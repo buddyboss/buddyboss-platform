@@ -3202,3 +3202,158 @@ div#bp-group-message-content {
     border-left: 1px solid var(--bb-rl-border-secondary-color);
   }
 }
+
+.bb-readylaunch-template {
+  /* A sidebar-conditioned grid can be used on
+    single profile or group screens. */
+}
+
+.bb-readylaunch-template ul.bb-course-items {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--bb-rl-space-200);
+}
+
+.bb-readylaunch-template ul.bb-course-items.bb-grid .item-entry {
+  width: 100%;
+}
+
+.bb-readylaunch-template ul.bb-course-items.bb-grid .item-entry.item-entry-header {
+  grid-column: 1 / -1;
+}
+
+@media screen and (max-width: 1200px) {
+  .bb-readylaunch-template ul.bb-course-items.bb-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media screen and (max-width: 800px) {
+  .bb-readylaunch-template ul.bb-course-items.bb-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media screen and (max-width: 544px) {
+  .bb-readylaunch-template ul.bb-course-items.bb-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.bb-readylaunch-template ul.bb-course-items:not(.bb-grid) {
+  grid-template-columns: 1fr;
+}
+
+.bb-readylaunch-template ul.bb-course-items:not(.bb-grid) .item-entry {
+  width: 100%;
+}
+
+.bb-readylaunch-template .bb-rl-primary-container ul.bb-course-items.bb-grid {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+@media screen and (max-width: 1600px) {
+  .bb-readylaunch-template .bb-rl-primary-container ul.bb-course-items.bb-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media screen and (min-width: 1200px) and (max-width: 1400px) {
+  .bb-readylaunch-template .bb-rl-primary-container ul.bb-course-items.bb-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media screen and (max-width: 800px) {
+  .bb-readylaunch-template .bb-rl-primary-container ul.bb-course-items.bb-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.bb-readylaunch-template ul.bb-course-items {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.bb-readylaunch-template ul.bb-course-items .bb-course-item-wrap {
+  width: 100%;
+}
+
+.bb-readylaunch-template ul.bb-course-items .bb-cover-list-item {
+  position: relative;
+  height: 100%;
+  border-radius: var(--bb-rl-radius-lg);
+  background-color: var(--bb-rl-background-color);
+}
+
+.bb-readylaunch-template ul.bb-course-items.bb-grid .bb-cover-list-item {
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.bb-readylaunch-template ul.bb-course-items .bb-course-cover {
+  position: relative;
+}
+
+.bb-readylaunch-template ul.bb-course-items a.bb-cover-wrap {
+  position: relative;
+  display: block;
+  height: 100%;
+  padding-top: 160px;
+  border-radius: var(--bb-rl-radius-lg) var(--bb-rl-radius-lg) 0 0;
+  overflow: hidden;
+  background-color: var(--bb-rl-background-tertiary-color);
+}
+
+.bb-readylaunch-template ul.bb-course-items a.bb-cover-wrap img {
+  position: absolute;
+  right: 0;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  object-fit: cover;
+  height: 100%;
+  width: 100%;
+}
+
+.bb-readylaunch-template ul.bb-course-items .bb-card-course-details {
+  padding: var(--bb-rl-space-200);
+  border: 1px solid var(--bb-rl-border-secondary-color);
+  border-top: 0;
+  border-radius: 0 0 var(--bb-rl-radius-lg) var(--bb-rl-radius-lg);
+  flex: 1;
+}
+
+.bb-readylaunch-template ul.bb-course-items .bb-course-title {
+  font-size: var(--bb-rl-font-size-base);
+  font-weight: 500;
+  line-height: var(--bb-rl-base-line);
+  color: var(--bb-rl-text-color);
+}
+
+.bb-readylaunch-template .bb-courses-header .grid-filters {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--bb-rl-space-100);
+}
+
+.bb-readylaunch-template .bb-courses-header .grid-filters .dashicons {
+  font-family: bb-icons-rl;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1;
+  width: auto;
+  height: auto;
+}
+
+.bb-readylaunch-template .bb-courses-header .grid-filters .layout-grid-view .dashicons:before {
+  content: "\e464";
+}
+
+.bb-readylaunch-template .bb-courses-header .grid-filters .layout-list-view .dashicons:before {
+  content: "\e5a2";
+}

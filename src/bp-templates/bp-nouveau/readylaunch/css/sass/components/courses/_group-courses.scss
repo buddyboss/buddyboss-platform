@@ -1,0 +1,27 @@
+.bb-readylaunch-template {
+
+	.bb-courses-header .grid-filters {
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		gap: var(--bb-rl-space-100);
+
+		.dashicons {
+			font-family: bb-icons-rl;
+			font-size: 24px;
+			font-style: normal;
+			font-weight: 400;
+			line-height: 1;
+			width: auto;
+			height: auto;
+		}
+
+		.layout-grid-view .dashicons:before {
+			content: "\e464";
+		}
+
+		.layout-list-view .dashicons:before {
+			content: "\e5a2";
+		}
+	}
+}

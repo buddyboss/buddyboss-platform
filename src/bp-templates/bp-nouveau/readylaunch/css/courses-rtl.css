@@ -279,8 +279,8 @@
 
 .bb-readylaunch-template ul.bb-course-items a.bb-cover-wrap img {
   position: absolute;
-  left: 0;
   right: 0;
+  left: 0;
   top: 0;
   bottom: 0;
   object-fit: cover;
