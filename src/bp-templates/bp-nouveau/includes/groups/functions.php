@@ -507,10 +507,9 @@ function bp_nouveau_prepare_group_for_js( $item ) {
 	}
 
 	if ( function_exists( 'bb_is_enabled_group_activity_topics' ) && bb_is_enabled_group_activity_topics() ) {
-		$topics = function_exists( 'bb_activity_topics_manager_instance' ) ? bb_activity_topics_manager_instance()->bb_get_activity_topics(
+		$topics = function_exists( 'bb_get_group_activity_topics' ) ? bb_get_group_activity_topics(
 			array(
-				'item_id'   => $item->id,
-				'item_type' => 'groups',
+				'item_id' => $item->id,
 			)
 		) : array();
 
