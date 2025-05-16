@@ -100,7 +100,28 @@ $activity_popup_title = sprintf( esc_html__( '%s\'s Post', 'buddyboss' ), bp_cor
 				<div class="activity-group-heading"><a href="<?php echo $group_permalink; ?>" data-bb-hp-group="<?php echo esc_attr( $group_id ); ?>"><?php echo $group_name; ?></a></div>
 				<div class="activity-group-post-meta">
 					<span class="activity-post-author">
-						<?php bp_activity_action(); ?>
+						<?php
+						$activity_type = bp_get_activity_type();
+						$activity_object = bp_get_activity_object_name();
+
+						// Standard group post types (adjust if you have custom types)
+						$standard_group_post_types = array('activity_update', 'activity_group_update');
+
+						if (
+							'groups' === $activity_object &&
+							in_array($activity_type, $standard_group_post_types)
+						) {
+							// Show only user link and display name
+							?>
+							<a href="<?php echo $user_link; ?>">
+								<?php echo bp_core_get_user_displayname($activities_template->activity->user_id); ?>
+							</a>
+							<?php
+						} else {
+							// Show the default activity action
+							bp_activity_action();
+						}
+						?>
 					</span>
 					<a href="<?php echo $activity_link; ?>">
 						<?php
