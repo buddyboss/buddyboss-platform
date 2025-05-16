@@ -103,9 +103,7 @@ class BB_Activity_Topics_Manager {
 
 		add_action( 'bp_activity_get_edit_data', array( $this, 'bb_activity_get_edit_topic_data' ), 10, 1 );
 
-		add_filter( 'bb_get_topics_select_sql', array( $this, 'bb_get_activity_topics_select_sql' ), 10, 2 );
-		add_filter( 'bb_get_topics_group_by', array( $this, 'bb_get_activity_topics_group_by' ), 10, 2 );
-		add_filter( 'bb_get_topics_order_by', array( $this, 'bb_get_activity_topics_order_by' ), 10, 2 );
+		add_filter( 'bb_get_topics_join_sql', array( $this, 'bb_get_activity_topics_join_sql' ), 10, 2 );
 		add_action( 'bb_topic_before_added', array( $this, 'bb_validate_activity_topic_before_added' ) );
 		add_filter( 'bp_ajax_querystring', array( $this, 'bb_activity_directory_set_topic_id' ), 20, 2 );
 		add_filter( 'bp_activity_get_join_sql', array( $this, 'bb_activity_topic_get_join_sql' ), 10, 2 );
@@ -582,52 +580,25 @@ class BB_Activity_Topics_Manager {
 	}
 
 	/**
-	 * Filter the MySQL SELECT clause for the topic query.
-	 * Required to pass MIN(tr.id) as id to avoid duplicates.
+	 * Filter the MySQL JOIN clause for the topic query.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param string $select_sql Current SELECT MySQL statement.
-	 * @param array  $r          Method parameters.
-	 */
-	public function bb_get_activity_topics_select_sql( $select_sql, $r ) {
-		if ( ! empty( $r['filter_query'] ) ) {
-			$select_sql = 'SELECT MIN(tr.id) AS id, MIN(tr.menu_order) AS menu_order, t.name';
-		}
-
-		return $select_sql;
-	}
-
-	/**
-	 * Filter the MySQL GROUP BY clause for the topic query.
-	 * Required to pass GROUP BY tr.topic_id, tr.menu_order to avoid duplicates.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param string $group_by Current GROUP BY MySQL statement.
+	 * @param string $join_sql Current JOIN MySQL statement.
 	 * @param array  $r        Method parameters.
 	 */
-	public function bb_get_activity_topics_group_by( $group_by, $r ) {
+	public function bb_get_activity_topics_join_sql( $join_sql, $r ) {
+		$topic_rel_table = $this->wpdb->prefix . 'bb_topic_relationships';
 		if ( ! empty( $r['filter_query'] ) ) {
-			$group_by = 'GROUP BY tr.topic_id, tr.menu_order, t.name';
+			$join_sql .= " INNER JOIN (
+				SELECT MIN(id) as min_id
+				FROM {$topic_rel_table}
+				GROUP BY topic_id
+				ORDER BY min_id
+			) tr2 ON tr.id = tr2.min_id";
 		}
 
-		return $group_by;
-	}
-
-	/**
-	 * Filter the MySQL ORDER BY clause for the topic query.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param string $order_by Current ORDER BY MySQL statement.
-	 * @param array  $r        Method parameters.
-	 */
-	public function bb_get_activity_topics_order_by( $order_by, $r ) {
-		if ( ! empty( $r['filter_query'] ) ) {
-			$order_by = 'tr.menu_order, t.name';
-		}
-		return $order_by;
+		return $join_sql;
 	}
 
 	/**
