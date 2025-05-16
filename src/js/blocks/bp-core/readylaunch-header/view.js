@@ -45,7 +45,7 @@ window.bp = window.bp || {};
 				$document.on( 'click', '.bb-rl-left-panel-widget .bb-rl-list > h2', this.toggleLeftPanelWidget.bind( this ) );
 				$document.on( 'click', '.action-unread', this.markNotificationRead.bind( this ) );
 				$document.on( 'click', '.action-delete', this.markNotificationDelete.bind( this ) );
-				$document.on( 'click', '.bb-rl-header-container .bb-rl-header-aside .user-link', this.profileNav.bind( this ) );
+				$document.on( 'click', '.bb-rl-header-container .bb-rl-header-aside .bb-rl-user-link', this.profileNav.bind( this ) );
 				$document.on( 'click', '.bb-rl-header-search', this.searchModelToggle.bind( this ) );
 			},
 
