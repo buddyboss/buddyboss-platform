@@ -1432,15 +1432,17 @@ class BB_Topics_Manager {
 	 * @return bool True if the maximum number of topics has been reached, false otherwise.
 	 */
 	public function bb_topics_limit_reached( $r ) {
-		$topics_count = $this->bb_get_topics(
-			array(
-				'per_page'    => 1,
-				'item_type'   => $r['item_type'],
-				'item_id'     => $r['item_id'],
-				'exclude'     => array( $r['topic_id'] ), // Exclude the current topic ID from the count.
-				'count_total' => true,
-			)
+		$args = array(
+			'per_page'    => 1,
+			'item_type'   => $r['item_type'],
+			'item_id'     => $r['item_id'],
+			'count_total' => true,
 		);
+		if ( ! empty( $r['topic_id'] ) ) {
+			$args['exclude'] = array( $r['topic_id'] );
+		}
+		$topics_count = $this->bb_get_topics( $args );
+
 		return is_array( $topics_count ) && isset( $topics_count['total'] ) ? $topics_count['total'] >= $this->bb_topics_limit() : false;
 	}
 
