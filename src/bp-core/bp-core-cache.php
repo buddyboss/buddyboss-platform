@@ -684,7 +684,7 @@ function bb_clear_topic_related_caches( $topic_data, $args = array() ) {
 	}
 
 	// Clear individual topic relationship cache.
-	if ( ! empty( $topic_data->id ) ) {
+	if ( ! empty( $topic_data->id ) && ! empty( $topic_data->item_id ) && ! empty( $topic_data->item_type ) ) {
 		$relationship_cache_key = 'bb_topic_relationship_' . $topic_data->id . '_' . $topic_data->item_id . '_' . $topic_data->item_type;
 		wp_cache_delete( $relationship_cache_key, 'bb_topics' );
 	}
