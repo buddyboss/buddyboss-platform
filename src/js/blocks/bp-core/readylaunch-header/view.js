@@ -5,13 +5,6 @@ window.bp = window.bp || {};
 
 (
 	function ( exports, $ ) {
-
-		var bpNouveauLocal    = BP_Nouveau,
-			bbRlIsAs3cfActive = bpNouveauLocal.bbRlIsAs3cfActive,
-			bbRlMedia         = bpNouveauLocal.media,
-			bbRlAjaxUrl       = bpNouveauLocal.ajaxurl,
-			bbRlNonce         = bpNouveauLocal.nonces;
-
 		/**
 		 * [ReadLaunch description]
 		 *
@@ -30,6 +23,7 @@ window.bp = window.bp || {};
 				// Listen to events ("Add hooks!").
 				this.addListeners();
 				this.mobileSubMenu();
+				this.gridListFilter();
 				this.styledSelect();
 				this.initBBNavOverflow();
 			},
@@ -43,14 +37,15 @@ window.bp = window.bp || {};
 				$document.on( 'click', '.notification-link, .notification-header-tab-action, .bb-rl-load-more a', this.bbHandleLoadMore.bind( this ) );
 				$document.on( 'heartbeat-send', this.bbHeartbeatSend.bind( this ) );
 				$document.on( 'heartbeat-tick', this.bbHeartbeatTick.bind( this ) );
-				$document.on( 'click', this.closeMoreOption.bind( this ) );
+				$document.on( 'click', '.bb-rl-option-wrap__action', this.openMoreOption.bind( this ) );
+				$document.on( 'click', (e) => this.closeMoreOption(e) );
 				$document.on( 'click', '#bb-rl-profile-theme-light, #bb-rl-profile-theme-dark', this.ToggleDarkMode.bind( this ) );
-				$document.on( 'click', '.header-aside div.menu-item-has-children > a', this.showHeaderNotifications.bind( this ) );
+				$document.on( 'click', '.bb-rl-header-aside div.menu-item-has-children > a', this.showHeaderNotifications.bind( this ) );
 				$document.on( 'click', '.bb-rl-left-panel-mobile, .bb-rl-close-panel-mobile', this.toggleMobileMenu.bind( this ) );
 				$document.on( 'click', '.bb-rl-left-panel-widget .bb-rl-list > h2', this.toggleLeftPanelWidget.bind( this ) );
 				$document.on( 'click', '.action-unread', this.markNotificationRead.bind( this ) );
 				$document.on( 'click', '.action-delete', this.markNotificationDelete.bind( this ) );
-				$document.on( 'click', '.bb-rl-header-container .header-aside .user-link', this.profileNav.bind( this ) );
+				$document.on( 'click', '.bb-rl-header-container .bb-rl-header-aside .user-link', this.profileNav.bind( this ) );
 				$document.on( 'click', '.bb-rl-header-search', this.searchModelToggle.bind( this ) );
 			},
 
@@ -105,11 +100,65 @@ window.bp = window.bp || {};
 				);
 			},
 
+            gridListFilter: function () {
+				$( '.bb-rl-filter select' ).each(
+					function () {
+						var $this   = $( this ),
+						customClass = '';
+
+						if ( $this.data( 'bb-caret' ) ) {
+								customClass += ' bb-rl-caret-icon ';
+						}
+
+						if ( $this.data( 'bb-icon' ) ) {
+							customClass += ' bb-rl-has-icon ';
+							customClass += ' ' + $this.data( 'bb-icon' ) + ' ';
+						}
+
+						if ( $this.data( 'bb-border' ) === 'rounded' ) {
+							customClass += ' bb-rl-rounded-border ';
+						}
+
+						if ( $this.data( 'dropdown-align' ) ) {
+							customClass += ' bb-rl-align-adaptive ';
+						}
+
+						$this.select2(
+							{
+								theme: 'rl',
+								dropdownParent: $this.parent()
+							}
+						);
+
+						// Apply CSS classes after initialization
+						$this.next( '.select2-container' ).find( '.select2-selection' ).addClass( 'bb-rl-select2-container' + customClass );
+
+						// Add class to dropdown when it opens
+						$this.on(
+							'select2:open',
+							function () {
+								var $this   = $( this ),
+								customDropDownClass = '';
+
+								if ( $this.data( 'dropdown-align' ) ) {
+									customDropDownClass += ' bb-rl-dropdown-align-adaptive ';
+								}
+
+								$( '.select2-dropdown' ).addClass( 'bb-rl-select2-dropdown' );
+								// Ensure dropdown alignment adapts when there's insufficient space on the right side of the screen.
+								// The '.bb-rl-dropdown-align-adaptive' class enables responsive positioning of Select2 dropdowns.
+								$this.closest( '.bb-rl-filter' ).find( '.bb-rl-select2-dropdown' ).addClass( customDropDownClass );
+							}
+						);
+					}
+				);
+			},
+
 			styledSelect: function () {
 				$( '.bb-rl-styled-select select' ).each(
 					function () {
 						var $this   = $( this ),
-							customClass = '';
+						customClass = '';
 
 						// Check if parent container has specific class
 						var $parent = $this.closest( '.bb-rl-styled-select' );
@@ -195,7 +244,7 @@ window.bp = window.bp || {};
 					containerId : '',
 				};
 				var settings        = $.extend( defaults, options ),
-					mainContainerID = $( '#' + settings.containerId ); // Show a loading indicator.
+					mainContainerID = $( '.bb-rl-header-block' ).find( '#' + settings.containerId ); // Show a loading indicator.
 				if ( settings.page > 1 ) {
 					mainContainerID.find( '.bb-rl-load-more' ).before( '<i class="bb-rl-loader"></i>' );
 				} else {
@@ -316,6 +365,43 @@ window.bp = window.bp || {};
 				e.preventDefault();
 
 				$( e.currentTarget ).closest( '.bb-rl-option-wrap' ).toggleClass( 'active' );
+			},
+
+            /**
+			 * [closeMoreOption close more options dropdown]
+			 *
+			 * @param e
+			 */
+			closeMoreOption : function ( e ) {
+				if ( ! $( e.target ).closest( '.bb-rl-option-wrap' ).length ) {
+					$( '.bb-rl-option-wrap' ).removeClass( 'active' );
+				}
+
+				var container = $( '.bb-rl-header-aside div.menu-item-has-children *' );
+				if ( ! container.is( e.target ) ) {
+					$( '.bb-rl-header-aside div.menu-item-has-children' ).removeClass( 'selected' );
+				}
+
+				// Close profile dropdown when clicking outside.
+				if ( ! $( e.target ).closest( '.user-wrap' ).length &&
+					! $( e.target ).closest( '.bb-rl-profile-dropdown' ).length ) {
+					$( '.user-wrap' ).removeClass( 'active' );
+				}
+
+				// Close search modal when clicking outside.
+				var search_element = $(
+					'#bb-rl-network-search-modal .bp-search-form-wrapper *, ' +
+					'.bb-rl-header-search, ' +
+					'.bb-rl-header-search *, ' +
+					'.select2-container, ' +
+					'.select2-container *, ' +
+					'#bb-rl-network-search-modal .bp-search-form-wrapper, ' +
+					'#bb-rl-network-search-modal .bp-search-form-wrapper *, ' +
+					'.bb-rl-network-search-clear'
+				);
+				if ( ! search_element.is( e.target ) ) {
+					$( '#bb-rl-network-search-modal' ).addClass( 'bp-hide' );
+				}
 			},
 
 			/**
