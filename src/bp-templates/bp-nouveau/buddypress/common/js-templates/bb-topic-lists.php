@@ -12,18 +12,25 @@
 <script type="text/html" id="tmpl-bb-topic-lists">
     <#
     if ( data.topics ) {
-        var topicData = data.topics;
-        var topicId = topicData.topic_id;
-        var topicName = topicData.topic_name;
+        var topicData       = data.topics;
+        var topicId         = topicData.topic_id;
+        var topicName       = topicData.topic_name;
         var topicWhoCanPost = topicData.topic_who_can_post;
-        var itemId = topicData.item_id;
-        var itemType = topicData.item_type;
-        var nonce = topicData.nonce;
-        var data = JSON.stringify( {
-			topic_id : topicId,
-		    item_id  : itemId,
+        var itemId          = topicData.item_id;
+        var itemType        = topicData.item_type;
+        var edit_nonce      = topicData.edit_nonce;
+        var delete_nonce    = topicData.delete_nonce;
+        var edit_data       = JSON.stringify( {
+			topic_id  : topicId,
+		    item_id   : itemId,
 			item_type : itemType,
-			nonce     : nonce
+			nonce     : edit_nonce
+		});
+		var delete_data     = JSON.stringify( {
+			topic_id  : topicId,
+		    item_id   : itemId,
+			item_type : itemType,
+			nonce     : delete_nonce
 		});
     #>
         <div class="bb-activity-topic-item" data-topic-id="{{topicId}}">
@@ -47,12 +54,12 @@
                     </a>
                 </span>
                 <div class="bb-topic-more-dropdown">
-                    <a href="#" class="button edit bb-edit-topic bp-secondary-action bp-tooltip" title="<?php esc_html_e( 'Edit', 'buddyboss' ); ?>" data-topic-attr="{{data}}">
+                    <a href="#" class="button edit bb-edit-topic bp-secondary-action bp-tooltip" title="<?php esc_html_e( 'Edit', 'buddyboss' ); ?>" data-topic-attr="{{edit_data}}">
                         <span class="bp-screen-reader-text"><?php esc_html_e( 'Edit', 'buddyboss' ); ?></span>
                         <span class="edit-label"><?php esc_html_e( 'Edit', 'buddyboss' ); ?></span>
                     </a>
                     <# if ( ! topicData.is_global_activity ) { #>
-                        <a href="#" class="button delete bb-delete-topic bp-secondary-action bp-tooltip" title="<?php esc_html_e( 'Delete', 'buddyboss' ); ?>" data-topic-attr="{{data}}">
+                        <a href="#" class="button delete bb-delete-topic bp-secondary-action bp-tooltip" title="<?php esc_html_e( 'Delete', 'buddyboss' ); ?>" data-topic-attr="{{delete_data}}">
                             <span class="bp-screen-reader-text"><?php esc_html_e( 'Delete', 'buddyboss' ); ?></span>
                             <span class="delete-label"><?php esc_html_e( 'Delete', 'buddyboss' ); ?></span>
                         </a>

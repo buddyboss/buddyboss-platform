@@ -428,16 +428,17 @@ window.bp = window.bp || {};
 				// Remove loading state
 				this.$modal.removeClass( 'loading' );
 				if ( response.success && response.data.content ) {
-					var content                = response.data.content;
-					var topicData              = content.topic;
-					var currentTopicId         = topicData.topic_id;
-					var currentTopicName       = topicData.name;
-					var currentTopicWhoCanPost = topicData.permission_type;
-					var currentItemId          = topicData.item_id;
-					var currentItemType        = topicData.item_type;
-					var currentTopicNonce      = content.nonce;
-					var isGlobalActivity       = ! _.isUndefined( topicData.is_global_activity ) ? topicData.is_global_activity : false;
-					var topicListsTemplate     = wp.template( 'bb-topic-lists' );
+					var content                 = response.data.content;
+					var topicData               = content.topic;
+					var currentTopicId          = topicData.topic_id;
+					var currentTopicName        = topicData.name;
+					var currentTopicWhoCanPost  = topicData.permission_type;
+					var currentItemId           = topicData.item_id;
+					var currentItemType         = topicData.item_type;
+					var currentTopicNonce       = content.edit_nonce;
+					var currentTopicDeleteNonce = content.delete_nonce;
+					var isGlobalActivity        = ! _.isUndefined( topicData.is_global_activity ) ? topicData.is_global_activity : false;
+					var topicListsTemplate      = wp.template( 'bb-topic-lists' );
 
 					var collectedTopicData = {
 						topic_id           : currentTopicId,
@@ -445,7 +446,8 @@ window.bp = window.bp || {};
 						topic_who_can_post : currentTopicWhoCanPost,
 						item_id            : currentItemId,
 						item_type          : currentItemType,
-						nonce              : currentTopicNonce
+						edit_nonce         : currentTopicNonce,
+						delete_nonce       : currentTopicDeleteNonce
 					};
 
 					if ( isGlobalActivity ) {
@@ -465,6 +467,7 @@ window.bp = window.bp || {};
 						this.$topicList.append( $renderedTopicLists );
 					}
 					this.handleCloseModal( event );
+					this.checkTopicsLimit();
 				} else {
 					this.$modal.find( this.config.modalContentSelector ).prepend( this.config.errorContainer );
 					this.$modal.find( this.config.errorContainerSelector ).append( response.data.error );
@@ -607,11 +610,9 @@ window.bp = window.bp || {};
 				// Send AJAX request
 				$.post( ajaxUrl, data, function ( response ) {
 					if ( response.success ) {
-						$topicItem.fadeOut( 300, function () {
-							$( this ).remove();
-							// Check if we need to show the "Add new topic" button after deletion.
-							this.checkTopicsLimit();
-						}.bind( this ) );
+						$topicItem.remove();
+						// Check if we need to show the "Add new topic" button after deletion.
+						BBTopicsManager.checkTopicsLimit();
 					} else {
 						alert( response.data.error );
 					}
@@ -636,6 +637,9 @@ window.bp = window.bp || {};
 			} else {
 				// If we're below the limit, show the add button.
 				this.$addTopicButton.show();
+				if ( this.$addTopicButton.hasClass( 'bp-hide' ) ) {
+					this.$addTopicButton.removeClass( 'bp-hide' );
+				}
 			}
 
 			return topicsLimitReached;

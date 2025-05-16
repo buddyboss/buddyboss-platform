@@ -759,7 +759,7 @@ class BB_Activity_Topics_Manager {
 	 * @return array Modified array of strings.
 	 */
 	public function bb_activity_topic_get_js_strings( $strings ) {
-		$args = array();
+		$topic_lists = $this->bb_get_activity_topics( array( 'item_type' => 'activity' ) );
 		// If group activity topics is not enabled, then don't show the topic lists.
 		if (
 			bp_is_active( 'groups' ) &&
@@ -767,13 +767,8 @@ class BB_Activity_Topics_Manager {
 			function_exists( 'bb_is_enabled_group_activity_topics' ) &&
 			function_exists( 'bb_get_group_activity_topics' )
 		) {
-			$args = array(
-				'item_id'   => bp_get_current_group_id(),
-				'item_type' => 'groups',
-			);
+			$topic_lists = bb_get_group_activity_topics();
 		}
-
-		$topic_lists = $this->bb_get_activity_topics( $args );
 
 		$strings['activity']['params']['topics']['bb_is_enabled_group_activity_topics'] = function_exists( 'bb_is_enabled_group_activity_topics' ) && bb_is_enabled_group_activity_topics();
 		$strings['activity']['params']['topics']['bb_is_enabled_activity_topics']       = function_exists( 'bb_is_enabled_activity_topics' ) ? bb_is_enabled_activity_topics() : false;

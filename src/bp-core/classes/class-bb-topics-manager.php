@@ -280,22 +280,12 @@ class BB_Topics_Manager {
 
 		check_ajax_referer( 'bb_add_topic', 'nonce' );
 
-		$name               = sanitize_text_field( wp_unslash( $_POST['name'] ) );
-		$slug               = isset( $_POST['slug'] ) ? sanitize_title( wp_unslash( $_POST['slug'] ) ) : '';
-		$permission_type    = isset( $_POST['permission_type'] ) ? sanitize_text_field( wp_unslash( $_POST['permission_type'] ) ) : 'anyone';
-		$previous_topic_id  = isset( $_POST['topic_id'] ) ? absint( wp_unslash( $_POST['topic_id'] ) ) : 0;
-		$item_id            = isset( $_POST['item_id'] ) ? absint( wp_unslash( $_POST['item_id'] ) ) : 0;
-		$item_type          = isset( $_POST['item_type'] ) ? sanitize_text_field( wp_unslash( $_POST['item_type'] ) ) : 'activity';
-		$action_from        = isset( $_POST['action_from'] ) ? sanitize_text_field( wp_unslash( $_POST['action_from'] ) ) : 'admin';
-		$is_global_activity = false;
-		if ( isset( $_POST['is_global_activity'] ) ) {
-			$val = sanitize_text_field( wp_unslash( $_POST['is_global_activity'] ) );
-			if ( '1' === $val || 'true' === $val ) {
-				$is_global_activity = true;
-			} else {
-				$is_global_activity = false;
-			}
-		}
+		$name              = sanitize_text_field( wp_unslash( $_POST['name'] ) );
+		$slug              = isset( $_POST['slug'] ) ? sanitize_title( wp_unslash( $_POST['slug'] ) ) : '';
+		$permission_type   = isset( $_POST['permission_type'] ) ? sanitize_text_field( wp_unslash( $_POST['permission_type'] ) ) : 'anyone';
+		$previous_topic_id = isset( $_POST['topic_id'] ) ? absint( wp_unslash( $_POST['topic_id'] ) ) : 0;
+		$item_id           = isset( $_POST['item_id'] ) ? absint( wp_unslash( $_POST['item_id'] ) ) : 0;
+		$item_type         = isset( $_POST['item_type'] ) ? sanitize_text_field( wp_unslash( $_POST['item_type'] ) ) : 'activity';
 
 		if ( empty( $slug ) ) {
 			$slug = sanitize_title( $name );
@@ -343,8 +333,9 @@ class BB_Topics_Manager {
 		wp_send_json_success(
 			array(
 				'content' => array(
-					'topic' => $topic_data,
-					'nonce' => wp_create_nonce( 'bb_edit_topic' ),
+					'topic'        => $topic_data,
+					'edit_nonce'   => wp_create_nonce( 'bb_edit_topic' ),
+					'delete_nonce' => wp_create_nonce( 'bb_delete_topic' ),
 				),
 			)
 		);
@@ -1441,14 +1432,17 @@ class BB_Topics_Manager {
 	 * @return bool True if the maximum number of topics has been reached, false otherwise.
 	 */
 	public function bb_topics_limit_reached( $r ) {
-		$topics_count = $this->bb_get_topics(
-			array(
-				'per_page'    => 1,
-				'item_type'   => $r['item_type'],
-				'item_id'     => $r['item_id'],
-				'count_total' => true,
-			)
+		$args = array(
+			'per_page'    => 1,
+			'item_type'   => $r['item_type'],
+			'item_id'     => $r['item_id'],
+			'count_total' => true,
 		);
+		if ( ! empty( $r['topic_id'] ) ) {
+			$args['exclude'] = array( $r['topic_id'] );
+		}
+		$topics_count = $this->bb_get_topics( $args );
+
 		return is_array( $topics_count ) && isset( $topics_count['total'] ) ? $topics_count['total'] >= $this->bb_topics_limit() : false;
 	}
 
