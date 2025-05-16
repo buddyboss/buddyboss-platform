@@ -694,7 +694,7 @@ class BB_Activity_Topics_Manager {
 		}
 
 		$bp_prefix = bp_core_get_table_prefix();
-		$join_sql .= " INNER JOIN {$bp_prefix}bb_activity_topic_relationship AS atr ON a.id = atr.activity_id";
+		$join_sql .= " LEFT JOIN {$bp_prefix}bb_activity_topic_relationship AS atr ON a.id = atr.activity_id";
 
 		return $join_sql;
 	}
@@ -715,8 +715,14 @@ class BB_Activity_Topics_Manager {
 			return $where_conditions;
 		}
 
-		$topic_id                     = (int) $args['topic_id'];
-		$where_conditions['topic_id'] = "atr.topic_id = {$topic_id}";
+		$topic_id  = (int) $args['topic_id'];
+		$pinned_id = (int) $args['pinned_id'];
+
+		if ( ! empty( $pinned_id ) ) {
+			$where_conditions['topic_filter'] = "( atr.topic_id = {$topic_id} OR a.id = {$pinned_id})";
+		} else {
+			$where_conditions['topic_filter'] = "atr.topic_id = {$topic_id}";
+		}
 
 		return $where_conditions;
 	}
@@ -817,10 +823,7 @@ class BB_Activity_Topics_Manager {
 			add_filter( 'bb_get_topics_join_sql', 'bb_topics_join_sql_filter', 10 );
 			add_filter( 'bb_get_topics_where_conditions', 'bb_topics_where_conditions_filter', 10, 2 );
 		}
-		if ( ! empty( $r['filter_query'] ) ) {
-			error_log( 'filter_query' );
-			$r['debug'] = true;
-		}
+
 		$topic_lists = bb_topics_manager_instance()->bb_get_topics( $r );
 
 		if ( $group_topics_enabled ) {
@@ -828,7 +831,11 @@ class BB_Activity_Topics_Manager {
 			remove_filter( 'bb_get_topics_where_conditions', 'bb_topics_where_conditions_filter', 10 );
 		}
 
-		$topic_lists = ! empty( $topic_lists['topics'] ) ? $topic_lists['topics'] : array();
+		if ( ! empty( $r['count_total'] ) ) {
+			$topic_lists = ! empty( $topic_lists ) ? $topic_lists : array();
+		} else {
+			$topic_lists = ! empty( $topic_lists['topics'] ) ? $topic_lists['topics'] : array();
+		}
 
 		wp_cache_set( $cache_key, $topic_lists, $this->activity_topics_cache_key );
 

@@ -227,7 +227,8 @@ class BB_Topics_Manager {
 				KEY user_id (user_id),
 				KEY permission_type (permission_type),
 				KEY date_created (date_created),
-				KEY date_updated (date_updated)
+				KEY date_updated (date_updated),
+				KEY idx_relationship_type_perm_item ( item_type, permission_type, item_id, topic_id )
 			) $charset_collate;";
 		}
 
@@ -1249,9 +1250,9 @@ class BB_Topics_Manager {
 			 */
 			$total_activity_topic_sql = apply_filters(
 				'bb_total_topic_count_sql',
-				'SELECT count(DISTINCT t.id)' . $global_activity_sql . ' FROM ' . $this->topic_rel_table . ' tr
-				 LEFT JOIN ' . $this->topics_table . ' t ON t.id = tr.topic_id
-				 ' . $where_sql,
+				'SELECT count(DISTINCT t.id)' . $global_activity_sql . ' FROM ' . $this->topic_rel_table . ' tr'
+				. ' ' . $join_sql
+				. ' ' . $where_sql,
 				$where_sql
 			);
 
