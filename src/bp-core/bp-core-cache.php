@@ -699,6 +699,9 @@ function bb_clear_topic_related_caches( $topic_data, $args = array() ) {
 
 	// Clear topic caches from args if provided.
 	if ( ! empty( $args ) ) {
+		if ( ! empty( $args['id'] ) ) {
+			wp_cache_delete( 'bb_topic_id_' . $args['id'], 'bb_topics' );
+		}
 		if ( ! empty( $args['name'] ) ) {
 			wp_cache_delete( 'bb_topic_name_' . $args['name'], 'bb_topics' );
 		}

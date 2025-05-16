@@ -817,7 +817,21 @@ class BB_Activity_Topics_Manager {
 			return $topic_cache;
 		}
 
-		$group_topics_enabled = isset( $args['filter_query'] ) && $args['filter_query'] && bp_is_active( 'groups' ) && function_exists( 'bb_is_enabled_group_activity_topics' ) && bb_is_enabled_group_activity_topics();
+		$group_topics_enabled = (
+			bp_is_active( 'groups' ) &&
+			function_exists( 'bb_is_enabled_group_activity_topics' ) &&
+			bb_is_enabled_group_activity_topics() &&
+			(
+				(
+					isset( $r['filter_query'] ) &&
+					$r['filter_query']
+				) ||
+				(
+					isset( $r['item_type'] ) &&
+					in_array( 'groups', $r['item_type'], true )
+				)
+			)
+		);
 		if ( $group_topics_enabled ) {
 			add_filter( 'bb_get_topics_join_sql', 'bb_topics_join_sql_filter', 10 );
 			add_filter( 'bb_get_topics_where_conditions', 'bb_topics_where_conditions_filter', 10, 2 );
