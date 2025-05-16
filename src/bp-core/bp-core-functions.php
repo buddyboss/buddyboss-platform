@@ -10029,6 +10029,6 @@ function bb_topics_manager_instance() {
  * @return string
  */
 function bb_pro_group_activity_topics_version() {
-	return '2.7.01';
+	return '2.7.20';
 }
 
