@@ -326,6 +326,16 @@
 	cursor: not-allowed;
 }
 
+.bb-rl-loader  {
+	display: inline-block;
+    height: 22px;
+    width: 22px;
+    border: 2px solid var(--bb-rl-border-quaternary-color);
+    border-top-color: var(--bb-rl-border-tertiary-color);
+    border-radius: var(--bb-rl-radius-full);
+    animation: spin 3s infinite linear;
+}
+
 .bb-rl-header-block {
 
 	&.bb-rl-header {
@@ -610,10 +620,18 @@
 				visibility: hidden;
 				z-index: 0;
 				display: none;
+				overflow: visible;
 	
 				.bb-rl-loader {
 					margin: 20px auto;
 					display: table;
+				}
+			}
+
+			.bb-rl-option-wrap .bb-rl-option-dropdown {
+
+				li {
+					padding: 0	;
 				}
 			}
 
@@ -656,10 +674,19 @@
 				}
 
 				.message-view-all-link {
+					border-radius: var(--bb-rl-radius-full);
+					font-size: .85rem;
 					margin-left: auto;
 					margin-right: var(--bb-rl-space-200);
-					border-radius: var(--bb-rl-radius-full);
-					font-size: 0.85rem;
+					align-items: center;
+					cursor: pointer;
+					display: inline-flex;
+					justify-content: center;
+					padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+					text-align: center;
+					text-decoration: none;
+					transition: background-color .2s ease, bordfont, size, smer-color .2s ease, color .2s ease;					
+					margin: 0 0 0 auto;
 				}
 
 				.mark-read-all {
@@ -679,6 +706,10 @@
 				display: flex;
 				align-items: center;
 				gap: var(--bb-rl-space-200);
+
+				a {
+					line-height: 1.5;
+				}
 			}
 		}
 
@@ -776,12 +807,13 @@
 		}
 	}
 	
-	.notification-list {
+	.notification-dropdown ul.notification-list {
 		max-height: 52vh;
 		overflow: auto;
 		overflow-x: hidden;
 		padding: var(--bb-rl-space-100);
 		margin: 0;
+		max-width: inherit;
 
 		> li {
 			display: flex;
@@ -1632,6 +1664,7 @@ body.bb-rl-dark-mode #bb-rl-profile-theme-dark a {
 		border-radius: var(--bb-rl-radius-lg);
 		border: 1px solid var(--bb-rl-border-secondary-color);
 		box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.1);
+		padding: 0 !important;
 		position: relative;
 		z-index: 999995;
 		height: auto;
@@ -1680,7 +1713,7 @@ body.bb-rl-dark-mode #bb-rl-profile-theme-dark a {
 		width: 100%;
 		border-radius: var(--bb-rl-radius-md);
 		padding: var(--bb-rl-space-200) var(--bb-rl-space-200) var(--bb-rl-space-200) var(--bb-rl-space-700);
-		background-color: none;
+		background-image: none;
 		height: auto;
 		box-shadow: none;
 	}
