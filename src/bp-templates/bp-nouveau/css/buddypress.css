@@ -8469,6 +8469,8 @@ span.dashicons.dashicons-admin-file:before {
   list-style: none;
   z-index: 99;
   display: none;
+  max-height: 230px;
+  overflow: auto;
 }
 
 #buddypress .activity-topic-selector > ul .bb_nav_more_dropdown.open {

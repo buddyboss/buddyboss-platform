@@ -4522,6 +4522,8 @@ span.dashicons.dashicons-admin-file:before {
 			list-style: none;
 			z-index: 99;
 			display: none;
+			max-height: 230px;
+			overflow: auto;
 
 			&.open {
 				display: block;
