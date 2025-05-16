@@ -109,12 +109,12 @@ window.bp = window.bp || {};
 				$( '.bb-rl-styled-select select' ).each(
 					function () {
 						var $this   = $( this ),
-						customClass = '';
+							customClass = '';
 
 						// Check if parent container has specific class
 						var $parent = $this.closest( '.bb-rl-styled-select' );
 						if ( $parent.hasClass( 'bb-rl-styled-select--default' ) ) {
-								customClass += ' bb-rl-select-default';
+							customClass += ' bb-rl-select-default';
 						}
 
 						$this.select2(

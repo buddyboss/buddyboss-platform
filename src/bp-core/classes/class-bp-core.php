@@ -437,6 +437,9 @@ class BP_Core extends BP_Component {
 	 *                      description.
 	 */
 	public function blocks_init( $blocks = array() ) {
+		// Register block assets.
+		$this->register_readylaunch_header_assets();
+
 		parent::blocks_init(
 			array(
 				// 'buddyboss/login-form' => array(
@@ -445,10 +448,37 @@ class BP_Core extends BP_Component {
 				// ),
 				'buddyboss/readylaunch-header' => array(
 					'metadata'        => trailingslashit( buddypress()->plugin_dir ) . 'bp-core/blocks/readylaunch-header',
-					'script_url' => trailingslashit( buddypress()->plugin_dir ) . 'bp-templates/bp-nouveau/readylaunch/js/bb-readylaunch-header-block.js',
-					'script_deps' => ['jquery'],
 					'render_callback' => 'bp_block_render_readylaunch_header_block',
 				),
+			)
+		);
+	}
+
+	/**
+	 * Register assets for the Ready Launch Header block
+	 *
+	 * @since 1.0.0
+	 */
+	private function register_readylaunch_header_assets() {
+		$plugin_dir = trailingslashit( buddypress()->plugin_dir );
+
+		// Register the view script.
+		wp_register_script(
+			'bp-readylaunch-header-view',
+			$plugin_dir . 'bp-core/blocks/readylaunch-header/view.js',
+			array( 'jquery' ),
+			bp_get_version(),
+			true
+		);
+
+		wp_localize_script(
+			'bp-readylaunch-header-view',
+			'bbReadyLaunchFront',
+			array(
+				'ajax_url' 	=> admin_url( 'admin-ajax.php' ),
+				'nonce'    	=> wp_create_nonce( 'bb-readylaunch' ),
+				'more_nav' 	=> esc_html__( 'More', 'buddyboss' ),
+				'filter_all'=> esc_html__( 'All', 'buddyboss' ),
 			)
 		);
 	}

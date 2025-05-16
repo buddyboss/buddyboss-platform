@@ -27,6 +27,7 @@ module.exports = {
 			"block-collection/index": './src/js/blocks/bp-core/block-collection/block-collection.js',
 			"login-form/index": './src/js/blocks/bp-core/login-form/login-form.js',
 			"readylaunch-header/index": './src/js/blocks/bp-core/readylaunch-header/index.js',
+			"readylaunch-header/view": './src/js/blocks/bp-core/readylaunch-header/view.js'
 		},
 		output: {
 			filename: '[name].js',
