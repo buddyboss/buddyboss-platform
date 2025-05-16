@@ -686,7 +686,7 @@
 					text-align: center;
 					text-decoration: none;
 					transition: background-color .2s ease, bordfont, size, smer-color .2s ease, color .2s ease;					
-					margin: 0 0 0 auto;
+					margin: 0 var(--bb-rl-space-200) 0 auto;
 				}
 
 				.mark-read-all {
