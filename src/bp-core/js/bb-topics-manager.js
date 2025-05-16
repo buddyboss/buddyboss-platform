@@ -637,6 +637,9 @@ window.bp = window.bp || {};
 			} else {
 				// If we're below the limit, show the add button.
 				this.$addTopicButton.show();
+				if ( this.$addTopicButton.hasClass( 'bp-hide' ) ) {
+					this.$addTopicButton.removeClass( 'bp-hide' );
+				}
 			}
 
 			return topicsLimitReached;
