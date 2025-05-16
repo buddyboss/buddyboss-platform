@@ -603,13 +603,6 @@ class BB_Topics_Manager {
 			// Case: Name already exists.
 			// Fetch topic id from bb_topics table.
 			$new_topic_id = (int) $existing_topic->id;
-			$topic_data   = $this->bb_get_topic(
-				array(
-					'topic_id'  => $new_topic_id,
-					'item_id'   => $item_id,
-					'item_type' => $item_type,
-				)
-			);
 
 			// Check if topic id is different from current topic id.
 			if ( $previous_topic_id !== $new_topic_id ) { // NO.
@@ -643,12 +636,15 @@ class BB_Topics_Manager {
 					);
 
 					if ( function_exists( 'bb_activity_topics_manager_instance' ) ) {
-						bb_activity_topics_manager_instance()->bb_update_activity_topic_relationship(
-							array(
-								'topic_id'    => $new_topic_id,
-								'previous_id' => $previous_topic_id,
-							)
-						);
+						$get_previous_activity_relationship = bb_activity_topics_manager_instance()->bb_get_activity_topic_relationship( $previous_topic_id );
+						if ( $get_previous_activity_relationship ) {
+							bb_activity_topics_manager_instance()->bb_update_activity_topic_relationship(
+								array(
+									'topic_id'    => $new_topic_id,
+									'previous_id' => $previous_topic_id,
+								)
+							);
+						}
 					}
 				}
 			} else {
@@ -666,6 +662,14 @@ class BB_Topics_Manager {
 					)
 				);
 			}
+
+			$topic_data = $this->bb_get_topic(
+				array(
+					'topic_id'  => $new_topic_id,
+					'item_id'   => $item_id,
+					'item_type' => $item_type,
+				)
+			);
 		}
 
 		/**
@@ -859,6 +863,8 @@ class BB_Topics_Manager {
 		 * @param array $args The arguments used to add the topic relationship.
 		 */
 		do_action( 'bb_topic_relationship_after_updated', $updated, $r );
+
+		return $updated;
 	}
 
 	/**
