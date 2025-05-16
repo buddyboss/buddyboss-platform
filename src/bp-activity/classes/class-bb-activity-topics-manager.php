@@ -796,10 +796,9 @@ class BB_Activity_Topics_Manager {
 		$r = bp_parse_args(
 			$args,
 			array(
-				'item_id'            => 0,
-				'item_type'          => array( 'activity', 'groups' ),
-				'is_global_activity' => true,
-				'fields'             => 'name,slug,topic_id,is_global_activity',
+				'item_id'   => 0,
+				'item_type' => array( 'activity', 'groups' ),
+				'fields'    => 'name,slug,topic_id',
 			)
 		);
 

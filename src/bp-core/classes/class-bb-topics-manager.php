@@ -316,13 +316,12 @@ class BB_Topics_Manager {
 		} else {
 			$topic_data = $this->bb_update_topic(
 				array(
-					'id'                 => $previous_topic_id,
-					'name'               => $name,
-					'slug'               => $slug,
-					'permission_type'    => $permission_type,
-					'item_type'          => $item_type,
-					'item_id'            => $item_id,
-					'is_global_activity' => $is_global_activity,
+					'id'              => $previous_topic_id,
+					'name'            => $name,
+					'slug'            => $slug,
+					'permission_type' => $permission_type,
+					'item_type'       => $item_type,
+					'item_id'         => $item_id,
 				)
 			);
 		}
@@ -332,8 +331,6 @@ class BB_Topics_Manager {
 		}
 
 		if ( 'activity' === $item_type ) {
-			// Remove is_global_activity from the topic data when it's an activity topic.
-			unset( $topic_data->is_global_activity );
 			$permission_type = function_exists( 'bb_activity_topics_manager_instance' ) ? bb_activity_topics_manager_instance()->bb_activity_topic_permission_type( $permission_type ) : array();
 		} else {
 			$permission_type = function_exists( 'bb_group_activity_topic_permission_type' ) ? bb_group_activity_topic_permission_type( $permission_type ) : array();
@@ -507,10 +504,9 @@ class BB_Topics_Manager {
 
 		$get_topic_relationship = $this->bb_get_topic(
 			array(
-				'topic_id'           => $topic_id,
-				'item_id'            => $r['item_id'],
-				'item_type'          => $r['item_type'],
-				'is_global_activity' => true,
+				'topic_id'  => $topic_id,
+				'item_id'   => $r['item_id'],
+				'item_type' => $r['item_type'],
 			)
 		);
 
@@ -558,24 +554,20 @@ class BB_Topics_Manager {
 			)
 		);
 
-		$previous_topic_id  = $r['id'];
-		$name               = $r['name'];
-		$slug               = $r['slug'];
-		$item_type          = $r['item_type'];
-		$item_id            = $r['item_id'];
-		$is_global_activity = isset( $r['is_global_activity'] ) ? $r['is_global_activity'] : false;
-		$permission_type    = $r['permission_type'];
+		$previous_topic_id = $r['id'];
+		$name              = $r['name'];
+		$slug              = $r['slug'];
+		$item_type         = $r['item_type'];
+		$item_id           = $r['item_id'];
+		$permission_type   = $r['permission_type'];
 
 		// Check if the topic is global activity.
-		$previous_topic = $this->bb_get_topic(
+		$previous_topic     = $this->bb_get_topic(
 			array(
-				'topic_id'           => $previous_topic_id,
-				'is_global_activity' => true,
+				'topic_id' => $previous_topic_id,
 			)
 		);
-		if ( $previous_topic ) {
-			$is_global_activity = $previous_topic->is_global_activity;
-		}
+		$is_global_activity = $previous_topic && isset( $previous_topic->is_global_activity ) ? $previous_topic->is_global_activity : false;
 
 		/**
 		 * Fires before a topic has been updated.
@@ -613,10 +605,9 @@ class BB_Topics_Manager {
 			$new_topic_id = (int) $existing_topic->id;
 			$topic_data   = $this->bb_get_topic(
 				array(
-					'topic_id'           => $new_topic_id,
-					'item_id'            => $item_id,
-					'item_type'          => $item_type,
-					'is_global_activity' => true,
+					'topic_id'  => $new_topic_id,
+					'item_id'   => $item_id,
+					'item_type' => $item_type,
 				)
 			);
 
@@ -625,10 +616,9 @@ class BB_Topics_Manager {
 				// Check if relationship already exists.
 				$existing_relationship = $this->bb_get_topic(
 					array(
-						'topic_id'           => $new_topic_id,
-						'item_type'          => $item_type,
-						'item_id'            => $item_id,
-						'is_global_activity' => true,
+						'topic_id'  => $new_topic_id,
+						'item_type' => $item_type,
+						'item_id'   => $item_id,
 					)
 				);
 
@@ -945,24 +935,23 @@ class BB_Topics_Manager {
 		$r = bp_parse_args(
 			$args,
 			array(
-				'topic_id'           => 0,
-				'name'               => '',
-				'slug'               => '',
-				'per_page'           => -1, // Retrieve all by default.
-				'paged'              => 1,
-				'orderby'            => 'menu_order',
-				'order'              => 'ASC',
-				'search'             => '',
-				'item_id'            => 0,
-				'item_type'          => 'activity',
-				'permission_type'    => '',
-				'user_id'            => 0,
-				'include'            => array(),
-				'exclude'            => array(),
-				'count_total'        => false,
-				'fields'             => 'all', // Fields to include.
-				'error_type'         => 'bool',
-				'is_global_activity' => false,
+				'topic_id'        => 0,
+				'name'            => '',
+				'slug'            => '',
+				'per_page'        => -1, // Retrieve all by default.
+				'paged'           => 1,
+				'orderby'         => 'menu_order',
+				'order'           => 'ASC',
+				'search'          => '',
+				'item_id'         => 0,
+				'item_type'       => '',
+				'permission_type' => '',
+				'user_id'         => 0,
+				'include'         => array(),
+				'exclude'         => array(),
+				'count_total'     => false,
+				'fields'          => 'all', // Fields to include.
+				'error_type'      => 'bool',
 			),
 			'bb_get_topics'
 		);
@@ -979,20 +968,6 @@ class BB_Topics_Manager {
 		 * @param array  $r          Method parameters.
 		 */
 		$select_sql = apply_filters( 'bb_get_topics_select_sql', $select_sql, $r );
-
-		// Add is_global_activity field if requested.
-		$global_activity_sql = '';
-		if ( $r['is_global_activity'] ) {
-			$global_activity_sql = ', EXISTS (
-				SELECT 1 
-				FROM ' . $this->topic_rel_table . ' global_tr 
-				WHERE global_tr.topic_id = tr.topic_id 
-				AND global_tr.item_id = 0 
-				AND global_tr.item_type = "activity"
-				AND global_tr.id IS NOT NULL
-			) as is_global_activity';
-			$select_sql         .= $global_activity_sql;
-		}
 
 		$from_sql = ' FROM ' . $this->topic_rel_table . ' tr';
 
@@ -1188,7 +1163,7 @@ class BB_Topics_Manager {
 			if ( ! empty( $uncached_ids ) ) {
 				$uncached_ids_sql = implode( ',', wp_parse_id_list( $uncached_ids ) );
 
-				$queried_data = $this->wpdb->get_results( 'SELECT t.*, tr.*' . $global_activity_sql . ' FROM ' . $this->topics_table . ' t LEFT JOIN ' . $this->topic_rel_table . ' tr ON t.id = tr.topic_id WHERE tr.id IN (' . $uncached_ids_sql . ') ' . $order_by, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+				$queried_data = $this->wpdb->get_results( 'SELECT t.*, tr.* FROM ' . $this->topics_table . ' t LEFT JOIN ' . $this->topic_rel_table . ' tr ON t.id = tr.topic_id WHERE tr.id IN (' . $uncached_ids_sql . ') ' . $order_by, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 				foreach ( (array) $queried_data as $topic_data ) {
 					if ( ! empty( $topic_data['id'] ) ) {
 						// Create a unique cache key for each topic relationship.
@@ -1207,10 +1182,8 @@ class BB_Topics_Manager {
 				$item_type              = is_array( $r['item_type'] ) ? implode( '_', $r['item_type'] ) : $r['item_type'];
 				$relationship_cache_key = 'bb_topic_relationship_' . $id . '_' . $item_id . '_' . $item_type;
 				$topic                  = wp_cache_get( $relationship_cache_key, self::$topic_cache_group );
-
 				if ( ! empty( $topic ) ) {
-					$topic['is_global_activity'] = ! empty( $topic['is_global_activity'] ) ? (bool) $topic['is_global_activity'] : false;
-					$topic_data[]                = (object) $topic;
+					$topic_data[] = (object) $topic;
 				}
 			}
 
@@ -1250,7 +1223,7 @@ class BB_Topics_Manager {
 			 */
 			$total_activity_topic_sql = apply_filters(
 				'bb_total_topic_count_sql',
-				'SELECT count(DISTINCT t.id)' . $global_activity_sql . ' FROM ' . $this->topic_rel_table . ' tr'
+				'SELECT count(DISTINCT t.id) FROM ' . $this->topic_rel_table . ' tr'
 				. ' ' . $join_sql
 				. ' ' . $where_sql,
 				$where_sql
@@ -1300,10 +1273,6 @@ class BB_Topics_Manager {
 			'item_type' => $item_type,
 		);
 
-		if ( 'groups' === $item_type ) {
-			$args['is_global_activity'] = true;
-		}
-
 		$topic = $this->bb_get_topic( $args );
 
 		if ( ! $topic ) {
@@ -1337,9 +1306,13 @@ class BB_Topics_Manager {
 			)
 		);
 
-		$topic = $this->bb_get_topics( $r );
+		$topic      = $this->bb_get_topics( $r );
+		$topic_data = is_array( $topic ) && ! empty( $topic['topics'] ) ? current( $topic['topics'] ) : null;
+		if ( isset( $r['item_type'] ) && 'groups' === $r['item_type'] && $topic_data ) {
+			$topic_data->is_global_activity = $this->bb_is_topic_global( $r['topic_id'] );
+		}
 
-		return is_array( $topic ) && ! empty( $topic['topics'] ) ? current( $topic['topics'] ) : null;
+		return $topic_data;
 	}
 
 	/**
@@ -1577,5 +1550,32 @@ class BB_Topics_Manager {
 				)
 			)
 		);
+	}
+
+	/**
+	 * Check if a topic is global by looking for activity relationships.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int $topic_id The ID of the topic to check.
+	 * @return bool True if the topic is global (has activity relationships), false otherwise.
+	 */
+	public function bb_is_topic_global( $topic_id ) {
+		if ( empty( $topic_id ) ) {
+			return false;
+		}
+
+		$topic_id = absint( $topic_id );
+
+		// Check if topic has any activity relationships.
+		$activity_relationships = $this->bb_get_topics(
+			array(
+				'topic_id'  => $topic_id,
+				'item_type' => 'activity',
+				'fields'    => 'id',
+			)
+		);
+
+		return ! empty( $activity_relationships['topics'] );
 	}
 }
