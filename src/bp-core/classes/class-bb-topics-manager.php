@@ -1250,9 +1250,9 @@ class BB_Topics_Manager {
 			 */
 			$total_activity_topic_sql = apply_filters(
 				'bb_total_topic_count_sql',
-				'SELECT count(DISTINCT t.id)' . $global_activity_sql . ' FROM ' . $this->topic_rel_table . ' tr
-				 LEFT JOIN ' . $this->topics_table . ' t ON t.id = tr.topic_id
-				 ' . $where_sql,
+				'SELECT count(DISTINCT t.id)' . $global_activity_sql . ' FROM ' . $this->topic_rel_table . ' tr'
+				. ' ' . $join_sql
+				. ' ' . $where_sql,
 				$where_sql
 			);
 

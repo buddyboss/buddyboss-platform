@@ -823,10 +823,7 @@ class BB_Activity_Topics_Manager {
 			add_filter( 'bb_get_topics_join_sql', 'bb_topics_join_sql_filter', 10 );
 			add_filter( 'bb_get_topics_where_conditions', 'bb_topics_where_conditions_filter', 10, 2 );
 		}
-		if ( ! empty( $r['filter_query'] ) ) {
-			error_log( 'filter_query' );
-			$r['debug'] = true;
-		}
+
 		$topic_lists = bb_topics_manager_instance()->bb_get_topics( $r );
 
 		if ( $group_topics_enabled ) {
@@ -834,7 +831,11 @@ class BB_Activity_Topics_Manager {
 			remove_filter( 'bb_get_topics_where_conditions', 'bb_topics_where_conditions_filter', 10 );
 		}
 
-		$topic_lists = ! empty( $topic_lists['topics'] ) ? $topic_lists['topics'] : array();
+		if ( ! empty( $r['count_total'] ) ) {
+			$topic_lists = ! empty( $topic_lists ) ? $topic_lists : array();
+		} else {
+			$topic_lists = ! empty( $topic_lists['topics'] ) ? $topic_lists['topics'] : array();
+		}
 
 		wp_cache_set( $cache_key, $topic_lists, $this->activity_topics_cache_key );
 
