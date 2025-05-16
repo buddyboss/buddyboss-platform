@@ -333,8 +333,9 @@ class BB_Topics_Manager {
 		wp_send_json_success(
 			array(
 				'content' => array(
-					'topic' => $topic_data,
-					'nonce' => wp_create_nonce( 'bb_edit_topic' ),
+					'topic'        => $topic_data,
+					'edit_nonce'   => wp_create_nonce( 'bb_edit_topic' ),
+					'delete_nonce' => wp_create_nonce( 'bb_delete_topic' ),
 				),
 			)
 		);
