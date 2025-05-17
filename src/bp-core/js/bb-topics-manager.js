@@ -294,6 +294,9 @@ window.bp = window.bp || {};
 		 */
 		makeTopicsSortable : function () {
 			var self = this;
+			if ( ! this.$topicList.length ) {
+				return;
+			}
 			this.$topicList.sortable( {
 				update : function ( event ) {
 					var $container = $( event.target );
