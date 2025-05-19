@@ -8271,6 +8271,11 @@ li.bb-rl-hideshow {
   position: relative;
 }
 
+.bb-rl-nav-more {
+  display: inline-flex;
+  align-items: center;
+}
+
 .bb-rl-nav-more i {
   margin-right: var(--bb-rl-space-50);
   font-weight: 500;
