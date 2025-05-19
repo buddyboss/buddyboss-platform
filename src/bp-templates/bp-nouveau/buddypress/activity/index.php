@@ -29,7 +29,7 @@ if ( bb_is_enabled_activity_topics() ) {
 				</li>
 				<?php
 				foreach ( $topics as $topic ) {
-					echo '<li><a href="#topic-' . esc_attr( $topic->slug ) . '" data-topic-id="' . esc_attr( $topic->topic_id ) . '">' . esc_html( $topic->name ) . '</a></li>';
+					echo '<li><a href="#topic-' . esc_attr( $topic['slug'] ) . '" data-topic-id="' . esc_attr( $topic['topic_id'] ) . '">' . esc_html( $topic['name'] ) . '</a></li>';
 				}
 				?>
 			</ul>
