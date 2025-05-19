@@ -2,9 +2,9 @@
 /**
  * Core BP Blocks functions.
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage Core
- * @since 6.0.0
+ * @since BuddyBoss [BBVERSION]
  */
 
 // Exit if accessed directly.
@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * BuddyPress blocks require the BP REST API.
  *
- * @since 6.0.0
+ * @since BuddyBoss [BBVERSION]
  *
  * @return bool True if the current installation supports BP Blocks.
  *              False otherwise.
@@ -22,7 +22,7 @@ function bp_support_blocks() {
 	/**
 	 * Filter here, returning `false`, to completely disable BuddyPress blocks.
 	 *
-	 * @since 10.0.0
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param bool $value True if the BP REST API is available. False otherwise.
 	 */
@@ -32,10 +32,7 @@ function bp_support_blocks() {
 /**
  * Registers the BP Block components.
  *
- * @since 6.0.0
- * @since 9.0.0 Adds a dependency to `wp-server-side-render` if WP >= 5.3.
- *              Uses a dependency to `wp-editor` otherwise.
- * @since 12.0.0 Uses the `@wordpress/scripts` `index.asset.php` generated file to get dependencies.
+ * @since BuddyBoss [BBVERSION]
  */
 function bp_register_block_components() {
 	$asset      = array(
@@ -61,9 +58,7 @@ add_action( 'bp_blocks_init', 'bp_register_block_components', 1 );
 /**
  * Registers the BP Block Assets.
  *
- * @since 9.0.0
- * @since 12.0.0 Adds the BuddyPress Blocks collection & uses the `@wordpress/scripts`
- *               `index.asset.php` generated file to get dependencies.
+ * @since BuddyBoss [BBVERSION]
  */
 function bp_register_block_assets() {
 	$default_asset   = array(
@@ -117,7 +112,7 @@ add_action( 'bp_blocks_init', 'bp_register_block_assets', 2 );
 /**
  * Enqueue additional BP Assets for the Block Editor.
  *
- * @since 12.0.0
+ * @since BuddyBoss [BBVERSION]
  */
 function bp_enqueue_block_editor_assets() {
 	wp_enqueue_script( 'bp-blocks-collection' );
@@ -125,7 +120,7 @@ function bp_enqueue_block_editor_assets() {
 	/**
 	 * Fires when it's time to enqueue BP Block assets.
 	 *
-	 * @since 12.0.0
+	 * @since BuddyBoss [BBVERSION]
 	 */
 	do_action( 'bp_enqueue_block_editor_assets' );
 }
@@ -134,16 +129,16 @@ add_action( 'enqueue_block_editor_assets', 'bp_enqueue_block_editor_assets', 9 )
 /**
  * Filters the Block Editor settings to gather BuddyPress ones into a `bp` key.
  *
- * @since 6.0.0
+ * @since BuddyBoss [BBVERSION]
  *
  * @param array $editor_settings Default editor settings.
- * @return array The editor settings including BP blocks specific ones.
+ * @return array The editor settings, including BP blocks, specific ones.
  */
 function bp_blocks_editor_settings( $editor_settings = array() ) {
 	/**
 	 * Filter here to include your BP Blocks specific settings.
 	 *
-	 * @since 6.0.0
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param array $bp_editor_settings BP blocks specific editor settings.
 	 */
@@ -160,7 +155,7 @@ add_filter( 'block_editor_settings_all', 'bp_blocks_editor_settings' );
 /**
  * Preload the Active BuddyPress Components.
  *
- * @since 9.0.0
+ * @since BuddyBoss [BBVERSION]
  *
  * @param string[] $paths The Block Editors preload paths.
  * @return string[] The Block Editors preload paths.
@@ -178,7 +173,7 @@ add_filter( 'block_editor_rest_api_preload_paths', 'bp_blocks_preload_paths' );
 /**
  * Register a BuddyPress block type.
  *
- * @since 6.0.0
+ * @since BuddyBoss [BBVERSION]
  *
  * @param array $args The registration arguments for the block type.
  * @return BP_Block   The BuddyPress block type object.
@@ -200,7 +195,7 @@ function bp_register_block( $args = array() ) {
 /**
  * Gets a Widget Block list of classnames.
  *
- * @since 9.0.0
+ * @since BuddyBoss [BBVERSION]
  *
  * @param string $block_name The Block name.
  * @return array The list of widget classnames for the Block.
@@ -225,9 +220,9 @@ function bp_blocks_get_widget_block_classnames( $block_name = '' ) {
 }
 
 /**
- * Make sure the BP Widget Block classnames are included into Widget Blocks.
+ * Make sure the BP Widget Block classnames are included in Widget Blocks.
  *
- * @since 9.0.0
+ * @since BuddyBoss [BBVERSION]
  *
  * @param string $classname The classname to be used in the block widget's container HTML.
  * @param string $block_name The name of the block.
@@ -246,9 +241,9 @@ function bp_widget_block_dynamic_classname( $classname, $block_name ) {
 add_filter( 'widget_block_dynamic_classname', 'bp_widget_block_dynamic_classname', 10, 2 );
 
 /**
- * Create a link to the registration form for use on the bottom of the login form widget.
+ * Create a link to the registration form for use at the bottom of the login form widget.
  *
- * @since 9.0.0
+ * @since BuddyBoss [BBVERSION]
  *
  * @param string $content Content to display. Default empty.
  * @param array  $args    Array of login form arguments.
@@ -279,7 +274,7 @@ function bp_blocks_get_login_widget_registration_link( $content = '', $args = ar
 		/**
 		 * Fires inside the display of the login widget form.
 		 *
-		 * @since 2.4.0
+		 * @since BuddyBoss [BBVERSION]
 		 */
 		do_action( 'bp_login_widget_form' );
 		$action_output = ob_get_clean();
@@ -295,7 +290,7 @@ function bp_blocks_get_login_widget_registration_link( $content = '', $args = ar
 /**
  * Callback function to render the BP Login Form.
  *
- * @since 9.0.0
+ * @since BuddyBoss [BBVERSION]
  *
  * @param array $attributes The block attributes.
  * @return string           HTML output.
@@ -330,7 +325,7 @@ function bp_block_render_login_form_block( $attributes = array() ) {
 			/**
 			 * Fires before the display of widget content if logged in.
 			 *
-			 * @since 1.9.0
+			 * @since BuddyBoss [BBVERSION]
 			 */
 			do_action( 'bp_before_login_widget_loggedin' );
 			$action_output = ob_get_clean();
@@ -372,7 +367,7 @@ function bp_block_render_login_form_block( $attributes = array() ) {
 			/**
 			 * Fires after the display of widget content if logged in.
 			 *
-			 * @since 1.9.0
+			 * @since BuddyBoss [BBVERSION]
 			 */
 			do_action( 'bp_after_login_widget_loggedin' );
 			$action_output = ob_get_clean();
@@ -390,7 +385,7 @@ function bp_block_render_login_form_block( $attributes = array() ) {
 			/**
 			 * Fires before the display of widget content if logged out.
 			 *
-			 * @since 1.9.0
+			 * @since BuddyBoss [BBVERSION]
 			 */
 			do_action( 'bp_before_login_widget_loggedout' );
 			$action_output = ob_get_clean();
@@ -428,7 +423,7 @@ function bp_block_render_login_form_block( $attributes = array() ) {
 			/**
 			 * Fires after the display of widget content if logged out.
 			 *
-			 * @since 1.9.0
+			 * @since BuddyBoss [BBVERSION]
 			 */
 			do_action( 'bp_after_login_widget_loggedout' );
 			$action_output = ob_get_clean();
@@ -453,7 +448,7 @@ function bp_block_render_login_form_block( $attributes = array() ) {
 /**
  * Callback function to render the Ready Launch Header block.
  *
- * @since 2.8.30
+ * @since BuddyBoss [BBVERSION]
  *
  * @param array $attributes The block attributes.
  * @return string          HTML output.
@@ -516,7 +511,7 @@ function bp_block_render_readylaunch_header_block( $attributes = array() ) {
 							bp_get_template_part( 'readylaunch/header/notification-dropdown' );
 						}
 						if ( $block_args['showProfileMenu'] ) {
-						?>
+							?>
 						<div class="user-wrap user-wrap-container">
 							<?php
 							$current_user = wp_get_current_user();
@@ -531,7 +526,7 @@ function bp_block_render_readylaunch_header_block( $attributes = array() ) {
 								<?php bp_get_template_part( 'readylaunch/header/profile-dropdown' ); ?>
 							</div>
 						</div>
-						<?php
+							<?php
 						}
 					} else {
 						?>
@@ -577,8 +572,8 @@ function bp_block_render_readylaunch_header_block( $attributes = array() ) {
 				);
 
 				if ( is_user_logged_in() && (
-					($block_args['showMessages'] && bp_is_active( 'messages' )) ||
-					($block_args['showNotifications'] && bp_is_active( 'notifications' ))
+					( $block_args['showMessages'] && bp_is_active( 'messages' ) ) ||
+					( $block_args['showNotifications'] && bp_is_active( 'notifications' ) )
 				) ) {
 					?>
 					<div class="bb-readylaunch-mobile-menu_items">
@@ -603,7 +598,7 @@ function bp_block_render_readylaunch_header_block( $attributes = array() ) {
 										<i class="bb-icons-rl-bell-simple"></i>
 										<span class="notification-label"><?php esc_html_e( 'Notifications', 'buddyboss' ); ?></span>
 										<?php
-										$notifications = bp_notifications_get_unread_notification_count( bp_loggedin_user_id() );
+										$notifications             = bp_notifications_get_unread_notification_count( bp_loggedin_user_id() );
 										$unread_notification_count = ! empty( $notifications ) ? $notifications : 0;
 										if ( $unread_notification_count > 0 ) :
 											?>

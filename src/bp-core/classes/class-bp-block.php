@@ -5,7 +5,7 @@
  * @package BuddyPress
  * @subpackage Core
  * @since buddypress 6.0.0
- * @since buddyboss [BBVERSION]
+ * @since BuddyBoss [BBVERSION]
  */
 
 // Exit if accessed directly.
@@ -14,32 +14,32 @@ defined( 'ABSPATH' ) || exit;
 /**
  * BP Block Class.
  *
- * @since 6.0.0
+ * @since BuddyBoss [BBVERSION]
  */
 class BP_Block {
 
 	/**
 	 * WP Block Type object.
 	 *
-	 * @since 6.0.0
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @var WP_Block_Type|WP_Error
 	 */
 	public $block;
 
 	/**
-	 * The script types registered.
+	 * The script types are registered.
 	 *
-	 * @since 6.0.0
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @var array
 	 */
 	private $registered_scripts;
 
 	/**
-	 * The style types registered.
+	 * The style types are registered.
 	 *
-	 * @since 6.0.0
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @var array
 	 */
@@ -48,8 +48,7 @@ class BP_Block {
 	/**
 	 * Construct the BuddyPress Block.
 	 *
-	 * @since 6.0.0
-	 * @since 11.0.0 Add support for WP Block API v2 { apiVersion: 2 }.
+	 * @since BuddyBoss [BBVERSION] Add support for WP Block API v2 { apiVersion: 2 }.
 	 *
 	 * @param array $args {
 	 *     The registration arguments for the BP Block. Part of the arguments are the ones
@@ -262,7 +261,7 @@ class BP_Block {
 					/**
 					 * Filter here to use a custom directory to look for the JSON translation file into.
 					 *
-					 * @since 6.0.0
+					 * @since BuddyBoss [BBVERSION]
 					 *
 					 * @param string $domain_path   Absolute path to the directory to look for the JSON translation file into.
 					 * @param string $editor_script The editor's script handle.
@@ -278,7 +277,7 @@ class BP_Block {
 					/**
 					 * Filter here to use a custom domain for the JSON translation file.
 					 *
-					 * @since 6.0.0
+					 * @since BuddyBoss [BBVERSION]
 					 *
 					 * @param string $textdomain    The custom domain for the JSON translation file.
 					 * @param string $editor_script The editor's script handle.

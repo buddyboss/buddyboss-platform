@@ -264,7 +264,7 @@ class BP_Moderation_Component extends BP_Component {
 	/**
 	 * Register the BP Moderation Blocks.
 	 *
-	 * @since 2.5.0
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param array $blocks Optional. See BP_Component::blocks_init() for
 	 * description.

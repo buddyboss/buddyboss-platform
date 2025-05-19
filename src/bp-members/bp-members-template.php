@@ -3101,7 +3101,7 @@ function bp_loggedin_user_url( $path_chunks = array() ) {
 	/**
 	 * Filter here to edit the logged-in user's profile URL.
 	 *
-	 * @since 12.0.0
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param string $url         The logged-in user's profile URL.
 	 * @param array  $path_chunks {

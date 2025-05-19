@@ -397,7 +397,7 @@ class BP_Document_Component extends BP_Component {
 	/**
 	 * Register the BP Documents Blocks.
 	 *
-	 * @since 2.5.0
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param array $blocks Optional. See BP_Component::blocks_init() for
 	 * description.

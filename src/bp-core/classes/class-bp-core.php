@@ -70,7 +70,8 @@ class BP_Core extends BP_Component {
 		 *
 		 * @param array $value Array of included and optional components.
 		 */
-		$bp->optional_components = apply_filters( 'bp_optional_components',
+		$bp->optional_components = apply_filters(
+			'bp_optional_components',
 			array(
 				'settings',
 				'notifications',
@@ -363,7 +364,7 @@ class BP_Core extends BP_Component {
 				'bp_invitations',
 				'bb_subscriptions',
 				'bb_reactions',
-				'bb_reaction_data'
+				'bb_reaction_data',
 			)
 		);
 
@@ -430,8 +431,7 @@ class BP_Core extends BP_Component {
 	/**
 	 * Register the BP Core Blocks.
 	 *
-	 * @since 9.0.0
-	 * @since 12.0.0 Use the WP Blocks API v2.
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param array $blocks Optional. See BP_Component::blocks_init() for
 	 *                      description.
@@ -442,10 +442,6 @@ class BP_Core extends BP_Component {
 
 		parent::blocks_init(
 			array(
-				// 'buddyboss/login-form' => array(
-				// 	'metadata'        => trailingslashit( buddypress()->plugin_dir ) . 'bp-core/blocks/login-form',
-				// 	'render_callback' => 'bp_block_render_login_form_block',
-				// ),
 				'buddyboss/readylaunch-header' => array(
 					'metadata'        => trailingslashit( buddypress()->plugin_dir ) . 'bp-core/blocks/readylaunch-header',
 					'render_callback' => 'bp_block_render_readylaunch_header_block',
@@ -457,7 +453,7 @@ class BP_Core extends BP_Component {
 	/**
 	 * Register assets for the Ready Launch Header block
 	 *
-	 * @since 1.0.0
+	 * @since BuddyBoss [BBVERSION]
 	 */
 	private function register_readylaunch_header_assets() {
 		$plugin_dir = trailingslashit( buddypress()->plugin_dir );
@@ -475,10 +471,10 @@ class BP_Core extends BP_Component {
 			'bp-readylaunch-header-view',
 			'bbReadyLaunchFront',
 			array(
-				'ajax_url' 	=> admin_url( 'admin-ajax.php' ),
-				'nonce'    	=> wp_create_nonce( 'bb-readylaunch' ),
-				'more_nav' 	=> esc_html__( 'More', 'buddyboss' ),
-				'filter_all'=> esc_html__( 'All', 'buddyboss' ),
+				'ajax_url'   => admin_url( 'admin-ajax.php' ),
+				'nonce'      => wp_create_nonce( 'bb-readylaunch' ),
+				'more_nav'   => esc_html__( 'More', 'buddyboss' ),
+				'filter_all' => esc_html__( 'All', 'buddyboss' ),
 			)
 		);
 	}
