@@ -68,7 +68,8 @@ h1.wp-login-logo {
 	border: 1px solid var(--bb-rl-border-secondary-color);
 	padding: var(--bb-rl-space-400) var(--bb-rl-space-300);
 	border-radius: var(--bb-rl-radius-lg);
-	width: 432px;
+	max-width: 432px;
+	width: auto;
 
 	form {
 		border: 0;
@@ -336,7 +337,7 @@ body.bb-rl-register {
 	border: 1px solid var(--bb-rl-border-secondary-color);
 	padding: var(--bb-rl-space-400) var(--bb-rl-space-300);
 	border-radius: var(--bb-rl-radius-lg);
-	width: 432px;
+	max-width: 432px;
 	margin: 0 auto var(--bb-rl-space-500);
 
 	h1 {
@@ -742,5 +743,23 @@ body.bb-rl-register {
 				color: var(--bb-rl-text-white-color);
 			}
 		}
+	}
+}
+
+@media screen and (max-width: 480px) {
+
+	.bb-rl-login-header {
+		flex-direction: column;
+		gap: var(--bb-rl-space-100);
+
+		.bb-rl-button {
+			min-width: 100px;
+		}
+	}
+
+	#login,
+	.register-page-main {
+		max-width: 100%;
+		margin: 0 var(--bb-rl-space-200);
 	}
 }
