@@ -1863,7 +1863,7 @@ body.bb-rl-dark-mode #bb-rl-profile-theme-dark a {
 		}
 
 		> li {
-			padding: var(--bb-rl-space-200) var(--bb-rl-space-300);
+			padding: var(--bb-rl-space-200) var(--bb-rl-space-300) !important;
 			border-top: 1px solid var(--bb-rl-border-secondary-color);
 
 			.item-avatar {
@@ -2054,6 +2054,7 @@ body.bb-rl-dark-mode #bb-rl-profile-theme-dark a {
 				border-top-color: var(--bb-rl-border-tertiary-color);
 				border-radius: var(--bb-rl-radius-full);
 				animation: spin 3s infinite linear;
+				background-image: none;
 			}
 		}
 	}
@@ -2222,5 +2223,73 @@ body.bb-rl-dark-mode #bb-rl-profile-theme-dark a {
 	&.select2-container--open .bb-rl-select2-dropdown.select2-dropdown--above,
 	&.select2-container--open .bb-rl-select2-dropdown.select2-dropdown--below {
 		border-radius: var(--bb-rl-radius-base);
+	}
+}
+
+.bp-dir-search-form {
+	position: relative;
+	background-color: var(--bb-rl-background-color);
+	border: 1px solid var(--bb-rl-border-tertiary-color);
+	border-radius: var(--bb-rl-radius-full);
+	display: inline-flex;
+	align-items: center;
+	flex-wrap: wrap;
+
+	&:before {
+		content: "\e30c";
+		font-weight: 400;
+		font-family: bb-icons-rl;
+		font-size: 16px;
+		color: var(--bb-rl-icon-primary-color);
+		font-style: normal;
+		margin-right: var(--bb-rl-space-100);
+		position: absolute;
+		left: 12px;
+		top: 5px;
+	}
+
+	input[type="search"] {
+		border: 0;
+		padding-left: 36px;
+		background-color: transparent;
+		border-radius: var(--bb-rl-radius-full);
+	}
+
+	button[type="submit"] {
+		position: absolute;
+		left: 0;
+		top: 2px;
+		opacity: 0;
+	}
+
+	.search-form_reset {
+		display: none;
+		background-color: transparent;
+		border: 0;
+		position: absolute;
+		top: 50%;
+		transform: translateY(-50%);
+		right: var(--bb-rl-space-100);
+		opacity: 0.4;
+	}
+
+	.bb-rl-search-results-container {
+		position: relative;
+		width: 100%;
+		padding: 0;
+	}
+
+	.bb-rl-search-results-container .ui-autocomplete {
+		position: static !important;
+		width: 100% !important;
+		overflow-y: auto !important;
+		overflow-x: hidden !important;
+		display: block !important;
+		max-height: calc(100vh - 250px);
+		box-shadow: none;
+
+		&.bp-hide {
+			display: none !important;
+		}
 	}
 }
