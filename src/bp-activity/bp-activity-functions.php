@@ -606,7 +606,14 @@ function bp_activity_get_post_types_tracking_args() {
 				// Used to be able to find the post type this activity type is associated to.
 				$track_post_type->comments_tracking->post_type = $post_type;
 
-				$post_types_tracking_args[ $track_post_type->comments_tracking->action_id ] = $track_post_type->comments_tracking;
+				// Attach comment tracking to respective post type.
+				if ( 'post' === $post_type ) {
+					$post_type_comment_action_id = 'new_blog_comment';
+				} else {
+					$post_type_comment_action_id = 'new_blog_' . $post_type . '_comment';
+				}
+
+				$post_types_tracking_args[ $post_type_comment_action_id ] = $track_post_type->comments_tracking;
 
 				// Used to check support for comment tracking by activity type (new_post_type)
 				$track_post_type->comments_tracking = true;
