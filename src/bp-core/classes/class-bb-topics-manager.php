@@ -826,6 +826,42 @@ class BB_Topics_Manager {
 			$where = array_merge( $where, $r['where'] );
 		}
 
+		$get_topic_relationship = $this->bb_get_topic(
+			array(
+				'topic_id'  => $where['topic_id'],
+				'item_id'   => $where['item_id'],
+				'item_type' => $where['item_type'],
+			)
+		);
+
+		// If no existing data found or data is the same, return early.
+		if ( ! $get_topic_relationship ) {
+			return false;
+		}
+
+		// Check if any values actually changed.
+		$needs_update = false;
+		foreach ( $data as $key => $value ) {
+			// Cast both values to integers for numeric fields.
+			if ( in_array( $key, array( 'topic_id', 'item_id' ), true ) ) {
+				$current_value = isset( $get_topic_relationship->{$key} ) ? (int) $get_topic_relationship->{$key} : 0;
+				$new_value     = (int) $value;
+			} else {
+				$current_value = isset( $get_topic_relationship->{$key} ) ? $get_topic_relationship->{$key} : '';
+				$new_value     = $value;
+			}
+
+			if ( $current_value !== $new_value ) {
+				$needs_update = true;
+				break;
+			}
+		}
+
+		// If no changes needed, return success.
+		if ( ! $needs_update ) {
+			return true;
+		}
+
 		$updated = $this->wpdb->update(
 			$this->topic_rel_table,
 			$data,
