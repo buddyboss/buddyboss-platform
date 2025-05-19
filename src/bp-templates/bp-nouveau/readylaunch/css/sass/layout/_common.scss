@@ -598,6 +598,11 @@
 
 .bb-rl-content-wrapper {
 	padding: var(--bb-rl-space-400) var(--bb-rl-space-600);
+
+	.bb-rl-group-details & {
+		padding-left: 0;
+		padding-right: 0;
+	}
 }
 
 .bb-rl-content-wrapper {
