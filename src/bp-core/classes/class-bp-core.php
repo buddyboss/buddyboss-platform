@@ -462,7 +462,7 @@ class BP_Core extends BP_Component {
 		wp_register_script(
 			'bp-readylaunch-header-view',
 			$plugin_dir . 'bp-core/blocks/readylaunch-header/view.js',
-			array( 'jquery' ),
+			array( 'jquery', 'bp-select2' ),
 			bp_get_version(),
 			true
 		);
