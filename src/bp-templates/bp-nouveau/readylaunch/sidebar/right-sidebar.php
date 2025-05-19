@@ -43,7 +43,7 @@ if ( bp_is_active( 'activity' ) && bp_is_activity_directory() ) {
 
 	$available_widgets[] = 'BP_Latest_Activities';
 
-	$available_widgets[] = 'BP_Blogs_Recent_Posts_Widget';
+	$available_widgets[] = 'BB_Recent_Blog_Posts_Widget';
 
 	$available_widgets[] = 'BP_Core_Recently_Active_Widget';
 }

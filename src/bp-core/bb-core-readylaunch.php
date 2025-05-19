@@ -11,36 +11,74 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Register readyLaunch widgets.
+ * Register a widget for ReadyLaunch
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $widget_class Widget class name.
+ * @param string $widget_file Widget file path.
+ *
+ * @return void
+ */
+function bb_rl_register_single_widget( $widget_class, $widget_file ) {
+	if ( ! file_exists( $widget_file ) ) {
+		return;
+	}
+
+	require_once $widget_file;
+
+	if ( ! class_exists( $widget_class ) ) {
+		return;
+	}
+
+	// Register widget.
+	add_action(
+		'widgets_init',
+		function () use ( $widget_class ) {
+			register_widget( $widget_class );
+		}
+	);
+
+	// Unregister widget from admin area.
+	add_action(
+		'widgets_init',
+		function () use ( $widget_class ) {
+			if ( is_admin() ) {
+				unregister_widget( $widget_class );
+			}
+		},
+		11
+	);
+}
+
+/**
+ * Register ReadyLaunch widgets
  *
  * @since BuddyBoss [BBVERSION]
  */
-function bb_rl_register_widgets () {
-	if ( bb_get_enabled_readylaunch() && function_exists( 'bp_get_following_ids' ) ) {
-		$plugin_dir = BP_PLUGIN_DIR;
-		if ( defined( 'BP_SOURCE_SUBDIRECTORY' ) && ! empty( constant( 'BP_SOURCE_SUBDIRECTORY' ) ) ) {
-			$plugin_dir = $plugin_dir . 'src';
-		}
-		$widget_file = $plugin_dir . '/bp-core/classes/class-bb-core-follow-my-network-widget.php';
-		if ( file_exists( $widget_file ) ) {
-			require_once $widget_file;
-			if ( class_exists( 'BB_Core_Follow_My_Network_Widget' ) ) {
-				add_action(
-					'widgets_init',
-					function() {
-						register_widget( 'BB_Core_Follow_My_Network_Widget' );
-					}
-				);
-
-				// Do not allow the widget to admin area, only be used for readylaunch.
-				add_action( 'widgets_init', function() {
-					if ( is_admin() ) {
-						unregister_widget( 'BB_Core_Follow_My_Network_Widget' );
-					}
-				}, 11 );
-			}
-		}
+function bb_rl_register_widgets() {
+	if ( ! bb_get_enabled_readylaunch() ) {
+		return;
 	}
+
+	$plugin_dir = BP_PLUGIN_DIR;
+	if ( defined( 'BP_SOURCE_SUBDIRECTORY' ) && ! empty( constant( 'BP_SOURCE_SUBDIRECTORY' ) ) ) {
+		$plugin_dir = $plugin_dir . 'src';
+	}
+
+	// Follow My Network Widget.
+	if ( function_exists( 'bp_get_following_ids' ) ) {
+		bb_rl_register_single_widget(
+			'BB_Core_Follow_My_Network_Widget',
+			$plugin_dir . '/bp-core/classes/class-bb-core-follow-my-network-widget.php'
+		);
+	}
+
+	// Recent Blog Posts Widget.
+	bb_rl_register_single_widget(
+		'BB_Recent_Blog_Posts_Widget',
+		$plugin_dir . '/bp-core/classes/class-bb-recent-blog-posts-widget.php'
+	);
 }
 
 add_action( 'bp_register_widgets', 'bb_rl_register_widgets' );
