@@ -1770,6 +1770,7 @@ body.bb-rl-dark-mode #bb-rl-profile-theme-dark a {
 		line-height: var(--bb-rl-base-line-small);
 		color: var(--bb-rl-text-color);
 		white-space: nowrap;
+		text-decoration: none;
 	}
 
 	.bb-rl-filter-tag {
@@ -1856,6 +1857,7 @@ body.bb-rl-dark-mode #bb-rl-profile-theme-dark a {
 		.ui-menu-item-wrapper {
 			display: flex;
 			gap: var(--bb-rl-space-200);
+			border: 0 !important;
 
 			> a.x {
 				display: none;
