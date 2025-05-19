@@ -19344,6 +19344,10 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   white-space: nowrap;
 }
 
+.bb-rl-ac-results .bp-search-ac > li:has(.results-group) {
+  display: none;
+}
+
 .bb-rl-ac-results .bp-search-ac .bbls-view_all_type-type {
   padding-bottom: 10px;
 }
