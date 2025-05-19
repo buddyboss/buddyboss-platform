@@ -739,6 +739,7 @@ class BB_Activity_Topics_Manager {
 			function_exists( 'bb_get_group_activity_topics' )
 		) {
 			$topic_lists = bb_get_group_activity_topics();
+			$topic_lists = ! empty( $topic_lists['topics'] ) ? $topic_lists['topics'] : array();
 		}
 
 		$strings['activity']['params']['topics']['bb_is_enabled_group_activity_topics'] = function_exists( 'bb_is_enabled_group_activity_topics' ) && bb_is_enabled_group_activity_topics();
