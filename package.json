@@ -41,8 +41,6 @@
 		"prepare": "npm install husky jira-prepare-commit-msg --save-dev && npx husky install",
 		"build:blocks": "npm run build:block:core",
 		"build:block:core": "wp-scripts build --webpack-src-dir=src/js/blocks/bp-core --config src/js/blocks/bp-core/webpack.config.js",
-		"build:admin": "wp-scripts build --webpack-src-dir=src/js/admin --config src/js/admin/webpack.config.js && grunt move:admin:js",
-		"wp-env": "wp-env",
 		"watch:readylaunch-header": "wp-scripts start --webpack-src-dir=src/js/blocks/bp-core/readylaunch-header --config src/js/blocks/bp-core/webpack.config.js"
 	},
 	"engines": {

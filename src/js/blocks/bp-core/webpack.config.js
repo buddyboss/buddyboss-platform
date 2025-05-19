@@ -10,22 +10,6 @@ module.exports = {
 	...defaultConfig,
 	...{
 		entry: {
-			"block-data/index": {
-				import: './src/js/blocks/bp-core/block-assets/block-data.js',
-				library: {
-					name: [ 'buddyboss', 'blockData' ],
-					type: 'window',
-				},
-			},
-			"block-components/index": {
-				import: './src/js/blocks/bp-core/block-components/block-components.js',
-				library: {
-					name: [ 'buddyboss', 'blockComponents' ],
-					type: 'window',
-				},
-			},
-			"block-collection/index": './src/js/blocks/bp-core/block-collection/block-collection.js',
-			"login-form/index": './src/js/blocks/bp-core/login-form/login-form.js',
 			"readylaunch-header/index": './src/js/blocks/bp-core/readylaunch-header/index.js',
 			"readylaunch-header/view": './src/js/blocks/bp-core/readylaunch-header/view.js'
 		},
@@ -41,18 +25,8 @@ module.exports = {
 		),
 		new DependencyExtractionWebpackPlugin( {
 			requestToExternal( request ) {
-				if ( request === '@buddypress/block-components' ) {
-					return [ 'buddyboss', 'blockComponents' ];
-				} else if ( request === '@buddypress/block-data' ) {
-					return [ 'buddyboss', 'blockData' ];
-				}
 			},
 			requestToHandle( request ) {
-				if ( request === '@buddypress/block-components' ) {
-					return 'bp-block-components';
-				} else if ( request === '@buddypress/block-data' ) {
-					return 'bp-block-data';
-				}
 			}
 		} )
 	],
