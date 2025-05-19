@@ -2935,7 +2935,7 @@ body.bb-rl-register {
   content: "\e220";
   font-family: bb-icons-rl;
   color: var(--bb-rl-icon-secondary-color);
-  font-size: 20px;
+  font-size: 18px;
   line-height: 1;
   font-style: normal;
 }
@@ -3118,6 +3118,7 @@ body.bb-rl-register {
 }
 
 .register-section select {
+  font-size: var(--bb-rl-font-size-sm);
   background-color: var(--bb-rl-background-secondary-color);
   border: 1px solid var(--bb-rl-border-quaternary-color);
   border-radius: var(--bb-rl-radius-base);
@@ -3206,4 +3207,100 @@ body.bb-rl-register {
 
 .login-action-confirm_admin_email .admin-email__actions .admin-email__actions-secondary {
   font-size: 15px;
+}
+
+.register-page .select2-container--default.select2-container--focus .select2-selection--multiple {
+  border-color: var(--bb-rl-border-tertiary-color);
+  outline: 1px solid var(--bb-rl-primary-color);
+}
+
+.register-page .select2-container--default.select2-container--open.select2-container--below .select2-selection--multiple {
+  border-radius: var(--bb-rl-radius-base);
+}
+
+.register-page .select2-container--default .select2-selection--multiple {
+  color: var(--bb-rl-text-color);
+  font-size: 14px;
+  border: 1px solid var(--bb-rl-border-tertiary-color);
+  border-radius: var(--bb-rl-radius-base);
+  padding: var(--bb-rl-space-100);
+}
+
+.register-page .select2-container--default .select2-selection--multiple .select2-selection__rendered {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--bb-rl-space-100);
+}
+
+.register-page .select2-container--default .select2-selection--multiple .select2-selection__rendered li {
+  margin: 0;
+}
+
+.register-page .select2-container--default .select2-selection--multiple .select2-selection__choice {
+  display: flex;
+  align-items: center;
+  gap: var(--bb-rl-space-50);
+  font-size: var(--bb-rl-font-size-sm);
+  background-color: var(--bb-rl-background-secondary-color);
+  border-color: var(--bb-rl-border-tertiary-color);
+  padding: 0 var(--bb-rl-space-100);
+  margin: 0 0 0 var(--bb-rl-space-100);
+}
+
+.register-page .select2-container--default .select2-selection--multiple .select2-selection__choice .select2-selection__choice__remove {
+  order: 2;
+  font-size: 0;
+}
+
+.register-page .select2-container--default .select2-selection--multiple .select2-selection__choice .select2-selection__choice__remove:before {
+  content: "\e4f6";
+  font-family: bb-icons-rl;
+  color: var(--bb-rl-text-color);
+  font-size: 12px;
+}
+
+.register-page .select2-container--default .select2-search--inline .select2-search__field {
+  margin: 0;
+}
+
+.register-page .clear-value {
+  display: none;
+}
+
+.register .select2-dropdown {
+  background-color: var(--bb-rl-background-color);
+  border: 1px solid var(--bb-rl-border-secondary-color);
+  border-radius: var(--bb-rl-radius-lg);
+  margin-top: 5px;
+  box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.12);
+}
+
+.register .select2-dropdown.select2-dropdown--below {
+  border-radius: var(--bb-rl-radius-lg);
+  padding: var(--bb-rl-space-100) 0;
+}
+
+.register .select2-dropdown.select2-results__option {
+  background-color: transparent;
+}
+
+.register .select2-dropdown .select2-results__option {
+  font-size: var(--bb-rl-font-size-sm);
+  color: var(--bb-rl-text-color);
+  line-height: 1.2;
+  padding: var(--bb-rl-space-100);
+}
+
+.register .select2-dropdown .select2-results__option[aria-selected="true"] {
+  color: var(--bb-rl-text-color);
+  background-color: var(--bb-rl-background-secondary-color);
+}
+
+.register .select2-dropdown .select2-results__option[aria-selected="true"]:hover {
+  color: var(--bb-rl-text-color);
+}
+
+.register .select2-dropdown .select2-results__option.select2-results__option--highlighted[aria-selected]:not([aria-selected="true"]) {
+  background-color: var(--bb-rl-primary-color);
+  color: var(--bb-rl-text-white-color);
 }
