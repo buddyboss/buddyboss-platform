@@ -73,6 +73,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				add_filter( 'bp_core_avatar_full_height', array( $this, 'bb_rl_avatar_full_height' ) );
 				add_filter( 'bp_core_avatar_thumb_width', array( $this, 'bb_rl_avatar_thumb_width' ) );
 				add_filter( 'bp_core_avatar_thumb_height', array( $this, 'bb_rl_avatar_thumb_height' ) );
+				add_filter( 'bp_search_js_settings', array( $this, 'bb_rl_filter_search_js_settings' ) );
 
 				if (
 					bp_is_active( 'activity' ) &&
@@ -1989,6 +1990,25 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			?>
 			<p class="lostmenot"><a href="<?php echo wp_lostpassword_url(); ?>"><?php esc_html_e('Forgot Password?', 'buddyboss'); ?></a></p>
 			<?php
+		}
+
+		/**
+		 * Filter the search JS settings for ReadyLaunch
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 * 
+		 * @param array $settings Search settings array
+		 * 
+		 * @return array Modified settings
+		 */
+		public function bb_rl_filter_search_js_settings( $settings ) {
+			// Set the autocomplete selector for ReadyLaunch search form
+			$settings['autocomplete_selector'] = '.bb-rl-network-search-modal .search-form';
+			
+			// Set the form selector for ReadyLaunch search forms
+			$settings['form_selector'] = '.bp-search-form-wrapper #search-form';
+			
+			return $settings;
 		}
 	}
 }
