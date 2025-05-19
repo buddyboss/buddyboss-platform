@@ -397,7 +397,7 @@ body.bb-rl-register {
 		padding: 0 var(--bb-rl-space-100);
 		transform: translateY(-50%);
 
-		.bb-icon-eye {
+		i[class*="bb-icon-"] {
 			display: flex;
 
 			&:before {
@@ -408,11 +408,8 @@ body.bb-rl-register {
 				line-height: 1;
 				font-style: normal;
 			}
-		}
 
-		&.bb-show-pass {
-
-			.bb-icon-eye:before {
+			&.bb-icon-eye-slash:before {
 				content: "\e224";
 			}
 		}

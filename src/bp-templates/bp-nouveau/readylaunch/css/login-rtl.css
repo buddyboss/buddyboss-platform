@@ -2928,11 +2928,11 @@ body.bb-rl-register {
   transform: translateY(-50%);
 }
 
-.register-page-main .bb-toggle-password .bb-icon-eye {
+.register-page-main .bb-toggle-password i[class*="bb-icon-"] {
   display: flex;
 }
 
-.register-page-main .bb-toggle-password .bb-icon-eye:before {
+.register-page-main .bb-toggle-password i[class*="bb-icon-"]:before {
   content: "\e220";
   font-family: bb-icons-rl;
   color: var(--bb-rl-icon-secondary-color);
@@ -2941,7 +2941,7 @@ body.bb-rl-register {
   font-style: normal;
 }
 
-.register-page-main .bb-toggle-password.bb-show-pass .bb-icon-eye:before {
+.register-page-main .bb-toggle-password i[class*="bb-icon-"].bb-icon-eye-slash:before {
   content: "\e224";
 }
 

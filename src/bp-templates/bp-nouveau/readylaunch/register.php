@@ -41,8 +41,22 @@ wp_enqueue_style( 'bb-rl-login-style', buddypress()->plugin_url . 'bp-templates/
 		?>
 	</div>
 	<script>
-		jQuery(document).ready(function($) {
-			$('.register-page select[multiple]').select2();
+		jQuery( document ).ready( function( $ ) {
+			$( '.register-page select[multiple]' ).select2();
+
+			$( '.bb-password-wrap .bb-toggle-password' ).on( 'click', function( e ) {
+				e.preventDefault();
+				var $this = $( this );
+				var $input = $this.closest( '.bb-password-wrap' ).find( 'input' );
+				var $icon = $this.find( 'i' );
+				if ( $input.attr( 'type' ) === 'password' ) {
+					$input.attr( 'type', 'text' );
+					$icon.addClass( 'bb-icon-eye-slash' ).removeClass( 'bb-icon-eye' );
+				} else {
+					$input.attr( 'type', 'password' );
+					$icon.addClass( 'bb-icon-eye' ).removeClass( 'bb-icon-eye-slash' );
+				}
+			});
 		});
 	</script>
 </body>
