@@ -67,6 +67,11 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			add_action( 'bp_admin_init', array( $this, 'bb_core_admin_readylaunch_page_fields' ) );
 			add_action( 'bp_admin_init', array( $this, 'bb_core_admin_maybe_save_readylaunch_settings' ), 100 );
 
+			if ( ! empty( $this->settings['enabled'] ) ) {
+				add_action( 'bb_blocks_init', array( $this, 'bb_rl_register_blocks' ), 20 );
+				add_filter( 'bp_search_js_settings', array( $this, 'bb_rl_filter_search_js_settings' ) );
+			}
+
 			$enabled = $this->bb_is_readylaunch_enabled();
 			if ( $enabled ) {
 				add_filter( 'bp_core_avatar_full_width', array( $this, 'bb_rl_avatar_full_width' ) );
@@ -168,6 +173,17 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				add_filter( 'bp_nouveau_get_media_description_html', array( $this, 'bb_rl_modify_document_description_html' ), 10 );
 				add_filter( 'bp_nouveau_get_video_description_html', array( $this, 'bb_rl_modify_document_description_html' ), 10 );
 				add_filter( 'bp_core_get_js_strings', array( $this, 'bb_rl_modify_js_strings' ), 10, 1 );
+
+				remove_all_actions( 'login_head' );
+				remove_all_actions( 'login_form' );
+				remove_all_actions( 'login_enqueue_scripts' );
+				remove_all_actions( 'login_message' );
+
+				// Login page.
+				add_action( 'login_enqueue_scripts', array( $this, 'bb_rl_login_enqueue_scripts' ), 999 );
+				add_action( 'login_head', array( $this, 'bb_rl_login_header' ), 999 );
+				add_filter( 'login_message', array( $this, 'bb_rl_signin_login_message' ) );
+				add_action( 'login_form', array( $this, 'bb_rl_login_custom_form' ) );
 			}
 
 			add_action( 'bp_admin_enqueue_scripts', array( $this, 'bb_rl_admin_enqueue_scripts' ), 1 );
@@ -255,7 +271,9 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					bp_is_current_component( 'media' ) ||
 					is_admin() ||
 					wp_doing_ajax() ||
-					self::bb_is_network_search()
+					self::bb_is_network_search() ||
+					is_login() ||
+					bp_is_register_page()
 				)
 			) {
 				return true;
@@ -504,6 +522,10 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * @return string ReadyLaunch layout template.
 		 */
 		public function override_page_templates() {
+
+			if ( bp_is_register_page()  ) {
+				return bp_locate_template( 'register.php' );
+			}
 
 			return bp_locate_template( 'layout.php' );
 		}
@@ -1914,6 +1936,129 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			}
 
 			return $strings;
+		}
+
+		/**
+		 * Enqueue the login scripts.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 */
+		public function bb_rl_login_enqueue_scripts() {
+			wp_enqueue_style( 'bb-rl-login-fonts', buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/assets/fonts/fonts.css' );
+			wp_enqueue_style( 'bb-rl-login-style', buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/css/login.css' );
+			wp_enqueue_style( 'bb-rl-login-style-icons', buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/icons/css/bb-icons-rl.min.css' );
+		}
+
+		/**
+		 * Modify the login header.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 */
+		public function bb_rl_login_header() {
+			bp_get_template_part( 'common/header-register' );
+		}
+
+		/**
+		 * Modify the login message.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $message The login message.
+		 *
+		 * @return string $message The modified login message.
+		 */
+		public function bb_rl_signin_login_message( $message ) {
+			$home_url                 = get_bloginfo( 'url' );
+			$confirm_admin_email_page = false;
+			if ( $GLOBALS['pagenow'] === 'wp-login.php' && ! empty( $_REQUEST['action'] ) && $_REQUEST['action'] === 'confirm_admin_email' ) {
+				$confirm_admin_email_page = true;
+			}
+
+			if ( $confirm_admin_email_page === false ) {
+				if ( empty( $message ) ) {
+					return sprintf(
+						'<div class="login-heading"><h2>%s</h2></div>',
+						__( 'Sign in to your account', 'buddyboss' )
+					);
+				} else {
+					return $message;
+				}
+			} else {
+				return $message;
+			}
+		}
+
+		/**
+		 * Modify the login form to add a forgot password link.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 */
+		public function bb_rl_login_custom_form() {
+			?>
+			<p class="lostmenot"><a href="<?php echo wp_lostpassword_url(); ?>"><?php esc_html_e('Forgot Password?', 'buddyboss'); ?></a></p>
+			<?php
+		}
+
+		/**
+		 * Filter the search JS settings for ReadyLaunch
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array $settings Search settings array
+		 *
+		 * @return array Modified settings
+		 */
+		public function bb_rl_filter_search_js_settings( $settings ) {
+			// Set the autocomplete selector for ReadyLaunch search form.
+			$settings['rl_autocomplete_selector'] = '.bb-rl-network-search-modal .search-form';
+
+			return $settings;
+		}
+
+		/**
+		 * Register the ReadyLaunch Header block.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 */
+		public function bb_rl_register_blocks() {
+			// Register block assets.
+			$this->register_readylaunch_header_assets();
+
+			bb_register_block(
+				array(
+					'metadata'        => trailingslashit( buddypress()->plugin_dir ) . 'bp-core/blocks/readylaunch-header',
+					'render_callback' => 'bb_block_render_readylaunch_header_block',
+				),
+			);
+		}
+
+		/**
+		 * Register assets for the ReadyLaunch Header block.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 */
+		private function register_readylaunch_header_assets() {
+			$plugin_url = trailingslashit( buddypress()->plugin_url );
+
+			// Register the view script.
+			wp_register_script(
+				'bb-readylaunch-header-view',
+				$plugin_url . 'bp-core/blocks/readylaunch-header/view.js',
+				array( 'jquery', 'bp-nouveau', 'bp-select2' ),
+				bp_get_version(),
+				true
+			);
+
+			wp_localize_script(
+				'bb-readylaunch-header-view',
+				'bbReadyLaunchFront',
+				array(
+					'ajax_url'   => admin_url( 'admin-ajax.php' ),
+					'nonce'      => wp_create_nonce( 'bb-readylaunch' ),
+					'more_nav'   => esc_html__( 'More', 'buddyboss' ),
+					'filter_all' => esc_html__( 'All', 'buddyboss' ),
+				)
+			);
 		}
 
 		/**

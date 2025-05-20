@@ -51,6 +51,7 @@ window.bp = window.bp || {};
 				$document.on( 'click', '#bb-rl-profile-theme-light, #bb-rl-profile-theme-dark', this.ToggleDarkMode.bind( this ) );
 				$document.on( 'click', '.header-aside div.menu-item-has-children > a', this.showHeaderNotifications.bind( this ) );
 				$document.on( 'click', '.bb-rl-left-panel-mobile, .bb-rl-close-panel-mobile', this.toggleMobileMenu.bind( this ) );
+				$document.on( 'click', '.bb-rl-left-panel-widget .bb-rl-list > h2', this.toggleLeftPanelWidget.bind( this ) );
 				$document.on( 'click', '.action-unread', this.markNotificationRead.bind( this ) );
 				$document.on( 'click', '.action-delete', this.markNotificationDelete.bind( this ) );
 				$document.on( 'click', '.bb-rl-header-container .header-aside .user-link', this.profileNav.bind( this ) );
@@ -127,6 +128,10 @@ window.bp = window.bp || {};
 							customClass += ' bb-rl-rounded-border ';
 						}
 
+						if ( $this.data( 'dropdown-align' ) ) {
+							customClass += ' bb-rl-align-adaptive ';
+						}
+
 						$this.select2(
 							{
 								theme: 'rl',
@@ -141,7 +146,17 @@ window.bp = window.bp || {};
 						$this.on(
 							'select2:open',
 							function () {
+								var $this   = $( this ),
+								customDropDownClass = '';
+
+								if ( $this.data( 'dropdown-align' ) ) {
+									customDropDownClass += ' bb-rl-dropdown-align-adaptive ';
+								}
+
 								$( '.select2-dropdown' ).addClass( 'bb-rl-select2-dropdown' );
+								// Ensure dropdown alignment adapts when there's insufficient space on the right side of the screen.
+								// The '.bb-rl-dropdown-align-adaptive' class enables responsive positioning of Select2 dropdowns.
+								$this.closest( '.bb-rl-filter' ).find( '.bb-rl-select2-dropdown' ).addClass( customDropDownClass );
 							}
 						);
 					}
@@ -439,6 +454,14 @@ window.bp = window.bp || {};
 				e.preventDefault();
 
 				$( 'body' ).toggleClass( 'bb-mobile-menu-open' );
+			},
+
+			toggleLeftPanelWidget : function ( e ) {
+				e.preventDefault();
+
+				if ( $( window ).width() < 993 ) {
+					$( e.currentTarget ).closest( '.bb-rl-left-panel-widget' ).toggleClass( 'is-open' );
+				}
 			},
 
 			/**

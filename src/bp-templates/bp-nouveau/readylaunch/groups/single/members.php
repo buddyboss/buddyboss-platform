@@ -15,7 +15,6 @@ bp_get_template_part( 'groups/single/parts/members-subnav' );
 	<?php
 	bp_nouveau_search_form();
 	bp_get_template_part( 'common/filters/grid-filters' );
-	bp_get_template_part( 'common/filters/groups-screens-filters' );
 	?>
 </div>
 

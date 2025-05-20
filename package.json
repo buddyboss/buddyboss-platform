@@ -1,6 +1,10 @@
 {
 	"description": "BuddyBoss adds community features to WordPress. Member Profiles, Activity Streams, Direct Messaging, Notifications, and more!",
 	"devDependencies": {
+		"@wordpress/babel-preset-default": "^7.32.0",
+		"@wordpress/browserslist-config": "^5.31.0",
+		"@wordpress/env": "^10.8.0",
+		"@wordpress/scripts": "^26.19.0",
 		"@wordpress/stylelint-config": "^19.1.0",
 		"apidoc": "^0.22.0",
 		"grunt": "^1.4.1",
@@ -34,7 +38,10 @@
 		"stylelint": "~13.13.1"
 	},
 	"scripts": {
-		"prepare": "npm install husky jira-prepare-commit-msg --save-dev && npx husky install"
+		"prepare": "npm install husky jira-prepare-commit-msg --save-dev && npx husky install",
+		"build:blocks": "npm run build:block:core",
+		"build:block:core": "wp-scripts build --webpack-src-dir=src/js/blocks/bp-core --config src/js/blocks/bp-core/webpack.config.js",
+		"watch:readylaunch-header": "wp-scripts start --webpack-src-dir=src/js/blocks/bp-core/readylaunch-header --config src/js/blocks/bp-core/webpack.config.js"
 	},
 	"engines": {
 		"node": ">=14.15.0"

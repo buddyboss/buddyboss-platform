@@ -67,7 +67,8 @@ bp_nouveau_member_hook( 'before', 'home_content' );
 			! bp_is_user_profile_edit() &&
 			! bp_is_messages_component() &&
 			! bp_is_user_settings() &&
-			! bp_is_user_change_avatar()
+			! bp_is_user_change_avatar() &&
+			! bp_is_user_notifications()
 		) {
 			?>
 			<div class="bb-rl-secondary-container">

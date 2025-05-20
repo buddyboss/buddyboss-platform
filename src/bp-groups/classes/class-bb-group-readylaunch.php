@@ -175,225 +175,255 @@ class BB_Group_Readylaunch {
 								</a>
 							</header>
 
-							<div class="bb-rl-modal-content">
-								<?php
-								if ( function_exists( 'bp_get_group_status_description' ) ) {
-									?>
-										<div class="highlight bb-rl-group-meta bp-group-status">
-											<div class="bb-rl-group-meta-figure">
-												<i class="bb-icons-rl-globe-simple"></i>
-											</div>
-											<div class="bb-rl-group-meta-data">
-												<h3>
-												<?php
-													$group_meta = bp_nouveau_group_meta();
-												if ( is_object( $group_meta ) && isset( $group_meta->status ) ) {
-													echo wp_kses( $group_meta->status, array( 'span' => array( 'class' => array() ) ) );
-												}
-												?>
-												</h3>
-												<span class="bb-rl-meta-desc flex">
-												<?php
-													echo esc_attr( bp_get_group_status_description( $group ) );
-												?>
-												</span>
-											</div>
-										</div>
-										<?php
-								}
-
-								if ( function_exists( 'bp_get_group_member_count' ) ) {
-									?>
-										<div class="highlight bb-rl-group-meta bp-group-count">
-											<div class="bb-rl-group-meta-figure">
-												<i class="bb-icons-rl-users"></i>
-											</div>
-											<div class="bb-rl-group-meta-data">
-												<h3>
-												<?php
-													echo bp_get_group_member_count();
-												?>
-												</h3>
-												<span class="bb-rl-meta-desc flex">
-												<?php
-													esc_html_e( 'Total members in the group', 'buddyboss' );
-												?>
-												</span>
-											</div>
-										</div>
-										<?php
-								}
-								?>
-
-								<div class="highlight bb-rl-group-meta bp-group-last-active">
-									<div class="bb-rl-group-meta-figure">
-										<i class="bb-icons-rl-pulse"></i>
-									</div>
-									<div class="bb-rl-group-meta-data">
-										<h3>
-											<?php
-												printf(
-												/* translators: %s = last activity timestamp (e.g. "active 1 hour ago") */
-													esc_html__( 'Active %s', 'buddyboss' ),
-													wp_kses_post( bp_get_group_last_active( $group ) )
-												);
-											?>
-										</h3>
-										<span class="bb-rl-meta-desc flex">
-										<?php
-											esc_html_e( 'Last post by any member', 'buddyboss' );
-										?>
-										</span>
-									</div>
-								</div>
-
-								<?php
-									$group_query = array(
-										'group_id'   => absint( $group_id ),
-										'group_role' => array( 'admin' ),
-										'per_page'   => 0,
-									);
-									if ( bp_group_has_members( $group_query ) ) {
-										?>
-										<div class="item-wrap-box bp-dir-hori-nav bb-rl-wrap-box bb-rl-wrap-group-organizers">
-											<h3>
-												<?php
-													esc_html_e( 'Group Organizers', 'buddyboss' );
-												?>
-											</h3>
-											<ul id="members-list" class="<?php bp_nouveau_loop_classes(); ?> members-list bb-rl-group-organizers">
-												<?php
-												while ( bp_group_members() ) :
-													bp_group_the_member();
-
-													$member_user_id  = bp_get_member_user_id();
-													$group_member_id = bp_get_group_member_id();
-
-													// Member joined data.
-													$member_joined_date = bp_get_group_member_joined_since();
-
-													// Member last activity.
-													$member_last_activity = bp_get_last_activity( $member_user_id );
-
-													// Primary and secondary profile action buttons.
-													$profile_actions = bb_member_directories_get_profile_actions( $member_user_id );
-
-													// Member switch button.
-													$member_switch_button = bp_get_add_switch_button( $member_user_id );
-
-													// Get Primary action.
-													$primary_action_btn = function_exists( 'bb_get_member_directory_primary_action' ) ? bb_get_member_directory_primary_action() : '';
-													$is_blocked         = false;
-													$moderation_class   = '';
-													if ( bp_is_active( 'moderation' ) ) {
-														if ( bp_moderation_is_user_suspended( $member_user_id ) ) {
-															$moderation_class .= 'bp-user-suspended';
-														} elseif ( bb_moderation_is_user_blocked_by( $member_user_id ) ) {
-															$is_blocked        = true;
-															$moderation_class .= ' bp-user-blocked';
-														}
-													}
-													?>
-														<li
-														<?php
-														bp_member_class( array( 'item-entry' ) );
-														?>
-														data-bp-item-id="
-															<?php
-															echo esc_attr( $group_member_id );
-															?>
-															" data-bp-item-component="members">
-															<div class="list-wrap">
-
-																<div class="list-wrap-inner">
-																	<div class="item-avatar">
-																		<a href="
-																		<?php
-																		bp_group_member_domain();
-																		?>
-																		" class="
-																			<?php
-																			echo esc_attr( $moderation_class );
-																			?>
-																			">
-																			<?php
-																			bb_user_presence_html( $group_member_id );
-																			bp_group_member_avatar();
-																			?>
-																		</a>
-																	</div>
-
-																	<div class="item">
-																		<div class="item-block">
-																			<h2 class="list-title member-name">
-																			<?php
-																				bp_group_member_link();
-																			?>
-																			</h2>
-																			<div class="list-meta">
-																				<?php
-																				$is_enabled_member_type = ( function_exists( 'bp_member_type_enable_disable' ) && true === bp_member_type_enable_disable() && true === bp_member_type_display_on_profile() );
-																				if ( $is_enabled_member_type ) {
-																					echo '<p class="item-meta member-type only-list-view">' . wp_kses_post( bp_get_user_member_type( $member_user_id ) ) . '</p>';
-																				}
-
-																				if (
-																					! $is_blocked &&
-																					$member_last_activity
-																				) {
-																					?>
-																						<p class="item-meta last-activity">
-																						<?php
-																							echo wp_kses_post( $member_last_activity );
-																						?>
-																						</p>
-																						<?php
-																				}
-																				?>
-																			</div>
-																		</div>
-																	</div><!-- // .item -->
-																</div>
-
-															</div>
-														</li>
-
-													<?php
-													endwhile;
-												?>
-											</ul>
-										</div>
-										<?php
-									}
-
-									if (
-										! bp_nouveau_groups_front_page_description() &&
-										bp_nouveau_group_has_meta( 'description' )
-									) :
-										?>
-										<div class="item-wrap-box bp-dir-hori-nav bb-rl-wrap-box bb-rl-group-desc">
-											<h3>
-											<?php
-													echo esc_html_x( 'Description', 'Group description', 'buddyboss' );
-											?>
-											</h3>
-											<div class="group-description">
-												<?php
-													bp_group_description_excerpt();
-												?>
-											</div>
-										</div>
-										<?php
-									endif;
-
-									?>
-
-
-							</div>
+							<?php
+							$this->bb_rl_get_current_group_info(
+								array(
+									'group_id' => $group_id,
+									'group'    => $group,
+									'action'   => 'popup',
+								)
+							);
+							?>
 						</div>
 					</div>
 				</div>
 			</transition>
+		</div>
+		<?php
+	}
+
+	/**
+	 * Get current group info.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $args Array of arguments.
+	 */
+	public function bb_rl_get_current_group_info( $args ) {
+		$group_id = $args['group_id'];
+		$group    = $args['group'];
+		$action   = $args['action'];
+
+		?>
+		<div class="bb-rl-modal-content">
+			<?php
+			if ( function_exists( 'bp_get_group_status_description' ) ) {
+				?>
+				<div class="highlight bb-rl-group-meta bp-group-status">
+					<div class="bb-rl-group-meta-figure">
+						<i class="bb-icons-rl-globe-simple"></i>
+					</div>
+					<div class="bb-rl-group-meta-data">
+						<h3>
+							<?php
+							$group_meta = bp_nouveau_group_meta();
+							if ( is_object( $group_meta ) && isset( $group_meta->status ) ) {
+								echo wp_kses( $group_meta->status, array( 'span' => array( 'class' => array() ) ) );
+							}
+							?>
+						</h3>
+						<span class="bb-rl-meta-desc flex">
+							<?php
+							echo esc_attr( bp_get_group_status_description( $group ) );
+							?>
+						</span>
+					</div>
+				</div>
+				<?php
+			}
+
+			if ( function_exists( 'bp_get_group_member_count' ) ) {
+				?>
+				<div class="highlight bb-rl-group-meta bp-group-count">
+					<div class="bb-rl-group-meta-figure">
+						<i class="bb-icons-rl-users"></i>
+					</div>
+					<div class="bb-rl-group-meta-data">
+						<h3>
+							<?php
+							echo bp_get_group_member_count();
+							?>
+						</h3>
+						<span class="bb-rl-meta-desc flex">
+							<?php
+							esc_html_e( 'Total members in the group', 'buddyboss' );
+							?>
+						</span>
+					</div>
+				</div>
+				<?php
+			}
+			?>
+
+			<div class="highlight bb-rl-group-meta bp-group-last-active">
+				<div class="bb-rl-group-meta-figure">
+					<i class="bb-icons-rl-pulse"></i>
+				</div>
+				<div class="bb-rl-group-meta-data">
+					<h3>
+						<?php
+						printf(
+						/* translators: %s = last activity timestamp (e.g. "active 1 hour ago") */
+							esc_html__( 'Active %s', 'buddyboss' ),
+							wp_kses_post( bp_get_group_last_active( $group ) )
+						);
+						?>
+					</h3>
+					<span class="bb-rl-meta-desc flex">
+						<?php
+						esc_html_e( 'Last post by any member', 'buddyboss' );
+						?>
+					</span>
+				</div>
+			</div>
+
+			<?php
+			$group_query = array(
+				'group_id'   => absint( $group_id ),
+				'group_role' => array( 'admin' ),
+				'per_page'   => 0,
+			);
+			if ( bp_group_has_members( $group_query ) ) {
+				$admins        = groups_get_group_admins( $group_id );
+				$total_admins  = is_array( $admins ) ? count( $admins ) : 0;
+				$max_avatars   = 5;
+				$current_index = 0;
+				?>
+				<div class="item-wrap-box bp-dir-hori-nav bb-rl-wrap-box bb-rl-wrap-group-organizers">
+					<h3>
+						<?php
+						if ( 'widget' === $action ) {
+							esc_html_e( 'Organizers', 'buddyboss' );
+						} else {
+							esc_html_e( 'Group Organizers', 'buddyboss' );
+						}
+						?>
+					</h3>
+					<ul id="members-list" class="<?php bp_nouveau_loop_classes(); ?> members-list bb-rl-group-organizers">
+						<?php
+						while ( bp_group_members() ) :
+							bp_group_the_member();
+							++$current_index;
+							if ( 'widget' === $action ) {
+								if ( $current_index <= $max_avatars ) {
+									?>
+									<li class="organizer-avatar" style="display:inline-block;vertical-align:middle;margin-right:-8px;">
+										<a href="<?php bp_group_member_domain(); ?>">
+											<?php bp_group_member_avatar(); ?>
+										</a>
+									</li>
+									<?php
+								}
+							} else {
+								$member_user_id  = bp_get_member_user_id();
+								$group_member_id = bp_get_group_member_id();
+
+								// Member joined data.
+								$member_joined_date = bp_get_group_member_joined_since();
+
+								// Member last activity.
+								$member_last_activity = bp_get_last_activity( $member_user_id );
+
+								// Primary and secondary profile action buttons.
+								$profile_actions = bb_member_directories_get_profile_actions( $member_user_id );
+
+								// Member switch button.
+								$member_switch_button = bp_get_add_switch_button( $member_user_id );
+
+								// Get Primary action.
+								$primary_action_btn = function_exists( 'bb_get_member_directory_primary_action' ) ? bb_get_member_directory_primary_action() : '';
+								$is_blocked         = false;
+								$moderation_class   = '';
+								if ( bp_is_active( 'moderation' ) ) {
+									if ( bp_moderation_is_user_suspended( $member_user_id ) ) {
+										$moderation_class .= 'bp-user-suspended';
+									} elseif ( bb_moderation_is_user_blocked_by( $member_user_id ) ) {
+										$is_blocked        = true;
+										$moderation_class .= ' bp-user-blocked';
+									}
+								}
+								?>
+								<li <?php bp_member_class( array( 'item-entry' ) ); ?> data-bp-item-id="<?php echo esc_attr( $group_member_id ); ?>" data-bp-item-component="members">
+									<div class="list-wrap">
+										<div class="list-wrap-inner">
+											<div class="item-avatar">
+												<a href="<?php bp_group_member_domain(); ?>">
+													<?php bp_group_member_avatar(); ?>
+												</a>
+											</div>
+											<div class="item">
+												<div class="item-block">
+													<h2 class="list-title member-name"><?php bp_group_member_link(); ?></h2>
+													<div class="list-meta">
+														<?php
+														$is_enabled_member_type = ( function_exists( 'bp_member_type_enable_disable' ) && true === bp_member_type_enable_disable() && true === bp_member_type_display_on_profile() );
+														if ( $is_enabled_member_type ) {
+															echo '<p class="item-meta member-type only-list-view">' . wp_kses_post( bp_get_user_member_type( $member_user_id ) ) . '</p>';
+														}
+														if ( ! $is_blocked && $member_last_activity ) {
+															?>
+															<p class="item-meta last-activity">
+																<?php echo wp_kses_post( $member_last_activity ); ?>
+															</p>
+															<?php
+														}
+														?>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</li>
+								<?php
+							}
+						endwhile;
+
+						// After avatars, show "+X more" if needed (widget only).
+						if ( 'widget' === $action && $total_admins > $max_avatars ) {
+							?>
+							<li class="organizer-more" style="display:inline-block;vertical-align:middle;margin-left:8px;color:#a3a5a9;">
+								<?php
+								printf(
+									/* translators: %d = number of additional group organizers */
+									esc_html__( '+%d more', 'buddyboss' ),
+									absint( $total_admins - $max_avatars )
+								);
+								?>
+							</li>
+							<?php
+						}
+						?>
+					</ul>
+				</div>
+				<?php
+			}
+
+			if (
+				! bp_nouveau_groups_front_page_description() &&
+				bp_nouveau_group_has_meta( 'description' )
+			) {
+				?>
+				<div class="item-wrap-box bp-dir-hori-nav bb-rl-wrap-box bb-rl-group-desc">
+					<?php
+					if ( 'widget' !== $action ) {
+						?>
+						<h3>
+							<?php
+							echo esc_html_x( 'Description', 'Group description', 'buddyboss' );
+							?>
+						</h3>
+						<?php
+					}
+					?>
+					<div class="group-description">
+						<?php
+						bp_group_description_excerpt();
+						?>
+					</div>
+				</div>
+				<?php
+			}
+			?>
 		</div>
 		<?php
 	}

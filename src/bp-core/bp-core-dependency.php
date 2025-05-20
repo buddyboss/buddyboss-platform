@@ -282,6 +282,21 @@ function bp_rest_api_init() {
 }
 
 /**
+ * BB Blocks Init hook.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_blocks_init() {
+
+	/**
+	 * Hook here to register your BuddyBoss blocks.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	do_action( 'bb_blocks_init' );
+}
+
+/**
  * Fire the 'bp_customize_register' action when the Customizer has loaded,
  * allowing scripts and styles to be initialized.
  *

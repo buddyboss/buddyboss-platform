@@ -81,54 +81,83 @@ bp_get_template_part( 'sidebar/left-sidebar' );
 								</div>
 							<?php } ?>
 						</div>
+					<?php } else { ?>
+						<div class="bb-rl-header-buttons">
+							<a href="<?php echo esc_url( wp_login_url() ); ?>" class="bb-rl-button bb-rl-button--tertiaryLink bb-rl-button--small signin-button"><?php esc_html_e( 'Sign in', 'buddyboss-theme' ); ?></a>
+
+							<?php if ( get_option( 'users_can_register' ) ) : ?>
+								<a href="<?php echo esc_url( wp_registration_url() ); ?>" class="bb-rl-button bb-rl-button--secondaryFill bb-rl-button--small signup"><?php esc_html_e( 'Sign up', 'buddyboss-theme' ); ?></a>
+							<?php endif; ?>
+						</div>
 					<?php } ?>
 				</div>
 			</div>
 
 			<div class="bb-readylaunch-mobile-menu__wrap">
 				<?php
-				if ( is_user_logged_in() ) {
-					?>
-					<div class="bb-rl-mobile-panel-header flex items-center justify-between">
-						<div class="bb-rl-mobile-user-wrap flex items-center">
-							<?php
-							$current_user = wp_get_current_user();
-							$user_link    = function_exists( 'bp_core_get_user_domain' ) ? bp_core_get_user_domain( $current_user->ID ) : get_author_posts_url( $current_user->ID );
-							$display_name = function_exists( 'bp_core_get_user_displayname' ) ? bp_core_get_user_displayname( $current_user->ID ) : $current_user->display_name;
-							?>
-
-							<a class="bb-rl-mobile-user-link" href="<?php echo esc_url( $user_link ); ?>">
-								<?php echo get_avatar( get_current_user_id(), 100 ); ?>
-							</a>
-							<div>
-								<a href="<?php echo esc_url( $user_link ); ?>" class="bb-rl-mobile-user-name">
-									<?php echo esc_html( $display_name ); ?>
-								</a>
-								<?php
-								if ( function_exists( 'bp_is_active' ) && bp_is_active( 'settings' ) ) {
-									$settings_link = trailingslashit( bp_loggedin_user_domain() . bp_get_settings_slug() );
-									?>
-									<div class="bb-rl-my-account-link">
-										<a href="<?php echo esc_url( $settings_link ); ?>"><?php esc_html_e( 'My Account', 'buddyboss' ); ?></a>
-									</div>
-									<?php
-								}
-								?>
+					if ( bp_is_active( 'search' ) ) {
+						?>
+						<form action="<?php echo esc_url( home_url( '/' ) ); ?>" method="get" class="bp-dir-search-form search-form" id="mobile-search-form">
+							<label for="mobile-search" class="bp-screen-reader-text"><?php esc_html_e( 'Search', 'buddyboss' ); ?></label>
+							<div class="bb-rl-network-search-bar">
+								<input id="mobile-search" name="s" type="search" value="" placeholder="<?php esc_attr_e( 'Search community...', 'buddyboss' ); ?>">
+								<input type="hidden" name="bp_search" value="1">
+								<button type="submit" id="mobile-search-submit" class="nouveau-search-submit">
+									<span class="bb-icons-rl-magnifying-glass" aria-hidden="true"></span>
+									<span id="mobile-button-text" class="bp-screen-reader-text"><?php esc_html_e( 'Search', 'buddyboss' ); ?></span>
+								</button>
+								<a href="javascript:;" class="bb-rl-network-search-clear bp-hide"><?php esc_html_e( 'Clear Search', 'buddyboss' ); ?></a>
 							</div>
-						</div><!-- .bb-rl-mobile-user-wrap -->
-						<a href="#" class="bb-rl-close-panel-mobile"><i class="bb-icons-rl-bold bb-icons-rl-x"></i></a>
-					</div> <!-- .brl-mobile-panel-header -->
+						</form>
+					<?php } ?>
 					<?php
-				}
-				wp_nav_menu(
-					array(
-						'theme_location' => 'bb-readylaunch',
-						'menu_id'        => '',
-						'container'      => false,
-						'fallback_cb'    => false,
-						'menu_class'     => 'bb-readylaunch-mobile-menu',
-					)
-				);
+					wp_nav_menu(
+						array(
+							'theme_location' => 'bb-readylaunch',
+							'menu_id'        => '',
+							'container'      => false,
+							'fallback_cb'    => false,
+							'menu_class'     => 'bb-readylaunch-mobile-menu',
+						)
+					);
+					if ( is_user_logged_in() && (bp_is_active( 'messages' ) || bp_is_active( 'notifications' ))) {
+				?>
+				<div class="bb-readylaunch-mobile-menu_items">
+					<ul>
+						<?php if ( bp_is_active( 'messages' ) ) { ?>
+							<li>
+								<a href="javascript:void(0);" ref="notification_bell" class="notification-link">
+									<i class="bb-icons-rl-chat-teardrop-text"></i>
+									<span class="notification-label"><?php esc_html_e( 'Messages', 'buddyboss' ); ?></span>
+									<?php
+										$unread_message_count = messages_get_unread_count();
+										if ( $unread_message_count > 0 ) :
+									?>
+										<span class="count"><?php echo esc_html( $unread_message_count ); ?>+</span>
+									<?php endif; ?>
+								</a>
+							</li>
+						<?php } ?>
+						<?php if ( bp_is_active( 'notifications' ) ) { ?>
+							<li>
+								<a href="javascript:void(0);" ref="notification_bell" class="notification-link">
+									<i class="bb-icons-rl-bell-simple"></i>
+									<span class="notification-label"><?php esc_html_e( 'Notifications', 'buddyboss' ); ?></span>
+									<?php
+										$notifications             = bp_notifications_get_unread_notification_count( bp_loggedin_user_id() );
+										$unread_notification_count = ! empty( $notifications ) ? $notifications : 0;
+										if ( $unread_notification_count > 0 ) :
+									?>
+										<span class="count"><?php echo esc_html( $unread_notification_count ); ?>+</span>
+									<?php endif; ?>
+								</a>
+							</li>
+						<?php } ?>
+					</ul>
+				</div>
+				<?php
+					}
+					bp_get_template_part( 'sidebar/left-sidebar' );
 				?>
 			</div>
 		</div>
