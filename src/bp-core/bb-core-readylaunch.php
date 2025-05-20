@@ -79,6 +79,18 @@ function bb_rl_register_widgets() {
 		'BB_Recent_Blog_Posts_Widget',
 		$plugin_dir . '/bp-core/classes/class-bb-recent-blog-posts-widget.php'
 	);
+
+	// About Group Widget.
+	bb_rl_register_single_widget(
+		'BB_Group_About_Widget',
+		$plugin_dir . '/bp-core/classes/class-bb-group-about-widget.php'
+	);
+
+	// Group Members Widget.
+	bb_rl_register_single_widget(
+		'BB_Group_Members_Widget',
+		$plugin_dir . '/bp-core/classes/class-bb-group-members-widget.php'
+	);
 }
 
 add_action( 'bp_register_widgets', 'bb_rl_register_widgets' );

@@ -49,6 +49,8 @@ if ( bp_is_active( 'activity' ) && bp_is_activity_directory() ) {
 }
 
 if ( bp_is_active( 'groups' ) && bp_is_group() ) {
+	$available_widgets[] = 'BB_Group_About_Widget';
+	$available_widgets[] = 'BB_Group_Members_Widget';
 	$available_widgets[] = 'BP_Groups_Widget';
 }
 
