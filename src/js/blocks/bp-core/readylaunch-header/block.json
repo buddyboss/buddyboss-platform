@@ -6,7 +6,7 @@
     "category": "buddyboss",
     "icon": "align-wide",
     "description": "Ready Launch Header block for BuddyBoss platform",
-    "keywords": [ "BuddyPress", "header", "readylaunch", "navigation" ],
+    "keywords": [ "BuddyBoss", "Header", "ReadyLaunch" ],
     "textdomain": "buddyboss",
     "attributes": {
         "showSearch": {
