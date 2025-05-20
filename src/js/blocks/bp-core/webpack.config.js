@@ -12,7 +12,6 @@ module.exports = {
 		entry: {
 			"readylaunch-header/index": './src/js/blocks/bp-core/readylaunch-header/index.js',
 			"readylaunch-header/view": './src/js/blocks/bp-core/readylaunch-header/view.js'
-			"readylaunch-header/view": './src/js/blocks/bp-core/readylaunch-header/view.js'
 		},
 		output: {
 			filename: '[name].js',
