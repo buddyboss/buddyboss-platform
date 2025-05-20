@@ -521,4 +521,16 @@ class BP_XProfile_Component extends BP_Component {
 			'BP_REST_XProfile_Types_Endpoint',
 		) );
 	}
+
+	/**
+	 * Register the xProfile Blocks.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $blocks Optional. See BP_Component::blocks_init() for
+	 * description.
+	 */
+	public function blocks_init( $blocks = array() ) {
+		parent::blocks_init( array() );
+	}
 }

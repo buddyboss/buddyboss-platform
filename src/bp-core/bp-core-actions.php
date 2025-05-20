@@ -74,6 +74,7 @@ add_action( 'bp_init', 'bp_setup_globals', 4 );
 add_action( 'bp_init', 'bp_setup_canonical_stack', 5 );
 add_action( 'bp_init', 'bp_setup_nav', 6 );
 add_action( 'bp_init', 'bp_setup_title', 8 );
+add_action( 'bp_init', 'bb_blocks_init', 10 );
 add_action( 'bp_init', 'bp_core_load_admin_bar_css', 12 );
 add_action( 'bp_init', 'bp_add_rewrite_tags', 20 );
 add_action( 'bp_init', 'bp_add_rewrite_rules', 30 );
@@ -1250,4 +1251,4 @@ function bb_load_readylaunch() {
 	}
 }
 
-add_action( 'bp_init', 'bb_load_readylaunch' );
+add_action( 'bp_init', 'bb_load_readylaunch', 9 );

@@ -10,7 +10,7 @@ jQuery( document ).ready(
 			if ( BP_SEARCH.enable_ajax_search == '1' ) {
 				var document_height = $( document ).height(),
 				bb_is_rtl           = $( 'body' ).hasClass( 'rtl' );
-				$( BP_SEARCH.autocomplete_selector ).each(
+				$( BP_SEARCH.rl_autocomplete_selector ).each(
 					function () {
 						var $form     = $( this ),
 						$search_field = $form.find( 'input[name="s"], input[type=search]' );
@@ -149,7 +149,7 @@ jQuery( document ).ready(
 		 * Add hidden input as a flag in a search form. If this hidden input exist in a search form,
 		 * it'll sprint network search feature of the platform in the search query.
 		 */
-		$( [ BP_SEARCH.autocomplete_selector ].filter( Boolean ).join( ',' ) ).each(
+		$( [ BP_SEARCH.rl_autocomplete_selector ].filter( Boolean ).join( ',' ) ).each(
 			function () {
 				var $form = $( this );
 
