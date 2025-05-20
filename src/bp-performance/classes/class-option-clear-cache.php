@@ -51,7 +51,23 @@ class OptionClearCache {
 	 * @param string $value     Option Updated Value.
 	 */
 	public function purge_component_cache( $option, $old_value, $value ) {
-		if ( ! function_exists( 'bbapp_is_active' ) || ! bbapp_is_active( 'performance' ) ) {
+		/**
+		 * Filter to determine if components should be purged based on option changes.
+		 *
+		 * This filter allows developers to control whether cache purging should occur
+		 * when specific options are updated. Return true or an array of components
+		 * to trigger the purge process.
+		 *
+		 * @param bool $do_purge_components Boolean flag to control purge behavior.
+		 * @param string $option The option name being updated.
+		 * @param mixed $old_value The old option value.
+		 * @param mixed $value The new option value.
+		 *
+		 * @return bool|array               Boolean to control purge behavior or array of components to purge.
+		 */
+		$do_purge_components = apply_filters( 'performance_purge_components_flag', false, $option, $old_value, $value );
+
+		if ( ! $do_purge_components ) {
 			return;
 		}
 
