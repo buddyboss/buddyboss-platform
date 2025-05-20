@@ -172,10 +172,13 @@ function bp_block_render_readylaunch_header_block( $attributes = array() ) {
 	$dark_mode_class = $block_args['darkMode'] ? 'bb-rl-dark-mode' : '';
 
 	if ( $block_args['showSearch'] && bp_is_active( 'search' ) ) {
-	    wp_enqueue_style( 'bp-select2' );
-    }
+		wp_enqueue_style( 'bp-select2' );
+		if ( function_exists( 'bb_rl_search_enqueue_scripts' ) ) {
+			bb_rl_search_enqueue_scripts();
+		}
+	}
 
-	wp_enqueue_script( 'bp-readylaunch-header-view' );
+	wp_enqueue_script( 'bb-readylaunch-header-view' );
 
 	wp_enqueue_style( 'bb-readylaunch-icons', buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/icons/css/bb-icons-rl{$min}.css", array(), bp_get_version() );
 

@@ -456,19 +456,19 @@ class BP_Core extends BP_Component {
 	 * @since BuddyBoss [BBVERSION]
 	 */
 	private function register_readylaunch_header_assets() {
-		$plugin_dir = trailingslashit( buddypress()->plugin_dir );
+		$plugin_url = trailingslashit( buddypress()->plugin_url );
 
 		// Register the view script.
 		wp_register_script(
-			'bp-readylaunch-header-view',
-			$plugin_dir . 'bp-core/blocks/readylaunch-header/view.js',
-			array( 'jquery', 'bp-select2' ),
+			'bb-readylaunch-header-view',
+			$plugin_url . 'bp-core/blocks/readylaunch-header/view.js',
+			array( 'jquery', 'bp-nouveau', 'bp-select2' ),
 			bp_get_version(),
 			true
 		);
 
 		wp_localize_script(
-			'bp-readylaunch-header-view',
+			'bb-readylaunch-header-view',
 			'bbReadyLaunchFront',
 			array(
 				'ajax_url'   => admin_url( 'admin-ajax.php' ),
