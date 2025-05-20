@@ -22,6 +22,11 @@ window.bp = window.bp || {};
 	bp.mentions.xhr        = null;
 	bp.mentions.xhr_scroll = null;
 
+	// Add method to clear mentions query cache
+	bp.mentions.clearCache = function() {
+		mentionsQueryCache = [];
+	};
+
 	/**
 	 * Adds BuddyPress @mentions to form inputs.
 	 *
