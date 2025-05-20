@@ -179,7 +179,7 @@ class BB_Group_Members_Widget extends WP_Widget {
 			 INNER JOIN {$bp->activity->table_name} a ON u.ID = a.user_id
 			 WHERE a.component = 'groups'
 			   AND a.item_id = %d
-			   AND a.type IN ('activity_update','activity_comment','joined_group','bbp_topic_create','bbp_reply_create')
+			   AND a.type IN ( 'activity_update','activity_comment','joined_group','bbp_topic_create','bbp_reply_create' )
 			 GROUP BY u.ID
 			 ORDER BY last_activity DESC
 			 LIMIT %d",
@@ -201,10 +201,14 @@ class BB_Group_Members_Widget extends WP_Widget {
 	private function bb_get_new_group_members( $group_id, $limit = 5 ) {
 		global $wpdb, $bp;
 		$sql = $wpdb->prepare(
-			"SELECT user_id as ID, date_modified as last_activity
-			 FROM {$bp->groups->table_name_members}
-			 WHERE group_id = %d
-			 ORDER BY date_modified DESC
+			"SELECT u.ID
+			 FROM {$wpdb->users} u
+			 INNER JOIN {$bp->activity->table_name} a ON u.ID = a.user_id
+			 WHERE a.component = 'groups'
+			   AND a.item_id = %d
+			   AND a.type IN ( 'joined_group' )
+			 GROUP BY u.ID
+			 ORDER BY u.ID DESC
 			 LIMIT %d",
 			$group_id,
 			$limit
@@ -229,7 +233,7 @@ class BB_Group_Members_Widget extends WP_Widget {
 			 INNER JOIN {$bp->activity->table_name} a ON u.ID = a.user_id
 			 WHERE a.component = 'groups'
 			   AND a.item_id = %d
-			   AND a.type IN ('activity_update','activity_comment','joined_group','bbp_topic_create','bbp_reply_create')
+			   AND a.type IN ( 'activity_update','activity_comment','bbp_topic_create','bbp_reply_create' )
 			 GROUP BY u.ID
 			 ORDER BY activity_count DESC
 			 LIMIT %d",
