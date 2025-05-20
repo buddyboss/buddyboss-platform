@@ -143,7 +143,6 @@ if ( ! class_exists( 'BP_Component' ) ) :
 		/**
 		 * An array of globalized data for BB Blocks.
 		 *
-		 * @since BuddyPress 9.0.0
 		 * @since BuddyBoss [BBVERSION]
 		 *
 		 * @var array

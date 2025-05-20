@@ -2030,7 +2030,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		}
 
 		/**
-		 * Register assets for the ReadyLaunch Header block
+		 * Register assets for the ReadyLaunch Header block.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 */
