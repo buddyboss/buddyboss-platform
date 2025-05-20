@@ -42,6 +42,7 @@ class BP_Performance_Includes {
 		add_action( 'bb_document_delete_older_symlinks', array( $this, 'purge_symlink_cache' ) );
 		add_action( 'bb_video_delete_older_symlinks', array( $this, 'purge_symlink_cache' ) );
 		add_filter( 'performance_purge_components', array( $this, 'bb_purge_components' ), 10, 4 );
+		add_filter( 'performance_group_purge_actions', array( $this, 'get_group_purge_actions' ), 10, 2 );
 	}
 
 	/**
@@ -319,6 +320,37 @@ class BP_Performance_Includes {
 		}
 
 		return array_merge( $purge_components, $bb_purge_components );
+	}
+
+	/**
+	 * Get Purge actions by group
+	 *
+	 * @param array  $actions Actions list to perform.
+	 * @param string $group   Cache Group name.
+	 *
+	 * @return array
+	 */
+	public function get_group_purge_actions( $actions, $group ) {
+		$bb_actions = array();
+
+		if ( 'bbplatform' === $group ) {
+			$bb_actions = array(
+				'bp-members',
+				'bp-notifications',
+				'bp-groups',
+				'bbp-forums',
+				'bbp-topics',
+				'bbp-replies',
+				'bp-activity',
+				'bp-messages',
+				'bp-friends',
+				'bp-media',
+				'bp-document',
+				'bp-video',
+			);
+		}
+
+		return array( $actions, $bb_actions );
 	}
 }
 
