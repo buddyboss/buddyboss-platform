@@ -19,6 +19,7 @@ defined( 'ABSPATH' ) || exit;
  *              False otherwise.
  */
 function bb_support_blocks() {
+
 	/**
 	 * Filter here, returning `false`, to completely disable BuddyBoss blocks.
 	 *
@@ -51,9 +52,11 @@ add_action( 'enqueue_block_editor_assets', 'bb_enqueue_block_editor_assets', 9 )
  * @since BuddyBoss [BBVERSION]
  *
  * @param array $editor_settings Default editor settings.
+ *
  * @return array The editor settings, including BB blocks, specific ones.
  */
 function bb_blocks_editor_settings( $editor_settings = array() ) {
+
 	/**
 	 * Filter here to include your BB Blocks specific settings.
 	 *
@@ -77,7 +80,8 @@ add_filter( 'block_editor_settings_all', 'bb_blocks_editor_settings' );
  * @since BuddyBoss [BBVERSION]
  *
  * @param array $args The registration arguments for the block type.
- * @return BB_Block   The BuddyBoss block type object.
+ *
+ * @return BB_Block|bool The BuddyBoss block type object.
  */
 function bb_register_block( $args = array() ) {
 	if ( isset( $args['metadata'] ) && is_string( $args['metadata'] ) && file_exists( $args['metadata'] ) ) {
@@ -99,6 +103,7 @@ function bb_register_block( $args = array() ) {
  * @since BuddyBoss [BBVERSION]
  *
  * @param string $block_name The Block name.
+ *
  * @return array The list of widget classnames for the Block.
  */
 function bb_blocks_get_widget_block_classnames( $block_name = '' ) {
@@ -125,8 +130,9 @@ function bb_blocks_get_widget_block_classnames( $block_name = '' ) {
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param string $classname The classname to be used in the block widget's container HTML.
+ * @param string $classname  The classname to be used in the block widget's container HTML.
  * @param string $block_name The name of the block.
+ *
  * @return string The classname to be used in the block widget's container HTML.
  */
 function bb_widget_block_dynamic_classname( $classname, $block_name ) {
@@ -147,7 +153,8 @@ add_filter( 'widget_block_dynamic_classname', 'bb_widget_block_dynamic_classname
  * @since BuddyBoss [BBVERSION]
  *
  * @param array $attributes The block attributes.
- * @return string          HTML output.
+ *
+ * @return string HTML output.
  */
 function bb_block_render_readylaunch_header_block( $attributes = array() ) {
 	$block_args = bp_parse_args(
@@ -215,20 +222,20 @@ function bb_block_render_readylaunch_header_block( $attributes = array() ) {
 						}
 						if ( $block_args['showProfileMenu'] ) {
 							?>
-						<div class="user-wrap user-wrap-container">
-							<?php
-							$current_user = wp_get_current_user();
-							$user_link    = function_exists( 'bp_core_get_user_domain' ) ? bp_core_get_user_domain( $current_user->ID ) : get_author_posts_url( $current_user->ID );
-							$display_name = function_exists( 'bp_core_get_user_displayname' ) ? bp_core_get_user_displayname( $current_user->ID ) : $current_user->display_name;
-							?>
+							<div class="user-wrap user-wrap-container">
+								<?php
+								$current_user = wp_get_current_user();
+								$user_link    = function_exists( 'bp_core_get_user_domain' ) ? bp_core_get_user_domain( $current_user->ID ) : get_author_posts_url( $current_user->ID );
+								$display_name = function_exists( 'bp_core_get_user_displayname' ) ? bp_core_get_user_displayname( $current_user->ID ) : $current_user->display_name;
+								?>
 
-							<a class="bb-rl-user-link" href="<?php echo esc_url( $user_link ); ?>">
-								<?php echo get_avatar( get_current_user_id(), 100 ); ?>
-							</a>
-							<div class="bb-rl-profile-dropdown">
-								<?php bp_get_template_part( 'readylaunch/header/profile-dropdown' ); ?>
+								<a class="bb-rl-user-link" href="<?php echo esc_url( $user_link ); ?>">
+									<?php echo get_avatar( get_current_user_id(), 100 ); ?>
+								</a>
+								<div class="bb-rl-profile-dropdown">
+									<?php bp_get_template_part( 'readylaunch/header/profile-dropdown' ); ?>
+								</div>
 							</div>
-						</div>
 							<?php
 						}
 					} else {
@@ -245,75 +252,78 @@ function bb_block_render_readylaunch_header_block( $attributes = array() ) {
 			</div>
 
 			<?php if ( $block_args['showSearch'] || is_user_logged_in() ) : ?>
-			<div class="bb-readylaunch-mobile-menu__wrap">
-				<?php
-				if ( $block_args['showSearch'] && bp_is_active( 'search' ) ) {
-					?>
-					<form action="<?php echo esc_url( home_url( '/' ) ); ?>" method="get" class="bp-dir-search-form search-form" id="search-form">
-						<label for="search" class="bp-screen-reader-text"><?php esc_html_e( 'Search', 'buddyboss' ); ?></label>
-						<div class="bb-rl-network-search-bar">
-							<input id="search" name="s" type="search" value="" placeholder="<?php esc_attr_e( 'Search community...', 'buddyboss' ); ?>">
-							<input type="hidden" name="bp_search" value="1">
-							<button type="submit" id="search-submit" class="nouveau-search-submit">
-								<span class="bb-icons-rl-magnifying-glass" aria-hidden="true"></span>
-								<span id="button-text" class="bp-screen-reader-text"><?php esc_html_e( 'Search', 'buddyboss' ); ?></span>
-							</button>
-							<a href="javascript:;" class="bb-rl-network-search-clear bp-hide"><?php esc_html_e( 'Clear Search', 'buddyboss' ); ?></a>
+				<div class="bb-readylaunch-mobile-menu__wrap">
+					<?php
+					if ( $block_args['showSearch'] && bp_is_active( 'search' ) ) {
+						?>
+						<form action="<?php echo esc_url( home_url( '/' ) ); ?>" method="get" class="bp-dir-search-form search-form" id="search-form">
+							<label for="search" class="bp-screen-reader-text"><?php esc_html_e( 'Search', 'buddyboss' ); ?></label>
+							<div class="bb-rl-network-search-bar">
+								<input id="search" name="s" type="search" value="" placeholder="<?php esc_attr_e( 'Search community...', 'buddyboss' ); ?>">
+								<input type="hidden" name="bp_search" value="1">
+								<button type="submit" id="search-submit" class="nouveau-search-submit">
+									<span class="bb-icons-rl-magnifying-glass" aria-hidden="true"></span>
+									<span id="button-text" class="bp-screen-reader-text"><?php esc_html_e( 'Search', 'buddyboss' ); ?></span>
+								</button>
+								<a href="javascript:;" class="bb-rl-network-search-clear bp-hide"><?php esc_html_e( 'Clear Search', 'buddyboss' ); ?></a>
+							</div>
+						</form>
+					<?php } ?>
+
+					<?php
+					wp_nav_menu(
+						array(
+							'theme_location' => 'bb-readylaunch',
+							'menu_id'        => '',
+							'container'      => false,
+							'fallback_cb'    => false,
+							'menu_class'     => 'bb-readylaunch-mobile-menu',
+						)
+					);
+
+					if (
+						is_user_logged_in() &&
+						(
+							( $block_args['showMessages'] && bp_is_active( 'messages' ) ) ||
+							( $block_args['showNotifications'] && bp_is_active( 'notifications' ) )
+						)
+					) {
+						?>
+						<div class="bb-readylaunch-mobile-menu_items">
+							<ul>
+								<?php if ( $block_args['showMessages'] && bp_is_active( 'messages' ) ) { ?>
+									<li>
+										<a href="javascript:void(0);" ref="notification_bell" class="notification-link">
+											<i class="bb-icons-rl-chat-teardrop-text"></i>
+											<span class="notification-label"><?php esc_html_e( 'Messages', 'buddyboss' ); ?></span>
+											<?php
+											$unread_message_count = messages_get_unread_count();
+											if ( $unread_message_count > 0 ) :
+												?>
+												<span class="count"><?php echo esc_html( $unread_message_count ); ?>+</span>
+											<?php endif; ?>
+										</a>
+									</li>
+								<?php }
+								if ( $block_args['showNotifications'] && bp_is_active( 'notifications' ) ) { ?>
+									<li>
+										<a href="javascript:void(0);" ref="notification_bell" class="notification-link">
+											<i class="bb-icons-rl-bell-simple"></i>
+											<span class="notification-label"><?php esc_html_e( 'Notifications', 'buddyboss' ); ?></span>
+											<?php
+											$notifications             = bp_notifications_get_unread_notification_count( bp_loggedin_user_id() );
+											$unread_notification_count = ! empty( $notifications ) ? $notifications : 0;
+											if ( $unread_notification_count > 0 ) :
+												?>
+												<span class="count"><?php echo esc_html( $unread_notification_count ); ?>+</span>
+											<?php endif; ?>
+										</a>
+									</li>
+								<?php } ?>
+							</ul>
 						</div>
-					</form>
-				<?php } ?>
-
-				<?php
-				wp_nav_menu(
-					array(
-						'theme_location' => 'bb-readylaunch',
-						'menu_id'        => '',
-						'container'      => false,
-						'fallback_cb'    => false,
-						'menu_class'     => 'bb-readylaunch-mobile-menu',
-					)
-				);
-
-				if ( is_user_logged_in() && (
-					( $block_args['showMessages'] && bp_is_active( 'messages' ) ) ||
-					( $block_args['showNotifications'] && bp_is_active( 'notifications' ) )
-				) ) {
-					?>
-					<div class="bb-readylaunch-mobile-menu_items">
-						<ul>
-							<?php if ( $block_args['showMessages'] && bp_is_active( 'messages' ) ) { ?>
-								<li>
-									<a href="javascript:void(0);" ref="notification_bell" class="notification-link">
-										<i class="bb-icons-rl-chat-teardrop-text"></i>
-										<span class="notification-label"><?php esc_html_e( 'Messages', 'buddyboss' ); ?></span>
-										<?php
-										$unread_message_count = messages_get_unread_count();
-										if ( $unread_message_count > 0 ) :
-											?>
-											<span class="count"><?php echo esc_html( $unread_message_count ); ?>+</span>
-										<?php endif; ?>
-									</a>
-								</li>
-							<?php } ?>
-							<?php if ( $block_args['showNotifications'] && bp_is_active( 'notifications' ) ) { ?>
-								<li>
-									<a href="javascript:void(0);" ref="notification_bell" class="notification-link">
-										<i class="bb-icons-rl-bell-simple"></i>
-										<span class="notification-label"><?php esc_html_e( 'Notifications', 'buddyboss' ); ?></span>
-										<?php
-										$notifications             = bp_notifications_get_unread_notification_count( bp_loggedin_user_id() );
-										$unread_notification_count = ! empty( $notifications ) ? $notifications : 0;
-										if ( $unread_notification_count > 0 ) :
-											?>
-											<span class="count"><?php echo esc_html( $unread_notification_count ); ?>+</span>
-										<?php endif; ?>
-									</a>
-								</li>
-							<?php } ?>
-						</ul>
-					</div>
-				<?php } ?>
-			</div>
+					<?php } ?>
+				</div>
 			<?php endif; ?>
 		</div>
 	</header>

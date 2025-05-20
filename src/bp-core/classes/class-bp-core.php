@@ -429,7 +429,7 @@ class BP_Core extends BP_Component {
 	}
 
 	/**
-	 * Register the BP Core Blocks.
+	 * Register the BB Core Blocks.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
@@ -451,7 +451,7 @@ class BP_Core extends BP_Component {
 	}
 
 	/**
-	 * Register assets for the Ready Launch Header block
+	 * Register assets for the ReadyLaunch Header block
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 */

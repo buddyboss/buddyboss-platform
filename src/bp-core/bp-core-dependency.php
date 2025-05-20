@@ -287,6 +287,7 @@ function bp_rest_api_init() {
  * @since BuddyBoss [BBVERSION]
  */
 function bb_blocks_init() {
+
 	/**
 	 * Hook here to register your BuddyBoss blocks.
 	 *

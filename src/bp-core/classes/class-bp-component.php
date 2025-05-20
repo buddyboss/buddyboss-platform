@@ -503,7 +503,7 @@ if ( ! class_exists( 'BP_Component' ) ) :
 				add_action( 'bp_rest_api_init', array( $this, 'rest_api_init' ), 10 );
 			}
 
-			// Register BP Blocks.
+			// Register BB Blocks.
 			if ( bb_support_blocks() ) {
 				add_action( 'bb_blocks_init', array( $this, 'blocks_init' ), 10 );
 			}
@@ -947,6 +947,7 @@ if ( ! class_exists( 'BP_Component' ) ) :
 		 * @param array $blocks The list of BB Blocks to register.
 		 */
 		public function blocks_init( $blocks = array() ) {
+
 			/**
 			 * Filter here to add new BB Blocks, disable some or all BB Blocks for a component.
 			 *

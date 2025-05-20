@@ -2,10 +2,10 @@
     "$schema": "https://schemas.wp.org/trunk/block.json",
     "apiVersion": 2,
     "name": "buddyboss/readylaunch-header",
-    "title": "Ready Launch Header",
+    "title": "ReadyLaunch Header",
     "category": "buddyboss",
     "icon": "align-wide",
-    "description": "Ready Launch Header block for BuddyBoss platform",
+    "description": "ReadyLaunch Header block for BuddyBoss platform",
     "keywords": [ "BuddyBoss", "Header", "ReadyLaunch" ],
     "textdomain": "buddyboss",
     "attributes": {
