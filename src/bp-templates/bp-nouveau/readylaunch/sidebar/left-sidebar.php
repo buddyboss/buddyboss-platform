@@ -66,17 +66,20 @@ global $bb_rl_search_nav;
 		}
 		?>
 		<div class="bb-rl-left-panel-widget">
-			<?php
-			wp_nav_menu(
-				array(
-					'theme_location' => 'bb-bottom-readylaunchpanel',
-					'menu_id'        => '',
-					'container'      => false,
-					'fallback_cb'    => false,
-					'menu_class'     => 'bb-readylaunchpanel-menu bb-bottom-readylaunchpanel-menu',
-				)
-			);
-			?>
+			<div class="bb-rl-list">
+				<h2><?php esc_html_e( 'Links', 'buddyboss' ); ?></h2>
+				<?php
+				wp_nav_menu(
+					array(
+						'theme_location' => 'bb-bottom-readylaunchpanel',
+						'menu_id'        => '',
+						'container'      => false,
+						'fallback_cb'    => false,
+						'menu_class'     => 'bb-readylaunchpanel-menu bb-bottom-readylaunchpanel-menu',
+					)
+				);
+				?>
+			</div>
 		</div>
 		<?php
 	}
