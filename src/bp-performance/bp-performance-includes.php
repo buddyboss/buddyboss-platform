@@ -41,6 +41,7 @@ class BP_Performance_Includes {
 		add_action( 'bb_media_delete_older_symlinks', array( $this, 'purge_symlink_cache' ) );
 		add_action( 'bb_document_delete_older_symlinks', array( $this, 'purge_symlink_cache' ) );
 		add_action( 'bb_video_delete_older_symlinks', array( $this, 'purge_symlink_cache' ) );
+		add_filter( 'performance_purge_components', array( $this, 'bb_purge_components' ), 10, 3 );
 	}
 
 	/**
@@ -266,6 +267,58 @@ class BP_Performance_Includes {
 
 			Cache::instance()->purge_by_component( 'bbapp-deeplinking' );
 		}
+	}
+
+	/**
+	 * Modifies the list of components that should be purged based on specific configuration changes.
+	 *
+	 * @param array $purge_components The default list of components to purge.
+	 * @param string $option The name of the option being updated.
+	 * @param mixed $old_value The old value of the option.
+	 * @param mixed $value The new value of the option.
+	 *
+	 * @since [BBVERSION]
+	 * @return array The updated list of components to purge.
+	 */
+	public function bb_purge_components( $purge_components, $option, $old_value, $value ){
+		$bb_purge_components = array();
+
+		if ( 'bp-active-components' === $option ) {
+			$uninstalled_components = array_diff_key( $old_value, $value );
+			$uninstalled_components = array_keys( $uninstalled_components );
+			$non_cached_component   = array(
+				'settings',
+				'invites',
+				'moderation',
+				'search',
+			);
+
+			if ( ! empty( $uninstalled_components ) ) {
+				$can_purge_cache = false;
+
+				foreach ( $uninstalled_components as $component ) {
+					if ( in_array( $component, $non_cached_component, true ) ) {
+						continue;
+					}
+
+					$can_purge_cache = true;
+				}
+
+				if ( true === $can_purge_cache ) {
+					$bb_purge_components = array_merge( $purge_components, Settings::instance()->get_group_purge_actions( 'bbplatform' ) );
+				}
+			}
+		}
+
+		if ( 'bp_ld_sync_settings' === $option ) {
+			if ( ! empty( $value ) && isset( $value['course'] ) ) {
+				if ( isset( $value['course']['courses_visibility'] ) && '0' === $value['course']['courses_visibility'] ) {
+					$bb_purge_components = array_merge( $purge_components, Settings::instance()->get_group_purge_actions( 'learndash' ) );
+				}
+			}
+		}
+
+		return array_merge( $purge_components, $bb_purge_components );
 	}
 }
 
