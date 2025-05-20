@@ -2,14 +2,31 @@
 /**
  * BuddyBoss Performance Files include.
  *
- * @package BuddyBoss\Performance
  * @since BuddyBoss [BBVERSION]
+ * @package BuddyBoss\Performance
  */
+
+namespace BuddyBoss\Performance;
 
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
+
+use BuddyBoss\Performance\Integration\BB_Activity;
+use BuddyBoss\Performance\Integration\BB_Documents;
+use BuddyBoss\Performance\Integration\BB_Forums;
+use BuddyBoss\Performance\Integration\BB_Friends;
+use BuddyBoss\Performance\Integration\BB_Groups;
+use BuddyBoss\Performance\Integration\BB_Media_Albums;
+use BuddyBoss\Performance\Integration\BB_Media_Photos;
+use BuddyBoss\Performance\Integration\BB_Members;
+use BuddyBoss\Performance\Integration\BB_Messages;
+use BuddyBoss\Performance\Integration\BB_Notifications;
+use BuddyBoss\Performance\Integration\BB_Replies;
+use BuddyBoss\Performance\Integration\BB_Topics;
+use BuddyBoss\Performance\Integration\BB_Videos;
+use BuddyBoss\Performance\Integration\BB_Subscriptions;
 
 class BP_Performance_Includes {
 	/**
@@ -20,6 +37,7 @@ class BP_Performance_Includes {
 	public function __construct() {
 		// BB Cache Components.
 		add_filter( 'performance_components', array( $this, 'bb_performance_components' ), 10, 3 );
+		add_action( 'rest_cache_loaded', array( $this, 'bb_load_cache_components' ) );
 	}
 
 	/**
@@ -120,6 +138,104 @@ class BP_Performance_Includes {
 		);
 
 		return $components;
+	}
+
+	/**
+	 * Loads cache components.
+	 *
+	 * @return void
+	 */
+	public function bb_load_cache_components() {
+		// Load platform or buddyPress related cache integration.
+		if ( Performance::mu_is_plugin_active( 'buddyboss-platform/bp-loader.php' ) || Performance::mu_is_plugin_active( 'buddypress/bp-loader.php' ) ) {
+			$group_integration = dirname( __FILE__ ) . '/integrations/class-bb-groups.php';
+			if ( Performance::mu_is_component_active( 'groups' ) && file_exists( $group_integration ) ) {
+				require_once $group_integration;
+				BB_Groups::instance();
+			}
+
+			$members_integration = dirname( __FILE__ ) . '/integrations/class-bb-members.php';
+			if ( Performance::mu_is_component_active( 'members' ) && file_exists( $members_integration ) ) {
+				require_once $members_integration;
+				BB_Members::instance();
+			}
+
+			$activity_integration = dirname( __FILE__ ) . '/integrations/class-bb-activity.php';
+			if ( Performance::mu_is_component_active( 'activity' ) && file_exists( $activity_integration ) ) {
+				require_once $activity_integration;
+				BB_Activity::instance();
+			}
+
+			$friends_integration = dirname( __FILE__ ) . '/integrations/class-bb-friends.php';
+			if ( Performance::mu_is_component_active( 'friends' ) && file_exists( $friends_integration ) ) {
+				require_once $friends_integration;
+				BB_Friends::instance();
+			}
+
+			$notifications_integration = dirname( __FILE__ ) . '/integrations/class-bb-notifications.php';
+			if ( Performance::mu_is_component_active( 'notifications' ) && file_exists( $notifications_integration ) ) {
+				require_once $notifications_integration;
+				BB_Notifications::instance();
+			}
+
+			$messages_integration = dirname( __FILE__ ) . '/integrations/class-bb-messages.php';
+			if ( Performance::mu_is_component_active( 'messages' ) && file_exists( $messages_integration ) ) {
+				require_once $messages_integration;
+				BB_Messages::instance();
+			}
+
+			$media_photos_integration = dirname( __FILE__ ) . '/integrations/class-bb-media-photos.php';
+			if ( Performance::mu_is_component_active( 'media' ) && file_exists( $media_photos_integration ) ) {
+				require_once $media_photos_integration;
+				BB_Media_Photos::instance();
+			}
+
+			$media_albums_integration = dirname( __FILE__ ) . '/integrations/class-bb-media-albums.php';
+			if ( Performance::mu_is_component_active( 'media' ) && file_exists( $media_albums_integration ) ) {
+				require_once $media_albums_integration;
+				BB_Media_Albums::instance();
+			}
+
+			$documents_integration = dirname( __FILE__ ) . '/integrations/class-bb-documents.php';
+			if ( Performance::mu_is_component_active( 'document' ) && file_exists( $documents_integration ) ) {
+				require_once $documents_integration;
+				BB_Documents::instance();
+			}
+
+			$videos_integration = dirname( __FILE__ ) . '/integrations/class-bb-videos.php';
+			if ( Performance::mu_is_component_active( 'video' ) && file_exists( $videos_integration ) ) {
+				require_once $videos_integration;
+				BB_Videos::instance();
+			}
+
+			$subscriptions_integration = dirname( __FILE__ ) . '/integrations/class-bb-subscriptions.php';
+			if ( file_exists( $subscriptions_integration ) ) {
+				require_once $subscriptions_integration;
+				BB_Subscriptions::instance();
+			}
+		}
+
+		// Load platform or bbPress related cache integration.
+		if ( ( Performance::mu_is_plugin_active( 'buddyboss-platform/bp-loader.php' ) && Performance::mu_is_component_active( 'forums' ) ) || Performance::mu_is_plugin_active( 'bbpress/bbpress.php' ) ) {
+			$forum_integration = dirname( __FILE__ ) . '/integrations/class-bb-forums.php';
+			$topic_integration = dirname( __FILE__ ) . '/integrations/class-bb-topics.php';
+			$reply_integration = dirname( __FILE__ ) . '/integrations/class-bb-replies.php';
+
+			if ( file_exists( $forum_integration ) ) {
+				require_once $forum_integration;
+				BB_Forums::instance();
+			}
+
+			if ( file_exists( $topic_integration ) ) {
+				require_once $topic_integration;
+				BB_Topics::instance();
+			}
+
+			if ( file_exists( $reply_integration ) ) {
+				require_once $reply_integration;
+				BB_Replies::instance();
+			}
+		}
 	}
 }
 
