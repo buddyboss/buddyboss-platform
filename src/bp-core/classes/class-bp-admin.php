@@ -129,8 +129,8 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			require $this->admin_dir . 'bp-core-admin-help.php';
 			require $this->admin_dir . 'bp-core-admin-theme-settings.php';
 
-			// Load the react settings.
-			require $this->admin_dir . 'react-settings/index.php';
+			// Load the BuddyBoss React settings.
+			require $this->admin_dir . 'bb-settings/index.php';
 		}
 
 		/**
