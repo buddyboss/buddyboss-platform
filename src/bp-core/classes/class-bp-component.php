@@ -141,7 +141,7 @@ if ( ! class_exists( 'BP_Component' ) ) :
 		public $search_query_arg = 's';
 
 		/**
-		 * An array of globalized data for BP Blocks.
+		 * An array of globalized data for BB Blocks.
 		 *
 		 * @since BuddyPress 9.0.0
 		 * @since BuddyBoss [BBVERSION]
@@ -230,7 +230,7 @@ if ( ! class_exists( 'BP_Component' ) ) :
 		 *                                           'Search Groups...'.
 		 *     @type array    $global_tables         Optional. An array of database table names.
 		 *     @type array    $meta_tables           Optional. An array of metadata table names.
-		 *     @type array    $block_globals         An array of globalized data for BP Blocks.
+		 *     @type array    $block_globals         An array of globalized data for BB Blocks.
 		 * }
 		 */
 		public function setup_globals( $args = array() ) {
@@ -330,13 +330,12 @@ if ( ! class_exists( 'BP_Component' ) ) :
 			/**
 			 * Filters the $blocks global value.
 			 *
-			 * @since buddypress 9.0.0
 			 * @since BuddyBoss [BBVERSION]
 			 *
 			 * @param array $blocks a list of global properties for blocks keyed
 			 *                      by their corresponding block name.
 			 */
-			$block_globals = apply_filters( 'bp_' . $this->id . '_block_globals', $r['block_globals'] );
+			$block_globals = apply_filters( 'bb_' . $this->id . '_block_globals', $r['block_globals'] );
 			if ( is_array( $block_globals ) && array_filter( $block_globals ) ) {
 				foreach ( $block_globals as $block_name => $block_props ) {
 					$this->block_globals[ $block_name ] = new stdClass();
