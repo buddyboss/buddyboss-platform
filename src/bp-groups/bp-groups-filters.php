@@ -201,7 +201,14 @@ function bp_groups_disable_at_mention_notification_for_non_public_groups( $send,
 		return $send;
 	}
 
-	if ( 'groups' === $activity->component && ! bp_user_can( $user_id, 'groups_access_group', array( 'group_id' => $activity->item_id ) ) ) {
+	if ( 'activity_update' === $activity->type ) {
+		$group_id = 'groups' === $activity->component ? $activity->item_id : 0;
+	} elseif ( 'activity_comment' === $activity->type ) {
+		$comment  = new BP_Activity_Activity( $activity->item_id );
+		$group_id = ! empty( $comment->component ) && 'groups' === $comment->component ? $comment->item_id : 0;
+	}
+
+	if ( $group_id && ! bp_user_can( $user_id, 'groups_access_group', array( 'group_id' => $group_id ) ) ) {
 		$send = false;
 	}
 
