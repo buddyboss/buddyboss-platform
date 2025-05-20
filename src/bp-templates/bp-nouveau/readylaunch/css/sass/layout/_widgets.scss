@@ -305,6 +305,10 @@
 			border-radius: 50%;
 		}
 	}
+
+	#boss_recently_active_widget_heartbeat .more-block {
+		display: none;
+	}
 }
 
 .bp-latest-activities {
