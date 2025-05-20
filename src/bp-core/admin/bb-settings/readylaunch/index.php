@@ -87,7 +87,7 @@ function bb_readylaunch_settings_page_enqueue_style_script( $admin_page ) {
     // Enqueue the BB Icons CSS
     wp_enqueue_style(
         'bb-icons-rl-css',
-        plugins_url( 'src/styles/icons/bb-icons-rl.css', __FILE__ ),
+        buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/icons/css/bb-icons-rl.css',
         array(),
         $asset['version']
     );
