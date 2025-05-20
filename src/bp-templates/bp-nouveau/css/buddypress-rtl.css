@@ -22641,6 +22641,7 @@ ul.bb-albums-list .load-more {
   text-align: center;
 }
 
+#buddypress .activity-list li.load-more,
 #buddypress .bb-photo-list li.load-more,
 #buddypress .bb-video-list li.load-more {
   margin: 20px auto 10px;
@@ -22651,6 +22652,7 @@ ul.bb-albums-list .load-more {
   pointer-events: none;
 }
 
+#buddypress .activity-list li.load-more > a,
 #buddypress .bb-photo-list li.load-more > a,
 #buddypress .bb-video-list li.load-more > a {
   max-width: 33%;
@@ -22777,8 +22779,13 @@ ul.bb-albums-list .load-more {
   margin-bottom: 20px;
 }
 
-#buddypress .bb-media-container.member-media .bp-navs ~ .bb-media-actions-wrap {
+#buddypress .bb-media-container.member-media .bp-navs ~ .bb-media-actions-wrap,
+#buddypress .bb-media-container.member-media .bb-media-actions-header .bb-media-actions-wrap {
   margin-bottom: 0;
+}
+
+#buddypress .bb-media-container.member-media .bb-media-actions-header .bb-member-media-header {
+  margin-top: 0;
 }
 
 @media (min-width: 1025px) {
@@ -23017,6 +23024,23 @@ ul.bb-albums-list .load-more {
 .bbm-uploader-model-wrap .bb-model-header .dashicons {
   font-size: 22px;
   margin: 0;
+}
+
+.bb-media-actions-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.groups.single-item .bb-media-actions-header .bb-media-actions-wrap {
+  margin-bottom: 0;
+}
+
+@media (max-width: 540px) {
+  .bb-media-actions-header .bb-photos-actions {
+    flex: 1;
+  }
 }
 
 .bb-media-actions-wrap {

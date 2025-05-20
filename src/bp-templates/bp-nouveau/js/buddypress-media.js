@@ -3568,15 +3568,22 @@ window.bp = window.bp || {};
 							}
 
 							if ( response.data.id ) {
-								file.id = response.id;
-								response.data.uuid = file.upload.uuid;
-								response.data.menu_order = $( file.previewElement ).closest( '.dropzone' ).find( file.previewElement ).index() - 1;
+								file.id                = response.id;
+								response.data.uuid     = file.upload.uuid;
 								response.data.album_id = self.album_id;
 								response.data.group_id = self.group_id;
-								response.data.js_preview  = $( file.previewElement ).find( '.dz-video-thumbnail img' ).attr( 'src' );
-								response.data.saved = false;
-								self.dropzone_media[ dropzone_obj_key ].push( response.data );
-								self.addVideoIdsToForumsForm( dropzone_container );
+
+								var thumbnailCheck = setInterval( function () {
+									if ( $( file.previewElement ).closest( '.dz-preview' ).hasClass( 'dz-has-no-thumbnail' ) || $( file.previewElement ).closest( '.dz-preview' ).hasClass( 'dz-has-thumbnail' ) ) {
+										response.data.js_preview = $( file.previewElement ).find( '.dz-video-thumbnail img' ).attr( 'src' );
+										response.data.menu_order = $( file.previewElement ).closest( '.dropzone' ).find( file.previewElement ).index() - 1;
+										response.data.saved      = false;
+										self.dropzone_media[ dropzone_obj_key ].push( response.data );
+										self.addVideoIdsToForumsForm( dropzone_container );
+										clearInterval( thumbnailCheck );
+									}
+								});
+								
 							} else {
 								var node, _i, _len, _ref, _results;
 								var message = response.data.feedback;
@@ -3640,13 +3647,15 @@ window.bp = window.bp || {};
 						}
 					);
 
-					// Enable submit button when all videos are uploaded
+					// Enable submit button when all videos are uploaded.
 					self.dropzone_obj[ dropzone_obj_key ].on(
 						'complete',
 						function() {
 							if ( this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0 && this.files.length > 0 ) {
 								var formElement = target.closest( 'form' );
-								formElement.removeClass( 'media-uploading' );
+								if ( ! formElement.hasClass( 'draft-video-uploading' ) ) {
+									formElement.removeClass( 'media-uploading' );
+								}
 							}
 						}
 					);
@@ -3964,6 +3973,7 @@ window.bp = window.bp || {};
 					'queuecomplete',
 					function () {
 						$( '#bp-media-uploader-modal-title' ).text( BP_Nouveau.media.i18n_strings.upload );
+						$( '.bb-field-steps-1 #bp-media-photo-next, #bp-media-submit' ).show();
 					}
 				);
 
@@ -3971,6 +3981,7 @@ window.bp = window.bp || {};
 					'processing',
 					function () {
 						$( '#bp-media-uploader-modal-title' ).text( BP_Nouveau.media.i18n_strings.uploading + '...' );
+						$( '.bb-field-steps-1 #bp-media-photo-next, #bp-media-submit' ).hide();
 					}
 				);
 
@@ -3992,7 +4003,6 @@ window.bp = window.bp || {};
 							this.removeFile( file );
 						}
 
-						$( '.bb-field-steps-1 #bp-media-photo-next, #bp-media-submit' ).show();
 						$( '.modal-container' ).addClass( 'modal-container--alert' );
 						$( '.bb-field-steps-1' ).addClass( 'controls-added' );
 						$( '#bp-media-add-more' ).show();
@@ -4236,6 +4246,7 @@ window.bp = window.bp || {};
 					'queuecomplete',
 					function () {
 						$( '#bp-media-uploader-modal-title' ).text( BP_Nouveau.media.i18n_strings.upload );
+						$( '.bb-field-steps-1 #bp-media-document-next, #bp-media-document-submit' ).show();
 					}
 				);
 
@@ -4243,6 +4254,7 @@ window.bp = window.bp || {};
 					'processing',
 					function () {
 						$( '#bp-media-uploader-modal-title' ).text( BP_Nouveau.media.i18n_strings.uploading + '...' );
+						$( '.bb-field-steps-1 #bp-media-document-next, #bp-media-document-submit' ).hide();
 					}
 				);
 
@@ -4279,7 +4291,7 @@ window.bp = window.bp || {};
 							return _results;
 						}
 
-						$( '.bb-field-steps-1 #bp-media-document-next, #bp-media-document-submit' ).show();
+						// $( '.bb-field-steps-1 #bp-media-document-next, #bp-media-document-submit' ).show();
 						$( '.modal-container' ).addClass( 'modal-container--alert' );
 						$( '.bb-field-steps-1' ).addClass( 'controls-added' );
 						$( '#bp-media-uploader-modal-title' ).text( BP_Nouveau.media.i18n_strings.uploading + '...' );
@@ -7197,8 +7209,16 @@ window.bp = window.bp || {};
 				document_elements.find( '.bb-document-section .document-preview' ).html( '' );
 				document_elements.find( '.bb-document-section .document-preview' ).html( '<h3>' + target_text + '</h3><div class="document-text"><textarea class="document-text-file-data-hidden"></textarea></div>' );
 				document_elements.find( '.bb-document-section .document-preview .document-text' ).attr( 'data-extension', extension );
-				document_elements.find( '.bb-document-section .document-preview .document-text textarea' ).html( mirror_text_display );
 
+				var $textarea = document_elements.find( '.bb-document-section .document-preview .document-text textarea' );
+    
+				// Special handling for HTML files.
+				if ( 'html' === extension || 'htm' === extension ) {
+					$textarea.val(mirror_text_display);
+				} else {
+					// Default behavior for other file types.
+					$textarea.html(mirror_text_display);
+				}
 				setTimeout( function () {
 					bp.Nouveau.Media.documentCodeMirror();
 				}, 1000 );
@@ -7824,13 +7844,13 @@ window.bp = window.bp || {};
 		syncPinPostActivityOnCloseTheatre: function( target ) {
 			var parentActivityId         = $( '#hidden_parent_id' ).length > 0 ? parseInt( $( '#hidden_parent_id' ).val() ) : 0;
 			var parentActivityIdForModel = target.closest( '.bb-media-model-wrapper' ).find( '#bb-media-model-container .activity-list li.activity-item' ).data( 'bp-activity-id' );
-			if ( 
+			if (
 				parentActivityId > 0 &&
 				'undefined' !== typeof parentActivityIdForModel &&
 				parentActivityId === parseInt( parentActivityIdForModel ) &&
 				target.hasClass( 'bb-close-media-theatre' ) &&
 				'undefined' !== typeof bp.Nouveau.Activity.activityPinHasUpdates &&
-				bp.Nouveau.Activity.activityPinHasUpdates 
+				bp.Nouveau.Activity.activityPinHasUpdates
 			) {
 				var $pageActivityListItem = $( '#activity-stream li.activity-item[data-bp-activity-id=' + parentActivityId + ']' );
 				$pageActivityListItem.addClass( 'activity-sync' );
