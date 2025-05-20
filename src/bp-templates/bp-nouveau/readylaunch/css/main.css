@@ -8271,6 +8271,11 @@ li.bb-rl-hideshow {
   position: relative;
 }
 
+.bb-rl-nav-more {
+  display: inline-flex;
+  align-items: center;
+}
+
 .bb-rl-nav-more i {
   margin-left: var(--bb-rl-space-50);
   font-weight: 500;
@@ -10254,6 +10259,60 @@ input.bb-rl-zoom-slider::-moz-range-progress {
   font-size: 14px;
   font-weight: 400;
   line-height: 22px;
+  color: var(--bb-rl-text-tertiary-color);
+}
+
+.widget_bb_recent_blog_posts_widget .bb-rl-recent-post {
+  margin-bottom: var(--bb-rl-space-200);
+}
+
+.widget_bb_recent_blog_posts_widget .bb-rl-recent-post:last-of-type {
+  margin-bottom: 0;
+}
+
+.widget_bb_recent_blog_posts_widget .widget-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--bb-rl-space-200);
+  flex-wrap: wrap;
+  margin-bottom: var(--bb-rl-space-200);
+  border-bottom: 1px solid var(--bb-rl-border-secondary-color);
+}
+
+.widget_bb_recent_blog_posts_widget .widget-header .widget-link {
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 500;
+  color: var(--bb-rl-text-color);
+}
+
+.widget_bb_recent_blog_posts_widget .widget-header .widget-title {
+  margin: 0;
+  border: 0;
+}
+
+.widget_bb_recent_blog_posts_widget .bb-rl-recent-post-thumb img {
+  border-radius: var(--bb-rl-radius-md);
+  margin-bottom: var(--bb-rl-space-100);
+  max-height: 140px;
+  object-fit: cover;
+  width: 100%;
+  height: auto;
+}
+
+.widget_bb_recent_blog_posts_widget .bb-rl-recent-post-title {
+  margin: 0;
+}
+
+.widget_bb_recent_blog_posts_widget .bb-rl-recent-post-title-link {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--bb-rl-text-color);
+}
+
+.widget_bb_recent_blog_posts_widget .bb-rl-recent-post-date {
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 400;
   color: var(--bb-rl-text-tertiary-color);
 }
 
@@ -19288,6 +19347,10 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
 .bb-rl-ac-results .bp-search-ac > li .entry-meta a {
   color: var(--bb-rl-text-tertiary-color);
   white-space: nowrap;
+}
+
+.bb-rl-ac-results .bp-search-ac > li:has(.results-group) {
+  display: none;
 }
 
 .bb-rl-ac-results .bp-search-ac .bbls-view_all_type-type {

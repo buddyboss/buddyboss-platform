@@ -904,6 +904,8 @@ li.bb-rl-hideshow {
 }
 
 .bb-rl-nav-more {
+	display: inline-flex;
+	align-items: center;
 
 	i {
 		margin-left: var(--bb-rl-space-50);
