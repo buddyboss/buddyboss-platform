@@ -51,6 +51,12 @@ class BB_Group_Members_Widget extends WP_Widget {
 		);
 		if ( bp_group_has_members( $group_args ) ) {
 			?>
+			<div class="widget-header">
+				<h2 class="widget-title"><?php esc_html_e( 'Group Members', 'buddyboss' ); ?></h2>
+				<a href="<?php echo bp_get_group_permalink(); ?>" class="widget-link">
+					<?php esc_html_e( 'See all', 'buddyboss' ); ?>
+				</a>
+			</div>
 			<div class="item-options" id="groups-members-list-options">
 				<a href="" id="active-groups-members"
 					<?php
@@ -91,9 +97,18 @@ class BB_Group_Members_Widget extends WP_Widget {
 				bp_group_the_member();
 				?>
 				<li>
-					<?php echo wp_kses_post( bp_get_group_member_avatar() ); ?>
-					<span class="member-name"><?php echo esc_html( bp_get_group_member_name() ); ?></span>
-					<?php bb_user_presence_html( bp_get_group_member_id() ); ?>
+					<div class="item-avatar">
+						<a href="<?php echo esc_url( bp_get_member_permalink() ); ?>">
+							<?php echo wp_kses_post( bp_get_group_member_avatar() ); ?>
+							<?php bb_user_presence_html( bp_get_group_member_id() ); ?>
+						</a>
+					</div>
+					<div class="item-content">
+						<a href="<?php echo esc_url( bp_get_member_permalink() ); ?>">
+							<span class="member-name"><?php echo esc_html( bp_get_group_member_name() ); ?></span>
+						</a>
+						<span class="member-active"><?php echo esc_html( bp_get_last_activity( bp_get_group_member_id()) ); ?></span>
+					</div>
 				</li>
 				<?php endwhile; ?>
 			</ul>
