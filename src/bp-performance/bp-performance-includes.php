@@ -41,7 +41,7 @@ class BP_Performance_Includes {
 		add_action( 'bb_media_delete_older_symlinks', array( $this, 'purge_symlink_cache' ) );
 		add_action( 'bb_document_delete_older_symlinks', array( $this, 'purge_symlink_cache' ) );
 		add_action( 'bb_video_delete_older_symlinks', array( $this, 'purge_symlink_cache' ) );
-		add_filter( 'performance_purge_components', array( $this, 'bb_purge_components' ), 10, 3 );
+		add_filter( 'performance_purge_components', array( $this, 'bb_purge_components' ), 10, 4 );
 	}
 
 	/**
