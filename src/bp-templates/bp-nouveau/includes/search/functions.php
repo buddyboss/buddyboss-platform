@@ -183,10 +183,10 @@ function bp_nouveau_search_messages_autocomplete_init_jsblock() {
 }
 
 /**
- * Enqueue scripts and localize data for BuddyPress ReadyLaunch search functionality.
+ * Enqueue scripts and localize data for BuddyBoss ReadyLaunch search functionality.
  *
  * This function registers the necessary JavaScript files and provides localization
- * data for handling search functionalities in the BuddyPress ReadyLaunch theme.
+ * data for handling search functionalities in the BuddyBoss ReadyLaunch theme.
  * It dynamically sets parameters such as nonces, AJAX action URLs, messages, and
  * other settings required for the search feature.
  *

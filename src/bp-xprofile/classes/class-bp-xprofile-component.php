@@ -523,7 +523,7 @@ class BP_XProfile_Component extends BP_Component {
 	}
 
 	/**
-	 * Register the BP xProfile Blocks.
+	 * Register the xProfile Blocks.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *

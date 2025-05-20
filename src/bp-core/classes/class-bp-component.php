@@ -504,8 +504,8 @@ if ( ! class_exists( 'BP_Component' ) ) :
 			}
 
 			// Register BP Blocks.
-			if ( bp_support_blocks() ) {
-				add_action( 'bp_blocks_init', array( $this, 'blocks_init' ), 10 );
+			if ( bb_support_blocks() ) {
+				add_action( 'bb_blocks_init', array( $this, 'blocks_init' ), 10 );
 			}
 
 			/**
@@ -938,32 +938,30 @@ if ( ! class_exists( 'BP_Component' ) ) :
 		}
 
 		/**
-		 * Register the BP Blocks.
+		 * Register the BB Blocks.
 		 *
-		 * @since buddypress 6.0.0
 		 * @since BuddyBoss [BBVERSION]
 		 *
-		 * @see `BP_Block->construct()` for a full description of a BP Block arguments.
+		 * @see `BB_Block->construct()` for a full description of a BB Block arguments.
 		 *
-		 * @param array $blocks The list of BP Blocks to register.
+		 * @param array $blocks The list of BB Blocks to register.
 		 */
 		public function blocks_init( $blocks = array() ) {
 			/**
-			 * Filter here to add new BP Blocks, disable some or all BP Blocks for a component.
+			 * Filter here to add new BB Blocks, disable some or all BB Blocks for a component.
 			 *
 			 * This is a dynamic hook that is based on the component string ID.
 			 *
-			 * @since buddypress 6.0.0
 			 * @since BuddyBoss [BBVERSION]
 			 *
-			 * @param array $blocks The list of BP Blocks for the component.
+			 * @param array $blocks The list of BB Blocks for the component.
 			 */
-			$blocks = (array) apply_filters( 'bp_' . $this->id . '_register_blocks', $blocks );
+			$blocks = (array) apply_filters( 'bb_' . $this->id . '_register_blocks', $blocks );
 			$blocks = array_filter( $blocks );
 
 			if ( $blocks ) {
 				foreach ( $blocks as $block ) {
-					bp_register_block( $block );
+					bb_register_block( $block );
 				}
 			}
 
@@ -972,10 +970,9 @@ if ( ! class_exists( 'BP_Component' ) ) :
 			 *
 			 * This is a dynamic hook that is based on the component string ID.
 			 *
-			 * @since buddypress 6.0.0
 			 * @since BuddyBoss [BBVERSION]
 			 */
-			do_action( 'bp_' . $this->id . '_blocks_init' );
+			do_action( 'bb_' . $this->id . '_blocks_init' );
 		}
 	}
 endif; // BP_Component.

@@ -348,7 +348,7 @@ class BP_Settings_Component extends BP_Component {
 	}
 
 	/**
-	 * Register the BP Settings Blocks.
+	 * Register the Settings Blocks.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *

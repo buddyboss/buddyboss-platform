@@ -536,7 +536,7 @@ class BP_Members_Component extends BP_Component {
 	}
 
 	/**
-	 * Register the BP Members Blocks.
+	 * Register the Members Blocks.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *

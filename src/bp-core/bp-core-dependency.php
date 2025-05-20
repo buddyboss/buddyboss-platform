@@ -282,17 +282,17 @@ function bp_rest_api_init() {
 }
 
 /**
- * BP Blocks Init hook.
+ * BB Blocks Init hook.
  *
  * @since BuddyBoss [BBVERSION]
  */
-function bp_blocks_init() {
+function bb_blocks_init() {
 	/**
-	 * Hook here to register your BuddyPress blocks.
+	 * Hook here to register your BuddyBoss blocks.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 */
-	do_action( 'bp_blocks_init' );
+	do_action( 'bb_blocks_init' );
 }
 
 /**

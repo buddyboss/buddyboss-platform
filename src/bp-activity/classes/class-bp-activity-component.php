@@ -394,7 +394,7 @@ class BP_Activity_Component extends BP_Component {
 	}
 
 	/**
-	 * Register the BP Activity Blocks.
+	 * Register the Activity Blocks.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *

@@ -395,7 +395,7 @@ class BP_Document_Component extends BP_Component {
 	}
 
 	/**
-	 * Register the BP Documents Blocks.
+	 * Register the Documents Blocks.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *

@@ -262,7 +262,7 @@ class BP_Moderation_Component extends BP_Component {
 	}
 
 	/**
-	 * Register the BP Moderation Blocks.
+	 * Register the Moderation Blocks.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *

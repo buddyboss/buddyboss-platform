@@ -444,7 +444,7 @@ class BP_Core extends BP_Component {
 			array(
 				'buddyboss/readylaunch-header' => array(
 					'metadata'        => trailingslashit( buddypress()->plugin_dir ) . 'bp-core/blocks/readylaunch-header',
-					'render_callback' => 'bp_block_render_readylaunch_header_block',
+					'render_callback' => 'bb_block_render_readylaunch_header_block',
 				),
 			)
 		);

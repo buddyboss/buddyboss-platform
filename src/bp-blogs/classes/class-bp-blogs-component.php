@@ -379,7 +379,7 @@ class BP_Blogs_Component extends BP_Component {
 	}
 
 	/**
-	 * Register the BP Blogs Blocks.
+	 * Register the Blogs Blocks.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *

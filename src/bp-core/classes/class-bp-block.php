@@ -1,10 +1,9 @@
 <?php
 /**
- * BP Block class.
+ * BB Block class.
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage Core
- * @since buddypress 6.0.0
  * @since BuddyBoss [BBVERSION]
  */
 
@@ -12,11 +11,11 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * BP Block Class.
+ * BB Block Class.
  *
  * @since BuddyBoss [BBVERSION]
  */
-class BP_Block {
+class BB_Block {
 
 	/**
 	 * WP Block Type object.
@@ -46,18 +45,18 @@ class BP_Block {
 	private $registered_styles;
 
 	/**
-	 * Construct the BuddyPress Block.
+	 * Construct the BuddyBoss Block.
 	 *
 	 * @since BuddyBoss [BBVERSION] Add support for WP Block API v2 { apiVersion: 2 }.
 	 *
 	 * @param array $args {
-	 *     The registration arguments for the BP Block. Part of the arguments are the ones
-	 *     used by `WP_Block_Type`. Below are BP specific arguments.
+	 *     The registration arguments for the BB Block. Part of the arguments are the ones
+	 *     used by `WP_Block_Type`. Below are BB specific arguments.
 	 *
-	 *     @type string $editor_script_url   URL to the JavaScript main file of the BP Block
+	 *     @type string $editor_script_url   URL to the JavaScript main file of the BB Block
 	 *                                       to load into the Block Editor.
 	 *     @type array  $editor_script_deps  The list of JavaScript dependency handles for the
-	 *                                       BP Block main file.
+	 *                                       BB Block main file.
 	 *     @type string $script_url          URL to the JavaScript file to load into the Block
 	 *                                       Editor and on front-end.
 	 *     @type array  $script_deps         The list of JavaScript dependency handles for the
@@ -66,7 +65,7 @@ class BP_Block {
 	 *     @type string $view_script_url     URL to the JavaScript file to load on front-end.
 	 *     @type array  $view_script_deps    The list of JavaScript dependency handles for the
 	 *                                       JavaScript file to load on front-end.
-	 *     @type string $editor_style_url    URL to the CSS main file of the BP Block to load
+	 *     @type string $editor_style_url    URL to the CSS main file of the BB Block to load
 	 *                                       into the Block Editor.
 	 *     @type array  $editor_style_deps   The list of CSS dependency handles for the
 	 *                                       CSS main file.
@@ -76,12 +75,12 @@ class BP_Block {
 	 *                                       to load into the Block Editor and on front-end.
 	 *     @type string $domain_path         The path to the folder where custom block translations
 	 *                                       are located.
-	 *     @type array  $buddypress_contexts The list of BuddyPress contexts a block can be loaded into.
+	 *     @type array  $buddyboss_contexts The list of BuddyBoss contexts a block can be loaded into.
 	 * }
 	 */
 	public function __construct( $args ) {
-		if ( ! did_action( 'bp_blocks_init' ) ) {
-			_doing_it_wrong( __METHOD__, esc_html__( 'BP Blocks needs to be registered hooking `bp_blocks_init`', 'buddyboss' ), '6.0.0' );
+		if ( ! did_action( 'bb_blocks_init' ) ) {
+			_doing_it_wrong( __METHOD__, esc_html__( 'BB Blocks needs to be registered hooking `bb_blocks_init`', 'buddyboss' ), '[BBVERSION]' );
 		}
 
 		$min          = bp_core_get_minified_asset_suffix();
@@ -146,22 +145,22 @@ class BP_Block {
 				}
 			}
 
-			// Get specific BP Blocks arguments.
-			$bp_args = array_intersect_key(
+			// Get specific BB Blocks arguments.
+			$bb_args = array_intersect_key(
 				$args,
 				array(
-					'editor_script_url'   => '',
-					'editor_script_deps'  => array(),
-					'script_url'          => '',
-					'script_deps'         => array(),
-					'view_script_url'     => '',
-					'view_script_deps'    => array(),
-					'editor_style_url'    => '',
-					'editor_style_deps'   => array(),
-					'style_url'           => '',
-					'style_deps'          => array(),
-					'domain_path'         => null,
-					'buddypress_contexts' => array(),
+					'editor_script_url'  => '',
+					'editor_script_deps' => array(),
+					'script_url'         => '',
+					'script_deps'        => array(),
+					'view_script_url'    => '',
+					'view_script_deps'   => array(),
+					'editor_style_url'   => '',
+					'editor_style_deps'  => array(),
+					'style_url'          => '',
+					'style_deps'         => array(),
+					'domain_path'        => null,
+					'buddyboss_contexts' => array(),
 				)
 			);
 
@@ -177,18 +176,18 @@ class BP_Block {
 					continue;
 				}
 
-				if ( ! isset( $bp_args[ $script_handle_key . '_url' ] ) || ! $bp_args[ $script_handle_key . '_url' ] ) {
+				if ( ! isset( $bb_args[ $script_handle_key . '_url' ] ) || ! $bb_args[ $script_handle_key . '_url' ] ) {
 					continue;
 				}
 
 				$deps = array();
-				if ( isset( $bp_args[ $script_handle_key . '_deps' ] ) && is_array( $bp_args[ $script_handle_key . '_deps' ] ) ) {
-					$deps = $bp_args[ $script_handle_key . '_deps' ];
+				if ( isset( $bb_args[ $script_handle_key . '_deps' ] ) && is_array( $bb_args[ $script_handle_key . '_deps' ] ) ) {
+					$deps = $bb_args[ $script_handle_key . '_deps' ];
 				}
 
 				$this->registered_scripts[ $script_handle_key ] = wp_register_script(
 					$wp_args[ $script_handle_key ],
-					$bp_args[ $script_handle_key . '_url' ],
+					$bb_args[ $script_handle_key . '_url' ],
 					$deps,
 					$version,
 					true
@@ -206,27 +205,27 @@ class BP_Block {
 						continue;
 					}
 
-					if ( ! isset( $bp_args[ $style_handle_key . '_url' ] ) || ! $bp_args[ $style_handle_key . '_url' ] ) {
+					if ( ! isset( $bb_args[ $style_handle_key . '_url' ] ) || ! $bb_args[ $style_handle_key . '_url' ] ) {
 						continue;
 					}
 
 					if ( $min ) {
-						$minified_css  = str_replace( '.css', $min . '.css', $bp_args[ $style_handle_key . '_url' ] );
+						$minified_css  = str_replace( '.css', $min . '.css', $bb_args[ $style_handle_key . '_url' ] );
 						$css_file_path = str_replace( content_url(), WP_CONTENT_DIR, $minified_css );
 
 						if ( file_exists( $css_file_path ) ) {
-							$bp_args[ $style_handle_key . '_url' ] = $minified_css;
+							$bb_args[ $style_handle_key . '_url' ] = $minified_css;
 						}
 					}
 
 					$deps = array();
-					if ( isset( $bp_args[ $style_handle_key . '_deps' ] ) && is_array( $bp_args[ $style_handle_key . '_deps' ] ) ) {
-						$deps = $bp_args[ $style_handle_key . '_deps' ];
+					if ( isset( $bb_args[ $style_handle_key . '_deps' ] ) && is_array( $bb_args[ $style_handle_key . '_deps' ] ) ) {
+						$deps = $bb_args[ $style_handle_key . '_deps' ];
 					}
 
 					$this->registered_styles[ $style_handle_key ] = wp_register_style(
 						$wp_args[ $style_handle_key ],
-						$bp_args[ $style_handle_key . '_url' ],
+						$bb_args[ $style_handle_key . '_url' ],
 						$deps,
 						$version
 					);
@@ -240,9 +239,9 @@ class BP_Block {
 				$name = $wp_args['name'];
 				unset( $wp_args['name'] );
 
-				// Used to restrict blocks to specific BuddyPress contexts.
-				if ( isset( $bp_args['buddypress_contexts'] ) ) {
-					$wp_args['buddypress_contexts'] = $bp_args['buddypress_contexts'];
+				// Used to restrict blocks to specific BuddyBoss contexts.
+				if ( isset( $bb_args['buddyboss_contexts'] ) ) {
+					$wp_args['buddyboss_contexts'] = $bb_args['buddyboss_contexts'];
 				}
 
 				// Set the Block Type.
@@ -254,8 +253,8 @@ class BP_Block {
 				// Load Block translations if found.
 				if ( $this->block->editor_script ) {
 					$domain_path = null;
-					if ( isset( $bp_args['domain_path'] ) && is_dir( $bp_args['domain_path'] ) ) {
-						$domain_path = $bp_args['domain_path'];
+					if ( isset( $bb_args['domain_path'] ) && is_dir( $bb_args['domain_path'] ) ) {
+						$domain_path = $bb_args['domain_path'];
 					}
 
 					/**
@@ -267,7 +266,7 @@ class BP_Block {
 					 * @param string $editor_script The editor's script handle.
 					 * @param string $name          The block's name.
 					 */
-					$translation_dir = apply_filters( 'bp_block_translation_dir', $domain_path, $this->block->editor_script, $name );
+					$translation_dir = apply_filters( 'bb_block_translation_dir', $domain_path, $this->block->editor_script, $name );
 
 					$textdomain = 'buddyboss';
 					if ( isset( $wp_args['textdomain'] ) && $wp_args['textdomain'] ) {
@@ -283,7 +282,7 @@ class BP_Block {
 					 * @param string $editor_script The editor's script handle.
 					 * @param string $name          The block's name.
 					 */
-					$translation_domain = apply_filters( 'bp_block_translation_domain', $textdomain, $this->block->editor_script, $name );
+					$translation_domain = apply_filters( 'bb_block_translation_domain', $textdomain, $this->block->editor_script, $name );
 
 					// Try to load the translation.
 					wp_set_script_translations( $this->block->editor_script, $translation_domain, $translation_dir );

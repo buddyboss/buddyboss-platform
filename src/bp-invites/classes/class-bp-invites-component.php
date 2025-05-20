@@ -373,7 +373,7 @@ class BP_Invites_Component extends BP_Component {
 	}
 
 	/**
-	 * Register the BP Invites Blocks.
+	 * Register the Invites Blocks.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *

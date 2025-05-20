@@ -560,7 +560,7 @@ class BuddyPress {
 		require $this->plugin_dir . 'bp-core/bp-core-notification.php';
 		require $this->plugin_dir . 'bp-core/bp-core-invitation.php';
 		require $this->plugin_dir . 'bp-core/bb-core-subscriptions.php';
-		require $this->plugin_dir . 'bp-core/bp-core-blocks.php';
+		require $this->plugin_dir . 'bp-core/bb-core-blocks.php';
 
 		// Maybe load deprecated buddypress functionality (this double negative is proof positive!).
 		if ( ! bp_get_option( '_bp_ignore_deprecated_code', ! $this->load_deprecated ) ) {
@@ -657,7 +657,7 @@ class BuddyPress {
 			'BP_Attachment_Cover_Image'                    => 'core',
 			'BP_Attachment'                                => 'core',
 			'BP_Button'                                    => 'core',
-			'BP_Block'                                     => 'core',
+			'BB_Block'                                     => 'core',
 			'BP_Component'                                 => 'core',
 			'BP_Integration'                               => 'core',
 			'BP_Customizer_Control_Range'                  => 'core',

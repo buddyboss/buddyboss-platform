@@ -1,6 +1,6 @@
 <?php
 /**
- * Core BP Blocks functions.
+ * Core BB Blocks functions.
  *
  * @package BuddyBoss
  * @subpackage Core
@@ -11,75 +11,75 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * BuddyPress blocks require the BP REST API.
+ * BuddyBoss blocks require the BP REST API.
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @return bool True if the current installation supports BP Blocks.
+ * @return bool True if the current installation supports BB Blocks.
  *              False otherwise.
  */
-function bp_support_blocks() {
+function bb_support_blocks() {
 	/**
-	 * Filter here, returning `false`, to completely disable BuddyPress blocks.
+	 * Filter here, returning `false`, to completely disable BuddyBoss blocks.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param bool $value True if the BP REST API is available. False otherwise.
 	 */
-	return apply_filters( 'bp_support_blocks', bp_rest_api_is_available() );
+	return apply_filters( 'bb_support_blocks', bp_rest_api_is_available() );
 }
 
 /**
- * Enqueue additional BP Assets for the Block Editor.
+ * Enqueue additional BB Assets for the Block Editor.
  *
  * @since BuddyBoss [BBVERSION]
  */
-function bp_enqueue_block_editor_assets() {
+function bb_enqueue_block_editor_assets() {
 
 	/**
-	 * Fires when it's time to enqueue BP Block assets.
+	 * Fires when it's time to enqueue BuddyBoss Block assets.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 */
-	do_action( 'bp_enqueue_block_editor_assets' );
+	do_action( 'bb_enqueue_block_editor_assets' );
 }
-add_action( 'enqueue_block_editor_assets', 'bp_enqueue_block_editor_assets', 9 );
+add_action( 'enqueue_block_editor_assets', 'bb_enqueue_block_editor_assets', 9 );
 
 /**
- * Filters the Block Editor settings to gather BuddyPress ones into a `bp` key.
+ * Filters the Block Editor settings to gather BuddyBoss ones into a `bb` key.
  *
  * @since BuddyBoss [BBVERSION]
  *
  * @param array $editor_settings Default editor settings.
- * @return array The editor settings, including BP blocks, specific ones.
+ * @return array The editor settings, including BB blocks, specific ones.
  */
-function bp_blocks_editor_settings( $editor_settings = array() ) {
+function bb_blocks_editor_settings( $editor_settings = array() ) {
 	/**
 	 * Filter here to include your BB Blocks specific settings.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param array $bp_editor_settings BP blocks specific editor settings.
+	 * @param array $bb_editor_settings BB blocks specific editor settings.
 	 */
-	$bp_editor_settings = (array) apply_filters( 'bp_blocks_editor_settings', array() );
+	$bb_editor_settings = (array) apply_filters( 'bb_blocks_editor_settings', array() );
 
-	if ( $bp_editor_settings ) {
-		$editor_settings['bb'] = $bp_editor_settings;
+	if ( $bb_editor_settings ) {
+		$editor_settings['bb'] = $bb_editor_settings;
 	}
 
 	return $editor_settings;
 }
-add_filter( 'block_editor_settings_all', 'bp_blocks_editor_settings' );
+add_filter( 'block_editor_settings_all', 'bb_blocks_editor_settings' );
 
 /**
- * Register a BuddyPress block type.
+ * Register a BuddyBoss block type.
  *
  * @since BuddyBoss [BBVERSION]
  *
  * @param array $args The registration arguments for the block type.
- * @return BP_Block   The BuddyPress block type object.
+ * @return BB_Block   The BuddyBoss block type object.
  */
-function bp_register_block( $args = array() ) {
+function bb_register_block( $args = array() ) {
 	if ( isset( $args['metadata'] ) && is_string( $args['metadata'] ) && file_exists( $args['metadata'] ) ) {
 		$callback = array();
 
@@ -90,7 +90,7 @@ function bp_register_block( $args = array() ) {
 		return register_block_type_from_metadata( $args['metadata'], $callback );
 	}
 
-	return new BP_Block( $args );
+	return new BB_Block( $args );
 }
 
 /**
@@ -101,7 +101,7 @@ function bp_register_block( $args = array() ) {
  * @param string $block_name The Block name.
  * @return array The list of widget classnames for the Block.
  */
-function bp_blocks_get_widget_block_classnames( $block_name = '' ) {
+function bb_blocks_get_widget_block_classnames( $block_name = '' ) {
 	$components         = bp_core_get_active_components( array(), 'objects' );
 	$components['core'] = buddypress()->core;
 	$classnames         = array();
@@ -121,7 +121,7 @@ function bp_blocks_get_widget_block_classnames( $block_name = '' ) {
 }
 
 /**
- * Make sure the BP Widget Block classnames are included in Widget Blocks.
+ * Make sure the BB Widget Block classnames are included in Widget Blocks.
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -129,17 +129,17 @@ function bp_blocks_get_widget_block_classnames( $block_name = '' ) {
  * @param string $block_name The name of the block.
  * @return string The classname to be used in the block widget's container HTML.
  */
-function bp_widget_block_dynamic_classname( $classname, $block_name ) {
-	$bp_classnames = bp_blocks_get_widget_block_classnames( $block_name );
+function bb_widget_block_dynamic_classname( $classname, $block_name ) {
+	$bb_classnames = bb_blocks_get_widget_block_classnames( $block_name );
 
-	if ( $bp_classnames ) {
-		$bp_classnames = array_map( 'sanitize_html_class', $bp_classnames );
-		$classname    .= ' ' . implode( ' ', $bp_classnames );
+	if ( $bb_classnames ) {
+		$bb_classnames = array_map( 'sanitize_html_class', $bb_classnames );
+		$classname    .= ' ' . implode( ' ', $bb_classnames );
 	}
 
 	return $classname;
 }
-add_filter( 'widget_block_dynamic_classname', 'bp_widget_block_dynamic_classname', 10, 2 );
+add_filter( 'widget_block_dynamic_classname', 'bb_widget_block_dynamic_classname', 10, 2 );
 
 /**
  * Callback function to render the Ready Launch Header block.
@@ -149,7 +149,7 @@ add_filter( 'widget_block_dynamic_classname', 'bp_widget_block_dynamic_classname
  * @param array $attributes The block attributes.
  * @return string          HTML output.
  */
-function bp_block_render_readylaunch_header_block( $attributes = array() ) {
+function bb_block_render_readylaunch_header_block( $attributes = array() ) {
 	$block_args = bp_parse_args(
 		$attributes,
 		array(

@@ -580,7 +580,7 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 		}
 
 		/**
-		 * Register the BP Forums Blocks.
+		 * Register the Forums Blocks.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *

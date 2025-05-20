@@ -343,7 +343,7 @@ class BP_Friends_Component extends BP_Component {
 	}
 
 	/**
-	 * Register the BP Friends Blocks.
+	 * Register the Friends Blocks.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *

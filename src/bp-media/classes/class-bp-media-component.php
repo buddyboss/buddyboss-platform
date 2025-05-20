@@ -415,7 +415,7 @@ class BP_Media_Component extends BP_Component {
 	}
 
 	/**
-	 * Register the BP Media Blocks.
+	 * Register the Media Blocks.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *

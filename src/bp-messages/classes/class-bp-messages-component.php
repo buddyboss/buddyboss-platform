@@ -444,7 +444,7 @@ class BP_Messages_Component extends BP_Component {
 	}
 
 	/**
-	 * Register the BP Messages Blocks.
+	 * Register the Messages Blocks.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *

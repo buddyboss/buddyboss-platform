@@ -1189,7 +1189,7 @@ class BP_Groups_Component extends BP_Component {
 	}
 
 	/**
-	 * Register the BP Groups Blocks.
+	 * Register the Groups Blocks.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *

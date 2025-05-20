@@ -317,7 +317,7 @@ class BP_Notifications_Component extends BP_Component {
 	}
 
 	/**
-	 * Register the BP Notifications Blocks.
+	 * Register the Notifications Blocks.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
