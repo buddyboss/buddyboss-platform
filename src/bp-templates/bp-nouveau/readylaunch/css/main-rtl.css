@@ -10320,6 +10320,51 @@ input.bb-rl-zoom-slider::-moz-range-progress {
   color: var(--bb-rl-text-tertiary-color);
 }
 
+.widget_bb_group_about_widget .bb-rl-modal-content {
+  padding: 0;
+  max-height: initial;
+  overflow: initial;
+}
+
+.widget_bb_group_about_widget .bb-rl-wrap-box {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.widget_bb_group_about_widget .bb-rl-wrap-box h3 {
+  font-size: 14px;
+  margin-bottom: 0;
+}
+
+.widget_bb_group_about_widget .bb-rl-wrap-group-organizers {
+  display: flex;
+  align-items: center;
+  gap: var(--bb-rl-space-100);
+  margin: 0 0 var(--bb-rl-space-200);
+}
+
+.widget_bb_group_about_widget .bb-rl-group-organizers {
+  display: flex;
+  align-items: center;
+  margin: 0;
+}
+
+.widget_bb_group_about_widget .bb-rl-group-organizers li {
+  margin-left: calc(var(--bb-rl-space-50) * -1) !important;
+}
+
+.widget_bb_group_about_widget .bb-rl-group-organizers li .avatar {
+  height: 24px;
+  width: 24px;
+  border-radius: var(--bb-rl-radius-full);
+}
+
+.widget_bb_group_about_widget .bb-rl-group-organizers li.organizer-more {
+  font-weight: 500;
+  color: var(--bb-rl-text-tertiary-color) !important;
+  margin-right: 12px !important;
+}
+
 .bb-rl-members .bp-list.grid .item-entry .list-wrap {
   padding: var(--bb-rl-space-300) var(--bb-rl-space-200);
 }
