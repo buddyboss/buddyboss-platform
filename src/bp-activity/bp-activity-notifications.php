@@ -233,7 +233,7 @@ add_action( 'bp_activity_sent_mention_email', 'bp_activity_at_mention_add_notifi
  * Notify a member one of their activity received a reply.
  *
  * @since BuddyPress 2.6.0
- * @since BuddyBoss [BBVERSION] Added the `$params` parameter.
+ * @since BuddyBoss 2.8.50 Added the `$params` parameter.
  *
  * @param BP_Activity_Activity $activity     The original activity.
  * @param int                  $comment_id   ID for the newly received comment.
@@ -302,7 +302,7 @@ add_action( 'bp_activity_sent_reply_to_update_notification', 'bp_activity_update
  * Notify a member one of their activity comment received a reply.
  *
  * @since BuddyPress 2.6.0
- * @since BuddyBoss [BBVERSION] Added the `$params` parameter.
+ * @since BuddyBoss 2.8.50 Added the `$params` parameter.
  *
  * @param BP_Activity_Activity $activity_comment The parent activity.
  * @param int                  $comment_id       ID for the newly received comment.
