@@ -251,7 +251,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 				$users           = apply_filters( 'bp_ps_search_results', $users );
 				$args['include'] = implode( ',', $users );
 			}
-		} else if ( ! empty( $args['include'] ) ) {
+		} else if ( ! empty( $request['include'] ) ) {
 			$args['type'] = 'in';
 		}
 
@@ -1528,11 +1528,11 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 	 *
 	 * @return mixed      Comma-seperated string of user IDs on success. Integer zero on failure.
 	 */
-	private function rest_bp_get_following_ids( $args ) {
+	public function rest_bp_get_following_ids( $args ) {
 		if ( bp_is_active( 'follow' ) ) {
 			return bp_get_following_ids( $args );
 		} else {
-			return ( function_exists( 'bp_get_following' ) ? bp_get_following( $args ) : '' );
+			return ( function_exists( 'bp_get_following' ) && bp_is_activity_follow_active() ? bp_get_following( $args ) : '' );
 		}
 	}
 
@@ -1543,11 +1543,11 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 	 *
 	 * @return mixed      Comma-seperated string of user IDs on success. Integer zero on failure.
 	 */
-	private function rest_bp_get_follower_ids( $args ) {
+	public function rest_bp_get_follower_ids( $args ) {
 		if ( bp_is_active( 'follow' ) ) {
 			return bp_get_follower_ids( $args );
 		} else {
-			return ( function_exists( 'bp_get_followers' ) ? bp_get_followers( $args ) : '' );
+			return ( function_exists( 'bp_get_followers' ) && bp_is_activity_follow_active() ? bp_get_followers( $args ) : '' );
 		}
 	}
 

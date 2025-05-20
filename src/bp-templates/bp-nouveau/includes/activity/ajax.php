@@ -1022,9 +1022,9 @@ function bp_nouveau_ajax_post_update() {
 
 	wp_send_json_success(
 		array(
-			'id'                      => $activity_id,
-			'message'                 => esc_html__( 'Update posted.', 'buddyboss' ) . ' ' . sprintf( '<a href="%s" class="just-posted">%s</a>', esc_url( bp_activity_get_permalink( $activity_id ) ), esc_html__( 'View activity.', 'buddyboss' ) ),
-			'activity'                => $activity,
+			'id'               => $activity_id,
+			'message'          => esc_html__( 'Update posted.', 'buddyboss' ) . ' ' . sprintf( '<a href="%s" class="just-posted">%s</a>', esc_url( bp_activity_get_permalink( $activity_id ) ), esc_html__( 'View activity.', 'buddyboss' ) ),
+			'activity'         => $activity,
 
 			/**
 			 * Filters whether or not an AJAX post update is private.
@@ -1033,10 +1033,9 @@ function bp_nouveau_ajax_post_update() {
 			 *
 			 * @param bool $is_private Privacy status for the update.
 			 */
-			'is_private'              => apply_filters( 'bp_nouveau_ajax_post_update_is_private', $is_private ),
-			'is_directory'            => bp_is_activity_directory(),
-			'is_user_activity'        => bp_is_user_activity(),
-			'is_active_activity_tabs' => bp_is_activity_tabs_active(),
+			'is_private'       => apply_filters( 'bp_nouveau_ajax_post_update_is_private', $is_private ),
+			'is_directory'     => bp_is_activity_directory(),
+			'is_user_activity' => bp_is_user_activity(),
 		)
 	);
 }
@@ -1243,11 +1242,26 @@ function bp_nouveau_ajax_activity_update_privacy() {
 
 	if ( bp_activity_user_can_delete( $activity ) ) {
 		remove_action( 'bp_activity_before_save', 'bp_activity_check_moderation_keys', 2 );
-		$activity->privacy = $_POST['privacy'];
+		$activity->privacy       = sanitize_text_field( wp_unslash( $_POST['privacy'] ) );
+		$activity->date_recorded = bp_core_current_time();
 		$activity->save();
+
+		if ( function_exists( 'bp_activity_update_meta' ) ) {	
+			// Add meta to ensure that this activity has been edited.
+			bp_activity_update_meta( $activity->id, '_is_edited', bp_core_current_time() );
+		}
+
+		$data_response = array();
+		if ( function_exists( 'bp_nouveau_activity_is_edited' ) ) {
+			$edited_text = bp_nouveau_activity_is_edited( $activity->id, false );
+			if ( $edited_text ) {
+				$data_response = array( 'edited_text' => $edited_text );
+			}
+		}
+
 		add_action( 'bp_activity_before_save', 'bp_activity_check_moderation_keys', 2 );
 
-		$response = apply_filters( 'bb_ajax_activity_update_privacy', array(), $_POST );
+		$response = apply_filters( 'bb_ajax_activity_update_privacy', $data_response, $_POST );
 
 		wp_send_json_success( $response );
 	} else {
@@ -1306,7 +1320,7 @@ function bb_nouveau_ajax_activity_update_pinned_post() {
 		} elseif ( 'pinned' === $retval ) {
 			$response['feedback'] = esc_html__( 'Your post has been pinned', 'buddyboss' );
 		} elseif ( 'not_allowed' === $retval || 'not_member' === $retval ) {
-			$response['feedback'] = esc_html__( 'Your are not allowed to pinned or unpinned the post', 'buddyboss' );
+			$response['feedback'] = esc_html__( 'You are not allowed to pin or unpin this post', 'buddyboss' );
 		} elseif ( 'pin_updated' === $retval ) {
 			$response['feedback'] = esc_html__( 'Your pinned post has been updated', 'buddyboss' );
 		}

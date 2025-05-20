@@ -15,12 +15,12 @@ $member_user_link = bp_get_member_permalink();
 <li <?php bp_member_class( array( 'item-entry', 'bp-search-item' ) ); ?> data-bp-item-id="<?php echo esc_attr( $member_user_id ); ?>" data-bp-item-component="members">
 	<div class="list-wrap">
 		<div class="item-avatar">
-			<a href="<?php echo esc_url( $member_user_link ); ?>"><?php bp_member_avatar( bp_nouveau_avatar_args() ); ?></a>
+			<a href="<?php echo esc_url( $member_user_link ); ?>" data-bb-hp-profile="<?php echo esc_attr( $member_user_id ); ?>"><?php bp_member_avatar( bp_nouveau_avatar_args() ); ?></a>
 		</div>
 
 		<div class="item">
 			<h2 class="item-title member-name">
-				<a href="<?php echo esc_url( $member_user_link ); ?>"><?php bp_member_name(); ?></a>
+				<a href="<?php echo esc_url( $member_user_link ); ?>" data-bb-hp-profile="<?php echo esc_attr( $member_user_id ); ?>"><?php bp_member_name(); ?></a>
 			</h2>
 			<?php
 			echo bp_get_user_member_type( $member_user_id );

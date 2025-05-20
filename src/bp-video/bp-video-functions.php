@@ -733,7 +733,7 @@ function bp_video_add_handler( $videos = array(), $privacy = 'public', $content 
 							'blog_id'       => $bp_video->blog_id,
 							'attachment_id' => $bp_video->attachment_id,
 							'user_id'       => $bp_video->user_id,
-							'title'         => $bp_video->title,
+							'title'         => sanitize_text_field( wp_unslash( $bp_video->title ) ),
 							'album_id'      => ! empty( $video['album_id'] ) ? $video['album_id'] : $album_id,
 							'group_id'      => ! empty( $video['group_id'] ) ? $video['group_id'] : $group_id,
 							'activity_id'   => $bp_video->activity_id,
@@ -755,7 +755,7 @@ function bp_video_add_handler( $videos = array(), $privacy = 'public', $content 
 				$video_id = bp_video_add(
 					array(
 						'attachment_id' => $video['id'],
-						'title'         => $video['name'],
+						'title'         => sanitize_text_field( wp_unslash( $video['name'] ) ),
 						'album_id'      => ! empty( $video['album_id'] ) ? $video['album_id'] : $album_id,
 						'group_id'      => ! empty( $video['group_id'] ) ? $video['group_id'] : $group_id,
 						'message_id'    => ! empty( $video['message_id'] ) ? $video['message_id'] : 0,
@@ -3427,7 +3427,12 @@ function bp_video_delete_video_previews() {
 		return;
 	}
 
-	$dir          = opendir( $inner_directory_name );
+	$dir = opendir( $inner_directory_name );
+
+	if ( false === $dir ) {
+		return;
+	}
+
 	$five_minutes = strtotime( '-5 minutes' );
 	while ( false != ( $file = readdir( $dir ) ) ) { // phpcs:ignore WordPress.CodeAnalysis.AssignmentInCondition.FoundInWhileCondition, WordPress.PHP.StrictComparisons.LooseComparison
 		if ( file_exists( $inner_directory_name . '/' . $file ) && is_writable( $inner_directory_name . '/' . $file ) && filemtime( $inner_directory_name . '/' . $file ) < $five_minutes ) {

@@ -1035,6 +1035,10 @@ function bp_filter_metaid_column_name( $q ) {
 	$q = preg_replace( $quoted_regex, '__QUOTE__', $q );
 
 	if ( strpos( $q, 'umeta_id' ) === false ) {
+		global $wpdb;
+		if ( false !== strpos( $q, $wpdb->postmeta ) ) {
+			return $q;
+		}
 		$q = str_replace( 'meta_id', 'id', $q );
 	}
 
@@ -2331,6 +2335,13 @@ function bb_update_digest_schedule_event_on_change_component_status( $active_com
 		if ( ! wp_next_scheduled( 'bb_digest_email_notifications_hook' ) ) {
 			wp_schedule_event( time(), $schedule_key, 'bb_digest_email_notifications_hook' );
 		}
+	}
+
+	$is_moderation_disabled = in_array( 'moderation', $db_component, true ) && ! in_array( 'moderation', $active_components, true );
+	$is_moderation_enabled  = ! in_array( 'moderation', $db_component, true ) && in_array( 'moderation', $active_components, true );
+
+	if ( $is_moderation_disabled || $is_moderation_enabled ) {
+		bb_create_background_member_friends_count();
 	}
 
 }

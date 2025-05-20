@@ -1103,6 +1103,9 @@ function bb_load_group_type_label_custom_css() {
 		}
 		wp_add_inline_style( 'bp-nouveau', $group_type_custom_css );
 	}
+
+	// load the group card template.
+	bb_group_card_template();
 }
 add_action( 'bp_enqueue_scripts', 'bb_load_group_type_label_custom_css', 12 );
 
@@ -1695,4 +1698,13 @@ function bb_add_subgroups_args_single_home( $args ) {
 	 * @param array $args Group args.
 	 */
 	return apply_filters( 'bb_add_subgroups_args_single_home', $args );
+}
+
+/**
+ * Add group hover card template.
+ *
+ * @since BuddyBoss 2.8.20
+ */
+function bb_group_card_template() {
+	bp_get_template_part( 'groups/group-card' );
 }
