@@ -10463,6 +10463,32 @@ input.bb-rl-zoom-slider::-moz-range-progress {
   color: var(--bb-rl-text-tertiary-color);
 }
 
+.widget_bb_group_members_widget .item-list.loading {
+  position: relative;
+}
+
+.widget_bb_group_members_widget .item-list.loading * {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.widget_bb_group_members_widget .item-list.loading:before {
+  content: "";
+  display: inline-block;
+  height: 20px;
+  width: 20px;
+  border: 2px solid var(--bb-rl-border-quaternary-color);
+  border-top-color: var(--bb-rl-border-tertiary-color);
+  border-radius: var(--bb-rl-radius-full);
+  animation: spin 3s infinite linear;
+  position: absolute;
+  inset: 0;
+  opacity: 1;
+  top: 50%;
+  left: 50%;
+  margin: -10px 0 0 -10px;
+}
+
 .widget_bb_group_members_widget .see-all-link {
   display: none;
 }
