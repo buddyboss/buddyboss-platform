@@ -107,7 +107,7 @@ $activity_popup_title = sprintf( esc_html__( '%s\'s Post', 'buddyboss' ), bp_cor
 						if ( 'groups' === $activity_object && 'activity_update' === $activity_type ) {
 							// Show only user link and display name
 							?>
-							<a href="<?php echo esc_url( $user_link ); ?>">
+							<a href="<?php echo esc_url( $user_link ); ?>" data-bb-hp-profile="<?php echo esc_attr( bp_get_activity_user_id() ); ?>">
 								<?php echo esc_html( bp_core_get_user_displayname( $activities_template->activity->user_id ) ); ?>
 							</a>
 							<?php
