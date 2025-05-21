@@ -26,15 +26,15 @@ if ( bp_is_user() ) {
 
 	$available_widgets[] = 'BP_Xprofile_Profile_Completion_Widget';
 
+	if ( bp_is_active( 'friends' ) && ! bp_is_user_friends() ) {
+		$available_widgets[] = 'BB_Core_Connections_Widget';
+	}
+
 	if (
 		bp_is_active( 'activity' ) &&
 		bp_is_activity_follow_active()
 	) {
 		$available_widgets[] = 'BB_Core_Follow_My_Network_Widget';
-	}
-
-	if ( bp_is_active( 'friends' ) && ! bp_is_user_friends() ) {
-		$available_widgets[] = 'BP_Core_Friends_Widget';
 	}
 }
 
@@ -51,7 +51,6 @@ if ( bp_is_active( 'activity' ) && bp_is_activity_directory() ) {
 if ( bp_is_active( 'groups' ) && bp_is_group() ) {
 	$available_widgets[] = 'BB_Group_About_Widget';
 	$available_widgets[] = 'BB_Group_Members_Widget';
-	$available_widgets[] = 'BP_Groups_Widget';
 }
 
 if ( count( $available_widgets ) || ! empty( $static_sidebar_widget ) ) {

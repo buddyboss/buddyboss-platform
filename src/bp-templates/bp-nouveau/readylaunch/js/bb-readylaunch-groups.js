@@ -50,6 +50,8 @@ window.bp = window.bp || {};
 					$( this ).closest( '.bb-rl-action-popup' ).removeClass( 'open' );
 				}
 			);
+
+			$document.on( 'click', '.bb-rl-group-members-list-options a', this.handleGroupMembersListOptionsClick );
 		},
 
 		openModal: function ( modalId ) {
@@ -60,6 +62,37 @@ window.bp = window.bp || {};
 			}
 
 			$modal.addClass( 'open' );
+		},
+
+		handleGroupMembersListOptionsClick : function ( e ) {
+			e.preventDefault();
+			var $link      = $( this );
+			var $options   = $link.closest( '.bb-rl-group-members-list-options' );
+			var $list      = $options.closest( '.widget_bb_group_members_widget' ).find( '.bb-rl-group-members-list' );
+			var $groupAttr = JSON.parse( $link.data( 'group-attr' ) );
+			$list.addClass( 'loading' );
+
+			$options.find( 'a' ).removeClass( 'selected' );
+			$link.addClass( 'selected' );
+
+			$.post(
+				ajaxurl,
+				{
+					action     : 'widget_groups_members_list',
+					'_wpnonce' : $groupAttr.nonce,
+					'group_id' : $groupAttr.group_id,
+					'max'      : $groupAttr.max,
+					'filter'   : $groupAttr.filter
+				},
+				function ( response ) {
+					$list.removeClass( 'loading' );
+					if ( response.data.success && $list.length && response.data.html ) {
+						$list.html( response.data.html );
+					}
+				}
+			);
+
+			return false;
 		},
 	};
 

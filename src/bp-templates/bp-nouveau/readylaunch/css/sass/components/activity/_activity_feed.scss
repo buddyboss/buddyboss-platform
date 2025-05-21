@@ -902,6 +902,10 @@
 		.bb-activity-more-options-wrap + .bb-rl-pin-action {
 			right: 35px;
 		}
+
+		&:has(.activity-state-popup.active) {
+			backdrop-filter: none;
+		}
 	}
 
 	li.activity-item {

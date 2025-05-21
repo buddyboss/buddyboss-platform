@@ -10266,15 +10266,7 @@ input.bb-rl-zoom-slider::-moz-range-progress {
   color: var(--bb-rl-text-tertiary-color);
 }
 
-.widget_bb_recent_blog_posts_widget .bb-rl-recent-post {
-  margin-bottom: var(--bb-rl-space-200);
-}
-
-.widget_bb_recent_blog_posts_widget .bb-rl-recent-post:last-of-type {
-  margin-bottom: 0;
-}
-
-.widget_bb_recent_blog_posts_widget .widget-header {
+.widget .widget-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -10284,15 +10276,38 @@ input.bb-rl-zoom-slider::-moz-range-progress {
   border-bottom: 1px solid var(--bb-rl-border-secondary-color);
 }
 
-.widget_bb_recent_blog_posts_widget .widget-header .widget-link {
+.widget .widget-header .widget-link {
   font-size: var(--bb-rl-font-size-sm);
   font-weight: 500;
   color: var(--bb-rl-text-color);
 }
 
-.widget_bb_recent_blog_posts_widget .widget-header .widget-title {
+.widget .widget-header .widget-title {
   margin: 0;
   border: 0;
+}
+
+.widget .item-avatar {
+  position: relative;
+}
+
+.widget .item-avatar .member-status.online {
+  position: absolute;
+  right: 4px;
+  bottom: 2px;
+  border: 1px solid var(--bb-rl-background-color);
+  background-color: var(--bb-rl-background-positive-primary-color);
+  border-radius: var(--bb-rl-radius-full);
+  width: 9px;
+  height: 9px;
+}
+
+.widget_bb_recent_blog_posts_widget .bb-rl-recent-post {
+  margin-bottom: var(--bb-rl-space-200);
+}
+
+.widget_bb_recent_blog_posts_widget .bb-rl-recent-post:last-of-type {
+  margin-bottom: 0;
 }
 
 .widget_bb_recent_blog_posts_widget .bb-rl-recent-post-thumb img {
@@ -10318,6 +10333,181 @@ input.bb-rl-zoom-slider::-moz-range-progress {
   font-size: var(--bb-rl-font-size-sm);
   font-weight: 400;
   color: var(--bb-rl-text-tertiary-color);
+}
+
+.widget_bb_group_about_widget .bb-rl-modal-content {
+  padding: 0;
+  max-height: initial;
+  overflow: initial;
+}
+
+.widget_bb_group_about_widget .bb-rl-wrap-box {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.widget_bb_group_about_widget .bb-rl-wrap-box h3 {
+  font-size: 14px;
+  margin-bottom: 0;
+}
+
+.widget_bb_group_about_widget .bb-rl-wrap-group-organizers {
+  display: flex;
+  align-items: center;
+  gap: var(--bb-rl-space-100);
+  margin: 0 0 var(--bb-rl-space-200);
+}
+
+.widget_bb_group_about_widget .bb-rl-group-organizers {
+  display: flex;
+  align-items: center;
+  margin: 0;
+}
+
+.widget_bb_group_about_widget .bb-rl-group-organizers li {
+  margin-right: calc(var(--bb-rl-space-50) * -1) !important;
+}
+
+.widget_bb_group_about_widget .bb-rl-group-organizers li .avatar {
+  height: 24px;
+  width: 24px;
+  border-radius: var(--bb-rl-radius-full);
+}
+
+.widget_bb_group_about_widget .bb-rl-group-organizers li.organizer-more {
+  font-weight: 500;
+  color: var(--bb-rl-text-tertiary-color) !important;
+  margin-left: 12px !important;
+}
+
+.widget_bb_group_members_widget .item-options {
+  display: flex;
+  align-items: center;
+  gap: var(--bb-rl-space-50);
+  flex-wrap: wrap;
+  margin-bottom: var(--bb-rl-space-300);
+}
+
+.widget_bb_group_members_widget .item-options a {
+  display: inline-block;
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 500;
+  line-height: 1.8;
+  color: var(--bb-rl-text-color);
+  background-color: transparent;
+  border-radius: var(--bb-rl-radius-full);
+  padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
+  border: 0;
+  text-decoration: none;
+}
+
+.widget_bb_group_members_widget .item-options a.selected, .widget_bb_group_members_widget .item-options a:hover {
+  color: var(--bb-rl-text-color);
+  background-color: var(--bb-rl-background-secondary-color);
+}
+
+.widget_bb_group_members_widget .item-list {
+  padding: 0;
+}
+
+.widget_bb_group_members_widget .item-list li {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: var(--bb-rl-space-200);
+  padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+  border-radius: var(--bb-rl-radius-lg);
+  margin: 0 calc(var(--bb-rl-space-200) * -1);
+  position: relative;
+}
+
+.widget_bb_group_members_widget .item-list li:hover {
+  background-color: var(--bb-rl-background-secondary-hover-color);
+}
+
+.widget_bb_group_members_widget .item-list li .item-avatar {
+  height: 48px;
+  width: 48px;
+  position: static;
+}
+
+.widget_bb_group_members_widget .item-list li .item-avatar a {
+  position: absolute;
+  inset: 0;
+}
+
+.widget_bb_group_members_widget .item-list li .item-avatar .member-status.online {
+  left: 52px;
+  top: 46px;
+}
+
+.widget_bb_group_members_widget .item-list li .avatar {
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+  border-radius: var(--bb-rl-radius-full);
+  margin: var(--bb-rl-space-100) 0 0 var(--bb-rl-space-200);
+}
+
+.widget_bb_group_members_widget .item-list li .member-name {
+  display: block;
+  color: var(--bb-rl-text-color);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.widget_bb_group_members_widget .item-list li .member-active {
+  display: block;
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--bb-rl-text-tertiary-color);
+}
+
+.widget_bb_group_members_widget .item-list.loading {
+  position: relative;
+}
+
+.widget_bb_group_members_widget .item-list.loading * {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.widget_bb_group_members_widget .item-list.loading:before {
+  content: "";
+  display: inline-block;
+  height: 20px;
+  width: 20px;
+  border: 2px solid var(--bb-rl-border-quaternary-color);
+  border-top-color: var(--bb-rl-border-tertiary-color);
+  border-radius: var(--bb-rl-radius-full);
+  animation: spin 3s infinite linear;
+  position: absolute;
+  inset: 0;
+  opacity: 1;
+  top: 50%;
+  left: 50%;
+  margin: -10px 0 0 -10px;
+}
+
+.widget_bb_group_members_widget .see-all-link {
+  display: none;
+}
+
+.widget_bb_connections_widget .bb-connections-grid {
+  display: flex;
+  gap: var(--bb-rl-space-100);
+  flex-wrap: wrap;
+  padding: 0;
+  margin-left: -1px;
+  margin-right: -1px;
+  list-style: none;
+}
+
+.widget_bb_connections_widget .bb-connections-grid .avatar {
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+  border-radius: var(--bb-rl-radius-full);
 }
 
 .bb-rl-members .bp-list.grid .item-entry .list-wrap {
@@ -14106,6 +14296,10 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
 
 .bb-rl-internal-model .bb-rl-activity-modal .bb-activity-more-options-wrap + .bb-rl-pin-action {
   right: 35px;
+}
+
+.bb-rl-internal-model .bb-rl-activity-modal:has(.activity-state-popup.active) {
+  backdrop-filter: none;
 }
 
 .bb-rl-internal-model li.activity-item {
