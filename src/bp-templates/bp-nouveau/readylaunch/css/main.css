@@ -20492,7 +20492,7 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   font-size: 0;
 }
 
-.notifications.dir-list .notification-list .actions .bb-rl-more_dropdown-wrap.active a {
+.notifications.dir-list .notification-list .actions .bb-rl-more_dropdown-wrap.active .bb_rl_more_dropdown__action {
   color: var(--bb-rl-icon-color);
 }
 
@@ -20502,22 +20502,25 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
 }
 
 .notifications.dir-list .notification-list .actions a {
-  color: var(--bb-rl-icon-secondary-color);
+  display: flex;
+  align-items: center;
+  gap: var(--bb-rl-space-100);
+  color: var(--bb-rl-text-secondary-color);
   font-weight: 500;
-  padding-left: var(--bb-rl-space-100);
 }
 
-.notifications.dir-list .notification-list .actions a:hover {
-  color: var(--bb-rl-icon-color);
+.notifications.dir-list .notification-list .actions a:before, .notifications.dir-list .notification-list .actions a:after {
+  display: none;
 }
 
 .notifications.dir-list .notification-list .actions a .dashicons {
-  font-size: var(--bb-rl-font-size-base);
+  font-size: var(--bb-rl-font-size-2xl);
   font-family: bb-icons-rl;
+  color: var(--bb-rl-icon-secondary-color);
 }
 
 .notifications.dir-list .notification-list .actions a .dashicons.dashicons-visibility:before {
-  content: "\e224";
+  content: "\e182";
 }
 
 .notifications.dir-list .notification-list .actions a .dashicons.dashicons-trash:before {
