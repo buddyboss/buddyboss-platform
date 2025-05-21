@@ -124,3 +124,9 @@
 		}
 	}
 }
+
+.bb-rl-courses-grid {
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+	gap: var(--bb-rl-space-200);
+}
