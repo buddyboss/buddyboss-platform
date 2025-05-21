@@ -9839,6 +9839,10 @@ input.bb-rl-zoom-slider::-moz-range-progress {
   color: var(--bb-rl-text-color);
 }
 
+.bb-rl-widget-sidebar .bb-rl-see-all a [class*="bb-icon-"] {
+  display: none;
+}
+
 .bb-rl-widget-sidebar .widget + .widget {
   margin-top: var(--bb-rl-space-200);
 }

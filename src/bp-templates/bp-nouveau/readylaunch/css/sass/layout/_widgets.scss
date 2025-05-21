@@ -24,6 +24,10 @@
 
 		@include bb-rl-label-heading-bolder;
 		color: var(--bb-rl-text-color);
+
+		[class*="bb-icon-"] {
+			display: none;
+		}
 	}
 
 	.widget + .widget {
