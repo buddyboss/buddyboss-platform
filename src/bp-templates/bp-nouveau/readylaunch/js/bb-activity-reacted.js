@@ -380,7 +380,7 @@ window.bp = window.bp || {};
 			},
 			closePopup: function ( e ) {
 				e.preventDefault();
-				$( e.currentTarget ).closest( '.activity-state-popup' ).hide();
+				$( e.currentTarget ).closest( '.activity-state-popup' ).removeClass( 'active' );
 			},
 			render: function () {
 				this.$el.html( this.template( this.data ) );

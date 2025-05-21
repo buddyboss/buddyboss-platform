@@ -54,18 +54,18 @@ class BB_Core_Connections_Widget extends WP_Widget {
 		$friends = array_slice( $friends, 0, $max );
 
 		?>
-		<div class="widget-header" style="display:flex;justify-content:space-between;align-items:center;">
+		<div class="widget-header">
 			<h2 class="widget-title"><?php esc_html_e( 'Connections', 'buddyboss' ); ?></h2>
 			<a href="<?php echo esc_url( bp_loggedin_user_domain() . bp_get_friends_slug() . '/' ); ?>" class="widget-link">
 				<?php esc_html_e( 'See all', 'buddyboss' ); ?>
 			</a>
 		</div>
-		<ul class="bb-connections-grid" style="display:flex;flex-wrap:wrap;gap:12px;list-style:none;padding:0;margin:0;">
+		<ul class="bb-connections-grid">
 			<?php
 			foreach ( $friends as $friend_id ) {
 				?>
-				<li style="position:relative;">
-					<a href="<?php echo esc_url( bp_core_get_user_domain( $friend_id ) ); ?>">
+				<li>
+					<a href="<?php echo esc_url( bp_core_get_user_domain( $friend_id ) ); ?>" class="item-avatar bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo esc_attr( bp_core_get_user_displayname( $friend_id ) ); ?>">
 						<?php
 						echo wp_kses_post(
 							bp_core_fetch_avatar(
