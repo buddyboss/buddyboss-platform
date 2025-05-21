@@ -175,7 +175,7 @@ export const ReadyLaunchSettings = () => {
 				const updatedItems = prevItems.map(item =>
 					item.id === name ? { ...item, enabled: value } : item
 				);
-				
+
 				// Update settings and changedFields with the new structure
 				const bb_rl_side_menu = {};
 				updatedItems.forEach(item => {
@@ -244,12 +244,12 @@ export const ReadyLaunchSettings = () => {
 
 	const handleSaveLink = (linkData) => {
 		setHasUserMadeChanges(true); // Set flag when user makes a change
-		
+
 		if (currentEditingLink) {
 			// Update existing link
-			const updatedLinks = settings.bb_rl_custom_links.map(link => 
-				link.id === currentEditingLink.id 
-					? { ...link, title: linkData.title, url: linkData.url } 
+			const updatedLinks = settings.bb_rl_custom_links.map(link =>
+				link.id === currentEditingLink.id
+					? { ...link, title: linkData.title, url: linkData.url }
 					: link
 			);
 
@@ -284,7 +284,7 @@ export const ReadyLaunchSettings = () => {
 				bb_rl_custom_links: updatedLinks
 			}));
 		}
-		
+
 		setIsLinkModalOpen(false);
 	};
 
@@ -292,7 +292,7 @@ export const ReadyLaunchSettings = () => {
 		setHasUserMadeChanges(true); // Set flag when user makes a change
 
 		const updatedLinks = settings.bb_rl_custom_links ? settings.bb_rl_custom_links.filter(link => link.id !== id) : [];
-		
+
 		setSettings(prevSettings => ({
 			...prevSettings,
 			// Ensure bb_rl_custom_links exists before filtering
@@ -308,13 +308,13 @@ export const ReadyLaunchSettings = () => {
 	// Specific handler for image uploads using WordPress media library
 	const handleImageUpload = (name) => (imageData) => {
 		setHasUserMadeChanges(true); // Set flag when user makes a change
-		
+
 		// Update both settings and changedFields
-		setSettings(prevSettings => ({ 
-			...prevSettings, 
-			[name]: imageData 
+		setSettings(prevSettings => ({
+			...prevSettings,
+			[name]: imageData
 		}));
-		
+
 		setChangedFields(prev => ({
 			...prev,
 			[name]: imageData
@@ -364,8 +364,8 @@ export const ReadyLaunchSettings = () => {
 				<div className="image-selector-control">
 					{value && value.url ? (
 						<div className="bb-rl-image-preview-wrapper">
-							<img 
-								src={value.url} 
+							<img
+								src={value.url}
 								alt={value.alt || ''}
 								className="image-preview"
 							/>
@@ -377,7 +377,7 @@ export const ReadyLaunchSettings = () => {
 								>
 									{__('Replace', 'buddyboss')}
 								</Button>
-								<Button 
+								<Button
 									onClick={() => onChange(null)}
 									className="remove-image-button bb-rl-button bb-rl-button--outline bb-rl-button--small"
 									icon={<i className="bb-icons-rl-x" />}
@@ -387,7 +387,7 @@ export const ReadyLaunchSettings = () => {
 							</div>
 						</div>
 					) : (
-						<Button 
+						<Button
 							onClick={() => openMediaLibrary(label, onChange)}
 							className="bb-rl-upload-image-button"
 							icon={<i className="bb-icons-rl-plus" />}
@@ -405,19 +405,19 @@ export const ReadyLaunchSettings = () => {
 	const ColorPickerButton = ({ label, color, onChange }) => {
 		const [isPickerOpen, setIsPickerOpen] = useState(false);
 		const [tempColor, setTempColor] = useState(color);
-		
+
 		const togglePicker = () => {
 			setIsPickerOpen(!isPickerOpen);
 			setTempColor(color); // Reset temp color when opening
 		};
-		
+
 		const closePicker = () => setIsPickerOpen(false);
-		
+
 		const applyColor = () => {
 			onChange(tempColor);
 			closePicker();
 		};
-		
+
 		// Ensure we have a valid color value
 		const colorValue = color || '#3E34FF'; // Default to blue if no color is set
 
@@ -486,7 +486,7 @@ export const ReadyLaunchSettings = () => {
 		}
 
 		setHasUserMadeChanges(true);
-		
+
 		// Reorder Side Menu Items
 		if (source.droppableId === 'sideMenuItems') {
 			const items = Array.from(sideMenuItems);
@@ -544,7 +544,7 @@ export const ReadyLaunchSettings = () => {
 		setHelpOpen(true);
 		setHelpLoading(true);
 		setHelpError(null);
-		
+
 		try {
 			const content = await fetchHelpContent(contentId);
 			setHelpContent(content);
@@ -566,7 +566,7 @@ export const ReadyLaunchSettings = () => {
 
 	// Update Accordion usage to include contentId
 	const renderAccordion = (title, isExpanded, section, contentId) => (
-		<Accordion 
+		<Accordion
 			title={__(title, 'buddyboss')}
 			isExpanded={isExpanded}
 			onToggle={() => toggleSection(section)}
@@ -630,7 +630,7 @@ export const ReadyLaunchSettings = () => {
 					<div className="settings-content">
 						<h1>{__('Style Settings', 'buddyboss')}</h1>
 						<p className="settings-description">{__('ReadyLaunch loads BuddyBoss templates into your community with minimal customization, making deployment easy.', 'buddyboss')}</p>
-						
+
 						<div className="settings-card">
 							<div className="settings-header">
 								<h3>{__('Branding', 'buddyboss')}</h3>
@@ -703,7 +703,7 @@ export const ReadyLaunchSettings = () => {
 									)}
 								</div>
 							</div>
-							
+
 
 							{/* Theme Mode Setting */}
 							{settings.bb_rl_skin_appearance && (
@@ -736,9 +736,9 @@ export const ReadyLaunchSettings = () => {
 					<div className="settings-content">
 						<h1>{__('Pages and Widgets Settings', 'buddyboss')}</h1>
 						<p className="settings-description">{__('ReadyLaunch loads BuddyBoss templates into your community with minimal customization, making deployment easy.', 'buddyboss')}</p>
-					
+
 						<div className="settings-card">
-							<Accordion 
+							<Accordion
 								title={__('Pages', 'buddyboss')}
 								isExpanded={expandedSections.pages}
 								onToggle={() => toggleSection('pages')}
@@ -784,87 +784,54 @@ export const ReadyLaunchSettings = () => {
 						</div>
 
 						<div className="settings-card">
-							<Accordion 
+							<Accordion
 								title={__('Sidebars', 'buddyboss')}
 								isExpanded={expandedSections.sidebars}
 								onToggle={() => toggleSection('sidebars')}
 								onHelpClick={() => handleHelpClick('456175')}
 							>
-								{/* Activity Feed */}
-								<div className="settings-form-field with-multiple-toggles">
-									<div className="field-label">
-										<label>{__('Activity Feed', 'buddyboss')}</label>
-										<p>{__('Description text goes here', 'buddyboss')}</p>
-									</div>
-									<div className="field-toggles">
-										<div className="toggle-item">
-											<ToggleControl
-												label={__('Complete Profile', 'buddyboss')}
-												checked={settings.bb_rl_activity_sidebars.complete_profile}
-												onChange={handleNestedSettingChange('bb_rl_activity_sidebars', 'complete_profile')}
-											/>
+								{
+									BP_ADMIN.components &&
+									BP_ADMIN.components.activity &&
+									BP_ADMIN.components.activity === '1' && (
+									<div className="settings-form-field with-multiple-toggles">
+										<div className="field-label">
+											<label>{__('Activity Feed', 'buddyboss')}</label>
+											<p>{__('Description text goes here', 'buddyboss')}</p>
 										</div>
-										<div className="toggle-item">
-											<ToggleControl
-												label={__('Latest Updates', 'buddyboss')}
-												checked={settings.bb_rl_activity_sidebars.latest_updates}
-												onChange={handleNestedSettingChange('bb_rl_activity_sidebars', 'latest_updates')}
-											/>
-										</div>
-										<div className="toggle-item">
-											<ToggleControl
-												label={__('Recent Blog Posts', 'buddyboss')}
-												checked={settings.bb_rl_activity_sidebars.recent_blog_posts}
-												onChange={handleNestedSettingChange('bb_rl_activity_sidebars', 'recent_blog_posts')}
-											/>
-										</div>
-										<div className="toggle-item">
-											<ToggleControl
-												label={__('Active Members', 'buddyboss')}
-												checked={settings.bb_rl_activity_sidebars.active_members}
-												onChange={handleNestedSettingChange('bb_rl_activity_sidebars', 'active_members')}
-											/>
-										</div>
-									</div>
-								</div>
-
-								{/* Member Directory */}
-								<div className="settings-form-field with-multiple-toggles">
-									<div className="field-label">
-										<label>{__('Member Directory', 'buddyboss')}</label>
-										<p>{__('Description text goes here', 'buddyboss')}</p>
-									</div>
-									<div className="field-toggles">
-										<div className="toggle-item">
-											<ToggleControl
-												label={__('Complete Profile', 'buddyboss')}
-												checked={settings.bb_rl_member_sidebars.complete_profile}
-												onChange={handleNestedSettingChange('bb_rl_member_sidebars', 'complete_profile')}
-											/>
-										</div>
-										<div className="toggle-item">
-											<ToggleControl
-												label={__('Connections', 'buddyboss')}
-												checked={settings.bb_rl_member_sidebars.connections}
-												onChange={handleNestedSettingChange('bb_rl_member_sidebars', 'connections')}
-											/>
-										</div>
-										<div className="toggle-item">
-											<ToggleControl
-												label={__('My Network (Follow, Followers)', 'buddyboss')}
-												checked={settings.bb_rl_member_sidebars.my_network}
-												onChange={handleNestedSettingChange('bb_rl_member_sidebars', 'my_network')}
-											/>
-										</div>
-										<div className="toggle-item">
-											<ToggleControl
-												label={__('Social', 'buddyboss')}
-												checked={settings.bb_rl_member_sidebars.social}
-												onChange={handleNestedSettingChange('bb_rl_member_sidebars', 'social')}
-											/>
+										<div className="field-toggles">
+											<div className="toggle-item">
+												<ToggleControl
+													label={__('Complete Profile', 'buddyboss')}
+													checked={settings.bb_rl_activity_sidebars.complete_profile}
+													onChange={handleNestedSettingChange('bb_rl_activity_sidebars', 'complete_profile')}
+												/>
+											</div>
+											<div className="toggle-item">
+												<ToggleControl
+													label={__('Latest Updates', 'buddyboss')}
+													checked={settings.bb_rl_activity_sidebars.latest_updates}
+													onChange={handleNestedSettingChange('bb_rl_activity_sidebars', 'latest_updates')}
+												/>
+											</div>
+											<div className="toggle-item">
+												<ToggleControl
+													label={__('Recent Blog Posts', 'buddyboss')}
+													checked={settings.bb_rl_activity_sidebars.recent_blog_posts}
+													onChange={handleNestedSettingChange('bb_rl_activity_sidebars', 'recent_blog_posts')}
+												/>
+											</div>
+											<div className="toggle-item">
+												<ToggleControl
+													label={__('Active Members', 'buddyboss')}
+													checked={settings.bb_rl_activity_sidebars.active_members}
+													onChange={handleNestedSettingChange('bb_rl_activity_sidebars', 'active_members')}
+												/>
+											</div>
 										</div>
 									</div>
-								</div>
+									)
+								}
 
 								{/* Member Profile */}
 								<div className="settings-form-field with-multiple-toggles">
@@ -880,32 +847,43 @@ export const ReadyLaunchSettings = () => {
 												onChange={handleNestedSettingChange('bb_rl_member_profile_sidebars', 'complete_profile')}
 											/>
 										</div>
-										<div className="toggle-item">
-											<ToggleControl
-												label={__('Connections', 'buddyboss')}
-												checked={settings.bb_rl_member_profile_sidebars.connections}
-												onChange={handleNestedSettingChange('bb_rl_member_profile_sidebars', 'connections')}
-											/>
-										</div>
-										<div className="toggle-item">
-											<ToggleControl
-												label={__('My Network (Follow, Followers)', 'buddyboss')}
-												checked={settings.bb_rl_member_profile_sidebars.my_network}
-												onChange={handleNestedSettingChange('bb_rl_member_profile_sidebars', 'my_network')}
-											/>
-										</div>
-										<div className="toggle-item">
-											<ToggleControl
-												label={__('Social', 'buddyboss')}
-												checked={settings.bb_rl_member_profile_sidebars.social}
-												onChange={handleNestedSettingChange('bb_rl_member_profile_sidebars', 'social')}
-											/>
-										</div>
+										{
+											BP_ADMIN.components &&
+											BP_ADMIN.components.friends &&
+											BP_ADMIN.components.friends === '1' && (
+											<div className="toggle-item">
+												<ToggleControl
+													label={__('Connections', 'buddyboss')}
+													checked={settings.bb_rl_member_profile_sidebars.connections}
+													onChange={handleNestedSettingChange('bb_rl_member_profile_sidebars', 'connections')}
+												/>
+											</div>
+											)
+										}
+										{
+											BP_ADMIN.components &&
+											BP_ADMIN.components.activity &&
+											BP_ADMIN.components.activity === '1' &&
+											settings.bp_enable_activity_follow === true &&
+											(
+											<div className="toggle-item">
+												<ToggleControl
+													label={__('My Network (Follow, Followers)', 'buddyboss')}
+													checked={settings.bb_rl_member_profile_sidebars.my_network}
+													onChange={handleNestedSettingChange('bb_rl_member_profile_sidebars', 'my_network')}
+												/>
+											</div>
+											)
+										}
 									</div>
 								</div>
 
 								{/* Group */}
-								<div className="settings-form-field with-multiple-toggles">
+								{
+									BP_ADMIN.components &&
+									BP_ADMIN.components.groups &&
+									BP_ADMIN.components.groups === '1' && (
+									<div className="settings-form-field with-multiple-toggles">
 									<div className="field-label">
 										<label>{__('Group', 'buddyboss')}</label>
 										<p>{__('Description text goes here', 'buddyboss')}</p>
@@ -927,6 +905,8 @@ export const ReadyLaunchSettings = () => {
 										</div>
 									</div>
 								</div>
+									)
+								}
 							</Accordion>
 						</div>
 					</div>
@@ -936,10 +916,10 @@ export const ReadyLaunchSettings = () => {
 					<div className="settings-content">
 						<h1>{__('Menu Settings', 'buddyboss')}</h1>
 						<p className="settings-description">{__('ReadyLaunch loads BuddyBoss templates into your community with minimal customization, making deployment easy.', 'buddyboss')}</p>
-						
+
 						<DragDropContext onDragEnd={onDragEnd}> {/* Wrap relevant sections */}
 							<div className="settings-card">
-								<Accordion 
+								<Accordion
 									title={__('Menus', 'buddyboss')}
 									isExpanded={expandedSections.menus}
 									onToggle={() => toggleSection('menus')}
@@ -968,7 +948,7 @@ export const ReadyLaunchSettings = () => {
 											</p>
 										</div>
 									</div>
-									
+
 									{/* Side Menu - Now uses Draggable/Droppable */}
 									<div className="settings-form-field with-icon-toggles">
 										<div className="field-label">
@@ -977,9 +957,9 @@ export const ReadyLaunchSettings = () => {
 										</div>
 										<Droppable droppableId="sideMenuItems">
 											{(provided) => (
-												<div 
-													className="field-toggles" 
-													{...provided.droppableProps} 
+												<div
+													className="field-toggles"
+													{...provided.droppableProps}
 													ref={provided.innerRef}
 												>
 													{sideMenuItems.map((item, index) => (
@@ -995,7 +975,7 @@ export const ReadyLaunchSettings = () => {
 																	<ToggleControl
 																		checked={item.enabled}
 																		// Use the updated handler, passing the item ID
-																		onChange={(value) => handleNestedSettingChange('bb_rl_side_menu', item.id)(value)} 
+																		onChange={(value) => handleNestedSettingChange('bb_rl_side_menu', item.id)(value)}
 																		label={<><span className={`menu-icon ${item.icon}`}></span> {item.label}</>}
 																	/>
 																</div>
@@ -1007,7 +987,7 @@ export const ReadyLaunchSettings = () => {
 											)}
 										</Droppable>
 									</div>
-									
+
 									{/* Custom Links - Now uses Draggable/Droppable */}
 									<div className="settings-form-field custom-links-field">
 										<div className="field-label">
@@ -1016,7 +996,7 @@ export const ReadyLaunchSettings = () => {
 										</div>
 										<Droppable droppableId="bb_rl_custom_links">
 											{(provided) => (
-												<div 
+												<div
 													className="field-input custom-links-wrapper"
 													{...provided.droppableProps}
 													ref={provided.innerRef}
@@ -1038,7 +1018,7 @@ export const ReadyLaunchSettings = () => {
 														</Draggable>
 													))}
 													{provided.placeholder}
-													
+
 													{/* Add New Link Button - Moved inside Droppable but outside mapping */}
 													<Button
 														className="add-link-button bb-rl-button bb-rl-button--primary bb-rl-button--small"
@@ -1054,15 +1034,15 @@ export const ReadyLaunchSettings = () => {
 								</Accordion>
 							</div>
 						</DragDropContext> {/* End DragDropContext */}
-						
+
 						{/* Link Modal */}
 						<LinkModal
 							isOpen={isLinkModalOpen}
 							onClose={() => setIsLinkModalOpen(false)}
 							onSave={handleSaveLink}
-							linkData={currentEditingLink ? { 
-								title: currentEditingLink.title, 
-								url: currentEditingLink.url 
+							linkData={currentEditingLink ? {
+								title: currentEditingLink.title,
+								url: currentEditingLink.url
 							} : { title: '', url: '' }}
 						/>
 					</div>
@@ -1086,7 +1066,7 @@ export const ReadyLaunchSettings = () => {
 							{notification.message}
 						</Notice>
 					)}
-					
+
 					{isSaving && (
 						<div className="settings-saving-indicator">
 							<Spinner />
@@ -1115,24 +1095,24 @@ export const ReadyLaunchSettings = () => {
 					<>
 						{helpContent.videoId && (
 							<div style={{marginBottom: 16}}>
-								<iframe 
-									width="100%" 
-									height="315" 
+								<iframe
+									width="100%"
+									height="315"
 									src={`https://www.youtube.com/embed/${helpContent.videoId}`}
-									title="YouTube video" 
-									frameBorder="0" 
+									title="YouTube video"
+									frameBorder="0"
 									allowFullScreen
 								></iframe>
 							</div>
 						)}
-						<div 
+						<div
 							className="help-content"
 							dangerouslySetInnerHTML={{ __html: helpContent.content }}
 						/>
 						{helpContent.imageUrl && (
-							<img 
-								src={helpContent.imageUrl} 
-								alt="Help content illustration" 
+							<img
+								src={helpContent.imageUrl}
+								alt="Help content illustration"
 								style={{width: '100%', borderRadius: 8, marginBottom: 16}}
 							/>
 						)}

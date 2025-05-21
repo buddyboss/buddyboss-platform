@@ -343,7 +343,8 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 				'forum_validation'             => array(
 					'escaped_html_tags' => esc_js( __( 'Your content contains escaped HTML tags. Please fix them before submitting.', 'buddyboss' ) ),
 					'malformed_ul_li'   => esc_js( __( 'Content has malformed <ul> or <li> tags. Please fix them before submitting.', 'buddyboss' ) ),
-				)
+				),
+				'components' => bp_get_option( 'bp-active-components' ),
 			);
 
 			// Localize only post_type is member type and group type.

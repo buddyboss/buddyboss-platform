@@ -2114,21 +2114,6 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				)
 			);
 
-			$settings['bb_rl_member_sidebars'] = array_map(
-				function ( $value ) {
-					return (bool) $value;
-				},
-				bp_get_option(
-					'bb_rl_member_sidebars',
-					array(
-						'complete_profile' => true,
-						'connections'      => false,
-						'my_network'       => false,
-						'social'           => false,
-					)
-				)
-			);
-
 			$settings['bb_rl_member_profile_sidebars'] = array_map(
 				function ( $value ) {
 					return (bool) $value;
