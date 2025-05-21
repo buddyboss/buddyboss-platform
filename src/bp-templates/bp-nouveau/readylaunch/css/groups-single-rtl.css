@@ -3334,6 +3334,12 @@ div#bp-group-message-content {
   color: var(--bb-rl-text-color);
 }
 
+.bb-rl-courses-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--bb-rl-space-200);
+}
+
 .bb-readylaunch-template .bb-courses-header .grid-filters {
   display: flex;
   align-items: center;
