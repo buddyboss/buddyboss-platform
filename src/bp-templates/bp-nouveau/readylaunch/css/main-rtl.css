@@ -14255,6 +14255,10 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   left: 35px;
 }
 
+.bb-rl-internal-model .bb-rl-activity-modal:has(.activity-state-popup.active) {
+  backdrop-filter: none;
+}
+
 .bb-rl-internal-model li.activity-item {
   border: 0;
   padding: 0;
