@@ -10,15 +10,82 @@ import { LinkModal } from '../../components/LinkModal';
 import { HelpIcon } from '../../components/HelpIcon';
 import { HelpSliderModal } from '../../components/HelpSliderModal';
 
-// Initial structure for side menu items
-const initialSideMenuItems = [
-	{ id: 'activity_feed', label: __('Activity Feed', 'buddyboss'), icon: 'activity-icon', enabled: true, order: 0 },
+// Initial structure for base menu items that are always included
+const baseMenuItems = [
 	{ id: 'members', label: __('Members', 'buddyboss'), icon: 'members-icon', enabled: true, order: 1 },
-	{ id: 'groups', label: __('Groups', 'buddyboss'), icon: 'groups-icon', enabled: true, order: 2 },
-	{ id: 'courses', label: __('Courses', 'buddyboss'), icon: 'courses-icon', enabled: true, order: 3 },
-	{ id: 'messages', label: __('Messages', 'buddyboss'), icon: 'messages-icon', enabled: false, order: 4 },
-	{ id: 'notifications', label: __('Notifications', 'buddyboss'), icon: 'notifications-icon', enabled: false, order: 5 },
+	{ id: 'courses', label: __('Courses', 'buddyboss'), icon: 'courses-icon', enabled: true, order: 3 }
 ];
+
+// Helper function to get component-based menu items
+const getComponentMenuItems = () => {
+	const items = [...baseMenuItems];
+	let currentOrder = 0;
+
+	// Add activity feed if component is active
+	if (window?.BP_ADMIN?.components?.activity === '1') {
+		items.unshift({
+			id: 'activity_feed',
+			label: __('Activity Feed', 'buddyboss'),
+			icon: 'activity-icon',
+			enabled: true,
+			order: currentOrder++
+		});
+	}
+
+	// Update order for base items
+	items.forEach(item => {
+		if (item.id === 'members') {
+			item.order = currentOrder++;
+		}
+	});
+
+	// Add groups if component is active
+	if (window?.BP_ADMIN?.components?.groups === '1') {
+		items.push({
+			id: 'groups',
+			label: __('Groups', 'buddyboss'),
+			icon: 'groups-icon',
+			enabled: true,
+			order: currentOrder++
+		});
+	}
+
+	// Update order for remaining base items
+	items.forEach(item => {
+		if (item.id === 'courses') {
+			item.order = currentOrder++;
+		}
+	});
+
+	// Add messages if component is active
+	if (window?.BP_ADMIN?.components?.messages === '1') {
+		items.push({
+			id: 'messages',
+			label: __('Messages', 'buddyboss'),
+			icon: 'messages-icon',
+			enabled: false,
+			order: currentOrder++
+		});
+	}
+
+	// Add notifications if component is active
+	if (window?.BP_ADMIN?.components?.notifications === '1') {
+		items.push({
+			id: 'notifications',
+			label: __('Notifications', 'buddyboss'),
+			icon: 'notifications-icon',
+			enabled: false,
+			order: currentOrder
+		});
+	}
+
+	return items;
+};
+
+// Helper function to safely check component status
+const isComponentActive = (componentName) => {
+	return window?.BP_ADMIN?.components?.[componentName] === '1';
+};
 
 export const ReadyLaunchSettings = () => {
 	const [ activeTab, setActiveTab ] = useState( 'activation' );
@@ -36,8 +103,8 @@ export const ReadyLaunchSettings = () => {
 	});
 	const [ isLinkModalOpen, setIsLinkModalOpen ] = useState(false);
 	const [ currentEditingLink, setCurrentEditingLink ] = useState(null);
-	// State for sortable side menu items
-	const [ sideMenuItems, setSideMenuItems ] = useState(initialSideMenuItems);
+	// Initialize with base items, will be updated in useEffect
+	const [ sideMenuItems, setSideMenuItems ] = useState(baseMenuItems);
 	const [menus, setMenus] = useState([]);
 	const [isHelpOpen, setHelpOpen] = useState(false);
 	const [helpContent, setHelpContent] = useState(null);
@@ -48,38 +115,42 @@ export const ReadyLaunchSettings = () => {
 	const debouncedSaveRef = useRef();
 	const debouncedTextChangeRef = useRef();
 
-	// Load settings on component mount
+	// Load settings and initialize menu items
 	useEffect(() => {
-		loadSettings();
+		const initializeSettings = async () => {
+			setIsLoading(true);
+			const data = await fetchSettings();
+
+			if (data && data.platform) {
+				setSettings(data.platform);
+
+				// Get the complete menu items based on enabled components
+				const completeMenuItems = getComponentMenuItems();
+
+				// Apply any saved settings
+				setSideMenuItems(prevItems => {
+					if (data.platform.bb_rl_side_menu) {
+						return completeMenuItems.map(item => {
+							const savedItem = data.platform.bb_rl_side_menu[item.id];
+							return {
+								...item,
+								enabled: savedItem ? savedItem.enabled : item.enabled,
+								order: savedItem ? savedItem.order : item.order
+							};
+						}).sort((a, b) => a.order - b.order);
+					}
+					return completeMenuItems;
+				});
+			}
+
+			setIsLoading(false);
+			setInitialLoad(false);
+			setHasUserMadeChanges(false);
+		};
+
+		initializeSettings();
 		fetchMenus().then(setMenus);
 	}, []);
-
-	const loadSettings = async () => {
-		setIsLoading( true );
-		const data = await fetchSettings();
-		if ( data && data.platform ) {
-			// Set initial settings from API
-			setSettings(data.platform);
-
-			// Initialize sideMenuItems based on fetched data
-			setSideMenuItems(prevItems => {
-				if (data.platform.bb_rl_side_menu) {
-					return prevItems.map(item => {
-						const savedItem = data.platform.bb_rl_side_menu[item.id];
-						return {
-							...item,
-							enabled: savedItem ? savedItem.enabled : item.enabled,
-							order: savedItem ? savedItem.order : item.order
-						};
-					}).sort((a, b) => a.order - b.order);
-				}
-				return prevItems;
-			});
-		}
-		setIsLoading( false );
-		setInitialLoad(false);
-		setHasUserMadeChanges(false);
-	};
 
 	// Initialize the debounced save function
 	useEffect(() => {
@@ -1068,7 +1139,7 @@ export const ReadyLaunchSettings = () => {
 					)}
 
 					{isSaving && (
-						<div className="settings-saving-indicator">
+						<div className="settings-saving-indicator settings-notice components-notice">
 							<Spinner />
 							<span>{__( 'Saving...', 'buddyboss' )}</span>
 						</div>
