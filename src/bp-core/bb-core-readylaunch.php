@@ -91,6 +91,14 @@ function bb_rl_register_widgets() {
 		'BB_Group_Members_Widget',
 		$plugin_dir . '/bp-core/classes/class-bb-group-members-widget.php'
 	);
+
+	// Connections Widget.
+	if ( function_exists( 'friends_get_friend_user_ids' ) ) {
+		bb_rl_register_single_widget(
+			'BB_Core_Connections_Widget',
+			$plugin_dir . '/bp-core/classes/class-bb-core-connections-widget.php'
+		);
+	}
 }
 
 add_action( 'bp_register_widgets', 'bb_rl_register_widgets' );

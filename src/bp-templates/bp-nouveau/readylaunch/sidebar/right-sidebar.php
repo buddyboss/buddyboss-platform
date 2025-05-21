@@ -34,7 +34,7 @@ if ( bp_is_user() ) {
 	}
 
 	if ( bp_is_active( 'friends' ) && ! bp_is_user_friends() ) {
-		$available_widgets[] = 'BP_Core_Friends_Widget';
+		$available_widgets[] = 'BB_Core_Connections_Widget';
 	}
 }
 
