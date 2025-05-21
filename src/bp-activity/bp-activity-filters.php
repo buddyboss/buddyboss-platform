@@ -1514,8 +1514,8 @@ add_filter( 'bp_activity_set_mentions_scope_args', 'bp_activity_filter_mentions_
  *
  * @since BuddyBoss 1.0.0
  *
- * @param array|string $qs The querystring for the BP loop.
- * @param str          $object The current object for the querystring.
+ * @param array|string $qs     The querystring for the BP loop.
+ * @param string       $object The current object for the querystring.
  *
  * @return array|string Modified querystring
  */
@@ -3810,8 +3810,8 @@ function bb_activity_directory_set_pagination( $querystring, $object ) {
  *
  * @since BuddyBoss 2.8.20
  *
- * @param array|string $qs The querystring for the BP loop.
- * @param str          $object The current object for the querystring.
+ * @param array|string $qs     The querystring for the BP loop.
+ * @param string       $object The current object for the querystring.
  *
  * @return array|string Modified querystring
  */
