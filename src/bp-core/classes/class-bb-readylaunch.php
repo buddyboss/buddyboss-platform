@@ -204,6 +204,9 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			// Add ReadyLaunch settings to platform settings API.
 			add_filter( 'bp_rest_platform_settings', array( $this, 'bb_rest_readylaunch_platform_settings' ), 10, 1 );
 
+			// Update notification item action links
+			add_filter( 'bp_get_the_notification_action_links', array( $this, 'bb_rl_modify_notification_action_links' ), 10, 2 );
+
 			// LearnDash integration
 			add_filter( 'bp_is_sidebar_enabled_for_courses', array( $this, 'bb_is_sidebar_enabled_for_courses' ) );
 
@@ -2662,6 +2665,29 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 			// Still keep the LearnDash template styles we need
 			wp_enqueue_style('learndash-course-content');
+		}
+
+		/**
+		 * Modify notification item action links
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $retval HTML links for actions to take on single notifications.
+		 * @param array  $r      Array of parsed arguments.
+		 *
+		 * @return string
+		 */
+		public function bb_rl_modify_notification_action_links( $retval, $r ) {
+			// Replace bp-screen-reader-text with bb_rl_label
+			$retval = str_replace( 'bp-screen-reader-text', 'bb_rl_label', $retval );
+
+			// Update link text for mark as read
+			$retval = str_replace( '>Read<', '>' . __( 'Mark as read', 'buddyboss' ) . '<', $retval );
+
+			// Update link text for delete
+			$retval = str_replace( '>Delete<', '>' . __( 'Delete notifications', 'buddyboss' ) . '<', $retval );
+
+			return $retval;
 		}
 	}
 }
