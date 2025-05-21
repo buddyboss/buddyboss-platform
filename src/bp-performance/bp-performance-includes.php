@@ -35,7 +35,6 @@ class BP_Performance_Includes {
 	 * @since [BBVERSION]
 	 */
 	public function __construct() {
-		// BB Cache Components.
 		add_filter( 'performance_components', array( $this, 'bb_performance_components' ), 10, 3 );
 		add_action( 'rest_cache_loaded', array( $this, 'bb_load_cache_components' ) );
 		add_action( 'bb_media_delete_older_symlinks', array( $this, 'purge_symlink_cache' ) );
