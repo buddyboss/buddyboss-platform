@@ -10428,11 +10428,17 @@ input.bb-rl-zoom-slider::-moz-range-progress {
 .widget_bb_group_members_widget .item-list li .item-avatar {
   height: 48px;
   width: 48px;
+  position: static;
 }
 
 .widget_bb_group_members_widget .item-list li .item-avatar a {
   position: absolute;
   inset: 0;
+}
+
+.widget_bb_group_members_widget .item-list li .item-avatar .member-status.online {
+  right: 52px;
+  top: 46px;
 }
 
 .widget_bb_group_members_widget .item-list li .avatar {

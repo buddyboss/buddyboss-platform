@@ -669,10 +669,16 @@
 			.item-avatar {
 				height: 48px;
 				width: 48px;
+				position: static;
 
 				a {
 					position: absolute;
 					inset: 0;
+				}
+
+				.member-status.online {
+					left: 52px;
+					top: 46px;
 				}
 			}
 
