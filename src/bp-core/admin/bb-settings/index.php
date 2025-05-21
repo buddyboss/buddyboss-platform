@@ -1,10 +1,10 @@
 <?php
 /**
- * BuddyPress Core React Admin Settings
+ * BuddyBoss Core React Admin Settings
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage Core
- * @since [BBVERSION]
+ * @since BuddyBoss [BBVERSION]
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
