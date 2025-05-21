@@ -553,31 +553,28 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * @return string ReadyLaunch layout template.
 		 */
 		public function override_page_templates() {
-			// Debug
-			error_log('Debug - override_page_templates called');
-			error_log('Debug - is_learndash_page: ' . (int)$this->bb_is_learndash_page());
-
+			$post_id = get_the_ID();
+			$post_type = get_post_type();
+			$template = '';
+			
 			// Special handling for LearnDash pages
 			if ($this->bb_is_learndash_page()) {
-				error_log('Debug - Using direct approach for LearnDash page');
-
-				// Filter the_content instead of bp_template_content
+				// Remove all content filters and add our own
 				remove_all_filters('the_content');
 				add_filter('the_content', array($this, 'bb_rl_learndash_content_filter'), 10);
 
 				// Return the layout template
 				$layout_template = buddypress()->plugin_dir . 'bp-templates/bp-nouveau/readylaunch/layout.php';
 				if (file_exists($layout_template)) {
-					error_log('Debug - Using ReadyLaunch layout: ' . $layout_template);
 					return $layout_template;
 				}
 			}
 
-			if ( bp_is_register_page()  ) {
-				return bp_locate_template( 'register.php' );
+			if (bp_is_register_page()) {
+				return bp_locate_template('register.php');
 			}
 
-			return bp_locate_template( 'layout.php' );
+			return bp_locate_template('layout.php');
 		}
 
 		/**
@@ -2322,10 +2319,16 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			// CRITICAL: Prevent infinite recursion
 			static $is_filtering = false;
 
+			// Track which page ID we've processed to avoid duplicate processing
+			static $processed_page_ids = array();
+			
+			// Get the current page ID
+			$current_page_id = get_the_ID();
+			
 			// Keep track of how many times this filter is called
 			static $call_count = 0;
 			$call_count++;
-
+			
 			if ($is_filtering) {
 				return $content;
 			}
@@ -2334,16 +2337,27 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			if (!$this->bb_is_learndash_page()) {
 				return $content;
 			}
-
-			// Check if we've already processed this content
-			static $has_processed_content = false;
-			if ($has_processed_content) {
+			
+			// Check if we're on a course archive page
+			$is_course_archive = is_post_type_archive('sfwd-courses') || 
+			                     (strpos($_SERVER['REQUEST_URI'], '/courses/') !== false && 
+			                      substr_count($_SERVER['REQUEST_URI'], '/') <= 3);
+			
+			// If we've already processed this specific page/post and it's not an archive page, return the original content
+			if (in_array($current_page_id, $processed_page_ids) && !$is_course_archive) {
+				return $content;
+			}
+			
+			// Check if this is the first post in an archive loop, in which case we want to process it
+			if ($is_course_archive && $call_count > 1 && !empty($processed_page_ids)) {
 				return $content;
 			}
 
+			// Mark this page as processed
+			$processed_page_ids[] = $current_page_id;
+			
 			// Set flag to prevent recursion
 			$is_filtering = true;
-			$has_processed_content = true;
 
 			// Get our custom content
 			$learndash_content = $this->bb_rl_learndash_content();
@@ -2382,6 +2396,16 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 			// Wrapper for all LearnDash content
 			echo '<div class="bb-learndash-content-wrap">';
+
+			// Check user access to course content
+			$user_id = get_current_user_id();
+			$post_id = get_the_ID();
+			$has_access = true; // Default to true
+
+			// If it's a course, check if the user has access
+			if (get_post_type() === 'sfwd-courses') {
+				$has_access = sfwd_lms_has_access($post_id, $user_id);
+			}
 
 			// Get the appropriate template based on the current page
 			if (is_post_type_archive('sfwd-courses') || (strpos($_SERVER['REQUEST_URI'], '/courses/') !== false && substr_count($_SERVER['REQUEST_URI'], '/') <= 3)) {
@@ -2428,72 +2452,8 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					get_template_part('learndash/ld30/course');
 				}
 			}
-			elseif (is_singular('sfwd-lessons')) {
-				// For lesson content
-				$template_path = 'learndash/ld30/lesson.php';
-				if (!locate_template($template_path)) {
-					$template_path = buddypress()->plugin_dir . 'bp-templates/bp-nouveau/readylaunch/learndash/ld30/lesson.php';
-					if (!file_exists($template_path)) {
-						// Fall back to default LearnDash template
-						$template_path = SFWD_LMS::get_template('lesson', null, null, true);
-						if (file_exists($template_path)) {
-							include($template_path);
-						} else {
-							echo '<main class="bb-learndash-content-area">';
-							echo '<p>Lesson template not found. Please create a template file.</p>';
-							echo '</main>';
-						}
-					} else {
-						include($template_path);
-					}
-				} else {
-					get_template_part('learndash/ld30/lesson');
-				}
-			}
-			elseif (is_singular('sfwd-topic')) {
-				// For topic content
-				$template_path = 'learndash/ld30/topic.php';
-				if (!locate_template($template_path)) {
-					$template_path = buddypress()->plugin_dir . 'bp-templates/bp-nouveau/readylaunch/learndash/ld30/topic.php';
-					if (!file_exists($template_path)) {
-						// Fall back to default LearnDash template
-						$template_path = SFWD_LMS::get_template('topic', null, null, true);
-						if (file_exists($template_path)) {
-							include($template_path);
-						} else {
-							echo '<main class="bb-learndash-content-area">';
-							echo '<p>Topic template not found. Please create a template file.</p>';
-							echo '</main>';
-						}
-					} else {
-						include($template_path);
-					}
-				} else {
-					get_template_part('learndash/ld30/topic');
-				}
-			}
-			elseif (is_singular('sfwd-quiz')) {
-				// For quiz content
-				$template_path = 'learndash/ld30/quiz.php';
-				if (!locate_template($template_path)) {
-					$template_path = buddypress()->plugin_dir . 'bp-templates/bp-nouveau/readylaunch/learndash/ld30/quiz.php';
-					if (!file_exists($template_path)) {
-						// Fall back to default LearnDash template
-						$template_path = SFWD_LMS::get_template('quiz', null, null, true);
-						if (file_exists($template_path)) {
-							include($template_path);
-						} else {
-							echo '<main class="bb-learndash-content-area">';
-							echo '<p>Quiz template not found. Please create a template file.</p>';
-							echo '</main>';
-						}
-					} else {
-						include($template_path);
-					}
-				} else {
-					get_template_part('learndash/ld30/quiz');
-				}
-			} else {
+			// Add other template loaders for lessons, topics, etc.
+			else {
 				// For other LearnDash content types
 				echo '<main class="bb-learndash-content-area">';
 				echo '<p>This LearnDash content type is not currently supported in ReadyLaunch.</p>';
@@ -2594,7 +2554,8 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				$is_ld_related = true;
 			}
 
-			return $is_ld_single || $is_course_archive || $is_ld_taxonomy || $is_ld_related;
+			$result = $is_ld_single || $is_course_archive || $is_ld_taxonomy || $is_ld_related;
+			return $result;
 		}
 
 		/**
@@ -2627,7 +2588,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 				// Remove the standard LearnDash content filters
 				if (class_exists('LDLMS_Content') && method_exists(LDLMS_Content::instance(), 'content_filter')) {
-					remove_filter('the_content', array(LDLMS_Content::instance(), 'content_filter'));
+						remove_filter('the_content', array(LDLMS_Content::instance(), 'content_filter'));
 				}
 
 				// Add our custom filter to clean up content - only if needed
@@ -2648,9 +2609,9 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 */
 		public function bb_rl_cleanup_learndash_content($content) {
 			// Remove any "Open to access this content" instances
-			$content = preg_replace('/<p>Open to access this content<\/p>/i', '', $content);
-
-			return $content;
+			$new_content = preg_replace('/<p>Open to access this content<\/p>/i', '', $content);
+			
+			return $new_content;
 		}
 
 		/**
