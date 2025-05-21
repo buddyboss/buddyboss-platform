@@ -785,7 +785,8 @@ h6 {
   padding: 12px var(--bb-rl-space-200);
 }
 
-.bb-rl-entry-heading h2 {
+.bb-rl-entry-heading h2,
+.bb-rl-entry-heading .bb-rl-page-title {
   font-size: var(--bb-rl-font-size-base);
   font-weight: 500;
   line-height: var(--bb-rl-base-line);

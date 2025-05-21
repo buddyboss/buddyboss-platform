@@ -127,6 +127,112 @@
 
 .bb-rl-courses-grid {
 	display: grid;
-	grid-template-columns: repeat(4, 1fr);
 	gap: var(--bb-rl-space-200);
+
+	&.grid {
+		grid-template-columns: repeat(4, 1fr);
+
+		@media screen and (max-width: $xl) {
+			grid-template-columns: repeat(3, 1fr);
+		}
+
+		@media screen and (max-width: $md) {
+			grid-template-columns: repeat(2, 1fr);
+		}
+
+		@media screen and (max-width: $sm) {
+			grid-template-columns: 1fr;
+		}
+	}
+
+	&.list {
+		grid-template-columns: 1fr;
+	}
+}
+
+.bb-rl-course-card {
+
+	.bb-rl-course-item {
+		display: flex;
+		flex-direction: column;
+		border-radius: var(--bb-rl-radius-lg);
+		height: 100%;
+	}
+
+	.bb-rl-course-image {
+
+		a {
+			position: relative;
+			display: block;
+			height: 100%;
+			padding-top: 160px;
+			border-radius: var(--bb-rl-radius-lg) var(--bb-rl-radius-lg) 0 0;
+			overflow: hidden;
+			background-color: var(--bb-rl-background-tertiary-color);
+		}
+
+		img {
+			position: absolute;
+			left: 0;
+			right: 0;
+			top: 0;
+			bottom: 0;
+			object-fit: cover;
+			height: 100%;
+			width: 100%;
+		}
+	}
+
+	.bb-rl-course-content {
+		flex: 1;
+		display: flex;
+		flex-direction: column;
+		padding: var(--bb-rl-space-200);
+		border: 1px solid var(--bb-rl-border-secondary-color);
+		border-top: 0;
+		border-radius: 0 0 var(--bb-rl-radius-lg) var(--bb-rl-radius-lg);
+	}
+
+	.bb-rl-course-title {
+
+		@include bb-rl-base-heading;
+		margin: 0 0 var(--bb-rl-space-100);
+
+		a {
+			color: var(--bb-rl-text-color);
+		}
+	}
+
+	.bb-rl-course-excerpt {
+
+		@include bb-rl-label-heading;
+		color: var(--bb-rl-text-tertiary-color);
+	}
+
+	.bb-rl-course-footer {
+		margin-top: auto;
+
+		.bb-rl-course-link {
+			width: 100%;
+		}
+	}
+
+	.bb-rl-course-author {
+		display: flex;
+		align-items: center;
+		gap: var(--bb-rl-space-50);
+		margin: var(--bb-rl-space-300) 0 var(--bb-rl-space-200);
+
+		.bb-rl-author-avatar img {
+			width: 24px;
+			height: auto;
+			border-radius: 50%;
+		}
+
+		.bb-rl-author-name {
+
+			@include bb-rl-label-heading-bolder;
+			color: var(--bb-rl-text-color);
+		}
+	}
 }

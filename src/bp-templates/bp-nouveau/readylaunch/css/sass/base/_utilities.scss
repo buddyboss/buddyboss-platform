@@ -112,7 +112,8 @@
 
 .bb-rl-entry-heading {
 
-	h2 {
+	h2,
+	.bb-rl-page-title {
 
 		@include bb-rl-base-heading;
 		color: var(--bb-rl-text-color);

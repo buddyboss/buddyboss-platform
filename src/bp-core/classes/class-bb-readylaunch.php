@@ -2394,9 +2394,6 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 			ob_start();
 
-			// Wrapper for all LearnDash content
-			echo '<div class="bb-learndash-content-wrap">';
-
 			// Check user access to course content
 			$user_id = get_current_user_id();
 			$post_id = get_the_ID();
@@ -2458,9 +2455,6 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				echo '<p>This LearnDash content type is not currently supported in ReadyLaunch.</p>';
 				echo '</main>';
 			}
-
-			// Close the wrapper
-			echo '</div>';
 
 			$cached_content = ob_get_clean();
 			$is_generating  = false;

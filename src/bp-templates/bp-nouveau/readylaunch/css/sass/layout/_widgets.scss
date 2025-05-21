@@ -718,6 +718,7 @@
 			}
 
 			&:before {
+
 				@include bb-rl-spinner;
 				position: absolute;
 				inset: 0;

@@ -4805,7 +4805,8 @@ table.users .unsuspend a.disabled[data-bp-tooltip]:after {
   display: none;
 }
 
-.bb-upgrade-nav-tag {
+.bb-upgrade-nav-tag,
+.bb-rl-nav-tag {
   display: inline-block;
   vertical-align: top;
   box-sizing: border-box;
@@ -4823,7 +4824,8 @@ table.users .unsuspend a.disabled[data-bp-tooltip]:after {
 }
 
 @media screen and (max-width: 760px) {
-  .bb-upgrade-nav-tag {
+  .bb-upgrade-nav-tag,
+  .bb-rl-nav-tag {
     margin-top: 2px;
   }
 }

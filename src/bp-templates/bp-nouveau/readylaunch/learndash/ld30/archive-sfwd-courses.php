@@ -14,68 +14,53 @@ if ( ! defined( 'ABSPATH' ) ) {
 $readylaunch = BB_Readylaunch::instance();
 ?>
 
-<div class="bb-learndash-content-wrap">
+<div class="bb-rl-secondary-header flex items-center">
+	<div class="bb-rl-entry-heading">
+		<h1 class="bb-rl-page-title bb-rl-base-heading">
+			<?php
+			if ( is_tax() ) {
+				echo single_term_title( '', false );
+			} else {
+				esc_html_e( 'Courses', 'buddyboss' );
+			}
+			?>
+			<span class="bb-rl-heading-count">9</span>
+		</h1>
+	</div>
+
+	<div class="bb-rl-course-filters bb-rl-sub-ctrls flex items-center">
+				
+		<?php
+		// Display course category filter if available
+		$course_cats = get_terms( array(
+			'taxonomy' => 'ld_course_category',
+			'hide_empty' => true,
+		) );
+		
+		//if ( ! empty( $course_cats ) && ! is_wp_error( $course_cats ) ) :
+		?>
+			<div class="bb-rl-course-categories bb-rl-filter">
+				<label for="ld-course-cats" class="bb-rl-filter-label"><span><?php esc_html_e( 'Category', 'buddyboss' ); ?></span></label>
+				<div class="select-wrap">
+					<select id="ld-course-cats" onchange="if (this.value) window.location.href=this.value">
+						<option value="<?php echo esc_url( get_post_type_archive_link( 'sfwd-courses' ) ); ?>"><?php esc_html_e( 'All Categories', 'buddyboss' ); ?></option>
+						<?php foreach ( $course_cats as $cat ) : ?>
+							<option value="<?php echo esc_url( get_term_link( $cat ) ); ?>" <?php selected( is_tax( 'ld_course_category', $cat->term_id ) ); ?>>
+								<?php echo esc_html( $cat->name ); ?>
+							</option>
+						<?php endforeach; ?>
+					</select>
+				</div>
+			</div>
+		<?php //endif; ?>
+	</div>
+</div>
+<div class="bb-rl-container-inner bb-rl-learndash-content-wrap">
 	<main class="bb-learndash-content-area">
 		<div class="bb-rl-courses-list">
-			<header class="bb-rl-page-header">
-				<h1 class="bb-rl-page-title">
-					<?php
-					if ( is_tax() ) {
-						echo single_term_title( '', false );
-					} else {
-						esc_html_e( 'Courses', 'buddyboss' );
-					}
-					?>
-				</h1>
-				
-				<?php
-				if ( is_tax() ) {
-					$term_description = term_description();
-					if ( ! empty( $term_description ) ) :
-						?>
-						<div class="bb-rl-taxonomy-description">
-							<?php echo wp_kses_post( $term_description ); ?>
-						</div>
-						<?php
-					endif;
-				}
-				?>
-			</header>
-			
-			<div class="bb-rl-course-filters">
-				<div class="bb-rl-course-search">
-					<form role="search" method="get" class="bb-rl-search-form" action="<?php echo esc_url( home_url( '/' ) ); ?>">
-						<input type="search" class="bb-rl-search-field" placeholder="<?php esc_attr_e( 'Search courses...', 'buddyboss' ); ?>" value="<?php echo get_search_query(); ?>" name="s" />
-						<input type="hidden" name="post_type" value="sfwd-courses" />
-						<button type="submit" class="bb-rl-search-submit"><i class="bb-icons-rl-search"></i></button>
-					</form>
-				</div>
-				
-				<?php
-				// Display course category filter if available
-				$course_cats = get_terms( array(
-					'taxonomy' => 'ld_course_category',
-					'hide_empty' => true,
-				) );
-				
-				if ( ! empty( $course_cats ) && ! is_wp_error( $course_cats ) ) :
-				?>
-					<div class="bb-rl-course-categories">
-						<label for="ld-course-cats"><?php esc_html_e( 'Categories:', 'buddyboss' ); ?></label>
-						<select id="ld-course-cats" onchange="if (this.value) window.location.href=this.value">
-							<option value="<?php echo esc_url( get_post_type_archive_link( 'sfwd-courses' ) ); ?>"><?php esc_html_e( 'All Categories', 'buddyboss' ); ?></option>
-							<?php foreach ( $course_cats as $cat ) : ?>
-								<option value="<?php echo esc_url( get_term_link( $cat ) ); ?>" <?php selected( is_tax( 'ld_course_category', $cat->term_id ) ); ?>>
-									<?php echo esc_html( $cat->name ); ?>
-								</option>
-							<?php endforeach; ?>
-						</select>
-					</div>
-				<?php endif; ?>
-			</div>
 			
 			<?php if ( have_posts() ) : ?>
-				<div class="bb-rl-courses-grid">
+				<div class="bb-rl-courses-grid grid">
 					<?php while ( have_posts() ) : the_post(); ?>
 						<?php
 						$course_id = get_the_ID();
@@ -119,7 +104,7 @@ $readylaunch = BB_Readylaunch::instance();
 											<span class="bb-rl-author-name"><?php echo esc_html( $author_name ); ?></span>
 										</div>
 										
-										<a href="<?php the_permalink(); ?>" class="bb-rl-course-link">
+										<a href="<?php the_permalink(); ?>" class="bb-rl-course-link bb-rl-button bb-rl-button--secondaryFill bb-rl-button--small">
 											<?php
 											if ( $is_enrolled ) {
 												esc_html_e( 'Continue', 'buddyboss' );
