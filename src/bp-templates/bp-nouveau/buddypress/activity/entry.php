@@ -101,17 +101,14 @@ $activity_popup_title = sprintf( esc_html__( '%s\'s Post', 'buddyboss' ), bp_cor
 				<div class="activity-group-post-meta">
 					<span class="activity-post-author">
 						<?php
-						$activity_type = bp_get_activity_type();
+						$activity_type   = bp_get_activity_type();
 						$activity_object = bp_get_activity_object_name();
 
-						if (
-							'groups' === $activity_object &&
-							'activity_update' === $activity_type
-						) {
+						if ( 'groups' === $activity_object && 'activity_update' === $activity_type ) {
 							// Show only user link and display name
 							?>
-							<a href="<?php echo $user_link; ?>">
-								<?php echo bp_core_get_user_displayname($activities_template->activity->user_id); ?>
+							<a href="<?php echo esc_url( $user_link ); ?>">
+								<?php echo esc_html( bp_core_get_user_displayname( $activities_template->activity->user_id ) ); ?>
 							</a>
 							<?php
 						} else {
