@@ -69,7 +69,7 @@ window.bp = window.bp || {};
 			var $link      = $( this );
 			var $options   = $link.closest( '.bb-rl-group-members-list-options' );
 			var $list      = $options.closest( '.widget_bb_group_members_widget' ).find( '.bb-rl-group-members-list' );
-			var $groupAttr = $link.data( 'group-attr' );
+			var $groupAttr = JSON.parse( $link.data( 'group-attr' ) );
 			$list.addClass( 'loading' );
 
 			$options.find( 'a' ).removeClass( 'selected' );
