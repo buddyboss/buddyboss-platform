@@ -266,7 +266,12 @@ class BP_Performance_Includes {
 				Cache::instance()->purge_by_component( $purge_component );
 			}
 
-			Cache::instance()->purge_by_component( 'bbapp-deeplinking' );
+			/**
+			 * Fires after cache purge for symlink expired.
+			 *
+			 * @since [BBVERSION]
+			 */
+			do_action( 'bb_purge_symlink_cache_after' );
 		}
 	}
 
