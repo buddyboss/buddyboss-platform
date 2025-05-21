@@ -1,6 +1,7 @@
 {
   "extends": "@wordpress/stylelint-config/scss",
   "rules": {
+	"scss/at-rule-no-unknown": true,
 	"no-descending-specificity": null,
 	"selector-pseudo-element-colon-notation": null,
 	"selector-id-pattern": null,
@@ -8,5 +9,10 @@
 	"no-duplicate-selectors": null,
 	"font-family-no-missing-generic-family-keyword": null,
 	"selector-combinator-space-after": null
-  }
+  },
+  "ignoreFiles": [
+    "src/js/**/*.scss",
+    "**/*.min.css",
+	"**/*.css"
+  ]
 }

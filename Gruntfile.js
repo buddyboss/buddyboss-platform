@@ -1,7 +1,7 @@
 /* jshint node:true */
 /* global module */
 module.exports = function (grunt) {
-	var sass       = require( 'node-sass' ),
+	var sass       = require( 'sass' ),
 		SOURCE_DIR = 'src/',
 		BUILD_DIR  = 'buddyboss-platform/',
 
@@ -368,14 +368,18 @@ module.exports = function (grunt) {
 					ext: '.min.js',
 					src: BP_JS.concat(
 						[
-						'!**/vendor/*.js',
-						'!**/lib/*.js',
-						'!**/*.min.js',
-						'!**/emojione-edited.js',
-						'!**/emojionearea-edited.js',
-						'!**/node_modules/**/*.js',
-						'!**/endpoints/**/*.js',
-						'!**/js/lib/Chart.js',
+							'!**/vendor/*.js',
+							'!**/lib/*.js',
+							'!**/*.min.js',
+							'!**/emojione-edited.js',
+							'!**/emojionearea-edited.js',
+							'!**/node_modules/**/*.js',
+							'!**/endpoints/**/*.js',
+							'!**/js/lib/Chart.js',
+							'!**/js/blocks/**/*.js',
+							'!**/bp-core/admin/bb-settings/**/*.js',
+							'!**/bp-core/blocks/**/*.js',
+							'!**/js/admin/**/*.js',
 						]
 					)
 				}
@@ -477,13 +481,17 @@ module.exports = function (grunt) {
 				src: {
 					files: {
 						src: [
-						SOURCE_DIR + '/**/*.js',
-						'!**/emojione-edited.js',
-						'!**/emojionearea-edited.js',
-						'!**/vendor/**/*.js',
-						'!**/node_modules/**/*.js',
-						'!**/endpoints/**/*.js',
-						'!**/js/lib/Chart.js',
+							SOURCE_DIR + '/**/*.js',
+							'!**/emojione-edited.js',
+							'!**/emojionearea-edited.js',
+							'!**/vendor/**/*.js',
+							'!**/node_modules/**/*.js',
+							'!**/endpoints/**/*.js',
+							'!**/js/lib/Chart.js',
+							'!' + SOURCE_DIR + 'js/**/*.js',
+							'!' + SOURCE_DIR + 'bp-core/admin/bb-settings/**/*.js',
+							'!' + SOURCE_DIR + 'bp-core/blocks/**/*.js',
+							'!**/*.min.js'
 						].concat( BP_EXCLUDED_MISC )
 					}
 				}
@@ -509,15 +517,12 @@ module.exports = function (grunt) {
 					},
 				}
 			},
-			json2php: {
-				convert: {
-					expand: true,
-					cwd: SOURCE_DIR + 'bp-templates/bp-nouveau/icons/',
-					dest: SOURCE_DIR + 'bp-templates/bp-nouveau/icons/',
-					ext: '.php',
-					src: [
-						'font-map.json'
-					]
+			convertJsonToPhp: {
+				icons: {
+					files: [{
+						src: [SOURCE_DIR + 'bp-templates/bp-nouveau/icons/font-map.json'],
+						dest: SOURCE_DIR + 'bp-templates/bp-nouveau/icons/font-map.php'
+					}]
 				}
 			},
 			'string-replace': {
@@ -554,6 +559,18 @@ module.exports = function (grunt) {
 	/**
 	 * Register tasks.
 	 */
+	// Custom task to convert JSON to PHP
+	grunt.registerMultiTask('convertJsonToPhp', 'Convert JSON files to PHP', function() {
+		this.files.forEach(function(file) {
+			file.src.forEach(function(src) {
+				var content = grunt.file.readJSON(src);
+				var phpContent = '<?php\nreturn ' + JSON.stringify(content, null, 2) + ';';
+				grunt.file.write(file.dest, phpContent);
+				grunt.log.writeln('File ' + file.dest + ' created.');
+			});
+		});
+	});
+
 	// Fetch bb icons.
 	grunt.registerTask(
 		'fetch_bb_icons',
@@ -562,7 +579,7 @@ module.exports = function (grunt) {
 			'exec:fetch_bb_icons',
 			'copy:bb_icons',
 			'clean:bb_icons',
-			'json2php',
+			'convertJsonToPhp',
 			'string-replace:icon-translate',
 			'rtlcss',
 			'cssmin'
