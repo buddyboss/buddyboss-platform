@@ -128,6 +128,9 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			require $this->admin_dir . 'bp-core-admin-tools.php';
 			require $this->admin_dir . 'bp-core-admin-help.php';
 			require $this->admin_dir . 'bp-core-admin-theme-settings.php';
+
+			// Load the BuddyBoss React settings.
+			require $this->admin_dir . 'bb-settings/index.php';
 		}
 
 		/**
@@ -535,11 +538,16 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			// ReadyLaunch.
 			$hooks[] = add_submenu_page(
 				$this->settings_page,
-				__( 'ReadyLaunch™', 'buddyboss' ),
-				__( 'ReadyLaunch™', 'buddyboss' ),
+				__( 'ReadyLaunch', 'buddyboss' ),
+				sprintf(
+					/* translators: New Tag */
+					__( 'ReadyLaunch %s', 'buddyboss' ),
+					'<span class="bb-rl-nav-tag">' . esc_html__( 'New', 'buddyboss' ) . '</span>'
+				),
 				$this->capability,
 				'bb-readylaunch',
-				array( $this, 'bb_readylaunch_screen' )
+				'bb_readylaunch_settings_page_html',
+				99
 			);
 
 			// For consistency with non-Multisite, we add a Tools menu in

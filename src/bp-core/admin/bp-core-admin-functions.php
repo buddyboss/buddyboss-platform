@@ -698,11 +698,6 @@ function bp_core_get_admin_tabs( $active_tab = '' ) {
 			'name'  => __( 'Credits', 'buddyboss' ),
 			'class' => 'bp-credits',
 		),
-		'8' => array(
-			'href'  => bp_get_admin_url( add_query_arg( array( 'page' => 'bb-readylaunch' ), 'admin.php' ) ),
-			'name'  => __( 'ReadyLaunch™', 'buddyboss' ),
-			'class' => 'bb-readylaunch',
-		),
 	);
 
 	/**

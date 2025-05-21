@@ -1,0 +1,559 @@
+@import "normalize";
+@import "variables";
+@import "mixins";
+@import "buttons";
+@import "forms";
+@import "modal";
+@import "components/accordion";
+@import "components/link-item";
+@import "components/help-modal";
+
+/* Full Height BuddyBoss ReadyLaunch Settings Page */
+.buddyboss_page_bb-readylaunch {
+
+	#wpbody-content {
+		height: 100%;
+		display: flex;
+		flex-direction: column;
+		padding-bottom: 0;
+		position: absolute;
+	}
+
+	#bb-readylaunch-settings {
+		flex: 1;
+		display: flex;
+		flex-direction: column;
+		margin-top: 0;
+
+		> .bb-rl-field-wrap {
+			flex: 1;
+			display: flex;
+			flex-direction: column;
+
+			> .bb-readylaunch-settings-container {
+				flex: 1;
+			}
+		}
+	}
+
+	#wpfooter {
+		display: none;
+	}
+}
+
+/* Just a minimal test to see if the basic file compiles */
+.test {
+	color: $bb-rl-text-primary-color;
+}
+
+/* Main container */
+.bb-readylaunch-settings-container {
+	display: flex;
+	background-color: $bb-rl-background-primary-color;
+	min-height: 90vh;
+	margin: 0 -20px; /* Adjust based on WordPress admin padding */
+}
+
+/* Header */
+.bb-rl-tab-header {
+	background-color: $bb-rl-background-base-color;
+	margin: 0 -20px;
+	padding: 12px $bb-rl-space-300;
+	border-bottom: 1px solid $bb-rl-border-secondary-color;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.bb-branding-header {
+	margin-right: auto;
+
+	.bb-branding-logo {
+		max-width: 130px;
+	}
+}
+
+.bb-rl-header-actions {
+	display: flex;
+	align-items: center;
+	gap: $bb-rl-space-100;
+}
+
+.bb-rl-header-actions-button {
+	background-color: transparent;
+	border: none;
+	color: $bb-rl-icon-primary-color;
+	font-size: 24px;
+	cursor: pointer;
+	position: relative;
+
+	.bb-rl-header-button-count {
+
+		@include font-style(9px, 400, 9px);
+		position: absolute;
+		top: -3px;
+		right: -2px;
+		background-color: $bb-rl-background-danger-secondary-color;
+		color: $bb-rl-text-inverse-color;
+		padding: 2px 4px;
+		border-radius: $bb-rl-radius-full;
+	}
+
+}
+
+/* Sidebar */
+.bb-readylaunch-sidebar {
+	width: 250px;
+	background-color: $bb-rl-background-secondary-color;
+	border-right: 1px solid $bb-rl-background-primary-color-hover;
+	padding: $bb-rl-space-300 $bb-rl-space-200;
+
+	ul {
+		margin: 0;
+		padding: 0;
+	}
+
+	li {
+
+		@include bb-rl-text-bolder;
+		display: flex;
+		align-items: center;
+		padding: 12px $bb-rl-space-200;
+		color: $bb-rl-text-secondary-color;
+		cursor: pointer;
+		border-radius: $bb-rl-radius-base;
+		margin: 0;
+
+		&:hover {
+			background-color: $bb-rl-background-base-color;
+		}
+
+		&.active {
+			color: $bb-rl-text-primary-color;
+			font-weight: 500;
+			background-color: $bb-rl-background-base-color;
+		}
+
+		i {
+			font-size: 20px;
+			margin-right: $bb-rl-space-100;
+		}
+	}
+}
+
+/* Main content */
+.bb-readylaunch-settings-content {
+	flex: 1;
+	padding: $bb-rl-space-300 $bb-rl-space-400;
+
+	.settings-saving-indicator {
+		max-width: 900px;
+		margin: 0 auto $bb-rl-space-200;
+		display: flex;
+		align-items: center;
+		gap: $bb-rl-space-100;
+
+		span {
+			color: $bb-rl-text-tertiary-color;
+		}
+
+		svg {
+			margin: 0;
+
+			path {
+				stroke: $bb-rl-background-brand-primary-color;
+			}
+		}
+	}
+
+	.settings-notice.components-notice {
+		max-width: 900px;
+		margin: 0 auto $bb-rl-space-200;
+
+		&.is-success {
+			border-left-color: $bb-rl-border-positive-secondary-color;
+			background-color: $bb-rl-background-positive-primary-color;
+		}
+	}
+
+	.components-form-toggle {
+		height: 20px;
+
+		.components-form-toggle__track {
+			background-color: $bb-rl-background-tertiary-color;
+			border: 1px solid transparent;
+			height: 20px;
+			border-radius: $bb-rl-radius-full;
+		}
+
+		.components-form-toggle__thumb {
+			background-color: $bb-rl-background-base-color;
+			box-shadow: none;
+			width: 14px;
+			height: 14px;
+			top: 3px;
+			left: 3px;
+		}
+
+		&.is-checked {
+
+			.components-form-toggle__track {
+				background-color: $bb-rl-background-base-color;
+				border: 1px solid $bb-rl-border-brand-primary-color;
+			}
+
+			.components-form-toggle__thumb {
+				background-color: $bb-rl-border-brand-primary-color;
+				left: unset;
+				right: 20px;
+			}
+		}
+	}
+
+	> .settings-loading {
+		text-align: center;
+
+		p {
+			color: $bb-rl-text-tertiary-color;
+		}
+
+		svg path {
+			stroke: $bb-rl-background-brand-primary-color;
+		}
+	}
+}
+
+.settings-content {
+	max-width: $content-max-width;
+	margin-left: auto;
+	margin-right: auto;
+
+	> h1 {
+
+		@include bb-rl-heading-bolder;
+		color: #000;
+		margin: 0 0 2px;
+		padding: 0;
+	}
+
+	> .settings-description {
+
+		@include font-style(14px, 400, 18px);
+		padding: 0;
+		margin: 0 0 $bb-rl-space-200;
+		color: $bb-rl-text-tertiary-color;
+	}
+}
+
+/* Settings cards */
+.settings-card {
+
+	@include card-style;
+	margin-bottom: $bb-rl-space-300;
+	padding: 0 $bb-rl-space-300 $bb-rl-space-300;
+
+	&.settings-card--plain {
+		padding: $bb-rl-space-300;
+	}
+}
+
+/* Toggle settings */
+.settings-toggle-container {
+
+	@include flex-between;
+}
+
+.toggle-content {
+	flex: 1;
+
+	h3 {
+		margin-top: 0;
+		margin-bottom: 5px;
+		font-size: 16px;
+		font-weight: 500;
+	}
+
+	p {
+		margin: 0;
+		color: $bb-rl-text-secondary-color;
+		font-size: 13px;
+	}
+}
+
+/* Settings header */
+.settings-header {
+
+	@include flex-between;
+	margin-bottom: $bb-rl-space-200;
+	padding: $bb-rl-space-200 0;
+	border-bottom: 1px solid $bb-rl-border-secondary-color;
+
+	h3 {
+
+		@include bb-rl-heading;
+		margin: 0;
+	}
+}
+
+.bb-rl-help-icon {
+
+	@include flex-center;
+	width: 20px;
+	height: 20px;
+	color: $bb-rl-icon-secondary-color;
+	font-size: 20px;
+	cursor: pointer;
+	background-color: transparent;
+	border: none;
+}
+
+/* Form fields */
+.settings-form-field {
+	display: flex;
+	margin-bottom: $bb-rl-space-200;
+	padding-bottom: $bb-rl-space-200;
+	border-bottom: 1px solid $bb-rl-border-secondary-color;
+
+	&:last-of-type {
+		border-bottom: none;
+		margin-bottom: 0;
+	}
+
+	@media screen and (max-width: $lg) {
+		flex-direction: column;
+		gap: $bb-rl-space-200;
+	}
+}
+
+.field-label {
+	width: 30%;
+	padding-right: 20px;
+
+	label {
+
+		@include font-style(14px, 500, 18px);
+		display: block;
+		margin-bottom: $bb-rl-space-100;
+		color: $bb-rl-text-primary-color;
+	}
+
+	p {
+
+		@include bb-rl-text;
+		margin: 0;
+		color: $bb-rl-text-tertiary-color;
+	}
+
+	@media screen and (max-width: $lg) {
+		width: 100%;
+	}
+}
+
+.field-input {
+	width: 70%;
+
+	@media screen and (max-width: $lg) {
+		width: 100%;
+	}
+
+	input[type="email"],
+	input[type="number"],
+	input[type="text"],
+	input[type="url"] {
+		width: 100%;
+		max-width: 300px;
+	}
+
+	label {
+
+		@include bb-rl-text-bolder;
+	}
+
+	.components-toggle-control__label {
+
+		@include font-style(14px, 400, 18px);
+	}
+
+	.components-radio-control__input[type="radio"] {
+		border-color: $bb-rl-background-brand-primary-color;
+	}
+
+	.components-radio-control__input[type="radio"]:checked {
+		background: $bb-rl-background-brand-primary-color;
+	}
+}
+
+.field-description {
+	margin-top: 5px;
+	color: $bb-rl-text-secondary-color;
+	font-size: 13px;
+}
+
+.bb-rl-color-palettes {
+
+	.color-palette-item {
+		margin-bottom: $bb-rl-space-200;
+	}
+
+	.color-picker-label {
+
+		@include bb-rl-text-bolder;
+		display: block;
+		margin-bottom: $bb-rl-space-100;
+		color: $bb-rl-text-secondary-color;
+		padding: 3px 0;
+	}
+}
+
+.bb-rl-color-picker-button-component {
+
+	.color-picker-button-wrapper {
+		display: inline-flex;
+	}
+
+	.color-picker-button {
+		display: inline-flex;
+		border: 1px solid $bb-rl-border-secondary-color;
+		box-shadow: none;
+		border-radius: $bb-rl-radius-base;
+		height: 40px;
+		background-color: $bb-rl-background-primary-color;
+
+		.color-indicator-wrapper {
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			width: 40px;
+			height: 40px;
+		}
+
+		.component-color-indicator {
+			width: 24px;
+			height: 24px;
+			border-radius: $bb-rl-radius-sm;
+		}
+
+		.color-picker-value {
+
+			@include font-style(14px, 400, 40px);
+			display: inline-flex;
+			align-items: center;
+			color: $bb-rl-text-secondary-color;
+			padding: 0 $bb-rl-space-200 0 0;
+			border-top-right-radius: $bb-rl-radius-base;
+			border-bottom-right-radius: $bb-rl-radius-base;
+		}
+	}
+}
+
+.buddyboss_page_bb-readylaunch {
+
+	.color-picker-popover-footer {
+		padding: 0 $bb-rl-space-100 $bb-rl-space-100;
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+
+		> button {
+
+			@include bb-rl-button;
+			@include bb-rl-button--primary;
+			@include bb-rl-button--small;
+		}
+	}
+}
+
+.bb-rl-settings {
+
+	.image-selector-component {
+		margin-bottom: $bb-rl-space-200;
+
+		&:last-of-type {
+			margin-bottom: 0;
+		}
+
+		> label {
+
+			@include bb-rl-text-bolder;
+			color: $bb-rl-text-secondary-color;
+			margin-bottom: $bb-rl-space-100;
+			display: block;
+		}
+
+		.field-description {
+
+			@include bb-rl-text;
+			color: $bb-rl-text-tertiary-color;
+		}
+
+		&.dark-logo-mode {
+
+			.image-preview {
+				background-color: $bb-rl-background-inverse-color;
+			}
+		}
+	}
+
+	.bb-rl-upload-image-button {
+		margin-bottom: $bb-rl-space-100;
+	}
+}
+
+.bb-rl-upload-image-button,
+.bb-rl-settings .bb-rl-upload-image-button,
+.bb-rl-upload-image-button.components-button.has-icon {
+	background-color: $bb-rl-background-primary-color;
+	border: 1px dashed $bb-rl-border-secondary-color;
+	border-radius: $bb-rl-radius-md;
+	text-align: center;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 184px;
+	line-height: 56px;
+	height: 56px;
+	padding: 0;
+	font-size: 24px;
+	color: $bb-rl-icon-secondary-color;
+
+	&:hover {
+		background-color: $bb-rl-background-primary-color-hover;
+		border-color: $bb-rl-border-tertiary-color;
+	}
+}
+
+.bb-rl-image-preview-wrapper {
+	display: flex;
+	align-items: center;
+	gap: $bb-rl-space-200;
+	margin-bottom: $bb-rl-space-100;
+
+	.image-preview {
+		max-width: 184px;
+		padding: $bb-rl-space-100;
+		border-radius: $bb-rl-radius-md;
+		border: 1px solid $bb-rl-border-tertiary-color;
+	}
+
+	.image-actions {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		gap: $bb-rl-space-100;
+		flex-direction: column;
+
+		.bb-rl-button,
+		.bb-rl-button.has-icon.has-text {
+			padding: $bb-rl-space-50 $bb-rl-space-100;
+			height: auto;
+		}
+	}
+}
+
+/* Responsive adjustments */
+@include responsive(tablet) {
+
+	.new-link-inputs {
+		flex-direction: column;
+	}
+}

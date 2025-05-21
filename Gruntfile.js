@@ -368,14 +368,18 @@ module.exports = function (grunt) {
 					ext: '.min.js',
 					src: BP_JS.concat(
 						[
-						'!**/vendor/*.js',
-						'!**/lib/*.js',
-						'!**/*.min.js',
-						'!**/emojione-edited.js',
-						'!**/emojionearea-edited.js',
-						'!**/node_modules/**/*.js',
-						'!**/endpoints/**/*.js',
-						'!**/js/lib/Chart.js',
+							'!**/vendor/*.js',
+							'!**/lib/*.js',
+							'!**/*.min.js',
+							'!**/emojione-edited.js',
+							'!**/emojionearea-edited.js',
+							'!**/node_modules/**/*.js',
+							'!**/endpoints/**/*.js',
+							'!**/js/lib/Chart.js',
+							'!**/js/blocks/**/*.js',
+							'!**/bp-core/admin/bb-settings/**/*.js',
+							'!**/bp-core/blocks/**/*.js',
+							'!**/js/admin/**/*.js',
 						]
 					)
 				}
@@ -393,13 +397,17 @@ module.exports = function (grunt) {
 						BP_EXCLUDED_MISC,
 						BP_SCSS_CSS_FILES,
 						[
-						'!**/*.min.css',
-						'!**/admin/**/*.css',
-						'!**/emojionearea-edited.css',
-						'!**/pusher/**/*.css',
-						'!**/recaptcha/**/*.css',
-						'!**/endpoints/**/*.css',
-						'!**/readylaunch/**/*.css'
+							'!**/*.min.css',
+							'!**/admin/**/*.css',
+							'!**/emojionearea-edited.css',
+							'!**/pusher/**/*.css',
+							'!**/recaptcha/**/*.css',
+							'!**/endpoints/**/*.css',
+							'!**/readylaunch/**/*.css',
+							'!**/js/blocks/**/*.css',
+							'!**/js/admin/**/*.css',
+							'!**/bp-core/admin/bb-settings/**/*.css',
+							'!**/bp-core/blocks/**/*.css'
 						]
 					)
 				},
@@ -477,13 +485,16 @@ module.exports = function (grunt) {
 				src: {
 					files: {
 						src: [
-						SOURCE_DIR + '/**/*.js',
-						'!**/emojione-edited.js',
-						'!**/emojionearea-edited.js',
-						'!**/vendor/**/*.js',
-						'!**/node_modules/**/*.js',
-						'!**/endpoints/**/*.js',
-						'!**/js/lib/Chart.js',
+							SOURCE_DIR + '/**/*.js',
+							'!**/emojione-edited.js',
+							'!**/emojionearea-edited.js',
+							'!**/vendor/**/*.js',
+							'!**/node_modules/**/*.js',
+							'!**/endpoints/**/*.js',
+							'!**/js/lib/Chart.js',
+							'!' + SOURCE_DIR + 'js/**/*.js',
+							'!' + SOURCE_DIR + 'bp-core/admin/bb-settings/**/*.js',
+							'!' + SOURCE_DIR + 'bp-core/blocks/**/*.js'
 						].concat( BP_EXCLUDED_MISC )
 					}
 				}
