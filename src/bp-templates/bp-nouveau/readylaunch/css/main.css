@@ -10266,15 +10266,7 @@ input.bb-rl-zoom-slider::-moz-range-progress {
   color: var(--bb-rl-text-tertiary-color);
 }
 
-.widget_bb_recent_blog_posts_widget .bb-rl-recent-post {
-  margin-bottom: var(--bb-rl-space-200);
-}
-
-.widget_bb_recent_blog_posts_widget .bb-rl-recent-post:last-of-type {
-  margin-bottom: 0;
-}
-
-.widget_bb_recent_blog_posts_widget .widget-header {
+.widget .widget-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -10284,15 +10276,38 @@ input.bb-rl-zoom-slider::-moz-range-progress {
   border-bottom: 1px solid var(--bb-rl-border-secondary-color);
 }
 
-.widget_bb_recent_blog_posts_widget .widget-header .widget-link {
+.widget .widget-header .widget-link {
   font-size: var(--bb-rl-font-size-sm);
   font-weight: 500;
   color: var(--bb-rl-text-color);
 }
 
-.widget_bb_recent_blog_posts_widget .widget-header .widget-title {
+.widget .widget-header .widget-title {
   margin: 0;
   border: 0;
+}
+
+.widget .item-avatar {
+  position: relative;
+}
+
+.widget .item-avatar .member-status.online {
+  position: absolute;
+  right: 4px;
+  bottom: 2px;
+  border: 1px solid var(--bb-rl-background-color);
+  background-color: var(--bb-rl-background-positive-primary-color);
+  border-radius: var(--bb-rl-radius-full);
+  width: 9px;
+  height: 9px;
+}
+
+.widget_bb_recent_blog_posts_widget .bb-rl-recent-post {
+  margin-bottom: var(--bb-rl-space-200);
+}
+
+.widget_bb_recent_blog_posts_widget .bb-rl-recent-post:last-of-type {
+  margin-bottom: 0;
 }
 
 .widget_bb_recent_blog_posts_widget .bb-rl-recent-post-thumb img {
@@ -10391,27 +10406,6 @@ input.bb-rl-zoom-slider::-moz-range-progress {
   background-color: var(--bb-rl-background-secondary-color);
 }
 
-.widget_bb_group_members_widget .widget-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--bb-rl-space-200);
-  flex-wrap: wrap;
-  margin-bottom: var(--bb-rl-space-200);
-  border-bottom: 1px solid var(--bb-rl-border-secondary-color);
-}
-
-.widget_bb_group_members_widget .widget-header .widget-link {
-  font-size: var(--bb-rl-font-size-sm);
-  font-weight: 500;
-  color: var(--bb-rl-text-color);
-}
-
-.widget_bb_group_members_widget .widget-header .widget-title {
-  margin: 0;
-  border: 0;
-}
-
 .widget_bb_group_members_widget .item-list {
   padding: 0;
 }
@@ -10465,6 +10459,23 @@ input.bb-rl-zoom-slider::-moz-range-progress {
 
 .widget_bb_group_members_widget .see-all-link {
   display: none;
+}
+
+.widget_bb_connections_widget .bb-connections-grid {
+  display: flex;
+  gap: var(--bb-rl-space-100);
+  flex-wrap: wrap;
+  padding: 0;
+  margin-left: -1px;
+  margin-right: -1px;
+  list-style: none;
+}
+
+.widget_bb_connections_widget .bb-connections-grid .avatar {
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+  border-radius: var(--bb-rl-radius-full);
 }
 
 .bb-rl-members .bp-list.grid .item-entry .list-wrap {
