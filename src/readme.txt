@@ -57,6 +57,9 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 2.8.61 =
+* Bug: Groups - Fixed an issue where regular group post activity headers incorrectly displayed post content instead of showing only basic activity details
+
 = 2.8.60 =
 * Bug: Activity - Fixed an issue where the Activity “Load More” button wrapper was being triggered even when clicking outside the button
 * Bug: Core - Added a check to ensure opendir() succeeds before calling closedir() to prevent potential errors, following PHP best practices for high-security environments like WordPress VIP
