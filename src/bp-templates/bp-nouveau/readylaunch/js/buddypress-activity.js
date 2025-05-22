@@ -4215,7 +4215,7 @@ window.bp = window.bp || {};
 						var form = $activityComments.find( '#ac-form-' + settings.activityId );
 						bp.Nouveau.Activity.clearFeedbackNotice( form );
 						form.removeClass( 'events-initiated' );
-						var ce = $activityComments.find( '.ac-input[contenteditable]' );
+						var ce = $activityComments.find( '.ac-form .ac-input[contenteditable]' );
 						bp.Nouveau.Activity.listenCommentInput( ce );
 
 						if ( ! _.isUndefined( bbRlMedia ) && ! _.isUndefined( bbRlMedia.emoji ) ) {
