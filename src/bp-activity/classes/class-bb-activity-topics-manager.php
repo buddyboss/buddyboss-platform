@@ -707,7 +707,12 @@ class BB_Activity_Topics_Manager {
 	 * @return array Modified array of strings.
 	 */
 	public function bb_activity_topic_get_js_strings( $strings ) {
-		$topic_lists = $this->bb_get_activity_topics( array( 'item_type' => 'activity' ) );
+		$topic_lists = $this->bb_get_activity_topics(
+			array(
+				'item_type' => 'activity',
+				'can_post'  => true,
+			)
+		);
 		// If group activity topics is not enabled, then don't show the topic lists.
 		if (
 			bp_is_active( 'groups' ) &&
@@ -715,7 +720,7 @@ class BB_Activity_Topics_Manager {
 			function_exists( 'bb_is_enabled_group_activity_topics' ) &&
 			function_exists( 'bb_get_group_activity_topics' )
 		) {
-			$topic_lists = bb_get_group_activity_topics();
+			$topic_lists = bb_get_group_activity_topics( array( 'can_post' => true ) );
 		}
 
 		$strings['activity']['params']['topics']['bb_is_enabled_group_activity_topics'] = function_exists( 'bb_is_enabled_group_activity_topics' ) && bb_is_enabled_group_activity_topics();
@@ -746,7 +751,7 @@ class BB_Activity_Topics_Manager {
 		);
 
 		$r['item_type'] = ! empty( $r['item_type'] ) ? ( is_array( $r['item_type'] ) ? $r['item_type'] : array( $r['item_type'] ) ) : array( 'activity' );
-		if ( empty( $r['filter'] ) && in_array( 'activity', $r['item_type'], true ) ) {
+		if ( ! empty( $r['can_post'] ) && in_array( 'activity', $r['item_type'], true ) ) {
 			if ( bp_current_user_can( 'administrator' ) ) {
 				$r['permission_type'] = array( 'mods_admins', 'anyone' );
 			} else {
@@ -975,7 +980,7 @@ class BB_Activity_Topics_Manager {
 	 * @since BuddyBoss [BBVERSION]
 	 */
 	public function bb_user_activity_topics_after_post_form() {
-		$topics = $this->bb_get_activity_topics( array( 'filter' => true ) );
+		$topics = $this->bb_get_activity_topics();
 		if ( ! empty( $topics ) ) {
 			?>
 			<div class="activity-topic-selector">

@@ -19,7 +19,7 @@ endif;
 bp_nouveau_template_notices();
 
 if ( bb_is_enabled_activity_topics() ) {
-	$topics = function_exists( 'bb_activity_topics_manager_instance' ) ? bb_activity_topics_manager_instance()->bb_get_activity_topics( array( 'filter' => true ) ) : array();
+	$topics = function_exists( 'bb_activity_topics_manager_instance' ) ? bb_activity_topics_manager_instance()->bb_get_activity_topics() : array();
 	if ( ! empty( $topics ) ) {
 		?>
 		<div class="activity-topic-selector">
