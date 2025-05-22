@@ -805,19 +805,29 @@ window.bp = window.bp || {};
 				// Find the topic link with matching href.
 				var $topicLink = $( '.activity-topic-selector li a[href="#' + topicSlug + '"]' );
 
+				// Detect if we are on a group activity page.
+				var groupSlug       = bbTopicsManagerVars.group_slug;
+				var activitySlug    = BP_Nouveau.activity.params.topics.activity_slug;
+				var isGroupActivity =
+					    window.location.pathname.indexOf( '/' + groupSlug + '/' ) !== -1 &&
+					    window.location.pathname.indexOf( '/' + activitySlug + '/' ) !== -1;
+
 				if ( $topicLink.length ) {
-					// If we found a matching topic, trigger the filter.
-					$topicLink.trigger( 'click' );
-
-					// Move the topic position after "All" its for reload.
-					BBTopicsManager.moveTopicPosition( {
-						$topicItem : $topicLink,
-						topicId    : $topicLink.data( 'topic-id' )
-					} );
-
-					// Set selected/active classes
-					$( '.activity-topic-selector li a' ).removeClass( 'selected active' );
-					$topicLink.addClass( 'selected active' );
+					// If on group activity page, trigger filter without redirect.
+					if ( isGroupActivity ) {
+						$topicLink.trigger( 'click' );
+						// Optionally, scroll to the feed or highlight the topic.
+						return false; // Prevent default.
+					} else {
+						// Default: trigger filter and move topic position.
+						$topicLink.trigger( 'click' );
+						BBTopicsManager.moveTopicPosition( {
+							$topicItem : $topicLink,
+							topicId    : $topicLink.data( 'topic-id' )
+						} );
+						$( '.activity-topic-selector li a' ).removeClass( 'selected active' );
+						$topicLink.addClass( 'selected active' );
+					}
 				}
 			} else {
 				bp.Nouveau.setStorage( 'bp-activity', 'topic_id', '' );
