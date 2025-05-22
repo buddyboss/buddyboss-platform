@@ -268,7 +268,8 @@ h1.wp-login-logo {
 	}
 }
 
-.mfp-bg {
+.bb-rl-register .mfp-bg,
+body .mfp-bg {
     position: fixed;
     inset: 0;
     background-color: rgba(0, 0, 0, 0.5);
@@ -310,9 +311,8 @@ h1.wp-login-logo {
 }
   
 
-.registration .mfp-content #terms-modal,
+.registration-popup,
 body.login .mfp-content #terms-modal,
-.registration .mfp-content #privacy-modal,
 body.login .mfp-content #privacy-modal {
 	background-color: var(--bb-rl-background-color);
 	border: 1px solid var(--bb-rl-border-secondary-color);

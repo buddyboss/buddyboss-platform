@@ -10,6 +10,8 @@ defined( 'ABSPATH' ) || exit;
 
 wp_enqueue_script( 'bp-select2' );
 wp_enqueue_style( 'bp-select2' );
+wp_enqueue_script( 'jquery-magnific-popup' );
+wp_enqueue_style( 'jquery-magnific-popup' );
 wp_enqueue_style( 'bb-rl-login-fonts', buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/assets/fonts/fonts.css' );
 wp_enqueue_style( 'bb-rl-login-style-icons', buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/icons/css/bb-icons-rl.min.css' );
 wp_enqueue_style( 'bb-rl-login-style', buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/css/login.css' );
@@ -57,6 +59,17 @@ wp_enqueue_style( 'bb-rl-login-style', buddypress()->plugin_url . 'bp-templates/
 					$icon.addClass( 'bb-icon-eye' ).removeClass( 'bb-icon-eye-slash' );
 				}
 			});
+
+			if ( $( '.popup-modal-register' ).length ) {
+				$( '.popup-modal-register' ).magnificPopup(
+					{
+						type            : 'inline',
+						preloader       : false,
+						fixedBgPos      : true,
+						fixedContentPos : true
+					}
+				);
+			}
 		});
 	</script>
 </body>
