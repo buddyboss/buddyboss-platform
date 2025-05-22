@@ -57,7 +57,7 @@ function bb_rl_register_single_widget( $widget_class, $widget_file ) {
  * @since BuddyBoss [BBVERSION]
  */
 function bb_rl_register_widgets() {
-	if ( ! bb_get_enabled_readylaunch() ) {
+	if ( ! bb_is_readylaunch_enabled() ) {
 		return;
 	}
 

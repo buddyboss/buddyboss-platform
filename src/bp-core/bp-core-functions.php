@@ -9993,12 +9993,12 @@ function bb_filter_activity_filter_scope_keys( $filters = array() ) {
 }
 
 /**
- * Function to return enabled components for ReadyLaunch.
+ * Function to check if ReadyLaunch is enabled.
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @return array
+ * @return bool True if ReadyLaunch is enabled, false otherwise.
  */
-function bb_get_enabled_readylaunch() {
-	return bp_get_option( 'bb_readylaunch', array() );
+function bb_is_readylaunch_enabled() {
+	return bp_get_option( 'bb_rl_enabled', false );
 }

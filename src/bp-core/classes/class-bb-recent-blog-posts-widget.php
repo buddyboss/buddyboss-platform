@@ -47,7 +47,7 @@ class BB_Recent_Blog_Posts_Widget extends WP_Widget {
 			)
 		);
 		$class_prefix = 'bb-';
-		if ( bb_get_enabled_readylaunch() ) {
+		if ( bb_is_readylaunch_enabled() ) {
 			$class_prefix = 'bb-rl-';
 		}
 		if ( ! empty( $recent_posts ) ) {

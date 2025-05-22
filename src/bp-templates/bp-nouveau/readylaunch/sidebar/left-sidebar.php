@@ -32,18 +32,28 @@ global $bb_rl_search_nav;
 		bp_search_buffer_template_part( 'search-nav' );
 	} else {
 		?>
-
-		<div class="bb-rl-left-panel-widget">
+		<div class="bb-rl-left-panel-widget bb-rl-left-panel-menu">
 			<?php
-			wp_nav_menu(
-				array(
-					'theme_location' => 'bb-top-readylaunchpanel',
-					'menu_id'        => '',
-					'container'      => false,
-					'fallback_cb'    => false,
-					'menu_class'     => 'bb-readylaunchpanel-menu bb-top-readylaunchpanel-menu',
-				)
-			);
+			$sidebar_order = bb_load_readylaunch()->bb_rl_get_sidebar_order();
+			if ( ! empty( $sidebar_order ) ) {
+				?>
+				<ul class="bb-rl-left-panel-menu-list bb-readylaunchpanel-menu">
+					<?php
+					foreach ( $sidebar_order as $key => $item ) {
+						if ( ! empty( $item['enabled'] ) ) {
+							?>
+							<li>
+								<a href="<?php echo esc_url( $item['url'] ); ?>" class="bb-rl-left-panel-menu-link">
+									<?php echo esc_html( $item['label'] ); ?>
+								</a>
+							</li>
+							<?php
+						}
+					}
+					?>
+				</ul>
+				<?php
+			}
 			?>
 		</div>
 		<?php
@@ -62,7 +72,6 @@ global $bb_rl_search_nav;
 				<?php bb_load_readylaunch()->bb_render_left_sidebar_middle_html( $active_left_sidebar_section['courses'] ); ?>
 			</div>
 			<?php
-
 		}
 		?>
 		<div class="bb-rl-left-panel-widget">

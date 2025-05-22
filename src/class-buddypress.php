@@ -604,7 +604,7 @@ class BuddyPress {
 			require $this->plugin_dir . 'cli/wp-cli-bp.php';
 		}
 
-		if ( bb_get_enabled_readylaunch() ) {
+		if ( bb_is_readylaunch_enabled() ) {
 			require $this->plugin_dir . 'bp-core/bb-core-readylaunch.php';
 		}
 	}
