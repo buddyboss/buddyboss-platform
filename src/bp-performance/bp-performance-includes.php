@@ -335,10 +335,8 @@ class BP_Performance_Includes {
 	 * @return array
 	 */
 	public function get_group_purge_actions( $actions, $group ) {
-		$bb_actions = array();
-
 		if ( 'bbplatform' === $group ) {
-			$bb_actions = array(
+			$actions = array(
 				'bp-members',
 				'bp-notifications',
 				'bp-groups',
@@ -354,7 +352,7 @@ class BP_Performance_Includes {
 			);
 		}
 
-		return array( $actions, $bb_actions );
+		return $actions;
 	}
 }
 
