@@ -513,7 +513,7 @@ function bp_nouveau_prepare_group_for_js( $item ) {
 			)
 		) : array();
 
-		$args['topics']['topic_lists'] = ! empty( $topics['topics'] ) ? $topics['topics'] : array();
+		$args['topics']['topic_lists'] = ! empty( $topics ) ? $topics : array();
 	}
 
 	return $args;
