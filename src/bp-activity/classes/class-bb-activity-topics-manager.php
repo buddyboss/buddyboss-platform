@@ -764,7 +764,7 @@ class BB_Activity_Topics_Manager {
 			$args,
 			array(
 				'item_id'   => 0,
-				'item_type' => array( 'activity', 'groups' ),
+				'item_type' => array( 'activity' ),
 				'fields'    => 'name,slug,topic_id',
 			)
 		);
