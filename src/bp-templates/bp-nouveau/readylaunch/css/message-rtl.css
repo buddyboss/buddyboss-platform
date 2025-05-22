@@ -1085,6 +1085,10 @@ body.messages .bb-rl-content-wrapper {
   width: 100%;
 }
 
+#bp-message-thread-list .divider-date .bp-avatar-wrap {
+  display: none;
+}
+
 #bp-message-thread-list .divider-date .bp-single-message-wrap {
   text-align: center;
 }
@@ -1118,7 +1122,8 @@ body.messages .bb-rl-content-wrapper {
 
 #bp-message-thread-list > li .bp-avatar-wrap img {
   max-width: 100%;
-  height: auto;
+  height: 40px;
+  object-fit: cover;
   border-radius: var(--bb-rl-radius-full);
 }
 

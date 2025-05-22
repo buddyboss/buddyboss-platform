@@ -303,6 +303,10 @@
 			width: 100%;
 		}
 
+		.bp-avatar-wrap {
+			display: none;
+		}
+
 		.bp-single-message-wrap {
 			text-align: center;
 		}
@@ -335,7 +339,8 @@
 
 			img {
 				max-width: 100%;
-				height: auto;
+				height: 40px;
+				object-fit: cover;
 				border-radius: var(--bb-rl-radius-full);
 			}
 		}
