@@ -151,6 +151,7 @@
 }
 
 .bb-rl-course-card {
+	position: relative;
 
 	.bb-rl-course-item {
 		display: flex;
@@ -234,5 +235,67 @@
 			@include bb-rl-label-heading-bolder;
 			color: var(--bb-rl-text-color);
 		}
+	}
+}
+
+.bb-rl-course-card {
+
+	.bb-rl-course-card-popup {
+		position: absolute;
+		z-index: 99;
+		top: 50%;
+		right: 0;
+		width: 296px;
+		background-color: var(--bb-rl-background-color);
+		border-radius: var(--bb-rl-radius-base);
+		box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.1);
+		transform: translateY(-50%);
+		padding: var(--bb-rl-space-200);
+		opacity: 0;
+		visibility: hidden;
+		transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+	}
+
+	&:hover {
+
+		.bb-rl-course-card-popup {
+			opacity: 1;
+			visibility: visible;
+		}
+	}
+}
+
+.bb-rl-course-card-popup {
+
+	.bb-rl-course-popup-caption {
+
+		@include bb-rl-label-heading;
+		color: var(--bb-rl-text-tertiary-color);
+		margin: var(--bb-rl-space-100) 0 var(--bb-rl-space-200);
+	}
+
+	.bb-rl-course-popup-actions {
+		margin-top: var(--bb-rl-space-300);
+
+		.bb-rl-course-link {
+			width: 100%;
+		}
+	}
+
+	.bb-rl-course-timestamp {
+
+		@include bb-rl-label-heading-bolder;
+		color: var(--bb-rl-text-positive-primary-color);
+	}
+
+	.bb-rl-course-popup-meta {
+		display: flex;
+		gap: var(--bb-rl-space-100);
+		margin: var(--bb-rl-space-100) 0 0;
+	}
+
+	.bb-rl-course-meta-tag {
+
+		@include bb-rl-label-heading;
 	}
 }

@@ -76,10 +76,6 @@ $readylaunch = BB_Readylaunch::instance();
 										<?php else : ?>
 											<div class="bb-rl-course-placeholder-image"></div>
 										<?php endif; ?>
-										
-										<?php if ( $is_enrolled ) : ?>
-											<span class="bb-rl-course-status bb-rl-enrolled"><?php esc_html_e( 'Enrolled', 'buddyboss' ); ?></span>
-										<?php endif; ?>
 									</a>
 								</div>
 								
@@ -87,10 +83,6 @@ $readylaunch = BB_Readylaunch::instance();
 									<h2 class="bb-rl-course-title">
 										<a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
 									</h2>
-									
-									<div class="bb-rl-course-excerpt">
-										<?php the_excerpt(); ?>
-									</div>
 									
 									<div class="bb-rl-course-footer">
 										<div class="bb-rl-course-author">
@@ -116,6 +108,27 @@ $readylaunch = BB_Readylaunch::instance();
 									</div>
 								</div>
 							</article>
+							<div class="bb-rl-course-card-popup">
+								<div class="bb-rl-course-timestamp"><?php esc_html_e( 'Updated: 20 May 2025', 'buddyboss' ); ?></div>
+								<div class="bb-rl-course-popup-meta">
+									<span class="bb-rl-course-meta-tag"><?php esc_html_e( '5 lessons', 'buddyboss' ); ?></span>
+									<span class="bb-rl-course-meta-tag"><?php esc_html_e( 'Beginner', 'buddyboss' ); ?></span>
+								</div>
+								<div class="bb-rl-course-popup-caption">
+									<?php the_excerpt(); ?>
+								</div>
+								<div class="bb-rl-course-popup-actions">
+									<a href="<?php the_permalink(); ?>" class="bb-rl-course-link bb-rl-button bb-rl-button--secondaryFill bb-rl-button--small">
+										<?php
+										if ( $is_enrolled ) {
+											esc_html_e( 'Continue', 'buddyboss' );
+										} else {
+											esc_html_e( 'View Course', 'buddyboss' );
+										}
+										?>
+									</a>
+								</div>
+							</div>
 						</div>
 					<?php endwhile; ?>
 				</div>
