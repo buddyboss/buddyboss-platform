@@ -329,6 +329,10 @@
 			background-color: var(--bb-rl-background-secondary-color);
 		}
 
+		cite > a:after {
+			font-style: normal;
+		}
+
 		.avatar {
 			border-radius: var(--bb-rl-radius-full);
 		}
@@ -345,6 +349,21 @@
 				display: block;
 				font-size: var(--bb-rl-font-size-sm);
 				color: var(--bb-rl-text-tertiary-color);
+			}
+
+			.activity-to {
+				font-size: var(--bb-rl-font-size-sm);
+				font-weight: 500;
+				color: var(--bb-rl-text-color);
+			}
+
+			.avatar {
+				max-width: 15px;
+				max-height: 15px;
+				object-fit: cover;
+				display: inline-block;
+				vertical-align: middle;
+				margin-right: var(--bb-rl-space-50);
 			}
 		}
 	}

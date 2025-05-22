@@ -10121,6 +10121,10 @@ input.bb-rl-zoom-slider::-moz-range-progress {
   background-color: var(--bb-rl-background-secondary-color);
 }
 
+.bp-latest-activities .update-item cite > a:after {
+  font-style: normal;
+}
+
 .bp-latest-activities .update-item .avatar {
   border-radius: var(--bb-rl-radius-full);
 }
@@ -10135,6 +10139,21 @@ input.bb-rl-zoom-slider::-moz-range-progress {
   display: block;
   font-size: var(--bb-rl-font-size-sm);
   color: var(--bb-rl-text-tertiary-color);
+}
+
+.bp-latest-activities .update-item .bp-activity-info .activity-to {
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 500;
+  color: var(--bb-rl-text-color);
+}
+
+.bp-latest-activities .update-item .bp-activity-info .avatar {
+  max-width: 15px;
+  max-height: 15px;
+  object-fit: cover;
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: var(--bb-rl-space-50);
 }
 
 .bb-rl-widget-sidebar .buddypress.widget .item-options {
