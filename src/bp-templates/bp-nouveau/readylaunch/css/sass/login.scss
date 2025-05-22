@@ -17,6 +17,17 @@
 }
 
 
+.interim-login {
+
+	.bb-rl-login-header {
+		margin-bottom: 0;
+		
+		.bb-rl-login-header-logo {
+			display: none;
+		}
+	}
+}
+
 .bb-rl-button {
 
 	@include bb-rl-button;
@@ -70,6 +81,12 @@ h1.wp-login-logo {
 	border-radius: var(--bb-rl-radius-lg);
 	max-width: 432px;
 	width: auto;
+
+	.interim-login & {
+		padding: var(--bb-rl-space-400) var(--bb-rl-space-300);
+		border-radius: 0;
+		margin: 0 auto 20px;
+	}
 
 	form {
 		border: 0;
