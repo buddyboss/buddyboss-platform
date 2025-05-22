@@ -78,6 +78,8 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 
 			add_filter( 'bp_groups_get_where_conditions', array( $this, 'bb_wpml_groups_dir_search_where_conditions' ), 10, 2 );
 			add_filter( 'Bp_Search_Groups_sql', array( $this, 'bb_wpml_groups_search_global_sql' ), 10, 2 );
+
+			add_filter( 'bp_activity_pre_transition_post_type_status', array( $this, 'bb_wpml_prevent_activity_for_translations' ), 10, 4 );
 		}
 
 		/**
@@ -414,6 +416,61 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 			}
 
 			return $sql_query;
+		}
+
+		/**
+		 * Prevent activity creation for WPML translations
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param bool    $pre_transition Whether to proceed with the transition. Default true.
+		 * @param string  $new_status     New status for the post.
+		 * @param string  $old_status     Old status for the post.
+		 * @param WP_Post $post           Post data.
+		 *
+		 * @return bool
+		 */
+		public function bb_wpml_prevent_activity_for_translations( $pre_transition, $new_status, $old_status, $post ) {
+			// Only proceed if WPML is active.
+			if (
+				! function_exists( 'icl_object_id' ) ||
+				'publish' !== $new_status
+			) {
+				return $pre_transition;
+			}
+
+			if ( ! is_a( $post, 'WP_Post' ) ) {
+				return $pre_transition;
+			}
+
+			// Get the post type tracking args.
+			$activity_post_object = bp_activity_get_post_type_tracking_args( $post->post_type );
+
+			if ( ! empty( $activity_post_object->action_id ) ) {
+				$activity_id = bp_activity_get_activity_id(
+					array(
+						'component'         => $activity_post_object->component_id,
+						'item_id'           => get_current_blog_id(),
+						'secondary_item_id' => $post->ID,
+						'type'              => $activity_post_object->action_id,
+					)
+				);
+
+				// Activity ID exists, so allow update.
+				if ( ! empty( $activity_id ) ) {
+					return $pre_transition;
+				}
+			}
+
+			// Get the default language.
+			$default_lang     = wpml_get_default_language();
+			$current_language = apply_filters( 'wpml_current_language', null );
+
+			if ( $default_lang !== $current_language ) {
+				return false;
+			}
+
+			return $pre_transition;
 		}
 	}
 
