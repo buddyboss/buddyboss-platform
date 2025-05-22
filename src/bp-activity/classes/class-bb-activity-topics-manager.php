@@ -103,7 +103,6 @@ class BB_Activity_Topics_Manager {
 
 		add_action( 'bp_activity_get_edit_data', array( $this, 'bb_activity_get_edit_topic_data' ), 10, 1 );
 
-		add_filter( 'bb_get_topics_join_sql', array( $this, 'bb_get_activity_topics_join_sql' ), 10, 2 );
 		add_action( 'bb_topic_before_added', array( $this, 'bb_validate_activity_topic_before_added' ) );
 		add_filter( 'bp_ajax_querystring', array( $this, 'bb_activity_directory_set_topic_id' ), 20, 2 );
 		add_filter( 'bp_activity_get_join_sql', array( $this, 'bb_activity_topic_get_join_sql' ), 10, 2 );
@@ -580,28 +579,6 @@ class BB_Activity_Topics_Manager {
 	}
 
 	/**
-	 * Filter the MySQL JOIN clause for the topic query.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param string $join_sql Current JOIN MySQL statement.
-	 * @param array  $r        Method parameters.
-	 */
-	public function bb_get_activity_topics_join_sql( $join_sql, $r ) {
-		$topic_rel_table = $this->wpdb->prefix . 'bb_topic_relationships';
-		if ( ! empty( $r['filter_query'] ) ) {
-			$join_sql .= " INNER JOIN (
-				SELECT MIN(id) as min_id
-				FROM {$topic_rel_table}
-				GROUP BY topic_id
-				ORDER BY min_id
-			) tr2 ON tr.id = tr2.min_id";
-		}
-
-		return $join_sql;
-	}
-
-	/**
 	 * Set the topic id in the querystring.
 	 *
 	 * @since BuddyBoss [BBVERSION]
@@ -730,7 +707,12 @@ class BB_Activity_Topics_Manager {
 	 * @return array Modified array of strings.
 	 */
 	public function bb_activity_topic_get_js_strings( $strings ) {
-		$topic_lists = $this->bb_get_activity_topics( array( 'item_type' => 'activity' ) );
+		$topic_lists = $this->bb_get_activity_topics(
+			array(
+				'item_type' => 'activity',
+				'can_post'  => true,
+			)
+		);
 		// If group activity topics is not enabled, then don't show the topic lists.
 		if (
 			bp_is_active( 'groups' ) &&
@@ -738,8 +720,7 @@ class BB_Activity_Topics_Manager {
 			function_exists( 'bb_is_enabled_group_activity_topics' ) &&
 			function_exists( 'bb_get_group_activity_topics' )
 		) {
-			$topic_lists = bb_get_group_activity_topics();
-			$topic_lists = ! empty( $topic_lists['topics'] ) ? $topic_lists['topics'] : array();
+			$topic_lists = bb_get_group_activity_topics( array( 'can_post' => true ) );
 		}
 
 		$strings['activity']['params']['topics']['bb_is_enabled_group_activity_topics'] = function_exists( 'bb_is_enabled_group_activity_topics' ) && bb_is_enabled_group_activity_topics();
@@ -764,13 +745,13 @@ class BB_Activity_Topics_Manager {
 			$args,
 			array(
 				'item_id'   => 0,
-				'item_type' => array( 'activity', 'groups' ),
+				'item_type' => 'activity',
 				'fields'    => 'name,slug,topic_id',
 			)
 		);
 
 		$r['item_type'] = ! empty( $r['item_type'] ) ? ( is_array( $r['item_type'] ) ? $r['item_type'] : array( $r['item_type'] ) ) : array( 'activity' );
-		if ( in_array( 'activity', $r['item_type'], true ) ) {
+		if ( ! empty( $r['can_post'] ) && in_array( 'activity', $r['item_type'], true ) ) {
 			if ( bp_current_user_can( 'administrator' ) ) {
 				$r['permission_type'] = array( 'mods_admins', 'anyone' );
 			} else {
@@ -784,32 +765,7 @@ class BB_Activity_Topics_Manager {
 			return $topic_cache;
 		}
 
-		$group_topics_enabled = (
-			bp_is_active( 'groups' ) &&
-			function_exists( 'bb_is_enabled_group_activity_topics' ) &&
-			bb_is_enabled_group_activity_topics() &&
-			(
-				(
-					isset( $r['filter_query'] ) &&
-					$r['filter_query']
-				) ||
-				(
-					isset( $r['item_type'] ) &&
-					in_array( 'groups', $r['item_type'], true )
-				)
-			)
-		);
-		if ( $group_topics_enabled ) {
-			add_filter( 'bb_get_topics_join_sql', 'bb_topics_join_sql_filter', 10 );
-			add_filter( 'bb_get_topics_where_conditions', 'bb_topics_where_conditions_filter', 10, 2 );
-		}
-
 		$topic_lists = bb_topics_manager_instance()->bb_get_topics( $r );
-
-		if ( $group_topics_enabled ) {
-			remove_filter( 'bb_get_topics_join_sql', 'bb_topics_join_sql_filter', 10 );
-			remove_filter( 'bb_get_topics_where_conditions', 'bb_topics_where_conditions_filter', 10 );
-		}
 
 		if ( ! empty( $r['count_total'] ) ) {
 			$topic_lists = ! empty( $topic_lists ) ? $topic_lists : array();
@@ -1024,7 +980,7 @@ class BB_Activity_Topics_Manager {
 	 * @since BuddyBoss [BBVERSION]
 	 */
 	public function bb_user_activity_topics_after_post_form() {
-		$topics = $this->bb_get_activity_topics( array( 'filter_query' => true ) );
+		$topics = $this->bb_get_activity_topics();
 		if ( ! empty( $topics ) ) {
 			?>
 			<div class="activity-topic-selector">
