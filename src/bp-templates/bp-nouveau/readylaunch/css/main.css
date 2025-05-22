@@ -6936,7 +6936,7 @@ body.admin-bar .bb-rl-left-panel {
   font-size: 24px;
   line-height: 1;
   color: var(--bb-rl-icon-color);
-  margin-right: var(--bb-rl-space-100);
+  margin-left: var(--bb-rl-space-100);
 }
 
 .bb-rl-left-panel .bb-readylaunchpanel-menu li > a > i:before {
@@ -6965,12 +6965,12 @@ body.admin-bar .bb-rl-left-panel {
   cursor: pointer;
   font-size: 20px;
   color: var(--bb-rl-text-tertiary-color);
-  line-height: 30px;
+  line-height: var(--bb-rl-space-300);
   position: absolute;
   right: 10px;
   top: 6px;
   width: 30px;
-  height: 30px;
+  height: var(--bb-rl-space-300);
   text-align: center;
 }
 
@@ -6991,6 +6991,8 @@ body.admin-bar .bb-rl-left-panel {
 
 .bb-rl-left-panel .bb-readylaunchpanel-menu .open-parent > a .submenu-toggle {
   transform: rotate(-180deg);
+  margin-right: var(--bb-rl-space-100);
+  margin-left: 0;
 }
 
 .bb-rl-left-panel .bb-bottom-readylaunchpanel-menu li > a > i {

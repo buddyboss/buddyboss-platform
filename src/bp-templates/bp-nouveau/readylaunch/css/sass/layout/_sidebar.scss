@@ -40,7 +40,7 @@
 				font-size: 24px;
 				line-height: 1;
 				color: var(--bb-rl-icon-color);
-				margin-right: var(--bb-rl-space-100);
+				margin-left: var(--bb-rl-space-100);
 
 				&:before {
 					margin: 0;
@@ -71,12 +71,12 @@
 			cursor: pointer;
 			font-size: 20px;
 			color: var(--bb-rl-text-tertiary-color);
-			line-height: 30px;
+			line-height: var(--bb-rl-space-300);
 			position: absolute;
 			right: 10px;
 			top: 6px;
 			width: 30px;
-			height: 30px;
+			height: var(--bb-rl-space-300);
 			text-align: center;
 		}
 
@@ -98,6 +98,8 @@
 
 				.submenu-toggle {
 					transform: rotate(-180deg);
+					margin-right: var(--bb-rl-space-100);
+					margin-left: 0;
 				}
 			}
 		}
