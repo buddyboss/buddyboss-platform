@@ -398,6 +398,10 @@
 			}
 		}
 	}
+
+	.bb-rl-activity-comments #bb-rl-ajax-loader {
+		margin-top: var(--bb-rl-space-300);
+	}
 }
 
 .acomments-view-more {

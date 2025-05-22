@@ -17036,6 +17036,10 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   padding-top: 0;
 }
 
+.activity-item .bb-rl-activity-comments #bb-rl-ajax-loader {
+  margin-top: var(--bb-rl-space-300);
+}
+
 .acomments-view-more {
   display: flex;
   align-items: center;
