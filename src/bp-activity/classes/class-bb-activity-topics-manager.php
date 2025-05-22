@@ -729,6 +729,7 @@ class BB_Activity_Topics_Manager {
 		$strings['activity']['params']['topics']['topic_lists']                         = ! empty( $topic_lists ) ? $topic_lists : array();
 		$strings['activity']['params']['topics']['topic_tooltip_error']                 = esc_html__( 'Please select a topic', 'buddyboss' );
 		$strings['activity']['params']['topics']['activity_slug']                       = bp_get_activity_slug();
+		$strings['activity']['params']['topics']['is_activity_directory']               = bp_is_activity_directory();
 		return $strings;
 	}
 
