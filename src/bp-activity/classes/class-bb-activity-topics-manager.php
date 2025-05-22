@@ -728,6 +728,7 @@ class BB_Activity_Topics_Manager {
 		$strings['activity']['params']['topics']['bb_is_activity_topic_required']       = function_exists( 'bb_is_activity_topic_required' ) ? bb_is_activity_topic_required() : false;
 		$strings['activity']['params']['topics']['topic_lists']                         = ! empty( $topic_lists ) ? $topic_lists : array();
 		$strings['activity']['params']['topics']['topic_tooltip_error']                 = esc_html__( 'Please select a topic', 'buddyboss' );
+		$strings['activity']['params']['topics']['activity_slug']                       = bp_get_activity_slug();
 		return $strings;
 	}
 
