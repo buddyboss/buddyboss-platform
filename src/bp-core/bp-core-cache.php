@@ -770,14 +770,13 @@ add_action( 'bb_topic_deleted', 'bb_topic_deleted_cache_reset', 10, 2 );
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param int   $relationship_id The ID of the updated relationship.
- * @param array $r               The arguments used to update the relationship.
+ * @param int $relationship_id The ID of the updated relationship.
  */
-function bb_activity_topic_relationship_after_update_cache_reset( $relationship_id, $r ) {
+function bb_activity_topic_relationship_after_update_cache_reset( $relationship_id ) {
 	bp_core_reset_incrementor( 'bb_activity_topics' );
 	if ( ! empty( $relationship_id ) ) {
 		wp_cache_delete( $relationship_id, 'bb_activity_topics' );
 	}
 }
 
-add_action( 'bb_activity_topic_relationship_after_update', 'bb_activity_topic_relationship_after_update_cache_reset', 10, 2 );
+add_action( 'bb_activity_topic_relationship_after_update', 'bb_activity_topic_relationship_after_update_cache_reset', 10, 1 );
