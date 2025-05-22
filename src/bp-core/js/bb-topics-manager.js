@@ -754,8 +754,7 @@ window.bp = window.bp || {};
 				// Are we on the main activity/news feed?
 				var isMainFeed = BP_Nouveau.activity.params.topics.is_activity_directory;
 				if ( isMainFeed ) {
-					var groupSlug = bbTopicsManagerVars.group_slug;
-					if ( -1 !== topicUrl.indexOf( groupSlug ) ) {
+					if ( $topicItem.closest( 'li.groups' ).length > 0 ) {
 						window.location.href = topicUrl;
 						return;
 					}
