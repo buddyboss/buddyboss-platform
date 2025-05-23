@@ -29,6 +29,15 @@ $readylaunch = BB_Readylaunch::instance();
 	</div>
 
 	<div class="bb-rl-course-filters bb-rl-sub-ctrls flex items-center">
+
+		<div class="bb-rl-grid-filters flex items-center" data-view="ld-course">
+			<a href="" class="layout-view layout-view-course layout-grid-view bp-tooltip active" data-view="grid" data-bp-tooltip-pos="down" data-bp-tooltip="<?php _e( 'Grid View', 'buddyboss' ); ?>">
+				<i class="bb-icons-rl-squares-four"></i>
+			</a>
+			<a href="" class="layout-view layout-view-course layout-list-view bp-tooltip" data-view="list" data-bp-tooltip-pos="down" data-bp-tooltip="<?php _e( 'List View', 'buddyboss' ); ?>">
+				<i class="bb-icons-rl-rows"></i>
+			</a>
+		</div>
 				
 		<?php
 		// Display course category filter if available
@@ -39,17 +48,19 @@ $readylaunch = BB_Readylaunch::instance();
 		
 		//if ( ! empty( $course_cats ) && ! is_wp_error( $course_cats ) ) :
 		?>
-			<div class="bb-rl-course-categories bb-rl-filter">
-				<label for="ld-course-cats" class="bb-rl-filter-label"><span><?php esc_html_e( 'Category', 'buddyboss' ); ?></span></label>
-				<div class="select-wrap">
-					<select id="ld-course-cats" onchange="if (this.value) window.location.href=this.value">
-						<option value="<?php echo esc_url( get_post_type_archive_link( 'sfwd-courses' ) ); ?>"><?php esc_html_e( 'All Categories', 'buddyboss' ); ?></option>
-						<?php foreach ( $course_cats as $cat ) : ?>
-							<option value="<?php echo esc_url( get_term_link( $cat ) ); ?>" <?php selected( is_tax( 'ld_course_category', $cat->term_id ) ); ?>>
-								<?php echo esc_html( $cat->name ); ?>
-							</option>
-						<?php endforeach; ?>
-					</select>
+			<div class="component-filters">
+				<div class="bb-rl-course-categories bb-rl-filter">
+					<label for="ld-course-cats" class="bb-rl-filter-label"><span><?php esc_html_e( 'Category', 'buddyboss' ); ?></span></label>
+					<div class="select-wrap">
+						<select id="ld-course-cats" onchange="if (this.value) window.location.href=this.value">
+							<option value="<?php echo esc_url( get_post_type_archive_link( 'sfwd-courses' ) ); ?>"><?php esc_html_e( 'All Categories', 'buddyboss' ); ?></option>
+							<?php foreach ( $course_cats as $cat ) : ?>
+								<option value="<?php echo esc_url( get_term_link( $cat ) ); ?>" <?php selected( is_tax( 'ld_course_category', $cat->term_id ) ); ?>>
+									<?php echo esc_html( $cat->name ); ?>
+								</option>
+							<?php endforeach; ?>
+						</select>
+					</div>
 				</div>
 			</div>
 		<?php //endif; ?>
@@ -80,11 +91,11 @@ $readylaunch = BB_Readylaunch::instance();
 								</div>
 								
 								<div class="bb-rl-course-content">
-									<h2 class="bb-rl-course-title">
-										<a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
-									</h2>
-									
-									<div class="bb-rl-course-footer">
+									<div class="bb-rl-course-body">
+										<h2 class="bb-rl-course-title">
+											<a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
+										</h2>
+
 										<div class="bb-rl-course-author">
 											<?php
 											$author_id = get_the_author_meta( 'ID' );
@@ -95,6 +106,8 @@ $readylaunch = BB_Readylaunch::instance();
 											</span>
 											<span class="bb-rl-author-name"><?php echo esc_html( $author_name ); ?></span>
 										</div>
+									</div>
+									<div class="bb-rl-course-footer">
 										
 										<a href="<?php the_permalink(); ?>" class="bb-rl-course-link bb-rl-button bb-rl-button--secondaryFill bb-rl-button--small">
 											<?php
@@ -104,6 +117,7 @@ $readylaunch = BB_Readylaunch::instance();
 												esc_html_e( 'View Course', 'buddyboss' );
 											}
 											?>
+											<i class="bb-icons-rl-caret-right"></i>
 										</a>
 									</div>
 								</div>

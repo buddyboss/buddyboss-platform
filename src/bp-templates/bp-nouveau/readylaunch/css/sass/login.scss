@@ -30,7 +30,7 @@
 
 	.bb-rl-login-header {
 		margin-bottom: 0;
-		
+
 		.bb-rl-login-header-logo {
 			display: none;
 		}
@@ -296,10 +296,10 @@ h1.wp-login-logo {
 
 .bb-rl-register .mfp-bg,
 body .mfp-bg {
-    position: fixed;
-    inset: 0;
-    background-color: rgba(0, 0, 0, 0.5);
-    z-index: 99;
+	position: fixed;
+	inset: 0;
+	background-color: rgba(0, 0, 0, 0.5);
+	z-index: 99;
 }
 
 
@@ -335,7 +335,7 @@ body .mfp-bg {
 	padding: 0 8px;
 	box-sizing: border-box;
 }
-  
+
 
 .registration-popup,
 body.login .mfp-content #terms-modal,
@@ -345,12 +345,12 @@ body.login .mfp-content #privacy-modal {
 	padding: var(--bb-rl-space-400) var(--bb-rl-space-300);
 	border-radius: var(--bb-rl-radius-lg);
 	background: #fff;
-    padding: 30px;
-    text-align: left;
-    min-height: 400px;
-    max-width: 650px;
-    margin: 40px auto;
-    position: relative;
+	padding: 30px;
+	text-align: left;
+	min-height: 400px;
+	max-width: 650px;
+	margin: 40px auto;
+	position: relative;
 
 	.mfp-close {
 		position: absolute;

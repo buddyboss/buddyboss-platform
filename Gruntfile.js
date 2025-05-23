@@ -16,7 +16,9 @@ module.exports = function (grunt) {
 		BP_EXCLUDED_CSS = [
 			'!**/*-rtl.css',
 			// '!bp-forums/**/*.css',
-			'!**/endpoints/**/*.css'
+			'!**/endpoints/**/*.css',
+			'!**/bp-core/admin/bb-settings/readylaunch/build/**/*.css',
+			'!**/js/admin/readylaunch/styles/**/*.css'
 		],
 
 		BP_JS = [

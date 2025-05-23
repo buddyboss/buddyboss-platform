@@ -17,60 +17,49 @@
          * Initialization
          */
         init: function() {
-            this.setupViewToggle();
+            this.switchLdGridList();
             this.setupCourseItemEvents();
             this.setupCourseFilters();
             this.setupSidebarToggle();
         },
-        
+
         /**
          * Setup course grid/list view toggle
          */
-        setupViewToggle: function() {
-            var self = this;
-            
-            $('.bb-courses-view-toggle button').on('click', function(e) {
-                e.preventDefault();
-                
-                var $this = $(this),
-                    view = $this.data('view'),
-                    $courseItems = $('.bb-course-items');
-                
-                // Remove active class from buttons
-                $('.bb-courses-view-toggle button').removeClass('active');
-                
-                // Add active class to clicked button
-                $this.addClass('active');
-                
-                // Remove view classes from course items
-                $courseItems.removeClass('grid-view list-view');
-                
-                // Add current view class
-                $courseItems.addClass(view + '-view');
-                
-                // Save view preference
-                self.saveViewPreference(view);
-            });
-        },
-        
-        /**
-         * Save user's course view preference via AJAX
-         */
-        saveViewPreference: function(view) {
-            if (typeof bbReadylaunchLearnDash === 'undefined') {
-                return;
-            }
-            
-            $.ajax({
-                url: bbReadylaunchLearnDash.ajax_url,
-                type: 'POST',
-                data: {
-                    action: 'bb_readylaunch_learndash_save_view',
-                    view: view,
-                    nonce: bbReadylaunchLearnDash.nonce
-                }
-            });
-        },
+        switchLdGridList: function() {
+
+			var courseLoopSelector = $( '.bb-rl-courses-grid' );
+			$( document ).on(
+				'click',
+				'.bb-rl-grid-filters .layout-view-course:not(.active)',
+				function(e) {
+					e.preventDefault();
+
+					if (
+						'undefined' === typeof $( this ).parent().attr( 'data-view' ) ||
+						'ld-course' !== $( this ).parent().attr( 'data-view' )
+					) {
+						return;
+					}
+
+					var rlContainer = $( this ).closest( '.bb-rl-container' );
+                    var gridFilters = $( this ).closest( '.bb-rl-grid-filters' );
+
+					courseLoopSelector = rlContainer.find( '.bb-rl-courses-grid' );
+					if ( $( this ).hasClass( 'layout-list-view' ) ) {
+						gridFilters.find( '.layout-view-course' ).removeClass( 'active' );
+						courseLoopSelector.removeClass( 'grid' );
+						$( this ).addClass( 'active' );
+						courseLoopSelector.addClass( 'list' );
+					} else {
+						gridFilters.find( '.layout-view-course' ).removeClass( 'active' );
+						courseLoopSelector.removeClass( 'list' );
+						$( this ).addClass( 'active' );
+						courseLoopSelector.addClass( 'grid' );
+					}
+				}
+			);
+		},
         
         /**
          * Setup course item events
