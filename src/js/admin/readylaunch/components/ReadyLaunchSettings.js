@@ -721,7 +721,7 @@ export const ReadyLaunchSettings = () => {
 										onChange={handleSettingChange('bb_rl_skin_appearance')}
 									/>
 									{settings.bb_rl_skin_appearance && (
-										<div style={{ marginTop: '16px' }}>
+										<div className="sub-field-input">
 											<RadioControl
 												selected={settings.bb_rl_theme_mode}
 												options={[
