@@ -21,6 +21,7 @@
             this.setupCourseItemEvents();
             this.setupCourseFilters();
             this.setupSidebarToggle();
+            this.setupCourseCardPopups();
         },
 
         /**
@@ -169,6 +170,90 @@
                     $('body').removeClass('bb-sidebar-open');
                 }
             });
+        },
+        
+        /**
+         * Setup dynamic positioning for course card popups
+         */
+        setupCourseCardPopups: function() {
+            var self = this;
+            
+            // Handle popup positioning on hover
+            $('.bb-rl-course-card').on({
+                mouseenter: function() {
+                    var $card = $(this);
+                    var $popup = $card.find('.bb-rl-course-card-popup');
+                    
+                    if ($popup.length) {
+                        self.positionCoursePopup($card, $popup);
+                    }
+                }
+            });
+            
+            // Reposition popups on window resize
+            $(window).on('resize', function() {
+                $('.bb-rl-course-card:hover').each(function() {
+                    var $card = $(this);
+                    var $popup = $card.find('.bb-rl-course-card-popup');
+                    
+                    if ($popup.length) {
+                        self.positionCoursePopup($card, $popup);
+                    }
+                });
+            });
+        },
+        
+        /**
+         * Position course popup dynamically based on available space
+         */
+        positionCoursePopup: function($card, $popup) {
+            // Don't position on mobile - let CSS handle it
+            if ($(window).width() <= 768) {
+                $popup.removeClass('bb-rl-popup-left bb-rl-popup-right');
+                return;
+            }
+            
+            var cardRect = $card[0].getBoundingClientRect();
+            var popupWidth = 296;
+            var windowWidth = $(window).width();
+            var spaceRight = windowWidth - cardRect.right;
+            var spaceLeft = cardRect.left;
+            var minSpaceRequired = popupWidth + 20;
+            var scrollOffset = $(window).scrollLeft();
+            
+            // Reset positioning classes
+            $popup.removeClass('bb-rl-popup-left bb-rl-popup-right');
+            
+            // Check if there's enough space on the right
+            if (spaceRight >= minSpaceRequired) {
+                // Position on the right
+                $popup.addClass('bb-rl-popup-right');
+            } else if (spaceLeft >= minSpaceRequired) {
+                // Position on the left
+                $popup.addClass('bb-rl-popup-left');
+            } else {
+                // If neither side has enough space, choose the side with more space
+                if (spaceRight >= spaceLeft) {
+                    $popup.addClass('bb-rl-popup-right');
+                } else {
+                    $popup.addClass('bb-rl-popup-left');
+                }
+            }
+            
+            // Ensure popup doesn't go off-screen vertically
+            var cardTop = cardRect.top;
+            var cardHeight = cardRect.height;
+            var popupHeight = 200; // Approximate popup height
+            var windowHeight = $(window).height();
+            
+            // Adjust vertical position if needed
+            if (cardTop + popupHeight/2 > windowHeight) {
+                $popup.css('transform', 'translateY(calc(-50% - ' + (cardTop + popupHeight/2 - windowHeight + 20) + 'px))');
+            } else if (cardTop - popupHeight/2 < 0) {
+                $popup.css('transform', 'translateY(calc(-50% + ' + Math.abs(cardTop - popupHeight/2 + 20) + 'px))');
+            } else {
+                $popup.css('transform', 'translateY(-50%)');
+            }
         }
     };
     

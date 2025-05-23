@@ -282,7 +282,6 @@
 		position: absolute;
 		z-index: 99;
 		top: 50%;
-		right: 0;
 		width: 296px;
 		background-color: var(--bb-rl-background-color);
 		border-radius: var(--bb-rl-radius-base);
@@ -292,6 +291,65 @@
 		opacity: 0;
 		visibility: hidden;
 		transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+
+		// Default positioning (right side)
+		&.bb-rl-popup-right {
+			left: calc(100% - var(--bb-rl-space-50));
+		}
+	
+		// Left side positioning
+		&.bb-rl-popup-left {
+			right: calc(100% - var(--bb-rl-space-50));
+		}
+
+		// Fallback for when no positioning class is applied
+		&:not(.bb-rl-popup-left):not(.bb-rl-popup-right) {
+			right: 0;
+		}
+
+		// Ensure popup doesn't overflow on small screens
+		@media screen and (max-width: 768px) {
+			position: fixed;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			width: calc(100vw - var(--bb-rl-space-400));
+			max-width: 320px;
+
+			&.bb-rl-popup-left,
+			&.bb-rl-popup-right {
+				left: 50%;
+				right: auto;
+			}
+		}
+
+		&.bb-rl-popup-right::before {
+			content: "";
+			position: absolute;
+			top: 50%;
+			left: -8px;
+			transform: translateY(-50%);
+			width: 0;
+			height: 0;
+			border-top: 8px solid transparent;
+			border-bottom: 8px solid transparent;
+			border-right: 8px solid var(--bb-rl-background-color);
+			filter: drop-shadow(-2px 0 2px rgba(0, 0, 0, 0.1));
+		}
+
+		&.bb-rl-popup-left::before {
+			content: "";
+			position: absolute;
+			top: 50%;
+			right: -8px;
+			transform: translateY(-50%);
+			width: 0;
+			height: 0;
+			border-top: 8px solid transparent;
+			border-bottom: 8px solid transparent;
+			border-left: 8px solid var(--bb-rl-background-color);
+			filter: drop-shadow(2px 0 2px rgba(0, 0, 0, 0.1));
+		}
 	}
 
 	&:hover {
