@@ -700,7 +700,7 @@ export const ReadyLaunchSettings = () => {
 				return (
 					<div className="settings-content">
 						<h1>{__('Style Settings', 'buddyboss')}</h1>
-						<p className="settings-description">{__('Customize your community’s look with mode preferences, logos, and theme colors.', 'buddyboss')}</p>
+						<p className="settings-description">{__('Customize your community\'s look with mode preferences, logos, and theme colors.', 'buddyboss')}</p>
 
 						<div className="settings-card">
 							<div className="settings-header">
@@ -716,10 +716,23 @@ export const ReadyLaunchSettings = () => {
 								</div>
 								<div className="field-input">
 									<ToggleControl
-										label={__('Enable Dark Mode', 'buddyboss')}
+										label={__('Allow Dark Mode', 'buddyboss')}
 										checked={settings.bb_rl_skin_appearance}
 										onChange={handleSettingChange('bb_rl_skin_appearance')}
 									/>
+									{settings.bb_rl_skin_appearance && (
+										<div style={{ marginTop: '16px' }}>
+											<RadioControl
+												selected={settings.bb_rl_theme_mode}
+												options={[
+													{ label: __('Light Mode', 'buddyboss'), value: 'light' },
+													{ label: __('Dark Mode', 'buddyboss'), value: 'dark' },
+													{ label: __('User Preference', 'buddyboss'), value: 'choice' },
+												]}
+												onChange={handleSettingChange('bb_rl_theme_mode')}
+											/>
+										</div>
+									)}
 								</div>
 							</div>
 
@@ -774,30 +787,6 @@ export const ReadyLaunchSettings = () => {
 									)}
 								</div>
 							</div>
-
-
-							{/* Theme Mode Setting */}
-							{settings.bb_rl_skin_appearance && (
-								<>
-									<div className="settings-form-field">
-										<div className="field-label">
-											<label>{__('Theme Mode Settings', 'buddyboss')}</label>
-										<p>{__('Description text goes here', 'buddyboss')}</p>
-									</div>
-									<div className="field-input">
-										<RadioControl
-											selected={settings.bb_rl_theme_mode}
-											options={[
-												{ label: __('Light Mode', 'buddyboss'), value: 'light' },
-												{ label: __('Dark Mode', 'buddyboss'), value: 'dark' },
-												{ label: __('User Preference', 'buddyboss'), value: 'choice' },
-											]}
-											onChange={handleSettingChange('bb_rl_theme_mode')}
-										/>
-									</div>
-									</div>
-								</>
-							)}
 
 						</div>
 					</div>
