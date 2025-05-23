@@ -39,13 +39,22 @@ if ( bp_is_user() ) {
 }
 
 if ( bp_is_active( 'activity' ) && bp_is_activity_directory() ) {
-	$available_widgets[] = 'BP_Xprofile_Profile_Completion_Widget';
+	$bb_rl_activity_sidebars = bp_get_option( 'bb_rl_activity_sidebars', array() );
+	if ( ! empty( $bb_rl_activity_sidebars['complete_profile'] ) ) {
+		$available_widgets[] = 'BP_Xprofile_Profile_Completion_Widget';
+	}
 
-	$available_widgets[] = 'BP_Latest_Activities';
+	if ( ! empty( $bb_rl_activity_sidebars['latest_updates'] ) ) {
+		$available_widgets[] = 'BP_Latest_Activities';
+	}
 
-	$available_widgets[] = 'BB_Recent_Blog_Posts_Widget';
+	if ( ! empty( $bb_rl_activity_sidebars['recent_blog_posts'] ) ) {
+		$available_widgets[] = 'BB_Recent_Blog_Posts_Widget';
+	}
 
-	$available_widgets[] = 'BP_Core_Recently_Active_Widget';
+	if ( ! empty( $bb_rl_activity_sidebars['active_members'] ) ) {
+		$available_widgets[] = 'BP_Core_Recently_Active_Widget';
+	}
 }
 
 if ( bp_is_active( 'groups' ) && bp_is_group() ) {
