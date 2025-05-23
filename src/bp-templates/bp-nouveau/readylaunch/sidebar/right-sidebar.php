@@ -23,18 +23,21 @@ $available_widgets = array();
 
 // @todo enable based on the enabled widget for specific page.
 if ( bp_is_user() ) {
-
-	$available_widgets[] = 'BP_Xprofile_Profile_Completion_Widget';
-
-	if ( bp_is_active( 'friends' ) && ! bp_is_user_friends() ) {
-		$available_widgets[] = 'BB_Core_Connections_Widget';
+	$bb_rl_member_profile_sidebars = bp_get_option( 'bb_rl_member_profile_sidebars', array() );
+	if ( ! empty( $bb_rl_member_profile_sidebars['complete_profile'] ) ) {
+		$available_widgets[] = 'BP_Xprofile_Profile_Completion_Widget';
 	}
 
-	if (
-		bp_is_active( 'activity' ) &&
-		bp_is_activity_follow_active()
-	) {
-		$available_widgets[] = 'BB_Core_Follow_My_Network_Widget';
+	if ( ! empty( $bb_rl_member_profile_sidebars['connections'] ) ) {
+		if ( bp_is_active( 'friends' ) && ! bp_is_user_friends() ) {
+			$available_widgets[] = 'BB_Core_Connections_Widget';
+		}
+	}
+
+	if ( ! empty( $bb_rl_member_profile_sidebars['my_network'] ) ) {
+		if ( bp_is_active( 'activity' ) && bp_is_activity_follow_active() ) {
+			$available_widgets[] = 'BB_Core_Follow_My_Network_Widget';
+		}
 	}
 }
 
