@@ -31,12 +31,10 @@ global $bb_rl_search_nav;
 	} elseif ( BB_Readylaunch::bb_is_network_search() ) {
 		bp_search_buffer_template_part( 'search-nav' );
 	} else {
-		?>
-		<div class="bb-rl-left-panel-widget bb-rl-left-panel-menu">
-			<?php
-			$sidebar_order = bb_load_readylaunch()->bb_rl_get_sidebar_order();
-			if ( ! empty( $sidebar_order ) ) {
-				?>
+		$sidebar_order = bb_load_readylaunch()->bb_rl_get_sidebar_order();
+		if ( ! empty( $sidebar_order ) ) {
+			?>
+			<div class="bb-rl-left-panel-widget bb-rl-left-panel-menu">
 				<ul class="bb-rl-left-panel-menu-list bb-readylaunchpanel-menu">
 					<?php
 					foreach ( $sidebar_order as $key => $item ) {
@@ -52,11 +50,9 @@ global $bb_rl_search_nav;
 					}
 					?>
 				</ul>
-				<?php
-			}
-			?>
-		</div>
-		<?php
+			</div>
+			<?php
+		}
 		$active_left_sidebar_section = bb_load_readylaunch()->bb_is_active_any_left_sidebar_section( true );
 		if ( ! empty( $active_left_sidebar_section['groups']['items'] ) ) {
 			?>
@@ -73,24 +69,29 @@ global $bb_rl_search_nav;
 			</div>
 			<?php
 		}
-		?>
-		<div class="bb-rl-left-panel-widget">
-			<div class="bb-rl-list">
-				<h2><?php esc_html_e( 'Links', 'buddyboss' ); ?></h2>
-				<?php
-				wp_nav_menu(
-					array(
-						'theme_location' => 'bb-bottom-readylaunchpanel',
-						'menu_id'        => '',
-						'container'      => false,
-						'fallback_cb'    => false,
-						'menu_class'     => 'bb-readylaunchpanel-menu bb-bottom-readylaunchpanel-menu',
-					)
-				);
-				?>
+		$custom_links = bp_get_option( 'bb_rl_custom_links', array() );
+		if ( ! empty( $custom_links ) ) {
+			?>
+			<div class="bb-rl-left-panel-widget">
+				<div class="bb-rl-list">
+					<h2><?php esc_html_e( 'Links', 'buddyboss' ); ?></h2>
+					<ul class="bb-readylaunchpanel-menu bb-bottom-readylaunchpanel-menu">
+					<?php
+					foreach ( $custom_links as $link_item ) {
+						?>
+						<li class="bb-rl-left-panel-menu-item">
+							<a href="<?php echo esc_url( $link_item['url'] ); ?>" class="bb-rl-left-panel-menu-link">
+								<?php echo esc_html( $link_item['title'] ); ?>
+							</a>
+						</li>
+						<?php
+					}
+					?>
+					</ul>
+				</div>
 			</div>
-		</div>
-		<?php
+			<?php
+		}
 	}
 	?>
 </div>
