@@ -398,7 +398,7 @@
 
 	label {
 
-		@include bb-rl-text-bolder;
+		@include font-style(14px, 400, 18px);
 	}
 
 	.components-toggle-control__label {
@@ -412,6 +412,16 @@
 
 	.components-radio-control__input[type="radio"]:checked {
 		background: $bb-rl-background-brand-primary-color;
+	}
+}
+
+.sub-field-input-inline {
+
+	.components-radio-control__group-wrapper {
+		flex-direction: row;
+		gap: $bb-rl-space-200;
+		flex-wrap: wrap;
+		justify-content: flex-start;
 	}
 }
 
