@@ -242,29 +242,56 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			$ordered_items = array();
 			foreach ( $settings as $key => $item ) {
 				if ( ! empty( $item['enabled'] ) ) {
-					if ( 'activity_feed' === $key ) {
+					$is_active = false;
+					if ( 'activity_feed' === $key && bp_is_active( 'activity' ) ) {
+						$is_active     = true;
 						$item['url']   = bp_get_activity_directory_permalink();
 						$item['label'] = __( 'News Feed', 'buddyboss' );
 					} elseif ( 'members' === $key ) {
+						$is_active     = true;
 						$item['url']   = bp_get_members_directory_permalink();
 						$item['label'] = __( 'Members', 'buddyboss' );
-					} elseif ( 'groups' === $key ) {
+					} elseif ( 'groups' === $key && bp_is_active( 'groups' ) ) {
+						$is_active     = true;
 						$item['url']   = bp_get_groups_directory_permalink();
 						$item['label'] = __( 'Groups', 'buddyboss' );
 					} elseif ( 'courses' === $key ) {
 						$item['label'] = __( 'Courses', 'buddyboss' );
 						$item['url']   = '';
 						if ( class_exists( 'SFWD_LMS' ) ) {
-							$item['url'] = get_post_type_archive_link( learndash_get_post_type_slug( 'course' ) );
+							$options = bp_get_option( 'bp_ld_sync_settings', array() );
+							if (
+								! empty( $options['buddypress']['enabled'] ) ||
+								! empty( $options['learndash']['enabled'] )
+							) {
+								$is_active   = true;
+								$item['url'] = get_post_type_archive_link( learndash_get_post_type_slug( 'course' ) );
+							}
+						} elseif (
+							function_exists( 'tutor_utils' ) &&
+							function_exists( 'bb_tutorlms_enable' ) &&
+							bb_tutorlms_enable()
+						) {
+							$is_active   = true;
+							$item['url'] = get_post_type_archive_link( bb_tutorlms_profile_courses_slug() );
+						} elseif (
+							class_exists( 'memberpress\courses\helpers\Courses' ) &&
+							function_exists( 'bb_meprlms_enable' ) &&
+							bb_meprlms_enable()
+						) {
+							$is_active   = true;
+							$item['url'] = get_post_type_archive_link( bb_meprlms_profile_courses_slug() );
 						}
-					} elseif ( 'messages' === $key ) {
+					} elseif ( 'messages' === $key && bp_is_active( 'messages' ) ) {
 						$item['url']   = trailingslashit( bp_loggedin_user_domain() . bp_get_messages_slug() );
 						$item['label'] = __( 'Messages', 'buddyboss' );
-					} elseif ( 'notifications' === $key ) {
+					} elseif ( 'notifications' === $key && bp_is_active( 'notifications' ) ) {
 						$item['url']   = bp_get_notifications_permalink();
 						$item['label'] = __( 'Notifications', 'buddyboss' );
 					}
-					$ordered_items[ $key ] = $item;
+					if ( $is_active ) {
+						$ordered_items[ $key ] = $item;
+					}
 				}
 			}
 
@@ -778,13 +805,31 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * @return bool True if the sidebar is enabled for courses, false otherwise.
 		 */
 		public function bb_is_sidebar_enabled_for_courses() {
-			// Check if Learn Dash is active.
-			if ( ! class_exists( 'SFWD_LMS' ) ) {
-				return false;
+			$is_active = false;
+			if ( class_exists( 'SFWD_LMS' ) ) {
+				$options = bp_get_option( 'bp_ld_sync_settings', array() );
+				if (
+					! empty( $options['buddypress']['enabled'] ) ||
+					! empty( $options['learndash']['enabled'] )
+				) {
+					$is_active = true;
+				}
+			} elseif (
+				function_exists( 'tutor_utils' ) &&
+				function_exists( 'bb_tutorlms_enable' ) &&
+				bb_tutorlms_enable()
+			) {
+				$is_active = true;
+			} elseif (
+				class_exists( 'memberpress\courses\helpers\Courses' ) &&
+				function_exists( 'bb_meprlms_enable' ) &&
+				bb_meprlms_enable()
+			) {
+				$is_active = true;
 			}
 
 			// Get sidebar setting.
-			return apply_filters( 'bb_readylaunch_learndash_sidebar_enabled', true );
+			return apply_filters( 'bb_readylaunch_lms_sidebar_enabled', $is_active );
 		}
 
 		/**
