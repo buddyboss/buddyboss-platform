@@ -13,8 +13,8 @@ import { createInterpolateElement } from '@wordpress/element';
 
 // Initial structure for base menu items that are always included
 const baseMenuItems = [
-	{ id: 'members', label: __('Members', 'buddyboss'), icon: 'members-icon', enabled: true, order: 1 },
-	{ id: 'courses', label: __('Courses', 'buddyboss'), icon: 'courses-icon', enabled: true, order: 3 }
+	{ id: 'members', label: __('Members', 'buddyboss'), icon: 'users', enabled: true, order: 1 },
+	{ id: 'courses', label: __('Courses', 'buddyboss'), icon: 'graduation-cap', enabled: true, order: 3 }
 ];
 
 // Helper function to get component-based menu items
@@ -27,7 +27,7 @@ const getComponentMenuItems = () => {
 		items.unshift({
 			id: 'activity_feed',
 			label: __('Activity Feed', 'buddyboss'),
-			icon: 'activity-icon',
+			icon: 'pulse',
 			enabled: true,
 			order: currentOrder++
 		});
@@ -45,7 +45,7 @@ const getComponentMenuItems = () => {
 		items.push({
 			id: 'groups',
 			label: __('Groups', 'buddyboss'),
-			icon: 'groups-icon',
+			icon: 'users-three',
 			enabled: true,
 			order: currentOrder++
 		});
@@ -63,7 +63,7 @@ const getComponentMenuItems = () => {
 		items.push({
 			id: 'messages',
 			label: __('Messages', 'buddyboss'),
-			icon: 'messages-icon',
+			icon: 'chat-teardrop-text',
 			enabled: false,
 			order: currentOrder++
 		});
@@ -74,7 +74,7 @@ const getComponentMenuItems = () => {
 		items.push({
 			id: 'notifications',
 			label: __('Notifications', 'buddyboss'),
-			icon: 'notifications-icon',
+			icon: 'bell',
 			enabled: false,
 			order: currentOrder
 		});
@@ -1138,7 +1138,7 @@ export const ReadyLaunchSettings = () => {
 																		checked={item.enabled}
 																		// Use the updated handler, passing the item ID
 																		onChange={(value) => handleNestedSettingChange('bb_rl_side_menu', item.id)(value)}
-																		label={<><span className={`menu-icon ${item.icon}`}></span> {item.label}</>}
+																		label={<><span className={`menu-icon bb-icons-rl-${item.icon}`}></span> {item.label}</>}
 																	/>
 																</div>
 															)}

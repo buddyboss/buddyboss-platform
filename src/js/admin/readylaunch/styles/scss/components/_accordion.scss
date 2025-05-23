@@ -25,9 +25,19 @@
 			color: $bb-rl-icon-secondary-color;
 		}
 
+		.menu-icon {
+			font-size: 16px;
+			margin: 0 $bb-rl-space-100 0;
+		}
+
 		label {
 
 			@include font-style(14px, 400, 18px);
+
+			&:has(.menu-icon) {
+				display: flex;
+				align-items: center;
+			}
 		}
 	}
 }
