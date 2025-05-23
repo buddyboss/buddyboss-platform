@@ -658,6 +658,25 @@ export const ReadyLaunchSettings = () => {
 			);
 		}
 
+		 // Block all settings except Activation if ReadyLaunch is disabled.
+		 if ( !settings.bb_rl_enabled && 'activation' !== activeTab ) {
+			return (
+				<div className="bb-rl-disabled-message">
+					<div className="bb-rl-disabled-icon">
+						<span className="dashicons dashicons-info-outline" />
+					</div>
+					<h3>{__('ReadyLaunch is disabled', 'buddyboss')}</h3>
+					<p>{__('To enable ReadyLaunch and access its features, go to the Activation menu.', 'buddyboss')}</p>
+					<Button
+						isPrimary
+						onClick={() => setActiveTab('activation')}
+					>
+						{__('Enable ReadyLaunch', 'buddyboss')}
+					</Button>
+				</div>
+			);
+		}
+
 		switch ( activeTab ) {
 			case 'activation':
 				return (
@@ -682,6 +701,7 @@ export const ReadyLaunchSettings = () => {
 							</div>
 						</div>
 
+						{ settings.bb_rl_enabled && (
 						<div className="settings-card">
 							<div className="settings-header">
 								<h3>{__('Site Name', 'buddyboss')}</h3>
@@ -702,6 +722,7 @@ export const ReadyLaunchSettings = () => {
 								</div>
 							</div>
 						</div>
+						) }
 					</div>
 				);
 			case 'styles':
