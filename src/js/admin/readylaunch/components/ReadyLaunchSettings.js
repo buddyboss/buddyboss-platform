@@ -779,7 +779,7 @@ export const ReadyLaunchSettings = () => {
 										description={__('Recommended to use a dark-colored logo, 280x80 px, in JPG or PNG format.', 'buddyboss')}
 										customClass="light-logo-mode"
 									/>
-									{settings.bb_rl_skin_appearance && (
+									{settings.bb_rl_skin_appearance && 'light' !== settings.bb_rl_theme_mode && (
 										<ImageSelector
 											label={__('Logo (Dark mode)', 'buddyboss')}
 											value={settings.bb_rl_dark_logo}
@@ -805,7 +805,7 @@ export const ReadyLaunchSettings = () => {
 											onChange={handleSettingChange('bb_rl_color_light')}
 										/>
 									</div>
-									{settings.bb_rl_skin_appearance && (
+									{settings.bb_rl_skin_appearance && 'light' !== settings.bb_rl_theme_mode && (
 										<div className="color-palette-item">
 											<ColorPickerButton
 												label={__('Primary Color (Dark Mode)', 'buddyboss')}
