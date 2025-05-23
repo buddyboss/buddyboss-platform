@@ -702,27 +702,95 @@ export const ReadyLaunchSettings = () => {
 						</div>
 
 						{ settings.bb_rl_enabled && (
+							<div className="settings-card">
+								<div className="settings-header">
+									<h3>{__('Site Name', 'buddyboss')}</h3>
+									<HelpIcon onClick={() => handleHelpClick('456175')} />
+								</div>
+								<div className="settings-form-field">
+									<div className="field-label">
+										<label>{__('Site Name', 'buddyboss')}</label>
+										<p>{__('Appears in the browser title, search engine results, and possibly in the site header.', 'buddyboss')}</p>
+									</div>
+									<div className="field-input">
+										<TextControl
+											placeholder={__('Type your community/site title', 'buddyboss')}
+											value={settings.blogname}
+											onChange={handleTextChange('blogname')}
+										/>
+										<p className="field-description">{__('This matches the WordPress Site Title. Updating it here will update it site-wide.', 'buddyboss')}</p>
+									</div>
+								</div>
+							</div>
+						) }
+
 						<div className="settings-card">
 							<div className="settings-header">
-								<h3>{__('Site Name', 'buddyboss')}</h3>
+								<h3>{__('Backend Settings', 'buddyboss')}</h3>
 								<HelpIcon onClick={() => handleHelpClick('456175')} />
 							</div>
-							<div className="settings-form-field">
-								<div className="field-label">
-									<label>{__('Site Name', 'buddyboss')}</label>
-									<p>{__('Appears in the browser title, search engine results, and possibly in the site header.', 'buddyboss')}</p>
-								</div>
-								<div className="field-input">
-									<TextControl
-										placeholder={__('Type your community/site title', 'buddyboss')}
-										value={settings.blogname}
-										onChange={handleTextChange('blogname')}
-									/>
-									<p className="field-description">{__('This matches the WordPress Site Title. Updating it here will update it site-wide.', 'buddyboss')}</p>
-								</div>
+							<div className="settings-list-items-block">
+								{
+									[
+										{
+											icon: 'bb-icons-rl-pulse',
+											title: __('Activity', 'buddyboss'),
+											description: __('Control activity streams and user engagement settings.', 'buddyboss'),
+											actionLink: 'www.buddyboss.com'
+										},
+										{
+											icon: 'bb-icons-rl-user-square',
+											title: __('Profiles', 'buddyboss'),
+											description: __('Manage profile fields, visibility, and user profile options.', 'buddyboss'),
+											actionLink: 'www.buddyboss.com'
+										},
+										{
+											icon: 'bb-icons-rl-users-three',
+											title: __('Groups', 'buddyboss'),
+											description: __('Configure group creation, privacy, and member roles.', 'buddyboss'),
+											actionLink: 'www.buddyboss.com'
+										},
+										{
+											icon: 'bb-icons-rl-image',
+											title: __('Media', 'buddyboss'),
+											description: __('Enable or restrict user-uploaded media across the platform.', 'buddyboss'),
+											actionLink: 'www.buddyboss.com'
+										},
+										{
+											icon: 'bb-icons-rl-flag',
+											title: __('Moderation', 'buddyboss'),
+											description: __('Set rules and tools for reporting and content moderation.', 'buddyboss'),
+											actionLink: 'www.buddyboss.com'
+										}
+									].map(item => (
+										<div className="settings-list-item">
+											<div className="settings-list-item-icon">
+												<span className={item.icon} />
+											</div>
+											<div className="settings-list-item-content">
+												<div className="settings-list-item-title">
+													<h4>{item.title}</h4>
+												</div>
+												<div className="settings-list-item-description">
+													<p>{item.description}</p>
+												</div>
+											</div>
+											<div className="settings-list-item-actions">
+													<Button
+														className="bb-rl-button bb-rl-button--outline bb-rl-button--small"
+														icon={<i className="bb-icons-rl-gear" />}
+														href={item.actionLink}
+														target="_blank"
+														rel="noopener noreferrer"
+													>
+														{__('Settings', 'buddyboss')}
+													</Button>
+												</div>
+										</div>
+									))
+								}
 							</div>
 						</div>
-						) }
 					</div>
 				);
 			case 'styles':
