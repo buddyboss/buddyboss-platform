@@ -6075,6 +6075,15 @@ body.admin-bar .bb-rl-header {
   object-fit: contain;
 }
 
+.bb-rl-site-branding .site-title {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.bb-rl-site-branding .site-title a {
+  color: var(--bb-rl-text-color);
+}
+
 .header-aside .header-aside-inner {
   gap: var(--bb-rl-space-100);
 }
