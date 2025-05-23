@@ -9,6 +9,7 @@ import { LinkItem } from '../../components/LinkItem';
 import { LinkModal } from '../../components/LinkModal';
 import { HelpIcon } from '../../components/HelpIcon';
 import { HelpSliderModal } from '../../components/HelpSliderModal';
+import { createInterpolateElement } from '@wordpress/element';
 
 // Initial structure for base menu items that are always included
 const baseMenuItems = [
@@ -664,8 +665,15 @@ export const ReadyLaunchSettings = () => {
 						<div className="settings-card settings-card--plain">
 							<div className="settings-toggle-container">
 								<div className="toggle-content">
-									<h3>ReadyLaunch Enabled</h3>
-									<p>Description text goes here explaining RL activation and deactivation logics</p>
+									<h3>{__('Enable ReadyLaunch', 'buddyboss')}</h3>
+									<p>
+										{createInterpolateElement(
+											__("Making <a>ReadyLaunch</a> your default style will override your WordPress Theme.", "buddyboss"),
+											{
+												a: <a href="https://www.buddyboss.com/resources/readylaunch/" target="_blank" rel="noopener noreferrer" />
+											}
+										)}
+									</p>
 								</div>
 								<ToggleControl
 									checked={settings.bb_rl_enabled}
@@ -676,21 +684,21 @@ export const ReadyLaunchSettings = () => {
 
 						<div className="settings-card">
 							<div className="settings-header">
-								<h3>Site Name</h3>
+								<h3>{__('Site Name', 'buddyboss')}</h3>
 								<HelpIcon onClick={() => handleHelpClick('456175')} />
 							</div>
 							<div className="settings-form-field">
 								<div className="field-label">
-									<label>Community Name</label>
-									<p>Description text goes here</p>
+									<label>{__('Site Name', 'buddyboss')}</label>
+									<p>{__('Appears in the browser title, search engine results, and possibly in the site header.', 'buddyboss')}</p>
 								</div>
 								<div className="field-input">
 									<TextControl
-										placeholder="Type community name"
+										placeholder={__('Type your community/site title', 'buddyboss')}
 										value={settings.blogname}
 										onChange={handleTextChange('blogname')}
 									/>
-									<p className="field-description">Description texts goes here</p>
+									<p className="field-description">{__('This matches the WordPress Site Title. Updating it here will update it site-wide.', 'buddyboss')}</p>
 								</div>
 							</div>
 						</div>
@@ -845,7 +853,7 @@ export const ReadyLaunchSettings = () => {
 
 						<div className="settings-card">
 							<Accordion
-								title={__('Sidebars', 'buddyboss')}
+								title={__('Sidebar Widgets', 'buddyboss')}
 								isExpanded={expandedSections.sidebars}
 								onToggle={() => toggleSection('sidebars')}
 								onHelpClick={() => handleHelpClick('456175')}
@@ -989,7 +997,7 @@ export const ReadyLaunchSettings = () => {
 									<div className="settings-form-field menu-header-field">
 										<div className="field-label">
 											<label>{__('Header', 'buddyboss')}</label>
-											<p>{__('Description text goes here', 'buddyboss')}</p>
+											<p>{__('Select a header menu for ReadyLaunch.', 'buddyboss')}</p>
 										</div>
 										<div className="field-input">
 											<SelectControl
@@ -1004,7 +1012,12 @@ export const ReadyLaunchSettings = () => {
 												className="bb-rl-input-field"
 											/>
 											<p className="field-note">
-												{__('Select a header menu for ReadyLaunch.', 'buddyboss')} <strong>Menus</strong> {__('tab, where you will find a dedicated Ready Launch header menu location.', 'buddyboss')}
+												{createInterpolateElement(
+													__('Update your header menu from the <a>Menus</a> tab, where you\'ll find a dedicated ReadyLaunch header menu location.', 'buddyboss'),
+													{
+														a: <a href="#menus" />
+													}
+												)}
 											</p>
 										</div>
 									</div>
