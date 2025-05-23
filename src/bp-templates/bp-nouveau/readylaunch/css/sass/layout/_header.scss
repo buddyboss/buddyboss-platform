@@ -148,10 +148,22 @@
 	display: none;
 }
 
-.bb-rl-site-branding img {
-	max-width: 130px;
-	max-height: 32px;
-	object-fit: contain;
+.bb-rl-site-branding {
+
+	img {
+		max-width: 130px;
+		max-height: 32px;
+		object-fit: contain;
+	}
+
+	.site-title {
+		font-size: 18px;
+		font-weight: 600;
+
+		a {
+			color: var(--bb-rl-text-color);
+		}
+	}
 }
 
 .header-aside {

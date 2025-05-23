@@ -10,10 +10,19 @@
 	margin-bottom: var(--bb-rl-space-500);
 }
 
-.bb-rl-login-header-logo img {
-	width: 130px;
-	height: 32px;
-	object-fit: contain;
+.bb-rl-login-header-logo {
+
+	img {
+		width: 130px;
+		height: 32px;
+		object-fit: contain;
+	}
+
+	h2 {
+		color: var(--bb-rl-text-color);
+		font-size: 18px;
+		font-weight: 600;
+	}
 }
 
 

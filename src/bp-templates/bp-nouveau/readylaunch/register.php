@@ -27,9 +27,16 @@ wp_enqueue_style( 'bb-rl-login-style', buddypress()->plugin_url . 'bp-templates/
 
 	<?php bp_get_template_part( 'common/header-register' ); ?>
 	<div class="register-page-main">
-		<a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home" class="register-page-logo">
-			<img src="<?php echo esc_url( buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/images/logo.png' ); ?>" alt="<?php esc_attr__( 'ReadyLaunch Logo', 'buddyboss' ); ?>">
-		</a>
+		<?php	
+			$bb_rl_light_logo = bp_get_option( 'bb_rl_light_logo', '' );
+			if ( ! empty( $bb_rl_light_logo ) ) :
+				$logo_url   = esc_url( $bb_rl_light_logo['url'] );
+				$logo_title = ! empty( $bb_rl_light_logo['title'] );
+				?>
+				<a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home" class="register-page-logo">
+					<img src="<?php echo $logo_url; ?>" alt="<?php echo $logo_title; ?>">
+				</a>
+			<?php endif; ?>
 		<h1><?php echo get_the_title(); ?></h1>
 		<?php
 			if ( have_posts() ) :

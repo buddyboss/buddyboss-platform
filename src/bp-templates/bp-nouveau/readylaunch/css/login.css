@@ -2515,6 +2515,12 @@ div.vjs-menu li.vjs-selected .vjs-menu-item-text, div.vjs-menu li:hover .vjs-men
   object-fit: contain;
 }
 
+.bb-rl-login-header-logo h2 {
+  color: var(--bb-rl-text-color);
+  font-size: 18px;
+  font-weight: 600;
+}
+
 .interim-login .bb-rl-login-header {
   margin-bottom: 0;
 }
