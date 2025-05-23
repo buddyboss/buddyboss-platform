@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 6.7.2
 Requires PHP: 5.6.20
-Stable tag: 2.8.30
+Stable tag: 2.8.61
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,46 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 2.8.61 =
+* Bug: Groups - Fixed an issue where regular group post activity headers incorrectly displayed post content instead of showing only basic activity details
+
+= 2.8.60 =
+* Bug: Activity - Fixed an issue where the Activity “Load More” button wrapper was being triggered even when clicking outside the button
+* Bug: Core - Added a check to ensure opendir() succeeds before calling closedir() to prevent potential errors, following PHP best practices for high-security environments like WordPress VIP
+* Bug: Moderation - Fixed an issue where activating the Moderation component incorrectly created a component page
+* Bug: Moderation API - Fixed an issue where admins or organizers couldn’t delete suspended members’ posts in groups on the app, while it worked on the web
+* Bug: Reactions - Fixed an issue in the WP Admin where a backslash was being added after an apostrophe in the Reactions button text each time it was saved
+* Bug: WPML - Fixed an issue where search results were incorrect for the Jobs post type from WP Job Manager when WPML Multilingual CMS was activated
+
+= 2.8.51 =
+* Bug: Core - Fixed Vulnerability issues
+
+= 2.8.50 =
+* Bug: Activity - Fixed an issue allowing site admins to pin posts in groups without needing to be a group member
+* Bug: Activity - Fixed an issue that caused problems when saving large videos as drafts
+* Bug: Activity - Fixed an issue where hover-over popups were not closing properly
+* Bug: Forums - Resolved a media display issue in edited forum topics and replies when the Redis cache was active
+* Bug: Learndash - Fixed an issue where admin quiz email notifications were not sent in the latest version of the LearnDash plugin
+* Bug: Members - Fixed an issue where member profiles displayed single and double quotes incorrectly
+* Bug: Notifications - Fixed an issue where double notifications were sent when someone was mentioned in replies
+
+= 2.8.41 =
+* Bug: Notifications - Fixed an issue where unwanted paragraph tags appeared in notifications
+
+= 2.8.40 =
+* Bug: Activity - Resolved a UI issue with the "Read More" link
+* Bug: Core - Disabled hover popups on mobile and touch devices to improve user experience and prevent unintended interactions
+* Bug: Core - Fixed an issue in the admin where the timestamp in a user's extended profile did not correctly reflect the selected timezone
+* Bug: Core - Fixed invalid HTML tags in templates
+* Bug: Core - Fixed Vulnerability issues
+* Bug: Core - Resolved an issue where duplicated activity form templates were being loaded.
+* Bug: Forum - Resolved an issue where the pagination for sticky and super sticky forum discussions did not work correctly based on the settings
+* Bug: Media - Corrected the filter name for the function {{bp_get_media_parent_activity_id}}
+* Bug: Media - Fixed a UI issue related to Directory Count on the Profile > Photos page
+* Bug: Media - Fixed an issue where photos were partially uploaded
+* Bug: Messages - Resolved console errors on the message screen.
+* Bug: Notifications - Improved message handling by showing messages only to logged-in users and enhancing security
 
 = 2.8.30 =
 * Bug: Activity - Fixed an issue where the checkbox in Report options was not selectable when the feed opened in a popup

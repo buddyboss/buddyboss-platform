@@ -71,6 +71,11 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 					'callback'            => array( $this, 'upload_item' ),
 					'permission_callback' => array( $this, 'upload_item_permissions_check' ),
 				),
+				array(
+					'methods'             => WP_REST_Server::DELETABLE,
+					'callback'            => array( $this, 'delete_uploaded_attachment_item' ),
+					'permission_callback' => array( $this, 'delete_uploaded_attachment_item_permissions_check' ),
+				),
 				'allow_batch' => $this->allow_batch,
 			)
 		);
@@ -1629,8 +1634,8 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 			$add_video_args = array(
 				'id'            => $id,
 				'attachment_id' => $wp_attachment_id,
-				'title'         => $title,
-				'description'   => wp_filter_nohtml_kses( $content ),
+				'title'         => sanitize_text_field( wp_unslash( $title ) ),
+				'description'   => sanitize_textarea_field( wp_unslash( $content ) ),
 				'activity_id'   => $video_activity_id,
 				'message_id'    => $message_id,
 				'album_id'      => ( ! empty( $args['album_id'] ) ? $args['album_id'] : false ),
@@ -2321,7 +2326,7 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 				$video_id = bp_video_add(
 					array(
 						'attachment_id' => $attachment_id,
-						'title'         => $title,
+						'title'         => sanitize_text_field( wp_unslash( $title ) ),
 						'group_id'      => $group_id,
 						'privacy'       => 'forums',
 						'error_type'    => 'wp_error',
@@ -2660,4 +2665,169 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 		return false;
 	}
 
+	/**
+	 * Delete uploaded video attachment.
+	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 *
+	 * @return WP_REST_Response | WP_Error
+	 * @since 0.1.0
+	 *
+	 * @api            {DELETE} /wp-json/buddyboss/v1/video/upload Delete Uploaded Video Attachment.
+	 * @apiName        DeleteBBUploadedVideoAttachment
+	 * @apiGroup       Video
+	 * @apiDescription Delete Uploaded Video Attachment.
+	 * @apiVersion     1.0.0
+	 * @apiPermission  LoggedInUser
+	 * @apiParam {Number} [id] A unique numeric ID for the video attachment.
+	 */
+	public function delete_uploaded_attachment_item( $request ) {
+		$attachment_id = $request->get_param( 'id' );
+
+		if ( empty( $attachment_id ) ) {
+			return new WP_Error(
+				'bp_rest_video_attachment_invalid_id',
+				__( 'Invalid attachment ID.', 'buddyboss' ),
+				array(
+					'status' => 404,
+				)
+			);
+		}
+
+		// Check if the attachment exists.
+		$attachment = get_post( $attachment_id );
+		if ( empty( $attachment ) ) {
+			return new WP_Error(
+				'bp_rest_video_attachment_invalid_id',
+				__( 'Invalid attachment ID.', 'buddyboss' ),
+				array(
+					'status' => 404,
+				)
+			);
+		}
+
+		// Get metadata BEFORE deleting the attachment.
+		$auto_thumbnails      = get_post_meta( $attachment_id, 'video_preview_thumbnails', true );
+		$preview_thumbnail_id = get_post_meta( $attachment_id, 'bp_video_preview_thumbnail_id', true );
+
+		// Delete the attachment.
+		$status = wp_delete_attachment( $attachment_id, true );
+
+		if ( ! $status ) {
+			return new WP_Error(
+				'bp_rest_video_attachment_delete_failed',
+				__( 'Could not delete the attachment.', 'buddyboss' ),
+				array(
+					'status' => 500,
+				)
+			);
+		}
+
+		// Delete auto-generated thumbnail previews.
+		if ( ! empty( $auto_thumbnails ) ) {
+			foreach ( $auto_thumbnails as $key => $attachment ) {
+				if ( is_array( $attachment ) && ! empty( $attachment ) ) {
+					foreach ( $attachment as $thumb_id ) {
+						wp_delete_attachment( $thumb_id, true );
+					}
+				} elseif ( ! empty( $attachment ) ) {
+					wp_delete_attachment( $attachment, true );
+				}
+			}
+		}
+
+		// Delete main preview thumbnail if exists.
+		if ( ! empty( $preview_thumbnail_id ) ) {
+			wp_delete_attachment( $preview_thumbnail_id, true );
+		}
+
+		$response = new WP_REST_Response();
+		$response->set_data(
+			array(
+				'deleted'  => true,
+				'previous' => array(
+					'id' => $attachment_id,
+				),
+			)
+		);
+
+		/**
+		 * Fires after a video attachment is deleted via the REST API.
+		 *
+		 * @param WP_REST_Response $response The response data.
+		 * @param WP_REST_Request  $request  The request sent to the API.
+		 *
+		 * @since 0.1.0
+		 */
+		do_action( 'bp_rest_video_delete_attachment_item', $response, $request );
+
+		return $response;
+	}
+
+	/**
+	 * Checks if a given request has access to delete uploaded video.
+	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 *
+	 * @return bool|WP_Error
+	 * @since 0.1.0
+	 */
+	public function delete_uploaded_attachment_item_permissions_check( $request ) {
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you need to be logged in to delete this video.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
+
+		if ( is_user_logged_in() ) {
+			$attachment_id = $request->get_param( 'id' );
+
+			if ( empty( $attachment_id ) ) {
+				$retval = new WP_Error(
+					'bp_rest_video_attachment_invalid_id',
+					__( 'Invalid attachment ID.', 'buddyboss' ),
+					array(
+						'status' => 404,
+					)
+				);
+			} else {
+				// Check if attachment exists.
+				$attachment = get_post( $attachment_id );
+				if ( empty( $attachment ) ) {
+					$retval = new WP_Error(
+						'bp_rest_video_attachment_invalid_id',
+						__( 'Invalid attachment ID.', 'buddyboss' ),
+						array(
+							'status' => 404,
+						)
+					);
+				} else {
+					// Check if user has permission to delete this attachment.
+					if ( bp_current_user_can( 'bp_moderate' ) || $attachment->post_author == bp_loggedin_user_id() ) {
+						$retval = true;
+					} else {
+						$retval = new WP_Error(
+							'bp_rest_authorization_required',
+							__( 'Sorry, you are not allowed to delete this video attachment.', 'buddyboss' ),
+							array(
+								'status' => rest_authorization_required_code(),
+							)
+						);
+					}
+				}
+			}
+		}
+
+		/**
+		 * Filter the video `delete_attachment_item` permissions check.
+		 *
+		 * @param bool|WP_Error   $retval  Returned value.
+		 * @param WP_REST_Request $request The request sent to the API.
+		 *
+		 * @since 0.1.0
+		 */
+		return apply_filters( 'bp_rest_video_delete_attachment_item_permissions_check', $retval, $request );
+	}
 }
