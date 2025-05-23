@@ -15,23 +15,27 @@ $logo = get_bloginfo( 'name' );
 <div id="site-logo" class="bb-rl-site-branding">
 	<<?php echo esc_html( $elem ); ?> class="site-title">
 	<?php
-	$bb_rl_light_logo = bp_get_option( 'bb_rl_light_logo', '' );
-	$bb_rl_dark_logo  = bp_get_option( 'bb_rl_dark_logo', '' );
-	if ( ! empty( $bb_rl_light_logo ) ) {
-		$logo = $bb_rl_light_logo;
-	} elseif ( ! empty( $bb_rl_dark_logo ) ) {
-		$logo = $bb_rl_dark_logo;
+	$bb_rl_theme_mode = BB_Readylaunch::instance()->bb_rl_get_theme_mode();
+	if ( 'choice' === $bb_rl_theme_mode ) {
+		$dark_mode = isset( $_COOKIE['bb-rl-dark-mode'] ) ? sanitize_text_field( wp_unslash( $_COOKIE['bb-rl-dark-mode'] ) ) : 'false';
+		$key       = 'light';
+		if ( 'true' === $dark_mode ) {
+			$key = 'dark';
+		}
+	} else {
+		$key = $bb_rl_theme_mode;
 	}
-	if ( ! empty( $logo ) ) {
+	$bb_rl_logo = BB_Readylaunch::instance()->bb_rl_get_theme_logo( $key );
+	if ( ! empty( $bb_rl_logo ) ) {
 		?>
-		<a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home">
-			<img src="<?php echo esc_url( $logo['url'] ); ?>" alt="<?php echo esc_attr( $logo['title'] ); ?>" />
+		<a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home" class="bb-rl-light-logo">
+			<img src="<?php echo esc_url( $bb_rl_logo['url'] ); ?>" alt="<?php echo esc_attr( $bb_rl_logo['title'] ); ?>" />
 		</a>
 		<?php
 	} else {
 		?>
 		<a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home">
-			<img src="<?php echo esc_url( buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/images/logo.png' ); ?>" alt="Logo" />
+			<?php echo esc_html( $logo ); ?>
 		</a>
 		<?php
 	}

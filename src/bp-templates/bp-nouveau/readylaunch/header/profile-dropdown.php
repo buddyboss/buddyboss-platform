@@ -180,16 +180,18 @@ $profile_url = trailingslashit( bp_loggedin_user_domain() . bp_get_profile_slug(
 					! bp_disable_account_deletion() &&
 					! bp_current_user_can( 'bp_moderate' )
 				) {
-					$delete_nav_item = new BP_Core_Nav_Item( array(
-						'name'            => __( 'Delete Account', 'buddyboss' ),
-						'slug'            => 'delete-account',
-						'parent_url'      => $settings_link,
-						'link'            => trailingslashit( $settings_link . 'delete-account' ),
-						'parent_slug'     => bp_get_settings_slug(),
-						'screen_function' => 'bp_settings_screen_delete_account',
-						'position'        => 90,
-						'user_has_access' => ! is_super_admin( bp_displayed_user_id() ),
-					) );
+					$delete_nav_item = new BP_Core_Nav_Item(
+						array(
+							'name'            => __( 'Delete Account', 'buddyboss' ),
+							'slug'            => 'delete-account',
+							'parent_url'      => $settings_link,
+							'link'            => trailingslashit( $settings_link . 'delete-account' ),
+							'parent_slug'     => bp_get_settings_slug(),
+							'screen_function' => 'bp_settings_screen_delete_account',
+							'position'        => 90,
+							'user_has_access' => ! is_super_admin( bp_displayed_user_id() ),
+						)
+					);
 
 					$settings_nav[ $delete_nav_item->position ] = $delete_nav_item;
 				}
@@ -225,25 +227,32 @@ $profile_url = trailingslashit( bp_loggedin_user_domain() . bp_get_profile_slug(
 	}
 	?>
 
-	<li class="bb-rl-profile-list-item">
-		<a href="#" class="bb-rl-profile-list-link">
-			<i class="bb-icons-rl-sun"></i>
-			<?php esc_html_e( 'Theme', 'buddyboss' ); ?>
-		</a>
+	<?php
+	$bb_rl_theme_mode = BB_Readylaunch::instance()->bb_rl_get_theme_mode();
+	if ( 'choice' === $bb_rl_theme_mode ) {
+		?>
+		<li class="bb-rl-profile-list-item">
+			<a href="#" class="bb-rl-profile-list-link">
+				<i class="bb-icons-rl-sun"></i>
+				<?php esc_html_e( 'Theme', 'buddyboss' ); ?>
+			</a>
 
-		<ul class="bb-profile-submenu-lists">
-			<li class="bb-rl-profile-sublist-link" id="bb-rl-profile-theme-light">
-				<a href="#">
-					<?php esc_html_e( 'Light', 'buddyboss' ); ?>
-				</a>
-			</li>
-			<li class="bb-rl-profile-sublist-link" id="bb-rl-profile-theme-dark">
-				<a href="#">
-					<?php esc_html_e( 'Dark', 'buddyboss' ); ?>
-				</a>
-			</li>
-		</ul>
-	</li>
+			<ul class="bb-profile-submenu-lists">
+				<li class="bb-rl-profile-sublist-link" id="bb-rl-profile-theme-light">
+					<a href="#">
+						<?php esc_html_e( 'Light', 'buddyboss' ); ?>
+					</a>
+				</li>
+				<li class="bb-rl-profile-sublist-link" id="bb-rl-profile-theme-dark">
+					<a href="#">
+						<?php esc_html_e( 'Dark', 'buddyboss' ); ?>
+					</a>
+				</li>
+			</ul>
+		</li>
+		<?php
+	}
+	?>
 
 	<li class="bb-rl-profile-list-item">
 		<a href="<?php echo esc_url( wp_logout_url( bp_get_requested_url() ) ); ?>">

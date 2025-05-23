@@ -2585,5 +2585,47 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 			return $retval;
 		}
+
+		/**
+		 * Return the skin appearance option.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 */
+		public function bb_rl_is_skin_appearance_enabled() {
+
+			$bb_rl_skin_appearance = bp_get_option( 'bb_rl_skin_appearance', false );
+
+			return $bb_rl_skin_appearance;
+		}
+
+		/**
+		 * Return the theme mode option.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 */
+		public function bb_rl_get_theme_mode() {
+			$bb_rl_theme_mode = bp_get_option( 'bb_rl_theme_mode', 'light' );
+
+			if ( ! $this->bb_rl_is_skin_appearance_enabled() ) {
+				return 'light';
+			}
+
+			return $bb_rl_theme_mode;
+		}
+
+		/**
+		 * Return the theme logo option.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $key The key of the logo.
+		 *
+		 * @return array
+		 */
+		public function bb_rl_get_theme_logo( $key ) {
+			$bb_rl_theme_logo = bp_get_option( 'bb_rl_' . $key . '_logo', array() );
+
+			return $bb_rl_theme_logo;
+		}
 	}
 }

@@ -700,7 +700,7 @@ export const ReadyLaunchSettings = () => {
 				return (
 					<div className="settings-content">
 						<h1>{__('Style Settings', 'buddyboss')}</h1>
-						<p className="settings-description">{__('ReadyLaunch loads BuddyBoss templates into your community with minimal customization, making deployment easy.', 'buddyboss')}</p>
+						<p className="settings-description">{__('Customize your community’s look with mode preferences, logos, and theme colors.', 'buddyboss')}</p>
 
 						<div className="settings-card">
 							<div className="settings-header">
@@ -712,7 +712,7 @@ export const ReadyLaunchSettings = () => {
 							<div className="settings-form-field with-toggle">
 								<div className="field-label">
 									<label>{__('Appearance', 'buddyboss')}</label>
-									<p>{__('Description text goes here', 'buddyboss')}</p>
+									<p>{__('Enable or disable dark mode for your community, allowing users to choose or set it for them.', 'buddyboss')}</p>
 								</div>
 								<div className="field-input">
 									<ToggleControl
@@ -727,22 +727,22 @@ export const ReadyLaunchSettings = () => {
 							<div className="settings-form-field">
 								<div className="field-label">
 									<label>{__('Logo', 'buddyboss')}</label>
-									<p>{__('Description text goes here', 'buddyboss')}</p>
+									<p>{__('Upload separate logos optimized for light and dark themes to ensure clear visibility.', 'buddyboss')}</p>
 								</div>
 								<div className="field-input logo-uploaders">
 									<ImageSelector
-										label={__('Light', 'buddyboss')}
+										label={__('Logo (Light mode)', 'buddyboss')}
 										value={settings.bb_rl_light_logo}
 										onChange={handleImageUpload('bb_rl_light_logo')}
-										description={__('Recommended size 280px by 80px jpg or png', 'buddyboss')}
+										description={__('Recommended to use a dark-colored logo, 280x80 px, in JPG or PNG format.', 'buddyboss')}
 										customClass="light-logo-mode"
 									/>
 									{settings.bb_rl_skin_appearance && (
 										<ImageSelector
-											label={__('Dark', 'buddyboss')}
+											label={__('Logo (Dark mode)', 'buddyboss')}
 											value={settings.bb_rl_dark_logo}
 											onChange={handleImageUpload('bb_rl_dark_logo')}
-											description={__('Recommended size 280px by 80px jpg or png', 'buddyboss')}
+											description={__('Recommended to use a light-colored logo, 280x80 px, in JPG or PNG format.', 'buddyboss')}
 											customClass="dark-logo-mode"
 										/>
 									)}
@@ -753,7 +753,7 @@ export const ReadyLaunchSettings = () => {
 							<div className="settings-form-field">
 								<div className="field-label">
 									<label>{__('Theme Color', 'buddyboss')}</label>
-									<p>{__('Description text goes here', 'buddyboss')}</p>
+									<p>{__('Set the primary color scheme for light and dark modes, used for buttons, links, and interactive elements.', 'buddyboss')}</p>
 								</div>
 								<div className="field-input color-palettes bb-rl-color-palettes">
 									<div className="color-palette-item">
@@ -790,7 +790,7 @@ export const ReadyLaunchSettings = () => {
 											options={[
 												{ label: __('Light Mode', 'buddyboss'), value: 'light' },
 												{ label: __('Dark Mode', 'buddyboss'), value: 'dark' },
-												{ label: __('Customer Choice', 'buddyboss'), value: 'choice' },
+												{ label: __('User Preference', 'buddyboss'), value: 'choice' },
 											]}
 											onChange={handleSettingChange('bb_rl_theme_mode')}
 										/>
@@ -806,7 +806,7 @@ export const ReadyLaunchSettings = () => {
 				return (
 					<div className="settings-content">
 						<h1>{__('Pages and Widgets Settings', 'buddyboss')}</h1>
-						<p className="settings-description">{__('ReadyLaunch loads BuddyBoss templates into your community with minimal customization, making deployment easy.', 'buddyboss')}</p>
+						<p className="settings-description">{__('Enable or disable page styles, and customize sidebar widgets for different sections of your community.', 'buddyboss')}</p>
 
 						<div className="settings-card">
 							<Accordion
@@ -818,7 +818,7 @@ export const ReadyLaunchSettings = () => {
 								<div className="settings-form-field with-multiple-toggles">
 									<div className="field-label">
 										<label>{__('Enable Pages', 'buddyboss')}</label>
-										<p>{__('Select which BuddyBoss pages you would like to use ReadyLaunch style with', 'buddyboss')}</p>
+										<p>{__('Enable pages that should have styles from ReadyLaunch.', 'buddyboss')}</p>
 									</div>
 									<div className="field-toggles">
 										<div className="toggle-item">
@@ -868,7 +868,7 @@ export const ReadyLaunchSettings = () => {
 									<div className="settings-form-field with-multiple-toggles">
 										<div className="field-label">
 											<label>{__('Activity Feed', 'buddyboss')}</label>
-											<p>{__('Description text goes here', 'buddyboss')}</p>
+											<p>{__('Enable or disable widgets to appear on the activity feed.', 'buddyboss')}</p>
 										</div>
 										<div className="field-toggles">
 											<div className="toggle-item">
@@ -908,7 +908,7 @@ export const ReadyLaunchSettings = () => {
 								<div className="settings-form-field with-multiple-toggles">
 									<div className="field-label">
 										<label>{__('Member Profile', 'buddyboss')}</label>
-										<p>{__('Description text goes here', 'buddyboss')}</p>
+										<p>{__('Enable or disable widgets to appear on the member profile.', 'buddyboss')}</p>
 									</div>
 									<div className="field-toggles">
 										<div className="toggle-item">
@@ -957,7 +957,7 @@ export const ReadyLaunchSettings = () => {
 									<div className="settings-form-field with-multiple-toggles">
 									<div className="field-label">
 										<label>{__('Group', 'buddyboss')}</label>
-										<p>{__('Description text goes here', 'buddyboss')}</p>
+										<p>{__('Enable or disable widgets to appear on the group single page.', 'buddyboss')}</p>
 									</div>
 									<div className="field-toggles">
 										<div className="toggle-item">
@@ -986,7 +986,7 @@ export const ReadyLaunchSettings = () => {
 				return (
 					<div className="settings-content">
 						<h1>{__('Menu Settings', 'buddyboss')}</h1>
-						<p className="settings-description">{__('ReadyLaunch loads BuddyBoss templates into your community with minimal customization, making deployment easy.', 'buddyboss')}</p>
+						<p className="settings-description">{__('Configure header, sidebar, and custom link menus to control navigation across your community.', 'buddyboss')}</p>
 
 						<DragDropContext onDragEnd={onDragEnd}> {/* Wrap relevant sections */}
 							<div className="settings-card">
@@ -1015,7 +1015,7 @@ export const ReadyLaunchSettings = () => {
 												className="bb-rl-input-field"
 											/>
 											<p className="field-note">
-												{__('You can update your header menu from the', 'buddyboss')} <strong>Menus</strong> {__('tab, where you will find a dedicated Ready Launch header menu location.', 'buddyboss')}
+												{__('Select a header menu for ReadyLaunch.', 'buddyboss')} <strong>Menus</strong> {__('tab, where you will find a dedicated Ready Launch header menu location.', 'buddyboss')}
 											</p>
 										</div>
 									</div>
@@ -1024,7 +1024,7 @@ export const ReadyLaunchSettings = () => {
 									<div className="settings-form-field with-icon-toggles">
 										<div className="field-label">
 											<label>{__('Side', 'buddyboss')}</label>
-											<p>{__('Description text goes here. Drag to reorder.', 'buddyboss')}</p> {/* Added note */}
+											<p>{__('Enable the options to appear in the left-side menu.', 'buddyboss')}</p> {/* Added note */}
 										</div>
 										<Droppable droppableId="sideMenuItems">
 											{(provided) => (
@@ -1063,7 +1063,7 @@ export const ReadyLaunchSettings = () => {
 									<div className="settings-form-field custom-links-field">
 										<div className="field-label">
 											<label>{__('Link', 'buddyboss')}</label>
-											<p>{__('Description text goes here. Drag to reorder.', 'buddyboss')}</p> {/* Added note */}
+											<p>{__('Add links to the link menu.', 'buddyboss')}</p> {/* Added note */}
 										</div>
 										<Droppable droppableId="bb_rl_custom_links">
 											{(provided) => (

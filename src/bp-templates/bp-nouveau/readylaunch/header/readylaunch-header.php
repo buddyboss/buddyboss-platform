@@ -20,16 +20,19 @@ defined( 'ABSPATH' ) || exit;
 </head>
 
 <?php
-	// Read cookie dark mode and add class to body
-	$dark_mode = isset( $_COOKIE['bb-rl-dark-mode'] ) ? $_COOKIE['bb-rl-dark-mode'] : 'false';
-	if ( $dark_mode === 'true' ) {
-		$dark_mode_class = 'bb-rl-dark-mode';
-	} else {
-		$dark_mode_class = '';
+$bb_rl_theme_mode = BB_Readylaunch::instance()->bb_rl_get_theme_mode();
+$theme_mode_class = '';
+if ( 'choice' === $bb_rl_theme_mode ) {
+	$dark_mode = isset( $_COOKIE['bb-rl-dark-mode'] ) ? sanitize_text_field( wp_unslash( $_COOKIE['bb-rl-dark-mode'] ) ) : 'false';
+	if ( 'true' === $dark_mode ) {
+		$theme_mode_class = 'bb-rl-dark-mode';
 	}
+} elseif ( 'dark' === $bb_rl_theme_mode ) {
+	$theme_mode_class = 'bb-rl-dark-mode';
+}
 ?>
 
-<body <?php body_class( 'bb-readylaunch-template ' . $dark_mode_class ); ?>>
+<body <?php body_class( 'bb-readylaunch-template ' . $theme_mode_class ); ?>>
 <?php
 wp_body_open();
 bp_get_template_part( 'sidebar/left-sidebar' );
@@ -95,8 +98,8 @@ bp_get_template_part( 'sidebar/left-sidebar' );
 
 			<div class="bb-readylaunch-mobile-menu__wrap">
 				<?php
-					if ( bp_is_active( 'search' ) ) {
-						?>
+				if ( bp_is_active( 'search' ) ) {
+					?>
 						<form action="<?php echo esc_url( home_url( '/' ) ); ?>" method="get" class="bp-dir-search-form search-form" id="mobile-search-form">
 							<label for="mobile-search" class="bp-screen-reader-text"><?php esc_html_e( 'Search', 'buddyboss' ); ?></label>
 							<div class="bb-rl-network-search-bar">
@@ -120,8 +123,8 @@ bp_get_template_part( 'sidebar/left-sidebar' );
 							'menu_class'     => 'bb-readylaunch-mobile-menu',
 						)
 					);
-					if ( is_user_logged_in() && (bp_is_active( 'messages' ) || bp_is_active( 'notifications' ))) {
-				?>
+					if ( is_user_logged_in() && ( bp_is_active( 'messages' ) || bp_is_active( 'notifications' ) ) ) {
+						?>
 				<div class="bb-readylaunch-mobile-menu_items">
 					<ul>
 						<?php if ( bp_is_active( 'messages' ) ) { ?>
@@ -131,8 +134,8 @@ bp_get_template_part( 'sidebar/left-sidebar' );
 									<span class="notification-label"><?php esc_html_e( 'Messages', 'buddyboss' ); ?></span>
 									<?php
 										$unread_message_count = messages_get_unread_count();
-										if ( $unread_message_count > 0 ) :
-									?>
+									if ( $unread_message_count > 0 ) :
+										?>
 										<span class="count"><?php echo esc_html( $unread_message_count ); ?>+</span>
 									<?php endif; ?>
 								</a>
@@ -146,8 +149,8 @@ bp_get_template_part( 'sidebar/left-sidebar' );
 									<?php
 										$notifications             = bp_notifications_get_unread_notification_count( bp_loggedin_user_id() );
 										$unread_notification_count = ! empty( $notifications ) ? $notifications : 0;
-										if ( $unread_notification_count > 0 ) :
-									?>
+									if ( $unread_notification_count > 0 ) :
+										?>
 										<span class="count"><?php echo esc_html( $unread_notification_count ); ?>+</span>
 									<?php endif; ?>
 								</a>
@@ -155,10 +158,10 @@ bp_get_template_part( 'sidebar/left-sidebar' );
 						<?php } ?>
 					</ul>
 				</div>
-				<?php
+						<?php
 					}
 					bp_get_template_part( 'sidebar/left-sidebar' );
-				?>
+					?>
 			</div>
 		</div>
 	</header>
