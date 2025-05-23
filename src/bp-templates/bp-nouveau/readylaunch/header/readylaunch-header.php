@@ -42,7 +42,7 @@ bp_get_template_part( 'sidebar/left-sidebar' );
 			bp_get_template_part( 'header/site-logo' );
 			wp_nav_menu(
 				array(
-					'theme_location' => 'bb-readylaunch',
+					'theme_location' => bp_get_option( 'bb_rl_header_menu', 'bb-readylaunch' ),
 					'menu_id'        => '',
 					'container'      => false,
 					'fallback_cb'    => false,
