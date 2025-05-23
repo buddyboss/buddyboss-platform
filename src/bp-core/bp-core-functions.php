@@ -7700,7 +7700,7 @@ function bb_core_get_encoded_image( $attachment_id, $size = 'full' ) {
  *
  * @since BuddyBoss 2.0.0
  *
- * @param $id Id of the section.
+ * @param string $id Id of the section.
  *
  * @return string Return icon name.
  */
@@ -10002,4 +10002,15 @@ function bb_filter_activity_filter_scope_keys( $filters = array() ) {
 	}
 
 	return $filters;
+}
+
+/**
+ * Function to check if ReadyLaunch is enabled.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return bool True if ReadyLaunch is enabled, false otherwise.
+ */
+function bb_is_readylaunch_enabled() {
+	return bp_get_option( 'bb_rl_enabled', false );
 }

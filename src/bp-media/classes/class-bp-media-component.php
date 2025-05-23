@@ -413,4 +413,16 @@ class BP_Media_Component extends BP_Component {
 			)
 		);
 	}
+
+	/**
+	 * Register the Media Blocks.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $blocks Optional. See BP_Component::blocks_init() for
+	 * description.
+	 */
+	public function blocks_init( $blocks = array() ) {
+		parent::blocks_init( array() );
+	}
 }
