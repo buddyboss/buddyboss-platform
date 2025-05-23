@@ -185,6 +185,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				// Login page.
 				add_action( 'login_enqueue_scripts', array( $this, 'bb_rl_login_enqueue_scripts' ), 999 );
 				add_action( 'login_head', array( $this, 'bb_rl_login_header' ), 999 );
+				add_action( 'login_footer', array( $this, 'bb_rl_login_footer' ), 999 );
 				add_filter( 'login_message', array( $this, 'bb_rl_signin_login_message' ) );
 				add_action( 'login_form', array( $this, 'bb_rl_login_custom_form' ) );
 			}
@@ -1929,6 +1930,23 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 */
 		public function bb_rl_login_header() {
 			bp_get_template_part( 'common/header-register' );
+		}
+
+		/**
+		 * Modify the login footer.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 */
+		public function bb_rl_login_footer() {
+			?>
+			<script>
+				jQuery( document ).ready( function( $ ) {
+					var $forgetMeNot = $( '.login p.forgetmenot' );
+					var $lostMeNot = $( '.login p.lostmenot' );
+					$( $lostMeNot ).before( $forgetMeNot );
+				} );
+			</script>
+			<?php
 		}
 
 		/**
