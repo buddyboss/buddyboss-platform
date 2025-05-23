@@ -663,12 +663,12 @@ export const ReadyLaunchSettings = () => {
 			return (
 				<div className="bb-rl-disabled-message">
 					<div className="bb-rl-disabled-icon">
-						<span className="dashicons dashicons-info-outline" />
+						<span className="bb-icons-rl-info" />
 					</div>
 					<h3>{__('ReadyLaunch is disabled', 'buddyboss')}</h3>
 					<p>{__('To enable ReadyLaunch and access its features, go to the Activation menu.', 'buddyboss')}</p>
 					<Button
-						isPrimary
+						className="bb-rl-button bb-rl-button--primary bb-rl-button--small"
 						onClick={() => setActiveTab('activation')}
 					>
 						{__('Enable ReadyLaunch', 'buddyboss')}

@@ -85,7 +85,7 @@ function bb_readylaunch_settings_page_enqueue_style_script( $admin_page ) {
 
 	wp_enqueue_style(
 		'bb-readylaunch-admin-style',
-		plugins_url( 'build/index.css', __FILE__ ),
+		plugins_url( 'build/styles/settings.css', __FILE__ ),
 		array(),
 		$asset['version']
 	);
