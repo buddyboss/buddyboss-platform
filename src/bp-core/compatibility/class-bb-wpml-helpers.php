@@ -447,73 +447,6 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 					add_filter( "bp_activity_{$post_type}_pre_publish", array( $this, 'bb_check_if_wpml_translation' ), 10, 4 );
 				}
 			}
-
-			// For WPML translation approvals via AJAX.
-			if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
-				$this->bb_hook_wp_send_json();
-			}
-		}
-
-		/**
-		 * Override WordPress's wp_send_json_success function to intercept WPML translation approvals.
-		 * This is a hacky but effective approach since WPML doesn't provide a hook before sending the response.
-		 *
-		 * @since BuddyBoss [BBVERSION]
-		 */
-		private function bb_hook_wp_send_json() {
-
-			if ( empty( $_POST['nonce'] ) || empty( $_POST['endpoint'] ) || empty( $_POST['action'] ) ) {
-				return;
-			}
-
-			$nonce    = sanitize_text_field( wp_unslash( $_POST['nonce'] ) );
-			$endpoint = sanitize_text_field( wp_unslash( $_POST['endpoint'] ) );
-			$action   = sanitize_text_field( wp_unslash( $_POST['action'] ) );
-
-			if (
-				! wp_verify_nonce( $nonce, $endpoint ) ||
-				'WPML\TM\ATE\Review\AcceptTranslation' !== $endpoint ||
-				'wpml_action' !== $action
-			) {
-				return;
-			}
-
-			// Extract the post ID from the request.
-			$post_id = null;
-			if ( isset( $_POST['data'] ) ) {
-				$data = json_decode( sanitize_text_field( wp_unslash( $_POST['data'] ) ), true );
-				if ( isset( $data['postId'] ) ) {
-					$post_id = intval( $data['postId'] );
-				}
-			}
-
-			// If we don't have a post ID, there's nothing to do.
-			if ( ! $post_id ) {
-				return;
-			}
-
-			// Define a function that will run before wp_send_json_success is called.
-			// The function will be removed immediately after it runs once.
-			add_filter(
-				'wp_die_ajax_handler',
-				function( $function ) use ( $post_id ) {
-					// Get the post to pass to bp_activity_post_type_publish.
-					$post = get_post( $post_id );
-					if ( $post && 'publish' === $post->post_status ) {
-						// Before sending the response, explicitly check if this is a translation and prevent activity.
-						if ( function_exists( 'bp_activity_post_type_publish' ) ) {
-							delete_transient( 'bb_wpml_posted_icl_post_language_' . intval( $post_id ) );
-
-							// Now call the function directly to process this post.
-							bp_activity_post_type_publish( $post_id, $post );
-						}
-					}
-
-					// Return the original function to ensure normal execution.
-					return $function;
-				},
-				1
-			);
 		}
 
 		/**
@@ -622,15 +555,19 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 				$old_language === $default_lang &&
 				$current_language !== $default_lang
 			) {
-				// Delete any BuddyBoss activity entries created for this post ID and post type.
-				bp_activity_delete(
-					array(
-						'component'         => 'blogs',
-						'type'              => 'new_blog_' . $post_after->post_type,
-						'item_id'           => get_current_blog_id(),
-						'secondary_item_id' => $post_id,
-					)
-				);
+				// Get the post type tracking args.
+				$activity_post_object = bp_activity_get_post_type_tracking_args( get_post_type( $post_id ) );
+				if ( ! empty( $activity_post_object->action_id ) ) {
+					// Delete the activity.
+					bp_activity_delete(
+						array(
+							'component'         => $activity_post_object->component_id,
+							'item_id'           => get_current_blog_id(),
+							'secondary_item_id' => $post_id,
+							'type'              => $activity_post_object->action_id,
+						)
+					);
+				}
 			}
 
 			// Clean up transients.
@@ -676,26 +613,29 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 				if ( ! empty( $to_lang ) && ! empty( $from_lang ) ) {
 					$post_type = get_post_type( $post_id );
 					if ( $from_lang === $default_lang && $to_lang !== $default_lang ) {
-						// Delete any BuddyBoss activity entries created for this post ID and post type.
-						bp_activity_delete(
-							array(
-								'component'         => 'blogs',
-								'type'              => 'new_blog_' . $post_type,
-								'item_id'           => get_current_blog_id(),
-								'secondary_item_id' => $post_id,
-							)
-						);
+						// Get the post type tracking args.
+						$activity_post_object = bp_activity_get_post_type_tracking_args( get_post_type( $post_id ) );
+						if ( ! empty( $activity_post_object->action_id ) ) {
+							// Delete the activity.
+							bp_activity_delete(
+								array(
+									'component'         => $activity_post_object->component_id,
+									'item_id'           => get_current_blog_id(),
+									'secondary_item_id' => $post_id,
+									'type'              => $activity_post_object->action_id,
+								)
+							);
+						}
 					} elseif ( $default_lang === $to_lang ) {
-						$post = get_post( $post_id );
-						if ( $post && 'publish' === $post->post_status ) {
+						if ( 'publish' === get_post_status( $post_id ) ) {
+
 							if ( has_filter( "bp_activity_{$post_type}_pre_publish", array( $this, 'bb_check_if_wpml_translation' ) ) ) {
-								$flag_has_filter = true;
 								remove_filter( "bp_activity_{$post_type}_pre_publish", array( $this, 'bb_check_if_wpml_translation' ), 10, 4 );
 							}
 
-							bp_activity_post_type_publish( $post_id, $post );
+							bp_activity_post_type_publish( $post_id, get_post( $post_id ) );
 
-							if ( ! empty( $flag_has_filter ) ) {
+							if ( has_filter( "bp_activity_{$post_type}_pre_publish", array( $this, 'bb_check_if_wpml_translation' ) ) ) {
 								add_filter( "bp_activity_{$post_type}_pre_publish", array( $this, 'bb_check_if_wpml_translation' ), 10, 4 );
 							}
 						}
