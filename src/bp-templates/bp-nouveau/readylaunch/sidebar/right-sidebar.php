@@ -61,8 +61,14 @@ if ( bp_is_active( 'activity' ) && bp_is_activity_directory() ) {
 }
 
 if ( bp_is_active( 'groups' ) && bp_is_group() ) {
-	$available_widgets[] = 'BB_Group_About_Widget';
-	$available_widgets[] = 'BB_Group_Members_Widget';
+	$bb_rl_groups_sidebars = bp_get_option( 'bb_rl_groups_sidebars', array() );
+	if ( ! empty( $bb_rl_groups_sidebars['about_group'] ) ) {
+		$available_widgets[] = 'BB_Group_About_Widget';
+	}
+
+	if ( ! empty( $bb_rl_groups_sidebars['group_members'] ) ) {
+		$available_widgets[] = 'BB_Group_Members_Widget';
+	}
 }
 
 if ( count( $available_widgets ) || ! empty( $static_sidebar_widget ) ) {
