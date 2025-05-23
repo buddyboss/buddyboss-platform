@@ -3852,6 +3852,16 @@ input.search-query-input {
   margin: 0;
   font-size: 13px;
   font-weight: 500;
+  vertical-align: middle;
+  margin-left: 3px;
+}
+
+.activity-list .activity-item .activity-header .bb-media-privacy-wrap {
+  vertical-align: middle;
+}
+
+.activity-list .activity-item .activity-header .bb-media-privacy-wrap .privacy:after {
+  display: none;
 }
 
 .activity-list .activity-item .activity-content .activity-header,
@@ -5572,6 +5582,12 @@ ul.medium-editor-toolbar-actions .medium-editor-action-close b:before {
 
 .activity-header--group .activity-post-author > p .view.activity-time-since {
   display: none;
+}
+
+.activity-header--group .activity-post-author + a > .time-since:before {
+  content: "\00b7";
+  display: inline-block;
+  margin: 0 4px 0 2px;
 }
 
 .activity-group-avatar {

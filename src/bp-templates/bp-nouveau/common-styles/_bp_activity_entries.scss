@@ -264,6 +264,16 @@
 				margin: 0;
 				font-size: 13px;
 				font-weight: 500;
+				vertical-align: middle;
+				margin-left: 3px;
+			}
+
+			.bb-media-privacy-wrap {
+				vertical-align: middle;
+
+				.privacy:after {
+					display: none;
+				}
 			}
 
 		}
@@ -2110,13 +2120,23 @@ ul.medium-editor-toolbar-actions {
 
 .activity-header--group {
 
-	.activity-post-author > p {
-		display: inline;
+	.activity-post-author {
 
-		.view.activity-time-since {
-			display: none;
+		> p {
+			display: inline;
+
+			.view.activity-time-since {
+				display: none;
+			}
+		}
+
+		+ a > .time-since:before {
+			content: "\00b7";
+			display: inline-block;
+			margin: 0 4px 0 2px;
 		}
 	}
+
 }
 
 .activity-group-avatar {
