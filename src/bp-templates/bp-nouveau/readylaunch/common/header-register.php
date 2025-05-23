@@ -1,4 +1,5 @@
 <?php
+declare( strict_types=1 );
 /**
  * The template for BP Nouveau Register and Logon page header
  *
@@ -13,7 +14,29 @@
 
 <header class="bb-rl-login-header">
     <div class="bb-rl-login-header-logo">
-        <img src="<?php echo esc_url( buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/images/logo.png' ); ?>" alt="<?php esc_attr__( 'ReadyLaunch Logo', 'buddyboss' ) ?>">
+    <?php
+        $bb_rl_light_logo = bp_get_option( 'bb_rl_light_logo', '' );
+        if ( ! empty( $bb_rl_light_logo ) ) {
+    ?>
+        <img src="<?php echo esc_url( $bb_rl_light_logo['url'] ); ?>" alt="<?php echo esc_attr( $bb_rl_light_logo['title'] ); ?>">
+        <style>
+            #login h1.wp-login-logo a {
+                background-image: url(<?php echo esc_url( $bb_rl_light_logo['url'] ); ?>);
+            }
+        </style>
+    <?php } else {
+        $community_name = bp_get_option( 'blogname', '' );
+    ?>
+        <h2>
+        <?php
+            if ( ! empty( $community_name ) ) {
+                echo esc_html( $community_name );
+            } else {
+                echo esc_html( get_the_title() );
+            }
+        ?>
+        </h2>
+    <?php } ?>
     </div>
     <div class="bb-rl-login-header-actions">
         <?php if( bp_is_register_page() ) : ?>
