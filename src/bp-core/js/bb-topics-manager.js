@@ -826,6 +826,12 @@ window.bp = window.bp || {};
 					// Set selected/active classes
 					$( '.activity-topic-selector li a' ).removeClass( 'selected active' );
 					$topicLink.addClass( 'selected active' );
+
+					// Scroll to the feed [data-bp-list="activity"]
+					var $feed = $( '[data-bp-list="activity"]' );
+					if ( $feed.length > 0 ) {
+						jQuery( 'html, body' ).animate( { scrollTop: jQuery( $feed ).offset().top - 200 }, 300 );
+					}
 				}
 			} else {
 				bp.Nouveau.setStorage( 'bp-activity', 'topic_id', '' );
