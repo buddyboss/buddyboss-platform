@@ -721,6 +721,8 @@ class BuddyPress {
 			'BB_Reaction'                                  => 'core',
 			'BB_BG_Process_Log'                            => 'core',
 			'BB_Telemetry'                                 => 'core',
+			'BB_Topics_Manager'                            => 'core',
+			'BB_Activity_Topics_Manager'                   => 'activity',
 
 			// BuddyBoss Platform Rest API classes.
 			'BP_REST_Components_Endpoint'                  => 'core',
