@@ -167,11 +167,16 @@ class BP_Latest_Activities extends WP_Widget {
 			$bp_nouveau->activity->widget_args['display_comments'] = 'stream';
 		}
 
-		add_filter( 'bb_activity_activity_get_filter_sql', 'bb_filter_activity_get_filter_sql', 10, 2 );
+		if ( bp_is_active( 'blogs' ) && function_exists( 'bb_filter_activity_get_filter_sql' ) ) {
+			$flag_activity_get_filter_sql = true;
+			add_filter( 'bb_activity_activity_get_filter_sql', 'bb_filter_activity_get_filter_sql', 10, 2 );
+		}
 
 		bp_get_template_part( 'activity/widget' );
 
-		remove_filter( 'bb_activity_activity_get_filter_sql', 'bb_filter_activity_get_filter_sql', 10, 2 );
+		if ( ! empty( $flag_activity_get_filter_sql ) ) {
+			remove_filter( 'bb_activity_activity_get_filter_sql', 'bb_filter_activity_get_filter_sql', 10, 2 );
+		}
 
 		// Reset the globals
 		$GLOBALS['activities_template']    = $reset_activities_template;
