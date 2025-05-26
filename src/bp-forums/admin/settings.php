@@ -1200,7 +1200,12 @@ function bbp_converter_setting_callback_platform() {
 
 	$current          = bbp_get_form_option( '_bbp_converter_platform' );
 	$platform_options = '';
-	$curdir           = opendir( bbpress()->admin->admin_dir . 'converters/' );
+
+	if ( ! file_exists( bbpress()->admin->admin_dir . 'converters/' ) ) {
+		return;
+	}
+
+	$curdir = opendir( bbpress()->admin->admin_dir . 'converters/' );
 
 	// Bail if no directory was found (how did this happen?)
 	if ( empty( $curdir ) ) {
