@@ -189,6 +189,9 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				add_action( 'login_footer', array( $this, 'bb_rl_login_footer' ), 999 );
 				add_filter( 'login_message', array( $this, 'bb_rl_signin_login_message' ) );
 				add_action( 'login_form', array( $this, 'bb_rl_login_custom_form' ) );
+
+				// Add Dynamic colors
+				add_action( 'wp_head', array( $this, 'bb_rl_dynamic_colors' ) );
 			}
 
 			add_action( 'bp_admin_enqueue_scripts', array( $this, 'bb_rl_admin_enqueue_scripts' ), 1 );
@@ -2006,6 +2009,27 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		public function bb_rl_login_custom_form() {
 			?>
 			<p class="lostmenot"><a href="<?php echo wp_lostpassword_url(); ?>"><?php esc_html_e( 'Forgot Password?', 'buddyboss' ); ?></a></p>
+			<?php
+		}
+
+		/**
+		 * Add dynamic colors to the frontend.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 */
+		public function bb_rl_dynamic_colors() {
+			$color_light = bp_get_option( 'bb_rl_color_light', '#4946fe' );	
+			$color_dark  = bp_get_option( 'bb_rl_color_dark', '#9747FF' );
+			?>
+			<style>
+				:root {
+					--bb-rl-primary-color: <?php echo $color_light; ?>;
+
+					.bb-rl-dark-mode {
+						--bb-rl-primary-color: <?php echo $color_dark; ?>;
+					}
+				}
+			</style>
 			<?php
 		}
 
