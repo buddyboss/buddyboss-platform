@@ -724,7 +724,7 @@ export const ReadyLaunchSettings = () => {
 							</div>
 						) }
 
-						<div className="settings-card">
+						{ settings.bb_rl_enabled && ( <div className="settings-card">
 							<div className="settings-header">
 								<h3>{__('Backend Settings', 'buddyboss')}</h3>
 								<HelpIcon onClick={() => handleHelpClick('456175')} />
@@ -791,6 +791,7 @@ export const ReadyLaunchSettings = () => {
 								}
 							</div>
 						</div>
+						) }
 					</div>
 				);
 			case 'styles':
