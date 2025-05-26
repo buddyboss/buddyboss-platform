@@ -35,5 +35,6 @@
         "html": false
     },
     "editorScript": "file:index.js",
-    "style": "file:style-index.css"
+    "style": "file:style-index.css",
+    "editorStyle": [ "bb-icons-rl-css" ]
 }
