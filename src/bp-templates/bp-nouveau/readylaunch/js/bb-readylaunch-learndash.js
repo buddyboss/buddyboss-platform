@@ -254,20 +254,6 @@
                     $popup.addClass('bb-rl-popup-left');
                 }
             }
-            
-            // Ensure popup doesn't go off-screen vertically
-            var cardTop = cardRect.top;
-            var popupHeight = 200; // Approximate popup height
-            var windowHeight = $(window).height();
-            
-            // Adjust vertical position if needed
-            if (cardTop + popupHeight/2 > windowHeight) {
-                $popup.css('transform', 'translateY(calc(-50% - ' + (cardTop + popupHeight/2 - windowHeight + 20) + 'px))');
-            } else if (cardTop - popupHeight/2 < 0) {
-                $popup.css('transform', 'translateY(calc(-50% + ' + Math.abs(cardTop - popupHeight/2 + 20) + 'px))');
-            } else {
-                $popup.css('transform', 'translateY(-50%)');
-            }
         },
         
         /**

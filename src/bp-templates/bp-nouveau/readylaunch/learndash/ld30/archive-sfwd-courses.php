@@ -77,6 +77,26 @@ $readylaunch = BB_Readylaunch::instance();
 						$course_id = get_the_ID();
 						$user_id = get_current_user_id();
 						$is_enrolled = sfwd_lms_has_access( $course_id, $user_id );
+
+						// Get course progress
+						$course_progress = learndash_course_progress(
+							array(
+								'user_id'   => $user_id,
+								'course_id' => $course_id,
+								'array'     => true,
+							)
+						);
+
+						// Course data
+						$course = get_post( $course_id );
+						$course_settings = learndash_get_setting( $course_id );
+						$course_price = learndash_get_course_price( $course_id );
+						$is_enrolled = sfwd_lms_has_access( $course_id, $user_id );
+						$course_status = learndash_course_status( $course_id, $user_id );
+
+						// Get course steps
+						$course_steps = learndash_get_course_steps( $course_id );
+						$lessons = learndash_get_course_lessons_list( $course_id );
 						?>
 						<div class="bb-rl-course-card">
 							<article id="post-<?php the_ID(); ?>" <?php post_class( 'bb-rl-course-item' ); ?>>
@@ -96,15 +116,29 @@ $readylaunch = BB_Readylaunch::instance();
 											<a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
 										</h2>
 
-										<div class="bb-rl-course-author">
-											<?php
-											$author_id = get_the_author_meta( 'ID' );
-											$author_name = get_the_author();
-											?>
-											<span class="bb-rl-author-avatar">
-												<?php echo get_avatar( $author_id, 32 ); ?>
-											</span>
-											<span class="bb-rl-author-name"><?php echo esc_html( $author_name ); ?></span>
+										<div class="bb-rl-course-meta">
+											<?php if ( $is_enrolled ) : ?>
+												<div class="bb-rl-course-status">
+													<?php if ( ! empty( $course_progress ) ) : ?>
+														<div class="bb-rl-course-progress">
+															<span class="bb-rl-percentage"><span class="bb-rl-percentage-figure"><?php echo (int) $course_progress['percentage']; ?>%</span> <?php esc_html_e( 'Completed', 'buddyboss' ); ?></span>
+															<div class="bb-rl-progress-bar">
+																<div class="bb-rl-progress" style="width: <?php echo (int) $course_progress['percentage']; ?>%"></div>
+															</div>
+														</div>
+													<?php endif; ?>
+												</div>
+											<?php else : ?>
+												<div class="bb-rl-course-price">
+													<?php if ( ! empty( $course_price['type'] ) && 'open' === $course_price['type'] ) : ?>
+														<span class="bb-rl-price bb-rl-free"><?php esc_html_e( 'Free', 'buddyboss' ); ?></span>
+													<?php elseif ( ! empty( $course_price['type'] ) && 'paynow' === $course_price['type'] ) : ?>
+														<span class="bb-rl-price"><?php echo sprintf( esc_html__( 'Price: %s', 'buddyboss' ), esc_html( $course_price['price'] ) ); ?></span>
+													<?php elseif ( ! empty( $course_price['type'] ) && 'subscribe' === $course_price['type'] ) : ?>
+														<span class="bb-rl-price"><?php echo sprintf( esc_html__( 'Subscription: %s', 'buddyboss' ), esc_html( $course_price['price'] ) ); ?></span>
+													<?php endif; ?>
+												</div>
+											<?php endif; ?>
 										</div>
 									</div>
 									<div class="bb-rl-course-footer">
@@ -174,12 +208,4 @@ $readylaunch = BB_Readylaunch::instance();
 			<?php endif; ?>
 		</div>
 	</main>
-
-	<?php if ( $readylaunch->bb_is_sidebar_enabled_for_courses() ) : ?>
-		<aside class="bb-learndash-sidebar">
-			<div class="bb-rl-sidebar-content">
-				<?php do_action( 'bb_readylaunch_learndash_sidebar' ); ?>
-			</div>
-		</aside>
-	<?php endif; ?>
 </div> 
