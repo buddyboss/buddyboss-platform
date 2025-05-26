@@ -177,10 +177,25 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				add_filter( 'bp_nouveau_get_video_description_html', array( $this, 'bb_rl_modify_document_description_html' ), 10 );
 				add_filter( 'bp_core_get_js_strings', array( $this, 'bb_rl_modify_js_strings' ), 10, 1 );
 
-				remove_all_actions( 'login_head' );
-				remove_all_actions( 'login_form' );
-				remove_all_actions( 'login_enqueue_scripts' );
-				remove_all_actions( 'login_message' );
+				// Remove BuddyBoss Theme login hooks.
+				add_action( 'login_init', function() {
+					remove_action( 'login_message', 'change_register_message' );
+					remove_action( 'login_message', 'signin_login_message' );
+					remove_action( 'login_head', 'buddyboss_login_scripts', 150 );
+					remove_action( 'login_head', 'login_custom_head', 150 );
+					remove_action( 'login_form', 'login_custom_form' );
+					remove_action( 'init', 'buddyboss_theme_login_load' );
+					remove_action( 'login_enqueue_scripts', 'login_enqueue_scripts' );
+					remove_action( 'login_message', 'login_message' );
+					remove_filter( 'login_headertext', 'login_headertext' );
+					remove_filter( 'login_headerurl', 'login_headerurl' );
+				}, 20 );
+
+				// Dequeue BuddyBoss Theme login styles.
+				add_action( 'login_enqueue_scripts', function() {
+					wp_dequeue_style( 'buddyboss-theme-login' );
+					wp_deregister_style( 'buddyboss-theme-login' );
+				}, 20 );
 
 				// Login page.
 				add_action( 'login_enqueue_scripts', array( $this, 'bb_rl_login_enqueue_scripts' ), 999 );
