@@ -736,31 +736,31 @@ export const ReadyLaunchSettings = () => {
 											icon: 'bb-icons-rl-pulse',
 											title: __('Activity', 'buddyboss'),
 											description: __('Control activity streams and user engagement settings.', 'buddyboss'),
-											actionLink: 'www.buddyboss.com'
+											actionLink: 'admin.php?page=bp-settings&tab=bp-activity'
 										},
 										{
 											icon: 'bb-icons-rl-user-square',
 											title: __('Profiles', 'buddyboss'),
 											description: __('Manage profile fields, visibility, and user profile options.', 'buddyboss'),
-											actionLink: 'www.buddyboss.com'
+											actionLink: 'admin.php?page=bp-settings&tab=bp-xprofile'
 										},
 										{
 											icon: 'bb-icons-rl-users-three',
 											title: __('Groups', 'buddyboss'),
 											description: __('Configure group creation, privacy, and member roles.', 'buddyboss'),
-											actionLink: 'www.buddyboss.com'
+											actionLink: 'admin.php?page=bp-groups&tab=bp-groups'
 										},
 										{
 											icon: 'bb-icons-rl-image',
 											title: __('Media', 'buddyboss'),
 											description: __('Enable or restrict user-uploaded media across the platform.', 'buddyboss'),
-											actionLink: 'www.buddyboss.com'
+											actionLink: 'admin.php?page=bp-settings&tab=bp-media'
 										},
 										{
 											icon: 'bb-icons-rl-flag',
 											title: __('Moderation', 'buddyboss'),
 											description: __('Set rules and tools for reporting and content moderation.', 'buddyboss'),
-											actionLink: 'www.buddyboss.com'
+											actionLink: 'admin.php?page=bp-settings&tab=bp-moderation'
 										}
 									].map(item => (
 										<div className="settings-list-item">
