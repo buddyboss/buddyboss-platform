@@ -3263,7 +3263,9 @@ div.dropzone .dz-preview {
 	}
 
 	.media-folder_details__bottom {
-		display: block;
+		display: inline-flex;
+		align-items: center;
+		gap: 4px;
 		font-size: 14px;
 		line-height: 1.3;
 		color: #4d5c6d;
@@ -3668,8 +3670,6 @@ li:hover .search-document-list .media-folder_items .media-folder_icon > a i {
 	}
 
 	.media-album_details {
-		width: calc(100% - 63px);
-		float: right;
 		line-height: 1;
 		margin-top: 5px;
 
@@ -3781,8 +3781,6 @@ li:hover .search-document-list .media-folder_items .media-folder_icon > a i {
 
 		.media-folder_details {
 			display: inline-block;
-			float: right;
-			width: calc(100% - 64px);
 		}
 
 		.media-folder_group {
@@ -3817,8 +3815,14 @@ body.search-results .search_results {
 		}
 
 		.media-album_details {
-			margin-top: 22px;
+			padding-top: 22px;
 			width: calc(100% - 106px);
+		}
+
+		.media-album_details__bottom {
+			display: inline-flex;
+			align-items: center;
+			gap: 4px;
 		}
 
 	}

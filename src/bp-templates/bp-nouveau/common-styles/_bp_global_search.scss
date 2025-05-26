@@ -328,6 +328,52 @@ AJAX SEARCH
 	text-align: center;
 }
 
+.bp-search-ac {
+
+	.entry-meta {
+
+		> span {
+			display: inline-flex;
+			align-items: center;
+			gap: 4px;
+		}
+
+		.media-album_details__bottom {
+			display: inline-flex;
+			align-items: center;
+			gap: 4px;
+		}
+	}
+
+	li {
+
+		> .bp-search-ajax-item {
+			display: flex;
+		}
+	}
+
+	.item {
+
+		> .middot {
+			vertical-align: middle;
+		}
+	}
+
+	.bbls-cpt-product-type {
+
+		ins {
+			text-decoration: none;
+		}
+	}
+}
+
+.bp-search-ac > li:not(.bbls-view_all_type-type) {
+
+	.item p {
+		margin-bottom: 0;
+	}
+}
+
 @media screen and (max-width: 720px) {
 
 	.bp-search-ac.ui-autocomplete {
