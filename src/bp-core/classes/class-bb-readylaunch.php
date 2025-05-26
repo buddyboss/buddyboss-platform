@@ -2384,7 +2384,14 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			// Check for course archive using multiple methods.
 			if ( is_post_type_archive( $ld_post_types ) || is_singular( $ld_post_types ) ) {
 				return true;
-			} elseif ( ! bp_is_user() && isset( $_SERVER['REQUEST_URI'] ) && strpos( sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ), LDLMS_Post_Types::COURSE ) !== false ) {
+			} elseif (
+				(
+					! bp_is_user() &&
+					! bp_is_group()
+				) &&
+				isset( $_SERVER['REQUEST_URI'] ) &&
+				strpos( sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ), LDLMS_Post_Types::COURSE ) !== false
+			) {
 				return true;
 			}
 
