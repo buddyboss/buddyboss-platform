@@ -359,6 +359,13 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 				}
 			}
 
+			if ( function_exists( 'bb_is_readylaunch_enabled' ) && bb_is_readylaunch_enabled() && class_exists( 'BB_Readylaunch' ) ) {
+				$readylaunch                           = new BB_Readylaunch();
+				$localize_arg['courses_integration']   = $readylaunch->bb_is_sidebar_enabled_for_courses();
+				$localize_arg['gamipress_integration'] = class_exists( 'GamiPress' );
+				$localize_arg['events_integration']    = class_exists( 'Tribe__Events__Main' );
+			}
+
 			wp_localize_script(
 				'bp-admin',
 				'BP_ADMIN',

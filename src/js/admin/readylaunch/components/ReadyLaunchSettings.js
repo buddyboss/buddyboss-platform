@@ -915,27 +915,33 @@ export const ReadyLaunchSettings = () => {
 												onChange={handleNestedSettingChange('bb_rl_enabled_pages', 'registration')}
 											/>
 										</div>
-										<div className="toggle-item">
-											<ToggleControl
-												label={__('Courses', 'buddyboss')}
-												checked={settings.bb_rl_enabled_pages.courses}
-												onChange={handleNestedSettingChange('bb_rl_enabled_pages', 'courses')}
-											/>
-										</div>
-										<div className="toggle-item">
-											<ToggleControl
-												label={__('Events', 'buddyboss')}
-												checked={settings.bb_rl_enabled_pages.events}
-												onChange={handleNestedSettingChange('bb_rl_enabled_pages', 'events')}
-											/>
-										</div>
-										<div className="toggle-item">
-											<ToggleControl
-												label={__('Gamification', 'buddyboss')}
-												checked={settings.bb_rl_enabled_pages.gamification}
-												onChange={handleNestedSettingChange('bb_rl_enabled_pages', 'gamification')}
-											/>
-										</div>
+										{window?.BP_ADMIN?.courses_integration === '1' && (
+											<div className="toggle-item">
+												<ToggleControl
+													label={__('Courses', 'buddyboss')}
+													checked={settings.bb_rl_enabled_pages.courses}
+													onChange={handleNestedSettingChange('bb_rl_enabled_pages', 'courses')}
+												/>
+											</div>
+										)}
+										{window?.BP_ADMIN?.events_integration === '1' && (
+											<div className="toggle-item">
+												<ToggleControl
+													label={__('Events', 'buddyboss')}
+													checked={settings.bb_rl_enabled_pages.events}
+													onChange={handleNestedSettingChange('bb_rl_enabled_pages', 'events')}
+												/>
+											</div>
+										)}
+										{window?.BP_ADMIN?.gamipress_integration === '1' && (
+											<div className="toggle-item">
+												<ToggleControl
+													label={__('Gamification', 'buddyboss')}
+													checked={settings.bb_rl_enabled_pages.gamification}
+													onChange={handleNestedSettingChange('bb_rl_enabled_pages', 'gamification')}
+												/>
+											</div>
+										)}
 									</div>
 								</div>
 							</Accordion>
