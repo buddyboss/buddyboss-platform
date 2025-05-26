@@ -10,7 +10,7 @@ defined( 'ABSPATH' ) || exit;
 
 bp_get_template_part( 'header/readylaunch-header' );
 
-$courses_integration = bp_get_option( 'bb_rl_enabled_pages' )['courses'];
+$courses_integration = bp_get_option( 'bb_rl_enabled_pages' )['courses'] ?? false;
 if ( $courses_integration && BB_Readylaunch::instance()->bb_rl_is_learndash_page() ) {
 	BB_Readylaunch::instance()->bb_rl_courses_integration_page();
 } elseif ( have_posts() ) {
