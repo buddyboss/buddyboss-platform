@@ -119,9 +119,6 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				// Add Readylaunch template locations.
 				add_filter( 'bp_get_template_stack', array( $this, 'add_template_stack' ), PHP_INT_MAX );
 
-				// For LearnDash pages specifically, ensure the template stack is set.
-				add_action( 'template_redirect', array( $this, 'setup_learndash_template_stack' ), 5 );
-
 				add_filter( 'bp_document_svg_icon', array( $this, 'bb_rl_document_svg_icon' ), 10, 2 );
 
 				add_action( 'wp_enqueue_scripts', array( $this, 'bb_enqueue_scripts' ), 1 );
@@ -227,12 +224,9 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			add_filter( 'bp_is_sidebar_enabled_for_courses', array( $this, 'bb_is_sidebar_enabled_for_courses' ) );
 
 			// LearnDash integration.
-			add_filter( 'bp_nouveau_learndash_override_templates', array( $this, 'bb_readylaunch_learndash_override_templates' ) );
-			add_filter( 'template_include', array( $this, 'bb_readylaunch_learndash_template_include' ), 100 );
 			add_action( 'wp_enqueue_scripts', array( $this, 'bb_readylaunch_learndash_enqueue_styles' ), 10 );
 
 			// Set up LearnDash integration.
-			add_action( 'plugins_loaded', array( $this, 'bb_rl_learndash_integration_setup' ), 20 );
 		}
 
 		/**
@@ -402,7 +396,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					self::bb_is_network_search() ||
 					is_login() ||
 					bp_is_register_page() ||
-					$this->bb_is_learndash_page() // Add check for LearnDash pages
+					$this->bb_rl_is_learndash_page() // Add check for LearnDash pages
 				)
 			) {
 				return true;
@@ -487,23 +481,6 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * @return string ReadyLaunch layout template.
 		 */
 		public function override_page_templates() {
-			$post_id   = get_the_ID();
-			$post_type = get_post_type();
-			$template  = '';
-
-			// Special handling for LearnDash pages.
-			if ( $this->bb_is_learndash_page() ) {
-				// Remove all content filters and add our own.
-				remove_all_filters( 'the_content' );
-				add_filter( 'the_content', array( $this, 'bb_rl_learndash_content_filter' ), 10 );
-
-				// Return the layout template.
-				$layout_template = buddypress()->plugin_dir . 'bp-templates/bp-nouveau/readylaunch/layout.php';
-				if ( file_exists( $layout_template ) ) {
-					return $layout_template;
-				}
-			}
-
 			if ( bp_is_register_page() ) {
 				return bp_locate_template( 'register.php' );
 			}
@@ -2258,121 +2235,6 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		}
 
 		/**
-		 * Override LearnDash templates for ReadyLaunch.
-		 *
-		 * @since BuddyBoss [BBVERSION]
-		 *
-		 * @return bool
-		 */
-		public function bb_readylaunch_learndash_override_templates() {
-			if ( bb_is_readylaunch_enabled() ) {
-				return true;
-			}
-
-			return false;
-		}
-
-		/**
-		 * Include custom LearnDash template files for ReadyLaunch.
-		 *
-		 * @since BuddyBoss [BBVERSION]
-		 *
-		 * @param string $template Template file path.
-		 * @return string
-		 */
-		public function bb_readylaunch_learndash_template_include( $template ) {
-			// Prevent recursion
-			static $is_processing = false;
-			if ( $is_processing ) {
-				return $template;
-			}
-
-			// Check if ReadyLaunch is enabled and if it's a LearnDash page
-			if ( ! $this->bb_is_learndash_page() ) {
-				return $template;
-			}
-
-			// Set flag to prevent recursion
-			$is_processing = true;
-
-			// Add our content filter only once
-			if ( ! has_filter( 'the_content', array( $this, 'bb_rl_learndash_content_filter' ) ) ) {
-				add_filter( 'the_content', array( $this, 'bb_rl_learndash_content_filter' ), 10 );
-			}
-
-			// Return the layout template
-			$layout_template = buddypress()->plugin_dir . 'bp-templates/bp-nouveau/readylaunch/layout.php';
-			if ( file_exists( $layout_template ) ) {
-				$is_processing = false;
-				return $layout_template;
-			}
-
-			$is_processing = false;
-			return $template;
-		}
-
-		/**
-		 * Filter for the_content to replace with LearnDash content
-		 *
-		 * @since BuddyBoss [BBVERSION]
-		 *
-		 * @param string $content The original content
-		 * @return string The modified content
-		 */
-		public function bb_rl_learndash_content_filter( $content ) {
-			// CRITICAL: Prevent infinite recursion
-			static $is_filtering = false;
-
-			// Track which page ID we've processed to avoid duplicate processing
-			static $processed_page_ids = array();
-
-			// Get the current page ID
-			$current_page_id = get_the_ID();
-
-			// Keep track of how many times this filter is called
-			static $call_count = 0;
-			++$call_count;
-
-			if ( $is_filtering ) {
-				return $content;
-			}
-
-			// Only run on LearnDash pages
-			if ( ! $this->bb_is_learndash_page() ) {
-				return $content;
-			}
-
-			// Check if we're on a course archive page
-			$is_course_archive = is_post_type_archive( 'sfwd-courses' ) ||
-								( strpos( $_SERVER['REQUEST_URI'], '/courses/' ) !== false &&
-								substr_count( $_SERVER['REQUEST_URI'], '/' ) <= 3 );
-
-			// If we've already processed this specific page/post and it's not an archive page, return the original content
-			if ( in_array( $current_page_id, $processed_page_ids, true ) && ! $is_course_archive ) {
-				return $content;
-			}
-
-			// Check if this is the first post in an archive loop, in which case we want to process it
-			if ( $is_course_archive && $call_count > 1 && ! empty( $processed_page_ids ) ) {
-				return $content;
-			}
-
-			// Mark this page as processed
-			$processed_page_ids[] = $current_page_id;
-
-			// Set flag to prevent recursion
-			$is_filtering = true;
-
-			// Get our custom content
-			$learndash_content = $this->bb_rl_learndash_content();
-
-			// Reset recursion flag after we're done
-			$is_filtering = false;
-
-			return $learndash_content;
-		}
-
-		/**
 		 * Generate LearnDash content for ReadyLaunch layout.
 		 *
 		 * @since BuddyBoss [BBVERSION]
@@ -2501,131 +2363,55 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 *
 		 * @return bool True if current page is a LearnDash page, false otherwise.
 		 */
-		public function bb_is_learndash_page() {
+		public function bb_rl_is_learndash_page() {
 			if ( ! class_exists( 'SFWD_LMS' ) ) {
 				return false;
 			}
 
-			$post_type   = get_post_type();
-			$current_url = $_SERVER['REQUEST_URI'];
+			$post_type = get_post_type();
 
 			// LearnDash post types.
 			$ld_post_types = array(
-				'sfwd-courses',
-				'sfwd-lessons',
-				'sfwd-topic',
-				'sfwd-quiz',
-				'sfwd-assignment',
-				'sfwd-essays',
-				'groups',
+				learndash_get_post_type_slug( 'course' ),
+				learndash_get_post_type_slug( 'lesson' ),
+				learndash_get_post_type_slug( 'topic' ),
+				learndash_get_post_type_slug( 'quiz' ),
+				learndash_get_post_type_slug( 'assignment' ),
+				learndash_get_post_type_slug( 'essays' ),
+				learndash_get_post_type_slug( 'group' ),
 			);
 
 			// Check for course archive using multiple methods.
-			$is_course_archive = false;
-			if ( is_post_type_archive( 'sfwd-courses' ) ) {
-				$is_course_archive = true;
-			} elseif ( strpos( $current_url, '/courses/' ) !== false && substr_count( $current_url, '/' ) <= 3 ) {
-				// This catches most course archive URLs even when WP doesn't recognize them.
-				$is_course_archive = true;
+			if ( is_post_type_archive( $ld_post_types ) || is_singular( $ld_post_types ) ) {
+				return true;
+			} elseif ( ! bp_is_user() && isset( $_SERVER['REQUEST_URI'] ) && strpos( sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ), LDLMS_Post_Types::COURSE ) !== false ) {
+				return true;
 			}
 
-			// Check for course-related taxonomy archives.
-			$is_ld_taxonomy = is_tax( 'ld_course_category' ) ||
-							is_tax( 'ld_course_tag' ) ||
-							is_tax( 'ld_lesson_category' ) ||
-							is_tax( 'ld_lesson_tag' );
+			$ld_taxonomies = array(
+				'ld_course_category',
+				'ld_course_tag',
+				'ld_lesson_category',
+				'ld_lesson_tag',
+			);
+
+			foreach ( $ld_taxonomies as $tax ) {
+				if ( is_tax( $tax ) ) {
+					return true;
+				}
+			}
 
 			// Check if this is a single course/lesson/topic/etc.
-			$is_ld_single = in_array( $post_type, $ld_post_types, true ) && is_singular();
-
-			// Some additional checks for related pages.
-			$is_ld_related = false;
-
-			// Course profile page.
-			if ( function_exists( 'learndash_is_user_profile' ) && learndash_is_user_profile() ) {
-				$is_ld_related = true;
+			if ( in_array( $post_type, $ld_post_types, true ) && is_singular() ) {
+				return true;
 			}
 
 			// Group leader pages.
 			if ( function_exists( 'learndash_is_group_leader_user' ) && learndash_is_group_leader_user() ) {
-				$is_ld_related = true;
+				return true;
 			}
 
-			$result = $is_ld_single || $is_course_archive || $is_ld_taxonomy || $is_ld_related;
-			return $result;
-		}
-
-		/**
-		 * Set up LearnDash template stack for ReadyLaunch.
-		 *
-		 * @since BuddyBoss [BBVERSION]
-		 */
-		public function setup_learndash_template_stack() {
-			// Add ReadyLaunch template directory to the stack
-			add_filter(
-				'bp_get_template_stack',
-				function ( $stack ) {
-					return array_merge( $stack, array( buddypress()->plugin_dir . 'bp-templates/bp-nouveau/readylaunch/' ) );
-				}
-			);
-		}
-
-		/**
-		 * Check if LearnDash is active and properly integrates with ReadyLaunch.
-		 * This should be called after plugins are loaded.
-		 *
-		 * @since BuddyBoss [BBVERSION]
-		 */
-		public function bb_rl_learndash_integration_setup() {
-			if ( ! class_exists( 'SFWD_LMS' ) || ! bb_is_readylaunch_enabled() ) {
-				return;
-			}
-
-			// Handle LearnDash pages - but only if we haven't already set up filters
-			static $already_setup = false;
-			if ( ! $already_setup && $this->bb_is_learndash_page() ) {
-				$already_setup = true;
-
-				// Remove the standard LearnDash content filters
-				if ( class_exists( 'LDLMS_Content' ) && method_exists( LDLMS_Content::instance(), 'content_filter' ) ) {
-					remove_filter( 'the_content', array( LDLMS_Content::instance(), 'content_filter' ) );
-				}
-
-				// Add our custom filter to clean up content - only if needed
-				add_filter( 'the_content', array( $this, 'bb_rl_cleanup_learndash_content' ), 9999 );
-
-				// Remove unwanted scripts and styles for better ReadyLaunch integration
-				add_action( 'wp_enqueue_scripts', array( $this, 'bb_rl_remove_learndash_defaults' ), 100 );
-			}
-		}
-
-		/**
-		 * Clean up any duplicate content or unwanted elements from LearnDash content.
-		 *
-		 * @since BuddyBoss [BBVERSION]
-		 *
-		 * @param string $content The original content.
-		 * @return string The cleaned content.
-		 */
-		public function bb_rl_cleanup_learndash_content( $content ) {
-			// Remove any "Open to access this content" instances
-			$new_content = preg_replace( '/<p>Open to access this content<\/p>/i', '', $content );
-
-			return $new_content;
-		}
-
-		/**
-		 * Remove default LearnDash scripts and styles that conflict with ReadyLaunch.
-		 *
-		 * @since BuddyBoss [BBVERSION]
-		 */
-		public function bb_rl_remove_learndash_defaults() {
-			// Dequeue LearnDash styles that might conflict with ReadyLaunch
-			wp_dequeue_style( 'learndash_style' );
-			wp_dequeue_style( 'learndash-front' );
-
-			// Still keep the LearnDash template styles we need
-			wp_enqueue_style( 'learndash-course-content' );
+			return false;
 		}
 
 		/**
@@ -2691,6 +2477,19 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			$bb_rl_theme_logo = bp_get_option( 'bb_rl_' . $key . '_logo', array() );
 
 			return $bb_rl_theme_logo;
+		}
+
+		/**
+		 * Integration pages callback.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 */
+		public function bb_rl_courses_integration_page() {
+			if ( is_singular( learndash_get_post_type_slug( 'course' ) ) ) {
+				bp_get_template_part( 'learndash/ld30/sfwd-courses' );
+			} else {
+				bp_get_template_part( 'learndash/ld30/archive-sfwd-courses' );
+			}
 		}
 	}
 }

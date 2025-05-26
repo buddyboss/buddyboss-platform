@@ -472,10 +472,9 @@ body.bb-rl-register {
 
 	.bb-toggle-password {
 		position: absolute;
-		top: 50%;
+		bottom: 10px;
 		right: 5px;
 		padding: 0 var(--bb-rl-space-100);
-		transform: translateY(-50%);
 
 		i[class*="bb-icon-"] {
 			display: flex;
@@ -819,6 +818,111 @@ body.bb-rl-register {
 				background-color: var(--bb-rl-primary-color);
 				color: var(--bb-rl-text-white-color);
 			}
+		}
+	}
+}
+
+.show.bad,
+.show.mismatch {
+	background-color: var(--bb-rl-background-warning-primary-color);
+    color: var(--bb-rl-text-white-color);
+    border-radius: var(--bb-rl-radius-base);
+    padding: var(--bb-rl-space-50) var(--bb-rl-space-100);
+    margin: var(--bb-rl-space-100) 0;
+    font-weight: 500;
+    font-size: var(--bb-rl-font-size-sm);
+}
+
+.show.bad {
+	background-color: var(--bb-rl-background-danger-primary-color);
+}
+
+.bp-feedback {
+	margin-bottom: var(--bb-rl-space-100);
+
+	.bp-icon {
+		line-height: 1;
+		margin-right: 6px;
+
+		&:before {
+			content: "";
+			font-weight: 500;
+			font-family: bb-icons-rl;
+			font-size: var(--bb-rl-base-line-small);
+			color: var(--bb-rl-icon-primary-color);
+			font-style: normal;
+		}
+	}
+
+	&.info {
+		background-color: var(--bb-rl-background-brand-secondary-color);
+		border-color: var(--bb-rl-border-brand-primary-color);
+
+		> [class*="bb-icons"] {
+			color: var(--bb-rl-icon-primary-color);
+
+			&:before {
+				content: "\e4e2";
+			}
+		}
+
+		.bp-icon:before {
+			content: "\e2ce";
+			color: var(--bb-rl-icon-brand-primary-color);
+		}
+	}
+
+	&.success {
+		background-color: var(--bb-rl-background-positive-secondary-color);
+		border-color: var(--bb-rl-border-positive-primary-color);
+
+		> [class*="bb-icons"] {
+			color: var(--bb-rl-icon-positive-primary-color);
+
+			&:before {
+				content: "\e184";
+			}
+		}
+
+		.bp-icon:before {
+			content: "\e184";
+			color: var(--bb-rl-icon-positive-primary-color);
+		}
+	}
+
+	&.warning {
+		background-color: var(--bb-rl-background-warning-secondary-color);
+		border-color: var(--bb-rl-border-warning-primary-color);
+
+		> [class*="bb-icons"] {
+			color: var(--bb-rl-icon-warning-primary-color);
+
+			&:before {
+				content: "\e4e0";
+			}
+		}
+
+		.bp-icon:before {
+			content: "\e4e0";
+			color: var(--bb-rl-icon-warning-primary-color);
+		}
+	}
+
+	&.error {
+		background-color: var(--bb-rl-background-danger-secondary-color);
+		border-color: var(--bb-rl-border-danger-primary-color);
+
+		> [class*="bb-icons"] {
+			color: var(--bb-rl-text-danger-primary-color);
+
+			&:before {
+				content: "\e4e2";
+			}
+		}
+
+		.bp-icon:before {
+			content: "\e4e2";
+			color: var(--bb-rl-icon-danger-primary-color);
 		}
 	}
 }
