@@ -2234,99 +2234,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			return $settings;
 		}
 
-		/**
-		 * Generate LearnDash content for ReadyLaunch layout.
-		 *
-		 * @since BuddyBoss [BBVERSION]
-		 *
-		 * @return string The LearnDash content HTML.
-		 */
-		public function bb_rl_learndash_content() {
-			// Use a static flag to ensure we only generate content once per page load
-			static $is_generating  = false;
-			static $cached_content = '';
 
-			// If we already have cached content, return it
-			if ( ! empty( $cached_content ) ) {
-				return $cached_content;
-			}
-
-			// Prevent recursion
-			if ( $is_generating ) {
-				return '<div class="bb-learndash-content-wrap"><p>Content generation prevented recursion</p></div>';
-			}
-
-			$is_generating = true;
-
-			ob_start();
-
-			// Check user access to course content
-			$user_id    = get_current_user_id();
-			$post_id    = get_the_ID();
-			$has_access = true; // Default to true
-
-			// If it's a course, check if the user has access
-			if ( get_post_type() === 'sfwd-courses' ) {
-				$has_access = sfwd_lms_has_access( $post_id, $user_id );
-			}
-
-			// Get the appropriate template based on the current page
-			if ( is_post_type_archive( 'sfwd-courses' ) || ( strpos( $_SERVER['REQUEST_URI'], '/courses/' ) !== false && substr_count( $_SERVER['REQUEST_URI'], '/' ) <= 3 ) ) {
-				// For course archive/listing
-				$template_path = 'learndash/ld30/archive-sfwd-courses.php';
-				if ( ! locate_template( $template_path ) ) {
-					$template_path = buddypress()->plugin_dir . 'bp-templates/bp-nouveau/readylaunch/learndash/ld30/archive-sfwd-courses.php';
-					if ( ! file_exists( $template_path ) ) {
-						// Fall back to the default LearnDash template
-						$template_path = SFWD_LMS::get_template( 'course_archive_template', null, null, true );
-						if ( file_exists( $template_path ) ) {
-							include $template_path;
-						} else {
-							echo '<main class="bb-learndash-content-area">';
-							echo '<p>Course archive template not found. Please create a template file.</p>';
-							echo '</main>';
-						}
-					} else {
-						include $template_path;
-					}
-				} else {
-					get_template_part( 'learndash/ld30/archive-sfwd-courses' );
-				}
-			} elseif ( is_singular( 'sfwd-courses' ) ) {
-				// For single course view
-				$template_path = 'learndash/ld30/course.php';
-				if ( ! locate_template( $template_path ) ) {
-					$template_path = buddypress()->plugin_dir . 'bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php';
-					if ( ! file_exists( $template_path ) ) {
-						// Fall back to default LearnDash template
-						$template_path = SFWD_LMS::get_template( 'course', null, null, true );
-						if ( file_exists( $template_path ) ) {
-							include $template_path;
-						} else {
-							echo '<main class="bb-learndash-content-area">';
-							echo '<p>Course template not found. Please create a template file.</p>';
-							echo '</main>';
-						}
-					} else {
-						include $template_path;
-					}
-				} else {
-					get_template_part( 'learndash/ld30/course' );
-				}
-			}
-			// Add other template loaders for lessons, topics, etc.
-			else {
-				// For other LearnDash content types
-				echo '<main class="bb-learndash-content-area">';
-				echo '<p>This LearnDash content type is not currently supported in ReadyLaunch.</p>';
-				echo '</main>';
-			}
-
-			$cached_content = ob_get_clean();
-			$is_generating  = false;
-
-			return $cached_content;
-		}
 
 		/**
 		 * Enqueue LearnDash styles for ReadyLaunch.
@@ -2493,7 +2401,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 */
 		public function bb_rl_courses_integration_page() {
 			if ( is_singular( learndash_get_post_type_slug( 'course' ) ) ) {
-				bp_get_template_part( 'learndash/ld30/sfwd-courses' );
+				bp_get_template_part( 'learndash/ld30/course' );
 			} else {
 				bp_get_template_part( 'learndash/ld30/archive-sfwd-courses' );
 			}
