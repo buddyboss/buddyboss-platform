@@ -5,8 +5,8 @@
     "title": "ReadyLaunch Header",
     "category": "buddyboss",
     "icon": "align-wide",
-    "description": "ReadyLaunch Header block for BuddyBoss platform",
-    "keywords": [ "BuddyBoss", "Header", "ReadyLaunch" ],
+    "description": "Display the BuddyBoss ReadyLaunch navigation menu as a heading across your page",
+    "keywords": [ "BuddyBoss", "Header", "ReadyLaunch", "BB", "Navigation" ],
     "textdomain": "buddyboss",
     "attributes": {
         "showSearch": {
