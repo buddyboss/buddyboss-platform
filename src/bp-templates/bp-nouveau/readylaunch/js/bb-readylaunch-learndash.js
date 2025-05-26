@@ -209,22 +209,37 @@
         positionCoursePopup: function($card, $popup) {
             // Don't position on mobile - let CSS handle it
             if ($(window).width() <= 768) {
-                $popup.removeClass('bb-rl-popup-left bb-rl-popup-right');
+                $popup.removeClass('bb-rl-popup-left bb-rl-popup-right bb-rl-popup-top bb-rl-popup-bottom');
                 return;
             }
             
+            var $coursesGrid = $card.closest('.bb-rl-courses-grid');
+            var isListView = $coursesGrid.hasClass('list');
+            
+            // Reset all positioning classes
+            $popup.removeClass('bb-rl-popup-left bb-rl-popup-right bb-rl-popup-top bb-rl-popup-bottom');
+            
+            if (isListView) {
+                // List view: position above/below
+                this.positionPopupVertical($card, $popup);
+            } else {
+                // Grid view: position left/right
+                this.positionPopupHorizontal($card, $popup);
+            }
+        },
+        
+        /**
+         * Position popup horizontally (left/right) for grid view
+         */
+        positionPopupHorizontal: function($card, $popup) {
             var cardRect = $card[0].getBoundingClientRect();
-            var popupWidth = 296;
+            var popupWidth = 296; // Width from CSS
             var windowWidth = $(window).width();
             var spaceRight = windowWidth - cardRect.right;
             var spaceLeft = cardRect.left;
-            var minSpaceRequired = popupWidth + 20;
-            var scrollOffset = $(window).scrollLeft();
+            var minSpaceRequired = popupWidth + 20; // Add some padding
             
-            // Reset positioning classes
-            $popup.removeClass('bb-rl-popup-left bb-rl-popup-right');
-            
-            // Check if there's enough space on the right
+            // Check if there's enough space on the right (preferred)
             if (spaceRight >= minSpaceRequired) {
                 // Position on the right
                 $popup.addClass('bb-rl-popup-right');
@@ -242,7 +257,6 @@
             
             // Ensure popup doesn't go off-screen vertically
             var cardTop = cardRect.top;
-            var cardHeight = cardRect.height;
             var popupHeight = 200; // Approximate popup height
             var windowHeight = $(window).height();
             
@@ -254,6 +268,37 @@
             } else {
                 $popup.css('transform', 'translateY(-50%)');
             }
+        },
+        
+        /**
+         * Position popup vertically for list view
+         */
+        positionPopupVertical: function($card, $popup) {
+            var cardRect = $card[0].getBoundingClientRect();
+            var popupHeight = 250; // Approximate popup height
+            var windowHeight = $(window).height();
+            var spaceAbove = cardRect.top;
+            var spaceBelow = windowHeight - cardRect.bottom;
+            var minSpaceRequired = popupHeight + 20; // Add some padding
+            
+            // Check if there's enough space above (preferred for list view)
+            if (spaceAbove >= minSpaceRequired) {
+                // Position above
+                $popup.addClass('bb-rl-popup-top');
+            } else if (spaceBelow >= minSpaceRequired) {
+                // Position below
+                $popup.addClass('bb-rl-popup-bottom');
+            } else {
+                // If neither position has enough space, choose the one with more space
+                if (spaceAbove >= spaceBelow) {
+                    $popup.addClass('bb-rl-popup-top');
+                } else {
+                    $popup.addClass('bb-rl-popup-bottom');
+                }
+            }
+            
+            // Reset any previous transform adjustments
+            $popup.css('transform', '');
         }
     };
     

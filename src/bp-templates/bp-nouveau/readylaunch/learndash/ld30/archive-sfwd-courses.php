@@ -131,8 +131,20 @@ $readylaunch = BB_Readylaunch::instance();
 								<div class="bb-rl-course-popup-caption">
 									<?php the_excerpt(); ?>
 								</div>
+								<div class="bb-rl-course-author">
+									<h4><?php esc_html_e( 'Instructor', 'buddyboss' ); ?></h4>
+									<?php
+									$author_id = get_the_author_meta( 'ID' );
+									$author_name = get_the_author();
+									?>
+									<span class="bb-rl-author-avatar">
+										<?php echo get_avatar( $author_id, 32 ); ?>
+									</span>
+									<span class="bb-rl-author-name"><?php echo esc_html( $author_name ); ?></span>
+								</div>
 								<div class="bb-rl-course-popup-actions">
-									<a href="<?php the_permalink(); ?>" class="bb-rl-course-link bb-rl-button bb-rl-button--secondaryFill bb-rl-button--small">
+									<a href="<?php the_permalink(); ?>" class="bb-rl-course-link bb-rl-button bb-rl-button--brandFill bb-rl-button--small">
+										<i class="bb-icons-rl-play"></i>
 										<?php
 										if ( $is_enrolled ) {
 											esc_html_e( 'Continue', 'buddyboss' );

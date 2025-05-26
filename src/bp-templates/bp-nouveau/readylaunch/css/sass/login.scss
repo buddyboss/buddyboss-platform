@@ -825,12 +825,12 @@ body.bb-rl-register {
 .show.bad,
 .show.mismatch {
 	background-color: var(--bb-rl-background-warning-primary-color);
-    color: var(--bb-rl-text-white-color);
-    border-radius: var(--bb-rl-radius-base);
-    padding: var(--bb-rl-space-50) var(--bb-rl-space-100);
-    margin: var(--bb-rl-space-100) 0;
-    font-weight: 500;
-    font-size: var(--bb-rl-font-size-sm);
+	color: var(--bb-rl-text-white-color);
+	border-radius: var(--bb-rl-radius-base);
+	padding: var(--bb-rl-space-50) var(--bb-rl-space-100);
+	margin: var(--bb-rl-space-100) 0;
+	font-weight: 500;
+	font-size: var(--bb-rl-font-size-sm);
 }
 
 .show.bad {
