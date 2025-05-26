@@ -49,6 +49,10 @@
 			white-space: nowrap;
 
 			&:focus {
+				outline: none;
+			}
+
+			&:focus-visible {
 				outline: 2px solid var(--bb-rl-border-quinery-color);
 			}
 		}
@@ -162,6 +166,10 @@
 
 		a {
 			color: var(--bb-rl-text-color);
+
+			&:focus-visible {
+				outline: 2px solid var(--bb-rl-border-quinery-color);
+			}
 		}
 	}
 }
@@ -263,6 +271,14 @@
 		padding: 4px;
 		border-radius: var(--bb-rl-radius-md);
 
+		&:focus {
+			outline: none;
+		}
+		
+		&:focus-visible {
+			outline: 2px solid var(--bb-rl-border-quinery-color);
+		}
+
 		> span {
 			display: flex;
 		}
@@ -304,6 +320,13 @@
 			display: none;
 		}
 
+		.user-link {
+
+			&:focus-visible {
+				outline: 2px solid var(--bb-rl-border-quinery-color);
+			}
+		}
+
 		&.active {
 
 			.bb-rl-profile-dropdown {
@@ -324,6 +347,14 @@
 
 		.bb-rl-header-search__label {
 			white-space: nowrap;
+		}
+
+		&:focus {
+			outline: none;
+		}
+
+		&:focus-visible {
+			outline: 2px solid var(--bb-rl-border-quinery-color);
 		}
 	}
 
