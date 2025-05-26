@@ -185,6 +185,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				// Login page.
 				add_action( 'login_enqueue_scripts', array( $this, 'bb_rl_login_enqueue_scripts' ), 999 );
 				add_action( 'login_head', array( $this, 'bb_rl_login_header' ), 999 );
+				add_filter( 'login_headerurl', array( $this, 'bb_rl_login_header_url' ) );
 				add_action( 'login_footer', array( $this, 'bb_rl_login_footer' ), 999 );
 				add_filter( 'login_message', array( $this, 'bb_rl_signin_login_message' ) );
 				add_action( 'login_form', array( $this, 'bb_rl_login_custom_form' ) );
@@ -1930,6 +1931,24 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 */
 		public function bb_rl_login_header() {
 			bp_get_template_part( 'common/header-register' );
+		}
+
+
+		/**
+		 * Custom Login Link
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 */
+		public function bb_rl_login_header_url() {
+
+			if ( function_exists( 'buddypress' ) && isset( buddypress()->buddyboss ) ) {
+				$enable_private_network = bp_get_option( 'bp-enable-private-network' );
+
+				if ( '0' === $enable_private_network ) {
+					return '#';
+				}
+			}
+			return home_url();
 		}
 
 		/**
