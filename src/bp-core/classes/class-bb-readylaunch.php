@@ -67,6 +67,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			if ( $enabled ) {
 				add_action( 'bb_blocks_init', array( $this, 'bb_rl_register_blocks' ), 20 );
 				add_filter( 'bp_search_js_settings', array( $this, 'bb_rl_filter_search_js_settings' ) );
+				add_action( 'admin_enqueue_scripts', array( $this, 'bb_admin_enqueue_scripts' ), 1 );
 			}
 
 			$enabled_for_page = $this->bb_is_readylaunch_enabled_for_page();
@@ -198,8 +199,6 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 			$admin_enabled = $this->bb_is_readylaunch_admin_enabled();
 			if ( $admin_enabled ) {
-				add_action( 'admin_enqueue_scripts', array( $this, 'bb_admin_enqueue_scripts' ), 1 );
-
 				add_filter( 'bb_document_icon_class', array( $this, 'bb_readylaunch_document_icon_class' ) );
 			}
 
@@ -581,7 +580,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				}
 			}
 
-			wp_enqueue_style( 'bb-readylaunch-icons', buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/icons/css/bb-icons-rl{$min}.css", array(), bp_get_version() );
+			wp_enqueue_style( 'bb-icons-rl-css', buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/icons/css/bb-icons-rl{$min}.css", array(), bp_get_version() );
 
 			if ( bp_is_members_directory() ) {
 				wp_register_script(
@@ -628,7 +627,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 */
 		public function bb_admin_enqueue_scripts() {
 			$min = bp_core_get_minified_asset_suffix();
-			wp_enqueue_style( 'bb-readylaunch-icons', buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/icons/css/bb-icons-rl{$min}.css", array(), bp_get_version() );
+			wp_enqueue_style( 'bb-icons-rl-css', buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/icons/css/bb-icons-rl{$min}.css", array(), bp_get_version() );
 		}
 
 		/**
@@ -2018,7 +2017,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * @since BuddyBoss [BBVERSION]
 		 */
 		public function bb_rl_dynamic_colors() {
-			$color_light = bp_get_option( 'bb_rl_color_light', '#4946fe' );	
+			$color_light = bp_get_option( 'bb_rl_color_light', '#4946fe' );
 			$color_dark  = bp_get_option( 'bb_rl_color_dark', '#9747FF' );
 			?>
 			<style>
@@ -2073,6 +2072,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 */
 		private function register_readylaunch_header_assets() {
 			$plugin_url = trailingslashit( buddypress()->plugin_url );
+			$min        = bp_core_get_minified_asset_suffix();
 
 			// Register the view script.
 			wp_register_script(
@@ -2092,6 +2092,13 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					'more_nav'   => esc_html__( 'More', 'buddyboss' ),
 					'filter_all' => esc_html__( 'All', 'buddyboss' ),
 				)
+			);
+
+			wp_register_style(
+				'bb-icons-rl-css',
+				$plugin_url . "bp-templates/bp-nouveau/readylaunch/icons/css/bb-icons-rl{$min}.css",
+				array(),
+				bp_get_version()
 			);
 		}
 

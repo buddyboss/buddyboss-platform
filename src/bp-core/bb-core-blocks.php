@@ -173,8 +173,6 @@ function bb_block_render_readylaunch_header_block( $attributes = array() ) {
 		$align_class = 'align' . $attributes['align'];
 	}
 
-	$min = bp_core_get_minified_asset_suffix();
-
 	// Get dark mode class.
 	$dark_mode_class = $block_args['darkMode'] ? 'bb-rl-dark-mode' : '';
 
@@ -187,7 +185,8 @@ function bb_block_render_readylaunch_header_block( $attributes = array() ) {
 
 	wp_enqueue_script( 'bb-readylaunch-header-view' );
 
-	wp_enqueue_style( 'bb-readylaunch-icons', buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/icons/css/bb-icons-rl{$min}.css", array(), bp_get_version() );
+	// Let WordPress handle the icon styles through block.json dependencies
+	wp_enqueue_style( 'bb-icons-rl-css' );
 
 	ob_start();
 	?>
