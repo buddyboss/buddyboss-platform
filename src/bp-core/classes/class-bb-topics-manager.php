@@ -1190,7 +1190,7 @@ class BB_Topics_Manager {
 
 		if ( 'id' === $r['fields'] ) {
 			// We only want the IDs.
-			$topic_data = array_map( 'intval', $topic_ids );
+			$topic_data = wp_parse_id_list( $topic_ids );
 		} else {
 			$uncached_ids = bp_get_non_cached_ids( $topic_ids, self::$topic_cache_group );
 			if ( ! empty( $uncached_ids ) ) {
@@ -1510,7 +1510,7 @@ class BB_Topics_Manager {
 
 		check_ajax_referer( 'bb_update_topics_order', 'nonce' );
 
-		$topic_ids = array_map( 'absint', $_POST['topic_ids'] );
+		$topic_ids = wp_parse_id_list( $_POST['topic_ids'] );
 
 		$success = true;
 
