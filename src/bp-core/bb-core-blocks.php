@@ -107,7 +107,7 @@ function bb_register_block( $args = array() ) {
  * @return array The list of widget classnames for the Block.
  */
 function bb_blocks_get_widget_block_classnames( $block_name = '' ) {
-	$components         = bp_core_get_active_components( array(), 'objects' );
+	$components         = bb_core_get_active_components( array(), 'objects' );
 	$components['core'] = buddypress()->core;
 	$classnames         = array();
 
