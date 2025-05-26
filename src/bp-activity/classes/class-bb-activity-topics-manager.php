@@ -18,6 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @since BuddyBoss [BBVERSION]
  */
+#[\AllowDynamicProperties]
 class BB_Activity_Topics_Manager {
 
 	/**

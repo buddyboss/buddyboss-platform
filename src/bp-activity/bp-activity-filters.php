@@ -3984,7 +3984,7 @@ function bb_load_activity_topics_manager() {
 }
 
 /**
- * Save topic data for activity.
+ * Save topic data for the activity.
  *
  * @since BuddyBoss [BBVERSION]
  *

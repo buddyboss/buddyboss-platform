@@ -3015,8 +3015,6 @@ window.bp = window.bp || {};
 		});
 	}
 
-	activityTopicHandle();
-
 	function activityTopicHandle() {
 		// Initialize the BBTopicsManager with admin-specific configuration for activity topics.
 		if ( 'undefined' !== typeof BBTopicsManager ) {
@@ -3032,20 +3030,26 @@ window.bp = window.bp || {};
 			BBTopicsManager.config.topicsLimit            = BP_ADMIN.topics_limit;
 		}
 
-		$( document ).on( 'change', '#bb_enable_group_activity_topics', function ( e ) {
-			// Prevent default action and stop event propagation.
-			e.preventDefault();
-			e.stopPropagation();
+		$( document ).on(
+			'change',
+			'#bb_enable_group_activity_topics',
+			function ( e ) {
+				// Prevent default action and stop event propagation.
+				e.preventDefault();
+				e.stopPropagation();
 
-			var enableGroupTopicsChecked = $( '#bb_enable_group_activity_topics' ).is( ':checked' );
+				var enableGroupTopicsChecked = $( '#bb_enable_group_activity_topics' ).is( ':checked' );
 
-			// Show/hide only group topics dependent fields
-			if ( enableGroupTopicsChecked ) {
-				$( '.bb_enable_group_activity_topics_required' ).removeClass( 'bp-hide' );
-			} else {
-				$( '.bb_enable_group_activity_topics_required' ).addClass( 'bp-hide' );
+				// Show/hide only group topics dependent fields.
+				if ( enableGroupTopicsChecked ) {
+					$( '.bb_enable_group_activity_topics_required' ).removeClass( 'bp-hide' );
+				} else {
+					$( '.bb_enable_group_activity_topics_required' ).addClass( 'bp-hide' );
+				}
 			}
-		} );
+		);
 	}
+
+	activityTopicHandle();
 
 }());
