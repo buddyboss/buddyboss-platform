@@ -160,9 +160,9 @@ function bb_block_render_readylaunch_header_block( $attributes = array() ) {
 	$block_args = bp_parse_args(
 		$attributes,
 		array(
-			'showSearch'        => true,
-			'showMessages'      => true,
-			'showNotifications' => true,
+			'showSearch'        => false,
+			'showMessages'      => false,
+			'showNotifications' => false,
 			'showProfileMenu'   => true,
 			'darkMode'          => false,
 		)
