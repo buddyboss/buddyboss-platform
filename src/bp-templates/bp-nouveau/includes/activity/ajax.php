@@ -1320,7 +1320,7 @@ function bb_nouveau_ajax_activity_update_pinned_post() {
 		} elseif ( 'pinned' === $retval ) {
 			$response['feedback'] = esc_html__( 'Your post has been pinned', 'buddyboss' );
 		} elseif ( 'not_allowed' === $retval || 'not_member' === $retval ) {
-			$response['feedback'] = esc_html__( 'Your are not allowed to pinned or unpinned the post', 'buddyboss' );
+			$response['feedback'] = esc_html__( 'You are not allowed to pin or unpin this post', 'buddyboss' );
 		} elseif ( 'pin_updated' === $retval ) {
 			$response['feedback'] = esc_html__( 'Your pinned post has been updated', 'buddyboss' );
 		}
