@@ -677,6 +677,45 @@
   color: var(--bb-rl-text-color);
 }
 
+.bb-rl-learndash-course {
+  max-width: 1032px;
+  margin: 0 auto;
+}
+
+.bb-rl-learndash-course .bb-rl-entry-header {
+  background-color: var(--bb-rl-background-color);
+  padding: var(--bb-rl-space-500) var(--bb-rl-space-600);
+  border: 1px solid var(--bb-rl-border-secondary-color);
+  border-radius: var(--bb-rl-radius-lg);
+  margin-bottom: var(--bb-rl-space-400);
+}
+
+.bb-rl-course-banner {
+  gap: var(--bb-rl-space-600);
+}
+
+.bb-rl-course-banner .bb-rl-course-overview {
+  flex: 1;
+}
+
+.bb-rl-course-banner .bb-rl-course-figure {
+  flex: 0 0 50%;
+}
+
+.bb-rl-course-banner .bb-rl-entry-title {
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 30px;
+  color: var(--bb-rl-text-color);
+  margin-bottom: var(--bb-rl-space-100);
+}
+
+.bb-rl-course-featured-image img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--bb-rl-radius-lg);
+}
+
 .bb-readylaunch-template .bb-courses-header .grid-filters {
   display: flex;
   align-items: center;

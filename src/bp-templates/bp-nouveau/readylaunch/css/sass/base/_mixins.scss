@@ -52,6 +52,12 @@
 	line-height: 28px;
 }
 
+@mixin bb-rl-base-heading-2xl {
+	font-size: 20px;
+	font-weight: 700;
+	line-height: 30px;
+}
+
 @mixin bb-rl-button {
 	display: inline-flex;
 	align-items: center;

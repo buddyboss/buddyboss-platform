@@ -42,39 +42,42 @@ $lessons = learndash_get_course_lessons_list( $course_id );
 	<main class="bb-learndash-content-area">
 		<article id="post-<?php the_ID(); ?>" <?php post_class('bb-rl-learndash-course'); ?>>
 			<header class="bb-rl-entry-header">
-				<h1 class="bb-rl-entry-title"><?php the_title(); ?></h1>
-				
-				<?php if ( has_post_thumbnail() ) : ?>
-					<div class="bb-rl-course-featured-image">
-						<?php the_post_thumbnail( 'full' ); ?>
-					</div>
-				<?php endif; ?>
-				
-				<div class="bb-rl-course-meta">
-					<?php if ( $is_enrolled ) : ?>
-						<div class="bb-rl-course-status">
-							<span class="bb-rl-status bb-rl-enrolled"><?php echo esc_html( $course_status ); ?></span>
-							
-							<?php if ( ! empty( $course_progress ) ) : ?>
-								<div class="bb-rl-course-progress">
-									<div class="bb-rl-progress-bar">
-										<div class="bb-rl-progress" style="width: <?php echo (int) $course_progress['percentage']; ?>%"></div>
-									</div>
-									<span class="bb-rl-percentage"><?php echo (int) $course_progress['percentage']; ?>% <?php esc_html_e( 'Complete', 'buddyboss' ); ?></span>
+				<div class="bb-rl-course-banner flex">
+					<div class="bb-rl-course-overview">
+						<h1 class="bb-rl-entry-title"><?php the_title(); ?></h1>
+						<div class="bb-rl-course-meta">
+							<?php if ( $is_enrolled ) : ?>
+								<div class="bb-rl-course-status">
+									<?php if ( ! empty( $course_progress ) ) : ?>
+										<div class="bb-rl-course-progress">
+											<span class="bb-rl-percentage"><span class="bb-rl-percentage-figure"><?php echo (int) $course_progress['percentage']; ?>%</span> <?php esc_html_e( 'Completed', 'buddyboss' ); ?></span>
+											<div class="bb-rl-progress-bar">
+												<div class="bb-rl-progress" style="width: <?php echo (int) $course_progress['percentage']; ?>%"></div>
+											</div>
+											
+										</div>
+									<?php endif; ?>
+								</div>
+							<?php else : ?>
+								<div class="bb-rl-course-price">
+									<?php if ( ! empty( $course_price['type'] ) && 'open' === $course_price['type'] ) : ?>
+										<span class="bb-rl-price bb-rl-free"><?php esc_html_e( 'Free', 'buddyboss' ); ?></span>
+									<?php elseif ( ! empty( $course_price['type'] ) && 'paynow' === $course_price['type'] ) : ?>
+										<span class="bb-rl-price"><?php echo sprintf( esc_html__( 'Price: %s', 'buddyboss' ), esc_html( $course_price['price'] ) ); ?></span>
+									<?php elseif ( ! empty( $course_price['type'] ) && 'subscribe' === $course_price['type'] ) : ?>
+										<span class="bb-rl-price"><?php echo sprintf( esc_html__( 'Subscription: %s', 'buddyboss' ), esc_html( $course_price['price'] ) ); ?></span>
+									<?php endif; ?>
 								</div>
 							<?php endif; ?>
 						</div>
-					<?php else : ?>
-						<div class="bb-rl-course-price">
-							<?php if ( ! empty( $course_price['type'] ) && 'open' === $course_price['type'] ) : ?>
-								<span class="bb-rl-price bb-rl-free"><?php esc_html_e( 'Free', 'buddyboss' ); ?></span>
-							<?php elseif ( ! empty( $course_price['type'] ) && 'paynow' === $course_price['type'] ) : ?>
-								<span class="bb-rl-price"><?php echo sprintf( esc_html__( 'Price: %s', 'buddyboss' ), esc_html( $course_price['price'] ) ); ?></span>
-							<?php elseif ( ! empty( $course_price['type'] ) && 'subscribe' === $course_price['type'] ) : ?>
-								<span class="bb-rl-price"><?php echo sprintf( esc_html__( 'Subscription: %s', 'buddyboss' ), esc_html( $course_price['price'] ) ); ?></span>
-							<?php endif; ?>
-						</div>
-					<?php endif; ?>
+					</div>
+					<div class="bb-rl-course-figure">
+						<?php if ( has_post_thumbnail() ) : ?>
+							<div class="bb-rl-course-featured-image">
+								<?php the_post_thumbnail( 'full' ); ?>
+							</div>
+						<?php endif; ?>
+					</div>
 				</div>
 			</header>
 
