@@ -16,7 +16,9 @@ module.exports = function (grunt) {
 		BP_EXCLUDED_CSS = [
 			'!**/*-rtl.css',
 			// '!bp-forums/**/*.css',
-			'!**/endpoints/**/*.css'
+			'!**/endpoints/**/*.css',
+			'!**/bp-core/admin/bb-settings/readylaunch/build/**/*.css',
+			'!**/js/admin/readylaunch/styles/**/*.css'
 		],
 
 		BP_JS = [
@@ -25,6 +27,7 @@ module.exports = function (grunt) {
 			// '!bp-forums/**/*.js',
 			'!**/vendor/**/*.js',
 			'!**/endpoints/**/*.js',
+			'!bp-templates/bp-nouveau/readylaunch/js/cropper.js'
 		],
 
 		BP_EXCLUDED_MISC = [],
@@ -119,6 +122,15 @@ module.exports = function (grunt) {
 					flatten: true,
 					src: ['bp-templates/bp-nouveau/sass/buddypress.scss'],
 					dest: SOURCE_DIR + 'bp-templates/bp-nouveau/css/'
+				},
+				ready_launch: {
+					cwd: SOURCE_DIR,
+					extDot: 'last',
+					expand: true,
+					ext: '.css',
+					flatten: true,
+					src: ['bp-templates/bp-nouveau/readylaunch//css/sass/*.scss'],
+					dest: SOURCE_DIR + 'bp-templates/bp-nouveau/readylaunch/css'
 				},
 				admin: {
 					cwd: SOURCE_DIR,
@@ -358,14 +370,18 @@ module.exports = function (grunt) {
 					ext: '.min.js',
 					src: BP_JS.concat(
 						[
-						'!**/vendor/*.js',
-						'!**/lib/*.js',
-						'!**/*.min.js',
-						'!**/emojione-edited.js',
-						'!**/emojionearea-edited.js',
-						'!**/node_modules/**/*.js',
-						'!**/endpoints/**/*.js',
-						'!**/js/lib/Chart.js',
+							'!**/vendor/*.js',
+							'!**/lib/*.js',
+							'!**/*.min.js',
+							'!**/emojione-edited.js',
+							'!**/emojionearea-edited.js',
+							'!**/node_modules/**/*.js',
+							'!**/endpoints/**/*.js',
+							'!**/js/lib/Chart.js',
+							'!**/js/blocks/**/*.js',
+							'!**/bp-core/admin/bb-settings/**/*.js',
+							'!**/bp-core/blocks/**/*.js',
+							'!**/js/admin/**/*.js',
 						]
 					)
 				}
@@ -383,12 +399,17 @@ module.exports = function (grunt) {
 						BP_EXCLUDED_MISC,
 						BP_SCSS_CSS_FILES,
 						[
-						'!**/*.min.css',
-						'!**/admin/**/*.css',
-						'!**/emojionearea-edited.css',
-						'!**/pusher/**/*.css',
-						'!**/recaptcha/**/*.css',
-						'!**/endpoints/**/*.css'
+							'!**/*.min.css',
+							'!**/admin/**/*.css',
+							'!**/emojionearea-edited.css',
+							'!**/pusher/**/*.css',
+							'!**/recaptcha/**/*.css',
+							'!**/endpoints/**/*.css',
+							'!**/readylaunch/**/*.css',
+							'!**/js/blocks/**/*.css',
+							'!**/js/admin/**/*.css',
+							'!**/bp-core/admin/bb-settings/**/*.css',
+							'!**/bp-core/blocks/**/*.css'
 						]
 					)
 				},
@@ -466,13 +487,16 @@ module.exports = function (grunt) {
 				src: {
 					files: {
 						src: [
-						SOURCE_DIR + '/**/*.js',
-						'!**/emojione-edited.js',
-						'!**/emojionearea-edited.js',
-						'!**/vendor/**/*.js',
-						'!**/node_modules/**/*.js',
-						'!**/endpoints/**/*.js',
-						'!**/js/lib/Chart.js',
+							SOURCE_DIR + '/**/*.js',
+							'!**/emojione-edited.js',
+							'!**/emojionearea-edited.js',
+							'!**/vendor/**/*.js',
+							'!**/node_modules/**/*.js',
+							'!**/endpoints/**/*.js',
+							'!**/js/lib/Chart.js',
+							'!' + SOURCE_DIR + 'js/**/*.js',
+							'!' + SOURCE_DIR + 'bp-core/admin/bb-settings/**/*.js',
+							'!' + SOURCE_DIR + 'bp-core/blocks/**/*.js'
 						].concat( BP_EXCLUDED_MISC )
 					}
 				}

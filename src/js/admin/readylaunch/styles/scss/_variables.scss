@@ -1,0 +1,75 @@
+// Colors
+$bb-rl-background-brand-primary-color: #ef5d33;
+$bb-rl-background-brand-primary-hover-color: #d7542e;
+$bb-rl-background-brand-secondary-color: #fcdfd6;
+$bb-rl-background-brand-secondary-hover-color: #d9d9d9;
+$bb-rl-background-base-color: #fff;
+$bb-rl-background-inverse-color: #000;
+$bb-rl-background-primary-color: #f6f6f6;
+$bb-rl-background-primary-color-hover: #e5e5e5;
+$bb-rl-background-secondary-color: #f0f0f0;
+$bb-rl-background-secondary-color-hover: #d9d9d9;
+$bb-rl-background-tertiary-color: #b2b2b2;
+$bb-rl-background-danger-primary-color: #fee9e7;
+$bb-rl-background-danger-primary-color-hover: #fcb3ad;
+$bb-rl-background-danger-secondary-color: #ec221f;
+$bb-rl-background-danger-secondary-color-hover: #c00f0c;
+$bb-rl-background-warning-primary-color: #fffbeb;
+$bb-rl-background-positive-primary-color: #ebffee;
+
+$bb-rl-border-brand-primary-color: #ef5d33;
+$bb-rl-border-brand-secondary-color: #4946fe;
+$bb-rl-border-brand-tertiary-color: #f7ae99;
+$bb-rl-border-primary-color: #e5e5e5;
+$bb-rl-border-secondary-color: #d9d9d9;
+$bb-rl-border-tertiary-color: #ccc;
+$bb-rl-border-quaternary-color: #808080;
+$bb-rl-border-quinary-color: #2f2f2f;
+$bb-rl-border-danger-primary-color: #ec221f;
+$bb-rl-border-danger-secondary-color: #c00f0c;
+$bb-rl-border-warning-primary-color: #e8b931;
+$bb-rl-border-positive-secondary-color: #009951;
+
+$bb-rl-text-primary-color: #000;
+$bb-rl-text-secondary-color: #2f2f2f;
+$bb-rl-text-tertiary-color: #666;
+$bb-rl-text-disabled-color: #b2b2b2;
+$bb-rl-text-inverse-color: #fff;
+$bb-rl-link-color: #0781f2;
+
+$bb-rl-icon-primary-color: #4d4d4d;
+$bb-rl-icon-secondary-color: #808080;
+$bb-rl-icon-disabled-color: #b2b2b2;
+$bb-rl-icon-warning-secondary-color: #e5a000;
+$bb-rl-icon-positive-primary-color: #009951;
+$bb-rl-icon-danger-secondary-color: #ec221f;
+
+// UI Elements
+$card-box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.15);
+
+// Dimensions and spaing
+$bb-rl-space-0: 0;
+$bb-rl-space-50: 4px;
+$bb-rl-space-100: 8px;
+$bb-rl-space-200: 16px;
+$bb-rl-space-300: 24px;
+$bb-rl-space-400: 32px;
+$bb-rl-space-500: 40px;
+$bb-rl-space-600: 48px;
+$bb-rl-space-700: 56px;
+$content-max-width: 900px;
+
+// Radius
+$bb-rl-radius-xs: 2px;
+$bb-rl-radius-sm: 4px;
+$bb-rl-radius-md: 6px;
+$bb-rl-radius-base: 8px;
+$bb-rl-radius-lg: 12px;
+$bb-rl-radius-xl: 16px;
+$bb-rl-radius-full: 99px;
+
+// BREAKPOINTS
+$sm: 544px !default;
+$md: 800px !default;
+$lg: 992px !default;
+$xl: 1200px !default;

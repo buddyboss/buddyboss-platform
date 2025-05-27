@@ -343,7 +343,8 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 				'forum_validation'             => array(
 					'escaped_html_tags' => esc_js( __( 'Your content contains escaped HTML tags. Please fix them before submitting.', 'buddyboss' ) ),
 					'malformed_ul_li'   => esc_js( __( 'Content has malformed <ul> or <li> tags. Please fix them before submitting.', 'buddyboss' ) ),
-				)
+				),
+				'components' => bp_get_option( 'bp-active-components' ),
 			);
 
 			// Localize only post_type is member type and group type.
@@ -356,6 +357,13 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 					$localize_arg['background_color'] = buddyboss_theme_get_option( 'label_background_color' );
 					$localize_arg['color']            = buddyboss_theme_get_option( 'label_text_color' );
 				}
+			}
+
+			if ( function_exists( 'bb_is_readylaunch_enabled' ) && bb_is_readylaunch_enabled() && class_exists( 'BB_Readylaunch' ) ) {
+				$readylaunch                           = new BB_Readylaunch();
+				$localize_arg['courses_integration']   = $readylaunch->bb_is_sidebar_enabled_for_courses();
+				$localize_arg['gamipress_integration'] = class_exists( 'GamiPress' );
+				$localize_arg['events_integration']    = class_exists( 'Tribe__Events__Main' );
 			}
 
 			wp_localize_script(

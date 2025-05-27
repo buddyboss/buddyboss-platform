@@ -392,4 +392,16 @@ class BP_Activity_Component extends BP_Component {
 			'BP_REST_Activity_Link_Preview_Endpoint',
 		) );
 	}
+
+	/**
+	 * Register the Activity Blocks.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $blocks Optional. See BP_Component::blocks_init() for
+	 * description.
+	 */
+	public function blocks_init( $blocks = array() ) {
+		parent::blocks_init( array() );
+	}
 }

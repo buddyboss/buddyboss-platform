@@ -2407,6 +2407,7 @@ function buddyboss_menu_order( $menu_order ) {
 	$buddyboss_theme_options_menu = array();
 	$buddyboss_theme_font_menu    = array();
 	$buddyboss_updater_menu       = array();
+	$buddyboss_readylaunch_menu   = array();
 	$sep_position                 = 0;
 
 	$after_sep = array();
@@ -2433,6 +2434,12 @@ function buddyboss_menu_order( $menu_order ) {
 					continue;
 				}
 
+				if( 'bb-readylaunch' === $val[2] ) {
+					$buddyboss_readylaunch_menu = $submenu['buddyboss-platform'][ $key ];
+					unset( $submenu['buddyboss-platform'][ $key ] );
+					continue;
+				}
+
 				if ( 0 !== $sep_position ) {
 					$after_sep[] = $val;
 					unset( $submenu['buddyboss-platform'][ $key ] );
@@ -2442,6 +2449,10 @@ function buddyboss_menu_order( $menu_order ) {
 					$sep_position = $key;
 				}
 			}
+		}
+
+		if ( ! empty( $buddyboss_readylaunch_menu ) ) {
+			$submenu['buddyboss-platform'][ ++ $sep_position ] = $buddyboss_readylaunch_menu; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 		}
 
 		if ( ! empty( $buddyboss_theme_options_menu ) ) {
