@@ -7725,14 +7725,12 @@ function bb_is_activity_topic_required( $retval = false ) {
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @return BB_Activity_Topics_Manager|null Instance of the topics manager or null if class doesn't exist.
+ * @return BB_Activity_Topics_Manager|null Instance of the topics manager or null if the class doesn't exist.
  */
 function bb_activity_topics_manager_instance() {
-	static $instance = null;
-
-	if ( null === $instance && class_exists( 'BB_Activity_Topics_Manager' ) ) {
-		$instance = BB_Activity_Topics_Manager::instance();
+	if ( class_exists( 'BB_Activity_Topics_Manager' ) ) {
+		return BB_Activity_Topics_Manager::instance();
 	}
 
-	return $instance;
+	return null;
 }

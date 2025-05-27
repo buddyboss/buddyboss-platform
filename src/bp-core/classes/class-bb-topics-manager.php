@@ -109,7 +109,7 @@ class BB_Topics_Manager {
 	}
 
 	/**
-	 * Setup hooks for logging actions.
+	 * Set up hooks for logging actions.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 */
@@ -301,6 +301,7 @@ class BB_Topics_Manager {
 					'permission_type' => $permission_type,
 					'item_id'         => $item_id,
 					'item_type'       => $item_type,
+					'error_type'      => 'wp_error',
 				)
 			);
 		} else {
@@ -312,12 +313,13 @@ class BB_Topics_Manager {
 					'permission_type' => $permission_type,
 					'item_type'       => $item_type,
 					'item_id'         => $item_id,
+					'error_type'      => 'wp_error',
 				)
 			);
 		}
 
-		if ( ! $topic_data ) {
-			wp_send_json_error( array( 'error' => __( 'Failed to add topic.', 'buddyboss' ) ) );
+		if ( is_wp_error( $topic_data ) ) {
+			wp_send_json_error( array( 'error' => $topic_data->get_error_message() ) );
 		}
 
 		if ( 'activity' === $item_type ) {
@@ -353,7 +355,7 @@ class BB_Topics_Manager {
 	 * @type string $slug Optional. The slug for the topic. Auto-generated if empty.
 	 * }
 	 *
-	 * @return int|WP_Error Topic ID on success, WP_Error on failure.
+	 * @return object|WP_Error Topic ID on success, WP_Error on failure.
 	 */
 	public function bb_add_topic( $args ) {
 		$r = bp_parse_args(
@@ -377,11 +379,7 @@ class BB_Topics_Manager {
 
 			unset( $r );
 
-			wp_send_json_error(
-				array(
-					'error' => $error_message,
-				)
-			);
+			return false;
 		}
 
 		/**
@@ -414,11 +412,7 @@ class BB_Topics_Manager {
 
 			unset( $r );
 
-			wp_send_json_error(
-				array(
-					'error' => esc_html( $error_message ),
-				)
-			);
+			return false;
 		}
 
 		// Check if we've reached the maximum number of topics (20).
@@ -432,11 +426,7 @@ class BB_Topics_Manager {
 
 			unset( $r );
 
-			wp_send_json_error(
-				array(
-					'error' => esc_html( $error_message ),
-				)
-			);
+			return false;
 		}
 
 		$existing_slug = $this->bb_get_topic_by( 'slug', $r['slug'] );
@@ -452,8 +442,16 @@ class BB_Topics_Manager {
 			// Use the updated table name property.
 			$inserted = $this->wpdb->insert( $this->topics_table, $data, $format );
 
-			if ( ! $inserted ) {
-				return new WP_Error( 'bb_topic_db_insert_error', $this->wpdb->last_error );
+			if ( is_wp_error( $inserted ) ) {
+				if ( 'wp_error' === $r['error_type'] ) {
+					unset( $r );
+
+					return new WP_Error( 'bb_topic_db_insert_error', $this->wpdb->last_error );
+				}
+
+				unset( $r );
+
+				return false;
 			}
 
 			$topic_id = $this->wpdb->insert_id;
@@ -500,6 +498,13 @@ class BB_Topics_Manager {
 				'item_type' => $r['item_type'],
 			)
 		);
+
+		if ( empty( $get_topic_relationship ) ) {
+			return new WP_Error(
+				'bb_topic_relationship_not_found',
+				esc_html__( 'Topic relationship not found.', 'buddyboss' )
+			);
+		}
 
 		/**
 		 * Fires after a topic has been added.
@@ -552,7 +557,7 @@ class BB_Topics_Manager {
 		$item_id           = $r['item_id'];
 		$permission_type   = $r['permission_type'];
 
-		// Check if the topic is global activity.
+		// Check if the topic is a global activity.
 		$previous_topic     = $this->bb_get_topic(
 			array(
 				'topic_id' => $previous_topic_id,
@@ -569,15 +574,22 @@ class BB_Topics_Manager {
 		 */
 		do_action( 'bb_topic_before_updated', $r, $previous_topic_id, $previous_topic );
 
-		// First check if new name exists in bb_topics table.
+		// First, check if the new name exists in the bb_topics table.
 		$existing_topic = $this->bb_get_topic_by( 'slug', $slug );
 		if ( ! $existing_topic ) { // NO.
 			if ( $is_global_activity && 'groups' === $item_type ) {
-				wp_send_json_error(
-					array(
-						'error' => esc_html__( 'You cannot assign or update a global topic under a group.', 'buddyboss' ),
-					)
-				);
+				if ( 'wp_error' === $r['error_type'] ) {
+					unset( $r, $existing_topic, $previous_topic, $is_global_activity, $item_type, $item_id, $permission_type );
+
+					return new WP_Error(
+						'bb_topic_global_activity_group',
+						esc_html__( 'You cannot assign or update a global topic under a group.', 'buddyboss' )
+					);
+				}
+
+				unset( $r );
+
+				return false;
 			}
 			// Case: Name doesn't exist - create new topic.
 			$topic_data = $this->bb_add_topic(
@@ -592,12 +604,12 @@ class BB_Topics_Manager {
 			);
 		} else { // YES.
 			// Case: Name already exists.
-			// Fetch topic id from bb_topics table.
+			// Fetch topic id from the bb_topics table.
 			$new_topic_id = (int) $existing_topic->id;
 
-			// Check if topic id is different from current topic id.
+			// Check if topic ID is different from the current topic ID.
 			if ( $previous_topic_id !== $new_topic_id ) { // NO.
-				// Check if relationship already exists.
+				// Check if a relationship already exists.
 				$existing_relationship = $this->bb_get_topic(
 					array(
 						'topic_id'  => $new_topic_id,
@@ -608,11 +620,18 @@ class BB_Topics_Manager {
 
 				if ( $existing_relationship ) {
 					// Error: Topic already exists with this relationship.
-					wp_send_json_error(
-						array(
-							'error' => esc_html__( 'This topic name is already in use. Please enter a unique topic name.', 'buddyboss' ),
-						)
-					);
+					if ( 'wp_error' === $r['error_type'] ) {
+						unset( $r, $existing_topic, $previous_topic, $is_global_activity, $item_type, $item_id, $permission_type );
+
+						return new WP_Error(
+							'bb_topic_duplicate_slug',
+							esc_html__( 'This topic name is already in use. Please enter a unique topic name.', 'buddyboss' )
+						);
+					}
+
+					unset( $r );
+
+					return false;
 				} else {
 					// Update relationships.
 					$this->bb_update_topic_relationship(
@@ -661,6 +680,13 @@ class BB_Topics_Manager {
 					'item_type' => $item_type,
 				)
 			);
+
+			if ( empty( $topic_data ) ) {
+				return new WP_Error(
+					'bb_topic_relationship_not_found',
+					esc_html__( 'Topic relationship not found.', 'buddyboss' )
+				);
+			}
 		}
 
 		/**
@@ -694,6 +720,8 @@ class BB_Topics_Manager {
 	 * @type string $date_created    The date created.
 	 * @type string $date_updated    The date updated.
 	 * }
+	 *
+	 * @return int|bool|WP_Error The number of rows inserted on success, false on failure, WP_Error on error.
 	 */
 	public function bb_add_topic_relationship( $args ) {
 		$r = bp_parse_args(
@@ -706,13 +734,28 @@ class BB_Topics_Manager {
 				'user_id'         => bp_loggedin_user_id(),
 				'permission_data' => null,
 				'menu_order'      => 0,
-				'date_created'    => current_time( 'mysql' ),
-				'date_updated'    => current_time( 'mysql' ),
+				'date_created'    => bp_core_current_time(),
+				'date_updated'    => bp_core_current_time(),
 				'error_type'      => 'bool',
 			)
 		);
 
-		$menu_order      = $this->wpdb->get_var( $this->wpdb->prepare( "SELECT MAX(menu_order) FROM {$this->topic_rel_table} WHERE item_type = %s AND item_id = %d", $r['item_type'], $r['item_id'] ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+		if ( empty( $r['topic_id'] ) ) {
+			return new WP_Error(
+				'bb_topic_relationship_missing_topic_id',
+				esc_html__( 'Topic ID is required.', 'buddyboss' )
+			);
+		}
+
+		if ( empty( $r['item_type'] ) ) {
+			return new WP_Error(
+				'bb_topic_relationship_missing_item_type',
+				esc_html__( 'Item type is required.', 'buddyboss' )
+			);
+		}
+
+		// phpcs:ignore
+		$menu_order      = $this->wpdb->get_var( $this->wpdb->prepare( "SELECT MAX(menu_order) FROM {$this->topic_rel_table} WHERE item_type = %s AND item_id = %d", $r['item_type'], $r['item_id'] ) );
 		$r['menu_order'] = $menu_order + 1;
 
 		/**
@@ -743,14 +786,17 @@ class BB_Topics_Manager {
 		if ( ! $inserted ) {
 			$error_message = esc_html__( 'Failed to add topic relationship.', 'buddyboss' );
 			if ( 'wp_error' === $r['error_type'] ) {
-				return new WP_Error( 'bb_topic_relationship_db_insert_error', esc_html( $error_message ) );
+				unset( $r );
+
+				return new WP_Error(
+					'bb_topic_relationship_db_insert_error',
+					esc_html( $error_message )
+				);
 			}
 
-			wp_send_json_error(
-				array(
-					'error' => esc_html( $error_message ),
-				)
-			);
+			unset( $r );
+
+			return false;
 		}
 
 		/**
@@ -762,6 +808,8 @@ class BB_Topics_Manager {
 		 * @param array $args     The arguments used to add the topic relationship.
 		 */
 		do_action( 'bb_topic_relationship_after_added', $inserted, $r );
+
+		return $inserted;
 	}
 
 	/**
@@ -771,13 +819,14 @@ class BB_Topics_Manager {
 	 *
 	 * @param array $args {
 	 *     Array of arguments for updating a topic relationship.
+	 *
 	 *     @type int    $topic_id         The topic ID. (required)
-	 *     @type int    $item_id          The item ID. (optional, for more specific updates)
+	 *     @type int    $item_id          The item ID. (Optional, for more specific updates)
 	 *     @type string $item_type        The item type. (optional)
 	 *     @type string $permission_type  The new permission type. (optional)
 	 *     @type array  $where            Additional WHERE conditions. (optional)
 	 * }
-	 * @return int|false Number of rows updated, or false on error.
+	 * @return bool|WP_Error
 	 */
 	public function bb_update_topic_relationship( $args ) {
 		$r = bp_parse_args(
@@ -834,20 +883,20 @@ class BB_Topics_Manager {
 			)
 		);
 
-		// If no existing data found or data is the same, return early.
+		// If no existing data is found or data is the same, return early.
 		if ( ! $get_topic_relationship ) {
 			return false;
 		}
 
-		// Check if any values actually changed.
+		// Check if any values changed.
 		$needs_update = false;
 		foreach ( $data as $key => $value ) {
 			// Cast both values to integers for numeric fields.
 			if ( in_array( $key, array( 'topic_id', 'item_id' ), true ) ) {
-				$current_value = isset( $get_topic_relationship->{$key} ) ? (int) $get_topic_relationship->{$key} : 0;
+				$current_value = (int) ( $get_topic_relationship->{$key} ?? 0 );
 				$new_value     = (int) $value;
 			} else {
-				$current_value = isset( $get_topic_relationship->{$key} ) ? $get_topic_relationship->{$key} : '';
+				$current_value = $get_topic_relationship->{$key} ?? '';
 				$new_value     = $value;
 			}
 
@@ -871,14 +920,17 @@ class BB_Topics_Manager {
 		if ( ! $updated ) {
 			$error_message = esc_html__( 'Failed to update topic relationship.', 'buddyboss' );
 			if ( 'wp_error' === $r['error_type'] ) {
-				return new WP_Error( 'bb_topic_relationship_db_updated_error', esc_html( $error_message ) );
+				unset( $r );
+
+				return new WP_Error(
+					'bb_topic_relationship_db_updated_error',
+					esc_html( $error_message )
+				);
 			}
 
-			wp_send_json_error(
-				array(
-					'error' => esc_html( $error_message ),
-				)
-			);
+			unset( $r );
+
+			return false;
 		}
 
 		/**
@@ -902,7 +954,7 @@ class BB_Topics_Manager {
 	 * @param string $field The field to query by ('id' or 'slug').
 	 * @param mixed  $value The value to search for.
 	 *
-	 * @return object|null Topic object on success, null on failure.
+	 * @return object|bool Topic object on success, null on failure.
 	 */
 	public function bb_get_topic_by( $field, $value ) {
 
@@ -931,10 +983,8 @@ class BB_Topics_Manager {
 			return $topic;
 		}
 
-		$sql = $this->wpdb->prepare(
-			"SELECT * FROM {$this->topics_table} WHERE {$field} = %s",
-			$value
-		);
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$sql = $this->wpdb->prepare( "SELECT * FROM {$this->topics_table} WHERE {$field} = %s", $value );
 
 		$topic = $this->wpdb->get_row( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
@@ -1043,7 +1093,7 @@ class BB_Topics_Manager {
 
 		if ( ! empty( $r['item_id'] ) ) {
 			$r['item_id']       = is_array( $r['item_id'] ) ? $r['item_id'] : array( $r['item_id'] );
-			$item_ids           = array_map( 'absint', $r['item_id'] );
+			$item_ids           = wp_parse_id_list( $r['item_id'] );
 			$placeholders       = array_fill( 0, count( $item_ids ), '%d' );
 			$where_conditions[] = $this->wpdb->prepare( 'tr.item_id IN (' . implode( ',', $placeholders ) . ')', $item_ids ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 		}
@@ -1091,25 +1141,25 @@ class BB_Topics_Manager {
 
 		// include.
 		if ( ! empty( $r['include'] ) ) {
-			$include_ids        = implode( ',', array_map( 'absint', $r['include'] ) );
+			$include_ids        = implode( ',', wp_parse_id_list( $r['include'] ) );
 			$where_conditions[] = $this->wpdb->prepare( 'tr.topic_id IN ( %s )', $include_ids );
 		}
 
 		// exclude.
 		if ( ! empty( $r['exclude'] ) ) {
-			$exclude_ids        = implode( ',', array_map( 'absint', $r['exclude'] ) );
+			$exclude_ids        = implode( ',', wp_parse_id_list( $r['exclude'] ) );
 			$where_conditions[] = $this->wpdb->prepare( 'tr.topic_id NOT IN ( %s )', $exclude_ids );
 		}
 
 		/**
-		 * Filters the MySQL WHERE conditions for the activity topics get sql method.
+		 * Filters the MySQL WHERE conditions for the activity topics using the SQL method.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
 		 * @param array  $where_conditions Current conditions for MySQL WHERE statement.
-		 * @param array  $r                Parsed arguments passed into method.
+		 * @param array  $r                Parsed arguments passed into the method.
 		 * @param string $select_sql       Current SELECT MySQL statement at the point of execution.
-		 * @param string $from_sql         Current FROM MySQL statement at point of execution.
+		 * @param string $from_sql         Current FROM MySQL statement at the point of execution.
 		 */
 		$where_conditions = apply_filters( 'bb_get_topics_where_conditions', $where_conditions, $r, $select_sql, $from_sql );
 
@@ -1172,7 +1222,7 @@ class BB_Topics_Manager {
 		 * @since 2.6.00
 		 *
 		 * @param string $poll_votes_sql MySQL's statement used to query for poll votes.
-		 * @param array  $r              Array of arguments passed into method.
+		 * @param array  $r              Array of arguments passed into the method.
 		 */
 		$topic_sql = apply_filters( 'bb_get_topics_sql', $topic_sql, $r );
 
@@ -1190,7 +1240,7 @@ class BB_Topics_Manager {
 
 		if ( 'id' === $r['fields'] ) {
 			// We only want the IDs.
-			$topic_data = array_map( 'intval', $topic_ids );
+			$topic_data = wp_parse_id_list( $topic_ids );
 		} else {
 			$uncached_ids = bp_get_non_cached_ids( $topic_ids, self::$topic_cache_group );
 			if ( ! empty( $uncached_ids ) ) {
@@ -1247,7 +1297,7 @@ class BB_Topics_Manager {
 		if ( ! empty( $r['count_total'] ) ) {
 
 			/**
-			 * Filters the total activity topics MySQL statement.
+			 * Filters the total activity topics in the MySQL statement.
 			 *
 			 * @since BuddyBoss [BBVERSION]
 			 *
@@ -1280,7 +1330,7 @@ class BB_Topics_Manager {
 	}
 
 	/**
-	 * Fetch an existing topic while edit topic modal is open via AJAX.
+	 * Fetch an existing topic while the edit topic modal is open via AJAX.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 */
@@ -1308,8 +1358,8 @@ class BB_Topics_Manager {
 
 		$topic = $this->bb_get_topic( $args );
 
-		if ( ! $topic ) {
-			wp_send_json_error( array( 'error' => __( 'Topic not found.', 'buddyboss' ) ) );
+		if ( is_wp_error( $topic ) ) {
+			wp_send_json_error( array( 'error' => $topic->get_error_message() ) );
 		}
 
 		wp_send_json_success(
@@ -1365,7 +1415,20 @@ class BB_Topics_Manager {
 
 		check_ajax_referer( 'bb_delete_topic', 'nonce' );
 
-		$topic_id = absint( sanitize_text_field( wp_unslash( $_POST['topic_id'] ) ) );
+		$topic_id  = absint( sanitize_text_field( wp_unslash( $_POST['topic_id'] ) ) );
+		$item_id   = isset( $_POST['item_id'] ) ? absint( sanitize_text_field( wp_unslash( $_POST['item_id'] ) ) ) : 0;
+		$item_type = isset( $_POST['item_type'] ) ? sanitize_text_field( wp_unslash( $_POST['item_type'] ) ) : '';
+
+		if ( 'groups' === $item_type ) {
+			$is_global_activity = $this->bb_is_topic_global( $topic_id );
+			if ( $is_global_activity ) {
+				wp_send_json_error(
+					array(
+						'error' => __( 'You cannot delete a global topic.', 'buddyboss' ),
+					)
+				);
+			}
+		}
 
 		$deleted = $this->bb_delete_topic( $topic_id );
 
@@ -1479,7 +1542,7 @@ class BB_Topics_Manager {
 		}
 		$topics_count = $this->bb_get_topics( $args );
 
-		return is_array( $topics_count ) && isset( $topics_count['total'] ) ? $topics_count['total'] >= $this->bb_topics_limit() : false;
+		return is_array( $topics_count ) && isset( $topics_count['total'] ) && $topics_count['total'] >= $this->bb_topics_limit();
 	}
 
 	/**
@@ -1510,11 +1573,11 @@ class BB_Topics_Manager {
 
 		check_ajax_referer( 'bb_update_topics_order', 'nonce' );
 
-		$topic_ids = array_map( 'absint', $_POST['topic_ids'] );
+		$topic_ids = wp_parse_id_list( wp_unslash( $_POST['topic_ids'] ) );
 
 		$success = true;
 
-		// Update each topic with its new order in the relationships table.
+		// Update each topic with its new order in the relationship table.
 		foreach ( $topic_ids as $position => $topic_id ) {
 			$result = $this->wpdb->update(
 				$this->topic_rel_table,
@@ -1547,7 +1610,12 @@ class BB_Topics_Manager {
 	 * @return string The permission type for the topic.
 	 */
 	public function bb_get_topic_permission_type( $topic_id ) {
-		$topic_permission_type = $this->wpdb->get_var( $this->wpdb->prepare( "SELECT permission_type FROM {$this->topic_rel_table} WHERE topic_id = %d", $topic_id ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+		if ( empty( $topic_id ) ) {
+			return 'anyone';
+		}
+
+		// phpcs:ignore
+		$topic_permission_type = $this->wpdb->get_var( $this->wpdb->prepare( "SELECT permission_type FROM {$this->topic_rel_table} WHERE topic_id = %d", $topic_id ) );
 
 		if ( ! $topic_permission_type ) {
 			return 'anyone';
@@ -1557,7 +1625,7 @@ class BB_Topics_Manager {
 	}
 
 	/**
-	 * Allow to load scripts only when needed.
+	 * Allow loading scripts only when needed.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 */
@@ -1569,7 +1637,7 @@ class BB_Topics_Manager {
 			(
 				$is_enabled_activity && // Activity is active.
 				(
-					// If groups is active.
+					// If the groups component is active.
 					(
 						$is_enabled_groups &&
 						! bp_is_activity_directory() &&
@@ -1578,7 +1646,7 @@ class BB_Topics_Manager {
 						! bp_is_group_activity() &&
 						! bp_is_user_activity()
 					) ||
-					// If groups is not active.
+					// If the groups component is not active.
 					(
 						! $is_enabled_groups &&
 						! bp_is_activity_directory()
