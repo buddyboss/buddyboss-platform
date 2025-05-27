@@ -3709,6 +3709,7 @@ div#bp-group-message-content {
 }
 
 .bb-rl-learndash-course {
+  display: table;
   max-width: 1032px;
   margin: 0 auto;
 }
@@ -3718,7 +3719,7 @@ div#bp-group-message-content {
   padding: var(--bb-rl-space-500) var(--bb-rl-space-600);
   border: 1px solid var(--bb-rl-border-secondary-color);
   border-radius: var(--bb-rl-radius-lg);
-  margin-bottom: var(--bb-rl-space-400);
+  margin: var(--bb-rl-space-400) 0;
 }
 
 .bb-rl-course-banner {
@@ -3727,6 +3728,8 @@ div#bp-group-message-content {
 
 .bb-rl-course-banner .bb-rl-course-overview {
   flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .bb-rl-course-banner .bb-rl-course-figure {
@@ -3739,6 +3742,76 @@ div#bp-group-message-content {
   line-height: 30px;
   color: var(--bb-rl-text-color);
   margin-bottom: var(--bb-rl-space-100);
+}
+
+.bb-rl-course-banner .bb-rl-course-meta {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.bb-rl-course-banner .bb-rl-meta-item {
+  margin-bottom: var(--bb-rl-space-200);
+}
+
+.bb-rl-course-banner .bb-rl-author-name {
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 500;
+}
+
+.bb-rl-course-banner .bb-rl-author-name .bb-rl-author-name-label {
+  color: var(--bb-rl-text-secondary-color);
+}
+
+.bb-rl-course-banner .bb-rl-course-enrolled-date {
+  font-size: 14px;
+  color: var(--bb-rl-text-secondary-color);
+}
+
+.bb-rl-course-banner .bb-rl-course-enrolled-date strong {
+  color: var(--bb-rl-text-color);
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 600;
+}
+
+.bb-rl-course-banner .bb-rl-course-status {
+  margin-top: auto;
+}
+
+.bb-rl-course-banner .bb-rl-price {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--bb-rl-text-color);
+}
+
+.bb-rl-course-details {
+  display: flex;
+  gap: var(--bb-rl-space-200);
+  justify-content: space-between;
+  margin-top: var(--bb-rl-space-600);
+}
+
+.bb-rl-course-details .bb-rl-course-details-item {
+  display: flex;
+  align-items: center;
+  gap: var(--bb-rl-space-200);
+}
+
+.bb-rl-course-details .bb-rl-course-details-item i {
+  color: var(--bb-rl-icon-color);
+  font-size: 40px;
+}
+
+.bb-rl-course-details .bb-rl-course-details-item .bb-rl-course-details-label {
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 400;
+  color: var(--bb-rl-text-secondary-color);
+}
+
+.bb-rl-course-details .bb-rl-course-details-item .bb-rl-course-details-value {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--bb-rl-text-color);
 }
 
 .bb-rl-course-featured-image img {

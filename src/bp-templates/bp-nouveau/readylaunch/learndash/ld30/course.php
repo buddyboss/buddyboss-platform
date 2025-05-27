@@ -36,6 +36,7 @@ $course_status = learndash_course_status( $course_id, $user_id );
 // Get course steps
 $course_steps = learndash_get_course_steps( $course_id );
 $lessons = learndash_get_course_lessons_list( $course_id );
+$lesson_count = array_column( $lessons, 'post' );
 ?>
 
 <div class="bb-learndash-content-wrap">
@@ -46,6 +47,14 @@ $lessons = learndash_get_course_lessons_list( $course_id );
 					<div class="bb-rl-course-overview">
 						<h1 class="bb-rl-entry-title"><?php the_title(); ?></h1>
 						<div class="bb-rl-course-meta">
+							<div class="bb-rl-meta-item">
+								<div class="bb-rl-author-name">
+									<?php echo '<span class="bb-rl-author-name-label">' . esc_html__( 'By', 'buddyboss' ) . '</span> ' . get_the_author_meta( 'first_name', $course->post_author ); ?>
+								</div>
+							</div>
+							<div class="bb-rl-meta-item bb-rl-course-enrolled-date">
+								<?php echo esc_html__( 'You enrolled this course on ', 'buddyboss' ); ?> <strong>20 June, 2024</strong> <!-- TODO: Add dynamic enrolled date -->
+							</div>
 							<?php if ( $is_enrolled ) : ?>
 								<div class="bb-rl-course-status">
 									<?php if ( ! empty( $course_progress ) ) : ?>
@@ -63,7 +72,7 @@ $lessons = learndash_get_course_lessons_list( $course_id );
 									<?php if ( ! empty( $course_price['type'] ) && 'open' === $course_price['type'] ) : ?>
 										<span class="bb-rl-price bb-rl-free"><?php esc_html_e( 'Free', 'buddyboss' ); ?></span>
 									<?php elseif ( ! empty( $course_price['type'] ) && 'paynow' === $course_price['type'] ) : ?>
-										<span class="bb-rl-price"><?php echo sprintf( esc_html__( 'Price: %s', 'buddyboss' ), esc_html( $course_price['price'] ) ); ?></span>
+										<span class="bb-rl-price"><?php echo esc_html( $course_price['price'] ); ?></span>
 									<?php elseif ( ! empty( $course_price['type'] ) && 'subscribe' === $course_price['type'] ) : ?>
 										<span class="bb-rl-price"><?php echo sprintf( esc_html__( 'Subscription: %s', 'buddyboss' ), esc_html( $course_price['price'] ) ); ?></span>
 									<?php endif; ?>
@@ -77,6 +86,44 @@ $lessons = learndash_get_course_lessons_list( $course_id );
 								<?php the_post_thumbnail( 'full' ); ?>
 							</div>
 						<?php endif; ?>
+					</div>
+				</div>
+
+				<div class="bb-rl-course-details">
+					<div class="bb-rl-course-details-item">
+						<i class="bb-icons-rl-book-open-text"></i>
+						<div>
+							<div class="bb-rl-course-details-label">
+								<?php esc_html_e( 'Lesson', 'buddyboss' ); ?>
+							</div>
+							<div class="bb-rl-course-details-value">
+								<?php echo esc_html( sizeof( $lesson_count ) ); ?>
+							</div>
+						</div>
+					</div>
+
+					<div class="bb-rl-course-details-item">
+						<i class="bb-icons-rl-student"></i>
+						<div>
+							<div class="bb-rl-course-details-label">
+								<?php esc_html_e( 'Enrolled', 'buddyboss' ); ?>
+							</div>
+							<div class="bb-rl-course-details-value">
+								<?php echo esc_html( sizeof( $lesson_count ) ); ?>
+							</div>
+						</div>
+					</div>
+
+					<div class="bb-rl-course-details-item">
+						<i class="bb-icons-rl-arrows-clockwise"></i>
+						<div>
+							<div class="bb-rl-course-details-label">
+								<?php esc_html_e( 'Update', 'buddyboss' ); ?>
+							</div>
+							<div class="bb-rl-course-details-value">
+								<?php echo get_the_modified_date(); ?>
+							</div>
+						</div>
 					</div>
 				</div>
 			</header>
