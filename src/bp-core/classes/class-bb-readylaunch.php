@@ -2329,7 +2329,10 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			if (
 				(
 					! bp_is_user() &&
-					! bp_is_group()
+					! bp_is_group() &&
+					! bp_is_groups_directory() &&
+					! bp_is_group_single() &&
+					! bp_is_group_create()
 				) &&
 				isset( $_SERVER['REQUEST_URI'] )
 			) {
@@ -2342,7 +2345,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					}
 				}
 				
-				// Additional patterns to check for LearnDash URLs
+				// Additional patterns to check for LearnDash URLs (excluding BuddyPress patterns)
 				$ld_patterns = array(
 					'/lesson/',
 					'/lessons/',
@@ -2355,13 +2358,13 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					'/assignment/',
 					'/assignments/',
 					'/essays/',
-					'/groups/',
 					'sfwd-lessons',
 					'sfwd-courses',
 					'sfwd-topic',
 					'sfwd-quiz',
 					'sfwd-assignment',
 					'sfwd-essays',
+					'sfwd-groups', // Use specific LearnDash group slug
 				);
 				
 				foreach ( $ld_patterns as $pattern ) {

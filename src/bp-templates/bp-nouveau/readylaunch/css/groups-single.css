@@ -3820,6 +3820,34 @@ div#bp-group-message-content {
   border-radius: var(--bb-rl-radius-lg);
 }
 
+.bb-rl-learndash-lesson {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: var(--bb-rl-space-400) 0;
+}
+
+.bb-rl-learndash-lesson .bb-rl-entry-header {
+  margin: 0 0 var(--bb-rl-space-300);
+}
+
+.bb-rl-learndash-lesson .bb-rl-heading {
+  margin: 0 0 var(--bb-rl-space-200);
+}
+
+.bb-rl-learndash-lesson .bb-rl-entry-title {
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 30px;
+  color: var(--bb-rl-text-color);
+}
+
+.bb-rl-lesson-featured-image img {
+  width: 100%;
+  height: auto;
+  border-radius: var(--bb-rl-radius-lg);
+  object-fit: cover;
+}
+
 .bb-readylaunch-template .bb-courses-header .grid-filters {
   display: flex;
   align-items: center;

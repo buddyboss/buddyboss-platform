@@ -46,7 +46,9 @@ $next_lesson = function_exists( 'learndash_get_next_lesson' ) ? learndash_get_ne
 	<main class="bb-learndash-content-area">
 		<article id="post-<?php the_ID(); ?>" <?php post_class('bb-rl-learndash-lesson'); ?>>
 			<header class="bb-rl-entry-header">
-				<h1 class="bb-rl-entry-title"><?php the_title(); ?></h1>
+                <div class="bb-rl-heading">
+				    <h1 class="bb-rl-entry-title"><?php the_title(); ?></h1>
+                </div>
 
 				<?php if ( has_post_thumbnail() ) : ?>
 					<div class="bb-rl-lesson-featured-image">
