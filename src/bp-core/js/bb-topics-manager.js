@@ -222,6 +222,7 @@ window.bp = window.bp || {};
 							this.$el.find( '.bb-topic-selector-button' ).text( topicName );
 							this.$el.removeClass( 'is-active' );
 
+							this.$el.find( '.bb-topic-selector-list li a' ).removeClass( 'selected' );
 							this.$el.find( '.bb-topic-selector-list li a[data-topic-id="' + topicId + '"]' ).addClass( 'selected' );
 
 							// Trigger input event on #whats-new to trigger postValidate.
