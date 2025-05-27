@@ -520,8 +520,8 @@ window.bp = window.bp || {};
 				data.target = '#buddypress [data-bp-list] ul.bp-list:not(#bb-media-model-container ul.bp-list)';
 			}
 
-			// if object is members, media, document and object nav does not exists fallback to scope = all.
-			if ( [ 'members', 'media', 'activity', 'document' ].includes( data.object ) && ! $( this.objectNavParent + ' [data-bp-scope="' + data.scope + '"]' ).length ) {
+			// if object is members, media, document, video, groups and object nav does not exists fallback to scope = all.
+			if ( [ 'members', 'media', 'activity', 'document', 'video', 'groups' ].includes( data.object ) && ! $( this.objectNavParent + ' [data-bp-scope="' + data.scope + '"]' ).length ) {
 				data.scope = 'all';
 
 				if ( 'activity' === data.object ) {
