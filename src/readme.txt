@@ -57,6 +57,14 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 2.8.70 =
+* Bug: Activity - Fixed issue where changing the activity post’s privacy incorrectly updated the posting date. The original date now remains unchanged
+* Bug: Activity - Fixed issue where emoji functionality wasn’t working in all areas due to JS files
+* Bug: Activity - Fixed issue where Follow/Unfollow functionality did not work when accessing user profiles from the Activity Feed
+* Bug: Groups - Fixed @mention issue in Hidden and Private groups, only group members can now be tagged
+* Bug: Groups - Fixed issue with the "Select Multiple Videos" feature, enabling associated actions like delete on the user's profile page and group page
+* Bug: Media - Fixed issue where video count showed as undefined when videos page, group videos, or user videos page were opened directly via URL
+
 = 2.8.61 =
 * Bug: Groups - Fixed an issue where regular group post activity headers incorrectly displayed post content instead of showing only basic activity details
 
