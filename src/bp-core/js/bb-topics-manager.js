@@ -200,14 +200,24 @@ window.bp = window.bp || {};
 						selectTopic : function ( event ) {
 							event.preventDefault();
 
-							var topicId   = $( event.currentTarget ).data( 'topic-id' );
+							var topicId   = parseInt( $( event.currentTarget ).data( 'topic-id' ) );
 							var topicName = $( event.currentTarget ).text().trim();
 
-							this.model.set( 'topics', {
-								topic_id    : topicId,
-								topic_name  : topicName,
-								topic_lists : this.model.get( 'topics' ).topic_lists
-							} );
+							if ( 0 === topicId ) {
+								this.model.set('topics', {
+									topic_id: 0,
+									topic_name: '', // This will trigger the template to show "Select Topic"
+									topic_lists: this.model.get('topics').topic_lists
+								});
+								topicName = this.$el.find( '.bb-topic-selector-button' ).data( 'select-topic-text' );
+							} else {
+								this.model.set('topics', {
+									topic_id: topicId,
+									topic_name: topicName,
+									topic_lists: this.model.get('topics').topic_lists
+								});
+								topicName = topicName;
+							}
 
 							this.$el.find( '.bb-topic-selector-button' ).text( topicName );
 							this.$el.removeClass( 'is-active' );
