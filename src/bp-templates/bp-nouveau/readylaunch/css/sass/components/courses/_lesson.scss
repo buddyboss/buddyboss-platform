@@ -1,5 +1,5 @@
 .bb-rl-learndash-lesson {
-	
+
 	.bb-rl-lesson-footer {
 		position: fixed;
 		bottom: 0;
@@ -12,7 +12,7 @@
 
 	.bb-rl-lesson-actions {
 		max-width: 800px;
-		margin: 0 auto;	
+		margin: 0 auto;
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
@@ -42,22 +42,26 @@
 	}
 
 	.bb-rl-entry-title {
+
 		@include bb-rl-base-heading-2xl;
 		color: var(--bb-rl-text-color);
 	}
 
 	.bb-rl-entry-content {
+
 		@include bb-rl-label-heading-md-thin;
 		color: var(--bb-rl-text-secondary-color);
 	}
 }
 
 .bb-rl-lesson-count {
+
 	@include bb-rl-label-heading;
 	color: var(--bb-rl-text-secondary-color);
 }
 
 .bb-rl-lesson-featured-image {
+
 	img {
 		width: 100%;
 		height: auto;
@@ -68,13 +72,18 @@
 
 .bb-rl-lesson-actions {
 
+	.learndash_next_prev_link {
+		display: flex;
+		gap: var(--bb-rl-space-200);
+		align-items: center;
+	}
+
 	a.prev-link,
 	a.next-link {
 
 		@include bb-rl-button;
 		@include bb-rl-button-secondary-fill;
 		@include bb-rl-button--small;
-		display: inline-flex;
 		gap: var(--bb-rl-space-50);
 	}
 
@@ -84,7 +93,6 @@
 		@include bb-rl-button;
 		@include bb-rl-button--secondary-outline;
 		@include bb-rl-button--small;
-		display: inline-flex;
 		gap: var(--bb-rl-space-50);
 		cursor: default;
 		pointer-events: none;

@@ -858,6 +858,12 @@
   object-fit: cover;
 }
 
+.bb-rl-lesson-actions .learndash_next_prev_link {
+  display: flex;
+  gap: var(--bb-rl-space-200);
+  align-items: center;
+}
+
 .bb-rl-lesson-actions a.prev-link,
 .bb-rl-lesson-actions a.next-link {
   display: inline-flex;
@@ -875,7 +881,6 @@
   border: 1px solid transparent;
   padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
   font-size: 0.875rem;
-  display: inline-flex;
   gap: var(--bb-rl-space-50);
 }
 
@@ -913,7 +918,6 @@
   border: 1px solid var(--bb-rl-border-tertiary-color);
   padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
   font-size: 0.875rem;
-  display: inline-flex;
   gap: var(--bb-rl-space-50);
   cursor: default;
   pointer-events: none;

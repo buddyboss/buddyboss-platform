@@ -36,6 +36,14 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		public $settings = array();
 
 		/**
+		 * LearnDash helper instance.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 * @var BB_Readylaunch_Learndash_Helper
+		 */
+		protected $learndash_helper = null;
+
+		/**
 		 * Get the instance of this class.
 		 *
 		 * @since BuddyBoss [BBVERSION]
@@ -2598,6 +2606,20 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				// Default to courses archive
 				bp_get_template_part( 'learndash/ld30/archive-sfwd-courses' );
 			}
+		}
+
+		/**
+		 * Get the LearnDash helper instance.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return BB_Readylaunch_Learndash_Helper
+		 */
+		public function learndash_helper() {
+			if ( is_null( $this->learndash_helper ) ) {
+				$this->learndash_helper = BB_Readylaunch_Learndash_Helper::instance();
+			}
+			return $this->learndash_helper;
 		}
 	}
 }
