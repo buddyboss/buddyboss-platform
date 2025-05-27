@@ -147,14 +147,10 @@ $lesson_count = array_column( $lessons, 'post' );
 					</div>
 				</div>
 			</header>
-
-			<div class="bb-rl-entry-content">
-				<?php the_content(); ?>
-			</div>
 			
 			<?php if ( ! empty( $lessons ) ) : ?>
 				<div class="bb-rl-course-content">
-					<h3><?php esc_html_e( 'Course Content', 'buddyboss' ); ?></h3>
+					<h2><?php esc_html_e( 'Course Content', 'buddyboss' ); ?></h2>
 					
 					<div class="bb-rl-lessons-list">
 						<?php foreach ( $lessons as $lesson ) : ?>
@@ -179,6 +175,11 @@ $lesson_count = array_column( $lessons, 'post' );
 					</div>
 				</div>
 			<?php endif; ?>
+
+			<div class="bb-rl-entry-content">
+				<h2><?php esc_html_e( 'About course', 'buddyboss' ); ?></h2>
+				<?php the_content(); ?>
+			</div>
 			
 			<?php if ( ! $is_enrolled ) : ?>
 				<div class="bb-rl-course-join">

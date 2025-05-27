@@ -3843,6 +3843,20 @@ div#bp-group-message-content {
   border-radius: var(--bb-rl-radius-lg);
 }
 
+.bb-rl-entry-content h2 {
+  font-size: var(--bb-rl-font-size-base);
+  font-weight: 600;
+  line-height: var(--bb-rl-base-line);
+  margin-bottom: var(--bb-rl-space-200);
+}
+
+.bb-rl-entry-content p {
+  color: var(--bb-rl-text-secondary-color);
+  font-size: 14px;
+  font-weight: 400;
+  margin-bottom: var(--bb-rl-space-200);
+}
+
 .bb-rl-learndash-lesson {
   max-width: 800px;
   margin: 0 auto;

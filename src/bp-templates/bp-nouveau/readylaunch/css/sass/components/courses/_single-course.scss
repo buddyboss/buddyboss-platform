@@ -134,3 +134,18 @@
 		border-radius: var(--bb-rl-radius-lg);
 	}
 }
+
+.bb-rl-entry-content {
+
+	h2 {
+		@include bb-rl-base-heading-bolder;
+		margin-bottom: var(--bb-rl-space-200);
+	}
+
+	p {
+		color: var(--bb-rl-text-secondary-color);
+		font-size: 14px;
+		font-weight: 400;
+		margin-bottom: var(--bb-rl-space-200);
+	}
+}
