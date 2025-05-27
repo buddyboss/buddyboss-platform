@@ -40,65 +40,113 @@ $lesson_status = function_exists( 'learndash_lesson_status' ) ? learndash_lesson
 $topics = function_exists( 'learndash_get_topic_list' ) ? learndash_get_topic_list( $lesson_id, $user_id ) : array();
 $prev_lesson = function_exists( 'learndash_get_previous_lesson' ) ? learndash_get_previous_lesson( $lesson_id ) : null;
 $next_lesson = function_exists( 'learndash_get_next_lesson' ) ? learndash_get_next_lesson( $lesson_id ) : null;
+
+$lesson_list = learndash_get_course_lessons_list( $course_id, null, array( 'num' => - 1 ) );
+$lesson_list = array_column( $lesson_list, 'post' );
+$lesson_topics_completed = learndash_lesson_topics_completed( $post->ID );
+$content_urls            = buddyboss_theme()->learndash_helper()->buddyboss_theme_ld_custom_pagination( $course_id, $lesson_list );
+$pagination_urls         = buddyboss_theme()->learndash_helper()->buddyboss_theme_custom_next_prev_url( $content_urls );
+
+$lesson_no = 1;
+foreach ( $lesson_list as $les ) {
+    if ( $les->ID == $post->ID ) {
+        break;
+    }
+    $lesson_no ++;
+}
 ?>
 
-<div class="bb-learndash-content-wrap">
+<div class="bb-learndash-content-wrap bb-learndash-content-wrap--lesson">
 	<main class="bb-learndash-content-area">
 		<article id="post-<?php the_ID(); ?>" <?php post_class('bb-rl-learndash-lesson'); ?>>
-			<header class="bb-rl-entry-header">
-                <div class="bb-rl-heading">
-				    <h1 class="bb-rl-entry-title"><?php the_title(); ?></h1>
+            <div class="bb-rl-lesson-block">
+                <header class="bb-rl-entry-header">
+                    <div class="bb-rl-heading">
+                        <div class="bb-rl-lesson-count">
+                            <span class="bb-pages"><?php echo LearnDash_Custom_Label::get_label( 'lesson' ); ?> <?php echo $lesson_no; ?> <span class="bb-total"><?php esc_html_e( 'of', 'buddyboss' ); ?> <?php echo count( $lesson_list ); ?></span></span>
+                        </div>
+                        <div class="bb-rl-lesson-title">
+                            <h1 class="bb-rl-entry-title"><?php the_title(); ?></h1>
+                        </div>
+                    </div>
+
+                    <?php if ( has_post_thumbnail() ) : ?>
+                        <div class="bb-rl-lesson-featured-image">
+                            <?php the_post_thumbnail( 'full' ); ?>
+                        </div>
+                    <?php endif; ?>
+
+                    <div class="bb-rl-lesson-meta">
+                        <?php if ( $is_enrolled ) : ?>
+                            <div class="bb-rl-lesson-status">
+                                <span class="bb-rl-status bb-rl-enrolled"><?php echo esc_html( $lesson_status ); ?></span>
+                                <?php if ( ! empty( $lesson_progress ) ) : ?>
+                                    <div class="bb-rl-lesson-progress">
+                                        <div class="bb-rl-progress-bar">
+                                            <div class="bb-rl-progress" style="width: <?php echo (int) $lesson_progress['percentage']; ?>%"></div>
+                                        </div>
+                                        <span class="bb-rl-percentage"><?php echo (int) $lesson_progress['percentage']; ?>% <?php esc_html_e( 'Complete', 'buddyboss' ); ?></span>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+                </header>
+
+                <div class="bb-rl-entry-content">
+                    <?php the_content(); ?>
                 </div>
 
-				<?php if ( has_post_thumbnail() ) : ?>
-					<div class="bb-rl-lesson-featured-image">
-						<?php the_post_thumbnail( 'full' ); ?>
-					</div>
-				<?php endif; ?>
+                <?php if ( ! empty( $topics ) ) : ?>
+                    <div class="bb-rl-lesson-topics">
+                        <h3><?php esc_html_e( 'Lesson Topics', 'buddyboss' ); ?></h3>
+                        <ul class="bb-rl-topics-list">
+                            <?php foreach ( $topics as $topic ) : ?>
+                                <li class="bb-rl-topic-item">
+                                    <a href="<?php echo esc_url( get_permalink( $topic->ID ) ); ?>" class="bb-rl-topic-link">
+                                        <?php echo esc_html( $topic->post_title ); ?>
+                                    </a>
+                                </li>
+                            <?php endforeach; ?>
+                        </ul>
+                    </div>
+                <?php endif; ?>
+            </div>
 
-				<div class="bb-rl-lesson-meta">
-					<?php if ( $is_enrolled ) : ?>
-						<div class="bb-rl-lesson-status">
-							<span class="bb-rl-status bb-rl-enrolled"><?php echo esc_html( $lesson_status ); ?></span>
-							<?php if ( ! empty( $lesson_progress ) ) : ?>
-								<div class="bb-rl-lesson-progress">
-									<div class="bb-rl-progress-bar">
-										<div class="bb-rl-progress" style="width: <?php echo (int) $lesson_progress['percentage']; ?>%"></div>
-									</div>
-									<span class="bb-rl-percentage"><?php echo (int) $lesson_progress['percentage']; ?>% <?php esc_html_e( 'Complete', 'buddyboss' ); ?></span>
-								</div>
-							<?php endif; ?>
-						</div>
-					<?php endif; ?>
-				</div>
-			</header>
-
-			<div class="bb-rl-entry-content">
-				<?php the_content(); ?>
-			</div>
-
-			<?php if ( ! empty( $topics ) ) : ?>
-				<div class="bb-rl-lesson-topics">
-					<h3><?php esc_html_e( 'Lesson Topics', 'buddyboss' ); ?></h3>
-					<ul class="bb-rl-topics-list">
-						<?php foreach ( $topics as $topic ) : ?>
-							<li class="bb-rl-topic-item">
-								<a href="<?php echo esc_url( get_permalink( $topic->ID ) ); ?>" class="bb-rl-topic-link">
-									<?php echo esc_html( $topic->post_title ); ?>
-								</a>
-							</li>
-						<?php endforeach; ?>
-					</ul>
-				</div>
-			<?php endif; ?>
-
-			<nav class="bb-rl-lesson-navigation">
-				<?php if ( $prev_lesson ) : ?>
-					<a href="<?php echo esc_url( get_permalink( $prev_lesson->ID ) ); ?>" class="bb-rl-prev-lesson"><?php esc_html_e( 'Previous Lesson', 'buddyboss' ); ?></a>
-				<?php endif; ?>
-				<?php if ( $next_lesson ) : ?>
-					<a href="<?php echo esc_url( get_permalink( $next_lesson->ID ) ); ?>" class="bb-rl-next-lesson"><?php esc_html_e( 'Next Lesson', 'buddyboss' ); ?></a>
-				<?php endif; ?>
+			<nav class="bb-rl-lesson-footer">
+                <div class="bb-rl-lesson-actions">
+                    <div class="bb-rl-lesson-count">
+                        <span class="bb-pages"><?php echo LearnDash_Custom_Label::get_label( 'lesson' ); ?> <?php echo $lesson_no; ?> <span class="bb-total"><?php esc_html_e( 'of', 'buddyboss' ); ?> <?php echo count( $lesson_list ); ?></span></span>
+                    </div>
+                    <div class="learndash_next_prev_link">
+                        <?php
+                        if ( isset( $pagination_urls['prev'] ) && $pagination_urls['prev'] != '' ) {
+                            echo $pagination_urls['prev'];
+                        } else {
+                            echo '<span class="prev-link empty-post"><i class="bb-icons-rl-caret-left"></i>' . esc_html__( 'Previous', 'buddyboss' ) . '</span>';
+                        }
+                        ?>
+                        <?php
+                        if (
+                            (
+                                isset( $pagination_urls['next'] ) &&
+                                apply_filters( 'learndash_show_next_link', learndash_is_lesson_complete( $user_id, $post->ID ), $user_id, $post->ID ) &&
+                                $pagination_urls['next'] != ''
+                            ) ||
+                            (
+                                isset( $pagination_urls['next'] ) &&
+                                $pagination_urls['next'] != '' &&
+                                isset( $course_settings['course_disable_lesson_progression'] ) &&
+                                $course_settings['course_disable_lesson_progression'] === 'on'
+                            )
+                        ) {
+                            echo $pagination_urls['next'];
+                        } else {
+                            echo '<span class="next-link empty-post">' . esc_html__( 'Next Lesson', 'buddyboss' ) . '<i class="bb-icons-rl-caret-right"></i></span>';
+                        }
+                        ?>
+                    </div>
+                </div>
 			</nav>
 		</article>
 	</main>
