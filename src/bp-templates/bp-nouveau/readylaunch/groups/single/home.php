@@ -115,11 +115,13 @@ if ( bp_has_groups() ) {
 							</div><!-- #item-body -->
 						</div>
 
-						<div class="bb-rl-secondary-container">
-							<?php
-								bp_get_template_part( 'sidebar/right-sidebar' );
-							?>
-						</div>
+						<?php if ( ! BB_Readylaunch::bb_is_group_admin() ) { ?>
+							<div class="bb-rl-secondary-container">
+								<?php
+									bp_get_template_part( 'sidebar/right-sidebar' );
+								?>
+							</div>
+						<?php } ?>
 					</div>
 				</div><!-- // .bb-rl-group-details -->
 			</div>
