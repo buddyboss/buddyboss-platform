@@ -361,8 +361,6 @@ module.exports = function (grunt) {
 						'!**/vendor/*.js',
 						'!**/lib/*.js',
 						'!**/*.min.js',
-						'!**/emojione-edited.js',
-						'!**/emojionearea-edited.js',
 						'!**/node_modules/**/*.js',
 						'!**/endpoints/**/*.js',
 						'!**/js/lib/Chart.js',
