@@ -367,7 +367,10 @@ window.bp = window.bp || {};
 			}
 
 			$( 'body' ).addClass( this.config.modalOpenClass );
-
+			
+			// Remove any existing error messages.
+			this.$modal.find(this.config.errorContainerSelector).remove();
+			
 			// Clear form fields.
 			this.$topicName.val( '' );
 			this.$topicId.val( '' );
@@ -498,6 +501,9 @@ window.bp = window.bp || {};
 			this.$topicWhoCanPost.prop( 'checked', false );
 			this.$topicId.val( '' );
 			$( '#bb_is_global_activity' ).val( '' );
+			this.$topicName.prop( 'readonly', false );
+			this.$topicName.prop( 'disabled', false );
+
 			// Trigger modal closed event.
 			$( document ).trigger( 'bb_modal_closed', [this.$modal] );
 		},

@@ -301,6 +301,7 @@ class BB_Topics_Manager {
 					'permission_type' => $permission_type,
 					'item_id'         => $item_id,
 					'item_type'       => $item_type,
+					'error_type'      => 'wp_error',
 				)
 			);
 		} else {
@@ -312,12 +313,13 @@ class BB_Topics_Manager {
 					'permission_type' => $permission_type,
 					'item_type'       => $item_type,
 					'item_id'         => $item_id,
+					'error_type'      => 'wp_error',
 				)
 			);
 		}
 
-		if ( ! $topic_data ) {
-			wp_send_json_error( array( 'error' => __( 'Failed to add topic.', 'buddyboss' ) ) );
+		if ( is_wp_error( $topic_data ) ) {
+			wp_send_json_error( array( 'error' => $topic_data->get_error_message() ) );
 		}
 
 		if ( 'activity' === $item_type ) {
@@ -377,11 +379,7 @@ class BB_Topics_Manager {
 
 			unset( $r );
 
-			wp_send_json_error(
-				array(
-					'error' => $error_message,
-				)
-			);
+			return false;
 		}
 
 		/**
@@ -414,11 +412,7 @@ class BB_Topics_Manager {
 
 			unset( $r );
 
-			wp_send_json_error(
-				array(
-					'error' => esc_html( $error_message ),
-				)
-			);
+			return false;
 		}
 
 		// Check if we've reached the maximum number of topics (20).
@@ -432,11 +426,7 @@ class BB_Topics_Manager {
 
 			unset( $r );
 
-			wp_send_json_error(
-				array(
-					'error' => esc_html( $error_message ),
-				)
-			);
+			return false;
 		}
 
 		$existing_slug = $this->bb_get_topic_by( 'slug', $r['slug'] );
@@ -452,8 +442,16 @@ class BB_Topics_Manager {
 			// Use the updated table name property.
 			$inserted = $this->wpdb->insert( $this->topics_table, $data, $format );
 
-			if ( ! $inserted ) {
-				return new WP_Error( 'bb_topic_db_insert_error', $this->wpdb->last_error );
+			if ( is_wp_error( $inserted ) ) {
+				if ( 'wp_error' === $r['error_type'] ) {
+					unset( $r );
+
+					return new WP_Error( 'bb_topic_db_insert_error', $this->wpdb->last_error );
+				}
+
+				unset( $r );
+
+				return false;
 			}
 
 			$topic_id = $this->wpdb->insert_id;
@@ -500,6 +498,13 @@ class BB_Topics_Manager {
 				'item_type' => $r['item_type'],
 			)
 		);
+
+		if ( empty( $get_topic_relationship ) ) {
+			return new WP_Error(
+				'bb_topic_relationship_not_found',
+				esc_html__( 'Topic relationship not found.', 'buddyboss' )
+			);
+		}
 
 		/**
 		 * Fires after a topic has been added.
@@ -573,11 +578,18 @@ class BB_Topics_Manager {
 		$existing_topic = $this->bb_get_topic_by( 'slug', $slug );
 		if ( ! $existing_topic ) { // NO.
 			if ( $is_global_activity && 'groups' === $item_type ) {
-				wp_send_json_error(
-					array(
-						'error' => esc_html__( 'You cannot assign or update a global topic under a group.', 'buddyboss' ),
-					)
-				);
+				if ( 'wp_error' === $r['error_type'] ) {
+					unset( $r, $existing_topic, $previous_topic, $is_global_activity, $item_type, $item_id, $permission_type );
+
+					return new WP_Error(
+						'bb_topic_global_activity_group',
+						esc_html__( 'You cannot assign or update a global topic under a group.', 'buddyboss' )
+					);
+				}
+
+				unset( $r );
+
+				return false;
 			}
 			// Case: Name doesn't exist - create new topic.
 			$topic_data = $this->bb_add_topic(
@@ -608,11 +620,18 @@ class BB_Topics_Manager {
 
 				if ( $existing_relationship ) {
 					// Error: Topic already exists with this relationship.
-					wp_send_json_error(
-						array(
-							'error' => esc_html__( 'This topic name is already in use. Please enter a unique topic name.', 'buddyboss' ),
-						)
-					);
+					if ( 'wp_error' === $r['error_type'] ) {
+						unset( $r, $existing_topic, $previous_topic, $is_global_activity, $item_type, $item_id, $permission_type );
+
+						return new WP_Error(
+							'bb_topic_duplicate_slug',
+							esc_html__( 'This topic name is already in use. Please enter a unique topic name.', 'buddyboss' )
+						);
+					}
+
+					unset( $r );
+
+					return false;
 				} else {
 					// Update relationships.
 					$this->bb_update_topic_relationship(
@@ -661,6 +680,13 @@ class BB_Topics_Manager {
 					'item_type' => $item_type,
 				)
 			);
+
+			if ( empty( $topic_data ) ) {
+				return new WP_Error(
+					'bb_topic_relationship_not_found',
+					esc_html__( 'Topic relationship not found.', 'buddyboss' )
+				);
+			}
 		}
 
 		/**
@@ -694,6 +720,8 @@ class BB_Topics_Manager {
 	 * @type string $date_created    The date created.
 	 * @type string $date_updated    The date updated.
 	 * }
+	 *
+	 * @return int|bool|WP_Error The number of rows inserted on success, false on failure, WP_Error on error.
 	 */
 	public function bb_add_topic_relationship( $args ) {
 		$r = bp_parse_args(
@@ -711,6 +739,20 @@ class BB_Topics_Manager {
 				'error_type'      => 'bool',
 			)
 		);
+
+		if ( empty( $r['topic_id'] ) ) {
+			return new WP_Error(
+				'bb_topic_relationship_missing_topic_id',
+				esc_html__( 'Topic ID is required.', 'buddyboss' )
+			);
+		}
+
+		if ( empty( $r['item_type'] ) ) {
+			return new WP_Error(
+				'bb_topic_relationship_missing_item_type',
+				esc_html__( 'Item type is required.', 'buddyboss' )
+			);
+		}
 
 		// phpcs:ignore
 		$menu_order      = $this->wpdb->get_var( $this->wpdb->prepare( "SELECT MAX(menu_order) FROM {$this->topic_rel_table} WHERE item_type = %s AND item_id = %d", $r['item_type'], $r['item_id'] ) );
@@ -744,14 +786,17 @@ class BB_Topics_Manager {
 		if ( ! $inserted ) {
 			$error_message = esc_html__( 'Failed to add topic relationship.', 'buddyboss' );
 			if ( 'wp_error' === $r['error_type'] ) {
-				return new WP_Error( 'bb_topic_relationship_db_insert_error', esc_html( $error_message ) );
+				unset( $r );
+
+				return new WP_Error(
+					'bb_topic_relationship_db_insert_error',
+					esc_html( $error_message )
+				);
 			}
 
-			wp_send_json_error(
-				array(
-					'error' => esc_html( $error_message ),
-				)
-			);
+			unset( $r );
+
+			return false;
 		}
 
 		/**
@@ -763,6 +808,8 @@ class BB_Topics_Manager {
 		 * @param array $args     The arguments used to add the topic relationship.
 		 */
 		do_action( 'bb_topic_relationship_after_added', $inserted, $r );
+
+		return $inserted;
 	}
 
 	/**
@@ -873,14 +920,17 @@ class BB_Topics_Manager {
 		if ( ! $updated ) {
 			$error_message = esc_html__( 'Failed to update topic relationship.', 'buddyboss' );
 			if ( 'wp_error' === $r['error_type'] ) {
-				return new WP_Error( 'bb_topic_relationship_db_updated_error', esc_html( $error_message ) );
+				unset( $r );
+
+				return new WP_Error(
+					'bb_topic_relationship_db_updated_error',
+					esc_html( $error_message )
+				);
 			}
 
-			wp_send_json_error(
-				array(
-					'error' => esc_html( $error_message ),
-				)
-			);
+			unset( $r );
+
+			return false;
 		}
 
 		/**
@@ -1308,8 +1358,8 @@ class BB_Topics_Manager {
 
 		$topic = $this->bb_get_topic( $args );
 
-		if ( ! $topic ) {
-			wp_send_json_error( array( 'error' => __( 'Topic not found.', 'buddyboss' ) ) );
+		if ( is_wp_error( $topic ) ) {
+			wp_send_json_error( array( 'error' => $topic->get_error_message() ) );
 		}
 
 		wp_send_json_success(
@@ -1365,7 +1415,20 @@ class BB_Topics_Manager {
 
 		check_ajax_referer( 'bb_delete_topic', 'nonce' );
 
-		$topic_id = absint( sanitize_text_field( wp_unslash( $_POST['topic_id'] ) ) );
+		$topic_id  = absint( sanitize_text_field( wp_unslash( $_POST['topic_id'] ) ) );
+		$item_id   = isset( $_POST['item_id'] ) ? absint( sanitize_text_field( wp_unslash( $_POST['item_id'] ) ) ) : 0;
+		$item_type = isset( $_POST['item_type'] ) ? sanitize_text_field( wp_unslash( $_POST['item_type'] ) ) : '';
+
+		if ( 'groups' === $item_type ) {
+			$is_global_activity = $this->bb_is_topic_global( $topic_id );
+			if ( $is_global_activity ) {
+				wp_send_json_error(
+					array(
+						'error' => __( 'You cannot delete a global topic.', 'buddyboss' ),
+					)
+				);
+			}
+		}
 
 		$deleted = $this->bb_delete_topic( $topic_id );
 
@@ -1510,7 +1573,7 @@ class BB_Topics_Manager {
 
 		check_ajax_referer( 'bb_update_topics_order', 'nonce' );
 
-		$topic_ids = wp_parse_id_list( $_POST['topic_ids'] );
+		$topic_ids = wp_parse_id_list( wp_unslash( $_POST['topic_ids'] ) );
 
 		$success = true;
 
