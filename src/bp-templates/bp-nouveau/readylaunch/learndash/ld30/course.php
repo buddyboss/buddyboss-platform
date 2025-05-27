@@ -45,6 +45,26 @@ $lesson_count = array_column( $lessons, 'post' );
 			<header class="bb-rl-entry-header">
 				<div class="bb-rl-course-banner flex">
 					<div class="bb-rl-course-overview">
+						<?php
+							if ( taxonomy_exists( 'ld_course_category' ) ) {
+								// category.
+								$course_cats = get_the_terms( $course->ID, 'ld_course_category' );
+								if ( ! empty( $course_cats ) ) {
+									?>
+									<div class="bb-rl-course-category">
+										<?php foreach ( $course_cats as $course_cat ) { ?>
+											<span class="bb-rl-course-category-item">
+												<a title="<?php echo $course_cat->name; ?>" href="<?php printf( '%s/%s/?search=&filter-categories=%s', home_url(), $course_slug, $course_cat->slug ); ?>">
+													<?php echo $course_cat->name; ?>
+												</a>
+												<span>,</span>
+											</span>
+										<?php } ?>
+									</div>
+									<?php
+								}
+							}
+						?>
 						<h1 class="bb-rl-entry-title"><?php the_title(); ?></h1>
 						<div class="bb-rl-course-meta">
 							<div class="bb-rl-meta-item">

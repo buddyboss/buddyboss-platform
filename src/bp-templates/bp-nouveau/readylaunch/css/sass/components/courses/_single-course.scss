@@ -71,6 +71,29 @@
 		font-weight: 700;
 		color: var(--bb-rl-text-color);
 	}
+
+	.bb-rl-course-category {
+		display: flex;
+		align-items: center;
+		flex-wrap: wrap;
+		gap: var(--bb-rl-space-100);
+		margin-bottom: var(--bb-rl-space-100);
+
+		.bb-rl-course-category-item {
+			font-size: 14px;
+			color: var(--bb-rl-text-tertiary-color);
+			display: flex;
+			align-items: center;
+
+			a {
+				color: var(--bb-rl-text-tertiary-color);
+			}
+
+			&:last-child span {
+				display: none;
+			}
+		}
+	}
 }
 
 .bb-rl-course-details {

@@ -3784,6 +3784,29 @@ div#bp-group-message-content {
   color: var(--bb-rl-text-color);
 }
 
+.bb-rl-course-banner .bb-rl-course-category {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--bb-rl-space-100);
+  margin-bottom: var(--bb-rl-space-100);
+}
+
+.bb-rl-course-banner .bb-rl-course-category .bb-rl-course-category-item {
+  font-size: 14px;
+  color: var(--bb-rl-text-tertiary-color);
+  display: flex;
+  align-items: center;
+}
+
+.bb-rl-course-banner .bb-rl-course-category .bb-rl-course-category-item a {
+  color: var(--bb-rl-text-tertiary-color);
+}
+
+.bb-rl-course-banner .bb-rl-course-category .bb-rl-course-category-item:last-child span {
+  display: none;
+}
+
 .bb-rl-course-details {
   display: flex;
   gap: var(--bb-rl-space-200);
