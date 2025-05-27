@@ -32,6 +32,8 @@ $course_settings = learndash_get_setting( $course_id );
 $course_price = learndash_get_course_price( $course_id );
 $is_enrolled = sfwd_lms_has_access( $course_id, $user_id );
 $course_status = learndash_course_status( $course_id, $user_id );
+$ld_permalinks = get_option( 'learndash_settings_permalinks', array() );
+$course_slug   = isset( $ld_permalinks['courses'] ) ? $ld_permalinks['courses'] : 'courses';
 
 // Get course steps
 $course_steps = learndash_get_course_steps( $course_id );
