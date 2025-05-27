@@ -4,7 +4,7 @@
  *
  * This template can be overridden by copying it to yourtheme/buddypress/common/js-templates/activity/parts/bb-activity-post-form-topic-selector.php.
  *
- * @since   1.0.0
+ * @since   BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
 

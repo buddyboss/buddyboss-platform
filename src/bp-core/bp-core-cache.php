@@ -711,7 +711,15 @@ function bb_clear_topic_related_caches( $topic_data, $args = array() ) {
 	}
 
 	// Clear activity topics cache for list of topics.
-	wp_cache_flush_group( 'bb_activity_topics' );
+	if (
+		function_exists( 'wp_cache_flush_group' ) &&
+		function_exists( 'wp_cache_supports' ) &&
+		wp_cache_supports( 'flush_group' )
+	) {
+		wp_cache_flush_group( 'bb_activity_topics' );
+	} else {
+		wp_cache_flush();
+	}
 }
 
 /**
@@ -759,7 +767,15 @@ function bb_topic_deleted_cache_reset( $relationships_ids, $topic_id ) {
 	wp_cache_delete( 'bb_topic_id_' . $topic_id, 'bb_topics' );
 
 	// Clear activity topics cache for list of topics.
-	wp_cache_flush_group( 'bb_activity_topics' );
+	if (
+		function_exists( 'wp_cache_flush_group' ) &&
+		function_exists( 'wp_cache_supports' ) &&
+		wp_cache_supports( 'flush_group' )
+	) {
+		wp_cache_flush_group( 'bb_activity_topics' );
+	} else {
+		wp_cache_flush();
+	}
 }
 
 add_action( 'bb_topic_deleted', 'bb_topic_deleted_cache_reset', 10, 2 );
