@@ -13,16 +13,27 @@
 
 	<# 
 	if ( data.topics && data.topics.topic_lists && data.topics.topic_lists.length > 0 ) { #>
-		<span class="bb-topic-selector-button">
-			<# 
-			if ( data.topics.topic_name ) { #>
-				{{ data.topic_name }}
+		<span class="bb-topic-selector-button" data-select-topic-text="<?php esc_html_e( 'Select Topic', 'buddyboss' ); ?>">
+			<#
+			if ( data.topics.topic_id && data.topics.topic_name ) { #>
+				{{ data.topics.topic_name }}
 			<# } else { #>
 				<?php esc_html_e( 'Select Topic', 'buddyboss' ); ?>
 			<# } #>
 		</span>
 		<div class="bb-topic-selector-list">
 			<ul>
+				<?php
+				if ( ! bb_is_activity_topic_required() ) {
+				?>
+					<li>
+						<a href="#" data-topic-id="0" <# if ( !data.topics.topic_id ) { #>class="selected"<# } #>>
+							<?php esc_html_e( 'None', 'buddyboss' ); ?>
+						</a>
+					</li>
+				<?php
+				}
+				?>
 				<# _.each( data.topics.topic_lists, function( topic ) { #>
 					<li>
 						<a href="#" 

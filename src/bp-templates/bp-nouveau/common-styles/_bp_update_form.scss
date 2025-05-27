@@ -1987,6 +1987,10 @@ input.search-query-input {
 				font-weight: 400;
 				text-decoration: none;
 
+				&.selected {
+					font-weight: 600;
+				}
+
 				&:hover {
 					background-color: $light-grey;
 				}
