@@ -54,7 +54,7 @@ $logged_in                  = is_user_logged_in();
 $current_user               = wp_get_current_user();
 $has_access                 = sfwd_lms_has_access( $course_id, $user_id );
 $materials                  = $course_model->get_materials();
-$quizzes                    = $course_model->get_quizzes();
+$quizzes                    = learndash_get_course_quiz_list( $course_id, $user_id );
 $lesson_progression_enabled = learndash_lesson_progression_enabled( $course_id );
 $has_topics                 = $topic_count > 0;
 
