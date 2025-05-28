@@ -3996,6 +3996,14 @@ function bb_activity_save_topic_data( $activity ) {
 		return;
 	}
 
+	if ( ! in_array( $activity->component, array( 'groups', 'activity' ), true ) ) {
+		return;
+	}
+
+	if ( 'activity_update' !== $activity->type ) {
+		return;
+	}
+
 	check_admin_referer( 'post_update', '_wpnonce_post_update' );
 
 	$topic_id = intval( $_POST['topic_id'] );

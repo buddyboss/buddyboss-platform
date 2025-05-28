@@ -790,7 +790,13 @@ class BB_Activity_Topics_Manager {
 	 * @return bool True if the user can post to the topic, false otherwise.
 	 */
 	public function bb_can_user_post_to_activity_topic( $topic_id ) {
-		$get_permission_type = bb_topics_manager_instance()->bb_get_topic_permission_type( $topic_id );
+		$get_permission_type = bb_topics_manager_instance()->bb_get_topic_permission_type(
+			array(
+				'topic_id'  => $topic_id,
+				'item_id'   => 0,
+				'item_type' => 'activity',
+			)
+		);
 
 		if ( 'mods_admins' === $get_permission_type && ! bp_current_user_can( 'administrator' ) ) {
 			return false;

@@ -5950,7 +5950,7 @@ window.bp = window.bp || {};
 					this.cleanFeedback(); //Clean if there's any error already displayed.
 					this.views.add( new bp.Views.activityFeedback( model.get( 'errors' ) ) );
 					this.$el.addClass( 'has-feedback' );
-					var errorHeight = this.$el.find( '#message-feedabck' ).outerHeight( true );
+					var errorHeight = this.$el.children( '#message-feedabck' ).outerHeight( true );
 					this.$el.find( '#activity-header' ).css( { 'margin-bottom': errorHeight + 'px' } );
 				}
 			},

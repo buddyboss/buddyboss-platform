@@ -72,7 +72,7 @@ class BB_Topics_Manager {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @var wpdb
+	 * @var object
 	 */
 	private $wpdb;
 
@@ -151,7 +151,7 @@ class BB_Topics_Manager {
 		$min = bp_core_get_minified_asset_suffix();
 		wp_enqueue_script(
 			'bb-topics-manager',
-			$bp->plugin_url . 'bp-core/js/bb-topics-manager' . $min . '.js',
+			$bp->plugin_url . "bp-core/js/bb-topics-manager{$min}.js",
 			array(
 				'jquery',
 			),
@@ -327,7 +327,7 @@ class BB_Topics_Manager {
 		} else {
 			$permission_type = function_exists( 'bb_group_activity_topic_permission_type' ) ? bb_group_activity_topic_permission_type( $permission_type ) : array();
 		}
-		if ( ! empty( $permission_type ) ) {
+		if ( ! empty( $permission_type ) && is_object( $topic_data ) ) {
 			$permission_type_value       = current( $permission_type );
 			$topic_data->permission_type = $permission_type_value;
 		}
@@ -355,7 +355,7 @@ class BB_Topics_Manager {
 	 * @type string $slug Optional. The slug for the topic. Auto-generated if empty.
 	 * }
 	 *
-	 * @return object|WP_Error Topic ID on success, WP_Error on failure.
+	 * @return bool|WP_Error|object Topic ID on success, WP_Error on failure.
 	 */
 	public function bb_add_topic( $args ) {
 		$r = bp_parse_args(
@@ -463,7 +463,7 @@ class BB_Topics_Manager {
 			$this->bb_add_topic_relationship(
 				array(
 					'topic_id'        => $topic_id,
-					'permission_type' => $r['permission_type'],
+					'permission_type' => isset( $r['permission_type'] ) ? $r['permission_type'] : 'anyone',
 					'item_id'         => $r['item_id'],
 					'item_type'       => $r['item_type'],
 				)
@@ -472,7 +472,7 @@ class BB_Topics_Manager {
 			$this->bb_update_topic_relationship(
 				array(
 					'topic_id'        => $topic_id,
-					'permission_type' => $r['permission_type'],
+					'permission_type' => isset( $r['permission_type'] ) ? $r['permission_type'] : 'anyone',
 					'where'           => array(
 						'topic_id'  => $r['topic_id'],
 						'item_id'   => $r['item_id'],
@@ -509,6 +509,8 @@ class BB_Topics_Manager {
 		/**
 		 * Fires after a topic has been added.
 		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
 		 * @param object $get_topic_relationship The topic relationship object.
 		 * @param array  $r The arguments used to add the topic.
 		 */
@@ -535,7 +537,7 @@ class BB_Topics_Manager {
 	 *     @type string $item_type        The type of item.
 	 * }
 	 *
-	 * @return object|WP_Error Topic object on success, WP_Error on failure.
+	 * @return object|bool|WP_Error Topic object on success, WP_Error on failure.
 	 */
 	public function bb_update_topic( $args ) {
 		$r = bp_parse_args(
@@ -567,6 +569,8 @@ class BB_Topics_Manager {
 
 		/**
 		 * Fires before a topic has been updated.
+		 *
+		 * @since BuddyBoss [BBVERSION]
 		 *
 		 * @param array  $r The arguments used to update the topic.
 		 * @param int    $previous_topic_id The ID of the previous topic.
@@ -692,6 +696,8 @@ class BB_Topics_Manager {
 		/**
 		 * Fires after a topic has been updated.
 		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
 		 * @param object $topic_data The topic data.
 		 * @param array  $r The arguments used to update the topic.
 		 * @param int    $previous_topic_id The ID of the previous topic.
@@ -751,6 +757,25 @@ class BB_Topics_Manager {
 			return new WP_Error(
 				'bb_topic_relationship_missing_item_type',
 				esc_html__( 'Item type is required.', 'buddyboss' )
+			);
+		}
+
+		$valid_permission_types = array();
+		if ( 'groups' === $r['item_type'] ) {
+			$valid_permission_types = array( 'admins', 'mods', 'members' );
+		} elseif ( 'activity' === $r['item_type'] ) {
+			$valid_permission_types = array( 'mods_admins', 'anyone' );
+		} else {
+			return new WP_Error(
+				'bb_topic_relationship_invalid_item_type',
+				esc_html__( 'Invalid item type.', 'buddyboss' )
+			);
+		}
+
+		if ( ! in_array( $r['permission_type'], $valid_permission_types, true ) ) {
+			return new WP_Error(
+				'bb_topic_relationship_invalid_permission_type',
+				esc_html__( 'Invalid permission type.', 'buddyboss' )
 			);
 		}
 
@@ -1092,10 +1117,12 @@ class BB_Topics_Manager {
 		}
 
 		if ( ! empty( $r['item_id'] ) ) {
-			$r['item_id']       = is_array( $r['item_id'] ) ? $r['item_id'] : array( $r['item_id'] );
-			$item_ids           = wp_parse_id_list( $r['item_id'] );
-			$placeholders       = array_fill( 0, count( $item_ids ), '%d' );
-			$where_conditions[] = $this->wpdb->prepare( 'tr.item_id IN (' . implode( ',', $placeholders ) . ')', $item_ids ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+			$r['item_id'] = is_array( $r['item_id'] ) ? $r['item_id'] : array( $r['item_id'] );
+			$item_ids     = wp_parse_id_list( $r['item_id'] );
+			$placeholders = array_fill( 0, count( $item_ids ), '%d' );
+
+			// phpcs:ignore
+			$where_conditions[] = $this->wpdb->prepare( 'tr.item_id IN (' . implode( ',', $placeholders ) . ')', $item_ids );
 		}
 
 		// topic_id.
@@ -1120,10 +1147,12 @@ class BB_Topics_Manager {
 
 		// item_type.
 		if ( ! empty( $r['item_type'] ) ) {
-			$r['item_type']     = is_array( $r['item_type'] ) ? $r['item_type'] : array( $r['item_type'] );
-			$item_types         = array_map( 'sanitize_text_field', $r['item_type'] );
-			$placeholders       = array_fill( 0, count( $item_types ), '%s' );
-			$where_conditions[] = $this->wpdb->prepare( 'tr.item_type IN (' . implode( ',', $placeholders ) . ')', $item_types ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+			$r['item_type'] = is_array( $r['item_type'] ) ? $r['item_type'] : array( $r['item_type'] );
+			$item_types     = array_map( 'sanitize_text_field', $r['item_type'] );
+			$placeholders   = array_fill( 0, count( $item_types ), '%s' );
+
+			// phpcs:ignore
+			$where_conditions[] = $this->wpdb->prepare( 'tr.item_type IN (' . implode( ',', $placeholders ) . ')', $item_types );
 		}
 
 		// permission_type.
@@ -1131,7 +1160,9 @@ class BB_Topics_Manager {
 			$r['permission_type'] = is_array( $r['permission_type'] ) ? $r['permission_type'] : array( $r['permission_type'] );
 			$permission_types     = array_map( 'sanitize_text_field', $r['permission_type'] );
 			$placeholders         = array_fill( 0, count( $permission_types ), '%s' );
-			$where_conditions[]   = $this->wpdb->prepare( 'tr.permission_type IN (' . implode( ',', $placeholders ) . ')', $permission_types ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+
+			// phpcs:ignore
+			$where_conditions[] = $this->wpdb->prepare( 'tr.permission_type IN (' . implode( ',', $placeholders ) . ')', $permission_types );
 		}
 
 		// user_id.
@@ -1208,7 +1239,7 @@ class BB_Topics_Manager {
 		 */
 		$group_by = apply_filters( 'bb_get_topics_group_by', '', $r, $select_sql, $from_sql, $where_sql );
 
-		// Query first for poll vote IDs.
+		// Query first for topic IDs.
 		$topic_sql = "{$select_sql} {$from_sql} {$join_sql} {$where_sql} {$group_by} {$order_by} {$pagination}";
 
 		$retval = array(
@@ -1217,12 +1248,12 @@ class BB_Topics_Manager {
 		);
 
 		/**
-		 * Filters the poll votes data MySQL statement.
+		 * Filters the Topic MySQL statement.
 		 *
-		 * @since 2.6.00
+		 * @since BuddyBoss [BBVERSION]
 		 *
-		 * @param string $poll_votes_sql MySQL's statement used to query for poll votes.
-		 * @param array  $r              Array of arguments passed into the method.
+		 * @param string $topic_sql MySQL's statement used to query for topics.
+		 * @param array  $r         Array of arguments passed into the method.
 		 */
 		$topic_sql = apply_filters( 'bb_get_topics_sql', $topic_sql, $r );
 
@@ -1605,17 +1636,26 @@ class BB_Topics_Manager {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param int $topic_id The ID of the topic.
+	 * @param array $args {
+	 *     Array of arguments.
+	 *     @type int $topic_id The ID of the topic.
+	 *     @type int $item_id The ID of the item.
+	 *     @type string $item_type The type of item.
+	 * }
 	 *
 	 * @return string The permission type for the topic.
 	 */
-	public function bb_get_topic_permission_type( $topic_id ) {
-		if ( empty( $topic_id ) ) {
+	public function bb_get_topic_permission_type( $args ) {
+		if ( empty( $args['topic_id'] ) ) {
 			return 'anyone';
 		}
 
+		$topic_id  = $args['topic_id'];
+		$item_id   = $args['item_id'] ?? 0;
+		$item_type = $args['item_type'] ?? 'activity';
+
 		// phpcs:ignore
-		$topic_permission_type = $this->wpdb->get_var( $this->wpdb->prepare( "SELECT permission_type FROM {$this->topic_rel_table} WHERE topic_id = %d", $topic_id ) );
+		$topic_permission_type = $this->wpdb->get_var( $this->wpdb->prepare( "SELECT permission_type FROM {$this->topic_rel_table} WHERE topic_id = %d AND item_id = %d AND item_type = %s", $topic_id, $item_id, $item_type ) );
 
 		if ( ! $topic_permission_type ) {
 			return 'anyone';

@@ -216,7 +216,6 @@ window.bp = window.bp || {};
 									topic_name: topicName,
 									topic_lists: this.model.get('topics').topic_lists
 								});
-								topicName = topicName;
 							}
 
 							this.$el.find( '.bb-topic-selector-button' ).text( topicName );
@@ -378,10 +377,10 @@ window.bp = window.bp || {};
 			}
 
 			$( 'body' ).addClass( this.config.modalOpenClass );
-			
+
 			// Remove any existing error messages.
 			this.$modal.find(this.config.errorContainerSelector).remove();
-			
+
 			// Clear form fields.
 			this.$topicName.val( '' );
 			this.$topicId.val( '' );
@@ -940,7 +939,7 @@ window.bp = window.bp || {};
 			    data          = args.data;
 
 
-			// Need to check if the poll is enabled and the poll_id is set. 
+			// Need to check if the poll is enabled and the poll_id is set.
 			// It will mainly use when we change the topic from the topic selector.
 			if (
 				! _.isUndefined( data.poll ) &&
