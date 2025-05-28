@@ -3733,10 +3733,6 @@ msgstr ""
 msgid "Note: Any fields in the first group will appear on the signup page."
 msgstr ""
 
-#. Author of the plugin/theme
-msgid "BuddyBoss"
-msgstr ""
-
 #: bp-core/admin/bp-core-admin-functions.php:1237
 #: bp-core/admin/bp-core-admin-functions.php:1246
 msgid "Logged-In"
@@ -35516,6 +35512,10 @@ msgstr ""
 msgid ""
 "The BuddyBoss Platform adds community features to WordPress. Member "
 "Profiles, Activity Feeds, Direct Messaging, Notifications, and more!"
+msgstr ""
+
+#. Author of the plugin/theme
+msgid "BuddyBoss"
 msgstr ""
 
 #: bp-blogs/classes/class-bp-blogs-recent-posts-widget.php:165
