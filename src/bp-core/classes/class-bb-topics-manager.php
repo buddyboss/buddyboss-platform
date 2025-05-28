@@ -72,7 +72,7 @@ class BB_Topics_Manager {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @var wpdb
+	 * @var object
 	 */
 	private $wpdb;
 
@@ -151,7 +151,7 @@ class BB_Topics_Manager {
 		$min = bp_core_get_minified_asset_suffix();
 		wp_enqueue_script(
 			'bb-topics-manager',
-			$bp->plugin_url . 'bp-core/js/bb-topics-manager' . $min . '.js',
+			$bp->plugin_url . "bp-core/js/bb-topics-manager{$min}.js",
 			array(
 				'jquery',
 			),
@@ -355,7 +355,7 @@ class BB_Topics_Manager {
 	 * @type string $slug Optional. The slug for the topic. Auto-generated if empty.
 	 * }
 	 *
-	 * @return object|WP_Error Topic ID on success, WP_Error on failure.
+	 * @return bool|WP_Error|object Topic ID on success, WP_Error on failure.
 	 */
 	public function bb_add_topic( $args ) {
 		$r = bp_parse_args(
@@ -509,6 +509,8 @@ class BB_Topics_Manager {
 		/**
 		 * Fires after a topic has been added.
 		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
 		 * @param object $get_topic_relationship The topic relationship object.
 		 * @param array  $r The arguments used to add the topic.
 		 */
@@ -535,7 +537,7 @@ class BB_Topics_Manager {
 	 *     @type string $item_type        The type of item.
 	 * }
 	 *
-	 * @return object|WP_Error Topic object on success, WP_Error on failure.
+	 * @return object|bool|WP_Error Topic object on success, WP_Error on failure.
 	 */
 	public function bb_update_topic( $args ) {
 		$r = bp_parse_args(
@@ -567,6 +569,8 @@ class BB_Topics_Manager {
 
 		/**
 		 * Fires before a topic has been updated.
+		 *
+		 * @since BuddyBoss [BBVERSION]
 		 *
 		 * @param array  $r The arguments used to update the topic.
 		 * @param int    $previous_topic_id The ID of the previous topic.
@@ -691,6 +695,8 @@ class BB_Topics_Manager {
 
 		/**
 		 * Fires after a topic has been updated.
+		 *
+		 * @since BuddyBoss [BBVERSION]
 		 *
 		 * @param object $topic_data The topic data.
 		 * @param array  $r The arguments used to update the topic.
@@ -1092,10 +1098,12 @@ class BB_Topics_Manager {
 		}
 
 		if ( ! empty( $r['item_id'] ) ) {
-			$r['item_id']       = is_array( $r['item_id'] ) ? $r['item_id'] : array( $r['item_id'] );
-			$item_ids           = wp_parse_id_list( $r['item_id'] );
-			$placeholders       = array_fill( 0, count( $item_ids ), '%d' );
-			$where_conditions[] = $this->wpdb->prepare( 'tr.item_id IN (' . implode( ',', $placeholders ) . ')', $item_ids ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+			$r['item_id'] = is_array( $r['item_id'] ) ? $r['item_id'] : array( $r['item_id'] );
+			$item_ids     = wp_parse_id_list( $r['item_id'] );
+			$placeholders = array_fill( 0, count( $item_ids ), '%d' );
+
+			// phpcs:ignore
+			$where_conditions[] = $this->wpdb->prepare( 'tr.item_id IN (' . implode( ',', $placeholders ) . ')', $item_ids );
 		}
 
 		// topic_id.
@@ -1120,10 +1128,12 @@ class BB_Topics_Manager {
 
 		// item_type.
 		if ( ! empty( $r['item_type'] ) ) {
-			$r['item_type']     = is_array( $r['item_type'] ) ? $r['item_type'] : array( $r['item_type'] );
-			$item_types         = array_map( 'sanitize_text_field', $r['item_type'] );
-			$placeholders       = array_fill( 0, count( $item_types ), '%s' );
-			$where_conditions[] = $this->wpdb->prepare( 'tr.item_type IN (' . implode( ',', $placeholders ) . ')', $item_types ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+			$r['item_type'] = is_array( $r['item_type'] ) ? $r['item_type'] : array( $r['item_type'] );
+			$item_types     = array_map( 'sanitize_text_field', $r['item_type'] );
+			$placeholders   = array_fill( 0, count( $item_types ), '%s' );
+
+			// phpcs:ignore
+			$where_conditions[] = $this->wpdb->prepare( 'tr.item_type IN (' . implode( ',', $placeholders ) . ')', $item_types );
 		}
 
 		// permission_type.
@@ -1131,7 +1141,9 @@ class BB_Topics_Manager {
 			$r['permission_type'] = is_array( $r['permission_type'] ) ? $r['permission_type'] : array( $r['permission_type'] );
 			$permission_types     = array_map( 'sanitize_text_field', $r['permission_type'] );
 			$placeholders         = array_fill( 0, count( $permission_types ), '%s' );
-			$where_conditions[]   = $this->wpdb->prepare( 'tr.permission_type IN (' . implode( ',', $placeholders ) . ')', $permission_types ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+
+			// phpcs:ignore
+			$where_conditions[] = $this->wpdb->prepare( 'tr.permission_type IN (' . implode( ',', $placeholders ) . ')', $permission_types );
 		}
 
 		// user_id.
@@ -1208,7 +1220,7 @@ class BB_Topics_Manager {
 		 */
 		$group_by = apply_filters( 'bb_get_topics_group_by', '', $r, $select_sql, $from_sql, $where_sql );
 
-		// Query first for poll vote IDs.
+		// Query first for topic IDs.
 		$topic_sql = "{$select_sql} {$from_sql} {$join_sql} {$where_sql} {$group_by} {$order_by} {$pagination}";
 
 		$retval = array(
@@ -1217,12 +1229,12 @@ class BB_Topics_Manager {
 		);
 
 		/**
-		 * Filters the poll votes data MySQL statement.
+		 * Filters the Topic MySQL statement.
 		 *
-		 * @since 2.6.00
+		 * @since BuddyBoss [BBVERSION]
 		 *
-		 * @param string $poll_votes_sql MySQL's statement used to query for poll votes.
-		 * @param array  $r              Array of arguments passed into the method.
+		 * @param string $topic_sql MySQL's statement used to query for topics.
+		 * @param array  $r         Array of arguments passed into the method.
 		 */
 		$topic_sql = apply_filters( 'bb_get_topics_sql', $topic_sql, $r );
 
@@ -1237,6 +1249,8 @@ class BB_Topics_Manager {
 		} else {
 			$topic_ids = $cached;
 		}
+
+		$topic_data = array();
 
 		if ( 'id' === $r['fields'] ) {
 			// We only want the IDs.
@@ -1258,7 +1272,6 @@ class BB_Topics_Manager {
 				}
 			}
 
-			$topic_data = array();
 			foreach ( $topic_ids as $id ) {
 				// Get the cached topic relationship using the unique key.
 				$item_id                = is_array( $r['item_id'] ) ? implode( '_', $r['item_id'] ) : $r['item_id'];
