@@ -327,7 +327,7 @@ class BB_Topics_Manager {
 		} else {
 			$permission_type = function_exists( 'bb_group_activity_topic_permission_type' ) ? bb_group_activity_topic_permission_type( $permission_type ) : array();
 		}
-		if ( ! empty( $permission_type ) ) {
+		if ( ! empty( $permission_type ) && is_object( $topic_data ) ) {
 			$permission_type_value       = current( $permission_type );
 			$topic_data->permission_type = $permission_type_value;
 		}
