@@ -463,7 +463,7 @@ class BB_Topics_Manager {
 			$this->bb_add_topic_relationship(
 				array(
 					'topic_id'        => $topic_id,
-					'permission_type' => $r['permission_type'],
+					'permission_type' => isset( $r['permission_type'] ) ? $r['permission_type'] : 'anyone',
 					'item_id'         => $r['item_id'],
 					'item_type'       => $r['item_type'],
 				)
@@ -472,7 +472,7 @@ class BB_Topics_Manager {
 			$this->bb_update_topic_relationship(
 				array(
 					'topic_id'        => $topic_id,
-					'permission_type' => $r['permission_type'],
+					'permission_type' => isset( $r['permission_type'] ) ? $r['permission_type'] : 'anyone',
 					'where'           => array(
 						'topic_id'  => $r['topic_id'],
 						'item_id'   => $r['item_id'],
@@ -757,6 +757,25 @@ class BB_Topics_Manager {
 			return new WP_Error(
 				'bb_topic_relationship_missing_item_type',
 				esc_html__( 'Item type is required.', 'buddyboss' )
+			);
+		}
+
+		$valid_permission_types = array();
+		if ( 'groups' === $r['item_type'] ) {
+			$valid_permission_types = array( 'admins', 'mods', 'members' );
+		} elseif ( 'activity' === $r['item_type'] ) {
+			$valid_permission_types = array( 'mods_admins', 'anyone' );
+		} else {
+			return new WP_Error(
+				'bb_topic_relationship_invalid_item_type',
+				esc_html__( 'Invalid item type.', 'buddyboss' )
+			);
+		}
+
+		if ( ! in_array( $r['permission_type'], $valid_permission_types, true ) ) {
+			return new WP_Error(
+				'bb_topic_relationship_invalid_permission_type',
+				esc_html__( 'Invalid permission type.', 'buddyboss' )
 			);
 		}
 
