@@ -135,10 +135,64 @@
 	}
 }
 
+.bb-rl-course-content-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: var(--bb-rl-space-200);
+
+	h2 {
+		@include bb-rl-base-heading;
+	}
+
+	.bb-rl-course-content-header-inner {
+		display: flex;
+		flex-direction: column;
+
+		.bb-rl-course-content-meta {
+			display: flex;
+			align-items: center;
+
+			.bb-rl-course-content-meta-item {
+
+				@include bb-rl-label-heading;
+				color: var(--bb-rl-text-tertiary-color);
+				display: flex;
+				align-items: center;
+
+				&:after {
+					content: '';
+					display: inline-block;
+					height: 4px;
+					width: 4px;
+					background-color: var(--bb-rl-background-tertiary-color);
+					border-radius: 50%;
+					margin: 0 var(--bb-rl-space-100);
+				}
+
+				&:last-child:after {
+					display: none;
+				}
+			}
+		}
+	}
+
+	.bb-rl-course-content-collapse {
+		@include bb-rl-label-heading-bolder;
+		color: var(--bb-rl-text-color);
+	}
+}
+
+.bb-rl-lessons-list {
+	border: 1px solid var(--bb-rl-border-secondary-color);
+	border-radius: var(--bb-rl-radius-md);
+	margin-bottom: var(--bb-rl-space-400);
+}
+
 .bb-rl-entry-content {
 
 	h2 {
-		@include bb-rl-base-heading-bolder;
+		@include bb-rl-base-heading;
 		margin-bottom: var(--bb-rl-space-200);
 	}
 

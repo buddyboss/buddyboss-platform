@@ -39,6 +39,7 @@ $course_slug   = isset( $ld_permalinks['courses'] ) ? $ld_permalinks['courses'] 
 $course_steps = learndash_get_course_steps( $course_id );
 $lessons = learndash_get_course_lessons_list( $course_id );
 $lesson_count = array_column( $lessons, 'post' );
+$topic_count = array_column( $course_steps, 'post' );
 ?>
 
 <div class="bb-learndash-content-wrap">
@@ -152,7 +153,24 @@ $lesson_count = array_column( $lessons, 'post' );
 			
 			<?php if ( ! empty( $lessons ) ) : ?>
 				<div class="bb-rl-course-content">
-					<h2><?php esc_html_e( 'Course Content', 'buddyboss' ); ?></h2>
+					<div class="bb-rl-course-content-header">
+						<div class="bb-rl-course-content-header-inner">
+							<h2><?php esc_html_e( 'Course Content', 'buddyboss' ); ?></h2>
+							<div class="bb-rl-course-content-meta">
+								<div class="bb-rl-course-content-meta-item">
+									<span><?php echo esc_html( sizeof( $lesson_count ) ); ?> <?php esc_html_e( 'Lessons', 'buddyboss' ); ?></span>
+								</div>
+								<div class="bb-rl-course-content-meta-item">
+									<span><?php echo esc_html( sizeof( $topic_count ) ); ?> <?php esc_html_e( 'Topics', 'buddyboss' ); ?></span>
+								</div>
+							</div>
+						</div>
+						<div class="bb-rl-course-content-header-actions">
+							<a href="#" class="bb-rl-course-content-collapse">
+								<?php esc_html_e( 'Collapse all sections', 'buddyboss' ); ?>
+							</a>
+						</div>
+					</div>
 					
 					<div class="bb-rl-lessons-list">
 						<?php foreach ( $lessons as $lesson ) : ?>
