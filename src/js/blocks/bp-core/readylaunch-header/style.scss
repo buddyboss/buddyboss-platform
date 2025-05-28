@@ -356,7 +356,7 @@
 		display: none;
 	}
 
-	#menu-readylaunch {
+	[id^="menu-readylaunch"] {
 
 		.bb-rl-sub-menu {
 			background-color: var(--bb-rl-background-color);
@@ -447,12 +447,18 @@
 	.bb-readylaunch-menu {
 		display: flex;
 		align-items: center;
+		flex-wrap: wrap;
 		list-style: none;
 		margin: 0;
 		padding: 0;
 		flex: 1;
 		justify-content: center;
 		font-weight: 400;
+
+		body.wp-admin & {
+			height: 34px;
+			overflow: hidden;		
+		}
 	}
 
 	.bb-readylaunch-menu {

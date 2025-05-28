@@ -598,7 +598,7 @@ window.bp = window.bp || {};
 				}
 
 				initSelector( '#object-nav > ul', 100 );
-				initSelector( '#menu-readylaunch', 200 );
+				initSelector( '.bb-readylaunch-menu', 100 );
 
 				$( document ).on(
 					'click',
