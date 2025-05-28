@@ -3994,7 +3994,7 @@ function bb_load_activity_topics_manager() {
  */
 function bb_activity_save_topic_data( $activity ) {
 
-	if ( ! isset( $_POST['topic_id'] ) ) {
+	if ( ! isset( $_POST['topic_id'] ) || 'activity_comment' === $activity->type ) {
 		return;
 	}
 
