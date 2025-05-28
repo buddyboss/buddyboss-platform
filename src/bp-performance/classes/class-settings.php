@@ -82,91 +82,20 @@ class Settings {
 
 		$purge_url = self::get_performance_purge_url();
 
-		return array(
-			'buddyboss' => array(
-				'title'     => __( 'BuddyBoss Platform', 'buddyboss' ),
-				'purge_url' => $purge_url . '&group=bbplatform&component=all&nonce=' . self::$purge_nonce,
-				'settings'  => array(
-					'cache_bb_activity_feeds'     => array(
-						'label'          => __( 'Activity Feeds', 'buddyboss' ),
-						'label_checkbox' => __( 'Cache Activity Feeds', 'buddyboss' ),
-						'purge_url'      => $purge_url . '&group=bbplatform&component=bp-activity&nonce=' . self::$purge_nonce,
-						'type'           => 'checkbox',
-						'value'          => true,
-					),
-					'cache_bb_members'            => array(
-						'label'          => __( 'Member Profiles', 'buddyboss' ),
-						'label_checkbox' => __( 'Cache Member Profiles', 'buddyboss' ),
-						'purge_url'      => $purge_url . '&group=bbplatform&component=bp-members&nonce=' . self::$purge_nonce,
-						'type'           => 'checkbox',
-						'value'          => true,
-					),
-					'cache_bb_member_connections' => array(
-						'label'          => __( 'Member Connections', 'buddyboss' ),
-						'label_checkbox' => __( 'Cache Member Connections', 'buddyboss' ),
-						'purge_url'      => $purge_url . '&group=bbplatform&component=bp-friends&nonce=' . self::$purge_nonce,
-						'type'           => 'checkbox',
-						'value'          => true,
-					),
-					'cache_bb_social_groups'      => array(
-						'label'          => __( 'Social Groups', 'buddyboss' ),
-						'label_checkbox' => __( 'Cache Social Groups', 'buddyboss' ),
-						'purge_url'      => $purge_url . '&group=bbplatform&component=bp-groups&nonce=' . self::$purge_nonce,
-						'type'           => 'checkbox',
-						'value'          => true,
-					),
-					'cache_bb_private_messaging'  => array(
-						'label'          => __( 'Private Messaging', 'buddyboss' ),
-						'label_checkbox' => __( 'Cache Private Messaging', 'buddyboss' ),
-						'purge_url'      => $purge_url . '&group=bbplatform&component=bp-messages&nonce=' . self::$purge_nonce,
-						'type'           => 'checkbox',
-						'value'          => true,
-					),
-					'cache_bb_forum_discussions'  => array(
-						'label'          => __( 'Forum Discussions', 'buddyboss' ),
-						'label_checkbox' => __( 'Cache Forum Discussions', 'buddyboss' ),
-						'purge_url'      => $purge_url . '&group=bbplatform&component=bbp-forums,bbp-topics,bbp-replies&nonce=' . self::$purge_nonce,
-						'type'           => 'checkbox',
-						'value'          => true,
-					),
-					'cache_bb_notifications'      => array(
-						'label'          => __( 'Notifications', 'buddyboss' ),
-						'label_checkbox' => __( 'Cache Notifications', 'buddyboss' ),
-						'purge_url'      => $purge_url . '&group=bbplatform&component=bp-notifications&nonce=' . self::$purge_nonce,
-						'type'           => 'checkbox',
-						'value'          => true,
-					),
-					'cache_bb_media'              => array(
-						'label'          => __( 'Photos', 'buddyboss' ),
-						'label_checkbox' => __( 'Cache Photos/Albums', 'buddyboss' ),
-						'purge_url'      => $purge_url . '&group=bbplatform&component=bp-media&nonce=' . self::$purge_nonce,
-						'type'           => 'checkbox',
-						'value'          => true,
-					),
-					'cache_bb_document'           => array(
-						'label'          => __( 'Documents', 'buddyboss' ),
-						'label_checkbox' => __( 'Cache Document Files/Folders', 'buddyboss' ),
-						'purge_url'      => $purge_url . '&group=bbplatform&component=bp-document&nonce=' . self::$purge_nonce,
-						'type'           => 'checkbox',
-						'value'          => true,
-					),
-					'cache_bb_video'              => array(
-						'label'          => __( 'Videos', 'buddyboss' ),
-						'label_checkbox' => __( 'Cache Videos', 'buddyboss' ),
-						'purge_url'      => $purge_url . '&group=bbplatform&component=bp-video&nonce=' . self::$purge_nonce,
-						'type'           => 'checkbox',
-						'value'          => true,
-					),
-					'cache_bb_subscription'       => array(
-						'label'          => __( 'Subscriptions', 'buddyboss' ),
-						'label_checkbox' => __( 'Cache Subscriptions', 'buddyboss' ),
-						'purge_url'      => $purge_url . '&group=bbplatform&component=bb-subscription&nonce=' . self::$purge_nonce,
-						'type'           => 'checkbox',
-						'value'          => true,
-					),
-				),
-			),
-		);
+		/**
+		 * The URL endpoint used to perform purge operations.
+		 *
+		 * This variable typically holds the URL that will be
+		 * invoked to clear or remove cached data or other stored
+		 * elements. It is expected to be a fully qualified URL
+		 * string, and its usage is to ensure proper access to
+		 * the purge functionality of a system.
+		 *
+		 * @param array $components Performance components.
+		 * @param string $purge_url Purge URL.
+		 * @param string $purge_nonce Purcge nonce.
+		 */
+		return apply_filters( 'performance_components', array(), $purge_url, self::$purge_nonce );
 	}
 
 	/**
