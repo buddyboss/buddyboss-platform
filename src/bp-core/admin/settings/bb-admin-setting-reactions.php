@@ -42,6 +42,7 @@ class BB_Admin_Setting_Reactions extends BP_Admin_Setting_tab {
 		$reaction_button = ! empty( $_POST['bb_reactions_button'] ) ? $_POST['bb_reactions_button'] : array();
 		if ( ! empty( $reaction_button ) ) {
 			$reaction_button = array_map( 'trim', $reaction_button );
+			$reaction_button = array_map( 'stripslashes_deep', $reaction_button );
 			$reaction_button = array_map( 'sanitize_text_field', $reaction_button );
 
 			// If reaction button text is more then 8 characters then truncate it.
