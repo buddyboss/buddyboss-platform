@@ -1269,8 +1269,6 @@ class BB_Topics_Manager {
 			$topic_ids = $cached;
 		}
 
-		$topic_data = array();
-
 		if ( 'id' === $r['fields'] ) {
 			// We only want the IDs.
 			$topic_data = wp_parse_id_list( $topic_ids );
@@ -1291,6 +1289,7 @@ class BB_Topics_Manager {
 				}
 			}
 
+			$topic_data = array();
 			foreach ( $topic_ids as $id ) {
 				// Get the cached topic relationship using the unique key.
 				$item_id                = is_array( $r['item_id'] ) ? implode( '_', $r['item_id'] ) : $r['item_id'];
