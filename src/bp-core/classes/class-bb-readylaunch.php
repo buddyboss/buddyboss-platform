@@ -397,9 +397,11 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					is_admin() ||
 					wp_doing_ajax() ||
 					self::bb_is_network_search() ||
-					is_login() ||
 					(
-						bp_is_register_page() &&
+						(
+							is_login() ||
+							bp_is_register_page()
+						) &&
 						$this->bb_rl_is_page_enabled_for_integration( 'registration' )
 					) ||
 					$this->bb_rl_is_learndash_page() // Add check for LearnDash pages.

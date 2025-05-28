@@ -915,7 +915,7 @@ export const ReadyLaunchSettings = () => {
 									<div className="field-toggles">
 										{window?.BP_ADMIN?.register_integration === '1' && (<div className="toggle-item">
 											<ToggleControl
-												label={__('Registration', 'buddyboss')}
+												label={__('Login & Registration', 'buddyboss')}
 												checked={settings.bb_rl_enabled_pages.registration}
 												onChange={handleNestedSettingChange('bb_rl_enabled_pages', 'registration')}
 											/>
@@ -927,24 +927,6 @@ export const ReadyLaunchSettings = () => {
 													label={__('Courses', 'buddyboss')}
 													checked={settings.bb_rl_enabled_pages.courses}
 													onChange={handleNestedSettingChange('bb_rl_enabled_pages', 'courses')}
-												/>
-											</div>
-										)}
-										{window?.BP_ADMIN?.events_integration === '1' && (
-											<div className="toggle-item">
-												<ToggleControl
-													label={__('Events', 'buddyboss')}
-													checked={settings.bb_rl_enabled_pages.events}
-													onChange={handleNestedSettingChange('bb_rl_enabled_pages', 'events')}
-												/>
-											</div>
-										)}
-										{window?.BP_ADMIN?.gamipress_integration === '1' && (
-											<div className="toggle-item">
-												<ToggleControl
-													label={__('Gamification', 'buddyboss')}
-													checked={settings.bb_rl_enabled_pages.gamification}
-													onChange={handleNestedSettingChange('bb_rl_enabled_pages', 'gamification')}
 												/>
 											</div>
 										)}
