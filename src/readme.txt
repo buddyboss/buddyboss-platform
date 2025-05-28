@@ -1,9 +1,9 @@
 === BuddyBoss Platform ===
 Contributors: buddyboss
 Requires at least: 4.9.1
-Tested up to: 6.7.2
+Tested up to: 6.8.1
 Requires PHP: 5.6.20
-Stable tag: 2.8.61
+Stable tag: 2.8.70
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,14 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 2.8.70 =
+* Bug: Activity - Fixed issue where changing the activity post’s privacy incorrectly updated the posting date. The original date now remains unchanged
+* Bug: Activity - Fixed issue where emoji functionality wasn’t working in all areas due to JS files
+* Bug: Activity - Fixed issue where Follow/Unfollow functionality did not work when accessing user profiles from the Activity Feed
+* Bug: Groups - Fixed @mention issue in Hidden and Private groups, only group members can now be tagged
+* Bug: Groups - Fixed issue with the "Select Multiple Videos" feature, enabling associated actions like delete on the user's profile page and group page
+* Bug: Media - Fixed issue where video count showed as undefined when videos page, group videos, or user videos page were opened directly via URL
 
 = 2.8.61 =
 * Bug: Groups - Fixed an issue where regular group post activity headers incorrectly displayed post content instead of showing only basic activity details
