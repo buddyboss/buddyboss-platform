@@ -4,7 +4,7 @@
  *
  * This template can be overridden by copying it to yourtheme/buddypress/common/js-templates/bb-topic-lists.php.
  *
- * @since   1.0.0
+ * @since   BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
 
@@ -46,7 +46,7 @@
 			<div class="bb-topic-right">
 				<span class="bb-topic-access">
 					{{topicWhoCanPost}}
-				</span>						
+				</span>
 			<div class="bb-topic-actions-wrapper">
 				<span class="bb-topic-actions">
 					<a href="#" class="bb-topic-actions_button">
