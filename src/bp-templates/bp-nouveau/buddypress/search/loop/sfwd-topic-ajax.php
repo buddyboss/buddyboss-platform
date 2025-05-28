@@ -14,7 +14,7 @@ $total              = bp_search_get_total_quizzes_count( $topic_id );
 $post_thumbnail_url = get_the_post_thumbnail_url();
 ?>
 <div class="bp-search-ajax-item bp-search-ajax-item_sfwd-topic">
-	<a href="<?php echo esc_url( add_query_arg( array( 'no_frame' => '1' ), get_permalink() ) ); ?>">
+	<a href="<?php echo esc_url( get_permalink() ); ?>">
 		<div class="item-avatar">
 			<?php
 			if ( $post_thumbnail_url ) {
@@ -28,39 +28,41 @@ $post_thumbnail_url = get_the_post_thumbnail_url();
 			}
 			?>
 		</div>
-
-		<div class="item">
-			<div class="item-title"><?php the_title(); ?></div>
-
-			<div class="item-desc">
-				<?php
-				if ( get_the_excerpt( $topic_id ) ) {
-					echo bp_create_excerpt(
-						get_the_excerpt( $topic_id ),
-						100,
-						array(
-							'ending' => __( '&hellip;', 'buddyboss' ),
-						)
-					);
-				} elseif ( get_the_content( $topic_id ) ) {
-					echo bp_create_excerpt(
-						wp_strip_all_tags( get_the_content( $topic_id ) ),
-						100,
-						array(
-							'ending' => __( '&hellip;', 'buddyboss' ),
-						)
-					);
-				}
-				?>
-			</div>
-
-			<div class="item-meta">
-			<?php
-			// @todo remove %d?
-			printf( _n( '%d quiz', '%d quizzes', $total, 'buddyboss' ), $total );
-			?>
-			</div>
-
-		</div>
 	</a>
+
+	<div class="item">
+		<div class="item-title">
+			<a href="<?php echo esc_url( get_permalink() ); ?>"><?php the_title(); ?></a>
+		</div>
+
+		<div class="item-desc">
+			<?php
+			if ( get_the_excerpt( $topic_id ) ) {
+				echo bp_create_excerpt(
+					get_the_excerpt( $topic_id ),
+					100,
+					array(
+						'ending' => __( '&hellip;', 'buddyboss' ),
+					)
+				);
+			} elseif ( get_the_content( $topic_id ) ) {
+				echo bp_create_excerpt(
+					wp_strip_all_tags( get_the_content( $topic_id ) ),
+					100,
+					array(
+						'ending' => __( '&hellip;', 'buddyboss' ),
+					)
+				);
+			}
+			?>
+		</div>
+
+		<div class="item-meta">
+		<?php
+		// @todo remove %d?
+		printf( _n( '%d quiz', '%d quizzes', $total, 'buddyboss' ), $total );
+		?>
+		</div>
+
+	</div>
 </div>
