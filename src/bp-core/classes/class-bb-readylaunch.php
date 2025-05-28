@@ -419,9 +419,10 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * @return bool True if the network search is enabled, false otherwise.
 		 */
 		public static function bb_is_network_search() {
+			$bp_search = isset( $_REQUEST['bp_search'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['bp_search'] ) ) : '';
 			if (
 				bp_is_active( 'search' ) &&
-				! empty( sanitize_text_field( wp_unslash( $_REQUEST['bp_search'] ) ) )
+				! empty( $bp_search )
 			) {
 				return true;
 			}
