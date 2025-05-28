@@ -913,13 +913,14 @@ export const ReadyLaunchSettings = () => {
 										<p>{__('Enable pages that should have styles from ReadyLaunch.', 'buddyboss')}</p>
 									</div>
 									<div className="field-toggles">
-										<div className="toggle-item">
+										{window?.BP_ADMIN?.register_integration === '1' && (<div className="toggle-item">
 											<ToggleControl
 												label={__('Registration', 'buddyboss')}
 												checked={settings.bb_rl_enabled_pages.registration}
 												onChange={handleNestedSettingChange('bb_rl_enabled_pages', 'registration')}
 											/>
 										</div>
+										)}
 										{window?.BP_ADMIN?.courses_integration === '1' && (
 											<div className="toggle-item">
 												<ToggleControl
