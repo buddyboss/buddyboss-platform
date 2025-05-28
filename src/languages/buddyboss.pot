@@ -250,9 +250,9 @@ msgstr ""
 #: bp-groups/bp-groups-admin.php:152 bp-groups/bp-groups-admin.php:218
 #: bp-members/classes/class-bp-members-admin.php:936
 #: bp-members/classes/class-bp-members-admin.php:1829
-#: bp-moderation/bp-moderation-admin.php:133
-#: bp-moderation/bp-moderation-admin.php:165
-#: bp-moderation/bp-moderation-admin.php:344
+#: bp-moderation/bp-moderation-admin.php:136
+#: bp-moderation/bp-moderation-admin.php:168
+#: bp-moderation/bp-moderation-admin.php:347
 msgid "Overview"
 msgstr ""
 
@@ -315,9 +315,9 @@ msgstr ""
 #: bp-groups/bp-groups-admin.php:237
 #: bp-members/classes/class-bp-members-admin.php:946
 #: bp-members/classes/class-bp-members-admin.php:1853
-#: bp-moderation/bp-moderation-admin.php:141
-#: bp-moderation/bp-moderation-admin.php:174
-#: bp-moderation/bp-moderation-admin.php:353
+#: bp-moderation/bp-moderation-admin.php:144
+#: bp-moderation/bp-moderation-admin.php:177
+#: bp-moderation/bp-moderation-admin.php:356
 msgid "For more information:"
 msgstr ""
 
@@ -3784,10 +3784,6 @@ msgstr ""
 msgid "Note: Any fields in the first group will appear on the signup page."
 msgstr ""
 
-#. Author of the plugin/theme
-msgid "BuddyBoss"
-msgstr ""
-
 #: bp-core/admin/bp-core-admin-functions.php:1237
 #: bp-core/admin/bp-core-admin-functions.php:1246
 msgid "Logged-In"
@@ -4190,19 +4186,19 @@ msgid "Forum Import"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:3351
-#: bp-moderation/bp-moderation-admin.php:384
-#: bp-moderation/bp-moderation-admin.php:460
+#: bp-moderation/bp-moderation-admin.php:387
+#: bp-moderation/bp-moderation-admin.php:463
 msgid "Flagged Members"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:3363
-#: bp-moderation/bp-moderation-admin.php:382
-#: bp-moderation/bp-moderation-admin.php:458
+#: bp-moderation/bp-moderation-admin.php:385
+#: bp-moderation/bp-moderation-admin.php:461
 msgid "Reported Content"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:3377
-#: bp-moderation/bp-moderation-admin.php:577
+#: bp-moderation/bp-moderation-admin.php:580
 #: bp-moderation/bp-moderation-settings.php:121
 #: bp-moderation/classes/class-bp-moderation-component.php:188
 msgid "Reporting Categories"
@@ -4323,9 +4319,9 @@ msgid "Articles"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-help.php:57
-#: bp-moderation/bp-moderation-admin.php:142
-#: bp-moderation/bp-moderation-admin.php:175
-#: bp-moderation/bp-moderation-admin.php:354
+#: bp-moderation/bp-moderation-admin.php:145
+#: bp-moderation/bp-moderation-admin.php:178
+#: bp-moderation/bp-moderation-admin.php:357
 msgid "Documentation"
 msgstr ""
 
@@ -6794,8 +6790,8 @@ msgid "Messages"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-moderation.php:27
-#: bp-core/bp-core-functions.php:2627 bp-moderation/bp-moderation-admin.php:70
-#: bp-moderation/bp-moderation-admin.php:71
+#: bp-core/bp-core-functions.php:2627 bp-moderation/bp-moderation-admin.php:73
+#: bp-moderation/bp-moderation-admin.php:74
 msgid "Moderation"
 msgstr ""
 
@@ -28212,113 +28208,113 @@ msgstr ""
 msgid "Messages <span class=\"%1$s\">%2$s</span>"
 msgstr ""
 
-#: bp-moderation/bp-moderation-admin.php:44
+#: bp-moderation/bp-moderation-admin.php:47
 msgid ""
 "Please confirm you want to hide this content. It will be hidden from all "
 "members in your network."
 msgstr ""
 
-#: bp-moderation/bp-moderation-admin.php:45
+#: bp-moderation/bp-moderation-admin.php:48
 msgid ""
 "Please confirm you want to unhide this content. It will be open for all "
 "members in your network."
 msgstr ""
 
-#: bp-moderation/bp-moderation-admin.php:46
+#: bp-moderation/bp-moderation-admin.php:49
 #: bp-moderation/classes/class-bp-moderation-list-table.php:541
 #: bp-moderation/screens/single/admin/report-single.php:112
 #: bp-moderation/screens/single/admin/report-single.php:255
 msgid "Hide Content"
 msgstr ""
 
-#: bp-moderation/bp-moderation-admin.php:47
+#: bp-moderation/bp-moderation-admin.php:50
 #: bp-moderation/classes/class-bp-moderation-list-table.php:541
 #: bp-moderation/screens/single/admin/report-single.php:112
 #: bp-moderation/screens/single/admin/report-single.php:255
 msgid "Unhide Content"
 msgstr ""
 
-#: bp-moderation/bp-moderation-admin.php:48
+#: bp-moderation/bp-moderation-admin.php:51
 #: bp-moderation/classes/class-bp-moderation-list-table.php:630
 #: bp-moderation/screens/single/admin/report-single.php:178
 msgid "Suspend Member"
 msgstr ""
 
-#: bp-moderation/bp-moderation-admin.php:49
+#: bp-moderation/bp-moderation-admin.php:52
 #: bp-moderation/classes/class-bp-moderation-list-table.php:630
 #: bp-moderation/screens/single/admin/report-single.php:178
 msgid "Unsuspend Member"
 msgstr ""
 
-#: bp-moderation/bp-moderation-admin.php:50
+#: bp-moderation/bp-moderation-admin.php:53
 #: bp-moderation/classes/class-bp-moderation-list-table.php:579
 #: bp-moderation/screens/single/admin/report-single.php:125
 msgid "Suspend Owner"
 msgstr ""
 
-#: bp-moderation/bp-moderation-admin.php:51
+#: bp-moderation/bp-moderation-admin.php:54
 #: bp-moderation/classes/class-bp-moderation-list-table.php:579
 #: bp-moderation/screens/single/admin/report-single.php:125
 msgid "Unsuspend Owner"
 msgstr ""
 
-#: bp-moderation/bp-moderation-admin.php:135
+#: bp-moderation/bp-moderation-admin.php:138
 msgid "View moderation Overview line 1."
 msgstr ""
 
-#: bp-moderation/bp-moderation-admin.php:136
+#: bp-moderation/bp-moderation-admin.php:139
 msgid "View moderation Overview line 2"
 msgstr ""
 
-#: bp-moderation/bp-moderation-admin.php:159
-#: bp-moderation/bp-moderation-admin.php:338
+#: bp-moderation/bp-moderation-admin.php:162
+#: bp-moderation/bp-moderation-admin.php:341
 msgid "Moderation Request"
 msgstr ""
 
-#: bp-moderation/bp-moderation-admin.php:167
-#: bp-moderation/bp-moderation-admin.php:346
+#: bp-moderation/bp-moderation-admin.php:170
+#: bp-moderation/bp-moderation-admin.php:349
 msgid "Moderation overview line 1"
 msgstr ""
 
-#: bp-moderation/bp-moderation-admin.php:168
-#: bp-moderation/bp-moderation-admin.php:347
+#: bp-moderation/bp-moderation-admin.php:171
+#: bp-moderation/bp-moderation-admin.php:350
 msgid "Moderation overview line 2"
 msgstr ""
 
-#: bp-moderation/bp-moderation-admin.php:182
-#: bp-moderation/bp-moderation-admin.php:361
+#: bp-moderation/bp-moderation-admin.php:185
+#: bp-moderation/bp-moderation-admin.php:364
 #. translators: accessibility text
 msgid "Moderation list navigation"
 msgstr ""
 
-#: bp-moderation/bp-moderation-admin.php:429
-#: bp-moderation/bp-moderation-admin.php:527
+#: bp-moderation/bp-moderation-admin.php:432
+#: bp-moderation/bp-moderation-admin.php:530
 #. translators:  number of items.
 msgid "Content hidden successfully."
 msgstr ""
 
-#: bp-moderation/bp-moderation-admin.php:434
-#: bp-moderation/bp-moderation-admin.php:532
+#: bp-moderation/bp-moderation-admin.php:437
+#: bp-moderation/bp-moderation-admin.php:535
 #. translators:  number of items.
 msgid "Content unhidden successfully."
 msgstr ""
 
-#: bp-moderation/bp-moderation-admin.php:439
-#: bp-moderation/bp-moderation-admin.php:537
+#: bp-moderation/bp-moderation-admin.php:442
+#: bp-moderation/bp-moderation-admin.php:540
 #. translators:  number of items.
 msgid "Member suspended successfully"
 msgid_plural "Members suspended successfully"
 msgstr[0] ""
 msgstr[1] ""
 
-#: bp-moderation/bp-moderation-admin.php:444
+#: bp-moderation/bp-moderation-admin.php:447
 #. translators:  number of items.
 msgid "Member unsuspended successfully."
 msgid_plural "Members unsuspended successfully."
 msgstr[0] ""
 msgstr[1] ""
 
-#: bp-moderation/bp-moderation-admin.php:542
+#: bp-moderation/bp-moderation-admin.php:545
 #. translators:  number of items.
 msgid "Member unsuspended successfully"
 msgid_plural "Members suspended successfully"
@@ -35709,6 +35705,10 @@ msgstr ""
 msgid ""
 "The BuddyBoss Platform adds community features to WordPress. Member "
 "Profiles, Activity Feeds, Direct Messaging, Notifications, and more!"
+msgstr ""
+
+#. Author of the plugin/theme
+msgid "BuddyBoss"
 msgstr ""
 
 #: bp-blogs/classes/class-bp-blogs-recent-posts-widget.php:165
