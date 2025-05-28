@@ -1636,17 +1636,26 @@ class BB_Topics_Manager {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param int $topic_id The ID of the topic.
+	 * @param array $args {
+	 *     Array of arguments.
+	 *     @type int $topic_id The ID of the topic.
+	 *     @type int $item_id The ID of the item.
+	 *     @type string $item_type The type of item.
+	 * }
 	 *
 	 * @return string The permission type for the topic.
 	 */
-	public function bb_get_topic_permission_type( $topic_id ) {
-		if ( empty( $topic_id ) ) {
+	public function bb_get_topic_permission_type( $args ) {
+		if ( empty( $args['topic_id'] ) ) {
 			return 'anyone';
 		}
 
+		$topic_id  = $args['topic_id'];
+		$item_id   = $args['item_id'] ?? 0;
+		$item_type = $args['item_type'] ?? 'activity';
+
 		// phpcs:ignore
-		$topic_permission_type = $this->wpdb->get_var( $this->wpdb->prepare( "SELECT permission_type FROM {$this->topic_rel_table} WHERE topic_id = %d", $topic_id ) );
+		$topic_permission_type = $this->wpdb->get_var( $this->wpdb->prepare( "SELECT permission_type FROM {$this->topic_rel_table} WHERE topic_id = %d AND item_id = %d AND item_type = %s", $topic_id, $item_id, $item_type ) );
 
 		if ( ! $topic_permission_type ) {
 			return 'anyone';
