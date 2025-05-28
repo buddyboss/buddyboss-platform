@@ -3994,7 +3994,15 @@ function bb_load_activity_topics_manager() {
  */
 function bb_activity_save_topic_data( $activity ) {
 
-	if ( ! isset( $_POST['topic_id'] ) || 'activity_comment' === $activity->type ) {
+	if ( ! isset( $_POST['topic_id'] ) ) {
+		return;
+	}
+
+	if ( ! in_array( $activity->component, array( 'groups', 'activity' ), true ) ) {
+		return;
+	}
+
+	if ( 'activity_update' !== $activity->type ) {
 		return;
 	}
 
