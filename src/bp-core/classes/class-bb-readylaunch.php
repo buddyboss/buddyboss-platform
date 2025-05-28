@@ -2284,6 +2284,11 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				return false;
 			}
 
+			$courses_integration = bp_get_option( 'bb_rl_enabled_pages' )['courses'] ?? false;
+			if ( ! $courses_integration ) {
+				return false;
+			}
+
 			global $post, $wp_query;
 
 			// Multiple ways to get the post type
