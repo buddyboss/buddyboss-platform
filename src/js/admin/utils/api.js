@@ -129,12 +129,12 @@ export const debounce = (func, wait) => {
 export const fetchMenus = async () => {
 	try {
 	  // Try the most common endpoint for menus
-	  const menus = await apiFetch({ path: '/wp/v2/menus', method: 'GET' });
+	  const menus = await apiFetch({ path: '/wp/v2/menus?per_page=99', method: 'GET' });
 	  return menus;
 	} catch (e) {
 	  // Try fallback endpoint if needed
 	  try {
-		const menus = await apiFetch({ path: '/menus/v1/menus', method: 'GET' });
+		const menus = await apiFetch({ path: '/menus/v1/menus?per_page=99', method: 'GET' });
 		return menus;
 	  } catch (err) {
 		console.error('Error fetching menus:', err);
