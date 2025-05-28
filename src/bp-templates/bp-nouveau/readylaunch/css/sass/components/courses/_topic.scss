@@ -1,6 +1,6 @@
-.bb-rl-learndash-lesson {
+.bb-rl-learndash-topic {
 
-	.bb-rl-lesson-footer {
+	.bb-rl-topic-footer {
 		position: fixed;
 		bottom: 0;
 		padding: 12px 0;
@@ -10,7 +10,7 @@
 		z-index: 100;
 	}
 
-	.bb-rl-lesson-actions {
+	.bb-rl-topic-actions {
 		max-width: 800px;
 		margin: 0 auto;
 		display: flex;
@@ -19,19 +19,19 @@
 	}
 }
 
-.single-sfwd-lessons {
+.single-sfwd-topics {
 
 	.site.bb-readylaunch {
 		background-color: var(--bb-rl-background-color);
 	}
 }
 
-.bb-learndash-content-wrap--lesson {
+.bb-learndash-content-wrap--topic {
 	padding-bottom: 60px;
 	background-color: var(--bb-rl-background-color);
 }
 
-.bb-rl-lesson-block {
+.bb-rl-topic-block {
 	max-width: 800px;
 	margin: 0 auto;
 	padding: var(--bb-rl-space-400) 0;
@@ -58,50 +58,5 @@
 
 		@include bb-rl-label-heading-md-thin;
 		color: var(--bb-rl-text-secondary-color);
-	}
-}
-
-.bb-rl-lesson-count {
-
-	@include bb-rl-label-heading;
-	color: var(--bb-rl-text-secondary-color);
-}
-
-.bb-rl-lesson-featured-image {
-
-	img {
-		width: 100%;
-		height: auto;
-		border-radius: var(--bb-rl-radius-lg);
-		object-fit: cover;
-	}
-}
-
-.bb-rl-lesson-actions {
-
-	.learndash_next_prev_link {
-		display: flex;
-		gap: var(--bb-rl-space-200);
-		align-items: center;
-	}
-
-	a.prev-link,
-	a.next-link {
-
-		@include bb-rl-button;
-		@include bb-rl-button-secondary-fill;
-		@include bb-rl-button--small;
-		gap: var(--bb-rl-space-50);
-	}
-
-	span.prev-link,
-	span.next-link {
-
-		@include bb-rl-button;
-		@include bb-rl-button--secondary-outline;
-		@include bb-rl-button--small;
-		gap: var(--bb-rl-space-50);
-		cursor: default;
-		pointer-events: none;
 	}
 }
