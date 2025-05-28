@@ -138,9 +138,6 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				add_action( 'wp_head', array( $this, 'bb_rl_start_buffering' ), 0 );
 				add_action( 'wp_footer', array( $this, 'bb_rl_end_buffering' ), 999 );
 
-				// Remove the footer debug message hook.
-				// add_action( 'wp_footer', array( $this, 'bb_rl_debug_footer_message' ) );
-
 				add_action( 'wp_ajax_bb_fetch_header_messages', array( $this, 'bb_fetch_header_messages' ) );
 				add_action( 'wp_ajax_bb_fetch_header_notifications', array( $this, 'bb_fetch_header_notifications' ) );
 
@@ -184,24 +181,32 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				add_filter( 'bp_core_get_js_strings', array( $this, 'bb_rl_modify_js_strings' ), 10, 1 );
 
 				// Remove BuddyBoss Theme login hooks.
-				add_action( 'login_init', function() {
-					remove_action( 'login_message', 'change_register_message' );
-					remove_action( 'login_message', 'signin_login_message' );
-					remove_action( 'login_head', 'buddyboss_login_scripts', 150 );
-					remove_action( 'login_head', 'login_custom_head', 150 );
-					remove_action( 'login_form', 'login_custom_form' );
-					remove_action( 'init', 'buddyboss_theme_login_load' );
-					remove_action( 'login_enqueue_scripts', 'login_enqueue_scripts' );
-					remove_action( 'login_message', 'login_message' );
-					remove_filter( 'login_headertext', 'login_headertext' );
-					remove_filter( 'login_headerurl', 'login_headerurl' );
-				}, 20 );
+				add_action(
+					'login_init',
+					function () {
+						remove_action( 'login_message', 'change_register_message' );
+						remove_action( 'login_message', 'signin_login_message' );
+						remove_action( 'login_head', 'buddyboss_login_scripts', 150 );
+						remove_action( 'login_head', 'login_custom_head', 150 );
+						remove_action( 'login_form', 'login_custom_form' );
+						remove_action( 'init', 'buddyboss_theme_login_load' );
+						remove_action( 'login_enqueue_scripts', 'login_enqueue_scripts' );
+						remove_action( 'login_message', 'login_message' );
+						remove_filter( 'login_headertext', 'login_headertext' );
+						remove_filter( 'login_headerurl', 'login_headerurl' );
+					},
+					20
+				);
 
 				// Dequeue BuddyBoss Theme login styles.
-				add_action( 'login_enqueue_scripts', function() {
-					wp_dequeue_style( 'buddyboss-theme-login' );
-					wp_deregister_style( 'buddyboss-theme-login' );
-				}, 20 );
+				add_action(
+					'login_enqueue_scripts',
+					function () {
+						wp_dequeue_style( 'buddyboss-theme-login' );
+						wp_deregister_style( 'buddyboss-theme-login' );
+					},
+					20
+				);
 
 				// Login page.
 				add_action( 'login_enqueue_scripts', array( $this, 'bb_rl_login_enqueue_scripts' ), 999 );
@@ -211,7 +216,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				add_filter( 'login_message', array( $this, 'bb_rl_signin_login_message' ) );
 				add_action( 'login_form', array( $this, 'bb_rl_login_custom_form' ) );
 
-				// Add Dynamic colors
+				// Add Dynamic colors.
 				add_action( 'wp_head', array( $this, 'bb_rl_dynamic_colors' ) );
 			}
 
@@ -226,7 +231,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			add_filter( 'bp_rest_platform_settings', array( $this, 'bb_rest_readylaunch_platform_settings' ), 10, 1 );
 
 			// Update notification item action links.
-			add_filter( 'bp_get_the_notification_action_links', array( $this, 'bb_rl_modify_notification_action_links' ), 10, 2 );
+			add_filter( 'bp_get_the_notification_action_links', array( $this, 'bb_rl_modify_notification_action_links' ), 10 );
 
 			// LearnDash integration.
 			add_filter( 'bp_is_sidebar_enabled_for_courses', array( $this, 'bb_is_sidebar_enabled_for_courses' ) );
@@ -320,16 +325,6 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		}
 
 		/**
-		 * Empty version of debug footer message to prevent fatal errors
-		 *
-		 * @since BuddyBoss [BBVERSION]
-		 */
-		public function bb_rl_debug_footer_message() {
-			// This method is intentionally empty to prevent fatal errors
-			// The actual debug functionality has been removed
-		}
-
-		/**
 		 * Override full width for avatar in ReadyLaunch.
 		 *
 		 * @since BuddyBoss [BBVERSION]
@@ -403,8 +398,11 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					wp_doing_ajax() ||
 					self::bb_is_network_search() ||
 					is_login() ||
-					bp_is_register_page() ||
-					$this->bb_rl_is_learndash_page() // Add check for LearnDash pages
+					(
+						bp_is_register_page() &&
+						$this->bb_rl_is_page_enabled_for_integration( 'registration' )
+					) ||
+					$this->bb_rl_is_learndash_page() // Add check for LearnDash pages.
 				)
 			) {
 				return true;
@@ -413,10 +411,17 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			return false;
 		}
 
+		/**
+		 * Check if the network search is enabled.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return bool True if the network search is enabled, false otherwise.
+		 */
 		public static function bb_is_network_search() {
 			if (
 				bp_is_active( 'search' ) &&
-				! empty( $_REQUEST['bp_search'] )
+				! empty( sanitize_text_field( wp_unslash( $_REQUEST['bp_search'] ) ) )
 			) {
 				return true;
 			}
@@ -424,16 +429,26 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			return false;
 		}
 
+		/**
+		 * Check if the admin is enabled.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return bool True if the admin is enabled, false otherwise.
+		 */
 		private function bb_is_readylaunch_admin_enabled() {
+			$page = isset( $_GET['page'] ) ? sanitize_text_field( wp_unslash( $_GET['page'] ) ) : '';
+			$tab  = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : '';
+
 			if (
 				(
 					bb_is_readylaunch_enabled() &&
 					is_admin() &&
 					! wp_doing_ajax() &&
-					! empty( $_GET['page'] ) &&
-					'bp-settings' == $_GET['page'] &&
-					! empty( $_GET['tab'] ) &&
-					'bp-document' == $_GET['tab']
+					! empty( $page ) &&
+					'bp-settings' === $page &&
+					! empty( $tab ) &&
+					'bp-document' === $tab
 				)
 			) {
 				return true;
@@ -642,7 +657,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			$bb_icon_version = function_exists( 'bb_icon_font_map_data' ) ? bb_icon_font_map_data( 'version' ) : '';
 			$bb_icon_version = ! empty( $bb_icon_version ) ? $bb_icon_version : bp_get_version();
 
-			// Enqueue BB icons for admin pages
+			// Enqueue BB icons for admin pages.
 			wp_enqueue_style( 'bb-readylaunch-bb-icons', buddypress()->plugin_url . "bp-templates/bp-nouveau/icons/css/bb-icons{$min}.css", array(), $bb_icon_version );
 			wp_enqueue_style( 'bb-readylaunch-bb-icons-map', buddypress()->plugin_url . "bp-templates/bp-nouveau/icons/css/icons-map{$min}.css", array(), $bb_icon_version );
 		}
@@ -1316,6 +1331,15 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			return $svg['font'];
 		}
 
+		/**
+		 * Get the icon class for the document.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $icon_class The icon class.
+		 *
+		 * @return string The icon class.
+		 */
 		public function bb_readylaunch_document_icon_class( $icon_class ) {
 			$mapped_icon = array(
 				'bb-icon-file'             => 'bb-icons-rl-file',
@@ -1513,6 +1537,8 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * Callback function for invite form.
 		 *
 		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return void|false
 		 */
 		public function bb_rl_invite_form_callback() {
 			$response = array(
@@ -1520,10 +1546,12 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				'type'    => 'error',
 			);
 
+			$nonce = isset( $_POST['bb_rl_invite_form_nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['bb_rl_invite_form_nonce'] ) ) : '';
+
 			// Verify nonce.
 			if (
-				! isset( $_POST['bb_rl_invite_form_nonce'] ) ||
-				! wp_verify_nonce( $_POST['bb_rl_invite_form_nonce'], 'bb_rl_invite_form_action' )
+				! empty( $nonce ) &&
+				! wp_verify_nonce( $nonce, 'bb_rl_invite_form_action' )
 			) {
 				$response['message'] = esc_html__( 'Nonce verification failed.', 'buddyboss' );
 				wp_send_json_error( $response );
@@ -1556,15 +1584,15 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				wp_send_json_error( $response );
 			}
 
-			$name        = sanitize_text_field( wp_unslash( $_POST['bb-rl-invite-name'] ) );
+			$name        = isset( $_POST['bb-rl-invite-name'] ) ? sanitize_text_field( wp_unslash( $_POST['bb-rl-invite-name'] ) ) : '';
 			$member_type = isset( $_POST['bb-rl-invite-type'] ) ? sanitize_text_field( wp_unslash( $_POST['bb-rl-invite-type'] ) ) : '';
 
-			$subject = bp_disable_invite_member_email_subject() && ! empty( $_POST['bp_member_invites_custom_subject'] )
-				? stripslashes( strip_tags( wp_unslash( $_POST['bp_member_invites_custom_subject'] ) ) )
+			$subject = bp_disable_invite_member_email_subject() && ! empty( sanitize_text_field( wp_unslash( $_POST['bp_member_invites_custom_subject'] ) ) )
+				? stripslashes( strip_tags( sanitize_text_field( wp_unslash( $_POST['bp_member_invites_custom_subject'] ) ) ) )
 				: stripslashes( strip_tags( bp_get_member_invitation_subject() ) );
 
-			$message = bp_disable_invite_member_email_content() && ! empty( $_POST['bp_member_invites_custom_content'] )
-				? stripslashes( strip_tags( wp_unslash( $_POST['bp_member_invites_custom_content'] ) ) )
+			$message = bp_disable_invite_member_email_content() && ! empty( sanitize_text_field( wp_unslash( $_POST['bp_member_invites_custom_content'] ) ) )
+				? stripslashes( strip_tags( sanitize_textarea_field( wp_unslash( $_POST['bp_member_invites_custom_content'] ) ) ) )
 				: stripslashes( strip_tags( bp_get_member_invitation_message() ) );
 
 			$message .= ' ' . bp_get_member_invites_wildcard_replace(
@@ -1921,9 +1949,9 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * @since BuddyBoss [BBVERSION]
 		 */
 		public function bb_rl_login_enqueue_scripts() {
-			wp_enqueue_style( 'bb-rl-login-fonts', buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/assets/fonts/fonts.css' );
-			wp_enqueue_style( 'bb-rl-login-style', buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/css/login.css' );
-			wp_enqueue_style( 'bb-rl-login-style-icons', buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/icons/css/bb-icons-rl.min.css' );
+			wp_enqueue_style( 'bb-rl-login-fonts', buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/assets/fonts/fonts.css', array(), bp_get_version() );
+			wp_enqueue_style( 'bb-rl-login-style', buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/css/login.css', array(), bp_get_version() );
+			wp_enqueue_style( 'bb-rl-login-style-icons', buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/icons/css/bb-icons-rl.min.css', array(), bp_get_version() );
 		}
 
 		/**
@@ -1980,13 +2008,13 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * @return string $message The modified login message.
 		 */
 		public function bb_rl_signin_login_message( $message ) {
-			$home_url                 = get_bloginfo( 'url' );
+			$action                   = isset( $_REQUEST['action'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['action'] ) ) : '';
 			$confirm_admin_email_page = false;
-			if ( $GLOBALS['pagenow'] === 'wp-login.php' && ! empty( $_REQUEST['action'] ) && $_REQUEST['action'] === 'confirm_admin_email' ) {
+			if ( 'wp-login.php' === $GLOBALS['pagenow'] && ! empty( $action ) && 'confirm_admin_email' === $action ) {
 				$confirm_admin_email_page = true;
 			}
 
-			if ( $confirm_admin_email_page === false ) {
+			if ( false === $confirm_admin_email_page ) {
 				if ( empty( $message ) ) {
 					return sprintf(
 						'<div class="login-heading"><h2>%s</h2></div>',
@@ -2037,9 +2065,9 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
-		 * @param array $settings Search settings array
+		 * @param array $settings Search settings array.
 		 *
-		 * @return array Modified settings
+		 * @return array Modified settings.
 		 */
 		public function bb_rl_filter_search_js_settings( $settings ) {
 			// Set the autocomplete selector for ReadyLaunch search form.
@@ -2061,7 +2089,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				array(
 					'metadata'        => trailingslashit( buddypress()->plugin_dir ) . 'bp-core/blocks/readylaunch-header',
 					'render_callback' => 'bb_block_render_readylaunch_header_block',
-				),
+				)
 			);
 		}
 
@@ -2242,8 +2270,6 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			return $settings;
 		}
 
-
-
 		/**
 		 * Enqueue LearnDash styles for ReadyLaunch.
 		 *
@@ -2254,7 +2280,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				return;
 			}
 
-			// Enqueue LearnDash ReadyLaunch styles
+			// Enqueue LearnDash ReadyLaunch styles.
 			wp_enqueue_style(
 				'bb-readylaunch-learndash',
 				buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/css/courses.css',
@@ -2262,7 +2288,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				bp_get_version()
 			);
 
-			// Enqueue our LearnDash helper JavaScript
+			// Enqueue our LearnDash helper JavaScript.
 			wp_enqueue_script(
 				'bb-readylaunch-learndash-js',
 				buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/js/bb-readylaunch-learndash.js',
@@ -2291,28 +2317,28 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 			global $post, $wp_query;
 
-			// Multiple ways to get the post type
+			// Multiple ways to get the post type.
 			$post_type = '';
-			
-			// get_post_type()
+
+			// Get post type.
 			if ( function_exists( 'get_post_type' ) ) {
 				$post_type = get_post_type();
 			}
-			
-			// Check global $post
+
+			// Check global $post.
 			if ( empty( $post_type ) && isset( $post->post_type ) ) {
 				$post_type = $post->post_type;
 			}
-			
-			// Check queried object
+
+			// Check queried object.
 			if ( empty( $post_type ) && is_object( $wp_query ) ) {
 				$queried_object = get_queried_object();
 				if ( $queried_object && isset( $queried_object->post_type ) ) {
 					$post_type = $queried_object->post_type;
 				}
 			}
-			
-			// Check query vars
+
+			// Check query vars.
 			if ( empty( $post_type ) && is_object( $wp_query ) && isset( $wp_query->query_vars['post_type'] ) ) {
 				$post_type = $wp_query->query_vars['post_type'];
 			}
@@ -2333,12 +2359,12 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				return true;
 			}
 
-			// Check if post type matches LearnDash types
+			// Check if post type matches LearnDash types.
 			if ( ! empty( $post_type ) && in_array( $post_type, $ld_post_types, true ) ) {
 				return true;
 			}
 
-			// Check REQUEST_URI for LearnDash patterns
+			// Check REQUEST_URI for LearnDash patterns.
 			if (
 				(
 					! bp_is_user() &&
@@ -2350,15 +2376,15 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				isset( $_SERVER['REQUEST_URI'] )
 			) {
 				$request_uri = sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) );
-				
-				// Check for any LearnDash post type in the URL
+
+				// Check for any LearnDash post type in the URL.
 				foreach ( $ld_post_types as $ld_post_type ) {
 					if ( ! empty( $ld_post_type ) && strpos( $request_uri, $ld_post_type ) !== false ) {
 						return true;
 					}
 				}
-				
-				// Additional patterns to check for LearnDash URLs (excluding BuddyPress patterns)
+
+				// Additional patterns to check for LearnDash URLs (excluding BuddyPress patterns).
 				$ld_patterns = array(
 					'/lesson/',
 					'/lessons/',
@@ -2379,14 +2405,14 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					'sfwd-essays',
 					'sfwd-groups', // Use specific LearnDash group slug
 				);
-				
+
 				foreach ( $ld_patterns as $pattern ) {
 					if ( strpos( $request_uri, $pattern ) !== false ) {
 						return true;
 					}
 				}
-				
-				// Legacy check for courses
+
+				// Legacy check for courses.
 				if ( defined( 'LDLMS_Post_Types::COURSE' ) && strpos( $request_uri, LDLMS_Post_Types::COURSE ) !== false ) {
 					return true;
 				}
@@ -2419,18 +2445,17 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * @since BuddyBoss [BBVERSION]
 		 *
 		 * @param string $retval HTML links for actions to take on single notifications.
-		 * @param array  $r      Array of parsed arguments.
 		 *
 		 * @return string
 		 */
-		public function bb_rl_modify_notification_action_links( $retval, $r ) {
-			// Replace bp-screen-reader-text with bb_rl_label
+		public function bb_rl_modify_notification_action_links( $retval ) {
+			// Replace bp-screen-reader-text with bb_rl_label.
 			$retval = str_replace( 'bp-screen-reader-text', 'bb_rl_label', $retval );
 
-			// Update link text for mark as read
+			// Update link text for mark as read.
 			$retval = str_replace( '>Read<', '>' . __( 'Mark as read', 'buddyboss' ) . '<', $retval );
 
-			// Update link text for delete
+			// Update link text for delete.
 			$retval = str_replace( '>Delete<', '>' . __( 'Delete notifications', 'buddyboss' ) . '<', $retval );
 
 			return $retval;
@@ -2500,30 +2525,30 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 */
 		public function bb_rl_courses_integration_page() {
 			global $post, $wp_query;
-			
-			// Get LearnDash post type slugs
-			$course_slug = learndash_get_post_type_slug( 'course' );
-			$lesson_slug = learndash_get_post_type_slug( 'lesson' );
-			$topic_slug = learndash_get_post_type_slug( 'topic' );
-			$quiz_slug = learndash_get_post_type_slug( 'quiz' );
+
+			// Get LearnDash post type slugs.
+			$course_slug     = learndash_get_post_type_slug( 'course' );
+			$lesson_slug     = learndash_get_post_type_slug( 'lesson' );
+			$topic_slug      = learndash_get_post_type_slug( 'topic' );
+			$quiz_slug       = learndash_get_post_type_slug( 'quiz' );
 			$assignment_slug = learndash_get_post_type_slug( 'assignment' );
-			$essays_slug = learndash_get_post_type_slug( 'essays' );
-			$group_slug = learndash_get_post_type_slug( 'group' );
-			
-			// Check for archive pages first (these take priority)
+			$essays_slug     = learndash_get_post_type_slug( 'essays' );
+			$group_slug      = learndash_get_post_type_slug( 'group' );
+
+			// Check for archive pages first (these take priority).
 			if ( is_post_type_archive( $course_slug ) ) {
 				bp_get_template_part( 'learndash/ld30/archive-sfwd-courses' );
 				return;
 			}
-			
-			// Check for singular pages using WordPress functions
+
+			// Check for singular pages using WordPress functions.
 			if ( is_singular( $course_slug ) ) {
 				bp_get_template_part( 'learndash/ld30/course' );
 				return;
 			}
-			
+
 			if ( is_singular( $lesson_slug ) ) {
-				// Try to include the template directly first, fallback to bp_get_template_part
+				// Try to include the template directly first, fallback to bp_get_template_part.
 				$template_path = bp_locate_template( 'learndash/ld30/lesson.php' );
 				if ( ! empty( $template_path ) && file_exists( $template_path ) ) {
 					include $template_path;
@@ -2532,59 +2557,59 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				}
 				return;
 			}
-			
+
 			if ( is_singular( $topic_slug ) ) {
 				bp_get_template_part( 'learndash/ld30/topic' );
 				return;
 			}
-			
+
 			if ( is_singular( $quiz_slug ) ) {
 				bp_get_template_part( 'learndash/ld30/quiz' );
 				return;
 			}
-			
+
 			if ( is_singular( $assignment_slug ) ) {
 				bp_get_template_part( 'learndash/ld30/assignment' );
 				return;
 			}
-			
+
 			if ( is_singular( $essays_slug ) ) {
 				bp_get_template_part( 'learndash/ld30/essays' );
 				return;
 			}
-			
+
 			if ( is_singular( $group_slug ) ) {
 				bp_get_template_part( 'learndash/ld30/group' );
 				return;
 			}
-			
-			// Fallback: Try multiple ways to get the post type for edge cases
+
+			// Fallback: Try multiple ways to get the post type for edge cases.
 			$post_type = '';
-			
+
 			if ( function_exists( 'get_post_type' ) ) {
 				$post_type = get_post_type();
 			}
-			
+
 			if ( empty( $post_type ) && isset( $post->post_type ) ) {
 				$post_type = $post->post_type;
 			}
-			
+
 			if ( empty( $post_type ) && is_object( $wp_query ) ) {
 				$queried_object = get_queried_object();
 				if ( $queried_object && isset( $queried_object->post_type ) ) {
 					$post_type = $queried_object->post_type;
 				}
 			}
-			
+
 			if ( empty( $post_type ) && is_object( $wp_query ) && isset( $wp_query->query_vars['post_type'] ) ) {
 				$post_type = $wp_query->query_vars['post_type'];
 			}
-			
-			// If we still don't have post data, try to determine from URL (for edge cases)
+
+			// If we still don't have post data, try to determine from URL (for edge cases).
 			if ( empty( $post_type ) && isset( $_SERVER['REQUEST_URI'] ) ) {
 				$request_uri = sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) );
-				
-				// Only check for specific single post patterns, not general directory patterns
+
+				// Only check for specific single post patterns, not general directory patterns.
 				if ( preg_match( '#/' . preg_quote( $lesson_slug, '#' ) . '/([^/]+)/?$#', $request_uri ) ) {
 					$post_type = $lesson_slug;
 				} elseif ( preg_match( '#/' . preg_quote( $course_slug, '#' ) . '/([^/]+)/?$#', $request_uri ) ) {
@@ -2601,8 +2626,8 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					$post_type = $group_slug;
 				}
 			}
-			
-			// Handle fallback cases based on detected post type
+
+			// Handle fallback cases based on detected post type.
 			if ( $post_type === $course_slug ) {
 				bp_get_template_part( 'learndash/ld30/course' );
 			} elseif ( $post_type === $lesson_slug ) {
@@ -2623,7 +2648,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			} elseif ( $post_type === $group_slug ) {
 				bp_get_template_part( 'learndash/ld30/group' );
 			} else {
-				// Default to courses archive
+				// Default to courses archive.
 				bp_get_template_part( 'learndash/ld30/archive-sfwd-courses' );
 			}
 		}
