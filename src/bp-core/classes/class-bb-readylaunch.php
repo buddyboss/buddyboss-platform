@@ -2479,6 +2479,21 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		}
 
 		/**
+		 * Function to check pages is enable for integration.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $page The page to check.
+		 *
+		 * @return bool True if the page is enabled for integration, false otherwise.
+		 */
+		public function bb_rl_is_page_enabled_for_integration( $page ) {
+			$enabled_pages = bp_get_option( 'bb_rl_enabled_pages' );
+
+			return ! empty( $enabled_pages[ $page ] );
+		}
+
+		/**
 		 * Integration pages callback.
 		 *
 		 * @since BuddyBoss [BBVERSION]
