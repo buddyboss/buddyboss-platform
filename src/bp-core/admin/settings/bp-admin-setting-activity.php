@@ -524,6 +524,9 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 					$topics = ! empty( $topics['topics'] ) ? $topics['topics'] : array();
 					if ( ! empty( $topics ) ) {
 						foreach ( $topics as $topic ) {
+							if ( ! is_object( $topic ) ) {
+								continue;
+							}
 							$topic_attr = array(
 								'topic_id'  => $topic->topic_id,
 								'item_id'   => ! empty( $topic->item_id ) ? $topic->item_id : 0,
