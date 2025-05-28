@@ -1238,3 +1238,16 @@ function bb_telemetry_load() {
 }
 
 add_action( 'bp_init', 'bb_telemetry_load' );
+
+/**
+ * Function to load in-plugin notification class.
+ *
+ * @since BuddyBoss [BB_VERSION]
+ */
+function bb_in_plugin_notification() {
+	if ( class_exists( 'BB_Grd_Lvl_Ctrl' ) ) {
+		// Load GroundLevel classes.
+		new BB_Grd_Lvl_Ctrl();
+	}
+}
+add_action( 'init', 'bb_in_plugin_notification', 4 );
