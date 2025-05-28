@@ -947,6 +947,7 @@
 
 .ld-lesson-list .ld-item-list-item-expanded .ld-table-list-item {
   padding: var(--bb-rl-space-200);
+  background-color: var(--bb-rl-background-color);
   border-bottom: 1px solid var(--bb-rl-border-secondary-color);
 }
 
