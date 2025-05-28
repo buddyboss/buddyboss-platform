@@ -177,16 +177,109 @@
 		}
 	}
 
-	.bb-rl-course-content-collapse {
-		@include bb-rl-label-heading-bolder;
+	.ld-expand-button {
+		@include bb-rl-label-heading;
 		color: var(--bb-rl-text-color);
+		background-color: transparent;
+		border: 0;
 	}
 }
 
-.bb-rl-lessons-list {
+.bb-rl-course-content {
+	display: flex;
+	gap: var(--bb-rl-space-400);
+
+	.bb-rl-course-content-inner {
+		flex: 1;
+	}
+
+	.bb-rl-course-content-sidebar {
+		flex: 0 0 320px;
+	}
+}
+
+.ld-lesson-list {
 	border: 1px solid var(--bb-rl-border-secondary-color);
 	border-radius: var(--bb-rl-radius-md);
 	margin-bottom: var(--bb-rl-space-400);
+
+	.ld-item-list-item-preview {
+		display: flex;
+		align-items: center;
+		background-color: var(--bb-rl-background-hover-color);
+		border-radius: var(--bb-rl-radius-md) var(--bb-rl-radius-md) 0 0;
+		border-bottom: 1px solid var(--bb-rl-border-secondary-color);
+		padding: var(--bb-rl-space-200);
+
+		> a {
+			font-size: 16px;
+			font-weight: 500;
+			color: var(--bb-rl-text-color);
+			flex: 1;
+			order: 2;
+		}
+
+		.ld-item-title {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+		}
+
+		.ld-item-details {
+			order: 1;
+			font-size: 0;
+			margin-right: 12px;
+		}
+
+		.ld-item-components {
+			margin-left: auto;
+			font-weight: 400;
+		}
+
+		&.ld-expanded .ld-icon-arrow-down:before {
+			content: "\e136";
+		}
+	}
+
+	.ld-item-details {
+
+		.ld-expand-button  {
+			cursor: pointer;
+		}
+
+		.ld-icon-arrow-down:before {
+			font-family: bb-icons-rl;
+			content: "\e13c";
+			font-size: 16px;
+			color: var(--bb-rl-icon-color);
+		}
+	}
+
+	.ld-item-list-item-expanded {
+		display: none;
+		position: relative;
+		transition: max-height .5s ease;
+
+		.ld-table-list-header {
+			display: none;
+		}
+
+		.ld-table-list-item {
+			padding: var(--bb-rl-space-200);
+			border-bottom: 1px solid var(--bb-rl-border-secondary-color);
+
+			.ld-item-title {
+				display: flex;
+				align-items: center;
+				background-color: var(--bb-rl-background-color);
+			}
+
+			.ld-table-list-item-preview {
+				font-size: 14px;
+				color: var(--bb-rl-text-secondary-color);
+			}
+		}
+	}
 }
 
 .bb-rl-entry-content {

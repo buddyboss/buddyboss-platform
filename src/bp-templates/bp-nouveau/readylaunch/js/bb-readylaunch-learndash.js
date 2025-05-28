@@ -22,8 +22,21 @@
             this.setupCourseFilters();
             this.setupSidebarToggle();
             this.setupCourseCardPopups();
+            this.addEvents();
         },
 
+        addEvents: function() {
+            $( document ).on( 'click', '.ld-expand-button', this.handleLessonExpand );
+        },
+
+        handleLessonExpand: function(e) {
+            e.preventDefault();
+            var $parentEl = $(this).closest('.ld-item-list-item');
+            var $containerElm = $parentEl.find('.ld-item-list-item-expanded');
+            var $expandElm = $parentEl.find('.ld-item-list-item-preview');
+            $expandElm.toggleClass('ld-expanded');
+            $containerElm.toggleClass('ld-expanded').slideToggle( 300 );
+        },
         /**
          * Setup course grid/list view toggle
          */
@@ -285,7 +298,7 @@
             
             // Reset any previous transform adjustments
             $popup.css('transform', '');
-        }
+        },
     };
     
     /**
