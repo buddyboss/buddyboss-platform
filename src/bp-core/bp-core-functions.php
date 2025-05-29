@@ -10027,6 +10027,6 @@ function bb_topics_manager_instance() {
  * @return string
  */
 function bb_pro_group_activity_topics_version() {
-	return '2.7.20'; // @todo: Update when release.
+	return '2.7.30'; // @todo: Update when release.
 }
 
