@@ -4004,8 +4004,6 @@ function bb_activity_save_topic_data( $activity ) {
 		return;
 	}
 
-	check_admin_referer( 'post_update', '_wpnonce_post_update' );
-
 	$topic_id = intval( $_POST['topic_id'] );
 	$item_id  = isset( $_POST['group_id'] ) ? intval( $_POST['group_id'] ) : 0;
 	// If topic ID is provided, add the relationship.
