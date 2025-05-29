@@ -119,24 +119,24 @@ $readylaunch = BB_Readylaunch::instance();
 										<h2 class="bb-rl-course-title">
 											<a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
 										</h2>
-										<div class="bb-rl-course-meta">
+										<div class="bb-rl-course-meta bb-rl-course-author">
 											<?php
 											$user_link = bp_core_get_user_domain( get_the_author_meta( 'ID' ) );
 											if ( ! empty( $user_link ) ) {
 												?>
-												<a class="item-avatar" href="<?php echo esc_url( $user_link ); ?>">
+												<a class="item-avatar bb-rl-author-avatar" href="<?php echo esc_url( $user_link ); ?>">
 													<?php echo get_avatar( get_the_author_meta( 'email' ), 80, '', '', array() ); ?>
 												</a>
 												<?php
 											}
 											?>
-											<strong>
+											<span class="bb-rl-author-name">
 												<?php
 												$author_name = get_the_author_meta( 'display_name' );
 												// translators: %s is the author name.
 												printf( esc_html__( 'By %s', 'buddyboss' ), '<a href="' . esc_url( $user_link ) . '">' . esc_html( $author_name ) . '</a>' );
 												?>
-											</strong>
+											</span>
 										</div>
 									</div>
 									<div class="bb-rl-course-footer">
