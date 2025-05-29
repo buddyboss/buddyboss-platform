@@ -32,3 +32,4 @@ registerBlockType(
 		edit: editReadyLaunchHeader,
 	}
 );
+
