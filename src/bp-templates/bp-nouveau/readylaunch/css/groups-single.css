@@ -3912,18 +3912,41 @@ div#bp-group-message-content {
 }
 
 .ld-lesson-list {
-  border: 1px solid var(--bb-rl-border-secondary-color);
-  border-radius: var(--bb-rl-radius-md);
   margin-bottom: var(--bb-rl-space-400);
+}
+
+.ld-lesson-list .ld-lesson-section-heading {
+  font-size: var(--bb-rl-font-size-base);
+  font-weight: 500;
+  color: var(--bb-rl-text-color);
+  margin-bottom: var(--bb-rl-space-200);
+}
+
+.ld-lesson-list .ld-item-list-item + .ld-item-list-section-heading {
+  margin-top: var(--bb-rl-space-200);
+}
+
+.ld-lesson-list .ld-item-list-item {
+  border-radius: var(--bb-rl-radius-md);
+  border: 1px solid var(--bb-rl-border-secondary-color);
+  margin-bottom: var(--bb-rl-space-100);
 }
 
 .ld-lesson-list .ld-item-list-item-preview {
   display: flex;
   align-items: center;
+  border-radius: var(--bb-rl-radius-md);
   background-color: var(--bb-rl-background-hover-color);
-  border-radius: var(--bb-rl-radius-md) var(--bb-rl-radius-md) 0 0;
-  border-bottom: 1px solid var(--bb-rl-border-secondary-color);
   padding: var(--bb-rl-space-200);
+}
+
+.ld-lesson-list .ld-item-list-item-preview.ld-expanded {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.ld-lesson-list .ld-item-list-item-preview.ld-expanded .ld-icon-arrow-down:before {
+  content: "\e136";
 }
 
 .ld-lesson-list .ld-item-list-item-preview > a {
@@ -3960,10 +3983,6 @@ div#bp-group-message-content {
 .ld-lesson-list .ld-item-list-item-preview .ld-item-components {
   margin-left: auto;
   font-weight: 400;
-}
-
-.ld-lesson-list .ld-item-list-item-preview.ld-expanded .ld-icon-arrow-down:before {
-  content: "\e136";
 }
 
 .ld-lesson-list .ld-status-icon {
@@ -4010,6 +4029,20 @@ div#bp-group-message-content {
   transform: translate(-50%, -50%);
 }
 
+.ld-lesson-list .ld-item-list-item-quiz .ld-item-title {
+  justify-content: flex-start;
+}
+
+.ld-lesson-list .ld-item-list-item-quiz .ld-item-title:before {
+  content: "\e3e8";
+  font-family: bb-icons-rl;
+  font-size: var(--bb-rl-font-size-2xl);
+  font-weight: 400;
+  line-height: 1;
+  color: var(--bb-rl-icon-secondary-color);
+  margin-right: var(--bb-rl-space-100);
+}
+
 .ld-lesson-list .ld-item-details .ld-expand-button {
   cursor: pointer;
 }
@@ -4037,6 +4070,11 @@ div#bp-group-message-content {
   border-bottom: 1px solid var(--bb-rl-border-secondary-color);
 }
 
+.ld-lesson-list .ld-item-list-item-expanded .ld-table-list-item:last-child {
+  border-bottom: 0;
+  border-radius: 0 0 var(--bb-rl-radius-md) var(--bb-rl-radius-md);
+}
+
 .ld-lesson-list .ld-item-list-item-expanded .ld-table-list-item .ld-item-title {
   display: flex;
   align-items: center;
@@ -4051,7 +4089,18 @@ div#bp-group-message-content {
 }
 
 .ld-lesson-list .ld-item-list-item-expanded .ld-table-list-item .ld-table-list-item-preview .ld-topic-title {
+  display: flex;
+  align-items: center;
   flex: 1;
+}
+
+.ld-lesson-list .ld-item-list-item-expanded .ld-table-list-item .ld-table-list-item-preview .ld-topic-title:before {
+  content: "\e23a";
+  font-family: bb-icons-rl;
+  font-size: var(--bb-rl-font-size-2xl);
+  line-height: 1;
+  color: var(--bb-rl-icon-secondary-color);
+  margin-right: var(--bb-rl-space-100);
 }
 
 .ld-lesson-list .ld-item-list-item-expanded .ld-table-list-item .ld-table-list-item-preview .ld-status-icon {
