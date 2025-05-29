@@ -3927,10 +3927,21 @@ div#bp-group-message-content {
 }
 
 .ld-lesson-list .ld-item-list-item-preview > a {
+  display: flex;
+  align-items: center;
   font-size: 16px;
   font-weight: 500;
   color: var(--bb-rl-text-color);
   flex: 1;
+  order: 2;
+}
+
+.ld-lesson-list .ld-item-list-item-preview > a .ld-item-title {
+  flex: 1;
+  order: 1;
+}
+
+.ld-lesson-list .ld-item-list-item-preview > a .ld-status-icon {
   order: 2;
 }
 
@@ -3953,6 +3964,50 @@ div#bp-group-message-content {
 
 .ld-lesson-list .ld-item-list-item-preview.ld-expanded .ld-icon-arrow-down:before {
   content: "\e136";
+}
+
+.ld-lesson-list .ld-status-icon {
+  flex-basis: 20px;
+  flex-shrink: 0;
+  height: 20px;
+  width: 20px;
+  border: 2px solid;
+  border-radius: 100%;
+  text-align: center;
+  margin-left: var(--bb-rl-space-100);
+}
+
+.ld-lesson-list .ld-status-icon.ld-status-in-progress {
+  transform: rotate(-45deg);
+  border-color: var(--bb-rl-border-brand-secondary-color);
+  border-top-color: var(--bb-rl-border-tertiary-color);
+  border-left-color: var(--bb-rl-border-tertiary-color);
+}
+
+.ld-lesson-list .ld-status-icon.ld-quiz-incomplete, .ld-lesson-list .ld-status-icon.ld-status-incomplete {
+  border-color: var(--bb-rl-border-tertiary-color);
+}
+
+.ld-lesson-list .ld-status-icon.ld-status-complete {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--bb-rl-background-brand-primary-color);
+  border-color: var(--bb-rl-background-brand-primary-color);
+  color: var(--bb-rl-text-white-color);
+  position: relative;
+}
+
+.ld-lesson-list .ld-status-icon .ld-icon-checkmark::before {
+  content: "\e182";
+  font-family: bb-icons-rl;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--bb-rl-text-white-color);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .ld-lesson-list .ld-item-details .ld-expand-button {
@@ -3989,8 +4044,18 @@ div#bp-group-message-content {
 }
 
 .ld-lesson-list .ld-item-list-item-expanded .ld-table-list-item .ld-table-list-item-preview {
+  display: flex;
+  align-items: center;
   font-size: 14px;
   color: var(--bb-rl-text-secondary-color);
+}
+
+.ld-lesson-list .ld-item-list-item-expanded .ld-table-list-item .ld-table-list-item-preview .ld-topic-title {
+  flex: 1;
+}
+
+.ld-lesson-list .ld-item-list-item-expanded .ld-table-list-item .ld-table-list-item-preview .ld-status-icon {
+  order: 2;
 }
 
 .bb-rl-entry-content h2 {
