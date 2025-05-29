@@ -681,6 +681,7 @@
   display: table;
   max-width: 1032px;
   margin: 0 auto;
+  width: 100%;
 }
 
 .bb-rl-learndash-course .bb-rl-entry-header {
@@ -977,7 +978,7 @@
   border-color: var(--bb-rl-border-tertiary-color);
 }
 
-.ld-lesson-list .ld-status-icon.ld-status-complete {
+.ld-lesson-list .ld-status-icon.ld-quiz-complete, .ld-lesson-list .ld-status-icon.ld-status-complete {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -987,7 +988,7 @@
   position: relative;
 }
 
-.ld-lesson-list .ld-status-icon .ld-icon-checkmark::before {
+.ld-lesson-list .ld-status-icon.ld-quiz-complete .ld-icon:before, .ld-lesson-list .ld-status-icon.ld-status-complete .ld-icon:before {
   content: "\e182";
   font-family: bb-icons-rl;
   font-size: 12px;
@@ -1089,6 +1090,26 @@
   font-size: 14px;
   font-weight: 400;
   margin-bottom: var(--bb-rl-space-200);
+}
+
+.bb-rl-recent-enrolled-members {
+  display: flex;
+  align-items: center;
+  gap: var(--bb-rl-space-100);
+  flex-wrap: wrap;
+}
+
+.bb-rl-recent-enrolled-members .avatar {
+  height: 46px;
+  width: 46px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.widget-content p {
+  font-size: var(--bb-rl-font-size-sm);
+  color: var(--bb-rl-text-secondary-color);
+  margin-bottom: 0;
 }
 
 .bb-rl-learndash-lesson .bb-rl-lesson-footer {

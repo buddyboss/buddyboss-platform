@@ -2,6 +2,7 @@
 	display: table;
 	max-width: 1032px;
 	margin: 0 auto;
+	width: 100%;
 
 	.bb-rl-entry-header {
 		background-color: var(--bb-rl-background-color);
@@ -294,6 +295,7 @@
 			border-color: var(--bb-rl-border-tertiary-color);
 		}
 
+		&.ld-quiz-complete,
 		&.ld-status-complete {
 			display: flex;
 			align-items: center;
@@ -302,18 +304,18 @@
 			border-color: var(--bb-rl-background-brand-primary-color);
 			color: var(--bb-rl-text-white-color);
 			position: relative;
-		}
 
-		.ld-icon-checkmark::before {
-			content: "\e182";
-			font-family: bb-icons-rl;
-			font-size: 12px;
-			font-weight: 700;
-			color: var(--bb-rl-text-white-color);
-			position: absolute;
-			top: 50%;
-			left: 50%;
-			transform: translate(-50%, -50%);
+			.ld-icon:before {
+				content: "\e182";
+				font-family: bb-icons-rl;
+				font-size: 12px;
+				font-weight: 700;
+				color: var(--bb-rl-text-white-color);
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				transform: translate(-50%, -50%);
+			}
 		}
 	}
 
@@ -412,4 +414,25 @@
 		font-weight: 400;
 		margin-bottom: var(--bb-rl-space-200);
 	}
+}
+
+// Widgets
+.bb-rl-recent-enrolled-members {
+	display: flex;
+	align-items: center;
+	gap: var(--bb-rl-space-100);
+	flex-wrap: wrap;
+
+	.avatar {
+		height: 46px;
+		width: 46px;
+		border-radius: 50%;
+		object-fit: cover;
+	}
+}
+
+.widget-content p {
+	font-size: var(--bb-rl-font-size-sm);
+	color: var(--bb-rl-text-secondary-color);
+	margin-bottom: 0;
 }

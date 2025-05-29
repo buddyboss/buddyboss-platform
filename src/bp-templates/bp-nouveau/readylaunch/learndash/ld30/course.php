@@ -216,7 +216,7 @@ global $course_pager_results;
 									<?php
 									printf(
 									// translators: placeholder: Course.
-										esc_html_x( '%s Content', 'placeholder: Course', 'buddyboss-theme' ),
+										esc_html_x( '%s Content', 'placeholder: Course', 'buddyboss' ),
 										LearnDash_Custom_Label::get_label( 'course' ) // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Method escapes output
 									);
 									?>
@@ -287,11 +287,11 @@ global $course_pager_results;
 											class="ld-expand-button ld-primary-background"
 											id="<?php echo esc_attr( 'ld-expand-button-' . $course_id ); ?>"
 											data-ld-expands="<?php echo esc_attr( $lesson_container_ids ); ?>"
-											data-ld-expand-text="<?php echo esc_attr__( 'Expand All Section', 'buddyboss-theme' ); ?>"
-											data-ld-collapse-text="<?php echo esc_attr__( 'Collapse All Sections', 'buddyboss-theme' ); ?>"
+											data-ld-expand-text="<?php echo esc_attr__( 'Expand All Section', 'buddyboss' ); ?>"
+											data-ld-collapse-text="<?php echo esc_attr__( 'Collapse All Sections', 'buddyboss' ); ?>"
 									>
 										<span class="ld-icon-arrow-down ld-icon"></span>
-										<span class="ld-text"><?php echo esc_attr__( 'Expand All Sections', 'buddyboss-theme' ); ?></span>
+										<span class="ld-text"><?php echo esc_attr__( 'Expand All Sections', 'buddyboss' ); ?></span>
 									</button> <!--/.ld-expand-button-->
 								<?php
 
@@ -405,8 +405,91 @@ global $course_pager_results;
 						</div>
 					<?php endif; ?>
 				</div> <!-- /.bb-rl-course-content-inner -->
-				<div class="bb-rl-course-content-sidebar">
-
+				<div class="bb-rl-course-content-sidebar bb-rl-widget-sidebar ">
+					<div class="widget">
+						<h2 class="widget-title">
+							<?php esc_html_e( 'Recently enrolled', 'buddyboss' ); ?>
+						</h2>
+						<div class="widget-content">
+							<?php
+							// Get recently enrolled members for the current course
+							if ( function_exists( 'learndash_get_users_for_course' ) ) {
+								$course_id = get_the_ID();
+								$enrolled_users_query = learndash_get_users_for_course( $course_id, array( 'number' => 10 ), false );
+								
+								// Get the actual user IDs from the WP_User_Query object
+								$enrolled_users = array();
+								if ( $enrolled_users_query instanceof WP_User_Query && ! empty( $enrolled_users_query->get_results() ) ) {
+									$enrolled_users = $enrolled_users_query->get_results();
+								}
+								
+								if ( ! empty( $enrolled_users ) ) {
+									// Sort by enrollment date (most recent first)
+									$user_enrollments = array();
+									foreach ( $enrolled_users as $user_id ) {
+										$enrolled_date = get_user_meta( $user_id, 'course_' . $course_id . '_access_from', true );
+										if ( empty( $enrolled_date ) ) {
+											$enrolled_date = time(); // Fallback to current time if no enrollment date
+										}
+										$user_enrollments[] = array(
+											'user_id' => $user_id,
+											'enrolled_date' => $enrolled_date
+										);
+									}
+									
+									// Sort by enrollment date (newest first)
+									usort( $user_enrollments, function( $a, $b ) {
+										return $b['enrolled_date'] - $a['enrolled_date'];
+									});
+									
+									// Limit to 5 most recent enrollments
+									$recent_enrollments = array_slice( $user_enrollments, 0, 10 );
+									
+									if ( ! empty( $recent_enrollments ) ) {
+										echo '<div class="bb-rl-recent-enrolled-members">';
+										
+										foreach ( $recent_enrollments as $enrollment ) {
+											$user_id = $enrollment['user_id'];
+											$user_data = get_userdata( $user_id );
+											
+											if ( $user_data ) {
+												$user_link = function_exists( 'bp_core_get_user_domain' ) ? bp_core_get_user_domain( $user_id ) : get_author_posts_url( $user_id );
+												$display_name = function_exists( 'bp_core_get_user_displayname' ) ? bp_core_get_user_displayname( $user_id ) : $user_data->display_name;
+												?>
+												<div class="bb-rl-enrolled-member-item">
+													<a href="<?php echo esc_url( $user_link ); ?>" title="<?php echo esc_attr( $display_name ); ?>" data-balloon-pos="up" data-balloon="<?php echo esc_attr( $display_name ); ?>">
+														<?php 
+														// Use bp_core_fetch_avatar with proper parameters
+														if ( function_exists( 'bp_core_fetch_avatar' ) ) {
+															echo wp_kses_post( bp_core_fetch_avatar(
+																array(
+																	'item_id' => $user_id,
+																	'width' => 48,
+																	'height' => 48,
+																	'type' => 'full',
+																	'html' => true,
+																)
+															) );
+														}
+														if ( function_exists( 'bb_user_presence_html' ) ) {
+															bb_user_presence_html( $user_id );
+														}
+														?>
+													</a>
+												</div>
+												<?php
+											}
+										}
+										
+										echo '</div>';
+									}
+								} else {
+									echo '<p>' . esc_html__( 'No members enrolled yet.', 'buddyboss' ) . '</p>';
+								}
+							}
+							?>
+						</div>
+					</div>
 				</div><!-- /.bb-rl-course-content-sidebar -->
 			</div> <!-- /.bb-rl-course-content -->
 		</article>
