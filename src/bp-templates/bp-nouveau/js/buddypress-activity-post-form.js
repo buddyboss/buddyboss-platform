@@ -1068,6 +1068,10 @@ window.bp = window.bp || {};
 				delete activity_data.video;
 			}
 
+			if ( 'group' === activity_data.object && 'undefined' !== typeof activity_data.item_id ) {
+				$( '#whats-new' ).attr( 'data-suggestions-group-id', activity_data.item_id ).data( 'suggestions-group-id', activity_data.item_id );
+			}
+
 			// check media is enabled in profile or not.
 			if ( false === BP_Nouveau.media.profile_media ) {
 				$( '#whats-new-toolbar .post-media.media-support' ).removeClass( 'active' ).addClass( 'media-support-hide' );
@@ -3770,6 +3774,11 @@ window.bp = window.bp || {};
 
 				if ( true === this.model.get( 'selected' ) ) {
 					this.model.unset( 'selected' );
+					// Reset the data-suggestions-group-id when unselecting
+					$( '#whats-new' ).attr( 'data-suggestions-group-id', false ).data( 'suggestions-group-id', false );
+				} else {
+					// Set the data-suggestions-group-id to the selected group's ID
+					$( '#whats-new' ).attr( 'data-suggestions-group-id', this.model.get( 'id' ) ).data( 'suggestions-group-id', this.model.get( 'id' ) );
 				}
 
 				whats_new_form.removeClass( 'focus-in--blank-group' );
@@ -4418,9 +4427,14 @@ window.bp = window.bp || {};
 					$( '#privacy-status-submit' ).click();
 					this.model.set( 'object', 'user' );
 
+					// Update the post area to not have the suggestions-group-id
+					$( '#whats-new' ).attr( 'data-suggestions-group-id', false ).data( 'suggestions-group-id', false );
+
 					// Update multi media options dependent on profile/group view
 					Backbone.trigger('mediaprivacytoolbar');
 				}
+
+				bp.mentions.clearCache();
 			}
 		}
 	);
