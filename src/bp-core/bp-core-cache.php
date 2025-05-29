@@ -661,3 +661,138 @@ function bb_reaction_clear_reactions_cache_on_delete_emotion( $postid, $post ) {
 }
 
 add_action( 'deleted_post', 'bb_reaction_clear_reactions_cache_on_delete_emotion', 10, 2 );
+
+/**
+ * Common function to clear topic related caches.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param object|int $topic_data Topic relationship object or topic ID.
+ * @param array      $args       Additional arguments.
+ */
+function bb_clear_topic_related_caches( $topic_data, $args = array() ) {
+	if ( empty( $topic_data ) ) {
+		return;
+	}
+
+	// Reset the incrementor to clear all cached queries.
+	bp_core_reset_incrementor( 'bb_topics' );
+
+	// If topic_data is an ID, get the full topic data.
+	if ( is_numeric( $topic_data ) ) {
+		$topic_data = bb_topics_manager_instance()->bb_get_topic( array( 'topic_id' => $topic_data ) );
+	}
+
+	// Clear individual topic relationship cache.
+	if ( ! empty( $topic_data->id ) && ! empty( $topic_data->item_id ) && ! empty( $topic_data->item_type ) ) {
+		$relationship_cache_key = 'bb_topic_relationship_' . $topic_data->id . '_' . $topic_data->item_id . '_' . $topic_data->item_type;
+		wp_cache_delete( $relationship_cache_key, 'bb_topics' );
+	}
+
+	// Clear topic caches.
+	if ( ! empty( $topic_data->name ) ) {
+		wp_cache_delete( 'bb_topic_name_' . $topic_data->name, 'bb_topics' );
+	}
+	if ( ! empty( $topic_data->slug ) ) {
+		wp_cache_delete( 'bb_topic_slug_' . $topic_data->slug, 'bb_topics' );
+	}
+
+	// Clear topic caches from args if provided.
+	if ( ! empty( $args ) ) {
+		if ( ! empty( $args['id'] ) ) {
+			wp_cache_delete( 'bb_topic_id_' . $args['id'], 'bb_topics' );
+		}
+		if ( ! empty( $args['name'] ) ) {
+			wp_cache_delete( 'bb_topic_name_' . $args['name'], 'bb_topics' );
+		}
+		if ( ! empty( $args['slug'] ) ) {
+			wp_cache_delete( 'bb_topic_slug_' . $args['slug'], 'bb_topics' );
+		}
+	}
+
+	// Clear activity topics cache for list of topics.
+	if (
+		function_exists( 'wp_cache_flush_group' ) &&
+		function_exists( 'wp_cache_supports' ) &&
+		wp_cache_supports( 'flush_group' )
+	) {
+		wp_cache_flush_group( 'bb_activity_topics' );
+	} else {
+		wp_cache_flush();
+	}
+}
+
+/**
+ * Reset cache when a topic is added.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param object|int $topic_relationship Topic relationship object or topic ID.
+ * @param array      $r                  Additional arguments.
+ */
+function bb_topic_added_cache_reset( $topic_relationship, $r ) {
+	bb_clear_topic_related_caches( $topic_relationship, $r );
+}
+
+add_action( 'bb_topic_after_added', 'bb_topic_added_cache_reset', 10, 2 );
+add_action( 'bb_topic_after_updated', 'bb_topic_added_cache_reset', 10, 2 );
+add_action( 'bb_topic_relationship_after_updated', 'bb_topic_added_cache_reset', 10, 2 );
+
+/**
+ * Reset cache when a topic is deleted.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $relationships_ids The IDs of the topic relationships that were deleted.
+ * @param int   $topic_id          The ID of the topic that was deleted.
+ */
+function bb_topic_deleted_cache_reset( $relationships_ids, $topic_id ) {
+	if ( empty( $relationships_ids ) || empty( $topic_id ) ) {
+		return;
+	}
+
+	// Reset the incrementor to clear all cached queries.
+	bp_core_reset_incrementor( 'bb_topics' );
+
+	// Clear individual topic relationship caches.
+	foreach ( $relationships_ids as $relationship_id ) {
+		$relationship = bb_topics_manager_instance()->bb_get_topic( array( 'topic_id' => $relationship_id ) );
+		if ( ! empty( $relationship ) ) {
+			$relationship_cache_key = 'bb_topic_relationship_' . $relationship_id . '_' . $relationship->item_id . '_' . $relationship->item_type;
+			wp_cache_delete( $relationship_cache_key, 'bb_topics' );
+		}
+	}
+
+	// Clear topic caches.
+	wp_cache_delete( 'bb_topic_id_' . $topic_id, 'bb_topics' );
+
+	// Clear activity topics cache for list of topics.
+	if (
+		function_exists( 'wp_cache_flush_group' ) &&
+		function_exists( 'wp_cache_supports' ) &&
+		wp_cache_supports( 'flush_group' )
+	) {
+		wp_cache_flush_group( 'bb_activity_topics' );
+	} else {
+		wp_cache_flush();
+	}
+}
+
+add_action( 'bb_topic_deleted', 'bb_topic_deleted_cache_reset', 10, 2 );
+
+
+/**
+ * Reset cache when a topic relationship is updated.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $relationship_id The ID of the updated relationship.
+ */
+function bb_activity_topic_relationship_after_update_cache_reset( $relationship_id ) {
+	bp_core_reset_incrementor( 'bb_activity_topics' );
+	if ( ! empty( $relationship_id ) ) {
+		wp_cache_delete( $relationship_id, 'bb_activity_topics' );
+	}
+}
+
+add_action( 'bb_activity_topic_relationship_after_update', 'bb_activity_topic_relationship_after_update_cache_reset', 10, 1 );

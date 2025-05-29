@@ -695,6 +695,32 @@ function bp_nouveau_ajax_post_update() {
 		wp_send_json_error();
 	}
 
+	if ( bb_is_activity_topic_required() ) {
+		$topic_id = ! empty( $_POST['topic_id'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['topic_id'] ) ) : 0;
+		if ( empty( $topic_id ) ) {
+			wp_send_json_error( array( 'message' => esc_html__( 'Please select a topic before posting.', 'buddyboss' ) ) );
+		}
+
+		$object  = ! empty( $_POST['object'] ) ? sanitize_text_field( wp_unslash( $_POST['object'] ) ) : '';
+		$item_id = ! empty( $_POST['item_id'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['item_id'] ) ) : 0;
+		if (
+			'user' === $object &&
+			function_exists( 'bb_activity_topics_manager_instance' ) &&
+			! bb_activity_topics_manager_instance()->bb_can_user_post_to_activity_topic( $topic_id )
+		) {
+			wp_send_json_error( array( 'message' => esc_html__( 'You do not have permission to post in this topic.', 'buddyboss' ) ) );
+		}
+
+		if (
+			'group' === $object &&
+			! empty( $item_id ) &&
+			function_exists( 'bb_can_user_post_to_group_activity_topic' ) &&
+			! bb_can_user_post_to_group_activity_topic( bp_loggedin_user_id(), $item_id, $topic_id )
+		) {
+			wp_send_json_error( array( 'message' => esc_html__( 'You do not have permission to post in this topic.', 'buddyboss' ) ) );
+		}
+	}
+
 	if ( ! strlen( trim( html_entity_decode( wp_strip_all_tags( $_POST['content'] ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) ) ) ) {
 
 		// check activity toolbar options if one of them is set, activity can be empty.
