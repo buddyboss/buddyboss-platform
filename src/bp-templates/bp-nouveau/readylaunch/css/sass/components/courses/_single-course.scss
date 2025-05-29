@@ -182,6 +182,7 @@
 		color: var(--bb-rl-text-color);
 		background-color: transparent;
 		border: 0;
+		cursor: pointer;
 	}
 }
 
@@ -332,16 +333,16 @@
 
 	.ld-item-details {
 
-		.ld-expand-button  {
-			cursor: pointer;
-		}
-
 		.ld-icon-arrow-down:before {
 			font-family: bb-icons-rl;
 			content: "\e13c";
 			font-size: 16px;
 			color: var(--bb-rl-icon-color);
 		}
+	}
+
+	.ld-expand-button  {
+		cursor: pointer;
 	}
 
 	.ld-item-list-item-expanded {

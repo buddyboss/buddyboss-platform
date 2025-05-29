@@ -865,6 +865,7 @@
   color: var(--bb-rl-text-color);
   background-color: transparent;
   border: 0;
+  cursor: pointer;
 }
 
 .bb-rl-course-content {
@@ -1012,15 +1013,15 @@
   margin-right: var(--bb-rl-space-100);
 }
 
-.ld-lesson-list .ld-item-details .ld-expand-button {
-  cursor: pointer;
-}
-
 .ld-lesson-list .ld-item-details .ld-icon-arrow-down:before {
   font-family: bb-icons-rl;
   content: "\e13c";
   font-size: 16px;
   color: var(--bb-rl-icon-color);
+}
+
+.ld-lesson-list .ld-expand-button {
+  cursor: pointer;
 }
 
 .ld-lesson-list .ld-item-list-item-expanded {

@@ -26,7 +26,8 @@
         },
 
         addEvents: function() {
-            $( document ).on( 'click', '.ld-expand-button', this.handleLessonExpand );
+            $( document ).on( 'click', '.ld-lesson-list .ld-expand-button', this.handleLessonExpand );
+            $( document ).on( 'click', '.bb-rl-course-content-header .ld-expand-button', this.handleAllLessonsExpand );
         },
 
         handleLessonExpand: function(e) {
@@ -37,6 +38,22 @@
             $expandElm.toggleClass('ld-expanded');
             $containerElm.toggleClass('ld-expanded').slideToggle( 300 );
         },
+
+        handleAllLessonsExpand: function(e) {
+            e.preventDefault();
+            $( this ).toggleClass( 'ld-expanded' );
+            if( $( this ).hasClass( 'ld-expanded' ) ) {
+                $( this ).find( '.ld-text' ).text( $(this).data( 'ld-collapse-text' ) );
+            } else {
+                $( this ).find( '.ld-text' ).text( $(this).data( 'ld-expand-text' ) );
+            }
+            var $parentEl = $(this).closest( '.bb-rl-course-content-header' ).next( '.ld-lesson-list' ).find( '.ld-item-list-item' );
+            var $containerElm = $parentEl.find( '.ld-item-list-item-expanded' );
+            var $expandElm = $parentEl.find( '.ld-item-list-item-preview' );
+            $expandElm.toggleClass('ld-expanded');
+            $containerElm.toggleClass('ld-expanded').slideToggle( 300 );
+        },
+
         /**
          * Setup course grid/list view toggle
          */
