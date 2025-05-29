@@ -180,7 +180,11 @@ $readylaunch = BB_Readylaunch::instance();
 							</article>
 							<div class="bb-rl-course-card-popup">
 								<div class="bb-rl-course-timestamp">
-									<?php echo get_the_date( 'j M, Y' ); ?>
+									<?php
+									$updated_date = get_the_date( 'j M, Y' );
+									// translators: %s is the updated date.
+									printf( esc_html__( 'Updated %s', 'buddyboss' ), esc_html( $updated_date ) );
+									?>
 								</div>
 								<div class="bb-rl-course-popup-meta">
 									<?php
