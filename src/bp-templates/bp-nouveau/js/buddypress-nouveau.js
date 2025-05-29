@@ -791,14 +791,26 @@ window.bp = window.bp || {};
 					} else {
 						/* animate to top if called from bottom pagination */
 						if ( data.caller === 'pag-bottom' ) {
-							var top = null;
+							var top = null, additionalOffset = 0;
+
+							if ( $( '#wpadminbar' ).length ) {
+								additionalOffset = additionalOffset + $( '#wpadminbar' ).height();
+							}
+
+							if ( $( '.sticky-header .site-header--bb' ).length ) {
+								additionalOffset = additionalOffset + $( '.sticky-header .site-header--bb' ).height();
+							}
+
 							if ( $( '#subnav' ).length ) {
 								top = $( '#subnav' ).parent();
+							} else if ( $( '.main-navs.dir-navs.bp-subnavs' ).length ) {
+								top = $( '.main-navs.dir-navs.bp-subnavs' ).parent();
 							} else {
 								top = $( data.target );
 							}
+
 							$( 'html,body' ).animate(
-								{ scrollTop: top.offset().top },
+								{ scrollTop: top.offset().top - additionalOffset },
 								'slow',
 								function () {
 									$( data.target ).fadeOut(
