@@ -133,8 +133,14 @@
 	&.grid {
 		grid-template-columns: repeat(4, 1fr);
 
-		.bb-rl-course-body {
-			padding: 0 0 var(--bb-rl-space-200);
+		.bb-rl-course-card {
+
+			.bb-rl-course-footer {
+				border-top: 1px solid var(--bb-rl-border-secondary-color);
+				margin-left: calc(var(--bb-rl-space-200) * -1);
+				margin-right: calc(var(--bb-rl-space-200) * -1);
+				padding: 12px var(--bb-rl-space-200) 0;
+			}
 		}
 
 		@media screen and (max-width: $xl) {
@@ -298,7 +304,11 @@
 		.bb-rl-author-name {
 
 			@include bb-rl-label-heading-bolder;
-			color: var(--bb-rl-text-color);
+			color: var(--bb-rl-text-secondary-color);
+
+			a {
+				color: var(--bb-rl-text-color);
+			}
 		}
 	}
 }

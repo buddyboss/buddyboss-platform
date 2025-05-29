@@ -313,8 +313,11 @@
   grid-template-columns: repeat(4, 1fr);
 }
 
-.bb-rl-courses-grid.grid .bb-rl-course-body {
-  padding: 0 0 var(--bb-rl-space-200);
+.bb-rl-courses-grid.grid .bb-rl-course-card .bb-rl-course-footer {
+  border-top: 1px solid var(--bb-rl-border-secondary-color);
+  margin-left: calc(var(--bb-rl-space-200) * -1);
+  margin-right: calc(var(--bb-rl-space-200) * -1);
+  padding: 12px var(--bb-rl-space-200) 0;
 }
 
 @media screen and (max-width: 1200px) {
@@ -482,6 +485,10 @@
   font-size: var(--bb-rl-font-size-sm);
   font-weight: 500;
   line-height: var(--bb-rl-base-line-small);
+  color: var(--bb-rl-text-secondary-color);
+}
+
+.bb-rl-course-card .bb-rl-course-author .bb-rl-author-name a {
   color: var(--bb-rl-text-color);
 }
 
@@ -846,7 +853,7 @@
 }
 
 .bb-rl-course-content-header .bb-rl-course-content-header-inner .bb-rl-course-content-meta .bb-rl-course-content-meta-item:after {
-  content: '';
+  content: "";
   display: inline-block;
   height: 4px;
   width: 4px;
@@ -1028,7 +1035,7 @@
 .ld-lesson-list .ld-item-list-item-expanded {
   display: none;
   position: relative;
-  transition: max-height .5s ease;
+  transition: max-height 0.5s ease;
 }
 
 .ld-lesson-list .ld-item-list-item-expanded .ld-table-list-header {

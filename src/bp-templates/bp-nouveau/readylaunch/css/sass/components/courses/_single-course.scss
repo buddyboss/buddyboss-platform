@@ -143,6 +143,7 @@
 	margin-bottom: var(--bb-rl-space-200);
 
 	h2 {
+
 		@include bb-rl-base-heading;
 	}
 
@@ -162,7 +163,7 @@
 				align-items: center;
 
 				&:after {
-					content: '';
+					content: "";
 					display: inline-block;
 					height: 4px;
 					width: 4px;
@@ -179,6 +180,7 @@
 	}
 
 	.ld-expand-button {
+
 		@include bb-rl-label-heading;
 		color: var(--bb-rl-text-color);
 		background-color: transparent;
@@ -343,14 +345,14 @@
 		}
 	}
 
-	.ld-expand-button  {
+	.ld-expand-button {
 		cursor: pointer;
 	}
 
 	.ld-item-list-item-expanded {
 		display: none;
 		position: relative;
-		transition: max-height .5s ease;
+		transition: max-height 0.5s ease;
 
 		.ld-table-list-header {
 			display: none;
@@ -404,6 +406,7 @@
 .bb-rl-entry-content {
 
 	h2 {
+
 		@include bb-rl-base-heading;
 		margin-bottom: var(--bb-rl-space-200);
 	}
