@@ -188,6 +188,23 @@ function bb_block_render_readylaunch_header_block( $attributes = array() ) {
 	// Let WordPress handle the icon styles through block.json dependencies
 	wp_enqueue_style( 'bb-icons-rl-css' );
 
+	// Get the ReadyLaunch colors.
+	if ( function_exists( 'bp_get_option' ) ) :
+		$color_light = bp_get_option( 'bb_rl_color_light', '#4946fe' );
+		$color_dark  = bp_get_option( 'bb_rl_color_dark', '#9747FF' );
+		?>
+		<style>
+			.bb-rl-header-block {
+				--bb-rl-primary-color: <?php echo $color_light; ?>;
+			}
+
+			.bb-rl-dark-mode .bb-rl-header-block {
+				--bb-rl-primary-color: <?php echo $color_dark; ?>;
+			}
+		</style>
+		<?php
+	endif;
+
 	ob_start();
 	?>
 	<header id="masthead" class="bb-rl-header bb-rl-header-block <?php echo esc_attr( $dark_mode_class . ' ' . $align_class ); ?>">
