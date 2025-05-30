@@ -342,7 +342,7 @@ global $course_pager_results;
 
 					if ( $show_course_content ) : ?>
 
-						<div class="ld-item-list ld-lesson-list">
+						<div class="ld-item-list ld-lesson-list bb-rl-ld-lesson-list">
 
 							<?php
 							/**

@@ -202,31 +202,37 @@
 	}
 }
 
-.ld-lesson-list {
+.bb-rl-ld-lesson-list {
 	margin-bottom: var(--bb-rl-space-400);
 
-	.ld-lesson-section-heading {
-		font-size: var(--bb-rl-font-size-base);
-		font-weight: 500;
-		color: var(--bb-rl-text-color);
-		margin-bottom: var(--bb-rl-space-200);
+	.ld-item-list-items {
+		border: 1px solid var(--bb-rl-border-secondary-color);
+		border-radius: var(--bb-rl-radius-md);
+		overflow: hidden;
 	}
 
-	.ld-item-list-item + .ld-item-list-section-heading {
-		margin-top: var(--bb-rl-space-200);
+	.ld-lesson-section-heading {
+
+		@include bb-rl-base-heading;
+		color: var(--bb-rl-text-color);
+		padding: var(--bb-rl-space-200);
+		background-color: var(--bb-rl-background-hover-color);
+		border-bottom: 1px solid var(--bb-rl-border-secondary-color);
 	}
 
 	.ld-item-list-item {
-		border-radius: var(--bb-rl-radius-md);
-		border: 1px solid var(--bb-rl-border-secondary-color);
-		margin-bottom: var(--bb-rl-space-100);
+		border-bottom: 1px solid var(--bb-rl-border-secondary-color);
+		background-color: var(--bb-rl-background-color);
+
+		&:last-of-type {
+			border-bottom: 0;
+		}
 	}
 
 	.ld-item-list-item-preview {
 		display: flex;
 		align-items: center;
 		border-radius: var(--bb-rl-radius-md);
-		background-color: var(--bb-rl-background-hover-color);
 		padding: var(--bb-rl-space-200);
 
 		&.ld-expanded {
@@ -258,6 +264,9 @@
 		}
 
 		.ld-item-title {
+
+			@include bb-rl-label-heading-md-thin;
+			color: var(--bb-rl-text-secondary-color);
 			display: flex;
 			align-items: center;
 			justify-content: space-between;
@@ -272,6 +281,7 @@
 		.ld-item-components {
 			margin-left: auto;
 			font-weight: 400;
+			color: var(--bb-rl-text-tertiary-color);
 		}
 	}
 
@@ -347,6 +357,11 @@
 
 	.ld-expand-button {
 		cursor: pointer;
+		background-color: transparent;
+		border: 0;
+		padding: 0;
+		margin: 0;
+		line-height: 1;
 	}
 
 	.ld-item-list-item-expanded {
