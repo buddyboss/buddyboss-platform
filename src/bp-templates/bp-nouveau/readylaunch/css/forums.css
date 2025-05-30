@@ -1,3 +1,4 @@
+@charset "UTF-8";
 /* CSS variables */
 :root {
   --bb-rl-primary-color: #4946fe;
@@ -177,4 +178,62 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: var(--bb-rl-space-200);
+  list-style: none;
+}
+
+.bb-rl-forums-list .bb-rl-forum-list-item {
+  border: 1px solid var(--bb-rl-border-secondary-color);
+  background-color: var(--bb-rl-background-primary);
+  border-radius: var(--bb-rl-radius-lg);
+}
+
+.bb-rl-forums-list .bb-rl-forum-cover img {
+  border-radius: var(--bb-rl-radius-lg) var(--bb-rl-radius-lg) 0 0;
+  height: 120px;
+  width: 100%;
+  object-fit: cover;
+}
+
+.bb-rl-forums-list .bb-rl-card-forum-details {
+  padding: var(--bb-rl-space-200) var(--bb-rl-space-200) var(--bb-rl-space-300);
+}
+
+.bb-rl-forums-list .bb-rl-card-forum-details h3 {
+  font-size: var(--bb-rl-font-size-base);
+  font-weight: 500;
+  line-height: var(--bb-rl-base-line);
+  margin-bottom: var(--bb-rl-space-100);
+}
+
+.bb-rl-forums-list .bb-rl-card-forum-details h3 a {
+  color: var(--bb-rl-text-color);
+}
+
+.bb-rl-forums-list .bb-rl-card-forum-details h3 a:hover {
+  text-decoration: underline;
+}
+
+.bb-rl-forums-list .bb-rl-card-forum-details p,
+.bb-rl-forums-list .bb-rl-card-forum-details .bb-forum-content {
+  font-size: var(--bb-rl-font-size-sm);
+  line-height: var(--bb-rl-base-line-small);
+  color: var(--bb-rl-text-secondary-color);
+}
+
+.bb-rl-forums-list .bb-rl-forum-meta {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+  color: var(--bb-rl-text-tertiary-color);
+  font-size: var(--bb-rl-font-size-sm);
+}
+
+.bb-rl-forums-list .bb-rl-forum-meta .bb-rl-forum-meta-item + .bb-rl-forum-meta-item:before {
+  content: '•';
+  margin: 0 6px;
+  color: var(--bb-rl-background-tertiary-color);
+}
+
+.bb-rl-forums-list .bb-rl-forum-meta a {
+  color: var(--bb-rl-text-tertiary-color);
 }
