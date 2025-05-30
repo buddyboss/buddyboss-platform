@@ -31,12 +31,6 @@
 	background-color: var(--bb-rl-background-color);
 }
 
-.bb-rl-lesson-count {
-
-	@include bb-rl-label-heading;
-	color: var(--bb-rl-text-secondary-color);
-}
-
 .bb-rl-lesson-featured-image {
 
 	img {

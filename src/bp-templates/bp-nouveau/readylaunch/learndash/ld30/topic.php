@@ -81,7 +81,7 @@ if ( function_exists( 'learndash_is_topic_accessable' ) ) {
             <div class="bb-rl-topic-block bb-rl-lms-inner-block">
                 <header class="bb-rl-entry-header">
                     <div class="bb-rl-heading">
-                        <div class="bb-rl-topic-count">
+                        <div class="bb-rl-topic-count bb-rl-lms-inner-count">
                             <span class="bb-pages">
                                 <?php echo LearnDash_Custom_Label::get_label( 'lesson' ); ?> <?php echo $lesson_no; ?>, 
                                 <?php echo LearnDash_Custom_Label::get_label( 'topic' ); ?> <?php echo $topic_no; ?>

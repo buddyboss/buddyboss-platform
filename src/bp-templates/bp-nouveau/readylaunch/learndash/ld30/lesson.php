@@ -71,7 +71,7 @@ if ( function_exists( 'learndash_is_lesson_accessable' ) ) {
             <div class="bb-rl-lesson-block bb-rl-lms-inner-block">
                 <header class="bb-rl-entry-header">
                     <div class="bb-rl-heading">
-                        <div class="bb-rl-lesson-count">
+                        <div class="bb-rl-lesson-count bb-rl-lms-inner-count">
                             <span class="bb-pages"><?php echo LearnDash_Custom_Label::get_label( 'lesson' ); ?> <?php echo $lesson_no; ?> <span class="bb-total"><?php esc_html_e( 'of', 'buddyboss' ); ?> <?php echo count( $lesson_list ); ?></span></span>
                         </div>
                         <div class="bb-rl-lesson-title">

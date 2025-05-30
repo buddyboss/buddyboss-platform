@@ -10,7 +10,7 @@
 	.bb-rl-heading {
 		margin: 0 0 var(--bb-rl-space-200);
 
-		.bb-rl-lesson-count {
+		.bb-rl-lms-inner-count {
 			margin-bottom: var(--bb-rl-space-50);
 		}
 	}
@@ -26,4 +26,11 @@
 		@include bb-rl-label-heading-md-thin;
 		color: var(--bb-rl-text-secondary-color);
 	}
+}
+
+
+.bb-rl-lms-inner-count {
+
+	@include bb-rl-label-heading;
+	color: var(--bb-rl-text-secondary-color);
 }
