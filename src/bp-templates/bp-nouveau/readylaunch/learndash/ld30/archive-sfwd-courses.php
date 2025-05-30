@@ -295,42 +295,6 @@ $instructor = isset( $_GET['filter-instructors'] ) ? sanitize_text_field( wp_uns
 											?>
 											<div class="bb-rl-course-footer-meta">
 												<?php
-												if ( class_exists( 'LearnDash_Course_Reviews_Loader' ) ) {
-													$average = learndash_course_reviews_get_average_review_score( $course_id );
-													if ( is_bool( $average ) ) {
-														$average = 0.0;
-													}
-													$reviews = get_comments(
-														wp_parse_args(
-															array(),
-															array(
-																'post_id' => $course_id,
-																'type'    => 'ld_review',
-																'status'  => 'approve',
-																'fields'  => 'ids',
-															)
-														)
-													);
-													if ( ! is_array( $reviews ) ) {
-														$reviews = array();
-													}
-													$reviews      = array_filter(
-														$reviews,
-														'is_int'
-													);
-													$review_count = count( $reviews );
-													?>
-													<div class="bb-rl-course-review">
-															<span class="star">
-																<svg width="20" height="20" viewBox="0 0 20 20" fill="#FFC107" xmlns="http://www.w3.org/2000/svg" style="vertical-align:middle;">
-																	<path d="M10 15l-5.878 3.09 1.122-6.545L.488 6.91l6.561-.955L10 0l2.951 5.955 6.561.955-4.756 4.635 1.122 6.545z" />
-																</svg>
-															</span>
-														<span class="average"><?php echo esc_html( number_format( $average, 1 ) ); ?></span>
-														<span class="count">(<?php echo esc_html( $review_count ); ?>)</span>
-													</div>
-													<?php
-												}
 												$currency = function_exists( 'learndash_get_currency_symbol' ) ? learndash_get_currency_symbol() : learndash_30_get_currency_symbol();
 												$price    = $course_price['price'];
 												if ( ! $is_enrolled && ! empty( $price ) ) {
