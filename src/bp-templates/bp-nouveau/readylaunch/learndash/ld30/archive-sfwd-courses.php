@@ -342,16 +342,16 @@ $instructor = isset( $_GET['filter-instructors'] ) ? sanitize_text_field( wp_uns
 									$lessons_count > 1
 										? sprintf(
 									/* translators: 1: plugin name, 2: action number 3: total number of actions. */
-										__( '%1$s %2$s', 'buddyboss' ),
-										$lessons_count,
-										LearnDash_Custom_Label::get_label( 'lessons' )
-									)
+											__( '%1$s %2$s', 'buddyboss' ),
+											$lessons_count,
+											LearnDash_Custom_Label::get_label( 'lessons' )
+										)
 										: sprintf(
 									/* translators: 1: plugin name, 2: action number 3: total number of actions. */
-										__( '%1$s %2$s', 'buddyboss' ),
-										$lessons_count,
-										LearnDash_Custom_Label::get_label( 'lesson' )
-									)
+											__( '%1$s %2$s', 'buddyboss' ),
+											$lessons_count,
+											LearnDash_Custom_Label::get_label( 'lesson' )
+										)
 									);
 									?>
 									<span class="bb-rl-course-meta-tag"><?php echo esc_html( $total_lessons ); ?></span>
