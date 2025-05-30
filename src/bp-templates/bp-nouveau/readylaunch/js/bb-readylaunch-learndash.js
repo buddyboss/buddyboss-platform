@@ -139,7 +139,8 @@
          * Filter courses via AJAX
          */
         filterCourses : function () {
-            var $courseItems = $( '.bb-rl-courses-grid' ),
+            var $courseList  = $( '.bb-rl-courses-list' ),
+                $courseItems = $( '.bb-rl-courses-grid' ),
                 category     = $( '#ld-course-cats' ).val(),
                 instructor   = $( '#ld-course-instructors' ).val(),
                 orderby      = $( '#ld-course-orderby' ).val(),
@@ -165,14 +166,21 @@
 
             // Fetch the new HTML
             $.get( newUrl, function ( response ) {
-                // Parse the response and extract the grid
-                var html     = $( '<div>' ).html( response );
-                var newGrid  = html.find( '.bb-rl-courses-grid' ).html();
-                var newCount = html.find( '.bb-rl-heading-count' ).text();
+                // Parse the response and extract the grid.
+                var html          = $( '<div>' ).html( response );
+                var newGrid       = html.find( '.bb-rl-courses-list' ).html();
+                var newCount      = html.find('.bb-rl-heading-count').text();
+                var newPagination = html.find('.bb-rl-course-pagination').html();
 
                 // Update the grid and count
-                $courseItems.html( newGrid );
+                if ( $courseList.length ) {
+                    $courseList.html( newGrid );
+                } else {
+                    // Replace the whole .bb-rl-courses-list with the new HTML.
+                    $( '.bb-rl-courses-list' ).html( newGrid );
+                }
                 $( '.bb-rl-heading-count' ).text( newCount );
+                $( '.bb-rl-course-pagination' ).html( newPagination );
                 $courseItems.removeClass( 'loading' );
 
                 // Update the browser URL
