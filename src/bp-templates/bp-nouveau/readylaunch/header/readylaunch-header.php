@@ -20,8 +20,9 @@ defined( 'ABSPATH' ) || exit;
 </head>
 
 <?php
-$bb_rl_theme_mode = BB_Readylaunch::instance()->bb_rl_get_theme_mode();
-$theme_mode_class = '';
+$readylaunch_instance = BB_Readylaunch::instance();
+$bb_rl_theme_mode     = $readylaunch_instance->bb_rl_get_theme_mode();
+$theme_mode_class     = '';
 if ( 'choice' === $bb_rl_theme_mode ) {
 	$dark_mode = isset( $_COOKIE['bb-rl-dark-mode'] ) ? sanitize_text_field( wp_unslash( $_COOKIE['bb-rl-dark-mode'] ) ) : 'false';
 	if ( 'true' === $dark_mode ) {
@@ -45,7 +46,7 @@ bp_get_template_part( 'sidebar/left-sidebar' );
 			bp_get_template_part( 'header/site-logo' );
 			wp_nav_menu(
 				array(
-					'theme_location' => bp_get_option( 'bb_rl_header_menu', 'bb-readylaunch' ),
+					'theme_location' => $readylaunch_instance->bb_rl_get_header_menu_location(),
 					'menu_id'        => '',
 					'container'      => false,
 					'fallback_cb'    => false,
@@ -116,7 +117,7 @@ bp_get_template_part( 'sidebar/left-sidebar' );
 					<?php
 					wp_nav_menu(
 						array(
-							'theme_location' => 'bb-readylaunch',
+							'theme_location' => $readylaunch_instance->bb_rl_get_header_menu_location(),
 							'menu_id'        => '',
 							'container'      => false,
 							'fallback_cb'    => false,
