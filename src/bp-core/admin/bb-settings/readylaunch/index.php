@@ -26,7 +26,7 @@ function bb_readylaunch_settings_page_html() {
 				<img alt="" class="bb-branding-logo" src="<?php echo esc_url( buddypress()->plugin_url . 'bp-core/images/admin/BBLogo.png' ); ?>" />
 			</div>
 			<div class="bb-rl-header-actions">
-				<button class="bb-rl-header-actions-button">
+				<button class="bb-rl-header-actions-button" data-help-content-id="456175"> <!-- @todo: update when release. -->
 					<i class="bb-icons-rl-book-open"></i>
 				</button>
 			</div>

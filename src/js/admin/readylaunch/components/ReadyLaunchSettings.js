@@ -648,6 +648,15 @@ export const ReadyLaunchSettings = () => {
 		</Accordion>
 	);
 
+	useEffect(() => {
+		const helpBtn = document.querySelector('.bb-rl-header-actions-button[data-help-content-id]');
+		if (helpBtn) {
+			const onClick = () => handleHelpClick(helpBtn.getAttribute('data-help-content-id'));
+			helpBtn.addEventListener('click', onClick);
+			return () => helpBtn.removeEventListener('click', onClick);
+		}
+	}, [handleHelpClick]);
+
 	const renderContent = () => {
 		if ( isLoading ) {
 			return (
