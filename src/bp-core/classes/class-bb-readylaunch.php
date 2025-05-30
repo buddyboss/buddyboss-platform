@@ -123,9 +123,11 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 				// Remove BuddyPress template locations.
 				remove_filter( 'bp_get_template_stack', 'bp_add_template_stack_locations' );
+				remove_filter( 'bbp_get_template_stack', 'bbp_add_template_stack_locations' );
 
 				// Add Readylaunch template locations.
 				add_filter( 'bp_get_template_stack', array( $this, 'add_template_stack' ), PHP_INT_MAX );
+				add_filter( 'bbp_get_template_stack', array( $this, 'add_forum_template_stack' ), PHP_INT_MAX );
 
 				add_filter( 'bp_document_svg_icon', array( $this, 'bb_rl_document_svg_icon' ), 10, 2 );
 
@@ -396,6 +398,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					bp_is_current_component( 'media' ) ||
 					is_admin() ||
 					wp_doing_ajax() ||
+					$this->bb_is_readylaunch_forums() ||
 					self::bb_is_network_search() ||
 					(
 						(
@@ -537,6 +540,27 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 			foreach ( $stack as $key => $value ) {
 				$stack[ $key ] = untrailingslashit( trailingslashit( $value ) . $custom_location );
+			}
+
+			return $stack;
+		}
+
+		public function add_forum_template_stack( $stack ) {
+			$stylesheet_dir = get_stylesheet_directory();
+			$template_dir   = get_template_directory();
+
+			$stack = array_flip( $stack );
+
+
+			unset( $stack[ $stylesheet_dir ], $stack[ $template_dir ] );
+
+			$stack = array_flip( $stack );
+
+			foreach ( $stack as $key => $value ) {
+				if ( strpos( $value, 'bp-forums/templates/default' ) !== false ) {
+					$value = str_replace( 'bp-forums/templates/default', 'bp-templates/bp-nouveau/readylaunch/forums', $value );
+				}
+				$stack[ $key ] = $value;
 			}
 
 			return $stack;
@@ -2668,6 +2692,17 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				$this->learndash_helper = BB_Readylaunch_Learndash_Helper::instance();
 			}
 			return $this->learndash_helper;
+		}
+
+		private function bb_is_readylaunch_forums() {
+			return bp_is_active( 'forums' );
+//				   && (
+//				   		bbp_is_single_forum() ||
+//						bbp_is_single_topic() ||
+//						bbp_is_single_user() ||
+//						bbp_is_single_view() ||
+//						bbp_is_single_reply()
+//				   );
 		}
 	}
 }
