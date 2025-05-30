@@ -2699,13 +2699,26 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 		private function bb_is_readylaunch_forums() {
 			return bp_is_active( 'forums' );
-//				   && (
-//				   		bbp_is_single_forum() ||
+//					&& (
+//						bbp_is_forum_archive() ||
+//						bbp_is_topic_archive() ||
+//						is_post_type_archive( bbp_get_reply_post_type() ) ||
+//						bbp_is_single_user_edit() ||
+//						bbp_is_single_forum() ||
+//						bbp_is_forum_edit() ||
 //						bbp_is_single_topic() ||
+//						bbp_is_topic_edit() ||
+//						bbp_is_topic_split() ||
+//						bbp_is_topic_merge() ||
+//						bbp_is_single_reply() ||
+//						bbp_is_reply_edit() ||
+//						bbp_is_reply_move() ||
 //						bbp_is_single_user() ||
 //						bbp_is_single_view() ||
-//						bbp_is_single_reply()
-//				   );
+//						bbp_is_search() ||
+//						bbp_is_topic_tag_edit() ||
+//						bbp_is_topic_tag()
+//					);
 		}
 
 		public function bb_readylaunch_forums_enqueue_styles() {
