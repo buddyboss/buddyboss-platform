@@ -3204,6 +3204,38 @@ div#bp-group-message-content {
   }
 }
 
+.bb-rl-lms-inner-block {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: var(--bb-rl-space-400) 0;
+}
+
+.bb-rl-lms-inner-block .bb-rl-entry-header {
+  margin: 0 0 var(--bb-rl-space-300);
+}
+
+.bb-rl-lms-inner-block .bb-rl-heading {
+  margin: 0 0 var(--bb-rl-space-200);
+}
+
+.bb-rl-lms-inner-block .bb-rl-heading .bb-rl-lesson-count {
+  margin-bottom: var(--bb-rl-space-50);
+}
+
+.bb-rl-lms-inner-block .bb-rl-entry-title {
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 30px;
+  color: var(--bb-rl-text-color);
+}
+
+.bb-rl-lms-inner-block .bb-rl-entry-content {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 22px;
+  color: var(--bb-rl-text-secondary-color);
+}
+
 .bb-readylaunch-template {
   /* A sidebar-conditioned grid can be used on
     single profile or group screens. */
@@ -4203,38 +4235,6 @@ div#bp-group-message-content {
   background-color: var(--bb-rl-background-color);
 }
 
-.bb-rl-lesson-block {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: var(--bb-rl-space-400) 0;
-}
-
-.bb-rl-lesson-block .bb-rl-entry-header {
-  margin: 0 0 var(--bb-rl-space-300);
-}
-
-.bb-rl-lesson-block .bb-rl-heading {
-  margin: 0 0 var(--bb-rl-space-200);
-}
-
-.bb-rl-lesson-block .bb-rl-heading .bb-rl-lesson-count {
-  margin-bottom: var(--bb-rl-space-50);
-}
-
-.bb-rl-lesson-block .bb-rl-entry-title {
-  font-size: 20px;
-  font-weight: 700;
-  line-height: 30px;
-  color: var(--bb-rl-text-color);
-}
-
-.bb-rl-lesson-block .bb-rl-entry-content {
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 22px;
-  color: var(--bb-rl-text-secondary-color);
-}
-
 .bb-rl-lesson-count {
   font-size: var(--bb-rl-font-size-sm);
   font-weight: 400;
@@ -4356,38 +4356,6 @@ div#bp-group-message-content {
 .bb-learndash-content-wrap--topic {
   padding-bottom: 60px;
   background-color: var(--bb-rl-background-color);
-}
-
-.bb-rl-topic-block {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: var(--bb-rl-space-400) 0;
-}
-
-.bb-rl-topic-block .bb-rl-entry-header {
-  margin: 0 0 var(--bb-rl-space-300);
-}
-
-.bb-rl-topic-block .bb-rl-heading {
-  margin: 0 0 var(--bb-rl-space-200);
-}
-
-.bb-rl-topic-block .bb-rl-heading .bb-rl-lesson-count {
-  margin-bottom: var(--bb-rl-space-50);
-}
-
-.bb-rl-topic-block .bb-rl-entry-title {
-  font-size: 20px;
-  font-weight: 700;
-  line-height: 30px;
-  color: var(--bb-rl-text-color);
-}
-
-.bb-rl-topic-block .bb-rl-entry-content {
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 22px;
-  color: var(--bb-rl-text-secondary-color);
 }
 
 .bb-rl-learndash-quiz .bb-rl-quiz-footer {

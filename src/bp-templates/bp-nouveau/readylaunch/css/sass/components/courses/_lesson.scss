@@ -31,36 +31,6 @@
 	background-color: var(--bb-rl-background-color);
 }
 
-.bb-rl-lesson-block {
-	max-width: 800px;
-	margin: 0 auto;
-	padding: var(--bb-rl-space-400) 0;
-
-	.bb-rl-entry-header {
-		margin: 0 0 var(--bb-rl-space-300);
-	}
-
-	.bb-rl-heading {
-		margin: 0 0 var(--bb-rl-space-200);
-
-		.bb-rl-lesson-count {
-			margin-bottom: var(--bb-rl-space-50);
-		}
-	}
-
-	.bb-rl-entry-title {
-
-		@include bb-rl-base-heading-2xl;
-		color: var(--bb-rl-text-color);
-	}
-
-	.bb-rl-entry-content {
-
-		@include bb-rl-label-heading-md-thin;
-		color: var(--bb-rl-text-secondary-color);
-	}
-}
-
 .bb-rl-lesson-count {
 
 	@include bb-rl-label-heading;

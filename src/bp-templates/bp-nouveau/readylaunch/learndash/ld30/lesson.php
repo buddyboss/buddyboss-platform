@@ -44,8 +44,8 @@ $next_lesson = function_exists( 'learndash_get_next_lesson' ) ? learndash_get_ne
 $lesson_list = learndash_get_course_lessons_list( $course_id, null, array( 'num' => - 1 ) );
 $lesson_list = array_column( $lesson_list, 'post' );
 $lesson_topics_completed = learndash_lesson_topics_completed( $post->ID );
-$content_urls            = BB_Readylaunch::instance()->learndash_helper()->bb_rl_ld_custom_pagination( $course_id, $lesson_list );
-$pagination_urls         = BB_Readylaunch::instance()->learndash_helper()->bb_rl_custom_next_prev_url( $content_urls );
+/* $content_urls            = BB_Readylaunch::instance()->learndash_helper()->bb_rl_ld_custom_pagination( $course_id, $lesson_list );
+$pagination_urls         = BB_Readylaunch::instance()->learndash_helper()->bb_rl_custom_next_prev_url( $content_urls ); */
 
 $lesson_no = 1;
 foreach ( $lesson_list as $les ) {
@@ -68,7 +68,7 @@ if ( function_exists( 'learndash_is_lesson_accessable' ) ) {
 <div class="bb-learndash-content-wrap bb-learndash-content-wrap--lesson">
 	<main class="bb-learndash-content-area">
 		<article id="post-<?php the_ID(); ?>" <?php post_class('bb-rl-learndash-lesson'); ?>>
-            <div class="bb-rl-lesson-block">
+            <div class="bb-rl-lesson-block bb-rl-lms-inner-block">
                 <header class="bb-rl-entry-header">
                     <div class="bb-rl-heading">
                         <div class="bb-rl-lesson-count">

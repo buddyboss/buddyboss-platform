@@ -44,8 +44,8 @@ $quizzes = function_exists( 'learndash_get_lesson_quiz_list' ) ? learndash_get_l
 
 $lesson_list = learndash_get_course_lessons_list( $course_id, null, array( 'num' => - 1 ) );
 $lesson_list = array_column( $lesson_list, 'post' );
-$content_urls = BB_Readylaunch::instance()->learndash_helper()->bb_rl_ld_custom_pagination( $course_id, $lesson_list );
-$pagination_urls = BB_Readylaunch::instance()->learndash_helper()->bb_rl_custom_next_prev_url( $content_urls );
+/* $content_urls = BB_Readylaunch::instance()->learndash_helper()->bb_rl_ld_custom_pagination( $course_id, $lesson_list );
+$pagination_urls = BB_Readylaunch::instance()->learndash_helper()->bb_rl_custom_next_prev_url( $content_urls ); */
 
 // Find lesson number
 $lesson_no = 1;
@@ -78,7 +78,7 @@ if ( function_exists( 'learndash_is_topic_accessable' ) ) {
 <div class="bb-learndash-content-wrap bb-learndash-content-wrap--topic">
 	<main class="bb-learndash-content-area">
 		<article id="post-<?php the_ID(); ?>" <?php post_class('bb-rl-learndash-topic'); ?>>
-            <div class="bb-rl-topic-block">
+            <div class="bb-rl-topic-block bb-rl-lms-inner-block">
                 <header class="bb-rl-entry-header">
                     <div class="bb-rl-heading">
                         <div class="bb-rl-topic-count">
