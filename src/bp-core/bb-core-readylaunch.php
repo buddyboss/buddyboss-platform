@@ -11,7 +11,7 @@
 defined( 'ABSPATH' ) || exit;
 
 // Include the ReadyLaunch LearnDash helper.
-require_once dirname( __FILE__ ) . '/classes/class-bb-readylaunch-learndash-helper.php';
+require_once __DIR__ . '/classes/class-bb-readylaunch-learndash-helper.php';
 
 /**
  * Register a widget for ReadyLaunch
@@ -42,7 +42,7 @@ function bb_rl_register_single_widget( $widget_class, $widget_file ) {
 		}
 	);
 
-	// Unregister widget from admin area.
+	// Unregister widget from the admin area.
 	add_action(
 		'widgets_init',
 		function () use ( $widget_class ) {
@@ -107,12 +107,12 @@ function bb_rl_register_widgets() {
 add_action( 'bp_register_widgets', 'bb_rl_register_widgets' );
 
 /**
- * Filter pre existing widgets.
+ * Filter pre-existing widgets.
  *
  * @since BuddyBoss [BBVERSION]
  */
 function bb_rl_modify_existing_widget_output( $instance, $widget, $args ) {
-    ob_start(); // Start output buffering.
+	ob_start(); // Start output buffering.
 	$widget->widget( $args, $instance ); // Render the widget.
 	$output = ob_get_clean(); // Get the output.
 
@@ -143,12 +143,11 @@ function bb_rl_modify_existing_widget_output( $instance, $widget, $args ) {
 
 	echo $output; // Output modified widget.
 	return false; // Prevent default rendering.
-
 }
 add_filter( 'widget_display_callback', 'bb_rl_modify_existing_widget_output', 10, 3 );
 
 /**
- * Open wrapper of repeater set - on View profile screen
+ * Open the wrapper of the repeater set - on the View profile screen
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -175,27 +174,6 @@ remove_action( 'bp_before_profile_field_item', 'bp_view_profile_repeaters_print_
 add_action( 'bp_before_profile_field_item', 'bb_rl_view_profile_repeaters_print_group_html_start' );
 
 /**
- * Close wrapper of repeater set - on edit profile screen
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @global boolean $first_xpfield_in_repeater
- */
-function bb_rl_view_profile_repeaters_print_group_html_end() {
-	global $repeater_set_being_displayed;
-	if ( ! empty( $repeater_set_being_displayed ) ) {
-
-		// End of previous set.
-		echo "<div class='bb-rl-repeater-separator'></div>";
-
-		$repeater_set_being_displayed = false;
-	}
-}
-//remove_filter( 'bp_ps_field_before_query', 'bp_profile_repeaters_search_change_filter' );
-//add_filter( 'bp_ps_field_before_query', 'bb_rl_view_profile_repeaters_print_group_html_end' );
-
-
-/**
  * Add social networks button to the member header area.
  *
  * @since BuddyBoss [BBVERSION]
@@ -203,8 +181,8 @@ function bb_rl_view_profile_repeaters_print_group_html_end() {
  * @return string
  */
 function bb_rl_get_user_social_networks_urls( $user_id = null ) {
-	$social_networks_id                 = bb_rl_get_user_social_networks_field_id();
-	$is_enabled_header_social_networks  = bb_enabled_profile_header_layout_element( 'social-networks' ) && function_exists( 'bb_enabled_member_social_networks' ) && bb_enabled_member_social_networks();
+	$social_networks_id                = bb_rl_get_user_social_networks_field_id();
+	$is_enabled_header_social_networks = bb_enabled_profile_header_layout_element( 'social-networks' ) && function_exists( 'bb_enabled_member_social_networks' ) && bb_enabled_member_social_networks();
 
 	$html = '';
 
@@ -230,7 +208,7 @@ function bb_rl_get_user_social_networks_urls( $user_id = null ) {
 			$original_option_values = array_intersect_key( $original_option_values, array_flip( array_column( $social_settings_options, 'name' ) ) );
 			foreach ( $original_option_values as $key => $original_option_value ) {
 				if ( '' !== $original_option_value ) {
-					$key = bp_social_network_search_key( $key, $providers );
+					$key   = bp_social_network_search_key( $key, $providers );
 					$html .= '<span class="bb-rl-social ' . esc_attr( $providers[ $key ]->value ) . '"><a target="_blank" data-balloon-pos="up" data-balloon="' . esc_attr( $providers[ $key ]->name ) . '" href="' . esc_url( $original_option_value ) . '"><i class="bb-icons-rl-' . esc_attr( strtolower( $providers[ $key ]->value ) ) . '-logo"></i></a></span>';
 				}
 			}
@@ -256,17 +234,17 @@ function bb_rl_get_user_social_networks_urls( $user_id = null ) {
 }
 
 /**
- * Get social network field id.
+ * Get social network field ID.
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @return int Social network xprofile field id.
+ * @return int Social network xProfile field id.
  */
 function bb_rl_get_user_social_networks_field_id() {
 	global $wpdb, $bp;
 
 	$social_networks_field = $wpdb->get_row( "SELECT a.id FROM {$bp->table_prefix}bp_xprofile_fields a WHERE parent_id = 0 AND type = 'socialnetworks' " );
-	return ! empty( $social_networks_field->id ) ? $social_networks_field->id : 0;
+	return ( ! empty( $social_networks_field->id ) ? $social_networks_field->id : 0 );
 }
 
 /**
@@ -278,9 +256,9 @@ function bb_rl_get_user_social_networks_field_id() {
  * @return array Modified mentions options.
  */
 function bb_rl_add_mentions_selectors( $options ) {
-    if ( ! empty( $options['selectors'] ) && is_array( $options['selectors'] ) ) {
-        $options['selectors'][] = '.bb-rl-suggestions';
-    }
-    return $options;
+	if ( ! empty( $options['selectors'] ) && is_array( $options['selectors'] ) ) {
+		$options['selectors'][] = '.bb-rl-suggestions';
+	}
+	return $options;
 }
 add_filter( 'bp_at_mention_js_options', 'bb_rl_add_mentions_selectors' );

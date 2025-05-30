@@ -123,7 +123,7 @@ class BB_Activity_Readylaunch {
 			$output .= '</div>';
 		}
 
-		// Build popup to show reacted items.
+		// Build a popup to show reacted items.
 		if ( $is_popup ) {
 			$output .= '<div class="activity-state-popup">
 				<div class="activity-state-popup_overlay"></div>
@@ -270,7 +270,7 @@ class BB_Activity_Readylaunch {
 	}
 
 	/**
-	 * Load more comments for activity.
+	 * Load more comments for the activity.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 */
@@ -319,7 +319,7 @@ class BB_Activity_Readylaunch {
 			)
 		);
 
-		// Bail if activity privacy restrict.
+		// Bail if activity privacy is restricted.
 		if ( is_wp_error( $privacy_check ) ) {
 			wp_send_json_error(
 				array(
@@ -362,7 +362,7 @@ class BB_Activity_Readylaunch {
 		}
 
 		$activities_template->activity = $comments[0];
-		// We have all comments and replies just loop through.
+		// We have all comments and replies, just loop through.
 		ob_start();
 
 		$args = array(
@@ -403,7 +403,6 @@ class BB_Activity_Readylaunch {
 	 * @since BuddyBoss [BBVERSION]
 	 */
 	public function bb_rl_activity_state() {
-
 		$activity_id    = bp_get_activity_id();
 		$comment_count  = $this->bb_rl_get_activity_comment_count( $activity_id );
 		$reactions      = bb_active_reactions();
@@ -488,7 +487,7 @@ class BB_Activity_Readylaunch {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param array $params Associative array containing the js strings needed by scripts.
+	 * @param array $params Associative array containing the JS strings needed by scripts.
 	 *
 	 * @return array The same array with specific strings for the ReadyLaunch activity if needed.
 	 */
@@ -567,7 +566,7 @@ class BB_Activity_Readylaunch {
 			$followers_count = 0;
 			if ( ! empty( $followers ) ) {
 				$followers_count = sprintf(
-				/* translators: %d: follower count */
+					/* translators: %d: follower count */
 					_n( '%d follower', '%d followers', count( $followers ), 'buddyboss' ),
 					count( $followers )
 				);
