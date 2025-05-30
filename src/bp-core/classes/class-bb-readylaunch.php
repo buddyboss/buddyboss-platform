@@ -2669,5 +2669,37 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			}
 			return $this->learndash_helper;
 		}
+
+		/**
+		 * Get the header menu option.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 */
+		public function bb_rl_get_header_menu_location() {
+			$header_menu_slug = bp_get_option( 'bb_rl_header_menu', 'bb-readylaunch' );
+
+			if ( empty( $header_menu_slug ) ) {
+				return 'bb-readylaunch';
+			}
+
+			$header_menu_id = null;
+			$menus          = wp_get_nav_menus();
+			foreach ( $menus as $menu ) {
+				if ( $menu->slug === $header_menu_slug ) {
+					$header_menu_id = $menu->term_id;
+					break;
+				}
+			}
+			$locations = get_nav_menu_locations();
+			if ( $header_menu_id ) {
+				foreach ( $locations as $location => $assigned_menu_id ) {
+					if ( (int) $assigned_menu_id === (int) $header_menu_id ) {
+						return $location;
+					}
+				}
+			}
+
+			return 'bb-readylaunch';
+		}
 	}
 }
