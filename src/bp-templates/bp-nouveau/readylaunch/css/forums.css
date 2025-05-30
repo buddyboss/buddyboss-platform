@@ -183,7 +183,7 @@
 
 .bb-rl-forums-list .bb-rl-forum-list-item {
   border: 1px solid var(--bb-rl-border-secondary-color);
-  background-color: var(--bb-rl-background-primary);
+  background-color: var(--bb-rl-background-color);
   border-radius: var(--bb-rl-radius-lg);
 }
 
@@ -226,6 +226,19 @@
   margin-bottom: 12px;
   color: var(--bb-rl-text-tertiary-color);
   font-size: var(--bb-rl-font-size-sm);
+}
+
+.bb-rl-forums-list .bb-rl-forum-meta .bb-rl-forum-meta-item-inactive {
+  display: none;
+}
+
+.bb-rl-forums-list .bb-rl-forum-meta .bb-rl-forum-meta-item {
+  display: flex;
+  align-items: center;
+}
+
+.bb-rl-forums-list .bb-rl-forum-meta .bb-rl-forum-meta-item > span:not(:last-child) {
+  margin-right: var(--bb-rl-space-50);
 }
 
 .bb-rl-forums-list .bb-rl-forum-meta .bb-rl-forum-meta-item + .bb-rl-forum-meta-item:before {
