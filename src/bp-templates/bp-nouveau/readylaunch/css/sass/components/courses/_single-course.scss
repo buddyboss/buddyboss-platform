@@ -277,7 +277,10 @@
 		.ld-item-details {
 			order: 1;
 			font-size: 0;
-			margin-right: 12px;
+
+			&:has(.ld-expand-button) {
+				margin-right: 12px;
+			}
 		}
 
 		.ld-item-components {

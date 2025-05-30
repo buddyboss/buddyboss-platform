@@ -3999,6 +3999,9 @@ div#bp-group-message-content {
 .bb-rl-ld-lesson-list .ld-item-list-item-preview .ld-item-details {
   order: 1;
   font-size: 0;
+}
+
+.bb-rl-ld-lesson-list .ld-item-list-item-preview .ld-item-details:has(.ld-expand-button) {
   margin-right: 12px;
 }
 
