@@ -21,7 +21,12 @@
 
 	<div class="bb-rl-secondary-header flex items-center">
 		<div class="bb-rl-entry-heading">
-			<h2><?php esc_html_e( 'Forums', 'buddyboss' ); ?><span class="bb-rl-heading-count">10</span></h2>
+			<?php
+			// Get total forums count using bbPress statistics
+			$stats = bbp_get_statistics();
+			$total_forums = isset( $stats['forum_count_int'] ) ? $stats['forum_count_int'] : 0;
+			?>
+			<h2><?php esc_html_e( 'Forums', 'buddyboss' ); ?> <span class="bb-rl-heading-count"><?php echo esc_html( $total_forums ); ?></span></h2>
 		</div>
 		<div class="bb-rl-sub-ctrls flex items-center">
 			<?php
