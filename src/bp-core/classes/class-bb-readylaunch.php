@@ -241,6 +241,9 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			// LearnDash integration.
 			add_action( 'wp_enqueue_scripts', array( $this, 'bb_readylaunch_learndash_enqueue_styles' ), 10 );
 
+			// Forums integration.
+			add_filter( 'wp_enqueue_scripts', array( $this, 'bb_readylaunch_forums_enqueue_styles' ), 10 );
+
 			// Set up LearnDash integration.
 		}
 
@@ -2703,6 +2706,29 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 //						bbp_is_single_view() ||
 //						bbp_is_single_reply()
 //				   );
+		}
+
+		public function bb_readylaunch_forums_enqueue_styles() {
+			if ( ! $this->bb_is_readylaunch_forums() ) {
+				return;
+			}
+
+			// Enqueue LearnDash ReadyLaunch styles.
+			wp_enqueue_style(
+				'bb-readylaunch-forums',
+				buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/css/forums.css',
+				array(),
+				bp_get_version()
+			);
+
+			// Enqueue our LearnDash helper JavaScript.
+			wp_enqueue_script(
+				'bb-readylaunch-forums-js',
+				buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/js/bb-readylaunch-forums.js',
+				array( 'jquery' ),
+				bp_get_version(),
+				true
+			);
 		}
 	}
 }
