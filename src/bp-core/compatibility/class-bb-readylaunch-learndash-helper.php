@@ -49,7 +49,8 @@ class BB_Readylaunch_Learndash_Helper {
 	 * @since BuddyBoss [BBVERSION]
 	 */
 	public function __construct() {
-		// Constructor can be used for initialization if needed
+		// Add pre_get_posts filter for course filtering.
+		add_action( 'pre_get_posts', array( $this, 'bb_rl_filter_courses_query' ) );
 	}
 
 	/**
@@ -157,7 +158,7 @@ class BB_Readylaunch_Learndash_Helper {
 
 		// Get current URL if not provided.
 		if ( empty( $current_url ) ) {
-			$protocol = is_ssl() ? 'https' : 'http';
+			$protocol    = is_ssl() ? 'https' : 'http';
 			$current_url = $protocol . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 		}
 
@@ -177,22 +178,22 @@ class BB_Readylaunch_Learndash_Helper {
 			);
 		}
 
-		$url_result = array();
-		$keys = array_keys( $url_arr );
+		$url_result        = array();
+		$keys              = array_keys( $url_arr );
 		$current_key_index = array_search( $key, $keys );
 
 		// Get next URL.
 		$next = null;
 		if ( isset( $keys[ $current_key_index + 1 ] ) ) {
 			$next_key = $keys[ $current_key_index + 1 ];
-			$next = $url_arr[ $next_key ];
+			$next     = $url_arr[ $next_key ];
 		}
 
 		// Get previous URL.
 		$prev = null;
 		if ( isset( $keys[ $current_key_index - 1 ] ) ) {
 			$prev_key = $keys[ $current_key_index - 1 ];
-			$prev = $url_arr[ $prev_key ];
+			$prev     = $url_arr[ $prev_key ];
 		}
 
 		$last_element = end( $url_arr );
@@ -261,7 +262,7 @@ class BB_Readylaunch_Learndash_Helper {
 				// Check lesson completion.
 				$lesson_completed = ! empty( $course_progress[ $course_id ]['lessons'][ $lesson->ID ] ) && 1 === $course_progress[ $course_id ]['lessons'][ $lesson->ID ];
 
-				$lesson_url = function_exists( 'learndash_get_step_permalink' ) 
+				$lesson_url = function_exists( 'learndash_get_step_permalink' )
 					? learndash_get_step_permalink( $lesson->ID, $course_id )
 					: get_permalink( $lesson->ID );
 
@@ -283,7 +284,7 @@ class BB_Readylaunch_Learndash_Helper {
 							// Check topic completion.
 							$topic_completed = ! empty( $course_progress[ $course_id ]['topics'][ $lesson->ID ][ $lesson_topic->ID ] ) && 1 === $course_progress[ $course_id ]['topics'][ $lesson->ID ][ $lesson_topic->ID ];
 
-							$topic_url = function_exists( 'learndash_get_step_permalink' ) 
+							$topic_url = function_exists( 'learndash_get_step_permalink' )
 								? learndash_get_step_permalink( $lesson_topic->ID, $course_id )
 								: get_permalink( $lesson_topic->ID );
 
@@ -302,11 +303,11 @@ class BB_Readylaunch_Learndash_Helper {
 											continue;
 										}
 
-										$quiz_completed = function_exists( 'learndash_is_quiz_complete' ) 
+										$quiz_completed = function_exists( 'learndash_is_quiz_complete' )
 											? learndash_is_quiz_complete( $user_id, $topic_quiz['post']->ID, $course_id )
 											: false;
 
-										$quiz_url = function_exists( 'learndash_get_step_permalink' ) 
+										$quiz_url = function_exists( 'learndash_get_step_permalink' )
 											? learndash_get_step_permalink( $topic_quiz['post']->ID, $course_id )
 											: get_permalink( $topic_quiz['post']->ID );
 
@@ -331,11 +332,11 @@ class BB_Readylaunch_Learndash_Helper {
 								continue;
 							}
 
-							$quiz_completed = function_exists( 'learndash_is_quiz_complete' ) 
+							$quiz_completed = function_exists( 'learndash_is_quiz_complete' )
 								? learndash_is_quiz_complete( $user_id, $lesson_quiz['post']->ID, $course_id )
 								: false;
 
-							$quiz_url = function_exists( 'learndash_get_step_permalink' ) 
+							$quiz_url = function_exists( 'learndash_get_step_permalink' )
 								? learndash_get_step_permalink( $lesson_quiz['post']->ID, $course_id )
 								: get_permalink( $lesson_quiz['post']->ID );
 
@@ -358,11 +359,11 @@ class BB_Readylaunch_Learndash_Helper {
 						continue;
 					}
 
-					$quiz_completed = function_exists( 'learndash_is_quiz_complete' ) 
+					$quiz_completed = function_exists( 'learndash_is_quiz_complete' )
 						? learndash_is_quiz_complete( $user_id, $course_quiz['post']->ID, $course_id )
 						: false;
 
-					$quiz_url = function_exists( 'learndash_get_step_permalink' ) 
+					$quiz_url = function_exists( 'learndash_get_step_permalink' )
 						? learndash_get_step_permalink( $course_quiz['post']->ID, $course_id )
 						: get_permalink( $course_quiz['post']->ID );
 
@@ -375,9 +376,12 @@ class BB_Readylaunch_Learndash_Helper {
 		}
 
 		// Find first incomplete step.
-		$incomplete_steps = array_filter( $navigation_urls, function( $step ) {
-			return 'no' === $step['complete'];
-		});
+		$incomplete_steps = array_filter(
+			$navigation_urls,
+			function ( $step ) {
+				return 'no' === $step['complete'];
+			}
+		);
 
 		if ( ! empty( $incomplete_steps ) ) {
 			$first_incomplete = reset( $incomplete_steps );
@@ -483,7 +487,7 @@ class BB_Readylaunch_Learndash_Helper {
 
 		// Get current URL if not provided.
 		if ( empty( $current_url ) ) {
-			$protocol = is_ssl() ? 'https' : 'http';
+			$protocol    = is_ssl() ? 'https' : 'http';
 			$current_url = $protocol . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 		}
 
@@ -494,4 +498,66 @@ class BB_Readylaunch_Learndash_Helper {
 
 		return false !== $key ? $key + 1 : 0;
 	}
-} 
+
+	/**
+	 * Filter the main query for courses based on filters
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param WP_Query $query The WP_Query instance.
+	 */
+	public function bb_rl_filter_courses_query( $query ) {
+		// Only modify the main query for course archive.
+		if ( ! is_admin() && $query->is_main_query() && is_post_type_archive( 'sfwd-courses' ) ) {
+
+			// Get filter values.
+			$orderby    = isset( $_GET['orderby'] ) ? sanitize_text_field( wp_unslash( $_GET['orderby'] ) ) : '';
+			$category   = isset( $_GET['categories'] ) ? sanitize_text_field( wp_unslash( $_GET['categories'] ) ) : '';
+			$instructor = isset( $_GET['instructors'] ) ? sanitize_text_field( wp_unslash( $_GET['instructors'] ) ) : '';
+
+			// Ensure we get the total count.
+			$query->set( 'no_found_rows', false );
+
+			// Handle ordering.
+			switch ( $orderby ) {
+				case 'alphabetical':
+					$query->set( 'orderby', 'title' );
+					$query->set( 'order', 'ASC' );
+					break;
+				case 'recent':
+					$query->set( 'orderby', 'date' );
+					$query->set( 'order', 'DESC' );
+					break;
+				case 'my-progress':
+					if ( is_user_logged_in() ) {
+						$user_id = get_current_user_id();
+						// Get user's course progress.
+						$user_courses = learndash_user_get_enrolled_courses( $user_id );
+						if ( ! empty( $user_courses ) ) {
+							$query->set( 'post__in', $user_courses );
+						}
+					}
+					break;
+			}
+
+			// Handle category filter.
+			if ( ! empty( $category ) && 'all' !== $category ) {
+				$tax_query = array(
+					array(
+						'taxonomy' => 'ld_course_category',
+						'field'    => 'slug',
+						'terms'    => $category,
+					),
+				);
+				$query->set( 'tax_query', $tax_query );
+			}
+
+			// Handle instructor filter.
+			if ( ! empty( $instructor ) && 'all' !== $instructor ) {
+				$query->set( 'author', $instructor );
+			}
+		}
+	}
+}
+
+BB_Readylaunch_Learndash_Helper::instance();

@@ -10,9 +10,6 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-// Include the ReadyLaunch LearnDash helper.
-require_once dirname( __FILE__ ) . '/classes/class-bb-readylaunch-learndash-helper.php';
-
 /**
  * Register a widget for ReadyLaunch
  *

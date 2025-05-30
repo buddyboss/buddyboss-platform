@@ -13,9 +13,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 // Get the ReadyLaunch instance to check if sidebar is enabled.
 $readylaunch = BB_Readylaunch::instance();
 
-$orderby    = isset( $_GET['orderby'] ) ? sanitize_text_field( wp_unslash( $_GET['orderby'] ) ) : 'alphabetical';
-$category   = isset( $_GET['filter-categories'] ) ? sanitize_text_field( wp_unslash( $_GET['filter-categories'] ) ) : '';
-$instructor = isset( $_GET['filter-instructors'] ) ? sanitize_text_field( wp_unslash( $_GET['filter-instructors'] ) ) : '';
+// Get the global query object.
+global $wp_query;
+
+// Get filter values.
+$current_orderby    = isset( $_GET['orderby'] ) ? sanitize_text_field( wp_unslash( $_GET['orderby'] ) ) : 'alphabetical';
+$current_category   = isset( $_GET['categories'] ) ? sanitize_text_field( wp_unslash( $_GET['categories'] ) ) : '';
+$current_instructor = isset( $_GET['instructors'] ) ? sanitize_text_field( wp_unslash( $_GET['instructors'] ) ) : '';
 ?>
 
 <div class="bb-rl-secondary-header flex items-center">
@@ -28,17 +32,17 @@ $instructor = isset( $_GET['filter-instructors'] ) ? sanitize_text_field( wp_uns
 				esc_html_e( 'Courses', 'buddyboss' );
 			}
 			?>
-			<span class="bb-rl-heading-count">9</span>
+			<span class="bb-rl-heading-count"><?php echo esc_html( $wp_query->found_posts ); ?></span>
 		</h1>
 	</div>
 
 	<div class="bb-rl-course-filters bb-rl-sub-ctrls flex items-center">
 
 		<div class="bb-rl-grid-filters flex items-center" data-view="ld-course">
-			<a href="" class="layout-view layout-view-course layout-grid-view bp-tooltip active" data-view="grid" data-bp-tooltip-pos="down" data-bp-tooltip="<?php esc_html_e( 'Grid View', 'buddyboss' ); ?>">
+			<a href="#" class="layout-view layout-view-course layout-grid-view bp-tooltip active" data-view="grid" data-bp-tooltip-pos="down" data-bp-tooltip="<?php esc_html_e( 'Grid View', 'buddyboss' ); ?>">
 				<i class="bb-icons-rl-squares-four"></i>
 			</a>
-			<a href="" class="layout-view layout-view-course layout-list-view bp-tooltip" data-view="list" data-bp-tooltip-pos="down" data-bp-tooltip="<?php esc_html_e( 'List View', 'buddyboss' ); ?>">
+			<a href="#" class="layout-view layout-view-course layout-list-view bp-tooltip" data-view="list" data-bp-tooltip-pos="down" data-bp-tooltip="<?php esc_html_e( 'List View', 'buddyboss' ); ?>">
 				<i class="bb-icons-rl-rows"></i>
 			</a>
 		</div>
@@ -54,7 +58,7 @@ $instructor = isset( $_GET['filter-instructors'] ) ? sanitize_text_field( wp_uns
 				$order_by_options['my-progress'] = __( 'My Progress', 'buddyboss' );
 			}
 			if ( ! empty( $order_by_options ) ) {
-				$order_by_current = isset( $order_by_options[ $orderby ] ) ? $orderby : 'alphabetical';
+				$order_by_current = isset( $order_by_options[ $current_orderby ] ) ? $current_orderby : 'alphabetical';
 				?>
 				<div class="bb-rl-course-categories bb-rl-filter">
 					<label for="ld-course-orderby" class="bb-rl-filter-label">
@@ -97,7 +101,7 @@ $instructor = isset( $_GET['filter-instructors'] ) ? sanitize_text_field( wp_uns
 							<?php
 							foreach ( $course_cats as $cat_data ) {
 								?>
-								<option value="<?php echo esc_attr( $cat_data->slug ); ?>" <?php selected( $category, $cat_data->slug ); ?>>
+								<option value="<?php echo esc_attr( $cat_data->slug ); ?>" <?php selected( $current_category, $cat_data->slug ); ?>>
 									<?php echo esc_html( $cat_data->name ); ?>
 								</option>
 								<?php
@@ -126,7 +130,7 @@ $instructor = isset( $_GET['filter-instructors'] ) ? sanitize_text_field( wp_uns
 							foreach ( $author_ids as $author_id ) {
 								$author_name = get_the_author_meta( 'display_name', $author_id );
 								?>
-								<option value="<?php echo esc_attr( $author_id ); ?>" <?php selected( $instructor, $author_id, false ); ?>>
+								<option value="<?php echo esc_attr( $author_id ); ?>" <?php selected( (int) $current_instructor, (int) $author_id ); ?>>
 									<?php echo esc_html( $author_name ); ?>
 								</option>
 								<?php
@@ -145,7 +149,9 @@ $instructor = isset( $_GET['filter-instructors'] ) ? sanitize_text_field( wp_uns
 	<main class="bb-learndash-content-area">
 		<div class="bb-rl-courses-list">
 
-			<?php if ( have_posts() ) : ?>
+			<?php
+			if ( have_posts() ) :
+				?>
 				<div class="bb-rl-courses-grid grid">
 					<?php
 					while ( have_posts() ) :

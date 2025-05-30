@@ -114,17 +114,17 @@
             var self = this;
             
             // Course category filter
-            $('#bb-courses-category-filter').on('change', function() {
+            $('#ld-course-cats').on('change', function() {
                 self.filterCourses();
             });
             
             // Course instructor filter
-            $('#bb-courses-instructor-filter').on('change', function() {
+            $('#ld-course-instructors').on('change', function() {
                 self.filterCourses();
             });
             
             // Course sort filter
-            $('#bb-courses-sort-filter').on('change', function() {
+            $('#ld-course-orderby').on('change', function() {
                 self.filterCourses();
             });
             
@@ -138,47 +138,48 @@
         /**
          * Filter courses via AJAX
          */
-        filterCourses: function() {
-            var $courseItems = $('.bb-course-items'),
-                category = $('#bb-courses-category-filter').val(),
-                instructor = $('#bb-courses-instructor-filter').val(),
-                sort = $('#bb-courses-sort-filter').val(),
-                search = $('#bb-courses-search').val();
-            
-            // Show loading state
-            $courseItems.addClass('loading');
-            
-            // Make AJAX request
-            $.ajax({
-                url: bbReadylaunchLearnDash.ajax_url,
-                type: 'POST',
-                data: {
-                    action: 'bb_readylaunch_learndash_filter_courses',
-                    category: category,
-                    instructor: instructor,
-                    sort: sort,
-                    search: search,
-                    nonce: bbReadylaunchLearnDash.nonce
-                },
-                success: function(response) {
-                    if (response.success) {
-                        // Replace course items
-                        $courseItems.html(response.data.content);
-                        
-                        // Update course count
-                        $('.bb-courses-count').text(response.data.count);
-                        
-                        // Initialize course item events
-                        BBReadyLaunchLearnDash.setupCourseItemEvents();
-                    }
-                },
-                complete: function() {
-                    // Remove loading state
-                    $courseItems.removeClass('loading');
-                }
-            });
+        filterCourses : function () {
+            var $courseItems = $( '.bb-rl-courses-grid' ),
+                category     = $( '#ld-course-cats' ).val(),
+                instructor   = $( '#ld-course-instructors' ).val(),
+                orderby      = $( '#ld-course-orderby' ).val(),
+                search       = $( '#bb-courses-search' ).val();
+
+            // Show loading state.
+            $courseItems.addClass( 'loading' );
+
+            // Build query string.
+            var params = [];
+            if ( orderby ) {
+                params.push( 'orderby=' + encodeURIComponent( orderby ) );
+            }
+            if ( category ) {
+                params.push( 'categories=' + encodeURIComponent( category ) );
+            }
+            if ( instructor ) {
+                params.push( 'instructors=' + encodeURIComponent( instructor ) );
+            }
+            var newUrl = bbReadylaunchLearnDash.courses_url + (
+                params.length ? '?' + params.join( '&' ) : ''
+            );
+
+            // Fetch the new HTML
+            $.get( newUrl, function ( response ) {
+                // Parse the response and extract the grid
+                var html     = $( '<div>' ).html( response );
+                var newGrid  = html.find( '.bb-rl-courses-grid' ).html();
+                var newCount = html.find( '.bb-rl-heading-count' ).text();
+
+                // Update the grid and count
+                $courseItems.html( newGrid );
+                $( '.bb-rl-heading-count' ).text( newCount );
+                $courseItems.removeClass( 'loading' );
+
+                // Update the browser URL
+                window.history.replaceState( {}, '', newUrl );
+            } );
         },
-        
+
         /**
          * Setup sidebar toggle for mobile
          */

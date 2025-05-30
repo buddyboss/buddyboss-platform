@@ -240,6 +240,9 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			add_action( 'wp_enqueue_scripts', array( $this, 'bb_readylaunch_learndash_enqueue_styles' ), 10 );
 
 			// Set up LearnDash integration.
+			if ( class_exists( 'SFWD_LMS' ) ) {
+				require buddypress()->compatibility_dir . '/class-bb-readylaunch-learndash-helper.php';
+			}
 		}
 
 		/**
@@ -2298,6 +2301,14 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				array( 'jquery' ),
 				bp_get_version(),
 				true
+			);
+
+			wp_localize_script(
+				'bb-readylaunch-learndash-js',
+				'bbReadylaunchLearnDash',
+				array(
+					'courses_url' => home_url( '/courses/' ),
+				)
 			);
 		}
 
