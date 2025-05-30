@@ -6967,16 +6967,15 @@ body.admin-bar .bb-rl-left-panel {
   border-radius: var(--bb-rl-radius-md);
 }
 
-.bb-rl-left-panel .bb-readylaunchpanel-menu li > a > i {
+.bb-rl-left-panel .bb-readylaunchpanel-menu li > a > .menu-icon {
   display: flex;
-  font-family: bb-icons-rl;
-  font-size: 24px;
+  font-size: 18px;
   line-height: 1;
   color: var(--bb-rl-icon-color);
-  margin-left: var(--bb-rl-space-100);
+  margin-right: var(--bb-rl-space-100);
 }
 
-.bb-rl-left-panel .bb-readylaunchpanel-menu li > a > i:before {
+.bb-rl-left-panel .bb-readylaunchpanel-menu li > a > .menu-icon:before {
   margin: 0;
 }
 
