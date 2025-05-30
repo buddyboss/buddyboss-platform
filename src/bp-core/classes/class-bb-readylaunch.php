@@ -316,6 +316,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 						$item['label'] = __( 'Notifications', 'buddyboss' );
 					}
 					if ( $is_active ) {
+						$item['icon']          = 'bb-icons-rl-' . $item['icon'];
 						$ordered_items[ $key ] = $item;
 					}
 				}

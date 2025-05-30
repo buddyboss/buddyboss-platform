@@ -42,6 +42,13 @@ global $bb_rl_search_nav;
 							?>
 							<li>
 								<a href="<?php echo esc_url( $item['url'] ); ?>" class="bb-rl-left-panel-menu-link">
+									<?php
+									if ( ! empty( $item['icon'] ) ) {
+										?>
+										<span class="menu-icon <?php echo esc_attr( $item['icon'] ); ?>"></span>
+										<?php
+									}
+									?>
 									<?php echo esc_html( $item['label'] ); ?>
 								</a>
 							</li>
