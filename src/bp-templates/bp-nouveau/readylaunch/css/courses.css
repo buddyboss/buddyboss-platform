@@ -918,16 +918,18 @@
   border-bottom: 0;
 }
 
+.bb-rl-ld-lesson-list .ld-item-list-item:last-of-type .ld-item-list-item-preview.ld-expanded {
+  border-bottom: 0;
+}
+
 .bb-rl-ld-lesson-list .ld-item-list-item-preview {
   display: flex;
   align-items: center;
-  border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-200);
 }
 
 .bb-rl-ld-lesson-list .ld-item-list-item-preview.ld-expanded {
-  border-bottom-left-radius: 0;
-  border-bottom-right-radius: 0;
+  border-bottom: 1px solid var(--bb-rl-border-secondary-color);
 }
 
 .bb-rl-ld-lesson-list .ld-item-list-item-preview.ld-expanded .ld-icon-arrow-down:before {
@@ -966,6 +968,9 @@
 .bb-rl-ld-lesson-list .ld-item-list-item-preview .ld-item-details {
   order: 1;
   font-size: 0;
+}
+
+.bb-rl-ld-lesson-list .ld-item-list-item-preview .ld-item-details:has(.ld-expand-button) {
   margin-right: 12px;
 }
 
@@ -1096,6 +1101,10 @@
   line-height: 1;
   color: var(--bb-rl-icon-secondary-color);
   margin-right: var(--bb-rl-space-100);
+}
+
+.bb-rl-ld-lesson-list .ld-item-list-item-expanded .ld-table-list-item .ld-table-list-item-preview .ld-item-title {
+  flex: 1;
 }
 
 .bb-rl-ld-lesson-list .ld-item-list-item-expanded .ld-table-list-item .ld-table-list-item-preview .ld-status-icon {
