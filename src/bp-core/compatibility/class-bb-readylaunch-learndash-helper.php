@@ -9,6 +9,11 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
+// Prevent duplicate class declarations.
+if ( class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
+	return;
+}
+
 /**
  * ReadyLaunch LearnDash Helper Class
  *

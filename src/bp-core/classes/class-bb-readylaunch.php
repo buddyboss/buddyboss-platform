@@ -233,7 +233,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 			// Set up LearnDash integration.
 			if ( class_exists( 'SFWD_LMS' ) ) {
-				require buddypress()->compatibility_dir . '/class-bb-readylaunch-learndash-helper.php';
+				require_once buddypress()->compatibility_dir . '/class-bb-readylaunch-learndash-helper.php';
 			}
 		}
 
