@@ -147,7 +147,7 @@
                 search       = $( '#bb-courses-search' ).val();
 
             // Show loading state.
-            $courseItems.addClass( 'loading' );
+            $courseList.addClass( 'loading' );
 
             // Build query string.
             var params = [];
@@ -163,6 +163,8 @@
             var newUrl = bbReadylaunchLearnDash.courses_url + (
                 params.length ? '?' + params.join( '&' ) : ''
             );
+
+            var view = $( '.bb-rl-grid-filters .layout-view.active' ).data( 'view' );
 
             // Fetch the new HTML
             $.get( newUrl, function ( response ) {
@@ -181,7 +183,8 @@
                 }
                 $( '.bb-rl-heading-count' ).text( newCount );
                 $( '.bb-rl-course-pagination' ).html( newPagination );
-                $courseItems.removeClass( 'loading' );
+                $courseList.find( '.bb-rl-courses-grid' ).addClass( view );
+                $courseList.removeClass( 'loading' );
 
                 // Update the browser URL
                 window.history.replaceState( {}, '', newUrl );
