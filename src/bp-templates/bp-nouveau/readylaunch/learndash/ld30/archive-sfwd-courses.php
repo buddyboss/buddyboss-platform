@@ -12,6 +12,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 // Get the ReadyLaunch instance to check if sidebar is enabled.
 $readylaunch = BB_Readylaunch::instance();
+
+$orderby    = isset( $_GET['orderby'] ) ? sanitize_text_field( wp_unslash( $_GET['orderby'] ) ) : 'alphabetical';
+$category   = isset( $_GET['filter-categories'] ) ? sanitize_text_field( wp_unslash( $_GET['filter-categories'] ) ) : '';
+$instructor = isset( $_GET['filter-instructors'] ) ? sanitize_text_field( wp_unslash( $_GET['filter-instructors'] ) ) : '';
 ?>
 
 <div class="bb-rl-secondary-header flex items-center">
@@ -41,6 +45,37 @@ $readylaunch = BB_Readylaunch::instance();
 
 		<div class="component-filters">
 			<?php
+			$order_by_options = array(
+				'alphabetical' => __( 'Alphabetical', 'buddyboss' ),
+				'recent'       => __( 'Newly Created', 'buddyboss' ),
+			);
+
+			if ( is_user_logged_in() ) {
+				$order_by_options['my-progress'] = __( 'My Progress', 'buddyboss' );
+			}
+			if ( ! empty( $order_by_options ) ) {
+				$order_by_current = isset( $order_by_options[ $orderby ] ) ? $orderby : 'alphabetical';
+				?>
+				<div class="bb-rl-course-categories bb-rl-filter">
+					<label for="ld-course-orderby" class="bb-rl-filter-label">
+						<span><?php esc_html_e( 'Sort by', 'buddyboss' ); ?></span>
+					</label>
+					<div class="select-wrap">
+						<select id="ld-course-orderby" name="orderby">
+							<?php
+							foreach ( $order_by_options as $key => $value ) {
+								?>
+								<option value="<?php echo esc_attr( $key ); ?>" <?php selected( $order_by_current, $key ); ?>>
+									<?php echo esc_html( $value ); ?>
+								</option>
+								<?php
+							}
+							?>
+						</select>
+					</div>
+				</div>
+				<?php
+			}
 			// Display course category filter if available.
 			$course_cats = get_terms(
 				array(
@@ -55,15 +90,44 @@ $readylaunch = BB_Readylaunch::instance();
 						<span><?php esc_html_e( 'Category', 'buddyboss' ); ?></span>
 					</label>
 					<div class="select-wrap">
-						<select id="ld-course-cats">
-							<option value="<?php echo esc_url( get_post_type_archive_link( 'sfwd-courses' ) ); ?>">
+						<select id="ld-course-cats" name="filter-categories">
+							<option value="all">
 								<?php esc_html_e( 'All Categories', 'buddyboss' ); ?>
 							</option>
 							<?php
 							foreach ( $course_cats as $cat_data ) {
 								?>
-								<option value="<?php echo esc_url( get_term_link( $cat_data ) ); ?>" <?php selected( is_tax( 'ld_course_category', $cat_data->term_id ) ); ?>>
+								<option value="<?php echo esc_attr( $cat_data->slug ); ?>" <?php selected( $category, $cat_data->slug ); ?>>
 									<?php echo esc_html( $cat_data->name ); ?>
+								</option>
+								<?php
+							}
+							?>
+						</select>
+					</div>
+				</div>
+				<?php
+			}
+			// Display course instructor filter if available.
+			global $wpdb;
+			$author_ids = $wpdb->get_col( "SELECT DISTINCT post_author FROM {$wpdb->posts} WHERE post_type = 'sfwd-courses' AND post_status = 'publish' ORDER BY post_title ASC" );
+			if ( ! empty( $author_ids ) ) {
+				?>
+				<div class="bb-rl-course-instructors bb-rl-filter">
+					<label for="ld-course-instructors" class="bb-rl-filter-label">
+						<span><?php esc_html_e( 'Instructor', 'buddyboss' ); ?></span>
+					</label>
+					<div class="select-wrap">
+						<select id="ld-course-instructors" name="filter-instructors">
+							<option value="all">
+								<?php esc_html_e( 'All', 'buddyboss' ); ?>
+							</option>
+							<?php
+							foreach ( $author_ids as $author_id ) {
+								$author_name = get_the_author_meta( 'display_name', $author_id );
+								?>
+								<option value="<?php echo esc_attr( $author_id ); ?>" <?php selected( $instructor, $author_id, false ); ?>>
+									<?php echo esc_html( $author_name ); ?>
 								</option>
 								<?php
 							}
