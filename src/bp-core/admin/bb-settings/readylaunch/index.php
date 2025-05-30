@@ -27,10 +27,6 @@ function bb_readylaunch_settings_page_html() {
 			</div>
 			<div class="bb-rl-header-actions">
 				<button class="bb-rl-header-actions-button">
-					<i class="bb-icons-rl-bell"></i>
-					<span class="bb-rl-header-button-count"><?php esc_html_e( '2', 'buddyboss' ); ?></span>
-				</button>
-				<button class="bb-rl-header-actions-button">
 					<i class="bb-icons-rl-book-open"></i>
 				</button>
 			</div>
