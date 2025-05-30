@@ -26,7 +26,7 @@
         },
 
         addEvents: function() {
-            $( document ).on( 'click', '.ld-lesson-list .ld-expand-button', this.handleLessonExpand );
+            $( document ).on( 'click', '.bb-rl-ld-lesson-list .ld-expand-button', this.handleLessonExpand );
             $( document ).on( 'click', '.bb-rl-course-content-header .ld-expand-button', this.handleAllLessonsExpand );
         },
 
@@ -34,7 +34,7 @@
             e.preventDefault();
             var $parentEl = $(this).closest('.ld-item-list-item');
             var $containerElm = $parentEl.find('.ld-item-list-item-expanded');
-            var $expandElm = $parentEl.find('.ld-item-list-item-preview');
+            var $expandElm = $parentEl.find('.ld-item-list-item-preview:has(.ld-expand-button)');
             $expandElm.toggleClass('ld-expanded');
             $containerElm.toggleClass('ld-expanded').slideToggle( 300 );
         },
@@ -49,7 +49,7 @@
             }
             var $parentEl = $(this).closest( '.bb-rl-course-content-header' ).next( '.ld-lesson-list' ).find( '.ld-item-list-item' );
             var $containerElm = $parentEl.find( '.ld-item-list-item-expanded' );
-            var $expandElm = $parentEl.find( '.ld-item-list-item-preview' );
+            var $expandElm = $parentEl.find( '.ld-item-list-item-preview:has(.ld-expand-button)' );
             $expandElm.toggleClass('ld-expanded');
             $containerElm.toggleClass('ld-expanded').slideToggle( 300 );
         },
