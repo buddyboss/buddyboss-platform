@@ -172,8 +172,10 @@ $instructor = isset( $_GET['filter-instructors'] ) ? sanitize_text_field( wp_uns
 						$course_status   = learndash_course_status( $course_id, $user_id );
 
 						// Get course steps.
-						$course_steps = learndash_get_course_steps( $course_id );
-						$lessons      = learndash_get_course_lessons_list( $course_id );
+						$course_steps  = learndash_get_course_steps( $course_id );
+						$lessons       = learndash_get_course_lessons_list( $course_id );
+						$lesson_count  = array_column( $lessons, 'post' );
+						$lessons_count = ! empty( $lesson_count ) ? count( $lesson_count ) : 0;
 						?>
 						<div class="bb-rl-course-card">
 							<article id="post-<?php the_ID(); ?>" <?php post_class( 'bb-rl-course-item' ); ?>>
@@ -209,9 +211,35 @@ $instructor = isset( $_GET['filter-instructors'] ) ? sanitize_text_field( wp_uns
 											if ( $is_enrolled ) {
 												?>
 												<div class="bb-rl-course-status">
-													<?php if ( ! empty( $course_progress ) ) { ?>
+													<?php
+													if ( ! empty( $course_progress ) ) {
+														?>
 														<div class="bb-rl-course-progress">
-															<span class="bb-rl-percentage"><span class="bb-rl-percentage-figure"><?php echo (int) $course_progress['percentage']; ?>%</span> <?php esc_html_e( 'Completed', 'buddyboss' ); ?></span>
+															<span class="bb-rl-percentage">
+																<?php
+																echo wp_kses_post(
+																	sprintf(
+																	/* translators: 1: course progress percentage, 2: percentage symbol. */
+																		__( '<span class="bb-rl-percentage-figure">%1$s%2$s</span> Completed', 'buddyboss' ),
+																		(int) $course_progress['percentage'],
+																		'%'
+																	)
+																);
+																?>
+															</span>
+															<?php
+															// Get completed steps.
+															$completed_steps = ! empty( $course_progress['completed'] ) ? (int) $course_progress['completed'] : 0;
+
+															// Output as "completed/total".
+															if ( $course_progress['total'] > 0 ) {
+																?>
+																<span class="bb-rl-course-steps">
+																	<?php echo esc_html( $completed_steps . '/' . $course_progress['total'] ); ?>
+																</span>
+																<?php
+															}
+															?>
 															<div class="bb-rl-progress-bar">
 																<div class="bb-rl-progress" style="width: <?php echo (int) $course_progress['percentage']; ?>%"></div>
 															</div>
@@ -335,9 +363,6 @@ $instructor = isset( $_GET['filter-instructors'] ) ? sanitize_text_field( wp_uns
 								</div>
 								<div class="bb-rl-course-popup-meta">
 									<?php
-									$lesson_count  = learndash_get_course_lessons_list( $course_id, null, array( 'num' => -1 ) );
-									$lesson_count  = array_column( $lesson_count, 'post' );
-									$lessons_count = ! empty( $lesson_count ) ? count( $lesson_count ) : 0;
 									$total_lessons = (
 									$lessons_count > 1
 										? sprintf(
