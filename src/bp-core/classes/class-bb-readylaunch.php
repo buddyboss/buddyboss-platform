@@ -309,9 +309,11 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 							$item['url'] = get_post_type_archive_link( bb_meprlms_profile_courses_slug() );
 						}
 					} elseif ( 'messages' === $key && bp_is_active( 'messages' ) ) {
+						$is_active     = true;
 						$item['url']   = trailingslashit( bp_loggedin_user_domain() . bp_get_messages_slug() );
 						$item['label'] = __( 'Messages', 'buddyboss' );
 					} elseif ( 'notifications' === $key && bp_is_active( 'notifications' ) ) {
+						$is_active     = true;
 						$item['url']   = bp_get_notifications_permalink();
 						$item['label'] = __( 'Notifications', 'buddyboss' );
 					}
