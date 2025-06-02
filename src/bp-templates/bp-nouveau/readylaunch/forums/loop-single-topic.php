@@ -56,6 +56,8 @@
 		</p>
 
 		<div class="bb-rl-topic-meta">
+		<div class="bb-rl-topic-footer">
+			<div class="bb-rl-topic-meta">
 
 			<?php if ( bbp_is_user_home() ) : ?>
 
@@ -139,9 +141,15 @@
 
 			<?php bbp_topic_row_actions(); ?>
 
+			</div>
+			
+			
+			<div class="bb-rl-topic-stats">
+				<div class="bb-rl-topic-voice-count"><i class="bb-icons-rl-user"></i> <?php bbp_topic_voice_count(); ?></div>
+				<div class="bb-rl-topic-reply-count"><i class="bb-icons-rl-chat"></i> <?php bbp_show_lead_topic() ? bbp_topic_reply_count() : bbp_topic_post_count(); ?></div>
+			</div>
 		</div>
 
-		<div class="bb-rl-topic-reply-count"><?php bbp_show_lead_topic() ? bbp_topic_reply_count() : bbp_topic_post_count(); ?></div>
 	</div>
 
 </li><!-- #bbp-topic-<?php bbp_topic_id(); ?> -->
