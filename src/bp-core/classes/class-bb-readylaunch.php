@@ -207,12 +207,12 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			add_action( 'login_footer', array( $this, 'bb_rl_login_footer' ), 999 );
 			add_filter( 'login_message', array( $this, 'bb_rl_signin_login_message' ) );
 			add_action( 'login_form', array( $this, 'bb_rl_login_custom_form' ) );
-
-			// Add Dynamic colours.
-			add_action( 'wp_head', array( $this, 'bb_rl_dynamic_colors' ) );
 		}
 
 		protected function load_hooks() {
+			// Add Dynamic colours.
+			add_action( 'wp_head', array( $this, 'bb_rl_dynamic_colors' ) );
+
 			// Dequeue theme/plugins styles.
 			add_action( 'wp_enqueue_scripts', array( $this, 'bb_dequeue_styles' ), PHP_INT_MAX );
 			add_action( 'wp_enqueue_scripts', array( $this, 'bb_enqueue_scripts' ), 1 );
