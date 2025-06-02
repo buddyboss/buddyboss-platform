@@ -78,154 +78,20 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				add_action( 'admin_enqueue_scripts', array( $this, 'bb_admin_enqueue_scripts' ), 1 );
 			}
 
-			$enabled_for_page = $this->bb_is_readylaunch_enabled_for_page();
-			if ( $enabled_for_page ) {
-				add_filter( 'bp_core_avatar_full_width', array( $this, 'bb_rl_avatar_full_width' ) );
-				add_filter( 'bp_core_avatar_full_height', array( $this, 'bb_rl_avatar_full_height' ) );
-				add_filter( 'bp_core_avatar_thumb_width', array( $this, 'bb_rl_avatar_thumb_width' ) );
-				add_filter( 'bp_core_avatar_thumb_height', array( $this, 'bb_rl_avatar_thumb_height' ) );
-
-				if (
-					bp_is_active( 'activity' ) &&
-					(
-						bp_is_activity_directory() ||
-						bp_is_single_activity() ||
-						bp_is_user_activity() ||
-						bp_is_group_activity()
-					)
-				) {
-					BB_Activity_Readylaunch::instance();
-				}
-
-				if (
-					bp_is_active( 'groups' ) &&
-					(
-						bp_is_groups_directory() ||
-						bp_is_group_single() ||
-						bp_is_group_create()
-					)
-				) {
-					BB_Group_Readylaunch::instance();
-				}
-
-				if ( bp_is_messages_component() ) {
-					BB_Messages_Readylaunch::instance();
-				}
-
-				add_filter(
-					'template_include',
-					array(
-						$this,
-						'override_page_templates',
-					),
-					999999
-				); // High priority so we have the last say here.
-
-				// Remove BuddyPress template locations.
-				remove_filter( 'bp_get_template_stack', 'bp_add_template_stack_locations' );
-
-				// Add Readylaunch template locations.
-				add_filter( 'bp_get_template_stack', array( $this, 'add_template_stack' ), PHP_INT_MAX );
-
-				add_filter( 'bp_document_svg_icon', array( $this, 'bb_rl_document_svg_icon' ), 10, 2 );
-
-				add_action( 'wp_enqueue_scripts', array( $this, 'bb_enqueue_scripts' ), 1 );
-
-				// Dequeue theme/plugins styles.
-				add_action( 'wp_enqueue_scripts', array( $this, 'bb_dequeue_styles' ), PHP_INT_MAX );
-				// Dequeue bbpress activity js.
-				add_filter( 'bbp_is_single_topic', array( $this, 'bb_dequeue_bbpress_activity_js' ), PHP_INT_MAX );
-				add_action( 'wp_head', array( $this, 'bb_rl_start_buffering' ), 0 );
-				add_action( 'wp_footer', array( $this, 'bb_rl_end_buffering' ), 999 );
-
-				add_action( 'wp_ajax_bb_fetch_header_messages', array( $this, 'bb_fetch_header_messages' ) );
-				add_action( 'wp_ajax_bb_fetch_header_notifications', array( $this, 'bb_fetch_header_notifications' ) );
-
-				add_filter( 'heartbeat_received', array( $this, 'bb_heartbeat_unread_notifications' ), 12, 2 );
-				add_filter( 'heartbeat_nopriv_received', array( $this, 'bb_heartbeat_unread_notifications' ), 12, 2 );
-
-				add_action( 'wp_ajax_bb_mark_notification_read', array( $this, 'bb_mark_notification_read' ) );
-
-				// Directory filters.
-				add_filter( 'bp_nouveau_get_filter_label', array( $this, 'bb_nouveau_get_filter_label_hook' ), 10, 2 );
-				add_filter( 'bp_nouveau_get_filter_id', array( $this, 'bb_rl_prefix_key' ) );
-				add_filter( 'bp_nouveau_get_nav_id', array( $this, 'bb_rl_prefix_key' ) );
-
-				add_filter( 'bp_nouveau_register_scripts', array( $this, 'bb_rl_nouveau_register_scripts' ), 99, 1 );
-				add_filter( 'paginate_links_output', array( $this, 'bb_rl_filter_paginate_links_output' ), 10, 2 );
-
-				add_filter( 'wp_ajax_bb_rl_invite_form', array( $this, 'bb_rl_invite_form_callback' ) );
-
-				add_filter( 'body_class', array( $this, 'bb_rl_theme_body_classes' ) );
-
-				add_filter( 'bp_get_send_message_button_args', array( $this, 'bb_rl_override_send_message_button_text' ) );
-
-				add_filter( 'bb_member_directories_get_profile_actions', array( $this, 'bb_rl_member_directories_get_profile_actions' ), 10, 3 );
-
-				// override default images for the avatar image.
-				add_filter( 'bb_attachments_get_default_profile_group_avatar_image', array( $this, 'bb_rl_group_default_group_avatar_image' ), 999, 2 );
-
-				add_filter( 'bp_core_register_common_scripts', array( $this, 'bb_rl_register_common_scripts' ), 999, 1 );
-				add_filter( 'bp_core_register_common_styles', array( $this, 'bb_rl_register_common_styles' ), 999, 1 );
-
-				remove_action( 'bp_before_directory_members_page', 'bp_members_directory_page_content' );
-				remove_action( 'bp_before_directory_media', 'bp_media_directory_page_content' );
-				remove_action( 'bp_before_directory_document', 'bb_document_directory_page_content' );
-
-				// Remove profile search form on members directory.
-				remove_action( 'bp_before_directory_members', 'bp_profile_search_show_form' );
-
-				add_filter( 'bp_nouveau_get_document_description_html', array( $this, 'bb_rl_modify_document_description_html' ), 10 );
-				add_filter( 'bp_nouveau_get_media_description_html', array( $this, 'bb_rl_modify_document_description_html' ), 10 );
-				add_filter( 'bp_nouveau_get_video_description_html', array( $this, 'bb_rl_modify_document_description_html' ), 10 );
-				add_filter( 'bp_core_get_js_strings', array( $this, 'bb_rl_modify_js_strings' ), 10, 1 );
-
-				// Remove BuddyBoss Theme login hooks.
-				add_action(
-					'login_init',
-					function () {
-						remove_action( 'login_message', 'change_register_message' );
-						remove_action( 'login_message', 'signin_login_message' );
-						remove_action( 'login_head', 'buddyboss_login_scripts', 150 );
-						remove_action( 'login_head', 'login_custom_head', 150 );
-						remove_action( 'login_form', 'login_custom_form' );
-						remove_action( 'init', 'buddyboss_theme_login_load' );
-						remove_action( 'login_enqueue_scripts', 'login_enqueue_scripts' );
-						remove_action( 'login_message', 'login_message' );
-						remove_filter( 'login_headertext', 'login_headertext' );
-						remove_filter( 'login_headerurl', 'login_headerurl' );
-					},
-					20
-				);
-
-				// Dequeue BuddyBoss Theme login styles.
-				add_action(
-					'login_enqueue_scripts',
-					function () {
-						wp_dequeue_style( 'buddyboss-theme-login' );
-						wp_deregister_style( 'buddyboss-theme-login' );
-					},
-					20
-				);
-
-				// Login page.
-				add_action( 'login_enqueue_scripts', array( $this, 'bb_rl_login_enqueue_scripts' ), 999 );
-				add_action( 'login_head', array( $this, 'bb_rl_login_header' ), 999 );
-				add_filter( 'login_headerurl', array( $this, 'bb_rl_login_header_url' ) );
-				add_action( 'login_footer', array( $this, 'bb_rl_login_footer' ), 999 );
-				add_filter( 'login_message', array( $this, 'bb_rl_signin_login_message' ) );
-				add_action( 'login_form', array( $this, 'bb_rl_login_custom_form' ) );
-
-				// Add Dynamic colors.
-				add_action( 'wp_head', array( $this, 'bb_rl_dynamic_colors' ) );
-			}
-
-			add_action( 'bp_admin_enqueue_scripts', array( $this, 'bb_rl_admin_enqueue_scripts' ), 1 );
-
 			$admin_enabled = $this->bb_is_readylaunch_admin_enabled();
 			if ( $admin_enabled ) {
 				add_filter( 'bb_document_icon_class', array( $this, 'bb_readylaunch_document_icon_class' ) );
 			}
+
+			$enabled_for_page = $this->bb_is_readylaunch_enabled_for_page();
+			if ( $enabled_for_page ) {
+				$this->load_template_stack();
+				$this->load_component_integration();
+				$this->load_login_registration_integration();
+				$this->load_hooks();
+			}
+
+			add_action( 'bp_admin_enqueue_scripts', array( $this, 'bb_rl_admin_enqueue_scripts' ), 1 );
 
 			// Add ReadyLaunch settings to platform settings API.
 			add_filter( 'bp_rest_platform_settings', array( $this, 'bb_rest_readylaunch_platform_settings' ), 10, 1 );
@@ -240,6 +106,155 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			add_action( 'wp_enqueue_scripts', array( $this, 'bb_readylaunch_learndash_enqueue_styles' ), 10 );
 
 			// Set up LearnDash integration.
+		}
+
+		protected function load_template_stack() {
+			add_filter(
+				'template_include',
+				array(
+					$this,
+					'override_page_templates',
+				),
+				999999
+			); // High priority, so we have the last say here.
+
+			// Remove BuddyPress template locations.
+			remove_filter( 'bp_get_template_stack', 'bp_add_template_stack_locations' );
+			remove_filter( 'bbp_get_template_stack', 'bbp_add_template_stack_locations' );
+
+			// Add Readylaunch template locations.
+			add_filter( 'bp_get_template_stack', array( $this, 'add_template_stack' ), PHP_INT_MAX );
+			add_filter( 'bbp_get_template_stack', array( $this, 'add_forum_template_stack' ), PHP_INT_MAX );
+		}
+
+		protected function load_component_integration() {
+			if (
+				bp_is_active( 'activity' ) &&
+				(
+					bp_is_activity_directory() ||
+					bp_is_single_activity() ||
+					bp_is_user_activity() ||
+					bp_is_group_activity()
+				)
+			) {
+				BB_Activity_Readylaunch::instance();
+			}
+
+			if (
+				bp_is_active( 'groups' ) &&
+				(
+					bp_is_groups_directory() ||
+					bp_is_group_single() ||
+					bp_is_group_create()
+				)
+			) {
+				BB_Group_Readylaunch::instance();
+			}
+
+			if ( bp_is_messages_component() ) {
+				BB_Messages_Readylaunch::instance();
+			}
+		}
+
+		protected function load_login_registration_integration() {
+			// Remove BuddyBoss Theme login hooks.
+			add_action(
+				'login_init',
+				function () {
+					remove_action( 'login_message', 'change_register_message' );
+					remove_action( 'login_message', 'signin_login_message' );
+					remove_action( 'login_head', 'buddyboss_login_scripts', 150 );
+					remove_action( 'login_head', 'login_custom_head', 150 );
+					remove_action( 'login_form', 'login_custom_form' );
+					remove_action( 'init', 'buddyboss_theme_login_load' );
+					remove_action( 'login_enqueue_scripts', 'login_enqueue_scripts' );
+					remove_action( 'login_message', 'login_message' );
+					remove_filter( 'login_headertext', 'login_headertext' );
+					remove_filter( 'login_headerurl', 'login_headerurl' );
+				},
+				20
+			);
+
+			// Dequeue BuddyBoss Theme login styles.
+			add_action(
+				'login_enqueue_scripts',
+				function () {
+					wp_dequeue_style( 'buddyboss-theme-login' );
+					wp_deregister_style( 'buddyboss-theme-login' );
+				},
+				20
+			);
+
+			// Login page.
+			add_action( 'login_enqueue_scripts', array( $this, 'bb_rl_login_enqueue_scripts' ), 999 );
+			add_action( 'login_head', array( $this, 'bb_rl_login_header' ), 999 );
+			add_filter( 'login_headerurl', array( $this, 'bb_rl_login_header_url' ) );
+			add_action( 'login_footer', array( $this, 'bb_rl_login_footer' ), 999 );
+			add_filter( 'login_message', array( $this, 'bb_rl_signin_login_message' ) );
+			add_action( 'login_form', array( $this, 'bb_rl_login_custom_form' ) );
+
+			// Add Dynamic colours.
+			add_action( 'wp_head', array( $this, 'bb_rl_dynamic_colors' ) );
+		}
+
+		protected function load_hooks() {
+			// Dequeue theme/plugins styles.
+			add_action( 'wp_enqueue_scripts', array( $this, 'bb_dequeue_styles' ), PHP_INT_MAX );
+			add_action( 'wp_enqueue_scripts', array( $this, 'bb_enqueue_scripts' ), 1 );
+			add_action( 'wp_head', array( $this, 'bb_rl_start_buffering' ), 0 );
+			add_action( 'wp_footer', array( $this, 'bb_rl_end_buffering' ), 999 );
+
+			// Add Dynamic colours.
+			add_action( 'wp_head', array( $this, 'bb_rl_dynamic_colors' ) );
+
+			add_action( 'wp_ajax_bb_fetch_header_messages', array( $this, 'bb_fetch_header_messages' ) );
+			add_action( 'wp_ajax_bb_fetch_header_notifications', array( $this, 'bb_fetch_header_notifications' ) );
+			add_action( 'wp_ajax_bb_mark_notification_read', array( $this, 'bb_mark_notification_read' ) );
+
+			add_filter( 'bp_core_avatar_full_width', array( $this, 'bb_rl_avatar_full_width' ) );
+			add_filter( 'bp_core_avatar_full_height', array( $this, 'bb_rl_avatar_full_height' ) );
+			add_filter( 'bp_core_avatar_thumb_width', array( $this, 'bb_rl_avatar_thumb_width' ) );
+			add_filter( 'bp_core_avatar_thumb_height', array( $this, 'bb_rl_avatar_thumb_height' ) );
+
+			add_filter( 'bp_document_svg_icon', array( $this, 'bb_rl_document_svg_icon' ), 10, 2 );
+			// Dequeue bbpress activity js.
+			add_filter( 'bbp_is_single_topic', array( $this, 'bb_dequeue_bbpress_activity_js' ), PHP_INT_MAX );
+			add_filter( 'heartbeat_received', array( $this, 'bb_heartbeat_unread_notifications' ), 12, 2 );
+			add_filter( 'heartbeat_nopriv_received', array( $this, 'bb_heartbeat_unread_notifications' ), 12, 2 );
+
+			// Directory filters.
+			add_filter( 'bp_nouveau_get_filter_label', array( $this, 'bb_nouveau_get_filter_label_hook' ), 10, 2 );
+			add_filter( 'bp_nouveau_get_filter_id', array( $this, 'bb_rl_prefix_key' ) );
+			add_filter( 'bp_nouveau_get_nav_id', array( $this, 'bb_rl_prefix_key' ) );
+
+			add_filter( 'bp_nouveau_register_scripts', array( $this, 'bb_rl_nouveau_register_scripts' ), 99, 1 );
+			add_filter( 'paginate_links_output', array( $this, 'bb_rl_filter_paginate_links_output' ), 10, 2 );
+
+			add_filter( 'wp_ajax_bb_rl_invite_form', array( $this, 'bb_rl_invite_form_callback' ) );
+
+			add_filter( 'body_class', array( $this, 'bb_rl_theme_body_classes' ) );
+
+			add_filter( 'bp_get_send_message_button_args', array( $this, 'bb_rl_override_send_message_button_text' ) );
+
+			add_filter( 'bb_member_directories_get_profile_actions', array( $this, 'bb_rl_member_directories_get_profile_actions' ), 10, 3 );
+
+			// override default images for the avatar image.
+			add_filter( 'bb_attachments_get_default_profile_group_avatar_image', array( $this, 'bb_rl_group_default_group_avatar_image' ), 999, 2 );
+
+			add_filter( 'bp_core_register_common_scripts', array( $this, 'bb_rl_register_common_scripts' ), 999, 1 );
+			add_filter( 'bp_core_register_common_styles', array( $this, 'bb_rl_register_common_styles' ), 999, 1 );
+
+			add_filter( 'bp_nouveau_get_document_description_html', array( $this, 'bb_rl_modify_document_description_html' ), 10 );
+			add_filter( 'bp_nouveau_get_media_description_html', array( $this, 'bb_rl_modify_document_description_html' ), 10 );
+			add_filter( 'bp_nouveau_get_video_description_html', array( $this, 'bb_rl_modify_document_description_html' ), 10 );
+			add_filter( 'bp_core_get_js_strings', array( $this, 'bb_rl_modify_js_strings' ), 10, 1 );
+
+			remove_action( 'bp_before_directory_members_page', 'bp_members_directory_page_content' );
+			remove_action( 'bp_before_directory_media', 'bp_media_directory_page_content' );
+			remove_action( 'bp_before_directory_document', 'bb_document_directory_page_content' );
+
+			// Remove profile search form on members directory.
+			remove_action( 'bp_before_directory_members', 'bp_profile_search_show_form' );
 		}
 
 		/**
