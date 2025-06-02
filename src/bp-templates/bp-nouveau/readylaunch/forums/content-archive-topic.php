@@ -12,7 +12,12 @@
 
 	<div class="bb-rl-secondary-header flex items-center">
 		<div class="bb-rl-entry-heading">
-			<h2><?php esc_html_e( 'Discussions', 'buddyboss' ); ?> <span class="bb-rl-heading-count">10</span></h2>
+			<?php
+			// Get total discussions count
+			$stats = bbp_get_statistics();
+			$total_discussions = isset( $stats['topic_count_int'] ) ? $stats['topic_count_int'] : 0;
+			?>
+			<h2><?php esc_html_e( 'Discussions', 'buddyboss' ); ?> <span class="bb-rl-heading-count"><?php echo esc_html( $total_discussions ); ?></span></h2>
 		</div>
 		<div class="bb-rl-sub-ctrls flex items-center">
 			<?php
