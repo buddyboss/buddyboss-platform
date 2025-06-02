@@ -824,6 +824,10 @@ window.bp = window.bp || {};
 			// Store the topic ID in BP's storage.
 			if ( ! topicId || $topicItem.hasClass( 'all' ) || 'all' === topicUrl.toLowerCase() ) {
 				bp.Nouveau.setStorage( 'bp-activity', 'topic_id', '' );
+				var $allItem = $( '.activity-topic-selector li a' ).first();
+				if ( $allItem.length > 0 ) {
+					$allItem.addClass( 'selected active' );
+				}
 			} else {
 				bp.Nouveau.setStorage( 'bp-activity', 'topic_id', topicId );
 			}
@@ -861,6 +865,10 @@ window.bp = window.bp || {};
 				}
 			} else {
 				bp.Nouveau.setStorage( 'bp-activity', 'topic_id', '' );
+				var $allItem = $( '.activity-topic-selector li a' ).first();
+				if ( $allItem.length > 0 ) {
+					$allItem.addClass( 'selected active' );
+				}
 			}
 		},
 
