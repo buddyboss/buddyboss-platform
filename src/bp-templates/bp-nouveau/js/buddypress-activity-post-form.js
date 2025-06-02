@@ -1331,9 +1331,13 @@ window.bp = window.bp || {};
 					(
 						! _.isUndefined( self.postForm.model.get( 'topics' ) ) &&
 						! $.isEmptyObject( self.postForm.model.get( 'topics' ) ) &&
-						! Object.keys( self.postForm.model.get( 'topics' ) ).length
+						! Object.keys( self.postForm.model.get( 'topics' ) ).length &&
+						! self.postForm.model.get( 'topics' ).topic_id
 					) ||
-					_.isUndefined( self.postForm.model.get( 'topics' ) )
+					(
+						_.isUndefined(self.postForm.model.get('topics')) ||
+						1 > parseInt( self.postForm.model.get( 'topics' ).topic_id )
+					)
 				)
 			) {
 				if ( bp.draft_content_changed ) {
