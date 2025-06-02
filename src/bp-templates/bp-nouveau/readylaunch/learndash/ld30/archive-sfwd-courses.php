@@ -193,6 +193,11 @@ $current_instructor = isset( $_GET['instructors'] ) ? sanitize_text_field( wp_un
 						$lessons       = learndash_get_course_lessons_list( $course_id );
 						$lesson_count  = array_column( $lessons, 'post' );
 						$lessons_count = ! empty( $lesson_count ) ? count( $lesson_count ) : 0;
+
+						add_filter( 'learndash_template_content_on_listing_is_hidden', '__return_false' );
+						$course_excerpt            = get_the_excerpt( $course_id );
+						$course_excerpt_in_listing = wp_trim_words( $course_excerpt, 10, '...' );
+						remove_filter( 'learndash_template_content_on_listing_is_hidden', '__return_false' );
 						?>
 						<div class="bb-rl-course-card">
 							<article id="post-<?php the_ID(); ?>" <?php post_class( 'bb-rl-course-item' ); ?>>
@@ -204,17 +209,17 @@ $current_instructor = isset( $_GET['instructors'] ) ? sanitize_text_field( wp_un
 												(
 													'open' === $course_price['type'] &&
 													0 === (int) $course_progress['percentage'] ) ||
-													(
-														'open' !== $course_price['type'] &&
-														$is_enrolled &&
-														0 === $course_progress['percentage']
-													)
-												) {
+												(
+													'open' !== $course_price['type'] &&
+													$is_enrolled &&
+													0 === $course_progress['percentage']
+												)
+											) {
 												?>
 												<div class="ld-status ld-status-progress ld-primary-background">
 													<?php
 													printf(
-														// translators: %s is the course label.
+													// translators: %s is the course label.
 														esc_html__( 'Start %s', 'buddyboss' ),
 														esc_html( LearnDash_Custom_Label::get_label( 'course' ) )
 													);
@@ -241,7 +246,7 @@ $current_instructor = isset( $_GET['instructors'] ) ? sanitize_text_field( wp_un
 											<div class="ld-status ld-status-progress ld-primary-background">
 												<?php
 												printf(
-													// translators: %s is the course label.
+												// translators: %s is the course label.
 													esc_html__( 'Start %s', 'buddyboss' ),
 													esc_html( LearnDash_Custom_Label::get_label( 'course' ) )
 												);
@@ -289,7 +294,7 @@ $current_instructor = isset( $_GET['instructors'] ) ? sanitize_text_field( wp_un
 														$remaining_count    = $total_categories - $max_display;
 														echo esc_html(
 															sprintf(
-																// translators: 1: comma-separated category names, 2: number of additional categories.
+															// translators: 1: comma-separated category names, 2: number of additional categories.
 																__( '%1$s, + %2$d more', 'buddyboss' ),
 																implode( ', ', $visible_categories ),
 																$remaining_count
@@ -300,6 +305,34 @@ $current_instructor = isset( $_GET['instructors'] ) ? sanitize_text_field( wp_un
 												</div>
 												<?php
 											}
+											if ( ! empty( $course_excerpt_in_listing ) ) {
+												?>
+												<div class="bb-rl-course-excerpt">
+													<?php echo wp_kses_post( $course_excerpt_in_listing ); ?>
+												</div>
+												<?php
+											}
+											?>
+											<div class="bb-rl-course-author">
+												<?php
+												$user_link = bp_core_get_user_domain( get_the_author_meta( 'ID' ) );
+												if ( ! empty( $user_link ) ) {
+													?>
+													<a class="item-avatar bb-rl-author-avatar" href="<?php echo esc_url( $user_link ); ?>">
+														<?php echo get_avatar( get_the_author_meta( 'email' ), 80, '', '', array() ); ?>
+													</a>
+													<?php
+												}
+												?>
+												<span class="bb-rl-author-name">
+													<?php
+													$author_name = get_the_author_meta( 'display_name' );
+													// translators: %s is the author name.
+													printf( esc_html__( 'By %s', 'buddyboss' ), '<a href="' . esc_url( $user_link ) . '">' . esc_html( $author_name ) . '</a>' );
+													?>
+												</span>
+											</div>
+											<?php
 											if ( $is_enrolled ) {
 												?>
 												<div class="bb-rl-course-status">
@@ -339,89 +372,64 @@ $current_instructor = isset( $_GET['instructors'] ) ? sanitize_text_field( wp_un
 														<?php
 													}
 													?>
-												</div>
-												<?php
-											}
-											if ( ! $is_enrolled ) {
-												?>
-												<div class="bb-rl-course-author">
-													<?php
-													$user_link = bp_core_get_user_domain( get_the_author_meta( 'ID' ) );
-													if ( ! empty( $user_link ) ) {
-														?>
-														<a class="item-avatar bb-rl-author-avatar" href="<?php echo esc_url( $user_link ); ?>">
-															<?php echo get_avatar( get_the_author_meta( 'email' ), 80, '', '', array() ); ?>
+													<div class="bb-rl-course-link-wrap">
+														<a href="<?php the_permalink(); ?>" class="bb-rl-course-link bb-rl-button bb-rl-button--secondaryFill bb-rl-button--small">
+															<?php
+															if ( $is_enrolled ) {
+																esc_html_e( 'Continue', 'buddyboss' );
+															} else {
+																esc_html_e( 'View Course', 'buddyboss' );
+															}
+															?>
+															<i class="bb-icons-rl-caret-right"></i>
 														</a>
-														<?php
-													}
-													?>
-													<span class="bb-rl-author-name">
-														<?php
-														$author_name = get_the_author_meta( 'display_name' );
-														// translators: %s is the author name.
-														printf( esc_html__( 'By %s', 'buddyboss' ), '<a href="' . esc_url( $user_link ) . '">' . esc_html( $author_name ) . '</a>' );
-														?>
-													</span>
+													</div>
 												</div>
 												<?php
 											}
 											?>
 										</div>
 									</div>
-									<div class="bb-rl-course-footer">
-										<?php
-										if ( $is_enrolled ) {
-											?>
-											<a href="<?php the_permalink(); ?>" class="bb-rl-course-link bb-rl-button bb-rl-button--secondaryFill bb-rl-button--small">
-												<?php
-												if ( $is_enrolled ) {
-													esc_html_e( 'Continue', 'buddyboss' );
-												} else {
-													esc_html_e( 'View Course', 'buddyboss' );
-												}
-												?>
-												<i class="bb-icons-rl-caret-right"></i>
-											</a>
-											<?php
-										} else {
-											?>
+									<?php
+									if ( ! $is_enrolled ) {
+										?>
+										<div class="bb-rl-course-footer">
 											<div class="bb-rl-course-footer-meta">
 												<?php
 												if ( class_exists( 'LearnDash_Course_Reviews_Loader' ) ) {
 													$average = learndash_course_reviews_get_average_review_score( $course_id );
-													if ( is_bool( $average ) ) {
-														$average = 0.0;
-													}
-													$reviews = get_comments(
-														wp_parse_args(
-															array(),
-															array(
-																'post_id' => $course_id,
-																'type'    => 'ld_review',
-																'status'  => 'approve',
-																'fields'  => 'ids',
+													if ( ! is_bool( $average ) ) {
+														$reviews = get_comments(
+															wp_parse_args(
+																array(),
+																array(
+																	'post_id' => $course_id,
+																	'type'    => 'ld_review',
+																	'status'  => 'approve',
+																	'fields'  => 'ids',
+																)
 															)
-														)
-													);
-													if ( ! is_array( $reviews ) ) {
-														$reviews = array();
-													}
-													$reviews      = array_filter(
-														$reviews,
-														'is_int'
-													);
-													$review_count = count( $reviews );
-													?>
-													<div class="bb-rl-course-review">
+														);
+														if ( ! is_array( $reviews ) ) {
+															$reviews = array();
+														}
+														$reviews      = array_filter(
+															$reviews,
+															'is_int'
+														);
+														$review_count = count( $reviews );
+														?>
+														<div class="bb-rl-course-review">
 															<span class="star">
 																<svg width="20" height="20" viewBox="0 0 20 20" fill="#FFC107" xmlns="http://www.w3.org/2000/svg" style="vertical-align:middle;">
 																	<path d="M10 15l-5.878 3.09 1.122-6.545L.488 6.91l6.561-.955L10 0l2.951 5.955 6.561.955-4.756 4.635 1.122 6.545z" />
 																</svg>
 															</span>
-														<span class="average"><?php echo esc_html( number_format( $average, 1 ) ); ?></span>
-														<span class="count">(<?php echo esc_html( $review_count ); ?>)</span>
-													</div>
-													<?php
+															<span class="average"><?php echo esc_html( number_format( $average, 1 ) ); ?></span>
+															<span class="count">(<?php echo esc_html( $review_count ); ?>)</span>
+														</div>
+														<?php
+													}
 												}
 												$currency = function_exists( 'learndash_get_currency_symbol' ) ? learndash_get_currency_symbol() : learndash_30_get_currency_symbol();
 												$price    = $course_price['price'];
@@ -431,7 +439,7 @@ $current_instructor = isset( $_GET['instructors'] ) ? sanitize_text_field( wp_un
 														<div class="bb-rl-course-price">
 															<span class="bb-rl-price">
 																<?php esc_html_e( 'Free', 'buddyboss' ); ?>
-															</span>	
+															</span>
 														</div>
 														<?php
 													} elseif ( ! empty( $price ) ) {
@@ -442,17 +450,17 @@ $current_instructor = isset( $_GET['instructors'] ) ? sanitize_text_field( wp_un
 																	<?php echo wp_kses_post( $currency ); ?>
 																</span> 
 																<?php echo wp_kses_post( $price ); ?>
-															</span>	
+															</span>
 														</div>
 														<?php
 													}
 												}
 												?>
 											</div>
-											<?php
-										}
-										?>
-									</div>
+										</div>
+										<?php
+									}
+									?>
 								</div>
 							</article>
 							<div class="bb-rl-course-card-popup">
@@ -466,15 +474,15 @@ $current_instructor = isset( $_GET['instructors'] ) ? sanitize_text_field( wp_un
 								<div class="bb-rl-course-popup-meta">
 									<?php
 									$total_lessons = (
-									$lessons_count > 1
-										? sprintf(
-									/* translators: 1: plugin name, 2: action number 3: total number of actions. */
+										$lessons_count > 1
+											? sprintf(
+										/* translators: 1: plugin name, 2: action number 3: total number of actions. */
 											__( '%1$s %2$s', 'buddyboss' ),
 											$lessons_count,
 											LearnDash_Custom_Label::get_label( 'lessons' )
 										)
-										: sprintf(
-									/* translators: 1: plugin name, 2: action number 3: total number of actions. */
+											: sprintf(
+										/* translators: 1: plugin name, 2: action number 3: total number of actions. */
 											__( '%1$s %2$s', 'buddyboss' ),
 											$lessons_count,
 											LearnDash_Custom_Label::get_label( 'lesson' )
