@@ -661,6 +661,12 @@ window.bp = window.bp || {};
 				}
 			}
 
+			if ( topicsCount > 0 ) {
+				this.$topicList.closest( '.bb-activity-topics-content' ).addClass( 'bb-has-topics' );
+			} else {
+				this.$topicList.closest( '.bb-activity-topics-content' ).removeClass( 'bb-has-topics' );
+			}
+
 			return topicsLimitReached;
 		},
 
