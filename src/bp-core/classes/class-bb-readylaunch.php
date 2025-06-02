@@ -198,14 +198,14 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		}
 
 		protected function load_hooks() {
+			// Add Dynamic colours.
+			add_action( 'wp_head', array( $this, 'bb_rl_dynamic_colors' ) );
+
 			// Dequeue theme/plugins styles.
 			add_action( 'wp_enqueue_scripts', array( $this, 'bb_dequeue_styles' ), PHP_INT_MAX );
 			add_action( 'wp_enqueue_scripts', array( $this, 'bb_enqueue_scripts' ), 1 );
 			add_action( 'wp_head', array( $this, 'bb_rl_start_buffering' ), 0 );
 			add_action( 'wp_footer', array( $this, 'bb_rl_end_buffering' ), 999 );
-
-			// Add Dynamic colours.
-			add_action( 'wp_head', array( $this, 'bb_rl_dynamic_colors' ) );
 
 			add_action( 'wp_ajax_bb_fetch_header_messages', array( $this, 'bb_fetch_header_messages' ) );
 			add_action( 'wp_ajax_bb_fetch_header_notifications', array( $this, 'bb_fetch_header_notifications' ) );
