@@ -552,6 +552,9 @@ window.bp = window.bp || {};
 				errorElm.remove();
 			}
 
+			// Show loader
+			this.$modal.addClass( 'is-loading' );
+
 			// Prepare data for AJAX request.
 			var data = {
 				action             : this.config.editTopicAction,
@@ -567,6 +570,7 @@ window.bp = window.bp || {};
 
 			// Send AJAX request.
 			$.post( ajaxUrl, data, function ( response ) {
+				this.$modal.removeClass( 'is-loading' );
 				if ( response.success ) {
 					var topic = response.data.topic;
 					if ( this.$topicName.hasClass( 'select2-hidden-accessible' ) ) {
