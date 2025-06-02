@@ -168,24 +168,29 @@ class BB_Activity_Topics_Manager {
 			return;
 		}
 
-		$args = array();
-		if ( 'groups' === $item->component ) {
-			$args['item_id']   = $item->item_id;
-			$args['item_type'] = 'groups';
+		$topics = array();
+		if ( 'groups' === $item->component && function_exists( 'bb_get_group_activity_topics' ) ) {
+			$topics = bb_get_group_activity_topics(
+				array(
+					'item_id'   => $item->item_id,
+					'item_type' => 'groups',
+				)
+			);
+		} else {
+			$topics = $this->bb_get_activity_topics();
 		}
 		$item->id         = (int) $item->id;
-		$topics           = bb_topics_manager_instance()->bb_get_topics( $args );
 		$current_topic_id = (int) $this->bb_get_activity_topic( $item->id, 'id' );
 		?>
 		<div class="bb-activity-topic-container">
 			<?php wp_nonce_field( 'save_activity_topic', 'activity_topic_nonce' ); ?>
 			<select name="activity_topic" id="activity_topic">
 				<?php
-				if ( ! empty( $topics['topics'] ) ) {
-					foreach ( $topics['topics'] as $topic ) {
+				if ( ! empty( $topics ) ) {
+					foreach ( $topics as $topic ) {
 						?>
-						<option value="<?php echo esc_attr( $topic->topic_id ); ?>" <?php selected( $current_topic_id, $topic->topic_id ); ?>>
-							<?php echo esc_html( $topic->name ); ?>
+						<option value="<?php echo esc_attr( $topic['slug'] ); ?>" <?php selected( $current_topic_id, $topic['slug'] ); ?>>
+							<?php echo esc_html( $topic['name'] ); ?>
 						</option>
 						<?php
 					}
@@ -265,7 +270,7 @@ class BB_Activity_Topics_Manager {
 		foreach ( $columns as $key => $value ) {
 			$new_columns[ $key ] = $value;
 			if ( 'comment' === $key ) {
-				$new_columns['activity_topic'] = __( 'Topic', 'buddyboss' );
+				$new_columns['activity_topic'] = __( 'Topics', 'buddyboss' );
 			}
 		}
 		return $new_columns;
