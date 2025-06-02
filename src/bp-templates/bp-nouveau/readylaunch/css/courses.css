@@ -538,6 +538,11 @@
   color: var(--bb-rl-text-color);
 }
 
+.bb-rl-course-card .bb-rl-course-title a:hover {
+  border-bottom: 1px solid var(--bb-rl-text-color);
+  text-decoration: none;
+}
+
 .bb-rl-course-card .bb-rl-course-excerpt {
   font-size: var(--bb-rl-font-size-sm);
   font-weight: 400;
@@ -755,7 +760,7 @@
   filter: drop-shadow(0 -2px 2px rgba(0, 0, 0, 0.1));
 }
 
-.bb-rl-course-card:hover .bb-rl-course-card-popup {
+.bb-rl-course-card.bb-rl-card-popup-active .bb-rl-course-card-popup {
   opacity: 1;
   visibility: visible;
 }

@@ -316,6 +316,11 @@
 
 		a {
 			color: var(--bb-rl-text-color);
+
+			&:hover {
+				border-bottom: 1px solid var(--bb-rl-text-color);
+				text-decoration: none;
+			}
 		}
 	}
 
@@ -546,7 +551,7 @@
 		}
 	}
 
-	&:hover {
+	&.bb-rl-card-popup-active {
 
 		.bb-rl-course-card-popup {
 			opacity: 1;

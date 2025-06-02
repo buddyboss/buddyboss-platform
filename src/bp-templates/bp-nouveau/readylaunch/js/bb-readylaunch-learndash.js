@@ -221,21 +221,59 @@
             var self = this;
             
             // Handle popup positioning on hover
-            $('.bb-rl-course-card').on({
+            $('.bb-rl-course-card .bb-rl-course-title a').on({
                 mouseenter: function() {
-                    var $card = $(this);
+                    var $card = $(this).closest('.bb-rl-course-card');
                     var $popup = $card.find('.bb-rl-course-card-popup');
+                    
+                    // Clear any existing timeout for this card
+                    var cardTimeout = $card.data('hoverTimeout');
+                    if (cardTimeout) {
+                        clearTimeout(cardTimeout);
+                        $card.removeData('hoverTimeout');
+                    }
+                    
+                    // Close all other active popups
+                    $('.bb-rl-course-card.bb-rl-card-popup-active').not($card).each(function() {
+                        var $activeCard = $(this);
+                        var otherTimeout = $activeCard.data('hoverTimeout');
+                        if (otherTimeout) {
+                            clearTimeout(otherTimeout);
+                            $activeCard.removeData('hoverTimeout');
+                        }
+                        $activeCard.removeClass('bb-rl-card-popup-active');
+                    });
+                    
+                    // Show current popup
+                    $card.addClass('bb-rl-card-popup-active');
                     
                     if ($popup.length) {
                         self.positionCoursePopup($card, $popup);
                     }
+                },
+                mouseleave: function() {
+                    var $card = $(this).closest('.bb-rl-course-card');
+                    
+                    // Clear any existing timeout for this card
+                    var cardTimeout = $card.data('hoverTimeout');
+                    if (cardTimeout) {
+                        clearTimeout(cardTimeout);
+                    }
+                    
+                    // Add delay before hiding popup
+                    var timeout = setTimeout(function() {
+                        $card.removeClass('bb-rl-card-popup-active');
+                        $card.removeData('hoverTimeout');
+                    }, 300);
+                    
+                    $card.data('hoverTimeout', timeout);
                 }
             });
             
             // Reposition popups on window resize
             $(window).on('resize', function() {
-                $('.bb-rl-course-card:hover').each(function() {
-                    var $card = $(this);
+                $('.bb-rl-course-card .bb-rl-course-title a:hover').each(function() {
+                    var $card = $(this).closest('.bb-rl-course-card');
                     var $popup = $card.find('.bb-rl-course-card-popup');
                     
                     if ($popup.length) {
