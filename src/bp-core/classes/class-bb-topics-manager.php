@@ -1461,7 +1461,13 @@ class BB_Topics_Manager {
 			}
 		}
 
-		$deleted = $this->bb_delete_topic( $topic_id );
+		$deleted = $this->bb_delete_topic(
+			array(
+				'topic_id'  => $topic_id,
+				'item_id'   => $item_id,
+				'item_type' => $item_type,
+			)
+		);
 
 		if ( is_wp_error( $deleted ) ) {
 			wp_send_json_error( array( 'error' => $deleted->get_error_message() ) );
@@ -1475,28 +1481,42 @@ class BB_Topics_Manager {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param int $topic_id The ID of the topic to delete.
+	 * @param array $args {
+	 *     Array of arguments.
+	 *     @type int $topic_id The ID of the topic to delete.
+	 *     @type int $item_id The ID of the item.
+	 *     @type string $item_type The type of item.
+	 * }
 	 *
 	 * @return bool|WP_Error True on success, WP_Error on failure.
 	 */
-	public function bb_delete_topic( $topic_id ) {
+	public function bb_delete_topic( $args ) {
+		$r = bp_parse_args(
+			$args,
+			array(
+				'topic_id' => 0,
+			)
+		);
 
-		if ( empty( $topic_id ) ) {
+		if ( empty( $r['topic_id'] ) ) {
 			return false;
 		}
 
-		$topic_id = absint( $topic_id );
+		$topic_id = absint( $r['topic_id'] );
 		if ( ! $this->bb_get_topic_by( 'id', $topic_id ) ) {
 			return false;
 		}
 
-		$get_all_topic_relationships = $this->bb_get_topics(
-			array(
-				'topic_id'  => $topic_id,
-				'item_type' => array( 'activity', 'groups' ),
-				'fields'    => 'id',
-			)
+		// Delete the topic relationship.
+		$args = array(
+			'topic_id' => $topic_id,
+			'fields'   => 'id',
 		);
+		if ( 'groups' === $r['item_type'] ) {
+			$args['item_id']   = $r['item_id'];
+			$args['item_type'] = $r['item_type'];
+		}
+		$get_all_topic_relationships = $this->bb_get_topics( $args );
 
 		$relationships_ids = ! empty( $get_all_topic_relationships['topics'] ) ? $get_all_topic_relationships['topics'] : array();
 
@@ -1529,11 +1549,7 @@ class BB_Topics_Manager {
 			do_action( 'bb_topic_relationship_after_deleted', $relationships_ids, $topic_id );
 
 			if ( function_exists( 'bb_activity_topics_manager_instance' ) ) {
-				bb_activity_topics_manager_instance()->bb_delete_activity_topic_relationship(
-					array(
-						'topic_id' => $topic_id,
-					)
-				);
+				bb_activity_topics_manager_instance()->bb_delete_activity_topic_relationship( $args );
 			}
 		}
 
