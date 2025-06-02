@@ -203,9 +203,9 @@ window.bp = window.bp || {};
 							var topicId   = parseInt( $( event.currentTarget ).data( 'topic-id' ) );
 							var topicName = $( event.currentTarget ).text().trim();
 
-							if ( 0 === topicId ) {
+							if ( -1 === topicId ) {
 								this.model.set('topics', {
-									topic_id: 0,
+									topic_id: topicId,
 									topic_name: '', // This will trigger the template to show "Select Topic"
 									topic_lists: this.model.get('topics').topic_lists
 								});

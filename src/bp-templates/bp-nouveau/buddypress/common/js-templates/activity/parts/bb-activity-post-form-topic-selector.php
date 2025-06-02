@@ -27,7 +27,7 @@
 				if ( ! bb_is_activity_topic_required() ) {
 				?>
 					<li>
-						<a href="#" data-topic-id="0" <# if ( !data.topics.topic_id ) { #>class="selected"<# } #>>
+						<a href="#" data-topic-id="-1" <# if ( '-1' === data.topics.topic_id ) { #>class="selected"<# } #>>
 							<?php esc_html_e( 'None', 'buddyboss' ); ?>
 						</a>
 					</li>

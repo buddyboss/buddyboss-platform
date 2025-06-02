@@ -1261,8 +1261,8 @@ window.bp = window.bp || {};
 						! self.postForm.model.get( 'topics' ).topic_id
 					) ||
 					(
-						_.isUndefined( self.postForm.model.get( 'topics' ) ) ||
-						0 === parseInt( self.postForm.model.get( 'topics' ).topic_id )
+						_.isUndefined(self.postForm.model.get('topics')) ||
+						1 > parseInt( self.postForm.model.get( 'topics' ).topic_id )
 					)
 				)
 			) {
