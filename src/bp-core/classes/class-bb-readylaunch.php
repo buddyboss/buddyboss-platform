@@ -76,6 +76,18 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				add_action( 'bb_blocks_init', array( $this, 'bb_rl_register_blocks' ), 20 );
 				add_filter( 'bp_search_js_settings', array( $this, 'bb_rl_filter_search_js_settings' ) );
 				add_action( 'admin_enqueue_scripts', array( $this, 'bb_admin_enqueue_scripts' ), 1 );
+
+				// Added support for Forums integration.
+				if ( bp_is_active( 'forums' ) ) {
+					add_filter(
+						'template_include',
+						array(
+							$this,
+							'override_forums_page_templates',
+						),
+						1
+					); // High priority, so we have the last say here.
+				}
 			}
 
 			$admin_enabled = $this->bb_is_readylaunch_admin_enabled();
@@ -196,7 +208,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			add_filter( 'login_message', array( $this, 'bb_rl_signin_login_message' ) );
 			add_action( 'login_form', array( $this, 'bb_rl_login_custom_form' ) );
 
-			// Add Dynamic colors.
+			// Add Dynamic colours.
 			add_action( 'wp_head', array( $this, 'bb_rl_dynamic_colors' ) );
 		}
 
@@ -255,6 +267,16 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 			// Remove profile search form on members directory.
 			remove_action( 'bp_before_directory_members', 'bp_profile_search_show_form' );
+		}
+
+		public function override_forums_page_templates( $template ) {
+			if ( $this->bb_is_readylaunch_forums() ) {
+				$this->load_template_stack();
+				$this->load_component_integration();
+				$this->load_hooks();
+			}
+
+			return $template;
 		}
 
 		/**
@@ -411,7 +433,6 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					bp_is_current_component( 'media' ) ||
 					is_admin() ||
 					wp_doing_ajax() ||
-					$this->bb_is_readylaunch_forums() ||
 					self::bb_is_network_search() ||
 					(
 						(
@@ -2080,7 +2101,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		}
 
 		/**
-		 * Add dynamic colors to the frontend.
+		 * Add dynamic colours to the frontend.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 */
@@ -2484,7 +2505,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
-		 * @param string $retval HTML links for actions to take on single notifications.
+		 * @param string $retval HTML links for actions on single notifications.
 		 *
 		 * @return string
 		 */
@@ -2708,27 +2729,27 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		}
 
 		private function bb_is_readylaunch_forums() {
-			return bp_is_active( 'forums' );
-//					&& (
-//						bbp_is_forum_archive() ||
-//						bbp_is_topic_archive() ||
-//						is_post_type_archive( bbp_get_reply_post_type() ) ||
-//						bbp_is_single_user_edit() ||
-//						bbp_is_single_forum() ||
-//						bbp_is_forum_edit() ||
-//						bbp_is_single_topic() ||
-//						bbp_is_topic_edit() ||
-//						bbp_is_topic_split() ||
-//						bbp_is_topic_merge() ||
-//						bbp_is_single_reply() ||
-//						bbp_is_reply_edit() ||
-//						bbp_is_reply_move() ||
-//						bbp_is_single_user() ||
-//						bbp_is_single_view() ||
-//						bbp_is_search() ||
-//						bbp_is_topic_tag_edit() ||
-//						bbp_is_topic_tag()
-//					);
+			return bp_is_active( 'forums' )
+					&& (
+						bbp_is_forum_archive() ||
+						bbp_is_topic_archive() ||
+						is_post_type_archive( bbp_get_reply_post_type() ) ||
+						bbp_is_single_user_edit() ||
+						bbp_is_single_forum() ||
+						bbp_is_forum_edit() ||
+						bbp_is_single_topic() ||
+						bbp_is_topic_edit() ||
+						bbp_is_topic_split() ||
+						bbp_is_topic_merge() ||
+						bbp_is_single_reply() ||
+						bbp_is_reply_edit() ||
+						bbp_is_reply_move() ||
+						bbp_is_single_user() ||
+						bbp_is_single_view() ||
+						bbp_is_search() ||
+						bbp_is_topic_tag_edit() ||
+						bbp_is_topic_tag()
+					);
 		}
 
 		public function bb_readylaunch_forums_enqueue_styles() {
