@@ -272,8 +272,29 @@ $current_instructor = isset( $_GET['instructors'] ) ? sanitize_text_field( wp_un
 												?>
 												<div class="bb-rl-course-category">
 													<?php
-													foreach ( $course_category as $category ) {
-														echo '<span class="bb-rl-course-category-tag">' . esc_html( $category->name ) . '</span>';
+													$category_names = array_map(
+														function ( $category ) {
+															return esc_html( $category->name );
+														},
+														$course_category
+													);
+
+													$total_categories = count( $category_names );
+													$max_display      = 1;
+
+													if ( $total_categories <= $max_display ) {
+														echo esc_html( implode( ', ', $category_names ) );
+													} else {
+														$visible_categories = array_slice( $category_names, 0, $max_display );
+														$remaining_count    = $total_categories - $max_display;
+														echo esc_html(
+															sprintf(
+																// translators: 1: comma-separated category names, 2: number of additional categories.
+																__( '%1$s, + %2$d more', 'buddyboss' ),
+																implode( ', ', $visible_categories ),
+																$remaining_count
+															)
+														);
 													}
 													?>
 												</div>
