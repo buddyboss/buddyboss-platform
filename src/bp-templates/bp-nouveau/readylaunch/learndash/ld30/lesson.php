@@ -79,12 +79,6 @@ if ( function_exists( 'learndash_is_lesson_accessable' ) ) {
                         </div>
                     </div>
 
-                    <?php if ( has_post_thumbnail() ) : ?>
-                        <div class="bb-rl-lesson-featured-image">
-                            <?php the_post_thumbnail( 'full' ); ?>
-                        </div>
-                    <?php endif; ?>
-
                     <div class="bb-rl-lesson-meta">
                         <?php if ( $is_enrolled ) : ?>
                             <div class="bb-rl-lesson-status">

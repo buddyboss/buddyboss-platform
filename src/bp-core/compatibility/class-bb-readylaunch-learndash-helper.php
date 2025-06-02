@@ -592,12 +592,23 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 
 			$enrolled_users = array();
 			if ( function_exists( 'learndash_get_users_for_course' ) ) {
-				$all_enrolled_users   = learndash_get_users_for_course( $course_id, array(), false );
-				$enrolled_users_count = $all_enrolled_users->get_total();
+				$all_enrolled_users   = learndash_get_users_for_course( $course_id, array(), true );
+				
+				// Handle both array and WP_User_Query object returns
+				if ( is_array( $all_enrolled_users ) ) {
+					$enrolled_users_count = count( $all_enrolled_users );
+				} elseif ( is_object( $all_enrolled_users ) && method_exists( $all_enrolled_users, 'get_total' ) ) {
+					$enrolled_users_count = $all_enrolled_users->get_total();
+				} else {
+					$enrolled_users_count = 0;
+				}
+				
 				$enrolled_users_query = learndash_get_users_for_course( $course_id, array( 'number' => $limit ), false );
 
 				if ( $enrolled_users_query instanceof WP_User_Query && ! empty( $enrolled_users_query->get_results() ) ) {
 					$enrolled_users = $enrolled_users_query->get_results();
+				} elseif ( is_array( $enrolled_users_query ) ) {
+					$enrolled_users = array_slice( $enrolled_users_query, 0, $limit );
 				}
 			}
 
@@ -630,7 +641,7 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 					$enrolled_count = isset( $enrolled_users_count ) ? $enrolled_users_count : count( $recent_enrollments );
 					$wrapper_class  = 'bb-rl-recent-enrolled-members';
 					if ( 'header' === $action ) {
-						$wrapper_class = 'bb-rl-enrolled-members-header';
+						$wrapper_class = 'bb-rl-enrolled-members-bar';
 					}
 					?>
 					<div class="<?php echo esc_attr( $wrapper_class ); ?>">

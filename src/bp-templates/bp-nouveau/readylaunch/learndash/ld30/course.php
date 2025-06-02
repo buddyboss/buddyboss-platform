@@ -158,6 +158,25 @@ global $course_pager_results;
 								</div>
 							</div>
 						</div>
+						<div class="bb-rl-course-price">
+							<?php echo esc_html( $course_price['price'] ); ?>
+						</div>
+
+						<div class="bb-rl-course-overview-footer">
+							<div class="bb-rl-course-enrolled">
+								<?php
+								if ( class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
+									$enrolled_users = BB_Readylaunch_Learndash_Helper::instance()->bb_rl_ld_get_enrolled_users(
+										array(
+											'course_id' => $course_id,
+											'limit'     => 3,
+											'action'    => 'header',
+										)
+									);
+								}
+								?>
+							</div>
+						</div>
 					</div>
 					<div class="bb-rl-course-figure">
 						<?php if ( has_post_thumbnail() ) : ?>
@@ -166,26 +185,6 @@ global $course_pager_results;
 							</div>
 						<?php endif; ?>
 					</div>
-				</div>
-
-				<div class="bb-rl-course-price">
-					<div class="bb-rl-course-price">
-						<?php echo esc_html( $course_price['price'] ); ?>
-					</div>
-				</div>
-
-				<div class="bb-rl-course-enrolled">
-					<?php
-					if ( class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
-						$enrolled_users = BB_Readylaunch_Learndash_Helper::instance()->bb_rl_ld_get_enrolled_users(
-							array(
-								'course_id' => $course_id,
-								'limit'     => 3,
-								'action'    => 'header',
-							)
-						);
-					}
-					?>
 				</div>
 
 				<div class="bb-rl-course-details">

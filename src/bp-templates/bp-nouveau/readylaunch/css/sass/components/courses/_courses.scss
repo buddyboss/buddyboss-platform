@@ -350,25 +350,6 @@
 		margin-top: auto;
 	}
 
-	.bb-rl-course-review {
-		display: inline-flex;
-		align-items: center;
-		gap: var(--bb-rl-space-50);
-
-		.average {
-
-			@include bb-rl-base-heading;
-			color: var(--bb-rl-text-color);
-		}
-
-		.count {
-			font-size: var(--bb-rl-font-size-base);
-			font-weight: 400;
-			line-height: var(--bb-rl-base-line);
-			color: var(--bb-rl-text-tertiary-color);
-		}
-	}
-
 	.bb-rl-course-link {
 		width: 100%;
 		display: inline-flex;

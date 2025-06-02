@@ -35,12 +35,28 @@
 
 	.bb-rl-course-meta {
 		display: flex;
-		flex-direction: column;
-		flex: 1;
+		align-items: center;
+		gap: var(--bb-rl-space-100);
 	}
 
-	.bb-rl-meta-item {
-		margin-bottom: var(--bb-rl-space-200);
+	.bb-rl-course-price {
+
+		@include bb-rl-base-heading-2xl;
+		color: var(--bb-rl-text-color);
+		margin-top: var(--bb-rl-space-200);
+	}
+
+	.bb-rl-course-review {
+	
+		.average {
+	
+			@include bb-rl-label-heading-bolder;
+		}
+	
+		.count {
+
+			@include bb-rl-label-heading;
+		}
 	}
 
 	.bb-rl-author-name {
@@ -95,6 +111,10 @@
 			}
 		}
 	}
+
+	.bb-rl-course-overview-footer {
+		margin-top: auto;
+	}
 }
 
 .bb-rl-course-details {
@@ -128,11 +148,23 @@
 }
 
 .bb-rl-course-featured-image {
+	position: relative;
+    display: block;
+    height: 100%;
+    padding-top: 300px;
+    border-radius: var(--bb-rl-radius-lg);
+    overflow: hidden;
+    background-color: var(--bb-rl-background-tertiary-color);
 
 	img {
-		max-width: 100%;
-		height: auto;
-		border-radius: var(--bb-rl-radius-lg);
+		position: absolute;
+		left: 0;
+		right: 0;
+		top: 0;
+		bottom: 0;
+		object-fit: cover;
+		height: 100%;
+		width: 100%;
 	}
 }
 

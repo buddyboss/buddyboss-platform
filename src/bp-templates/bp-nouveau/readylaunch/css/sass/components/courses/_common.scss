@@ -34,3 +34,56 @@
 	@include bb-rl-label-heading;
 	color: var(--bb-rl-text-secondary-color);
 }
+
+.bb-rl-enrolled-members-bar {
+	display: flex;
+	align-items: center;
+
+	.bb-rl-enrolled-member-item {
+		max-width: 24px;
+		float: left;
+		margin-right: -4px;
+		position: relative;
+		z-index: 1;
+
+		a {
+			text-decoration: none;
+		}
+
+		img {
+			border-radius: 50%;
+			max-width: 100%;
+			image-rendering: -webkit-optimize-contrast;
+			display: block;
+			height: auto;
+		}
+	}
+
+	.bb-rl-enrolled-count {
+
+		@include bb-rl-label-heading-bolder;
+		color: var(--bb-rl-text-tertiary-color);
+		white-space: nowrap;
+		margin-left: 8px;
+    	max-width: none;
+	}
+}
+
+.bb-rl-course-review {
+	display: inline-flex;
+	align-items: center;
+	gap: var(--bb-rl-space-50);
+
+	.average {
+
+		@include bb-rl-base-heading;
+		color: var(--bb-rl-text-color);
+	}
+
+	.count {
+		font-size: var(--bb-rl-font-size-base);
+		font-weight: 400;
+		line-height: var(--bb-rl-base-line);
+		color: var(--bb-rl-text-tertiary-color);
+	}
+}
