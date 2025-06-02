@@ -19,7 +19,7 @@
 		</p>
 	</div>
 
-	<div class="bbp-pagination-links">
+	<div class="bp-pagination-links">
 
 		<?php bbp_forum_pagination_links(); ?>
 

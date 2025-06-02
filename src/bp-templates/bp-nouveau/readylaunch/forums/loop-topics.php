@@ -10,19 +10,9 @@
 
 <?php do_action( 'bbp_template_before_topics_loop' ); ?>
 
-<ul id="bbp-forum-<?php bbp_forum_id(); ?>" class="bbp-topics">
+<div id="bp-rl-forum-<?php bbp_forum_id(); ?>" class="bb-rl-topics-list">
 
-	<li class="bbp-header">
-
-		<ul class="forum-titles">
-			<li class="bbp-topic-title"><?php _e( 'Discussions', 'buddyboss' ); ?></li>
-			<li class="bbp-topic-reply-count"><?php bbp_show_lead_topic() ? _e( 'Replies', 'buddyboss' ) : _e( 'Posts', 'buddyboss' ); ?></li>
-			<li class="bbp-topic-freshness"><?php _e( 'Last Post', 'buddyboss' ); ?></li>
-		</ul>
-
-	</li>
-
-	<li class="bbp-body">
+	<ul class="bb-rl-topics-list-body">
 
 		<?php
 		while ( bbp_topics() ) :
@@ -33,9 +23,9 @@
 
 		<?php endwhile; ?>
 
-	</li>
+	</ul>
 
-	<li class="bbp-footer">
+	<div class="bb-rl-topics-list-footer">
 
 		<div class="tr">
 			<p>
@@ -43,8 +33,8 @@
 			</p>
 		</div><!-- .tr -->
 
-	</li>
+	</div>
 
-</ul><!-- #bbp-forum-<?php bbp_forum_id(); ?> -->
+</div><!-- #bbp-forum-<?php bbp_forum_id(); ?> -->
 
 <?php do_action( 'bbp_template_after_topics_loop' ); ?>
