@@ -2555,6 +2555,10 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * @return bool True if the page is enabled for integration, false otherwise.
 		 */
 		public function bb_rl_is_page_enabled_for_integration( $page ) {
+			if ( ! bp_enable_site_registration() || '0' !== bp_get_option( 'allow-custom-registration' ) ) {
+				return false;
+			}
+
 			$enabled_pages = bp_get_option( 'bb_rl_enabled_pages' );
 
 			return ! empty( $enabled_pages[ $page ] );
