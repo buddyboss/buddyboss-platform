@@ -11,11 +11,36 @@
 <li id="bbp-topic-<?php bbp_topic_id(); ?>" <?php bbp_topic_class(); ?>>
 
 	<div class="bb-rl-topic-avatar">
-		<?php echo get_avatar( bbp_get_topic_author_id(), 48 ); ?>
+		<?php bbp_topic_author_link( array( 'size' => '48' ) ); ?>
 	</div>
 
 	<div class="bb-rl-topic-content">
 
+	<div class="bb-rl-topic-status-wrapper">
+
+			<?php if ( ! bbp_is_topic_open() ) { ?>
+				<span class="bb-rl-topic-state" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'Closed', 'buddyboss' ); ?>"><i class="bb-icons-rl-lock-simple bb-rl-topic-status closed"></i></span>
+				<?php
+			}
+
+			if ( bbp_is_topic_super_sticky() ) {
+				?>
+				<span class="bb-rl-topic-state" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'Super Sticky', 'buddyboss' ); ?>"><i class="bb-icons-rl-push-pin bb-rl-topic-status super-sticky"></i></span>
+			<?php } elseif ( bbp_is_topic_sticky() ) { ?>
+				<span class="bb-rl-topic-state" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'Sticky', 'buddyboss' ); ?>"><i class="bb-icons-rl-push-pin bb-rl-topic-status sticky"></i></span>
+				<?php
+			}
+
+			if ( is_user_logged_in() ) {
+				$is_subscribed = bbp_is_user_subscribed_to_topic( get_current_user_id(), bbp_get_topic_id() );
+				if ( $is_subscribed ) {
+					?>
+					<span class="bb-rl-topic-state" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'Subscribed', 'buddyboss' ); ?>"><i class="bb-icons-rl-rss"></i></span>
+					<?php
+				}
+			}
+		?>
+	</div>
 		<?php do_action( 'bbp_theme_before_topic_started_in' ); ?>
 		<div class="bb-rl-topic-started-in">
 			<?php printf( __( '<a href="%1$s">%2$s</a>', 'buddyboss' ), bbp_get_forum_permalink( bbp_get_topic_forum_id() ), bbp_get_forum_title( bbp_get_topic_forum_id() ) ); ?>

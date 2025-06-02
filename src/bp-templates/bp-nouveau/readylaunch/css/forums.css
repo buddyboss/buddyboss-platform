@@ -293,6 +293,31 @@
   border-radius: var(--bb-rl-radius-full);
 }
 
+.bb-rl-topics-list .type-topic .bb-rl-topic-avatar .bbp-author-name {
+  display: none;
+}
+
+.bb-rl-topics-list .type-topic .bb-rl-topic-content {
+  flex: 1;
+  position: relative;
+}
+
+.bb-rl-topics-list .type-topic .bb-rl-topic-status-wrapper {
+  display: flex;
+  align-items: center;
+  gap: var(--bb-rl-space-100);
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 1;
+  line-height: 1;
+}
+
+.bb-rl-topics-list .type-topic .bb-rl-topic-status-wrapper .bb-rl-topic-state {
+  color: var(--bb-rl-icon-secondary-color);
+  font-size: 20px;
+}
+
 .bb-rl-topics-list .type-topic .bb-rl-topic-title {
   font-size: var(--bb-rl-font-size-base);
   font-weight: 600;

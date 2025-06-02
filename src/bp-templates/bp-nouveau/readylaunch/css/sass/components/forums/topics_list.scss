@@ -39,6 +39,31 @@
                 object-fit: cover;
                 border-radius: var(--bb-rl-radius-full);
             }
+
+            .bbp-author-name {
+                display: none
+            }
+        }
+
+        .bb-rl-topic-content {
+            flex: 1;
+            position: relative;
+        }
+
+        .bb-rl-topic-status-wrapper {
+            display: flex;
+            align-items: center;
+            gap: var(--bb-rl-space-100);
+            position: absolute;
+            top: 0;
+            right: 0;
+            z-index: 1;
+            line-height: 1;
+
+            .bb-rl-topic-state {
+                color: var(--bb-rl-icon-secondary-color);
+                font-size: 20px;
+            }
         }
 
         .bb-rl-topic-title {
