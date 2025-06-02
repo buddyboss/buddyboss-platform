@@ -5417,10 +5417,13 @@ h1.bb-advance-heading {
 }
 
 .bb-activity-topics-wrapper .bb-activity-topics-content {
+  margin-bottom: 10px;
+}
+
+.bb-activity-topics-wrapper .bb-activity-topics-content.bb-has-topics {
   background: #f0f0f1;
   border-radius: 6px;
   padding: 16px;
-  margin-bottom: 10px;
 }
 
 .bb-activity-topics-wrapper .bb-activity-topics-content .bb-activity-topics-list {

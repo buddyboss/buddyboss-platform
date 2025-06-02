@@ -5456,10 +5456,13 @@ h1.bb-advance-heading {
 	}
 
 	.bb-activity-topics-content {
-		background: #f0f0f1;
-		border-radius: 6px;
-		padding: 16px;
 		margin-bottom: 10px;
+
+		&.bb-has-topics {
+			background: #f0f0f1;
+			border-radius: 6px;
+			padding: 16px;
+		}
 
 		.bb-activity-topics-list {
 			margin-bottom: 18px;
