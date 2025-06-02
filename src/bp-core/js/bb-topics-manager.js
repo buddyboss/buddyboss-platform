@@ -581,6 +581,11 @@ window.bp = window.bp || {};
 						}
 						this.$topicName.val( topic.slug ).trigger( 'change' );
 						this.$topicName.prop( 'disabled', topic.is_global_activity );
+						if ( topic.is_global_activity ) {
+							this.$topicName.closest( '.input-field' ).addClass( 'bb-topic-global-selected' );
+						} else {
+							this.$topicName.closest( '.input-field' ).removeClass( 'bb-topic-global-selected' );
+						}
 					} else {
 						// For plain input.
 						this.$topicName.val( topic.name );
