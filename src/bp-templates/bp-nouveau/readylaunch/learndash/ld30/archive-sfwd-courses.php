@@ -376,7 +376,7 @@ $current_instructor = isset( $_GET['instructors'] ) ? sanitize_text_field( wp_un
 														<a href="<?php the_permalink(); ?>" class="bb-rl-course-link bb-rl-button bb-rl-button--secondaryFill bb-rl-button--small">
 															<?php
 															if ( $is_enrolled ) {
-																esc_html_e( 'Continue', 'buddyboss' );
+																esc_html_e( 'Continue Course', 'buddyboss' );
 															} else {
 																esc_html_e( 'View Course', 'buddyboss' );
 															}
@@ -477,16 +477,16 @@ $current_instructor = isset( $_GET['instructors'] ) ? sanitize_text_field( wp_un
 										$lessons_count > 1
 											? sprintf(
 										/* translators: 1: plugin name, 2: action number 3: total number of actions. */
-											__( '%1$s %2$s', 'buddyboss' ),
-											$lessons_count,
-											LearnDash_Custom_Label::get_label( 'lessons' )
-										)
+												__( '%1$s %2$s', 'buddyboss' ),
+												$lessons_count,
+												LearnDash_Custom_Label::get_label( 'lessons' )
+											)
 											: sprintf(
 										/* translators: 1: plugin name, 2: action number 3: total number of actions. */
-											__( '%1$s %2$s', 'buddyboss' ),
-											$lessons_count,
-											LearnDash_Custom_Label::get_label( 'lesson' )
-										)
+												__( '%1$s %2$s', 'buddyboss' ),
+												$lessons_count,
+												LearnDash_Custom_Label::get_label( 'lesson' )
+											)
 									);
 									?>
 									<span class="bb-rl-course-meta-tag"><?php echo esc_html( $total_lessons ); ?></span>
