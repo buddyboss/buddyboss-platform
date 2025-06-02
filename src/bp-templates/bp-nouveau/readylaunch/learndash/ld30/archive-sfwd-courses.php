@@ -468,7 +468,7 @@ $current_instructor = isset( $_GET['instructors'] ) ? sanitize_text_field( wp_un
 									<?php
 									$updated_date = get_the_date( 'j M, Y' );
 									// translators: %s is the updated date.
-									printf( esc_html__( 'Updated %s', 'buddyboss' ), esc_html( $updated_date ) );
+									printf( esc_html__( 'Updated: %s', 'buddyboss' ), esc_html( $updated_date ) );
 									?>
 								</div>
 								<div class="bb-rl-course-popup-meta">
