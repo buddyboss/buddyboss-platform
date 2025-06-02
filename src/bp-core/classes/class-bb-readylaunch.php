@@ -560,6 +560,27 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			return $stack;
 		}
 
+		public function add_forum_template_stack( $stack ) {
+			$stylesheet_dir = get_stylesheet_directory();
+			$template_dir   = get_template_directory();
+
+			$stack = array_flip( $stack );
+
+
+			unset( $stack[ $stylesheet_dir ], $stack[ $template_dir ] );
+
+			$stack = array_flip( $stack );
+
+			foreach ( $stack as $key => $value ) {
+				if ( strpos( $value, 'bp-forums/templates/default' ) !== false ) {
+					$value = str_replace( 'bp-forums/templates/default', 'bp-templates/bp-nouveau/readylaunch/forums', $value );
+				}
+				$stack[ $key ] = $value;
+			}
+
+			return $stack;
+		}
+
 		/**
 		 * Enqueue ReadyLaunch scripts.
 		 *
