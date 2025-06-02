@@ -517,7 +517,7 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 			)
 		);
 		$topics               = ! empty( $topics['topics'] ) ? $topics['topics'] : array();
-		$total_topics         = count( $topics );
+		$total_topics         = is_array( $topics ) ? count( $topics ) : 0;
 		?>
 		<div class="bb-activity-topics-wrapper <?php echo $total_topics > 0 ? esc_attr( 'bb-has-topics' ) : ''; ?>">
 			<div class="bb-activity-topics-content">
