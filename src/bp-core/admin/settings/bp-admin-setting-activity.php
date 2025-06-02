@@ -516,12 +516,13 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 				'item_id'   => 0,
 			)
 		);
+		$topics               = ! empty( $topics['topics'] ) ? $topics['topics'] : array();
+		$total_topics         = is_array( $topics ) ? count( $topics ) : 0;
 		?>
-		<div class="bb-activity-topics-wrapper">
+		<div class="bb-activity-topics-wrapper <?php echo $total_topics > 0 ? esc_attr( 'bb-has-topics' ) : ''; ?>">
 			<div class="bb-activity-topics-content">
 				<div class="bb-activity-topics-list">
 					<?php
-					$topics = ! empty( $topics['topics'] ) ? $topics['topics'] : array();
 					if ( ! empty( $topics ) ) {
 						foreach ( $topics as $topic ) {
 							if ( ! is_object( $topic ) ) {

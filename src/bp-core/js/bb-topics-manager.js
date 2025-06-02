@@ -203,9 +203,9 @@ window.bp = window.bp || {};
 							var topicId   = parseInt( $( event.currentTarget ).data( 'topic-id' ) );
 							var topicName = $( event.currentTarget ).text().trim();
 
-							if ( 0 === topicId ) {
+							if ( -1 === topicId ) {
 								this.model.set('topics', {
-									topic_id: 0,
+									topic_id: topicId,
 									topic_name: '', // This will trigger the template to show "Select Topic"
 									topic_lists: this.model.get('topics').topic_lists
 								});
@@ -552,6 +552,9 @@ window.bp = window.bp || {};
 				errorElm.remove();
 			}
 
+			// Show loader
+			this.$modal.addClass( 'is-loading' );
+
 			// Prepare data for AJAX request.
 			var data = {
 				action             : this.config.editTopicAction,
@@ -567,6 +570,7 @@ window.bp = window.bp || {};
 
 			// Send AJAX request.
 			$.post( ajaxUrl, data, function ( response ) {
+				this.$modal.removeClass( 'is-loading' );
 				if ( response.success ) {
 					var topic = response.data.topic;
 					if ( this.$topicName.hasClass( 'select2-hidden-accessible' ) ) {
@@ -659,6 +663,12 @@ window.bp = window.bp || {};
 				if ( this.$addTopicButton.hasClass( 'bp-hide' ) ) {
 					this.$addTopicButton.removeClass( 'bp-hide' );
 				}
+			}
+
+			if ( topicsCount > 0 ) {
+				this.$topicList.closest( '.bb-activity-topics-content' ).addClass( 'bb-has-topics' );
+			} else {
+				this.$topicList.closest( '.bb-activity-topics-content' ).removeClass( 'bb-has-topics' );
 			}
 
 			return topicsLimitReached;
@@ -814,6 +824,10 @@ window.bp = window.bp || {};
 			// Store the topic ID in BP's storage.
 			if ( ! topicId || $topicItem.hasClass( 'all' ) || 'all' === topicUrl.toLowerCase() ) {
 				bp.Nouveau.setStorage( 'bp-activity', 'topic_id', '' );
+				var $allItem = $( '.activity-topic-selector li a' ).first();
+				if ( $allItem.length > 0 ) {
+					$allItem.addClass( 'selected active' );
+				}
 			} else {
 				bp.Nouveau.setStorage( 'bp-activity', 'topic_id', topicId );
 			}
@@ -851,6 +865,10 @@ window.bp = window.bp || {};
 				}
 			} else {
 				bp.Nouveau.setStorage( 'bp-activity', 'topic_id', '' );
+				var $allItem = $( '.activity-topic-selector li a' ).first();
+				if ( $allItem.length > 0 ) {
+					$allItem.addClass( 'selected active' );
+				}
 			}
 		},
 

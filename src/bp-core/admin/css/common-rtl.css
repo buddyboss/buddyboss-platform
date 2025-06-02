@@ -5417,10 +5417,13 @@ h1.bb-advance-heading {
 }
 
 .bb-activity-topics-wrapper .bb-activity-topics-content {
+  margin-bottom: 10px;
+}
+
+.bb-activity-topics-wrapper .bb-activity-topics-content.bb-has-topics {
   background: #f0f0f1;
   border-radius: 6px;
   padding: 16px;
-  margin-bottom: 10px;
 }
 
 .bb-activity-topics-wrapper .bb-activity-topics-content .bb-activity-topics-list {
@@ -5673,6 +5676,34 @@ h1.bb-advance-heading {
   justify-content: flex-end;
   gap: 10px;
   box-sizing: border-box;
+}
+
+.bb-modal-panel--activity-topic.bb-modal-panel.is-loading:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.1);
+  z-index: 1;
+}
+
+.bb-modal-panel--activity-topic.bb-modal-panel.is-loading:after {
+  content: "\ef30";
+  font-family: bb-icons;
+  font-size: 24px;
+  font-weight: 400;
+  line-height: 1;
+  margin-right: 10px;
+  position: absolute;
+  top: 50%;
+  right: 50%;
+  transform: translate(50%, -50%);
+  text-align: center;
+  display: inline-block;
+  animation: spin 3s infinite linear;
+  z-index: 1;
 }
 
 #bb-hello-container.bb-modal-panel,
