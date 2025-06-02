@@ -592,7 +592,7 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 			<div class="bb-hello-header">
 				<div class="bb-hello-title">
 					<h2 id="bb-hello-title" tabindex="-1">
-						<?php esc_html_e( 'Create topic', 'buddyboss' ); ?>
+						<?php esc_html_e( 'Create Topic', 'buddyboss' ); ?>
 					</h2>
 				</div>
 				<div class="bb-hello-close">
@@ -605,10 +605,10 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 				<div class="form-fields">
 					<div class="form-field">
 						<div class="field-label">
-							<label for="bb_topic_name"><?php esc_html_e( 'Topic name', 'buddyboss' ); ?></label>
+							<label for="bb_topic_name"><?php esc_html_e( 'Topic Name', 'buddyboss' ); ?></label>
 						</div>
 						<div class="field-input">
-							<input type="text" id="bb_topic_name" name="bb_topic_name" placeholder="<?php esc_html_e( 'Enter topic name', 'buddyboss' ); ?>" />
+							<input type="text" id="bb_topic_name" name="bb_topic_name" />
 						</div>
 					</div>
 					<div class="form-field">
