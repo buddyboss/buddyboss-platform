@@ -340,31 +340,33 @@ $current_instructor = isset( $_GET['instructors'] ) ? sanitize_text_field( wp_un
 													if ( ! empty( $course_progress ) ) {
 														?>
 														<div class="bb-rl-course-progress">
-															<span class="bb-rl-percentage">
-																<?php
-																echo wp_kses_post(
-																	sprintf(
-																	/* translators: 1: course progress percentage, 2: percentage symbol. */
-																		__( '<span class="bb-rl-percentage-figure">%1$s%2$s</span> Completed', 'buddyboss' ),
-																		(int) $course_progress['percentage'],
-																		'%'
-																	)
-																);
-																?>
-															</span>
-															<?php
-															// Get completed steps.
-															$completed_steps = ! empty( $course_progress['completed'] ) ? (int) $course_progress['completed'] : 0;
-
-															// Output as "completed/total".
-															if ( $course_progress['total'] > 0 ) {
-																?>
-																<span class="bb-rl-course-steps">
-																	<?php echo esc_html( $completed_steps . '/' . $course_progress['total'] ); ?>
+															<div class="bb-rl-course-progress-overview flex items-center">
+																<span class="bb-rl-percentage">
+																	<?php
+																	echo wp_kses_post(
+																		sprintf(
+																		/* translators: 1: course progress percentage, 2: percentage symbol. */
+																			__( '<span class="bb-rl-percentage-figure">%1$s%2$s</span> Completed', 'buddyboss' ),
+																			(int) $course_progress['percentage'],
+																			'%'
+																		)
+																	);
+																	?>
 																</span>
 																<?php
-															}
-															?>
+																// Get completed steps.
+																$completed_steps = ! empty( $course_progress['completed'] ) ? (int) $course_progress['completed'] : 0;
+
+																// Output as "completed/total".
+																if ( $course_progress['total'] > 0 ) {
+																	?>
+																	<span class="bb-rl-course-steps">
+																		<?php echo esc_html( $completed_steps . '/' . $course_progress['total'] ); ?>
+																	</span>
+																	<?php
+																}
+																?>
+															</div>
 															<div class="bb-rl-progress-bar">
 																<div class="bb-rl-progress" style="width: <?php echo (int) $course_progress['percentage']; ?>%"></div>
 															</div>

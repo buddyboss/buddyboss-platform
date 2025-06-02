@@ -3428,6 +3428,10 @@ div#bp-group-message-content {
   color: var(--bb-rl-text-color);
 }
 
+.bb-rl-course-filters .component-filters .bb-rl-filter + .bb-rl-filter {
+  margin-left: var(--bb-rl-space-200);
+}
+
 .bb-rl-courses-grid {
   display: grid;
   gap: var(--bb-rl-space-200);
@@ -3871,6 +3875,17 @@ div#bp-group-message-content {
   line-height: var(--bb-rl-base-line-small);
 }
 
+.bb-rl-course-progress-overview {
+  justify-content: space-between;
+}
+
+.bb-rl-course-progress-overview .bb-rl-course-steps {
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 400;
+  line-height: var(--bb-rl-base-line-small);
+  color: var(--bb-rl-text-secondary-color);
+}
+
 .bb-rl-progress-bar {
   height: var(--bb-rl-space-100);
   border-radius: var(--bb-rl-radius-full);
@@ -3963,6 +3978,17 @@ div#bp-group-message-content {
   font-size: var(--bb-rl-font-size-sm);
   font-weight: 400;
   line-height: var(--bb-rl-base-line-small);
+}
+
+.bb-rl-course-banner .bb-rl-course-review::after {
+  content: "";
+  display: inline-block;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background-color: var(--bb-rl-background-tertiary-color);
+  vertical-align: middle;
+  margin-left: var(--bb-rl-space-50);
 }
 
 .bb-rl-course-banner .bb-rl-author-name {

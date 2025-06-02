@@ -125,6 +125,16 @@
 	}
 }
 
+.bb-rl-course-filters {
+
+	.component-filters {
+
+		.bb-rl-filter + .bb-rl-filter {
+			margin-left: var(--bb-rl-space-200);
+		}
+	}
+}
+
 .bb-rl-courses-grid {
 	display: grid;
 	gap: var(--bb-rl-space-200);
@@ -289,7 +299,7 @@
 				border-color: var(--bb-rl-border-positive-secondary-color);
 				color: var(--bb-rl-text-positive-primary-color);
 			}
-			
+
 		}
 	}
 
@@ -578,6 +588,16 @@
 	.bb-rl-course-meta-tag {
 
 		@include bb-rl-label-heading;
+	}
+}
+
+.bb-rl-course-progress-overview {
+	justify-content: space-between;
+
+	.bb-rl-course-steps {
+
+		@include bb-rl-label-heading;
+		color: var(--bb-rl-text-secondary-color);
 	}
 }
 
