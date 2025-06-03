@@ -42,6 +42,7 @@ class BP_Performance_Includes {
 		add_action( 'bb_video_delete_older_symlinks', array( $this, 'purge_symlink_cache' ) );
 		add_filter( 'performance_purge_components', array( $this, 'bb_purge_components' ), 10, 4 );
 		add_filter( 'performance_group_purge_actions', array( $this, 'get_group_purge_actions' ), 10, 2 );
+		add_filter( 'bbapp_performance_deep_linking_supported_items', array( $this, 'performance_deep_linking_supported_items' ) );
 	}
 
 	/**
@@ -353,6 +354,76 @@ class BP_Performance_Includes {
 		}
 
 		return $actions;
+	}
+
+	/**
+	 * Check for platform components deeplinking caching.
+	 *
+	 * @param array $deeplinking_cache_args Array of enabled components for deeplinking.
+	 *
+	 * @since [BBVERSION]
+	 * @return mixed
+	 */
+	public function performance_deep_linking_supported_items( $deeplinking_cache_args ){
+		$is_component_active           = Helper::instance()->get_app_settings( 'cache_component', 'buddyboss-app' );
+		$bb_groups_settings            = Helper::instance()->get_app_settings( 'cache_bb_social_groups', 'buddyboss-app' );
+		$bb_activity_settings          = Helper::instance()->get_app_settings( 'cache_bb_activity_feeds', 'buddyboss-app' );
+		$bb_member_settings            = Helper::instance()->get_app_settings( 'cache_bb_members', 'buddyboss-app' );
+		$bb_private_messaging          = Helper::instance()->get_app_settings( 'cache_bb_private_messaging', 'buddyboss-app' );
+		$bb_forum_discussions_settings = Helper::instance()->get_app_settings( 'cache_bb_forum_discussions', 'buddyboss-app' );
+
+		// Groups
+		if ( ! empty( $is_component_active ) && ! empty( $bb_groups_settings ) ) {
+			$deeplinking_cache_args['bp-groups'] = array(
+				'action'    => array( 'open_groups','open_member_groups' ),
+				'namespace' => array( 'buddypress' )
+			);
+		}
+
+		// Activity
+		if ( ! empty( $is_component_active ) && ! empty( $bb_activity_settings ) ) {
+			$deeplinking_cache_args['bp-activity'] = array(
+				'action'    => array( 'open_activity' ),
+				'namespace' => array( 'buddypress' )
+			);
+		}
+
+		// Members
+		if ( ! empty( $is_component_active ) && ! empty( $bb_member_settings ) ) {
+			$deeplinking_cache_args['bp-members'] = array(
+				'action'    => array( 'open_member_profile' ),
+				'namespace' => array( 'buddypress' )
+			);
+
+		}
+
+		// Message
+		if ( ! empty( $is_component_active ) && ! empty( $bb_private_messaging ) ) {
+			$deeplinking_cache_args['bp-messages'] = array(
+				'action'    => array( 'open_member_messages' ),
+				'namespace' => array( 'buddypress' )
+			);
+		}
+
+		// Forums
+		if ( ! empty( $is_component_active ) && ! empty( $bb_forum_discussions_settings ) ) {
+			$deeplinking_cache_args['bbp-forums'] = array(
+				'action'    => array( 'open_groups_forum', 'open_member_forums', 'open_forum' ),
+				'namespace' => array( 'buddypress', 'core' )
+			);
+
+			$deeplinking_cache_args['bbp-replies'] = array(
+				'action'    => array( 'open_reply' ),
+				'namespace' => array( 'core' )
+			);
+
+			$deeplinking_cache_args['bbp-topics'] = array(
+				'action'    => array( 'open_topic' ),
+				'namespace' => array( 'core' )
+			);
+		}
+
+		return $deeplinking_cache_args;
 	}
 }
 
