@@ -178,6 +178,18 @@
   margin-left: 0;
 }
 
+.bbpress .bp-pagination > .bp-pagination-links span {
+  margin-bottom: var(--bb-rl-space-200);
+}
+
+.bbpress .bb-rl-secondary-header .select2-container .bb-rl-select2-dropdown {
+  margin-left: -54px;
+}
+
+.bbpress .bb-rl-secondary-header .select2-container .bb-rl-select2-dropdown .select2-results__option[aria-selected="true"] {
+  color: var(--bb-rl-text-color);
+}
+
 .bb-rl-forums-list {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));

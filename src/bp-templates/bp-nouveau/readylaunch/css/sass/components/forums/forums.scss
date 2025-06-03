@@ -2,8 +2,22 @@
 
     .bp-pagination > .bp-pagination-links {
         margin-left: 0;
+
+        span {
+            margin-bottom: var(--bb-rl-space-200);
+        }
     }
 
+    .bb-rl-secondary-header {
+
+        .select2-container .bb-rl-select2-dropdown {
+            margin-left: -54px;
+
+            .select2-results__option[aria-selected="true"]{
+                color: var(--bb-rl-text-color);
+            }
+        }
+    }
 }
 
 .bb-rl-forums-list {
