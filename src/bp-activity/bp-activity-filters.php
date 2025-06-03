@@ -3992,6 +3992,10 @@ function bb_load_activity_topics_manager() {
  */
 function bb_activity_save_topic_data( $activity ) {
 
+	if ( ! bb_is_enabled_activity_topics() ) {
+		return;
+	}
+
 	if ( ! isset( $_POST['topic_id'] ) ) {
 		return;
 	}
