@@ -47,29 +47,6 @@
 				do_action( 'bbp_theme_after_forum_description' );
 			?>
 		</div>
-
-		<div class="forums-meta bb-forums-meta">
-			<?php
-				do_action( 'bbp_theme_before_forum_sub_forums' );
-
-				$r = array(
-						'before'            => '',
-						'after'             => '',
-						'link_before'       => '<span>',
-						'link_after'        => '</span>',
-						'count_before'      => ' (',
-						'count_after'       => ')',
-						'count_sep'         => ', ',
-						'separator'         => ' ',
-						'forum_id'          => '',
-						'show_topic_count'  => false,
-						'show_reply_count'  => false,
-					);
-
-				bbp_list_forums($r);
-
-				do_action( 'bbp_theme_after_forum_sub_forums' );
-			?>
-		</div>
+		
 	</div>
 </li>
