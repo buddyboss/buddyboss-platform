@@ -4503,6 +4503,9 @@ span.dashicons.dashicons-admin-file:before {
 			background-color: $light-grey;
 			border: 1px solid transparent;
 			text-decoration: none;
+			max-width: 200px;
+			overflow: hidden;
+			text-overflow: ellipsis;
 
 			&:hover,
 			&.selected {
@@ -4534,7 +4537,7 @@ span.dashicons.dashicons-admin-file:before {
 			border-radius: 8px;
 			background-color: $white;
 			box-shadow: 0 3px 8px 0 rgba(0, 0, 0, 0.06), 0 6px 24px 0 rgba(0, 0, 0, 0.12);
-			min-width: 190px;
+			width: 190px;
 			position: absolute;
 			right: 0;
 			top: 40px;
@@ -4559,6 +4562,8 @@ span.dashicons.dashicons-admin-file:before {
 				border-radius: 6px;
 				position: relative;
 				text-decoration: none;
+				overflow: hidden;
+				text-overflow: ellipsis;
 
 				&:hover {
 					background-color: $light-grey;

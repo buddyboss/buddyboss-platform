@@ -8454,6 +8454,9 @@ span.dashicons.dashicons-admin-file:before {
   background-color: #eaeaea;
   border: 1px solid transparent;
   text-decoration: none;
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .activity-topic-selector > ul > li > a:hover, .activity-topic-selector > ul > li > a.selected {
@@ -8481,7 +8484,7 @@ span.dashicons.dashicons-admin-file:before {
   border-radius: 8px;
   background-color: #fff;
   box-shadow: 0 3px 8px 0 rgba(0, 0, 0, 0.06), 0 6px 24px 0 rgba(0, 0, 0, 0.12);
-  min-width: 190px;
+  width: 190px;
   position: absolute;
   left: 0;
   top: 40px;
@@ -8507,6 +8510,8 @@ span.dashicons.dashicons-admin-file:before {
   border-radius: 6px;
   position: relative;
   text-decoration: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 #buddypress .activity-topic-selector > ul .bb_nav_more_dropdown li a:hover {
