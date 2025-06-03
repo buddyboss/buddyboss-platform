@@ -6,6 +6,14 @@
  * @package BuddyBoss\Activity\Classes
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * BuddyBoss Activity ReadyLaunch Class.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
 class BB_Activity_Readylaunch {
 
 	/**
@@ -27,7 +35,7 @@ class BB_Activity_Readylaunch {
 		add_filter( 'bb_get_activity_post_user_reactions_html', array( $this, 'bb_rl_get_activity_post_user_reactions_html' ), 10, 4 );
 		add_filter( 'bp_activity_new_update_action', array( $this, 'bb_rl_activity_new_update_action' ), 10, 2 );
 		add_filter( 'bp_get_activity_action_pre_meta', array( $this, 'bb_rl_remove_secondary_avatars_for_connected_users' ), 11, 2 );
-		add_filter( 'bp_nouveau_get_activity_comment_buttons', array( $this, 'bb_rl_get_activity_comment_buttons' ), 10, 3 );
+		add_filter( 'bp_nouveau_get_activity_comment_buttons', array( $this, 'bb_rl_get_activity_comment_buttons' ), 10, 2 );
 		add_filter( 'bb_get_activity_reaction_button_html', array( $this, 'bb_rl_modify_reaction_button_html' ), 10, 2 );
 		add_filter( 'bp_get_activity_css_class', array( $this, 'bb_rl_add_empty_content_class' ), 10, 1 );
 
@@ -39,7 +47,7 @@ class BB_Activity_Readylaunch {
 		add_filter( 'bb_document_get_image_sizes', array( $this, 'bb_rl_modify_document_image_sizes' ), 20 );
 		add_filter( 'bb_media_get_activity_max_thumb_length', array( $this, 'bb_rl_modify_activity_max_thumb_length' ) );
 		add_filter( 'bb_video_get_activity_max_thumb_length', array( $this, 'bb_rl_modify_activity_max_thumb_length' ) );
-		add_filter( 'bb_activity_get_reacted_users_data', array( $this, 'bb_rl_modify_user_data_to_reactions' ), 10, 2 );
+		add_filter( 'bb_activity_get_reacted_users_data', array( $this, 'bb_rl_modify_user_data_to_reactions' ), 10, 1 );
 		add_filter( 'bb_get_activity_comment_threading_depth', array( $this, 'bb_rl_modify_activity_comment_threading_depth' ), 10 );
 		add_filter( 'bp_nouveau_get_submit_button', array( $this, 'bb_rl_modify_submit_button' ), 10 );
 		add_filter( 'bp_get_activity_content_body', array( $this, 'bb_rl_activity_content_with_changed_avatar' ), 9999, 2 );
@@ -108,7 +116,7 @@ class BB_Activity_Readylaunch {
 				)
 			);
 			if ( ! empty( $reaction_count ) ) {
-				$reaction_text = $reaction_count === 1 ?
+				$reaction_text = 1 === $reaction_count ?
 					esc_html__( 'reaction', 'buddyboss' ) :
 					esc_html__( 'reactions', 'buddyboss' );
 
@@ -153,7 +161,8 @@ class BB_Activity_Readylaunch {
 		$user_link = bp_core_get_userlink( $activity->user_id );
 		switch ( $activity->component ) {
 			case 'activity':
-				if ( bp_activity_do_mentions() && $usernames = bp_activity_find_mentions( $activity->content ) ) {
+				$usernames = bp_activity_find_mentions( $activity->content );
+				if ( bp_activity_do_mentions() && ! empty( $usernames ) ) {
 					$mentioned_users        = array_filter( array_map( 'bp_get_user_by_nickname', $usernames ) );
 					$mentioned_users_link   = array();
 					$mentioned_users_avatar = array();
@@ -167,7 +176,7 @@ class BB_Activity_Readylaunch {
 						);
 					}
 
-					// Get the last user link
+					// Get the last user link.
 					$last_user_link = array_pop( $mentioned_users_link );
 
 					$action = sprintf(
@@ -201,11 +210,10 @@ class BB_Activity_Readylaunch {
 	 *
 	 * @param array $buttons             The activity comment buttons.
 	 * @param int   $activity_comment_id The activity comment ID.
-	 * @param int   $activity_id         The activity ID.
 	 *
 	 * @return array
 	 */
-	public function bb_rl_get_activity_comment_buttons( $buttons, $activity_comment_id, $activity_id ) {
+	public function bb_rl_get_activity_comment_buttons( $buttons, $activity_comment_id ) {
 		if ( isset( $buttons['activity_comment_favorite'] ) ) {
 			if ( ! bb_get_activity_comment_is_favorite() ) {
 				$button_settings                                   = bb_get_reaction_button_settings();
@@ -217,7 +225,7 @@ class BB_Activity_Readylaunch {
 					esc_attr( $button_settings['icon'] )
 				);
 			} else {
-				// Get user reacted reaction data and prepare the link.
+				// Get user reaction data and prepare the link.
 				$reaction_data = bb_activity_get_user_reaction_by_item( $activity_comment_id, 'activity_comment' );
 				if ( ! empty( $reaction_data ) ) {
 					$prepared_icon                                     = bb_activity_get_reaction_button( $reaction_data['id'], true );
@@ -284,7 +292,7 @@ class BB_Activity_Readylaunch {
 		}
 
 		// Nonce check!
-		if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_activity' ) ) {
+		if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_activity' ) ) { // phpcs:ignore
 			wp_send_json_error(
 				array(
 					'message' => __( 'Invalid request.', 'buddyboss' ),
@@ -347,7 +355,7 @@ class BB_Activity_Readylaunch {
 			array(
 				'limit'                  => bb_get_activity_comment_loading(),
 				'offset'                 => $offset,
-				'last_comment_timestamp' => ! empty( $_POST['last_comment_timestamp'] ) ? sanitize_text_field( $_POST['last_comment_timestamp'] ) : '',
+				'last_comment_timestamp' => ! empty( $_POST['last_comment_timestamp'] ) ? sanitize_text_field( wp_unslash( $_POST['last_comment_timestamp'] ) ) : '',
 				'last_comment_id'        => $last_comment_id,
 				'comment_order_by'       => apply_filters( 'bb_activity_recurse_comments_order_by', 'ASC' ),
 			)
@@ -417,7 +425,7 @@ class BB_Activity_Readylaunch {
 		<div class="activity-state <?php echo ! empty( $reaction_count ) ? 'has-likes' : ''; ?> <?php echo $comment_count ? 'has-comments' : ''; ?>">
 			<?php
 			if ( bb_is_reaction_activity_posts_enabled() ) {
-				echo bb_get_activity_post_user_reactions_html( $activity_id );
+				echo bb_get_activity_post_user_reactions_html( $activity_id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			}
 			?>
 
@@ -433,8 +441,10 @@ class BB_Activity_Readylaunch {
 				<span class="comments-count" data-comments-count="<?php echo esc_attr( $comment_count ); ?>">
 					<?php
 					if ( $comment_count > 1 || 0 === $comment_count ) {
+						/* translators: %d: activity comment count */
 						printf( _x( '%d Comments', 'placeholder: activity comments count', 'buddyboss' ), $comment_count );
 					} else {
+						/* translators: %d: activity comment count */
 						printf( _x( '%d Comment', 'placeholder: activity comment count', 'buddyboss' ), $comment_count );
 					}
 					?>
@@ -474,16 +484,12 @@ class BB_Activity_Readylaunch {
 	public function bb_rl_get_activity_comment_count( $activity_id ) {
 		global $wpdb, $bp;
 
-		return (int) $wpdb->get_var(
-			$wpdb->prepare(
-				"SELECT COUNT(*) FROM {$bp->activity->table_name} WHERE type = 'activity_comment' AND item_id = %d",
-				$activity_id
-			)
-		);
+		// phpcs:ignore
+		return (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$bp->activity->table_name} WHERE type = 'activity_comment' AND item_id = %d", $activity_id ) );
 	}
 
 	/**
-	 * Localize the strings needed for the ReadyLaunch activity.
+	 * Localise the strings needed for the ReadyLaunch activity.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
@@ -549,11 +555,10 @@ class BB_Activity_Readylaunch {
 	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param array $reaction_data The reaction data array.
-	 * @param array $args          The arguments passed to bb_activity_get_reacted_users_data.
 	 *
 	 * @return array Modified reaction data.
 	 */
-	public function bb_rl_modify_user_data_to_reactions( $reaction_data, $args ) {
+	public function bb_rl_modify_user_data_to_reactions( $reaction_data ) {
 		if ( empty( $reaction_data['reactions'] ) ) {
 			return $reaction_data;
 		}
