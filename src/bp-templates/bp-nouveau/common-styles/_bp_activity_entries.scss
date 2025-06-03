@@ -4809,5 +4809,10 @@ span.dashicons.dashicons-admin-file:before {
 		.bb-action-popup-content .select2-container--bb-activity-topic .select2-selection__clear {
 			display: none;
 		}
+
+		#bb_topic_submit[disabled] {
+			opacity: 0.6;
+			pointer-events: none;
+		}
 	}
 }

@@ -8747,6 +8747,12 @@ span.dashicons.dashicons-admin-file:before {
   display: none;
 }
 
+.groups .bb-action-popup--activity-topic #bb_topic_submit[disabled], .groups
+.bb-modal-panel--activity-topic #bb_topic_submit[disabled] {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
 /**
 *-----------------------------------------------------
 * @section 3.1.3 - Activity Comments
