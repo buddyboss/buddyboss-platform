@@ -5648,6 +5648,11 @@ h1.bb-advance-heading {
   margin: 0;
 }
 
+.bb-modal-panel--activity-topic.bb-modal-panel .bb-hello-content div.bb-hello-error {
+  padding: 8px 20px;
+  margin: -15px -20px 18px -20px;
+}
+
 .bb-modal-panel--activity-topic.bb-modal-panel .form-fields .form-field {
   margin-bottom: 15px;
 }
