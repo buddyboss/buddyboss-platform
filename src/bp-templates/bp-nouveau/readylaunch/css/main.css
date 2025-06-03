@@ -20575,16 +20575,19 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   display: none;
 }
 
+.notifications.dir-list .notification-list .actions a [class*="bb-icons-rl-"],
 .notifications.dir-list .notification-list .actions a .dashicons {
   font-size: var(--bb-rl-font-size-2xl);
   font-family: bb-icons-rl;
   color: var(--bb-rl-icon-secondary-color);
 }
 
+.notifications.dir-list .notification-list .actions a [class*="bb-icons-rl-"].dashicons-visibility:before,
 .notifications.dir-list .notification-list .actions a .dashicons.dashicons-visibility:before {
   content: "\e182";
 }
 
+.notifications.dir-list .notification-list .actions a [class*="bb-icons-rl-"].dashicons-trash:before,
 .notifications.dir-list .notification-list .actions a .dashicons.dashicons-trash:before {
   content: "\e4a6";
 }

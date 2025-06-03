@@ -96,9 +96,6 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			// Add ReadyLaunch settings to platform settings API.
 			add_filter( 'bp_rest_platform_settings', array( $this, 'bb_rest_readylaunch_platform_settings' ), 10, 1 );
 
-			// Update notification item action links.
-			add_filter( 'bp_get_the_notification_action_links', array( $this, 'bb_rl_modify_notification_action_links' ), 10 );
-
 			// LearnDash integration.
 			add_filter( 'bp_is_sidebar_enabled_for_courses', array( $this, 'bb_is_sidebar_enabled_for_courses' ) );
 
@@ -192,9 +189,6 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			add_action( 'login_footer', array( $this, 'bb_rl_login_footer' ), 999 );
 			add_filter( 'login_message', array( $this, 'bb_rl_signin_login_message' ) );
 			add_action( 'login_form', array( $this, 'bb_rl_login_custom_form' ) );
-
-			// Add Dynamic colours.
-			add_action( 'wp_head', array( $this, 'bb_rl_dynamic_colors' ) );
 		}
 
 		protected function load_hooks() {
@@ -249,12 +243,72 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			add_filter( 'bp_nouveau_get_video_description_html', array( $this, 'bb_rl_modify_document_description_html' ), 10 );
 			add_filter( 'bp_core_get_js_strings', array( $this, 'bb_rl_modify_js_strings' ), 10, 1 );
 
+			// Update notification item action links.
+			add_filter( 'bp_get_the_notification_mark_unread_link', array( $this, 'bb_rl_notifications_mark_unread_link' ), 1, 1 );
+			add_filter( 'bp_get_the_notification_mark_read_link', array( $this, 'bb_rl_notifications_mark_read_link' ), 1, 1 );
+			add_filter( 'bp_get_the_notification_delete_link', array( $this, 'bb_rl_notifications_delete_link' ), 1, 1 );
+
+			// Remove page content actions.
 			remove_action( 'bp_before_directory_members_page', 'bp_members_directory_page_content' );
 			remove_action( 'bp_before_directory_media', 'bp_media_directory_page_content' );
 			remove_action( 'bp_before_directory_document', 'bb_document_directory_page_content' );
 
 			// Remove profile search form on members directory.
 			remove_action( 'bp_before_directory_members', 'bp_profile_search_show_form' );
+
+			// Removed for update notification item action links.
+			remove_filter( 'bp_get_the_notification_mark_unread_link', 'bp_nouveau_notifications_mark_unread_link', 10, 1 );
+			remove_filter( 'bp_get_the_notification_mark_read_link', 'bp_nouveau_notifications_mark_read_link', 10, 1 );
+			remove_filter( 'bp_get_the_notification_delete_link', 'bp_nouveau_notifications_delete_link', 10, 1 );
+		}
+
+		public function bb_rl_notifications_mark_unread_link( $link = '' ) {
+			return $this->bb_rl_notifications_link(
+				$link,
+				__( 'Mark as unread', 'buddyboss' ),
+				'bb-icons-rl-eye-slash',
+				__( 'Mark as unread', 'buddyboss' )
+			);
+		}
+
+		public function bb_rl_notifications_mark_read_link( $link = '' ) {
+			return $this->bb_rl_notifications_link(
+				$link,
+				__( 'Mark as read', 'buddyboss' ),
+				'bb-icons-rl-check',
+				__( 'Mark as read', 'buddyboss' )
+			);
+		}
+
+		public function bb_rl_notifications_delete_link( $link = '' ) {
+			return $this->bb_rl_notifications_link(
+				$link,
+				__( 'Delete notification', 'buddyboss' ),
+				'bb-icons-rl-trash',
+				__( 'Delete notification', 'buddyboss' )
+			);
+		}
+
+		private function bb_rl_notifications_link( $link = '', $bp_tooltip = '', $icon = '', $label = '' ) {
+			$link = str_replace( 'class="', 'class="bp-tooltip ', $link );
+			preg_match( '/<a\s[^>]*>(.*)<\/a>/siU', $link, $match );
+
+			if ( ! empty( $match[0] ) && ! empty( $match[1] ) && ! empty( $icon ) && ! empty( $bp_tooltip ) ) {
+
+				$link = str_replace(
+					'>' . $match[1] . '<',
+					sprintf(
+						' data-bp-tooltip-pos="up" data-bp-tooltip="%1$s"><span class="%2$s" aria-hidden="true"></span><span class="bb_rl_label">%3$s</span><',
+						esc_attr( $bp_tooltip ),
+						sanitize_html_class( $icon ),
+						( ! empty( $label ) ? $label : $match[1] )
+					),
+					$match[0]
+				);
+
+			}
+
+			return $link;
 		}
 
 		/**
@@ -2479,28 +2533,6 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			}
 
 			return false;
-		}
-
-		/**
-		 * Modify notification item action links
-		 *
-		 * @since BuddyBoss [BBVERSION]
-		 *
-		 * @param string $retval HTML links for actions to take on single notifications.
-		 *
-		 * @return string
-		 */
-		public function bb_rl_modify_notification_action_links( $retval ) {
-			// Replace bp-screen-reader-text with bb_rl_label.
-			$retval = str_replace( 'bp-screen-reader-text', 'bb_rl_label', $retval );
-
-			// Update link text for mark as read.
-			$retval = str_replace( '>Read<', '>' . __( 'Mark as read', 'buddyboss' ) . '<', $retval );
-
-			// Update link text for delete.
-			$retval = str_replace( '>Delete<', '>' . __( 'Delete notifications', 'buddyboss' ) . '<', $retval );
-
-			return $retval;
 		}
 
 		/**
