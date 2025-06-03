@@ -42,8 +42,7 @@
 	.bb-rl-course-price {
 
 		@include bb-rl-base-heading-2xl;
-		color: var(--bb-rl-text-color);
-		margin-top: var(--bb-rl-space-200);
+		margin: var(--bb-rl-space-200) 0 var(--bb-rl-space-100);
 	}
 
 	.bb-rl-course-review {
@@ -126,6 +125,10 @@
 
 	.bb-rl-course-overview-footer {
 		margin-top: auto;
+		display: flex;
+		align-items: center;
+		flex-flow: wrap;
+		gap: var(--bb-rl-space-200);
 	}
 }
 
@@ -156,6 +159,16 @@
 			font-weight: 600;
 			color: var(--bb-rl-text-color);
 		}
+	}
+}
+
+.bb-rl-course-join {
+
+	.btn-join {
+
+		@include bb-rl-button;
+		@include bb-rl-button--brand-fill;
+		@include bb-rl-button--small;
 	}
 }
 

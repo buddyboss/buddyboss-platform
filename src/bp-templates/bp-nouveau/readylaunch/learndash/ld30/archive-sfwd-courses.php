@@ -216,7 +216,7 @@ $current_instructor = isset( $_GET['instructors'] ) ? sanitize_text_field( wp_un
 												)
 											) {
 												?>
-												<div class="ld-status ld-status-progress ld-primary-background">
+												<div class="ld-status ld-status-progress ld-primary-background bb-rl-ld-status">
 													<?php
 													printf(
 													// translators: %s is the course label.
@@ -231,7 +231,7 @@ $current_instructor = isset( $_GET['instructors'] ) ? sanitize_text_field( wp_un
 											}
 										} elseif ( 'free' === $course_price['type'] ) {
 											?>
-											<div class="ld-status ld-status-incomplete ld-third-background">
+											<div class="ld-status ld-status-incomplete ld-third-background bb-rl-ld-status">
 												<?php esc_html_e( 'Free', 'buddyboss' ); ?>
 											</div>
 											<?php
@@ -243,7 +243,7 @@ $current_instructor = isset( $_GET['instructors'] ) ? sanitize_text_field( wp_un
 											<?php
 										} elseif ( 'open' === $course_price['type'] ) {
 											?>
-											<div class="ld-status ld-status-progress ld-primary-background">
+											<div class="ld-status ld-status-progress ld-primary-background bb-rl-ld-status">
 												<?php
 												printf(
 												// translators: %s is the course label.

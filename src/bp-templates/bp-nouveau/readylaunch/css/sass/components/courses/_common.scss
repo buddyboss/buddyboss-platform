@@ -35,6 +35,15 @@
 	color: var(--bb-rl-text-secondary-color);
 }
 
+.bb-rl-course-enrolled {
+
+	> p {
+		@include bb-rl-label-heading-bolder;
+		color: var(--bb-rl-text-tertiary-color);
+		white-space: nowrap;
+	}
+}
+
 .bb-rl-enrolled-members-bar {
 	display: flex;
 	align-items: center;
@@ -86,4 +95,33 @@
 		line-height: var(--bb-rl-base-line);
 		color: var(--bb-rl-text-tertiary-color);
 	}
+}
+
+.bb-rl-ld-status,
+.bb-rl-course-image .ld-status,
+.bb-rl-course-details .ld-status {
+
+	@include bb-rl-label-heading-xs;
+	padding: var(--bb-rl-space-50) var(--bb-rl-space-100);
+	border-radius: var(--bb-rl-radius-full);
+	border: 1px solid var(--bb-rl-border-brand-secondary-color);
+	background-color: var(--bb-rl-background-brand-secondary-color);
+	color: var(--bb-rl-text-brand-secondary-color);
+
+	&.ld-status-incomplete {
+		background-color: var(--bb-rl-background-brand-secondary-color);
+		border-color: var(--bb-rl-border-brand-secondary-color);
+		color: var(--bb-rl-text-brand-secondary-color);
+	}
+
+	&.ld-status-progress {
+		background-color: var(--bb-rl-background-positive-secondary-color);
+		border-color: var(--bb-rl-border-positive-secondary-color);
+		color: var(--bb-rl-text-positive-primary-color);
+	}
+}
+
+.bb-rl-course-details .ld-status {
+	padding: 0 var(--bb-rl-space-100);
+	margin-top: var(--bb-rl-space-50);
 }
