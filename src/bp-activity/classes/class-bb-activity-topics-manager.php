@@ -331,8 +331,12 @@ class BB_Activity_Topics_Manager {
 		);
 
 		// Validate required fields.
-		if ( empty( $r['topic_id'] ) || empty( $r['activity_id'] ) ) {
+		if ( empty( $r['activity_id'] ) ) {
 			return new WP_Error( 'bb_activity_topic_relationship_missing_data', __( 'Topic ID and Activity ID are required.', 'buddyboss' ) );
+		}
+
+		if ( bb_is_activity_topic_required() && empty( $r['topic_id'] ) ) {
+			return new WP_Error( 'bb_activity_topic_relationship_missing_data', __( 'Topic ID is required.', 'buddyboss' ) );
 		}
 
 		/**

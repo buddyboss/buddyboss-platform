@@ -6044,9 +6044,25 @@ window.bp = window.bp || {};
 					]
 				);
 
-				if ( this.model.get( 'topics' ) && this.model.get( 'topics' ).topic_id ) {
-					data.topic_id = this.model.get( 'topics' ).topic_id;
+				if (
+					! _.isUndefined( BP_Nouveau.activity.params.topics ) &&
+					! _.isUndefined( BP_Nouveau.activity.params.topics.bb_is_enabled_activity_topics ) &&
+					BP_Nouveau.activity.params.topics.bb_is_enabled_activity_topics
+				) {
+					if (
+						!_.isUndefined(BP_Nouveau.activity.params.topics.bb_is_activity_topic_required) &&
+						BP_Nouveau.activity.params.topics.bb_is_activity_topic_required
+					) {
+						if ( this.model.get( 'topics' ) && this.model.get( 'topics' ).topic_id ) {
+							data.topic_id = this.model.get( 'topics' ).topic_id;
+						}
+					} else {
+						if ( this.model.get( 'topics' ) ) {
+							data.topic_id = this.model.get( 'topics' ).topic_id;
+						}
+					}
 				}
+				
 
 				// Form link preview data to pass in request if available.
 				if ( self.model.get( 'link_success' ) ) {
