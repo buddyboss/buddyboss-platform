@@ -4798,4 +4798,11 @@ span.dashicons.dashicons-admin-file:before {
 			}
 		}
 	}
+
+	.groups & {
+
+		.bb-action-popup-content .select2-container--bb-activity-topic .select2-selection__clear {
+			display: none;
+		}
+	}
 }
