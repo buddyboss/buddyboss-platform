@@ -1450,17 +1450,6 @@ class BB_Topics_Manager {
 		$item_id   = isset( $_POST['item_id'] ) ? absint( sanitize_text_field( wp_unslash( $_POST['item_id'] ) ) ) : 0;
 		$item_type = isset( $_POST['item_type'] ) ? sanitize_text_field( wp_unslash( $_POST['item_type'] ) ) : '';
 
-		if ( 'groups' === $item_type ) {
-			$is_global_activity = $this->bb_is_topic_global( $topic_id );
-			if ( $is_global_activity ) {
-				wp_send_json_error(
-					array(
-						'error' => __( 'You cannot delete a global topic.', 'buddyboss' ),
-					)
-				);
-			}
-		}
-
 		$deleted = $this->bb_delete_topic(
 			array(
 				'topic_id'  => $topic_id,
@@ -1495,6 +1484,7 @@ class BB_Topics_Manager {
 			$args,
 			array(
 				'topic_id' => 0,
+				'fields'   => 'id',
 			)
 		);
 
@@ -1508,15 +1498,16 @@ class BB_Topics_Manager {
 		}
 
 		// Delete the topic relationship.
-		$args = array(
+		$get_topic_args = array(
 			'topic_id' => $topic_id,
-			'fields'   => 'id',
+			'fields'   => $r['fields'],
 		);
 		if ( 'groups' === $r['item_type'] ) {
-			$args['item_id']   = $r['item_id'];
-			$args['item_type'] = $r['item_type'];
+			$get_topic_args['item_id']   = $r['item_id'];
+			$get_topic_args['item_type'] = $r['item_type'];
 		}
-		$get_all_topic_relationships = $this->bb_get_topics( $args );
+
+		$get_all_topic_relationships = $this->bb_get_topics( $get_topic_args );
 
 		$relationships_ids = ! empty( $get_all_topic_relationships['topics'] ) ? $get_all_topic_relationships['topics'] : array();
 
@@ -1549,7 +1540,7 @@ class BB_Topics_Manager {
 			do_action( 'bb_topic_relationship_after_deleted', $relationships_ids, $topic_id );
 
 			if ( function_exists( 'bb_activity_topics_manager_instance' ) ) {
-				bb_activity_topics_manager_instance()->bb_delete_activity_topic_relationship( $args );
+				bb_activity_topics_manager_instance()->bb_delete_activity_topic_relationship( $r );
 			}
 		}
 
