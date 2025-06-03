@@ -200,12 +200,12 @@ window.bp = window.bp || {};
 						selectTopic : function ( event ) {
 							event.preventDefault();
 
-							var topicId   = parseInt( $( event.currentTarget ).data( 'topic-id' ) );
+							var topicId   = $( event.currentTarget ).data( 'topic-id' );
 							var topicName = $( event.currentTarget ).text().trim();
 
-							if ( -1 === topicId ) {
+							if ( '' === topicId ) {
 								this.model.set('topics', {
-									topic_id: topicId,
+									topic_id: '',
 									topic_name: '', // This will trigger the template to show "Select Topic"
 									topic_lists: this.model.get('topics').topic_lists
 								});
@@ -221,8 +221,10 @@ window.bp = window.bp || {};
 							this.$el.find( '.bb-topic-selector-button' ).text( topicName );
 							this.$el.removeClass( 'is-active' );
 
-							this.$el.find( '.bb-topic-selector-list li a' ).removeClass( 'selected' );
-							this.$el.find( '.bb-topic-selector-list li a[data-topic-id="' + topicId + '"]' ).addClass( 'selected' );
+							this.$el.find('.bb-topic-selector-list li a').removeClass('selected');
+							if ( '' !== topicId ) {
+								this.$el.find( '.bb-topic-selector-list li a[data-topic-id="' + topicId + '"]' ).addClass( 'selected' );
+							}
 
 							// Trigger input event on #whats-new to trigger postValidate.
 							if (
@@ -296,7 +298,11 @@ window.bp = window.bp || {};
 				if ( ! $( e.target ).closest( '.bb-topic-actions-wrapper' ).length ) {
 					$( '.bb-topic-actions-wrapper' ).removeClass( 'active' );
 				}
-			} );
+			});
+
+			// Disable submit button if no topic is selected.
+			this.$document.on( 'change', '.bb-topic-name-field', this.enableDisableSubmitButton.bind( this ) );
+			this.$document.on( 'keyup', '#bb_topic_name, .bb-topic-name-field', this.enableDisableSubmitButton.bind( this ) );
 		},
 
 		/**
@@ -594,6 +600,7 @@ window.bp = window.bp || {};
 					this.$topicWhoCanPost.filter( '[value="' + topic.permission_type + '"]' ).prop( 'checked', true );
 					this.$topicId.val( topic.topic_id );
 					$( '#bb_is_global_activity' ).val( topic.is_global_activity );
+					this.handleEnableDisableSubmitButton( topic.name );
 				} else {
 					this.$modal.find( this.config.modalContentSelector ).prepend( this.config.errorContainer );
 					this.$modal.find( this.config.errorContainerSelector ).append( response.data.error );
@@ -731,14 +738,16 @@ window.bp = window.bp || {};
 						bp.Nouveau.Activity.postForm.model.set( 'topics', activity_data.topics );
 						bp.draft_activity.data.topics = activity_data.topics;
 
-						var $topicElement = $( '.bb-topic-selector-list a[data-topic-id="' + activity_data.topics.topic_id + '"]' );
-						if ( $topicElement.length > 0 ) {
-							$topicElement.addClass( 'selected' );
-							var topicName = activity_data.topics.topic_name;
-							if ( ! topicName ) {
-								topicName = $topicElement.text();
+						if ( '' !== activity_data.topics.topic_id ) {
+							var $topicElement = $('.bb-topic-selector-list a[data-topic-id="' + activity_data.topics.topic_id + '"]');
+							if ($topicElement.length > 0) {
+								$topicElement.addClass('selected');
+								var topicName = activity_data.topics.topic_name;
+								if (!topicName) {
+									topicName = $topicElement.text();
+								}
+								$('.bb-topic-selector-button').text(topicName);
 							}
-							$( '.bb-topic-selector-button' ).text( topicName );
 						}
 					}
 				} );
@@ -1016,6 +1025,19 @@ window.bp = window.bp || {};
 				}
 			}
 		},
+
+		enableDisableSubmitButton : function ( event ) {
+			var value = $( event.currentTarget ).val();
+			this.handleEnableDisableSubmitButton( value );
+		},
+
+		handleEnableDisableSubmitButton : function ( value ) {
+			if ( '' === value ) {
+				$( this.config.submitButtonSelector ).prop( 'disabled', true );
+			} else {
+				$( this.config.submitButtonSelector ).prop( 'disabled', false );
+			}
+		}
 	};
 
 	$(
