@@ -258,7 +258,7 @@ $current_instructor = isset( $_GET['instructors'] ) ? sanitize_text_field( wp_un
 											the_post_thumbnail( 'medium' );
 										} else {
 											?>
-											<div class="bb-rl-course-placeholder-image"></div>
+											<img src="<?php echo esc_url( buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/images/group_cover_image.jpeg' ); ?>" alt="<?php esc_attr_e( 'Course placeholder image', 'buddyboss' ); ?>">
 											<?php
 										}
 										?>
