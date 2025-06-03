@@ -695,14 +695,29 @@ function bp_nouveau_ajax_post_update() {
 		wp_send_json_error();
 	}
 
-	if ( bb_is_activity_topic_required() ) {
-		$topic_id = ! empty( $_POST['topic_id'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['topic_id'] ) ) : 0;
+	if ( bb_is_activity_topic_required() && isset( $_POST['topic_id'] ) ) {
+		$topic_id = (int) sanitize_text_field( wp_unslash( $_POST['topic_id'] ) );
 		if ( empty( $topic_id ) ) {
 			wp_send_json_error( array( 'message' => esc_html__( 'Please select a topic before posting.', 'buddyboss' ) ) );
 		}
 
 		$object  = ! empty( $_POST['object'] ) ? sanitize_text_field( wp_unslash( $_POST['object'] ) ) : '';
 		$item_id = ! empty( $_POST['item_id'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['item_id'] ) ) : 0;
+
+		$args = array(
+			'topic_id'  => $topic_id,
+			'item_type' => 'activity',
+			'fields'    => 'id',
+		);
+		if ( 'group' === $object ) {
+			$args['item_type'] = 'groups';
+			$args['item_id']   = $item_id;
+		}
+		$topic_exists = function_exists( 'bb_topics_manager_instance' ) ? bb_topics_manager_instance()->bb_get_topics( $args ) : false;
+		if ( empty( $topic_exists ) || empty( $topic_exists['topics'] ) ) {
+			wp_send_json_error( array( 'message' => esc_html__( 'The topic does not exist.', 'buddyboss' ) ) );
+		}
+
 		if (
 			'user' === $object &&
 			function_exists( 'bb_activity_topics_manager_instance' ) &&

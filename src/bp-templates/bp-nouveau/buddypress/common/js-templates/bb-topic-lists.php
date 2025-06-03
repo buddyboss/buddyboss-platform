@@ -58,12 +58,10 @@
 						<span class="bp-screen-reader-text"><?php esc_html_e( 'Edit', 'buddyboss' ); ?></span>
 						<span class="edit-label"><?php esc_html_e( 'Edit', 'buddyboss' ); ?></span>
 					</a>
-					<# if ( ! topicData.is_global_activity ) { #>
-						<a href="#" class="button delete bb-delete-topic bp-secondary-action bp-tooltip" title="<?php esc_html_e( 'Delete', 'buddyboss' ); ?>" data-topic-attr="{{delete_data}}">
-							<span class="bp-screen-reader-text"><?php esc_html_e( 'Delete', 'buddyboss' ); ?></span>
-							<span class="delete-label"><?php esc_html_e( 'Delete', 'buddyboss' ); ?></span>
-						</a>
-					<# } #>
+					<a href="#" class="button delete bb-delete-topic bp-secondary-action bp-tooltip" title="<?php esc_html_e( 'Delete', 'buddyboss' ); ?>" data-topic-attr="{{delete_data}}">
+						<span class="bp-screen-reader-text"><?php esc_html_e( 'Delete', 'buddyboss' ); ?></span>
+						<span class="delete-label"><?php esc_html_e( 'Delete', 'buddyboss' ); ?></span>
+					</a>
 					</div>
 				</div>
 			</div>
