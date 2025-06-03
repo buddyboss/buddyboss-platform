@@ -1,3 +1,11 @@
+.bbpress {
+
+    .bp-pagination > .bp-pagination-links {
+        margin-left: 0;
+    }
+
+}
+
 .bb-rl-forums-list {
 	display: grid;
 	grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
