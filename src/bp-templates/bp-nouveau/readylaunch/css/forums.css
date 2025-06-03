@@ -176,9 +176,11 @@
 /* SCSS Variables */
 .bb-rl-forums-list {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
   gap: var(--bb-rl-space-200);
   list-style: none;
+  padding: 0;
+  justify-content: center;
 }
 
 .bb-rl-forums-list .bb-rl-forum-list-item {
