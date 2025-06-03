@@ -296,7 +296,11 @@ window.bp = window.bp || {};
 				if ( ! $( e.target ).closest( '.bb-topic-actions-wrapper' ).length ) {
 					$( '.bb-topic-actions-wrapper' ).removeClass( 'active' );
 				}
-			} );
+			});
+
+			// Disable submit button if no topic is selected.
+			this.$document.on( 'change', '.bb-topic-name-field', this.enableDisableSubmitButton.bind( this ) );
+			this.$document.on( 'keyup', '#bb_topic_name, .bb-topic-name-field', this.enableDisableSubmitButton.bind( this ) );
 		},
 
 		/**
@@ -594,6 +598,7 @@ window.bp = window.bp || {};
 					this.$topicWhoCanPost.filter( '[value="' + topic.permission_type + '"]' ).prop( 'checked', true );
 					this.$topicId.val( topic.topic_id );
 					$( '#bb_is_global_activity' ).val( topic.is_global_activity );
+					this.handleEnableDisableSubmitButton( topic.name );
 				} else {
 					this.$modal.find( this.config.modalContentSelector ).prepend( this.config.errorContainer );
 					this.$modal.find( this.config.errorContainerSelector ).append( response.data.error );
@@ -1016,6 +1021,19 @@ window.bp = window.bp || {};
 				}
 			}
 		},
+
+		enableDisableSubmitButton : function ( event ) {
+			var value = $( event.currentTarget ).val();
+			this.handleEnableDisableSubmitButton( value );
+		},
+
+		handleEnableDisableSubmitButton : function ( value ) {
+			if ( '' === value ) {
+				$( this.config.submitButtonSelector ).prop( 'disabled', true );
+			} else {
+				$( this.config.submitButtonSelector ).prop( 'disabled', false );
+			}
+		}
 	};
 
 	$(
