@@ -79,13 +79,6 @@ if ( $lesson_id ) {
                         <div class="bb-rl-quiz-title">
                             <h1 class="bb-rl-entry-title"><?php echo esc_html( $quiz_post->post_title ); ?></h1>
                         </div>
-                        <?php if ( $lesson_post ) : ?>
-                            <div class="bb-rl-lesson-link">
-                                <span class="bb-rl-lesson-title"><?php esc_html_e( 'Part of:', 'buddyboss' ); ?> 
-                                    <a href="<?php echo esc_url( get_permalink( $lesson_post->ID ) ); ?>"><?php echo esc_html( $lesson_post->post_title ); ?></a>
-                                </span>
-                            </div>
-                        <?php endif; ?>
                     </div>
 
                     <?php if ( has_post_thumbnail( $quiz_id ) ) : ?>
@@ -176,20 +169,7 @@ if ( $lesson_id ) {
 			<nav class="bb-rl-quiz-footer">
                 <div class="bb-rl-quiz-actions">
                     <div class="bb-rl-course-steps">
-                        <?php
-                        if ( ( defined( 'LEARNDASH_TEMPLATE_CONTENT_METHOD' ) ) && ( 'shortcode' === LEARNDASH_TEMPLATE_CONTENT_METHOD ) ) {
-                            $shown_content_key = 'learndash-shortcode-wrap-ld_navigation-' . absint( $course_id ) . '_' . (int) get_the_ID() . '_' . absint( $user_id );
-                            if ( false === strstr( $content, $shown_content_key ) ) {
-                                $shortcode_out = do_shortcode( '[ld_navigation course_id="' . $course_id . '" user_id="' . $user_id . '" post_id="' . get_the_ID() . '"]' );
-                                if ( ! empty( $shortcode_out ) ) {
-                                    echo $shortcode_out;
-                                }
-                            }
-                        } else {
-                            // For quiz, we typically don't show course-steps module as it's handled differently
-                            // The quiz form itself handles completion and navigation
-                        }
-                        ?>
+                        <button type="submit" class="bb-rl-mark-complete-button bb-rl-button bb-rl-button--brandFill bb-rl-button--small"><?php esc_html_e( 'Mark Complete', 'buddyboss' ); ?></button>
                     </div>
                     <div class="bb-rl-quiz-count">
                         <span class="bb-pages">

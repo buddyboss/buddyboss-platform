@@ -91,13 +91,6 @@ if ( function_exists( 'learndash_is_topic_accessable' ) ) {
                         <div class="bb-rl-topic-title">
                             <h1 class="bb-rl-entry-title"><?php the_title(); ?></h1>
                         </div>
-                        <?php if ( $lesson_post ) : ?>
-                            <div class="bb-rl-lesson-link">
-                                <span class="bb-rl-lesson-title"><?php esc_html_e( 'Part of:', 'buddyboss' ); ?> 
-                                    <a href="<?php echo esc_url( get_permalink( $lesson_post->ID ) ); ?>"><?php echo esc_html( $lesson_post->post_title ); ?></a>
-                                </span>
-                            </div>
-                        <?php endif; ?>
                     </div>
 
                     <?php if ( has_post_thumbnail() ) : ?>
@@ -146,57 +139,12 @@ if ( function_exists( 'learndash_is_topic_accessable' ) ) {
                 <?php endif; ?>
             </div>
 
-			<nav class="bb-rl-topic-footer">
-                <div class="bb-rl-topic-actions">
+			<nav class="bb-rl-ld-module-footer bb-rl-topic-footer">
+                <div class="bb-rl-ld-module-actions bb-rl-topic-actions">
                     <div class="bb-rl-course-steps">
-                        <?php
-                        if ( ( defined( 'LEARNDASH_TEMPLATE_CONTENT_METHOD' ) ) && ( 'shortcode' === LEARNDASH_TEMPLATE_CONTENT_METHOD ) ) {
-                            $shown_content_key = 'learndash-shortcode-wrap-ld_navigation-' . absint( $course_id ) . '_' . (int) get_the_ID() . '_' . absint( $user_id );
-                            if ( false === strstr( $content, $shown_content_key ) ) {
-                                $shortcode_out = do_shortcode( '[ld_navigation course_id="' . $course_id . '" user_id="' . $user_id . '" post_id="' . get_the_ID() . '"]' );
-                                if ( ! empty( $shortcode_out ) ) {
-                                    echo $shortcode_out;
-                                }
-                            }
-                        } else {
-                        
-                            /**
-                             * Set a variable to switch the next button to complete button
-                             *
-                             * @var $can_complete [bool] - can the user complete this or not?
-                             */
-                            $can_complete = false;
-                            if ( $all_quizzes_completed && $logged_in && ! empty( $course_id ) ) :
-                                $can_complete = $previous_topic_completed;
-
-                                /**
-                                 * Filters whether a user can complete the topic or not.
-                                 *
-                                 * @since 3.0.0
-                                 *
-                                 * @param boolean $can_complete Whether user can complete topic or not.
-                                 * @param int     $post_id      Topic ID.
-                                 * @param int     $course_id    Course ID.
-                                 * @param int     $user_id      User ID.
-                                 */
-                                $can_complete = apply_filters( 'learndash-topic-can-complete', true, get_the_ID(), $course_id, $user_id );
-                            endif;
-                            learndash_get_template_part(
-                                'modules/course-steps.php',
-                                array(
-                                    'course_id'        => $course_id,
-                                    'course_step_post' => $post,
-                                    'user_id'          => $user_id,
-                                    'course_settings'  => isset( $course_settings ) ? $course_settings : array(),
-                                    'can_complete'     => $can_complete,
-                                    'context'          => 'topic',
-                                ),
-                                true
-                            );
-                        }
-                        ?>
+                        <button type="submit" class="bb-rl-mark-complete-button bb-rl-button bb-rl-button--brandFill bb-rl-button--small"><?php esc_html_e( 'Mark Complete', 'buddyboss' ); ?></button>
                     </div>
-                    <div class="bb-rl-topic-count">
+                    <div class="bb-rl-ld-module-count bb-rl-topic-count">
                         <span class="bb-pages">
                             <?php echo LearnDash_Custom_Label::get_label( 'lesson' ); ?> <?php echo $lesson_no; ?>, 
                             <?php echo LearnDash_Custom_Label::get_label( 'topic' ); ?> <?php echo $topic_no; ?>

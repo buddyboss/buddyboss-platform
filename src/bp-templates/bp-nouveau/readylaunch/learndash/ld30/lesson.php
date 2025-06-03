@@ -116,12 +116,12 @@ if ( function_exists( 'learndash_is_lesson_accessable' ) ) {
                 <?php endif; ?>
             </div>
 
-			<nav class="bb-rl-lesson-footer">
-                <div class="bb-rl-lesson-actions">
+			<nav class="bb-rl-ld-module-footer bb-rl-lesson-footer">
+                <div class="bb-rl-ld-module-actions bb-rl-lesson-actions">
                     <div class="bb-rl-course-steps">
                         <button type="submit" class="bb-rl-mark-complete-button bb-rl-button bb-rl-button--brandFill bb-rl-button--small"><?php esc_html_e( 'Mark Complete', 'buddyboss' ); ?></button>
                     </div>
-                    <div class="bb-rl-lesson-count">
+                    <div class="bb-rl-ld-module-count bb-rl-lesson-count">
                         <span class="bb-pages"><?php echo LearnDash_Custom_Label::get_label( 'lesson' ); ?> <?php echo $lesson_no; ?> <span class="bb-total"><?php esc_html_e( 'of', 'buddyboss' ); ?> <?php echo count( $lesson_list ); ?></span></span>
                     </div>
                     <div class="learndash_next_prev_link">

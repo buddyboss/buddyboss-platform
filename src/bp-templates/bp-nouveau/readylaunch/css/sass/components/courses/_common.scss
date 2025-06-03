@@ -38,6 +38,7 @@
 .bb-rl-course-enrolled {
 
 	> p {
+
 		@include bb-rl-label-heading-bolder;
 		color: var(--bb-rl-text-tertiary-color);
 		white-space: nowrap;
@@ -150,8 +151,8 @@
 
 	.jq-dropdown-menu {
 
-		input[type=button],
-		input[type=submit] {
+		input[type="button"],
+		input[type="submit"] {
 			font-size: var(--bb-rl-font-size-sm) !important;
 			font-weight: 500 !important;
 			line-height: var(--bb-rl-base-line-small);
@@ -163,5 +164,48 @@
 				background-color: var(--bb-rl-background-secondary-hover-color) !important;
 			}
 		}
+	}
+}
+
+.bb-rl-ld-module-actions {
+	max-width: 800px;
+	margin: 0 auto;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+
+	.learndash_next_prev_link {
+		display: flex;
+		gap: var(--bb-rl-space-200);
+		align-items: center;
+	}
+
+	a.prev-link,
+	a.next-link {
+
+		@include bb-rl-button;
+		@include bb-rl-button-secondary-fill;
+		@include bb-rl-button--small;
+		gap: var(--bb-rl-space-50);
+	}
+
+	span.prev-link,
+	span.next-link {
+
+		@include bb-rl-button;
+		@include bb-rl-button--secondary-outline;
+		@include bb-rl-button--small;
+		gap: var(--bb-rl-space-50);
+		cursor: default;
+		pointer-events: none;
+	}
+}
+
+.bb-rl-ld-module-count {
+
+	.bb-pages {
+
+		@include bb-rl-label-heading;
+		color: var(--bb-rl-text-secondary-color);
 	}
 }

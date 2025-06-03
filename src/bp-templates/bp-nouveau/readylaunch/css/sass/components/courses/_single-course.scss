@@ -367,6 +367,10 @@
 		&.ld-quiz-incomplete,
 		&.ld-status-incomplete {
 			border-color: var(--bb-rl-border-tertiary-color);
+
+			.ld-icon:before {
+				opacity: 0;
+			}
 		}
 
 		&.ld-quiz-complete,

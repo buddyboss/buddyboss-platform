@@ -192,11 +192,15 @@ global $course_pager_results;
 						</div>
 					</div>
 					<div class="bb-rl-course-figure">
-						<?php if ( has_post_thumbnail() ) : ?>
+						<?php if ( has_post_thumbnail() ) { ?>
 							<div class="bb-rl-course-featured-image">
 								<?php the_post_thumbnail( 'full' ); ?>
 							</div>
-						<?php endif; ?>
+						<?php } else { ?>											
+							<div class="bb-rl-course-featured-image">
+								<img src="<?php echo esc_url( buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/images/group_cover_image.jpeg' ); ?>" alt="<?php esc_attr_e( 'Course placeholder image', 'buddyboss' ); ?>">
+							</div>
+						<?php } ?>
 					</div>
 				</div>
 

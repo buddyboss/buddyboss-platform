@@ -9,14 +9,6 @@
 		border-top: 1px solid var(--bb-rl-border-secondary-color);
 		z-index: 100;
 	}
-
-	.bb-rl-lesson-actions {
-		max-width: 800px;
-		margin: 0 auto;
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-	}
 }
 
 .single-sfwd-lessons {
@@ -29,33 +21,4 @@
 .bb-learndash-content-wrap--lesson {
 	padding-bottom: 60px;
 	background-color: var(--bb-rl-background-color);
-}
-
-.bb-rl-lesson-actions {
-
-	.learndash_next_prev_link {
-		display: flex;
-		gap: var(--bb-rl-space-200);
-		align-items: center;
-	}
-
-	a.prev-link,
-	a.next-link {
-
-		@include bb-rl-button;
-		@include bb-rl-button-secondary-fill;
-		@include bb-rl-button--small;
-		gap: var(--bb-rl-space-50);
-	}
-
-	span.prev-link,
-	span.next-link {
-
-		@include bb-rl-button;
-		@include bb-rl-button--secondary-outline;
-		@include bb-rl-button--small;
-		gap: var(--bb-rl-space-50);
-		cursor: default;
-		pointer-events: none;
-	}
 }
