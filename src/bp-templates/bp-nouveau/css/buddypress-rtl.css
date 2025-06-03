@@ -8492,6 +8492,11 @@ span.dashicons.dashicons-admin-file:before {
   opacity: 0.5;
 }
 
+.groups .bb-action-popup--activity-topic .bb-action-popup-content .select2-container--bb-activity-topic .select2-selection__clear, .groups
+.bb-modal-panel--activity-topic .bb-action-popup-content .select2-container--bb-activity-topic .select2-selection__clear {
+  display: none;
+}
+
 /**
 *-----------------------------------------------------
 * @section 3.1.3 - Activity Comments
