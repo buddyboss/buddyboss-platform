@@ -4009,16 +4009,19 @@ function bb_activity_save_topic_data( $activity ) {
 	}
 
 	$topic_id = intval( $_POST['topic_id'] );
-	$item_id  = isset( $_POST['group_id'] ) ? intval( $_POST['group_id'] ) : 0;
-	// If topic ID is provided, add the relationship.
-	if ( $topic_id ) {
-		bb_activity_topics_manager_instance()->bb_add_activity_topic_relationship(
-			array(
-				'topic_id'    => $topic_id,
-				'activity_id' => $activity->id,
-				'component'   => $activity->component,
-				'item_id'     => $item_id,
-			)
-		);
+	if ( bb_is_activity_topic_required() && empty( $topic_id ) ) {
+		return;
 	}
+
+	$item_id = isset( $_POST['group_id'] ) ? intval( $_POST['group_id'] ) : 0;
+
+	// Add/update the activity topic relationship.
+	bb_activity_topics_manager_instance()->bb_add_activity_topic_relationship(
+		array(
+			'topic_id'    => $topic_id,
+			'activity_id' => $activity->id,
+			'component'   => $activity->component,
+			'item_id'     => $item_id,
+		)
+	);
 }

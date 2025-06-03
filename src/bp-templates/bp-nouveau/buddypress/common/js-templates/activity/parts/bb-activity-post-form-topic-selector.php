@@ -15,7 +15,8 @@
 	if ( data.topics && data.topics.topic_lists && data.topics.topic_lists.length > 0 ) { #>
 		<span class="bb-topic-selector-button" data-select-topic-text="<?php esc_html_e( 'Select Topic', 'buddyboss' ); ?>">
 			<#
-			if ( data.topics.topic_id && data.topics.topic_name ) { #>
+			var topicId = data.topics.topic_id;
+			if ( '' !== topicId && data.topics.topic_name ) { #>
 				{{ data.topics.topic_name }}
 			<# } else { #>
 				<?php esc_html_e( 'Select Topic', 'buddyboss' ); ?>
@@ -27,7 +28,7 @@
 				if ( ! bb_is_activity_topic_required() ) {
 				?>
 					<li>
-						<a href="#" data-topic-id="-1" <# if ( '-1' === data.topics.topic_id ) { #>class="selected"<# } #>>
+						<a href="#" data-topic-id="">
 							<?php esc_html_e( 'None', 'buddyboss' ); ?>
 						</a>
 					</li>

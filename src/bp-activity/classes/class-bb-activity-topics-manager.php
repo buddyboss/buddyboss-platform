@@ -189,7 +189,7 @@ class BB_Activity_Topics_Manager {
 				if ( ! empty( $topics ) ) {
 					foreach ( $topics as $topic ) {
 						?>
-						<option value="<?php echo esc_attr( $topic['slug'] ); ?>" <?php selected( $current_topic_id, $topic['slug'] ); ?>>
+						<option value="<?php echo esc_attr( $topic['topic_id'] ); ?>" <?php selected( $current_topic_id, $topic['topic_id'] ); ?>>
 							<?php echo esc_html( $topic['name'] ); ?>
 						</option>
 						<?php
@@ -331,8 +331,12 @@ class BB_Activity_Topics_Manager {
 		);
 
 		// Validate required fields.
-		if ( empty( $r['topic_id'] ) || empty( $r['activity_id'] ) ) {
+		if ( empty( $r['activity_id'] ) ) {
 			return new WP_Error( 'bb_activity_topic_relationship_missing_data', __( 'Topic ID and Activity ID are required.', 'buddyboss' ) );
+		}
+
+		if ( bb_is_activity_topic_required() && empty( $r['topic_id'] ) ) {
+			return new WP_Error( 'bb_activity_topic_relationship_missing_data', __( 'Topic ID is required.', 'buddyboss' ) );
 		}
 
 		/**

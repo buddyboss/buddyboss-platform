@@ -5449,6 +5449,7 @@ h1.bb-advance-heading {
   display: flex;
   align-items: center;
   gap: 8px;
+  margin-left: 8px;
 }
 
 .bb-activity-topics-wrapper .bb-activity-topics-content .bb-activity-topics-list .bb-activity-topic-item .bb-topic-left .bb-topic-drag {
@@ -5466,6 +5467,7 @@ h1.bb-advance-heading {
   color: #101517;
   font-size: 15px;
   font-weight: 500;
+  word-break: break-all;
 }
 
 .bb-activity-topics-wrapper .bb-activity-topics-content .bb-activity-topics-list .bb-activity-topic-item .bb-topic-right {
