@@ -413,7 +413,6 @@ global $course_pager_results;
 											data-ld-expand-text="<?php echo esc_attr__( 'Expand All Section', 'buddyboss' ); ?>"
 											data-ld-collapse-text="<?php echo esc_attr__( 'Collapse All Sections', 'buddyboss' ); ?>"
 									>
-										<span class="ld-icon-arrow-down ld-icon"></span>
 										<span class="ld-text"><?php echo esc_attr__( 'Expand All Sections', 'buddyboss' ); ?></span>
 									</button> <!--/.ld-expand-button-->
 									<?php

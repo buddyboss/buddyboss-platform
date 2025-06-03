@@ -4130,17 +4130,20 @@ button[data-balloon] {
  * Ensures proper positioning when there's limited space on the right side
  * Applied via JavaScript when 'data-dropdown-align' attribute is present
  */
-body:not(.logged-in) .bb-rl-filter .select-wrap:has(.bb-rl-align-adaptive) {
+body:not(.logged-in) .bb-rl-filter .select-wrap:has(.bb-rl-align-adaptive),
+body.bb-readylaunch-template .bb-rl-filter .select-wrap:has(.bb-rl-align-adaptive) {
   position: relative;
 }
 
-body:not(.logged-in) .bb-rl-dropdown-align-adaptive {
+body:not(.logged-in) .bb-rl-dropdown-align-adaptive,
+body.bb-readylaunch-template .bb-rl-dropdown-align-adaptive {
   left: unset;
   right: -8px;
   top: 10px;
 }
 
-body:not(.logged-in) .select2-container--rl.select2-container--open:has(.bb-rl-dropdown-align-adaptive) {
+body:not(.logged-in) .select2-container--rl.select2-container--open:has(.bb-rl-dropdown-align-adaptive),
+body.bb-readylaunch-template .select2-container--rl.select2-container--open:has(.bb-rl-dropdown-align-adaptive) {
   width: 100% !important;
 }
 

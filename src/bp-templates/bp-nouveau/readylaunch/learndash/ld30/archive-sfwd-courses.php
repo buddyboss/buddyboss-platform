@@ -122,7 +122,7 @@ $current_instructor = isset( $_GET['instructors'] ) ? sanitize_text_field( wp_un
 						<span><?php esc_html_e( 'Instructor', 'buddyboss' ); ?></span>
 					</label>
 					<div class="select-wrap">
-						<select id="ld-course-instructors" name="filter-instructors">
+						<select id="ld-course-instructors" name="filter-instructors" data-dropdown-align="true">
 							<option value="all">
 								<?php esc_html_e( 'All', 'buddyboss' ); ?>
 							</option>

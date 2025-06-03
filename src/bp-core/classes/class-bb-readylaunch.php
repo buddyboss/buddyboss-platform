@@ -681,6 +681,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					false === strpos( $src, '/wp-includes/' ) &&
 					false === strpos( $src, '/buddyboss-platform/' ) &&
 					false === strpos( $src, '/buddyboss-platform-pro/' ) &&
+					false === strpos( $src, '/sfwd-lms/' ) &&
 					! $this->bb_has_allowed_suffix( $handle, $allow_suffix )
 				) {
 					wp_dequeue_script( $handle );
@@ -696,6 +697,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 						false === strpos( $src, '/wp-includes/' ) &&
 						false === strpos( $src, '/buddyboss-platform/' ) &&
 						false === strpos( $src, '/buddyboss-platform-pro/' ) &&
+						false === strpos( $src, '/sfwd-lms/' ) &&
 						! $this->bb_has_allowed_suffix( $handle, $allow_suffix )
 					) ||
 					'bp-nouveau-bb-icons' === $handle

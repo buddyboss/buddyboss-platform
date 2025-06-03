@@ -3340,6 +3340,37 @@ div#bp-group-message-content {
   margin-top: var(--bb-rl-space-50);
 }
 
+.bb-readylaunch-template .jq-dropdown .jq-dropdown-menu {
+  background-color: var(--bb-rl-background-color);
+  padding: var(--bb-rl-space-100) 0;
+  border-radius: var(--bb-rl-radius-md);
+  box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.15) !important;
+  border: 1px solid var(--bb-rl-border-secondary-color);
+}
+
+.bb-readylaunch-template .jq-dropdown.jq-dropdown-tip {
+  margin-top: var(--bb-rl-space-400);
+}
+
+.bb-readylaunch-template .jq-dropdown.jq-dropdown-tip::before, .bb-readylaunch-template .jq-dropdown.jq-dropdown-tip::after {
+  display: none;
+}
+
+.bb-readylaunch-template .jq-dropdown-menu input[type=button],
+.bb-readylaunch-template .jq-dropdown-menu input[type=submit] {
+  font-size: var(--bb-rl-font-size-sm) !important;
+  font-weight: 500 !important;
+  line-height: var(--bb-rl-base-line-small);
+  color: var(--bb-rl-text-secondary-color) !important;
+  text-align: left;
+  padding: 10px var(--bb-rl-space-200);
+}
+
+.bb-readylaunch-template .jq-dropdown-menu input[type=button]:hover,
+.bb-readylaunch-template .jq-dropdown-menu input[type=submit]:hover {
+  background-color: var(--bb-rl-background-secondary-hover-color) !important;
+}
+
 .bb-readylaunch-template {
   /* A sidebar-conditioned grid can be used on
     single profile or group screens. */

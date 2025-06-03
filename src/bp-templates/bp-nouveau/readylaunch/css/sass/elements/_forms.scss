@@ -255,7 +255,8 @@
  * Ensures proper positioning when there's limited space on the right side
  * Applied via JavaScript when 'data-dropdown-align' attribute is present
  */
-body:not(.logged-in) {
+body:not(.logged-in),
+body.bb-readylaunch-template {
 
 	.bb-rl-filter .select-wrap:has(.bb-rl-align-adaptive) {
 		position: relative;
