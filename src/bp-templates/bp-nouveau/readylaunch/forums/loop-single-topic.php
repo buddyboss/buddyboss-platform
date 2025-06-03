@@ -3,8 +3,37 @@
 /**
  * Topics Loop - Single
  *
- * @package BuddyBoss\Theme
+ * @package BuddyBoss\ReadyLaunch
  */
+
+$forum_id = bbp_get_topic_forum_id();
+$group_avatar = '';
+if ( function_exists( 'bbp_is_forum_group_forum' ) && bbp_is_forum_group_forum( $forum_id ) ) {
+	$group_ids = bbp_get_forum_group_ids( $forum_id );
+	
+	if ( ! empty( $group_ids ) && function_exists( 'groups_get_group' ) ) {
+		$group_id = $group_ids[0]; // Get the first group ID
+		$group = groups_get_group( $group_id );
+		
+		if ( $group && ! empty( $group->name ) ) {
+			// Get group avatar
+			if ( function_exists( 'bp_core_fetch_avatar' ) && ! bp_disable_group_avatar_uploads() ) {
+				$group_avatar = bp_core_fetch_avatar(
+					array(
+						'item_id'    => $group_id,
+						'object'     => 'group',
+						'type'       => 'thumb',
+						'width'      => 20,
+						'height'     => 20,
+						'html'       => true,
+						'alt'        => sprintf( __( '%s logo', 'buddyboss' ), $group->name ),
+						'class'      => 'bb-rl-group-avatar',
+					)
+				);
+			}
+		}
+	}
+}
 
 ?>
 
@@ -43,7 +72,7 @@
 		</div>
 		<?php do_action( 'bbp_theme_before_topic_started_in' ); ?>
 		<div class="bb-rl-topic-started-in">
-			<?php printf( __( '<a href="%1$s">%2$s</a>', 'buddyboss' ), bbp_get_forum_permalink( bbp_get_topic_forum_id() ), bbp_get_forum_title( bbp_get_topic_forum_id() ) ); ?>
+			<?php printf( __( '<a href="%1$s">%2$s%3$s</a>', 'buddyboss' ), bbp_get_forum_permalink( bbp_get_topic_forum_id() ), $group_avatar, bbp_get_forum_title( bbp_get_topic_forum_id() )  ); ?>
 		</div>
 		<?php do_action( 'bbp_theme_after_topic_started_in' ); ?>
 

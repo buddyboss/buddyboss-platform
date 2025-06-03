@@ -180,7 +180,14 @@
     margin-bottom: var(--bb-rl-space-100);
 
     a {
+        display: flex;
+        align-items: center;
+        gap: var(--bb-rl-space-100);
         color: var(--bb-rl-text-color);
+
+        img {
+            border-radius: var(--bb-rl-radius-sm);
+        }
     }
 }
 

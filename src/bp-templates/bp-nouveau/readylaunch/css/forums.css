@@ -429,7 +429,14 @@
 }
 
 .bb-rl-topic-started-in a {
+  display: flex;
+  align-items: center;
+  gap: var(--bb-rl-space-100);
   color: var(--bb-rl-text-color);
+}
+
+.bb-rl-topic-started-in a img {
+  border-radius: var(--bb-rl-radius-sm);
 }
 
 .bb-rl-topic-started-by a.bbp-author-link {
