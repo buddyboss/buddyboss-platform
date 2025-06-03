@@ -261,7 +261,6 @@
   max-width: 848px;
 }
 
-
 .bb-rl-topics-list-body {
   padding: 0;
 }
@@ -449,4 +448,13 @@
 
 .bb-rl-topic-started-by .bbp-author-avatar {
   display: none;
+}
+
+@media screen and (max-width: 782px) {
+  .bb-forums-topics-page .bb-rl-container-inner {
+    padding: 0;
+  }
+  .bb-rl-topics-list .type-topic {
+    padding: var(--bb-rl-space-200);
+  }
 }

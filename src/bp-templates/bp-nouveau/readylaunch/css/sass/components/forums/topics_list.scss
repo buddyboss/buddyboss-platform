@@ -198,3 +198,14 @@
         display: none;
     }
 }
+
+@media screen and (max-width: 782px) {
+        
+    .bb-forums-topics-page .bb-rl-container-inner {
+        padding: 0;
+    }
+    
+    .bb-rl-topics-list .type-topic {
+        padding: var(--bb-rl-space-200);
+    }
+}
