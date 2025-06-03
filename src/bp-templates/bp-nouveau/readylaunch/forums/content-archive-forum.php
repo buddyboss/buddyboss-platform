@@ -21,7 +21,7 @@
 		<div class="bb-rl-entry-heading">
 			<?php
 			// Get total forums count using bbPress statistics
-			$stats = bbp_get_statistics();
+			$stats        = bbp_get_statistics();
 			$total_forums = isset( $stats['forum_count_int'] ) ? $stats['forum_count_int'] : 0;
 			?>
 			<h2><?php esc_html_e( 'Forums', 'buddyboss' ); ?> <span class="bb-rl-heading-count"><?php echo esc_html( $total_forums ); ?></span></h2>
@@ -43,19 +43,35 @@
 					</label>
 					<div class="select-wrap">
 						<select id="bb-rl-forum-scope-options" data-bp-forum-scope-filter="forums" data-dropdown-align="true" data-select2-id="bb-rl-forum-scope-options" tabindex="-1" class="select2-hidden-accessible" aria-hidden="true">
-							<option value="forum">Forum</option>
-							<option value="Discussion">Discussion</option>
+							<?php
+							$forum_page = bbp_get_page_by_path( bbp_get_root_slug() );
+							if ( ! empty( $forum_page ) ) {
+								$forum_url   = get_permalink( $forum_page->ID );
+								$forum_title = $forum_page->post_title;
+							} else {
+								$forum_url   = get_post_type_archive_link( bbp_get_forum_post_type() );
+								$forum_title = esc_html__( 'Forums', 'buddyboss' );
+							}
+							if ( ! empty( $forum_url ) && ! empty( $forum_title ) ) {
+								echo '<option value="' . esc_url( $forum_url ) . '">' . esc_html( $forum_title ) . '</option>';
+							}
+
+							// Add a default option for Discussions.
+							$discussion_url = get_post_type_archive_link( bbp_get_topic_post_type() );
+							?>
+
+							<option value="<?php echo esc_url( $discussion_url ); ?>"><?php esc_html_e( 'Discussions', 'buddyboss' ); ?></option>
 						</select>
 					</div>
 				</div>
-			</div> 
+			</div>
 		</div>
 	</div>
 
 	<div class="bb-rl-container-inner">
 
 		<?php do_action( 'bbp_template_before_forums_index' ); ?>
-	
+
 		<?php if ( bbp_has_forums() ) : ?>
 
 			<?php bbp_get_template_part( 'loop', 'forums' ); ?>
