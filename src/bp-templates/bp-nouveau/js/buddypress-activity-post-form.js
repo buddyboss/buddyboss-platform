@@ -5875,7 +5875,7 @@ window.bp = window.bp || {};
 				if ( validContent ) {
 					this.$el.removeClass( 'focus-in--empty loading' );
 				} else {
-					this.$el.addClass( 'focus-in--empty loading' );
+					this.$el.addClass( 'focus-in--empty' );
 				}
 
 				// Validate topic content.
