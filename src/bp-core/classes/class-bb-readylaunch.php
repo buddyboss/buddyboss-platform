@@ -2692,5 +2692,69 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 			return 'bb-readylaunch';
 		}
+
+		/**
+		 * Check if the current page is a LearnDash lesson, topic, or quiz page.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 * @return bool True if on lesson, topic, or quiz page, false otherwise.
+		 */
+		public function bb_rl_is_learndash_inner_page() {
+			if ( ! class_exists( 'SFWD_LMS' ) ) {
+				return false;
+			}
+
+			$courses_integration = bp_get_option( 'bb_rl_enabled_pages' )['courses'] ?? false;
+			if ( ! $courses_integration ) {
+				return false;
+			}
+
+			global $post, $wp_query;
+
+			// Multiple ways to get the post type.
+			$post_type = '';
+
+			// Get post type.
+			if ( function_exists( 'get_post_type' ) ) {
+				$post_type = get_post_type();
+			}
+
+			// Check global $post.
+			if ( empty( $post_type ) && isset( $post->post_type ) ) {
+				$post_type = $post->post_type;
+			}
+
+			// Check queried object.
+			if ( empty( $post_type ) && is_object( $wp_query ) ) {
+				$queried_object = get_queried_object();
+				if ( $queried_object && isset( $queried_object->post_type ) ) {
+					$post_type = $queried_object->post_type;
+				}
+			}
+
+			// Check query vars.
+			if ( empty( $post_type ) && is_object( $wp_query ) && isset( $wp_query->query_vars['post_type'] ) ) {
+				$post_type = $wp_query->query_vars['post_type'];
+			}
+
+			// LearnDash lesson, topic, and quiz post types only.
+			$ld_lesson_topic_quiz_types = array(
+				learndash_get_post_type_slug( 'lesson' ),
+				learndash_get_post_type_slug( 'topic' ),
+				learndash_get_post_type_slug( 'quiz' ),
+			);
+
+			// Check if it's a singular lesson, topic, or quiz page.
+			if ( is_singular( $ld_lesson_topic_quiz_types ) ) {
+				return true;
+			}
+
+			// Check if post type matches LearnDash lesson, topic, or quiz types.
+			if ( ! empty( $post_type ) && in_array( $post_type, $ld_lesson_topic_quiz_types, true ) ) {
+				return true;
+			}
+
+			return false;
+		}
 	}
 }

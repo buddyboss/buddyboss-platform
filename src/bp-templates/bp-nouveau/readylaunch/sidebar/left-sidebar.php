@@ -28,6 +28,8 @@ global $bb_rl_search_nav;
 		bp_get_template_part( 'members/single/parts/item-subnav' );
 	} elseif ( bp_is_user_change_avatar() || bp_is_user_profile_edit() ) {
 		bp_get_template_part( 'members/single/parts/edit-subnav' );
+	} elseif ( bb_load_readylaunch()->bb_rl_is_learndash_inner_page() ) {
+		bp_get_template_part( 'learndash/ld30/single/parts/ld-subnav' );
 	} elseif ( BB_Readylaunch::bb_is_network_search() ) {
 		bp_search_buffer_template_part( 'search-nav' );
 	} else {
