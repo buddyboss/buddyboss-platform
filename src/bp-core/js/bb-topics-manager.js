@@ -205,7 +205,7 @@ window.bp = window.bp || {};
 
 							if ( '' === topicId ) {
 								this.model.set('topics', {
-									topic_id: '',
+									topic_id: 0,
 									topic_name: '', // This will trigger the template to show "Select Topic"
 									topic_lists: this.model.get('topics').topic_lists
 								});
@@ -732,25 +732,6 @@ window.bp = window.bp || {};
 						}
 					} );
 				}
-
-				$( document ).on( 'bb_draft_activity_loaded', function ( event, activity_data ) {
-					if ( activity_data && activity_data.topics ) {
-						bp.Nouveau.Activity.postForm.model.set( 'topics', activity_data.topics );
-						bp.draft_activity.data.topics = activity_data.topics;
-
-						if ( '' !== activity_data.topics.topic_id ) {
-							var $topicElement = $('.bb-topic-selector-list a[data-topic-id="' + activity_data.topics.topic_id + '"]');
-							if ($topicElement.length > 0) {
-								$topicElement.addClass('selected');
-								var topicName = activity_data.topics.topic_name;
-								if (!topicName) {
-									topicName = $topicElement.text();
-								}
-								$('.bb-topic-selector-button').text(topicName);
-							}
-						}
-					}
-				} );
 
 				this.$document.on( 'click', '.activity-topic-selector li a', this.topicActivityFilter.bind( this ) );
 

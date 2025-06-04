@@ -1044,27 +1044,42 @@ window.bp = window.bp || {};
 			if ( 0 < parseInt( activity_data.id ) ) {
 				Backbone.trigger( 'editactivity' );
 			} else {
-				if (
-					! _.isUndefined( BP_Nouveau.activity.params.topics ) &&
-					! _.isUndefined( BP_Nouveau.activity.params.topics.bb_is_enabled_activity_topics ) &&
-					BP_Nouveau.activity.params.topics.bb_is_enabled_activity_topics &&
-					! _.isUndefined( BP_Nouveau.activity.params.topics.bb_is_activity_topic_required ) &&
-					BP_Nouveau.activity.params.topics.bb_is_activity_topic_required
-				) {
-					BBTopicsManager.bbTopicValidateContent( {
-						self         : self,
-						selector     : self.postForm.$el,
-						validContent : bp.Nouveau.Activity.postForm.validateContent(),
-						class        : 'focus-in--empty loading',
-						data         : activity_data,
-						action       : 'draft_activity_loaded'
-					} );
-				} else {
-					self.postForm.$el.removeClass( 'focus-in--empty loading' );
-				}
+				self.postForm.$el.removeClass( 'focus-in--empty loading' );
 			}
 
-			$( document ).trigger( 'bb_draft_activity_loaded', activity_data );
+			if (
+				! _.isUndefined( BP_Nouveau.activity.params.topics ) &&
+				BP_Nouveau.activity.params.topics.topic_lists.length > 0 &&
+				! _.isUndefined( BP_Nouveau.activity.params.topics.bb_is_enabled_activity_topics ) &&
+				BP_Nouveau.activity.params.topics.bb_is_enabled_activity_topics &&
+				! _.isUndefined( BP_Nouveau.activity.params.topics.bb_is_activity_topic_required ) &&
+				BP_Nouveau.activity.params.topics.bb_is_activity_topic_required
+			) {
+				BBTopicsManager.bbTopicValidateContent( {
+					self         : self,
+					selector     : self.postForm.$el,
+					validContent : bp.Nouveau.Activity.postForm.validateContent(),
+					class        : 'focus-in--empty',
+					data         : activity_data,
+					action       : 'draft_activity_loaded'
+				} );
+			}
+
+			if ( activity_data && activity_data.topics ) {
+				self.postForm.model.set( 'topics', activity_data.topics );
+				bp.draft_activity.data.topics = activity_data.topics;
+				if ( 0 !== parseInt( activity_data.topics.topic_id ) ) {
+					var $topicElement = $( '.bb-topic-selector-list a[data-topic-id="' + activity_data.topics.topic_id + '"]' );
+					if ( $topicElement.length > 0 ) {
+						$topicElement.addClass( 'selected' );
+						var topicName = activity_data.topics.topic_name;
+						if ( ! topicName ) {
+							topicName = $topicElement.text();
+						}
+						$( '.bb-topic-selector-button' ).text( topicName );
+					}
+				}
+			}
 		},
 
 		getCurrentDraftActivity: function () {
@@ -6120,6 +6135,7 @@ window.bp = window.bp || {};
 
 				if (
 					! _.isUndefined( BP_Nouveau.activity.params.topics ) &&
+					BP_Nouveau.activity.params.topics.topic_lists.length > 0 &&
 					! _.isUndefined( BP_Nouveau.activity.params.topics.bb_is_enabled_activity_topics ) &&
 					BP_Nouveau.activity.params.topics.bb_is_enabled_activity_topics
 				) {
@@ -6127,8 +6143,11 @@ window.bp = window.bp || {};
 						!_.isUndefined(BP_Nouveau.activity.params.topics.bb_is_activity_topic_required) &&
 						BP_Nouveau.activity.params.topics.bb_is_activity_topic_required
 					) {
-						if ( this.model.get( 'topics' ) && this.model.get( 'topics' ).topic_id ) {
-							data.topic_id = this.model.get( 'topics' ).topic_id;
+						if ( this.model.get( 'topics' ) ) {
+							var topicId = this.model.get( 'topics' ) ? this.model.get( 'topics' ).topic_id : null;
+							if ( ! _.isUndefined( topicId ) && null !== topicId) {
+								data.topic_id = topicId;
+							}
 						}
 					} else {
 						if ( this.model.get( 'topics' ) ) {
