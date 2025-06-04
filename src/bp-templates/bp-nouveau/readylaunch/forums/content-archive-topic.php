@@ -61,7 +61,7 @@
 		</div>
 	</div>
 
-	<div class="bb-rl-container-inner">
+	<div class="bb-rl-forums-container-inner">
 
 		<?php do_action( 'bbp_template_before_topics_index' ); ?>
 

@@ -1,3 +1,8 @@
+.bb-rl-forums-container-inner {
+    max-width: 848px;
+    margin: 0 auto;
+}
+
 .bbpress {
 
     .bp-pagination > .bp-pagination-links {
@@ -21,9 +26,9 @@
 }
 
 .bb-rl-forums-list {
-	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-	gap: var(--bb-rl-space-200);
+	display: flex;
+    flex-flow: row wrap;
+    gap: var(--bb-rl-space-200);
     list-style: none;
     padding: 0;
     justify-content: center;
@@ -32,6 +37,8 @@
         border: 1px solid var(--bb-rl-border-secondary-color);
         background-color: var(--bb-rl-background-color);
         border-radius: var(--bb-rl-radius-lg);
+        min-width: 340px;
+        width: calc(33.3333% - var(--bb-rl-space-200));
     }
 
     .bb-rl-forum-cover img {
@@ -64,35 +71,36 @@
             color: var(--bb-rl-text-secondary-color);
         }
     }
+}
 
-    .bb-rl-forum-meta {
+.bb-rl-forum-meta {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+    color: var(--bb-rl-text-tertiary-color);
+    font-size: var(--bb-rl-font-size-sm);
+
+    .bb-rl-forum-meta-item-inactive {
+        display: none;
+    }
+
+    .bb-rl-forum-meta-item {
         display: flex;
         align-items: center;
-        margin-bottom: 12px;
-        color: var(--bb-rl-text-tertiary-color);
-        font-size: var(--bb-rl-font-size-sm);
 
-        .bb-rl-forum-meta-item-inactive {
-            display: none;
-        }
-
-        .bb-rl-forum-meta-item {
-            display: flex;
-            align-items: center;
-
-            > span:not(:last-child) {
-                margin-right: var(--bb-rl-space-50);
-            }
-        }
-
-        .bb-rl-forum-meta-item + .bb-rl-forum-meta-item:before {
-            content: '•';
-            margin: 0 6px;
-            color: var(--bb-rl-background-tertiary-color);
-        }
-
-        a  {
-            color: var(--bb-rl-text-tertiary-color);
+        > span:not(:last-child) {
+            margin-right: var(--bb-rl-space-50);
         }
     }
+
+    .bb-rl-forum-meta-item + .bb-rl-forum-meta-item:before {
+        content: '•';
+        margin: 0 6px;
+        color: var(--bb-rl-background-tertiary-color);
+    }
+
+    a  {
+        color: var(--bb-rl-text-tertiary-color);
+    }
 }
+

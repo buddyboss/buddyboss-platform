@@ -174,6 +174,11 @@
 }
 
 /* SCSS Variables */
+.bb-rl-forums-container-inner {
+  max-width: 848px;
+  margin: 0 auto;
+}
+
 .bbpress .bp-pagination > .bp-pagination-links {
   margin-left: 0;
 }
@@ -191,8 +196,8 @@
 }
 
 .bb-rl-forums-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  display: flex;
+  flex-flow: row wrap;
   gap: var(--bb-rl-space-200);
   list-style: none;
   padding: 0;
@@ -203,6 +208,8 @@
   border: 1px solid var(--bb-rl-border-secondary-color);
   background-color: var(--bb-rl-background-color);
   border-radius: var(--bb-rl-radius-lg);
+  min-width: 340px;
+  width: calc(33.3333% - var(--bb-rl-space-200));
 }
 
 .bb-rl-forums-list .bb-rl-forum-cover img {
@@ -238,7 +245,7 @@
   color: var(--bb-rl-text-secondary-color);
 }
 
-.bb-rl-forums-list .bb-rl-forum-meta {
+.bb-rl-forum-meta {
   display: flex;
   align-items: center;
   margin-bottom: 12px;
@@ -246,31 +253,27 @@
   font-size: var(--bb-rl-font-size-sm);
 }
 
-.bb-rl-forums-list .bb-rl-forum-meta .bb-rl-forum-meta-item-inactive {
+.bb-rl-forum-meta .bb-rl-forum-meta-item-inactive {
   display: none;
 }
 
-.bb-rl-forums-list .bb-rl-forum-meta .bb-rl-forum-meta-item {
+.bb-rl-forum-meta .bb-rl-forum-meta-item {
   display: flex;
   align-items: center;
 }
 
-.bb-rl-forums-list .bb-rl-forum-meta .bb-rl-forum-meta-item > span:not(:last-child) {
+.bb-rl-forum-meta .bb-rl-forum-meta-item > span:not(:last-child) {
   margin-right: var(--bb-rl-space-50);
 }
 
-.bb-rl-forums-list .bb-rl-forum-meta .bb-rl-forum-meta-item + .bb-rl-forum-meta-item:before {
+.bb-rl-forum-meta .bb-rl-forum-meta-item + .bb-rl-forum-meta-item:before {
   content: '•';
   margin: 0 6px;
   color: var(--bb-rl-background-tertiary-color);
 }
 
-.bb-rl-forums-list .bb-rl-forum-meta a {
+.bb-rl-forum-meta a {
   color: var(--bb-rl-text-tertiary-color);
-}
-
-.bb-forums-topics-page .bb-rl-container-inner {
-  max-width: 848px;
 }
 
 .bb-rl-topics-list-body {
@@ -321,7 +324,7 @@
   align-items: center;
   gap: var(--bb-rl-space-100);
   position: absolute;
-  top: var(--bb-rl-space-100);
+  top: 0;
   right: 0;
   z-index: 1;
   line-height: 1;
@@ -469,4 +472,157 @@
   .bb-rl-topics-list .type-topic {
     padding: var(--bb-rl-space-200);
   }
+}
+
+.bb-rl-single-forum {
+  padding: var(--bb-rl-space-300) 0;
+}
+
+.bb-rl-forum-single-header {
+  border: 1px solid var(--bb-rl-border-secondary-color);
+  border-radius: var(--bb-rl-radius-lg);
+  margin-bottom: var(--bb-rl-space-400);
+}
+
+.bb-rl-forum-single-header .bb-rl-forum-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--bb-rl-space-100);
+}
+
+.bb-rl-forum-single-header .bb-rl-new-discussion-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--bb-rl-space-50);
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 500;
+  line-height: var(--bb-rl-base-line);
+}
+
+.bb-rl-forum-single-header .bb-rl-new-discussion-btn i {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.bb-rl-forum-single-header .subscription-toggle {
+  color: var(--bb-rl-text-color);
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 500;
+  padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+  border-radius: var(--bb-rl-radius-md);
+  border: 1px solid var(--bb-rl-border-tertiary-color);
+  background-color: var(--bb-rl-background-color);
+  display: flex;
+  align-items: center;
+}
+
+.bb-rl-forum-single-header .subscription-toggle:before {
+  content: "\e400";
+  font-family: "bb-icons-rl";
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1;
+  color: var(--bb-rl-icon-color);
+  margin-right: 6px;
+}
+
+.bb-rl-forum-single-header-cover {
+  border-radius: var(--bb-rl-radius-lg) var(--bb-rl-radius-lg) 0 0;
+  height: 100%;
+  height: 265px;
+  overflow: hidden;
+}
+
+.bb-rl-forum-single-header-cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.bb-rl-forum-single-header-content {
+  background-color: var(--bb-rl-background-color);
+  padding: var(--bb-rl-space-300) var(--bb-rl-space-400);
+  border-radius: 0 0 var(--bb-rl-radius-lg) var(--bb-rl-radius-lg);
+}
+
+.bb-rl-forum-single-header-content h1 {
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 30px;
+  margin-bottom: var(--bb-rl-space-50);
+}
+
+.bb-rl-forum-single-header-content .bb-rl-forum-description {
+  margin-bottom: var(--bb-rl-space-200);
+}
+
+.bb-rl-forum-single-header-content .bb-rl-forum-description p {
+  font-size: var(--bb-rl-font-size-sm);
+  line-height: var(--bb-rl-base-line-small);
+  color: var(--bb-rl-text-secondary-color);
+}
+
+.bb-rl-forum-tabs {
+  display: flex;
+  align-items: center;
+  gap: var(--bb-rl-space-100);
+  margin-bottom: var(--bb-rl-space-200);
+  list-style: none;
+  padding: 0;
+}
+
+.bb-rl-forum-tabs .bb-rl-forum-tabs-item a {
+  display: inline-block;
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 500;
+  line-height: var(--bb-rl-base-line-small);
+  border: 1px solid var(--bb-rl-border-secondary-color);
+  border-radius: var(--bb-rl-radius-full);
+  padding: 6px var(--bb-rl-space-200);
+  color: var(--bb-rl-text-secondary-color);
+}
+
+.bb-rl-forum-tabs .bb-rl-forum-tabs-item.selected a {
+  background-color: var(--bb-rl-background-color);
+  color: var(--bb-rl-text-color);
+  border-color: var(--bb-rl-border-quinery-color);
+}
+
+.bb-rl-forum-tabs-content {
+  display: none;
+}
+
+.bb-rl-forum-tabs-content.selected {
+  display: block;
+}
+
+.bb-rl-forum-tabs-content .bb-rl-forums-list {
+  justify-content: flex-start;
+}
+
+.bb-rl-stick .bbp-topic-super-sticky-link {
+  display: none !important;
+}
+
+.forum-dropdown.bb-rl-context-wrap .bb-rl-context-btn {
+  display: inline-flex;
+  padding: var(--bb-rl-space-50);
+  transition: all 0.3s ease;
+  border: 0.5px solid transparent;
+  border-radius: 6px;
+}
+
+.forum-dropdown.bb-rl-context-wrap .bb-rl-context-dropdown .bb-rl-unstick a:before,
+.forum-dropdown.bb-rl-context-wrap .bb-rl-context-dropdown .bb-rl-stick a:before {
+  content: "\e3e2";
+}
+  font-weight: 600;
+  line-height: 1.2;
+  width: 100%;
+  border: 0;
+}
+
+.bb-rl-forum-modal .bb-rl-forum-modal-title input:-webkit-input-placeholder {
+  color: var(--bb-rl-text-tertiary-color);
 }

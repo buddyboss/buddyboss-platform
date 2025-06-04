@@ -1,10 +1,3 @@
-.bb-forums-topics-page {
-
-    .bb-rl-container-inner {
-        max-width: 848px;
-    }
-}
-
 .bb-rl-topics-list-body {
     padding: 0;
 }
@@ -51,7 +44,7 @@
             align-items: center;
             gap: var(--bb-rl-space-100);
             position: absolute;
-            top: var(--bb-rl-space-100);
+            top: 0;
             right: 0;
             z-index: 1;
             line-height: 1;
