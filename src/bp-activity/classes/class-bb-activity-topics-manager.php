@@ -460,6 +460,9 @@ class BB_Activity_Topics_Manager {
 			array(
 				'previous_id' => 0,
 				'topic_id'    => 0,
+				'component'   => 'activity',
+				'item_id'     => 0,
+				'error_type'  => 'wp_error',
 			)
 		);
 
@@ -475,12 +478,30 @@ class BB_Activity_Topics_Manager {
 		 */
 		do_action( 'bb_before_update_activity_topic_relationship', $args );
 
+		$where        = array();
+		$where_format = array();
+		// Build where clause and format specifiers.
+		if ( ! empty( $r['previous_id'] ) ) {
+			$where['topic_id'] = $r['previous_id'];
+			$where_format[]    = '%d';
+		}
+
+		if ( ! empty( $r['item_id'] ) ) {
+			$where['item_id'] = $r['item_id'];
+			$where_format[]   = '%d';
+		}
+
+		if ( ! empty( $r['component'] ) ) {
+			$where['component'] = $r['component'];
+			$where_format[]     = '%s';
+		}
+
 		$updated = $this->wpdb->update(
 			$this->activity_topic_rel_table,
 			array( 'topic_id' => $r['topic_id'] ),
-			array( 'topic_id' => $r['previous_id'] ),
+			$where,
 			array( '%d' ),
-			array( '%d' )
+			$where_format
 		);
 
 		if ( false === $updated ) {
