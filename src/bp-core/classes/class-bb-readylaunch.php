@@ -387,7 +387,12 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 						$item['label'] = __( 'Notifications', 'buddyboss' );
 					}
 					if ( $is_active ) {
-						$item['icon']          = 'bb-icons-rl-' . $item['icon'];
+						if ( ! empty( $item['icon'] ) ) {
+							$item['icon'] = 'bb-icons-rl-' . $item['icon'];
+						} else {
+							$item['icon'] = '';
+						}
+
 						$ordered_items[ $key ] = $item;
 					}
 				}
