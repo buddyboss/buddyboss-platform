@@ -922,25 +922,40 @@ export const ReadyLaunchSettings = () => {
 										<label>{__('Enable Pages', 'buddyboss')}</label>
 										<p>{__('Enable pages that should have styles from ReadyLaunch.', 'buddyboss')}</p>
 									</div>
-									<div className="field-toggles">
-										{window?.BP_ADMIN?.register_integration === '1' && (<div className="toggle-item">
-											<ToggleControl
-												label={__('Login & Registration', 'buddyboss')}
-												checked={settings.bb_rl_enabled_pages.registration}
-												onChange={handleNestedSettingChange('bb_rl_enabled_pages', 'registration')}
-											/>
+									{window?.BP_ADMIN?.register_integration === '1' || window?.BP_ADMIN?.courses_integration === '1' ? (
+										<div className="field-toggles">
+											{window?.BP_ADMIN?.register_integration === '1' && (
+												<div className="toggle-item">
+													<ToggleControl
+														label={__('Login & Registration', 'buddyboss')}
+														checked={settings.bb_rl_enabled_pages.registration}
+														onChange={handleNestedSettingChange('bb_rl_enabled_pages', 'registration')}
+													/>
+												</div>
+											)}
+											{window?.BP_ADMIN?.courses_integration === '1' && (
+												<div className="toggle-item">
+													<ToggleControl
+														label={__('Courses', 'buddyboss')}
+														checked={settings.bb_rl_enabled_pages.courses}
+														onChange={handleNestedSettingChange('bb_rl_enabled_pages', 'courses')}
+													/>
+												</div>
+											)}
 										</div>
-										)}
-										{window?.BP_ADMIN?.courses_integration === '1' && (
-											<div className="toggle-item">
-												<ToggleControl
-													label={__('Courses', 'buddyboss')}
-													checked={settings.bb_rl_enabled_pages.courses}
-													onChange={handleNestedSettingChange('bb_rl_enabled_pages', 'courses')}
-												/>
-											</div>
-										)}
-									</div>
+									) : (
+										<div className="bb-rl-notice bb-rl-notice--info">
+										  <span className="bb-rl-notice-icon">
+											<i className="bb-icons-rl-info" />
+										  </span>
+										  <div className="bb-rl-notice-content">
+											<strong>{__('No pages found', 'buddyboss')}</strong>
+											<p>
+											  {__('Enable the corresponding pages from your backend settings to manage them here with ReadyLaunch styles.', 'buddyboss')}
+											</p>
+										  </div>
+										</div>
+									)}
 								</div>
 							</Accordion>
 						</div>
