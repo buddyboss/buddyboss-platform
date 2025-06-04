@@ -85,6 +85,8 @@ if ( ! isset( $course_meta['sfwd-courses_course_disable_content_table'] ) ) {
 // Additional variables needed for course content listing.
 $has_lesson_quizzes = learndash_30_has_lesson_quizzes( $course_id, $lessons );
 global $course_pager_results;
+
+$bb_rl_ld_helper = class_exists( 'BB_Readylaunch_Learndash_Helper' ) ? BB_Readylaunch_Learndash_Helper::instance() : null;
 ?>
 
 <div class="bb-learndash-content-wrap">
@@ -158,9 +160,32 @@ global $course_pager_results;
 								</div>
 							</div>
 						</div>
-						<div class="bb-rl-course-price">
-							<?php echo esc_html( $course_price['price'] ); ?>
-						</div>
+						<?php
+						$currency = function_exists( 'learndash_get_currency_symbol' ) ? learndash_get_currency_symbol() : learndash_30_get_currency_symbol();
+						$price    = $course_price['price'];
+						if ( ! $is_enrolled ) {
+							if ( 'free' === $course_price['type'] ) {
+								?>
+									<div class="bb-rl-course-price">
+										<span class="bb-rl-price">
+										<?php esc_html_e( 'Free', 'buddyboss' ); ?>
+										</span>
+									</div>
+									<?php
+							} elseif ( ! empty( $price ) ) {
+								?>
+									<div class="bb-rl-course-price">
+										<span class="bb-rl-price">
+											<span class="ld-currency">
+											<?php echo wp_kses_post( $currency ); ?>
+											</span> 
+										<?php echo wp_kses_post( $price ); ?>
+										</span>
+									</div>
+									<?php
+							}
+						}
+						?>
 
 						<div class="bb-rl-course-overview-footer">
 							<div class="bb-rl-course-action">
@@ -178,12 +203,14 @@ global $course_pager_results;
 							</div>
 							<div class="bb-rl-course-enrolled">
 								<?php
-								if ( class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
-									$enrolled_users = BB_Readylaunch_Learndash_Helper::instance()->bb_rl_ld_get_enrolled_users(
+								if ( $bb_rl_ld_helper ) {
+									$enrolled_users = $bb_rl_ld_helper->bb_rl_ld_get_enrolled_users(
 										array(
 											'course_id' => $course_id,
 											'limit'     => 3,
 											'action'    => 'header',
+											'count'     => true,
+											'data'      => true,
 										)
 									);
 								}
@@ -299,7 +326,17 @@ global $course_pager_results;
 								<?php esc_html_e( 'Enrolled', 'buddyboss' ); ?>
 							</div>
 							<div class="bb-rl-course-details-value">
-								<?php echo esc_html( count( $lesson_count ) ); ?>
+								<?php
+								$enrolled_users = $bb_rl_ld_helper->bb_rl_filter_courses_query(
+									array(
+										'course_id' => $course_id,
+										'limit'     => 10,
+										'count'     => true,
+										'data'      => false,
+									)
+								);
+								echo ! empty( $enrolled_users['count'] ) ? esc_html( $enrolled_users['count'] ) : 0;
+								?>
 							</div>
 						</div>
 					</div>
@@ -532,12 +569,14 @@ global $course_pager_results;
 						</h2>
 						<div class="widget-content">
 							<?php
-							if ( class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
-								$enrolled_users = BB_Readylaunch_Learndash_Helper::instance()->bb_rl_ld_get_enrolled_users(
+							if ( $bb_rl_ld_helper ) {
+								$enrolled_users = $bb_rl_ld_helper->bb_rl_ld_get_enrolled_users(
 									array(
 										'course_id' => $course_id,
 										'limit'     => 10,
 										'action'    => 'sidebar',
+										'count'     => false,
+										'data'      => true,
 									)
 								);
 							}
