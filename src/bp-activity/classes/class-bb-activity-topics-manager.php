@@ -183,20 +183,28 @@ class BB_Activity_Topics_Manager {
 		$current_topic_id = (int) $this->bb_get_activity_topic( $item->id, 'id' );
 		?>
 		<div class="bb-activity-topic-container">
-			<?php wp_nonce_field( 'save_activity_topic', 'activity_topic_nonce' ); ?>
-			<select name="activity_topic" id="activity_topic">
-				<?php
-				if ( ! empty( $topics ) ) {
+			<?php
+			if ( ! empty( $topics ) ) {
+				wp_nonce_field( 'save_activity_topic', 'activity_topic_nonce' );
+				?>
+				<select name="activity_topic" id="activity_topic">
+					<?php
 					foreach ( $topics as $topic ) {
 						?>
-						<option value="<?php echo esc_attr( $topic['topic_id'] ); ?>" <?php selected( $current_topic_id, $topic['topic_id'] ); ?>>
+							<option value="<?php echo esc_attr( $topic['topic_id'] ); ?>" <?php selected( $current_topic_id, $topic['topic_id'] ); ?>>
 							<?php echo esc_html( $topic['name'] ); ?>
-						</option>
-						<?php
+							</option>
+							<?php
 					}
-				}
+					?>
+				</select>
+				<?php
+			} else {
 				?>
-			</select>
+				<p><?php esc_html_e( 'No topics found.', 'buddyboss' ); ?></p>
+				<?php
+			}
+			?>
 		</div>
 		<?php
 	}
@@ -593,9 +601,8 @@ class BB_Activity_Topics_Manager {
 			return $args;
 		}
 
-		$topic_id = $this->bb_get_activity_topic( (int) $args['id'], 'id' );
-
-		$args['topic_id'] = $topic_id;
+		$topic_id         = $this->bb_get_activity_topic( (int) $args['id'], 'all' );
+		$args['topic_id'] = isset( $topic_id->topic_id ) ? $topic_id->topic_id : 0;
 
 		return $args;
 	}
@@ -844,7 +851,7 @@ class BB_Activity_Topics_Manager {
 
 		// Define allowed return types and their default values.
 		$allowed_types = array(
-			'id'   => 0,
+			'id'   => '',
 			'name' => '',
 			'slug' => '',
 			'all'  => null,
@@ -871,7 +878,7 @@ class BB_Activity_Topics_Manager {
 		$query = $this->wpdb->prepare(
 			"SELECT {$select} 
 			FROM {$this->activity_topic_rel_table} atr 
-			INNER JOIN {$this->wpdb->prefix}bb_topics t ON t.id = atr.topic_id 
+			LEFT JOIN {$this->wpdb->prefix}bb_topics t ON t.id = atr.topic_id 
 			WHERE atr.activity_id = %d 
 			LIMIT 1",
 			$activity_id
@@ -890,7 +897,7 @@ class BB_Activity_Topics_Manager {
 		 */
 		$result = apply_filters( 'bb_get_activity_topic_data', $result, $activity_id, $return_type );
 
-		return null !== $result ? $result : $default_value;
+		return ! empty( $result ) ? $result : $default_value;
 	}
 
 	/**
