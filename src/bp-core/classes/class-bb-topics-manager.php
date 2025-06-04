@@ -486,6 +486,8 @@ class BB_Topics_Manager {
 					array(
 						'topic_id'    => $topic_id,
 						'previous_id' => $r['topic_id'],
+						'component'   => $r['item_type'],
+						'item_id'     => $r['item_id'],
 					)
 				);
 			}
@@ -656,6 +658,8 @@ class BB_Topics_Manager {
 								array(
 									'topic_id'    => $new_topic_id,
 									'previous_id' => $previous_topic_id,
+									'component'   => $item_type,
+									'item_id'     => $item_id,
 								)
 							);
 						}
@@ -876,28 +880,40 @@ class BB_Topics_Manager {
 		do_action( 'bb_topic_relationship_before_updated', $r );
 
 		// Build data to update.
-		$data = array();
+		$data        = array();
+		$data_format = array();
 		if ( ! empty( $r['permission_type'] ) ) {
 			$data['permission_type'] = $r['permission_type'];
+			$data_format[]           = '%s';
 		}
 		if ( ! empty( $r['item_id'] ) ) {
 			$data['item_id'] = $r['item_id'];
+			$data_format[]   = '%d';
 		}
 		if ( ! empty( $r['item_type'] ) ) {
 			$data['item_type'] = $r['item_type'];
+			$data_format[]     = '%s';
 		}
 		if ( ! empty( $r['topic_id'] ) ) {
 			$data['topic_id'] = $r['topic_id'];
+			$data_format[]    = '%d';
 		}
 
 		if ( empty( $data ) ) {
 			return false;
 		}
 
-		$where = array();
-		// Build where clause.
+		// Build where clause and format specifiers.
 		if ( ! empty( $r['where'] ) && is_array( $r['where'] ) ) {
-			$where = array_merge( $where, $r['where'] );
+			foreach ( $r['where'] as $key => $value ) {
+				$where[ $key ] = $value;
+				// Add appropriate format specifier based on field type.
+				if ( in_array( $key, array( 'topic_id', 'item_id' ), true ) ) {
+					$where_format[] = '%d';
+				} else {
+					$where_format[] = '%s';
+				}
+			}
 		}
 
 		$get_topic_relationship = $this->bb_get_topic(
@@ -939,7 +955,9 @@ class BB_Topics_Manager {
 		$updated = $this->wpdb->update(
 			$this->topic_rel_table,
 			$data,
-			$where
+			$where,
+			$data_format,
+			$where_format
 		);
 
 		if ( ! $updated ) {
