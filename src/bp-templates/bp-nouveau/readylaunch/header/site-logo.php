@@ -15,7 +15,7 @@ $logo = get_bloginfo( 'name' );
 <div id="site-logo" class="bb-rl-site-branding">
 	<<?php echo esc_html( $elem ); ?> class="site-title">
 	<?php
-	$bb_rl_theme_mode = BB_Readylaunch::instance()->bb_rl_get_theme_mode();
+	$bb_rl_theme_mode = bb_load_readylaunch()->bb_rl_get_theme_mode();
 	if ( 'choice' === $bb_rl_theme_mode ) {
 		$dark_mode = isset( $_COOKIE['bb-rl-dark-mode'] ) ? sanitize_text_field( wp_unslash( $_COOKIE['bb-rl-dark-mode'] ) ) : 'false';
 		$key       = 'light';
@@ -25,7 +25,7 @@ $logo = get_bloginfo( 'name' );
 	} else {
 		$key = $bb_rl_theme_mode;
 	}
-	$bb_rl_logo = BB_Readylaunch::instance()->bb_rl_get_theme_logo( $key );
+	$bb_rl_logo = bb_load_readylaunch()->bb_rl_get_theme_logo( $key );
 	if ( ! empty( $bb_rl_logo ) ) {
 		?>
 		<a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home" class="bb-rl-light-logo">

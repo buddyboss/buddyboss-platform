@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // Get the ReadyLaunch instance to check if sidebar is enabled
-$readylaunch = BB_Readylaunch::instance();
+$readylaunch = bb_load_readylaunch();
 
 // Debug message - this will be visible on the page if it's loading correctly
 echo '<!-- ReadyLaunch LearnDash template loading. Default template used. -->';
@@ -43,4 +43,4 @@ echo '<!-- ReadyLaunch LearnDash template loading. Default template used. -->';
 			</div>
 		</aside>
 	<?php endif; ?>
-</div> 
+</div>

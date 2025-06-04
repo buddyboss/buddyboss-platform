@@ -20,7 +20,7 @@ defined( 'ABSPATH' ) || exit;
 </head>
 
 <?php
-$readylaunch_instance = BB_Readylaunch::instance();
+$readylaunch_instance = bb_load_readylaunch();
 $bb_rl_theme_mode     = $readylaunch_instance->bb_rl_get_theme_mode();
 $theme_mode_class     = '';
 if ( 'choice' === $bb_rl_theme_mode ) {

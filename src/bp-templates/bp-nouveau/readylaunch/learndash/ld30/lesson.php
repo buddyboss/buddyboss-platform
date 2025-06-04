@@ -44,8 +44,8 @@ $next_lesson = function_exists( 'learndash_get_next_lesson' ) ? learndash_get_ne
 $lesson_list = learndash_get_course_lessons_list( $course_id, null, array( 'num' => - 1 ) );
 $lesson_list = array_column( $lesson_list, 'post' );
 $lesson_topics_completed = learndash_lesson_topics_completed( $post->ID );
-$content_urls            = BB_Readylaunch::instance()->learndash_helper()->bb_rl_ld_custom_pagination( $course_id, $lesson_list );
-$pagination_urls         = BB_Readylaunch::instance()->learndash_helper()->bb_rl_custom_next_prev_url( $content_urls );
+$content_urls            = bb_load_readylaunch()->learndash_helper()->bb_rl_ld_custom_pagination( $course_id, $lesson_list );
+$pagination_urls         = bb_load_readylaunch()->learndash_helper()->bb_rl_custom_next_prev_url( $content_urls );
 
 $lesson_no = 1;
 foreach ( $lesson_list as $les ) {
@@ -162,4 +162,4 @@ if ( function_exists( 'learndash_is_lesson_accessable' ) ) {
 			</nav>
 		</article>
 	</main>
-</div> 
+</div>

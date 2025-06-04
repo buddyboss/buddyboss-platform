@@ -47,10 +47,10 @@ $attempts_left = function_exists( 'learndash_quiz_attempts_left' ) ? learndash_q
 $lesson_list = learndash_get_course_lessons_list( $course_id, null, array( 'num' => - 1 ) );
 $lesson_list = array_column( $lesson_list, 'post' );
 $course_quizzes_list = function_exists( 'learndash_get_course_quiz_list' ) ? learndash_get_course_quiz_list( $course_id, $user_id ) : array();
-$content_urls = BB_Readylaunch::instance()->learndash_helper()->bb_rl_ld_custom_pagination( $course_id, $lesson_list, $course_quizzes_list );
-$quiz_urls = BB_Readylaunch::instance()->learndash_helper()->bb_rl_ld_custom_quiz_count( $course_id, $lesson_list, $course_quizzes_list );
-$pagination_urls = BB_Readylaunch::instance()->learndash_helper()->bb_rl_custom_next_prev_url( $content_urls );
-$current_quiz_no = BB_Readylaunch::instance()->learndash_helper()->bb_rl_ld_custom_quiz_key( $quiz_urls );
+$content_urls = bb_load_readylaunch()->learndash_helper()->bb_rl_ld_custom_pagination( $course_id, $lesson_list, $course_quizzes_list );
+$quiz_urls = bb_load_readylaunch()->learndash_helper()->bb_rl_ld_custom_quiz_count( $course_id, $lesson_list, $course_quizzes_list );
+$pagination_urls = bb_load_readylaunch()->learndash_helper()->bb_rl_custom_next_prev_url( $content_urls );
+$current_quiz_no = bb_load_readylaunch()->learndash_helper()->bb_rl_ld_custom_quiz_key( $quiz_urls );
 
 // Find lesson number if quiz is associated with a lesson
 $lesson_no = 1;
@@ -81,7 +81,7 @@ if ( $lesson_id ) {
                         </div>
                         <?php if ( $lesson_post ) : ?>
                             <div class="bb-rl-lesson-link">
-                                <span class="bb-rl-lesson-title"><?php esc_html_e( 'Part of:', 'buddyboss' ); ?> 
+                                <span class="bb-rl-lesson-title"><?php esc_html_e( 'Part of:', 'buddyboss' ); ?>
                                     <a href="<?php echo esc_url( get_permalink( $lesson_post->ID ) ); ?>"><?php echo esc_html( $lesson_post->post_title ); ?></a>
                                 </span>
                             </div>
@@ -105,24 +105,24 @@ if ( $lesson_id ) {
                                 }
                                 ?>
                                 <span class="bb-rl-status bb-rl-enrolled"><?php echo $status_text; ?></span>
-                                
+
                                 <?php if ( $attempts_count > 0 ) : ?>
                                     <div class="bb-rl-quiz-attempts">
                                         <span class="bb-rl-attempts-count">
-                                            <?php 
-                                            printf( 
-                                                esc_html__( 'Attempts: %d', 'buddyboss' ), 
-                                                $attempts_count 
-                                            ); 
+                                            <?php
+                                            printf(
+                                                esc_html__( 'Attempts: %d', 'buddyboss' ),
+                                                $attempts_count
+                                            );
                                             ?>
                                         </span>
                                         <?php if ( $attempts_left > 0 ) : ?>
                                             <span class="bb-rl-attempts-left">
-                                                <?php 
-                                                printf( 
-                                                    esc_html__( '(%d remaining)', 'buddyboss' ), 
-                                                    $attempts_left 
-                                                ); 
+                                                <?php
+                                                printf(
+                                                    esc_html__( '(%d remaining)', 'buddyboss' ),
+                                                    $attempts_left
+                                                );
                                                 ?>
                                             </span>
                                         <?php elseif ( $attempts_left === 0 ) : ?>
@@ -145,10 +145,10 @@ if ( $lesson_id ) {
                         $quiz_access = learndash_is_quiz_accessable( $user_id, $quiz_post, true, $course_id );
                         $show_content = ( $quiz_access === true );
                     }
-                    
+
                     if ( $show_content ) {
                         echo apply_filters( 'the_content', $quiz_post->post_content );
-                        
+
                         // Show quiz content/form if available
                         if ( function_exists( 'learndash_get_template_part' ) ) {
                             /**
@@ -210,8 +210,8 @@ if ( $lesson_id ) {
                             isset( $pagination_urls['next'] ) &&
                             $pagination_urls['next'] != '' &&
                             (
-                                function_exists( 'learndash_is_quiz_complete' ) ? 
-                                learndash_is_quiz_complete( $user_id, $quiz_post->ID ) : 
+                                function_exists( 'learndash_is_quiz_complete' ) ?
+                                learndash_is_quiz_complete( $user_id, $quiz_post->ID ) :
                                 false
                             )
                         ) {
@@ -225,4 +225,4 @@ if ( $lesson_id ) {
 			</nav>
 		</article>
 	</main>
-</div> 
+</div>

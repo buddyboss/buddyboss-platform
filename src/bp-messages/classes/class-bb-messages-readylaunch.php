@@ -222,12 +222,12 @@ class BB_Messages_Readylaunch {
 
 			$media_items = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 				$wpdb->prepare(
-					"SELECT SQL_CALC_FOUND_ROWS m.* 
+					"SELECT SQL_CALC_FOUND_ROWS m.*
 					FROM {$bp->media->table_name} m
-					INNER JOIN {$bp->messages->table_name_messages} msg ON m.message_id = msg.id 
-					WHERE msg.thread_id = %d 
+					INNER JOIN {$bp->messages->table_name_messages} msg ON m.message_id = msg.id
+					WHERE msg.thread_id = %d
 					{$media_type_condition}
-					ORDER BY m.date_created DESC 
+					ORDER BY m.date_created DESC
 					LIMIT %d OFFSET %d",
 					$thread_id,
 					$media_per_page,
@@ -285,11 +285,11 @@ class BB_Messages_Readylaunch {
 
 			$document_items = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 				$wpdb->prepare(
-					"SELECT SQL_CALC_FOUND_ROWS d.* 
+					"SELECT SQL_CALC_FOUND_ROWS d.*
 					FROM {$bp->document->table_name} d
-					INNER JOIN {$bp->messages->table_name_messages} msg ON d.message_id = msg.id 
-					WHERE msg.thread_id = %d 
-					ORDER BY d.date_created DESC 
+					INNER JOIN {$bp->messages->table_name_messages} msg ON d.message_id = msg.id
+					WHERE msg.thread_id = %d
+					ORDER BY d.date_created DESC
 					LIMIT %d OFFSET %d",
 					$thread_id,
 					$files_per_page,
@@ -320,7 +320,7 @@ class BB_Messages_Readylaunch {
 						'url'            => bp_document_get_preview_url( $document->id, $attachment_id ),
 						'full_title'     => $document->title,
 						'id'             => $document->id,
-						'svg_icon'       => class_exists( 'BB_Readylaunch' ) ? BB_Readylaunch::instance()->bb_rl_document_svg_icon( '', $extension ) : '',
+						'svg_icon'       => class_exists( 'BB_Readylaunch' ) ? bb_load_readylaunch()->bb_rl_document_svg_icon( '', $extension ) : '',
 						'attachment_id'  => $attachment_id,
 						'privacy'        => $document->privacy,
 						'extension'      => $extension,

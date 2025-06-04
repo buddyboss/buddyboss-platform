@@ -24,7 +24,7 @@ $course_progress = learndash_course_progress(
 );
 
 // Get the ReadyLaunch instance to check if sidebar is enabled
-$readylaunch = BB_Readylaunch::instance();
+$readylaunch = bb_load_readylaunch();
 
 // Course data
 $course = get_post( $course_id );
@@ -131,7 +131,7 @@ global $course_pager_results;
 											<div class="bb-rl-progress-bar">
 												<div class="bb-rl-progress" style="width: <?php echo (int) $course_progress['percentage']; ?>%"></div>
 											</div>
-											
+
 										</div>
 									<?php endif; ?>
 								</div>
@@ -195,7 +195,7 @@ global $course_pager_results;
 					</div>
 				</div>
 			</header>
-			
+
 			<div class="bb-rl-course-content">
 				<div class="bb-rl-course-content-inner">
 					<?php if ( ! empty( $lessons ) ) : ?>
@@ -396,7 +396,7 @@ global $course_pager_results;
 						<h2><?php esc_html_e( 'About course', 'buddyboss' ); ?></h2>
 						<?php the_content(); ?>
 					</div>
-					
+
 					<?php if ( ! $is_enrolled ) : ?>
 						<div class="bb-rl-course-join">
 							<?php
@@ -416,13 +416,13 @@ global $course_pager_results;
 							if ( function_exists( 'learndash_get_users_for_course' ) ) {
 								$course_id = get_the_ID();
 								$enrolled_users_query = learndash_get_users_for_course( $course_id, array( 'number' => 10 ), false );
-								
+
 								// Get the actual user IDs from the WP_User_Query object
 								$enrolled_users = array();
 								if ( $enrolled_users_query instanceof WP_User_Query && ! empty( $enrolled_users_query->get_results() ) ) {
 									$enrolled_users = $enrolled_users_query->get_results();
 								}
-								
+
 								if ( ! empty( $enrolled_users ) ) {
 									// Sort by enrollment date (most recent first)
 									$user_enrollments = array();
@@ -436,29 +436,29 @@ global $course_pager_results;
 											'enrolled_date' => $enrolled_date
 										);
 									}
-									
+
 									// Sort by enrollment date (newest first)
 									usort( $user_enrollments, function( $a, $b ) {
 										return $b['enrolled_date'] - $a['enrolled_date'];
 									});
-									
+
 									// Limit to 5 most recent enrollments
 									$recent_enrollments = array_slice( $user_enrollments, 0, 10 );
-									
+
 									if ( ! empty( $recent_enrollments ) ) {
 										echo '<div class="bb-rl-recent-enrolled-members">';
-										
+
 										foreach ( $recent_enrollments as $enrollment ) {
 											$user_id = $enrollment['user_id'];
 											$user_data = get_userdata( $user_id );
-											
+
 											if ( $user_data ) {
 												$user_link = function_exists( 'bp_core_get_user_domain' ) ? bp_core_get_user_domain( $user_id ) : get_author_posts_url( $user_id );
 												$display_name = function_exists( 'bp_core_get_user_displayname' ) ? bp_core_get_user_displayname( $user_id ) : $user_data->display_name;
 												?>
 												<div class="bb-rl-enrolled-member-item">
 													<a href="<?php echo esc_url( $user_link ); ?>" title="<?php echo esc_attr( $display_name ); ?>" data-balloon-pos="up" data-balloon="<?php echo esc_attr( $display_name ); ?>">
-														<?php 
+														<?php
 														// Use bp_core_fetch_avatar with proper parameters
 														if ( function_exists( 'bp_core_fetch_avatar' ) ) {
 															echo wp_kses_post( bp_core_fetch_avatar(
@@ -480,7 +480,7 @@ global $course_pager_results;
 												<?php
 											}
 										}
-										
+
 										echo '</div>';
 									}
 								} else {
@@ -502,4 +502,4 @@ global $course_pager_results;
 			</div>
 		</aside>
 	<?php endif; ?>
-</div> 
+</div>

@@ -44,8 +44,8 @@ $quizzes = function_exists( 'learndash_get_lesson_quiz_list' ) ? learndash_get_l
 
 $lesson_list = learndash_get_course_lessons_list( $course_id, null, array( 'num' => - 1 ) );
 $lesson_list = array_column( $lesson_list, 'post' );
-$content_urls = BB_Readylaunch::instance()->learndash_helper()->bb_rl_ld_custom_pagination( $course_id, $lesson_list );
-$pagination_urls = BB_Readylaunch::instance()->learndash_helper()->bb_rl_custom_next_prev_url( $content_urls );
+$content_urls = bb_load_readylaunch()->learndash_helper()->bb_rl_ld_custom_pagination( $course_id, $lesson_list );
+$pagination_urls = bb_load_readylaunch()->learndash_helper()->bb_rl_custom_next_prev_url( $content_urls );
 
 // Find lesson number
 $lesson_no = 1;
@@ -83,7 +83,7 @@ if ( function_exists( 'learndash_is_topic_accessable' ) ) {
                     <div class="bb-rl-heading">
                         <div class="bb-rl-topic-count">
                             <span class="bb-pages">
-                                <?php echo LearnDash_Custom_Label::get_label( 'lesson' ); ?> <?php echo $lesson_no; ?>, 
+                                <?php echo LearnDash_Custom_Label::get_label( 'lesson' ); ?> <?php echo $lesson_no; ?>,
                                 <?php echo LearnDash_Custom_Label::get_label( 'topic' ); ?> <?php echo $topic_no; ?>
                                 <span class="bb-total"><?php esc_html_e( 'of', 'buddyboss' ); ?> <?php echo count( $topics ); ?></span>
                             </span>
@@ -93,7 +93,7 @@ if ( function_exists( 'learndash_is_topic_accessable' ) ) {
                         </div>
                         <?php if ( $lesson_post ) : ?>
                             <div class="bb-rl-lesson-link">
-                                <span class="bb-rl-lesson-title"><?php esc_html_e( 'Part of:', 'buddyboss' ); ?> 
+                                <span class="bb-rl-lesson-title"><?php esc_html_e( 'Part of:', 'buddyboss' ); ?>
                                     <a href="<?php echo esc_url( get_permalink( $lesson_post->ID ) ); ?>"><?php echo esc_html( $lesson_post->post_title ); ?></a>
                                 </span>
                             </div>
@@ -159,7 +159,7 @@ if ( function_exists( 'learndash_is_topic_accessable' ) ) {
                                 }
                             }
                         } else {
-                        
+
                             /**
                              * Set a variable to switch the next button to complete button
                              *
@@ -198,7 +198,7 @@ if ( function_exists( 'learndash_is_topic_accessable' ) ) {
                     </div>
                     <div class="bb-rl-topic-count">
                         <span class="bb-pages">
-                            <?php echo LearnDash_Custom_Label::get_label( 'lesson' ); ?> <?php echo $lesson_no; ?>, 
+                            <?php echo LearnDash_Custom_Label::get_label( 'lesson' ); ?> <?php echo $lesson_no; ?>,
                             <?php echo LearnDash_Custom_Label::get_label( 'topic' ); ?> <?php echo $topic_no; ?>
                             <span class="bb-total"><?php esc_html_e( 'of', 'buddyboss' ); ?> <?php echo count( $topics ); ?></span>
                         </span>
@@ -235,4 +235,4 @@ if ( function_exists( 'learndash_is_topic_accessable' ) ) {
 			</nav>
 		</article>
 	</main>
-</div> 
+</div>

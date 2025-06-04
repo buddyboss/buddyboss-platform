@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // Get the ReadyLaunch instance to check if sidebar is enabled
-$readylaunch = BB_Readylaunch::instance();
+$readylaunch = bb_load_readylaunch();
 ?>
 
 <div class="bb-rl-secondary-header flex items-center">
@@ -38,7 +38,7 @@ $readylaunch = BB_Readylaunch::instance();
 				<i class="bb-icons-rl-rows"></i>
 			</a>
 		</div>
-				
+
 		<?php
 		// Display course category filter if available
 		$course_cats = get_terms(
@@ -71,7 +71,7 @@ $readylaunch = BB_Readylaunch::instance();
 <div class="bb-rl-container-inner bb-rl-learndash-content-wrap">
 	<main class="bb-learndash-content-area">
 		<div class="bb-rl-courses-list">
-			
+
 			<?php if ( have_posts() ) : ?>
 				<div class="bb-rl-courses-grid grid">
 					<?php
@@ -113,7 +113,7 @@ $readylaunch = BB_Readylaunch::instance();
 										<?php endif; ?>
 									</a>
 								</div>
-								
+
 								<div class="bb-rl-course-content">
 									<div class="bb-rl-course-body">
 										<h2 class="bb-rl-course-title">
@@ -166,7 +166,7 @@ $readylaunch = BB_Readylaunch::instance();
 														<span class="bb-rl-price">
 															<span class="ld-currency">
 																<?php echo wp_kses_post( $currency ); ?>
-															</span> 
+															</span>
 															<?php echo wp_kses_post( $price ); ?>
 														</span>
 													</div>
@@ -240,7 +240,7 @@ $readylaunch = BB_Readylaunch::instance();
 						</div>
 					<?php endwhile; ?>
 				</div>
-				
+
 				<div class="bb-rl-course-pagination">
 					<?php
 					echo paginate_links(
@@ -258,4 +258,4 @@ $readylaunch = BB_Readylaunch::instance();
 			<?php endif; ?>
 		</div>
 	</main>
-</div> 
+</div>

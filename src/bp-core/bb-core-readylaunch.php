@@ -1,9 +1,10 @@
 <?php
 /**
- * BuddyBoss Core Readylaunch.
+ * BuddyBoss Core ReadyLaunch.
  *
- * Handles the core functions related to the BB Readylaunch.
+ * Handles the core functions related to the BB ReadyLaunch.
  *
+ * @package BuddyBoss\Core\ReadyLaunch
  * @since BuddyBoss [BBVERSION]
  */
 
