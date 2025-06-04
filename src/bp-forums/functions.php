@@ -1031,16 +1031,17 @@ function bb_nouveau_forum_localize_scripts( $params = array() ) {
 	$draft_data = get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
 
 	$params['forums'] = array(
-		'params'  => array(
+		'params'     => array(
 			'bb_current_user_id' => $user_id,
 			'link_preview'       => bbp_use_autoembed() ? true : false,
 		),
-		'nonces'  => array(
+		'nonces'     => array(
 			'post_topic_reply_draft' => wp_create_nonce( 'post_topic_reply_draft_data' ),
 		),
-		'strings' => array(
+		'strings'    => array(
 			'discardButton' => esc_html__( 'Discard Draft', 'buddyboss' ),
 		),
+		'forums_url' => esc_url( bbp_get_forums_url() ),
 	);
 
 	$params['forums']['draft'] = array();
