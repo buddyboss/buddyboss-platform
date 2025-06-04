@@ -4525,6 +4525,7 @@ div#bp-group-message-content {
   display: none;
   position: relative;
   transition: max-height 0.5s ease;
+  max-height: none !important;
 }
 
 .bb-rl-ld-lesson-list .ld-item-list-item-expanded .ld-table-list-header {
@@ -4545,7 +4546,6 @@ div#bp-group-message-content {
 .bb-rl-ld-lesson-list .ld-item-list-item-expanded .ld-table-list-item .ld-item-title {
   display: flex;
   align-items: center;
-  background-color: var(--bb-rl-background-color);
 }
 
 .bb-rl-ld-lesson-list .ld-item-list-item-expanded .ld-table-list-item .ld-table-list-item-preview {
@@ -4576,6 +4576,20 @@ div#bp-group-message-content {
 
 .bb-rl-ld-lesson-list .ld-item-list-item-expanded .ld-table-list-item .ld-table-list-item-preview .ld-status-icon {
   order: 2;
+}
+
+.bb-rl-ld-lesson-list .ld-item-list-item-expanded .ld-table-list-item .ld-table-list-item-quiz .ld-table-list-item-preview .ld-item-title {
+  justify-content: flex-start;
+}
+
+.bb-rl-ld-lesson-list .ld-item-list-item-expanded .ld-table-list-item .ld-table-list-item-quiz .ld-table-list-item-preview .ld-item-title:before {
+  content: "\e3e8";
+  font-family: bb-icons-rl;
+  font-size: var(--bb-rl-font-size-2xl);
+  font-weight: 400;
+  line-height: 1;
+  color: var(--bb-rl-icon-secondary-color);
+  margin-left: var(--bb-rl-space-100);
 }
 
 .bb-rl-entry-content h2 {
@@ -4749,7 +4763,8 @@ div#bp-group-message-content {
 }
 
 .bb-rl-lms-nav-list .bb-rl-ld-lesson-list .ld-item-list-item-preview {
-  margin: 0 var(--bb-rl-space-50);
+  margin: var(--bb-rl-space-50);
+  padding: 12px var(--bb-rl-space-200);
   border-radius: var(--bb-rl-radius-md);
 }
 
@@ -4763,6 +4778,17 @@ div#bp-group-message-content {
 
 .bb-rl-lms-nav-list .bb-rl-ld-lesson-list .ld-item-list-item-preview .ld-item-components {
   display: none;
+}
+
+.bb-rl-lms-nav-list .bb-rl-ld-lesson-list .ld-item-list-item-expanded .ld-table-list-item {
+  margin: var(--bb-rl-space-50);
+  padding: 12px var(--bb-rl-space-200);
+  border-radius: var(--bb-rl-radius-md);
+  border-bottom: 0;
+}
+
+.bb-rl-lms-nav-list .bb-rl-ld-lesson-list .ld-item-list-item-expanded .ld-table-list-item:hover {
+  background-color: var(--bb-rl-background-secondary-hover-color);
 }
 
 .bb-readylaunch-template .bb-courses-header .grid-filters {

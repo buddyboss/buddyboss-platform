@@ -36,7 +36,8 @@
 		}
 
 		.ld-item-list-item-preview {
-			margin: 0 var(--bb-rl-space-50);
+			margin: var(--bb-rl-space-50);
+			padding: 12px var(--bb-rl-space-200);
 			border-radius: var(--bb-rl-radius-md);
 
 			&:hover {
@@ -49,6 +50,20 @@
 
 			.ld-item-components {
 				display: none;
+			}
+		}
+
+		.ld-item-list-item-expanded {
+
+			.ld-table-list-item {
+				margin: var(--bb-rl-space-50);
+				padding: 12px var(--bb-rl-space-200);
+				border-radius: var(--bb-rl-radius-md);
+				border-bottom: 0;
+
+				&:hover {
+					background-color: var(--bb-rl-background-secondary-hover-color);
+				}
 			}
 		}
 	}

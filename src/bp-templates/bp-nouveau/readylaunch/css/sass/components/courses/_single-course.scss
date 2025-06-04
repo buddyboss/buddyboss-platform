@@ -434,6 +434,7 @@
 		display: none;
 		position: relative;
 		transition: max-height 0.5s ease;
+		max-height: none !important;
 
 		.ld-table-list-header {
 			display: none;
@@ -452,7 +453,6 @@
 			.ld-item-title {
 				display: flex;
 				align-items: center;
-				background-color: var(--bb-rl-background-color);
 			}
 
 			.ld-table-list-item-preview {
@@ -482,6 +482,26 @@
 
 				.ld-status-icon {
 					order: 2;
+				}
+			}
+
+			.ld-table-list-item-quiz {
+
+				.ld-table-list-item-preview {
+
+					.ld-item-title {
+						justify-content: flex-start;
+
+						&:before {
+							content: "\e3e8";
+							font-family: bb-icons-rl;
+							font-size: var(--bb-rl-font-size-2xl);
+							font-weight: 400;
+							line-height: 1;
+							color: var(--bb-rl-icon-secondary-color);
+							margin-right: var(--bb-rl-space-100);
+						}
+					}
 				}
 			}
 		}
