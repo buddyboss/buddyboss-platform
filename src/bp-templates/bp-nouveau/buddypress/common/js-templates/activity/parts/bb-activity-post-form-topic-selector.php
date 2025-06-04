@@ -16,7 +16,7 @@
 		<span class="bb-topic-selector-button" data-select-topic-text="<?php esc_html_e( 'Select Topic', 'buddyboss' ); ?>">
 			<#
 			var topicId = data.topics.topic_id;
-			if ( '' !== topicId && data.topics.topic_name ) { #>
+			if ( 0 !== topicId && data.topics.topic_name ) { #>
 				{{ data.topics.topic_name }}
 			<# } else { #>
 				<?php esc_html_e( 'Select Topic', 'buddyboss' ); ?>
