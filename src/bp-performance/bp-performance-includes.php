@@ -28,11 +28,19 @@ use BuddyBoss\Performance\Integration\BB_Topics;
 use BuddyBoss\Performance\Integration\BB_Videos;
 use BuddyBoss\Performance\Integration\BB_Subscriptions;
 
+/**
+ * Class BP_Performance_Includes
+ *
+ * This class is responsible for integrating BuddyBoss platform-specific performance components
+ * into the BuddyBoss Performance system, allowing for caching and purging of various BuddyBoss features.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
 class BP_Performance_Includes {
 	/**
 	 * Constructor.
 	 *
-	 * @since [BBVERSION]
+	 * @since BuddyBoss [BBVERSION]
 	 */
 	public function __construct() {
 		add_filter( 'performance_components', array( $this, 'bb_performance_components' ), 10, 3 );
@@ -49,15 +57,15 @@ class BP_Performance_Includes {
 	 * Adds BuddyBoss platform-specific performance components to the provided components array.
 	 * These components facilitate caching and purging operations for various BuddyBoss features.
 	 *
-	 * @param array $components Array of performance components.
-	 * @param string $purge_url Base URL used to construct purge URLs for each component.
-	 * @param string $purge_nonce Nonce value used for security in purge URLs.
+	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @since [BBVERSION]
+	 * @param array  $components  Array of performance components.
+	 * @param string $purge_url   Base URL used to construct purge URLs for each component.
+	 * @param string $purge_nonce Nonce value used for security in purge URLs.
 	 *
 	 * @return array Modified components array including BuddyBoss platform components.
 	 */
-	function bb_performance_components( $components, $purge_url, $purge_nonce ) {
+	public function bb_performance_components( $components, $purge_url, $purge_nonce ) {
 		$components['buddyboss'] = array(
 			'title'     => __( 'BuddyBoss Platform', 'buddyboss' ),
 			'purge_url' => $purge_url . '&group=bbplatform&component=all&nonce=' . $purge_nonce,
@@ -153,67 +161,67 @@ class BP_Performance_Includes {
 	public function bb_load_cache_components() {
 		// Load platform or buddyPress related cache integration.
 		if ( Performance::mu_is_plugin_active( 'buddyboss-platform/bp-loader.php' ) || Performance::mu_is_plugin_active( 'buddypress/bp-loader.php' ) ) {
-			$group_integration = dirname( __FILE__ ) . '/classes/integrations/class-bb-groups.php';
+			$group_integration = __DIR__ . '/classes/integrations/class-bb-groups.php';
 			if ( Performance::mu_is_component_active( 'groups' ) && file_exists( $group_integration ) ) {
 				require_once $group_integration;
 				BB_Groups::instance();
 			}
 
-			$members_integration = dirname( __FILE__ ) . '/classes/integrations/class-bb-members.php';
+			$members_integration = __DIR__ . '/classes/integrations/class-bb-members.php';
 			if ( Performance::mu_is_component_active( 'members' ) && file_exists( $members_integration ) ) {
 				require_once $members_integration;
 				BB_Members::instance();
 			}
 
-			$activity_integration = dirname( __FILE__ ) . '/classes/integrations/class-bb-activity.php';
+			$activity_integration = __DIR__ . '/classes/integrations/class-bb-activity.php';
 			if ( Performance::mu_is_component_active( 'activity' ) && file_exists( $activity_integration ) ) {
 				require_once $activity_integration;
 				BB_Activity::instance();
 			}
 
-			$friends_integration = dirname( __FILE__ ) . '/classes/integrations/class-bb-friends.php';
+			$friends_integration = __DIR__ . '/classes/integrations/class-bb-friends.php';
 			if ( Performance::mu_is_component_active( 'friends' ) && file_exists( $friends_integration ) ) {
 				require_once $friends_integration;
 				BB_Friends::instance();
 			}
 
-			$notifications_integration = dirname( __FILE__ ) . '/classes/integrations/class-bb-notifications.php';
+			$notifications_integration = __DIR__ . '/classes/integrations/class-bb-notifications.php';
 			if ( Performance::mu_is_component_active( 'notifications' ) && file_exists( $notifications_integration ) ) {
 				require_once $notifications_integration;
 				BB_Notifications::instance();
 			}
 
-			$messages_integration = dirname( __FILE__ ) . '/classes/integrations/class-bb-messages.php';
+			$messages_integration = __DIR__ . '/classes/integrations/class-bb-messages.php';
 			if ( Performance::mu_is_component_active( 'messages' ) && file_exists( $messages_integration ) ) {
 				require_once $messages_integration;
 				BB_Messages::instance();
 			}
 
-			$media_photos_integration = dirname( __FILE__ ) . '/classes/integrations/class-bb-media-photos.php';
+			$media_photos_integration = __DIR__ . '/classes/integrations/class-bb-media-photos.php';
 			if ( Performance::mu_is_component_active( 'media' ) && file_exists( $media_photos_integration ) ) {
 				require_once $media_photos_integration;
 				BB_Media_Photos::instance();
 			}
 
-			$media_albums_integration = dirname( __FILE__ ) . '/classes/integrations/class-bb-media-albums.php';
+			$media_albums_integration = __DIR__ . '/classes/integrations/class-bb-media-albums.php';
 			if ( Performance::mu_is_component_active( 'media' ) && file_exists( $media_albums_integration ) ) {
 				require_once $media_albums_integration;
 				BB_Media_Albums::instance();
 			}
 
-			$documents_integration = dirname( __FILE__ ) . '/classes/integrations/class-bb-documents.php';
+			$documents_integration = __DIR__ . '/classes/integrations/class-bb-documents.php';
 			if ( Performance::mu_is_component_active( 'document' ) && file_exists( $documents_integration ) ) {
 				require_once $documents_integration;
 				BB_Documents::instance();
 			}
 
-			$videos_integration = dirname( __FILE__ ) . '/classes/integrations/class-bb-videos.php';
+			$videos_integration = __DIR__ . '/classes/integrations/class-bb-videos.php';
 			if ( Performance::mu_is_component_active( 'video' ) && file_exists( $videos_integration ) ) {
 				require_once $videos_integration;
 				BB_Videos::instance();
 			}
 
-			$subscriptions_integration = dirname( __FILE__ ) . '/classes/integrations/class-bb-subscriptions.php';
+			$subscriptions_integration = __DIR__ . '/classes/integrations/class-bb-subscriptions.php';
 			if ( file_exists( $subscriptions_integration ) ) {
 				require_once $subscriptions_integration;
 				BB_Subscriptions::instance();
@@ -222,9 +230,9 @@ class BP_Performance_Includes {
 
 		// Load platform or bbPress related cache integration.
 		if ( ( Performance::mu_is_plugin_active( 'buddyboss-platform/bp-loader.php' ) && Performance::mu_is_component_active( 'forums' ) ) || Performance::mu_is_plugin_active( 'bbpress/bbpress.php' ) ) {
-			$forum_integration = dirname( __FILE__ ) . '/classes/integrations/class-bb-forums.php';
-			$topic_integration = dirname( __FILE__ ) . '/classes/integrations/class-bb-topics.php';
-			$reply_integration = dirname( __FILE__ ) . '/classes/integrations/class-bb-replies.php';
+			$forum_integration = __DIR__ . '/classes/integrations/class-bb-forums.php';
+			$topic_integration = __DIR__ . '/classes/integrations/class-bb-topics.php';
+			$reply_integration = __DIR__ . '/classes/integrations/class-bb-replies.php';
 
 			if ( file_exists( $forum_integration ) ) {
 				require_once $forum_integration;
@@ -269,7 +277,7 @@ class BP_Performance_Includes {
 			/**
 			 * Fires after cache purge for symlink expired.
 			 *
-			 * @since [BBVERSION]
+			 * @since BuddyBoss [BBVERSION]
 			 */
 			do_action( 'bb_purge_symlink_cache_after' );
 		}
@@ -278,15 +286,15 @@ class BP_Performance_Includes {
 	/**
 	 * Modifies the list of components that should be purged based on specific configuration changes.
 	 *
-	 * @param array $purge_components The default list of components to purge.
+	 * @param array  $purge_components The default list of components to purge.
 	 * @param string $option The name of the option being updated.
-	 * @param mixed $old_value The old value of the option.
-	 * @param mixed $value The new value of the option.
+	 * @param mixed  $old_value The old value of the option.
+	 * @param mixed  $value The new value of the option.
 	 *
-	 * @since [BBVERSION]
+	 * @since BuddyBoss [BBVERSION]
 	 * @return array The updated list of components to purge.
 	 */
-	public function bb_purge_components( $purge_components, $option, $old_value, $value ){
+	public function bb_purge_components( $purge_components, $option, $old_value, $value ) {
 		$bb_purge_components = array();
 
 		if ( 'bp-active-components' === $option ) {
@@ -361,10 +369,10 @@ class BP_Performance_Includes {
 	 *
 	 * @param array $deeplinking_cache_args Array of enabled components for deeplinking.
 	 *
-	 * @since [BBVERSION]
+	 * @since BuddyBoss [BBVERSION]
 	 * @return mixed
 	 */
-	public function performance_deep_linking_supported_items( $deeplinking_cache_args ){
+	public function performance_deep_linking_supported_items( $deeplinking_cache_args ) {
 		$is_component_active           = Helper::instance()->get_app_settings( 'cache_component', 'buddyboss-app' );
 		$bb_groups_settings            = Helper::instance()->get_app_settings( 'cache_bb_social_groups', 'buddyboss-app' );
 		$bb_activity_settings          = Helper::instance()->get_app_settings( 'cache_bb_activity_feeds', 'buddyboss-app' );
@@ -372,54 +380,54 @@ class BP_Performance_Includes {
 		$bb_private_messaging          = Helper::instance()->get_app_settings( 'cache_bb_private_messaging', 'buddyboss-app' );
 		$bb_forum_discussions_settings = Helper::instance()->get_app_settings( 'cache_bb_forum_discussions', 'buddyboss-app' );
 
-		// Groups
+		// Groups.
 		if ( ! empty( $is_component_active ) && ! empty( $bb_groups_settings ) ) {
 			$deeplinking_cache_args['bp-groups'] = array(
-				'action'    => array( 'open_groups','open_member_groups' ),
-				'namespace' => array( 'buddypress' )
+				'action'    => array( 'open_groups', 'open_member_groups' ),
+				'namespace' => array( 'buddypress' ),
 			);
 		}
 
-		// Activity
+		// Activity.
 		if ( ! empty( $is_component_active ) && ! empty( $bb_activity_settings ) ) {
 			$deeplinking_cache_args['bp-activity'] = array(
 				'action'    => array( 'open_activity' ),
-				'namespace' => array( 'buddypress' )
+				'namespace' => array( 'buddypress' ),
 			);
 		}
 
-		// Members
+		// Members.
 		if ( ! empty( $is_component_active ) && ! empty( $bb_member_settings ) ) {
 			$deeplinking_cache_args['bp-members'] = array(
 				'action'    => array( 'open_member_profile' ),
-				'namespace' => array( 'buddypress' )
+				'namespace' => array( 'buddypress' ),
 			);
 
 		}
 
-		// Message
+		// Message.
 		if ( ! empty( $is_component_active ) && ! empty( $bb_private_messaging ) ) {
 			$deeplinking_cache_args['bp-messages'] = array(
 				'action'    => array( 'open_member_messages' ),
-				'namespace' => array( 'buddypress' )
+				'namespace' => array( 'buddypress' ),
 			);
 		}
 
-		// Forums
+		// Forums.
 		if ( ! empty( $is_component_active ) && ! empty( $bb_forum_discussions_settings ) ) {
 			$deeplinking_cache_args['bbp-forums'] = array(
 				'action'    => array( 'open_groups_forum', 'open_member_forums', 'open_forum' ),
-				'namespace' => array( 'buddypress', 'core' )
+				'namespace' => array( 'buddypress', 'core' ),
 			);
 
 			$deeplinking_cache_args['bbp-replies'] = array(
 				'action'    => array( 'open_reply' ),
-				'namespace' => array( 'core' )
+				'namespace' => array( 'core' ),
 			);
 
 			$deeplinking_cache_args['bbp-topics'] = array(
 				'action'    => array( 'open_topic' ),
-				'namespace' => array( 'core' )
+				'namespace' => array( 'core' ),
 			);
 		}
 
