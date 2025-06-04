@@ -53,6 +53,11 @@ window.bp = window.bp || {};
 			ajaxUrl     : bbTopicsManagerVars.ajax_url,
 		},
 
+		/**
+		 * Navigation flag to prevent infinite loops.
+		 */
+		isNavigating : false,
+
 		start : function () {
 			this.init();
 			this.initTopicsManagerFrontend();
@@ -738,6 +743,10 @@ window.bp = window.bp || {};
 				this.$document.ready( this.handleUrlHashTopic.bind( this ) );
 
 				this.$document.on( 'click', '.bb-topic-url', this.topicActivityFilter.bind( this ) );
+
+				// Listen for browser back/forward navigation.
+				$( window ).on( 'hashchange', this.handleBrowserNavigation.bind( this ) );
+				$( window ).on( 'popstate', this.handleBrowserNavigation.bind( this ) );
 			}
 		},
 
@@ -783,8 +792,8 @@ window.bp = window.bp || {};
 				topicHash = topicUrl.substring( topicUrl.indexOf( '#' ) );
 			}
 
-			// Update the URL to include the topic slug (or remove it for "All").
-			if ( history.pushState ) {
+			// Update the URL to include the topic slug (or remove it for "All") - only if not navigating.
+			if ( history.pushState && ! this.isNavigating ) {
 				var newUrl;
 				if ( ! topicId || $topicItem.hasClass( 'all' ) || 'all' === topicHash.toLowerCase() ) {
 					newUrl = window.location.protocol + '//' + window.location.host + window.location.pathname;
@@ -1018,6 +1027,67 @@ window.bp = window.bp || {};
 			} else {
 				$( this.config.submitButtonSelector ).prop( 'disabled', false );
 			}
+		},
+
+		handleBrowserNavigation : function ( event ) {
+			// Set navigation flag to prevent URL updates
+			this.isNavigating = true;
+
+			// Handle browser back/forward navigation by checking the current URL hash
+			if ( window.location.hash && window.location.hash.startsWith( '#topic-' ) ) {
+				var topicSlug = window.location.hash.substring( 1 ); // Remove the # symbol.
+
+				// Find the topic link with matching href.
+				var $topicLink = $( '.activity-topic-selector li a[href="#' + topicSlug + '"]' );
+
+				if ( $topicLink.length ) {
+					var topicId = $topicLink.data( 'topic-id' );
+
+					// Remove all selected/active classes first
+					$( '.activity-topic-selector li a' ).removeClass( 'selected active' );
+
+					// Move the topic position if needed
+					var $clickedListItem = $topicLink.closest( 'li' );
+					var isDropdownItem   = $clickedListItem.closest( '.bb_nav_more_dropdown' ).length > 0;
+
+					if ( isDropdownItem ) {
+						// Move from dropdown to main bar
+						this.moveTopicPosition( {
+							$topicItem : $topicLink,
+							topicId    : topicId
+						} );
+						// After move, select the new main bar item
+						var $newMainBarItem = $( '.activity-topic-selector li a[data-topic-id="' + topicId + '"]' ).first();
+						$newMainBarItem.addClass( 'selected active' );
+					} else {
+						// Just add classes, do not move
+						$topicLink.addClass( 'selected active' );
+					}
+
+					// Store the topic ID in BP's storage
+					bp.Nouveau.setStorage( 'bp-activity', 'topic_id', topicId );
+
+					// Trigger the activity filter without preventing default (since we're handling navigation)
+					bp.Nouveau.Activity.filterActivity( event );
+				}
+			} else {
+				// No hash means "All" topics
+				$( '.activity-topic-selector li a' ).removeClass( 'selected active' );
+				bp.Nouveau.setStorage( 'bp-activity', 'topic_id', '' );
+				var $allItem = $( '.activity-topic-selector li a' ).first();
+				if ( $allItem.length > 0 ) {
+					$allItem.addClass( 'selected active' );
+				}
+
+				// Trigger the activity filter to show all topics
+				bp.Nouveau.Activity.filterActivity( event );
+			}
+
+			// Reset navigation flag after a short delay
+			var self = this;
+			setTimeout( function () {
+				self.isNavigating = false;
+			}, 100 );
 		}
 	};
 
