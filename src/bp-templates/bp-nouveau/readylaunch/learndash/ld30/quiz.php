@@ -47,10 +47,17 @@ $attempts_left = function_exists( 'learndash_quiz_attempts_left' ) ? learndash_q
 $lesson_list = learndash_get_course_lessons_list( $course_id, null, array( 'num' => - 1 ) );
 $lesson_list = array_column( $lesson_list, 'post' );
 $course_quizzes_list = function_exists( 'learndash_get_course_quiz_list' ) ? learndash_get_course_quiz_list( $course_id, $user_id ) : array();
-$content_urls = BB_Readylaunch::instance()->learndash_helper()->bb_rl_ld_custom_pagination( $course_id, $lesson_list, $course_quizzes_list );
+
+// Initialize variables with fallback values to prevent fatal errors
+$content_urls = array();
+$quiz_urls = array();
+$pagination_urls = array( 'prev' => '', 'next' => '' );
+$current_quiz_no = 1;
+
+/* $content_urls = BB_Readylaunch::instance()->learndash_helper()->bb_rl_ld_custom_pagination( $course_id, $lesson_list, $course_quizzes_list );
 $quiz_urls = BB_Readylaunch::instance()->learndash_helper()->bb_rl_ld_custom_quiz_count( $course_id, $lesson_list, $course_quizzes_list );
 $pagination_urls = BB_Readylaunch::instance()->learndash_helper()->bb_rl_custom_next_prev_url( $content_urls );
-$current_quiz_no = BB_Readylaunch::instance()->learndash_helper()->bb_rl_ld_custom_quiz_key( $quiz_urls );
+$current_quiz_no = BB_Readylaunch::instance()->learndash_helper()->bb_rl_ld_custom_quiz_key( $quiz_urls ); */
 
 // Find lesson number if quiz is associated with a lesson
 $lesson_no = 1;
@@ -73,7 +80,7 @@ if ( $lesson_id ) {
                         <div class="bb-rl-quiz-count">
                             <span class="bb-pages">
                                 <?php echo LearnDash_Custom_Label::get_label( 'quiz' ); ?> <?php echo $current_quiz_no; ?>
-                                <span class="bb-total"><?php esc_html_e( 'of', 'buddyboss' ); ?> <?php echo count( $quiz_urls ); ?></span>
+                                <span class="bb-total"><?php esc_html_e( 'of', 'buddyboss' ); ?> <?php echo is_array( $quiz_urls ) ? count( $quiz_urls ) : 1; ?></span>
                             </span>
                         </div>
                         <div class="bb-rl-quiz-title">
@@ -174,7 +181,7 @@ if ( $lesson_id ) {
                     <div class="bb-rl-quiz-count">
                         <span class="bb-pages">
                             <?php echo LearnDash_Custom_Label::get_label( 'quiz' ); ?> <?php echo $current_quiz_no; ?>
-                            <span class="bb-total"><?php esc_html_e( 'of', 'buddyboss' ); ?> <?php echo count( $quiz_urls ); ?></span>
+                            <span class="bb-total"><?php esc_html_e( 'of', 'buddyboss' ); ?> <?php echo is_array( $quiz_urls ) ? count( $quiz_urls ) : 1; ?></span>
                         </span>
                     </div>
                     <div class="learndash_next_prev_link">
