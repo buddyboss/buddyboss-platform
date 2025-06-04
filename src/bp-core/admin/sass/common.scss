@@ -5446,6 +5446,14 @@ h1.bb-advance-heading {
 }
 
 // Activity Topics Settings Styles.
+
+.bb-modal-panel--activity-topic {
+
+	&:has(.bb-hello-content > .bb-hello-error) .bb-hello-header {
+		border-bottom: 0 !important;
+	}
+}
+
 .bb-activity-topics-wrapper {
 	margin-top: 15px;
 
@@ -5562,9 +5570,10 @@ h1.bb-advance-heading {
 			display: inline-flex;
 			align-items: center;
 			gap: 4px;
-			padding: 4px 12px;
-			font-size: 14px;
-			border-radius: 6px;
+			padding: 5px 8px;
+			font-size: 13px;
+			line-height: 1.5;
+			border-radius: 4px;
 
 			.bb-icon-plus {
 				font-size: 16px;
@@ -5580,6 +5589,12 @@ h1.bb-advance-heading {
 			color: #646970;
 			font-size: 12px;
 			margin: 10px 0 0;
+		}
+
+		.bb-topics-sort-success {
+			padding: 0 10px;
+			border-radius: 0 5px 5px 0;
+			margin: 0 0 20px !important;
 		}
 	}
 
@@ -5696,8 +5711,11 @@ h1.bb-advance-heading {
 		}
 
 		div.bb-hello-error {
+			color: #d63638;
+			border-color: #ffabaf;
 			padding: 8px 20px;
 			margin: -15px -20px 18px -20px;
+			align-items: center;
 		}
 	}
 

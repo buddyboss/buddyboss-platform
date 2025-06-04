@@ -579,7 +579,7 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 				<?php
 				$button_class = $topics_limit_reached ? 'bp-hide' : '';
 				?>
-				<button type="button" class="button button-primary bb-add-topic <?php echo esc_attr( $button_class ); ?>">
+				<button type="button" class="button button-secondary bb-add-topic <?php echo esc_attr( $button_class ); ?>">
 					<i class="bb-icon-plus"></i>
 					<?php esc_html_e( 'Add New Topic', 'buddyboss' ); ?>
 				</button>

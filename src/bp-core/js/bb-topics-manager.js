@@ -348,7 +348,7 @@ window.bp = window.bp || {};
 							// Show success notification if needed.
 							if ( response.data && response.data.message ) {
 								// Display success message.
-								$container.after( '<div class="bb-topics-sort-success">' + response.data.message + '</div>' );
+								$container.after( '<div class="bb-topics-sort-success notice notice-success"><p>' + response.data.message + '</p></div>' );
 								setTimeout( function () {
 									$( '.bb-topics-sort-success' ).fadeOut( 300, function () {
 										$( this ).remove();
