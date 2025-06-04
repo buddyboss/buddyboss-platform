@@ -695,8 +695,8 @@ function bp_nouveau_ajax_post_update() {
 		wp_send_json_error();
 	}
 
-	if ( bb_is_activity_topic_required() && isset( $_POST['topic_id'] ) ) {
-		$topic_id = (int) sanitize_text_field( wp_unslash( $_POST['topic_id'] ) );
+	if ( bb_is_activity_topic_required() ) {
+		$topic_id = ! empty( $_POST['topic_id'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['topic_id'] ) ) : 0;
 		if ( empty( $topic_id ) ) {
 			wp_send_json_error( array( 'message' => esc_html__( 'Please select a topic before posting.', 'buddyboss' ) ) );
 		}
