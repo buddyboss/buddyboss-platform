@@ -173,8 +173,17 @@ function bb_block_render_readylaunch_header_block( $attributes = array() ) {
 		$align_class = 'align' . $attributes['align'];
 	}
 
-	// Get dark mode class.
-	$dark_mode_class = $block_args['darkMode'] ? 'bb-rl-dark-mode' : '';
+	$readylaunch_instance = bb_load_readylaunch();
+	$bb_rl_theme_mode     = $readylaunch_instance->bb_rl_get_theme_mode();
+	$dark_mode_class      = '';
+	if ( 'choice' === $bb_rl_theme_mode ) {
+		$dark_mode = isset( $_COOKIE['bb-rl-dark-mode'] ) ? sanitize_text_field( wp_unslash( $_COOKIE['bb-rl-dark-mode'] ) ) : 'false';
+		if ( 'true' === $dark_mode ) {
+			$dark_mode_class = 'bb-rl-dark-mode';
+		}
+	} elseif ( 'dark' === $bb_rl_theme_mode ) {
+		$dark_mode_class = 'bb-rl-dark-mode';
+	}
 
 	if ( $block_args['showSearch'] && bp_is_active( 'search' ) ) {
 		wp_enqueue_style( 'bp-select2' );

@@ -5,7 +5,7 @@
   "title": "BB ReadyLaunch Header",
   "category": "buddyboss",
   "icon": "align-wide",
-  "description": "Display the BuddyBoss ReadyLaunch navigation menu as a heading across your page",
+  "description": "Use with page templates to add the BuddyBoss ReadyLaunch menu as a Block theme heading",
   "keywords": [
     "BuddyBoss",
     "Header",
@@ -30,10 +30,6 @@
     "showProfileMenu": {
       "type": "boolean",
       "default": true
-    },
-    "darkMode": {
-      "type": "boolean",
-      "default": false
     }
   },
   "supports": {
