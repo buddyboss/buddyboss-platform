@@ -71,9 +71,9 @@ bp_get_template_part( 'sidebar/left-sidebar' );
 						?>
 						<div class="user-wrap user-wrap-container">
 							<?php
-							$current_user = wp_get_current_user();
-							$user_link    = function_exists( 'bp_core_get_user_domain' ) ? bp_core_get_user_domain( $current_user->ID ) : get_author_posts_url( $current_user->ID );
-							$display_name = function_exists( 'bp_core_get_user_displayname' ) ? bp_core_get_user_displayname( $current_user->ID ) : $current_user->display_name;
+							$logged_in_user = wp_get_current_user();
+							$user_link      = function_exists( 'bp_core_get_user_domain' ) ? bp_core_get_user_domain( $logged_in_user->ID ) : get_author_posts_url( $logged_in_user->ID );
+							$display_name   = function_exists( 'bp_core_get_user_displayname' ) ? bp_core_get_user_displayname( $logged_in_user->ID ) : $logged_in_user->display_name;
 							?>
 
 							<a class="user-link" href="<?php echo esc_url( $user_link ); ?>">
