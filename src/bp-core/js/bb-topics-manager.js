@@ -314,9 +314,11 @@ window.bp = window.bp || {};
 			});
 
 			// Disable submit button if no topic is selected.
-			this.$document.on( 'change', '.bb-topic-name-field, #bb_existing_topic_id', this.enableDisableSubmitButton.bind( this ) );
+			this.$document.on( 'change', '.bb-topic-name-field', this.enableDisableSubmitButton.bind( this ) );
 			this.$document.on( 'keyup', '#bb_topic_name, .bb-topic-name-field', this.enableDisableSubmitButton.bind( this ) );
 			
+			this.$document.on( 'change', 'input[name="bb_migrate_existing_topic"]', this.enableDisableMigrateTopicButton.bind( this ) );
+			this.$document.on( 'change', '#bb_existing_topic_id', this.updateMigrateButtonForDropdown.bind( this ) );
 			this.$document.on( 'click', this.config.migrateTopicButtonSelector, this.handleMigrateTopic.bind( this ) );
 		},
 
@@ -718,22 +720,27 @@ window.bp = window.bp || {};
 		},
 
 		handleMigrateTopic : function ( event ) {
-			var oldTopicId = this.$migrateTopicContainerModalSelector.find( '#bb_topic_id' ).val();
-			var nonce      = this.$migrateTopicContainerModalSelector.find( '#bb_topic_nonce' ).val();
-			var itemId     = this.$migrateTopicContainerModalSelector.find( '#bb_item_id' ).val();
-			var itemType   = this.$migrateTopicContainerModalSelector.find( '#bb_item_type' ).val();
-			var newTopicId = this.$migrateTopicContainerModalSelector.find( '#bb_existing_topic_id' ).val();
-			var $topicItem = $( '.bb-activity-topics-list .bb-activity-topic-item[data-topic-id="' + oldTopicId + '"]' );
+			var oldTopicId  = this.$migrateTopicContainerModalSelector.find( '#bb_topic_id' ).val();
+			var nonce       = this.$migrateTopicContainerModalSelector.find( '#bb_topic_nonce' ).val();
+			var itemId      = this.$migrateTopicContainerModalSelector.find( '#bb_item_id' ).val();
+			var itemType    = this.$migrateTopicContainerModalSelector.find( '#bb_item_type' ).val();
+			var newTopicId  = this.$migrateTopicContainerModalSelector.find( '#bb_existing_topic_id' ).val();
+			var $topicItem  = $( '.bb-activity-topics-list .bb-activity-topic-item[data-topic-id="' + oldTopicId + '"]' );
+			var migrateType = $('input[name="bb_migrate_existing_topic"]:checked').val();
 
 			// Prepare data for AJAX request.
 			var data = {
 				action    : this.config.migrateTopicAction,
 				old_topic_id  : oldTopicId,
-				new_topic_id  : newTopicId,
 				nonce     : nonce,
 				item_id   : itemId,
 				item_type : itemType,
+				migrate_type : migrateType
 			};
+
+			if ( 'existing' === migrateType ) {
+				data.new_topic_id = newTopicId;
+			}
 
 			// Use the configured AJAX URL.
 			var ajaxUrl = this.config.ajaxUrl;
@@ -1160,6 +1167,32 @@ window.bp = window.bp || {};
 				if ( this.$modal && this.$modal.is(':visible') ) {
 					$( this.config.submitButtonSelector ).prop( 'disabled', false );
 				}
+			}
+		},
+
+		enableDisableMigrateTopicButton : function ( event ) {
+			var value          = $( event.currentTarget ).val();
+			var $dropdownValue = $('#bb_existing_topic_id').val();
+			this.handleEnableDisableMigrateTopicButton( value, $dropdownValue );
+		},
+
+		updateMigrateButtonForDropdown : function ( event ) {
+			var selectedRadio  = $('input[name="bb_migrate_existing_topic"]:checked').val();
+			var $dropdownValue = $( event.currentTarget ).val();
+			this.handleEnableDisableMigrateTopicButton( selectedRadio, $dropdownValue );
+		},
+
+		handleEnableDisableMigrateTopicButton : function ( value, $dropdownValue ) {
+			if (
+				'uncategorized' === value ||
+				(
+					'existing' === value &&
+					0 !== parseInt( $dropdownValue )
+				)
+			) {
+				$( this.config.migrateTopicButtonSelector ).prop( 'disabled', false );
+			} else {
+				$( this.config.migrateTopicButtonSelector ).prop( 'disabled', true );
 			}
 		},
 

@@ -1585,7 +1585,8 @@ class BB_Topics_Manager {
 			);
 		}
 
-		if ( ! isset( $_POST['new_topic_id'] ) ) {
+		$migrate_type = isset( $_POST['migrate_type'] ) ? sanitize_text_field( wp_unslash( $_POST['migrate_type'] ) ) : '';
+		if ( 'existing' === $migrate_type && ! isset( $_POST['new_topic_id'] ) ) {
 			wp_send_json_error(
 				array(
 					'error' => __( 'Migrate topic ID is required.', 'buddyboss' ),
@@ -1595,49 +1596,61 @@ class BB_Topics_Manager {
 		}
 
 		$old_topic_id = absint( sanitize_text_field( wp_unslash( $_POST['old_topic_id'] ) ) );
-		$new_topic_id = absint( sanitize_text_field( wp_unslash( $_POST['new_topic_id'] ) ) );
 		$item_id      = isset( $_POST['item_id'] ) ? absint( sanitize_text_field( wp_unslash( $_POST['item_id'] ) ) ) : 0;
 		$item_type    = isset( $_POST['item_type'] ) ? sanitize_text_field( wp_unslash( $_POST['item_type'] ) ) : '';
+		$new_topic_id = 'existing' === $migrate_type ? absint( sanitize_text_field( wp_unslash( $_POST['new_topic_id'] ) ) ) : 0;
 
-		/**
-		 * Fires before a topic is migrated.
-		 *
-		 * @since BuddyBoss [BBVERSION]
-		 *
-		 * @param int    $old_topic_id The ID of the old topic.
-		 * @param int    $new_topic_id The ID of the new topic.
-		 * @param int    $item_id      The ID of the item.
-		 * @param string $item_type    The type of item.
-		 */
-		do_action( 'bb_before_migrate_topic', $old_topic_id, $new_topic_id, $item_id, $item_type );
+		if ( 'existing' === $migrate_type && $new_topic_id ) {
 
-		$result = $this->wpdb->update(
-			$this->activity_topic_rel_table,
-			array( 'topic_id' => $new_topic_id ),
-			array(
-				'topic_id'  => $old_topic_id,
-				'item_id'   => $item_id,
-				'component' => $item_type,
-			),
-			array( '%d' ),
-			array( '%d', '%d', '%s' )
-		);
+			/**
+			 * Fires before a topic is migrated.
+			 *
+			 * @since BuddyBoss [BBVERSION]
+			 *
+			 * @param int    $old_topic_id The ID of the old topic.
+			 * @param int    $new_topic_id The ID of the new topic.
+			 * @param int    $item_id      The ID of the item.
+			 * @param string $item_type    The type of item.
+			 */
+			do_action( 'bb_before_migrate_topic', $old_topic_id, $new_topic_id, $item_id, $item_type );
 
-		if ( false === $result ) {
-			wp_send_json_error( array( 'error' => __( 'Failed to migrate topic.', 'buddyboss' ) ) );
+			$result = $this->wpdb->update(
+				$this->activity_topic_rel_table,
+				array( 'topic_id' => $new_topic_id ),
+				array(
+					'topic_id'  => $old_topic_id,
+					'item_id'   => $item_id,
+					'component' => $item_type,
+				),
+				array( '%d' ),
+				array( '%d', '%d', '%s' )
+			);
+
+			if ( false === $result ) {
+				wp_send_json_error( array( 'error' => __( 'Failed to migrate topic.', 'buddyboss' ) ) );
+			}
+
+			/**
+			 * Fires after a topic is migrated.
+			 *
+			 * @since BuddyBoss [BBVERSION]
+			 *
+			 * @param int    $old_topic_id The ID of the old topic.
+			 * @param int    $new_topic_id The ID of the new topic.
+			 * @param int    $item_id      The ID of the item.
+			 * @param string $item_type    The type of item.
+			 */
+			do_action( 'bb_after_migrate_topic', $old_topic_id, $new_topic_id, $item_id, $item_type );
 		}
 
 		/**
-		 * Fires after a topic is migrated.
+		 * Fires before a topic is deleted.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
-		 * @param int    $old_topic_id The ID of the old topic.
-		 * @param int    $new_topic_id The ID of the new topic.
-		 * @param int    $item_id      The ID of the item.
-		 * @param string $item_type    The type of item.
+		 * @param int $topic_id The ID of the topic being deleted.
 		 */
-		do_action( 'bb_after_migrate_topic', $old_topic_id, $new_topic_id, $item_id, $item_type );
+		do_action( 'bb_activity_topic_before_delete', $old_topic_id );
 
 		$deleted_topic = $this->bb_delete_topic(
 			array(
@@ -1648,13 +1661,13 @@ class BB_Topics_Manager {
 		);
 
 		/**
-		 * Fires before a topic is deleted.
+		 * Fires after a topic is deleted.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
 		 * @param int $topic_id The ID of the topic being deleted.
 		 */
-		do_action( 'bb_topic_relationship_before_delete', $old_topic_id );
+		do_action( 'bb_activity_topic_after_delete', $old_topic_id );
 
 		if ( false === $deleted_topic ) {
 			wp_send_json_error( array( 'error' => __( 'Failed to delete topic.', 'buddyboss' ) ) );

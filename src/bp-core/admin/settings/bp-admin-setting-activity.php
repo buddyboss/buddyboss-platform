@@ -660,12 +660,29 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 			</div>
 			<div class="bb-hello-content">
 				<p>
-					<?php esc_html_e( 'Deleting this will remove to this topic from all related activity posts.', 'buddyboss' ); ?>
+					<?php esc_html_e( 'Select a new topic from the dropdown box below to migrate existing activity posts', 'buddyboss' ); ?>
 				</p>
 				<div class="bb-existing-topic-list" id="bb_existing_topic_list">
-					<select name="bb_existing_topic_id" id="bb_existing_topic_id">
-						<option value="0"><?php esc_html_e( 'Select topic', 'buddyboss' ); ?></option>
-					</select>
+				<div class="form-fields">
+					<div class="form-field">
+						<div class="field-label">
+							<input type="radio" name="bb_migrate_existing_topic" id="bb_migrate_existing_topic" value="existing" checked>
+							<label for="bb_migrate_existing_topic"><?php esc_html_e( 'Move to existing topic', 'buddyboss' ); ?></label>
+						</div>
+						<div class="field-input">
+							<select name="bb_existing_topic_id" id="bb_existing_topic_id">
+								<option value="0"><?php esc_html_e( 'Select topic', 'buddyboss' ); ?></option>
+							</select>
+						</div>
+					</div>
+					<div class="form-field">
+						<div class="field-label">
+							<input type="radio" name="bb_migrate_existing_topic" id="bb_migrate_uncategorized_topic" value="uncategorized">
+							<label for="bb_migrate_uncategorized_topic"><?php esc_html_e( 'Move to Uncategorized', 'buddyboss' ); ?></label>
+						</div>
+					</div>
+				</div>
+					
 				</div>
 				<p>
 					<?php echo wp_kses( __( 'This action is permanent and cannot be <b>undone</b>.', 'buddyboss' ), array( 'b' => array() ) ); ?>
