@@ -983,8 +983,7 @@ class BB_Activity_Topics_Manager {
 			return '';
 		}
 
-		// Use hash fragment for topic.
-		$url = trailingslashit( $directory_permalink ) . '#topic-' . rawurlencode( $topic->slug );
+		$url = add_query_arg( 'bb-topic', rawurlencode( $topic->slug ), trailingslashit( $directory_permalink ) );
 
 		/**
 		 * Filters the activity topic URL before returning.
@@ -1043,11 +1042,11 @@ class BB_Activity_Topics_Manager {
 			<div class="activity-topic-selector">
 				<ul>
 					<li>
-						<a href="#"><?php esc_html_e( 'All', 'buddyboss' ); ?></a>
+						<a href="<?php echo esc_url( bp_get_activity_directory_permalink() ); ?>"><?php esc_html_e( 'All', 'buddyboss' ); ?></a>
 					</li>
 					<?php
 					foreach ( $topics as $topic ) {
-						echo '<li><a href="#topic-' . esc_attr( $topic['slug'] ) . '" data-topic-id="' . esc_attr( $topic['topic_id'] ) . '">' . esc_html( $topic['name'] ) . '</a></li>';
+						echo '<li><a href="' . esc_url( add_query_arg( 'bb-topic', $topic['slug'] ) ) . '" data-topic-id="' . esc_attr( $topic['topic_id'] ) . '">' . esc_html( $topic['name'] ) . '</a></li>';
 					}
 					?>
 				</ul>
