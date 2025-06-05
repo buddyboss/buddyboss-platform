@@ -138,11 +138,16 @@ window.bp = window.bp || {};
 								topicName = ! _.isUndefined( bp.draft_activity.data.topics.topic_name ) ? bp.draft_activity.data.topics.topic_name : '';
 							}
 
-							var topicLists = BBTopicsManager.topicLists;
-							if ( ! _.isUndefined( this.model.get( 'topics' ) ) ) {
-								topicLists = ! _.isUndefined( this.model.get( 'topics' ).topic_lists ) ? this.model.get( 'topics' ).topic_lists : [];
-							} else if ( ! _.isUndefined( bp.draft_activity.data.topics ) ) {
-								topicLists = ! _.isUndefined( bp.draft_activity.data.topics.topic_lists ) ? bp.draft_activity.data.topics.topic_lists : [];
+							var topicLists = [];
+							var modelTopics = this.model.get( 'topics' );
+							
+							// Priority order: model data > draft data > global data.
+							if ( modelTopics && ! _.isUndefined( modelTopics.topic_lists ) ) {
+								topicLists = modelTopics.topic_lists;
+							} else if ( ! _.isUndefined( bp.draft_activity.data.topics ) && ! _.isUndefined( bp.draft_activity.data.topics.topic_lists ) ) {
+								topicLists = bp.draft_activity.data.topics.topic_lists;
+							} else {
+								topicLists = BBTopicsManager.topicLists;
 							}
 
 							this.model.set( 'topics', {
@@ -153,6 +158,13 @@ window.bp = window.bp || {};
 
 							this.listenTo( Backbone, 'topic:update', this.updateTopics );
 
+							// Listen to model changes for topics.
+							this.listenTo( this.model, 'change:topics', function( model, topics ) {
+								if ( topics ) {
+									this.updateTopics( topics );
+								}
+							} );
+
 							// Add document-level click handler
 							$( document ).on( 'click.topicSelector', $.proxy( this.closeTopicSelectorDropdown, this ) );
 
@@ -160,16 +172,27 @@ window.bp = window.bp || {};
 
 						updateTopics : function ( topics ) {
 
-							// Fix to handle various formats of incoming topics data
+							// Fix to handle various formats of incoming topics data.
 							var topicsArray;
 
-							// Check if topics is an object with topic_lists property
+							// Check if topics is an object with topic_lists property.
 							if ( _.isObject( topics ) && ! _.isUndefined( topics.topic_lists ) ) {
 								topicsArray = topics.topic_lists;
 							}
 
-							var topicId   = ! _.isUndefined( this.model.get( 'topics' ) ) ? this.model.get( 'topics' ).topic_id : 0;
-							var topicName = ! _.isUndefined( this.model.get( 'topics' ) ) ? this.model.get( 'topics' ).topic_name : '';
+							var currentTopics = this.model.get( 'topics' );
+							var topicId       = currentTopics ? currentTopics.topic_id : 0;
+							var topicName     = currentTopics ? currentTopics.topic_name : '';
+
+							// If the incoming topics object has topic_id and topic_name, use them.
+							if ( _.isObject( topics ) ) {
+								if ( ! _.isUndefined( topics.topic_id ) ) {
+									topicId = topics.topic_id;
+								}
+								if ( ! _.isUndefined( topics.topic_name ) ) {
+									topicName = topics.topic_name;
+								}
+							}
 
 							// Update the model with the new topics
 							this.model.set( 'topics', {
@@ -726,15 +749,15 @@ window.bp = window.bp || {};
 			var itemType    = this.$migrateTopicContainerModalSelector.find( '#bb_item_type' ).val();
 			var newTopicId  = this.$migrateTopicContainerModalSelector.find( '#bb_existing_topic_id' ).val();
 			var $topicItem  = $( '.bb-activity-topics-list .bb-activity-topic-item[data-topic-id="' + oldTopicId + '"]' );
-			var migrateType = $('input[name="bb_migrate_existing_topic"]:checked').val();
+			var migrateType = $( 'input[name="bb_migrate_existing_topic"]:checked' ).val();
 
 			// Prepare data for AJAX request.
 			var data = {
-				action    : this.config.migrateTopicAction,
-				old_topic_id  : oldTopicId,
-				nonce     : nonce,
-				item_id   : itemId,
-				item_type : itemType,
+				action       : this.config.migrateTopicAction,
+				old_topic_id : oldTopicId,
+				nonce        : nonce,
+				item_id      : itemId,
+				item_type    : itemType,
 				migrate_type : migrateType
 			};
 
