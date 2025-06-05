@@ -796,3 +796,67 @@ function bb_activity_topic_relationship_after_update_cache_reset( $relationship_
 }
 
 add_action( 'bb_activity_topic_relationship_after_update', 'bb_activity_topic_relationship_after_update_cache_reset', 10, 1 );
+
+/**
+ * Clear topic redirect cache for a specific slug.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string|array $old_slug_or_args The old topic slug to clear cache for, or array of arguments.
+ * @param string       $item_type The item type (optional, defaults to 'activity').
+ * @param int          $item_id The item ID (optional, defaults to 0 for activity).
+ */
+function bb_clear_topic_redirect_cache( $old_slug_or_args, $item_type = 'activity', $item_id = 0 ) {
+	// Handle array parameter (from action hooks).
+	if ( is_array( $old_slug_or_args ) ) {
+		$old_slug  = isset( $old_slug_or_args['old_topic_slug'] ) ? $old_slug_or_args['old_topic_slug'] : '';
+		$item_type = isset( $old_slug_or_args['item_type'] ) ? $old_slug_or_args['item_type'] : 'activity';
+		$item_id   = isset( $old_slug_or_args['item_id'] ) ? $old_slug_or_args['item_id'] : 0;
+	} else {
+		// Handle individual parameters.
+		$old_slug = $old_slug_or_args;
+	}
+
+	if ( empty( $old_slug ) ) {
+		return;
+	}
+
+	$old_slug = sanitize_title( $old_slug );
+
+	// Clear cache for the specific slug.
+	$cache_key = 'bb_topic_redirect_' . $old_slug . '_' . $item_type . '_' . $item_id;
+	wp_cache_delete( $cache_key, 'bb_topics' );
+
+	// Also clear cache for potential recursive redirects.
+	// Get all slugs that might redirect to this one.
+	global $wpdb;
+
+	if ( function_exists( 'bb_topics_manager_instance' ) && bb_topics_manager_instance() ) {
+		$topic_history_table = bb_topics_manager_instance()->topic_history_table;
+		$sql                 = $wpdb->prepare(
+			"SELECT DISTINCT old_topic_slug FROM {$topic_history_table} WHERE new_topic_slug = %s",
+			$old_slug
+		);
+		$related_slugs       = $wpdb->get_col( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+
+		if ( ! empty( $related_slugs ) ) {
+			foreach ( $related_slugs as $related_slug ) {
+				$related_cache_key = 'bb_topic_redirect_' . $related_slug . '_' . $item_type . '_' . $item_id;
+				wp_cache_delete( $related_cache_key, 'bb_topics' );
+			}
+		}
+	}
+
+	/**
+	 * Fires after topic redirect cache is cleared.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $old_slug The old topic slug.
+	 * @param string $item_type The item type.
+	 * @param int    $item_id The item ID.
+	 */
+	do_action( 'bb_topic_redirect_cache_cleared', $old_slug, $item_type, $item_id );
+}
+
+add_action( 'bb_topic_history_after_added', 'bb_clear_topic_redirect_cache', 10, 1 );
