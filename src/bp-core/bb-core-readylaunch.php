@@ -111,6 +111,12 @@ add_action( 'bp_register_widgets', 'bb_rl_register_widgets' );
  * Filter pre-existing widgets.
  *
  * @since BuddyBoss [BBVERSION]
+ *
+ * @param array     $instance Widget instance.
+ * @param WP_Widget $widget   Widget object.
+ * @param array     $args     Widget arguments.
+ *
+ * @return bool
  */
 function bb_rl_modify_existing_widget_output( $instance, $widget, $args ) {
 	ob_start(); // Start output buffering.
@@ -142,6 +148,7 @@ function bb_rl_modify_existing_widget_output( $instance, $widget, $args ) {
 		$output = preg_replace( '/(<h[1-6][^>]*>)(.*?)(<\/h[1-6]>)/s', '$1$2 ' . $updated_more_block . ' $3', $output, 1 );
 	}
 
+	// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Output is properly escaped above
 	echo $output; // Output modified widget.
 	return false; // Prevent default rendering.
 }
@@ -156,14 +163,14 @@ add_filter( 'widget_display_callback', 'bb_rl_modify_existing_widget_output', 10
  */
 function bb_rl_view_profile_repeaters_print_group_html_start() {
 	$group_id            = bp_get_the_profile_group_id();
-	$is_repeater_enabled = 'on' == BP_XProfile_Group::get_group_meta( $group_id, 'is_repeater_enabled' ) ? true : false;
+	$is_repeater_enabled = 'on' === BP_XProfile_Group::get_group_meta( $group_id, 'is_repeater_enabled' ) ? true : false;
 	if ( $is_repeater_enabled ) {
 		global $repeater_set_being_displayed;
 
 		$current_field_id   = bp_get_the_profile_field_id();
 		$current_set_number = bp_xprofile_get_meta( $current_field_id, 'field', '_clone_number', true );
 
-		if ( ! empty( $repeater_set_being_displayed ) && $repeater_set_being_displayed != $current_set_number ) {
+		if ( ! empty( $repeater_set_being_displayed ) && $repeater_set_being_displayed !== $current_set_number ) {
 			// End of previous set.
 			echo "<div class='bb-rl-repeater-separator'></div>";
 		}
@@ -179,17 +186,17 @@ add_action( 'bp_before_profile_field_item', 'bb_rl_view_profile_repeaters_print_
  *
  * @since BuddyBoss [BBVERSION]
  *
+ * @param int|null $user_id User ID.
  * @return string
  */
 function bb_rl_get_user_social_networks_urls( $user_id = null ) {
 	$social_networks_id                = bb_rl_get_user_social_networks_field_id();
-	$is_enabled_header_social_networks = bb_enabled_profile_header_layout_element( 'social-networks' ) && function_exists( 'bb_enabled_member_social_networks' ) && bb_enabled_member_social_networks();
 
 	$html = '';
 
 	$original_option_values = array();
 
-	$user = ( $user_id !== null && $user_id > 0 ) ? $user_id : bp_displayed_user_id();
+	$user = ( null !== $user_id && $user_id > 0 ) ? $user_id : bp_displayed_user_id();
 
 	if ( $social_networks_id > 0 ) {
 		$providers = bp_xprofile_social_network_provider();
@@ -216,7 +223,7 @@ function bb_rl_get_user_social_networks_urls( $user_id = null ) {
 		}
 	}
 
-	if ( $html !== '' ) {
+	if ( '' !== $html ) {
 		$level = xprofile_get_field_visibility_level( $social_networks_id, bp_displayed_user_id() );
 		if ( 'friends' === $level && is_user_logged_in() ) {
 
@@ -244,12 +251,52 @@ function bb_rl_get_user_social_networks_urls( $user_id = null ) {
 function bb_rl_get_user_social_networks_field_id() {
 	global $wpdb, $bp;
 
-	$social_networks_field = $wpdb->get_row( "SELECT a.id FROM {$bp->table_prefix}bp_xprofile_fields a WHERE parent_id = 0 AND type = 'socialnetworks' " );
-	return ( ! empty( $social_networks_field->id ) ? $social_networks_field->id : 0 );
+	// Check cache first.
+	$cache_key = 'bb_rl_social_networks_field_id';
+	$field_id  = wp_cache_get( $cache_key );
+
+	if ( false === $field_id ) {
+		$social_networks_field = $wpdb->get_row(
+			$wpdb->prepare(
+				"SELECT a.id FROM {$wpdb->base_prefix}bp_xprofile_fields a WHERE parent_id = %d AND type = %s",
+				0,
+				'socialnetworks'
+			)
+		);
+		$field_id              = ! empty( $social_networks_field->id ) ? $social_networks_field->id : 0;
+
+		// Cache the result.
+		wp_cache_set( $cache_key, $field_id, '', HOUR_IN_SECONDS );
+	}
+
+	return $field_id;
 }
 
 /**
- * Add bb-rl-suggestions to mentions selectors
+ * Clear the cached social networks field ID.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_rl_clear_social_networks_field_cache() {
+	wp_cache_delete( 'bb_rl_social_networks_field_id' );
+}
+
+/**
+ * Clear social networks field cache when field type changes.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param BP_XProfile_Field $field The field object being saved.
+ */
+function bb_rl_clear_cache_on_field_type_change( $field = null ) {
+	// Clear cache if this is a socialnetworks field or if we can't determine the type.
+	if ( ! empty( $field->type ) && 'socialnetworks' === $field->type ) {
+		bb_rl_clear_social_networks_field_cache();
+	}
+}
+
+/**
+ * Add bb-rl-suggestions to mention selectors
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -263,3 +310,10 @@ function bb_rl_add_mentions_selectors( $options ) {
 	return $options;
 }
 add_filter( 'bp_at_mention_js_options', 'bb_rl_add_mentions_selectors' );
+
+// Hook cache clearing to XProfile field changes.
+add_action( 'xprofile_field_after_save', 'bb_rl_clear_cache_on_field_type_change' );
+add_action( 'xprofile_field_before_delete', 'bb_rl_clear_social_networks_field_cache' );
+add_action( 'xprofile_fields_saved_field', 'bb_rl_clear_social_networks_field_cache' );
+add_action( 'bp_xprofile_admin_new_field', 'bb_rl_clear_social_networks_field_cache' );
+add_action( 'bp_xprofile_admin_edit_field', 'bb_rl_clear_social_networks_field_cache' );

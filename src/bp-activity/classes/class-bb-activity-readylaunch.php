@@ -442,10 +442,10 @@ class BB_Activity_Readylaunch {
 					<?php
 					if ( $comment_count > 1 || 0 === $comment_count ) {
 						/* translators: %d: activity comment count */
-						printf( _x( '%d Comments', 'placeholder: activity comments count', 'buddyboss' ), $comment_count );
+						echo esc_html( sprintf( _x( '%d Comments', 'placeholder: activity comments count', 'buddyboss' ), $comment_count ) );
 					} else {
 						/* translators: %d: activity comment count */
-						printf( _x( '%d Comment', 'placeholder: activity comment count', 'buddyboss' ), $comment_count );
+						echo esc_html( sprintf( _x( '%d Comment', 'placeholder: activity comment count', 'buddyboss' ), $comment_count ) );
 					}
 					?>
 				</span>
