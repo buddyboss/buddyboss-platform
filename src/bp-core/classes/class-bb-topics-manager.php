@@ -401,7 +401,8 @@ class BB_Topics_Manager {
 				'item_type'  => 'activity',
 				'item_id'    => 0,
 				'error_type' => 'bool',
-			)
+			),
+			'bb_add_topic'
 		);
 
 		if ( empty( $r['name'] ) ) {
@@ -586,7 +587,8 @@ class BB_Topics_Manager {
 				'item_type'  => 'activity',
 				'item_id'    => 0,
 				'error_type' => 'bool',
-			)
+			),
+			'bb_update_topic'
 		);
 
 		$previous_topic_id = $r['id'];
@@ -782,7 +784,8 @@ class BB_Topics_Manager {
 				'date_created'    => bp_core_current_time(),
 				'date_updated'    => bp_core_current_time(),
 				'error_type'      => 'bool',
-			)
+			),
+			'bb_add_topic_relationship'
 		);
 
 		if ( empty( $r['topic_id'] ) ) {
@@ -902,7 +905,8 @@ class BB_Topics_Manager {
 				'permission_type' => null,
 				'where'           => array(),
 				'error_type'      => 'bool',
-			)
+			),
+			'bb_update_topic_relationship'
 		);
 
 		/**
@@ -1470,7 +1474,8 @@ class BB_Topics_Manager {
 			$args,
 			array(
 				'topic_id' => 0,
-			)
+			),
+			'bb_get_topic'
 		);
 
 		$topic      = $this->bb_get_topics( $r );
@@ -1538,7 +1543,8 @@ class BB_Topics_Manager {
 			array(
 				'topic_id' => 0,
 				'fields'   => 'id',
-			)
+			),
+			'bb_delete_topic'
 		);
 
 		if ( empty( $r['topic_id'] ) ) {
