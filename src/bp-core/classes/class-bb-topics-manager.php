@@ -1881,6 +1881,15 @@ class BB_Topics_Manager {
 			return false;
 		}
 
+		/**
+		 * Fires after topic history has been added.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array $r The arguments used to add the topic history.
+		 */
+		do_action( 'bb_topic_history_after_added', $r );
+
 		return false !== $result;
 	}
 
