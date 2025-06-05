@@ -860,3 +860,32 @@ function bb_clear_topic_redirect_cache( $old_slug_or_args, $item_type = 'activit
 }
 
 add_action( 'bb_topic_history_after_added', 'bb_clear_topic_redirect_cache', 10, 1 );
+
+/**
+ * Clear activity results cache when a topic is migrated.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int    $old_topic_id The ID of the old topic.
+ * @param int    $new_topic_id The ID of the new topic.
+ * @param int    $item_id The ID of the item.
+ * @param string $item_type The type of item.
+ */
+function bb_clear_activity_results_cache( $old_topic_id, $new_topic_id, $item_id, $item_type ) {
+	if ( empty( $item_type ) ) {
+		return;
+	}
+
+	// Clear activity cache for filtered results.
+	if (
+		function_exists( 'wp_cache_flush_group' ) &&
+		function_exists( 'wp_cache_supports' ) &&
+		wp_cache_supports( 'flush_group' )
+	) {
+		wp_cache_flush_group( 'bp_activity' );
+	} else {
+		wp_cache_flush();
+	}
+}
+
+add_action( 'bb_after_migrate_topic', 'bb_clear_activity_results_cache', 10, 4 );

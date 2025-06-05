@@ -647,6 +647,43 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 				</div>
 			</div>
 		</div>
+
+		<!-- Migrate Topic Modal -->
+		<div id="bb-hello-topic-migrate-backdrop" class="bb-hello-backdrop-activity-topic-migrate bb-modal-backdrop" style="display: none;"></div>
+		<div id="bb-hello-topic-migrate-container" class="bb-hello-activity-topic-migrate bb-modal-panel bb-modal-panel--activity-topic-migrate" role="dialog" aria-labelledby="bb-hello-activity-topic-migrate" style="display: none;">
+			<div class="bb-hello-header">
+				<div class="bb-hello-title">
+					<h2 id="bb-hello-title" tabindex="-1">
+						<?php esc_html_e( 'Delete Topic', 'buddyboss' ); ?>
+					</h2>
+				</div>
+			</div>
+			<div class="bb-hello-content">
+				<p>
+					<?php esc_html_e( 'Deleting this will remove to this topic from all related activity posts.', 'buddyboss' ); ?>
+				</p>
+				<div class="bb-existing-topic-list" id="bb_existing_topic_list">
+					<select name="bb_existing_topic_id" id="bb_existing_topic_id">
+						<option value="0"><?php esc_html_e( 'Select topic', 'buddyboss' ); ?></option>
+					</select>
+				</div>
+				<p>
+					<?php echo wp_kses( __( 'This action is permanent and cannot be <b>undone</b>.', 'buddyboss' ), array( 'b' => array() ) ); ?>
+				</p>
+				<div class="bb-popup-buttons">
+					<span id="bb_topic_cancel" class="button" tabindex="0">
+						<?php esc_html_e( 'Cancel', 'buddyboss' ); ?>
+					</span>
+					<input type="hidden" id="bb_topic_id" name="bb_topic_id" value="0">
+					<input type="hidden" id="bb_item_id" name="bb_item_id" value="0">
+					<input type="hidden" id="bb_item_type" name="bb_item_type" value="activity">
+					<input type="hidden" id="bb_topic_nonce" name="bb_topic_nonce" value="<?php echo esc_attr( wp_create_nonce( 'bb_migrate_topic' ) ); ?>">
+					<button type="button" id="bb_topic_migrate" class="button button-primary" disabled="disabled">
+						<?php esc_html_e( 'Confirm', 'buddyboss' ); ?>
+					</button>
+				</div>
+			</div>
+		</div>
 		<?php
 	}
 

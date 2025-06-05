@@ -5447,7 +5447,8 @@ h1.bb-advance-heading {
 
 // Activity Topics Settings Styles.
 
-.bb-modal-panel--activity-topic {
+.bb-modal-panel--activity-topic,
+.bb-modal-panel--activity-topic-migrate {
 
 	&:has(.bb-hello-content > .bb-hello-error) .bb-hello-header {
 		border-bottom: 0 !important;
@@ -5666,7 +5667,8 @@ h1.bb-advance-heading {
 }
 
 // Add topic modal
-.bb-modal-panel--activity-topic.bb-modal-panel {
+.bb-modal-panel--activity-topic.bb-modal-panel,
+.bb-modal-panel--activity-topic-migrate.bb-modal-panel {
 	width: 100%;
 	max-width: 700px;
 
@@ -5785,7 +5787,9 @@ h1.bb-advance-heading {
 }
 
 #bb-hello-container.bb-modal-panel,
-.admin-bar #bb-hello-container.bb-modal-panel {
+.admin-bar #bb-hello-container.bb-modal-panel,
+#bb-hello-topic-migrate-container.bb-modal-panel,
+.admin-bar #bb-hello-topic-migrate-container.bb-modal-panel {
 	top: 50%;
 	left: 50%;
 	right: unset;
@@ -5949,7 +5953,8 @@ h1.bb-advance-heading {
 	}
 }
 
-#bb-hello-container.bb-modal-panel {
+#bb-hello-container.bb-modal-panel,
+#bb-hello-topic-migrate-container.bb-modal-panel {
 	top: 50%;
 	bottom: initial;
 	transform: translateY(-50%);

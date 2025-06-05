@@ -32,21 +32,25 @@ window.bp = window.bp || {};
 			nonceSelector           : '#bb_topic_nonce',
 			actionFromSelector      : '#bb_action_from',
 			addTopicButtonSelector  : '.bb-add-topic',
-			closeModalSelector      : '.bb-model-close-button, #bb_topic_cancel',
+			closeModalSelector      : '.bb-model-close-button, .bb-hello-activity-topic #bb_topic_cancel, .bb-hello-activity-topic-migrate #bb_topic_cancel',
 			submitButtonSelector    : '#bb_topic_submit',
 			editTopicSelector       : '.bb-edit-topic',
 			deleteTopicSelector     : '.bb-delete-topic',
 			errorContainerSelector  : '.bb-hello-error',
 			errorContainer          : '<div class="bb-hello-error"><i class="bb-icon-rf bb-icon-exclamation"></i>',
 			topicActionsButton      : '.bb-topic-actions-wrapper .bb-topic-actions_button',
+			migrateTopicButtonSelector      : '#bb_topic_migrate',
+			migrateTopicBackdropModal       : '#bb-hello-backdrop-activity-topic-migrate',
+			migrateTopicContainerModal      : '#bb-activity-topic-migrate-form_modal',
 
 			// Classes.
 			modalOpenClass : 'activity-modal-open',
 
 			// AJAX actions.
-			addTopicAction    : 'bb_add_topic',
-			editTopicAction   : 'bb_edit_topic',
-			deleteTopicAction : 'bb_delete_topic',
+			addTopicAction     : 'bb_add_topic',
+			editTopicAction    : 'bb_edit_topic',
+			deleteTopicAction  : 'bb_delete_topic',
+			migrateTopicAction : 'bb_migrate_topic',
 
 			// Other settings.
 			topicsLimit : bbTopicsManagerVars.topics_limit,
@@ -271,6 +275,10 @@ window.bp = window.bp || {};
 			this.$itemId          = $( this.config.itemIdSelector );
 			this.$itemType        = $( this.config.itemTypeSelector );
 			this.$actionFrom      = $( this.config.actionFromSelector );
+			
+			// Migrate topic elements.
+			this.$migrateTopicBackdropModalSelector  = $( this.config.migrateTopicBackdropModal );
+			this.$migrateTopicContainerModalSelector = $( this.config.migrateTopicContainerModal );
 		},
 
 		/**
@@ -306,8 +314,10 @@ window.bp = window.bp || {};
 			});
 
 			// Disable submit button if no topic is selected.
-			this.$document.on( 'change', '.bb-topic-name-field', this.enableDisableSubmitButton.bind( this ) );
+			this.$document.on( 'change', '.bb-topic-name-field, #bb_existing_topic_id', this.enableDisableSubmitButton.bind( this ) );
 			this.$document.on( 'keyup', '#bb_topic_name, .bb-topic-name-field', this.enableDisableSubmitButton.bind( this ) );
+			
+			this.$document.on( 'click', this.config.migrateTopicButtonSelector, this.handleMigrateTopic.bind( this ) );
 		},
 
 		/**
@@ -507,15 +517,25 @@ window.bp = window.bp || {};
 		 *
 		 * @param {Event} event - The click event
 		 */
-		handleCloseModal : function ( event ) {
+		handleCloseModal: function ( event ) {
 			// Prevent default action and stop event propagation.
 			event.preventDefault();
 			event.stopPropagation();
 
 			$( 'body' ).removeClass( this.config.modalOpenClass );
 
-			this.$modal.hide();
-			this.$backdrop.hide();
+			if (
+				this.$modal.hasClass( 'bb-modal-panel--activity-topic' ) ||
+				this.$modal.hasClass( 'bb-action-popup--activity-topic' )
+			) {
+				this.$modal.hide();
+				this.$backdrop.hide();
+			}
+
+			if ( this.$migrateTopicContainerModalSelector.hasClass( 'bb-modal-panel--activity-topic-migrate' ) ) {
+				this.$migrateTopicBackdropModalSelector.hide();
+				this.$migrateTopicContainerModalSelector.hide();
+			}
 
 			// Reset data.
 			this.$topicName.val( '' );
@@ -631,33 +651,106 @@ window.bp = window.bp || {};
 			var itemId         = topicAttr.item_id;
 			var itemType       = topicAttr.item_type;
 			var topicName      = $topicItem.find( '.bb-topic-title' ).text().trim();
-			var confirmMessage = bbTopicsManagerVars.delete_topic_confirm.replace( '%s', topicName );
 
-			if ( confirm( confirmMessage ) ) {
+			// First, check if there are existing posts on this topic.
+			this.checkTopicPostsBeforeDelete( {
+				topicId    : topicId,
+				topicName  : topicName,
+				nonce      : nonce,
+				itemId     : itemId,
+				itemType   : itemType,
+				$topicItem : $topicItem
+			} );
+		},
 
-				// Prepare data for AJAX request.
-				var data = {
-					action    : this.config.deleteTopicAction,
-					topic_id  : topicId,
-					nonce     : nonce,
-					item_id   : itemId,
-					item_type : itemType
-				};
+		/**
+		 * Check if topic has existing posts before deletion.
+		 *
+		 * @param {Object} args - Arguments object containing topic data.
+		 */
+		checkTopicPostsBeforeDelete : function ( args ) {
+			var data = {
+				action    : this.config.deleteTopicAction,
+				topic_id  : args.topicId,
+				nonce     : args.nonce,
+				item_id   : args.itemId,
+				item_type : args.itemType
+			};
 
-				// Use the configured AJAX URL.
-				var ajaxUrl = this.config.ajaxUrl;
+			// Show loader
+			this.$migrateTopicContainerModalSelector.addClass( 'is-loading' );
 
-				// Send AJAX request
-				$.post( ajaxUrl, data, function ( response ) {
-					if ( response.success ) {
-						$topicItem.remove();
-						// Check if we need to show the "Add new topic" button after deletion.
-						BBTopicsManager.checkTopicsLimit();
-					} else {
-						alert( response.data.error );
+			// Add modal open class.
+			$( 'body' ).addClass( this.config.modalOpenClass );
+
+			// Show modal.
+			this.$migrateTopicContainerModalSelector.show();
+			this.$migrateTopicBackdropModalSelector.show();
+
+			// Send initial AJAX request to check for existing posts.
+			$.post( this.config.ajaxUrl, data, function ( response ) {
+				BBTopicsManager.$migrateTopicContainerModalSelector.removeClass( 'is-loading' );
+				if ( response.success && response.data ) {
+					var topicData = response.data;
+
+					BBTopicsManager.$migrateTopicContainerModalSelector.find( '#bb-hello-title' ).text( topicData.header_text );
+					BBTopicsManager.$migrateTopicContainerModalSelector.find( '#bb_topic_id' ).val( topicData.topic_id );
+					BBTopicsManager.$migrateTopicContainerModalSelector.find( '#bb_item_id' ).val( topicData.item_id );
+					BBTopicsManager.$migrateTopicContainerModalSelector.find( '#bb_item_type' ).val( topicData.item_type );
+					BBTopicsManager.$migrateTopicContainerModalSelector.find( '#bb_topic_nonce' ).val( topicData.nonce );
+					
+					// Clear existing options to prevent duplicates, then append new ones
+					var $topicSelect = BBTopicsManager.$migrateTopicContainerModalSelector.find( '#bb_existing_topic_list #bb_existing_topic_id' );
+					$topicSelect.find( 'option:not(:first)' ).remove();
+					
+					if ( topicData.topic_lists ) {
+						_.each( topicData.topic_lists, function ( topic ) {
+							var option = new Option( topic.name, topic.topic_id );
+							$topicSelect.append( option );
+						} );
 					}
-				}.bind( this ) );
-			}
+				} else {
+
+				}
+			} ).fail( function () {
+
+			}.bind(this));
+		},
+
+		handleMigrateTopic : function ( event ) {
+			var oldTopicId = this.$migrateTopicContainerModalSelector.find( '#bb_topic_id' ).val();
+			var nonce      = this.$migrateTopicContainerModalSelector.find( '#bb_topic_nonce' ).val();
+			var itemId     = this.$migrateTopicContainerModalSelector.find( '#bb_item_id' ).val();
+			var itemType   = this.$migrateTopicContainerModalSelector.find( '#bb_item_type' ).val();
+			var newTopicId = this.$migrateTopicContainerModalSelector.find( '#bb_existing_topic_id' ).val();
+			var $topicItem = $( '.bb-activity-topics-list .bb-activity-topic-item[data-topic-id="' + oldTopicId + '"]' );
+
+			// Prepare data for AJAX request.
+			var data = {
+				action    : this.config.migrateTopicAction,
+				old_topic_id  : oldTopicId,
+				new_topic_id  : newTopicId,
+				nonce     : nonce,
+				item_id   : itemId,
+				item_type : itemType,
+			};
+
+			// Use the configured AJAX URL.
+			var ajaxUrl = this.config.ajaxUrl;
+
+			// Send AJAX request.
+			$.post( ajaxUrl, data, function ( response ) {
+				if ( response.success ) {
+					$topicItem.remove();
+					this.handleCloseModal( event );
+				} else {
+					this.$migrateTopicContainerModalSelector.find( '.bb-hello-content' ).prepend( this.config.errorContainer );
+					this.$migrateTopicContainerModalSelector.find( '.bb-hello-error' ).append( response.data.error );
+				}
+			}.bind( this ) ).fail( function () {
+				this.$migrateTopicContainerModalSelector.find( '.bb-hello-content' ).prepend( this.config.errorContainer );
+				this.$migrateTopicContainerModalSelector.find( '.bb-hello-error' ).append( bbTopicsManagerVars.generic_error );
+			}.bind( this ) );
 		},
 
 		/**
@@ -1054,9 +1147,19 @@ window.bp = window.bp || {};
 
 		handleEnableDisableSubmitButton : function ( value ) {
 			if ( '' === value ) {
-				$( this.config.submitButtonSelector ).prop( 'disabled', true );
+				if ( this.$migrateTopicContainerModalSelector && this.$migrateTopicContainerModalSelector.is(':visible') ) {
+					$( this.config.migrateTopicButtonSelector ).prop( 'disabled', true );
+				}
+				if ( this.$modal && this.$modal.is(':visible') ) {
+					$( this.config.submitButtonSelector ).prop( 'disabled', true );
+				}
 			} else {
-				$( this.config.submitButtonSelector ).prop( 'disabled', false );
+				if ( this.$migrateTopicContainerModalSelector && this.$migrateTopicContainerModalSelector.is(':visible') ) {
+					$( this.config.migrateTopicButtonSelector ).prop( 'disabled', false );
+				}
+				if ( this.$modal && this.$modal.is(':visible') ) {
+					$( this.config.submitButtonSelector ).prop( 'disabled', false );
+				}
 			}
 		},
 
