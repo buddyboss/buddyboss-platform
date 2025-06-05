@@ -9,13 +9,11 @@
 defined( 'ABSPATH' ) || exit;
 
 if ( ! class_exists( 'BB_Readylaunch' ) ) {
-
 	/**
 	 * BuddyBoss Readylaunch object.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 */
-	#[\AllowDynamicProperties]
 	class BB_Readylaunch {
 
 		/**
@@ -32,6 +30,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * ReadyLaunch Settings.
 		 *
 		 * @since BuddyBoss [BBVERSION]
+		 * @var array
 		 */
 		public $settings = array();
 
@@ -48,10 +47,9 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
-		 * @return Controller|BB_Readylaunch|null
+		 * @return BB_Readylaunch|null
 		 */
 		public static function instance() {
-
 			if ( null === self::$instance ) {
 				$class_name     = __CLASS__;
 				self::$instance = new $class_name();
@@ -66,7 +64,6 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * @since BuddyBoss [BBVERSION]
 		 */
 		public function __construct() {
-
 			$enabled = bb_is_readylaunch_enabled();
 
 			// Register the ReadyLaunch menu.
@@ -101,10 +98,14 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 			// LearnDash integration.
 			add_action( 'wp_enqueue_scripts', array( $this, 'bb_readylaunch_learndash_enqueue_styles' ), 10 );
-
 			// Set up LearnDash integration.
 		}
 
+		/**
+		 * Load template stack for ReadyLaunch.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 */
 		protected function load_template_stack() {
 			add_filter(
 				'template_include',
@@ -124,6 +125,11 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			add_filter( 'bbp_get_template_stack', array( $this, 'add_forum_template_stack' ), PHP_INT_MAX );
 		}
 
+		/**
+		 * Load component integration for ReadyLaunch.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 */
 		protected function load_component_integration() {
 			if (
 				bp_is_active( 'activity' ) &&
@@ -153,6 +159,11 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			}
 		}
 
+		/**
+		 * Load login registration integration for ReadyLaunch.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 */
 		protected function load_login_registration_integration() {
 			// Remove BuddyBoss Theme login hooks.
 			add_action(
@@ -191,6 +202,11 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			add_action( 'login_form', array( $this, 'bb_rl_login_custom_form' ) );
 		}
 
+		/**
+		 * Load hooks for ReadyLaunch.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 */
 		protected function load_hooks() {
 			// Add Dynamic colours.
 			add_action( 'wp_head', array( $this, 'bb_rl_dynamic_colors' ) );
@@ -262,6 +278,15 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			remove_filter( 'bp_get_the_notification_delete_link', 'bp_nouveau_notifications_delete_link', 10, 1 );
 		}
 
+		/**
+		 * Mark notification as unread link.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $link The link.
+		 *
+		 * @return string
+		 */
 		public function bb_rl_notifications_mark_unread_link( $link = '' ) {
 			return $this->bb_rl_notifications_link(
 				$link,
@@ -271,6 +296,15 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			);
 		}
 
+		/**
+		 * Mark notification as read link.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $link The link.
+		 *
+		 * @return string
+		 */
 		public function bb_rl_notifications_mark_read_link( $link = '' ) {
 			return $this->bb_rl_notifications_link(
 				$link,
@@ -280,6 +314,15 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			);
 		}
 
+		/**
+		 * Delete notification link.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $link The link.
+		 *
+		 * @return string
+		 */
 		public function bb_rl_notifications_delete_link( $link = '' ) {
 			return $this->bb_rl_notifications_link(
 				$link,
@@ -289,12 +332,23 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			);
 		}
 
+		/**
+		 * Generate notification link.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $link       The link.
+		 * @param string $bp_tooltip The tooltip.
+		 * @param string $icon       The icon.
+		 * @param string $label      The label.
+		 *
+		 * @return string
+		 */
 		private function bb_rl_notifications_link( $link = '', $bp_tooltip = '', $icon = '', $label = '' ) {
 			$link = str_replace( 'class="', 'class="bp-tooltip ', $link );
 			preg_match( '/<a\s[^>]*>(.*)<\/a>/siU', $link, $match );
 
 			if ( ! empty( $match[0] ) && ! empty( $match[1] ) && ! empty( $icon ) && ! empty( $bp_tooltip ) ) {
-
 				$link = str_replace(
 					'>' . $match[1] . '<',
 					sprintf(
@@ -305,7 +359,6 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					),
 					$match[0]
 				);
-
 			}
 
 			return $link;
@@ -619,12 +672,20 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			return $stack;
 		}
 
+		/**
+		 * Add forum template stack for ReadyLaunch.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array $stack The template stack.
+		 *
+		 * @return array
+		 */
 		public function add_forum_template_stack( $stack ) {
 			$stylesheet_dir = get_stylesheet_directory();
 			$template_dir   = get_template_directory();
 
 			$stack = array_flip( $stack );
-
 
 			unset( $stack[ $stylesheet_dir ], $stack[ $template_dir ] );
 
@@ -657,7 +718,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			wp_enqueue_style( 'bb-readylaunch-font', buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/assets/fonts/fonts.css', array(), bp_get_version() );
 			wp_enqueue_style( 'bb-readylaunch-style-main', buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/css/main{$min}.css", array(), bp_get_version() );
 
-			// Register only if it's Activity component.
+			// Register only if it's an Activity component.
 			if ( bp_is_active( 'activity' ) && bp_is_activity_component() ) {
 				wp_enqueue_style( 'bb-readylaunch-activity', buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/css/activity{$min}.css", array(), bp_get_version() );
 
@@ -889,7 +950,6 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * @since BuddyBoss [BBVERSION]
 		 */
 		public function bb_fetch_header_messages() {
-
 			check_ajax_referer( 'bb-readylaunch', 'nonce' );
 
 			$type = ! empty( $_POST['tab'] ) ? sanitize_text_field( wp_unslash( $_POST['tab'] ) ) : 'all';
@@ -906,7 +966,6 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * @since BuddyBoss [BBVERSION]
 		 */
 		public function bb_fetch_header_notifications() {
-
 			check_ajax_referer( 'bb-readylaunch', 'nonce' );
 
 			$page = ! empty( $_POST['page'] ) ? intval( sanitize_text_field( wp_unslash( $_POST['page'] ) ) ) : 1;
@@ -1034,74 +1093,80 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			$has_more_items = ! empty( $args['has_more_items'] ) ? $args['has_more_items'] : false;
 			?>
 			<div class="bb-rl-list">
-				<h2><?php echo esc_html( $title ); ?></h2>
-				<?php
-				if ( ! empty( $items ) ) {
+				<h2>
+					<?php
+						echo esc_html( $title );
 					?>
-					<ul class="bb-rl-item-list" aria-live="polite" aria-relevant="all" aria-atomic="true">
-						<?php
-						foreach ( $items as $item ) {
-							?>
-							<li>
-								<?php
-								if ( ! empty( $item['thumbnail'] ) ) {
+				</h2>
+				<?php
+					if ( ! empty( $items ) ) {
+						?>
+						<ul class="bb-rl-item-list" aria-live="polite" aria-relevant="all" aria-atomic="true">
+							<?php
+								foreach ( $items as $item ) {
 									?>
-									<div class="item-avatar">
-										<a href="<?php echo esc_url( $item['permalink'] ); ?>">
-											<?php
-											echo wp_kses(
-												$item['thumbnail'],
-												array(
-													'img' => array(
-														'src' => true,
-														'class' => true,
-														'id' => true,
-														'width' => true,
-														'height' => true,
-														'alt' => true,
-													),
-												)
-											);
-											?>
-										</a>
-									</div>
-									<?php
-								} else {
-									?>
-									<div class="item-avatar">
-										<a href="<?php echo esc_url( $item['permalink'] ); ?>" title="<?php echo esc_attr( $item['title'] ); ?>" class="bb-rl-placeholder-avatar">
-											<span class="bb-rl-placeholder-avatar-image"></span>
-										</a>
-									</div>
+									<li>
+										<?php
+											if ( ! empty( $item['thumbnail'] ) ) {
+												?>
+												<div class="item-avatar">
+													<a href="<?php echo esc_url( $item['permalink'] ); ?>">
+														<?php
+															echo wp_kses(
+																$item['thumbnail'],
+																array(
+																	'img' => array(
+																		'src'    => true,
+																		'class'  => true,
+																		'id'     => true,
+																		'width'  => true,
+																		'height' => true,
+																		'alt'    => true,
+																	),
+																)
+															);
+														?>
+													</a>
+												</div>
+												<?php
+											} else {
+												?>
+												<div class="item-avatar">
+													<a href="<?php echo esc_url( $item['permalink'] ); ?>" title="<?php echo esc_attr( $item['title'] ); ?>" class="bb-rl-placeholder-avatar">
+														<span class="bb-rl-placeholder-avatar-image"></span>
+													</a>
+												</div>
+												<?php
+											}
+										?>
+										<div class="item-title">
+											<a href="<?php echo esc_url( $item['permalink'] ); ?>">
+												<?php echo esc_html( $item['title'] ); ?>
+											</a>
+										</div>
+									</li>
 									<?php
 								}
-								?>
-								<div class="item-title">
-									<a href="<?php echo esc_url( $item['permalink'] ); ?>">
-										<?php echo esc_html( $item['title'] ); ?>
+								if ( ! empty( $has_more_items ) ) {
+									?>
+									<a href="<?php echo ! empty( $args['show_more_link'] ) ? esc_url( $args['show_more_link'] ) : ''; ?>" class="bb-rl-show-more">
+										<i class="bb-icons-rl-caret-down"></i>
+										<?php echo esc_html__( 'Show More', 'buddyboss' ); ?>
 									</a>
-								</div>
-							</li>
-							<?php
-						}
-						if ( ! empty( $has_more_items ) ) {
+									<?php
+								}
 							?>
-							<a href="<?php echo ! empty( $args['show_more_link'] ) ? esc_url( $args['show_more_link'] ) : ''; ?>" class="bb-rl-show-more">
-								<i class="bb-icons-rl-caret-down"></i>
-								<?php echo esc_html__( 'Show More', 'buddyboss' ); ?>
-							</a>
-							<?php
-						}
+						</ul>
+						<?php
+					} else {
 						?>
-					</ul>
-					<?php
-				} else {
-					?>
-					<div class="widget-error">
-						<?php echo esc_html( $error_text ); ?>
-					</div>
-					<?php
-				}
+						<div class="widget-error">
+							<?php
+								echo esc_html( $error_text );
+							?>
+						</div>
+						<?php
+					}
 				?>
 			</div>
 			<?php
@@ -1117,7 +1182,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * @since BuddyBoss [BBVERSION]
 		 *
 		 * @param array $response The existing heartbeat response array.
-		 * @param array $data The data passed to the heartbeat request.
+		 * @param array $data     The data passed to the heartbeat request.
 		 *
 		 * @return array The modified heartbeat response array with unread notifications' data.
 		 */
@@ -1127,7 +1192,6 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				bp_is_active( 'notifications' ) &&
 				! empty( $data['bb_fetch_header_notifications'] )
 			) {
-
 				// Handle the mark_as_read_notifications.
 				if ( ! empty( $data['mark_as_read_notifications'] ) ) {
 					$ids = array_map( 'intval', explode( ',', $data['mark_as_read_notifications'] ) );
@@ -1183,7 +1247,6 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * @return void
 		 */
 		public function bb_mark_notification_read() {
-
 			if ( ! bp_is_active( 'notifications' ) ) {
 				return;
 			}
@@ -1514,7 +1577,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		}
 
 		/**
-		 * Filters to add readylaunch prefix.
+		 * Filters to add the ReadyLaunch prefix.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
@@ -1587,7 +1650,6 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * @return string Modified pagination links output.
 		 */
 		public function bb_rl_filter_paginate_links_output( $output, $args ) {
-
 			// Add custom class to span tags (disabled or active links).
 			$output = str_replace( 'page-numbers', 'bb-rl-page-numbers', $output );
 
@@ -1595,8 +1657,8 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			$next_label = esc_html__( 'Next', 'buddyboss' );
 
 			// Use prev_text and next_text passed in the paginate_links arguments.
-			$prev_text = isset( $args['prev_text'] ) ? $args['prev_text'] : __( '&larr; Prev', 'buddyboss' );
-			$next_text = isset( $args['next_text'] ) ? $args['next_text'] : __( 'Next &rarr;', 'buddyboss' );
+			$prev_text = $args['prev_text'] ?? __( '&larr; Prev', 'buddyboss' );
+			$next_text = $args['next_text'] ?? __( 'Next &rarr;', 'buddyboss' );
 
 			// Ensure Previous and Next links are always visible (even if disabled).
 			if ( strpos( $output, 'prev bb-rl-page-numbers' ) === false ) {
@@ -1621,7 +1683,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					$next_label,
 					$next_text
 				);
-				$output       .= $next_disabled;
+				$output        .= $next_disabled;
 			} else {
 				// Replace "Next" link text with custom text and add data-bb-rl-label attribute.
 				$output = preg_replace(
@@ -1689,17 +1751,17 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			$member_type = isset( $_POST['bb-rl-invite-type'] ) ? sanitize_text_field( wp_unslash( $_POST['bb-rl-invite-type'] ) ) : '';
 
 			$subject = bp_disable_invite_member_email_subject() && ! empty( sanitize_text_field( wp_unslash( $_POST['bp_member_invites_custom_subject'] ) ) )
-				? stripslashes( strip_tags( sanitize_text_field( wp_unslash( $_POST['bp_member_invites_custom_subject'] ) ) ) )
-				: stripslashes( strip_tags( bp_get_member_invitation_subject() ) );
+				? stripslashes( wp_strip_all_tags( sanitize_text_field( wp_unslash( $_POST['bp_member_invites_custom_subject'] ) ) ) )
+				: stripslashes( wp_strip_all_tags( bp_get_member_invitation_subject() ) );
 
 			$message = bp_disable_invite_member_email_content() && ! empty( sanitize_text_field( wp_unslash( $_POST['bp_member_invites_custom_content'] ) ) )
-				? stripslashes( strip_tags( sanitize_textarea_field( wp_unslash( $_POST['bp_member_invites_custom_content'] ) ) ) )
-				: stripslashes( strip_tags( bp_get_member_invitation_message() ) );
+				? stripslashes( wp_strip_all_tags( sanitize_textarea_field( wp_unslash( $_POST['bp_member_invites_custom_content'] ) ) ) )
+				: stripslashes( wp_strip_all_tags( bp_get_member_invitation_message() ) );
 
 			$message .= ' ' . bp_get_member_invites_wildcard_replace(
-				stripslashes( strip_tags( bp_get_invites_member_invite_url() ) ),
-				$email
-			);
+					stripslashes( wp_strip_all_tags( bp_get_invites_member_invite_url() ) ),
+					$email
+				);
 
 			$inviter_name = bp_core_get_user_displayname( $loggedin_user_id );
 			$email_encode = rawurlencode( $email );
@@ -1716,6 +1778,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				array(
 					'bp-invites' => 'accept-member-invitation',
 					'email'      => $email_encode,
+					// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode -- Used for legitimate encoding of user ID in invite URL
 					'inviter'    => base64_encode( (string) $loggedin_user_id ),
 				),
 				trailingslashit( bp_get_root_domain() ) . bp_get_signup_slug() . '/'
@@ -1734,7 +1797,8 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			if ( ! function_exists( 'bp_invites_kses_allowed_tags' ) ) {
 				require trailingslashit( buddypress()->plugin_dir . 'bp-invites/actions' ) . '/invites.php';
 			}
-			$mail = bp_send_email( 'invites-member-invite', $email, $args );
+
+			bp_send_email( 'invites-member-invite', $email, $args );
 
 			$post_id = wp_insert_post(
 				array(
@@ -1760,10 +1824,11 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			/**
 			 * Fires after a member invitation is sent.
 			 *
-			 * @param int $user_id Inviter user ID.
+			 * @since BuddyBoss [BBVERSION]
+			 *
 			 * @param int $post_id Invitation post ID.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @param int $user_id Inviter user ID.
 			 */
 			do_action( 'bp_member_invite_submit', $loggedin_user_id, $post_id );
 
@@ -1785,8 +1850,6 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * @return array
 		 */
 		public function bb_rl_theme_body_classes( $classes ) {
-			global $post, $wp_query;
-
 			if ( is_active_sidebar( 'bb-readylaunch-members-sidebar' ) ) {
 				$classes[] = 'bb-rl-has-sidebar';
 			}
@@ -1805,6 +1868,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 */
 		public function bb_rl_override_send_message_button_text( $args ) {
 			$args['link_text'] = esc_html__( 'Message', 'buddyboss' );
+
 			return $args;
 		}
 
@@ -1820,12 +1884,9 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * @return array $buttons Filtered buttons.
 		 */
 		public function bb_rl_member_directories_get_profile_actions( $buttons, $user_id, $button_type ) {
+			$enabled_message_action = ! function_exists( 'bb_enabled_member_directory_profile_action' ) || bb_enabled_member_directory_profile_action( 'message' );
 
-			$enabled_message_action = function_exists( 'bb_enabled_member_directory_profile_action' )
-				? bb_enabled_member_directory_profile_action( 'message' )
-				: true;
-
-			// Member directories primary actions.
+			// Member directories' primary actions.
 			$primary_action_btn = function_exists( 'bb_get_member_directory_primary_action' )
 				? bb_get_member_directory_primary_action()
 				: '';
@@ -1843,29 +1904,28 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				add_filter( 'bp_force_friendship_to_message', '__return_false' );
 				$is_message_active = apply_filters(
 					'bb_member_loop_show_message_button',
-					(bool) $enabled_message_action && bp_is_active( 'messages' ),
+					bp_is_active( 'messages' ),
 					$user_id,
 					bp_loggedin_user_id()
 				);
 				remove_filter( 'bp_force_friendship_to_message', '__return_false' );
 
 				if ( $is_message_active ) {
-
 					add_filter( 'bp_displayed_user_id', 'bb_member_loop_set_member_id' );
 					add_filter( 'bp_is_my_profile', 'bb_member_loop_set_my_profile' );
 
 					if ( 'message' === $primary_action_btn ) {
 						$primary_button_args               = function_exists( 'bb_member_get_profile_action_arguments' )
-						? bb_member_get_profile_action_arguments()
-						: array();
+							? bb_member_get_profile_action_arguments()
+							: array();
 						$primary_button_args['link_class'] = 'bb-rl-send-message-disabled';
 						$buttons['primary']                = bp_get_send_message_button( $primary_button_args );
 					} else {
 						$secondary_button_args               = function_exists( 'bb_member_get_profile_action_arguments' )
-						? bb_member_get_profile_action_arguments( 'directory', 'secondary' )
-						: array();
+							? bb_member_get_profile_action_arguments( 'directory', 'secondary' )
+							: array();
 						$secondary_button_args['link_class'] = 'bb-rl-send-message-disabled';
-						$buttons['secondary']               .= bp_get_send_message_button( $secondary_button_args );
+						$buttons['secondary']                .= bp_get_send_message_button( $secondary_button_args );
 					}
 
 					remove_filter( 'bp_displayed_user_id', 'bb_member_loop_set_member_id' );
@@ -1882,7 +1942,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * @since BuddyBoss [BBVERSION]
 		 *
 		 * @param string|bool $avatar_image_url Default avatar URL, false otherwise.
-		 * @param array       $params          Parameters for the avatar image.
+		 * @param array       $params           Parameters for the avatar image.
 		 *
 		 * @return string|bool $avatar_image_url Default avatar URL, false otherwise.
 		 */
@@ -1890,6 +1950,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			if ( isset( $params['object'] ) && 'group' === $params['object'] ) {
 				$avatar_image_url = esc_url( buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/images/group_avatar_image.jpeg' );
 			}
+
 			return $avatar_image_url;
 		}
 
@@ -1902,8 +1963,8 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 */
 		public static function bb_is_group_admin() {
 			return bp_is_active( 'groups' ) &&
-					bp_is_group_single() &&
-					bp_get_group_current_admin_tab();
+				   bp_is_group_single() &&
+				   bp_get_group_current_admin_tab();
 		}
 
 		/**
@@ -2071,7 +2132,6 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * @since BuddyBoss [BBVERSION]
 		 */
 		public function bb_rl_login_header_url() {
-
 			if ( function_exists( 'buddypress' ) && isset( buddypress()->buddyboss ) ) {
 				$enable_private_network = bp_get_option( 'bp-enable-private-network' );
 
@@ -2079,6 +2139,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					return '#';
 				}
 			}
+
 			return home_url();
 		}
 
@@ -2090,7 +2151,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		public function bb_rl_login_footer() {
 			?>
 			<script>
-				jQuery( document ).ready( function( $ ) {
+				jQuery( document ).ready( function ( $ ) {
 					var $forgetMeNot = $( '.login p.forgetmenot' );
 					var $lostMeNot = $( '.login p.lostmenot' );
 					$( $lostMeNot ).before( $forgetMeNot );
@@ -2136,7 +2197,13 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 */
 		public function bb_rl_login_custom_form() {
 			?>
-			<p class="lostmenot"><a href="<?php echo wp_lostpassword_url(); ?>"><?php esc_html_e( 'Forgot Password?', 'buddyboss' ); ?></a></p>
+			<p class="lostmenot">
+				<a href="<?php
+					echo esc_url( wp_lostpassword_url() ); ?>">
+					<?php
+						esc_html_e( 'Forgot Password?', 'buddyboss' ); ?>
+				</a>
+			</p>
 			<?php
 		}
 
@@ -2151,10 +2218,10 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			?>
 			<style>
 				:root {
-					--bb-rl-primary-color: <?php echo $color_light; ?>;
+					--bb-rl-primary-color: <?php echo esc_attr( $color_light ); ?>;
 
 					.bb-rl-dark-mode {
-						--bb-rl-primary-color: <?php echo $color_dark; ?>;
+						--bb-rl-primary-color: <?php echo esc_attr( $color_dark ); ?>;
 					}
 				}
 			</style>
@@ -2504,7 +2571,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					'sfwd-quiz',
 					'sfwd-assignment',
 					'sfwd-essays',
-					'sfwd-groups', // Use specific LearnDash group slug
+					'sfwd-groups', // Use specific LearnDash group slug.
 				);
 
 				foreach ( $ld_patterns as $pattern ) {
@@ -2546,7 +2613,6 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * @since BuddyBoss [BBVERSION]
 		 */
 		public function bb_rl_is_skin_appearance_enabled() {
-
 			$bb_rl_skin_appearance = bp_get_option( 'bb_rl_skin_appearance', false );
 
 			return $bb_rl_skin_appearance;
@@ -2621,12 +2687,14 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			// Check for archive pages first (these take priority).
 			if ( is_post_type_archive( $course_slug ) ) {
 				bp_get_template_part( 'learndash/ld30/archive-sfwd-courses' );
+
 				return;
 			}
 
 			// Check for singular pages using WordPress functions.
 			if ( is_singular( $course_slug ) ) {
 				bp_get_template_part( 'learndash/ld30/course' );
+
 				return;
 			}
 
@@ -2638,31 +2706,37 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				} else {
 					bp_get_template_part( 'learndash/ld30/lesson' );
 				}
+
 				return;
 			}
 
 			if ( is_singular( $topic_slug ) ) {
 				bp_get_template_part( 'learndash/ld30/topic' );
+
 				return;
 			}
 
 			if ( is_singular( $quiz_slug ) ) {
 				bp_get_template_part( 'learndash/ld30/quiz' );
+
 				return;
 			}
 
 			if ( is_singular( $assignment_slug ) ) {
 				bp_get_template_part( 'learndash/ld30/assignment' );
+
 				return;
 			}
 
 			if ( is_singular( $essays_slug ) ) {
 				bp_get_template_part( 'learndash/ld30/essays' );
+
 				return;
 			}
 
 			if ( is_singular( $group_slug ) ) {
 				bp_get_template_part( 'learndash/ld30/group' );
+
 				return;
 			}
 
@@ -2747,6 +2821,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			if ( is_null( $this->learndash_helper ) ) {
 				$this->learndash_helper = BB_Readylaunch_Learndash_Helper::instance();
 			}
+
 			return $this->learndash_helper;
 		}
 
