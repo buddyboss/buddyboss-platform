@@ -330,6 +330,14 @@ class BB_Topics_Manager {
 		} else {
 			$slug = sanitize_title( $slug );
 		}
+		if ( empty( $slug ) ) {
+			wp_send_json_error(
+				array(
+					'error' => __( 'Please enter a valid topic name.', 'buddyboss' ),
+					'topic' => array(),
+				)
+			);
+		}
 
 		if ( empty( $previous_topic_id ) ) {
 			$topic_data = $this->bb_add_topic(
