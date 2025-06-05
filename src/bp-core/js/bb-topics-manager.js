@@ -768,67 +768,86 @@ window.bp = window.bp || {};
 			event.preventDefault();
 			event.stopPropagation();
 
-			var $topicItem     = $( event.currentTarget );
-			var topicId        = $topicItem.data( 'topic-id' );
-			var topicUrl       = $topicItem.attr( 'href' );
-			var $filterBarLink = $( '.activity-topic-selector li a[data-topic-id="' + topicId + '"]' );
+			var $topicItem      = $( event.currentTarget );
+			var topicId         = $topicItem.data( 'topic-id' );
+			var topicUrl        = $topicItem.attr( 'href' );
+			var topicFilterATag = $( '.activity-topic-selector li a' );
+			var $filterBarLink  = topicFilterATag.filter( '[data-topic-id="' + topicId + '"]' );
 			var $newMainBarItem;
 
 			if ( $topicItem.closest( 'li' ).hasClass( 'menu-item-has-children' ) ) {
 				return;
 			}
 
-			// Extract hash from full URL if present.
-			var topicHash = '';
-			if ( -1 !== topicUrl.indexOf( '#' ) ) {
-				// Are we on the main activity/news feed?
-				var isMainFeed = BP_Nouveau.activity.params.topics.is_activity_directory;
-				if ( isMainFeed ) {
-					if ( $topicItem.closest( 'li.groups' ).length > 0 ) {
-						window.location.href = topicUrl;
-						return;
-					}
+			// Extract topic parameter from URL.
+			var topicParam = '', url;
+			if ( topicUrl ) {
+				try {
+					// Create URL object to properly parse the URL
+					url        = new URL( topicUrl, window.location.origin );
+					topicParam = url.searchParams.get( 'bb-topic' );
+				} catch ( e ) {
+					// Fallback for older browsers or invalid URLs
+					var urlParams = new URLSearchParams( topicUrl.split( '?' )[ 1 ] || '' );
+					topicParam    = urlParams.get( 'bb-topic' );
 				}
-				topicHash = topicUrl.substring( topicUrl.indexOf( '#' ) );
 			}
 
-			// Update the URL to include the topic slug (or remove it for "All") - only if not navigating.
-			if ( history.pushState && ! this.isNavigating ) {
-				var newUrl;
-				if ( ! topicId || $topicItem.hasClass( 'all' ) || 'all' === topicHash.toLowerCase() ) {
-					newUrl = window.location.protocol + '//' + window.location.host + window.location.pathname;
-				} else {
-					newUrl = window.location.protocol + '//' + window.location.host + window.location.pathname + topicHash;
+			// Are we on the main activity/news feed?
+			var isMainFeed = BP_Nouveau.activity.params.topics.is_activity_directory;
+			if ( isMainFeed ) {
+				if ( $topicItem.closest( 'li.groups' ).length > 0 ) {
+					window.location.href = topicUrl;
+					return;
 				}
-				window.history.pushState( { path : newUrl }, '', newUrl );
+			}
+
+			// Get current URL and construct new URL with topic parameter.
+			var currentUrl = window.location.href;
+			try {
+				// Create URL object to properly handle the URL
+				url = new URL( currentUrl );
+				if ( ! topicId || $topicItem.hasClass( 'all' ) || 'all' === topicParam ) {
+					url.searchParams.delete( 'bb-topic' );
+				} else {
+					url.searchParams.set( 'bb-topic', topicParam );
+				}
+				window.history.pushState( {}, '', url.toString() );
+			} catch ( e ) {
+				// Fallback for older browsers or invalid URLs
+				var newUrl = currentUrl.split( '?' )[ 0 ];
+				if ( topicId && ! $topicItem.hasClass( 'all' ) && 'all' !== topicParam ) {
+					newUrl += '?bb-topic=' + encodeURIComponent( topicParam );
+				}
+				window.history.pushState( {}, '', newUrl );
 			}
 
 			// Remove all selected/active classes.
-			$( '.activity-topic-selector li a' ).removeClass( 'selected active' );
+			topicFilterATag.removeClass( 'selected active' );
 
 			if ( $filterBarLink.length ) {
 				var $clickedListItem = $filterBarLink.closest( 'li' );
 				var isDropdownItem   = $clickedListItem.closest( '.bb_nav_more_dropdown' ).length > 0;
 
 				if ( isDropdownItem ) {
-					// Move from dropdown to main bar
+					// Move from dropdown to main bar.
 					this.moveTopicPosition( {
 						$topicItem : $filterBarLink,
 						topicId    : topicId
 					} );
-					// After move, select the new main bar item
+					// After move, select the new main bar item.
 					$newMainBarItem = $( '.activity-topic-selector li a[data-topic-id="' + topicId + '"]' ).first();
 					$newMainBarItem.addClass( 'selected active' );
 				} else {
-					// Just add classes, do not move
+					// Just add classes, do not move.
 					$filterBarLink.addClass( 'selected active' );
 				}
 			}
 
 			// Store the topic ID in BP's storage.
-			if ( ! topicId || $topicItem.hasClass( 'all' ) || 'all' === topicUrl.toLowerCase() ) {
+			if ( ! topicId || $topicItem.hasClass( 'all' ) || 'all' === topicParam ) {
 				bp.Nouveau.setStorage( 'bp-activity', 'topic_id', '' );
-				var $allItem = $( '.activity-topic-selector li a' ).first();
+				var $allItem = topicFilterATag.first();
 				if ( $allItem.length > 0 ) {
 					$allItem.addClass( 'selected active' );
 				}
@@ -841,33 +860,45 @@ window.bp = window.bp || {};
 		},
 
 		handleUrlHashTopic : function () {
-			if ( window.location.hash && window.location.hash.startsWith( '#topic-' ) ) {
-				var topicSlug = window.location.hash.substring( 1 ); // Remove the # symbol.
+			// Get topic slug from URL parameters.
+			var topicSlug = new URLSearchParams( window.location.search ).get( 'bb-topic' );
 
-				// Find the topic link with matching href.
-				var $topicLink = $( '.activity-topic-selector li a[href="#' + topicSlug + '"]' );
+			if ( topicSlug ) {
+				var topicFilterATag = $( '.activity-topic-selector li a' );
+				// Find the topic link with matching href or data attribute.
+				var $topicLink      = topicFilterATag.filter( function () {
+					var href     = $( this ).attr( 'href' ) || '';
+					var dataSlug = $( this ).data( 'topic-slug' );
+					return href.includes( 'bb-topic=' + topicSlug ) || dataSlug === topicSlug;
+				} );
 
 				if ( $topicLink.length ) {
 					// If we found a matching topic, trigger the filter.
 					$topicLink.trigger( 'click' );
 
-					// Move the topic position after "All" its for reload.
+					// Move the topic position after "All" for reload.
 					BBTopicsManager.moveTopicPosition( {
 						$topicItem : $topicLink,
 						topicId    : $topicLink.data( 'topic-id' )
 					} );
 
-					// Set selected/active classes
-					$( '.activity-topic-selector li a' ).removeClass( 'selected active' );
+					// Set selected/active classes.
+					topicFilterATag.removeClass( 'selected active' );
 					$topicLink.addClass( 'selected active' );
 
-					// Scroll to the feed [data-bp-list="activity"]
+					// Store the topic ID in BP's storage.
+					bp.Nouveau.setStorage( 'bp-activity', 'topic_id', $topicLink.data( 'topic-id' ) );
+
+					// Scroll to the feed [data-bp-list="activity"].
 					var $feed = $( '[data-bp-list="activity"]' );
 					if ( $feed.length > 0 ) {
-						jQuery( 'html, body' ).animate( { scrollTop: jQuery( $feed ).offset().top - 200 }, 300 );
+						$( 'html, body' ).animate( {
+							scrollTop : $feed.offset().top - 200
+						}, 300 );
 					}
 				}
 			} else {
+				// No topic selected, reset to "All".
 				bp.Nouveau.setStorage( 'bp-activity', 'topic_id', '' );
 				var $allItem = $( '.activity-topic-selector li a' ).first();
 				if ( $allItem.length > 0 ) {
@@ -1030,60 +1061,66 @@ window.bp = window.bp || {};
 		},
 
 		handleBrowserNavigation : function ( event ) {
-			// Set navigation flag to prevent URL updates
+			// Set navigation flag to prevent URL updates.
 			this.isNavigating = true;
 
-			// Handle browser back/forward navigation by checking the current URL hash
-			if ( window.location.hash && window.location.hash.startsWith( '#topic-' ) ) {
-				var topicSlug = window.location.hash.substring( 1 ); // Remove the # symbol.
-
-				// Find the topic link with matching href.
-				var $topicLink = $( '.activity-topic-selector li a[href="#' + topicSlug + '"]' );
+			// Get topic slug from URL parameters.
+			var topicSlug = new URLSearchParams( window.location.search ).get( 'bb-topic' );
+			var topicFilterATag;
+			if ( topicSlug ) {
+				topicFilterATag = $( '.activity-topic-selector li a' );
+				// Find the topic link with matching href or data attribute.
+				var $topicLink  = topicFilterATag.filter( function () {
+					var href     = $( this ).attr( 'href' ) || '';
+					var dataSlug = $( this ).data( 'topic-slug' );
+					return href.includes( 'bb-topic=' + topicSlug ) || dataSlug === topicSlug;
+				} );
 
 				if ( $topicLink.length ) {
 					var topicId = $topicLink.data( 'topic-id' );
 
-					// Remove all selected/active classes first
-					$( '.activity-topic-selector li a' ).removeClass( 'selected active' );
+					// Remove all selected/active classes first.
+					topicFilterATag.removeClass( 'selected active' );
 
-					// Move the topic position if needed
+					// Move the topic position if needed.
 					var $clickedListItem = $topicLink.closest( 'li' );
 					var isDropdownItem   = $clickedListItem.closest( '.bb_nav_more_dropdown' ).length > 0;
 
 					if ( isDropdownItem ) {
-						// Move from dropdown to main bar
+						// Move from dropdown to main bar.
 						this.moveTopicPosition( {
 							$topicItem : $topicLink,
 							topicId    : topicId
 						} );
-						// After move, select the new main bar item
+						// After move, select the new main bar item.
 						var $newMainBarItem = $( '.activity-topic-selector li a[data-topic-id="' + topicId + '"]' ).first();
 						$newMainBarItem.addClass( 'selected active' );
 					} else {
-						// Just add classes, do not move
+						// Just add classes, do not move.
 						$topicLink.addClass( 'selected active' );
 					}
 
-					// Store the topic ID in BP's storage
+					// Store the topic ID in BP's storage.
 					bp.Nouveau.setStorage( 'bp-activity', 'topic_id', topicId );
 
-					// Trigger the activity filter without preventing default (since we're handling navigation)
+					// Trigger the activity filter without preventing default (since we're handling navigation).
 					bp.Nouveau.Activity.filterActivity( event );
 				}
 			} else {
-				// No hash means "All" topics
-				$( '.activity-topic-selector li a' ).removeClass( 'selected active' );
+				topicFilterATag = $( '.activity-topic-selector li a' );
+				// No hash means "All" topics.
+				topicFilterATag.removeClass( 'selected active' );
 				bp.Nouveau.setStorage( 'bp-activity', 'topic_id', '' );
-				var $allItem = $( '.activity-topic-selector li a' ).first();
+				var $allItem = topicFilterATag.first();
 				if ( $allItem.length > 0 ) {
 					$allItem.addClass( 'selected active' );
 				}
 
-				// Trigger the activity filter to show all topics
+				// Trigger the activity filter to show all topics.
 				bp.Nouveau.Activity.filterActivity( event );
 			}
 
-			// Reset navigation flag after a short delay
+			// Reset navigation flag after a short delay.
 			var self = this;
 			setTimeout( function () {
 				self.isNavigating = false;
