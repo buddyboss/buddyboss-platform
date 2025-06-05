@@ -1744,6 +1744,236 @@
   cursor: not-allowed;
 }
 
+.bb-rl-quiz-entry .wpProQuiz_content .wpProQuiz_button[name="skip"] {
+  background-color: var(--bb-rl-background-tertiary-color);
+  color: var(--bb-rl-text-color);
+  border: 1px solid transparent;
+}
+
+.bb-rl-quiz-entry .wpProQuiz_content .wpProQuiz_button[name="skip"]:hover {
+  background-color: var(--bb-rl-background-tertiary-hover-color);
+}
+
+.bb-rl-quiz-entry .wpProQuiz_content .wpProQuiz_button[name="skip"]:focus {
+  outline: 2px solid var(--bb-rl-border-quinery-color);
+}
+
+.bb-rl-quiz-entry .wpProQuiz_content .wpProQuiz_button[name="skip"]:disabled {
+  background-color: var(--bb-rl-background-tertiary-color);
+  color: var(--bb-rl-text-disabled-color);
+  cursor: not-allowed;
+}
+
+.bb-rl-quiz-entry .wpProQuiz_content .wpProQuiz_button2 {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  font-weight: 500;
+  text-align: center;
+  cursor: pointer;
+  border-radius: var(--bb-rl-radius-md);
+  padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  text-decoration: none;
+  background-color: var(--bb-rl-background-tertiary-color);
+  color: var(--bb-rl-text-color);
+  border: 1px solid transparent;
+  padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
+  font-size: 0.875rem;
+  font-weight: 400;
+}
+
+.bb-rl-quiz-entry .wpProQuiz_content .wpProQuiz_button2:hover {
+  background-color: var(--bb-rl-background-tertiary-hover-color);
+}
+
+.bb-rl-quiz-entry .wpProQuiz_content .wpProQuiz_button2:focus {
+  outline: 2px solid var(--bb-rl-border-quinery-color);
+}
+
+.bb-rl-quiz-entry .wpProQuiz_content .wpProQuiz_button2:disabled {
+  background-color: var(--bb-rl-background-tertiary-color);
+  color: var(--bb-rl-text-disabled-color);
+  cursor: not-allowed;
+}
+
+.bb-rl-quiz-entry .learndash-wrapper .wpProQuiz_content .wpProQuiz_questionListItem label {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 22px;
+  color: var(--bb-rl-text-color);
+  border: 1px solid var(--bb-rl-border-secondary-color);
+  border-radius: var(--bb-rl-radius-md);
+}
+
+.bb-rl-quiz-entry .learndash-wrapper .wpProQuiz_content .wpProQuiz_time_limit {
+  background-color: var(--bb-rl-background-secondary-color);
+  border-radius: var(--bb-rl-radius-md);
+  padding: var(--bb-rl-space-200);
+}
+
+.bb-rl-quiz-entry .learndash-wrapper .wpProQuiz_content .wpProQuiz_time_limit::before {
+  background-color: var(--bb-rl-background-color);
+  height: var(--bb-rl-space-100);
+  border-radius: var(--bb-rl-radius-full);
+  bottom: var(--bb-rl-space-200);
+  left: var(--bb-rl-space-200);
+  right: var(--bb-rl-space-200);
+}
+
+.bb-rl-quiz-entry .learndash-wrapper .wpProQuiz_content .wpProQuiz_time_limit .time {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 22px;
+  color: var(--bb-rl-text-color);
+}
+
+.bb-rl-quiz-entry .learndash-wrapper .wpProQuiz_content .wpProQuiz_time_limit .wpProQuiz_progress {
+  background-color: var(--bb-rl-text-positive-secondary-color);
+  border-radius: var(--bb-rl-radius-full);
+  height: var(--bb-rl-space-100);
+}
+
+.bb-rl-quiz-entry .learndash-wrapper .wpProQuiz_content .wpProQuiz_time_limit .wpProQuiz_progress .wpProQuiz_progress_bar {
+  background-color: var(--bb-rl-text-positive-primary-color);
+}
+
+.bb-rl-quiz-entry .learndash-wrapper .wpProQuiz_content .wpProQuiz_response {
+  background-color: var(--bb-rl-background-secondary-color);
+  border: 1px solid var(--bb-rl-border-secondary-color);
+  color: var(--bb-rl-text-color);
+  border-radius: var(--bb-rl-radius-md);
+  padding: var(--bb-rl-space-300);
+}
+
+.bb-rl-quiz-entry .learndash-wrapper .wpProQuiz_content .wpProQuiz_response .wpProQuiz_incorrect {
+  color: var(--bb-rl-text-danger-secondary-color);
+}
+
+.bb-rl-quiz-entry .learndash-wrapper .wpProQuiz_content .wpProQuiz_response .wpProQuiz_correct {
+  color: var(--bb-rl-text-positive-secondary-color);
+}
+
+.bb-rl-quiz-entry .learndash-wrapper .wpProQuiz_content .wpProQuiz_questionListItem.wpProQuiz_answerCorrect label {
+  background-color: var(--bb-rl-background-positive-secondary-color);
+}
+
+.bb-rl-quiz-entry .learndash-wrapper .wpProQuiz_content .wpProQuiz_questionListItem.wpProQuiz_answerIncorrect label {
+  background-color: var(--bb-rl-background-danger-secondary-color);
+}
+
+.bb-rl-quiz-entry .learndash-wrapper .wpProQuiz_reviewSummary .wpProQuiz_reviewQuestion {
+  border-color: var(--bb-rl-border-secondary-color);
+}
+
+.bb-rl-quiz-entry .learndash-wrapper .wpProQuiz_reviewDiv .wpProQuiz_reviewQuestion,
+.bb-rl-quiz-entry .learndash-wrapper .wpProQuiz_reviewSummary .wpProQuiz_reviewQuestion {
+  background-color: var(--bb-rl-background-secondary-color);
+  border-radius: var(--bb-rl-radius-md);
+  padding: var(--bb-rl-space-100);
+}
+
+.bb-rl-quiz-entry .learndash-wrapper .wpProQuiz_reviewDiv .wpProQuiz_reviewQuestion ol,
+.bb-rl-quiz-entry .learndash-wrapper .wpProQuiz_reviewSummary .wpProQuiz_reviewQuestion ol {
+  display: flex;
+  flex-flow: wrap;
+  align-items: center;
+  gap: var(--bb-rl-space-50);
+}
+
+.bb-rl-quiz-entry .learndash-wrapper .wpProQuiz_reviewDiv .wpProQuiz_reviewQuestion li,
+.bb-rl-quiz-entry .learndash-wrapper .wpProQuiz_reviewSummary .wpProQuiz_reviewQuestion li {
+  background-color: var(--bb-rl-background-color);
+  border-radius: var(--bb-rl-radius-md);
+  border: 1px solid var(--bb-rl-border-secondary-color);
+  margin: 0;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--bb-rl-space-400);
+  height: var(--bb-rl-space-400);
+}
+
+.bb-rl-quiz-entry .learndash-wrapper .wpProQuiz_reviewDiv .wpProQuiz_reviewQuestion li.wpProQuiz_reviewQuestionTarget,
+.bb-rl-quiz-entry .learndash-wrapper .wpProQuiz_reviewSummary .wpProQuiz_reviewQuestion li.wpProQuiz_reviewQuestionTarget {
+  border: 1px solid var(--bb-rl-text-brand-primary-color);
+  outline: none;
+}
+
+.bb-rl-quiz-entry .learndash-wrapper .wpProQuiz_reviewDiv .wpProQuiz_reviewQuestion li.wpProQuiz_reviewQuestionSolved,
+.bb-rl-quiz-entry .learndash-wrapper .wpProQuiz_reviewSummary .wpProQuiz_reviewQuestion li.wpProQuiz_reviewQuestionSolved {
+  color: var(--bb-rl-text-color);
+}
+
+.bb-rl-quiz-entry .learndash-wrapper .wpProQuiz_reviewDiv .wpProQuiz_reviewQuestion li.wpProQuiz_reviewQuestionTarget,
+.bb-rl-quiz-entry .learndash-wrapper .wpProQuiz_reviewSummary .wpProQuiz_reviewQuestion li.wpProQuiz_reviewQuestionTarget {
+  color: var(--bb-rl-text-color);
+  box-shadow: none;
+}
+
+.bb-rl-quiz-entry .learndash-wrapper .wpProQuiz_reviewDiv .wpProQuiz_reviewLegend,
+.bb-rl-quiz-entry .learndash-wrapper .wpProQuiz_reviewSummary .wpProQuiz_reviewLegend {
+  margin: var(--bb-rl-space-100) 0 var(--bb-rl-space-200);
+}
+
+.bb-rl-quiz-entry .learndash-wrapper .wpProQuiz_reviewDiv .wpProQuiz_reviewLegend ol,
+.bb-rl-quiz-entry .learndash-wrapper .wpProQuiz_reviewSummary .wpProQuiz_reviewLegend ol {
+  display: flex;
+  flex-flow: wrap;
+  align-items: center;
+  gap: var(--bb-rl-space-100);
+}
+
+.bb-rl-quiz-entry .learndash-wrapper .wpProQuiz_reviewDiv .wpProQuiz_reviewLegend ol li,
+.bb-rl-quiz-entry .learndash-wrapper .wpProQuiz_reviewSummary .wpProQuiz_reviewLegend ol li {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--bb-rl-space-100);
+}
+
+.bb-rl-quiz-entry .learndash-wrapper .wpProQuiz_reviewDiv .wpProQuiz_reviewLegend .wpProQuiz_reviewText,
+.bb-rl-quiz-entry .learndash-wrapper .wpProQuiz_reviewSummary .wpProQuiz_reviewLegend .wpProQuiz_reviewText {
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 400;
+  line-height: var(--bb-rl-base-line-small);
+  color: var(--bb-rl-text-secondary-color);
+}
+
+.bb-rl-quiz-entry .learndash-wrapper .wpProQuiz_reviewDiv .wpProQuiz_reviewLegend .wpProQuiz_reviewColor,
+.bb-rl-quiz-entry .learndash-wrapper .wpProQuiz_reviewSummary .wpProQuiz_reviewLegend .wpProQuiz_reviewColor {
+  border-radius: var(--bb-rl-radius-sm);
+  width: var(--bb-rl-space-200);
+  height: var(--bb-rl-space-200);
+  margin: 0;
+}
+
+.bb-rl-quiz-entry .learndash-wrapper .wpProQuiz_reviewDiv .wpProQuiz_reviewLegend .wpProQuiz_reviewColor.wpProQuiz_reviewColor_AnswerCorrect,
+.bb-rl-quiz-entry .learndash-wrapper .wpProQuiz_reviewSummary .wpProQuiz_reviewLegend .wpProQuiz_reviewColor.wpProQuiz_reviewColor_AnswerCorrect {
+  background-color: var(--bb-rl-text-positive-secondary-color);
+}
+
+.bb-rl-quiz-entry .learndash-wrapper .wpProQuiz_reviewDiv .wpProQuiz_reviewLegend .wpProQuiz_reviewColor.wpProQuiz_reviewColor_AnswerIncorrect,
+.bb-rl-quiz-entry .learndash-wrapper .wpProQuiz_reviewSummary .wpProQuiz_reviewLegend .wpProQuiz_reviewColor.wpProQuiz_reviewColor_AnswerIncorrect {
+  background-color: var(--bb-rl-text-danger-secondary-color);
+}
+
+.bb-rl-quiz-entry .learndash-wrapper .wpProQuiz_reviewDiv .wpProQuiz_reviewLegend .wpProQuiz_reviewColor.wpProQuiz_reviewColor_Review,
+.bb-rl-quiz-entry .learndash-wrapper .wpProQuiz_reviewSummary .wpProQuiz_reviewLegend .wpProQuiz_reviewColor.wpProQuiz_reviewColor_Review {
+  background-color: var(--bb-rl-text-warning-secondary-color);
+}
+
+.bb-rl-quiz-entry .learndash-wrapper .wpProQuiz_reviewDiv .wpProQuiz_reviewLegend .wpProQuiz_reviewColor.wpProQuiz_reviewColor_Answer,
+.bb-rl-quiz-entry .learndash-wrapper .wpProQuiz_reviewSummary .wpProQuiz_reviewLegend .wpProQuiz_reviewColor.wpProQuiz_reviewColor_Answer {
+  background-color: var(--bb-rl-border-brand-primary-color);
+}
+
+.bb-rl-quiz-entry .learndash-wrapper .wpProQuiz_reviewDiv .wpProQuiz_reviewLegend .wpProQuiz_reviewColor.wpProQuiz_reviewQuestion_Target,
+.bb-rl-quiz-entry .learndash-wrapper .wpProQuiz_reviewSummary .wpProQuiz_reviewLegend .wpProQuiz_reviewColor.wpProQuiz_reviewQuestion_Target {
+  outline: 2px solid var(--bb-rl-border-brand-secondary-color);
+}
+
 .bb-rl-lms-sidebar-data {
   padding: var(--bb-rl-space-200) 0;
 }
