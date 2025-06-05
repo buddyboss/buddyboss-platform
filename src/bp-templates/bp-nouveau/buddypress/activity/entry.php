@@ -57,9 +57,10 @@ $activity_popup_title = sprintf( esc_html__( '%s\'s Post', 'buddyboss' ), bp_cor
 	<?php
 	global $activities_template;
 
-	$user_link = bp_get_activity_user_link();
-	$user_link = ! empty( $user_link ) ? esc_url( $user_link ) : '';
-	$user_id   = bp_get_activity_user_id();
+	$user_link       = bp_get_activity_user_link();
+	$user_link       = ! empty( $user_link ) ? esc_url( $user_link ) : '';
+	$user_id         = bp_get_activity_user_id();
+	$hp_profile_attr = ! empty( $user_id ) ? 'data-bb-hp-profile="' . esc_attr( $user_id ) . '"' : '';
 
 	if ( bp_is_active( 'groups' ) && ! bp_is_group() && buddypress()->groups->id === bp_get_activity_object_name() ) :
 
@@ -72,34 +73,46 @@ $activity_popup_title = sprintf( esc_html__( '%s\'s Post', 'buddyboss' ), bp_cor
 		$group_permalink = ! empty( $group_permalink ) ? esc_url( $group_permalink ) : '';
 		$activity_link   = bp_activity_get_permalink( $activities_template->activity->id, $activities_template->activity );
 		$activity_link   = ! empty( $activity_link ) ? esc_url( $activity_link ) : '';
+		$hp_group_attr   = ! empty( $group_id ) ? 'data-bb-hp-group="' . esc_attr( $group_id ) . '"' : '';
 		?>
 		<div class="bp-activity-head-group">
 			<div class="activity-group-avatar">
 				<div class="group-avatar">
-					<a class="group-avatar-wrap mobile-center" href="<?php echo $group_permalink; ?>" <?php echo ! empty( $group_id ) ? 'data-bb-hp-group="' . esc_attr( $group_id ) . '"' : ''; ?>>
+					<a class="group-avatar-wrap mobile-center" href="<?php echo $group_permalink; ?>" <?php echo $hp_group_attr; //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
 						<?php
 						echo bp_core_fetch_avatar(
 							array(
-								'item_id' => $group->id,
+								'item_id'    => $group->id,
 								'avatar_dir' => 'group-avatars',
-								'type' => 'thumb',
-								'object' => 'group',
-								'width' => 100,
-								'height' => 100,
-								'class' => 'avatar bb-hp-group-avatar'
+								'type'       => 'thumb',
+								'object'     => 'group',
+								'width'      => 100,
+								'height'     => 100,
+								'class'      => 'avatar bb-hp-group-avatar',
 							)
 						);
 						?>
 					</a>
 				</div>
 				<div class="author-avatar">
-					<a href="<?php echo esc_url( $user_link ); ?>" <?php echo ! empty( $user_id ) ? 'data-bb-hp-profile="' . esc_attr( $user_id ) . '"' : ''; ?>><?php bp_activity_avatar( array( 'type' => 'thumb', 'class' => 'avatar bb-hp-profile-avatar' ) ); ?></a>
+					<a href="<?php echo $user_link; ?>" <?php echo $hp_profile_attr; //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
+						<?php
+						bp_activity_avatar(
+							array(
+								'type'  => 'thumb',
+								'class' => 'avatar bb-hp-profile-avatar',
+							)
+						);
+						?>
+					</a>
 				</div>
 			</div>
 
 			<div class="activity-header activity-header--group">
 				<div class="activity-group-heading">
-					<a href="<?php echo esc_url( $group_permalink ); ?>" <?php echo ! empty( $group_id ) ? 'data-bb-hp-group="' . esc_attr( $group_id ) . '"' : ''; ?>><?php echo $group_name; ?></a>
+					<a href="<?php echo $group_permalink; ?>" <?php echo $hp_group_attr; //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
+						<?php echo $group_name; //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+					</a>
 				</div>
 				<div class="activity-group-post-meta">
 					<span class="activity-post-author">
@@ -108,19 +121,19 @@ $activity_popup_title = sprintf( esc_html__( '%s\'s Post', 'buddyboss' ), bp_cor
 						$activity_object = bp_get_activity_object_name();
 
 						if ( 'groups' === $activity_object && 'activity_update' === $activity_type ) {
-							// Show only user link and display name
+							// Show only user link and display name.
 							?>
-							<a href="<?php echo esc_url( $user_link ); ?>" <?php echo ! empty( $user_id ) ? 'data-bb-hp-profile="' . esc_attr( $user_id ) . '"' : ''; ?>>
+							<a href="<?php echo $user_link; ?>" <?php echo $hp_profile_attr; //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
 								<?php echo esc_html( bp_core_get_user_displayname( $activities_template->activity->user_id ) ); ?>
 							</a>
 							<?php
 						} else {
-							// Show the default activity action
+							// Show the default activity action.
 							bp_activity_action();
 						}
 						?>
 					</span>
-					<a href="<?php echo $activity_link; ?>">
+					<a href="<?php echo $activity_link; //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>">
 						<?php
 						$activity_date_recorded = bp_get_activity_date_recorded();
 						printf(
@@ -145,7 +158,16 @@ $activity_popup_title = sprintf( esc_html__( '%s\'s Post', 'buddyboss' ), bp_cor
 	<?php else : ?>
 
 		<div class="activity-avatar item-avatar">
-			<a href="<?php echo esc_url( $user_link ); ?>" <?php echo ! empty( $user_id ) ? 'data-bb-hp-profile="' . esc_attr( $user_id ) . '"' : ''; ?>><?php bp_activity_avatar( array( 'type' => 'full', 'class' => 'avatar bb-hp-profile-avatar' ) ); ?></a>
+			<a href="<?php echo $user_link; ?>" <?php echo $hp_profile_attr; //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
+				<?php
+					bp_activity_avatar(
+						array(
+							'type'  => 'full',
+							'class' => 'avatar bb-hp-profile-avatar',
+						)
+					);
+				?>
+			</a>
 		</div>
 
 		<div class="activity-header">
@@ -156,8 +178,7 @@ $activity_popup_title = sprintf( esc_html__( '%s\'s Post', 'buddyboss' ), bp_cor
 			?>
 		</div>
 
-	<?php endif;
-	?>
+	<?php endif; ?>
 
 	<div class="activity-content <?php bp_activity_entry_css_class(); ?>">
 
@@ -166,8 +187,8 @@ $activity_popup_title = sprintf( esc_html__( '%s\'s Post', 'buddyboss' ), bp_cor
 
 		if ( bp_nouveau_activity_has_content() ) :
 			?>
-			<div class="activity-inner"><?php bp_nouveau_activity_content(); ?></div>
-		<?php
+				<div class="activity-inner"><?php bp_nouveau_activity_content(); ?></div>
+			<?php
 		endif;
 
 		bp_nouveau_activity_hook( 'after', 'activity_content' );
@@ -196,7 +217,7 @@ $activity_popup_title = sprintf( esc_html__( '%s\'s Post', 'buddyboss' ), bp_cor
 			$class .= bb_is_activity_comment_threading_enabled() ? ' threaded-comments threaded-level-' . bb_get_activity_comment_threading_depth() : '';
 		}
 		?>
-		<div class="<?php echo $class ?>">
+		<div class="<?php echo esc_attr( $class ); ?>">
 			<?php
 			if ( bp_activity_get_comment_count() ) {
 				bp_activity_comments();
