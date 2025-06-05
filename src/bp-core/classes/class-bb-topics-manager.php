@@ -59,6 +59,15 @@ class BB_Topics_Manager {
 	public $activity_topic_rel_table;
 
 	/**
+	 * Table name for Topic History.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @var string
+	 */
+	public $topic_history_table;
+
+	/**
 	 * Cache group for topics.
 	 *
 	 * @since BuddyBoss [BBVERSION]
@@ -104,6 +113,7 @@ class BB_Topics_Manager {
 		$this->topics_table             = $prefix . 'bb_topics';
 		$this->topic_rel_table          = $prefix . 'bb_topic_relationships';
 		$this->activity_topic_rel_table = $prefix . 'bb_activity_topic_relationship';
+		$this->topic_history_table      = $prefix . 'bb_topic_history';
 
 		$this->setup_hooks();
 	}
@@ -192,6 +202,7 @@ class BB_Topics_Manager {
 		$topics_table             = $this->topics_table;
 		$topic_rel_table          = $this->topic_rel_table;
 		$activity_topic_rel_table = $this->activity_topic_rel_table;
+		$topic_history_table      = $this->topic_history_table;
 
 		$has_topics_table = $wpdb->query( $wpdb->prepare( 'show tables like %s', $topics_table ) ); //phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		if ( empty( $has_topics_table ) ) {
@@ -250,6 +261,30 @@ class BB_Topics_Manager {
 				KEY item_id (item_id),
 				KEY date_created (date_created),
 				KEY date_updated (date_updated)
+			) $charset_collate;";
+		}
+
+		$has_topic_history_table = $wpdb->query( $wpdb->prepare( 'show tables like %s', $topic_history_table ) ); //phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		if ( empty( $has_topic_history_table ) ) {
+			$sql[] = "CREATE TABLE {$topic_history_table} (
+				id BIGINT(20) UNSIGNED AUTO_INCREMENT,
+				item_id BIGINT(20) UNSIGNED NOT NULL,
+				item_type VARCHAR(10) NOT NULL,
+				old_topic_id BIGINT(20) UNSIGNED NOT NULL,
+				old_topic_slug VARCHAR(255) NOT NULL,
+				new_topic_id BIGINT(20) UNSIGNED NOT NULL,
+				new_topic_slug VARCHAR(255) NOT NULL,
+				action VARCHAR(20) NOT NULL,
+				date_created DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+				PRIMARY KEY (id),
+				KEY item_id (item_id),
+				KEY item_type (item_type),
+				KEY old_topic_id (old_topic_id),
+				KEY old_topic_slug (old_topic_slug),
+				KEY new_topic_id (new_topic_id),
+				KEY new_topic_slug (new_topic_slug),
+				KEY action (action),
+				KEY date_created (date_created)
 			) $charset_collate;";
 		}
 
