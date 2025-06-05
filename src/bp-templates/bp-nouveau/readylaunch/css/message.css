@@ -1949,6 +1949,7 @@ body.messages .bb-rl-content-wrapper {
   align-items: center;
   justify-content: center;
   font-size: 1rem;
+  font-weight: 500;
   text-align: center;
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);

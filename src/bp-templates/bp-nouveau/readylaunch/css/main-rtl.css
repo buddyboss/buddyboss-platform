@@ -689,6 +689,7 @@ h6 {
   align-items: center;
   justify-content: center;
   font-size: 1rem;
+  font-weight: 500;
   text-align: center;
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
@@ -728,6 +729,7 @@ h6 {
   align-items: center;
   justify-content: center;
   font-size: 1rem;
+  font-weight: 500;
   text-align: center;
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
@@ -2336,6 +2338,7 @@ div.vjs-menu li.vjs-selected .vjs-menu-item-text, div.vjs-menu li:hover .vjs-men
   align-items: center;
   justify-content: center;
   font-size: 1rem;
+  font-weight: 500;
   text-align: center;
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
@@ -2347,6 +2350,7 @@ div.vjs-menu li.vjs-selected .vjs-menu-item-text, div.vjs-menu li:hover .vjs-men
   border: 1px solid var(--bb-rl-background-brand-primary-color);
   padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
   font-size: 0.875rem;
+  font-weight: 400;
   margin-right: var(--bb-rl-space-100);
 }
 
@@ -2447,6 +2451,7 @@ div.vjs-menu li.vjs-selected .vjs-menu-item-text, div.vjs-menu li:hover .vjs-men
   align-items: center;
   justify-content: center;
   font-size: 1rem;
+  font-weight: 500;
   text-align: center;
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
@@ -2458,6 +2463,7 @@ div.vjs-menu li.vjs-selected .vjs-menu-item-text, div.vjs-menu li:hover .vjs-men
   border: 1px solid transparent;
   padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
   font-size: 0.875rem;
+  font-weight: 400;
   margin-left: var(--bb-rl-space-100);
 }
 
@@ -3637,6 +3643,7 @@ button[data-balloon] {
   align-items: center;
   justify-content: center;
   font-size: 1rem;
+  font-weight: 500;
   text-align: center;
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
@@ -3648,6 +3655,7 @@ button[data-balloon] {
 .bb-rl-button.bb-rl-button--small {
   padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
   font-size: 0.875rem;
+  font-weight: 400;
 }
 
 .bb-rl-button.bb-rl-button--brandFill {
@@ -3916,6 +3924,7 @@ button[data-balloon] {
   align-items: center;
   justify-content: center;
   font-size: 1rem;
+  font-weight: 500;
   text-align: center;
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
@@ -5224,6 +5233,7 @@ body.bb-readylaunch-template .select2-container--rl.select2-container--open:has(
   align-items: center;
   justify-content: center;
   font-size: 1rem;
+  font-weight: 500;
   text-align: center;
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
@@ -5374,6 +5384,7 @@ body.bb-readylaunch-template .select2-container--rl.select2-container--open:has(
   align-items: center;
   justify-content: center;
   font-size: 1rem;
+  font-weight: 500;
   text-align: center;
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
@@ -8392,6 +8403,7 @@ li.bb-rl-hideshow {
   align-items: center;
   justify-content: center;
   font-size: 1rem;
+  font-weight: 500;
   text-align: center;
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
@@ -8423,6 +8435,7 @@ li.bb-rl-hideshow {
   align-items: center;
   justify-content: center;
   font-size: 1rem;
+  font-weight: 500;
   text-align: center;
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
@@ -9103,6 +9116,7 @@ input.bb-rl-zoom-slider::-moz-range-progress {
   align-items: center;
   justify-content: center;
   font-size: 1rem;
+  font-weight: 500;
   text-align: center;
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
@@ -10828,6 +10842,7 @@ input.bb-rl-zoom-slider::-moz-range-progress {
   align-items: center;
   justify-content: center;
   font-size: 1rem;
+  font-weight: 500;
   text-align: center;
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
@@ -11043,6 +11058,7 @@ input.bb-rl-zoom-slider::-moz-range-progress {
   line-height: var(--bb-rl-base-line-small);
   padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
   font-size: 0.875rem;
+  font-weight: 400;
 }
 
 .bb-rl-advance-profile-search {
@@ -11142,6 +11158,7 @@ input.bb-rl-zoom-slider::-moz-range-progress {
   align-items: center;
   justify-content: center;
   font-size: 1rem;
+  font-weight: 500;
   text-align: center;
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
@@ -11153,6 +11170,7 @@ input.bb-rl-zoom-slider::-moz-range-progress {
   border: 1px solid var(--bb-rl-background-brand-primary-color);
   padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
   font-size: 0.875rem;
+  font-weight: 400;
 }
 
 .bb-rl-advance-profile-search .bps-form .submit-wrapper input.submit:hover {
@@ -11337,6 +11355,7 @@ input.bb-rl-zoom-slider::-moz-range-progress {
   align-items: center;
   justify-content: center;
   font-size: 1rem;
+  font-weight: 500;
   text-align: center;
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
@@ -15668,6 +15687,7 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
 .bb-rl-modal-move-file .bb-rl-model-footer .bb-rl-button {
   padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
   font-size: 0.875rem;
+  font-weight: 400;
 }
 
 .bb-rl-modal-move-file .bb-rl-model-footer .bb-rl-button.is-disabled {
@@ -17319,6 +17339,7 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   align-items: center;
   justify-content: center;
   font-size: 1rem;
+  font-weight: 500;
   text-align: center;
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
@@ -17480,6 +17501,7 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   align-items: center;
   justify-content: center;
   font-size: 1rem;
+  font-weight: 500;
   text-align: center;
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
@@ -17627,6 +17649,7 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   align-items: center;
   justify-content: center;
   font-size: 1rem;
+  font-weight: 500;
   text-align: center;
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
@@ -17638,6 +17661,7 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   border: 1px solid var(--bb-rl-border-tertiary-color);
   padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
   font-size: 0.875rem;
+  font-weight: 400;
 }
 
 .sent-invites .bb-rl-wrap-invites table#member-invites-table td:not(.bp-pagination) .revoked-access:hover {
@@ -17694,6 +17718,7 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   align-items: center;
   justify-content: center;
   font-size: 1rem;
+  font-weight: 500;
   text-align: center;
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
@@ -17759,6 +17784,7 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   align-items: center;
   justify-content: center;
   font-size: 1rem;
+  font-weight: 500;
   text-align: center;
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
@@ -17770,6 +17796,7 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   border: 1px solid transparent;
   padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
   font-size: 0.875rem;
+  font-weight: 400;
   font-weight: 500;
   line-height: var(--bb-rl-base-line-small);
 }
@@ -17865,6 +17892,7 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   align-items: center;
   justify-content: center;
   font-size: 1rem;
+  font-weight: 500;
   text-align: center;
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
@@ -17904,6 +17932,7 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   align-items: center;
   justify-content: center;
   font-size: 1rem;
+  font-weight: 500;
   text-align: center;
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
@@ -18072,6 +18101,7 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   align-items: center;
   justify-content: center;
   font-size: 1rem;
+  font-weight: 500;
   text-align: center;
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
@@ -18513,6 +18543,7 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   align-items: center;
   justify-content: center;
   font-size: 1rem;
+  font-weight: 500;
   text-align: center;
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
@@ -18524,6 +18555,7 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   border: 1px solid transparent;
   padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
   font-size: 0.875rem;
+  font-weight: 400;
 }
 
 .bb-rl-account-settings-section #account-data-export-form #submit:hover {
@@ -18581,6 +18613,7 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   align-items: center;
   justify-content: center;
   font-size: 1rem;
+  font-weight: 500;
   text-align: center;
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
@@ -18592,6 +18625,7 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   border: 1px solid transparent;
   padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
   font-size: 0.875rem;
+  font-weight: 400;
   margin-top: var(--bb-rl-space-50);
 }
 
@@ -18910,6 +18944,7 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   align-items: center;
   justify-content: center;
   font-size: 1rem;
+  font-weight: 500;
   text-align: center;
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
@@ -18921,6 +18956,7 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   border: 1px solid transparent;
   padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
   font-size: 0.875rem;
+  font-weight: 400;
 }
 
 .bb-rl-search-results-container .results-group-footer .view-all-link:hover {
@@ -19630,6 +19666,7 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   align-items: center;
   justify-content: center;
   font-size: 1rem;
+  font-weight: 500;
   text-align: center;
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
@@ -19643,6 +19680,7 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   border-bottom: 1px solid transparent;
   padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
   font-size: 0.875rem;
+  font-weight: 400;
   padding-right: var(--bb-rl-space-100);
 }
 
@@ -20066,6 +20104,7 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   align-items: center;
   justify-content: center;
   font-size: 1rem;
+  font-weight: 500;
   text-align: center;
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
@@ -20149,6 +20188,7 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   align-items: center;
   justify-content: center;
   font-size: 1rem;
+  font-weight: 500;
   text-align: center;
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);

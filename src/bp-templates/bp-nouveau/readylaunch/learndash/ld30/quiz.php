@@ -2,6 +2,29 @@
 /**
  * LearnDash Single Quiz Template for ReadyLaunch
  *
+ * Available Variables:
+ *
+ * $course_id                   : (int) ID of the course
+ * $course                      : (object) Post object of the course
+ * $course_settings             : (array) Settings specific to current course
+ * $course_status               : Course Status
+ * $has_access                  : User has access to course or is enrolled.
+ *
+ * $courses_options             : Options/Settings as configured on Course Options page
+ * $lessons_options             : Options/Settings as configured on Lessons Options page
+ * $quizzes_options             : Options/Settings as configured on Quiz Options page
+ *
+ * $user_id                     : (object) Current User ID
+ * $logged_in                   : (true/false) User is logged in
+ * $current_user                : (object) Currently logged in user object
+ * $post                        : (object) The quiz post object () (Deprecated in LD 3.1. User $quiz_post instead).
+ * $quiz_post                   : (object) The quiz post object ().
+ * $lesson_progression_enabled  : (true/false)
+ * $show_content                : (true/false) true if user is logged in and lesson progression is disabled or if previous lesson and topic is completed.
+ * $attempts_left               : (true/false)
+ * $attempts_count              : (integer) No of attempts already made
+ * $quiz_settings               : (array)
+ *
  * @package BuddyBoss\Core
  * @since BuddyBoss [BBVERSION]
  */
@@ -10,64 +33,93 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-// Ensure LearnDash functions are available
-if ( ! class_exists( 'SFWD_LMS' ) || ! function_exists( 'learndash_get_course_id' ) ) {
-	// Fallback to default content if LearnDash functions aren't available
-	?>
-	<div class="bb-learndash-content-wrap">
-		<main class="bb-learndash-content-area">
-			<article id="post-<?php the_ID(); ?>" <?php post_class('bb-rl-learndash-quiz'); ?>>
-				<header class="bb-rl-entry-header">
-					<h1 class="bb-rl-entry-title"><?php the_title(); ?></h1>
-				</header>
-				<div class="bb-rl-entry-content">
-					<?php the_content(); ?>
-				</div>
-			</article>
-		</main>
-	</div>
-	<?php
-	return;
+// Set up global post context for LearnDash
+global $post;
+if ( ! isset( $post ) ) {
+    $post = get_post( get_the_ID() );
 }
 
-// Handle both $post and $quiz_post variables for compatibility
-$quiz_id = get_the_ID();
-$quiz_post = isset( $quiz_post ) ? $quiz_post : get_post( $quiz_id );
-$user_id = get_current_user_id();
-$course_id = function_exists( 'learndash_get_course_id' ) ? learndash_get_course_id( $quiz_id ) : 0;
-$lesson_id = function_exists( 'learndash_get_lesson_id' ) ? learndash_get_lesson_id( $quiz_id ) : 0;
-$quiz = get_post( $quiz_id );
-$lesson_post = $lesson_id ? get_post( $lesson_id ) : null;
-$quiz_settings = function_exists( 'learndash_get_setting' ) ? learndash_get_setting( $quiz_post ) : array();
-$is_enrolled = function_exists( 'sfwd_lms_has_access' ) ? sfwd_lms_has_access( $course_id, $user_id ) : false;
-$quiz_attempts = function_exists( 'learndash_get_user_quiz_attempts' ) ? learndash_get_user_quiz_attempts( $user_id, $quiz_id ) : array();
-$attempts_count = is_array( $quiz_attempts ) ? count( $quiz_attempts ) : 0;
-$attempts_left = function_exists( 'learndash_quiz_attempts_left' ) ? learndash_quiz_attempts_left( $user_id, $quiz_id ) : -1;
+// Ensure we have the quiz_post variable
+if ( ( ! isset( $quiz_post ) ) || ( ! is_a( $quiz_post, 'WP_Post' ) ) ) {
+    $quiz_post = $post;
+}
 
+// Initialize variables if not already set by LearnDash
+if ( ! isset( $course_id ) || empty( $course_id ) ) {
+    $course_id = function_exists( 'learndash_get_course_id' ) ? learndash_get_course_id( $quiz_post->ID ) : 0;
+}
+
+if ( ! isset( $user_id ) ) {
+    $user_id = get_current_user_id();
+}
+
+if ( ! isset( $lesson_progression_enabled ) ) {
+    $lesson_progression_enabled = function_exists( 'learndash_lesson_progression_enabled' ) ? learndash_lesson_progression_enabled( $course_id ) : false;
+}
+
+if ( ! isset( $logged_in ) ) {
+    $logged_in = is_user_logged_in();
+}
+
+if ( ! isset( $current_user ) ) {
+    $current_user = wp_get_current_user();
+}
+
+if ( ! isset( $has_access ) ) {
+    $has_access = function_exists( 'sfwd_lms_has_access' ) ? sfwd_lms_has_access( $course_id, $user_id ) : false;
+}
+
+if ( ! isset( $attempts_left ) ) {
+    $attempts_left = function_exists( 'learndash_quiz_attempts_left' ) ? learndash_quiz_attempts_left( $user_id, $quiz_post->ID ) : -1;
+}
+
+if ( ! isset( $attempts_count ) ) {
+    $quiz_attempts = function_exists( 'learndash_get_user_quiz_attempts' ) ? learndash_get_user_quiz_attempts( $user_id, $quiz_post->ID ) : array();
+    $attempts_count = is_array( $quiz_attempts ) ? count( $quiz_attempts ) : 0;
+}
+
+if ( ! isset( $content ) ) {
+    $content = apply_filters( 'the_content', $quiz_post->post_content );
+}
+
+if ( ! isset( $materials ) ) {
+    $materials = function_exists( 'learndash_get_setting' ) ? learndash_get_setting( $quiz_post, 'lesson_materials' ) : '';
+}
+
+// Additional LearnDash required variables
+if ( ! isset( $courses_options ) ) {
+    $courses_options = function_exists( 'learndash_get_option' ) ? learndash_get_option( 'sfwd-courses' ) : array();
+}
+
+if ( ! isset( $lessons_options ) ) {
+    $lessons_options = function_exists( 'learndash_get_option' ) ? learndash_get_option( 'sfwd-lessons' ) : array();
+}
+
+if ( ! isset( $quizzes_options ) ) {
+    $quizzes_options = function_exists( 'learndash_get_option' ) ? learndash_get_option( 'sfwd-quiz' ) : array();
+}
+
+if ( ! isset( $quiz_settings ) ) {
+    $quiz_settings = function_exists( 'learndash_get_setting' ) ? learndash_get_setting( $quiz_post ) : array();
+}
+
+// ReadyLaunch specific variables for pagination
 $lesson_list = learndash_get_course_lessons_list( $course_id, null, array( 'num' => - 1 ) );
 $lesson_list = array_column( $lesson_list, 'post' );
 $course_quizzes_list = function_exists( 'learndash_get_course_quiz_list' ) ? learndash_get_course_quiz_list( $course_id, $user_id ) : array();
 
-// Initialize variables with fallback values to prevent fatal errors
 $content_urls = array();
 $quiz_urls = array();
 $pagination_urls = array( 'prev' => '', 'next' => '' );
 $current_quiz_no = 1;
 
-/* $content_urls = BB_Readylaunch::instance()->learndash_helper()->bb_rl_ld_custom_pagination( $course_id, $lesson_list, $course_quizzes_list );
-$quiz_urls = BB_Readylaunch::instance()->learndash_helper()->bb_rl_ld_custom_quiz_count( $course_id, $lesson_list, $course_quizzes_list );
-$pagination_urls = BB_Readylaunch::instance()->learndash_helper()->bb_rl_custom_next_prev_url( $content_urls );
-$current_quiz_no = BB_Readylaunch::instance()->learndash_helper()->bb_rl_ld_custom_quiz_key( $quiz_urls ); */
-
-// Find lesson number if quiz is associated with a lesson
-$lesson_no = 1;
-if ( $lesson_id ) {
-    foreach ( $lesson_list as $les ) {
-        if ( $les->ID == $lesson_id ) {
-            break;
-        }
-        $lesson_no ++;
-    }
+// Use ReadyLaunch helper if available
+if ( class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
+    $bb_rl_helper = BB_Readylaunch_Learndash_Helper::instance();
+    $content_urls = $bb_rl_helper->bb_rl_ld_custom_pagination( $course_id, $lesson_list, $course_quizzes_list );
+    $quiz_urls = $bb_rl_helper->bb_rl_ld_custom_quiz_count( $course_id, $lesson_list, $course_quizzes_list );
+    $pagination_urls = $bb_rl_helper->bb_rl_custom_next_prev_url( $content_urls );
+    $current_quiz_no = $bb_rl_helper->bb_rl_ld_custom_quiz_key( $quiz_urls );
 }
 ?>
 
@@ -77,9 +129,15 @@ if ( $lesson_id ) {
             <div class="bb-rl-quiz-block">
                 <header class="bb-rl-entry-header">
                     <div class="bb-rl-heading">
-                        <div class="bb-rl-quiz-count">
+                        <div class="bb-rl-quiz-count bb-rl-lms-inner-count">
                             <span class="bb-pages">
-                                <?php echo LearnDash_Custom_Label::get_label( 'quiz' ); ?> <?php echo $current_quiz_no; ?>
+                                <?php 
+                                if ( function_exists( 'LearnDash_Custom_Label::get_label' ) ) {
+                                    echo LearnDash_Custom_Label::get_label( 'quiz' );
+                                } else {
+                                    esc_html_e( 'Quiz', 'buddyboss' );
+                                }
+                                ?> <?php echo $current_quiz_no; ?>
                                 <span class="bb-total"><?php esc_html_e( 'of', 'buddyboss' ); ?> <?php echo is_array( $quiz_urls ) ? count( $quiz_urls ) : 1; ?></span>
                             </span>
                         </div>
@@ -88,17 +146,17 @@ if ( $lesson_id ) {
                         </div>
                     </div>
 
-                    <?php if ( has_post_thumbnail( $quiz_id ) ) : ?>
+                    <?php if ( has_post_thumbnail( $quiz_post->ID ) ) : ?>
                         <div class="bb-rl-quiz-featured-image">
-                            <?php echo get_the_post_thumbnail( $quiz_id, 'full' ); ?>
+                            <?php echo get_the_post_thumbnail( $quiz_post->ID, 'full' ); ?>
                         </div>
                     <?php endif; ?>
 
                     <div class="bb-rl-quiz-meta">
-                        <?php if ( $is_enrolled ) : ?>
+                        <?php if ( $has_access ) : ?>
                             <div class="bb-rl-quiz-status">
                                 <?php
-                                $quiz_completed = function_exists( 'learndash_is_quiz_complete' ) ? learndash_is_quiz_complete( $user_id, $quiz_id ) : false;
+                                $quiz_completed = function_exists( 'learndash_is_quiz_complete' ) ? learndash_is_quiz_complete( $user_id, $quiz_post->ID ) : false;
                                 $status_text = $quiz_completed ? esc_html__( 'Completed', 'buddyboss' ) : esc_html__( 'Not Started', 'buddyboss' );
                                 if ( $attempts_count > 0 && ! $quiz_completed ) {
                                     $status_text = esc_html__( 'In Progress', 'buddyboss' );
@@ -137,50 +195,272 @@ if ( $lesson_id ) {
                     </div>
                 </header>
 
-                <div class="bb-rl-entry-content">
-                    <?php
-                    // Check if quiz content should be shown based on lesson progression
-                    $show_content = true;
-                    if ( function_exists( 'learndash_is_quiz_accessable' ) ) {
-                        $quiz_access = learndash_is_quiz_accessable( $user_id, $quiz_post, true, $course_id );
-                        $show_content = ( $quiz_access === true );
-                    }
-                    
-                    if ( $show_content ) {
-                        echo apply_filters( 'the_content', $quiz_post->post_content );
-                        
-                        // Show quiz content/form if available
-                        if ( function_exists( 'learndash_get_template_part' ) ) {
-                            /**
-                             * Fires before the quiz content starts.
-                             *
-                             * @since 3.0.0
-                             *
-                             * @param int $quiz_id   Quiz ID.
-                             * @param int $course_id Course ID.
-                             * @param int $user_id   User ID.
-                             */
-                            do_action( 'learndash-quiz-before', $quiz_post->ID, $course_id, $user_id );
-                        }
-                    } else {
-                        ?>
-                        <div class="bb-rl-quiz-locked">
-                            <p><?php esc_html_e( 'This quiz is not yet available. Please complete the previous lessons and topics first.', 'buddyboss' ); ?></p>
-                        </div>
+                <div class="bb-rl-entry-content bb-rl-quiz-entry">
+                    <div class="<?php echo esc_attr( learndash_the_wrapper_class() ); ?>">
                         <?php
-                    }
-                    ?>
+                        /**
+                         * Fires before the quiz content starts.
+                         *
+                         * @since 3.0.0
+                         *
+                         * @param int $quiz_id   Quiz ID.
+                         * @param int $course_id Course ID.
+                         * @param int $user_id   User ID.
+                         */
+                        do_action( 'learndash-quiz-before', $quiz_post->ID, $course_id, $user_id );
+
+                        // Load infobar
+                        if ( ( defined( 'LEARNDASH_TEMPLATE_CONTENT_METHOD' ) ) && ( 'shortcode' === LEARNDASH_TEMPLATE_CONTENT_METHOD ) ) {
+                            $shown_content_key = 'learndash-shortcode-wrap-ld_infobar-' . absint( $course_id ) . '_' . (int) get_the_ID() . '_' . absint( $user_id );
+                            if ( false === strstr( $content, $shown_content_key ) ) {
+                                $shortcode_out = do_shortcode( '[ld_infobar course_id="' . $course_id . '" user_id="' . $user_id . '" post_id="' . get_the_ID() . '"]' );
+                                if ( ! empty( $shortcode_out ) ) {
+                                    echo $shortcode_out;
+                                }
+                            }
+                        } else {
+                            if ( function_exists( 'learndash_get_template_part' ) ) {
+                                learndash_get_template_part(
+                                    'modules/infobar.php',
+                                    array(
+                                        'context'   => 'quiz',
+                                        'course_id' => $course_id,
+                                        'user_id'   => $user_id,
+                                        'post'      => $quiz_post,
+                                    ),
+                                    true
+                                );
+                            }
+                        }
+
+                        // Implement lesson progression logic
+                        if ( ! empty( $lesson_progression_enabled ) ) :
+                            $last_incomplete_step = function_exists( 'learndash_is_quiz_accessable' ) ? learndash_is_quiz_accessable( $user_id, $quiz_post, true, $course_id ) : false;
+                            
+                            if ( ! empty( $user_id ) ) {
+                                if ( function_exists( 'learndash_user_progress_is_step_complete' ) && learndash_user_progress_is_step_complete( $user_id, $course_id, $quiz_post->ID ) ) {
+                                    $show_content = true;
+                                } else {
+                                    $bypass_course_limits_admin_users = isset( $bypass_course_limits_admin_users ) ? $bypass_course_limits_admin_users : false;
+                                    if ( $bypass_course_limits_admin_users ) {
+                                        remove_filter( 'learndash_content', 'lesson_visible_after', 1, 2 );
+                                        $previous_lesson_completed = true;
+                                    } else {
+                                        $previous_step_post_id = function_exists( 'learndash_user_progress_get_parent_incomplete_step' ) ? learndash_user_progress_get_parent_incomplete_step( $user_id, $course_id, $quiz_post->ID ) : 0;
+                                        if ( ( ! empty( $previous_step_post_id ) ) && ( $previous_step_post_id !== $quiz_post->ID ) ) {
+                                            $previous_lesson_completed = false;
+                                            $last_incomplete_step = get_post( $previous_step_post_id );
+                                        } else {
+                                            $previous_step_post_id = function_exists( 'learndash_user_progress_get_previous_incomplete_step' ) ? learndash_user_progress_get_previous_incomplete_step( $user_id, $course_id, $quiz_post->ID ) : 0;
+                                            $previous_lesson_completed = true;
+                                            if ( ( ! empty( $previous_step_post_id ) ) && ( $previous_step_post_id !== $quiz_post->ID ) ) {
+                                                $previous_lesson_completed = false;
+                                                $last_incomplete_step = get_post( $previous_step_post_id );
+                                            }
+                                        }
+
+                                        /**
+                                         * Filter to override previous step completed.
+                                         *
+                                         * @param bool $previous_lesson_completed True if previous step completed.
+                                         * @param int  $step_id                   Step Post ID.
+                                         * @param int  $user_id                   User ID.
+                                         */
+                                        $previous_lesson_completed = apply_filters( 'learndash_previous_step_completed', $previous_lesson_completed, $quiz_post->ID, $user_id );
+                                    }
+
+                                    $show_content = $previous_lesson_completed;
+                                }
+
+                                // Check for sample quizzes
+                                if ( function_exists( 'learndash_is_sample' ) && learndash_is_sample( $quiz_post ) ) {
+                                    $show_content = true;
+                                }
+
+                                // Handle blocked content
+                                if ( 
+                                    $last_incomplete_step 
+                                    && $last_incomplete_step instanceof WP_Post 
+                                    && (
+                                        ! ( function_exists( 'learndash_is_sample' ) && learndash_is_sample( $quiz_post ) )
+                                        || (bool) $has_access
+                                    )
+                                ) {
+                                    $show_content = false;
+
+                                    $sub_context = '';
+                                    if ( 'on' === learndash_get_setting( $last_incomplete_step->ID, 'lesson_video_enabled' ) ) {
+                                        if ( ! empty( learndash_get_setting( $last_incomplete_step->ID, 'lesson_video_url' ) ) ) {
+                                            if ( 'BEFORE' === learndash_get_setting( $last_incomplete_step->ID, 'lesson_video_shown' ) ) {
+                                                if ( ! learndash_video_complete_for_step( $last_incomplete_step->ID, $course_id, $user_id ) ) {
+                                                    $sub_context = 'video_progression';
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                    /**
+                                     * Fires before the quiz progression.
+                                     *
+                                     * @since 3.0.0
+                                     *
+                                     * @param int $quiz_id   Quiz ID.
+                                     * @param int $course_id Course ID.
+                                     * @param int $user_id   User ID.
+                                     */
+                                    do_action( 'learndash-quiz-progression-before', $quiz_post->ID, $course_id, $user_id );
+
+                                    if ( function_exists( 'learndash_get_template_part' ) ) {
+                                        learndash_get_template_part(
+                                            'modules/messages/lesson-progression.php',
+                                            array(
+                                                'previous_item' => $last_incomplete_step,
+                                                'course_id'     => $course_id,
+                                                'user_id'       => $user_id,
+                                                'context'       => 'quiz',
+                                                'sub_context'   => $sub_context,
+                                            ),
+                                            true
+                                        );
+                                    }
+
+                                    /**
+                                     * Fires after the quiz progress.
+                                     *
+                                     * @since 3.0.0
+                                     *
+                                     * @param int $quiz_id   Quiz ID.
+                                     * @param int $course_id Course ID.
+                                     * @param int $user_id   User ID.
+                                     */
+                                    do_action( 'learndash-quiz-progression-after', $quiz_post->ID, $course_id, $user_id );
+                                }
+                            } else {
+                                $show_content = true;
+                            }
+                        else :
+                            $show_content = true;
+                        endif;
+
+                        if ( $show_content ) :
+                            // Load tabs
+                            if ( function_exists( 'learndash_get_template_part' ) ) {
+                                learndash_get_template_part(
+                                    'modules/tabs.php',
+                                    array(
+                                        'course_id' => $course_id,
+                                        'post_id'   => $quiz_post->ID,
+                                        'user_id'   => $user_id,
+                                        'content'   => $content,
+                                        'materials' => $materials,
+                                        'context'   => 'quiz',
+                                    ),
+                                    true
+                                );
+                            }
+
+                            if ( $attempts_left ) :
+                                /**
+                                 * Fires before the actual quiz content (not WP_Editor content).
+                                 *
+                                 * @since 3.0.0
+                                 *
+                                 * @param int $quiz_id   Quiz ID.
+                                 * @param int $course_id Course ID.
+                                 * @param int $user_id   User ID.
+                                 */
+                                do_action( 'learndash-quiz-actual-content-before', $quiz_post->ID, $course_id, $user_id );
+
+                                // Generate quiz content if not already set
+                                if ( ! isset( $quiz_content ) || empty( $quiz_content ) ) {
+                                    // Get quiz pro ID
+                                    $quiz_pro_id = get_post_meta( $quiz_post->ID, 'quiz_pro_id', true );
+                                    $quiz_pro_id = absint( $quiz_pro_id );
+                                    if ( empty( $quiz_pro_id ) ) {
+                                        if ( isset( $quiz_settings['quiz_pro'] ) ) {
+                                            $quiz_settings['quiz_pro'] = absint( $quiz_settings['quiz_pro'] );
+                                            if ( ! empty( $quiz_settings['quiz_pro'] ) ) {
+                                                $quiz_pro_id = $quiz_settings['quiz_pro'];
+                                            }
+                                        }
+                                    }
+                                    
+                                    if ( ! empty( $quiz_pro_id ) ) {
+                                        // Generate quiz content
+                                        $quiz_content = wptexturize(
+                                            do_shortcode( '[LDAdvQuiz ' . $quiz_pro_id . ' quiz_pro_id="' . $quiz_pro_id . '" quiz_id="' . $quiz_post->ID . '" course_id="' . $course_id . '" lesson_id="' . ( isset( $quiz_settings['lesson'] ) ? $quiz_settings['lesson'] : '' ) . '" topic_id="' . ( isset( $quiz_settings['topic'] ) ? $quiz_settings['topic'] : '' ) . '"]' )
+                                        );
+                                        
+                                        // Apply the LearnDash filter
+                                        $quiz_content = apply_filters( 'learndash_quiz_content', $quiz_content, $quiz_post );
+                                    }
+                                }
+
+                                if ( isset( $quiz_content ) && ! empty( $quiz_content ) ) {
+                                    echo $quiz_content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Post content
+                                }
+
+                                /**
+                                 * Fires after the actual quiz content (not WP_Editor content).
+                                 *
+                                 * @since 3.0.0
+                                 *
+                                 * @param int $quiz_id   Quiz ID.
+                                 * @param int $course_id Course ID.
+                                 * @param int $user_id   User ID.
+                                 */
+                                do_action( 'learndash-quiz-actual-content-after', $quiz_post->ID, $course_id, $user_id );
+                            else :
+                                /**
+                                 * Display an alert for exhausted attempts
+                                 */
+                                echo '<div class="bb-rl-alert bb-rl-alert--warning">
+                                        <div class="bb-rl-alert-content">
+                                            <h3>' . esc_html__( 'Quiz Attempts Exhausted', 'buddyboss' ) . '</h3>
+                                            <p>' . sprintf(
+                                                esc_html__( 'You have already taken this %1$s %2$d time(s) and may not take it again.', 'buddyboss' ),
+                                                function_exists( 'learndash_get_custom_label_lower' ) ? learndash_get_custom_label_lower( 'quiz' ) : 'quiz',
+                                                $attempts_count
+                                            ) . '</p>
+                                        </div>
+                                      </div>';
+                            endif;
+                        endif;
+
+                        /**
+                         * Fires after the quiz content starts.
+                         *
+                         * @since 3.0.0
+                         *
+                         * @param int $quiz_id   Quiz ID.
+                         * @param int $course_id Course ID.
+                         * @param int $user_id   User ID.
+                         */
+                        do_action( 'learndash-quiz-after', $quiz_post->ID, $course_id, $user_id );
+                        ?>
+                    </div>
                 </div>
             </div>
 
-			<nav class="bb-rl-quiz-footer">
-                <div class="bb-rl-quiz-actions">
+			<nav class="bb-rl-ld-module-footer bb-rl-quiz-footer">
+                <div class="bb-rl-ld-module-actions bb-rl-quiz-actions">
                     <div class="bb-rl-course-steps">
-                        <button type="submit" class="bb-rl-mark-complete-button bb-rl-button bb-rl-button--brandFill bb-rl-button--small"><?php esc_html_e( 'Mark Complete', 'buddyboss' ); ?></button>
+                        <?php if ( isset( $show_content ) && $show_content && function_exists( 'learndash_is_quiz_complete' ) && learndash_is_quiz_complete( $user_id, $quiz_post->ID ) ) : ?>
+                            <span class="bb-rl-mark-complete-button bb-rl-button bb-rl-button--success bb-rl-button--small">
+                                <i class="bb-icon-l bb-icon-check"></i>
+                                <?php esc_html_e( 'Completed', 'buddyboss' ); ?>
+                            </span>
+                        <?php endif; ?>
                     </div>
-                    <div class="bb-rl-quiz-count">
+                    <div class="bb-rl-ld-module-count bb-rl-quiz-count">
                         <span class="bb-pages">
-                            <?php echo LearnDash_Custom_Label::get_label( 'quiz' ); ?> <?php echo $current_quiz_no; ?>
+                            <?php 
+                            if ( function_exists( 'LearnDash_Custom_Label::get_label' ) ) {
+                                echo LearnDash_Custom_Label::get_label( 'quiz' );
+                            } else {
+                                esc_html_e( 'Quiz', 'buddyboss' );
+                            }
+                            ?> <?php echo $current_quiz_no; ?>
                             <span class="bb-total"><?php esc_html_e( 'of', 'buddyboss' ); ?> <?php echo is_array( $quiz_urls ) ? count( $quiz_urls ) : 1; ?></span>
                         </span>
                     </div>
@@ -193,16 +473,14 @@ if ( $lesson_id ) {
                         }
                         ?>
                         <?php
-                        if (
-                            isset( $pagination_urls['next'] ) &&
-                            $pagination_urls['next'] != '' &&
-                            (
-                                function_exists( 'learndash_is_quiz_complete' ) ? 
-                                learndash_is_quiz_complete( $user_id, $quiz_post->ID ) : 
-                                false
-                            )
-                        ) {
-                            echo $pagination_urls['next'];
+                        if ( isset( $pagination_urls['next'] ) && $pagination_urls['next'] != '' ) {
+                            // Only show next link if no progression required or quiz is completed
+                            if ( ! $lesson_progression_enabled || 
+                                ( function_exists( 'learndash_is_quiz_complete' ) && learndash_is_quiz_complete( $user_id, $quiz_post->ID ) ) ) {
+                                echo $pagination_urls['next'];
+                            } else {
+                                echo '<span class="next-link empty-post">' . esc_html__( 'Next', 'buddyboss' ) . '<i class="bb-icons-rl-caret-right"></i></span>';
+                            }
                         } else {
                             echo '<span class="next-link empty-post">' . esc_html__( 'Next', 'buddyboss' ) . '<i class="bb-icons-rl-caret-right"></i></span>';
                         }

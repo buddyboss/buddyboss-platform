@@ -688,6 +688,7 @@ h6 {
   align-items: center;
   justify-content: center;
   font-size: 1rem;
+  font-weight: 500;
   text-align: center;
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
@@ -727,6 +728,7 @@ h6 {
   align-items: center;
   justify-content: center;
   font-size: 1rem;
+  font-weight: 500;
   text-align: center;
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
@@ -2335,6 +2337,7 @@ div.vjs-menu li.vjs-selected .vjs-menu-item-text, div.vjs-menu li:hover .vjs-men
   align-items: center;
   justify-content: center;
   font-size: 1rem;
+  font-weight: 500;
   text-align: center;
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
@@ -2346,6 +2349,7 @@ div.vjs-menu li.vjs-selected .vjs-menu-item-text, div.vjs-menu li:hover .vjs-men
   border: 1px solid var(--bb-rl-background-brand-primary-color);
   padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
   font-size: 0.875rem;
+  font-weight: 400;
   margin-left: var(--bb-rl-space-100);
 }
 
@@ -2446,6 +2450,7 @@ div.vjs-menu li.vjs-selected .vjs-menu-item-text, div.vjs-menu li:hover .vjs-men
   align-items: center;
   justify-content: center;
   font-size: 1rem;
+  font-weight: 500;
   text-align: center;
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
@@ -2457,6 +2462,7 @@ div.vjs-menu li.vjs-selected .vjs-menu-item-text, div.vjs-menu li:hover .vjs-men
   border: 1px solid transparent;
   padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
   font-size: 0.875rem;
+  font-weight: 400;
   margin-right: var(--bb-rl-space-100);
 }
 
@@ -2534,6 +2540,7 @@ div.vjs-menu li.vjs-selected .vjs-menu-item-text, div.vjs-menu li:hover .vjs-men
   align-items: center;
   justify-content: center;
   font-size: 1rem;
+  font-weight: 500;
   text-align: center;
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
@@ -2545,6 +2552,7 @@ div.vjs-menu li.vjs-selected .vjs-menu-item-text, div.vjs-menu li:hover .vjs-men
 .bb-rl-button--small {
   padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
   font-size: 0.875rem;
+  font-weight: 400;
 }
 
 .bb-rl-button--secondary-fill {
@@ -3013,6 +3021,7 @@ body.bb-rl-register {
   align-items: center;
   justify-content: center;
   font-size: 1rem;
+  font-weight: 500;
   text-align: center;
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
@@ -3222,6 +3231,7 @@ body.bb-rl-register {
   align-items: center;
   justify-content: center;
   font-size: 1rem;
+  font-weight: 500;
   text-align: center;
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
@@ -3230,6 +3240,7 @@ body.bb-rl-register {
   text-decoration: none;
   padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
   font-size: 0.875rem;
+  font-weight: 400;
   background-color: transparent;
   color: var(--bb-rl-text-brand-primary-color);
   border: 1px solid var(--bb-rl-text-brand-primary-color);

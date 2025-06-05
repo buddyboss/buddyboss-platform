@@ -60,3 +60,21 @@
 		color: var(--bb-rl-text-secondary-color);
 	}
 }
+
+.bb-rl-quiz-entry {
+
+	.ld-breadcrumbs {
+		display: none;
+	}
+
+	.wpProQuiz_content {
+
+		.wpProQuiz_button {
+
+			@include bb-rl-button;
+			@include bb-rl-button--brand-fill;
+			@include bb-rl-button--small;
+			font-weight: 400;
+		}
+	}
+}

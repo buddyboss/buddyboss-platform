@@ -360,6 +360,7 @@
   align-items: center;
   justify-content: center;
   font-size: 1rem;
+  font-weight: 500;
   text-align: center;
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
@@ -371,6 +372,7 @@
   border: 1px solid transparent;
   padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
   font-size: 0.875rem;
+  font-weight: 400;
   gap: var(--bb-rl-space-50);
 }
 
@@ -397,6 +399,7 @@
   align-items: center;
   justify-content: center;
   font-size: 1rem;
+  font-weight: 500;
   text-align: center;
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
@@ -408,6 +411,7 @@
   border: 1px solid var(--bb-rl-border-tertiary-color);
   padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
   font-size: 0.875rem;
+  font-weight: 400;
   gap: var(--bb-rl-space-50);
   cursor: default;
   pointer-events: none;
@@ -1205,6 +1209,7 @@
   align-items: center;
   justify-content: center;
   font-size: 1rem;
+  font-weight: 500;
   text-align: center;
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
@@ -1216,6 +1221,7 @@
   border: 1px solid var(--bb-rl-background-brand-primary-color);
   padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
   font-size: 0.875rem;
+  font-weight: 400;
 }
 
 .bb-rl-course-join .btn-join:hover {
@@ -1698,6 +1704,44 @@
   font-weight: 400;
   line-height: 22px;
   color: var(--bb-rl-text-secondary-color);
+}
+
+.bb-rl-quiz-entry .ld-breadcrumbs {
+  display: none;
+}
+
+.bb-rl-quiz-entry .wpProQuiz_content .wpProQuiz_button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  font-weight: 500;
+  text-align: center;
+  cursor: pointer;
+  border-radius: var(--bb-rl-radius-md);
+  padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  text-decoration: none;
+  background-color: var(--bb-rl-background-brand-primary-color);
+  color: var(--bb-rl-text-white-color);
+  border: 1px solid var(--bb-rl-background-brand-primary-color);
+  padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
+  font-size: 0.875rem;
+  font-weight: 400;
+  font-weight: 400;
+}
+
+.bb-rl-quiz-entry .wpProQuiz_content .wpProQuiz_button:hover {
+  background-color: var(--bb-rl-background-brand-primary-hover-color);
+}
+
+.bb-rl-quiz-entry .wpProQuiz_content .wpProQuiz_button:focus-within {
+  outline: 2px solid var(--bb-rl-border-brand-primary-color);
+}
+
+.bb-rl-quiz-entry .wpProQuiz_content .wpProQuiz_button:disabled {
+  background-color: var(--bb-rl-background-brand-disabled-color);
+  cursor: not-allowed;
 }
 
 .bb-rl-lms-sidebar-data {
