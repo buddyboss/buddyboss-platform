@@ -130,6 +130,7 @@ class BB_Topics_Manager {
 		add_action( 'wp_ajax_bb_edit_topic', array( $this, 'bb_edit_topic_ajax' ) );
 		add_action( 'wp_ajax_bb_delete_topic', array( $this, 'bb_delete_topic_ajax' ) );
 		add_action( 'wp_ajax_bb_update_topics_order', array( $this, 'bb_update_topics_order_ajax' ) );
+		add_action( 'bp_template_redirect', array( $this, 'bb_handle_topic_redirects' ) );
 	}
 
 	/**
@@ -355,6 +356,24 @@ class BB_Topics_Manager {
 
 		if ( is_wp_error( $topic_data ) ) {
 			wp_send_json_error( array( 'error' => $topic_data->get_error_message() ) );
+		}
+
+		// Add topic history when topic is updated.
+		if ( ! empty( $previous_topic_id ) && ! empty( $topic_data ) ) {
+			$previous_topic_data = $this->bb_get_topic_by( 'id', $previous_topic_id );
+			$previous_topic_slug = ! empty( $previous_topic_data ) ? $previous_topic_data->slug : '';
+
+			$this->bb_add_topic_history(
+				array(
+					'item_id'        => $item_id,
+					'item_type'      => $item_type,
+					'old_topic_id'   => $previous_topic_id,
+					'old_topic_slug' => $previous_topic_slug,
+					'new_topic_id'   => $topic_data->id,
+					'new_topic_slug' => $topic_data->slug,
+					'action'         => 'rename',
+				)
+			);
 		}
 
 		if ( 'activity' === $item_type ) {
@@ -1787,5 +1806,242 @@ class BB_Topics_Manager {
 		);
 
 		return ! empty( $activity_relationships['topics'] );
+	}
+
+	/**
+	 * Add a topic history.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $args {
+	 *     Array of arguments.
+	 *     @type int $item_id The ID of the item.
+	 *     @type string $item_type The type of item.
+	 *     @type int $old_topic_id The ID of the old topic.
+	 *     @type string $old_topic_slug The slug of the old topic.
+	 *     @type int $new_topic_id The ID of the new topic.
+	 *     @type string $new_topic_slug The slug of the new topic.
+	 *     @type string $action The action.
+	 *     @type bool $error_type The error type.
+	 * }
+	 *
+	 * @return bool True on success, false on failure.
+	 */
+	public function bb_add_topic_history( $args ) {
+		$r = bp_parse_args(
+			$args,
+			array(
+				'item_id'        => 0,
+				'item_type'      => 'activity',
+				'old_topic_id'   => 0,
+				'old_topic_slug' => '',
+				'new_topic_id'   => 0,
+				'new_topic_slug' => '',
+				'action'         => '',
+				'error_type'     => 'bool',
+			),
+			'bb_add_topic_history'
+		);
+
+		// Early validation - return immediately if required fields are missing.
+		if (
+			empty( $r['item_type'] ) ||
+			( 'groups' === $r['item_type'] && empty( $r['item_id'] ) ) ||
+			empty( $r['old_topic_id'] ) ||
+			empty( $r['old_topic_slug'] ) ||
+			empty( $r['new_topic_id'] ) ||
+			empty( $r['new_topic_slug'] ) ||
+			empty( $r['action'] )
+		) {
+			return false;
+		}
+
+		$result = $this->wpdb->insert(
+			$this->topic_history_table,
+			array(
+				'item_id'        => absint( $r['item_id'] ),
+				'item_type'      => sanitize_text_field( $r['item_type'] ),
+				'old_topic_id'   => absint( $r['old_topic_id'] ),
+				'old_topic_slug' => sanitize_title( $r['old_topic_slug'] ),
+				'new_topic_id'   => absint( $r['new_topic_id'] ),
+				'new_topic_slug' => sanitize_title( $r['new_topic_slug'] ),
+				'action'         => sanitize_text_field( $r['action'] ),
+				'date_created'   => bp_core_current_time(),
+			),
+			array( '%d', '%s', '%d', '%s', '%d', '%s', '%s', '%s' )
+		);
+
+		if ( false === $result ) {
+			if ( 'wp_error' === $r['error_type'] ) {
+				return new WP_Error(
+					'bb_topic_history_add_failed',
+					$this->wpdb->last_error
+				);
+			}
+			return false;
+		}
+
+		return false !== $result;
+	}
+
+	/**
+	 * Get the redirected topic slug from history.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $args {
+	 *     Array of arguments.
+	 *     @type string $old_slug The old topic slug to check.
+	 *     @type string $item_type The item type (optional, defaults to 'activity').
+	 *     @type int    $item_id The item ID (optional, defaults to 0 for activity).
+	 * }
+	 *
+	 * @return string|false The redirected topic slug if found, false otherwise.
+	 */
+	public function bb_get_redirected_topic_slug( $args ) {
+		$r = bp_parse_args(
+			$args,
+			array(
+				'old_slug'  => '',
+				'item_type' => 'activity',
+				'item_id'   => 0,
+			),
+			'bb_get_redirected_topic_slug'
+		);
+
+		$old_slug  = $r['old_slug'];
+		$item_type = $r['item_type'];
+		$item_id   = $r['item_id'];
+
+		if ( empty( $old_slug ) ) {
+			return false;
+		}
+
+		$old_slug = sanitize_title( $old_slug );
+
+		// Check cache first.
+		$cache_key       = 'bb_topic_redirect_' . $old_slug . '_' . $item_type . '_' . $item_id;
+		$cached_redirect = wp_cache_get( $cache_key, self::$topic_cache_group );
+		if ( false !== $cached_redirect ) {
+			return $cached_redirect;
+		}
+
+		// Build the WHERE clause based on item_type.
+		$where_clause = '';
+		$prepare_args = array( $old_slug );
+
+		if ( 'activity' === $item_type ) {
+			$where_clause   = 'WHERE old_topic_slug = %s AND item_type = %s';
+			$prepare_args[] = $item_type;
+		} elseif ( 'groups' === $item_type && ! empty( $item_id ) ) {
+			$where_clause   = 'WHERE old_topic_slug = %s AND item_type = %s AND item_id = %d';
+			$prepare_args[] = $item_type;
+			$prepare_args[] = $item_id;
+		} else {
+			// For other cases, just search by slug.
+			$where_clause = 'WHERE old_topic_slug = %s';
+		}
+
+		// Get the most recent redirect for this slug.
+		$sql = "SELECT new_topic_slug FROM {$this->topic_history_table} 
+				{$where_clause} 
+				ORDER BY date_created DESC 
+				LIMIT 1";
+
+		$new_slug = $this->wpdb->get_var( $this->wpdb->prepare( $sql, $prepare_args ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+
+		// If we found a redirect, check if that slug was also redirected (recursive redirects).
+		if ( $new_slug && $new_slug !== $old_slug ) {
+			$recursive_redirect = $this->bb_get_redirected_topic_slug(
+				array(
+					'old_slug'  => $new_slug,
+					'item_type' => $item_type,
+					'item_id'   => $item_id,
+				)
+			);
+			$final_slug         = $recursive_redirect ? $recursive_redirect : $new_slug;
+		} else {
+			$final_slug = $new_slug;
+		}
+
+		// Cache the result (cache false results too to avoid repeated queries).
+		wp_cache_set( $cache_key, $final_slug, self::$topic_cache_group, HOUR_IN_SECONDS );
+
+		return $final_slug;
+	}
+
+	/**
+	 * Handle topic redirects for renamed topics.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	public function bb_handle_topic_redirects() {
+		// Check if we have a bb-topic parameter.
+		$bb_topic = isset( $_GET['bb-topic'] ) ? sanitize_text_field( wp_unslash( $_GET['bb-topic'] ) ) : '';
+		if ( empty( $bb_topic ) ) {
+			return;
+		}
+
+		// First check if the topic exists with the current slug.
+		$args = array(
+			'slug' => $bb_topic,
+		);
+		if ( function_exists( 'bp_is_group' ) && bp_is_group() ) {
+			$args['item_type'] = 'groups';
+			$args['item_id']   = bp_get_current_group_id();
+		} else {
+			$args['item_type'] = 'activity';
+			$args['item_id']   = 0;
+		}
+
+		$existing_topic = $this->bb_get_topic( $args );
+
+		// If topic exists, no redirect needed.
+		if ( $existing_topic ) {
+			return;
+		}
+
+		// Check for redirect in topic history.
+		$new_slug = $this->bb_get_redirected_topic_slug(
+			array(
+				'old_slug'  => $bb_topic,
+				'item_type' => $args['item_type'],
+				'item_id'   => $args['item_id'],
+			)
+		);
+
+		if ( $new_slug ) {
+			// Build the redirect URL.
+			$current_url  = home_url( add_query_arg( array() ) );
+			$redirect_url = add_query_arg( 'bb-topic', $new_slug, remove_query_arg( 'bb-topic', $current_url ) );
+
+			/**
+			 * Filters the topic redirect URL.
+			 *
+			 * @since BuddyBoss [BBVERSION]
+			 *
+			 * @param string $redirect_url The redirect URL.
+			 * @param string $old_slug The old topic slug.
+			 * @param string $new_slug The new topic slug.
+			 * @param string $item_type The item type (activity or groups).
+			 * @param int    $item_id The item ID.
+			 */
+			$redirect_url = apply_filters( 'bb_topic_redirect_url', $redirect_url, $bb_topic, $new_slug, $args['item_type'], $args['item_id'] );
+
+			/**
+			 * Fires before a topic redirect is performed.
+			 *
+			 * @since BuddyBoss [BBVERSION]
+			 *
+			 * @param string $old_slug The old topic slug.
+			 * @param string $new_slug The new topic slug.
+			 * @param string $item_type The item type (activity or groups).
+			 * @param int    $item_id The item ID.
+			 */
+			do_action( 'bb_topic_before_redirect', $bb_topic, $new_slug, $args['item_type'], $args['item_id'] );
+
+			wp_safe_redirect( $redirect_url, 301 );
+			exit;
+		}
 	}
 }
