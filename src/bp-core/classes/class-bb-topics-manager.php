@@ -179,6 +179,8 @@ class BB_Topics_Manager {
 				'delete_topic_confirm'         => esc_html__( 'Are you sure you want to delete "%s"? This cannot be undone.', 'buddyboss' ),
 				'bb_update_topics_order_nonce' => wp_create_nonce( 'bb_update_topics_order' ),
 				'generic_error'                => esc_html__( 'An error occurred while updating topic order.', 'buddyboss' ),
+				'create_topic_text'            => __( 'Create Topic', 'buddyboss' ),
+				'edit_topic_text'              => __( 'Edit Topic', 'buddyboss' ),
 			)
 		);
 		wp_localize_script(
@@ -379,7 +381,7 @@ class BB_Topics_Manager {
 					'item_type'      => $item_type,
 					'old_topic_id'   => $previous_topic_id,
 					'old_topic_slug' => $previous_topic_slug,
-					'new_topic_id'   => $topic_data->id,
+					'new_topic_id'   => $topic_data->topic_id,
 					'new_topic_slug' => $topic_data->slug,
 					'action'         => 'rename',
 				)

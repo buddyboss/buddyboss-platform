@@ -657,6 +657,11 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 						<?php esc_html_e( 'Deleting', 'buddyboss' ); ?>
 					</h2>
 				</div>
+				<div class="bb-hello-close">
+					<button type="button" class="close-modal button">
+						<i class="bb-icon-f bb-icon-times"></i>
+					</button>
+				</div>
 			</div>
 			<div class="bb-hello-content">
 				<p class="bb-hello-content-description">

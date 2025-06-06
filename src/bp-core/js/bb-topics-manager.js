@@ -425,7 +425,14 @@ window.bp = window.bp || {};
 			$( 'body' ).addClass( this.config.modalOpenClass );
 
 			// Remove any existing error messages.
-			this.$modal.find(this.config.errorContainerSelector).remove();
+			this.$modal.find( this.config.errorContainerSelector ).remove();
+			
+			if ( this.$modal.find( '.bb-model-header h4 .target_name' ).length ) {
+				this.$modal.find( '.bb-model-header h4 .target_name' ).text( bbTopicsManagerVars.create_topic_text );
+			}
+			if ( this.$modal.find( '.bb-hello-title h2' ).length ) {
+				this.$modal.find( '.bb-hello-title h2' ).text( bbTopicsManagerVars.create_topic_text );
+			}
 
 			// Clear form fields.
 			this.$topicName.val( '' );
@@ -594,6 +601,13 @@ window.bp = window.bp || {};
 
 			// Add modal open class.
 			$( 'body' ).addClass( this.config.modalOpenClass );
+			
+			if ( this.$modal.find( '.bb-model-header h4 .target_name' ).length ) {
+				this.$modal.find( '.bb-model-header h4 .target_name' ).text( bbTopicsManagerVars.edit_topic_text );
+			}
+			if ( this.$modal.find( '.bb-hello-title h2' ).length ) {
+				this.$modal.find( '.bb-hello-title h2' ).text( bbTopicsManagerVars.edit_topic_text );
+			}
 
 			// Show modal.
 			this.$modal.show();
