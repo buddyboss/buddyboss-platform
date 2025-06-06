@@ -496,21 +496,21 @@ function bp_nouveau_ajax_document_get_document_description() {
 			$document_description = ob_get_contents();
 			ob_end_clean();
 
+			/**
+			 * Filter the document description HTML.
+			 *
+			 * @since BuddyBoss [BBVERSION]
+			 *
+			 * @param string $document_description The document description HTML.
+			 * @param object $document             Document object.
+			 * @param int    $document_id          Document ID.
+			 * @param int    $attachment_id        Attachment ID.
+			 * @param bool   $can_edit_btn         Whether the user can edit.
+			 * @param bool   $can_download_btn     Whether the user can download.
+			 *
+			 * @return string The modified document description HTML.
+			 */
 			$document_description = apply_filters(
-				/**
-				 * Filter the document description HTML.
-				 *
-				 * @since BuddyBoss [BBVERSION]
-				 *
-				 * @param string $document_description The document description HTML.
-				 * @param object $document Document object.
-				 * @param int    $document_id Document ID.
-				 * @param int    $attachment_id Attachment ID.
-				 * @param bool   $can_edit_btn Whether user can edit.
-				 * @param bool   $can_download_btn Whether user can download.
-				 *
-				 * @return string The modified document description HTML.
-				 */
 				'bp_nouveau_get_document_description_html',
 				$document_description,
 				$document,

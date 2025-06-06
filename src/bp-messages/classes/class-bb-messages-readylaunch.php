@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyBoss Messages Readylaunch Class
+ * BuddyBoss Messages ReadyLaunch Class
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -10,7 +10,7 @@
  */
 
 /**
- * BuddyBoss Messages Readylaunch.
+ * BuddyBoss Messages ReadyLaunch.
  *
  * @since   BuddyBoss [BBVERSION]
  * @package BuddyBoss\Messages\Classes
@@ -46,7 +46,7 @@ class BB_Messages_Readylaunch {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @return Controller|BB_Activity_Readylaunch|null
+	 * @return BB_Messages_Readylaunch|null
 	 */
 	public static function instance() {
 
@@ -75,7 +75,7 @@ class BB_Messages_Readylaunch {
 	}
 
 	/**
-	 * Localize the scripts.
+	 * Localise the scripts.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
@@ -172,8 +172,8 @@ class BB_Messages_Readylaunch {
 		}
 
 		$first_message = BP_Messages_Thread::get_first_message( $thread_id );
-		$group_id      = (int) bp_messages_get_meta( $first_message->id, 'group_id', true );
-		$message_from  = bp_messages_get_meta( $first_message->id, 'message_from', true ); // group.
+		$group_id      = (int) bp_messages_get_meta( $first_message->id, 'group_id' );
+		$message_from  = bp_messages_get_meta( $first_message->id, 'message_from' ); // group.
 
 		// Get media attachments if BuddyBoss Media component is active.
 		$media_component = bp_is_active( 'media' ) &&
@@ -340,7 +340,7 @@ class BB_Messages_Readylaunch {
 					$filename            = basename( $attached_file );
 					$text_attachment_url = wp_get_attachment_url( $attachment_id );
 					$audio_url           = in_array( $extension, bp_get_document_preview_music_extensions(), true ) ? bp_document_get_preview_url( bp_get_document_id(), $attachment_id ) : '';
-					$video_url           = in_array( $extension, bp_get_document_preview_video_extensions(), true ) ? bb_document_video_get_symlink( bp_get_document_id(), true ) : '';
+					$video_url           = in_array( $extension, bp_get_document_preview_video_extensions(), true ) ? bb_document_video_get_symlink( bp_get_document_id() ) : '';
 
 					$response['files'][] = array(
 						'url'            => bp_document_get_preview_url( $document->id, $attachment_id ),

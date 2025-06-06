@@ -347,19 +347,16 @@ class BB_Group_Readylaunch {
 								$member_user_id  = bp_get_member_user_id();
 								$group_member_id = bp_get_group_member_id();
 
-								// Member last activity.
+								//Member's last activity.
 								$member_last_activity = bp_get_last_activity( $member_user_id );
 
 								// Get Primary action.
 								$is_blocked         = false;
-								$moderation_class   = '';
-								if ( bp_is_active( 'moderation' ) ) {
-									if ( bp_moderation_is_user_suspended( $member_user_id ) ) {
-										$moderation_class .= 'bp-user-suspended';
-									} elseif ( bb_moderation_is_user_blocked_by( $member_user_id ) ) {
-										$is_blocked        = true;
-										$moderation_class .= ' bp-user-blocked';
-									}
+								if (
+									bp_is_active( 'moderation' ) &&
+									bb_moderation_is_user_blocked_by( $member_user_id )
+								) {
+									$is_blocked        = true;
 								}
 								?>
 								<li <?php bp_member_class( array( 'item-entry' ) ); ?> data-bp-item-id="<?php echo esc_attr( $group_member_id ); ?>" data-bp-item-component="members">
@@ -487,12 +484,13 @@ class BB_Group_Readylaunch {
 	}
 
 	/**
-	 * Modify group creation tab number display.
+	 * Modify the group creation tab number display.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param string $html    Original HTML.
 	 * @param int    $counter Tab counter.
+	 *
 	 * @return string Modified HTML.
 	 */
 	public function bb_group_creation_tab_number( $html, $counter ) {
