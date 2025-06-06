@@ -2044,9 +2044,9 @@ class BB_Topics_Manager {
 	 *
 	 * @param array $args {
 	 *     Array of arguments.
-	 *     @type string $old_slug The old topic slug to check.
+	 *     @type string $old_slug  The old topic slug to check.
 	 *     @type string $item_type The item type (optional, defaults to 'activity').
-	 *     @type int    $item_id The item ID (optional, defaults to 0 for activity).
+	 *     @type int    $item_id   The item ID (optional, defaults to 0 for activity).
 	 * }
 	 *
 	 * @return string|false The redirected topic slug if found, false otherwise.
@@ -2062,65 +2062,55 @@ class BB_Topics_Manager {
 			'bb_get_redirected_topic_slug'
 		);
 
-		$old_slug  = $r['old_slug'];
-		$item_type = $r['item_type'];
-		$item_id   = $r['item_id'];
-
-		if ( empty( $old_slug ) ) {
+		if ( empty( $r['old_slug'] ) ) {
 			return false;
 		}
 
-		$old_slug = sanitize_title( $old_slug );
+		$cache_key  = 'bb_topic_redirect_' . $r['old_slug'] . '_' . $r['item_type'] . '_' . $r['item_id'];
+		$final_slug = wp_cache_get( $cache_key, self::$topic_cache_group );
 
-		// Check cache first.
-		$cache_key       = 'bb_topic_redirect_' . $old_slug . '_' . $item_type . '_' . $item_id;
-		$cached_redirect = wp_cache_get( $cache_key, self::$topic_cache_group );
-		if ( false !== $cached_redirect ) {
-			return $cached_redirect;
+		if ( ! $final_slug ) {
+			$final_slug = $this->bb_get_latest_topic_slug_concise( $r['old_slug'], $r['item_id'], $r['item_type'] );
 		}
 
-		// Build the WHERE clause based on item_type.
-		$where_clause = '';
-		$prepare_args = array( $old_slug );
-
-		if ( 'activity' === $item_type ) {
-			$where_clause   = 'WHERE old_topic_slug = %s AND item_type = %s';
-			$prepare_args[] = $item_type;
-		} elseif ( 'groups' === $item_type && ! empty( $item_id ) ) {
-			$where_clause   = 'WHERE old_topic_slug = %s AND item_type = %s AND item_id = %d';
-			$prepare_args[] = $item_type;
-			$prepare_args[] = $item_id;
-		} else {
-			// For other cases, just search by slug.
-			$where_clause = 'WHERE old_topic_slug = %s';
-		}
-
-		// Get the most recent redirect for this slug.
-		$sql = "SELECT new_topic_slug FROM {$this->topic_history_table} 
-				{$where_clause} 
-				ORDER BY date_created DESC 
-				LIMIT 1";
-
-		$new_slug = $this->wpdb->get_var( $this->wpdb->prepare( $sql, $prepare_args ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-
-		// If we found a redirect, check if that slug was also redirected (recursive redirects).
-		if ( $new_slug && $new_slug !== $old_slug ) {
-			$recursive_redirect = $this->bb_get_redirected_topic_slug(
-				array(
-					'old_slug'  => $new_slug,
-					'item_type' => $item_type,
-					'item_id'   => $item_id,
-				)
-			);
-			$final_slug         = $recursive_redirect ? $recursive_redirect : $new_slug;
-		} else {
-			$final_slug = $new_slug;
-		}
-
-		// Cache the result (cache false results too to avoid repeated queries).
 		wp_cache_set( $cache_key, $final_slug, self::$topic_cache_group, HOUR_IN_SECONDS );
 
 		return $final_slug;
+	}
+
+	/**
+	 * Get the latest topic slug using concise query.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $input_slug The input slug.
+	 * @param int    $item_id The item ID.
+	 * @param string $item_type The item type.
+	 *
+	 * @return string The latest topic slug.
+	 */
+	protected function bb_get_latest_topic_slug_concise( $input_slug, $item_id = 0, $item_type = 'activity' ) {
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$query = $this->wpdb->prepare(
+			"
+			SELECT d.current_slug 
+			FROM (
+				SELECT @r AS current_slug, 
+					   (SELECT @r := new_topic_slug FROM wp_bb_topic_history WHERE old_topic_slug = @r AND item_id = %d AND item_type = %s AND action = 'rename' ORDER BY id LIMIT 1) AS next_slug, 
+					   @l := @l + 1 AS level 
+				FROM (SELECT @r := %s, @l := 0) vars, wp_bb_topic_history m 
+				WHERE @r IS NOT NULL AND @r <> ''
+			) d 
+			WHERE d.next_slug IS NULL 
+			ORDER BY d.level DESC 
+			LIMIT 1
+		",
+			$item_id,
+			$item_type,
+			$input_slug
+		);
+
+		return $this->wpdb->get_var( $query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 	}
 
 	/**
