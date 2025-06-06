@@ -179,6 +179,8 @@ class BB_Topics_Manager {
 				'delete_topic_confirm'         => esc_html__( 'Are you sure you want to delete "%s"? This cannot be undone.', 'buddyboss' ),
 				'bb_update_topics_order_nonce' => wp_create_nonce( 'bb_update_topics_order' ),
 				'generic_error'                => esc_html__( 'An error occurred while updating topic order.', 'buddyboss' ),
+				'create_topic_text'            => __( 'Create Topic', 'buddyboss' ),
+				'edit_topic_text'              => __( 'Edit Topic', 'buddyboss' ),
 			)
 		);
 		wp_localize_script(
