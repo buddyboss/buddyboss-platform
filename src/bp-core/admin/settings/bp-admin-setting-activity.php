@@ -663,26 +663,25 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 					<?php esc_html_e( 'Would you like to move all previously tagged posts into another topic?', 'buddyboss' ); ?>
 				</p>
 				<div class="bb-existing-topic-list" id="bb_existing_topic_list">
-				<div class="form-fields">
-					<div class="form-field">
-						<div class="field-label">
-							<input type="radio" name="bb_migrate_existing_topic" id="bb_migrate_existing_topic" value="existing" checked>
-							<label for="bb_migrate_existing_topic"><?php esc_html_e( 'Yes, move posts to another topic', 'buddyboss' ); ?></label>
+					<div class="form-fields">
+						<div class="form-field">
+							<div class="field-label">
+								<input type="radio" name="bb_migrate_existing_topic" id="bb_migrate_existing_topic" value="existing" checked>
+								<label for="bb_migrate_existing_topic"><?php esc_html_e( 'Yes, move posts to another topic', 'buddyboss' ); ?></label>
+							</div>
+							<div class="field-input">
+								<select name="bb_existing_topic_id" id="bb_existing_topic_id">
+									<option value="0"><?php esc_html_e( 'Select topic', 'buddyboss' ); ?></option>
+								</select>
+							</div>
 						</div>
-						<div class="field-input">
-							<select name="bb_existing_topic_id" id="bb_existing_topic_id">
-								<option value="0"><?php esc_html_e( 'Select topic', 'buddyboss' ); ?></option>
-							</select>
+						<div class="form-field">
+							<div class="field-label">
+								<input type="radio" name="bb_migrate_existing_topic" id="bb_migrate_uncategorized_topic" value="uncategorized">
+								<label for="bb_migrate_uncategorized_topic"><?php esc_html_e( 'No, delete the topic', 'buddyboss' ); ?></label>
+							</div>
 						</div>
 					</div>
-					<div class="form-field">
-						<div class="field-label">
-							<input type="radio" name="bb_migrate_existing_topic" id="bb_migrate_uncategorized_topic" value="uncategorized">
-							<label for="bb_migrate_uncategorized_topic"><?php esc_html_e( 'No, delete the topic', 'buddyboss' ); ?></label>
-						</div>
-					</div>
-				</div>
-					
 				</div>
 				<p>
 					<?php echo wp_kses( __( 'This action is permanent and cannot be <b>undone</b>.', 'buddyboss' ), array( 'b' => array() ) ); ?>
