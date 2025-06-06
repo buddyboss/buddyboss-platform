@@ -115,8 +115,6 @@ class BB_Block {
 
 		// rekey $args.
 		foreach ( $args as $arg_key => $arg ) {
-			$snake_case_key = '';
-
 			if ( isset( $metadata_map[ $arg_key ] ) ) {
 				$snake_case_key             = $metadata_map[ $arg_key ];
 				$wp_args[ $snake_case_key ] = $arg;

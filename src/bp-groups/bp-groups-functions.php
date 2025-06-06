@@ -5190,7 +5190,8 @@ function bb_get_group_subscription_button( $args, $html = true ) {
  */
 function bb_group_single_header_actions() {
 	?>
-	<div class="group-actions-absolute"><?php
+	<div class="group-actions-absolute">
+		<?php
 			bp_nouveau_group_header_buttons();
 			bp_nouveau_group_header_buttons(
 				array(
@@ -5199,7 +5200,8 @@ function bb_group_single_header_actions() {
 				)
 			);
 			bb_nouveau_group_header_bubble_buttons();
-		?></div>
+		?>
+	</div>
 	<?php
 }
 

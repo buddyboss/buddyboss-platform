@@ -2434,7 +2434,7 @@ function buddyboss_menu_order( $menu_order ) {
 					continue;
 				}
 
-				if( 'bb-readylaunch' === $val[2] ) {
+				if ( 'bb-readylaunch' === $val[2] ) {
 					$buddyboss_readylaunch_menu = $submenu['buddyboss-platform'][ $key ];
 					unset( $submenu['buddyboss-platform'][ $key ] );
 					continue;
