@@ -1708,3 +1708,33 @@ function bb_add_subgroups_args_single_home( $args ) {
 function bb_group_card_template() {
 	bp_get_template_part( 'groups/group-card' );
 }
+
+/**
+ * Delete group activity topic when delete the group.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $group_id ID of the group.
+ *
+ * @return bool|int True on success, false on failure.
+ */
+function bb_delete_group_activity_topic( $group_id ) {
+	global $wpdb;
+
+	$table_prefix = bp_core_get_table_prefix();
+	$deleted      = $wpdb->delete( // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+		$table_prefix . 'bb_topic_relationships',
+		array(
+			'item_id'   => $group_id,
+			'item_type' => 'groups',
+		),
+		array( '%d', '%s' )
+	);
+
+	if ( false === $deleted ) {
+		return false;
+	}
+
+	return true;
+}
+add_action( 'groups_delete_group', 'bb_delete_group_activity_topic' );
