@@ -566,7 +566,7 @@ window.bp = window.bp || {};
 
 			if (
 				this.$migrateTopicContainerModalSelector.hasClass( 'bb-modal-panel--activity-topic-migrate' ) ||
-				this.$migrateTopicContainerModalSelector.hasClass( 'bb-action-popup--activity-topic-migrate' )
+				this.$migrateTopicContainerModalSelector.hasClass( 'bb-action-popup--activity-migrate-topic' )
 			) {
 				this.$migrateTopicBackdropModalSelector.hide();
 				this.$migrateTopicContainerModalSelector.hide();
