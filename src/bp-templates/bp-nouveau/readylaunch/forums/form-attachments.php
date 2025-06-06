@@ -29,7 +29,7 @@ $video_extensions = bp_is_active( 'media' ) ? bp_video_get_allowed_extension() :
 <div id="whats-new-attachments">
 
 	<?php if ( bp_is_active( 'media' ) && bb_user_has_access_upload_media( $group_id, bp_loggedin_user_id(), $forum_id, 0 ) ) : ?>
-		<div class="dropzone closed media-dropzone" id="forums-post-media-uploader" data-key="<?php echo esc_attr( bp_unique_id( 'forums_media_uploader_' ) ); ?>"></div>
+		<div class="dropzone closed media-dropzone" id="bb-rl-forums-post-media-uploader" data-key="<?php echo esc_attr( bp_unique_id( 'forums_media_uploader_' ) ); ?>"></div>
 		<input name="bbp_media" id="bbp_media" type="hidden" value=""/>
 		<div class="forum-post-media-template" style="display:none;">
 			<div class="dz-preview">
@@ -78,7 +78,7 @@ $video_extensions = bp_is_active( 'media' ) ? bp_video_get_allowed_extension() :
 
 	if ( bp_is_active( 'media' ) && ! empty( $extensions ) && bb_user_has_access_upload_document( $group_id, bp_loggedin_user_id(), $forum_id, 0, 'forum' ) ) :
 		?>
-		<div class="dropzone closed document-dropzone" id="forums-post-document-uploader" data-key="<?php echo esc_attr( wp_unique_id( 'forums_document_uploader_' ) ); ?>"></div>
+		<div class="dropzone closed document-dropzone" id="bb-rl-forums-post-document-uploader" data-key="<?php echo esc_attr( wp_unique_id( 'forums_document_uploader_' ) ); ?>"></div>
 		<input name="bbp_document" id="bbp_document" type="hidden" value=""/>
 		<div class="forum-post-document-template" style="display:none;">
 			<div class="dz-preview dz-file-preview">
@@ -109,7 +109,7 @@ $video_extensions = bp_is_active( 'media' ) ? bp_video_get_allowed_extension() :
 	<?php endif; ?>
 
 	<?php if ( bp_is_active( 'media' ) && bb_user_has_access_upload_video( $group_id, bp_loggedin_user_id(), $forum_id, 0 ) ) : ?>
-		<div class="dropzone closed video-dropzone" id="forums-post-video-uploader" data-key="<?php echo esc_attr( bp_unique_id( 'forums_video_uploader_' ) ); ?>"></div>
+		<div class="dropzone closed video-dropzone" id="bb-rl-forums-post-video-uploader" data-key="<?php echo esc_attr( bp_unique_id( 'forums_video_uploader_' ) ); ?>"></div>
 		<input name="bbp_video" id="bbp_video" type="hidden" value=""/>
 		<div class="forum-post-video-template" style="display:none;">
 		<div class="dz-preview dz-file-preview well" id="dz-preview-template">
@@ -190,7 +190,7 @@ $video_extensions = bp_is_active( 'media' ) ? bp_video_get_allowed_extension() :
 		?>
 		<div class="bb-rl-post-elements-buttons-item bb-rl-post-gif">
 			<div class="bb-rl-gif-media-search">
-				<a href="#" id="forums-gif-button" class="bb-rl-toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Choose a GIF', 'buddyboss' ); ?>">
+				<a href="#" id="bb-rl-forums-gif-button" class="bb-rl-toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Choose a GIF', 'buddyboss' ); ?>">
 					<i class="bb-icons-rl-gif"></i>
 				</a>
 				<div class="bb-rl-gif-media-search-dropdown">

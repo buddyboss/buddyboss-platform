@@ -93,7 +93,7 @@ window.bp = window.bp || {};
 							element,
 							{
 								placeholder: {
-									text: window.bbpEditorJsStrs.description,
+									text: window.bbrlForumsEditorJsStrs.description,
 									hideOnClick: true
 								},
 								// toolbar: toolbarOptions,
@@ -212,7 +212,7 @@ window.bp = window.bp || {};
 							element,
 							{
 								placeholder: {
-									text: window.bbpEditorJsStrs.type_reply,
+									text: window.bbrlForumsEditorJsStrs.type_reply,
 									hideOnClick: true
 								},
 								// toolbar: toolbarOptions,
@@ -379,7 +379,7 @@ window.bp = window.bp || {};
 							element,
 							{
 								placeholder: {
-									text: window.bbpEditorJsStrs.description,
+									text: window.bbrlForumsEditorJsStrs.description,
 									hideOnClick: true
 								},
 								// toolbar: toolbarOptions,
@@ -628,12 +628,12 @@ window.bp = window.bp || {};
 						},
 						tokenSeparators: [ ',' ],
 						ajax: {
-							url: bbpCommonJsData.ajax_url,
+							url: bbrlForumsCommonJsData.ajax_url,
 							dataType: 'json',
 							delay: 1000,
 							data: function ( params ) {
 								return jQuery.extend( {}, params, {
-									_wpnonce: bbpCommonJsData.nonce,
+									_wpnonce: bbrlForumsCommonJsData.nonce,
 									action: 'search_tags',
 								} );
 							},

@@ -252,10 +252,10 @@ window.bp = window.bp || {};
 			$document.on( 'click', 'ul.document-nav li a', this.resetPageDocumentDirectory.bind( this ) );
 
 			// forums.
-			$document.on( 'click', '#forums-media-button', this.openForumsUploader.bind( this ) );
-			$document.on( 'click', '#forums-document-button', this.openForumsDocumentUploader.bind( this ) );
-			$document.on( 'click', '#forums-video-button', this.openForumsVideoUploader.bind( this ) );
-			$document.on( 'click', '#forums-gif-button', this.toggleGifSelector.bind( this ) );
+			$document.on( 'click', '#bb-rl-forums-media-button', this.openForumsUploader.bind( this ) );
+			$document.on( 'click', '#bb-rl-forums-document-button', this.openForumsDocumentUploader.bind( this ) );
+			$document.on( 'click', '#bb-rl-forums-video-button', this.openForumsVideoUploader.bind( this ) );
+			$document.on( 'click', '#bb-rl-forums-gif-button', this.toggleGifSelector.bind( this ) );
 			$document.find( 'form #whats-new-toolbar, .forum form #whats-new-toolbar' ).on( 'keydown', '.search-query-input', this.searchGif.bind( this ) );
 			$document.on( 'click', '.bbpress-forums-activity #whats-new-toolbar .found-media-item', this.selectGif.bind( this ) );
 			$document.find( 'form #whats-new-toolbar, .forum form #whats-new-toolbar' ).on( 'click', '.found-media-item', this.selectGif.bind( this ) );
@@ -1530,16 +1530,16 @@ window.bp = window.bp || {};
 				target.toggleClass( 'active' );
 			}
 
-			var $forums_media_container = target.closest( 'form' ).find( '#forums-post-media-uploader' );
+			var $forums_media_container = target.closest( 'form' ).find( '#bb-rl-forums-post-media-uploader' );
 			if ( $forums_media_container.length ) {
 				self.resetForumsMediaComponent( $forums_media_container.data( 'key' ) );
 			}
-			var $forums_document_container = target.closest( 'form' ).find( '#forums-post-document-uploader' );
+			var $forums_document_container = target.closest( 'form' ).find( '#bb-rl-forums-post-document-uploader' );
 			if ( $forums_document_container.length ) {
 				self.resetForumsDocumentComponent( $forums_document_container.data( 'key' ) );
 			}
 
-			var $forums_video_container = target.closest( 'form' ).find( '#forums-post-video-uploader' );
+			var $forums_video_container = target.closest( 'form' ).find( '#bb-rl-forums-post-video-uploader' );
 			if ( $forums_video_container.length ) {
 				self.resetForumsVideoComponent( $forums_video_container.data( 'key' ) );
 			}
@@ -1789,9 +1789,9 @@ window.bp = window.bp || {};
 
 		openForumsUploader: function ( event ) {
 			var self                           = this, target = $( event.currentTarget ),
-				dropzone_container             = target.closest( 'form' ).find( '#forums-post-media-uploader' ),
-				forum_dropzone_container       = target.closest( 'form' ).find( '#forums-post-document-uploader' ),
-				forum_video_dropzone_container = target.closest( 'form' ).find( '#forums-post-video-uploader' ),
+				dropzone_container             = target.closest( 'form' ).find( '#bb-rl-forums-post-media-uploader' ),
+				forum_dropzone_container       = target.closest( 'form' ).find( '#bb-rl-forums-post-document-uploader' ),
+				forum_video_dropzone_container = target.closest( 'form' ).find( '#bb-rl-forums-post-video-uploader' ),
 				edit_medias                    = [];
 			event.preventDefault();
 
@@ -1885,9 +1885,9 @@ window.bp = window.bp || {};
 
 		openForumsDocumentUploader: function ( event ) {
 			var self                     = this, target = $( event.currentTarget ),
-				dropzone_container       = target.closest( 'form' ).find( '#forums-post-document-uploader' ),
-				media_dropzone_container = target.closest( 'form' ).find( '#forums-post-media-uploader' ),
-				video_dropzone_container = target.closest( 'form' ).find( '#forums-post-video-uploader' ),
+				dropzone_container       = target.closest( 'form' ).find( '#bb-rl-forums-post-document-uploader' ),
+				media_dropzone_container = target.closest( 'form' ).find( '#bb-rl-forums-post-media-uploader' ),
+				video_dropzone_container = target.closest( 'form' ).find( '#bb-rl-forums-post-video-uploader' ),
 				edit_documents           = [];
 			event.preventDefault();
 
@@ -1982,9 +1982,9 @@ window.bp = window.bp || {};
 
 		openForumsVideoUploader: function ( event ) {
 			var self                              = this, target = $( event.currentTarget ),
-				dropzone_container                = target.closest( 'form' ).find( '#forums-post-video-uploader' ),
-				forum_dropzone_container          = target.closest( 'form' ).find( '#forums-post-media-uploader' ),
-				forum_document_dropzone_container = target.closest( 'form' ).find( '#forums-post-document-uploader' ),
+				dropzone_container                = target.closest( 'form' ).find( '#bb-rl-forums-post-video-uploader' ),
+				forum_dropzone_container          = target.closest( 'form' ).find( '#bb-rl-forums-post-media-uploader' ),
+				forum_document_dropzone_container = target.closest( 'form' ).find( '#bb-rl-forums-post-document-uploader' ),
 				edit_videos                       = [];
 			event.preventDefault();
 
