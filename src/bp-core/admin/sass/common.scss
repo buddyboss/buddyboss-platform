@@ -5756,6 +5756,11 @@ h1.bb-advance-heading {
 
 	&.is-loading {
 
+		.bb-hello-header,
+		.bb-popup-buttons {
+			z-index: 1;
+		}
+
 		&:before {
 			content: "";
 			position: absolute;
@@ -5763,7 +5768,7 @@ h1.bb-advance-heading {
 			left: 0;
 			width: 100%;
 			height: 100%;
-			background-color: rgba(0, 0, 0, 0.1);
+			background-color: #fff;
 			z-index: 1;
 		}
 
@@ -5773,11 +5778,10 @@ h1.bb-advance-heading {
 			font-size: 24px;
 			font-weight: 400;
 			line-height: 1;
-			margin-left: 10px;
+			margin: -6px 0 0 -6px;
 			position: absolute;
 			top: 50%;
 			left: 50%;
-			transform: translate(-50%, -50%);
 			text-align: center;
 			display: inline-block;
 			animation: spin 3s infinite linear;

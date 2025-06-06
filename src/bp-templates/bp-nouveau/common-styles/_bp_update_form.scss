@@ -1986,6 +1986,9 @@ input.search-query-input {
 				font-size: 13px;
 				font-weight: 400;
 				text-decoration: none;
+				white-space: nowrap;
+				overflow: hidden;
+				text-overflow: ellipsis;
 
 				&.selected {
 					font-weight: 600;

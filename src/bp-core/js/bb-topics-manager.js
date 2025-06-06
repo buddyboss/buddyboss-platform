@@ -792,8 +792,12 @@ window.bp = window.bp || {};
 			// Use the configured AJAX URL.
 			var ajaxUrl = this.config.ajaxUrl;
 
+			// Show Loader
+			$( this.config.migrateTopicButtonSelector ).addClass( 'is-loading' );
+
 			// Send AJAX request.
 			$.post( ajaxUrl, data, function ( response ) {
+				$( this.config.migrateTopicButtonSelector ).removeClass( 'is-loading' );
 				if ( response.success ) {
 					$topicItem.remove();
 					this.handleCloseModal( event );
