@@ -5786,6 +5786,90 @@ h1.bb-advance-heading {
 	}
 }
 
+// Topic migrate modal
+.bb-hello-backdrop-activity-topic-migrate {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	z-index: 9998;
+	background-color: rgba(0, 0, 0, 0.8);
+	transition: opacity 0.15s ease-out;
+}
+
+.bb-hello-activity-topic-migrate.bb-modal-panel {
+	position: fixed;
+	z-index: 9999;
+	border-radius: 3px;
+	bottom: initial;
+	top: 50%;
+    left: 50%;
+    right: unset;
+    transform: translate(-50%, -50%);
+	max-width: 500px;
+
+	#bb-hello-title {
+		font-size: 18px;
+		color: #1d2327;
+	}
+
+	div.bb-hello-content {
+		min-height: 130px;
+		margin-bottom: 55px;
+
+		.form-fields {
+
+			.form-field {
+				display: flex;
+				align-items: center;
+				gap: 15px;
+				margin-bottom: 8px;
+			}
+
+			.field-input select {
+				min-width: 150px;
+			}
+
+			.field-label {
+				display: flex;
+				align-items: center;
+				gap: 6px;
+				margin-bottom: 0;
+
+				input[type="radio"] {
+					margin: 0;
+				}
+
+				label {
+					font-size: 14px;
+					font-weight: 400;
+					color: #50575e;
+					margin-bottom: 0;
+				}
+			}
+		}
+
+		#bb_topic_cancel {
+			border-color: #646970;
+			color: #2c3338;
+		}
+
+		#bb_topic_migrate {
+			color: #fff;
+			border-color: #d63638;
+			background-color: #d63638;
+		}
+	}
+
+	.bb-hello-content-description {
+		color: #1d2327;
+		font-size: 14px;
+		font-weight: 400;
+		margin-bottom: 24px;
+	}
+}
+
 #bb-hello-container.bb-modal-panel,
 .admin-bar #bb-hello-container.bb-modal-panel,
 #bb-hello-topic-migrate-container.bb-modal-panel,

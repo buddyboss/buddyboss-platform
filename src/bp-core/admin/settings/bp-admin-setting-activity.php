@@ -659,7 +659,7 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 				</div>
 			</div>
 			<div class="bb-hello-content">
-				<p>
+				<p class="bb-hello-content-description">
 					<?php esc_html_e( 'Would you like to move all previously tagged posts into another topic?', 'buddyboss' ); ?>
 				</p>
 				<div class="bb-existing-topic-list" id="bb_existing_topic_list">
@@ -683,9 +683,6 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 						</div>
 					</div>
 				</div>
-				<p>
-					<?php echo wp_kses( __( 'This action is permanent and cannot be <b>undone</b>.', 'buddyboss' ), array( 'b' => array() ) ); ?>
-				</p>
 				<div class="bb-popup-buttons">
 					<span id="bb_topic_cancel" class="button" tabindex="0">
 						<?php esc_html_e( 'Cancel', 'buddyboss' ); ?>
