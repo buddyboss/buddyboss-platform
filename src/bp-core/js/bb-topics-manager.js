@@ -719,6 +719,14 @@ window.bp = window.bp || {};
 				item_type : args.itemType
 			};
 
+			var topicName = args.topicName || '';
+			if ( BBTopicsManager.$migrateTopicContainerModalSelector.find( '#bb-hello-title' ).length ) {
+				BBTopicsManager.$migrateTopicContainerModalSelector.find( '#bb-hello-title' ).text( bbTopicsManagerVars.delete_topic_text.replace( '%s', topicName ) );
+			}
+			if ( BBTopicsManager.$migrateTopicContainerModalSelector.find( '.bb-model-header h4 .target_name' ).length ) {
+				BBTopicsManager.$migrateTopicContainerModalSelector.find( '.bb-model-header h4 .target_name' ).text( bbTopicsManagerVars.delete_topic_text.replace( '%s', topicName ) );
+			}
+
 			// Show loader
 			this.$migrateTopicContainerModalSelector.addClass( 'is-loading' );
 
@@ -735,12 +743,6 @@ window.bp = window.bp || {};
 				if ( response.success && response.data ) {
 					var topicData = response.data;
 
-					if ( BBTopicsManager.$migrateTopicContainerModalSelector.find( '#bb-hello-title' ).length ) {
-						BBTopicsManager.$migrateTopicContainerModalSelector.find( '#bb-hello-title' ).text( topicData.header_text );
-					}
-					if ( BBTopicsManager.$migrateTopicContainerModalSelector.find( '.bb-model-header h4 .target_name' ).length ) {
-						BBTopicsManager.$migrateTopicContainerModalSelector.find( '.bb-model-header h4 .target_name' ).text( topicData.header_text );
-					}
 					BBTopicsManager.$migrateTopicContainerModalSelector.find( '#bb_topic_id' ).val( topicData.topic_id );
 					BBTopicsManager.$migrateTopicContainerModalSelector.find( '#bb_item_id' ).val( topicData.item_id );
 					BBTopicsManager.$migrateTopicContainerModalSelector.find( '#bb_item_type' ).val( topicData.item_type );

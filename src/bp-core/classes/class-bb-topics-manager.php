@@ -181,6 +181,8 @@ class BB_Topics_Manager {
 				'generic_error'                => esc_html__( 'An error occurred while updating topic order.', 'buddyboss' ),
 				'create_topic_text'            => __( 'Create Topic', 'buddyboss' ),
 				'edit_topic_text'              => __( 'Edit Topic', 'buddyboss' ),
+				/* translators: %s: Topic name */
+				'delete_topic_text'            => esc_html__( 'Deleting "%s"?', 'buddyboss' ),
 			)
 		);
 		wp_localize_script(
