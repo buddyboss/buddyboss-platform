@@ -2,9 +2,7 @@
 /**
  * The template for BP Object search form
  *
- * This template can be overridden by copying it to yourtheme/buddypress/common/search/search-form.php.
- *
- * @since   BuddyPress 3.0.0
+ * @since   BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
 

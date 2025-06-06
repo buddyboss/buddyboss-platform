@@ -2,9 +2,17 @@
 /**
  * ReadyLaunch - The template for BuddyBoss - Home.
  *
- * @since   BuddyBoss [BBVERSION]
+ * This template handles the single activity page display including
+ * activity stream, edit forms, and loading placeholders.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 $is_send_ajax_request = bb_is_send_ajax_request();
 ?>
@@ -28,10 +36,7 @@ bp_nouveau_before_single_activity_content();
 	do_action( 'bp_before_single_activity_content' );
 	?>
 
-	<ul id="bb-rl-activity-stream" class="bb-rl-activity-list bb-rl-item-list bb-rl-list" data-bp-list="activity" data-ajax="<?php
-	echo esc_attr( $is_send_ajax_request ? 'true' : 'false' );
-	?>
-	">
+	<ul id="bb-rl-activity-stream" class="bb-rl-activity-list bb-rl-item-list bb-rl-list" data-bp-list="activity" data-ajax="<?php echo esc_attr( $is_send_ajax_request ? 'true' : 'false' ); ?>">
 		<?php
 		if ( $is_send_ajax_request ) {
 			echo '<li id="bb-rl-ajax-loader">';

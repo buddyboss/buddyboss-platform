@@ -5,7 +5,7 @@
  * This template can be overridden by copying it to yourtheme/buddypress/search/loop/photos-ajax.php.
  *
  * @package BuddyBoss\Core
- * @since   BuddyBoss 1.0.0
+ * @since   BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
 

@@ -6,7 +6,7 @@
 	 *
 	 * @since   BuddyBoss [BBVERSION]
 	 * @package BuddyBoss\Core
-	 * @version [BBVERSION]
+	 * @version 1.0.0
 	 */
 
 	$is_send_ajax_request = bb_is_send_ajax_request();

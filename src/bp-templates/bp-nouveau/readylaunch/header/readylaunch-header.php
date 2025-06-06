@@ -2,7 +2,14 @@
 /**
  * The header for ReadyLaunch.
  *
- * @package ReadyLaunch
+ * This template handles the main header structure for the ReadyLaunch theme.
+ * It includes the site logo, navigation menu, search functionality, user profile dropdown,
+ * message/notification counts, and responsive mobile navigation.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
+ * @version 1.0.0
  */
 
 // Exit if accessed directly.

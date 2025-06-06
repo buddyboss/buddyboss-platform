@@ -2,12 +2,17 @@
 /**
  * ReadyLaunch - The template for BuddyBoss - Activity Feed (Single Item).
  *
- * This template is used by activity-loop.php and AJAX functions to show
- * each activity.
+ * This template handles the display of individual activity entries in the feed
+ * including user/group avatars, content, actions, and comments functionality.
  *
- * @since   BuddyBoss [BBVERSION]
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 bp_nouveau_activity_hook( 'before', 'entry' );
 
@@ -20,10 +25,11 @@ $link_embed          = $activity_metas['_link_embed'][0] ?? '';
 if ( ! empty( $link_embed ) ) {
 	$link_url = $link_embed;
 }
+/* translators: %s: user display name for post title */
 $activity_popup_title        = sprintf( esc_html__( '%s\'s Post', 'buddyboss' ), bp_core_get_user_displayname( bp_get_activity_user_id() ) );
 $bb_rl_activity_class_exists = class_exists( 'BB_Activity_Readylaunch' ) ? BB_Activity_Readylaunch::instance() : false;
 ?>
-	<li class="<?php bp_activity_css_class(); ?>" id="bb-rl-activity-<?php echo esc_attr( $activity_id ); ?>" data-bp-activity-id="<?php echo esc_attr( $activity_id ); ?>" data-bp-timestamp="<?php bp_nouveau_activity_timestamp(); ?>" data-bp-activity="<?php bp_nouveau_edit_activity_data(); ?>" data-link-preview='<?php echo $link_preview_string; ?>' data-link-url='<?php echo empty( $link_url ) ? '' : esc_url( $link_url ); ?>' data-activity-popup-title='<?php echo empty( $activity_popup_title ) ? '' : esc_html( $activity_popup_title ); ?>'>
+	<li class="<?php bp_activity_css_class(); ?>" id="bb-rl-activity-<?php echo esc_attr( $activity_id ); ?>" data-bp-activity-id="<?php echo esc_attr( $activity_id ); ?>" data-bp-timestamp="<?php bp_nouveau_activity_timestamp(); ?>" data-bp-activity="<?php bp_nouveau_edit_activity_data(); ?>" data-link-preview='<?php echo esc_attr( $link_preview_string ); ?>' data-link-url='<?php echo empty( $link_url ) ? '' : esc_url( $link_url ); ?>' data-activity-popup-title='<?php echo empty( $activity_popup_title ) ? '' : esc_html( $activity_popup_title ); ?>'>
 
 		<?php bb_nouveau_activity_entry_bubble_buttons(); ?>
 
@@ -62,8 +68,9 @@ $bb_rl_activity_class_exists = class_exists( 'BB_Activity_Readylaunch' ) ? BB_Ac
 			<div class="bb-rl-activity-head-group">
 				<div class="bb-rl-activity-group-avatar">
 					<div class="bb-rl-group-avatar">
-						<a class="bb-rl-group-avatar-wrap bb-rl-mobile-center" href="<?php echo $group_permalink; ?>" data-bb-hp-group="<?php echo esc_attr( $group_id ); ?>">
+						<a class="bb-rl-group-avatar-wrap bb-rl-mobile-center" href="<?php echo esc_url( $group_permalink ); ?>" data-bb-hp-group="<?php echo esc_attr( $group_id ); ?>">
 							<?php
+							// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 							echo bp_core_fetch_avatar(
 								array(
 									'item_id'    => $group->id,
@@ -78,25 +85,34 @@ $bb_rl_activity_class_exists = class_exists( 'BB_Activity_Readylaunch' ) ? BB_Ac
 						</a>
 					</div>
 					<div class="bb-rl-author-avatar">
-						<a href="<?php echo $user_link; ?>" data-bb-hp-profile="<?php echo esc_attr( bp_get_activity_user_id() ); ?>"><?php bp_activity_avatar( array( 'type' => 'thumb', 'class' => 'avatar bb-hp-profile-avatar' ) ); ?></a>
+						<a href="<?php echo esc_url( $user_link ); ?>" data-bb-hp-profile="<?php echo esc_attr( bp_get_activity_user_id() ); ?>">
+							<?php
+							bp_activity_avatar(
+								array(
+									'type'  => 'thumb',
+									'class' => 'avatar bb-hp-profile-avatar',
+								)
+							);
+							?>
+						</a>
 					</div>
 				</div>
 
 				<div class="bb-rl-activity-header bb-rl-activity-header--group">
 					<div class="bb-rl-activity-group-heading">
-						<a href="<?php echo $group_permalink; ?>" data-bb-hp-group="<?php echo esc_attr( $group_id ); ?>"><?php echo $group_name; ?></a>
+						<a href="<?php echo esc_url( $group_permalink ); ?>" data-bb-hp-group="<?php echo esc_attr( $group_id ); ?>"><?php echo esc_html( $group_name ); ?></a>
 					</div>
 					<div class="bb-rl-activity-group-post-meta">
 						<span class="bb-rl-activity-post-author">
 							<?php bp_activity_action( array( 'no_timestamp' => true ) ); ?>
 						</span>
-						<a href="<?php echo $activity_link; ?>">
+						<a href="<?php echo esc_url( $activity_link ); ?>">
 							<?php
 							$activity_date_recorded = bp_get_activity_date_recorded();
 							printf(
 								'<span class="time-since" data-livestamp="%1$s">%2$s</span>',
-								bp_core_get_iso8601_date( $activity_date_recorded ),
-								bp_core_time_since( $activity_date_recorded )
+								esc_attr( bp_core_get_iso8601_date( $activity_date_recorded ) ),
+								esc_html( bp_core_time_since( $activity_date_recorded ) )
 							);
 							?>
 						</a>
@@ -112,7 +128,8 @@ $bb_rl_activity_class_exists = class_exists( 'BB_Activity_Readylaunch' ) ? BB_Ac
 				</div>
 			</div>
 
-		<?php else :
+		<?php else : ?>
+			<?php
 			$friendship_created = false;
 			if ( bp_is_active( 'friends' ) && 'friendship_created' === $activities_template->activity->type ) {
 				$friendship_created = true;
@@ -120,7 +137,7 @@ $bb_rl_activity_class_exists = class_exists( 'BB_Activity_Readylaunch' ) ? BB_Ac
 			?>
 			<div class="bb-rl-activity-head">
 				<div class="bb-rl-activity-avatar bb-rl-item-avatar <?php echo $friendship_created ? esc_attr( 'bb-rl-multiple-avatars' ) : ''; ?>" data-bb-hp-profile="<?php echo esc_attr( bp_get_activity_user_id() ); ?>">
-					<a href="<?php echo $user_link; ?>">
+					<a href="<?php echo esc_url( $user_link ); ?>">
 						<?php bp_activity_avatar( array( 'type' => 'full', 'class' => 'avatar bb-hp-profile-avatar' ) ); ?>
 					</a>
 					<?php
@@ -137,8 +154,8 @@ $bb_rl_activity_class_exists = class_exists( 'BB_Activity_Readylaunch' ) ? BB_Ac
 							$activity_date_recorded = bp_get_activity_date_recorded();
 							printf(
 								'<span class="time-since" data-livestamp="%1$s">%2$s</span>',
-								bp_core_get_iso8601_date( $activity_date_recorded ),
-								bp_core_time_since( $activity_date_recorded )
+								esc_attr( bp_core_get_iso8601_date( $activity_date_recorded ) ),
+								esc_html( bp_core_time_since( $activity_date_recorded ) )
 							);
 							?>
 						</a>

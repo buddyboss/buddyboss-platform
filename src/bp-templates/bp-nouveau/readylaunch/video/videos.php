@@ -2,11 +2,17 @@
 /**
  * BuddyBoss - Groups Video
  *
- * This template can be overridden by copying it to yourtheme/buddypress/groups/single/videos.php.
+ * This template handles the video management and display for groups.
+ * It includes video upload functionality, actions, and video stream display.
  *
- * @since   BuddyBoss 1.7.0
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss 1.7.0
  * @version 1.7.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 $is_send_ajax_request = bb_is_send_ajax_request();
 ?>

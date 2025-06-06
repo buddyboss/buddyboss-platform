@@ -10,46 +10,49 @@
  * @version [BBVERSION]
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 $is_send_ajax_request = bb_is_send_ajax_request();
 ?>
 <div class="bb-rl-video-directory-wrapper">
 	<div class="bb-rl-secondary-header flex items-center">
 		<div class="bb-rl-entry-heading">
-			<h2><?php esc_html_e( 'Videos', 'buddyboss' ); ?> <span class="bb-rl-heading-count"><?php echo ! $is_send_ajax_request ? bp_core_get_all_member_count() : ''; ?></span></h2>
+			<h2><?php esc_html_e( 'Videos', 'buddyboss' ); ?> <span class="bb-rl-heading-count"><?php echo ! $is_send_ajax_request ? esc_html( bp_core_get_all_member_count() ) : ''; ?></span></h2>
 		</div>
 		<div class="bb-rl-sub-ctrls flex items-center">
 			<?php
 				bp_get_template_part( 'common/search-and-filters-bar' );
 
-				if ( is_user_logged_in() ) {
+			if ( is_user_logged_in() ) {
 
-					echo '<div class="bb-rl-video-actions bb-rl-actions-buttons flex items-center">';
+				echo '<div class="bb-rl-video-actions bb-rl-actions-buttons flex items-center">';
 
-					if ( bp_is_profile_albums_support_enabled() ) {
-						?>
+				if ( bp_is_profile_albums_support_enabled() ) {
+					?>
 						<a href="#" id="bb-create-video-album" class="action-secondary bb-create-video-album button small">
 							<i class="bb-icons-rl-images"></i><?php esc_html_e( 'Create Album', 'buddyboss' ); ?>
 						</a>
 						<?php
-					}
+				}
 
-					if (
-						bp_is_profile_video_support_enabled() &&
-						bb_user_can_create_video()
-					) {
-						?>
+				if (
+					bp_is_profile_video_support_enabled() &&
+					bb_user_can_create_video()
+				) {
+					?>
 						<a class="action-primary bb-add-videos button small" id="bp-add-video" href="#" >
 							<i class="bb-icons-rl-plus"></i><?php esc_html_e( 'Add Videos', 'buddyboss' ); ?>
 						</a>
 						<?php
-					}
-
-					bp_get_template_part( 'video/uploader' );
-
-					bp_get_template_part( 'video/create-album' );
-
-					echo '</div>';
 				}
+
+				bp_get_template_part( 'video/uploader' );
+
+				bp_get_template_part( 'video/create-album' );
+
+				echo '</div>';
+			}
 
 				bp_get_template_part( 'media/theatre' );
 				bp_get_template_part( 'video/theatre' );
@@ -91,13 +94,13 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 
 				<div id="video-stream" class="video dir-list bb-rl-video bb-rl-media-stream" data-bp-list="video" data-ajax="<?php echo esc_attr( $is_send_ajax_request ? 'true' : 'false' ); ?>">
 					<?php
-						if ( $is_send_ajax_request ) {
-							echo '<div id="bp-ajax-loader">';
-							bp_nouveau_user_feedback( 'directory-video-loading' );
-							echo '</div>';
-						} else {
-							bp_get_template_part( 'video/video-loop' );
-						}
+					if ( $is_send_ajax_request ) {
+						echo '<div id="bp-ajax-loader">';
+						bp_nouveau_user_feedback( 'directory-video-loading' );
+						echo '</div>';
+					} else {
+						bp_get_template_part( 'video/video-loop' );
+					}
 					?>
 				</div><!-- .video -->
 

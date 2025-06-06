@@ -154,7 +154,7 @@ if ( $lesson_id ) {
                             /**
                              * Fires before the quiz content starts.
                              *
-                             * @since 3.0.0
+                             * @since BuddyBoss [BBVERSION]
                              *
                              * @param int $quiz_id   Quiz ID.
                              * @param int $course_id Course ID.

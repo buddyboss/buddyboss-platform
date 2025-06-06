@@ -5,7 +5,7 @@
  * This template can be overridden by copying it to yourtheme/buddypress/search/loop/folder-ajax.php.
  *
  * @package BuddyBoss\Core
- * @since   BuddyBoss 1.0.0
+ * @since   BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
 
@@ -13,7 +13,7 @@ $folder_link             = bp_get_folder_folder_link();
 $document_folder_privacy = bp_get_document_folder_privacy();
 ?>
 <div class="bp-search-ajax-item bboss_ajax_search_document search-document-list bb-rl-search-post-item">
-	<a href="<?php echo esc_url( $folder_link ); ?>">	
+	<a href="<?php echo esc_url( $folder_link ); ?>">
 		<div class="item-avatar">
 			<i class="bb-icons-rl-folder"></i>
 		</div>

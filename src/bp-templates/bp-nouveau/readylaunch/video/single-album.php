@@ -2,10 +2,17 @@
 /**
  * BuddyBoss - Video Single Album
  *
+ * This template handles the display of a single video album page.
+ * It shows album details, videos within the album, and management actions.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
  * @since BuddyBoss [BBVERSION]
- * 
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 global $video_album_template;
 
@@ -74,7 +81,8 @@ if ( bp_has_video_albums( array( 'include' => $album_id ) ) ) {
 							<?php
 						}
 
-						if ( ( $bp_is_my_profile || $bp_is_user_video ) && ! $bp_is_group ) : ?>
+						if ( ( $bp_is_my_profile || $bp_is_user_video ) && ! $bp_is_group ) :
+							?>
 							<select id="bb-album-privacy">
 								<?php
 								foreach ( bp_video_get_visibility_levels() as $k => $option ) {

@@ -2,7 +2,13 @@
 /**
  * The footer for ReadyLaunch.
  *
- * @package ReadyLaunch
+ * This template handles the footer section for the ReadyLaunch theme.
+ * It includes closing HTML tags and WordPress footer hooks.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
+ * @version 1.0.0
  */
 
 // Exit if accessed directly.

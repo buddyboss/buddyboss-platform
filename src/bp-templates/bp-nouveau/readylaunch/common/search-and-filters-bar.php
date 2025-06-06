@@ -114,9 +114,9 @@ if ( bp_is_activity_directory() || bp_is_user_activity() ) {
 					<span class="selected">
 						<?php
 							$default_filter_label = $filters_labels[ $default_selected ];
-							if ( ! preg_match( '/^(I\'ve|I\'m)/i', $default_filter_label ) ) {
-								$default_filter_label = strtolower( $default_filter_label );
-							}
+						if ( ! preg_match( '/^(I\'ve|I\'m)/i', $default_filter_label ) ) {
+							$default_filter_label = strtolower( $default_filter_label );
+						}
 							echo esc_html( $default_filter_label );
 							unset( $default_filter_label );
 						?>
@@ -192,6 +192,6 @@ if ( bp_is_activity_directory() || bp_is_user_activity() ) {
 			</div>
 		</div>
 	</div>
-<?php
+	<?php
 }
 ?>

@@ -172,7 +172,7 @@ if ( function_exists( 'learndash_is_topic_accessable' ) ) {
                                 /**
                                  * Filters whether a user can complete the topic or not.
                                  *
-                                 * @since 3.0.0
+                                 * @since BuddyBoss [BBVERSION]
                                  *
                                  * @param boolean $can_complete Whether user can complete topic or not.
                                  * @param int     $post_id      Topic ID.

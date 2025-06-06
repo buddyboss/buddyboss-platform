@@ -4,6 +4,7 @@
  *
  * @package BuddyBoss\Core
  * @since BuddyBoss [BBVERSION]
+ * @version 1.0.0
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -205,7 +206,7 @@ global $course_pager_results;
 								/**
 								 * Fires before the course heading.
 								 *
-								 * @since 3.0.0
+								 * @since BuddyBoss [BBVERSION]
 								 *
 								 * @param int $course_id Course ID.
 								 * @param int $user_id   User ID.
@@ -225,7 +226,7 @@ global $course_pager_results;
 								/**
 								 * Fires after the course heading.
 								 *
-								 * @since 3.0.0
+								 * @since BuddyBoss [BBVERSION]
 								 *
 								 * @param int $course_id Course ID.
 								 * @param int $user_id   User ID.
@@ -247,7 +248,7 @@ global $course_pager_results;
 								/**
 								 * Fires before the course expand.
 								 *
-								 * @since 3.0.0
+								 * @since BuddyBoss [BBVERSION]
 								 *
 								 * @param int $course_id Course ID.
 								 * @param int $user_id   User ID.
@@ -298,7 +299,7 @@ global $course_pager_results;
 								/**
 								 * Filters whether to expand all course steps by default. Default is false.
 								 *
-								 * @since 2.5.0
+								 * @since BuddyBoss [BBVERSION]
 								 *
 								 * @param boolean $expand_all Whether to expand all course steps.
 								 * @param int     $course_id  Course ID.
@@ -321,7 +322,7 @@ global $course_pager_results;
 								/**
 								 * Fires after the course content expand button.
 								 *
-								 * @since 3.0.0
+								 * @since BuddyBoss [BBVERSION]
 								 *
 								 * @param int $course_id Course ID.
 								 * @param int $user_id   User ID.
@@ -348,7 +349,7 @@ global $course_pager_results;
 							/**
 							 * Fires before the course content listing
 							 *
-							 * @since 3.0.0
+							 * @since BuddyBoss [BBVERSION]
 							 *
 							 * @param int $course_id Course ID.
 							 * @param int $user_id   User ID.
@@ -358,7 +359,7 @@ global $course_pager_results;
 							/**
 							 * Content listing
 							 *
-							 * @since 3.0.0
+							 * @since BuddyBoss [BBVERSION]
 							 *
 							 * ('listing.php');
 							 */
@@ -380,7 +381,7 @@ global $course_pager_results;
 							/**
 							 * Fires before the course content listing.
 							 *
-							 * @since 3.0.0
+							 * @since BuddyBoss [BBVERSION]
 							 *
 							 * @param int $course_id Course ID.
 							 * @param int $user_id   User ID.

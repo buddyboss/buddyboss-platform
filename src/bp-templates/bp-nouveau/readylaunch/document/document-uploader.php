@@ -6,7 +6,7 @@
  *
  * @since   BuddyBoss 1.4.0
  * @package BuddyBoss\Core
- * @version 1.8.6
+ * @version 1.0.0
  */
 
 ?>

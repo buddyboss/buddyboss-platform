@@ -65,7 +65,7 @@ if ( false !== strpos( $attachment_full, 'video-placeholder.jpg' ) || false !== 
 								<a
 									href="#"
 									data-action="video"
-									data-video-attachments="<?php echo esc_html( json_encode( $attachment_urls ) ); ?>"
+									data-video-attachments="<?php echo esc_html( wp_json_encode( $attachment_urls ) ); ?>"
 									data-video-attachment-id="<?php echo esc_attr( $attachment_id ); ?>"
 									data-video-id="<?php echo esc_attr( $video_id ); ?>"
 									class="bb-rl-ac-video-thumbnail-edit">

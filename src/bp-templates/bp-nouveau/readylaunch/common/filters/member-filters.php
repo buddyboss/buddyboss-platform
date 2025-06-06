@@ -2,8 +2,6 @@
 /**
  * The template for BP Nouveau Component's members filters template
  *
- * This template can be overridden by copying it to yourtheme/readylaunch/common/filters/member-filters.php.
- *
  * @since BuddyBoss [BBVERSION]
  *
  * @version 1.0.0
@@ -21,17 +19,17 @@ if ( $is_member_type_enabled ) {
 			),
 		)
 	);
-	
+
 	if ( bp_is_members_directory() ) {
 		$args['meta_query'][] = array(
 			'key'   => '_bp_member_type_enable_remove',
 			'value' => 0,
 		);
 	}
-	
+
 	// Get active member types.
 	$member_types = bp_get_active_member_types( $args );
-	
+
 	if ( ! empty( $member_types ) ) {
 		?>
 		<div id="bb-rl-member-type-filters" class="component-filters clearfix">
@@ -75,7 +73,7 @@ if ( bp_nouveau_has_nav( array( 'object' => 'directory' ) ) ) { ?>
 						bp_nouveau_nav_item();
 						?>
 						<option id="<?php bp_nouveau_nav_id(); ?>" <?php bp_nouveau_nav_scope(); ?> data-bp-object="<?php bp_nouveau_directory_nav_object(); ?>">
-							<?php 
+							<?php
 								if ( 'bb-rl-members-all' === bp_nouveau_get_nav_id() ) {
 									esc_html_e( 'All', 'buddyboss' );
 								} else {

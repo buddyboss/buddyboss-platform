@@ -1,19 +1,25 @@
 <?php
-	/**
-	 * The template for medias
-	 *
-	 * This template can be overridden by copying it to yourtheme/buddypress/media/index.php.
-	 *
-	 * @since   BuddyBoss 1.0.0
-	 * @version 1.0.0
-	 */
+/**
+ * The template for medias
+ *
+ * This template handles the media directory page layout for the ReadyLaunch theme.
+ * It includes search filters, create album button, add photos functionality, and media listing.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss 1.0.0
+ * @version 1.0.0
+ */
 
-	$is_send_ajax_request = bb_is_send_ajax_request();
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
+$is_send_ajax_request = bb_is_send_ajax_request();
 ?>
 <div class="bb-rl-media-directory-wrapper">
 	<div class="bb-rl-secondary-header flex items-center">
 		<div class="bb-rl-entry-heading">
-			<h2><?php esc_html_e( 'Photos', 'buddyboss' ); ?> <span class="bb-rl-heading-count"><?php echo ! $is_send_ajax_request ? bp_core_get_all_member_count() : ''; ?></span></h2>
+			<h2><?php esc_html_e( 'Photos', 'buddyboss' ); ?> <span class="bb-rl-heading-count"><?php echo ! $is_send_ajax_request ? esc_html( bp_core_get_all_member_count() ) : ''; ?></span></h2>
 		</div>
 		<div class="bb-rl-sub-ctrls flex items-center">
 			<?php

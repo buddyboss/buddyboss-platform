@@ -1,9 +1,9 @@
 <?php
 /**
- * BP Nouveau Groups screens filters
+ * BuddyBoss ReadyLaunch Groups screens filters
  *
- * @since 3.0.0
- * @version 3.0.0
+ * @since BuddyBoss [BBVERSION]
+ * @version 1.0.0
  */
 
 $avail_sorting_options = bb_get_enabled_activity_sorting_options();

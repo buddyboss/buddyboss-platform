@@ -2,12 +2,20 @@
 /**
  * BuddyBoss - Album Entry
  *
+ * This template handles the display of individual video album entries.
+ * It shows the album cover, title, creation date, and video count.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
  * @since BuddyBoss [BBVERSION]
- * 
  * @version 1.0.0
  */
 
-global $video_album_template; ?>
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
+global $video_album_template;
+?>
 
 <li class="bb-album-list-item">
 	<div class="bb-album-cover-wrap">
