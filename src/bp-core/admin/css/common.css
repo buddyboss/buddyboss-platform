@@ -5823,6 +5823,19 @@ h1.bb-advance-heading {
   background-color: #d63638;
 }
 
+.bb-hello-activity-topic-migrate.bb-modal-panel div.bb-hello-content #bb_topic_migrate.is-loading:after {
+  content: "\ef30";
+  font-family: bb-icons;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1;
+  margin: 0 0 3px 5px;
+  text-align: center;
+  display: inline-block;
+  vertical-align: middle;
+  animation: spin 3s infinite linear;
+}
+
 .bb-hello-activity-topic-migrate.bb-modal-panel .bb-hello-content-description {
   color: #1d2327;
   font-size: 14px;

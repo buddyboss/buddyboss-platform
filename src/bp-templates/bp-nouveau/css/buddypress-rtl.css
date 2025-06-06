@@ -3496,6 +3496,9 @@ input.search-query-input {
   font-size: 13px;
   font-weight: 400;
   text-decoration: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .whats-new-topic-selector .bb-topic-selector-list ul a.selected {
@@ -8687,6 +8690,12 @@ span.dashicons.dashicons-admin-file:before {
 .bb-modal-panel--activity-topic.is-loading .modal-wrapper,
 .bb-action-popup--activity-migrate-topic.is-loading .modal-wrapper {
   pointer-events: none;
+}
+
+.bb-action-popup--activity-topic.is-loading .modal-wrapper .bb-action-popup-content,
+.bb-modal-panel--activity-topic.is-loading .modal-wrapper .bb-action-popup-content,
+.bb-action-popup--activity-migrate-topic.is-loading .modal-wrapper .bb-action-popup-content {
+  opacity: 0;
 }
 
 .bb-action-popup--activity-topic.is-loading .modal-wrapper:before,

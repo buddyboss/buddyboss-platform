@@ -5714,6 +5714,13 @@ h1.bb-advance-heading {
   box-sizing: border-box;
 }
 
+.bb-modal-panel--activity-topic.bb-modal-panel.is-loading .bb-hello-header,
+.bb-modal-panel--activity-topic.bb-modal-panel.is-loading .bb-popup-buttons,
+.bb-modal-panel--activity-topic-migrate.bb-modal-panel.is-loading .bb-hello-header,
+.bb-modal-panel--activity-topic-migrate.bb-modal-panel.is-loading .bb-popup-buttons {
+  z-index: 1;
+}
+
 .bb-modal-panel--activity-topic.bb-modal-panel.is-loading:before,
 .bb-modal-panel--activity-topic-migrate.bb-modal-panel.is-loading:before {
   content: "";
@@ -5722,7 +5729,7 @@ h1.bb-advance-heading {
   right: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.1);
+  background-color: #fff;
   z-index: 1;
 }
 
@@ -5733,11 +5740,10 @@ h1.bb-advance-heading {
   font-size: 24px;
   font-weight: 400;
   line-height: 1;
-  margin-right: 10px;
+  margin: -6px -6px 0 0;
   position: absolute;
   top: 50%;
   right: 50%;
-  transform: translate(50%, -50%);
   text-align: center;
   display: inline-block;
   animation: spin 3s infinite linear;
@@ -5815,6 +5821,19 @@ h1.bb-advance-heading {
   color: #fff;
   border-color: #d63638;
   background-color: #d63638;
+}
+
+.bb-hello-activity-topic-migrate.bb-modal-panel div.bb-hello-content #bb_topic_migrate.is-loading:after {
+  content: "\ef30";
+  font-family: bb-icons;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1;
+  margin: 0 5px 3px 0;
+  text-align: center;
+  display: inline-block;
+  vertical-align: middle;
+  animation: spin 3s infinite linear;
 }
 
 .bb-hello-activity-topic-migrate.bb-modal-panel .bb-hello-content-description {
