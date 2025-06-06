@@ -1572,133 +1572,17 @@ class BB_Topics_Manager {
 	}
 
 	/**
-	 * Migrate a topic via AJAX.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 */
-	public function bb_migrate_topic_ajax() {
-		if ( ! isset( $_POST['nonce'] ) ) {
-			wp_send_json_error(
-				array(
-					'error' => __( 'Nonce is required.', 'buddyboss' ),
-					'topic' => array(),
-				)
-			);
-		}
-
-		check_ajax_referer( 'bb_migrate_topic', 'nonce' );
-
-		if ( ! isset( $_POST['old_topic_id'] ) ) {
-			wp_send_json_error(
-				array(
-					'error' => __( 'Topic ID is required.', 'buddyboss' ),
-					'topic' => array(),
-				)
-			);
-		}
-
-		$migrate_type = isset( $_POST['migrate_type'] ) ? sanitize_text_field( wp_unslash( $_POST['migrate_type'] ) ) : '';
-		if ( 'existing' === $migrate_type && ! isset( $_POST['new_topic_id'] ) ) {
-			wp_send_json_error(
-				array(
-					'error' => __( 'Migrate topic ID is required.', 'buddyboss' ),
-					'topic' => array(),
-				)
-			);
-		}
-
-		$old_topic_id = absint( sanitize_text_field( wp_unslash( $_POST['old_topic_id'] ) ) );
-		$item_id      = isset( $_POST['item_id'] ) ? absint( sanitize_text_field( wp_unslash( $_POST['item_id'] ) ) ) : 0;
-		$item_type    = isset( $_POST['item_type'] ) ? sanitize_text_field( wp_unslash( $_POST['item_type'] ) ) : '';
-		$new_topic_id = 'existing' === $migrate_type ? absint( sanitize_text_field( wp_unslash( $_POST['new_topic_id'] ) ) ) : 0;
-
-		if ( 'existing' === $migrate_type && $new_topic_id ) {
-
-			/**
-			 * Fires before a topic is migrated.
-			 *
-			 * @since BuddyBoss [BBVERSION]
-			 *
-			 * @param int    $old_topic_id The ID of the old topic.
-			 * @param int    $new_topic_id The ID of the new topic.
-			 * @param int    $item_id      The ID of the item.
-			 * @param string $item_type    The type of item.
-			 */
-			do_action( 'bb_before_migrate_topic', $old_topic_id, $new_topic_id, $item_id, $item_type );
-
-			$result = $this->wpdb->update(
-				$this->activity_topic_rel_table,
-				array( 'topic_id' => $new_topic_id ),
-				array(
-					'topic_id'  => $old_topic_id,
-					'item_id'   => $item_id,
-					'component' => $item_type,
-				),
-				array( '%d' ),
-				array( '%d', '%d', '%s' )
-			);
-
-			if ( false === $result ) {
-				wp_send_json_error( array( 'error' => __( 'Failed to migrate topic.', 'buddyboss' ) ) );
-			}
-
-			/**
-			 * Fires after a topic is migrated.
-			 *
-			 * @since BuddyBoss [BBVERSION]
-			 *
-			 * @param int    $old_topic_id The ID of the old topic.
-			 * @param int    $new_topic_id The ID of the new topic.
-			 * @param int    $item_id      The ID of the item.
-			 * @param string $item_type    The type of item.
-			 */
-			do_action( 'bb_after_migrate_topic', $old_topic_id, $new_topic_id, $item_id, $item_type );
-		}
-
-		/**
-		 * Fires before a topic is deleted.
-		 *
-		 * @since BuddyBoss [BBVERSION]
-		 *
-		 * @param int $topic_id The ID of the topic being deleted.
-		 */
-		do_action( 'bb_activity_topic_before_delete', $old_topic_id );
-
-		$deleted_topic = $this->bb_delete_topic(
-			array(
-				'topic_id'  => $old_topic_id,
-				'item_id'   => $item_id,
-				'item_type' => $item_type,
-			)
-		);
-
-		/**
-		 * Fires after a topic is deleted.
-		 *
-		 * @since BuddyBoss [BBVERSION]
-		 *
-		 * @param int $topic_id The ID of the topic being deleted.
-		 */
-		do_action( 'bb_activity_topic_after_delete', $old_topic_id );
-
-		if ( false === $deleted_topic ) {
-			wp_send_json_error( array( 'error' => __( 'Failed to delete topic.', 'buddyboss' ) ) );
-		}
-
-		wp_send_json_success( array( 'message' => __( 'Topic migrated successfully.', 'buddyboss' ) ) );
-	}
-
-	/**
 	 * Delete a topic and its associated relationships.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param array $args {
-	 *     Array of arguments.
-	 *     @type int $topic_id The ID of the topic to delete.
-	 *     @type int $item_id The ID of the item.
-	 *     @type string $item_type The type of item.
-	 * }
+	 * @param array $args      {
+	 *                         Array of arguments.
+	 *
+	 * @type int    $topic_id  The ID of the topic to delete.
+	 * @type int    $item_id   The ID of the item.
+	 * @type string $item_type The type of item.
+	 *                         }
 	 *
 	 * @return bool|WP_Error True on success, WP_Error on failure.
 	 */
@@ -1781,6 +1665,228 @@ class BB_Topics_Manager {
 		unset( $topic_id, $deleted_rels, $deleted_topic, $get_all_topic_relationships, $relationships_ids );
 
 		return true;
+	}
+
+	/**
+	 * Migrate a topic via AJAX.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	public function bb_migrate_topic_ajax() {
+		if ( ! isset( $_POST['nonce'] ) ) {
+			wp_send_json_error(
+				array(
+					'error' => __( 'Nonce is required.', 'buddyboss' ),
+					'topic' => array(),
+				)
+			);
+		}
+
+		check_ajax_referer( 'bb_migrate_topic', 'nonce' );
+
+		if ( ! isset( $_POST['old_topic_id'] ) ) {
+			wp_send_json_error(
+				array(
+					'error' => __( 'Topic ID is required.', 'buddyboss' ),
+					'topic' => array(),
+				)
+			);
+		}
+
+		$migrate_type = isset( $_POST['migrate_type'] ) ? sanitize_text_field( wp_unslash( $_POST['migrate_type'] ) ) : '';
+		if ( 'existing' === $migrate_type && ! isset( $_POST['new_topic_id'] ) ) {
+			wp_send_json_error(
+				array(
+					'error' => __( 'Migrate topic ID is required.', 'buddyboss' ),
+					'topic' => array(),
+				)
+			);
+		}
+
+		$old_topic_id = absint( sanitize_text_field( wp_unslash( $_POST['old_topic_id'] ) ) );
+		$item_id      = isset( $_POST['item_id'] ) ? absint( sanitize_text_field( wp_unslash( $_POST['item_id'] ) ) ) : 0;
+		$item_type    = isset( $_POST['item_type'] ) ? sanitize_text_field( wp_unslash( $_POST['item_type'] ) ) : '';
+		$new_topic_id = 'existing' === $migrate_type ? absint( sanitize_text_field( wp_unslash( $_POST['new_topic_id'] ) ) ) : 0;
+
+		if ( 'existing' === $migrate_type && $new_topic_id ) {
+			$result = $this->bb_migrate_topic(
+				array(
+					'old_topic_id' => $old_topic_id,
+					'new_topic_id' => $new_topic_id,
+					'item_id'      => $item_id,
+					'item_type'    => $item_type,
+					'migrate_type' => $migrate_type,
+				)
+			);
+
+			if ( false === $result ) {
+				wp_send_json_error( array( 'error' => __( 'Failed to migrate topic.', 'buddyboss' ) ) );
+			}
+		}
+
+		/**
+		 * Fires before a topic is deleted.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param int $topic_id The ID of the topic being deleted.
+		 */
+		do_action( 'bb_activity_topic_before_delete', $old_topic_id );
+
+		$deleted_topic = $this->bb_delete_topic(
+			array(
+				'topic_id'  => $old_topic_id,
+				'item_id'   => $item_id,
+				'item_type' => $item_type,
+			)
+		);
+
+		/**
+		 * Fires after a topic is deleted.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param int $topic_id The ID of the topic being deleted.
+		 */
+		do_action( 'bb_activity_topic_after_delete', $old_topic_id );
+
+		if ( false === $deleted_topic ) {
+			wp_send_json_error( array( 'error' => __( 'Failed to delete topic.', 'buddyboss' ) ) );
+		}
+
+		wp_send_json_success( array( 'message' => __( 'Topic migrated successfully.', 'buddyboss' ) ) );
+	}
+
+	/**
+	 * Migrate a topic.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $args {
+	 *     Array of arguments.
+	 *     @type int $old_topic_id The ID of the old topic.
+	 *     @type int $new_topic_id The ID of the new topic.
+	 *     @type int $item_id The ID of the item.
+	 *     @type string $item_type The type of item.
+	 * }
+	 */
+	public function bb_migrate_topic( $args ) {
+		$r = bp_parse_args(
+			$args,
+			array(
+				'old_topic_id' => 0,
+				'new_topic_id' => 0,
+				'item_id'      => 0,
+				'item_type'    => 'activity',
+				'error_type'   => 'bool',
+			),
+			'bb_migrate_topic'
+		);
+
+		if ( empty( $r['old_topic_id'] ) ) {
+			return new WP_Error(
+				'bb_migrate_topic_error',
+				__( 'Old topic ID is required.', 'buddyboss' ),
+				array( 'status' => 400 )
+			);
+		}
+
+		if ( empty( $r['new_topic_id'] ) ) {
+			return new WP_Error(
+				'bb_migrate_topic_error',
+				__( 'New topic ID is required.', 'buddyboss' ),
+				array( 'status' => 400 )
+			);
+		}
+
+		if ( empty( $r['item_type'] ) ) {
+			return new WP_Error(
+				'bb_migrate_topic_error',
+				__( 'Item type is required.', 'buddyboss' ),
+				array( 'status' => 400 )
+			);
+		}
+
+		if ( 'groups' === $r['item_type'] && empty( $r['item_id'] ) ) {
+			return new WP_Error(
+				'bb_migrate_topic_error',
+				__( 'Item ID is required.', 'buddyboss' ),
+				array( 'status' => 400 )
+			);
+		}
+
+		$old_topic_id = $r['old_topic_id'];
+		$new_topic_id = $r['new_topic_id'];
+		$item_id      = $r['item_id'];
+		$item_type    = $r['item_type'];
+
+		if ( ! in_array( $item_type, array( 'activity', 'groups' ), true ) ) {
+			return new WP_Error(
+				'bb_migrate_topic_error',
+				__( 'Item type is invalid.', 'buddyboss' ),
+				array( 'status' => 400 )
+			);
+		}
+
+		$old_topic_id_exists = $this->bb_get_topic_by( 'id', $old_topic_id );
+		if ( ! $old_topic_id_exists ) {
+			return new WP_Error(
+				'bb_migrate_topic_error',
+				__( 'Old topic ID does not exist.', 'buddyboss' ),
+				array( 'status' => 400 )
+			);
+		}
+
+		$new_topic_id_exists = $this->bb_get_topic_by( 'id', $new_topic_id );
+		if ( ! $new_topic_id_exists ) {
+			return new WP_Error(
+				'bb_migrate_topic_error',
+				__( 'New topic ID does not exist.', 'buddyboss' ),
+				array( 'status' => 400 )
+			);
+		}
+
+		/**
+		 * Fires before a topic is migrated.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param int    $old_topic_id The ID of the old topic.
+		 * @param int    $new_topic_id The ID of the new topic.
+		 * @param int    $item_id      The ID of the item.
+		 * @param string $item_type    The type of item.
+		 */
+		do_action( 'bb_before_migrate_topic', $old_topic_id, $new_topic_id, $item_id, $item_type );
+
+		$result = $this->wpdb->update(
+			$this->activity_topic_rel_table,
+			array( 'topic_id' => $new_topic_id ),
+			array(
+				'topic_id'  => $old_topic_id,
+				'item_id'   => $item_id,
+				'component' => $item_type,
+			),
+			array( '%d' ),
+			array( '%d', '%d', '%s' )
+		);
+
+		if ( false === $result ) {
+			wp_send_json_error( array( 'error' => __( 'Failed to migrate topic.', 'buddyboss' ) ) );
+		}
+
+		/**
+		 * Fires after a topic is migrated.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param int    $old_topic_id The ID of the old topic.
+		 * @param int    $new_topic_id The ID of the new topic.
+		 * @param int    $item_id      The ID of the item.
+		 * @param string $item_type    The type of item.
+		 */
+		do_action( 'bb_after_migrate_topic', $old_topic_id, $new_topic_id, $item_id, $item_type );
+
+		return $result;
 	}
 
 	/**
