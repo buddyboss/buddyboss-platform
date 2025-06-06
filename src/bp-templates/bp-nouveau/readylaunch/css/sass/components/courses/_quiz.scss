@@ -119,6 +119,19 @@
 			}
 		}
 
+		.wpProQuiz_questionList[data-type="assessment_answer"] {
+
+			.wpProQuiz_questionListItem {
+				border: 1px solid var(--bb-rl-border-secondary-color);
+				border-radius: var(--bb-rl-radius-md);
+				padding: var(--bb-rl-space-200);
+
+				label {
+					border: 0;
+				}
+			}
+		}
+
 		.wpProQuiz_time_limit {
 			background-color: var(--bb-rl-background-secondary-color);
 			border-radius: var(--bb-rl-radius-md);
@@ -173,6 +186,27 @@
 		.wpProQuiz_questionListItem.wpProQuiz_answerIncorrect label {
 			background-color: var(--bb-rl-background-danger-secondary-color);
 		}
+
+		.wpProQuiz_questionList[data-type="cloze_answer"] .wpProQuiz_questionListItem .wpProQuiz_cloze {
+
+			.wpProQuiz_answerIncorrect {
+				background-color: var(--bb-rl-background-danger-secondary-color);
+				border-radius: var(--bb-rl-radius-sm);
+			}
+
+			.wpProQuiz_answerCorrect {
+				background-color: var(--bb-rl-background-positive-secondary-color);
+				border-radius: var(--bb-rl-radius-sm);
+			}
+		}
+
+		.wpProQuiz_questionListItem.wpProQuiz_answerCorrect {
+
+			.wpProQuiz_sortable {
+				color: var(--bb-rl-text-color);
+				background-color: var(--bb-rl-background-positive-secondary-color);
+			}
+		}
 	}
 
 	.learndash-wrapper .wpProQuiz_reviewSummary .wpProQuiz_reviewQuestion {
@@ -209,15 +243,13 @@
 				&.wpProQuiz_reviewQuestionTarget {
 					border: 1px solid var(--bb-rl-text-brand-primary-color);
 					outline: none;
+					font-weight: 400;
+					color: var(--bb-rl-text-color);
+					box-shadow: none;
 				}
 
 				&.wpProQuiz_reviewQuestionSolved {
 					color: var(--bb-rl-text-color);
-				}
-
-				&.wpProQuiz_reviewQuestionTarget {
-					color: var(--bb-rl-text-color);
-					box-shadow: none;
 				}
 			}
 		}
@@ -301,6 +333,127 @@
 			}
 		}
 
+		.wpProQuiz_questionListItem {
+
+			.wpProQuiz_sortable {
+
+				@include bb-rl-label-heading-md;
+				color: var(--bb-rl-text-color);
+				display: flex;
+				align-items: center;
+				flex-direction: row-reverse;
+				justify-content: space-between;
+				border: 1px solid var(--bb-rl-border-secondary-color);
+				padding: 12px var(--bb-rl-space-200);
+				border-radius: var(--bb-rl-radius-sm);
+			}
+
+			.wpProQuiz_sortable:before {
+				content: "\eae2";
+				display: inline-block;
+				font-weight: 400;
+				font-family: bb-icons-rl !important;
+				font-size: 20px;
+				line-height: 1;
+				color: var(--bb-rl-icon-tertiary-color);
+				font-style: normal;
+				margin: 0;
+			}
+		}
+
+		.wpProQuiz_questionList[data-type="matrix_sort_answer"] {
+
+			.wpProQuiz_questionListItem {
+
+				table {
+					border: 0;
+
+					td:first-child {
+						border-right: 0;
+					}
+
+					.wpProQuiz_maxtrixSortCriterion {
+						border: 1px solid var(--bb-rl-border-tertiary-color);
+						border-radius: var(--bb-rl-radius-md);
+						padding: 0;
+						height: 40px !important;
+						min-height: 40px !important;
+
+						.wpProQuiz_sortStringItem {
+
+							@include bb-rl-label-heading-md-thin;
+							padding: var(--bb-rl-space-50) 12px;
+							background-color: var(--bb-rl-background-secondary-color);
+						}
+					}
+
+					.wpProQuiz_maxtrixSortText {
+
+						@include bb-rl-label-heading-md-thin;
+						padding: var(--bb-rl-space-100);
+					}
+				}
+
+				&.wpProQuiz_answerCorrect {
+
+					> table td {
+						background-color: var(--bb-rl-background-positive-secondary-color);
+						border-color: var(--bb-rl-background-positive-secondary-color);
+					}
+				}
+			}
+		}
+
+		.wpProQuiz_matrixSortString {
+
+			.wpProQuiz_header {
+
+				@include bb-rl-label-heading-md-bold;
+				color: var(--bb-rl-text-color);
+			}
+
+			.wpProQuiz_sortStringList {
+				background-color: var(--bb-rl-background-secondary-color);
+				border-radius: var(--bb-rl-radius-base);
+				padding: var(--bb-rl-space-200) !important;
+				display: flex;
+				align-items: center;
+				flex-flow: wrap;
+				justify-content: flex-start;
+				gap: var(--bb-rl-space-100);
+
+				.wpProQuiz_sortStringItem {
+
+					@include bb-rl-label-heading-md;
+					background-color: var(--bb-rl-background-color);
+					border: 1px solid var(--bb-rl-border-secondary-color);
+					border-radius: var(--bb-rl-radius-md);
+					padding: var(--bb-rl-space-50) var(--bb-rl-space-100) var(--bb-rl-space-50) var(--bb-rl-space-50);
+					margin: 0;
+					color: var(--bb-rl-text-color);
+					cursor: move;
+					display: inline-flex;
+					align-items: center;
+
+					&::before {
+						content: "\eae2";
+						display: inline-block;
+						font-weight: 400;
+						font-family: bb-icons-rl !important;
+						font-size: 20px;
+						line-height: 1;
+						color: var(--bb-rl-icon-secondary-color);
+						font-style: normal;
+						margin-right: var(--bb-rl-space-50);
+					}
+				}
+			}
+		}
+
+		.wpProQuiz_placehold {
+			background-color: var(--bb-rl-background-warning-secondary-color);
+		}
+
 		.wpProQuiz_results {
 			margin-top: var(--bb-rl-space-300);
 
@@ -332,14 +485,15 @@
 				padding-top: var(--bb-rl-space-400);
 			}
 
-			.ld-quiz-actions input[name=reShowQuestion] {
+			.ld-quiz-actions input[name="reShowQuestion"] {
 
 				@include bb-rl-button;
 				@include bb-rl-button-secondary-fill;
 				@include bb-rl-button--small;
 			}
 
-			.ld-quiz-actions input[name=restartQuiz] {
+			.ld-quiz-actions input[name="restartQuiz"],
+			a#quiz_continue_link {
 
 				@include bb-rl-button;
 				@include bb-rl-button--brand-fill;
@@ -368,6 +522,42 @@
 					height: var(--bb-rl-space-100);
 					border-radius: var(--bb-rl-radius-full);
 				}
+			}
+		}
+
+		.wpProQuiz_questionListItem .wpProQuiz_cloze {
+			background-color: var(--bb-rl-background-color);
+			border: 1px solid var(--bb-rl-border-tertiary-color);
+			border-radius: var(--bb-rl-radius-md);
+			position: relative;
+
+			&::after {
+				content: "";
+				width: 100%;
+				height: 1px;
+				border-bottom: 1px dashed var(--bb-rl-border-secondary-color);
+				position: absolute;
+				bottom: -4px;
+				left: 0;
+			}
+		}
+
+		li.wpProQuiz_listItem div.wpProQuiz_questionList_containers {
+
+			input.wpProQuiz_questionList_containers_view_student {
+
+				@include bb-rl-button;
+				@include bb-rl-button-secondary-fill;
+				@include bb-rl-button--small;
+				margin-right: var(--bb-rl-space-50);
+				margin-left: var(--bb-rl-space-50);
+			}
+
+			input.wpProQuiz_questionList_containers_view_correct {
+
+				@include bb-rl-button;
+				@include bb-rl-button--secondary-outline;
+				@include bb-rl-button--small;
 			}
 		}
 	}
