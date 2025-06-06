@@ -5192,14 +5192,14 @@ function bb_group_single_header_actions() {
 	?>
 	<div class="group-actions-absolute">
 		<?php
-			bp_nouveau_group_header_buttons();
-			bp_nouveau_group_header_buttons(
-				array(
-					'type'           => 'subscription',
-					'button_element' => 'button',
-				)
-			);
-			bb_nouveau_group_header_bubble_buttons();
+		bp_nouveau_group_header_buttons();
+		bp_nouveau_group_header_buttons(
+			array(
+				'type'           => 'subscription',
+				'button_element' => 'button',
+			)
+		);
+		bb_nouveau_group_header_bubble_buttons();
 		?>
 	</div>
 	<?php
