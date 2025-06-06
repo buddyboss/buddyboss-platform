@@ -1038,6 +1038,9 @@ window.bp = window.bp || {};
 							} else {
 								queryData.topic_id = '';
 							}
+						} else {
+							delete queryData.topic_id;
+							self.setStorage( 'bp-activity', 'topic_id', '' );
 						}
 						// Populate the object list.
 						self.objectRequest( queryData );
