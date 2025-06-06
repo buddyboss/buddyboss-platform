@@ -785,7 +785,7 @@ window.bp = window.bp || {};
 				migrate_type : migrateType
 			};
 
-			if ( 'existing' === migrateType ) {
+			if ( 'migrate' === migrateType ) {
 				data.new_topic_id = newTopicId;
 			}
 
@@ -1231,9 +1231,9 @@ window.bp = window.bp || {};
 
 		handleEnableDisableMigrateTopicButton : function ( value, $dropdownValue ) {
 			if (
-				'uncategorized' === value ||
+				'delete' === value ||
 				(
-					'existing' === value &&
+					'migrate' === value &&
 					0 !== parseInt( $dropdownValue )
 				)
 			) {

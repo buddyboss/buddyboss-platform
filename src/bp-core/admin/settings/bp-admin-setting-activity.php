@@ -671,7 +671,7 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 					<div class="form-fields">
 						<div class="form-field">
 							<div class="field-label">
-								<input type="radio" name="bb_migrate_existing_topic" id="bb_migrate_existing_topic" value="existing" checked>
+								<input type="radio" name="bb_migrate_existing_topic" id="bb_migrate_existing_topic" value="migrate" checked>
 								<label for="bb_migrate_existing_topic"><?php esc_html_e( 'Yes, move posts to another topic', 'buddyboss' ); ?></label>
 							</div>
 							<div class="field-input">
@@ -682,7 +682,7 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 						</div>
 						<div class="form-field">
 							<div class="field-label">
-								<input type="radio" name="bb_migrate_existing_topic" id="bb_migrate_uncategorized_topic" value="uncategorized">
+								<input type="radio" name="bb_migrate_existing_topic" id="bb_migrate_uncategorized_topic" value="delete">
 								<label for="bb_migrate_uncategorized_topic"><?php esc_html_e( 'No, delete the topic', 'buddyboss' ); ?></label>
 							</div>
 						</div>

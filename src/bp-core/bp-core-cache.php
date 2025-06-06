@@ -866,13 +866,14 @@ add_action( 'bb_topic_history_after_added', 'bb_clear_topic_redirect_cache', 10,
  *
  * @since BuddyBoss [BBVERSION]
  *
+ * @param object $topic        The topic object.
  * @param int    $old_topic_id The ID of the old topic.
  * @param int    $new_topic_id The ID of the new topic.
- * @param int    $item_id The ID of the item.
- * @param string $item_type The type of item.
+ * @param int    $item_id      The ID of the item.
+ * @param string $item_type    The type of item.
  */
-function bb_clear_activity_results_cache( $old_topic_id, $new_topic_id, $item_id, $item_type ) {
-	if ( empty( $item_type ) ) {
+function bb_clear_activity_results_cache( $topic, $old_topic_id, $new_topic_id, $item_id, $item_type ) {
+	if ( empty( $topic ) || empty( $item_type ) ) {
 		return;
 	}
 
@@ -888,4 +889,4 @@ function bb_clear_activity_results_cache( $old_topic_id, $new_topic_id, $item_id
 	}
 }
 
-add_action( 'bb_after_migrate_topic', 'bb_clear_activity_results_cache', 10, 4 );
+add_action( 'bb_after_migrate_topic', 'bb_clear_activity_results_cache', 10, 5 );
