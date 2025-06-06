@@ -377,17 +377,19 @@ class BB_Topics_Manager {
 			$previous_topic_data = $this->bb_get_topic_by( 'id', $previous_topic_id );
 			$previous_topic_slug = ! empty( $previous_topic_data ) ? $previous_topic_data->slug : '';
 
-			$this->bb_add_topic_history(
-				array(
-					'item_id'        => $item_id,
-					'item_type'      => $item_type,
-					'old_topic_id'   => $previous_topic_id,
-					'old_topic_slug' => $previous_topic_slug,
-					'new_topic_id'   => $topic_data->topic_id,
-					'new_topic_slug' => $topic_data->slug,
-					'action'         => 'rename',
-				)
-			);
+			if ( $previous_topic_slug !== $topic_data->slug ) {
+				$this->bb_add_topic_history(
+					array(
+						'item_id'        => $item_id,
+						'item_type'      => $item_type,
+						'old_topic_id'   => $previous_topic_id,
+						'old_topic_slug' => $previous_topic_slug,
+						'new_topic_id'   => $topic_data->topic_id,
+						'new_topic_slug' => $topic_data->slug,
+						'action'         => 'rename',
+					)
+				);
+			}
 		}
 
 		if ( 'activity' === $item_type ) {
