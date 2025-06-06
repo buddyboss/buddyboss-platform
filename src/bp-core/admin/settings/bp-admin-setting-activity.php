@@ -660,14 +660,14 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 			</div>
 			<div class="bb-hello-content">
 				<p>
-					<?php esc_html_e( 'Select a new topic from the dropdown box below to migrate existing activity posts', 'buddyboss' ); ?>
+					<?php esc_html_e( 'Would you like to move all previously tagged posts into another topic?', 'buddyboss' ); ?>
 				</p>
 				<div class="bb-existing-topic-list" id="bb_existing_topic_list">
 				<div class="form-fields">
 					<div class="form-field">
 						<div class="field-label">
 							<input type="radio" name="bb_migrate_existing_topic" id="bb_migrate_existing_topic" value="existing" checked>
-							<label for="bb_migrate_existing_topic"><?php esc_html_e( 'Move to existing topic', 'buddyboss' ); ?></label>
+							<label for="bb_migrate_existing_topic"><?php esc_html_e( 'Yes, move posts to another topic', 'buddyboss' ); ?></label>
 						</div>
 						<div class="field-input">
 							<select name="bb_existing_topic_id" id="bb_existing_topic_id">
@@ -678,7 +678,7 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 					<div class="form-field">
 						<div class="field-label">
 							<input type="radio" name="bb_migrate_existing_topic" id="bb_migrate_uncategorized_topic" value="uncategorized">
-							<label for="bb_migrate_uncategorized_topic"><?php esc_html_e( 'Move to Uncategorized', 'buddyboss' ); ?></label>
+							<label for="bb_migrate_uncategorized_topic"><?php esc_html_e( 'No, delete the topic', 'buddyboss' ); ?></label>
 						</div>
 					</div>
 				</div>
