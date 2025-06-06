@@ -654,7 +654,7 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 			<div class="bb-hello-header">
 				<div class="bb-hello-title">
 					<h2 id="bb-hello-title" tabindex="-1">
-						<?php esc_html_e( 'Delete Topic', 'buddyboss' ); ?>
+						<?php esc_html_e( 'Deleting', 'buddyboss' ); ?>
 					</h2>
 				</div>
 			</div>

@@ -1546,11 +1546,11 @@ class BB_Topics_Manager {
 		);
 
 		$existing_topic_name = $this->bb_get_topic_by( 'id', $topic_id );
-		$header_text         = __( 'Delete Topic', 'buddyboss' );
+		$header_text         = __( 'Deleting', 'buddyboss' );
 		if ( ! empty( $existing_topic_name->name ) ) {
 			$header_text = sprintf(
 			/* translators: %s: topic name */
-				__( 'Delete Topic "%s"?', 'buddyboss' ),
+				__( 'Deleting "%s"?', 'buddyboss' ),
 				$existing_topic_name->name
 			);
 		}
