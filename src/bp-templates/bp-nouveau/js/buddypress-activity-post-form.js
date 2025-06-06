@@ -6242,6 +6242,22 @@ window.bp = window.bp || {};
 							}
 						}
 
+						// Prevent activity from being prepended if it doesn't belong to the current topic.
+						var currentTopicSlug = new URLSearchParams( window.location.search ).get( 'bb-topic' );
+						if ( currentTopicSlug && '' !== response.activity ) {
+							var activityData = response.activity.match( /data-bp-activity="([^"]*)"/ );
+							if ( activityData && activityData[1] ) {
+								var parsedData = JSON.parse(self.decodeHtml( activityData[1] ) );
+								if (
+									!_.isUndefined( parsedData.topics ) &&
+									!_.isUndefined( parsedData.topics.topic_slug ) &&
+									parsedData.topics.topic_slug !== currentTopicSlug
+								) {
+									toPrepend = false;
+								}
+							}
+						}
+
 						// Display a successful feedback if the activity is not consistent with the displayed stream.
 						if ( ! toPrepend ) {
 

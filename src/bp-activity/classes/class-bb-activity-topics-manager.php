@@ -622,8 +622,9 @@ class BB_Activity_Topics_Manager {
 			return $args;
 		}
 
-		$topic_id                   = $this->bb_get_activity_topic( (int) $args['id'], 'all' );
-		$args['topics']['topic_id'] = isset( $topic_id->topic_id ) ? $topic_id->topic_id : 0;
+		$topic_id                     = $this->bb_get_activity_topic( (int) $args['id'], 'all' );
+		$args['topics']['topic_id']   = isset( $topic_id->topic_id ) ? $topic_id->topic_id : 0;
+		$args['topics']['topic_slug'] = isset( $topic_id->slug ) ? $topic_id->slug : '';
 
 		return $args;
 	}
@@ -714,7 +715,7 @@ class BB_Activity_Topics_Manager {
 		}
 
 		$topic_id  = (int) $args['topic_id'];
-		$pinned_id = (int) $args['pinned_id'];
+		$pinned_id = isset( $args['pinned_id'] ) ? (int) $args['pinned_id'] : 0;
 
 		if ( ! empty( $pinned_id ) ) {
 			$where_conditions['topic_filter'] = "( atr.topic_id = {$topic_id} OR a.id = {$pinned_id})";
