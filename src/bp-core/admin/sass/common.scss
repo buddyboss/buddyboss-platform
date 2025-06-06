@@ -5676,7 +5676,7 @@ h1.bb-advance-heading {
 		position: relative;
 		padding: 15px;
 		background-color: #f6f7f7;
-		border-color: #dcdcde;
+		border-bottom: 1px solid #dcdcde;
 	}
 
 	#bb-hello-title {
@@ -5745,7 +5745,7 @@ h1.bb-advance-heading {
 
 	.bb-popup-buttons {
 		background-color: #f6f7f7;
-		border-color: #dcdcde;
+		border-top: 1px solid #dcdcde;
 		margin: 0 -20px;
 		padding: 12px 15px;
 		display: flex;
@@ -5866,7 +5866,7 @@ h1.bb-advance-heading {
 		color: #1d2327;
 		font-size: 14px;
 		font-weight: 400;
-		margin-bottom: 24px;
+		margin: 0 0 24px;
 	}
 }
 
