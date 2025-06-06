@@ -570,6 +570,10 @@ window.bp = window.bp || {};
 			) {
 				this.$migrateTopicBackdropModalSelector.hide();
 				this.$migrateTopicContainerModalSelector.hide();
+
+				// Reset data.
+				$( 'input[name="bb_migrate_existing_topic"]:first' ).prop( 'checked', true );
+				$( '#bb_existing_topic_id option:not(:first)' ).prop( 'selected', false );
 			}
 
 			// Reset data.
