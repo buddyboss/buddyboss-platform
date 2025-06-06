@@ -381,7 +381,7 @@ class BB_Topics_Manager {
 					'item_type'      => $item_type,
 					'old_topic_id'   => $previous_topic_id,
 					'old_topic_slug' => $previous_topic_slug,
-					'new_topic_id'   => $topic_data->id,
+					'new_topic_id'   => $topic_data->topic_id,
 					'new_topic_slug' => $topic_data->slug,
 					'action'         => 'rename',
 				)
