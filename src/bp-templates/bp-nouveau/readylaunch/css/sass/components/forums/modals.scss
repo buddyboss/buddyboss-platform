@@ -244,4 +244,11 @@
 	#bb-rl-whats-new-attachments .bb-rl-forums-attached-gif-container {
 		margin: 0 var(--bb-rl-space-300);
 	}
+
+	.bb-rl-toolbar-button.active {
+		color: var(--bb-rl-icon-color);
+		background-color: var(--bb-rl-background-secondary-hover-color);
+		border: 0.5px solid var(--bb-rl-border-secondary-color);
+		border-radius: var(--bb-rl-radius-md);
+	}
 }

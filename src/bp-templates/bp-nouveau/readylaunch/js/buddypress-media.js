@@ -1244,8 +1244,8 @@ window.bp = window.bp || {};
 			tool_box.removeClass( 'has-gif' );
 			['media', 'document', 'video', 'gif'].forEach(
 				function ( type ) {
-					if ( tool_box.find( '#forums-' + type + '-button' ) ) {
-						tool_box.find( '#forums-' + type + '-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable no-click' );
+					if ( tool_box.find( '#bb-rl-forums-' + type + '-button' ) ) {
+						tool_box.find( '#bb-rl-forums-' + type + '-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable no-click' );
 					}
 				}
 			);
@@ -1860,7 +1860,7 @@ window.bp = window.bp || {};
 								var tool_box = target.closest( 'form' );
 								['media', 'document', 'video', 'gif'].forEach(
 									function ( type ) {
-										var $button = tool_box.find( '#forums-' + type + '-button' );
+										var $button = tool_box.find( '#bb-rl-forums-' + type + '-button' );
 										if ( $button ) {
 											if ( 'media' === type ) {
 												$button.removeClass( 'no-click' );
@@ -1957,7 +1957,7 @@ window.bp = window.bp || {};
 								var tool_box = target.closest( 'form' );
 								['media', 'document', 'video', 'gif'].forEach(
 									function ( type ) {
-										var $button = tool_box.find( '#forums-' + type + '-button' );
+										var $button = tool_box.find( '#bb-rl-forums-' + type + '-button' );
 										if ( $button ) {
 											if ( 'document' === type ) {
 												$button.removeClass( 'no-click' );
@@ -2055,7 +2055,7 @@ window.bp = window.bp || {};
 								var tool_box = target.closest( 'form' );
 								['media', 'document', 'video', 'gif'].forEach(
 									function ( type ) {
-										var $button = tool_box.find( '#forums-' + type + '-button' );
+										var $button = tool_box.find( '#bb-rl-forums-' + type + '-button' );
 										if ( $button ) {
 											if ( 'video' === type ) {
 												$button.removeClass( 'no-click' );
@@ -4849,7 +4849,7 @@ window.bp = window.bp || {};
 					tool_box.addClass( 'has-media' );
 					['media', 'document', 'video', 'gif'].forEach(
 						function ( subType ) {
-							var dropZoneButton = tool_box.find( '#forums-' + subType + '-button' );
+							var dropZoneButton = tool_box.find( '#bb-rl-forums-' + subType + '-button' );
 							if ( dropZoneButton ) {
 									var buttonItems = dropZoneButton.parents( '.post-elements-buttons-item' );
 								if ( type === subType ) {
@@ -5018,7 +5018,7 @@ window.bp = window.bp || {};
 							var tool_box = target.closest( 'form' );
 							['media', 'document', 'video', 'gif'].forEach(
 								function ( subType ) {
-									var dropZoneButton = tool_box.find( '#forums-' + subType + '-button' );
+									var dropZoneButton = tool_box.find( '#bb-rl-forums-' + subType + '-button' );
 									if ( dropZoneButton ) {
 											var buttonItems = dropZoneButton.parents( '.post-elements-buttons-item' );
 										if ( type === subType ) {
@@ -5713,7 +5713,7 @@ window.bp = window.bp || {};
 		},
 
 		resetForumsAttachmentComponent: function ( args ) {
-			$( '#forums-' + args.type + '-button' ).removeClass( 'active' );
+			$( '#bb-rl-forums-' + args.type + '-button' ).removeClass( 'active' );
 			var dropzoneObj       = args.dropzoneObj,
 				dropzoneData      = args.dropzoneData,
 				dropzoneContainer = args.dropzoneContainer;
@@ -5723,7 +5723,7 @@ window.bp = window.bp || {};
 					dropzoneObj.splice( dropzoneContainer, 1 );
 					dropzoneData.splice( dropzoneContainer, 1 );
 				}
-				var keySelector = $( 'div#forums-post-' + args.type + '-uploader' );
+				var keySelector = $( 'div#bb-rl-forums-post-' + args.type + '-uploader' );
 				keySelector.html( '' );
 				keySelector.addClass( 'closed' ).removeClass( 'open' );
 			}
