@@ -2773,6 +2773,32 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				bp_get_version(),
 				true
 			);
+
+			// Localize data to the forums script
+			wp_localize_script(
+				'bb-readylaunch-forums-js',
+				'bbrlForumsEditorJsStrs',
+				array(
+					'description' => __( 'Explain what the forum is about', 'buddyboss' ),
+					'type_reply'  => __( 'Type your reply here', 'buddyboss' ),
+					'type_topic'  => __( 'Type your discussion content here', 'buddyboss' ),
+				)
+			);
+
+			$no_load_topic = true;
+			if ( bbp_allow_topic_tags() && current_user_can( 'assign_topic_tags' ) ) {
+				$no_load_topic = false;
+			}
+
+			$common_array = array(
+				'loading_text' => __( 'Loading', 'buddyboss' ),
+				'ajax_url'     => bp_core_ajax_url(),
+				'nonce'        => wp_create_nonce( 'search_tag' ),
+				'load'         => $no_load_topic,
+				'tag_text'     => __( 'Add Tags:', 'buddyboss' ),
+			);
+
+			wp_localize_script( 'bb-readylaunch-forums-js', 'bbrlForumsCommonJsData', $common_array );
 		}
 	}
 }
