@@ -4,9 +4,13 @@
  *
  * @since   BuddyBoss [BBVERSION]
  *
- * @package BuddyBoss\Core
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 global $media_template;
 

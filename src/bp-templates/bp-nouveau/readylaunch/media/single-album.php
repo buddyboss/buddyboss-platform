@@ -1,10 +1,17 @@
 <?php
 /**
- * The template for media single album
+ * ReadyLaunch - Single Album template.
  *
- * @since   BuddyBoss 1.0.0
+ * This template handles displaying a single media album with its contents.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 global $media_album_template;
 

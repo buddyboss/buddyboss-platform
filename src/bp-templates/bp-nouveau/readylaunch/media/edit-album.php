@@ -1,11 +1,17 @@
 <?php
 /**
- * ReadyLaunch - The template for album edit.
+ * ReadyLaunch - Edit Album template.
  *
- * @since   BuddyBoss [BBVERSION]
- * @package BuddyBoss\Core
+ * This template handles the edit album modal and functionality.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 global $media_album_template;
 

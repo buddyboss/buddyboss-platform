@@ -1,10 +1,17 @@
 <?php
 /**
- * The template for media loop
+ * ReadyLaunch - Media Loop template.
  *
- * @since   BuddyBoss 1.0.0
+ * This template handles displaying the media loop listing with pagination.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 bp_nouveau_before_loop();
 

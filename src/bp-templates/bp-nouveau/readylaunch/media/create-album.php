@@ -1,10 +1,17 @@
 <?php
 /**
- * The template for media albums create
+ * ReadyLaunch - Create Album template.
  *
- * @since   BuddyBoss 1.0.0
+ * This template handles the create album modal and functionality.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 ?>
 
 <div id="bp-media-create-album" style="display: none;">

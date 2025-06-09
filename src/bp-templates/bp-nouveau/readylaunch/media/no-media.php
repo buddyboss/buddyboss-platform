@@ -1,3 +1,18 @@
+<?php
+/**
+ * ReadyLaunch - Media No Content template.
+ *
+ * This template handles displaying the no media content message and actions.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
+ * @version 1.0.0
+ */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+?>
 <div class="bb-rl-media-none">
 	<div class="bb-rl-media-none-figure"><i class="bb-icons-rl-file-image"></i></div>
 	<aside class="bp-feedback bp-messages info">

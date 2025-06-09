@@ -1,10 +1,17 @@
 <?php
 /**
- * The template for add media
+ * ReadyLaunch - Add Media template.
  *
- * @since   BuddyBoss 1.0.0
+ * This template handles the add media functionality and button display.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 if ( ( ( bp_is_my_profile() && bb_user_can_create_media() ) || ( bp_is_group() && is_user_logged_in() && groups_can_user_manage_media( bp_loggedin_user_id(), bp_get_current_group_id() ) ) ) ) { ?>
 

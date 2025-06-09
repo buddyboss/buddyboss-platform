@@ -7,7 +7,7 @@
  *
  * @package BuddyBoss\Template
  * @subpackage BP_Nouveau\ReadyLaunch
- * @since BuddyBoss 1.0.0
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
 

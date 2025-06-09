@@ -1,10 +1,17 @@
 <?php
 /**
- * The template for media uploader
+ * ReadyLaunch - Media Uploader template.
  *
- * @since   BuddyBoss 1.0.0
+ * This template handles the media upload modal and functionality for the ReadyLaunch theme.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 $bp_is_single_album = bp_is_single_album();
 ?>

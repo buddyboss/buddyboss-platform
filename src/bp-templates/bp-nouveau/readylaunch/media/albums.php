@@ -1,10 +1,17 @@
 <?php
 /**
- * The template for media albums
+ * ReadyLaunch - Media Albums template.
  *
- * @since   BuddyBoss 1.0.0
+ * This template handles displaying media albums listing and management.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 $bp_is_group = bp_is_group();
 if ( ( ( bp_is_my_profile() && bb_user_can_create_media() ) || ( $bp_is_group && groups_can_user_manage_albums( bp_loggedin_user_id(), bp_get_current_group_id() ) ) ) ) {
