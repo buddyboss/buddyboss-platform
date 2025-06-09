@@ -96,6 +96,8 @@
 
 					<?php do_action( 'bbp_theme_after_topic_form_content' ); ?>
 
+					<div id="bb-rl-editor-toolbar"></div>
+
 					<?php if ( ! ( bbp_use_wp_editor() || current_user_can( 'unfiltered_html' ) ) ) : ?>
 
 						<p class="form-allowed-tags">

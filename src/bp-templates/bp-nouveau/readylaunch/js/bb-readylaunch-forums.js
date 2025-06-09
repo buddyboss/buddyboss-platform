@@ -76,7 +76,7 @@ window.bp = window.bp || {};
 	
 				var toolbarOptions = {
 					buttons: ['bold', 'italic', 'unorderedlist','orderedlist', 'quote', 'anchor', 'pre' ],
-					relativeContainer: document.getElementById('whats-new-toolbar'),
+					relativeContainer: document.getElementById( 'bb-rl-editor-toolbar' ),
 					static: true,
 					updateOnEmptySelection: true
 				};
@@ -97,7 +97,7 @@ window.bp = window.bp || {};
 									hideOnClick: true
 								},
 								// toolbar: toolbarOptions,
-								toolbar: Object.assign(toolbarOptions, { relativeContainer: jQuery( element ).closest( '.bbp-forum-form' ).closest( '.bbp-forum-form' ).find( '#whats-new-toolbar' )[0] } ),
+								toolbar: Object.assign(toolbarOptions, { relativeContainer: jQuery( element ).closest( 'form' ).find( '#bb-rl-editor-toolbar' )[0] } ),
 								paste: {
 									forcePlainText: false,
 									cleanPastedHTML: true,
@@ -216,7 +216,7 @@ window.bp = window.bp || {};
 									hideOnClick: true
 								},
 								// toolbar: toolbarOptions,
-								toolbar: Object.assign(toolbarOptions, { relativeContainer: jQuery( element ).closest( '.bbp-reply-form' ).closest( '.bbp-reply-form' ).find( '#whats-new-toolbar' )[0] } ),
+								toolbar: Object.assign(toolbarOptions, { relativeContainer: jQuery( element ).closest( 'form' ).find( '#bb-rl-editor-toolbar' )[0] } ),
 								paste: {
 									forcePlainText: false,
 									cleanPastedHTML: true,
@@ -383,7 +383,7 @@ window.bp = window.bp || {};
 									hideOnClick: true
 								},
 								// toolbar: toolbarOptions,
-								toolbar: Object.assign(toolbarOptions, { relativeContainer: jQuery( element ).closest( '.bbp-topic-form ' ).find( '#whats-new-toolbar' )[0] } ),
+								toolbar: Object.assign(toolbarOptions, { relativeContainer: jQuery( element ).closest( 'form' ).find( '#bb-rl-editor-toolbar' )[0] } ),
 								paste: {
 									forcePlainText: false,
 									cleanPastedHTML: true,
@@ -512,12 +512,12 @@ window.bp = window.bp || {};
 				}
 	
 				// Add Click event to show / hide text formatting Toolbar for topic form.
-				jQuery( document ).on( 'click', '.bbp-topic-form #whats-new-toolbar .show-toolbar', function ( e ) {
+				jQuery( document ).on( 'click', '.bbp-topic-form #whats-new-toolbar .bb-rl-show-toolbar', function ( e ) {
 					e.preventDefault();
 					var key = jQuery( e.currentTarget ).closest( '.bbp-topic-form' ).find( '.bbp_editor_topic_content' ).data( 'key' );
 					var medium_editor = jQuery( e.currentTarget ).closest( '.bbp-form' ).find( '.medium-editor-toolbar' );
-					jQuery( e.currentTarget ).find( '.toolbar-button' ).toggleClass( 'active' );
-					if ( jQuery( e.currentTarget ).find( '.toolbar-button' ).hasClass( 'active' ) ) {
+					jQuery( e.currentTarget ).find( '.bb-rl-toolbar-button' ).toggleClass( 'active' );
+					if ( jQuery( e.currentTarget ).find( '.bb-rl-toolbar-button' ).hasClass( 'active' ) ) {
 						jQuery( e.currentTarget ).attr( 'data-bp-tooltip', jQuery( e.currentTarget ).attr( 'data-bp-tooltip-hide' ) );
 						if ( window.forums_medium_topic_editor[ key ].exportSelection() !== null ) {
 							medium_editor.addClass( 'medium-editor-toolbar-active' );

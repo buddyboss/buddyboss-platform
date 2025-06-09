@@ -253,3 +253,15 @@
 		border-radius: var(--bb-rl-radius-md);
 	}
 }
+
+#bb-rl-forums-medium-toolbar {
+
+	.medium-editor-toolbar {
+		position: static;
+		background-color: transparent;
+	}
+}
+
+.bbpress #bb-rl-editor-toolbar {
+	padding: var(--bb-rl-space-100) 0;
+}
