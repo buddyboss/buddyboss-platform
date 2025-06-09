@@ -844,7 +844,11 @@ window.bp = window.bp || {};
 				if ( this.$addTopicButton.hasClass( 'bp-hide' ) ) {
 					this.$addTopicButton.removeClass( 'bp-hide' );
 				}
-				$limitNotReached.show();
+				if ( 0 === parseInt( topicsCount ) ) {
+					$limitNotReached.hide();
+				} else {
+					$limitNotReached.show();
+				}
 				$limitReached.hide();
 			}
 

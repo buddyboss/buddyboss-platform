@@ -584,8 +584,7 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 					<?php esc_html_e( 'Add New Topic', 'buddyboss' ); ?>
 				</button>
 			</div>
-
-			<p class="description bb-topic-limit-not-reached" <?php echo $topics_limit_reached ? 'style="display: none;"' : ''; ?>><?php esc_html_e( 'You can add up to a maximum of 20 topics', 'buddyboss' ); ?></p>
+			<p class="description bb-topic-limit-not-reached" <?php echo 0 === (int) $total_topics || $topics_limit_reached ? 'style="display: none;"' : ''; ?>><?php esc_html_e( 'You can add up to a maximum of 20 topics', 'buddyboss' ); ?></p>
 			<p class="description bb-topic-limit-reached" <?php echo ! $topics_limit_reached ? 'style="display: none;"' : ''; ?>><?php esc_html_e( 'You have reached the maximum topic limit', 'buddyboss' ); ?></p>
 		</div>
 		<div id="bb-hello-backdrop" class="bb-hello-backdrop-activity-topic bb-modal-backdrop" style="display: none;"></div>
