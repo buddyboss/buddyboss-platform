@@ -1,11 +1,17 @@
 <?php
 /**
- * ReadyLaunch - BuddyBoss - Video Location Move.
+ * ReadyLaunch - Video Location Move template.
  *
- * @since   BuddyBoss [BBVERSION]
- * @package BuddyBoss\Core
+ * Template for moving videos to different locations.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 $bp_get_album_id = bp_get_album_id();
 $bp_get_album_id = ! empty( $bp_get_album_id ) ? $bp_get_album_id : 0;

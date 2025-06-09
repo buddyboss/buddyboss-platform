@@ -1,14 +1,17 @@
 <?php
 /**
- * BuddyBoss - Video Albums Create
+ * ReadyLaunch - Video Create Album template.
  *
- * This template is used to create a new album.
+ * Template for creating new video albums.
  *
- * @package BuddyBoss\Core
- *
- * @since   BuddyBoss 1.7.0
- * @version 1.7.0
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
+ * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 $bp_is_group = bp_is_group();
 ?>

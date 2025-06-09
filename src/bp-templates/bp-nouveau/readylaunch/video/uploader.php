@@ -1,12 +1,17 @@
 <?php
 /**
- * BuddyBoss - Video Uploader
+ * ReadyLaunch - Video Uploader template.
  *
- * @package BuddyBoss\Core
+ * Video uploader interface for uploading videos.
  *
- * @since   BuddyBoss 1.7.0
- * @version 1.7.0
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
+ * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 ?>
 <div id="bp-video-uploader" style="display: none;" class="bp-video-uploader open-popup">

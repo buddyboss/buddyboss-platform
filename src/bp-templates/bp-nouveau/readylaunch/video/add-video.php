@@ -1,14 +1,17 @@
 <?php
 /**
- * BuddyBoss - Add Video
+ * ReadyLaunch - Add Video template.
  *
- * This template is used to show the add video form.
+ * Template for adding videos interface.
  *
- * @package BuddyBoss\Core
- *
- * @since   BuddyBoss 1.7.0
- * @version 1.7.0
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
+ * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 if ( ( ( bp_is_my_profile() && bb_user_can_create_video() ) || ( bp_is_group() && is_user_logged_in() && groups_can_user_manage_video( bp_loggedin_user_id(), bp_get_current_group_id() ) ) ) ) { ?>
 	<div class="bb-video-actions-wrap bb-media-actions-wrap bb-rl-media-actions-wrap">

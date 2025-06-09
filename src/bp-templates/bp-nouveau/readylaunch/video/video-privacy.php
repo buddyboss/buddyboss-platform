@@ -1,11 +1,17 @@
 <?php
 /**
- * ReadyLaunch - BuddyBoss - Video Privacy Change.
+ * ReadyLaunch - Video Privacy template.
  *
- * @since   BuddyBoss [BBVERSION]
- * @package BuddyBoss\Core
+ * Template for video privacy settings and controls.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 $album_privacy = '';
 if ( bp_is_user_video() || bp_is_user_albums() ) {

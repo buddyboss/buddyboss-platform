@@ -1,9 +1,8 @@
 <?php
 /**
- * BuddyBoss - Video Albums
+ * ReadyLaunch - Video Albums template.
  *
- * This template handles the display of video albums for profiles and groups.
- * It includes album creation functionality and album listing with pagination.
+ * Template for displaying video albums.
  *
  * @package BuddyBoss\Template
  * @subpackage BP_Nouveau\ReadyLaunch

@@ -1,12 +1,17 @@
 <?php
 /**
- * BuddyBoss - Video Entry
+ * ReadyLaunch - Video Entry template.
  *
- * @package BuddyBoss\Core
+ * BuddyBoss Video Entry template for displaying individual video items.
  *
- * @since   BuddyBoss 1.7.0
- * @version 1.7.0
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
+ * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 global $video_template;
 

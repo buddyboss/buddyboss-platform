@@ -1,9 +1,8 @@
 <?php
 /**
- * BuddyBoss - No Videos Found Template
+ * ReadyLaunch - No Video template.
  *
- * This template displays a message when no videos are found.
- * It includes an option to add new videos if the user has permission.
+ * Template for displaying when no videos are available.
  *
  * @package BuddyBoss\Template
  * @subpackage BP_Nouveau\ReadyLaunch

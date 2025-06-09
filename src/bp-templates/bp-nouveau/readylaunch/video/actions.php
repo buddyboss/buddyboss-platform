@@ -1,9 +1,8 @@
 <?php
 /**
- * BuddyBoss - Video Actions, This template is used to render the video actions.
+ * ReadyLaunch - Video Actions template.
  *
- * This template handles the video action buttons for deleting and selecting videos.
- * It displays actions based on user permissions and current context (profile or group).
+ * Template for video action buttons and controls.
  *
  * @package BuddyBoss\Template
  * @subpackage BP_Nouveau\ReadyLaunch

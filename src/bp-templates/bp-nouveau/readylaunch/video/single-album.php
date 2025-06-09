@@ -1,9 +1,8 @@
 <?php
 /**
- * BuddyBoss - Video Single Album
+ * ReadyLaunch - Single Video Album template.
  *
- * This template handles the display of a single video album page.
- * It shows album details, videos within the album, and management actions.
+ * Template for displaying a single video album.
  *
  * @package BuddyBoss\Template
  * @subpackage BP_Nouveau\ReadyLaunch

@@ -1,9 +1,8 @@
 <?php
 /**
- * BuddyBoss - Album Entry
+ * ReadyLaunch - Video Album Entry template.
  *
- * This template handles the display of individual video album entries.
- * It shows the album cover, title, creation date, and video count.
+ * Template for displaying individual video album entries.
  *
  * @package BuddyBoss\Template
  * @subpackage BP_Nouveau\ReadyLaunch

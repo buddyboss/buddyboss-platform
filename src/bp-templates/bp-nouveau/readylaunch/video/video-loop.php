@@ -1,12 +1,17 @@
 <?php
 /**
- * BuddyBoss - Video Loop
+ * ReadyLaunch - Video Loop template.
  *
- * @package BuddyBoss\Core
+ * BuddyBoss Video Loop template for displaying video list.
  *
- * @since   BuddyBoss 1.7.0
- * @version 1.7.0
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
+ * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 bp_nouveau_before_loop();
 

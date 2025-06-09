@@ -1,11 +1,13 @@
 <?php
 /**
- * BuddyBoss Video templates
+ * ReadyLaunch - Video Directory template.
  *
- * @package BuddyBoss\Core
+ * BuddyBoss Video templates for directory listing.
  *
- * @since   BuddyBoss [BBVERSION]
- * @version [BBVERSION]
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
+ * @version 1.0.0
  */
 
 // Exit if accessed directly.

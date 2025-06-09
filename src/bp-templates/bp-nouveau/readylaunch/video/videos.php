@@ -1,14 +1,13 @@
 <?php
 /**
- * BuddyBoss - Groups Video
+ * ReadyLaunch - Videos template.
  *
- * This template handles the video management and display for groups.
- * It includes video upload functionality, actions, and video stream display.
+ * Template for displaying videos in profile or group context.
  *
  * @package BuddyBoss\Template
  * @subpackage BP_Nouveau\ReadyLaunch
- * @since BuddyBoss 1.7.0
- * @version 1.7.0
+ * @since BuddyBoss [BBVERSION]
+ * @version 1.0.0
  */
 
 // Exit if accessed directly.
