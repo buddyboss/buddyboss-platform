@@ -5816,6 +5816,11 @@ h1.bb-advance-heading {
 	#bb-hello-title {
 		font-size: 18px;
 		color: #1d2327;
+		width: calc(100% - 35px);
+		overflow: hidden;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+		display: block;
 	}
 
 	div.bb-hello-content {
@@ -5833,6 +5838,7 @@ h1.bb-advance-heading {
 
 			.field-input select {
 				min-width: 150px;
+				max-width: 150px;
 			}
 
 			.field-label {
@@ -5865,7 +5871,7 @@ h1.bb-advance-heading {
 			background-color: #d63638;
 
 			&.is-loading {
-				
+
 				&:after {
 					content: "\ef30";
 					font-family: bb-icons;

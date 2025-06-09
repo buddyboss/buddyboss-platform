@@ -3448,16 +3448,18 @@ input.search-query-input {
 }
 
 .whats-new-topic-selector .bb-topic-selector-button {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
+  display: block;
   cursor: pointer;
-  padding: 6px 12px;
+  padding: 6px 12px 6px 25px;
   border-radius: 6px;
   background-color: #fff;
   border: 1px solid #eee;
   font-size: 14px;
   color: #333;
+  max-width: 160px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .whats-new-topic-selector .bb-topic-selector-button:after {
@@ -3466,6 +3468,10 @@ input.search-query-input {
   /* stylelint-disable-line */
   font-size: 20px;
   line-height: 1;
+  position: absolute;
+  top: 50%;
+  left: 5px;
+  transform: translateY(-50%);
 }
 
 .whats-new-topic-selector .bb-topic-selector-list {
