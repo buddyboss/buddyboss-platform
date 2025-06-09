@@ -1,13 +1,17 @@
 <?php
 /**
- * BuddyBoss - Moderation Blocked Member entry
+ * ReadyLaunch - Moderation Blocked Members Entry template.
  *
  * This template is used to render each member in the blocked members loop.
  *
- * @since   BuddyBoss 1.5.6
- * @package BuddyBoss\Core
- * @version 1.5.6
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
+ * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 $hide_sitewide           = 1 === (int) bp_get_moderation_hide_site_wide();
 $bp_moderation_item_id   = bp_get_moderation_item_id();
@@ -18,13 +22,15 @@ $bp_moderation_item_type = bp_get_moderation_item_type();
 		<?php
 		$user_id = bp_moderation_get_content_owner_id( $bp_moderation_item_id, $bp_moderation_item_type );
 
-		// Add the user avatar
+		// Add the user avatar.
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		echo bp_core_fetch_avatar(
 			array(
 				'item_id' => $user_id,
 				'type'    => 'thumb',
 				'width'   => 30,
 				'height'  => 30,
+				/* translators: %s: user display name */
 				'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss' ), bp_core_get_user_displayname( $user_id ) ),
 			)
 		);
