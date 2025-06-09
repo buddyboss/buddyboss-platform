@@ -45,6 +45,12 @@
 		margin: var(--bb-rl-space-200) 0 var(--bb-rl-space-100);
 	}
 
+	.bb-rl-course-status-label {
+		margin: var(--bb-rl-space-100) 0 0;
+		width: fit-content;
+		padding-right: var(--bb-rl-space-500);
+	}
+
 	.bb-rl-course-review {
 
 		.average {

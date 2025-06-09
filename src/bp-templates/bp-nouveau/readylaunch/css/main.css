@@ -3793,6 +3793,12 @@ button[data-balloon] {
   cursor: not-allowed;
 }
 
+.bb-rl-button.bb-rl-button--disabled {
+  background-color: var(--bb-rl-background-tertiary-color);
+  color: var(--bb-rl-text-disabled-color);
+  cursor: not-allowed;
+}
+
 .bb-rl-loader {
   display: inline-block;
   height: 22px;

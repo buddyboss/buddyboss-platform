@@ -78,6 +78,12 @@
 	font-weight: 400;
 }
 
+@mixin bb-rl-button--disabled {
+	background-color: var(--bb-rl-background-tertiary-color);
+	color: var(--bb-rl-text-disabled-color);
+	cursor: not-allowed;	
+}
+
 @mixin bb-button-secondary-hover {
 	background-color: var(--bb-secondary-button-background-hover);
 	color: var(--bb-secondary-button-text-hover);

@@ -57,6 +57,7 @@ $materials                  = $course_model->get_materials();
 $quizzes                    = learndash_get_course_quiz_list( $course_id, $user_id );
 $lesson_progression_enabled = learndash_lesson_progression_enabled( $course_id );
 $has_topics                 = $topic_count > 0;
+$course_pricing      		= learndash_get_course_price( $course_id );
 
 if ( ! empty( $lessons ) ) {
 	foreach ( $lessons as $lesson ) {
@@ -186,10 +187,21 @@ $bb_rl_ld_helper = class_exists( 'BB_Readylaunch_Learndash_Helper' ) ? BB_Readyl
 							}
 						}
 						?>
+						<?php
+						if ( 'closed' === $course_pricing['type'] ) { ?>
+							<div class="bb-rl-course-status-label bb-rl-notice--plain bb-rl-notice--error">
+								<?php esc_html_e( 'This course is currently closed', 'buddyboss' ); ?>
+							</div>
+						<?php } ?>
 
 						<div class="bb-rl-course-overview-footer">
 							<div class="bb-rl-course-action">
-								<?php if ( ! $is_enrolled ) { ?>
+								<?php 
+								if ( 'closed' === $course_pricing['type'] ) { ?>
+									<a href="#" class="bb-rl-course-action-button bb-rl-button bb-rl-button--secondaryFill bb-rl-button--small bb-rl-button--disabled">
+										<?php esc_html_e( 'Not Enrolled', 'buddyboss' ); ?>
+									</a>
+								<?php } elseif ( ! $is_enrolled ) { ?>
 									<div class="bb-rl-course-join">
 										<?php
 										echo learndash_payment_buttons( $course );
