@@ -1,11 +1,17 @@
 <?php
 /**
- * The template for displaying site logo
+ * ReadyLaunch - Header Site Logo template.
  *
- * @since   BuddyBoss [BBVERSION]
- * @package BuddyBoss\ReadyLaunch
+ * This template handles displaying the site logo in the header.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 // This is for better SEO.
 $elem = ( is_front_page() && is_home() ) ? 'h1' : 'div';

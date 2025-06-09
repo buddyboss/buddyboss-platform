@@ -1,10 +1,13 @@
 <?php
 /**
- * The Profile Dropdown template in the header for ReadyLaunch.
+ * ReadyLaunch - Header Profile Dropdown template.
  *
- * @since   BuddyBoss [BBVERSION]
+ * This template handles the profile dropdown display in the header for ReadyLaunch.
  *
- * @package ReadyLaunch
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
+ * @version 1.0.0
  */
 
 // Exit if accessed directly.

@@ -1,4 +1,17 @@
 <?php
+/**
+ * ReadyLaunch - Header Unread Messages template.
+ *
+ * This template handles displaying unread messages in the header dropdown.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
+ * @version 1.0.0
+ */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 global $messages_template;
 
@@ -56,6 +69,7 @@ if ( bp_has_message_threads( bp_ajax_querystring( 'messages' ) . '&user_id=' . g
 							'object'     => 'group',
 							'type'       => 'full',
 							'avatar_dir' => 'group-avatars',
+							/* translators: %s: Group name */
 							'alt'        => sprintf( __( 'Group logo of %s', 'buddyboss' ), $group_name ),
 							'title'      => $group_name,
 							'html'       => false,
@@ -66,10 +80,10 @@ if ( bp_has_message_threads( bp_ajax_querystring( 'messages' ) . '&user_id=' . g
 
 				$prefix       = apply_filters( 'bp_core_get_table_prefix', $wpdb->base_prefix );
 				$groups_table = $prefix . 'bp_groups';
-				$group_name   = $wpdb->get_var( "SELECT `name` FROM `{$groups_table}` WHERE `id` = '{$group_id}';" ); // db call ok; no-cache ok;
+				$group_name   = $wpdb->get_var( "SELECT `name` FROM `{$groups_table}` WHERE `id` = '{$group_id}';" ); // db call ok; no-cache ok.
 				$group_link   = 'javascript:void(0);';
 
-				if ( ! empty( $group_name ) && ( ! function_exists( 'bp_disable_group_avatar_uploads' ) || function_exists( 'bp_disable_group_avatar_uploads' ) && ! bp_disable_group_avatar_uploads() ) ) {
+				if ( ! empty( $group_name ) && ( ! function_exists( 'bp_disable_group_avatar_uploads' ) || ( function_exists( 'bp_disable_group_avatar_uploads' ) && ! bp_disable_group_avatar_uploads() ) ) ) {
 					$directory                = 'group-avatars';
 					$avatar_size              = '-bpfull';
 					$legacy_group_avatar_name = '-groupavatar-full';
@@ -344,7 +358,7 @@ if ( bp_has_message_threads( bp_ajax_querystring( 'messages' ) . '&user_id=' . g
 					<span class="notification-users">
 						<a href="<?php bp_message_thread_view_link( bp_get_message_thread_id() ); ?>">
 							<?php
-							echo ucwords( $group_name );
+							echo esc_html( ucwords( $group_name ) );
 							?>
 						</a>
 					</span>
@@ -386,7 +400,7 @@ if ( bp_has_message_threads( bp_ajax_querystring( 'messages' ) . '&user_id=' . g
 							if ( ! empty( $recipients ) && count( $recipients ) > 5 ) {
 								$recipient_names[] = esc_html__( 'others', 'buddyboss' );
 							}
-							echo( ! empty( $recipient_names ) ? implode( ', ', $recipient_names ) : '' );
+							echo esc_html( ! empty( $recipient_names ) ? implode( ', ', $recipient_names ) : '' );
 							?>
 						</a>
 					</span>
@@ -477,9 +491,9 @@ if ( bp_has_message_threads( bp_ajax_querystring( 'messages' ) . '&user_id=' . g
 
 					if ( (int) bp_loggedin_user_id() === (int) $messages_template->thread->last_sender_id ) {
 						if ( $send_media ) {
-							echo esc_html__( 'You', 'buddyboss' ) . ' ' . stripslashes_deep( strtolower( $exerpt ) );
+							echo esc_html__( 'You', 'buddyboss' ) . ' ' . esc_html( stripslashes_deep( strtolower( $exerpt ) ) );
 						} else {
-							echo esc_html__( 'You', 'buddyboss' ) . ': ' . stripslashes_deep( $exerpt );
+							echo esc_html__( 'You', 'buddyboss' ) . ': ' . esc_html( stripslashes_deep( $exerpt ) );
 						}
 					} else {
 						$last_sender = bp_core_get_user_displayname( $messages_template->thread->last_sender_id );
@@ -490,18 +504,18 @@ if ( bp_has_message_threads( bp_ajax_querystring( 'messages' ) . '&user_id=' . g
 								$last_sender = function_exists( 'bb_moderation_has_blocked_label' ) ? bb_moderation_has_blocked_label( $last_sender, $messages_template->thread->last_sender_id ) : esc_html__( 'Blocked Member', 'buddyboss' );
 							}
 						}
-						// For conversations with a single recipient - Don’t include the name of the last person to message before the message content.
+						// For conversations with a single recipient - Don't include the name of the last person to message before the message content.
 						if ( ! $is_group_thread && ! empty( $recipients ) && count( $other_recipients ) === 1 ) {
 							$last_sender = '';
 						}
 						if ( $last_sender ) {
 							if ( $send_media ) {
-								echo $last_sender . ' ' . stripslashes_deep( strtolower( $exerpt ) );
+								echo esc_html( $last_sender ) . ' ' . esc_html( stripslashes_deep( strtolower( $exerpt ) ) );
 							} else {
-								echo $last_sender . ': ' . stripslashes_deep( $exerpt );
+								echo esc_html( $last_sender ) . ': ' . esc_html( stripslashes_deep( $exerpt ) );
 							}
 						} else {
-							echo stripslashes_deep( $exerpt );
+							echo esc_html( stripslashes_deep( $exerpt ) );
 						}
 					}
 					?>

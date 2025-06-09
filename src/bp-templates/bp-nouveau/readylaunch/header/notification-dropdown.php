@@ -1,10 +1,13 @@
 <?php
 /**
- * The Notification template in the header for ReadyLaunch.
+ * ReadyLaunch - Header Notification Dropdown template.
  *
- * @since   BuddyBoss [BBVERSION]
+ * This template handles the notification dropdown display in the header for ReadyLaunch.
  *
- * @package ReadyLaunch
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
+ * @version 1.0.0
  */
 
 // Exit if accessed directly.
