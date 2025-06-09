@@ -726,8 +726,8 @@ class BB_Topics_Manager {
 					if ( function_exists( 'bb_activity_topics_manager_instance' ) ) {
 						$get_previous_activity_relationship = bb_activity_topics_manager_instance()->bb_get_activity_topic_relationship(
 							array(
-								'topic_id' => $previous_topic_id,
-								'item_id'  => $item_id,
+								'topic_id'  => $previous_topic_id,
+								'item_id'   => $item_id,
 								'component' => $item_type,
 							)
 						);
@@ -2253,20 +2253,20 @@ class BB_Topics_Manager {
 		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		$query = $this->wpdb->prepare(
 			"SELECT @final_slug := IF(
-				@next_slug IS NULL, 
-				@current_slug, 
+				@next_slug IS NULL,
+				@current_slug,
 				@next_slug
 			) as final_slug
 			FROM (
 				SELECT @current_slug := %s,
 					   @next_slug := (
-						   SELECT new_topic_slug 
-						   FROM {$this->topic_history_table} 
-						   WHERE BINARY old_topic_slug = @current_slug 
-						   AND item_id = %d 
-						   AND item_type = %s 
+						   SELECT new_topic_slug
+						   FROM {$this->topic_history_table}
+						   WHERE BINARY old_topic_slug = @current_slug
+						   AND item_id = %d
+						   AND item_type = %s
 						   AND action IN ( 'rename', 'migrate' )
-						   ORDER BY date_created DESC 
+						   ORDER BY date_created DESC
 						   LIMIT 1
 					   )
 			) vars",
@@ -2359,9 +2359,14 @@ class BB_Topics_Manager {
 	 * Get the topic slug from the URL.
 	 *
 	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return string The topic slug from URL parameters.
 	 */
 	public function bb_get_topic_slug_from_url() {
-		$topic_slug = isset( $_REQUEST['bb-topic'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['bb-topic'] ) ) : '';
+		// Get topic slug from GET/POST data - this is used for public filtering, no nonce needed.
+		// Since this is used for public topic filtering and not form submission, nonce verification
+		// is not required. The data is sanitized for security.
+		$topic_slug = isset( $_REQUEST['bb-topic'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['bb-topic'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
 		return $topic_slug;
 	}
