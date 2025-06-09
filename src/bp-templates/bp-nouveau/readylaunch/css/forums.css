@@ -843,11 +843,10 @@
   line-height: 1.5;
   color: var(--bb-rl-text-color);
   font-weight: 400;
-  margin-bottom: var(--bb-rl-space-100);
   padding: var(--bb-rl-space-200) 0;
   border: 0;
   background-color: transparent;
-  min-height: 110px;
+  min-height: 90px;
   outline: none;
 }
 
@@ -905,4 +904,31 @@
 
 .bbpress #bb-rl-editor-toolbar {
   padding: var(--bb-rl-space-100) 0;
+}
+
+.bb-rl-forum-tags {
+  border-top: 1px solid var(--bb-rl-border-secondary-color);
+  padding: var(--bb-rl-space-200) 0;
+}
+
+.bb-rl-forum-tags .select2-container--default .select2-selection--multiple {
+  border: 0;
+}
+
+.bbpress .select2-dropdown {
+  border: 0;
+  border-radius: var(--bb-rl-radius-lg);
+  box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.1);
+  max-width: 320px;
+}
+
+.bbpress .select2-results__option {
+  padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--bb-rl-text-color);
+  background-color: var(--bb-rl-background-color);
+  border: 0;
+  border-radius: var(--bb-rl-radius-base);
+  cursor: pointer;
 }
