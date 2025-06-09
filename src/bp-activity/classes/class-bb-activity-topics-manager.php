@@ -133,7 +133,7 @@ class BB_Activity_Topics_Manager {
 			'bb_activity_topic_permission_type',
 			array(
 				'anyone'      => __( 'Anyone', 'buddyboss' ),
-				'mods_admins' => __( 'Admin & Moderator Only', 'buddyboss' ),
+				'mods_admins' => __( 'Admins & Group Owners', 'buddyboss' ),
 			)
 		);
 
