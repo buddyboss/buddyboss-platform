@@ -164,6 +164,7 @@ $bb_rl_ld_helper = class_exists( 'BB_Readylaunch_Learndash_Helper' ) ? BB_Readyl
 						<?php
 						$currency = function_exists( 'learndash_get_currency_symbol' ) ? learndash_get_currency_symbol() : learndash_30_get_currency_symbol();
 						$price    = $course_price['price'];
+						$trial_price = $course_price['trial_price'];
 						if ( ! $is_enrolled ) {
 							if ( 'free' === $course_price['type'] ) {
 								?>
@@ -174,16 +175,45 @@ $bb_rl_ld_helper = class_exists( 'BB_Readylaunch_Learndash_Helper' ) ? BB_Readyl
 									</div>
 									<?php
 							} elseif ( ! empty( $price ) ) {
-								?>
+								if ( $course_price['trial_price'] ) { ?>
+									<div class="bb-rl-composite-price">
+										<div class="bb-rl-premium-price bb-rl-price-module">
+											<span class="bb-rl-price">
+												<span class="ld-currency"><?php echo wp_kses_post( $currency ); ?></span> 
+												<?php echo $course_price['trial_price']; ?>
+											</span>
+											<span class="bb-rl-price-meta">
+												<?php esc_html_e( 'Trial price for ', 'buddyboss' ); ?>
+												<span class="bb-rl-meta-trial">
+													<?php echo $course_price['trial_interval']; ?>
+													<?php echo $course_price['trial_frequency']; ?>
+												</span>
+											</span>
+										</div>
+										<div class="bb-rl-full-price bb-rl-price-module">
+											<span class="bb-rl-price">
+												<span class="ld-currency"><?php echo wp_kses_post( $currency ); ?></span> 
+												<?php echo wp_kses_post( $price ); ?>
+											</span>
+											<span class="bb-rl-price-meta">
+												<?php esc_html_e( 'Full price every ', 'buddyboss' ); ?>
+												<span class="bb-rl-meta-trial">
+													<?php echo $course_price['interval']; ?>
+													<?php echo $course_price['frequency']; ?>
+												</span>
+												<?php esc_html_e( 'afterward', 'buddyboss' ); ?>
+											</span>
+										</div>
+									</div>
+								<?php } else { ?>
 									<div class="bb-rl-course-price">
 										<span class="bb-rl-price">
-											<span class="ld-currency">
-											<?php echo wp_kses_post( $currency ); ?>
-											</span> 
-										<?php echo wp_kses_post( $price ); ?>
+											<span class="ld-currency"><?php echo wp_kses_post( $currency ); ?></span> 
+											<?php echo wp_kses_post( $price ); ?>
 										</span>
 									</div>
-									<?php
+								<?php } ?>		
+							<?php
 							}
 						}
 						?>
@@ -281,6 +311,12 @@ $bb_rl_ld_helper = class_exists( 'BB_Readylaunch_Learndash_Helper' ) ? BB_Readyl
 									?>
 									<div class="ld-status ld-status-incomplete ld-third-background bb-rl-ld-status">
 										<?php esc_html_e( 'Free', 'buddyboss' ); ?>
+									</div>
+									<?php
+								} elseif ( 'closed' === $course_price['type'] ) {
+									?>
+									<div class="ld-status ld-status-closed ld-third-background">
+										<?php esc_html_e( 'Closed Course', 'buddyboss' ); ?>
 									</div>
 									<?php
 								} elseif ( 'open' !== $course_price['type'] ) {

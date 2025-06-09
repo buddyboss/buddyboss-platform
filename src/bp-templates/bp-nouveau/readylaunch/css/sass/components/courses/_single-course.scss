@@ -45,6 +45,35 @@
 		margin: var(--bb-rl-space-200) 0 var(--bb-rl-space-100);
 	}
 
+	.bb-rl-composite-price {
+		display: inline-flex;
+		align-items: center;
+		gap: var(--bb-rl-space-100);
+		width: fit-content;
+		margin: var(--bb-rl-space-200) 0 var(--bb-rl-space-100);
+
+		.bb-rl-premium-price {
+			flex: 0 0 50%;
+		}
+	}
+
+	.bb-rl-price-module {
+		display: flex;
+		flex-direction: column;
+		gap: var(--bb-rl-space-50);
+	}
+
+	.bb-rl-price-meta {
+
+		@include bb-rl-label-heading-bolder;
+		color: var(--bb-rl-text-tertiary-color);
+		white-space: nowrap;
+
+		.bb-rl-meta-trial {
+			color: var(--bb-rl-text-color);
+		}
+	}
+
 	.bb-rl-course-status-label {
 		margin: var(--bb-rl-space-100) 0 0;
 		width: fit-content;
@@ -104,6 +133,7 @@
 		font-size: 20px;
 		font-weight: 700;
 		color: var(--bb-rl-text-color);
+		white-space: nowrap;
 	}
 
 	.bb-rl-course-category {

@@ -235,6 +235,12 @@ $current_instructor = isset( $_GET['instructors'] ) ? sanitize_text_field( wp_un
 												<?php esc_html_e( 'Free', 'buddyboss' ); ?>
 											</div>
 											<?php
+										} elseif ( 'closed' === $course_price['type'] ) {
+											?>
+											<div class="ld-status ld-status-closed ld-third-background">
+												<?php esc_html_e( 'Closed Course', 'buddyboss' ); ?>
+											</div>
+											<?php
 										} elseif ( 'open' !== $course_price['type'] ) {
 											?>
 											<div class="ld-status ld-status-incomplete ld-third-background">
