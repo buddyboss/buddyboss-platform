@@ -754,6 +754,7 @@
   border: 0;
   margin: 12px 0;
   padding: 0;
+  border-radius: 0;
 }
 
 .bb-rl-forum-modal .bb-rl-forum-modal-title input:-webkit-input-placeholder {
@@ -852,6 +853,7 @@
 
 .bb-rl-forum-modal .bbp-the-content:after {
   color: var(--bb-rl-text-tertiary-color);
+  pointer-events: none;
 }
 
 .bb-rl-forum-modal div[class*="attached-gif-container"] {
@@ -912,7 +914,13 @@
 }
 
 .bb-rl-forum-tags .select2-container--default .select2-selection--multiple {
+  display: flex;
   border: 0;
+  min-height: 24px;
+}
+
+.bb-rl-forum-tags .select2-container--default .select2-selection--multiple .select2-search__field {
+  margin: 0;
 }
 
 .bbpress .select2-dropdown {
@@ -931,4 +939,49 @@
   border: 0;
   border-radius: var(--bb-rl-radius-base);
   cursor: pointer;
+}
+
+.bbp-topic-form .bp-feedback {
+  border-radius: 0;
+}
+
+.bbp-topic-form .bp-feedback > p {
+  padding: 0 5px 0 0;
+}
+
+.bbp-topic-form .bp-feedback > p + p {
+  margin: 0;
+}
+
+#new-post.has-content .bbp-form #bbp_reply_submit,
+#new-post .has-gif .bbp-form #bbp_reply_submit,
+#new-post .has-link-preview .bbp-form #bbp_reply_submit,
+#new-post .has-media .bbp-form #bbp_reply_submit {
+  opacity: 1;
+  pointer-events: initial;
+}
+
+#new-post .bbp-form #bbp_reply_submit,
+#new-post.media-uploading .bbp-form #bbp_reply_submit {
+  opacity: .4;
+  pointer-events: none;
+}
+
+#new-post.has-title.has-content .bbp-form #bbp_topic_submit, #new-post.has-title.has-gif .bbp-form #bbp_topic_submit, #new-post.has-title.has-link-preview .bbp-form #bbp_topic_submit, #new-post.has-title.has-media .bbp-form #bbp_topic_submit {
+  opacity: 1;
+  pointer-events: initial;
+}
+
+#new-post .bbp-form #bbp_topic_submit,
+#new-post.media-uploading.has-title .bbp-form #bbp_topic_submit {
+  opacity: .4;
+  pointer-events: none;
+}
+
+.reply-edit #new-post .bbp-form #bbp_reply_submit,
+.reply-edit #new-post .bbp-form #bbp_topic_submit,
+.topic-edit #new-post .bbp-form #bbp_reply_submit,
+.topic-edit #new-post .bbp-form #bbp_topic_submit {
+  opacity: 1;
+  pointer-events: initial;
 }
