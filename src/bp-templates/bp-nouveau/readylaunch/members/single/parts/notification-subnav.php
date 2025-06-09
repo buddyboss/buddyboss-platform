@@ -2,8 +2,6 @@
 /**
  * BuddyBoss Account Notification Navigation
  *
- * This template can be overridden by copying it to yourtheme/buddypress/members/single/parts/notification-subnav.php.
- *
  * @since BuddyBoss 2.2.6
  * @version 1.0.0
  */

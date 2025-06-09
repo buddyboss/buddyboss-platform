@@ -2,8 +2,6 @@
 /**
  * Albums search Template
  *
- * This template can be overridden by copying it to yourtheme/buddypress/search/loop/albums.php.
- *
  * @package BuddyBoss\Core
  * @version 1.0.0
  */

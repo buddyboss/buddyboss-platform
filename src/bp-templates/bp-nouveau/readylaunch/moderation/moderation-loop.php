@@ -4,8 +4,6 @@
  *
  * The template for displaying the moderation loop.
  *
- * This template can be overridden by copying it to yourtheme/buddypress/moderation/moderation-loop.php.
- *
  * @since   BuddyBoss 1.5.6
  * @package BuddyBoss\Core
  * @version 1.5.6

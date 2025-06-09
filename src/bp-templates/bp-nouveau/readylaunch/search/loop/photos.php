@@ -2,8 +2,6 @@
 /**
  * Media search Template
  *
- * This template can be overridden by copying it to yourtheme/buddypress/search/loop/photos.php.
- *
  * @package BuddyBoss\Core
  * @since   BuddyBoss [BBVERSION]
  * @version 1.0.0

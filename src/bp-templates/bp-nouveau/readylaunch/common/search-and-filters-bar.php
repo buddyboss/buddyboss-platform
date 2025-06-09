@@ -2,8 +2,6 @@
 /**
  * The template for BP Nouveau Search & filters bar
  *
- * This template can be overridden by copying it to yourtheme/readylaunch/common/search-and-filters-bar.php.
- *
  * @since BuddyBoss [BBVERSION]
  *
  * @version 1.0.0

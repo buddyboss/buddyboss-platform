@@ -2,8 +2,6 @@
 /**
  * BuddyBoss Video templates
  *
- * This template can be overridden by copying it to yourtheme/buddypress/video/index.php.
- *
  * @package BuddyBoss\Core
  *
  * @since   BuddyBoss [BBVERSION]

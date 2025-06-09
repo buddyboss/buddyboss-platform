@@ -2,8 +2,6 @@
 	/**
 	 * The template for document templates
 	 *
-	 * This template can be overridden by copying it to yourtheme/buddypress/document/index.php.
-	 *
 	 * @since   BuddyBoss [BBVERSION]
 	 * @package BuddyBoss\Core
 	 * @version 1.0.0

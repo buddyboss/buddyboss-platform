@@ -2,8 +2,6 @@
 /**
  * The template for media entry
  *
- * This template can be overridden by copying it to yourtheme/buddypress/media/entry.php.
- *
  * @since   BuddyBoss 1.0.0
  * @version 1.0.0
  */

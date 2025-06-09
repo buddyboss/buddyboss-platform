@@ -4,8 +4,6 @@
  *
  * This template is used to render group documents.
  *
- * This template can be overridden by copying it to yourtheme/buddypress/groups/single/documents.php.
- *
  * @since   BuddyBoss 1.4.0
  * @version 1.4.0
  */
@@ -70,7 +68,7 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 					bp_nouveau_group_hook( 'before', 'document_content' );
 					bp_get_template_part( 'document/actions' );
 					?>
-					
+
 					<?php
 					if ( $is_send_ajax_request ) {
 						echo '<div id="bp-ajax-loader">';

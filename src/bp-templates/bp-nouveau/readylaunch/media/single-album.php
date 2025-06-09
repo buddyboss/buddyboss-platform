@@ -2,8 +2,6 @@
 /**
  * The template for media single album
  *
- * This template can be overridden by copying it to yourtheme/buddypress/media/single-album.php.
- *
  * @since   BuddyBoss 1.0.0
  * @version 1.0.0
  */

@@ -4,8 +4,6 @@
  *
  * This template is used to show the add video form.
  *
- * This template can be overridden by copying it to yourtheme/buddypress/video/add-video.php.
- *
  * @package BuddyBoss\Core
  *
  * @since   BuddyBoss 1.7.0

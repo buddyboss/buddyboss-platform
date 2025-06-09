@@ -2,8 +2,6 @@
 /**
  * The template for create folder
  *
- * This template can be overridden by copying it to yourtheme/buddypress/document/add-folder.php.
- *
  * @since   BuddyBoss [BBVERSION]
  * @package BuddyBoss\Core
  * @version 1.0.0

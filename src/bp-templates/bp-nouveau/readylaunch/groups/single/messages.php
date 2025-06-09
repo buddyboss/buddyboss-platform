@@ -2,8 +2,6 @@
 /**
  * BuddyBoss - Groups Messages
  *
- * This template can be overridden by copying it to yourtheme/buddypress/groups/single/messages.php.
- *
  * @since   BuddyPress 3.0.0
  * @version 1.0.0
  */

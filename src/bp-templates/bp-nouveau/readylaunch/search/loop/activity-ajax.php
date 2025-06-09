@@ -2,8 +2,6 @@
 /**
  * The template for displaying the activity loop in the ajaxified search result.
  *
- * This template can be overridden by copying it to yourtheme/buddypress/search/loop/activity-ajax.php.
- *
  * @package BuddyBoss\Core
  * @version 1.0.0
  */

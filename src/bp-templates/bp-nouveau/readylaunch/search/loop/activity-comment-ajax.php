@@ -2,8 +2,6 @@
 /**
  * This template is used to print the activity comment.
  *
- * This template can be overridden by copying it to yourtheme/buddypress/search/loop/activity-comment-ajax.php.
- *
  * @package BuddyBoss\Core
  * @version 1.0.0
  */

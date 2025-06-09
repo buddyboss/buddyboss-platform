@@ -1,10 +1,15 @@
 <?php
 /**
- * ReadyLaunch - The template for displaying activity link preview.
+ * ReadyLaunch - Activity Link Preview JS Templates.
  *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
  * @since   BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 ?>
 <script type="text/html" id="tmpl-activity-link-preview">

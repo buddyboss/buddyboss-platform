@@ -2,8 +2,6 @@
 /**
  * BP Nouveau Group's avatar template.
  *
- * This template can be overridden by copying it toyourtheme/buddypress/groups/single/admin/group-avatar.php.
- *
  * @since   BuddyPress 3.0.0
  * @version 1.0.0
  */

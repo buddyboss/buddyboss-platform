@@ -2,8 +2,6 @@
 /**
  * The template for BP Nouveau Component's groups filters template
  *
- * This template can be overridden by copying it to yourtheme/readylaunch/common/filters/group-filters.php.
- *
  * @since BuddyBoss [BBVERSION]
  *
  * @version 1.0.0

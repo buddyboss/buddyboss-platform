@@ -5,8 +5,6 @@
  * the template file to display content search result page
  * instead create a folder 'buddyboss-global-search' inside your theme, copy this file over there, and make changes there
  *
- * This template can be overridden by copying it to yourtheme/buddypress/search/results-page-content.php.
- *
  * @package BuddyBoss\Core
  * @since   BuddyBoss [BBVERSION]
  * @version 1.0.0

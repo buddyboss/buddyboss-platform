@@ -6,8 +6,6 @@
  * dont make changes to this file,
  * instead create a folder 'buddyboss-global-search' inside your theme, copy this file over there, and make changes there
  *
- * This template can be overridden by copying it to yourtheme/buddypress/search/results-page.php.
- *
  * @package BuddyBoss\Core
  * @since   BuddyBoss [BBVERSION]
  * @version 1.0.0

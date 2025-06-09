@@ -2,8 +2,6 @@
 /**
  * Template for displaying the search results of the reply ajax
  *
- * This template can be overridden by copying it to yourtheme/buddypress/search/loop/reply-ajax.php.
- *
  * @package BuddyBoss\Core
  * @since   BuddyBoss [BBVERSION]
  * @version 1.0.0

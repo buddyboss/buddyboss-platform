@@ -4,8 +4,6 @@
  *
  * This template is used to create a new album.
  *
- * This template can be overridden by copying it to yourtheme/buddypress/video/create-album.php.
- *
  * @package BuddyBoss\Core
  *
  * @since   BuddyBoss 1.7.0

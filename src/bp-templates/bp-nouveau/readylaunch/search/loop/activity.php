@@ -2,8 +2,6 @@
 /**
  * The template for search results for the activity.
  *
- * This template can be overridden by copying it to yourtheme/buddypress/search/loop/activity.php.
- *
  * @package BuddyBoss\Core
  * @version 1.0.0
  */

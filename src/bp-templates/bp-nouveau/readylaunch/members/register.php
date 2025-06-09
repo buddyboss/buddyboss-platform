@@ -2,8 +2,6 @@
 /**
  * The template for members/blogs registration forms
  *
- * This template can be overridden by copying it to yourtheme/buddypress/members/register.php.
- *
  * @since   BuddyPress 3.0.0
  * @version 1.0.0
  */
@@ -92,7 +90,7 @@ $bp_get_current_signup_step = bp_get_current_signup_step();
 							<input type="checkbox" name="signup_with_blog" id="signup_with_blog" class="bs-styled-checkbox" value="1" <?php checked( (int) bp_get_signup_with_blog_value(), 1 ); ?> />
 							<label for="signup_with_blog"><?php esc_html_e( "Yes, I'd like to create a new site", 'buddyboss' ); ?></label>
 						</p>
-						<div id="blog-details" 
+						<div id="blog-details"
 						<?php
 						if ( (int) bp_get_signup_with_blog_value() ) :
 							?>

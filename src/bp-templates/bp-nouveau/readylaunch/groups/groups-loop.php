@@ -2,12 +2,14 @@
 /**
  * BuddyBoss - Groups Loop
  *
- * This template can be overridden by copying it to yourtheme/readylaunch/groups/groups-loop.php.
- *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
  * @since BuddyBoss [BBVERSION]
- *
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 add_filter( 'bp_get_group_description_excerpt', 'bb_get_group_description_excerpt_view_more', 99, 2 );
 
