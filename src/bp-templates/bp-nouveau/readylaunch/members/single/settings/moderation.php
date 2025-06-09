@@ -1,11 +1,17 @@
 <?php
 /**
- * The template for user moderation
+ * ReadyLaunch - Member Settings Moderation template.
  *
+ * This template handles the moderation settings for members.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
  * @since BuddyBoss [BBVERSION]
- *
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 $is_send_ajax_request = bb_is_send_ajax_request();
 

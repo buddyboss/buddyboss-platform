@@ -1,10 +1,17 @@
 <?php
 /**
- * The template for profile card.
+ * ReadyLaunch - Profile Card template.
  *
- * @since   BuddyBoss 2.8.20
+ * This template handles the member profile card popup display functionality.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 ?>
 <script type="text/html" id="tmpl-profile-card-popup">

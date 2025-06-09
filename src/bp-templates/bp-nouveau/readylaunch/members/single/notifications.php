@@ -1,11 +1,17 @@
 <?php
 /**
- * The template for users notifications
+ * ReadyLaunch - Member Notifications template.
  *
+ * This template handles displaying member notifications with sorting and filtering.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
  * @since BuddyBoss [BBVERSION]
- *
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 $is_send_ajax_request = bb_is_send_ajax_request();
 ?>

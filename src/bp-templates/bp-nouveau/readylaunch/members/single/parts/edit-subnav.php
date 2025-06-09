@@ -1,10 +1,17 @@
 <?php
 /**
- * The template for single members item sub navigation
+ * ReadyLaunch - Member Edit Sub Navigation template.
  *
- * @since   BuddyPress 3.0.0
+ * This template handles the secondary navigation for member profile editing.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 ?>
 
 <?php

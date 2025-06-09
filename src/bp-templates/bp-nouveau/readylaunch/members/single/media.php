@@ -1,11 +1,17 @@
 <?php
 /**
- * The template for users media
+ * ReadyLaunch - Member Media template.
  *
+ * This template handles displaying member media with albums and loading placeholders.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
  * @since BuddyBoss [BBVERSION]
- *
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 $is_send_ajax_request = bb_is_send_ajax_request();
 ?>

@@ -1,11 +1,17 @@
 <?php
 /**
- * BuddyBoss - Members Profile widget loop
+ * ReadyLaunch - Member Profile Loop template.
  *
+ * This template handles displaying member profile fields in a widget loop.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
  * @since BuddyBoss [BBVERSION]
- *
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 $edit_profile_link = trailingslashit( bp_displayed_user_domain() . bp_get_profile_slug() . '/edit/group/' );
 $bp                = buddypress();

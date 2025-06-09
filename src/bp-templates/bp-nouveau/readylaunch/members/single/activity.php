@@ -1,11 +1,17 @@
 <?php
 /**
- * ReadyLaunch - The template for users activity.
+ * ReadyLaunch - Member Activity template.
  *
+ * This template handles displaying member activity with loading placeholders.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
  * @since BuddyBoss [BBVERSION]
- *
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 $is_send_ajax_request = bb_is_send_ajax_request();
 ?>

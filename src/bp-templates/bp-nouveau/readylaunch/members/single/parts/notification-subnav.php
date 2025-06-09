@@ -1,10 +1,17 @@
 <?php
 /**
- * BuddyBoss Account Notification Navigation
+ * ReadyLaunch - Member Notification Sub Navigation template.
  *
- * @since BuddyBoss 2.2.6
+ * This template handles the notification administration menu navigation.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 ?>
 
 <nav class="subnav_tab" id="subnav" role="navigation" aria-label="<?php esc_attr_e( 'Notification administration menu', 'buddyboss' ); ?>">

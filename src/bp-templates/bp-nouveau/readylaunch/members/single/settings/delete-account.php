@@ -1,11 +1,17 @@
 <?php
 /**
- * The template for members settings ( Delete Account )
+ * ReadyLaunch - Member Settings Delete Account template.
  *
+ * This template handles the account deletion settings for members.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
  * @since BuddyBoss [BBVERSION]
- *
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 bp_nouveau_member_hook( 'before', 'settings_template' ); ?>
 

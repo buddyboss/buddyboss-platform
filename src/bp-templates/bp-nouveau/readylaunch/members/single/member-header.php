@@ -1,11 +1,17 @@
 <?php
 /**
- * The template for users header
+ * ReadyLaunch - Member Header template.
  *
+ * This template handles displaying the member profile header with actions and metadata.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
  * @since BuddyBoss [BBVERSION]
- *
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 remove_filter( 'bp_get_add_follow_button', 'bb_bp_get_add_follow_button' );
 

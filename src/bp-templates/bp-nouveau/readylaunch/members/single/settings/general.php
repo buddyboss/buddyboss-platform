@@ -1,11 +1,17 @@
 <?php
 /**
- * The template for members settings ( General )
+ * ReadyLaunch - Member Settings General template.
  *
+ * This template handles the general account settings for members.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
  * @since BuddyBoss [BBVERSION]
- *
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 bp_nouveau_member_hook( 'before', 'settings_template' ); ?>
 

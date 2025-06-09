@@ -1,11 +1,17 @@
 <?php
 /**
- * The template for members single profile edit
+ * ReadyLaunch - Member Profile Edit template.
  *
+ * This template handles editing member profile information.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
  * @since BuddyBoss [BBVERSION]
- *
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 bp_nouveau_xprofile_hook( 'before', 'edit_content' );
 

@@ -1,11 +1,17 @@
 <?php
 /**
- * The template for members settings ( Notifications )
+ * ReadyLaunch - Member Settings Notifications template.
  *
+ * This template handles the notification settings for members.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
  * @since BuddyBoss [BBVERSION]
- *
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 // Added this condition for theme backward compatibility.
 if ( bp_action_variables() && 'subscriptions' === bp_action_variable( 0 ) ) {

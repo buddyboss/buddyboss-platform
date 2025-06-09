@@ -1,11 +1,17 @@
 <?php
 /**
- * The template for member courses
+ * ReadyLaunch - Member Courses template.
  *
+ * This template handles displaying member courses with progress and certificates.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
  * @since BuddyBoss [BBVERSION]
- *
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 $filepath = locate_template(
 	array(

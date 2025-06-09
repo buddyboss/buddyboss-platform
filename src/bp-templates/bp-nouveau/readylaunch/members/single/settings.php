@@ -1,11 +1,17 @@
 <?php
 /**
- * BuddyPress - Users Settings
+ * ReadyLaunch - Member Settings template.
  *
+ * This template handles displaying member account settings sections.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
  * @since BuddyBoss [BBVERSION]
- *
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 ?>
 <div class="bb-rl-account-settings-section">

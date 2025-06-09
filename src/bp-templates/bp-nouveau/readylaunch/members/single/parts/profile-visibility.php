@@ -1,10 +1,17 @@
 <?php
 /**
- * The template for members single profile edit field visibility
+ * ReadyLaunch - Member Profile Visibility template.
  *
- * @since   BuddyPress 3.0.0
+ * This template handles the profile field visibility settings for member profiles.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 if ( empty( $GLOBALS['profile_template'] ) ) {
 	return;

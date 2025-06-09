@@ -1,11 +1,17 @@
 <?php
 /**
- * The template for sent invites
+ * ReadyLaunch - Member Sent Invites template.
  *
+ * This template handles displaying sent member invitations.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
  * @since BuddyBoss [BBVERSION]
- *
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 bp_nouveau_member_hook( 'before', 'invites_sent_template' );
 

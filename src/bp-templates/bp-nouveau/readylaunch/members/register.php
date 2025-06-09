@@ -1,10 +1,17 @@
 <?php
 /**
- * The template for members/blogs registration forms
+ * ReadyLaunch - Members Registration template.
  *
- * @since   BuddyPress 3.0.0
+ * This template handles the member registration form for blogs and member signups.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 bp_nouveau_signup_hook( 'before', 'page' );
 $bp_get_current_signup_step = bp_get_current_signup_step();

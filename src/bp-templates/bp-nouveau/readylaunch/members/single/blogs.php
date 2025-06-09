@@ -1,11 +1,17 @@
 <?php
 /**
- * The template for users blogs
+ * ReadyLaunch - Member Blogs template.
  *
+ * This template handles displaying member blogs with loading placeholders.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
  * @since BuddyBoss [BBVERSION]
- *
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 bp_get_template_part( 'members/single/parts/item-subnav' );
 bp_get_template_part( 'common/search-and-filters-bar' );

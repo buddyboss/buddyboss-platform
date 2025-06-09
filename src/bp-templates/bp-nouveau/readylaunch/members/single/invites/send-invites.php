@@ -1,11 +1,17 @@
 <?php
 /**
- * The template for send invites
+ * ReadyLaunch - Member Send Invites template.
  *
+ * This template handles sending member invitations.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
  * @since BuddyBoss [BBVERSION]
- *
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 bp_nouveau_member_hook( 'before', 'invites_send_template' );
 $send_invite_member_type_allow     = bp_check_member_send_invites_tab_member_type_allowed();

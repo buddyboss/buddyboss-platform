@@ -1,11 +1,17 @@
 <?php
 /**
- * The template for members settings ( Export Data )
+ * ReadyLaunch - Member Settings Export Data template.
  *
+ * This template handles the data export functionality for members.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
  * @since BuddyBoss [BBVERSION]
- *
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 ?>
 
 <h2 class="screen-heading data-export-screen">
