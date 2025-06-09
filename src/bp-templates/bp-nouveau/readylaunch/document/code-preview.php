@@ -1,12 +1,18 @@
 <?php
 /**
- * ReadyLaunch - The template for activity document code preview
+ * ReadyLaunch - The template for activity document code preview.
  *
- * @since   BuddyBoss [BBVERSION]
+ * This template handles the preview display for code documents
+ * with syntax highlighting and expand/collapse functionality.
  *
- * @package BuddyBoss\Core
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 $attachment_id = bp_get_document_attachment_id();
 $download_url  = bp_document_download_link( $attachment_id, bp_get_document_id() );
@@ -25,7 +31,7 @@ if ( $sizes && filesize( $sizes ) / 1e+6 < 2 && $bp_document_text_preview ) {
 	if ( in_array( $extension, bp_get_document_preview_code_extensions(), true ) ) {
 		$data      = bp_document_get_preview_text_from_attachment( $attachment_id );
 		$file_data = $data['text'];
-		$more_text = $data['more_text']
+		$more_text = $data['more_text'];
 		?>
 		<div class="bb-rl-document-text-wrap">
 			<div class="bb-rl-document-text" data-extension="<?php echo esc_attr( $extension ); ?>">

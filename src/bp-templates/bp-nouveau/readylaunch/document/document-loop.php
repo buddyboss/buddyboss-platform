@@ -1,22 +1,29 @@
 <?php
 /**
- * The template for document loop
+ * ReadyLaunch - Document loop template.
  *
- * @since   BuddyBoss 1.4.0
- * @package BuddyBoss\Core
+ * This template handles the document listing loop with sorting
+ * and pagination functionality.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 bp_nouveau_before_loop();
 
 if ( bp_has_document( bp_ajax_querystring( 'document' ) ) ) :
 
-	$get_page = bb_filter_input_string( INPUT_POST, 'page' );
-	$order_by = bb_filter_input_string( INPUT_POST, 'order_by' );
-	$orderby  = bb_filter_input_string( INPUT_POST, 'orderby' );
-	$sort     = bb_filter_input_string( INPUT_POST, 'sort' );
-	$scope    = bb_filter_input_string( INPUT_POST, 'scope' );
-	$extras   = filter_input( INPUT_POST, 'extras', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
+	$get_page    = bb_filter_input_string( INPUT_POST, 'page' );
+	$order_by    = bb_filter_input_string( INPUT_POST, 'order_by' );
+	$order_by_db = bb_filter_input_string( INPUT_POST, 'orderby' );
+	$sort        = bb_filter_input_string( INPUT_POST, 'sort' );
+	$scope       = bb_filter_input_string( INPUT_POST, 'scope' );
+	$extras      = filter_input( INPUT_POST, 'extras', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
 
 	if ( empty( $get_page ) || 1 === (int) $get_page ) :
 		$active_title_class   = '';

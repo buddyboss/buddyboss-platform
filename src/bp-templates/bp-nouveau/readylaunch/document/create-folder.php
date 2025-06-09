@@ -1,11 +1,18 @@
 <?php
 /**
- * The template for document folder create
+ * ReadyLaunch - The template for document folder create.
  *
- * @since   BuddyBoss 1.4.0
- * @package BuddyBoss\Core
+ * This template handles the modal interface for creating new document folders
+ * with title input, validation, and privacy settings.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 ?>
 
@@ -21,7 +28,7 @@
 					<div class="bb-field-wrap">
 						<label for="bb-album-title" class="bb-label"><?php esc_html_e( 'Title', 'buddyboss' ); ?></label>
 						<input id="bb-album-title" value="" type="text" placeholder="<?php esc_html_e( 'Enter Folder Title', 'buddyboss' ); ?>" />
-						<small class="error-box"><?php _e( 'Following special characters are not supported: \ / ? % * : | " < >', 'buddyboss' ); ?></small>
+						<small class="error-box"><?php esc_html_e( 'Following special characters are not supported: \ / ? % * : | " < >', 'buddyboss' ); ?></small>
 					</div>
 					<?php
 					if ( ! bp_is_group() ) :

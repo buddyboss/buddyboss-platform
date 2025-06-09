@@ -2,10 +2,14 @@
 /**
  * ReadyLaunch - The template for document create folder
  *
- * @since   BuddyBoss [BBVERSION]
- * @package BuddyBoss\Core
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 ?>
 
@@ -13,7 +17,7 @@
 	<div class="bb-rl-field-wrap">
 		<label for="bb_rl_new_folder_name_input" class="bb-label"><?php esc_html_e( 'Folder Title', 'buddyboss' ); ?></label>
 		<input class="bb-rl-popup-on-fly-create-folder-title" value="" type="text" placeholder="<?php esc_attr_e( 'Enter Folder Title', 'buddyboss' ); ?>">
-		<small class="error-box"><?php _e( 'Following special characters are not supported: \ / ? % * : | " < >', 'buddyboss' ); ?></small>
+		<small class="error-box"><?php esc_html_e( 'Following special characters are not supported: \ / ? % * : | " < >', 'buddyboss' ); ?></small>
 	</div>
 	<?php
 	if ( ! bp_is_group() ) :

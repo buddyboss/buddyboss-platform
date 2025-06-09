@@ -1,11 +1,18 @@
 <?php
 /**
- * The template for document entry
+ * ReadyLaunch - Document entry template.
  *
+ * This template handles the display of individual document entries
+ * in the document list view with thumbnails and selection controls.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
  * @since BuddyBoss [BBVERSION]
- *
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 $document_id      = bp_get_document_id();
 $current_group_id = function_exists( 'bp_get_current_group_id' ) ? bp_get_current_group_id() : 0;

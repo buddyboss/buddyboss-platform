@@ -1,13 +1,20 @@
 <?php
-	/**
-	 * The template for document templates
-	 *
-	 * @since   BuddyBoss [BBVERSION]
-	 * @package BuddyBoss\Core
-	 * @version 1.0.0
-	 */
+/**
+ * ReadyLaunch - Document templates index.
+ *
+ * This template handles the main document directory page
+ * with search, filters, and document listing functionality.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
+ * @version 1.0.0
+ */
 
-	$is_send_ajax_request = bb_is_send_ajax_request();
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
+$is_send_ajax_request = bb_is_send_ajax_request();
 ?>
 <div class="bb-rl-document-directory-wrapper">
 	<div class="bb-rl-secondary-header flex items-center">

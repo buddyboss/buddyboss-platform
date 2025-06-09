@@ -1,11 +1,18 @@
 <?php
 /**
- * The template for activity document actions
+ * ReadyLaunch - Activity document actions template.
  *
+ * This template handles document action buttons in activity views
+ * including download, move, and delete functionality.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
  * @since BuddyBoss [BBVERSION]
- *
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 global $document_template;
 $document_id            = bp_get_document_id();

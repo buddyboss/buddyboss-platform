@@ -1,13 +1,21 @@
 <?php
 /**
- * The template for document actions
+ * ReadyLaunch - Document actions template.
  *
+ * This template handles the action buttons for document management
+ * including delete and select all functionality.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
  * @since BuddyBoss [BBVERSION]
- *
  * @version 1.0.0
  */
 
-if ( bp_is_my_profile() || ( bp_is_active( 'groups' ) && bp_is_group() && ( bp_is_group_media() && groups_can_user_manage_media( bp_loggedin_user_id(), bp_get_current_group_id() ) ) || ( bp_is_group_albums() && groups_can_user_manage_albums( bp_loggedin_user_id(), bp_get_current_group_id() ) ) ) ) : ?>
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
+if ( bp_is_my_profile() || ( bp_is_active( 'groups' ) && bp_is_group() && ( ( bp_is_group_media() && groups_can_user_manage_media( bp_loggedin_user_id(), bp_get_current_group_id() ) ) || ( bp_is_group_albums() && groups_can_user_manage_albums( bp_loggedin_user_id(), bp_get_current_group_id() ) ) ) ) ) :
+	?>
 
 	<header class="bb-member-media-header bb-photos-actions">
 		<div class="bb-media-meta bb-documents-meta">
