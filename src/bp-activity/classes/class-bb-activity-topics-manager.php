@@ -110,6 +110,7 @@ class BB_Activity_Topics_Manager {
 		add_filter( 'bp_activity_get_where_conditions', array( $this, 'bb_activity_topic_get_where_conditions' ), 10, 2 );
 		add_filter( 'bp_core_get_js_strings', array( $this, 'bb_activity_topic_get_js_strings' ), 10, 1 );
 		add_action( 'bp_after_member_activity_post_form', array( $this, 'bb_user_activity_topics_after_post_form' ), 10, 1 );
+		add_filter( 'bp_before_has_activities_parse_args', array( $this, 'bb_get_activity_topic_from_url' ) );
 	}
 
 	/**
@@ -1037,7 +1038,8 @@ class BB_Activity_Topics_Manager {
 	 * @since BuddyBoss [BBVERSION]
 	 */
 	public function bb_user_activity_topics_after_post_form() {
-		$topics = $this->bb_get_activity_topics();
+		$current_slug = function_exists( 'bb_topics_manager_instance' ) ? bb_topics_manager_instance()->bb_get_topic_slug_from_url() : '';
+		$topics       = $this->bb_get_activity_topics();
 		if ( ! empty( $topics ) ) {
 			?>
 			<div class="activity-topic-selector">
@@ -1047,12 +1049,38 @@ class BB_Activity_Topics_Manager {
 					</li>
 					<?php
 					foreach ( $topics as $topic ) {
-						echo '<li><a href="' . esc_url( add_query_arg( 'bb-topic', $topic['slug'] ) ) . '" data-topic-id="' . esc_attr( $topic['topic_id'] ) . '">' . esc_html( $topic['name'] ) . '</a></li>';
+						$li_class = '';
+						$a_class  = '';
+						if ( ! empty( $current_slug ) && $current_slug === $topic['slug'] ) {
+							$li_class = 'selected';
+							$a_class  = 'selected active';
+						}
+						echo '<li class="bb-topic-selector-item ' . esc_attr( $li_class ) . '"><a href="' . esc_url( add_query_arg( 'bb-topic', $topic['slug'] ) ) . '" data-topic-id="' . esc_attr( $topic['topic_id'] ) . '" class="bb-topic-selector-link ' . esc_attr( $a_class ) . '">' . esc_html( $topic['name'] ) . '</a></li>';
 					}
 					?>
 				</ul>
 			</div>
 			<?php
 		}
+	}
+
+	/**
+	 * Get the activity topic from the URL.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $args The arguments.
+	 *
+	 * @return array The arguments.
+	 */
+	public function bb_get_activity_topic_from_url( $args ) {
+		$topic_slug = bb_topics_manager_instance()->bb_get_topic_slug_from_url();
+		if ( ! empty( $topic_slug ) ) {
+			$topic_data = bb_topics_manager_instance()->bb_get_topic_by( 'slug', $topic_slug );
+			if ( ! empty( $topic_data ) && isset( $topic_data->id ) ) {
+				$args['topic_id'] = $topic_data->id;
+			}
+		}
+		return $args;
 	}
 }

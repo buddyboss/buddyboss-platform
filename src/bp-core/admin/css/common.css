@@ -5776,6 +5776,11 @@ h1.bb-advance-heading {
 .bb-hello-activity-topic-migrate.bb-modal-panel #bb-hello-title {
   font-size: 18px;
   color: #1d2327;
+  width: calc(100% - 35px);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  display: block;
 }
 
 .bb-hello-activity-topic-migrate.bb-modal-panel div.bb-hello-content {
@@ -5792,6 +5797,7 @@ h1.bb-advance-heading {
 
 .bb-hello-activity-topic-migrate.bb-modal-panel div.bb-hello-content .form-fields .field-input select {
   min-width: 150px;
+  max-width: 150px;
 }
 
 .bb-hello-activity-topic-migrate.bb-modal-panel div.bb-hello-content .form-fields .field-label {
