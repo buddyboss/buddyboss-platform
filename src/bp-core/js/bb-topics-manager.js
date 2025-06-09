@@ -698,6 +698,10 @@ window.bp = window.bp || {};
 			var itemType       = topicAttr.item_type;
 			var topicName      = $topicItem.find( '.bb-topic-title' ).text().trim();
 
+			var $radioValue    = $( 'input[name="bb_migrate_existing_topic"]:checked' ).val();
+			var $dropdownValue = $( '#bb_existing_topic_id' ).val();
+			this.handleEnableDisableMigrateTopicButton( $radioValue, $dropdownValue );
+
 			// First, check if there are existing posts on this topic.
 			this.checkTopicPostsBeforeDelete( {
 				topicId    : topicId,
