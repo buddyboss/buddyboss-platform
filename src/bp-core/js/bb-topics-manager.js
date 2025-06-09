@@ -32,21 +32,25 @@ window.bp = window.bp || {};
 			nonceSelector           : '#bb_topic_nonce',
 			actionFromSelector      : '#bb_action_from',
 			addTopicButtonSelector  : '.bb-add-topic',
-			closeModalSelector      : '.bb-model-close-button, #bb_topic_cancel',
+			closeModalSelector      : '.bb-model-close-button, .bb-hello-activity-topic #bb_topic_cancel, .bb-hello-activity-topic-migrate #bb_topic_cancel',
 			submitButtonSelector    : '#bb_topic_submit',
 			editTopicSelector       : '.bb-edit-topic',
 			deleteTopicSelector     : '.bb-delete-topic',
 			errorContainerSelector  : '.bb-hello-error',
 			errorContainer          : '<div class="bb-hello-error"><i class="bb-icon-rf bb-icon-exclamation"></i>',
 			topicActionsButton      : '.bb-topic-actions-wrapper .bb-topic-actions_button',
+			migrateTopicButtonSelector      : '#bb_topic_migrate',
+			migrateTopicBackdropModal       : '#bb-hello-backdrop-activity-topic-migrate',
+			migrateTopicContainerModal      : '#bb-activity-topic-migrate-form_modal',
 
 			// Classes.
 			modalOpenClass : 'activity-modal-open',
 
 			// AJAX actions.
-			addTopicAction    : 'bb_add_topic',
-			editTopicAction   : 'bb_edit_topic',
-			deleteTopicAction : 'bb_delete_topic',
+			addTopicAction     : 'bb_add_topic',
+			editTopicAction    : 'bb_edit_topic',
+			deleteTopicAction  : 'bb_delete_topic',
+			migrateTopicAction : 'bb_migrate_topic',
 
 			// Other settings.
 			topicsLimit : bbTopicsManagerVars.topics_limit,
@@ -134,11 +138,16 @@ window.bp = window.bp || {};
 								topicName = ! _.isUndefined( bp.draft_activity.data.topics.topic_name ) ? bp.draft_activity.data.topics.topic_name : '';
 							}
 
-							var topicLists = BBTopicsManager.topicLists;
-							if ( ! _.isUndefined( this.model.get( 'topics' ) ) ) {
-								topicLists = ! _.isUndefined( this.model.get( 'topics' ).topic_lists ) ? this.model.get( 'topics' ).topic_lists : [];
-							} else if ( ! _.isUndefined( bp.draft_activity.data.topics ) ) {
-								topicLists = ! _.isUndefined( bp.draft_activity.data.topics.topic_lists ) ? bp.draft_activity.data.topics.topic_lists : [];
+							var topicLists = [];
+							var modelTopics = this.model.get( 'topics' );
+							
+							// Priority order: model data > draft data > global data.
+							if ( modelTopics && ! _.isUndefined( modelTopics.topic_lists ) ) {
+								topicLists = modelTopics.topic_lists;
+							} else if ( ! _.isUndefined( bp.draft_activity.data.topics ) && ! _.isUndefined( bp.draft_activity.data.topics.topic_lists ) ) {
+								topicLists = bp.draft_activity.data.topics.topic_lists;
+							} else {
+								topicLists = BBTopicsManager.topicLists;
 							}
 
 							this.model.set( 'topics', {
@@ -149,6 +158,13 @@ window.bp = window.bp || {};
 
 							this.listenTo( Backbone, 'topic:update', this.updateTopics );
 
+							// Listen to model changes for topics.
+							this.listenTo( this.model, 'change:topics', function( model, topics ) {
+								if ( topics ) {
+									this.updateTopics( topics );
+								}
+							} );
+
 							// Add document-level click handler
 							$( document ).on( 'click.topicSelector', $.proxy( this.closeTopicSelectorDropdown, this ) );
 
@@ -156,16 +172,27 @@ window.bp = window.bp || {};
 
 						updateTopics : function ( topics ) {
 
-							// Fix to handle various formats of incoming topics data
+							// Fix to handle various formats of incoming topics data.
 							var topicsArray;
 
-							// Check if topics is an object with topic_lists property
+							// Check if topics is an object with topic_lists property.
 							if ( _.isObject( topics ) && ! _.isUndefined( topics.topic_lists ) ) {
 								topicsArray = topics.topic_lists;
 							}
 
-							var topicId   = ! _.isUndefined( this.model.get( 'topics' ) ) ? this.model.get( 'topics' ).topic_id : 0;
-							var topicName = ! _.isUndefined( this.model.get( 'topics' ) ) ? this.model.get( 'topics' ).topic_name : '';
+							var currentTopics = this.model.get( 'topics' );
+							var topicId       = currentTopics ? currentTopics.topic_id : 0;
+							var topicName     = currentTopics ? currentTopics.topic_name : '';
+
+							// If the incoming topics object has topic_id and topic_name, use them.
+							if ( _.isObject( topics ) ) {
+								if ( ! _.isUndefined( topics.topic_id ) ) {
+									topicId = topics.topic_id;
+								}
+								if ( ! _.isUndefined( topics.topic_name ) ) {
+									topicName = topics.topic_name;
+								}
+							}
 
 							// Update the model with the new topics
 							this.model.set( 'topics', {
@@ -271,6 +298,10 @@ window.bp = window.bp || {};
 			this.$itemId          = $( this.config.itemIdSelector );
 			this.$itemType        = $( this.config.itemTypeSelector );
 			this.$actionFrom      = $( this.config.actionFromSelector );
+			
+			// Migrate topic elements.
+			this.$migrateTopicBackdropModalSelector  = $( this.config.migrateTopicBackdropModal );
+			this.$migrateTopicContainerModalSelector = $( this.config.migrateTopicContainerModal );
 		},
 
 		/**
@@ -308,6 +339,10 @@ window.bp = window.bp || {};
 			// Disable submit button if no topic is selected.
 			this.$document.on( 'change', '.bb-topic-name-field', this.enableDisableSubmitButton.bind( this ) );
 			this.$document.on( 'keyup', '#bb_topic_name, .bb-topic-name-field', this.enableDisableSubmitButton.bind( this ) );
+			
+			this.$document.on( 'change', 'input[name="bb_migrate_existing_topic"]', this.enableDisableMigrateTopicButton.bind( this ) );
+			this.$document.on( 'change', '#bb_existing_topic_id', this.updateMigrateButtonForDropdown.bind( this ) );
+			this.$document.on( 'click', this.config.migrateTopicButtonSelector, this.handleMigrateTopic.bind( this ) );
 		},
 
 		/**
@@ -348,7 +383,7 @@ window.bp = window.bp || {};
 							// Show success notification if needed.
 							if ( response.data && response.data.message ) {
 								// Display success message.
-								$container.after( '<div class="bb-topics-sort-success">' + response.data.message + '</div>' );
+								$container.after( '<div class="bb-topics-sort-success notice notice-success"><p>' + response.data.message + '</p></div>' );
 								setTimeout( function () {
 									$( '.bb-topics-sort-success' ).fadeOut( 300, function () {
 										$( this ).remove();
@@ -390,7 +425,14 @@ window.bp = window.bp || {};
 			$( 'body' ).addClass( this.config.modalOpenClass );
 
 			// Remove any existing error messages.
-			this.$modal.find(this.config.errorContainerSelector).remove();
+			this.$modal.find( this.config.errorContainerSelector ).remove();
+			
+			if ( this.$modal.find( '.bb-model-header h4 .target_name' ).length ) {
+				this.$modal.find( '.bb-model-header h4 .target_name' ).text( bbTopicsManagerVars.create_topic_text );
+			}
+			if ( this.$modal.find( '.bb-hello-title h2' ).length ) {
+				this.$modal.find( '.bb-hello-title h2' ).text( bbTopicsManagerVars.create_topic_text );
+			}
 
 			// Clear form fields.
 			this.$topicName.val( '' );
@@ -507,15 +549,32 @@ window.bp = window.bp || {};
 		 *
 		 * @param {Event} event - The click event
 		 */
-		handleCloseModal : function ( event ) {
+		handleCloseModal: function ( event ) {
 			// Prevent default action and stop event propagation.
 			event.preventDefault();
 			event.stopPropagation();
 
 			$( 'body' ).removeClass( this.config.modalOpenClass );
 
-			this.$modal.hide();
-			this.$backdrop.hide();
+			if (
+				this.$modal.hasClass( 'bb-modal-panel--activity-topic' ) ||
+				this.$modal.hasClass( 'bb-action-popup--activity-topic' )
+			) {
+				this.$modal.hide();
+				this.$backdrop.hide();
+			}
+
+			if (
+				this.$migrateTopicContainerModalSelector.hasClass( 'bb-modal-panel--activity-topic-migrate' ) ||
+				this.$migrateTopicContainerModalSelector.hasClass( 'bb-action-popup--activity-migrate-topic' )
+			) {
+				this.$migrateTopicBackdropModalSelector.hide();
+				this.$migrateTopicContainerModalSelector.hide();
+
+				// Reset data.
+				$( 'input[name="bb_migrate_existing_topic"]:first' ).prop( 'checked', true );
+				$( '#bb_existing_topic_id option:not(:first)' ).prop( 'selected', false );
+			}
 
 			// Reset data.
 			this.$topicName.val( '' );
@@ -549,6 +608,13 @@ window.bp = window.bp || {};
 
 			// Add modal open class.
 			$( 'body' ).addClass( this.config.modalOpenClass );
+			
+			if ( this.$modal.find( '.bb-model-header h4 .target_name' ).length ) {
+				this.$modal.find( '.bb-model-header h4 .target_name' ).text( bbTopicsManagerVars.edit_topic_text );
+			}
+			if ( this.$modal.find( '.bb-hello-title h2' ).length ) {
+				this.$modal.find( '.bb-hello-title h2' ).text( bbTopicsManagerVars.edit_topic_text );
+			}
 
 			// Show modal.
 			this.$modal.show();
@@ -631,33 +697,123 @@ window.bp = window.bp || {};
 			var itemId         = topicAttr.item_id;
 			var itemType       = topicAttr.item_type;
 			var topicName      = $topicItem.find( '.bb-topic-title' ).text().trim();
-			var confirmMessage = bbTopicsManagerVars.delete_topic_confirm.replace( '%s', topicName );
 
-			if ( confirm( confirmMessage ) ) {
+			// First, check if there are existing posts on this topic.
+			this.checkTopicPostsBeforeDelete( {
+				topicId    : topicId,
+				topicName  : topicName,
+				nonce      : nonce,
+				itemId     : itemId,
+				itemType   : itemType,
+				$topicItem : $topicItem
+			} );
+		},
 
-				// Prepare data for AJAX request.
-				var data = {
-					action    : this.config.deleteTopicAction,
-					topic_id  : topicId,
-					nonce     : nonce,
-					item_id   : itemId,
-					item_type : itemType
-				};
+		/**
+		 * Check if topic has existing posts before deletion.
+		 *
+		 * @param {Object} args - Arguments object containing topic data.
+		 */
+		checkTopicPostsBeforeDelete : function ( args ) {
+			var data = {
+				action    : this.config.deleteTopicAction,
+				topic_id  : args.topicId,
+				nonce     : args.nonce,
+				item_id   : args.itemId,
+				item_type : args.itemType
+			};
 
-				// Use the configured AJAX URL.
-				var ajaxUrl = this.config.ajaxUrl;
-
-				// Send AJAX request
-				$.post( ajaxUrl, data, function ( response ) {
-					if ( response.success ) {
-						$topicItem.remove();
-						// Check if we need to show the "Add new topic" button after deletion.
-						BBTopicsManager.checkTopicsLimit();
-					} else {
-						alert( response.data.error );
-					}
-				}.bind( this ) );
+			var topicName = args.topicName || '';
+			if ( BBTopicsManager.$migrateTopicContainerModalSelector.find( '#bb-hello-title' ).length ) {
+				BBTopicsManager.$migrateTopicContainerModalSelector.find( '#bb-hello-title' ).text( bbTopicsManagerVars.delete_topic_text.replace( '%s', topicName ) );
 			}
+			if ( BBTopicsManager.$migrateTopicContainerModalSelector.find( '.bb-model-header h4 .target_name' ).length ) {
+				BBTopicsManager.$migrateTopicContainerModalSelector.find( '.bb-model-header h4 .target_name' ).text( bbTopicsManagerVars.delete_topic_text.replace( '%s', topicName ) );
+			}
+
+			// Show loader
+			this.$migrateTopicContainerModalSelector.addClass( 'is-loading' );
+
+			// Add modal open class.
+			$( 'body' ).addClass( this.config.modalOpenClass );
+
+			// Show modal.
+			this.$migrateTopicContainerModalSelector.show();
+			this.$migrateTopicBackdropModalSelector.show();
+
+			// Send initial AJAX request to check for existing posts.
+			$.post( this.config.ajaxUrl, data, function ( response ) {
+				BBTopicsManager.$migrateTopicContainerModalSelector.removeClass( 'is-loading' );
+				if ( response.success && response.data ) {
+					var topicData = response.data;
+
+					BBTopicsManager.$migrateTopicContainerModalSelector.find( '#bb_topic_id' ).val( topicData.topic_id );
+					BBTopicsManager.$migrateTopicContainerModalSelector.find( '#bb_item_id' ).val( topicData.item_id );
+					BBTopicsManager.$migrateTopicContainerModalSelector.find( '#bb_item_type' ).val( topicData.item_type );
+					BBTopicsManager.$migrateTopicContainerModalSelector.find( '#bb_topic_nonce' ).val( topicData.nonce );
+					
+					// Clear existing options to prevent duplicates, then append new ones
+					var $topicSelect = BBTopicsManager.$migrateTopicContainerModalSelector.find( '#bb_existing_topic_list #bb_existing_topic_id' );
+					$topicSelect.find( 'option:not(:first)' ).remove();
+					
+					if ( topicData.topic_lists ) {
+						_.each( topicData.topic_lists, function ( topic ) {
+							var option = new Option( topic.name, topic.topic_id );
+							$topicSelect.append( option );
+						} );
+					}
+				} else {
+
+				}
+			} ).fail( function () {
+
+			}.bind(this));
+		},
+
+		handleMigrateTopic : function ( event ) {
+			var oldTopicId  = this.$migrateTopicContainerModalSelector.find( '#bb_topic_id' ).val();
+			var nonce       = this.$migrateTopicContainerModalSelector.find( '#bb_topic_nonce' ).val();
+			var itemId      = this.$migrateTopicContainerModalSelector.find( '#bb_item_id' ).val();
+			var itemType    = this.$migrateTopicContainerModalSelector.find( '#bb_item_type' ).val();
+			var newTopicId  = this.$migrateTopicContainerModalSelector.find( '#bb_existing_topic_id' ).val();
+			var $topicItem  = $( '.bb-activity-topics-list .bb-activity-topic-item[data-topic-id="' + oldTopicId + '"]' );
+			var migrateType = $( 'input[name="bb_migrate_existing_topic"]:checked' ).val();
+
+			// Prepare data for AJAX request.
+			var data = {
+				action       : this.config.migrateTopicAction,
+				old_topic_id : oldTopicId,
+				nonce        : nonce,
+				item_id      : itemId,
+				item_type    : itemType,
+				migrate_type : migrateType
+			};
+
+			if ( 'migrate' === migrateType ) {
+				data.new_topic_id = newTopicId;
+			}
+
+			// Use the configured AJAX URL.
+			var ajaxUrl = this.config.ajaxUrl;
+
+			// Show Loader
+			$( this.config.migrateTopicButtonSelector ).addClass( 'is-loading' );
+
+			// Send AJAX request.
+			$.post( ajaxUrl, data, function ( response ) {
+				$( this.config.migrateTopicButtonSelector ).removeClass( 'is-loading' );
+				if ( response.success ) {
+					$topicItem.remove();
+					this.handleCloseModal( event );
+					this.checkTopicsLimit();
+				} else {
+					this.$migrateTopicContainerModalSelector.find( '.bb-hello-content' ).prepend( this.config.errorContainer );
+					this.$migrateTopicContainerModalSelector.find( '.bb-hello-error' ).append( response.data.error );
+				}
+			}.bind( this ) ).fail( function () {
+				this.$migrateTopicContainerModalSelector.find( '.bb-hello-content' ).prepend( this.config.errorContainer );
+				this.$migrateTopicContainerModalSelector.find( '.bb-hello-error' ).append( bbTopicsManagerVars.generic_error );
+			}.bind( this ) );
 		},
 
 		/**
@@ -666,20 +822,26 @@ window.bp = window.bp || {};
 		 * @return {boolean} True if limit reached, false otherwise.
 		 */
 		checkTopicsLimit : function () {
-			var topicsCount = this.$topicList.find( '.bb-activity-topic-item' ).length;
-			var topicsLimit = this.config.topicsLimit;
+			var topicsCount      = this.$topicList.find( '.bb-activity-topic-item' ).length;
+			var topicsLimit      = this.config.topicsLimit;
+			var $limitNotReached = $( '.bb-topic-limit-not-reached' );
+			var $limitReached    = $( '.bb-topic-limit-reached' );
 
 			var topicsLimitReached = topicsCount >= topicsLimit;
 
 			// If the limit is reached, hide the add button.
 			if ( topicsLimitReached ) {
 				this.$addTopicButton.hide();
+				$limitNotReached.hide();
+				$limitReached.show();
 			} else {
 				// If we're below the limit, show the add button.
 				this.$addTopicButton.show();
 				if ( this.$addTopicButton.hasClass( 'bp-hide' ) ) {
 					this.$addTopicButton.removeClass( 'bp-hide' );
 				}
+				$limitNotReached.show();
+				$limitReached.hide();
 			}
 
 			if ( topicsCount > 0 ) {
@@ -723,7 +885,7 @@ window.bp = window.bp || {};
 		 * Add frontend listeners.
 		 */
 		addFrontendListeners : function () {
-			if ( BBTopicsManager.isEnabledActivityTopic && BP_Nouveau.activity.params.topics.topic_lists.length > 0 ) {
+			if ( BBTopicsManager.isEnabledActivityTopic ) {
 				if ( this.isActivityTopicRequired ) {
 					this.$document.on( 'mouseenter focus', '#whats-new-submit', this.showTopicTooltip.bind( this ) );
 					this.$document.on( 'mouseleave blur', '#whats-new-submit', this.hideTopicTooltip.bind( this ) );
@@ -768,67 +930,86 @@ window.bp = window.bp || {};
 			event.preventDefault();
 			event.stopPropagation();
 
-			var $topicItem     = $( event.currentTarget );
-			var topicId        = $topicItem.data( 'topic-id' );
-			var topicUrl       = $topicItem.attr( 'href' );
-			var $filterBarLink = $( '.activity-topic-selector li a[data-topic-id="' + topicId + '"]' );
+			var $topicItem      = $( event.currentTarget );
+			var topicId         = $topicItem.data( 'topic-id' );
+			var topicUrl        = $topicItem.attr( 'href' );
+			var topicFilterATag = $( '.activity-topic-selector li a' );
+			var $filterBarLink  = topicFilterATag.filter( '[data-topic-id="' + topicId + '"]' );
 			var $newMainBarItem;
 
 			if ( $topicItem.closest( 'li' ).hasClass( 'menu-item-has-children' ) ) {
 				return;
 			}
 
-			// Extract hash from full URL if present.
-			var topicHash = '';
-			if ( -1 !== topicUrl.indexOf( '#' ) ) {
-				// Are we on the main activity/news feed?
-				var isMainFeed = BP_Nouveau.activity.params.topics.is_activity_directory;
-				if ( isMainFeed ) {
-					if ( $topicItem.closest( 'li.groups' ).length > 0 ) {
-						window.location.href = topicUrl;
-						return;
-					}
+			// Extract topic parameter from URL.
+			var topicParam = '', url;
+			if ( topicUrl ) {
+				try {
+					// Create URL object to properly parse the URL
+					url        = new URL( topicUrl, window.location.origin );
+					topicParam = url.searchParams.get( 'bb-topic' );
+				} catch ( e ) {
+					// Fallback for older browsers or invalid URLs
+					var urlParams = new URLSearchParams( topicUrl.split( '?' )[ 1 ] || '' );
+					topicParam    = urlParams.get( 'bb-topic' );
 				}
-				topicHash = topicUrl.substring( topicUrl.indexOf( '#' ) );
 			}
 
-			// Update the URL to include the topic slug (or remove it for "All") - only if not navigating.
-			if ( history.pushState && ! this.isNavigating ) {
-				var newUrl;
-				if ( ! topicId || $topicItem.hasClass( 'all' ) || 'all' === topicHash.toLowerCase() ) {
-					newUrl = window.location.protocol + '//' + window.location.host + window.location.pathname;
-				} else {
-					newUrl = window.location.protocol + '//' + window.location.host + window.location.pathname + topicHash;
+			// Are we on the main activity/news feed?
+			var isMainFeed = BP_Nouveau.activity.params.topics.is_activity_directory;
+			if ( isMainFeed ) {
+				if ( $topicItem.closest( 'li.groups' ).length > 0 ) {
+					window.location.href = topicUrl;
+					return;
 				}
-				window.history.pushState( { path : newUrl }, '', newUrl );
+			}
+
+			// Get current URL and construct new URL with topic parameter.
+			var currentUrl = window.location.href;
+			try {
+				// Create URL object to properly handle the URL
+				url = new URL( currentUrl );
+				if ( ! topicId || $topicItem.hasClass( 'all' ) || 'all' === topicParam ) {
+					url.searchParams.delete( 'bb-topic' );
+				} else {
+					url.searchParams.set( 'bb-topic', topicParam );
+				}
+				window.history.pushState( {}, '', url.toString() );
+			} catch ( e ) {
+				// Fallback for older browsers or invalid URLs
+				var newUrl = currentUrl.split( '?' )[ 0 ];
+				if ( topicId && ! $topicItem.hasClass( 'all' ) && 'all' !== topicParam ) {
+					newUrl += '?bb-topic=' + encodeURIComponent( topicParam );
+				}
+				window.history.pushState( {}, '', newUrl );
 			}
 
 			// Remove all selected/active classes.
-			$( '.activity-topic-selector li a' ).removeClass( 'selected active' );
+			topicFilterATag.removeClass( 'selected active' );
 
 			if ( $filterBarLink.length ) {
 				var $clickedListItem = $filterBarLink.closest( 'li' );
 				var isDropdownItem   = $clickedListItem.closest( '.bb_nav_more_dropdown' ).length > 0;
 
 				if ( isDropdownItem ) {
-					// Move from dropdown to main bar
+					// Move from dropdown to main bar.
 					this.moveTopicPosition( {
 						$topicItem : $filterBarLink,
 						topicId    : topicId
 					} );
-					// After move, select the new main bar item
+					// After move, select the new main bar item.
 					$newMainBarItem = $( '.activity-topic-selector li a[data-topic-id="' + topicId + '"]' ).first();
 					$newMainBarItem.addClass( 'selected active' );
 				} else {
-					// Just add classes, do not move
+					// Just add classes, do not move.
 					$filterBarLink.addClass( 'selected active' );
 				}
 			}
 
 			// Store the topic ID in BP's storage.
-			if ( ! topicId || $topicItem.hasClass( 'all' ) || 'all' === topicUrl.toLowerCase() ) {
+			if ( ! topicId || $topicItem.hasClass( 'all' ) || 'all' === topicParam ) {
 				bp.Nouveau.setStorage( 'bp-activity', 'topic_id', '' );
-				var $allItem = $( '.activity-topic-selector li a' ).first();
+				var $allItem = topicFilterATag.first();
 				if ( $allItem.length > 0 ) {
 					$allItem.addClass( 'selected active' );
 				}
@@ -841,33 +1022,45 @@ window.bp = window.bp || {};
 		},
 
 		handleUrlHashTopic : function () {
-			if ( window.location.hash && window.location.hash.startsWith( '#topic-' ) ) {
-				var topicSlug = window.location.hash.substring( 1 ); // Remove the # symbol.
+			// Get topic slug from URL parameters.
+			var topicSlug = new URLSearchParams( window.location.search ).get( 'bb-topic' );
 
-				// Find the topic link with matching href.
-				var $topicLink = $( '.activity-topic-selector li a[href="#' + topicSlug + '"]' );
+			if ( topicSlug ) {
+				var topicFilterATag = $( '.activity-topic-selector li a' );
+				// Find the topic link with matching href or data attribute.
+				var $topicLink      = topicFilterATag.filter( function () {
+					var href     = $( this ).attr( 'href' ) || '';
+					var dataSlug = $( this ).data( 'topic-slug' );
+					return href.includes( 'bb-topic=' + topicSlug ) || dataSlug === topicSlug;
+				} );
 
 				if ( $topicLink.length ) {
 					// If we found a matching topic, trigger the filter.
 					$topicLink.trigger( 'click' );
 
-					// Move the topic position after "All" its for reload.
+					// Move the topic position after "All" for reload.
 					BBTopicsManager.moveTopicPosition( {
 						$topicItem : $topicLink,
 						topicId    : $topicLink.data( 'topic-id' )
 					} );
 
-					// Set selected/active classes
-					$( '.activity-topic-selector li a' ).removeClass( 'selected active' );
+					// Set selected/active classes.
+					topicFilterATag.removeClass( 'selected active' );
 					$topicLink.addClass( 'selected active' );
 
-					// Scroll to the feed [data-bp-list="activity"]
+					// Store the topic ID in BP's storage.
+					bp.Nouveau.setStorage( 'bp-activity', 'topic_id', $topicLink.data( 'topic-id' ) );
+
+					// Scroll to the feed [data-bp-list="activity"].
 					var $feed = $( '[data-bp-list="activity"]' );
 					if ( $feed.length > 0 ) {
-						jQuery( 'html, body' ).animate( { scrollTop: jQuery( $feed ).offset().top - 200 }, 300 );
+						$( 'html, body' ).animate( {
+							scrollTop : $feed.offset().top - 200
+						}, 300 );
 					}
 				}
 			} else {
+				// No topic selected, reset to "All".
 				bp.Nouveau.setStorage( 'bp-activity', 'topic_id', '' );
 				var $allItem = $( '.activity-topic-selector li a' ).first();
 				if ( $allItem.length > 0 ) {
@@ -1023,67 +1216,109 @@ window.bp = window.bp || {};
 
 		handleEnableDisableSubmitButton : function ( value ) {
 			if ( '' === value ) {
-				$( this.config.submitButtonSelector ).prop( 'disabled', true );
+				if ( this.$migrateTopicContainerModalSelector && this.$migrateTopicContainerModalSelector.is(':visible') ) {
+					$( this.config.migrateTopicButtonSelector ).prop( 'disabled', true );
+				}
+				if ( this.$modal && this.$modal.is(':visible') ) {
+					$( this.config.submitButtonSelector ).prop( 'disabled', true );
+				}
 			} else {
-				$( this.config.submitButtonSelector ).prop( 'disabled', false );
+				if ( this.$migrateTopicContainerModalSelector && this.$migrateTopicContainerModalSelector.is(':visible') ) {
+					$( this.config.migrateTopicButtonSelector ).prop( 'disabled', false );
+				}
+				if ( this.$modal && this.$modal.is(':visible') ) {
+					$( this.config.submitButtonSelector ).prop( 'disabled', false );
+				}
+			}
+		},
+
+		enableDisableMigrateTopicButton : function ( event ) {
+			var value          = $( event.currentTarget ).val();
+			var $dropdownValue = $('#bb_existing_topic_id').val();
+			this.handleEnableDisableMigrateTopicButton( value, $dropdownValue );
+		},
+
+		updateMigrateButtonForDropdown : function ( event ) {
+			var selectedRadio  = $('input[name="bb_migrate_existing_topic"]:checked').val();
+			var $dropdownValue = $( event.currentTarget ).val();
+			this.handleEnableDisableMigrateTopicButton( selectedRadio, $dropdownValue );
+		},
+
+		handleEnableDisableMigrateTopicButton : function ( value, $dropdownValue ) {
+			if (
+				'delete' === value ||
+				(
+					'migrate' === value &&
+					0 !== parseInt( $dropdownValue )
+				)
+			) {
+				$( this.config.migrateTopicButtonSelector ).prop( 'disabled', false );
+			} else {
+				$( this.config.migrateTopicButtonSelector ).prop( 'disabled', true );
 			}
 		},
 
 		handleBrowserNavigation : function ( event ) {
-			// Set navigation flag to prevent URL updates
+			// Set navigation flag to prevent URL updates.
 			this.isNavigating = true;
 
-			// Handle browser back/forward navigation by checking the current URL hash
-			if ( window.location.hash && window.location.hash.startsWith( '#topic-' ) ) {
-				var topicSlug = window.location.hash.substring( 1 ); // Remove the # symbol.
-
-				// Find the topic link with matching href.
-				var $topicLink = $( '.activity-topic-selector li a[href="#' + topicSlug + '"]' );
+			// Get topic slug from URL parameters.
+			var topicSlug = new URLSearchParams( window.location.search ).get( 'bb-topic' );
+			var topicFilterATag;
+			if ( topicSlug ) {
+				topicFilterATag = $( '.activity-topic-selector li a' );
+				// Find the topic link with matching href or data attribute.
+				var $topicLink  = topicFilterATag.filter( function () {
+					var href     = $( this ).attr( 'href' ) || '';
+					var dataSlug = $( this ).data( 'topic-slug' );
+					return href.includes( 'bb-topic=' + topicSlug ) || dataSlug === topicSlug;
+				} );
 
 				if ( $topicLink.length ) {
 					var topicId = $topicLink.data( 'topic-id' );
 
-					// Remove all selected/active classes first
-					$( '.activity-topic-selector li a' ).removeClass( 'selected active' );
+					// Remove all selected/active classes first.
+					topicFilterATag.removeClass( 'selected active' );
 
-					// Move the topic position if needed
+					// Move the topic position if needed.
 					var $clickedListItem = $topicLink.closest( 'li' );
 					var isDropdownItem   = $clickedListItem.closest( '.bb_nav_more_dropdown' ).length > 0;
 
 					if ( isDropdownItem ) {
-						// Move from dropdown to main bar
+						// Move from dropdown to main bar.
 						this.moveTopicPosition( {
 							$topicItem : $topicLink,
 							topicId    : topicId
 						} );
-						// After move, select the new main bar item
+						// After move, select the new main bar item.
 						var $newMainBarItem = $( '.activity-topic-selector li a[data-topic-id="' + topicId + '"]' ).first();
 						$newMainBarItem.addClass( 'selected active' );
 					} else {
-						// Just add classes, do not move
+						// Just add classes, do not move.
 						$topicLink.addClass( 'selected active' );
 					}
 
-					// Store the topic ID in BP's storage
+					// Store the topic ID in BP's storage.
 					bp.Nouveau.setStorage( 'bp-activity', 'topic_id', topicId );
 
-					// Trigger the activity filter without preventing default (since we're handling navigation)
+					// Trigger the activity filter without preventing default (since we're handling navigation).
 					bp.Nouveau.Activity.filterActivity( event );
 				}
 			} else {
-				// No hash means "All" topics
-				$( '.activity-topic-selector li a' ).removeClass( 'selected active' );
+				topicFilterATag = $( '.activity-topic-selector li a' );
+				// No hash means "All" topics.
+				topicFilterATag.removeClass( 'selected active' );
 				bp.Nouveau.setStorage( 'bp-activity', 'topic_id', '' );
-				var $allItem = $( '.activity-topic-selector li a' ).first();
+				var $allItem = topicFilterATag.first();
 				if ( $allItem.length > 0 ) {
 					$allItem.addClass( 'selected active' );
 				}
 
-				// Trigger the activity filter to show all topics
+				// Trigger the activity filter to show all topics.
 				bp.Nouveau.Activity.filterActivity( event );
 			}
 
-			// Reset navigation flag after a short delay
+			// Reset navigation flag after a short delay.
 			var self = this;
 			setTimeout( function () {
 				self.isNavigating = false;

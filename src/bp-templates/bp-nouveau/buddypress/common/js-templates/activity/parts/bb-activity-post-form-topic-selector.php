@@ -15,7 +15,7 @@
 	if ( data.topics && data.topics.topic_lists && data.topics.topic_lists.length > 0 ) { #>
 		<span class="bb-topic-selector-button" data-select-topic-text="<?php esc_html_e( 'Select Topic', 'buddyboss' ); ?>">
 			<#
-			var topicId = data.topics.topic_id;
+			var topicId = parseInt( data.topics.topic_id );
 			if ( 0 !== topicId && data.topics.topic_name ) { #>
 				{{ data.topics.topic_name }}
 			<# } else { #>
@@ -39,7 +39,7 @@
 					<li>
 						<a href="#" 
 						data-topic-id="{{ topic.topic_id }}" 
-						<# if (data.topic_id && data.topic_id == topic.topic_id) { #>class="selected"<# } #>
+						<# if ( data.topics.topic_id && parseInt( data.topics.topic_id ) === parseInt( topic.topic_id ) ) { #>class="selected"<# } #>
 						>
 							{{ topic.name }}
 						</a>

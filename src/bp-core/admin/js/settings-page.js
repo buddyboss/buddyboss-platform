@@ -3028,6 +3028,11 @@ window.bp = window.bp || {};
 			BBTopicsManager.config.ajaxUrl                = BP_ADMIN.ajax_url;
 			BBTopicsManager.config.nonce                  = BP_ADMIN.nonce;
 			BBTopicsManager.config.topicsLimit            = BP_ADMIN.topics_limit;
+
+			// Migrate topic elements.
+			BBTopicsManager.config.migrateTopicBackdropModal  = '#bb-hello-topic-migrate-backdrop';
+			BBTopicsManager.config.migrateTopicContainerModal = '#bb-hello-topic-migrate-container';
+			BBTopicsManager.config.migrateAjaxAction          = 'bb_migrate_topic';
 		}
 
 		$( document ).on(

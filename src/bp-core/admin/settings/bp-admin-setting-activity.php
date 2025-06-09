@@ -579,13 +579,14 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 				<?php
 				$button_class = $topics_limit_reached ? 'bp-hide' : '';
 				?>
-				<button type="button" class="button button-primary bb-add-topic <?php echo esc_attr( $button_class ); ?>">
+				<button type="button" class="button button-secondary bb-add-topic <?php echo esc_attr( $button_class ); ?>">
 					<i class="bb-icon-plus"></i>
 					<?php esc_html_e( 'Add New Topic', 'buddyboss' ); ?>
 				</button>
 			</div>
 
-			<p class="description"><?php esc_html_e( 'You can add up to a maximum of 20 topics', 'buddyboss' ); ?></p>
+			<p class="description bb-topic-limit-not-reached" <?php echo $topics_limit_reached ? 'style="display: none;"' : ''; ?>><?php esc_html_e( 'You can add up to a maximum of 20 topics', 'buddyboss' ); ?></p>
+			<p class="description bb-topic-limit-reached" <?php echo ! $topics_limit_reached ? 'style="display: none;"' : ''; ?>><?php esc_html_e( 'You have reached the maximum topic limit', 'buddyboss' ); ?></p>
 		</div>
 		<div id="bb-hello-backdrop" class="bb-hello-backdrop-activity-topic bb-modal-backdrop" style="display: none;"></div>
 		<div id="bb-hello-container" class="bb-hello-activity-topic bb-modal-panel bb-modal-panel--activity-topic" role="dialog" aria-labelledby="bb-hello-activity-topic" style="display: none;">
@@ -642,6 +643,61 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 					<input type="hidden" id="bb_action_from" name="bb_action_from" value="admin">
 					<input type="hidden" id="bb_topic_nonce" name="bb_topic_nonce" value="<?php echo esc_attr( wp_create_nonce( 'bb_add_topic' ) ); ?>">
 					<button type="button" id="bb_topic_submit" class="button button-primary" disabled="disabled">
+						<?php esc_html_e( 'Confirm', 'buddyboss' ); ?>
+					</button>
+				</div>
+			</div>
+		</div>
+
+		<!-- Migrate Topic Modal -->
+		<div id="bb-hello-topic-migrate-backdrop" class="bb-hello-backdrop-activity-topic-migrate bb-modal-backdrop" style="display: none;"></div>
+		<div id="bb-hello-topic-migrate-container" class="bb-hello-activity-topic-migrate bb-modal-panel bb-modal-panel--activity-topic-migrate" role="dialog" aria-labelledby="bb-hello-activity-topic-migrate" style="display: none;">
+			<div class="bb-hello-header">
+				<div class="bb-hello-title">
+					<h2 id="bb-hello-title" tabindex="-1">
+						<?php esc_html_e( 'Deleting', 'buddyboss' ); ?>
+					</h2>
+				</div>
+				<div class="bb-hello-close">
+					<button type="button" class="close-modal button">
+						<i class="bb-icon-f bb-icon-times"></i>
+					</button>
+				</div>
+			</div>
+			<div class="bb-hello-content">
+				<p class="bb-hello-content-description">
+					<?php esc_html_e( 'Would you like to move all previously tagged posts into another topic?', 'buddyboss' ); ?>
+				</p>
+				<div class="bb-existing-topic-list" id="bb_existing_topic_list">
+					<div class="form-fields">
+						<div class="form-field">
+							<div class="field-label">
+								<input type="radio" name="bb_migrate_existing_topic" id="bb_migrate_existing_topic" value="migrate" checked>
+								<label for="bb_migrate_existing_topic"><?php esc_html_e( 'Yes, move posts to another topic', 'buddyboss' ); ?></label>
+							</div>
+							<div class="field-input">
+								<select name="bb_existing_topic_id" id="bb_existing_topic_id">
+									<option value="0"><?php esc_html_e( 'Select topic', 'buddyboss' ); ?></option>
+								</select>
+							</div>
+						</div>
+						<div class="form-field">
+							<div class="field-label">
+								<input type="radio" name="bb_migrate_existing_topic" id="bb_migrate_uncategorized_topic" value="delete">
+								<label for="bb_migrate_uncategorized_topic"><?php esc_html_e( 'No, delete the topic', 'buddyboss' ); ?></label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="bb-popup-buttons">
+					<span id="bb_topic_cancel" class="button" tabindex="0">
+						<?php esc_html_e( 'Cancel', 'buddyboss' ); ?>
+					</span>
+					<input type="hidden" id="bb_topic_id" name="bb_topic_id" value="0">
+					<input type="hidden" id="bb_item_id" name="bb_item_id" value="0">
+					<input type="hidden" id="bb_item_type" name="bb_item_type" value="activity">
+					<input type="hidden" id="bb_topic_nonce" name="bb_topic_nonce" value="<?php echo esc_attr( wp_create_nonce( 'bb_migrate_topic' ) ); ?>">
+					<button type="button" id="bb_topic_migrate" class="button button-primary" disabled="disabled">
 						<?php esc_html_e( 'Confirm', 'buddyboss' ); ?>
 					</button>
 				</div>

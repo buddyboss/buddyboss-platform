@@ -5446,6 +5446,15 @@ h1.bb-advance-heading {
 }
 
 // Activity Topics Settings Styles.
+
+.bb-modal-panel--activity-topic,
+.bb-modal-panel--activity-topic-migrate {
+
+	&:has(.bb-hello-content > .bb-hello-error) .bb-hello-header {
+		border-bottom: 0 !important;
+	}
+}
+
 .bb-activity-topics-wrapper {
 	margin-top: 15px;
 
@@ -5562,9 +5571,10 @@ h1.bb-advance-heading {
 			display: inline-flex;
 			align-items: center;
 			gap: 4px;
-			padding: 4px 12px;
-			font-size: 14px;
-			border-radius: 6px;
+			padding: 5px 8px;
+			font-size: 13px;
+			line-height: 1.5;
+			border-radius: 4px;
 
 			.bb-icon-plus {
 				font-size: 16px;
@@ -5580,6 +5590,12 @@ h1.bb-advance-heading {
 			color: #646970;
 			font-size: 12px;
 			margin: 10px 0 0;
+		}
+
+		.bb-topics-sort-success {
+			padding: 0 10px;
+			border-radius: 0 5px 5px 0;
+			margin: 0 0 20px !important;
 		}
 	}
 
@@ -5651,7 +5667,8 @@ h1.bb-advance-heading {
 }
 
 // Add topic modal
-.bb-modal-panel--activity-topic.bb-modal-panel {
+.bb-modal-panel--activity-topic.bb-modal-panel,
+.bb-modal-panel--activity-topic-migrate.bb-modal-panel {
 	width: 100%;
 	max-width: 700px;
 
@@ -5659,7 +5676,7 @@ h1.bb-advance-heading {
 		position: relative;
 		padding: 15px;
 		background-color: #f6f7f7;
-		border-color: #dcdcde;
+		border-bottom: 1px solid #dcdcde;
 	}
 
 	#bb-hello-title {
@@ -5696,8 +5713,11 @@ h1.bb-advance-heading {
 		}
 
 		div.bb-hello-error {
+			color: #d63638;
+			border-color: #ffabaf;
 			padding: 8px 20px;
 			margin: -15px -20px 18px -20px;
+			align-items: center;
 		}
 	}
 
@@ -5725,7 +5745,7 @@ h1.bb-advance-heading {
 
 	.bb-popup-buttons {
 		background-color: #f6f7f7;
-		border-color: #dcdcde;
+		border-top: 1px solid #dcdcde;
 		margin: 0 -20px;
 		padding: 12px 15px;
 		display: flex;
@@ -5736,6 +5756,11 @@ h1.bb-advance-heading {
 
 	&.is-loading {
 
+		.bb-hello-header,
+		.bb-popup-buttons {
+			z-index: 1;
+		}
+
 		&:before {
 			content: "";
 			position: absolute;
@@ -5743,7 +5768,7 @@ h1.bb-advance-heading {
 			left: 0;
 			width: 100%;
 			height: 100%;
-			background-color: rgba(0, 0, 0, 0.1);
+			background-color: #fff;
 			z-index: 1;
 		}
 
@@ -5753,11 +5778,10 @@ h1.bb-advance-heading {
 			font-size: 24px;
 			font-weight: 400;
 			line-height: 1;
-			margin-left: 10px;
+			margin: -6px 0 0 -6px;
 			position: absolute;
 			top: 50%;
 			left: 50%;
-			transform: translate(-50%, -50%);
 			text-align: center;
 			display: inline-block;
 			animation: spin 3s infinite linear;
@@ -5766,8 +5790,110 @@ h1.bb-advance-heading {
 	}
 }
 
+// Topic migrate modal
+.bb-hello-backdrop-activity-topic-migrate {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	z-index: 9998;
+	background-color: rgba(0, 0, 0, 0.8);
+	transition: opacity 0.15s ease-out;
+}
+
+.bb-hello-activity-topic-migrate.bb-modal-panel {
+	position: fixed;
+	z-index: 9999;
+	border-radius: 3px;
+	bottom: initial;
+	top: 50%;
+	left: 50%;
+	right: unset;
+	transform: translate(-50%, -50%);
+	max-width: 500px;
+
+	#bb-hello-title {
+		font-size: 18px;
+		color: #1d2327;
+	}
+
+	div.bb-hello-content {
+		min-height: 130px;
+		margin-bottom: 55px;
+
+		.form-fields {
+
+			.form-field {
+				display: flex;
+				align-items: center;
+				gap: 15px;
+				margin-bottom: 8px;
+			}
+
+			.field-input select {
+				min-width: 150px;
+			}
+
+			.field-label {
+				display: flex;
+				align-items: center;
+				gap: 6px;
+				margin-bottom: 0;
+
+				input[type="radio"] {
+					margin: 0;
+				}
+
+				label {
+					font-size: 14px;
+					font-weight: 400;
+					color: #50575e;
+					margin-bottom: 0;
+				}
+			}
+		}
+
+		#bb_topic_cancel {
+			border-color: #646970;
+			color: #2c3338;
+		}
+
+		#bb_topic_migrate {
+			color: #fff;
+			border-color: #d63638;
+			background-color: #d63638;
+
+			&.is-loading {
+				
+				&:after {
+					content: "\ef30";
+					font-family: bb-icons;
+					font-size: 18px;
+					font-weight: 400;
+					line-height: 1;
+					margin: 0 0 3px 5px;
+					text-align: center;
+					display: inline-block;
+					vertical-align: middle;
+					animation: spin 3s infinite linear;
+				}
+			}
+		}
+	}
+
+	.bb-hello-content-description {
+		color: #1d2327;
+		font-size: 14px;
+		font-weight: 400;
+		margin: 0 0 24px;
+	}
+}
+
 #bb-hello-container.bb-modal-panel,
-.admin-bar #bb-hello-container.bb-modal-panel {
+.admin-bar #bb-hello-container.bb-modal-panel,
+#bb-hello-topic-migrate-container.bb-modal-panel,
+.admin-bar #bb-hello-topic-migrate-container.bb-modal-panel {
 	top: 50%;
 	left: 50%;
 	right: unset;
@@ -5931,7 +6057,8 @@ h1.bb-advance-heading {
 	}
 }
 
-#bb-hello-container.bb-modal-panel {
+#bb-hello-container.bb-modal-panel,
+#bb-hello-topic-migrate-container.bb-modal-panel {
 	top: 50%;
 	bottom: initial;
 	transform: translateY(-50%);

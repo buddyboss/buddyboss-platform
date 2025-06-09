@@ -59,6 +59,15 @@ class BB_Topics_Manager {
 	public $activity_topic_rel_table;
 
 	/**
+	 * Table name for Topic History.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @var string
+	 */
+	public $topic_history_table;
+
+	/**
 	 * Cache group for topics.
 	 *
 	 * @since BuddyBoss [BBVERSION]
@@ -104,6 +113,7 @@ class BB_Topics_Manager {
 		$this->topics_table             = $prefix . 'bb_topics';
 		$this->topic_rel_table          = $prefix . 'bb_topic_relationships';
 		$this->activity_topic_rel_table = $prefix . 'bb_activity_topic_relationship';
+		$this->topic_history_table      = $prefix . 'bb_topic_history';
 
 		$this->setup_hooks();
 	}
@@ -120,6 +130,8 @@ class BB_Topics_Manager {
 		add_action( 'wp_ajax_bb_edit_topic', array( $this, 'bb_edit_topic_ajax' ) );
 		add_action( 'wp_ajax_bb_delete_topic', array( $this, 'bb_delete_topic_ajax' ) );
 		add_action( 'wp_ajax_bb_update_topics_order', array( $this, 'bb_update_topics_order_ajax' ) );
+		add_action( 'bp_template_redirect', array( $this, 'bb_handle_topic_redirects' ) );
+		add_action( 'wp_ajax_bb_migrate_topic', array( $this, 'bb_migrate_topic_ajax' ) );
 	}
 
 	/**
@@ -167,6 +179,10 @@ class BB_Topics_Manager {
 				'delete_topic_confirm'         => esc_html__( 'Are you sure you want to delete "%s"? This cannot be undone.', 'buddyboss' ),
 				'bb_update_topics_order_nonce' => wp_create_nonce( 'bb_update_topics_order' ),
 				'generic_error'                => esc_html__( 'An error occurred while updating topic order.', 'buddyboss' ),
+				'create_topic_text'            => __( 'Create Topic', 'buddyboss' ),
+				'edit_topic_text'              => __( 'Edit Topic', 'buddyboss' ),
+				/* translators: %s: Topic name */
+				'delete_topic_text'            => esc_html__( 'Deleting "%s"?', 'buddyboss' ),
 			)
 		);
 		wp_localize_script(
@@ -176,6 +192,7 @@ class BB_Topics_Manager {
 		);
 
 		// Add the JS templates for topics.
+		bp_get_template_part( 'common/js-templates/bb-topic-delete' );
 		bp_get_template_part( 'common/js-templates/bb-topic-lists' );
 	}
 
@@ -192,6 +209,7 @@ class BB_Topics_Manager {
 		$topics_table             = $this->topics_table;
 		$topic_rel_table          = $this->topic_rel_table;
 		$activity_topic_rel_table = $this->activity_topic_rel_table;
+		$topic_history_table      = $this->topic_history_table;
 
 		$has_topics_table = $wpdb->query( $wpdb->prepare( 'show tables like %s', $topics_table ) ); //phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		if ( empty( $has_topics_table ) ) {
@@ -253,6 +271,30 @@ class BB_Topics_Manager {
 			) $charset_collate;";
 		}
 
+		$has_topic_history_table = $wpdb->query( $wpdb->prepare( 'show tables like %s', $topic_history_table ) ); //phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		if ( empty( $has_topic_history_table ) ) {
+			$sql[] = "CREATE TABLE {$topic_history_table} (
+				id BIGINT(20) UNSIGNED AUTO_INCREMENT,
+				item_id BIGINT(20) UNSIGNED NOT NULL,
+				item_type VARCHAR(10) NOT NULL,
+				old_topic_id BIGINT(20) UNSIGNED NOT NULL,
+				old_topic_slug VARCHAR(255) NOT NULL,
+				new_topic_id BIGINT(20) UNSIGNED NOT NULL,
+				new_topic_slug VARCHAR(255) NOT NULL,
+				action VARCHAR(20) NOT NULL,
+				date_created DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+				PRIMARY KEY (id),
+				KEY item_id (item_id),
+				KEY item_type (item_type),
+				KEY old_topic_id (old_topic_id),
+				KEY old_topic_slug (old_topic_slug),
+				KEY new_topic_id (new_topic_id),
+				KEY new_topic_slug (new_topic_slug),
+				KEY action (action),
+				KEY date_created (date_created)
+			) $charset_collate;";
+		}
+
 		if ( ! empty( $sql ) ) {
 			// Ensure that dbDelta() is defined.
 			if ( ! function_exists( 'dbDelta' ) ) {
@@ -292,6 +334,14 @@ class BB_Topics_Manager {
 		} else {
 			$slug = sanitize_title( $slug );
 		}
+		if ( empty( $slug ) ) {
+			wp_send_json_error(
+				array(
+					'error' => __( 'Please enter a valid topic name.', 'buddyboss' ),
+					'topic' => array(),
+				)
+			);
+		}
 
 		if ( empty( $previous_topic_id ) ) {
 			$topic_data = $this->bb_add_topic(
@@ -320,6 +370,26 @@ class BB_Topics_Manager {
 
 		if ( is_wp_error( $topic_data ) ) {
 			wp_send_json_error( array( 'error' => $topic_data->get_error_message() ) );
+		}
+
+		// Add topic history when topic is updated.
+		if ( ! empty( $previous_topic_id ) && ! empty( $topic_data ) ) {
+			$previous_topic_data = $this->bb_get_topic_by( 'id', $previous_topic_id );
+			$previous_topic_slug = ! empty( $previous_topic_data ) ? $previous_topic_data->slug : '';
+
+			if ( $previous_topic_slug !== $topic_data->slug ) {
+				$this->bb_add_topic_history(
+					array(
+						'item_id'        => $item_id,
+						'item_type'      => $item_type,
+						'old_topic_id'   => $previous_topic_id,
+						'old_topic_slug' => $previous_topic_slug,
+						'new_topic_id'   => $topic_data->topic_id,
+						'new_topic_slug' => $topic_data->slug,
+						'action'         => 'rename',
+					)
+				);
+			}
 		}
 
 		if ( 'activity' === $item_type ) {
@@ -366,7 +436,8 @@ class BB_Topics_Manager {
 				'item_type'  => 'activity',
 				'item_id'    => 0,
 				'error_type' => 'bool',
-			)
+			),
+			'bb_add_topic'
 		);
 
 		if ( empty( $r['name'] ) ) {
@@ -551,7 +622,8 @@ class BB_Topics_Manager {
 				'item_type'  => 'activity',
 				'item_id'    => 0,
 				'error_type' => 'bool',
-			)
+			),
+			'bb_update_topic'
 		);
 
 		$previous_topic_id = $r['id'];
@@ -747,7 +819,8 @@ class BB_Topics_Manager {
 				'date_created'    => bp_core_current_time(),
 				'date_updated'    => bp_core_current_time(),
 				'error_type'      => 'bool',
-			)
+			),
+			'bb_add_topic_relationship'
 		);
 
 		if ( empty( $r['topic_id'] ) ) {
@@ -867,7 +940,8 @@ class BB_Topics_Manager {
 				'permission_type' => null,
 				'where'           => array(),
 				'error_type'      => 'bool',
-			)
+			),
+			'bb_update_topic_relationship'
 		);
 
 		/**
@@ -1435,7 +1509,8 @@ class BB_Topics_Manager {
 			$args,
 			array(
 				'topic_id' => 0,
-			)
+			),
+			'bb_get_topic'
 		);
 
 		$topic      = $this->bb_get_topics( $r );
@@ -1468,19 +1543,34 @@ class BB_Topics_Manager {
 		$item_id   = isset( $_POST['item_id'] ) ? absint( sanitize_text_field( wp_unslash( $_POST['item_id'] ) ) ) : 0;
 		$item_type = isset( $_POST['item_type'] ) ? sanitize_text_field( wp_unslash( $_POST['item_type'] ) ) : '';
 
-		$deleted = $this->bb_delete_topic(
+		$topic_lists = $this->bb_get_topics(
 			array(
-				'topic_id'  => $topic_id,
 				'item_id'   => $item_id,
 				'item_type' => $item_type,
+				'exclude'   => $topic_id,
 			)
 		);
 
-		if ( is_wp_error( $deleted ) ) {
-			wp_send_json_error( array( 'error' => $deleted->get_error_message() ) );
+		$existing_topic_name = $this->bb_get_topic_by( 'id', $topic_id );
+		$header_text         = __( 'Deleting', 'buddyboss' );
+		if ( ! empty( $existing_topic_name->name ) ) {
+			$header_text = sprintf(
+			/* translators: %s: topic name */
+				__( 'Deleting "%s"?', 'buddyboss' ),
+				$existing_topic_name->name
+			);
 		}
 
-		wp_send_json_success();
+		wp_send_json_success(
+			array(
+				'topic_lists' => ! empty( $topic_lists['topics'] ) ? $topic_lists['topics'] : null,
+				'topic_id'    => $topic_id,
+				'header_text' => $header_text,
+				'item_id'     => $item_id,
+				'item_type'   => $item_type,
+				'nonce'       => wp_create_nonce( 'bb_migrate_topic' ),
+			)
+		);
 	}
 
 	/**
@@ -1488,12 +1578,13 @@ class BB_Topics_Manager {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param array $args {
-	 *     Array of arguments.
-	 *     @type int $topic_id The ID of the topic to delete.
-	 *     @type int $item_id The ID of the item.
-	 *     @type string $item_type The type of item.
-	 * }
+	 * @param array $args      {
+	 *                         Array of arguments.
+	 *
+	 * @type int    $topic_id  The ID of the topic to delete.
+	 * @type int    $item_id   The ID of the item.
+	 * @type string $item_type The type of item.
+	 *                         }
 	 *
 	 * @return bool|WP_Error True on success, WP_Error on failure.
 	 */
@@ -1503,7 +1594,8 @@ class BB_Topics_Manager {
 			array(
 				'topic_id' => 0,
 				'fields'   => 'id',
-			)
+			),
+			'bb_delete_topic'
 		);
 
 		if ( empty( $r['topic_id'] ) ) {
@@ -1575,6 +1667,248 @@ class BB_Topics_Manager {
 		unset( $topic_id, $deleted_rels, $deleted_topic, $get_all_topic_relationships, $relationships_ids );
 
 		return true;
+	}
+
+	/**
+	 * Migrate a topic via AJAX.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	public function bb_migrate_topic_ajax() {
+		if ( ! isset( $_POST['nonce'] ) ) {
+			wp_send_json_error(
+				array(
+					'error' => __( 'Nonce is required.', 'buddyboss' ),
+					'topic' => array(),
+				)
+			);
+		}
+
+		check_ajax_referer( 'bb_migrate_topic', 'nonce' );
+
+		if ( ! isset( $_POST['old_topic_id'] ) ) {
+			wp_send_json_error(
+				array(
+					'error' => __( 'Topic ID is required.', 'buddyboss' ),
+					'topic' => array(),
+				)
+			);
+		}
+
+		$migrate_type = isset( $_POST['migrate_type'] ) ? sanitize_text_field( wp_unslash( $_POST['migrate_type'] ) ) : '';
+		if ( 'migrate' === $migrate_type && ! isset( $_POST['new_topic_id'] ) ) {
+			wp_send_json_error(
+				array(
+					'error' => __( 'Migrate topic ID is required.', 'buddyboss' ),
+					'topic' => array(),
+				)
+			);
+		}
+
+		$old_topic_id = absint( sanitize_text_field( wp_unslash( $_POST['old_topic_id'] ) ) );
+		$item_id      = isset( $_POST['item_id'] ) ? absint( sanitize_text_field( wp_unslash( $_POST['item_id'] ) ) ) : 0;
+		$item_type    = isset( $_POST['item_type'] ) ? sanitize_text_field( wp_unslash( $_POST['item_type'] ) ) : '';
+		$new_topic_id = 'migrate' === $migrate_type ? absint( sanitize_text_field( wp_unslash( $_POST['new_topic_id'] ) ) ) : 0;
+
+		if ( 'migrate' === $migrate_type && $new_topic_id ) {
+			$result = $this->bb_migrate_topic(
+				array(
+					'topic_id'     => $old_topic_id,
+					'new_topic_id' => $new_topic_id,
+					'item_id'      => $item_id,
+					'item_type'    => $item_type,
+					'migrate_type' => $migrate_type,
+				)
+			);
+
+			if ( is_wp_error( $result ) ) {
+				wp_send_json_error( array( 'error' => $result->get_error_message() ) );
+			}
+		}
+
+		/**
+		 * Fires before a topic is deleted.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param int $topic_id The ID of the topic being deleted.
+		 */
+		do_action( 'bb_activity_topic_before_delete', $old_topic_id );
+
+		$deleted_topic = $this->bb_delete_topic(
+			array(
+				'topic_id'  => $old_topic_id,
+				'item_id'   => $item_id,
+				'item_type' => $item_type,
+			)
+		);
+
+		/**
+		 * Fires after a topic is deleted.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param int $topic_id The ID of the topic being deleted.
+		 */
+		do_action( 'bb_activity_topic_after_delete', $old_topic_id );
+
+		if ( false === $deleted_topic ) {
+			wp_send_json_error( array( 'error' => __( 'Failed to delete topic.', 'buddyboss' ) ) );
+		}
+
+		wp_send_json_success(
+			array(
+				'message' => __( 'Topic migrated successfully.', 'buddyboss' ),
+				'topic'   => $result,
+			)
+		);
+	}
+
+	/**
+	 * Migrate a topic.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $args {
+	 *     Array of arguments.
+	 *     @type int $old_topic_id The ID of the old topic.
+	 *     @type int $new_topic_id The ID of the new topic.
+	 *     @type int $item_id The ID of the item.
+	 *     @type string $item_type The type of item.
+	 * }
+	 */
+	public function bb_migrate_topic( $args ) {
+		$r = bp_parse_args(
+			$args,
+			array(
+				'topic_id'     => 0,
+				'new_topic_id' => 0,
+				'item_id'      => 0,
+				'item_type'    => 'activity',
+				'error_type'   => 'bool',
+			),
+			'bb_migrate_topic'
+		);
+
+		if ( empty( $r['topic_id'] ) ) {
+			return new WP_Error(
+				'bb_migrate_topic_error',
+				__( 'Topic ID is required.', 'buddyboss' ),
+				array( 'status' => 400 )
+			);
+		}
+
+		if ( empty( $r['new_topic_id'] ) ) {
+			return new WP_Error(
+				'bb_migrate_topic_error',
+				__( 'New topic ID is required.', 'buddyboss' ),
+				array( 'status' => 400 )
+			);
+		}
+
+		if ( empty( $r['item_type'] ) ) {
+			return new WP_Error(
+				'bb_migrate_topic_error',
+				__( 'Item type is required.', 'buddyboss' ),
+				array( 'status' => 400 )
+			);
+		}
+
+		if ( 'groups' === $r['item_type'] && empty( $r['item_id'] ) ) {
+			return new WP_Error(
+				'bb_migrate_topic_error',
+				__( 'Item ID is required.', 'buddyboss' ),
+				array( 'status' => 400 )
+			);
+		}
+
+		$topic_id     = $r['topic_id'];
+		$new_topic_id = $r['new_topic_id'];
+		$item_id      = $r['item_id'];
+		$item_type    = $r['item_type'];
+
+		if ( ! in_array( $item_type, array( 'activity', 'groups' ), true ) ) {
+			return new WP_Error(
+				'bb_migrate_topic_error',
+				__( 'Item type is invalid.', 'buddyboss' ),
+				array( 'status' => 400 )
+			);
+		}
+
+		$topic_id_exists = $this->bb_get_topic_by( 'id', $topic_id );
+		if ( ! $topic_id_exists ) {
+			return new WP_Error(
+				'bb_migrate_topic_error',
+				__( 'Old topic ID does not exist.', 'buddyboss' ),
+				array( 'status' => 400 )
+			);
+		}
+
+		$new_topic_id_exists = $this->bb_get_topic_by( 'id', $new_topic_id );
+		if ( ! $new_topic_id_exists ) {
+			return new WP_Error(
+				'bb_migrate_topic_error',
+				__( 'New topic ID does not exist.', 'buddyboss' ),
+				array( 'status' => 400 )
+			);
+		}
+
+		/**
+		 * Fires before a topic is migrated.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param int    $topic_id     The ID of the old topic.
+		 * @param int    $new_topic_id The ID of the new topic.
+		 * @param int    $item_id      The ID of the item.
+		 * @param string $item_type    The type of item.
+		 */
+		do_action( 'bb_before_migrate_topic', $topic_id, $new_topic_id, $item_id, $item_type );
+
+		$result = $this->wpdb->update(
+			$this->activity_topic_rel_table,
+			array( 'topic_id' => $new_topic_id ),
+			array(
+				'topic_id'  => $topic_id,
+				'item_id'   => $item_id,
+				'component' => $item_type,
+			),
+			array( '%d' ),
+			array( '%d', '%d', '%s' )
+		);
+
+		if ( false === $result ) {
+			wp_send_json_error( array( 'error' => __( 'Failed to migrate topic.', 'buddyboss' ) ) );
+		}
+
+		$get_topic = $this->bb_get_topic(
+			array(
+				'topic_id' => $new_topic_id,
+				'fields'   => 'all',
+			)
+		);
+		if ( empty( $get_topic ) ) {
+			return new WP_Error(
+				'bb_migrate_topic_error',
+				__( 'Failed to get new topic.', 'buddyboss' ),
+				array( 'status' => 400 )
+			);
+		}
+
+		/**
+		 * Fires after a topic is migrated.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array  $get_topic    The new topic.
+		 * @param int    $topic_id     The ID of the old topic.
+		 * @param int    $new_topic_id The ID of the new topic.
+		 * @param int    $item_id      The ID of the item.
+		 * @param string $item_type    The type of item.
+		 */
+		do_action( 'bb_after_migrate_topic', $get_topic, $topic_id, $new_topic_id, $item_id, $item_type );
+
+		return $get_topic;
 	}
 
 	/**
@@ -1746,5 +2080,241 @@ class BB_Topics_Manager {
 		);
 
 		return ! empty( $activity_relationships['topics'] );
+	}
+
+	/**
+	 * Add a topic history.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $args {
+	 *     Array of arguments.
+	 *     @type int $item_id The ID of the item.
+	 *     @type string $item_type The type of item.
+	 *     @type int $old_topic_id The ID of the old topic.
+	 *     @type string $old_topic_slug The slug of the old topic.
+	 *     @type int $new_topic_id The ID of the new topic.
+	 *     @type string $new_topic_slug The slug of the new topic.
+	 *     @type string $action The action.
+	 *     @type bool $error_type The error type.
+	 * }
+	 *
+	 * @return bool True on success, false on failure.
+	 */
+	public function bb_add_topic_history( $args ) {
+		$r = bp_parse_args(
+			$args,
+			array(
+				'item_id'        => 0,
+				'item_type'      => 'activity',
+				'old_topic_id'   => 0,
+				'old_topic_slug' => '',
+				'new_topic_id'   => 0,
+				'new_topic_slug' => '',
+				'action'         => '',
+				'error_type'     => 'bool',
+			),
+			'bb_add_topic_history'
+		);
+
+		// Early validation - return immediately if required fields are missing.
+		if (
+			empty( $r['item_type'] ) ||
+			( 'groups' === $r['item_type'] && empty( $r['item_id'] ) ) ||
+			empty( $r['old_topic_id'] ) ||
+			empty( $r['old_topic_slug'] ) ||
+			empty( $r['new_topic_id'] ) ||
+			empty( $r['new_topic_slug'] ) ||
+			empty( $r['action'] )
+		) {
+			return false;
+		}
+
+		$result = $this->wpdb->insert(
+			$this->topic_history_table,
+			array(
+				'item_id'        => absint( $r['item_id'] ),
+				'item_type'      => sanitize_text_field( $r['item_type'] ),
+				'old_topic_id'   => absint( $r['old_topic_id'] ),
+				'old_topic_slug' => sanitize_title( $r['old_topic_slug'] ),
+				'new_topic_id'   => absint( $r['new_topic_id'] ),
+				'new_topic_slug' => sanitize_title( $r['new_topic_slug'] ),
+				'action'         => sanitize_text_field( $r['action'] ),
+				'date_created'   => bp_core_current_time(),
+			),
+			array( '%d', '%s', '%d', '%s', '%d', '%s', '%s', '%s' )
+		);
+
+		if ( false === $result ) {
+			if ( 'wp_error' === $r['error_type'] ) {
+				return new WP_Error(
+					'bb_topic_history_add_failed',
+					$this->wpdb->last_error
+				);
+			}
+			return false;
+		}
+
+		/**
+		 * Fires after topic history has been added.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array $r The arguments used to add the topic history.
+		 */
+		do_action( 'bb_topic_history_after_added', $r );
+
+		return false !== $result;
+	}
+
+	/**
+	 * Get the redirected topic slug from history.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $args {
+	 *     Array of arguments.
+	 *     @type string $old_slug  The old topic slug to check.
+	 *     @type string $item_type The item type (optional, defaults to 'activity').
+	 *     @type int    $item_id   The item ID (optional, defaults to 0 for activity).
+	 * }
+	 *
+	 * @return string|false The redirected topic slug if found, false otherwise.
+	 */
+	public function bb_get_redirected_topic_slug( $args ) {
+		$r = bp_parse_args(
+			$args,
+			array(
+				'old_slug'  => '',
+				'item_type' => 'activity',
+				'item_id'   => 0,
+			),
+			'bb_get_redirected_topic_slug'
+		);
+
+		if ( empty( $r['old_slug'] ) ) {
+			return false;
+		}
+
+		$cache_key  = 'bb_topic_redirect_' . $r['old_slug'] . '_' . $r['item_type'] . '_' . $r['item_id'];
+		$final_slug = wp_cache_get( $cache_key, self::$topic_cache_group );
+
+		if ( ! $final_slug ) {
+			$final_slug = $this->bb_get_latest_topic_slug_concise( $r['old_slug'], $r['item_id'], $r['item_type'] );
+		}
+
+		wp_cache_set( $cache_key, $final_slug, self::$topic_cache_group, HOUR_IN_SECONDS );
+
+		return $final_slug;
+	}
+
+	/**
+	 * Get the latest topic slug using concise query.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $input_slug The input slug.
+	 * @param int    $item_id The item ID.
+	 * @param string $item_type The item type.
+	 *
+	 * @return string The latest topic slug.
+	 */
+	protected function bb_get_latest_topic_slug_concise( $input_slug, $item_id = 0, $item_type = 'activity' ) {
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$query = $this->wpdb->prepare(
+			"
+			SELECT d.current_slug 
+			FROM (
+				SELECT @r AS current_slug, 
+					   (SELECT @r := new_topic_slug FROM wp_bb_topic_history WHERE old_topic_slug = @r AND item_id = %d AND item_type = %s AND action = 'rename' ORDER BY id LIMIT 1) AS next_slug, 
+					   @l := @l + 1 AS level 
+				FROM (SELECT @r := %s, @l := 0) vars, wp_bb_topic_history m 
+				WHERE @r IS NOT NULL AND @r <> ''
+			) d 
+			WHERE d.next_slug IS NULL 
+			ORDER BY d.level DESC 
+			LIMIT 1
+		",
+			$item_id,
+			$item_type,
+			$input_slug
+		);
+
+		return $this->wpdb->get_var( $query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+	}
+
+	/**
+	 * Handle topic redirects for renamed topics.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	public function bb_handle_topic_redirects() {
+		// Check if we have a bb-topic parameter.
+		$bb_topic = isset( $_GET['bb-topic'] ) ? sanitize_text_field( wp_unslash( $_GET['bb-topic'] ) ) : '';
+		if ( empty( $bb_topic ) ) {
+			return;
+		}
+
+		// First check if the topic exists with the current slug.
+		$args = array(
+			'slug' => $bb_topic,
+		);
+		if ( function_exists( 'bp_is_group' ) && bp_is_group() ) {
+			$args['item_type'] = 'groups';
+			$args['item_id']   = bp_get_current_group_id();
+		} else {
+			$args['item_type'] = 'activity';
+			$args['item_id']   = 0;
+		}
+
+		$existing_topic = $this->bb_get_topic( $args );
+
+		// If topic exists, no redirect needed.
+		if ( $existing_topic ) {
+			return;
+		}
+
+		// Check for redirect in topic history.
+		$new_slug = $this->bb_get_redirected_topic_slug(
+			array(
+				'old_slug'  => $bb_topic,
+				'item_type' => $args['item_type'],
+				'item_id'   => $args['item_id'],
+			)
+		);
+
+		if ( $new_slug ) {
+			// Build the redirect URL.
+			$current_url  = home_url( add_query_arg( array() ) );
+			$redirect_url = add_query_arg( 'bb-topic', $new_slug, remove_query_arg( 'bb-topic', $current_url ) );
+
+			/**
+			 * Filters the topic redirect URL.
+			 *
+			 * @since BuddyBoss [BBVERSION]
+			 *
+			 * @param string $redirect_url The redirect URL.
+			 * @param string $old_slug The old topic slug.
+			 * @param string $new_slug The new topic slug.
+			 * @param string $item_type The item type (activity or groups).
+			 * @param int    $item_id The item ID.
+			 */
+			$redirect_url = apply_filters( 'bb_topic_redirect_url', $redirect_url, $bb_topic, $new_slug, $args['item_type'], $args['item_id'] );
+
+			/**
+			 * Fires before a topic redirect is performed.
+			 *
+			 * @since BuddyBoss [BBVERSION]
+			 *
+			 * @param string $old_slug The old topic slug.
+			 * @param string $new_slug The new topic slug.
+			 * @param string $item_type The item type (activity or groups).
+			 * @param int    $item_id The item ID.
+			 */
+			do_action( 'bb_topic_before_redirect', $bb_topic, $new_slug, $args['item_type'], $args['item_id'] );
+
+			wp_safe_redirect( $redirect_url, 301 );
+			exit;
+		}
 	}
 }

@@ -4739,7 +4739,8 @@ span.dashicons.dashicons-admin-file:before {
 }
 
 .bb-action-popup--activity-topic,
-.bb-modal-panel--activity-topic {
+.bb-modal-panel--activity-topic,
+.bb-action-popup--activity-migrate-topic {
 
 	#bb_topic_submit {
 		display: inline-flex;
@@ -4748,6 +4749,10 @@ span.dashicons.dashicons-admin-file:before {
 
 	&.is-loading .modal-wrapper {
 		pointer-events: none;
+
+		.bb-action-popup-content {
+			opacity: 0;
+		}
 
 		&:before {
 			content: "";

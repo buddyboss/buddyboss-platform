@@ -5406,6 +5406,11 @@ h1.bb-advance-heading {
   margin-left: 8px;
 }
 
+.bb-modal-panel--activity-topic:has(.bb-hello-content > .bb-hello-error) .bb-hello-header,
+.bb-modal-panel--activity-topic-migrate:has(.bb-hello-content > .bb-hello-error) .bb-hello-header {
+  border-bottom: 0 !important;
+}
+
 .bb-activity-topics-wrapper {
   margin-top: 15px;
 }
@@ -5524,9 +5529,10 @@ h1.bb-advance-heading {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  padding: 4px 12px;
-  font-size: 14px;
-  border-radius: 6px;
+  padding: 5px 8px;
+  font-size: 13px;
+  line-height: 1.5;
+  border-radius: 4px;
 }
 
 .bb-activity-topics-wrapper .bb-activity-topics-content .bb-add-topic .bb-icon-plus {
@@ -5542,6 +5548,12 @@ h1.bb-advance-heading {
   color: #646970;
   font-size: 12px;
   margin: 10px 0 0;
+}
+
+.bb-activity-topics-wrapper .bb-activity-topics-content .bb-topics-sort-success {
+  padding: 0 10px;
+  border-radius: 5px 0 0 5px;
+  margin: 0 0 20px !important;
 }
 
 .bb-activity-topics-wrapper p.description {
@@ -5604,31 +5616,36 @@ h1.bb-advance-heading {
   display: block;
 }
 
-.bb-modal-panel--activity-topic.bb-modal-panel {
+.bb-modal-panel--activity-topic.bb-modal-panel,
+.bb-modal-panel--activity-topic-migrate.bb-modal-panel {
   width: 100%;
   max-width: 700px;
 }
 
-.bb-modal-panel--activity-topic.bb-modal-panel .bb-hello-header {
+.bb-modal-panel--activity-topic.bb-modal-panel .bb-hello-header,
+.bb-modal-panel--activity-topic-migrate.bb-modal-panel .bb-hello-header {
   position: relative;
   padding: 15px;
   background-color: #f6f7f7;
-  border-color: #dcdcde;
+  border-bottom: 1px solid #dcdcde;
 }
 
-.bb-modal-panel--activity-topic.bb-modal-panel #bb-hello-title {
+.bb-modal-panel--activity-topic.bb-modal-panel #bb-hello-title,
+.bb-modal-panel--activity-topic-migrate.bb-modal-panel #bb-hello-title {
   margin: 0;
   padding: 0;
   border: 0;
   font-weight: 500;
 }
 
-.bb-modal-panel--activity-topic.bb-modal-panel .bb-hello-close {
+.bb-modal-panel--activity-topic.bb-modal-panel .bb-hello-close,
+.bb-modal-panel--activity-topic-migrate.bb-modal-panel .bb-hello-close {
   top: 50%;
   transform: translateY(-50%);
 }
 
-.bb-modal-panel--activity-topic.bb-modal-panel .bb-hello-close button {
+.bb-modal-panel--activity-topic.bb-modal-panel .bb-hello-close button,
+.bb-modal-panel--activity-topic-migrate.bb-modal-panel .bb-hello-close button {
   border: 0;
   padding: 0;
   background: transparent;
@@ -5638,45 +5655,57 @@ h1.bb-advance-heading {
   min-height: auto;
 }
 
-.bb-modal-panel--activity-topic.bb-modal-panel .bb-hello-close button i:before {
+.bb-modal-panel--activity-topic.bb-modal-panel .bb-hello-close button i:before,
+.bb-modal-panel--activity-topic-migrate.bb-modal-panel .bb-hello-close button i:before {
   margin: 0;
 }
 
-.bb-modal-panel--activity-topic.bb-modal-panel .bb-hello-content {
+.bb-modal-panel--activity-topic.bb-modal-panel .bb-hello-content,
+.bb-modal-panel--activity-topic-migrate.bb-modal-panel .bb-hello-content {
   padding: 15px 20px;
 }
 
-.bb-modal-panel--activity-topic.bb-modal-panel .bb-hello-content .form-fields {
+.bb-modal-panel--activity-topic.bb-modal-panel .bb-hello-content .form-fields,
+.bb-modal-panel--activity-topic-migrate.bb-modal-panel .bb-hello-content .form-fields {
   margin: 0;
 }
 
-.bb-modal-panel--activity-topic.bb-modal-panel .bb-hello-content div.bb-hello-error {
+.bb-modal-panel--activity-topic.bb-modal-panel .bb-hello-content div.bb-hello-error,
+.bb-modal-panel--activity-topic-migrate.bb-modal-panel .bb-hello-content div.bb-hello-error {
+  color: #d63638;
+  border-color: #ffabaf;
   padding: 8px 20px;
   margin: -15px -20px 18px -20px;
+  align-items: center;
 }
 
-.bb-modal-panel--activity-topic.bb-modal-panel .form-fields .form-field {
+.bb-modal-panel--activity-topic.bb-modal-panel .form-fields .form-field,
+.bb-modal-panel--activity-topic-migrate.bb-modal-panel .form-fields .form-field {
   margin-bottom: 15px;
 }
 
-.bb-modal-panel--activity-topic.bb-modal-panel .form-fields .field-label {
+.bb-modal-panel--activity-topic.bb-modal-panel .form-fields .field-label,
+.bb-modal-panel--activity-topic-migrate.bb-modal-panel .form-fields .field-label {
   margin-bottom: 12px;
 }
 
-.bb-modal-panel--activity-topic.bb-modal-panel .form-fields .field-label label {
+.bb-modal-panel--activity-topic.bb-modal-panel .form-fields .field-label label,
+.bb-modal-panel--activity-topic-migrate.bb-modal-panel .form-fields .field-label label {
   font-size: 14px;
   font-weight: 500;
   color: #1d2327;
   margin-bottom: 10px;
 }
 
-.bb-modal-panel--activity-topic.bb-modal-panel .form-fields .bb-topic-who-can-post-option {
+.bb-modal-panel--activity-topic.bb-modal-panel .form-fields .bb-topic-who-can-post-option,
+.bb-modal-panel--activity-topic-migrate.bb-modal-panel .form-fields .bb-topic-who-can-post-option {
   margin-bottom: 10px;
 }
 
-.bb-modal-panel--activity-topic.bb-modal-panel .bb-popup-buttons {
+.bb-modal-panel--activity-topic.bb-modal-panel .bb-popup-buttons,
+.bb-modal-panel--activity-topic-migrate.bb-modal-panel .bb-popup-buttons {
   background-color: #f6f7f7;
-  border-color: #dcdcde;
+  border-top: 1px solid #dcdcde;
   margin: 0 -20px;
   padding: 12px 15px;
   display: flex;
@@ -5685,36 +5714,139 @@ h1.bb-advance-heading {
   box-sizing: border-box;
 }
 
-.bb-modal-panel--activity-topic.bb-modal-panel.is-loading:before {
+.bb-modal-panel--activity-topic.bb-modal-panel.is-loading .bb-hello-header,
+.bb-modal-panel--activity-topic.bb-modal-panel.is-loading .bb-popup-buttons,
+.bb-modal-panel--activity-topic-migrate.bb-modal-panel.is-loading .bb-hello-header,
+.bb-modal-panel--activity-topic-migrate.bb-modal-panel.is-loading .bb-popup-buttons {
+  z-index: 1;
+}
+
+.bb-modal-panel--activity-topic.bb-modal-panel.is-loading:before,
+.bb-modal-panel--activity-topic-migrate.bb-modal-panel.is-loading:before {
   content: "";
   position: absolute;
   top: 0;
   right: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.1);
+  background-color: #fff;
   z-index: 1;
 }
 
-.bb-modal-panel--activity-topic.bb-modal-panel.is-loading:after {
+.bb-modal-panel--activity-topic.bb-modal-panel.is-loading:after,
+.bb-modal-panel--activity-topic-migrate.bb-modal-panel.is-loading:after {
   content: "\ef30";
   font-family: bb-icons;
   font-size: 24px;
   font-weight: 400;
   line-height: 1;
-  margin-right: 10px;
+  margin: -6px -6px 0 0;
   position: absolute;
   top: 50%;
   right: 50%;
-  transform: translate(50%, -50%);
   text-align: center;
   display: inline-block;
   animation: spin 3s infinite linear;
   z-index: 1;
 }
 
+.bb-hello-backdrop-activity-topic-migrate {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 9998;
+  background-color: rgba(0, 0, 0, 0.8);
+  transition: opacity 0.15s ease-out;
+}
+
+.bb-hello-activity-topic-migrate.bb-modal-panel {
+  position: fixed;
+  z-index: 9999;
+  border-radius: 3px;
+  bottom: initial;
+  top: 50%;
+  right: 50%;
+  left: unset;
+  transform: translate(50%, -50%);
+  max-width: 500px;
+}
+
+.bb-hello-activity-topic-migrate.bb-modal-panel #bb-hello-title {
+  font-size: 18px;
+  color: #1d2327;
+}
+
+.bb-hello-activity-topic-migrate.bb-modal-panel div.bb-hello-content {
+  min-height: 130px;
+  margin-bottom: 55px;
+}
+
+.bb-hello-activity-topic-migrate.bb-modal-panel div.bb-hello-content .form-fields .form-field {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 8px;
+}
+
+.bb-hello-activity-topic-migrate.bb-modal-panel div.bb-hello-content .form-fields .field-input select {
+  min-width: 150px;
+}
+
+.bb-hello-activity-topic-migrate.bb-modal-panel div.bb-hello-content .form-fields .field-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 0;
+}
+
+.bb-hello-activity-topic-migrate.bb-modal-panel div.bb-hello-content .form-fields .field-label input[type="radio"] {
+  margin: 0;
+}
+
+.bb-hello-activity-topic-migrate.bb-modal-panel div.bb-hello-content .form-fields .field-label label {
+  font-size: 14px;
+  font-weight: 400;
+  color: #50575e;
+  margin-bottom: 0;
+}
+
+.bb-hello-activity-topic-migrate.bb-modal-panel div.bb-hello-content #bb_topic_cancel {
+  border-color: #646970;
+  color: #2c3338;
+}
+
+.bb-hello-activity-topic-migrate.bb-modal-panel div.bb-hello-content #bb_topic_migrate {
+  color: #fff;
+  border-color: #d63638;
+  background-color: #d63638;
+}
+
+.bb-hello-activity-topic-migrate.bb-modal-panel div.bb-hello-content #bb_topic_migrate.is-loading:after {
+  content: "\ef30";
+  font-family: bb-icons;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1;
+  margin: 0 5px 3px 0;
+  text-align: center;
+  display: inline-block;
+  vertical-align: middle;
+  animation: spin 3s infinite linear;
+}
+
+.bb-hello-activity-topic-migrate.bb-modal-panel .bb-hello-content-description {
+  color: #1d2327;
+  font-size: 14px;
+  font-weight: 400;
+  margin: 0 0 24px;
+}
+
 #bb-hello-container.bb-modal-panel,
-.admin-bar #bb-hello-container.bb-modal-panel {
+.admin-bar #bb-hello-container.bb-modal-panel,
+#bb-hello-topic-migrate-container.bb-modal-panel,
+.admin-bar #bb-hello-topic-migrate-container.bb-modal-panel {
   top: 50%;
   right: 50%;
   left: unset;
@@ -5723,7 +5855,9 @@ h1.bb-advance-heading {
 
 @media screen and (max-width: 768px) {
   #bb-hello-container.bb-modal-panel,
-  .admin-bar #bb-hello-container.bb-modal-panel {
+  .admin-bar #bb-hello-container.bb-modal-panel,
+  #bb-hello-topic-migrate-container.bb-modal-panel,
+  .admin-bar #bb-hello-topic-migrate-container.bb-modal-panel {
     width: 90%;
   }
 }
@@ -5868,19 +6002,22 @@ h1.bb-advance-heading {
   line-height: 22px;
 }
 
-#bb-hello-container.bb-modal-panel {
+#bb-hello-container.bb-modal-panel,
+#bb-hello-topic-migrate-container.bb-modal-panel {
   top: 50%;
   bottom: initial;
   transform: translateY(-50%);
 }
 
-#bb-hello-container.bb-modal-panel .button-primary {
+#bb-hello-container.bb-modal-panel .button-primary,
+#bb-hello-topic-migrate-container.bb-modal-panel .button-primary {
   color: #fff;
   margin-left: 5px;
 }
 
 @media screen and (max-width: 480px) {
-  #bb-hello-container.bb-modal-panel .button-primary {
+  #bb-hello-container.bb-modal-panel .button-primary,
+  #bb-hello-topic-migrate-container.bb-modal-panel .button-primary {
     margin-left: 0;
   }
 }

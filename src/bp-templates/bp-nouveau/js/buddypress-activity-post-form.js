@@ -995,25 +995,15 @@ window.bp = window.bp || {};
 				! _.isUndefined( BP_Nouveau.activity.params.topics ) &&
 				! _.isUndefined( BP_Nouveau.activity.params.topics.bb_is_enabled_activity_topics ) &&
 				BP_Nouveau.activity.params.topics.bb_is_enabled_activity_topics &&
-				_.isUndefined( activity_data.topics )
+				! _.isUndefined( activity_data.topics )
 			) {
-				activity_data.topics = {
-					topic_id    : activity_data.topic_id,
-					topic_name  : '',
-					topic_lists : []
-				};
+				activity_data.topics.topic_id   = activity_data.topics.topic_id || 0;
+				activity_data.topics.topic_name = activity_data.topics.topic_name || '';
 				if (
 					activity_data.item_id &&
-					! _.isUndefined( BP_Nouveau.activity.params.objects ) &&
-					! _.isUndefined( BP_Nouveau.activity.params.objects.group_list )
+					'groups' === activity_data.object
 				) {
-					var matchingGroup = BP_Nouveau.activity.params.objects.group_list.find( function ( group ) {
-						return parseInt( group.id ) === parseInt( activity_data.item_id );
-					} );
-
-					if ( matchingGroup && matchingGroup.topics && matchingGroup.topics.topic_lists ) {
-						activity_data.topics.topic_lists = matchingGroup.topics.topic_lists;
-					}
+					activity_data.topics.topic_lists = activity_data.topics.topic_lists;
 				} else {
 					activity_data.topics.topic_lists = BP_Nouveau.activity.params.topics.topic_lists;
 				}
@@ -6556,6 +6546,22 @@ window.bp = window.bp || {};
 								toPrepend = true;
 							} else {
 								toPrepend = false;
+							}
+						}
+
+						// Prevent activity from being prepended if it doesn't belong to the current topic.
+						var currentTopicSlug = new URLSearchParams( window.location.search ).get( 'bb-topic' );
+						if ( currentTopicSlug && '' !== response.activity ) {
+							var activityData = response.activity.match( /data-bp-activity="([^"]*)"/ );
+							if ( activityData && activityData[1] ) {
+								var parsedData = JSON.parse(self.decodeHtml( activityData[1] ) );
+								if (
+									!_.isUndefined( parsedData.topics ) &&
+									!_.isUndefined( parsedData.topics.topic_slug ) &&
+									parsedData.topics.topic_slug !== currentTopicSlug
+								) {
+									toPrepend = false;
+								}
 							}
 						}
 
