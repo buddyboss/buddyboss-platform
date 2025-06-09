@@ -724,7 +724,13 @@ class BB_Topics_Manager {
 					);
 
 					if ( function_exists( 'bb_activity_topics_manager_instance' ) ) {
-						$get_previous_activity_relationship = bb_activity_topics_manager_instance()->bb_get_activity_topic_relationship( $previous_topic_id );
+						$get_previous_activity_relationship = bb_activity_topics_manager_instance()->bb_get_activity_topic_relationship(
+							array(
+								'topic_id' => $previous_topic_id,
+								'item_id'  => $item_id,
+								'component' => $item_type,
+							)
+						);
 						if ( $get_previous_activity_relationship ) {
 							bb_activity_topics_manager_instance()->bb_update_activity_topic_relationship(
 								array(
@@ -2220,27 +2226,35 @@ class BB_Topics_Manager {
 	 * @return string The latest topic slug.
 	 */
 	protected function bb_get_latest_topic_slug_concise( $input_slug, $item_id = 0, $item_type = 'activity' ) {
-		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		$query = $this->wpdb->prepare(
-			"
-			SELECT d.current_slug 
+			"SELECT @final_slug := IF(
+				@next_slug IS NULL, 
+				@current_slug, 
+				@next_slug
+			) as final_slug
 			FROM (
-				SELECT @r AS current_slug, 
-					   (SELECT @r := new_topic_slug FROM wp_bb_topic_history WHERE old_topic_slug = @r AND item_id = %d AND item_type = %s AND action = 'rename' ORDER BY id LIMIT 1) AS next_slug, 
-					   @l := @l + 1 AS level 
-				FROM (SELECT @r := %s, @l := 0) vars, wp_bb_topic_history m 
-				WHERE @r IS NOT NULL AND @r <> ''
-			) d 
-			WHERE d.next_slug IS NULL 
-			ORDER BY d.level DESC 
-			LIMIT 1
-		",
+				SELECT @current_slug := %s,
+					   @next_slug := (
+						   SELECT new_topic_slug 
+						   FROM {$this->topic_history_table} 
+						   WHERE BINARY old_topic_slug = @current_slug 
+						   AND item_id = %d 
+						   AND item_type = %s 
+						   AND action = 'rename'
+						   ORDER BY date_created DESC 
+						   LIMIT 1
+					   )
+			) vars",
+			$input_slug,
 			$item_id,
-			$item_type,
-			$input_slug
+			$item_type
 		);
+		// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
-		return $this->wpdb->get_var( $query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+		$final_slug = $this->wpdb->get_var( $query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Query is prepared above.
+
+		return ( false !== $final_slug && null !== $final_slug ) ? $final_slug : $input_slug;
 	}
 
 	/**
@@ -2249,8 +2263,7 @@ class BB_Topics_Manager {
 	 * @since BuddyBoss [BBVERSION]
 	 */
 	public function bb_handle_topic_redirects() {
-		// Check if we have a bb-topic parameter.
-		$bb_topic = isset( $_GET['bb-topic'] ) ? sanitize_text_field( wp_unslash( $_GET['bb-topic'] ) ) : '';
+		$bb_topic = $this->bb_get_topic_slug_from_url();
 		if ( empty( $bb_topic ) ) {
 			return;
 		}
