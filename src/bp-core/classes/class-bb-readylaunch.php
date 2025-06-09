@@ -2779,7 +2779,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				'bb-readylaunch-forums-js',
 				'bbrlForumsEditorJsStrs',
 				array(
-					'description' => __( 'Explain what the forum is about', 'buddyboss' ),
+					'description' => __( 'Write a description', 'buddyboss' ),
 					'type_reply'  => __( 'Type your reply here', 'buddyboss' ),
 					'type_topic'  => __( 'Type your discussion content here', 'buddyboss' ),
 				)
