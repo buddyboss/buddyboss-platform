@@ -6,8 +6,8 @@
  *
  * @package BuddyBoss\Template
  * @subpackage BP_Nouveau\ReadyLaunch
- * @since BuddyPress 2.3.0
- * @version 3.1.0
+ * @since BuddyBoss [BBVERSION]
+ * @version 1.0.0
  */
 
 // Exit if accessed directly.

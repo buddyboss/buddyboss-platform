@@ -21,7 +21,7 @@ defined( 'ABSPATH' ) || exit;
  */
 do_action( 'bp_attachments_avatar_check_template' );
 
-// Get the current avatar if it exists
+// Get the current avatar if it exists.
 $avatar_url      = '';
 $has_avatar      = false;
 $container_class = 'bb-rl-avatar-container';
@@ -64,21 +64,34 @@ if ( bp_is_group() ) {
 	$avatar_icon_class = 'bb-icons-rl-pencil-simple';
 }
 
-// Add has-avatar or no-avatar class based on whether an avatar exists
+// Add has-avatar or no-avatar class based on whether an avatar exists.
 $container_class .= $has_avatar ? ' bb-rl-avatar-container--has-avatar' : ' bb-rl-avatar-container--no-avatar';
 ?>
 <div class="bb-rl-image-headline">
-	<h3><?php esc_html_e( $avatar_label . ' photo', 'buddyboss' ); ?></h3>
+	<h3>
+		<?php
+		if ( bp_is_group() ) {
+			esc_html_e( 'Group photo', 'buddyboss' );
+		} else {
+			esc_html_e( 'Profile photo', 'buddyboss' );
+		}
+		?>
+	</h3>
 </div>
 <div class="bb-rl-image-caption">
 	<?php esc_html_e( 'For best results, upload an image that is 300px by 300px or larger.', 'buddyboss' ); ?>
 </div>
 <div class="<?php echo esc_attr( $container_class ); ?>">
 	<div class="bb-rl-avatar-photo">
-		<a class="bb-rl-remove-avatar-button <?php echo bp_is_group() ? '' : 'bb-rl-edit-avatar'; ?>" href="#" data-balloon-pos="up" data-balloon="<?php esc_html_e( 'Delete ' . $avatar_label . ' Photo', 'buddyboss' ); ?>">
+		<a class="bb-rl-remove-avatar-button <?php echo bp_is_group() ? '' : 'bb-rl-edit-avatar'; ?>" href="#" data-balloon-pos="up" data-balloon="<?php echo bp_is_group() ? esc_attr__( 'Delete Group Photo', 'buddyboss' ) : esc_attr__( 'Delete Profile Photo', 'buddyboss' ); ?>">
 			<i class="<?php echo esc_attr( $avatar_icon_class ); ?>"></i>
 		</a>
-		<img src="<?php echo esc_url( $avatar_url ); ?>" class="<?php echo bp_is_group() ? 'group' : 'user'; ?>-<?php echo esc_attr( $avatar_id ); ?>-avatar" alt="<?php echo esc_attr( sprintf( __( '%s avatar', 'buddyboss' ), $avatar_label ) ); ?>" />
+		<img src="<?php echo esc_url( $avatar_url ); ?>" class="<?php echo bp_is_group() ? 'group' : 'user'; ?>-<?php echo esc_attr( $avatar_id ); ?>-avatar" alt="
+			<?php
+				/* translators: %s: Avatar type (Group or Profile) */
+				echo esc_attr( sprintf( __( '%s avatar', 'buddyboss' ), $avatar_label ) );
+			?>
+		" />
 	</div>
 	<div class="bp-avatar"></div>
 	<div class="bp-avatar-status-progress"></div>

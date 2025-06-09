@@ -16,7 +16,7 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-// Get the current cover image if it exists
+// Get the current cover image if it exists.
 $cover_image_url = '';
 $has_cover_image = false;
 $container_class = 'bb-rl-cover-container';
@@ -59,7 +59,7 @@ if ( bp_is_group() ) {
 	$container_class .= ' bb-rl-cover-container--user';
 }
 
-// Add has-cover-image or no-cover-image class based on whether a cover image exists
+// Add has-cover-image or no-cover-image class based on whether a cover image exists.
 $container_class .= $has_cover_image ? ' bb-rl-cover-container--has-cover' : ' bb-rl-cover-container--no-cover';
 ?>
 
@@ -74,7 +74,12 @@ $container_class .= $has_cover_image ? ' bb-rl-cover-container--has-cover' : ' b
 		<a class="bb-rl-remove-cover-button" href="#" data-balloon-pos="up" data-balloon="<?php esc_html_e( 'Delete Group Cover Photo', 'buddyboss' ); ?>">
 			<i class="bb-icons-rl-x"></i>
 		</a>
-		<img src="<?php echo esc_url( $cover_image_url ); ?>" class="group-cover-image" alt="<?php echo esc_attr( sprintf( __( '%s cover image', 'buddyboss' ), $cover_label ) ); ?>" />
+		<img src="<?php echo esc_url( $cover_image_url ); ?>" class="group-cover-image" alt="
+			<?php
+				/* translators: %s: Cover image type (Group or Profile) */
+				echo esc_attr( sprintf( __( '%s cover image', 'buddyboss' ), $cover_label ) );
+			?>
+		" />
 	</div>
 	<div class="bp-cover-image"></div>
 	<div class="bp-cover-image-status-progress"></div>
