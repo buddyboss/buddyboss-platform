@@ -1,11 +1,18 @@
 <?php
 /**
- * The template for ReadyLaunch Activity Widget template.
+ * ReadyLaunch - The template for Activity Widget.
  *
- * @since   BuddyBoss [BBVERSION]
+ * This template handles the display of activities in widget format
+ * with user avatars, actions, and activity information.
  *
- * @package ReadyLaunch
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
+ * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 if ( bp_has_activities( bp_nouveau_activity_widget_query() ) ) : ?>
 	<div class="bb-rl-activity-list bb-rl-item-list">
