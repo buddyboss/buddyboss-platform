@@ -698,6 +698,10 @@ window.bp = window.bp || {};
 			var itemType       = topicAttr.item_type;
 			var topicName      = $topicItem.find( '.bb-topic-title' ).text().trim();
 
+			var $radioValue    = $( 'input[name="bb_migrate_existing_topic"]:checked' ).val();
+			var $dropdownValue = $( '#bb_existing_topic_id' ).val();
+			this.handleEnableDisableMigrateTopicButton( $radioValue, $dropdownValue );
+
 			// First, check if there are existing posts on this topic.
 			this.checkTopicPostsBeforeDelete( {
 				topicId    : topicId,
@@ -902,7 +906,9 @@ window.bp = window.bp || {};
 
 				this.$document.on( 'click', '.activity-topic-selector li a', this.topicActivityFilter.bind( this ) );
 
-				this.$document.ready( this.handleUrlHashTopic.bind( this ) );
+				if ( undefined !== BP_Nouveau.is_send_ajax_request && '1' === BP_Nouveau.is_send_ajax_request ) {
+					this.$document.ready( this.handleUrlHashTopic.bind( this ) );
+				}
 
 				this.$document.on( 'click', '.bb-topic-url', this.topicActivityFilter.bind( this ) );
 
