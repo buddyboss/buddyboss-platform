@@ -753,6 +753,7 @@
   width: 100%;
   border: 0;
   margin: 12px 0;
+  padding: 0;
 }
 
 .bb-rl-forum-modal .bb-rl-forum-modal-title input:-webkit-input-placeholder {

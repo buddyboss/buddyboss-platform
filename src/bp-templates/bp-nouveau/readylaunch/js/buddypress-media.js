@@ -4831,7 +4831,7 @@ window.bp = window.bp || {};
 							$( file.previewElement ).find( '.dz-video-thumbnail' ).prepend( '<img src=" ' + file.dataThumb + ' " alt=""/>' );
 						} else {
 							if ( bp.Nouveau.getVideoThumb ) {
-								bp.Nouveau.getVideoThumb( file, '.dz-video-thumbnail' );
+								bp.Nouveau.getVideoThumb( file, '.dz-image' );
 							}
 						}
 					}
@@ -4949,7 +4949,7 @@ window.bp = window.bp || {};
 							response.data.folder_id = self.current_folder;
 						} else if ( 'video' === type ) {
 							response.data.album_id   = self.album_id;
-							response.data.js_preview = $( file.previewElement ).find( '.dz-video-thumbnail img' ).attr( 'src' );
+							response.data.js_preview = $( file.previewElement ).find( '.dz-image img' ).attr( 'src' );
 						}
 						dropzoneDataObj.push( response.data );
 						if ( dropzoneContainer.closest( '#whats-new-attachments' ).find( '#bbp_' + type ).length ) {
@@ -4968,8 +4968,8 @@ window.bp = window.bp || {};
 							);
 							var icon_class    = ! _.isEmpty( file_icon ) ? file_icon : 'bb-icon-file-' + fileExtension;
 
-							if ( $( file.previewElement ).find( '.dz-details .dz-icon .bb-icon-file' ).length ) {
-								$( file.previewElement ).find( '.dz-details .dz-icon .bb-icon-file' ).removeClass( 'bb-icon-file' ).addClass( icon_class );
+							if ( $( file.previewElement ).find( '.dz-details .dz-icon .bb-icons-rl-file' ).length ) {
+								$( file.previewElement ).find( '.dz-details .dz-icon .bb-icons-rl-file' ).removeClass( 'bb-icon-file' ).addClass( icon_class );
 							}
 						}
 					} else {
