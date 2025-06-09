@@ -389,7 +389,7 @@ class BB_Activity_Topics_Manager {
 				wp_send_json_error( array( 'error' => $error_message ) );
 			}
 
-			$get_activity_relationship = $this->bb_get_activity_topic_relationship( $existing->id );
+			$get_activity_relationship = $this->bb_get_activity_topic_relationship( array( 'id' => $existing->id ) );
 
 			/**
 			 * Fires after an activity-topic relationship is updated.
@@ -430,7 +430,7 @@ class BB_Activity_Topics_Manager {
 
 		$relationship_id = $this->wpdb->insert_id;
 
-		$get_activity_relationship = $this->bb_get_activity_topic_relationship( $relationship_id );
+		$get_activity_relationship = $this->bb_get_activity_topic_relationship( array( 'id' => $relationship_id ) );
 
 		/**
 		 * Fires after an activity-topic relationship is added.
@@ -509,7 +509,7 @@ class BB_Activity_Topics_Manager {
 			return false;
 		}
 
-		$get_activity_relationship = $this->bb_get_activity_topic_relationship( $updated );
+		$get_activity_relationship = $this->bb_get_activity_topic_relationship( array( 'id' => $updated ) );
 
 		/**
 		 * Fires after updating the activity topic relationship.
@@ -578,7 +578,7 @@ class BB_Activity_Topics_Manager {
 			return false;
 		}
 
-		$get_activity_relationship = $this->bb_get_activity_topic_relationship( $deleted );
+		$get_activity_relationship = $this->bb_get_activity_topic_relationship( array( 'id' => $deleted ) );
 
 		/**
 		 * Fires after deleting the activity topic relationship.
@@ -601,12 +601,58 @@ class BB_Activity_Topics_Manager {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param int $id The ID of the activity topic relationship.
+	 * @param array $args Array of args. {
+	 *     @type int $id The ID of the activity topic relationship.
+	 *     @type int $topic_id The ID of the topic.
+	 *     @type int $item_id The ID of the item.
+	 *     @type string $component The component.
+	 * }
 	 *
 	 * @return array Array of activity topic relationship.
 	 */
-	public function bb_get_activity_topic_relationship( $id ) {
-		return $this->wpdb->get_row( $this->wpdb->prepare( "SELECT * FROM {$this->activity_topic_rel_table} WHERE id = %d", $id ), ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+	public function bb_get_activity_topic_relationship( $args ) {
+		$r = bp_parse_args(
+			$args,
+			array(
+				'id' => 0,
+			)
+		);
+
+		$where_clauses = array();
+		$where_values  = array();
+
+		if ( ! empty( $r['id'] ) ) {
+			$where_clauses[] = 'id = %d';
+			$where_values[]  = $r['id'];
+		}
+
+		if ( ! empty( $r['topic_id'] ) ) {
+			$where_clauses[] = 'topic_id = %d';
+			$where_values[]  = $r['topic_id'];
+		}
+
+		if ( ! empty( $r['item_id'] ) ) {
+			$where_clauses[] = 'item_id = %d';
+			$where_values[]  = $r['item_id'];
+		}
+
+		if ( ! empty( $r['component'] ) ) {
+			$where_clauses[] = 'component = %s';
+			$where_values[]  = $r['component'];
+		}
+
+		if ( ! empty( $r['activity_id'] ) ) {
+			$where_clauses[] = 'activity_id = %d';
+			$where_values[]  = $r['activity_id'];
+		}
+
+		if ( empty( $where_clauses ) ) {
+			return null;
+		}
+
+		$where_sql = implode( ' AND ', $where_clauses );
+
+		return $this->wpdb->get_row( $this->wpdb->prepare( "SELECT * FROM {$this->activity_topic_rel_table} WHERE {$where_sql}", $where_values ), ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 	}
 
 	/**
@@ -626,6 +672,7 @@ class BB_Activity_Topics_Manager {
 		$topic_id                     = $this->bb_get_activity_topic( (int) $args['id'], 'all' );
 		$args['topics']['topic_id']   = isset( $topic_id->topic_id ) ? $topic_id->topic_id : 0;
 		$args['topics']['topic_slug'] = isset( $topic_id->slug ) ? $topic_id->slug : '';
+		$args['topics']['topic_name'] = isset( $topic_id->name ) ? $topic_id->name : '';
 
 		return $args;
 	}
