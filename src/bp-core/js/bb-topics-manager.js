@@ -805,6 +805,7 @@ window.bp = window.bp || {};
 				if ( response.success ) {
 					$topicItem.remove();
 					this.handleCloseModal( event );
+					this.checkTopicsLimit();
 				} else {
 					this.$migrateTopicContainerModalSelector.find( '.bb-hello-content' ).prepend( this.config.errorContainer );
 					this.$migrateTopicContainerModalSelector.find( '.bb-hello-error' ).append( response.data.error );
@@ -821,20 +822,26 @@ window.bp = window.bp || {};
 		 * @return {boolean} True if limit reached, false otherwise.
 		 */
 		checkTopicsLimit : function () {
-			var topicsCount = this.$topicList.find( '.bb-activity-topic-item' ).length;
-			var topicsLimit = this.config.topicsLimit;
+			var topicsCount      = this.$topicList.find( '.bb-activity-topic-item' ).length;
+			var topicsLimit      = this.config.topicsLimit;
+			var $limitNotReached = $( '.bb-topic-limit-not-reached' );
+			var $limitReached    = $( '.bb-topic-limit-reached' );
 
 			var topicsLimitReached = topicsCount >= topicsLimit;
 
 			// If the limit is reached, hide the add button.
 			if ( topicsLimitReached ) {
 				this.$addTopicButton.hide();
+				$limitNotReached.hide();
+				$limitReached.show();
 			} else {
 				// If we're below the limit, show the add button.
 				this.$addTopicButton.show();
 				if ( this.$addTopicButton.hasClass( 'bp-hide' ) ) {
 					this.$addTopicButton.removeClass( 'bp-hide' );
 				}
+				$limitNotReached.show();
+				$limitReached.hide();
 			}
 
 			if ( topicsCount > 0 ) {
