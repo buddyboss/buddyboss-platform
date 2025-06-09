@@ -11,7 +11,7 @@ global $document_folder_template;
 $folder_id = 0;
 if ( function_exists( 'bp_is_group_single' ) && bp_is_group_single() && bp_is_group_folders() ) {
 	$action_variables = bp_action_variables();
-	$folder_id         = (int) $action_variables[1];
+	$folder_id        = (int) $action_variables[1];
 } else {
 	$folder_id = (int) bp_action_variable( 0 );
 }
@@ -32,8 +32,8 @@ if ( function_exists( 'bp_is_group_single' ) && bp_is_group_single() && bp_is_gr
 						</div>
 						<?php
 						$current_folder = bp_get_folder_id();
-						$folder_id = (int) bp_document_get_root_parent_id( bp_get_folder_id() );
-						$folder    = new BP_Document_Folder( $folder_id );
+						$folder_id      = (int) bp_document_get_root_parent_id( bp_get_folder_id() );
+						$folder         = new BP_Document_Folder( $folder_id );
 						if ( ! bp_is_group() && (int) $folder->id === $current_folder ) :
 							bp_get_template_part( 'document/document-privacy' );
 						endif;

@@ -22,20 +22,20 @@
 
 				$active_extensions = bp_document_get_allowed_extension();
 
-				if ( ! empty( $active_extensions ) && bp_is_profile_document_support_enabled() && is_user_logged_in() && bb_user_can_create_document() ) {
+			if ( ! empty( $active_extensions ) && bp_is_profile_document_support_enabled() && is_user_logged_in() && bb_user_can_create_document() ) {
 
-					echo '<div class="bb-rl-document-actions bb-rl-actions-buttons flex items-center">';
+				echo '<div class="bb-rl-document-actions bb-rl-actions-buttons flex items-center">';
 
-					if ( bp_is_profile_albums_support_enabled() ) {
-						?>
+				if ( bp_is_profile_albums_support_enabled() ) {
+					?>
 						<a href="#" id="bb-create-folder" class="action-secondary bb-create-folder button small"><i class="bb-icons-rl-folder-plus"></i><?php esc_html_e( 'Create Folder', 'buddyboss' ); ?></a>
 						<a href="#" id="bp-add-document" class="action-primary bb-add-document button small"><i class="bb-icons-rl-plus"></i><?php esc_html_e( 'Add Documents', 'buddyboss' ); ?></a>
 						<?php
 						bp_get_template_part( 'document/document-uploader' );
 						bp_get_template_part( 'document/create-folder' );
-					}
-					echo '</div>';
 				}
+				echo '</div>';
+			}
 			?>
 		</div>
 	</div>
@@ -73,13 +73,13 @@
 
 				<div id="media-stream" class="documents dir-list bb-rl-document bb-rl-media-stream" data-bp-list="document" data-ajax="<?php echo esc_attr( $is_send_ajax_request ? 'true' : 'false' ); ?>">
 					<?php
-						if ( $is_send_ajax_request ) {
-							echo '<div id="bp-ajax-loader">';
-							bp_nouveau_user_feedback( 'directory-media-document-loading' );
-							echo '</div>';
-						} else {
-							bp_get_template_part( 'document/document-loop' );
-						}
+					if ( $is_send_ajax_request ) {
+						echo '<div id="bp-ajax-loader">';
+						bp_nouveau_user_feedback( 'directory-media-document-loading' );
+						echo '</div>';
+					} else {
+						bp_get_template_part( 'document/document-loop' );
+					}
 					?>
 				</div><!-- .documents -->
 

@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 // Get current course ID
 $course_id = get_the_ID();
-$user_id = get_current_user_id();
+$user_id   = get_current_user_id();
 
 // Get course progress
 $course_progress = learndash_course_progress(
@@ -28,24 +28,24 @@ $course_progress = learndash_course_progress(
 $readylaunch = bb_load_readylaunch();
 
 // Course data
-$course = get_post( $course_id );
+$course          = get_post( $course_id );
 $course_settings = learndash_get_setting( $course_id );
-$course_price = learndash_get_course_price( $course_id );
-$is_enrolled = sfwd_lms_has_access( $course_id, $user_id );
-$course_status = learndash_course_status( $course_id, $user_id );
-$ld_permalinks = get_option( 'learndash_settings_permalinks', array() );
-$course_slug   = isset( $ld_permalinks['courses'] ) ? $ld_permalinks['courses'] : 'courses';
+$course_price    = learndash_get_course_price( $course_id );
+$is_enrolled     = sfwd_lms_has_access( $course_id, $user_id );
+$course_status   = learndash_course_status( $course_id, $user_id );
+$ld_permalinks   = get_option( 'learndash_settings_permalinks', array() );
+$course_slug     = isset( $ld_permalinks['courses'] ) ? $ld_permalinks['courses'] : 'courses';
 
 // Get course steps
 $course_steps = learndash_get_course_steps( $course_id );
-$lessons = learndash_get_course_lessons_list( $course_id );
+$lessons      = learndash_get_course_lessons_list( $course_id );
 $lesson_count = array_column( $lessons, 'post' );
-$topic_count = array_column( $course_steps, 'post' );
+$topic_count  = array_column( $course_steps, 'post' );
 
 // Essential variables for course content listing (from theme file)
-$post      = get_post( $course_id ); // Get the WP_Post object.
-$course_model    = \LearnDash\Core\Models\Course::create_from_post( $post );
-$content   = $course_model->get_content();
+$post         = get_post( $course_id ); // Get the WP_Post object.
+$course_model = \LearnDash\Core\Models\Course::create_from_post( $post );
+$content      = $course_model->get_content();
 
 // Get basic course data from the course object.
 $courses_options            = learndash_get_option( 'sfwd-courses' );
@@ -90,18 +90,18 @@ global $course_pager_results;
 
 <div class="bb-learndash-content-wrap">
 	<main class="bb-learndash-content-area">
-		<article id="post-<?php the_ID(); ?>" <?php post_class('bb-rl-learndash-course'); ?>>
+		<article id="post-<?php the_ID(); ?>" <?php post_class( 'bb-rl-learndash-course' ); ?>>
 			<header class="bb-rl-entry-header">
 				<div class="bb-rl-course-banner flex">
 					<div class="bb-rl-course-overview">
 						<?php
-							if ( taxonomy_exists( 'ld_course_category' ) ) {
-								// category.
-								$course_cats = get_the_terms( $course->ID, 'ld_course_category' );
-								if ( ! empty( $course_cats ) ) {
-									?>
+						if ( taxonomy_exists( 'ld_course_category' ) ) {
+							// category.
+							$course_cats = get_the_terms( $course->ID, 'ld_course_category' );
+							if ( ! empty( $course_cats ) ) {
+								?>
 									<div class="bb-rl-course-category">
-										<?php foreach ( $course_cats as $course_cat ) { ?>
+									<?php foreach ( $course_cats as $course_cat ) { ?>
 											<span class="bb-rl-course-category-item">
 												<a title="<?php echo $course_cat->name; ?>" href="<?php printf( '%s/%s/?search=&filter-categories=%s', home_url(), $course_slug, $course_cat->slug ); ?>">
 													<?php echo $course_cat->name; ?>
@@ -111,8 +111,8 @@ global $course_pager_results;
 										<?php } ?>
 									</div>
 									<?php
-								}
 							}
+						}
 						?>
 						<h1 class="bb-rl-entry-title"><?php the_title(); ?></h1>
 						<div class="bb-rl-course-meta">
@@ -143,7 +143,7 @@ global $course_pager_results;
 									<?php elseif ( ! empty( $course_price['type'] ) && 'paynow' === $course_price['type'] ) : ?>
 										<span class="bb-rl-price"><?php echo esc_html( $course_price['price'] ); ?></span>
 									<?php elseif ( ! empty( $course_price['type'] ) && 'subscribe' === $course_price['type'] ) : ?>
-										<span class="bb-rl-price"><?php echo sprintf( esc_html__( 'Subscription: %s', 'buddyboss' ), esc_html( $course_price['price'] ) ); ?></span>
+										<span class="bb-rl-price"><?php printf( esc_html__( 'Subscription: %s', 'buddyboss' ), esc_html( $course_price['price'] ) ); ?></span>
 									<?php endif; ?>
 								</div>
 							<?php endif; ?>
@@ -294,19 +294,19 @@ global $course_pager_results;
 										<span class="ld-icon-arrow-down ld-icon"></span>
 										<span class="ld-text"><?php echo esc_attr__( 'Expand All Sections', 'buddyboss' ); ?></span>
 									</button> <!--/.ld-expand-button-->
-								<?php
+									<?php
 
-								/**
-								 * Filters whether to expand all course steps by default. Default is false.
-								 *
-								 * @since BuddyBoss [BBVERSION]
-								 *
-								 * @param boolean $expand_all Whether to expand all course steps.
-								 * @param int     $course_id  Course ID.
-								 * @param string  $context    The context where course is expanded.
-								 */
-								if ( apply_filters( 'learndash_course_steps_expand_all', false, $course_id, 'course_lessons_listing_main' ) ) :
-								?>
+									/**
+									 * Filters whether to expand all course steps by default. Default is false.
+									 *
+									 * @since BuddyBoss [BBVERSION]
+									 *
+									 * @param boolean $expand_all Whether to expand all course steps.
+									 * @param int     $course_id  Course ID.
+									 * @param string  $context    The context where course is expanded.
+									 */
+									if ( apply_filters( 'learndash_course_steps_expand_all', false, $course_id, 'course_lessons_listing_main' ) ) :
+										?>
 									<script>
 										jQuery( function () {
 											setTimeout( function () {
@@ -314,7 +314,7 @@ global $course_pager_results;
 											}, 1000 );
 										} );
 									</script>
-								<?php
+										<?php
 								endif;
 
 								endif;
@@ -332,7 +332,8 @@ global $course_pager_results;
 
 							</div> <!--/.ld-item-list-actions-->
 						</div><!-- .bb-rl-course-content-header -->
-					<?php endif;
+						<?php
+					endif;
 
 					/**
 					 * Identify if we should show the course content listing
@@ -341,7 +342,8 @@ global $course_pager_results;
 					 */
 					$show_course_content = ( ! $has_access && 'on' === $course_meta['sfwd-courses_course_disable_content_table'] ? false : true );
 
-					if ( $show_course_content ) : ?>
+					if ( $show_course_content ) :
+						?>
 
 						<div class="ld-item-list ld-lesson-list">
 
@@ -366,13 +368,13 @@ global $course_pager_results;
 							learndash_get_template_part(
 								'course/listing.php',
 								array(
-									'course_id'                  => $course_id,
-									'user_id'                    => $user_id,
-									'lessons'                    => $lessons,
-									'lesson_topics'              => $lesson_topics,
-									'quizzes'                    => $quizzes,
-									'has_access'                 => $has_access,
-									'course_pager_results'       => $course_pager_results,
+									'course_id'            => $course_id,
+									'user_id'              => $user_id,
+									'lessons'              => $lessons,
+									'lesson_topics'        => $lesson_topics,
+									'quizzes'              => $quizzes,
+									'has_access'           => $has_access,
+									'course_pager_results' => $course_pager_results,
 									'lesson_progression_enabled' => $lesson_progression_enabled,
 								),
 								true
@@ -415,7 +417,7 @@ global $course_pager_results;
 							<?php
 							// Get recently enrolled members for the current course
 							if ( function_exists( 'learndash_get_users_for_course' ) ) {
-								$course_id = get_the_ID();
+								$course_id            = get_the_ID();
 								$enrolled_users_query = learndash_get_users_for_course( $course_id, array( 'number' => 10 ), false );
 
 								// Get the actual user IDs from the WP_User_Query object
@@ -434,14 +436,17 @@ global $course_pager_results;
 										}
 										$user_enrollments[] = array(
 											'user_id' => $user_id,
-											'enrolled_date' => $enrolled_date
+											'enrolled_date' => $enrolled_date,
 										);
 									}
 
 									// Sort by enrollment date (newest first)
-									usort( $user_enrollments, function( $a, $b ) {
-										return $b['enrolled_date'] - $a['enrolled_date'];
-									});
+									usort(
+										$user_enrollments,
+										function ( $a, $b ) {
+											return $b['enrolled_date'] - $a['enrolled_date'];
+										}
+									);
 
 									// Limit to 5 most recent enrollments
 									$recent_enrollments = array_slice( $user_enrollments, 0, 10 );
@@ -450,11 +455,11 @@ global $course_pager_results;
 										echo '<div class="bb-rl-recent-enrolled-members">';
 
 										foreach ( $recent_enrollments as $enrollment ) {
-											$user_id = $enrollment['user_id'];
+											$user_id   = $enrollment['user_id'];
 											$user_data = get_userdata( $user_id );
 
 											if ( $user_data ) {
-												$user_link = function_exists( 'bp_core_get_user_domain' ) ? bp_core_get_user_domain( $user_id ) : get_author_posts_url( $user_id );
+												$user_link    = function_exists( 'bp_core_get_user_domain' ) ? bp_core_get_user_domain( $user_id ) : get_author_posts_url( $user_id );
 												$display_name = function_exists( 'bp_core_get_user_displayname' ) ? bp_core_get_user_displayname( $user_id ) : $user_data->display_name;
 												?>
 												<div class="bb-rl-enrolled-member-item">
@@ -462,15 +467,17 @@ global $course_pager_results;
 														<?php
 														// Use bp_core_fetch_avatar with proper parameters
 														if ( function_exists( 'bp_core_fetch_avatar' ) ) {
-															echo wp_kses_post( bp_core_fetch_avatar(
-																array(
-																	'item_id' => $user_id,
-																	'width' => 48,
-																	'height' => 48,
-																	'type' => 'full',
-																	'html' => true,
+															echo wp_kses_post(
+																bp_core_fetch_avatar(
+																	array(
+																		'item_id' => $user_id,
+																		'width' => 48,
+																		'height' => 48,
+																		'type' => 'full',
+																		'html' => true,
+																	)
 																)
-															) );
+															);
 														}
 														if ( function_exists( 'bb_user_presence_html' ) ) {
 															bb_user_presence_html( $user_id );

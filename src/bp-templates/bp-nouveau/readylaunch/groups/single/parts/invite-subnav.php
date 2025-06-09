@@ -21,7 +21,8 @@
 						<?php
 						bp_nouveau_nav_link_text();
 
-						if ( bp_nouveau_nav_has_count() ) : ?>
+						if ( bp_nouveau_nav_has_count() ) :
+							?>
 							<span class="count"><?php bp_nouveau_nav_count(); ?></span>
 						<?php endif; ?>
 					</a>

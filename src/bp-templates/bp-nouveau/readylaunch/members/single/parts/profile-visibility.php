@@ -46,4 +46,5 @@ if ( bp_current_user_can( 'bp_xprofile_change_field_visibility' ) ) : ?>
 		?>
 	</p>
 
-<?php endif;
+	<?php
+endif;

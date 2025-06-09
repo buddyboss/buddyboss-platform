@@ -29,14 +29,14 @@ do_action( 'bp_before_directory_members_page' );
 		<div class="bb-rl-entry-heading flex">
 			<h2><?php esc_html_e( 'Members', 'buddyboss' ); ?> <span class="bb-rl-heading-count"><?php echo ! $is_send_ajax_request ? esc_html( bp_core_get_all_member_count() ) : ''; ?></span></h2>
 			<?php
-				if ( ! bp_disable_advanced_profile_search() ) {
-					?>
-					<div class="bb-rl-advance-profile-search">
-						<a href="javascript::" class="bb-rl-advance-profile-search-toggle"><?php esc_html_e( 'Profile Search', 'buddyboss' ); ?></a>
-						<?php bp_profile_search_show_form(); ?>
-					</div>
-					<?php
-				}
+			if ( ! bp_disable_advanced_profile_search() ) {
+				?>
+				<div class="bb-rl-advance-profile-search">
+					<a href="javascript::" class="bb-rl-advance-profile-search-toggle"><?php esc_html_e( 'Profile Search', 'buddyboss' ); ?></a>
+				<?php bp_profile_search_show_form(); ?>
+				</div>
+				<?php
+			}
 			?>
 		</div>
 		<div class="bb-rl-sub-ctrls flex items-center">
@@ -44,10 +44,10 @@ do_action( 'bp_before_directory_members_page' );
 			bp_get_template_part( 'common/search-and-filters-bar' );
 			if ( bp_allow_user_to_send_invites() ) {
 				?>
-					<div class="bb-rl-action-button">
-						<a href="" id="bb-rl-invite-button" class="bb-rl-button bb-rl-button--brandFill bb-rl-button--small flex items-center"><i class="bb-icons-rl-plus"></i><?php esc_html_e( 'Invite', 'buddyboss' ); ?></a>
-					</div>
-					<?php
+				<div class="bb-rl-action-button">
+					<a href="" id="bb-rl-invite-button" class="bb-rl-button bb-rl-button--brandFill bb-rl-button--small flex items-center"><i class="bb-icons-rl-plus"></i><?php esc_html_e( 'Invite', 'buddyboss' ); ?></a>
+				</div>
+				<?php
 			}
 			?>
 		</div>
@@ -107,7 +107,6 @@ do_action( 'bp_before_directory_members_page' );
 							<?php endfor; ?>
 						</div>
 						<?php
-						// bp_nouveau_user_feedback( 'directory-members-loading' );
 						echo '</div>';
 					} else {
 						bp_get_template_part( 'members/members-loop' );

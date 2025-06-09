@@ -42,7 +42,7 @@
 				?>
 			</div>
 			<?php
-			break;	
+			break;
 
 		// Any other.
 		default:

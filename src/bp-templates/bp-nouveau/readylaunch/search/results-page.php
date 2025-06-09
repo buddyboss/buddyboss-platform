@@ -16,12 +16,12 @@
 $post_title = '';
 
 if ( empty( $_GET['s'] ) || '' === $_GET['s'] ) {
-	$post_title = __( 'No results found', "buddyboss" );
+	$post_title = __( 'No results found', 'buddyboss' );
 	$no_results = ' bb-rl-no-search-results';
 } elseif ( BP_Search::instance()->has_search_results() ) {
-	$post_title = sprintf( __( 'Showing results for <span class="bb-rl-result-label">\'%s\'</span>', "buddyboss" ), esc_html( $_GET['s'] ) );
+	$post_title = sprintf( __( 'Showing results for <span class="bb-rl-result-label">\'%s\'</span>', 'buddyboss' ), esc_html( $_GET['s'] ) );
 } else {
-	$post_title = sprintf( __( 'No results for <span class="bb-rl-result-label">\'%s\'</span>', "buddyboss" ), esc_html( $_GET['s'] ) );
+	$post_title = sprintf( __( 'No results for <span class="bb-rl-result-label">\'%s\'</span>', 'buddyboss' ), esc_html( $_GET['s'] ) );
 	$no_results = ' bb-rl-no-search-results';
 }
 ?>
@@ -35,7 +35,7 @@ if ( empty( $_GET['s'] ) || '' === $_GET['s'] ) {
 		</header>
 
 		<div id="buddypress">
-			<?php bp_get_template_part("search/results-page-content"); ?>
+			<?php bp_get_template_part( 'search/results-page-content' ); ?>
 		</div>
 
 	</div>

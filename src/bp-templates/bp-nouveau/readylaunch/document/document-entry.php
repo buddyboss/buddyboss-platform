@@ -264,7 +264,7 @@ id="div-listing-<?php echo esc_attr( $document_id ); ?>">
 						<?php
 					}
 					if ( $can_edit ) {
-                        $privacy = ( 0 === $group_id && 0 === bp_get_document_parent_id() ) ? 'data-privacy="' . esc_attr( bp_get_db_document_privacy() ) . '"' : '' ;
+						$privacy = ( 0 === $group_id && 0 === bp_get_document_parent_id() ) ? 'data-privacy="' . esc_attr( bp_get_db_document_privacy() ) . '"' : '';
 						?>
 						<li class="bb-rl-edit-file">
 							<a href="#" data-type="<?php echo esc_attr( $document_type ); ?>" class="ac-document-edit" <?php echo $privacy; ?>><?php esc_html_e( 'Edit', 'buddyboss' ); ?></a>

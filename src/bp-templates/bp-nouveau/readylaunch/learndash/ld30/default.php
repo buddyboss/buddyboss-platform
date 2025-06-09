@@ -20,8 +20,11 @@ echo '<!-- ReadyLaunch LearnDash template loading. Default template used. -->';
 <div class="bb-learndash-content-wrap">
 	<main class="bb-learndash-content-area">
 		<?php if ( have_posts() ) : ?>
-			<?php while ( have_posts() ) : the_post(); ?>
-				<article id="post-<?php the_ID(); ?>" <?php post_class('bb-rl-learndash-content'); ?>>
+			<?php
+			while ( have_posts() ) :
+				the_post();
+				?>
+				<article id="post-<?php the_ID(); ?>" <?php post_class( 'bb-rl-learndash-content' ); ?>>
 					<header class="bb-rl-entry-header">
 						<h1 class="bb-rl-entry-title"><?php the_title(); ?></h1>
 					</header>

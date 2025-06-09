@@ -42,7 +42,7 @@ if ( bp_has_folders( array( 'include' => $folder_id ) ) ) :
 						<div class="bb-media-actions">
 							<?php
 							if ( bp_has_document( bp_ajax_querystring( 'document' ) ) ) {
-							?>
+								?>
 								<div id="search-documents-form" class="media-search-form" data-bp-search="document">
 									<form action="" method="get" class="bp-dir-search-form search-form-has-reset" id="group-document-search-form" autocomplete="off">
 										<button type="submit" id="group-document-search-submit" class="nouveau-search-submit search-form_submit" name="group_document_search_submit">
@@ -57,7 +57,7 @@ if ( bp_has_folders( array( 'include' => $folder_id ) ) ) :
 										</button>
 									</form>
 								</div>
-							<?php
+								<?php
 							}
 							?>
 							<?php

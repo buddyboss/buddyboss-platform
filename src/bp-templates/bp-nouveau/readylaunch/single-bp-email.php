@@ -297,7 +297,7 @@ $settings = bp_email_get_appearance_settings();
 							if ( ! empty( $image_src ) ) {
 								?>
 								<img src="<?php echo esc_attr( $image_src[0] ); ?>" alt="<?php echo esc_attr( $blog_name ); ?>" style="margin:0; padding:0; border:none; display:block; max-height:auto; height:auto; width:<?php echo esc_attr( $settings['site_title_logo_size'] ); ?>px;" border="0" />
-													 <?php
+								<?php
 							} else {
 								echo esc_html( $blog_name );
 							}

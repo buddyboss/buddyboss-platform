@@ -42,7 +42,8 @@
 											<p class="item-meta group-details">
 												<?php
 												$inviter = bp_groups_get_invited_by();
-												if ( ! empty( $inviter ) ) : ?>
+												if ( ! empty( $inviter ) ) :
+													?>
 													<span class="small">
 													<?php
 													printf(

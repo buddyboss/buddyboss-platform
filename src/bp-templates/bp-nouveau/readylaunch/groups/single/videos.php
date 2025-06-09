@@ -41,7 +41,7 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 						<h2 class="bb-title"><?php esc_html_e( 'Videos', 'buddyboss' ); ?></h2>
 						<?php
 					}
-		
+
 					bp_nouveau_group_hook( 'before', 'video_content' );
 					bp_get_template_part( 'video/actions' );
 				}

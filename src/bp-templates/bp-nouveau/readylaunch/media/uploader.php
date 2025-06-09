@@ -97,7 +97,8 @@ $bp_is_single_album = bp_is_single_album();
 										bp_get_template_part( 'media/entry' );
 									endwhile;
 
-									if ( bp_media_has_more_items() ) : ?>
+									if ( bp_media_has_more_items() ) :
+										?>
 										<li class="load-more">
 											<a class="button outline" href="<?php bp_media_load_more_link(); ?>"><?php esc_html_e( 'Load More', 'buddyboss' ); ?></a>
 										</li>

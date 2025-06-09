@@ -167,23 +167,22 @@ if ( isset( $restricted ) && '' !== $restricted ) {
 							<?php echo $title; ?>
 						</span>
 						<?php
-					} else {
+					} elseif ( 'registered' === $class ) {
 
-						if ( 'registered' === $class ) {
-							?>
+						?>
 							<span class="bp-invitee-status">
 								<span class="bb-icons-rl-<?php echo esc_attr( $icon ); ?>"></span><?php echo $title; ?>
 							</span>
 							<?php
-						} else {
-							?>
+					} else {
+						?>
 							<span class="bp-invitee-status">
 								<a data-revoke-access="<?php echo esc_url( $revoke_link ); ?>" data-name="<?php echo esc_attr( $alert_message ); ?>" id="<?php echo esc_attr( $post_id ); ?>" class="<?php echo esc_attr( $class ); ?>" href="javascript:void(0);">
 									<span class="bb-icons-rl-<?php echo esc_attr( $icon ); ?>"></span><?php echo $title; ?>
 								</a>
 							</span>
 							<?php
-						}
+
 					}
 					?>
 				</td>
@@ -204,10 +203,10 @@ if ( isset( $restricted ) && '' !== $restricted ) {
 	$total_pages = $the_query->max_num_pages;
 	if ( $total_pages > 1 ) {
 		?>
-        <tr>
-            <td colspan="4" class="field-name bp-pagination">
-                <div class="bp-pagination-links bottom">
-                    <p class="pag-data">
+		<tr>
+			<td colspan="4" class="field-name bp-pagination">
+				<div class="bp-pagination-links bottom">
+					<p class="pag-data">
 						<?php
 							$current_page = max( 1, get_query_var( 'paged' ) );
 							echo paginate_links(
@@ -221,10 +220,10 @@ if ( isset( $restricted ) && '' !== $restricted ) {
 								)
 							);
 						?>
-                    </p>
-                </div>
-            </td>
-        </tr>
+					</p>
+				</div>
+			</td>
+		</tr>
 		<?php
 	}
 

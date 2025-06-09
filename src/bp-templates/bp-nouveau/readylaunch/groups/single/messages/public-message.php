@@ -221,7 +221,8 @@ if ( bp_is_active( 'groups' ) && bp_is_group_single() ) {
 							<?php
 						endif;
 
-						if ( $is_media_active && bb_user_has_access_upload_emoji( $group_id, $bp_loggedin_user_id, 0, 0 ) ) : ?>
+						if ( $is_media_active && bb_user_has_access_upload_emoji( $group_id, $bp_loggedin_user_id, 0, 0 ) ) :
+							?>
 							<div class="bb-rl-separator"></div>
 							<div class="post-elements-buttons-item post-emoji bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Emoji', 'buddyboss' ); ?>"></div>
 						<?php endif; ?>

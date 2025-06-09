@@ -2,7 +2,6 @@
 /**
  * The template for add document
  *
- *
  * @since   BuddyBoss [BBVERSION]
  * @package BuddyBoss\Core
  * @version 1.0.0

@@ -1,12 +1,17 @@
 <?php
 /**
- * BuddyPress Avatars crop template.
+ * BuddyBoss Avatars crop template.
  *
  * This template is used to create the crop Backbone views.
  *
- * @since BuddyPress 2.3.0
- * @version 3.1.0
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
+ * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 ?>
 <script id="tmpl-bp-avatar-item" type="text/html">
@@ -27,7 +32,7 @@
 	<div class="avatar-crop-management">
 		<div id="avatar-crop-actions">
 			<button type="button" class="button avatar-crop-submit"><?php esc_html_e( 'Crop', 'buddyboss' ); ?></button>
-            <a class="avatar-crop-cancel" href="#"><?php esc_html_e( 'Cancel', 'buddyboss' ); ?></a>
+			<a class="avatar-crop-cancel" href="#"><?php esc_html_e( 'Cancel', 'buddyboss' ); ?></a>
 		</div>
 	</div>
 </script>

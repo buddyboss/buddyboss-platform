@@ -21,14 +21,14 @@ $bp_moderation_item_type = bp_get_moderation_item_type();
 		$user_id = bp_moderation_get_content_owner_id( $bp_moderation_item_id, $bp_moderation_item_type );
 
 		// Add the user avatar
-		echo bp_core_fetch_avatar( 
+		echo bp_core_fetch_avatar(
 			array(
 				'item_id' => $user_id,
 				'type'    => 'thumb',
 				'width'   => 30,
 				'height'  => 30,
-				'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss' ), bp_core_get_user_displayname( $user_id ) )
-			) 
+				'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss' ), bp_core_get_user_displayname( $user_id ) ),
+			)
 		);
 
 		echo esc_html( bp_core_get_user_displayname( $user_id ) );
@@ -50,7 +50,7 @@ $bp_moderation_item_type = bp_get_moderation_item_type();
 		<?php
 		$btn_cls = ( true === $hide_sitewide ) ? 'button disabled' : 'button bp-unblock-user';
 		?>
-		<a href="javascript:void(0)" class="<?php echo esc_attr( $btn_cls ); ?> bb-rl-button bb-rl-button--secondaryOutline bb-rl-button--small" data-id="<?php echo esc_attr( $bp_moderation_item_id ); ?>" data-type="<?php echo esc_attr( $bp_moderation_item_type ); ?>" data-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-unblock-user' ) ); ?>" <?php echo ( true === $hide_sitewide ) ? 'data-balloon-pos="left" data-balloon="Member Suspended"' : '' ?>>
+		<a href="javascript:void(0)" class="<?php echo esc_attr( $btn_cls ); ?> bb-rl-button bb-rl-button--secondaryOutline bb-rl-button--small" data-id="<?php echo esc_attr( $bp_moderation_item_id ); ?>" data-type="<?php echo esc_attr( $bp_moderation_item_type ); ?>" data-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-unblock-user' ) ); ?>" <?php echo ( true === $hide_sitewide ) ? 'data-balloon-pos="left" data-balloon="Member Suspended"' : ''; ?>>
 			<?php
 			esc_html_e( 'Unblock', 'buddyboss' );
 			?>

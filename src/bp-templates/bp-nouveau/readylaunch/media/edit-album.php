@@ -9,9 +9,9 @@
 
 global $media_album_template;
 
-$album_id      = (int) bp_action_variable( 0 );
-$bp_is_my_profile                    = bp_is_my_profile();
-$bp_is_group                         = bp_is_group();
+$album_id         = (int) bp_action_variable( 0 );
+$bp_is_my_profile = bp_is_my_profile();
+$bp_is_group      = bp_is_group();
 
 if ( bp_has_video_albums( array( 'include' => $album_id ) ) ) {
 	$bp_is_user_video = bp_is_user_video();
@@ -35,7 +35,8 @@ if ( bp_has_video_albums( array( 'include' => $album_id ) ) ) {
 					</div>
 					<footer class="bb-model-footer">
 						<?php
-						if ( ( $bp_is_my_profile || $bp_is_user_video ) && ! $bp_is_group ) : ?>
+						if ( ( $bp_is_my_profile || $bp_is_user_video ) && ! $bp_is_group ) :
+							?>
 							<div class="bb-rl-field-wrap bb-rl-privacy-field-wrap-hide-show">
 								<select id="bb-album-privacy">
 									<?php

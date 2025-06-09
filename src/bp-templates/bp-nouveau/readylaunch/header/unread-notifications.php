@@ -47,7 +47,7 @@ if ( bp_has_notifications( bp_ajax_querystring( 'notifications' ) . '&user_id=' 
 				</ul>
 			</div>
 		</li>
-	<?php
+		<?php
 	endwhile;
 
 	$total       = bp_notifications_get_unread_notification_count();
@@ -60,7 +60,7 @@ if ( bp_has_notifications( bp_ajax_querystring( 'notifications' ) . '&user_id=' 
 				<?php esc_html_e( 'Load More', 'buddyboss' ); ?>
 			</a>
 		</div>
-	<?php
+		<?php
 	endif;
 else :
 	?>
@@ -69,5 +69,5 @@ else :
 			<?php esc_html_e( 'You have no notifications right now.', 'buddyboss' ); ?>
 		</div>
 	</li>
-<?php
+	<?php
 endif;

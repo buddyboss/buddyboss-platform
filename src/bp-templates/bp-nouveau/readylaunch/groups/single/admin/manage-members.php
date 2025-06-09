@@ -207,9 +207,9 @@ if ( bp_is_group_create() ) {
 									add_filter( 'bp_nouveau_get_groups_buttons', 'BB_Group_Readylaunch::bb_readylaunch_manage_member_actions', 20, 3 );
 									bp_nouveau_groups_manage_members_buttons(
 										array(
-											'container'         => 'div',
+											'container' => 'div',
 											'container_classes' => array( 'members-manage-buttons', 'text-links-list' ),
-											'parent_element'    => '',
+											'parent_element' => '',
 										)
 									);
 									remove_filter( 'bp_nouveau_get_groups_buttons', 'BB_Group_Readylaunch::bb_readylaunch_manage_member_actions', 20, 3 );

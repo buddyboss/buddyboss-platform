@@ -55,7 +55,6 @@ switch ( bp_current_action() ) :
 					<?php endfor; ?>
 				</div>
 				<?php
-				//bp_nouveau_user_feedback( 'member-groups-loading' );
 				echo '</div>';
 			} else {
 				bp_get_template_part( 'groups/groups-loop' );

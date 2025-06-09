@@ -73,7 +73,8 @@ add_filter( 'bp_get_group_description_excerpt', 'bb_get_group_description_excerp
 
 				bp_nouveau_group_hook( 'before', 'header_meta' );
 
-				if ( bp_nouveau_group_has_meta_extra() ) : ?>
+				if ( bp_nouveau_group_has_meta_extra() ) :
+					?>
 					<div class="item-meta">
 						<?php echo wp_kses_post( bp_nouveau_group_meta()->extra ); ?>
 					</div><!-- .item-meta -->

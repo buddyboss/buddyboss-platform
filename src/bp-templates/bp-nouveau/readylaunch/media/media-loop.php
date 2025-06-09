@@ -56,9 +56,9 @@ else :
 				bp_nouveau_user_feedback( 'media-video-loop-none' );
 			} else {
 				bp_nouveau_user_feedback( 'media-loop-none' );
-				bp_get_template_part( 'media/add-media' );			
+				bp_get_template_part( 'media/add-media' );
 			}
-	?>
+			?>
 	</div>
 	<?php
 

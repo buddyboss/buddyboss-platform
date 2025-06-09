@@ -41,10 +41,10 @@ if ( 'upload-image' === $bp_avatar_admin_step ) :
 	<div class="bb-rl-upload-image-wrap">
 	<?php
 
-		if ( $bp_is_group_create ) :
-			?>
+	if ( $bp_is_group_create ) :
+		?>
 			<div class="left-menu">
-				<?php bp_new_group_avatar(); ?>
+			<?php bp_new_group_avatar(); ?>
 			</div><!-- .left-menu -->
 			<div class="main-column">
 		<?php endif; ?>
@@ -63,7 +63,7 @@ if ( 'upload-image' === $bp_avatar_admin_step ) :
 
 		<?php elseif ( $group_has_avatar ) : ?>
 
-			<p><?php esc_html_e( "To remove the existing group photo, please use the delete group profile photo button.", 'buddyboss' ); ?></p>
+			<p><?php esc_html_e( 'To remove the existing group photo, please use the delete group profile photo button.', 'buddyboss' ); ?></p>
 			<?php
 			bp_button(
 				array(
@@ -79,7 +79,7 @@ if ( 'upload-image' === $bp_avatar_admin_step ) :
 
 		endif;
 
-	?>
+		?>
 	</div>
 	<?php
 
@@ -94,7 +94,7 @@ if ( 'upload-image' === $bp_avatar_admin_step ) :
 		wp_nonce_field( 'bp_avatar_upload' );
 	}
 
-	
+
 endif;
 
 if ( 'crop-image' === $bp_avatar_admin_step ) {

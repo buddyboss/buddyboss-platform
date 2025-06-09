@@ -41,13 +41,13 @@ $more_media     = $media_count > $max_length;
 
 <div class="bb-rl-activity-media-elem bb-rl-media-activity
 	<?php
-echo esc_attr( $bp_get_media_id ) . ' ';
-echo ( $media_template->current_media > ( $max_length - 1 ) ) ? esc_attr( 'hide ' ) : '';
-echo 1 === $media_count ? esc_attr( 'act-grid-1-1 ' ) : '';
-echo ( 1 === $media_count || $media_count > 1 ) && 0 === $media_template->current_media ? esc_attr( 'act-grid-1-1 ' ) : '';
-echo $media_count > 1 && $media_template->current_media > 0 ? 'act-grid-1-2 ' : '';
-echo ( $more_media && ( $max_length - 1 ) === $media_template->current_media ) ? esc_attr( ' no_more_option ' ) : '';
-?>
+	echo esc_attr( $bp_get_media_id ) . ' ';
+	echo ( $media_template->current_media > ( $max_length - 1 ) ) ? esc_attr( 'hide ' ) : '';
+	echo 1 === $media_count ? esc_attr( 'act-grid-1-1 ' ) : '';
+	echo ( 1 === $media_count || $media_count > 1 ) && 0 === $media_template->current_media ? esc_attr( 'act-grid-1-1 ' ) : '';
+	echo $media_count > 1 && $media_template->current_media > 0 ? 'act-grid-1-2 ' : '';
+	echo ( $more_media && ( $max_length - 1 ) === $media_template->current_media ) ? esc_attr( ' no_more_option ' ) : '';
+	?>
 	" data-id="<?php echo esc_attr( $bp_get_media_id ); ?>">
 	<div class="bb-rl-more_dropdown-wrap">
 		<?php
@@ -91,16 +91,16 @@ echo ( $more_media && ( $max_length - 1 ) === $media_template->current_media ) ?
 		<?php } ?>
 	</div> <!--.bb-rl-more_dropdown-wrap-->
 	<a href="#"
-	   class="bb-rl-open-media-theatre bb-rl-entry-img"
-	   data-id="<?php echo esc_attr( $bp_get_media_id ); ?>"
-	   data-attachment-id="<?php echo esc_attr( $attachment_id ); ?>"
-	   data-attachment-full="<?php bb_media_photos_theatre_popup_image(); ?>"
-	   data-activity-id="<?php echo esc_attr( $media_activity_id ); ?>"
-	   data-privacy="<?php echo esc_attr( $db_privacy ); ?>"
-	   data-parent-activity-id="<?php echo esc_attr( $media_parent_activity_id ); ?>"
-	   data-album-id="<?php bp_media_album_id(); ?>"
-	   data-group-id="<?php echo esc_attr( $group_id ); ?>"
-	   data-can-edit="<?php echo esc_attr( bp_media_user_can_edit( $bp_get_media_id ) ); ?>"
+		class="bb-rl-open-media-theatre bb-rl-entry-img"
+		data-id="<?php echo esc_attr( $bp_get_media_id ); ?>"
+		data-attachment-id="<?php echo esc_attr( $attachment_id ); ?>"
+		data-attachment-full="<?php bb_media_photos_theatre_popup_image(); ?>"
+		data-activity-id="<?php echo esc_attr( $media_activity_id ); ?>"
+		data-privacy="<?php echo esc_attr( $db_privacy ); ?>"
+		data-parent-activity-id="<?php echo esc_attr( $media_parent_activity_id ); ?>"
+		data-album-id="<?php bp_media_album_id(); ?>"
+		data-group-id="<?php echo esc_attr( $group_id ); ?>"
+		data-can-edit="<?php echo esc_attr( bp_media_user_can_edit( $bp_get_media_id ) ); ?>"
 	>
 		<?php $size = 1 === $media_count ? 'bb-media-activity-image' : 'bb-media-photos-album-directory-image-medium'; ?>
 		<img src="<?php echo esc_url( buddypress()->plugin_url ); ?>bp-templates/bp-nouveau/images/placeholder.png" data-src="<?php echo 1 === $media_count ? esc_url( bp_get_media_attachment_image_activity_thumbnail() ) : esc_url( bb_get_media_photos_directory_image_thumbnail() ); ?>" class="no-round photo lazy" alt="<?php bp_media_title(); ?>" />

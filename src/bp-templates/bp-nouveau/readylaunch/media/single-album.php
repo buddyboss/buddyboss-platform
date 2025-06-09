@@ -116,7 +116,7 @@ if ( bp_has_albums( array( 'include' => $album_id ) ) ) : ?>
 													( $bp_is_group && $can_edit )
 												) {
 
-												$privacy = ! $bp_is_group && $can_edit ? 'data-privacy="' . esc_attr( bp_get_album_privacy() ) . '"' : '' ;
+												$privacy = ! $bp_is_group && $can_edit ? 'data-privacy="' . esc_attr( bp_get_album_privacy() ) . '"' : '';
 												?>
 													<li class="album-edit">
 														<a href="#" class="bb-edit-album bb-rl-edit-album" id="bp-edit-album-title" <?php echo $privacy; ?>>
@@ -143,7 +143,7 @@ if ( bp_has_albums( array( 'include' => $album_id ) ) ) : ?>
 									</div>
 								</div>
 								<?php
-							}
+						}
 						?>
 					</div>
 
@@ -179,14 +179,14 @@ if ( bp_has_albums( array( 'include' => $album_id ) ) ) : ?>
 						<span><?php esc_html_e( 'Created: ', 'buddyboss' ); ?><?php bp_core_format_date( $media_album_template->album->date_created ); ?></span><span class="bb-sep"></span>
 
 						<?php
-							if ( $bp_is_my_profile ) {
-								?>
+						if ( $bp_is_my_profile ) {
+							?>
 								<span class="bb-media-privacy-wrap">
 									<span class="bb-media-privacy-icon privacy <?php echo esc_attr( $media_album_template->album->privacy ); ?>"></span>
-									<span class="bb-media-privacy-text"><?php echo esc_html( $media_privacy[ $media_album_template->album->privacy ] ??  $media_album_template->album->privacy ); ?></span>
+									<span class="bb-media-privacy-text"><?php echo esc_html( $media_privacy[ $media_album_template->album->privacy ] ?? $media_album_template->album->privacy ); ?></span>
 								</span><span class="bb-sep"></span>
 								<?php
-							}
+						}
 						?>
 
 						<span><i class="bb-icons-rl-images"></i><?php printf( _n( '%s', '%s', $media_album_template->album->media['total'], 'buddyboss' ), bp_core_number_format( $media_album_template->album->media['total'] ) ); ?></span><span class="bb-sep"></span>

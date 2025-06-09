@@ -2,9 +2,14 @@
 /**
  * ReadyLaunch - The template for BP Nouveau Activity Comment form.
  *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
  * @since   BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 global $activities_template;
 
@@ -12,7 +17,7 @@ if ( ! bp_nouveau_current_user_can( 'comment_activity' ) || ! bp_activity_can_co
 	return;
 }
 
-$activity_id = bp_get_activity_id();
+$activity_id  = bp_get_activity_id();
 $media_active = bp_is_active( 'media' );
 ?>
 
@@ -103,12 +108,12 @@ $media_active = bp_is_active( 'media' );
 		<div class="bb-rl-ac-reply-footer">
 			<input type="hidden" name="comment_form_id" value="<?php echo esc_attr( $activity_id ); ?>" />
 			<?php
-				if ( 'blogs' !== $activities_template->activity->component ) {
-					?>
+			if ( 'blogs' !== $activities_template->activity->component ) {
+				?>
 					<div id="bb-rl-ac-reply-toolbar-<?php echo esc_attr( $activity_id ); ?>" class="bb-rl-ac-reply-toolbar">
-						<?php
-						if ( $media_active ) :
-							?>
+					<?php
+					if ( $media_active ) :
+						?>
 							<div class="bb-rl-post-elements-buttons-item bb-rl-post-media bb-rl-media-support">
 								<a href="#" id="bb-rl-ac-reply-media-button-<?php echo esc_attr( $activity_id ); ?>" class="toolbar-button bp-tooltip bb-rl-ac-reply-media-button" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Attach photo', 'buddyboss' ); ?>" data-ac-id="<?php echo esc_attr( $activity_id ); ?>">
 									<i class="bb-icons-rl-camera"></i>
@@ -137,7 +142,7 @@ $media_active = bp_is_active( 'media' );
 						<?php endif; ?>
 					</div>
 					<?php
-				}
+			}
 			?>
 			<?php
 			printf(

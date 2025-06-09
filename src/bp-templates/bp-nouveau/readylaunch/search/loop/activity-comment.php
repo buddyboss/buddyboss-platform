@@ -32,7 +32,7 @@ $bp_activity_url       = bp_activity_get_permalink( bp_get_activity_id() );
 						bp_get_activity_content_body(),
 						100,
 						array(
-							'ending' => '&hellip;'
+							'ending' => '&hellip;',
 						)
 					);
 					?>

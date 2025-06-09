@@ -23,7 +23,7 @@ $certificates = bp_learndash_get_users_certificates( $user_id );
 							<h3 class="bb-certificate-title">
 								<?php
 								printf(
-									__( '<span>Certificate in </span> <a href="%s">%s</a>', 'buddyboss' ),
+									__( '<span>Certificate in </span> <a href="%1$s">%2$s</a>', 'buddyboss' ),
 									get_permalink( $certificate->ID ),
 									$certificate->title
 								);

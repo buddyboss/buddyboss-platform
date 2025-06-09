@@ -38,7 +38,7 @@ if ( bp_has_groups( bp_ajax_querystring( 'groups' ) ) ) {
 	bp_nouveau_loop_classes();
 	echo esc_attr( ' ' . $cover_class . ' ' . $group_alignment );
 	?>
-	 groups-dir-list">
+	groups-dir-list">
 		<?php
 		while ( bp_groups() ) :
 			bp_the_group();

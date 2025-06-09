@@ -231,7 +231,7 @@ endif;
 					<div class="bb-remove-connection-content bb-action-popup-content">
 						<p>
 							<?php
-							echo sprintf(
+							printf(
 								/* translators: %s: The member name with HTML tags. */
 								esc_html__( 'Are you sure you want to remove %s from your connections?', 'buddyboss' ),
 								'<span class="bb-user-name"></span>'

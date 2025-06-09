@@ -14,7 +14,7 @@
 
 global $bb_rl_search_nav;
 
-$no_results_class = ! BP_Search::instance()->has_search_results() ?  'bp-search-no-results' : '';
+$no_results_class = ! BP_Search::instance()->has_search_results() ? 'bp-search-no-results' : '';
 ?>
 
 <div class="bp-search-page buddypress-wrap bp-dir-hori-nav">
@@ -26,7 +26,7 @@ $no_results_class = ! BP_Search::instance()->has_search_results() ?  'bp-search-
 				<div class="modal-mask bb-rl-modal-mask">
 					<div class="bb-rl-modal-wrapper">
 						<div class="bp-search-form-wrapper dir-search no-ajax">
-							<?php bp_search_buffer_template_part('search-form');?>
+							<?php bp_search_buffer_template_part( 'search-form' ); ?>
 						</div>
 					</div>
 				</div>
@@ -35,7 +35,7 @@ $no_results_class = ! BP_Search::instance()->has_search_results() ?  'bp-search-
 
 		<div class="search_results">
 			<?php do_action( 'bp_search_before_result' ); ?>
-			<?php bp_search_results();?>
+			<?php bp_search_results(); ?>
 			<?php do_action( 'bp_search_after_result' ); ?>
 		</div>
 

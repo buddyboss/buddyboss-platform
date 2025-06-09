@@ -138,10 +138,18 @@ $bb_rl_activity_class_exists = class_exists( 'BB_Activity_Readylaunch' ) ? BB_Ac
 			<div class="bb-rl-activity-head">
 				<div class="bb-rl-activity-avatar bb-rl-item-avatar <?php echo $friendship_created ? esc_attr( 'bb-rl-multiple-avatars' ) : ''; ?>" data-bb-hp-profile="<?php echo esc_attr( bp_get_activity_user_id() ); ?>">
 					<a href="<?php echo esc_url( $user_link ); ?>">
-						<?php bp_activity_avatar( array( 'type' => 'full', 'class' => 'avatar bb-hp-profile-avatar' ) ); ?>
+						<?php
+						bp_activity_avatar(
+							array(
+								'type'  => 'full',
+								'class' => 'avatar bb-hp-profile-avatar',
+							)
+						);
+						?>
 					</a>
 					<?php
 					if ( $friendship_created ) {
+						// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 						echo bp_get_activity_secondary_avatar( $activities_template->activity->secondary_item_id );
 					}
 					?>

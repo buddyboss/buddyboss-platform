@@ -1,15 +1,20 @@
 <?php
 /**
- * BuddyPress Avatars main template.
+ * BuddyBoss Avatars main template.
  *
- * This template is used to inject the BuddyPress Backbone views
+ * This template is used to inject the BuddyBoss Backbone views
  * dealing with avatars.
  *
  * It's also used to create the common Backbone views.
  *
- * @since BuddyPress 2.3.0
- * @version 3.1.0
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
+ * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 /**
  * This action is for internal use, please do not use it
@@ -17,41 +22,45 @@
 do_action( 'bp_attachments_avatar_check_template' );
 
 // Get the current avatar if it exists
-$avatar_url = '';
-$has_avatar = false;
+$avatar_url      = '';
+$has_avatar      = false;
 $container_class = 'bb-rl-avatar-container';
-$avatar_id = 0;
-$avatar_label = '';
+$avatar_id       = 0;
+$avatar_label    = '';
 
 if ( bp_is_group() ) {
-    $group_id = bp_get_current_group_id();
-	$avatar_id = $group_id;
-	$avatar_label = __("Group", 'buddyboss');
-    if ( bp_get_group_has_avatar( $group_id ) ) {
+	$group_id     = bp_get_current_group_id();
+	$avatar_id    = $group_id;
+	$avatar_label = __( 'Group', 'buddyboss' );
+	if ( bp_get_group_has_avatar( $group_id ) ) {
 		$has_avatar = true;
-        $avatar_url = bp_core_fetch_avatar( array(
-            'item_id'    => $group_id,
-            'object'     => 'group',
-            'type'       => 'full',
-            'avatar_dir' => 'group-avatars',
-            'alt'        => __( 'Group Profile Photo', 'buddyboss' ),
-            'html'       => false,
-        ) );
-    }
-	$container_class .= ' bb-rl-avatar-container--group';
+		$avatar_url = bp_core_fetch_avatar(
+			array(
+				'item_id'    => $group_id,
+				'object'     => 'group',
+				'type'       => 'full',
+				'avatar_dir' => 'group-avatars',
+				'alt'        => __( 'Group Profile Photo', 'buddyboss' ),
+				'html'       => false,
+			)
+		);
+	}
+	$container_class  .= ' bb-rl-avatar-container--group';
 	$avatar_icon_class = 'bb-icons-rl-x';
 } elseif ( bp_is_user() ) {
-    $user_id = bp_displayed_user_id();
-	$avatar_id = $user_id;
-	$avatar_label = __("Profile", 'buddyboss');
-	$has_avatar = bp_get_user_has_avatar( $user_id );
-    $avatar_url = bp_core_fetch_avatar( array(
-        'item_id' => $user_id,
-        'object'  => 'user',
-        'type'    => 'full',
-        'html'    => false,
-    ) );
-	$container_class .= ' bb-rl-avatar-container--user';
+	$user_id           = bp_displayed_user_id();
+	$avatar_id         = $user_id;
+	$avatar_label      = __( 'Profile', 'buddyboss' );
+	$has_avatar        = bp_get_user_has_avatar( $user_id );
+	$avatar_url        = bp_core_fetch_avatar(
+		array(
+			'item_id' => $user_id,
+			'object'  => 'user',
+			'type'    => 'full',
+			'html'    => false,
+		)
+	);
+	$container_class  .= ' bb-rl-avatar-container--user';
 	$avatar_icon_class = 'bb-icons-rl-pencil-simple';
 }
 
@@ -59,10 +68,10 @@ if ( bp_is_group() ) {
 $container_class .= $has_avatar ? ' bb-rl-avatar-container--has-avatar' : ' bb-rl-avatar-container--no-avatar';
 ?>
 <div class="bb-rl-image-headline">
-	<h3><?php esc_html_e( $avatar_label . " photo", 'buddyboss' ); ?></h3>
+	<h3><?php esc_html_e( $avatar_label . ' photo', 'buddyboss' ); ?></h3>
 </div>
 <div class="bb-rl-image-caption">
-	<?php esc_html_e( "For best results, upload an image that is 300px by 300px or larger.", 'buddyboss' ); ?>
+	<?php esc_html_e( 'For best results, upload an image that is 300px by 300px or larger.', 'buddyboss' ); ?>
 </div>
 <div class="<?php echo esc_attr( $container_class ); ?>">
 	<div class="bb-rl-avatar-photo">
@@ -103,7 +112,8 @@ $container_class .= $has_avatar ? ' bb-rl-avatar-container--has-avatar' : ' bb-r
 			 *
 			 * @since BuddyPress 3.0.0
 			 */
-			do_action( 'bp_attachments_avatar_delete_template' ); ?>
+			do_action( 'bp_attachments_avatar_delete_template' );
+		?>
 	<# } #>
 </script>
 

@@ -31,7 +31,7 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 			<div id="media-stream" class="media bb-rl-media-stream" data-bp-list="media" data-ajax="<?php echo esc_attr( $is_send_ajax_request ? 'true' : 'false' ); ?>">
 				<?php
 				if ( bp_has_media( bp_ajax_querystring( 'media' ) ) ) {
-				?>
+					?>
 					<div class="bb-media-actions-wrap bb-rl-media-actions-wrap">
 						<?php
 							bp_get_template_part( 'media/add-media' );
@@ -39,7 +39,7 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 							bp_get_template_part( 'media/actions' );
 						?>
 					</div>
-				<?php
+					<?php
 				}
 				?>
 				<?php

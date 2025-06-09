@@ -360,7 +360,7 @@ if ( bp_has_message_threads( bp_ajax_querystring( 'messages' ) . '&user_id=' . g
 							$i = 1;
 							foreach ( $recipients as $recipient ) :
 								if ( bp_loggedin_user_id() !== (int) $recipient->user_id ) :
-									$i++;
+									++$i;
 									$recipient_name = bp_core_get_user_displayname( $recipient->user_id );
 
 									if ( empty( $recipient_name ) ) :
@@ -508,7 +508,7 @@ if ( bp_has_message_threads( bp_ajax_querystring( 'messages' ) . '&user_id=' . g
 				</span>
 			</div>
 		</li>
-	<?php
+		<?php
 	endwhile;
 
 else :
@@ -530,5 +530,5 @@ else :
 			</div>
 		</div>
 	</li>
-<?php
+	<?php
 endif;
