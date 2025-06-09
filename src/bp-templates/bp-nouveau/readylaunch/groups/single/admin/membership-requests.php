@@ -1,10 +1,18 @@
 <?php
 /**
- * BP Nouveau Group's membership requests template.
+ * ReadyLaunch - Group's membership requests template.
  *
- * @since   BuddyPress 3.0.0
+ * This template displays pending membership requests for a group
+ * with AJAX loading support and request management interface.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 $is_send_ajax_request = bb_is_send_ajax_request();
 ?>

@@ -1,10 +1,18 @@
 <?php
 /**
- * BP Nouveau Group's search members template.
+ * ReadyLaunch - Group's search members template.
  *
- * @since   BuddyBoss 2.5.50
+ * This template displays search results for group members in the
+ * manage members interface with member actions and pagination.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 $group = groups_get_current_group();
 if ( ! empty( $group->id ) ) {

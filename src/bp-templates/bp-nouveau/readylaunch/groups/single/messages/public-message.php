@@ -1,10 +1,18 @@
 <?php
 /**
- * BP Nouveau Group's Public Message template.
+ * ReadyLaunch - Group's Public Message template.
  *
- * @since   BuddyBoss 1.5.7
- * @version 1.5.7
+ * This template provides the interface for sending public messages to group members
+ * with media attachments, GIF support, and member selection functionality.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
+ * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 $bp_loggedin_user_id = bp_loggedin_user_id();
 $args                = array(

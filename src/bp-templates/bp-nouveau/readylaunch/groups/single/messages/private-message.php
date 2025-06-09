@@ -1,10 +1,18 @@
 <?php
 /**
- * BP Nouveau Group's Private Message template.
+ * ReadyLaunch - Group's Private Message template.
  *
- * @since   BuddyBoss 1.5.7
- * @version 1.5.7
+ * This template provides the interface for sending private messages to selected group members
+ * with member selection, media attachments, and message composition functionality.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
+ * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 $bp_loggedin_user_id = bp_loggedin_user_id();
 $is_media_active     = bp_is_active( 'media' );

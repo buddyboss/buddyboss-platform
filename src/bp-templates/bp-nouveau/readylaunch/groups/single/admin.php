@@ -1,10 +1,18 @@
 <?php
 /**
- * BuddyBoss - Groups Admin
+ * ReadyLaunch - Groups Admin template.
  *
- * @since   BuddyPress 3.0.0
+ * This template handles the group administration interface
+ * with management forms and settings.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 ?>
 <div class="bb-rl-manage-group-container bb-rl-group-dashboard-panel">

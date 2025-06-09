@@ -1,12 +1,18 @@
 <?php
 /**
- * BuddyBoss - Groups Document
+ * ReadyLaunch - Groups Document template.
  *
- * This template is used to render group documents.
+ * This template renders group documents with search functionality,
+ * folder management, and document upload capabilities.
  *
- * @since   BuddyBoss 1.4.0
- * @version 1.4.0
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
+ * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 $is_send_ajax_request = bb_is_send_ajax_request();
 ?>

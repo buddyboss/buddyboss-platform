@@ -1,14 +1,22 @@
 <?php
 /**
- * BuddyBoss - Groups Pending Invites
+ * ReadyLaunch - Groups Pending Invites template.
  *
- * @since   BuddyBoss 1.2.3
- * @version 1.2.3
+ * This template displays pending group invitations with search functionality
+ * and member management interface for reviewing sent invites.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
+ * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 ?>
 <div class="bb-rl-group-invites-dashboard bb-rl-group-dashboard-panel bb-rl-group-invites-dashboard--pending-invites">
 	<div class="bb-rl-group-invites-header">
-		<h2 class="bb-rl-entry-title"><?php _e( 'Pending Invites', 'buddyboss' ); ?></h2>
+		<h2 class="bb-rl-entry-title"><?php esc_html_e( 'Pending Invites', 'buddyboss' ); ?></h2>
 	</div>
 	<?php
 	bp_get_template_part( 'groups/single/parts/invite-subnav' );
@@ -20,7 +28,7 @@
 					<div class="group-invites-search subnav-search clearfix" role="search">
 						<div class="bp-search">
 							<form action="" method="get" id="group_invites_search_form" class="bp-invites-search-form search-form-has-reset" data-bp-search="group-invites">
-								<label for="group_invites_search" class="bp-screen-reader-text"><?php bp_nouveau_search_default_text( __( 'Search Members', 'buddyboss' ), false ); ?></label>
+								<label for="group_invites_search" class="bp-screen-reader-text"><?php bp_nouveau_search_default_text( esc_html__( 'Search Members', 'buddyboss' ), false ); ?></label>
 								<input type="search" id="group_invites_search" placeholder="<?php esc_attr_e( 'Search Members', 'buddyboss' ); ?>"/>
 								<button type="submit" id="group_invites_search_submit" class="nouveau-search-submit search-form_submit">
 									<span class="bb-icons-rl-magnifying-glass" aria-hidden="true"></span>

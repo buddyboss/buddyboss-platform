@@ -1,10 +1,18 @@
 <?php
 /**
- * BuddyBoss - Groups Subgroups
+ * ReadyLaunch - Groups Subgroups template.
  *
- * @since   BuddyBoss 1.0.0
+ * This template displays subgroups within a parent group
+ * with search filters and AJAX loading support.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 $is_send_ajax_request = bb_is_send_ajax_request();
 

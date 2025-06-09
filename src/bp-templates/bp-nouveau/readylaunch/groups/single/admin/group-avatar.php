@@ -1,10 +1,18 @@
 <?php
 /**
- * BP Nouveau Group's avatar template.
+ * ReadyLaunch - Group's avatar template.
  *
- * @since   BuddyPress 3.0.0
+ * This template handles group avatar upload, cropping, and management
+ * for both group creation and editing workflows.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 $bp_is_group_create   = bp_is_group_create();
 $group_has_avatar     = bp_get_group_has_avatar();

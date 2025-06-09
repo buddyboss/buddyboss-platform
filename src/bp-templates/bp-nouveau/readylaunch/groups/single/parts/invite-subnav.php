@@ -1,10 +1,18 @@
 <?php
 /**
- * BuddyPress Single Groups Invites Navigation
+ * ReadyLaunch - Single Groups Invites Navigation template.
  *
- * @since   BuddyBoss 1.2.3
- * @version 1.2.3
+ * This template displays the navigation menu for group invite-related pages
+ * including send invites and pending invites tabs.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
+ * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 ?>
 
 <nav class="<?php bp_nouveau_single_item_subnav_classes(); ?>" id="subnav" role="navigation" aria-label="<?php esc_attr_e( 'Group administration menu', 'buddyboss' ); ?>">

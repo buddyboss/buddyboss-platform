@@ -1,12 +1,18 @@
 <?php
 /**
- * BuddyBoss - Groups Header
+ * ReadyLaunch - Groups Header template.
  *
- * This template is used to render the group header.
+ * This template renders the group header with cover image, avatar,
+ * group information, meta data, and action buttons.
  *
- * @since   BuddyPress 3.0.0
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 $group_link       = bp_get_group_permalink();
 $admin_link       = trailingslashit( $group_link . 'admin' );

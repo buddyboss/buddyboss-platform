@@ -1,10 +1,18 @@
 <?php
 /**
- * BuddyBoss - Groups Cover Photo Header.
+ * ReadyLaunch - Groups Cover Photo Header template.
  *
- * @since   BuddyPress 3.0.0
+ * This template displays the group cover image with editing controls
+ * for administrators including upload, reposition, and delete options.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 $group_link               = bp_get_group_permalink();
 $admin_link               = trailingslashit( $group_link . 'admin' );

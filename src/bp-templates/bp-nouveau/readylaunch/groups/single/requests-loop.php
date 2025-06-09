@@ -1,10 +1,18 @@
 <?php
 /**
- * BuddyBoss - Groups Requests Loop
+ * ReadyLaunch - Groups Requests Loop template.
  *
- * @since   BuddyPress 3.0.0
+ * This template displays the loop of membership requests for a group
+ * including user avatars, request time, and action buttons.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 if ( bp_group_has_membership_requests( bp_ajax_querystring( 'membership_requests' ) ) ) {
 	?>

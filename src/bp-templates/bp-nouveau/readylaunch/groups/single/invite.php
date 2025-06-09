@@ -1,10 +1,18 @@
 <?php
 /**
- * BuddyBoss - Groups Invites
+ * ReadyLaunch - Groups Invites template.
  *
- * @since   BuddyBoss 1.2.3
- * @version  1.2.3
+ * This template handles the different invite-related pages for groups
+ * including sending invites and viewing pending invitations.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
+ * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 switch ( bp_get_group_current_invite_tab() ) :
 

@@ -1,10 +1,18 @@
 <?php
 /**
- * BuddyBoss - Groups Members
+ * ReadyLaunch - Groups Members template.
  *
- * @since   BuddyPress 3.0.0
+ * This template displays group members with search filters and pagination.
+ * Includes views for all members and group leaders.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 bp_get_template_part( 'groups/single/parts/members-subnav' );
 ?>

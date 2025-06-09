@@ -77,7 +77,6 @@ bp_nouveau_template_notices();
 							<?php endfor; ?>
 						</div>
 						<?php
-						// bp_nouveau_user_feedback( 'directory-groups-loading' );
 						echo '</div>';
 					} else {
 						bp_get_template_part( 'groups/groups-loop' );

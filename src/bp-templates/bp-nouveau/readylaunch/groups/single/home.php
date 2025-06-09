@@ -1,10 +1,18 @@
 <?php
 /**
- * BuddyBoss - Groups Home
+ * ReadyLaunch - Groups Home template.
  *
- * @since   BuddyPress 3.0.0
+ * This template handles the main group home page layout
+ * with header, navigation, and content sections.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 if ( bp_is_group_subgroups() ) {
 	ob_start();

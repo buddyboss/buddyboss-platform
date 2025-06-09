@@ -1,10 +1,18 @@
 <?php
 /**
- * BP Nouveau Group's cover photo template.
+ * ReadyLaunch - Group's cover photo template.
  *
- * @since   BuddyPress 3.0.0
+ * This template handles group cover photo upload and management
+ * for both group creation and editing workflows.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 ?>
 
 <?php if ( bp_is_group_create() ) : ?>
@@ -27,7 +35,7 @@
 	}
 	?>
 
-	<div id="header-cover-image" style="<?php echo $group_cover_image ? 'display: block;' : ''; ?>"></div>
+	<div id="header-cover-image" style="<?php echo $group_cover_image ? esc_attr( 'display: block;' ) : ''; ?>"></div>
 
 <?php else : ?>
 

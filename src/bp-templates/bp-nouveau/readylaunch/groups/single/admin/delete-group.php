@@ -1,10 +1,18 @@
 <?php
 /**
- * BP Nouveau Group's delete group template.
+ * ReadyLaunch - Group's delete group template.
  *
- * @since   BuddyPress 3.0.0
+ * This template provides the confirmation interface for deleting a group
+ * including warnings and confirmation checkboxes.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 ?>
 
 <h2 class="bp-screen-title warn">

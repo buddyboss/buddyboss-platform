@@ -1,10 +1,18 @@
 <?php
 /**
- * BuddyPress Single Groups Messages Navigation
+ * ReadyLaunch - Single Groups Messages Navigation template.
  *
- * @since   BuddyBoss 1.5.7
- * @version 1.5.7
+ * This template displays the navigation menu for group messages pages
+ * including public and private messaging options.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
+ * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 ?>
 
 <nav class="<?php bp_nouveau_single_item_subnav_classes(); ?>" id="subnav" role="navigation" aria-label="<?php esc_attr_e( 'Group Messages menu', 'buddyboss' ); ?>">

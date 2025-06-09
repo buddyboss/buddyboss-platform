@@ -1,10 +1,18 @@
 <?php
 /**
- * BuddyBoss - Groups Messages
+ * ReadyLaunch - Groups Messages template.
  *
- * @since   BuddyPress 3.0.0
+ * This template handles group messaging functionality including
+ * public and private message interfaces with navigation.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 bp_get_template_part( 'groups/single/parts/messages-subnav' );
 ?>

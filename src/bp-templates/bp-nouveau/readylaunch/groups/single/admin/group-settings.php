@@ -1,10 +1,18 @@
 <?php
 /**
- * BP Nouveau Group's edit settings template.
+ * ReadyLaunch - Group's edit settings template.
  *
- * @since   BuddyPress 3.0.0
+ * This template handles group privacy settings, permissions,
+ * and group type selection in the admin interface.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 $bp_get_new_group_status = bp_get_new_group_status();
 $bp_is_media_active      = bp_is_active( 'media' );
@@ -186,7 +194,7 @@ if ( bp_is_group_create() ) : ?>
 		}
 	}
 
-	// Group type selection
+	// Group type selection.
 	if ( $group_types ) :
 		?>
 		<fieldset class="group-create-types">
@@ -194,19 +202,19 @@ if ( bp_is_group_create() ) : ?>
 
 			<p class="group-setting-label" tabindex="0"><?php esc_html_e( 'What type of group is this? (optional)', 'buddyboss' ); ?></p>
 			<select id="bp-groups-type" name="group-types[]" autocomplete="off">
-				<option value="" <?php selected( '', '' ); ?>><?php _e( 'Select Group Type', 'buddyboss' ); ?></option>
+				<option value="" <?php selected( '', '' ); ?>><?php esc_html_e( 'Select Group Type', 'buddyboss' ); ?></option>
 				<?php
-				foreach ( $group_types as $type ) :
+				foreach ( $group_types as $group_type ) :
 
-					$option = sprintf(
+					$group_option = sprintf(
 						'<option for="%1$s" value="%2$s" %3$s>%4$s</option>',
 						sprintf(
 							'group-type-%s',
-							$type->name
+							$group_type->name
 						),
-						esc_attr( $type->name ),
-						selected( ( true === bp_groups_has_group_type( bp_get_current_group_id(), $type->name ) ) ? $type->name : '', $type->name, false ),
-						esc_html( $type->labels['singular_name'] )
+						esc_attr( $group_type->name ),
+						selected( ( true === bp_groups_has_group_type( bp_get_current_group_id(), $group_type->name ) ) ? $group_type->name : '', $group_type->name, false ),
+						esc_html( $group_type->labels['singular_name'] )
 					);
 
 					if ( false === bp_restrict_group_creation() && true === bp_member_type_enable_disable() ) {
@@ -223,20 +231,20 @@ if ( bp_is_group_create() ) : ?>
 								$include_group_type  = get_post_meta( $member_type_post_id, '_bp_member_type_enabled_group_type_create', true );
 
 								if ( ! empty( $include_group_type ) ) {
-									if ( in_array( $type->name, $include_group_type ) ) {
-										print $option;
+									if ( in_array( $group_type->name, $include_group_type, true ) ) {
+										echo wp_kses_post( $group_option );
 									}
 								} else {
-									print $option;
+									echo wp_kses_post( $group_option );
 								}
 							} else {
-								print $option;
+								echo wp_kses_post( $group_option );
 							}
 						} else {
-							print $option;
+							echo wp_kses_post( $group_option );
 						}
 					} else {
-						print $option;
+						echo wp_kses_post( $group_option );
 					}
 				endforeach;
 				?>
@@ -253,12 +261,12 @@ if ( bp_is_group_create() ) : ?>
 			<legend><?php esc_html_e( 'Group Parent', 'buddyboss' ); ?></legend>
 			<p class="group-setting-label" tabindex="0"><?php esc_html_e( 'Which group should be the parent of this group? (optional)', 'buddyboss' ); ?></p>
 			<select id="bp-groups-parent" name="bp-groups-parent" autocomplete="off">
-				<option value="0" <?php selected( 0, $current_parent_group_id ); ?>><?php _e( 'Select Parent', 'buddyboss' ); ?></option>
+				<option value="0" <?php selected( 0, $current_parent_group_id ); ?>><?php esc_html_e( 'Select Parent', 'buddyboss' ); ?></option>
 				<?php
 				if ( $possible_parent_groups ) {
 					foreach ( $possible_parent_groups as $possible_parent_group ) {
 						?>
-						<option value="<?php echo $possible_parent_group->id; ?>" <?php selected( $current_parent_group_id, $possible_parent_group->id ); ?>><?php echo esc_html( $possible_parent_group->name ); ?></option>
+						<option value="<?php echo esc_attr( $possible_parent_group->id ); ?>" <?php selected( $current_parent_group_id, $possible_parent_group->id ); ?>><?php echo esc_html( $possible_parent_group->name ); ?></option>
 						<?php
 					}
 				}
