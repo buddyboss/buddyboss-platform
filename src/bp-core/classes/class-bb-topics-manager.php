@@ -2317,4 +2317,15 @@ class BB_Topics_Manager {
 			exit;
 		}
 	}
+
+	/**
+	 * Get the topic slug from the URL.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	public function bb_get_topic_slug_from_url() {
+		$topic_slug = isset( $_REQUEST['bb-topic'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['bb-topic'] ) ) : '';
+
+		return $topic_slug;
+	}
 }

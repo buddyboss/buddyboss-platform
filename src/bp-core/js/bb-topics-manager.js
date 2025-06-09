@@ -902,7 +902,9 @@ window.bp = window.bp || {};
 
 				this.$document.on( 'click', '.activity-topic-selector li a', this.topicActivityFilter.bind( this ) );
 
-				this.$document.ready( this.handleUrlHashTopic.bind( this ) );
+				if ( undefined !== BP_Nouveau.is_send_ajax_request && '1' === BP_Nouveau.is_send_ajax_request ) {
+					this.$document.ready( this.handleUrlHashTopic.bind( this ) );
+				}
 
 				this.$document.on( 'click', '.bb-topic-url', this.topicActivityFilter.bind( this ) );
 
