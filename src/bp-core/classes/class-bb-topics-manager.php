@@ -1730,6 +1730,30 @@ class BB_Topics_Manager {
 			if ( is_wp_error( $result ) ) {
 				wp_send_json_error( array( 'error' => $result->get_error_message() ) );
 			}
+
+			// Add topic history when topic is migrated.
+			if (
+				! empty( $old_topic_id ) &&
+				! empty( $new_topic_id ) &&
+				! empty( $item_type )
+			) {
+				$old_topic_data = $this->bb_get_topic_by( 'id', $old_topic_id );
+				$old_topic_slug = ! empty( $old_topic_data ) ? $old_topic_data->slug : '';
+				$new_topic_data = $this->bb_get_topic_by( 'id', $new_topic_id );
+				$new_topic_slug = ! empty( $new_topic_data ) ? $new_topic_data->slug : '';
+
+				$this->bb_add_topic_history(
+					array(
+						'item_id'        => $item_id,
+						'item_type'      => $item_type,
+						'old_topic_id'   => $old_topic_id,
+						'old_topic_slug' => $old_topic_slug,
+						'new_topic_id'   => $new_topic_id,
+						'new_topic_slug' => $new_topic_slug,
+						'action'         => 'migrate',
+					)
+				);
+			}
 		}
 
 		/**
@@ -2241,7 +2265,7 @@ class BB_Topics_Manager {
 						   WHERE BINARY old_topic_slug = @current_slug 
 						   AND item_id = %d 
 						   AND item_type = %s 
-						   AND action = 'rename'
+						   AND action IN ( 'rename', 'migrate' )
 						   ORDER BY date_created DESC 
 						   LIMIT 1
 					   )
