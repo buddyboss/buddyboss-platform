@@ -1,11 +1,17 @@
 <?php
 /**
- * Template for displaying the search results of the folder
+ * ReadyLaunch - Search Loop Folder template.
  *
- * @package BuddyBoss\Core
- * @since   BuddyBoss [BBVERSION]
+ * The template for search results for folders.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 $folder_link             = bp_get_folder_folder_link();
 $folder_id               = bp_get_folder_folder_id();

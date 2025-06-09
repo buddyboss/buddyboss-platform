@@ -1,11 +1,17 @@
 <?php
 /**
- * Template for displaying the search results of the message ajax
+ * ReadyLaunch - Search Loop Message AJAX template.
  *
- * @package BuddyBoss\Core
- * @since   BuddyBoss [BBVERSION]
+ * The template for AJAX search results for messages.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 global $current_message; ?>
 <div class="bp-search-ajax-item bp-search-ajax-item_ajax">

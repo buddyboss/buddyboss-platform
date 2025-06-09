@@ -1,10 +1,17 @@
 <?php
 /**
+ * ReadyLaunch - Search Loop Activity template.
+ *
  * The template for search results for the activity.
  *
- * @package BuddyBoss\Core
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 ?>
 

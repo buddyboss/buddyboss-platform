@@ -1,11 +1,17 @@
 <?php
 /**
- * Template for displaying the search results of the reply ajax
+ * ReadyLaunch - Search Loop Reply AJAX template.
  *
- * @package BuddyBoss\Core
- * @since   BuddyBoss [BBVERSION]
+ * The template for AJAX search results for replies.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 $reply_id = get_the_ID();
 ?>

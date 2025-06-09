@@ -1,11 +1,17 @@
 <?php
 /**
- * Template for displaying the search results of the document
+ * ReadyLaunch - Search Loop Document template.
  *
- * @package BuddyBoss\Core
- * @since   BuddyBoss [BBVERSION]
+ * Template for displaying the search results of documents.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 $listing_class       = '';
 $attachment_id       = bp_get_document_attachment_id();

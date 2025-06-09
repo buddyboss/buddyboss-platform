@@ -1,11 +1,17 @@
 <?php
 /**
- * Template for displaying the search results of the videos ajax
+ * ReadyLaunch - Search Loop Videos AJAX template.
  *
- * @package BuddyBoss\Core
- * @since   BuddyBoss [BBVERSION]
+ * The template for AJAX search results for videos.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 $listing_class = '';
 $attachment_id = bp_get_video_attachment_id();

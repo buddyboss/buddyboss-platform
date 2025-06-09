@@ -1,15 +1,17 @@
 <?php
 /**
- * Template for displaying the search results of the page
+ * ReadyLaunch - Search Results Page template.
  *
- * the template file to display search result page having buddypress container
- * dont make changes to this file,
- * instead create a folder 'buddyboss-global-search' inside your theme, copy this file over there, and make changes there
+ * Template for displaying the search results page with BuddyPress container.
  *
- * @package BuddyBoss\Core
- * @since   BuddyBoss [BBVERSION]
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 $post_title = '';
 

@@ -1,11 +1,17 @@
 <?php
 /**
- * Template for displaying the search results of the lessons ajax
+ * ReadyLaunch - Search Loop SFWD Lessons AJAX template.
  *
- * @package BuddyBoss\Core
- * @since   BuddyBoss [BBVERSION]
+ * The template for AJAX search results for LearnDash lessons.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 $lessons_id         = get_the_ID();
 $total              = bp_search_get_total_topics_count( $lessons_id );

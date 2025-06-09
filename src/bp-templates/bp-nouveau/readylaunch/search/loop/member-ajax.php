@@ -1,11 +1,17 @@
 <?php
 /**
- * Template for displaying the search results of the member ajax
+ * ReadyLaunch - Search Loop Member AJAX template.
  *
- * @package BuddyBoss\Core
- * @since   BuddyBoss [BBVERSION]
+ * The template for AJAX search results for members.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 ?>
 <div class="bp-search-ajax-item bboss_ajax_search_member">
 	<a href="<?php echo esc_url( bp_get_member_permalink() ); ?>">

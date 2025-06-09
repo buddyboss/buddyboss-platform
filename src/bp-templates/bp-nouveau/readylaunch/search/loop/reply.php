@@ -1,11 +1,17 @@
 <?php
 /**
- * Template for displaying the search results of the reply
+ * ReadyLaunch - Search Loop Reply template.
  *
- * @package BuddyBoss\Core
- * @since   BuddyBoss [BBVERSION]
+ * The template for search results for replies.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 $reply_id = get_the_ID();
 $topic_id = bbp_get_reply_topic_id( $reply_id );

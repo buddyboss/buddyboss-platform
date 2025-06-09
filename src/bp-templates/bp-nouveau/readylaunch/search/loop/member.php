@@ -1,11 +1,17 @@
 <?php
 /**
- * Template for displaying the search results of the member
+ * ReadyLaunch - Search Loop Member template.
  *
- * @package BuddyBoss\Core
- * @since   BuddyBoss [BBVERSION]
+ * The template for search results for members.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 $member_user_id   = bp_get_member_user_id();
 $member_user_link = bp_get_member_permalink();

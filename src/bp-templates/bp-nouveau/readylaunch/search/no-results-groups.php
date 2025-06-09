@@ -1,10 +1,16 @@
 <?php
 /**
- * Template for displaying the search results of the no results groups
+ * ReadyLaunch - Search No Results Groups template.
  *
- * @package BuddyBoss\Core
- * @since   BuddyBoss [BBVERSION]
+ * Template for displaying when no group search results are found.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 esc_html_e( 'No groups found!', 'buddyboss' );

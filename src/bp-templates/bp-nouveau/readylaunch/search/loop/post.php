@@ -1,11 +1,17 @@
 <?php
 /**
- * Template for displaying the search results of the post
+ * ReadyLaunch - Search Loop Post template.
  *
- * @package BuddyBoss\Core
- * @since   BuddyBoss [BBVERSION]
+ * The template for search results for posts.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 $search_post_id = get_the_ID();
 $result         = bp_search_is_post_restricted( $search_post_id, get_current_user_id(), 'post' );

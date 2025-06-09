@@ -1,11 +1,17 @@
 <?php
 /**
- * Template for displaying the search results of the folder ajax
+ * ReadyLaunch - Search Loop Folder AJAX template.
  *
- * @package BuddyBoss\Core
- * @since   BuddyBoss [BBVERSION]
+ * The template for AJAX search results for folders.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 $folder_link             = bp_get_folder_folder_link();
 $document_folder_privacy = bp_get_document_folder_privacy();

@@ -1,9 +1,8 @@
 <?php
 /**
- * Template for displaying the search results of the no results
+ * ReadyLaunch - Search No Results template.
  *
- * This template displays a message when no search results are found.
- * It provides user feedback with an appropriate icon and message.
+ * Template for displaying when no search results are found.
  *
  * @package BuddyBoss\Template
  * @subpackage BP_Nouveau\ReadyLaunch

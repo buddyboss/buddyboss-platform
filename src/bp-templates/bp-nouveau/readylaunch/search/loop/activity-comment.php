@@ -1,10 +1,17 @@
 <?php
 /**
- * This template is used to print a single activity comment.
+ * ReadyLaunch - Search Loop Activity Comment template.
  *
- * @package BuddyBoss\Core
+ * The template for search results for activity comments.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 $bp_activity_user_link = bp_get_activity_user_link();
 $bp_activity_url       = bp_activity_get_permalink( bp_get_activity_id() );

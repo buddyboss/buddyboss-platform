@@ -1,11 +1,17 @@
 <?php
 /**
- * Template for displaying the search results of the forum ajax
+ * ReadyLaunch - Search Loop Forum AJAX template.
  *
- * @package BuddyBoss\Core
- * @since   BuddyBoss [BBVERSION]
+ * The template for AJAX search results for forums.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 $forum_id    = get_the_ID();
 $total       = bbp_get_forum_topic_count( $forum_id );

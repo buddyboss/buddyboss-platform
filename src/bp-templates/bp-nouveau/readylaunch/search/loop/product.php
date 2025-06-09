@@ -1,11 +1,17 @@
 <?php
 /**
- * Template for displaying the search results of the product
+ * ReadyLaunch - Search Loop Product template.
  *
- * @package BuddyBoss\Core
- * @since   BuddyBoss [BBVERSION]
+ * The template for search results for products.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 $product_id    = get_the_ID();
 $product       = wc_get_product( $product_id );

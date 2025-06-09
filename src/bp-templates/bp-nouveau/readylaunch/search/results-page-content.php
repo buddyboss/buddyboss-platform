@@ -1,14 +1,17 @@
 <?php
 /**
- * Template for displaying the search results of the page content
+ * ReadyLaunch - Search Results Page Content template.
  *
- * the template file to display content search result page
- * instead create a folder 'buddyboss-global-search' inside your theme, copy this file over there, and make changes there
+ * Template for displaying the search results page content.
  *
- * @package BuddyBoss\Core
- * @since   BuddyBoss [BBVERSION]
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 global $bb_rl_search_nav;
 

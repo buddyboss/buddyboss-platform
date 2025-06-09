@@ -1,11 +1,17 @@
 <?php
 /**
- * Template for displaying the search results of the topic ajax
+ * ReadyLaunch - Search Loop Topic AJAX template.
  *
- * @package BuddyBoss\Core
- * @since   BuddyBoss [BBVERSION]
+ * The template for AJAX search results for topics.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 $topic_id = get_the_ID();
 $total    = bbp_get_topic_reply_count( $topic_id );

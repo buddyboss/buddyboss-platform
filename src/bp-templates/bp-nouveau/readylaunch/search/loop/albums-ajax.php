@@ -1,10 +1,17 @@
 <?php
 /**
- * Albums search ajax Template
+ * ReadyLaunch - Search Loop Albums AJAX template.
  *
- * @package BuddyBoss\Core
+ * The template for AJAX search results for albums.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 global $media_album_template;
 $albums_link = bp_get_album_link();

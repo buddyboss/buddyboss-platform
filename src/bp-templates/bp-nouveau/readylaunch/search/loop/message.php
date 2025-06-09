@@ -1,11 +1,17 @@
 <?php
 /**
- * Template for displaying the search results of the message
+ * ReadyLaunch - Search Loop Message template.
  *
- * @package BuddyBoss\Core
+ * The template for search results for messages.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
  * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 global $current_message; ?>
 <li class="bp-search-item bp-search-item_message">

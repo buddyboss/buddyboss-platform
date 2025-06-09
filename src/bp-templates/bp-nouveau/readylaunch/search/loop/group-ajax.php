@@ -1,11 +1,17 @@
 <?php
 /**
- * Template for displaying the search results of the group ajax
+ * ReadyLaunch - Search Loop Group AJAX template.
  *
- * @package BuddyBoss\Core
- * @since   BuddyBoss [BBVERSION]
+ * The template for AJAX search results for groups.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 ?>
 <div class="bp-search-ajax-item bboss_ajax_search_group">
 	<a href="<?php echo esc_url( bp_get_group_permalink() ); ?>">
