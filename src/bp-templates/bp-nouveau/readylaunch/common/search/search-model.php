@@ -1,12 +1,18 @@
 <?php
 /**
- * Template for displaying the model search.
+ * ReadyLaunch - Search model template.
  *
- * @poackage BuddyBoss
+ * This template handles the search modal display and functionality
+ * for advanced search features across the platform.
  *
- * @since   BuddyBosss [BBVERSION]
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 ?>
 <button class="bb-rl-button bb-rl-button--secondaryOutline bb-rl-header-search">
 	<i class="bb-icons-rl-magnifying-glass"></i>

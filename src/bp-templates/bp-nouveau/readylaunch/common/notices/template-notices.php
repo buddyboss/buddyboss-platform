@@ -1,10 +1,18 @@
 <?php
 /**
- * ReadyLaunch - The template for BP Nouveau template notices template.
+ * ReadyLaunch - Template notices template.
  *
- * @since   BuddyBoss [BBVERSION]
+ * This template handles the display of system notices, messages,
+ * and feedback to users throughout the platform.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 ?>
 <aside class="<?php bp_nouveau_template_message_classes(); ?>">

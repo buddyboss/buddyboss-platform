@@ -1,11 +1,18 @@
 <?php
 /**
- * The template for BP Nouveau Component's members filters template
+ * ReadyLaunch - Member filters template.
  *
+ * This template handles filtering options for member directories
+ * including member type filters and sorting options.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
  * @since BuddyBoss [BBVERSION]
- *
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 // Check profile type enable?
 $is_member_type_enabled = bp_member_type_enable_disable();
@@ -39,7 +46,7 @@ if ( $is_member_type_enabled ) {
 				</label>
 				<div class="select-wrap">
 					<select id="bb-rl-member-type-order-by" data-bp-member-type-filter="members">
-						<option value=""><?php _e( 'All', 'buddyboss' ); ?></option>
+						<option value=""><?php esc_html_e( 'All', 'buddyboss' ); ?></option>
 						<?php
 						foreach ( $member_types as $member_type_id ) {
 							$type_name        = bp_get_member_type_key( $member_type_id );

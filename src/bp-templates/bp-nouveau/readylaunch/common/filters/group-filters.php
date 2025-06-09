@@ -1,11 +1,18 @@
 <?php
 /**
- * The template for BP Nouveau Component's groups filters template
+ * ReadyLaunch - Group filters template.
  *
+ * This template handles filtering options for group directories
+ * including type filters, status filters, and search functionality.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
  * @since BuddyBoss [BBVERSION]
- *
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 // Check group type enable?
 if ( false !== bp_disable_group_type_creation() ) {

@@ -1,10 +1,18 @@
 <?php
 /**
- * BuddyBoss ReadyLaunch Groups screens filters
+ * ReadyLaunch - Groups screens filters template.
  *
+ * This template handles the sorting filters for group activity streams
+ * providing options to sort by date, alphabetical, and other criteria.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
  * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 $avail_sorting_options = bb_get_enabled_activity_sorting_options();
 arsort( $avail_sorting_options );
@@ -24,7 +32,7 @@ if ( ! empty( $avail_sorting_options ) && in_array( 1, $avail_sorting_options, t
 	<div class="bb-subnav-filters-container bb-subnav-filters-filtering">
 		<?php $sorting_labels = bb_get_activity_sorting_options_labels(); ?>
 		<button class="subnav-filters-opener" aria-expanded="false" aria-controls="bb-subnav-filter-by">
-			<span class="selected"><?php echo strtolower( esc_html( $sorting_labels[ $default_selected ] ) ); ?></span>
+			<span class="selected"><?php echo esc_html( strtolower( $sorting_labels[ $default_selected ] ) ); ?></span>
 			<i class="bb-icon-l bb-icon-angle-down"></i>
 		</button>
 
