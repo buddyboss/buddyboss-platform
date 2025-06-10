@@ -1,3 +1,13 @@
+<?php
+/**
+ * BuddyBoss Media No Media Template
+ *
+ * @since BuddyBoss [BBVERSION]
+ * @version 1.0.0
+ */
+
+defined( 'ABSPATH' ) || exit;
+?>
 <aside class="bp-feedback bp-messages info">
     <span class="bp-icon" aria-hidden="true"></span>
     <p>
