@@ -4377,7 +4377,7 @@ window.bp = window.bp || {};
 							this.model.get( 'topics' ).topic_lists
 						) {
 							if (
-								!_.isUndefined(BP_Nouveau.activity.params.topics.bb_is_enabled_group_activity_topics) &&
+								!_.isUndefined( BP_Nouveau.activity.params.topics.bb_is_enabled_group_activity_topics ) &&
 								BP_Nouveau.activity.params.topics.bb_is_enabled_group_activity_topics
 							) {
 								Backbone.trigger( 'topic:update', this.model.get( 'topics' ) );
