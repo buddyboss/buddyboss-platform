@@ -23,6 +23,11 @@ if (
 	$readylaunch_instance->bb_rl_is_page_enabled_for_integration( 'courses' )
 ) {
 	$readylaunch_instance->bb_rl_courses_integration_page();
+} elseif ( $readylaunch_instance->bb_rl_is_memberpress_courses_page() ) {
+	$bb_rl_meprlms_template = BB_Readylaunch_Memberpress_Courses_Integration::bb_rl_meprlms_get_template();
+	if ( $bb_rl_meprlms_template ) {
+		load_template( $bb_rl_meprlms_template );
+	}
 } elseif ( have_posts() ) {
 	/* Start the Loop */
 	while ( have_posts() ) :

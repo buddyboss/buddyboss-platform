@@ -26,6 +26,10 @@ global $bb_rl_search_nav;
 
 <div id="secondary" class="bb-rl-left-panel widget-area" role="complementary">
 	<?php
+	if ( bb_is_readylaunch_enabled() && is_single() && class_exists( 'memberpress\courses\helpers\Courses' ) ) {
+		echo memberpress\courses\helpers\Courses::get_classroom_sidebar( $post );
+	}
+
 	if ( BB_Readylaunch::bb_is_group_admin() ) {
 		bp_get_template_part( 'groups/single/parts/admin-subnav' );
 	} elseif ( bp_is_user_settings() && bp_core_can_edit_settings() ) {
@@ -104,5 +108,6 @@ global $bb_rl_search_nav;
 			<?php
 		}
 	}
+
 	?>
 </div>
