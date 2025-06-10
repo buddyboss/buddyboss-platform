@@ -3433,6 +3433,10 @@ function bb_get_pro_label_notice( $type = 'default' ) {
 			(
 				'sso' === $type &&
 				version_compare( bb_platform_pro()->version, bb_pro_sso_version(), '<' )
+			) ||
+			(
+				'group_activity_topics' === $type &&
+				version_compare( bb_platform_pro()->version, bb_pro_group_activity_topics_version(), '<' )
 			)
 		)
 	) {
@@ -3501,6 +3505,10 @@ function bb_get_pro_fields_class( $type = 'default' ) {
 			(
 				'sso' === $type &&
 				version_compare( bb_platform_pro()->version, bb_pro_sso_version(), '<' )
+			) ||
+			(
+				'group_activity_topics' === $type &&
+				version_compare( bb_platform_pro()->version, bb_pro_group_activity_topics_version(), '<' )
 			)
 		)
 	) {
