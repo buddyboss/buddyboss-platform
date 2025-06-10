@@ -6051,7 +6051,12 @@ window.bp = window.bp || {};
 
 				if (
 					! _.isUndefined( BP_Nouveau.activity.params.topics ) &&
-					BP_Nouveau.activity.params.topics.topic_lists.length > 0 &&
+					(
+						! _.isUndefined( this.model.get( 'topics' ) ) &&
+						this.model.get( 'topics' ) &&
+						! _.isUndefined( this.model.get( 'topics' ).topic_lists ) &&
+						this.model.get( 'topics' ).topic_lists.length > 0
+					) &&
 					! _.isUndefined( BP_Nouveau.activity.params.topics.bb_is_enabled_activity_topics ) &&
 					BP_Nouveau.activity.params.topics.bb_is_enabled_activity_topics
 				) {
