@@ -312,22 +312,22 @@ class BB_Activity_Topics_Manager {
 	}
 
 	/**
-	 * Add or update an activity-topic relationship.
+	 * Add the activity topic relationship.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param array $args {
-	 *     Array of arguments for adding/updating an activity-topic relationship.
-	 *
+	 * @param array $args Array of args. {
 	 *     @type int    $topic_id    The ID of the topic.
 	 *     @type int    $activity_id The ID of the activity.
-	 *     @type string $component   The component name (e.g., 'activity', 'groups').
-	 *     @type int    $item_id     The ID of the item (e.g., group ID if component is 'groups').
+	 *     @type string $component   The component (default: 'activity').
+	 *     @type int    $item_id     The ID of the item (default: 0).
+	 *     @type string $error_type  The error type ('wp_error' or other, default: 'wp_error').
 	 * }
 	 *
-	 * @return int|WP_Error The ID of the relationship or WP_Error on failure.
+	 * @return int|WP_Error The ID of the inserted relationship on success, WP_Error on failure.
 	 */
 	public function bb_add_activity_topic_relationship( $args ) {
+		// Parse and validate arguments with defaults.
 		$r = bp_parse_args(
 			$args,
 			array(
@@ -353,12 +353,13 @@ class BB_Activity_Topics_Manager {
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
-		 * @param array $r The arguments used to add/update the relationship.
+		 * @param array $r The arguments used to add the relationship.
 		 */
 		do_action( 'bb_activity_topic_relationship_before_add', $r );
 
-		// Check if activity already has a topic assigned.
-		$existing = $this->wpdb->get_row( $this->wpdb->prepare( "SELECT id, topic_id FROM {$this->activity_topic_rel_table} WHERE activity_id = %d", $r['activity_id'] ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+		// Check if activity already has a topic assigned to prevent duplicates.
+		$table_name = $this->activity_topic_rel_table;
+		$existing   = $this->wpdb->get_row( $this->wpdb->prepare( "SELECT id, topic_id FROM `$table_name` WHERE activity_id = %d", $r['activity_id'] ) ); // phpcs:ignore WordPress.DB
 
 		if ( $existing ) {
 			// If the same topic is already assigned, return the existing relationship ID.
@@ -366,7 +367,7 @@ class BB_Activity_Topics_Manager {
 				return $existing->id;
 			}
 
-			// Update the existing relationship with the new topic.
+			// Update the existing relationship with the new topic instead of creating duplicate.
 			$updated = $this->wpdb->update(
 				$this->activity_topic_rel_table,
 				array(
@@ -380,6 +381,7 @@ class BB_Activity_Topics_Manager {
 				array( '%d' )
 			);
 
+			// Handle update errors.
 			if ( false === $updated ) {
 				$error_message = __( 'Failed to update activity-topic relationship.', 'buddyboss' );
 				if ( 'wp_error' === $r['error_type'] ) {
@@ -389,6 +391,7 @@ class BB_Activity_Topics_Manager {
 				wp_send_json_error( array( 'error' => $error_message ) );
 			}
 
+			// Get the updated relationship for hooks.
 			$get_activity_relationship = $this->bb_get_activity_topic_relationship( array( 'id' => $existing->id ) );
 
 			/**
@@ -405,7 +408,7 @@ class BB_Activity_Topics_Manager {
 			return $existing->id;
 		}
 
-		// Insert new relationship.
+		// Insert new relationship since none exists for this activity.
 		$inserted = $this->wpdb->insert(
 			$this->activity_topic_rel_table,
 			array(
@@ -419,6 +422,7 @@ class BB_Activity_Topics_Manager {
 			array( '%d', '%d', '%s', '%d', '%s', '%s' )
 		);
 
+		// Handle insert errors.
 		if ( ! $inserted ) {
 			$error_message = __( 'Failed to add activity-topic relationship.', 'buddyboss' );
 			if ( 'wp_error' === $r['error_type'] ) {
@@ -428,8 +432,10 @@ class BB_Activity_Topics_Manager {
 			wp_send_json_error( array( 'error' => $error_message ) );
 		}
 
+		// Get the ID of the newly inserted relationship.
 		$relationship_id = $this->wpdb->insert_id;
 
+		// Retrieve the complete relationship data for hooks.
 		$get_activity_relationship = $this->bb_get_activity_topic_relationship( array( 'id' => $relationship_id ) );
 
 		/**
@@ -650,9 +656,12 @@ class BB_Activity_Topics_Manager {
 			return null;
 		}
 
-		$where_sql = implode( ' AND ', $where_clauses );
+		$where_sql  = implode( ' AND ', $where_clauses );
+		$table_name = $this->activity_topic_rel_table;
 
-		return $this->wpdb->get_row( $this->wpdb->prepare( "SELECT * FROM {$this->activity_topic_rel_table} WHERE {$where_sql}", $where_values ), ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+		// Use prepare with proper placeholders for the dynamic WHERE conditions.
+		$query = "SELECT * FROM `$table_name` WHERE $where_sql";
+		return $this->wpdb->get_row( $this->wpdb->prepare( $query, $where_values ), ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 	}
 
 	/**
@@ -692,13 +701,13 @@ class BB_Activity_Topics_Manager {
 			return $querystring;
 		}
 
-		if ( ! isset( $_POST['topic_id'] ) ) {
+		if ( empty( $_POST['topic_id'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
 			return $querystring;
 		}
 
 		// Add topic id to querystring if it exists.
 		$querystring             = bp_parse_args( $querystring );
-		$querystring['topic_id'] = (int) sanitize_text_field( wp_unslash( $_POST['topic_id'] ) );
+		$querystring['topic_id'] = (int) sanitize_text_field( wp_unslash( $_POST['topic_id'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
 
 		return http_build_query( $querystring );
 	}
@@ -784,11 +793,11 @@ class BB_Activity_Topics_Manager {
 	 * @return string Modified query string.
 	 */
 	public function bb_activity_add_topic_id_to_query_string( $qs ) {
-		if ( empty( $_POST['topic_id'] ) ) {
+		if ( empty( $_POST['topic_id'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
 			return $qs;
 		}
 
-		$topic_id = (int) sanitize_text_field( wp_unslash( $_POST['topic_id'] ) );
+		$topic_id = (int) sanitize_text_field( wp_unslash( $_POST['topic_id'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
 		if ( $topic_id ) {
 			$qs .= '&topic_id=' . $topic_id;
 		}
@@ -945,16 +954,14 @@ class BB_Activity_Topics_Manager {
 		}
 
 		// Build and execute the query.
-		$query = $this->wpdb->prepare(
-			"SELECT {$select} 
-			FROM {$this->activity_topic_rel_table} atr 
-			LEFT JOIN {$this->wpdb->prefix}bb_topics t ON t.id = atr.topic_id 
-			WHERE atr.activity_id = %d 
-			LIMIT 1",
-			$activity_id
-		);
+		$activity_topic_table = $this->activity_topic_rel_table;
+		$topics_table         = $this->wpdb->prefix . 'bb_topics';
 
-		$result = $this->wpdb->$method( $query );
+		// Prepare the base query with proper table names.
+		$base_query = "SELECT %s FROM `$activity_topic_table` atr LEFT JOIN `$topics_table` t ON t.id = atr.topic_id WHERE atr.activity_id = %d LIMIT 1";
+
+		$query  = sprintf( $base_query, $select, $activity_id );
+		$result = $this->wpdb->$method( $query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
 		/**
 		 * Filters the activity topic data before returning.
@@ -1123,7 +1130,7 @@ class BB_Activity_Topics_Manager {
 	public function bb_get_activity_topic_from_url( $args ) {
 		$topic_slug = bb_topics_manager_instance()->bb_get_topic_slug_from_url();
 		if ( ! empty( $topic_slug ) ) {
-			$topic_data = bb_topics_manager_instance()->bb_get_topic_by( 'slug', $topic_slug );
+			$topic_data = bb_topics_manager_instance()->bb_get_topic_by( 'slug', urldecode( $topic_slug ) );
 			if ( ! empty( $topic_data ) && isset( $topic_data->id ) ) {
 				$args['topic_id'] = $topic_data->id;
 			}
