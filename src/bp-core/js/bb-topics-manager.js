@@ -1050,10 +1050,6 @@ window.bp = window.bp || {};
 					return hrefTopicSlug === topicSlug || dataSlug === topicSlug;
 				} );
 
-				console.log( 'topicSlug ' + topicSlug );
-				console.log( topicFilterATag );
-				console.log($topicLink );
-
 				if ( $topicLink.length ) {
 					// If we found a matching topic, trigger the filter.
 					$topicLink.trigger( 'click' );
