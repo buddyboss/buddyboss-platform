@@ -122,7 +122,7 @@ if ( function_exists( 'learndash_is_topic_accessable' ) ) {
 
                 <?php
                 /**
-                 * Display Topic Assignments - similar to BuddyBoss theme implementation
+                 * Display Topic Assignments
                  */
                 if ( function_exists( 'learndash_lesson_hasassignments' ) && learndash_lesson_hasassignments( $post ) && ! empty( $user_id ) ) :
                     $bypass_course_limits_admin_users = function_exists( 'learndash_can_user_bypass' ) ? learndash_can_user_bypass( $user_id, 'learndash_lesson_assignment' ) : false;
@@ -131,7 +131,7 @@ if ( function_exists( 'learndash_is_topic_accessable' ) ) {
                     
                     if ( ( $lesson_progression_enabled && $course_children_steps_completed ) || ! $lesson_progression_enabled || $bypass_course_limits_admin_users ) :
                         ?>
-                        <div class="bb-rl-topic-assignments">
+                        <div class="bb-rl-topic-assignments bb-rl-assignments-module">
                             <?php
                             /**
                              * Fires before the lesson assignment.
