@@ -678,10 +678,12 @@ class BB_Activity_Topics_Manager {
 			return $args;
 		}
 
-		$topic_id                     = $this->bb_get_activity_topic( (int) $args['id'], 'all' );
-		$args['topics']['topic_id']   = isset( $topic_id->topic_id ) ? $topic_id->topic_id : 0;
-		$args['topics']['topic_slug'] = isset( $topic_id->slug ) ? $topic_id->slug : '';
-		$args['topics']['topic_name'] = isset( $topic_id->name ) ? $topic_id->name : '';
+		$topic_id                   = $this->bb_get_activity_topic( (int) $args['id'], 'all' );
+		$args['topics']['topic_id'] = isset( $topic_id->topic_id ) ? $topic_id->topic_id : 0;
+		if ( ! empty( $args['topics']['topic_id'] ) ) {
+			$args['topics']['topic_slug'] = isset( $topic_id->slug ) ? $topic_id->slug : '';
+			$args['topics']['topic_name'] = isset( $topic_id->name ) ? $topic_id->name : '';
+		}
 
 		return $args;
 	}
