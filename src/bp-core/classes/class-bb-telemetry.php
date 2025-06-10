@@ -461,7 +461,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 						'per_page'    => 1,
 					)
 				);
-				if ( ! empty( $global_activity_topics_count['total'] ) ) {
+				if ( isset( $global_activity_topics_count['total'] ) ) {
 					$bb_telemetry_data['bb_topic_count'] = $global_activity_topics_count['total'];
 				}
 			}
