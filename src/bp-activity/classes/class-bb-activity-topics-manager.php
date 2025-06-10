@@ -827,10 +827,9 @@ class BB_Activity_Topics_Manager {
 		if (
 			bp_is_active( 'groups' ) &&
 			bp_is_group() &&
-			function_exists( 'bb_is_enabled_group_activity_topics' ) &&
 			function_exists( 'bb_get_group_activity_topics' )
 		) {
-			$topic_lists = bb_get_group_activity_topics( array( 'can_post' => true ) );
+			$topic_lists = function_exists( 'bb_is_enabled_group_activity_topics' ) && bb_is_enabled_group_activity_topics() ? bb_get_group_activity_topics( array( 'can_post' => true ) ) : array();
 		}
 
 		$strings['activity']['params']['topics']['bb_is_enabled_group_activity_topics'] = function_exists( 'bb_is_enabled_group_activity_topics' ) && bb_is_enabled_group_activity_topics();
