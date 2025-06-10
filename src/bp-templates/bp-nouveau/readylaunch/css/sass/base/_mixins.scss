@@ -81,7 +81,7 @@
 @mixin bb-rl-button--disabled {
 	background-color: var(--bb-rl-background-tertiary-color);
 	color: var(--bb-rl-text-disabled-color);
-	cursor: not-allowed;	
+	cursor: not-allowed;
 }
 
 @mixin bb-button-secondary-hover {

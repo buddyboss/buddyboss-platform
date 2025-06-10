@@ -120,6 +120,60 @@ if ( function_exists( 'learndash_is_topic_accessable' ) ) {
                     <?php the_content(); ?>
                 </div>
 
+                <?php
+                /**
+                 * Display Topic Assignments - similar to BuddyBoss theme implementation
+                 */
+                if ( function_exists( 'learndash_lesson_hasassignments' ) && learndash_lesson_hasassignments( $post ) && ! empty( $user_id ) ) :
+                    $bypass_course_limits_admin_users = function_exists( 'learndash_can_user_bypass' ) ? learndash_can_user_bypass( $user_id, 'learndash_lesson_assignment' ) : false;
+                    $course_children_steps_completed = function_exists( 'learndash_user_is_course_children_progress_complete' ) ? learndash_user_is_course_children_progress_complete( $user_id, $course_id, $post->ID ) : false;
+                    $lesson_progression_enabled = function_exists( 'learndash_lesson_progression_enabled' ) ? learndash_lesson_progression_enabled() : false;
+                    
+                    if ( ( $lesson_progression_enabled && $course_children_steps_completed ) || ! $lesson_progression_enabled || $bypass_course_limits_admin_users ) :
+                        ?>
+                        <div class="bb-rl-topic-assignments">
+                            <?php
+                            /**
+                             * Fires before the lesson assignment.
+                             *
+                             * @since 3.0.0
+                             *
+                             * @param int $post_id   Post ID.
+                             * @param int $course_id Course ID.
+                             * @param int $user_id   User ID.
+                             */
+                            do_action( 'learndash-lesson-assignment-before', get_the_ID(), $course_id, $user_id );
+
+                            if ( function_exists( 'learndash_get_template_part' ) ) {
+                                learndash_get_template_part(
+                                    'assignment/listing.php',
+                                    array(
+                                        'user_id' => $user_id,
+                                        'course_step_post' => $post,
+                                        'course_id' => $course_id,
+                                        'context' => 'topic',
+                                    ),
+                                    true
+                                );
+                            }
+
+                            /**
+                             * Fires after the lesson assignment.
+                             *
+                             * @since 3.0.0
+                             *
+                             * @param int $post_id   Post ID.
+                             * @param int $course_id Course ID.
+                             * @param int $user_id   User ID.
+                             */
+                            do_action( 'learndash-lesson-assignment-after', get_the_ID(), $course_id, $user_id );
+                            ?>
+                        </div>
+                        <?php
+                    endif;
+                endif;
+                ?>
+
                 <?php if ( ! empty( $quizzes ) ) : ?>
                     <div class="bb-rl-topic-quizzes">
                         <h3><?php esc_html_e( 'Topic Quizzes', 'buddyboss' ); ?></h3>
