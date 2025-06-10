@@ -2,17 +2,17 @@
 /**
  * LearnDash Single Quiz Template for ReadyLaunch
  *
- * @package BuddyBoss\Core
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @version 1.0.0
  * @since BuddyBoss [BBVERSION]
  */
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+defined( 'ABSPATH' ) || exit;
 
-// Ensure LearnDash functions are available
+// Ensure LearnDash functions are available.
 if ( ! class_exists( 'SFWD_LMS' ) || ! function_exists( 'learndash_get_course_id' ) ) {
-	// Fallback to default content if LearnDash functions aren't available
+	// Fallback to default content if LearnDash functions aren't available.
 	?>
 	<div class="bb-learndash-content-wrap">
 		<main class="bb-learndash-content-area">
@@ -72,8 +72,8 @@ if ( $lesson_id ) {
 					<div class="bb-rl-heading">
 						<div class="bb-rl-quiz-count">
 							<span class="bb-pages">
-								<?php echo LearnDash_Custom_Label::get_label( 'quiz' ); ?> <?php echo $current_quiz_no; ?>
-								<span class="bb-total"><?php esc_html_e( 'of', 'buddyboss' ); ?> <?php echo count( $quiz_urls ); ?></span>
+								<?php echo esc_html( LearnDash_Custom_Label::get_label( 'quiz' ) ); ?> <?php echo esc_html( $current_quiz_no ); ?>
+								<span class="bb-total"><?php esc_html_e( 'of', 'buddyboss' ); ?> <?php echo esc_html( count( $quiz_urls ) ); ?></span>
 							</span>
 						</div>
 						<div class="bb-rl-quiz-title">
@@ -104,28 +104,30 @@ if ( $lesson_id ) {
 									$status_text = esc_html__( 'In Progress', 'buddyboss' );
 								}
 								?>
-								<span class="bb-rl-status bb-rl-enrolled"><?php echo $status_text; ?></span>
+								<span class="bb-rl-status bb-rl-enrolled"><?php echo esc_html( $status_text ); ?></span>
 
 								<?php if ( $attempts_count > 0 ) : ?>
 									<div class="bb-rl-quiz-attempts">
 										<span class="bb-rl-attempts-count">
 											<?php
+											// translators: %d is the number of attempts.
 											printf(
 												esc_html__( 'Attempts: %d', 'buddyboss' ),
-												$attempts_count
+												esc_html( $attempts_count )
 											);
 											?>
 										</span>
 										<?php if ( $attempts_left > 0 ) : ?>
 											<span class="bb-rl-attempts-left">
 												<?php
+												// translators: %d is the number of attempts remaining.
 												printf(
 													esc_html__( '(%d remaining)', 'buddyboss' ),
-													$attempts_left
+													esc_html( $attempts_left )
 												);
 												?>
 											</span>
-										<?php elseif ( $attempts_left === 0 ) : ?>
+										<?php elseif ( 0 === $attempts_left ) : ?>
 											<span class="bb-rl-attempts-exhausted">
 												<?php esc_html_e( '(No attempts remaining)', 'buddyboss' ); ?>
 											</span>
@@ -143,11 +145,11 @@ if ( $lesson_id ) {
 					$show_content = true;
 					if ( function_exists( 'learndash_is_quiz_accessable' ) ) {
 						$quiz_access  = learndash_is_quiz_accessable( $user_id, $quiz_post, true, $course_id );
-						$show_content = ( $quiz_access === true );
+						$show_content = ( true === $quiz_access );
 					}
 
 					if ( $show_content ) {
-						echo apply_filters( 'the_content', $quiz_post->post_content );
+						echo wp_kses_post( apply_filters( 'the_content', $quiz_post->post_content ) );
 
 						// Show quiz content/form if available
 						if ( function_exists( 'learndash_get_template_part' ) ) {
@@ -182,7 +184,7 @@ if ( $lesson_id ) {
 							if ( false === strstr( $content, $shown_content_key ) ) {
 								$shortcode_out = do_shortcode( '[ld_navigation course_id="' . $course_id . '" user_id="' . $user_id . '" post_id="' . get_the_ID() . '"]' );
 								if ( ! empty( $shortcode_out ) ) {
-									echo $shortcode_out;
+									echo wp_kses_post( $shortcode_out );
 								}
 							}
 						} else {
@@ -193,27 +195,23 @@ if ( $lesson_id ) {
 					</div>
 					<div class="bb-rl-quiz-count">
 						<span class="bb-pages">
-							<?php echo LearnDash_Custom_Label::get_label( 'quiz' ); ?> <?php echo $current_quiz_no; ?>
-							<span class="bb-total"><?php esc_html_e( 'of', 'buddyboss' ); ?> <?php echo count( $quiz_urls ); ?></span>
+							<?php echo esc_html( LearnDash_Custom_Label::get_label( 'quiz' ) ); ?> <?php echo esc_html( $current_quiz_no ); ?>
+							<span class="bb-total"><?php esc_html_e( 'of', 'buddyboss' ); ?> <?php echo esc_html( count( $quiz_urls ) ); ?></span>
 						</span>
 					</div>
 					<div class="learndash_next_prev_link">
 						<?php
-						if ( isset( $pagination_urls['prev'] ) && $pagination_urls['prev'] != '' ) {
-							echo $pagination_urls['prev'];
+						if ( isset( $pagination_urls['prev'] ) && '' !== $pagination_urls['prev'] ) {
+							echo wp_kses_post( $pagination_urls['prev'] );
 						} else {
 							echo '<span class="prev-link empty-post"><i class="bb-icons-rl-caret-left"></i>' . esc_html__( 'Previous', 'buddyboss' ) . '</span>';
 						}
-						?>
-						<?php
+
+						$quiz_completed = ( function_exists( 'learndash_is_quiz_complete' ) ? learndash_is_quiz_complete( $user_id, $quiz_post->ID ) : false );
 						if (
 							isset( $pagination_urls['next'] ) &&
-							$pagination_urls['next'] != '' &&
-							(
-								function_exists( 'learndash_is_quiz_complete' ) ?
-								learndash_is_quiz_complete( $user_id, $quiz_post->ID ) :
-								false
-							)
+							'' !== $pagination_urls['next'] &&
+							$quiz_completed
 						) {
 							echo $pagination_urls['next'];
 						} else {

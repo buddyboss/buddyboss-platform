@@ -2,17 +2,17 @@
 /**
  * LearnDash Single Topic Template for ReadyLaunch
  *
- * @package BuddyBoss\Core
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @version 1.0.0
  * @since BuddyBoss [BBVERSION]
  */
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+defined( 'ABSPATH' ) || exit;
 
-// Ensure LearnDash functions are available
+// Ensure LearnDash functions are available.
 if ( ! class_exists( 'SFWD_LMS' ) || ! function_exists( 'learndash_get_course_id' ) ) {
-	// Fallback to default content if LearnDash functions aren't available
+	// Fallback to default content if LearnDash functions aren't available.
 	?>
 	<div class="bb-learndash-content-wrap">
 		<main class="bb-learndash-content-area">
@@ -56,7 +56,7 @@ $pagination_urls = bb_load_readylaunch()->learndash_helper()->bb_rl_custom_next_
 // Find lesson number
 $lesson_no = 1;
 foreach ( $lesson_list as $les ) {
-	if ( $les->ID == $lesson_id ) {
+	if ( $lesson_id === $les->ID ) {
 		break;
 	}
 	++$lesson_no;
@@ -65,7 +65,7 @@ foreach ( $lesson_list as $les ) {
 // Find topic number within the lesson
 $topic_no = 1;
 foreach ( $topics as $topic_item ) {
-	if ( $topic_item->ID == $post->ID ) {
+	if ( $post->ID === $topic_item->ID ) {
 		break;
 	}
 	++$topic_no;
@@ -89,9 +89,9 @@ if ( function_exists( 'learndash_is_topic_accessable' ) ) {
 					<div class="bb-rl-heading">
 						<div class="bb-rl-topic-count">
 							<span class="bb-pages">
-								<?php echo LearnDash_Custom_Label::get_label( 'lesson' ); ?> <?php echo $lesson_no; ?>,
-								<?php echo LearnDash_Custom_Label::get_label( 'topic' ); ?> <?php echo $topic_no; ?>
-								<span class="bb-total"><?php esc_html_e( 'of', 'buddyboss' ); ?> <?php echo count( $topics ); ?></span>
+								<?php echo esc_html( LearnDash_Custom_Label::get_label( 'lesson' ) ); ?> <?php echo esc_html( $lesson_no ); ?>,
+								<?php echo esc_html( LearnDash_Custom_Label::get_label( 'topic' ) ); ?> <?php echo esc_html( $topic_no ); ?>
+								<span class="bb-total"><?php esc_html_e( 'of', 'buddyboss' ); ?> <?php echo esc_html( count( $topics ) ); ?></span>
 							</span>
 						</div>
 						<div class="bb-rl-topic-title">
@@ -161,7 +161,7 @@ if ( function_exists( 'learndash_is_topic_accessable' ) ) {
 							if ( false === strstr( $content, $shown_content_key ) ) {
 								$shortcode_out = do_shortcode( '[ld_navigation course_id="' . $course_id . '" user_id="' . $user_id . '" post_id="' . get_the_ID() . '"]' );
 								if ( ! empty( $shortcode_out ) ) {
-									echo $shortcode_out;
+									echo wp_kses_post( $shortcode_out );
 								}
 							}
 						} else {
@@ -204,15 +204,15 @@ if ( function_exists( 'learndash_is_topic_accessable' ) ) {
 					</div>
 					<div class="bb-rl-topic-count">
 						<span class="bb-pages">
-							<?php echo LearnDash_Custom_Label::get_label( 'lesson' ); ?> <?php echo $lesson_no; ?>,
-							<?php echo LearnDash_Custom_Label::get_label( 'topic' ); ?> <?php echo $topic_no; ?>
-							<span class="bb-total"><?php esc_html_e( 'of', 'buddyboss' ); ?> <?php echo count( $topics ); ?></span>
+							<?php echo esc_html( LearnDash_Custom_Label::get_label( 'lesson' ) ); ?> <?php echo esc_html( $lesson_no ); ?>,
+							<?php echo esc_html( LearnDash_Custom_Label::get_label( 'topic' ) ); ?> <?php echo esc_html( $topic_no ); ?>
+							<span class="bb-total"><?php esc_html_e( 'of', 'buddyboss' ); ?> <?php echo esc_html( count( $topics ) ); ?></span>
 						</span>
 					</div>
 					<div class="learndash_next_prev_link">
 						<?php
-						if ( isset( $pagination_urls['prev'] ) && $pagination_urls['prev'] != '' ) {
-							echo $pagination_urls['prev'];
+						if ( isset( $pagination_urls['prev'] ) && '' !== $pagination_urls['prev'] ) {
+							echo wp_kses_post( $pagination_urls['prev'] );
 						} else {
 							echo '<span class="prev-link empty-post"><i class="bb-icons-rl-caret-left"></i>' . esc_html__( 'Previous', 'buddyboss' ) . '</span>';
 						}
@@ -222,16 +222,16 @@ if ( function_exists( 'learndash_is_topic_accessable' ) ) {
 							(
 								isset( $pagination_urls['next'] ) &&
 								apply_filters( 'learndash_show_next_link', learndash_is_topic_complete( $user_id, $post->ID ), $user_id, $post->ID ) &&
-								$pagination_urls['next'] != ''
+								'' !== $pagination_urls['next']
 							) ||
 							(
 								isset( $pagination_urls['next'] ) &&
-								$pagination_urls['next'] != '' &&
+								'' !== $pagination_urls['next'] &&
 								isset( $course_settings['course_disable_lesson_progression'] ) &&
-								$course_settings['course_disable_lesson_progression'] === 'on'
+								'on' === $course_settings['course_disable_lesson_progression']
 							)
 						) {
-							echo $pagination_urls['next'];
+							echo wp_kses_post( $pagination_urls['next'] );
 						} else {
 							echo '<span class="next-link empty-post">' . esc_html__( 'Next Topic', 'buddyboss' ) . '<i class="bb-icons-rl-caret-right"></i></span>';
 						}

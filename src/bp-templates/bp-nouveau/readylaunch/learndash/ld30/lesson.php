@@ -2,17 +2,17 @@
 /**
  * LearnDash Single Lesson Template for ReadyLaunch
  *
- * @package BuddyBoss\Core
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @version 1.0.0
  * @since BuddyBoss [BBVERSION]
  */
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+defined( 'ABSPATH' ) || exit;
 
-// Ensure LearnDash functions are available
+// Ensure LearnDash functions are available.
 if ( ! class_exists( 'SFWD_LMS' ) || ! function_exists( 'learndash_get_course_id' ) ) {
-	// Fallback to default content if LearnDash functions aren't available
+	// Fallback to default content if LearnDash functions aren't available.
 	?>
 	<div class="bb-learndash-content-wrap">
 		<main class="bb-learndash-content-area">
@@ -55,16 +55,16 @@ $pagination_urls         = bb_load_readylaunch()->learndash_helper()->bb_rl_cust
 
 $lesson_no = 1;
 foreach ( $lesson_list as $les ) {
-	if ( $les->ID == $post->ID ) {
+	if ( $les->ID === $post->ID ) {
 		break;
 	}
 	++$lesson_no;
 }
 
-// Define variables for course-steps module compatibility
+// Define variables for course-steps module compatibility.
 $logged_in                 = is_user_logged_in();
 $course_settings           = function_exists( 'learndash_get_setting' ) ? learndash_get_setting( $course_id ) : array();
-$all_quizzes_completed     = true; // Assume all quizzes are completed for now
+$all_quizzes_completed     = true; // Assume all quizzes are completed for now.
 $previous_lesson_completed = true;
 if ( function_exists( 'learndash_is_lesson_accessable' ) ) {
 	$previous_lesson_completed = learndash_is_lesson_accessable( $user_id, $post );
@@ -78,7 +78,7 @@ if ( function_exists( 'learndash_is_lesson_accessable' ) ) {
 				<header class="bb-rl-entry-header">
 					<div class="bb-rl-heading">
 						<div class="bb-rl-lesson-count">
-							<span class="bb-pages"><?php echo LearnDash_Custom_Label::get_label( 'lesson' ); ?> <?php echo $lesson_no; ?> <span class="bb-total"><?php esc_html_e( 'of', 'buddyboss' ); ?> <?php echo count( $lesson_list ); ?></span></span>
+							<span class="bb-pages"><?php echo esc_html( LearnDash_Custom_Label::get_label( 'lesson' ) ); ?> <?php echo esc_html( $lesson_no ); ?> <span class="bb-total"><?php esc_html_e( 'of', 'buddyboss' ); ?> <?php echo esc_html( count( $lesson_list ) ); ?></span></span>
 						</div>
 						<div class="bb-rl-lesson-title">
 							<h1 class="bb-rl-entry-title"><?php the_title(); ?></h1>
@@ -134,12 +134,12 @@ if ( function_exists( 'learndash_is_lesson_accessable' ) ) {
 						<button type="submit" class="bb-rl-mark-complete-button bb-rl-button bb-rl-button--brandFill bb-rl-button--small"><?php esc_html_e( 'Mark Complete', 'buddyboss' ); ?></button>
 					</div>
 					<div class="bb-rl-lesson-count">
-						<span class="bb-pages"><?php echo LearnDash_Custom_Label::get_label( 'lesson' ); ?> <?php echo $lesson_no; ?> <span class="bb-total"><?php esc_html_e( 'of', 'buddyboss' ); ?> <?php echo count( $lesson_list ); ?></span></span>
+						<span class="bb-pages"><?php echo esc_html( LearnDash_Custom_Label::get_label( 'lesson' ) ); ?> <?php echo esc_html( $lesson_no ); ?> <span class="bb-total"><?php esc_html_e( 'of', 'buddyboss' ); ?> <?php echo esc_html( count( $lesson_list ) ); ?></span></span>
 					</div>
 					<div class="learndash_next_prev_link">
 						<?php
-						if ( isset( $pagination_urls['prev'] ) && $pagination_urls['prev'] != '' ) {
-							echo $pagination_urls['prev'];
+						if ( isset( $pagination_urls['prev'] ) && '' !== $pagination_urls['prev'] ) {
+							echo wp_kses_post( $pagination_urls['prev'] );
 						} else {
 							echo '<span class="prev-link empty-post"><i class="bb-icons-rl-caret-left"></i>' . esc_html__( 'Previous', 'buddyboss' ) . '</span>';
 						}
@@ -149,16 +149,16 @@ if ( function_exists( 'learndash_is_lesson_accessable' ) ) {
 							(
 								isset( $pagination_urls['next'] ) &&
 								apply_filters( 'learndash_show_next_link', learndash_is_lesson_complete( $user_id, $post->ID ), $user_id, $post->ID ) &&
-								$pagination_urls['next'] != ''
+								'' !== $pagination_urls['next']
 							) ||
 							(
 								isset( $pagination_urls['next'] ) &&
-								$pagination_urls['next'] != '' &&
+								'' !== $pagination_urls['next'] &&
 								isset( $course_settings['course_disable_lesson_progression'] ) &&
-								$course_settings['course_disable_lesson_progression'] === 'on'
+								'on' === $course_settings['course_disable_lesson_progression']
 							)
 						) {
-							echo $pagination_urls['next'];
+							echo wp_kses_post( $pagination_urls['next'] );
 						} else {
 							echo '<span class="next-link empty-post">' . esc_html__( 'Next Lesson', 'buddyboss' ) . '<i class="bb-icons-rl-caret-right"></i></span>';
 						}
