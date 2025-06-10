@@ -235,6 +235,11 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			if ( class_exists( 'SFWD_LMS' ) ) {
 				require_once buddypress()->compatibility_dir . '/class-bb-readylaunch-learndash-helper.php';
 			}
+
+			if ( class_exists( 'memberpress\courses\helpers\Courses' ) ) {
+				require_once 'class-bb-readylaunch-memberpress-courses-integration.php';
+				BB_Readylaunch_Memberpress_Courses_Integration::instance();
+			}
 		}
 
 		/**
@@ -399,7 +404,8 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 						) &&
 						$this->bb_rl_is_page_enabled_for_integration( 'registration' )
 					) ||
-					$this->bb_rl_is_learndash_page() // Add check for LearnDash pages.
+					$this->bb_rl_is_learndash_page() || // Add check for LearnDash pages.
+					$this->bb_rl_is_memberpress_courses_page() // Add check for MemberPress Courses pages.
 				)
 			) {
 				return true;
@@ -631,6 +637,9 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					'filter_all' => esc_html__( 'All', 'buddyboss' ),
 				)
 			);
+
+			wp_enqueue_script( 'bp-select2' );
+			wp_enqueue_style( 'bp-select2' );
 		}
 
 		/**
@@ -2752,6 +2761,117 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			// Check if post type matches LearnDash lesson, topic, or quiz types.
 			if ( ! empty( $post_type ) && in_array( $post_type, $ld_lesson_topic_quiz_types, true ) ) {
 				return true;
+			}
+
+			return false;
+		}
+
+		/**
+		 * Check if current page is a memberpress courses page.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return bool True if current page is a memberpress courses page, false otherwise.
+		 */
+		public function bb_rl_is_memberpress_courses_page() {
+			if ( ! class_exists( 'memberpress\courses\helpers\Courses' ) ) {
+				return false;
+			}
+
+			// $courses_integration = bp_get_option( 'bb_rl_enabled_pages' )['courses'] ?? false;
+			// if ( ! $courses_integration ) {
+			// 	return false;
+			// }
+
+			global $post, $wp_query;
+
+			// Method 1: Use MemberPress's own detection methods (most reliable)
+			if ( isset( $post ) && is_a( $post, 'WP_Post' ) ) {
+				// Check if this is a course page using MemberPress helper
+				if (
+					class_exists( 'memberpress\courses\helpers\Courses' ) && 
+					method_exists( 'memberpress\courses\helpers\Courses', 'is_a_course' ) && 
+					memberpress\courses\helpers\Courses::is_a_course( $post )
+				) {
+					return true;
+				}
+
+				// Check if this is a lesson page using MemberPress helper  
+				if (
+					class_exists( 'memberpress\courses\helpers\Lessons' ) && 
+					method_exists( 'memberpress\courses\helpers\Lessons', 'is_a_lesson' ) && 
+					memberpress\courses\helpers\Lessons::is_a_lesson( $post )
+				) {
+					return true;
+				}
+			}
+
+			// Method 2: Check for course archive using URL patterns
+			if (
+				class_exists( 'memberpress\courses\helpers\Courses' ) && 
+				method_exists( 'memberpress\courses\helpers\Courses', 'get_permalink_base' )
+			) {
+				$courses_base = memberpress\courses\helpers\Courses::get_permalink_base();
+				if ( ! empty( $courses_base ) && isset( $_SERVER['REQUEST_URI'] ) ) {
+					$request_uri = sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) );
+					// Check if this is the courses archive page.
+					if ( strpos( $request_uri, '/' . $courses_base ) !== false ) {
+						return true;
+					}
+				}
+			}
+
+
+			// Method 3: Fallback to post type detection
+			$post_type = '';
+
+			// Check global $post first
+			if ( isset( $post ) && is_a( $post, 'WP_Post' ) && ! empty( $post->post_type ) ) {
+				$post_type = $post->post_type;
+			}
+
+			// Get post type using WordPress function
+			if ( empty( $post_type ) && function_exists( 'get_post_type' ) ) {
+				$current_post_type = get_post_type();
+				if ( ! empty( $current_post_type ) ) {
+					$post_type = $current_post_type;
+				}
+			}
+
+			// Check queried object
+			if ( empty( $post_type ) && is_object( $wp_query ) ) {
+				$queried_object = get_queried_object();
+				if ( $queried_object && isset( $queried_object->post_type ) && ! empty( $queried_object->post_type ) ) {
+					$post_type = $queried_object->post_type;
+				}
+			}
+
+			// Check query vars
+			if ( empty( $post_type ) && is_object( $wp_query ) && isset( $wp_query->query_vars['post_type'] ) && ! empty( $wp_query->query_vars['post_type'] ) ) {
+				$post_type = $wp_query->query_vars['post_type'];
+			}
+
+			// Method 4: Check against known MemberPress post types
+			if ( ! empty( $post_type ) && is_single() ) {
+				// Check if this is a course post type
+				if ( class_exists( 'memberpress\courses\models\Course' ) && memberpress\courses\models\Course::$cpt === $post_type ) {
+					return true;
+				}
+				
+				// Check if this is a lesson post type
+				if ( class_exists( 'memberpress\courses\models\Lesson' ) && memberpress\courses\models\Lesson::$cpt === $post_type ) {
+					return true;
+				}
+				
+				// Check if this is an assignment post type
+				if ( class_exists( 'memberpress\assignments\models\Assignment' ) && memberpress\assignments\models\Assignment::$cpt === $post_type ) {
+					return true;
+				}
+				
+				// Check if this is a quiz post type
+				if ( class_exists( 'memberpress\quizzes\models\Quiz' ) && memberpress\quizzes\models\Quiz::$cpt === $post_type ) {
+					return true;
+				}
 			}
 
 			return false;
