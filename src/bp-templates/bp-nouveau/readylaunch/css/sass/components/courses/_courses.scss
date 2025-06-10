@@ -132,6 +132,20 @@
 		.bb-rl-filter + .bb-rl-filter {
 			margin-left: var(--bb-rl-space-200);
 		}
+
+		@media screen and (max-width: $md) {
+			flex-flow: wrap;
+			justify-content: center;
+			gap: var(--bb-rl-space-100);
+
+			&::before {
+				display: none;
+			}
+
+			.bb-rl-filter + .bb-rl-filter {
+				margin-left: 0;
+			}
+		}
 	}
 }
 

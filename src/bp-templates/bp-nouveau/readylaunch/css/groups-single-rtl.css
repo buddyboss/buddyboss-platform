@@ -3871,6 +3871,37 @@ div#bp-group-message-content {
   color: var(--bb-rl-text-tertiary-color);
 }
 
+@media screen and (max-width: 992px) {
+  .bb-rl-container .bb-learndash-content-wrap {
+    padding-right: var(--bb-rl-space-200);
+    padding-left: var(--bb-rl-space-200);
+  }
+}
+
+@media screen and (max-width: 782px) {
+  .bb-rl-container .bb-learndash-content-wrap {
+    padding-right: 0;
+    padding-left: 0;
+  }
+}
+
+.bb-rl-ld-module-footer {
+  position: fixed;
+  bottom: 0;
+  padding: 12px 0;
+  background-color: var(--bb-rl-background-color);
+  width: calc(100% - 300px);
+  border-top: 1px solid var(--bb-rl-border-secondary-color);
+  z-index: 100;
+}
+
+@media screen and (max-width: 992px) {
+  .bb-rl-ld-module-footer {
+    width: 100%;
+    right: 0;
+  }
+}
+
 .bb-readylaunch-template {
   /* A sidebar-conditioned grid can be used on
     single profile or group screens. */
@@ -4003,6 +4034,20 @@ div#bp-group-message-content {
 
 .bb-rl-course-filters .component-filters .bb-rl-filter + .bb-rl-filter {
   margin-right: var(--bb-rl-space-200);
+}
+
+@media screen and (max-width: 800px) {
+  .bb-rl-course-filters .component-filters {
+    flex-flow: wrap;
+    justify-content: center;
+    gap: var(--bb-rl-space-100);
+  }
+  .bb-rl-course-filters .component-filters::before {
+    display: none;
+  }
+  .bb-rl-course-filters .component-filters .bb-rl-filter + .bb-rl-filter {
+    margin-right: 0;
+  }
 }
 
 .bb-rl-courses-grid {
@@ -4506,6 +4551,12 @@ div#bp-group-message-content {
   margin: var(--bb-rl-space-400) 0;
 }
 
+@media screen and (max-width: 992px) {
+  .bb-rl-learndash-course .bb-rl-entry-header {
+    padding: var(--bb-rl-space-300) var(--bb-rl-space-300);
+  }
+}
+
 .bb-rl-course-banner {
   gap: var(--bb-rl-space-600);
 }
@@ -4662,6 +4713,16 @@ div#bp-group-message-content {
   gap: var(--bb-rl-space-200);
 }
 
+@media screen and (max-width: 1200px) {
+  .bb-rl-course-banner {
+    flex-direction: column;
+    gap: var(--bb-rl-space-300);
+  }
+  .bb-rl-course-banner .bb-rl-course-overview-footer {
+    margin-top: var(--bb-rl-space-200);
+  }
+}
+
 .bb-rl-course-details {
   display: flex;
   gap: var(--bb-rl-space-200);
@@ -4690,6 +4751,14 @@ div#bp-group-message-content {
   font-size: 14px;
   font-weight: 600;
   color: var(--bb-rl-text-color);
+}
+
+@media screen and (max-width: 1200px) {
+  .bb-rl-course-details {
+    flex-flow: wrap;
+    justify-content: center;
+    gap: var(--bb-rl-space-400);
+  }
 }
 
 .bb-rl-course-join .btn-join {
@@ -4813,6 +4882,17 @@ div#bp-group-message-content {
 
 .bb-rl-course-content .bb-rl-course-content-sidebar {
   flex: 0 0 320px;
+}
+
+@media screen and (max-width: 1200px) {
+  .bb-rl-learndash-course .bb-rl-course-content {
+    flex-direction: column;
+  }
+  .bb-rl-learndash-course .bb-rl-course-content .bb-rl-course-content-sidebar {
+    max-width: 100%;
+    flex: 0 0 100%;
+    width: 100%;
+  }
 }
 
 .bb-rl-ld-lesson-list {
@@ -5089,16 +5169,6 @@ div#bp-group-message-content {
   margin-bottom: 0;
 }
 
-.bb-rl-learndash-lesson .bb-rl-lesson-footer {
-  position: fixed;
-  bottom: 0;
-  padding: 12px 0;
-  background-color: var(--bb-rl-background-color);
-  width: calc(100% - 300px);
-  border-top: 1px solid var(--bb-rl-border-secondary-color);
-  z-index: 100;
-}
-
 .single-sfwd-lessons .site.bb-readylaunch {
   background-color: var(--bb-rl-background-color);
 }
@@ -5108,24 +5178,6 @@ div#bp-group-message-content {
   background-color: var(--bb-rl-background-color);
 }
 
-.bb-rl-learndash-topic .bb-rl-topic-footer {
-  position: fixed;
-  bottom: 0;
-  padding: 12px 0;
-  background-color: var(--bb-rl-background-color);
-  width: calc(100% - 300px);
-  border-top: 1px solid var(--bb-rl-border-secondary-color);
-  z-index: 100;
-}
-
-.bb-rl-learndash-topic .bb-rl-topic-actions {
-  max-width: 800px;
-  margin: 0 auto;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
 .single-sfwd-topic .site.bb-readylaunch {
   background-color: var(--bb-rl-background-color);
 }
@@ -5133,24 +5185,6 @@ div#bp-group-message-content {
 .bb-learndash-content-wrap--topic {
   padding-bottom: 60px;
   background-color: var(--bb-rl-background-color);
-}
-
-.bb-rl-learndash-quiz .bb-rl-quiz-footer {
-  position: fixed;
-  bottom: 0;
-  padding: 12px 0;
-  background-color: var(--bb-rl-background-color);
-  width: calc(100% - 300px);
-  border-top: 1px solid var(--bb-rl-border-secondary-color);
-  z-index: 100;
-}
-
-.bb-rl-learndash-quiz .bb-rl-quiz-actions {
-  max-width: 800px;
-  margin: 0 auto;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
 }
 
 .single-sfwd-quiz .site.bb-readylaunch {

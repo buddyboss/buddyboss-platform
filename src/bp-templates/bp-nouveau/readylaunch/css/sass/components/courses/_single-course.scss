@@ -10,6 +10,10 @@
 		border: 1px solid var(--bb-rl-border-secondary-color);
 		border-radius: var(--bb-rl-radius-lg);
 		margin: var(--bb-rl-space-400) 0;
+
+		@media screen and (max-width: $lg) {
+			padding: var(--bb-rl-space-300) var(--bb-rl-space-300);
+		}
 	}
 }
 
@@ -166,6 +170,15 @@
 		flex-flow: wrap;
 		gap: var(--bb-rl-space-200);
 	}
+
+	@media screen and (max-width: $xl) {
+		flex-direction: column;
+		gap: var(--bb-rl-space-300);
+
+		.bb-rl-course-overview-footer {
+			margin-top: var(--bb-rl-space-200);
+		}
+	}
 }
 
 .bb-rl-course-details {
@@ -195,6 +208,12 @@
 			font-weight: 600;
 			color: var(--bb-rl-text-color);
 		}
+	}
+
+	@media screen and (max-width: $xl) {
+		flex-flow: wrap;
+		justify-content: center;
+		gap: var(--bb-rl-space-400);
 	}
 }
 
@@ -292,6 +311,22 @@
 
 	.bb-rl-course-content-sidebar {
 		flex: 0 0 320px;
+	}
+}
+
+.bb-rl-learndash-course {
+
+	.bb-rl-course-content {
+
+		@media screen and (max-width: $xl) {
+			flex-direction: column;
+
+			.bb-rl-course-content-sidebar {
+				max-width: 100%;
+				flex: 0 0 100%;
+				width: 100%;
+			}
+		}
 	}
 }
 

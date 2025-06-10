@@ -1,24 +1,3 @@
-.bb-rl-learndash-quiz {
-
-	.bb-rl-quiz-footer {
-		position: fixed;
-		bottom: 0;
-		padding: 12px 0;
-		background-color: var(--bb-rl-background-color);
-		width: calc(100% - 300px);
-		border-top: 1px solid var(--bb-rl-border-secondary-color);
-		z-index: 100;
-	}
-
-	.bb-rl-quiz-actions {
-		max-width: 800px;
-		margin: 0 auto;
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-	}
-}
-
 .single-sfwd-quiz {
 
 	.site.bb-readylaunch {

@@ -540,3 +540,34 @@
 		}
 	}
 }
+
+.bb-rl-container {
+
+	.bb-learndash-content-wrap {
+
+		@media screen and (max-width: $lg) {
+			padding-left: var(--bb-rl-space-200);
+			padding-right: var(--bb-rl-space-200);
+		}
+
+		@media screen and (max-width: 782px) {
+			padding-left: 0;
+			padding-right: 0;
+		}
+	}
+}
+
+.bb-rl-ld-module-footer {
+	position: fixed;
+	bottom: 0;
+	padding: 12px 0;
+	background-color: var(--bb-rl-background-color);
+	width: calc(100% - 300px);
+	border-top: 1px solid var(--bb-rl-border-secondary-color);
+	z-index: 100;
+
+	@media screen and (max-width: $lg) {
+		width: 100%;
+		left: 0;
+	}
+}
