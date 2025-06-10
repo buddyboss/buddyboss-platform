@@ -960,9 +960,8 @@ class BB_Activity_Topics_Manager {
 		// Prepare the base query with proper table names.
 		$base_query = "SELECT %s FROM `$activity_topic_table` atr LEFT JOIN `$topics_table` t ON t.id = atr.topic_id WHERE atr.activity_id = %d LIMIT 1";
 
-		// Use sprintf to inject the SELECT clause, then prepare with activity_id.
-		$query  = sprintf( $base_query, $select, '%d' );
-		$result = $this->wpdb->$method( $this->wpdb->prepare( $query, $activity_id ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+		$query  = sprintf( $base_query, $select, $activity_id );
+		$result = $this->wpdb->$method( $query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
 		/**
 		 * Filters the activity topic data before returning.
@@ -1131,7 +1130,7 @@ class BB_Activity_Topics_Manager {
 	public function bb_get_activity_topic_from_url( $args ) {
 		$topic_slug = bb_topics_manager_instance()->bb_get_topic_slug_from_url();
 		if ( ! empty( $topic_slug ) ) {
-			$topic_data = bb_topics_manager_instance()->bb_get_topic_by( 'slug', $topic_slug );
+			$topic_data = bb_topics_manager_instance()->bb_get_topic_by( 'slug', urldecode( $topic_slug ) );
 			if ( ! empty( $topic_data ) && isset( $topic_data->id ) ) {
 				$args['topic_id'] = $topic_data->id;
 			}
