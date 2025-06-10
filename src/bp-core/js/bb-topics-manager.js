@@ -1038,11 +1038,21 @@ window.bp = window.bp || {};
 			if ( topicSlug ) {
 				var topicFilterATag = $( '.activity-topic-selector li a' );
 				// Find the topic link with matching href or data attribute.
-				var $topicLink      = topicFilterATag.filter( function () {
-					var href     = $( this ).attr( 'href' ) || '';
+				var $topicLink = topicFilterATag.filter( function () {
+					var href = $( this ).attr( 'href' ) || '';
 					var dataSlug = $( this ).data( 'topic-slug' );
-					return href.includes( 'bb-topic=' + topicSlug ) || dataSlug === topicSlug;
+					
+					// Extract the topic value from href
+					var hrefMatch = href.match(/bb-topic=([^&]+)/);
+					var hrefTopicSlug = hrefMatch ? hrefMatch[1] : '';
+					
+					// Check for exact matches only
+					return hrefTopicSlug === topicSlug || dataSlug === topicSlug;
 				} );
+
+				console.log( 'topicSlug ' + topicSlug );
+				console.log( topicFilterATag );
+				console.log($topicLink );
 
 				if ( $topicLink.length ) {
 					// If we found a matching topic, trigger the filter.
@@ -1278,10 +1288,16 @@ window.bp = window.bp || {};
 			if ( topicSlug ) {
 				topicFilterATag = $( '.activity-topic-selector li a' );
 				// Find the topic link with matching href or data attribute.
-				var $topicLink  = topicFilterATag.filter( function () {
-					var href     = $( this ).attr( 'href' ) || '';
+				var $topicLink = topicFilterATag.filter( function () {
+					var href = $( this ).attr( 'href' ) || '';
 					var dataSlug = $( this ).data( 'topic-slug' );
-					return href.includes( 'bb-topic=' + topicSlug ) || dataSlug === topicSlug;
+					
+					// Extract the topic value from href
+					var hrefMatch = href.match(/bb-topic=([^&]+)/);
+					var hrefTopicSlug = hrefMatch ? hrefMatch[1] : '';
+					
+					// Check for exact matches only
+					return hrefTopicSlug === topicSlug || dataSlug === topicSlug;
 				} );
 
 				if ( $topicLink.length ) {

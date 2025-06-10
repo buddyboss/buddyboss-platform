@@ -5775,6 +5775,7 @@ h1.bb-advance-heading {
 
 .bb-hello-activity-topic-migrate.bb-modal-panel #bb-hello-title {
   font-size: 18px;
+  line-height: 1.2;
   color: #1d2327;
   width: calc(100% - 35px);
   overflow: hidden;
