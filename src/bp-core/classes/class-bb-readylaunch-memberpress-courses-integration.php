@@ -57,12 +57,12 @@ class BB_Readylaunch_Memberpress_Courses_Integration {
 	 */
 	public function __construct() {
 		// Constructor can be used for initialization if needed.
-		if ( function_exists( 'bb_meprlms_override_template' ) ) {
+		if ( bb_is_readylaunch_enabled() && function_exists( 'bb_meprlms_override_template' ) ) {
 			remove_filter( 'template_include', 'bb_meprlms_override_template', PHP_INT_MAX );
 		}
 
 		add_action( 'wp_head', array( $this, 'bb_rl_meprlms_add_script' ), 10 );
-		add_action( 'wp_enqueue_scripts', array( $this, 'dequeue_pro_frontend_styles' ), 20 );
+		//add_action( 'wp_enqueue_scripts', array( $this, 'dequeue_pro_frontend_styles' ), 20 );
 	}
 
 	/**

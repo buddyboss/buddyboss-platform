@@ -228,6 +228,9 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			// LearnDash integration.
 			add_filter( 'bp_is_sidebar_enabled_for_courses', array( $this, 'bb_is_sidebar_enabled_for_courses' ) );
 
+			// Common LMS stylesheets.
+			add_action( 'wp_enqueue_scripts', array( $this, 'bb_readylaunch_lms_enqueue_styles' ), 10 );
+
 			// LearnDash integration.
 			add_action( 'wp_enqueue_scripts', array( $this, 'bb_readylaunch_learndash_enqueue_styles' ), 10 );
 
@@ -235,6 +238,9 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			if ( class_exists( 'SFWD_LMS' ) ) {
 				require_once buddypress()->compatibility_dir . '/class-bb-readylaunch-learndash-helper.php';
 			}
+
+			// MemberPress Courses integration.
+			add_action( 'wp_enqueue_scripts', array( $this, 'bb_readylaunch_meprlms_enqueue_styles' ), 10 );
 
 			if ( class_exists( 'memberpress\courses\helpers\Courses' ) ) {
 				require_once 'class-bb-readylaunch-memberpress-courses-integration.php';
@@ -2280,6 +2286,25 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		}
 
 		/**
+		 * Enqueue LMS styles for ReadyLaunch.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 */
+		public function bb_readylaunch_lms_enqueue_styles() {
+			if ( ! bb_is_readylaunch_enabled() || ( ! class_exists( 'SFWD_LMS' ) && ! class_exists( 'memberpress\courses\helpers\Courses' ) )  ) {
+				return;
+			}
+
+			// Enqueue LearnDash ReadyLaunch styles.
+			wp_enqueue_style(
+				'bb-readylaunch-lms',
+				buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/css/lms.css',
+				array(),
+				bp_get_version()
+			);
+		}
+
+		/**
 		 * Enqueue LearnDash styles for ReadyLaunch.
 		 *
 		 * @since BuddyBoss [BBVERSION]
@@ -2309,6 +2334,42 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			wp_localize_script(
 				'bb-readylaunch-learndash-js',
 				'bbReadylaunchLearnDash',
+				array(
+					'courses_url' => home_url( '/courses/' ),
+				)
+			);
+		}
+
+		/**
+		 * Enqueue MemberPress Courses styles for ReadyLaunch.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 */
+		public function bb_readylaunch_meprlms_enqueue_styles() {
+			if ( ! bb_is_readylaunch_enabled() || ! class_exists( 'memberpress\courses\helpers\Courses' ) ) {
+				return;
+			}
+
+			// Enqueue MemberPress Courses ReadyLaunch styles.
+			wp_enqueue_style(
+				'bb-readylaunch-meprlms',
+				buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/css/meprlms.css',
+				array(),
+				bp_get_version()
+			);
+
+			// Enqueue our MemberPress Courses helper JavaScript.
+			wp_enqueue_script(
+				'bb-readylaunch-meprlms-js',
+				buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/js/bb-readylaunch-meprlms.js',
+				array( 'jquery' ),
+				bp_get_version(),
+				true
+			);
+
+			wp_localize_script(
+				'bb-readylaunch-meprlms-js',
+				'bbReadylaunchMeprlms',
 				array(
 					'courses_url' => home_url( '/courses/' ),
 				)
