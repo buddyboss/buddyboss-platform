@@ -3544,12 +3544,13 @@ input.search-query-input {
     display: block;
     width: 100%;
     text-align: center;
+    max-width: 350px;
+    margin: 15px auto 5px;
   }
   .whats-new-topic-selector .bb-topic-selector-button {
     width: 100%;
-    max-width: 220px;
+    max-width: 350px;
     justify-content: center;
-    margin: 15px auto 5px;
   }
   .whats-new-topic-selector .bb-topic-selector-list {
     top: 60px;
