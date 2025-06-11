@@ -729,6 +729,7 @@ function bp_nouveau_ajax_post_update() {
 				wp_send_json_error( array( 'message' => esc_html__( 'You do not have permission to post in this topic.', 'buddyboss' ) ) );
 			} elseif (
 				'group' === $object &&
+				bp_is_active( 'groups' ) &&
 				! empty( $item_id ) &&
 				function_exists( 'bb_can_user_post_to_group_activity_topic' ) &&
 				! bb_can_user_post_to_group_activity_topic( bp_loggedin_user_id(), $item_id, $topic_id )
