@@ -30,7 +30,7 @@ module.exports = function (grunt) {
 			'!bp-templates/bp-nouveau/readylaunch/js/cropper.js'
 		],
 
-		BP_EXCLUDED_MISC = [],
+		BP_EXCLUDED_MISC = ['!js/**'],
 
 		// SASS generated "Twenty*"" CSS files.
 		BP_SCSS_CSS_FILES = [
