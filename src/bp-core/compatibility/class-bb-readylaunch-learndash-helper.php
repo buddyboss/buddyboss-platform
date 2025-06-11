@@ -63,6 +63,7 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 		public function __construct() {
 			// Add pre_get_posts filter for course filtering.
 			add_action( 'pre_get_posts', array( $this, 'bb_rl_filter_courses_query' ) );
+			add_filter( 'learndash_lesson_row_class', array( $this, 'bb_rl_learndash_lesson_row_class' ), 10, 2 );
 		}
 
 		/**
@@ -815,6 +816,65 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 				</p>
 				<?php
 			}
+		}
+
+		/**
+		 * Add custom classes to lesson rows in LearnDash sidebar.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $lesson_class The existing lesson classes.
+		 * @param array  $lesson       The lesson object.
+		 *
+		 * @return string Modified lesson classes.
+		 */
+		public function bb_rl_learndash_lesson_row_class( $lesson_class, $lesson ) {
+			$current_post = get_post();
+
+			if ( ! $current_post || ! isset( $lesson['post']->ID ) ) {
+				return $lesson_class;
+			}
+
+			$add_current_class = false;
+
+			switch ( $current_post->post_type ) {
+				case 'sfwd-topic':
+					// If viewing a topic, check if this lesson is its parent.
+					$topic_lesson_id = learndash_get_setting( $current_post->ID, 'lesson' );
+					if ( isset( $lesson['post']->ID ) && (int) $lesson['post']->ID === (int) $topic_lesson_id ) {
+						$add_current_class = true;
+					}
+					break;
+
+				case 'sfwd-lessons':
+					// If viewing a lesson, check if this is the current lesson.
+					if ( isset( $lesson['post']->ID ) && (int) $lesson['post']->ID === (int) $current_post->ID ) {
+						$add_current_class = true;
+					}
+					break;
+
+				case 'sfwd-quiz':
+					$quiz_lesson_id = learndash_get_setting( $current_post->ID, 'lesson' );
+					$quiz_topic_id  = learndash_get_setting( $current_post->ID, 'topic' );
+
+					if ( $quiz_lesson_id ) {
+						if ( isset( $lesson['post']->ID ) && (int) $lesson['post']->ID === (int) $quiz_lesson_id ) {
+							$add_current_class = true;
+						}
+					} elseif ( $quiz_topic_id ) {
+						$topic_lesson_id = learndash_get_setting( $quiz_topic_id, 'lesson' );
+						if ( isset( $lesson['post']->ID ) && (int) $lesson['post']->ID === (int) $topic_lesson_id ) {
+							$add_current_class = true;
+						}
+					}
+					break;
+			}
+
+			if ( $add_current_class ) {
+				$lesson_class .= ' bb-rl-current-lesson';
+			}
+
+			return $lesson_class;
 		}
 	}
 
