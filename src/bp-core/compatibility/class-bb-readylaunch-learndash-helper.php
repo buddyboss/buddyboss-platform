@@ -2,8 +2,8 @@
 /**
  * ReadyLaunch LearnDash Helper Functions
  *
+ * @since   BuddyBoss [BBVERSION]
  * @package BuddyBoss\Core
- * @since BuddyBoss [BBVERSION]
  */
 
 // Exit if accessed directly.
@@ -52,6 +52,7 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 			if ( is_null( self::$_instance ) ) {
 				self::$_instance = new self();
 			}
+
 			return self::$_instance;
 		}
 
@@ -71,8 +72,8 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
-		 * @param int   $course_id The course ID.
-		 * @param array $lesson_list Array of lesson objects.
+		 * @param int   $course_id           The course ID.
+		 * @param array $lesson_list         Array of lesson objects.
 		 * @param array $course_quizzes_list Optional. Array of course quizzes.
 		 *
 		 * @return array Array of navigation URLs.
@@ -156,7 +157,7 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
-		 * @param array  $url_arr Array of URLs for navigation.
+		 * @param array  $url_arr     Array of URLs for navigation.
 		 * @param string $current_url Optional. Current URL (auto-detected if empty).
 		 *
 		 * @return array Array with 'next' and 'prev' HTML links.
@@ -172,17 +173,17 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 			// Get current URL if not provided.
 			if ( empty( $current_url ) ) {
 				$protocol    = is_ssl() ? 'https' : 'http';
-				$current_url = $protocol . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+				$current_url = isset( $_SERVER['HTTP_HOST'] ) && isset( $_SERVER['REQUEST_URI'] ) ? $protocol . '://' . wp_unslash( $_SERVER['HTTP_HOST'] ) . wp_unslash( $_SERVER['REQUEST_URI'] ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Data is only used for conditional and not further processed.
 			}
 
 			// Normalize current URL.
 			$current_url = trailingslashit( $current_url );
-			if ( ! parse_url( $current_url, PHP_URL_QUERY ) ) {
+			if ( ! wp_parse_url( $current_url, PHP_URL_QUERY ) ) {
 				$current_url = trailingslashit( $current_url );
 			}
 
 			// Find current URL in the array.
-			$key = array_search( urldecode( $current_url ), $url_arr );
+			$key = array_search( urldecode( $current_url ), $url_arr, true );
 
 			if ( false === $key ) {
 				return array(
@@ -193,7 +194,7 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 
 			$url_result        = array();
 			$keys              = array_keys( $url_arr );
-			$current_key_index = array_search( $key, $keys );
+			$current_key_index = array_search( $key, $keys, true );
 
 			// Get next URL.
 			$next = null;
@@ -215,10 +216,10 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 			$url_result['next'] = '';
 			if ( ! empty( $next ) && $last_element !== $current_url ) {
 				$url_result['next'] = sprintf(
+					/* translators: 1: Next URL, 2: Next text */
 					'<a href="%s" class="next-link" rel="next">%s<i class="bb-icons-rl-caret-right"></i></a>',
 					esc_url( $next ),
-					esc_html__( 'Next', 'buddyboss' ),
-					esc_attr__( 'Next', 'buddyboss' )
+					esc_html__( 'Next', 'buddyboss' )
 				);
 			}
 
@@ -226,9 +227,9 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 			$url_result['prev'] = '';
 			if ( ! empty( $prev ) && $last_element !== $prev ) {
 				$url_result['prev'] = sprintf(
+					/* translators: 1: Previous URL, 2: Previous text */
 					'<a href="%s" class="prev-link" rel="prev"><i class="bb-icons-rl-caret-left"></i> %s</a>',
 					esc_url( $prev ),
-					esc_attr__( 'Previous', 'buddyboss' ),
 					esc_html__( 'Previous', 'buddyboss' )
 				);
 			}
@@ -241,11 +242,11 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
-		 * @param int   $course_id The course ID.
-		 * @param array $lesson_list Array of lesson objects.
+		 * @param int   $course_id           The course ID.
+		 * @param array $lesson_list         Array of lesson objects.
 		 * @param array $course_quizzes_list Optional. Array of course quizzes.
 		 *
-		 * @return array Array of navigation URLs with completion status.
+		 * @return false|string Array of navigation URLs with completion status.
 		 */
 		public function bb_rl_ld_custom_continue_url_arr( $course_id, $lesson_list, $course_quizzes_list = array() ) {
 			$user_id = get_current_user_id();
@@ -256,7 +257,7 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 				if ( 'closed' === $course_price_type ) {
 					if ( function_exists( 'learndash_user_get_enrolled_courses' ) ) {
 						$user_courses = learndash_user_get_enrolled_courses( $user_id );
-						if ( ! in_array( $course_id, $user_courses ) ) {
+						if ( ! in_array( $course_id, $user_courses, true ) ) {
 							return get_permalink( $course_id );
 						}
 					}
@@ -276,8 +277,8 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 					$lesson_completed = ! empty( $course_progress[ $course_id ]['lessons'][ $lesson->ID ] ) && 1 === $course_progress[ $course_id ]['lessons'][ $lesson->ID ];
 
 					$lesson_url = function_exists( 'learndash_get_step_permalink' )
-					? learndash_get_step_permalink( $lesson->ID, $course_id )
-					: get_permalink( $lesson->ID );
+						? learndash_get_step_permalink( $lesson->ID, $course_id )
+						: get_permalink( $lesson->ID );
 
 					$navigation_urls[] = array(
 						'url'      => $lesson_url,
@@ -298,8 +299,8 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 								$topic_completed = ! empty( $course_progress[ $course_id ]['topics'][ $lesson->ID ][ $lesson_topic->ID ] ) && 1 === $course_progress[ $course_id ]['topics'][ $lesson->ID ][ $lesson_topic->ID ];
 
 								$topic_url = function_exists( 'learndash_get_step_permalink' )
-								? learndash_get_step_permalink( $lesson_topic->ID, $course_id )
-								: get_permalink( $lesson_topic->ID );
+									? learndash_get_step_permalink( $lesson_topic->ID, $course_id )
+									: get_permalink( $lesson_topic->ID );
 
 								$navigation_urls[] = array(
 									'url'      => $topic_url,
@@ -317,12 +318,12 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 											}
 
 											$quiz_completed = function_exists( 'learndash_is_quiz_complete' )
-											? learndash_is_quiz_complete( $user_id, $topic_quiz['post']->ID, $course_id )
-											: false;
+												? learndash_is_quiz_complete( $user_id, $topic_quiz['post']->ID, $course_id )
+												: false;
 
 											$quiz_url = function_exists( 'learndash_get_step_permalink' )
-											? learndash_get_step_permalink( $topic_quiz['post']->ID, $course_id )
-											: get_permalink( $topic_quiz['post']->ID );
+												? learndash_get_step_permalink( $topic_quiz['post']->ID, $course_id )
+												: get_permalink( $topic_quiz['post']->ID );
 
 											$navigation_urls[] = array(
 												'url'      => $quiz_url,
@@ -346,12 +347,12 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 								}
 
 								$quiz_completed = function_exists( 'learndash_is_quiz_complete' )
-								? learndash_is_quiz_complete( $user_id, $lesson_quiz['post']->ID, $course_id )
-								: false;
+									? learndash_is_quiz_complete( $user_id, $lesson_quiz['post']->ID, $course_id )
+									: false;
 
 								$quiz_url = function_exists( 'learndash_get_step_permalink' )
-								? learndash_get_step_permalink( $lesson_quiz['post']->ID, $course_id )
-								: get_permalink( $lesson_quiz['post']->ID );
+									? learndash_get_step_permalink( $lesson_quiz['post']->ID, $course_id )
+									: get_permalink( $lesson_quiz['post']->ID );
 
 								$navigation_urls[] = array(
 									'url'      => $quiz_url,
@@ -373,12 +374,12 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 						}
 
 						$quiz_completed = function_exists( 'learndash_is_quiz_complete' )
-						? learndash_is_quiz_complete( $user_id, $course_quiz['post']->ID, $course_id )
-						: false;
+							? learndash_is_quiz_complete( $user_id, $course_quiz['post']->ID, $course_id )
+							: false;
 
 						$quiz_url = function_exists( 'learndash_get_step_permalink' )
-						? learndash_get_step_permalink( $course_quiz['post']->ID, $course_id )
-						: get_permalink( $course_quiz['post']->ID );
+							? learndash_get_step_permalink( $course_quiz['post']->ID, $course_id )
+							: get_permalink( $course_quiz['post']->ID );
 
 						$navigation_urls[] = array(
 							'url'      => $quiz_url,
@@ -398,6 +399,7 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 
 			if ( ! empty( $incomplete_steps ) ) {
 				$first_incomplete = reset( $incomplete_steps );
+
 				return $first_incomplete['url'];
 			}
 
@@ -409,8 +411,8 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
-		 * @param int   $course_id The course ID.
-		 * @param array $lesson_list Array of lesson objects.
+		 * @param int   $course_id           The course ID.
+		 * @param array $lesson_list         Array of lesson objects.
 		 * @param array $course_quizzes_list Optional. Array of course quizzes.
 		 *
 		 * @return array Array of quiz URLs.
@@ -488,7 +490,7 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
-		 * @param array  $url_arr Array of quiz URLs.
+		 * @param array  $url_arr     Array of quiz URLs.
 		 * @param string $current_url Optional. Current URL (auto-detected if empty).
 		 *
 		 * @return int Current quiz number (1-based index).
@@ -640,10 +642,10 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 												bp_core_fetch_avatar(
 													array(
 														'item_id' => $user_id,
-														'width' => 48,
-														'height' => 48,
-														'type' => 'full',
-														'html' => true,
+														'width'   => 48,
+														'height'  => 48,
+														'type'    => 'full',
+														'html'    => true,
 													)
 												)
 											);
@@ -662,7 +664,7 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 							<span class="bb-rl-enrolled-count">
 								<?php
 								printf(
-									// translators: %d is the number of enrolled users.
+								// translators: %d is the number of enrolled users.
 									esc_html__( '%d+ Student enrolled', 'buddyboss' ),
 									intval( $enrolled_count )
 								);
@@ -775,10 +777,10 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 												bp_core_fetch_avatar(
 													array(
 														'item_id' => $user_id,
-														'width' => 48,
-														'height' => 48,
-														'type' => 'full',
-														'html' => true,
+														'width'   => 48,
+														'height'  => 48,
+														'type'    => 'full',
+														'html'    => true,
 													)
 												)
 											);
@@ -797,7 +799,7 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 							<span class="bb-rl-enrolled-count">
 								<?php
 								printf(
-									// translators: %d is the number of enrolled users.
+									/* translators: %d is the number of enrolled users. */
 									esc_html__( '%d+ Student enrolled', 'buddyboss' ),
 									intval( $enrolled_count )
 								);
@@ -820,6 +822,7 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 
 		/**
 		 * Add custom classes to lesson rows in LearnDash sidebar.
+		 * Adds bb-rl-current-lesson class for current lesson or parent lesson of current topic.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
