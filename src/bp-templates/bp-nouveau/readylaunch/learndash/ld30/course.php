@@ -188,13 +188,13 @@ $bb_rl_ld_helper = class_exists( 'BB_Readylaunch_Learndash_Helper' ) ? BB_Readyl
 										<div class="bb-rl-premium-price bb-rl-price-module">
 											<span class="bb-rl-price">
 												<span class="ld-currency"><?php echo wp_kses_post( $currency ); ?></span> 
-												<?php echo $trial_price; ?>
+												<?php echo esc_html( $trial_price ); ?>
 											</span>
 											<span class="bb-rl-price-meta">
 												<?php esc_html_e( 'Trial price for ', 'buddyboss' ); ?>
 												<span class="bb-rl-meta-trial">
-													<?php echo $course_price['trial_interval']; ?>
-													<?php echo $course_price['trial_frequency']; ?>
+													<?php echo esc_html( $course_price['trial_interval'] ); ?>
+													<?php echo esc_html( $course_price['trial_frequency'] ); ?>
 												</span>
 											</span>
 										</div>
@@ -206,8 +206,8 @@ $bb_rl_ld_helper = class_exists( 'BB_Readylaunch_Learndash_Helper' ) ? BB_Readyl
 											<span class="bb-rl-price-meta">
 												<?php esc_html_e( 'Full price every ', 'buddyboss' ); ?>
 												<span class="bb-rl-meta-trial">
-													<?php echo $course_price['interval']; ?>
-													<?php echo $course_price['frequency']; ?>
+													<?php echo esc_html( $course_price['interval'] ); ?>
+													<?php echo esc_html( $course_price['frequency'] ); ?>
 												</span>
 												<?php esc_html_e( 'afterward', 'buddyboss' ); ?>
 											</span>
@@ -244,7 +244,7 @@ $bb_rl_ld_helper = class_exists( 'BB_Readylaunch_Learndash_Helper' ) ? BB_Readyl
 								<?php } elseif ( ! $is_enrolled ) { ?>
 									<div class="bb-rl-course-join">
 										<?php
-										echo learndash_payment_buttons( $course );
+										echo wp_kses_post( learndash_payment_buttons( $course ) );
 										?>
 									</div>
 								<?php } else { ?>
@@ -578,13 +578,6 @@ $bb_rl_ld_helper = class_exists( 'BB_Readylaunch_Learndash_Helper' ) ? BB_Readyl
 							 */
 							do_action( 'learndash-course-content-list-before', $course_id, $user_id );
 
-							/**
-							 * Content listing
-							 *
-							 * @since 3.0.0
-							 *
-							 * ('listing.php');
-							 */
 							learndash_get_template_part(
 								'course/listing.php',
 								array(
@@ -653,4 +646,4 @@ $bb_rl_ld_helper = class_exists( 'BB_Readylaunch_Learndash_Helper' ) ? BB_Readyl
 			</div>
 		</aside>
 	<?php endif; ?>
-</div> 
+</div>
