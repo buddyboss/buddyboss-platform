@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 2.8.61\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2025-06-11 08:39:13+00:00\n"
+"POT-Creation-Date: 2025-06-11 08:58:01+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -275,7 +275,6 @@ msgstr ""
 #: bp-search/bp-search-functions.php:376
 #: bp-search/bp-search-settings.php:952
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/readylaunch/components/ReadyLaunchSettings.js:748
 msgid "Activity"
 msgstr ""
 
@@ -398,7 +397,6 @@ msgstr ""
 #: bp-activity/bp-activity-admin.php:269
 #: bp-activity/bp-activity-admin.php:883
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/readylaunch/components/ReadyLaunchSettings.js:1177
 msgid "Link"
 msgstr ""
 
@@ -549,7 +547,6 @@ msgstr ""
 #: bp-xprofile/classes/class-bp-xprofile-component.php:276
 #: bp-xprofile/classes/class-bp-xprofile-component.php:393
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/components/LinkItem.js:36
 msgid "Edit"
 msgstr ""
 
@@ -735,7 +732,6 @@ msgstr ""
 #: bp-xprofile/classes/class-bp-xprofile-field.php:1522
 #: bp-xprofile/classes/class-bp-xprofile-group.php:1000
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/components/LinkModal.js:105
 msgid "Cancel"
 msgstr ""
 
@@ -821,8 +817,6 @@ msgstr ""
 #: bp-activity/bp-activity-filters.php:3410
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:792
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/readylaunch/components/ReadyLaunchSettings.js:29
-#: js/admin/readylaunch/components/ReadyLaunchSettings.js:976
 msgid "Activity Feed"
 msgstr ""
 
@@ -1446,7 +1440,6 @@ msgstr ""
 #: bp-xprofile/classes/class-bp-xprofile-field-type-social-networks.php:300
 #: bp-xprofile/classes/class-bp-xprofile-field-type.php:417
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/components/LinkItem.js:43
 msgid "Delete"
 msgstr ""
 
@@ -3812,7 +3805,6 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/notifications/template-tags.php:121
 #: bp-templates/bp-nouveau/readylaunch/groups/single/admin/manage-members.php:135
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/readylaunch/components/ReadyLaunchSettings.js:533
 msgid "Apply"
 msgstr ""
 
@@ -3871,7 +3863,6 @@ msgstr ""
 #: bp-groups/classes/class-bp-groups-component.php:917
 #: bp-integrations/compatibility/bp-compatibility-integration.php:80
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/readylaunch/components/ReadyLaunchSettings.js:801
 msgid "Settings"
 msgstr ""
 
@@ -3931,7 +3922,6 @@ msgstr ""
 #: bp-forums/admin/settings.php:1652
 #: bp-search/bp-search-functions.php:362
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/readylaunch/components/ReadyLaunchSettings.js:915
 msgid "Pages"
 msgstr ""
 
@@ -4870,7 +4860,6 @@ msgstr ""
 #: bp-core/profile-search/bps-start.php:194
 #: bp-groups/bp-groups-admin.php:1512
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/readylaunch/components/ReadyLaunchSettings.js:458
 msgid "Remove"
 msgstr ""
 
@@ -5643,7 +5632,6 @@ msgstr ""
 #: bp-templates/bp-nouveau/readylaunch/common/js-templates/messages/parts/bp-messages-single-header.php:346
 #: bp-templates/bp-nouveau/readylaunch/members/index.php:30
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/readylaunch/components/ReadyLaunchSettings.js:16
 msgid "Members"
 msgstr ""
 
@@ -5672,7 +5660,6 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/customizer.php:196
 #: bp-video/classes/class-bp-video.php:735
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/readylaunch/components/ReadyLaunchSettings.js:1033
 msgid "Connections"
 msgstr ""
 
@@ -5721,8 +5708,6 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/groups/functions.php:123
 #: bp-templates/bp-nouveau/readylaunch/groups/index.php:25
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/readylaunch/components/ReadyLaunchSettings.js:47
-#: js/admin/readylaunch/components/ReadyLaunchSettings.js:762
 msgid "Groups"
 msgstr ""
 
@@ -6805,7 +6790,6 @@ msgstr ""
 #: bp-media/bp-media-filters.php:1407
 #: bp-templates/bp-nouveau/readylaunch/common/js-templates/messages/parts/bp-messages-right-panel.php:179
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/readylaunch/components/ReadyLaunchSettings.js:769
 msgid "Media"
 msgstr ""
 
@@ -6833,7 +6817,6 @@ msgstr ""
 #: bp-templates/bp-nouveau/readylaunch/header/messages-dropdown.php:30
 #: bp-templates/bp-nouveau/readylaunch/header/readylaunch-header.php:142
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/readylaunch/components/ReadyLaunchSettings.js:65
 msgid "Messages"
 msgstr ""
 
@@ -6842,7 +6825,6 @@ msgstr ""
 #: bp-moderation/bp-moderation-admin.php:70
 #: bp-moderation/bp-moderation-admin.php:71
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/readylaunch/components/ReadyLaunchSettings.js:776
 msgid "Moderation"
 msgstr ""
 
@@ -6865,7 +6847,6 @@ msgstr ""
 #: bp-templates/bp-nouveau/readylaunch/header/readylaunch-header.php:156
 #: bp-templates/bp-nouveau/readylaunch/members/single/notifications.php:19
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/readylaunch/components/ReadyLaunchSettings.js:76
 msgid "Notifications"
 msgstr ""
 
@@ -6907,7 +6888,6 @@ msgstr ""
 #: bp-xprofile/bp-xprofile-admin.php:29
 #: bp-xprofile/bp-xprofile-admin.php:30
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/readylaunch/components/ReadyLaunchSettings.js:755
 msgid "Profiles"
 msgstr ""
 
@@ -8159,7 +8139,6 @@ msgstr ""
 
 #: bp-core/bp-core-customizer-email.php:141
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/readylaunch/components/ReadyLaunchSettings.js:1108
 msgid "Header"
 msgstr ""
 
@@ -10000,7 +9979,6 @@ msgstr ""
 #: bp-core/classes/class-bb-group-about-widget.php:56
 #: bp-groups/classes/class-bb-group-readylaunch.php:198
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/readylaunch/components/ReadyLaunchSettings.js:1071
 msgid "About Group"
 msgstr ""
 
@@ -10022,7 +10000,6 @@ msgstr ""
 #: bp-templates/bp-nouveau/readylaunch/groups/single/messages/private-message.php:76
 #: bp-video/classes/class-bp-video.php:728
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/readylaunch/components/ReadyLaunchSettings.js:1078
 msgid "Group Members"
 msgstr ""
 
@@ -10286,8 +10263,6 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/groups/classes.php:346
 #: bp-templates/bp-nouveau/readylaunch/learndash/ld30/archive-sfwd-courses.php:24
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/readylaunch/components/ReadyLaunchSettings.js:17
-#: js/admin/readylaunch/components/ReadyLaunchSettings.js:939
 msgid "Courses"
 msgstr ""
 
@@ -10420,7 +10395,6 @@ msgstr ""
 
 #: bp-core/classes/class-bb-recent-blog-posts-widget.php:28
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/readylaunch/components/ReadyLaunchSettings.js:996
 msgid "Recent Blog Posts"
 msgstr ""
 
@@ -11334,7 +11308,6 @@ msgstr ""
 #: bp-templates/bp-nouveau/readylaunch/common/js-templates/activity/parts/bp-activity-post-case-privacy.php:23
 #: bp-templates/bp-nouveau/readylaunch/common/js-templates/activity/parts/bp-activity-post-form-privacy.php:54
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/readylaunch/components/ReadyLaunchSettings.js:1065
 msgid "Group"
 msgstr ""
 
@@ -14422,7 +14395,6 @@ msgstr ""
 #: bp-templates/bp-nouveau/readylaunch/video/create-album.php:30
 #: bp-templates/bp-nouveau/readylaunch/video/single-album.php:43
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/components/LinkModal.js:82
 msgid "Title"
 msgstr ""
 
@@ -14966,8 +14938,6 @@ msgstr ""
 
 #: bp-forums/admin/settings.php:1667
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/readylaunch/components/ReadyLaunchSettings.js:1100
-#: js/admin/readylaunch/components/Sidebar.js:22
 msgid "Menus"
 msgstr ""
 
@@ -20069,7 +20039,6 @@ msgstr ""
 #: bp-xprofile/classes/class-bp-xprofile-field.php:1300
 #: bp-xprofile/classes/class-bp-xprofile-group.php:881
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/components/LinkModal.js:111
 msgid "Save"
 msgstr ""
 
@@ -36538,467 +36507,372 @@ msgid "%1$s wrote a new post, %2$s"
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/readylaunch/components/Sidebar.js:7
 msgid "Activation Settings"
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/readylaunch/components/Sidebar.js:12
 msgid "Styles"
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/readylaunch/components/Sidebar.js:17
 msgid "Pages & Sidebars"
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/components/LinkModal.js:75
 msgid "Edit Link"
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/components/LinkModal.js:75
 msgid "Add Link"
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/components/LinkModal.js:86
 msgid "Type a title"
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/components/LinkModal.js:91
 msgid "URL"
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/components/LinkModal.js:95
 msgid "Paste link"
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/components/LinkModal.js:34
 msgid "Title is required"
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/components/LinkModal.js:40
 msgid "Please enter a valid URL"
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/components/LinkModal.js:38
 msgid "URL is required"
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/readylaunch/components/ReadyLaunchSettings.js:169
 msgid "Settings saved."
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/readylaunch/components/ReadyLaunchSettings.js:175
-#: js/admin/readylaunch/components/ReadyLaunchSettings.js:182
 msgid "Error saving settings."
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/readylaunch/components/ReadyLaunchSettings.js:408
 msgid "Select or Upload Media"
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/readylaunch/components/ReadyLaunchSettings.js:410
 msgid "Use this media"
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/readylaunch/components/ReadyLaunchSettings.js:451
 msgid "Replace"
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/readylaunch/components/ReadyLaunchSettings.js:505
 msgid "Select color"
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/readylaunch/components/ReadyLaunchSettings.js:1256
 msgid "Saving..."
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/readylaunch/components/ReadyLaunchSettings.js:666
 msgid "Loading settings..."
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/readylaunch/components/ReadyLaunchSettings.js:678
 msgid "ReadyLaunch is disabled"
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/readylaunch/components/ReadyLaunchSettings.js:679
 msgid "To enable ReadyLaunch and access its features, go to the Activation menu."
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/readylaunch/components/ReadyLaunchSettings.js:684
-#: js/admin/readylaunch/components/ReadyLaunchSettings.js:697
 msgid "Enable ReadyLaunch"
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/readylaunch/components/ReadyLaunchSettings.js:700
 msgid "Making <a>ReadyLaunch</a> your default style will override your WordPress Theme."
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/readylaunch/components/ReadyLaunchSettings.js:717
-#: js/admin/readylaunch/components/ReadyLaunchSettings.js:722
 msgid "Site Name"
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/readylaunch/components/ReadyLaunchSettings.js:723
 msgid "Appears in the browser title, search engine results, and possibly in the site header."
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/readylaunch/components/ReadyLaunchSettings.js:727
 msgid "Type your community/site title"
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/readylaunch/components/ReadyLaunchSettings.js:731
 msgid "This matches the WordPress Site Title. Updating it here will update it site-wide."
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/readylaunch/components/ReadyLaunchSettings.js:739
 msgid "Backend Settings"
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/readylaunch/components/ReadyLaunchSettings.js:749
 msgid "Control activity streams and user engagement settings."
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/readylaunch/components/ReadyLaunchSettings.js:756
 msgid "Manage profile fields, visibility, and user profile options."
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/readylaunch/components/ReadyLaunchSettings.js:763
 msgid "Configure group creation, privacy, and member roles."
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/readylaunch/components/ReadyLaunchSettings.js:770
 msgid "Enable or restrict user-uploaded media across the platform."
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/readylaunch/components/ReadyLaunchSettings.js:777
 msgid "Set rules and tools for reporting and content moderation."
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/readylaunch/components/ReadyLaunchSettings.js:815
 msgid "Style Settings"
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/readylaunch/components/ReadyLaunchSettings.js:816
 msgid "Customize your community's look with mode preferences, logos, and theme colors."
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/readylaunch/components/ReadyLaunchSettings.js:820
 msgid "Branding"
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/readylaunch/components/ReadyLaunchSettings.js:827
 msgid "Appearance"
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/readylaunch/components/ReadyLaunchSettings.js:828
 msgid "Enable or disable dark mode for your community, allowing users to choose or set it for them."
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/readylaunch/components/ReadyLaunchSettings.js:832
 msgid "Allow Dark Mode"
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/readylaunch/components/ReadyLaunchSettings.js:841
 msgid "Light Mode"
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/readylaunch/components/ReadyLaunchSettings.js:842
 msgid "Dark Mode"
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/readylaunch/components/ReadyLaunchSettings.js:843
 msgid "User Preference"
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/readylaunch/components/ReadyLaunchSettings.js:855
 msgid "Logo"
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/readylaunch/components/ReadyLaunchSettings.js:856
 msgid "Upload separate logos optimized for light and dark themes to ensure clear visibility."
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/readylaunch/components/ReadyLaunchSettings.js:860
 msgid "Logo (Light mode)"
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/readylaunch/components/ReadyLaunchSettings.js:863
 msgid "Recommended to use a dark-colored logo, 280x80 px, in JPG or PNG format."
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/readylaunch/components/ReadyLaunchSettings.js:868
 msgid "Logo (Dark mode)"
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/readylaunch/components/ReadyLaunchSettings.js:871
 msgid "Recommended to use a light-colored logo, 280x80 px, in JPG or PNG format."
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/readylaunch/components/ReadyLaunchSettings.js:881
 msgid "Theme Color"
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/readylaunch/components/ReadyLaunchSettings.js:882
 msgid "Set the primary color scheme for light and dark modes, used for buttons, links, and interactive elements."
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/readylaunch/components/ReadyLaunchSettings.js:887
 msgid "Primary Color (Light Mode)"
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/readylaunch/components/ReadyLaunchSettings.js:895
 msgid "Primary Color (Dark Mode)"
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/readylaunch/components/ReadyLaunchSettings.js:910
 msgid "Pages and Widgets Settings"
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/readylaunch/components/ReadyLaunchSettings.js:911
 msgid "Enable or disable page styles, and customize sidebar widgets for different sections of your community."
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/readylaunch/components/ReadyLaunchSettings.js:922
 msgid "Enable Pages"
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/readylaunch/components/ReadyLaunchSettings.js:923
 msgid "Enable pages that should have styles from ReadyLaunch."
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/readylaunch/components/ReadyLaunchSettings.js:930
 msgid "Login & Registration"
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/readylaunch/components/ReadyLaunchSettings.js:952
 msgid "No pages found"
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/readylaunch/components/ReadyLaunchSettings.js:954
 msgid "Enable the corresponding pages from your backend settings to manage them here with ReadyLaunch styles."
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/readylaunch/components/ReadyLaunchSettings.js:965
 msgid "Sidebar Widgets"
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/readylaunch/components/ReadyLaunchSettings.js:977
 msgid "Enable or disable widgets to appear on the activity feed."
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/readylaunch/components/ReadyLaunchSettings.js:982
-#: js/admin/readylaunch/components/ReadyLaunchSettings.js:1022
 msgid "Complete Profile"
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/readylaunch/components/ReadyLaunchSettings.js:989
 msgid "Latest Updates"
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/readylaunch/components/ReadyLaunchSettings.js:1003
 msgid "Active Members"
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/readylaunch/components/ReadyLaunchSettings.js:1016
 msgid "Member Profile"
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/readylaunch/components/ReadyLaunchSettings.js:1017
 msgid "Enable or disable widgets to appear on the member profile."
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/readylaunch/components/ReadyLaunchSettings.js:1048
 msgid "My Network (Follow, Followers)"
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/readylaunch/components/ReadyLaunchSettings.js:1066
 msgid "Enable or disable widgets to appear on the group single page."
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/readylaunch/components/ReadyLaunchSettings.js:1094
 msgid "Menu Settings"
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/readylaunch/components/ReadyLaunchSettings.js:1095
 msgid "Configure header, sidebar, and custom link menus to control navigation across your community."
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/readylaunch/components/ReadyLaunchSettings.js:1109
 msgid "Select a header menu for ReadyLaunch."
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/readylaunch/components/ReadyLaunchSettings.js:1115
 msgid "ReadyLaunch Menu"
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/readylaunch/components/ReadyLaunchSettings.js:1126
 msgid "Update your header menu from the <a>Menus</a> tab, where you'll find a dedicated ReadyLaunch header menu location."
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/readylaunch/components/ReadyLaunchSettings.js:1138
 msgid "Side"
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/readylaunch/components/ReadyLaunchSettings.js:1139
 msgid "Enable the options to appear in the left-side menu."
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/readylaunch/components/ReadyLaunchSettings.js:1178
 msgid "Add links to the link menu."
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/readylaunch/components/ReadyLaunchSettings.js:1211
 msgid "Add New Link"
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/readylaunch/components/ReadyLaunchSettings.js:1271
 msgid "Loading help content..."
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: js/admin/readylaunch/components/ReadyLaunchSettings.js:1304
 msgid "No help content available."
 msgstr ""
 
 #: bp-core/blocks/readylaunch-header/index.js:1
-#: js/blocks/bp-core/readylaunch-header/edit.js:34
 msgid "Header Settings"
 msgstr ""
 
 #: bp-core/blocks/readylaunch-header/index.js:1
-#: js/blocks/bp-core/readylaunch-header/edit.js:37
 msgid "Show Search"
 msgstr ""
 
 #: bp-core/blocks/readylaunch-header/index.js:1
-#: js/blocks/bp-core/readylaunch-header/edit.js:44
 msgid "Show Messages"
 msgstr ""
 
 #: bp-core/blocks/readylaunch-header/index.js:1
-#: js/blocks/bp-core/readylaunch-header/edit.js:51
 msgid "Show Notifications"
 msgstr ""
 
 #: bp-core/blocks/readylaunch-header/index.js:1
-#: js/blocks/bp-core/readylaunch-header/edit.js:57
 msgid "Show Profile Menu"
 msgstr ""
 
 #: bp-core/blocks/readylaunch-header/block.json
-#: js/blocks/bp-core/readylaunch-header/block.json
 msgctxt "block title"
 msgid "BB ReadyLaunch Header"
 msgstr ""
 
 #: bp-core/blocks/readylaunch-header/block.json
-#: js/blocks/bp-core/readylaunch-header/block.json
 msgctxt "block description"
 msgid "Use with page templates to add the BuddyBoss ReadyLaunch menu as a Block theme heading"
 msgstr ""
 
 #: bp-core/blocks/readylaunch-header/block.json
-#: js/blocks/bp-core/readylaunch-header/block.json
 msgctxt "block keyword"
 msgid "BuddyBoss"
 msgstr ""
 
 #: bp-core/blocks/readylaunch-header/block.json
-#: js/blocks/bp-core/readylaunch-header/block.json
 msgctxt "block keyword"
 msgid "Header"
 msgstr ""
 
 #: bp-core/blocks/readylaunch-header/block.json
-#: js/blocks/bp-core/readylaunch-header/block.json
 msgctxt "block keyword"
 msgid "ReadyLaunch"
 msgstr ""
 
 #: bp-core/blocks/readylaunch-header/block.json
-#: js/blocks/bp-core/readylaunch-header/block.json
 msgctxt "block keyword"
 msgid "BB"
 msgstr ""
 
 #: bp-core/blocks/readylaunch-header/block.json
-#: js/blocks/bp-core/readylaunch-header/block.json
 msgctxt "block keyword"
 msgid "Navigation"
 msgstr ""
