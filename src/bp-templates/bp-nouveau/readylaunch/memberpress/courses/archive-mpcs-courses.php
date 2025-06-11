@@ -30,7 +30,7 @@ if ( $pos > 0 ) {
 }
 
 ?>
-<div class="bb-rl-secondary-header flex items-center">
+<div class="bb-rl-secondary-header flex items-center bb-rl-secondary-header--mbprlms">
 	<div class="bb-rl-entry-heading">
 		<h1 class="bb-rl-page-title bb-rl-base-heading">
 			<?php
@@ -120,7 +120,7 @@ if ( $pos > 0 ) {
 </div>
 <div class="bb-rl-container-inner bb-rl-meprlms-content-wrap">	
 
-	<div class="bb-rl-courses-grid grid">
+	<div class="bb-rl-courses-grid grid bb-rl-courses-grid--mbprlms">
 
 		<?php
 		if ( have_posts() ) :
@@ -138,7 +138,7 @@ if ( $pos > 0 ) {
 				}
 				?>
 
-				<div class="bb-rl-course-card">
+				<div class="bb-rl-course-card bb-rl-course-card--mbprlms">
 					<div class="bb-rl-course-item">
 						<div class="bb-rl-course-image">
 							<?php if ( $course_is_locked ) { ?>
@@ -229,6 +229,55 @@ if ( $pos > 0 ) {
 									?>
 								<?php endif; ?>
 							</div>
+						</div>
+					</div>
+					<div class="bb-rl-course-card-popup">
+						<div class="bb-rl-course-timestamp">
+							<?php
+							$updated_date = get_the_modified_date();
+							// translators: %s is the updated date.
+							printf( esc_html__( 'Updated: %s', 'buddyboss' ), esc_html( $updated_date ) );
+							?>
+						</div>
+						<div class="bb-rl-course-popup-meta">
+							<?php
+							$total_lessons = 5;
+							?>
+							<span class="bb-rl-course-meta-tag"><?php echo esc_html( $total_lessons ); ?></span>
+							<span class="bb-rl-course-meta-tag"><?php esc_html_e( 'Beginner', 'buddyboss' ); ?></span>
+						</div>
+						<div class="bb-rl-course-popup-caption">
+							<?php the_excerpt(); ?>
+						</div>
+						<div class="bb-rl-course-author">
+							<h4><?php esc_html_e( 'Instructor', 'buddyboss' ); ?></h4>
+							<?php
+							$author_id   = get_the_author_meta( 'ID' );
+							$author_name = bp_core_get_user_displayname( $user_id );
+							?>
+							<span class="bb-rl-author-avatar">
+								<?php
+								echo bp_core_fetch_avatar(
+									array(
+										'item_id' => $user_id,
+										'html' => true,
+									)
+								);
+								?>
+							</span>
+							<span class="bb-rl-author-name"><?php echo esc_html( $author_name ); ?></span>
+						</div>
+						<div class="bb-rl-course-popup-actions">
+							<a href="<?php the_permalink(); ?>" class="bb-rl-course-link bb-rl-button bb-rl-button--brandFill bb-rl-button--small">
+								<i class="bb-icons-rl-play"></i>
+								<?php
+								if ( $is_enrolled ) {
+									esc_html_e( 'Continue', 'buddyboss' );
+								} else {
+									esc_html_e( 'View Course', 'buddyboss' );
+								}
+								?>
+							</a>
 						</div>
 					</div>
 				</div>

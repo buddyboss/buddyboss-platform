@@ -22,7 +22,7 @@ $current_category   = isset( $_GET['categories'] ) ? sanitize_text_field( wp_uns
 $current_instructor = isset( $_GET['instructors'] ) ? sanitize_text_field( wp_unslash( $_GET['instructors'] ) ) : '';
 ?>
 
-<div class="bb-rl-secondary-header flex items-center">
+<div class="bb-rl-secondary-header flex items-center bb-rl-secondary-header--ldlms">
 	<div class="bb-rl-entry-heading">
 		<h1 class="bb-rl-page-title bb-rl-base-heading">
 			<?php
@@ -152,7 +152,7 @@ $current_instructor = isset( $_GET['instructors'] ) ? sanitize_text_field( wp_un
 			<?php
 			if ( have_posts() ) :
 				?>
-				<div class="bb-rl-courses-grid grid">
+				<div class="bb-rl-courses-grid grid bb-rl-courses-grid--ldlms">
 					<?php
 					while ( have_posts() ) :
 						the_post();
@@ -199,7 +199,7 @@ $current_instructor = isset( $_GET['instructors'] ) ? sanitize_text_field( wp_un
 						$course_excerpt_in_listing = wp_trim_words( $course_excerpt, 10, '...' );
 						remove_filter( 'learndash_template_content_on_listing_is_hidden', '__return_false' );
 						?>
-						<div class="bb-rl-course-card">
+						<div class="bb-rl-course-card bb-rl-course-card--ldlms">
 							<article id="post-<?php the_ID(); ?>" <?php post_class( 'bb-rl-course-item' ); ?>>
 								<div class="bb-rl-course-image">
 									<a href="<?php the_permalink(); ?>">
