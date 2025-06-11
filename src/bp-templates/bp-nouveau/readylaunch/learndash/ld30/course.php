@@ -39,7 +39,14 @@ $course_slug     = isset( $ld_permalinks['courses'] ) ? $ld_permalinks['courses'
 $course_steps = learndash_get_course_steps( $course_id );
 $lessons      = learndash_get_course_lessons_list( $course_id );
 $lesson_count = array_column( $lessons, 'post' );
-$topic_count  = array_column( $course_steps, 'post' );
+$topics_count = count(
+	array_filter(
+		$course_steps,
+		function ( $step_id ) {
+			return get_post_type( $step_id ) === 'sfwd-topic';
+		}
+	)
+);
 
 // Essential variables for course content listing (from theme file).
 $post_data    = get_post( $course_id );
@@ -56,8 +63,8 @@ $has_access                 = sfwd_lms_has_access( $course_id, $user_id );
 $materials                  = $course_model->get_materials();
 $quizzes                    = learndash_get_course_quiz_list( $course_id, $user_id );
 $lesson_progression_enabled = learndash_lesson_progression_enabled( $course_id );
-$has_topics                 = $topic_count > 0;
-$course_pricing      		= learndash_get_course_price( $course_id );
+$has_topics                 = $topics_count > 0;
+$course_pricing             = learndash_get_course_price( $course_id );
 
 if ( ! empty( $lessons ) ) {
 	foreach ( $lessons as $lesson ) {
@@ -162,9 +169,9 @@ $bb_rl_ld_helper = class_exists( 'BB_Readylaunch_Learndash_Helper' ) ? BB_Readyl
 							</div>
 						</div>
 						<?php
-						$currency = function_exists( 'learndash_get_currency_symbol' ) ? learndash_get_currency_symbol() : learndash_30_get_currency_symbol();
-						$price    = $course_price['price'];
-						$trial_price = $course_price['trial_price'];
+						$currency    = function_exists( 'learndash_get_currency_symbol' ) ? learndash_get_currency_symbol() : learndash_30_get_currency_symbol();
+						$price       = $course_price['price'];
+						$trial_price = ! empty( $course_price['trial_price'] ) ? $course_price['trial_price'] : 0;
 						if ( ! $is_enrolled ) {
 							if ( 'free' === $course_price['type'] ) {
 								?>
@@ -175,12 +182,13 @@ $bb_rl_ld_helper = class_exists( 'BB_Readylaunch_Learndash_Helper' ) ? BB_Readyl
 									</div>
 									<?php
 							} elseif ( ! empty( $price ) ) {
-								if ( $course_price['trial_price'] ) { ?>
+								if ( $trial_price ) {
+									?>
 									<div class="bb-rl-composite-price">
 										<div class="bb-rl-premium-price bb-rl-price-module">
 											<span class="bb-rl-price">
 												<span class="ld-currency"><?php echo wp_kses_post( $currency ); ?></span> 
-												<?php echo $course_price['trial_price']; ?>
+												<?php echo $trial_price; ?>
 											</span>
 											<span class="bb-rl-price-meta">
 												<?php esc_html_e( 'Trial price for ', 'buddyboss' ); ?>
@@ -213,12 +221,13 @@ $bb_rl_ld_helper = class_exists( 'BB_Readylaunch_Learndash_Helper' ) ? BB_Readyl
 										</span>
 									</div>
 								<?php } ?>		
-							<?php
+								<?php
 							}
 						}
 						?>
 						<?php
-						if ( 'closed' === $course_pricing['type'] ) { ?>
+						if ( 'closed' === $course_pricing['type'] ) {
+							?>
 							<div class="bb-rl-course-status-label bb-rl-notice--plain bb-rl-notice--error">
 								<?php esc_html_e( 'This course is currently closed', 'buddyboss' ); ?>
 							</div>
@@ -226,8 +235,9 @@ $bb_rl_ld_helper = class_exists( 'BB_Readylaunch_Learndash_Helper' ) ? BB_Readyl
 
 						<div class="bb-rl-course-overview-footer">
 							<div class="bb-rl-course-action">
-								<?php 
-								if ( 'closed' === $course_pricing['type'] ) { ?>
+								<?php
+								if ( 'closed' === $course_pricing['type'] ) {
+									?>
 									<a href="#" class="bb-rl-course-action-button bb-rl-button bb-rl-button--secondaryFill bb-rl-button--small bb-rl-button--disabled">
 										<?php esc_html_e( 'Not Enrolled', 'buddyboss' ); ?>
 									</a>
@@ -442,14 +452,14 @@ $bb_rl_ld_helper = class_exists( 'BB_Readylaunch_Learndash_Helper' ) ? BB_Readyl
 								<div class="bb-rl-course-content-meta">
 									<div class="bb-rl-course-content-meta-item">
 										<span>
-											<?php echo esc_html( count( $lesson_count ) ); ?>
-											<?php esc_html_e( 'Lessons', 'buddyboss' ); ?>
-										</span>
+											<?php echo esc_html( $topics_count ); ?>
+											<?php esc_html_e( 'Topics', 'buddyboss' ); ?></span>
 									</div>
 									<div class="bb-rl-course-content-meta-item">
 										<span>
-											<?php echo esc_html( count( $topic_count ) ); ?>
-											<?php esc_html_e( 'Topics', 'buddyboss' ); ?></span>
+											<?php echo esc_html( count( $lesson_count ) ); ?>
+											<?php esc_html_e( 'Lessons', 'buddyboss' ); ?>
+										</span>
 									</div>
 								</div>
 							</div>
