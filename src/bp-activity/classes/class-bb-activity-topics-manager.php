@@ -824,12 +824,16 @@ class BB_Activity_Topics_Manager {
 			)
 		);
 		// If group activity topics is not enabled, then don't show the topic lists.
-		if (
-			bp_is_active( 'groups' ) &&
-			bp_is_group() &&
-			function_exists( 'bb_get_group_activity_topics' )
-		) {
-			$topic_lists = function_exists( 'bb_is_enabled_group_activity_topics' ) && bb_is_enabled_group_activity_topics() ? bb_get_group_activity_topics( array( 'can_post' => true ) ) : array();
+		if ( bp_is_group() ) {
+			$topic_lists = array();
+			if (
+				bp_is_active( 'groups' ) &&
+				function_exists( 'bb_is_enabled_group_activity_topics' ) &&
+				bb_is_enabled_group_activity_topics() &&
+				function_exists( 'bb_get_group_activity_topics' )
+			) {
+				$topic_lists = bb_get_group_activity_topics( array( 'can_post' => true ) );
+			}
 		}
 
 		$strings['activity']['params']['topics']['bb_is_enabled_group_activity_topics'] = function_exists( 'bb_is_enabled_group_activity_topics' ) && bb_is_enabled_group_activity_topics();
