@@ -56,11 +56,11 @@ if ( $pos > 0 ) {
 		</div>
 
 		<div class="component-filters">
-			<div class="mpcs-course-filter columns">
+			<div class="mpcs-course-filter columns bb-rl-meprlms-course-filters">
 				<div class="column col-sm-12">
 					<div class="dropdown">
 						<a href="#" class="btn btn-link dropdown-toggle" tabindex="0">
-							<?php esc_html_e( 'Category', 'buddyboss-pro' ); ?>: <span></span><i class="mpcs-down-dir"></i>
+							<?php esc_html_e( 'Category', 'buddyboss-pro' ); ?> <span></span><i class="bb-icons-rl-caret-down"></i>
 						</a>
 						<ul class="menu">
 							<?php
@@ -78,7 +78,7 @@ if ( $pos > 0 ) {
 
 					<div class="dropdown">
 						<a href="#" class="btn btn-link dropdown-toggle" tabindex="0">
-							<?php esc_html_e( 'Author', 'buddyboss-pro' ); ?>: <span></span><i class="mpcs-down-dir"></i>
+							<?php esc_html_e( 'Author', 'buddyboss-pro' ); ?> <span></span><i class="bb-icons-rl-caret-down"></i>
 						</a>
 						<!-- menu component -->
 						<ul class="menu">
@@ -109,7 +109,7 @@ if ( $pos > 0 ) {
 							<input type="text" name="s" class="form-input"
 									placeholder="<?php esc_html_e( 'Find a course', 'buddyboss-pro' ); ?>"
 									value="<?php echo esc_attr( $search ); ?>">
-							<button class="btn input-group-btn"><i class="bb-icon-l bb-icon-search"></i></button>
+							<button class="btn input-group-btn"><i class="bb-icons-rl-magnifying-glass"></i></button>
 						</div>
 					</form>
 

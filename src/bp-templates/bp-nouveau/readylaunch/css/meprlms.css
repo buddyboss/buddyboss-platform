@@ -177,6 +177,86 @@
   display: flex;
 }
 
-.courses {
-  display: grid;
+.post-type-archive-mpcs-course.bb-readylaunch-template .bb-rl-meprlms-course-filters .dropdown a.dropdown-toggle {
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 400;
+  line-height: var(--bb-rl-base-line-small);
+  color: var(--bb-rl-text-secondary-color);
+  display: flex;
+  align-items: center;
+  background-color: var(--bb-rl-background-secondary-color);
+  border: 1px solid var(--bb-rl-border-secondary-color) !important;
+  border-radius: 6px;
+  padding: 0 8px;
+  height: 32px;
+  line-height: 32px;
+}
+
+.post-type-archive-mpcs-course.bb-readylaunch-template .bb-rl-meprlms-course-filters .dropdown a.dropdown-toggle i {
+  font-weight: 500;
+}
+
+.post-type-archive-mpcs-course.bb-readylaunch-template .bb-rl-meprlms-course-filters .dropdown a.dropdown-toggle span {
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 500;
+  line-height: var(--bb-rl-base-line-small);
+  color: var(--bb-rl-text-color) !important;
+  padding: 0 var(--bb-rl-space-200) 0 0;
+}
+
+.post-type-archive-mpcs-course.bb-readylaunch-template .bb-rl-meprlms-course-filters .dropdown a.dropdown-toggle span::before {
+  content: "|";
+  color: var(--bb-rl-background-tertiary-hover-color);
+  padding: 0 var(--bb-rl-space-100);
+}
+
+.post-type-archive-mpcs-course.bb-readylaunch-template .bb-rl-meprlms-course-filters .dropdown .menu {
+  background-color: var(--bb-rl-background-color);
+  border: 1px solid var(--bb-rl-border-secondary-color);
+  border-radius: var(--bb-rl-radius-base);
+  box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.15);
+  padding: var(--bb-rl-space-100) 0;
+}
+
+.post-type-archive-mpcs-course.bb-readylaunch-template .bb-rl-meprlms-course-filters .dropdown .menu input {
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 400;
+  line-height: var(--bb-rl-base-line-small);
+  padding: 0 var(--bb-rl-space-200);
+}
+
+.post-type-archive-mpcs-course.bb-readylaunch-template .bb-rl-meprlms-course-filters .dropdown .menu li {
+  border: 0;
+}
+
+.post-type-archive-mpcs-course.bb-readylaunch-template .bb-rl-meprlms-course-filters .dropdown .menu li a {
+  color: var(--bb-rl-text-secondary-color);
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 500;
+  line-height: var(--bb-rl-base-line-small);
+  padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+  white-space: nowrap;
+}
+
+.post-type-archive-mpcs-course.bb-readylaunch-template .bb-rl-meprlms-course-filters .dropdown .menu li a:hover {
+  background-color: var(--bb-rl-background-secondary-hover-color);
+  color: var(--bb-rl-text-color);
+}
+
+.post-type-archive-mpcs-course.bb-readylaunch-template .bb-rl-meprlms-course-filters .input-group {
+  height: var(--bb-rl-space-400);
+  line-height: var(--bb-rl-space-400);
+  background-color: var(--bb-rl-background-color);
+  border: 1px solid var(--bb-rl-border-secondary-color);
+  border-radius: var(--bb-rl-radius-md);
+}
+
+.post-type-archive-mpcs-course.bb-readylaunch-template .bb-rl-meprlms-course-filters .input-group i {
+  font-size: 16px;
+  color: var(--bb-rl-icon-secondary-color) !important;
+  opacity: 1;
+}
+
+.post-type-archive-mpcs-course.bb-readylaunch-template .bb-rl-meprlms-course-filters .input-group .input-group-btn {
+  height: var(--bb-rl-space-400);
 }
