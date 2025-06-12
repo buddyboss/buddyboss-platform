@@ -7,14 +7,15 @@
  */
 
 $forum_id = bbp_get_topic_forum_id();
+$topic_id = bbp_get_topic_id();
 $group_avatar = '';
 if ( function_exists( 'bbp_is_forum_group_forum' ) && bbp_is_forum_group_forum( $forum_id ) ) {
 	$group_ids = bbp_get_forum_group_ids( $forum_id );
-	
+
 	if ( ! empty( $group_ids ) && function_exists( 'groups_get_group' ) ) {
 		$group_id = $group_ids[0]; // Get the first group ID
 		$group = groups_get_group( $group_id );
-		
+
 		if ( $group && ! empty( $group->name ) ) {
 			// Get group avatar
 			if ( function_exists( 'bp_core_fetch_avatar' ) && ! bp_disable_group_avatar_uploads() ) {
@@ -93,7 +94,7 @@ if ( function_exists( 'bbp_is_forum_group_forum' ) && bbp_is_forum_group_forum( 
 									<?php
 								}
 							}
-							
+
 							if ( function_exists( 'bp_is_active' ) && bp_is_active( 'moderation' ) && function_exists( 'bbp_get_topic_report_link' ) && bbp_get_topic_report_link( array( 'id' => get_the_ID() ) ) ) { ?>
 									<div class="generic-button bb-rl-context-item">
 										<?php
@@ -103,7 +104,7 @@ if ( function_exists( 'bbp_is_forum_group_forum' ) && bbp_is_forum_group_forum( 
 										?>
 									</div>
 							<?php
-							} 
+							}
 							?>
 						</div><!-- .bb_more_options_list -->
 						<div class="bb_more_dropdown_overlay"></div>
@@ -111,13 +112,13 @@ if ( function_exists( 'bbp_is_forum_group_forum' ) && bbp_is_forum_group_forum( 
 				<?php }
 			} ?>
 		</div><!-- .bb-rl-topic-status-wrapper -->
-		<?php if( !bbp_is_single_forum() ) { 
+		<?php if( !bbp_is_single_forum() ) {
 			do_action( 'bbp_theme_before_topic_started_in' );
 		?>
 			<div class="bb-rl-topic-started-in">
 				<?php printf( __( '<a href="%1$s">%2$s%3$s</a>', 'buddyboss' ), bbp_get_forum_permalink( bbp_get_topic_forum_id() ), $group_avatar, bbp_get_forum_title( bbp_get_topic_forum_id() )  ); ?>
 			</div>
-		<?php 
+		<?php
 			do_action( 'bbp_theme_after_topic_started_in' );
 		} ?>
 		<div class="bb-rl-topic-title">
@@ -227,8 +228,8 @@ if ( function_exists( 'bbp_is_forum_group_forum' ) && bbp_is_forum_group_forum( 
 			<?php bbp_topic_row_actions(); ?>
 
 			</div>
-			
-			
+
+
 			<div class="bb-rl-topic-stats">
 				<div class="bb-rl-topic-voice-count"><i class="bb-icons-rl-user"></i> <?php bbp_topic_voice_count(); ?></div>
 				<div class="bb-rl-topic-reply-count"><i class="bb-icons-rl-chat"></i> <?php bbp_show_lead_topic() ? bbp_topic_reply_count() : bbp_topic_post_count(); ?></div>

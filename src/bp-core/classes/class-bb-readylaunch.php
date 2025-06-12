@@ -80,12 +80,12 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				// Added support for Forums integration.
 				if ( bp_is_active( 'forums' ) ) {
 					add_filter(
-						'template_include',
+						'bbp_template_include',
 						array(
 							$this,
 							'override_forums_page_templates',
 						),
-						1
+						5
 					); // High priority, so we have the last say here.
 				}
 			}
@@ -274,6 +274,8 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				$this->load_template_stack();
 				$this->load_component_integration();
 				$this->load_hooks();
+
+				return bp_locate_template( 'layout.php' );
 			}
 
 			return $template;
@@ -543,7 +545,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 *
 		 * @return string ReadyLaunch layout template.
 		 */
-		public function override_page_templates() {
+		public function override_page_templates( $template ) {
 			if ( bp_is_register_page() ) {
 				return bp_locate_template( 'register.php' );
 			}
@@ -585,17 +587,21 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 			$stack = array_flip( $stack );
 
-
 			unset( $stack[ $stylesheet_dir ], $stack[ $template_dir ] );
 
 			$stack = array_flip( $stack );
 
+			// Add ReadyLaunch forum template directory at the beginning.
+			$readylaunch_forum_dir = buddypress()->plugin_dir . 'bp-templates/bp-nouveau/readylaunch/forums/';
+			array_unshift( $stack, $readylaunch_forum_dir );
+
 			foreach ( $stack as $key => $value ) {
 				if ( strpos( $value, 'bp-forums/templates/default' ) !== false ) {
-					$value = str_replace( 'bp-forums/templates/default', 'bp-templates/bp-nouveau/readylaunch/forums', $value );
+					$stack[ $key ] = str_replace( 'bp-forums/templates/default', 'bp-templates/bp-nouveau/readylaunch/forums', $value );
 				}
-				$stack[ $key ] = $value;
 			}
+
+			$stack = array_unique( $stack );
 
 			return $stack;
 		}
@@ -2728,7 +2734,81 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			return $this->learndash_helper;
 		}
 
-		private function bb_is_readylaunch_forums() {
+		/**
+		 * Forum integration pages callback.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 */
+		public function bb_rl_forums_integration_page() {
+			// Check for single topic (discussion) page.
+			if ( bbp_is_single_topic() || is_singular( bbp_get_topic_post_type() ) ) {
+				bbp_get_template_part( 'content-single-topic' );
+				return;
+			}
+
+			// Check for single forum page.
+			if ( bbp_is_single_forum() || is_singular( bbp_get_forum_post_type() ) ) {
+				bbp_get_template_part( 'content-single-forum' );
+				return;
+			}
+
+			// Check for single reply page.
+			if ( bbp_is_single_reply() || is_singular( bbp_get_reply_post_type() ) ) {
+				bbp_get_template_part( 'content-single-reply' );
+				return;
+			}
+
+			// Check for forum archive.
+			if ( bbp_is_forum_archive() || is_post_type_archive( bbp_get_forum_post_type() ) ) {
+				bbp_get_template_part( 'content-archive-forum' );
+				return;
+			}
+
+			// Check for topic archive.
+			if ( bbp_is_topic_archive() || is_post_type_archive( bbp_get_topic_post_type() ) ) {
+				bbp_get_template_part( 'content-archive-topic' );
+				return;
+			}
+
+			// Check for search results.
+			if ( bbp_is_search() ) {
+				bbp_get_template_part( 'content-search' );
+				return;
+			}
+
+			// Check for single view page.
+			if ( bbp_is_single_view() ) {
+				bbp_get_template_part( 'content-single-view' );
+				return;
+			}
+
+			// Check for topic tag pages.
+			if ( bbp_is_topic_tag() ) {
+				bbp_get_template_part( 'content-archive-topic' );
+				return;
+			}
+
+			// Check for edit pages.
+			if ( bbp_is_forum_edit() ) {
+				bbp_get_template_part( 'form-forum' );
+				return;
+			}
+
+			if ( bbp_is_topic_edit() ) {
+				bbp_get_template_part( 'form-topic' );
+				return;
+			}
+
+			if ( bbp_is_reply_edit() ) {
+				bbp_get_template_part( 'form-reply' );
+				return;
+			}
+
+			// Default fallback - load forum archive.
+			bbp_get_template_part( 'content-archive-forum' );
+		}
+
+		public function bb_is_readylaunch_forums() {
 			return bp_is_active( 'forums' )
 					&& (
 						bbp_is_forum_archive() ||
@@ -2748,7 +2828,13 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 						bbp_is_single_view() ||
 						bbp_is_search() ||
 						bbp_is_topic_tag_edit() ||
-						bbp_is_topic_tag()
+						bbp_is_topic_tag() ||
+						is_singular( bbp_get_topic_post_type() ) ||
+						is_singular( bbp_get_forum_post_type() ) ||
+						is_singular( bbp_get_reply_post_type() ) ||
+						is_post_type_archive( bbp_get_topic_post_type() ) ||
+						is_post_type_archive( bbp_get_forum_post_type() ) ||
+						is_post_type_archive( bbp_get_reply_post_type() )
 					);
 		}
 
