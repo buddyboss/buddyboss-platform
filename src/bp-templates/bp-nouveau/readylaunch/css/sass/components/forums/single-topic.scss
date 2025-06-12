@@ -112,3 +112,68 @@
         color: var(--bb-rl-icon-color);
     }
 }
+
+.bb-rl-topic-header .bb-rl-topic-footer {
+    display: flex;
+    flex-wrap: wrap;
+    padding-bottom: var(--bb-rl-space-300);
+    border-bottom: 1px solid var(--bb-rl-border-secondary-color);
+
+    .bbp-topic-tags {
+        width: 100%;
+        margin-bottom: var(--bb-rl-space-200);
+    }
+
+    .bb-rl-topic-actions {
+        display: flex;
+        align-items: center;
+        gap: var(--bb-rl-space-100);
+        margin-left: auto;
+    }
+
+    .favorite-toggle,
+    .subscription-toggle {
+        color: var(--bb-rl-text-color);
+		font-size: var(--bb-rl-font-size-sm);
+		font-weight: 500;
+		padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+		border-radius: var(--bb-rl-radius-md);
+		border: 1px solid var(--bb-rl-border-tertiary-color);
+		background-color: var(--bb-rl-background-color);
+		display: flex;
+		align-items: center;
+
+        &:before {
+            content: "\e400";
+            font-family: "bb-icons-rl";
+            font-size: 16px;
+            font-weight: 400;
+            line-height: 1;
+            color: var(--bb-rl-icon-color);
+            margin-right: 6px;
+        }
+    }
+
+    .favorite-toggle:before {
+        content: "\e2aa";
+    }
+}
+
+.bb-rl-topic-reply-link-wrap {
+
+    a {
+        @include bb-rl-button;
+        @include bb-rl-button--small;
+        @include bb-rl-button--brand-fill;
+
+        display: flex;
+        align-items: center;
+        gap: var(--bb-rl-space-50);
+
+        &:before {
+            content: "\e03a";
+            font-family: bb-icons-rl;
+            font-size: 16px;
+        }
+    }
+}
