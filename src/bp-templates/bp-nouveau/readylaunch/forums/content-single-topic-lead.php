@@ -49,33 +49,25 @@ if ( function_exists( 'bbp_is_forum_group_forum' ) && bbp_is_forum_group_forum( 
 		</div>
 		<div class="bb-rl-topic-author-details">
 			<div class="bb-rl-topic-author-name">
-				<?php bbp_get_topic_author_link( array( 'size' => '14' ) ); ?>
+				<?php bbp_get_topic_author_link( array( 'size' => '14' ) ); ?><!-- TODO: Author name not showing -->
 			</div>
 			<div class="bb-rl-topic-time">
 				<?php bbp_topic_freshness_link(); ?>
 			</div>
 		</div>
 	</div>
-	<div class="bb-rl-topic-title">
+	<h2 class="bb-rl-topic-title">
 		<?php bbp_topic_title(); ?>
-	</div>
+	</h2>
 	<div class="bb-rl-topic-content">
 		<?php bbp_topic_content(); ?>
 	</div>
 	<div class="bb-rl-topic-footer">
-		<div class="bb-rl-topic-tags">
-			<?php
-				$terms = bbp_get_topic_tag_list( bbp_get_topic_id() );
-				if ( $terms && bbp_allow_topic_tags() ) {
-					echo $terms;
-				} else {
-					?>
-					<div class="item-tags" style="display: none;">
-						<i class="bb-icon-l bb-icon-tag"></i>
-					</div>
-					<?php
-				}
-			?>
+		<?php bbp_topic_tag_list(); ?>
+
+		<div class="bb-rl-topic-stats">
+			<div class="bb-rl-topic-voice-count"><i class="bb-icons-rl-user"></i> <?php bbp_topic_voice_count(); ?></div>
+			<div class="bb-rl-topic-reply-count"><i class="bb-icons-rl-chat"></i> <?php bbp_show_lead_topic() ? bbp_topic_reply_count() : bbp_topic_post_count(); ?></div>
 		</div>
 	</div>
 </div>

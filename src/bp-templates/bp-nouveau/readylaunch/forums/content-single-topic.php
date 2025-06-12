@@ -8,6 +8,11 @@
 
 ?>
 <div class="bb-rl-container-inner">
+	<?php if( bp_is_group() ) { ?>
+		<a href="<?php echo bbp_get_forum_permalink( bbp_get_topic_forum_id() ); ?>" class="bb-rl-group-forum-header-back">
+			<i class="bb-icons-rl-arrow-left"></i> <?php esc_html_e( 'Back to Discussions', 'buddyboss' ); ?>
+		</a>
+	<?php } ?>
 	<div id="bbpress-forums" class="bb-rl-forums-topic-page">
 		<div class="bb-rl-forums-container-inner">
 			<?php do_action( 'bbp_template_before_single_topic' ); ?>
@@ -17,8 +22,6 @@
 				<?php bbp_get_template_part( 'form', 'protected' ); ?>
 
 			<?php else : ?>
-
-				<?php bbp_topic_tag_list(); ?>
 
 				<?php if ( bbp_show_lead_topic() ) : ?>
 

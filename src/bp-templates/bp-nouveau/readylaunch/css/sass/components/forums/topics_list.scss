@@ -74,30 +74,6 @@
             color: var(--bb-rl-text-color);
             margin-bottom: var(--bb-rl-space-100);
         }
-
-        .bbp-topic-tags {
-            font-size: 0;
-            margin-bottom: 14px;
-
-            > p {
-                display: flex;
-                align-items: center;
-                gap: 0;
-            }
-
-            a {
-                color: var(--bb-rl-text-secondary-color);
-                font-size: 12px;
-                background-color: var(--bb-rl-background-tertiary-color);
-                border-radius: var(--bb-rl-radius-sm);
-                padding: 2px 6px;
-
-                + a {
-                    margin-left: 8px;
-                }
-            }
-        }
-
     }
 
     .bb-rl-topic-footer {
@@ -106,26 +82,6 @@
         justify-content: space-between;
         flex-wrap: wrap;
         gap: var(--bb-rl-space-200);
-    }
-
-    .bb-rl-topic-stats {
-        display: flex;
-        align-items: center;
-        gap: var(--bb-rl-space-200);
-
-        > div {
-            color: var(--bb-rl-text-secondary-color);
-            font-size: 14px;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            gap: var(--bb-rl-space-50);
-
-            i {
-                font-size: 20px;
-                color: var(--bb-rl-icon-secondary-color);
-            }
-        }
     }
 
     .bb-rl-topic-meta {
@@ -153,6 +109,26 @@
                 border-radius: var(--bb-rl-radius-full);
                 margin: 0 var(--bb-rl-space-100);
             }
+        }
+    }
+}
+
+.bb-rl-topic-stats {
+    display: flex;
+    align-items: center;
+    gap: var(--bb-rl-space-200);
+
+    > div {
+        color: var(--bb-rl-text-secondary-color);
+        font-size: 14px;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: var(--bb-rl-space-50);
+
+        i {
+            font-size: 20px;
+            color: var(--bb-rl-icon-secondary-color);
         }
     }
 }
