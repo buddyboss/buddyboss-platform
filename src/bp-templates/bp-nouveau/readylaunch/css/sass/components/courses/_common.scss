@@ -303,7 +303,28 @@
 					color: var(--bb-rl-icon-positive-secondary-color);
 				}
 			}
+
+			&.ld-icon-certificate {
+
+				&::before {
+					content: "\e766";
+					font-size: 24px;
+					color: var(--bb-rl-icon-positive-secondary-color);
+				}
+			}
 		}
+	}
+}
+
+.bb-rl-ld-alert-certificate {
+	justify-content: space-between;
+	margin-bottom: var(--bb-rl-space-200);
+
+	.ld-button {
+
+		@include bb-rl-button;
+		@include bb-rl-button-secondary-fill;
+		@include bb-rl-button--small;
 	}
 }
 

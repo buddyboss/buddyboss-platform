@@ -83,6 +83,9 @@ if ( ! empty( $bb_lessons ) ) {
 	}
 }
 
+// Get the WP_User object for the current user.
+$bb_user = get_userdata( $bb_user_id );
+
 // Get course meta and certificate.
 $bb_course_meta = get_post_meta( $bb_course_id, '_sfwd-courses', true );
 if ( ! is_array( $bb_course_meta ) ) {
@@ -91,6 +94,7 @@ if ( ! is_array( $bb_course_meta ) ) {
 if ( ! isset( $bb_course_meta['sfwd-courses_course_disable_content_table'] ) ) {
 	$bb_course_meta['sfwd-courses_course_disable_content_table'] = false;
 }
+$bb_course_certficate_link = $bb_course_model->get_certificate_link( $bb_user );
 
 // Additional variables needed for course content listing.
 $bb_has_lesson_quizzes = learndash_30_has_lesson_quizzes( $bb_course_id, $bb_lessons );
@@ -417,6 +421,26 @@ $bb_bb_rl_ld_helper = class_exists( 'BB_Readylaunch_Learndash_Helper' ) ? BB_Rea
 
 			<div class="bb-rl-course-content">
 				<div class="bb-rl-course-content-inner">
+					<?php
+					// Display certificate if available.
+					if ( ! empty( $bb_course_certficate_link ) ) {
+						learndash_get_template_part(
+							'modules/alert.php',
+							array(
+								'type'    => 'success bb-rl-ld-alert-certificate',
+								'icon'    => 'certificate',
+								'message' => __( 'You\'ve earned a certificate!', 'buddyboss' ),
+								'button'  => array(
+									'url'    => $bb_course_certficate_link,
+									'icon'   => 'download',
+									'label'  => __( 'Download Certificate', 'buddyboss' ),
+									'target' => '_new',
+								),
+							),
+							true
+						);
+					}
+					?>
 					<?php if ( ! empty( $bb_lessons ) ) : ?>
 						<div class="bb-rl-course-content-header">
 							<div class="bb-rl-course-content-header-inner">
