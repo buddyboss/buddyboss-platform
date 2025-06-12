@@ -6,9 +6,79 @@
  * @package BuddyBoss\Theme
  */
 
+$forum_id = bbp_get_topic_forum_id();
+$group_avatar = '';
+if ( function_exists( 'bbp_is_forum_group_forum' ) && bbp_is_forum_group_forum( $forum_id ) ) {
+	$group_ids = bbp_get_forum_group_ids( $forum_id );
+	
+	if ( ! empty( $group_ids ) && function_exists( 'groups_get_group' ) ) {
+		$group_id = $group_ids[0]; // Get the first group ID
+		$group = groups_get_group( $group_id );
+		
+		if ( $group && ! empty( $group->name ) ) {
+			// Get group avatar
+			if ( function_exists( 'bp_core_fetch_avatar' ) && ! bp_disable_group_avatar_uploads() ) {
+				$group_avatar = bp_core_fetch_avatar(
+					array(
+						'item_id'    => $group_id,
+						'object'     => 'group',
+						'type'       => 'thumb',
+						'width'      => 20,
+						'height'     => 20,
+						'html'       => true,
+						'alt'        => sprintf( __( '%s logo', 'buddyboss' ), $group->name ),
+						'class'      => 'bb-rl-group-avatar',
+					)
+				);
+			}
+		}
+	}
+}
 ?>
 
 <?php do_action( 'bbp_template_before_lead_topic' ); ?>
+<div class="bb-rl-topic-header">
+
+	<div class="bb-rl-topic-started-in">
+		<?php printf( __( '<a href="%1$s">%2$s%3$s</a>', 'buddyboss' ), bbp_get_forum_permalink( bbp_get_topic_forum_id() ), $group_avatar, bbp_get_forum_title( bbp_get_topic_forum_id() )  ); ?>
+	</div>
+
+	<div class="bb-rl-topic-author">
+		<div class="bb-rl-topic-avatar">
+			<?php bbp_topic_author_link( array( 'size' => '48' ) ); ?>
+		</div>
+		<div class="bb-rl-topic-author-details">
+			<div class="bb-rl-topic-author-name">
+				<?php bbp_get_topic_author_link( array( 'size' => '14' ) ); ?>
+			</div>
+			<div class="bb-rl-topic-time">
+				<?php bbp_topic_freshness_link(); ?>
+			</div>
+		</div>
+	</div>
+	<div class="bb-rl-topic-title">
+		<?php bbp_topic_title(); ?>
+	</div>
+	<div class="bb-rl-topic-content">
+		<?php bbp_topic_content(); ?>
+	</div>
+	<div class="bb-rl-topic-footer">
+		<div class="bb-rl-topic-tags">
+			<?php
+				$terms = bbp_get_topic_tag_list( bbp_get_topic_id() );
+				if ( $terms && bbp_allow_topic_tags() ) {
+					echo $terms;
+				} else {
+					?>
+					<div class="item-tags" style="display: none;">
+						<i class="bb-icon-l bb-icon-tag"></i>
+					</div>
+					<?php
+				}
+			?>
+		</div>
+	</div>
+</div>
 
 <ul id="bbp-topic-<?php bbp_topic_id(); ?>-lead" class="bbp-lead-topic">
 
