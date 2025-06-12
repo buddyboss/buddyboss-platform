@@ -57,6 +57,13 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 2.8.80 =
+* New Feature! – Added Activity Topics for categorizing and filtering posts in activity feeds and groups
+* Bug: Activity - Fixed an issue where the activity feed showed duplicate job posts across multiple WPML site languages
+* Bug: Core - Fixed an issue where translating the “BuddyBoss” admin menu title caused moderation features to stop working
+* Bug: Groups - Fixed an issue where the recipient count in group messages didn’t update after members were deleted
+* Bug: Widgets - Fixed issue where the BB Latest Update widget wasn’t showing activity comments or blog comments
+
 = 2.8.70 =
 * Bug: Activity - Fixed issue where changing the activity post’s privacy incorrectly updated the posting date. The original date now remains unchanged
 * Bug: Activity - Fixed issue where emoji functionality wasn’t working in all areas due to JS files
