@@ -148,9 +148,9 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 	 *
 	 * @return WP_REST_Response
 	 *
-	 * @api            {GET} /wp-json/buddyboss/v1/topics Get Topics
+	 * @api            {GET} /wp-json/buddyboss/v1/bb-topics Get Topics
 	 * @apiName        GetTopics
-	 * @apiGroup       Topics
+	 * @apiGroup       BB Topics
 	 * @apiDescription Get Topics
 	 * @apiVersion     1.0.0
 	 * @apiPermission  User
@@ -279,9 +279,9 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 	 *
 	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
 	 *
-	 * @api            {POST} /wp-json/buddyboss/v1/topics Create Topic
+	 * @api            {POST} /wp-json/buddyboss/v1/bb-topics Create Topic
 	 * @apiName        CreateTopic
-	 * @apiGroup       Topics
+	 * @apiGroup       BB Topics
 	 * @apiDescription Create a new topic
 	 * @apiVersion     1.0.0
 	 * @apiPermission  LoggedInUser
@@ -468,9 +468,9 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 	 *
 	 * @return WP_REST_Response|WP_Error
 	 *
-	 * @api            {GET} /wp-json/buddyboss/v1/topics/:id Get Topic
+	 * @api            {GET} /wp-json/buddyboss/v1/bb-topics/:id Get Topic
 	 * @apiName        GetTopic
-	 * @apiGroup       Topics
+	 * @apiGroup       BB Topics
 	 * @apiDescription Get Topic
 	 * @apiVersion     1.0.0
 	 * @apiPermission  User
@@ -579,9 +579,9 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 	 *
 	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
 	 *
-	 * @api            {PUT} /wp-json/buddyboss/v1/topics/:id Update Topic
+	 * @api            {PUT} /wp-json/buddyboss/v1/bb-topics/:id Update Topic
 	 * @apiName        UpdateTopic
-	 * @apiGroup       Topics
+	 * @apiGroup       BB Topics
 	 * @apiDescription Update an existing topic
 	 * @apiVersion     1.0.0
 	 * @apiPermission  LoggedInUser
@@ -831,9 +831,9 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 	 *
 	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
 	 *
-	 * @api            {DELETE} /wp-json/buddyboss/v1/topics/{id} Delete Topic
+	 * @api            {DELETE} /wp-json/buddyboss/v1/bb-topics/{id} Delete Topic
 	 * @apiName        DeleteTopic
-	 * @apiGroup       Topics
+	 * @apiGroup       BB Topics
 	 * @apiDescription Delete an existing topic
 	 * @apiVersion     1.0.0
 	 * @apiPermission  LoggedInUser
@@ -1054,7 +1054,7 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 	 *
 	 * @api            {PUT} /wp-json/buddyboss/v1/bb-topics/order Update Topics Order
 	 * @apiName        UpdateTopicsOrder
-	 * @apiGroup       Topics
+	 * @apiGroup       BB Topics
 	 * @apiDescription Update the order of topics
 	 * @apiVersion     1.0.0
 	 * @apiPermission  LoggedInUser
