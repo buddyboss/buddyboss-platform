@@ -204,6 +204,7 @@ $bb_bb_rl_ld_helper = class_exists( 'BB_Readylaunch_Learndash_Helper' ) ? BB_Rea
 												</span>
 											</span>
 										</div>
+										<span class="bb-rl-separator bb-rl-separator--vertical"></span>
 										<div class="bb-rl-full-price bb-rl-price-module">
 											<span class="bb-rl-price">
 												<span class="ld-currency"><?php echo wp_kses_post( $bb_currency ); ?></span> 

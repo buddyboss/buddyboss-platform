@@ -55,10 +55,6 @@
 		gap: var(--bb-rl-space-100);
 		width: fit-content;
 		margin: var(--bb-rl-space-200) 0 var(--bb-rl-space-100);
-
-		.bb-rl-premium-price {
-			flex: 0 0 50%;
-		}
 	}
 
 	.bb-rl-price-module {
@@ -179,6 +175,16 @@
 			margin-top: var(--bb-rl-space-200);
 		}
 	}
+}
+
+.bb-rl-separator.bb-rl-separator--vertical {
+	content: "";
+	display: inline-block;
+	width: 1px;
+	height: 80%;
+	background-color: var(--bb-rl-border-secondary-color);
+	margin-left: var(--bb-rl-space-200);
+	margin-right: var(--bb-rl-space-200);
 }
 
 .bb-rl-course-details {

@@ -314,6 +314,32 @@
 			}
 		}
 	}
+
+	.learndash-wrapper {
+
+		.ld-alert {
+			min-height: auto;
+
+			.ld-button {
+
+				@include bb-rl-button;
+				@include bb-rl-button-secondary-fill;
+				@include bb-rl-button--small;
+			}
+		}
+
+		.ld-alert .ld-alert-icon {
+			position: static;
+			transform: none;
+			background-color: transparent;
+			font-size: 20px;
+			margin: 0;
+		}
+
+		.ld-alert-warning .ld-alert-icon {
+			background-color: transparent;
+		}
+	}
 }
 
 .bb-rl-ld-alert-certificate {
