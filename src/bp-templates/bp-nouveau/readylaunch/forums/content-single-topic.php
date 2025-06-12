@@ -31,8 +31,6 @@
 
 				<?php if ( bbp_has_replies() ) : ?>
 
-					<?php bbp_get_template_part( 'pagination', 'replies' ); ?>
-
 					<?php bbp_get_template_part( 'loop', 'replies' ); ?>
 
 					<?php bbp_get_template_part( 'pagination', 'replies' ); ?>

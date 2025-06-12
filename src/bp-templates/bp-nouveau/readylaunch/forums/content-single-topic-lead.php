@@ -69,6 +69,37 @@ if ( function_exists( 'bbp_is_forum_group_forum' ) && bbp_is_forum_group_forum( 
 			<div class="bb-rl-topic-voice-count"><i class="bb-icons-rl-user"></i> <?php bbp_topic_voice_count(); ?></div>
 			<div class="bb-rl-topic-reply-count"><i class="bb-icons-rl-chat"></i> <?php bbp_show_lead_topic() ? bbp_topic_reply_count() : bbp_topic_post_count(); ?></div>
 		</div>
+
+		<div class="bb-rl-topic-actions">
+			<div class="bb-rl-topic-favorite-link-wrap">
+				<?php
+					if ( bbp_is_favorites_active() ) {
+						?>
+						<p class="bb-topic-favorite-link-wrap">
+							<?php
+							$args = array( 'before' => '' );
+							echo bbp_get_topic_favorite_link( $args );
+							?>
+						</p>
+						<?php
+					}
+				?>
+			</div>
+			<div class="bb-rl-topic-subscription-link-wrap">
+				<?php
+					$args = array( 'before' => '' );
+					echo bbp_get_topic_subscription_link( $args );
+				?>
+			</div>
+			<div class="bb-rl-topic-reply-link-wrap">
+				<?php
+					bbp_topic_reply_link();
+					if ( ! bbp_current_user_can_access_create_reply_form() && ! bbp_is_topic_closed() && ! bbp_is_forum_closed( bbp_get_topic_forum_id() ) && ! is_user_logged_in() ) {
+						?>
+						<a href="<?php echo esc_url( wp_login_url() ); ?>" class="bbp-topic-login-link bb-style-primary-bgr-color bb-style-border-radius"><?php esc_html_e( 'Log In to Reply', 'buddyboss-theme' ); ?></a>
+					<?php } ?>
+			</div>
+		</div><!-- .bb-rl-forum-actions -->
 	</div>
 </div>
 

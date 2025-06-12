@@ -1163,3 +1163,90 @@
   font-size: 16px;
   color: var(--bb-rl-icon-color);
 }
+
+.bb-rl-topic-header .bb-rl-topic-footer {
+  display: flex;
+  flex-wrap: wrap;
+  padding-bottom: var(--bb-rl-space-300);
+  border-bottom: 1px solid var(--bb-rl-border-secondary-color);
+}
+
+.bb-rl-topic-header .bb-rl-topic-footer .bbp-topic-tags {
+  width: 100%;
+  margin-bottom: var(--bb-rl-space-200);
+}
+
+.bb-rl-topic-header .bb-rl-topic-footer .bb-rl-topic-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--bb-rl-space-100);
+  margin-left: auto;
+}
+
+.bb-rl-topic-header .bb-rl-topic-footer .favorite-toggle,
+.bb-rl-topic-header .bb-rl-topic-footer .subscription-toggle {
+  color: var(--bb-rl-text-color);
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 500;
+  padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+  border-radius: var(--bb-rl-radius-md);
+  border: 1px solid var(--bb-rl-border-tertiary-color);
+  background-color: var(--bb-rl-background-color);
+  display: flex;
+  align-items: center;
+}
+
+.bb-rl-topic-header .bb-rl-topic-footer .favorite-toggle:before,
+.bb-rl-topic-header .bb-rl-topic-footer .subscription-toggle:before {
+  content: "\e400";
+  font-family: "bb-icons-rl";
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1;
+  color: var(--bb-rl-icon-color);
+  margin-right: 6px;
+}
+
+.bb-rl-topic-header .bb-rl-topic-footer .favorite-toggle:before {
+  content: "\e2aa";
+}
+
+.bb-rl-topic-reply-link-wrap a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  text-align: center;
+  cursor: pointer;
+  border-radius: var(--bb-rl-radius-md);
+  padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  text-decoration: none;
+  padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
+  font-size: 0.875rem;
+  background-color: var(--bb-rl-background-brand-primary-color);
+  color: var(--bb-rl-text-white-color);
+  border: 1px solid var(--bb-rl-background-brand-primary-color);
+  display: flex;
+  align-items: center;
+  gap: var(--bb-rl-space-50);
+}
+
+.bb-rl-topic-reply-link-wrap a:hover {
+  background-color: var(--bb-rl-background-brand-primary-hover-color);
+}
+
+.bb-rl-topic-reply-link-wrap a:focus-within {
+  outline: 2px solid var(--bb-rl-border-brand-primary-color);
+}
+
+.bb-rl-topic-reply-link-wrap a:disabled {
+  background-color: var(--bb-rl-background-brand-disabled-color);
+  cursor: not-allowed;
+}
+
+.bb-rl-topic-reply-link-wrap a:before {
+  content: "\e03a";
+  font-family: bb-icons-rl;
+  font-size: 16px;
+}
