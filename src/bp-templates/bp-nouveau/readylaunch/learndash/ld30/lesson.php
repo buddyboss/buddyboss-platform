@@ -101,8 +101,165 @@ if ( function_exists( 'learndash_is_lesson_accessable' ) ) {
 					</div>
 				</header>
 
-				<div class="bb-rl-entry-content">
-					<?php the_content(); ?>
+				<div class="bb-rl-entry-content bb-rl-lesson-entry">
+					<div class="<?php echo esc_attr( learndash_the_wrapper_class() ); ?>">
+						<?php
+						/**
+						 * Fires before the lesson content starts.
+						 *
+						 * @since 3.0.0
+						 *
+						 * @param int $lesson_id Lesson ID.
+						 * @param int $course_id Course ID.
+						 * @param int $user_id   User ID.
+						 */
+						do_action( 'learndash-lesson-before', $lesson_id, $course_id, $user_id );
+
+						// Implement lesson progression logic
+						$lesson_progression_enabled = function_exists( 'learndash_lesson_progression_enabled' ) ? learndash_lesson_progression_enabled( $course_id ) : false;
+						$show_content = true;
+
+						if ( ! empty( $lesson_progression_enabled ) ) :
+							$last_incomplete_step = function_exists( 'learndash_is_lesson_accessable' ) ? learndash_is_lesson_accessable( $user_id, $post, true, $course_id ) : false;
+							
+							if ( ! empty( $user_id ) ) {
+								if ( function_exists( 'learndash_user_progress_is_step_complete' ) && learndash_user_progress_is_step_complete( $user_id, $course_id, $post->ID ) ) {
+									$show_content = true;
+								} else {
+									$bypass_course_limits_admin_users = function_exists( 'learndash_can_user_bypass' ) ? learndash_can_user_bypass( $user_id, 'learndash_lesson_progression' ) : false;
+									if ( $bypass_course_limits_admin_users ) {
+										remove_filter( 'learndash_content', 'lesson_visible_after', 1, 2 );
+										$previous_lesson_completed = true;
+									} else {
+										$previous_step_post_id = function_exists( 'learndash_user_progress_get_parent_incomplete_step' ) ? learndash_user_progress_get_parent_incomplete_step( $user_id, $course_id, $post->ID ) : 0;
+										if ( ( ! empty( $previous_step_post_id ) ) && ( $previous_step_post_id !== $post->ID ) ) {
+											$previous_lesson_completed = false;
+											$last_incomplete_step = get_post( $previous_step_post_id );
+										} else {
+											$previous_step_post_id = function_exists( 'learndash_user_progress_get_previous_incomplete_step' ) ? learndash_user_progress_get_previous_incomplete_step( $user_id, $course_id, $post->ID ) : 0;
+											$previous_lesson_completed = true;
+											if ( ( ! empty( $previous_step_post_id ) ) && ( $previous_step_post_id !== $post->ID ) ) {
+												$previous_lesson_completed = false;
+												$last_incomplete_step = get_post( $previous_step_post_id );
+											}
+										}
+
+										/**
+										 * Filter to override previous step completed.
+										 *
+										 * @param bool $previous_lesson_completed True if previous step completed.
+										 * @param int  $step_id                   Step Post ID.
+										 * @param int  $user_id                   User ID.
+										 */
+										$previous_lesson_completed = apply_filters( 'learndash_previous_step_completed', $previous_lesson_completed, $post->ID, $user_id );
+									}
+
+									$show_content = $previous_lesson_completed;
+								}
+
+								// Check for sample lessons
+								if ( function_exists( 'learndash_is_sample' ) && learndash_is_sample( $post ) ) {
+									$show_content = true;
+								}
+
+								// Handle blocked content
+								if ( 
+									$last_incomplete_step 
+									&& $last_incomplete_step instanceof WP_Post 
+									&& (
+										! ( function_exists( 'learndash_is_sample' ) && learndash_is_sample( $post ) )
+										|| (bool) $is_enrolled
+									)
+								) {
+									$show_content = false;
+
+									$sub_context = '';
+									if ( 'on' === learndash_get_setting( $last_incomplete_step->ID, 'lesson_video_enabled' ) ) {
+										if ( ! empty( learndash_get_setting( $last_incomplete_step->ID, 'lesson_video_url' ) ) ) {
+											if ( 'BEFORE' === learndash_get_setting( $last_incomplete_step->ID, 'lesson_video_shown' ) ) {
+												if ( ! learndash_video_complete_for_step( $last_incomplete_step->ID, $course_id, $user_id ) ) {
+													$sub_context = 'video_progression';
+												}
+											}
+										}
+									}
+
+									/**
+									 * Fires before the lesson progression.
+									 *
+									 * @since 3.0.0
+									 *
+									 * @param int $lesson_id Lesson ID.
+									 * @param int $course_id Course ID.
+									 * @param int $user_id   User ID.
+									 */
+									do_action( 'learndash-lesson-progression-before', $post->ID, $course_id, $user_id );
+
+									if ( function_exists( 'learndash_get_template_part' ) ) {
+										learndash_get_template_part(
+											'modules/messages/lesson-progression.php',
+											array(
+												'previous_item' => $last_incomplete_step,
+												'course_id'     => $course_id,
+												'user_id'       => $user_id,
+												'context'       => 'lesson',
+												'sub_context'   => $sub_context,
+											),
+											true
+										);
+									}
+
+									/**
+									 * Fires after the lesson progression.
+									 *
+									 * @since 3.0.0
+									 *
+									 * @param int $lesson_id Lesson ID.
+									 * @param int $course_id Course ID.
+									 * @param int $user_id   User ID.
+									 */
+									do_action( 'learndash-lesson-progression-after', $post->ID, $course_id, $user_id );
+								}
+							} else {
+								$show_content = true;
+							}
+						else :
+							$show_content = true;
+						endif;
+
+						if ( $show_content ) :
+							// Load tabs if available
+							if ( function_exists( 'learndash_get_template_part' ) ) {
+								$materials = function_exists( 'learndash_get_setting' ) ? learndash_get_setting( $post, 'lesson_materials' ) : '';
+								learndash_get_template_part(
+									'modules/tabs.php',
+									array(
+										'course_id' => $course_id,
+										'post_id'   => $post->ID,
+										'user_id'   => $user_id,
+										'content'   => get_the_content(),
+										'materials' => $materials,
+										'context'   => 'lesson',
+									),
+									true
+								);
+							} else {
+								the_content();
+							}
+						endif;
+
+						/**
+						 * Fires after the lesson content ends.
+						 *
+						 * @since 3.0.0
+						 *
+						 * @param int $lesson_id Lesson ID.
+						 * @param int $course_id Course ID.
+						 * @param int $user_id   User ID.
+						 */
+						do_action( 'learndash-lesson-after', $lesson_id, $course_id, $user_id );
+						?>
+					</div>
 				</div>
 
 				<?php
