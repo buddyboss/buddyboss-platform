@@ -7779,6 +7779,9 @@ function bb_admin_icons( $id ) {
 		case 'bb_activity_comments':
 			$meta_icon = $bb_icon_bf . ' bb-icon-activity-comment';
 			break;
+		case 'bb_activity_topics':
+			$meta_icon = $bb_icon_bf . ' bb-icon-grid-large';
+			break;
 		case 'bp_custom_post_type':
 			$meta_icon = $bb_icon_bf . ' bb-icon-thumbtack';
 			break;
@@ -10027,6 +10030,6 @@ function bb_topics_manager_instance() {
  * @return string
  */
 function bb_pro_group_activity_topics_version() {
-	return '2.7.30'; // @todo: Update when release.
+	return '2.7.40';
 }
 
