@@ -23,6 +23,7 @@
             this.setupSidebarToggle();
             this.setupCourseCardPopups();
             this.addEvents();
+            this.autoExpandCurrentLesson();
         },
 
         addEvents: function() {
@@ -365,6 +366,15 @@
             
             // Reset any previous transform adjustments
             $popup.css('transform', '');
+        },
+
+        /**
+         * Automatically expand current lesson on page load
+         */
+        autoExpandCurrentLesson: function() {
+            $('.ld-item-list-item.bb-rl-current-lesson .ld-expand-button').each(function() {
+                $(this).trigger('click');
+            });
         },
     };
     

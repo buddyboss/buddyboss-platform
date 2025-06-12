@@ -2497,6 +2497,14 @@
   background-color: var(--bb-rl-background-secondary-hover-color);
 }
 
+.bb-rl-lms-nav-list .bb-rl-ld-lesson-list .ld-item-list-item-expanded .ld-table-list-item:has(.ld-is-current-item) {
+  background-color: var(--bb-rl-background-secondary-hover-color);
+}
+
+.bb-rl-lms-nav-list .bb-rl-ld-lesson-list .ld-item-list-item.bb-rl-current-lesson:not(:has(.ld-is-current-item)) .ld-item-list-item-preview {
+  background-color: var(--bb-rl-background-secondary-hover-color);
+}
+
 .bb-readylaunch-template .bb-courses-header .grid-filters {
   display: flex;
   align-items: center;
