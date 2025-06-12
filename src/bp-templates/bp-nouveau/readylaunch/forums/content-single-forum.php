@@ -12,6 +12,7 @@
 		<div class="bb-rl-forums-container-inner">
 			<?php
 				$forum_cover_photo = wp_get_attachment_url( get_post_thumbnail_id( $post->ID ) );
+				if( bbp_is_single_forum() && ! bp_is_group() ) {
 			?>
 			<div class="bb-rl-forum-single-header">
 				<div class="bb-rl-forum-single-header-cover">
@@ -58,6 +59,24 @@
 					</div><!-- .bb-rl-forum-actions -->
 				</div><!-- .bb-rl-forum-single-header-content -->
 			</div><!-- .bb-rl-forum-single-header -->
+			<?php } ?>
+
+			<?php if( bp_is_group() ) { ?>
+				<div class="bb-rl-group-forum-header">
+					<h2>Discussions (7)</h2> <!-- TODO: Get discussion count from group forum -->
+					<div class="bb-rl-forum-actions">
+						<?php if ( bbp_is_single_forum() && ! bbp_is_forum_category() && ( bbp_current_user_can_access_create_topic_form() || bbp_current_user_can_access_anonymous_user_form() ) ) { ?>
+							<a href="#new-post" class="bb-rl-button bb-rl-button--brandFill bb-rl-button--small bb-rl-new-discussion-btn" data-modal-id="bb-rl-topic-form"><i class="bb-icons-rl-plus"></i> <?php esc_html_e( 'New discussion', 'buddyboss' ); ?></a>
+							<?php
+							// Remove subscription link if forum assigned to the group.
+							if ( ! function_exists( 'bb_is_forum_group_forum' ) || ! bb_is_forum_group_forum( bbp_get_forum_id() ) ) {
+								bbp_forum_subscription_link();
+							}
+							?>
+						<?php } ?>
+					</div><!-- .bb-rl-forum-actions -->
+				</div>
+			<?php } ?>
 
 			<?php do_action( 'bbp_template_before_single_forum' ); ?>
 

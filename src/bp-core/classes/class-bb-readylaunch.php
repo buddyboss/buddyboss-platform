@@ -2754,7 +2754,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 		public function bb_readylaunch_forums_enqueue_styles() {
 			if ( ! $this->bb_is_readylaunch_forums() ) {
-				return;
+				// return; // TODO: Include group forums pages
 			}
 
 			// Enqueue LearnDash ReadyLaunch styles.
