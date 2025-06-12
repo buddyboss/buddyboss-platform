@@ -604,6 +604,7 @@ class BP_Activity_Activity {
 				}
 			}
 		}
+		$r['pinned_id'] = $pinned_id;
 
 		// Hide Hidden Items?
 		if ( ! $r['show_hidden'] ) {
@@ -2188,7 +2189,15 @@ class BP_Activity_Activity {
 			return false;
 		}
 
-		return join( ' AND ', $filter_sql );
+		/**
+		 * Filter the activity get filter sql.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $filter_sql   The filter sql.
+		 * @param array  $filter_array The filter array.
+		 */
+		return apply_filters( 'bb_activity_activity_get_filter_sql', join( ' AND ', $filter_sql ), $filter_array );
 	}
 
 	/**

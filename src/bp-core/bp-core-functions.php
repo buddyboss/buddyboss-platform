@@ -7779,6 +7779,9 @@ function bb_admin_icons( $id ) {
 		case 'bb_activity_comments':
 			$meta_icon = $bb_icon_bf . ' bb-icon-activity-comment';
 			break;
+		case 'bb_activity_topics':
+			$meta_icon = $bb_icon_bf . ' bb-icon-grid-large';
+			break;
 		case 'bp_custom_post_type':
 			$meta_icon = $bb_icon_bf . ' bb-icon-thumbtack';
 			break;
@@ -10003,3 +10006,30 @@ function bb_filter_activity_filter_scope_keys( $filters = array() ) {
 
 	return $filters;
 }
+
+/**
+ * Get the singleton instance of BB_Topics_Manager.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return BB_Topics_Manager|null Instance of the topics manager or null if class doesn't exist.
+ */
+function bb_topics_manager_instance() {
+	if ( class_exists( 'BB_Topics_Manager' ) ) {
+		return BB_Topics_Manager::instance();
+	}
+
+	return null;
+}
+
+/**
+ * Function to return the minimum pro version to show notice for group activity topics.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string
+ */
+function bb_pro_group_activity_topics_version() {
+	return '2.7.40';
+}
+
