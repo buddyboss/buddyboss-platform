@@ -1743,7 +1743,7 @@ function bp_blogs_format_activity_action_new_custom_post_type_feed( $action, $ac
 /**
  * Filter the activity get filter sql.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.8.80
  *
  * @param string $filter_sql   The filter sql.
  * @param array  $filter_array The filter array.

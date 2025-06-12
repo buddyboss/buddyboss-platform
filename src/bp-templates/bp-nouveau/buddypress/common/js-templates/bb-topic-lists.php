@@ -4,7 +4,7 @@
  *
  * This template can be overridden by copying it to yourtheme/buddypress/common/js-templates/bb-topic-lists.php.
  *
- * @since   BuddyBoss [BBVERSION]
+ * @since   BuddyBoss 2.8.80
  * @version 1.0.0
  */
 

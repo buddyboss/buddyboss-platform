@@ -433,7 +433,7 @@ class BP_Core extends BP_Component {
 	 *
 	 * @param array $controllers Optional. See BP_Component::rest_api_init() for description.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.8.80
 	 */
 	public function rest_api_init( $controllers = array() ) {
 		$controllers = array(

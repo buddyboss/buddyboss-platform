@@ -4,7 +4,7 @@
  *
  * Handles database schema creation and CRUD operations for activity topics.
  *
- * @since   BuddyBoss [BBVERSION]
+ * @since   BuddyBoss 2.8.80
  * @package BuddyBoss\Activity
  */
 
@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Manages Activity Topics data storage and operations.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.8.80
  */
 #[\AllowDynamicProperties]
 class BB_Activity_Topics_Manager {
@@ -24,7 +24,7 @@ class BB_Activity_Topics_Manager {
 	/**
 	 * Instance of this class.
 	 *
-	 * @since  BuddyBoss [BBVERSION]
+	 * @since  BuddyBoss 2.8.80
 	 *
 	 * @var object
 	 *
@@ -35,7 +35,7 @@ class BB_Activity_Topics_Manager {
 	/**
 	 * Table name for Activity Topic Relationships.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.8.80
 	 *
 	 * @var string
 	 */
@@ -44,7 +44,7 @@ class BB_Activity_Topics_Manager {
 	/**
 	 * Cache key for activity topics.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.8.80
 	 *
 	 * @var string
 	 */
@@ -53,7 +53,7 @@ class BB_Activity_Topics_Manager {
 	/**
 	 * WordPress Database instance.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.8.80
 	 *
 	 * @var wpdb
 	 */
@@ -62,7 +62,7 @@ class BB_Activity_Topics_Manager {
 	/**
 	 * Get the singleton instance of this class.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.8.80
 	 *
 	 * @return BB_Activity_Topics_Manager The singleton instance.
 	 */
@@ -77,7 +77,7 @@ class BB_Activity_Topics_Manager {
 	/**
 	 * Constructor.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.8.80
 	 */
 	public function __construct() {
 		global $wpdb;
@@ -92,7 +92,7 @@ class BB_Activity_Topics_Manager {
 	/**
 	 * Setup hooks for logging actions.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.8.80
 	 */
 	private function setup_hooks() {
 		add_action( 'load-buddyboss_page_bp-activity', array( $this, 'bb_activity_admin_edit_metabox_topic' ) );
@@ -116,7 +116,7 @@ class BB_Activity_Topics_Manager {
 	/**
 	 * Get the permission type for the activity topic.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.8.80
 	 *
 	 * @param string $existing_permission_type The existing permission type.
 	 *
@@ -127,7 +127,7 @@ class BB_Activity_Topics_Manager {
 			/**
 			 * Filters the permission types for the activity topic.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 2.8.80
 			 *
 			 * @param array $permission_types Array of permission types.
 			 */
@@ -150,7 +150,7 @@ class BB_Activity_Topics_Manager {
 	/**
 	 * Load the activity topics metabox in activity admin page.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.8.80
 	 */
 	public function bb_activity_admin_edit_metabox_topic() {
 		add_meta_box( 'bp_activity_topic', __( 'Topic', 'buddyboss' ), array( $this, 'bb_activity_admin_edit_metabox_topic_content' ), 'buddyboss_page_bp-activity', 'normal', 'core' );
@@ -159,7 +159,7 @@ class BB_Activity_Topics_Manager {
 	/**
 	 * Display the activity topics metabox in activity admin page.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.8.80
 	 *
 	 * @param object $item The activity item.
 	 */
@@ -213,7 +213,7 @@ class BB_Activity_Topics_Manager {
 	/**
 	 * Save the activity topic metabox.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.8.80
 	 *
 	 * @param object $activity The activity object.
 	 */
@@ -230,7 +230,7 @@ class BB_Activity_Topics_Manager {
 		/**
 		 * Fires before saving the activity topic metabox.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.8.80
 		 *
 		 * @param object $activity The activity object.
 		 */
@@ -257,7 +257,7 @@ class BB_Activity_Topics_Manager {
 		/**
 		 * Fires after saving the activity topic metabox.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.8.80
 		 *
 		 * @param int $activity_id The ID of the activity.
 		 * @param int $topic_id    The ID of the topic.
@@ -268,7 +268,7 @@ class BB_Activity_Topics_Manager {
 	/**
 	 * Add topic column to activity admin list table.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.8.80
 	 *
 	 * @param array $columns Array of column names and labels.
 	 *
@@ -288,7 +288,7 @@ class BB_Activity_Topics_Manager {
 	/**
 	 * Display topic column content in activity admin list table.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.8.80
 	 *
 	 * @param string $content     The column content.
 	 * @param string $column_name Column name.
@@ -314,7 +314,7 @@ class BB_Activity_Topics_Manager {
 	/**
 	 * Add the activity topic relationship.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.8.80
 	 *
 	 * @param array $args Array of args. {
 	 *     @type int    $topic_id    The ID of the topic.
@@ -351,7 +351,7 @@ class BB_Activity_Topics_Manager {
 		/**
 		 * Fires before an activity-topic relationship is added or updated.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.8.80
 		 *
 		 * @param array $r The arguments used to add the relationship.
 		 */
@@ -397,7 +397,7 @@ class BB_Activity_Topics_Manager {
 			/**
 			 * Fires after an activity-topic relationship is updated.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 2.8.80
 			 *
 			 * @param int   $existing_id               The ID of the updated relationship.
 			 * @param array $get_activity_relationship The activity topic relationship.
@@ -441,7 +441,7 @@ class BB_Activity_Topics_Manager {
 		/**
 		 * Fires after an activity-topic relationship is added.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.8.80
 		 *
 		 * @param int   $relationship_id           The ID of the inserted relationship.
 		 * @param array $get_activity_relationship The activity topic relationship.
@@ -455,7 +455,7 @@ class BB_Activity_Topics_Manager {
 	/**
 	 * Update the activity topic relationship.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.8.80
 	 *
 	 * @param array $args Array of args.
 	 *
@@ -476,7 +476,7 @@ class BB_Activity_Topics_Manager {
 		/**
 		 * Fires before updating the activity topic relationship.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.8.80
 		 *
 		 * @param array $args Array of args. {
 		 *     @type int $previous_id The ID of the previous topic.
@@ -520,7 +520,7 @@ class BB_Activity_Topics_Manager {
 		/**
 		 * Fires after updating the activity topic relationship.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.8.80
 		 *
 		 * @param int   $updated                   The ID of the updated relationship.
 		 * @param array $get_activity_relationship The activity topic relationship.
@@ -537,7 +537,7 @@ class BB_Activity_Topics_Manager {
 	/**
 	 * Delete the activity topic relationship.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.8.80
 	 *
 	 * @param array $args Array of args.
 	 *
@@ -554,7 +554,7 @@ class BB_Activity_Topics_Manager {
 		/**
 		 * Fires before deleting the activity topic relationship.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.8.80
 		 *
 		 * @param array $args Array of args. {
 		 *     @type int $topic_id The ID of the topic.
@@ -589,7 +589,7 @@ class BB_Activity_Topics_Manager {
 		/**
 		 * Fires after deleting the activity topic relationship.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.8.80
 		 *
 		 * @param int $deleted The ID of the deleted relationship.
 		 * @param array $get_activity_relationship The activity topic relationship.
@@ -605,7 +605,7 @@ class BB_Activity_Topics_Manager {
 	/**
 	 * Function to get activity topic relationship.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.8.80
 	 *
 	 * @param array $args Array of args. {
 	 *     @type int $id The ID of the activity topic relationship.
@@ -667,7 +667,7 @@ class BB_Activity_Topics_Manager {
 	/**
 	 * Get the activity topic data.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.8.80
 	 *
 	 * @param array $args Array of args.
 	 *
@@ -691,7 +691,7 @@ class BB_Activity_Topics_Manager {
 	/**
 	 * Set the topic id in the querystring.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.8.80
 	 *
 	 * @param string $querystring The querystring.
 	 * @param string $object_type The object type.
@@ -717,7 +717,7 @@ class BB_Activity_Topics_Manager {
 	/**
 	 * Validate the activity topic before it is added.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.8.80
 	 *
 	 * @param array $args The arguments array.
 	 */
@@ -738,7 +738,7 @@ class BB_Activity_Topics_Manager {
 	/**
 	 * Add join SQL for activity topic filtering.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.8.80
 	 *
 	 * @param string $join_sql Join SQL statement.
 	 * @param array  $args     Query arguments.
@@ -760,7 +760,7 @@ class BB_Activity_Topics_Manager {
 	/**
 	 * Get the where conditions for the activity topic.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.8.80
 	 *
 	 * @param array $where_conditions Array of where conditions.
 	 * @param array $args             Query arguments.
@@ -788,7 +788,7 @@ class BB_Activity_Topics_Manager {
 	/**
 	 * Process activity topic ID parameter for activity queries.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.8.80
 	 *
 	 * @param string $qs The activity query string.
 	 *
@@ -810,7 +810,7 @@ class BB_Activity_Topics_Manager {
 	/**
 	 * Get the JS strings for the activity topic.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.8.80
 	 *
 	 * @param array $strings Array of strings.
 	 *
@@ -848,7 +848,7 @@ class BB_Activity_Topics_Manager {
 	/**
 	 * Function to get the activity topics.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.8.80
 	 *
 	 * @param array $args The arguments array.
 	 *
@@ -895,7 +895,7 @@ class BB_Activity_Topics_Manager {
 	/**
 	 * Check if a user can post to a activity topic.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.8.80
 	 *
 	 * @param int $topic_id The topic ID.
 	 *
@@ -919,7 +919,7 @@ class BB_Activity_Topics_Manager {
 	/**
 	 * Get the activity topic information.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.8.80
 	 *
 	 * @param int    $activity_id The ID of the activity.
 	 * @param string $return_type The type of data to return ('id', 'name', 'slug', 'all').
@@ -971,7 +971,7 @@ class BB_Activity_Topics_Manager {
 		/**
 		 * Filters the activity topic data before returning.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.8.80
 		 *
 		 * @param mixed  $result      The topic data.
 		 * @param int    $activity_id The activity ID.
@@ -985,7 +985,7 @@ class BB_Activity_Topics_Manager {
 	/**
 	 * Get the activity topic URL.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.8.80
 	 *
 	 * @param array $args Array of args. {
 	 *     @type int    $activity_id The ID of the activity.
@@ -1049,7 +1049,7 @@ class BB_Activity_Topics_Manager {
 		/**
 		 * Filters the activity topic URL before returning.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.8.80
 		 *
 		 * @param string $url         The topic URL.
 		 * @param object $topic       The topic object.
@@ -1074,7 +1074,7 @@ class BB_Activity_Topics_Manager {
 			/**
 			 * Filter the HTML output for the activity topic URL.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 2.8.80
 			 *
 			 * @param string $html_output The HTML output.
 			 * @param string $url         The topic URL.
@@ -1094,7 +1094,7 @@ class BB_Activity_Topics_Manager {
 	/**
 	 * Add the activity topic selector after the post form in user activity.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.8.80
 	 */
 	public function bb_user_activity_topics_after_post_form() {
 		$current_slug = function_exists( 'bb_topics_manager_instance' ) ? bb_topics_manager_instance()->bb_get_topic_slug_from_url() : '';
@@ -1126,7 +1126,7 @@ class BB_Activity_Topics_Manager {
 	/**
 	 * Get the activity topic from the URL.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.8.80
 	 *
 	 * @param array $args The arguments.
 	 *

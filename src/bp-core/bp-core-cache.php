@@ -665,7 +665,7 @@ add_action( 'deleted_post', 'bb_reaction_clear_reactions_cache_on_delete_emotion
 /**
  * Common function to clear topic related caches.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.8.80
  *
  * @param object|int $topic_data Topic relationship object or topic ID.
  * @param array      $args       Additional arguments.
@@ -725,7 +725,7 @@ function bb_clear_topic_related_caches( $topic_data, $args = array() ) {
 /**
  * Reset cache when a topic is added.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.8.80
  *
  * @param object|int $topic_relationship Topic relationship object or topic ID.
  * @param array      $r                  Additional arguments.
@@ -741,7 +741,7 @@ add_action( 'bb_topic_relationship_after_updated', 'bb_topic_added_cache_reset',
 /**
  * Reset cache when a topic is deleted.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.8.80
  *
  * @param array $relationships_ids The IDs of the topic relationships that were deleted.
  * @param int   $topic_id          The ID of the topic that was deleted.
@@ -784,7 +784,7 @@ add_action( 'bb_topic_deleted', 'bb_topic_deleted_cache_reset', 10, 2 );
 /**
  * Reset cache when a topic relationship is updated.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.8.80
  *
  * @param int $relationship_id The ID of the updated relationship.
  */
@@ -800,7 +800,7 @@ add_action( 'bb_activity_topic_relationship_after_update', 'bb_activity_topic_re
 /**
  * Clear topic redirect cache for a specific slug.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.8.80
  *
  * @param string|array $old_slug_or_args The old topic slug to clear cache for, or array of arguments.
  * @param string       $item_type The item type (optional, defaults to 'activity').
@@ -850,7 +850,7 @@ function bb_clear_topic_redirect_cache( $old_slug_or_args, $item_type = 'activit
 	/**
 	 * Fires after topic redirect cache is cleared.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.8.80
 	 *
 	 * @param string $old_slug The old topic slug.
 	 * @param string $item_type The item type.
@@ -864,7 +864,7 @@ add_action( 'bb_topic_history_after_added', 'bb_clear_topic_redirect_cache', 10,
 /**
  * Clear activity results cache when a topic is migrated.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.8.80
  *
  * @param object $topic        The topic object.
  * @param int    $old_topic_id The ID of the old topic.
