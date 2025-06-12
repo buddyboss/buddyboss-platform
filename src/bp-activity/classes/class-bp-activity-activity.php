@@ -604,6 +604,7 @@ class BP_Activity_Activity {
 				}
 			}
 		}
+		$r['pinned_id'] = $pinned_id;
 
 		// Hide Hidden Items?
 		if ( ! $r['show_hidden'] ) {
