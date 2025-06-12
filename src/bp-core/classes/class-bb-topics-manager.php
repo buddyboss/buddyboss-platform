@@ -2321,9 +2321,15 @@ class BB_Topics_Manager {
 		);
 
 		if ( $new_slug ) {
+			$new_slug_exists = $this->bb_get_topic_history( array( 'new_topic_slug' => $new_slug ) );
+
 			// Build the redirect URL.
-			$current_url  = home_url( add_query_arg( array() ) );
-			$redirect_url = add_query_arg( 'bb-topic', $new_slug, remove_query_arg( 'bb-topic', $current_url ) );
+			$current_url = home_url( add_query_arg( array() ) );
+			if ( ! $new_slug_exists ) {
+				$redirect_url = remove_query_arg( 'bb-topic', $current_url );
+			} else {
+				$redirect_url = add_query_arg( 'bb-topic', $new_slug, remove_query_arg( 'bb-topic', $current_url ) );
+			}
 
 			/**
 			 * Filters the topic redirect URL.
@@ -2369,5 +2375,32 @@ class BB_Topics_Manager {
 		$topic_slug = isset( $_REQUEST['bb-topic'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['bb-topic'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
 		return $topic_slug;
+	}
+
+	/**
+	 * Get the topic history.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $args The arguments.
+	 *
+	 * @return array The topic history.
+	 */
+	public function bb_get_topic_history( $args ) {
+		$r = bp_parse_args(
+			$args,
+			array(
+				'new_topic_slug' => '',
+			),
+			'bb_get_topic_history'
+		);
+
+		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$query = $this->wpdb->prepare(
+			"SELECT * FROM {$this->topic_history_table} WHERE new_topic_slug = %s",
+			$r['new_topic_slug']
+		);
+
+		return $this->wpdb->get_var( $query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Query is prepared above.
 	}
 }

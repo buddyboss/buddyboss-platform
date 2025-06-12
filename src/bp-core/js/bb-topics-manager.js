@@ -583,6 +583,7 @@ window.bp = window.bp || {};
 			$( '#bb_is_global_activity' ).val( '' );
 			this.$topicName.prop( 'readonly', false );
 			this.$topicName.prop( 'disabled', false );
+			$( this.config.submitButtonSelector ).prop( 'disabled', true );
 
 			// Trigger modal closed event.
 			$( document ).trigger( 'bb_modal_closed', [this.$modal] );
