@@ -1244,7 +1244,7 @@ add_action( 'bp_init', 'bb_telemetry_load' );
  * Initialize the Topics Manager.
  * This ensures we only load the manager when needed.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.8.80
  *
  * @return void True if the topics manager is loaded, false otherwise.
  */

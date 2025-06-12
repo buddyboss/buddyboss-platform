@@ -204,7 +204,7 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 		/**
 		 * Fires to register Activity topic settings fields.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.8.80
 		 *
 		 * @param Object $this BP_Admin_Setting_Activity.
 		 */
@@ -482,7 +482,7 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 	/**
 	 * Enable activity topics.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.8.80
 	 */
 	public function bb_admin_setting_callback_enable_activity_topics() {
 		?>
@@ -494,7 +494,7 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 	/**
 	 * Enable activity topic required.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.8.80
 	 */
 	public function bb_admin_setting_callback_activity_topic_required() {
 		?>
@@ -506,7 +506,7 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 	/**
 	 * Activity topics.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.8.80
 	 */
 	public function bb_admin_setting_callback_activity_topics() {
 		$topics               = bb_topics_manager_instance()->bb_get_topics(
@@ -713,7 +713,7 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 	/**
 	 * Enable group activity topics.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.8.80
 	 */
 	public function bb_admin_setting_callback_enable_group_activity_topics() {
 		$val    = function_exists( 'bb_is_enabled_group_activity_topics' ) && bb_is_enabled_group_activity_topics();
@@ -728,7 +728,7 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 	/**
 	 * Link to Activity Topics tutorial.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.8.80
 	 */
 	public function bb_admin_activity_topics_settings_tutorial() {
 		?>

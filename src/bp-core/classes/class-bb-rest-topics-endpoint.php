@@ -2,7 +2,7 @@
 /**
  * BB REST: BB_REST_Topics_Endpoint class
  *
- * @since   [BBVERSION]
+ * @since   2.8.80
  * @package BuddyBoss
  */
 
@@ -11,14 +11,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Topics endpoints.
  *
- * @since [BBVERSION]
+ * @since 2.8.80
  */
 class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 
 	/**
 	 * Constructor.
 	 *
-	 * @since [BBVERSION]
+	 * @since 2.8.80
 	 */
 	public function __construct() {
 		$this->namespace = bp_rest_namespace() . '/' . bp_rest_version();
@@ -32,7 +32,7 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 	/**
 	 * Register the fields for the activity object.
 	 *
-	 * @since [BBVERSION]
+	 * @since 2.8.80
 	 */
 	public function bp_rest_activity_support() {
 		bp_rest_register_field(
@@ -65,7 +65,7 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 	/**
 	 * Register the routes for the objects of the controller.
 	 *
-	 * @since [BBVERSION]
+	 * @since 2.8.80
 	 */
 	public function register_routes() {
 		register_rest_route(
@@ -142,7 +142,7 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 	/**
 	 * Get topics.
 	 *
-	 * @since          [BBVERSION]
+	 * @since          2.8.80
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
@@ -210,7 +210,7 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 		/**
 		 * Fires after the topics were fetched via the REST API.
 		 *
-		 * @since [BBVERSION]
+		 * @since 2.8.80
 		 *
 		 * @param array            $topics   Fetched topics.
 		 * @param WP_REST_Response $response The response data.
@@ -224,7 +224,7 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 	/**
 	 * Check if a given request has access to view topics.
 	 *
-	 * @since [BBVERSION]
+	 * @since 2.8.80
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
@@ -262,7 +262,7 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 		/**
 		 * Filter the topic `get_items` permissions check.
 		 *
-		 * @since [BBVERSION]
+		 * @since 2.8.80
 		 *
 		 * @param bool|WP_Error   $retval  Returned value.
 		 * @param WP_REST_Request $request The request sent to the API.
@@ -273,7 +273,7 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 	/**
 	 * Create a topic.
 	 *
-	 * @since          [BBVERSION]
+	 * @since          2.8.80
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
@@ -334,7 +334,7 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 		/**
 		 * Fires after an topic is created via the REST API.
 		 *
-		 * @since [BBVERSION]
+		 * @since 2.8.80
 		 *
 		 * @param WP_REST_Response $response The response data.
 		 * @param WP_REST_Request  $request  The request sent to the API.
@@ -347,7 +347,7 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 	/**
 	 * Check if a given request has access to create a topic.
 	 *
-	 * @since [BBVERSION]
+	 * @since 2.8.80
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
@@ -451,7 +451,7 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 		/**
 		 * Filter the topic `create_item` permissions check.
 		 *
-		 * @since [BBVERSION]
+		 * @since 2.8.80
 		 *
 		 * @param bool|WP_Error   $retval  Returned value.
 		 * @param WP_REST_Request $request The request sent to the API.
@@ -462,7 +462,7 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 	/**
 	 * Get a topic.
 	 *
-	 * @since          [BBVERSION]
+	 * @since          2.8.80
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
@@ -502,7 +502,7 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 		/**
 		 * Fires after an topic is fetched via the REST API.
 		 *
-		 * @since [BBVERSION]
+		 * @since 2.8.80
 		 *
 		 * @param WP_REST_Response  $response The response data.
 		 * @param WP_REST_Request   $request  The request sent to the API.
@@ -517,7 +517,7 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 	/**
 	 * Check if a given request has access to view a topic.
 	 *
-	 * @since [BBVERSION]
+	 * @since 2.8.80
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
@@ -562,7 +562,7 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 		/**
 		 * Filter the topic `get_item` permissions check.
 		 *
-		 * @since [BBVERSION]
+		 * @since 2.8.80
 		 *
 		 * @param bool|WP_Error   $retval  Returned value.
 		 * @param WP_REST_Request $request The request sent to the API.
@@ -573,7 +573,7 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 	/**
 	 * Update a topic.
 	 *
-	 * @since          [BBVERSION]
+	 * @since          2.8.80
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
@@ -655,7 +655,7 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 		/**
 		 * Fires after a topic is updated via the REST API.
 		 *
-		 * @since [BBVERSION]
+		 * @since 2.8.80
 		 *
 		 * @param WP_REST_Response $response The response data.
 		 * @param WP_REST_Request  $request  The request sent to the API.
@@ -668,7 +668,7 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 	/**
 	 * Check if a given request has access to update a topic.
 	 *
-	 * @since [BBVERSION]
+	 * @since 2.8.80
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
@@ -814,7 +814,7 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 		/**
 		 * Filter the topic `update_item` permissions check.
 		 *
-		 * @since [BBVERSION]
+		 * @since 2.8.80
 		 *
 		 * @param bool|WP_Error   $retval  Returned value.
 		 * @param WP_REST_Request $request The request sent to the API.
@@ -825,7 +825,7 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 	/**
 	 * Delete a topic.
 	 *
-	 * @since          [BBVERSION]
+	 * @since          2.8.80
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
@@ -910,7 +910,7 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 		/**
 		 * Fires after an topic is deleted via the REST API.
 		 *
-		 * @since [BBVERSION]
+		 * @since 2.8.80
 		 *
 		 * @param WP_REST_Response $response The response data.
 		 * @param WP_REST_Request  $request  The request sent to the API.
@@ -923,7 +923,7 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 	/**
 	 * Check if a given request has access to delete a topic.
 	 *
-	 * @since [BBVERSION]
+	 * @since 2.8.80
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
@@ -1035,7 +1035,7 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 		/**
 		 * Filter the topic `delete_item` permissions check.
 		 *
-		 * @since [BBVERSION]
+		 * @since 2.8.80
 		 *
 		 * @param bool|WP_Error   $retval  Returned value.
 		 * @param WP_REST_Request $request The request sent to the API.
@@ -1046,7 +1046,7 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 	/**
 	 * Update the order of topics.
 	 *
-	 * @since          [BBVERSION]
+	 * @since          2.8.80
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
@@ -1129,7 +1129,7 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 			/**
 			 * Fires after topics order is updated via the REST API.
 			 *
-			 * @since [BBVERSION]
+			 * @since 2.8.80
 			 *
 			 * @param WP_REST_Response $response The response data.
 			 * @param WP_REST_Request  $request  The request sent to the API.
@@ -1149,7 +1149,7 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 	/**
 	 * Check if a given request has access to update topics order.
 	 *
-	 * @since [BBVERSION]
+	 * @since 2.8.80
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
@@ -1245,7 +1245,7 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 		/**
 		 * Filter the topics order update permissions check.
 		 *
-		 * @since [BBVERSION]
+		 * @since 2.8.80
 		 *
 		 * @param bool|WP_Error   $retval  Returned value.
 		 * @param WP_REST_Request $request The request sent to the API.
@@ -1256,7 +1256,7 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 	/**
 	 * Get the endpoint arguments for the item schema.
 	 *
-	 * @since [BBVERSION]
+	 * @since 2.8.80
 	 *
 	 * @param string $method Optional. HTTP method of the request. Default 'GET'.
 	 *
@@ -1413,7 +1413,7 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 		/**
 		 * Filters the method query arguments.
 		 *
-		 * @since [BBVERSION]
+		 * @since 2.8.80
 		 *
 		 * @param array  $args   Query arguments.
 		 * @param string $method HTTP method of the request.
@@ -1424,7 +1424,7 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 	/**
 	 * Prepare a topic for response.
 	 *
-	 * @since [BBVERSION]
+	 * @since 2.8.80
 	 *
 	 * @param stdClass        $item    Topic object.
 	 * @param WP_REST_Request $request Request object.
@@ -1492,7 +1492,7 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 		/**
 		 * Filter a topic value returned from the API.
 		 *
-		 * @since [BBVERSION]
+		 * @since 2.8.80
 		 *
 		 * @param WP_REST_Response  $response The response data.
 		 * @param WP_REST_Request   $request  Request used to generate the response.
@@ -1528,7 +1528,7 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 	/**
 	 * Get the topic schema, conforming to JSON Schema.
 	 *
-	 * @since [BBVERSION]
+	 * @since 2.8.80
 	 *
 	 * @return array
 	 */
@@ -1573,7 +1573,7 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 	/**
 	 * Get the topic name.
 	 *
-	 * @since [BBVERSION]
+	 * @since 2.8.80
 	 *
 	 * @param array  $activity  The activity object.
 	 * @param string $field   The field.
@@ -1616,7 +1616,7 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 	/**
 	 * The function to use to update the topic id's value of the activity REST Field.
 	 *
-	 * @since [BBVERSION]
+	 * @since 2.8.80
 	 *
 	 * @param int    $topic_id   The BuddyPress component's object that was just created/updated during the request.
 	 *                           (in this case, the BP_Activity_Activity object).

@@ -10010,7 +10010,7 @@ function bb_filter_activity_filter_scope_keys( $filters = array() ) {
 /**
  * Get the singleton instance of BB_Topics_Manager.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.8.80
  *
  * @return BB_Topics_Manager|null Instance of the topics manager or null if class doesn't exist.
  */
@@ -10025,7 +10025,7 @@ function bb_topics_manager_instance() {
 /**
  * Function to return the minimum pro version to show notice for group activity topics.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.8.80
  *
  * @return string
  */
