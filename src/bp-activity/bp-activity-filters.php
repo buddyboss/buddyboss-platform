@@ -3968,7 +3968,7 @@ function bb_clear_activity_all_comment_parent_caches( $activities ) {
  * Initialize the Activity Topics Manager.
  * This ensures we only load the manager when needed.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.8.80
  *
  * @return void True if the activity topics manager is loaded, false otherwise.
  */
@@ -3984,7 +3984,7 @@ function bb_load_activity_topics_manager() {
 /**
  * Save topic data for the activity.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.8.80
  *
  * @param object $activity The activity object.
  *

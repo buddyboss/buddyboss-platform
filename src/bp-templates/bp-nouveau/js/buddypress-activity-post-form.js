@@ -1629,7 +1629,7 @@ window.bp = window.bp || {};
 				$whatsNew[0].innerHTML = '';
 			}
 			
-			if ( $( $.parseHTML( content ) ).text().trim() !== '' || content.includes( 'class="emoji"' ) || ( ! _.isUndefined( this.model.get( 'link_success' ) ) && true === this.model.get( 'link_success' ) ) || ( ! _.isUndefined( this.model.get( 'video' ) ) && 0 !== this.model.get('video').length ) || ( ! _.isUndefined( this.model.get( 'document' ) ) && 0 !== this.model.get('document').length ) || ( ! _.isUndefined( this.model.get( 'media' ) ) && 0 !== this.model.get('media').length ) || ( ! _.isUndefined( this.model.get( 'gif_data' ) ) && ! _.isEmpty( this.model.get( 'gif_data' ) ) ) || ( ! _.isUndefined( this.model.get( 'poll' ) ) && ! _.isEmpty( this.model.get( 'poll' ) ) ) ) {
+			if ( $( $.parseHTML( content ) ).text().trim() !== '' || content.includes( 'class="emoji"' ) || ( ! _.isUndefined( this.postForm.model.get( 'link_success' ) ) && true === this.postForm.model.get( 'link_success' ) ) || ( ! _.isUndefined( this.postForm.model.get( 'video' ) ) && 0 !== this.postForm.model.get('video').length ) || ( ! _.isUndefined( this.postForm.model.get( 'document' ) ) && 0 !== this.postForm.model.get('document').length ) || ( ! _.isUndefined( this.postForm.model.get( 'media' ) ) && 0 !== this.postForm.model.get('media').length ) || ( ! _.isUndefined( this.postForm.model.get( 'gif_data' ) ) && ! _.isEmpty( this.postForm.model.get( 'gif_data' ) ) ) || ( ! _.isUndefined( this.postForm.model.get( 'poll' ) ) && ! _.isEmpty( this.postForm.model.get( 'poll' ) ) ) ) {
 				return true;
 			}
 			
