@@ -1057,6 +1057,27 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 				'current_instructor' => $current_instructor,
 			);
 		}
+
+		/**
+		 * Get course instructors including main author and shared instructors.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param int $course_id Course ID.
+		 *
+		 * @return array Array of instructor IDs.
+		 */
+		public function bb_rl_get_course_instructor( $course_id ) {
+			$shared_instructor_list = get_post_meta( $course_id, 'ir_shared_instructor_ids', 1 );
+			$shared_instructor_ids  = ! empty( $shared_instructor_list ) ? explode( ',', $shared_instructor_list ) : array();
+
+			$main_author_id = get_post_field( 'post_author', $course_id );
+			if ( ! empty( $main_author_id ) ) {
+				$shared_instructor_ids[] = $main_author_id;
+			}
+
+			return array_filter( array_unique( $shared_instructor_ids ) );
+		}
 	}
 
 

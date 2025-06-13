@@ -369,15 +369,34 @@ if ( $is_enrolled ) {
 			?>
 		</div>
 		<div class="bb-rl-course-author">
-			<h4><?php esc_html_e( 'Instructor', 'buddyboss' ); ?></h4>
+			<h4><?php esc_html_e( 'Instructors', 'buddyboss' ); ?></h4>
 			<?php
-			$author_id   = get_the_author_meta( 'ID' );
-			$author_name = get_the_author();
+			$shared_instructor_ids = BB_Readylaunch_Learndash_Helper::instance()->bb_rl_get_course_instructor( $course_id );
+
+			// Display all instructors.
+			foreach ( $shared_instructor_ids as $instructor_id ) {
+				$instructor = get_userdata( $instructor_id );
+				if ( $instructor ) {
+					$instructor_user_link = bp_core_get_user_domain( $instructor_id );
+					?>
+					<div class="bb-rl-instructor-item">
+						<a class="item-avatar bb-rl-author-avatar" href="<?php echo esc_url( $instructor_user_link ); ?>">
+							<?php echo get_avatar( $instructor_id, 32 ); ?>
+						</a>
+						<span class="bb-rl-author-name">
+							<?php
+							if ( ! empty( $instructor_user_link ) ) {
+								echo '<a href="' . esc_url( $instructor_user_link ) . '">' . esc_html( $instructor->display_name ) . '</a>';
+							} else {
+								echo esc_html( $instructor->display_name );
+							}
+							?>
+						</span>
+					</div>
+					<?php
+				}
+			}
 			?>
-			<span class="bb-rl-author-avatar">
-				<?php echo get_avatar( $author_id, 32 ); ?>
-			</span>
-			<span class="bb-rl-author-name"><?php echo esc_html( $author_name ); ?></span>
 		</div>
 		<div class="bb-rl-course-popup-actions">
 			<a href="<?php echo esc_url( $resume_link ); ?>" class="bb-rl-course-link bb-rl-button bb-rl-button--brandFill bb-rl-button--small">
