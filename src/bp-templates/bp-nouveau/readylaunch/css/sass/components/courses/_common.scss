@@ -616,3 +616,45 @@
 		left: 0;
 	}
 }
+
+.bb-rl-entry-content {
+
+	.learndash-wrapper {
+
+		.ld-tabs {
+			margin: 0;
+		}
+
+		.ld-tabs .ld-tabs-navigation:after {
+			display: none;
+		}
+
+		.ld-tabs .ld-tabs-navigation {
+			gap: var(--bb-rl-space-100);
+
+			.ld-tab {
+
+				@include bb-rl-label-heading-bolder;
+				padding: 6px var(--bb-rl-space-200);
+				border: 1px solid var(--bb-rl-border-secondary-color);
+				color: var(--bb-rl-text-secondary-color);
+				border-radius: var(--bb-rl-radius-full);
+				background-color: transparent;
+
+				.ld-icon {
+					display: none;
+				}
+
+				&::after {
+					display: none;
+				}
+
+				&.ld-active {
+					background-color: var(--bb-rl-background-color);
+					color: var(--bb-rl-text-color);
+					border-color: var(--bb-rl-border-quinery-color);
+				}
+			}
+		}
+	}
+}
