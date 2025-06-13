@@ -84,7 +84,7 @@ if ( ! empty( $bb_lessons ) ) {
 }
 
 // Get the WP_User object for the current user.
-$bb_user = get_userdata( $bb_user_id );
+$bb_user = is_user_logged_in() ? get_userdata( $bb_user_id ) : false;
 
 // Get course meta and certificate.
 $bb_course_meta = get_post_meta( $bb_course_id, '_sfwd-courses', true );
@@ -94,7 +94,7 @@ if ( ! is_array( $bb_course_meta ) ) {
 if ( ! isset( $bb_course_meta['sfwd-courses_course_disable_content_table'] ) ) {
 	$bb_course_meta['sfwd-courses_course_disable_content_table'] = false;
 }
-$bb_course_certficate_link = $bb_course_model->get_certificate_link( $bb_user );
+$bb_course_certficate_link = $bb_user ? $bb_course_model->get_certificate_link( $bb_user ) : '';
 
 // Additional variables needed for course content listing.
 $bb_has_lesson_quizzes = learndash_30_has_lesson_quizzes( $bb_course_id, $bb_lessons );
