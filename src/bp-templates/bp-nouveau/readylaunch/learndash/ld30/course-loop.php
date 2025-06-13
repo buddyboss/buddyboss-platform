@@ -48,6 +48,15 @@ add_filter( 'learndash_template_content_on_listing_is_hidden', '__return_false' 
 $course_excerpt            = get_the_excerpt( $course_id );
 $course_excerpt_in_listing = wp_trim_words( $course_excerpt, 10, '...' );
 remove_filter( 'learndash_template_content_on_listing_is_hidden', '__return_false' );
+
+$resume_link = get_permalink( $course_id );
+if ( $is_enrolled ) {
+	$user_course_last_step_id = learndash_user_progress_get_first_incomplete_step( $user_id, $course_id );
+	if ( ! empty( $user_course_last_step_id ) ) {
+		$user_course_last_step_id = learndash_user_progress_get_parent_incomplete_step( $user_id, $course_id, $user_course_last_step_id );
+		$resume_link              = learndash_get_step_permalink( $user_course_last_step_id, $course_id );
+	}
+}
 ?>
 <div class="bb-rl-course-card bb-rl-course-card--ldlms">
 	<article id="post-<?php the_ID(); ?>" <?php post_class( 'bb-rl-course-item' ); ?>>
@@ -231,7 +240,7 @@ remove_filter( 'learndash_template_content_on_listing_is_hidden', '__return_fals
 							}
 							?>
 							<div class="bb-rl-course-link-wrap">
-								<a href="<?php the_permalink(); ?>" class="bb-rl-course-link bb-rl-button bb-rl-button--secondaryFill bb-rl-button--small">
+								<a href="<?php echo esc_url( $resume_link ); ?>" class="bb-rl-course-link bb-rl-button bb-rl-button--secondaryFill bb-rl-button--small">
 									<?php
 									if ( $is_enrolled ) {
 										esc_html_e( 'Continue Course', 'buddyboss' );
@@ -371,7 +380,7 @@ remove_filter( 'learndash_template_content_on_listing_is_hidden', '__return_fals
 			<span class="bb-rl-author-name"><?php echo esc_html( $author_name ); ?></span>
 		</div>
 		<div class="bb-rl-course-popup-actions">
-			<a href="<?php the_permalink(); ?>" class="bb-rl-course-link bb-rl-button bb-rl-button--brandFill bb-rl-button--small">
+			<a href="<?php echo esc_url( $resume_link ); ?>" class="bb-rl-course-link bb-rl-button bb-rl-button--brandFill bb-rl-button--small">
 				<i class="bb-icons-rl-play"></i>
 				<?php
 				if ( $is_enrolled ) {
