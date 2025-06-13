@@ -1062,6 +1062,10 @@
   margin-bottom: var(--bb-rl-space-200);
 }
 
+.bb-rl-forums-topic-page .bp-pagination-count {
+  display: none;
+}
+
 .bb-rl-topic-author {
   display: flex;
   align-items: center;
