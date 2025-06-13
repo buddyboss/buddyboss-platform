@@ -206,7 +206,7 @@
   font-size: 16px;
   color: var(--bb-rl-icon-tertiary-color);
   font-style: normal;
-  margin-right: var(--bb-rl-space-50);
+  margin-left: var(--bb-rl-space-50);
 }
 
 .mpcs-classroom.buddyboss-theme.bb-readylaunch-template .mpcs-sidebar-wrapper .mpcs-sidebar-menu,
@@ -239,7 +239,7 @@
   font-weight: 500;
   line-height: var(--bb-rl-base-line-small);
   color: var(--bb-rl-text-color) !important;
-  padding: 0 var(--bb-rl-space-200) 0 0;
+  padding: 0 0 0 var(--bb-rl-space-200);
 }
 
 .post-type-archive-mpcs-course.bb-readylaunch-template .bb-rl-meprlms-course-filters .dropdown a.dropdown-toggle span::before {

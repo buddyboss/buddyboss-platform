@@ -123,6 +123,37 @@
                     $card.data('hoverTimeout', timeout);
                 }
             });
+
+            // Handle popup hover events to keep popup open
+            $(document).on({
+                mouseenter: function() {
+                    var $card = $(this).closest('.bb-rl-course-card');
+                    
+                    // Clear any existing timeout for this card
+                    var cardTimeout = $card.data('hoverTimeout');
+                    if (cardTimeout) {
+                        clearTimeout(cardTimeout);
+                        $card.removeData('hoverTimeout');
+                    }
+                },
+                mouseleave: function() {
+                    var $card = $(this).closest('.bb-rl-course-card');
+                    
+                    // Clear any existing timeout for this card
+                    var cardTimeout = $card.data('hoverTimeout');
+                    if (cardTimeout) {
+                        clearTimeout(cardTimeout);
+                    }
+                    
+                    // Add delay before hiding popup
+                    var timeout = setTimeout(function() {
+                        $card.removeClass('bb-rl-card-popup-active');
+                        $card.removeData('hoverTimeout');
+                    }, 300);
+                    
+                    $card.data('hoverTimeout', timeout);
+                }
+            }, '.bb-rl-course-card-popup');
             
             // Reposition popups on window resize
             $(window).on('resize', function() {

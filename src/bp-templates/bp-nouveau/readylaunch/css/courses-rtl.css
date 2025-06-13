@@ -173,38 +173,6 @@
 }
 
 /* SCSS Variables */
-.bb-rl-lms-inner-block {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: var(--bb-rl-space-400) 0;
-}
-
-.bb-rl-lms-inner-block .bb-rl-entry-header {
-  margin: 0 0 var(--bb-rl-space-300);
-}
-
-.bb-rl-lms-inner-block .bb-rl-heading {
-  margin: 0 0 var(--bb-rl-space-200);
-}
-
-.bb-rl-lms-inner-block .bb-rl-heading .bb-rl-lms-inner-count {
-  margin-bottom: var(--bb-rl-space-50);
-}
-
-.bb-rl-lms-inner-block .bb-rl-entry-title {
-  font-size: 20px;
-  font-weight: 700;
-  line-height: 30px;
-  color: var(--bb-rl-text-color);
-}
-
-.bb-rl-lms-inner-block .bb-rl-entry-content {
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 22px;
-  color: var(--bb-rl-text-secondary-color);
-}
-
 .bb-rl-lms-inner-count {
   font-size: var(--bb-rl-font-size-sm);
   font-weight: 400;

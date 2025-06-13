@@ -227,6 +227,11 @@ if ( $pos > 0 ) {
 										<?php
 									}
 									?>
+								<?php else : ?>
+									<a href="<?php the_permalink(); ?>" class="bb-rl-course-link bb-rl-button bb-rl-button--secondaryFill bb-rl-button--small">
+										<?php esc_html_e( 'View Course', 'buddyboss' ); ?>
+										<i class="bb-icons-rl-caret-right"></i>
+									</a>
 								<?php endif; ?>
 							</div>
 						</div>

@@ -1,3 +1,51 @@
 .bb-rl-meprlms-inner-block {
 	display: flex;
 }
+
+.bb-rl-lms-inner-block {
+
+	.mpcs-main-content {
+
+		p {
+
+			@include bb-rl-label-heading-md-thin;
+			color: var(--bb-rl-text-secondary-color);
+			margin-bottom: var(--bb-rl-space-200);
+		}
+
+		.mpcs-breadcrumbs {
+
+			@include bb-rl-label-heading;
+			color: var(--bb-rl-text-secondary-color);
+			margin: var(--bb-rl-space-50) 0 var(--bb-rl-space-300);
+
+			span.mpcs-breadcrumb {
+				display: inline-flex;
+				align-items: center;
+				gap: var(--bb-rl-space-50);
+			}
+
+			span.mpcs-breadcrumb:not(:last-child)::after {
+				content: "\e13a";
+				font-weight: 400;
+				font-family: bb-icons-rl;
+				font-size: 16px;
+				color: var(--bb-rl-icon-tertiary-color);
+				font-style: normal;
+				margin-right: var(--bb-rl-space-50);
+			}
+		}
+	}
+}
+
+.mpcs-classroom.buddyboss-theme.bb-readylaunch-template {
+
+	.mpcs-sidebar-wrapper {
+
+		.mpcs-sidebar-menu,
+		.mpcs-sidebar-grades,
+		.mpcs-sidebar-resources {
+			margin: 0;
+		}
+	}
+}

@@ -1,0 +1,13 @@
+.bb-rl-lms-inner-block {
+
+	#mpcs-lesson-navigation {
+
+		#next_lesson_link:not(#mpcs-classroom-previous-lesson-link),
+		#next_lesson_link {
+
+			@include bb-rl-button;
+			@include bb-rl-button--brand-fill;
+			@include bb-rl-button--small;
+		}
+	}
+}
