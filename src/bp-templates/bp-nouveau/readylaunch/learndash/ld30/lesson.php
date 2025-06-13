@@ -165,11 +165,12 @@ if ( function_exists( 'learndash_is_lesson_accessable' ) ) {
 								}
 
 								// Handle blocked content.
-								if ( $last_incomplete_step
-									&& $last_incomplete_step instanceof WP_Post
-									&& (
-										! ( function_exists( 'learndash_is_sample' ) && learndash_is_sample( $post ) )
-										|| (bool) $is_enrolled
+								if (
+									$last_incomplete_step &&
+									$last_incomplete_step instanceof WP_Post &&
+									(
+										! ( function_exists( 'learndash_is_sample' ) && learndash_is_sample( $post ) ) ||
+										(bool) $is_enrolled
 									)
 								) {
 									$show_content = false;
@@ -238,7 +239,7 @@ if ( function_exists( 'learndash_is_lesson_accessable' ) ) {
 										'course_id' => $course_id,
 										'post_id'   => $post->ID,
 										'user_id'   => $user_id,
-										'content'   => get_the_content(),
+										'content'   => $content,
 										'materials' => $materials,
 										'context'   => 'lesson',
 									),

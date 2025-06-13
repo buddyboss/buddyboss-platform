@@ -11,23 +11,63 @@ defined( 'ABSPATH' ) || exit;
 bp_get_template_part( 'header/readylaunch-header' );
 
 $readylaunch_instance = BB_Readylaunch::instance();
-if (
-	$readylaunch_instance->bb_rl_is_learndash_page() &&
-	$readylaunch_instance->bb_rl_is_page_enabled_for_integration( 'courses' )
-) {
-	$readylaunch_instance->bb_rl_courses_integration_page();
-} elseif ( $readylaunch_instance->bb_rl_is_memberpress_courses_page() ) {
+
+$is_ld_archive = is_post_type_archive( learndash_get_post_type_slug( 'course' ) );
+
+/**
+ * Fires before the layout.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+do_action( 'bb_rl_layout_before' );
+
+if ( $readylaunch_instance->bb_rl_is_memberpress_courses_page() ) {
 	$bb_rl_meprlms_template = BB_Readylaunch_Memberpress_Courses_Integration::bb_rl_meprlms_get_template();
 	if ( $bb_rl_meprlms_template ) {
 		load_template( $bb_rl_meprlms_template );
 	}
 } elseif ( have_posts() ) {
+
+	/**
+	 * Fires before the loop starts.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	do_action( 'bb_rl_layout_before_loop' );
+
 		/* Start the Loop */
 	while ( have_posts() ) :
 		the_post();
 
-		the_content();
-		endwhile;
+		if ( $is_ld_archive ) {
+			bp_get_template_part( 'learndash/ld30/course-loop' );
+		} else {
+			the_content();
+		}
+
+	endwhile;
+
+	/**
+	 * Fires after the loop ends.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	do_action( 'bb_rl_layout_after_loop' );
+} else {
+
+	/**
+	 * Fires when no posts are found.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	do_action( 'bb_rl_layout_no_posts' );
 }
+
+/**
+ * Fires after the layout.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+do_action( 'bb_rl_layout_after' );
 
 bp_get_template_part( 'footer/readylaunch-footer' );

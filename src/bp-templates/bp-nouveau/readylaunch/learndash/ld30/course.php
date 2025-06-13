@@ -392,7 +392,7 @@ $bb_bb_rl_ld_helper = class_exists( 'BB_Readylaunch_Learndash_Helper' ) ? BB_Rea
 							</div>
 							<div class="bb-rl-course-details-value">
 								<?php
-								$bb_enrolled_users = $bb_bb_rl_ld_helper->bb_rl_filter_courses_query(
+								$bb_enrolled_users = $bb_bb_rl_ld_helper->bb_rl_ld_get_enrolled_users_data(
 									array(
 										'course_id' => $bb_course_id,
 										'limit'     => 10,

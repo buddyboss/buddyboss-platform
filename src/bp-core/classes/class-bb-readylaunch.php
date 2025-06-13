@@ -235,7 +235,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			add_action( 'wp_enqueue_scripts', array( $this, 'bb_readylaunch_learndash_enqueue_styles' ), 10 );
 
 			// Set up LearnDash integration.
-			if ( class_exists( 'SFWD_LMS' ) ) {
+			if ( $enabled_for_page && class_exists( 'SFWD_LMS' ) ) {
 				require_once buddypress()->compatibility_dir . '/class-bb-readylaunch-learndash-helper.php';
 			}
 

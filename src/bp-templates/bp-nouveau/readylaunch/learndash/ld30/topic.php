@@ -247,7 +247,7 @@ if ( function_exists( 'learndash_is_topic_accessable' ) ) {
 										'course_id' => $course_id,
 										'post_id'   => get_the_ID(),
 										'user_id'   => $user_id,
-										'content'   => get_the_content(),
+										'content'   => $content,
 										'materials' => $materials,
 										'context'   => 'topic',
 									),

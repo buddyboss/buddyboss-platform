@@ -62,9 +62,104 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 		 * @since BuddyBoss [BBVERSION]
 		 */
 		public function __construct() {
+			add_filter( 'learndash_template', array( $this, 'bb_rl_override_learndash_template_path' ), 20, 5 );
+
+			// Add actions for archive template.
+			add_action( 'bb_rl_layout_before', array( $this, 'bb_rl_learndash_layout_before' ) );
+			add_action( 'bb_rl_layout_after', array( $this, 'bb_rl_learndash_layout_after' ) );
+			add_action( 'bb_rl_layout_before_loop', array( $this, 'bb_rl_learndash_before_loop' ) );
+			add_action( 'bb_rl_layout_after_loop', array( $this, 'bb_rl_learndash_after_loop' ) );
+			add_action( 'bb_rl_layout_no_posts', array( $this, 'bb_rl_learndash_no_posts' ) );
+
 			// Add pre_get_posts filter for course filtering.
 			add_action( 'pre_get_posts', array( $this, 'bb_rl_filter_courses_query' ) );
 			add_filter( 'learndash_lesson_row_class', array( $this, 'bb_rl_learndash_lesson_row_class' ), 10, 2 );
+		}
+
+		/**
+		 * Override LearnDash template path to use ReadyLaunch templates
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string     $filepath         Template file path.
+		 * @param string     $name             Template name.
+		 * @param array|null $args             Template data.
+		 * @param bool|null  $echo             Whether to echo the template output or not.
+		 * @param bool       $return_file_path Whether to return file or path or not.
+		 *
+		 * @return string Modified template path
+		 */
+		public function bb_rl_override_learndash_template_path( $filepath, $name, $args, $echo, $return_file_path ) {
+
+			// Get template name without extension.
+			$template_name = str_replace( '.php', '', basename( $name ) );
+
+			// Try to load template using bp_get_template_part.
+			$template = bp_locate_template(
+				array(
+					"learndash/ld30/{$template_name}.php",
+				)
+			);
+
+			if ( $template ) {
+				return $template;
+			}
+
+			return $filepath;
+		}
+
+		/**
+		 * Fires before the layout.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 */
+		public function bb_rl_learndash_layout_before() {
+			if ( is_post_type_archive( learndash_get_post_type_slug( 'course' ) ) ) {
+				bp_get_template_part( 'learndash/ld30/archive-course-header' );
+			}
+		}
+
+		/**
+		 * Fires after the layout.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 */
+		public function bb_rl_learndash_layout_after() {
+			if ( is_post_type_archive( learndash_get_post_type_slug( 'course' ) ) ) {
+				bp_get_template_part( 'learndash/ld30/archive-course-footer' );
+			}
+		}
+
+		/**
+		 * Fires before the loop starts.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 */
+		public function bb_rl_learndash_before_loop() {
+			if ( is_post_type_archive( learndash_get_post_type_slug( 'course' ) ) ) {
+				echo '<div class="bb-rl-courses-grid grid bb-rl-courses-grid--ldlms">';
+			}
+		}
+
+		/**
+		 * Fires after the loop ends.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 */
+		public function bb_rl_learndash_after_loop() {
+			if ( is_post_type_archive( learndash_get_post_type_slug( 'course' ) ) ) {
+				echo '</div>';
+				bp_get_template_part( 'learndash/ld30/archive-course-pagination' );
+			}
+		}
+
+		/**
+		 * Fires when no posts are found.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 */
+		public function bb_rl_learndash_no_posts() {
+			bp_get_template_part( 'learndash/ld30/archive-no-course' );
 		}
 
 		/**
@@ -216,7 +311,7 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 			$url_result['next'] = '';
 			if ( ! empty( $next ) && $last_element !== $current_url ) {
 				$url_result['next'] = sprintf(
-					/* translators: 1: Next URL, 2: Next text */
+				/* translators: 1: Next URL, 2: Next text */
 					'<a href="%s" class="next-link" rel="next">%s<i class="bb-icons-rl-caret-right"></i></a>',
 					esc_url( $next ),
 					esc_html__( 'Next', 'buddyboss' )
@@ -227,7 +322,7 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 			$url_result['prev'] = '';
 			if ( ! empty( $prev ) && $last_element !== $prev ) {
 				$url_result['prev'] = sprintf(
-					/* translators: 1: Previous URL, 2: Previous text */
+				/* translators: 1: Previous URL, 2: Previous text */
 					'<a href="%s" class="prev-link" rel="prev"><i class="bb-icons-rl-caret-left"></i> %s</a>',
 					esc_url( $prev ),
 					esc_html__( 'Previous', 'buddyboss' )
@@ -519,11 +614,74 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
+		 * @param WP_Query $query The query object.
+		 *
+		 * @return void
+		 */
+		public function bb_rl_filter_courses_query( $query ) {
+			// Only modify the main query for course archive.
+			if ( ! is_admin() && $query->is_main_query() && is_post_type_archive( 'sfwd-courses' ) ) {
+
+				// Get filter values.
+				$orderby_data = $this->bb_rl_get_orderby_data();
+				$orderby      = $orderby_data['current_orderby'];
+				$category     = $orderby_data['current_category'];
+				$instructor   = $orderby_data['current_instructor'];
+
+				// Ensure we get the total count.
+				$query->set( 'no_found_rows', false );
+
+				// Handle ordering.
+				switch ( $orderby ) {
+					case 'alphabetical':
+						$query->set( 'orderby', 'title' );
+						$query->set( 'order', 'ASC' );
+						break;
+					case 'recent':
+						$query->set( 'orderby', 'date' );
+						$query->set( 'order', 'DESC' );
+						break;
+					case 'my-progress':
+						if ( is_user_logged_in() ) {
+							$user_id = get_current_user_id();
+							// Get user's course progress.
+							$user_courses = learndash_user_get_enrolled_courses( $user_id );
+							if ( ! empty( $user_courses ) ) {
+								$query->set( 'post__in', $user_courses );
+							}
+						}
+						break;
+				}
+
+				// Handle category filter.
+				if ( ! empty( $category ) && 'all' !== $category ) {
+					$tax_query = array(
+						array(
+							'taxonomy' => 'ld_course_category',
+							'field'    => 'slug',
+							'terms'    => $category,
+						),
+					);
+					$query->set( 'tax_query', $tax_query );
+				}
+
+				// Handle instructor filter.
+				if ( ! empty( $instructor ) && 'all' !== $instructor ) {
+					$query->set( 'author', $instructor );
+				}
+			}
+		}
+
+		/**
+		 * Filter the main query for courses based on filters
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
 		 * @param array $args Optional. Array of arguments.
 		 *
 		 * @return array Array of enrolled users.
 		 */
-		public function bb_rl_filter_courses_query( $args ) {
+		public function bb_rl_ld_get_enrolled_users_data( $args ) {
 			$defaults = array(
 				'course_id' => 0,
 				'limit'     => 10,
@@ -574,7 +732,7 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 		 *
 		 * @param array $args Optional. Array of arguments.
 		 */
-		public function bb_rl_ld_get_enrolled_users_data( $args ) {
+		public function bb_rl_ld_get_enrolled_users_html( $args ) {
 
 			$defaults = array(
 				'course_id' => 0,
@@ -586,7 +744,7 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 			$limit     = $args['limit'];
 			$action    = $args['action'];
 
-			$enrolled_users = $this->bb_rl_filter_courses_query( $args );
+			$enrolled_users = $this->bb_rl_ld_get_enrolled_users_data( $args );
 
 			$enrolled_users_count = $enrolled_users['count'];
 			$enrolled_users       = $enrolled_users['enrolled_users'];
@@ -799,7 +957,7 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 							<span class="bb-rl-enrolled-count">
 								<?php
 								printf(
-									/* translators: %d is the number of enrolled users. */
+								/* translators: %d is the number of enrolled users. */
 									esc_html__( '%d+ Student enrolled', 'buddyboss' ),
 									intval( $enrolled_count )
 								);
@@ -878,6 +1036,25 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 			}
 
 			return $lesson_class;
+		}
+
+		/**
+		 * Get the orderby data.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return array The orderby data.
+		 */
+		public function bb_rl_get_orderby_data() {
+			$current_orderby    = isset( $_GET['orderby'] ) ? sanitize_text_field( wp_unslash( $_GET['orderby'] ) ) : 'alphabetical';
+			$current_category   = isset( $_GET['categories'] ) ? sanitize_text_field( wp_unslash( $_GET['categories'] ) ) : '';
+			$current_instructor = isset( $_GET['instructors'] ) ? sanitize_text_field( wp_unslash( $_GET['instructors'] ) ) : '';
+
+			return array(
+				'current_orderby'    => $current_orderby,
+				'current_category'   => $current_category,
+				'current_instructor' => $current_instructor,
+			);
 		}
 	}
 
