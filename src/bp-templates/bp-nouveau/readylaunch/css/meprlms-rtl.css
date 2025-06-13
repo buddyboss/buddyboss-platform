@@ -177,44 +177,6 @@
   display: flex;
 }
 
-.bb-rl-lms-inner-block .mpcs-main-content p {
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 22px;
-  color: var(--bb-rl-text-secondary-color);
-  margin-bottom: var(--bb-rl-space-200);
-}
-
-.bb-rl-lms-inner-block .mpcs-main-content .mpcs-breadcrumbs {
-  font-size: var(--bb-rl-font-size-sm);
-  font-weight: 400;
-  line-height: var(--bb-rl-base-line-small);
-  color: var(--bb-rl-text-secondary-color);
-  margin: var(--bb-rl-space-50) 0 var(--bb-rl-space-300);
-}
-
-.bb-rl-lms-inner-block .mpcs-main-content .mpcs-breadcrumbs span.mpcs-breadcrumb {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--bb-rl-space-50);
-}
-
-.bb-rl-lms-inner-block .mpcs-main-content .mpcs-breadcrumbs span.mpcs-breadcrumb:not(:last-child)::after {
-  content: "\e13a";
-  font-weight: 400;
-  font-family: bb-icons-rl;
-  font-size: 16px;
-  color: var(--bb-rl-icon-tertiary-color);
-  font-style: normal;
-  margin-left: var(--bb-rl-space-50);
-}
-
-.mpcs-classroom.buddyboss-theme.bb-readylaunch-template .mpcs-sidebar-wrapper .mpcs-sidebar-menu,
-.mpcs-classroom.buddyboss-theme.bb-readylaunch-template .mpcs-sidebar-wrapper .mpcs-sidebar-grades,
-.mpcs-classroom.buddyboss-theme.bb-readylaunch-template .mpcs-sidebar-wrapper .mpcs-sidebar-resources {
-  margin: 0;
-}
-
 .post-type-archive-mpcs-course.bb-readylaunch-template .bb-rl-meprlms-course-filters .dropdown a.dropdown-toggle {
   font-size: var(--bb-rl-font-size-sm);
   font-weight: 400;
@@ -297,55 +259,4 @@
 
 .post-type-archive-mpcs-course.bb-readylaunch-template .bb-rl-meprlms-course-filters .input-group .input-group-btn {
   height: var(--bb-rl-space-400);
-}
-
-.bb-rl-courses-grid.grid .bb-rl-course-card.bb-rl-course-card--mbprlms .bb-rl-course-footer,
-.bb-rl-course-card.bb-rl-course-card--mbprlms .bb-rl-course-footer {
-  padding: 0 var(--bb-rl-space-200);
-  border: 0;
-}
-
-.bb-rl-course-card--mbprlms .bb-rl-course-excerpt {
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.bb-rl-lms-inner-block #mpcs-lesson-navigation #next_lesson_link:not(#mpcs-classroom-previous-lesson-link),
-.bb-rl-lms-inner-block #mpcs-lesson-navigation #next_lesson_link {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1rem;
-  font-weight: 500;
-  text-align: center;
-  cursor: pointer;
-  border-radius: var(--bb-rl-radius-md);
-  padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
-  text-decoration: none;
-  background-color: var(--bb-rl-background-brand-primary-color);
-  color: var(--bb-rl-text-white-color);
-  border: 1px solid var(--bb-rl-background-brand-primary-color);
-  padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
-  font-size: 0.875rem;
-  font-weight: 400;
-}
-
-.bb-rl-lms-inner-block #mpcs-lesson-navigation #next_lesson_link:not(#mpcs-classroom-previous-lesson-link):hover,
-.bb-rl-lms-inner-block #mpcs-lesson-navigation #next_lesson_link:hover {
-  background-color: var(--bb-rl-background-brand-primary-hover-color);
-}
-
-.bb-rl-lms-inner-block #mpcs-lesson-navigation #next_lesson_link:not(#mpcs-classroom-previous-lesson-link):focus-within,
-.bb-rl-lms-inner-block #mpcs-lesson-navigation #next_lesson_link:focus-within {
-  outline: 2px solid var(--bb-rl-border-brand-primary-color);
-}
-
-.bb-rl-lms-inner-block #mpcs-lesson-navigation #next_lesson_link:not(#mpcs-classroom-previous-lesson-link):disabled,
-.bb-rl-lms-inner-block #mpcs-lesson-navigation #next_lesson_link:disabled {
-  background-color: var(--bb-rl-background-brand-disabled-color);
-  cursor: not-allowed;
 }

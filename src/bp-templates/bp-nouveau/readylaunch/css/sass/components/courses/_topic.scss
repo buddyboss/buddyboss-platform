@@ -9,3 +9,46 @@
 	padding-bottom: 60px;
 	background-color: var(--bb-rl-background-color);
 }
+
+.bb-rl-topic-quizzes {
+
+	h3 {
+
+		@include bb-rl-base-heading;
+		color: var(--bb-rl-text-color);
+		margin: var(--bb-rl-space-200) 0;
+	}
+}
+
+.bb-rl-quizzes-list {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	background-color: var(--bb-rl-background-color);
+	border: 1px solid var(--bb-rl-border-secondary-color);
+	border-radius: var(--bb-rl-radius-md);
+	overflow: hidden;
+
+	li {
+		margin: 0;
+		padding: 0;
+		border-bottom: 1px solid var(--bb-rl-border-secondary-color);
+
+		&:last-of-type {
+			border-bottom: none;
+		}
+
+		a {
+
+			@include bb-rl-label-heading-md;
+			padding: var(--bb-rl-space-100) var(--bb-rl-space-300);
+			display: block;
+			color: var(--bb-rl-text-color);
+			text-decoration: none;
+
+			&:hover {
+				background-color: var(--bb-rl-background-hover-color);
+			}
+		}
+	}
+}
