@@ -338,20 +338,19 @@ remove_filter( 'learndash_template_content_on_listing_is_hidden', '__return_fals
 			$lessons_count > 1
 				? sprintf(
 			/* translators: 1: plugin name, 2: action number 3: total number of actions. */
-				__( '%1$s %2$s', 'buddyboss' ),
-				$lessons_count,
-				LearnDash_Custom_Label::get_label( 'lessons' )
-			)
+					__( '%1$s %2$s', 'buddyboss' ),
+					$lessons_count,
+					LearnDash_Custom_Label::get_label( 'lessons' )
+				)
 				: sprintf(
 			/* translators: 1: plugin name, 2: action number 3: total number of actions. */
-				__( '%1$s %2$s', 'buddyboss' ),
-				$lessons_count,
-				LearnDash_Custom_Label::get_label( 'lesson' )
-			)
+					__( '%1$s %2$s', 'buddyboss' ),
+					$lessons_count,
+					LearnDash_Custom_Label::get_label( 'lesson' )
+				)
 			);
 			?>
 			<span class="bb-rl-course-meta-tag"><?php echo esc_html( $total_lessons ); ?></span>
-			<span class="bb-rl-course-meta-tag"><?php esc_html_e( 'Beginner', 'buddyboss' ); ?></span>
 		</div>
 		<div class="bb-rl-course-popup-caption">
 			<?php
