@@ -44,7 +44,7 @@ $lesson_progress = function_exists( 'learndash_lesson_progress' ) ? learndash_le
 ) : array();
 $is_enrolled     = function_exists( 'sfwd_lms_has_access' ) && sfwd_lms_has_access( $course_id, $user_id );
 $lesson_status   = function_exists( 'learndash_lesson_status' ) && learndash_lesson_status( $lesson_id, $user_id );
-$topics          = function_exists( 'learndash_get_topic_list' ) && learndash_get_topic_list( $lesson_id, $user_id );
+$topics          = function_exists( 'learndash_get_topic_list' ) ? learndash_get_topic_list( $lesson_id, $user_id ) : array();
 $prev_lesson     = function_exists( 'learndash_get_previous_lesson' ) && learndash_get_previous_lesson( $lesson_id );
 $next_lesson     = function_exists( 'learndash_get_next_lesson' ) && learndash_get_next_lesson( $lesson_id );
 
@@ -115,13 +115,13 @@ if ( function_exists( 'learndash_is_lesson_accessable' ) ) {
 						 */
 						do_action( 'learndash-lesson-before', $lesson_id, $course_id, $user_id );
 
-						// Implement lesson progression logic
+						// Implement lesson progression logic.
 						$lesson_progression_enabled = function_exists( 'learndash_lesson_progression_enabled' ) ? learndash_lesson_progression_enabled( $course_id ) : false;
-						$show_content = true;
+						$show_content               = true;
 
 						if ( ! empty( $lesson_progression_enabled ) ) :
 							$last_incomplete_step = function_exists( 'learndash_is_lesson_accessable' ) ? learndash_is_lesson_accessable( $user_id, $post, true, $course_id ) : false;
-							
+
 							if ( ! empty( $user_id ) ) {
 								if ( function_exists( 'learndash_user_progress_is_step_complete' ) && learndash_user_progress_is_step_complete( $user_id, $course_id, $post->ID ) ) {
 									$show_content = true;
@@ -134,18 +134,20 @@ if ( function_exists( 'learndash_is_lesson_accessable' ) ) {
 										$previous_step_post_id = function_exists( 'learndash_user_progress_get_parent_incomplete_step' ) ? learndash_user_progress_get_parent_incomplete_step( $user_id, $course_id, $post->ID ) : 0;
 										if ( ( ! empty( $previous_step_post_id ) ) && ( $previous_step_post_id !== $post->ID ) ) {
 											$previous_lesson_completed = false;
-											$last_incomplete_step = get_post( $previous_step_post_id );
+											$last_incomplete_step      = get_post( $previous_step_post_id );
 										} else {
-											$previous_step_post_id = function_exists( 'learndash_user_progress_get_previous_incomplete_step' ) ? learndash_user_progress_get_previous_incomplete_step( $user_id, $course_id, $post->ID ) : 0;
+											$previous_step_post_id     = function_exists( 'learndash_user_progress_get_previous_incomplete_step' ) ? learndash_user_progress_get_previous_incomplete_step( $user_id, $course_id, $post->ID ) : 0;
 											$previous_lesson_completed = true;
 											if ( ( ! empty( $previous_step_post_id ) ) && ( $previous_step_post_id !== $post->ID ) ) {
 												$previous_lesson_completed = false;
-												$last_incomplete_step = get_post( $previous_step_post_id );
+												$last_incomplete_step      = get_post( $previous_step_post_id );
 											}
 										}
 
 										/**
 										 * Filter to override previous step completed.
+										 *
+										 * @since BuddyBoss [BBVERSION]
 										 *
 										 * @param bool $previous_lesson_completed True if previous step completed.
 										 * @param int  $step_id                   Step Post ID.
@@ -157,15 +159,14 @@ if ( function_exists( 'learndash_is_lesson_accessable' ) ) {
 									$show_content = $previous_lesson_completed;
 								}
 
-								// Check for sample lessons
+								// Check for sample lessons.
 								if ( function_exists( 'learndash_is_sample' ) && learndash_is_sample( $post ) ) {
 									$show_content = true;
 								}
 
-								// Handle blocked content
-								if ( 
-									$last_incomplete_step 
-									&& $last_incomplete_step instanceof WP_Post 
+								// Handle blocked content.
+								if ( $last_incomplete_step
+									&& $last_incomplete_step instanceof WP_Post
 									&& (
 										! ( function_exists( 'learndash_is_sample' ) && learndash_is_sample( $post ) )
 										|| (bool) $is_enrolled
@@ -187,7 +188,7 @@ if ( function_exists( 'learndash_is_lesson_accessable' ) ) {
 									/**
 									 * Fires before the lesson progression.
 									 *
-									 * @since 3.0.0
+									 * @since BuddyBoss [BBVERSION]
 									 *
 									 * @param int $lesson_id Lesson ID.
 									 * @param int $course_id Course ID.
@@ -200,10 +201,10 @@ if ( function_exists( 'learndash_is_lesson_accessable' ) ) {
 											'modules/messages/lesson-progression.php',
 											array(
 												'previous_item' => $last_incomplete_step,
-												'course_id'     => $course_id,
-												'user_id'       => $user_id,
-												'context'       => 'lesson',
-												'sub_context'   => $sub_context,
+												'course_id' => $course_id,
+												'user_id' => $user_id,
+												'context' => 'lesson',
+												'sub_context' => $sub_context,
 											),
 											true
 										);
@@ -212,7 +213,7 @@ if ( function_exists( 'learndash_is_lesson_accessable' ) ) {
 									/**
 									 * Fires after the lesson progression.
 									 *
-									 * @since 3.0.0
+									 * @since BuddyBoss [BBVERSION]
 									 *
 									 * @param int $lesson_id Lesson ID.
 									 * @param int $course_id Course ID.
@@ -228,7 +229,7 @@ if ( function_exists( 'learndash_is_lesson_accessable' ) ) {
 						endif;
 
 						if ( $show_content ) :
-							// Load tabs if available
+							// Load tabs if available.
 							if ( function_exists( 'learndash_get_template_part' ) ) {
 								$materials = function_exists( 'learndash_get_setting' ) ? learndash_get_setting( $post, 'lesson_materials' ) : '';
 								learndash_get_template_part(
@@ -251,7 +252,7 @@ if ( function_exists( 'learndash_is_lesson_accessable' ) ) {
 						/**
 						 * Fires after the lesson content ends.
 						 *
-						 * @since 3.0.0
+						 * @since BuddyBoss [BBVERSION]
 						 *
 						 * @param int $lesson_id Lesson ID.
 						 * @param int $course_id Course ID.
