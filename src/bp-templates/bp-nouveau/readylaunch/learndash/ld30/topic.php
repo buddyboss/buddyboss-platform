@@ -1,22 +1,23 @@
 <?php
 /**
- * LearnDash Single Topic Template for ReadyLaunch
+ * LearnDash Single Topic Template for ReadyLaunch.
  *
+ * @since   BuddyBoss [BBVERSION]
  * @package BuddyBoss\Core
- * @since BuddyBoss [BBVERSION]
+ * @version 1.0.0
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-// Ensure LearnDash functions are available
+// Ensure LearnDash functions are available.
 if ( ! class_exists( 'SFWD_LMS' ) || ! function_exists( 'learndash_get_course_id' ) ) {
-	// Fallback to default content if LearnDash functions aren't available
+	// Fallback to default content if LearnDash functions aren't available.
 	?>
 	<div class="bb-learndash-content-wrap">
 		<main class="bb-learndash-content-area">
-			<article id="post-<?php the_ID(); ?>" <?php post_class('bb-rl-learndash-topic'); ?>>
+			<article id="post-<?php the_ID(); ?>" <?php post_class( 'bb-rl-learndash-topic' ); ?>>
 				<header class="bb-rl-entry-header">
 					<h1 class="bb-rl-entry-title"><?php the_title(); ?></h1>
 				</header>
@@ -30,329 +31,351 @@ if ( ! class_exists( 'SFWD_LMS' ) || ! function_exists( 'learndash_get_course_id
 	return;
 }
 
-$topic_id = get_the_ID();
-$user_id = get_current_user_id();
-$course_id = function_exists( 'learndash_get_course_id' ) ? learndash_get_course_id( $topic_id ) : 0;
-$lesson_id = function_exists( 'learndash_get_lesson_id' ) ? learndash_get_lesson_id( $topic_id ) : 0;
-$topic = get_post( $topic_id );
-$lesson_post = get_post( $lesson_id );
-$topic_progress = function_exists( 'learndash_topic_progress' ) ? learndash_topic_progress( array( 'topic_id' => $topic_id, 'user_id' => $user_id, 'array' => true ) ) : array();
-$is_enrolled = function_exists( 'sfwd_lms_has_access' ) ? sfwd_lms_has_access( $course_id, $user_id ) : false;
-$topic_status = function_exists( 'learndash_topic_status' ) ? learndash_topic_status( $topic_id, $user_id ) : '';
-$topics = function_exists( 'learndash_get_topic_list' ) ? learndash_get_topic_list( $lesson_id, $course_id ) : array();
-$quizzes = function_exists( 'learndash_get_lesson_quiz_list' ) ? learndash_get_lesson_quiz_list( $topic_id, $user_id, $course_id ) : array();
+$topic_id       = get_the_ID();
+$user_id        = get_current_user_id();
+$course_id      = function_exists( 'learndash_get_course_id' ) ? learndash_get_course_id( $topic_id ) : 0;
+$lesson_id      = function_exists( 'learndash_get_lesson_id' ) ? learndash_get_lesson_id( $topic_id ) : 0;
+$topic          = get_post( $topic_id );
+$lesson_post    = get_post( $lesson_id );
+$topic_progress = function_exists( 'learndash_topic_progress' ) ? learndash_topic_progress(
+	array(
+		'topic_id' => $topic_id,
+		'user_id'  => $user_id,
+		'array'    => true,
+	)
+) : array();
+$is_enrolled    = function_exists( 'sfwd_lms_has_access' ) ? sfwd_lms_has_access( $course_id, $user_id ) : false;
+$topic_status   = function_exists( 'learndash_topic_status' ) ? learndash_topic_status( $topic_id, $user_id ) : '';
+$topics         = function_exists( 'learndash_get_topic_list' ) ? learndash_get_topic_list( $lesson_id, $course_id ) : array();
+$quizzes        = function_exists( 'learndash_get_lesson_quiz_list' ) ? learndash_get_lesson_quiz_list( $topic_id, $user_id, $course_id ) : array();
 
-$lesson_list = learndash_get_course_lessons_list( $course_id, null, array( 'num' => - 1 ) );
+$lesson_list = learndash_get_course_lessons_list( $course_id, null, array( 'num' => -1 ) );
 $lesson_list = array_column( $lesson_list, 'post' );
-/* $content_urls = BB_Readylaunch::instance()->learndash_helper()->bb_rl_ld_custom_pagination( $course_id, $lesson_list );
-$pagination_urls = BB_Readylaunch::instance()->learndash_helper()->bb_rl_custom_next_prev_url( $content_urls ); */
 
-// Find lesson number
+// Find lesson number.
 $lesson_no = 1;
 foreach ( $lesson_list as $les ) {
-    if ( $les->ID == $lesson_id ) {
-        break;
-    }
-    $lesson_no ++;
+	if ( (int) $les->ID === (int) $lesson_id ) {
+		break;
+	}
+	++$lesson_no;
 }
 
-// Find topic number within the lesson
+// Find topic number within the lesson.
 $topic_no = 1;
 foreach ( $topics as $topic_item ) {
-    if ( $topic_item->ID == $post->ID ) {
-        break;
-    }
-    $topic_no ++;
+	if ( (int) $topic_item->ID === (int) $post->ID ) {
+		break;
+	}
+	++$topic_no;
 }
 
-// Define variables for course-steps module compatibility
-$logged_in = is_user_logged_in();
-$course_settings = function_exists( 'learndash_get_setting' ) ? learndash_get_setting( $course_id ) : array();
-$all_quizzes_completed = true; // For topics, we'll assume quizzes are handled separately
+// Define variables for course-steps module compatibility.
+$logged_in                = is_user_logged_in();
+$course_settings          = function_exists( 'learndash_get_setting' ) ? learndash_get_setting( $course_id ) : array();
+$all_quizzes_completed    = true; // For topics, we'll assume quizzes are handled separately.
 $previous_topic_completed = true;
 if ( function_exists( 'learndash_is_topic_accessable' ) ) {
-    $previous_topic_completed = learndash_is_topic_accessable( $user_id, $post );
+	$previous_topic_completed = learndash_is_topic_accessable( $user_id, $post );
 }
 ?>
 
 <div class="bb-learndash-content-wrap bb-learndash-content-wrap--topic">
 	<main class="bb-learndash-content-area">
-		<article id="post-<?php the_ID(); ?>" <?php post_class('bb-rl-learndash-topic'); ?>>
-            <div class="bb-rl-topic-block bb-rl-lms-inner-block">
-                <header class="bb-rl-entry-header">
-                    <div class="bb-rl-heading">
-                        <div class="bb-rl-topic-count bb-rl-lms-inner-count">
-                            <span class="bb-pages">
-                                <?php echo LearnDash_Custom_Label::get_label( 'lesson' ); ?> <?php echo $lesson_no; ?>, 
-                                <?php echo LearnDash_Custom_Label::get_label( 'topic' ); ?> <?php echo $topic_no; ?>
-                                <span class="bb-total"><?php esc_html_e( 'of', 'buddyboss' ); ?> <?php echo count( $topics ); ?></span>
-                            </span>
-                        </div>
-                        <div class="bb-rl-topic-title">
-                            <h1 class="bb-rl-entry-title"><?php the_title(); ?></h1>
-                        </div>
-                    </div>
+		<article id="post-<?php the_ID(); ?>" <?php post_class( 'bb-rl-learndash-topic' ); ?>>
+			<div class="bb-rl-topic-block bb-rl-lms-inner-block">
+				<header class="bb-rl-entry-header">
+					<div class="bb-rl-heading">
+						<div class="bb-rl-topic-count bb-rl-lms-inner-count">
+							<span class="bb-pages">
+								<?php echo esc_html( LearnDash_Custom_Label::get_label( 'lesson' ) ); ?> <?php echo esc_html( $lesson_no ); ?>, 
+								<?php echo esc_html( LearnDash_Custom_Label::get_label( 'topic' ) ); ?> <?php echo esc_html( $topic_no ); ?>
+								<span class="bb-total"><?php esc_html_e( 'of', 'buddyboss' ); ?><?php echo count( $topics ); ?></span>
+							</span>
+						</div>
+						<div class="bb-rl-topic-title">
+							<h1 class="bb-rl-entry-title"><?php the_title(); ?></h1>
+						</div>
+					</div>
 
-                    <?php if ( has_post_thumbnail() ) : ?>
-                        <div class="bb-rl-topic-featured-image">
-                            <?php the_post_thumbnail( 'full' ); ?>
-                        </div>
-                    <?php endif; ?>
+					<?php if ( has_post_thumbnail() ) : ?>
+						<div class="bb-rl-topic-featured-image">
+							<?php the_post_thumbnail( 'full' ); ?>
+						</div>
+					<?php endif; ?>
 
-                    <div class="bb-rl-topic-meta">
-                        <?php if ( $is_enrolled ) : ?>
-                            <div class="bb-rl-topic-status">
-                                <span class="bb-rl-status bb-rl-enrolled"><?php echo esc_html( $topic_status ); ?></span>
-                                <?php if ( ! empty( $topic_progress ) ) : ?>
-                                    <div class="bb-rl-topic-progress">
-                                        <div class="bb-rl-progress-bar">
-                                            <div class="bb-rl-progress" style="width: <?php echo (int) $topic_progress['percentage']; ?>%"></div>
-                                        </div>
-                                        <span class="bb-rl-percentage"><?php echo (int) $topic_progress['percentage']; ?>% <?php esc_html_e( 'Complete', 'buddyboss' ); ?></span>
-                                    </div>
-                                <?php endif; ?>
-                            </div>
-                        <?php endif; ?>
-                    </div>
-                </header>
+					<div class="bb-rl-topic-meta">
+						<?php if ( $is_enrolled ) : ?>
+							<div class="bb-rl-topic-status">
+								<span class="bb-rl-status bb-rl-enrolled"><?php echo esc_html( $topic_status ); ?></span>
+								<?php if ( ! empty( $topic_progress ) ) : ?>
+									<div class="bb-rl-topic-progress">
+										<div class="bb-rl-progress-bar">
+											<div class="bb-rl-progress" style="width: <?php echo (int) $topic_progress['percentage']; ?>%"></div>
+										</div>
+										<span class="bb-rl-percentage"><?php echo (int) $topic_progress['percentage']; ?>% <?php esc_html_e( 'Complete', 'buddyboss' ); ?></span>
+									</div>
+								<?php endif; ?>
+							</div>
+						<?php endif; ?>
+					</div>
+				</header>
 
-                <div class="bb-rl-entry-content bb-rl-topic-entry">
-                    <div class="<?php echo esc_attr( learndash_the_wrapper_class() ); ?>">
-                        <?php
-                        // Implement lesson progression logic
-                        $lesson_progression_enabled = function_exists( 'learndash_lesson_progression_enabled' ) ? learndash_lesson_progression_enabled( $course_id ) : false;
-                        $show_content = true;
+				<div class="bb-rl-entry-content bb-rl-topic-entry">
+					<div class="<?php echo esc_attr( learndash_the_wrapper_class() ); ?>">
+						<?php
+						// Implement lesson progression logic.
+						$lesson_progression_enabled = function_exists( 'learndash_lesson_progression_enabled' ) ? learndash_lesson_progression_enabled( $course_id ) : false;
+						$show_content               = true;
 
-                        if ( ! empty( $lesson_progression_enabled ) ) :
-                            $last_incomplete_step = function_exists( 'learndash_is_topic_accessable' ) ? learndash_is_topic_accessable( $user_id, $post, true, $course_id ) : false;
-                            
-                            if ( ! empty( $user_id ) ) {
-                                if ( function_exists( 'learndash_user_progress_is_step_complete' ) && learndash_user_progress_is_step_complete( $user_id, $course_id, $post->ID ) ) {
-                                    $show_content = true;
-                                } else {
-                                    $bypass_course_limits_admin_users = function_exists( 'learndash_can_user_bypass' ) ? learndash_can_user_bypass( $user_id, 'learndash_topic_progression' ) : false;
-                                    if ( $bypass_course_limits_admin_users ) {
-                                        remove_filter( 'learndash_content', 'lesson_visible_after', 1, 2 );
-                                        $previous_lesson_completed = true;
-                                    } else {
-                                        $previous_step_post_id = function_exists( 'learndash_user_progress_get_parent_incomplete_step' ) ? learndash_user_progress_get_parent_incomplete_step( $user_id, $course_id, $post->ID ) : 0;
-                                        if ( ( ! empty( $previous_step_post_id ) ) && ( $previous_step_post_id !== $post->ID ) ) {
-                                            $previous_lesson_completed = false;
-                                            $last_incomplete_step = get_post( $previous_step_post_id );
-                                        } else {
-                                            $previous_step_post_id = function_exists( 'learndash_user_progress_get_previous_incomplete_step' ) ? learndash_user_progress_get_previous_incomplete_step( $user_id, $course_id, $post->ID ) : 0;
-                                            $previous_lesson_completed = true;
-                                            if ( ( ! empty( $previous_step_post_id ) ) && ( $previous_step_post_id !== $post->ID ) ) {
-                                                $previous_lesson_completed = false;
-                                                $last_incomplete_step = get_post( $previous_step_post_id );
-                                            }
-                                        }
+						if ( ! empty( $lesson_progression_enabled ) ) :
+							$last_incomplete_step = function_exists( 'learndash_is_topic_accessable' ) ? learndash_is_topic_accessable( $user_id, $post, true, $course_id ) : false;
 
-                                        /**
-                                         * Filter to override previous step completed.
-                                         *
-                                         * @param bool $previous_lesson_completed True if previous step completed.
-                                         * @param int  $step_id                   Step Post ID.
-                                         * @param int  $user_id                   User ID.
-                                         */
-                                        $previous_lesson_completed = apply_filters( 'learndash_previous_step_completed', $previous_lesson_completed, $post->ID, $user_id );
-                                    }
+							if ( ! empty( $user_id ) ) {
+								if ( function_exists( 'learndash_user_progress_is_step_complete' ) && learndash_user_progress_is_step_complete( $user_id, $course_id, $post->ID ) ) {
+									$show_content = true;
+								} else {
+									$bypass_course_limits_admin_users = function_exists( 'learndash_can_user_bypass' ) ? learndash_can_user_bypass( $user_id, 'learndash_topic_progression' ) : false;
+									if ( $bypass_course_limits_admin_users ) {
+										remove_filter( 'learndash_content', 'lesson_visible_after', 1, 2 );
+										$previous_lesson_completed = true;
+									} else {
+										$previous_step_post_id = function_exists( 'learndash_user_progress_get_parent_incomplete_step' ) ? learndash_user_progress_get_parent_incomplete_step( $user_id, $course_id, $post->ID ) : 0;
+										if ( ( ! empty( $previous_step_post_id ) ) && ( $previous_step_post_id !== $post->ID ) ) {
+											$previous_lesson_completed = false;
+											$last_incomplete_step      = get_post( $previous_step_post_id );
+										} else {
+											$previous_step_post_id     = function_exists( 'learndash_user_progress_get_previous_incomplete_step' ) ? learndash_user_progress_get_previous_incomplete_step( $user_id, $course_id, $post->ID ) : 0;
+											$previous_lesson_completed = true;
+											if ( ( ! empty( $previous_step_post_id ) ) && ( $previous_step_post_id !== $post->ID ) ) {
+												$previous_lesson_completed = false;
+												$last_incomplete_step      = get_post( $previous_step_post_id );
+											}
+										}
 
-                                    $show_content = $previous_lesson_completed;
-                                }
+										/**
+										 * Filter to override previous step completed.
+										 *
+										 * @since BuddyBoss [BBVERSION]
+										 *
+										 * @param bool $previous_lesson_completed True if previous step completed.
+										 * @param int  $step_id                   Step Post ID.
+										 * @param int  $user_id                   User ID.
+										 */
+										$previous_lesson_completed = apply_filters( 'learndash_previous_step_completed', $previous_lesson_completed, $post->ID, $user_id );
+									}
 
-                                // Check for sample topics
-                                if ( function_exists( 'learndash_is_sample' ) && learndash_is_sample( $post ) ) {
-                                    $show_content = true;
-                                }
+									$show_content = $previous_lesson_completed;
+								}
 
-                                // Handle blocked content
-                                if ( 
-                                    $last_incomplete_step 
-                                    && $last_incomplete_step instanceof WP_Post 
-                                    && (
-                                        ! ( function_exists( 'learndash_is_sample' ) && learndash_is_sample( $post ) )
-                                        || (bool) $is_enrolled
-                                    )
-                                ) {
-                                    $show_content = false;
+								// Check for sample topics.
+								if ( function_exists( 'learndash_is_sample' ) && learndash_is_sample( $post ) ) {
+									$show_content = true;
+								}
 
-                                    $sub_context = '';
-                                    if ( 'on' === learndash_get_setting( $last_incomplete_step->ID, 'lesson_video_enabled' ) ) {
-                                        if ( ! empty( learndash_get_setting( $last_incomplete_step->ID, 'lesson_video_url' ) ) ) {
-                                            if ( 'BEFORE' === learndash_get_setting( $last_incomplete_step->ID, 'lesson_video_shown' ) ) {
-                                                if ( ! learndash_video_complete_for_step( $last_incomplete_step->ID, $course_id, $user_id ) ) {
-                                                    $sub_context = 'video_progression';
-                                                }
-                                            }
-                                        }
-                                    }
+								// Handle blocked content.
+								if (
+									$last_incomplete_step &&
+									$last_incomplete_step instanceof WP_Post &&
+									(
+										! ( function_exists( 'learndash_is_sample' ) && learndash_is_sample( $post ) ) ||
+										(bool) $is_enrolled
+									)
+								) {
+									$show_content = false;
 
-                                    /**
-                                     * Fires before the topic progression.
-                                     *
-                                     * @since 3.0.0
-                                     *
-                                     * @param int $topic_id  Topic ID.
-                                     * @param int $course_id Course ID.
-                                     * @param int $user_id   User ID.
-                                     */
-                                    do_action( 'learndash-topic-progression-before', $post->ID, $course_id, $user_id );
+									$sub_context = '';
+									if ( 'on' === learndash_get_setting( $last_incomplete_step->ID, 'lesson_video_enabled' ) ) {
+										if ( ! empty( learndash_get_setting( $last_incomplete_step->ID, 'lesson_video_url' ) ) ) {
+											if ( 'BEFORE' === learndash_get_setting( $last_incomplete_step->ID, 'lesson_video_shown' ) ) {
+												if ( ! learndash_video_complete_for_step( $last_incomplete_step->ID, $course_id, $user_id ) ) {
+													$sub_context = 'video_progression';
+												}
+											}
+										}
+									}
 
-                                    if ( function_exists( 'learndash_get_template_part' ) ) {
-                                        learndash_get_template_part(
-                                            'modules/messages/lesson-progression.php',
-                                            array(
-                                                'previous_item' => $last_incomplete_step,
-                                                'course_id'     => $course_id,
-                                                'user_id'       => $user_id,
-                                                'context'       => 'topic',
-                                                'sub_context'   => $sub_context,
-                                            ),
-                                            true
-                                        );
-                                    }
+									/**
+									 * Fires before the topic progression.
+									 *
+									 * @since BuddyBoss [BBVERSION]
+									 *
+									 * @param int $topic_id  Topic ID.
+									 * @param int $course_id Course ID.
+									 * @param int $user_id   User ID.
+									 */
+									do_action( 'learndash-topic-progression-before', $post->ID, $course_id, $user_id );
 
-                                    /**
-                                     * Fires after the topic progression.
-                                     *
-                                     * @since 3.0.0
-                                     *
-                                     * @param int $topic_id  Topic ID.
-                                     * @param int $course_id Course ID.
-                                     * @param int $user_id   User ID.
-                                     */
-                                    do_action( 'learndash-topic-progression-after', $post->ID, $course_id, $user_id );
-                                }
-                            } else {
-                                $show_content = true;
-                            }
-                        else :
-                            $show_content = true;
-                        endif;
+									if ( function_exists( 'learndash_get_template_part' ) ) {
+										learndash_get_template_part(
+											'modules/messages/lesson-progression.php',
+											array(
+												'previous_item' => $last_incomplete_step,
+												'course_id'     => $course_id,
+												'user_id'       => $user_id,
+												'context'       => 'topic',
+												'sub_context'   => $sub_context,
+											),
+											true
+										);
+									}
 
-                        if ( $show_content ) :
-                            the_content();
-                        endif;
-                        ?>
-                    </div>
-                </div>
+									/**
+									 * Fires after the topic progression.
+									 *
+									 * @since BuddyBoss [BBVERSION]
+									 *
+									 * @param int $topic_id  Topic ID.
+									 * @param int $course_id Course ID.
+									 * @param int $user_id   User ID.
+									 */
+									do_action( 'learndash-topic-progression-after', $post->ID, $course_id, $user_id );
+								}
+							} else {
+								$show_content = true;
+							}
+						else :
+							$show_content = true;
+						endif;
 
-                <?php
-                /**
-                 * Display Topic Assignments
-                 */
-                if ( function_exists( 'learndash_lesson_hasassignments' ) && learndash_lesson_hasassignments( $post ) && ! empty( $user_id ) ) :
-                    $bypass_course_limits_admin_users = function_exists( 'learndash_can_user_bypass' ) ? learndash_can_user_bypass( $user_id, 'learndash_lesson_assignment' ) : false;
-                    $course_children_steps_completed = function_exists( 'learndash_user_is_course_children_progress_complete' ) ? learndash_user_is_course_children_progress_complete( $user_id, $course_id, $post->ID ) : false;
-                    $lesson_progression_enabled = function_exists( 'learndash_lesson_progression_enabled' ) ? learndash_lesson_progression_enabled() : false;
-                    
-                    if ( ( $lesson_progression_enabled && $course_children_steps_completed ) || ! $lesson_progression_enabled || $bypass_course_limits_admin_users ) :
-                        ?>
-                        <div class="bb-rl-topic-assignments bb-rl-assignments-module">
-                            <?php
-                            /**
-                             * Fires before the lesson assignment.
-                             *
-                             * @since 3.0.0
-                             *
-                             * @param int $post_id   Post ID.
-                             * @param int $course_id Course ID.
-                             * @param int $user_id   User ID.
-                             */
-                            do_action( 'learndash-lesson-assignment-before', get_the_ID(), $course_id, $user_id );
+						if ( $show_content ) :
+							if ( function_exists( 'learndash_get_template_part' ) ) {
+								$materials = function_exists( 'learndash_get_setting' ) ? learndash_get_setting( $post, 'topic_materials' ) : '';
+								learndash_get_template_part(
+									'modules/tabs.php',
+									array(
+										'course_id' => $course_id,
+										'post_id'   => get_the_ID(),
+										'user_id'   => $user_id,
+										'content'   => get_the_content(),
+										'materials' => $materials,
+										'context'   => 'topic',
+									),
+									true
+								);
+							} else {
+								the_content();
+							}
+						endif;
+						?>
+					</div>
+				</div>
 
-                            if ( function_exists( 'learndash_get_template_part' ) ) {
-                                learndash_get_template_part(
-                                    'assignment/listing.php',
-                                    array(
-                                        'user_id' => $user_id,
-                                        'course_step_post' => $post,
-                                        'course_id' => $course_id,
-                                        'context' => 'topic',
-                                    ),
-                                    true
-                                );
-                            }
+				<?php
+				/**
+				 * Display Topic Assignments
+				 */
+				if ( function_exists( 'learndash_lesson_hasassignments' ) && learndash_lesson_hasassignments( $post ) && ! empty( $user_id ) ) :
+					$bypass_course_limits_admin_users = function_exists( 'learndash_can_user_bypass' ) ? learndash_can_user_bypass( $user_id, 'learndash_lesson_assignment' ) : false;
+					$course_children_steps_completed = function_exists( 'learndash_user_is_course_children_progress_complete' ) ? learndash_user_is_course_children_progress_complete( $user_id, $course_id, $post->ID ) : false;
+					$lesson_progression_enabled = function_exists( 'learndash_lesson_progression_enabled' ) ? learndash_lesson_progression_enabled() : false;
 
-                            /**
-                             * Fires after the lesson assignment.
-                             *
-                             * @since 3.0.0
-                             *
-                             * @param int $post_id   Post ID.
-                             * @param int $course_id Course ID.
-                             * @param int $user_id   User ID.
-                             */
-                            do_action( 'learndash-lesson-assignment-after', get_the_ID(), $course_id, $user_id );
-                            ?>
-                        </div>
-                        <?php
-                    endif;
-                endif;
-                ?>
+					if ( ( $lesson_progression_enabled && $course_children_steps_completed ) || ! $lesson_progression_enabled || $bypass_course_limits_admin_users ) :
+						?>
+						<div class="bb-rl-topic-assignments bb-rl-assignments-module">
+							<?php
+							/**
+							 * Fires before the lesson assignment.
+							 *
+							 * @since BuddyBoss [BBVERSION]
+							 *
+							 * @param int $post_id   Post ID.
+							 * @param int $course_id Course ID.
+							 * @param int $user_id   User ID.
+							 */
+							do_action( 'learndash-lesson-assignment-before', get_the_ID(), $course_id, $user_id );
 
-                <?php if ( ! empty( $quizzes ) ) : ?>
-                    <div class="bb-rl-topic-quizzes">
-                        <h3><?php esc_html_e( 'Topic Quizzes', 'buddyboss' ); ?></h3>
-                        <ul class="bb-rl-quizzes-list">
-                            <?php foreach ( $quizzes as $quiz ) : ?>
-                                <li class="bb-rl-quiz-item">
-                                    <a href="<?php echo esc_url( get_permalink( $quiz['post']->ID ) ); ?>" class="bb-rl-quiz-link">
-                                        <?php echo esc_html( $quiz['post']->post_title ); ?>
-                                        <?php if ( isset( $quiz['status'] ) && $quiz['status'] == 'completed' ) : ?>
-                                            <span class="bb-rl-quiz-completed"><?php esc_html_e( 'Completed', 'buddyboss' ); ?></span>
-                                        <?php endif; ?>
-                                    </a>
-                                </li>
-                            <?php endforeach; ?>
-                        </ul>
-                    </div>
-                <?php endif; ?>
-            </div>
+							if ( function_exists( 'learndash_get_template_part' ) ) {
+								learndash_get_template_part(
+									'assignment/listing.php',
+									array(
+										'user_id'          => $user_id,
+										'course_step_post' => $post,
+										'course_id'        => $course_id,
+										'context'          => 'topic',
+									),
+									true
+								);
+							}
+
+							/**
+							 * Fires after the lesson assignment.
+							 *
+							 * @since BuddyBoss [BBVERSION]
+							 *
+							 * @param int $post_id   Post ID.
+							 * @param int $course_id Course ID.
+							 * @param int $user_id   User ID.
+							 */
+							do_action( 'learndash-lesson-assignment-after', get_the_ID(), $course_id, $user_id );
+							?>
+						</div>
+					<?php
+					endif;
+				endif;
+				?>
+
+				<?php if ( ! empty( $quizzes ) ) : ?>
+					<div class="bb-rl-topic-quizzes">
+						<h3><?php esc_html_e( 'Topic Quizzes', 'buddyboss' ); ?></h3>
+						<ul class="bb-rl-quizzes-list">
+							<?php foreach ( $quizzes as $quiz ) : ?>
+								<li class="bb-rl-quiz-item">
+									<a href="<?php echo esc_url( get_permalink( $quiz['post']->ID ) ); ?>" class="bb-rl-quiz-link">
+										<?php echo esc_html( $quiz['post']->post_title ); ?>
+										<?php if ( isset( $quiz['status'] ) && 'completed' === $quiz['status'] ) : ?>
+											<span class="bb-rl-quiz-completed"><?php esc_html_e( 'Completed', 'buddyboss' ); ?></span>
+										<?php endif; ?>
+									</a>
+								</li>
+							<?php endforeach; ?>
+						</ul>
+					</div>
+				<?php endif; ?>
+			</div>
 
 			<nav class="bb-rl-ld-module-footer bb-rl-topic-footer">
-                <div class="bb-rl-ld-module-actions bb-rl-topic-actions">
-                    <div class="bb-rl-course-steps">
-                        <button type="submit" class="bb-rl-mark-complete-button bb-rl-button bb-rl-button--brandFill bb-rl-button--small"><?php esc_html_e( 'Mark Complete', 'buddyboss' ); ?></button>
-                    </div>
-                    <div class="bb-rl-ld-module-count bb-rl-topic-count">
-                        <span class="bb-pages">
-                            <?php echo LearnDash_Custom_Label::get_label( 'lesson' ); ?> <?php echo $lesson_no; ?>, 
-                            <?php echo LearnDash_Custom_Label::get_label( 'topic' ); ?> <?php echo $topic_no; ?>
-                            <span class="bb-total"><?php esc_html_e( 'of', 'buddyboss' ); ?> <?php echo count( $topics ); ?></span>
-                        </span>
-                    </div>
-                    <div class="learndash_next_prev_link">
-                        <?php
-                        if ( isset( $pagination_urls['prev'] ) && $pagination_urls['prev'] != '' ) {
-                            echo $pagination_urls['prev'];
-                        } else {
-                            echo '<span class="prev-link empty-post"><i class="bb-icons-rl-caret-left"></i>' . esc_html__( 'Previous', 'buddyboss' ) . '</span>';
-                        }
-                        ?>
-                        <?php
-                        if (
-                            (
-                                isset( $pagination_urls['next'] ) &&
-                                apply_filters( 'learndash_show_next_link', learndash_is_topic_complete( $user_id, $post->ID ), $user_id, $post->ID ) &&
-                                $pagination_urls['next'] != ''
-                            ) ||
-                            (
-                                isset( $pagination_urls['next'] ) &&
-                                $pagination_urls['next'] != '' &&
-                                isset( $course_settings['course_disable_lesson_progression'] ) &&
-                                $course_settings['course_disable_lesson_progression'] === 'on'
-                            )
-                        ) {
-                            echo $pagination_urls['next'];
-                        } else {
-                            echo '<span class="next-link empty-post">' . esc_html__( 'Next Topic', 'buddyboss' ) . '<i class="bb-icons-rl-caret-right"></i></span>';
-                        }
-                        ?>
-                    </div>
-                </div>
+				<div class="bb-rl-ld-module-actions bb-rl-topic-actions">
+					<div class="bb-rl-course-steps">
+						<button type="submit" class="bb-rl-mark-complete-button bb-rl-button bb-rl-button--brandFill bb-rl-button--small"><?php esc_html_e( 'Mark Complete', 'buddyboss' ); ?></button>
+					</div>
+					<div class="bb-rl-ld-module-count bb-rl-topic-count">
+						<span class="bb-pages">
+							<?php echo esc_html( LearnDash_Custom_Label::get_label( 'lesson' ) ); ?> <?php echo esc_html( $lesson_no ); ?>, 
+							<?php echo esc_html( LearnDash_Custom_Label::get_label( 'topic' ) ); ?> <?php echo esc_html( $topic_no ); ?>
+							<span class="bb-total"><?php esc_html_e( 'of', 'buddyboss' ); ?><?php echo count( $topics ); ?></span>
+						</span>
+					</div>
+					<div class="learndash_next_prev_link">
+						<?php
+						if ( isset( $pagination_urls['prev'] ) && '' !== $pagination_urls['prev'] ) {
+							echo esc_url( $pagination_urls['prev'] );
+						} else {
+							echo '<span class="prev-link empty-post"><i class="bb-icons-rl-caret-left"></i>' . esc_html__( 'Previous', 'buddyboss' ) . '</span>';
+						}
+						?>
+						<?php
+						if (
+							(
+								isset( $pagination_urls['next'] ) &&
+								apply_filters( 'learndash_show_next_link', learndash_is_topic_complete( $user_id, $post->ID ), $user_id, $post->ID ) &&
+								'' !== $pagination_urls['next']
+							) ||
+							(
+								isset( $pagination_urls['next'] ) &&
+								'' !== $pagination_urls['next'] &&
+								isset( $course_settings['course_disable_lesson_progression'] ) &&
+								'on' === $course_settings['course_disable_lesson_progression']
+							)
+						) {
+							echo esc_url( $pagination_urls['next'] );
+						} else {
+							echo '<span class="next-link empty-post">' . esc_html__( 'Next Topic', 'buddyboss' ) . '<i class="bb-icons-rl-caret-right"></i></span>';
+						}
+						?>
+					</div>
+				</div>
 			</nav>
 		</article>
 	</main>
-</div> 
+</div>

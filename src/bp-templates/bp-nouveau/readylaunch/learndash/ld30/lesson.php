@@ -1,6 +1,6 @@
 <?php
 /**
- * LearnDash Single Lesson Template for ReadyLaunch
+ * LearnDash Single Lesson Template for ReadyLaunch.
  *
  * @since   BuddyBoss [BBVERSION]
  * @package BuddyBoss\Core
