@@ -427,4 +427,23 @@ class BP_Core extends BP_Component {
 
 		parent::register_post_types();
 	}
+
+	/**
+	 * Init the BuddyBoss REST API.
+	 *
+	 * @param array $controllers Optional. See BP_Component::rest_api_init() for description.
+	 *
+	 * @since BuddyBoss 2.8.80
+	 */
+	public function rest_api_init( $controllers = array() ) {
+		$controllers = array(
+			/**
+			 * As the core component is always loaded,
+			 * let's register the Components endpoint here.
+			 */
+			'BB_REST_Topics_Endpoint'
+		);
+
+		parent::rest_api_init( $controllers );
+	}
 }

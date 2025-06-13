@@ -7681,7 +7681,7 @@ function bb_activity_update_date_updated_and_clear_cache( $activity, $date_updat
 /**
  * Check if the activity topics are enabled.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.8.80
  *
  * @param bool $retval Default value.
  *
@@ -7692,7 +7692,7 @@ function bb_is_enabled_activity_topics( $retval = false ) {
 	/**
 	 * Filters the activity topics status.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.8.80
 	 *
 	 * @param bool $enable_activity_topics Whether the activity topics are enabled.
 	 */
@@ -7702,7 +7702,7 @@ function bb_is_enabled_activity_topics( $retval = false ) {
 /**
  * Check if the activity topic is required.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.8.80
  *
  * @param bool $retval Default value.
  *
@@ -7713,7 +7713,7 @@ function bb_is_activity_topic_required( $retval = false ) {
 	/**
 	 * Filters the activity topic required status.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.8.80
 	 *
 	 * @param bool $enable_activity_topic_required Whether the activity topic is required.
 	 */
@@ -7723,7 +7723,7 @@ function bb_is_activity_topic_required( $retval = false ) {
 /**
  * Get the singleton instance of BB_Activity_Topics_Manager.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.8.80
  *
  * @return BB_Activity_Topics_Manager|null Instance of the topics manager or null if the class doesn't exist.
  */

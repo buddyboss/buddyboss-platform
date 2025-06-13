@@ -465,6 +465,7 @@ module.exports = function (grunt) {
 					files: {
 						src: [
 						SOURCE_DIR + '/**/*.js',
+						'!**/*.min.js',
 						'!**/emojione-edited.js',
 						'!**/emojionearea-edited.js',
 						'!**/vendor/**/*.js',

@@ -429,7 +429,7 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 		/**
 		 * Prevents activity creation for WPML translated posts.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.8.80
 		 */
 		public function bb_prevent_translated_post_activities() {
 			if ( ! bp_is_active( 'activity' ) ) {
@@ -453,7 +453,7 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 		/**
 		 * Check if the post is a WPML translation and prevent activity creation if it is.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.8.80
 		 *
 		 * @param bool $return  Whether the post should be published to activity.
 		 * @param int  $blog_id ID of the current site.
@@ -496,7 +496,7 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 		/**
 		 * Capture the original old language of a post before update.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.8.80
 		 *
 		 * @param int   $post_id Post ID.
 		 * @param array $data    Array of unslashed post data.
@@ -522,7 +522,7 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 		/**
 		 * Process WPML language change after post has been updated.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.8.80
 		 *
 		 * @param int     $post_id      Post ID.
 		 * @param WP_Post $post_after   Post object following the update.
@@ -580,7 +580,7 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 		/**
 		 * Ajax handler for switching the language of a post in WPML
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.8.80
 		 */
 		public function bb_handle_wpml_switch_post_language() {
 			if ( ! defined( 'ICL_SITEPRESS_VERSION' ) || ! class_exists( 'WPML_Post_Edit_Ajax' ) ) {

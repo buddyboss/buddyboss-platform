@@ -153,7 +153,12 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 		) );
 
 		// Activity Topics.
-		$this->add_section( 'bb_activity_topics', __( 'Activity Topics', 'buddyboss' ) );
+		$this->add_section(
+			'bb_activity_topics',
+			__( 'Activity Topics', 'buddyboss' ),
+			'',
+			array( $this, 'bb_admin_activity_topics_settings_tutorial' )
+		);
 
 		$this->add_field( 'bb_enable_activity_topics', __( 'Enable Topics', 'buddyboss' ), array( $this, 'bb_admin_setting_callback_enable_activity_topics' ), 'intval' );
 
@@ -199,7 +204,7 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 		/**
 		 * Fires to register Activity topic settings fields.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.8.80
 		 *
 		 * @param Object $this BP_Admin_Setting_Activity.
 		 */
@@ -477,7 +482,7 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 	/**
 	 * Enable activity topics.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.8.80
 	 */
 	public function bb_admin_setting_callback_enable_activity_topics() {
 		?>
@@ -489,7 +494,7 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 	/**
 	 * Enable activity topic required.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.8.80
 	 */
 	public function bb_admin_setting_callback_activity_topic_required() {
 		?>
@@ -501,7 +506,7 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 	/**
 	 * Activity topics.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.8.80
 	 */
 	public function bb_admin_setting_callback_activity_topics() {
 		$topics               = bb_topics_manager_instance()->bb_get_topics(
@@ -708,7 +713,7 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 	/**
 	 * Enable group activity topics.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.8.80
 	 */
 	public function bb_admin_setting_callback_enable_group_activity_topics() {
 		$val    = function_exists( 'bb_is_enabled_group_activity_topics' ) && bb_is_enabled_group_activity_topics();
@@ -717,6 +722,33 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 		<input id="bb_enable_group_activity_topics" name="<?php echo empty( $notice ) ? 'bb-enable-group-activity-topics' : ''; ?>" type="checkbox" value="1" <?php echo empty( $notice ) ? checked( $val, true, false ) : ''; ?> />
 		<label for="bb_enable_group_activity_topics"><?php esc_html_e( 'Enable topics for groups.', 'buddyboss' ); ?></label>
 		<p class="description"><?php esc_html_e( 'Allow group organizers to set categories for members to use in group posts.', 'buddyboss' ); ?></p>
+		<?php
+	}
+
+	/**
+	 * Link to Activity Topics tutorial.
+	 *
+	 * @since BuddyBoss 2.8.80
+	 */
+	public function bb_admin_activity_topics_settings_tutorial() {
+		?>
+		<p>
+			<a class="button" target="_blank" href="
+			<?php
+				echo esc_url(
+					bp_get_admin_url(
+						add_query_arg(
+							array(
+								'page'    => 'bp-help',
+								'article' => 128458,
+							),
+							'admin.php'
+						)
+					)
+				);
+			?>
+		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
+		</p>
 		<?php
 	}
 }
