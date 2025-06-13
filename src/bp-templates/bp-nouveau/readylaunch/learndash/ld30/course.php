@@ -636,8 +636,10 @@ $bb_bb_rl_ld_helper = class_exists( 'BB_Readylaunch_Learndash_Helper' ) ? BB_Rea
 					<?php endif; ?>
 
 					<div class="bb-rl-entry-content">
-						<h2><?php esc_html_e( 'About course', 'buddyboss' ); ?></h2>
-						<?php the_content(); ?>
+						<?php if ( get_the_content() ) : ?>
+							<h2><?php esc_html_e( 'About course', 'buddyboss' ); ?></h2>
+							<?php the_content(); ?>
+						<?php endif; ?>
 					</div>
 				</div> <!-- /.bb-rl-course-content-inner -->
 				<div class="bb-rl-course-content-sidebar bb-rl-widget-sidebar ">
