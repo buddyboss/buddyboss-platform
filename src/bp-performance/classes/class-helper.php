@@ -35,7 +35,7 @@ class Helper {
 	}
 
 	/**
-	 * Intitialization of class.
+	 * Initialisation of class.
 	 */
 	public function initialize() {
 	}
@@ -50,14 +50,13 @@ class Helper {
 	 * @return mixed|null
 	 */
 	public function get_app_settings( $setting_key = null, $group = 'default', $default_value = true ) {
-		// Currently we supporting only BuddyBoss App Settings.
+		// Currently, we are supporting only BuddyBoss App Settings.
 		$settings = \BuddyBoss\Performance\Settings::get_settings( $group );
 
 		if ( ! empty( $setting_key ) ) {
-			return isset( $settings[ $setting_key ] ) ? $settings[ $setting_key ] : $default_value;
+			return $settings[ $setting_key ] ?? $default_value;
 		} else {
 			return $settings;
 		}
 	}
-
 }

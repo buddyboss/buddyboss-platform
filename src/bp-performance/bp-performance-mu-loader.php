@@ -17,8 +17,12 @@ if ( ! function_exists( 'bp_performance_loaded' ) ) {
 	 */
 	function bp_performance_loaded() {
 		if ( ! class_exists( 'BuddyBoss\Performance\Performance' ) ) {
-			require_once dirname( __FILE__ ) . '/classes/class-performance.php';
+			require_once __DIR__ . '/classes/class-performance.php';
 			\BuddyBoss\Performance\Performance::instance();
+
+			if ( file_exists( __DIR__ . '/bp-performance-includes.php' ) ) {
+				require_once __DIR__ . '/bp-performance-includes.php';
+			}
 		}
 	}
 
@@ -109,7 +113,7 @@ if ( ! function_exists( 'bb_restricate_rest_api_mu_cache' ) ) {
 	function bb_restricate_rest_api_mu_cache( $data, $current_endpoint, $exclude_endpoints ) {
 		// Add mandatory endpoint here for app which you want to exclude from restriction.
 		// ex: /buddyboss-app/auth/v1/jwt/token.
-		$default_exclude_endpoint = array(
+		$default_exclude_endpoint   = array(
 			'/buddyboss/v1/signup/form',
 			'/buddyboss/v1/signup/(?P<id>[\w-]+)',
 			'/buddyboss/v1/signup/activate/(?P<id>[\w-]+)',
