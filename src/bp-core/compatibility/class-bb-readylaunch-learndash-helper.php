@@ -62,7 +62,8 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 		 * @since BuddyBoss [BBVERSION]
 		 */
 		public function __construct() {
-			add_filter( 'learndash_template', array( $this, 'bb_rl_override_learndash_template_path' ), 20, 5 );
+			remove_all_filters( 'learndash_template' );
+			add_filter( 'learndash_template', array( $this, 'bb_rl_override_learndash_template_path' ), 99999, 5 );
 
 			// Add actions for archive template.
 			add_action( 'bb_rl_layout_before', array( $this, 'bb_rl_learndash_layout_before' ) );
