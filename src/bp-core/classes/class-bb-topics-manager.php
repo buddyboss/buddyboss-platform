@@ -4,7 +4,7 @@
  *
  * Handles database schema creation and CRUD operations for topics.
  *
- * @since   BuddyBoss [BBVERSION]
+ * @since   BuddyBoss 2.8.80
  * @package BuddyBoss\Activity
  */
 
@@ -16,14 +16,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Manages Topics data storage and operations.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.8.80
  */
 class BB_Topics_Manager {
 
 	/**
 	 * Instance of this class.
 	 *
-	 * @since  BuddyBoss [BBVERSION]
+	 * @since  BuddyBoss 2.8.80
 	 *
 	 * @var object
 	 *
@@ -34,7 +34,7 @@ class BB_Topics_Manager {
 	/**
 	 * Table name for Topics.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.8.80
 	 *
 	 * @var string
 	 */
@@ -43,7 +43,7 @@ class BB_Topics_Manager {
 	/**
 	 * Table name for Topic Relationships.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.8.80
 	 *
 	 * @var string
 	 */
@@ -52,7 +52,7 @@ class BB_Topics_Manager {
 	/**
 	 * Table name for Activity Topic Relationships.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.8.80
 	 *
 	 * @var string
 	 */
@@ -61,7 +61,7 @@ class BB_Topics_Manager {
 	/**
 	 * Table name for Topic History.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.8.80
 	 *
 	 * @var string
 	 */
@@ -70,7 +70,7 @@ class BB_Topics_Manager {
 	/**
 	 * Cache group for topics.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.8.80
 	 *
 	 * @var string
 	 */
@@ -79,7 +79,7 @@ class BB_Topics_Manager {
 	/**
 	 * WordPress Database instance.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.8.80
 	 *
 	 * @var object
 	 */
@@ -88,7 +88,7 @@ class BB_Topics_Manager {
 	/**
 	 * Get the singleton instance of this class.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.8.80
 	 *
 	 * @return BB_Topics_Manager The singleton instance.
 	 */
@@ -103,7 +103,7 @@ class BB_Topics_Manager {
 	/**
 	 * Constructor.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.8.80
 	 */
 	public function __construct() {
 		global $wpdb;
@@ -121,7 +121,7 @@ class BB_Topics_Manager {
 	/**
 	 * Set up hooks for logging actions.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.8.80
 	 */
 	private function setup_hooks() {
 		add_action( 'bp_admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
@@ -137,7 +137,7 @@ class BB_Topics_Manager {
 	/**
 	 * Enqueue scripts.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.8.80
 	 *
 	 * @param string $hook_suffix The current admin page.
 	 */
@@ -199,7 +199,7 @@ class BB_Topics_Manager {
 	/**
 	 * Create the necessary database tables.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.8.80
 	 */
 	public function create_tables() {
 		$sql             = array();
@@ -308,7 +308,7 @@ class BB_Topics_Manager {
 	/**
 	 * Add a new global topic via AJAX.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.8.80
 	 */
 	public function bb_add_topic_ajax() {
 		if ( ! isset( $_POST['name'] ) ) {
@@ -416,7 +416,7 @@ class BB_Topics_Manager {
 	/**
 	 * Add a new global topic.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.8.80
 	 *
 	 * @param array $args {
 	 * Array of arguments for adding a topic.
@@ -456,7 +456,7 @@ class BB_Topics_Manager {
 		/**
 		 * Fires before a topic has been added.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.8.80
 		 *
 		 * @param array $r The arguments used to add the topic.
 		 */
@@ -582,7 +582,7 @@ class BB_Topics_Manager {
 		/**
 		 * Fires after a topic has been added.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.8.80
 		 *
 		 * @param object $get_topic_relationship The topic relationship object.
 		 * @param array  $r The arguments used to add the topic.
@@ -597,7 +597,7 @@ class BB_Topics_Manager {
 	/**
 	 * Update an existing topic.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.8.80
 	 *
 	 * @param array $args {
 	 *     Array of arguments for updating a topic.
@@ -644,7 +644,7 @@ class BB_Topics_Manager {
 		/**
 		 * Fires before a topic has been updated.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.8.80
 		 *
 		 * @param array  $r The arguments used to update the topic.
 		 * @param int    $previous_topic_id The ID of the previous topic.
@@ -778,7 +778,7 @@ class BB_Topics_Manager {
 		/**
 		 * Fires after a topic has been updated.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.8.80
 		 *
 		 * @param object $topic_data The topic data.
 		 * @param array  $r The arguments used to update the topic.
@@ -793,7 +793,7 @@ class BB_Topics_Manager {
 	/**
 	 * Add a new topic relationship.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.8.80
 	 *
 	 * @param array $args {
 	 * Array of arguments for adding a topic relationship.
@@ -869,7 +869,7 @@ class BB_Topics_Manager {
 		/**
 		 * Fires before a topic relationship has been added.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.8.80
 		 *
 		 * @param array $args The arguments used to add the topic relationship.
 		 */
@@ -910,7 +910,7 @@ class BB_Topics_Manager {
 		/**
 		 * Fires after a topic relationship has been added.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.8.80
 		 *
 		 * @param int   $inserted The number of rows inserted.
 		 * @param array $args     The arguments used to add the topic relationship.
@@ -923,7 +923,7 @@ class BB_Topics_Manager {
 	/**
 	 * Update a topic relationship.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.8.80
 	 *
 	 * @param array $args {
 	 *     Array of arguments for updating a topic relationship.
@@ -953,7 +953,7 @@ class BB_Topics_Manager {
 		/**
 		 * Fires before a topic relationship has been updated.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.8.80
 		 *
 		 * @param array $args The arguments used to add the topic relationship.
 		 */
@@ -1059,7 +1059,7 @@ class BB_Topics_Manager {
 		/**
 		 * Fires after a topic relationship has been updated.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.8.80
 		 *
 		 * @param int   $updated The number of rows updated.
 		 * @param array $args The arguments used to add the topic relationship.
@@ -1072,7 +1072,7 @@ class BB_Topics_Manager {
 	/**
 	 * Get a single topic by field (id or slug).
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.8.80
 	 *
 	 * @param string $field The field to query by ('id' or 'slug').
 	 * @param mixed  $value The value to search for.
@@ -1121,7 +1121,7 @@ class BB_Topics_Manager {
 	/**
 	 * Get multiple topics based on arguments.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.8.80
 	 *
 	 * @param array $args    {
 	 *                       Array of query arguments.
@@ -1168,7 +1168,7 @@ class BB_Topics_Manager {
 		/**
 		 * Filters the MySQL SELECT clause for the topic query.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.8.80
 		 *
 		 * @param string $select_sql Current SELECT MySQL statement.
 		 * @param array  $r          Method parameters.
@@ -1203,7 +1203,7 @@ class BB_Topics_Manager {
 		/**
 		 * Filters the MySQL ORDER BY clause for the topic query.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.8.80
 		 *
 		 * @param string $order_by Current ORDER BY MySQL statement.
 		 * @param array  $r        Method parameters.
@@ -1283,7 +1283,7 @@ class BB_Topics_Manager {
 		/**
 		 * Filters the MySQL WHERE conditions for the activity topics using the SQL method.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.8.80
 		 *
 		 * @param array  $where_conditions Current conditions for MySQL WHERE statement.
 		 * @param array  $r                Parsed arguments passed into the method.
@@ -1314,7 +1314,7 @@ class BB_Topics_Manager {
 		/**
 		 * Filter the MySQL JOIN clause for the topic query.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.8.80
 		 *
 		 * @param string $join_sql   JOIN clause.
 		 * @param array  $r          Method parameters.
@@ -1327,7 +1327,7 @@ class BB_Topics_Manager {
 		/**
 		 * Filters the MySQL GROUP BY clause for the topic query.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.8.80
 		 *
 		 * @param string $group_by   Current GROUP BY MySQL statement.
 		 * @param array  $r          Method parameters.
@@ -1348,7 +1348,7 @@ class BB_Topics_Manager {
 		/**
 		 * Filters the Topic MySQL statement.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.8.80
 		 *
 		 * @param string $topic_sql MySQL's statement used to query for topics.
 		 * @param array  $r         Array of arguments passed into the method.
@@ -1428,7 +1428,7 @@ class BB_Topics_Manager {
 			/**
 			 * Filters the total activity topics in the MySQL statement.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 2.8.80
 			 *
 			 * @param string $value     MySQL's statement used to query for total activity topics.
 			 * @param string $where_sql MySQL WHERE statement portion.
@@ -1461,7 +1461,7 @@ class BB_Topics_Manager {
 	/**
 	 * Fetch an existing topic while the edit topic modal is open via AJAX.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.8.80
 	 */
 	public function bb_edit_topic_ajax() {
 		if ( ! isset( $_POST['topic_id'] ) ) {
@@ -1501,7 +1501,7 @@ class BB_Topics_Manager {
 	/**
 	 * Get a single topic by ID.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.8.80
 	 *
 	 * @param array $args {
 	 *     Array of arguments.
@@ -1531,7 +1531,7 @@ class BB_Topics_Manager {
 	/**
 	 * Delete an existing topic via AJAX.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.8.80
 	 */
 	public function bb_delete_topic_ajax() {
 		if ( ! isset( $_POST['topic_id'] ) ) {
@@ -1582,7 +1582,7 @@ class BB_Topics_Manager {
 	/**
 	 * Delete a topic and its associated relationships.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.8.80
 	 *
 	 * @param array $args      {
 	 *                         Array of arguments.
@@ -1630,7 +1630,7 @@ class BB_Topics_Manager {
 		/**
 		 * Fires before a topic is deleted.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.8.80
 		 *
 		 * @param int $topic_id The ID of the topic being deleted.
 		 */
@@ -1648,7 +1648,7 @@ class BB_Topics_Manager {
 			/**
 			 * Fires after a topic relationship has been deleted.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 2.8.80
 			 *
 			 * @param array $relationships_ids The IDs of the topic relationships that were deleted.
 			 * @param int   $topic_id          The ID of the topic that was deleted.
@@ -1663,7 +1663,7 @@ class BB_Topics_Manager {
 		/**
 		 * Fires after a topic has been deleted.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.8.80
 		 *
 		 * @param array $relationships_ids The IDs of the topic relationships that were deleted.
 		 * @param int   $topic_id          The ID of the topic that was deleted.
@@ -1678,7 +1678,7 @@ class BB_Topics_Manager {
 	/**
 	 * Migrate a topic via AJAX.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.8.80
 	 */
 	public function bb_migrate_topic_ajax() {
 		if ( ! isset( $_POST['nonce'] ) ) {
@@ -1759,7 +1759,7 @@ class BB_Topics_Manager {
 		/**
 		 * Fires before a topic is deleted.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.8.80
 		 *
 		 * @param int $topic_id The ID of the topic being deleted.
 		 */
@@ -1776,7 +1776,7 @@ class BB_Topics_Manager {
 		/**
 		 * Fires after a topic is deleted.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.8.80
 		 *
 		 * @param int $topic_id The ID of the topic being deleted.
 		 */
@@ -1797,7 +1797,7 @@ class BB_Topics_Manager {
 	/**
 	 * Migrate a topic.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.8.80
 	 *
 	 * @param array $args {
 	 *     Array of arguments.
@@ -1886,7 +1886,7 @@ class BB_Topics_Manager {
 		/**
 		 * Fires before a topic is migrated.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.8.80
 		 *
 		 * @param int    $topic_id     The ID of the old topic.
 		 * @param int    $new_topic_id The ID of the new topic.
@@ -1928,7 +1928,7 @@ class BB_Topics_Manager {
 		/**
 		 * Fires after a topic is migrated.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.8.80
 		 *
 		 * @param array  $get_topic    The new topic.
 		 * @param int    $topic_id     The ID of the old topic.
@@ -1944,7 +1944,7 @@ class BB_Topics_Manager {
 	/**
 	 * Check if the maximum number of topics has been reached.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.8.80
 	 *
 	 * @param array $r Array of arguments.
 	 *
@@ -1968,7 +1968,7 @@ class BB_Topics_Manager {
 	/**
 	 * Limit the number of topics.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.8.80
 	 *
 	 * @return int The maximum number of topics.
 	 */
@@ -1979,7 +1979,7 @@ class BB_Topics_Manager {
 	/**
 	 * Update the order of topics.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.8.80
 	 */
 	public function bb_update_topics_order_ajax() {
 		if ( ! isset( $_POST['topic_ids'] ) || ! is_array( $_POST['topic_ids'] ) ) {
@@ -2023,7 +2023,7 @@ class BB_Topics_Manager {
 	/**
 	 * Get the permission type for a topic.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.8.80
 	 *
 	 * @param array $args {
 	 *     Array of arguments.
@@ -2056,7 +2056,7 @@ class BB_Topics_Manager {
 	/**
 	 * Allow loading scripts only when needed.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.8.80
 	 */
 	public function bb_load_topics_scripts() {
 		$is_enabled_activity = bp_is_active( 'activity' );
@@ -2088,7 +2088,7 @@ class BB_Topics_Manager {
 	/**
 	 * Check if a topic is global by looking for activity relationships.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.8.80
 	 *
 	 * @param int $topic_id The ID of the topic to check.
 	 * @return bool True if the topic is global (has activity relationships), false otherwise.
@@ -2115,7 +2115,7 @@ class BB_Topics_Manager {
 	/**
 	 * Add a topic history.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.8.80
 	 *
 	 * @param array $args {
 	 *     Array of arguments.
@@ -2188,7 +2188,7 @@ class BB_Topics_Manager {
 		/**
 		 * Fires after topic history has been added.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.8.80
 		 *
 		 * @param array $r The arguments used to add the topic history.
 		 */
@@ -2200,7 +2200,7 @@ class BB_Topics_Manager {
 	/**
 	 * Get the redirected topic slug from history.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.8.80
 	 *
 	 * @param array $args {
 	 *     Array of arguments.
@@ -2241,7 +2241,7 @@ class BB_Topics_Manager {
 	/**
 	 * Get the latest topic slug using concise query.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.8.80
 	 *
 	 * @param string $input_slug The input slug.
 	 * @param int    $item_id The item ID.
@@ -2284,7 +2284,7 @@ class BB_Topics_Manager {
 	/**
 	 * Handle topic redirects for renamed topics.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.8.80
 	 */
 	public function bb_handle_topic_redirects() {
 		$bb_topic = $this->bb_get_topic_slug_from_url();
@@ -2334,7 +2334,7 @@ class BB_Topics_Manager {
 			/**
 			 * Filters the topic redirect URL.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 2.8.80
 			 *
 			 * @param string $redirect_url The redirect URL.
 			 * @param string $old_slug The old topic slug.
@@ -2347,7 +2347,7 @@ class BB_Topics_Manager {
 			/**
 			 * Fires before a topic redirect is performed.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 2.8.80
 			 *
 			 * @param string $old_slug The old topic slug.
 			 * @param string $new_slug The new topic slug.
@@ -2364,7 +2364,7 @@ class BB_Topics_Manager {
 	/**
 	 * Get the topic slug from the URL.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.8.80
 	 *
 	 * @return string The topic slug from URL parameters.
 	 */
@@ -2380,7 +2380,7 @@ class BB_Topics_Manager {
 	/**
 	 * Get the topic history.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.8.80
 	 *
 	 * @param array $args The arguments.
 	 *

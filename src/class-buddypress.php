@@ -726,6 +726,7 @@ class BuddyPress {
 
 			// BuddyBoss Platform Rest API classes.
 			'BP_REST_Components_Endpoint'                  => 'core',
+			'BB_REST_Topics_Endpoint'                      => 'core',
 			'BP_REST_Attachments'                          => 'core',
 			'BP_REST_Settings_Endpoint'                    => 'core',
 			'BP_REST_Mention_Endpoint'                     => 'core',

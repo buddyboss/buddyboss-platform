@@ -1720,7 +1720,7 @@ function bb_group_card_template() {
 /**
  * Delete group activity topic when delete the group.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.8.80
  *
  * @param int $group_id ID of the group.
  *
