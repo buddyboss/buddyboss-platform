@@ -12,7 +12,10 @@ bp_get_template_part( 'header/readylaunch-header' );
 
 $readylaunch_instance = BB_Readylaunch::instance();
 
-$is_ld_archive = is_post_type_archive( learndash_get_post_type_slug( 'course' ) );
+$is_ld_archive = false;
+if ( function_exists( 'learndash_get_post_type_slug' ) ) {
+	$is_ld_archive = is_post_type_archive( learndash_get_post_type_slug( 'course' ) );
+}
 
 /**
  * Fires before the layout.
