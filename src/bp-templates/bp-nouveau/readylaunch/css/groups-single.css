@@ -3996,6 +3996,43 @@ div#bp-group-message-content {
   }
 }
 
+.bb-rl-entry-content .learndash-wrapper .ld-tabs {
+  margin: 0;
+}
+
+.bb-rl-entry-content .learndash-wrapper .ld-tabs .ld-tabs-navigation:after {
+  display: none;
+}
+
+.bb-rl-entry-content .learndash-wrapper .ld-tabs .ld-tabs-navigation {
+  gap: var(--bb-rl-space-100);
+}
+
+.bb-rl-entry-content .learndash-wrapper .ld-tabs .ld-tabs-navigation .ld-tab {
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 500;
+  line-height: var(--bb-rl-base-line-small);
+  padding: 6px var(--bb-rl-space-200);
+  border: 1px solid var(--bb-rl-border-secondary-color);
+  color: var(--bb-rl-text-secondary-color);
+  border-radius: var(--bb-rl-radius-full);
+  background-color: transparent;
+}
+
+.bb-rl-entry-content .learndash-wrapper .ld-tabs .ld-tabs-navigation .ld-tab .ld-icon {
+  display: none;
+}
+
+.bb-rl-entry-content .learndash-wrapper .ld-tabs .ld-tabs-navigation .ld-tab::after {
+  display: none;
+}
+
+.bb-rl-entry-content .learndash-wrapper .ld-tabs .ld-tabs-navigation .ld-tab.ld-active {
+  background-color: var(--bb-rl-background-color);
+  color: var(--bb-rl-text-color);
+  border-color: var(--bb-rl-border-quinery-color);
+}
+
 .bb-readylaunch-template {
   /* A sidebar-conditioned grid can be used on
     single profile or group screens. */

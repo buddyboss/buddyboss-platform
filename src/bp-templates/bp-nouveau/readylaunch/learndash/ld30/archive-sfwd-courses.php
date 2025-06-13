@@ -380,11 +380,16 @@ $current_instructor = isset( $_GET['instructors'] ) ? sanitize_text_field( wp_un
 														<?php
 													}
 													?>
+													<?php if ( empty( $course_progress['percentage'] ) || $course_progress['percentage'] < 100 ) : ?>
 													<div class="bb-rl-course-link-wrap">
 														<a href="<?php the_permalink(); ?>" class="bb-rl-course-link bb-rl-button bb-rl-button--secondaryFill bb-rl-button--small">
 															<?php
 															if ( $is_enrolled ) {
-																esc_html_e( 'Continue Course', 'buddyboss' );
+																if ( ! empty( $course_progress ) && $course_progress['percentage'] === 100 ) {
+																	esc_html_e( 'View Course', 'buddyboss' );
+																} else {
+																	esc_html_e( 'Continue', 'buddyboss' );
+																}
 															} else {
 																esc_html_e( 'View Course', 'buddyboss' );
 															}
@@ -392,6 +397,7 @@ $current_instructor = isset( $_GET['instructors'] ) ? sanitize_text_field( wp_un
 															<i class="bb-icons-rl-caret-right"></i>
 														</a>
 													</div>
+													<?php endif; ?>
 												</div>
 												<?php
 											}
@@ -526,7 +532,11 @@ $current_instructor = isset( $_GET['instructors'] ) ? sanitize_text_field( wp_un
 										<i class="bb-icons-rl-play"></i>
 										<?php
 										if ( $is_enrolled ) {
-											esc_html_e( 'Continue', 'buddyboss' );
+											if ( ! empty( $course_progress ) && $course_progress['percentage'] === 100 ) {
+												esc_html_e( 'View Course', 'buddyboss' );
+											} else {
+												esc_html_e( 'Continue', 'buddyboss' );
+											}
 										} else {
 											esc_html_e( 'View Course', 'buddyboss' );
 										}
