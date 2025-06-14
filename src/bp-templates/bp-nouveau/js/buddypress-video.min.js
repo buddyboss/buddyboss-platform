@@ -110,6 +110,42 @@ window.bp = window.bp || {};
 		},
 
 		/**
+		 * Update album counts in the header
+		 *
+		 * @since BuddyBoss PROD-8677
+		 */
+		updateAlbumCounts: function( response ) {
+			if ( response.success && response.data && response.data.album_id && response.data.album_id > 0 ) {
+				var $albumHeader = $( '.bb-single-album-header' );
+				if ( $albumHeader.length > 0 ) {
+					// Update photo count
+					var photoText = response.data.album_photo_count === 1 ? 
+						response.data.album_photo_count + ' ' + BP_Nouveau.media.i18n_strings.photo_singular : 
+						response.data.album_photo_count + ' ' + BP_Nouveau.media.i18n_strings.photos_plural;
+					
+					// Update video count
+					var videoText = response.data.album_video_count === 1 ? 
+						response.data.album_video_count + ' ' + BP_Nouveau.media.i18n_strings.video_singular : 
+						response.data.album_video_count + ' ' + BP_Nouveau.media.i18n_strings.videos_plural;
+					
+					// Find and update the counts in the paragraph
+					var $albumInfo = $albumHeader.find( 'p' );
+					if ( $albumInfo.length > 0 ) {
+						// Update the text while preserving the date and separator structure
+						var $spans = $albumInfo.find( 'span' );
+						// There are 5 spans total: date, separator, photo count, separator, video count
+						if ( $spans.length >= 5 ) {
+							// Third span contains photo count (index 2)
+							$spans.eq(2).text( photoText );
+							// Fifth span contains video count (index 4)
+							$spans.eq(4).text( videoText );
+						}
+					}
+				}
+			}
+		},
+
+		/**
 		 * [addListeners description]
 		 */
 		addListeners: function () {
@@ -1671,6 +1707,25 @@ window.bp = window.bp || {};
 									}
 								} else {
 
+									// Always remove DOM elements first for albums or other contexts
+									$.each(
+										video,
+										function ( index, value ) {
+											// Remove from video stream
+											if ( $( '#video-stream ul.video-list li[data-id="' + value + '"]' ).length ) {
+												$( '#video-stream ul.video-list li[data-id="' + value + '"]' ).remove();
+											}
+
+											// Remove video from the current album
+											if ( self.video_album_id && $( '#media-stream ul.media-list li[data-id="' + value + '"]' ).length ) {
+												$( '#media-stream ul.media-list li[data-id="' + value + '"]' ).remove();
+											}
+										}
+									);
+
+									// Update album counts if we're in an album
+									bp.Nouveau.Video.updateAlbumCounts( response );
+
 									if (
 										'undefined' !== typeof response.data &&
 										'undefined' !== typeof response.data.video_personal_count &&
@@ -1722,21 +1777,6 @@ window.bp = window.bp || {};
 										} else {
 											buddyPressSelector.find( '.video-list:not(.existing-video-list)' ).html( response.data.group_video_html_content );
 										}
-									} else {
-										$.each(
-											video,
-											function ( index, value ) {
-												if ( $( '#video-stream ul.video-list li[data-id="' + value + '"]' ).length ) {
-													$( '#video-stream ul.video-list li[data-id="' + value + '"]' ).remove();
-												}
-
-												// Remove video from the current album.
-												if ( self.video_album_id && $( '#media-stream ul.media-list li[data-id="' + value + '"]' ).length ) {
-													$( '#media-stream ul.media-list li[data-id="' + value + '"]' ).remove();
-												}
-
-											}
-										);
 									}
 								}
 							}
