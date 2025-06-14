@@ -28,3 +28,4 @@ src/scoped_vendor
 node_modules
 npm-debug.log
 *.zip
+.claude
