@@ -428,46 +428,7 @@ function bp_nouveau_ajax_video_save() {
 	}
 
 	// Get album counts if video was added to an album
-	$album_photo_count = 0;
-	$album_video_count = 0;
-	$album_id = 0;
-	
-	if ( ! empty( $video_ids ) ) {
-		// Get the first video item to check if it belongs to an album
-		$first_video = new BP_Video( $video_ids[0] );
-		if ( ! empty( $first_video->album_id ) ) {
-			$album_id = $first_video->album_id;
-			
-			// Check if all added video items belong to the same album
-			$same_album = true;
-			foreach ( $video_ids as $video_id ) {
-				$video_obj = new BP_Video( $video_id );
-				if ( $video_obj->album_id != $album_id ) {
-					$same_album = false;
-					break;
-				}
-			}
-			
-			// If all video items are in the same album, get updated counts
-			if ( $same_album ) {
-				if ( function_exists( 'bp_media_get' ) ) {
-					$album_media = bp_media_get( array(
-						'album_id'    => $album_id,
-						'count_total' => true,
-					) );
-					$album_photo_count = isset( $album_media['total'] ) ? $album_media['total'] : 0;
-				}
-				
-				if ( function_exists( 'bp_video_get' ) ) {
-					$album_video = bp_video_get( array(
-						'album_id'    => $album_id,
-						'count_total' => true,
-					) );
-					$album_video_count = isset( $album_video['total'] ) ? $album_video['total'] : 0;
-				}
-			}
-		}
-	}
+	$album_counts = bp_nouveau_get_album_counts_for_operation( $video_ids, 'video' );
 
 	wp_send_json_success(
 		array(
@@ -475,9 +436,9 @@ function bp_nouveau_ajax_video_save() {
 			'video_personal_count' => $video_personal_count,
 			'video_group_count'    => $video_group_count,
 			'video_all_count'      => $video_all_count,
-			'album_id'             => $album_id,
-			'album_photo_count'    => $album_photo_count,
-			'album_video_count'    => $album_video_count,
+			'album_id'             => $album_counts['album_id'],
+			'album_photo_count'    => $album_counts['album_photo_count'],
+			'album_video_count'    => $album_counts['album_video_count'],
 		)
 	);
 }
@@ -669,39 +630,21 @@ function bp_nouveau_ajax_video_delete() {
 	}
 
 	// Get album counts if we're deleting from an album
-	$album_photo_count = 0;
-	$album_video_count = 0;
-	$album_id = 0;
+	$album_counts = array(
+		'album_id'          => 0,
+		'album_photo_count' => 0,
+		'album_video_count' => 0,
+	);
 	
-	// Check if all deleted video items belong to the same album
-	if ( ! empty( $deleted_videos ) && ! empty( $deleted_videos[0]->album_id ) ) {
-		$album_id = $deleted_videos[0]->album_id;
-		$same_album = true;
-		
-		foreach ( $deleted_videos as $video_item ) {
-			if ( $video_item->album_id != $album_id ) {
-				$same_album = false;
-				break;
-			}
-		}
-		
-		// If all video items are from the same album, get updated counts
-		if ( $same_album ) {
-			if ( function_exists( 'bp_media_get' ) ) {
-				$album_media = bp_media_get( array(
-					'album_id'    => $album_id,
-					'count_total' => true,
-				) );
-				$album_photo_count = isset( $album_media['total'] ) ? $album_media['total'] : 0;
-			}
-			
-			if ( function_exists( 'bp_video_get' ) ) {
-				$album_video = bp_video_get( array(
-					'album_id'    => $album_id,
-					'count_total' => true,
-				) );
-				$album_video_count = isset( $album_video['total'] ) ? $album_video['total'] : 0;
-			}
+	if ( ! empty( $deleted_videos ) ) {
+		$validation = bp_nouveau_validate_same_album( $deleted_videos, 'video' );
+		if ( $validation['same_album'] ) {
+			$counts = bp_nouveau_get_album_counts( $validation['album_id'] );
+			$album_counts = array(
+				'album_id'          => $validation['album_id'],
+				'album_photo_count' => $counts['photo_count'],
+				'album_video_count' => $counts['video_count'],
+			);
 		}
 	}
 
@@ -716,9 +659,9 @@ function bp_nouveau_ajax_video_delete() {
 			'activity_content'         => $activity_content,
 			'video_html_content'       => $video_html_content,
 			'group_video_html_content' => $group_video_html_content,
-			'album_id'                 => $album_id,
-			'album_photo_count'        => $album_photo_count,
-			'album_video_count'        => $album_video_count,
+			'album_id'                 => $album_counts['album_id'],
+			'album_photo_count'        => $album_counts['album_photo_count'],
+			'album_video_count'        => $album_counts['album_video_count'],
 		)
 	);
 }
@@ -822,33 +765,14 @@ function bp_nouveau_ajax_video_move_to_album() {
 	}
 
 	// Get updated album counts
-	$album_photo_count = 0;
-	$album_video_count = 0;
-	
-	if ( ! empty( $album_id ) ) {
-		if ( function_exists( 'bp_media_get' ) ) {
-			$album_media = bp_media_get( array(
-				'album_id'    => $album_id,
-				'count_total' => true,
-			) );
-			$album_photo_count = isset( $album_media['total'] ) ? $album_media['total'] : 0;
-		}
-		
-		if ( function_exists( 'bp_video_get' ) ) {
-			$album_video = bp_video_get( array(
-				'album_id'    => $album_id,
-				'count_total' => true,
-			) );
-			$album_video_count = isset( $album_video['total'] ) ? $album_video['total'] : 0;
-		}
-	}
+	$album_counts = bp_nouveau_get_album_counts( $album_id );
 
 	wp_send_json_success(
 		array(
 			'video'             => $video_html,
 			'album_id'          => $album_id,
-			'album_photo_count' => $album_photo_count,
-			'album_video_count' => $album_video_count,
+			'album_photo_count' => $album_counts['photo_count'],
+			'album_video_count' => $album_counts['video_count'],
 		)
 	);
 }
@@ -1614,48 +1538,7 @@ function bp_nouveau_ajax_video_move() {
 		$content = '';
 		
 		// Get updated counts for both source and destination albums
-		$source_album_photo_count = 0;
-		$source_album_video_count = 0;
-		$dest_album_photo_count = 0;
-		$dest_album_video_count = 0;
-		
-		// Get source album counts if video was moved from an album
-		if ( ! empty( $source_album_id ) ) {
-			if ( function_exists( 'bp_media_get' ) ) {
-				$source_album_media = bp_media_get( array(
-					'album_id'    => $source_album_id,
-					'count_total' => true,
-				) );
-				$source_album_photo_count = isset( $source_album_media['total'] ) ? $source_album_media['total'] : 0;
-			}
-			
-			if ( function_exists( 'bp_video_get' ) ) {
-				$source_album_video = bp_video_get( array(
-					'album_id'    => $source_album_id,
-					'count_total' => true,
-				) );
-				$source_album_video_count = isset( $source_album_video['total'] ) ? $source_album_video['total'] : 0;
-			}
-		}
-		
-		// Get destination album counts if video was moved to an album
-		if ( ! empty( $album_id ) ) {
-			if ( function_exists( 'bp_media_get' ) ) {
-				$dest_album_media = bp_media_get( array(
-					'album_id'    => $album_id,
-					'count_total' => true,
-				) );
-				$dest_album_photo_count = isset( $dest_album_media['total'] ) ? $dest_album_media['total'] : 0;
-			}
-			
-			if ( function_exists( 'bp_video_get' ) ) {
-				$dest_album_video = bp_video_get( array(
-					'album_id'    => $album_id,
-					'count_total' => true,
-				) );
-				$dest_album_video_count = isset( $dest_album_video['total'] ) ? $dest_album_video['total'] : 0;
-			}
-		}
+		$move_counts = bp_nouveau_get_move_album_counts( $source_album_id, $album_id );
 		
 		wp_send_json_success(
 			array(
@@ -1663,12 +1546,12 @@ function bp_nouveau_ajax_video_move() {
 				'video_content'            => $response['content'],
 				'message'                  => 'success',
 				'html'                     => $content,
-				'source_album_id'          => $source_album_id,
-				'source_album_photo_count' => $source_album_photo_count,
-				'source_album_video_count' => $source_album_video_count,
-				'album_id'                 => $album_id,
-				'album_photo_count'        => $dest_album_photo_count,
-				'album_video_count'        => $dest_album_video_count,
+				'source_album_id'          => $move_counts['source_album_id'],
+				'source_album_photo_count' => $move_counts['source_album_photo_count'],
+				'source_album_video_count' => $move_counts['source_album_video_count'],
+				'album_id'                 => $move_counts['album_id'],
+				'album_photo_count'        => $move_counts['album_photo_count'],
+				'album_video_count'        => $move_counts['album_video_count'],
 			)
 		);
 	} else {
