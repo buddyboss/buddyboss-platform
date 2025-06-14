@@ -502,6 +502,36 @@ window.bp = window.bp || {};
 
 								self.closeUploader( event );
 
+								// Update album counts if we're in album view
+								if ( response.success && response.data && response.data.album_id && response.data.album_id > 0 ) {
+									var $albumHeader = $( '.bb-single-album-header' );
+									if ( $albumHeader.length > 0 ) {
+										// Update photo count
+										var photoText = response.data.album_photo_count === 1 ? 
+											response.data.album_photo_count + ' photo' : 
+											response.data.album_photo_count + ' photos';
+										
+										// Update video count
+										var videoText = response.data.album_video_count === 1 ? 
+											response.data.album_video_count + ' video' : 
+											response.data.album_video_count + ' videos';
+										
+										// Find and update the counts in the paragraph
+										var $albumInfo = $albumHeader.find( 'p' );
+										if ( $albumInfo.length > 0 ) {
+											// Update the text while preserving the date and separator structure
+											var $spans = $albumInfo.find( 'span' );
+											// There are 5 spans total: date, separator, photo count, separator, video count
+											if ( $spans.length >= 5 ) {
+												// Third span contains photo count (index 2)
+												$spans.eq(2).text( photoText );
+												// Fifth span contains video count (index 4)
+												$spans.eq(4).text( videoText );
+											}
+										}
+									}
+								}
+
 								// replace dummy image with original image by faking scroll event to call bp.Nouveau.lazyLoad.
 								jQuery( window ).scroll();
 
@@ -559,6 +589,36 @@ window.bp = window.bp || {};
 										}
 									}
 								);
+
+								// Update album counts if we're in album view
+								if ( response.success && response.data && response.data.album_id && response.data.album_id > 0 ) {
+									var $albumHeader = $( '.bb-single-album-header' );
+									if ( $albumHeader.length > 0 ) {
+										// Update photo count
+										var photoText = response.data.album_photo_count === 1 ? 
+											response.data.album_photo_count + ' photo' : 
+											response.data.album_photo_count + ' photos';
+										
+										// Update video count
+										var videoText = response.data.album_video_count === 1 ? 
+											response.data.album_video_count + ' video' : 
+											response.data.album_video_count + ' videos';
+										
+										// Find and update the counts in the paragraph
+										var $albumInfo = $albumHeader.find( 'p' );
+										if ( $albumInfo.length > 0 ) {
+											// Update the text while preserving the date and separator structure
+											var $spans = $albumInfo.find( 'span' );
+											// There are 5 spans total: date, separator, photo count, separator, video count
+											if ( $spans.length >= 5 ) {
+												// Third span contains photo count (index 2)
+												$spans.eq(2).text( photoText );
+												// Fifth span contains video count (index 4)
+												$spans.eq(4).text( videoText );
+											}
+										}
+									}
+								}
 
 								jQuery( window ).scroll();
 
@@ -1755,6 +1815,36 @@ window.bp = window.bp || {};
 						var selectAllMedia = $( '.bp-nouveau #bb-select-deselect-all-video' );
 						if ( selectAllMedia.hasClass( 'selected' ) ) {
 							selectAllMedia.removeClass( 'selected' );
+						}
+
+						// Update album counts if we're in album view
+						if ( response.success && response.data && response.data.album_id && response.data.album_id > 0 ) {
+							var $albumHeader = $( '.bb-single-album-header' );
+							if ( $albumHeader.length > 0 ) {
+								// Update photo count
+								var photoText = response.data.album_photo_count === 1 ? 
+									response.data.album_photo_count + ' photo' : 
+									response.data.album_photo_count + ' photos';
+								
+								// Update video count
+								var videoText = response.data.album_video_count === 1 ? 
+									response.data.album_video_count + ' video' : 
+									response.data.album_video_count + ' videos';
+								
+								// Find and update the counts in the paragraph
+								var $albumInfo = $albumHeader.find( 'p' );
+								if ( $albumInfo.length > 0 ) {
+									// Update the text while preserving the date and separator structure
+									var $spans = $albumInfo.find( 'span' );
+									// There are 5 spans total: date, separator, photo count, separator, video count
+									if ( $spans.length >= 5 ) {
+										// Third span contains photo count (index 2)
+										$spans.eq(2).text( photoText );
+										// Fifth span contains video count (index 4)
+										$spans.eq(4).text( videoText );
+									}
+								}
+							}
 						}
 
 						// replace dummy image with original image by faking scroll event to call bp.Nouveau.lazyLoad.
