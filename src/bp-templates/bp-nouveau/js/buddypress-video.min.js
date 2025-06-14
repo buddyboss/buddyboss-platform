@@ -1627,6 +1627,14 @@ window.bp = window.bp || {};
 			target.prop( 'disabled', true );
 			$( '#buddypress #video-stream.video .bp-feedback' ).remove();
 
+			// Immediately add visual feedback for deletion
+			$.each( video, function ( index, value ) {
+				// Add loading/deleting class to video elements being deleted
+				$( '#video-stream ul.video-list li[data-id="' + value + '"]' ).addClass( 'loading deleting' );
+				$( '#media-stream ul.media-list li[data-id="' + value + '"]' ).addClass( 'loading deleting' );
+				$( '.bb-activity-video-elem[data-id="' + value + '"]' ).addClass( 'loading deleting' );
+			});
+
 			var data = {
 				'action': 'video_delete',
 				'_wpnonce': BP_Nouveau.nonces.video,
@@ -1642,19 +1650,25 @@ window.bp = window.bp || {};
 					data: data,
 					success: function ( response ) {
 						var dir_label;
+						
+						// Immediately remove DOM elements for faster UX
+						if ( response.success ) {
+							$.each( video, function ( index, value ) {
+								// Remove from all possible locations
+								$( '#video-stream ul.video-list li[data-id="' + value + '"]' ).remove();
+								$( '#media-stream ul.media-list li[data-id="' + value + '"]' ).remove();
+								$( '.bb-activity-video-elem[data-id="' + value + '"]' ).remove();
+								$( '#activity-stream ul.activity-list li.activity .activity-content .activity-inner .bb-activity-video-wrap div[data-id="' + value + '"]' ).remove();
+								$( 'body .bb-activity-video-elem.' + value ).remove();
+							});
+							
+							// Update album counts immediately if we're in an album
+							bp.Nouveau.Video.updateAlbumCounts( response );
+						}
+						
 						if ( fromWhere && fromWhere.length && 'activity' === fromWhere ) {
 							if ( response.success ) {
-								$.each(
-									video,
-									function ( index, value ) {
-										if ( $( '#activity-stream ul.activity-list li.activity .activity-content .activity-inner .bb-activity-video-wrap div[data-id="' + value + '"]' ).length ) {
-											$( '#activity-stream ul.activity-list li.activity .activity-content .activity-inner .bb-activity-video-wrap div[data-id="' + value + '"]' ).remove();
-										}
-										if ( $( 'body .bb-activity-video-elem.' + value ).length ) {
-											$( 'body .bb-activity-video-elem.' + value ).remove();
-										}
-									}
-								);
+								// DOM elements already removed above
 
 								var length = $( '#activity-stream ul.activity-list li[data-bp-activity-id="' + activityId + '"] .activity-content .activity-inner .bb-activity-video-elem' ).length;
 								if ( length == 0 ) {
@@ -1706,25 +1720,7 @@ window.bp = window.bp || {};
 										$( document ).find( 'li#video-all' ).trigger( 'click' );
 									}
 								} else {
-
-									// Always remove DOM elements first for albums or other contexts
-									$.each(
-										video,
-										function ( index, value ) {
-											// Remove from video stream
-											if ( $( '#video-stream ul.video-list li[data-id="' + value + '"]' ).length ) {
-												$( '#video-stream ul.video-list li[data-id="' + value + '"]' ).remove();
-											}
-
-											// Remove video from the current album
-											if ( self.video_album_id && $( '#media-stream ul.media-list li[data-id="' + value + '"]' ).length ) {
-												$( '#media-stream ul.media-list li[data-id="' + value + '"]' ).remove();
-											}
-										}
-									);
-
-									// Update album counts if we're in an album
-									bp.Nouveau.Video.updateAlbumCounts( response );
+									// DOM elements already removed and album counts updated at the beginning of success callback
 
 									if (
 										'undefined' !== typeof response.data &&
