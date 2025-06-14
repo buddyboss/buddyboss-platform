@@ -80,7 +80,8 @@ add_action( 'bp_video_add', 'bp_video_clear_video_user_object_cache', 10 );
 function bp_video_clear_video_user_object_cache_on_delete( $videos ) {
 	if ( ! empty( $videos ) ) {
 		foreach ( (array) $videos as $deleted_video ) {
-			$user_id = ! empty( $deleted_video->user_id ) ? $deleted_video->user_id : false;
+			$user_id  = ! empty( $deleted_video->user_id ) ? $deleted_video->user_id : false;
+			$album_id = ! empty( $deleted_video->album_id ) ? $deleted_video->album_id : false;
 
 			wp_cache_delete( 'bb_video_activity_' . $deleted_video->id, 'bp_video' ); // Used in bb_moderation_get_media_record_by_id().
 
@@ -92,6 +93,11 @@ function bp_video_clear_video_user_object_cache_on_delete( $videos ) {
 			if ( $user_id ) {
 				wp_cache_delete( 'bp_total_video_for_user_' . $user_id, 'bp' );
 				wp_cache_delete( 'bp_total_group_video_for_user_' . $user_id, 'bp' );
+			}
+
+			// Clear album cache when video from album is deleted
+			if ( $album_id ) {
+				wp_cache_delete( $album_id, 'bp_media_album' );
 			}
 		}
 	}

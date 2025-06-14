@@ -349,3 +349,6 @@ function bp_video_allowed_video_type() {
 
 	return $extension_lists;
 }
+
+// Include album count helper functions.
+require_once dirname( __FILE__ ) . '/../media/album-count-helpers.php';
