@@ -331,7 +331,7 @@ function bp_nouveau_ajax_media_save() {
 	}
 
 	// Get album counts if media was added to an album
-	$album_counts = bp_nouveau_get_album_counts_for_operation( $media_ids, 'media' );
+	$album_counts = bb_get_album_counts_for_operation( $media_ids, 'media' );
 
 	wp_send_json_success(
 		array(
@@ -546,9 +546,9 @@ function bp_nouveau_ajax_media_delete() {
 	);
 	
 	if ( ! empty( $deleted_medias ) ) {
-		$validation = bp_nouveau_validate_same_album( $deleted_medias, 'media' );
+		$validation = bb_validate_same_album( $deleted_medias, 'media' );
 		if ( $validation['same_album'] ) {
-			$counts = bp_nouveau_get_album_counts( $validation['album_id'] );
+			$counts = bb_get_album_counts( $validation['album_id'] );
 			$album_counts = array(
 				'album_id'          => $validation['album_id'],
 				'album_photo_count' => $counts['photo_count'],
@@ -685,7 +685,7 @@ function bp_nouveau_ajax_media_move_to_album() {
 	}
 
 	// Get updated album counts
-	$album_counts = bp_nouveau_get_album_counts( $album_id );
+	$album_counts = bb_get_album_counts( $album_id );
 
 	wp_send_json_success(
 		array(
@@ -1541,7 +1541,7 @@ function bp_nouveau_ajax_media_move() {
 		$content = '';
 		
 		// Get updated counts for both source and destination albums
-		$move_counts = bp_nouveau_get_move_album_counts( $source_album_id, $album_id );
+		$move_counts = bb_get_move_album_counts( $source_album_id, $album_id );
 		
 		wp_send_json_success(
 			array(

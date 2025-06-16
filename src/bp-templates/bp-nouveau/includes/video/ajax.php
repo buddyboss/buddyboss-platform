@@ -428,7 +428,7 @@ function bp_nouveau_ajax_video_save() {
 	}
 
 	// Get album counts if video was added to an album
-	$album_counts = bp_nouveau_get_album_counts_for_operation( $video_ids, 'video' );
+	$album_counts = bb_get_album_counts_for_operation( $video_ids, 'video' );
 
 	wp_send_json_success(
 		array(
@@ -637,9 +637,9 @@ function bp_nouveau_ajax_video_delete() {
 	);
 	
 	if ( ! empty( $deleted_videos ) ) {
-		$validation = bp_nouveau_validate_same_album( $deleted_videos, 'video' );
+		$validation = bb_validate_same_album( $deleted_videos, 'video' );
 		if ( $validation['same_album'] ) {
-			$counts = bp_nouveau_get_album_counts( $validation['album_id'] );
+			$counts = bb_get_album_counts( $validation['album_id'] );
 			$album_counts = array(
 				'album_id'          => $validation['album_id'],
 				'album_photo_count' => $counts['photo_count'],
@@ -765,7 +765,7 @@ function bp_nouveau_ajax_video_move_to_album() {
 	}
 
 	// Get updated album counts
-	$album_counts = bp_nouveau_get_album_counts( $album_id );
+	$album_counts = bb_get_album_counts( $album_id );
 
 	wp_send_json_success(
 		array(
@@ -1538,7 +1538,7 @@ function bp_nouveau_ajax_video_move() {
 		$content = '';
 		
 		// Get updated counts for both source and destination albums
-		$move_counts = bp_nouveau_get_move_album_counts( $source_album_id, $album_id );
+		$move_counts = bb_get_move_album_counts( $source_album_id, $album_id );
 		
 		wp_send_json_success(
 			array(

@@ -313,5 +313,3 @@ function bp_nouveau_media_activity_edit_button( $buttons, $activity_id ) {
 	return $buttons;
 }
 
-// Include album count helper functions.
-require_once dirname( __FILE__ ) . '/album-count-helpers.php';
