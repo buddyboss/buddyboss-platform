@@ -349,3 +349,11 @@
   background-color: var(--bb-rl-background-brand-disabled-color);
   cursor: not-allowed;
 }
+
+.bb-rl-course-overview .course-progress h1 {
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 30px;
+  color: var(--bb-rl-text-color);
+  margin-bottom: var(--bb-rl-space-100);
+}

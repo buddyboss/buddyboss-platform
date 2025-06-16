@@ -18,52 +18,52 @@ while ( have_posts() ) :
 	global $post;
 
 	?>
-	<div class="entry entry-content">
-		<div class="columns">
+	<div class="bb-rl-memprlms-course bb-rl-lms-course">			
 
-			<div id="mpcs-main" class="mpcs-main column col-9 col-md-12">
-				
-
-				<?php if ( ! empty( models\Lesson::get_thumbnail( $post ) ) ) : ?>
-					<figure class="figure">
-						<a href="<?php the_permalink(); ?>" alt="<?php the_title_attribute(); ?>">
-							<img src="<?php echo esc_url( models\Lesson::get_thumbnail( $post ) ); ?>" alt="">
-						</a>
-					</figure>
-				<?php endif; ?>
-
-				<div class="course-progress">
-					<?php echo helpers\Courses::classroom_sidebar_progress( $post ); ?>
+		<div class="bb-rl-entry-header">
+			<div class="bb-rl-course-banner flex">
+				<div class="bb-rl-course-overview">
+					<div class="course-progress">
+						<?php echo helpers\Courses::classroom_sidebar_progress( $post ); ?>
+					</div>
 				</div>
-
-
-				<?php setup_postdata( $post->ID ); ?>
-				<?php the_content(); ?>
-				<?php
-				$options              = \get_option( 'mpcs-options' );
-				$show_course_comments = helpers\Options::val( $options, 'show-course-comments' );
-				if ( ! empty( $show_course_comments ) && ( comments_open() || get_comments_number() ) ) {
-					comments_template();
-				}
-				?>
-
-				<div class="mepr-rl-footer-widgets">
-					<?php if ( is_active_sidebar( 'mpcs_classroom_courses_overview_footer' ) ) : ?>
-						<div id="mpcs-courses-overview-footer-widget"
-							class="mpcs-courses-overview-footer-widget widget-area" role="complementary">
-							<?php dynamic_sidebar( 'mpcs_classroom_courses_overview_footer' ); ?>
-						</div>
-					<?php endif; ?>
-
-					<?php if ( is_active_sidebar( 'mepr_rl_global_footer' ) ) : ?>
-						<div id="mepr-rl-global-footer-widget" class="mepr-rl-global-footer-widget widget-area"
-							role="complementary">
-							<?php dynamic_sidebar( 'mepr_rl_global_footer' ); ?>
-						</div>
-					<?php endif; ?>
+				<div class="bb-rl-course-figure">
+					<div class="bb-rl-course-featured-image">
+						<?php if ( ! empty( models\Lesson::get_thumbnail( $post ) ) ) : ?>
+							<a href="<?php the_permalink(); ?>" alt="<?php the_title_attribute(); ?>">
+								<img src="<?php echo esc_url( models\Lesson::get_thumbnail( $post ) ); ?>" alt="">
+							</a>
+						<?php endif; ?>
+					</div>
 				</div>
-
 			</div>
+		</div>
+
+
+		<?php setup_postdata( $post->ID ); ?>
+		<?php the_content(); ?>
+		<?php
+		$options              = \get_option( 'mpcs-options' );
+		$show_course_comments = helpers\Options::val( $options, 'show-course-comments' );
+		if ( ! empty( $show_course_comments ) && ( comments_open() || get_comments_number() ) ) {
+			comments_template();
+		}
+		?>
+
+		<div class="mepr-rl-footer-widgets">
+			<?php if ( is_active_sidebar( 'mpcs_classroom_courses_overview_footer' ) ) : ?>
+				<div id="mpcs-courses-overview-footer-widget"
+					class="mpcs-courses-overview-footer-widget widget-area" role="complementary">
+					<?php dynamic_sidebar( 'mpcs_classroom_courses_overview_footer' ); ?>
+				</div>
+			<?php endif; ?>
+
+			<?php if ( is_active_sidebar( 'mepr_rl_global_footer' ) ) : ?>
+				<div id="mepr-rl-global-footer-widget" class="mepr-rl-global-footer-widget widget-area"
+					role="complementary">
+					<?php dynamic_sidebar( 'mepr_rl_global_footer' ); ?>
+				</div>
+			<?php endif; ?>
 		</div>
 	</div>
 

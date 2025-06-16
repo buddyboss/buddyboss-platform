@@ -1,0 +1,12 @@
+.bb-rl-course-overview {
+
+	.course-progress {
+
+		h1 {
+
+			@include bb-rl-base-heading-2xl;
+			color: var(--bb-rl-text-color);
+			margin-bottom: var(--bb-rl-space-100);
+		}
+	}
+}
