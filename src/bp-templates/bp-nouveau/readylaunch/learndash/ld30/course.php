@@ -396,7 +396,11 @@ if ( $is_enrolled ) {
 								$login_model           = LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Theme_LD30', 'login_mode_enabled' );
 								$login_url             = apply_filters( 'learndash_login_url', ( 'yes' === $login_model ? '#login' : wp_login_url( get_the_permalink( $course_id ) ) ) );
 								$learndash_login_modal = apply_filters( 'learndash_login_modal', true, $course_id, $user_id ) && ! is_user_logged_in() && 'open' !== $course_pricing['type'];
-								$learndash_login_modal = ( class_exists( 'LearnDash\Core\Models\Product' ) ) ? ( $learndash_login_modal && $ld_product->can_be_purchased() ) : $learndash_login_modal;
+								
+								// Add proper checks for $ld_product
+								if ( class_exists( 'LearnDash\Core\Models\Product' ) && $ld_product instanceof \LearnDash\Core\Models\Product ) {
+									$learndash_login_modal = $learndash_login_modal && $ld_product->can_be_purchased();
+								}
 
 								// Determine button class and text based on conditions.
 								$button_class  = 'learndash_join_button';
