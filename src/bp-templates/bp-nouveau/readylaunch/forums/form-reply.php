@@ -18,14 +18,20 @@
 
 <?php if ( bbp_current_user_can_access_create_reply_form() ) : ?>
 
-	<div id="new-reply-<?php bbp_topic_id(); ?>" class="bbp-reply-form">
+	<div id="new-reply-<?php bbp_topic_id(); ?>" class="bbp-reply-form bb-rl-forum-modal">
 
 		<form id="new-post" name="new-post" method="post" action="<?php bbp_is_reply_edit() ? bbp_reply_edit_url() : the_permalink(); ?>">
 
 			<?php do_action( 'bbp_theme_before_reply_form' ); ?>
 
 			<fieldset class="bbp-form">
-				<legend><?php printf( esc_html__( 'Reply To: %s', 'buddyboss' ), ( bbp_get_form_reply_to() ) ? sprintf( esc_html__( 'Reply #%1$s in %2$s', 'buddyboss' ), bbp_get_form_reply_to(), bbp_get_topic_title() ) : bbp_get_topic_title() ); ?></legend>
+				<div class="bb-rl-forum-modal-header">
+					<h3><?php _e( 'Replying to', 'buddyboss' ); ?></h3>
+					<button type="button" class="bb-rl-forum-modal-close">
+						<span class="screen-reader-text">Close Modal</span>
+						<span class="bb-icons-rl-x"></span>
+					</button>
+				</div>
 
 				<?php do_action( 'bbp_theme_before_reply_form_notices' ); ?>
 
@@ -40,7 +46,7 @@
 
 				<?php do_action( 'bbp_template_notices' ); ?>
 
-				<div>
+				<div class="bb-rl-forum-modal-content">
 
 					<?php bbp_get_template_part( 'form', 'anonymous' ); ?>
 
@@ -50,7 +56,7 @@
 
 					<?php do_action( 'bbp_theme_after_reply_form_content' ); ?>
 
-					<?php bbp_get_template_part( 'form', 'attachments' ); ?>
+					<div id="bb-rl-editor-toolbar"></div>
 
 					<?php if ( ! ( bbp_use_wp_editor() || current_user_can( 'unfiltered_html' ) ) ) : ?>
 
@@ -70,7 +76,7 @@
 						$get_the_tags = isset( $get_topic_id ) && ! empty( $get_topic_id ) ? bbp_get_topic_tag_names( $get_topic_id ) : array();
 						?>
 
-						<p>
+						<p class="bb-rl-forum-tags">
 							<input type="hidden" value="<?php echo ( ! empty( $get_the_tags ) ) ? esc_attr( $get_the_tags ) : ''; ?>" name="bbp_topic_tags" class="bbp_topic_tags" id="bbp_topic_tags" >
 							<select name="bbp_topic_tags_dropdown[]" class="bbp_topic_tags_dropdown" id="bbp_topic_tags_dropdown" placeholder="<?php esc_html_e( 'Type one or more tags, comma separated', 'buddyboss' ); ?>" autocomplete="off" multiple="multiple" style="width: 100%" tabindex="<?php bbp_tab_index(); ?>">
 								<?php
@@ -91,6 +97,11 @@
 
 					<?php endif; ?>
 
+				</div>
+
+				<div class="bb-rl-forum-modal-footer">
+					<?php bbp_get_template_part( 'form', 'attachments' ); ?>
+
 					<?php if ( bb_is_enabled_subscription( 'topic' ) && ! bbp_is_anonymous() && ( ! bbp_is_reply_edit() || ( bbp_is_reply_edit() && ! bbp_is_reply_anonymous() ) ) ) : ?>
 
 						<?php
@@ -102,7 +113,7 @@
 
 							<?php do_action( 'bbp_theme_before_reply_form_subscription' ); ?>
 
-							<p class="checkbox bp-checkbox-wrap">
+							<p class="checkbox bp-checkbox-wrap bb-rl-forum-subscription">
 
 								<input name="bbp_topic_subscription" id="bbp_topic_subscription" class="bs-styled-checkbox" type="checkbox" value="bbp_subscribe"<?php bbp_form_topic_subscribed(); ?> tabindex="<?php bbp_tab_index(); ?>" />
 
@@ -183,9 +194,9 @@
 
 						<?php bbp_cancel_reply_to_link(); ?>
 
-						<button type="button" tabindex="<?php bbp_tab_index(); ?>" id="bb_reply_discard_draft" name="bb_reply_discard_draft" class="button discard small bb_discard_topic_reply_draft"><?php esc_html_e( 'Discard Draft', 'buddyboss' ); ?></button>
+						<button type="button" tabindex="<?php bbp_tab_index(); ?>" id="bb_reply_discard_draft" name="bb_reply_discard_draft" class="bb-rl-button bb-rl-button--tertiaryText bb-rl-button--small discard small bb_discard_topic_reply_draft"><?php esc_html_e( 'Discard Draft', 'buddyboss' ); ?></button>
 
-						<button type="submit" tabindex="<?php bbp_tab_index(); ?>" id="bbp_reply_submit" name="bbp_reply_submit" class="button submit"><?php _e( 'Post', 'buddyboss' ); ?></button>
+						<button type="submit" tabindex="<?php bbp_tab_index(); ?>" id="bbp_reply_submit" name="bbp_reply_submit" class="bb-rl-button bb-rl-button--brandFill bb-rl-button--small submit"><?php _e( 'Post', 'buddyboss' ); ?></button>
 
 						<?php do_action( 'bbp_theme_after_reply_form_submit_button' ); ?>
 
@@ -202,6 +213,7 @@
 			<?php do_action( 'bbp_theme_after_reply_form' ); ?>
 
 		</form>
+		<div class="bb-rl-forum-modal-overlay"></div>
 	</div>
 
 <?php elseif ( bbp_is_topic_closed() ) : ?>

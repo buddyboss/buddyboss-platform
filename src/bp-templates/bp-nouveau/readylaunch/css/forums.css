@@ -985,14 +985,48 @@
   margin: 0;
 }
 
-.bbpress .select2-dropdown {
+.bb-rl-forum-tags .select2-container--default .select2-selection--multiple .select2-selection__rendered {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--bb-rl-space-50);
+  padding: 0;
+}
+
+.bb-rl-forum-tags .select2-container--default .select2-selection--multiple .select2-selection__choice {
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--bb-rl-border-secondary-color);
+  border-radius: var(--bb-rl-radius-full);
+  padding: var(--bb-rl-space-50) var(--bb-rl-space-100);
+  background-color: transparent;
+  color: var(--bb-rl-text-color);
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 500;
+  margin: 0;
+}
+
+.bb-rl-forum-tags .select2-container--default .select2-selection--multiple .select2-selection__choice .select2-selection__choice__remove {
+  font-size: 0;
+  order: 2;
+}
+
+.bb-rl-forum-tags .select2-container--default .select2-selection--multiple .select2-selection__choice .select2-selection__choice__remove:before {
+  content: "\e4f6";
+  font-family: bb-icons-rl;
+  font-size: 14px;
+  color: var(--bb-rl-icon-secondary-color);
+  margin-right: var(--bb-rl-space-50);
+}
+
+.forum .select2-dropdown {
   border: 0;
   border-radius: var(--bb-rl-radius-lg);
   box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.1);
   max-width: 320px;
 }
 
-.bbpress .select2-results__option {
+.forum .select2-results__option {
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
   font-size: 14px;
   font-weight: 500;
@@ -1003,7 +1037,7 @@
   cursor: pointer;
 }
 
-.bbpress .select2-selection__rendered li {
+.forum .select2-selection__rendered li {
   line-height: normal;
 }
 
@@ -1050,6 +1084,19 @@
 .topic-edit #new-post .bbp-form #bbp_topic_submit {
   opacity: 1;
   pointer-events: initial;
+}
+
+.bbp-reply-form .bb-rl-forum-modal-header .bb-rl-forum-modal-close {
+  margin-left: auto;
+}
+
+.bbp-reply-form .bb_discard_topic_reply_draft:hover {
+  outline: none;
+  background-color: transparent;
+}
+
+.bbp-reply-form .bb_discard_topic_reply_draft:focus {
+  outline: none;
 }
 
 .bb-rl-forums-topic-page {

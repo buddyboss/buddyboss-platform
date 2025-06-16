@@ -31,12 +31,18 @@ window.bp = window.bp || {};
 			$document.on( 'change', '#bb-rl-forum-scope-options', this.handleForumScopeChange );
 			$document.on( 'click', '.bb-rl-forum-tabs-item a', this.handleForumTabsClick );
 			$document.on( 'click', '.bb-rl-new-discussion-btn', this.openForumModal );
+			$document.on( 'click', '.bbp-topic-reply-link', this.openReplyModal );
 			$document.on( 'click', '.bb-rl-forum-modal-close, .bb-rl-forum-modal-overlay', this.closeForumModal );
 		},
 
 		openForumModal: function ( e ) {
 			e.preventDefault();
-			$('.bb-rl-forum-modal').addClass( 'bb-rl-forum-modal-visible' );
+			$('.bbp-topic-form.bb-rl-forum-modal').addClass( 'bb-rl-forum-modal-visible' );
+		},
+
+		openReplyModal: function ( e ) {
+			e.preventDefault();
+			$('.bbp-reply-form.bb-rl-forum-modal').addClass( 'bb-rl-forum-modal-visible' );
 		},
 
 		closeForumModal: function ( e ) {
@@ -343,15 +349,15 @@ window.bp = window.bp || {};
 				}
 	
 				// Add Click event to show / hide text formatting Toolbar for reply form.
-				jQuery( document ).on( 'click', '.bbp-reply-form #whats-new-toolbar .show-toolbar', function ( e ) {
+				jQuery( document ).on( 'click', '.bbp-reply-form #whats-new-toolbar .bb-rl-show-toolbar', function ( e ) {
 					e.preventDefault();
 					if( jQuery( this ).closest( '.bbpress-forums-activity.bb-quick-reply-form-wrap' ).length > 0) {
 						return;
 					}
 					var key = jQuery( e.currentTarget ).closest( '.bbp-reply-form' ).find( '.bbp_editor_reply_content' ).data( 'key' );
 					var medium_editor = jQuery( e.currentTarget ).closest( '.bbp-form' ).find( '.medium-editor-toolbar' );
-					jQuery( e.currentTarget ).find( '.toolbar-button' ).toggleClass( 'active' );
-					if ( jQuery( e.currentTarget ).find( '.toolbar-button' ).hasClass( 'active' ) ) {
+					jQuery( e.currentTarget ).find( '.bb-rl-toolbar-button' ).toggleClass( 'active' );
+					if ( jQuery( e.currentTarget ).find( '.bb-rl-toolbar-button' ).hasClass( 'active' ) ) {
 						jQuery( e.currentTarget ).attr( 'data-bp-tooltip', jQuery( e.currentTarget ).attr( 'data-bp-tooltip-hide' ) );
 						if ( window.forums_medium_reply_editor[ key ].exportSelection() !== null ) {
 							medium_editor.addClass( 'medium-editor-toolbar-active' );
