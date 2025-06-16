@@ -4611,6 +4611,7 @@ div#bp-group-message-content {
   color: var(--bb-rl-text-color);
   flex: 1;
   order: 2;
+  width: calc(100% - 28px);
 }
 
 .bb-rl-ld-lesson-list .ld-item-list-item-preview > a .ld-item-title {
@@ -4630,6 +4631,20 @@ div#bp-group-message-content {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  max-width: calc(100% - 28px);
+}
+
+.bb-rl-ld-lesson-list .ld-item-list-item-preview .ld-item-title > span:not(.ld-item-components) {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+  min-width: 0;
+  display: block;
+}
+
+.bb-rl-ld-lesson-list .ld-item-list-item-preview .ld-item-title .ld-item-components {
+  white-space: nowrap;
 }
 
 .bb-rl-ld-lesson-list .ld-item-list-item-preview .ld-item-details {
