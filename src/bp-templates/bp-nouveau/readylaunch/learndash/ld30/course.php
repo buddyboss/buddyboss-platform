@@ -90,7 +90,7 @@ if ( LearnDash_Theme_Register::get_active_theme_instance()->supports_views( LDLM
 }
 
 // Get course progress.
-$bb_course_progress = learndash_course_progress(
+$course_progress = learndash_course_progress(
 	array(
 		'user_id'   => $user_id,
 		'course_id' => $course_id,
@@ -98,22 +98,27 @@ $bb_course_progress = learndash_course_progress(
 	)
 );
 
+$progress_status = ( 100 == (int) $course_progress['percentage'] ) ? 'completed' : 'notcompleted';
+if ( 0 < (int) $course_progress['percentage'] && 100 !== (int) $course_progress['percentage'] ) {
+	$progress_status = 'progress';
+}
+
 // Get the ReadyLaunch instance to check if sidebar is enabled.
 $bb_readylaunch = BB_Readylaunch::instance();
 
 // Course data.
-$bb_course_price  = learndash_get_course_price( $course_id );
-$bb_is_enrolled   = sfwd_lms_has_access( $course_id, $user_id );
-$bb_course_status = learndash_course_status( $course_id, $user_id );
-$bb_ld_permalinks = get_option( 'learndash_settings_permalinks', array() );
-$bb_course_slug   = isset( $bb_ld_permalinks['courses'] ) ? $bb_ld_permalinks['courses'] : 'courses';
+$course_pricing = learndash_get_course_price( $course_id );
+$is_enrolled    = sfwd_lms_has_access( $course_id, $user_id );
+$course_status  = learndash_course_status( $course_id, $user_id );
+$ld_permalinks  = get_option( 'learndash_settings_permalinks', array() );
+$course_slug    = isset( $ld_permalinks['courses'] ) ? $ld_permalinks['courses'] : 'courses';
 
 // Get course steps.
-$bb_course_steps = learndash_get_course_steps( $course_id );
-$bb_lesson_count = array_column( $lessons, 'post' );
-$bb_topics_count = count(
+$course_steps = learndash_get_course_steps( $course_id );
+$lesson_count = array_column( $lessons, 'post' );
+$topics_count = count(
 	array_filter(
-		$bb_course_steps,
+		$course_steps,
 		function ( $step_id ) {
 			return get_post_type( $step_id ) === 'sfwd-topic';
 		}
@@ -121,12 +126,12 @@ $bb_topics_count = count(
 );
 
 // Get basic course data from the course object.
-$bb_course_pricing = learndash_get_course_price( $course_id );
+$course_pricing = learndash_get_course_price( $course_id );
 
 if ( ! empty( $lessons ) ) {
 	foreach ( $lessons as $bb_lesson ) {
-		$bb_lesson_topics[ $bb_lesson['post']->ID ] = learndash_topic_dots( $bb_lesson['post']->ID, false, 'array', null, $course_id );
-		if ( ! empty( $bb_lesson_topics[ $bb_lesson['post']->ID ] ) ) {
+		$lesson_topics[ $bb_lesson['post']->ID ] = learndash_topic_dots( $bb_lesson['post']->ID, false, 'array', null, $course_id );
+		if ( ! empty( $lesson_topics[ $bb_lesson['post']->ID ] ) ) {
 			$has_topics = true;
 
 			$topic_pager_args = array(
@@ -134,27 +139,36 @@ if ( ! empty( $lessons ) ) {
 				'lesson_id' => $bb_lesson['post']->ID,
 			);
 
-			$bb_lesson_topics[ $bb_lesson['post']->ID ] = learndash_process_lesson_topics_pager( $bb_lesson_topics[ $bb_lesson['post']->ID ], $topic_pager_args );
+			$lesson_topics[ $bb_lesson['post']->ID ] = learndash_process_lesson_topics_pager( $lesson_topics[ $bb_lesson['post']->ID ], $topic_pager_args );
 		}
 	}
 }
 
 // Get course meta and certificate.
-$bb_course_meta = get_post_meta( $course_id, '_sfwd-courses', true );
-if ( ! is_array( $bb_course_meta ) ) {
-	$bb_course_meta = array();
+$course_meta = get_post_meta( $course_id, '_sfwd-courses', true );
+if ( ! is_array( $course_meta ) ) {
+	$course_meta = array();
 }
-if ( ! isset( $bb_course_meta['sfwd-courses_course_disable_content_table'] ) ) {
-	$bb_course_meta['sfwd-courses_course_disable_content_table'] = false;
+if ( ! isset( $course_meta['sfwd-courses_course_disable_content_table'] ) ) {
+	$course_meta['sfwd-courses_course_disable_content_table'] = false;
 }
 
 $is_completed = learndash_course_completed( $user_id, $course_id );
 
 // Additional variables needed for course content listing.
-$bb_has_lesson_quizzes = learndash_30_has_lesson_quizzes( $course_id, $lessons );
+$has_lesson_quizzes = learndash_30_has_lesson_quizzes( $course_id, $lessons );
 global $bb_course_pager_results;
 
-$bb_bb_rl_ld_helper = class_exists( 'BB_Readylaunch_Learndash_Helper' ) ? BB_Readylaunch_Learndash_Helper::instance() : null;
+$bb_rl_ld_helper = class_exists( 'BB_Readylaunch_Learndash_Helper' ) ? BB_Readylaunch_Learndash_Helper::instance() : null;
+
+$resume_link = get_permalink( $course_id );
+if ( $is_enrolled ) {
+	$user_course_last_step_id = learndash_user_progress_get_first_incomplete_step( $user_id, $course_id );
+	if ( ! empty( $user_course_last_step_id ) ) {
+		$user_course_last_step_id = learndash_user_progress_get_parent_incomplete_step( $user_id, $course_id, $user_course_last_step_id );
+		$resume_link              = learndash_get_step_permalink( $user_course_last_step_id, $course_id );
+	}
+}
 ?>
 
 <div class="bb-learndash-content-wrap">
@@ -172,7 +186,7 @@ $bb_bb_rl_ld_helper = class_exists( 'BB_Readylaunch_Learndash_Helper' ) ? BB_Rea
 								<div class="bb-rl-course-category">
 									<?php foreach ( $bb_course_cats as $bb_course_cat ) { ?>
 										<span class="bb-rl-course-category-item">
-												<a title="<?php echo esc_attr( $bb_course_cat->name ); ?>" href="<?php printf( '%s/%s/?search=&filter-categories=%s', esc_url( home_url() ), esc_attr( $bb_course_slug ), esc_attr( $bb_course_cat->slug ) ); ?>">
+												<a title="<?php echo esc_attr( $bb_course_cat->name ); ?>" href="<?php printf( '%s/%s/?search=&filter-categories=%s', esc_url( home_url() ), esc_attr( $course_slug ), esc_attr( $bb_course_cat->slug ) ); ?>">
 													<?php echo esc_html( $bb_course_cat->name ); ?>
 												</a>
 												<span>,</span>
@@ -229,33 +243,67 @@ $bb_bb_rl_ld_helper = class_exists( 'BB_Readylaunch_Learndash_Helper' ) ? BB_Rea
 							</div>
 						</div>
 						<?php
-						$bb_currency    = function_exists( 'learndash_get_currency_symbol' ) ? learndash_get_currency_symbol() : learndash_30_get_currency_symbol();
-						$bb_price       = $bb_course_price['price'];
-						$bb_trial_price = ! empty( $bb_course_price['trial_price'] ) ? $bb_course_price['trial_price'] : 0;
+						$course_pricing = wp_parse_args(
+							$course_pricing,
+							array(
+								'type'             => LEARNDASH_DEFAULT_COURSE_PRICE_TYPE,
+								'price'            => '',
+								'interval'         => '',
+								'frequency'        => '',
+								'trial_price'      => '',
+								'trial_interval'   => '',
+								'trial_frequency'  => '',
+								'repeats'          => '',
+								'repeat_frequency' => '',
+							)
+						);
 
-						if ( 'open' === $bb_course_price['type'] || 'free' === $bb_course_price['type'] ) {
-							if ( 'open' === $bb_course_price['type'] ) {
+						if ( 'subscribe' === $course_pricing['type'] ) {
+							if ( ( empty( $course_pricing['price'] ) ) || ( empty( $course_pricing['interval'] ) ) || ( empty( $course_pricing['frequency'] ) ) ) {
+								$course_pricing['type']             = LEARNDASH_DEFAULT_COURSE_PRICE_TYPE;
+								$course_pricing['interval']         = '';
+								$course_pricing['frequency']        = '';
+								$course_pricing['trial_price']      = '';
+								$course_pricing['trial_interval']   = '';
+								$course_pricing['trial_frequency']  = '';
+								$course_pricing['repeats']          = '';
+								$course_pricing['repeat_frequency'] = '';
+							} elseif ( empty( $course_pricing['trial_price'] ) ) {
+								$course_pricing['trial_interval']  = '';
+								$course_pricing['trial_frequency'] = '';
+							} elseif ( ( empty( $course_pricing['trial_interval'] ) ) || ( empty( $course_pricing['trial_frequency'] ) ) ) {
+								$course_pricing['trial_price'] = '';
+							}
+						}
+
+						$currency    = function_exists( 'learndash_get_currency_symbol' ) ? learndash_get_currency_symbol() : learndash_30_get_currency_symbol();
+						$price       = $course_pricing['price'];
+						$trial_price = ! empty( $course_pricing['trial_price'] ) ? $course_pricing['trial_price'] : 0;
+
+						if ( 'open' === $course_pricing['type'] || 'free' === $course_pricing['type'] ) {
+							if ( 'open' === $course_pricing['type'] ) {
 								echo '<span class="bb-course-type bb-course-type-open">' . __( 'Open Registration', 'buddyboss' ) . '</span>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 							} else {
+								error_log( 'a1' );
 								echo '<span class="bb-course-type bb-course-type-free">' . __( 'Free', 'buddyboss' ) . '</span>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 							}
-						} elseif ( 'closed' === $bb_course_price['type'] ) {
+						} elseif ( 'closed' === $course_pricing['type'] ) {
 							$learndash_payment_buttons = learndash_payment_buttons( $course );
 							if ( empty( $learndash_payment_buttons ) ) {
-								if ( false === $bb_is_enrolled ) {
+								if ( false === $is_enrolled ) {
 									echo '<span class="ld-status ld-status-incomplete ld-third-background ld-text">' . esc_html__( 'This course is currently closed', 'buddyboss' ) . '</span>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-									if ( ! empty( $bb_course_price['price'] ) ) {
-										echo '<span class="bb-course-type bb-course-type-paynow">' . wp_kses_post( learndash_get_price_formatted( $bb_course_price['price'] ) ) . '</span>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+									if ( ! empty( $course_pricing['price'] ) ) {
+										echo '<span class="bb-course-type bb-course-type-paynow">' . wp_kses_post( learndash_get_price_formatted( $course_pricing['price'] ) ) . '</span>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 									}
 								}
-							} elseif ( ! empty( $bb_course_price['price'] ) ) {
-								echo '<span class="bb-course-type bb-course-type-paynow">' . wp_kses_post( learndash_get_price_formatted( $bb_course_price['price'] ) ) . '</span>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+							} elseif ( ! empty( $course_pricing['price'] ) ) {
+								echo '<span class="bb-course-type bb-course-type-paynow">' . wp_kses_post( learndash_get_price_formatted( $course_pricing['price'] ) ) . '</span>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 							}
-						} elseif ( 'paynow' === $bb_course_price['type'] || 'subscribe' === $bb_course_price['type'] ) {
-							if ( false === $bb_is_enrolled ) {
-								if ( 'paynow' === $bb_course_price['type'] ) {
-									if ( ! empty( $bb_course_price['price'] ) ) {
-										echo '<span class="bb-course-type bb-course-type-paynow">' . wp_kses_post( learndash_get_price_formatted( $bb_course_price['price'] ) ) . '</span>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+						} elseif ( 'paynow' === $course_pricing['type'] || 'subscribe' === $course_pricing['type'] ) {
+							if ( false === $is_enrolled ) {
+								if ( 'paynow' === $course_pricing['type'] ) {
+									if ( ! empty( $course_pricing['price'] ) ) {
+										echo '<span class="bb-course-type bb-course-type-paynow">' . wp_kses_post( learndash_get_price_formatted( $course_pricing['price'] ) ) . '</span>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 									}
 								} else {
 									$bb_course_price_billing_p3 = get_post_meta( $course_id, 'course_price_billing_p3', true );
@@ -274,12 +322,13 @@ $bb_bb_rl_ld_helper = class_exists( 'BB_Readylaunch_Learndash_Helper' ) ? BB_Rea
 									$recurring = ( '' === $bb_course_price_billing_p3 ) ? 0 : $bb_course_price_billing_p3;
 
 									$recurring_label = '<span class="bb-course-type bb-course-type-subscribe">';
-									if ( '' === $bb_course_price['price'] && 'subscribe' === $bb_course_price['type'] ) {
+									if ( '' === $course_pricing['price'] && 'subscribe' === $course_pricing['type'] ) {
 										$recurring_label .= '<span class="bb-course-type bb-course-type-subscribe">' . __( 'Free', 'buddyboss' ) . '</span>';
 									} else {
-										$recurring_label .= wp_kses_post( learndash_get_price_formatted( $bb_course_price['price'] ) );
+										$recurring_label .= wp_kses_post( learndash_get_price_formatted( $course_pricing['price'] ) );
 									}
-									$recurring_label .= '<span class="course-bill-cycle"> / ' . $recurring . ' ' . $course_price_billing_t3 . '</span></span>';
+									error_log( 'a2' );
+									$recurring_label .= '<span class="course-bill-cycle"> / ' . $recurring . ' ' . $bb_course_price_billing_t3 . '</span></span>';
 
 									echo $recurring_label; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 								}
@@ -290,14 +339,14 @@ $bb_bb_rl_ld_helper = class_exists( 'BB_Readylaunch_Learndash_Helper' ) ? BB_Rea
 						<div class="bb-rl-course-overview-footer">
 							<div class="bb-rl-course-action">
 								<?php
-								if ( empty( $bb_course_progress ) && 100 > $bb_course_progress ) {
+								if ( empty( $course_progress ) && 100 > $course_progress ) {
 									$btn_advance_class = 'btn-advance-start';
 									$btn_advance_label = sprintf(
 										/* translators: %s: Course label. */
 										__( 'Start %s', 'buddyboss' ),
 										LearnDash_Custom_Label::get_label( 'course' )
 									);
-								} elseif ( 100 === (int) $bb_course_progress ) {
+								} elseif ( 100 === (int) $course_progress ) {
 									$btn_advance_class = 'btn-advance-completed';
 									$btn_advance_label = __( 'Completed', 'buddyboss' );
 								} else {
@@ -309,19 +358,24 @@ $bb_bb_rl_ld_helper = class_exists( 'BB_Readylaunch_Learndash_Helper' ) ? BB_Rea
 									$btn_advance_class .= ' btn-advance-disable';
 								}
 
+								$login_model           = LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Theme_LD30', 'login_mode_enabled' );
+								$login_url             = apply_filters( 'learndash_login_url', ( 'yes' === $login_model ? '#login' : wp_login_url( get_the_permalink( $course_id ) ) ) );
+								$learndash_login_modal = apply_filters( 'learndash_login_modal', true, $course_id, $user_id ) && ! is_user_logged_in() && 'open' !== $course_pricing['type'];
+								$learndash_login_modal = ( class_exists( 'LearnDash\Core\Models\Product' ) ) ? ( $learndash_login_modal && $ld_product->can_be_purchased() ) : $learndash_login_modal;
+
 								// Determine button class and text based on conditions.
 								$button_class  = 'learndash_join_button';
 								$button_class .= ! empty( $btn_advance_class ) ? ' ' . $btn_advance_class : '';
 
 								$button_html = '';
-								if ( 'open' === $bb_course_pricing['type'] || 'free' === $bb_course_pricing['type'] ) {
+								if ( 'open' === $course_pricing['type'] || 'free' === $course_pricing['type'] ) {
 									if ( $learndash_login_modal ) {
 										$button_html = sprintf(
 											'<a href="%s" class="btn-advance ld-primary-background">%s</a>',
 											esc_url( $login_url ),
 											__( 'Login to Enroll', 'buddyboss' )
 										);
-									} elseif ( 'free' === $bb_course_pricing['type'] && false === $bb_is_enrolled ) {
+									} elseif ( 'free' === $course_pricing['type'] && false === $is_enrolled ) {
 										$button_html = learndash_payment_buttons( $course );
 									} else {
 										$button_html = sprintf(
@@ -330,9 +384,9 @@ $bb_bb_rl_ld_helper = class_exists( 'BB_Readylaunch_Learndash_Helper' ) ? BB_Rea
 											esc_html( $btn_advance_label )
 										);
 									}
-								} elseif ( 'closed' === $bb_course_pricing['type'] ) {
+								} elseif ( 'closed' === $course_pricing['type'] ) {
 									$learndash_payment_buttons = learndash_payment_buttons( $course );
-									if ( empty( $learndash_payment_buttons ) && false !== $bb_is_enrolled ) {
+									if ( empty( $learndash_payment_buttons ) && false !== $is_enrolled ) {
 										$button_html = sprintf(
 											'<a href="%s" class="btn-advance ld-primary-background">%s</a>',
 											esc_url( $resume_link ),
@@ -341,13 +395,13 @@ $bb_bb_rl_ld_helper = class_exists( 'BB_Readylaunch_Learndash_Helper' ) ? BB_Rea
 									} else {
 										$button_html = $learndash_payment_buttons;
 									}
-								} elseif ( 'paynow' === $bb_course_pricing['type'] || 'subscribe' === $bb_course_pricing['type'] ) {
-									if ( false === $bb_is_enrolled ) {
+								} elseif ( 'paynow' === $course_pricing['type'] || 'subscribe' === $course_pricing['type'] ) {
+									if ( false === $is_enrolled ) {
 										$meta                       = get_post_meta( $course_id, '_sfwd-courses', true );
-										$bb_course_pricing['type']  = $meta['sfwd-courses_course_price_type'];
-										$bb_course_pricing['price'] = $meta['sfwd-courses_course_price'];
+										$course_pricing['type']  = $meta['sfwd-courses_course_price_type'];
+										$course_pricing['price'] = $meta['sfwd-courses_course_price'];
 
-										if ( 'subscribe' === $bb_course_pricing['type'] && '' === $bb_course_pricing['price'] ) {
+										if ( 'subscribe' === $course_pricing['type'] && '' === $course_pricing['price'] ) {
 											$button_text = ! empty( $custom_button_label )
 												? esc_attr( $custom_button_label )
 												: LearnDash_Custom_Label::get_label( 'button_take_this_course' );
@@ -382,8 +436,8 @@ $bb_bb_rl_ld_helper = class_exists( 'BB_Readylaunch_Learndash_Helper' ) ? BB_Rea
 							</div>
 							<div class="bb-rl-course-enrolled">
 								<?php
-								if ( $bb_bb_rl_ld_helper ) {
-									$bb_bb_rl_ld_helper->bb_rl_ld_get_enrolled_users(
+								if ( $bb_rl_ld_helper ) {
+									$bb_rl_ld_helper->bb_rl_ld_get_enrolled_users(
 										array(
 											'course_id' => $course_id,
 											'limit'     => 3,
@@ -537,7 +591,7 @@ $bb_bb_rl_ld_helper = class_exists( 'BB_Readylaunch_Learndash_Helper' ) ? BB_Rea
 								<?php esc_html_e( 'Lesson', 'buddyboss' ); ?>
 							</div>
 							<div class="bb-rl-course-details-value">
-								<?php echo esc_html( count( $bb_lesson_count ) ); ?>
+								<?php echo esc_html( count( $lesson_count ) ); ?>
 							</div>
 						</div>
 					</div>
@@ -550,7 +604,7 @@ $bb_bb_rl_ld_helper = class_exists( 'BB_Readylaunch_Learndash_Helper' ) ? BB_Rea
 							</div>
 							<div class="bb-rl-course-details-value">
 								<?php
-								$bb_enrolled_users = $bb_bb_rl_ld_helper->bb_rl_ld_get_enrolled_users_data(
+								$bb_enrolled_users = $bb_rl_ld_helper->bb_rl_ld_get_enrolled_users_data(
 									array(
 										'course_id' => $course_id,
 										'limit'     => 10,
@@ -637,12 +691,12 @@ $bb_bb_rl_ld_helper = class_exists( 'BB_Readylaunch_Learndash_Helper' ) ? BB_Rea
 								<div class="bb-rl-course-content-meta">
 									<div class="bb-rl-course-content-meta-item">
 										<span>
-											<?php echo esc_html( $bb_topics_count ); ?>
+											<?php echo esc_html( $topics_count ); ?>
 											<?php esc_html_e( 'Topics', 'buddyboss' ); ?></span>
 									</div>
 									<div class="bb-rl-course-content-meta-item">
 										<span>
-											<?php echo esc_html( count( $bb_lesson_count ) ); ?>
+											<?php echo esc_html( count( $lesson_count ) ); ?>
 											<?php esc_html_e( 'Lessons', 'buddyboss' ); ?>
 										</span>
 									</div>
@@ -679,7 +733,7 @@ $bb_bb_rl_ld_helper = class_exists( 'BB_Readylaunch_Learndash_Helper' ) ? BB_Rea
 
 												return "ld-expand-{$bb_lesson_id}-container";
 											},
-											array_keys( $bb_lesson_topics )
+											array_keys( $lesson_topics )
 										)
 									)
 								);
@@ -687,7 +741,7 @@ $bb_bb_rl_ld_helper = class_exists( 'BB_Readylaunch_Learndash_Helper' ) ? BB_Rea
 
 								<?php
 								// Only display if there is something to expand.
-								if ( $has_topics || $bb_has_lesson_quizzes ) {
+								if ( $has_topics || $has_lesson_quizzes ) {
 									?>
 									<button
 											aria-controls="<?php echo esc_attr( $bb_lesson_container_ids ); ?>"
@@ -744,7 +798,7 @@ $bb_bb_rl_ld_helper = class_exists( 'BB_Readylaunch_Learndash_Helper' ) ? BB_Rea
 					 *
 					 * @var $show_course_content [bool]
 					 */
-					$show_course_content = ( ! $has_access && 'on' === $bb_course_meta['sfwd-courses_course_disable_content_table'] ? false : true );
+					$show_course_content = ( ! $has_access && 'on' === $course_meta['sfwd-courses_course_disable_content_table'] ? false : true );
 
 					if ( $show_course_content ) {
 						?>
@@ -768,7 +822,7 @@ $bb_bb_rl_ld_helper = class_exists( 'BB_Readylaunch_Learndash_Helper' ) ? BB_Rea
 									'course_id'            => $course_id,
 									'user_id'              => $user_id,
 									'lessons'              => $lessons,
-									'lesson_topics'        => $bb_lesson_topics,
+									'lesson_topics'        => $lesson_topics,
 									'quizzes'              => $quizzes,
 									'has_access'           => $has_access,
 									'course_pager_results' => $bb_course_pager_results,
@@ -813,8 +867,8 @@ $bb_bb_rl_ld_helper = class_exists( 'BB_Readylaunch_Learndash_Helper' ) ? BB_Rea
 						</h2>
 						<div class="widget-content">
 							<?php
-							if ( $bb_bb_rl_ld_helper ) {
-								$bb_bb_rl_ld_helper->bb_rl_ld_get_enrolled_users(
+							if ( $bb_rl_ld_helper ) {
+								$bb_rl_ld_helper->bb_rl_ld_get_enrolled_users(
 									array(
 										'course_id' => $course_id,
 										'limit'     => 10,
