@@ -282,10 +282,10 @@ if ( $is_enrolled ) {
 
 						if ( 'open' === $course_pricing['type'] || 'free' === $course_pricing['type'] ) {
 							if ( 'open' === $course_pricing['type'] ) {
-								echo '<span class="bb-course-type bb-course-type-open">' . __( 'Open Registration', 'buddyboss' ) . '</span>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+								echo '<span class="bb-course-type bb-course-type-open bb-rl-course-type-status">' . __( 'Open Registration', 'buddyboss' ) . '</span>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 							} else {
 								error_log( 'a1' );
-								echo '<span class="bb-course-type bb-course-type-free">' . __( 'Free', 'buddyboss' ) . '</span>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+								echo '<span class="bb-course-type bb-course-type-free bb-rl-course-type-status">' . __( 'Free', 'buddyboss' ) . '</span>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 							}
 						} elseif ( 'closed' === $course_pricing['type'] ) {
 							$learndash_payment_buttons = learndash_payment_buttons( $course );
@@ -357,7 +357,7 @@ if ( $is_enrolled ) {
 
 										$recurring_label = '<span class="bb-course-type bb-course-type-subscribe">';
 										if ( '' === $course_pricing['price'] && 'subscribe' === $course_pricing['type'] ) {
-											$recurring_label .= '<span class="bb-course-type bb-course-type-subscribe">' . __( 'Free', 'buddyboss' ) . '</span>';
+											$recurring_label .= '<span class="bb-course-type bb-course-type-subscribe bb-rl-course-type-status">' . __( 'Free', 'buddyboss' ) . '</span>';
 										} else {
 											$recurring_label .= '<span class="bb-rl-course-price">' . wp_kses_post( learndash_get_price_formatted( $course_pricing['price'] ) ) . '</span>';
 										}

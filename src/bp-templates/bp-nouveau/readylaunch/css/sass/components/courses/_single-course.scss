@@ -49,6 +49,15 @@
 		margin: var(--bb-rl-space-200) 0 var(--bb-rl-space-100);
 	}
 
+	.bb-rl-course-type-status {
+
+		@include bb-rl-notice--plain;
+		@include bb-rl-notice--plain-info;
+		margin: var(--bb-rl-space-200) 0 var(--bb-rl-space-100);
+		width: fit-content;
+		padding-right: var(--bb-rl-space-500);
+	}
+
 	.bb-rl-composite-price {
 		display: inline-flex;
 		align-items: center;
@@ -429,7 +438,6 @@
 
 			@include bb-rl-label-heading-md-thin;
 			color: var(--bb-rl-text-secondary-color);
-			display: flex;
 			align-items: center;
 			justify-content: space-between;
 			max-width: calc(100% - 28px);

@@ -4397,6 +4397,24 @@ div#bp-group-message-content {
   margin: var(--bb-rl-space-200) 0 var(--bb-rl-space-100);
 }
 
+.bb-rl-course-banner .bb-rl-course-type-status {
+  display: block;
+  border-width: 0;
+  border-left-width: 2px;
+  border-style: solid;
+  border-radius: 0;
+  padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+  color: var(--bb-rl-text-primary-color);
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 500;
+  line-height: var(--bb-rl-base-line-small);
+  background-color: var(--bb-rl-background-brand-secondary-color);
+  border-color: var(--bb-rl-border-brand-secondary-color);
+  margin: var(--bb-rl-space-200) 0 var(--bb-rl-space-100);
+  width: fit-content;
+  padding-right: var(--bb-rl-space-500);
+}
+
 .bb-rl-course-banner .bb-rl-composite-price {
   display: inline-flex;
   align-items: center;
@@ -4827,7 +4845,6 @@ div#bp-group-message-content {
   font-weight: 400;
   line-height: 22px;
   color: var(--bb-rl-text-secondary-color);
-  display: flex;
   align-items: center;
   justify-content: space-between;
   max-width: calc(100% - 28px);
