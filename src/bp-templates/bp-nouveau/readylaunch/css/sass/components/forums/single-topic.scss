@@ -1,7 +1,12 @@
 .bb-rl-forums-topic-page {
-    background-color: var(--bb-rl-background-color);
-    border-radius: var(--bb-rl-radius-lg);
-    border: 1px solid var(--bb-rl-border-secondary-color);
+    padding-top: var(--bb-rl-space-300);
+
+    > .bb-rl-forums-container-inner {
+        background-color: var(--bb-rl-background-color);
+        border-radius: var(--bb-rl-radius-lg);
+        border: 1px solid var(--bb-rl-border-secondary-color);
+        padding: var(--bb-rl-space-300);
+    }
 
     .bb-rl-topic-started-in {
         margin-bottom: var(--bb-rl-space-200);
@@ -94,9 +99,12 @@
 
 .groups {
 
-    .bb-rl-forums-topic-page > .bb-rl-forums-container-inner {
-        max-width: 100%;
-        padding: var(--bb-rl-space-300);
+    .bb-rl-forums-topic-page {
+        padding-top: 0;
+
+        > .bb-rl-forums-container-inner {
+            max-width: 100%;
+        }
     }
 }
 
