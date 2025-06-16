@@ -5,6 +5,31 @@
  * @since   BuddyBoss [BBVERSION]
  * @package BuddyBoss\Core
  * @version 1.0.0
+ *
+ * Available Variables:
+ *
+ * $course_id                 : (int) ID of the course
+ * $course                    : (object) Post object of the course
+ * $course_settings           : (array) Settings specific to current course
+ * $course_status             : Course Status
+ * $has_access                : User has access to course or is enrolled.
+ *
+ * $courses_options            : Options/Settings as configured on Course Options page
+ * $lessons_options            : Options/Settings as configured on Lessons Options page
+ * $quizzes_options            : Options/Settings as configured on Quiz Options page
+ *
+ * $user_id                    : (object) Current User ID
+ * $logged_in                  : (true/false) User is logged in
+ * $current_user               : (object) Currently logged in user object
+ * $quizzes                    : (array) Quizzes Array
+ * $post                       : (object) The topic post object
+ * $lesson_post                : (object) Lesson post object in which the topic exists
+ * $topics                     : (array) Array of Topics in the current lesson
+ * $all_quizzes_completed      : (true/false) User has completed all quizzes on the lesson Or, there are no quizzes.
+ * $lesson_progression_enabled : (true/false)
+ * $show_content               : (true/false) true if lesson progression is disabled or if previous lesson and topic is completed.
+ * $previous_lesson_completed  : (true/false) true if previous lesson is completed
+ * $previous_topic_completed   : (true/false) true if previous topic is completed
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -267,8 +292,8 @@ if ( function_exists( 'learndash_is_topic_accessable' ) ) {
 				 */
 				if ( function_exists( 'learndash_lesson_hasassignments' ) && learndash_lesson_hasassignments( $post ) && ! empty( $user_id ) ) :
 					$bypass_course_limits_admin_users = function_exists( 'learndash_can_user_bypass' ) ? learndash_can_user_bypass( $user_id, 'learndash_lesson_assignment' ) : false;
-					$course_children_steps_completed = function_exists( 'learndash_user_is_course_children_progress_complete' ) ? learndash_user_is_course_children_progress_complete( $user_id, $course_id, $post->ID ) : false;
-					$lesson_progression_enabled = function_exists( 'learndash_lesson_progression_enabled' ) ? learndash_lesson_progression_enabled() : false;
+					$course_children_steps_completed  = function_exists( 'learndash_user_is_course_children_progress_complete' ) ? learndash_user_is_course_children_progress_complete( $user_id, $course_id, $post->ID ) : false;
+					$lesson_progression_enabled       = function_exists( 'learndash_lesson_progression_enabled' ) ? learndash_lesson_progression_enabled() : false;
 
 					if ( ( $lesson_progression_enabled && $course_children_steps_completed ) || ! $lesson_progression_enabled || $bypass_course_limits_admin_users ) :
 						?>
@@ -310,7 +335,7 @@ if ( function_exists( 'learndash_is_topic_accessable' ) ) {
 							do_action( 'learndash-lesson-assignment-after', get_the_ID(), $course_id, $user_id );
 							?>
 						</div>
-					<?php
+						<?php
 					endif;
 				endif;
 				?>
@@ -336,44 +361,27 @@ if ( function_exists( 'learndash_is_topic_accessable' ) ) {
 
 			<nav class="bb-rl-ld-module-footer bb-rl-topic-footer">
 				<div class="bb-rl-ld-module-actions bb-rl-topic-actions">
-					<div class="bb-rl-course-steps">
-						<button type="submit" class="bb-rl-mark-complete-button bb-rl-button bb-rl-button--brandFill bb-rl-button--small"><?php esc_html_e( 'Mark Complete', 'buddyboss' ); ?></button>
-					</div>
-					<div class="bb-rl-ld-module-count bb-rl-topic-count">
-						<span class="bb-pages">
-							<?php echo esc_html( LearnDash_Custom_Label::get_label( 'lesson' ) ); ?> <?php echo esc_html( $lesson_no ); ?>, 
-							<?php echo esc_html( LearnDash_Custom_Label::get_label( 'topic' ) ); ?> <?php echo esc_html( $topic_no ); ?>
-							<span class="bb-total"><?php esc_html_e( 'of', 'buddyboss' ); ?><?php echo count( $topics ); ?></span>
-						</span>
-					</div>
-					<div class="learndash_next_prev_link">
-						<?php
-						if ( isset( $pagination_urls['prev'] ) && '' !== $pagination_urls['prev'] ) {
-							echo esc_url( $pagination_urls['prev'] );
-						} else {
-							echo '<span class="prev-link empty-post"><i class="bb-icons-rl-caret-left"></i>' . esc_html__( 'Previous', 'buddyboss' ) . '</span>';
-						}
-						?>
-						<?php
-						if (
-							(
-								isset( $pagination_urls['next'] ) &&
-								apply_filters( 'learndash_show_next_link', learndash_is_topic_complete( $user_id, $post->ID ), $user_id, $post->ID ) &&
-								'' !== $pagination_urls['next']
-							) ||
-							(
-								isset( $pagination_urls['next'] ) &&
-								'' !== $pagination_urls['next'] &&
-								isset( $course_settings['course_disable_lesson_progression'] ) &&
-								'on' === $course_settings['course_disable_lesson_progression']
-							)
-						) {
-							echo esc_url( $pagination_urls['next'] );
-						} else {
-							echo '<span class="next-link empty-post">' . esc_html__( 'Next Topic', 'buddyboss' ) . '<i class="bb-icons-rl-caret-right"></i></span>';
-						}
-						?>
-					</div>
+					<?php
+					$can_complete = false;
+
+					if ( $all_quizzes_completed && $logged_in && ! empty( $course_id ) ) :
+						$can_complete = apply_filters( 'learndash-topic-can-complete', true, get_the_ID(), $course_id, $user_id );
+					endif;
+
+					learndash_get_template_part(
+						'modules/course-steps.php',
+						array(
+							'course_id'             => $course_id,
+							'course_step_post'      => $post,
+							'all_quizzes_completed' => $all_quizzes_completed,
+							'user_id'               => $user_id,
+							'course_settings'       => isset( $course_settings ) ? $course_settings : array(),
+							'context'               => 'topic',
+							'can_complete'          => $can_complete,
+						),
+						true
+					);
+					?>
 				</div>
 			</nav>
 		</article>

@@ -2,6 +2,31 @@
 /**
  * LearnDash Single Lesson Template for ReadyLaunch.
  *
+ * Available Variables:
+ *
+ * $course_id                  : (int) ID of the course
+ * $course                     : (object) Post object of the course
+ * $course_settings            : (array) Settings specific to current course
+ * $course_status              : Course Status
+ * $has_access                 : User has access to course or is enrolled.
+ *
+ * $courses_options            : Options/Settings as configured on Course Options page
+ * $lessons_options            : Options/Settings as configured on Lessons Options page
+ * $quizzes_options            : Options/Settings as configured on Quiz Options page
+ *
+ * $user_id                    : (object) Current User ID
+ * $logged_in                  : (true/false) User is logged in
+ * $current_user               : (object) Currently logged in user object
+ *
+ * $quizzes                    : (array) Quizzes Array
+ * $post                       : (object) The lesson post object
+ * $topics                     : (array) Array of Topics in the current lesson
+ * $all_quizzes_completed      : (true/false) User has completed all quizzes on the lesson Or, there are no quizzes.
+ * $lesson_progression_enabled : (true/false)
+ * $show_content               : (true/false) true if lesson progression is disabled or if previous lesson is completed.
+ * $previous_lesson_completed  : (true/false) true if previous lesson is completed
+ * $lesson_settings            : Settings specific to the current lesson.
+ *
  * @since   BuddyBoss [BBVERSION]
  * @package BuddyBoss\Core
  * @version 1.0.0
@@ -60,7 +85,6 @@ foreach ( $lesson_list as $les ) {
 // Define variables for course-steps module compatibility.
 $logged_in                 = is_user_logged_in();
 $course_settings           = function_exists( 'learndash_get_setting' ) ? learndash_get_setting( $course_id ) : array();
-$all_quizzes_completed     = true; // Assume all quizzes are completed for now.
 $previous_lesson_completed = true;
 if ( function_exists( 'learndash_is_lesson_accessable' ) ) {
 	$previous_lesson_completed = learndash_is_lesson_accessable( $user_id, $post );
@@ -336,38 +360,41 @@ if ( function_exists( 'learndash_is_lesson_accessable' ) ) {
 
 			<nav class="bb-rl-ld-module-footer bb-rl-lesson-footer">
 				<div class="bb-rl-ld-module-actions bb-rl-lesson-actions">
-					<div class="bb-rl-course-steps">
-						<button type="submit" class="bb-rl-mark-complete-button bb-rl-button bb-rl-button--brandFill bb-rl-button--small"><?php esc_html_e( 'Mark Complete', 'buddyboss' ); ?></button>
-					</div>
-					<div class="bb-rl-ld-module-count bb-rl-lesson-count">
-						<span class="bb-pages"><?php echo esc_html( LearnDash_Custom_Label::get_label( 'lesson' ) ); ?> <?php echo esc_html( $lesson_no ); ?> <span class="bb-total"><?php esc_html_e( 'of', 'buddyboss' ); ?><?php echo esc_html( count( $lesson_list ) ); ?></span></span>
-					</div>
-					<div class="learndash_next_prev_link">
-						<?php
-						if ( isset( $pagination_urls['prev'] ) && '' !== $pagination_urls['prev'] ) {
-							echo esc_html( $pagination_urls['prev'] );
-						} else {
-							echo '<span class="prev-link empty-post"><i class="bb-icons-rl-caret-left"></i>' . esc_html__( 'Previous', 'buddyboss' ) . '</span>';
-						}
-						if (
-							(
-								isset( $pagination_urls['next'] ) &&
-								apply_filters( 'learndash_show_next_link', learndash_is_lesson_complete( $user_id, $post->ID ), $user_id, $post->ID ) &&
-								'' !== $pagination_urls['next']
-							) ||
-							(
-								isset( $pagination_urls['next'] ) &&
-								'' !== $pagination_urls['next'] &&
-								isset( $course_settings['course_disable_lesson_progression'] ) &&
-								'on' === $course_settings['course_disable_lesson_progression']
-							)
-						) {
-							echo esc_html( $pagination_urls['next'] );
-						} else {
-							echo '<span class="next-link empty-post">' . esc_html__( 'Next Lesson', 'buddyboss' ) . '<i class="bb-icons-rl-caret-right"></i></span>';
-						}
-						?>
-					</div>
+					<?php
+					/**
+					 * Set a variable to switch the next button to complete button
+					 *
+					 * @var $can_complete [bool] - can the user complete this or not?
+					 */
+					$can_complete = false;
+					if ( $all_quizzes_completed && $logged_in && ! empty( $course_id ) ) {
+						$can_complete = $previous_lesson_completed;
+
+						/**
+						 * Filters whether a user can complete the lesson or not.
+						 *
+						 * @since BuddyBoss [BBVERSION]
+						 *
+						 * @param boolean $can_complete Whether user can complete lesson or not.
+						 * @param int     $post_id      Lesson ID/Topic ID.
+						 * @param int     $course_id    Course ID.
+						 * @param int     $user_id      User ID.
+						 */
+						$can_complete = apply_filters( 'learndash-lesson-can-complete', true, get_the_ID(), $course_id, $user_id );
+					}
+					learndash_get_template_part(
+						'modules/course-steps.php',
+						array(
+							'course_id'        => $course_id,
+							'course_step_post' => $post,
+							'user_id'          => $user_id,
+							'course_settings'  => isset( $course_settings ) ? $course_settings : array(),
+							'can_complete'     => $can_complete,
+							'context'          => 'lesson',
+						),
+						true
+					);
+					?>
 				</div>
 			</nav>
 		</article>

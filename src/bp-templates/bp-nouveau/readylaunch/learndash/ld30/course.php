@@ -5,14 +5,37 @@
  * @since   BuddyBoss [BBVERSION]
  * @package BuddyBoss\Core
  * @version 1.0.0
+ *
+ * Available Variables:
+ *
+ * $course_id                   : (int) ID of the course
+ * $course                      : (object) Post object of the course
+ * $course_settings             : (array) Settings specific to current course
+ *
+ * $courses_options             : Options/Settings as configured on Course Options page
+ * $lessons_options             : Options/Settings as configured on Lessons Options page
+ * $quizzes_options             : Options/Settings as configured on Quiz Options page
+ *
+ * $user_id                     : Current User ID
+ * $logged_in                   : User is logged in
+ * $current_user                : (object) Currently logged in user object
+ *
+ * $course_status               : Course Status
+ * $has_access                  : User has access to course or is enrolled.
+ * $materials                   : Course Materials
+ * $has_course_content          : Course has course content
+ * $lessons                     : Lessons Array
+ * $quizzes                     : Quizzes Array
+ * $lesson_progression_enabled  : (true/false)
+ * $has_topics                  : (true/false)
+ * $lesson_topics               : (array) lessons topics
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-$course_id = get_the_ID();
-$bb_post   = get_post( $course_id ); // Get the WP_Post object.
+$bb_post = get_post( $course_id ); // Get the WP_Post object.
 if ( LearnDash_Theme_Register::get_active_theme_instance()->supports_views( LDLMS_Post_Types::get_post_type_key( learndash_get_post_type_slug( 'course' ) ) ) ) {
 	$course  = \LearnDash\Core\Models\Course::create_from_post( $bb_post );
 	$content = $course->get_content();
@@ -66,12 +89,10 @@ if ( LearnDash_Theme_Register::get_active_theme_instance()->supports_views( LDLM
 	$course_certficate_link = ( isset( $course_certficate_link ) ) ? $course_certficate_link : '';
 }
 
-$bb_user_id = get_current_user_id();
-
 // Get course progress.
 $bb_course_progress = learndash_course_progress(
 	array(
-		'user_id'   => $bb_user_id,
+		'user_id'   => $user_id,
 		'course_id' => $course_id,
 		'array'     => true,
 	)
@@ -82,8 +103,8 @@ $bb_readylaunch = BB_Readylaunch::instance();
 
 // Course data.
 $bb_course_price  = learndash_get_course_price( $course_id );
-$bb_is_enrolled   = sfwd_lms_has_access( $course_id, $bb_user_id );
-$bb_course_status = learndash_course_status( $course_id, $bb_user_id );
+$bb_is_enrolled   = sfwd_lms_has_access( $course_id, $user_id );
+$bb_course_status = learndash_course_status( $course_id, $user_id );
 $bb_ld_permalinks = get_option( 'learndash_settings_permalinks', array() );
 $bb_course_slug   = isset( $bb_ld_permalinks['courses'] ) ? $bb_ld_permalinks['courses'] : 'courses';
 
@@ -117,9 +138,6 @@ if ( ! empty( $lessons ) ) {
 		}
 	}
 }
-
-// Get the WP_User object for the current user.
-$bb_user = is_user_logged_in() ? get_userdata( $bb_user_id ) : false;
 
 // Get course meta and certificate.
 $bb_course_meta = get_post_meta( $course_id, '_sfwd-courses', true );
@@ -292,9 +310,9 @@ $bb_bb_rl_ld_helper = class_exists( 'BB_Readylaunch_Learndash_Helper' ) ? BB_Rea
 									</div>
 									<?php
 								} elseif ( $bb_is_enrolled ) {
-									$user_course_last_step_id = learndash_user_progress_get_first_incomplete_step( $bb_user_id, $course_id );
+									$user_course_last_step_id = learndash_user_progress_get_first_incomplete_step( $user_id, $course_id );
 									if ( ! empty( $user_course_last_step_id ) ) {
-										$user_course_last_step_id = learndash_user_progress_get_parent_incomplete_step( $bb_user_id, $course_id, $user_course_last_step_id );
+										$user_course_last_step_id = learndash_user_progress_get_parent_incomplete_step( $user_id, $course_id, $user_course_last_step_id );
 										$resume_link              = learndash_get_step_permalink( $user_course_last_step_id, $course_id );
 									}
 									?>
@@ -504,7 +522,7 @@ $bb_bb_rl_ld_helper = class_exists( 'BB_Readylaunch_Learndash_Helper' ) ? BB_Rea
 								 * @param int $course_id Course ID.
 								 * @param int $user_id   User ID.
 								 */
-								do_action( 'learndash-course-heading-before', $course_id, $bb_user_id );
+								do_action( 'learndash-course-heading-before', $course_id, $user_id );
 								?>
 								<h2>
 									<?php
@@ -524,7 +542,7 @@ $bb_bb_rl_ld_helper = class_exists( 'BB_Readylaunch_Learndash_Helper' ) ? BB_Rea
 								 * @param int $course_id Course ID.
 								 * @param int $user_id   User ID.
 								 */
-								do_action( 'learndash-course-heading-after', $course_id, $bb_user_id );
+								do_action( 'learndash-course-heading-after', $course_id, $user_id );
 								?>
 								<div class="bb-rl-course-content-meta">
 									<div class="bb-rl-course-content-meta-item">
@@ -551,15 +569,15 @@ $bb_bb_rl_ld_helper = class_exists( 'BB_Readylaunch_Learndash_Helper' ) ? BB_Rea
 								 * @param int $course_id Course ID.
 								 * @param int $user_id   User ID.
 								 */
-								do_action( 'learndash-course-expand-before', $course_id, $bb_user_id );
+								do_action( 'learndash-course-expand-before', $course_id, $user_id );
 
 								$bb_lesson_container_ids = implode(
 									' ',
 									array_filter(
 										array_map(
-											function ( $bb_lesson_id ) use ( $bb_user_id, $course_id ) {
+											function ( $bb_lesson_id ) use ( $user_id, $course_id ) {
 												$bb_topics = learndash_get_topic_list( $bb_lesson_id, $course_id );
-												$quizzes   = learndash_get_lesson_quiz_list( $bb_lesson_id, $bb_user_id, $course_id );
+												$quizzes   = learndash_get_lesson_quiz_list( $bb_lesson_id, $user_id, $course_id );
 
 												// Ensure we only include this ID if there is something to collapse/expand.
 												if (
@@ -623,7 +641,7 @@ $bb_bb_rl_ld_helper = class_exists( 'BB_Readylaunch_Learndash_Helper' ) ? BB_Rea
 								 * @param int $course_id Course ID.
 								 * @param int $user_id   User ID.
 								 */
-								do_action( 'learndash-course-expand-after', $course_id, $bb_user_id );
+								do_action( 'learndash-course-expand-after', $course_id, $user_id );
 								?>
 
 							</div> <!--/.ld-item-list-actions-->
@@ -652,13 +670,13 @@ $bb_bb_rl_ld_helper = class_exists( 'BB_Readylaunch_Learndash_Helper' ) ? BB_Rea
 							 * @param int $course_id Course ID.
 							 * @param int $user_id   User ID.
 							 */
-							do_action( 'learndash-course-content-list-before', $course_id, $bb_user_id );
+							do_action( 'learndash-course-content-list-before', $course_id, $user_id );
 
 							learndash_get_template_part(
 								'course/listing.php',
 								array(
 									'course_id'                  => $course_id,
-									'user_id'                    => $bb_user_id,
+									'user_id'                    => $user_id,
 									'lessons'                    => $lessons,
 									'lesson_topics'              => $bb_lesson_topics,
 									'quizzes'                    => $quizzes,
@@ -677,7 +695,7 @@ $bb_bb_rl_ld_helper = class_exists( 'BB_Readylaunch_Learndash_Helper' ) ? BB_Rea
 							 * @param int $course_id Course ID.
 							 * @param int $user_id   User ID.
 							 */
-							do_action( 'learndash-course-content-list-after', $course_id, $bb_user_id );
+							do_action( 'learndash-course-content-list-after', $course_id, $user_id );
 							?>
 
 						</div> <!--/.ld-item-list-->
