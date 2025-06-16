@@ -12,8 +12,6 @@
 
 <div id="bbpress-forums">
 
-	<?php bbp_breadcrumb(); ?>
-
 <?php endif; ?>
 
 <?php if ( bbp_is_topic_edit() ) : ?>
@@ -24,7 +22,7 @@
 
 <?php if ( bbp_current_user_can_access_create_topic_form() ) : ?>
 
-	<div id="new-topic-<?php bbp_topic_id(); ?>" class="bbp-topic-form <?php echo ( bbp_is_single_forum() ? 'bb-rl-forum-modal' : '' ); ?>">
+	<div id="new-topic-<?php bbp_topic_id(); ?>" class="bbp-topic-form bb-rl-forum-modal <?php echo ( bbp_is_topic_edit() ? 'bb-rl-forum-modal--static' : '' ); ?>">
 
 		<form id="new-post" name="new-post" method="post" action="<?php bbp_is_topic_edit() ? bbp_topic_edit_url() : the_permalink(); ?>">
 
@@ -79,7 +77,9 @@
 
 				<div class="bb-rl-forum-modal-content">
 
-					<?php bbp_get_template_part( 'form', 'anonymous' ); ?>
+					<div class="bb-rl-forum-form-anonymous">
+						<?php bbp_get_template_part( 'form', 'anonymous' ); ?>
+					</div>
 
 					<?php do_action( 'bbp_theme_before_topic_form_title' ); ?>
 
@@ -141,7 +141,7 @@
 
 						<?php do_action( 'bbp_theme_before_topic_form_forum' ); ?>
 
-						<p>
+						<p class="bb-rl-forum-id-selection">
 							<label for="bbp_forum_id"><?php _e( 'Forum:', 'buddyboss' ); ?></label><br />
 							<?php
 								bbp_dropdown(
@@ -167,7 +167,7 @@
 								<label for="bbp_log_topic_edit"><?php _e( 'Keep a log of this edit:', 'buddyboss' ); ?></label><br />
 							</div>
 
-							<div>
+							<div class="bb-rl-forum-edit-reason">
 								<label for="bbp_topic_edit_reason"><?php printf( __( 'Optional reason for editing:', 'buddyboss' ), bbp_get_current_user_name() ); ?></label><br />
 								<input type="text" value="<?php bbp_form_topic_edit_reason(); ?>" tabindex="<?php bbp_tab_index(); ?>" size="40" name="bbp_topic_edit_reason" id="bbp_topic_edit_reason" />
 							</div>
@@ -250,7 +250,13 @@
 
 						<button type="button" tabindex="<?php bbp_tab_index(); ?>" id="bb_topic_discard_draft" name="bb_topic_discard_draft" class="button discard small bb-rl-discard_topic_reply_draft"><?php esc_html_e( 'Discard Draft', 'buddyboss' ); ?></button>
 
-						<button type="submit" tabindex="<?php bbp_tab_index(); ?>" id="bbp_topic_submit" name="bbp_topic_submit" class="bb-rl-button bb-rl-button--brandFill bb-rl-button--small submit"><?php _e( 'Post', 'buddyboss' ); ?></button>
+						<button type="submit" tabindex="<?php bbp_tab_index(); ?>" id="bbp_topic_submit" name="bbp_topic_submit" class="bb-rl-button bb-rl-button--brandFill bb-rl-button--small submit">
+							<?php if ( bbp_is_topic_edit() ) {
+								_e( 'Update', 'buddyboss' );
+							} else {
+								_e( 'Post', 'buddyboss' );
+							} ?>
+						</button>
 
 						<?php do_action( 'bbp_theme_after_topic_form_submit_button' ); ?>
 
