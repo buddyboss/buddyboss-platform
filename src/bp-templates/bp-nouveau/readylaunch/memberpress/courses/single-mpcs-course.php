@@ -24,18 +24,16 @@ while ( have_posts() ) :
 			<div id="mpcs-main" class="mpcs-main column col-9 col-md-12">
 				
 
-				<!-- Featured Image -->
-				<?php if ( ! empty( models\Lesson::get_thumbnail($post) ) ) : ?>
-				<figure class="figure">
-					<a href="<?php the_permalink(); ?>" alt="<?php the_title_attribute(); ?>">
-					<img src="<?php echo esc_url(models\Lesson::get_thumbnail($post)) ?>" alt="">
-					</a>
-				</figure>
+				<?php if ( ! empty( models\Lesson::get_thumbnail( $post ) ) ) : ?>
+					<figure class="figure">
+						<a href="<?php the_permalink(); ?>" alt="<?php the_title_attribute(); ?>">
+							<img src="<?php echo esc_url( models\Lesson::get_thumbnail( $post ) ); ?>" alt="">
+						</a>
+					</figure>
 				<?php endif; ?>
 
-				<!-- Progress -->
 				<div class="course-progress">
-				<?php echo helpers\Courses::classroom_sidebar_progress($post); ?>
+					<?php echo helpers\Courses::classroom_sidebar_progress( $post ); ?>
 				</div>
 
 
