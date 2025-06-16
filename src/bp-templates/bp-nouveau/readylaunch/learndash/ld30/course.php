@@ -687,10 +687,15 @@ $bb_bb_rl_ld_helper = class_exists( 'BB_Readylaunch_Learndash_Helper' ) ? BB_Rea
 					?>
 
 					<div class="bb-rl-entry-content">
-						<?php if ( get_the_content() ) { ?>
+						<?php
+						$course_content = get_the_content();
+						if ( ! empty( $course_content ) ) {
+							?>
 							<h2><?php esc_html_e( 'About course', 'buddyboss' ); ?></h2>
-							<?php the_content(); ?>
-						<?php } ?>
+							<?php echo wp_kses_post( $course_content ); ?>
+							<?php
+						}
+						?>
 					</div>
 				</div> <!-- /.bb-rl-course-content-inner -->
 				<div class="bb-rl-course-content-sidebar bb-rl-widget-sidebar ">
