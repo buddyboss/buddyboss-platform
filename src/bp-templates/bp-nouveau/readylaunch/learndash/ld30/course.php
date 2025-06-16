@@ -11,11 +11,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+$course_id = get_the_ID();
+$bb_post   = get_post( $course_id ); // Get the WP_Post object.
 if ( LearnDash_Theme_Register::get_active_theme_instance()->supports_views( LDLMS_Post_Types::get_post_type_key( learndash_get_post_type_slug( 'course' ) ) ) ) {
-	$course_id = get_the_ID();
-	$bb_post   = get_post( $course_id ); // Get the WP_Post object.
-	$course    = \LearnDash\Core\Models\Course::create_from_post( $bb_post );
-	$content   = $course->get_content();
+	$course  = \LearnDash\Core\Models\Course::create_from_post( $bb_post );
+	$content = $course->get_content();
 
 	// Get basic course data from the course object.
 	$course_product             = $course->get_product();

@@ -12,6 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // Ensure LearnDash functions are available.
+global $post;
 if ( ! class_exists( 'SFWD_LMS' ) || ! function_exists( 'learndash_get_course_id' ) ) {
 	// Fallback to default content if LearnDash functions aren't available.
 	?>
@@ -34,13 +35,9 @@ if ( ! class_exists( 'SFWD_LMS' ) || ! function_exists( 'learndash_get_course_id
 $lesson_id       = get_the_ID();
 $user_id         = get_current_user_id();
 $course_id       = function_exists( 'learndash_get_course_id' ) ? learndash_get_course_id( $lesson_id ) : 0;
-$lesson          = get_post( $lesson_id );
 $lesson_progress = function_exists( 'learndash_lesson_progress' ) ? learndash_lesson_progress(
-	array(
-		'lesson_id' => $lesson_id,
-		'user_id'   => $user_id,
-		'array'     => true,
-	)
+	$post,
+	$course_id
 ) : array();
 $is_enrolled     = function_exists( 'sfwd_lms_has_access' ) && sfwd_lms_has_access( $course_id, $user_id );
 $lesson_status   = function_exists( 'learndash_lesson_status' ) && learndash_lesson_status( $lesson_id, $user_id );
