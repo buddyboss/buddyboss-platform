@@ -906,14 +906,19 @@
   pointer-events: none;
 }
 
-.bb-rl-forum-modal div[class*="attached-gif-container"] {
+.bb-rl-forum-modal #whats-new-attachments > div[class*="attached-gif-container"] {
+  width: 160px !important;
+  height: 160px !important;
   position: relative;
-  margin-bottom: 0;
-  height: auto !important;
+  margin: var(--bb-rl-space-200) var(--bb-rl-space-300);
   background-repeat: no-repeat;
   max-width: 100%;
   border-radius: var(--bb-rl-radius-lg);
   overflow: hidden;
+}
+
+.bb-rl-forum-modal #whats-new-attachments > div[class*="attached-gif-container"].closed {
+  display: none;
 }
 
 .bb-rl-forum-modal div[class*="attached-gif-container"] .gif-image-container img {
@@ -1097,6 +1102,51 @@
 
 .bbp-reply-form .bb_discard_topic_reply_draft:focus {
   outline: none;
+}
+
+.bbp-reply-form .bb-rl-reply-header {
+  padding: var(--bb-rl-space-100) var(--bb-rl-space-300);
+  display: flex;
+  align-items: center;
+  gap: var(--bb-rl-space-100);
+  border-bottom: 1px solid var(--bb-rl-border-secondary-color);
+  margin: 0 calc(var(--bb-rl-space-300) * -1);
+}
+
+.bbp-reply-form .bb-rl-reply-header .bb-rl-reply-header-avatar {
+  width: 40px;
+  height: 40px;
+}
+
+.bbp-reply-form .bb-rl-reply-header .bb-rl-reply-header-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: var(--bb-rl-radius-full);
+}
+
+.bbp-reply-form .bb-rl-reply-header .bb-rl-reply-header-content {
+  flex: 1;
+}
+
+.bbp-reply-form .bb-rl-reply-header .bb-rl-reply-header-content .bb-rl-reply-header-title {
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--bb-rl-text-color);
+  margin: 0 0 var(--bb-rl-space-50);
+}
+
+.bbp-reply-form .bb-rl-reply-header .bb-rl-reply-header-content .bb-rl-reply-header-excerpt {
+  font-size: var(--bb-rl-font-size-xs);
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--bb-rl-text-secondary-color);
+  margin: 0;
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .bb-rl-forums-topic-page {

@@ -48,6 +48,16 @@
 
 				<div class="bb-rl-forum-modal-content">
 
+					<div class="bb-rl-reply-header">
+						<div class="bb-rl-reply-header-avatar">
+							<img src="bb-rl-avatar" alt="<?php esc_attr_e( 'Reply author avatar', 'buddyboss' ); ?>" />
+						</div>
+						<div class="bb-rl-reply-header-content">
+							<h4 class="bb-rl-reply-header-title"></h4>
+							<p class="bb-rl-reply-header-excerpt"></p>
+						</div>
+					</div>
+
 					<?php bbp_get_template_part( 'form', 'anonymous' ); ?>
 
 					<?php do_action( 'bbp_theme_before_reply_form_content' ); ?>

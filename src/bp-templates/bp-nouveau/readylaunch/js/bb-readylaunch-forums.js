@@ -43,6 +43,23 @@ window.bp = window.bp || {};
 		openReplyModal: function ( e ) {
 			e.preventDefault();
 			$('.bbp-reply-form.bb-rl-forum-modal').addClass( 'bb-rl-forum-modal-visible' );
+
+			if( $( this ).closest( '.bb-rl-forum-reply-list-item' ).length > 0 ) {
+				var $reply = $( this ).closest( '.bb-rl-forum-reply-list-item' );
+				var $reply_header = $reply.children( '.bb-rl-reply-header' );
+				var $reply_header_title = $reply_header.find( '.bb-rl-reply-author-info h3' ).text();
+				var $reply_header_excerpt = $reply.children( '.bb-rl-reply-content' ).text().trim().substring( 0, 50 );
+				var $reply_header_avatar_url = $reply_header.find( '.avatar' ).attr( 'src' );
+			} else {
+				var $header = $( this ).closest( '.bb-rl-topic-header'  );
+				var $reply_header_title = $header.find( '.bb-rl-topic-author-name' ).text();
+				var $reply_header_excerpt = $header.find( '#bbp_topic_excerpt' ).val();
+				var $reply_header_avatar_url = $header.find( '.avatar' ).attr( 'src' );
+			}
+
+			$('.bbp-reply-form.bb-rl-forum-modal').find(  '.bb-rl-reply-header .bb-rl-reply-header-title').text( $reply_header_title );
+			$( '.bbp-reply-form.bb-rl-forum-modal').find( '.bb-rl-reply-header .bb-rl-reply-header-excerpt' ).text( $reply_header_excerpt );
+			$( '.bbp-reply-form.bb-rl-forum-modal').find( '.bb-rl-reply-header .bb-rl-reply-header-avatar img' ).attr( 'src', $reply_header_avatar_url );
 		},
 
 		closeForumModal: function ( e ) {

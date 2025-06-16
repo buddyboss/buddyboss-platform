@@ -62,6 +62,7 @@ if ( function_exists( 'bbp_is_forum_group_forum' ) && bbp_is_forum_group_forum( 
 	<div class="bb-rl-topic-content">
 		<?php bbp_topic_content(); ?>
 	</div>
+	<input type="hidden" name="bbp_topic_excerpt" id="bbp_topic_excerpt" value="<?php bbp_reply_excerpt( bbp_get_topic_forum_id(), 50 ); ?>"/>
 	<div class="bb-rl-topic-footer">
 		<?php bbp_topic_tag_list(); ?>
 
