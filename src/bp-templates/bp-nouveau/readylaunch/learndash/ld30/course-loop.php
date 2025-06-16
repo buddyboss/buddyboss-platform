@@ -44,10 +44,12 @@ $lessons       = learndash_get_course_lessons_list( $course_id );
 $lesson_count  = array_column( $lessons, 'post' );
 $lessons_count = ! empty( $lesson_count ) ? count( $lesson_count ) : 0;
 
-add_filter( 'learndash_template_content_on_listing_is_hidden', '__return_false' );
-$course_excerpt            = get_the_excerpt( $course_id );
+// Temporarily override the content visibility filter for excerpt retrieval.
+// add_filter( 'learndash_template_content_on_listing_is_hidden', '__return_false', 10, 2 );
+$course_excerpt = get_the_excerpt( $course_id );
+// remove_filter( 'learndash_template_content_on_listing_is_hidden', '__return_false', 10, 2 );
+
 $course_excerpt_in_listing = wp_trim_words( $course_excerpt, 10, '...' );
-remove_filter( 'learndash_template_content_on_listing_is_hidden', '__return_false' );
 
 $resume_link = get_permalink( $course_id );
 if ( $is_enrolled ) {
@@ -266,7 +268,7 @@ if ( $is_enrolled ) {
 						if ( class_exists( 'LearnDash_Course_Reviews_Loader' ) ) {
 							$average = learndash_course_reviews_get_average_review_score( $course_id );
 
-							// Get reviews
+							// Get reviews.
 							$reviews = get_comments(
 								wp_parse_args(
 									array(),
@@ -287,8 +289,8 @@ if ( $is_enrolled ) {
 							);
 							$review_count = count( $reviews );
 
-							// Set default values if no average
-							$display_average = ( $average !== false ) ? $average : 0;
+							// Set default values if no average.
+							$display_average = ( false !== $average ) ? $average : 0;
 							?>
 							<div class="bb-rl-course-review">
 								<span class="star">
@@ -363,9 +365,7 @@ if ( $is_enrolled ) {
 		</div>
 		<div class="bb-rl-course-popup-caption">
 			<?php
-			add_filter( 'learndash_template_content_on_listing_is_hidden', '__return_false' );
-			echo wp_kses_post( get_the_excerpt( $course_id ) );
-			remove_filter( 'learndash_template_content_on_listing_is_hidden', '__return_false' );
+			echo wp_kses_post( $course_excerpt );
 			?>
 		</div>
 		<div class="bb-rl-course-author">
