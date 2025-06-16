@@ -7,6 +7,7 @@
  * @version 1.0.0
  */
 
+global $post;
 $course_id   = get_the_ID();
 $user_id     = get_current_user_id();
 $is_enrolled = sfwd_lms_has_access( $course_id, $user_id );
@@ -33,7 +34,6 @@ if ( $course_progress['percentage'] > 0 && 100 !== $course_progress['percentage'
 }
 
 // Course data.
-$course          = get_post( $course_id );
 $course_settings = learndash_get_setting( $course_id );
 $course_price    = learndash_get_course_price( $course_id );
 $course_status   = learndash_course_status( $course_id, $user_id );
@@ -58,6 +58,33 @@ if ( $is_enrolled ) {
 		$user_course_last_step_id = learndash_user_progress_get_parent_incomplete_step( $user_id, $course_id, $user_course_last_step_id );
 		$resume_link              = learndash_get_step_permalink( $user_course_last_step_id, $course_id );
 	}
+}
+
+$is_completed = false;
+$has_access   = false;
+if ( 'sfwd-courses' === $post->post_type ) {
+	$has_access   = sfwd_lms_has_access( $post->ID, $user_id );
+	$is_completed = learndash_course_completed( $user_id, $post->ID );
+} elseif ( 'groups' === $post->post_type ) {
+	$has_access   = learndash_is_user_in_group( $user_id, $post->ID );
+	$is_completed = learndash_get_user_group_completed_timestamp( $post->ID, $user_id );
+} elseif ( 'sfwd-lessons' === $post->post_type || 'sfwd-topic' === $post->post_type ) {
+	$parent_course_id = learndash_get_course_id( $post->ID );
+	$has_access       = is_user_logged_in() && ! empty( $parent_course_id ) ? sfwd_lms_has_access( $post->ID, $user_id ) : false;
+	if ( 'sfwd-lessons' === $post->post_type ) {
+		$is_completed = learndash_is_lesson_complete( $user_id, $post->ID, $parent_course_id );
+	} elseif ( 'sfwd-topic' === $post->post_type ) {
+		$is_completed = learndash_is_topic_complete( $user_id, $post->ID, $parent_course_id );
+	}
+}
+
+$button_text = '';
+if ( $is_enrolled && 0 === $course_progress['percentage'] ) {
+	$button_text = __( 'Continue', 'buddyboss' );
+} elseif ( $has_access && $is_completed ) {
+	$button_text = __( 'Completed', 'buddyboss' );
+} else {
+	$button_text = __( 'View Course', 'buddyboss' );
 }
 ?>
 <div class="bb-rl-course-card bb-rl-course-card--ldlms">
@@ -243,13 +270,7 @@ if ( $is_enrolled ) {
 							?>
 							<div class="bb-rl-course-link-wrap">
 								<a href="<?php echo esc_url( $resume_link ); ?>" class="bb-rl-course-link bb-rl-button bb-rl-button--secondaryFill bb-rl-button--small">
-									<?php
-									if ( $is_enrolled ) {
-										esc_html_e( 'Continue Course', 'buddyboss' );
-									} else {
-										esc_html_e( 'View Course', 'buddyboss' );
-									}
-									?>
+									<?php echo esc_html( $button_text ); ?>
 									<i class="bb-icons-rl-caret-right"></i>
 								</a>
 							</div>
@@ -401,13 +422,7 @@ if ( $is_enrolled ) {
 		<div class="bb-rl-course-popup-actions">
 			<a href="<?php echo esc_url( $resume_link ); ?>" class="bb-rl-course-link bb-rl-button bb-rl-button--brandFill bb-rl-button--small">
 				<i class="bb-icons-rl-play"></i>
-				<?php
-				if ( $is_enrolled ) {
-					esc_html_e( 'Continue', 'buddyboss' );
-				} else {
-					esc_html_e( 'View Course', 'buddyboss' );
-				}
-				?>
+				<?php echo esc_html( $button_text ); ?>
 			</a>
 		</div>
 	</div>
