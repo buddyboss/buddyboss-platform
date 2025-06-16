@@ -341,9 +341,9 @@ if ( function_exists( 'learndash_is_topic_accessable' ) ) {
 				?>
 
 				<?php if ( ! empty( $quizzes ) ) : ?>
-					<div class="bb-rl-topic-quizzes">
+					<div class="bb-rl-topic-quizzes bb-rl-lms-inner-content-block">
 						<h3><?php esc_html_e( 'Topic Quizzes', 'buddyboss' ); ?></h3>
-						<ul class="bb-rl-quizzes-list">
+						<ul class="bb-rl-quizzes-list bb-rl-lms-inner-content-list">
 							<?php foreach ( $quizzes as $quiz ) : ?>
 								<li class="bb-rl-quiz-item">
 									<a href="<?php echo esc_url( get_permalink( $quiz['post']->ID ) ); ?>" class="bb-rl-quiz-link">

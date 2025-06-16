@@ -9,3 +9,14 @@
 	padding-bottom: 60px;
 	background-color: var(--bb-rl-background-color);
 }
+
+.bb-rl-container {
+
+	.learndash_post_sfwd-lessons > .learndash-wrapper {
+
+		> .ld-alert {
+			margin: var(--bb-rl-space-200) auto;
+			max-width: 800px;
+		}
+	}
+}

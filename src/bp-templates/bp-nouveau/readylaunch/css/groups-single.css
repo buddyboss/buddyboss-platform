@@ -3459,6 +3459,135 @@ div#bp-group-message-content {
   cursor: not-allowed;
 }
 
+.bb-rl-ld-module-actions .sfwd-mark-complete .learndash_mark_complete_button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  font-weight: 500;
+  text-align: center;
+  cursor: pointer;
+  border-radius: var(--bb-rl-radius-md);
+  padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  text-decoration: none;
+  background-color: var(--bb-rl-background-brand-primary-color);
+  color: var(--bb-rl-text-white-color);
+  border: 1px solid var(--bb-rl-background-brand-primary-color);
+  padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
+  font-size: 0.875rem;
+  font-weight: 400;
+}
+
+.bb-rl-ld-module-actions .sfwd-mark-complete .learndash_mark_complete_button:hover {
+  background-color: var(--bb-rl-background-brand-primary-hover-color);
+}
+
+.bb-rl-ld-module-actions .sfwd-mark-complete .learndash_mark_complete_button:focus-within {
+  outline: 2px solid var(--bb-rl-border-brand-primary-color);
+}
+
+.bb-rl-ld-module-actions .sfwd-mark-complete .learndash_mark_complete_button:disabled {
+  background-color: var(--bb-rl-background-brand-disabled-color);
+  cursor: not-allowed;
+}
+
+.bb-rl-ld-module-actions .ld-content-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: var(--bb-rl-space-100);
+}
+
+.bb-rl-ld-module-actions .ld-content-actions .ld-content-action {
+  display: flex;
+  align-items: center;
+  gap: var(--bb-rl-space-100);
+}
+
+.bb-rl-ld-module-actions .ld-content-actions .ld-course-step-back {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  font-weight: 500;
+  text-align: center;
+  cursor: pointer;
+  border-radius: var(--bb-rl-radius-md);
+  padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  text-decoration: none;
+  background-color: var(--bb-rl-background-tertiary-color);
+  color: var(--bb-rl-text-color);
+  border: 1px solid transparent;
+  padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
+  font-size: 0.875rem;
+  font-weight: 400;
+}
+
+.bb-rl-ld-module-actions .ld-content-actions .ld-course-step-back:hover {
+  background-color: var(--bb-rl-background-tertiary-hover-color);
+}
+
+.bb-rl-ld-module-actions .ld-content-actions .ld-course-step-back:focus {
+  outline: 2px solid var(--bb-rl-border-quinery-color);
+}
+
+.bb-rl-ld-module-actions .ld-content-actions .ld-course-step-back:disabled {
+  background-color: var(--bb-rl-background-tertiary-color);
+  color: var(--bb-rl-text-disabled-color);
+  cursor: not-allowed;
+}
+
+.bb-rl-ld-module-actions .ld-content-actions .ld-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  font-weight: 500;
+  text-align: center;
+  cursor: pointer;
+  border-radius: var(--bb-rl-radius-md);
+  padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  text-decoration: none;
+  background-color: transparent;
+  color: var(--bb-rl-text-color);
+  border: none;
+  padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
+  font-size: 0.875rem;
+  font-weight: 400;
+  gap: var(--bb-rl-space-50);
+}
+
+.bb-rl-ld-module-actions .ld-content-actions .ld-button:hover {
+  background-color: var(--bb-rl-background-secondary-hover-color);
+}
+
+.bb-rl-ld-module-actions .ld-content-actions .ld-button:focus {
+  outline: 2px solid var(--bb-rl-border-quinery-color);
+}
+
+.bb-rl-ld-module-actions .ld-content-actions .ld-button:disabled {
+  color: var(--bb-rl-text-disabled-color);
+  cursor: not-allowed;
+}
+
+.bb-rl-ld-module-actions .ld-content-actions .ld-button .ld-icon-arrow-left::before {
+  content: "\e138";
+  font-weight: 400;
+  font-family: bb-icons-rl;
+  font-size: 16px;
+}
+
+.bb-rl-ld-module-actions .ld-content-actions .ld-button .ld-icon-arrow-right::before {
+  content: "\e13a";
+  font-weight: 400;
+  font-family: bb-icons-rl;
+  font-size: 16px;
+}
+
 .bb-rl-ld-module-count .bb-pages {
   font-size: var(--bb-rl-font-size-sm);
   font-weight: 400;
@@ -3506,6 +3635,7 @@ div#bp-group-message-content {
   font-size: var(--bb-rl-font-size-sm);
   font-weight: 500;
   background-color: var(--bb-rl-background-secondary-color);
+  padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
 }
 
 .bb-rl-container .ld-alert > [class*="bb-icons"] {
@@ -3569,6 +3699,12 @@ div#bp-group-message-content {
   color: var(--bb-rl-icon-positive-secondary-color);
 }
 
+.bb-rl-container .ld-alert .ld-icon.ld-icon-calendar::before {
+  content: "\e10a";
+  font-weight: 400;
+  color: var(--bb-rl-icon-primary-color);
+}
+
 .bb-rl-container .ld-alert .ld-icon.ld-icon-certificate::before {
   content: "\e766";
   font-size: 20px;
@@ -3619,6 +3755,7 @@ div#bp-group-message-content {
   background-color: transparent;
   font-size: 20px;
   margin: 0;
+  padding: 0;
 }
 
 .bb-rl-container .learndash-wrapper .ld-alert-warning .ld-alert-icon {
@@ -4010,6 +4147,10 @@ div#bp-group-message-content {
   border-color: var(--bb-rl-border-quinery-color);
 }
 
+.bb-rl-entry-content .learndash-wrapper .ld-video {
+  margin: 0 0 var(--bb-rl-space-300);
+}
+
 .bb-readylaunch-template {
   /* A sidebar-conditioned grid can be used on
     single profile or group screens. */
@@ -4383,6 +4524,39 @@ div#bp-group-message-content {
   }
 }
 
+.bb-rl-course-overview-footer .btn-advance-continue .btn-advance {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  font-weight: 500;
+  text-align: center;
+  cursor: pointer;
+  border-radius: var(--bb-rl-radius-md);
+  padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  text-decoration: none;
+  background-color: var(--bb-rl-background-brand-primary-color);
+  color: var(--bb-rl-text-white-color);
+  border: 1px solid var(--bb-rl-background-brand-primary-color);
+  padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
+  font-size: 0.875rem;
+  font-weight: 400;
+}
+
+.bb-rl-course-overview-footer .btn-advance-continue .btn-advance:hover {
+  background-color: var(--bb-rl-background-brand-primary-hover-color);
+}
+
+.bb-rl-course-overview-footer .btn-advance-continue .btn-advance:focus-within {
+  outline: 2px solid var(--bb-rl-border-brand-primary-color);
+}
+
+.bb-rl-course-overview-footer .btn-advance-continue .btn-advance:disabled {
+  background-color: var(--bb-rl-background-brand-disabled-color);
+  cursor: not-allowed;
+}
+
 .bb-rl-separator.bb-rl-separator--vertical {
   content: "";
   display: inline-block;
@@ -4642,6 +4816,12 @@ div#bp-group-message-content {
   align-items: center;
   justify-content: space-between;
   max-width: calc(100% - 28px);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+  min-width: 0;
+  display: block;
 }
 
 .bb-rl-ld-lesson-list .ld-item-list-item-preview .ld-item-title > span:not(.ld-item-components) {
@@ -4815,7 +4995,13 @@ div#bp-group-message-content {
 
 .bb-rl-ld-lesson-list .ld-item-list-item-expanded .ld-table-list-item .ld-table-list-item-quiz .ld-table-list-item-preview .ld-item-title {
   justify-content: flex-start;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
   max-width: calc(100% - 28px);
+  min-width: 0;
+  display: block;
 }
 
 .bb-rl-ld-lesson-list .ld-item-list-item-expanded .ld-table-list-item .ld-table-list-item-quiz .ld-table-list-item-preview .ld-item-title:before {
@@ -4826,6 +5012,8 @@ div#bp-group-message-content {
   line-height: 1;
   color: var(--bb-rl-icon-secondary-color);
   margin-right: var(--bb-rl-space-100);
+  position: relative;
+  top: 3px;
 }
 
 .bb-rl-ld-lesson-list .ld-item-list-item-expanded .ld-table-list-item .ld-table-list-item-quiz .ld-table-list-item-preview .ld-item-title > span {
@@ -4881,6 +5069,11 @@ div#bp-group-message-content {
   background-color: var(--bb-rl-background-color);
 }
 
+.bb-rl-container .learndash_post_sfwd-lessons > .learndash-wrapper > .ld-alert {
+  margin: var(--bb-rl-space-200) auto;
+  max-width: 800px;
+}
+
 .single-sfwd-topic .site.bb-readylaunch {
   background-color: var(--bb-rl-background-color);
 }
@@ -4890,7 +5083,7 @@ div#bp-group-message-content {
   background-color: var(--bb-rl-background-color);
 }
 
-.bb-rl-topic-quizzes h3 {
+.bb-rl-lms-inner-content-block h3 {
   font-size: var(--bb-rl-font-size-base);
   font-weight: 500;
   line-height: var(--bb-rl-base-line);
@@ -4898,7 +5091,7 @@ div#bp-group-message-content {
   margin: var(--bb-rl-space-200) 0;
 }
 
-.bb-rl-quizzes-list {
+.bb-rl-lms-inner-content-list {
   margin: 0;
   padding: 0;
   list-style: none;
@@ -4908,17 +5101,17 @@ div#bp-group-message-content {
   overflow: hidden;
 }
 
-.bb-rl-quizzes-list li {
+.bb-rl-lms-inner-content-list li {
   margin: 0;
   padding: 0;
   border-bottom: 1px solid var(--bb-rl-border-secondary-color);
 }
 
-.bb-rl-quizzes-list li:last-of-type {
+.bb-rl-lms-inner-content-list li:last-of-type {
   border-bottom: none;
 }
 
-.bb-rl-quizzes-list li a {
+.bb-rl-lms-inner-content-list li a {
   font-size: 14px;
   font-weight: 500;
   line-height: 22px;
@@ -4928,7 +5121,7 @@ div#bp-group-message-content {
   text-decoration: none;
 }
 
-.bb-rl-quizzes-list li a:hover {
+.bb-rl-lms-inner-content-list li a:hover {
   background-color: var(--bb-rl-background-hover-color);
 }
 

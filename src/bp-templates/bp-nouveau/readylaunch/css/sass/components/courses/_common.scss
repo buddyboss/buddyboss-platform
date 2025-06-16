@@ -175,6 +175,65 @@
 		cursor: default;
 		pointer-events: none;
 	}
+
+	.sfwd-mark-complete {
+
+		.learndash_mark_complete_button {
+
+			@include bb-rl-button;
+			@include bb-rl-button--brand-fill;
+			@include bb-rl-button--small;
+		}
+	}
+
+	.ld-content-actions {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		width: 100%;
+		gap: var(--bb-rl-space-100);
+
+		.ld-content-action {
+			display: flex;
+			align-items: center;
+			gap: var(--bb-rl-space-100);
+		}
+
+		.ld-course-step-back {
+
+			@include bb-rl-button;
+			@include bb-rl-button-secondary-fill;
+			@include bb-rl-button--small;
+		}
+
+		.ld-button {
+
+			@include bb-rl-button;
+			@include bb-rl-button--tertiary-text;
+			@include bb-rl-button--small;
+			gap: var(--bb-rl-space-50);
+
+			.ld-icon-arrow-left {
+
+				&::before {
+					content: "\e138";
+					font-weight: 400;
+					font-family: bb-icons-rl;
+					font-size: 16px;
+				}
+			}
+
+			.ld-icon-arrow-right {
+
+				&::before {
+					content: "\e13a";
+					font-weight: 400;
+					font-family: bb-icons-rl;
+					font-size: 16px;
+				}
+			}
+		}
+	}
 }
 
 .bb-rl-ld-module-count {
@@ -227,6 +286,7 @@
 	.ld-alert {
 
 		@include bb-rl-notice;
+		padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
 
 		&.ld-alert-warning {
 
@@ -279,6 +339,15 @@
 				}
 			}
 
+			&.ld-icon-calendar {
+
+				&::before {
+					content: "\e10a";
+					font-weight: 400;
+					color: var(--bb-rl-icon-primary-color);
+				}
+			}
+
 			&.ld-icon-certificate {
 
 				&::before {
@@ -309,6 +378,7 @@
 			background-color: transparent;
 			font-size: 20px;
 			margin: 0;
+			padding: 0;
 		}
 
 		.ld-alert-warning .ld-alert-icon {
@@ -630,6 +700,10 @@
 					border-color: var(--bb-rl-border-quinery-color);
 				}
 			}
+		}
+
+		.ld-video {
+			margin: 0 0 var(--bb-rl-space-300);
 		}
 	}
 }

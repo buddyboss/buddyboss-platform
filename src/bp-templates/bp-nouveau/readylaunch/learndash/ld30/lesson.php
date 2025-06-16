@@ -347,9 +347,9 @@ if ( function_exists( 'learndash_is_lesson_accessable' ) ) {
 					?>
 
 					<?php if ( ! empty( $topics ) ) : ?>
-					<div class="bb-rl-lesson-topics">
+					<div class="bb-rl-lesson-topics bb-rl-lms-inner-content-block">
 						<h3><?php esc_html_e( 'Lesson Topics', 'buddyboss' ); ?></h3>
-						<ul class="bb-rl-topics-list">
+						<ul class="bb-rl-topics-list bb-rl-lms-inner-content-list">
 							<?php
 							foreach ( $topics as $topic ) :
 								$topic_link = get_permalink( $topic->ID );
