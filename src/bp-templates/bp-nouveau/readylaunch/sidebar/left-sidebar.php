@@ -25,7 +25,13 @@ global $post;
 
 <div id="secondary" class="bb-rl-left-panel widget-area" role="complementary">
 	<?php
-	if ( bb_is_readylaunch_enabled() && is_single() && ! helpers\Courses::is_a_course( $post ) && class_exists( 'memberpress\courses\helpers\Courses' ) ) {
+	if (
+		bb_is_readylaunch_enabled() &&
+		is_single() &&
+		class_exists( 'memberpress\courses\helpers\Courses' ) &&
+		! helpers\Courses::is_a_course( $post ) &&
+		! bb_load_readylaunch()->bb_rl_is_learndash_inner_page()
+	) {
 		echo memberpress\courses\helpers\Courses::get_classroom_sidebar( $post );
 	}
 
