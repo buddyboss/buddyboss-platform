@@ -693,7 +693,7 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 
 			$enrolled_users = array();
 			if ( function_exists( 'learndash_get_users_for_course' ) ) {
-				$all_enrolled_users = learndash_get_users_for_course( $args['course_id'], array(), true );
+				$all_enrolled_users = learndash_get_users_for_course( $args['course_id'], array(), false );
 
 				// Handle both array and WP_User_Query object returns.
 				if ( is_array( $all_enrolled_users ) ) {

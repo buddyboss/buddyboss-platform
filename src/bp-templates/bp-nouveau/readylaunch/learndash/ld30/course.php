@@ -282,13 +282,29 @@ $bb_bb_rl_ld_helper = class_exists( 'BB_Readylaunch_Learndash_Helper' ) ? BB_Rea
 									<a href="#" class="bb-rl-course-action-button bb-rl-button bb-rl-button--secondaryFill bb-rl-button--small bb-rl-button--disabled">
 										<?php esc_html_e( 'Not Enrolled', 'buddyboss' ); ?>
 									</a>
-								<?php } elseif ( ! $bb_is_enrolled ) { ?>
+									<?php
+								} elseif ( ! $bb_is_enrolled ) {
+									?>
 									<div class="bb-rl-course-join">
 										<?php
 										echo wp_kses_post( learndash_payment_buttons( $course ) );
 										?>
 									</div>
-								<?php } else { ?>
+									<?php
+								} elseif ( $bb_is_enrolled ) {
+									$user_course_last_step_id = learndash_user_progress_get_first_incomplete_step( $bb_user_id, $course_id );
+									if ( ! empty( $user_course_last_step_id ) ) {
+										$user_course_last_step_id = learndash_user_progress_get_parent_incomplete_step( $bb_user_id, $course_id, $user_course_last_step_id );
+										$resume_link              = learndash_get_step_permalink( $user_course_last_step_id, $course_id );
+									}
+									?>
+									<a href="<?php echo esc_url( $resume_link ); ?>" class="bb-rl-course-action-button bb-rl-button bb-rl-button--brandFill bb-rl-button--small">
+										<?php esc_html_e( 'Continue Course', 'buddyboss' ); ?>
+										<i class="bb-icons-rl-caret-right"></i>
+									</a>
+									<?php
+								} else {
+									?>
 									<a href="#" class="bb-rl-course-action-button bb-rl-button bb-rl-button--brandFill bb-rl-button--small">
 										<?php esc_html_e( 'Take this course', 'buddyboss' ); ?>
 									</a>
