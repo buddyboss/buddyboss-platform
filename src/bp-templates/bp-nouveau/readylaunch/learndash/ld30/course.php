@@ -291,46 +291,81 @@ if ( $is_enrolled ) {
 							$learndash_payment_buttons = learndash_payment_buttons( $course );
 							if ( empty( $learndash_payment_buttons ) ) {
 								if ( false === $is_enrolled ) {
-									echo '<span class="ld-status ld-status-incomplete ld-third-background ld-text">' . esc_html__( 'This course is currently closed', 'buddyboss' ) . '</span>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 									if ( ! empty( $course_pricing['price'] ) ) {
-										echo '<span class="bb-course-type bb-course-type-paynow">' . wp_kses_post( learndash_get_price_formatted( $course_pricing['price'] ) ) . '</span>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+										echo '<span class="bb-course-type bb-course-type-paynow bb-rl-course-price">' . wp_kses_post( learndash_get_price_formatted( $course_pricing['price'] ) ) . '</span>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 									}
+									echo '<span class="bb-rl-course-status-label bb-rl-notice--plain bb-rl-notice--error">' . esc_html__( 'This course is currently closed', 'buddyboss' ) . '</span>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 								}
 							} elseif ( ! empty( $course_pricing['price'] ) ) {
-								echo '<span class="bb-course-type bb-course-type-paynow">' . wp_kses_post( learndash_get_price_formatted( $course_pricing['price'] ) ) . '</span>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+								echo '<span class="bb-course-type bb-course-type-paynow bb-rl-course-price">' . wp_kses_post( learndash_get_price_formatted( $course_pricing['price'] ) ) . '</span>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 							}
 						} elseif ( 'paynow' === $course_pricing['type'] || 'subscribe' === $course_pricing['type'] ) {
 							if ( false === $is_enrolled ) {
 								if ( 'paynow' === $course_pricing['type'] ) {
 									if ( ! empty( $course_pricing['price'] ) ) {
-										echo '<span class="bb-course-type bb-course-type-paynow">' . wp_kses_post( learndash_get_price_formatted( $course_pricing['price'] ) ) . '</span>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+										echo '<span class="bb-course-type bb-course-type-paynow bb-rl-course-price">' . wp_kses_post( learndash_get_price_formatted( $course_pricing['price'] ) ) . '</span>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 									}
 								} else {
-									$bb_course_price_billing_p3 = get_post_meta( $course_id, 'course_price_billing_p3', true );
-									$bb_course_price_billing_t3 = get_post_meta( $course_id, 'course_price_billing_t3', true );
+									$bb_trial_price = ! empty( $course_pricing['trial_price'] ) ? $course_pricing['trial_price'] : 0;
+									if ( $bb_trial_price ) {
+										?>
+										<div class="bb-rl-composite-price">
+											<div class="bb-rl-premium-price bb-rl-price-module">
+												<span class="bb-rl-price">
+													<span class="ld-currency"><?php echo wp_kses_post( $currency ); ?></span> 
+													<?php echo esc_html( $bb_trial_price ); ?>
+												</span>
+												<span class="bb-rl-price-meta">
+													<?php esc_html_e( 'Trial price for ', 'buddyboss' ); ?>
+													<span class="bb-rl-meta-trial">
+														<?php echo esc_html( $course_pricing['trial_interval'] ); ?>
+														<?php echo esc_html( $course_pricing['trial_frequency'] ); ?>
+													</span>
+												</span>
+											</div>
+											<span class="bb-rl-separator bb-rl-separator--vertical"></span>
+											<div class="bb-rl-full-price bb-rl-price-module">
+												<span class="bb-rl-price">
+													<span class="ld-currency"><?php echo wp_kses_post( $currency ); ?></span> 
+													<?php echo wp_kses_post( $course_pricing['price'] ); ?>
+												</span>
+												<span class="bb-rl-price-meta">
+													<?php esc_html_e( 'Full price every ', 'buddyboss' ); ?>
+													<span class="bb-rl-meta-trial">
+														<?php echo esc_html( $course_pricing['interval'] ); ?>
+														<?php echo esc_html( $course_pricing['frequency'] ); ?>
+													</span>
+													<?php esc_html_e( 'afterward', 'buddyboss' ); ?>
+												</span>
+											</div>
+										</div>
+									<?php } else {
+										$bb_course_price_billing_p3 = get_post_meta( $course_id, 'course_price_billing_p3', true );
+										$bb_course_price_billing_t3 = get_post_meta( $course_id, 'course_price_billing_t3', true );
 
-									if ( 'D' === $bb_course_price_billing_t3 ) {
-										$bb_course_price_billing_t3 = 'day(s)';
-									} elseif ( 'W' === $bb_course_price_billing_t3 ) {
-										$bb_course_price_billing_t3 = 'week(s)';
-									} elseif ( 'M' === $bb_course_price_billing_t3 ) {
-										$bb_course_price_billing_t3 = 'month(s)';
-									} elseif ( 'Y' === $bb_course_price_billing_t3 ) {
-										$bb_course_price_billing_t3 = 'year(s)';
+										if ( 'D' === $bb_course_price_billing_t3 ) {
+											$bb_course_price_billing_t3 = 'day(s)';
+										} elseif ( 'W' === $bb_course_price_billing_t3 ) {
+											$bb_course_price_billing_t3 = 'week(s)';
+										} elseif ( 'M' === $bb_course_price_billing_t3 ) {
+											$bb_course_price_billing_t3 = 'month(s)';
+										} elseif ( 'Y' === $bb_course_price_billing_t3 ) {
+											$bb_course_price_billing_t3 = 'year(s)';
+										}
+
+										$recurring = ( '' === $bb_course_price_billing_p3 ) ? 0 : $bb_course_price_billing_p3;
+
+										$recurring_label = '<span class="bb-course-type bb-course-type-subscribe">';
+										if ( '' === $course_pricing['price'] && 'subscribe' === $course_pricing['type'] ) {
+											$recurring_label .= '<span class="bb-course-type bb-course-type-subscribe">' . __( 'Free', 'buddyboss' ) . '</span>';
+										} else {
+											$recurring_label .= '<span class="bb-rl-course-price">' . wp_kses_post( learndash_get_price_formatted( $course_pricing['price'] ) ) . '</span>';
+										}
+										error_log( 'a2' );
+										$recurring_label .= '<span class="course-bill-cycle"> / ' . $recurring . ' ' . $bb_course_price_billing_t3 . '</span></span>';
+
+										echo $recurring_label; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 									}
-
-									$recurring = ( '' === $bb_course_price_billing_p3 ) ? 0 : $bb_course_price_billing_p3;
-
-									$recurring_label = '<span class="bb-course-type bb-course-type-subscribe">';
-									if ( '' === $course_pricing['price'] && 'subscribe' === $course_pricing['type'] ) {
-										$recurring_label .= '<span class="bb-course-type bb-course-type-subscribe">' . __( 'Free', 'buddyboss' ) . '</span>';
-									} else {
-										$recurring_label .= wp_kses_post( learndash_get_price_formatted( $course_pricing['price'] ) );
-									}
-									error_log( 'a2' );
-									$recurring_label .= '<span class="course-bill-cycle"> / ' . $recurring . ' ' . $bb_course_price_billing_t3 . '</span></span>';
-
-									echo $recurring_label; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 								}
 							}
 						}

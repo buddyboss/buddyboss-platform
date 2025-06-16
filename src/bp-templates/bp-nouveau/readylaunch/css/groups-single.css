@@ -4423,6 +4423,17 @@ div#bp-group-message-content {
   color: var(--bb-rl-text-color);
 }
 
+.bb-rl-course-banner .bb-course-type-subscribe {
+  margin: var(--bb-rl-space-200) 0 var(--bb-rl-space-100);
+}
+
+.bb-rl-course-banner .bb-course-type-subscribe .course-bill-cycle {
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 500;
+  line-height: var(--bb-rl-base-line-small);
+  color: var(--bb-rl-text-tertiary-color);
+}
+
 .bb-rl-course-banner .bb-rl-course-status-label {
   margin: var(--bb-rl-space-100) 0 0;
   width: fit-content;
@@ -4524,7 +4535,8 @@ div#bp-group-message-content {
   }
 }
 
-.bb-rl-course-overview-footer .btn-advance-continue .btn-advance {
+.bb-rl-course-overview-footer .btn-advance-continue .btn-advance,
+.bb-rl-course-overview-footer .btn-advance-continue .learndash_checkout_buttons .btn-join {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -4544,15 +4556,18 @@ div#bp-group-message-content {
   font-weight: 400;
 }
 
-.bb-rl-course-overview-footer .btn-advance-continue .btn-advance:hover {
+.bb-rl-course-overview-footer .btn-advance-continue .btn-advance:hover,
+.bb-rl-course-overview-footer .btn-advance-continue .learndash_checkout_buttons .btn-join:hover {
   background-color: var(--bb-rl-background-brand-primary-hover-color);
 }
 
-.bb-rl-course-overview-footer .btn-advance-continue .btn-advance:focus-within {
+.bb-rl-course-overview-footer .btn-advance-continue .btn-advance:focus-within,
+.bb-rl-course-overview-footer .btn-advance-continue .learndash_checkout_buttons .btn-join:focus-within {
   outline: 2px solid var(--bb-rl-border-brand-primary-color);
 }
 
-.bb-rl-course-overview-footer .btn-advance-continue .btn-advance:disabled {
+.bb-rl-course-overview-footer .btn-advance-continue .btn-advance:disabled,
+.bb-rl-course-overview-footer .btn-advance-continue .learndash_checkout_buttons .btn-join:disabled {
   background-color: var(--bb-rl-background-brand-disabled-color);
   cursor: not-allowed;
 }

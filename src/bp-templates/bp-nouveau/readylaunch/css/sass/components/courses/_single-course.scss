@@ -74,6 +74,16 @@
 		}
 	}
 
+	.bb-course-type-subscribe {
+		margin: var(--bb-rl-space-200) 0 var(--bb-rl-space-100);
+
+		.course-bill-cycle {
+
+			@include bb-rl-label-heading-bolder;
+			color: var(--bb-rl-text-tertiary-color);
+		}
+	}
+
 	.bb-rl-course-status-label {
 		margin: var(--bb-rl-space-100) 0 0;
 		width: fit-content;
@@ -181,7 +191,8 @@
 
 	.btn-advance-continue {
 
-		.btn-advance {
+		.btn-advance,
+		.learndash_checkout_buttons .btn-join {
 
 			@include bb-rl-button;
 			@include bb-rl-button--brand-fill;
