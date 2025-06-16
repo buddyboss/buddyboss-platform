@@ -236,6 +236,12 @@
 		&.ld-alert-success {
 
 			@include bb-rl-notice--alt-success;
+
+			&.bb-rl-ld-alert-certificate {
+
+				@include bb-rl-notice--alt-info;
+				border-color: var(--bb-rl-border-brand-primary-color);
+			}
 		}
 
 		.ld-alert-content {
@@ -277,8 +283,8 @@
 
 				&::before {
 					content: "\e766";
-					font-size: 24px;
-					color: var(--bb-rl-icon-positive-secondary-color);
+					font-size: 20px;
+					color: var(--bb-rl-icon-brand-primary-color);
 				}
 			}
 		}
@@ -318,8 +324,8 @@
 	.ld-button {
 
 		@include bb-rl-button;
-		@include bb-rl-button-secondary-fill;
-		@include bb-rl-button--small;
+		@include bb-rl-button--brand-fill;
+		@include bb-rl-button--small-xs;
 	}
 }
 

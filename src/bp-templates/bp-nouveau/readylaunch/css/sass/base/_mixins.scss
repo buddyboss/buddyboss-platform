@@ -78,6 +78,12 @@
 	font-weight: 400;
 }
 
+@mixin bb-rl-button--small-xs {
+	padding: 2px var(--bb-rl-space-100);
+	font-size: var(--bb-rl-font-size-sm);
+	font-weight: 400;
+}
+
 @mixin bb-rl-button--disabled {
 	background-color: var(--bb-rl-background-tertiary-color);
 	color: var(--bb-rl-text-disabled-color);
