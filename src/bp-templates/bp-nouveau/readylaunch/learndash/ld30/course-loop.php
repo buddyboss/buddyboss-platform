@@ -8,9 +8,10 @@
  */
 
 global $post;
-$course_id   = get_the_ID();
-$user_id     = get_current_user_id();
-$is_enrolled = sfwd_lms_has_access( $course_id, $user_id );
+$course_id              = get_the_ID();
+$user_id                = get_current_user_id();
+$user_course_has_access = sfwd_lms_has_access( $course_id, $user_id );
+$is_enrolled            = $user_course_has_access ? true : false;
 
 // Get course progress.
 $course_progress = learndash_course_progress(
@@ -45,9 +46,9 @@ $lesson_count  = array_column( $lessons, 'post' );
 $lessons_count = ! empty( $lesson_count ) ? count( $lesson_count ) : 0;
 
 // Temporarily override the content visibility filter for excerpt retrieval.
-// add_filter( 'learndash_template_content_on_listing_is_hidden', '__return_false', 10, 2 );
+add_filter( 'learndash_template_content_on_listing_is_hidden', '__return_false', 10, 2 );
 $course_excerpt = get_the_excerpt( $course_id );
-// remove_filter( 'learndash_template_content_on_listing_is_hidden', '__return_false', 10, 2 );
+remove_filter( 'learndash_template_content_on_listing_is_hidden', '__return_false', 10, 2 );
 
 $course_excerpt_in_listing = wp_trim_words( $course_excerpt, 10, '...' );
 
@@ -92,61 +93,40 @@ if ( $is_enrolled && 0 === $course_progress['percentage'] ) {
 		<div class="bb-rl-course-image">
 			<a href="<?php the_permalink(); ?>">
 				<?php
-				if ( is_user_logged_in() && isset( $is_enrolled ) && $is_enrolled ) {
+				if ( is_user_logged_in() && isset( $user_course_has_access ) && $user_course_has_access ) {
 					if (
 						(
 							'open' === $course_price['type'] &&
-							0 === (int) $course_progress['percentage'] ) ||
+							0 === (int) $course_progress['percentage']
+						) ||
 						(
 							'open' !== $course_price['type'] &&
-							$is_enrolled &&
+							$user_course_has_access &&
 							0 === $course_progress['percentage']
 						)
 					) {
-						?>
-						<div class="ld-status ld-status-progress ld-primary-background bb-rl-ld-status">
-							<?php
-							printf(
-							// translators: %s is the course label.
+						echo '<div class="ld-status ld-status-progress ld-start-background bb-rl-ld-status">' .
+							sprintf(
+								/* translators: %s: Course label. */
 								esc_html__( 'Start %s', 'buddyboss' ),
 								esc_html( LearnDash_Custom_Label::get_label( 'course' ) )
-							);
-							?>
-						</div>
-						<?php
+							) .
+						'</div>';
 					} else {
 						learndash_status_bubble( $course_status );
 					}
 				} elseif ( 'free' === $course_price['type'] ) {
-					?>
-					<div class="ld-status ld-status-incomplete ld-third-background bb-rl-ld-status">
-						<?php esc_html_e( 'Free', 'buddyboss' ); ?>
-					</div>
-					<?php
-				} elseif ( 'closed' === $course_price['type'] ) {
-					?>
-					<div class="ld-status ld-status-closed ld-third-background">
-						<?php esc_html_e( 'Closed Course', 'buddyboss' ); ?>
-					</div>
-					<?php
+					echo '<div class="ld-status ld-status-incomplete ld-third-background">' . esc_html__( 'Free', 'buddyboss' ) . '</div>';
 				} elseif ( 'open' !== $course_price['type'] ) {
-					?>
-					<div class="ld-status ld-status-incomplete ld-third-background">
-						<?php esc_html_e( 'Not Enrolled', 'buddyboss' ); ?>
-					</div>
-					<?php
+					echo '<div class="ld-status ld-status-incomplete ld-third-background">' . esc_html__( 'Not Enrolled', 'buddyboss' ) . '</div>';
 				} elseif ( 'open' === $course_price['type'] ) {
-					?>
-					<div class="ld-status ld-status-progress ld-primary-background bb-rl-ld-status">
-						<?php
-						printf(
-						// translators: %s is the course label.
+					echo '<div class="ld-status ld-status-progress ld-start-background bb-rl-ld-status">' .
+						sprintf(
+							/* translators: %s: Course label. */
 							esc_html__( 'Start %s', 'buddyboss' ),
 							esc_html( LearnDash_Custom_Label::get_label( 'course' ) )
-						);
-						?>
-					</div>
-					<?php
+						) .
+					'</div>';
 				}
 				if ( has_post_thumbnail() ) {
 					the_post_thumbnail( 'medium' );
