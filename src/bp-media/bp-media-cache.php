@@ -112,6 +112,7 @@ function bp_media_clear_media_user_object_cache_on_delete( $medias ) {
 			$attachment_id = ! empty( $deleted_media->attachment_id ) ? $deleted_media->attachment_id : false;
 			$group_id      = ! empty( $deleted_media->group_id ) ? $deleted_media->group_id : false;
 			$activity_id   = ! empty( $deleted_media->activity_id ) ? $deleted_media->activity_id : false;
+			$album_id      = ! empty( $deleted_media->album_id ) ? $deleted_media->album_id : false;
 
 			wp_cache_delete( 'bb_media_activity_' . $deleted_media->id, 'bp_media' ); // Used in bb_moderation_get_media_record_by_id().
 
@@ -134,6 +135,11 @@ function bp_media_clear_media_user_object_cache_on_delete( $medias ) {
 				wp_cache_delete( 'get_activity_attachment_id_' . $activity_id, 'bp_media' );
 				wp_cache_delete( 'bp_media_activity_id_' . $activity_id, 'bp_media' );
 				wp_cache_delete( 'bp_media_attachment_id_' . $activity_id, 'bp_media' );
+			}
+
+			// Clear album cache when media from album is deleted
+			if ( $album_id ) {
+				wp_cache_delete( $album_id, 'bp_media_album' );
 			}
 		}
 	}

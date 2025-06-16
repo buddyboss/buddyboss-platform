@@ -193,6 +193,10 @@ function bp_nouveau_media_localize_scripts( $params = array() ) {
 		'album_delete_confirm' => __( 'Are you sure you want to delete this album? Photos in this album will also be deleted.', 'buddyboss' ),
 		'album_delete_error'   => __( 'There was a problem deleting the album.', 'buddyboss' ),
 		'media_delete_confirm' => __( 'Are you sure you want to delete this media?', 'buddyboss' ),
+		'photo_singular'       => __( 'photo', 'buddyboss' ),
+		'photos_plural'        => __( 'photos', 'buddyboss' ),
+		'video_singular'       => __( 'video', 'buddyboss' ),
+		'videos_plural'        => __( 'videos', 'buddyboss' ),
 	);
 
 	$params['dir_labels'] = array_merge(
@@ -308,3 +312,4 @@ function bp_nouveau_media_activity_edit_button( $buttons, $activity_id ) {
 
 	return $buttons;
 }
+

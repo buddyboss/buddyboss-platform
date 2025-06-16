@@ -110,6 +110,42 @@ window.bp = window.bp || {};
 		},
 
 		/**
+		 * Update album counts in the header
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 */
+		updateAlbumCounts: function( response ) {
+			if ( response.success && response.data && response.data.album_id && response.data.album_id > 0 ) {
+				var $albumHeader = $( '.bb-single-album-header' );
+				if ( $albumHeader.length > 0 ) {
+					// Update photo count
+					var photoText = response.data.album_photo_count === 1 ? 
+						response.data.album_photo_count + ' ' + BP_Nouveau.media.i18n_strings.photo_singular : 
+						response.data.album_photo_count + ' ' + BP_Nouveau.media.i18n_strings.photos_plural;
+					
+					// Update video count
+					var videoText = response.data.album_video_count === 1 ? 
+						response.data.album_video_count + ' ' + BP_Nouveau.media.i18n_strings.video_singular : 
+						response.data.album_video_count + ' ' + BP_Nouveau.media.i18n_strings.videos_plural;
+					
+					// Find and update the counts in the paragraph
+					var $albumInfo = $albumHeader.find( 'p' );
+					if ( $albumInfo.length > 0 ) {
+						// Update the text while preserving the date and separator structure
+						var $spans = $albumInfo.find( 'span' );
+						// There are 5 spans total: date, separator, photo count, separator, video count
+						if ( $spans.length >= 5 ) {
+							// Third span contains photo count (index 2)
+							$spans.eq(2).text( photoText );
+							// Fifth span contains video count (index 4)
+							$spans.eq(4).text( videoText );
+						}
+					}
+				}
+			}
+		},
+
+		/**
 		 * [addListeners description]
 		 */
 		addListeners: function () {
@@ -502,6 +538,36 @@ window.bp = window.bp || {};
 
 								self.closeUploader( event );
 
+								// Update album counts if we're in album view
+								if ( response.success && response.data && response.data.album_id && response.data.album_id > 0 ) {
+									var $albumHeader = $( '.bb-single-album-header' );
+									if ( $albumHeader.length > 0 ) {
+										// Update photo count
+										var photoText = response.data.album_photo_count === 1 ? 
+											response.data.album_photo_count + ' photo' : 
+											response.data.album_photo_count + ' photos';
+										
+										// Update video count
+										var videoText = response.data.album_video_count === 1 ? 
+											response.data.album_video_count + ' video' : 
+											response.data.album_video_count + ' videos';
+										
+										// Find and update the counts in the paragraph
+										var $albumInfo = $albumHeader.find( 'p' );
+										if ( $albumInfo.length > 0 ) {
+											// Update the text while preserving the date and separator structure
+											var $spans = $albumInfo.find( 'span' );
+											// There are 5 spans total: date, separator, photo count, separator, video count
+											if ( $spans.length >= 5 ) {
+												// Third span contains photo count (index 2)
+												$spans.eq(2).text( photoText );
+												// Fifth span contains video count (index 4)
+												$spans.eq(4).text( videoText );
+											}
+										}
+									}
+								}
+
 								// replace dummy image with original image by faking scroll event to call bp.Nouveau.lazyLoad.
 								jQuery( window ).scroll();
 
@@ -559,6 +625,36 @@ window.bp = window.bp || {};
 										}
 									}
 								);
+
+								// Update album counts if we're in album view
+								if ( response.success && response.data && response.data.album_id && response.data.album_id > 0 ) {
+									var $albumHeader = $( '.bb-single-album-header' );
+									if ( $albumHeader.length > 0 ) {
+										// Update photo count
+										var photoText = response.data.album_photo_count === 1 ? 
+											response.data.album_photo_count + ' photo' : 
+											response.data.album_photo_count + ' photos';
+										
+										// Update video count
+										var videoText = response.data.album_video_count === 1 ? 
+											response.data.album_video_count + ' video' : 
+											response.data.album_video_count + ' videos';
+										
+										// Find and update the counts in the paragraph
+										var $albumInfo = $albumHeader.find( 'p' );
+										if ( $albumInfo.length > 0 ) {
+											// Update the text while preserving the date and separator structure
+											var $spans = $albumInfo.find( 'span' );
+											// There are 5 spans total: date, separator, photo count, separator, video count
+											if ( $spans.length >= 5 ) {
+												// Third span contains photo count (index 2)
+												$spans.eq(2).text( photoText );
+												// Fifth span contains video count (index 4)
+												$spans.eq(4).text( videoText );
+											}
+										}
+									}
+								}
 
 								jQuery( window ).scroll();
 
@@ -1481,7 +1577,6 @@ window.bp = window.bp || {};
 		},
 
 		deleteVideo: function ( event ) {
-			var self   = this;
 			var target = $( event.currentTarget );
 			event.preventDefault();
 
@@ -1531,6 +1626,14 @@ window.bp = window.bp || {};
 			target.prop( 'disabled', true );
 			$( '#buddypress #video-stream.video .bp-feedback' ).remove();
 
+			// Immediately add visual feedback for deletion
+			$.each( video, function ( index, value ) {
+				// Add loading/deleting class to video elements being deleted
+				$( '#video-stream ul.video-list li[data-id="' + value + '"]' ).addClass( 'loading deleting' );
+				$( '#media-stream ul.media-list li[data-id="' + value + '"]' ).addClass( 'loading deleting' );
+				$( '.bb-activity-video-elem[data-id="' + value + '"]' ).addClass( 'loading deleting' );
+			});
+
 			var data = {
 				'action': 'video_delete',
 				'_wpnonce': BP_Nouveau.nonces.video,
@@ -1546,19 +1649,25 @@ window.bp = window.bp || {};
 					data: data,
 					success: function ( response ) {
 						var dir_label;
+						
+						// Immediately remove DOM elements for faster UX
+						if ( response.success ) {
+							$.each( video, function ( index, value ) {
+								// Remove from all possible locations
+								$( '#video-stream ul.video-list li[data-id="' + value + '"]' ).remove();
+								$( '#media-stream ul.media-list li[data-id="' + value + '"]' ).remove();
+								$( '.bb-activity-video-elem[data-id="' + value + '"]' ).remove();
+								$( '#activity-stream ul.activity-list li.activity .activity-content .activity-inner .bb-activity-video-wrap div[data-id="' + value + '"]' ).remove();
+								$( 'body .bb-activity-video-elem.' + value ).remove();
+							});
+							
+							// Update album counts immediately if we're in an album
+							bp.Nouveau.Video.updateAlbumCounts( response );
+						}
+						
 						if ( fromWhere && fromWhere.length && 'activity' === fromWhere ) {
 							if ( response.success ) {
-								$.each(
-									video,
-									function ( index, value ) {
-										if ( $( '#activity-stream ul.activity-list li.activity .activity-content .activity-inner .bb-activity-video-wrap div[data-id="' + value + '"]' ).length ) {
-											$( '#activity-stream ul.activity-list li.activity .activity-content .activity-inner .bb-activity-video-wrap div[data-id="' + value + '"]' ).remove();
-										}
-										if ( $( 'body .bb-activity-video-elem.' + value ).length ) {
-											$( 'body .bb-activity-video-elem.' + value ).remove();
-										}
-									}
-								);
+								// DOM elements already removed above
 
 								var length = $( '#activity-stream ul.activity-list li[data-bp-activity-id="' + activityId + '"] .activity-content .activity-inner .bb-activity-video-elem' ).length;
 								if ( length == 0 ) {
@@ -1610,6 +1719,7 @@ window.bp = window.bp || {};
 										$( document ).find( 'li#video-all' ).trigger( 'click' );
 									}
 								} else {
+									// DOM elements already removed and album counts updated at the beginning of success callback
 
 									if (
 										'undefined' !== typeof response.data &&
@@ -1662,21 +1772,6 @@ window.bp = window.bp || {};
 										} else {
 											buddyPressSelector.find( '.video-list:not(.existing-video-list)' ).html( response.data.group_video_html_content );
 										}
-									} else {
-										$.each(
-											video,
-											function ( index, value ) {
-												if ( $( '#video-stream ul.video-list li[data-id="' + value + '"]' ).length ) {
-													$( '#video-stream ul.video-list li[data-id="' + value + '"]' ).remove();
-												}
-
-												// Remove video from the current album.
-												if ( self.video_album_id && $( '#media-stream ul.media-list li[data-id="' + value + '"]' ).length ) {
-													$( '#media-stream ul.media-list li[data-id="' + value + '"]' ).remove();
-												}
-
-											}
-										);
 									}
 								}
 							}
@@ -1755,6 +1850,36 @@ window.bp = window.bp || {};
 						var selectAllMedia = $( '.bp-nouveau #bb-select-deselect-all-video' );
 						if ( selectAllMedia.hasClass( 'selected' ) ) {
 							selectAllMedia.removeClass( 'selected' );
+						}
+
+						// Update album counts if we're in album view
+						if ( response.success && response.data && response.data.album_id && response.data.album_id > 0 ) {
+							var $albumHeader = $( '.bb-single-album-header' );
+							if ( $albumHeader.length > 0 ) {
+								// Update photo count
+								var photoText = response.data.album_photo_count === 1 ? 
+									response.data.album_photo_count + ' photo' : 
+									response.data.album_photo_count + ' photos';
+								
+								// Update video count
+								var videoText = response.data.album_video_count === 1 ? 
+									response.data.album_video_count + ' video' : 
+									response.data.album_video_count + ' videos';
+								
+								// Find and update the counts in the paragraph
+								var $albumInfo = $albumHeader.find( 'p' );
+								if ( $albumInfo.length > 0 ) {
+									// Update the text while preserving the date and separator structure
+									var $spans = $albumInfo.find( 'span' );
+									// There are 5 spans total: date, separator, photo count, separator, video count
+									if ( $spans.length >= 5 ) {
+										// Third span contains photo count (index 2)
+										$spans.eq(2).text( photoText );
+										// Fifth span contains video count (index 4)
+										$spans.eq(4).text( videoText );
+									}
+								}
+							}
 						}
 
 						// replace dummy image with original image by faking scroll event to call bp.Nouveau.lazyLoad.
@@ -2252,6 +2377,43 @@ window.bp = window.bp || {};
 							}
 							target.closest( '.bp-video-move-file' ).find( '.ac-video-close-button' ).trigger( 'click' );
 							$( document ).find( 'a.bb-open-video-theatre[data-id="' + video_id + '"]' ).data( 'album-id', album_id );
+							
+							// Update album counts if we have both source and destination album info
+							if ( response.data && response.data.source_album_id && response.data.source_album_id > 0 ) {
+								// We might be on the source album page, so update its counts
+								var currentAlbumId = parseInt( BP_Nouveau.video.current_album );
+								if ( currentAlbumId === response.data.source_album_id ) {
+									var $albumHeader = $( '.bb-single-album-header' );
+									if ( $albumHeader.length > 0 ) {
+										// Update photo count
+										var photoText = response.data.source_album_photo_count === 1 ? 
+											response.data.source_album_photo_count + ' photo' : 
+											response.data.source_album_photo_count + ' photos';
+										
+										// Update video count
+										var videoText = response.data.source_album_video_count === 1 ? 
+											response.data.source_album_video_count + ' video' : 
+											response.data.source_album_video_count + ' videos';
+										
+										// Find and update the counts in the paragraph
+										var $albumInfo = $albumHeader.find( 'p' );
+										if ( $albumInfo.length > 0 ) {
+											// Update the text while preserving the date and separator structure
+											var $spans = $albumInfo.find( 'span' );
+											// There are 5 spans total: date, separator, photo count, separator, video count
+											if ( $spans.length >= 5 ) {
+												// Third span contains photo count (index 2)
+												$spans.eq(2).text( photoText );
+												// Fifth span contains video count (index 4)
+												$spans.eq(4).text( videoText );
+											}
+										}
+									}
+								}
+							}
+							
+							// Update destination album counts if we're on that album page
+							bp.Nouveau.Video.updateAlbumCounts( response );
 
 						} else {
 							/* jshint ignore:start */
