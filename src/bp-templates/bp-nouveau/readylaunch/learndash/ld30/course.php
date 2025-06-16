@@ -173,7 +173,7 @@ if ( $is_enrolled ) {
 
 <div class="bb-learndash-content-wrap">
 	<main class="bb-learndash-content-area">
-		<article id="post-<?php echo esc_attr( get_the_ID() ); ?>" <?php post_class( 'bb-rl-learndash-course' ); ?>>
+		<article id="post-<?php echo esc_attr( get_the_ID() ); ?>" <?php post_class( array( 'bb-rl-learndash-course', 'bb-rl-lms-course' ) ); ?>>
 			<header class="bb-rl-entry-header">
 				<div class="bb-rl-course-banner flex">
 					<div class="bb-rl-course-overview">

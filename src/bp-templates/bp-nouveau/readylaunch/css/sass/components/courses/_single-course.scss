@@ -1,22 +1,3 @@
-.bb-rl-learndash-course {
-	display: table;
-	max-width: 1032px;
-	margin: 0 auto;
-	width: 100%;
-
-	.bb-rl-entry-header {
-		background-color: var(--bb-rl-background-color);
-		padding: var(--bb-rl-space-500) var(--bb-rl-space-600);
-		border: 1px solid var(--bb-rl-border-secondary-color);
-		border-radius: var(--bb-rl-radius-lg);
-		margin: var(--bb-rl-space-400) 0;
-
-		@media screen and (max-width: $lg) {
-			padding: var(--bb-rl-space-300) var(--bb-rl-space-300);
-		}
-	}
-}
-
 .bb-rl-course-banner {
 	gap: var(--bb-rl-space-600);
 
