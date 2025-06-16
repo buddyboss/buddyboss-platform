@@ -122,6 +122,13 @@ if ( function_exists( 'learndash_is_lesson_accessable' ) ) {
 					</div>
 				</header>
 
+				<?php
+				$buddyboss_content = apply_filters( 'buddyboss_learndash_content', '', $post );
+				if ( ! empty( $buddyboss_content ) ) {
+					echo wp_kses_post( $buddyboss_content );
+				} else {
+					?>
+
 				<div class="bb-rl-entry-content bb-rl-lesson-entry">
 					<div class="<?php echo esc_attr( learndash_the_wrapper_class() ); ?>">
 						<?php
@@ -285,17 +292,17 @@ if ( function_exists( 'learndash_is_lesson_accessable' ) ) {
 					</div>
 				</div>
 
-				<?php
-				/**
-				 * Display Lesson Assignments.
-				 */
-				if ( function_exists( 'learndash_lesson_hasassignments' ) && learndash_lesson_hasassignments( $post ) && ! empty( $user_id ) ) :
-					$bypass_course_limits_admin_users = function_exists( 'learndash_can_user_bypass' ) ? learndash_can_user_bypass( $user_id, 'learndash_lesson_assignment' ) : false;
-					$course_children_steps_completed  = function_exists( 'learndash_user_is_course_children_progress_complete' ) ? learndash_user_is_course_children_progress_complete( $user_id, $course_id, $post->ID ) : false;
-					$lesson_progression_enabled       = function_exists( 'learndash_lesson_progression_enabled' ) ? learndash_lesson_progression_enabled() : false;
+					<?php
+					/**
+					 * Display Lesson Assignments.
+					 */
+					if ( function_exists( 'learndash_lesson_hasassignments' ) && learndash_lesson_hasassignments( $post ) && ! empty( $user_id ) ) :
+						$bypass_course_limits_admin_users = function_exists( 'learndash_can_user_bypass' ) ? learndash_can_user_bypass( $user_id, 'learndash_lesson_assignment' ) : false;
+						$course_children_steps_completed  = function_exists( 'learndash_user_is_course_children_progress_complete' ) ? learndash_user_is_course_children_progress_complete( $user_id, $course_id, $post->ID ) : false;
+						$lesson_progression_enabled       = function_exists( 'learndash_lesson_progression_enabled' ) ? learndash_lesson_progression_enabled() : false;
 
-					if ( ( $lesson_progression_enabled && $course_children_steps_completed ) || ! $lesson_progression_enabled || $bypass_course_limits_admin_users ) :
-						?>
+						if ( ( $lesson_progression_enabled && $course_children_steps_completed ) || ! $lesson_progression_enabled || $bypass_course_limits_admin_users ) :
+							?>
 						<div class="bb-rl-lesson-assignments bb-rl-assignments-module">
 							<?php
 							/**
@@ -334,12 +341,12 @@ if ( function_exists( 'learndash_is_lesson_accessable' ) ) {
 							do_action( 'learndash-lesson-assignment-after', get_the_ID(), $course_id, $user_id );
 							?>
 						</div>
-						<?php
-					endif;
+							<?php
+						endif;
 				endif;
-				?>
+					?>
 
-				<?php if ( ! empty( $topics ) ) : ?>
+					<?php if ( ! empty( $topics ) ) : ?>
 					<div class="bb-rl-lesson-topics">
 						<h3><?php esc_html_e( 'Lesson Topics', 'buddyboss' ); ?></h3>
 						<ul class="bb-rl-topics-list">
@@ -355,7 +362,10 @@ if ( function_exists( 'learndash_is_lesson_accessable' ) ) {
 							<?php endforeach; ?>
 						</ul>
 					</div>
-				<?php endif; ?>
+						<?php
+				endif;
+				}
+				?>
 			</div>
 
 			<nav class="bb-rl-ld-module-footer bb-rl-lesson-footer">
