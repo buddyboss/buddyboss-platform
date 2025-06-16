@@ -50,11 +50,50 @@ function bb_readylaunch_settings_page_html() {
  *
  * @param string $admin_page The admin page.
  */
-function bb_readylaunch_settings_page_enqueue_style_script( $admin_page ) {
-	if ( 'buddyboss_page_bb-readylaunch' !== $admin_page ) {
+function bb_readylaunch_register_enqueue_style_script() {
+	$asset_file = plugin_dir_path( __FILE__ ) . 'build/index.asset.php';
+
+	if ( ! file_exists( $asset_file ) ) {
 		return;
 	}
 
+	$asset = include $asset_file;
+
+	wp_register_script(
+		'bb-readylaunch-admin-script',
+		plugins_url( 'build/index.js', __FILE__ ),
+		$asset['dependencies'],
+		$asset['version'],
+		array(
+			'in_footer' => true,
+		)
+	);
+
+	wp_register_style(
+		'bb-readylaunch-admin-style',
+		plugins_url( 'build/styles/settings.css', __FILE__ ),
+		array(),
+		$asset['version']
+	);
+
+	// Enqueue the BB Icons CSS.
+	wp_register_style(
+		'bb-icons-rl-css',
+		buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/icons/css/bb-icons-rl.css',
+		array(),
+		$asset['version']
+	);
+}
+add_action( 'admin_enqueue_scripts', 'bb_readylaunch_register_enqueue_style_script', 5 );
+
+/**
+ * Enqueue the BuddyBoss Readylaunch React Settings page styles and scripts.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $admin_page The admin page.
+ */
+function bb_readylaunch_settings_page_enqueue_style_script( $admin_page ) {
 	$asset_file = plugin_dir_path( __FILE__ ) . 'build/index.asset.php';
 
 	if ( ! file_exists( $asset_file ) ) {
@@ -69,30 +108,14 @@ function bb_readylaunch_settings_page_enqueue_style_script( $admin_page ) {
 	// Enqueue WordPress components styles for Gutenberg blocks.
 	wp_enqueue_style( 'wp-components' );
 
-	wp_enqueue_script(
-		'bb-readylaunch-admin-script',
-		plugins_url( 'build/index.js', __FILE__ ),
-		$asset['dependencies'],
-		$asset['version'],
-		array(
-			'in_footer' => true,
-		)
-	);
+	wp_enqueue_script( 'bb-readylaunch-admin-script' );
 
-	wp_enqueue_style(
-		'bb-readylaunch-admin-style',
-		plugins_url( 'build/styles/settings.css', __FILE__ ),
-		array(),
-		$asset['version']
-	);
+	wp_set_script_translations( 'bb-readylaunch-admin-script', 'buddyboss' );
+
+	wp_enqueue_style( 'bb-readylaunch-admin-style' );
 
 	// Enqueue the BB Icons CSS.
-	wp_enqueue_style(
-		'bb-icons-rl-css',
-		buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/icons/css/bb-icons-rl.css',
-		array(),
-		$asset['version']
-	);
+	wp_enqueue_style( 'bb-icons-rl-css' );
 }
 
-add_action( 'admin_enqueue_scripts', 'bb_readylaunch_settings_page_enqueue_style_script' );
+add_action( 'bp_admin_enqueue_scripts', 'bb_readylaunch_settings_page_enqueue_style_script' );
