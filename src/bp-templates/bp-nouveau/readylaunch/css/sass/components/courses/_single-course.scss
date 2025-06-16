@@ -338,6 +338,7 @@
 
 .bb-rl-ld-lesson-list {
 	margin-bottom: var(--bb-rl-space-400);
+	max-width: 680px;
 
 	.ld-item-list-items {
 		border: 1px solid var(--bb-rl-border-secondary-color);
@@ -554,9 +555,13 @@
 				color: var(--bb-rl-text-secondary-color);
 
 				.ld-topic-title {
-					display: flex;
-					align-items: center;
 					flex: 1;
+					white-space: nowrap;
+					overflow: hidden;
+					text-overflow: ellipsis;
+					width: 100%;
+					min-width: 0;
+					display: block;
 
 					&:before {
 						content: "\e23a";
@@ -565,6 +570,8 @@
 						line-height: 1;
 						color: var(--bb-rl-icon-secondary-color);
 						margin-right: var(--bb-rl-space-100);
+						position: relative;
+						top: 3px;
 					}
 				}
 
@@ -583,6 +590,7 @@
 
 					.ld-item-title {
 						justify-content: flex-start;
+						max-width: calc(100% - 28px);
 
 						&:before {
 							content: "\e3e8";
@@ -592,6 +600,16 @@
 							line-height: 1;
 							color: var(--bb-rl-icon-secondary-color);
 							margin-right: var(--bb-rl-space-100);
+						}
+
+						> span {
+							white-space: nowrap;
+							overflow: hidden;
+							text-overflow: ellipsis;
+							width: 100%;
+							max-width: calc(100% - 28px);
+							min-width: 0;
+							display: block;
 						}
 					}
 				}

@@ -1511,6 +1511,7 @@
 
 .bb-rl-ld-lesson-list {
   margin-bottom: var(--bb-rl-space-400);
+  max-width: 680px;
 }
 
 .bb-rl-ld-lesson-list .ld-item-list-items {
@@ -1728,9 +1729,13 @@
 }
 
 .bb-rl-ld-lesson-list .ld-item-list-item-expanded .ld-table-list-item .ld-table-list-item-preview .ld-topic-title {
-  display: flex;
-  align-items: center;
   flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+  min-width: 0;
+  display: block;
 }
 
 .bb-rl-ld-lesson-list .ld-item-list-item-expanded .ld-table-list-item .ld-table-list-item-preview .ld-topic-title:before {
@@ -1740,6 +1745,8 @@
   line-height: 1;
   color: var(--bb-rl-icon-secondary-color);
   margin-right: var(--bb-rl-space-100);
+  position: relative;
+  top: 3px;
 }
 
 .bb-rl-ld-lesson-list .ld-item-list-item-expanded .ld-table-list-item .ld-table-list-item-preview .ld-item-title {
@@ -1752,6 +1759,7 @@
 
 .bb-rl-ld-lesson-list .ld-item-list-item-expanded .ld-table-list-item .ld-table-list-item-quiz .ld-table-list-item-preview .ld-item-title {
   justify-content: flex-start;
+  max-width: calc(100% - 28px);
 }
 
 .bb-rl-ld-lesson-list .ld-item-list-item-expanded .ld-table-list-item .ld-table-list-item-quiz .ld-table-list-item-preview .ld-item-title:before {
@@ -1762,6 +1770,16 @@
   line-height: 1;
   color: var(--bb-rl-icon-secondary-color);
   margin-right: var(--bb-rl-space-100);
+}
+
+.bb-rl-ld-lesson-list .ld-item-list-item-expanded .ld-table-list-item .ld-table-list-item-quiz .ld-table-list-item-preview .ld-item-title > span {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+  max-width: calc(100% - 28px);
+  min-width: 0;
+  display: block;
 }
 
 .bb-rl-entry-content h2 {
