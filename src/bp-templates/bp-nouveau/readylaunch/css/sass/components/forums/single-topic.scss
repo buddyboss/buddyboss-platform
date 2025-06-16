@@ -366,3 +366,10 @@
         }
     }
 }
+
+body.forum {
+
+    .bp-pagination .bp-pagination-count {
+        display: none;
+    }
+}

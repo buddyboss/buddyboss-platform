@@ -1424,3 +1424,7 @@
   background-color: var(--bb-rl-background-secondary-hover-color);
   color: var(--bb-rl-text-color);
 }
+
+body.forum .bp-pagination .bp-pagination-count {
+  display: none;
+}
