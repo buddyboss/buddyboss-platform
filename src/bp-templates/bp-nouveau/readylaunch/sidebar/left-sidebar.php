@@ -7,6 +7,8 @@
  * @package ReadyLaunch
  */
 
+use memberpress\courses\helpers;
+
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
@@ -18,11 +20,12 @@ if (
 }
 
 global $bb_rl_search_nav;
+global $post;
 ?>
 
 <div id="secondary" class="bb-rl-left-panel widget-area" role="complementary">
 	<?php
-	if ( bb_is_readylaunch_enabled() && is_single() && class_exists( 'memberpress\courses\helpers\Courses' ) ) {
+	if ( bb_is_readylaunch_enabled() && is_single() && ! helpers\Courses::is_a_course( $post ) && class_exists( 'memberpress\courses\helpers\Courses' ) ) {
 		echo memberpress\courses\helpers\Courses::get_classroom_sidebar( $post );
 	}
 
