@@ -148,6 +148,8 @@ if ( ! isset( $bb_course_meta['sfwd-courses_course_disable_content_table'] ) ) {
 	$bb_course_meta['sfwd-courses_course_disable_content_table'] = false;
 }
 
+$is_completed = learndash_course_completed( $user_id, $course_id );
+
 // Additional variables needed for course content listing.
 $bb_has_lesson_quizzes = learndash_30_has_lesson_quizzes( $course_id, $lessons );
 global $bb_course_pager_results;
@@ -309,7 +311,8 @@ $bb_bb_rl_ld_helper = class_exists( 'BB_Readylaunch_Learndash_Helper' ) ? BB_Rea
 										?>
 									</div>
 									<?php
-								} elseif ( $bb_is_enrolled ) {
+								} elseif ( $bb_is_enrolled && 0 === $bb_course_progress['percentage'] ) {
+									$resume_link              = '';
 									$user_course_last_step_id = learndash_user_progress_get_first_incomplete_step( $user_id, $course_id );
 									if ( ! empty( $user_course_last_step_id ) ) {
 										$user_course_last_step_id = learndash_user_progress_get_parent_incomplete_step( $user_id, $course_id, $user_course_last_step_id );
@@ -321,12 +324,20 @@ $bb_bb_rl_ld_helper = class_exists( 'BB_Readylaunch_Learndash_Helper' ) ? BB_Rea
 										<i class="bb-icons-rl-caret-right"></i>
 									</a>
 									<?php
+								} elseif ( $has_access && $is_completed ) {
+									?>
+									<a href="#" class="bb-rl-course-action-button bb-rl-button bb-rl-button--brandFill bb-rl-button--small">
+										<?php esc_html_e( 'Completed', 'buddyboss' ); ?>
+									</a>
+									<?php
 								} else {
 									?>
 									<a href="#" class="bb-rl-course-action-button bb-rl-button bb-rl-button--brandFill bb-rl-button--small">
 										<?php esc_html_e( 'Take this course', 'buddyboss' ); ?>
 									</a>
-								<?php } ?>
+									<?php
+								}
+								?>
 							</div>
 							<div class="bb-rl-course-enrolled">
 								<?php
@@ -675,13 +686,13 @@ $bb_bb_rl_ld_helper = class_exists( 'BB_Readylaunch_Learndash_Helper' ) ? BB_Rea
 							learndash_get_template_part(
 								'course/listing.php',
 								array(
-									'course_id'                  => $course_id,
-									'user_id'                    => $user_id,
-									'lessons'                    => $lessons,
-									'lesson_topics'              => $bb_lesson_topics,
-									'quizzes'                    => $quizzes,
-									'has_access'                 => $has_access,
-									'course_pager_results'       => $bb_course_pager_results,
+									'course_id'            => $course_id,
+									'user_id'              => $user_id,
+									'lessons'              => $lessons,
+									'lesson_topics'        => $bb_lesson_topics,
+									'quizzes'              => $quizzes,
+									'has_access'           => $has_access,
+									'course_pager_results' => $bb_course_pager_results,
 									'lesson_progression_enabled' => $lesson_progression_enabled,
 								),
 								true
