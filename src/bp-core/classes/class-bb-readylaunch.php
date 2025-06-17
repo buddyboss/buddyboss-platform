@@ -2335,7 +2335,6 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			$settings['blogname']      = (string) get_bloginfo( 'name' );
 
 			// Style Settings.
-			$settings['bb_rl_skin_appearance'] = (bool) bp_get_option( 'bb_rl_skin_appearance', false );
 			$settings['bb_rl_light_logo']      = bp_get_option( 'bb_rl_light_logo', null );
 			$settings['bb_rl_dark_logo']       = bp_get_option( 'bb_rl_dark_logo', null );
 			$settings['bb_rl_color_light']     = (string) bp_get_option( 'bb_rl_color_light', '#3E34FF' );
@@ -2417,19 +2416,41 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					'enabled' => true,
 					'order'   => 2,
 				),
-				'courses'       => array(
+				'forums'        => array(
 					'enabled' => true,
 					'order'   => 3,
 				),
-				'messages'      => array(
-					'enabled' => false,
+				'courses'       => array(
+					'enabled' => true,
 					'order'   => 4,
 				),
-				'notifications' => array(
+				'messages'      => array(
 					'enabled' => false,
 					'order'   => 5,
 				),
+				'notifications' => array(
+					'enabled' => false,
+					'order'   => 6,
+				),
 			);
+
+			if ( ! bp_is_active( 'activity' ) ) {
+				unset( $defaults['activity_feed'] );
+			}
+			if ( ! bp_is_active( 'groups' ) ) {
+				unset( $defaults['groups'] );
+			}
+			if ( ! bp_is_active( 'forums' ) ) {
+				unset( $defaults['forums'] );
+			}
+			if ( ! bp_is_active( 'messages' ) ) {
+				unset( $defaults['messages'] );
+			}
+			if ( ! bp_is_active( 'notifications' ) ) {
+				unset( $defaults['notifications'] );
+			}
+
+			// @todo: remove 'courses' from defaults if LMS not active.
 
 			$raw_settings = bp_get_option( 'bb_rl_side_menu', $defaults );
 
@@ -2630,17 +2651,6 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		}
 
 		/**
-		 * Return the skin appearance option.
-		 *
-		 * @since BuddyBoss [BBVERSION]
-		 */
-		public function bb_rl_is_skin_appearance_enabled() {
-			$bb_rl_skin_appearance = bp_get_option( 'bb_rl_skin_appearance', false );
-
-			return $bb_rl_skin_appearance;
-		}
-
-		/**
 		 * Return the theme mode option.
 		 *
 		 * @since BuddyBoss [BBVERSION]
@@ -2648,9 +2658,6 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		public function bb_rl_get_theme_mode() {
 			$bb_rl_theme_mode = bp_get_option( 'bb_rl_theme_mode', 'light' );
 
-			if ( ! $this->bb_rl_is_skin_appearance_enabled() ) {
-				return 'light';
-			}
 
 			return $bb_rl_theme_mode;
 		}

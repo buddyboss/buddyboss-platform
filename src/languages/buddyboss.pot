@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 2.8.61\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2025-06-17 04:17:23+00:00\n"
+"POT-Creation-Date: 2025-06-17 09:33:54+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -225,7 +225,7 @@ msgstr ""
 #: bp-core/admin/templates/upgrade-integrations-screen.php:45
 #: bp-core/bp-core-functions.php:7449
 #: bp-core/classes/class-bb-readylaunch.php:795
-#: bp-core/classes/class-bb-readylaunch.php:2289
+#: bp-core/classes/class-bb-readylaunch.php:2309
 #: bp-groups/classes/class-bp-groups-list-table.php:370
 #: bp-messages/bp-messages-template.php:1022
 #: bp-moderation/classes/class-bp-moderation-list-table.php:293
@@ -1850,6 +1850,7 @@ msgstr ""
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:950
 #: bp-templates/bp-nouveau/includes/customizer.php:202
 #: bp-video/classes/class-bp-video.php:739
+#: bp-core/admin/bb-settings/readylaunch/build/index.js:1
 msgid "Forums"
 msgstr ""
 
@@ -10298,7 +10299,7 @@ msgid "There was an error submitting the form. Please try again."
 msgstr ""
 
 #: bp-core/classes/class-bb-readylaunch.php:794
-#: bp-core/classes/class-bb-readylaunch.php:2288
+#: bp-core/classes/class-bb-readylaunch.php:2308
 msgid "More"
 msgstr ""
 
@@ -36552,6 +36553,18 @@ msgid "URL is required"
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
+msgid "The site will be shown in light mode."
+msgstr ""
+
+#: bp-core/admin/bb-settings/readylaunch/build/index.js:1
+msgid "The site will be shown in dark mode."
+msgstr ""
+
+#: bp-core/admin/bb-settings/readylaunch/build/index.js:1
+msgid "Users will be able switch between the modes."
+msgstr ""
+
+#: bp-core/admin/bb-settings/readylaunch/build/index.js:1
 msgid "Settings saved."
 msgstr ""
 
@@ -36657,10 +36670,6 @@ msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
 msgid "Enable or disable dark mode for your community, allowing users to choose or set it for them."
-msgstr ""
-
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-msgid "Allow Dark Mode"
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
