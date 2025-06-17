@@ -14,6 +14,7 @@
 
 	.learndash_post_sfwd-lessons > .learndash-wrapper,
 	.learndash_post_sfwd-topic > .learndash-wrapper {
+		padding-top: var(--bb-rl-space-400);
 
 		> .ld-alert {
 			margin: var(--bb-rl-space-200) auto;

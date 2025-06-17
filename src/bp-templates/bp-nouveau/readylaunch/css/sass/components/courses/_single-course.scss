@@ -392,13 +392,17 @@
 			color: var(--bb-rl-text-secondary-color);
 			align-items: center;
 			justify-content: space-between;
-			max-width: calc(100% - 28px);
-			white-space: nowrap;
-			overflow: hidden;
-			text-overflow: ellipsis;
-			width: 100%;
 			min-width: 0;
-			display: block;
+			display: flex;
+
+			.bb-rl-item-title-plain {
+				display: block;
+				max-width: calc(100% - 28px);
+				white-space: nowrap;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				width: 100%;
+			}
 
 			> span:not(.ld-item-components) {
 				white-space: nowrap;
@@ -546,12 +550,9 @@
 
 				.ld-topic-title {
 					flex: 1;
-					white-space: nowrap;
-					overflow: hidden;
-					text-overflow: ellipsis;
-					width: 100%;
 					min-width: 0;
-					display: block;
+					display: flex;
+					align-items: center;
 
 					&:before {
 						content: "\e23a";
@@ -560,8 +561,16 @@
 						line-height: 1;
 						color: var(--bb-rl-icon-secondary-color);
 						margin-right: var(--bb-rl-space-100);
-						position: relative;
-						top: 3px;
+					}
+
+					.bb-rl-item-title-plain {
+						white-space: nowrap;
+						overflow: hidden;
+						text-overflow: ellipsis;
+						width: 100%;
+						max-width: calc(100% - 28px);
+						min-width: 0;
+						display: block;
 					}
 				}
 
@@ -580,13 +589,9 @@
 
 					.ld-item-title {
 						justify-content: flex-start;
-						white-space: nowrap;
-						overflow: hidden;
-						text-overflow: ellipsis;
-						width: 100%;
-						max-width: calc(100% - 28px);
+						align-items: center;
 						min-width: 0;
-						display: block;
+						display: flex;
 
 						&:before {
 							content: "\e3e8";
@@ -597,10 +602,10 @@
 							color: var(--bb-rl-icon-secondary-color);
 							margin-right: var(--bb-rl-space-100);
 							position: relative;
-							top: 3px;
+							top: 1px;
 						}
 
-						> span {
+						.bb-rl-item-title-plain {
 							white-space: nowrap;
 							overflow: hidden;
 							text-overflow: ellipsis;

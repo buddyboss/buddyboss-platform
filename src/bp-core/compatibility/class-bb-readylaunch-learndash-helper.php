@@ -100,6 +100,45 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 			// Get template name without extension.
 			$template_name = str_replace( '.php', '', basename( $name ) );
 
+			// Special handling for lesson row template
+			if ( $name === 'lesson/partials/row.php' ) {
+				$template = bp_locate_template(
+					array(
+						'learndash/ld30/lesson/partials/row.php',
+					)
+				);
+
+				if ( $template ) {
+					return $template;
+				}
+			}
+
+			// Special handling for quiz row template
+			if ( $name === 'quiz/partials/row.php' ) {
+				$template = bp_locate_template(
+					array(
+						'learndash/ld30/quiz/partials/row.php',
+					)
+				);
+
+				if ( $template ) {
+					return $template;
+				}
+			}
+
+			// Special handling for topic row template
+			if ( $name === 'topic/partials/row.php' ) {
+				$template = bp_locate_template(
+					array(
+						'learndash/ld30/topic/partials/row.php',
+					)
+				);
+
+				if ( $template ) {
+					return $template;
+				}
+			}
+
 			// Try to load template using bp_get_template_part.
 			$template = bp_locate_template(
 				array(
