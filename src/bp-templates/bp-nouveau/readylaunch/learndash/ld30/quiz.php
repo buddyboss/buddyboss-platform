@@ -448,10 +448,12 @@ if ( class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 				</div>
 			</div>
 
-			<nav class="bb-rl-ld-module-footer bb-rl-quiz-footer">
-				<div class="bb-rl-ld-module-actions bb-rl-quiz-actions">
-					<?php
-					if ( learndash_course_steps_is_external( $quiz_post->ID ) ) {
+			<?php
+			if ( learndash_course_steps_is_external( $quiz_post->ID ) ) {
+				?>
+				<nav class="bb-rl-ld-module-footer bb-rl-quiz-footer">
+					<div class="bb-rl-ld-module-actions bb-rl-quiz-actions">
+						<?php
 						learndash_get_template_part(
 							'modules/course-steps.php',
 							array(
@@ -464,10 +466,12 @@ if ( class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 							),
 							true
 						);
-					}
-					?>
-				</div>
-			</nav>
+						?>
+					</div>
+				</nav>
+				<?php
+			}
+			?>
 		</article>
 	</main>
 </div> 
