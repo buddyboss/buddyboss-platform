@@ -915,6 +915,15 @@
   font-style: normal;
 }
 
+.bb-rl-assignments-module .ld-assignment-list .ld-table-list-items .ld-icon-checkmark::before {
+  content: "\e182";
+  font-weight: 400;
+  font-family: bb-icons-rl;
+  font-size: 16px;
+  color: var(--bb-rl-icon-secondary-color);
+  font-style: normal;
+}
+
 .bb-rl-assignments-module .ld-assignment-list .ld-table-list-items .ld-icon-comments::before {
   content: "\e15c";
   font-weight: 400;
@@ -1071,6 +1080,12 @@
     width: 100%;
     left: 0;
   }
+}
+
+.bb-rl-ld-module-footer.bb-rl-ld-empty-module-footer {
+  border-top: 0;
+  padding: 0;
+  background-color: transparent;
 }
 
 .bb-rl-entry-content .learndash-wrapper .ld-tabs {
