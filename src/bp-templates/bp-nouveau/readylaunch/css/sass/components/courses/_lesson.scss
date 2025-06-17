@@ -12,7 +12,8 @@
 
 .bb-rl-container {
 
-	.learndash_post_sfwd-lessons > .learndash-wrapper {
+	.learndash_post_sfwd-lessons > .learndash-wrapper,
+	.learndash_post_sfwd-topic > .learndash-wrapper {
 
 		> .ld-alert {
 			margin: var(--bb-rl-space-200) auto;
