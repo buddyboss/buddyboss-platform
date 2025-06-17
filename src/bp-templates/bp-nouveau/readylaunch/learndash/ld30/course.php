@@ -284,7 +284,6 @@ if ( $is_enrolled ) {
 							if ( 'open' === $course_pricing['type'] ) {
 								echo '<span class="bb-course-type bb-course-type-open bb-rl-course-type-status">' . __( 'Open Registration', 'buddyboss' ) . '</span>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 							} else {
-								error_log( 'a1' );
 								echo '<span class="bb-course-type bb-course-type-free bb-rl-course-type-status">' . __( 'Free', 'buddyboss' ) . '</span>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 							}
 						} elseif ( 'closed' === $course_pricing['type'] ) {
@@ -339,7 +338,8 @@ if ( $is_enrolled ) {
 												</span>
 											</div>
 										</div>
-									<?php } else {
+										<?php
+									} else {
 										$bb_course_price_billing_p3 = get_post_meta( $course_id, 'course_price_billing_p3', true );
 										$bb_course_price_billing_t3 = get_post_meta( $course_id, 'course_price_billing_t3', true );
 
@@ -361,7 +361,6 @@ if ( $is_enrolled ) {
 										} else {
 											$recurring_label .= '<span class="bb-rl-course-price">' . wp_kses_post( learndash_get_price_formatted( $course_pricing['price'] ) ) . '</span>';
 										}
-										error_log( 'a2' );
 										$recurring_label .= '<span class="course-bill-cycle"> / ' . $recurring . ' ' . $bb_course_price_billing_t3 . '</span></span>';
 
 										echo $recurring_label; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
@@ -396,8 +395,8 @@ if ( $is_enrolled ) {
 								$login_model           = LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Theme_LD30', 'login_mode_enabled' );
 								$login_url             = apply_filters( 'learndash_login_url', ( 'yes' === $login_model ? '#login' : wp_login_url( get_the_permalink( $course_id ) ) ) );
 								$learndash_login_modal = apply_filters( 'learndash_login_modal', true, $course_id, $user_id ) && ! is_user_logged_in() && 'open' !== $course_pricing['type'];
-								
-								// Add proper checks for $ld_product
+
+								// Add proper checks for $ld_product.
 								if ( class_exists( 'LearnDash\Core\Models\Product' ) && $ld_product instanceof \LearnDash\Core\Models\Product ) {
 									$learndash_login_modal = $learndash_login_modal && $ld_product->can_be_purchased();
 								}
@@ -436,7 +435,7 @@ if ( $is_enrolled ) {
 									}
 								} elseif ( 'paynow' === $course_pricing['type'] || 'subscribe' === $course_pricing['type'] ) {
 									if ( false === $is_enrolled ) {
-										$meta                       = get_post_meta( $course_id, '_sfwd-courses', true );
+										$meta                    = get_post_meta( $course_id, '_sfwd-courses', true );
 										$course_pricing['type']  = $meta['sfwd-courses_course_price_type'];
 										$course_pricing['price'] = $meta['sfwd-courses_course_price'];
 
@@ -469,7 +468,8 @@ if ( $is_enrolled ) {
 
 								// Output the button HTML if we have content.
 								if ( ! empty( $button_html ) ) {
-									printf( '<div class="%s">%s</div>', esc_attr( $button_class ), $button_html );
+									/* translators: %s: Button class. */
+									printf( '<div class="%s">%s</div>', esc_attr( $button_class ), wp_kses_post( $button_html ) );
 								}
 								?>
 							</div>
@@ -603,7 +603,7 @@ if ( $is_enrolled ) {
 								<?php esc_html_e( 'Status', 'buddyboss' ); ?>
 							</div>
 							<div class="bb-rl-course-details-value">
-								<?php printf( '<div class="bb-course-status-content">%s</div>', $status_html ); ?>
+								<?php printf( '<div class="bb-course-status-content">%s</div>', wp_kses_post( $status_html ) ); ?>
 							</div>
 							</div>
 						</div>
