@@ -35,6 +35,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+$bb_rl_ld_helper = class_exists( 'BB_Readylaunch_Learndash_Helper' ) ? BB_Readylaunch_Learndash_Helper::instance() : null;
+
 $bb_post = get_post( $course_id ); // Get the WP_Post object.
 if ( LearnDash_Theme_Register::get_active_theme_instance()->supports_views( LDLMS_Post_Types::get_post_type_key( learndash_get_post_type_slug( 'course' ) ) ) ) {
 	$course  = \LearnDash\Core\Models\Course::create_from_post( $bb_post );
@@ -90,7 +92,10 @@ if ( LearnDash_Theme_Register::get_active_theme_instance()->supports_views( LDLM
 }
 
 // Get course progress.
-$course_progress = learndash_course_progress(
+$course_progress = $bb_rl_ld_helper->bb_rl_get_courses_progress( $user_id );
+$course_progress = isset( $course_progress[ $course_id ] ) ? $course_progress[ $course_id ] : 0;
+
+$progress = learndash_course_progress(
 	array(
 		'user_id'   => $user_id,
 		'course_id' => $course_id,
@@ -98,8 +103,15 @@ $course_progress = learndash_course_progress(
 	)
 );
 
-$progress_status = ( 100 == (int) $course_progress['percentage'] ) ? 'completed' : 'notcompleted';
-if ( 0 < (int) $course_progress['percentage'] && 100 !== (int) $course_progress['percentage'] ) {
+if ( empty( $progress ) ) {
+	$progress = array(
+		'percentage' => 0,
+		'completed'  => 0,
+		'total'      => 0,
+	);
+}
+$progress_status = ( 100 === (int) $progress['percentage'] ) ? 'completed' : 'notcompleted';
+if ( 0 < (int) $progress['percentage'] && 100 !== (int) $progress['percentage'] ) {
 	$progress_status = 'progress';
 }
 
@@ -158,8 +170,6 @@ $is_completed = learndash_course_completed( $user_id, $course_id );
 // Additional variables needed for course content listing.
 $has_lesson_quizzes = learndash_30_has_lesson_quizzes( $course_id, $lessons );
 global $bb_course_pager_results;
-
-$bb_rl_ld_helper = class_exists( 'BB_Readylaunch_Learndash_Helper' ) ? BB_Readylaunch_Learndash_Helper::instance() : null;
 
 $resume_link = get_permalink( $course_id );
 if ( $is_enrolled ) {

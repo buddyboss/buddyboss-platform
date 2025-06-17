@@ -77,6 +77,7 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 			add_filter( 'learndash_lesson_row_class', array( $this, 'bb_rl_learndash_lesson_row_class' ), 10, 2 );
 
 			add_filter( 'buddyboss_learndash_content', array( $this, 'bb_rl_learndash_content' ), 10, 2 );
+			add_action( 'learndash_update_user_activity', array( $this, 'bb_rl_flush_ld_courses_progress_cache' ), 9999, 1 );
 		}
 
 		/**
@@ -1166,6 +1167,92 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 			}
 
 			return $content;
+		}
+
+		/**
+		 * Get the courses progress.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param int    $user_id The user ID.
+		 * @param string $sort_order The sort order.
+		 *
+		 * @return array The courses progress.
+		 */
+		public function bb_rl_get_courses_progress( $user_id, $sort_order = 'desc' ) {
+			$course_completion_percentage = wp_cache_get( $user_id, 'ld_courses_progress' );
+			if ( ! $course_completion_percentage ) {
+				$course_completion_percentage = array();
+
+				$course_progress = get_user_meta( $user_id, '_sfwd-course_progress', true );
+
+				if ( ! empty( $course_progress ) && is_array( $course_progress ) ) {
+
+					foreach ( $course_progress as $course_id => $coursep ) {
+						// We take default progress value as 1 % rather than 0%.
+						$course_completion_percentage[ $course_id ] = 1;
+						if ( 0 === (int) $coursep['total'] ) {
+							continue;
+						}
+
+						$course_steps_count     = learndash_get_course_steps_count( $course_id );
+						$course_steps_completed = learndash_course_get_completed_steps( $user_id, $course_id, $coursep );
+
+						$completed_on = get_user_meta( $user_id, 'course_completed_' . $course_id, true );
+						if ( ! empty( $completed_on ) ) {
+
+							$coursep['completed'] = $course_steps_count;
+							$coursep['total']     = $course_steps_count;
+
+						} else {
+							$coursep['total']     = $course_steps_count;
+							$coursep['completed'] = $course_steps_completed;
+
+							if ( $coursep['completed'] > $coursep['total'] ) {
+								$coursep['completed'] = $coursep['total'];
+							}
+						}
+
+						// Cannot divide by 0.
+						if ( 0 === (int) $coursep['total'] ) {
+							$course_completion_percentage[ $course_id ] = 0;
+						} else {
+							$course_completion_percentage[ $course_id ] = ceil( ( $coursep['completed'] * 100 ) / $coursep['total'] );
+						}
+					}
+				}
+
+				// Avoid running the queries multiple times if user's course progress is empty.
+				$course_completion_percentage = ! empty( $course_completion_percentage ) ? $course_completion_percentage : 'empty';
+
+				wp_cache_set( $user_id, $course_completion_percentage, 'ld_courses_progress' );
+			}
+
+			$course_completion_percentage = 'empty' !== $course_completion_percentage ? $course_completion_percentage : array();
+
+			if ( ! empty( $course_completion_percentage ) ) {
+				// Sort.
+				if ( 'asc' === $sort_order ) {
+					asort( $course_completion_percentage );
+				} else {
+					arsort( $course_completion_percentage );
+				}
+			}
+
+			return $course_completion_percentage;
+		}
+
+		/**
+		 * Reset object cache for ld_courses_progress.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array $args Details of the learndash activity.
+		 */
+		public function bb_rl_flush_ld_courses_progress_cache( $args ) {
+			if ( ! empty( $args['user_id'] ) ) {
+				wp_cache_delete( absint( $args['user_id'] ), 'ld_courses_progress' );
+			}
 		}
 	}
 
