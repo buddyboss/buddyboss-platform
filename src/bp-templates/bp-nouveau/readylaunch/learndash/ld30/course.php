@@ -931,6 +931,15 @@ if ( class_exists( 'LearnDash\Core\Models\Product' ) && isset( $course_id ) ) {
 					</div>
 				</div><!-- /.bb-rl-course-content-sidebar -->
 			</div> <!-- /.bb-rl-course-content -->
+
+			<div class="bb-rl-course-content-comments">
+				<?php
+				// If comments are open or we have at least one comment, load up the comment template.
+				if ( comments_open() || get_comments_number() ) :
+					comments_template();
+				endif;
+				?>
+			</div>
 		</article>
 	</main>
 
