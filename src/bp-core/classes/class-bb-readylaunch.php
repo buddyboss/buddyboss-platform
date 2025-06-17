@@ -85,7 +85,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 							$this,
 							'override_forums_page_templates',
 						),
-						5
+						1
 					); // High priority, so we have the last say here.
 				}
 			}
