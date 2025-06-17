@@ -57,19 +57,15 @@ if ( ! class_exists( 'SFWD_LMS' ) || ! function_exists( 'learndash_get_course_id
 	return;
 }
 
-$lesson_id       = get_the_ID();
-$user_id         = get_current_user_id();
-$course_id       = function_exists( 'learndash_get_course_id' ) ? learndash_get_course_id( $lesson_id ) : 0;
-$lesson_progress = function_exists( 'learndash_lesson_progress' ) ? learndash_lesson_progress(
+$lesson_id               = get_the_ID();
+$user_id                 = get_current_user_id();
+$course_id               = function_exists( 'learndash_get_course_id' ) ? learndash_get_course_id( $lesson_id ) : 0;
+$lesson_progress         = function_exists( 'learndash_lesson_progress' ) ? learndash_lesson_progress(
 	$post,
 	$course_id
 ) : array();
-$is_enrolled     = function_exists( 'sfwd_lms_has_access' ) && sfwd_lms_has_access( $course_id, $user_id );
-$lesson_status   = function_exists( 'learndash_lesson_status' ) && learndash_lesson_status( $lesson_id, $user_id );
-$topics          = function_exists( 'learndash_get_topic_list' ) ? learndash_get_topic_list( $lesson_id, $user_id ) : array();
-$prev_lesson     = function_exists( 'learndash_get_previous_lesson' ) && learndash_get_previous_lesson( $lesson_id );
-$next_lesson     = function_exists( 'learndash_get_next_lesson' ) && learndash_get_next_lesson( $lesson_id );
-
+$is_enrolled             = function_exists( 'sfwd_lms_has_access' ) && sfwd_lms_has_access( $course_id, $user_id );
+$topics                  = function_exists( 'learndash_get_topic_list' ) ? learndash_get_topic_list( $lesson_id, $user_id ) : array();
 $lesson_list             = learndash_get_course_lessons_list( $course_id, null, array( 'num' => -1 ) );
 $lesson_list             = array_column( $lesson_list, 'post' );
 $lesson_topics_completed = learndash_lesson_topics_completed( $post->ID );
@@ -83,12 +79,8 @@ foreach ( $lesson_list as $les ) {
 }
 
 // Define variables for course-steps module compatibility.
-$logged_in                 = is_user_logged_in();
-$course_settings           = function_exists( 'learndash_get_setting' ) ? learndash_get_setting( $course_id ) : array();
-$previous_lesson_completed = true;
-if ( function_exists( 'learndash_is_lesson_accessable' ) ) {
-	$previous_lesson_completed = learndash_is_lesson_accessable( $user_id, $post );
-}
+$logged_in       = is_user_logged_in();
+$course_settings = function_exists( 'learndash_get_setting' ) ? learndash_get_setting( $course_id ) : array();
 ?>
 
 <div class="bb-learndash-content-wrap bb-learndash-content-wrap--lesson">
@@ -103,22 +95,6 @@ if ( function_exists( 'learndash_is_lesson_accessable' ) ) {
 						<div class="bb-rl-lesson-title">
 							<h1 class="bb-rl-entry-title"><?php the_title(); ?></h1>
 						</div>
-					</div>
-
-					<div class="bb-rl-lesson-meta">
-						<?php if ( $is_enrolled ) : ?>
-							<div class="bb-rl-lesson-status">
-								<span class="bb-rl-status bb-rl-enrolled"><?php echo esc_html( $lesson_status ); ?></span>
-								<?php if ( ! empty( $lesson_progress ) ) : ?>
-									<div class="bb-rl-lesson-progress">
-										<div class="bb-rl-progress-bar">
-											<div class="bb-rl-progress" style="width: <?php echo (int) $lesson_progress['percentage']; ?>%"></div>
-										</div>
-										<span class="bb-rl-percentage"><?php echo (int) $lesson_progress['percentage']; ?>% <?php esc_html_e( 'Complete', 'buddyboss' ); ?></span>
-									</div>
-								<?php endif; ?>
-							</div>
-						<?php endif; ?>
 					</div>
 				</header>
 
@@ -135,7 +111,7 @@ if ( function_exists( 'learndash_is_lesson_accessable' ) ) {
 						/**
 						 * Fires before the lesson content starts.
 						 *
-						 * @since 3.0.0
+						 * @since BuddyBoss [BBVERSION]
 						 *
 						 * @param int $lesson_id Lesson ID.
 						 * @param int $course_id Course ID.
@@ -148,7 +124,7 @@ if ( function_exists( 'learndash_is_lesson_accessable' ) ) {
 						$show_content               = true;
 
 						if ( ! empty( $lesson_progression_enabled ) ) :
-							$last_incomplete_step = function_exists( 'learndash_is_lesson_accessable' ) ? learndash_is_lesson_accessable( $user_id, $post, true, $course_id ) : false;
+							$last_incomplete_step = function_exists( 'learndash_user_progress_get_previous_incomplete_step' ) ? learndash_user_progress_get_previous_incomplete_step( $user_id, $course_id, $post->ID, true ) : false;
 
 							if ( ! empty( $user_id ) ) {
 								if ( function_exists( 'learndash_user_progress_is_step_complete' ) && learndash_user_progress_is_step_complete( $user_id, $course_id, $post->ID ) ) {
