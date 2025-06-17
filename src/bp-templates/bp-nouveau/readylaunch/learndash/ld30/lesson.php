@@ -340,7 +340,8 @@ foreach ( $lesson_list as $les ) {
 				?>
 			</div>
 
-			<nav class="bb-rl-ld-module-footer bb-rl-lesson-footer">
+			<?php $class_name = learndash_course_steps_is_external( $post->ID ) ? '' : 'bb-rl-ld-empty-module-footer'; ?>
+			<nav class="bb-rl-ld-module-footer bb-rl-lesson-footer <?php echo esc_attr( $class_name ); ?>">
 				<div class="bb-rl-ld-module-actions bb-rl-lesson-actions">
 					<?php
 					/**
