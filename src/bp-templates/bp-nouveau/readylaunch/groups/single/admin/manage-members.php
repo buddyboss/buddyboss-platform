@@ -21,7 +21,8 @@ $bp_current_group_id = bp_get_current_group_id();
 <h2 class="bp-screen-title
 <?php
 if ( bp_is_group_create() ) {
-	echo esc_attr( 'creation-step-name' ); }
+	echo esc_attr( 'creation-step-name' );
+}
 ?>
 ">
 	<?php esc_html_e( 'Manage Group Members', 'buddyboss' ); ?>
@@ -171,7 +172,9 @@ if ( bp_is_group_create() ) {
 
 	<dd class="general-members-listing">
 
-		<p class="bb-rl-manage-description-text"><?php printf( esc_html__( 'When a member joins a group, he or she is assigned the %1$s role by default. %2$s are able to contribute to the group's discussions, activity feeds, and view other group members.', 'buddyboss' ), strtolower( get_group_role_label( $bp_current_group_id, 'member_singular_label_name' ) ), get_group_role_label( $bp_current_group_id, 'member_plural_label_name' ) ); ?></p>
+		<p class="bb-rl-manage-description-text">
+			<?php printf( esc_html__( 'When a member joins a group, he or she is assigned the %1$s role by default. %2$s are able to contribute to the group\'s discussions, activity feeds, and view other group members.', 'buddyboss' ), strtolower( get_group_role_label( $bp_current_group_id, 'member_singular_label_name' ) ), get_group_role_label( $bp_current_group_id, 'member_plural_label_name' ) ); ?>
+		</p>
 		<div data-bp-list="manage_group_members">
 		<?php
 		if ( bp_group_has_members( 'per_page=15&exclude_banned=0' ) ) {
