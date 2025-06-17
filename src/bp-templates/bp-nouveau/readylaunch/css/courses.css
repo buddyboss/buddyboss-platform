@@ -1446,6 +1446,51 @@
 }
 
 .bb-rl-course-overview-footer .btn-advance-continue .btn-advance,
+.bb-rl-course-overview-footer .btn-advance-continue .btn-join,
+.bb-rl-course-overview-footer .learndash_join_button .btn-advance,
+.bb-rl-course-overview-footer .learndash_join_button .btn-join {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  font-weight: 500;
+  text-align: center;
+  cursor: pointer;
+  border-radius: var(--bb-rl-radius-md);
+  padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  text-decoration: none;
+  background-color: var(--bb-rl-background-brand-primary-color);
+  color: var(--bb-rl-text-white-color);
+  border: 1px solid var(--bb-rl-background-brand-primary-color);
+  padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
+  font-size: 0.875rem;
+  font-weight: 400;
+}
+
+.bb-rl-course-overview-footer .btn-advance-continue .btn-advance:hover,
+.bb-rl-course-overview-footer .btn-advance-continue .btn-join:hover,
+.bb-rl-course-overview-footer .learndash_join_button .btn-advance:hover,
+.bb-rl-course-overview-footer .learndash_join_button .btn-join:hover {
+  background-color: var(--bb-rl-background-brand-primary-hover-color);
+}
+
+.bb-rl-course-overview-footer .btn-advance-continue .btn-advance:focus-within,
+.bb-rl-course-overview-footer .btn-advance-continue .btn-join:focus-within,
+.bb-rl-course-overview-footer .learndash_join_button .btn-advance:focus-within,
+.bb-rl-course-overview-footer .learndash_join_button .btn-join:focus-within {
+  outline: 2px solid var(--bb-rl-border-brand-primary-color);
+}
+
+.bb-rl-course-overview-footer .btn-advance-continue .btn-advance:disabled,
+.bb-rl-course-overview-footer .btn-advance-continue .btn-join:disabled,
+.bb-rl-course-overview-footer .learndash_join_button .btn-advance:disabled,
+.bb-rl-course-overview-footer .learndash_join_button .btn-join:disabled {
+  background-color: var(--bb-rl-background-brand-disabled-color);
+  cursor: not-allowed;
+}
+
+.bb-rl-course-overview-footer .btn-advance-continue .btn-advance,
 .bb-rl-course-overview-footer .btn-advance-continue .learndash_checkout_buttons .btn-join {
   display: inline-flex;
   align-items: center;

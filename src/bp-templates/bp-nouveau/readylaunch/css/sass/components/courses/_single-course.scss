@@ -144,6 +144,21 @@
 
 .bb-rl-course-overview-footer {
 
+	.btn-advance-continue,
+	.learndash_join_button {
+
+		.btn-advance,
+		.btn-join {
+
+			@include bb-rl-button;
+			@include bb-rl-button--brand-fill;
+			@include bb-rl-button--small;
+		}
+	}
+}
+
+.bb-rl-course-overview-footer {
+
 	.btn-advance-continue {
 
 		.btn-advance,
