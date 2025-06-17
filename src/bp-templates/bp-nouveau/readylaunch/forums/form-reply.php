@@ -12,13 +12,11 @@
 
 <div id="bbpress-forums">
 
-	<?php bbp_breadcrumb(); ?>
-
 <?php endif; ?>
 
 <?php if ( bbp_current_user_can_access_create_reply_form() ) : ?>
 
-	<div id="new-reply-<?php bbp_topic_id(); ?>" class="bbp-reply-form bb-rl-forum-modal <?php ( bbp_is_reply_edit() ? 'bb-rl-forum-modal--static' : '' ); ?>">
+	<div id="new-reply-<?php bbp_topic_id(); ?>" class="bbp-reply-form bb-rl-forum-modal <?php echo ( bbp_is_reply_edit() ? 'bb-rl-forum-modal--static' : '' ); ?>">
 
 		<form id="new-post" name="new-post" method="post" action="<?php bbp_is_reply_edit() ? bbp_reply_edit_url() : the_permalink(); ?>">
 
@@ -105,6 +103,26 @@
 
 					<?php endif; ?>
 
+					<?php if ( bbp_allow_revisions() && bbp_is_reply_edit() ) : ?>
+
+					<?php do_action( 'bbp_theme_before_reply_form_revisions' ); ?>
+
+					<fieldset class="bbp-form bb-rl-reply-log-edit">
+						<div class="bp-checkbox-wrap">
+							<input name="bbp_log_reply_edit" id="bbp_log_reply_edit" class="bs-styled-checkbox" type="checkbox" value="1" <?php bbp_form_reply_log_edit(); ?> tabindex="<?php bbp_tab_index(); ?>" />
+							<label for="bbp_log_reply_edit"><?php _e( 'Keep a log of this edit:', 'buddyboss' ); ?></label>
+						</div>
+
+						<div class="bb-rl-forum-edit-reason">
+							<label for="bbp_reply_edit_reason"><?php printf( __( 'Optional reason for editing:', 'buddyboss' ), bbp_get_current_user_name() ); ?></label><br />
+							<input type="text" value="<?php bbp_form_reply_edit_reason(); ?>" tabindex="<?php bbp_tab_index(); ?>" size="40" name="bbp_reply_edit_reason" id="bbp_reply_edit_reason" />
+						</div>
+					</fieldset>
+
+					<?php do_action( 'bbp_theme_after_reply_form_revisions' ); ?>
+
+					<?php endif; ?>
+
 				</div>
 
 				<div class="bb-rl-forum-modal-footer">
@@ -171,26 +189,6 @@
 							<?php do_action( 'bbp_theme_after_reply_form_subscription' ); ?>
 
 						<?php } ?>
-
-					<?php endif; ?>
-
-					<?php if ( bbp_allow_revisions() && bbp_is_reply_edit() ) : ?>
-
-						<?php do_action( 'bbp_theme_before_reply_form_revisions' ); ?>
-
-						<fieldset class="bbp-form">
-							<div class="bp-checkbox-wrap">
-								<input name="bbp_log_reply_edit" id="bbp_log_reply_edit" class="bs-styled-checkbox" type="checkbox" value="1" <?php bbp_form_reply_log_edit(); ?> tabindex="<?php bbp_tab_index(); ?>" />
-								<label for="bbp_log_reply_edit"><?php _e( 'Keep a log of this edit:', 'buddyboss' ); ?></label>
-							</div>
-
-							<div>
-								<label for="bbp_reply_edit_reason"><?php printf( __( 'Optional reason for editing:', 'buddyboss' ), bbp_get_current_user_name() ); ?></label><br />
-								<input type="text" value="<?php bbp_form_reply_edit_reason(); ?>" tabindex="<?php bbp_tab_index(); ?>" size="40" name="bbp_reply_edit_reason" id="bbp_reply_edit_reason" />
-							</div>
-						</fieldset>
-
-						<?php do_action( 'bbp_theme_after_reply_form_revisions' ); ?>
 
 					<?php endif; ?>
 

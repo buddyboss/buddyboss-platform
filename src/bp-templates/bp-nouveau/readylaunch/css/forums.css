@@ -1073,6 +1073,18 @@
   display: none;
 }
 
+.bb-rl-forum-modal.bb-rl-forum-modal--static .bb-rl-reply-log-edit {
+  border-top: 1px solid var(--bb-rl-border-secondary-color);
+  padding-top: var(--bb-rl-space-200);
+  margin-bottom: var(--bb-rl-space-200);
+}
+
+.bb-rl-forum-modal.bb-rl-forum-modal--static .bb-rl-reply-log-edit label {
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: var(--bb-rl-space-200);
+}
+
 .bb-rl-forum-modal.bb-rl-forum-modal--static [for="bbp_log_topic_edit"] {
   font-size: 14px;
   font-weight: 500;
@@ -1098,6 +1110,10 @@
   font-weight: 500;
   margin-bottom: var(--bb-rl-space-100);
   line-height: 1.2;
+}
+
+.bb-rl-forum-modal.bb-rl-forum-modal--static .bb_discard_topic_reply_draft {
+  display: none;
 }
 
 .bb-rl-forum-modal #new-post {

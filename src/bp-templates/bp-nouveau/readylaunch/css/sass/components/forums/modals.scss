@@ -114,6 +114,18 @@
 			}
 		}
 
+		.bb-rl-reply-log-edit {
+			border-top: 1px solid var(--bb-rl-border-secondary-color);
+			padding-top: var(--bb-rl-space-200);
+			margin-bottom: var(--bb-rl-space-200);
+
+			label {
+				font-size: 14px;
+				font-weight: 500;
+				margin-bottom: var(--bb-rl-space-200);
+			}
+		}
+
 		[for="bbp_log_topic_edit"] {
 			font-size: 14px;
 			font-weight: 500;
@@ -139,6 +151,10 @@
 				margin-bottom: var(--bb-rl-space-100);
 				line-height: 1.2;
 			}
+		}
+
+		.bb_discard_topic_reply_draft {
+			display: none;
 		}
 	}
 
