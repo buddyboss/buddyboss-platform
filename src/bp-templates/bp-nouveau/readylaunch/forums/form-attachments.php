@@ -116,6 +116,9 @@ $video_extensions = bp_is_active( 'media' ) ? bp_video_get_allowed_extension() :
 
 </div>
 
+<!-- Medium Editor Toolbar -->
+<div id="bb-rl-editor-toolbar"></div>
+
 <div id="whats-new-toolbar" class="<?php echo ( ! bp_is_active( 'media' ) ) ? esc_attr( 'media-off' ) : ''; ?> ">
 
 	<?php

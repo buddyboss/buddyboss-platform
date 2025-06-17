@@ -382,10 +382,23 @@
 
 	#bb-rl-editor-toolbar {
 		padding: 0;
+		width: 100%;
+		opacity: 1;
 
 		&:has(.medium-editor-toolbar.active) {
-			border-top: 1px solid var(--bb-rl-border-secondary-color);
-			padding: var(--bb-rl-space-100) 0;
+			border-bottom: 1px solid var(--bb-rl-border-secondary-color);
+			width: calc(100% + var(--bb-rl-space-600));
+			padding: 0 var(--bb-rl-space-300) var(--bb-rl-space-100);
+			margin: calc(var(--bb-rl-space-100) * -1) calc(var(--bb-rl-space-300) * -1) var(--bb-rl-space-200) calc(var(--bb-rl-space-300) * -1);
+			opacity: 1;
+
+			.medium-editor-toolbar {
+				opacity: 0.4;
+
+				&.medium-editor-toolbar-active {
+					opacity: 1;
+				}
+			}
 		}
 
 		.medium-editor-toolbar {
@@ -393,10 +406,12 @@
 			background-color: transparent;
 			padding: 0 var(--bb-rl-space-300);
 			height: 0;
+			opacity: 0;
 
 			&.active {
 				height: auto;
 				padding: 0;
+				opacity: 1;
 			}
 		}
 	}
@@ -451,7 +466,7 @@
 	}
 }
 
-.forum {
+.bb-rl-forums-container-inner {
 
 	.select2-dropdown {
 		border: 0;
