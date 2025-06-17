@@ -416,6 +416,16 @@
 			.ld-item-components {
 				white-space: nowrap;
 			}
+
+			.ld-status-waiting {
+
+				@include bb-rl-notice;
+				@include bb-rl-notice--warning;
+				display: inline-flex;
+				padding: 2px 4px;
+				font-size: var(--bb-rl-font-size-xs);
+				gap: var(--bb-rl-space-50);
+			}
 		}
 
 		.ld-item-details {

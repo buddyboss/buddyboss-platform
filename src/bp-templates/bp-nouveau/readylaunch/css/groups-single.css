@@ -4879,6 +4879,37 @@ body.ld-in-focus-mode.admin-bar.bb-readylaunch-template {
   white-space: nowrap;
 }
 
+.bb-rl-ld-lesson-list .ld-item-list-item-preview .ld-item-title .ld-status-waiting {
+  display: flex;
+  align-items: center;
+  padding: var(--bb-rl-space-100);
+  border: 1px solid transparent;
+  border-radius: var(--bb-rl-radius-md);
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 500;
+  background-color: var(--bb-rl-background-secondary-color);
+  background-color: var(--bb-rl-background-warning-secondary-color);
+  border-color: var(--bb-rl-border-warning-primary-color);
+  display: inline-flex;
+  padding: 2px 4px;
+  font-size: var(--bb-rl-font-size-xs);
+  gap: var(--bb-rl-space-50);
+}
+
+.bb-rl-ld-lesson-list .ld-item-list-item-preview .ld-item-title .ld-status-waiting > [class*="bb-icons"] {
+  margin-right: var(--bb-rl-space-100);
+  font-size: 20px;
+  font-family: bb-icons-rl;
+}
+
+.bb-rl-ld-lesson-list .ld-item-list-item-preview .ld-item-title .ld-status-waiting > [class*="bb-icons"] {
+  color: var(--bb-rl-icon-warning-primary-color);
+}
+
+.bb-rl-ld-lesson-list .ld-item-list-item-preview .ld-item-title .ld-status-waiting > [class*="bb-icons"]:before {
+  content: "\e4e0";
+}
+
 .bb-rl-ld-lesson-list .ld-item-list-item-preview .ld-item-details {
   order: 1;
   font-size: 0;
@@ -5916,8 +5947,28 @@ body.ld-in-focus-mode.admin-bar.bb-readylaunch-template {
   border-bottom: 0;
 }
 
-.bb-rl-lms-nav-list .bb-rl-ld-lesson-list .ld-item-list-item-preview .ld-item-components {
+.bb-rl-lms-nav-list .bb-rl-ld-lesson-list .ld-item-list-item-preview .ld-item-components .ld-item-component {
   display: none;
+}
+
+.bb-rl-lms-nav-list .bb-rl-ld-lesson-list .ld-item-list-item-preview .ld-item-components .ld-status-waiting {
+  font-size: 0;
+  background-color: transparent;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  border-radius: 0;
+}
+
+.bb-rl-lms-nav-list .bb-rl-ld-lesson-list .ld-item-list-item-preview .ld-item-components .ld-status-waiting .ld-icon-calendar:before {
+  content: "\e2fa";
+  font-weight: 400;
+  font-family: bb-icons-rl;
+  font-size: 16px;
+  color: var(--bb-rl-icon-primary-color);
+  font-style: normal;
+  position: relative;
+  top: 2px;
 }
 
 .bb-rl-lms-nav-list .bb-rl-ld-lesson-list .ld-item-list-item-expanded .ld-table-list-item {

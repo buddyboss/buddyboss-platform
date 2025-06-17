@@ -49,7 +49,30 @@
 			}
 
 			.ld-item-components {
-				display: none;
+
+				.ld-item-component {
+					display: none;
+				}
+
+				.ld-status-waiting {
+					font-size: 0;
+					background-color: transparent;
+					border: 0;
+					padding: 0;
+					margin: 0;
+					border-radius: 0;
+
+					.ld-icon-calendar:before {
+						content: "\e2fa";
+						font-weight: 400;
+						font-family: bb-icons-rl;
+						font-size: 16px;
+						color: var(--bb-rl-icon-primary-color);
+						font-style: normal;
+						position: relative;
+						top: 2px;
+					}
+				}
 			}
 		}
 
