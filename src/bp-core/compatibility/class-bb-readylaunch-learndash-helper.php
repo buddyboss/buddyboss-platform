@@ -957,17 +957,32 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 							}
 						}
 						if ( 'header' === $action ) {
-							?>
-							<span class="bb-rl-enrolled-count">
-								<?php
-								printf(
-								/* translators: %d is the number of enrolled users. */
-									esc_html__( '%d+ Student enrolled', 'buddyboss' ),
-									intval( $enrolled_count )
-								);
+							if ( $enrolled_count > $limit ) {
+								$remaining_count = $enrolled_count - $limit;
 								?>
-							</span>
-							<?php
+								<span class="bb-rl-enrolled-count">
+									<?php
+									printf(
+									/* translators: %d is the number of enrolled users. */
+										esc_html__( '%d+ Student enrolled', 'buddyboss' ),
+										intval( $remaining_count )
+									);
+									?>
+								</span>
+								<?php
+							} else {
+								?>
+								<span class="bb-rl-enrolled-count">
+									<?php
+									printf(
+									/* translators: %d is the number of enrolled users. */
+										esc_html__( '%d Student enrolled', 'buddyboss' ),
+										intval( $enrolled_count )
+									);
+									?>
+								</span>
+								<?php
+							}
 						}
 						?>
 					</div>
