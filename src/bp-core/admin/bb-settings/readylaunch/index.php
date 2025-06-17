@@ -110,7 +110,7 @@ function bb_readylaunch_settings_page_enqueue_style_script( $admin_page ) {
 
 	wp_enqueue_script( 'bb-readylaunch-admin-script' );
 
-	wp_set_script_translations( 'bb-readylaunch-admin-script', 'buddyboss' );
+	wp_set_script_translations( 'bb-readylaunch-admin-script', 'buddyboss', buddypress()->plugin_dir . 'languages/' );
 
 	wp_enqueue_style( 'bb-readylaunch-admin-style' );
 

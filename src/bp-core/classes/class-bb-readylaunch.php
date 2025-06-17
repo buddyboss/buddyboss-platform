@@ -2290,9 +2290,9 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				)
 			);
 
-			wp_set_script_translations( 'bb-readylaunch-header-view', 'buddyboss' );
+			wp_set_script_translations( 'bb-readylaunch-header-view', 'buddyboss', buddypress()->plugin_dir . 'languages/' );
 
-			wp_set_script_translations( 'buddyboss-readylaunch-header-editor-script', 'buddyboss' );
+			wp_set_script_translations( 'buddyboss-readylaunch-header-editor-script', 'buddyboss', buddypress()->plugin_dir . 'languages/' );
 
 			wp_register_style(
 				'bb-icons-rl-css',
