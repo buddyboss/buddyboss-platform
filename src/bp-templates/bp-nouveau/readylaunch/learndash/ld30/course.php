@@ -179,6 +179,11 @@ if ( $is_enrolled ) {
 		$resume_link              = learndash_get_step_permalink( $user_course_last_step_id, $course_id );
 	}
 }
+
+$ld_product = null;
+if ( class_exists( 'LearnDash\Core\Models\Product' ) && isset( $course_id ) ) {
+	$ld_product = LearnDash\Core\Models\Product::find( (int) $course_id );
+}
 ?>
 
 <div class="bb-learndash-content-wrap">
@@ -407,7 +412,7 @@ if ( $is_enrolled ) {
 								$learndash_login_modal = apply_filters( 'learndash_login_modal', true, $course_id, $user_id ) && ! is_user_logged_in() && 'open' !== $course_pricing['type'];
 
 								// Add proper checks for $ld_product.
-								if ( class_exists( 'LearnDash\Core\Models\Product' ) && $ld_product instanceof \LearnDash\Core\Models\Product ) {
+								if ( $ld_product && $ld_product instanceof \LearnDash\Core\Models\Product ) {
 									$learndash_login_modal = $learndash_login_modal && $ld_product->can_be_purchased();
 								}
 
@@ -516,11 +521,6 @@ if ( $is_enrolled ) {
 				<div class="bb-rl-course-details">
 					<?php
 					$status_html = '';
-					$ld_product  = null;
-
-					if ( class_exists( 'LearnDash\Core\Models\Product' ) && isset( $course_id ) ) {
-						$ld_product = LearnDash\Core\Models\Product::find( (int) $course_id );
-					}
 
 					if ( $ld_product ) {
 						if ( ! $has_access ) {
