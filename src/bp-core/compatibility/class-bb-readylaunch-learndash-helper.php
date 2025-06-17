@@ -75,6 +75,8 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 			// Add pre_get_posts filter for course filtering.
 			add_action( 'pre_get_posts', array( $this, 'bb_rl_filter_courses_query' ) );
 			add_filter( 'learndash_lesson_row_class', array( $this, 'bb_rl_learndash_lesson_row_class' ), 10, 2 );
+			add_filter( 'learndash-topic-row-class', array( $this, 'bb_rl_learndash_topic_row_class' ), 10, 2 );
+			add_filter( 'learndash_quiz_row_classes', array( $this, 'bb_rl_learndash_quiz_row_classes' ), 10, 2 );
 
 			add_filter( 'buddyboss_learndash_content', array( $this, 'bb_rl_learndash_content' ), 10, 2 );
 			add_action( 'learndash_update_user_activity', array( $this, 'bb_rl_flush_ld_courses_progress_cache' ), 9999, 1 );
@@ -1037,14 +1039,23 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 					$quiz_lesson_id = learndash_get_setting( $current_post->ID, 'lesson' );
 					$quiz_topic_id  = learndash_get_setting( $current_post->ID, 'topic' );
 
-					if ( $quiz_lesson_id ) {
+					// If quiz is directly associated with a lesson.
+					if ( ! empty( $quiz_lesson_id ) && 'sfwd-lessons' === get_post_type( $quiz_lesson_id ) ) {
 						if ( isset( $lesson['post']->ID ) && (int) $lesson['post']->ID === (int) $quiz_lesson_id ) {
 							$add_current_class = true;
 						}
-					} elseif ( $quiz_topic_id ) {
-						$topic_lesson_id = learndash_get_setting( $quiz_topic_id, 'lesson' );
-						if ( isset( $lesson['post']->ID ) && (int) $lesson['post']->ID === (int) $topic_lesson_id ) {
-							$add_current_class = true;
+					} else {
+						$topic_id = 0;
+						if ( ! empty( $quiz_topic_id ) ) {
+							$topic_id = $quiz_topic_id;
+						} elseif ( ! empty( $quiz_lesson_id ) && 'sfwd-topic' === get_post_type( $quiz_lesson_id ) ) {
+							$topic_id = $quiz_lesson_id;
+						}
+						if ( $topic_id ) {
+							$topic_lesson_id = learndash_get_setting( $topic_id, 'lesson' );
+							if ( ! empty( $topic_lesson_id ) && isset( $lesson['post']->ID ) && (int) $lesson['post']->ID === (int) $topic_lesson_id ) {
+								$add_current_class = true;
+							}
 						}
 					}
 					break;
@@ -1055,6 +1066,55 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 			}
 
 			return $lesson_class;
+		}
+
+		/**
+		 * Add custom classes to topic rows in LearnDash sidebar.
+		 * Adds bb-rl-current-topic class for current topic.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $topic_class The existing topic classes.
+		 * @param object $topic       The topic object.
+		 *
+		 * @return string Modified topic classes.
+		 */
+		public function bb_rl_learndash_topic_row_class( $topic_class, $topic ) {
+			$current_post = get_post();
+			if ( ! $current_post || ! isset( $topic->ID ) ) {
+				return $topic_class;
+			}
+
+			if ( (int) $topic->ID === (int) $current_post->ID ) {
+				$topic_class .= ' bb-rl-current-topic-anchor';
+			}
+
+			return $topic_class;
+		}
+
+		/**
+		 * Add custom classes to quiz rows in LearnDash sidebar.
+		 * Adds bb-rl-current-step class for current quiz.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array $classes The existing quiz classes.
+		 * @param array $quiz    The quiz object.
+		 *
+		 * @return array Modified quiz classes.
+		 */
+		public function bb_rl_learndash_quiz_row_classes( $classes, $quiz ) {
+			$current_post = get_post();
+
+			if ( ! $current_post || ! isset( $quiz['post']->ID ) ) {
+				return $classes;
+			}
+
+			if ( (int) $quiz['post']->ID === (int) $current_post->ID ) {
+				$classes['wrapper'] .= ' bb-rl-current-quiz-wrapper';
+				$classes['anchor']  .= ' bb-rl-current-quiz-anchor';
+			}
+			return $classes;
 		}
 
 		/**
