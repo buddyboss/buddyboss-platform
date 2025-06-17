@@ -889,12 +889,11 @@ if ( $is_enrolled ) {
 
 					<div class="bb-rl-entry-content">
 						<?php
-						$course_content = get_the_content();
-						if ( ! empty( $course_content ) ) {
+						if ( ! empty( $content ) ) {
 							?>
 							<h2><?php esc_html_e( 'About course', 'buddyboss' ); ?></h2>
-							<?php echo wp_kses_post( $course_content ); ?>
 							<?php
+							echo $content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 						}
 						?>
 					</div>
