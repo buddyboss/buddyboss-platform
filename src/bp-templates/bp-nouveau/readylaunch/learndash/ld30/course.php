@@ -935,9 +935,23 @@ if ( class_exists( 'LearnDash\Core\Models\Product' ) && isset( $course_id ) ) {
 			<div class="bb-rl-course-content-comments">
 				<?php
 				// If comments are open or we have at least one comment, load up the comment template.
-				if ( comments_open() || get_comments_number() ) :
-					comments_template();
-				endif;
+				$focus_mode         = LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Theme_LD30', 'focus_mode_enabled' );
+				$post_type_comments = learndash_post_type_supports_comments( $post->post_type );
+				if ( is_user_logged_in() && 'yes' === $focus_mode && comments_open() ) {
+					learndash_get_template_part(
+						'focus/comments.php',
+						array(
+							'course_id' => $course_id,
+							'user_id'   => $user_id,
+							'context'   => 'focus',
+						),
+						true
+					);
+				} elseif ( true === $post_type_comments ) {
+					if ( comments_open() ) :
+						comments_template();
+					endif;
+				}
 				?>
 			</div>
 		</article>
