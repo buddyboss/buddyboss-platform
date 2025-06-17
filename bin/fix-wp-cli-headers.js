@@ -6,11 +6,11 @@ const potFilePath = 'src/languages/buddyboss.pot';
 try {
     // Read the current POT file
     let potContent = fs.readFileSync(potFilePath, 'utf8');
-    
+
     // Get current version from package.json
     const packageJson = JSON.parse(fs.readFileSync('package.json', 'utf8'));
     const bbVersion = packageJson.BBVersion || '2.8.61';
-    
+
     // Get WP-CLI version for X-Generator
     let wpCliVersion = 'WP-CLI';
     try {
@@ -18,11 +18,11 @@ try {
     } catch (error) {
         console.log('Could not detect WP-CLI version, using default');
     }
-    
+
     // Get current date in the required format
     const now = new Date();
     const potCreationDate = now.toISOString().replace('T', ' ').replace(/\.\d{3}Z$/, '+00:00');
-    
+
     // Define the correct header format to match grunt-wp-i18n output
     const correctHeaders = `# Copyright (C) ${now.getFullYear()} BuddyBoss
 # This file is distributed under the GPLv2 or later (license.txt).
@@ -49,29 +49,30 @@ msgstr ""
 "X-Poedit-Bookmarks: \\n"
 "X-Textdomain-Support: yes\\n"
 "X-Generator: ${wpCliVersion}\\n"
+"X-Domain: buddyboss\\n"
 
 `;
 
     // Find the first actual msgid entry (not the header)
     const firstMsgidMatch = potContent.match(/\n(#[^\n]*\n)*msgid\s+"[^"]/);
-    
+
     if (firstMsgidMatch) {
         const contentStartIndex = potContent.indexOf(firstMsgidMatch[0]);
         const originalContent = potContent.substring(contentStartIndex);
-        
+
         // Combine corrected headers with original content
         const newPotContent = correctHeaders + originalContent;
-        
+
         // Write the corrected POT file
         fs.writeFileSync(potFilePath, newPotContent, 'utf8');
-        
+
         console.log('POT file headers fixed successfully to match grunt-wp-i18n format!');
     } else {
         console.error('Could not find content section in POT file');
         process.exit(1);
     }
-    
+
 } catch (error) {
     console.error('Error fixing POT file headers:', error.message);
     process.exit(1);
-} 
+}
