@@ -77,10 +77,6 @@ foreach ( $lesson_list as $les ) {
 	}
 	++$lesson_no;
 }
-
-// Define variables for course-steps module compatibility.
-$logged_in       = is_user_logged_in();
-$course_settings = function_exists( 'learndash_get_setting' ) ? learndash_get_setting( $course_id ) : array();
 ?>
 
 <div class="bb-learndash-content-wrap bb-learndash-content-wrap--lesson">
