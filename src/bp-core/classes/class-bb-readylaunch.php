@@ -2268,13 +2268,33 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 */
 		private function register_readylaunch_header_assets() {
 			$plugin_url = trailingslashit( buddypress()->plugin_url );
+			$plugin_dir = trailingslashit( buddypress()->plugin_dir );
 			$min        = bp_core_get_minified_asset_suffix();
+
+			// Register the editor script.
+			$asset_file = $plugin_dir . 'bp-core/blocks/readylaunch-header/index.asset.php';
+
+			if ( ! file_exists( $asset_file ) ) {
+				return;
+			}
+
+			$asset = include $asset_file;
+
+			// Register the admin script.
+			wp_register_script(
+				'buddyboss-readylaunch-header-editor-script',
+				$plugin_url . 'bp-core/blocks/readylaunch-header/index.js',
+				$asset['dependencies'],
+				$asset['version']
+			);
+
+			wp_set_script_translations( 'buddyboss-readylaunch-header-editor-script', 'buddyboss', buddypress()->plugin_dir . 'languages/' );
 
 			// Register the view script.
 			wp_register_script(
 				'bb-readylaunch-header-view',
 				$plugin_url . 'bp-core/blocks/readylaunch-header/view.js',
-				array( 'jquery', 'bp-nouveau', 'bp-select2' ),
+				array( 'jquery', 'bp-nouveau', 'bp-select2', 'wp-i18n' ),
 				bp_get_version(),
 				true
 			);
@@ -2291,8 +2311,6 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			);
 
 			wp_set_script_translations( 'bb-readylaunch-header-view', 'buddyboss', buddypress()->plugin_dir . 'languages/' );
-
-			wp_set_script_translations( 'buddyboss-readylaunch-header-editor-script', 'buddyboss', buddypress()->plugin_dir . 'languages/' );
 
 			wp_register_style(
 				'bb-icons-rl-css',
