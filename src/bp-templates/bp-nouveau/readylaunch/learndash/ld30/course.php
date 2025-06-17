@@ -195,7 +195,7 @@ if ( class_exists( 'LearnDash\Core\Models\Product' ) && isset( $course_id ) ) {
 						<?php
 						if ( taxonomy_exists( 'ld_course_category' ) ) {
 							// category.
-							$bb_course_cats = get_the_terms( $course->ID, 'ld_course_category' );
+							$bb_course_cats = get_the_terms( $post->ID, 'ld_course_category' );
 							if ( ! empty( $bb_course_cats ) ) {
 								?>
 								<div class="bb-rl-course-category">
@@ -253,7 +253,7 @@ if ( class_exists( 'LearnDash\Core\Models\Product' ) && isset( $course_id ) ) {
 							?>
 							<div class="bb-rl-meta-item">
 								<div class="bb-rl-author-name">
-									<?php echo '<span class="bb-rl-author-name-label">' . esc_html__( 'By', 'buddyboss' ) . '</span> ' . esc_html( get_the_author_meta( 'first_name', $course->post_author ) ); ?>
+									<?php echo '<span class="bb-rl-author-name-label">' . esc_html__( 'By', 'buddyboss' ) . '</span> ' . esc_html( get_the_author_meta( 'first_name', $post->post_author ) ); ?>
 								</div>
 							</div>
 						</div>
@@ -465,8 +465,8 @@ if ( class_exists( 'LearnDash\Core\Models\Product' ) && isset( $course_id ) ) {
 													<input type="hidden" name="course_join" value="%s" />
 													<input type="submit" value="%s" class="btn-join" id="btn-join" />
 												</form>',
-												$course->ID,
-												wp_create_nonce( 'course_join_' . get_current_user_id() . '_' . $course->ID ),
+												$post->ID,
+												wp_create_nonce( 'course_join_' . get_current_user_id() . '_' . $post->ID ),
 												$button_text
 											);
 										} else {
