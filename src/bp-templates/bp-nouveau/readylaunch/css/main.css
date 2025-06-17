@@ -13197,9 +13197,13 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 
 .activity-link-preview-info {
   background-color: var(--bb-rl-background-secondary-color);
-  border-radius: 0 0 var(--bb-rl-radius-lg) var(--bb-rl-radius-lg);
+  border-radius: var(--bb-rl-radius-lg);
   padding: var(--bb-rl-space-200) var(--bb-rl-space-200);
   margin-bottom: var(--bb-rl-space-300);
+}
+
+#activity-url-scrapper-img-holder + .activity-link-preview-info {
+  border-radius: 0 0 var(--bb-rl-radius-lg) var(--bb-rl-radius-lg);
 }
 
 .activity-url-scrapper-container.activity-post-form-link-wp-embed .activity-link-preview-info {
