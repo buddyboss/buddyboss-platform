@@ -155,6 +155,18 @@
 			@include bb-rl-button--small;
 		}
 	}
+
+	.btn-advance-completed {
+
+		.btn-advance {
+
+			@include bb-rl-button;
+			@include bb-rl-button--small;
+			background-color: var(--bb-rl-background-brand-disabled-color);
+			border-color: var(--bb-rl-background-brand-disabled-color);
+			pointer-events: none;
+		}
+	}
 }
 
 .bb-rl-course-overview-footer {

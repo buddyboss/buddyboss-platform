@@ -4537,6 +4537,26 @@ div#bp-group-message-content {
   cursor: not-allowed;
 }
 
+.bb-rl-course-overview-footer .btn-advance-completed .btn-advance {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  font-weight: 500;
+  text-align: center;
+  cursor: pointer;
+  border-radius: var(--bb-rl-radius-md);
+  padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  text-decoration: none;
+  padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
+  font-size: 0.875rem;
+  font-weight: 400;
+  background-color: var(--bb-rl-background-brand-disabled-color);
+  border-color: var(--bb-rl-background-brand-disabled-color);
+  pointer-events: none;
+}
+
 .bb-rl-course-overview-footer .btn-advance-continue .btn-advance,
 .bb-rl-course-overview-footer .btn-advance-continue .learndash_checkout_buttons .btn-join {
   display: inline-flex;
