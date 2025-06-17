@@ -20,6 +20,7 @@ window.bp = window.bp || {};
 			this.addListeners();
 			this.initMediumEditor();
 			this.forumSelect2();
+			this.forumEmoji();
 		},
 
 		/**
@@ -792,6 +793,69 @@ window.bp = window.bp || {};
 					} );
 				} );
 
+			}
+		},
+
+		forumEmoji: function () {
+			if ( typeof BP_Nouveau !== 'undefined' && typeof BP_Nouveau.media !== 'undefined' && typeof BP_Nouveau.media.emoji !== 'undefined' ) {
+				if ( jQuery( '.bbp-the-content' ).length && typeof jQuery.prototype.emojioneArea !== 'undefined' ) {
+					jQuery( '.bbp-the-content' ).each( function ( i, element ) {
+						var elem_id = jQuery( element ).attr( 'id' );
+						var key = jQuery( element ).data( 'key' );
+						jQuery( '#' + elem_id ).emojioneArea(
+							{
+								standalone: true,
+								hideSource: false,
+								container: jQuery( '#' + elem_id ).closest( 'form' ).find( '#whats-new-toolbar > .bb-rl-post-emoji' ),
+								autocomplete: false,
+								pickerPosition: 'bottom',
+								hidePickerOnBlur: true,
+								useInternalCDN: false,
+								events: {
+									ready: function () {
+										if ( typeof window.forums_medium_topic_editor !== 'undefined' && typeof window.forums_medium_topic_editor[ key ] !== 'undefined' ) {
+											window.forums_medium_topic_editor[ key ].resetContent();
+										}
+										if ( typeof window.forums_medium_reply_editor !== 'undefined' && typeof window.forums_medium_reply_editor[ key ] !== 'undefined' ) {
+											window.forums_medium_reply_editor[ key ].resetContent();
+										}
+										if ( typeof window.forums_medium_forum_editor !== 'undefined' && typeof window.forums_medium_forum_editor[ key ] !== 'undefined' ) {
+											window.forums_medium_forum_editor[ key ].resetContent();
+										}
+									},
+									emojibtn_click: function () {
+										if ( typeof window.forums_medium_topic_editor !== 'undefined' && typeof window.forums_medium_topic_editor[ key ] !== 'undefined' ) {
+											window.forums_medium_topic_editor[ key ].checkContentChanged();
+										}
+										if ( typeof window.forums_medium_reply_editor !== 'undefined' && typeof window.forums_medium_reply_editor[ key ] !== 'undefined' ) {
+											window.forums_medium_reply_editor[ key ].checkContentChanged();
+										}
+										if ( typeof window.forums_medium_forum_editor !== 'undefined' && typeof window.forums_medium_forum_editor[ key ] !== 'undefined' ) {
+											window.forums_medium_forum_editor[ key ].checkContentChanged();
+										}
+										if ( typeof window.forums_medium_topic_editor == 'undefined' ) {
+											$( '#bbpress-forums .bbp-the-content' ).keyup();
+										}
+										jQuery( '#' + elem_id )[ 0 ].emojioneArea.hidePicker();
+									},
+									search_keypress: function() {
+										var _this = this;
+										var small = _this.search.val().toLowerCase();
+										_this.search.val(small);
+									},
+	
+									picker_show: function () {
+										$( this.button[0] ).closest( '.bb-rl-post-emoji' ).addClass('active');
+									},
+	
+									picker_hide: function () {
+										$( this.button[0] ).closest( '.bb-rl-post-emoji' ).removeClass('active');
+									},
+								}
+							}
+						);
+					} );
+				}
 			}
 		}
 	};
