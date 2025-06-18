@@ -500,6 +500,12 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 
 				$results['bb_activity_sorting_options'] = $sorted_labels;
 			}
+
+			// Activity Topics.
+			$results['bb_enable_activity_topics'] = function_exists( 'bb_is_enabled_activity_topics' ) ? bb_is_enabled_activity_topics() : false;
+			if ( $results['bb_enable_activity_topics'] ) {
+				$results['bb_activity_topic_required'] = function_exists( 'bb_is_activity_topic_required' ) ? bb_is_activity_topic_required() : false;
+			}
 		}
 
 		// Media settings.

@@ -3611,6 +3611,11 @@ function bb_update_to_2_6_10() {
  * @return void
  */
 function bb_remove_symlinks( $folder_path ) {
+
+	if ( ! file_exists( $folder_path ) ) {
+		return;
+	}
+
 	// Open the folder.
 	if ( $handle = opendir( $folder_path ) ) {
 		// Loop through the folder contents.

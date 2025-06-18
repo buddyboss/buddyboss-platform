@@ -102,7 +102,7 @@ function bp_core_register_common_scripts() {
 			'footer'       => true,
 		),
 		'emojione'                      => array(
-			'file'         => "{$url}emojione-edited.js",
+			'file'         => "{$url}emojione-edited{$min}.js",
 			'dependencies' => array(),
 			'footer'       => true,
 		),

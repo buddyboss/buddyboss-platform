@@ -1208,7 +1208,7 @@ function bp_admin_wp_nav_menu_meta_box() {
 		return;
 	}
 
-	add_meta_box( 'add-buddypress-nav-menu', __( 'BuddyBoss', 'buddyboss' ), 'bp_admin_do_wp_nav_menu_meta_box', 'nav-menus', 'side', 'default' );
+	add_meta_box( 'add-buddypress-nav-menu', 'BuddyBoss', 'bp_admin_do_wp_nav_menu_meta_box', 'nav-menus', 'side', 'default' );
 
 	add_action( 'admin_print_footer_scripts', 'bp_admin_wp_nav_menu_restrict_items' );
 }
@@ -3244,7 +3244,7 @@ function bp_block_category( $categories = array(), $post = null ) {
 		array(
 			array(
 				'slug'  => 'buddyboss',
-				'title' => __( 'BuddyBoss', 'buddyboss' ),
+				'title' => 'BuddyBoss',
 				'icon'  => '',
 			),
 		)
@@ -3433,6 +3433,10 @@ function bb_get_pro_label_notice( $type = 'default' ) {
 			(
 				'sso' === $type &&
 				version_compare( bb_platform_pro()->version, bb_pro_sso_version(), '<' )
+			) ||
+			(
+				'group_activity_topics' === $type &&
+				version_compare( bb_platform_pro()->version, bb_pro_group_activity_topics_version(), '<' )
 			)
 		)
 	) {
@@ -3501,6 +3505,10 @@ function bb_get_pro_fields_class( $type = 'default' ) {
 			(
 				'sso' === $type &&
 				version_compare( bb_platform_pro()->version, bb_pro_sso_version(), '<' )
+			) ||
+			(
+				'group_activity_topics' === $type &&
+				version_compare( bb_platform_pro()->version, bb_pro_group_activity_topics_version(), '<' )
 			)
 		)
 	) {

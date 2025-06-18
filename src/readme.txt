@@ -1,9 +1,9 @@
 === BuddyBoss Platform ===
 Contributors: buddyboss
 Requires at least: 4.9.1
-Tested up to: 6.7.2
+Tested up to: 6.8.1
 Requires PHP: 5.6.20
-Stable tag: 2.8.41
+Stable tag: 2.8.80
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,44 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 2.8.80 =
+* New Feature! – Added Activity Topics for categorizing and filtering posts in activity feeds and groups
+* Bug: Activity - Fixed an issue where the activity feed showed duplicate job posts across multiple WPML site languages
+* Bug: Core - Fixed an issue where translating the “BuddyBoss” admin menu title caused moderation features to stop working
+* Bug: Groups - Fixed an issue where the recipient count in group messages didn’t update after members were deleted
+* Bug: Widgets - Fixed issue where the BB Latest Update widget wasn’t showing activity comments or blog comments
+
+= 2.8.70 =
+* Bug: Activity - Fixed issue where changing the activity post’s privacy incorrectly updated the posting date. The original date now remains unchanged
+* Bug: Activity - Fixed issue where emoji functionality wasn’t working in all areas due to JS files
+* Bug: Activity - Fixed issue where Follow/Unfollow functionality did not work when accessing user profiles from the Activity Feed
+* Bug: Groups - Fixed @mention issue in Hidden and Private groups, only group members can now be tagged
+* Bug: Groups - Fixed issue with the "Select Multiple Videos" feature, enabling associated actions like delete on the user's profile page and group page
+* Bug: Media - Fixed issue where video count showed as undefined when videos page, group videos, or user videos page were opened directly via URL
+
+= 2.8.61 =
+* Bug: Groups - Fixed an issue where regular group post activity headers incorrectly displayed post content instead of showing only basic activity details
+
+= 2.8.60 =
+* Bug: Activity - Fixed an issue where the Activity “Load More” button wrapper was being triggered even when clicking outside the button
+* Bug: Core - Added a check to ensure opendir() succeeds before calling closedir() to prevent potential errors, following PHP best practices for high-security environments like WordPress VIP
+* Bug: Moderation - Fixed an issue where activating the Moderation component incorrectly created a component page
+* Bug: Moderation API - Fixed an issue where admins or organizers couldn’t delete suspended members’ posts in groups on the app, while it worked on the web
+* Bug: Reactions - Fixed an issue in the WP Admin where a backslash was being added after an apostrophe in the Reactions button text each time it was saved
+* Bug: WPML - Fixed an issue where search results were incorrect for the Jobs post type from WP Job Manager when WPML Multilingual CMS was activated
+
+= 2.8.51 =
+* Bug: Core - Fixed Vulnerability issues
+
+= 2.8.50 =
+* Bug: Activity - Fixed an issue allowing site admins to pin posts in groups without needing to be a group member
+* Bug: Activity - Fixed an issue that caused problems when saving large videos as drafts
+* Bug: Activity - Fixed an issue where hover-over popups were not closing properly
+* Bug: Forums - Resolved a media display issue in edited forum topics and replies when the Redis cache was active
+* Bug: Learndash - Fixed an issue where admin quiz email notifications were not sent in the latest version of the LearnDash plugin
+* Bug: Members - Fixed an issue where member profiles displayed single and double quotes incorrectly
+* Bug: Notifications - Fixed an issue where double notifications were sent when someone was mentioned in replies
 
 = 2.8.41 =
 * Bug: Notifications - Fixed an issue where unwanted paragraph tags appeared in notifications

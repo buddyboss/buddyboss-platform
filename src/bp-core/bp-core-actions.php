@@ -82,6 +82,7 @@ add_action( 'bp_init', 'bp_init_background_updater', 50 );
 add_action( 'bp_init', 'bb_init_email_background_updater', 51 );
 add_action( 'bp_init', 'bb_init_notifications_background_updater', 52 );
 add_action( 'bp_init', 'bb_init_background_updater', 50 );
+add_action( 'bp_init', 'bb_load_topics_manager' );
 
 /**
  * The bp_register_taxonomies hook - Attached to 'bp_init' @ priority 2 above.
@@ -1238,3 +1239,24 @@ function bb_telemetry_load() {
 }
 
 add_action( 'bp_init', 'bb_telemetry_load' );
+
+/**
+ * Initialize the Topics Manager.
+ * This ensures we only load the manager when needed.
+ *
+ * @since BuddyBoss 2.8.80
+ *
+ * @return void True if the topics manager is loaded, false otherwise.
+ */
+function bb_load_topics_manager() {
+	// @todo: Only load if activity topics are enabled for now.
+	if (
+		! bp_is_active( 'activity' ) ||
+		! function_exists( 'bb_is_enabled_activity_topics' ) ||
+		! bb_is_enabled_activity_topics()
+	) {
+		return;
+	}
+
+	bb_topics_manager_instance();
+}
