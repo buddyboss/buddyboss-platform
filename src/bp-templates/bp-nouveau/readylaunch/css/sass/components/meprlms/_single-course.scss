@@ -48,3 +48,55 @@
 		}
 	}
 }
+
+.bb-rl-memprlms-course {
+
+	.course-curriculum:has(a) {
+		border: 0;
+		border-radius: 0;
+		background-color: transparent !important;
+		padding: 0;
+
+		> a {
+
+			@include bb-rl-button;
+			@include bb-rl-button--brand-fill;
+			@include bb-rl-button--small;
+
+			.mpcs-angle-right {
+				line-height: 1;
+			}
+
+			.mpcs-angle-right::before {
+				content: "\e13a";
+				font-weight: 400;
+				font-family: bb-icons-rl;
+				font-size: 14px;
+				position: relative;
+				top: 1px;
+			}
+		}
+
+		.mpcs-bookmark-link-title {
+
+			@include bb-rl-label-heading-md;
+			color: var(--bb-rl-text-secondary-color);
+		}
+	}
+}
+
+.bb-rl-course-content-inner {
+
+	> p {
+
+		@include bb-rl-label-heading-md-thin;
+		color: var(--bb-rl-text-secondary-color);
+		margin: 0 0 var(--bb-rl-space-200);
+	}
+
+	> h2 {
+
+		@include bb-rl-base-heading;
+		margin-bottom: var(--bb-rl-space-100);
+	}
+}
