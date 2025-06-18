@@ -321,21 +321,23 @@ foreach ( $lesson_list as $les ) {
 						?>
 						<div class="bb-rl-lesson-topics bb-rl-lms-inner-content-block">
 							<h3><?php esc_html_e( 'Lesson Topics', 'buddyboss' ); ?></h3>
-							<?php
-							if ( ! empty( $topics ) ) :
-								foreach ( $topics as $topic ) :
-									learndash_get_template_part(
-										'topic/partials/row.php',
-										array(
-											'topic'     => $topic,
-											'user_id'   => $user_id,
-											'course_id' => $course_id,
-										),
-										true
-									);
-								endforeach;
-							endif;
-							?>
+							<div class="bb-rl-ld-lesson-list bb-rl-ld-lesson-list--snippet">
+								<?php
+								if ( ! empty( $topics ) ) :
+									foreach ( $topics as $topic ) :
+										learndash_get_template_part(
+											'topic/partials/row.php',
+											array(
+												'topic'     => $topic,
+												'user_id'   => $user_id,
+												'course_id' => $course_id,
+											),
+											true
+										);
+									endforeach;
+								endif;
+								?>
+							</div>
 						</div>
 						<?php
 					}

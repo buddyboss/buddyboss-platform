@@ -614,6 +614,42 @@
 			}
 		}
 	}
+
+	&.bb-rl-ld-lesson-list--snippet {
+		border: 1px solid var(--bb-rl-border-secondary-color);
+		border-radius: var(--bb-rl-radius-md);
+		overflow: hidden;
+
+		.ld-table-list-item {
+			padding: var(--bb-rl-space-200);
+			background-color: var(--bb-rl-background-color);
+			border-bottom: 1px solid var(--bb-rl-border-secondary-color);
+
+			&:last-child {
+				border-bottom: 0;
+				border-radius: 0 0 var(--bb-rl-radius-md) var(--bb-rl-radius-md);
+			}
+		}
+
+		a.ld-table-list-item-preview {
+			display: flex;
+			align-items: center;
+			gap: var(--bb-rl-space-100);
+			color: var(--bb-rl-text-secondary-color);
+
+			.ld-status-icon {
+				order: 2;
+			}
+
+			.ld-topic-title,
+			.ld-item-title {
+				flex: 1;
+				order: 1;
+				font-size: 14px;
+				color: var(--bb-rl-text-secondary-color);
+			}
+		}
+	}
 }
 
 .bb-rl-entry-content {

@@ -5092,6 +5092,42 @@ body.ld-in-focus-mode.admin-bar.bb-readylaunch-template {
   display: block;
 }
 
+.bb-rl-ld-lesson-list.bb-rl-ld-lesson-list--snippet {
+  border: 1px solid var(--bb-rl-border-secondary-color);
+  border-radius: var(--bb-rl-radius-md);
+  overflow: hidden;
+}
+
+.bb-rl-ld-lesson-list.bb-rl-ld-lesson-list--snippet .ld-table-list-item {
+  padding: var(--bb-rl-space-200);
+  background-color: var(--bb-rl-background-color);
+  border-bottom: 1px solid var(--bb-rl-border-secondary-color);
+}
+
+.bb-rl-ld-lesson-list.bb-rl-ld-lesson-list--snippet .ld-table-list-item:last-child {
+  border-bottom: 0;
+  border-radius: 0 0 var(--bb-rl-radius-md) var(--bb-rl-radius-md);
+}
+
+.bb-rl-ld-lesson-list.bb-rl-ld-lesson-list--snippet a.ld-table-list-item-preview {
+  display: flex;
+  align-items: center;
+  gap: var(--bb-rl-space-100);
+  color: var(--bb-rl-text-secondary-color);
+}
+
+.bb-rl-ld-lesson-list.bb-rl-ld-lesson-list--snippet a.ld-table-list-item-preview .ld-status-icon {
+  order: 2;
+}
+
+.bb-rl-ld-lesson-list.bb-rl-ld-lesson-list--snippet a.ld-table-list-item-preview .ld-topic-title,
+.bb-rl-ld-lesson-list.bb-rl-ld-lesson-list--snippet a.ld-table-list-item-preview .ld-item-title {
+  flex: 1;
+  order: 1;
+  font-size: 14px;
+  color: var(--bb-rl-text-secondary-color);
+}
+
 .bb-rl-entry-content h2 {
   font-size: var(--bb-rl-font-size-base);
   font-weight: 500;
