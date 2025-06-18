@@ -807,7 +807,7 @@ if ( ! class_exists( 'bbPress' ) ) :
 
 			// Tertiary Slugs
 			$feed_slug  = 'feed';
-			$edit_slug  = 'edit';
+			$edit_slug  = bbp_get_edit_slug();
 			$paged_slug = bbp_get_paged_slug();
 
 			// Unique rewrite ID's
