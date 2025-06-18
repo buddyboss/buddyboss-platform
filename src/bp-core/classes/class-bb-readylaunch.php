@@ -2843,7 +2843,18 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				// return; // TODO: Include group forums pages
 			}
 
-			// Enqueue LearnDash ReadyLaunch styles.
+			// enqueue select2, emojionearea, medium editor.
+			wp_enqueue_script( 'bp-select2' );
+			wp_enqueue_style( 'bp-select2' );
+
+			wp_enqueue_style( 'emojionearea' );
+			wp_enqueue_script( 'emojionearea' );
+
+			wp_enqueue_script( 'bp-medium-editor' );
+			wp_enqueue_style( 'bp-medium-editor' );
+			wp_enqueue_style( 'bp-medium-editor-beagle' );
+
+			// Enqueue Forum ReadyLaunch styles.
 			wp_enqueue_style(
 				'bb-readylaunch-forums',
 				buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/css/forums.css',
@@ -2851,7 +2862,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				bp_get_version()
 			);
 
-			// Enqueue our LearnDash helper JavaScript.
+			// Enqueue our Forum helper JavaScript.
 			wp_enqueue_script(
 				'bb-readylaunch-forums-js',
 				buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/js/bb-readylaunch-forums.js',
