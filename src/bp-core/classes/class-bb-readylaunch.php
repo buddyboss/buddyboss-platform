@@ -2854,6 +2854,8 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			wp_enqueue_style( 'bp-medium-editor' );
 			wp_enqueue_style( 'bp-medium-editor-beagle' );
 
+			wp_enqueue_script( 'giphy' );
+
 			// Enqueue Forum ReadyLaunch styles.
 			wp_enqueue_style(
 				'bb-readylaunch-forums',
