@@ -1314,6 +1314,7 @@
   max-width: 100%;
   border-radius: var(--bb-rl-radius-lg);
   overflow: hidden;
+  background-image: none !important;
 }
 
 .bb-rl-forum-modal #whats-new-attachments > div[class*="attached-gif-container"].closed {
@@ -1322,6 +1323,7 @@
 
 .bb-rl-forum-modal div[class*="attached-gif-container"] .gif-image-container img {
   max-width: 100%;
+  border-radius: var(--bb-rl-radius-lg);
 }
 
 .bb-rl-forum-modal div[class*="attached-gif-container"] .gif-image-overlay {

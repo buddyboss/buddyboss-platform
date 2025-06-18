@@ -357,6 +357,7 @@
 		max-width: 100%;
 		border-radius: var(--bb-rl-radius-lg);
 		overflow: hidden;
+		background-image: none !important;
 
 		&.closed {
 			display: none;
@@ -365,6 +366,7 @@
 	
 	div[class*="attached-gif-container"] .gif-image-container img {
 		max-width: 100%;
+		border-radius: var(--bb-rl-radius-lg);
 	}
 	
 	div[class*="attached-gif-container"] .gif-image-overlay {
