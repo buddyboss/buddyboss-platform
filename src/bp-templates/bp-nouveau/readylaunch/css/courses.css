@@ -1824,6 +1824,10 @@ body.ld-in-focus-mode.admin-bar.bb-readylaunch-template {
   white-space: nowrap;
 }
 
+.bb-rl-ld-lesson-list .ld-item-list-item-preview .ld-item-title .ld-sep {
+  opacity: 0.5;
+}
+
 .bb-rl-ld-lesson-list .ld-item-list-item-preview .ld-item-title .ld-status-waiting {
   display: flex;
   align-items: center;
@@ -2049,6 +2053,7 @@ body.ld-in-focus-mode.admin-bar.bb-readylaunch-template {
   border: 1px solid var(--bb-rl-border-secondary-color);
   border-radius: var(--bb-rl-radius-md);
   overflow: hidden;
+  max-width: 100%;
 }
 
 .bb-rl-ld-lesson-list.bb-rl-ld-lesson-list--snippet .ld-table-list-item {
@@ -3031,7 +3036,8 @@ body.ld-in-focus-mode.admin-bar.bb-readylaunch-template {
   border-bottom: 0;
 }
 
-.bb-rl-lms-nav-list .bb-rl-ld-lesson-list .ld-item-list-item-preview .ld-item-components .ld-item-component {
+.bb-rl-lms-nav-list .bb-rl-ld-lesson-list .ld-item-list-item-preview .ld-item-components .ld-item-component,
+.bb-rl-lms-nav-list .bb-rl-ld-lesson-list .ld-item-list-item-preview .ld-item-components .ld-sep {
   display: none;
 }
 

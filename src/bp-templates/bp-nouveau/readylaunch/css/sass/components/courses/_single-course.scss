@@ -402,6 +402,10 @@
 				white-space: nowrap;
 			}
 
+			.ld-sep {
+				opacity: 0.5;
+			}
+
 			.ld-status-waiting {
 
 				@include bb-rl-notice;
@@ -619,6 +623,7 @@
 		border: 1px solid var(--bb-rl-border-secondary-color);
 		border-radius: var(--bb-rl-radius-md);
 		overflow: hidden;
+		max-width: 100%;
 
 		.ld-table-list-item {
 			padding: var(--bb-rl-space-200);
