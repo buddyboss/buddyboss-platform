@@ -226,16 +226,15 @@
 }
 
 // Link Preview
-// .bb-rl-forum-modal .bb-url-scrapper-container {
-//     margin: calc(var(--bb-rl-space-200) * -1) calc(var(--bb-rl-space-300) * -1) var(--bb-rl-space-200);
-//     width: calc(100% + var(--bb-rl-space-600));
-//     border-bottom: 1px solid var(--bb-rl-border-secondary-color);
-// }
-
 .bb-url-scrapper-container {
 	display: flex;
 	flex-flow: column;
-	padding: var(--bb-rl-space-100) var(--bb-rl-space-300);
+
+    &:has(.bb-link-preview-container),
+    &:has(.bb-url-scrapper-loading) {
+        padding: var(--bb-rl-space-100) var(--bb-rl-space-300);
+    }
+
 }
 
 .bb-url-scrapper-loading {

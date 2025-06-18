@@ -254,7 +254,8 @@
 
 			&:has(.dropzone.open),
 			&:has(.forums-attached-gif-container:not(.closed)),
-			&:has(.bb-url-scrapper-container:not(:empty)) {
+			&:has(.bb-link-preview-container),
+			&:has(.bb-url-scrapper-loading) {
 				margin: calc(var(--bb-rl-space-200) * -1) calc(var(--bb-rl-space-300) * -1) var(--bb-rl-space-200);
 				width: calc(100% + var(--bb-rl-space-600));
 				border-bottom: 1px solid var(--bb-rl-border-secondary-color);
