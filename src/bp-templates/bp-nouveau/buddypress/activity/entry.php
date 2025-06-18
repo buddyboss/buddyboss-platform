@@ -151,6 +151,30 @@ $activity_popup_title = sprintf( esc_html__( '%s\'s Post', 'buddyboss' ), bp_cor
 					if ( function_exists( 'bp_nouveau_activity_privacy' ) ) {
 						bp_nouveau_activity_privacy();
 					}
+					if (
+						function_exists( 'bb_is_enabled_group_activity_topics' ) &&
+						bb_is_enabled_group_activity_topics()
+					) {
+						?>
+						<p class="activity-topic 3">
+							<?php
+							if (
+								function_exists( 'bb_activity_topics_manager_instance' ) &&
+								method_exists( bb_activity_topics_manager_instance(), 'bb_get_activity_topic_url' )
+							) {
+								echo wp_kses_post(
+									bb_activity_topics_manager_instance()->bb_get_activity_topic_url(
+										array(
+											'activity_id' => bp_get_activity_id(),
+											'html'        => true,
+										)
+									)
+								);
+							}
+							?>
+						</p>
+						<?php
+					}
 					?>
 				</div>
 			</div>
@@ -176,6 +200,38 @@ $activity_popup_title = sprintf( esc_html__( '%s\'s Post', 'buddyboss' ), bp_cor
 			bp_activity_action();
 			bp_nouveau_activity_is_edited();
 			bp_nouveau_activity_privacy();
+			if (
+				(
+					'groups' === $activities_template->activity->component &&
+					function_exists( 'bb_is_enabled_group_activity_topics' ) &&
+					bb_is_enabled_group_activity_topics()
+				) ||
+				(
+					'groups' !== $activities_template->activity->component &&
+					function_exists( 'bb_is_enabled_activity_topics' ) &&
+					bb_is_enabled_activity_topics()
+				)
+			) {
+				?>
+				<p class="activity-topic 4">
+					<?php
+					if (
+						function_exists( 'bb_activity_topics_manager_instance' ) &&
+						method_exists( bb_activity_topics_manager_instance(), 'bb_get_activity_topic_url' )
+					) {
+						echo wp_kses_post(
+							bb_activity_topics_manager_instance()->bb_get_activity_topic_url(
+								array(
+									'activity_id' => bp_get_activity_id(),
+									'html'        => true,
+								)
+							)
+						);
+					}
+					?>
+				</p>
+				<?php
+			}
 			?>
 		</div>
 
