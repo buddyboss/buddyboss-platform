@@ -2611,20 +2611,21 @@ function bb_forums_delete_topic_reply_media_attachments( $post_id = 0, $post = n
 		$media_ids_array = array_map( 'intval', $media_ids_array );
 
 		if ( ! empty( $media_ids_array ) ) {
-			// Get attachment IDs before deleting media records.
-			$attachment_ids = $wpdb->get_col( // phpcs:ignore WordPress.DB.DirectDatabaseQuery
-				$wpdb->prepare(
-					// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-					"SELECT attachment_id FROM {$media_table} WHERE id IN (" . implode( ',', array_fill( 0, count( $media_ids_array ), '%d' ) ) . ') AND attachment_id > 0',
-					$media_ids_array
-				)
-			);
-
 			if ( bp_is_active( 'media' ) ) {
 				foreach ( $media_ids_array as $media_id ) {
 					bp_media_delete( array( 'id' => $media_id ) );
 				}
 			} else {
+
+				// Get attachment IDs before deleting media records.
+				$attachment_ids = $wpdb->get_col( // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+					$wpdb->prepare(
+						// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+						"SELECT attachment_id FROM {$media_table} WHERE id IN (" . implode( ',', array_fill( 0, count( $media_ids_array ), '%d' ) ) . ') AND attachment_id > 0',
+						$media_ids_array
+					)
+				);
+
 				// Execute delete query on media table as fallback and delete related attachments.
 				$wpdb->query( // phpcs:ignore WordPress.DB.DirectDatabaseQuery
 					$wpdb->prepare(
@@ -2655,20 +2656,21 @@ function bb_forums_delete_topic_reply_media_attachments( $post_id = 0, $post = n
 		$video_ids_array = array_map( 'intval', $video_ids_array );
 
 		if ( ! empty( $video_ids_array ) ) {
-			// Get attachment IDs before deleting video records.
-			$attachment_ids = $wpdb->get_col( // phpcs:ignore WordPress.DB.DirectDatabaseQuery
-				$wpdb->prepare(
-					// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-					"SELECT attachment_id FROM {$media_table} WHERE id IN (" . implode( ',', array_fill( 0, count( $video_ids_array ), '%d' ) ) . ') AND attachment_id > 0',
-					$video_ids_array
-				)
-			);
-
 			if ( bp_is_active( 'media' ) ) {
 				foreach ( $video_ids_array as $video_id ) {
 					bp_video_delete( array( 'id' => $video_id ) );
 				}
 			} else {
+
+				// Get attachment IDs before deleting video records.
+				$attachment_ids = $wpdb->get_col( // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+					$wpdb->prepare(
+						// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+						"SELECT attachment_id FROM {$media_table} WHERE id IN (" . implode( ',', array_fill( 0, count( $video_ids_array ), '%d' ) ) . ') AND attachment_id > 0',
+						$video_ids_array
+					)
+				);
+
 				// Execute delete query on media table as fallback and delete related attachments.
 				$wpdb->query( // phpcs:ignore WordPress.DB.DirectDatabaseQuery
 					$wpdb->prepare(
@@ -2718,20 +2720,21 @@ function bb_forums_delete_topic_reply_media_attachments( $post_id = 0, $post = n
 		$document_ids_array = array_map( 'intval', $document_ids_array );
 
 		if ( ! empty( $document_ids_array ) ) {
-			// Get attachment IDs before deleting document records.
-			$attachment_ids = $wpdb->get_col( // phpcs:ignore WordPress.DB.DirectDatabaseQuery
-				$wpdb->prepare(
-					// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-					"SELECT attachment_id FROM {$document_table} WHERE id IN (" . implode( ',', array_fill( 0, count( $document_ids_array ), '%d' ) ) . ') AND attachment_id > 0',
-					$document_ids_array
-				)
-			);
-
 			if ( bp_is_active( 'media' ) ) {
 				foreach ( $document_ids_array as $document_id ) {
 					bp_document_delete( array( 'id' => $document_id ) );
 				}
 			} else {
+
+				// Get attachment IDs before deleting document records.
+				$attachment_ids = $wpdb->get_col( // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+					$wpdb->prepare(
+						// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+						"SELECT attachment_id FROM {$document_table} WHERE id IN (" . implode( ',', array_fill( 0, count( $document_ids_array ), '%d' ) ) . ') AND attachment_id > 0',
+						$document_ids_array
+					)
+				);
+
 				// Execute delete query on document table as fallback and delete related attachments.
 				$wpdb->query( // phpcs:ignore WordPress.DB.DirectDatabaseQuery
 					$wpdb->prepare(
