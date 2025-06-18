@@ -72,6 +72,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 			$enabled_for_page = $this->bb_is_readylaunch_enabled_for_page();
 			if ( $enabled_for_page ) {
+				add_action( 'bb_rl_get_template_part_content', array( $this, 'bb_rl_get_template_part_content' ), 10, 1 );
 				add_filter( 'bp_core_avatar_full_width', array( $this, 'bb_rl_avatar_full_width' ) );
 				add_filter( 'bp_core_avatar_full_height', array( $this, 'bb_rl_avatar_full_height' ) );
 				add_filter( 'bp_core_avatar_thumb_width', array( $this, 'bb_rl_avatar_thumb_width' ) );
@@ -328,6 +329,31 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			}
 
 			return $ordered_items;
+		}
+
+		/**
+		 * Get the template part content for readylaunch.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 */
+		public function bb_rl_get_template_part_content() {
+			$is_ld_archive    = false;
+			$is_ld_assignment = false;
+			$is_ld_exam       = false;
+			if ( function_exists( 'learndash_get_post_type_slug' ) ) {
+				$is_ld_archive    = is_post_type_archive( learndash_get_post_type_slug( 'course' ) );
+				$is_ld_assignment = is_singular( learndash_get_post_type_slug( 'assignment' ) );
+				$is_ld_exam       = is_singular( learndash_get_post_type_slug( 'exam' ) );
+			}
+			if ( $is_ld_archive ) {
+				bp_get_template_part( 'learndash/ld30/course-loop' );
+			} elseif ( $is_ld_assignment ) {
+				bp_get_template_part( 'learndash/ld30/assignment' );
+			} elseif ( $is_ld_exam ) {
+				bp_get_template_part( 'learndash/ld30/challenge-exam' );
+			} else {
+				the_content();
+			}
 		}
 
 		/**
@@ -2430,6 +2456,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				learndash_get_post_type_slug( 'assignment' ),
 				learndash_get_post_type_slug( 'essays' ),
 				learndash_get_post_type_slug( 'group' ),
+				learndash_get_post_type_slug( 'exam' ),
 			);
 
 			// Check for course archive using multiple methods.

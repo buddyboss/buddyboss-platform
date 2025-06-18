@@ -12,13 +12,6 @@ bp_get_template_part( 'header/readylaunch-header' );
 
 $readylaunch_instance = BB_Readylaunch::instance();
 
-$is_ld_archive    = false;
-$is_ld_assignment = false;
-if ( function_exists( 'learndash_get_post_type_slug' ) ) {
-	$is_ld_archive    = is_post_type_archive( learndash_get_post_type_slug( 'course' ) );
-	$is_ld_assignment = is_singular( learndash_get_post_type_slug( 'assignment' ) );
-}
-
 /**
  * Fires before the layout.
  *
@@ -44,13 +37,7 @@ if ( $readylaunch_instance->bb_rl_is_memberpress_courses_page() ) {
 	while ( have_posts() ) :
 		the_post();
 
-		if ( $is_ld_archive ) {
-			bp_get_template_part( 'learndash/ld30/course-loop' );
-		} elseif ( $is_ld_assignment ) {
-			bp_get_template_part( 'learndash/ld30/assignment' );
-		} else {
-			the_content();
-		}
+		do_action( 'bb_rl_get_template_part_content' );
 
 	endwhile;
 
