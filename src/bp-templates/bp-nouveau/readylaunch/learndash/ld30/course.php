@@ -897,12 +897,24 @@ if ( class_exists( 'LearnDash\Core\Models\Product' ) && isset( $course_id ) ) {
 
 					<div class="bb-rl-entry-content">
 						<?php
-						if ( ! empty( $content ) ) {
-							?>
-							<h2><?php esc_html_e( 'About course', 'buddyboss' ); ?></h2>
-							<?php
-							echo $content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-						}
+						/** This filter is documented in themes/legacy/templates/course.php */
+						echo apply_filters( 'ld_after_course_status_template_container', '', learndash_course_status_idx( $course_status ), $course_id, $user_id );
+
+						/**
+						 * Content tabs
+						 */
+						learndash_get_template_part(
+							'modules/tabs.php',
+							array(
+								'course_id' => $course_id,
+								'post_id'   => get_the_ID(),
+								'user_id'   => $user_id,
+								'content'   => $content,
+								'materials' => $materials,
+								'context'   => 'course',
+							),
+							true
+						);
 						?>
 					</div>
 				</div> <!-- /.bb-rl-course-content-inner -->

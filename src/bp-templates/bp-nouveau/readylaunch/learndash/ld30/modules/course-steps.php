@@ -12,9 +12,10 @@
  * $context          : (string) Context of the usage. Either 'lesson', 'topic' or 'focus' use for Focus Mode header
  * navigation.
  *
- * @since BuddyBoss [BBVERSION]
- *
+ * @since 3.0.0
  * @version 4.11.0
+ *
+ * @since BuddyBoss [BBVERSION]
  *
  * @package LearnDash\Templates\LD30
  */
@@ -26,8 +27,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 if ( ! isset( $can_complete ) ) {
 	$can_complete = false;
 }
-
-error_log( '#################' );
 
 // TODO @37designs this is a bit confusing still, as you can still navigate left / right on lessons even with topics.
 if ( ( isset( $course_step_post ) ) && ( is_a( $course_step_post, 'WP_Post' ) ) && ( in_array( $course_step_post->post_type, learndash_get_post_types( 'course' ), true ) ) ) {

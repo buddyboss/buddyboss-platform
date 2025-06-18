@@ -80,6 +80,7 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 
 			add_filter( 'buddyboss_learndash_content', array( $this, 'bb_rl_learndash_content' ), 10, 2 );
 			add_action( 'learndash_update_user_activity', array( $this, 'bb_rl_flush_ld_courses_progress_cache' ), 9999, 1 );
+			add_filter( 'learndash_content_tabs', array( $this, 'bb_rl_learndash_content_tabs' ), 10, 4 );
 		}
 
 		/**
@@ -1335,6 +1336,25 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 			if ( ! empty( $args['user_id'] ) ) {
 				wp_cache_delete( absint( $args['user_id'] ), 'ld_courses_progress' );
 			}
+		}
+
+		/**
+		 * Filter the content tabs.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array  $tabs The content tabs.
+		 * @param string $context The context.
+		 * @param int    $course_id The course ID.
+		 * @param int    $user_id The user ID.
+		 *
+		 * @return array The filtered content tabs.
+		 */
+		public function bb_rl_learndash_content_tabs( $tabs, $context, $course_id, $user_id ) {
+			if ( 'course' === $context ) {
+				$tabs[0]['label'] = __( 'About course', 'buddyboss' );
+			}
+			return $tabs;
 		}
 	}
 
