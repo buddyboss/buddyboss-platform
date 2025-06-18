@@ -253,7 +253,8 @@
 			width: 100%;
 
 			&:has(.dropzone.open),
-			&:has(.forums-attached-gif-container:not(.closed)) {
+			&:has(.forums-attached-gif-container:not(.closed)),
+			&:has(.bb-url-scrapper-container:not(:empty)) {
 				margin: calc(var(--bb-rl-space-200) * -1) calc(var(--bb-rl-space-300) * -1) var(--bb-rl-space-200);
 				width: calc(100% + var(--bb-rl-space-600));
 				border-bottom: 1px solid var(--bb-rl-border-secondary-color);
@@ -349,8 +350,10 @@
 	}
 
 	#whats-new-attachments > div[class*="attached-gif-container"] {
-		width: 160px !important;
-		height: 160px !important;
+		height: auto !important;
+		width: auto !important;
+		max-width: 160px !important;
+		max-height: 160px !important;
 		position: relative;
 		margin: var(--bb-rl-space-200) var(--bb-rl-space-300);
 		background-repeat: no-repeat;
