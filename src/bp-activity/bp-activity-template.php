@@ -1254,7 +1254,9 @@ function bp_get_activity_secondary_avatar( $args = '' ) {
 				$name  = $group->name;
 			}
 
-			$attribute = 'data-bb-hp-group="' . esc_attr( $group->id ) . '"';
+			if ( ! empty( $group->id ) ) {
+				$attribute = 'data-bb-hp-group="' . esc_attr( $group->id ) . '"';
+			}
 
 			if ( empty( $alt ) ) {
 				$alt = __( 'Group logo', 'buddyboss' );
@@ -1284,7 +1286,9 @@ function bp_get_activity_secondary_avatar( $args = '' ) {
 				$alt = sprintf( __( 'Profile photo of %s', 'buddyboss' ), bp_core_get_user_displayname( $activities_template->activity->secondary_item_id ) );
 			}
 
-			$attribute = 'data-bb-hp-profile="' . esc_attr( $item_id ) . '"';
+			if ( ! empty( $item_id ) ) {
+				$attribute = 'data-bb-hp-profile="' . esc_attr( $item_id ) . '"';
+			}
 
 			break;
 		default:
@@ -1293,7 +1297,9 @@ function bp_get_activity_secondary_avatar( $args = '' ) {
 			$email   = $activities_template->activity->user_email;
 			$link    = bp_core_get_userlink( $item_id, false, true );
 
-			$attribute = 'data-bb-hp-profile="' . esc_attr( $item_id ) . '"';
+			if ( ! empty( $item_id ) ) {
+				$attribute = 'data-bb-hp-profile="' . esc_attr( $item_id ) . '"';
+			}
 
 			if ( empty( $alt ) ) {
 				$alt = sprintf( __( 'Profile photo of %s', 'buddyboss' ), $activities_template->activity->display_name );
