@@ -667,3 +667,73 @@
 		}
 	}
 }
+
+.bb-rl-entry-content {
+
+	.average-review-label {
+
+		@include bb-rl-base-heading;
+		color: var(--bb-rl-text-color);
+	}
+
+	.average-review {
+		display: flex;
+		align-items: center;
+		gap: var(--bb-rl-space-200);
+		margin-bottom: var(--bb-rl-space-300);
+
+		.learndash-course-reviews-review-stars {
+			color: var(--bb-rl-text-tertiary-color);
+		}
+	}
+
+	.reviews-list {
+
+		.learndash-course-reviews-author.vcard {
+			display: flex;
+			align-items: flex-start;
+			gap: var(--bb-rl-space-100);
+
+			> img {
+				width: 32px;
+				height: 32px;
+				border-radius: 50%;
+				object-fit: cover;
+			}
+
+			.alignleft {
+
+				.review-title {
+
+					@include bb-rl-label-heading-bolder;
+					color: var(--bb-rl-text-color);
+				}
+
+				.learndash-course-reviews-metadata img {
+					display: none;
+				}
+
+				.learndash-course-reviews-metadata {
+
+					@include bb-rl-label-heading;
+					color: var(--bb-rl-text-secondary-color);
+
+					a {
+						color: var(--bb-rl-text-color);
+					}
+				}
+
+				.learndash-course-reviews-review-stars {
+					color: var(--bb-rl-text-tertiary-color);
+				}
+			}
+		}
+
+		.learndash-course-reviews-content {
+
+			@include bb-rl-label-heading;
+			color: var(--bb-rl-text-secondary-color);
+			margin-top: var(--bb-rl-space-100);
+		}
+	}
+}

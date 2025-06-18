@@ -683,17 +683,14 @@
 
 .bb-rl-entry-content {
 
-	.learndash-wrapper {
+	.learndash-wrapper .ld-tabs {
+		margin: 0;
 
-		.ld-tabs {
-			margin: 0;
-		}
-
-		.ld-tabs .ld-tabs-navigation:after {
+		.ld-tabs-navigation:after {
 			display: none;
 		}
 
-		.ld-tabs .ld-tabs-navigation {
+		.ld-tabs-navigation {
 			gap: var(--bb-rl-space-100);
 
 			.ld-tab {
@@ -720,6 +717,9 @@
 				}
 			}
 		}
+	}
+
+	.learndash-wrapper {
 
 		.ld-video {
 			margin: 0 0 var(--bb-rl-space-300);

@@ -2117,6 +2117,71 @@ body.ld-in-focus-mode.admin-bar.bb-readylaunch-template {
   cursor: not-allowed;
 }
 
+.bb-rl-entry-content .average-review-label {
+  font-size: var(--bb-rl-font-size-base);
+  font-weight: 500;
+  line-height: var(--bb-rl-base-line);
+  color: var(--bb-rl-text-color);
+}
+
+.bb-rl-entry-content .average-review {
+  display: flex;
+  align-items: center;
+  gap: var(--bb-rl-space-200);
+  margin-bottom: var(--bb-rl-space-300);
+}
+
+.bb-rl-entry-content .average-review .learndash-course-reviews-review-stars {
+  color: var(--bb-rl-text-tertiary-color);
+}
+
+.bb-rl-entry-content .reviews-list .learndash-course-reviews-author.vcard {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--bb-rl-space-100);
+}
+
+.bb-rl-entry-content .reviews-list .learndash-course-reviews-author.vcard > img {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.bb-rl-entry-content .reviews-list .learndash-course-reviews-author.vcard .alignleft .review-title {
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 500;
+  line-height: var(--bb-rl-base-line-small);
+  color: var(--bb-rl-text-color);
+}
+
+.bb-rl-entry-content .reviews-list .learndash-course-reviews-author.vcard .alignleft .learndash-course-reviews-metadata img {
+  display: none;
+}
+
+.bb-rl-entry-content .reviews-list .learndash-course-reviews-author.vcard .alignleft .learndash-course-reviews-metadata {
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 400;
+  line-height: var(--bb-rl-base-line-small);
+  color: var(--bb-rl-text-secondary-color);
+}
+
+.bb-rl-entry-content .reviews-list .learndash-course-reviews-author.vcard .alignleft .learndash-course-reviews-metadata a {
+  color: var(--bb-rl-text-color);
+}
+
+.bb-rl-entry-content .reviews-list .learndash-course-reviews-author.vcard .alignleft .learndash-course-reviews-review-stars {
+  color: var(--bb-rl-text-tertiary-color);
+}
+
+.bb-rl-entry-content .reviews-list .learndash-course-reviews-content {
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 400;
+  line-height: var(--bb-rl-base-line-small);
+  color: var(--bb-rl-text-secondary-color);
+  margin-top: var(--bb-rl-space-100);
+}
+
 .single-sfwd-lessons .site.bb-readylaunch {
   background-color: var(--bb-rl-background-color);
 }
