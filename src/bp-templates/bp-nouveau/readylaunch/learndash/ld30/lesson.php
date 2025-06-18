@@ -317,7 +317,7 @@ foreach ( $lesson_list as $les ) {
 						endif;
 					}
 
-					if ( ! empty( $topics ) ) {
+					if ( $show_content && ( ! empty( $topics ) || ! empty( $quizzes ) ) ) {
 						?>
 						<div class="bb-rl-lesson-topics bb-rl-lms-inner-content-block">
 							<h3><?php esc_html_e( 'Lesson Topics', 'buddyboss' ); ?></h3>
