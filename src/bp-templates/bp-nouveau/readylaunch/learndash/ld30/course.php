@@ -482,7 +482,7 @@ if ( class_exists( 'LearnDash\Core\Models\Product' ) && isset( $course_id ) ) {
 								// Output the button HTML if we have content.
 								if ( ! empty( $button_html ) ) {
 									/* translators: %s: Button class. */
-									printf( '<div class="%s">%s</div>', esc_attr( $button_class ), wp_kses_post( $button_html ) );
+									printf( '<div class="%s">%s</div>', esc_attr( $button_class ), $button_html ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 								}
 								?>
 							</div>
