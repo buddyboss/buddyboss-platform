@@ -331,23 +331,31 @@ foreach ( $topics as $topic_item ) {
 				endif;
 				?>
 
-				<?php if ( ! empty( $quizzes ) ) : ?>
+				<?php
+				if ( ! empty( $quizzes ) ) {
+					?>
 					<div class="bb-rl-topic-quizzes bb-rl-lms-inner-content-block">
 						<h3><?php esc_html_e( 'Topic Quizzes', 'buddyboss' ); ?></h3>
-						<ul class="bb-rl-quizzes-list bb-rl-lms-inner-content-list">
-							<?php foreach ( $quizzes as $quiz ) : ?>
-								<li class="bb-rl-quiz-item">
-									<a href="<?php echo esc_url( get_permalink( $quiz['post']->ID ) ); ?>" class="bb-rl-quiz-link">
-										<?php echo esc_html( $quiz['post']->post_title ); ?>
-										<?php if ( isset( $quiz['status'] ) && 'completed' === $quiz['status'] ) : ?>
-											<span class="bb-rl-quiz-completed"><?php esc_html_e( 'Completed', 'buddyboss' ); ?></span>
-										<?php endif; ?>
-									</a>
-								</li>
-							<?php endforeach; ?>
-						</ul>
+						<div class="bb-rl-quizzes-list bb-rl-lms-inner-content-list">
+							<?php
+							foreach ( $quizzes as $quiz ) {
+								learndash_get_template_part(
+									'quiz/partials/row.php',
+									array(
+										'quiz'      => $quiz,
+										'context'   => 'topic',
+										'course_id' => $course_id,
+										'user_id'   => $user_id,
+									),
+									true
+								);
+							}
+							?>
+						</div>
 					</div>
-				<?php endif; ?>
+					<?php
+				}
+				?>
 			</div>
 
 			<?php
