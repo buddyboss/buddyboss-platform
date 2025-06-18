@@ -281,3 +281,22 @@ function bb_rl_add_mentions_selectors( $options ) {
     return $options;
 }
 add_filter( 'bp_at_mention_js_options', 'bb_rl_add_mentions_selectors' );
+
+/**
+ * Get course category names for a specific course.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $course_id Course ID.
+ *
+ * @return string Course category names separated by comma.
+ */
+function bb_rl_mpcs_get_course_category_names( $course_id ) {
+	$categories = get_the_terms( $course_id, 'mpcs-course-categories' );
+
+	if ( is_wp_error( $categories ) || empty( $categories ) ) {
+		return '';
+	}
+
+	return implode( ', ', wp_list_pluck( $categories, 'name' ) );
+}

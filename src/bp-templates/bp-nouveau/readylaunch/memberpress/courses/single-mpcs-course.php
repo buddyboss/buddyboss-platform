@@ -23,6 +23,91 @@ while ( have_posts() ) :
 		<div class="bb-rl-entry-header">
 			<div class="bb-rl-course-banner flex">
 				<div class="bb-rl-course-overview">
+					<?php
+					$course_category_names = bb_rl_mpcs_get_course_category_names( $post->ID );
+					if ( ! empty( $course_category_names ) ) {
+						?>
+						<div class="bb-rl-course-category">
+							<?php echo esc_html( $course_category_names ); ?>
+						</div>
+						<?php
+					}
+
+					// get course author full name.
+					$course_author_fullname = get_the_author_meta( 'first_name', $post->post_author ) . ' ' . get_the_author_meta( 'last_name', $post->post_author );
+					if ( ! empty( $course_author_fullname ) ) {
+						?>
+						<div class="bb-rl-course-author">
+							<?php echo esc_html( trim( $course_author_fullname ) ); ?>
+						</div>
+						<?php
+					}
+
+					// get course enrollment count.
+					$course_participants = models\UserProgress::find_all_course_participants( $post->ID );
+					if ( ! empty( $course_participants ) ) {
+						$course_enrollment_count = count( $course_participants );
+						?>
+						<div class="bb-rl-course-enrollment-count">
+							<?php echo $course_enrollment_count; ?>
+						</div>
+						<?php
+					}
+
+					// get course price.
+					$course_price = '';
+					$course       = new models\Course( $post->ID );
+					$memberships  = $course->memberships();
+
+					if ( ! empty( $memberships ) ) {
+						$membership = $memberships[0];
+						if ( isset( $membership->price ) && floatval( $membership->price ) <= 0 ) {
+							$course_price = __( 'Free', 'memberpress-courses' );
+						} else {
+							$course_price = \MeprAppHelper::format_currency( $membership->price );
+							// Add period type if it's recurring.
+							if ( ! empty( $membership->period_type ) && 'lifetime' !== $membership->period_type ) {
+								$course_price .= '/' . esc_html( $membership->period_type );
+							}
+						}
+					} else {
+						$course_price = __( 'Free', 'memberpress-courses' );
+					}
+
+					if ( ! empty( $course_price ) ) {
+						?>
+						<div class="bb-rl-course-price">
+							<?php echo esc_html( $course_price ); ?>
+						</div>
+						<?php
+					}
+
+					if ( is_user_logged_in() ) {
+						if ( ! empty( $course_participants ) && in_array( get_current_user_id(), $course_participants ) ) {
+							?>
+							<div class="bb-rl-course-enrollment-status">
+								<?php esc_html_e( 'Enrolled', 'buddyboss-theme' ); ?>
+							</div>
+							<?php
+						} else {
+							?>
+							<div class="bb-rl-course-enrollment-status">
+								<?php esc_html_e( 'Not enrolled', 'buddyboss-theme' ); ?>
+							</div>
+							<?php
+						}
+					}
+
+					// get course lesson count.
+					$course_lesson_count = $course->number_of_lessons();
+					if ( $course_lesson_count > 0 ) {
+						?>
+						<div class="bb-rl-course-lesson-count">
+							<?php echo esc_html( $course_lesson_count . ' ' .  'lessons' ); ?>
+						</div>
+						<?php
+					}
+					?>
 					<div class="course-progress">
 						<?php echo helpers\Courses::classroom_sidebar_progress( $post ); ?>
 					</div>
