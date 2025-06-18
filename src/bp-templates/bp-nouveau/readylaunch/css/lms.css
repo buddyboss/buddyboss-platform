@@ -736,3 +736,28 @@
     margin-top: var(--bb-rl-space-200);
   }
 }
+
+.bb-rl-course-content {
+  display: flex;
+  gap: var(--bb-rl-space-400);
+  margin: 0 0 var(--bb-rl-space-400);
+}
+
+.bb-rl-course-content .bb-rl-course-content-inner {
+  flex: 1;
+}
+
+.bb-rl-course-content .bb-rl-course-content-sidebar {
+  flex: 0 0 320px;
+}
+
+@media screen and (max-width: 1200px) {
+  .bb-rl-course-content {
+    flex-direction: column;
+  }
+  .bb-rl-course-content .bb-rl-course-content-sidebar {
+    max-width: 100%;
+    flex: 0 0 100%;
+    width: 100%;
+  }
+}

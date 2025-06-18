@@ -39,16 +39,20 @@ while ( have_posts() ) :
 			</div>
 		</div>
 
-
-		<?php setup_postdata( $post->ID ); ?>
-		<?php the_content(); ?>
-		<?php
-		$options              = \get_option( 'mpcs-options' );
-		$show_course_comments = helpers\Options::val( $options, 'show-course-comments' );
-		if ( ! empty( $show_course_comments ) && ( comments_open() || get_comments_number() ) ) {
-			comments_template();
-		}
-		?>
+		<div class="bb-rl-course-content">
+			<div class="bb-rl-course-content-inner">
+				<?php setup_postdata( $post->ID ); ?>
+				<?php the_content(); ?>
+				<?php
+				$options              = \get_option( 'mpcs-options' );
+				$show_course_comments = helpers\Options::val( $options, 'show-course-comments' );
+				if ( ! empty( $show_course_comments ) && ( comments_open() || get_comments_number() ) ) {
+					comments_template();
+				}
+				?>
+			</div>
+			<div class="bb-rl-course-content-sidebar bb-rl-widget-sidebar"></div>
+		</div>
 
 		<div class="mepr-rl-footer-widgets">
 			<?php if ( is_active_sidebar( 'mpcs_classroom_courses_overview_footer' ) ) : ?>

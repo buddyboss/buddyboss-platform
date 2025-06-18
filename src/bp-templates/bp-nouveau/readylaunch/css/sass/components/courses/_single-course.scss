@@ -306,36 +306,6 @@
 	}
 }
 
-.bb-rl-course-content {
-	display: flex;
-	gap: var(--bb-rl-space-400);
-	margin: 0 0 var(--bb-rl-space-400);
-
-	.bb-rl-course-content-inner {
-		flex: 1;
-	}
-
-	.bb-rl-course-content-sidebar {
-		flex: 0 0 320px;
-	}
-}
-
-.bb-rl-learndash-course {
-
-	.bb-rl-course-content {
-
-		@media screen and (max-width: $xl) {
-			flex-direction: column;
-
-			.bb-rl-course-content-sidebar {
-				max-width: 100%;
-				flex: 0 0 100%;
-				width: 100%;
-			}
-		}
-	}
-}
-
 .bb-rl-ld-lesson-list {
 	margin-bottom: var(--bb-rl-space-400);
 	max-width: 680px;
