@@ -96,56 +96,24 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 		 * @return string Modified template path
 		 */
 		public function bb_rl_override_learndash_template_path( $filepath, $name, $args, $echo, $return_file_path ) {
-
-			// Get template name without extension.
-			$template_name = str_replace( '.php', '', basename( $name ) );
-
-			// Special handling for lesson row template
-			if ( $name === 'lesson/partials/row.php' ) {
-				$template = bp_locate_template(
-					array(
-						'learndash/ld30/lesson/partials/row.php',
-					)
-				);
-
-				if ( $template ) {
-					return $template;
-				}
-			}
-
-			// Special handling for quiz row template
-			if ( $name === 'quiz/partials/row.php' ) {
-				$template = bp_locate_template(
-					array(
-						'learndash/ld30/quiz/partials/row.php',
-					)
-				);
-
-				if ( $template ) {
-					return $template;
-				}
-			}
-
-			// Special handling for topic row template
-			if ( $name === 'topic/partials/row.php' ) {
-				$template = bp_locate_template(
-					array(
-						'learndash/ld30/topic/partials/row.php',
-					)
-				);
-
-				if ( $template ) {
-					return $template;
-				}
-			}
-
-			// Try to load template using bp_get_template_part.
-			$template = bp_locate_template(
-				array(
-					"learndash/ld30/{$template_name}.php",
-				)
+			// Map special LearnDash template names to ReadyLaunch template paths.
+			$special_templates = array(
+				'lesson/partials/row.php'  => 'learndash/ld30/lesson/partials/row.php',
+				'quiz/partials/row.php'    => 'learndash/ld30/quiz/partials/row.php',
+				'topic/partials/row.php'   => 'learndash/ld30/topic/partials/row.php',
+				'modules/course-steps.php' => 'learndash/ld30/modules/course-steps.php',
 			);
 
+			if ( isset( $special_templates[ $name ] ) ) {
+				$template = bp_locate_template( array( $special_templates[ $name ] ) );
+				if ( $template ) {
+					return $template;
+				}
+			}
+
+			// Fallback: Try to load template using bp_get_template_part.
+			$template_name = str_replace( '.php', '', basename( $name ) );
+			$template      = bp_locate_template( array( "learndash/ld30/{$template_name}.php" ) );
 			if ( $template ) {
 				return $template;
 			}

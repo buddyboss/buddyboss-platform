@@ -340,46 +340,41 @@ foreach ( $lesson_list as $les ) {
 				?>
 			</div>
 
-			<?php $class_name = learndash_course_steps_is_external( $post->ID ) ? '' : 'bb-rl-ld-empty-module-footer'; ?>
-			<nav class="bb-rl-ld-module-footer bb-rl-lesson-footer <?php echo esc_attr( $class_name ); ?>">
-				<div class="bb-rl-ld-module-actions bb-rl-lesson-actions">
-					<?php
-					/**
-					 * Set a variable to switch the next button to complete button
-					 *
-					 * @var $can_complete [bool] - can the user complete this or not?
-					 */
-					$can_complete = false;
-					if ( $all_quizzes_completed && $logged_in && ! empty( $course_id ) ) {
-						$can_complete = $previous_lesson_completed;
+			<?php
+			/**
+			 * Set a variable to switch the next button to complete button
+			 *
+			 * @var $can_complete [bool] - can the user complete this or not?
+			 */
+			$can_complete = false;
+			if ( $all_quizzes_completed && $logged_in && ! empty( $course_id ) ) {
+				$can_complete = $previous_lesson_completed;
 
-						/**
-						 * Filters whether a user can complete the lesson or not.
-						 *
-						 * @since BuddyBoss [BBVERSION]
-						 *
-						 * @param boolean $can_complete Whether user can complete lesson or not.
-						 * @param int     $post_id      Lesson ID/Topic ID.
-						 * @param int     $course_id    Course ID.
-						 * @param int     $user_id      User ID.
-						 */
-						$can_complete = apply_filters( 'learndash-lesson-can-complete', true, get_the_ID(), $course_id, $user_id );
-					}
-					learndash_get_template_part(
-						'modules/course-steps.php',
-						array(
-							'course_id'        => $course_id,
-							'course_step_post' => $post,
-							'user_id'          => $user_id,
-							'course_settings'  => isset( $course_settings ) ? $course_settings : array(),
-							'can_complete'     => $can_complete,
-							'context'          => 'lesson',
-						),
-						true
-					);
-					?>
-				</div>
-			</nav>
+				/**
+				 * Filters whether a user can complete the lesson or not.
+				 *
+				 * @since BuddyBoss [BBVERSION]
+				 *
+				 * @param boolean $can_complete Whether user can complete lesson or not.
+				 * @param int     $post_id      Lesson ID/Topic ID.
+				 * @param int     $course_id    Course ID.
+				 * @param int     $user_id      User ID.
+				 */
+				$can_complete = apply_filters( 'learndash-lesson-can-complete', true, get_the_ID(), $course_id, $user_id );
+			}
+			learndash_get_template_part(
+				'modules/course-steps.php',
+				array(
+					'course_id'        => $course_id,
+					'course_step_post' => $post,
+					'user_id'          => $user_id,
+					'course_settings'  => isset( $course_settings ) ? $course_settings : array(),
+					'can_complete'     => $can_complete,
+					'context'          => 'lesson',
+				),
+				true
+			);
+			?>
 		</article>
 	</main>
 </div> 

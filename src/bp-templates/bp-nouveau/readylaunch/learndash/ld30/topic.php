@@ -94,15 +94,6 @@ foreach ( $topics as $topic_item ) {
 	}
 	++$topic_no;
 }
-
-// Define variables for course-steps module compatibility.
-$logged_in                = is_user_logged_in();
-$course_settings          = function_exists( 'learndash_get_setting' ) ? learndash_get_setting( $course_id ) : array();
-$all_quizzes_completed    = true; // For topics, we'll assume quizzes are handled separately.
-$previous_topic_completed = true;
-if ( function_exists( 'learndash_is_topic_accessable' ) ) {
-	$previous_topic_completed = learndash_is_topic_accessable( $user_id, $post );
-}
 ?>
 
 <div class="bb-learndash-content-wrap bb-learndash-content-wrap--topic">
@@ -359,32 +350,25 @@ if ( function_exists( 'learndash_is_topic_accessable' ) ) {
 				<?php endif; ?>
 			</div>
 
-			<?php $class_name = learndash_course_steps_is_external( $post->ID ) ? '' : 'bb-rl-ld-empty-module-footer'; ?>
-			<nav class="bb-rl-ld-module-footer bb-rl-topic-footer <?php echo esc_attr( $class_name ); ?>">
-				<div class="bb-rl-ld-module-actions bb-rl-topic-actions">
-					<?php
-					$can_complete = false;
-
-					if ( $all_quizzes_completed && $logged_in && ! empty( $course_id ) ) :
-						$can_complete = apply_filters( 'learndash-topic-can-complete', true, get_the_ID(), $course_id, $user_id );
-					endif;
-
-					learndash_get_template_part(
-						'modules/course-steps.php',
-						array(
-							'course_id'             => $course_id,
-							'course_step_post'      => $post,
-							'all_quizzes_completed' => $all_quizzes_completed,
-							'user_id'               => $user_id,
-							'course_settings'       => isset( $course_settings ) ? $course_settings : array(),
-							'context'               => 'topic',
-							'can_complete'          => $can_complete,
-						),
-						true
-					);
-					?>
-				</div>
-			</nav>
+			<?php
+			$can_complete = false;
+			if ( $all_quizzes_completed && $logged_in && ! empty( $course_id ) ) :
+				$can_complete = apply_filters( 'learndash-topic-can-complete', true, get_the_ID(), $course_id, $user_id );
+			endif;
+			learndash_get_template_part(
+				'modules/course-steps.php',
+				array(
+					'course_id'             => $course_id,
+					'course_step_post'      => $post,
+					'all_quizzes_completed' => $all_quizzes_completed,
+					'user_id'               => $user_id,
+					'course_settings'       => isset( $course_settings ) ? $course_settings : array(),
+					'context'               => 'topic',
+					'can_complete'          => $can_complete,
+				),
+				true
+			);
+			?>
 		</article>
 	</main>
 </div>

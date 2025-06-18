@@ -450,26 +450,18 @@ if ( class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 
 			<?php
 			if ( learndash_course_steps_is_external( $quiz_post->ID ) ) {
-				?>
-				<nav class="bb-rl-ld-module-footer bb-rl-quiz-footer">
-					<div class="bb-rl-ld-module-actions bb-rl-quiz-actions">
-						<?php
-						learndash_get_template_part(
-							'modules/course-steps.php',
-							array(
-								'course_id'        => $course_id,
-								'course_step_post' => $quiz_post,
-								'user_id'          => $user_id,
-								'course_settings'  => $course_settings ?? array(),
-								'can_complete'     => ! learndash_course_steps_is_external_attendance_required( $quiz_post->ID ),
-								'context'          => 'quiz',
-							),
-							true
-						);
-						?>
-					</div>
-				</nav>
-				<?php
+				learndash_get_template_part(
+					'modules/course-steps.php',
+					array(
+						'course_id'        => $course_id,
+						'course_step_post' => $quiz_post,
+						'user_id'          => $user_id,
+						'course_settings'  => $course_settings ?? array(),
+						'can_complete'     => ! learndash_course_steps_is_external_attendance_required( $quiz_post->ID ),
+						'context'          => 'quiz',
+					),
+					true
+				);
 			}
 			?>
 		</article>
