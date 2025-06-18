@@ -336,7 +336,7 @@ foreach ( $topics as $topic_item ) {
 					?>
 					<div class="bb-rl-topic-quizzes bb-rl-lms-inner-content-block">
 						<h3><?php esc_html_e( 'Topic Quizzes', 'buddyboss' ); ?></h3>
-						<div class="bb-rl-quizzes-list bb-rl-lms-inner-content-list">
+						<div class="bb-rl-ld-lesson-list bb-rl-ld-lesson-list--snippet">
 							<?php
 							foreach ( $quizzes as $quiz ) {
 								learndash_get_template_part(
