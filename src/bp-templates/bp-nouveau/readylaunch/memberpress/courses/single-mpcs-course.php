@@ -17,6 +17,11 @@ while ( have_posts() ) :
 	the_post();
 	global $post;
 
+	$course_price        = '';
+	$course              = new models\Course( $post->ID );
+	$memberships         = $course->memberships();
+	$course_participants = models\UserProgress::find_all_course_participants( $post->ID );
+
 	?>
 	<div class="bb-rl-memprlms-course bb-rl-lms-course">			
 
@@ -28,37 +33,41 @@ while ( have_posts() ) :
 					if ( ! empty( $course_category_names ) ) {
 						?>
 						<div class="bb-rl-course-category">
-							<?php echo esc_html( $course_category_names ); ?>
+							<div class="bb-rl-course-category-item">
+								<?php echo esc_html( $course_category_names ); ?>
+							</div>
 						</div>
 						<?php
 					}
+					?>
+					<h1 class="bb-rl-entry-title"><?php echo $course->post_title ?></h1>
 
-					// get course author full name.
-					$course_author_fullname = get_the_author_meta( 'first_name', $post->post_author ) . ' ' . get_the_author_meta( 'last_name', $post->post_author );
-					if ( ! empty( $course_author_fullname ) ) {
-						?>
-						<div class="bb-rl-course-author">
-							<?php echo esc_html( trim( $course_author_fullname ) ); ?>
+					<div class="bb-rl-course-meta">
+						<div class="bb-rl-meta-item">
+							<?php
+							// get course author full name.
+							$first_name = get_the_author_meta('first_name', $post->post_author);
+							$last_name = get_the_author_meta('last_name', $post->post_author);
+							$course_author_fullname = trim($first_name . ' ' . $last_name);
+							
+							// Fallback to display_name if first/last name are empty
+							if (empty($course_author_fullname)) {
+								$course_author_fullname = get_the_author_meta('display_name', $post->post_author);
+							}
+							
+							if ( ! empty( $course_author_fullname ) ) {
+								?>
+								<div class="bb-rl-author-name">
+									<span class="bb-rl-author-name-label"><?php echo esc_html__( 'By ', 'buddyboss' ); ?></span><?php echo esc_html( trim( $course_author_fullname ) ); ?>
+								</div>
+								<?php
+							}
+							?>
 						</div>
-						<?php
-					}
+					</div>
 
-					// get course enrollment count.
-					$course_participants = models\UserProgress::find_all_course_participants( $post->ID );
-					if ( ! empty( $course_participants ) ) {
-						$course_enrollment_count = count( $course_participants );
-						?>
-						<div class="bb-rl-course-enrollment-count">
-							<?php echo $course_enrollment_count; ?>
-						</div>
-						<?php
-					}
-
+					<?php
 					// get course price.
-					$course_price = '';
-					$course       = new models\Course( $post->ID );
-					$memberships  = $course->memberships();
-
 					if ( ! empty( $memberships ) ) {
 						$membership = $memberships[0];
 						if ( isset( $membership->price ) && floatval( $membership->price ) <= 0 ) {
@@ -70,10 +79,13 @@ while ( have_posts() ) :
 								$course_price .= '/' . esc_html( $membership->period_type );
 							}
 						}
-					} else {
-						$course_price = __( 'Free', 'memberpress-courses' );
-					}
+					} else { ?>
+						<span class="bb-course-type bb-course-type-free bb-rl-course-type-status">
+							<?php echo esc_html__( 'Free', 'memberpress-courses' ); ?>
+						</span>
+					<?php } ?>
 
+					<?php
 					if ( ! empty( $course_price ) ) {
 						?>
 						<div class="bb-rl-course-price">
@@ -81,35 +93,15 @@ while ( have_posts() ) :
 						</div>
 						<?php
 					}
-
-					if ( is_user_logged_in() ) {
-						if ( ! empty( $course_participants ) && in_array( get_current_user_id(), $course_participants ) ) {
-							?>
-							<div class="bb-rl-course-enrollment-status">
-								<?php esc_html_e( 'Enrolled', 'buddyboss-theme' ); ?>
-							</div>
-							<?php
-						} else {
-							?>
-							<div class="bb-rl-course-enrollment-status">
-								<?php esc_html_e( 'Not enrolled', 'buddyboss-theme' ); ?>
-							</div>
-							<?php
-						}
-					}
-
-					// get course lesson count.
-					$course_lesson_count = $course->number_of_lessons();
-					if ( $course_lesson_count > 0 ) {
-						?>
-						<div class="bb-rl-course-lesson-count">
-							<?php echo esc_html( $course_lesson_count . ' ' .  'lessons' ); ?>
-						</div>
-						<?php
-					}
 					?>
-					<div class="course-progress">
-						<?php echo helpers\Courses::classroom_sidebar_progress( $post ); ?>
+
+					<div class="bb-rl-course-overview-footer">
+						<div class="mpcs-sidebar-wrapper">
+							<div class="course-progress">
+								<?php echo helpers\Courses::classroom_sidebar_progress( $post ); ?>
+							</div>
+						</div>
+						<div class="bb-rl-course-enrolled"></div>
 					</div>
 				</div>
 				<div class="bb-rl-course-figure">
@@ -121,6 +113,64 @@ while ( have_posts() ) :
 						<?php endif; ?>
 					</div>
 				</div>
+			</div>
+
+			<div class="bb-rl-course-details">
+
+				<div class="bb-rl-course-details-item">
+					<i class="bb-icons-rl-wave-triangle"></i>
+					<div>
+						<div class="bb-rl-course-details-label"><?php echo esc_html__( 'Status', 'buddyboss' ); ?></div>
+						<div class="bb-rl-course-details-value">
+							<?php
+							if ( is_user_logged_in() ) {
+								if ( ! empty( $course_participants ) && in_array( get_current_user_id(), $course_participants ) ) {
+									?>
+									<div class="bb-rl-course-enrollment-status bb-rl-status-enrolled">
+										<?php esc_html_e( 'Enrolled', 'buddyboss-theme' ); ?>
+									</div>
+									<?php
+								} else {
+									?>
+									<div class="bb-rl-course-enrollment-status bb-rl-status-idle">
+										<?php esc_html_e( 'Not enrolled', 'buddyboss-theme' ); ?>
+									</div>
+									<?php
+								}
+							}
+							?>
+						</div>
+					</div>
+				</div>
+
+				<div class="bb-rl-course-details-item">
+					<i class="bb-icons-rl-book-open-text"></i>
+					<div>
+						<div class="bb-rl-course-details-label"><?php echo esc_html__( 'Lessons', 'buddyboss' ); ?></div>
+						<div class="bb-rl-course-details-value">
+							<?php
+							// get course lesson count.
+							$course_lesson_count = $course->number_of_lessons();
+							echo esc_html( $course_lesson_count . ' ' .  'lessons' );
+							?>
+						</div>
+					</div>
+				</div>
+
+				<div class="bb-rl-course-details-item">
+					<i class="bb-icons-rl-student"></i>
+					<div>
+						<div class="bb-rl-course-details-label"><?php echo esc_html__( 'Enrolled', 'buddyboss' ); ?></div>
+						<div class="bb-rl-course-details-value">
+							<?php
+							// get course enrollment count.
+							$course_enrollment_count = ! empty( $course_participants ) ? count( $course_participants ) : 0;
+							echo esc_html( $course_enrollment_count );
+							?>
+						</div>
+					</div>
+				</div>
+
 			</div>
 		</div>
 

@@ -3,10 +3,47 @@
 	.course-progress {
 
 		h1 {
+			display: none;
+		}
+	}
+}
 
-			@include bb-rl-base-heading-2xl;
-			color: var(--bb-rl-text-color);
-			margin-bottom: var(--bb-rl-space-100);
+.bb-rl-course-overview-footer {
+
+	.mpcs-sidebar-wrapper {
+		width: 100%;
+
+		.course-progress {
+			display: flex;
+			flex-direction: column;
+
+			.progress-bar {
+				order: 2;
+			}
+		}
+
+		.progress-text {
+			order: 1;
+			margin: 0 0 var(--bb-rl-space-100);
+		}
+	}
+}
+
+.bb-rl-course-details {
+
+	.bb-rl-course-enrollment-status {
+		@include bb-rl-label-heading-xs;
+		border-radius: var(--bb-rl-radius-full);
+		border: 1px solid var(--bb-rl-border-brand-secondary-color);
+		background-color: var(--bb-rl-background-brand-secondary-color);
+		color: var(--bb-rl-text-brand-secondary-color);
+		padding: 0 var(--bb-rl-space-100);
+		margin-top: var(--bb-rl-space-50);
+
+		&.bb-rl-status-idle {
+			background-color: var(--bb-rl-background-brand-secondary-color);
+			border-color: var(--bb-rl-border-brand-secondary-color);
+			color: var(--bb-rl-text-brand-secondary-color);
 		}
 	}
 }

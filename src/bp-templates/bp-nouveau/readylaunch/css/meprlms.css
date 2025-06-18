@@ -351,9 +351,36 @@
 }
 
 .bb-rl-course-overview .course-progress h1 {
-  font-size: 20px;
-  font-weight: 700;
-  line-height: 30px;
-  color: var(--bb-rl-text-color);
-  margin-bottom: var(--bb-rl-space-100);
+  display: none;
+}
+
+.bb-rl-course-overview-footer .mpcs-sidebar-wrapper {
+  width: 100%;
+}
+
+.bb-rl-course-overview-footer .mpcs-sidebar-wrapper .course-progress {
+  display: flex;
+  flex-direction: column;
+}
+
+.bb-rl-course-overview-footer .mpcs-sidebar-wrapper .course-progress .progress-bar {
+  order: 2;
+}
+
+.bb-rl-course-overview-footer .mpcs-sidebar-wrapper .progress-text {
+  order: 1;
+  margin: 0 0 var(--bb-rl-space-100);
+}
+
+.bb-rl-course-details .bb-rl-course-enrollment-status {
+  font-size: var(--bb-rl-font-size-xs);
+  font-weight: 500;
+  line-height: var(--bb-rl-base-line-xs);
+  padding: var(--bb-rl-space-50) var(--bb-rl-space-100);
+  border-radius: var(--bb-rl-radius-full);
+  border: 1px solid var(--bb-rl-border-brand-secondary-color);
+  background-color: var(--bb-rl-background-brand-secondary-color);
+  color: var(--bb-rl-text-brand-secondary-color);
+  padding: 0 var(--bb-rl-space-100);
+  margin-top: var(--bb-rl-space-50);
 }
