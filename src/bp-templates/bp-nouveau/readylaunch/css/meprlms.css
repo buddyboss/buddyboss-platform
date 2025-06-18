@@ -376,11 +376,16 @@
   font-size: var(--bb-rl-font-size-xs);
   font-weight: 500;
   line-height: var(--bb-rl-base-line-xs);
-  padding: var(--bb-rl-space-50) var(--bb-rl-space-100);
   border-radius: var(--bb-rl-radius-full);
   border: 1px solid var(--bb-rl-border-brand-secondary-color);
   background-color: var(--bb-rl-background-brand-secondary-color);
   color: var(--bb-rl-text-brand-secondary-color);
   padding: 0 var(--bb-rl-space-100);
   margin-top: var(--bb-rl-space-50);
+}
+
+.bb-rl-course-details .bb-rl-course-enrollment-status.bb-rl-status-idle {
+  background-color: var(--bb-rl-background-brand-secondary-color);
+  border-color: var(--bb-rl-border-brand-secondary-color);
+  color: var(--bb-rl-text-brand-secondary-color);
 }

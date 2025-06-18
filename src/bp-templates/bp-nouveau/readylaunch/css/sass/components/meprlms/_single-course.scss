@@ -32,6 +32,7 @@
 .bb-rl-course-details {
 
 	.bb-rl-course-enrollment-status {
+
 		@include bb-rl-label-heading-xs;
 		border-radius: var(--bb-rl-radius-full);
 		border: 1px solid var(--bb-rl-border-brand-secondary-color);
