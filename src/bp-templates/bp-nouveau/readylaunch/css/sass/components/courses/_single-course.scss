@@ -12,13 +12,27 @@
 		margin: var(--bb-rl-space-200) 0 var(--bb-rl-space-100);
 	}
 
-	.bb-rl-course-type-status {
+	.bb-rl-course-type-status:not(.bb-course-type-free):not(.bb-course-type-open) {
 
 		@include bb-rl-notice--plain;
 		@include bb-rl-notice--plain-info;
 		margin: var(--bb-rl-space-200) 0 var(--bb-rl-space-100);
 		width: fit-content;
 		padding-right: var(--bb-rl-space-500);
+	}
+
+	.bb-rl-course-type-status.bb-course-type-free {
+
+		@include bb-rl-base-heading-2xl;
+		color: var(--bb-rl-text-color);
+		margin: var(--bb-rl-space-200) 0 var(--bb-rl-space-100);
+	}
+
+	.bb-rl-course-type-status.bb-course-type-open {
+
+		@include bb-rl-label-heading-md-thin;
+		color: var(--bb-rl-text-tertiary-color);
+		margin: var(--bb-rl-space-200) 0 var(--bb-rl-space-100);
 	}
 
 	.bb-rl-composite-price {
@@ -295,6 +309,7 @@
 .bb-rl-course-content {
 	display: flex;
 	gap: var(--bb-rl-space-400);
+	margin: 0 0 var(--bb-rl-space-400);
 
 	.bb-rl-course-content-inner {
 		flex: 1;
@@ -666,4 +681,19 @@
 	font-size: var(--bb-rl-font-size-sm);
 	color: var(--bb-rl-text-secondary-color);
 	margin-bottom: 0;
+}
+
+.bb-rl-entry-content {
+
+	.learndash-wrapper:not(.ld-registration__outer-wrapper) {
+
+		.btn-join,
+		#btn-join {
+
+			@include bb-rl-button;
+			@include bb-rl-button--brand-fill;
+			@include bb-rl-button--small;
+			width: auto;
+		}
+	}
 }
