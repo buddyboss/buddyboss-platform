@@ -646,6 +646,22 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 			if ( ! empty( $activity_id ) ) {
 				update_post_meta( $topic_id, '_bbp_activity_id', $activity_id );
 				bp_activity_update_meta( $activity_id, 'post_title', $topic_title );
+
+				// Check if the medias are there in the topic then add them to the activity when status changes from trash to publish. 
+				if ( empty( $existing_activity_id ) && doing_action( 'edit_post' ) ) {
+					$old_bp_media_ids = get_post_meta( $topic_id, 'bp_media_ids', true );
+					if ( ! empty( $old_bp_media_ids ) ) {
+						bp_activity_update_meta( $activity_id, 'bp_media_ids', $old_bp_media_ids );
+					}
+					$old_bp_video_ids = get_post_meta( $topic_id, 'bp_video_ids', true );
+					if ( ! empty( $old_bp_video_ids ) ) {
+						bp_activity_update_meta( $activity_id, 'bp_video_ids', $old_bp_video_ids );
+					}
+					$old_bp_document_ids = get_post_meta( $topic_id, 'bp_document_ids', true );
+					if ( ! empty( $old_bp_document_ids ) ) {
+						bp_activity_update_meta( $activity_id, 'bp_document_ids', $old_bp_document_ids );
+					}
+				}
 			}
 		}
 
@@ -809,6 +825,22 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 			if ( ! empty( $activity_id ) ) {
 				update_post_meta( $reply_id, '_bbp_activity_id', $activity_id );
 				bp_activity_update_meta( $activity_id, 'post_title', $topic_title );
+
+				// Check if the medias are there in the reply then add them to the activity when status changes from trash to publish. 
+				if ( empty( $existing_activity_id ) && doing_action( 'edit_post' ) ) {
+					$old_bp_media_ids = get_post_meta( $reply_id, 'bp_media_ids', true );
+					if ( ! empty( $old_bp_media_ids ) ) {
+						bp_activity_update_meta( $activity_id, 'bp_media_ids', $old_bp_media_ids );
+					}
+					$old_bp_video_ids = get_post_meta( $reply_id, 'bp_video_ids', true );
+					if ( ! empty( $old_bp_video_ids ) ) {
+						bp_activity_update_meta( $activity_id, 'bp_video_ids', $old_bp_video_ids );
+					}
+					$old_bp_document_ids = get_post_meta( $reply_id, 'bp_document_ids', true );
+					if ( ! empty( $old_bp_document_ids ) ) {
+						bp_activity_update_meta( $activity_id, 'bp_document_ids', $old_bp_document_ids );
+					}
+				}
 			}
 		}
 
