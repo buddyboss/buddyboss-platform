@@ -1245,7 +1245,7 @@ window.bp = window.bp || {};
 			['media', 'document', 'video', 'gif'].forEach(
 				function ( type ) {
 					if ( tool_box.find( '#bb-rl-forums-' + type + '-button' ) ) {
-						tool_box.find( '#bb-rl-forums-' + type + '-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable no-click' );
+						tool_box.find( '#bb-rl-forums-' + type + '-button' ).parents( '.bb-rl-post-elements-buttons-item' ).removeClass( 'disable no-click' );
 					}
 				}
 			);
@@ -1269,7 +1269,7 @@ window.bp = window.bp || {};
 			['media', 'document', 'video'].forEach(
 				function ( type ) {
 					if ( tool_box.find( '#bp-group-messages-' + type + '-button' ) ) {
-						tool_box.find( '#bp-group-messages-' + type + '-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable' );
+						tool_box.find( '#bp-group-messages-' + type + '-button' ).parents( '.bb-rl-post-elements-buttons-item' ).removeClass( 'disable' );
 					}
 				}
 			);
@@ -1865,7 +1865,7 @@ window.bp = window.bp || {};
 											if ( 'media' === type ) {
 												$button.removeClass( 'no-click' );
 											} else {
-												$button.parents( '.post-elements-buttons-item' ).addClass( 'disable' );
+												$button.parents( '.bb-rl-post-elements-buttons-item' ).addClass( 'disable' );
 											}
 										}
 									}
@@ -1962,7 +1962,7 @@ window.bp = window.bp || {};
 											if ( 'document' === type ) {
 												$button.removeClass( 'no-click' );
 											} else {
-												$button.parents( '.post-elements-buttons-item' ).addClass( 'disable' );
+												$button.parents( '.bb-rl-post-elements-buttons-item' ).addClass( 'disable' );
 											}
 										}
 									}
@@ -2060,7 +2060,7 @@ window.bp = window.bp || {};
 											if ( 'video' === type ) {
 												$button.removeClass( 'no-click' );
 											} else {
-												$button.parents( '.post-elements-buttons-item' ).addClass( 'disable' );
+												$button.parents( '.bb-rl-post-elements-buttons-item' ).addClass( 'disable' );
 											}
 										}
 									}
@@ -4872,7 +4872,7 @@ window.bp = window.bp || {};
 						function ( subType ) {
 							var dropZoneButton = tool_box.find( '#bb-rl-forums-' + subType + '-button' );
 							if ( dropZoneButton ) {
-									var buttonItems = dropZoneButton.parents( '.post-elements-buttons-item' );
+									var buttonItems = dropZoneButton.parents( '.bb-rl-post-elements-buttons-item' );
 								if ( type === subType ) {
 									buttonItems.addClass( 'no-click' );
 								} else {
@@ -5041,7 +5041,7 @@ window.bp = window.bp || {};
 								function ( subType ) {
 									var dropZoneButton = tool_box.find( '#bb-rl-forums-' + subType + '-button' );
 									if ( dropZoneButton ) {
-											var buttonItems = dropZoneButton.parents( '.post-elements-buttons-item' );
+											var buttonItems = dropZoneButton.parents( '.bb-rl-post-elements-buttons-item' );
 										if ( type === subType ) {
 											buttonItems.removeClass( 'no-click' );
 										} else {

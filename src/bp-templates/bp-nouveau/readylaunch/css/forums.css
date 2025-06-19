@@ -1244,6 +1244,11 @@
   margin: 0;
 }
 
+.bb-rl-forum-modal #whats-new-toolbar .bb-rl-post-elements-buttons-item.disable {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
 .bb-rl-forum-modal [class*="post-elements-buttons-item"] {
   position: relative;
   margin-right: var(--bb-rl-space-100);
