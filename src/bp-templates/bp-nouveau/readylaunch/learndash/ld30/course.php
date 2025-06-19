@@ -920,7 +920,55 @@ if ( class_exists( 'LearnDash\Core\Models\Product' ) && isset( $course_id ) ) {
 						</div> <!-- /.learndash-wrapper -->
 					</div>
 				</div> <!-- /.bb-rl-course-content-inner -->
-				<div class="bb-rl-course-content-sidebar bb-rl-widget-sidebar ">
+				<div class="bb-rl-course-content-sidebar bb-rl-widget-sidebar">
+					<?php
+					if ( has_excerpt( $course_id ) ) {
+						?>
+						<div class="widget">
+							<h2 class="widget-title">
+								<?php esc_html_e( 'Summary', 'buddyboss' ); ?>
+							</h2>
+							<div class="widget-content">
+								<div class="bb-rl-course-summary-inner">
+									<div class="bb-rl-course-summary-excerpt">
+										<?php echo get_the_excerpt( $course_id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Method escapes output ?>
+									</div>
+									<div class="bb-rl-course-summary-instructor">
+										<?php
+										$shared_instructor_ids = $bb_rl_ld_helper->bb_rl_get_course_instructor( $course_id );
+
+										// Display all instructors.
+										foreach ( $shared_instructor_ids as $instructor_id ) {
+											$instructor = get_userdata( $instructor_id );
+											if ( $instructor ) {
+												$instructor_user_link = bp_core_get_user_domain( $instructor_id );
+												?>
+												<div class="bb-rl-course-summary-instructor-item">
+													<a class="item-avatar bb-rl-author-avatar" href="<?php echo esc_url( $instructor_user_link ); ?>">
+														<?php echo get_avatar( $instructor_id, 32 ); ?>
+													</a>
+													<span class="bb-rl-author-name">
+														<?php
+														if ( ! empty( $instructor_user_link ) ) {
+															echo '<a href="' . esc_url( $instructor_user_link ) . '">' . esc_html( $instructor->display_name ) . '</a>';
+														} else {
+															echo esc_html( $instructor->display_name );
+														}
+														?>
+													</span>
+												</div>
+												<?php
+											}
+										}
+										?>
+									</div>
+								</div>
+							</div>
+						</div>
+						<?php
+					}
+					?>
+
 					<div class="widget">
 						<h2 class="widget-title">
 							<?php esc_html_e( 'Recently enrolled', 'buddyboss' ); ?>
