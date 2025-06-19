@@ -1,3 +1,4 @@
+@charset "UTF-8";
 /* CSS variables */
 :root {
   --bb-rl-primary-color: #4946fe;
@@ -5249,6 +5250,24 @@ body.ld-in-focus-mode.admin-bar.bb-readylaunch-template {
   font-weight: 500;
   line-height: var(--bb-rl-base-line);
   color: var(--bb-rl-text-color);
+}
+
+.bb-rl-entry-content .learndash-course-reviews-review-stars {
+  display: inline-block;
+  position: relative;
+  letter-spacing: -0.1em;
+}
+
+.bb-rl-entry-content .learndash-course-reviews-review-stars::after {
+  bottom: 0;
+  color: var(--bb-rl-icon-warning-secondary-color);
+  content: "★★★★★";
+  left: 0;
+  overflow: hidden;
+  position: absolute;
+  right: 0;
+  top: 0;
+  white-space: nowrap;
 }
 
 .bb-rl-entry-content .average-review {
