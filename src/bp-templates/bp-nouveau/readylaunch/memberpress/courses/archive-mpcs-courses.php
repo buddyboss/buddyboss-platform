@@ -246,10 +246,10 @@ if ( $pos > 0 ) {
 						</div>
 						<div class="bb-rl-course-popup-meta">
 							<?php
-							$total_lessons = 5;
+							$total_lessons = $course->number_of_lessons();
 							?>
 							<span class="bb-rl-course-meta-tag"><?php echo esc_html( $total_lessons ); ?></span>
-							<span class="bb-rl-course-meta-tag"><?php esc_html_e( 'Beginner', 'buddyboss' ); ?></span>
+							<span class="bb-rl-course-meta-tag"><?php esc_html_e( 'Lessons', 'buddyboss' ); ?></span>
 						</div>
 						<div class="bb-rl-course-popup-caption">
 							<?php the_excerpt(); ?>

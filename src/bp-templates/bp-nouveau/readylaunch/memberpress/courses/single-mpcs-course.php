@@ -71,7 +71,7 @@ while ( have_posts() ) :
 					if ( ! empty( $memberships ) ) {
 						$membership = $memberships[0];
 						if ( isset( $membership->price ) && floatval( $membership->price ) <= 0 ) {
-							$course_price = __( 'Free', 'memberpress-courses' );
+							$course_price = __( 'Free', 'buddyboss' );
 						} else {
 							$course_price = \MeprAppHelper::format_currency( $membership->price );
 							// Add period type if it's recurring.
@@ -79,13 +79,8 @@ while ( have_posts() ) :
 								$course_price .= '/' . esc_html( $membership->period_type );
 							}
 						}
-					} else { ?>
-						<span class="bb-course-type bb-course-type-free bb-rl-course-type-status">
-							<?php echo esc_html__( 'Free', 'memberpress-courses' ); ?>
-						</span>
-					<?php } ?>
+					}
 
-					<?php
 					if ( ! empty( $course_price ) ) {
 						?>
 						<div class="bb-rl-course-price">
@@ -127,13 +122,13 @@ while ( have_posts() ) :
 							if ( ! empty( $course_participants ) && in_array( get_current_user_id(), $course_participants ) ) {
 								?>
 								<div class="bb-rl-course-enrollment-status bb-rl-status-enrolled">
-									<?php esc_html_e( 'Enrolled', 'buddyboss-theme' ); ?>
+									<?php esc_html_e( 'Enrolled', 'buddyboss' ); ?>
 								</div>
 								<?php
 							} else {
 								?>
 								<div class="bb-rl-course-enrollment-status bb-rl-status-idle">
-									<?php esc_html_e( 'Not enrolled', 'buddyboss-theme' ); ?>
+									<?php esc_html_e( 'Not enrolled', 'buddyboss' ); ?>
 								</div>
 								<?php
 							}
