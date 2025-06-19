@@ -282,3 +282,28 @@
 		}
 	}
 }
+
+.bb-rl-container--ld-archive {
+
+	.bb-rl-lms-inner-block--ld-archive {
+		padding: var(--bb-rl-space-200) 0;
+	}
+
+	.bb-rl-ld-archive {
+
+		.entry-title {
+
+			a {
+
+				@include bb-rl-base-heading;
+				color: var(--bb-rl-text-color);
+			}
+		}
+
+		.entry-content {
+
+			@include bb-rl-label-heading;
+			color: var(--bb-rl-text-secondary-color);
+		}
+	}
+}

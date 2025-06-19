@@ -1458,6 +1458,24 @@ body.ld-in-focus-mode.admin-bar.bb-readylaunch-template {
   color: var(--bb-rl-text-disabled-color);
 }
 
+.bb-rl-container--ld-archive .bb-rl-lms-inner-block--ld-archive {
+  padding: var(--bb-rl-space-200) 0;
+}
+
+.bb-rl-container--ld-archive .bb-rl-ld-archive .entry-title a {
+  font-size: var(--bb-rl-font-size-base);
+  font-weight: 500;
+  line-height: var(--bb-rl-base-line);
+  color: var(--bb-rl-text-color);
+}
+
+.bb-rl-container--ld-archive .bb-rl-ld-archive .entry-content {
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 400;
+  line-height: var(--bb-rl-base-line-small);
+  color: var(--bb-rl-text-secondary-color);
+}
+
 .bb-rl-course-banner .bb-rl-composite-price {
   display: inline-flex;
   align-items: center;
