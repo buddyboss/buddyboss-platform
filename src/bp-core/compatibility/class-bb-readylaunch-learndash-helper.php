@@ -81,6 +81,9 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 			add_filter( 'buddyboss_learndash_content', array( $this, 'bb_rl_learndash_content' ), 10, 2 );
 			add_action( 'learndash_update_user_activity', array( $this, 'bb_rl_flush_ld_courses_progress_cache' ), 9999, 1 );
 			add_filter( 'learndash_content_tabs', array( $this, 'bb_rl_learndash_content_tabs' ), 10, 4 );
+
+			remove_action( 'learndash_course_reviews_review_reply', 'bb_output_review_reply_template', 9, 1 );
+			add_action( 'learndash_course_reviews_review_reply', array( $this, 'bb_rl_output_review_reply_template' ), 9, 1 );
 		}
 
 		/**
@@ -1355,6 +1358,57 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 				$tabs[0]['label'] = __( 'About course', 'buddyboss' );
 			}
 			return $tabs;
+		}
+
+		/**
+		 * Output the review reply template.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param int $course_id The course ID.
+		 */
+		public function bb_rl_output_review_reply_template( $course_id ) {
+			bb_remove_class_action( 'learndash_course_reviews_review_reply', 'LearnDash_Course_Reviews_Loader', 'output_review_reply_template' )
+			?>
+			<div id="learndash-course-reviews-reply" class="bb-rl-learndash-course-reviews-reply" style="display: none">
+				<h3 id="learndash-course-reviews-reply-heading" class="learndash-course-reviews-heading">
+					<?php esc_html_e( 'Leave a reply', 'buddyboss' ); ?>
+					<small>
+						<a rel="nofollow" id="cancel-comment-reply-link" href="#">
+							<?php esc_html_e( 'Cancel reply', 'buddyboss' ); ?>
+						</a>
+					</small>
+				</h3>
+				<form action="" method="post" name="">
+					<div class="grid-container full">
+						<div class="grid-x">
+							<div class="small-12 cell">
+								<label for="learndash-course-reviews-review">
+									<?php esc_html_e( 'Comment', 'buddyboss' ); ?> <span class="required">*</span>
+								</label>
+								<textarea
+									id="learndash-course-reviews-reply"
+									name="learndash-course-reviews-reply"
+									cols="45"
+									rows="8"
+									aria-required="true"
+									required="required"
+								></textarea>
+							</div>
+						</div>
+						<div class="grid-x">
+							<div class="small-12 cell">
+								<input
+									type="submit"
+									class="button primary expanded"
+									value="<?php esc_attr_e( 'Post Reply', 'buddyboss' ); ?>"
+								/>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+			<?php
 		}
 	}
 
