@@ -562,23 +562,15 @@ class BB_Activity_Topics_Manager {
 		 */
 		do_action( 'bb_before_delete_activity_topic_relationship', $args );
 
-		if ( 'activity' === $r['item_type'] ) {
-			$deleted = $this->wpdb->delete(
-				$this->activity_topic_rel_table,
-				array( 'topic_id' => $r['topic_id'] ),
-				array( '%d' )
-			);
-		} elseif ( 'groups' === $r['item_type'] ) {
-			$deleted = $this->wpdb->delete(
-				$this->activity_topic_rel_table,
-				array(
-					'topic_id'  => $r['topic_id'],
-					'item_id'   => $r['item_id'],
-					'component' => $r['item_type'],
-				),
-				array( '%d', '%d', '%s' )
-			);
-		}
+		$deleted = $this->wpdb->delete(
+			$this->activity_topic_rel_table,
+			array(
+				'topic_id'  => $r['topic_id'],
+				'item_id'   => $r['item_id'],
+				'component' => $r['item_type'],
+			),
+			array( '%d', '%d', '%s' )
+		);
 
 		if ( false === $deleted ) {
 			return false;
