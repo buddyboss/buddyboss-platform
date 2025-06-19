@@ -13,22 +13,24 @@ if ( ! defined( 'ABSPATH' ) ) {
 ?>
 
 <div class="bb-rl-course-pagination">
-	<?php
-	echo wp_kses_post(
-		paginate_links(
-			array(
-				'prev_text' => sprintf(
-				/* translators: %s is the previous text. */
-					'<i class="bb-icons-rl-arrow-left"></i> %s',
-					esc_html__( 'Previous', 'buddyboss' )
-				),
-				'next_text' => sprintf(
-				/* translators: %s is the next text. */
-					'%s <i class="bb-icons-rl-arrow-right"></i>',
-					esc_html__( 'Next', 'buddyboss' )
-				),
+	<div class="bb-rl-pagination-links">
+		<?php
+		echo wp_kses_post(
+			paginate_links(
+				array(
+					'prev_text' => sprintf(
+					/* translators: %s is the previous text. */
+						'<i class="bb-icons-rl-arrow-left"></i> %s',
+						esc_html__( 'Previous', 'buddyboss' )
+					),
+					'next_text' => sprintf(
+					/* translators: %s is the next text. */
+						'%s <i class="bb-icons-rl-arrow-right"></i>',
+						esc_html__( 'Next', 'buddyboss' )
+					),
+				)
 			)
-		)
-	);
-	?>
+		);
+		?>
+	</div>
 </div>

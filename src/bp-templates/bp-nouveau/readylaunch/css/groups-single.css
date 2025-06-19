@@ -4364,6 +4364,107 @@ body.ld-in-focus-mode.admin-bar.bb-readylaunch-template {
   color: var(--bb-rl-text-color);
 }
 
+.bb-rl-course-pagination {
+  display: flex;
+  align-items: center;
+  padding-bottom: var(--bb-rl-space-400);
+}
+
+.bb-rl-course-pagination .bb-rl-pagination-links {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: var(--bb-rl-space-100);
+}
+
+.bb-rl-course-pagination .bb-rl-pagination-links span,
+.bb-rl-course-pagination .bb-rl-pagination-links a {
+  line-height: var(--bb-rl-space-400);
+}
+
+.bb-rl-course-pagination .bb-rl-pagination-links .prev,
+.bb-rl-course-pagination .bb-rl-pagination-links .next {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--bb-rl-space-50);
+  font-size: 0;
+  padding: 0 var(--bb-rl-space-200);
+  border: 1px solid var(--bb-rl-border-tertiary-color);
+  border-radius: var(--bb-rl-radius-md);
+}
+
+.bb-rl-course-pagination .bb-rl-pagination-links .prev::before,
+.bb-rl-course-pagination .bb-rl-pagination-links .next::before {
+  font-size: var(--bb-rl-font-size-sm);
+  content: attr(data-bb-rl-label);
+}
+
+.bb-rl-course-pagination .bb-rl-pagination-links .prev::after,
+.bb-rl-course-pagination .bb-rl-pagination-links .next::after {
+  font-size: var(--bb-rl-font-size-base);
+  content: "";
+  font-weight: 400;
+  font-family: bb-icons-rl;
+  font-style: normal;
+  line-height: 1;
+  position: relative;
+  top: 1px;
+}
+
+.bb-rl-course-pagination .bb-rl-pagination-links .prev {
+  flex-direction: row-reverse;
+  margin-right: var(--bb-rl-space-500);
+}
+
+@media screen and (max-width: 544px) {
+  .bb-rl-course-pagination .bb-rl-pagination-links .prev {
+    margin-right: var(--bb-rl-space-200);
+  }
+}
+
+.bb-rl-course-pagination .bb-rl-pagination-links .prev::after {
+  content: "\e138";
+}
+
+.bb-rl-course-pagination .bb-rl-pagination-links .next {
+  margin-left: var(--bb-rl-space-500);
+}
+
+@media screen and (max-width: 544px) {
+  .bb-rl-course-pagination .bb-rl-pagination-links .next {
+    margin-left: var(--bb-rl-space-200);
+  }
+}
+
+.bb-rl-course-pagination .bb-rl-pagination-links .next::after {
+  content: "\e13a";
+}
+
+.bb-rl-course-pagination .bb-rl-pagination-links .bb-rl-page-numbers:not(.prev):not(.next) {
+  display: inline-flex;
+  min-width: var(--bb-rl-space-400);
+  height: var(--bb-rl-space-400);
+  border: 1px solid transparent;
+  border-radius: var(--bb-rl-radius-md);
+  justify-content: center;
+  color: var(--bb-rl-text-tertiary-color);
+}
+
+.bb-rl-course-pagination .bb-rl-pagination-links .bb-rl-page-numbers:not(.prev):not(.next).current {
+  color: var(--bb-rl-text-color);
+  border: 1px solid var(--bb-rl-border-quaternary-color);
+}
+
+.bb-rl-course-pagination .bb-rl-pagination-links a.prev,
+.bb-rl-course-pagination .bb-rl-pagination-links a.next {
+  color: var(--bb-rl-text-color);
+}
+
+.bb-rl-course-pagination .bb-rl-pagination-links span.prev,
+.bb-rl-course-pagination .bb-rl-pagination-links span.next {
+  color: var(--bb-rl-text-disabled-color);
+}
+
 .bb-rl-course-banner .bb-rl-composite-price {
   display: inline-flex;
   align-items: center;
@@ -4662,6 +4763,61 @@ body.ld-in-focus-mode.admin-bar.bb-readylaunch-template {
   border: 1px solid var(--bb-rl-border-secondary-color);
   border-radius: var(--bb-rl-radius-md);
   overflow: hidden;
+}
+
+.bb-rl-ld-lesson-list .ld-item-list-items .ld-item-list-items {
+  border-width: 0;
+}
+
+.bb-rl-ld-lesson-list .ld-item-list-items.ld-loading::before {
+  border-color: var(--bb-rl-border-secondary-color);
+  border-top-color: var(--bb-rl-border-brand-secondary-color);
+}
+
+.bb-rl-ld-lesson-list .ld-item-list-items > .ld-pagination {
+  padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+}
+
+.bb-rl-ld-lesson-list .ld-item-list-items > .ld-pagination .ld-pages {
+  display: flex;
+  align-items: center;
+  gap: var(--bb-rl-space-100);
+}
+
+.bb-rl-ld-lesson-list .ld-item-list-items > .ld-pagination .ld-pages a.prev,
+.bb-rl-ld-lesson-list .ld-item-list-items > .ld-pagination .ld-pages a.next {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bb-rl-ld-lesson-list .ld-item-list-items > .ld-pagination .ld-pages span {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 22px;
+  color: var(--bb-rl-text-secondary-color);
+}
+
+.bb-rl-ld-lesson-list .ld-item-list-items > .ld-pagination .ld-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bb-rl-ld-lesson-list .ld-item-list-items > .ld-pagination .ld-icon::before {
+  content: "";
+  font-family: bb-icons-rl !important;
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--bb-rl-icon-primary-color);
+}
+
+.bb-rl-ld-lesson-list .ld-item-list-items > .ld-pagination .ld-icon.ld-icon-arrow-right::before {
+  content: "\e13a";
+}
+
+.bb-rl-ld-lesson-list .ld-item-list-items > .ld-pagination .ld-icon.ld-icon-arrow-left::before {
+  content: "\e138";
 }
 
 .bb-rl-ld-lesson-list .ld-lesson-section-heading {

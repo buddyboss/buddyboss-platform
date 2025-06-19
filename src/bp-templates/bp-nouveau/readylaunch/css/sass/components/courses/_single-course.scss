@@ -211,6 +211,66 @@
 		border: 1px solid var(--bb-rl-border-secondary-color);
 		border-radius: var(--bb-rl-radius-md);
 		overflow: hidden;
+
+		.ld-item-list-items {
+			border-width: 0;
+		}
+
+		&.ld-loading::before {
+			border-color: var(--bb-rl-border-secondary-color);
+			border-top-color: var(--bb-rl-border-brand-secondary-color);
+		}
+
+		> .ld-pagination {
+			padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+
+			.ld-pages {
+				display: flex;
+				align-items: center;
+				gap: var(--bb-rl-space-100);
+
+				a.prev,
+				a.next {
+					display: inline-flex;
+					align-items: center;
+					justify-content: center;
+				}
+
+				span {
+
+					@include bb-rl-label-heading-md-thin;
+					color: var(--bb-rl-text-secondary-color);
+				}
+			}
+
+			.ld-icon {
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+
+				&::before {
+					content: "";
+					font-family: bb-icons-rl !important;
+					font-size: 16px;
+					font-weight: 400;
+					color: var(--bb-rl-icon-primary-color);
+				}
+
+				&.ld-icon-arrow-right {
+
+					&::before {
+						content: "\e13a";
+					}
+				}
+
+				&.ld-icon-arrow-left {
+
+					&::before {
+						content: "\e138";
+					}
+				}
+			}
+		}
 	}
 
 	.ld-lesson-section-heading {
