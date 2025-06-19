@@ -91,7 +91,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 			// Added support for Forums integration.
 			if ( bp_is_active( 'forums' ) ) {
-				add_filter( 'bbp_template_include', array( $this, 'bb_rl_overwite_forum_template' ), 3, 1 );
+				add_filter( 'bbp_use_template_canvas', '__return_false' );
 			}
 
 			$enabled_for_page = $this->bb_is_readylaunch_enabled_for_page();
@@ -110,21 +110,21 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			// Set up LearnDash integration.
 		}
 
-		public function bb_rl_overwite_forum_template( $template ) {
-			if ( $this->bb_is_readylaunch_forums() ) {
-				return array(
-					'bbpress.php',
-				);
-			}
-			return $template;
-		}
-
 		/**
 		 * Load template stack for ReadyLaunch.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 */
 		protected function load_template_stack() {
+			add_filter(
+				'template_include',
+				array(
+					$this,
+					'override_page_templates',
+				),
+				PHP_INT_MAX
+			); // High priority, so we have the last say here.
+
 			// Remove BuddyPress template locations.
 			remove_filter( 'bp_get_template_stack', 'bp_add_template_stack_locations' );
 			remove_filter( 'bbp_get_template_stack', 'bbp_add_template_stack_locations' );
@@ -648,7 +648,14 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				return bp_locate_template( 'register.php' );
 			}
 
-			return bp_locate_template( 'layout.php' );
+			if (
+				$this->bb_is_readylaunch_forums() ||
+				$this->bb_is_readylaunch_enabled_for_page()
+			) {
+				return bp_locate_template( 'layout.php' );
+			}
+
+			return $template;
 		}
 
 		/**
