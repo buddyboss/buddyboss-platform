@@ -486,41 +486,51 @@
   margin-bottom: var(--bb-rl-space-100);
 }
 
-.bb-rl-course-content-inner .mpcs-section.mpcs-section-lessons {
+.bb-rl-course-content-inner .mpcs-section.mpcs-section-lessons,
+.mpcs-sidebar-content .mpcs-section.mpcs-section-lessons {
   border-color: var(--bb-rl-border-secondary-color);
   background-color: var(--bb-rl-background-color);
 }
 
-.bb-rl-course-content-inner .mpcs-section.mpcs-section-lessons.first_section {
+.bb-rl-course-content-inner .mpcs-section.mpcs-section-lessons.first_section,
+.mpcs-sidebar-content .mpcs-section.mpcs-section-lessons.first_section {
   border-radius: var(--bb-rl-radius-md) var(--bb-rl-radius-md) 0 0;
 }
 
-.bb-rl-course-content-inner .mpcs-section.mpcs-section-lessons.last_section {
+.bb-rl-course-content-inner .mpcs-section.mpcs-section-lessons.last_section,
+.mpcs-sidebar-content .mpcs-section.mpcs-section-lessons.last_section {
   border-radius: 0 0 var(--bb-rl-radius-md) var(--bb-rl-radius-md);
 }
 
-.bb-rl-course-content-inner .mpcs-section.mpcs-section-lessons .mpcs-section-header.active .mpcs-section-title {
+.bb-rl-course-content-inner .mpcs-section.mpcs-section-lessons .mpcs-section-header.active .mpcs-section-title,
+.mpcs-sidebar-content .mpcs-section.mpcs-section-lessons .mpcs-section-header.active .mpcs-section-title {
   border-color: var(--bb-rl-border-secondary-color);
 }
 
-.bb-rl-course-content-inner .mpcs-section .mpcs-lessons {
+.bb-rl-course-content-inner .mpcs-section .mpcs-lessons,
+.mpcs-sidebar-content .mpcs-section .mpcs-lessons {
   padding: var(--bb-rl-space-100) 0;
 }
 
-.bb-rl-course-content-inner .mpcs-section .mpcs-lessons > .mpcs-lesson {
+.bb-rl-course-content-inner .mpcs-section .mpcs-lessons > .mpcs-lesson,
+.mpcs-sidebar-content .mpcs-section .mpcs-lessons > .mpcs-lesson {
   padding: 0 var(--bb-rl-space-100);
   flex: 1;
 }
 
-.bb-rl-course-content-inner .mpcs-section .mpcs-lessons > .mpcs-lesson .mpcs-lesson-link {
+.bb-rl-course-content-inner .mpcs-section .mpcs-lessons > .mpcs-lesson .mpcs-lesson-link,
+.mpcs-sidebar-content .mpcs-section .mpcs-lessons > .mpcs-lesson .mpcs-lesson-link {
   flex: 1;
+  color: var(--bb-rl-text-secondary-color);
 }
 
-.bb-rl-course-content-inner .mpcs-section .mpcs-lessons > .mpcs-lesson .mpcs-lesson-button {
+.bb-rl-course-content-inner .mpcs-section .mpcs-lessons > .mpcs-lesson .mpcs-lesson-button,
+.mpcs-sidebar-content .mpcs-section .mpcs-lessons > .mpcs-lesson .mpcs-lesson-button {
   display: none;
 }
 
-.bb-rl-course-content-inner .mpcs-section .mpcs-lessons .mpcs-lesson-link.mpcs-lesson:before {
+.bb-rl-course-content-inner .mpcs-section .mpcs-lessons .mpcs-lesson-link.mpcs-lesson:before,
+.mpcs-sidebar-content .mpcs-section .mpcs-lessons .mpcs-lesson-link.mpcs-lesson:before {
   content: "\e23a";
   font-weight: 400;
   font-family: bb-icons-rl;
@@ -529,7 +539,8 @@
   margin: 0 var(--bb-rl-space-100) 0 0;
 }
 
-.bb-rl-course-content-inner .mpcs-section .mpcs-lessons .mpcs-lesson-row-link .mpcs-assignment-icon:before {
+.bb-rl-course-content-inner .mpcs-section .mpcs-lessons .mpcs-lesson-row-link .mpcs-assignment-icon:before,
+.mpcs-sidebar-content .mpcs-section .mpcs-lessons .mpcs-lesson-row-link .mpcs-assignment-icon:before {
   content: "\eadc";
   font-weight: 400;
   font-family: bb-icons-rl;
@@ -538,25 +549,30 @@
   margin: 0 var(--bb-rl-space-100) 0 0;
 }
 
-.bb-rl-course-content-inner .mpcs-section .mpcs-lessons .mpcs-lesson-row-link {
+.bb-rl-course-content-inner .mpcs-section .mpcs-lessons .mpcs-lesson-row-link,
+.mpcs-sidebar-content .mpcs-section .mpcs-lessons .mpcs-lesson-row-link {
   padding: var(--bb-rl-space-100);
   border-radius: var(--bb-rl-radius-md);
   flex-direction: row-reverse;
 }
 
-.bb-rl-course-content-inner .mpcs-section .mpcs-lessons .mpcs-lesson-row-link:hover {
+.bb-rl-course-content-inner .mpcs-section .mpcs-lessons .mpcs-lesson-row-link:hover,
+.mpcs-sidebar-content .mpcs-section .mpcs-lessons .mpcs-lesson-row-link:hover {
   background-color: var(--bb-rl-background-secondary-hover-color);
 }
 
-.bb-rl-course-content-inner .mpcs-section .mpcs-lessons .mpcs-lesson-progress i {
+.bb-rl-course-content-inner .mpcs-section .mpcs-lessons .mpcs-lesson-progress i,
+.mpcs-sidebar-content .mpcs-section .mpcs-lessons .mpcs-lesson-progress i {
   margin-right: 0;
 }
 
-.bb-rl-course-content-inner .mpcs-section .mpcs-lessons .mpcs-lesson-progress i:before {
+.bb-rl-course-content-inner .mpcs-section .mpcs-lessons .mpcs-lesson-progress i:before,
+.mpcs-sidebar-content .mpcs-section .mpcs-lessons .mpcs-lesson-progress i:before {
   color: var(--bb-rl-border-tertiary-color);
 }
 
-.bb-rl-course-content-inner .mpcs-section .mpcs-lessons .mpcs-lesson-progress i.mpcs-ok-circled {
+.bb-rl-course-content-inner .mpcs-section .mpcs-lessons .mpcs-lesson-progress i.mpcs-ok-circled,
+.mpcs-sidebar-content .mpcs-section .mpcs-lessons .mpcs-lesson-progress i.mpcs-ok-circled {
   display: inline-flex;
   width: 20px;
   height: 20px;
@@ -566,7 +582,8 @@
   justify-content: center;
 }
 
-.bb-rl-course-content-inner .mpcs-section .mpcs-lessons .mpcs-lesson-progress i.mpcs-ok-circled::before {
+.bb-rl-course-content-inner .mpcs-section .mpcs-lessons .mpcs-lesson-progress i.mpcs-ok-circled::before,
+.mpcs-sidebar-content .mpcs-section .mpcs-lessons .mpcs-lesson-progress i.mpcs-ok-circled::before {
   content: "\e182";
   font-family: bb-icons-rl;
   font-size: 12px;
@@ -574,7 +591,8 @@
   color: var(--bb-rl-text-white-color);
 }
 
-.bb-rl-course-content-inner .mpcs-section.mpcs-section-lessons .mpcs-section-title .mpcs-section-title-text:before {
+.bb-rl-course-content-inner .mpcs-section.mpcs-section-lessons .mpcs-section-title .mpcs-section-title-text:before,
+.mpcs-sidebar-content .mpcs-section.mpcs-section-lessons .mpcs-section-title .mpcs-section-title-text:before {
   content: "\e13c";
   font-weight: 400;
   font-family: bb-icons-rl;
@@ -582,6 +600,65 @@
   color: var(--bb-rl-icon-secondary-color);
 }
 
-.bb-rl-course-content-inner .mpcs-section.mpcs-section-lessons .mpcs-section-header.active .mpcs-section-title .mpcs-section-title-text:before {
+.bb-rl-course-content-inner .mpcs-section.mpcs-section-lessons .mpcs-section-header.active .mpcs-section-title .mpcs-section-title-text:before,
+.mpcs-sidebar-content .mpcs-section.mpcs-section-lessons .mpcs-section-header.active .mpcs-section-title .mpcs-section-title-text:before {
   content: "\e136";
+}
+
+.bb-rl-left-panel--memprlms .bb-rl-left-panel-widget {
+  display: none;
+}
+
+.bb-rl-left-panel--memprlms #mpcs-sidebar-header {
+  margin: 0 calc(var(--bb-rl-space-200) * -1) var(--bb-rl-space-200);
+  padding: 0 var(--bb-rl-space-200) var(--bb-rl-space-400);
+  border-bottom: 1px solid var(--bb-rl-border-secondary-color);
+}
+
+.bb-rl-left-panel--memprlms #mpcs-sidebar-header .figure {
+  display: none;
+}
+
+.bb-rl-left-panel--memprlms #mpcs-sidebar-header .course-progress {
+  display: flex;
+  flex-direction: column;
+}
+
+.bb-rl-left-panel--memprlms #mpcs-sidebar-header .course-progress h1 {
+  order: 1;
+}
+
+.bb-rl-left-panel--memprlms #mpcs-sidebar-header .course-progress .progress-text {
+  order: 2;
+}
+
+.bb-rl-left-panel--memprlms #mpcs-sidebar-header .course-progress .progress-bar {
+  order: 3;
+}
+
+.bb-rl-left-panel--memprlms #mpcs-sidebar-header .course-progress h1 {
+  margin: var(--bb-rl-space-200) 0 var(--bb-rl-space-100);
+}
+
+.bb-rl-left-panel--memprlms #mpcs-sidebar-header .course-progress h1 a {
+  font-size: var(--bb-rl-font-size-base);
+  font-weight: 600;
+  line-height: var(--bb-rl-base-line);
+  color: var(--bb-rl-text-color);
+}
+
+.bb-rl-left-panel--memprlms .mpcs-sidebar-content .mpcs-section.mpcs-section-lessons {
+  border: 0;
+}
+
+.bb-rl-left-panel--memprlms .mpcs-sidebar-content .mpcs-section.mpcs-section-lessons .mpcs-section-header {
+  margin: 0 calc(var(--bb-rl-space-200) * -1);
+}
+
+.bb-rl-left-panel--memprlms .mpcs-sidebar-content .mpcs-section .mpcs-lessons .mpcs-lesson-row-link {
+  margin: 0 calc(var(--bb-rl-space-200) * -1);
+}
+
+.bb-rl-left-panel--memprlms .mpcs-sidebar-content .mpcs-section.mpcs-section-lessons.first_section {
+  margin-top: var(--bb-rl-space-200);
 }

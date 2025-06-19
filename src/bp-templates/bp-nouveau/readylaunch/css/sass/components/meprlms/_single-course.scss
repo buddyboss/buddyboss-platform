@@ -99,6 +99,10 @@
 		@include bb-rl-base-heading;
 		margin-bottom: var(--bb-rl-space-100);
 	}
+}
+
+.bb-rl-course-content-inner,
+.mpcs-sidebar-content {
 
 	.mpcs-section.mpcs-section-lessons {
 		border-color: var(--bb-rl-border-secondary-color);
@@ -127,6 +131,7 @@
 
 		.mpcs-lesson-link {
 			flex: 1;
+			color: var(--bb-rl-text-secondary-color);
 		}
 
 		.mpcs-lesson-button {

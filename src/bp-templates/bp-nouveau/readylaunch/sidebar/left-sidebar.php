@@ -21,9 +21,22 @@ if (
 
 global $bb_rl_search_nav;
 global $post;
+
+// Check if this is a MemberPress inner page
+$is_memberpress_inner = (
+	bb_is_readylaunch_enabled() &&
+	is_single() &&
+	class_exists( 'memberpress\courses\helpers\Courses' ) &&
+	! helpers\Courses::is_a_course( $post ) &&
+	! bb_load_readylaunch()->bb_rl_is_learndash_inner_page()
+);
+$panel_classes = 'bb-rl-left-panel widget-area';
+if ( $is_memberpress_inner ) {
+	$panel_classes .= ' bb-rl-left-panel--memprlms';
+}
 ?>
 
-<div id="secondary" class="bb-rl-left-panel widget-area" role="complementary">
+<div id="secondary" class="<?php echo esc_attr( $panel_classes ); ?>" role="complementary">
 	<?php
 	if (
 		bb_is_readylaunch_enabled() &&
