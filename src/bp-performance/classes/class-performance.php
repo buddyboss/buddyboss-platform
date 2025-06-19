@@ -257,10 +257,10 @@ if ( ! class_exists( 'BuddyBoss\Performance\Performance' ) ) {
 
 			if ( strpos( $file_location, 'Performance' ) !== false ) {
 				$file_location          = str_replace( 'Performance', '', $file_location );
-				$bp_mu_plugin_file_path = $file_location . 'MuPlugin/buddyboss-api-caching-mu.php';
+				$bp_mu_plugin_file_path = $file_location . 'MuPlugin/app-api-caching-mu.php';
 			} elseif ( strpos( $file_location, 'bp-performance' ) !== false ) {
-				$bp_platform_mu_path     = WP_PLUGIN_DIR . '/buddyboss-platform/bp-performance/mu-plugins/buddyboss-api-caching-mu.php';
-				$bp_platform_dev_mu_path = WP_PLUGIN_DIR . '/buddyboss-platform/src/bp-performance/mu-plugins/buddyboss-api-caching-mu.php';
+				$bp_platform_mu_path     = WP_PLUGIN_DIR . '/buddyboss-platform/bp-performance/mu-plugins/app-api-caching-mu.php';
+				$bp_platform_dev_mu_path = WP_PLUGIN_DIR . '/buddyboss-platform/src/bp-performance/mu-plugins/app-api-caching-mu.php';
 
 				if ( file_exists( $bp_platform_mu_path ) ) {
 					$bp_mu_plugin_file_path = $bp_platform_mu_path;
@@ -276,17 +276,17 @@ if ( ! class_exists( 'BuddyBoss\Performance\Performance' ) ) {
 
 			$wp_files_system = new \WP_Filesystem_Direct( array() );
 
-			if ( ! file_exists( WPMU_PLUGIN_DIR . '/buddyboss-api-caching-mu.php' ) ) {
+			if ( ! file_exists( WPMU_PLUGIN_DIR . '/app-api-caching-mu.php' ) ) {
 				// Try to automatically install MU plugin.
 				if ( wp_is_writable( WPMU_PLUGIN_DIR ) && ! empty( $bp_mu_plugin_file_path ) ) {
 					// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
-					@$wp_files_system->copy( $bp_mu_plugin_file_path, WPMU_PLUGIN_DIR . '/buddyboss-api-caching-mu.php' );
+					@$wp_files_system->copy( $bp_mu_plugin_file_path, WPMU_PLUGIN_DIR . '/app-api-caching-mu.php' );
 				}
-			} elseif ( ! empty( $mu_plugins ) && array_key_exists( 'buddyboss-api-caching-mu.php', $mu_plugins ) && version_compare( $mu_plugins['buddyboss-api-caching-mu.php']['Version'], '1.0.1', '<' ) ) {
+			} elseif ( ! empty( $mu_plugins ) && array_key_exists( 'app-api-caching-mu.php', $mu_plugins ) && version_compare( $mu_plugins['app-api-caching-mu.php']['Version'], '1.0.1', '<' ) ) {
 				// Try to automatically install MU plugin.
 				if ( wp_is_writable( WPMU_PLUGIN_DIR ) && ! empty( $bp_mu_plugin_file_path ) ) {
 					// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
-					@$wp_files_system->copy( $bp_mu_plugin_file_path, WPMU_PLUGIN_DIR . '/buddyboss-api-caching-mu.php', true );
+					@$wp_files_system->copy( $bp_mu_plugin_file_path, WPMU_PLUGIN_DIR . '/app-api-caching-mu.php', true );
 				}
 			}
 
@@ -310,9 +310,9 @@ if ( ! class_exists( 'BuddyBoss\Performance\Performance' ) ) {
 			$mu_plugins = get_mu_plugins();
 
 			// If installing MU plugin fails, display warning and download link in WP admin.
-			if ( ! file_exists( WPMU_PLUGIN_DIR . '/buddyboss-api-caching-mu.php' ) ) {
+			if ( ! file_exists( WPMU_PLUGIN_DIR . '/app-api-caching-mu.php' ) ) {
 				add_action( 'admin_notices', array( $this, 'add_sitewide_notice' ) );
-			} elseif ( ! empty( $mu_plugins ) && array_key_exists( 'buddyboss-api-caching-mu.php', $mu_plugins ) && version_compare( $mu_plugins['buddyboss-api-caching-mu.php']['Version'], '1.0.1', '<' ) ) {
+			} elseif ( ! empty( $mu_plugins ) && array_key_exists( 'app-api-caching-mu.php', $mu_plugins ) && version_compare( $mu_plugins['app-api-caching-mu.php']['Version'], '1.0.1', '<' ) ) {
 				add_action( 'admin_notices', array( $this, 'update_sitewide_notice' ) );
 			}
 		}
