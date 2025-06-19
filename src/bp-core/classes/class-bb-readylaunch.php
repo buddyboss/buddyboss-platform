@@ -83,18 +83,22 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			}
 
 			$this->load_template_stack();
-			$this->load_component_integration();
 			$this->load_login_registration_integration();
 			$this->load_hooks();
 
+			// Added support for Forums integration.
+			if ( bp_is_active( 'forums' ) ) {
+				add_filter( 'bbp_template_include', array( $this, 'bb_rl_overwite_forum_template' ), 1, 1 );
+			}
+
 			$enabled_for_page = $this->bb_is_readylaunch_enabled_for_page();
 			if ( $enabled_for_page ) {
-
+				// specific to the ReadyLaunch pages.
 			}
 
 			add_action( 'bp_admin_enqueue_scripts', array( $this, 'bb_rl_admin_enqueue_scripts' ), 1 );
 
-			// Add ReadyLaunch settings to platform settings API.
+			// Add ReadyLaunch settings to the platform settings API.
 			add_filter( 'bp_rest_platform_settings', array( $this, 'bb_rest_readylaunch_platform_settings' ), 10, 1 );
 
 			// LearnDash integration.
@@ -103,6 +107,37 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			// LearnDash integration.
 			add_action( 'wp_enqueue_scripts', array( $this, 'bb_readylaunch_learndash_enqueue_styles' ), 10 );
 			// Set up LearnDash integration.
+		}
+
+		public function bb_rl_overwite_forum_template( $template ) {
+			add_filter( 'bbp_get_profile_template', array( $this, 'override_forums_page_templates' ), PHP_INT_MAX, 1 );
+			add_filter( 'bbp_get_profileedit_template', array( $this, 'override_forums_page_templates' ), PHP_INT_MAX, 1 );
+			add_filter( 'bbp_get_favorites_template', array( $this, 'override_forums_page_templates' ), PHP_INT_MAX, 1 );
+			add_filter( 'bbp_get_subscriptions_template', array( $this, 'override_forums_page_templates' ), PHP_INT_MAX, 1 );
+			add_filter( 'bbp_get_singleview_template', array( $this, 'override_forums_page_templates' ), PHP_INT_MAX, 1 );
+			add_filter( 'bbp_get_singlesearch_template', array( $this, 'override_forums_page_templates' ), PHP_INT_MAX, 1 );
+			add_filter( 'bbp_get_singleforum_template', array( $this, 'override_forums_page_templates' ), PHP_INT_MAX, 1 );
+			add_filter( 'bbp_get_forumarchive_template', array( $this, 'override_forums_page_templates' ), PHP_INT_MAX, 1 );
+			add_filter( 'bbp_get_forumedit_template', array( $this, 'override_forums_page_templates' ), PHP_INT_MAX, 1 );
+			add_filter( 'bbp_get_singletopic_template', array( $this, 'override_forums_page_templates' ), PHP_INT_MAX, 1 );
+			add_filter( 'bbp_get_topicarchive_template', array( $this, 'override_forums_page_templates' ), PHP_INT_MAX, 1 );
+			add_filter( 'bbp_get_topicedit_template', array( $this, 'override_forums_page_templates' ), PHP_INT_MAX, 1 );
+			add_filter( 'bbp_get_topicsplit_template', array( $this, 'override_forums_page_templates' ), PHP_INT_MAX, 1 );
+			add_filter( 'bbp_get_topicmerge_template', array( $this, 'override_forums_page_templates' ), PHP_INT_MAX, 1 );
+			add_filter( 'bbp_get_singlereply_template', array( $this, 'override_forums_page_templates' ), PHP_INT_MAX, 1 );
+			add_filter( 'bbp_get_replyedit_template', array( $this, 'override_forums_page_templates' ), PHP_INT_MAX, 1 );
+			add_filter( 'bbp_get_replymove_template', array( $this, 'override_forums_page_templates' ), PHP_INT_MAX, 1 );
+			add_filter( 'bbp_get_topictag_template', array( $this, 'override_forums_page_templates' ), PHP_INT_MAX, 1 );
+			add_filter( 'bbp_get_topictagedit_template', array( $this, 'override_forums_page_templates' ), PHP_INT_MAX, 1 );
+			add_filter( 'bbp_get_bbpress_template', array( $this, 'override_forums_page_templates' ), PHP_INT_MAX, 1 );
+
+			return $template;
+		}
+
+		public function override_forums_page_templates( $template ) {
+			return array(
+				'bbpress.php',
+			);
 		}
 
 		/**
@@ -203,6 +238,9 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * @since BuddyBoss [BBVERSION]
 		 */
 		protected function load_hooks() {
+
+			add_action( 'bp_init', array( $this, 'bb_rl_init' ), 9 );
+
 			// Add Dynamic colours.
 			add_action( 'wp_head', array( $this, 'bb_rl_dynamic_colors' ) );
 
@@ -258,6 +296,11 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			add_filter( 'bp_get_the_notification_mark_unread_link', array( $this, 'bb_rl_notifications_mark_unread_link' ), 1, 1 );
 			add_filter( 'bp_get_the_notification_mark_read_link', array( $this, 'bb_rl_notifications_mark_read_link' ), 1, 1 );
 			add_filter( 'bp_get_the_notification_delete_link', array( $this, 'bb_rl_notifications_delete_link' ), 1, 1 );
+		}
+
+		public function bb_rl_init() {
+
+			$this->load_component_integration();
 
 			// Remove page content actions.
 			remove_action( 'bp_before_directory_members_page', 'bp_members_directory_page_content' );
@@ -678,12 +721,9 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 			$stack = array_flip( $stack );
 
-			foreach ( $stack as $key => $value ) {
-				if ( strpos( $value, 'bp-forums/templates/default' ) !== false ) {
-					$value = str_replace( 'bp-forums/templates/default', 'bp-templates/bp-nouveau/readylaunch/forums', $value );
-				}
-				$stack[ $key ] = $value;
-			}
+			// Add ReadyLaunch forum template directory at the first index (highest priority)
+			$readylaunch_forum_dir = buddypress()->plugin_dir . 'bp-templates/bp-nouveau/readylaunch/forums/';
+			array_unshift( $stack, $readylaunch_forum_dir );
 
 			return $stack;
 		}
@@ -1086,74 +1126,74 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					?>
 				</h2>
 				<?php
-					if ( ! empty( $items ) ) {
-						?>
+				if ( ! empty( $items ) ) {
+					?>
 						<ul class="bb-rl-item-list" aria-live="polite" aria-relevant="all" aria-atomic="true">
-							<?php
-								foreach ( $items as $item ) {
-									?>
+						<?php
+						foreach ( $items as $item ) {
+							?>
 									<li>
-										<?php
-											if ( ! empty( $item['thumbnail'] ) ) {
-												?>
+								<?php
+								if ( ! empty( $item['thumbnail'] ) ) {
+									?>
 												<div class="item-avatar">
 													<a href="<?php echo esc_url( $item['permalink'] ); ?>">
-														<?php
-															echo wp_kses(
-																$item['thumbnail'],
-																array(
-																	'img' => array(
-																		'src'    => true,
-																		'class'  => true,
-																		'id'     => true,
-																		'width'  => true,
-																		'height' => true,
-																		'alt'    => true,
-																	),
-																)
-															);
-														?>
+											<?php
+												echo wp_kses(
+													$item['thumbnail'],
+													array(
+														'img' => array(
+															'src'    => true,
+															'class'  => true,
+															'id'     => true,
+															'width'  => true,
+															'height' => true,
+															'alt'    => true,
+														),
+													)
+												);
+											?>
 													</a>
 												</div>
-												<?php
-											} else {
-												?>
+											<?php
+								} else {
+									?>
 												<div class="item-avatar">
 													<a href="<?php echo esc_url( $item['permalink'] ); ?>" title="<?php echo esc_attr( $item['title'] ); ?>" class="bb-rl-placeholder-avatar">
 														<span class="bb-rl-placeholder-avatar-image"></span>
 													</a>
 												</div>
-												<?php
-											}
-										?>
+										<?php
+								}
+								?>
 										<div class="item-title">
 											<a href="<?php echo esc_url( $item['permalink'] ); ?>">
-												<?php echo esc_html( $item['title'] ); ?>
+										<?php echo esc_html( $item['title'] ); ?>
 											</a>
 										</div>
 									</li>
 									<?php
-								}
-								if ( ! empty( $has_more_items ) ) {
-									?>
+						}
+						if ( ! empty( $has_more_items ) ) {
+							?>
 									<a href="<?php echo ! empty( $args['show_more_link'] ) ? esc_url( $args['show_more_link'] ) : ''; ?>" class="bb-rl-show-more">
 										<i class="bb-icons-rl-caret-down"></i>
-										<?php echo esc_html__( 'Show More', 'buddyboss' ); ?>
+								<?php echo esc_html__( 'Show More', 'buddyboss' ); ?>
 									</a>
-									<?php
-								}
-							?>
+								<?php
+						}
+						?>
 						</ul>
 						<?php
-					} else {
-						?>
+				} else {
+					?>
 						<div class="widget-error">
-							<?php
-								echo esc_html( $error_text );
-							?>
+						<?php
+							echo esc_html( $error_text );
+						?>
 						</div>
 						<?php
-					}
+				}
 				?>
 			</div>
 			<?php
@@ -1670,7 +1710,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					$next_label,
 					$next_text
 				);
-				$output        .= $next_disabled;
+				$output       .= $next_disabled;
 			} else {
 				// Replace "Next" link text with custom text and add data-bb-rl-label attribute.
 				$output = preg_replace(
@@ -1746,9 +1786,9 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				: stripslashes( wp_strip_all_tags( bp_get_member_invitation_message() ) );
 
 			$message .= ' ' . bp_get_member_invites_wildcard_replace(
-					stripslashes( wp_strip_all_tags( bp_get_invites_member_invite_url() ) ),
-					$email
-				);
+				stripslashes( wp_strip_all_tags( bp_get_invites_member_invite_url() ) ),
+				$email
+			);
 
 			$inviter_name = bp_core_get_user_displayname( $loggedin_user_id );
 			$email_encode = rawurlencode( $email );
@@ -1912,7 +1952,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 							? bb_member_get_profile_action_arguments( 'directory', 'secondary' )
 							: array();
 						$secondary_button_args['link_class'] = 'bb-rl-send-message-disabled';
-						$buttons['secondary']                .= bp_get_send_message_button( $secondary_button_args );
+						$buttons['secondary']               .= bp_get_send_message_button( $secondary_button_args );
 					}
 
 					remove_filter( 'bp_displayed_user_id', 'bb_member_loop_set_member_id' );
@@ -1950,8 +1990,8 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 */
 		public static function bb_is_group_admin() {
 			return bp_is_active( 'groups' ) &&
-				   bp_is_group_single() &&
-				   bp_get_group_current_admin_tab();
+					bp_is_group_single() &&
+					bp_get_group_current_admin_tab();
 		}
 
 		/**
@@ -2185,10 +2225,14 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		public function bb_rl_login_custom_form() {
 			?>
 			<p class="lostmenot">
-				<a href="<?php
-					echo esc_url( wp_lostpassword_url() ); ?>">
+				<a href="
+				<?php
+					echo esc_url( wp_lostpassword_url() );
+				?>
+				">
 					<?php
-						esc_html_e( 'Forgot Password?', 'buddyboss' ); ?>
+						esc_html_e( 'Forgot Password?', 'buddyboss' );
+					?>
 				</a>
 			</p>
 			<?php
@@ -2322,11 +2366,11 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			$settings['blogname']      = (string) get_bloginfo( 'name' );
 
 			// Style Settings.
-			$settings['bb_rl_light_logo']      = bp_get_option( 'bb_rl_light_logo', null );
-			$settings['bb_rl_dark_logo']       = bp_get_option( 'bb_rl_dark_logo', null );
-			$settings['bb_rl_color_light']     = (string) bp_get_option( 'bb_rl_color_light', '#3E34FF' );
-			$settings['bb_rl_color_dark']      = (string) bp_get_option( 'bb_rl_color_dark', '#9747FF' );
-			$settings['bb_rl_theme_mode']      = (string) bp_get_option( 'bb_rl_theme_mode', 'light' );
+			$settings['bb_rl_light_logo']  = bp_get_option( 'bb_rl_light_logo', null );
+			$settings['bb_rl_dark_logo']   = bp_get_option( 'bb_rl_dark_logo', null );
+			$settings['bb_rl_color_light'] = (string) bp_get_option( 'bb_rl_color_light', '#3E34FF' );
+			$settings['bb_rl_color_dark']  = (string) bp_get_option( 'bb_rl_color_dark', '#9747FF' );
+			$settings['bb_rl_theme_mode']  = (string) bp_get_option( 'bb_rl_theme_mode', 'light' );
 
 			// Pages & Sidebars Settings - Boolean values in arrays.
 			$settings['bb_rl_enabled_pages'] = array_map(
@@ -2645,7 +2689,6 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		public function bb_rl_get_theme_mode() {
 			$bb_rl_theme_mode = bp_get_option( 'bb_rl_theme_mode', 'light' );
 
-
 			return $bb_rl_theme_mode;
 		}
 
@@ -2871,6 +2914,36 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			}
 
 			return 'bb-readylaunch';
+		}
+
+		public function bb_is_readylaunch_forums() {
+			return bp_is_active( 'forums' )
+					&& (
+						bbp_is_forum_archive() ||
+						bbp_is_topic_archive() ||
+						is_post_type_archive( bbp_get_reply_post_type() ) ||
+						bbp_is_single_user_edit() ||
+						bbp_is_single_forum() ||
+						bbp_is_forum_edit() ||
+						bbp_is_single_topic() ||
+						bbp_is_topic_edit() ||
+						bbp_is_topic_split() ||
+						bbp_is_topic_merge() ||
+						bbp_is_single_reply() ||
+						bbp_is_reply_edit() ||
+						bbp_is_reply_move() ||
+						bbp_is_single_user() ||
+						bbp_is_single_view() ||
+						bbp_is_search() ||
+						bbp_is_topic_tag_edit() ||
+						bbp_is_topic_tag() ||
+						is_singular( bbp_get_topic_post_type() ) ||
+						is_singular( bbp_get_forum_post_type() ) ||
+						is_singular( bbp_get_reply_post_type() ) ||
+						is_post_type_archive( bbp_get_topic_post_type() ) ||
+						is_post_type_archive( bbp_get_forum_post_type() ) ||
+						is_post_type_archive( bbp_get_reply_post_type() )
+					);
 		}
 	}
 }
