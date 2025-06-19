@@ -1598,8 +1598,10 @@ class BB_Topics_Manager {
 		$r = bp_parse_args(
 			$args,
 			array(
-				'topic_id' => 0,
-				'fields'   => 'id',
+				'topic_id'  => 0,
+				'fields'    => 'id',
+				'item_id'   => 0,
+				'item_type' => 'activity',
 			),
 			'bb_delete_topic'
 		);
@@ -1615,13 +1617,11 @@ class BB_Topics_Manager {
 
 		// Delete the topic relationship.
 		$get_topic_args = array(
-			'topic_id' => $topic_id,
-			'fields'   => $r['fields'],
+			'topic_id'  => $topic_id,
+			'fields'    => $r['fields'],
+			'item_id'   => $r['item_id'],
+			'item_type' => $r['item_type'],
 		);
-		if ( 'groups' === $r['item_type'] ) {
-			$get_topic_args['item_id']   = $r['item_id'];
-			$get_topic_args['item_type'] = $r['item_type'];
-		}
 
 		$get_all_topic_relationships = $this->bb_get_topics( $get_topic_args );
 
