@@ -169,7 +169,7 @@ $is_completed = learndash_course_completed( $user_id, $course_id );
 
 // Additional variables needed for course content listing.
 $has_lesson_quizzes = learndash_30_has_lesson_quizzes( $course_id, $lessons );
-global $bb_course_pager_results;
+global $course_pager_results;
 
 $resume_link = get_permalink( $course_id );
 if ( $is_enrolled ) {
@@ -866,13 +866,13 @@ if ( class_exists( 'LearnDash\Core\Models\Product' ) && isset( $course_id ) ) {
 							learndash_get_template_part(
 								'course/listing.php',
 								array(
-									'course_id'            => $course_id,
-									'user_id'              => $user_id,
-									'lessons'              => $lessons,
-									'lesson_topics'        => $lesson_topics,
-									'quizzes'              => $quizzes,
-									'has_access'           => $has_access,
-									'course_pager_results' => $bb_course_pager_results,
+									'course_id'                  => $course_id,
+									'user_id'                    => $user_id,
+									'lessons'                    => $lessons,
+									'lesson_topics'              => $lesson_topics,
+									'quizzes'                    => $quizzes,
+									'has_access'                 => $has_access,
+									'course_pager_results'       => $course_pager_results,
 									'lesson_progression_enabled' => $lesson_progression_enabled,
 								),
 								true
