@@ -910,7 +910,7 @@ if ( class_exists( 'LearnDash\Core\Models\Product' ) && isset( $course_id ) ) {
 									'course_id' => $course_id,
 									'post_id'   => get_the_ID(),
 									'user_id'   => $user_id,
-									'content'   => wp_kses_post( $content ),
+									'content'   => $content,
 									'materials' => $materials,
 									'context'   => 'course',
 								),
