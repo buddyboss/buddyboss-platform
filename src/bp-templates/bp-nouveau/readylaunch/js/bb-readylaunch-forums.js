@@ -34,6 +34,7 @@ window.bp = window.bp || {};
 			$document.on( 'click', '.bb-rl-new-discussion-btn', this.openForumModal );
 			$document.on( 'click', '.bbp-topic-reply-link', this.openReplyModal );
 			$document.on( 'click', '.bb-rl-forum-modal-close, .bb-rl-forum-modal-overlay', this.closeForumModal );
+			$document.on( 'click', '.bb-rl-forum-modal-overlay', this.closeForumModalOverlay );
 		},
 
 		openForumModal: function ( e ) {
@@ -78,7 +79,28 @@ window.bp = window.bp || {};
 
 		closeForumModal: function ( e ) {
 			e.preventDefault();
+
 			$('.bb-rl-forum-modal').removeClass( 'bb-rl-forum-modal-visible' );
+
+			$( this ).trigger(
+				'bbp_after_close_topic_reply_form',
+				{
+					click_event: this,
+				}
+			);
+		},
+
+		closeForumModalOverlay: function ( e ) {
+			e.preventDefault();
+
+			$('.bb-rl-forum-modal').removeClass( 'bb-rl-forum-modal-visible' );
+
+			$( document ).trigger(
+				'bbp_after_close_topic_reply_form_on_overlay',
+				{
+					click_event: this,
+				}
+			);
 		},
 
 		handleForumScopeChange: function ( e ) {

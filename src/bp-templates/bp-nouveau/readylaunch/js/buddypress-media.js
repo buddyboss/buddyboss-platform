@@ -373,7 +373,7 @@ window.bp = window.bp || {};
 
 				// Disable other buttons( media/document ).
 				var tool_box = jQuery( '#bb-rl-forums-gif-button' ).addClass( 'active' ).closest( 'form' );
-				this.disableButtonsInToolBox(
+				bp.Nouveau.Media.disableButtonsInToolBox(
 					tool_box,
 					[
 						'#bb-rl-forums-media-button',
@@ -1166,7 +1166,7 @@ window.bp = window.bp || {};
 
 				var tool_box = target.closest( 'form' );
 				tool_box.addClass( 'has-gif' );
-				this.disableButtonsInToolBox(
+				bp.Nouveau.Media.disableButtonsInToolBox(
 					tool_box,
 					[
 						'#bb-rl-forums-media-button',
@@ -1204,7 +1204,7 @@ window.bp = window.bp || {};
 				}
 
 				var tool_box = $( '#send_group_message_form' );
-				this.disableButtonsInToolBox(
+				bp.Nouveau.Media.disableButtonsInToolBox(
 					tool_box,
 					[
 						'#bp-group-messages-media-button',
@@ -2076,6 +2076,27 @@ window.bp = window.bp || {};
 
 			}
 
+		},
+
+		addMediaIdsToForumsForm: function ( dropzone_container ) {
+			var self = this, dropzone_obj_key = dropzone_container.data( 'key' );
+			if ( dropzone_container.closest( '#whats-new-attachments' ).find( '#bbp_media' ).length ) {
+				dropzone_container.closest( '#whats-new-attachments' ).find( '#bbp_media' ).val( JSON.stringify( self.dropzone_media[ dropzone_obj_key ] ) );
+			}
+		},
+
+		addDocumentIdsToForumsForm: function ( dropzone_container ) {
+			var self = this, dropzone_obj_key = dropzone_container.data( 'key' );
+			if ( dropzone_container.closest( '#whats-new-attachments' ).find( '#bbp_document' ).length ) {
+				dropzone_container.closest( '#whats-new-attachments' ).find( '#bbp_document' ).val( JSON.stringify( self.dropzone_media[ dropzone_obj_key ] ) );
+			}
+		},
+
+		addVideoIdsToForumsForm: function ( dropzone_container ) {
+			var self = this, dropzone_obj_key = dropzone_container.data( 'key' );
+			if ( dropzone_container.closest( '#whats-new-attachments' ).find( '#bbp_video' ).length ) {
+				dropzone_container.closest( '#whats-new-attachments' ).find( '#bbp_video' ).val( JSON.stringify( self.dropzone_media[ dropzone_obj_key ] ) );
+			}
 		},
 
 		openGroupMessagesUploader: function ( event ) {
@@ -5976,6 +5997,17 @@ window.bp = window.bp || {};
 				}
 			);
 		},
+
+		disableButtonsInToolBox: function ( toolBox, selectors ) {
+			selectors.forEach(
+				function ( selector ) {
+					var button = toolBox.find( selector );
+					if ( button.length ) {
+							button.parents( '.bb-rl-post-elements-buttons-item' ).addClass( 'disable' );
+					}
+				}
+			);
+		}
 	};
 
 	/**
