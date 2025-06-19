@@ -2864,6 +2864,15 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				bp_get_version()
 			);
 
+			// Enqueue Topic Reply Draft JavaScript.
+			wp_enqueue_script(
+				'bb-readylaunch-topic-reply-draft',
+				buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/js/bb-readylaunch-topic-reply-draft.js',
+				array( 'jquery' ),
+				bp_get_version(),
+				true
+			);
+
 			// Enqueue our Forum helper JavaScript.
 			wp_enqueue_script(
 				'bb-readylaunch-forums-js',

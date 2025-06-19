@@ -317,7 +317,7 @@
 		margin-right: var(--bb-rl-space-300);
 	}
 
-	.bb-rl-discard_topic_reply_draft {
+	.bb_discard_topic_reply_draft {
 		display: none;
 		color: var(--bb-rl-text-secondary-color);
 		font-size: 14px;
@@ -579,6 +579,13 @@
 		.bbp-form #bbp_reply_submit {
 			opacity: 1;
 			pointer-events: initial	
+		}
+	}
+
+	&.has-draft {
+
+		.bb_discard_topic_reply_draft {
+			display: inline-block;
 		}
 	}
 }

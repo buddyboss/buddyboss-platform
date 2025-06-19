@@ -1269,7 +1269,7 @@
   margin-right: var(--bb-rl-space-300);
 }
 
-.bb-rl-forum-modal .bb-rl-discard_topic_reply_draft {
+.bb-rl-forum-modal .bb_discard_topic_reply_draft {
   display: none;
   color: var(--bb-rl-text-secondary-color);
   font-size: 14px;
@@ -1517,6 +1517,10 @@
 #new-post .has-media .bbp-form #bbp_reply_submit {
   opacity: 1;
   pointer-events: initial;
+}
+
+#new-post.has-draft .bb_discard_topic_reply_draft {
+  display: inline-block;
 }
 
 #new-post .bbp-form #bbp_reply_submit,
