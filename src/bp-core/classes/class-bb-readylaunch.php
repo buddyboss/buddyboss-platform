@@ -66,10 +66,10 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		public function __construct() {
             $enabled = bb_is_readylaunch_enabled();
 
-            // Add ReadyLaunch settings to the platform settings API.
+			// Add ReadyLaunch settings to the platform settings API.
 			add_filter( 'bp_rest_platform_settings', array( $this, 'bb_rest_readylaunch_platform_settings' ), 10, 1 );
 
-            if ( ! $enabled ) {
+			if ( ! $enabled ) {
 				return;
 			}
 

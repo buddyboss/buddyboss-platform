@@ -3,7 +3,7 @@
  * The layout for templates.
  *
  * This template handles the main layout structure for ReadyLaunch theme pages.
- * It determines whether to load LearnDash integration or standard page content.
+ * It determines whether to load the Forums integration or standard page content.
  *
  * @package BuddyBoss\Template
  * @subpackage BP_Nouveau\ReadyLaunch
@@ -26,6 +26,5 @@ if ( have_posts() ) {
 		the_content();
 	endwhile;
 }
-
 
 bp_get_template_part( 'footer/readylaunch-footer' );
