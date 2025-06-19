@@ -92,6 +92,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			// Added support for Forums integration.
 			if ( bp_is_active( 'forums' ) ) {
 				add_filter( 'bbp_use_template_canvas', '__return_false' );
+				add_filter( 'bbp_get_page_by_path', array( $this, 'bb_rl_forums_get_page_by_path' ), 99, 1 );
 			}
 
 			$enabled_for_page = $this->bb_is_readylaunch_enabled_for_page();
@@ -656,6 +657,21 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			}
 
 			return $template;
+		}
+
+		public function bb_rl_forums_get_page_by_path( $retval ) {
+			if (
+				(
+					bbp_is_topic_archive() ||
+					bbp_is_forum_archive()
+				) &&
+				is_object( $retval ) &&
+				! empty( $retval->post_content )
+			) {
+				$retval->post_content = '';
+			}
+
+			return $retval;
 		}
 
 		/**
