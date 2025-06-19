@@ -139,7 +139,7 @@ if ( $is_enrolled && 0 === $course_progress['percentage'] ) {
 			</a>
 		</div>
 
-		<div class="bb-rl-course-content">
+		<div class="bb-rl-course-card-content">
 			<div class="bb-rl-course-body">
 				<h2 class="bb-rl-course-title">
 					<a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>

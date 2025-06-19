@@ -246,7 +246,7 @@
   align-items: end;
 }
 
-.bb-rl-courses-grid.list .bb-rl-course-card .bb-rl-course-content {
+.bb-rl-courses-grid.list .bb-rl-course-card .bb-rl-course-card-content {
   border: 0;
   border-radius: 0;
   padding: 0;
@@ -330,7 +330,7 @@
   z-index: 3;
 }
 
-.bb-rl-course-card .bb-rl-course-content {
+.bb-rl-course-card .bb-rl-course-card-content {
   flex: 1;
   display: flex;
   flex-direction: column;

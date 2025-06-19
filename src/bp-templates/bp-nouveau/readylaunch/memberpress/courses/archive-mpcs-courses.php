@@ -157,7 +157,7 @@ if ( $pos > 0 ) {
 								<?php endif; ?>
 							</a>
 						</div>
-						<div class="bb-rl-course-content">
+						<div class="bb-rl-course-card-content">
 							<div class="bb-rl-course-body">
 								<h2 class="bb-rl-course-title"><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h2>
 								<div class="bb-rl-course-meta">
