@@ -891,10 +891,6 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 				return;
 			}
 
-			error_log('reply_update ' . $reply_id);
-			error_log(print_r($post->post_status, true));
-			error_log( bbp_get_public_status_id() );
-			error_log( bbp_get_spam_status_id() );
 			// Action based on new status
 			if ( bbp_get_public_status_id() === $post->post_status ) {
 
@@ -923,7 +919,6 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 				}
 				return false;
 			} else {
-				
 				$this->reply_delete( $reply_id );
 			}
 		}
