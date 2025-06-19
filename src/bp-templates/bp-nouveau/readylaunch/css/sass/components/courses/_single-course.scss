@@ -674,6 +674,24 @@
 		color: var(--bb-rl-text-color);
 	}
 
+	.learndash-course-reviews-review-stars {
+		display: inline-block;
+		position: relative;
+		letter-spacing: -0.1em;
+
+		&::after {
+			bottom: 0;
+			color: var(--bb-rl-icon-warning-secondary-color);
+			content: "★★★★★";
+			left: 0;
+			overflow: hidden;
+			position: absolute;
+			right: 0;
+			top: 0;
+			white-space: nowrap;
+		}
+	}
+
 	.average-review {
 		display: flex;
 		align-items: center;
