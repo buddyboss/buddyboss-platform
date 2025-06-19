@@ -514,7 +514,7 @@
 
 .bb-rl-course-content-inner .mpcs-section .mpcs-lessons > .mpcs-lesson,
 .mpcs-sidebar-content .mpcs-section .mpcs-lessons > .mpcs-lesson {
-  padding: 0 var(--bb-rl-space-100);
+  padding: 0 var(--bb-rl-space-50);
   flex: 1;
 }
 
@@ -522,6 +522,14 @@
 .mpcs-sidebar-content .mpcs-section .mpcs-lessons > .mpcs-lesson .mpcs-lesson-link {
   flex: 1;
   color: var(--bb-rl-text-secondary-color);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+  min-width: 0;
+  display: block;
+  position: relative;
+  bottom: 2px;
 }
 
 .bb-rl-course-content-inner .mpcs-section .mpcs-lessons > .mpcs-lesson .mpcs-lesson-button,
@@ -530,28 +538,27 @@
 }
 
 .bb-rl-course-content-inner .mpcs-section .mpcs-lessons .mpcs-lesson-link.mpcs-lesson:before,
-.mpcs-sidebar-content .mpcs-section .mpcs-lessons .mpcs-lesson-link.mpcs-lesson:before {
+.bb-rl-course-content-inner .mpcs-section .mpcs-lessons .mpcs-lesson-row-link .mpcs-assignment-icon:before,
+.mpcs-sidebar-content .mpcs-section .mpcs-lessons .mpcs-lesson-link.mpcs-lesson:before,
+.mpcs-sidebar-content .mpcs-section .mpcs-lessons .mpcs-lesson-row-link .mpcs-assignment-icon:before {
   content: "\e23a";
   font-weight: 400;
   font-family: bb-icons-rl;
   font-size: 20px;
   color: var(--bb-rl-icon-secondary-color);
-  margin: 0 var(--bb-rl-space-100) 0 0;
+  margin: 0 var(--bb-rl-space-50) 0 0;
+  position: relative;
+  top: 2px;
 }
 
 .bb-rl-course-content-inner .mpcs-section .mpcs-lessons .mpcs-lesson-row-link .mpcs-assignment-icon:before,
 .mpcs-sidebar-content .mpcs-section .mpcs-lessons .mpcs-lesson-row-link .mpcs-assignment-icon:before {
   content: "\eadc";
-  font-weight: 400;
-  font-family: bb-icons-rl;
-  font-size: 20px;
-  color: var(--bb-rl-icon-secondary-color);
-  margin: 0 var(--bb-rl-space-100) 0 0;
 }
 
 .bb-rl-course-content-inner .mpcs-section .mpcs-lessons .mpcs-lesson-row-link,
 .mpcs-sidebar-content .mpcs-section .mpcs-lessons .mpcs-lesson-row-link {
-  padding: var(--bb-rl-space-100);
+  padding: 11px var(--bb-rl-space-200);
   border-radius: var(--bb-rl-radius-md);
   flex-direction: row-reverse;
 }
