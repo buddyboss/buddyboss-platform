@@ -121,9 +121,13 @@
 		padding: var(--bb-rl-space-100) 0;
 	}
 
-	.mpcs-section .mpcs-lessons .mpcs-lesson {
+	.mpcs-section .mpcs-lessons > .mpcs-lesson {
 		padding: 0 var(--bb-rl-space-100);
 		flex: 1;
+
+		.mpcs-lesson-link {
+			flex: 1;
+		}
 
 		.mpcs-lesson-button {
 			display: none;
@@ -132,6 +136,15 @@
 
 	.mpcs-section .mpcs-lessons .mpcs-lesson-link.mpcs-lesson:before {
 		content: "\e23a";
+		font-weight: 400;
+		font-family: bb-icons-rl;
+		font-size: 20px;
+		color: var(--bb-rl-icon-secondary-color);
+		margin: 0 var(--bb-rl-space-100) 0 0;
+	}
+
+	.mpcs-section .mpcs-lessons .mpcs-lesson-row-link .mpcs-assignment-icon:before {
+		content: "\eadc";
 		font-weight: 400;
 		font-family: bb-icons-rl;
 		font-size: 20px;
@@ -149,8 +162,15 @@
 		}
 	}
 
-	.mpcs-section .mpcs-lessons .mpcs-lesson-progress i:before {
-		color: var(--bb-rl-border-tertiary-color);
+	.mpcs-section .mpcs-lessons .mpcs-lesson-progress {
+
+		i {
+			margin-right: 0;
+		}
+
+		i:before {
+			color: var(--bb-rl-border-tertiary-color);
+		}
 	}
 
 	.mpcs-section .mpcs-lessons .mpcs-lesson-progress i.mpcs-ok-circled {

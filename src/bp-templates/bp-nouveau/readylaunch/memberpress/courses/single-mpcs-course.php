@@ -117,31 +117,31 @@ while ( have_posts() ) :
 
 			<div class="bb-rl-course-details">
 
+				<?php if ( is_user_logged_in() ) { ?>
 				<div class="bb-rl-course-details-item">
 					<i class="bb-icons-rl-wave-triangle"></i>
 					<div>
 						<div class="bb-rl-course-details-label"><?php echo esc_html__( 'Status', 'buddyboss' ); ?></div>
 						<div class="bb-rl-course-details-value">
 							<?php
-							if ( is_user_logged_in() ) {
-								if ( ! empty( $course_participants ) && in_array( get_current_user_id(), $course_participants ) ) {
-									?>
-									<div class="bb-rl-course-enrollment-status bb-rl-status-enrolled">
-										<?php esc_html_e( 'Enrolled', 'buddyboss-theme' ); ?>
-									</div>
-									<?php
-								} else {
-									?>
-									<div class="bb-rl-course-enrollment-status bb-rl-status-idle">
-										<?php esc_html_e( 'Not enrolled', 'buddyboss-theme' ); ?>
-									</div>
-									<?php
-								}
+							if ( ! empty( $course_participants ) && in_array( get_current_user_id(), $course_participants ) ) {
+								?>
+								<div class="bb-rl-course-enrollment-status bb-rl-status-enrolled">
+									<?php esc_html_e( 'Enrolled', 'buddyboss-theme' ); ?>
+								</div>
+								<?php
+							} else {
+								?>
+								<div class="bb-rl-course-enrollment-status bb-rl-status-idle">
+									<?php esc_html_e( 'Not enrolled', 'buddyboss-theme' ); ?>
+								</div>
+								<?php
 							}
 							?>
 						</div>
 					</div>
 				</div>
+				<?php } ?>
 
 				<div class="bb-rl-course-details-item">
 					<i class="bb-icons-rl-book-open-text"></i>
@@ -167,6 +167,18 @@ while ( have_posts() ) :
 							$course_enrollment_count = ! empty( $course_participants ) ? count( $course_participants ) : 0;
 							echo esc_html( $course_enrollment_count );
 							?>
+						</div>
+					</div>
+				</div>
+
+				<div class="bb-rl-course-details-item">
+					<i class="bb-icons-rl-arrows-clockwise"></i>
+					<div>
+						<div class="bb-rl-course-details-label">
+							<?php esc_html_e( 'Update', 'buddyboss' ); ?>
+						</div>
+						<div class="bb-rl-course-details-value">
+							<?php echo esc_html( get_the_modified_date() ); ?>
 						</div>
 					</div>
 				</div>
