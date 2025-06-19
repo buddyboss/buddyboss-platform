@@ -310,6 +310,9 @@ add_action( 'bbp_new_reply', 'bb_forums_save_link_preview_data' );
 add_action( 'bbp_edit_topic', 'bb_forums_save_link_preview_data' );
 add_action( 'bbp_edit_reply', 'bb_forums_save_link_preview_data' );
 
+// When deleting reply and topic, delete the media attachments.
+add_action( 'before_delete_post', 'bb_forums_delete_topic_reply_media_attachments', 10, 2 );
+
 /**
  * Register the forum notifications.
  *
