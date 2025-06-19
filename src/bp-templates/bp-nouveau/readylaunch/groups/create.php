@@ -1,12 +1,18 @@
 <?php
 /**
- * BuddyBoss - Groups Create
+ * ReadyLaunch - Groups Create template.
  *
- * This template can be overridden by copying it to yourtheme/buddypress/groups/create.php.
+ * This template handles the group creation process with step-by-step
+ * navigation and form management for creating new groups.
  *
- * @since   BuddyPress 3.0.0
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 bp_nouveau_groups_create_hook( 'before', 'page' ); ?>
 <div class="bb-rl-content-wrapper">

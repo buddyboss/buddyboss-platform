@@ -1,12 +1,18 @@
 <?php
 /**
- * BuddyBoss - Groups plugins
+ * ReadyLaunch - Groups plugins template.
  *
- * This template can be overridden by copying it to yourtheme/buddypress/groups/single/plugins.php.
+ * This template provides hooks for group plugins to display their content
+ * within the group single page context.
  *
- * @since   BuddyPress 3.0.0
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 bp_nouveau_group_hook( 'before', 'plugin_template' );
 bp_nouveau_plugin_hook( 'content' );

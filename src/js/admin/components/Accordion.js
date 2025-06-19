@@ -19,7 +19,6 @@ export const Accordion = ({ title, isExpanded, onToggle, onHelpClick, children }
             <div className="accordion-header">
                 <div className="bb-rl-accordion-toggle" onClick={onToggle}>
                     <h3>{title}</h3>
-                    <i className={`bb-icons-rl-${isExpanded ? 'caret-down' : 'caret-up'}`}></i>
                 </div>
                 <HelpIcon onClick={onHelpClick} />
             </div>

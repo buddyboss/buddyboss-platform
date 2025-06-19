@@ -2,9 +2,18 @@
 /**
  * ReadyLaunch - The template for activity modal.
  *
- * @since   BuddyBoss [BBVERSION]
+ * This template handles the display of the activity modal/popup
+ * for viewing and commenting on activity items.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 ?>
 <div class="bb-rl-activity-model-wrapper bb-rl-internal-model bb-rl-activity-theatre bb-rl-wrap" style="display: none;" id="buddypress">
 	<div id="bb-rl-activity-modal" class="bb-rl-activity-modal activity">

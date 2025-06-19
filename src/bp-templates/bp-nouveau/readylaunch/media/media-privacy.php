@@ -1,11 +1,17 @@
 <?php
 /**
- * ReadyLaunch - The template for media privacy change.
+ * ReadyLaunch - Media Privacy template.
  *
- * @since   BuddyBoss [BBVERSION]
- * @package BuddyBoss\Core
+ * This template handles the media privacy selection dropdown.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 $album_privacy = '';
 if ( bp_is_user_media() || bp_is_user_albums() ) {

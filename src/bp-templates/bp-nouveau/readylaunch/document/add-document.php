@@ -2,11 +2,9 @@
 /**
  * The template for add document
  *
- * This template can be overridden by copying it to yourtheme/buddypress/document/add-document.php.
- *
- * @since   BuddyBoss 1.4.0
+ * @since   BuddyBoss [BBVERSION]
  * @package BuddyBoss\Core
- * @version 1.4.0
+ * @version 1.0.0
  */
 
 if ( bp_is_my_profile() || ( bp_is_active( 'groups' ) && bp_is_group() && is_user_logged_in() ) ) :

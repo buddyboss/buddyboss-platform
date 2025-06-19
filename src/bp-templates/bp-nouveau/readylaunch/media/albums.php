@@ -1,12 +1,17 @@
 <?php
 /**
- * The template for media albums
+ * ReadyLaunch - Media Albums template.
  *
- * This template can be overridden by copying it to yourtheme/buddypress/media/albums.php.
+ * This template handles displaying media albums listing and management.
  *
- * @since   BuddyBoss 1.0.0
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 $bp_is_group = bp_is_group();
 if ( ( ( bp_is_my_profile() && bb_user_can_create_media() ) || ( $bp_is_group && groups_can_user_manage_albums( bp_loggedin_user_id(), bp_get_current_group_id() ) ) ) ) {
@@ -16,7 +21,7 @@ if ( ( ( bp_is_my_profile() && bb_user_can_create_media() ) || ( $bp_is_group &&
 
 	<?php
 	if ( bp_has_albums( bp_ajax_querystring( 'albums' ) ) ) {
-	?>
+		?>
 		<div class="bb-media-actions-wrap album-actions-wrap bb-rl-media-actions-wrap">
 			<h2 class="bb-title"><?php esc_html_e( 'Albums', 'buddyboss' ); ?></h2>
 			<?php

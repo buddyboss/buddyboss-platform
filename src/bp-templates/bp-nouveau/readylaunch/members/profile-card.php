@@ -1,12 +1,17 @@
 <?php
 /**
- * The template for profile card.
+ * ReadyLaunch - Profile Card template.
  *
- * This template can be overridden by copying it to yourtheme/buddypress/members/profile-card.php.
+ * This template handles the member profile card popup display functionality.
  *
- * @since   BuddyBoss 2.8.20
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 ?>
 <script type="text/html" id="tmpl-profile-card-popup">

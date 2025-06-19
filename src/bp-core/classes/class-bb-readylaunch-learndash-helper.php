@@ -49,7 +49,7 @@ class BB_Readylaunch_Learndash_Helper {
 	 * @since BuddyBoss [BBVERSION]
 	 */
 	public function __construct() {
-		// Constructor can be used for initialization if needed
+		// Constructor can be used for initialization if needed.
 	}
 
 	/**
@@ -157,18 +157,20 @@ class BB_Readylaunch_Learndash_Helper {
 
 		// Get current URL if not provided.
 		if ( empty( $current_url ) ) {
-			$protocol = is_ssl() ? 'https' : 'http';
-			$current_url = $protocol . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+			$protocol    = is_ssl() ? 'https' : 'http';
+			$host        = isset( $_SERVER['HTTP_HOST'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_HOST'] ) ) : '';
+			$uri         = isset( $_SERVER['REQUEST_URI'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
+			$current_url = $protocol . '://' . $host . $uri;
 		}
 
 		// Normalize current URL.
 		$current_url = trailingslashit( $current_url );
-		if ( ! parse_url( $current_url, PHP_URL_QUERY ) ) {
+		if ( ! wp_parse_url( $current_url, PHP_URL_QUERY ) ) {
 			$current_url = trailingslashit( $current_url );
 		}
 
 		// Find current URL in the array.
-		$key = array_search( urldecode( $current_url ), $url_arr );
+		$key = array_search( urldecode( $current_url ), $url_arr, true );
 
 		if ( false === $key ) {
 			return array(
@@ -177,22 +179,22 @@ class BB_Readylaunch_Learndash_Helper {
 			);
 		}
 
-		$url_result = array();
-		$keys = array_keys( $url_arr );
-		$current_key_index = array_search( $key, $keys );
+		$url_result        = array();
+		$keys              = array_keys( $url_arr );
+		$current_key_index = array_search( $key, $keys, true );
 
 		// Get next URL.
 		$next = null;
 		if ( isset( $keys[ $current_key_index + 1 ] ) ) {
 			$next_key = $keys[ $current_key_index + 1 ];
-			$next = $url_arr[ $next_key ];
+			$next     = $url_arr[ $next_key ];
 		}
 
 		// Get previous URL.
 		$prev = null;
 		if ( isset( $keys[ $current_key_index - 1 ] ) ) {
 			$prev_key = $keys[ $current_key_index - 1 ];
-			$prev = $url_arr[ $prev_key ];
+			$prev     = $url_arr[ $prev_key ];
 		}
 
 		$last_element = end( $url_arr );
@@ -201,10 +203,10 @@ class BB_Readylaunch_Learndash_Helper {
 		$url_result['next'] = '';
 		if ( ! empty( $next ) && $last_element !== $current_url ) {
 			$url_result['next'] = sprintf(
-				'<a href="%s" class="next-link" rel="next">%s<i class="bb-icons-rl-caret-right"></i></a>',
+				/* translators: 1: Next URL, 2: Next text. */
+				'<a href="%1$s" class="next-link" rel="next">%2$s<i class="bb-icons-rl-caret-right"></i></a>',
 				esc_url( $next ),
-				esc_html__( 'Next', 'buddyboss' ),
-				esc_attr__( 'Next', 'buddyboss' )
+				esc_html__( 'Next', 'buddyboss' )
 			);
 		}
 
@@ -212,9 +214,9 @@ class BB_Readylaunch_Learndash_Helper {
 		$url_result['prev'] = '';
 		if ( ! empty( $prev ) && $last_element !== $prev ) {
 			$url_result['prev'] = sprintf(
-				'<a href="%s" class="prev-link" rel="prev"><i class="bb-icons-rl-caret-left"></i> %s</a>',
+				/* translators: 1: Previous URL, 2: Previous text. */
+				'<a href="%1$s" class="prev-link" rel="prev"><i class="bb-icons-rl-caret-left"></i> %2$s</a>',
 				esc_url( $prev ),
-				esc_attr__( 'Previous', 'buddyboss' ),
 				esc_html__( 'Previous', 'buddyboss' )
 			);
 		}
@@ -231,7 +233,7 @@ class BB_Readylaunch_Learndash_Helper {
 	 * @param array $lesson_list Array of lesson objects.
 	 * @param array $course_quizzes_list Optional. Array of course quizzes.
 	 *
-	 * @return array Array of navigation URLs with completion status.
+	 * @return false|string Returns the URL of the first incomplete step or an empty string if all steps are complete.
 	 */
 	public function bb_rl_ld_custom_continue_url_arr( $course_id, $lesson_list, $course_quizzes_list = array() ) {
 		$user_id = get_current_user_id();
@@ -242,7 +244,7 @@ class BB_Readylaunch_Learndash_Helper {
 			if ( 'closed' === $course_price_type ) {
 				if ( function_exists( 'learndash_user_get_enrolled_courses' ) ) {
 					$user_courses = learndash_user_get_enrolled_courses( $user_id );
-					if ( ! in_array( $course_id, $user_courses ) ) {
+					if ( ! in_array( $course_id, $user_courses, true ) ) {
 						return get_permalink( $course_id );
 					}
 				}
@@ -261,7 +263,7 @@ class BB_Readylaunch_Learndash_Helper {
 				// Check lesson completion.
 				$lesson_completed = ! empty( $course_progress[ $course_id ]['lessons'][ $lesson->ID ] ) && 1 === $course_progress[ $course_id ]['lessons'][ $lesson->ID ];
 
-				$lesson_url = function_exists( 'learndash_get_step_permalink' ) 
+				$lesson_url = function_exists( 'learndash_get_step_permalink' )
 					? learndash_get_step_permalink( $lesson->ID, $course_id )
 					: get_permalink( $lesson->ID );
 
@@ -283,7 +285,7 @@ class BB_Readylaunch_Learndash_Helper {
 							// Check topic completion.
 							$topic_completed = ! empty( $course_progress[ $course_id ]['topics'][ $lesson->ID ][ $lesson_topic->ID ] ) && 1 === $course_progress[ $course_id ]['topics'][ $lesson->ID ][ $lesson_topic->ID ];
 
-							$topic_url = function_exists( 'learndash_get_step_permalink' ) 
+							$topic_url = function_exists( 'learndash_get_step_permalink' )
 								? learndash_get_step_permalink( $lesson_topic->ID, $course_id )
 								: get_permalink( $lesson_topic->ID );
 
@@ -302,11 +304,11 @@ class BB_Readylaunch_Learndash_Helper {
 											continue;
 										}
 
-										$quiz_completed = function_exists( 'learndash_is_quiz_complete' ) 
+										$quiz_completed = function_exists( 'learndash_is_quiz_complete' )
 											? learndash_is_quiz_complete( $user_id, $topic_quiz['post']->ID, $course_id )
 											: false;
 
-										$quiz_url = function_exists( 'learndash_get_step_permalink' ) 
+										$quiz_url = function_exists( 'learndash_get_step_permalink' )
 											? learndash_get_step_permalink( $topic_quiz['post']->ID, $course_id )
 											: get_permalink( $topic_quiz['post']->ID );
 
@@ -331,11 +333,11 @@ class BB_Readylaunch_Learndash_Helper {
 								continue;
 							}
 
-							$quiz_completed = function_exists( 'learndash_is_quiz_complete' ) 
+							$quiz_completed = function_exists( 'learndash_is_quiz_complete' )
 								? learndash_is_quiz_complete( $user_id, $lesson_quiz['post']->ID, $course_id )
 								: false;
 
-							$quiz_url = function_exists( 'learndash_get_step_permalink' ) 
+							$quiz_url = function_exists( 'learndash_get_step_permalink' )
 								? learndash_get_step_permalink( $lesson_quiz['post']->ID, $course_id )
 								: get_permalink( $lesson_quiz['post']->ID );
 
@@ -358,11 +360,11 @@ class BB_Readylaunch_Learndash_Helper {
 						continue;
 					}
 
-					$quiz_completed = function_exists( 'learndash_is_quiz_complete' ) 
+					$quiz_completed = function_exists( 'learndash_is_quiz_complete' )
 						? learndash_is_quiz_complete( $user_id, $course_quiz['post']->ID, $course_id )
 						: false;
 
-					$quiz_url = function_exists( 'learndash_get_step_permalink' ) 
+					$quiz_url = function_exists( 'learndash_get_step_permalink' )
 						? learndash_get_step_permalink( $course_quiz['post']->ID, $course_id )
 						: get_permalink( $course_quiz['post']->ID );
 
@@ -375,9 +377,12 @@ class BB_Readylaunch_Learndash_Helper {
 		}
 
 		// Find first incomplete step.
-		$incomplete_steps = array_filter( $navigation_urls, function( $step ) {
-			return 'no' === $step['complete'];
-		});
+		$incomplete_steps = array_filter(
+			$navigation_urls,
+			function ( $step ) {
+				return 'no' === $step['complete'];
+			}
+		);
 
 		if ( ! empty( $incomplete_steps ) ) {
 			$first_incomplete = reset( $incomplete_steps );
@@ -483,15 +488,17 @@ class BB_Readylaunch_Learndash_Helper {
 
 		// Get current URL if not provided.
 		if ( empty( $current_url ) ) {
-			$protocol = is_ssl() ? 'https' : 'http';
-			$current_url = $protocol . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+			$protocol    = is_ssl() ? 'https' : 'http';
+			$host        = isset( $_SERVER['HTTP_HOST'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_HOST'] ) ) : '';
+			$uri         = isset( $_SERVER['REQUEST_URI'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
+			$current_url = $protocol . '://' . $host . $uri;
 		}
 
 		// Normalize current URL.
 		$current_url = trailingslashit( $current_url );
 
-		$key = array_search( $current_url, $url_arr );
+		$key = array_search( $current_url, $url_arr, true );
 
 		return false !== $key ? $key + 1 : 0;
 	}
-} 
+}

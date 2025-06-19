@@ -1,11 +1,17 @@
 <?php
 /**
- * ReadyLaunch - BuddyBoss - Video Creates Album.
+ * ReadyLaunch - Video Create Album Form template.
  *
- * @since   BuddyBoss [BBVERSION]
- * @package BuddyBoss\Core
+ * Template for video album creation form interface.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 ?>
 

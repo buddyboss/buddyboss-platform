@@ -1,13 +1,17 @@
 <?php
 /**
- * Template for displaying the search results of the post ajax
+ * ReadyLaunch - Search Loop Post AJAX template.
  *
- * This template can be overridden by copying it to yourtheme/buddypress/search/loop/post-ajax.php.
+ * The template for AJAX search results for posts.
  *
- * @package BuddyBoss\Core
- * @since   BuddyBoss 1.0.0
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 $result = bp_search_is_post_restricted( get_the_ID(), get_current_user_id(), 'post' );
 ?>

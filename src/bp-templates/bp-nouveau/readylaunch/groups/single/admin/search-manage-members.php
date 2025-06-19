@@ -1,12 +1,18 @@
 <?php
 /**
- * BP Nouveau Group's search members template.
+ * ReadyLaunch - Group's search members template.
  *
- * This template can be overridden by copying it to yourtheme/buddypress/groups/single/admin/search-manage-members.php.
+ * This template displays search results for group members in the
+ * manage members interface with member actions and pagination.
  *
- * @since   BuddyBoss 2.5.50
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 $group = groups_get_current_group();
 if ( ! empty( $group->id ) ) {

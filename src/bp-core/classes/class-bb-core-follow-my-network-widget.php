@@ -2,6 +2,7 @@
 /**
  * BuddyBoss Followers Following Widget.
  *
+ * @package BuddyBoss
  * @since BuddyBoss [BBVERSION]
  */
 
@@ -17,7 +18,7 @@ class BB_Core_Follow_My_Network_Widget extends WP_Widget {
 	/**
 	 * Constructor.
 	 */
-	function __construct() {
+	public function __construct() {
 		// Set up optional widget args.
 		$widget_ops = array(
 			'classname'   => 'widget-bb-rl-follow-my-network-widget widget buddypress',
@@ -41,10 +42,15 @@ class BB_Core_Follow_My_Network_Widget extends WP_Widget {
 
 	/**
 	 * Displays the widget.
+	 *
+	 * @param array $args     Widget arguments.
+	 * @param array $instance Widget instance.
+	 *
+	 * return void
 	 */
-	function widget( $args, $instance ) {
+	public function widget( $args, $instance ) {
 
-		// Do not do anything if user isn't logged in
+		// Do not do anything if the user isn't logged in.
 		if ( ! is_user_logged_in() || ! bp_is_activity_follow_active() ) {
 			return;
 		}
@@ -85,7 +91,6 @@ class BB_Core_Follow_My_Network_Widget extends WP_Widget {
 			$see_all_query_string = '?bb-rl-scope=following';
 		}
 
-	
 		$follower_array  = ! empty( $follower ) ? explode( ',', $follower ) : array();
 		$follower_count  = count( $follower_array );
 		$following_array = ! empty( $following ) ? explode( ',', $following ) : array();
@@ -94,6 +99,7 @@ class BB_Core_Follow_My_Network_Widget extends WP_Widget {
 		$instance['title'] = (
 			bp_loggedin_user_id() === bp_displayed_user_id()
 			? __( 'My Network', 'buddyboss' )
+			/* translators: %s is the user's display name */
 			: sprintf( __( "%s's Network", 'buddyboss' ), $this->get_user_display_name( $id ) )
 		);
 
@@ -117,21 +123,24 @@ class BB_Core_Follow_My_Network_Widget extends WP_Widget {
 		 * @param string $id_base  Root ID for all widgets of this type.
 		 */
 		$title = apply_filters( 'widget_title', $instance['title'], $instance, $this->id_base );
-		$title = $settings['link_title'] ? '<a href="' . $members_dir_url . '">' . $title . '</a>' : $title;
+		$title = $settings['link_title'] ? '<a href="' . esc_url( $members_dir_url ) . '">' . esc_html( $title ) . '</a>' : esc_html( $title );
 
 		do_action( 'bb_before_my_network_widget' );
 
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		echo $args['before_widget'];
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		echo $args['before_title']
-			. $title
-			. '<div class="bb-rl-see-all"><a target="_blank" href="' . $members_dir_url . $see_all_query_string .'" class="count-more">' . esc_html__( 'See all', 'buddyboss' ) . '<i class="bb-icon-l bb-icon-angle-right"></i></a></div>'
+			. esc_html( $title )
+			. '<div class="bb-rl-see-all"><a target="_blank" href="' . esc_url( $members_dir_url . $see_all_query_string ) . '" class="count-more">' . esc_html__( 'See all', 'buddyboss' ) . '<i class="bb-icon-l bb-icon-angle-right"></i></a></div>'
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			. $args['after_title'];
 		?>
 			<div class="bb-rl-members-item-options">
-				<a href="javascript:void(0);" id="bb-rl-my-network-followers" data-see-all-link="<?php echo $members_dir_url . '?bb-rl-scope=follower' ?>"
-					<?php echo ( empty( $settings['member_default'] ) || 'followers' === $settings['member_default'] ) ? 'class="selected"' : ''; ?>><?php esc_html_e( 'Followers', 'buddyboss' ); ?><span class="bb-rl-widget-tab-count"><?php echo $follower_count; ?></span></a>
-				<a href="javascript:void(0);" id="bb-rl-my-network-following" data-max="<?php echo esc_attr( $settings['max_users'] ); ?>" data-see-all-link="<?php echo $members_dir_url . '?bb-rl-scope=following' ?>"
-				<?php echo ( 'following' === $settings['member_default'] ) ? 'class="selected"' : ''; ?>><?php esc_html_e( 'Following', 'buddyboss' ); ?><span class="bb-rl-widget-tab-count"><?php echo $following_count; ?></span></a>
+				<a href="javascript:void(0);" id="bb-rl-my-network-followers" data-see-all-link="<?php echo esc_url( $members_dir_url . '?bb-rl-scope=follower' ); ?>"
+					<?php echo ( empty( $settings['member_default'] ) || 'followers' === $settings['member_default'] ) ? 'class="selected"' : ''; ?>><?php esc_html_e( 'Followers', 'buddyboss' ); ?><span class="bb-rl-widget-tab-count"><?php echo esc_html( $follower_count ); ?></span></a>
+				<a href="javascript:void(0);" id="bb-rl-my-network-following" data-max="<?php echo esc_attr( $settings['max_users'] ); ?>" data-see-all-link="<?php echo esc_url( $members_dir_url . '?bb-rl-scope=following' ); ?>"
+				<?php echo ( 'following' === $settings['member_default'] ) ? 'class="selected"' : ''; ?>><?php esc_html_e( 'Following', 'buddyboss' ); ?><span class="bb-rl-widget-tab-count"><?php echo esc_html( $following_count ); ?></span></a>
 			</div>
 			<div class="bb-rl-my-network-members-list bb-rl-avatar-block">
 		<?php
@@ -164,7 +173,9 @@ class BB_Core_Follow_My_Network_Widget extends WP_Widget {
 
 		<input type="hidden" name="bb_rl_my_network_widget_max" id="bb_rl_my_network_widget_max"  value="<?php echo esc_attr( $settings['max_users'] ); ?>"/>
 
-		<?php echo $args['after_widget'];
+		<?php
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo $args['after_widget'];
 
 		do_action( 'bb_after_my_network_widget' );
 
@@ -174,30 +185,37 @@ class BB_Core_Follow_My_Network_Widget extends WP_Widget {
 
 	/**
 	 * Callback to save widget settings.
+	 *
+	 * @param array $new_instance New widget instance.
+	 * @param array $old_instance Old widget instance.
+	 *
+	 * @return array Updated instance.
 	 */
-	function update( $new_instance, $old_instance ) {
+	public function update( $new_instance, $old_instance ) {
 		$instance                   = $old_instance;
 		$instance['max_users']      = (int) $new_instance['max_users'];
-		$instance['member_default'] = strip_tags( $new_instance['member_default'] );
+		$instance['member_default'] = wp_strip_all_tags( $new_instance['member_default'] );
 
 		return $instance;
 	}
 
 	/**
 	 * Widget settings form.
+	 *
+	 * @param array $instance Widget instance.
 	 */
-	function form( $instance ) {
+	public function form( $instance ) {
 		$settings       = $this->parse_settings( $instance );
-		$max_members    = strip_tags( $settings['max_users'] );
-		$member_default = strip_tags( $settings['member_default'] );
+		$max_members    = wp_strip_all_tags( $settings['max_users'] );
+		$member_default = wp_strip_all_tags( $settings['member_default'] );
 		?>
 
 		<p>
 			<label for="<?php echo esc_attr( $this->get_field_id( 'max_users' ) ); ?>"><?php esc_html_e( 'Max members to show:', 'buddyboss' ); ?> <input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'max_users' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'max_users' ) ); ?>" type="number" value="<?php echo esc_attr( (int) $max_members ); ?>" style="width: 30%" /></label>
 		</p>
 		<p>
-		<label for="<?php echo $this->get_field_id( 'member_default' ); ?>"><?php esc_html_e( 'Default members to show:', 'buddyboss' ); ?></label>
-		<select name="<?php echo $this->get_field_name( 'member_default' ); ?>" id="<?php echo $this->get_field_id( 'member_default' ); ?>">
+		<label for="<?php echo esc_attr( $this->get_field_id( 'member_default' ) ); ?>"><?php esc_html_e( 'Default members to show:', 'buddyboss' ); ?></label>
+		<select name="<?php echo esc_attr( $this->get_field_name( 'member_default' ) ); ?>" id="<?php echo esc_attr( $this->get_field_id( 'member_default' ) ); ?>">
 				<option value="followers"
 				<?php
 				if ( 'followers' === $member_default ) :
@@ -217,6 +235,10 @@ class BB_Core_Follow_My_Network_Widget extends WP_Widget {
 	 * Set Display user_id to loggedin_user_id if someone added the widget on outside bp pages.
 	 *
 	 * @since BuddyBoss 1.2.5
+	 *
+	 * @param int $id User ID.
+	 *
+	 * @return int User ID.
 	 */
 	public function set_display_user( $id ) {
 		if ( ! $id ) {
@@ -226,9 +248,13 @@ class BB_Core_Follow_My_Network_Widget extends WP_Widget {
 	}
 
 	/**
-	 * Display user name to 'First Name' when they have selected 'First Name & Last Name' in display format.
+	 * Display username to 'First Name' when they have selected 'First Name & Last Name' in display format.
 	 *
 	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int $user_id User ID.
+	 *
+	 * @return string User display name.
 	 */
 	public function get_user_display_name( $user_id ) {
 
@@ -253,24 +279,21 @@ class BB_Core_Follow_My_Network_Widget extends WP_Widget {
 	 *
 	 * @since BuddyPress 1.0.0
 	 */
-	function bb_ajax_widget_follow_my_network() {
+	public function bb_ajax_widget_follow_my_network() {
 		global $members_template;
 		check_ajax_referer( 'bb_core_widget_follow_my_network' );
 
-		// Setup some variables to check.
-		$filter      = ! empty( $_POST['filter'] ) ? $_POST['filter'] : 'recently-active-members';
+		// Set up some variables to check.
+		$filter      = ! empty( $_POST['filter'] ) ? sanitize_text_field( wp_unslash( $_POST['filter'] ) ) : 'recently-active-members';
 		$max_members = ! empty( $_POST['max-members'] ) ? absint( $_POST['max-members'] ) : 5;
 
-		// Determine the type of members query to perform.
+		// Determine the type of member query to perform.
 		switch ( $filter ) {
-			case 'bb-rl-my-network-followers':
-				$type = 'followers';
-				break;
-
 			case 'bb-rl-my-network-following':
 				$type = 'following';
 				break;
 
+			case 'bb-rl-my-network-followers':
 			default:
 				$type = 'followers';
 				break;

@@ -1,12 +1,17 @@
 <?php
 /**
- * The template for single members item sub navigation
+ * ReadyLaunch - Member Item Sub Navigation template.
  *
- * This template can be overridden by copying it to yourtheme/buddypress/members/single/parts/item-subnav.php.
+ * This template handles the secondary navigation for single member pages.
  *
- * @since   BuddyPress 3.0.0
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 ?>
 
 <?php

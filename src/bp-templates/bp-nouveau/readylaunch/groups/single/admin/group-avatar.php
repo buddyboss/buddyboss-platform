@@ -1,12 +1,18 @@
 <?php
 /**
- * BP Nouveau Group's avatar template.
+ * ReadyLaunch - Group's avatar template.
  *
- * This template can be overridden by copying it toyourtheme/buddypress/groups/single/admin/group-avatar.php.
+ * This template handles group avatar upload, cropping, and management
+ * for both group creation and editing workflows.
  *
- * @since   BuddyPress 3.0.0
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 $bp_is_group_create   = bp_is_group_create();
 $group_has_avatar     = bp_get_group_has_avatar();
@@ -41,10 +47,10 @@ if ( 'upload-image' === $bp_avatar_admin_step ) :
 	<div class="bb-rl-upload-image-wrap">
 	<?php
 
-		if ( $bp_is_group_create ) :
-			?>
+	if ( $bp_is_group_create ) :
+		?>
 			<div class="left-menu">
-				<?php bp_new_group_avatar(); ?>
+			<?php bp_new_group_avatar(); ?>
 			</div><!-- .left-menu -->
 			<div class="main-column">
 		<?php endif; ?>
@@ -63,7 +69,7 @@ if ( 'upload-image' === $bp_avatar_admin_step ) :
 
 		<?php elseif ( $group_has_avatar ) : ?>
 
-			<p><?php esc_html_e( "To remove the existing group photo, please use the delete group profile photo button.", 'buddyboss' ); ?></p>
+			<p><?php esc_html_e( 'To remove the existing group photo, please use the delete group profile photo button.', 'buddyboss' ); ?></p>
 			<?php
 			bp_button(
 				array(
@@ -79,7 +85,7 @@ if ( 'upload-image' === $bp_avatar_admin_step ) :
 
 		endif;
 
-	?>
+		?>
 	</div>
 	<?php
 
@@ -94,7 +100,7 @@ if ( 'upload-image' === $bp_avatar_admin_step ) :
 		wp_nonce_field( 'bp_avatar_upload' );
 	}
 
-	
+
 endif;
 
 if ( 'crop-image' === $bp_avatar_admin_step ) {

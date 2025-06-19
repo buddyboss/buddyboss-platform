@@ -1,4 +1,14 @@
 <?php
+/**
+ * LearnDash Group Courses Content Display Template
+ *
+ * @package BuddyBoss\Core
+ * @subpackage BP_Integrations\LearnDash\Templates
+ * @version 1.0.0
+ * @since BuddyBoss [BBVERSION]
+ */
+
+defined( 'ABSPATH' ) || exit;
 
 $ld_group_id = bp_ld_sync( 'buddypress' )->helpers->getLearndashGroupId( bp_get_current_group_id() );
 
@@ -286,10 +296,10 @@ $has_lesson_quizzes = learndash_30_has_lesson_quizzes( $course_id, $lessons );
 							if ( $has_topics || $has_lesson_quizzes ) :
 								?>
 								<div class="ld-expand-button ld-primary-background"
-									 id="<?php echo esc_attr( 'ld-expand-button-' . $course_id ); ?>"
-									 data-ld-expands="<?php echo esc_attr( 'ld-item-list-' . $course_id ); ?>"
-									 data-ld-expand-text="<?php esc_attr_e( 'Expand All', 'buddyboss' ); ?>"
-									 data-ld-collapse-text="<?php esc_attr_e( 'Collapse All', 'buddyboss' ); ?>">
+									id="<?php echo esc_attr( 'ld-expand-button-' . $course_id ); ?>"
+									data-ld-expands="<?php echo esc_attr( 'ld-item-list-' . $course_id ); ?>"
+									data-ld-expand-text="<?php esc_attr_e( 'Expand All', 'buddyboss' ); ?>"
+									data-ld-collapse-text="<?php esc_attr_e( 'Collapse All', 'buddyboss' ); ?>">
 
 									<span class="ld-icon-arrow-down ld-icon"></span>
 									<span class="ld-text"><?php esc_html_e( 'Expand All', 'buddyboss' ); ?></span>

@@ -1,12 +1,17 @@
 <?php
 /**
- * The template for members/blogs registration forms
+ * ReadyLaunch - Members Registration template.
  *
- * This template can be overridden by copying it to yourtheme/buddypress/members/register.php.
+ * This template handles the member registration form for blogs and member signups.
  *
- * @since   BuddyPress 3.0.0
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 bp_nouveau_signup_hook( 'before', 'page' );
 $bp_get_current_signup_step = bp_get_current_signup_step();
@@ -33,7 +38,7 @@ $bp_get_current_signup_step = bp_get_current_signup_step();
 
 				<?php
 				bp_nouveau_signup_hook( 'after', 'account_details' );
-				/***** Extra Profile Details ******/
+				/***** Extra Profile Details */
 				if ( bp_is_active( 'xprofile' ) && bp_nouveau_base_account_has_xprofile() ) {
 					bp_nouveau_signup_hook( 'before', 'signup_profile' );
 					?>
@@ -41,7 +46,8 @@ $bp_get_current_signup_step = bp_get_current_signup_step();
 
 						<?php
 						/* Use the profile field loop to render input fields for the 'base' profile field group */
-						while ( bp_profile_groups() ) : bp_the_profile_group();
+						while ( bp_profile_groups() ) :
+							bp_the_profile_group();
 
 							while ( bp_profile_fields() ) :
 								bp_the_profile_field();
@@ -53,7 +59,12 @@ $bp_get_current_signup_step = bp_get_current_signup_step();
 								}
 								?>
 
-								<div<?php bp_field_css_class( 'editfield' ); bp_field_data_attribute(); ?>>
+								<div
+								<?php
+								bp_field_css_class( 'editfield' );
+								bp_field_data_attribute();
+								?>
+								>
 									<fieldset>
 										<?php
 										$field_type = bp_xprofile_create_field_type( bp_get_the_profile_field_type() );
@@ -62,11 +73,11 @@ $bp_get_current_signup_step = bp_get_current_signup_step();
 									</fieldset>
 								</div>
 
-							<?php
+								<?php
 							endwhile;
 							?>
 							<input type="hidden" name="signup_profile_field_ids" id="signup_profile_field_ids" value="<?php bp_the_profile_field_ids(); ?>" />
-						<?php
+							<?php
 						endwhile;
 						bp_nouveau_signup_hook( '', 'signup_profile' );
 						?>
@@ -78,7 +89,7 @@ $bp_get_current_signup_step = bp_get_current_signup_step();
 				if ( bp_get_blog_signup_allowed() ) {
 
 					bp_nouveau_signup_hook( 'before', 'blog_details' );
-					/***** Blog Creation Details ******/
+					/***** Blog Creation Details */
 					?>
 					<div class="register-section blog-details" id="blog-details-section">
 						<h2><?php esc_html_e( 'Site Details', 'buddyboss' ); ?></h2>
@@ -86,7 +97,11 @@ $bp_get_current_signup_step = bp_get_current_signup_step();
 							<input type="checkbox" name="signup_with_blog" id="signup_with_blog" class="bs-styled-checkbox" value="1" <?php checked( (int) bp_get_signup_with_blog_value(), 1 ); ?> />
 							<label for="signup_with_blog"><?php esc_html_e( "Yes, I'd like to create a new site", 'buddyboss' ); ?></label>
 						</p>
-						<div id="blog-details" <?php if ( (int) bp_get_signup_with_blog_value() ) : ?>class="show"<?php endif; ?>>
+						<div id="blog-details"
+						<?php
+						if ( (int) bp_get_signup_with_blog_value() ) :
+							?>
+							class="show"<?php endif; ?>>
 							<?php bp_nouveau_signup_form( 'blog_details' ); ?>
 						</div>
 					</div><!-- #blog-details-section -->
@@ -102,7 +117,8 @@ $bp_get_current_signup_step = bp_get_current_signup_step();
 			bp_nouveau_submit_button( 'register' );
 		} // request-details signup step.
 
-		bp_nouveau_signup_hook( 'custom', 'steps' ); ?>
+		bp_nouveau_signup_hook( 'custom', 'steps' );
+		?>
 	</form>
 </div>
 <?php bp_nouveau_signup_hook( 'after', 'page' ); ?>

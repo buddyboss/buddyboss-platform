@@ -1,13 +1,18 @@
 <?php
 /**
- * The template for document entry
+ * ReadyLaunch - Document entry template.
  *
- * This template can be overridden by copying it to yourtheme/buddypress/document/document-entry.php.
+ * This template handles the display of individual document entries
+ * in the document list view with detailed information and actions.
  *
- * @since   BuddyBoss 1.4.0
- * @package BuddyBoss\Core
- * @version 1.4.0
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
+ * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 global $document_template;
 
@@ -138,9 +143,9 @@ id="div-listing-<?php echo esc_attr( $document_id ); ?>">
 			<?php
 			if ( $attachment_id ) {
 				?>
-				<small class="error-box"><?php _e( 'Following special characters are not supported:<br/> ? [ ] / \\\\ = < > : ; , \' " & $ # * ( ) | ~ ` ! { } % + {space}', 'buddyboss' ); ?></small>
+				<small class="error-box"><?php esc_html_e( 'Following special characters are not supported:<br/> ? [ ] / \\\\ = < > : ; , \' " & $ # * ( ) | ~ ` ! { } % + {space}', 'buddyboss' ); ?></small>
 			<?php } else { ?>
-				<small class="error-box"><?php _e( 'Following special characters are not supported:<br/> \ / ? % * : | " < >', 'buddyboss' ); ?></small>
+				<small class="error-box"><?php esc_html_e( 'Following special characters are not supported:<br/> \ / ? % * : | " < >', 'buddyboss' ); ?></small>
 				<?php
 			}
 			if ( wp_is_mobile() ) {
@@ -183,7 +188,8 @@ id="div-listing-<?php echo esc_attr( $document_id ); ?>">
 	</div>
 	<div class="media-folder_group">
 		<?php
-		if ( bp_is_document_directory() && bp_is_active( 'groups' ) && isset( $_POST ) && isset( $_POST['scope'] ) && 'personal' !== $_POST['scope'] ) {
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verification handled in calling context
+		if ( bp_is_document_directory() && bp_is_active( 'groups' ) && isset( $_POST ) && isset( $_POST['scope'] ) && 'personal' !== sanitize_text_field( wp_unslash( $_POST['scope'] ) ) ) {
 			?>
 			<div class="media-folder_details__bottom">
 				<?php
@@ -264,10 +270,10 @@ id="div-listing-<?php echo esc_attr( $document_id ); ?>">
 						<?php
 					}
 					if ( $can_edit ) {
-                        $privacy = ( 0 === $group_id && 0 === bp_get_document_parent_id() ) ? 'data-privacy="' . esc_attr( bp_get_db_document_privacy() ) . '"' : '' ;
+						$privacy = ( 0 === $group_id && 0 === bp_get_document_parent_id() ) ? 'data-privacy="' . esc_attr( bp_get_db_document_privacy() ) . '"' : '';
 						?>
 						<li class="bb-rl-edit-file">
-							<a href="#" data-type="<?php echo esc_attr( $document_type ); ?>" class="ac-document-edit" <?php echo $privacy; ?>><?php esc_html_e( 'Edit', 'buddyboss' ); ?></a>
+							<a href="#" data-type="<?php echo esc_attr( $document_type ); ?>" class="ac-document-edit" <?php echo wp_kses_post( $privacy ); ?>><?php esc_html_e( 'Edit', 'buddyboss' ); ?></a>
 						</li>
 						<?php
 						if ( $can_move ) {
@@ -297,7 +303,7 @@ id="div-listing-<?php echo esc_attr( $document_id ); ?>">
 					if ( $report_btn && 'document' === $document_type ) {
 						?>
 						<li class="report_file">
-							<?php echo $report_btn; ?>
+							<?php echo wp_kses_post( $report_btn ); ?>
 						</li>
 						<?php
 					}

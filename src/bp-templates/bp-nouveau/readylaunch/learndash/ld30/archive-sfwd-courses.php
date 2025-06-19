@@ -2,16 +2,16 @@
 /**
  * LearnDash Course Archive Template for ReadyLaunch
  *
- * @package BuddyBoss\Core
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @version 1.0.0
  * @since BuddyBoss [BBVERSION]
  */
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+defined( 'ABSPATH' ) || exit;
 
-// Get the ReadyLaunch instance to check if sidebar is enabled
-$readylaunch = BB_Readylaunch::instance();
+// Get the ReadyLaunch instance to check if sidebar is enabled.
+$readylaunch = bb_load_readylaunch();
 ?>
 
 <div class="bb-rl-secondary-header flex items-center">
@@ -31,16 +31,16 @@ $readylaunch = BB_Readylaunch::instance();
 	<div class="bb-rl-course-filters bb-rl-sub-ctrls flex items-center">
 
 		<div class="bb-rl-grid-filters flex items-center" data-view="ld-course">
-			<a href="" class="layout-view layout-view-course layout-grid-view bp-tooltip active" data-view="grid" data-bp-tooltip-pos="down" data-bp-tooltip="<?php _e( 'Grid View', 'buddyboss' ); ?>">
+			<a href="" class="layout-view layout-view-course layout-grid-view bp-tooltip active" data-view="grid" data-bp-tooltip-pos="down" data-bp-tooltip="<?php esc_attr_e( 'Grid View', 'buddyboss' ); ?>">
 				<i class="bb-icons-rl-squares-four"></i>
 			</a>
-			<a href="" class="layout-view layout-view-course layout-list-view bp-tooltip" data-view="list" data-bp-tooltip-pos="down" data-bp-tooltip="<?php _e( 'List View', 'buddyboss' ); ?>">
+			<a href="" class="layout-view layout-view-course layout-list-view bp-tooltip" data-view="list" data-bp-tooltip-pos="down" data-bp-tooltip="<?php esc_attr_e( 'List View', 'buddyboss' ); ?>">
 				<i class="bb-icons-rl-rows"></i>
 			</a>
 		</div>
-				
+
 		<?php
-		// Display course category filter if available
+		// Display course category filter if available.
 		$course_cats = get_terms(
 			array(
 				'taxonomy'   => 'ld_course_category',
@@ -56,9 +56,9 @@ $readylaunch = BB_Readylaunch::instance();
 					<div class="select-wrap">
 						<select id="ld-course-cats" onchange="if (this.value) window.location.href=this.value">
 							<option value="<?php echo esc_url( get_post_type_archive_link( 'sfwd-courses' ) ); ?>"><?php esc_html_e( 'All Categories', 'buddyboss' ); ?></option>
-							<?php foreach ( $course_cats as $cat ) : ?>
-								<option value="<?php echo esc_url( get_term_link( $cat ) ); ?>" <?php selected( is_tax( 'ld_course_category', $cat->term_id ) ); ?>>
-									<?php echo esc_html( $cat->name ); ?>
+							<?php foreach ( $course_cats as $course_category ) : ?>
+								<option value="<?php echo esc_url( get_term_link( $course_category ) ); ?>" <?php selected( is_tax( 'ld_course_category', $course_category->term_id ) ); ?>>
+									<?php echo esc_html( $course_category->name ); ?>
 								</option>
 							<?php endforeach; ?>
 						</select>
@@ -71,7 +71,7 @@ $readylaunch = BB_Readylaunch::instance();
 <div class="bb-rl-container-inner bb-rl-learndash-content-wrap">
 	<main class="bb-learndash-content-area">
 		<div class="bb-rl-courses-list">
-			
+
 			<?php if ( have_posts() ) : ?>
 				<div class="bb-rl-courses-grid grid">
 					<?php
@@ -113,7 +113,7 @@ $readylaunch = BB_Readylaunch::instance();
 										<?php endif; ?>
 									</a>
 								</div>
-								
+
 								<div class="bb-rl-course-content">
 									<div class="bb-rl-course-body">
 										<h2 class="bb-rl-course-title">
@@ -166,7 +166,7 @@ $readylaunch = BB_Readylaunch::instance();
 														<span class="bb-rl-price">
 															<span class="ld-currency">
 																<?php echo wp_kses_post( $currency ); ?>
-															</span> 
+															</span>
 															<?php echo wp_kses_post( $price ); ?>
 														</span>
 													</div>
@@ -184,26 +184,29 @@ $readylaunch = BB_Readylaunch::instance();
 								</div>
 								<div class="bb-rl-course-popup-meta">
 									<?php
-									$lesson_count  = learndash_get_course_lessons_list( $course_id, null, array( 'num' => - 1 ) );
-									$lesson_count  = array_column( $lesson_count, 'post' );
-									$lessons_count = ! empty( $lesson_count ) ? count( $lesson_count ) : 0;
-									$total_lessons = (
-										$lessons_count > 1
+									$lesson_count_obj  = learndash_get_course_lessons_list( $course_id, null, array( 'num' => - 1 ) );
+									$lesson_count_obj  = array_column( $lesson_count_obj, 'post' );
+									$lessons_count_val = ! empty( $lesson_count_obj ) ? count( $lesson_count_obj ) : 0;
+									$total_lessons     = (
+										$lessons_count_val > 1
 										? sprintf(
 											/* translators: 1: plugin name, 2: action number 3: total number of actions. */
 											__( '%1$s %2$s', 'buddyboss' ),
-											$lessons_count,
+											$lessons_count_val,
 											LearnDash_Custom_Label::get_label( 'lessons' )
 										)
 										: sprintf(
 											/* translators: 1: plugin name, 2: action number 3: total number of actions. */
 											__( '%1$s %2$s', 'buddyboss' ),
-											$lessons_count,
+											$lessons_count_val,
 											LearnDash_Custom_Label::get_label( 'lesson' )
 										)
 									);
 									?>
-									<span class="bb-rl-course-meta-tag"><?php echo esc_html( $total_lessons ); ?></span>
+									<span class="bb-rl-course-popup-item">
+										<i class="bb-icons-rl-book-open-text"></i>
+										<?php echo esc_html( $total_lessons ); ?>
+									</span>
 									<span class="bb-rl-course-meta-tag"><?php esc_html_e( 'Beginner', 'buddyboss' ); ?></span>
 								</div>
 								<div class="bb-rl-course-popup-caption">
@@ -240,13 +243,15 @@ $readylaunch = BB_Readylaunch::instance();
 						</div>
 					<?php endwhile; ?>
 				</div>
-				
+
 				<div class="bb-rl-course-pagination">
 					<?php
-					echo paginate_links(
-						array(
-							'prev_text' => __( '<i class="bb-icons-rl-arrow-left"></i> Previous', 'buddyboss' ),
-							'next_text' => __( 'Next <i class="bb-icons-rl-arrow-right"></i>', 'buddyboss' ),
+					echo wp_kses_post(
+						paginate_links(
+							array(
+								'prev_text' => __( '<i class="bb-icons-rl-arrow-left"></i> Previous', 'buddyboss' ),
+								'next_text' => __( 'Next <i class="bb-icons-rl-arrow-right"></i>', 'buddyboss' ),
+							)
 						)
 					);
 					?>
@@ -258,4 +263,4 @@ $readylaunch = BB_Readylaunch::instance();
 			<?php endif; ?>
 		</div>
 	</main>
-</div> 
+</div>

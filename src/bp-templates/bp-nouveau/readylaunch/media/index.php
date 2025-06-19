@@ -1,58 +1,64 @@
 <?php
-	/**
-	 * The template for medias
-	 *
-	 * This template can be overridden by copying it to yourtheme/buddypress/media/index.php.
-	 *
-	 * @since   BuddyBoss 1.0.0
-	 * @version 1.0.0
-	 */
+/**
+ * The template for medias
+ *
+ * This template handles the media directory page layout for the ReadyLaunch theme.
+ * It includes search filters, create album button, add photos functionality, and media listing.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
+ * @version 1.0.0
+ */
 
-	$is_send_ajax_request = bb_is_send_ajax_request();
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
+$is_send_ajax_request = bb_is_send_ajax_request();
 ?>
 <div class="bb-rl-media-directory-wrapper">
 	<div class="bb-rl-secondary-header flex items-center">
 		<div class="bb-rl-entry-heading">
-			<h2><?php esc_html_e( 'Photos', 'buddyboss' ); ?> <span class="bb-rl-heading-count"><?php echo ! $is_send_ajax_request ? bp_core_get_all_member_count() : ''; ?></span></h2>
+			<h2><?php esc_html_e( 'Photos', 'buddyboss' ); ?> <span class="bb-rl-heading-count"><?php echo ! $is_send_ajax_request ? esc_html( bp_core_get_all_member_count() ) : ''; ?></span></h2>
 		</div>
 		<div class="bb-rl-sub-ctrls flex items-center">
 			<?php
-				bp_get_template_part( 'common/search-and-filters-bar' );
+			bp_get_template_part( 'common/search-and-filters-bar' );
 
-				if (
-					is_user_logged_in() &&
-					bp_is_profile_media_support_enabled() &&
-					bb_user_can_create_media()
-				) {
+			if (
+				is_user_logged_in() &&
+				bp_is_profile_media_support_enabled() &&
+				bb_user_can_create_media()
+			) {
 
-					echo '<div class="bb-rl-media-actions bb-rl-actions-buttons flex items-center">';
+				echo '<div class="bb-rl-media-actions bb-rl-actions-buttons flex items-center">';
 
-					$bp_is_profile_albums_support_enabled = bp_is_profile_albums_support_enabled();
-					if ( $bp_is_profile_albums_support_enabled ) {
-						?>
-						<a href="#" id="bb-create-album" class="action-secondary bb-create-album button small">
-							<i class="bb-icons-rl-images"></i>
-							<?php esc_html_e( 'Create Album', 'buddyboss' ); ?>
-						</a>
-						<?php
-					}
-
+				$bp_is_profile_albums_support_enabled = bp_is_profile_albums_support_enabled();
+				if ( $bp_is_profile_albums_support_enabled ) {
 					?>
-					<a class="bb-add-photos button small action-primary" id="bp-add-media" href="#">
-						<i class="bb-icons-rl-plus"></i>
-						<?php esc_html_e( 'Add Photos', 'buddyboss' ); ?>
+					<a href="#" id="bb-create-album" class="action-secondary bb-create-album button small">
+						<i class="bb-icons-rl-images"></i>
+						<?php esc_html_e( 'Create Album', 'buddyboss' ); ?>
 					</a>
-
 					<?php
-
-					bp_get_template_part( 'media/uploader' );
-
-					if ( $bp_is_profile_albums_support_enabled ) {
-						bp_get_template_part( 'media/create-album' );
-					}
-
-					echo '</div>';
 				}
+
+				?>
+				<a class="bb-add-photos button small action-primary" id="bp-add-media" href="#">
+					<i class="bb-icons-rl-plus"></i>
+					<?php esc_html_e( 'Add Photos', 'buddyboss' ); ?>
+				</a>
+
+				<?php
+
+				bp_get_template_part( 'media/uploader' );
+
+				if ( $bp_is_profile_albums_support_enabled ) {
+					bp_get_template_part( 'media/create-album' );
+				}
+
+				echo '</div>';
+			}
 			?>
 		</div>
 	</div>
@@ -90,22 +96,22 @@
 
 				<?php
 					bp_get_template_part( 'media/theatre' );
-					if ( bp_is_profile_video_support_enabled() ) {
-						bp_get_template_part( 'video/theatre' );
-						bp_get_template_part( 'video/add-video-thumbnail' );
-					}
+				if ( bp_is_profile_video_support_enabled() ) {
+					bp_get_template_part( 'video/theatre' );
+					bp_get_template_part( 'video/add-video-thumbnail' );
+				}
 					bp_get_template_part( 'document/theatre' );
 				?>
 
 				<div id="media-stream" class="media dir-list bb-rl-media bb-rl-media-stream" data-bp-list="media" data-ajax="<?php echo esc_attr( $is_send_ajax_request ? 'true' : 'false' ); ?>">
 					<?php
-						if ( $is_send_ajax_request ) {
-							echo '<div id="bp-ajax-loader">';
-							bp_nouveau_user_feedback( 'directory-media-loading' );
-							echo '</div>';
-						} else {
-							bp_get_template_part( 'media/media-loop' );
-						}
+					if ( $is_send_ajax_request ) {
+						echo '<div id="bp-ajax-loader">';
+						bp_nouveau_user_feedback( 'directory-media-loading' );
+						echo '</div>';
+					} else {
+						bp_get_template_part( 'media/media-loop' );
+					}
 					?>
 				</div><!-- .media -->
 

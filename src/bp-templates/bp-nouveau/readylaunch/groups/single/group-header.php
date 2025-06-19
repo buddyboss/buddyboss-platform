@@ -1,14 +1,18 @@
 <?php
 /**
- * BuddyBoss - Groups Header
+ * ReadyLaunch - Groups Header template.
  *
- * This template is used to render the group header.
+ * This template renders the group header with cover image, avatar,
+ * group information, meta data, and action buttons.
  *
- * This template can be overridden by copying it to yourtheme/buddypress/groups/single/group-header.php.
- *
- * @since   BuddyPress 3.0.0
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 $group_link       = bp_get_group_permalink();
 $admin_link       = trailingslashit( $group_link . 'admin' );
@@ -73,7 +77,8 @@ add_filter( 'bp_get_group_description_excerpt', 'bb_get_group_description_excerp
 
 				bp_nouveau_group_hook( 'before', 'header_meta' );
 
-				if ( bp_nouveau_group_has_meta_extra() ) : ?>
+				if ( bp_nouveau_group_has_meta_extra() ) :
+					?>
 					<div class="item-meta">
 						<?php echo wp_kses_post( bp_nouveau_group_meta()->extra ); ?>
 					</div><!-- .item-meta -->

@@ -167,12 +167,12 @@
 							if ( data.is_group_thread || other_recipients.length > 2 ) { #>
 							<li class="view_members">
 								<a href="#message-members-list" id="view_more_members" class="view_more_members"
-								   data-thread-id="{{data.id}}"
-								   data-tp="{{data.recipients.total_pages}}"
-								   data-tc="{{data.recipients.count}}"
-								   data-pp="{{data.recipients.per_page}}"
-								   data-cp="1"
-								   data-action="bp_view_more"><?php esc_html_e( 'View members', 'buddyboss' ); ?></a>
+									data-thread-id="{{data.id}}"
+									data-tp="{{data.recipients.total_pages}}"
+									data-tc="{{data.recipients.count}}"
+									data-pp="{{data.recipients.per_page}}"
+									data-cp="1"
+									data-action="bp_view_more"><?php esc_html_e( 'View members', 'buddyboss' ); ?></a>
 							</li>
 							<# } #>
 							<?php if ( bp_is_active( 'moderation' ) && bp_is_moderation_member_blocking_enable() ) { ?>
@@ -256,12 +256,12 @@
 							if ( data.is_group_thread || other_recipients.length > 2 ) { #>
 							<li class="view_members">
 								<a href="#message-members-list" id="view_more_members" class="view_more_members"
-								   data-thread-id="{{data.id}}"
-								   data-tp="{{data.recipients.total_pages}}"
-								   data-tc="{{data.recipients.count}}"
-								   data-pp="{{data.recipients.per_page}}"
-								   data-cp="1"
-								   data-action="bp_view_more"><?php esc_html_e( 'View members', 'buddyboss' ); ?></a>
+									data-thread-id="{{data.id}}"
+									data-tp="{{data.recipients.total_pages}}"
+									data-tc="{{data.recipients.count}}"
+									data-pp="{{data.recipients.per_page}}"
+									data-cp="1"
+									data-action="bp_view_more"><?php esc_html_e( 'View members', 'buddyboss' ); ?></a>
 							</li>
 							<# } #>
 							<?php if ( bp_is_active( 'moderation' ) && bp_is_moderation_member_blocking_enable() ) { ?>

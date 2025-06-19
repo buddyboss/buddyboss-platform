@@ -2,12 +2,14 @@
 /**
  * The template for BP Nouveau Component's directory filters template
  *
- * This template can be overridden by copying it to yourtheme/readylaunch/common/filters/directory-filters.php.
- *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
  * @since BuddyBoss [BBVERSION]
- *
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 if ( bp_current_component() === 'activity' ) {
 	return '';

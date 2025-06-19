@@ -1,11 +1,17 @@
 <?php
 /**
- * The template for members settings ( Group Invites )
+ * ReadyLaunch - Member Settings Group Invites template.
  *
+ * This template handles the group invitation settings for members.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
  * @since BuddyBoss [BBVERSION]
- *
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 ?>
 
 <h2 class="screen-heading group-invites-screen">

@@ -1,12 +1,18 @@
 <?php
 /**
- * ReadyLaunch - Groups Activity
+ * ReadyLaunch - Groups Activity template.
  *
- * This template is used to show group activity.
+ * This template displays group activity feed with post form,
+ * filters, and AJAX loading support.
  *
- * @since   BuddyBoss [BBVERSION]
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 $is_send_ajax_request = bb_is_send_ajax_request();
 ?>

@@ -1,13 +1,17 @@
 <?php
 /**
- * Template for displaying the search results of the message
+ * ReadyLaunch - Search Loop Message template.
  *
- * This template can be overridden by copying it to yourtheme/buddypress/search/loop/message.php.
+ * The template for search results for messages.
  *
- * @package BuddyBoss\Core
- * @since BuddyBoss 1.0.0
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 global $current_message; ?>
 <li class="bp-search-item bp-search-item_message">

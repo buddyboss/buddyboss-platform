@@ -1,13 +1,17 @@
 <?php
 /**
- * Template for displaying the search results of the group
+ * ReadyLaunch - Search Loop Group template.
  *
- * This template can be overridden by copying it to yourtheme/buddypress/search/loop/group.php.
+ * The template for search results for groups.
  *
- * @package BuddyBoss\Core
- * @since   BuddyBoss 1.0.0
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 ?>
 <li <?php bp_group_class( array( 'item-entry bp-search-item bp-search-item_group' ) ); ?> data-bp-item-id="<?php bp_group_id(); ?>" data-bp-item-component="groups">
 	<div class="list-wrap">

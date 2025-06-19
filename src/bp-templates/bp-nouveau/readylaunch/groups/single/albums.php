@@ -1,14 +1,18 @@
 <?php
 /**
- * BuddyBoss - Groups Album
+ * ReadyLaunch - Groups Album template.
  *
- * This template is used to show the group album.
+ * This template displays group albums with media theatre functionality
+ * and single album views for group photo organization.
  *
- * This template can be overridden by copying it to yourtheme/buddypress/groups/single/albums.php.
- *
- * @since   BuddyBoss 1.0.0
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 ?>
 
 <div class="bb-media-container group-albums bb-rl-media-container">
@@ -42,7 +46,7 @@
 				?>
 			</div>
 			<?php
-			break;	
+			break;
 
 		// Any other.
 		default:

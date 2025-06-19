@@ -2,9 +2,14 @@
 /**
  * The right sidebar for ReadyLaunch.
  *
- * @since   BuddyBoss [BBVERSION]
+ * This template handles the right sidebar widgets for the ReadyLaunch theme.
+ * It dynamically displays widgets based on the current page context including
+ * profile completion, connections, network activity, and group information.
  *
- * @package ReadyLaunch
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
+ * @version 1.0.0
  */
 
 // Exit if accessed directly.
@@ -76,7 +81,7 @@ if ( count( $available_widgets ) || ! empty( $static_sidebar_widget ) ) {
 	<div id="bb-rl-right-sidebar" class="bb-rl-widget-sidebar sm-grid-1-1" role="complementary">
 		<?php
 		if ( ! empty( $static_sidebar_widget ) ) {
-			echo $static_sidebar_widget;
+			echo wp_kses_post( $static_sidebar_widget );
 		}
 
 			ob_start();
@@ -105,7 +110,7 @@ if ( count( $available_widgets ) || ! empty( $static_sidebar_widget ) ) {
 			$output = ob_get_clean();
 
 			if ( ! empty( trim( $output ) ) ) {
-				echo $output;
+				echo wp_kses_post( $output );
 			}
 		}
 		?>

@@ -18,8 +18,7 @@ const EditReadyLaunchHeader = ({ attributes, setAttributes }) => {
         showSearch,
         showMessages,
         showNotifications,
-        showProfileMenu,
-        darkMode,
+        showProfileMenu
     } = attributes;
 
     const blockProps = useBlockProps();
@@ -59,11 +58,6 @@ const EditReadyLaunchHeader = ({ attributes, setAttributes }) => {
                         checked={showProfileMenu}
                         onChange={() => setAttributes({ showProfileMenu: !showProfileMenu })}
                     />
-                    <ToggleControl
-                        label={__('Dark Mode', 'buddyboss')}
-                        checked={darkMode}
-                        onChange={() => setAttributes({ darkMode: !darkMode })}
-                    />
                 </PanelBody>
             </InspectorControls>
             <Disabled>
@@ -76,4 +70,4 @@ const EditReadyLaunchHeader = ({ attributes, setAttributes }) => {
     );
 };
 
-export default EditReadyLaunchHeader; 
+export default EditReadyLaunchHeader;

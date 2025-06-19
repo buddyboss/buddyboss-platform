@@ -1,11 +1,17 @@
 <?php
 /**
- * The template for single members item navigation
+ * ReadyLaunch - Member Item Navigation template.
  *
+ * This template handles the primary navigation for single member pages.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
  * @since BuddyBoss [BBVERSION]
- *
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 ?>
 
 <nav class="<?php bp_nouveau_single_item_nav_classes(); ?> bb-rl-main-nav" id="object-nav" role="navigation" aria-label="<?php esc_attr_e( 'Primary menu', 'buddyboss' ); ?>">

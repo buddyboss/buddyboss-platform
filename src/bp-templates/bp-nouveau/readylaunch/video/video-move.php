@@ -1,11 +1,17 @@
 <?php
 /**
- * ReadyLaunch - BuddyBoss - Video Activity Album Moves.
+ * ReadyLaunch - Video Move template.
  *
- * @since   BuddyBoss [BBVERSION]
- * @package BuddyBoss\Core
+ * Template for moving videos between albums or locations.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 ?>
 <div class="bb-rl-video-move-file bb-rl-video-move-photo bb-rl-modal-move-file" style="display: none;">

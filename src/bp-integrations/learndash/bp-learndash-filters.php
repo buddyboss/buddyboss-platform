@@ -492,13 +492,13 @@ function bb_support_learndash_permalinks_nested_urls( $ld_rewrite_rules, $ld_rew
  *
  * @param array $args Arguments.
  *
- * @return array $args The user enrolled courses.
+ * @return array The user's enrolled courses.
  */
 function bb_readylaunch_middle_content_ld_courses( $args = array() ) {
 
 	$course_data['integration'] = 'sfwd-courses';
 
-	// Check if sidebar data is enabled and courses sidebar is enabled.
+	// Check if the sidebar data and the courses sidebar are enabled.
 	if ( $args['has_sidebar_data'] && $args['is_sidebar_enabled_for_courses'] ) {
 		$user_id = bp_loggedin_user_id();
 		if ( $user_id ) {
@@ -524,6 +524,7 @@ function bb_readylaunch_middle_content_ld_courses( $args = array() ) {
 
 			$query       = new WP_Query( $query_args );
 			$courses_ids = ! empty( $query->posts ) ? $query->posts : array();
+			wp_reset_postdata();
 		}
 
 		// Prepare course data.

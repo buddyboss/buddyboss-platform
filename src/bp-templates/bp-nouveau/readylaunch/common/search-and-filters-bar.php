@@ -1,13 +1,18 @@
 <?php
 /**
- * The template for BP Nouveau Search & filters bar
+ * ReadyLaunch - The template for Search & filters bar.
  *
- * This template can be overridden by copying it to yourtheme/readylaunch/common/search-and-filters-bar.php.
+ * This template handles the search functionality and filters for various
+ * BuddyPress components including activity, members, groups, and media.
  *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
  * @since BuddyBoss [BBVERSION]
- *
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 ?>
 <div class="subnav-filters filters no-ajax" id="subnav-filters">
@@ -114,10 +119,11 @@ if ( bp_is_activity_directory() || bp_is_user_activity() ) {
 					<span class="selected">
 						<?php
 							$default_filter_label = $filters_labels[ $default_selected ];
-							if ( ! preg_match( '/^(I\'ve|I\'m)/i', $default_filter_label ) ) {
-								$default_filter_label = strtolower( $default_filter_label );
-							}
+						if ( ! preg_match( '/^(I\'ve|I\'m)/i', $default_filter_label ) ) {
+							echo esc_html( strtolower( $default_filter_label ) );
+						} else {
 							echo esc_html( $default_filter_label );
+						}
 							unset( $default_filter_label );
 						?>
 					</span>
@@ -169,7 +175,7 @@ if ( bp_is_activity_directory() || bp_is_user_activity() ) {
 			<div class="bb-subnav-filters-container bb-subnav-filters-filtering">
 				<?php $sorting_labels = bb_get_activity_sorting_options_labels(); ?>
 				<button class="subnav-filters-opener" aria-expanded="false" aria-controls="bb-subnav-filter-by">
-					<span class="selected"><?php echo strtolower( esc_html( $sorting_labels[ $default_selected ] ) ); ?></span>
+					<span class="selected"><?php echo esc_html( strtolower( $sorting_labels[ $default_selected ] ) ); ?></span>
 					<i class="bb-icon-l bb-icon-angle-down"></i>
 				</button>
 
@@ -192,6 +198,6 @@ if ( bp_is_activity_directory() || bp_is_user_activity() ) {
 			</div>
 		</div>
 	</div>
-<?php
+	<?php
 }
 ?>

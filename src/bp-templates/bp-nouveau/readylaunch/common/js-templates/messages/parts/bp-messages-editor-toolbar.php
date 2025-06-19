@@ -25,11 +25,11 @@
 		$video_extensions = bp_video_get_allowed_extension();
 		if ( ! empty( $video_extensions ) ) :
 			?>
-            <div class="post-elements-buttons-item bb-rl-post-video post-media-video-support">
-                <a href="#" id="messages-video-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down" data-bp-tooltip="<?php esc_attr_e( 'Attach video', 'buddyboss' ); ?>">
-                    <i class="bb-icons-rl-video-camera"></i>
-                </a>
-            </div>
+			<div class="post-elements-buttons-item bb-rl-post-video post-media-video-support">
+				<a href="#" id="messages-video-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down" data-bp-tooltip="<?php esc_attr_e( 'Attach video', 'buddyboss' ); ?>">
+					<i class="bb-icons-rl-video-camera"></i>
+				</a>
+			</div>
 		<?php endif; ?>
 
 		<?php

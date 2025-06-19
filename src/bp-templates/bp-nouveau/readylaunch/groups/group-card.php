@@ -2,11 +2,18 @@
 /**
  * The template for groups card.
  *
- * This template can be overridden by copying it to yourtheme/buddypress/groups/group-card.php.
+ * This template handles the group card popup display with skeleton loading
+ * and group information including avatar, title, meta, and action buttons.
  *
- * @since   BuddyBoss 2.8.20
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss 2.8.20
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 ?>
 <script type="text/html" id="tmpl-group-card-popup">
 	<div id="group-card" class="bb-rl-group-card bb-rl-popup-card" data-bp-item-id="" data-bp-item-component="groups">

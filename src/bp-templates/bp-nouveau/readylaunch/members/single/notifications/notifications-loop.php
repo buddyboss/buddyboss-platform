@@ -1,15 +1,21 @@
 <?php
 /**
- * The template for members notifications loop
+ * ReadyLaunch - Member Notifications Loop template.
  *
+ * This template handles displaying member notifications in a loop.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
  * @since BuddyBoss [BBVERSION]
- *
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 if ( bp_has_notifications( bp_ajax_querystring( 'notifications' ) ) ) :
 
-?>
+	?>
 
 	<form action="" method="post" id="notifications-bulk-management" class="standard-form">
 		<ul class="notification-list bb-nouveau-list bs-item-list list-view">
@@ -23,7 +29,7 @@ if ( bp_has_notifications( bp_ajax_querystring( 'notifications' ) ) ) :
 				<li class="bs-item-wrap">
 					<div class="bulk-select-check">
 						<span class="bb-input-wrap">
-							<input id="<?php echo esc_attr( $bp_the_notification_id ); ?>" type="checkbox" name="notifications[]" value="<?php echo esc_attr(  $bp_the_notification_id); ?>" class="notification-check bs-styled-checkbox" data-readonly="<?php echo esc_attr( $readonly ); ?>"/>
+							<input id="<?php echo esc_attr( $bp_the_notification_id ); ?>" type="checkbox" name="notifications[]" value="<?php echo esc_attr( $bp_the_notification_id ); ?>" class="notification-check bs-styled-checkbox" data-readonly="<?php echo esc_attr( $readonly ); ?>"/>
 							<label for="<?php echo esc_attr( $bp_the_notification_id ); ?>"></label>
 						</span>
 					</div>

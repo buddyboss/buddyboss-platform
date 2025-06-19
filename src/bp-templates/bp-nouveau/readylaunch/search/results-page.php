@@ -1,27 +1,27 @@
 <?php
 /**
- * Template for displaying the search results of the page
+ * ReadyLaunch - Search Results Page template.
  *
- * the template file to display search result page having buddypress container
- * dont make changes to this file,
- * instead create a folder 'buddyboss-global-search' inside your theme, copy this file over there, and make changes there
+ * Template for displaying the search results page with BuddyPress container.
  *
- * This template can be overridden by copying it to yourtheme/buddypress/search/results-page.php.
- *
- * @package BuddyBoss\Core
- * @since   BuddyBoss 1.0.0
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 $post_title = '';
 
 if ( empty( $_GET['s'] ) || '' === $_GET['s'] ) {
-	$post_title = __( 'No results found', "buddyboss" );
+	$post_title = __( 'No results found', 'buddyboss' );
 	$no_results = ' bb-rl-no-search-results';
 } elseif ( BP_Search::instance()->has_search_results() ) {
-	$post_title = sprintf( __( 'Showing results for <span class="bb-rl-result-label">\'%s\'</span>', "buddyboss" ), esc_html( $_GET['s'] ) );
+	$post_title = sprintf( __( 'Showing results for <span class="bb-rl-result-label">\'%s\'</span>', 'buddyboss' ), esc_html( $_GET['s'] ) );
 } else {
-	$post_title = sprintf( __( 'No results for <span class="bb-rl-result-label">\'%s\'</span>', "buddyboss" ), esc_html( $_GET['s'] ) );
+	$post_title = sprintf( __( 'No results for <span class="bb-rl-result-label">\'%s\'</span>', 'buddyboss' ), esc_html( $_GET['s'] ) );
 	$no_results = ' bb-rl-no-search-results';
 }
 ?>
@@ -35,7 +35,7 @@ if ( empty( $_GET['s'] ) || '' === $_GET['s'] ) {
 		</header>
 
 		<div id="buddypress">
-			<?php bp_get_template_part("search/results-page-content"); ?>
+			<?php bp_get_template_part( 'search/results-page-content' ); ?>
 		</div>
 
 	</div>

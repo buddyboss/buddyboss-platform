@@ -1,22 +1,28 @@
 <?php
 /**
- * The template for BP Object search form
+ * ReadyLaunch - Search form template.
  *
- * This template can be overridden by copying it to yourtheme/buddypress/common/search/search-form.php.
+ * This template handles the search form display for various
+ * BuddyPress components with proper input sanitization.
  *
- * @since   BuddyPress 3.0.0
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
 
-$search_term = ( is_search() && isset( $_GET['s'] ) ) ? $_GET['s'] : '';
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
+$search_term = ( is_search() && isset( $_GET['s'] ) ) ? sanitize_text_field( wp_unslash( $_GET['s'] ) ) : '';
 ?>
 
-<div class="<?php bp_nouveau_search_container_class(); ?> bp-search" data-bp-search="<?php bp_nouveau_search_object_data_attr() ;?>">
+<div class="<?php bp_nouveau_search_container_class(); ?> bp-search" data-bp-search="<?php bp_nouveau_search_object_data_attr(); ?>">
 	<form action="" method="get" class="bp-dir-search-form search-form-has-reset" id="<?php bp_nouveau_search_selector_id( 'search-form' ); ?>" role="search">
 
 		<label for="<?php bp_nouveau_search_selector_id( 'search' ); ?>" class="bp-screen-reader-text"><?php bp_nouveau_search_default_text( '', false ); ?></label>
 
-		<input id="<?php bp_nouveau_search_selector_id( 'search' ); ?>" name="<?php bp_nouveau_search_selector_name(); ?>" type="search"  value="<?php echo $search_term ?>" placeholder="<?php bp_nouveau_search_default_text(); ?>" />
+		<input id="<?php bp_nouveau_search_selector_id( 'search' ); ?>" name="<?php bp_nouveau_search_selector_name(); ?>" type="search"  value="<?php echo esc_attr( $search_term ); ?>" placeholder="<?php bp_nouveau_search_default_text(); ?>" />
 
 		<button type="submit" id="<?php bp_nouveau_search_selector_id( 'search-submit' ); ?>" class="nouveau-search-submit search-form_submit" name="<?php bp_nouveau_search_selector_name( 'search_submit' ); ?>">
 			<span class="bb-icons-rl-magnifying-glass" aria-hidden="true"></span>

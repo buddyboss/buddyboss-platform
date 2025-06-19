@@ -1,11 +1,17 @@
 <?php
 /**
- * The template for members single profile edit
+ * ReadyLaunch - Member Profile Edit template.
  *
+ * This template handles editing member profile information.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
  * @since BuddyBoss [BBVERSION]
- *
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 bp_nouveau_xprofile_hook( 'before', 'edit_content' );
 
@@ -36,9 +42,9 @@ if ( bp_has_profile( 'profile_group_id=' . bp_get_current_profile_group_id() ) )
 					bp_the_profile_field();
 
 					$get_profile_field_id = bp_get_the_profile_field_id();
-					$member_type_field_id = function_exists( 'bp_get_xprofile_member_type_field_id') ? bp_get_xprofile_member_type_field_id() : 0;
+					$member_type_field_id = function_exists( 'bp_get_xprofile_member_type_field_id' ) ? bp_get_xprofile_member_type_field_id() : 0;
 
-					if ( function_exists('bp_member_type_enable_disable' ) && false === bp_member_type_enable_disable() ) {
+					if ( function_exists( 'bp_member_type_enable_disable' ) && false === bp_member_type_enable_disable() ) {
 						if ( $member_type_field_id && $get_profile_field_id === $member_type_field_id ) {
 							continue;
 						}

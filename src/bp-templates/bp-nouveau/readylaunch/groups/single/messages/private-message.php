@@ -1,12 +1,18 @@
 <?php
 /**
- * BP Nouveau Group's Private Message template.
+ * ReadyLaunch - Group's Private Message template.
  *
- * This template can be overridden by copying it to yourtheme/buddypress/groups/single/messages/private-message.php.
+ * This template provides the interface for sending private messages to selected group members
+ * with member selection, media attachments, and message composition functionality.
  *
- * @since   BuddyBoss 1.5.7
- * @version 1.5.7
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
+ * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 $bp_loggedin_user_id = bp_loggedin_user_id();
 $is_media_active     = bp_is_active( 'media' );
@@ -34,7 +40,7 @@ if ( ! empty( $group_members ) && ! empty( $group_members['members'] ) ) {
 				)
 			)
 		) {
-			$total_count ++;
+			++$total_count;
 		}
 	}
 }
@@ -174,7 +180,8 @@ if ( 0 === $total_count ) {
 								</div>
 								<?php
 							endif;
-							if ( $is_media_active ) : ?>
+							if ( $is_media_active ) :
+								?>
 								<div class="dropzone closed video-dropzone" id="bp-group-messages-post-video-uploader"></div>
 								<input name="bp_group_messages_video" id="bp_group_messages_video" type="hidden" value=""/>
 								<div class="forum-post-video-template" style="display:none;">
@@ -198,7 +205,8 @@ if ( 0 === $total_count ) {
 								</div>
 								<?php
 							endif;
-							if ( $is_media_active ) : ?>
+							if ( $is_media_active ) :
+								?>
 								<div class="dropzone closed document-dropzone" id="bp-group-messages-post-document-uploader"></div>
 								<input name="bp_group_messages_document" id="bp_group_messages_document" type="hidden" value=""/>
 								<div class="forum-post-document-template" style="display:none;">
@@ -220,7 +228,8 @@ if ( 0 === $total_count ) {
 								</div>
 								<?php
 							endif;
-							if ( $is_media_active ) : ?>
+							if ( $is_media_active ) :
+								?>
 								<div class="bp-group-messages-attached-gif-container closed">
 									<div class="gif-image-container">
 										<img src="" alt="">
@@ -241,7 +250,8 @@ if ( 0 === $total_count ) {
 						">
 							<?php
 
-							if ( $is_media_active && bb_user_has_access_upload_media( $group_id, $bp_loggedin_user_id, 0, 0, 'message' ) ) : ?>
+							if ( $is_media_active && bb_user_has_access_upload_media( $group_id, $bp_loggedin_user_id, 0, 0, 'message' ) ) :
+								?>
 								<div class="post-elements-buttons-item post-media media-support group-message-media-support">
 									<a href="#" id="bp-group-messages-media-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Attach photo', 'buddyboss' ); ?>">
 										<span class="bb-icons-rl-camera"></span>
@@ -261,7 +271,8 @@ if ( 0 === $total_count ) {
 								<?php
 							endif;
 
-							if ( $is_media_active && bb_user_has_access_upload_document( $group_id, $bp_loggedin_user_id, 0, 0, 'message' ) ) : ?>
+							if ( $is_media_active && bb_user_has_access_upload_document( $group_id, $bp_loggedin_user_id, 0, 0, 'message' ) ) :
+								?>
 								<div class="post-elements-buttons-item post-media document-support group-message-document-support">
 									<a href="#" id="bp-group-messages-document-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Attach document', 'buddyboss' ); ?>">
 										<span class="bb-icons-rl-paperclip-horizontal"></span>
@@ -270,7 +281,8 @@ if ( 0 === $total_count ) {
 								<?php
 							endif;
 
-							if ( $is_media_active && bb_user_has_access_upload_gif( $group_id, $bp_loggedin_user_id, 0, 0, 'message' ) ) : ?>
+							if ( $is_media_active && bb_user_has_access_upload_gif( $group_id, $bp_loggedin_user_id, 0, 0, 'message' ) ) :
+								?>
 								<div class="post-elements-buttons-item post-gif">
 									<div class="gif-media-search">
 										<a href="#" id="bp-group-messages-gif-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Choose a GIF', 'buddyboss' ); ?>">
@@ -304,18 +316,22 @@ if ( 0 === $total_count ) {
 								<?php
 							endif;
 
-							if ( $is_media_active && bb_user_has_access_upload_emoji( $group_id, $bp_loggedin_user_id, 0, 0, 'message' ) ) : ?>
+							if ( $is_media_active && bb_user_has_access_upload_emoji( $group_id, $bp_loggedin_user_id, 0, 0, 'message' ) ) :
+								?>
 								<div class="bb-rl-separator"></div>
 								<div class="post-elements-buttons-item post-emoji bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Emoji', 'buddyboss' ); ?>"></div>
-							<?php endif;
-							if ( $is_media_active ) : ?>
+								<?php
+							endif;
+							if ( $is_media_active ) :
+								?>
 								<div class="post-elements-buttons-item show-toolbar" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Show formatting', 'buddyboss' ); ?>" data-bp-tooltip-show="<?php esc_html_e( 'Show formatting', 'buddyboss' ); ?>" data-bp-tooltip-hide="<?php esc_html_e( 'Hide formatting', 'buddyboss' ); ?>">
 									<a href="#" id="show-toolbar-button" class="toolbar-button bp-tooltip" aria-label="<?php esc_attr_e( 'Show formatting', 'buddyboss' ); ?>">
 										<span class="bb-icons-rl-text-aa"></span>
 									</a>
 								</div>
 								<?php
-							endif; ?>
+							endif;
+							?>
 
 							<select name="group-messages-type" class="group-messages-type">
 								<option value="private"><?php esc_html_e( 'Send Individually', 'buddyboss' ); ?></option>

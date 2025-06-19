@@ -2,9 +2,17 @@
 /**
  * ReadyLaunch - The template for More options view.
  *
- * @since   BuddyBoss [BBVERSION]
+ * This template handles the display of additional options in dropdown menus
+ * providing users with extra actions and settings.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 ?>
 <div class="bb_rl_more_dropdown__title">

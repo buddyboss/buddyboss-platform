@@ -1,17 +1,24 @@
 <?php
 /**
- * The template for document create child folder
+ * ReadyLaunch - Document create child folder template.
  *
+ * This template handles the modal interface for creating new child folders
+ * with title input and validation.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
  * @since BuddyBoss [BBVERSION]
- *
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 global $document_folder_template;
 $folder_id = 0;
 if ( function_exists( 'bp_is_group_single' ) && bp_is_group_single() && bp_is_group_folders() ) {
 	$action_variables = bp_action_variables();
-	$folder_id         = (int) $action_variables[1];
+	$folder_id        = (int) $action_variables[1];
 } else {
 	$folder_id = (int) bp_action_variable( 0 );
 }
@@ -29,7 +36,7 @@ if ( function_exists( 'bp_is_group_single' ) && bp_is_group_single() && bp_is_gr
 					<div class="bb-field-wrap">
 						<label for="bb-album-child-title" class="bb-label"><?php esc_html_e( 'Title', 'buddyboss' ); ?></label>
 						<input id="bb-album-child-title" value="" type="text" placeholder="<?php esc_html_e( 'Enter Folder Title', 'buddyboss' ); ?>" />
-						<small class="error-box"><?php _e( 'Following special characters are not supported: \ / ? % * : | " < >', 'buddyboss' ); ?></small>
+						<small class="error-box"><?php esc_html_e( 'Following special characters are not supported: \ / ? % * : | " < >', 'buddyboss' ); ?></small>
 					</div>
 					<footer class="bb-model-footer">
 						<a class="button bb-rl-button bb-rl-button--brandFill bb-rl-button--small" id="bp-media-create-child-folder-submit" href="#"><?php esc_html_e( 'Create new folder', 'buddyboss' ); ?></a>

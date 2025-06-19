@@ -1,13 +1,17 @@
 <?php
 /**
- * Media search Template
+ * ReadyLaunch - Search Loop Photos template.
  *
- * This template can be overridden by copying it to yourtheme/buddypress/search/loop/photos.php.
+ * The template for search results for photos.
  *
- * @package BuddyBoss\Core
- * @since   BuddyBoss 1.0.0
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 $listing_class = '';
 $attachment_id = bp_get_media_attachment_id();

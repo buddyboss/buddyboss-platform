@@ -1,11 +1,17 @@
 <?php
 /**
- * BuddyBoss - Video Albums
+ * ReadyLaunch - Video Albums template.
  *
+ * Template for displaying video albums.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
  * @since BuddyBoss [BBVERSION]
- * 
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 $bp_is_group = bp_is_group();
 if ( bp_is_my_profile() || ( $bp_is_group && groups_can_user_manage_albums( bp_loggedin_user_id(), bp_get_current_group_id() ) ) ) {
@@ -47,7 +53,9 @@ if ( bp_has_video_albums( bp_ajax_querystring( 'albums' ) ) ) {
 		<?php
 		$paged_page = filter_input( INPUT_POST, 'page', FILTER_SANITIZE_NUMBER_INT );
 		if ( empty( $paged_page ) || 1 === $paged_page ) {
-			?><ul class="bb-albums-list"><?php
+			?>
+			<ul class="bb-albums-list">
+			<?php
 		}
 
 		while ( bp_video_album() ) :
@@ -66,7 +74,9 @@ if ( bp_has_video_albums( bp_ajax_querystring( 'albums' ) ) ) {
 		}
 
 		if ( empty( $paged_page ) || 1 === $paged_page ) {
-			?></ul><?php
+			?>
+			</ul>
+			<?php
 		}
 		?>
 	</div>

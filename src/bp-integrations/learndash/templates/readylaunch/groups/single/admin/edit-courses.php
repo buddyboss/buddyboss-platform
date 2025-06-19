@@ -1,13 +1,20 @@
 <?php
 /**
- * Available Variables
+ * LearnDash Group Admin Edit Courses Template
  *
- * @version BuddyBoss 1.0.0
- *
+ * Available Variables:
  * $groupId - (int) Current social group id
  * $hasLdGroup - (bool) Current social group has an associated LearnDash group
  * $ldGroupId - (int) The associated LearnDash group id
+ *
+ * @package BuddyBoss\Core
+ * @subpackage BP_Integrations\LearnDash\Templates
+ * @version 1.0.0
+ * @since BuddyBoss [BBVERSION]
  */
+
+defined( 'ABSPATH' ) || exit;
+
 ?>
 <h4 class="bb-section-title"><?php esc_html_e( 'Group Course Settings', 'buddyboss' ); ?></h4>
 <p class="bb-section-info">

@@ -1,12 +1,18 @@
 <?php
 /**
- * Group Members Loop template
+ * ReadyLaunch - Group Members Loop template.
  *
- * This template can be overridden by copying it to yourtheme/buddypress/groups/single/members-loop.php.
+ * This template displays the list of group members with actions,
+ * member types, last activity, and various interaction buttons.
  *
- * @since   BuddyPress 3.0.0
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 $footer_buttons_class = ( bp_is_active( 'friends' ) && bp_is_active( 'messages' ) ) ? 'footer-buttons-on' : '';
 

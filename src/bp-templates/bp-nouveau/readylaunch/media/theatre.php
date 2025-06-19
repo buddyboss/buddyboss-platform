@@ -1,10 +1,17 @@
 <?php
 /**
- * ReadyLaunch - The template for media theater.
+ * ReadyLaunch - Media Theatre template.
  *
- * @since    BuddyBoss [BBVERSION]
- * @version  1.0.0
+ * This template handles the media theatre modal for viewing media in fullscreen.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
+ * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 ?>
 <div class="bb-rl-media-model-wrapper bb-rl-internal-model media bb-rl-media-theatre" style="display: none;" id="buddypress">

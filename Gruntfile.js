@@ -30,7 +30,7 @@ module.exports = function (grunt) {
 			'!bp-templates/bp-nouveau/readylaunch/js/cropper.js'
 		],
 
-		BP_EXCLUDED_MISC = [],
+		BP_EXCLUDED_MISC = ['!js/**'],
 
 		// SASS generated "Twenty*"" CSS files.
 		BP_SCSS_CSS_FILES = [
@@ -208,7 +208,7 @@ module.exports = function (grunt) {
 					expand: true
 				}
 			},
-			makepot: {
+			makepot_grunt: {
 				src: {
 					options: {
 						cwd: SOURCE_DIR,
@@ -476,6 +476,18 @@ module.exports = function (grunt) {
 					command: 'composer update; composer scoper;',
 					cwd: SOURCE_DIR,
 					stdout: false
+				},
+				// WP-CLI makepot with header fixing
+				makepot_wp: {
+					command: 'wp i18n make-pot src/ src/languages/buddyboss.pot --domain=buddyboss --ignore-domain --exclude="node_modules/*, vendor/*, src/vendor/*, js/*"',
+					cwd: '.',
+					stdout: true
+				},
+				// Fix POT file headers to match grunt-wp-i18n format
+				fix_wp_cli_headers: {
+					command: 'node bin/fix-wp-cli-headers.js',
+					cwd: '.',
+					stdout: true
 				}
 			},
 			jsvalidate: {
@@ -581,8 +593,12 @@ module.exports = function (grunt) {
 			'cssmin'
 		]
 	);
+
+	// WP-CLI makepot task with grunt-wp-i18n compatible headers
+	grunt.registerTask('makepot', ['exec:makepot_wp', 'exec:fix_wp_cli_headers']);
+
 	grunt.registerTask('pre-commit', ['checkDependencies', 'jsvalidate', 'jshint', 'stylelint']);
-	grunt.registerTask('src', ['checkDependencies', 'jsvalidate', 'jshint', 'stylelint', 'sass', 'rtlcss', 'checktextdomain', /*'imagemin',*/ 'uglify', 'cssmin', 'makepot:src']);
+	grunt.registerTask('src', ['checkDependencies', 'jsvalidate', 'jshint', 'stylelint', 'sass', 'rtlcss', 'checktextdomain', /*'imagemin',*/ 'uglify', 'cssmin', 'makepot']);
 	grunt.registerTask('bp_rest', ['clean:bp_rest', 'exec:rest_api', 'copy:bp_rest_components', 'copy:bp_rest_core', 'clean:bp_rest', 'apidoc' ]);
 	grunt.registerTask('bp_performance', ['clean:bp_rest', 'exec:rest_performance', 'copy:bp_rest_performance', 'copy:bp_rest_mu', 'clean:bp_rest']);
 	grunt.registerTask('build', ['string-replace:dist', 'exec:composer', 'exec:cli', 'clean:all', 'copy:files', 'clean:composer', 'compress', 'clean:all']);

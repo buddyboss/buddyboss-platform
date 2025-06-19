@@ -2,8 +2,6 @@
 /**
  * BP Nouveau member no subscription template
  *
- * This template can be overridden by copying it to yourtheme/buddypress/common/js-templates/members/settings/bb-member-no-subscription.php.
- *
  * @since   BuddyBoss 2.2.6
  * @version 1.0.0
  */

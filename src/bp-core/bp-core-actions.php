@@ -1251,4 +1251,4 @@ function bb_load_readylaunch() {
 	}
 }
 
-add_action( 'bp_init', 'bb_load_readylaunch', 9 );
+add_action( 'bp_loaded', 'bb_load_readylaunch', 99 );

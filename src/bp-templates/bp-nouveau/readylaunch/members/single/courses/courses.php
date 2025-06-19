@@ -1,11 +1,17 @@
 <?php
 /**
- * The template for member courses
+ * ReadyLaunch - Member Courses template.
  *
+ * This template handles displaying member courses with progress and certificates.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
  * @since BuddyBoss [BBVERSION]
- *
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 $filepath = locate_template(
 	array(
@@ -30,7 +36,7 @@ if ( ! empty( $filepath ) ) {
 
 }
 
-//LD_QuizPro::showModalWindow();
+// LD_QuizPro::showModalWindow();
 add_action( 'wp_footer', array( 'LD_QuizPro', 'showModalWindow' ), 20 );
 
 $user_id            = bp_displayed_user_id();
@@ -61,10 +67,9 @@ if ( ! empty( $quiz_attempts_meta ) ) {
 
 				/**
 				 * Do not show the free/open course unless those are explicitly started by the users
-				 *
 				 */
 
-				//Check user have enrolled for course
+				// Check user have enrolled for course
 				$since = ld_course_access_from( $course_id, $user_id );
 
 				/**
@@ -73,7 +78,7 @@ if ( ! empty( $quiz_attempts_meta ) ) {
 				 */
 				if ( empty( $since ) ) {
 
-					//Check user has mass enrolled for course
+					// Check user has mass enrolled for course
 					$since = learndash_user_group_enrolled_to_course_from( $user_id, $course_id );
 
 					/**
@@ -82,7 +87,7 @@ if ( ! empty( $quiz_attempts_meta ) ) {
 					 */
 					if ( empty( $since ) ) {
 
-						//Check user has started course(topic or lesson)
+						// Check user has started course(topic or lesson)
 						$course_status = learndash_course_status( $course_id, $user_id, true );
 
 						if ( 'not_started' === $course_status ) {
@@ -137,12 +142,12 @@ if ( ! empty( $quiz_attempts_meta ) ) {
 
 							<div>
 								<dd class="course_progress"
-									title='<?php echo sprintf( __( '%s out of %s steps completed', 'buddyboss' ), $progress['completed'], $progress['total'] ); ?>'>
+									title='<?php printf( __( '%1$s out of %2$s steps completed', 'buddyboss' ), $progress['completed'], $progress['total'] ); ?>'>
 									<div class="course_progress_blue" style='width: <?php echo esc_attr( $progress['percentage'] ); ?>%;'></div>
 								</dd>
 
 								<div class="right">
-									<?php echo sprintf( __( '%s%% Complete', 'buddyboss' ), $progress['percentage'] ); ?>
+									<?php printf( __( '%s%% Complete', 'buddyboss' ), $progress['percentage'] ); ?>
 								</div>
 							</div>
 
@@ -171,7 +176,8 @@ if ( ! empty( $quiz_attempts_meta ) ) {
 										$quiz_title = ! empty( $quiz_attempt['post']->post_title ) ? $quiz_attempt['post']->post_title : @$quiz_attempt['quiz_title'];
 										$quiz_link  = ! empty( $quiz_attempt['post']->ID ) ? get_permalink( $quiz_attempt['post']->ID ) : '#';
 
-										if ( ! empty( $quiz_title ) ) : ?>
+										if ( ! empty( $quiz_title ) ) :
+											?>
 											<div class='<?php echo esc_attr( $status ); ?>'>
 
 												<div class="quiz_title">
@@ -187,14 +193,18 @@ if ( ! empty( $quiz_attempts_meta ) ) {
 														<?php
 													else :
 														echo '-';
-													endif; ?>
+													endif;
+													?>
 												</div>
 
 												<div class="scores">
 													<?php if ( ( isset( $quiz_attempt['has_graded'] ) ) && ( true === $quiz_attempt['has_graded'] ) && ( true === LD_QuizPro::quiz_attempt_has_ungraded_question( $quiz_attempt ) ) ) : ?>
 														<?php echo _x( 'Pending', 'Pending Certificate Status Label', 'buddyboss' ); ?>
-													<?php else :
-														echo round( $quiz_attempt['percentage'], 2 ); ?>%
+														<?php
+													else :
+														echo round( $quiz_attempt['percentage'], 2 );
+														?>
+														%
 													<?php endif; ?>
 												</div>
 

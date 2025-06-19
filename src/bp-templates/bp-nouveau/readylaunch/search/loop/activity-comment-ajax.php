@@ -1,12 +1,17 @@
 <?php
 /**
- * This template is used to print the activity comment.
+ * ReadyLaunch - Search Loop Activity Comment AJAX template.
  *
- * This template can be overridden by copying it to yourtheme/buddypress/search/loop/activity-comment-ajax.php.
+ * The template for AJAX search results for activity comments.
  *
- * @package BuddyBoss\Core
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 ?>
 <div class="bp-search-ajax-item bp-search-ajax-item_activity_comment">

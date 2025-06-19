@@ -16,7 +16,7 @@ window.bp = window.bp || {};
 			 *
 			 * @return {[type]} [description]
 			 */
-			start : function () {
+			start: function () {
 				this.deletedNotifications     = [];
 				this.markAsReadNotifications  = [];
 				this.notificationIconSelector = $( '.bb-icons-rl-bell-simple' );
@@ -31,14 +31,14 @@ window.bp = window.bp || {};
 			/**
 			 * [addListeners description]
 			 */
-			addListeners : function () {
+			addListeners: function () {
 				var $document = $( document );
 				$( '.bb-nouveau-list' ).on( 'scroll', this.bbScrollHeaderDropDown.bind( this ) );
 				$document.on( 'click', '.notification-link, .notification-header-tab-action, .bb-rl-load-more a', this.bbHandleLoadMore.bind( this ) );
 				$document.on( 'heartbeat-send', this.bbHeartbeatSend.bind( this ) );
 				$document.on( 'heartbeat-tick', this.bbHeartbeatTick.bind( this ) );
 				$document.on( 'click', '.bb-rl-option-wrap__action', this.openMoreOption.bind( this ) );
-				$document.on( 'click', (e) => this.closeMoreOption(e) );
+				$document.on( 'click', (e) => this.closeMoreOption( e ) );
 				$document.on( 'click', '#bb-rl-profile-theme-light, #bb-rl-profile-theme-dark', this.ToggleDarkMode.bind( this ) );
 				$document.on( 'click', '.bb-rl-header-aside div.menu-item-has-children > a', this.showHeaderNotifications.bind( this ) );
 				$document.on( 'click', '.bb-rl-left-panel-mobile, .bb-rl-close-panel-mobile', this.toggleMobileMenu.bind( this ) );
@@ -69,7 +69,7 @@ window.bp = window.bp || {};
 			bbScrollHeaderDropDown: function ( e ) {
 				var el = e.target;
 				if ( 'notification-list' === el.id ) {
-					var scrollThreshold = 30; // pixels from bottom
+					var scrollThreshold = 30; // pixels from bottom.
 					var bottomReached   = (el.scrollTop + el.offsetHeight + scrollThreshold) >= el.scrollHeight;
 
 					if (bottomReached && ! el.classList.contains( 'loading' ) ) {
@@ -83,7 +83,7 @@ window.bp = window.bp || {};
 			},
 
 			// Add Mobile menu toggle button.
-			mobileSubMenu : function () {
+			mobileSubMenu: function () {
 				$( '.bb-readylaunch-mobile-menu .sub-menu, .bb-readylaunchpanel-menu .sub-menu' ).each(
 					function () {
 						$( this ).closest( 'li.menu-item-has-children' ).find( 'a:first' ).append( '<i class="bb-icons-rl-caret-down submenu-toggle"></i>' );
@@ -100,7 +100,7 @@ window.bp = window.bp || {};
 				);
 			},
 
-            gridListFilter: function () {
+			gridListFilter: function () {
 				$( '.bb-rl-filter select' ).each(
 					function () {
 						var $this   = $( this ),
@@ -130,14 +130,14 @@ window.bp = window.bp || {};
 							}
 						);
 
-						// Apply CSS classes after initialization
+						// Apply CSS classes after initialization.
 						$this.next( '.select2-container' ).find( '.select2-selection' ).addClass( 'bb-rl-select2-container' + customClass );
 
-						// Add class to dropdown when it opens
+						// Add class to dropdown when it opens.
 						$this.on(
 							'select2:open',
 							function () {
-								var $this   = $( this ),
+								var $this           = $( this ),
 								customDropDownClass = '';
 
 								if ( $this.data( 'dropdown-align' ) ) {
@@ -160,7 +160,7 @@ window.bp = window.bp || {};
 						var $this   = $( this ),
 						customClass = '';
 
-						// Check if parent container has specific class
+						// Check if parent container has specific class.
 						var $parent = $this.closest( '.bb-rl-styled-select' );
 						if ( $parent.hasClass( 'bb-rl-styled-select--default' ) ) {
 							customClass += ' bb-rl-select-default';
@@ -234,7 +234,7 @@ window.bp = window.bp || {};
 			 * @param {Object} e Event object
 			 * @param {Object} options Options for AJAX request
 			 */
-			bbPerformAjaxRequest : function ( e, options ) {
+			bbPerformAjaxRequest: function ( e, options ) {
 				e.preventDefault();
 
 				var defaults        = {
@@ -298,7 +298,7 @@ window.bp = window.bp || {};
 			 * @param e
 			 * @param data
 			 */
-			bbHeartbeatSend : function ( e, data ) {
+			bbHeartbeatSend: function ( e, data ) {
 				data.bb_fetch_header_notifications = true;
 
 				// Include the markAsReadNotifications if there are any pending.
@@ -318,7 +318,7 @@ window.bp = window.bp || {};
 			 * @param e
 			 * @param data
 			 */
-			bbHeartbeatTick : function ( e, data ) {
+			bbHeartbeatTick: function ( e, data ) {
 				this.bbpInjectNotifications( e, data );
 
 				// Check if markAsReadNotifications were processed.
@@ -338,7 +338,7 @@ window.bp = window.bp || {};
 			 * @param event
 			 * @param data
 			 */
-			bbpInjectNotifications : function ( event, data ) {
+			bbpInjectNotifications: function ( event, data ) {
 				if ( typeof data.unread_notifications !== 'undefined' && data.unread_notifications !== '' ) {
 					$( '#header-notifications-dropdown-elem .notification-dropdown .notification-list' ).empty().html( data.unread_notifications );
 				}
@@ -361,18 +361,18 @@ window.bp = window.bp || {};
 			 *
 			 * @param e
 			 */
-			openMoreOption : function ( e ) {
+			openMoreOption: function ( e ) {
 				e.preventDefault();
 
 				$( e.currentTarget ).closest( '.bb-rl-option-wrap' ).toggleClass( 'active' );
 			},
 
-            /**
+			/**
 			 * [closeMoreOption close more options dropdown]
 			 *
 			 * @param e
 			 */
-			closeMoreOption : function ( e ) {
+			closeMoreOption: function ( e ) {
 				if ( ! $( e.target ).closest( '.bb-rl-option-wrap' ).length ) {
 					$( '.bb-rl-option-wrap' ).removeClass( 'active' );
 				}
@@ -409,7 +409,7 @@ window.bp = window.bp || {};
 			 *
 			 * @param e
 			 */
-			ToggleDarkMode : function ( e ) {
+			ToggleDarkMode: function ( e ) {
 				e.preventDefault();
 
 				var $body = $( 'body' );
@@ -427,7 +427,7 @@ window.bp = window.bp || {};
 			 *
 			 * @param e
 			 */
-			showHeaderNotifications : function ( e ) {
+			showHeaderNotifications: function ( e ) {
 				e.preventDefault();
 				var current = $( e.currentTarget ).closest( 'div.menu-item-has-children' );
 				current.siblings( '.selected' ).removeClass( 'selected' );
@@ -441,13 +441,13 @@ window.bp = window.bp || {};
 				}
 			},
 
-			toggleMobileMenu : function ( e ) {
+			toggleMobileMenu: function ( e ) {
 				e.preventDefault();
 
 				$( 'body' ).toggleClass( 'bb-mobile-menu-open' );
 			},
 
-			toggleLeftPanelWidget : function ( e ) {
+			toggleLeftPanelWidget: function ( e ) {
 				e.preventDefault();
 
 				if ( $( window ).width() < 993 ) {
@@ -460,7 +460,7 @@ window.bp = window.bp || {};
 			 *
 			 * @param e
 			 */
-			markNotificationRead : function ( e ) {
+			markNotificationRead: function ( e ) {
 				e.preventDefault();
 
 				var $this                  = $( e.currentTarget ),
@@ -506,7 +506,7 @@ window.bp = window.bp || {};
 			 *
 			 * @param e
 			 */
-			markNotificationDelete : function ( e ) {
+			markNotificationDelete: function ( e ) {
 				e.preventDefault();
 
 				var $this                  = $( e.currentTarget ),
@@ -524,7 +524,7 @@ window.bp = window.bp || {};
 			 *
 			 * @return {boolean} [description]
 			 */
-			beforeUnload : function () {
+			beforeUnload: function () {
 				if (
 					0 === bp.Readylaunch.markAsReadNotifications.length &&
 					0 === bp.Readylaunch.deletedNotifications.length
@@ -561,11 +561,11 @@ window.bp = window.bp || {};
 				bp.Readylaunch.deletedNotifications    = [];
 			},
 
-			// Initializes navigation overflow handling on page load and resize.
+			// Initialises navigation overflow handling on page load and resize.
 			initBBNavOverflow: function () {
 				var self = this;
 
-				// Initialize overflow navigation for a specific selector
+				// Initialise overflow navigation for a specific selector.
 				function initSelector( selector, reduceWidth ) {
 					$( selector ).each(
 						function () {
@@ -573,7 +573,7 @@ window.bp = window.bp || {};
 						}
 					);
 
-					// Add resize and load event listeners
+					// Add resize and load event listeners.
 					window.addEventListener(
 						'resize',
 						function () {
@@ -613,10 +613,9 @@ window.bp = window.bp || {};
 					'click',
 					'.bb-rl-hideshow .bb-rl-sub-menu a',
 					function () {
-						// e.preventDefault();
 						$( 'body' ).trigger( 'click' );
 
-						// add 'current' and 'selected' class
+						// add 'current' and 'selected' class.
 						var currentLI = $( this ).parent();
 						currentLI.parent( '.bb-rl-sub-menu' ).find( 'li' ).removeClass( 'current selected' );
 						currentLI.addClass( 'current selected' );

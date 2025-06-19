@@ -1,11 +1,17 @@
 <?php
 /**
- * The template for members course certificates
+ * ReadyLaunch - Member Course Certificates template.
  *
+ * This template handles displaying member course certificates.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
  * @since BuddyBoss [BBVERSION]
- *
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 $user_id      = bp_displayed_user_id();
 $certificates = bp_learndash_get_users_certificates( $user_id );
@@ -23,7 +29,7 @@ $certificates = bp_learndash_get_users_certificates( $user_id );
 							<h3 class="bb-certificate-title">
 								<?php
 								printf(
-									__( '<span>Certificate in </span> <a href="%s">%s</a>', 'buddyboss' ),
+									__( '<span>Certificate in </span> <a href="%1$s">%2$s</a>', 'buddyboss' ),
 									get_permalink( $certificate->ID ),
 									$certificate->title
 								);

@@ -1,11 +1,17 @@
 <?php
 /**
- * The template for profile progression
+ * ReadyLaunch - Member Profile Widget template.
  *
+ * This template handles displaying member profile completion progress.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
  * @since BuddyBoss [BBVERSION]
- *
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 $bp_nouveau = bp_nouveau();
 

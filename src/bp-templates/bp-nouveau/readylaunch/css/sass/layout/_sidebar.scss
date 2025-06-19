@@ -34,13 +34,12 @@
 			text-decoration: none;
 			border-radius: var(--bb-rl-radius-md);
 
-			> i {
+			> .menu-icon {
 				display: flex;
-				font-family: bb-icons-rl;
-				font-size: 24px;
+				font-size: 18px;
 				line-height: 1;
 				color: var(--bb-rl-icon-color);
-				margin-left: var(--bb-rl-space-100);
+				margin-right: var(--bb-rl-space-100);
 
 				&:before {
 					margin: 0;

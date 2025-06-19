@@ -2,11 +2,9 @@
 /**
  * The template for document single folder
  *
- * This template can be overridden by copying it to yourtheme/buddypress/document/single-folder.php.
- *
  * @since   BuddyBoss 1.4.0
  * @package BuddyBoss\Core
- * @version 1.4.0
+ * @version 1.0.0
  */
 
 $is_send_ajax_request = bb_is_send_ajax_request();
@@ -42,7 +40,7 @@ if ( bp_has_folders( array( 'include' => $folder_id ) ) ) :
 						<div class="bb-media-actions">
 							<?php
 							if ( bp_has_document( bp_ajax_querystring( 'document' ) ) ) {
-							?>
+								?>
 								<div id="search-documents-form" class="media-search-form" data-bp-search="document">
 									<form action="" method="get" class="bp-dir-search-form search-form-has-reset" id="group-document-search-form" autocomplete="off">
 										<button type="submit" id="group-document-search-submit" class="nouveau-search-submit search-form_submit" name="group_document_search_submit">
@@ -57,7 +55,7 @@ if ( bp_has_folders( array( 'include' => $folder_id ) ) ) :
 										</button>
 									</form>
 								</div>
-							<?php
+								<?php
 							}
 							?>
 							<?php
@@ -90,7 +88,7 @@ if ( bp_has_folders( array( 'include' => $folder_id ) ) ) :
 										}
 									}
 								}
-								
+
 								if ( $can_edit_btn || $can_delete_btn ) {
 									?>
 									<div class="media-folder_items">

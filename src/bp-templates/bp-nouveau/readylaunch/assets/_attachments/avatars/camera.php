@@ -4,9 +4,14 @@
  *
  * This template is used to create the camera Backbone views.
  *
- * @since BuddyPress 2.3.0
- * @version 3.1.0
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
+ * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 ?>
 <script id="tmpl-bp-avatar-webcam" type="text/html">

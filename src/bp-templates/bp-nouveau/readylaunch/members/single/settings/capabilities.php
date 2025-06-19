@@ -1,11 +1,17 @@
 <?php
 /**
- * The template for members settings ( Capabilities )
+ * ReadyLaunch - Member Settings Capabilities template.
  *
+ * This template handles the member capabilities settings.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
  * @since BuddyBoss [BBVERSION]
- *
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 bp_nouveau_member_hook( 'before', 'settings_template' ); ?>
 

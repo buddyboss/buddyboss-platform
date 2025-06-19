@@ -5,9 +5,14 @@
  * This template is used by bp_activity_comments() functions to show
  * each activity.
  *
- * @since   BuddyBoss [BBVERSION]
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 global $activities_template;
 
@@ -28,7 +33,7 @@ $media_active = bp_is_active( 'media' );
 ?>
 
 <li id="acomment-<?php echo esc_attr( $activity_comment_id ); ?>" class="<?php bp_activity_comment_css_class(); ?> <?php echo $check_hidden_content ? 'suspended-comment-item' : ''; ?>"
-    data-bp-activity-comment-id="<?php echo esc_attr( $activity_comment_id ); ?>" data-bp-timestamp="<?php bb_nouveau_activity_comment_timestamp(); ?>">
+	data-bp-activity-comment-id="<?php echo esc_attr( $activity_comment_id ); ?>" data-bp-timestamp="<?php bb_nouveau_activity_comment_timestamp(); ?>">
 
 	<?php
 	if ( bb_is_group_activity_comment( $activity_comment_id ) && ! $check_hidden_content ) {

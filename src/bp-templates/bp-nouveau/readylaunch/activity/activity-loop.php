@@ -2,9 +2,17 @@
 /**
  * ReadyLaunch - The template for activity loop.
  *
- * @since   BuddyBoss [BBVERSION]
+ * This template handles the activity loop display with pagination support.
+ * It renders activities in a list format with load more functionality.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 bp_nouveau_before_loop();
 
@@ -15,7 +23,8 @@ if ( ! bp_is_single_activity() ) {
 
 if ( bp_has_activities( $args ) ) :
 
-	$is_first_page = empty( $_POST['page'] ) || 1 === (int) $_POST['page'];
+	// Check if this is the first page (used for AJAX pagination, nonce verification handled by BuddyPress core).
+	$is_first_page = empty( $_POST['page'] ) || 1 === (int) $_POST['page']; // phpcs:ignore WordPress.Security.NonceVerification.Missing
 	if ( $is_first_page ) :
 		?>
 		<ul class="bb-rl-activity-list bb-rl-item-list bb-rl-list">

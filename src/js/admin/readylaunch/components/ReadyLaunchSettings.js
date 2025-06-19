@@ -51,6 +51,17 @@ const getComponentMenuItems = () => {
 		});
 	}
 
+	// Add forums if component is active
+	if (window?.BP_ADMIN?.components?.forums === '1') {
+		items.push({
+			id: 'forums',
+			label: __('Forums', 'buddyboss'),
+			icon: 'chat-text',
+			enabled: true,
+			order: currentOrder++
+		});
+	}
+
 	// Update order for remaining base items
 	items.forEach(item => {
 		if (item.id === 'courses') {
@@ -80,12 +91,20 @@ const getComponentMenuItems = () => {
 		});
 	}
 
+	// @todo: remove 'courses' from items if LMS not active.
+
 	return items;
 };
 
 // Helper function to safely check component status
 const isComponentActive = (componentName) => {
 	return window?.BP_ADMIN?.components?.[componentName] === '1';
+};
+
+const themeModeDescriptions = {
+	light: __('The site will be shown in light mode.', 'buddyboss'),
+	dark: __('The site will be shown in dark mode.', 'buddyboss'),
+	choice: __('Users will be able switch between the modes.', 'buddyboss'),
 };
 
 export const ReadyLaunchSettings = () => {
@@ -253,7 +272,8 @@ export const ReadyLaunchSettings = () => {
 				updatedItems.forEach(item => {
 					bb_rl_side_menu[item.id] = {
 						enabled: item.enabled,
-						order: item.order
+						order: item.order,
+						icon: item.icon
 					};
 				});
 
@@ -648,6 +668,15 @@ export const ReadyLaunchSettings = () => {
 		</Accordion>
 	);
 
+	useEffect(() => {
+		const helpBtn = document.querySelector('.bb-rl-header-actions-button[data-help-content-id]');
+		if (helpBtn) {
+			const onClick = () => handleHelpClick(helpBtn.getAttribute('data-help-content-id'));
+			helpBtn.addEventListener('click', onClick);
+			return () => helpBtn.removeEventListener('click', onClick);
+		}
+	}, [handleHelpClick]);
+
 	const renderContent = () => {
 		if ( isLoading ) {
 			return (
@@ -740,7 +769,7 @@ export const ReadyLaunchSettings = () => {
 											actionLink: 'admin.php?page=bp-settings&tab=bp-activity'
 										},
 										{
-											id: 'profiles',
+											id: 'xprofile',
 											icon: 'bb-icons-rl-user-square',
 											title: __('Profiles', 'buddyboss'),
 											description: __('Manage profile fields, visibility, and user profile options.', 'buddyboss'),
@@ -768,6 +797,9 @@ export const ReadyLaunchSettings = () => {
 											actionLink: 'admin.php?page=bp-settings&tab=bp-moderation'
 										}
 									].map(item => (
+										window?.BP_ADMIN?.components &&
+										window?.BP_ADMIN?.components[item.id] &&
+										window?.BP_ADMIN?.components[item.id] === '1' && (
 										<div className="settings-list-item" key={item.id}>
 											<div className="settings-list-item-icon">
 												<span className={item.icon} />
@@ -792,6 +824,7 @@ export const ReadyLaunchSettings = () => {
 													</Button>
 												</div>
 										</div>
+										)
 									))
 								}
 							</div>
@@ -818,24 +851,22 @@ export const ReadyLaunchSettings = () => {
 									<p>{__('Enable or disable dark mode for your community, allowing users to choose or set it for them.', 'buddyboss')}</p>
 								</div>
 								<div className="field-input">
-									<ToggleControl
-										label={__('Allow Dark Mode', 'buddyboss')}
-										checked={settings.bb_rl_skin_appearance}
-										onChange={handleSettingChange('bb_rl_skin_appearance')}
-									/>
-									{settings.bb_rl_skin_appearance && (
-										<div className="sub-field-input sub-field-input-inline">
-											<RadioControl
-												selected={settings.bb_rl_theme_mode}
-												options={[
-													{ label: __('Light Mode', 'buddyboss'), value: 'light' },
-													{ label: __('Dark Mode', 'buddyboss'), value: 'dark' },
-													{ label: __('User Preference', 'buddyboss'), value: 'choice' },
-												]}
-												onChange={handleSettingChange('bb_rl_theme_mode')}
-											/>
-										</div>
-									)}
+									<div className="sub-field-input sub-field-input-inline">
+										<RadioControl
+											selected={settings.bb_rl_theme_mode}
+											options={[
+												{ label: __('Light Mode', 'buddyboss'), value: 'light' },
+												{ label: __('Dark Mode', 'buddyboss'), value: 'dark' },
+												{ label: __('User Preference', 'buddyboss'), value: 'choice' },
+											]}
+											onChange={handleSettingChange('bb_rl_theme_mode')}
+										/>
+										{themeModeDescriptions[settings.bb_rl_theme_mode] && (
+											<p className="field-description">
+												{themeModeDescriptions[settings.bb_rl_theme_mode]}
+											</p>
+										)}
+									</div>
 								</div>
 							</div>
 
@@ -846,14 +877,16 @@ export const ReadyLaunchSettings = () => {
 									<p>{__('Upload separate logos optimized for light and dark themes to ensure clear visibility.', 'buddyboss')}</p>
 								</div>
 								<div className="field-input logo-uploaders">
-									<ImageSelector
-										label={__('Logo (Light mode)', 'buddyboss')}
-										value={settings.bb_rl_light_logo}
-										onChange={handleImageUpload('bb_rl_light_logo')}
-										description={__('Recommended to use a dark-colored logo, 280x80 px, in JPG or PNG format.', 'buddyboss')}
-										customClass="light-logo-mode"
-									/>
-									{settings.bb_rl_skin_appearance && 'light' !== settings.bb_rl_theme_mode && (
+									{'dark' !== settings.bb_rl_theme_mode && (
+										<ImageSelector
+											label={__('Logo (Light mode)', 'buddyboss')}
+											value={settings.bb_rl_light_logo}
+											onChange={handleImageUpload('bb_rl_light_logo')}
+											description={__('Recommended to use a dark-colored logo, 280x80 px, in JPG or PNG format.', 'buddyboss')}
+											customClass="light-logo-mode"
+										/>
+									)}
+									{'light' !== settings.bb_rl_theme_mode && (
 										<ImageSelector
 											label={__('Logo (Dark mode)', 'buddyboss')}
 											value={settings.bb_rl_dark_logo}
@@ -872,6 +905,7 @@ export const ReadyLaunchSettings = () => {
 									<p>{__('Set the primary color scheme for light and dark modes, used for buttons, links, and interactive elements.', 'buddyboss')}</p>
 								</div>
 								<div className="field-input color-palettes bb-rl-color-palettes">
+									{'dark' !== settings.bb_rl_theme_mode && (
 									<div className="color-palette-item">
 										<ColorPickerButton
 											label={__('Primary Color (Light Mode)', 'buddyboss')}
@@ -879,7 +913,8 @@ export const ReadyLaunchSettings = () => {
 											onChange={handleSettingChange('bb_rl_color_light')}
 										/>
 									</div>
-									{settings.bb_rl_skin_appearance && 'light' !== settings.bb_rl_theme_mode && (
+									)}
+									{'light' !== settings.bb_rl_theme_mode && (
 										<div className="color-palette-item">
 											<ColorPickerButton
 												label={__('Primary Color (Dark Mode)', 'buddyboss')}
@@ -912,25 +947,40 @@ export const ReadyLaunchSettings = () => {
 										<label>{__('Enable Pages', 'buddyboss')}</label>
 										<p>{__('Enable pages that should have styles from ReadyLaunch.', 'buddyboss')}</p>
 									</div>
-									<div className="field-toggles">
-										{window?.BP_ADMIN?.register_integration === '1' && (<div className="toggle-item">
-											<ToggleControl
-												label={__('Login & Registration', 'buddyboss')}
-												checked={settings.bb_rl_enabled_pages.registration}
-												onChange={handleNestedSettingChange('bb_rl_enabled_pages', 'registration')}
-											/>
+									{window?.BP_ADMIN?.register_integration === '1' || window?.BP_ADMIN?.courses_integration === '1' ? (
+										<div className="field-toggles">
+											{window?.BP_ADMIN?.register_integration === '1' && (
+												<div className="toggle-item">
+													<ToggleControl
+														label={__('Login & Registration', 'buddyboss')}
+														checked={settings.bb_rl_enabled_pages.registration}
+														onChange={handleNestedSettingChange('bb_rl_enabled_pages', 'registration')}
+													/>
+												</div>
+											)}
+											{window?.BP_ADMIN?.courses_integration === '1' && (
+												<div className="toggle-item">
+													<ToggleControl
+														label={__('Courses', 'buddyboss')}
+														checked={settings.bb_rl_enabled_pages.courses}
+														onChange={handleNestedSettingChange('bb_rl_enabled_pages', 'courses')}
+													/>
+												</div>
+											)}
 										</div>
-										)}
-										{window?.BP_ADMIN?.courses_integration === '1' && (
-											<div className="toggle-item">
-												<ToggleControl
-													label={__('Courses', 'buddyboss')}
-													checked={settings.bb_rl_enabled_pages.courses}
-													onChange={handleNestedSettingChange('bb_rl_enabled_pages', 'courses')}
-												/>
-											</div>
-										)}
-									</div>
+									) : (
+										<div className="bb-rl-notice bb-rl-notice--info">
+										  <span className="bb-rl-notice-icon">
+											<i className="bb-icons-rl-info" />
+										  </span>
+										  <div className="bb-rl-notice-content">
+											<strong>{__('No pages found', 'buddyboss')}</strong>
+											<p>
+											  {__('Enable the corresponding pages from your backend settings to manage them here with ReadyLaunch styles.', 'buddyboss')}
+											</p>
+										  </div>
+										</div>
+									)}
 								</div>
 							</Accordion>
 						</div>
@@ -1087,6 +1137,7 @@ export const ReadyLaunchSettings = () => {
 											<SelectControl
 												value={settings.bb_rl_header_menu}
 												options={[
+													{ label: __('ReadyLaunch Menu', 'buddyboss'), value: 'bb-readylaunch' },
 													...menus.map(menu => ({
 														label: menu.name,
 														value: menu.slug

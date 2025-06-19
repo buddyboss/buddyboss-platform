@@ -1,13 +1,17 @@
 <?php
 /**
- * Template for displaying the search results of the reply ajax
+ * ReadyLaunch - Search Loop Reply AJAX template.
  *
- * This template can be overridden by copying it to yourtheme/buddypress/search/loop/reply-ajax.php.
+ * The template for AJAX search results for replies.
  *
- * @package BuddyBoss\Core
- * @since   BuddyBoss 1.0.0
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 $reply_id = get_the_ID();
 ?>
