@@ -66,6 +66,9 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		public function __construct() {
 			$enabled = bb_is_readylaunch_enabled();
 
+			// Add ReadyLaunch settings to the platform settings API.
+			add_filter( 'bp_rest_platform_settings', array( $this, 'bb_rest_readylaunch_platform_settings' ), 10, 1 );
+
 			if ( ! $enabled ) {
 				return;
 			}
@@ -88,7 +91,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 			// Added support for Forums integration.
 			if ( bp_is_active( 'forums' ) ) {
-				add_filter( 'bbp_template_include', array( $this, 'bb_rl_overwite_forum_template' ), 1, 1 );
+				add_filter( 'bbp_template_include', array( $this, 'bb_rl_overwite_forum_template' ), 3, 1 );
 			}
 
 			$enabled_for_page = $this->bb_is_readylaunch_enabled_for_page();
@@ -98,46 +101,24 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 			add_action( 'bp_admin_enqueue_scripts', array( $this, 'bb_rl_admin_enqueue_scripts' ), 1 );
 
-			// Add ReadyLaunch settings to the platform settings API.
-			add_filter( 'bp_rest_platform_settings', array( $this, 'bb_rest_readylaunch_platform_settings' ), 10, 1 );
-
 			// LearnDash integration.
 			add_filter( 'bp_is_sidebar_enabled_for_courses', array( $this, 'bb_is_sidebar_enabled_for_courses' ) );
 
 			// LearnDash integration.
 			add_action( 'wp_enqueue_scripts', array( $this, 'bb_readylaunch_learndash_enqueue_styles' ), 10 );
+
+			// Forums integration.
+			add_filter( 'wp_enqueue_scripts', array( $this, 'bb_readylaunch_forums_enqueue_styles' ), 10 );
 			// Set up LearnDash integration.
 		}
 
 		public function bb_rl_overwite_forum_template( $template ) {
-			add_filter( 'bbp_get_profile_template', array( $this, 'override_forums_page_templates' ), PHP_INT_MAX, 1 );
-			add_filter( 'bbp_get_profileedit_template', array( $this, 'override_forums_page_templates' ), PHP_INT_MAX, 1 );
-			add_filter( 'bbp_get_favorites_template', array( $this, 'override_forums_page_templates' ), PHP_INT_MAX, 1 );
-			add_filter( 'bbp_get_subscriptions_template', array( $this, 'override_forums_page_templates' ), PHP_INT_MAX, 1 );
-			add_filter( 'bbp_get_singleview_template', array( $this, 'override_forums_page_templates' ), PHP_INT_MAX, 1 );
-			add_filter( 'bbp_get_singlesearch_template', array( $this, 'override_forums_page_templates' ), PHP_INT_MAX, 1 );
-			add_filter( 'bbp_get_singleforum_template', array( $this, 'override_forums_page_templates' ), PHP_INT_MAX, 1 );
-			add_filter( 'bbp_get_forumarchive_template', array( $this, 'override_forums_page_templates' ), PHP_INT_MAX, 1 );
-			add_filter( 'bbp_get_forumedit_template', array( $this, 'override_forums_page_templates' ), PHP_INT_MAX, 1 );
-			add_filter( 'bbp_get_singletopic_template', array( $this, 'override_forums_page_templates' ), PHP_INT_MAX, 1 );
-			add_filter( 'bbp_get_topicarchive_template', array( $this, 'override_forums_page_templates' ), PHP_INT_MAX, 1 );
-			add_filter( 'bbp_get_topicedit_template', array( $this, 'override_forums_page_templates' ), PHP_INT_MAX, 1 );
-			add_filter( 'bbp_get_topicsplit_template', array( $this, 'override_forums_page_templates' ), PHP_INT_MAX, 1 );
-			add_filter( 'bbp_get_topicmerge_template', array( $this, 'override_forums_page_templates' ), PHP_INT_MAX, 1 );
-			add_filter( 'bbp_get_singlereply_template', array( $this, 'override_forums_page_templates' ), PHP_INT_MAX, 1 );
-			add_filter( 'bbp_get_replyedit_template', array( $this, 'override_forums_page_templates' ), PHP_INT_MAX, 1 );
-			add_filter( 'bbp_get_replymove_template', array( $this, 'override_forums_page_templates' ), PHP_INT_MAX, 1 );
-			add_filter( 'bbp_get_topictag_template', array( $this, 'override_forums_page_templates' ), PHP_INT_MAX, 1 );
-			add_filter( 'bbp_get_topictagedit_template', array( $this, 'override_forums_page_templates' ), PHP_INT_MAX, 1 );
-			add_filter( 'bbp_get_bbpress_template', array( $this, 'override_forums_page_templates' ), PHP_INT_MAX, 1 );
-
+			if ( $this->bb_is_readylaunch_forums() ) {
+				return array(
+					'bbpress.php',
+				);
+			}
 			return $template;
-		}
-
-		public function override_forums_page_templates( $template ) {
-			return array(
-				'bbpress.php',
-			);
 		}
 
 		/**
@@ -260,8 +241,6 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			add_filter( 'bp_core_avatar_thumb_height', array( $this, 'bb_rl_avatar_thumb_height' ) );
 
 			add_filter( 'bp_document_svg_icon', array( $this, 'bb_rl_document_svg_icon' ), 10, 2 );
-			// Dequeue bbpress activity js.
-			add_filter( 'bbp_is_single_topic', array( $this, 'bb_dequeue_bbpress_activity_js' ), PHP_INT_MAX );
 			add_filter( 'heartbeat_received', array( $this, 'bb_heartbeat_unread_notifications' ), 12, 2 );
 			add_filter( 'heartbeat_nopriv_received', array( $this, 'bb_heartbeat_unread_notifications' ), 12, 2 );
 
@@ -666,7 +645,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 *
 		 * @return string ReadyLaunch layout template.
 		 */
-		public function override_page_templates() {
+		public function override_page_templates( $template ) {
 			if ( bp_is_register_page() ) {
 				return bp_locate_template( 'register.php' );
 			}
@@ -721,7 +700,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 			$stack = array_flip( $stack );
 
-			// Add ReadyLaunch forum template directory at the first index (highest priority)
+			// Add ReadyLaunch forum template directory at the first index (highest priority).
 			$readylaunch_forum_dir = buddypress()->plugin_dir . 'bp-templates/bp-nouveau/readylaunch/forums/';
 			array_unshift( $stack, $readylaunch_forum_dir );
 
@@ -913,17 +892,6 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				}
 			}
 
-			return false;
-		}
-
-		/**
-		 * Dequeue bbPress activity js.
-		 *
-		 * @since BuddyBoss [BBVERSION]
-		 *
-		 * @return bool False to prevent bbPress activity js from being enqueued.
-		 */
-		public function bb_dequeue_bbpress_activity_js() {
 			return false;
 		}
 
@@ -2224,17 +2192,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 */
 		public function bb_rl_login_custom_form() {
 			?>
-			<p class="lostmenot">
-				<a href="
-				<?php
-					echo esc_url( wp_lostpassword_url() );
-				?>
-				">
-					<?php
-						esc_html_e( 'Forgot Password?', 'buddyboss' );
-					?>
-				</a>
-			</p>
+			<p class="lostmenot"><a href="<?php echo wp_lostpassword_url(); ?>"><?php esc_html_e( 'Forgot Password?', 'buddyboss' ); ?></a></p>
 			<?php
 		}
 
@@ -2921,18 +2879,15 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					&& (
 						bbp_is_forum_archive() ||
 						bbp_is_topic_archive() ||
-						is_post_type_archive( bbp_get_reply_post_type() ) ||
-						bbp_is_single_user_edit() ||
 						bbp_is_single_forum() ||
 						bbp_is_forum_edit() ||
-						bbp_is_single_topic() ||
+						bbp_is_single_topic() && ! bp_is_activity_component() ||
 						bbp_is_topic_edit() ||
 						bbp_is_topic_split() ||
 						bbp_is_topic_merge() ||
 						bbp_is_single_reply() ||
 						bbp_is_reply_edit() ||
 						bbp_is_reply_move() ||
-						bbp_is_single_user() ||
 						bbp_is_single_view() ||
 						bbp_is_search() ||
 						bbp_is_topic_tag_edit() ||
@@ -2944,6 +2899,77 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 						is_post_type_archive( bbp_get_forum_post_type() ) ||
 						is_post_type_archive( bbp_get_reply_post_type() )
 					);
+		}
+
+		public function bb_readylaunch_forums_enqueue_styles() {
+			if ( ! $this->bb_is_readylaunch_forums() ) {
+				// return; // TODO: Include group forums pages
+			}
+
+			// enqueue select2, emojionearea, medium editor.
+			wp_enqueue_script( 'bp-select2' );
+			wp_enqueue_style( 'bp-select2' );
+
+			wp_enqueue_style( 'emojionearea' );
+			wp_enqueue_script( 'emojionearea' );
+
+			wp_enqueue_script( 'bp-medium-editor' );
+			wp_enqueue_style( 'bp-medium-editor' );
+			wp_enqueue_style( 'bp-medium-editor-beagle' );
+
+			wp_enqueue_script( 'giphy' );
+
+			// Enqueue Forum ReadyLaunch styles.
+			wp_enqueue_style(
+				'bb-readylaunch-forums',
+				buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/css/forums.css',
+				array(),
+				bp_get_version()
+			);
+
+			// Enqueue Topic Reply Draft JavaScript.
+			wp_enqueue_script(
+				'bb-readylaunch-topic-reply-draft',
+				buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/js/bb-readylaunch-topic-reply-draft.js',
+				array( 'jquery' ),
+				bp_get_version(),
+				true
+			);
+
+			// Enqueue our Forum helper JavaScript.
+			wp_enqueue_script(
+				'bb-readylaunch-forums-js',
+				buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/js/bb-readylaunch-forums.js',
+				array( 'jquery' ),
+				bp_get_version(),
+				true
+			);
+
+			// Localize data to the forums script
+			wp_localize_script(
+				'bb-readylaunch-forums-js',
+				'bbrlForumsEditorJsStrs',
+				array(
+					'description' => __( 'Write a description', 'buddyboss' ),
+					'type_reply'  => __( 'Type your reply here', 'buddyboss' ),
+					'type_topic'  => __( 'Type your discussion content here', 'buddyboss' ),
+				)
+			);
+
+			$no_load_topic = true;
+			if ( bbp_allow_topic_tags() && current_user_can( 'assign_topic_tags' ) ) {
+				$no_load_topic = false;
+			}
+
+			$common_array = array(
+				'loading_text' => __( 'Loading', 'buddyboss' ),
+				'ajax_url'     => bp_core_ajax_url(),
+				'nonce'        => wp_create_nonce( 'search_tag' ),
+				'load'         => $no_load_topic,
+				'tag_text'     => __( 'Add Tags:', 'buddyboss' ),
+			);
+
+			wp_localize_script( 'bb-readylaunch-forums-js', 'bbrlForumsCommonJsData', $common_array );
 		}
 	}
 }
