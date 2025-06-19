@@ -934,6 +934,7 @@ if ( class_exists( 'LearnDash\Core\Models\Product' ) && isset( $course_id ) ) {
 										<?php echo get_the_excerpt( $course_id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Method escapes output ?>
 									</div>
 									<div class="bb-rl-course-summary-instructor">
+										<h3><?php esc_html_e( 'Instructor', 'buddyboss' ); ?></h3>
 										<?php
 										$shared_instructor_ids = $bb_rl_ld_helper->bb_rl_get_course_instructor( $course_id );
 

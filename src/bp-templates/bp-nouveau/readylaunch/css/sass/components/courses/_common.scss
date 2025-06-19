@@ -48,6 +48,45 @@
 	}
 }
 
+.bb-rl-course-summary-inner {
+
+	.bb-rl-course-summary-excerpt {
+
+		@include bb-rl-label-heading;
+		color: var(--bb-rl-text-secondary-color);
+	}
+}
+
+.bb-rl-course-summary-instructor {
+	margin-top: var(--bb-rl-space-200);
+
+	h3 {
+
+		@include bb-rl-base-heading;
+		color: var(--bb-rl-text-color);
+		margin: 0 0 var(--bb-rl-space-100);
+	}
+
+	.bb-rl-course-summary-instructor-item {
+		display: flex;
+		align-items: center;
+		gap: var(--bb-rl-space-100);
+		padding: var(--bb-rl-space-100) 0;
+	}
+
+	.bb-rl-author-avatar img {
+		width: 48px;
+		height: 48px;
+		border-radius: 50%;
+	}
+
+	.bb-rl-author-name a {
+
+		@include bb-rl-label-heading-md-bold;
+		color: var(--bb-rl-text-color);
+	}
+}
+
 .bb-rl-course-review {
 	display: inline-flex;
 	align-items: center;

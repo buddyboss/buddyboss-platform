@@ -3271,6 +3271,45 @@ div#bp-group-message-content {
   max-width: none;
 }
 
+.bb-rl-course-summary-inner .bb-rl-course-summary-excerpt {
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 400;
+  line-height: var(--bb-rl-base-line-small);
+  color: var(--bb-rl-text-secondary-color);
+}
+
+.bb-rl-course-summary-instructor {
+  margin-top: var(--bb-rl-space-200);
+}
+
+.bb-rl-course-summary-instructor h3 {
+  font-size: var(--bb-rl-font-size-base);
+  font-weight: 500;
+  line-height: var(--bb-rl-base-line);
+  color: var(--bb-rl-text-color);
+  margin: 0 0 var(--bb-rl-space-100);
+}
+
+.bb-rl-course-summary-instructor .bb-rl-course-summary-instructor-item {
+  display: flex;
+  align-items: center;
+  gap: var(--bb-rl-space-100);
+  padding: var(--bb-rl-space-100) 0;
+}
+
+.bb-rl-course-summary-instructor .bb-rl-author-avatar img {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+}
+
+.bb-rl-course-summary-instructor .bb-rl-author-name a {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 22px;
+  color: var(--bb-rl-text-color);
+}
+
 .bb-rl-course-review {
   display: inline-flex;
   align-items: center;
