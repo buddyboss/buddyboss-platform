@@ -66,26 +66,30 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		public function __construct() {
 			$enabled = bb_is_readylaunch_enabled();
 
+			if ( ! $enabled ) {
+				return;
+			}
+
 			// Register the ReadyLaunch menu.
 			$this->bb_register_readylaunch_menus();
 
-			if ( $enabled ) {
-				add_action( 'bb_blocks_init', array( $this, 'bb_rl_register_blocks' ), 20 );
-				add_filter( 'bp_search_js_settings', array( $this, 'bb_rl_filter_search_js_settings' ) );
-				add_action( 'admin_enqueue_scripts', array( $this, 'bb_admin_enqueue_scripts' ), 1 );
-			}
+			add_action( 'bb_blocks_init', array( $this, 'bb_rl_register_blocks' ), 20 );
+			add_filter( 'bp_search_js_settings', array( $this, 'bb_rl_filter_search_js_settings' ) );
+			add_action( 'admin_enqueue_scripts', array( $this, 'bb_admin_enqueue_scripts' ), 1 );
 
 			$admin_enabled = $this->bb_is_readylaunch_admin_enabled();
 			if ( $admin_enabled ) {
 				add_filter( 'bb_document_icon_class', array( $this, 'bb_readylaunch_document_icon_class' ) );
 			}
 
+			$this->load_template_stack();
+			$this->load_component_integration();
+			$this->load_login_registration_integration();
+			$this->load_hooks();
+
 			$enabled_for_page = $this->bb_is_readylaunch_enabled_for_page();
 			if ( $enabled_for_page ) {
-				$this->load_template_stack();
-				$this->load_component_integration();
-				$this->load_login_registration_integration();
-				$this->load_hooks();
+
 			}
 
 			add_action( 'bp_admin_enqueue_scripts', array( $this, 'bb_rl_admin_enqueue_scripts' ), 1 );
@@ -107,15 +111,6 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * @since BuddyBoss [BBVERSION]
 		 */
 		protected function load_template_stack() {
-			add_filter(
-				'template_include',
-				array(
-					$this,
-					'override_page_templates',
-				),
-				999999
-			); // High priority, so we have the last say here.
-
 			// Remove BuddyPress template locations.
 			remove_filter( 'bp_get_template_stack', 'bp_add_template_stack_locations' );
 			remove_filter( 'bbp_get_template_stack', 'bbp_add_template_stack_locations' );
@@ -506,41 +501,34 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * @return bool True if ReadyLaunch is enabled, false otherwise.
 		 */
 		private function bb_is_readylaunch_enabled_for_page() {
-			if (
-				bb_is_readylaunch_enabled() &&
+			return (
+				bp_is_members_directory() ||
+				bp_is_video_directory() ||
+				bp_is_media_directory() ||
+				bp_is_document_directory() ||
+				bp_is_activity_directory() ||
+				bp_is_groups_directory() ||
+				bp_is_group_single() ||
+				bp_is_group_activity() ||
+				bp_is_group_create() ||
+				bp_is_user() ||
+				bp_is_single_activity() ||
+				bp_is_user_activity() ||
+				bp_is_messages_component() ||
+				bp_is_current_component( 'video' ) ||
+				bp_is_current_component( 'media' ) ||
+				is_admin() ||
+				wp_doing_ajax() ||
+				self::bb_is_network_search() ||
 				(
-					bp_is_members_directory() ||
-					bp_is_video_directory() ||
-					bp_is_media_directory() ||
-					bp_is_document_directory() ||
-					bp_is_activity_directory() ||
-					bp_is_groups_directory() ||
-					bp_is_group_single() ||
-					bp_is_group_activity() ||
-					bp_is_group_create() ||
-					bp_is_user() ||
-					bp_is_single_activity() ||
-					bp_is_user_activity() ||
-					bp_is_messages_component() ||
-					bp_is_current_component( 'video' ) ||
-					bp_is_current_component( 'media' ) ||
-					is_admin() ||
-					wp_doing_ajax() ||
-					self::bb_is_network_search() ||
 					(
-						(
-							is_login() ||
-							bp_is_register_page()
-						) &&
-						$this->bb_rl_is_page_enabled_for_integration( 'registration' )
-					) ||
-					$this->bb_rl_is_learndash_page() // Add check for LearnDash pages.
-				)
-			) {
-				return true;
-			}
-
-			return false;
+						is_login() ||
+						bp_is_register_page()
+					) &&
+					$this->bb_rl_is_page_enabled_for_integration( 'registration' )
+				) ||
+				$this->bb_rl_is_learndash_page() // Add check for LearnDash pages.
+			);
 		}
 
 		/**
@@ -575,7 +563,6 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 			if (
 				(
-					bb_is_readylaunch_enabled() &&
 					is_admin() &&
 					! wp_doing_ajax() &&
 					! empty( $page ) &&
