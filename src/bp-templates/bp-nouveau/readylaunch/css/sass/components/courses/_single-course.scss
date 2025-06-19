@@ -752,4 +752,79 @@
 			margin-top: var(--bb-rl-space-100);
 		}
 	}
+
+	.learndash-course-reviews-form {
+		width: 90%;
+
+		.learndash-course-reviews-stars-input {
+			display: inline-flex;
+			align-items: center;
+		}
+
+		.grid-container {
+
+			.grid-x {
+				margin: 0 0 var(--bb-rl-space-200);
+
+				&:last-of-type {
+
+					.cell {
+						justify-content: flex-end;
+					}
+				}
+			}
+
+			.cell {
+				display: flex;
+
+				label {
+					flex: 0 0 140px;
+				}
+			}
+		}
+
+		input[type="text"],
+		textarea {
+			width: 100%;
+		}
+
+		input[type="submit"]	 {
+
+			@include bb-rl-button;
+			@include bb-rl-button--brand-fill;
+			@include bb-rl-button--small;
+		}
+	}
+
+	.learndash-course-reviews-container {
+
+		.learndash-course-reviews-stars-input {
+
+			.review-star {
+
+				input {
+					clip: rect(0, 0, 0, 0);
+					display: block !important;
+					height: 2em;
+					position: absolute;
+					width: auto;
+
+					+ label:before {
+						display: none;
+					}
+				}
+
+				label {
+					color: var(--bb-rl-text-tertiary-color);
+				}
+
+				&.active {
+
+					label {
+						color: var(--bb-rl-icon-warning-secondary-color);
+					}
+				}
+			}
+		}
+	}
 }
