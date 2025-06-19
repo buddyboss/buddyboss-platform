@@ -107,8 +107,6 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			// LearnDash integration.
 			add_action( 'wp_enqueue_scripts', array( $this, 'bb_readylaunch_learndash_enqueue_styles' ), 10 );
 
-			// Forums integration.
-			add_filter( 'wp_enqueue_scripts', array( $this, 'bb_readylaunch_forums_enqueue_styles' ), 10 );
 			// Set up LearnDash integration.
 		}
 
@@ -790,6 +788,9 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			if ( bp_is_user_profile_edit() || bp_is_user_profile() ) {
 				wp_enqueue_script( 'bb-rl-xprofile' );
 			}
+
+			// Enqueue the Forums styles for ReadyLaunch.
+			$this->bb_readylaunch_forums_enqueue_styles();
 
 			wp_localize_script(
 				'bb-readylaunch-front',
@@ -2903,7 +2904,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 		public function bb_readylaunch_forums_enqueue_styles() {
 			if ( ! $this->bb_is_readylaunch_forums() ) {
-				// return; // TODO: Include group forums pages
+				return;
 			}
 
 			// enqueue select2, emojionearea, medium editor.
