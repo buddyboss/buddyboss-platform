@@ -35,6 +35,7 @@ window.bp = window.bp || {};
 			$document.on( 'click', '.bbp-topic-reply-link', this.openReplyModal );
 			$document.on( 'click', '.bb-rl-forum-modal-close, .bb-rl-forum-modal-overlay', this.closeForumModal );
 			$document.on( 'click', '.bb-rl-forum-modal-overlay', this.closeForumModalOverlay );
+			$document.on( 'click', '[id*="single-forum-description-popup"] .bb-close-action-popup', this.closeForumDescriptionPopup );
 		},
 
 		openForumModal: function ( e ) {
@@ -123,6 +124,11 @@ window.bp = window.bp || {};
 
 			$('.bb-rl-forum-tabs-content').removeClass( 'selected' );
 			$('#' + $tab).addClass( 'selected' );
+		},
+
+		closeForumDescriptionPopup: function ( e ) {
+			e.preventDefault();
+			$( this ).closest( '.bb-action-popup' ).hide();
 		},
 
 		initMediumEditor: function () {

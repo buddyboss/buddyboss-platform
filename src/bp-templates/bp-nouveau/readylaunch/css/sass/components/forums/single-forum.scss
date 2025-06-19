@@ -81,7 +81,27 @@
 			font-size: var(--bb-rl-font-size-sm);
 			line-height: var(--bb-rl-base-line-small);
 			color: var(--bb-rl-text-secondary-color);
+
+			br {
+				display: none;
+			}
 		}
+
+		.bb-more-link {
+			display: inline-block;
+			color: var(--bb-rl-text-color);
+			font-size: var(--bb-rl-font-size-sm);
+			font-weight: 500;
+		}
+	}
+}
+
+[id*="single-forum-description-popup"] {
+
+	.bb-action-popup-content p {
+		font-size: var(--bb-rl-font-size-sm);
+		line-height: 1.5;
+		padding: var(--bb-rl-space-200);
 	}
 }
 

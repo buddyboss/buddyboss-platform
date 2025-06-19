@@ -852,6 +852,23 @@
   color: var(--bb-rl-text-secondary-color);
 }
 
+.bb-rl-forum-single-header-content .bb-rl-forum-description p br {
+  display: none;
+}
+
+.bb-rl-forum-single-header-content .bb-rl-forum-description .bb-more-link {
+  display: inline-block;
+  color: var(--bb-rl-text-color);
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 500;
+}
+
+[id*="single-forum-description-popup"] .bb-action-popup-content p {
+  font-size: var(--bb-rl-font-size-sm);
+  line-height: 1.5;
+  padding: var(--bb-rl-space-200);
+}
+
 .bb-rl-forum-tabs {
   display: flex;
   align-items: center;
