@@ -221,8 +221,8 @@ if ( $pos > 0 ) {
 									$next_lesson = models\UserProgress::next_lesson( get_current_user_id(), $course->ID );
 									if ( false !== $next_lesson && is_object( $next_lesson ) ) {
 										?>
-										<a href="<?php echo esc_url( get_permalink( $next_lesson->ID ) ); ?>" class="mpcs-btn-secondary">
-											<i class="bb-icon-l bb-icon-play"></i><?php esc_html_e( 'Continue Course', 'buddyboss-pro' ); ?>
+										<a href="<?php echo esc_url( get_permalink( $next_lesson->ID ) ); ?>" class="bb-rl-course-link bb-rl-button bb-rl-button--secondaryFill bb-rl-button--small">
+											<?php esc_html_e( 'Continue Course', 'buddyboss-pro' ); ?><i class="bb-icons-rl-caret-right"></i>
 										</a>
 										<?php
 									}

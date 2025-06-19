@@ -99,4 +99,87 @@
 		@include bb-rl-base-heading;
 		margin-bottom: var(--bb-rl-space-100);
 	}
+
+	.mpcs-section.mpcs-section-lessons {
+		border-color: var(--bb-rl-border-secondary-color);
+		background-color: var(--bb-rl-background-color);
+	}
+
+	.mpcs-section.mpcs-section-lessons.first_section {
+		border-radius: var(--bb-rl-radius-md) var(--bb-rl-radius-md) 0 0;
+	}
+
+	.mpcs-section.mpcs-section-lessons.last_section {
+		border-radius: 0 0 var(--bb-rl-radius-md) var(--bb-rl-radius-md);
+	}
+
+	.mpcs-section.mpcs-section-lessons .mpcs-section-header.active .mpcs-section-title {
+		border-color: var(--bb-rl-border-secondary-color);
+	}
+
+	.mpcs-section .mpcs-lessons {
+		padding: var(--bb-rl-space-100) 0;
+	}
+
+	.mpcs-section .mpcs-lessons .mpcs-lesson {
+		padding: 0 var(--bb-rl-space-100);
+		flex: 1;
+
+		.mpcs-lesson-button {
+			display: none;
+		}
+	}
+
+	.mpcs-section .mpcs-lessons .mpcs-lesson-link.mpcs-lesson:before {
+		content: "\e23a";
+		font-weight: 400;
+		font-family: bb-icons-rl;
+		font-size: 20px;
+		color: var(--bb-rl-icon-secondary-color);
+		margin: 0 var(--bb-rl-space-100) 0 0;
+	}
+
+	.mpcs-section .mpcs-lessons .mpcs-lesson-row-link {
+		padding: var(--bb-rl-space-100);
+		border-radius: var(--bb-rl-radius-md);
+		flex-direction: row-reverse;
+
+		&:hover {
+			background-color: var(--bb-rl-background-secondary-hover-color);
+		}
+	}
+
+	.mpcs-section .mpcs-lessons .mpcs-lesson-progress i:before {
+		color: var(--bb-rl-border-tertiary-color);
+	}
+
+	.mpcs-section .mpcs-lessons .mpcs-lesson-progress i.mpcs-ok-circled {
+		display: inline-flex;
+		width: 20px;
+		height: 20px;
+		border-radius: 50%;
+		background-color: var(--bb-rl-background-brand-primary-color);
+		align-items: center;
+		justify-content: center;
+
+		&::before {
+			content: "\e182";
+			font-family: bb-icons-rl;
+			font-size: 12px;
+			font-weight: 400;
+			color: var(--bb-rl-text-white-color);
+		}		
+	}
+
+	.mpcs-section.mpcs-section-lessons .mpcs-section-title .mpcs-section-title-text:before {
+		content: "\e13c";
+		font-weight: 400;
+		font-family: bb-icons-rl;
+		font-size: 16px;
+		color: var(--bb-rl-icon-secondary-color);
+	}
+
+	.mpcs-section.mpcs-section-lessons .mpcs-section-header.active .mpcs-section-title .mpcs-section-title-text:before {
+		content: "\e136";
+	}
 }

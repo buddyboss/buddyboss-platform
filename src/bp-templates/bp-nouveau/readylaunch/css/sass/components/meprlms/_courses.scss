@@ -92,6 +92,14 @@
 	.bb-rl-course-footer {
 		padding: 0 var(--bb-rl-space-200);
 		border: 0;
+
+		.mpcs-progress-wrap {
+			margin-bottom: var(--bb-rl-space-200);
+		}
+
+		.mpcs-progress-data {
+			flex-direction: row-reverse;
+		}
 	}
 }
 
@@ -103,5 +111,21 @@
 		-webkit-box-orient: vertical;
 		overflow: hidden;
 		text-overflow: ellipsis;
+	}
+
+	.bb-rl-course-category {
+
+		.card-categories a {
+
+			@include bb-rl-label-heading;
+			color: var(--bb-rl-text-tertiary-color);
+
+			&:last-of-type {
+
+				.card-category__separator {
+					display: none;
+				}
+			}
+		}
 	}
 }
