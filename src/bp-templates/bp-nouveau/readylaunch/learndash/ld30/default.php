@@ -1,46 +1,28 @@
 <?php
 /**
- * Default LearnDash Template for ReadyLaunch
+ * LD default template for ReadyLaunch.
  *
  * @package BuddyBoss\Core
  * @since BuddyBoss [BBVERSION]
  */
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
-
-// Get the ReadyLaunch instance to check if sidebar is enabled
-$readylaunch = BB_Readylaunch::instance();
-
-// Debug message - this will be visible on the page if it's loading correctly
-echo '<!-- ReadyLaunch LearnDash template loading. Default template used. -->';
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 ?>
 
-<div class="bb-learndash-content-wrap">
-	<main class="bb-learndash-content-area">
-		<?php if ( have_posts() ) : ?>
-			<?php while ( have_posts() ) : the_post(); ?>
-				<article id="post-<?php the_ID(); ?>" <?php post_class('bb-rl-learndash-content'); ?>>
-					<header class="bb-rl-entry-header">
-						<h1 class="bb-rl-entry-title"><?php the_title(); ?></h1>
-					</header>
-
-					<div class="bb-rl-entry-content">
-						<?php the_content(); ?>
-					</div>
-				</article>
-			<?php endwhile; ?>
-		<?php else : ?>
-			<p><?php esc_html_e( 'No content found.', 'buddyboss' ); ?></p>
-		<?php endif; ?>
-	</main>
-
-	<?php if ( $readylaunch->bb_is_sidebar_enabled_for_courses() ) : ?>
-		<aside class="bb-learndash-sidebar">
-			<div class="bb-rl-sidebar-content">
-				<?php do_action( 'bb_readylaunch_learndash_sidebar' ); ?>
+<div class="bb-rl-container bb-rl-container--ld-archive">
+	<div class="bb-rl-lms-inner-block bb-rl-lms-inner-block--ld-archive">
+		<div class="bb-rl-ld-archive">
+			<header class="entry-header">
+				<h2 class="entry-title">
+					<a href="<?php the_permalink(); ?>" rel="bookmark">
+						<?php the_title(); ?>
+					</a>
+				</h2>
+			</header>
+			<div class="entry-content">
+				<?php the_content(); ?>
 			</div>
-		</aside>
-	<?php endif; ?>
-</div> 
+		</div>
+	</div>
+</div>
