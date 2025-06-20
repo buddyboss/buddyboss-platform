@@ -87,6 +87,9 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 
 			remove_action( 'learndash_course_reviews_review_reply', 'bb_output_review_reply_template', 9, 1 );
 			add_action( 'learndash_course_reviews_review_reply', array( $this, 'bb_rl_output_review_reply_template' ), 9, 1 );
+
+			add_action( 'add_meta_boxes', array( $this, 'bb_rl_learndash_add_meta_boxes' ), 30 );
+			add_action( 'save_post', array( $this, 'bb_rl_learndash_save_meta_boxes' ), 10, 2 );
 		}
 
 		/**
@@ -1521,6 +1524,181 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 			}
 
 			return false;
+		}
+
+		/**
+		 * Add meta boxes to the course post type.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 */
+		public function bb_rl_learndash_add_meta_boxes() {
+			// Get existing meta boxes to check for duplicates.
+			global $wp_meta_boxes;
+			$existing_meta_boxes = isset( $wp_meta_boxes['sfwd-courses'] ) ? $wp_meta_boxes['sfwd-courses'] : array();
+
+			// Check if 'postexcerpt' meta box already exists.
+			$excerpt_exists = false;
+			if ( ! empty( $existing_meta_boxes['normal']['high'] ) ) {
+				foreach ( $existing_meta_boxes['normal']['high'] as $meta_box ) {
+					if ( isset( $meta_box['id'] ) && 'postexcerpt' === $meta_box['id'] ) {
+						$excerpt_exists = true;
+						break;
+					}
+				}
+			}
+
+			// Check if 'post_price_box' meta box already exists.
+			$price_box_exists = false;
+			if ( ! empty( $existing_meta_boxes['normal']['low'] ) ) {
+				foreach ( $existing_meta_boxes['normal']['low'] as $meta_box ) {
+					if ( isset( $meta_box['id'] ) && 'post_price_box' === $meta_box['id'] ) {
+						$price_box_exists = true;
+						break;
+					}
+				}
+			}
+
+			// Add 'postexcerpt' meta box only if it doesn't exist.
+			if ( ! $excerpt_exists ) {
+				add_meta_box(
+					'postexcerpt',
+					__( 'Course Short Description', 'buddyboss' ),
+					array( $this, 'bb_rl_learndash_course_short_description_output' ),
+					'sfwd-courses',
+					'normal',
+					'high'
+				);
+			}
+
+			// Add 'post_price_box' meta box only if it doesn't exist.
+			if ( ! $price_box_exists ) {
+				add_meta_box(
+					'post_price_box',
+					__( 'Course Video Preview', 'buddyboss' ),
+					array( $this, 'bb_rl_learndash_course_video_preview_output' ),
+					'sfwd-courses',
+					'normal',
+					'low'
+				);
+			}
+		}
+
+		/**
+		 * Output the course short description.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param object $post The post object.
+		 */
+		public function bb_rl_learndash_course_short_description_output( $post ) {
+			$settings = array(
+				'textarea_name' => 'excerpt',
+				'quicktags'     => array( 'buttons' => 'em,strong,link' ),
+				'tinymce'       => array(
+					'theme_advanced_buttons1' => 'bold,italic,strikethrough,separator,bullist,numlist,separator,blockquote,separator,justifyleft,justifycenter,justifyright,separator,link,unlink,separator,undo,redo,separator',
+					'theme_advanced_buttons2' => '',
+				),
+				'editor_css'    => '<style>#wp-excerpt-editor-container .wp-editor-area{height:175px; width:100%;}</style>',
+			);
+
+			wp_editor( htmlspecialchars_decode( $post->post_excerpt, ENT_QUOTES ), 'excerpt', $settings );
+		}
+
+		/**
+		 * Output the course video preview.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param object $post The post object.
+		 */
+		public function bb_rl_learndash_course_video_preview_output( $post ) {
+			?>
+			<div class="sfwd sfwd_options sfwd-courses_settings">
+				<div class="sfwd_input">
+					<span class="sfwd_option_label">
+						<a class="sfwd_help_text_link" style="cursor:pointer;" title="<?php esc_attr_e( 'Click for Help!', 'buddyboss' ); ?>" onclick="toggleVisibility('sfwd-courses_course_video_url_tip');">
+							<img alt="" src="<?php echo esc_url( buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/images/question.png' ); ?>"/>
+							<label for="buddyboss_lms_course_video" class="sfwd_label buddyboss_lms_course_video_label">
+								<?php esc_html_e( 'Preview Video URL', 'buddyboss' ); ?>
+							</label>
+						</a>
+					</span>
+					<span class="sfwd_option_input">
+						<div class="sfwd_option_div">
+							<?php
+							// Add a nonce field so we can check for it later.
+							wp_nonce_field( 'bb_rl_learndash_course_video_meta_box', 'bb_rl_learndash_course_video_meta_box_nonce' );
+
+							/*
+							 * Use get_post_meta() to retrieve an existing value
+							 * from the database and use the value for the form.
+							 */
+							$value = get_post_meta( $post->ID, '_buddyboss_lms_course_video', true );
+							echo '<textarea id="buddyboss_lms_course_video" name="buddyboss_lms_course_video" rows="2" style="width:100%;">' . esc_attr( $value ) . '</textarea>';
+							?>
+						</div>
+						<div class="sfwd_help_text_div" style="display:none" id="sfwd-courses_course_video_url_tip">
+							<label class="sfwd_help_text">
+								<?php esc_html_e( 'Enter preview video URL for the course. The video will be added on single course price box.', 'buddyboss' ); ?>
+							</label>
+						</div>
+					</span>
+					<p style="clear:left"></p>
+				</div>
+			</div>
+			<?php
+		}
+
+		/**
+		 * When the post is saved, saves our custom data.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param int    $post_id The ID of the post being saved.
+		 * @param object $post The post object.
+		 */
+		public function bb_rl_learndash_save_meta_boxes( $post_id, $post ) {
+
+			/*
+			 * We need to verify this came from our screen and with proper authorization,
+			 * because the save_post action can be triggered at other times.
+			 */
+
+			// Check if our nonce is set.
+			if (
+				! isset( $_POST['bb_rl_learndash_course_video_meta_box_nonce'] ) ||
+				! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['bb_rl_learndash_course_video_meta_box_nonce'] ) ), 'bb_rl_learndash_course_video_meta_box' )
+			) {
+				return;
+			}
+
+			// If this is an autosave, our form has not been submitted, so we don't want to do anything.
+			if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+				return;
+			}
+
+			// Check the user's permissions.
+			if ( isset( $_POST['post_type'] ) && 'page' === $_POST['post_type'] ) {
+
+				if ( ! current_user_can( 'edit_page', $post_id ) ) {
+					return;
+				}
+			} elseif ( ! current_user_can( 'edit_post', $post_id ) ) {
+					return;
+			}
+
+			/* OK, it's safe for us to save the data now. */
+
+			// Make sure that it is set.
+			if ( ! isset( $_POST['buddyboss_lms_course_video'] ) ) {
+				return;
+			}
+
+			// Sanitize user input.
+			$data = sanitize_text_field( wp_unslash( $_POST['buddyboss_lms_course_video'] ) );
+
+			// Update the meta field in the database.
+			update_post_meta( $post_id, '_buddyboss_lms_course_video', $data );
 		}
 	}
 
