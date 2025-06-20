@@ -728,172 +728,172 @@ $file_info          = pathinfo( $course_video_embed );
 			<div class="bb-rl-course-content">
 				<div class="bb-rl-course-content-inner">
 					<?php
-					// Display certificate if available.
-					if ( ! empty( $course_certficate_link ) ) {
-						learndash_get_template_part(
-							'modules/alert.php',
-							array(
-								'type'    => 'success bb-rl-ld-alert-certificate',
-								'icon'    => 'certificate',
-								'message' => __( 'You\'ve earned a certificate!', 'buddyboss' ),
-								'button'  => array(
-									'url'    => $course_certficate_link,
-									'icon'   => 'download',
-									'label'  => __( 'Download Certificate', 'buddyboss' ),
-									'target' => '_new',
-								),
-							),
-							true
-						);
-					}
-					?>
-					<?php if ( ! empty( $lessons ) ) { ?>
-						<div class="bb-rl-course-content-header">
-							<div class="bb-rl-course-content-header-inner">
-								<?php
-								/**
-								 * Fires before the course heading.
-								 *
-								 * @since BuddyBoss [BBVERSION]
-								 *
-								 * @param int $course_id Course ID.
-								 * @param int $user_id   User ID.
-								 */
-								do_action( 'learndash-course-heading-before', $course_id, $user_id );
-								?>
-								<h2>
-									<?php
-									printf(
-									// translators: placeholder: Course.
-										esc_html_x( '%s Content', 'placeholder: Course', 'buddyboss' ),
-										LearnDash_Custom_Label::get_label( 'course' ) // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Method escapes output
-									);
-									?>
-								</h2>
-								<?php
-								/**
-								 * Fires after the course heading.
-								 *
-								 * @since BuddyBoss [BBVERSION]
-								 *
-								 * @param int $course_id Course ID.
-								 * @param int $user_id   User ID.
-								 */
-								do_action( 'learndash-course-heading-after', $course_id, $user_id );
-								?>
-								<div class="bb-rl-course-content-meta">
-									<div class="bb-rl-course-content-meta-item">
-										<span>
-											<?php echo esc_html( $topics_count ); ?>
-											<?php esc_html_e( 'Topics', 'buddyboss' ); ?></span>
-									</div>
-									<div class="bb-rl-course-content-meta-item">
-										<span>
-											<?php echo esc_html( count( $lesson_count ) ); ?>
-											<?php esc_html_e( 'Lessons', 'buddyboss' ); ?>
-										</span>
-									</div>
-								</div>
-							</div>
-							<div class="ld-item-list-actions" data-ld-expand-list="true">
-
-								<?php
-								/**
-								 * Fires before the course expand.
-								 *
-								 * @since BuddyBoss [BBVERSION]
-								 *
-								 * @param int $course_id Course ID.
-								 * @param int $user_id   User ID.
-								 */
-								do_action( 'learndash-course-expand-before', $course_id, $user_id );
-
-								$bb_lesson_container_ids = implode(
-									' ',
-									array_filter(
-										array_map(
-											function ( $bb_lesson_id ) use ( $user_id, $course_id ) {
-												$bb_topics = learndash_get_topic_list( $bb_lesson_id, $course_id );
-												$quizzes   = learndash_get_lesson_quiz_list( $bb_lesson_id, $user_id, $course_id );
-
-												// Ensure we only include this ID if there is something to collapse/expand.
-												if (
-													empty( $bb_topics )
-													&& empty( $quizzes )
-												) {
-													return '';
-												}
-
-												return "ld-expand-{$bb_lesson_id}-container";
-											},
-											array_keys( $lesson_topics )
-										)
-									)
-								);
-								?>
-
-								<?php
-								// Only display if there is something to expand.
-								if ( $has_topics || $has_lesson_quizzes ) {
-									?>
-									<button
-											aria-controls="<?php echo esc_attr( $bb_lesson_container_ids ); ?>"
-											class="ld-expand-button ld-primary-background"
-											id="<?php echo esc_attr( 'ld-expand-button-' . $course_id ); ?>"
-											data-ld-expands="<?php echo esc_attr( $bb_lesson_container_ids ); ?>"
-											data-ld-expand-text="<?php echo esc_attr__( 'Expand All Section', 'buddyboss' ); ?>"
-											data-ld-collapse-text="<?php echo esc_attr__( 'Collapse All Sections', 'buddyboss' ); ?>"
-									>
-										<span class="ld-text"><?php echo esc_attr__( 'Expand All Sections', 'buddyboss' ); ?></span>
-									</button> <!--/.ld-expand-button-->
-
-									<?php
-									/**
-									 * Filters whether to expand all course steps by default. Default is false.
-									 *
-									 * @since BuddyBoss [BBVERSION]
-									 *
-									 * @param boolean $expand_all Whether to expand all course steps.
-									 * @param int     $course_id  Course ID.
-									 * @param string  $context    The context where course is expanded.
-									 */
-									if ( apply_filters( 'learndash_course_steps_expand_all', false, $course_id, 'course_lessons_listing_main' ) ) {
-										?>
-										<script>
-											jQuery( function () {
-												setTimeout( function () {
-													jQuery( "<?php echo esc_attr( '#ld-expand-button-' . $course_id ); ?>" ).trigger( 'click' );
-												}, 1000 );
-											} );
-										</script>
-										<?php
-									}
-								}
-
-								/**
-								 * Fires after the course content expand button.
-								 *
-								 * @since BuddyBoss [BBVERSION]
-								 *
-								 * @param int $course_id Course ID.
-								 * @param int $user_id   User ID.
-								 */
-								do_action( 'learndash-course-expand-after', $course_id, $user_id );
-								?>
-
-							</div> <!--/.ld-item-list-actions-->
-						</div><!-- .bb-rl-course-content-header -->
-						<?php
-					}
-
 					/**
 					 * Identify if we should show the course content listing
 					 *
 					 * @var $show_course_content [bool]
 					 */
 					$show_course_content = ( ! $has_access && 'on' === $course_meta['sfwd-courses_course_disable_content_table'] ? false : true );
-
 					if ( $show_course_content ) {
+
+						// Display certificate if available.
+						if ( ! empty( $course_certficate_link ) ) {
+							learndash_get_template_part(
+								'modules/alert.php',
+								array(
+									'type'    => 'success bb-rl-ld-alert-certificate',
+									'icon'    => 'certificate',
+									'message' => __( 'You\'ve earned a certificate!', 'buddyboss' ),
+									'button'  => array(
+										'url'    => $course_certficate_link,
+										'icon'   => 'download',
+										'label'  => __( 'Download Certificate', 'buddyboss' ),
+										'target' => '_new',
+									),
+								),
+								true
+							);
+						}
+
+						if ( ! empty( $lessons ) ) {
+							?>
+							<div class="bb-rl-course-content-header">
+								<div class="bb-rl-course-content-header-inner">
+									<?php
+									/**
+									 * Fires before the course heading.
+									 *
+									 * @since BuddyBoss [BBVERSION]
+									 *
+									 * @param int $course_id Course ID.
+									 * @param int $user_id   User ID.
+									 */
+									do_action( 'learndash-course-heading-before', $course_id, $user_id );
+									?>
+									<h2>
+										<?php
+										printf(
+										// translators: placeholder: Course.
+											esc_html_x( '%s Content', 'placeholder: Course', 'buddyboss' ),
+											LearnDash_Custom_Label::get_label( 'course' ) // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Method escapes output
+										);
+										?>
+									</h2>
+									<?php
+									/**
+									 * Fires after the course heading.
+									 *
+									 * @since BuddyBoss [BBVERSION]
+									 *
+									 * @param int $course_id Course ID.
+									 * @param int $user_id   User ID.
+									 */
+									do_action( 'learndash-course-heading-after', $course_id, $user_id );
+									?>
+									<div class="bb-rl-course-content-meta">
+										<div class="bb-rl-course-content-meta-item">
+											<span>
+												<?php echo esc_html( $topics_count ); ?>
+												<?php esc_html_e( 'Topics', 'buddyboss' ); ?></span>
+										</div>
+										<div class="bb-rl-course-content-meta-item">
+											<span>
+												<?php echo esc_html( count( $lesson_count ) ); ?>
+												<?php esc_html_e( 'Lessons', 'buddyboss' ); ?>
+											</span>
+										</div>
+									</div>
+								</div>
+								<div class="ld-item-list-actions" data-ld-expand-list="true">
+
+									<?php
+									/**
+									 * Fires before the course expand.
+									 *
+									 * @since BuddyBoss [BBVERSION]
+									 *
+									 * @param int $course_id Course ID.
+									 * @param int $user_id   User ID.
+									 */
+									do_action( 'learndash-course-expand-before', $course_id, $user_id );
+
+									$bb_lesson_container_ids = implode(
+										' ',
+										array_filter(
+											array_map(
+												function ( $bb_lesson_id ) use ( $user_id, $course_id ) {
+													$bb_topics = learndash_get_topic_list( $bb_lesson_id, $course_id );
+													$quizzes   = learndash_get_lesson_quiz_list( $bb_lesson_id, $user_id, $course_id );
+
+													// Ensure we only include this ID if there is something to collapse/expand.
+													if (
+														empty( $bb_topics )
+														&& empty( $quizzes )
+													) {
+														return '';
+													}
+
+													return "ld-expand-{$bb_lesson_id}-container";
+												},
+												array_keys( $lesson_topics )
+											)
+										)
+									);
+									?>
+
+									<?php
+									// Only display if there is something to expand.
+									if ( $has_topics || $has_lesson_quizzes ) {
+										?>
+										<button
+												aria-controls="<?php echo esc_attr( $bb_lesson_container_ids ); ?>"
+												class="ld-expand-button ld-primary-background"
+												id="<?php echo esc_attr( 'ld-expand-button-' . $course_id ); ?>"
+												data-ld-expands="<?php echo esc_attr( $bb_lesson_container_ids ); ?>"
+												data-ld-expand-text="<?php echo esc_attr__( 'Expand All Section', 'buddyboss' ); ?>"
+												data-ld-collapse-text="<?php echo esc_attr__( 'Collapse All Sections', 'buddyboss' ); ?>"
+										>
+											<span class="ld-text"><?php echo esc_attr__( 'Expand All Sections', 'buddyboss' ); ?></span>
+										</button> <!--/.ld-expand-button-->
+
+										<?php
+										/**
+										 * Filters whether to expand all course steps by default. Default is false.
+										 *
+										 * @since BuddyBoss [BBVERSION]
+										 *
+										 * @param boolean $expand_all Whether to expand all course steps.
+										 * @param int     $course_id  Course ID.
+										 * @param string  $context    The context where course is expanded.
+										 */
+										if ( apply_filters( 'learndash_course_steps_expand_all', false, $course_id, 'course_lessons_listing_main' ) ) {
+											?>
+											<script>
+												jQuery( function () {
+													setTimeout( function () {
+														jQuery( "<?php echo esc_attr( '#ld-expand-button-' . $course_id ); ?>" ).trigger( 'click' );
+													}, 1000 );
+												} );
+											</script>
+											<?php
+										}
+									}
+
+									/**
+									 * Fires after the course content expand button.
+									 *
+									 * @since BuddyBoss [BBVERSION]
+									 *
+									 * @param int $course_id Course ID.
+									 * @param int $user_id   User ID.
+									 */
+									do_action( 'learndash-course-expand-after', $course_id, $user_id );
+									?>
+
+								</div> <!--/.ld-item-list-actions-->
+							</div><!-- .bb-rl-course-content-header -->
+							<?php
+						}
 						?>
 
 						<div class="ld-item-list ld-lesson-list bb-rl-ld-lesson-list">
