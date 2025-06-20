@@ -232,9 +232,6 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			// Common LMS stylesheets.
 			add_action( 'wp_enqueue_scripts', array( $this, 'bb_readylaunch_lms_enqueue_styles' ), 10 );
 
-			// LearnDash integration.
-			add_action( 'wp_enqueue_scripts', array( $this, 'bb_readylaunch_learndash_enqueue_styles' ), 10 );
-
 			// Set up LearnDash integration.
 			if ( $enabled_for_page && class_exists( 'SFWD_LMS' ) ) {
 				require_once buddypress()->compatibility_dir . '/class-bb-readylaunch-learndash-helper.php';
@@ -2344,42 +2341,6 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		}
 
 		/**
-		 * Enqueue LearnDash styles for ReadyLaunch.
-		 *
-		 * @since BuddyBoss [BBVERSION]
-		 */
-		public function bb_readylaunch_learndash_enqueue_styles() {
-			if ( ! bb_is_readylaunch_enabled() || ! class_exists( 'SFWD_LMS' ) ) {
-				return;
-			}
-
-			// Enqueue LearnDash ReadyLaunch styles.
-			wp_enqueue_style(
-				'bb-readylaunch-learndash',
-				buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/css/courses.css',
-				array(),
-				bp_get_version()
-			);
-
-			// Enqueue our LearnDash helper JavaScript.
-			wp_enqueue_script(
-				'bb-readylaunch-learndash-js',
-				buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/js/bb-readylaunch-learndash.js',
-				array( 'jquery' ),
-				bp_get_version(),
-				true
-			);
-
-			wp_localize_script(
-				'bb-readylaunch-learndash-js',
-				'bbReadylaunchLearnDash',
-				array(
-					'courses_url' => home_url( '/courses/' ),
-				)
-			);
-		}
-
-		/**
 		 * Enqueue MemberPress Courses styles for ReadyLaunch.
 		 *
 		 * @since BuddyBoss [BBVERSION]
@@ -2637,141 +2598,6 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		}
 
 		/**
-		 * Integration pages callback.
-		 *
-		 * @since BuddyBoss [BBVERSION]
-		 */
-		public function bb_rl_courses_integration_page() {
-			global $post, $wp_query;
-
-			// Get LearnDash post type slugs.
-			$course_slug     = learndash_get_post_type_slug( 'course' );
-			$lesson_slug     = learndash_get_post_type_slug( 'lesson' );
-			$topic_slug      = learndash_get_post_type_slug( 'topic' );
-			$quiz_slug       = learndash_get_post_type_slug( 'quiz' );
-			$assignment_slug = learndash_get_post_type_slug( 'assignment' );
-			$essays_slug     = learndash_get_post_type_slug( 'essays' );
-			$group_slug      = learndash_get_post_type_slug( 'group' );
-
-			// Check for archive pages first (these take priority).
-			if ( is_post_type_archive( $course_slug ) ) {
-				bp_get_template_part( 'learndash/ld30/archive-sfwd-courses' );
-				return;
-			}
-
-			// Check for singular pages using WordPress functions.
-			if ( is_singular( $course_slug ) ) {
-				bp_get_template_part( 'learndash/ld30/course' );
-				return;
-			}
-
-			if ( is_singular( $lesson_slug ) ) {
-				// Try to include the template directly first, fallback to bp_get_template_part.
-				$template_path = bp_locate_template( 'learndash/ld30/lesson.php' );
-				if ( ! empty( $template_path ) && file_exists( $template_path ) ) {
-					include $template_path;
-				} else {
-					bp_get_template_part( 'learndash/ld30/lesson' );
-				}
-				return;
-			}
-
-			if ( is_singular( $topic_slug ) ) {
-				bp_get_template_part( 'learndash/ld30/topic' );
-				return;
-			}
-
-			if ( is_singular( $quiz_slug ) ) {
-				bp_get_template_part( 'learndash/ld30/quiz' );
-				return;
-			}
-
-			if ( is_singular( $assignment_slug ) ) {
-				bp_get_template_part( 'learndash/ld30/assignment' );
-				return;
-			}
-
-			if ( is_singular( $essays_slug ) ) {
-				bp_get_template_part( 'learndash/ld30/essays' );
-				return;
-			}
-
-			if ( is_singular( $group_slug ) ) {
-				bp_get_template_part( 'learndash/ld30/group' );
-				return;
-			}
-
-			// Fallback: Try multiple ways to get the post type for edge cases.
-			$post_type = '';
-
-			if ( function_exists( 'get_post_type' ) ) {
-				$post_type = get_post_type();
-			}
-
-			if ( empty( $post_type ) && isset( $post->post_type ) ) {
-				$post_type = $post->post_type;
-			}
-
-			if ( empty( $post_type ) && is_object( $wp_query ) ) {
-				$queried_object = get_queried_object();
-				if ( $queried_object && isset( $queried_object->post_type ) ) {
-					$post_type = $queried_object->post_type;
-				}
-			}
-
-			if ( empty( $post_type ) && is_object( $wp_query ) && isset( $wp_query->query_vars['post_type'] ) ) {
-				$post_type = $wp_query->query_vars['post_type'];
-			}
-
-			// If we still don't have post data, try to determine from URL (for edge cases).
-			if ( empty( $post_type ) && isset( $_SERVER['REQUEST_URI'] ) ) {
-				$request_uri = sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) );
-
-				// Only check for specific single post patterns, not general directory patterns.
-				if ( preg_match( '#/' . preg_quote( $lesson_slug, '#' ) . '/([^/]+)/?$#', $request_uri ) ) {
-					$post_type = $lesson_slug;
-				} elseif ( preg_match( '#/' . preg_quote( $course_slug, '#' ) . '/([^/]+)/?$#', $request_uri ) ) {
-					$post_type = $course_slug;
-				} elseif ( preg_match( '#/' . preg_quote( $topic_slug, '#' ) . '/([^/]+)/?$#', $request_uri ) ) {
-					$post_type = $topic_slug;
-				} elseif ( preg_match( '#/' . preg_quote( $quiz_slug, '#' ) . '/([^/]+)/?$#', $request_uri ) ) {
-					$post_type = $quiz_slug;
-				} elseif ( preg_match( '#/' . preg_quote( $assignment_slug, '#' ) . '/([^/]+)/?$#', $request_uri ) ) {
-					$post_type = $assignment_slug;
-				} elseif ( preg_match( '#/' . preg_quote( $essays_slug, '#' ) . '/([^/]+)/?$#', $request_uri ) ) {
-					$post_type = $essays_slug;
-				} elseif ( preg_match( '#/' . preg_quote( $group_slug, '#' ) . '/([^/]+)/?$#', $request_uri ) ) {
-					$post_type = $group_slug;
-				}
-			}
-
-			// Handle fallback cases based on detected post type.
-			if ( $post_type === $course_slug ) {
-				bp_get_template_part( 'learndash/ld30/course' );
-			} elseif ( $post_type === $lesson_slug ) {
-				$template_path = bp_locate_template( 'learndash/ld30/lesson.php' );
-				if ( ! empty( $template_path ) && file_exists( $template_path ) ) {
-					include $template_path;
-				} else {
-					bp_get_template_part( 'learndash/ld30/lesson' );
-				}
-			} elseif ( $post_type === $topic_slug ) {
-				bp_get_template_part( 'learndash/ld30/topic' );
-			} elseif ( $post_type === $quiz_slug ) {
-				bp_get_template_part( 'learndash/ld30/quiz' );
-			} elseif ( $post_type === $assignment_slug ) {
-				bp_get_template_part( 'learndash/ld30/assignment' );
-			} elseif ( $post_type === $essays_slug ) {
-				bp_get_template_part( 'learndash/ld30/essays' );
-			} elseif ( $post_type === $group_slug ) {
-				bp_get_template_part( 'learndash/ld30/group' );
-			} else {
-				// Default to courses archive.
-				bp_get_template_part( 'learndash/ld30/archive-sfwd-courses' );
-			}
-		}
-
-		/**
 		 * Get the header menu option.
 		 *
 		 * @since BuddyBoss [BBVERSION]
@@ -2801,79 +2627,6 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			}
 
 			return 'bb-readylaunch';
-		}
-
-		/**
-		 * Check if the current page is a LearnDash lesson, topic, or quiz page.
-		 *
-		 * @since BuddyBoss [BBVERSION]
-		 * @return bool True if on lesson, topic, or quiz page, false otherwise.
-		 */
-		public function bb_rl_is_learndash_inner_page() {
-			if ( ! class_exists( 'SFWD_LMS' ) ) {
-				return false;
-			}
-
-			$courses_integration = bp_get_option( 'bb_rl_enabled_pages' )['courses'] ?? false;
-			if ( ! $courses_integration ) {
-				return false;
-			}
-
-			global $post, $wp_query;
-
-			// Multiple ways to get the post type.
-			$post_type = '';
-
-			// Get post type.
-			if ( function_exists( 'get_post_type' ) ) {
-				$post_type = get_post_type();
-			}
-
-			// Check global $post.
-			if ( empty( $post_type ) && isset( $post->post_type ) ) {
-				$post_type = $post->post_type;
-			}
-
-			// Check queried object.
-			if ( empty( $post_type ) && is_object( $wp_query ) ) {
-				$queried_object = get_queried_object();
-				if ( $queried_object && isset( $queried_object->post_type ) ) {
-					$post_type = $queried_object->post_type;
-				}
-			}
-
-			// Check query vars.
-			if ( empty( $post_type ) && is_object( $wp_query ) && isset( $wp_query->query_vars['post_type'] ) ) {
-				$post_type = $wp_query->query_vars['post_type'];
-			}
-
-			// LearnDash lesson, topic, and quiz post types only.
-			$ld_lesson_topic_quiz_types = array(
-				learndash_get_post_type_slug( 'lesson' ),
-				learndash_get_post_type_slug( 'topic' ),
-				learndash_get_post_type_slug( 'quiz' ),
-			);
-
-			// Check if it's a lesson, topic, or quiz archive page then not display the sidebar.
-			if (
-				is_post_type_archive( learndash_get_post_type_slug( 'lesson' ) ) ||
-				is_post_type_archive( learndash_get_post_type_slug( 'topic' ) ) ||
-				is_post_type_archive( learndash_get_post_type_slug( 'quiz' ) )
-			) {
-				return false;
-			}
-
-			// Check if it's a singular lesson, topic, or quiz page.
-			if ( is_singular( $ld_lesson_topic_quiz_types ) ) {
-				return true;
-			}
-
-			// Check if post type matches LearnDash lesson, topic, or quiz types.
-			if ( ! empty( $post_type ) && in_array( $post_type, $ld_lesson_topic_quiz_types, true ) ) {
-				return true;
-			}
-
-			return false;
 		}
 
 		/**

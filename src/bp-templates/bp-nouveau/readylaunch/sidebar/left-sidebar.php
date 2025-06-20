@@ -22,13 +22,18 @@ if (
 global $bb_rl_search_nav;
 global $post;
 
-// Check if this is a MemberPress inner page
+$bb_rl_ld_helper = null;
+if ( class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
+	$bb_rl_ld_helper = BB_Readylaunch_Learndash_Helper::instance();
+}
+
+// Check if this is a MemberPress inner page.
 $is_memberpress_inner = (
 	bb_is_readylaunch_enabled() &&
 	is_single() &&
 	class_exists( 'memberpress\courses\helpers\Courses' ) &&
 	! helpers\Courses::is_a_course( $post ) &&
-	! bb_load_readylaunch()->bb_rl_is_learndash_inner_page()
+	( ! $bb_rl_ld_helper || ! $bb_rl_ld_helper->bb_rl_is_learndash_inner_page() )
 );
 $panel_classes = 'bb-rl-left-panel widget-area';
 if ( $is_memberpress_inner ) {
@@ -43,7 +48,7 @@ if ( $is_memberpress_inner ) {
 		is_single() &&
 		class_exists( 'memberpress\courses\helpers\Courses' ) &&
 		! helpers\Courses::is_a_course( $post ) &&
-		! bb_load_readylaunch()->bb_rl_is_learndash_inner_page()
+		( ! $bb_rl_ld_helper || ! $bb_rl_ld_helper->bb_rl_is_learndash_inner_page() )
 	) {
 		echo memberpress\courses\helpers\Courses::get_classroom_sidebar( $post );
 	}
@@ -54,7 +59,7 @@ if ( $is_memberpress_inner ) {
 		bp_get_template_part( 'members/single/parts/item-subnav' );
 	} elseif ( bp_is_user_change_avatar() || bp_is_user_profile_edit() ) {
 		bp_get_template_part( 'members/single/parts/edit-subnav' );
-	} elseif ( bb_load_readylaunch()->bb_rl_is_learndash_inner_page() ) {
+	} elseif ( $bb_rl_ld_helper && $bb_rl_ld_helper->bb_rl_is_learndash_inner_page() ) {
 		bp_get_template_part( 'learndash/ld30/single/parts/ld-subnav' );
 	} elseif ( BB_Readylaunch::bb_is_network_search() ) {
 		bp_search_buffer_template_part( 'search-nav' );
