@@ -3002,6 +3002,27 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			);
 
 			wp_localize_script( 'bb-readylaunch-forums-js', 'bbrlForumsCommonJsData', $common_array );
+			if ( bbp_is_single_topic() || ( function_exists( 'bp_is_group' ) && bp_is_group() ) ) {
+				ob_start();
+				bbp_get_template_part( 'form', 'reply' );
+				$reply_form_html = ob_get_clean();
+				wp_localize_script(
+					'bb-readylaunch-forums-js',
+					'bbpReplyAjaxJS',
+					array(
+						'bbp_ajaxurl'          => bbp_get_ajax_url(),
+						'generic_ajax_error'   => esc_html__( 'Something went wrong. Refresh your browser and try again.', 'buddyboss-theme' ),
+						'is_user_logged_in'    => is_user_logged_in(),
+						'reply_nonce'          => wp_create_nonce( 'reply-ajax_' . get_the_ID() ),
+						'topic_id'             => bbp_get_topic_id(),
+						'reply_form_html'      => $reply_form_html,
+						'threaded_reply'       => bbp_allow_threaded_replies(),
+						'threaded_reply_depth' => bbp_thread_replies_depth(),
+						'reply_to_text'        => esc_html__( 'Reply to', 'buddyboss-theme' ),
+						'type_reply_here_text' => esc_html__( 'Type your reply here', 'buddyboss-theme' ),
+					)
+				);
+			}
 		}
 	}
 }
