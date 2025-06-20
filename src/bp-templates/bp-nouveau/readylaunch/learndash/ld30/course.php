@@ -185,8 +185,9 @@ if ( class_exists( 'LearnDash\Core\Models\Product' ) && isset( $course_id ) ) {
 	$ld_product = LearnDash\Core\Models\Product::find( (int) $course_id );
 }
 
-$course_video_embed = get_post_meta( $course_id, '_buddyboss_lms_course_video', true );
-$file_info          = pathinfo( $course_video_embed );
+$course_video_embed    = get_post_meta( $course_id, '_buddyboss_lms_course_video', true );
+$file_info            = pathinfo( $course_video_embed );
+$course_video_duration = get_post_meta( $course_id, '_buddyboss_lms_course_video_duration', true );
 ?>
 
 <div class="bb-learndash-content-wrap">
@@ -528,6 +529,11 @@ $file_info          = pathinfo( $course_video_embed );
 										<div class="bb-rl-video-play-overlay">
 											<i class="bb-icons-rl-play"></i>
 										</div>
+										<?php if ( ! empty( $course_video_duration ) ) : ?>
+											<div class="bb-rl-video-duration">
+												<span class="bb-rl-video-duration-text"><?php echo esc_html( $course_video_duration ); ?></span>
+											</div>
+										<?php endif; ?>
 									</div>
 									<div class="bb-rl-video-embed-container" style="display: none;">
 										<?php echo wp_oembed_get( $course_video_embed ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
@@ -537,13 +543,21 @@ $file_info          = pathinfo( $course_video_embed );
 							} elseif ( isset( $file_info['extension'] ) && 'mp4' === $file_info['extension'] ) {
 								// For MP4 videos, use the poster attribute.
 								?>
-								<video width="100%" controls poster="<?php echo esc_url( $feature_image_url ); ?>">
-									<source src="<?php echo esc_url( $course_video_embed ); ?>" type="video/mp4">
-									<?php esc_html_e( 'Your browser does not support HTML5 video.', 'buddyboss' ); ?>
-								</video>
+								<div class="bb-rl-video-preview-container">
+									<video width="100%" controls poster="<?php echo esc_url( $feature_image_url ); ?>">
+										<source src="<?php echo esc_url( $course_video_embed ); ?>" type="video/mp4">
+										<?php esc_html_e( 'Your browser does not support HTML5 video.', 'buddyboss' ); ?>
+									</video>
+								</div>
 								<?php
 							} else {
-								esc_html_e( 'Video format is not supported, use Youtube video or MP4 format.', 'buddyboss' );
+								?>
+								<div class="bb-rl-video-preview-container bb-rl-video-preview-container--error">
+									<?php
+									esc_html_e( 'Video format is not supported, use Youtube video or MP4 format.', 'buddyboss' );
+									?>
+								</div>
+								<?php
 							}
 						} elseif ( has_post_thumbnail() ) {
 							?>

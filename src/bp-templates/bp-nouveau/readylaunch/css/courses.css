@@ -2638,6 +2638,115 @@ body.ld-in-focus-mode.admin-bar.bb-readylaunch-template {
   color: var(--bb-rl-icon-warning-secondary-color);
 }
 
+.bb-rl-course-figure.video-active .bb-rl-video-preview-container .bb-rl-video-embed-container {
+  display: block !important;
+  z-index: 20;
+}
+
+.bb-rl-video-preview-container {
+  overflow: hidden;
+  font-size: 0;
+  position: relative;
+  padding-top: 300px;
+  border-radius: var(--bb-rl-radius-lg);
+  overflow: hidden;
+}
+
+.bb-rl-video-preview-container .bb-rl-video-preview-image {
+  background-size: cover;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 5;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.bb-rl-video-preview-container .bb-rl-video-play-overlay {
+  width: 56px;
+  height: 56px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background-color: var(--bb-rl-background-black-color);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+  cursor: pointer;
+}
+
+.bb-rl-video-preview-container .bb-rl-video-play-overlay i {
+  color: var(--bb-rl-icon-tertiary-color);
+  font-weight: 500;
+  font-size: 32px;
+}
+
+.bb-rl-video-preview-container .bb-rl-video-duration {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--bb-rl-background-black-color);
+  padding: var(--bb-rl-space-50) var(--bb-rl-space-100);
+  position: absolute;
+  z-index: 9;
+  bottom: var(--bb-rl-space-200);
+  left: var(--bb-rl-space-200);
+  border-radius: var(--bb-rl-radius-md);
+}
+
+.bb-rl-video-preview-container .bb-rl-video-duration .bb-rl-video-duration-text {
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 500;
+  line-height: var(--bb-rl-base-line-small);
+  color: var(--bb-rl-text-white-color);
+}
+
+.bb-rl-video-preview-container .bb-rl-video-embed-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.bb-rl-video-preview-container .bb-rl-video-embed-container iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.bb-rl-video-preview-container video {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+}
+
+.bb-rl-video-preview-container.bb-rl-video-preview-container--error {
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 400;
+  line-height: var(--bb-rl-base-line-small);
+  color: var(--bb-rl-text-secondary-color);
+  background-color: var(--bb-rl-background-tertiary-color);
+  height: 300px;
+  width: 100%;
+  padding: var(--bb-rl-space-100) var(--bb-rl-space-700);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
 .single-sfwd-lessons .site.bb-readylaunch {
   background-color: var(--bb-rl-background-color);
 }
