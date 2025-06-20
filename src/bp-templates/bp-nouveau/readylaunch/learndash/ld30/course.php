@@ -993,7 +993,7 @@ if ( class_exists( 'LearnDash\Core\Models\Product' ) && isset( $course_id ) ) {
 				</div><!-- /.bb-rl-course-content-sidebar -->
 			</div> <!-- /.bb-rl-course-content -->
 
-			<div class="bb-rl-course-content-comments">
+			<div class="bb-rl-lms-content-comments bb-rl-course-content-comments">
 				<?php
 				// If comments are open or we have at least one comment, load up the comment template.
 				$focus_mode         = LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Theme_LD30', 'focus_mode_enabled' );

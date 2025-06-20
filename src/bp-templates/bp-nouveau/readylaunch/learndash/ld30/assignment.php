@@ -11,7 +11,7 @@ defined( 'ABSPATH' ) || exit;
 ?>
 
 <div class="bb-rl-container bb-rl-container--assignment">
-	<div class="bb-rl-lms-inner-block bb-rl-lms-inner-block--assignment">
+	<div class="bb-rl-lms-inner-block bb-rl-lms-inner-block--assignment bb-rl-lms-content-comments">
 		<div class="bb-rl-assignment">
 			<?php the_content(); ?>
 		</div>
