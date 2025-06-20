@@ -2021,6 +2021,14 @@
   content: "\e3b4";
 }
 
+.bb-rl-single-forum-list .bbp-admin-links > a.bbp-reply-move-link:before {
+  content: "\e164";
+}
+
+.bb-rl-single-forum-list .bbp-admin-links > a.bbp-topic-split-link:before {
+  content: "\e0a6";
+}
+
 .bb-rl-single-forum-list .bbp-admin-links > a.bbp-topic-close-link:before {
   content: "\e308";
 }

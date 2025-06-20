@@ -378,6 +378,14 @@
                 content: "\e3b4";
             }
 
+            &.bbp-reply-move-link:before {
+                content: "\e164";
+            }
+
+            &.bbp-topic-split-link:before {
+                content: "\e0a6";
+            }
+
             &.bbp-topic-close-link:before {
                 content: "\e308";
             }
