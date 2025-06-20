@@ -213,7 +213,7 @@
 			font-size: 12px;
 			font-weight: 400;
 			color: var(--bb-rl-text-white-color);
-		}		
+		}
 	}
 
 	.mpcs-section.mpcs-section-lessons .mpcs-section-title .mpcs-section-title-text:before {
@@ -247,7 +247,7 @@
 			height: var(--bb-rl-space-100);
 			border-radius: var(--bb-rl-radius-full);
 			background: var(--bb-rl-background-brand-secondary-color);
-	
+
 			.user-progress {
 				background: var(--bb-rl-background-brand-primary-color);
 				height: var(--bb-rl-space-100);
@@ -264,7 +264,7 @@
 			align-items: center;
 			gap: var(--bb-rl-space-50);
 			margin: 0 0 var(--bb-rl-space-100);
-			text-transform: lowercase;		
+			text-transform: lowercase;
 
 			> span {
 
@@ -340,7 +340,7 @@
 
 				@include bb-rl-base-heading;
 				color: var(--bb-rl-text-color);
-			} 
+			}
 		}
 	}
 

@@ -796,7 +796,7 @@
 			width: 100%;
 		}
 
-		input[type="submit"]	 {
+		input[type="submit"] {
 
 			@include bb-rl-button;
 			@include bb-rl-button--brand-fill;
@@ -849,7 +849,6 @@
 }
 
 .bb-rl-video-preview-container {
-	overflow: hidden;
 	font-size: 0;
 	position: relative;
 	padding-top: 300px;
@@ -935,7 +934,7 @@
 		left: 0;
 		z-index: 2;
 	}
-	
+
 	&.bb-rl-video-preview-container--error {
 
 		@include bb-rl-label-heading;

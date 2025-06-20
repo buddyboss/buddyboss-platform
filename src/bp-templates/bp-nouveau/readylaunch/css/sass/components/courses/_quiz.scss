@@ -573,7 +573,7 @@
 		}
 
 		.wpProQuiz_tipp > div {
-			box-shadow: 0px 12px 16px 0px rgba(0, 0, 0, 0.32);
+			box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.32);
 			background-color: var(--bb-rl-background-secondary-color);
 			padding: var(--bb-rl-space-200);
 
@@ -617,7 +617,7 @@
 
 					@include bb-rl-base-heading;
 					color: var(--bb-rl-text-color);
-					
+
 				}
 
 				.wpProQuiz_catPercent {
@@ -644,11 +644,12 @@
 				}
 
 				th {
+
 					@include bb-rl-label-heading;
 					color: var(--bb-rl-text-secondary-color);
 					background-color: var(--bb-rl-background-secondary-color);
 				}
-				
+
 				td {
 
 					@include bb-rl-label-heading;

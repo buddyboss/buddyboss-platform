@@ -5483,7 +5483,6 @@ body.ld-in-focus-mode.admin-bar.bb-readylaunch-template {
 }
 
 .bb-rl-video-preview-container {
-  overflow: hidden;
   font-size: 0;
   position: relative;
   padding-top: 300px;
@@ -6377,7 +6376,7 @@ body.ld-in-focus-mode.admin-bar.bb-readylaunch-template {
 }
 
 .bb-rl-quiz-entry .wpProQuiz_content .wpProQuiz_tipp > div {
-  box-shadow: 0px 12px 16px 0px rgba(0, 0, 0, 0.32);
+  box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.32);
   background-color: var(--bb-rl-background-secondary-color);
   padding: var(--bb-rl-space-200);
 }
