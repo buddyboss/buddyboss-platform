@@ -5701,6 +5701,7 @@ body.ld-in-focus-mode.admin-bar.bb-readylaunch-template {
 
 .bb-rl-video-preview-container .bb-rl-video-preview-image {
   background-size: cover;
+  background-position: center;
   position: absolute;
   top: 0;
   left: 0;
