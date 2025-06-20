@@ -2921,7 +2921,16 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 						is_singular( bbp_get_reply_post_type() ) ||
 						is_post_type_archive( bbp_get_topic_post_type() ) ||
 						is_post_type_archive( bbp_get_forum_post_type() ) ||
-						is_post_type_archive( bbp_get_reply_post_type() )
+						is_post_type_archive( bbp_get_reply_post_type() ) ||
+						(
+							bbp_is_group_forums_active() &&
+							(
+								bp_is_group_single() ||
+								bp_is_group_forum_topic() ||
+								bp_is_group_forum_topic_edit() ||
+								bbpress()->reply->is_reply_edit()
+							)
+						)
 					);
 		}
 
