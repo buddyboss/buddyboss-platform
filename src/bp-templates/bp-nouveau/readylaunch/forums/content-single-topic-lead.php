@@ -49,7 +49,14 @@ if ( function_exists( 'bbp_is_forum_group_forum' ) && bbp_is_forum_group_forum( 
 		</div>
 		<div class="bb-rl-topic-author-details">
 			<div class="bb-rl-topic-author-name">
-				<?php bbp_get_topic_author_link( array( 'size' => '14' ) ); ?><!-- TODO: Author name not showing -->
+			<?php
+				bbp_author_link(
+					array(
+						'post_id' => bbp_get_topic_forum_id(),
+						'type'    => 'name',
+					)
+				);
+			?>
 			</div>
 			<div class="bb-rl-topic-time">
 				<?php bbp_topic_freshness_link(); ?>

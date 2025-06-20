@@ -1655,10 +1655,12 @@
   display: flex;
   align-items: center;
   gap: var(--bb-rl-space-100);
+  margin-bottom: var(--bb-rl-space-200);
 }
 
 .bb-rl-topic-author .bb-rl-topic-avatar {
   width: 40px;
+  font-size: 0;
 }
 
 .bb-rl-topic-author .bb-rl-topic-avatar img {
@@ -1670,6 +1672,16 @@
 
 .bb-rl-topic-author .bb-rl-topic-avatar .bbp-author-name {
   display: none;
+}
+
+.bb-rl-topic-author .bb-rl-topic-author-name {
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 600;
+  line-height: var(--bb-rl-base-line-small);
+}
+
+.bb-rl-topic-author .bb-rl-topic-author-name a {
+  color: var(--bb-rl-text-color);
 }
 
 .bb-rl-topic-author .bb-rl-topic-time {
