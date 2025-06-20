@@ -328,7 +328,7 @@
 
 .bb-rl-course-content {
 
-	.mpcs-resource-section {
+	.mpcs-section.mpcs-resource-section {
 		background-color: var(--bb-rl-background-color);
 		border-radius: var(--bb-rl-radius-md);
 		border: 1px solid var(--bb-rl-border-secondary-color);
@@ -341,6 +341,17 @@
 				@include bb-rl-base-heading;
 				color: var(--bb-rl-text-color);
 			} 
+		}
+	}
+
+	.mpcs-resource-section:not(.mpcs-section) {
+
+		@include bb-rl-label-heading-md-thin;
+		color: var(--bb-rl-text-secondary-color);
+		margin: 0 0 var(--bb-rl-space-200);
+
+		p {
+			margin-bottom: var(--bb-rl-space-100);
 		}
 	}
 }

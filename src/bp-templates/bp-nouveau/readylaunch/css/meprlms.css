@@ -721,21 +721,33 @@
   font-size: 20px;
 }
 
-.bb-rl-course-content .mpcs-resource-section {
+.bb-rl-course-content .mpcs-section.mpcs-resource-section {
   background-color: var(--bb-rl-background-color);
   border-radius: var(--bb-rl-radius-md);
   border: 1px solid var(--bb-rl-border-secondary-color);
 }
 
-.bb-rl-course-content .mpcs-resource-section .mpcs-section-header {
+.bb-rl-course-content .mpcs-section.mpcs-resource-section .mpcs-section-header {
   background-color: var(--bb-rl-background-secondary-color);
 }
 
-.bb-rl-course-content .mpcs-resource-section .mpcs-section-header .mpcs-section-title-text {
+.bb-rl-course-content .mpcs-section.mpcs-resource-section .mpcs-section-header .mpcs-section-title-text {
   font-size: var(--bb-rl-font-size-base);
   font-weight: 500;
   line-height: var(--bb-rl-base-line);
   color: var(--bb-rl-text-color);
+}
+
+.bb-rl-course-content .mpcs-resource-section:not(.mpcs-section) {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 22px;
+  color: var(--bb-rl-text-secondary-color);
+  margin: 0 0 var(--bb-rl-space-200);
+}
+
+.bb-rl-course-content .mpcs-resource-section:not(.mpcs-section) p {
+  margin-bottom: var(--bb-rl-space-100);
 }
 
 .bb-rl-left-panel--memprlms .bb-rl-left-panel-widget {
