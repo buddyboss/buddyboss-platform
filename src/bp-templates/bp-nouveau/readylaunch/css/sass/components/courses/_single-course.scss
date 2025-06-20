@@ -207,6 +207,14 @@
 	margin-bottom: var(--bb-rl-space-400);
 	max-width: 680px;
 
+	.ld-table-list-items {
+
+		&.ld-loading::before {
+			border-color: var(--bb-rl-border-secondary-color);
+			border-top-color: var(--bb-rl-border-brand-secondary-color);
+		}
+	}
+
 	.ld-item-list-items {
 		border: 1px solid var(--bb-rl-border-secondary-color);
 		border-radius: var(--bb-rl-radius-md);
@@ -221,7 +229,7 @@
 			border-top-color: var(--bb-rl-border-brand-secondary-color);
 		}
 
-		> .ld-pagination {
+		.ld-pagination {
 			padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
 
 			.ld-pages {
