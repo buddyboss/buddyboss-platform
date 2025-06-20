@@ -62,14 +62,22 @@ $wp_query->max_num_comment_pages = get_comment_pages_count( $bb_comments );
 
 		<ol class="comment-list">
 			<?php
-			wp_list_comments(
-				array(
-					'callback'    => 'buddyboss_comment',
-					'style'       => 'ol',
-					'short_ping'  => true,
-					'avatar_size' => 80,
-				)
+			$bb_rl_ld_helper = null;
+			if ( class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
+				$bb_rl_ld_helper = BB_Readylaunch_Learndash_Helper::instance();
+			}
+
+			$comments_args = array(
+				'style'       => 'ol',
+				'short_ping'  => true,
+				'avatar_size' => 80,
 			);
+
+			if ( $bb_rl_ld_helper ) {
+				$comments_args['callback'] = array( $bb_rl_ld_helper, 'bb_rl_learndash_comment' );
+			}
+
+			wp_list_comments( $comments_args );
 			?>
 		</ol><!-- .comment-list -->
 
