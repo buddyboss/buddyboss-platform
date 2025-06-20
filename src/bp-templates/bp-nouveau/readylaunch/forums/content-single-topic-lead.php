@@ -39,6 +39,60 @@ if ( function_exists( 'bbp_is_forum_group_forum' ) && bbp_is_forum_group_forum( 
 <?php do_action( 'bbp_template_before_lead_topic' ); ?>
 <div class="bb-rl-topic-header">
 
+	<div class="bb-rl-topic-header-meta">
+		<?php if ( ! bbp_is_topic_open() ) { ?>
+				<div class="bb-rl-topic-status-closed">
+					<?php esc_html_e( 'Closed', 'buddyboss' ); ?>
+				</div>
+		<?php } ?>
+		<?php
+			$empty       = true;
+			$topic_links = '';
+
+			$args        = array(
+				'sep'    => '',
+				'before' => '',
+				'after'  => '',
+				'links'  => array(
+					'edit'  => bbp_get_topic_edit_link( array( 'id' => bbp_get_topic_id() ) ),
+					'close' => bbp_get_topic_close_link( array( 'id' => bbp_get_topic_id() ) ),
+					'stick' => bbp_get_topic_stick_link( array( 'id' => bbp_get_topic_id() ) ),
+					'merge' => bbp_get_topic_merge_link( array( 'id' => bbp_get_topic_id() ) ),
+					'trash' => bbp_get_topic_trash_link( array( 'id' => bbp_get_topic_id() ) ),
+					'spam'  => bbp_get_topic_spam_link( array( 'id' => bbp_get_topic_id() ) ),
+				),
+			);
+
+			if ( bp_is_active( 'moderation' ) && function_exists( 'bbp_get_topic_report_link' ) ) {
+				$report_link             = bbp_get_topic_report_link( array( 'id' => bbp_get_topic_id() ) );
+				$args['links']['report'] = str_replace( 'button', '', $report_link );
+			}
+
+			$topic_links = bbp_get_topic_admin_links( $args );
+			if ( ! empty( wp_strip_all_tags( $topic_links ) ) ) {
+				unset( $args['before'] );
+				unset( $args['after'] );
+				$topic_links = bbp_get_topic_admin_links( $args );
+				$empty       = false;
+			}
+			if ( ! $empty ) { ?>
+				<div class="bb_more_options forum-dropdown bb-rl-context-wrap">
+					<a href="#" class="bb-rl-context-btn bb_more_options_action bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'More Options', 'buddyboss' ); ?>">
+						<i class="bb-icons-rl-dots-three"></i>
+					</a>
+					<div class="bb_more_options_list bb_more_dropdown bb-rl-context-dropdown">
+						<div class="generic-button bb-rl-context-item">
+						<?php
+							do_action( 'bbp_theme_before_reply_admin_links' );
+							echo $topic_links;
+							do_action( 'bbp_theme_after_reply_admin_links' );
+						?>
+						</div>
+					</div>
+				</div>
+			<?php } ?>
+	</div>
+
 	<div class="bb-rl-topic-started-in">
 		<?php printf( __( '<a href="%1$s">%2$s%3$s</a>', 'buddyboss' ), bbp_get_forum_permalink( bbp_get_topic_forum_id() ), $group_avatar, bbp_get_forum_title( bbp_get_topic_forum_id() )  ); ?>
 	</div>
