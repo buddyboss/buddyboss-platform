@@ -1759,8 +1759,7 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 
 				<?php
 				if ( 0 !== (int) $args['avatar_size'] ) {
-					$platform_author_link = buddyboss_theme_get_option( 'blog_platform_author_link' );
-					if ( function_exists( 'bp_core_get_user_domain' ) && $platform_author_link ) {
+					if ( function_exists( 'bp_core_get_user_domain' ) ) {
 						$user_link = bp_core_get_user_domain( $comment->user_id );
 					} else {
 						$user_link = get_comment_author_url( $comment );
