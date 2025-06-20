@@ -3,7 +3,7 @@ import { __ } from '@wordpress/i18n';
 import { ToggleControl, TextControl, Spinner, Notice, ColorPicker, RadioControl, Button, SelectControl, ColorIndicator, Popover } from '@wordpress/components';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { Sidebar } from './Sidebar';
-import { fetchSettings, saveSettings, debounce, fetchMenus, fetchHelpContent, clearHelpContentCache } from '../../utils/api';
+import { fetchSettings, saveSettings, debounce, fetchMenus, fetchHelpContent, clearHelpContentCache, fetchHelpCategories } from '../../utils/api';
 import { Accordion } from '../../components/Accordion';
 import { LinkItem } from '../../components/LinkItem';
 import { LinkModal } from '../../components/LinkModal';
@@ -668,15 +668,6 @@ export const ReadyLaunchSettings = () => {
 		</Accordion>
 	);
 
-	useEffect(() => {
-		const helpBtn = document.querySelector('.bb-rl-header-actions-button[data-help-content-id]');
-		if (helpBtn) {
-			const onClick = () => handleHelpClick(helpBtn.getAttribute('data-help-content-id'));
-			helpBtn.addEventListener('click', onClick);
-			return () => helpBtn.removeEventListener('click', onClick);
-		}
-	}, [handleHelpClick]);
-
 	const renderContent = () => {
 		if ( isLoading ) {
 			return (
@@ -1259,6 +1250,85 @@ export const ReadyLaunchSettings = () => {
 				return <div>Select a tab</div>;
 		}
 	};
+
+	useEffect(() => {
+		const helpButton = document.querySelector('.bb-rl-header-actions-button');
+		const helpOverlay = document.getElementById('bb-rl-help-overlay');
+		const closeButton = document.getElementById('bb-rl-help-overlay-close');
+		const accordionContainer = document.querySelector('.bb-rl-help-accordion');
+
+		const renderAccordion = (categories) => {
+			if (!accordionContainer) return;
+			accordionContainer.innerHTML = ''; // Clear existing content
+			categories.forEach(category => {
+				const item = document.createElement('div');
+				item.className = 'bb-rl-help-accordion-item';
+
+				const link = document.createElement('a');
+				link.href = category.link;
+				link.target = '_blank';
+				link.rel = 'noopener noreferrer';
+				link.className = 'bb-rl-help-accordion-header';
+				link.innerHTML = `
+					<span><i class="bb-icons-rl-folder"></i> ${category.name}</span>
+					<i class="bb-icons-rl-caret-double-right"></i>
+				`;
+
+				item.appendChild(link);
+				accordionContainer.appendChild(item);
+			});
+		};
+
+		const loadHelpCategories = async () => {
+			if (!helpButton || !accordionContainer) {
+				return;
+			}
+			const parentId = helpButton.getAttribute('data-help-cat-id');
+
+			try {
+				accordionContainer.innerHTML = `<div class="bb-rl-spinner-wrapper"><span class="spinner is-active"></span></div>`;
+				const categories = await fetchHelpCategories(parentId);
+				renderAccordion(categories);
+			} catch (error) {
+				accordionContainer.innerHTML = `<p>${__('Error loading help content.', 'buddyboss')}</p>`;
+				console.error('Error fetching help categories:', error);
+			}
+		};
+
+		loadHelpCategories();
+
+		const openOverlay = (e) => {
+			e.preventDefault();
+			if (helpOverlay) {
+				helpOverlay.style.display = 'flex';
+				document.body.style.overflow = 'hidden';
+			}
+		};
+
+		const closeOverlay = () => {
+			if (helpOverlay) {
+				helpOverlay.style.display = 'none';
+				document.body.style.overflow = '';
+			}
+		};
+
+		if (helpButton) {
+			helpButton.addEventListener('click', openOverlay);
+		}
+
+		if (closeButton) {
+			closeButton.addEventListener('click', closeOverlay);
+		}
+
+		return () => {
+			if (helpButton) {
+				helpButton.removeEventListener('click', openOverlay);
+			}
+			if (closeButton) {
+				closeButton.removeEventListener('click', closeOverlay);
+			}
+		};
+	}, []);
 
 	return (
 		<>
