@@ -1222,6 +1222,10 @@
   border-top: 1px solid var(--bb-rl-border-secondary-color);
 }
 
+.bb-rl-forum-modal .bb-rl-forum-modal-footer #bbp-cancel-reply-to-link {
+  display: none;
+}
+
 .bb-rl-forum-modal .bb-rl-forum-modal-footer #whats-new-attachments {
   width: 100%;
 }

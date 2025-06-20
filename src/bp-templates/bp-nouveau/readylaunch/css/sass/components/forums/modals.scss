@@ -249,6 +249,10 @@
 		padding: var(--bb-rl-space-200) var(--bb-rl-space-300);
 		border-top: 1px solid var(--bb-rl-border-secondary-color);
 
+		#bbp-cancel-reply-to-link {
+			display: none;
+		}
+
 		#whats-new-attachments {
 			width: 100%;
 

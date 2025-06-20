@@ -36,6 +36,66 @@ window.bp = window.bp || {};
 			$document.on( 'click', '.bb-rl-forum-modal-close, .bb-rl-forum-modal-overlay', this.closeForumModal );
 			$document.on( 'click', '.bb-rl-forum-modal-overlay', this.closeForumModalOverlay );
 			$document.on( 'click', '[id*="single-forum-description-popup"] .bb-close-action-popup', this.closeForumDescriptionPopup );
+
+			window.addReply = {
+				moveForm: function ( replyId, parentId, respondId, postId ) {
+					$( '.bbp-reply-form' ).find( '#bbp_reply_to' ).val( parentId );
+					var t = this, div, reply = t.I( replyId ), respond = t.I( respondId ),
+						cancel = t.I( 'bbp-cancel-reply-to-link' ), parent = t.I( 'bbp_reply_to' ),
+						post = t.I( 'bbp_topic_id' );
+
+					if ( !reply || !respond || !cancel || !parent ) {
+						return;
+					}
+
+					t.respondId = respondId;
+					postId = postId || false;
+
+					if ( !t.I( 'bbp-temp-form-div' ) ) {
+						div = document.createElement( 'div' );
+						div.id = 'bbp-temp-form-div';
+						div.style.display = 'none';
+						respond.parentNode.insertBefore( div, respond );
+					}
+
+					respond.classList.add( 'bb-rl-forum-modal-visible' );
+					reply.parentNode.appendChild( respond );
+
+					if ( post && postId ) {
+						post.value = postId;
+					}
+					parent.value = parentId;
+					cancel.style.display = '';
+
+					try {
+						t.I( 'bbp_reply_content' ).focus();
+					} catch ( e ) {
+					}
+
+					var $reply = $( '.' + replyId + '.bb-rl-forum-reply-list-item' );
+					var $reply_header = $reply.children( '.bb-rl-reply-header' );
+					var $reply_header_title = $reply_header.find( '.bb-rl-reply-author-info h3' ).text();
+					var $reply_header_excerpt = $reply.children( '.bb-rl-reply-content' ).text().trim().substring( 0, 50 );
+					var $reply_header_avatar_url = $reply_header.find( '.avatar' ).attr( 'src' );
+
+					$('.bbp-reply-form.bb-rl-forum-modal').find(  '.bb-rl-reply-header .bb-rl-reply-header-title').text( $reply_header_title );
+					$( '.bbp-reply-form.bb-rl-forum-modal').find( '.bb-rl-reply-header .bb-rl-reply-header-excerpt' ).text( $reply_header_excerpt );
+					$( '.bbp-reply-form.bb-rl-forum-modal').find( '.bb-rl-reply-header .bb-rl-reply-header-avatar img' ).attr( 'src', $reply_header_avatar_url );
+
+					$( '.bbp-reply-form' ).trigger(
+						'bbp_after_load_reply_form',
+						{
+							click_event: this,
+						}
+					);
+
+					return false;
+				},
+
+				I: function ( e ) {
+					return document.getElementById( e );
+				}
+			};
 		},
 
 		openForumModal: function ( e ) {
