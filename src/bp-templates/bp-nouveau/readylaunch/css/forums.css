@@ -1715,12 +1715,14 @@
   margin: var(--bb-rl-space-100) 0;
 }
 
+.bbp-reply-revision-log,
 .bbp-topic-revision-log {
   padding: 0;
   list-style: none;
   margin: var(--bb-rl-space-100) 0 var(--bb-rl-space-200);
 }
 
+.bbp-reply-revision-log li,
 .bbp-topic-revision-log li {
   display: flex;
   align-items: center;
@@ -1729,19 +1731,23 @@
   color: var(--bb-rl-text-secondary-color);
 }
 
+.bbp-reply-revision-log li img,
 .bbp-topic-revision-log li img {
   border-radius: var(--bb-rl-radius-full);
 }
 
+.bbp-reply-revision-log li a,
 .bbp-topic-revision-log li a {
   color: var(--bb-rl-text-color);
   margin: 0 var(--bb-rl-space-50);
 }
 
+.bbp-reply-revision-log li a:first-child,
 .bbp-topic-revision-log li a:first-child {
   margin-left: 6px;
 }
 
+.bbp-reply-revision-log li a:last-child,
 .bbp-topic-revision-log li a:last-child {
   margin-right: 0;
   margin-left: 0;
