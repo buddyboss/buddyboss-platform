@@ -21,6 +21,15 @@ while ( have_posts() ) :
 	$course              = new models\Course( $post->ID );
 	$memberships         = $course->memberships();
 	$course_participants = models\UserProgress::find_all_course_participants( $post->ID );
+	$current_user_id     = get_current_user_id();
+	$user_has_progress   = ! empty( $course_participants ) && in_array( $current_user_id, $course_participants );
+
+	// Check user access once and reuse.
+	$has_membership_access = false;
+	if ( is_user_logged_in() && ! empty( $memberships ) ) {
+		$mepr_user             = new \MeprUser( $current_user_id );
+		$has_membership_access = ! \MeprRule::is_locked_for_user( $mepr_user, $post );
+	}
 
 	?>
 	<div class="bb-rl-memprlms-course bb-rl-lms-course">			
@@ -40,19 +49,19 @@ while ( have_posts() ) :
 						<?php
 					}
 					?>
-					<h1 class="bb-rl-entry-title"><?php echo $course->post_title ?></h1>
+					<h1 class="bb-rl-entry-title"><?php echo esc_html( $course->post_title ); ?></h1>
 
 					<div class="bb-rl-course-meta">
 						<div class="bb-rl-meta-item">
 							<?php
-							// get course author full name.
-							$first_name = get_the_author_meta('first_name', $post->post_author);
-							$last_name = get_the_author_meta('last_name', $post->post_author);
-							$course_author_fullname = trim($first_name . ' ' . $last_name);
+							// Get course author full name.
+							$first_name             = get_the_author_meta( 'first_name', $post->post_author );
+							$last_name              = get_the_author_meta( 'last_name', $post->post_author );
+							$course_author_fullname = trim( $first_name . ' ' . $last_name );
 							
-							// Fallback to display_name if first/last name are empty
-							if (empty($course_author_fullname)) {
-								$course_author_fullname = get_the_author_meta('display_name', $post->post_author);
+							// Fallback to display_name if first/last name are empty.
+							if ( empty( $course_author_fullname ) ) {
+								$course_author_fullname = get_the_author_meta( 'display_name', $post->post_author );
 							}
 							
 							if ( ! empty( $course_author_fullname ) ) {
@@ -67,7 +76,7 @@ while ( have_posts() ) :
 					</div>
 
 					<?php
-					// get course price.
+					// Get course price.
 					if ( ! empty( $memberships ) ) {
 						$membership = $memberships[0];
 						if ( isset( $membership->price ) && floatval( $membership->price ) <= 0 ) {
@@ -87,6 +96,37 @@ while ( have_posts() ) :
 							<?php echo esc_html( $course_price ); ?>
 						</div>
 						<?php
+					}
+
+					// Add membership purchase button near price.
+					if ( ! empty( $memberships ) && ( ! is_user_logged_in() || ! $has_membership_access ) ) {
+						$primary_membership = $memberships[0];
+						?>
+						<div class="bb-rl-course-purchase-button">
+							<a href="<?php echo esc_url( get_permalink( $primary_membership->ID ) ); ?>" 
+								class="button">
+								<?php esc_html_e( 'Get Access', 'buddyboss' ); ?>
+							</a>
+						</div>
+						<?php
+					}
+
+					// Add continue/bookmark button for enrolled users.
+					if ( is_user_logged_in() && ( empty( $memberships ) || $has_membership_access ) ) {
+						// Get next lesson URL for bookmarking.
+						$next_lesson = models\UserProgress::next_lesson( $current_user_id, $post->ID );
+						if ( $next_lesson && is_object( $next_lesson ) ) {
+							$bookmark_url = get_permalink( $next_lesson->ID );
+							$button_text  = $user_has_progress ? __( 'Continue', 'buddyboss' ) : __( 'Start', 'buddyboss' );
+							?>
+							<div class="bb-rl-course-continue-button">
+								<a href="<?php echo esc_url( $bookmark_url ); ?>" class="button button-primary">
+									<span><?php echo esc_html( $button_text ); ?></span>
+									<i class="bb-icon-angle-right"></i>
+								</a>
+							</div>
+							<?php
+						}
 					}
 					?>
 
@@ -112,20 +152,29 @@ while ( have_posts() ) :
 
 			<div class="bb-rl-course-details">
 
-				<?php if ( is_user_logged_in() ) { ?>
 				<div class="bb-rl-course-details-item">
 					<i class="bb-icons-rl-wave-triangle"></i>
 					<div>
 						<div class="bb-rl-course-details-label"><?php echo esc_html__( 'Status', 'buddyboss' ); ?></div>
-						<div class="bb-rl-course-details-value">
-							<?php
-							if ( ! empty( $course_participants ) && in_array( get_current_user_id(), $course_participants ) ) {
-								?>
-								<div class="bb-rl-course-enrollment-status bb-rl-status-enrolled">
-									<?php esc_html_e( 'Enrolled', 'buddyboss' ); ?>
-								</div>
-								<?php
+												<div class="bb-rl-course-details-value">
+							<?php 
+							if ( is_user_logged_in() ) {
+								// Simple logic: Enrolled if no membership required OR user has membership access
+								if ( empty( $memberships ) || $has_membership_access ) {
+									?>
+									<div class="bb-rl-course-enrollment-status bb-rl-status-enrolled">
+										<?php esc_html_e( 'Enrolled', 'buddyboss' ); ?>
+									</div>
+									<?php
+								} else {
+									?>
+									<div class="bb-rl-course-enrollment-status bb-rl-status-idle">
+										<?php esc_html_e( 'Not enrolled', 'buddyboss' ); ?>
+									</div>
+									<?php
+								}
 							} else {
+								// Not logged in
 								?>
 								<div class="bb-rl-course-enrollment-status bb-rl-status-idle">
 									<?php esc_html_e( 'Not enrolled', 'buddyboss' ); ?>
@@ -136,7 +185,6 @@ while ( have_posts() ) :
 						</div>
 					</div>
 				</div>
-				<?php } ?>
 
 				<div class="bb-rl-course-details-item">
 					<i class="bb-icons-rl-book-open-text"></i>
@@ -144,9 +192,9 @@ while ( have_posts() ) :
 						<div class="bb-rl-course-details-label"><?php echo esc_html__( 'Lessons', 'buddyboss' ); ?></div>
 						<div class="bb-rl-course-details-value">
 							<?php
-							// get course lesson count.
+							// Get course lesson count.
 							$course_lesson_count = $course->number_of_lessons();
-							echo esc_html( $course_lesson_count . ' ' .  'lessons' );
+							echo esc_html( $course_lesson_count . ' ' . _n( 'lesson', 'lessons', $course_lesson_count, 'buddyboss' ) );
 							?>
 						</div>
 					</div>
@@ -158,7 +206,7 @@ while ( have_posts() ) :
 						<div class="bb-rl-course-details-label"><?php echo esc_html__( 'Enrolled', 'buddyboss' ); ?></div>
 						<div class="bb-rl-course-details-value">
 							<?php
-							// get course enrollment count.
+							// Get course enrollment count.
 							$course_enrollment_count = ! empty( $course_participants ) ? count( $course_participants ) : 0;
 							echo esc_html( $course_enrollment_count );
 							?>
@@ -173,7 +221,22 @@ while ( have_posts() ) :
 							<?php esc_html_e( 'Update', 'buddyboss' ); ?>
 						</div>
 						<div class="bb-rl-course-details-value">
-							<?php echo esc_html( get_the_modified_date() ); ?>
+							<?php
+							// Get course content last modified date.
+							$course_modified_date = get_post_modified_time( 'U', false, $post->ID );
+							$lessons = $course->lessons();
+							$latest_modified_date = $course_modified_date;
+
+							// Check all lessons for the most recent modification date.
+							foreach ( $lessons as $lesson ) {
+								$lesson_modified_date = get_post_modified_time( 'U', false, $lesson->ID );
+								if ( $lesson_modified_date > $latest_modified_date ) {
+									$latest_modified_date = $lesson_modified_date;
+								}
+							}
+
+							echo esc_html( date_i18n( get_option( 'date_format' ), $latest_modified_date ) );
+							?>
 						</div>
 					</div>
 				</div>
@@ -183,9 +246,9 @@ while ( have_posts() ) :
 
 		<div class="bb-rl-course-content">
 			<div class="bb-rl-course-content-inner">
-				<?php setup_postdata( $post->ID ); ?>
-				<?php the_content(); ?>
 				<?php
+				setup_postdata( $post->ID );
+				the_content();
 				$options              = \get_option( 'mpcs-options' );
 				$show_course_comments = helpers\Options::val( $options, 'show-course-comments' );
 				if ( ! empty( $show_course_comments ) && ( comments_open() || get_comments_number() ) ) {
@@ -193,7 +256,105 @@ while ( have_posts() ) :
 				}
 				?>
 			</div>
-			<div class="bb-rl-course-content-sidebar bb-rl-widget-sidebar"></div>
+			<div class="bb-rl-course-content-sidebar bb-rl-widget-sidebar">
+				<?php
+				ob_start();
+				?>
+				<div class="widget">
+					<div class="widget-content">
+						<?php
+						if ( helpers\Lessons::is_a_lesson( $post ) ) {
+							do_action( 'mpcs_classroom_lesson_sidebar_menu', $course, $post );
+							if ( $course->has_resources() ) {
+								?>
+								<div class="mpcs-sidebar-resources">
+									<a class="tile mepr-resources" href="<?php echo esc_url( get_permalink( $course->ID ) . '?action=resources' ); ?>" target="_blank">
+										<div class="tile-icon">
+											<i class="mpcs-print"></i>
+										</div>
+										<div class="tile-content">
+											<p class="tile-title m-0"><?php esc_html_e( 'Resources', 'buddyboss' ); ?></p>
+										</div>
+									</a>
+								</div>
+								<?php
+							}
+							echo helpers\Courses::display_course_overview( false, true );
+						}
+
+						if ( helpers\Courses::is_a_course( $post ) ) {
+							?>
+							<div class="section mpcs-sidebar-menu">
+								<?php
+								do_action( 'mpcs_classroom_sidebar_menu', $course, $post );
+								if ( $course->has_resources() ) {
+									?>
+									<a class="tile <?php \MeprAccountHelper::active_nav( 'resources', 'is-active' ); ?>" href="<?php echo esc_url( get_permalink() . '?action=resources' ); ?>">
+										<div class="tile-icon">
+											<i class="mpcs-print"></i>
+										</div>
+										<div class="tile-content">
+											<p class="tile-title m-0"><?php esc_html_e( 'Resources', 'buddyboss' ); ?></p>
+										</div>
+									</a>
+									<?php
+								}
+
+								if ( $course->user_progress( $current_user_id ) >= 100 && $course->certificates_enable == 'enabled' ) {
+									$cert_url = admin_url( 'admin-ajax.php?action=mpcs-course-certificate' );
+									$cert_url = add_query_arg(
+										array(
+											'user'   => $current_user_id,
+											'course' => $post->ID,
+										),
+										$cert_url
+									);
+									$share_link = add_query_arg(
+										array(
+											'shareable' => 'true',
+										),
+										$cert_url
+									);
+									?>
+									<a target="_blank" class="tile <?php \MeprAccountHelper::active_nav( 'certificate', 'is-active' ); ?>" href="<?php echo esc_url_raw( $cert_url ); ?>">
+										<div class="tile-icon">
+											<i class="mpcs-award"></i>
+										</div>
+										<div class="tile-content">
+											<p class="tile-title m-0">
+												<?php esc_html_e( 'Certificate', 'buddyboss' ); ?>
+												<?php if ( $course->certificates_share_link == 'enabled' ) { ?>
+													<i title="<?php esc_attr_e( 'Copied Shareable Certificate Link', 'buddyboss' ); ?>" class="mpcs-share" data-clipboard-text="<?php echo esc_url( $share_link ); ?>" onclick="return false;"></i>
+												<?php } ?>
+											</p>
+										</div>
+									</a>
+								<?php
+								}
+								$remove_instructor_link = helpers\Options::val($options, 'remove-instructor-link');
+								if ( empty( $remove_instructor_link ) ) { ?>
+									<a class="tile <?php \MeprAccountHelper::active_nav( 'instructor', 'is-active' ); ?>" href="<?php echo esc_url( get_permalink() . '?action=instructor' ); ?>">
+										<div class="tile-icon">
+											<i class="mpcs-user"></i>
+										</div>
+										<div class="tile-content">
+											<p class="tile-title m-0"><?php esc_html_e( 'Your Instructor', 'buddyboss' ); ?></p>
+										</div>
+									</a>
+								<?php } ?>
+							</div>
+							<?php
+						}
+						?>
+					</div>
+				</div>
+				<?php
+				$widget_content = ob_get_clean();
+				if ( ! empty( $widget_content ) ) {
+					echo $widget_content;
+				}
+				?>
+			</div>
 		</div>
 
 		<div class="mepr-rl-footer-widgets">
@@ -212,6 +373,5 @@ while ( have_posts() ) :
 			<?php endif; ?>
 		</div>
 	</div>
-
 	<?php
 endwhile; // End the loop.
