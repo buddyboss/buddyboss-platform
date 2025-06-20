@@ -297,6 +297,17 @@
             font-weight: 400;
             line-height: var(--bb-rl-base-line-small);
         }
+
+        .bbp-header {
+            color: var(--bb-rl-text-secondary-color);
+            font-size: var(--bb-rl-font-size-xs);
+            display: block;
+            font-weight: 500;
+            
+            a {
+                color: var(--bb-rl-text-secondary-color);
+            }
+        }
     }
 
     .bb-rl-reply-meta {
@@ -430,9 +441,19 @@
     }
 }
 
-body.forum {
+.bb-rl-forums-pagination {
+    max-width: 848px;
+    margin: auto;
 
-    .bp-pagination .bp-pagination-count {
+    .bp-pagination-count {
         display: none;
+    }
+
+    .bp-pagination-links {
+        margin-left: 0;
+
+        span {
+            margin-bottom: var(--bb-rl-space-200);
+        }
     }
 }

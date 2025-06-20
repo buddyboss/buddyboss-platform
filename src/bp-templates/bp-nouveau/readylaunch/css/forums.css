@@ -179,14 +179,6 @@
   margin: 0 auto;
 }
 
-.bbpress .bp-pagination > .bp-pagination-links {
-  margin-left: 0;
-}
-
-.bbpress .bp-pagination > .bp-pagination-links span {
-  margin-bottom: var(--bb-rl-space-200);
-}
-
 .bbpress .bb-rl-secondary-header .select2-container .bb-rl-select2-dropdown {
   margin-left: -54px;
 }
@@ -576,6 +568,31 @@
   width: 100% !important;
 }
 
+.singular .bbp-user-replies-created .bb-rl-forums-pagination {
+  max-width: initial;
+}
+
+.singular .bbp-user-replies-created .bb-rl-single-forum-list {
+  background-color: var(--bb-rl-background-color);
+  border-radius: var(--bb-rl-radius-lg);
+  border: 1px solid var(--bb-rl-border-secondary-color);
+}
+
+.singular .bbp-user-replies-created .bb-rl-single-forum-list > li .bb-rl-forum-reply-list-item {
+  border-radius: 0;
+  padding: var(--bb-rl-space-200) var(--bb-rl-space-300);
+  margin-bottom: 0;
+}
+
+.singular .bbp-user-replies-created .bb-rl-single-forum-list > li:first-child .bb-rl-forum-reply-list-item {
+  border-radius: var(--bb-rl-radius-lg) var(--bb-rl-radius-lg) 0 0;
+}
+
+.singular .bbp-user-replies-created .bb-rl-single-forum-list > li:last-child .bb-rl-forum-reply-list-item {
+  border-radius: 0 0 var(--bb-rl-radius-lg) var(--bb-rl-radius-lg);
+  border: 0;
+}
+
 @media screen and (max-width: 1400px) {
   .bb-rl-forums-list {
     justify-content: center;
@@ -871,6 +888,10 @@
   font-size: var(--bb-rl-font-size-sm);
   line-height: 1.5;
   padding: var(--bb-rl-space-200);
+}
+
+.forums .bb-rl-profile-subnav ul.subnav {
+  margin-bottom: var(--bb-rl-space-200);
 }
 
 .bb-rl-forum-tabs {
@@ -1953,6 +1974,17 @@
   line-height: var(--bb-rl-base-line-small);
 }
 
+.bb-rl-single-forum-list .bb-rl-reply-author-info .bbp-header {
+  color: var(--bb-rl-text-secondary-color);
+  font-size: var(--bb-rl-font-size-xs);
+  display: block;
+  font-weight: 500;
+}
+
+.bb-rl-single-forum-list .bb-rl-reply-author-info .bbp-header a {
+  color: var(--bb-rl-text-secondary-color);
+}
+
 .bb-rl-single-forum-list .bb-rl-reply-meta {
   position: absolute;
   right: 0;
@@ -2077,6 +2109,19 @@
   color: var(--bb-rl-text-color);
 }
 
-body.forum .bp-pagination .bp-pagination-count {
+.bb-rl-forums-pagination {
+  max-width: 848px;
+  margin: auto;
+}
+
+.bb-rl-forums-pagination .bp-pagination-count {
   display: none;
+}
+
+.bb-rl-forums-pagination .bp-pagination-links {
+  margin-left: 0;
+}
+
+.bb-rl-forums-pagination .bp-pagination-links span {
+  margin-bottom: var(--bb-rl-space-200);
 }

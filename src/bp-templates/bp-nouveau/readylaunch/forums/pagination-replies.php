@@ -10,7 +10,7 @@
 
 <?php do_action( 'bbp_template_before_pagination_loop' ); ?>
 
-<div class="bp-pagination">
+<div class="bp-pagination bb-rl-forums-pagination">
 	<div class="bp-pagination-count">
 
 		<?php bbp_topic_pagination_count(); ?>
