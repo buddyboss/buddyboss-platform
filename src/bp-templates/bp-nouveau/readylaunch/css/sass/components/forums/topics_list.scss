@@ -87,6 +87,14 @@
     .bb-rl-topic-meta {
         display: flex;
         align-items: center;
+
+        .favorite-toggle {
+            display: none;
+        }
+    }
+
+    .bb-rl-row-actions:has(.favorite-toggle) + .bb-rl-topic-meta-item:before {
+        display: none;
     }
 
     .bb-rl-topic-meta-item {

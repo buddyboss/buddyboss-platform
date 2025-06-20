@@ -11,12 +11,9 @@
 	<?php do_action( 'bbp_template_before_user_favorites' ); ?>
 
 	<div id="bbp-user-favorites" class="bbp-user-favorites">
-		<h2 class="screen-heading favorite-topics-screen"><?php _e( 'My Favorite Discussions', 'buddyboss' ); ?></h2>
 		<div class="bbp-user-section">
 
 			<?php if ( bbp_get_user_favorites() ) : ?>
-
-				<?php bbp_get_template_part( 'pagination', 'topics' ); ?>
 
 				<?php bbp_get_template_part( 'loop', 'topics' ); ?>
 

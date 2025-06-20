@@ -703,6 +703,14 @@
   align-items: center;
 }
 
+.bb-rl-topics-list .bb-rl-topic-meta .favorite-toggle {
+  display: none;
+}
+
+.bb-rl-topics-list .bb-rl-row-actions:has(.favorite-toggle) + .bb-rl-topic-meta-item:before {
+  display: none;
+}
+
 .bb-rl-topics-list .bb-rl-topic-meta-item {
   display: flex;
   align-items: center;
