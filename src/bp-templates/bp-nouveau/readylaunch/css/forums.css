@@ -1876,6 +1876,12 @@
   visibility: visible;
 }
 
+.bb-rl-single-forum-list > li > .bbp-threaded-replies {
+  list-style: none;
+  padding: var(--bb-rl-space-100) 0 0 var(--bb-rl-space-400);
+  border-top: 1px solid var(--bb-rl-border-secondary-color);
+}
+
 .bb-rl-single-forum-list .bb-rl-reply-author-avatar {
   width: 40px;
   height: 40px;

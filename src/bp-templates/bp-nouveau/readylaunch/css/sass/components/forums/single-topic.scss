@@ -232,6 +232,12 @@
                 }
             }
         }
+
+        > .bbp-threaded-replies {
+            list-style: none;
+            padding: var(--bb-rl-space-100) 0 0 var(--bb-rl-space-400);
+            border-top: 1px solid var(--bb-rl-border-secondary-color);
+        }
     }
 
     .bb-rl-reply-author-avatar {
