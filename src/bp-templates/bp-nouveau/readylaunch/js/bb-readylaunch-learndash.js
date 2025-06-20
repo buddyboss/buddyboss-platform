@@ -29,6 +29,7 @@
         addEvents: function() {
             $( document ).on( 'click', '.bb-rl-ld-lesson-list .ld-expand-button', this.handleLessonExpand );
             $( document ).on( 'click', '.bb-rl-course-content-header .ld-expand-button', this.handleAllLessonsExpand );
+            $( document ).on( 'click', '.bb-rl-video-play-overlay', this.handleVideoPlayOverlay );
         },
 
         handleLessonExpand: function(e) {
@@ -53,6 +54,43 @@
             var $expandElm = $parentEl.find( '.ld-item-list-item-preview:has(.ld-expand-button)' );
             $expandElm.toggleClass('ld-expanded');
             $containerElm.toggleClass('ld-expanded').slideToggle( 300 );
+        },
+
+        handleVideoPlayOverlay: function(e) {
+            e.preventDefault();
+            var $overlay = $(this);
+            var $courseFigure = $overlay.closest('.bb-rl-course-figure');
+            var $videoPreview = $overlay.closest('.bb-rl-video-preview-container');
+            var $videoContainer = $videoPreview.find('.bb-rl-video-embed-container');
+            
+            if ($courseFigure.length) {
+                $courseFigure.addClass('video-active');
+            }
+            
+            // Show the video container and hide the preview image
+            if ($videoContainer.length) {
+                
+                // Handle YouTube video playback
+                var $iframe = $videoContainer.find('iframe');
+                if ($iframe.length) {
+                    var iframeSrc = $iframe.attr('src');
+                    
+                    // Check if it's a YouTube video
+                    if (iframeSrc && iframeSrc.indexOf('youtube.com') !== -1) {
+                        // Add autoplay parameter to YouTube URL
+                        var separator = iframeSrc.indexOf('?') !== -1 ? '&' : '?';
+                        var autoplaySrc = iframeSrc + separator + 'autoplay=1&mute=1';
+                        $iframe.attr('src', autoplaySrc);
+                    }
+                    // Check if it's a Vimeo video
+                    else if (iframeSrc && iframeSrc.indexOf('vimeo.com') !== -1) {
+                        // Add autoplay parameter to Vimeo URL
+                        var separator = iframeSrc.indexOf('?') !== -1 ? '&' : '?';
+                        var autoplaySrc = iframeSrc + separator + 'autoplay=1&muted=1';
+                        $iframe.attr('src', autoplaySrc);
+                    }
+                }
+            }
         },
 
         /**

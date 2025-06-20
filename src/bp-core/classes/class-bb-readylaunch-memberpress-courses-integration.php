@@ -62,7 +62,28 @@ class BB_Readylaunch_Memberpress_Courses_Integration {
 		}
 
 		add_action( 'wp_head', array( $this, 'bb_rl_meprlms_add_script' ), 10 );
+
+		add_filter( 'the_content', array( $this, 'bb_rl_meprlms_add_course_description' ), 9 );
 		//add_action( 'wp_enqueue_scripts', array( $this, 'dequeue_pro_frontend_styles' ), 20 );
+	}
+
+	/**
+	 * Add the course description to the content.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $content The content of the post.
+	 *
+	 * @return string The content of the post with the course description.
+	 */
+	public function bb_rl_meprlms_add_course_description( $content ) {
+		global $post;
+		if ( is_single() && ! empty( $post ) && is_a( $post, 'WP_Post' ) ) {
+			if ( class_exists( 'memberpress\courses\models\Course' ) && models\Course::$cpt === $post->post_type ) {
+				return '<div class="bb-rl-course-description"><h2>' . esc_html__( 'About this course', 'buddyboss' ) . '</h2>' . $content . '</div>';
+			}
+		}
+		return $content;
 	}
 
 	/**
