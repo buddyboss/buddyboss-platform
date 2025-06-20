@@ -1876,6 +1876,7 @@
 
 .bb-rl-single-forum-list {
   list-style: none;
+  padding: 0;
 }
 
 .bb-rl-single-forum-list .bb-rl-forum-reply-list-item {
