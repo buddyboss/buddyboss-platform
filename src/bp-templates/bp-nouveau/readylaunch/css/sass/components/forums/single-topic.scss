@@ -326,6 +326,10 @@
                 margin-bottom: 0;
             }
         }
+
+        iframe {
+            border-radius: var(--bb-rl-radius-base);
+        }
     }
 
     .bb_more_options {

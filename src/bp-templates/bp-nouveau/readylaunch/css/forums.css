@@ -423,6 +423,10 @@
   margin-bottom: var(--bb-rl-space-300);
 }
 
+.bb-link-preview-info:has(iframe) {
+  padding: 0;
+}
+
 #bb-url-scrapper-img-holder + .bb-link-preview-info {
   border-radius: 0 0 var(--bb-rl-radius-lg) var(--bb-rl-radius-lg);
 }
@@ -1978,6 +1982,10 @@
 
 .bb-rl-single-forum-list .bb-rl-reply-content p:last-child {
   margin-bottom: 0;
+}
+
+.bb-rl-single-forum-list .bb-rl-reply-content iframe {
+  border-radius: var(--bb-rl-radius-base);
 }
 
 .bb-rl-single-forum-list .bb_more_options .bbp-reply-to-link,
