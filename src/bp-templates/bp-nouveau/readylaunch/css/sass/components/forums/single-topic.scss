@@ -24,6 +24,10 @@
     }
 }
 
+.single-item.groups.forum #item-body > h3.bbp-topic-title {
+	display: none;
+}
+
 .bb-rl-topic-author {
     display: flex;
     align-items: center;
