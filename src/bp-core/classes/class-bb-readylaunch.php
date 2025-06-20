@@ -2927,8 +2927,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 							(
 								bp_is_group_single() ||
 								bp_is_group_forum_topic() ||
-								bp_is_group_forum_topic_edit() ||
-								bbpress()->reply->is_reply_edit()
+								bp_is_group_forum_topic_edit()
 							)
 						)
 					);
