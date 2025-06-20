@@ -1645,6 +1645,30 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 					</span>
 					<p style="clear:left"></p>
 				</div>
+				<div class="sfwd_input">
+					<span class="sfwd_option_label">
+						<a class="sfwd_help_text_link" style="cursor:pointer;" title="<?php esc_attr_e( 'Click for Help!', 'buddyboss' ); ?>" onclick="toggleVisibility('sfwd-courses_course_video_duration_tip');">
+							<img alt="" src="<?php echo esc_url( buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/images/question.png' ); ?>"/>
+							<label for="buddyboss_lms_course_video_duration" class="sfwd_label buddyboss_lms_course_video_duration_label">
+								<?php esc_html_e( 'Video Duration', 'buddyboss' ); ?>
+							</label>
+						</a>
+					</span>
+					<span class="sfwd_option_input">
+						<div class="sfwd_option_div">
+							<?php
+							$video_duration = get_post_meta( $post->ID, '_buddyboss_lms_course_video_duration', true );
+							echo '<input type="text" id="buddyboss_lms_course_video_duration" name="buddyboss_lms_course_video_duration" value="' . esc_attr( $video_duration ) . '" style="width:100%;" />';
+							?>
+						</div>
+						<div class="sfwd_help_text_div" style="display:none" id="sfwd-courses_course_video_duration_tip">
+							<label class="sfwd_help_text">
+								<?php esc_html_e( 'Enter the video duration to display on the preview. e.g., 0:45 or 1:20:30.', 'buddyboss' ); ?>
+							</label>
+						</div>
+					</span>
+					<p style="clear:left"></p>
+				</div>
 			</div>
 			<?php
 		}
@@ -1689,16 +1713,23 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 
 			/* OK, it's safe for us to save the data now. */
 
-			// Make sure that it is set.
-			if ( ! isset( $_POST['buddyboss_lms_course_video'] ) ) {
-				return;
+			// Make sure that video url is set.
+			if ( isset( $_POST['buddyboss_lms_course_video'] ) ) {
+				// Sanitize user input.
+				$data = sanitize_text_field( wp_unslash( $_POST['buddyboss_lms_course_video'] ) );
+
+				// Update the meta field in the database.
+				update_post_meta( $post_id, '_buddyboss_lms_course_video', $data );
 			}
 
-			// Sanitize user input.
-			$data = sanitize_text_field( wp_unslash( $_POST['buddyboss_lms_course_video'] ) );
+			// Make sure that video duration is set.
+			if ( isset( $_POST['buddyboss_lms_course_video_duration'] ) ) {
+				// Sanitize user input.
+				$video_duration_data = sanitize_text_field( wp_unslash( $_POST['buddyboss_lms_course_video_duration'] ) );
 
-			// Update the meta field in the database.
-			update_post_meta( $post_id, '_buddyboss_lms_course_video', $data );
+				// Update the meta field in the database.
+				update_post_meta( $post_id, '_buddyboss_lms_course_video_duration', $video_duration_data );
+			}
 		}
 	}
 

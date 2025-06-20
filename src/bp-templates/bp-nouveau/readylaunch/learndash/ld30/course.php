@@ -184,6 +184,9 @@ $ld_product = null;
 if ( class_exists( 'LearnDash\Core\Models\Product' ) && isset( $course_id ) ) {
 	$ld_product = LearnDash\Core\Models\Product::find( (int) $course_id );
 }
+
+$course_video_embed = get_post_meta( $course_id, '_buddyboss_lms_course_video', true );
+$file_info          = pathinfo( $course_video_embed );
 ?>
 
 <div class="bb-learndash-content-wrap">
@@ -504,15 +507,58 @@ if ( class_exists( 'LearnDash\Core\Models\Product' ) && isset( $course_id ) ) {
 						</div>
 					</div>
 					<div class="bb-rl-course-figure">
-						<?php if ( has_post_thumbnail() ) { ?>
+						<?php
+						if ( '' !== $course_video_embed ) {
+							// Get the feature image for video poster.
+							$feature_image_url = '';
+							$feature_image_id  = get_post_thumbnail_id( $course_id );
+
+							if ( $feature_image_id ) {
+								$feature_image_url = wp_get_attachment_image_url( $feature_image_id, 'full' );
+							} else {
+								// Fallback to default placeholder.
+								$feature_image_url = buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/images/group_cover_image.jpeg';
+							}
+
+							if ( wp_oembed_get( $course_video_embed ) ) {
+								// For oEmbed videos (YouTube, Vimeo, etc.), show feature image with play button overlay.
+								?>
+								<div class="bb-rl-video-preview-container">
+									<div class="bb-rl-video-preview-image" style="background-image: url('<?php echo esc_url( $feature_image_url ); ?>');">
+										<div class="bb-rl-video-play-overlay">
+											<i class="bb-icons-rl-play"></i>
+										</div>
+									</div>
+									<div class="bb-rl-video-embed-container" style="display: none;">
+										<?php echo wp_oembed_get( $course_video_embed ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+									</div>
+								</div>
+								<?php
+							} elseif ( isset( $file_info['extension'] ) && 'mp4' === $file_info['extension'] ) {
+								// For MP4 videos, use the poster attribute.
+								?>
+								<video width="100%" controls poster="<?php echo esc_url( $feature_image_url ); ?>">
+									<source src="<?php echo esc_url( $course_video_embed ); ?>" type="video/mp4">
+									<?php esc_html_e( 'Your browser does not support HTML5 video.', 'buddyboss' ); ?>
+								</video>
+								<?php
+							} else {
+								esc_html_e( 'Video format is not supported, use Youtube video or MP4 format.', 'buddyboss' );
+							}
+						} elseif ( has_post_thumbnail() ) {
+							?>
 							<div class="bb-rl-course-featured-image">
 								<?php the_post_thumbnail( 'full' ); ?>
 							</div>
-						<?php } else { ?>
+							<?php
+						} else {
+							?>
 							<div class="bb-rl-course-featured-image">
 								<img src="<?php echo esc_url( buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/images/group_cover_image.jpeg' ); ?>" alt="<?php esc_attr_e( 'Course placeholder image', 'buddyboss' ); ?>">
 							</div>
-						<?php } ?>
+							<?php
+						}
+						?>
 					</div>
 				</div>
 
