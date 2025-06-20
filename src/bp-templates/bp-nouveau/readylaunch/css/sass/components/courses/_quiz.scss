@@ -541,3 +541,157 @@
 		}
 	}
 }
+
+.bb-rl-quiz-entry {
+
+	.wpProQuiz_content {
+
+		.wpProQuiz_text {
+
+			input[type="checkbox"] {
+				opacity: 1;
+				position: static;
+			}
+		}
+
+		.wpProQuiz_quiz {
+
+			.wpProQuiz_header {
+
+				@include bb-rl-label-heading-md;
+				color: var(--bb-rl-text-color);
+				margin: 0 0 var(--bb-rl-space-100);
+			}
+
+			.wpProQuiz_listItem[data-type="single"] .wpProQuiz_questionListItem,
+			.wpProQuiz_listItem[data-type="multiple"] .wpProQuiz_questionListItem {
+				display: flex;
+				align-items: center;
+				flex-direction: row;
+				gap: var(--bb-rl-space-200);
+			}
+		}
+
+		.wpProQuiz_tipp > div {
+			box-shadow: 0px 12px 16px 0px rgba(0, 0, 0, 0.32);
+			background-color: var(--bb-rl-background-secondary-color);
+			padding: var(--bb-rl-space-200);
+
+			&:before {
+				background-color: var(--bb-rl-background-secondary-color);
+			}
+		}
+
+		.wpProQuiz_resultTable {
+			border: 1px solid var(--bb-rl-border-secondary-color);
+			border-radius: var(--bb-rl-radius-md);
+			padding: var(--bb-rl-space-200);
+			width: 100%;
+
+			.wpProQuiz_resultName {
+
+				@include bb-rl-label-heading-md;
+				color: var(--bb-rl-text-color);
+			}
+
+			.wpProQuiz_resultValue div {
+				height: var(--bb-rl-space-100);
+				border-radius: var(--bb-rl-radius-md);
+			}
+
+			.wpProQuiz_resultValue {
+
+				.progress-number {
+
+					@include bb-rl-label-heading-md;
+					color: var(--bb-rl-text-secondary-color);
+				}
+			}
+		}
+
+		.wpProQuiz_results {
+
+			.wpProQuiz_catOverview {
+
+				h4 {
+
+					@include bb-rl-base-heading;
+					color: var(--bb-rl-text-color);
+					
+				}
+
+				.wpProQuiz_catPercent {
+
+					@include bb-rl-label-heading-md;
+					color: var(--bb-rl-text-color);
+				}
+			}
+		}
+
+		.wpProQuiz_toplist {
+
+			.wpProQuiz_toplistTable {
+				border-collapse: separate;
+				border-spacing: 0;
+				border: 1px solid var(--bb-rl-border-secondary-color);
+				border-radius: var(--bb-rl-radius-md);
+
+				caption {
+
+					@include bb-rl-label-heading;
+					color: var(--bb-rl-text-secondary-color);
+					margin: 0 0 var(--bb-rl-space-50);
+				}
+
+				th {
+					@include bb-rl-label-heading;
+					color: var(--bb-rl-text-secondary-color);
+					background-color: var(--bb-rl-background-secondary-color);
+				}
+				
+				td {
+
+					@include bb-rl-label-heading;
+					color: var(--bb-rl-text-secondary-color);
+				}
+
+				thead tr {
+
+					th {
+						padding: var(--bb-rl-space-100);
+
+						&:first-of-type {
+							border-top-left-radius: var(--bb-rl-radius-md);
+						}
+
+						&:last-of-type {
+							border-top-right-radius: var(--bb-rl-radius-md);
+						}
+					}
+				}
+
+				tbody tr {
+
+					td {
+						padding: var(--bb-rl-space-100);
+						border-bottom: 1px solid var(--bb-rl-border-secondary-color);
+					}
+
+					&:last-child {
+
+						td {
+
+							&:first-of-type {
+								border-bottom-left-radius: var(--bb-rl-radius-md);
+							}
+
+							&:last-of-type {
+								border-bottom-right-radius: var(--bb-rl-radius-md);
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
