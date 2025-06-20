@@ -375,6 +375,19 @@
   display: none;
 }
 
+.bb-rl-course-overview .bb-rl-course-continue-button {
+  margin: var(--bb-rl-space-200) 0 0;
+}
+
+.bb-rl-course-overview .bb-rl-course-continue-button .bb-rl-button {
+  gap: var(--bb-rl-space-50);
+}
+
+.bb-rl-course-overview .bb-rl-course-continue-button .bb-rl-button i {
+  position: relative;
+  top: 1px;
+}
+
 .bb-rl-course-overview-footer .mpcs-sidebar-wrapper {
   width: 100%;
 }
@@ -471,7 +484,8 @@
   color: var(--bb-rl-text-secondary-color);
 }
 
-.bb-rl-course-content-inner > p {
+.bb-rl-course-content-module > p,
+.bb-rl-course-description > p {
   font-size: 14px;
   font-weight: 400;
   line-height: 22px;
@@ -479,7 +493,8 @@
   margin: 0 0 var(--bb-rl-space-200);
 }
 
-.bb-rl-course-content-inner > h2 {
+.bb-rl-course-content-module > h2,
+.bb-rl-course-description > h2 {
   font-size: var(--bb-rl-font-size-base);
   font-weight: 500;
   line-height: var(--bb-rl-base-line);
@@ -610,6 +625,117 @@
 .bb-rl-course-content-inner .mpcs-section.mpcs-section-lessons .mpcs-section-header.active .mpcs-section-title .mpcs-section-title-text:before,
 .mpcs-sidebar-content .mpcs-section.mpcs-section-lessons .mpcs-section-header.active .mpcs-section-title .mpcs-section-title-text:before {
   content: "\e136";
+}
+
+.bb-rl-course-content-module {
+  display: flex;
+  flex-direction: column;
+}
+
+.bb-rl-course-content-module .bb-rl-course-description {
+  order: 99;
+}
+
+.bb-readylaunch-template .mpcs-sidebar-wrapper .progress-bar,
+.mpcs-classroom.bb-readylaunch-template .mpcs-sidebar-wrapper .progress-bar {
+  height: var(--bb-rl-space-100);
+  border-radius: var(--bb-rl-radius-full);
+  background: var(--bb-rl-background-brand-secondary-color);
+}
+
+.bb-readylaunch-template .mpcs-sidebar-wrapper .progress-bar .user-progress,
+.mpcs-classroom.bb-readylaunch-template .mpcs-sidebar-wrapper .progress-bar .user-progress {
+  background: var(--bb-rl-background-brand-primary-color);
+  height: var(--bb-rl-space-100);
+  border-radius: var(--bb-rl-radius-full);
+  font-size: 0;
+}
+
+.bb-readylaunch-template .mpcs-sidebar-wrapper .progress-text,
+.mpcs-classroom.bb-readylaunch-template .mpcs-sidebar-wrapper .progress-text {
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 400;
+  line-height: var(--bb-rl-base-line-small);
+  color: var(--bb-rl-text-secondary-color);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--bb-rl-space-50);
+  margin: 0 0 var(--bb-rl-space-100);
+  text-transform: lowercase;
+}
+
+.bb-readylaunch-template .mpcs-sidebar-wrapper .progress-text > span,
+.mpcs-classroom.bb-readylaunch-template .mpcs-sidebar-wrapper .progress-text > span {
+  font-size: var(--bb-rl-font-size-base);
+  font-weight: 600;
+  line-height: var(--bb-rl-base-line);
+  color: var(--bb-rl-text-color);
+}
+
+.bb-rl-widget-sidebar-menu a,
+.mpcs-classroom .bb-rl-widget-sidebar-menu a {
+  display: flex;
+  align-items: center;
+  gap: var(--bb-rl-space-100);
+  margin: 0 calc(var(--bb-rl-space-100) * -1);
+  padding: var(--bb-rl-space-100) var(--bb-rl-space-100);
+  color: var(--bb-rl-text-color);
+  border-radius: var(--bb-rl-radius-md);
+}
+
+.bb-rl-widget-sidebar-menu a:hover,
+.mpcs-classroom .bb-rl-widget-sidebar-menu a:hover {
+  background-color: var(--bb-rl-background-secondary-hover-color);
+}
+
+.bb-rl-widget-sidebar-menu a .tile-icon,
+.mpcs-classroom .bb-rl-widget-sidebar-menu a .tile-icon {
+  line-height: 1;
+  max-width: 20px;
+}
+
+.bb-rl-widget-sidebar-menu a .tile-icon i,
+.mpcs-classroom .bb-rl-widget-sidebar-menu a .tile-icon i {
+  font-size: 20px;
+  color: var(--bb-rl-icon-secondary-color);
+}
+
+.bb-rl-widget-sidebar-menu a .tile-icon i:before,
+.mpcs-classroom .bb-rl-widget-sidebar-menu a .tile-icon i:before {
+  margin: 0;
+}
+
+.bb-rl-widget-sidebar-menu a .tile-title,
+.mpcs-classroom .bb-rl-widget-sidebar-menu a .tile-title {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 22px;
+  color: var(--bb-rl-text-secondary-color);
+}
+
+.bb-rl-widget-sidebar-menu .mepr-gradebook .tile-icon i:before,
+.mpcs-classroom .bb-rl-widget-sidebar-menu .mepr-gradebook .tile-icon i:before {
+  content: "\e154";
+  font-weight: 400;
+  font-family: bb-icons-rl;
+  font-size: 20px;
+}
+
+.bb-rl-course-content .mpcs-resource-section {
+  background-color: var(--bb-rl-background-color);
+  border-radius: var(--bb-rl-radius-md);
+  border: 1px solid var(--bb-rl-border-secondary-color);
+}
+
+.bb-rl-course-content .mpcs-resource-section .mpcs-section-header {
+  background-color: var(--bb-rl-background-secondary-color);
+}
+
+.bb-rl-course-content .mpcs-resource-section .mpcs-section-header .mpcs-section-title-text {
+  font-size: var(--bb-rl-font-size-base);
+  font-weight: 500;
+  line-height: var(--bb-rl-base-line);
+  color: var(--bb-rl-text-color);
 }
 
 .bb-rl-left-panel--memprlms .bb-rl-left-panel-widget {

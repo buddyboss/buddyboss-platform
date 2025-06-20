@@ -120,9 +120,9 @@ while ( have_posts() ) :
 							$button_text  = $user_has_progress ? __( 'Continue', 'buddyboss' ) : __( 'Start', 'buddyboss' );
 							?>
 							<div class="bb-rl-course-continue-button">
-								<a href="<?php echo esc_url( $bookmark_url ); ?>" class="button button-primary">
+								<a href="<?php echo esc_url( $bookmark_url ); ?>" class="bb-rl-button bb-rl-button--brandFill bb-rl-button--small">
 									<span><?php echo esc_html( $button_text ); ?></span>
-									<i class="bb-icon-angle-right"></i>
+									<i class="bb-icons-rl-caret-right"></i>
 								</a>
 							</div>
 							<?php
@@ -246,15 +246,23 @@ while ( have_posts() ) :
 
 		<div class="bb-rl-course-content">
 			<div class="bb-rl-course-content-inner">
-				<?php
-				setup_postdata( $post->ID );
-				the_content();
-				$options              = \get_option( 'mpcs-options' );
-				$show_course_comments = helpers\Options::val( $options, 'show-course-comments' );
-				if ( ! empty( $show_course_comments ) && ( comments_open() || get_comments_number() ) ) {
-					comments_template();
-				}
-				?>
+				<div class="bb-rl-course-content-panel">
+					<div class="bb-rl-course-content-module">
+						<?php
+						setup_postdata( $post->ID );
+						the_content();
+						?>
+					</div>
+					<div class="bb-rl-course-comment-module bb-rl-lms-content-comments">
+						<?php
+						$options              = \get_option( 'mpcs-options' );
+						$show_course_comments = helpers\Options::val( $options, 'show-course-comments' );
+						if ( ! empty( $show_course_comments ) && ( comments_open() || get_comments_number() ) ) {
+							comments_template();
+						}
+						?>
+					</div>
+				</div>
 			</div>
 			<div class="bb-rl-course-content-sidebar bb-rl-widget-sidebar">
 				<?php
@@ -284,14 +292,14 @@ while ( have_posts() ) :
 
 						if ( helpers\Courses::is_a_course( $post ) ) {
 							?>
-							<div class="section mpcs-sidebar-menu">
+							<div class="section mpcs-sidebar-menu bb-rl-widget-sidebar-menu">
 								<?php
 								do_action( 'mpcs_classroom_sidebar_menu', $course, $post );
 								if ( $course->has_resources() ) {
 									?>
 									<a class="tile <?php \MeprAccountHelper::active_nav( 'resources', 'is-active' ); ?>" href="<?php echo esc_url( get_permalink() . '?action=resources' ); ?>">
 										<div class="tile-icon">
-											<i class="mpcs-print"></i>
+											<i class="bb-icons-rl-printer"></i>
 										</div>
 										<div class="tile-content">
 											<p class="tile-title m-0"><?php esc_html_e( 'Resources', 'buddyboss' ); ?></p>
@@ -335,7 +343,7 @@ while ( have_posts() ) :
 								if ( empty( $remove_instructor_link ) ) { ?>
 									<a class="tile <?php \MeprAccountHelper::active_nav( 'instructor', 'is-active' ); ?>" href="<?php echo esc_url( get_permalink() . '?action=instructor' ); ?>">
 										<div class="tile-icon">
-											<i class="mpcs-user"></i>
+											<i class="bb-icons-rl-user"></i>
 										</div>
 										<div class="tile-content">
 											<p class="tile-title m-0"><?php esc_html_e( 'Your Instructor', 'buddyboss' ); ?></p>
