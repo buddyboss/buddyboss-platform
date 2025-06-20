@@ -63,7 +63,7 @@ function bb_readylaunch_settings_page_html() {
 						<i class="bb-icons-rl-lifebuoy"></i>
 						<h3><?php echo esc_html__( 'Get Support', 'buddyboss' ); ?></h3>
 						<p><?php echo esc_html__( 'Submit a ticket and our world class support team will be in touch soon.', 'buddyboss' ); ?></p>
-						<a href="#" target="_blank" rel="noopener noreferrer" class="button button-primary"><?php echo esc_html__( 'Upgrade to Pro', 'buddyboss' ); ?></a>
+						<a href="https://www.buddyboss.com/contact/" target="_blank" rel="noopener noreferrer" class="button button-primary"><?php echo esc_html__( 'Get Support', 'buddyboss' ); ?></a>
 					</div>
 				</div>
 			</div>
