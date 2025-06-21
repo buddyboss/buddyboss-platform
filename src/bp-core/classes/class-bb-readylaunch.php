@@ -243,6 +243,13 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			if ( class_exists( 'memberpress\courses\helpers\Courses' ) ) {
 				require_once 'class-bb-readylaunch-memberpress-courses-integration.php';
 				BB_Readylaunch_Memberpress_Courses_Integration::instance();
+				
+				// Add MemberPress template path filters for ReadyLaunch
+				if ( bb_is_readylaunch_enabled() ) {
+					add_filter( 'mepr_view_paths', array( $this, 'bb_readylaunch_meprlms_add_template_paths' ), PHP_INT_MAX );
+					add_filter( 'mepr_mpcs_gradebook_view_paths', array( $this, 'bb_readylaunch_meprlms_add_gradebook_template_paths' ), PHP_INT_MAX );
+					add_filter( 'mepr_mpcs_quizzes_view_paths', array( $this, 'bb_readylaunch_meprlms_add_quizzes_template_paths' ), PHP_INT_MAX );
+				}
 			}
 		}
 
@@ -2740,6 +2747,51 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			}
 
 			return false;
+		}
+
+		/**
+		 * Add MemberPress template path filters for ReadyLaunch
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array $paths The array of paths to add.
+		 *
+		 * @return array The modified array of paths.
+		 */
+		public function bb_readylaunch_meprlms_add_template_paths( $paths ) {
+			$readylaunch_path = trailingslashit( buddypress()->plugin_dir . 'bp-templates/bp-nouveau/readylaunch/memberpress' );
+			array_unshift( $paths, $readylaunch_path );
+			return $paths;
+		}
+
+		/**
+		 * Add MemberPress gradebook template path filters for ReadyLaunch
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array $paths The array of paths to add.
+		 *
+		 * @return array The modified array of paths.
+		 */
+		public function bb_readylaunch_meprlms_add_gradebook_template_paths( $paths ) {
+			$readylaunch_path = trailingslashit( buddypress()->plugin_dir . 'bp-templates/bp-nouveau/readylaunch/memberpress/assignments' );
+			array_unshift( $paths, $readylaunch_path );
+			return $paths;
+		}
+
+		/**
+		 * Add MemberPress quizzes template path filters for ReadyLaunch
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array $paths The array of paths to add.
+		 *
+		 * @return array The modified array of paths.
+		 */
+		public function bb_readylaunch_meprlms_add_quizzes_template_paths( $paths ) {
+			$readylaunch_path = trailingslashit( buddypress()->plugin_dir . 'bp-templates/bp-nouveau/readylaunch/memberpress/quizzes' );
+			array_unshift( $paths, $readylaunch_path );
+			return $paths;
 		}
 	}
 }
