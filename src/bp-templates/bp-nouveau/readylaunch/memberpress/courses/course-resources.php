@@ -8,6 +8,78 @@
  */
 
 defined( 'ABSPATH' ) || exit;
+
+// Fallback function if the Pro plugin function is not available.
+if ( ! function_exists( 'bb_mpcs_get_normalized_file_type' ) ) {
+	/**
+	 * Get normalized file type from MIME type.
+	 *
+	 * @param string $file_type MIME type.
+	 * @return string Normalized file type or empty string if invalid.
+	 */
+	function bb_mpcs_get_normalized_file_type( $file_type ) {
+		if ( ! $file_type ) {
+			return '';
+		}
+
+		$parts   = explode( '/', $file_type );
+		$subtype = isset( $parts[1] ) ? strtolower( $parts[1] ) : '';
+
+		// Basic normalization for common file types.
+		$normalized = array(
+			// Images.
+			'jpeg' => 'jpeg',
+			'jpg'  => 'jpeg',
+			'png'  => 'png',
+			'gif'  => 'gif',
+			'bmp'  => 'bmp',
+			'webp' => 'webp',
+			'svg'  => 'svg',
+			'tiff' => 'tiff',
+			'ico'  => 'ico',
+
+			// Video.
+			'mp4'  => 'mp4',
+			'mov'  => 'mov',
+			'mkv'  => 'mkv',
+			'avi'  => 'avi',
+			'wmv'  => 'wmv',
+			'ogg'  => 'ogg',
+			'flv'  => 'flv',
+			'3gp'  => '3gp',
+			'webm' => 'webm',
+
+			// Audio.
+			'aac'  => 'aac',
+			'flac' => 'flac',
+			'midi' => 'midi',
+			'wav'  => 'wav',
+			'wma'  => 'wma',
+			'aiff' => 'aiff',
+			'mp3'  => 'mp3',
+			'm4a'  => 'm4a',
+
+			// Documents.
+			'pdf'  => 'pdf',
+			'doc'  => 'doc',
+			'docx' => 'docx',
+			'xls'  => 'xls',
+			'xlsx' => 'xlsx',
+			'ppt'  => 'ppt',
+			'pptx' => 'pptx',
+			'txt'  => 'txt',
+			'rtf'  => 'rtf',
+			'csv'  => 'csv',
+			'xml'  => 'xml',
+			'html' => 'html',
+			'zip'  => 'zip',
+			'rar'  => 'rar',
+			'7z'   => '7z',
+		);
+
+		return isset( $normalized[ $subtype ] ) ? $normalized[ $subtype ] : $subtype;
+	}
+}
 ?>
 <h2><?php esc_html_e( 'Resources', 'buddyboss-pro' ); ?></h2>
 
