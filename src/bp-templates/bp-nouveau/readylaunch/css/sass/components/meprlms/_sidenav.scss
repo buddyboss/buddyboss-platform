@@ -49,6 +49,9 @@
 
 		.mpcs-section.mpcs-section-lessons .mpcs-section-header {
 			margin: 0 calc(var(--bb-rl-space-200) * -1);
+			background-color: transparent;
+			border-bottom: 1px solid var(--bb-rl-border-secondary-color);
+			border-top: 1px solid var(--bb-rl-border-secondary-color);
 		}
 
 		.mpcs-section .mpcs-lessons .mpcs-lesson-row-link {

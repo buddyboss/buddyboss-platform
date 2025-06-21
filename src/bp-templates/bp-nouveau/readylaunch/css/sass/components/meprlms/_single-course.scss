@@ -75,6 +75,7 @@
 			@include bb-rl-button;
 			@include bb-rl-button--brand-fill;
 			@include bb-rl-button--small;
+			margin-right: var(--bb-rl-space-100);
 
 			.mpcs-angle-right {
 				line-height: 1;
@@ -121,6 +122,28 @@
 	.mpcs-section.mpcs-section-lessons {
 		border-color: var(--bb-rl-border-secondary-color);
 		background-color: var(--bb-rl-background-color);
+		margin: 0;
+
+		&.first_section {
+			margin-top: var(--bb-rl-space-200);
+
+			.mpcs-section-header {
+				border-radius: var(--bb-rl-radius-md) var(--bb-rl-radius-md) 0 0;	
+			}
+		}
+
+		&.last_section {
+			margin-bottom: var(--bb-rl-space-300);
+		}
+
+		+ .mpcs-section.mpcs-section-lessons {
+			border-top: 0;
+		}
+	}
+
+	.mpcs-section.mpcs-section-lessons .mpcs-section-header {
+		background-color: var(--bb-rl-background-hover-color);
+		padding: var(--bb-rl-space-200);
 	}
 
 	.mpcs-section.mpcs-section-lessons.first_section {
@@ -135,6 +158,20 @@
 		border-color: var(--bb-rl-border-secondary-color);
 	}
 
+	.mpcs-section.mpcs-section-lessons .mpcs-section-title {
+		margin: 0;
+		padding: 0
+	}
+
+	.mpcs-section.mpcs-section-lessons .mpcs-section-title .mpcs-section-title-text {
+
+		@include bb-rl-base-heading;
+		color: var(--bb-rl-text-color);
+		display: inline-flex;
+		align-items: center;
+		gap: var(--bb-rl-space-100);
+	}
+
 	.mpcs-section .mpcs-lessons {
 		padding: var(--bb-rl-space-100) 0;
 	}
@@ -144,6 +181,8 @@
 		flex: 1;
 
 		.mpcs-lesson-link {
+
+			@include bb-rl-label-heading-md-thin;
 			flex: 1;
 			color: var(--bb-rl-text-secondary-color);
 			white-space: nowrap;
@@ -154,6 +193,7 @@
 			display: block;
 			position: relative;
 			bottom: 2px;
+			padding: 0;
 		}
 
 		.mpcs-lesson-button {
@@ -170,7 +210,7 @@
 		color: var(--bb-rl-icon-secondary-color);
 		margin: 0 var(--bb-rl-space-50) 0 0;
 		position: relative;
-		top: 2px;
+		top: 3px;
 	}
 
 	.mpcs-section .mpcs-lessons .mpcs-lesson-row-link .mpcs-assignment-icon:before {
@@ -184,6 +224,10 @@
 
 		&:hover {
 			background-color: var(--bb-rl-background-secondary-hover-color);
+		}
+
+		.mpcs-lesson-progress {
+			padding: 0;
 		}
 	}
 
