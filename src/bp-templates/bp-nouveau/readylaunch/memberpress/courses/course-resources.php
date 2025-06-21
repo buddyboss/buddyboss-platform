@@ -114,12 +114,12 @@ if ( ! function_exists( 'bb_mpcs_get_normalized_file_type' ) ) {
 					<div id="mpcs-lesson-<?php echo esc_attr( $download->id ); ?>" class="mpcs-lesson">
 						<a href="<?php echo esc_url( $download->url ); ?>" class="mpcs-lesson-row-link" target="_blank">
 							<div class="mpcs-lesson-link flex">
-								<i class="mpcs-download" style="align-self: start;"></i>
+								<i class="bb-icons-rl-download"></i>
 								<div class="mpcs-file-info">
 									<span class="mpcs-file-title">
 										<?php echo esc_html( $download->title ); ?>
 									</span>
-									<div class="bb-mpcs-file-meta" style="padding-top: 2px; font-size: 11px; color: grey;">
+									<div class="bb-mpcs-file-meta">
 										<?php if ( ! empty( $file_size ) ) : ?>
 											<span class="bb-mpcs-filesize">
 												<?php echo esc_html( bp_core_format_size_units( $file_size, true ) ); ?>

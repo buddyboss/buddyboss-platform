@@ -123,6 +123,7 @@
 		border-color: var(--bb-rl-border-secondary-color);
 		background-color: var(--bb-rl-background-color);
 		margin: 0;
+		border-bottom-width: 1px;
 
 		&.first_section {
 			margin-top: var(--bb-rl-space-200);
@@ -156,6 +157,7 @@
 
 	.mpcs-section.mpcs-section-lessons .mpcs-section-header.active .mpcs-section-title {
 		border-color: var(--bb-rl-border-secondary-color);
+		border-bottom: 0;
 	}
 
 	.mpcs-section.mpcs-section-lessons .mpcs-section-title {
@@ -376,6 +378,7 @@
 		background-color: var(--bb-rl-background-color);
 		border-radius: var(--bb-rl-radius-md);
 		border: 1px solid var(--bb-rl-border-secondary-color);
+		margin: 0 0 var(--bb-rl-space-200);
 
 		.mpcs-section-header {
 			background-color: var(--bb-rl-background-secondary-color);
@@ -384,6 +387,30 @@
 
 				@include bb-rl-base-heading;
 				color: var(--bb-rl-text-color);
+			}
+		}
+
+		.mpcs-lessons > .mpcs-lesson .mpcs-lesson-link {
+			display: flex;
+			align-items: flex-start;
+			gap: var(--bb-rl-space-200);
+
+			i {
+				font-size: 20px;
+				color: var(--bb-rl-icon-secondary-color);
+				margin-top: 2px;
+			}
+
+			.mpcs-file-title {
+
+				@include bb-rl-label-heading-md;
+				color: var(--bb-rl-text-color);
+			}
+
+			.bb-mpcs-file-meta {
+
+				@include bb-rl-label-heading;
+				color: var(--bb-rl-text-tertiary-color);
 			}
 		}
 	}
