@@ -29,6 +29,7 @@
 		@include bb-rl-button;
 		@include bb-rl-button--brand-fill;
 		@include bb-rl-button--small;
+		margin: 0;
 
 		&.disabled-link-css {
 			opacity: 1;
@@ -36,6 +37,13 @@
 			color: var(--bb-rl-text-white-color) !important;
 			border: 1px solid var(--bb-rl-background-brand-primary-color) !important;
 		}
+	}
+
+	#mpcs-assignment-continue-bottom {
+
+		@include bb-rl-button;
+		@include bb-rl-button--brand-fill;
+		@include bb-rl-button--small;
 	}
 
 	#mpcs-drag-drop-area .mpcs-drag-drop-buttons input[type="button"] {
@@ -104,5 +112,15 @@
 	#mpcs-submission-upload-delete {
 
 		@include bb-rl-button--tertiary-link;
+	}
+	
+	.mpcs-submission-display {
+
+		@include bb-rl-notice;
+
+		&.mpcs-submission-display__warning {
+
+			@include bb-rl-notice--warning;
+		}
 	}
 }

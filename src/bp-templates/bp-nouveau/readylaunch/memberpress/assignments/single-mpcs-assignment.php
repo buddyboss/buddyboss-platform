@@ -20,7 +20,7 @@ while ( have_posts() ) :
 	$lesson_available = $lesson->is_available();
 	?>
 	<div class="bb-rl-assignment-block bb-rl-lms-inner-block">
-		<div id="mpcs-main" class="mpcs-main column col-9 col-md-12 mpcs-inner-page-main">
+		<div id="mpcs-main" class="mpcs-main column mpcs-inner-page-main">
 			<?php setup_postdata( $post->ID ); ?>
 			<?php if ( is_active_sidebar( 'mpcs_classroom_lesson_header' ) ) : ?>
 				<div id="primary-sidebar" class="primary-sidebar widget-area" role="complementary">

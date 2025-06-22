@@ -1,0 +1,93 @@
+.bb-rl-lms-inner-block {
+
+	#mpcs-quiz-submit-bottom,
+	.mpcs-inner-page-main #mpcs-quiz-navigation button,
+	.mpcs-inner-page-main #mpcs-quiz-submit-bottom {
+
+		@include bb-rl-button;
+		@include bb-rl-button--brand-fill;
+		@include bb-rl-button--small;
+	}
+
+	.mpcs-quiz-question {
+		margin-bottom: var(--bb-rl-space-400);
+	}
+
+	.mpcs-quiz-question-label {
+
+		@include bb-rl-base-heading-bolder;
+		margin-bottom: var(--bb-rl-space-200);
+	}
+
+	.mpcs-quiz-question-option {
+		padding: var(--bb-rl-space-100);
+	}
+
+	.mpcs-quiz-question-option .mpcs-quiz-question-option-label {
+
+		@include bb-rl-label-heading-md;
+		color: var(--bb-rl-text-color);
+		padding-left: var(--bb-rl-space-100);
+	}
+
+	.mpcs-quiz-question-true-false .mpcs-quiz-question-options {
+		gap: var(--bb-rl-space-200);
+	}
+
+	.mpcs-quiz-question-short-answer input[type="text"],
+	.mpcs-fill-blank-field > input[type="text"] {
+		border: 1px solid var(--bb-rl-border-tertiary-color);
+		padding: 5px var(--bb-rl-space-100);
+		margin: 0 0 2px;
+	}
+
+	.mpcs-quiz-question-short-answer .mpcs-quiz-question-input,
+	.mpcs-quiz-question-essay .mpcs-quiz-question-input,
+	.mpcs-quiz-question-fill-blank .mpcs-quiz-question-input,
+	.mpcs-quiz-question-sort-values .mpcs-quiz-question-input,
+	.mpcs-quiz-question-likert-scale .mpcs-quiz-question-input {
+		margin-left: 0;	
+	}
+
+	.mpcs-quiz-question-essay textarea {
+		border: 1px solid var(--bb-rl-border-tertiary-color);
+		padding: 5px var(--bb-rl-space-100);
+	}
+
+	.mpcs-quiz-question-sort-list {
+		width: 100%;
+	}
+
+	.mpcs-quiz-question-sort-list-item,
+	.mpcs-quiz-question-sort-list-item-a {
+		border: 1px solid var(--bb-rl-border-secondary-color);
+		border-radius: var(--bb-rl-radius-md);
+		text-align: left;
+		padding: var(--bb-rl-space-100) var(--bb-rl-space-400) var(--bb-rl-space-100) var(--bb-rl-space-200);
+		min-width: 200px;
+		width: 100%;
+		position: relative;
+
+		.mpcs-quiz-question-sort-option-value {
+
+			@include bb-rl-label-heading-md;
+			color: var(--bb-rl-text-color);
+		}
+
+		&::after {
+			content: "\eae2";
+			display: inline-block;
+			font-weight: 400;
+			font-family: bb-icons-rl;
+			font-size: 20px;
+			line-height: 1;
+			color: var(--bb-rl-icon-tertiary-color);
+			font-style: normal;
+			margin: 0;
+			position: absolute;
+			right: var(--bb-rl-space-100);
+			top: 50%;
+			transform: translateY(-50%);
+		}
+	}
+}

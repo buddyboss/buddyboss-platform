@@ -11,6 +11,10 @@
 			@include bb-rl-label-heading-md-thin;
 			color: var(--bb-rl-text-secondary-color);
 			margin-bottom: var(--bb-rl-space-200);
+
+			&:empty {
+				margin: 0;
+			}
 		}
 
 		.mpcs-breadcrumbs {
