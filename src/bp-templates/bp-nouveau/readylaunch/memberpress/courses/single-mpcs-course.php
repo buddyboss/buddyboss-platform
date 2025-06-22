@@ -268,7 +268,7 @@ while ( have_posts() ) :
 				<?php
 				ob_start();
 				?>
-				<div class="widget">
+				<div class="widget bb-rl-memprlms-widget-sidebar-menu">
 					<div class="widget-content">
 						<?php
 						if ( helpers\Lessons::is_a_lesson( $post ) ) {
