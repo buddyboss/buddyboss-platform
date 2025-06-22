@@ -13,7 +13,7 @@
 			flex-wrap: wrap;
 
 			.archives-authors-section {
-				display: none
+				display: none;
 			}
 		}
 
@@ -54,7 +54,6 @@
 			border-radius: var(--bb-rl-radius-base);
 			box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.15);
 			padding: var(--bb-rl-space-100) 0;
-			list-style: none;
 			display: none;
 			position: absolute;
 			top: 100%;

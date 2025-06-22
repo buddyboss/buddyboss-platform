@@ -17,4 +17,16 @@
 			@include bb-rl-button--small;
 		}
 	}
+
+	.mpcs-classroom & {
+
+		div#mpcs-lesson-navigation button#previous_lesson_link {
+			background-color: var(--bb-rl-background-tertiary-color);
+			color: var(--bb-rl-text-color) !important;
+
+			&:hover {
+				background-color: var(--bb-rl-background-tertiary-hover-color);
+			}
+		}
+	}
 }
