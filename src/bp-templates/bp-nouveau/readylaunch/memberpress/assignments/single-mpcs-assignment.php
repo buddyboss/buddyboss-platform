@@ -19,47 +19,38 @@ while ( have_posts() ) :
 	$lesson           = new courses\models\Lesson( $post->ID );
 	$lesson_available = $lesson->is_available();
 	?>
-	<div class="entry entry-content">
-		<div class="columns col-gapless" style="flex-grow: 1;">
-			<div id="mpcs-sidebar" class="column col-3 col-md-12 pl-0">
+	<div class="bb-rl-assignment-block bb-rl-lms-inner-block">
+		<div id="mpcs-main" class="mpcs-main column col-9 col-md-12 mpcs-inner-page-main">
+			<?php setup_postdata( $post->ID ); ?>
+			<?php if ( is_active_sidebar( 'mpcs_classroom_lesson_header' ) ) : ?>
+				<div id="primary-sidebar" class="primary-sidebar widget-area" role="complementary">
+					<?php dynamic_sidebar( 'mpcs_classroom_lesson_header' ); ?>
+				</div>
+			<?php endif; ?>
 
-				<?php
-				echo courses\helpers\Courses::get_classroom_sidebar( $post ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			<?php
+
+			if ( 'enabled' === $lesson->course()->lesson_title ) {
+				printf( '<h1 class="bb-rl-entry-title">%s</h1>', esc_html( get_the_title() ) );
+			}
+			?>
+
+			<?php
+			if ( $lesson_available ) {
 				?>
-
-			</div>
-			<div id="mpcs-main" class="mpcs-main column col-9 col-md-12 mpcs-inner-page-main">
-				<?php setup_postdata( $post->ID ); ?>
-				<?php if ( is_active_sidebar( 'mpcs_classroom_lesson_header' ) ) : ?>
-					<div id="primary-sidebar" class="primary-sidebar widget-area" role="complementary">
-						<?php dynamic_sidebar( 'mpcs_classroom_lesson_header' ); ?>
-					</div>
-				<?php endif; ?>
-
+				<div class="mpcs-main-content"><?php the_content(); ?></div>
 				<?php
+			} else {
+				$button_class = 'btn btn-green is-purple';
+				require courses\VIEWS_PATH . '/lessons/lesson_locked.php';
+			}
+			?>
 
-				if ( 'enabled' === $lesson->course()->lesson_title ) {
-					printf( '<h1 class="entry-title">%s</h1>', esc_html( get_the_title() ) );
-				}
-				?>
-
-				<?php
-				if ( $lesson_available ) {
-					?>
-					<div class="mpcs-main-content"><?php the_content(); ?></div>
-					<?php
-				} else {
-					$button_class = 'btn btn-green is-purple';
-					require courses\VIEWS_PATH . '/lessons/lesson_locked.php';
-				}
-				?>
-
-				<?php if ( is_active_sidebar( 'mpcs_classroom_lesson_footer' ) ) : ?>
-					<div id="primary-sidebar" class="primary-sidebar widget-area" role="complementary">
-						<?php dynamic_sidebar( 'mpcs_classroom_lesson_footer' ); ?>
-					</div>
-				<?php endif; ?>
-			</div>
+			<?php if ( is_active_sidebar( 'mpcs_classroom_lesson_footer' ) ) : ?>
+				<div id="primary-sidebar" class="primary-sidebar widget-area" role="complementary">
+					<?php dynamic_sidebar( 'mpcs_classroom_lesson_footer' ); ?>
+				</div>
+			<?php endif; ?>
 		</div>
 	</div>
 

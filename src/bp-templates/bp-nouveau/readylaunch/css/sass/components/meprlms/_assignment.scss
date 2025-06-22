@@ -1,0 +1,108 @@
+.bb-rl-lms-inner-block {
+
+	.mpcs-submission {
+		margin: var(--bb-rl-space-300) 0 var(--bb-rl-space-200);
+	}
+
+	#plupload-upload-ui {
+		border: 1px solid var(--bb-rl-border-secondary-color);
+		background-color: var(--bb-rl-background-secondary-color);
+		border-radius: var(--bb-rl-radius-lg);
+	}
+
+	#mpcs-drag-drop-area {
+		border: 0;
+		background-color: transparent;
+		padding: var(--bb-rl-space-300);
+	}
+
+	#mpcs-url-paste-area {
+		padding: var(--bb-rl-space-100);
+		border: 0;
+		background-color: var(--bb-rl-background-color);
+		margin: 0;
+		border-radius: 0 0 var(--bb-rl-radius-lg) var(--bb-rl-radius-lg);
+	}
+
+	#mpcs-assignment-submit-bottom {
+
+		@include bb-rl-button;
+		@include bb-rl-button--brand-fill;
+		@include bb-rl-button--small;
+
+		&.disabled-link-css {
+			opacity: 1;
+			background: var(--bb-rl-background-brand-disabled-color) !important;
+			color: var(--bb-rl-text-white-color) !important;
+			border: 1px solid var(--bb-rl-background-brand-primary-color) !important;
+		}
+	}
+
+	#mpcs-drag-drop-area .mpcs-drag-drop-buttons input[type="button"] {
+
+		@include bb-rl-button;
+		@include bb-rl-button-secondary-fill;
+		@include bb-rl-button--small;
+	}
+
+	#mpcs-drag-drop-area .mpcs-drag-drop-inside {
+		padding: var(--bb-rl-space-300) 0;
+
+		p {
+
+			@include bb-rl-label-heading-md-thin;
+
+			&.mpcs-drag-drop-info {
+				font-weight: 600;
+			}
+		}
+	}
+
+	#mpcs-url-paste-area input#mpcs-upload-url {
+		border: 1px solid var(--bb-rl-border-tertiary-color);
+		border-radius: var(--bb-rl-radius-base);
+		padding: 5px var(--bb-rl-space-100);
+		margin-left: var(--bb-rl-space-100);
+	}
+
+	.mpcs-submission-upload-preview {
+		border: 1px solid var(--bb-rl-border-secondary-color);
+		border-radius: var(--bb-rl-radius-base);
+		padding: var(--bb-rl-space-200);
+		margin: 0 0 var(--bb-rl-space-200);
+		background-color: var(--bb-rl-background-color);
+	}
+
+	.mpcs-submission-upload-info {
+
+		> div {
+			margin-left: var(--bb-rl-space-100) !important;
+		}
+
+		p {
+			margin: 0;
+		}
+
+		a {
+
+			@include bb-rl-button--tertiary-link;
+		}
+	}
+
+	.plupload-upload-progress {
+		height: var(--bb-rl-space-100);
+		border-radius: var(--bb-rl-radius-full);
+		background-color: var(--bb-rl-background-color);
+	}
+
+	#plupload-upload-progress-bar {
+		background: var(--bb-rl-background-brand-primary-color);
+		height: var(--bb-rl-space-100);
+		border-radius: var(--bb-rl-radius-full);
+	}
+
+	#mpcs-submission-upload-delete {
+
+		@include bb-rl-button--tertiary-link;
+	}
+}

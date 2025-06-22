@@ -9,5 +9,12 @@
 			@include bb-rl-button--brand-fill;
 			@include bb-rl-button--small;
 		}
+
+		#previous_lesson_link {
+
+			@include bb-rl-button;
+			@include bb-rl-button-secondary-fill;
+			@include bb-rl-button--small;
+		}
 	}
 }

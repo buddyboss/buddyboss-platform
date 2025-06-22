@@ -601,6 +601,40 @@
   cursor: not-allowed;
 }
 
+.bb-rl-lms-inner-block #mpcs-lesson-navigation #previous_lesson_link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  font-weight: 500;
+  text-align: center;
+  cursor: pointer;
+  border-radius: var(--bb-rl-radius-md);
+  padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  text-decoration: none;
+  background-color: var(--bb-rl-background-tertiary-color);
+  color: var(--bb-rl-text-color);
+  border: 1px solid transparent;
+  padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
+  font-size: 0.875rem;
+  font-weight: 400;
+}
+
+.bb-rl-lms-inner-block #mpcs-lesson-navigation #previous_lesson_link:hover {
+  background-color: var(--bb-rl-background-tertiary-hover-color);
+}
+
+.bb-rl-lms-inner-block #mpcs-lesson-navigation #previous_lesson_link:focus {
+  outline: 2px solid var(--bb-rl-border-quinery-color);
+}
+
+.bb-rl-lms-inner-block #mpcs-lesson-navigation #previous_lesson_link:disabled {
+  background-color: var(--bb-rl-background-tertiary-color);
+  color: var(--bb-rl-text-disabled-color);
+  cursor: not-allowed;
+}
+
 .bb-rl-course-overview .course-progress h1 {
   display: none;
 }
@@ -1014,6 +1048,189 @@
   margin-bottom: var(--bb-rl-space-100);
 }
 
+.bb-rl-lms-inner-block .mpcs-submission {
+  margin: var(--bb-rl-space-300) 0 var(--bb-rl-space-200);
+}
+
+.bb-rl-lms-inner-block #plupload-upload-ui {
+  border: 1px solid var(--bb-rl-border-secondary-color);
+  background-color: var(--bb-rl-background-secondary-color);
+  border-radius: var(--bb-rl-radius-lg);
+}
+
+.bb-rl-lms-inner-block #mpcs-drag-drop-area {
+  border: 0;
+  background-color: transparent;
+  padding: var(--bb-rl-space-300);
+}
+
+.bb-rl-lms-inner-block #mpcs-url-paste-area {
+  padding: var(--bb-rl-space-100);
+  border: 0;
+  background-color: var(--bb-rl-background-color);
+  margin: 0;
+  border-radius: 0 0 var(--bb-rl-radius-lg) var(--bb-rl-radius-lg);
+}
+
+.bb-rl-lms-inner-block #mpcs-assignment-submit-bottom {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  font-weight: 500;
+  text-align: center;
+  cursor: pointer;
+  border-radius: var(--bb-rl-radius-md);
+  padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  text-decoration: none;
+  background-color: var(--bb-rl-background-brand-primary-color);
+  color: var(--bb-rl-text-white-color);
+  border: 1px solid var(--bb-rl-background-brand-primary-color);
+  padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
+  font-size: 0.875rem;
+  font-weight: 400;
+}
+
+.bb-rl-lms-inner-block #mpcs-assignment-submit-bottom:hover {
+  background-color: var(--bb-rl-background-brand-primary-hover-color);
+}
+
+.bb-rl-lms-inner-block #mpcs-assignment-submit-bottom:focus-within {
+  outline: 2px solid var(--bb-rl-border-brand-primary-color);
+}
+
+.bb-rl-lms-inner-block #mpcs-assignment-submit-bottom:disabled {
+  background-color: var(--bb-rl-background-brand-disabled-color);
+  cursor: not-allowed;
+}
+
+.bb-rl-lms-inner-block #mpcs-assignment-submit-bottom.disabled-link-css {
+  opacity: 1;
+  background: var(--bb-rl-background-brand-disabled-color) !important;
+  color: var(--bb-rl-text-white-color) !important;
+  border: 1px solid var(--bb-rl-background-brand-primary-color) !important;
+}
+
+.bb-rl-lms-inner-block #mpcs-drag-drop-area .mpcs-drag-drop-buttons input[type="button"] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  font-weight: 500;
+  text-align: center;
+  cursor: pointer;
+  border-radius: var(--bb-rl-radius-md);
+  padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  text-decoration: none;
+  background-color: var(--bb-rl-background-tertiary-color);
+  color: var(--bb-rl-text-color);
+  border: 1px solid transparent;
+  padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
+  font-size: 0.875rem;
+  font-weight: 400;
+}
+
+.bb-rl-lms-inner-block #mpcs-drag-drop-area .mpcs-drag-drop-buttons input[type="button"]:hover {
+  background-color: var(--bb-rl-background-tertiary-hover-color);
+}
+
+.bb-rl-lms-inner-block #mpcs-drag-drop-area .mpcs-drag-drop-buttons input[type="button"]:focus {
+  outline: 2px solid var(--bb-rl-border-quinery-color);
+}
+
+.bb-rl-lms-inner-block #mpcs-drag-drop-area .mpcs-drag-drop-buttons input[type="button"]:disabled {
+  background-color: var(--bb-rl-background-tertiary-color);
+  color: var(--bb-rl-text-disabled-color);
+  cursor: not-allowed;
+}
+
+.bb-rl-lms-inner-block #mpcs-drag-drop-area .mpcs-drag-drop-inside {
+  padding: var(--bb-rl-space-300) 0;
+}
+
+.bb-rl-lms-inner-block #mpcs-drag-drop-area .mpcs-drag-drop-inside p {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 22px;
+}
+
+.bb-rl-lms-inner-block #mpcs-drag-drop-area .mpcs-drag-drop-inside p.mpcs-drag-drop-info {
+  font-weight: 600;
+}
+
+.bb-rl-lms-inner-block #mpcs-url-paste-area input#mpcs-upload-url {
+  border: 1px solid var(--bb-rl-border-tertiary-color);
+  border-radius: var(--bb-rl-radius-base);
+  padding: 5px var(--bb-rl-space-100);
+  margin-left: var(--bb-rl-space-100);
+}
+
+.bb-rl-lms-inner-block .mpcs-submission-upload-preview {
+  border: 1px solid var(--bb-rl-border-secondary-color);
+  border-radius: var(--bb-rl-radius-base);
+  padding: var(--bb-rl-space-200);
+  margin: 0 0 var(--bb-rl-space-200);
+  background-color: var(--bb-rl-background-color);
+}
+
+.bb-rl-lms-inner-block .mpcs-submission-upload-info > div {
+  margin-left: var(--bb-rl-space-100) !important;
+}
+
+.bb-rl-lms-inner-block .mpcs-submission-upload-info p {
+  margin: 0;
+}
+
+.bb-rl-lms-inner-block .mpcs-submission-upload-info a {
+  background-color: transparent;
+  color: var(--bb-rl-text-brand-primary-color);
+  border: none;
+  border-radius: 0;
+  border-bottom: 1px solid transparent;
+}
+
+.bb-rl-lms-inner-block .mpcs-submission-upload-info a:hover {
+  border-bottom-color: var(--bb-rl-link-primary-hover-color);
+}
+
+.bb-rl-lms-inner-block .mpcs-submission-upload-info a:disabled {
+  color: var(--bb-rl-background-brand-disabled-color);
+  border-bottom-color: transparent;
+  cursor: not-allowed;
+}
+
+.bb-rl-lms-inner-block .plupload-upload-progress {
+  height: var(--bb-rl-space-100);
+  border-radius: var(--bb-rl-radius-full);
+  background-color: var(--bb-rl-background-color);
+}
+
+.bb-rl-lms-inner-block #plupload-upload-progress-bar {
+  background: var(--bb-rl-background-brand-primary-color);
+  height: var(--bb-rl-space-100);
+  border-radius: var(--bb-rl-radius-full);
+}
+
+.bb-rl-lms-inner-block #mpcs-submission-upload-delete {
+  background-color: transparent;
+  color: var(--bb-rl-text-brand-primary-color);
+  border: none;
+  border-radius: 0;
+  border-bottom: 1px solid transparent;
+}
+
+.bb-rl-lms-inner-block #mpcs-submission-upload-delete:hover {
+  border-bottom-color: var(--bb-rl-link-primary-hover-color);
+}
+
+.bb-rl-lms-inner-block #mpcs-submission-upload-delete:disabled {
+  color: var(--bb-rl-background-brand-disabled-color);
+  border-bottom-color: transparent;
+  cursor: not-allowed;
+}
+
 .bb-rl-left-panel--memprlms .bb-rl-left-panel-widget {
   display: none;
 }
@@ -1069,6 +1286,10 @@
 
 .bb-rl-left-panel--memprlms .mpcs-sidebar-content .mpcs-section .mpcs-lessons .mpcs-lesson-row-link {
   margin: 0 calc(var(--bb-rl-space-200) * -1);
+}
+
+.bb-rl-left-panel--memprlms .mpcs-sidebar-content .mpcs-lesson.current .mpcs-lesson-row-link {
+  background-color: var(--bb-rl-background-secondary-hover-color);
 }
 
 .bb-rl-left-panel--memprlms .mpcs-sidebar-content .mpcs-section.mpcs-section-lessons.first_section {

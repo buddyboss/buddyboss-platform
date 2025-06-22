@@ -58,6 +58,13 @@
 			margin: 0 calc(var(--bb-rl-space-200) * -1);
 		}
 
+		.mpcs-lesson.current {
+
+			.mpcs-lesson-row-link {
+				background-color: var(--bb-rl-background-secondary-hover-color);
+			}
+		}
+
 		.mpcs-section.mpcs-section-lessons.first_section {
 			margin-top: var(--bb-rl-space-200);
 		}
