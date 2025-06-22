@@ -90,4 +90,14 @@
 			transform: translateY(-50%);
 		}
 	}
+
+	.mpcs-quiz-question-matrix-item > div,
+	.mpcs-quiz-question.mpcs-quiz-question-match-matrix .mpcs-quiz-question-match-matrix-option-value {
+
+		> label {
+
+			@include bb-rl-label-heading-md;
+			color: var(--bb-rl-text-color);
+		}
+	}
 }

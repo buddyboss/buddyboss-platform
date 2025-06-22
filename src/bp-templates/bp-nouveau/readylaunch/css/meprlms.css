@@ -1427,6 +1427,14 @@
   transform: translateY(-50%);
 }
 
+.bb-rl-lms-inner-block .mpcs-quiz-question-matrix-item > div > label,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-match-matrix .mpcs-quiz-question-match-matrix-option-value > label {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 22px;
+  color: var(--bb-rl-text-color);
+}
+
 .bb-rl-left-panel--memprlms .bb-rl-left-panel-widget {
   display: none;
 }
