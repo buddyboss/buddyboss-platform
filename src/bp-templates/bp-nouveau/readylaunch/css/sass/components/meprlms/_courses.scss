@@ -1,6 +1,15 @@
 .post-type-archive-mpcs-course.bb-readylaunch-template {
 
 	.bb-rl-meprlms-course-filters {
+		display: flex;
+		align-items: center;
+		flex-wrap: wrap;
+
+		> .column {
+			display: flex;
+			align-items: center;
+			flex-wrap: wrap;
+		}
 
 		.dropdown a.dropdown-toggle {
 
@@ -39,12 +48,19 @@
 			border-radius: var(--bb-rl-radius-base);
 			box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.15);
 			padding: var(--bb-rl-space-100) 0;
+			list-style: none;
 
 			input {
 				font-size: var(--bb-rl-font-size-sm);
 				font-weight: 400;
 				line-height: var(--bb-rl-base-line-small);
 				padding: 0 var(--bb-rl-space-200);
+				border: 0;
+				height: 35px;
+				width: auto;
+				box-shadow: none;
+				outline: 0;
+				background-color: transparent;
 			}
 
 			li {
@@ -52,12 +68,13 @@
 			}
 
 			li a {
-				color: var(--bb-rl-text-secondary-color);
+				color: var(--bb-rl-text-secondary-color) !important;
 				font-size: var(--bb-rl-font-size-sm);
 				font-weight: 500;
 				line-height: var(--bb-rl-base-line-small);
 				padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
 				white-space: nowrap;
+				display: block;
 
 				&:hover {
 					background-color: var(--bb-rl-background-secondary-hover-color);
@@ -72,6 +89,10 @@
 			background-color: var(--bb-rl-background-color);
 			border: 1px solid var(--bb-rl-border-secondary-color);
 			border-radius: var(--bb-rl-radius-md);
+			display: flex;
+			align-items: center;
+			flex-flow: row-reverse;
+			padding: 0 var(--bb-rl-space-100);
 
 			i {
 				font-size: 16px;
@@ -81,6 +102,22 @@
 
 			.input-group-btn {
 				height: var(--bb-rl-space-400);
+				color: var(--bb-rl-icon-secondary-color) !important;
+				background-color: transparent;
+				border-color: transparent !important;
+				padding: 0;
+				margin-right: var(--bb-rl-space-50);
+			}
+
+			.form-input {
+				display: block;
+				color: var(--bb-rl-text-secondary-color) !important;
+				background-color: transparent;
+				border-color: transparent !important;
+				border: 0;
+				outline: 0;
+				box-shadow: none;
+				padding: 0;
 			}
 		}
 	}
