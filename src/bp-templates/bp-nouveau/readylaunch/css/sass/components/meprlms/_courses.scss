@@ -4,11 +4,17 @@
 		display: flex;
 		align-items: center;
 		flex-wrap: wrap;
+		margin: 0;
+		gap: var(--bb-rl-space-200);
 
 		> .column {
 			display: flex;
 			align-items: center;
 			flex-wrap: wrap;
+
+			.archives-authors-section {
+				display: none
+			}
 		}
 
 		.dropdown a.dropdown-toggle {
@@ -96,6 +102,10 @@
 
 		.dropdown {
 			position: relative;
+
+			+ .dropdown {
+				margin-left: var(--bb-rl-space-200);
+			}
 		}
 
 		.dropdown.active .menu {
@@ -151,10 +161,61 @@
 
 		.mpcs-progress-wrap {
 			margin-bottom: var(--bb-rl-space-200);
+			width: 100%;
+
+			.mpcs-progress-bar {
+				height: var(--bb-rl-space-100);
+				border-radius: var(--bb-rl-radius-full);
+				background: var(--bb-rl-background-brand-secondary-color);
+
+				.mpcs-progress-bar-inner {
+					background: var(--bb-rl-background-brand-primary-color);
+					height: var(--bb-rl-space-100);
+					border-radius: var(--bb-rl-radius-full);
+				}
+			}
 		}
 
 		.mpcs-progress-data {
 			flex-direction: row-reverse;
+			display: flex;
+			justify-content: space-between;
+			margin-bottom: var(--bb-rl-space-100);
+			align-items: center;
+
+			.mpcs-progress-lessons {
+
+				@include bb-rl-label-heading;
+				color: var(--bb-rl-text-secondary-color);
+			}
+
+			.mpcs-progress-per {
+
+				@include bb-rl-label-heading;
+				color: var(--bb-rl-text-secondary-color);
+
+				strong {
+
+					@include bb-rl-base-heading-bolder;
+					color: var(--bb-rl-text-color);
+				}
+			}
+		}
+	}
+}
+
+.bb-rl-courses-grid--mbprlms.list {
+
+	.bb-rl-course-card {
+
+		.bb-rl-course-footer {
+			flex-direction: column;
+			justify-content: flex-start;
+			align-items: flex-end;
+
+			.bb-rl-course-link {
+				margin-top: auto;
+			}
 		}
 	}
 }
