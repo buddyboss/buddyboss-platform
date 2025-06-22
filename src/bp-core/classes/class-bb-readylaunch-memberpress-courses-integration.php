@@ -61,10 +61,10 @@ class BB_Readylaunch_Memberpress_Courses_Integration {
 			remove_filter( 'template_include', 'bb_meprlms_override_template', PHP_INT_MAX );
 		}
 
-		add_action( 'wp_head', array( $this, 'bb_rl_meprlms_add_script' ), 10 );
+		// Use wp_footer hook after all scripts are registered
+		add_action( 'wp_footer', array( $this, 'bb_rl_meprlms_add_script' ), 10 );
 
 		add_filter( 'the_content', array( $this, 'bb_rl_meprlms_add_course_description' ), 9 );
-		//add_action( 'wp_enqueue_scripts', array( $this, 'dequeue_pro_frontend_styles' ), 20 );
 	}
 
 	/**
@@ -99,7 +99,8 @@ class BB_Readylaunch_Memberpress_Courses_Integration {
 		$custom_template = false;
 
 		if ( bb_is_readylaunch_enabled() && class_exists( 'memberpress\courses\helpers\App' ) && ! helpers\App::is_classroom() ) {
-			if ( is_post_type_archive( models\Course::$cpt ) ) {
+			// Handle course archive pages using MemberPress's reliable detection method.
+			if ( class_exists( 'memberpress\courses\helpers\Courses' ) && helpers\Courses::is_course_archive() ) {
 				$custom_template = self::bb_rl_meprlms_get_template_path( 'archive-mpcs-courses.php' );
 			} elseif ( is_single() && ! empty( $post ) && is_a( $post, 'WP_Post' ) ) {
 				$post_type = $post->post_type;
@@ -182,6 +183,12 @@ class BB_Readylaunch_Memberpress_Courses_Integration {
 		}
 
 		// Handle course archive pages.
+		if ( class_exists( 'memberpress\courses\helpers\Courses' ) && helpers\Courses::is_course_archive() ) {
+			$this->enqueue_classroom_assets();
+			return;
+		}
+
+		// Fallback: Handle course archive pages using WordPress method.
 		if ( is_post_type_archive( models\Course::$cpt ) ) {
 			$this->enqueue_classroom_assets();
 			return;
@@ -221,7 +228,19 @@ class BB_Readylaunch_Memberpress_Courses_Integration {
 	 * @since BuddyBoss [BBVERSION]
 	 */
 	private function enqueue_classroom_assets() {
-		wp_enqueue_script( 'mpcs-classroom-js' );
+		// Check if the script is registered
+		if ( wp_script_is( 'mpcs-classroom-js', 'registered' ) ) {
+			wp_enqueue_script( 'mpcs-classroom-js' );
+		} else {
+			// Register the script ourselves using MemberPress constants
+			if ( defined( 'memberpress\\courses\\JS_URL' ) && defined( 'memberpress\\courses\\VERSION' ) ) {
+				$js_url = memberpress\courses\JS_URL . '/classroom.js';
+				$version = memberpress\courses\VERSION;
+				
+				wp_register_script( 'mpcs-classroom-js', $js_url, array( 'jquery' ), $version, true );
+				wp_enqueue_script( 'mpcs-classroom-js' );
+			}
+		}
 	}
 
 	/**

@@ -49,6 +49,17 @@
 			box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.15);
 			padding: var(--bb-rl-space-100) 0;
 			list-style: none;
+			display: none;
+			position: absolute;
+			top: 100%;
+			left: 0;
+			list-style: none;
+			margin: 0;
+			min-width: 200px;
+			max-height: 220px;
+			overflow: auto;
+			transform: translateY(0.35rem);
+			z-index: 300;
 
 			input {
 				font-size: var(--bb-rl-font-size-sm);
@@ -81,6 +92,14 @@
 					color: var(--bb-rl-text-color);
 				}
 			}
+		}
+
+		.dropdown {
+			position: relative;
+		}
+
+		.dropdown.active .menu {
+			display: block;
 		}
 
 		.input-group {

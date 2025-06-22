@@ -267,6 +267,17 @@
   box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.15);
   padding: var(--bb-rl-space-100) 0;
   list-style: none;
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  list-style: none;
+  margin: 0;
+  min-width: 200px;
+  max-height: 220px;
+  overflow: auto;
+  transform: translateY(0.35rem);
+  z-index: 300;
 }
 
 .post-type-archive-mpcs-course.bb-readylaunch-template .bb-rl-meprlms-course-filters .dropdown .menu input {
@@ -299,6 +310,14 @@
 .post-type-archive-mpcs-course.bb-readylaunch-template .bb-rl-meprlms-course-filters .dropdown .menu li a:hover {
   background-color: var(--bb-rl-background-secondary-hover-color);
   color: var(--bb-rl-text-color);
+}
+
+.post-type-archive-mpcs-course.bb-readylaunch-template .bb-rl-meprlms-course-filters .dropdown {
+  position: relative;
+}
+
+.post-type-archive-mpcs-course.bb-readylaunch-template .bb-rl-meprlms-course-filters .dropdown.active .menu {
+  display: block;
 }
 
 .post-type-archive-mpcs-course.bb-readylaunch-template .bb-rl-meprlms-course-filters .input-group {

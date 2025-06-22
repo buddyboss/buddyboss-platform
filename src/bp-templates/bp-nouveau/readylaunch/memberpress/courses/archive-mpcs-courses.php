@@ -202,7 +202,9 @@ if ( $pos > 0 ) {
 							</div>
 							<div class="bb-rl-course-footer">
 								<?php
-								if ( models\UserProgress::has_started_course( get_current_user_id(), $course->ID ) ) :
+								$is_enrolled = models\UserProgress::has_started_course( get_current_user_id(), $course->ID );
+								
+								if ( $is_enrolled ) :
 									// Get lessons count.
 									$total_lessons = $course->number_of_lessons();
 									// If total lessons are n and progress is p% then get completed lesson count.
