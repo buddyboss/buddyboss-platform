@@ -206,6 +206,10 @@
             line-height: 1.4;
             color: var(--bb-rl-text-secondary-color);
 
+            p {
+                line-height: 1.5;
+            }
+
             &:hover {
                 background-color: var(--bb-rl-background-secondary-hover-color);
             }

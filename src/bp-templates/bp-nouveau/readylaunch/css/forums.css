@@ -365,6 +365,10 @@
   color: var(--bb-rl-text-secondary-color);
 }
 
+.bb-rl-activity-list li.bbp_reply_create .bb-content-inr-wrap p {
+  line-height: 1.5;
+}
+
 .bb-rl-activity-list li.bbp_reply_create .bb-content-inr-wrap:hover {
   background-color: var(--bb-rl-background-secondary-hover-color);
 }
