@@ -152,10 +152,10 @@
 		}
 	}
 
-	.learndash_post_groups + .comment-respond,
 	.learndash_post_groups + .comments-area {
-		max-width: calc(1032px - var(--bb-rl-space-200) * 2);
+		max-width: 1032px;
 		margin: 0 auto;
+		padding: 0 var(--bb-rl-space-200);
 		width: 100%;
 	}
 
@@ -234,25 +234,6 @@
 					}
 				}
 			}
-		}
-	}
-}
-
-.learndash-cpt-groups {
-
-	.site-main .bb-rl-container {
-
-		> h3#comments,
-		> .navigation,
-		> .commentlist,
-		> .comment-respond {
-			max-width: calc(1032px - var(--bb-rl-space-200) * 2);
-			margin: 0 auto;
-			width: 100%;
-		}
-
-		> h3#comments {
-			margin-bottom: var(--bb-rl-space-200);
 		}
 	}
 }

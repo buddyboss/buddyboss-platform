@@ -3879,10 +3879,10 @@ body.ld-in-focus-mode .learndash-wrapper {
   color: var(--bb-rl-text-positive-primary-color);
 }
 
-.bb-rl-container .learndash_post_groups + .comment-respond,
 .bb-rl-container .learndash_post_groups + .comments-area {
-  max-width: calc(1032px - var(--bb-rl-space-200) * 2);
+  max-width: 1032px;
   margin: 0 auto;
+  padding: 0 var(--bb-rl-space-200);
   width: 100%;
 }
 
@@ -3958,19 +3958,6 @@ body.ld-in-focus-mode .learndash-wrapper {
   font-weight: 500;
   line-height: 22px;
   color: var(--bb-rl-text-secondary-color);
-}
-
-.learndash-cpt-groups .site-main .bb-rl-container > h3#comments,
-.learndash-cpt-groups .site-main .bb-rl-container > .navigation,
-.learndash-cpt-groups .site-main .bb-rl-container > .commentlist,
-.learndash-cpt-groups .site-main .bb-rl-container > .comment-respond {
-  max-width: calc(1032px - var(--bb-rl-space-200) * 2);
-  margin: 0 auto;
-  width: 100%;
-}
-
-.learndash-cpt-groups .site-main .bb-rl-container > h3#comments {
-  margin-bottom: var(--bb-rl-space-200);
 }
 
 .bb-readylaunch-template .bb-courses-header .grid-filters {
