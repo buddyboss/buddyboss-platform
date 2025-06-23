@@ -138,6 +138,11 @@ class BB_Readylaunch_Memberpress_Courses_Helper {
 
 		$post_type = $post->post_type;
 
+		// Handle single course pages.
+		if ( class_exists( 'memberpress\courses\models\Course' ) && models\Course::$cpt === $post_type ) {
+			$this->enqueue_classroom_assets();
+		}
+
 		// Handle lesson posts.
 		if ( class_exists( 'memberpress\courses\models\Lesson' ) && in_array( $post_type, models\Lesson::lesson_cpts(), true ) ) {
 			$this->enqueue_lesson_assets();
