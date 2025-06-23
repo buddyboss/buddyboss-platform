@@ -2,9 +2,9 @@
 # This file is distributed under the GPLv2 or later (license.txt).
 msgid ""
 msgstr ""
-"Project-Id-Version: BuddyBoss Platform 2.8.80\n"
+"Project-Id-Version: BuddyBoss Platform 2.8.90\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2025-06-12 18:32:46+00:00\n"
+"POT-Creation-Date: 2025-06-23 11:00:07+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -170,7 +170,7 @@ msgstr ""
 #: bp-core/classes/class-bb-rest-topics-endpoint.php:731
 #: bp-core/classes/class-bb-rest-topics-endpoint.php:1015
 #: bp-core/classes/class-bb-rest-topics-endpoint.php:1197
-#: bp-core/classes/class-bb-topics-manager.php:1850
+#: bp-core/classes/class-bb-topics-manager.php:1851
 msgid "Item ID is required."
 msgstr ""
 
@@ -195,7 +195,7 @@ msgid "Likes"
 msgstr ""
 
 #: bp-activity/bb-activity-reactions.php:543
-#: bp-activity/classes/class-bb-activity-topics-manager.php:1107
+#: bp-activity/classes/class-bb-activity-topics-manager.php:1140
 #: bp-activity/classes/class-bp-activity-list-table.php:347
 #: bp-core/admin/templates/upgrade-integrations-screen.php:45
 #: bp-core/bp-core-functions.php:7401
@@ -724,8 +724,8 @@ msgstr ""
 #: bp-groups/classes/class-bp-groups-notification.php:1267
 #: bp-groups/classes/class-bp-groups-notification.php:1468
 #: bp-messages/classes/class-bp-messages-notification.php:216
-#: bp-notifications/bp-notifications-functions.php:1363
-#: bp-notifications/bp-notifications-functions.php:1405
+#: bp-notifications/bp-notifications-functions.php:1371
+#: bp-notifications/bp-notifications-functions.php:1413
 #: bp-templates/bp-nouveau/buddypress/search/loop/post.php:60
 #: bp-templates/bp-nouveau/buddypress/search/loop/sfwd-courses-ajax.php:42
 #: bp-templates/bp-nouveau/buddypress/search/loop/sfwd-courses.php:48
@@ -1228,8 +1228,8 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: bp-activity/bp-activity-template.php:1103
-#: bp-activity/bp-activity-template.php:1284
-#: bp-activity/bp-activity-template.php:1299
+#: bp-activity/bp-activity-template.php:1286
+#: bp-activity/bp-activity-template.php:1305
 #: bp-activity/classes/class-bp-activity-component.php:349
 #: bp-blogs/classes/class-bp-blogs-component.php:331
 #: bp-core/bp-core-template.php:201 bp-core/bp-core-template.php:225
@@ -1267,11 +1267,11 @@ msgstr ""
 msgid "Profile photo"
 msgstr ""
 
-#: bp-activity/bp-activity-template.php:1260
+#: bp-activity/bp-activity-template.php:1262
 msgid "Group logo"
 msgstr ""
 
-#: bp-activity/bp-activity-template.php:1263
+#: bp-activity/bp-activity-template.php:1265
 #: bp-groups/bp-groups-template.php:945
 #: bp-groups/classes/class-bp-groups-list-table.php:622
 #: bp-messages/bp-messages-functions.php:1366
@@ -1287,27 +1287,27 @@ msgstr ""
 msgid "Group logo of %s"
 msgstr ""
 
-#: bp-activity/bp-activity-template.php:1274
+#: bp-activity/bp-activity-template.php:1276
 msgid "Profile photo of the author of the site %s"
 msgstr ""
 
-#: bp-activity/bp-activity-template.php:2056
-#: bp-activity/bp-activity-template.php:2082
+#: bp-activity/bp-activity-template.php:2062
+#: bp-activity/bp-activity-template.php:2088
 #: bp-templates/bp-nouveau/buddypress-functions.php:650
 msgid "View more comments"
 msgstr ""
 
-#: bp-activity/bp-activity-template.php:2079
+#: bp-activity/bp-activity-template.php:2085
 msgid "View more replies"
 msgstr ""
 
-#: bp-activity/bp-activity-template.php:2477
+#: bp-activity/bp-activity-template.php:2483
 msgid ""
 "%1$s no longer accepts arguments. See the inline documentation at %2$s for "
 "more details."
 msgstr ""
 
-#: bp-activity/bp-activity-template.php:3018
+#: bp-activity/bp-activity-template.php:3024
 #: bp-core/admin/settings/bp-admin-setting-activity.php:570
 #: bp-core/admin/settings/bp-admin-setting-activity.php:571
 #: bp-core/admin/settings/bp-admin-setting-activity.php:572
@@ -1358,7 +1358,7 @@ msgstr ""
 msgid "Delete"
 msgstr ""
 
-#: bp-activity/bp-activity-template.php:3122 bp-blogs/bp-blogs-filters.php:161
+#: bp-activity/bp-activity-template.php:3128 bp-blogs/bp-blogs-filters.php:161
 #: bp-core/admin/bp-core-admin-functions.php:1593
 #: bp-core/admin/bp-core-admin-pages.php:358
 #: bp-core/admin/bp-core-admin-pages.php:392
@@ -1381,34 +1381,34 @@ msgstr ""
 msgid "View"
 msgstr ""
 
-#: bp-activity/bp-activity-template.php:3233
+#: bp-activity/bp-activity-template.php:3239
 msgid "Clear Filter"
 msgstr ""
 
-#: bp-activity/bp-activity-template.php:3529
+#: bp-activity/bp-activity-template.php:3535
 msgid "a user"
 msgstr ""
 
-#: bp-activity/bp-activity-template.php:4124
+#: bp-activity/bp-activity-template.php:4130
 msgid "Site Wide Activity RSS Feed"
 msgstr ""
 
-#: bp-activity/bp-activity-template.php:4361
-#: bp-activity/bp-activity-template.php:4370 bp-core/bp-core-options.php:2876
+#: bp-activity/bp-activity-template.php:4367
+#: bp-activity/bp-activity-template.php:4376 bp-core/bp-core-options.php:2876
 #: bp-members/bp-members-admin.php:61
 #: bp-templates/bp-nouveau/includes/members/functions.php:56
 msgid "Following"
 msgstr ""
 
-#: bp-activity/bp-activity-template.php:4365
+#: bp-activity/bp-activity-template.php:4371
 msgid "Stop Following"
 msgstr ""
 
-#: bp-activity/bp-activity-template.php:4369
+#: bp-activity/bp-activity-template.php:4375
 msgid "Unfollow"
 msgstr ""
 
-#: bp-activity/bp-activity-template.php:4385
+#: bp-activity/bp-activity-template.php:4391
 #: bp-core/admin/settings/bp-admin-setting-activity.php:102
 #: bp-members/bp-members-admin.php:140
 #: bp-templates/bp-nouveau/includes/customizer.php:327
@@ -1444,11 +1444,11 @@ msgstr ""
 
 #: bp-activity/classes/class-bb-activity-topics-manager.php:348
 #: bp-core/classes/class-bb-rest-topics-endpoint.php:1645
-#: bp-core/classes/class-bb-topics-manager.php:835
-#: bp-core/classes/class-bb-topics-manager.php:1470
-#: bp-core/classes/class-bb-topics-manager.php:1540
-#: bp-core/classes/class-bb-topics-manager.php:1698
-#: bp-core/classes/class-bb-topics-manager.php:1826
+#: bp-core/classes/class-bb-topics-manager.php:836
+#: bp-core/classes/class-bb-topics-manager.php:1471
+#: bp-core/classes/class-bb-topics-manager.php:1541
+#: bp-core/classes/class-bb-topics-manager.php:1699
+#: bp-core/classes/class-bb-topics-manager.php:1827
 msgid "Topic ID is required."
 msgstr ""
 
@@ -1460,11 +1460,11 @@ msgstr ""
 msgid "Failed to add activity-topic relationship."
 msgstr ""
 
-#: bp-activity/classes/class-bb-activity-topics-manager.php:729
+#: bp-activity/classes/class-bb-activity-topics-manager.php:762
 msgid "You are not allowed to add a topic."
 msgstr ""
 
-#: bp-activity/classes/class-bb-activity-topics-manager.php:843
+#: bp-activity/classes/class-bb-activity-topics-manager.php:876
 msgid "Please select a topic"
 msgstr ""
 
@@ -6277,7 +6277,7 @@ msgid "Close comments"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-activity.php:83
-#: bp-templates/bp-nouveau/buddypress/activity/entry.php:42
+#: bp-templates/bp-nouveau/buddypress/activity/entry.php:44
 msgid "Pinned Post"
 msgstr ""
 
@@ -6482,7 +6482,7 @@ msgid "Confirm"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-activity.php:662
-#: bp-core/classes/class-bb-topics-manager.php:1561
+#: bp-core/classes/class-bb-topics-manager.php:1562
 msgid "Deleting"
 msgstr ""
 
@@ -10398,8 +10398,8 @@ msgstr ""
 #: bp-core/classes/class-bb-rest-topics-endpoint.php:717
 #: bp-core/classes/class-bb-rest-topics-endpoint.php:983
 #: bp-core/classes/class-bb-rest-topics-endpoint.php:1177
-#: bp-core/classes/class-bb-topics-manager.php:842
-#: bp-core/classes/class-bb-topics-manager.php:1842
+#: bp-core/classes/class-bb-topics-manager.php:843
+#: bp-core/classes/class-bb-topics-manager.php:1843
 msgid "Item type is required."
 msgstr ""
 
@@ -10516,7 +10516,7 @@ msgid "You cannot delete a topic for this group."
 msgstr ""
 
 #: bp-core/classes/class-bb-rest-topics-endpoint.php:1144
-#: bp-core/classes/class-bb-topics-manager.php:2019
+#: bp-core/classes/class-bb-topics-manager.php:2031
 msgid "Failed to update topic order."
 msgstr ""
 
@@ -10654,7 +10654,7 @@ msgid "Edit Topic"
 msgstr ""
 
 #: bp-core/classes/class-bb-topics-manager.php:185
-#: bp-core/classes/class-bb-topics-manager.php:1565
+#: bp-core/classes/class-bb-topics-manager.php:1566
 #. translators: %s: Topic name
 #. translators: %s: topic name
 msgid "Deleting \"%s\"?"
@@ -10674,71 +10674,71 @@ msgid "Maximum number of topics (20) has been reached."
 msgstr ""
 
 #: bp-core/classes/class-bb-topics-manager.php:578
-#: bp-core/classes/class-bb-topics-manager.php:773
+#: bp-core/classes/class-bb-topics-manager.php:774
 msgid "Topic relationship not found."
 msgstr ""
 
-#: bp-core/classes/class-bb-topics-manager.php:854
+#: bp-core/classes/class-bb-topics-manager.php:855
 msgid "Invalid item type."
 msgstr ""
 
-#: bp-core/classes/class-bb-topics-manager.php:861
+#: bp-core/classes/class-bb-topics-manager.php:862
 msgid "Invalid permission type."
 msgstr ""
 
-#: bp-core/classes/class-bb-topics-manager.php:895
+#: bp-core/classes/class-bb-topics-manager.php:896
 msgid "Failed to add topic relationship."
 msgstr ""
 
-#: bp-core/classes/class-bb-topics-manager.php:1044
+#: bp-core/classes/class-bb-topics-manager.php:1045
 msgid "Failed to update topic relationship."
 msgstr ""
 
-#: bp-core/classes/class-bb-topics-manager.php:1687
+#: bp-core/classes/class-bb-topics-manager.php:1688
 msgid "Nonce is required."
 msgstr ""
 
-#: bp-core/classes/class-bb-topics-manager.php:1708
+#: bp-core/classes/class-bb-topics-manager.php:1709
 msgid "Migrate topic ID is required."
 msgstr ""
 
-#: bp-core/classes/class-bb-topics-manager.php:1786
+#: bp-core/classes/class-bb-topics-manager.php:1787
 msgid "Failed to delete topic."
 msgstr ""
 
-#: bp-core/classes/class-bb-topics-manager.php:1791
+#: bp-core/classes/class-bb-topics-manager.php:1792
 msgid "Topic migrated successfully."
 msgstr ""
 
-#: bp-core/classes/class-bb-topics-manager.php:1834
+#: bp-core/classes/class-bb-topics-manager.php:1835
 msgid "New topic ID is required."
 msgstr ""
 
-#: bp-core/classes/class-bb-topics-manager.php:1863
+#: bp-core/classes/class-bb-topics-manager.php:1864
 msgid "Item type is invalid."
 msgstr ""
 
-#: bp-core/classes/class-bb-topics-manager.php:1872
+#: bp-core/classes/class-bb-topics-manager.php:1873
 msgid "Old topic ID does not exist."
 msgstr ""
 
-#: bp-core/classes/class-bb-topics-manager.php:1881
+#: bp-core/classes/class-bb-topics-manager.php:1882
 msgid "New topic ID does not exist."
 msgstr ""
 
-#: bp-core/classes/class-bb-topics-manager.php:1911
+#: bp-core/classes/class-bb-topics-manager.php:1912
 msgid "Failed to migrate topic."
 msgstr ""
 
-#: bp-core/classes/class-bb-topics-manager.php:1923
+#: bp-core/classes/class-bb-topics-manager.php:1924
 msgid "Failed to get new topic."
 msgstr ""
 
-#: bp-core/classes/class-bb-topics-manager.php:1988
+#: bp-core/classes/class-bb-topics-manager.php:2000
 msgid "No topic order provided."
 msgstr ""
 
-#: bp-core/classes/class-bb-topics-manager.php:2017
+#: bp-core/classes/class-bb-topics-manager.php:2029
 msgid "Topic order updated successfully."
 msgstr ""
 
@@ -29594,7 +29594,7 @@ msgstr ""
 msgid "No new notifications"
 msgstr ""
 
-#: bp-notifications/bp-notifications-functions.php:1243
+#: bp-notifications/bp-notifications-functions.php:1251
 msgid "Notification Icon"
 msgstr ""
 
@@ -30379,11 +30379,12 @@ msgstr ""
 msgid "Check"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/activity/entry.php:33
+#: bp-templates/bp-nouveau/buddypress/activity/entry.php:35
+#. translators: %s: User display name.
 msgid "%s's Post"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/activity/entry.php:49
+#: bp-templates/bp-nouveau/buddypress/activity/entry.php:51
 msgid "Turned off notifications"
 msgstr ""
 
