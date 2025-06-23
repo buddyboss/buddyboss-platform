@@ -108,6 +108,7 @@ class Settings {
 	public static function get_settings( $group = 'default' ) {
 		$settings      = get_option( self::$option, array() );
 		$group_setting = isset( $settings[ $group ] ) ? $settings[ $group ] : array();
+
 		if ( 'default' !== $group && empty( $group_setting ) ) {
 			$group_setting = isset( $settings['default'] ) ? $settings['default'] : array();
 		}
@@ -125,9 +126,11 @@ class Settings {
 	 */
 	public static function save_settings( $group_setting, $group = 'default' ) {
 		$settings = get_option( self::$option, array() );
+
 		if ( empty( $settings ) ) {
 			$settings = array();
 		}
+
 		$settings[ $group ] = $group_setting;
 
 		return update_option( self::$option, $settings );
@@ -141,40 +144,20 @@ class Settings {
 	 * @return array
 	 */
 	public function get_group_purge_actions( $group ) {
-		$actions = array();
-		switch ( $group ) {
-			case 'bbplatform':
-				$actions = array(
-					'bp-members',
-					'bp-notifications',
-					'bp-groups',
-					'bbp-forums',
-					'bbp-topics',
-					'bbp-replies',
-					'bp-activity',
-					'bp-messages',
-					'bp-friends',
-					'bp-media',
-					'bp-document',
-					'bp-video',
-				);
-				break;
-		}
-
 		/**
 		 * Filter to set cache action by giving component.
 		 * It'll help us to extent it in custom code or support BuddyBoss App related group purging
 		 * $actions : Cache groups actions
 		 * $group: component like platofrm, Learndash, BuddyBoss App etc
 		 */
-		return apply_filters( 'performance_group_purge_actions', $actions, $group );
+		return apply_filters( 'performance_group_purge_actions', array(), $group );
 	}
 
 	/**
 	 * Handle Purge cache event.
 	 */
 	public static function handle_purge_cache() {
-
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		if ( ! empty( $_GET['cache_purge'] ) && 1 === (int) $_GET['cache_purge'] && empty( $_POST ) ) {
 			add_action(
 				'admin_notices',
@@ -187,7 +170,6 @@ class Settings {
 		$purge_nonce = ( ! empty( $_GET['nonce'] ) ) ? wp_unslash( $_GET['nonce'] ) : ''; //phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
 		if ( wp_verify_nonce( $purge_nonce, 'bbapp_cache_purge' ) ) {
-
 			$group      = ( ! empty( $_GET['group'] ) ) ? self::input_clean( wp_unslash( $_GET['group'] ) ) : ''; //phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 			$components = ( ! empty( $_GET['component'] ) ) ? self::input_clean( wp_unslash( $_GET['component'] ) ) : ''; //phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
@@ -204,8 +186,14 @@ class Settings {
 				foreach ( $components as $component ) {
 					Cache::instance()->purge_by_component( $component );
 				}
-				Cache::instance()->purge_by_component( 'bbapp-deeplinking' );
+
+				/**
+				 * This action allow us to purge cache by component.
+				 */
+				do_action( 'performance_cache_purge', $components );
+
 				$purge_url = self::get_performance_purge_url();
+
 				wp_safe_redirect( $purge_url . '&cache_purge=1' );
 				exit();
 			}
@@ -216,15 +204,15 @@ class Settings {
 	 * Clean variables using sanitize_text_field. Arrays are cleaned recursively.
 	 * Non-scalar values are ignored.
 	 *
-	 * @param string|array $var Data to sanitize.
+	 * @param string|array $args Data to sanitize.
 	 *
 	 * @return string|array
 	 */
-	public static function input_clean( $var ) {
-		if ( is_array( $var ) ) {
-			return array_map( 'self::input_clean', $var );
+	public static function input_clean( $args ) {
+		if ( is_array( $args ) ) {
+			return array_map( 'self::input_clean', $args );
 		} else {
-			return is_scalar( $var ) ? sanitize_text_field( $var ) : $var;
+			return is_scalar( $args ) ? sanitize_text_field( $args ) : $args;
 		}
 	}
 }
