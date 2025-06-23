@@ -171,8 +171,8 @@ class BB_Readylaunch_Memberpress_Courses_Helper {
 		} else {
 			// Register the script ourselves using MemberPress constants.
 			if ( defined( 'memberpress\\courses\\JS_URL' ) && defined( 'memberpress\\courses\\VERSION' ) ) {
-				$js_url   = memberpress\courses\JS_URL . '/classroom.js';
-				$version  = memberpress\courses\VERSION;
+				$js_url  = memberpress\courses\JS_URL . '/classroom.js';
+				$version = memberpress\courses\VERSION;
 
 				wp_register_script( 'mpcs-classroom-js', $js_url, array( 'jquery' ), $version, true );
 				wp_enqueue_script( 'mpcs-classroom-js' );
