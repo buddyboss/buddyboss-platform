@@ -219,6 +219,12 @@
   margin: 0;
 }
 
+.mpcs-classroom.buddyboss-theme.bb-readylaunch-template .mpcs-sidebar-wrapper .mpcs-sidebar-menu a,
+.mpcs-classroom.buddyboss-theme.bb-readylaunch-template .mpcs-sidebar-wrapper .mpcs-sidebar-grades a,
+.mpcs-classroom.buddyboss-theme.bb-readylaunch-template .mpcs-sidebar-wrapper .mpcs-sidebar-resources a {
+  padding: var(--bb-rl-space-100);
+}
+
 .bb-rl-widget-sidebar-menu a,
 .bb-rl-widget-sidebar-menu .mpcs-grades-menu,
 .bb-rl-widget-sidebar-menu .mepr-resources,
@@ -232,7 +238,7 @@
   align-items: center;
   gap: var(--bb-rl-space-100);
   margin: 0 calc(var(--bb-rl-space-100) * -1);
-  padding: var(--bb-rl-space-100) var(--bb-rl-space-100);
+  padding: var(--bb-rl-space-100);
   color: var(--bb-rl-text-color);
   border-radius: var(--bb-rl-radius-md);
 }
@@ -325,6 +331,14 @@
 
 .bb-rl-widget-sidebar .widget.bb-rl-memprlms-widget-sidebar-menu {
   padding: var(--bb-rl-space-200) var(--bb-rl-space-300);
+}
+
+.bb-rl-container .mpcs-ccw:before {
+  content: "\e038";
+  font-weight: 400;
+  font-family: bb-icons-rl;
+  font-size: 16px;
+  color: var(--bb-rl-icon-secondary-color);
 }
 
 .post-type-archive-mpcs-course.bb-readylaunch-template .bb-rl-meprlms-course-filters {
@@ -1013,6 +1027,7 @@
 
 .bb-rl-course-content .mpcs-section.mpcs-resource-section .mpcs-section-header {
   background-color: var(--bb-rl-background-secondary-color);
+  padding: var(--bb-rl-space-200);
 }
 
 .bb-rl-course-content .mpcs-section.mpcs-resource-section .mpcs-section-header .mpcs-section-title-text {
@@ -1020,6 +1035,10 @@
   font-weight: 500;
   line-height: var(--bb-rl-base-line);
   color: var(--bb-rl-text-color);
+}
+
+.bb-rl-course-content .mpcs-section.mpcs-resource-section .mpcs-section-header .mpcs-section-title {
+  padding: 0;
 }
 
 .bb-rl-course-content .mpcs-section.mpcs-resource-section .mpcs-lessons > .mpcs-lesson .mpcs-lesson-link {
@@ -1058,6 +1077,53 @@
 
 .bb-rl-course-content .mpcs-resource-section:not(.mpcs-section) p {
   margin-bottom: var(--bb-rl-space-100);
+}
+
+.bb-rl-course-content .mpcs-section.mpcs-resource-section .mpcs-section-header-static {
+  background-color: var(--bb-rl-background-secondary-color);
+  padding: var(--bb-rl-space-200);
+}
+
+.bb-rl-course-content .mpcs-section.mpcs-resource-section .mpcs-section-header-static .mpcs-section-title-text {
+  font-size: var(--bb-rl-font-size-base);
+  font-weight: 500;
+  line-height: var(--bb-rl-base-line);
+  color: var(--bb-rl-text-color);
+}
+
+.bb-rl-course-content .mpcs-section.mpcs-resource-section .mpcs-section-header-static .mpcs-section-title {
+  padding: 0;
+}
+
+.bb-rl-course-content .mpcs-section.mpcs-resource-section .mpcs-section-header-static + .mpcs-lessons {
+  padding: 0;
+}
+
+.bb-rl-course-content .mpcs-section.mpcs-resource-section table.mp-table {
+  width: 100%;
+  border-collapse: collapse;
+  border: none;
+}
+
+.bb-rl-course-content .mpcs-section.mpcs-resource-section table.mp-table thead {
+  background-color: var(--bb-rl-background-secondary-color);
+}
+
+.bb-rl-course-content .mpcs-section.mpcs-resource-section table.mp-table thead tr th {
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 400;
+  line-height: var(--bb-rl-base-line-small);
+  border-top: 1px solid var(--bb-rl-border-secondary-color) !important;
+  border-bottom: 1px solid var(--bb-rl-border-secondary-color) !important;
+  color: var(--bb-rl-text-secondary-color);
+  text-align: right;
+}
+
+.bb-rl-course-content .mpcs-section.mpcs-resource-section table.mp-table tbody tr td {
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 400;
+  line-height: var(--bb-rl-base-line-small);
+  color: var(--bb-rl-text-secondary-color);
 }
 
 .bb-rl-lms-inner-block .mpcs-submission {

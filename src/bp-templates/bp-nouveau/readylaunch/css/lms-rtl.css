@@ -456,6 +456,13 @@
   color: var(--bb-rl-text-color);
 }
 
+.bb-rl-course-card .bb-rl-instructor-item {
+  display: flex;
+  align-items: center;
+  gap: var(--bb-rl-space-100);
+  flex: 0 0 48%;
+}
+
 .bb-rl-course-card .bb-rl-course-card-popup {
   position: absolute;
   z-index: 99;
@@ -617,10 +624,22 @@
   line-height: var(--bb-rl-base-line-small);
 }
 
+.bb-rl-container .learndash_post_sfwd-topic + .comments-area,
+.bb-rl-container .learndash_post_sfwd-lessons + .comments-area,
+.bb-rl-container .learndash:has(.bb-learndash-content-wrap--quiz) + .comments-area {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 0 var(--bb-rl-space-700);
+}
+
 .bb-rl-lms-inner-block {
   max-width: 800px;
   margin: 0 auto;
   padding: var(--bb-rl-space-400) 0;
+}
+
+.bb-rl-lms-inner-block.bb-rl-lesson-block, .bb-rl-lms-inner-block.bb-rl-topic-block {
+  padding-bottom: 0;
 }
 
 .bb-rl-lms-inner-block .bb-rl-entry-header {
@@ -649,11 +668,15 @@
   color: var(--bb-rl-text-secondary-color);
 }
 
-.bb-rl-lms-content-comments.bb-rl-course-content-comments {
+.bb-rl-lms-content-comments.bb-rl-course-content-comments,
+.site-main .bb-rl-container.bb-rl-course-content-comments,
+.learndash-cpt-groups .site-main .bb-rl-container.bb-rl-course-content-comments {
   padding-bottom: var(--bb-rl-space-300);
 }
 
-.bb-rl-lms-content-comments .comments-title {
+.bb-rl-lms-content-comments .comments-title,
+.site-main .bb-rl-container .comments-title,
+.learndash-cpt-groups .site-main .bb-rl-container .comments-title {
   font-size: var(--bb-rl-font-size-base);
   font-weight: 500;
   line-height: var(--bb-rl-base-line);
@@ -661,27 +684,37 @@
   margin: 0 0 var(--bb-rl-space-200);
 }
 
-.bb-rl-lms-content-comments .logged-in-as {
+.bb-rl-lms-content-comments .logged-in-as,
+.site-main .bb-rl-container .logged-in-as,
+.learndash-cpt-groups .site-main .bb-rl-container .logged-in-as {
   margin-bottom: var(--bb-rl-space-300);
 }
 
-.bb-rl-lms-content-comments .comment-notes {
+.bb-rl-lms-content-comments .comment-notes,
+.site-main .bb-rl-container .comment-notes,
+.learndash-cpt-groups .site-main .bb-rl-container .comment-notes {
   font-size: 14px;
   font-weight: 400;
   line-height: 22px;
   margin-bottom: var(--bb-rl-space-100);
 }
 
-.bb-rl-lms-content-comments .comment-form-comment {
+.bb-rl-lms-content-comments .comment-form-comment,
+.site-main .bb-rl-container .comment-form-comment,
+.learndash-cpt-groups .site-main .bb-rl-container .comment-form-comment {
   margin-bottom: var(--bb-rl-space-100);
 }
 
-.bb-rl-lms-content-comments .comment-form-comment textarea {
+.bb-rl-lms-content-comments .comment-form-comment textarea,
+.site-main .bb-rl-container .comment-form-comment textarea,
+.learndash-cpt-groups .site-main .bb-rl-container .comment-form-comment textarea {
   width: 100%;
   max-height: 100px;
 }
 
-.bb-rl-lms-content-comments .comment-form-comment label {
+.bb-rl-lms-content-comments .comment-form-comment label,
+.site-main .bb-rl-container .comment-form-comment label,
+.learndash-cpt-groups .site-main .bb-rl-container .comment-form-comment label {
   font-size: var(--bb-rl-font-size-sm);
   font-weight: 400;
   line-height: var(--bb-rl-base-line-small);
@@ -692,13 +725,25 @@
 
 .bb-rl-lms-content-comments .comment-form-author,
 .bb-rl-lms-content-comments .comment-form-email,
-.bb-rl-lms-content-comments .comment-form-url {
+.bb-rl-lms-content-comments .comment-form-url,
+.site-main .bb-rl-container .comment-form-author,
+.site-main .bb-rl-container .comment-form-email,
+.site-main .bb-rl-container .comment-form-url,
+.learndash-cpt-groups .site-main .bb-rl-container .comment-form-author,
+.learndash-cpt-groups .site-main .bb-rl-container .comment-form-email,
+.learndash-cpt-groups .site-main .bb-rl-container .comment-form-url {
   margin-bottom: var(--bb-rl-space-100);
 }
 
 .bb-rl-lms-content-comments .comment-form-author label,
 .bb-rl-lms-content-comments .comment-form-email label,
-.bb-rl-lms-content-comments .comment-form-url label {
+.bb-rl-lms-content-comments .comment-form-url label,
+.site-main .bb-rl-container .comment-form-author label,
+.site-main .bb-rl-container .comment-form-email label,
+.site-main .bb-rl-container .comment-form-url label,
+.learndash-cpt-groups .site-main .bb-rl-container .comment-form-author label,
+.learndash-cpt-groups .site-main .bb-rl-container .comment-form-email label,
+.learndash-cpt-groups .site-main .bb-rl-container .comment-form-url label {
   font-size: var(--bb-rl-font-size-sm);
   font-weight: 400;
   line-height: var(--bb-rl-base-line-small);
@@ -709,21 +754,33 @@
 
 .bb-rl-lms-content-comments .comment-form-author input,
 .bb-rl-lms-content-comments .comment-form-email input,
-.bb-rl-lms-content-comments .comment-form-url input {
+.bb-rl-lms-content-comments .comment-form-url input,
+.site-main .bb-rl-container .comment-form-author input,
+.site-main .bb-rl-container .comment-form-email input,
+.site-main .bb-rl-container .comment-form-url input,
+.learndash-cpt-groups .site-main .bb-rl-container .comment-form-author input,
+.learndash-cpt-groups .site-main .bb-rl-container .comment-form-email input,
+.learndash-cpt-groups .site-main .bb-rl-container .comment-form-url input {
   width: 100%;
 }
 
-.bb-rl-lms-content-comments .comment-form-cookies-consent label {
+.bb-rl-lms-content-comments .comment-form-cookies-consent label,
+.site-main .bb-rl-container .comment-form-cookies-consent label,
+.learndash-cpt-groups .site-main .bb-rl-container .comment-form-cookies-consent label {
   font-size: var(--bb-rl-font-size-sm);
   font-weight: 400;
   line-height: var(--bb-rl-base-line-small);
 }
 
-.bb-rl-lms-content-comments .form-submit {
+.bb-rl-lms-content-comments .form-submit,
+.site-main .bb-rl-container .form-submit,
+.learndash-cpt-groups .site-main .bb-rl-container .form-submit {
   margin-top: var(--bb-rl-space-200);
 }
 
-.bb-rl-lms-content-comments .form-submit #cancel-comment-reply-link {
+.bb-rl-lms-content-comments .form-submit #cancel-comment-reply-link,
+.site-main .bb-rl-container .form-submit #cancel-comment-reply-link,
+.learndash-cpt-groups .site-main .bb-rl-container .form-submit #cancel-comment-reply-link {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -744,20 +801,28 @@
   margin-left: var(--bb-rl-space-100);
 }
 
-.bb-rl-lms-content-comments .form-submit #cancel-comment-reply-link:hover {
+.bb-rl-lms-content-comments .form-submit #cancel-comment-reply-link:hover,
+.site-main .bb-rl-container .form-submit #cancel-comment-reply-link:hover,
+.learndash-cpt-groups .site-main .bb-rl-container .form-submit #cancel-comment-reply-link:hover {
   background-color: var(--bb-rl-background-secondary-hover-color);
 }
 
-.bb-rl-lms-content-comments .form-submit #cancel-comment-reply-link:focus {
+.bb-rl-lms-content-comments .form-submit #cancel-comment-reply-link:focus,
+.site-main .bb-rl-container .form-submit #cancel-comment-reply-link:focus,
+.learndash-cpt-groups .site-main .bb-rl-container .form-submit #cancel-comment-reply-link:focus {
   outline: 2px solid var(--bb-rl-border-quinery-color);
 }
 
-.bb-rl-lms-content-comments .form-submit #cancel-comment-reply-link:disabled {
+.bb-rl-lms-content-comments .form-submit #cancel-comment-reply-link:disabled,
+.site-main .bb-rl-container .form-submit #cancel-comment-reply-link:disabled,
+.learndash-cpt-groups .site-main .bb-rl-container .form-submit #cancel-comment-reply-link:disabled {
   color: var(--bb-rl-text-disabled-color);
   cursor: not-allowed;
 }
 
-.bb-rl-lms-content-comments .form-submit input.submit {
+.bb-rl-lms-content-comments .form-submit input.submit,
+.site-main .bb-rl-container .form-submit input.submit,
+.learndash-cpt-groups .site-main .bb-rl-container .form-submit input.submit {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -777,20 +842,28 @@
   font-weight: 400;
 }
 
-.bb-rl-lms-content-comments .form-submit input.submit:hover {
+.bb-rl-lms-content-comments .form-submit input.submit:hover,
+.site-main .bb-rl-container .form-submit input.submit:hover,
+.learndash-cpt-groups .site-main .bb-rl-container .form-submit input.submit:hover {
   background-color: var(--bb-rl-background-brand-primary-hover-color);
 }
 
-.bb-rl-lms-content-comments .form-submit input.submit:focus-within {
+.bb-rl-lms-content-comments .form-submit input.submit:focus-within,
+.site-main .bb-rl-container .form-submit input.submit:focus-within,
+.learndash-cpt-groups .site-main .bb-rl-container .form-submit input.submit:focus-within {
   outline: 2px solid var(--bb-rl-border-brand-primary-color);
 }
 
-.bb-rl-lms-content-comments .form-submit input.submit:disabled {
+.bb-rl-lms-content-comments .form-submit input.submit:disabled,
+.site-main .bb-rl-container .form-submit input.submit:disabled,
+.learndash-cpt-groups .site-main .bb-rl-container .form-submit input.submit:disabled {
   background-color: var(--bb-rl-background-brand-disabled-color);
   cursor: not-allowed;
 }
 
-.bb-rl-lms-content-comments .comment-respond {
+.bb-rl-lms-content-comments .comment-respond,
+.site-main .bb-rl-container .comment-respond,
+.learndash-cpt-groups .site-main .bb-rl-container .comment-respond {
   margin: var(--bb-rl-space-200) 0 var(--bb-rl-space-300);
   background-color: var(--bb-rl-background-color);
   padding: var(--bb-rl-space-200);
@@ -798,7 +871,9 @@
   border: 1px solid var(--bb-rl-border-secondary-color);
 }
 
-.bb-rl-lms-content-comments .comment-respond .comment-reply-title {
+.bb-rl-lms-content-comments .comment-respond .comment-reply-title,
+.site-main .bb-rl-container .comment-respond .comment-reply-title,
+.learndash-cpt-groups .site-main .bb-rl-container .comment-respond .comment-reply-title {
   font-size: 14px;
   font-weight: 500;
   line-height: 22px;
@@ -806,11 +881,15 @@
   margin: 0 0 var(--bb-rl-space-100);
 }
 
-.bb-rl-lms-content-comments .comment-respond .comment-reply-title small {
+.bb-rl-lms-content-comments .comment-respond .comment-reply-title small,
+.site-main .bb-rl-container .comment-respond .comment-reply-title small,
+.learndash-cpt-groups .site-main .bb-rl-container .comment-respond .comment-reply-title small {
   padding-right: var(--bb-rl-space-50);
 }
 
-.bb-rl-lms-content-comments .comment-respond .comment-reply-title small a {
+.bb-rl-lms-content-comments .comment-respond .comment-reply-title small a,
+.site-main .bb-rl-container .comment-respond .comment-reply-title small a,
+.learndash-cpt-groups .site-main .bb-rl-container .comment-respond .comment-reply-title small a {
   background-color: transparent;
   color: var(--bb-rl-text-brand-primary-color);
   border: none;
@@ -821,30 +900,46 @@
   line-height: 22px;
 }
 
-.bb-rl-lms-content-comments .comment-respond .comment-reply-title small a:hover {
+.bb-rl-lms-content-comments .comment-respond .comment-reply-title small a:hover,
+.site-main .bb-rl-container .comment-respond .comment-reply-title small a:hover,
+.learndash-cpt-groups .site-main .bb-rl-container .comment-respond .comment-reply-title small a:hover {
   border-bottom-color: var(--bb-rl-link-primary-hover-color);
 }
 
-.bb-rl-lms-content-comments .comment-respond .comment-reply-title small a:disabled {
+.bb-rl-lms-content-comments .comment-respond .comment-reply-title small a:disabled,
+.site-main .bb-rl-container .comment-respond .comment-reply-title small a:disabled,
+.learndash-cpt-groups .site-main .bb-rl-container .comment-respond .comment-reply-title small a:disabled {
   color: var(--bb-rl-background-brand-disabled-color);
   border-bottom-color: transparent;
   cursor: not-allowed;
 }
 
 .bb-rl-lms-content-comments .comment-list,
-.bb-rl-lms-content-comments .commentlist {
+.bb-rl-lms-content-comments .commentlist,
+.site-main .bb-rl-container .comment-list,
+.site-main .bb-rl-container .commentlist,
+.learndash-cpt-groups .site-main .bb-rl-container .comment-list,
+.learndash-cpt-groups .site-main .bb-rl-container .commentlist {
   list-style: none;
   padding: 0;
   margin: 0;
 }
 
 .bb-rl-lms-content-comments .comment-list li,
-.bb-rl-lms-content-comments .commentlist li {
+.bb-rl-lms-content-comments .commentlist li,
+.site-main .bb-rl-container .comment-list li,
+.site-main .bb-rl-container .commentlist li,
+.learndash-cpt-groups .site-main .bb-rl-container .comment-list li,
+.learndash-cpt-groups .site-main .bb-rl-container .commentlist li {
   margin-bottom: var(--bb-rl-space-300);
 }
 
 .bb-rl-lms-content-comments .comment-list .comment-body,
-.bb-rl-lms-content-comments .commentlist .comment-body {
+.bb-rl-lms-content-comments .commentlist .comment-body,
+.site-main .bb-rl-container .comment-list .comment-body,
+.site-main .bb-rl-container .commentlist .comment-body,
+.learndash-cpt-groups .site-main .bb-rl-container .comment-list .comment-body,
+.learndash-cpt-groups .site-main .bb-rl-container .commentlist .comment-body {
   display: flex;
   align-items: flex-start;
   background-color: var(--bb-rl-background-color);
@@ -854,20 +949,32 @@
 }
 
 .bb-rl-lms-content-comments .comment-list .comment-body .comment-author.vcard,
-.bb-rl-lms-content-comments .commentlist .comment-body .comment-author.vcard {
+.bb-rl-lms-content-comments .commentlist .comment-body .comment-author.vcard,
+.site-main .bb-rl-container .comment-list .comment-body .comment-author.vcard,
+.site-main .bb-rl-container .commentlist .comment-body .comment-author.vcard,
+.learndash-cpt-groups .site-main .bb-rl-container .comment-list .comment-body .comment-author.vcard,
+.learndash-cpt-groups .site-main .bb-rl-container .commentlist .comment-body .comment-author.vcard {
   flex: 0 0 48px;
   max-width: 48px;
   margin-left: var(--bb-rl-space-200);
 }
 
 .bb-rl-lms-content-comments .comment-list .comment-body .fn,
-.bb-rl-lms-content-comments .commentlist .comment-body .fn {
+.bb-rl-lms-content-comments .commentlist .comment-body .fn,
+.site-main .bb-rl-container .comment-list .comment-body .fn,
+.site-main .bb-rl-container .commentlist .comment-body .fn,
+.learndash-cpt-groups .site-main .bb-rl-container .comment-list .comment-body .fn,
+.learndash-cpt-groups .site-main .bb-rl-container .commentlist .comment-body .fn {
   display: block;
   font-style: normal;
 }
 
 .bb-rl-lms-content-comments .comment-list .comment-body .fn a,
-.bb-rl-lms-content-comments .commentlist .comment-body .fn a {
+.bb-rl-lms-content-comments .commentlist .comment-body .fn a,
+.site-main .bb-rl-container .comment-list .comment-body .fn a,
+.site-main .bb-rl-container .commentlist .comment-body .fn a,
+.learndash-cpt-groups .site-main .bb-rl-container .comment-list .comment-body .fn a,
+.learndash-cpt-groups .site-main .bb-rl-container .commentlist .comment-body .fn a {
   font-size: 14px;
   font-weight: 500;
   line-height: 22px;
@@ -875,7 +982,11 @@
 }
 
 .bb-rl-lms-content-comments .comment-list .comment-body .comment-date,
-.bb-rl-lms-content-comments .commentlist .comment-body .comment-date {
+.bb-rl-lms-content-comments .commentlist .comment-body .comment-date,
+.site-main .bb-rl-container .comment-list .comment-body .comment-date,
+.site-main .bb-rl-container .commentlist .comment-body .comment-date,
+.learndash-cpt-groups .site-main .bb-rl-container .comment-list .comment-body .comment-date,
+.learndash-cpt-groups .site-main .bb-rl-container .commentlist .comment-body .comment-date {
   font-size: var(--bb-rl-font-size-sm);
   font-weight: 400;
   line-height: var(--bb-rl-base-line-small);
@@ -885,7 +996,15 @@
 .bb-rl-lms-content-comments .comment-list .comment-body .comment-text,
 .bb-rl-lms-content-comments .comment-list .comment-body .comment-content,
 .bb-rl-lms-content-comments .commentlist .comment-body .comment-text,
-.bb-rl-lms-content-comments .commentlist .comment-body .comment-content {
+.bb-rl-lms-content-comments .commentlist .comment-body .comment-content,
+.site-main .bb-rl-container .comment-list .comment-body .comment-text,
+.site-main .bb-rl-container .comment-list .comment-body .comment-content,
+.site-main .bb-rl-container .commentlist .comment-body .comment-text,
+.site-main .bb-rl-container .commentlist .comment-body .comment-content,
+.learndash-cpt-groups .site-main .bb-rl-container .comment-list .comment-body .comment-text,
+.learndash-cpt-groups .site-main .bb-rl-container .comment-list .comment-body .comment-content,
+.learndash-cpt-groups .site-main .bb-rl-container .commentlist .comment-body .comment-text,
+.learndash-cpt-groups .site-main .bb-rl-container .commentlist .comment-body .comment-content {
   font-size: 14px;
   font-weight: 400;
   line-height: 22px;
@@ -895,7 +1014,15 @@
 .bb-rl-lms-content-comments .comment-list .comment-body .comment-footer a,
 .bb-rl-lms-content-comments .comment-list .comment-body .comment-reply-link,
 .bb-rl-lms-content-comments .commentlist .comment-body .comment-footer a,
-.bb-rl-lms-content-comments .commentlist .comment-body .comment-reply-link {
+.bb-rl-lms-content-comments .commentlist .comment-body .comment-reply-link,
+.site-main .bb-rl-container .comment-list .comment-body .comment-footer a,
+.site-main .bb-rl-container .comment-list .comment-body .comment-reply-link,
+.site-main .bb-rl-container .commentlist .comment-body .comment-footer a,
+.site-main .bb-rl-container .commentlist .comment-body .comment-reply-link,
+.learndash-cpt-groups .site-main .bb-rl-container .comment-list .comment-body .comment-footer a,
+.learndash-cpt-groups .site-main .bb-rl-container .comment-list .comment-body .comment-reply-link,
+.learndash-cpt-groups .site-main .bb-rl-container .commentlist .comment-body .comment-footer a,
+.learndash-cpt-groups .site-main .bb-rl-container .commentlist .comment-body .comment-reply-link {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -918,27 +1045,53 @@
 .bb-rl-lms-content-comments .comment-list .comment-body .comment-footer a:hover,
 .bb-rl-lms-content-comments .comment-list .comment-body .comment-reply-link:hover,
 .bb-rl-lms-content-comments .commentlist .comment-body .comment-footer a:hover,
-.bb-rl-lms-content-comments .commentlist .comment-body .comment-reply-link:hover {
+.bb-rl-lms-content-comments .commentlist .comment-body .comment-reply-link:hover,
+.site-main .bb-rl-container .comment-list .comment-body .comment-footer a:hover,
+.site-main .bb-rl-container .comment-list .comment-body .comment-reply-link:hover,
+.site-main .bb-rl-container .commentlist .comment-body .comment-footer a:hover,
+.site-main .bb-rl-container .commentlist .comment-body .comment-reply-link:hover,
+.learndash-cpt-groups .site-main .bb-rl-container .comment-list .comment-body .comment-footer a:hover,
+.learndash-cpt-groups .site-main .bb-rl-container .comment-list .comment-body .comment-reply-link:hover,
+.learndash-cpt-groups .site-main .bb-rl-container .commentlist .comment-body .comment-footer a:hover,
+.learndash-cpt-groups .site-main .bb-rl-container .commentlist .comment-body .comment-reply-link:hover {
   background-color: var(--bb-rl-background-secondary-color);
 }
 
 .bb-rl-lms-content-comments .comment-list .comment-body .comment-footer a:focus,
 .bb-rl-lms-content-comments .comment-list .comment-body .comment-reply-link:focus,
 .bb-rl-lms-content-comments .commentlist .comment-body .comment-footer a:focus,
-.bb-rl-lms-content-comments .commentlist .comment-body .comment-reply-link:focus {
+.bb-rl-lms-content-comments .commentlist .comment-body .comment-reply-link:focus,
+.site-main .bb-rl-container .comment-list .comment-body .comment-footer a:focus,
+.site-main .bb-rl-container .comment-list .comment-body .comment-reply-link:focus,
+.site-main .bb-rl-container .commentlist .comment-body .comment-footer a:focus,
+.site-main .bb-rl-container .commentlist .comment-body .comment-reply-link:focus,
+.learndash-cpt-groups .site-main .bb-rl-container .comment-list .comment-body .comment-footer a:focus,
+.learndash-cpt-groups .site-main .bb-rl-container .comment-list .comment-body .comment-reply-link:focus,
+.learndash-cpt-groups .site-main .bb-rl-container .commentlist .comment-body .comment-footer a:focus,
+.learndash-cpt-groups .site-main .bb-rl-container .commentlist .comment-body .comment-reply-link:focus {
   outline: 2px solid var(--bb-rl-border-quinery-color);
 }
 
 .bb-rl-lms-content-comments .comment-list .comment-body .comment-footer a:disabled,
 .bb-rl-lms-content-comments .comment-list .comment-body .comment-reply-link:disabled,
 .bb-rl-lms-content-comments .commentlist .comment-body .comment-footer a:disabled,
-.bb-rl-lms-content-comments .commentlist .comment-body .comment-reply-link:disabled {
+.bb-rl-lms-content-comments .commentlist .comment-body .comment-reply-link:disabled,
+.site-main .bb-rl-container .comment-list .comment-body .comment-footer a:disabled,
+.site-main .bb-rl-container .comment-list .comment-body .comment-reply-link:disabled,
+.site-main .bb-rl-container .commentlist .comment-body .comment-footer a:disabled,
+.site-main .bb-rl-container .commentlist .comment-body .comment-reply-link:disabled,
+.learndash-cpt-groups .site-main .bb-rl-container .comment-list .comment-body .comment-footer a:disabled,
+.learndash-cpt-groups .site-main .bb-rl-container .comment-list .comment-body .comment-reply-link:disabled,
+.learndash-cpt-groups .site-main .bb-rl-container .commentlist .comment-body .comment-footer a:disabled,
+.learndash-cpt-groups .site-main .bb-rl-container .commentlist .comment-body .comment-reply-link:disabled {
   border-color: var(--bb-rl-border-tertiary-color);
   color: var(--bb-rl-text-disabled-color);
   cursor: not-allowed;
 }
 
-.bb-rl-lms-content-comments .comment-author {
+.bb-rl-lms-content-comments .comment-author,
+.site-main .bb-rl-container .comment-author,
+.learndash-cpt-groups .site-main .bb-rl-container .comment-author {
   font-size: 14px;
   font-weight: 500;
   line-height: 22px;
@@ -946,55 +1099,69 @@
   align-items: center;
 }
 
-.bb-rl-lms-content-comments .comment-author .avatar {
+.bb-rl-lms-content-comments .comment-author .avatar,
+.site-main .bb-rl-container .comment-author .avatar,
+.learndash-cpt-groups .site-main .bb-rl-container .comment-author .avatar {
   width: 48px;
   height: 48px;
   border-radius: 50%;
   margin-left: var(--bb-rl-space-100);
 }
 
-.bb-rl-lms-content-comments .comment-author .name {
+.bb-rl-lms-content-comments .comment-author .name,
+.site-main .bb-rl-container .comment-author .name,
+.learndash-cpt-groups .site-main .bb-rl-container .comment-author .name {
   color: var(--bb-rl-text-color);
 }
 
-.bb-rl-lms-content-comments .comment-author .says {
+.bb-rl-lms-content-comments .comment-author .says,
+.site-main .bb-rl-container .comment-author .says,
+.learndash-cpt-groups .site-main .bb-rl-container .comment-author .says {
   color: var(--bb-rl-text-tertiary-color);
   padding-right: var(--bb-rl-space-50);
 }
 
-.bb-rl-course-comment-module.bb-rl-lms-content-comments {
-  margin: var(--bb-rl-space-200) 0 var(--bb-rl-space-300);
+.bb-rl-course-comment-module.bb-rl-lms-content-comments,
+.learndash-cpt-groups .site-main .bb-rl-container {
+  margin: var(--bb-rl-space-200) 0 0;
+  padding-bottom: var(--bb-rl-space-300);
 }
 
-.bb-rl-course-comment-module.bb-rl-lms-content-comments > h3 {
+.bb-rl-course-comment-module.bb-rl-lms-content-comments > h3,
+.learndash-cpt-groups .site-main .bb-rl-container > h3 {
   font-size: var(--bb-rl-font-size-base);
   font-weight: 500;
   line-height: var(--bb-rl-base-line);
   margin-bottom: var(--bb-rl-space-200);
 }
 
-.bb-rl-course-comment-module.bb-rl-lms-content-comments > h3 + .navigation {
+.bb-rl-course-comment-module.bb-rl-lms-content-comments > h3 + .navigation,
+.learndash-cpt-groups .site-main .bb-rl-container > h3 + .navigation {
   display: none;
 }
 
-.bb-rl-course-comment-module.bb-rl-lms-content-comments .commentlist .comment-body {
+.bb-rl-course-comment-module.bb-rl-lms-content-comments .commentlist .comment-body,
+.learndash-cpt-groups .site-main .bb-rl-container .commentlist .comment-body {
   flex-direction: column;
   width: 100%;
 }
 
-.bb-rl-course-comment-module.bb-rl-lms-content-comments .commentlist .comment-body .comment-author.vcard {
+.bb-rl-course-comment-module.bb-rl-lms-content-comments .commentlist .comment-body .comment-author.vcard,
+.learndash-cpt-groups .site-main .bb-rl-container .commentlist .comment-body .comment-author.vcard {
   flex: 1;
   max-width: none;
 }
 
-.bb-rl-course-comment-module.bb-rl-lms-content-comments .commentlist .comment-body footer.comment-meta {
+.bb-rl-course-comment-module.bb-rl-lms-content-comments .commentlist .comment-body footer.comment-meta,
+.learndash-cpt-groups .site-main .bb-rl-container .commentlist .comment-body footer.comment-meta {
   display: flex;
   align-items: center;
   width: 100%;
   justify-content: space-between;
 }
 
-.bb-rl-course-comment-module.bb-rl-lms-content-comments .commentlist .comment-body footer.comment-meta .comment-metadata {
+.bb-rl-course-comment-module.bb-rl-lms-content-comments .commentlist .comment-body footer.comment-meta .comment-metadata,
+.learndash-cpt-groups .site-main .bb-rl-container .commentlist .comment-body footer.comment-meta .comment-metadata {
   display: inline-flex;
   align-items: center;
   gap: var(--bb-rl-space-100);
@@ -1003,11 +1170,13 @@
   line-height: 22px;
 }
 
-.bb-rl-course-comment-module.bb-rl-lms-content-comments .commentlist .comment-body footer.comment-meta .comment-metadata > a {
+.bb-rl-course-comment-module.bb-rl-lms-content-comments .commentlist .comment-body footer.comment-meta .comment-metadata > a,
+.learndash-cpt-groups .site-main .bb-rl-container .commentlist .comment-body footer.comment-meta .comment-metadata > a {
   color: var(--bb-rl-text-tertiary-color);
 }
 
-.bb-rl-course-comment-module.bb-rl-lms-content-comments .commentlist .comment-body footer.comment-meta .comment-metadata .comment-edit-link {
+.bb-rl-course-comment-module.bb-rl-lms-content-comments .commentlist .comment-body footer.comment-meta .comment-metadata .comment-edit-link,
+.learndash-cpt-groups .site-main .bb-rl-container .commentlist .comment-body footer.comment-meta .comment-metadata .comment-edit-link {
   background-color: transparent;
   color: var(--bb-rl-text-brand-primary-color);
   border: none;
@@ -1015,35 +1184,42 @@
   border-bottom: 1px solid transparent;
 }
 
-.bb-rl-course-comment-module.bb-rl-lms-content-comments .commentlist .comment-body footer.comment-meta .comment-metadata .comment-edit-link:hover {
+.bb-rl-course-comment-module.bb-rl-lms-content-comments .commentlist .comment-body footer.comment-meta .comment-metadata .comment-edit-link:hover,
+.learndash-cpt-groups .site-main .bb-rl-container .commentlist .comment-body footer.comment-meta .comment-metadata .comment-edit-link:hover {
   border-bottom-color: var(--bb-rl-link-primary-hover-color);
 }
 
-.bb-rl-course-comment-module.bb-rl-lms-content-comments .commentlist .comment-body footer.comment-meta .comment-metadata .comment-edit-link:disabled {
+.bb-rl-course-comment-module.bb-rl-lms-content-comments .commentlist .comment-body footer.comment-meta .comment-metadata .comment-edit-link:disabled,
+.learndash-cpt-groups .site-main .bb-rl-container .commentlist .comment-body footer.comment-meta .comment-metadata .comment-edit-link:disabled {
   color: var(--bb-rl-background-brand-disabled-color);
   border-bottom-color: transparent;
   cursor: not-allowed;
 }
 
-.bb-rl-course-comment-module.bb-rl-lms-content-comments .comment-respond .logged-in-as {
+.bb-rl-course-comment-module.bb-rl-lms-content-comments .comment-respond .logged-in-as,
+.learndash-cpt-groups .site-main .bb-rl-container .comment-respond .logged-in-as {
   font-size: 14px;
   font-weight: 400;
   line-height: 22px;
 }
 
-.bb-rl-course-comment-module.bb-rl-lms-content-comments .comment-respond .logged-in-as > a {
+.bb-rl-course-comment-module.bb-rl-lms-content-comments .comment-respond .logged-in-as > a,
+.learndash-cpt-groups .site-main .bb-rl-container .comment-respond .logged-in-as > a {
   background-color: transparent;
   color: var(--bb-rl-text-brand-primary-color);
   border: none;
   border-radius: 0;
   border-bottom: 1px solid transparent;
+  border-bottom: 0;
 }
 
-.bb-rl-course-comment-module.bb-rl-lms-content-comments .comment-respond .logged-in-as > a:hover {
+.bb-rl-course-comment-module.bb-rl-lms-content-comments .comment-respond .logged-in-as > a:hover,
+.learndash-cpt-groups .site-main .bb-rl-container .comment-respond .logged-in-as > a:hover {
   border-bottom-color: var(--bb-rl-link-primary-hover-color);
 }
 
-.bb-rl-course-comment-module.bb-rl-lms-content-comments .comment-respond .logged-in-as > a:disabled {
+.bb-rl-course-comment-module.bb-rl-lms-content-comments .comment-respond .logged-in-as > a:disabled,
+.learndash-cpt-groups .site-main .bb-rl-container .comment-respond .logged-in-as > a:disabled {
   color: var(--bb-rl-background-brand-disabled-color);
   border-bottom-color: transparent;
   cursor: not-allowed;
