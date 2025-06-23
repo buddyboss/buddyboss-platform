@@ -4620,6 +4620,10 @@ body.ld-in-focus-mode .learndash-wrapper {
   white-space: nowrap;
 }
 
+.bb-rl-course-overview-footer .bb-rl-course-progress {
+  width: 100%;
+}
+
 .bb-rl-course-overview-footer .btn-advance-continue .btn-advance,
 .bb-rl-course-overview-footer .btn-advance-continue .btn-join,
 .bb-rl-course-overview-footer .learndash_join_button .btn-advance,
