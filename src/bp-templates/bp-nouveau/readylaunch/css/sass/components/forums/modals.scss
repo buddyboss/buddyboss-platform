@@ -495,7 +495,7 @@
 
 	.select2-container--default .select2-selection--multiple {
 		display: flex;
-		border: 0;
+		border: 0 !important;
 		min-height: 24px;
 
 		.select2-search__field {
@@ -538,13 +538,22 @@
 	}
 }
 
-.bb-rl-forums-container-inner {
+.bb-rl-forum-modal {
 
 	.select2-dropdown {
 		border: 0;
 		border-radius: var(--bb-rl-radius-lg);
 		box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.1);
 		max-width: 320px;
+
+		&.select2-dropdown--above,
+		&.select2-dropdown--below {
+			border-radius: var(--bb-rl-radius-lg);
+		}
+	}
+
+	.select2-results__options {
+		padding: var(--bb-rl-space-100);
 	}
 
 	.select2-results__option {
