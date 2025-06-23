@@ -10,6 +10,7 @@ import { LinkModal } from '../../components/LinkModal';
 import { HelpIcon } from '../../components/HelpIcon';
 import { HelpSliderModal } from '../../components/HelpSliderModal';
 import { createInterpolateElement } from '@wordpress/element';
+import { Toast } from '../../components/Toast';
 
 // Initial structure for base menu items that are always included
 const baseMenuItems = [
@@ -205,7 +206,7 @@ export const ReadyLaunchSettings = () => {
 					setIsSaving(false);
 					setTimeout(() => setNotification(null), 3000);
 				});
-		}, 1000);
+		}, 1500);
 
 		// Initialize the debounced text change function
 		debouncedTextChangeRef.current = debounce((name, value, currentSettings) => {
@@ -1335,24 +1336,24 @@ export const ReadyLaunchSettings = () => {
 			<div className="bb-readylaunch-settings-container">
 				<Sidebar activeTab={activeTab} setActiveTab={setActiveTab}/>
 				<div className="bb-readylaunch-settings-content">
-					{notification && (
-						<Notice
-							status={notification.status}
-							isDismissible={false}
-							className="settings-notice"
-						>
-							{notification.message}
-						</Notice>
-					)}
-
-					{isSaving && (
-						<div className="settings-saving-indicator settings-notice components-notice">
-							<Spinner />
-							<span>{__( 'Saving...', 'buddyboss' )}</span>
-						</div>
-					)}
 					{renderContent()}
 				</div>
+			</div>
+
+			<div className="bb-rl-toast-container">
+				{isSaving && (
+					<Toast
+						status="saving"
+						message={__('Saving changes...', 'buddyboss')}
+					/>
+				)}
+				{notification && (
+					<Toast
+						status={notification.status}
+						message={notification.message}
+						onDismiss={() => setNotification(null)}
+					/>
+				)}
 			</div>
 
 			<HelpSliderModal

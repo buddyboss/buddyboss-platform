@@ -1,0 +1,75 @@
+.bb-rl-toast-container {
+	position: fixed;
+	bottom: 20px;
+	right: 20px;
+	z-index: 9999;
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+.bb-rl-toast {
+	display: flex;
+	align-items: center;
+	padding: 12px 16px;
+	border-radius: 999px;
+	background-color: #23282d;
+	color: #fff;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+	min-width: 250px;
+	transition: all 0.3s ease-in-out;
+
+	.bb-rl-toast-icon {
+		margin-right: 12px;
+		display: flex;
+		align-items: center;
+
+		.components-spinner {
+			width: 20px;
+			height: 20px;
+			margin: 0;
+		}
+
+		i {
+			font-size: 20px;
+		}
+	}
+
+	.bb-rl-toast-message {
+		flex-grow: 1;
+		font-size: 14px;
+		line-height: 1.4;
+	}
+
+	.bb-rl-toast-dismiss {
+		background: transparent;
+		border: none;
+		color: #fff;
+		cursor: pointer;
+		padding: 0;
+		margin-left: 16px;
+		display: flex;
+		align-items: center;
+
+		i {
+			font-size: 18px;
+		}
+
+		&:hover {
+			color: #ccc;
+		}
+	}
+
+	// Status variants
+	&.bb-rl-toast--success {
+		.bb-rl-toast-icon i {
+			color: #4CAF50; // Green
+		}
+	}
+
+	&.bb-rl-toast--error {
+		.bb-rl-toast-icon i {
+			color: #FF9800; // Orange
+		}
+	}
+} 
