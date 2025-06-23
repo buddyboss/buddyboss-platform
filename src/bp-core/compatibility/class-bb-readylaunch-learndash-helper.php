@@ -1852,6 +1852,8 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 		 * - All topics under each lesson.
 		 * - All quizzes (course-level, lesson-level, and topic-level).
 		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
 		 * @param int    $course_id The course ID.
 		 * @param string $format    Optional. Date format. Defaults to WordPress date format option. Use 'raw' for MySQL format.
 		 *
@@ -1943,6 +1945,87 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 
 			// Format the date according to WordPress standards.
 			return date_i18n( $format, strtotime( $latest_date ) );
+		}
+
+		/**
+		 * Format course expiration time in a human-readable format.
+		 *
+		 * This function automatically formats course expiration time based on the value:
+		 * - Less than 1 minute = seconds
+		 * - Less than 1 hour = minutes
+		 * - Less than 1 day = hours
+		 * - 1 day = 24 hours
+		 * - More than 1 day = days
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param int $course_id The course ID.
+		 *
+		 * @return string|false Formatted time string or false if no expiration set.
+		 */
+		public function bb_rl_format_course_expiration_time( $course_id ) {
+			// Validate course ID.
+			$course_id = absint( $course_id );
+			if ( empty( $course_id ) ) {
+				return false;
+			}
+
+			// Get expiration days from course settings.
+			$expiration_in_days = learndash_get_setting( $course_id, 'expire_access_days' );
+			if ( empty( $expiration_in_days ) ) {
+				return false;
+			}
+
+			// Convert days to seconds for more granular calculations.
+			$total_seconds = (float) $expiration_in_days * 24 * 60 * 60;
+
+			// Less than 1 minute (60 seconds).
+			if ( $total_seconds < 60 ) {
+				$seconds = (int) $total_seconds;
+				return sprintf(
+					// translators: %d = Number of seconds.
+					esc_html( _n( '%d Second', '%d Seconds', $seconds, 'buddyboss' ) ),
+					esc_html( $seconds )
+				);
+			}
+
+			// Less than 1 hour (3600 seconds).
+			if ( $total_seconds < 3600 ) {
+				$minutes = (int) ( $total_seconds / 60 );
+				return sprintf(
+					// translators: %d = Number of minutes.
+					esc_html( _n( '%d Minute', '%d Minutes', $minutes, 'buddyboss' ) ),
+					esc_html( $minutes )
+				);
+			}
+
+			// Less than 1 day (86400 seconds).
+			if ( $total_seconds < 86400 ) {
+				$hours = (int) ( $total_seconds / 3600 );
+				return sprintf(
+					// translators: %d = Number of hours.
+					esc_html( _n( '%d Hour', '%d Hours', $hours, 'buddyboss' ) ),
+					esc_html( $hours )
+				);
+			}
+
+			// Exactly 1 day.
+			if ( 1 === (int) $expiration_in_days ) {
+				$hours = 24;
+				return sprintf(
+					// translators: %d = Number of hours.
+					esc_html( _n( '%d Hour', '%d Hours', $hours, 'buddyboss' ) ),
+					esc_html( $hours )
+				);
+			}
+
+			// More than 1 day.
+			$days = (int) $expiration_in_days;
+			return sprintf(
+				// translators: %d = Number of days.
+				esc_html( _n( '%d Day', '%d Days', $days, 'buddyboss' ) ),
+				esc_html( $days )
+			);
 		}
 	}
 

@@ -186,7 +186,7 @@ if ( class_exists( 'LearnDash\Core\Models\Product' ) && isset( $course_id ) ) {
 }
 
 $course_video_embed    = get_post_meta( $course_id, '_buddyboss_lms_course_video', true );
-$file_info            = pathinfo( $course_video_embed );
+$file_info             = pathinfo( $course_video_embed );
 $course_video_duration = get_post_meta( $course_id, '_buddyboss_lms_course_video_duration', true );
 ?>
 
@@ -677,19 +677,26 @@ $course_video_duration = get_post_meta( $course_id, '_buddyboss_lms_course_video
 						</div>
 						<?php
 					}
-					?>
 
-					<div class="bb-rl-course-details-item">
-						<i class="bb-icons-rl-timer"></i>
-						<div>
-							<div class="bb-rl-course-details-label">
-								<?php esc_html_e( 'Duration', 'buddyboss' ); ?>
-							</div>
-							<div class="bb-rl-course-details-value">
-								<?php esc_html_e( '10 hours', 'buddyboss' ); ?>
+					$formatted_duration = $bb_rl_ld_helper->bb_rl_format_course_expiration_time( $course_id );
+					if ( $formatted_duration ) {
+						?>
+						<div class="bb-rl-course-details-item">
+							<i class="bb-icons-rl-timer"></i>
+							<div>
+								<div class="bb-rl-course-details-label">
+									<?php esc_html_e( 'Duration', 'buddyboss' ); ?>
+								</div>
+								<div class="bb-rl-course-details-value">
+									<?php
+									echo wp_kses_post( $formatted_duration );
+									?>
+								</div>
 							</div>
 						</div>
-					</div>
+						<?php
+					}
+					?>
 
 					<div class="bb-rl-course-details-item">
 						<i class="bb-icons-rl-book-open-text"></i>
@@ -724,6 +731,27 @@ $course_video_duration = get_post_meta( $course_id, '_buddyboss_lms_course_video
 							</div>
 						</div>
 					</div>
+
+					<?php
+					if ( ! $formatted_duration ) {
+						$progression_text = $course_settings['course_disable_lesson_progression'] ? __( 'Free form', 'buddyboss' ) : __( 'Linear', 'buddyboss' );
+						?>
+						<div class="bb-rl-course-details-item">
+							<i class="bb-icons-rl-timer"></i>
+							<div>
+								<div class="bb-rl-course-details-label">
+									<?php esc_html_e( 'Progression', 'buddyboss' ); ?>
+								</div>
+								<div class="bb-rl-course-details-value">
+									<?php
+									echo wp_kses_post( $progression_text );
+									?>
+								</div>
+							</div>
+						</div>
+						<?php
+					}
+					?>
 
 					<div class="bb-rl-course-details-item">
 						<i class="bb-icons-rl-arrows-clockwise"></i>
@@ -928,13 +956,13 @@ $course_video_duration = get_post_meta( $course_id, '_buddyboss_lms_course_video
 							learndash_get_template_part(
 								'course/listing.php',
 								array(
-									'course_id'                  => $course_id,
-									'user_id'                    => $user_id,
-									'lessons'                    => $lessons,
-									'lesson_topics'              => $lesson_topics,
-									'quizzes'                    => $quizzes,
-									'has_access'                 => $has_access,
-									'course_pager_results'       => $course_pager_results,
+									'course_id'            => $course_id,
+									'user_id'              => $user_id,
+									'lessons'              => $lessons,
+									'lesson_topics'        => $lesson_topics,
+									'quizzes'              => $quizzes,
+									'has_access'           => $has_access,
+									'course_pager_results' => $course_pager_results,
 									'lesson_progression_enabled' => $lesson_progression_enabled,
 								),
 								true
