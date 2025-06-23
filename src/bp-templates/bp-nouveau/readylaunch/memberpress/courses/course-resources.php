@@ -8,7 +8,6 @@
  */
 
 defined( 'ABSPATH' ) || exit;
-
 ?>
 <h2><?php esc_html_e( 'Resources', 'buddyboss-pro' ); ?></h2>
 
@@ -57,7 +56,7 @@ defined( 'ABSPATH' ) || exit;
 
 										<?php if ( ! empty( $file_type ) ) : ?>
 											<span class="bb-mpcs-file-type" style="text-transform: uppercase;">
-												<?php echo esc_html( bb_mpcs_get_normalized_file_type( $file_type ) ); ?>
+												<?php echo esc_html( bb_rl_get_normalized_file_type( $file_type ) ); ?>
 											</span>
 										<?php endif; ?>
 									</div>

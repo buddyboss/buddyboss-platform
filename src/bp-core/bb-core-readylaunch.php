@@ -301,8 +301,7 @@ function bb_rl_mpcs_get_course_category_names( $course_id ) {
 	return implode( ', ', wp_list_pluck( $categories, 'name' ) );
 }
 
-// Fallback function if the Pro plugin function is not available.
-if ( ! function_exists( 'bb_mpcs_get_normalized_file_type' ) ) {
+if ( ! function_exists( 'bb_rl_get_normalized_file_type' ) ) {
 	/**
 	 * Get normalized file type from MIME type.
 	 *
@@ -312,7 +311,7 @@ if ( ! function_exists( 'bb_mpcs_get_normalized_file_type' ) ) {
 	 *
 	 * @return string Normalized file type or empty string if invalid.
 	 */
-	function bb_mpcs_get_normalized_file_type( $file_type ) {
+	function bb_rl_get_normalized_file_type( $file_type ) {
 		if ( ! $file_type ) {
 			return '';
 		}
