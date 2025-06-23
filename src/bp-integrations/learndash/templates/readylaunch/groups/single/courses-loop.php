@@ -1,17 +1,18 @@
 <?php
-
-$is_enrolled            = false;
-$lesson_list            = learndash_get_lesson_list( get_the_ID(), array( 'num' => - 1 ) );
+// Get the course ID.
+$course_id = get_the_ID();
+if ( empty( $course_id ) ) {
+	$course_id = learndash_get_course_id();
+}
+$lesson_list            = learndash_get_lesson_list( $course_id, array( 'num' => - 1 ) );
 $lessons_count          = ! empty( $lesson_list ) ? count( $lesson_list ) : 0;
-$current_user_id        = get_current_user_id();
+$user_id                = is_user_logged_in() ? get_current_user_id() : 0;
 $access_list            = learndash_get_course_meta_setting( $post->ID, 'course_access_list' );
 $admin_enrolled         = LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_General_Admin_User', 'courses_autoenroll_admin_users' );
-$user_course_has_access = sfwd_lms_has_access( get_the_ID(), $current_user_id );
-$course_price           = learndash_get_course_price( get_the_ID() );
+$user_course_has_access = sfwd_lms_has_access( $course_id, $user_id );
 $paypal_settings        = LearnDash_Settings_Section::get_section_settings_all( 'LearnDash_Settings_Section_PayPal' );
-$completed              = 0;
-$total                  = false;
 $class                  = '';
+$is_enrolled            = $user_course_has_access ? true : false;
 
 if ( ! is_array( $access_list ) ) {
 	$access_list = array();
@@ -34,65 +35,45 @@ if ( ! empty( $access_list ) ) {
 
 $members = $result;
 foreach ( $members as $member ) {
-	if ( $current_user_id == $member->ID ) {
+	if ( (int) $user_id === (int) $member->ID ) {
 		$is_enrolled = true;
 		break;
 	}
 }
 
 // if admins are enrolled
-if ( current_user_can( 'administrator' ) && $admin_enrolled === 'yes' ) {
+if ( current_user_can( 'administrator' ) && 'yes' === $admin_enrolled ) {
 	$is_enrolled = true;
-}
-
-// $current_user = wp_get_current_user();
-if ( is_user_logged_in() ) {
-	$user_id = get_current_user_id();
-} else {
-	$user_id = 0;
-}
-
-$course_id = get_the_ID();
-if ( empty( $course_id ) ) {
-	$course_id = learndash_get_course_id();
-}
-
-if ( ! empty( $user_id ) ) {
-
-	$course_progress = get_user_meta( $user_id, '_sfwd-course_progress', true );
-
-	$percentage = 0;
-	$message    = '';
-
-	if ( ( ! empty( $course_progress ) ) && ( isset( $course_progress[ $course_id ] ) ) && ( ! empty( $course_progress[ $course_id ] ) ) ) {
-		if ( isset( $course_progress[ $course_id ]['completed'] ) ) {
-			$completed = absint( $course_progress[ $course_id ]['completed'] );
-		}
-
-		if ( isset( $course_progress[ $course_id ]['total'] ) ) {
-			$total = absint( $course_progress[ $course_id ]['total'] );
-		}
-	} else {
-		$total = 0;
-	}
-}
-
-// If $total is still false we calculate the total from course steps.
-if ( false === $total ) {
-	$total = learndash_get_course_steps_count( $course_id );
-}
-
-if ( $total > 0 ) {
-	$percentage = intval( $completed * 100 / $total );
-	$percentage = ( $percentage > 100 ) ? 100 : $percentage;
-} else {
-	$percentage = 0;
 }
 
 $class = '';
 if ( ! empty( $course_price ) && ( $course_price['type'] == 'paynow' || $course_price['type'] == 'subscribe' || $course_price['type'] == 'closed' ) ) {
 	$class = 'bb-course-paid';
 }
+
+// Get course progress.
+$course_progress = learndash_course_progress(
+	array(
+		'user_id'   => $user_id,
+		'course_id' => $course_id,
+		'array'     => true,
+	)
+);
+if ( empty( $course_progress ) ) {
+	$course_progress = array(
+		'percentage' => 0,
+		'completed'  => 0,
+		'total'      => 0,
+	);
+}
+$course_status = ( 100 === (int) $course_progress['percentage'] ) ? 'completed' : 'notcompleted';
+if ( $course_progress['percentage'] > 0 && 100 !== $course_progress['percentage'] ) {
+	$course_status = 'progress';
+}
+
+// Course data.
+$course_price  = learndash_get_course_price( $course_id );
+$course_status = learndash_course_status( $course_id, $user_id );
 
 $course_excerpt            = get_the_excerpt( $course_id );
 $course_excerpt_in_listing = '';
