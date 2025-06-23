@@ -50,6 +50,10 @@
 		.mpcs-sidebar-grades,
 		.mpcs-sidebar-resources {
 			margin: 0;
+
+			a {
+				padding: var(--bb-rl-space-100);
+			}
 		}
 	}
 }
@@ -65,7 +69,7 @@
 		align-items: center;
 		gap: var(--bb-rl-space-100);
 		margin: 0 calc(var(--bb-rl-space-100) * -1);
-		padding: var(--bb-rl-space-100) var(--bb-rl-space-100);
+		padding: var(--bb-rl-space-100);
 		color: var(--bb-rl-text-color);
 		border-radius: var(--bb-rl-radius-md);
 
@@ -126,5 +130,16 @@
 
 	&.bb-rl-memprlms-widget-sidebar-menu {
 		padding: var(--bb-rl-space-200) var(--bb-rl-space-300);
+	}
+}
+
+.bb-rl-container {
+
+	.mpcs-ccw:before {
+		content: "\e038";
+		font-weight: 400;
+		font-family: bb-icons-rl;
+		font-size: 16px;
+		color: var(--bb-rl-icon-secondary-color);
 	}
 }

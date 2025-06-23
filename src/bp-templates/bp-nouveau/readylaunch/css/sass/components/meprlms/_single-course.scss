@@ -331,11 +331,16 @@
 
 		.mpcs-section-header {
 			background-color: var(--bb-rl-background-secondary-color);
+			padding: var(--bb-rl-space-200);
 
 			.mpcs-section-title-text {
 
 				@include bb-rl-base-heading;
 				color: var(--bb-rl-text-color);
+			}
+
+			.mpcs-section-title {
+				padding: 0;
 			}
 		}
 
@@ -372,6 +377,56 @@
 
 		p {
 			margin-bottom: var(--bb-rl-space-100);
+		}
+	}
+}
+
+.bb-rl-course-content {
+
+	.mpcs-section.mpcs-resource-section {
+
+		.mpcs-section-header-static {
+			background-color: var(--bb-rl-background-secondary-color);
+			padding: var(--bb-rl-space-200);
+
+			.mpcs-section-title-text {
+
+				@include bb-rl-base-heading;
+				color: var(--bb-rl-text-color);
+			}
+
+			.mpcs-section-title {
+				padding: 0;
+			}
+
+			+ .mpcs-lessons {
+				padding: 0;
+			}
+		}
+
+		table.mp-table {
+			width: 100%;
+			border-collapse: collapse;
+			border: none;
+
+			thead {
+				background-color: var(--bb-rl-background-secondary-color);
+			}
+
+			thead tr th {
+
+				@include bb-rl-label-heading;
+				border-top: 1px solid var(--bb-rl-border-secondary-color) !important;
+				border-bottom: 1px solid var(--bb-rl-border-secondary-color) !important;
+				color: var(--bb-rl-text-secondary-color);
+				text-align: left;
+			}
+
+			tbody tr td {
+
+				@include bb-rl-label-heading;
+				color: var(--bb-rl-text-secondary-color);
+			}
 		}
 	}
 }
