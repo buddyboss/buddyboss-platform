@@ -761,6 +761,7 @@
 			> a {
 
 				@include bb-rl-button--tertiary-link;
+				border-bottom: 0;
 			}
 		}
 	}
