@@ -2095,6 +2095,7 @@
   order: 2;
 }
 
+.forum-dropdown .bbp-admin-links > a,
 .bb-rl-container-inner .bbp-admin-links > a {
   display: block;
   font-size: var(--bb-rl-font-size-sm);
@@ -2110,6 +2111,7 @@
   background-color: transparent;
 }
 
+.forum-dropdown .bbp-admin-links > a:before,
 .bb-rl-container-inner .bbp-admin-links > a:before {
   content: "";
   font-weight: 400;
@@ -2120,42 +2122,55 @@
   margin-right: var(--bb-rl-space-100);
 }
 
-.bb-rl-container-inner .bbp-admin-links > a.bbp-reply-edit-link:before, .bb-rl-container-inner .bbp-admin-links > a.bbp-topic-edit-link:before {
+.forum-dropdown .bbp-admin-links > a.bbp-reply-edit-link:before, .forum-dropdown .bbp-admin-links > a.bbp-topic-edit-link:before,
+.bb-rl-container-inner .bbp-admin-links > a.bbp-reply-edit-link:before,
+.bb-rl-container-inner .bbp-admin-links > a.bbp-topic-edit-link:before {
   content: "\e3b4";
 }
 
+.forum-dropdown .bbp-admin-links > a.bbp-reply-move-link:before,
 .bb-rl-container-inner .bbp-admin-links > a.bbp-reply-move-link:before {
   content: "\e164";
 }
 
+.forum-dropdown .bbp-admin-links > a.bbp-topic-split-link:before,
 .bb-rl-container-inner .bbp-admin-links > a.bbp-topic-split-link:before {
   content: "\e0a6";
 }
 
+.forum-dropdown .bbp-admin-links > a.bbp-topic-close-link:before,
 .bb-rl-container-inner .bbp-admin-links > a.bbp-topic-close-link:before {
   content: "\e308";
 }
 
+.forum-dropdown .bbp-admin-links > a.bbp-topic-sticky-link:before,
 .bb-rl-container-inner .bbp-admin-links > a.bbp-topic-sticky-link:before {
   content: "\e3e2";
 }
 
+.forum-dropdown .bbp-admin-links > a.bbp-topic-merge-link:before,
 .bb-rl-container-inner .bbp-admin-links > a.bbp-topic-merge-link:before {
   content: "\e09e";
 }
 
+.forum-dropdown .bbp-admin-links > a.bbp-topic-delete-link:before,
 .bb-rl-container-inner .bbp-admin-links > a.bbp-topic-delete-link:before {
   content: "\e4a6";
 }
 
-.bb-rl-container-inner .bbp-admin-links > a.bbp-reply-trash-link:before, .bb-rl-container-inner .bbp-admin-links > a.bbp-topic-trash-link:before {
+.forum-dropdown .bbp-admin-links > a.bbp-reply-trash-link:before, .forum-dropdown .bbp-admin-links > a.bbp-topic-trash-link:before,
+.bb-rl-container-inner .bbp-admin-links > a.bbp-reply-trash-link:before,
+.bb-rl-container-inner .bbp-admin-links > a.bbp-topic-trash-link:before {
   content: "\e4a6";
 }
 
-.bb-rl-container-inner .bbp-admin-links > a.bbp-reply-spam-link:before, .bb-rl-container-inner .bbp-admin-links > a.bbp-topic-spam-link:before {
+.forum-dropdown .bbp-admin-links > a.bbp-reply-spam-link:before, .forum-dropdown .bbp-admin-links > a.bbp-topic-spam-link:before,
+.bb-rl-container-inner .bbp-admin-links > a.bbp-reply-spam-link:before,
+.bb-rl-container-inner .bbp-admin-links > a.bbp-topic-spam-link:before {
   content: "\e3de";
 }
 
+.forum-dropdown .bbp-admin-links > a:hover,
 .bb-rl-container-inner .bbp-admin-links > a:hover {
   background-color: var(--bb-rl-background-secondary-hover-color);
   color: var(--bb-rl-text-color);
