@@ -1172,6 +1172,10 @@ body.ld-in-focus-mode.admin-bar.bb-readylaunch-template {
   padding-bottom: var(--bb-rl-space-300);
 }
 
+body.ld-in-focus-mode .learndash-wrapper {
+  background-color: var(--bb-rl-background-color);
+}
+
 .bb-readylaunch-template {
   /* A sidebar-conditioned grid can be used on
     single profile or group screens. */
@@ -3434,6 +3438,11 @@ body.ld-in-focus-mode.admin-bar.bb-readylaunch-template {
   border-bottom-right-radius: var(--bb-rl-radius-md);
 }
 
+.bb-rl-quiz-entry .wpProQuiz_content .wpProQuiz_cloze input[type="text"] {
+  background-color: var(--bb-rl-background-color);
+  color: var(--bb-rl-text-color);
+}
+
 .bb-rl-lms-sidebar-data {
   padding: var(--bb-rl-space-200) 0;
 }
@@ -3735,6 +3744,10 @@ body.ld-in-focus-mode.admin-bar.bb-readylaunch-template {
   background: var(--bb-rl-background-brand-secondary-color);
 }
 
+.bb-rl-container .learndash_post_groups .learndash-wrapper .ld-progress .ld-progress-bar {
+  background-color: var(--bb-rl-background-brand-secondary-color);
+}
+
 .bb-rl-container .learndash_post_groups .learndash-wrapper .ld-progress .ld-progress-bar .ld-progress-bar-percentage {
   background: var(--bb-rl-background-brand-primary-color);
   height: var(--bb-rl-space-100);
@@ -3835,11 +3848,16 @@ body.ld-in-focus-mode.admin-bar.bb-readylaunch-template {
   border-color: var(--bb-rl-border-tertiary-color);
   border-left-color: var(--bb-rl-background-brand-primary-color);
   border-top-color: var(--bb-rl-background-brand-primary-color);
+  background-color: var(--bb-rl-background-color);
 }
 
 .bb-rl-container .learndash_post_groups .learndash-wrapper .ld-item-list .ld-item-list-item .ld-item-list-item-expanded .ld-progress {
   background-color: var(--bb-rl-background-secondary-color);
   margin-bottom: 0;
+}
+
+.bb-rl-container .learndash_post_groups .learndash-wrapper .ld-item-list .ld-item-list-item .ld-item-list-item-expanded:before {
+  background-color: var(--bb-rl-background-color);
 }
 
 .bb-rl-container .learndash_post_groups .learndash-wrapper .ld-item-list-item-preview .ld-status {
@@ -3861,7 +3879,8 @@ body.ld-in-focus-mode.admin-bar.bb-readylaunch-template {
   color: var(--bb-rl-text-positive-primary-color);
 }
 
-.bb-rl-container .learndash_post_groups + .comment-respond {
+.bb-rl-container .learndash_post_groups + .comment-respond,
+.bb-rl-container .learndash_post_groups + .comments-area {
   max-width: calc(1032px - var(--bb-rl-space-200) * 2);
   margin: 0 auto;
   width: 100%;
