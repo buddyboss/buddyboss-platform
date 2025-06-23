@@ -112,8 +112,7 @@ export const ReadyLaunchSettings = () => {
 	const [ activeTab, setActiveTab ] = useState( 'activation' );
 	const [ settings, setSettings ] = useState( {} );
 	const [ isLoading, setIsLoading ] = useState( true );
-	const [ isSaving, setIsSaving ] = useState( false );
-	const [ notification, setNotification ] = useState( null );
+	const [ toast, setToast ] = useState(null);
 	const [ initialLoad, setInitialLoad ] = useState(true);
 	const [ hasUserMadeChanges, setHasUserMadeChanges ] = useState(false);
 	const [ changedFields, setChangedFields ] = useState({});
@@ -173,94 +172,87 @@ export const ReadyLaunchSettings = () => {
 		fetchMenus().then(setMenus);
 	}, []);
 
-	// Initialize the debounced save function
 	useEffect(() => {
-		debouncedSaveRef.current = debounce((newSettings) => {
-			if (initialLoad || Object.keys(changedFields).length === 0) {
+		debouncedSaveRef.current = debounce((fieldsToSave) => {
+			if (Object.keys(fieldsToSave).length === 0) {
 				return;
 			}
 
-			setIsSaving(true);
-			saveSettings(changedFields)
+			saveSettings(fieldsToSave)
 				.then((data) => {
 					if (data) {
-						setNotification({
+						setToast({
 							status: 'success',
 							message: __('Settings saved.', 'buddyboss'),
 						});
 						setChangedFields({});
 					} else {
-						setNotification({
+						setToast({
 							status: 'error',
 							message: __('Error saving settings.', 'buddyboss'),
 						});
 					}
 				})
 				.catch(() => {
-					setNotification({
+					setToast({
 						status: 'error',
 						message: __('Error saving settings.', 'buddyboss'),
 					});
-				})
-				.finally(() => {
-					setIsSaving(false);
-					setTimeout(() => setNotification(null), 3000);
 				});
-		}, 1500);
-
-		// Initialize the debounced text change function
-		debouncedTextChangeRef.current = debounce((name, value, currentSettings) => {
-			if (currentSettings[name] === value) {
-				return;
-			}
-			setChangedFields(prev => ({
-				...prev,
-				[name]: value
-			}));
-			setHasUserMadeChanges(true);
 		}, 1000);
 
-		// Cleanup function
 		return () => {
 			if (debouncedSaveRef.current?.cancel) {
 				debouncedSaveRef.current.cancel();
 			}
-			if (debouncedTextChangeRef.current?.cancel) {
-				debouncedTextChangeRef.current.cancel();
-			}
 		};
-	}, [initialLoad, changedFields]); // Dependencies for debouncedSave
+	}, []);
+
+	useEffect(() => {
+		if (!initialLoad && Object.keys(changedFields).length > 0) {
+			debouncedSaveRef.current(changedFields);
+		}
+	}, [changedFields, initialLoad]);
+
+	useEffect(() => {
+		if (!toast) return;
+
+		if (toast.status === 'success') {
+			const timer = setTimeout(() => {
+				setToast(null);
+			}, 3000);
+			return () => clearTimeout(timer);
+		}
+	}, [toast]);
 
 	// Generic handler for simple value changes
 	const handleSettingChange = (name) => (value) => {
+		setToast({ status: 'saving', message: __('Saving changes...', 'buddyboss') });
 		setSettings(prevSettings => ({
 			...prevSettings,
 			[name]: value
 		}));
-		setChangedFields(prev => ({
-			...prev,
-			[name]: value
-		}));
+		setChangedFields(prev => ({ ...prev, [name]: value }));
 		setHasUserMadeChanges(true);
 	};
 
 	// Specific handler for text input changes
 	const handleTextChange = (name) => (value) => {
 		// Update visual state immediately
+		setToast({ status: 'saving', message: __('Saving changes...', 'buddyboss') });
 		setSettings(prevSettings => ({
 			...prevSettings,
 			[name]: value
 		}));
 
-		// Use the debounced function from ref
-		if (debouncedTextChangeRef.current) {
-			debouncedTextChangeRef.current(name, value, settings);
-		}
+		setChangedFields(prev => ({ ...prev, [name]: value }));
+		setHasUserMadeChanges(true);
 	};
 
 	// Handler for nested settings (for pages and sidebars)
 	const handleNestedSettingChange = (category, name) => (value) => {
 		setHasUserMadeChanges(true);
+		setToast({ status: 'saving', message: __('Saving changes...', 'buddyboss') });
 
 		if (category === 'bb_rl_side_menu') {
 			setSideMenuItems(prevItems => {
@@ -282,10 +274,7 @@ export const ReadyLaunchSettings = () => {
 					...prev,
 					bb_rl_side_menu
 				}));
-				setChangedFields(prev => ({
-					...prev,
-					bb_rl_side_menu
-				}));
+				setChangedFields(prev => ({ ...prev, bb_rl_side_menu }));
 
 				return updatedItems;
 			});
@@ -296,11 +285,7 @@ export const ReadyLaunchSettings = () => {
 					...prevSettings[category],
 					[name]: value
 				};
-				// Use the updatedCategory for both settings and changedFields
-				setChangedFields(prev => ({
-					...prev,
-					[category]: updatedCategory
-				}));
+				setChangedFields(prev => ({ ...prev, [category]: updatedCategory }));
 				return {
 					...prevSettings,
 					[category]: updatedCategory
@@ -308,13 +293,6 @@ export const ReadyLaunchSettings = () => {
 			});
 		}
 	};
-
-	// Effect to trigger save when changedFields updates
-	useEffect(() => {
-		if (!initialLoad && Object.keys(changedFields).length > 0 && debouncedSaveRef.current) {
-			debouncedSaveRef.current(settings);
-		}
-	}, [changedFields, initialLoad, settings]);
 
 	// Toggle section expansion
 	const toggleSection = (section) => {
@@ -337,25 +315,16 @@ export const ReadyLaunchSettings = () => {
 
 	const handleSaveLink = (linkData) => {
 		setHasUserMadeChanges(true); // Set flag when user makes a change
+		setToast({ status: 'saving', message: __('Saving changes...', 'buddyboss') });
 
+		let updatedLinks;
 		if (currentEditingLink) {
 			// Update existing link
-			const updatedLinks = settings.bb_rl_custom_links.map(link =>
+			updatedLinks = settings.bb_rl_custom_links.map(link =>
 				link.id === currentEditingLink.id
 					? { ...link, title: linkData.title, url: linkData.url }
 					: link
 			);
-
-			// Update both settings and changedFields
-			setSettings(prevSettings => ({
-				...prevSettings,
-				bb_rl_custom_links: updatedLinks
-			}));
-
-			setChangedFields(prev => ({
-				...prev,
-				bb_rl_custom_links: updatedLinks
-			}));
 		} else {
 			// Add new link
 			const newLink = {
@@ -363,26 +332,22 @@ export const ReadyLaunchSettings = () => {
 				title: linkData.title,
 				url: linkData.url
 			};
-
-			const updatedLinks = [...(settings.bb_rl_custom_links || []), newLink];
-
-			// Update both settings and changedFields
-			setSettings(prevSettings => ({
-				...prevSettings,
-				bb_rl_custom_links: updatedLinks
-			}));
-
-			setChangedFields(prev => ({
-				...prev,
-				bb_rl_custom_links: updatedLinks
-			}));
+			updatedLinks = [...(settings.bb_rl_custom_links || []), newLink];
 		}
+
+		// Update both settings and changedFields
+		setSettings(prevSettings => ({
+			...prevSettings,
+			bb_rl_custom_links: updatedLinks
+		}));
+		setChangedFields(prev => ({ ...prev, bb_rl_custom_links: updatedLinks }));
 
 		setIsLinkModalOpen(false);
 	};
 
 	const handleDeleteLink = (id) => {
 		setHasUserMadeChanges(true); // Set flag when user makes a change
+		setToast({ status: 'saving', message: __('Saving changes...', 'buddyboss') });
 
 		const updatedLinks = settings.bb_rl_custom_links ? settings.bb_rl_custom_links.filter(link => link.id !== id) : [];
 
@@ -391,27 +356,20 @@ export const ReadyLaunchSettings = () => {
 			// Ensure bb_rl_custom_links exists before filtering
 			bb_rl_custom_links: updatedLinks
 		}));
-
-		setChangedFields(prev => ({
-			...prev,
-			bb_rl_custom_links: updatedLinks
-		}));
+		setChangedFields(prev => ({ ...prev, bb_rl_custom_links: updatedLinks }));
 	};
 
 	// Specific handler for image uploads using WordPress media library
 	const handleImageUpload = (name) => (imageData) => {
 		setHasUserMadeChanges(true); // Set flag when user makes a change
+		setToast({ status: 'saving', message: __('Saving changes...', 'buddyboss') });
 
 		// Update both settings and changedFields
 		setSettings(prevSettings => ({
 			...prevSettings,
 			[name]: imageData
 		}));
-
-		setChangedFields(prev => ({
-			...prev,
-			[name]: imageData
-		}));
+		setChangedFields(prev => ({ ...prev, [name]: imageData }));
 	};
 
 	// Helper function to open the WordPress media library
@@ -579,6 +537,7 @@ export const ReadyLaunchSettings = () => {
 		}
 
 		setHasUserMadeChanges(true);
+		setToast({ status: 'saving', message: __('Saving changes...', 'buddyboss') });
 
 		// Reorder Side Menu Items
 		if (source.droppableId === 'sideMenuItems') {
@@ -607,10 +566,7 @@ export const ReadyLaunchSettings = () => {
 				...prev,
 				bb_rl_side_menu
 			}));
-			setChangedFields(prev => ({
-				...prev,
-				bb_rl_side_menu
-			}));
+			setChangedFields(prev => ({ ...prev, bb_rl_side_menu }));
 		}
 
 		// Reorder Custom Links
@@ -624,11 +580,7 @@ export const ReadyLaunchSettings = () => {
 				...prevSettings,
 				bb_rl_custom_links: items
 			}));
-
-			setChangedFields(prev => ({
-				...prev,
-				bb_rl_custom_links: items
-			}));
+			setChangedFields(prev => ({ ...prev, bb_rl_custom_links: items }));
 		}
 	};
 
@@ -1341,17 +1293,11 @@ export const ReadyLaunchSettings = () => {
 			</div>
 
 			<div className="bb-rl-toast-container">
-				{isSaving && (
+				{toast && (
 					<Toast
-						status="saving"
-						message={__('Saving changes...', 'buddyboss')}
-					/>
-				)}
-				{notification && (
-					<Toast
-						status={notification.status}
-						message={notification.message}
-						onDismiss={() => setNotification(null)}
+						status={toast.status}
+						message={toast.message}
+						onDismiss={() => setToast(null)}
 					/>
 				)}
 			</div>

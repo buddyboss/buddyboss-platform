@@ -2378,8 +2378,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					array(
 						'complete_profile' => true,
 						'connections'      => false,
-						'my_network'       => false,
-						'social'           => false,
+						'my_network'       => false
 					)
 				)
 			);
