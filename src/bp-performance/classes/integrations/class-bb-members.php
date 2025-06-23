@@ -391,7 +391,9 @@ class BB_Members extends Integration_Abstract {
 	 */
 	public function event_bp_core_delete_existing_avatar( $args ) {
 		$user_id = ! empty( $args['item_id'] ) ? absint( $args['item_id'] ) : 0;
-		$this->purge_item_cache_by_item_id( $user_id );
+		if ( ! empty( $user_id ) && isset( $args['object'] ) && 'user' === $args['object'] ) {
+			$this->purge_item_cache_by_item_id( $user_id );
+		}
 	}
 
 	/**
@@ -640,6 +642,11 @@ class BB_Members extends Integration_Abstract {
 	 * @param int $user_id User ID.
 	 */
 	private function purge_subscription_cache_by_user_id( $user_id ) {
+
+		if ( empty( $user_id ) ) {
+			return;
+		}
+
 		$args = array(
 			'user_id' => $user_id,
 			'fields'  => 'id',

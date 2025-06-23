@@ -53,6 +53,12 @@ class BB_Activity extends Integration_Abstract {
 			'bb_poll_after_remove_poll_options', // Remove poll options
 			'bb_poll_after_add_poll_vote',   // Add a poll vote
 			'bb_poll_after_remove_poll_votes', // Remove poll votes
+
+			'bb_activity_topic_relationship_after_add', // Add a activity topic relationship.
+			'bb_activity_topic_relationship_after_update', // Update a activity topic relationship If the same topic is already assigned
+			'bb_after_update_activity_topic_relationship', // Update a activity topic relationship.
+			'bb_after_delete_activity_topic_relationship', // Delete a activity topic relationship.
+			'bb_after_migrate_topic', // Migrate a activity topic relationship.
 		);
 
 		$this->purge_event( 'bp-activity', $purge_events );
@@ -112,6 +118,7 @@ class BB_Activity extends Integration_Abstract {
 			'bb_activity_topic_relationship_after_update' => 3, // Update a activity topic relationship If the same topic is already assigned
 			'bb_after_update_activity_topic_relationship' => 3, // Update a activity topic relationship.
 			'bb_after_delete_activity_topic_relationship' => 3, // Delete a activity topic relationship.
+			'bb_after_migrate_topic'                      => 6, // Migrate a activity topic relationship.
 
 			'updated_option' => 3, // When change/update the activity CPT settings.
 		);
@@ -679,5 +686,23 @@ class BB_Activity extends Integration_Abstract {
 		}
 
 		$this->purge_item_cache_by_item_id( $data['activity_id'] );
+	}
+
+	/**
+	 * When a activity topic relationship is migrated.
+	 *
+	 * @param object $topic        The topic object.
+	 * @param int    $old_topic_id The ID of the old topic.
+	 * @param int    $new_topic_id The ID of the new topic.
+	 * @param int    $item_id      The ID of the item.
+	 * @param string $item_type    The type of item.
+	 * @param array  $migrated_activity_ids The IDs of the activities.
+	 */
+	public function event_bb_after_migrate_topic( $topic, $old_topic_id, $new_topic_id, $item_id, $item_type, $migrated_activity_ids ) {
+		if ( empty( $migrated_activity_ids ) ) {
+			return;
+		}
+
+		$this->purge_item_cache_by_item_ids( $migrated_activity_ids );
 	}
 }
