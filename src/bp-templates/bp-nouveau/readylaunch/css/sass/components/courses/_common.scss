@@ -777,3 +777,7 @@ body.ld-in-focus-mode.admin-bar.bb-readylaunch-template {
 		padding-bottom: var(--bb-rl-space-300);
 	}
 }
+
+body.ld-in-focus-mode .learndash-wrapper {
+	background-color: var(--bb-rl-background-color);
+}

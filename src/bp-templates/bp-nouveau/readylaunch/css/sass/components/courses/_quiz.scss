@@ -695,4 +695,9 @@
 			}
 		}
 	}
+
+	.wpProQuiz_content .wpProQuiz_cloze input[type="text"] {
+		background-color: var(--bb-rl-background-color);
+		color: var(--bb-rl-text-color);
+	}
 }
