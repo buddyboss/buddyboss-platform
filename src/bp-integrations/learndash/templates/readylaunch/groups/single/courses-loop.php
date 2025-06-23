@@ -2,8 +2,7 @@
 
 $is_enrolled            = false;
 $lesson_list            = learndash_get_lesson_list( get_the_ID(), array( 'num' => - 1 ) );
-$lesson_count           = array_column( $lesson_list, 'post' );
-$lessons_count          = ! empty( $lesson_count ) ? count( $lesson_count ) : 0;
+$lessons_count          = ! empty( $lesson_list ) ? count( $lesson_list ) : 0;
 $current_user_id        = get_current_user_id();
 $access_list            = learndash_get_course_meta_setting( $post->ID, 'course_access_list' );
 $admin_enrolled         = LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_General_Admin_User', 'courses_autoenroll_admin_users' );
