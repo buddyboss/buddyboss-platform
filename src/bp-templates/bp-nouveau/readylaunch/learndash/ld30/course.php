@@ -733,7 +733,7 @@ $course_video_duration = get_post_meta( $course_id, '_buddyboss_lms_course_video
 					</div>
 
 					<?php
-					if ( ! $formatted_duration ) {
+					if ( ! $formatted_duration && isset( $course_settings['course_disable_lesson_progression'] ) ) {
 						$progression_text = $course_settings['course_disable_lesson_progression'] ? __( 'Free form', 'buddyboss' ) : __( 'Linear', 'buddyboss' );
 						?>
 						<div class="bb-rl-course-details-item">
