@@ -256,7 +256,8 @@
   border-radius: 50%;
 }
 
-.bb-rl-course-summary-instructor .bb-rl-author-name a {
+.bb-rl-course-summary-instructor .bb-rl-author-name a,
+.bb-rl-course-summary-instructor span.bb-rl-author-name {
   font-size: 14px;
   font-weight: 600;
   line-height: 22px;

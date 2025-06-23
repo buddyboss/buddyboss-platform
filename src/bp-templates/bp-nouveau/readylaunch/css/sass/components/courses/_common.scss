@@ -80,7 +80,8 @@
 		border-radius: 50%;
 	}
 
-	.bb-rl-author-name a {
+	.bb-rl-author-name a,
+	span.bb-rl-author-name {
 
 		@include bb-rl-label-heading-md-bold;
 		color: var(--bb-rl-text-color);
