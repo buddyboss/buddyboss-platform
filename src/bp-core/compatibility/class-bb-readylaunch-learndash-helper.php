@@ -106,6 +106,21 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 		 * @return string Modified template path
 		 */
 		public function bb_rl_override_learndash_template_path( $filepath, $name, $args, $echo, $return_file_path ) {
+			if (
+				bp_is_active( 'groups' ) &&
+				bp_is_group_single() &&
+				'courses' === bp_current_action()
+			) {
+				return $filepath;
+			}
+
+			if (
+				bp_is_user() &&
+				'my-courses' === bp_current_action()
+			) {
+				return $filepath;
+			}
+
 			// Map special LearnDash template names to ReadyLaunch template paths.
 			$special_templates = array(
 				'lesson/partials/row.php'  => 'learndash/ld30/lesson/partials/row.php',
