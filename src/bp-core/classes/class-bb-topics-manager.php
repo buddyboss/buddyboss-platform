@@ -1939,7 +1939,7 @@ class BB_Topics_Manager {
 		 * Fires after a topic is migrated.
 		 *
 		 * @since BuddyBoss 2.8.80
-		 * @since BuddyBoss [BBVERSION] Added $migrated_activity_ids parameter.
+		 * @since BuddyBoss 2.8.90 Added $migrated_activity_ids parameter.
 		 *
 		 * @param array  $get_topic             The new topic.
 		 * @param int    $topic_id              The ID of the old topic.
