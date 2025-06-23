@@ -45,12 +45,11 @@ $lessons       = learndash_get_course_lessons_list( $course_id );
 $lesson_count  = array_column( $lessons, 'post' );
 $lessons_count = ! empty( $lesson_count ) ? count( $lesson_count ) : 0;
 
-// Temporarily override the content visibility filter for excerpt retrieval.
-add_filter( 'learndash_template_content_on_listing_is_hidden', '__return_false', 10, 2 );
-$course_excerpt = get_the_excerpt( $course_id );
-remove_filter( 'learndash_template_content_on_listing_is_hidden', '__return_false', 10, 2 );
-
-$course_excerpt_in_listing = wp_trim_words( $course_excerpt, 10, '...' );
+$course_excerpt            = get_the_excerpt( $course_id );
+$course_excerpt_in_listing = '';
+if ( ! empty( $course_excerpt ) ) {
+	$course_excerpt_in_listing = wp_trim_words( $course_excerpt, 10, '...' );
+}
 
 $resume_link = get_permalink( $course_id );
 if ( $is_enrolled ) {
