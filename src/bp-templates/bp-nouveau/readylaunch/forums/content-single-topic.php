@@ -29,14 +29,15 @@
 
 				<?php endif; ?>
 
-				<?php if ( bbp_has_replies() ) : ?>
+				<div class="bb-rl-forums-content-wrapper">
+					<?php if ( bbp_has_replies() ) : ?>
 
-					<?php bbp_get_template_part( 'loop', 'replies' ); ?>
+						<?php bbp_get_template_part( 'loop', 'replies' ); ?>
 
-				<?php endif; ?>
+					<?php endif; ?>
 
-				<?php bbp_get_template_part( 'form', 'reply' ); ?>
-
+					<?php bbp_get_template_part( 'form', 'reply' ); ?>
+				</div>
 			<?php endif; ?>
 
 			<?php do_action( 'bbp_template_after_single_topic' ); ?>

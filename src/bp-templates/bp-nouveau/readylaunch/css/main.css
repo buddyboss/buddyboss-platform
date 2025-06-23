@@ -3318,6 +3318,7 @@ button[data-balloon] {
 
 .activity .bp-feedback .bp-icon,
 .single-headers .bp-feedback .bp-icon,
+.bbp-no-reply .bp-feedback .bp-icon,
 .bp-invites-feedback .bp-feedback .bp-icon {
   line-height: 1;
   margin-right: 6px;
@@ -3325,6 +3326,7 @@ button[data-balloon] {
 
 .activity .bp-feedback .bp-icon::before,
 .single-headers .bp-feedback .bp-icon::before,
+.bbp-no-reply .bp-feedback .bp-icon::before,
 .bp-invites-feedback .bp-feedback .bp-icon::before {
   content: "";
   font-weight: 500;
@@ -3336,6 +3338,7 @@ button[data-balloon] {
 
 .activity .bp-feedback.info,
 .single-headers .bp-feedback.info,
+.bbp-no-reply .bp-feedback.info,
 .bp-invites-feedback .bp-feedback.info {
   background-color: var(--bb-rl-background-brand-secondary-color);
   border-color: var(--bb-rl-border-brand-primary-color);
@@ -3343,18 +3346,21 @@ button[data-balloon] {
 
 .activity .bp-feedback.info > [class*="bb-icons"],
 .single-headers .bp-feedback.info > [class*="bb-icons"],
+.bbp-no-reply .bp-feedback.info > [class*="bb-icons"],
 .bp-invites-feedback .bp-feedback.info > [class*="bb-icons"] {
   color: var(--bb-rl-icon-primary-color);
 }
 
 .activity .bp-feedback.info > [class*="bb-icons"]:before,
 .single-headers .bp-feedback.info > [class*="bb-icons"]:before,
+.bbp-no-reply .bp-feedback.info > [class*="bb-icons"]:before,
 .bp-invites-feedback .bp-feedback.info > [class*="bb-icons"]:before {
   content: "\e4e2";
 }
 
 .activity .bp-feedback.info .bp-icon::before,
 .single-headers .bp-feedback.info .bp-icon::before,
+.bbp-no-reply .bp-feedback.info .bp-icon::before,
 .bp-invites-feedback .bp-feedback.info .bp-icon::before {
   content: "\e2ce";
   color: var(--bb-rl-icon-brand-primary-color);
@@ -3362,6 +3368,7 @@ button[data-balloon] {
 
 .activity .bp-feedback.success,
 .single-headers .bp-feedback.success,
+.bbp-no-reply .bp-feedback.success,
 .bp-invites-feedback .bp-feedback.success {
   background-color: var(--bb-rl-background-positive-secondary-color);
   border-color: var(--bb-rl-border-positive-primary-color);
@@ -3369,18 +3376,21 @@ button[data-balloon] {
 
 .activity .bp-feedback.success > [class*="bb-icons"],
 .single-headers .bp-feedback.success > [class*="bb-icons"],
+.bbp-no-reply .bp-feedback.success > [class*="bb-icons"],
 .bp-invites-feedback .bp-feedback.success > [class*="bb-icons"] {
   color: var(--bb-rl-icon-positive-primary-color);
 }
 
 .activity .bp-feedback.success > [class*="bb-icons"]:before,
 .single-headers .bp-feedback.success > [class*="bb-icons"]:before,
+.bbp-no-reply .bp-feedback.success > [class*="bb-icons"]:before,
 .bp-invites-feedback .bp-feedback.success > [class*="bb-icons"]:before {
   content: "\e184";
 }
 
 .activity .bp-feedback.success .bp-icon::before,
 .single-headers .bp-feedback.success .bp-icon::before,
+.bbp-no-reply .bp-feedback.success .bp-icon::before,
 .bp-invites-feedback .bp-feedback.success .bp-icon::before {
   content: "\e184";
   color: var(--bb-rl-icon-positive-primary-color);
@@ -3388,6 +3398,7 @@ button[data-balloon] {
 
 .activity .bp-feedback.warning,
 .single-headers .bp-feedback.warning,
+.bbp-no-reply .bp-feedback.warning,
 .bp-invites-feedback .bp-feedback.warning {
   background-color: var(--bb-rl-background-warning-secondary-color);
   border-color: var(--bb-rl-border-warning-primary-color);
@@ -3395,18 +3406,21 @@ button[data-balloon] {
 
 .activity .bp-feedback.warning > [class*="bb-icons"],
 .single-headers .bp-feedback.warning > [class*="bb-icons"],
+.bbp-no-reply .bp-feedback.warning > [class*="bb-icons"],
 .bp-invites-feedback .bp-feedback.warning > [class*="bb-icons"] {
   color: var(--bb-rl-icon-warning-primary-color);
 }
 
 .activity .bp-feedback.warning > [class*="bb-icons"]:before,
 .single-headers .bp-feedback.warning > [class*="bb-icons"]:before,
+.bbp-no-reply .bp-feedback.warning > [class*="bb-icons"]:before,
 .bp-invites-feedback .bp-feedback.warning > [class*="bb-icons"]:before {
   content: "\e4e0";
 }
 
 .activity .bp-feedback.warning .bp-icon::before,
 .single-headers .bp-feedback.warning .bp-icon::before,
+.bbp-no-reply .bp-feedback.warning .bp-icon::before,
 .bp-invites-feedback .bp-feedback.warning .bp-icon::before {
   content: "\e4e0";
   color: var(--bb-rl-icon-warning-primary-color);
@@ -3414,6 +3428,7 @@ button[data-balloon] {
 
 .activity .bp-feedback.error,
 .single-headers .bp-feedback.error,
+.bbp-no-reply .bp-feedback.error,
 .bp-invites-feedback .bp-feedback.error {
   background-color: var(--bb-rl-background-danger-secondary-color);
   border-color: var(--bb-rl-border-danger-primary-color);
@@ -3421,18 +3436,21 @@ button[data-balloon] {
 
 .activity .bp-feedback.error > [class*="bb-icons"],
 .single-headers .bp-feedback.error > [class*="bb-icons"],
+.bbp-no-reply .bp-feedback.error > [class*="bb-icons"],
 .bp-invites-feedback .bp-feedback.error > [class*="bb-icons"] {
   color: var(--bb-rl-text-danger-primary-color);
 }
 
 .activity .bp-feedback.error > [class*="bb-icons"]:before,
 .single-headers .bp-feedback.error > [class*="bb-icons"]:before,
+.bbp-no-reply .bp-feedback.error > [class*="bb-icons"]:before,
 .bp-invites-feedback .bp-feedback.error > [class*="bb-icons"]:before {
   content: "\e4e2";
 }
 
 .activity .bp-feedback.error .bp-icon::before,
 .single-headers .bp-feedback.error .bp-icon::before,
+.bbp-no-reply .bp-feedback.error .bp-icon::before,
 .bp-invites-feedback .bp-feedback.error .bp-icon::before {
   content: "\e4e2";
   color: var(--bb-rl-icon-danger-primary-color);
@@ -3440,6 +3458,7 @@ button[data-balloon] {
 
 .activity .bp-feedback--alt,
 .single-headers .bp-feedback--alt,
+.bbp-no-reply .bp-feedback--alt,
 .bp-invites-feedback .bp-feedback--alt {
   padding: var(--bb-rl-space-50) var(--bb-rl-space-100);
   font-weight: 400;
@@ -3447,6 +3466,7 @@ button[data-balloon] {
 
 .activity .bp-feedback--alt.info,
 .single-headers .bp-feedback--alt.info,
+.bbp-no-reply .bp-feedback--alt.info,
 .bp-invites-feedback .bp-feedback--alt.info {
   background-color: var(--bb-rl-background-brand-secondary-color);
   border-color: var(--bb-rl-border-brand-secondary-color);
@@ -3454,12 +3474,14 @@ button[data-balloon] {
 
 .activity .bp-feedback--alt.info > [class*="bb-icons"],
 .single-headers .bp-feedback--alt.info > [class*="bb-icons"],
+.bbp-no-reply .bp-feedback--alt.info > [class*="bb-icons"],
 .bp-invites-feedback .bp-feedback--alt.info > [class*="bb-icons"] {
   color: var(--bb-rl-border-brand-secondary-color);
 }
 
 .activity .bp-feedback--alt.success,
 .single-headers .bp-feedback--alt.success,
+.bbp-no-reply .bp-feedback--alt.success,
 .bp-invites-feedback .bp-feedback--alt.success {
   background-color: var(--bb-rl-background-positive-secondary-color);
   border-color: var(--bb-rl-border-positive-secondary-color);
@@ -3467,12 +3489,14 @@ button[data-balloon] {
 
 .activity .bp-feedback--alt.success > [class*="bb-icons"],
 .single-headers .bp-feedback--alt.success > [class*="bb-icons"],
+.bbp-no-reply .bp-feedback--alt.success > [class*="bb-icons"],
 .bp-invites-feedback .bp-feedback--alt.success > [class*="bb-icons"] {
   color: var(--bb-rl-border-positive-secondary-color);
 }
 
 .activity .bp-feedback--alt.warning,
 .single-headers .bp-feedback--alt.warning,
+.bbp-no-reply .bp-feedback--alt.warning,
 .bp-invites-feedback .bp-feedback--alt.warning {
   background-color: var(--bb-rl-background-warning-secondary-color);
   border-color: var(--bb-rl-border-warning-secondary-color);
@@ -3480,12 +3504,14 @@ button[data-balloon] {
 
 .activity .bp-feedback--alt.warning > [class*="bb-icons"],
 .single-headers .bp-feedback--alt.warning > [class*="bb-icons"],
+.bbp-no-reply .bp-feedback--alt.warning > [class*="bb-icons"],
 .bp-invites-feedback .bp-feedback--alt.warning > [class*="bb-icons"] {
   color: var(--bb-rl-border-warning-secondary-color);
 }
 
 .activity .bp-feedback--alt.error,
 .single-headers .bp-feedback--alt.error,
+.bbp-no-reply .bp-feedback--alt.error,
 .bp-invites-feedback .bp-feedback--alt.error {
   background-color: var(--bb-rl-background-danger-secondary-color);
   border-color: var(--bb-rl-border-danger-secondary-color);
@@ -3493,12 +3519,14 @@ button[data-balloon] {
 
 .activity .bp-feedback--alt.error > [class*="bb-icons"],
 .single-headers .bp-feedback--alt.error > [class*="bb-icons"],
+.bbp-no-reply .bp-feedback--alt.error > [class*="bb-icons"],
 .bp-invites-feedback .bp-feedback--alt.error > [class*="bb-icons"] {
   color: var(--bb-rl-border-danger-secondary-color);
 }
 
 .activity .bp-feedback--plain,
 .single-headers .bp-feedback--plain,
+.bbp-no-reply .bp-feedback--plain,
 .bp-invites-feedback .bp-feedback--plain {
   display: block;
   border-width: 0;
@@ -3512,6 +3540,7 @@ button[data-balloon] {
 
 .activity .bp-feedback--plain.info,
 .single-headers .bp-feedback--plain.info,
+.bbp-no-reply .bp-feedback--plain.info,
 .bp-invites-feedback .bp-feedback--plain.info {
   background-color: var(--bb-rl-background-brand-secondary-color);
   border-color: var(--bb-rl-border-brand-secondary-color);
@@ -3519,6 +3548,7 @@ button[data-balloon] {
 
 .activity .bp-feedback--plain.success,
 .single-headers .bp-feedback--plain.success,
+.bbp-no-reply .bp-feedback--plain.success,
 .bp-invites-feedback .bp-feedback--plain.success {
   background-color: var(--bb-rl-background-positive-secondary-color);
   border-color: var(--bb-rl-border-positive-secondary-color);
@@ -3526,6 +3556,7 @@ button[data-balloon] {
 
 .activity .bp-feedback--plain.warning,
 .single-headers .bp-feedback--plain.warning,
+.bbp-no-reply .bp-feedback--plain.warning,
 .bp-invites-feedback .bp-feedback--plain.warning {
   background-color: var(--bb-rl-background-warning-secondary-color);
   border-color: var(--bb-rl-border-warning-secondary-color);
@@ -3533,6 +3564,7 @@ button[data-balloon] {
 
 .activity .bp-feedback--plain.error,
 .single-headers .bp-feedback--plain.error,
+.bbp-no-reply .bp-feedback--plain.error,
 .bp-invites-feedback .bp-feedback--plain.error {
   background-color: var(--bb-rl-background-danger-secondary-color);
   border-color: var(--bb-rl-border-danger-secondary-color);

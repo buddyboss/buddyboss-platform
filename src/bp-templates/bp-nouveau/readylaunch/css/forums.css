@@ -2081,6 +2081,20 @@
   font-size: 0;
 }
 
+.bb-rl-forums-content-wrapper:has(.bbp-no-reply) {
+  display: flex;
+  flex-direction: column;
+}
+
+.bb-rl-forums-content-wrapper:has(.bbp-no-reply) .bbp-no-reply {
+  order: 1;
+  margin-bottom: var(--bb-rl-space-100);
+}
+
+.bb-rl-forums-content-wrapper:has(.bbp-no-reply) .bb-rl-single-forum-list {
+  order: 2;
+}
+
 .bb-rl-container-inner .bbp-admin-links > a {
   display: block;
   font-size: var(--bb-rl-font-size-sm);

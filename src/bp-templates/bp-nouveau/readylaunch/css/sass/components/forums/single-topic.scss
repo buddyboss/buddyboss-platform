@@ -405,6 +405,21 @@
     }
 }
 
+.bb-rl-forums-content-wrapper:has(.bbp-no-reply) {
+    display: flex;
+    flex-direction: column;
+
+    .bbp-no-reply {
+        order: 1;
+        margin-bottom: var(--bb-rl-space-100);
+    }
+
+    .bb-rl-single-forum-list {
+        order: 2;
+    }
+
+}
+
 .bb-rl-container-inner .bbp-admin-links {
 
     > a {
