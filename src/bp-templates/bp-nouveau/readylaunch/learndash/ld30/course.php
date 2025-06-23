@@ -732,7 +732,9 @@ $course_video_duration = get_post_meta( $course_id, '_buddyboss_lms_course_video
 								<?php esc_html_e( 'Update', 'buddyboss' ); ?>
 							</div>
 							<div class="bb-rl-course-details-value">
-								<?php echo esc_html( get_the_modified_date() ); ?>
+								<?php
+								echo esc_html( $bb_rl_ld_helper->bb_rl_get_course_latest_modified_date( $course_id, 'default' ) );
+								?>
 							</div>
 						</div>
 					</div>

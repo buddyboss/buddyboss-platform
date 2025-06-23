@@ -1842,6 +1842,108 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 			</article>
 			<?php
 		}
+
+		/**
+		 * Get the latest modified date for all course content types.
+		 *
+		 * This function retrieves the modified date for:
+		 * - Course itself.
+		 * - All lessons in the course.
+		 * - All topics under each lesson.
+		 * - All quizzes (course-level, lesson-level, and topic-level).
+		 *
+		 * @param int    $course_id The course ID.
+		 * @param string $format    Optional. Date format. Defaults to WordPress date format option. Use 'raw' for MySQL format.
+		 *
+		 * @return string|false The latest modified date formatted according to WordPress options or false if no content found.
+		 */
+		public function bb_rl_get_course_latest_modified_date( $course_id, $format = '' ) {
+			// Validate course ID.
+			$course_id = absint( $course_id );
+			if ( empty( $course_id ) ) {
+				return false;
+			}
+
+			// Verify the course exists.
+			$course_post = get_post( $course_id );
+			if ( ! $course_post || learndash_get_post_type_slug( 'course' ) !== $course_post->post_type ) {
+				return false;
+			}
+
+			$dates = array();
+
+			// Add course modified date.
+			$dates[] = get_post_field( 'post_modified', $course_id );
+
+			// Get all lessons in the course.
+			$lessons = learndash_get_course_lessons_list( $course_id, null, array( 'num' => 0 ) );
+
+			if ( ! empty( $lessons ) && is_array( $lessons ) ) {
+				foreach ( $lessons as $lesson ) {
+					// Add lesson modified date.
+					$dates[] = get_post_field( 'post_modified', $lesson['post']->ID );
+
+					// Get topics under this lesson.
+					$topics = learndash_get_topic_list( $lesson['post']->ID, $course_id );
+
+					if ( ! empty( $topics ) && is_array( $topics ) ) {
+						foreach ( $topics as $topic ) {
+							// Add topic modified date.
+							$dates[] = get_post_field( 'post_modified', $topic->ID );
+
+							// Get quizzes under this topic.
+							$topic_quizzes = learndash_get_lesson_quiz_list( $topic->ID, null, $course_id );
+
+							if ( ! empty( $topic_quizzes ) && is_array( $topic_quizzes ) ) {
+								foreach ( $topic_quizzes as $quiz ) {
+									$dates[] = get_post_field( 'post_modified', $quiz['post']->ID );
+								}
+							}
+						}
+					}
+
+					// Get quizzes under this lesson.
+					$lesson_quizzes = learndash_get_lesson_quiz_list( $lesson['post']->ID, null, $course_id );
+
+					if ( ! empty( $lesson_quizzes ) && is_array( $lesson_quizzes ) ) {
+						foreach ( $lesson_quizzes as $quiz ) {
+							$dates[] = get_post_field( 'post_modified', $quiz['post']->ID );
+						}
+					}
+				}
+			}
+
+			// Get course-level quizzes.
+			$course_quizzes = learndash_get_course_quiz_list( $course_id );
+
+			if ( ! empty( $course_quizzes ) && is_array( $course_quizzes ) ) {
+				foreach ( $course_quizzes as $quiz ) {
+					$dates[] = get_post_field( 'post_modified', $quiz['post']->ID );
+				}
+			}
+
+			// Filter out empty dates and return the latest.
+			$dates = array_filter( $dates );
+
+			if ( empty( $dates ) ) {
+				return false;
+			}
+
+			$latest_date = max( $dates );
+
+			// Return raw date if format is 'raw' or empty.
+			if ( 'raw' === $format || empty( $format ) ) {
+				return $latest_date;
+			}
+
+			// Use WordPress date format if no custom format provided.
+			if ( 'default' === $format ) {
+				$format = get_option( 'date_format' );
+			}
+
+			// Format the date according to WordPress standards.
+			return date_i18n( $format, strtotime( $latest_date ) );
+		}
 	}
 
 
