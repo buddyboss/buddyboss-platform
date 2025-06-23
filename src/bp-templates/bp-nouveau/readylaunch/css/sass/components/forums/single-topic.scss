@@ -265,10 +265,22 @@
         }
     }
 
-    > li:last-child > .bbp-threaded-replies > li:last-child > .bb-rl-forum-reply-list-item {
-        padding-bottom: 0;
-        margin-bottom: 0;
-        border-bottom: 0;
+    > li:last-child {
+
+        > .bbp-threaded-replies > li:last-child > .bb-rl-forum-reply-list-item {
+            padding-bottom: 0;
+            margin-bottom: 0;
+            border-bottom: 0;
+        }
+
+        &:not(:has(.bbp-threaded-replies)) {
+
+            > .bb-rl-forum-reply-list-item {
+                padding-bottom: 0;
+                margin-bottom: 0;
+                border-bottom: 0;
+            }
+        }
     }
 
     .bb-rl-forum-reply-list-item:hover {
