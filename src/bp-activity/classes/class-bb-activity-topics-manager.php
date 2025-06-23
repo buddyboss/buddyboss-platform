@@ -562,6 +562,18 @@ class BB_Activity_Topics_Manager {
 		 */
 		do_action( 'bb_before_delete_activity_topic_relationship', $args );
 
+		$get_activity_relationship = $this->bb_get_activity_topic_relationship(
+			array(
+				'topic_id'  => $r['topic_id'],
+				'item_id'   => $r['item_id'],
+				'component' => $r['item_type'],
+			)
+		);
+
+		if ( empty( $get_activity_relationship ) ) {
+			return false;
+		}
+
 		$deleted = $this->wpdb->delete(
 			$this->activity_topic_rel_table,
 			array(
@@ -651,7 +663,36 @@ class BB_Activity_Topics_Manager {
 		$where_sql  = implode( ' AND ', $where_clauses );
 		$table_name = $this->activity_topic_rel_table;
 
-		// Use prepare with proper placeholders for the dynamic WHERE conditions.
+		// Handle dynamic fields.
+		if ( ! empty( $r['fields'] ) ) {
+			// Validate and sanitize fields.
+			$allowed_fields   = array( 'id', 'topic_id', 'activity_id', 'component', 'item_id', 'date_created', 'date_updated' );
+			$requested_fields = explode( ',', $r['fields'] );
+			$valid_fields     = array();
+
+			if ( ! empty( $requested_fields ) ) {
+				foreach ( $requested_fields as $field ) {
+					$field = trim( $field );
+					if ( in_array( $field, $allowed_fields, true ) ) {
+						$valid_fields[] = $field;
+					}
+				}
+			}
+
+			if ( ! empty( $valid_fields ) ) {
+				$select_fields = implode( ', ', $valid_fields );
+				$query         = "SELECT $select_fields FROM `$table_name` WHERE $where_sql";
+
+				// If only one field requested, return as column.
+				if ( 1 === count( $valid_fields ) ) {
+					return $this->wpdb->get_col( $this->wpdb->prepare( $query, $where_values ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+				}
+
+				// Multiple fields, return as results.
+				return $this->wpdb->get_results( $this->wpdb->prepare( $query, $where_values ), ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+			}
+		}
+
 		$query = "SELECT * FROM `$table_name` WHERE $where_sql";
 		return $this->wpdb->get_row( $this->wpdb->prepare( $query, $where_values ), ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 	}

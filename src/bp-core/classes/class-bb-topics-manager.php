@@ -729,9 +729,10 @@ class BB_Topics_Manager {
 								'topic_id'  => $previous_topic_id,
 								'item_id'   => $item_id,
 								'component' => $item_type,
+								'fields'    => 'activity_id',
 							)
 						);
-						if ( $get_previous_activity_relationship ) {
+						if ( ! empty( $get_previous_activity_relationship ) ) {
 							bb_activity_topics_manager_instance()->bb_update_activity_topic_relationship(
 								array(
 									'topic_id'    => $new_topic_id,
@@ -1925,18 +1926,29 @@ class BB_Topics_Manager {
 			);
 		}
 
+		$migrated_activity_ids = bb_activity_topics_manager_instance()->bb_get_activity_topic_relationship(
+			array(
+				'topic_id'  => $new_topic_id,
+				'item_id'   => $item_id,
+				'component' => $item_type,
+				'fields'    => 'activity_id',
+			)
+		);
+
 		/**
 		 * Fires after a topic is migrated.
 		 *
 		 * @since BuddyBoss 2.8.80
+		 * @since BuddyBoss [BBVERSION] Added $migrated_activity_ids parameter.
 		 *
-		 * @param array  $get_topic    The new topic.
-		 * @param int    $topic_id     The ID of the old topic.
-		 * @param int    $new_topic_id The ID of the new topic.
-		 * @param int    $item_id      The ID of the item.
-		 * @param string $item_type    The type of item.
+		 * @param array  $get_topic             The new topic.
+		 * @param int    $topic_id              The ID of the old topic.
+		 * @param int    $new_topic_id          The ID of the new topic.
+		 * @param int    $item_id               The ID of the item.
+		 * @param string $item_type             The type of item.
+		 * @param array  $migrated_activity_ids The IDs of the activities.
 		 */
-		do_action( 'bb_after_migrate_topic', $get_topic, $topic_id, $new_topic_id, $item_id, $item_type );
+		do_action( 'bb_after_migrate_topic', $get_topic, $topic_id, $new_topic_id, $item_id, $item_type, $migrated_activity_ids );
 
 		return $get_topic;
 	}
