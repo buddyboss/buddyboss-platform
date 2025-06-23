@@ -1690,6 +1690,23 @@
   margin: 0 4px;
 }
 
+.bb-rl-forum-form .bb-rl-forum-anonymous-form {
+  margin-top: var(--bb-rl-space-200);
+  border-bottom: 1px solid var(--bb-rl-border-secondary-color);
+  padding-bottom: var(--bb-rl-space-200);
+}
+
+.bb-rl-forum-form .bb-rl-forum-anonymous-form p {
+  margin-bottom: var(--bb-rl-space-100);
+}
+
+.bb-rl-forum-form .bb-rl-forum-anonymous-form p label {
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: var(--bb-rl-space-100);
+  line-height: 1.2;
+}
+
 .bb-rl-forum-form .bbp-form #bbp_reply_submit,
 .bb-rl-forum-form.media-uploading .bbp-form #bbp_reply_submit {
   opacity: .4;

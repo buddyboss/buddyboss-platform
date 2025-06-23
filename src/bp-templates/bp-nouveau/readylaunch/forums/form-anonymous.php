@@ -12,7 +12,7 @@
 
 	<?php do_action( 'bbp_theme_before_anonymous_form' ); ?>
 
-	<fieldset class="bbp-form">
+	<fieldset class="bbp-form bb-rl-forum-anonymous-form">
 		<legend><?php ( bbp_is_topic_edit() || bbp_is_reply_edit() ) ? _e( 'Author Information', 'buddyboss' ) : _e( 'Your information:', 'buddyboss' ); ?></legend>
 
 		<?php do_action( 'bbp_theme_anonymous_form_extras_top' ); ?>

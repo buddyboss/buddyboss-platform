@@ -638,6 +638,24 @@
 			}
 		}
 	}
+
+	.bb-rl-forum-anonymous-form {
+		margin-top: var(--bb-rl-space-200);
+		border-bottom: 1px solid var(--bb-rl-border-secondary-color);
+		padding-bottom: var(--bb-rl-space-200);
+
+		p {
+			margin-bottom: var(--bb-rl-space-100);
+
+			label {
+				font-size: 14px;
+				font-weight: 500;
+				margin-bottom: var(--bb-rl-space-100);
+				line-height: 1.2;
+			}
+		}
+		
+	}
 }
 
 .bb-rl-forum-form,
