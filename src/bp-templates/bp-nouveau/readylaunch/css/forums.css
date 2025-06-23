@@ -2113,10 +2113,16 @@
 
 .bb-rl-single-forum-list .bb_more_options .bbp-reply-to-link:before,
 .bb-rl-single-forum-list .bb_more_options .bbp-topic-reply-link:before {
+  all: revert;
   content: "\e03a";
   color: var(--bb-rl-icon-secondary-color);
   font-family: bb-icons-rl;
   font-size: 24px;
+}
+
+.bb-rl-single-forum-list .bb_more_options .bbp-reply-to-link:after,
+.bb-rl-single-forum-list .bb_more_options .bbp-topic-reply-link:after {
+  all: revert;
 }
 
 .bb-rl-single-forum-list .bb_more_options .bb_more_options_action i {

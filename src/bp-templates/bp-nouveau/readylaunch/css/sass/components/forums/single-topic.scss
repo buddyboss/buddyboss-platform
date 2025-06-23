@@ -395,10 +395,15 @@
             margin-right: var(--bb-rl-space-100);
 
             &:before {
+                all: revert;
                 content: "\e03a";
                 color: var(--bb-rl-icon-secondary-color);
                 font-family: bb-icons-rl;
                 font-size: 24px;
+            }
+
+            &:after {
+                all: revert;
             }
         }
 
