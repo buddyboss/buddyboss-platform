@@ -37,14 +37,14 @@ class OptionClearCache {
 	}
 
 	/**
-	 * Initialization of class.
+	 * Initialisation of class.
 	 */
 	public function initialize() {
 		add_action( 'updated_option', array( $this, 'purge_component_cache' ), 10, 3 );
 	}
 
 	/**
-	 * Purge component cache by component setting enabled or disable.
+	 * Purge component cache by setting component enabled or disabled.
 	 *
 	 * @param string $option    Option Name.
 	 * @param string $old_value Option Old Value.
@@ -55,15 +55,15 @@ class OptionClearCache {
 		 * Filter to determine if components should be purged based on option changes.
 		 *
 		 * This filter allows developers to control whether cache purging should occur
-		 * when specific options are updated. Return true or an array of components
+		 * When specific options are updated. Return true or an array of components
 		 * to trigger the purge process.
 		 *
-		 * @param bool $do_purge_components Boolean flag to control purge behavior.
+		 * @param bool $do_purge_components Boolean flag to control purge behaviour.
 		 * @param string $option The option name being updated.
 		 * @param mixed $old_value The old option value.
 		 * @param mixed $value The new option value.
 		 *
-		 * @return bool|array               Boolean to control purge behavior or array of components to purge.
+		 * @return bool|array               Boolean to control purge behaviour or array of components to purge.
 		 */
 		$do_purge_components = apply_filters( 'performance_purge_components_flag', false, $option, $old_value, $value );
 
@@ -76,11 +76,11 @@ class OptionClearCache {
 		 *
 		 * This variable typically holds the identifiers or names of components
 		 * (e.g., cache keys, module instances, or system components) that need
-		 * to be reset, reinitialized, or removed during a cleanup or purge process.
+		 * to be reset, reinitialised, or removed during a cleanup or purge process.
 		 *
-		 * Usage and behavior depend on the context in which the variable is implemented,
+		 * Usage and behaviour depend on the context in which the variable is implemented,
 		 * such as a caching mechanism, a framework's lifecycle hooks, or other
-		 * system cleaning operations.
+		 * System cleaning operations.
 		 *
 		 * @param array $purge_components Purge components.
 		 * @param string $option Purge option.
@@ -96,7 +96,14 @@ class OptionClearCache {
 				Cache::instance()->purge_by_component( $purge_component );
 			}
 
-			Cache::instance()->purge_by_component( 'bbapp-deeplinking' );
+			/**
+			 * Fires after selected components have been purged or cleared.
+			 *
+			 * This variable is typically used in scenarios where specific components are flagged
+			 * for deletion, cleanup, or resetting processes. It can hold names, identifiers,
+			 * or references to these components based on the application context.
+			 */
+			do_action( 'performance_purge_components_after', $purge_components, $option, $old_value, $value );
 		}
 	}
 }
