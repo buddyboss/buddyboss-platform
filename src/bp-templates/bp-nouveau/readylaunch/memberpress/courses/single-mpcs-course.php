@@ -244,7 +244,7 @@ if ( is_user_logged_in() && ! empty( $memberships ) ) {
 	<div class="bb-rl-course-content">
 		<div class="bb-rl-course-content-inner">
 			<div class="bb-rl-course-content-panel">
-				<div class="bb-rl-course-content-module">
+				<div id="mpcs-main" class="bb-rl-course-content-module">
 					<?php
 					setup_postdata( $post->ID );
 					the_content();
