@@ -372,6 +372,13 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				bp_get_template_part( 'learndash/ld30/challenge-exam' );
 			} else {
 				the_content();
+
+				/**
+				* If comments are open or we have at least one comment, load up the comment template.
+				*/
+				if ( comments_open() || get_comments_number() ) :
+					comments_template();
+				endif;
 			}
 		}
 
