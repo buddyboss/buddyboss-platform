@@ -57,6 +57,11 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 2.8.90 =
+* Bug: Groups - Fixed an issue where deleting activity topics removed them from group-level topics
+* Bug: Groups - Fixed an issue where uploading default cover images slowed down sites with many group subscriptions
+* Bug: Notifications - Fixed an issue where user hover info was not displaying in notifications after sending a connection request
+
 = 2.8.80 =
 * New Feature! – Added Activity Topics for categorizing and filtering posts in activity feeds and groups
 * Bug: Activity - Fixed an issue where the activity feed showed duplicate job posts across multiple WPML site languages
