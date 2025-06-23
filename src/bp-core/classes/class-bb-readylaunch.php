@@ -347,6 +347,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			$is_ld_quiz_archive   = false;
 			$is_ld_assignment     = false;
 			$is_ld_exam           = false;
+			$is_ld_group_archive  = false;
 			if ( function_exists( 'learndash_get_post_type_slug' ) ) {
 				$is_ld_course_archive = is_post_type_archive( learndash_get_post_type_slug( 'course' ) );
 				$is_ld_topic_archive  = is_post_type_archive( learndash_get_post_type_slug( 'topic' ) );
@@ -354,13 +355,15 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				$is_ld_quiz_archive   = is_post_type_archive( learndash_get_post_type_slug( 'quiz' ) );
 				$is_ld_assignment     = is_singular( learndash_get_post_type_slug( 'assignment' ) );
 				$is_ld_exam           = is_singular( learndash_get_post_type_slug( 'exam' ) );
+				$is_ld_group_archive  = is_post_type_archive( learndash_get_post_type_slug( 'group' ) );
 			}
 			if ( $is_ld_course_archive ) {
 				bp_get_template_part( 'learndash/ld30/course-loop' );
 			} elseif (
 				$is_ld_topic_archive ||
 				$is_ld_lesson_archive ||
-				$is_ld_quiz_archive
+				$is_ld_quiz_archive ||
+				$is_ld_group_archive
 			) {
 				bp_get_template_part( 'learndash/ld30/default' );
 			} elseif ( $is_ld_assignment ) {
