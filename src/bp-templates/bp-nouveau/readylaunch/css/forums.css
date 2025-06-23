@@ -1959,7 +1959,7 @@
 }
 
 .bb-rl-single-forum-list > li > .bbp-threaded-replies li > .bb-rl-forum-reply-list-item {
-  padding: var(--bb-rl-space-100) var(--bb-rl-space-100) var(--bb-rl-space-200) var(--bb-rl-space-300);
+  padding: var(--bb-rl-space-100) var(--bb-rl-space-100) var(--bb-rl-space-200) var(--bb-rl-space-400);
 }
 
 .bb-rl-single-forum-list > li:last-child > .bbp-threaded-replies > li:last-child > .bb-rl-forum-reply-list-item {
