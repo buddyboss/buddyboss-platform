@@ -966,6 +966,7 @@
   font-family: bb-icons-rl;
   font-size: 16px;
   color: var(--bb-rl-icon-secondary-color);
+  margin: 0;
 }
 
 .bb-rl-course-content-inner .mpcs-section.mpcs-section-lessons .mpcs-section-header.active .mpcs-section-title .mpcs-section-title-text:before,
