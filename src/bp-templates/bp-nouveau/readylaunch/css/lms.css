@@ -456,6 +456,13 @@
   color: var(--bb-rl-text-color);
 }
 
+.bb-rl-course-card .bb-rl-instructor-item {
+  display: flex;
+  align-items: center;
+  gap: var(--bb-rl-space-100);
+  flex: 0 0 48%;
+}
+
 .bb-rl-course-card .bb-rl-course-card-popup {
   position: absolute;
   z-index: 99;
