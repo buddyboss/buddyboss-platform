@@ -18,9 +18,9 @@
 
 <?php if ( bbp_current_user_can_access_create_forum_form() ) : ?>
 
-	<div id="new-forum-<?php bbp_forum_id(); ?>" class="bbp-forum-form">
+	<div id="new-forum-<?php bbp_forum_id(); ?>" class="bbp-forum-form bb-rl-forum-modal bb-rl-forum-modal--static">
 
-		<form id="new-post" name="new-post" method="post" action="<?php the_permalink(); ?>">
+		<form id="new-post" class="bb-rl-forum-form" name="new-post" method="post" action="<?php the_permalink(); ?>">
 
 			<?php do_action( 'bbp_theme_before_forum_form' ); ?>
 
@@ -123,7 +123,7 @@
 
 						<?php do_action( 'bbp_theme_before_forum_form_submit_button' ); ?>
 
-						<button type="submit" tabindex="<?php bbp_tab_index(); ?>" id="bbp_forum_submit" name="bbp_forum_submit" class="button submit"><?php _e( 'Submit', 'buddyboss' ); ?></button>
+						<button type="submit" tabindex="<?php bbp_tab_index(); ?>" id="bbp_forum_submit" name="bbp_forum_submit" class="bb-rl-button bb-rl-button--brandFill bb-rl-button--small submit"><?php _e( 'Submit', 'buddyboss' ); ?></button>
 
 						<?php do_action( 'bbp_theme_after_forum_form_submit_button' ); ?>
 

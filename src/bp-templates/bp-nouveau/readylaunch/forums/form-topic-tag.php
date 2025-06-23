@@ -10,11 +10,13 @@
 
 <?php if ( current_user_can( 'edit_topic_tags' ) ) : ?>
 
-	<div id="edit-topic-tag-<?php bbp_topic_tag_id(); ?>" class="bbp-topic-tag-form">
+	<div id="edit-topic-tag-<?php bbp_topic_tag_id(); ?>" class="bbp-topic-tag-form bb-rl-forum-modal bb-rl-forum-modal--static">
 
 		<fieldset class="bbp-form" id="bbp-edit-topic-tag">
 
-			<legend><?php printf( __( 'Manage Tag: "%s"', 'buddyboss' ), bbp_get_topic_tag_name() ); ?></legend>
+			<div class="bb-rl-forum-modal-header">
+				<h3><?php printf( __( 'Manage Tag: "%s"', 'buddyboss' ), bbp_get_topic_tag_name() ); ?></h3>
+			</div>
 
 			<fieldset class="bbp-form" id="tag-rename">
 
@@ -102,7 +104,7 @@
 					<form id="delete_tag" name="delete_tag" method="post" action="<?php the_permalink(); ?>">
 
 						<div class="bbp-submit-wrapper">
-							<button type="submit" tabindex="<?php bbp_tab_index(); ?>" class="button submit" onclick="return confirm('<?php echo esc_js( sprintf( __( 'Are you sure you want to delete the "%s" tag? This is permanent and cannot be undone.', 'buddyboss' ), bbp_get_topic_tag_name() ) ); ?>');"><?php esc_attr_e( 'Delete', 'buddyboss' ); ?></button>
+							<button type="submit" tabindex="<?php bbp_tab_index(); ?>" class="bb-rl-button bb-rl-button--brandFill bb-rl-button--small submit" onclick="return confirm('<?php echo esc_js( sprintf( __( 'Are you sure you want to delete the "%s" tag? This is permanent and cannot be undone.', 'buddyboss' ), bbp_get_topic_tag_name() ) ); ?>');"><?php esc_attr_e( 'Delete', 'buddyboss' ); ?></button>
 
 							<input type="hidden" name="tag-id" value="<?php bbp_topic_tag_id(); ?>" />
 							<input type="hidden" name="action" value="bbp-delete-topic-tag" />

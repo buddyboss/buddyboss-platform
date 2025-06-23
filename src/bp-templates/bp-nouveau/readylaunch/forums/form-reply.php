@@ -18,7 +18,7 @@
 
 	<div id="new-reply-<?php bbp_topic_id(); ?>" class="bbp-reply-form bb-rl-forum-modal <?php echo ( bbp_is_reply_edit() ? 'bb-rl-forum-modal--static' : '' ); ?>">
 
-		<form id="new-post" name="new-post" method="post" action="<?php bbp_is_reply_edit() ? bbp_reply_edit_url() : the_permalink(); ?>">
+		<form id="new-post" class="bb-rl-forum-form" name="new-post" method="post" action="<?php bbp_is_reply_edit() ? bbp_reply_edit_url() : the_permalink(); ?>">
 
 			<?php do_action( 'bbp_theme_before_reply_form' ); ?>
 
