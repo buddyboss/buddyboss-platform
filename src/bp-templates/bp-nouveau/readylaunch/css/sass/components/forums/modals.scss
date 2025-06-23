@@ -590,9 +590,9 @@
 #new-post {
 
 	&.has-content,
-	.has-gif,
-	.has-link-preview,
-	.has-media {
+	&.has-gif,
+	&.has-link-preview,
+	&.has-media {
 
 		.bbp-form #bbp_reply_submit {
 			opacity: 1;

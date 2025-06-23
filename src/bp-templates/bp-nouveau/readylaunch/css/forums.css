@@ -1578,10 +1578,7 @@
   margin: 0;
 }
 
-#new-post.has-content .bbp-form #bbp_reply_submit,
-#new-post .has-gif .bbp-form #bbp_reply_submit,
-#new-post .has-link-preview .bbp-form #bbp_reply_submit,
-#new-post .has-media .bbp-form #bbp_reply_submit {
+#new-post.has-content .bbp-form #bbp_reply_submit, #new-post.has-gif .bbp-form #bbp_reply_submit, #new-post.has-link-preview .bbp-form #bbp_reply_submit, #new-post.has-media .bbp-form #bbp_reply_submit {
   opacity: 1;
   pointer-events: initial;
 }
