@@ -19,12 +19,7 @@ $readylaunch_instance = BB_Readylaunch::instance();
  */
 do_action( 'bb_rl_layout_before' );
 
-if ( $readylaunch_instance->bb_rl_is_memberpress_courses_page() ) {
-	$bb_rl_meprlms_template = BB_Readylaunch_Memberpress_Courses_Integration::bb_rl_meprlms_get_template();
-	if ( $bb_rl_meprlms_template ) {
-		load_template( $bb_rl_meprlms_template );
-	}
-} elseif ( have_posts() ) {
+if ( have_posts() ) {
 
 	/**
 	 * Fires before the loop starts.

@@ -241,15 +241,8 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			add_action( 'wp_enqueue_scripts', array( $this, 'bb_readylaunch_meprlms_enqueue_styles' ), 10 );
 
 			if ( class_exists( 'memberpress\courses\helpers\Courses' ) ) {
-				require_once 'class-bb-readylaunch-memberpress-courses-integration.php';
-				BB_Readylaunch_Memberpress_Courses_Integration::instance();
-				
-				// Add MemberPress template path filters for ReadyLaunch
-				if ( bb_is_readylaunch_enabled() ) {
-					add_filter( 'mepr_view_paths', array( $this, 'bb_readylaunch_meprlms_add_template_paths' ), PHP_INT_MAX );
-					add_filter( 'mepr_mpcs_gradebook_view_paths', array( $this, 'bb_readylaunch_meprlms_add_gradebook_template_paths' ), PHP_INT_MAX );
-					add_filter( 'mepr_mpcs_quizzes_view_paths', array( $this, 'bb_readylaunch_meprlms_add_quizzes_template_paths' ), PHP_INT_MAX );
-				}
+				require_once buddypress()->compatibility_dir . '/class-bb-readylaunch-memberpress-courses-helper.php';
+				BB_Readylaunch_Memberpress_Courses_Helper::instance();
 			}
 		}
 
@@ -341,6 +334,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * @since BuddyBoss [BBVERSION]
 		 */
 		public function bb_rl_get_template_part_content() {
+			// Initialize LearnDash variables.
 			$is_ld_course_archive = false;
 			$is_ld_lesson_archive = false;
 			$is_ld_topic_archive  = false;
@@ -348,6 +342,15 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			$is_ld_assignment     = false;
 			$is_ld_exam           = false;
 			$is_ld_group_archive  = false;
+
+			// Initialize MemberPress variables.
+			$is_mp_course_archive    = false;
+			$is_mp_course_single     = false;
+			$is_mp_lesson_single     = false;
+			$is_mp_assignment_single = false;
+			$is_mp_quiz_single       = false;
+
+			// Check LearnDash post types.
 			if ( function_exists( 'learndash_get_post_type_slug' ) ) {
 				$is_ld_course_archive = is_post_type_archive( learndash_get_post_type_slug( 'course' ) );
 				$is_ld_topic_archive  = is_post_type_archive( learndash_get_post_type_slug( 'topic' ) );
@@ -357,8 +360,41 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				$is_ld_exam           = is_singular( learndash_get_post_type_slug( 'exam' ) );
 				$is_ld_group_archive  = is_post_type_archive( learndash_get_post_type_slug( 'group' ) );
 			}
+
+			// Check for MemberPress courses archive.
+			if ( class_exists( 'memberpress\courses\helpers\Courses' ) && memberpress\courses\helpers\Courses::is_course_archive() ) {
+				$is_mp_course_archive = true;
+			}
+
+			// Check for MemberPress single pages.
+			global $post;
+			if ( is_single() && ! empty( $post ) && is_a( $post, 'WP_Post' ) ) {
+				$post_type = $post->post_type;
+
+				if ( class_exists( 'memberpress\courses\models\Course' ) && memberpress\courses\models\Course::$cpt === $post_type ) {
+					$is_mp_course_single = true;
+				} elseif ( class_exists( 'memberpress\courses\models\Lesson' ) && memberpress\courses\models\Lesson::$cpt === $post_type ) {
+					$is_mp_lesson_single = true;
+				} elseif ( class_exists( 'memberpress\assignments\models\Assignment' ) && memberpress\assignments\models\Assignment::$cpt === $post_type ) {
+					$is_mp_assignment_single = true;
+				} elseif ( class_exists( 'memberpress\quizzes\models\Quiz' ) && memberpress\quizzes\models\Quiz::$cpt === $post_type ) {
+					$is_mp_quiz_single = true;
+				}
+			}
+
+			// Load appropriate template based on page type.
 			if ( $is_ld_course_archive ) {
 				bp_get_template_part( 'learndash/ld30/course-loop' );
+			} elseif ( $is_mp_course_archive ) {
+				bp_get_template_part( 'memberpress/courses/archive-mpcs-courses' );
+			} elseif ( $is_mp_course_single ) {
+				bp_get_template_part( 'memberpress/courses/single-mpcs-course' );
+			} elseif ( $is_mp_lesson_single ) {
+				bp_get_template_part( 'memberpress/courses/single-mpcs-lesson' );
+			} elseif ( $is_mp_assignment_single ) {
+				bp_get_template_part( 'memberpress/assignments/single-mpcs-assignment' );
+			} elseif ( $is_mp_quiz_single ) {
+				bp_get_template_part( 'memberpress/quizzes/single-mpcs-quiz' );
 			} elseif (
 				$is_ld_topic_archive ||
 				$is_ld_lesson_archive ||
@@ -2656,20 +2692,15 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * @return bool True if current page is a memberpress courses page, false otherwise.
 		 */
 		public function bb_rl_is_memberpress_courses_page() {
-			if ( ! class_exists( 'memberpress\courses\helpers\Courses' ) ) {
+			if ( ! class_exists( 'memberpress\courses\helpers\Courses' ) || ! $this->bb_rl_is_page_enabled_for_integration( 'courses' ) ) {
 				return false;
 			}
 
-			// $courses_integration = bp_get_option( 'bb_rl_enabled_pages' )['courses'] ?? false;
-			// if ( ! $courses_integration ) {
-			// 	return false;
-			// }
-
 			global $post, $wp_query;
 
-			// Method 1: Use MemberPress's own detection methods (most reliable)
+			// Method 1: Use MemberPress's own detection methods (most reliable).
 			if ( isset( $post ) && is_a( $post, 'WP_Post' ) ) {
-				// Check if this is a course page using MemberPress helper
+				// Check if this is a course page using MemberPress helper.
 				if (
 					class_exists( 'memberpress\courses\helpers\Courses' ) && 
 					method_exists( 'memberpress\courses\helpers\Courses', 'is_a_course' ) && 
@@ -2678,7 +2709,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					return true;
 				}
 
-				// Check if this is a lesson page using MemberPress helper  
+				// Check if this is a lesson page using MemberPress helper.
 				if (
 					class_exists( 'memberpress\courses\helpers\Lessons' ) && 
 					method_exists( 'memberpress\courses\helpers\Lessons', 'is_a_lesson' ) && 
@@ -2688,7 +2719,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				}
 			}
 
-			// Method 2: Check for course archive using URL patterns
+			// Method 2: Check for course archive using URL patterns.
 			if (
 				class_exists( 'memberpress\courses\helpers\Courses' ) && 
 				method_exists( 'memberpress\courses\helpers\Courses', 'get_permalink_base' )
@@ -2704,15 +2735,15 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			}
 
 
-			// Method 3: Fallback to post type detection
+			// Method 3: Fallback to post type detection.
 			$post_type = '';
 
-			// Check global $post first
+			// Check global $post first.
 			if ( isset( $post ) && is_a( $post, 'WP_Post' ) && ! empty( $post->post_type ) ) {
 				$post_type = $post->post_type;
 			}
 
-			// Get post type using WordPress function
+			// Get post type using WordPress function.
 			if ( empty( $post_type ) && function_exists( 'get_post_type' ) ) {
 				$current_post_type = get_post_type();
 				if ( ! empty( $current_post_type ) ) {
@@ -2720,7 +2751,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				}
 			}
 
-			// Check queried object
+			// Check queried object.
 			if ( empty( $post_type ) && is_object( $wp_query ) ) {
 				$queried_object = get_queried_object();
 				if ( $queried_object && isset( $queried_object->post_type ) && ! empty( $queried_object->post_type ) ) {
@@ -2728,80 +2759,36 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				}
 			}
 
-			// Check query vars
+			// Check query vars.
 			if ( empty( $post_type ) && is_object( $wp_query ) && isset( $wp_query->query_vars['post_type'] ) && ! empty( $wp_query->query_vars['post_type'] ) ) {
 				$post_type = $wp_query->query_vars['post_type'];
 			}
 
-			// Method 4: Check against known MemberPress post types
+			// Method 4: Check against known MemberPress post types.
 			if ( ! empty( $post_type ) && is_single() ) {
-				// Check if this is a course post type
+
+				// Check if this is a course post type.
 				if ( class_exists( 'memberpress\courses\models\Course' ) && memberpress\courses\models\Course::$cpt === $post_type ) {
 					return true;
 				}
-				
+
 				// Check if this is a lesson post type
 				if ( class_exists( 'memberpress\courses\models\Lesson' ) && memberpress\courses\models\Lesson::$cpt === $post_type ) {
 					return true;
 				}
-				
-				// Check if this is an assignment post type
+
+				// Check if this is an assignment post type.
 				if ( class_exists( 'memberpress\assignments\models\Assignment' ) && memberpress\assignments\models\Assignment::$cpt === $post_type ) {
 					return true;
 				}
-				
-				// Check if this is a quiz post type
+
+				// Check if this is a quiz post type.
 				if ( class_exists( 'memberpress\quizzes\models\Quiz' ) && memberpress\quizzes\models\Quiz::$cpt === $post_type ) {
 					return true;
 				}
 			}
 
 			return false;
-		}
-
-		/**
-		 * Add MemberPress template path filters for ReadyLaunch
-		 *
-		 * @since BuddyBoss [BBVERSION]
-		 *
-		 * @param array $paths The array of paths to add.
-		 *
-		 * @return array The modified array of paths.
-		 */
-		public function bb_readylaunch_meprlms_add_template_paths( $paths ) {
-			$readylaunch_path = trailingslashit( buddypress()->plugin_dir . 'bp-templates/bp-nouveau/readylaunch/memberpress' );
-			array_unshift( $paths, $readylaunch_path );
-			return $paths;
-		}
-
-		/**
-		 * Add MemberPress gradebook template path filters for ReadyLaunch
-		 *
-		 * @since BuddyBoss [BBVERSION]
-		 *
-		 * @param array $paths The array of paths to add.
-		 *
-		 * @return array The modified array of paths.
-		 */
-		public function bb_readylaunch_meprlms_add_gradebook_template_paths( $paths ) {
-			$readylaunch_path = trailingslashit( buddypress()->plugin_dir . 'bp-templates/bp-nouveau/readylaunch/memberpress/assignments' );
-			array_unshift( $paths, $readylaunch_path );
-			return $paths;
-		}
-
-		/**
-		 * Add MemberPress quizzes template path filters for ReadyLaunch
-		 *
-		 * @since BuddyBoss [BBVERSION]
-		 *
-		 * @param array $paths The array of paths to add.
-		 *
-		 * @return array The modified array of paths.
-		 */
-		public function bb_readylaunch_meprlms_add_quizzes_template_paths( $paths ) {
-			$readylaunch_path = trailingslashit( buddypress()->plugin_dir . 'bp-templates/bp-nouveau/readylaunch/memberpress/quizzes' );
-			array_unshift( $paths, $readylaunch_path );
-			return $paths;
 		}
 	}
 }

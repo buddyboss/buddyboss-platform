@@ -11,49 +11,42 @@
 
 use memberpress\courses;
 
-// Start the Loop.
-while ( have_posts() ) :
-	the_post();
-	global $post;
+global $post;
 
-	$lesson           = new courses\models\Lesson( $post->ID );
-	$lesson_available = $lesson->is_available();
-	?>
-	<div class="bb-rl-assignment-block bb-rl-lms-inner-block">
-		<div id="mpcs-main" class="mpcs-main column mpcs-inner-page-main">
-			<?php setup_postdata( $post->ID ); ?>
-			<?php if ( is_active_sidebar( 'mpcs_classroom_lesson_header' ) ) : ?>
-				<div id="primary-sidebar" class="primary-sidebar widget-area" role="complementary">
-					<?php dynamic_sidebar( 'mpcs_classroom_lesson_header' ); ?>
-				</div>
-			<?php endif; ?>
+$lesson           = new courses\models\Lesson( $post->ID );
+$lesson_available = $lesson->is_available();
+?>
+<div class="bb-rl-assignment-block bb-rl-lms-inner-block">
+	<div id="mpcs-main" class="mpcs-main column mpcs-inner-page-main">
+		<?php setup_postdata( $post->ID ); ?>
+		<?php if ( is_active_sidebar( 'mpcs_classroom_lesson_header' ) ) : ?>
+			<div id="primary-sidebar" class="primary-sidebar widget-area" role="complementary">
+				<?php dynamic_sidebar( 'mpcs_classroom_lesson_header' ); ?>
+			</div>
+		<?php endif; ?>
 
-			<?php
+		<?php
 
-			if ( 'enabled' === $lesson->course()->lesson_title ) {
-				printf( '<h1 class="bb-rl-entry-title">%s</h1>', esc_html( get_the_title() ) );
-			}
+		if ( 'enabled' === $lesson->course()->lesson_title ) {
+			printf( '<h1 class="bb-rl-entry-title">%s</h1>', esc_html( get_the_title() ) );
+		}
+		?>
+
+		<?php
+		if ( $lesson_available ) {
 			?>
-
+			<div class="mpcs-main-content"><?php the_content(); ?></div>
 			<?php
-			if ( $lesson_available ) {
-				?>
-				<div class="mpcs-main-content"><?php the_content(); ?></div>
-				<?php
-			} else {
-				$button_class = 'btn btn-green is-purple';
-				require courses\VIEWS_PATH . '/lessons/lesson_locked.php';
-			}
-			?>
+		} else {
+			$button_class = 'btn btn-green is-purple';
+			require courses\VIEWS_PATH . '/lessons/lesson_locked.php';
+		}
+		?>
 
-			<?php if ( is_active_sidebar( 'mpcs_classroom_lesson_footer' ) ) : ?>
-				<div id="primary-sidebar" class="primary-sidebar widget-area" role="complementary">
-					<?php dynamic_sidebar( 'mpcs_classroom_lesson_footer' ); ?>
-				</div>
-			<?php endif; ?>
-		</div>
+		<?php if ( is_active_sidebar( 'mpcs_classroom_lesson_footer' ) ) : ?>
+			<div id="primary-sidebar" class="primary-sidebar widget-area" role="complementary">
+				<?php dynamic_sidebar( 'mpcs_classroom_lesson_footer' ); ?>
+			</div>
+		<?php endif; ?>
 	</div>
-
-	<?php
-	wp_reset_postdata();
-endwhile; // End the loop.
+</div>
