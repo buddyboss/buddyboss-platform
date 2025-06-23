@@ -1946,7 +1946,7 @@
   padding: var(--bb-rl-space-100);
 }
 
-.bb-rl-single-forum-list .bb-rl-forum-reply-list-item:hover {
+.bb-rl-single-forum-list .bb-rl-forum-reply-list-item:hover, .bb-rl-single-forum-list .bb-rl-forum-reply-list-item.status-spam {
   background-color: var(--bb-rl-background-secondary-color);
   border-radius: var(--bb-rl-radius-base);
   border-color: transparent;

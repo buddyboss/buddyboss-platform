@@ -248,7 +248,8 @@
         border-bottom: 1px solid var(--bb-rl-border-secondary-color);
         padding: var(--bb-rl-space-100);
 
-        &:hover {
+        &:hover,
+        &.status-spam {
             background-color: var(--bb-rl-background-secondary-color);
             border-radius: var(--bb-rl-radius-base);
             border-color: transparent;
