@@ -1952,6 +1952,10 @@
   border-color: transparent;
 }
 
+.bb-rl-single-forum-list .bb-rl-forum-reply-list-item.status-trash, .bb-rl-single-forum-list .bb-rl-forum-reply-list-item.status-spam {
+  background-color: var(--bb-rl-background-secondary-hover-color);
+}
+
 .bb-rl-single-forum-list > li > .bbp-threaded-replies {
   list-style: none;
   padding: 0;
