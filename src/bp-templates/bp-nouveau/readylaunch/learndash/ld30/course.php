@@ -388,12 +388,50 @@ $course_video_duration = get_post_meta( $course_id, '_buddyboss_lms_course_video
 						?>
 
 						<div class="bb-rl-course-overview-footer">
+							<?php
+							if ( $is_enrolled && ! empty( $progress ) ) {
+								?>
+								<div class="bb-rl-course-progress">
+									<div class="bb-rl-course-progress-overview flex items-center">
+										<span class="bb-rl-percentage">
+											<?php
+											echo wp_kses_post(
+												sprintf(
+												/* translators: 1: course progress percentage, 2: percentage symbol. */
+													__( '<span class="bb-rl-percentage-figure">%1$s%2$s</span> Completed', 'buddyboss' ),
+													(int) $progress['percentage'],
+													'%'
+												)
+											);
+											?>
+										</span>
+										<?php
+										// Get completed steps.
+										$completed_steps = ! empty( $progress['completed'] ) ? (int) $progress['completed'] : 0;
+
+										// Output as "completed/total".
+										if ( $progress['total'] > 0 ) {
+											?>
+											<span class="bb-rl-course-steps">
+														<?php echo esc_html( $completed_steps . '/' . $progress['total'] ); ?>
+													</span>
+											<?php
+										}
+										?>
+									</div>
+									<div class="bb-rl-progress-bar">
+										<div class="bb-rl-progress" style="width: <?php echo (int) $progress['percentage']; ?>%"></div>
+									</div>
+								</div>
+								<?php
+							}
+							?>
 							<div class="bb-rl-course-action">
 								<?php
 								if ( empty( $course_progress ) && 100 > $course_progress ) {
 									$btn_advance_class = 'btn-advance-start';
 									$btn_advance_label = sprintf(
-										/* translators: %s: Course label. */
+									/* translators: %s: Course label. */
 										__( 'Start %s', 'buddyboss' ),
 										LearnDash_Custom_Label::get_label( 'course' )
 									);
@@ -419,7 +457,7 @@ $course_video_duration = get_post_meta( $course_id, '_buddyboss_lms_course_video
 								}
 
 								// Determine button class and text based on conditions.
-								$button_class  = 'learndash_join_button';
+								$button_class = 'learndash_join_button';
 								$button_class .= ! empty( $btn_advance_class ) ? ' ' . $btn_advance_class : '';
 
 								$button_html = '';
