@@ -1210,6 +1210,7 @@
   border: none;
   border-radius: 0;
   border-bottom: 1px solid transparent;
+  border-bottom: 0;
 }
 
 .bb-rl-course-comment-module.bb-rl-lms-content-comments .comment-respond .logged-in-as > a:hover,
