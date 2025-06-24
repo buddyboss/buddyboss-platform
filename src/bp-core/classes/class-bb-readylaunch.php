@@ -2332,8 +2332,8 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			$settings['blogname']      = (string) get_bloginfo( 'name' );
 
 			// Style Settings.
-			$settings['bb_rl_light_logo']  = bp_get_option( 'bb_rl_light_logo', null );
-			$settings['bb_rl_dark_logo']   = bp_get_option( 'bb_rl_dark_logo', null );
+			$settings['bb_rl_light_logo']  = bp_get_option( 'bb_rl_light_logo', array() );
+			$settings['bb_rl_dark_logo']   = bp_get_option( 'bb_rl_dark_logo', array() );
 			$settings['bb_rl_color_light'] = (string) bp_get_option( 'bb_rl_color_light', '#3E34FF' );
 			$settings['bb_rl_color_dark']  = (string) bp_get_option( 'bb_rl_color_dark', '#9747FF' );
 			$settings['bb_rl_theme_mode']  = (string) bp_get_option( 'bb_rl_theme_mode', 'light' );
