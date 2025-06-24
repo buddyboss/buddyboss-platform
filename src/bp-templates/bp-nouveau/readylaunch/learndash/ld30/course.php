@@ -1139,7 +1139,7 @@ $course_video_duration = get_post_meta( $course_id, '_buddyboss_lms_course_video
 					);
 				} elseif ( true === $post_type_comments ) {
 					if ( comments_open() ) :
-						comments_template();
+						bp_get_template_part( 'learndash/ld30/comments' );
 					endif;
 				}
 				?>

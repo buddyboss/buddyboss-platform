@@ -15,6 +15,8 @@ $bb_comments    = $comments_query->query(
 	array(
 		'post_id' => get_the_ID(),
 		'status'  => 'approve',
+		'orderby' => 'comment_date',
+		'order'   => 'ASC',
 	)
 );
 
