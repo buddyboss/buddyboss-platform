@@ -173,7 +173,7 @@ $course_video_duration = get_post_meta( $course_id, '_buddyboss_lms_course_video
 						<h1 class="bb-rl-entry-title"><?php the_title(); ?></h1>
 						<div class="bb-rl-course-meta">
 							<?php
-							if ( class_exists( 'LearnDash_Course_Reviews_Loader' ) ) {
+							if ( class_exists( 'LearnDash_Course_Reviews_Loader' ) && $course_id ) {
 								$bb_average = learndash_course_reviews_get_average_review_score( $course_id );
 								$bb_reviews = get_comments(
 									wp_parse_args(

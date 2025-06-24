@@ -296,7 +296,7 @@ if ( $is_enrolled && 0 === $course_progress['percentage'] ) {
 				<div class="bb-rl-course-footer">
 					<div class="bb-rl-course-footer-meta">
 						<?php
-						if ( class_exists( 'LearnDash_Course_Reviews_Loader' ) ) {
+						if ( class_exists( 'LearnDash_Course_Reviews_Loader' ) && $course_id ) {
 							$average = learndash_course_reviews_get_average_review_score( $course_id );
 
 							// Get reviews.
