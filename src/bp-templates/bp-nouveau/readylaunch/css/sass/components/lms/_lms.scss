@@ -507,13 +507,12 @@
 	}
 }
 
-.bb-rl-lms-content-comments,
-.site-main .bb-rl-container,
-.learndash-cpt-groups .site-main .bb-rl-container {
+.bb-rl-course-content-comments {
+	padding-bottom: var(--bb-rl-space-300);
+}
 
-	&.bb-rl-course-content-comments {
-		padding-bottom: var(--bb-rl-space-300);
-	}
+.bb-rl-comments-area,
+.bb-rl-course-content-comments {
 
 	.comments-title {
 
@@ -706,8 +705,7 @@
 	}
 }
 
-.bb-rl-course-comment-module.bb-rl-lms-content-comments,
-.learndash-cpt-groups .site-main .bb-rl-container {
+.bb-rl-comments-area {
 	margin: var(--bb-rl-space-200) 0 0;
 	padding-bottom: var(--bb-rl-space-300);
 
@@ -755,6 +753,11 @@
 					}
 				}
 			}
+		}
+
+		.children {
+			list-style: none;
+			margin-top: var(--bb-rl-space-200);
 		}
 	}
 

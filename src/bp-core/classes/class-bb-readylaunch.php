@@ -414,9 +414,13 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				/**
 				* If comments are open or we have at least one comment, load up the comment template.
 				*/
-				if ( ! $is_ld_course_single && ( comments_open() || get_comments_number() ) ) :
-					comments_template();
-				endif;
+				if ( ! $is_ld_course_single && ( comments_open() || get_comments_number() ) ) {
+					?>
+					<div class="comments-area bb-rl-comments-area">
+						<?php comments_template(); ?>
+					</div>
+					<?php
+				}
 			}
 		}
 
