@@ -1176,6 +1176,217 @@ body.ld-in-focus-mode .learndash-wrapper {
   background-color: var(--bb-rl-background-color);
 }
 
+.bb-readylaunch-template .bb-learndash-content-wrap .ld-modal {
+  display: flex;
+  text-align: center;
+  margin: 0 auto;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translateY(-50%) translateX(-50%);
+  z-index: 999;
+  width: 100%;
+  z-index: 9000;
+  max-width: 1024px;
+  min-height: 300px;
+  background: var(--bb-rl-background-color);
+  border-radius: var(--bb-rl-radius-lg);
+  overflow: hidden;
+  overflow-y: auto;
+  box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.1);
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+.bb-readylaunch-template .bb-learndash-content-wrap .ld-modal .ld-modal-closer {
+  position: absolute;
+  top: var(--bb-rl-space-100);
+  right: var(--bb-rl-space-100);
+  z-index: 9;
+  color: var(--bb-rl-icon-secondary-color);
+  cursor: pointer;
+  line-height: 0.5;
+  padding: var(--bb-rl-space-200);
+  font-size: var(--bb-rl-font-size-base);
+}
+
+.bb-readylaunch-template .bb-learndash-content-wrap .ld-login-modal .ld-login-modal-login {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background-color: var(--bb-rl-background-color);
+}
+
+.bb-readylaunch-template .ld-modal.ld-login-modal .ld-login-modal-register {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  color: var(--bb-rl-text-white-color);
+  background-color: var(--bb-rl-background-brand-primary-color);
+}
+
+.bb-readylaunch-template .ld-modal.ld-login-modal .ld-login-modal-wrapper {
+  max-width: 360px;
+  min-width: inherit;
+  padding: var(--bb-rl-space-400) var(--bb-rl-space-200);
+  margin: 0 auto;
+}
+
+.bb-readylaunch-template .ld-modal.ld-login-modal .ld-login-modal-branding {
+  margin-bottom: var(--bb-rl-space-300);
+}
+
+.bb-readylaunch-template .ld-modal.ld-login-modal .ld-login-modal-wrapper .ld-login-modal-branding > img {
+  max-width: 250px;
+}
+
+.bb-readylaunch-template .bb-learndash-content-wrap .ld-login-modal .ld-login-modal-login .ld-modal-heading {
+  font-size: var(--bb-rl-font-size-base);
+  font-weight: 500;
+  line-height: var(--bb-rl-base-line);
+  color: var(--bb-rl-text-color);
+  margin: 0 0 var(--bb-rl-space-200);
+}
+
+.bb-readylaunch-template .bb-learndash-content-wrap .ld-login-modal .ld-login-modal-login .ld-modal-text {
+  color: var(--bb-rl-text-secondary-color);
+  line-height: 1.5;
+  margin-bottom: var(--bb-rl-space-300);
+}
+
+.bb-readylaunch-template .ld-modal.ld-login-modal .ld-login-modal-form input[type=submit] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  font-weight: 500;
+  text-align: center;
+  cursor: pointer;
+  border-radius: var(--bb-rl-radius-md);
+  padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  text-decoration: none;
+  background-color: var(--bb-rl-background-brand-primary-color);
+  color: var(--bb-rl-text-white-color);
+  border: 1px solid var(--bb-rl-background-brand-primary-color);
+  padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
+  font-size: 0.875rem;
+  font-weight: 400;
+  margin: var(--bb-rl-space-200) 0 0;
+}
+
+.bb-readylaunch-template .ld-modal.ld-login-modal .ld-login-modal-form input[type=submit]:hover {
+  background-color: var(--bb-rl-background-brand-primary-hover-color);
+}
+
+.bb-readylaunch-template .ld-modal.ld-login-modal .ld-login-modal-form input[type=submit]:focus-within {
+  outline: 2px solid var(--bb-rl-border-brand-primary-color);
+}
+
+.bb-readylaunch-template .ld-modal.ld-login-modal .ld-login-modal-form input[type=submit]:disabled {
+  background-color: var(--bb-rl-background-brand-disabled-color);
+  cursor: not-allowed;
+}
+
+.bb-readylaunch-template .bb-learndash-content-wrap .ld-login-modal .ld-login-modal-form label {
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 400;
+  line-height: var(--bb-rl-base-line-small);
+  display: block;
+  margin: 0 0 var(--bb-rl-space-50);
+}
+
+.bb-readylaunch-template .bb-learndash-content-wrap .ld-login-modal input[type=text],
+.bb-readylaunch-template .bb-learndash-content-wrap .ld-login-modal input[type=password],
+.bb-readylaunch-template .bb-learndash-content-wrap .ld-login-modal input[type=email],
+.bb-readylaunch-template .bb-learndash-content-wrap .ld-login-modal .ld-login-field,
+.bb-readylaunch-template .bb-learndash-content-wrap .ld-login-modal .ld-password-field {
+  width: 100%;
+  margin-bottom: var(--bb-rl-space-100);
+}
+
+.bb-readylaunch-template .bb-learndash-content-wrap .ld-login-modal .ld-login-modal-form {
+  text-align: left;
+}
+
+.bb-readylaunch-template .bb-learndash-content-wrap .ld-login-modal input[type="checkbox"]:not(.bb-custom-check) {
+  position: static;
+  opacity: 1;
+}
+
+.bb-readylaunch-template .bb-learndash-content-wrap .ld-login-modal .ld-icon.ld-icon-delete:before {
+  content: "\e4f6";
+  font-weight: 400;
+  font-family: bb-icons-rl;
+  font-size: 16px;
+  color: var(--bb-rl-text-white-color);
+}
+
+.bb-readylaunch-template .bb-learndash-content-wrap .ld-login-modal .ld-forgot-password-link {
+  background-color: transparent;
+  color: var(--bb-rl-text-brand-primary-color);
+  border: none;
+  border-radius: 0;
+  border-bottom: 1px solid transparent;
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 400;
+  line-height: var(--bb-rl-base-line-small);
+  margin: var(--bb-rl-space-200) 0;
+  display: block;
+}
+
+.bb-readylaunch-template .bb-learndash-content-wrap .ld-login-modal .ld-forgot-password-link:hover {
+  border-bottom-color: var(--bb-rl-link-primary-hover-color);
+}
+
+.bb-readylaunch-template .bb-learndash-content-wrap .ld-login-modal .ld-forgot-password-link:disabled {
+  color: var(--bb-rl-background-brand-disabled-color);
+  border-bottom-color: transparent;
+  cursor: not-allowed;
+}
+
+.bb-readylaunch-template .ld-modal.ld-login-modal.ld-can-register .ld-login-modal-register #wp-submit,
+.bb-readylaunch-template .bb-learndash-content-wrap .ld-login-modal .ld-login-modal-register .ld-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  font-weight: 500;
+  text-align: center;
+  cursor: pointer;
+  border-radius: var(--bb-rl-radius-md);
+  padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  text-decoration: none;
+  background-color: var(--bb-rl-background-tertiary-color);
+  color: var(--bb-rl-text-color);
+  border: 1px solid transparent;
+  padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
+  font-size: 0.875rem;
+  font-weight: 400;
+  margin: var(--bb-rl-space-200) 0 0;
+}
+
+.bb-readylaunch-template .ld-modal.ld-login-modal.ld-can-register .ld-login-modal-register #wp-submit:hover,
+.bb-readylaunch-template .bb-learndash-content-wrap .ld-login-modal .ld-login-modal-register .ld-button:hover {
+  background-color: var(--bb-rl-background-tertiary-hover-color);
+}
+
+.bb-readylaunch-template .ld-modal.ld-login-modal.ld-can-register .ld-login-modal-register #wp-submit:focus,
+.bb-readylaunch-template .bb-learndash-content-wrap .ld-login-modal .ld-login-modal-register .ld-button:focus {
+  outline: 2px solid var(--bb-rl-border-quinery-color);
+}
+
+.bb-readylaunch-template .ld-modal.ld-login-modal.ld-can-register .ld-login-modal-register #wp-submit:disabled,
+.bb-readylaunch-template .bb-learndash-content-wrap .ld-login-modal .ld-login-modal-register .ld-button:disabled {
+  background-color: var(--bb-rl-background-tertiary-color);
+  color: var(--bb-rl-text-disabled-color);
+  cursor: not-allowed;
+}
+
 .bb-readylaunch-template {
   /* A sidebar-conditioned grid can be used on
     single profile or group screens. */
