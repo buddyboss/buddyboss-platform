@@ -79,8 +79,8 @@ if ( count( $available_widgets ) || ! empty( $static_sidebar_widget ) ) {
 			echo $static_sidebar_widget;
 		}
 
-			ob_start();
 		if ( count( $available_widgets ) ) {
+			ob_start();
 			foreach ( $available_widgets as $widget ) {
 				$args = false;
 
