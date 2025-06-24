@@ -39,7 +39,7 @@ $atts         = apply_filters( 'bp_learndash_user_courses_atts', array() );
 $user_courses = apply_filters( 'bp_learndash_user_courses', ld_get_mycourses( $user_id, $atts ) );
 ?>
 <div class="bb-rl-courses-list">
-	<div class="bb-rl-courses-grid grid bb-rl-courses-grid--ldlms">
+	<div class="bb-rl-courses-grid bb-rl-courses-grid--member grid bb-rl-courses-grid--ldlms">
 		<?php
 		if ( ! empty( $user_courses ) ) {
 			foreach ( $user_courses as $course_id ) {

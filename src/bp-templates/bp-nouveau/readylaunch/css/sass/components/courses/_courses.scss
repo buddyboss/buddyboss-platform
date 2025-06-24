@@ -41,7 +41,8 @@
     single profile or group screens. */
 
 	.bb-rl-primary-container ul.bb-course-items.bb-grid,
-	.bb-rl-courses-grid.bb-rl-courses-grid--group.grid {
+	.bb-rl-courses-grid.bb-rl-courses-grid--group.grid,
+	.bb-rl-courses-grid.bb-rl-courses-grid--member.grid {
 		grid-template-columns: repeat(3, 1fr);
 
 		@media screen and (max-width: 1600px) {
@@ -57,9 +58,14 @@
 		}
 	}
 
-	.bb-rl-courses-grid.bb-rl-courses-grid--group.list {
+	.bb-rl-courses-grid.bb-rl-courses-grid--group.list,
+	.bb-rl-courses-grid.bb-rl-courses-grid--member.list {
 		grid-template-columns: 1fr;
 	}
+}
+
+.bb-rl-courses-grid.bb-rl-courses-grid--member {
+	margin-top: var(--bb-rl-space-300);
 }
 
 .bb-readylaunch-template {

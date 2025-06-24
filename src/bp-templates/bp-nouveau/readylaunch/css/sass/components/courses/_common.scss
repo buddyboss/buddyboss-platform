@@ -782,6 +782,54 @@ body.ld-in-focus-mode .learndash-wrapper {
 	background-color: var(--bb-rl-background-color);
 }
 
+.bb-rl-content-wrapper {
+
+	.bb-certificates-wrapper {
+		margin-top: var(--bb-rl-space-300);
+
+		ul.bb-grid {
+			list-style: none;
+			padding: 0;
+			margin: 0;
+			display: grid;
+			grid-template-columns: repeat(3, 1fr);
+			gap: var(--bb-rl-space-200);
+
+			.bb-certificate-wrap {
+				background-color: var(--bb-rl-background-color);
+				border: 1px solid var(--bb-rl-border-secondary-color);
+				border-radius: var(--bb-rl-radius-md);
+				padding: var(--bb-rl-space-200);
+			}
+
+			.bb-certificate-title {
+
+				@include bb-rl-base-heading;
+				color: var(--bb-rl-text-color);
+
+				a {
+
+					@include bb-rl-button--tertiary-link;
+				}
+			}
+
+			.bb-certificate-date {
+
+				@include bb-rl-label-heading;
+				color: var(--bb-rl-text-tertiary-color);
+				margin: 0 0 var(--bb-rl-space-200);
+			}
+
+			.bb-certificate-download a {
+
+				@include bb-rl-button;
+				@include bb-rl-button-secondary-fill;
+				@include bb-rl-button--small;
+			}
+		}
+	}
+}
+
 .bb-readylaunch-template {
 
 	.bb-learndash-content-wrap .ld-modal {
