@@ -1418,6 +1418,9 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 		public function bb_rl_learndash_content_tabs( $tabs, $context, $course_id, $user_id ) {
 			if ( 'course' === $context ) {
 				$tabs[0]['label'] = __( 'About course', 'buddyboss' );
+				if ( empty( $tabs[0]['content'] ) ) {
+					unset( $tabs[0] );
+				}
 			}
 			return $tabs;
 		}
