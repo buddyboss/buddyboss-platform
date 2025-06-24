@@ -60,6 +60,12 @@ class BB_Readylaunch_Memberpress_Courses_Helper {
 		// Constructor can be used for initialization if needed.
 
 		if ( bb_is_readylaunch_enabled() && ! empty( bp_get_option( 'bb_rl_enabled_pages' )['courses'] ) ) {
+			
+			if ( helpers\App::is_classroom() ) {
+				// Remove MemberPress admin bar hiding hook.
+				$this->bb_rl_remove_memberpress_admin_bar_hook();
+			}
+
 			if ( function_exists( 'bb_meprlms_override_template' ) ) {
 				remove_filter( 'template_include', 'bb_meprlms_override_template', PHP_INT_MAX );
 			}
@@ -86,6 +92,38 @@ class BB_Readylaunch_Memberpress_Courses_Helper {
 			add_action( 'wp_footer', array( $this, 'bb_rl_meprlms_add_script' ), 10 );
 			add_filter( 'the_content', array( $this, 'bb_rl_meprlms_add_course_description' ), 9 );
 			add_filter( 'mpcs_classroom_style_handles', array( $this, 'bb_rl_mpcs_override_readylaunch_styles' ) );
+		}
+	}
+
+	/**
+	 * Remove MemberPress admin bar hiding hook to keep WordPress admin bar retain it's default behavior.
+	 *
+	 * This method removes the MemberPress Classroom controller's admin bar hiding hook
+	 * when BuddyBoss ReadyLaunch is enabled, allowing the WordPress admin bar to retain it's default behavior.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	private function bb_rl_remove_memberpress_admin_bar_hook() {
+
+		// If the Classroom controller is instantiated, try to remove from the instance.
+		if ( class_exists( 'memberpress\courses\controllers\Classroom' ) ) {
+			global $wp_filter;
+
+			// Check if the hook exists and remove it.
+			if ( isset( $wp_filter['show_admin_bar'] ) ) {
+				foreach ( $wp_filter['show_admin_bar']->callbacks as $priority => $callbacks ) {
+					foreach ( $callbacks as $key => $callback ) {
+						if (
+							is_array( $callback['function'] ) &&
+							is_object( $callback['function'][0] ) &&
+							get_class( $callback['function'][0] ) === 'memberpress\courses\controllers\Classroom' &&
+							$callback['function'][1] === 'maybe_hide_admin_bar'
+						) {
+							remove_filter( 'show_admin_bar', $callback['function'], $priority );
+						}
+					}
+				}
+			}
 		}
 	}
 
