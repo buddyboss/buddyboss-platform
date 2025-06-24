@@ -85,6 +85,7 @@ class BB_Readylaunch_Memberpress_Courses_Helper {
 			// Use wp_footer hook after all scripts are registered.
 			add_action( 'wp_footer', array( $this, 'bb_rl_meprlms_add_script' ), 10 );
 			add_filter( 'the_content', array( $this, 'bb_rl_meprlms_add_course_description' ), 9 );
+			add_filter( 'mpcs_classroom_style_handles', array( $this, 'bb_rl_mpcs_override_readylaunch_styles' ) );
 		}
 	}
 
@@ -456,4 +457,24 @@ class BB_Readylaunch_Memberpress_Courses_Helper {
 		echo '<p>' . esc_html__( 'No Course found', 'buddyboss' ) . '</p>';
 	}
 
+	/**
+	 * Override MemberPress classroom style removal to preserve all ReadyLaunch styles.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $allow_handle Allowed handles.
+	 *
+	 * @return array
+	 */
+	public function bb_rl_mpcs_override_readylaunch_styles( $allow_handle ) {
+		if ( class_exists( 'memberpress\courses\controllers\Classroom' ) && helpers\App::is_classroom() ) {
+			// Add all currently enqueued styles to the allowed list
+			global $wp_styles;
+			if ( isset( $wp_styles ) && ! empty( $wp_styles->queue ) ) {
+				$allow_handle = array_merge( $allow_handle, $wp_styles->queue );
+			}
+		}
+
+		return $allow_handle;
+	}
 }
