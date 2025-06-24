@@ -35,12 +35,16 @@ $lesson_available = $lesson->is_available();
 	if ( $lesson_available ) {
 		?>
 		<div class="mpcs-main-content"><?php the_content(); ?></div>
+		<div class="bb-rl-course-content-comments">
+			<?php
+			$options              = get_option( 'mpcs-options' );
+			$show_course_comments = helpers\Options::val( $options, 'show-course-comments' );
+			if ( ! empty( $show_course_comments ) && ( comments_open() || get_comments_number() ) ) {
+				comments_template();
+			}
+			?>
+		</div>
 		<?php
-		$options              = get_option( 'mpcs-options' );
-		$show_course_comments = helpers\Options::val( $options, 'show-course-comments' );
-		if ( ! empty( $show_course_comments ) && ( comments_open() || get_comments_number() ) ) {
-			comments_template();
-		}
 	} else {
 		$button_class = 'btn btn-green is-purple';
 		require MeprView::file( '/lessons/lesson_locked' );
