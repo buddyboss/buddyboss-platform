@@ -40,7 +40,8 @@
 	/* A sidebar-conditioned grid can be used on
     single profile or group screens. */
 
-	.bb-rl-primary-container ul.bb-course-items.bb-grid {
+	.bb-rl-primary-container ul.bb-course-items.bb-grid,
+	.bb-rl-courses-grid.bb-rl-courses-grid--group.grid {
 		grid-template-columns: repeat(3, 1fr);
 
 		@media screen and (max-width: 1600px) {
@@ -54,6 +55,10 @@
 		@media screen and (max-width: $md) {
 			grid-template-columns: 1fr;
 		}
+	}
+
+	.bb-rl-courses-grid.bb-rl-courses-grid--group.list {
+		grid-template-columns: 1fr;
 	}
 }
 
