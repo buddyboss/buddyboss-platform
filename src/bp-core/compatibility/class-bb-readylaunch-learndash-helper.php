@@ -111,7 +111,9 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 		public function bb_rl_override_learndash_template_path( $filepath, $name, $args, $echo, $return_file_path ) {
 			if (
 				bp_is_active( 'groups' ) &&
+				function_exists( 'bp_is_group_single' ) &&
 				bp_is_group_single() &&
+				function_exists( 'bp_current_action' ) &&
 				'courses' === bp_current_action()
 			) {
 				return $filepath;

@@ -336,13 +336,13 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		public function bb_rl_get_template_part_content() {
 			// Initialize LearnDash variables.
 			$is_ld_course_archive = false;
-			$is_ld_course_single  = false;
 			$is_ld_lesson_archive = false;
 			$is_ld_topic_archive  = false;
 			$is_ld_quiz_archive   = false;
 			$is_ld_assignment     = false;
 			$is_ld_exam           = false;
 			$is_ld_group_archive  = false;
+			$is_ld_group_single   = false;
 
 			// Initialize MemberPress variables.
 			$is_mp_course_archive    = false;
@@ -354,13 +354,13 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			// Check LearnDash post types.
 			if ( function_exists( 'learndash_get_post_type_slug' ) ) {
 				$is_ld_course_archive = is_post_type_archive( learndash_get_post_type_slug( 'course' ) );
-				$is_ld_course_single  = is_singular( learndash_get_post_type_slug( 'course' ) );
 				$is_ld_topic_archive  = is_post_type_archive( learndash_get_post_type_slug( 'topic' ) );
 				$is_ld_lesson_archive = is_post_type_archive( learndash_get_post_type_slug( 'lesson' ) );
 				$is_ld_quiz_archive   = is_post_type_archive( learndash_get_post_type_slug( 'quiz' ) );
 				$is_ld_assignment     = is_singular( learndash_get_post_type_slug( 'assignment' ) );
 				$is_ld_exam           = is_singular( learndash_get_post_type_slug( 'exam' ) );
 				$is_ld_group_archive  = is_post_type_archive( learndash_get_post_type_slug( 'group' ) );
+				$is_ld_group_single   = is_singular( learndash_get_post_type_slug( 'group' ) );
 			}
 
 			// Check for MemberPress courses archive.
@@ -414,7 +414,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				/**
 				* If comments are open or we have at least one comment, load up the comment template.
 				*/
-				if ( ! $is_ld_course_single && ( comments_open() || get_comments_number() ) ) {
+				if ( $is_ld_group_single && ( comments_open() || get_comments_number() ) ) {
 					?>
 					<div class="comments-area bb-rl-comments-area">
 						<?php comments_template(); ?>
