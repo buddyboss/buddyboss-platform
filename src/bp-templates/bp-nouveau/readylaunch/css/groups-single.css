@@ -5986,6 +5986,18 @@ body.ld-in-focus-mode .learndash-wrapper {
   background-color: var(--bb-rl-background-color);
 }
 
+.bb-rl-container .learndash_post_sfwd-topic + .comments-area,
+.bb-rl-container .learndash_post_sfwd-lessons + .comments-area {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 0 var(--bb-rl-space-700);
+}
+
+.bb-rl-learndash-quiz .bb-rl-course-content-comments {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
 .bb-rl-quiz-block {
   max-width: 800px;
   margin: 0 auto;

@@ -624,14 +624,6 @@
   line-height: var(--bb-rl-base-line-small);
 }
 
-.bb-rl-container .learndash_post_sfwd-topic + .comments-area,
-.bb-rl-container .learndash_post_sfwd-lessons + .comments-area,
-.bb-rl-container .learndash:has(.bb-learndash-content-wrap--quiz) + .comments-area {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 0 0 var(--bb-rl-space-700);
-}
-
 .bb-rl-lms-inner-block {
   max-width: 800px;
   margin: 0 auto;
