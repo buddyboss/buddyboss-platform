@@ -111,8 +111,11 @@ $ld_product = null;
 if ( class_exists( 'LearnDash\Core\Models\Product' ) && isset( $course_id ) ) {
 	$ld_product = LearnDash\Core\Models\Product::find( (int) $course_id );
 }
-?>
 
+$course_video_embed    = get_post_meta( $course_id, '_buddyboss_lms_course_video', true );
+$file_info             = pathinfo( $course_video_embed );
+$course_video_duration = get_post_meta( $course_id, '_buddyboss_lms_course_video_duration', true );
+?>
 
 <div class="bb-learndash-content-wrap">
 	<?php
