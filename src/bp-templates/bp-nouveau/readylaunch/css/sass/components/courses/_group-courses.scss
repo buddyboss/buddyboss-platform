@@ -73,7 +73,8 @@
 				color: var(--bb-rl-text-secondary-color);
 			}
 
-			.ld-course-status .ld-status.ld-status-progress {
+			.ld-course-status .ld-status.ld-status-progress,
+			.ld-course-status .ld-status.ld-status-complete {
 
 				@include bb-rl-label-heading-xs;
 				padding: var(--bb-rl-space-50) var(--bb-rl-space-100);
@@ -82,6 +83,12 @@
 				background-color: var(--bb-rl-background-brand-secondary-color);
 				color: var(--bb-rl-text-brand-secondary-color);
 				text-transform: none;
+			}
+
+			.ld-course-status .ld-status.ld-status-complete {
+				background-color: var(--bb-rl-background-positive-secondary-color);
+				border-color: var(--bb-rl-border-positive-secondary-color);
+				color: var(--bb-rl-text-positive-primary-color);
 			}
 		}
 
@@ -275,6 +282,10 @@
 					}
 				}
 			}
+		}
+
+		.ld-tabs {
+			margin-top: var(--bb-rl-space-300);
 		}
 	}
 }

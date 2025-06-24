@@ -1123,19 +1123,19 @@
   }
 }
 
-.bb-rl-entry-content .learndash-wrapper .ld-tabs {
+.bb-rl-container .learndash-wrapper .ld-tabs {
   margin: 0;
 }
 
-.bb-rl-entry-content .learndash-wrapper .ld-tabs .ld-tabs-navigation:after {
+.bb-rl-container .learndash-wrapper .ld-tabs .ld-tabs-navigation:after {
   display: none;
 }
 
-.bb-rl-entry-content .learndash-wrapper .ld-tabs .ld-tabs-navigation {
+.bb-rl-container .learndash-wrapper .ld-tabs .ld-tabs-navigation {
   gap: var(--bb-rl-space-100);
 }
 
-.bb-rl-entry-content .learndash-wrapper .ld-tabs .ld-tabs-navigation .ld-tab {
+.bb-rl-container .learndash-wrapper .ld-tabs .ld-tabs-navigation .ld-tab {
   font-size: var(--bb-rl-font-size-sm);
   font-weight: 500;
   line-height: var(--bb-rl-base-line-small);
@@ -1146,15 +1146,15 @@
   background-color: transparent;
 }
 
-.bb-rl-entry-content .learndash-wrapper .ld-tabs .ld-tabs-navigation .ld-tab .ld-icon {
+.bb-rl-container .learndash-wrapper .ld-tabs .ld-tabs-navigation .ld-tab .ld-icon {
   display: none;
 }
 
-.bb-rl-entry-content .learndash-wrapper .ld-tabs .ld-tabs-navigation .ld-tab::after {
+.bb-rl-container .learndash-wrapper .ld-tabs .ld-tabs-navigation .ld-tab::after {
   display: none;
 }
 
-.bb-rl-entry-content .learndash-wrapper .ld-tabs .ld-tabs-navigation .ld-tab.ld-active {
+.bb-rl-container .learndash-wrapper .ld-tabs .ld-tabs-navigation .ld-tab.ld-active {
   background-color: var(--bb-rl-background-color);
   color: var(--bb-rl-text-color);
   border-color: var(--bb-rl-border-quinery-color);
@@ -4095,7 +4095,8 @@ body.ld-in-focus-mode .learndash-wrapper {
   color: var(--bb-rl-text-secondary-color);
 }
 
-.bb-rl-container .learndash_post_groups .learndash-wrapper .ld-course-status .ld-status.ld-status-progress {
+.bb-rl-container .learndash_post_groups .learndash-wrapper .ld-course-status .ld-status.ld-status-progress,
+.bb-rl-container .learndash_post_groups .learndash-wrapper .ld-course-status .ld-status.ld-status-complete {
   font-size: var(--bb-rl-font-size-xs);
   font-weight: 500;
   line-height: var(--bb-rl-base-line-xs);
@@ -4105,6 +4106,12 @@ body.ld-in-focus-mode .learndash-wrapper {
   background-color: var(--bb-rl-background-brand-secondary-color);
   color: var(--bb-rl-text-brand-secondary-color);
   text-transform: none;
+}
+
+.bb-rl-container .learndash_post_groups .learndash-wrapper .ld-course-status .ld-status.ld-status-complete {
+  background-color: var(--bb-rl-background-positive-secondary-color);
+  border-color: var(--bb-rl-border-positive-secondary-color);
+  color: var(--bb-rl-text-positive-primary-color);
 }
 
 .bb-rl-container .learndash_post_groups .learndash-wrapper .ld-expand-button {
@@ -4312,6 +4319,10 @@ body.ld-in-focus-mode .learndash-wrapper {
   font-weight: 500;
   line-height: 22px;
   color: var(--bb-rl-text-secondary-color);
+}
+
+.bb-rl-container .learndash-wrapper .ld-tabs {
+  margin-top: var(--bb-rl-space-300);
 }
 
 .bb-readylaunch-template .bb-courses-header .grid-filters {
