@@ -622,7 +622,8 @@
 			margin-bottom: var(--bb-rl-space-300);
 		}
 
-		.comment-body {
+		.comment-body,
+		.course-comment {
 			display: flex;
 			align-items: flex-start;
 			background-color: var(--bb-rl-background-color);
@@ -661,7 +662,8 @@
 			}
 
 			.comment-footer a,
-			.comment-reply-link {
+			.comment-reply-link,
+			.comment-edit-link {
 
 				@include bb-rl-button;
 				@include bb-rl-button--secondary-outline;
@@ -759,6 +761,57 @@
 
 				@include bb-rl-button--tertiary-link;
 				border-bottom: 0;
+			}
+		}
+	}
+
+	.comment-list {
+
+		.course-comment {
+			flex-direction: column;
+			width: 100%;
+
+			.course-comment-info {
+				display: flex;
+				align-items: center;
+				width: 100%;
+				justify-content: flex-start;
+			}
+
+			.course-comment-author.vcard {
+
+				@include bb-rl-label-heading-md;
+				display: inline-flex;
+				align-items: center;
+				gap: var(--bb-rl-space-50);
+			}
+
+			.course-comment-time {
+
+				a {
+
+					@include bb-rl-button--tertiary-link;
+				}
+			}
+
+			.course-comment-avatar-wrap {
+
+				img {
+					width: 48px;
+					height: 48px;
+					border-radius: 50%;
+					margin-right: var(--bb-rl-space-100);
+				}
+			}
+
+			.course-comment-content {
+
+				@include bb-rl-label-heading-md-thin;
+				margin: var(--bb-rl-space-200) 0 0;
+
+				.course-comment-edit-reply-wrap {
+					margin-top: var(--bb-rl-space-200);
+				}
 			}
 		}
 	}

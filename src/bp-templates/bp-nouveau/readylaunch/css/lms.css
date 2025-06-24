@@ -898,9 +898,13 @@
 }
 
 .bb-rl-comments-area .comment-list .comment-body,
+.bb-rl-comments-area .comment-list .course-comment,
 .bb-rl-comments-area .commentlist .comment-body,
+.bb-rl-comments-area .commentlist .course-comment,
 .bb-rl-course-content-comments .comment-list .comment-body,
-.bb-rl-course-content-comments .commentlist .comment-body {
+.bb-rl-course-content-comments .comment-list .course-comment,
+.bb-rl-course-content-comments .commentlist .comment-body,
+.bb-rl-course-content-comments .commentlist .course-comment {
   display: flex;
   align-items: flex-start;
   background-color: var(--bb-rl-background-color);
@@ -910,26 +914,38 @@
 }
 
 .bb-rl-comments-area .comment-list .comment-body .comment-author.vcard,
+.bb-rl-comments-area .comment-list .course-comment .comment-author.vcard,
 .bb-rl-comments-area .commentlist .comment-body .comment-author.vcard,
+.bb-rl-comments-area .commentlist .course-comment .comment-author.vcard,
 .bb-rl-course-content-comments .comment-list .comment-body .comment-author.vcard,
-.bb-rl-course-content-comments .commentlist .comment-body .comment-author.vcard {
+.bb-rl-course-content-comments .comment-list .course-comment .comment-author.vcard,
+.bb-rl-course-content-comments .commentlist .comment-body .comment-author.vcard,
+.bb-rl-course-content-comments .commentlist .course-comment .comment-author.vcard {
   flex: 0 0 48px;
   max-width: 48px;
   margin-right: var(--bb-rl-space-200);
 }
 
 .bb-rl-comments-area .comment-list .comment-body .fn,
+.bb-rl-comments-area .comment-list .course-comment .fn,
 .bb-rl-comments-area .commentlist .comment-body .fn,
+.bb-rl-comments-area .commentlist .course-comment .fn,
 .bb-rl-course-content-comments .comment-list .comment-body .fn,
-.bb-rl-course-content-comments .commentlist .comment-body .fn {
+.bb-rl-course-content-comments .comment-list .course-comment .fn,
+.bb-rl-course-content-comments .commentlist .comment-body .fn,
+.bb-rl-course-content-comments .commentlist .course-comment .fn {
   display: block;
   font-style: normal;
 }
 
 .bb-rl-comments-area .comment-list .comment-body .fn a,
+.bb-rl-comments-area .comment-list .course-comment .fn a,
 .bb-rl-comments-area .commentlist .comment-body .fn a,
+.bb-rl-comments-area .commentlist .course-comment .fn a,
 .bb-rl-course-content-comments .comment-list .comment-body .fn a,
-.bb-rl-course-content-comments .commentlist .comment-body .fn a {
+.bb-rl-course-content-comments .comment-list .course-comment .fn a,
+.bb-rl-course-content-comments .commentlist .comment-body .fn a,
+.bb-rl-course-content-comments .commentlist .course-comment .fn a {
   font-size: 14px;
   font-weight: 500;
   line-height: 22px;
@@ -937,9 +953,13 @@
 }
 
 .bb-rl-comments-area .comment-list .comment-body .comment-date,
+.bb-rl-comments-area .comment-list .course-comment .comment-date,
 .bb-rl-comments-area .commentlist .comment-body .comment-date,
+.bb-rl-comments-area .commentlist .course-comment .comment-date,
 .bb-rl-course-content-comments .comment-list .comment-body .comment-date,
-.bb-rl-course-content-comments .commentlist .comment-body .comment-date {
+.bb-rl-course-content-comments .comment-list .course-comment .comment-date,
+.bb-rl-course-content-comments .commentlist .comment-body .comment-date,
+.bb-rl-course-content-comments .commentlist .course-comment .comment-date {
   font-size: var(--bb-rl-font-size-sm);
   font-weight: 400;
   line-height: var(--bb-rl-base-line-small);
@@ -948,12 +968,20 @@
 
 .bb-rl-comments-area .comment-list .comment-body .comment-text,
 .bb-rl-comments-area .comment-list .comment-body .comment-content,
+.bb-rl-comments-area .comment-list .course-comment .comment-text,
+.bb-rl-comments-area .comment-list .course-comment .comment-content,
 .bb-rl-comments-area .commentlist .comment-body .comment-text,
 .bb-rl-comments-area .commentlist .comment-body .comment-content,
+.bb-rl-comments-area .commentlist .course-comment .comment-text,
+.bb-rl-comments-area .commentlist .course-comment .comment-content,
 .bb-rl-course-content-comments .comment-list .comment-body .comment-text,
 .bb-rl-course-content-comments .comment-list .comment-body .comment-content,
+.bb-rl-course-content-comments .comment-list .course-comment .comment-text,
+.bb-rl-course-content-comments .comment-list .course-comment .comment-content,
 .bb-rl-course-content-comments .commentlist .comment-body .comment-text,
-.bb-rl-course-content-comments .commentlist .comment-body .comment-content {
+.bb-rl-course-content-comments .commentlist .comment-body .comment-content,
+.bb-rl-course-content-comments .commentlist .course-comment .comment-text,
+.bb-rl-course-content-comments .commentlist .course-comment .comment-content {
   font-size: 14px;
   font-weight: 400;
   line-height: 22px;
@@ -962,12 +990,28 @@
 
 .bb-rl-comments-area .comment-list .comment-body .comment-footer a,
 .bb-rl-comments-area .comment-list .comment-body .comment-reply-link,
+.bb-rl-comments-area .comment-list .comment-body .comment-edit-link,
+.bb-rl-comments-area .comment-list .course-comment .comment-footer a,
+.bb-rl-comments-area .comment-list .course-comment .comment-reply-link,
+.bb-rl-comments-area .comment-list .course-comment .comment-edit-link,
 .bb-rl-comments-area .commentlist .comment-body .comment-footer a,
 .bb-rl-comments-area .commentlist .comment-body .comment-reply-link,
+.bb-rl-comments-area .commentlist .comment-body .comment-edit-link,
+.bb-rl-comments-area .commentlist .course-comment .comment-footer a,
+.bb-rl-comments-area .commentlist .course-comment .comment-reply-link,
+.bb-rl-comments-area .commentlist .course-comment .comment-edit-link,
 .bb-rl-course-content-comments .comment-list .comment-body .comment-footer a,
 .bb-rl-course-content-comments .comment-list .comment-body .comment-reply-link,
+.bb-rl-course-content-comments .comment-list .comment-body .comment-edit-link,
+.bb-rl-course-content-comments .comment-list .course-comment .comment-footer a,
+.bb-rl-course-content-comments .comment-list .course-comment .comment-reply-link,
+.bb-rl-course-content-comments .comment-list .course-comment .comment-edit-link,
 .bb-rl-course-content-comments .commentlist .comment-body .comment-footer a,
-.bb-rl-course-content-comments .commentlist .comment-body .comment-reply-link {
+.bb-rl-course-content-comments .commentlist .comment-body .comment-reply-link,
+.bb-rl-course-content-comments .commentlist .comment-body .comment-edit-link,
+.bb-rl-course-content-comments .commentlist .course-comment .comment-footer a,
+.bb-rl-course-content-comments .commentlist .course-comment .comment-reply-link,
+.bb-rl-course-content-comments .commentlist .course-comment .comment-edit-link {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -989,34 +1033,82 @@
 
 .bb-rl-comments-area .comment-list .comment-body .comment-footer a:hover,
 .bb-rl-comments-area .comment-list .comment-body .comment-reply-link:hover,
+.bb-rl-comments-area .comment-list .comment-body .comment-edit-link:hover,
+.bb-rl-comments-area .comment-list .course-comment .comment-footer a:hover,
+.bb-rl-comments-area .comment-list .course-comment .comment-reply-link:hover,
+.bb-rl-comments-area .comment-list .course-comment .comment-edit-link:hover,
 .bb-rl-comments-area .commentlist .comment-body .comment-footer a:hover,
 .bb-rl-comments-area .commentlist .comment-body .comment-reply-link:hover,
+.bb-rl-comments-area .commentlist .comment-body .comment-edit-link:hover,
+.bb-rl-comments-area .commentlist .course-comment .comment-footer a:hover,
+.bb-rl-comments-area .commentlist .course-comment .comment-reply-link:hover,
+.bb-rl-comments-area .commentlist .course-comment .comment-edit-link:hover,
 .bb-rl-course-content-comments .comment-list .comment-body .comment-footer a:hover,
 .bb-rl-course-content-comments .comment-list .comment-body .comment-reply-link:hover,
+.bb-rl-course-content-comments .comment-list .comment-body .comment-edit-link:hover,
+.bb-rl-course-content-comments .comment-list .course-comment .comment-footer a:hover,
+.bb-rl-course-content-comments .comment-list .course-comment .comment-reply-link:hover,
+.bb-rl-course-content-comments .comment-list .course-comment .comment-edit-link:hover,
 .bb-rl-course-content-comments .commentlist .comment-body .comment-footer a:hover,
-.bb-rl-course-content-comments .commentlist .comment-body .comment-reply-link:hover {
+.bb-rl-course-content-comments .commentlist .comment-body .comment-reply-link:hover,
+.bb-rl-course-content-comments .commentlist .comment-body .comment-edit-link:hover,
+.bb-rl-course-content-comments .commentlist .course-comment .comment-footer a:hover,
+.bb-rl-course-content-comments .commentlist .course-comment .comment-reply-link:hover,
+.bb-rl-course-content-comments .commentlist .course-comment .comment-edit-link:hover {
   background-color: var(--bb-rl-background-secondary-color);
 }
 
 .bb-rl-comments-area .comment-list .comment-body .comment-footer a:focus,
 .bb-rl-comments-area .comment-list .comment-body .comment-reply-link:focus,
+.bb-rl-comments-area .comment-list .comment-body .comment-edit-link:focus,
+.bb-rl-comments-area .comment-list .course-comment .comment-footer a:focus,
+.bb-rl-comments-area .comment-list .course-comment .comment-reply-link:focus,
+.bb-rl-comments-area .comment-list .course-comment .comment-edit-link:focus,
 .bb-rl-comments-area .commentlist .comment-body .comment-footer a:focus,
 .bb-rl-comments-area .commentlist .comment-body .comment-reply-link:focus,
+.bb-rl-comments-area .commentlist .comment-body .comment-edit-link:focus,
+.bb-rl-comments-area .commentlist .course-comment .comment-footer a:focus,
+.bb-rl-comments-area .commentlist .course-comment .comment-reply-link:focus,
+.bb-rl-comments-area .commentlist .course-comment .comment-edit-link:focus,
 .bb-rl-course-content-comments .comment-list .comment-body .comment-footer a:focus,
 .bb-rl-course-content-comments .comment-list .comment-body .comment-reply-link:focus,
+.bb-rl-course-content-comments .comment-list .comment-body .comment-edit-link:focus,
+.bb-rl-course-content-comments .comment-list .course-comment .comment-footer a:focus,
+.bb-rl-course-content-comments .comment-list .course-comment .comment-reply-link:focus,
+.bb-rl-course-content-comments .comment-list .course-comment .comment-edit-link:focus,
 .bb-rl-course-content-comments .commentlist .comment-body .comment-footer a:focus,
-.bb-rl-course-content-comments .commentlist .comment-body .comment-reply-link:focus {
+.bb-rl-course-content-comments .commentlist .comment-body .comment-reply-link:focus,
+.bb-rl-course-content-comments .commentlist .comment-body .comment-edit-link:focus,
+.bb-rl-course-content-comments .commentlist .course-comment .comment-footer a:focus,
+.bb-rl-course-content-comments .commentlist .course-comment .comment-reply-link:focus,
+.bb-rl-course-content-comments .commentlist .course-comment .comment-edit-link:focus {
   outline: 2px solid var(--bb-rl-border-quinery-color);
 }
 
 .bb-rl-comments-area .comment-list .comment-body .comment-footer a:disabled,
 .bb-rl-comments-area .comment-list .comment-body .comment-reply-link:disabled,
+.bb-rl-comments-area .comment-list .comment-body .comment-edit-link:disabled,
+.bb-rl-comments-area .comment-list .course-comment .comment-footer a:disabled,
+.bb-rl-comments-area .comment-list .course-comment .comment-reply-link:disabled,
+.bb-rl-comments-area .comment-list .course-comment .comment-edit-link:disabled,
 .bb-rl-comments-area .commentlist .comment-body .comment-footer a:disabled,
 .bb-rl-comments-area .commentlist .comment-body .comment-reply-link:disabled,
+.bb-rl-comments-area .commentlist .comment-body .comment-edit-link:disabled,
+.bb-rl-comments-area .commentlist .course-comment .comment-footer a:disabled,
+.bb-rl-comments-area .commentlist .course-comment .comment-reply-link:disabled,
+.bb-rl-comments-area .commentlist .course-comment .comment-edit-link:disabled,
 .bb-rl-course-content-comments .comment-list .comment-body .comment-footer a:disabled,
 .bb-rl-course-content-comments .comment-list .comment-body .comment-reply-link:disabled,
+.bb-rl-course-content-comments .comment-list .comment-body .comment-edit-link:disabled,
+.bb-rl-course-content-comments .comment-list .course-comment .comment-footer a:disabled,
+.bb-rl-course-content-comments .comment-list .course-comment .comment-reply-link:disabled,
+.bb-rl-course-content-comments .comment-list .course-comment .comment-edit-link:disabled,
 .bb-rl-course-content-comments .commentlist .comment-body .comment-footer a:disabled,
-.bb-rl-course-content-comments .commentlist .comment-body .comment-reply-link:disabled {
+.bb-rl-course-content-comments .commentlist .comment-body .comment-reply-link:disabled,
+.bb-rl-course-content-comments .commentlist .comment-body .comment-edit-link:disabled,
+.bb-rl-course-content-comments .commentlist .course-comment .comment-footer a:disabled,
+.bb-rl-course-content-comments .commentlist .course-comment .comment-reply-link:disabled,
+.bb-rl-course-content-comments .commentlist .course-comment .comment-edit-link:disabled {
   border-color: var(--bb-rl-border-tertiary-color);
   color: var(--bb-rl-text-disabled-color);
   cursor: not-allowed;
@@ -1152,6 +1244,72 @@
   color: var(--bb-rl-background-brand-disabled-color);
   border-bottom-color: transparent;
   cursor: not-allowed;
+}
+
+.bb-rl-comments-area .comment-list .course-comment,
+.bb-rl-course-content-comments .comment-list .course-comment {
+  flex-direction: column;
+  width: 100%;
+}
+
+.bb-rl-comments-area .comment-list .course-comment .course-comment-info,
+.bb-rl-course-content-comments .comment-list .course-comment .course-comment-info {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  justify-content: flex-start;
+}
+
+.bb-rl-comments-area .comment-list .course-comment .course-comment-author.vcard,
+.bb-rl-course-content-comments .comment-list .course-comment .course-comment-author.vcard {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 22px;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--bb-rl-space-50);
+}
+
+.bb-rl-comments-area .comment-list .course-comment .course-comment-time a,
+.bb-rl-course-content-comments .comment-list .course-comment .course-comment-time a {
+  background-color: transparent;
+  color: var(--bb-rl-text-brand-primary-color);
+  border: none;
+  border-radius: 0;
+  border-bottom: 1px solid transparent;
+}
+
+.bb-rl-comments-area .comment-list .course-comment .course-comment-time a:hover,
+.bb-rl-course-content-comments .comment-list .course-comment .course-comment-time a:hover {
+  border-bottom-color: var(--bb-rl-link-primary-hover-color);
+}
+
+.bb-rl-comments-area .comment-list .course-comment .course-comment-time a:disabled,
+.bb-rl-course-content-comments .comment-list .course-comment .course-comment-time a:disabled {
+  color: var(--bb-rl-background-brand-disabled-color);
+  border-bottom-color: transparent;
+  cursor: not-allowed;
+}
+
+.bb-rl-comments-area .comment-list .course-comment .course-comment-avatar-wrap img,
+.bb-rl-course-content-comments .comment-list .course-comment .course-comment-avatar-wrap img {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  margin-right: var(--bb-rl-space-100);
+}
+
+.bb-rl-comments-area .comment-list .course-comment .course-comment-content,
+.bb-rl-course-content-comments .comment-list .course-comment .course-comment-content {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 22px;
+  margin: var(--bb-rl-space-200) 0 0;
+}
+
+.bb-rl-comments-area .comment-list .course-comment .course-comment-content .course-comment-edit-reply-wrap,
+.bb-rl-course-content-comments .comment-list .course-comment .course-comment-content .course-comment-edit-reply-wrap {
+  margin-top: var(--bb-rl-space-200);
 }
 
 .bb-rl-lms-course {
