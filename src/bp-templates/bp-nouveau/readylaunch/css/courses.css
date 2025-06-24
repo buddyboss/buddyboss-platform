@@ -4198,6 +4198,41 @@ body.ld-in-focus-mode .learndash-wrapper {
   color: var(--bb-rl-text-positive-primary-color);
 }
 
+.bb-rl-container .learndash_post_groups .ld-item-list-items.ld-loading::before {
+  border-color: var(--bb-rl-border-secondary-color);
+  border-top-color: var(--bb-rl-border-brand-secondary-color);
+}
+
+.bb-rl-container .learndash_post_groups .ld-pagination .ld-pages {
+  background-color: transparent;
+}
+
+.bb-rl-container .learndash_post_groups .ld-pagination .ld-pages > span {
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 400;
+  line-height: var(--bb-rl-base-line-small);
+  text-transform: none;
+  color: var(--bb-rl-text-secondary-color);
+}
+
+.bb-rl-container .learndash_post_groups .ld-pagination .ld-icon-arrow-left:before,
+.bb-rl-container .learndash_post_groups .ld-pagination .ld-icon-arrow-right:before {
+  font-size: var(--bb-rl-font-size-base);
+  content: "";
+  font-weight: 400;
+  font-family: bb-icons-rl;
+  font-style: normal;
+  line-height: 1;
+}
+
+.bb-rl-container .learndash_post_groups .ld-pagination .ld-icon-arrow-left:before {
+  content: "\e138";
+}
+
+.bb-rl-container .learndash_post_groups .ld-pagination .ld-icon-arrow-right:before {
+  content: "\e13a";
+}
+
 .bb-rl-container .learndash_post_groups + .comments-area {
   max-width: 1032px;
   margin: 0 auto;

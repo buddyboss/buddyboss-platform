@@ -151,6 +151,46 @@
 				}
 			}
 		}
+
+		.ld-item-list-items {
+
+			&.ld-loading::before {
+				border-color: var(--bb-rl-border-secondary-color);
+				border-top-color: var(--bb-rl-border-brand-secondary-color);
+			}
+		}
+
+		.ld-pagination {
+
+			.ld-pages {
+				background-color: transparent;
+
+				> span {
+
+					@include bb-rl-label-heading;
+					text-transform: none;
+					color: var(--bb-rl-text-secondary-color);
+				}
+			}
+
+			.ld-icon-arrow-left:before,
+			.ld-icon-arrow-right:before {
+				font-size: var(--bb-rl-font-size-base);
+				content: "";
+				font-weight: 400;
+				font-family: bb-icons-rl;
+				font-style: normal;
+				line-height: 1;
+			}
+
+			.ld-icon-arrow-left:before {
+				content: "\e138";
+			}
+
+			.ld-icon-arrow-right:before {
+				content: "\e13a";
+			}
+		}
 	}
 
 	.learndash_post_groups + .comments-area {
