@@ -34,7 +34,7 @@ window.bp = window.bp || {};
 			$document.on( 'change', '#bb-rl-forum-scope-options', this.handleForumScopeChange );
 			$document.on( 'click', '.bb-rl-forum-tabs-item a', this.handleForumTabsClick );
 			$document.on( 'click', '.bb-rl-new-discussion-btn', this.openForumModal );
-			$document.on( 'click', '.bbp-topic-reply-link', this.openReplyModal );
+			$document.on( 'click', '.bbp-topic-reply-link, .bbp-reply-to-link', this.openReplyModal );
 			$document.on( 'click', '.bb-rl-forum-modal-close, .bb-rl-forum-modal-overlay', this.closeForumModal );
 			$document.on( 'click', '.bb-rl-forum-modal-overlay', this.closeForumModalOverlay );
 			$document.on( 'click', '[id*="single-forum-description-popup"] .bb-close-action-popup', this.closeForumDescriptionPopup );
