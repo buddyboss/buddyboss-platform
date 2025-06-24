@@ -57,38 +57,39 @@
             $containerElm.toggleClass('ld-expanded').slideToggle( 300 );
         },
 
-        handleVideoPlayOverlay: function(e) {
+        handleVideoPlayOverlay : function ( e ) {
             e.preventDefault();
-            var $overlay = $(this);
-            var $courseFigure = $overlay.closest('.bb-rl-course-figure');
-            var $videoPreview = $overlay.closest('.bb-rl-video-preview-container');
-            var $videoContainer = $videoPreview.find('.bb-rl-video-embed-container');
-            
-            if ($courseFigure.length) {
-                $courseFigure.addClass('video-active');
+            var $overlay        = $( this );
+            var $courseFigure   = $overlay.closest( '.bb-rl-course-figure' );
+            var $videoPreview   = $overlay.closest( '.bb-rl-video-preview-container' );
+            var $videoContainer = $videoPreview.find( '.bb-rl-video-embed-container' );
+
+            if ( $courseFigure.length ) {
+                $courseFigure.addClass( 'video-active' );
             }
-            
+
             // Show the video container and hide the preview image
-            if ($videoContainer.length) {
-                
+            if ( $videoContainer.length ) {
+
                 // Handle YouTube video playback
-                var $iframe = $videoContainer.find('iframe');
-                if ($iframe.length) {
-                    var iframeSrc = $iframe.attr('src');
-                    
+                var $iframe = $videoContainer.find( 'iframe' );
+                if ( $iframe.length ) {
+                    var iframeSrc = $iframe.attr( 'src' );
+                    var separator, autoplaySrc;
+
                     // Check if it's a YouTube video
-                    if (iframeSrc && iframeSrc.indexOf('youtube.com') !== -1) {
+                    if ( iframeSrc && iframeSrc.indexOf( 'youtube.com' ) !== -1 ) {
                         // Add autoplay parameter to YouTube URL
-                        var separator = iframeSrc.indexOf('?') !== -1 ? '&' : '?';
-                        var autoplaySrc = iframeSrc + separator + 'autoplay=1&mute=1';
-                        $iframe.attr('src', autoplaySrc);
+                        separator   = iframeSrc.indexOf( '?' ) !== -1 ? '&' : '?';
+                        autoplaySrc = iframeSrc + separator + 'autoplay=1&mute=1';
+                        $iframe.attr( 'src', autoplaySrc );
                     }
                     // Check if it's a Vimeo video
-                    else if (iframeSrc && iframeSrc.indexOf('vimeo.com') !== -1) {
+                    else if ( iframeSrc && iframeSrc.indexOf( 'vimeo.com' ) !== -1 ) {
                         // Add autoplay parameter to Vimeo URL
-                        var separator = iframeSrc.indexOf('?') !== -1 ? '&' : '?';
-                        var autoplaySrc = iframeSrc + separator + 'autoplay=1&muted=1';
-                        $iframe.attr('src', autoplaySrc);
+                        separator   = iframeSrc.indexOf( '?' ) !== -1 ? '&' : '?';
+                        autoplaySrc = iframeSrc + separator + 'autoplay=1&muted=1';
+                        $iframe.attr( 'src', autoplaySrc );
                     }
                 }
             }
@@ -132,7 +133,7 @@
 								url     : bbReadylaunchLearnDash.ajaxurl,
 								nonce   : bbReadylaunchLearnDash.nonce_list_grid,
 								data    : 'action=bb_rl_lms_save_view&option=bb_layout_view&object=' + $( this ).parent().attr( 'data-view' ) + '&type=list&nonce=' + bbReadylaunchLearnDash.nonce_list_grid,
-								success : function ( response ) {
+								success : function () {
 								}
 							}
 						);
@@ -147,7 +148,7 @@
 								url     	: bbReadylaunchLearnDash.ajaxurl,
 								nonce       : bbReadylaunchLearnDash.nonce_list_grid,
 								data    	: 'action=bb_rl_lms_save_view&option=bb_layout_view&object=' + $( this ).parent().attr( 'data-view' ) + '&type=grid&nonce=' + bbReadylaunchLearnDash.nonce_list_grid,
-								success 	: function ( response ) {
+								success 	: function () {
 								}
 							}
 						);
@@ -203,12 +204,10 @@
          * Filter courses via AJAX
          */
         filterCourses : function () {
-            var $courseList  = $( '.bb-rl-courses-list' ),
-                $courseItems = $( '.bb-rl-courses-grid' ),
-                category     = $( '#ld-course-cats' ).val(),
-                instructor   = $( '#ld-course-instructors' ).val(),
-                orderby      = $( '#ld-course-orderby' ).val(),
-                search       = $( '#bb-courses-search' ).val();
+            var $courseList = $( '.bb-rl-courses-list' ),
+                category    = $( '#ld-course-cats' ).val(),
+                instructor  = $( '#ld-course-instructors' ).val(),
+                orderby     = $( '#ld-course-orderby' ).val();
 
             // Show loading state.
             $courseList.addClass( 'loading' );
