@@ -1,3 +1,4 @@
+/* global bbReadylaunchLearnDash */
 /**
  * LearnDash JavaScript for ReadyLaunch
  *
@@ -110,6 +111,10 @@
 						'ld-course' !== $( this ).parent().attr( 'data-view' )
 					) {
 						return;
+                    }
+                    
+                    if ( BBReadyLaunchLearnDash.ajax_request ) {
+						BBReadyLaunchLearnDash.ajax_request.abort();
 					}
 
 					var rlContainer = $( this ).closest( '.bb-rl-container' );
@@ -120,12 +125,32 @@
 						gridFilters.find( '.layout-view-course' ).removeClass( 'active' );
 						courseLoopSelector.removeClass( 'grid' );
 						$( this ).addClass( 'active' );
-						courseLoopSelector.addClass( 'list' );
+                        courseLoopSelector.addClass('list');
+                        BBReadyLaunchLearnDash.ajax_request = $.ajax(
+							{
+								method  : 'POST',
+								url     : bbReadylaunchLearnDash.ajaxurl,
+								nonce   : bbReadylaunchLearnDash.nonce_list_grid,
+								data    : 'action=bb_rl_lms_save_view&option=bb_layout_view&object=' + $( this ).parent().attr( 'data-view' ) + '&type=list&nonce=' + bbReadylaunchLearnDash.nonce_list_grid,
+								success : function ( response ) {
+								}
+							}
+						);
 					} else {
 						gridFilters.find( '.layout-view-course' ).removeClass( 'active' );
 						courseLoopSelector.removeClass( 'list' );
 						$( this ).addClass( 'active' );
-						courseLoopSelector.addClass( 'grid' );
+                        courseLoopSelector.addClass('grid');
+                        BBReadyLaunchLearnDash.ajax_request = $.ajax(
+							{
+								method  	: 'POST',
+								url     	: bbReadylaunchLearnDash.ajaxurl,
+								nonce       : bbReadylaunchLearnDash.nonce_list_grid,
+								data    	: 'action=bb_rl_lms_save_view&option=bb_layout_view&object=' + $( this ).parent().attr( 'data-view' ) + '&type=grid&nonce=' + bbReadylaunchLearnDash.nonce_list_grid,
+								success 	: function ( response ) {
+								}
+							}
+						);
 					}
 				}
 			);
@@ -450,7 +475,8 @@
     /**
      * DOM ready
      */
-    $(document).ready(function() {
+    $(document).ready(function () {
+        BBReadyLaunchLearnDash.ajax_request = null;
         BBReadyLaunchLearnDash.init();
     });
     

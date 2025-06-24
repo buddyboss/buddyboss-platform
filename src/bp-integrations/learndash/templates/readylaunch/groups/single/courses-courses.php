@@ -39,6 +39,7 @@ if (
 	)
 ) {
 	$view              = bb_get_directory_layout_preference( 'ld-course' );
+	$view              = ! empty( $view ) ? $view : 'grid';
 	$class_grid_active = ( 'grid' === $view ) ? 'active' : '';
 	$class_list_active = ( 'list' === $view ) ? 'active' : '';
 	$class_grid_show   = ( 'grid' === $view ) ? 'grid-view bb-grid' : '';
@@ -64,7 +65,7 @@ if (
 					</div>
                     <div class="grid-view bb-grid">
                         <div id="course-dir-list" class="course-dir-list bs-dir-list">
-                            <div id="courses-list" class="bb-rl-courses-grid bb-rl-courses-grid--group grid bb-course-items <?php echo esc_attr( $class_grid_show . $class_list_show ); ?>">
+                            <div id="courses-list" class="bb-rl-courses-grid bb-rl-courses-grid--group <?php echo esc_attr( $view ); ?> <?php echo esc_attr( $class_grid_show . $class_list_show ); ?>">
 								<?php
 								foreach ( bp_ld_sync( 'buddypress' )->courses->getGroupCourses() as $post ) :
 									setup_postdata( $post );

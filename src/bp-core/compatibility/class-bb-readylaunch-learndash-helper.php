@@ -90,6 +90,9 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 
 			add_action( 'add_meta_boxes', array( $this, 'bb_rl_learndash_add_meta_boxes' ), 30 );
 			add_action( 'save_post', array( $this, 'bb_rl_learndash_save_meta_boxes' ), 10, 2 );
+
+			add_action( 'wp_ajax_bb_rl_lms_save_view', array( $this, 'bb_rl_lms_save_view' ) );
+			add_action( 'wp_ajax_nopriv_bb_rl_lms_save_view', array( $this, 'bb_rl_lms_save_view' ) );
 		}
 
 		/**
@@ -182,7 +185,9 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 				'bb-readylaunch-learndash-js',
 				'bbReadylaunchLearnDash',
 				array(
-					'courses_url' => home_url( '/courses/' ),
+					'courses_url'     => home_url( '/courses/' ),
+					'ajaxurl'         => admin_url( 'admin-ajax.php' ),
+					'nonce_list_grid' => wp_create_nonce( 'list-grid-settings' ),
 				)
 			);
 		}
@@ -1706,7 +1711,6 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 		 * @param object $post The post object.
 		 */
 		public function bb_rl_learndash_save_meta_boxes( $post_id, $post ) {
-
 			/*
 			 * We need to verify this came from our screen and with proper authorization,
 			 * because the save_post action can be triggered at other times.
@@ -2049,6 +2053,70 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 				esc_html( _n( '%d Day', '%d Days', $days, 'buddyboss' ) ),
 				esc_html( $days )
 			);
+		}
+
+		/**
+		 * Save the view type for the course.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 */
+		public function bb_rl_lms_save_view() {
+			$nonce = isset( $_REQUEST['nonce'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['nonce'] ) ) : '';
+			if ( ! wp_verify_nonce( $nonce, 'list-grid-settings' ) ) {
+				wp_send_json_error(
+					array(
+						'message' => __( 'Invalid request.', 'buddyboss' ),
+					)
+				);
+				wp_die();
+			}
+
+			$object = isset( $_REQUEST['object'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['object'] ) ) : '';
+			if ( empty( $object ) || 'ld-course' !== $object ) {
+				wp_send_json_error(
+					array(
+						'message' => __( 'Not a valid object', 'buddyboss' ),
+					)
+				);
+				wp_die();
+			}
+
+			$option_name = isset( $_REQUEST['option'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['option'] ) ) : '';
+			if ( empty( $option_name ) || 'bb_layout_view' !== $option_name ) {
+				wp_send_json_error(
+					array(
+						'message' => __( 'Not a valid option', 'buddyboss' ),
+					)
+				);
+				wp_die();
+			}
+
+			// phpcs:ignore WordPress.Security.NonceVerification
+			$option_value = isset( $_REQUEST['type'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['type'] ) ) : '';
+			if ( ! in_array( $option_value, array( 'grid', 'list' ), true ) ) {
+				wp_send_json_error(
+					array(
+						'message' => __( 'Not a valid value', 'buddyboss' ),
+					)
+				);
+				wp_die();
+			}
+
+			if ( is_user_logged_in() ) {
+				$existing_layout = get_user_meta( get_current_user_id(), $option_name, true );
+				$existing_layout = ! empty( $existing_layout ) ? $existing_layout : array();
+				// Store layout option in the db.
+				$existing_layout[ $object ] = $option_value;
+				update_user_meta( get_current_user_id(), $option_name, $existing_layout );
+			} else {
+				$existing_layout = ! empty( $_COOKIE[ $option_name ] ) ? json_decode( rawurldecode( sanitize_text_field( wp_unslash( $_COOKIE[ $option_name ] ) ) ), true ) : array();
+				// Store layout option in the cookie.
+				$existing_layout[ $object ] = $option_value;
+				setcookie( $option_name, rawurlencode( wp_json_encode( $existing_layout ) ), time() + 31556926, '/', COOKIE_DOMAIN, false, false );
+			}
+
+			wp_send_json_success( array( 'html' => 'success' ) );
+			wp_die();
 		}
 	}
 
