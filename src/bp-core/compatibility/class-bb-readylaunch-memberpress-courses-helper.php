@@ -510,7 +510,7 @@ class BB_Readylaunch_Memberpress_Courses_Helper {
 	 * @since BuddyBoss [BBVERSION]
 	 */
 	public function bb_rl_mpcs_no_posts() {
-		echo '<div> class="bb-rl-container-inner"><p>' . esc_html__( 'No Courses found', 'buddyboss' ) . '</p></div>';
+		echo '<div class="bb-rl-container-inner"><p>' . esc_html__( 'No Courses found', 'buddyboss' ) . '</p></div>';
 	}
 
 	/**

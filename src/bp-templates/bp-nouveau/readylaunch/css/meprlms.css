@@ -279,6 +279,7 @@
 .bb-rl-left-panel--memprlms .mepr-resources .tile-icon i {
   font-size: 20px;
   color: var(--bb-rl-icon-secondary-color);
+  font-style: normal;
 }
 
 .bb-rl-widget-sidebar-menu a .tile-icon i:before,
@@ -937,6 +938,27 @@
   margin: 0 var(--bb-rl-space-50) 0 0;
   position: relative;
   top: 3px;
+  font-style: normal;
+}
+
+.bb-rl-course-content-inner .mpcs-section .mpcs-lessons .mpcs-lesson-row-link .mpcs-quiz-icon:before,
+.mpcs-sidebar-content .mpcs-section .mpcs-lessons .mpcs-lesson-row-link .mpcs-quiz-icon:before {
+  content: "\e3e8";
+  font-weight: 400;
+  font-family: bb-icons-rl;
+  font-size: 20px;
+  color: var(--bb-rl-icon-secondary-color);
+  margin: 0 var(--bb-rl-space-50) 0 0;
+  position: relative;
+  top: 4px;
+  font-style: normal;
+}
+
+.bb-rl-course-content-inner .mpcs-section .mpcs-lessons .mpcs-lesson-link.mpcs-lesson > i,
+.bb-rl-course-content-inner .mpcs-section .mpcs-lessons .mpcs-lesson-row-link .mpcs-assignment-icon > i,
+.mpcs-sidebar-content .mpcs-section .mpcs-lessons .mpcs-lesson-link.mpcs-lesson > i,
+.mpcs-sidebar-content .mpcs-section .mpcs-lessons .mpcs-lesson-row-link .mpcs-assignment-icon > i {
+  display: none;
 }
 
 .bb-rl-course-content-inner .mpcs-section .mpcs-lessons .mpcs-lesson-row-link .mpcs-assignment-icon:before,
@@ -949,6 +971,8 @@
   padding: 11px var(--bb-rl-space-200);
   border-radius: var(--bb-rl-radius-md);
   flex-direction: row-reverse;
+  display: flex;
+  align-items: center;
 }
 
 .bb-rl-course-content-inner .mpcs-section .mpcs-lessons .mpcs-lesson-row-link:hover,

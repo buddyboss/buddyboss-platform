@@ -74,7 +74,7 @@ foreach ( $sections as $section ) :
 						<span class="mpcs-lesson-not-complete"><i class="mpcs-circle-regular"></i></span>
 					<?php endif; ?>
 				</div>
-				<div class="mpcs-lesson-link">
+				<div class="mpcs-lesson-link <?php echo esc_attr( $lesson->post_type ); ?>">
 					<i class="<?php echo esc_attr( $lesson->post_type ); ?>-icon"></i>
 					<?php echo esc_html( $lesson->post_title ); ?>
 					<?php do_action( 'mpcs_section_lesson_title_suffix', $lesson, $has_completed_lesson, $is_sidebar ); ?>
