@@ -633,6 +633,13 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			$custom_location = 'readylaunch';
 
 			foreach ( $stack as $key => $value ) {
+
+				// Check if the path already ends with readylaunch to prevent recursive appending.
+				$normalized_path = untrailingslashit( $value );
+				if ( 0 === substr_compare( $normalized_path, $custom_location, -strlen( $custom_location ) ) ) {
+					continue;
+				}
+
 				$stack[ $key ] = untrailingslashit( trailingslashit( $value ) . $custom_location );
 			}
 
