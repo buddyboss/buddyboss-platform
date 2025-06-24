@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 6.8.1
 Requires PHP: 8.0
-Stable tag: 2.8.80
+Stable tag: 2.8.90
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,11 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 2.8.90 =
+* Bug: Groups - Fixed an issue where deleting activity topics removed them from group-level topics
+* Bug: Groups - Fixed an issue where uploading default cover images slowed down sites with many group subscriptions
+* Bug: Notifications - Fixed an issue where user hover info was not displaying in notifications after sending a connection request
 
 = 2.8.80 =
 * New Feature! – Added Activity Topics for categorizing and filtering posts in activity feeds and groups
