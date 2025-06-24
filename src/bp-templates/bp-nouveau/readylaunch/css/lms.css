@@ -1058,40 +1058,41 @@
   padding-left: var(--bb-rl-space-50);
 }
 
-.bb-rl-comments-area {
-  margin: var(--bb-rl-space-200) 0 0;
-  padding-bottom: var(--bb-rl-space-300);
-}
-
-.bb-rl-comments-area > h3 {
+.bb-rl-comments-area > h3,
+.bb-rl-course-content-comments > h3 {
   font-size: var(--bb-rl-font-size-base);
   font-weight: 500;
   line-height: var(--bb-rl-base-line);
   margin-bottom: var(--bb-rl-space-200);
 }
 
-.bb-rl-comments-area > h3 + .navigation {
+.bb-rl-comments-area > h3 + .navigation,
+.bb-rl-course-content-comments > h3 + .navigation {
   display: none;
 }
 
-.bb-rl-comments-area .commentlist .comment-body {
+.bb-rl-comments-area .commentlist .comment-body,
+.bb-rl-course-content-comments .commentlist .comment-body {
   flex-direction: column;
   width: 100%;
 }
 
-.bb-rl-comments-area .commentlist .comment-body .comment-author.vcard {
+.bb-rl-comments-area .commentlist .comment-body .comment-author.vcard,
+.bb-rl-course-content-comments .commentlist .comment-body .comment-author.vcard {
   flex: 1;
   max-width: none;
 }
 
-.bb-rl-comments-area .commentlist .comment-body footer.comment-meta {
+.bb-rl-comments-area .commentlist .comment-body footer.comment-meta,
+.bb-rl-course-content-comments .commentlist .comment-body footer.comment-meta {
   display: flex;
   align-items: center;
   width: 100%;
   justify-content: space-between;
 }
 
-.bb-rl-comments-area .commentlist .comment-body footer.comment-meta .comment-metadata {
+.bb-rl-comments-area .commentlist .comment-body footer.comment-meta .comment-metadata,
+.bb-rl-course-content-comments .commentlist .comment-body footer.comment-meta .comment-metadata {
   display: inline-flex;
   align-items: center;
   gap: var(--bb-rl-space-100);
@@ -1100,11 +1101,13 @@
   line-height: 22px;
 }
 
-.bb-rl-comments-area .commentlist .comment-body footer.comment-meta .comment-metadata > a {
+.bb-rl-comments-area .commentlist .comment-body footer.comment-meta .comment-metadata > a,
+.bb-rl-course-content-comments .commentlist .comment-body footer.comment-meta .comment-metadata > a {
   color: var(--bb-rl-text-tertiary-color);
 }
 
-.bb-rl-comments-area .commentlist .comment-body footer.comment-meta .comment-metadata .comment-edit-link {
+.bb-rl-comments-area .commentlist .comment-body footer.comment-meta .comment-metadata .comment-edit-link,
+.bb-rl-course-content-comments .commentlist .comment-body footer.comment-meta .comment-metadata .comment-edit-link {
   background-color: transparent;
   color: var(--bb-rl-text-brand-primary-color);
   border: none;
@@ -1112,28 +1115,33 @@
   border-bottom: 1px solid transparent;
 }
 
-.bb-rl-comments-area .commentlist .comment-body footer.comment-meta .comment-metadata .comment-edit-link:hover {
+.bb-rl-comments-area .commentlist .comment-body footer.comment-meta .comment-metadata .comment-edit-link:hover,
+.bb-rl-course-content-comments .commentlist .comment-body footer.comment-meta .comment-metadata .comment-edit-link:hover {
   border-bottom-color: var(--bb-rl-link-primary-hover-color);
 }
 
-.bb-rl-comments-area .commentlist .comment-body footer.comment-meta .comment-metadata .comment-edit-link:disabled {
+.bb-rl-comments-area .commentlist .comment-body footer.comment-meta .comment-metadata .comment-edit-link:disabled,
+.bb-rl-course-content-comments .commentlist .comment-body footer.comment-meta .comment-metadata .comment-edit-link:disabled {
   color: var(--bb-rl-background-brand-disabled-color);
   border-bottom-color: transparent;
   cursor: not-allowed;
 }
 
-.bb-rl-comments-area .commentlist .children {
+.bb-rl-comments-area .commentlist .children,
+.bb-rl-course-content-comments .commentlist .children {
   list-style: none;
   margin-top: var(--bb-rl-space-200);
 }
 
-.bb-rl-comments-area .comment-respond .logged-in-as {
+.bb-rl-comments-area .comment-respond .logged-in-as,
+.bb-rl-course-content-comments .comment-respond .logged-in-as {
   font-size: 14px;
   font-weight: 400;
   line-height: 22px;
 }
 
-.bb-rl-comments-area .comment-respond .logged-in-as > a {
+.bb-rl-comments-area .comment-respond .logged-in-as > a,
+.bb-rl-course-content-comments .comment-respond .logged-in-as > a {
   background-color: transparent;
   color: var(--bb-rl-text-brand-primary-color);
   border: none;
@@ -1142,11 +1150,13 @@
   border-bottom: 0;
 }
 
-.bb-rl-comments-area .comment-respond .logged-in-as > a:hover {
+.bb-rl-comments-area .comment-respond .logged-in-as > a:hover,
+.bb-rl-course-content-comments .comment-respond .logged-in-as > a:hover {
   border-bottom-color: var(--bb-rl-link-primary-hover-color);
 }
 
-.bb-rl-comments-area .comment-respond .logged-in-as > a:disabled {
+.bb-rl-comments-area .comment-respond .logged-in-as > a:disabled,
+.bb-rl-course-content-comments .comment-respond .logged-in-as > a:disabled {
   color: var(--bb-rl-background-brand-disabled-color);
   border-bottom-color: transparent;
   cursor: not-allowed;
