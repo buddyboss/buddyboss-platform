@@ -98,6 +98,11 @@ window.bp = window.bp || {};
 					return document.getElementById( e );
 				}
 			};
+
+			if ( 'undefined' !== typeof bp.Nouveau ) {
+				bp.Nouveau.reportPopUp();
+				bp.Nouveau.reportActions();
+			}
 		},
 
 		openForumModal: function ( e ) {
