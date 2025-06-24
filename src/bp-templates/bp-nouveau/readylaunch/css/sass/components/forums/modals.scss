@@ -24,6 +24,7 @@
 			height: 100vh;
 			background-color: rgba(0, 0, 0, 0.5);
 			z-index: 1;
+			backdrop-filter: blur(2px);
 		}
 
 		#new-post {
