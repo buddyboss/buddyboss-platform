@@ -970,3 +970,13 @@ body.ld-in-focus-mode .learndash-wrapper {
 		margin: var(--bb-rl-space-200) 0 0;
 	}
 }
+
+.bb-rl-learndash-quiz,
+.bb-rl-learndash-topic,
+.bb-rl-learndash-lesson {
+
+	.bb-rl-course-content-comments {
+		max-width: 800px;
+		margin: 0 auto;
+	}
+}

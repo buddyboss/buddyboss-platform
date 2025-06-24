@@ -1470,6 +1470,13 @@ body.ld-in-focus-mode .learndash-wrapper {
   cursor: not-allowed;
 }
 
+.bb-rl-learndash-quiz .bb-rl-course-content-comments,
+.bb-rl-learndash-topic .bb-rl-course-content-comments,
+.bb-rl-learndash-lesson .bb-rl-course-content-comments {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
 .bb-readylaunch-template {
   /* A sidebar-conditioned grid can be used on
     single profile or group screens. */
@@ -2937,18 +2944,6 @@ body.ld-in-focus-mode .learndash-wrapper {
 .bb-learndash-content-wrap--quiz {
   padding-bottom: 60px;
   background-color: var(--bb-rl-background-color);
-}
-
-.bb-rl-container .learndash_post_sfwd-topic + .comments-area,
-.bb-rl-container .learndash_post_sfwd-lessons + .comments-area {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 0 0 var(--bb-rl-space-700);
-}
-
-.bb-rl-learndash-quiz .bb-rl-course-content-comments {
-  max-width: 800px;
-  margin: 0 auto;
 }
 
 .bb-rl-quiz-block {
