@@ -1072,7 +1072,7 @@ $course_video_duration = get_post_meta( $course_id, '_buddyboss_lms_course_video
 				</div><!-- /.bb-rl-course-content-sidebar -->
 			</div> <!-- /.bb-rl-course-content -->
 
-			<div class="bb-rl-lms-content-comments bb-rl-course-content-comments">
+			<div class="bb-rl-course-content-comments">
 				<?php
 				// If comments are open or we have at least one comment, load up the comment template.
 				$focus_mode         = LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Theme_LD30', 'focus_mode_enabled' );

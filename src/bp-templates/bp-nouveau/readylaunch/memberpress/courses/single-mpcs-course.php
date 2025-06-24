@@ -250,7 +250,7 @@ if ( is_user_logged_in() && ! empty( $memberships ) ) {
 					the_content();
 					?>
 				</div>
-				<div class="bb-rl-course-comment-module bb-rl-lms-content-comments">
+				<div class="bb-rl-course-content-comments">
 					<?php
 					$options              = \get_option( 'mpcs-options' );
 					$show_course_comments = helpers\Options::val( $options, 'show-course-comments' );
