@@ -269,7 +269,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			add_filter( 'bp_nouveau_get_document_description_html', array( $this, 'bb_rl_modify_document_description_html' ), 10 );
 			add_filter( 'bp_nouveau_get_media_description_html', array( $this, 'bb_rl_modify_document_description_html' ), 10 );
 			add_filter( 'bp_nouveau_get_video_description_html', array( $this, 'bb_rl_modify_document_description_html' ), 10 );
-			add_filter( 'bp_core_get_js_strings', array( $this, 'bb_rl_modify_js_strings' ), 10, 1 );
+			add_filter( 'bp_core_get_js_strings', array( $this, 'bb_rl_modify_js_strings' ), 20, 1 );
 
 			// Update notification item action links.
 			add_filter( 'bp_get_the_notification_mark_unread_link', array( $this, 'bb_rl_notifications_mark_unread_link' ), 1, 1 );
