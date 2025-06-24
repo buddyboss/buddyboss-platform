@@ -1782,7 +1782,7 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 			}
 			?>
 
-			<<?php echo esc_attr( $tag ); ?><?php comment_class( $args['has_children'] ? 'parent' : '', $comment ); ?> id="comment-<?php comment_ID(); ?>">
+			<<?php echo esc_attr( $tag ); ?> <?php comment_class( $args['has_children'] ? 'parent' : '', $comment ); ?> id="comment-<?php comment_ID(); ?>">
 
 			<article id="div-comment-<?php comment_ID(); ?>" class="comment-body">
 
