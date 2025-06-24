@@ -88,6 +88,64 @@
     
 }
 
+.bs-reply-suspended-block {
+    opacity: 0.7;
+    pointer-events: none;
+
+    .type-reply {
+        margin-bottom: var(--bb-rl-space-100);
+        border-bottom: 1px solid var(--bb-rl-border-secondary-color);
+        padding: var(--bb-rl-space-100);
+    }
+
+    .bbp-author-link {
+        display: flex;
+        align-items: center;
+        gap: var(--bb-rl-space-100);
+        margin-bottom: var(--bb-rl-space-100);
+        position: relative;
+
+        .bbp-author-avatar {
+            height: 40px;
+            width: 40px;
+
+            .bbp-author-name {
+                display: none;
+            }
+
+            img {
+                height: 100%;
+                width: 100%;
+                object-fit: cover;
+                border-radius: var(--bb-rl-radius-full);
+            }
+        }
+
+        br {
+            display: none;
+        }
+
+        .bbp-author-name {
+            flex: 1;
+            color: var(--bb-rl-text-color);
+            font-size: var(--bb-rl-font-size-sm);
+            font-weight: 600;
+            line-height: var(--bb-rl-base-line-small);
+        }
+    }
+
+    .bbp-author-role {
+        display: none;
+    }
+
+    .bbp-reply-content {
+        font-size: var(--bb-rl-font-size-sm);
+        font-weight: 400;
+        line-height: var(--bb-rl-base-line-small);
+        padding: var(--bb-rl-space-100);
+    }
+}
+
 .bbp-reply-revision-log,
 .bbp-topic-revision-log {
     padding: 0;
