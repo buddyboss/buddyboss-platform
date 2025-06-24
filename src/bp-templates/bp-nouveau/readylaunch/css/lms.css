@@ -925,6 +925,16 @@
   margin: 0;
 }
 
+.bb-rl-lms-content-comments .comment-list ol.children,
+.bb-rl-lms-content-comments .commentlist ol.children,
+.site-main .bb-rl-container .comment-list ol.children,
+.site-main .bb-rl-container .commentlist ol.children,
+.learndash-cpt-groups .site-main .bb-rl-container .comment-list ol.children,
+.learndash-cpt-groups .site-main .bb-rl-container .commentlist ol.children {
+  list-style: none;
+  margin-top: var(--bb-rl-space-200);
+}
+
 .bb-rl-lms-content-comments .comment-list li,
 .bb-rl-lms-content-comments .commentlist li,
 .site-main .bb-rl-container .comment-list li,

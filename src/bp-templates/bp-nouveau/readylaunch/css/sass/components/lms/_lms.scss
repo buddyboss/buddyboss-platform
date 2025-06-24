@@ -625,6 +625,11 @@
 		padding: 0;
 		margin: 0;
 
+		ol.children {
+			list-style: none;
+			margin-top: var(--bb-rl-space-200);
+		}
+
 		li {
 			margin-bottom: var(--bb-rl-space-300);
 		}
