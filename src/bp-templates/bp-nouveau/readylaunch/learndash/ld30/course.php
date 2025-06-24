@@ -141,9 +141,6 @@ $topics_count = count(
 	)
 );
 
-// Get basic course data from the course object.
-$course_pricing = learndash_get_course_price( $course_id );
-
 if ( ! empty( $lessons ) ) {
 	foreach ( $lessons as $bb_lesson ) {
 		$lesson_topics[ $bb_lesson['post']->ID ] = learndash_topic_dots( $bb_lesson['post']->ID, false, 'array', null, $course_id );

@@ -103,9 +103,43 @@ if ( ! empty( $lessons ) ) {
 	}
 }
 
+$course_progress = $bb_rl_ld_helper->bb_rl_get_courses_progress( $user_id );
+$course_progress = isset( $course_progress[ $course_id ] ) ? $course_progress[ $course_id ] : 0;
+$progress        = learndash_course_progress(
+	array(
+		'user_id'   => $user_id,
+		'course_id' => $course_id,
+		'array'     => true,
+	)
+);
+
+if ( empty( $progress ) ) {
+	$progress = array(
+		'percentage' => 0,
+		'completed'  => 0,
+		'total'      => 0,
+	);
+}
+$progress_status = ( 100 === (int) $progress['percentage'] ) ? 'completed' : 'notcompleted';
+if ( 0 < (int) $progress['percentage'] && 100 !== (int) $progress['percentage'] ) {
+	$progress_status = 'progress';
+}
+
+$course_pricing         = learndash_get_course_price( $course_id );
+$is_enrolled            = sfwd_lms_has_access( $course_id, $user_id );
+$course_slug            = isset( $ld_permalinks['courses'] ) ? $ld_permalinks['courses'] : 'courses';
 $course_certficate_link = learndash_get_course_certificate_link( $course_id, $user_id );
 $course_meta            = get_post_meta( $course_id, '_sfwd-courses', true );
 $has_lesson_quizzes     = learndash_30_has_lesson_quizzes( $course_id, $lessons );
+
+$resume_link = get_permalink( $course_id );
+if ( $is_enrolled ) {
+	$user_course_last_step_id = learndash_user_progress_get_first_incomplete_step( $user_id, $course_id );
+	if ( ! empty( $user_course_last_step_id ) ) {
+		$user_course_last_step_id = learndash_user_progress_get_parent_incomplete_step( $user_id, $course_id, $user_course_last_step_id );
+		$resume_link              = learndash_get_step_permalink( $user_course_last_step_id, $course_id );
+	}
+}
 
 $ld_product = null;
 if ( class_exists( 'LearnDash\Core\Models\Product' ) && isset( $course_id ) ) {
@@ -215,6 +249,7 @@ $course_video_duration = get_post_meta( $course_id, '_buddyboss_lms_course_video
 						</div>
 						<?php
 						$course_pricing = wp_parse_args(
+							$course_pricing,
 							$course_pricing,
 							array(
 								'type'             => LEARNDASH_DEFAULT_COURSE_PRICE_TYPE,
@@ -373,7 +408,7 @@ $course_video_duration = get_post_meta( $course_id, '_buddyboss_lms_course_video
 								}
 
 								// Determine button class and text based on conditions.
-								$button_class = 'learndash_join_button';
+								$button_class  = 'learndash_join_button';
 								$button_class .= ! empty( $btn_advance_class ) ? ' ' . $btn_advance_class : '';
 
 								$button_html = '';
@@ -552,7 +587,7 @@ $course_video_duration = get_post_meta( $course_id, '_buddyboss_lms_course_video
 								: '';
 
 							if ( $ld_product->has_ended() ) {
-								$tooltips    = sprintf(
+								$tooltips = sprintf(
 								// translators: placeholder: course.
 									esc_attr_x( 'This %s has ended', 'placeholder: course', 'buddyboss' ),
 									esc_html( learndash_get_custom_label_lower( 'course' ) )
@@ -563,7 +598,7 @@ $course_video_duration = get_post_meta( $course_id, '_buddyboss_lms_course_video
 									__( 'Not Enrolled', 'buddyboss' )
 								);
 							} elseif ( ! $ld_product->has_started() ) {
-								$tooltips    = ! $ld_product->can_be_purchased()
+								$tooltips = ! $ld_product->can_be_purchased()
 									? sprintf(
 									// translators: placeholder: course, course start date.
 										esc_attr_x( 'This %1$s starts on %2$s', 'placeholder: course, course start date', 'buddyboss' ),
@@ -583,7 +618,7 @@ $course_video_duration = get_post_meta( $course_id, '_buddyboss_lms_course_video
 									esc_html( $ld_seats_available_text )
 								);
 							} else {
-								$tooltips    = $ld_product->can_be_purchased()
+								$tooltips = $ld_product->can_be_purchased()
 									? sprintf(
 									// translators: placeholder: course.
 										esc_attr_x( 'Enroll in this %s to get access', 'placeholder: course', 'buddyboss' ),
