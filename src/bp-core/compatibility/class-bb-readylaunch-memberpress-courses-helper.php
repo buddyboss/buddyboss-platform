@@ -81,7 +81,8 @@ class BB_Readylaunch_Memberpress_Courses_Helper {
 
 			// Add MemberPress template path filters for ReadyLaunch.
 			add_filter( 'mepr_view_paths', array( $this, 'bb_rl_mpcs_add_template_paths' ), PHP_INT_MAX );
-			add_filter( 'mepr_mpcs_gradebook_view_paths', array( $this, 'bb_rl_mpcs_add_gradebook_template_paths' ), PHP_INT_MAX );
+			add_filter( 'mepr_mpcs_gradebook_view_paths', array( $this, 'bb_rl_mpcs_add_assignments_template_paths' ), PHP_INT_MAX );
+			add_filter( 'mpcs_gradebook_view_paths', array( $this, 'bb_rl_mpcs_add_gradebook_template_paths' ), PHP_INT_MAX );
 			add_filter( 'mepr_mpcs_quizzes_view_paths', array( $this, 'bb_rl_mpcs_add_quizzes_template_paths' ), PHP_INT_MAX );
 
 			add_action( 'bb_rl_layout_before_loop', array( $this, 'bb_rl_mpcs_before_loop' ) );
@@ -327,6 +328,21 @@ class BB_Readylaunch_Memberpress_Courses_Helper {
 	}
 
 	/**
+	 * Add MemberPress assignments template path filters for ReadyLaunch
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $paths The array of paths to add.
+	 *
+	 * @return array The modified array of paths.
+	 */
+	public function bb_rl_mpcs_add_assignments_template_paths( $paths ) {
+		$readylaunch_path = trailingslashit( buddypress()->plugin_dir . 'bp-templates/bp-nouveau/readylaunch/memberpress/assignments' );
+		array_unshift( $paths, $readylaunch_path );
+		return $paths;
+	}
+
+	/**
 	 * Add MemberPress gradebook template path filters for ReadyLaunch
 	 *
 	 * @since BuddyBoss [BBVERSION]
@@ -336,7 +352,7 @@ class BB_Readylaunch_Memberpress_Courses_Helper {
 	 * @return array The modified array of paths.
 	 */
 	public function bb_rl_mpcs_add_gradebook_template_paths( $paths ) {
-		$readylaunch_path = trailingslashit( buddypress()->plugin_dir . 'bp-templates/bp-nouveau/readylaunch/memberpress/assignments' );
+		$readylaunch_path = trailingslashit( buddypress()->plugin_dir . 'bp-templates/bp-nouveau/readylaunch/memberpress/gradebook' );
 		array_unshift( $paths, $readylaunch_path );
 		return $paths;
 	}
