@@ -60,7 +60,7 @@ class BB_Readylaunch_Memberpress_Courses_Helper {
 		// Constructor can be used for initialization if needed.
 
 		if ( bb_is_readylaunch_enabled() && ! empty( bp_get_option( 'bb_rl_enabled_pages' )['courses'] ) ) {
-			
+
 			if ( helpers\App::is_classroom() ) {
 				// Remove MemberPress admin bar hiding hook.
 				$this->bb_rl_remove_memberpress_admin_bar_hook();
@@ -116,8 +116,8 @@ class BB_Readylaunch_Memberpress_Courses_Helper {
 						if (
 							is_array( $callback['function'] ) &&
 							is_object( $callback['function'][0] ) &&
-							get_class( $callback['function'][0] ) === 'memberpress\courses\controllers\Classroom' &&
-							$callback['function'][1] === 'maybe_hide_admin_bar'
+							'memberpress\courses\controllers\Classroom' === get_class( $callback['function'][0] ) &&
+							'maybe_hide_admin_bar' === $callback['function'][1]
 						) {
 							remove_filter( 'show_admin_bar', $callback['function'], $priority );
 						}
@@ -506,7 +506,7 @@ class BB_Readylaunch_Memberpress_Courses_Helper {
 	 */
 	public function bb_rl_mpcs_override_readylaunch_styles( $allow_handle ) {
 		if ( class_exists( 'memberpress\courses\controllers\Classroom' ) && helpers\App::is_classroom() ) {
-			// Add all currently enqueued styles to the allowed list
+			// Add all currently enqueued styles to the allowed list.
 			global $wp_styles;
 			if ( isset( $wp_styles ) && ! empty( $wp_styles->queue ) ) {
 				$allow_handle = array_merge( $allow_handle, $wp_styles->queue );
