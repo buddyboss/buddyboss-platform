@@ -85,6 +85,10 @@
 				border-radius: var(--bb-rl-radius-md);
 				border-bottom: 0;
 
+				&.learndash-not-available {
+					pointer-events: none;
+				}
+
 				&:hover {
 					background-color: var(--bb-rl-background-secondary-hover-color);
 				}
@@ -95,6 +99,26 @@
 
 				&.bb-rl-current-quiz-wrapper {
 					background-color: var(--bb-rl-background-secondary-hover-color);
+				}
+
+				.ld-status-waiting {
+					font-size: 0;
+					background-color: transparent;
+					border: 0;
+					padding: 0;
+					margin: 0;
+					border-radius: 0;
+
+					.ld-icon-calendar:before {
+						content: "\e2fa";
+						font-weight: 400;
+						font-family: bb-icons-rl;
+						font-size: 16px;
+						color: var(--bb-rl-icon-primary-color);
+						font-style: normal;
+						position: relative;
+						top: 2px;
+					}
 				}
 			}
 		}

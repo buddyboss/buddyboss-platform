@@ -76,7 +76,21 @@ do_action( 'learndash-quiz-row-before', $quiz['post']->ID, $course_id, $user_id 
 			do_action( 'learndash-quiz-row-title-before', $quiz['post']->ID, $course_id, $user_id );
 			?>
 
-			<div class="ld-item-title"><span class="bb-rl-item-title-plain"><?php echo wp_kses_post( apply_filters( 'the_title', $quiz['post']->post_title, $quiz['post']->ID ) ); ?></span></div> <?php // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound ?>
+			<div class="ld-item-title">
+				<span class="bb-rl-item-title-plain"><?php echo wp_kses_post( apply_filters( 'the_title', $quiz['post']->post_title, $quiz['post']->ID ) ); ?></span>
+				<?php
+				if ( ! empty( $attributes ) ) :
+					foreach ( $attributes as $attribute ) :
+						?>
+					<span class="<?php echo esc_attr( 'ld-status ' . $attribute['class'] ); ?>">
+						<span class="<?php echo esc_attr( 'ld-icon ' . $attribute['icon'] ); ?>"></span>
+						<?php echo esc_html( $attribute['label'] ); ?>
+					</span>
+						<?php
+					endforeach;
+				endif;
+				?>
+			</div> <?php // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound ?>
 
 			<?php
 			/**
@@ -91,18 +105,6 @@ do_action( 'learndash-quiz-row-before', $quiz['post']->ID, $course_id, $user_id 
 			do_action( 'learndash-quiz-row-title-after', $quiz['post']->ID, $course_id, $user_id );
 			?>
 		</a>
-		<?php
-		if ( ! empty( $attributes ) ) :
-			foreach ( $attributes as $attribute ) :
-				?>
-			<span class="<?php echo esc_attr( 'ld-status ' . $attribute['class'] ); ?>">
-				<span class="<?php echo esc_attr( 'ld-icon ' . $attribute['icon'] ); ?>"></span>
-				<?php echo esc_html( $attribute['label'] ); ?>
-			</span>
-				<?php
-			endforeach;
-		endif;
-		?>
 	</div> <!--/.list-item-preview-->
 </div>
 <?php

@@ -701,3 +701,15 @@
 		color: var(--bb-rl-text-color);
 	}
 }
+
+.single-sfwd-quiz {
+
+	.bb-rl-container > .learndash-wrapper {
+		padding-top: var(--bb-rl-space-400);
+
+		> .ld-alert {
+			margin: var(--bb-rl-space-200) auto;
+			max-width: 800px;
+		}
+	}
+}
