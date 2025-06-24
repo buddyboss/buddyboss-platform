@@ -115,7 +115,9 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 			}
 
 			if (
+				function_exists( 'bp_is_user' ) &&
 				bp_is_user() &&
+				function_exists( 'bp_current_action' ) &&
 				'my-courses' === bp_current_action()
 			) {
 				return $filepath;
