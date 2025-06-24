@@ -836,7 +836,6 @@ body.ld-in-focus-mode .learndash-wrapper {
 		top: 50%;
 		left: 50%;
 		transform: translateY(-50%) translateX(-50%);
-		z-index: 999;
 		width: 100%;
 		z-index: 9000;
 		max-width: 1024px;
@@ -908,7 +907,7 @@ body.ld-in-focus-mode .learndash-wrapper {
 		margin-bottom: var(--bb-rl-space-300);
 	}
 
-	.ld-modal.ld-login-modal .ld-login-modal-form input[type=submit] {
+	.ld-modal.ld-login-modal .ld-login-modal-form input[type="submit"] {
 
 		@include bb-rl-button;
 		@include bb-rl-button--brand-fill;
@@ -925,9 +924,9 @@ body.ld-in-focus-mode .learndash-wrapper {
 
 	.bb-learndash-content-wrap .ld-login-modal {
 
-		input[type=text],
-		input[type=password],
-		input[type=email],
+		input[type="text"],
+		input[type="password"],
+		input[type="email"],
 		.ld-login-field,
 		.ld-password-field {
 

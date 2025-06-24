@@ -495,8 +495,10 @@ class BB_Readylaunch_Memberpress_Courses_Helper {
 			?>
 				</div>
 			</div>
-			<div class="pagination">
-				<?php echo wp_kses_post( memberpress\courses\helpers\Courses::archive_navigation() ); ?>
+			<div class="bb-rl-container-inner bb-rl-mbprlms-pagination">
+				<div class="pagination">
+					<?php echo wp_kses_post( memberpress\courses\helpers\Courses::archive_navigation() ); ?>
+				</div>
 			</div>
 			<?php
 		}
@@ -508,7 +510,7 @@ class BB_Readylaunch_Memberpress_Courses_Helper {
 	 * @since BuddyBoss [BBVERSION]
 	 */
 	public function bb_rl_mpcs_no_posts() {
-		echo '<p>' . esc_html__( 'No Course found', 'buddyboss' ) . '</p>';
+		echo '<div> class="bb-rl-container-inner"><p>' . esc_html__( 'No Courses found', 'buddyboss' ) . '</p></div>';
 	}
 
 	/**

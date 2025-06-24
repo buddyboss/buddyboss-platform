@@ -581,6 +581,38 @@
   display: none;
 }
 
+.bb-rl-mbprlms-pagination .pagination {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-bottom: var(--bb-rl-space-400);
+}
+
+.bb-rl-mbprlms-pagination ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--bb-rl-space-100);
+}
+
+.bb-rl-mbprlms-pagination ul li a {
+  display: inline-flex;
+  min-width: var(--bb-rl-space-400);
+  height: var(--bb-rl-space-400);
+  border: 1px solid transparent;
+  border-radius: var(--bb-rl-radius-md);
+  justify-content: center;
+  align-items: center;
+  color: var(--bb-rl-text-tertiary-color);
+}
+
+.bb-rl-mbprlms-pagination ul li.active a {
+  color: var(--bb-rl-text-color);
+  border: 1px solid var(--bb-rl-border-quaternary-color);
+}
+
 .bb-rl-lms-inner-block #mpcs-lesson-navigation #next_lesson_link:not(#mpcs-classroom-previous-lesson-link),
 .bb-rl-lms-inner-block #mpcs-lesson-navigation #next_lesson_link {
   display: inline-flex;
