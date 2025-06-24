@@ -61,9 +61,19 @@
 			</div><!-- .bb-rl-forum-single-header -->
 			<?php } ?>
 
-			<?php if( bp_is_group() ) { ?>
+			<?php
+				$current_forum_id = bbp_get_forum_id();
+				$discussion_count = bbp_get_forum_topic_count( $current_forum_id );
+				$subforum_count = bbp_get_forum_subforum_count( $current_forum_id );
+				if( bp_is_group() ) { ?>
 				<div class="bb-rl-group-forum-header">
-					<h2>Discussions (7)</h2> <!-- TODO: Get discussion count from group forum -->
+					<h2>
+						<?php if ( ! bbp_has_forums() ) {
+							echo esc_html( sprintf( _n( 'Discussion (%d)', 'Discussions (%d)', $discussion_count, 'buddyboss' ), $discussion_count ) ); ?>
+						<?php } else { ?>
+							<?php echo esc_html( 'Discussions', 'buddyboss' ); ?>
+						<?php } ?>
+					</h2>
 					<div class="bb-rl-forum-actions">
 						<?php if ( bbp_is_single_forum() && ! bbp_is_forum_category() && ( bbp_current_user_can_access_create_topic_form() || bbp_current_user_can_access_anonymous_user_form() ) ) { ?>
 							<a href="#new-post" class="bb-rl-button bb-rl-button--brandFill bb-rl-button--small bb-rl-new-discussion-btn" data-modal-id="bb-rl-topic-form"><i class="bb-icons-rl-plus"></i> <?php esc_html_e( 'New discussion', 'buddyboss' ); ?></a>
@@ -88,10 +98,10 @@
 				<?php if ( bbp_has_forums() ) : ?>
 					<ul class="bb-rl-forum-tabs">
 						<li data-id="bb-rl-forum-discussions" class="bb-rl-forum-tabs-item selected">
-							<a href="#" id="public-message"><?php echo esc_html( 'Discussions', 'buddyboss' ); ?></a>
+							<a href="#" id="public-message"><?php echo esc_html( sprintf( _n( 'Discussion (%d)', 'Discussions (%d)', $discussion_count, 'buddyboss' ), $discussion_count ) ); ?></a>
 						</li>
 						<li data-id="bb-rl-forum-subforums" class="bb-rl-forum-tabs-item">
-							<a href="#" id="private-message"><?php echo esc_html( 'Sub Forums', 'buddyboss' ); ?></a>
+							<a href="#" id="private-message"><?php echo esc_html( sprintf( _n( 'Sub Forum (%d)', 'Sub Forums (%d)', $subforum_count, 'buddyboss' ), $subforum_count ) ); ?></a>
 						</li>
 					</ul>
 				<?php endif; ?>
