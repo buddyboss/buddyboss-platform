@@ -15271,8 +15271,10 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
 
 .bb-rl-activity-list li.bbp_reply_create .activity-attached-gif-container,
 .bb-rl-activity-list li.bbp_reply_create .bb-activity-media-wrap,
+.bb-rl-activity-list li.bbp_reply_create .bb-activity-video-wrap,
 .bb-rl-activity-list li.bbp_topic_create .activity-attached-gif-container,
-.bb-rl-activity-list li.bbp_topic_create .bb-activity-media-wrap {
+.bb-rl-activity-list li.bbp_topic_create .bb-activity-media-wrap,
+.bb-rl-activity-list li.bbp_topic_create .bb-activity-video-wrap {
   margin-bottom: var(--bb-rl-space-200);
 }
 
