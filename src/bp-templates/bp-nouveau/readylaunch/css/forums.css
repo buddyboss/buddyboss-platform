@@ -1949,9 +1949,6 @@
 .bb-rl-topic-header .bb-rl-topic-footer {
   display: flex;
   flex-wrap: wrap;
-  padding-bottom: var(--bb-rl-space-300);
-  border-bottom: 1px solid var(--bb-rl-border-secondary-color);
-  margin-bottom: var(--bb-rl-space-100);
 }
 
 .bb-rl-topic-header .bb-rl-topic-footer .bbp-topic-tags {
@@ -2032,6 +2029,12 @@
   content: "\e03a";
   font-family: bb-icons-rl;
   font-size: 16px;
+}
+
+.bb-rl-topic-header + .bb-rl-forums-content-wrapper .bb-rl-single-forum-list {
+  padding-top: var(--bb-rl-space-100);
+  border-top: 1px solid var(--bb-rl-border-secondary-color);
+  margin-top: var(--bb-rl-space-300);
 }
 
 .bb-rl-single-forum-list {
