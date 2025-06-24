@@ -158,6 +158,14 @@
 		}
 	}
 
+	&:not(.bb-rl-forum-modal--static) {
+
+		#new-post {
+			max-height: 90vh;
+			overflow: auto;
+		}
+	}
+
 	.bb-rl-forum-form {
 		width: 100%;
 		max-width: 800px;
@@ -218,8 +226,6 @@
 
 	.bb-rl-forum-modal-content {
 		padding: 0 var(--bb-rl-space-300);
-		max-height: 300px;
-		overflow: auto;
 	}
 
 	.bb-rl-forum-modal-title {
