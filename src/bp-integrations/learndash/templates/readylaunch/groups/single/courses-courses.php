@@ -46,24 +46,25 @@ if (
 	?>
     <div class="item-body-inner">
         <div id="bb-learndash_profile">
-            <div id="learndash-content" class="learndash-course-list">
+            <div id="learndash-content" class="learndash-course-list bb-rl-group-courses-list">
                 <form id="bb-courses-directory-form" class="bb-courses-directory" method="get" action="">
-                    <div class="flex align-items-center bb-courses-header">
-                        <div id="courses-dir-search" class="bs-dir-search" role="search"></div>
-                        <div class="bb-secondary-list-tabs flex align-items-center" id="subnav" aria-label="Members directory secondary navigation" role="navigation">
-                            <div class="grid-filters" data-view="ld-course">
-                                <a href="#" class="layout-view layout-view-course layout-grid-view bp-tooltip <?php echo esc_attr( $class_grid_active ); ?>" data-view="grid" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Grid View', 'buddyboss' ); ?>">
-                                    <i class="dashicons dashicons-screenoptions" aria-hidden="true"></i>
-                                </a>
-                                <a href="#" class="layout-view layout-view-course layout-list-view bp-tooltip <?php echo esc_attr( $class_list_active ); ?>" data-view="list" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'List View', 'buddyboss' ); ?>">
-                                    <i class="dashicons dashicons-menu" aria-hidden="true"></i>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
+                    <div class="subnav-filters">
+						<div class="flex align-items-center bb-courses-header">
+							<div class="bb-secondary-list-tabs flex align-items-center" id="subnav" aria-label="Members directory secondary navigation" role="navigation">
+								<div class="bb-rl-grid-filters grid-filters" data-view="ld-course">
+									<a href="#" class="layout-view layout-view-course layout-grid-view bp-tooltip <?php echo esc_attr( $class_grid_active ); ?>" data-view="grid" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Grid View', 'buddyboss' ); ?>">
+										<i class="bb-icons-rl-squares-four" aria-hidden="true"></i>
+									</a>
+									<a href="#" class="layout-view layout-view-course layout-list-view bp-tooltip <?php echo esc_attr( $class_list_active ); ?>" data-view="list" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'List View', 'buddyboss' ); ?>">
+										<i class="bb-icons-rl-rows" aria-hidden="true"></i>
+									</a>
+								</div>
+							</div>
+						</div>
+					</div>
                     <div class="grid-view bb-grid">
                         <div id="course-dir-list" class="course-dir-list bs-dir-list">
-                            <ul id="courses-list" class="bb-course-items <?php echo esc_attr( $class_grid_show . $class_list_show ); ?>">
+                            <div id="courses-list" class="bb-rl-courses-grid bb-rl-courses-grid--group grid bb-course-items <?php echo esc_attr( $class_grid_show . $class_list_show ); ?>">
 								<?php
 								foreach ( bp_ld_sync( 'buddypress' )->courses->getGroupCourses() as $post ) :
 									setup_postdata( $post );
@@ -71,7 +72,7 @@ if (
 								endforeach;
 								wp_reset_postdata();
 								?>
-                            </ul>
+                            </div>
                         </div>
                     </div>
                 </form>

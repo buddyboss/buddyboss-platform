@@ -4268,26 +4268,34 @@ body.ld-in-focus-mode .learndash-wrapper {
   width: 100%;
 }
 
-.bb-readylaunch-template .bb-rl-primary-container ul.bb-course-items.bb-grid {
+.bb-readylaunch-template .bb-rl-primary-container ul.bb-course-items.bb-grid,
+.bb-readylaunch-template .bb-rl-courses-grid.bb-rl-courses-grid--group.grid {
   grid-template-columns: repeat(3, 1fr);
 }
 
 @media screen and (max-width: 1600px) {
-  .bb-readylaunch-template .bb-rl-primary-container ul.bb-course-items.bb-grid {
+  .bb-readylaunch-template .bb-rl-primary-container ul.bb-course-items.bb-grid,
+  .bb-readylaunch-template .bb-rl-courses-grid.bb-rl-courses-grid--group.grid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
 @media screen and (min-width: 1200px) and (max-width: 1400px) {
-  .bb-readylaunch-template .bb-rl-primary-container ul.bb-course-items.bb-grid {
+  .bb-readylaunch-template .bb-rl-primary-container ul.bb-course-items.bb-grid,
+  .bb-readylaunch-template .bb-rl-courses-grid.bb-rl-courses-grid--group.grid {
     grid-template-columns: 1fr;
   }
 }
 
 @media screen and (max-width: 800px) {
-  .bb-readylaunch-template .bb-rl-primary-container ul.bb-course-items.bb-grid {
+  .bb-readylaunch-template .bb-rl-primary-container ul.bb-course-items.bb-grid,
+  .bb-readylaunch-template .bb-rl-courses-grid.bb-rl-courses-grid--group.grid {
     grid-template-columns: 1fr;
   }
+}
+
+.bb-readylaunch-template .bb-rl-courses-grid.bb-rl-courses-grid--group.list {
+  grid-template-columns: 1fr;
 }
 
 .bb-readylaunch-template ul.bb-course-items {
@@ -7034,4 +7042,9 @@ body.ld-in-focus-mode .learndash-wrapper {
 
 .bb-readylaunch-template .bb-courses-header .grid-filters .layout-list-view .dashicons:before {
   content: "\e5a2";
+}
+
+.bb-rl-group-courses-list .bb-courses-header,
+.bb-rl-group-courses-list .bb-secondary-list-tabs {
+  width: 100%;
 }
