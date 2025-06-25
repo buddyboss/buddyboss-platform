@@ -88,10 +88,17 @@ function bb_readylaunch_register_enqueue_style_script() {
 
 	$asset = include $asset_file;
 
+	$dependencies = array_merge(
+		$asset['dependencies'],
+		array(
+			'bp-admin',
+		)
+	);
+
 	wp_register_script(
 		'bb-readylaunch-admin-script',
 		plugins_url( 'build/index.js', __FILE__ ),
-		$asset['dependencies'],
+		$dependencies,
 		$asset['version'],
 		array(
 			'in_footer' => true,
