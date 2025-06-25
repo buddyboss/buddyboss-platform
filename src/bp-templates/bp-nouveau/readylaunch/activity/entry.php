@@ -182,7 +182,15 @@ $bb_rl_activity_class_exists = class_exists( 'BB_Activity_Readylaunch' ) ? BB_Ac
 			bp_nouveau_activity_hook( 'before', 'activity_content' );
 			if ( bp_nouveau_activity_has_content() ) :
 				?>
-				<div class="bb-rl-activity-inner"><?php bp_nouveau_activity_content(); ?></div>
+				<div class="bb-rl-activity-inner">
+					<?php
+					bp_nouveau_activity_content();
+
+					if ( function_exists( 'bb_nouveau_activity_inner_buttons' ) ) {
+						bb_nouveau_activity_inner_buttons();
+					}
+					?>
+				</div>
 				<?php
 			endif;
 

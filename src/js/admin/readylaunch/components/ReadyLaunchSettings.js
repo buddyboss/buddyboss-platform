@@ -939,7 +939,12 @@ export const ReadyLaunchSettings = () => {
 									<div className="settings-form-field with-multiple-toggles">
 										<div className="field-label">
 											<label>{__('Activity Feed', 'buddyboss')}</label>
-											<p>{__('Enable or disable widgets to appear on the activity feed.', 'buddyboss')}</p>
+											<p>{createInterpolateElement(
+												__('Enable or disable widgets to appear on the <a>activity feed</a>.', 'buddyboss'),
+												{
+													a: <a href={window?.BP_ADMIN?.component_pages?.activity || ''} target="_blank" />
+												}
+											)}</p>
 										</div>
 										<div className="field-toggles">
 											<div className="toggle-item">
@@ -979,7 +984,14 @@ export const ReadyLaunchSettings = () => {
 								<div className="settings-form-field with-multiple-toggles">
 									<div className="field-label">
 										<label>{__('Member Profile', 'buddyboss')}</label>
-										<p>{__('Enable or disable widgets to appear on the member profile.', 'buddyboss')}</p>
+										<p>
+											{createInterpolateElement(
+												__('Enable or disable widgets to appear on the <a>member profile</a>.', 'buddyboss'),
+												{
+													a: <a href={window?.BP_ADMIN?.component_pages?.xprofile || ''} target="_blank" />
+												}
+											)}
+										</p>
 									</div>
 									<div className="field-toggles">
 										<div className="toggle-item">
@@ -1028,7 +1040,14 @@ export const ReadyLaunchSettings = () => {
 									<div className="settings-form-field with-multiple-toggles">
 									<div className="field-label">
 										<label>{__('Group', 'buddyboss')}</label>
-										<p>{__('Enable or disable widgets to appear on the group single page.', 'buddyboss')}</p>
+										<p>
+											{createInterpolateElement(
+												__('Enable or disable widgets to appear on the <a>group single</a> page.', 'buddyboss'),
+												{
+													a: <a href={window?.BP_ADMIN?.component_pages?.single_group || ''} target="_blank" />
+												}
+											)}
+										</p>
 									</div>
 									<div className="field-toggles">
 										<div className="toggle-item">
