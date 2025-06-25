@@ -92,6 +92,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			// Added support for Forums integration.
 			if ( bp_is_active( 'forums' ) ) {
 				add_filter( 'bbp_use_template_canvas', '__return_false' );
+				add_filter( 'bbp_get_page_by_path', array( $this, 'bb_rl_forums_get_page_by_path' ), 99, 1 );
 			}
 
 			$enabled_for_page = $this->bb_is_readylaunch_enabled_for_page();
@@ -122,7 +123,8 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					$this,
 					'override_page_templates',
 				),
-				PHP_INT_MAX
+				PHP_INT_MAX,
+				1
 			); // High priority, so we have the last say here.
 
 			// Remove BuddyPress template locations.
@@ -268,7 +270,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			add_filter( 'bp_nouveau_get_document_description_html', array( $this, 'bb_rl_modify_document_description_html' ), 10 );
 			add_filter( 'bp_nouveau_get_media_description_html', array( $this, 'bb_rl_modify_document_description_html' ), 10 );
 			add_filter( 'bp_nouveau_get_video_description_html', array( $this, 'bb_rl_modify_document_description_html' ), 10 );
-			add_filter( 'bp_core_get_js_strings', array( $this, 'bb_rl_modify_js_strings' ), 10, 1 );
+			add_filter( 'bp_core_get_js_strings', array( $this, 'bb_rl_modify_js_strings' ), 20, 1 );
 
 			// Update notification item action links.
 			add_filter( 'bp_get_the_notification_mark_unread_link', array( $this, 'bb_rl_notifications_mark_unread_link' ), 1, 1 );
@@ -276,6 +278,11 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			add_filter( 'bp_get_the_notification_delete_link', array( $this, 'bb_rl_notifications_delete_link' ), 1, 1 );
 		}
 
+		/**
+		 * Initialise the hooks on BuddyBoss init.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 */
 		public function bb_rl_init() {
 
 			$this->load_component_integration();
@@ -292,6 +299,22 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			remove_filter( 'bp_get_the_notification_mark_unread_link', 'bp_nouveau_notifications_mark_unread_link', 10, 1 );
 			remove_filter( 'bp_get_the_notification_mark_read_link', 'bp_nouveau_notifications_mark_read_link', 10, 1 );
 			remove_filter( 'bp_get_the_notification_delete_link', 'bp_nouveau_notifications_delete_link', 10, 1 );
+
+			if ( bp_is_active( 'forums' ) ) {
+				add_filter( 'bb_nouveau_get_activity_inner_buttons', array( $this, 'bb_rl_activity_inner_buttons' ), 20, 2 );
+				add_filter( 'bbp_ajax_reply', array( $this, 'bb_rl_ajax_reply' ) );
+				add_action( 'bbp_new_reply_pre_extras', array( $this, 'bb_rl_new_reply_pre_extras' ), 99 );
+				add_action( 'bbp_new_reply_post_extras', array( $this, 'bb_rl_new_reply_post_extras' ), 99 );
+				add_action( 'wp_ajax_quick_reply_ajax', array( $this, 'bb_rl_activity_quick_reply' ) );
+
+				if ( class_exists( 'BBPressHelper' ) ) {
+					remove_filter( 'bb_nouveau_get_activity_inner_buttons', array( 'BBPressHelper', 'theme_activity_entry_buttons' ), 20, 2 );
+					remove_filter( 'bbp_ajax_reply', array( 'BBPressHelper', 'ajax_reply' ) );
+					remove_action( 'bbp_new_reply_pre_extras', array( 'BBPressHelper', 'new_reply_pre_extras' ), 99 );
+					remove_action( 'bbp_new_reply_post_extras', array( 'BBPressHelper', 'new_reply_post_extras' ), 99 );
+					remove_action( 'wp_ajax_quick_reply_ajax', array( 'BBPressHelper', 'activity_quick_reply_ajax_cb' ) );
+				}
+			}
 		}
 
 		/**
@@ -560,6 +583,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * @return bool True if the network search is enabled, false otherwise.
 		 */
 		public static function bb_is_network_search() {
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			$bp_search = isset( $_REQUEST['bp_search'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['bp_search'] ) ) : '';
 			if (
 				bp_is_active( 'search' ) &&
@@ -579,8 +603,11 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * @return bool True if the admin is enabled, false otherwise.
 		 */
 		private function bb_is_readylaunch_admin_enabled() {
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			$page = isset( $_GET['page'] ) ? sanitize_text_field( wp_unslash( $_GET['page'] ) ) : '';
-			$tab  = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : '';
+
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$tab = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : '';
 
 			if (
 				(
@@ -642,6 +669,8 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
+		 * @param string $template Template to override.
+		 *
 		 * @return string ReadyLaunch layout template.
 		 */
 		public function override_page_templates( $template ) {
@@ -657,6 +686,30 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			}
 
 			return $template;
+		}
+
+		/**
+		 * Remove the page content for ReadyLaunch forums and the discussion page.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param object $retval The page object.
+		 *
+		 * @return bool True if it's a ReadyLaunch forums page, false otherwise.
+		 */
+		public function bb_rl_forums_get_page_by_path( $retval ) {
+			if (
+				(
+					bbp_is_topic_archive() ||
+					bbp_is_forum_archive()
+				) &&
+				is_object( $retval ) &&
+				! empty( $retval->post_content )
+			) {
+				$retval->post_content = '';
+			}
+
+			return $retval;
 		}
 
 		/**
@@ -721,7 +774,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		public function bb_enqueue_scripts() {
 			$min = bp_core_get_minified_asset_suffix();
 
-			wp_enqueue_script( 'bb-readylaunch-front', buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/js/bb-readylaunch-front{$min}.js", array( 'jquery', 'bp-select2', 'bp-nouveau' ), bp_get_version(), true );
+			wp_enqueue_script( 'bb-readylaunch-front', buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/js/bb-readylaunch-front{$min}.js", array( 'jquery', 'bp-select2', 'bp-nouveau' ), bp_get_version(), false );
 
 			// Enqueue Cropper.js.
 			wp_enqueue_script( 'bb-readylaunch-cropper-js' );
@@ -2174,6 +2227,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * @return string $message The modified login message.
 		 */
 		public function bb_rl_signin_login_message( $message ) {
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			$action                   = isset( $_REQUEST['action'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['action'] ) ) : '';
 			$confirm_admin_email_page = false;
 			if ( 'wp-login.php' === $GLOBALS['pagenow'] && ! empty( $action ) && 'confirm_admin_email' === $action ) {
@@ -2201,7 +2255,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 */
 		public function bb_rl_login_custom_form() {
 			?>
-			<p class="lostmenot"><a href="<?php echo wp_lostpassword_url(); ?>"><?php esc_html_e( 'Forgot Password?', 'buddyboss' ); ?></a></p>
+			<p class="lostmenot"><a href="<?php echo esc_url( wp_lostpassword_url() ); ?>"><?php esc_html_e( 'Forgot Password?', 'buddyboss' ); ?></a></p>
 			<?php
 		}
 
@@ -2283,7 +2337,8 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				'buddyboss-readylaunch-header-editor-script',
 				$plugin_url . 'bp-core/blocks/readylaunch-header/index.js',
 				$asset['dependencies'],
-				$asset['version']
+				$asset['version'],
+				true
 			);
 
 			wp_set_script_translations( 'buddyboss-readylaunch-header-editor-script', 'buddyboss', buddypress()->plugin_dir . 'languages/' );
@@ -2882,6 +2937,13 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			return 'bb-readylaunch';
 		}
 
+		/**
+		 * Check if the current page is a BuddyBoss ReadyLaunch Forums page.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return bool True if the current page is a ReadyLaunch Forums page, false otherwise.
+		 */
 		public function bb_is_readylaunch_forums() {
 			return bp_is_active( 'forums' )
 					&& (
@@ -2905,10 +2967,23 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 						is_singular( bbp_get_reply_post_type() ) ||
 						is_post_type_archive( bbp_get_topic_post_type() ) ||
 						is_post_type_archive( bbp_get_forum_post_type() ) ||
-						is_post_type_archive( bbp_get_reply_post_type() )
+						is_post_type_archive( bbp_get_reply_post_type() ) ||
+						(
+							bbp_is_group_forums_active() &&
+							(
+								bp_is_group_single() ||
+								bp_is_group_forum_topic() ||
+								bp_is_group_forum_topic_edit()
+							)
+						)
 					);
 		}
 
+		/**
+		 * Enqueue styles and scripts for ReadyLaunch Forums.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 */
 		public function bb_readylaunch_forums_enqueue_styles() {
 			if ( ! $this->bb_is_readylaunch_forums() ) {
 				return;
@@ -2953,7 +3028,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				true
 			);
 
-			// Localize data to the forums script
+			// Localize data to the forums script.
 			wp_localize_script(
 				'bb-readylaunch-forums-js',
 				'bbrlForumsEditorJsStrs',
@@ -2978,6 +3053,372 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			);
 
 			wp_localize_script( 'bb-readylaunch-forums-js', 'bbrlForumsCommonJsData', $common_array );
+			if ( bbp_is_single_topic() || ( function_exists( 'bp_is_group' ) && bp_is_group() ) ) {
+				ob_start();
+				bbp_get_template_part( 'form', 'reply' );
+				$reply_form_html = ob_get_clean();
+				wp_localize_script(
+					'bb-readylaunch-forums-js',
+					'bbpReplyAjaxJS',
+					array(
+						'bbp_ajaxurl'          => bbp_get_ajax_url(),
+						'generic_ajax_error'   => esc_html__( 'Something went wrong. Refresh your browser and try again.', 'buddyboss-theme' ),
+						'is_user_logged_in'    => is_user_logged_in(),
+						'reply_nonce'          => wp_create_nonce( 'reply-ajax_' . get_the_ID() ),
+						'topic_id'             => bbp_get_topic_id(),
+						'reply_form_html'      => $reply_form_html,
+						'threaded_reply'       => bbp_allow_threaded_replies(),
+						'threaded_reply_depth' => bbp_thread_replies_depth(),
+						'reply_to_text'        => esc_html__( 'Reply to', 'buddyboss-theme' ),
+						'type_reply_here_text' => esc_html__( 'Type your reply here', 'buddyboss-theme' ),
+					)
+				);
+			}
+		}
+
+		/**
+		 * Add the 'Quick Reply' button to the activity stream.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array $buttons Array of buttons.
+		 * @param int   $activity_id Activity ID.
+		 *
+		 * @return array Modified array of buttons.
+		 */
+		public function bb_rl_activity_inner_buttons( $buttons, $activity_id ) {
+			// Get activity post data.
+			$activities = bp_activity_get_specific( array( 'activity_ids' => $activity_id ) );
+
+			if ( empty( $activities['activities'] ) ) {
+				return $buttons;
+			}
+
+			$activity = array_shift( $activities['activities'] );
+
+			if ( 'bbp_topic_create' === $activity->type ) {
+				// Set topic id when the activity component is not groups.
+				if ( 'bbpress' === $activity->component ) {
+					$topic_id = $activity->item_id;
+				}
+
+				// Set topic id when the activity component is groups.
+				if ( 'groups' === $activity->component ) {
+					$topic_id = $activity->secondary_item_id;
+				}
+
+				// bbp_get_topic_author_id.
+				$topic_title = get_post_field( 'post_title', $topic_id, 'raw' );
+				$user_id     = bbp_get_topic_author_id( $topic_id );
+				$author      = bp_core_get_user_displayname( $user_id );
+
+				// New meta button as 'Quick Reply'.
+				$buttons['quick_reply'] = array(
+					'id'                => 'quick_reply',
+					'position'          => 5,
+					'component'         => 'activity',
+					'must_be_logged_in' => true,
+					'button_element'    => 'a',
+					'link_text'         => sprintf(
+						'<span class="bp-screen-reader-text">%1$s</span> <span class="comment-count">%2$s</span>',
+						esc_html__( 'Quick Reply', 'buddyboss' ),
+						esc_html__( 'Quick Reply', 'buddyboss' )
+					),
+					'button_attr'       => array(
+						'class'            => 'bb-icon-l button bb-icon-comment bp-secondary-action',
+						'data-btn-id'      => 'bbp-reply-form',
+						'data-topic-title' => esc_attr( $topic_title ),
+						'data-topic-id'    => $topic_id,
+						'aria-expanded'    => 'false',
+						'href'             => '#new-post',
+						'data-author-name' => $author,
+					),
+				);
+			}
+
+			return $buttons;
+		}
+
+		/**
+		 * Handle AJAX reply submission.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 */
+		public function bb_rl_ajax_reply() {
+			$action = $_POST['bbp_reply_form_action'];
+			if ( 'bbp-new-reply' === $action ) {
+				bbp_new_reply_handler( $action );
+			} elseif ( 'bbp-edit-reply' === $action ) {
+				bbp_edit_reply_handler( $action );
+			}
+		}
+
+		/**
+		 * New pre replies.
+		 */
+		public function bb_rl_new_reply_pre_extras() {
+			if ( ! bbp_is_ajax() ) {
+				return;
+			}
+
+			// if reply posting has errors then show them in form.
+			if ( bbp_has_errors() ) {
+				ob_start();
+				bbp_template_notices();
+				$reply_error_html = ob_get_clean();
+				$extra_info       = array(
+					'error' => '1',
+				);
+				bbp_ajax_response( false, $reply_error_html, 200, $extra_info );
+			}
+		}
+
+		/**
+		 * New replies.
+		 *
+		 * @param integer $reply_id
+		 */
+		public function bb_rl_new_reply_post_extras( $reply_id ) {
+			if ( ! bbp_is_ajax() ) {
+				return;
+			}
+			$this->bb_rl_reply_ajax_response( $reply_id, 'new' );
+		}
+
+		/**
+		 * Ajax callback for Quick Reply.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @uses  bbp_get_template_part() Load required template.
+		 *
+		 * @return void
+		 */
+		public function bb_rl_activity_quick_reply() {
+			?>
+			<div id="bbpress-forums" class="bbpress-forums-activity bb-quick-reply-form-wrap" data-component="activity" style="display: none;">
+				<?php
+				if ( isset( $_POST['action'] ) && 'quick_reply_ajax' === $_POST['action'] ) {
+					$_POST['action'] = 'reply';
+				}
+
+					add_filter( 'bb_forum_attachment_group_id', array( $this, 'bb_rl_forum_attachment_group_id' ) );
+					add_filter( 'bb_forum_attachment_forum_id', array( $this, 'bb_rl_forum_attachment_forum_id' ) );
+
+					// Timeline quick reply form template.
+					bbp_get_template_part( 'form', 'reply-activity' );
+
+					// Success message template.
+					bbp_get_template_part( 'form-reply', 'success' );
+				?>
+			</div>
+			<?php
+			die();
+		}
+
+		/**
+		 * Generate an Ajax response.
+		 *
+		 * Sends the HTML for the reply along with some extra information.
+		 *
+		 * @param integer $reply_id Reply ID.
+		 * @param string  $type     Type of reply ('new' or 'edit').
+		 */
+		private function bb_rl_reply_ajax_response( $reply_id, $type ) {
+			$reply_html = $this->bb_rl_get_reply_html( $reply_id );
+			$topic_id   = (int) ( isset( $_REQUEST['bbp_topic_id'] ) ? $_REQUEST['bbp_topic_id'] : 0 );
+
+			/**
+			 * Redirect to last page when anyone reply from begging of the page.
+			 */
+			$redirect_to = bbp_get_redirect_to();
+			$reply_url   = bbp_get_reply_url( $reply_id, $redirect_to );
+			$total_pages = '';
+			if ( bbp_thread_replies() ) {
+				if ( function_exists( 'bbp_get_total_parent_reply' ) ) {
+					$parent_reply = (int) bbp_get_total_parent_reply( $topic_id );
+					$parent_reply = ( bbp_show_lead_topic() ? $parent_reply - 1 : $parent_reply );
+					$total_pages  = ceil( (int) $parent_reply / (int) bbp_get_replies_per_page() ); // 1;
+				}
+			} else {
+				$total_pages = ceil( (int) bbp_get_reply_position( $reply_id, $topic_id ) / (int) bbp_get_replies_per_page() );
+			}
+			$current_page = get_query_var( 'paged', $reply_url );
+			if ( 0 === (int) $current_page ) {
+				$current_page = 1;
+			}
+
+			ob_start();
+			if ( bbp_show_lead_topic() ) {
+				$topic_reply_count = (int) bbp_get_topic_reply_count( $topic_id );
+				echo $topic_reply_count;
+				$topic_reply_text = 1 !== $topic_reply_count ? esc_html__( 'Replies', 'buddyboss-theme' ) : esc_html__( 'Reply', 'buddyboss-theme' );
+			} else {
+				$topic_post_count = (int) bbp_get_topic_post_count( $topic_id );
+				echo $topic_post_count;
+				$topic_reply_text = 1 !== $topic_post_count ? esc_html__( 'Posts', 'buddyboss-theme' ) : esc_html__( 'Post', 'buddyboss-theme' );
+			}
+			echo ' ' . wp_kses_post( $topic_reply_text );
+			$topic_total_reply_count_html = ob_get_clean();
+
+			/**
+			 * Ended code for redirection to the last page.
+			 */
+			$extra_info = array(
+				'reply_id'          => $reply_id,
+				'reply_type'        => $type,
+				'reply_parent'      => (int) $_REQUEST['bbp_reply_to'],
+				'tags'              => $this->bb_rl_get_topic_tags( $topic_id ),
+				'redirect_url'      => $reply_url, // Get last page URl - Redirect to last page when anyone reply from begging of the page.
+				'current_page'      => $current_page, // Get current page - Redirect to last page when anyone reply from begging of the page.
+				'total_pages'       => $total_pages, // Get total pages - Redirect to last page when anyone reply from begging of the page.
+				'total_reply_count' => $topic_total_reply_count_html, // Get total pages - Redirect to last page when anyone reply from begging of the page.
+			);
+			bbp_ajax_response( true, $reply_html, 200, $extra_info );
+		}
+
+		/**
+		 * Uses a bbPress template file to generate reply HTML.
+		 *
+		 * @param integer $reply_id
+		 *
+		 * @return string
+		 */
+		private function bb_rl_get_reply_html( $reply_id ) {
+			ob_start();
+			$reply_query      = new \WP_Query(
+				array(
+					'p'         => (int) $reply_id,
+					'post_type' => bbp_get_reply_post_type(),
+				)
+			);
+			$bbp              = bbpress();
+			$bbp->reply_query = $reply_query;
+
+			if ( function_exists( 'bbp_make_clickable' ) ) {
+				// Convert plaintext URI to HTML links.
+				add_filter( 'bbp_get_reply_content', 'bbp_make_clickable', 4 );
+			}
+
+			if ( ! has_filter( 'bbp_get_reply_content', 'convert_smilies' ) ) {
+				add_filter( 'bbp_get_reply_content', 'convert_smilies', 20 );
+			}
+
+			if ( function_exists( 'bp_media_forums_embed_attachments' ) && ! has_filter( 'bbp_get_reply_content', 'bp_media_forums_embed_attachments' ) ) {
+				add_filter( 'bbp_get_reply_content', 'bp_media_forums_embed_attachments', 999, 2 );
+			}
+			if ( function_exists( 'bp_video_forums_embed_attachments' ) && ! has_filter( 'bbp_get_reply_content', 'bp_video_forums_embed_attachments' ) ) {
+				add_filter( 'bbp_get_reply_content', 'bp_video_forums_embed_attachments', 999, 2 );
+			}
+			if ( function_exists( 'bp_document_forums_embed_attachments' ) && ! has_filter( 'bbp_get_reply_content', 'bp_document_forums_embed_attachments' ) ) {
+				add_filter( 'bbp_get_reply_content', 'bp_document_forums_embed_attachments', 999, 2 );
+			}
+
+			if ( function_exists( 'bp_media_forums_embed_gif' ) && ! has_filter( 'bbp_get_reply_content', 'bp_media_forums_embed_gif' ) ) {
+				add_filter( 'bbp_get_reply_content', 'bp_media_forums_embed_gif', 999, 2 );
+			}
+
+			bbp_reply_content_autoembed();
+
+			// Add mentioned to be clickable.
+			add_filter( 'bbp_get_reply_content', 'bbp_make_mentions_clickable' );
+
+			// Link Preview.
+			if ( function_exists( 'bb_forums_link_preview' ) && ! has_filter( 'bbp_get_reply_content', 'bb_forums_link_preview' ) ) {
+				add_filter( 'bbp_get_reply_content', 'bb_forums_link_preview', 999, 2 );
+			}
+
+			while ( bbp_replies() ) :
+				bbp_the_reply();
+				bbp_get_template_part( 'loop', 'single-reply' );
+			endwhile;
+			$reply_html = ob_get_clean();
+
+			if ( function_exists( 'bbp_make_clickable' ) ) {
+				remove_filter( 'bbp_get_reply_content', 'bbp_make_clickable', 4 );
+			}
+
+			if ( function_exists( 'bp_media_forums_embed_attachments' ) ) {
+				remove_filter( 'bbp_get_reply_content', 'bp_media_forums_embed_attachments', 999, 2 );
+			}
+
+			if ( function_exists( 'bp_document_forums_embed_attachments' ) ) {
+				remove_filter( 'bbp_get_reply_content', 'bp_document_forums_embed_attachments', 999, 2 );
+			}
+			if ( function_exists( 'bp_media_forums_embed_gif' ) ) {
+				remove_filter( 'bbp_get_reply_content', 'bp_media_forums_embed_gif', 999, 2 );
+			}
+			return $reply_html;
+		}
+
+		/**
+		 * @param int $group_id Group ID.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return mixed
+		 */
+		public function bb_rl_forum_attachment_group_id( $group_id ) {
+			if ( function_exists( 'bp_is_active' ) && bp_is_active( 'groups' ) && isset( $_POST['group_id'] ) && ! empty( $_POST['group_id'] ) ) {
+				$group_id = $_POST['group_id'];
+			}
+
+			return $group_id;
+		}
+
+		/**
+		 * @param int $forum_id Forum ID.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return int|mixed
+		 */
+		public function bb_rl_forum_attachment_forum_id( $forum_id ) {
+			if ( function_exists( 'bp_is_active' ) && bp_is_active( 'forums' ) && isset( $_POST['topic_id'] ) && ! empty( $_POST['topic_id'] ) ) {
+				$topic_id = $_POST['topic_id'];
+				$forum_id = bbp_get_topic_forum_id( $topic_id );
+			}
+
+			return $forum_id;
+		}
+
+		/**
+		 * Get topic tags.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param int $topic_id Topic ID.
+		 *
+		 * @return string HTML list of topic tags.
+		 */
+		public function bb_rl_get_topic_tags( $topic_id ) {
+
+			$new_terms = array();
+
+			// Topic exists.
+			if ( ! empty( $topic_id ) ) {
+
+				// Topic is spammed so display pre-spam terms.
+				if ( bbp_is_topic_spam( $topic_id ) ) {
+					$new_terms = get_post_meta( $topic_id, '_bbp_spam_topic_tags', true );
+
+					// Topic is not spam so get real terms.
+				} else {
+					$terms     = array_filter( (array) get_the_terms( $topic_id, bbp_get_topic_tag_tax_id() ) );
+					$new_terms = wp_list_pluck( $terms, 'name' );
+				}
+			}
+
+			$html_li = '';
+			$html    = '';
+			if ( $new_terms ) {
+				foreach ( $new_terms as $tag ) {
+					$html_li .= '<li><a href="' . bbp_get_topic_tag_link( $tag ) . '">' . $tag . '</a></li>';
+				}
+
+				$html = '<ul> ' . rtrim( $html_li, ',' ) . '</ul>';
+			}
+			return $html;
 		}
 
 		public function bb_rl_admin_localize_script( $localize_arg, $screen_id ) {
