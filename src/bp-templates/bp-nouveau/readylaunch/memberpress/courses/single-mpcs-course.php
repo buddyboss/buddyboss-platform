@@ -290,6 +290,14 @@ if ( is_user_logged_in() && ! empty( $memberships ) ) {
 					if ( helpers\Courses::is_a_course( $post ) ) {
 						?>
 						<div class="section mpcs-sidebar-menu bb-rl-widget-sidebar-menu">
+							<a class="tile <?php \MeprAccountHelper::active_nav( 'home', 'is-active' ); ?>" href="<?php echo esc_url( get_permalink() ); ?>">
+								<div class="tile-icon">
+									<i class="bb-icons-rl-printer"></i>
+								</div>
+								<div class="tile-content">
+									<p class="tile-title m-0"><?php esc_html_e( 'Course Overview', 'buddyboss' ); ?></p>
+								</div>
+							</a>
 							<?php
 							do_action( 'mpcs_classroom_sidebar_menu', $course, $post );
 							if ( $course->has_resources() ) {
