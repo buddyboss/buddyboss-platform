@@ -222,8 +222,33 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 		 * @since BuddyBoss [BBVERSION]
 		 */
 		public function bb_rl_learndash_before_loop() {
-			if ( is_post_type_archive( learndash_get_post_type_slug( 'course' ) ) ) {
-				echo '<div class="bb-rl-courses-grid grid bb-rl-courses-grid--ldlms">';
+			$is_ld_course_archive = is_post_type_archive( learndash_get_post_type_slug( 'course' ) );
+			$is_ld_topic_archive  = is_post_type_archive( learndash_get_post_type_slug( 'topic' ) );
+			$is_ld_lesson_archive = is_post_type_archive( learndash_get_post_type_slug( 'lesson' ) );
+			$is_ld_quiz_archive   = is_post_type_archive( learndash_get_post_type_slug( 'quiz' ) );
+			$is_ld_group_archive  = is_post_type_archive( learndash_get_post_type_slug( 'group' ) );
+			$is_ld_group_single   = is_singular( learndash_get_post_type_slug( 'group' ) );
+			if ( $is_ld_course_archive ) {
+				?>
+				<div class="bb-rl-courses-grid grid bb-rl-courses-grid--ldlms">
+				<?php
+			}
+			if (
+				$is_ld_topic_archive ||
+				$is_ld_lesson_archive ||
+				$is_ld_quiz_archive ||
+				$is_ld_group_archive ||
+				$is_ld_group_single
+			) {
+				$single_class = $is_ld_group_single ? 'single' : 'archive';
+				?>
+				<div class="bb-rl-lms-page-title">
+					<h1 class="bb-rl-lms-page-title-text">
+						<?php the_title(); ?>
+					</h1>
+				</div>
+				<div class="bb-rl-lms-default-page bb-rl-lms-inner-block bb-rl-lms-inner-block--ld-<?php echo esc_attr( $single_class ); ?>">
+				<?php
 			}
 		}
 
@@ -233,9 +258,40 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 		 * @since BuddyBoss [BBVERSION]
 		 */
 		public function bb_rl_learndash_after_loop() {
-			if ( is_post_type_archive( learndash_get_post_type_slug( 'course' ) ) ) {
+			$is_ld_course_archive = is_post_type_archive( learndash_get_post_type_slug( 'course' ) );
+			$is_ld_topic_archive  = is_post_type_archive( learndash_get_post_type_slug( 'topic' ) );
+			$is_ld_lesson_archive = is_post_type_archive( learndash_get_post_type_slug( 'lesson' ) );
+			$is_ld_quiz_archive   = is_post_type_archive( learndash_get_post_type_slug( 'quiz' ) );
+			$is_ld_group_archive  = is_post_type_archive( learndash_get_post_type_slug( 'group' ) );
+			$is_ld_group_single   = is_singular( learndash_get_post_type_slug( 'group' ) );
+			if ( $is_ld_course_archive ) {
 				echo '</div>';
 				bp_get_template_part( 'learndash/ld30/archive-course-pagination' );
+			}
+
+			if (
+				$is_ld_topic_archive ||
+				$is_ld_lesson_archive ||
+				$is_ld_quiz_archive ||
+				$is_ld_group_archive ||
+				$is_ld_group_single
+			) {
+				if (
+					$is_ld_group_single &&
+					(
+						comments_open() ||
+						get_comments_number()
+					)
+				) {
+					?>
+					<div class="bb-rl-lms-content-comments bb-rl-course-content-comments">
+						<?php
+						bp_get_template_part( 'learndash/ld30/comments' );
+						?>
+					</div>
+					<?php
+				}
+				echo '</div>';
 			}
 		}
 

@@ -4831,18 +4831,29 @@ body.ld-in-focus-mode .learndash-wrapper {
   color: var(--bb-rl-text-disabled-color);
 }
 
-.bb-rl-container--ld-archive .bb-rl-lms-inner-block--ld-archive {
+.bb-rl-lms-default-page .bb-rl-lms-page-title h1 {
+  font-size: var(--bb-rl-font-size-base);
+  font-weight: 500;
+  line-height: var(--bb-rl-base-line);
+  color: var(--bb-rl-text-color);
+  white-space: nowrap;
+}
+
+.bb-rl-lms-default-page .bb-rl-ld-archive,
+.bb-rl-lms-default-page .bb-rl-ld-single {
   padding: var(--bb-rl-space-200) 0;
 }
 
-.bb-rl-container--ld-archive .bb-rl-ld-archive .entry-title a {
+.bb-rl-lms-default-page .bb-rl-ld-archive .entry-title a,
+.bb-rl-lms-default-page .bb-rl-ld-single .entry-title a {
   font-size: var(--bb-rl-font-size-base);
   font-weight: 500;
   line-height: var(--bb-rl-base-line);
   color: var(--bb-rl-text-color);
 }
 
-.bb-rl-container--ld-archive .bb-rl-ld-archive .entry-content {
+.bb-rl-lms-default-page .bb-rl-ld-archive .entry-content,
+.bb-rl-lms-default-page .bb-rl-ld-single .entry-content {
   font-size: var(--bb-rl-font-size-sm);
   font-weight: 400;
   line-height: var(--bb-rl-base-line-small);

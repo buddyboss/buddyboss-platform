@@ -401,26 +401,22 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				$is_ld_topic_archive ||
 				$is_ld_lesson_archive ||
 				$is_ld_quiz_archive ||
-				$is_ld_group_archive
+				$is_ld_group_archive ||
+				$is_ld_group_single
 			) {
-				bp_get_template_part( 'learndash/ld30/default' );
+				bp_get_template_part(
+					'learndash/ld30/default',
+					null,
+					array(
+						'is_ld_group_single' => $is_ld_group_single,
+					)
+				);
 			} elseif ( $is_ld_assignment ) {
 				bp_get_template_part( 'learndash/ld30/assignment' );
 			} elseif ( $is_ld_exam ) {
 				bp_get_template_part( 'learndash/ld30/challenge-exam' );
 			} else {
 				the_content();
-
-				/**
-				* If comments are open or we have at least one comment, load up the comment template.
-				*/
-				if ( $is_ld_group_single && ( comments_open() || get_comments_number() ) ) {
-					?>
-					<div class="comments-area bb-rl-comments-area">
-						<?php comments_template(); ?>
-					</div>
-					<?php
-				}
 			}
 		}
 
@@ -2395,7 +2391,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * @since BuddyBoss [BBVERSION]
 		 */
 		public function bb_readylaunch_lms_enqueue_styles() {
-			if ( ! bb_is_readylaunch_enabled() || ( ! class_exists( 'SFWD_LMS' ) && ! class_exists( 'memberpress\courses\helpers\Courses' ) )  ) {
+			if ( ! bb_is_readylaunch_enabled() || ( ! class_exists( 'SFWD_LMS' ) && ! class_exists( 'memberpress\courses\helpers\Courses' ) ) ) {
 				return;
 			}
 
@@ -2715,8 +2711,8 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			if ( isset( $post ) && is_a( $post, 'WP_Post' ) ) {
 				// Check if this is a course page using MemberPress helper.
 				if (
-					class_exists( 'memberpress\courses\helpers\Courses' ) && 
-					method_exists( 'memberpress\courses\helpers\Courses', 'is_a_course' ) && 
+					class_exists( 'memberpress\courses\helpers\Courses' ) &&
+					method_exists( 'memberpress\courses\helpers\Courses', 'is_a_course' ) &&
 					memberpress\courses\helpers\Courses::is_a_course( $post )
 				) {
 					return true;
@@ -2724,8 +2720,8 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 				// Check if this is a lesson page using MemberPress helper.
 				if (
-					class_exists( 'memberpress\courses\helpers\Lessons' ) && 
-					method_exists( 'memberpress\courses\helpers\Lessons', 'is_a_lesson' ) && 
+					class_exists( 'memberpress\courses\helpers\Lessons' ) &&
+					method_exists( 'memberpress\courses\helpers\Lessons', 'is_a_lesson' ) &&
 					memberpress\courses\helpers\Lessons::is_a_lesson( $post )
 				) {
 					return true;
@@ -2734,7 +2730,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 			// Method 2: Check for course archive using URL patterns.
 			if (
-				class_exists( 'memberpress\courses\helpers\Courses' ) && 
+				class_exists( 'memberpress\courses\helpers\Courses' ) &&
 				method_exists( 'memberpress\courses\helpers\Courses', 'get_permalink_base' )
 			) {
 				$courses_base = memberpress\courses\helpers\Courses::get_permalink_base();
@@ -2746,7 +2742,6 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					}
 				}
 			}
-
 
 			// Method 3: Fallback to post type detection.
 			$post_type = '';

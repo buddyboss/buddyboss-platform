@@ -294,13 +294,12 @@
 	}
 }
 
-.bb-rl-container--ld-archive {
+.bb-rl-lms-default-page {
 
-	.bb-rl-lms-inner-block--ld-archive {
+	.bb-rl-ld-archive,
+	.bb-rl-ld-single {
+
 		padding: var(--bb-rl-space-200) 0;
-	}
-
-	.bb-rl-ld-archive {
 
 		.entry-title {
 
