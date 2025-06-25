@@ -181,7 +181,8 @@
 		gap: var(--bb-rl-space-100);
 	}
 
-	.mpcs-likert-scale-low-label, .mpcs-likert-scale-high-label {
+	.mpcs-likert-scale-low-label,
+	.mpcs-likert-scale-high-label {
 
 		@include bb-rl-label-heading;
 		color: var(--bb-rl-text-tertiary-color);

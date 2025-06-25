@@ -41,7 +41,7 @@
 
 		&:before {
 			content: "\e400";
-			font-family: "bb-icons-rl";
+			font-family: bb-icons-rl;
 			font-size: 16px;
 			font-weight: 400;
 			line-height: 1;
@@ -70,6 +70,7 @@
 	border-radius: 0 0 var(--bb-rl-radius-lg) var(--bb-rl-radius-lg);
 
 	h1 {
+
 		@include bb-rl-base-heading-2xl;
 		margin-bottom: var(--bb-rl-space-50);
 	}

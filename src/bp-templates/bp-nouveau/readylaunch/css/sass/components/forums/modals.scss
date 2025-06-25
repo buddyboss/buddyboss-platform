@@ -67,7 +67,7 @@
 			position: relative;
 		}
 
-		.bbp-submit-wrapper .submit  {
+		.bbp-submit-wrapper .submit {
 			position: absolute;
 			bottom: -50px;
 			left: 0;
@@ -113,7 +113,7 @@
 				width: 100%;
 				max-width: 350px;
 			}
-			
+
 			br {
 				display: none;
 			}
@@ -178,7 +178,7 @@
 		background-color: var(--bb-rl-background-color);
 		border: 1px solid var(--bb-rl-border-secondary-color);
 		border-radius: var(--bb-rl-radius-lg);
-		box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.1);        
+		box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.1);
 	}
 
 	fieldset {
@@ -264,7 +264,7 @@
 			margin-top: var(--bb-rl-space-200);
 
 			.submit {
-				position: static
+				position: static;
 			}
 		}
 
@@ -395,12 +395,12 @@
 			display: none;
 		}
 	}
-	
+
 	div[class*="attached-gif-container"] .gif-image-container img {
 		max-width: 100%;
 		border-radius: var(--bb-rl-radius-lg);
 	}
-	
+
 	div[class*="attached-gif-container"] .gif-image-overlay {
 		display: flex;
 		align-items: center;
@@ -418,7 +418,7 @@
 		right: var(--bb-rl-space-100);
 		cursor: pointer;
 	}
-	
+
 	#bb-rl-whats-new-attachments .bb-rl-forums-attached-gif-container {
 		margin: 0 var(--bb-rl-space-300);
 	}
@@ -474,14 +474,14 @@
 			align-items: center;
 			justify-content: center;
 			padding: var(--bb-rl-space-50);
-	
+
 			&.active {
 				color: var(--bb-rl-icon-color);
 				background-color: var(--bb-rl-background-secondary-hover-color);
 				border-color: var(--bb-rl-border-secondary-color);
 				border-radius: var(--bb-rl-radius-md);
 			}
-	
+
 			&:before {
 				content: "\e436";
 				font-size: var(--bb-rl-base-line);
@@ -593,12 +593,12 @@
 
 .bbp-topic-form {
 
-	.bp-feedback{
+	.bp-feedback {
 		border-radius: 0;
 
 		> p {
 			padding: 0 5px 0 0;
-	
+
 			+ p {
 				margin: 0;
 			}
@@ -615,7 +615,7 @@
 
 		.bbp-form #bbp_reply_submit {
 			opacity: 1;
-			pointer-events: initial	
+			pointer-events: initial;
 		}
 	}
 
@@ -665,7 +665,7 @@
 				line-height: 1.2;
 			}
 		}
-		
+
 	}
 }
 
@@ -673,8 +673,8 @@
 .bb-rl-forum-form.media-uploading {
 
 	.bbp-form #bbp_reply_submit {
-		opacity: .4;
-		pointer-events: none
+		opacity: 0.4;
+		pointer-events: none;
 	}
 }
 
@@ -688,7 +688,7 @@
 
 		.bbp-form #bbp_topic_submit {
 			opacity: 1;
-			pointer-events: initial;	
+			pointer-events: initial;
 		}
 	}
 }
@@ -697,8 +697,8 @@
 .bb-rl-forum-form.media-uploading.has-title {
 
 	.bbp-form #bbp_topic_submit {
-		opacity: .4;
-		pointer-events: none
+		opacity: 0.4;
+		pointer-events: none;
 	}
 }
 
@@ -706,11 +706,11 @@
 .topic-edit {
 
 	.bb-rl-forum-form {
-		
+
 		.bbp-form #bbp_reply_submit,
 		.bbp-form #bbp_topic_submit {
 			opacity: 1;
-			pointer-events: initial
+			pointer-events: initial;
 		}
 	}
 }
@@ -720,7 +720,7 @@
 .bbp-reply-form {
 
 	.bb-rl-forum-modal-header {
-		
+
 		.bb-rl-forum-modal-close {
 			margin-left: auto;
 		}

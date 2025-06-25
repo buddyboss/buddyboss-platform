@@ -889,6 +889,80 @@
   margin-bottom: var(--bb-rl-space-100);
 }
 
+.bb-rl-course-content-module .mpcs-instructor,
+.bb-rl-course-description .mpcs-instructor {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--bb-rl-space-200);
+  padding: var(--bb-rl-space-300) 0;
+}
+
+.bb-rl-course-content-module .mpcs-instructor .tile-icon,
+.bb-rl-course-description .mpcs-instructor .tile-icon {
+  width: 144px;
+}
+
+.bb-rl-course-content-module .mpcs-instructor .tile-icon .avatar,
+.bb-rl-course-description .mpcs-instructor .tile-icon .avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.bb-rl-course-content-module .mpcs-instructor .tile-subtitle,
+.bb-rl-course-description .mpcs-instructor .tile-subtitle {
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 500;
+  line-height: var(--bb-rl-base-line-small);
+  display: inline-flex;
+  width: fit-content;
+  color: var(--bb-rl-text-brand-secondary-color);
+  background-color: var(--bb-rl-background-brand-secondary-color);
+  border: 1px solid var(--bb-rl-border-brand-secondary-color);
+  border-radius: var(--bb-rl-radius-full);
+  padding: var(--bb-rl-space-50) var(--bb-rl-space-100);
+}
+
+.bb-rl-course-content-module .mpcs-instructor .tile-meta,
+.bb-rl-course-description .mpcs-instructor .tile-meta {
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 400;
+  line-height: var(--bb-rl-base-line-small);
+  color: var(--bb-rl-text-secondary-color);
+  margin: var(--bb-rl-space-100) 0 0;
+}
+
+.bb-rl-course-content-module .mpcs-instructor .tile-meta p,
+.bb-rl-course-description .mpcs-instructor .tile-meta p {
+  margin: 0 0 var(--bb-rl-space-100);
+}
+
+.bb-rl-course-content-module .mpcs-instructor .tile-meta a,
+.bb-rl-course-description .mpcs-instructor .tile-meta a {
+  background-color: transparent;
+  color: var(--bb-rl-text-brand-primary-color);
+  border: none;
+  border-radius: 0;
+  border-bottom: 1px solid transparent;
+}
+
+.bb-rl-course-content-module .mpcs-instructor .tile-meta a:hover,
+.bb-rl-course-description .mpcs-instructor .tile-meta a:hover {
+  border-bottom-color: var(--bb-rl-link-primary-hover-color);
+}
+
+.bb-rl-course-content-module .mpcs-instructor .tile-meta a:disabled,
+.bb-rl-course-description .mpcs-instructor .tile-meta a:disabled {
+  color: var(--bb-rl-background-brand-disabled-color);
+  border-bottom-color: transparent;
+  cursor: not-allowed;
+}
+
+.bb-rl-course-content-inner .mpcs-section.mpcs-section-lessons {
+  border: 1px solid var(--bb-rl-border-secondary-color);
+}
+
 .bb-rl-course-content-inner .mpcs-section.mpcs-section-lessons,
 .mpcs-sidebar-content .mpcs-section.mpcs-section-lessons {
   border-color: var(--bb-rl-border-secondary-color);
@@ -1016,6 +1090,11 @@
   position: relative;
   top: 4px;
   font-style: normal;
+}
+
+.bb-rl-course-content-inner .mpcs-section .mpcs-lessons .mpcs-lesson.current,
+.mpcs-sidebar-content .mpcs-section .mpcs-lessons .mpcs-lesson.current {
+  background-color: transparent;
 }
 
 .bb-rl-course-content-inner .mpcs-section .mpcs-lessons .mpcs-lesson-link.mpcs-lesson > i,
@@ -1738,7 +1817,8 @@
   gap: var(--bb-rl-space-100);
 }
 
-.bb-rl-lms-inner-block .mpcs-likert-scale-low-label, .bb-rl-lms-inner-block .mpcs-likert-scale-high-label {
+.bb-rl-lms-inner-block .mpcs-likert-scale-low-label,
+.bb-rl-lms-inner-block .mpcs-likert-scale-high-label {
   font-size: var(--bb-rl-font-size-sm);
   font-weight: 400;
   line-height: var(--bb-rl-base-line-small);

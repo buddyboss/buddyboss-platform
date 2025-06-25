@@ -128,6 +128,59 @@
 		@include bb-rl-base-heading;
 		margin-bottom: var(--bb-rl-space-100);
 	}
+
+	.mpcs-instructor {
+		display: flex;
+		align-items: flex-start;
+		gap: var(--bb-rl-space-200);
+		padding: var(--bb-rl-space-300) 0;
+
+		.tile-icon {
+			width: 144px;
+
+			.avatar {
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+				border-radius: 50%;
+			}
+		}
+
+		.tile-subtitle {
+
+			@include bb-rl-label-heading-bolder;
+			display: inline-flex;
+			width: fit-content;
+			color: var(--bb-rl-text-brand-secondary-color);
+			background-color: var(--bb-rl-background-brand-secondary-color);
+			border: 1px solid var(--bb-rl-border-brand-secondary-color);
+			border-radius: var(--bb-rl-radius-full);
+			padding: var(--bb-rl-space-50) var(--bb-rl-space-100);
+		}
+
+		.tile-meta {
+
+			@include bb-rl-label-heading;
+			color: var(--bb-rl-text-secondary-color);
+			margin: var(--bb-rl-space-100) 0 0;
+
+			p {
+				margin: 0 0 var(--bb-rl-space-100);
+			}
+
+			a {
+
+				@include bb-rl-button--tertiary-link;
+			}
+		}
+	}
+}
+
+.bb-rl-course-content-inner {
+
+	.mpcs-section.mpcs-section-lessons {
+		border: 1px solid var(--bb-rl-border-secondary-color);
+	}
 }
 
 .bb-rl-course-content-inner,
@@ -243,6 +296,10 @@
 			top: 4px;
 			font-style: normal;
 		}
+	}
+
+	.mpcs-section .mpcs-lessons .mpcs-lesson.current {
+		background-color: transparent;
 	}
 
 	.mpcs-section .mpcs-lessons .mpcs-lesson-link.mpcs-lesson,

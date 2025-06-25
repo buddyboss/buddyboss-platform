@@ -171,15 +171,16 @@
 }
 
 .bb-rl-lms-tab-menu {
-    margin: 0 0 var(--bb-rl-space-300);
-    padding: 0;
-    display: flex;
-    align-items: center;
+	margin: 0 0 var(--bb-rl-space-300);
+	padding: 0;
+	display: flex;
+	align-items: center;
 	gap: var(--bb-rl-space-100);
 
 	.bb-rl-lms-tab,
 	.tile,
 	.mepr-gradebook {
+
 		@include bb-rl-label-heading-bolder;
 		padding: 6px var(--bb-rl-space-200);
 		border: 1px solid var(--bb-rl-border-secondary-color);
