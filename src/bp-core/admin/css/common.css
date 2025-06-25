@@ -4823,6 +4823,13 @@ table.users .unsuspend a.disabled[data-bp-tooltip]:after {
   text-align: center;
 }
 
+.bb-upgrade-nav-tag.color-green,
+.bb-rl-nav-tag.color-green {
+  background-color: #5f9a22;
+  padding-left: 6px;
+  padding-right: 6px;
+}
+
 @media screen and (max-width: 760px) {
   .bb-upgrade-nav-tag,
   .bb-rl-nav-tag {

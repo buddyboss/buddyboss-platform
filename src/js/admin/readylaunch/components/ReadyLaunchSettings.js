@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from '@wordpress/element';
+import { useState, useEffect, useRef } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { ToggleControl, TextControl, Spinner, Notice, ColorPicker, RadioControl, Button, SelectControl, ColorIndicator, Popover } from '@wordpress/components';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
@@ -661,14 +661,7 @@ export const ReadyLaunchSettings = () => {
 							<div className="settings-toggle-container">
 								<div className="toggle-content">
 									<h3>{__('Enable ReadyLaunch', 'buddyboss')}</h3>
-									<p>
-										{createInterpolateElement(
-											__("Making <a>ReadyLaunch</a> your default style will override your WordPress Theme.", "buddyboss"),
-											{
-												a: <a href="https://www.buddyboss.com/resources/readylaunch/" target="_blank" rel="noopener noreferrer" />
-											}
-										)}
-									</p>
+									<p>{__('Turn on ReadyLaunch to override your theme styles on BuddyBoss pages.', 'buddyboss')}</p>
 								</div>
 								<ToggleControl
 									checked={settings.bb_rl_enabled}
@@ -686,7 +679,7 @@ export const ReadyLaunchSettings = () => {
 								<div className="settings-form-field">
 									<div className="field-label">
 										<label>{__('Site Name', 'buddyboss')}</label>
-										<p>{__('Appears in the browser title, search engine results, and possibly in the site header.', 'buddyboss')}</p>
+										<p>{__('Displays in the browser title, search engine results and site header.', 'buddyboss')}</p>
 									</div>
 									<div className="field-input">
 										<TextControl
@@ -702,7 +695,7 @@ export const ReadyLaunchSettings = () => {
 
 						{ settings.bb_rl_enabled && ( <div className="settings-card">
 							<div className="settings-header">
-								<h3>{__('Backend Settings', 'buddyboss')}</h3>
+								<h3>{__('Platform Settings', 'buddyboss')}</h3>
 								<HelpIcon onClick={() => handleHelpClick('456175')} /> {/* @todo: update when release. */}
 							</div>
 							<div className="settings-list-items-block">
@@ -783,7 +776,7 @@ export const ReadyLaunchSettings = () => {
 				return (
 					<div className="settings-content">
 						<h1>{__('Style Settings', 'buddyboss')}</h1>
-						<p className="settings-description">{__('Customize your community\'s look with mode preferences, logos, and theme colors.', 'buddyboss')}</p>
+						<p className="settings-description">{__('Customize the appearance of your community to match your brand colors and logo.', 'buddyboss')}</p>
 
 						<div className="settings-card">
 							<div className="settings-header">
@@ -795,7 +788,7 @@ export const ReadyLaunchSettings = () => {
 							<div className="settings-form-field with-toggle">
 								<div className="field-label">
 									<label>{__('Appearance', 'buddyboss')}</label>
-									<p>{__('Enable or disable dark mode for your community, allowing users to choose or set it for them.', 'buddyboss')}</p>
+									<p>{__('Choose whether you wish to support light or dark mode.', 'buddyboss')}</p>
 								</div>
 								<div className="field-input">
 									<div className="sub-field-input sub-field-input-inline">
@@ -821,7 +814,7 @@ export const ReadyLaunchSettings = () => {
 							<div className="settings-form-field">
 								<div className="field-label">
 									<label>{__('Logo', 'buddyboss')}</label>
-									<p>{__('Upload separate logos optimized for light and dark themes to ensure clear visibility.', 'buddyboss')}</p>
+									<p>{__('Upload your logo which appears along the top site header.', 'buddyboss')}</p>
 								</div>
 								<div className="field-input logo-uploaders">
 									{'dark' !== settings.bb_rl_theme_mode && (
@@ -849,7 +842,7 @@ export const ReadyLaunchSettings = () => {
 							<div className="settings-form-field">
 								<div className="field-label">
 									<label>{__('Theme Color', 'buddyboss')}</label>
-									<p>{__('Set the primary color scheme for light and dark modes, used for buttons, links, and interactive elements.', 'buddyboss')}</p>
+									<p>{__('Select the primary color of your community. This is used across buttons, links and secondary elements.', 'buddyboss')}</p>
 								</div>
 								<div className="field-input color-palettes bb-rl-color-palettes">
 									{'dark' !== settings.bb_rl_theme_mode && (
@@ -892,7 +885,7 @@ export const ReadyLaunchSettings = () => {
 								<div className="settings-form-field with-multiple-toggles">
 									<div className="field-label">
 										<label>{__('Enable Pages', 'buddyboss')}</label>
-										<p>{__('Enable pages that should have styles from ReadyLaunch.', 'buddyboss')}</p>
+										<p>{__('Apply ReadyLaunch styles to the following pages', 'buddyboss')}</p>
 									</div>
 									{window?.BP_ADMIN?.register_integration === '1' || window?.BP_ADMIN?.courses_integration === '1' ? (
 										<div className="field-toggles">
@@ -1078,7 +1071,7 @@ export const ReadyLaunchSettings = () => {
 									<div className="settings-form-field menu-header-field">
 										<div className="field-label">
 											<label>{__('Header', 'buddyboss')}</label>
-											<p>{__('Select a header menu for ReadyLaunch.', 'buddyboss')}</p>
+											<p>{__('Choose a menu which displays in the top navigation bar', 'buddyboss')}</p>
 										</div>
 										<div className="field-input">
 											<SelectControl
@@ -1095,9 +1088,9 @@ export const ReadyLaunchSettings = () => {
 											/>
 											<p className="field-note">
 												{createInterpolateElement(
-													__('Update your header menu from the <a>Menus</a> tab, where you\'ll find a dedicated ReadyLaunch header menu location.', 'buddyboss'),
+													__('Update your header menu from Appearance > <a>Menus</a>. There you will find a Display Option of ReadyLaunch', 'buddyboss'),
 													{
-														a: <a href="#menus" />
+														a: <a href="/wp-admin/nav-menus.php" />
 													}
 												)}
 											</p>
@@ -1108,7 +1101,7 @@ export const ReadyLaunchSettings = () => {
 									<div className="settings-form-field with-icon-toggles">
 										<div className="field-label">
 											<label>{__('Side', 'buddyboss')}</label>
-											<p>{__('Enable the options to appear in the left-side menu.', 'buddyboss')}</p> {/* Added note */}
+											<p>{__('Enable and re-order menu items shown on the left sidebar', 'buddyboss')}</p> {/* Added note */}
 										</div>
 										<Droppable droppableId="sideMenuItems">
 											{(provided) => (
@@ -1147,7 +1140,7 @@ export const ReadyLaunchSettings = () => {
 									<div className="settings-form-field custom-links-field">
 										<div className="field-label">
 											<label>{__('Link', 'buddyboss')}</label>
-											<p>{__('Add links to the link menu.', 'buddyboss')}</p> {/* Added note */}
+											<p>{__('Add and re-order custom links which are shown on the left sidebar', 'buddyboss')}</p> {/* Added note */}
 										</div>
 										<Droppable droppableId="bb_rl_custom_links">
 											{(provided) => (
