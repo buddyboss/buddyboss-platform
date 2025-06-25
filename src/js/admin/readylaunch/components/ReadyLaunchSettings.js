@@ -189,14 +189,14 @@ export const ReadyLaunchSettings = () => {
 					} else {
 						setToast({
 							status: 'error',
-							message: __('Error saving settings.', 'buddyboss'),
+							message: __('Something went wrong. Please try again', 'buddyboss'),
 						});
 					}
 				})
 				.catch(() => {
 					setToast({
 						status: 'error',
-						message: __('Error saving settings.', 'buddyboss'),
+						message: __('Something went wrong. Please try again', 'buddyboss'),
 					});
 				});
 		}, 1000);
