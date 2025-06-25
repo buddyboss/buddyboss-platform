@@ -356,6 +356,41 @@
   color: var(--bb-rl-icon-secondary-color);
 }
 
+.bb-rl-lms-tab-menu {
+  margin: 0 0 var(--bb-rl-space-300);
+  padding: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--bb-rl-space-100);
+}
+
+.bb-rl-lms-tab-menu .bb-rl-lms-tab,
+.bb-rl-lms-tab-menu .tile,
+.bb-rl-lms-tab-menu .mepr-gradebook {
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 500;
+  line-height: var(--bb-rl-base-line-small);
+  padding: 6px var(--bb-rl-space-200);
+  border: 1px solid var(--bb-rl-border-secondary-color);
+  color: var(--bb-rl-text-secondary-color);
+  border-radius: var(--bb-rl-radius-full);
+  background-color: transparent;
+}
+
+.bb-rl-lms-tab-menu .bb-rl-lms-tab.is-active,
+.bb-rl-lms-tab-menu .tile.is-active,
+.bb-rl-lms-tab-menu .mepr-gradebook.is-active {
+  background-color: var(--bb-rl-background-color);
+  color: var(--bb-rl-text-color);
+  border-color: var(--bb-rl-border-quinery-color);
+}
+
+.bb-rl-lms-tab-menu .bb-rl-lms-tab .tile-icon,
+.bb-rl-lms-tab-menu .tile .tile-icon,
+.bb-rl-lms-tab-menu .mepr-gradebook .tile-icon {
+  display: none;
+}
+
 .post-type-archive-mpcs-course.bb-readylaunch-template .bb-rl-meprlms-course-filters {
   display: flex;
   align-items: center;
@@ -733,7 +768,7 @@
   display: flex;
   align-items: center;
   gap: var(--bb-rl-space-50);
-  margin: var(--bb-rl-space-200) 0;
+  margin: var(--bb-rl-space-200) 0 var(--bb-rl-space-100);
 }
 
 .bb-rl-course-overview .bb-rl-course-meta--updated .bb-rl-course-meta-value {

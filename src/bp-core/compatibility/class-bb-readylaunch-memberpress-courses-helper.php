@@ -636,11 +636,8 @@ class BB_Readylaunch_Memberpress_Courses_Helper {
 
 		ob_start();
 		?>
-		<div class="section bb-rl-course-tab-menu">
-			<a class="tile <?php \MeprAccountHelper::active_nav( 'home', 'is-active' ); ?>" href="<?php echo esc_url( get_permalink() ); ?>">
-				<div class="tile-icon">
-					<i class="bb-icons-rl-printer"></i>
-				</div>
+		<div class="section bb-rl-lms-tab-menu">
+			<a class="bb-rl-lms-tab <?php \MeprAccountHelper::active_nav( 'home', 'is-active' ); ?>" href="<?php echo esc_url( get_permalink() ); ?>">
 				<div class="tile-content">
 					<p class="tile-title m-0"><?php esc_html_e( 'About Course', 'buddyboss' ); ?></p>
 				</div>
@@ -649,10 +646,7 @@ class BB_Readylaunch_Memberpress_Courses_Helper {
 			do_action( 'mpcs_classroom_sidebar_menu', $course, $post );
 			if ( $course->has_resources() ) {
 				?>
-				<a class="tile <?php \MeprAccountHelper::active_nav( 'resources', 'is-active' ); ?>" href="<?php echo esc_url( get_permalink() . '?action=resources' ); ?>">
-					<div class="tile-icon">
-						<i class="bb-icons-rl-printer"></i>
-					</div>
+				<a class="bb-rl-lms-tab <?php \MeprAccountHelper::active_nav( 'resources', 'is-active' ); ?>" href="<?php echo esc_url( get_permalink() . '?action=resources' ); ?>">
 					<div class="tile-content">
 						<p class="tile-title m-0"><?php esc_html_e( 'Resources', 'buddyboss' ); ?></p>
 					</div>
@@ -676,10 +670,7 @@ class BB_Readylaunch_Memberpress_Courses_Helper {
 					$cert_url
 				);
 				?>
-				<a target="_blank" class="tile <?php \MeprAccountHelper::active_nav( 'certificate', 'is-active' ); ?>" href="<?php echo esc_url_raw( $cert_url ); ?>">
-					<div class="tile-icon">
-						<i class="mpcs-award"></i>
-					</div>
+				<a target="_blank" class="bb-rl-lms-tab <?php \MeprAccountHelper::active_nav( 'certificate', 'is-active' ); ?>" href="<?php echo esc_url_raw( $cert_url ); ?>">
 					<div class="tile-content">
 						<p class="tile-title m-0">
 							<?php esc_html_e( 'Certificate', 'buddyboss' ); ?>
@@ -696,10 +687,7 @@ class BB_Readylaunch_Memberpress_Courses_Helper {
 			$remove_instructor_link = helpers\Options::val( $options, 'remove-instructor-link' );
 			if ( empty( $remove_instructor_link ) ) {
 				?>
-				<a class="tile <?php \MeprAccountHelper::active_nav( 'instructor', 'is-active' ); ?>" href="<?php echo esc_url( get_permalink() . '?action=instructor' ); ?>">
-					<div class="tile-icon">
-						<i class="bb-icons-rl-user"></i>
-					</div>
+				<a class="bb-rl-lms-tab <?php \MeprAccountHelper::active_nav( 'instructor', 'is-active' ); ?>" href="<?php echo esc_url( get_permalink() . '?action=instructor' ); ?>">
 					<div class="tile-content">
 						<p class="tile-title m-0"><?php esc_html_e( 'Your Instructor', 'buddyboss' ); ?></p>
 					</div>
