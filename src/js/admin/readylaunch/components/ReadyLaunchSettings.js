@@ -364,12 +364,15 @@ export const ReadyLaunchSettings = () => {
 		setHasUserMadeChanges(true); // Set flag when user makes a change
 		setToast({ status: 'saving', message: __('Saving changes...', 'buddyboss') });
 
+		// If imageData is null (i.e., Remove button clicked), set to []
+		const valueToSet = imageData === null ? [] : imageData;
+
 		// Update both settings and changedFields
 		setSettings(prevSettings => ({
 			...prevSettings,
-			[name]: imageData
+			[name]: valueToSet
 		}));
-		setChangedFields(prev => ({ ...prev, [name]: imageData }));
+		setChangedFields(prev => ({ ...prev, [name]: valueToSet }));
 	};
 
 	// Helper function to open the WordPress media library
