@@ -149,10 +149,10 @@ defined( 'ABSPATH' ) || exit;
 			<#
 			var mediaComponentActive = <?php echo bp_is_active( 'media' ) ? 'true' : 'false'; ?>;
 			var videoComponentActive = <?php echo bp_is_active( 'video' ) ? 'true' : 'false'; ?>;
-			var messagesMediaEnabled = <?php echo bp_is_messages_media_support_enabled() ? 'true' : 'false'; ?>;
-			var groupMediaEnabled    = <?php echo bp_is_group_media_support_enabled() ? 'true' : 'false'; ?>;
-			var messagesVideoEnabled = <?php echo bp_is_messages_video_support_enabled() ? 'true' : 'false'; ?>;
-			var groupVideoEnabled    = <?php echo bp_is_group_video_support_enabled() ? 'true' : 'false'; ?>;
+			var messagesMediaEnabled = <?php echo function_exists( 'bp_is_messages_media_support_enabled' ) ? bp_is_messages_media_support_enabled() : 'false'; ?>;
+			var groupMediaEnabled    = <?php echo function_exists( 'bp_is_group_media_support_enabled' ) ? bp_is_group_media_support_enabled() : 'false'; ?>;
+			var messagesVideoEnabled = <?php echo function_exists( 'bp_is_messages_video_support_enabled' ) ? bp_is_messages_video_support_enabled() : 'false'; ?>;
+			var groupVideoEnabled    = <?php echo function_exists( 'bp_is_group_video_support_enabled' ) ? bp_is_group_video_support_enabled() : 'false'; ?>;
 
 			var mediaActive         = mediaComponentActive && ( messagesMediaEnabled || groupMediaEnabled );
 			var videoActive         = videoComponentActive && ( messagesVideoEnabled || groupVideoEnabled );
