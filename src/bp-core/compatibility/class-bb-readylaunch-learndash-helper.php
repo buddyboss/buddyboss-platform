@@ -200,8 +200,32 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 		 * @since BuddyBoss [BBVERSION]
 		 */
 		public function bb_rl_learndash_layout_before() {
-			if ( is_post_type_archive( learndash_get_post_type_slug( 'course' ) ) ) {
+			$is_ld_course_archive = is_post_type_archive( learndash_get_post_type_slug( 'course' ) );
+			$is_ld_topic_archive  = is_post_type_archive( learndash_get_post_type_slug( 'topic' ) );
+			$is_ld_lesson_archive = is_post_type_archive( learndash_get_post_type_slug( 'lesson' ) );
+			$is_ld_quiz_archive   = is_post_type_archive( learndash_get_post_type_slug( 'quiz' ) );
+			$is_ld_group_archive  = is_post_type_archive( learndash_get_post_type_slug( 'group' ) );
+
+			if ( $is_ld_course_archive ) {
 				bp_get_template_part( 'learndash/ld30/archive-course-header' );
+			}
+
+			if (
+				$is_ld_topic_archive ||
+				$is_ld_lesson_archive ||
+				$is_ld_quiz_archive ||
+				$is_ld_group_archive
+			) {
+				$post_type_obj = get_post_type_object( get_post_type() );
+				if ( $post_type_obj && ! empty( $post_type_obj->labels->name ) ) {
+					?>
+					<div class="bb-rl-lms-page-title">
+						<h1 class="bb-rl-lms-page-title-text">
+							<?php echo esc_html( $post_type_obj->labels->name ); ?>
+						</h1>
+					</div>
+					<?php
+				}
 			}
 		}
 
@@ -242,11 +266,6 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 			) {
 				$single_class = $is_ld_group_single ? 'single' : 'archive';
 				?>
-				<div class="bb-rl-lms-page-title">
-					<h1 class="bb-rl-lms-page-title-text">
-						<?php the_title(); ?>
-					</h1>
-				</div>
 				<div class="bb-rl-lms-default-page bb-rl-lms-inner-block bb-rl-lms-inner-block--ld-<?php echo esc_attr( $single_class ); ?>">
 				<?php
 			}
