@@ -1,11 +1,15 @@
 <?php
-
 /**
- * Archive Forum Content Part
+ * Archive Forum Content Template
  *
- * @package BuddyBoss\Theme
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
+ * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 ?>
 
 <div id="bbpress-forums" class="bb-forums-archive-page">
@@ -20,7 +24,7 @@
 	<div class="bb-rl-secondary-header flex items-center">
 		<div class="bb-rl-entry-heading">
 			<?php
-			// Get total forums count using bbPress statistics
+			// Get total forums count using bbPress statistics.
 			$stats        = bbp_get_statistics();
 			$total_forums = isset( $stats['forum_count_int'] ) ? $stats['forum_count_int'] : 0;
 			?>

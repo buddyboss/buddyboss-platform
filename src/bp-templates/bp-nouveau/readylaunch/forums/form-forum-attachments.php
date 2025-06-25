@@ -1,10 +1,15 @@
 <?php
-
 /**
  * New/Edit Forum Form Attachments
  *
- * @package BuddyBoss
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
+ * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 $group_id = apply_filters( 'bb_forum_attachment_group_id', 0 );
 $forum_id = apply_filters( 'bb_forum_attachment_forum_id', 0 );

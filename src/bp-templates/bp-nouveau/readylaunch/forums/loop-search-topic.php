@@ -1,11 +1,15 @@
 <?php
-
 /**
- * Search Loop - Single Topic
+ * Search Loop - Single Topic Template
  *
- * @package BuddyBoss\Theme
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
+ * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 ?>
 
 <div class="bbp-topic-header">
@@ -22,18 +26,18 @@
 
 		<?php do_action( 'bbp_theme_before_topic_title' ); ?>
 
-		<h3><?php _e( 'Discussion: ', 'buddyboss' ); ?>
+		<h3><?php esc_html_e( 'Discussion: ', 'buddyboss' ); ?>
 		<a href="<?php bbp_topic_permalink(); ?>"><?php bbp_topic_title(); ?></a></h3>
 
 		<div class="bbp-topic-title-meta">
 
 			<?php if ( function_exists( 'bbp_is_forum_group_forum' ) && bbp_is_forum_group_forum( bbp_get_topic_forum_id() ) ) : ?>
 
-				<?php _e( 'in group forum ', 'buddyboss' ); ?>
+				<?php esc_html_e( 'in group forum ', 'buddyboss' ); ?>
 
 			<?php else : ?>
 
-				<?php _e( 'in forum ', 'buddyboss' ); ?>
+				<?php esc_html_e( 'in forum ', 'buddyboss' ); ?>
 
 			<?php endif; ?>
 

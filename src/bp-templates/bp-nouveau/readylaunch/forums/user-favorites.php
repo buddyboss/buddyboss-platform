@@ -1,11 +1,15 @@
 <?php
-
 /**
- * User Favorites
+ * User Favorites Template
  *
- * @package BuddyBoss\Theme
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
+ * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 ?>
 
 	<?php do_action( 'bbp_template_before_user_favorites' ); ?>
@@ -23,7 +27,7 @@
 
 				<aside class="bp-feedback bp-messages info">
 					<span class="bp-icon" aria-hidden="true"></span>
-					<p><?php bbp_is_user_home() ? _e( 'You currently have no favorite discussions.', 'buddyboss' ) : _e( 'This user has no liked discussions.', 'buddyboss' ); ?></p>
+					<p><?php bbp_is_user_home() ? esc_html_e( 'You currently have no favorite discussions.', 'buddyboss' ) : esc_html_e( 'This user has no liked discussions.', 'buddyboss' ); ?></p>
 				</aside>
 
 			<?php endif; ?>

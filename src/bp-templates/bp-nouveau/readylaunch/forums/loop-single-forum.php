@@ -1,11 +1,15 @@
 <?php
-
 /**
- * Forums Loop - Single Forum
+ * Forums Loop - Single Forum Template
  *
- * @package BuddyBoss\Theme
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
+ * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 ?>
 
 <ul id="bbp-forum-<?php bbp_forum_id(); ?>" <?php bbp_forum_class(); ?>>

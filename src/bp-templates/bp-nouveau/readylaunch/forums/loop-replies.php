@@ -1,11 +1,15 @@
 <?php
-
 /**
- * Replies Loop
+ * Replies Loop Template
  *
- * @package    bbPress
- * @subpackage Theme
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
+ * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 $topic_id = bbp_get_topic_id();
 ?>

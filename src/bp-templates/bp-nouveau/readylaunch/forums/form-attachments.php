@@ -1,9 +1,15 @@
 <?php
 /**
- * New/Edit Forum Form Attachments
+ * New/Edit Forum Form Attachments Template
  *
- * @package BuddyBoss\Theme
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
+ * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 $group_id = apply_filters( 'bb_forum_attachment_group_id', 0 );
 $forum_id = apply_filters( 'bb_forum_attachment_forum_id', 0 );
@@ -167,7 +173,7 @@ $video_extensions = bp_is_active( 'media' ) ? bp_video_get_allowed_extension() :
 					<div class="bb-rl-forums-attached-gif-container">
 						<div class="gif-search-content">
 							<div class="gif-search-query">
-								<input type="search" placeholder="<?php esc_html_e( 'Search GIPHY...', 'buddyboss' ); ?>" class="search-query-input" />
+								<input type="search" placeholder="<?php esc_attr_e( 'Search GIPHY...', 'buddyboss' ); ?>" class="search-query-input" />
 								<span class="search-icon"></span>
 							</div>
 							<div class="gif-search-results" id="gif-search-results">
@@ -194,16 +200,15 @@ $video_extensions = bp_is_active( 'media' ) ? bp_video_get_allowed_extension() :
 	if ( bp_is_active( 'media' ) && bb_user_has_access_upload_emoji( $group_id, bp_loggedin_user_id(), $forum_id, 0, 'forum' ) ) :
 		?>
 		<div class="bb-rl-post-elements-buttons-item bb-rl-post-emoji bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Emoji', 'buddyboss' ); ?>"></div>
-	<?php endif;
-
-	if ( bp_is_active( 'media' ) && bbp_use_wp_editor() ) : ?>
-		<div class="bb-rl-post-elements-buttons-item bb-rl-show-toolbar" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Show formatting', 'buddyboss' ); ?>" data-bp-tooltip-hide="<?php esc_html_e( 'Hide formatting', 'buddyboss' ); ?>" data-bp-tooltip-show="<?php esc_html_e( 'Show formatting', 'buddyboss' ); ?>">
-			<a href="#" id="bb-rl-show-toolbar-button" class="bb-rl-toolbar-button bp-tooltip" aria-label="<?php esc_attr_e( 'Show formatting', 'buddyboss' ); ?>">
-				<i class="bb-icons-rl-text-aa"></i>
-			</a>
-		</div>
 		<?php
-	endif; ?>
+	endif;
+
+	if ( bp_is_active( 'media' ) && bbp_use_wp_editor() ) :
+		?>
+		<div class="bb-rl-post-elements-buttons-item bb-rl-show-toolbar" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Show formatting', 'buddyboss' ); ?>" data-bp-tooltip-hide="<?php esc_attr_e( 'Hide formatting', 'buddyboss' ); ?>" data-bp-tooltip-show="<?php esc_attr_e( 'Show formatting', 'buddyboss' ); ?>">
+			<i class="bb-icons-rl-text-formatting"></i>
+		</div>
+	<?php endif; ?>
 
 </div>
 

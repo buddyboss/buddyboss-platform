@@ -1,11 +1,15 @@
 <?php
-
 /**
- * User Topics Created
+ * User Topics Created Template
  *
- * @package BuddyBoss\Theme
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
+ * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 ?>
 
 	<?php do_action( 'bbp_template_before_user_topics_created' ); ?>
@@ -23,7 +27,7 @@
 
 				<aside class="bp-feedback bp-messages info">
 					<span class="bp-icon" aria-hidden="true"></span>
-					<p><?php bbp_is_user_home() ? _e( 'You have not created any discussions.', 'buddyboss' ) : _e( 'This user has not created any discussions.', 'buddyboss' ); ?></p>
+					<p><?php bbp_is_user_home() ? esc_html_e( 'You have not created any discussions.', 'buddyboss' ) : esc_html_e( 'This user has not created any discussions.', 'buddyboss' ); ?></p>
 				</aside>
 
 			<?php endif; ?>

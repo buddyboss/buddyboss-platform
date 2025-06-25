@@ -1,15 +1,19 @@
 <?php
-
 /**
- * No Discussions Feedback Part
+ * No Discussions Feedback Template
  *
- * @package BuddyBoss\Theme
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
+ * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 ?>
 
 <br />
 <div class="bp-feedback info">
 	<span class="bp-icon" aria-hidden="true"></span>
-	<p><?php _e( 'Sorry, there were no discussions found.', 'buddyboss' ); ?></p>
+	<p><?php esc_html_e( 'Sorry, there were no discussions found.', 'buddyboss' ); ?></p>
 </div>

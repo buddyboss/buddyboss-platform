@@ -1,11 +1,15 @@
 <?php
-
 /**
  * Pagination for pages of forum index
  *
- * @package BuddyBoss\Theme
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
+ * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 ?>
 
 <?php do_action( 'bbp_template_before_pagination_loop' ); ?>

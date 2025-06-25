@@ -1,10 +1,15 @@
 <?php
-
 /**
- * Archive Topic Content Part
+ * Archive Topic Content Template
  *
- * @package BuddyBoss\Theme
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
+ * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 ?>
 
@@ -13,7 +18,7 @@
 	<div class="bb-rl-secondary-header flex items-center">
 		<div class="bb-rl-entry-heading">
 			<?php
-			// Get total discussions count
+			// Get total discussions count.
 			$stats             = bbp_get_statistics();
 			$total_discussions = isset( $stats['topic_count_int'] ) ? $stats['topic_count_int'] : 0;
 			?>

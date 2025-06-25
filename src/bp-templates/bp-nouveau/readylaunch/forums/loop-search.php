@@ -1,11 +1,15 @@
 <?php
-
 /**
- * Search Loop
+ * Search Loop Template
  *
- * @package BuddyBoss\Theme
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
+ * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 ?>
 
 <?php do_action( 'bbp_template_before_search_results_loop' ); ?>
@@ -14,11 +18,11 @@
 
 	<li class="bbp-header">
 
-		<div class="bbp-search-author"><?php _e( 'Author', 'buddyboss' ); ?></div><!-- .bbp-reply-author -->
+		<div class="bbp-search-author"><?php esc_html_e( 'Author', 'buddyboss' ); ?></div><!-- .bbp-reply-author -->
 
 		<div class="bbp-search-content">
 
-			<?php _e( 'Search Results', 'buddyboss' ); ?>
+			<?php esc_html_e( 'Search Results', 'buddyboss' ); ?>
 
 		</div><!-- .bbp-search-content -->
 
@@ -39,11 +43,11 @@
 
 	<li class="bbp-footer">
 
-		<div class="bbp-search-author"><?php _e( 'Author', 'buddyboss' ); ?></div>
+		<div class="bbp-search-author"><?php esc_html_e( 'Author', 'buddyboss' ); ?></div>
 
 		<div class="bbp-search-content">
 
-			<?php _e( 'Search Results', 'buddyboss' ); ?>
+			<?php esc_html_e( 'Search Results', 'buddyboss' ); ?>
 
 		</div><!-- .bbp-search-content -->
 

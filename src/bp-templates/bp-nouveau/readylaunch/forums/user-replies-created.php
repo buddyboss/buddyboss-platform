@@ -1,11 +1,15 @@
 <?php
-
 /**
- * User Replies Created
+ * User Replies Created Template
  *
- * @package BuddyBoss\Theme
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
+ * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 ?>
 
 	<?php do_action( 'bbp_template_before_user_replies' ); ?>
@@ -23,7 +27,7 @@
 
 				<aside class="bp-feedback bp-messages info">
 					<span class="bp-icon" aria-hidden="true"></span>
-					<p><?php bbp_is_user_home() ? _e( 'You have not replied to any discussions.', 'buddyboss' ) : _e( 'This user has not replied to any topics.', 'buddyboss' ); ?></p>
+					<p><?php bbp_is_user_home() ? esc_html_e( 'You have not replied to any discussions.', 'buddyboss' ) : esc_html_e( 'This user has not replied to any topics.', 'buddyboss' ); ?></p>
 				</aside>
 
 			<?php endif; ?>

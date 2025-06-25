@@ -1,15 +1,20 @@
 <?php
-
 /**
- * Single Topic Content Part
+ * Single Topic Content Template
  *
- * @package BuddyBoss\Theme
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
+ * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 ?>
 <div class="bb-rl-container-inner">
-	<?php if( bp_is_group() ) { ?>
-		<a href="<?php echo bbp_get_forum_permalink( bbp_get_topic_forum_id() ); ?>" class="bb-rl-group-forum-header-back">
+	<?php if ( bp_is_group() ) { ?>
+		<a href="<?php echo esc_url( bbp_get_forum_permalink( bbp_get_topic_forum_id() ) ); ?>" class="bb-rl-group-forum-header-back">
 			<i class="bb-icons-rl-arrow-left"></i> <?php esc_html_e( 'Back to Discussions', 'buddyboss' ); ?>
 		</a>
 	<?php } ?>

@@ -1,46 +1,53 @@
 <?php
 /**
- * Single Forum Content Part
+ * Single Forum Content Template
  *
- * @package BuddyBoss\Theme
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
+ * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
+global $post;
 ?>
 <div class="bb-rl-container-inner">
 	<div class="bb-rl-single-forum">
 
 		<div class="bb-rl-forums-container-inner">
 			<?php
-				$forum_cover_photo = wp_get_attachment_url( get_post_thumbnail_id( $post->ID ) );
-				if( bbp_is_single_forum() && ! bp_is_group() ) {
-			?>
+			$forum_cover_photo = wp_get_attachment_url( get_post_thumbnail_id( $post->ID ) );
+			if ( bbp_is_single_forum() && ! bp_is_group() ) {
+				?>
 			<div class="bb-rl-forum-single-header">
 				<div class="bb-rl-forum-single-header-cover">
 					<img src="<?php echo esc_url( $forum_cover_photo ); ?>" alt="<?php the_title_attribute( array( 'post' => $post->ID ) ); ?>" class="banner-img wp-post-image"/>
 				</div>
 				<div class="bb-rl-forum-single-header-content">
-					<h1 class="entry-title"><?php esc_html( bbp_forum_title() ); ?></h1>
+					<h1 class="entry-title"><?php echo esc_html( bbp_get_forum_title() ); ?></h1>
 					<div class="bb-rl-forum-meta">
-						<?php
-							$forum_id = bbp_get_forum_id();
-							// get discussion count
-							$discussion_count = bbp_get_forum_topic_count( $forum_id );
-							// get forum visibility/privacy status
-							$forum_visibility = bbp_get_forum_visibility( $forum_id );
-							$forum_visibilities = bbp_get_forum_visibilities( $forum_id );
-							$privacy_label = isset( $forum_visibilities[ $forum_visibility ] ) ? $forum_visibilities[ $forum_visibility ] : __( 'Public', 'buddyboss' );
-						?>
+					<?php
+						$forum_id = bbp_get_forum_id();
+						// get discussion count.
+						$discussion_count = bbp_get_forum_topic_count( $forum_id );
+						// get forum visibility/privacy status.
+						$forum_visibility   = bbp_get_forum_visibility( $forum_id );
+						$forum_visibilities = bbp_get_forum_visibilities( $forum_id );
+						$privacy_label      = isset( $forum_visibilities[ $forum_visibility ] ) ? $forum_visibilities[ $forum_visibility ] : __( 'Public', 'buddyboss' );
+					?>
 						<div class="bb-rl-forum-meta-item">
-							<?php echo esc_html( $privacy_label ); ?>
+						<?php echo esc_html( $privacy_label ); ?>
 						</div>
-						<div class="bb-rl-forum-meta-item <?php echo $discussion_count == 0 ? 'bb-rl-forum-meta-item-inactive' : ''; ?>">
-							<span class="bb-rl-forum-topic-count-value"><?php echo $discussion_count; ?></span>
-							<span class="bb-rl-forum-topic-count-label"><?php echo _n( 'Discussion', 'Discussions', $discussion_count, 'buddyboss' ); ?></span>
+						<div class="bb-rl-forum-meta-item <?php echo 0 === $discussion_count ? 'bb-rl-forum-meta-item-inactive' : ''; ?>">
+							<span class="bb-rl-forum-topic-count-value"><?php echo esc_html( $discussion_count ); ?></span>
+							<span class="bb-rl-forum-topic-count-label"><?php echo esc_html( _n( 'Discussion', 'Discussions', $discussion_count, 'buddyboss' ) ); ?></span>
 						</div>
 						<div class="bb-rl-forum-meta-item">
-							<?php do_action( 'bbp_theme_before_forum_freshness_link' ); ?>
-							<?php bbp_forum_freshness_link(); ?>
-							<?php do_action( 'bbp_theme_after_forum_freshness_link' ); ?>
+						<?php do_action( 'bbp_theme_before_forum_freshness_link' ); ?>
+						<?php bbp_forum_freshness_link(); ?>
+						<?php do_action( 'bbp_theme_after_forum_freshness_link' ); ?>
 						</div>
 					</div>
 					<div class="bb-rl-forum-description">
@@ -64,15 +71,19 @@
 			<?php
 				$current_forum_id = bbp_get_forum_id();
 				$discussion_count = bbp_get_forum_topic_count( $current_forum_id );
-				$subforum_count = bbp_get_forum_subforum_count( $current_forum_id );
-				if( bp_is_group() ) { ?>
+				$subforum_count   = bbp_get_forum_subforum_count( $current_forum_id );
+			if ( bp_is_group() ) {
+				?>
 				<div class="bb-rl-group-forum-header">
 					<h2>
-						<?php if ( ! bbp_has_forums() ) {
-							echo esc_html( sprintf( _n( 'Discussion (%d)', 'Discussions (%d)', $discussion_count, 'buddyboss' ), $discussion_count ) ); ?>
-						<?php } else { ?>
-							<?php echo esc_html( 'Discussions', 'buddyboss' ); ?>
-						<?php } ?>
+						<?php
+						if ( ! bbp_has_forums() ) {
+							/* translators: %d: number of discussions */
+							echo esc_html( sprintf( _n( 'Discussion (%d)', 'Discussions (%d)', $discussion_count, 'buddyboss' ), $discussion_count ) );
+						} else {
+							echo esc_html__( 'Discussions', 'buddyboss' );
+						}
+						?>
 					</h2>
 					<div class="bb-rl-forum-actions">
 						<?php if ( bbp_is_single_forum() && ! bbp_is_forum_category() && ( bbp_current_user_can_access_create_topic_form() || bbp_current_user_can_access_anonymous_user_form() ) ) { ?>
@@ -98,10 +109,20 @@
 				<?php if ( bbp_has_forums() ) : ?>
 					<ul class="bb-rl-forum-tabs">
 						<li data-id="bb-rl-forum-discussions" class="bb-rl-forum-tabs-item selected">
-							<a href="#" id="public-message"><?php echo esc_html( sprintf( _n( 'Discussion (%d)', 'Discussions (%d)', $discussion_count, 'buddyboss' ), $discussion_count ) ); ?></a>
+							<a href="#" id="public-message">
+								<?php
+								/* translators: %d: number of discussions */
+								echo esc_html( sprintf( _n( 'Discussion (%d)', 'Discussions (%d)', $discussion_count, 'buddyboss' ), $discussion_count ) );
+								?>
+							</a>
 						</li>
 						<li data-id="bb-rl-forum-subforums" class="bb-rl-forum-tabs-item">
-							<a href="#" id="private-message"><?php echo esc_html( sprintf( _n( 'Sub Forum (%d)', 'Sub Forums (%d)', $subforum_count, 'buddyboss' ), $subforum_count ) ); ?></a>
+							<a href="#" id="private-message">
+								<?php
+								/* translators: %d: number of subforums */
+								echo esc_html( sprintf( _n( 'Sub Forum (%d)', 'Sub Forums (%d)', $subforum_count, 'buddyboss' ), $subforum_count ) );
+								?>
+							</a>
 						</li>
 					</ul>
 				<?php endif; ?>

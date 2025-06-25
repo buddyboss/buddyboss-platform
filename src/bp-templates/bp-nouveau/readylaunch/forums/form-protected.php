@@ -1,18 +1,22 @@
 <?php
-
 /**
- * Password Protected
+ * Password Protected Form Template
  *
- * @package BuddyBoss\Theme
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
+ * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 ?>
 
 <div id="bbpress-forums">
 	<fieldset class="bbp-form" id="bbp-protected">
-		<Legend><?php _e( 'Protected', 'buddyboss' ); ?></legend>
+		<Legend><?php esc_html_e( 'Protected', 'buddyboss' ); ?></legend>
 
-		<?php echo get_the_password_form(); ?>
+		<?php echo wp_kses_post( get_the_password_form() ); ?>
 
 	</fieldset>
 </div>

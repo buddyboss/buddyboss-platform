@@ -1,33 +1,42 @@
 <?php
-
 /**
- * Single Topic Lead Content Part
+ * Single Topic Lead Content Template
  *
- * @package BuddyBoss\Theme
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
+ * @version 1.0.0
  */
 
-$forum_id = bbp_get_topic_forum_id();
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
+$forum_id     = bbp_get_topic_forum_id();
 $group_avatar = '';
 if ( function_exists( 'bbp_is_forum_group_forum' ) && bbp_is_forum_group_forum( $forum_id ) ) {
 	$group_ids = bbp_get_forum_group_ids( $forum_id );
-	
+
 	if ( ! empty( $group_ids ) && function_exists( 'groups_get_group' ) ) {
-		$group_id = $group_ids[0]; // Get the first group ID
-		$group = groups_get_group( $group_id );
-		
+		$group_id = $group_ids[0]; // Get the first group ID.
+		$group    = groups_get_group( $group_id );
+
 		if ( $group && ! empty( $group->name ) ) {
-			// Get group avatar
+			// Get group avatar.
 			if ( function_exists( 'bp_core_fetch_avatar' ) && ! bp_disable_group_avatar_uploads() ) {
 				$group_avatar = bp_core_fetch_avatar(
 					array(
-						'item_id'    => $group_id,
-						'object'     => 'group',
-						'type'       => 'thumb',
-						'width'      => 20,
-						'height'     => 20,
-						'html'       => true,
-						'alt'        => sprintf( __( '%s logo', 'buddyboss' ), $group->name ),
-						'class'      => 'bb-rl-group-avatar',
+						'item_id' => $group_id,
+						'object'  => 'group',
+						'type'    => 'thumb',
+						'width'   => 20,
+						'height'  => 20,
+						'html'    => true,
+						'alt'     => sprintf(
+							/* translators: %s is the group name */
+							__( '%s logo', 'buddyboss' ),
+							$group->name
+						),
+						'class'   => 'bb-rl-group-avatar',
 					)
 				);
 			}
@@ -49,7 +58,7 @@ if ( function_exists( 'bbp_is_forum_group_forum' ) && bbp_is_forum_group_forum( 
 			$empty       = true;
 			$topic_links = '';
 
-			$args        = array(
+			$args = array(
 				'sep'    => '',
 				'before' => '',
 				'after'  => '',
@@ -75,7 +84,8 @@ if ( function_exists( 'bbp_is_forum_group_forum' ) && bbp_is_forum_group_forum( 
 				$topic_links = bbp_get_topic_admin_links( $args );
 				$empty       = false;
 			}
-			if ( ! $empty ) { ?>
+			if ( ! $empty ) {
+				?>
 				<div class="bb_more_options forum-dropdown bb-rl-context-wrap">
 					<a href="#" class="bb-rl-context-btn bb_more_options_action bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'More Options', 'buddyboss' ); ?>">
 						<i class="bb-icons-rl-dots-three"></i>
@@ -84,7 +94,7 @@ if ( function_exists( 'bbp_is_forum_group_forum' ) && bbp_is_forum_group_forum( 
 						<div class="generic-button bb-rl-context-item">
 						<?php
 							do_action( 'bbp_theme_before_reply_admin_links' );
-							echo $topic_links;
+							echo wp_kses_post( $topic_links );
 							do_action( 'bbp_theme_after_reply_admin_links' );
 						?>
 						</div>
@@ -94,7 +104,10 @@ if ( function_exists( 'bbp_is_forum_group_forum' ) && bbp_is_forum_group_forum( 
 	</div>
 
 	<div class="bb-rl-topic-started-in">
-		<?php printf( __( '<a href="%1$s">%2$s%3$s</a>', 'buddyboss' ), bbp_get_forum_permalink( bbp_get_topic_forum_id() ), $group_avatar, bbp_get_forum_title( bbp_get_topic_forum_id() )  ); ?>
+		<?php
+		/* translators: %1$s is the group avatar, %2$s is the forum title, %3$s is the forum permalink */
+		printf( __( '<a href="%1$s">%2$s%3$s</a>', 'buddyboss' ), bbp_get_forum_permalink( bbp_get_topic_forum_id() ), $group_avatar, bbp_get_forum_title( bbp_get_topic_forum_id() ) );
+		?>
 	</div>
 
 	<div class="bb-rl-topic-author">
@@ -110,7 +123,7 @@ if ( function_exists( 'bbp_is_forum_group_forum' ) && bbp_is_forum_group_forum( 
 						'type'    => 'name',
 					)
 				);
-			?>
+				?>
 			</div>
 			<div class="bb-rl-topic-time">
 				<?php bbp_topic_freshness_link(); ?>
@@ -135,31 +148,29 @@ if ( function_exists( 'bbp_is_forum_group_forum' ) && bbp_is_forum_group_forum( 
 		<div class="bb-rl-topic-actions">
 			<div class="bb-rl-topic-favorite-link-wrap">
 				<?php
-					if ( bbp_is_favorites_active() ) {
-						?>
+				if ( bbp_is_favorites_active() ) {
+					?>
 						<p class="bb-topic-favorite-link-wrap">
 							<?php
-							$args = array( 'before' => '' );
-							echo bbp_get_topic_favorite_link( $args );
+							echo wp_kses_post( bbp_get_topic_favorite_link( array( 'before' => '' ) ) );
 							?>
 						</p>
 						<?php
-					}
+				}
 				?>
 			</div>
 			<div class="bb-rl-topic-subscription-link-wrap">
 				<?php
-					$args = array( 'before' => '' );
-					echo bbp_get_topic_subscription_link( $args );
+					echo wp_kses_post( bbp_get_topic_subscription_link( array( 'before' => '' ) ) );
 				?>
 			</div>
 			<div class="bb-rl-topic-reply-link-wrap">
 				<?php
-					bbp_topic_reply_link();
-					if ( ! bbp_current_user_can_access_create_reply_form() && ! bbp_is_topic_closed() && ! bbp_is_forum_closed( bbp_get_topic_forum_id() ) && ! is_user_logged_in() ) {
-						?>
+				bbp_topic_reply_link();
+				if ( ! bbp_current_user_can_access_create_reply_form() && ! bbp_is_topic_closed() && ! bbp_is_forum_closed( bbp_get_topic_forum_id() ) && ! is_user_logged_in() ) {
+					?>
 						<a href="<?php echo esc_url( wp_login_url() ); ?>" class="bbp-topic-login-link bb-style-primary-bgr-color bb-style-border-radius"><?php esc_html_e( 'Log In to Reply', 'buddyboss-theme' ); ?></a>
-					<?php } ?>
+				<?php } ?>
 			</div>
 		</div><!-- .bb-rl-forum-actions -->
 	</div>

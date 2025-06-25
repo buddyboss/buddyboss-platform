@@ -1,11 +1,15 @@
 <?php
-
 /**
- * Search Content Part
+ * Search Content Template
  *
- * @package BuddyBoss\Theme
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
+ * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 ?>
 
 <div id="bbpress-forums">
@@ -18,15 +22,15 @@
 
 	<?php if ( bbp_has_search_results() ) : ?>
 
-		 <?php bbp_get_template_part( 'pagination', 'search' ); ?>
+		<?php bbp_get_template_part( 'pagination', 'search' ); ?>
 
-		 <?php bbp_get_template_part( 'loop', 'search' ); ?>
+		<?php bbp_get_template_part( 'loop', 'search' ); ?>
 
-		 <?php bbp_get_template_part( 'pagination', 'search' ); ?>
+		<?php bbp_get_template_part( 'pagination', 'search' ); ?>
 
 	<?php elseif ( bbp_get_search_terms() ) : ?>
 
-		 <?php bbp_get_template_part( 'feedback', 'no-search' ); ?>
+		<?php bbp_get_template_part( 'feedback', 'no-search' ); ?>
 
 	<?php else : ?>
 

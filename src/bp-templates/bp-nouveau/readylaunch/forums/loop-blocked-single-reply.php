@@ -1,11 +1,15 @@
 <?php
 /**
- * Replies Loop - Single Reply
+ * Replies Loop - Single Blocked Reply Template
  *
- * @since   BuddyBoss 1.5.6
- *
- * @package BuddyBoss\Theme
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
+ * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 $reply_id             = bbp_get_reply_id();
 $reply_author_id      = bbp_get_reply_author_id( $reply_id );
@@ -51,7 +55,7 @@ if ( bp_is_active( 'moderation' ) ) {
 			} elseif ( $is_user_blocked ) {
 				$reply_content = bb_moderation_has_blocked_message( $reply_content, BP_Moderation_Forum_Replies::$moderation_type, $reply_id );
 			}
-			echo $reply_content; // phpcs:ignore
+			echo $reply_content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			?>
 
 			<?php do_action( 'bbp_theme_after_reply_content' ); ?>

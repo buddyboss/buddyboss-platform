@@ -1,15 +1,23 @@
 <?php
-
 /**
- * Forums Loop
+ * Forums Loop Template
  *
- * @package BuddyBoss\Theme
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
+ * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 do_action( 'bbp_template_before_forums_loop' ); ?>
 
 	<ul class="bb-rl-forums-list">
-		<?php while ( bbp_forums() ) : bbp_the_forum(); ?>
+		<?php
+		while ( bbp_forums() ) :
+			bbp_the_forum();
+			?>
 			<?php bbp_get_template_part( 'loop-forum-card' ); ?>
 		<?php endwhile; ?>
 	</ul>
