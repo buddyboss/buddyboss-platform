@@ -1,9 +1,6 @@
 .bb-rl-container {
 
 	.learndash_post_groups {
-		max-width: 1032px;
-		margin: 0 auto;
-		padding: var(--bb-rl-space-300) var(--bb-rl-space-200);
 		width: 100%;
 
 		.learndash-wrapper:not(.ld-registration__outer-wrapper) {
@@ -197,6 +194,13 @@
 			.ld-icon-arrow-right:before {
 				content: "\e13a";
 			}
+		}
+
+		.learndash-wrapper:not(.ld-registration__outer-wrapper) .ld-button {
+
+			@include bb-rl-button;
+			@include bb-rl-button--brand-fill;
+			@include bb-rl-button--small;
 		}
 	}
 

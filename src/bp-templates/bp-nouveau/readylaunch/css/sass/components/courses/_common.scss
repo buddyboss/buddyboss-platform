@@ -979,3 +979,27 @@ body.ld-in-focus-mode .learndash-wrapper {
 		margin: 0 auto;
 	}
 }
+
+.bb-rl-lms-page-title {
+	max-width: 1032px;
+	margin: 0 auto;
+	padding: var(--bb-rl-space-400) var(--bb-rl-space-200) 0;
+
+	.bb-rl-lms-page-title-text {
+
+		@include bb-rl-base-heading-2xl;
+		color: var(--bb-rl-text-color);
+		margin: 0;
+	}
+}
+
+.bb-rl-lms-default-page.bb-rl-lms-inner-block {
+	max-width: 1032px;
+	padding-left: var(--bb-rl-space-200);
+	padding-right: var(--bb-rl-space-200);
+
+	.entry-header .entry-title {
+
+		@include bb-rl-base-heading-xl;
+	}
+}
