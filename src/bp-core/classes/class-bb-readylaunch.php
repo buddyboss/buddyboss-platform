@@ -1197,11 +1197,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				bb_tutorlms_enable()
 			) {
 				$is_active = true;
-			} elseif (
-				class_exists( 'memberpress\courses\helpers\Courses' ) &&
-				function_exists( 'bb_meprlms_enable' ) &&
-				bb_meprlms_enable()
-			) {
+			} elseif ( class_exists( 'memberpress\courses\helpers\Courses' ) ) {
 				$is_active = true;
 			}
 
@@ -2907,7 +2903,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * @return bool True if the page is enabled for integration, false otherwise.
 		 */
 		public function bb_rl_is_page_enabled_for_integration( $page ) {
-			if ( ! bp_enable_site_registration() || '0' !== bp_get_option( 'allow-custom-registration' ) ) {
+			if ( 'registration' === $page && ( ! bp_enable_site_registration() || bp_allow_custom_registration() ) ) {
 				return false;
 			}
 
