@@ -72,6 +72,18 @@ if ( is_user_logged_in() && ! empty( $memberships ) ) {
 					</div>
 				</div>
 
+				<div class="bb-rl-course-meta bb-rl-course-meta--updated">
+					<div class="bb-rl-course-meta-label">
+						<?php echo esc_html__( 'Course updated:', 'buddyboss' ); ?>
+					</div>
+					<div class="bb-rl-course-meta-value">
+						<?php
+						$course_update_date = BB_Readylaunch_Memberpress_Courses_Helper::bb_rl_mpcs_get_course_update_date( $course->ID, get_option( 'date_format' ) );
+						echo esc_html( $course_update_date );
+						?>
+					</div>
+				</div>
+
 				<?php
 				// Get course price.
 				if ( ! empty( $memberships ) ) {
@@ -145,87 +157,6 @@ if ( is_user_logged_in() && ! empty( $memberships ) ) {
 					<?php endif; ?>
 				</div>
 			</div>
-		</div>
-
-		<div class="bb-rl-course-details">
-
-			<div class="bb-rl-course-details-item">
-				<i class="bb-icons-rl-wave-triangle"></i>
-				<div>
-					<div class="bb-rl-course-details-label"><?php echo esc_html__( 'Status', 'buddyboss' ); ?></div>
-											<div class="bb-rl-course-details-value">
-						<?php 
-						if ( is_user_logged_in() ) {
-							// Simple logic: Enrolled if no membership required OR user has membership access
-							if ( empty( $memberships ) || $has_membership_access ) {
-								?>
-								<div class="bb-rl-course-enrollment-status bb-rl-status-enrolled">
-									<?php esc_html_e( 'Enrolled', 'buddyboss' ); ?>
-								</div>
-								<?php
-							} else {
-								?>
-								<div class="bb-rl-course-enrollment-status bb-rl-status-idle">
-									<?php esc_html_e( 'Not enrolled', 'buddyboss' ); ?>
-								</div>
-								<?php
-							}
-						} else {
-							// Not logged in
-							?>
-							<div class="bb-rl-course-enrollment-status bb-rl-status-idle">
-								<?php esc_html_e( 'Not enrolled', 'buddyboss' ); ?>
-							</div>
-							<?php
-						}
-						?>
-					</div>
-				</div>
-			</div>
-
-			<div class="bb-rl-course-details-item">
-				<i class="bb-icons-rl-book-open-text"></i>
-				<div>
-					<div class="bb-rl-course-details-label"><?php echo esc_html__( 'Lessons', 'buddyboss' ); ?></div>
-					<div class="bb-rl-course-details-value">
-						<?php
-						// Get course lesson count.
-						$course_lesson_count = $course->number_of_lessons();
-						echo esc_html( $course_lesson_count . ' ' . _n( 'lesson', 'lessons', $course_lesson_count, 'buddyboss' ) );
-						?>
-					</div>
-				</div>
-			</div>
-
-			<div class="bb-rl-course-details-item">
-				<i class="bb-icons-rl-student"></i>
-				<div>
-					<div class="bb-rl-course-details-label"><?php echo esc_html__( 'Enrolled', 'buddyboss' ); ?></div>
-					<div class="bb-rl-course-details-value">
-						<?php
-						// Get course enrollment count.
-						$course_enrollment_count = ! empty( $course_participants ) ? count( $course_participants ) : 0;
-						echo esc_html( $course_enrollment_count );
-						?>
-					</div>
-				</div>
-			</div>
-
-			<div class="bb-rl-course-details-item">
-				<i class="bb-icons-rl-arrows-clockwise"></i>
-				<div>
-					<div class="bb-rl-course-details-label">
-						<?php esc_html_e( 'Update', 'buddyboss' ); ?>
-					</div>
-					<div class="bb-rl-course-details-value">
-						<?php
-						$course_update_date = BB_Readylaunch_Memberpress_Courses_Helper::bb_rl_mpcs_get_course_update_date( $course->ID, get_option( 'date_format' ) );
-						echo esc_html( $course_update_date );
-						?>
-					</div>
-				</div>
-			</div>
-
 		</div>
 	</div>
 

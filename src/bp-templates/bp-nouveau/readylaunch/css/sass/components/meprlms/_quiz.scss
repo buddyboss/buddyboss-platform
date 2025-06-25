@@ -255,11 +255,13 @@
 		text-align: right;
 	}
 
-	.mpcs-quiz-question-error {
+	.mpcs-quiz-question-error,
+	.mpcs-assignment-error {
 		margin: 0;
 	}
 
-	.mpcs-quiz-question-error-inner {
+	.mpcs-quiz-question-error-inner,
+	.mpcs-assignment-error-inner {
 
 		@include bb-rl-notice;
 		@include bb-rl-notice--alt;

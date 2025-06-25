@@ -19,6 +19,20 @@
 			}
 		}
 	}
+
+	.bb-rl-course-meta--updated {
+
+		@include bb-rl-label-heading-md-thin;
+		color: var(--bb-rl-text-secondary-color);
+		display: flex;
+		align-items: center;
+		gap: var(--bb-rl-space-50);
+		margin: var(--bb-rl-space-200) 0 var(--bb-rl-space-100);
+
+		.bb-rl-course-meta-value {
+			font-weight: 600;
+		}
+	}
 }
 
 .bb-rl-course-overview-footer {
