@@ -225,11 +225,6 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			// Add Dynamic colours.
 			add_action( 'wp_head', array( $this, 'bb_rl_dynamic_colors' ) );
 
-			// Dequeue theme/plugins styles.
-			add_action( 'wp_enqueue_scripts', array( $this, 'bb_dequeue_styles' ), PHP_INT_MAX );
-			add_action( 'wp_enqueue_scripts', array( $this, 'bb_enqueue_scripts' ), 1 );
-			add_action( 'wp_head', array( $this, 'bb_rl_start_buffering' ), 0 );
-			add_action( 'wp_footer', array( $this, 'bb_rl_end_buffering' ), 999 );
 			add_filter( 'bb_admin_localize_script', array( $this, 'bb_rl_admin_localize_script' ), 10, 2 );
 
 			add_action( 'wp_ajax_bb_fetch_header_messages', array( $this, 'bb_fetch_header_messages' ) );
@@ -251,11 +246,8 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			add_filter( 'bp_nouveau_get_nav_id', array( $this, 'bb_rl_prefix_key' ) );
 
 			add_filter( 'bp_nouveau_register_scripts', array( $this, 'bb_rl_nouveau_register_scripts' ), 99, 1 );
-			add_filter( 'paginate_links_output', array( $this, 'bb_rl_filter_paginate_links_output' ), 10, 2 );
 
 			add_filter( 'wp_ajax_bb_rl_invite_form', array( $this, 'bb_rl_invite_form_callback' ) );
-
-			add_filter( 'body_class', array( $this, 'bb_rl_theme_body_classes' ) );
 
 			add_filter( 'bp_get_send_message_button_args', array( $this, 'bb_rl_override_send_message_button_text' ) );
 
@@ -276,6 +268,17 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			add_filter( 'bp_get_the_notification_mark_unread_link', array( $this, 'bb_rl_notifications_mark_unread_link' ), 1, 1 );
 			add_filter( 'bp_get_the_notification_mark_read_link', array( $this, 'bb_rl_notifications_mark_read_link' ), 1, 1 );
 			add_filter( 'bp_get_the_notification_delete_link', array( $this, 'bb_rl_notifications_delete_link' ), 1, 1 );
+		}
+
+		protected function bb_rl_required_load() {
+
+			// Dequeue theme/plugins styles.
+			add_action( 'wp_enqueue_scripts', array( $this, 'bb_dequeue_styles' ), PHP_INT_MAX );
+			add_action( 'wp_enqueue_scripts', array( $this, 'bb_enqueue_scripts' ), 1 );
+			add_action( 'wp_head', array( $this, 'bb_rl_start_buffering' ), 0 );
+			add_action( 'wp_footer', array( $this, 'bb_rl_end_buffering' ), 999 );
+			add_filter( 'paginate_links_output', array( $this, 'bb_rl_filter_paginate_links_output' ), 10, 2 );
+			add_filter( 'body_class', array( $this, 'bb_rl_theme_body_classes' ) );
 		}
 
 		/**
@@ -675,6 +678,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 */
 		public function override_page_templates( $template ) {
 			if ( bp_is_register_page() ) {
+				$this->bb_rl_required_load();
 				return bp_locate_template( 'register.php' );
 			}
 
@@ -682,7 +686,20 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				$this->bb_is_readylaunch_forums() ||
 				$this->bb_is_readylaunch_enabled_for_page()
 			) {
+				$this->bb_rl_required_load();
 				return bp_locate_template( 'layout.php' );
+			}
+
+			if (
+				! $this->bb_is_readylaunch_enabled_for_page() &&
+				! $this->bb_is_readylaunch_forums()
+			) {
+				add_filter( 'bp_get_template_stack', 'bp_add_template_stack_locations' );
+				add_filter( 'bbp_get_template_stack', 'bbp_add_template_stack_locations' );
+
+				// Add Readylaunch template locations.
+				remove_filter( 'bp_get_template_stack', array( $this, 'add_template_stack' ), PHP_INT_MAX );
+				remove_filter( 'bbp_get_template_stack', array( $this, 'add_forum_template_stack' ), PHP_INT_MAX );
 			}
 
 			return $template;
