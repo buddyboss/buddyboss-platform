@@ -93,6 +93,9 @@ class BB_Readylaunch_Memberpress_Courses_Helper {
 			add_action( 'wp_footer', array( $this, 'bb_rl_meprlms_add_script' ), 10 );
 			add_filter( 'the_content', array( $this, 'bb_rl_meprlms_add_course_description' ), 9 );
 			add_filter( 'mpcs_classroom_style_handles', array( $this, 'bb_rl_mpcs_override_readylaunch_styles' ) );
+
+			// Add "Back to Course" button to lesson sidebar menu.
+			add_action( 'mpcs_classroom_start_sidebar', array( $this, 'bb_rl_mpcs_add_back_to_course_button' ), 10 );
 		}
 	}
 
@@ -532,5 +535,81 @@ class BB_Readylaunch_Memberpress_Courses_Helper {
 		}
 
 		return $allow_handle;
+	}
+
+	/**
+	 * Add "Back to Course" button to lesson sidebar menu.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	public function bb_rl_mpcs_add_back_to_course_button() {
+		global $post;
+		$lesson_models = models\Lesson::lesson_cpts( true );
+		if ( array_key_exists( $post->post_type, $lesson_models ) ) {
+			$lesson = new $lesson_models[ $post->post_type ]( $post->ID );
+			$course = $lesson->course();
+
+			// Get the course URL.
+			$course_url = get_permalink( $course->ID );
+
+			// Output the back to course button.
+			?>
+			<div class="mpcs-sidebar-back-to-course">
+				<a class="tile" href="<?php echo esc_url( $course_url ); ?>">
+					<div class="tile-icon">
+						<i class="bb-icons-rl-arrow-left"></i>
+					</div>
+					<div class="tile-content">
+						<p class="tile-title m-0"><?php esc_html_e( 'Back to Course', 'buddyboss' ); ?></p>
+					</div>
+				</a>
+			</div>
+			<?php
+		}
+	}
+
+	/**
+	 * Get the course update date including latest modification from course and all its content.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int|object $course Course ID or Course object.
+	 * @param string     $format Date format. Default 'U' for timestamp.
+	 *
+	 * @return int|string The latest modification timestamp or formatted date.
+	 */
+	public static function bb_rl_mpcs_get_course_update_date( $course, $format = 'U' ) {
+		// Ensure we have a course object.
+		if ( is_numeric( $course ) ) {
+			$course = new models\Course( $course );
+		}
+
+		if ( ! is_object( $course ) || ! $course->ID ) {
+			return false;
+		}
+
+		// Get course content last modified date.
+		$course_modified_date = get_post_modified_time( 'U', false, $course->ID );
+		$latest_modified_date = $course_modified_date;
+
+		// Get all lessons in the course includes assignments and quizzes.
+		$lessons = $course->lessons();
+		if ( ! empty( $lessons ) ) {
+
+			// Check all lessons for the most recent modification date.
+			foreach ( $lessons as $lesson ) {
+				$lesson_modified_date = get_post_modified_time( 'U', false, $lesson->ID );
+				if ( $lesson_modified_date > $latest_modified_date ) {
+					$latest_modified_date = $lesson_modified_date;
+				}
+			}
+		}
+
+		// Return formatted date or timestamp based on format parameter.
+		if ( 'U' === $format ) {
+			return $latest_modified_date;
+		} else {
+			return date_i18n( $format, $latest_modified_date );
+		}
 	}
 }

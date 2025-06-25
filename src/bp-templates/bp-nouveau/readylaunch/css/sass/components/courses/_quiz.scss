@@ -10,18 +10,25 @@
 	background-color: var(--bb-rl-background-color);
 }
 
+.bb-rl-learndash-quiz:has(.bb-rl-quiz-block) {
+	padding-top: var(--bb-rl-space-400);
+}
+
 .bb-rl-quiz-block {
 	max-width: 800px;
 	margin: 0 auto;
-	padding: var(--bb-rl-space-400) 0;
+	padding: var(--bb-rl-space-200) 0;
+	border: 1px solid var(--bb-rl-border-secondary-color);
+	border-radius: var(--bb-rl-radius-base);
 
 	.bb-rl-entry-header {
 		margin: 0 0 var(--bb-rl-space-300);
+		padding: 0 var(--bb-rl-space-400);
+		border-bottom: 1px solid var(--bb-rl-border-secondary-color);
 
 		.bb-rl-quiz-meta {
 			display: flex;
 			align-items: center;
-			border-bottom: 1px solid var(--bb-rl-border-secondary-color);
 			padding-bottom: var(--bb-rl-space-200);
 
 			.bb-rl-quiz-status {
@@ -36,7 +43,7 @@
 	}
 
 	.bb-rl-heading {
-		margin: 0 0 var(--bb-rl-space-200);
+		margin: 0 0 var(--bb-rl-space-50);
 
 		.bb-rl-lesson-count {
 			margin-bottom: var(--bb-rl-space-50);
@@ -53,6 +60,7 @@
 
 		@include bb-rl-label-heading-md-thin;
 		color: var(--bb-rl-text-secondary-color);
+		padding: 0 var(--bb-rl-space-400);
 	}
 }
 
@@ -291,6 +299,7 @@
 			.wpProQuiz_questionListItem label {
 				display: flex;
 				align-items: center;
+				padding: 12px var(--bb-rl-space-200);
 			}
 
 			.wpProQuiz_questionListItem input[type="radio"] {
@@ -303,6 +312,7 @@
 			.wpProQuiz_questionListItem label {
 				display: flex;
 				align-items: center;
+				padding: 12px var(--bb-rl-space-200);
 			}
 
 			.wpProQuiz_questionListItem input[type="checkbox"] {
@@ -569,6 +579,13 @@
 				align-items: center;
 				flex-direction: row;
 				gap: var(--bb-rl-space-200);
+			}
+
+			.wpProQuiz_listItem .wpProQuiz_header + span {
+
+				@include bb-rl-label-heading;
+				color: var(--bb-rl-text-secondary-color);
+				font-weight: 400 !important;
 			}
 		}
 

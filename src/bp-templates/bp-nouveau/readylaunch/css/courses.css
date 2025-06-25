@@ -399,7 +399,7 @@
   background-color: var(--bb-rl-background-tertiary-color);
   color: var(--bb-rl-text-color);
   border: 1px solid transparent;
-  padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
+  padding: 6px var(--bb-rl-space-200);
   font-size: 0.875rem;
   font-weight: 400;
   gap: var(--bb-rl-space-50);
@@ -438,7 +438,7 @@
   background-color: transparent;
   color: var(--bb-rl-text-color);
   border: 1px solid var(--bb-rl-border-tertiary-color);
-  padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
+  padding: 6px var(--bb-rl-space-200);
   font-size: 0.875rem;
   font-weight: 400;
   gap: var(--bb-rl-space-50);
@@ -478,7 +478,7 @@
   background-color: var(--bb-rl-background-brand-primary-color);
   color: var(--bb-rl-text-white-color);
   border: 1px solid var(--bb-rl-background-brand-primary-color);
-  padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
+  padding: 6px var(--bb-rl-space-200);
   font-size: 0.875rem;
   font-weight: 400;
 }
@@ -525,7 +525,7 @@
   background-color: var(--bb-rl-background-tertiary-color);
   color: var(--bb-rl-text-color);
   border: 1px solid transparent;
-  padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
+  padding: 6px var(--bb-rl-space-200);
   font-size: 0.875rem;
   font-weight: 400;
 }
@@ -559,7 +559,7 @@
   background-color: transparent;
   color: var(--bb-rl-text-color);
   border: none;
-  padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
+  padding: 6px var(--bb-rl-space-200);
   font-size: 0.875rem;
   font-weight: 400;
   gap: var(--bb-rl-space-50);
@@ -734,7 +734,7 @@
   background-color: var(--bb-rl-background-tertiary-color);
   color: var(--bb-rl-text-color);
   border: 1px solid transparent;
-  padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
+  padding: 6px var(--bb-rl-space-200);
   font-size: 0.875rem;
   font-weight: 400;
 }
@@ -995,7 +995,7 @@
   background-color: var(--bb-rl-background-brand-primary-color);
   color: var(--bb-rl-text-white-color);
   border: 1px solid var(--bb-rl-background-brand-primary-color);
-  padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
+  padding: 6px var(--bb-rl-space-200);
   font-size: 0.875rem;
   font-weight: 400;
 }
@@ -1065,7 +1065,7 @@
   background-color: var(--bb-rl-background-tertiary-color);
   color: var(--bb-rl-text-color);
   border: 1px solid transparent;
-  padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
+  padding: 6px var(--bb-rl-space-200);
   font-size: 0.875rem;
   font-weight: 400;
   margin-right: var(--bb-rl-space-200);
@@ -1240,7 +1240,7 @@ body.ld-in-focus-mode .learndash-wrapper {
   background-color: var(--bb-rl-background-tertiary-color);
   color: var(--bb-rl-text-color);
   border: 1px solid transparent;
-  padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
+  padding: 6px var(--bb-rl-space-200);
   font-size: 0.875rem;
   font-weight: 400;
 }
@@ -1354,7 +1354,7 @@ body.ld-in-focus-mode .learndash-wrapper {
   background-color: var(--bb-rl-background-brand-primary-color);
   color: var(--bb-rl-text-white-color);
   border: 1px solid var(--bb-rl-background-brand-primary-color);
-  padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
+  padding: 6px var(--bb-rl-space-200);
   font-size: 0.875rem;
   font-weight: 400;
   margin: var(--bb-rl-space-200) 0 0;
@@ -1446,7 +1446,7 @@ body.ld-in-focus-mode .learndash-wrapper {
   background-color: var(--bb-rl-background-tertiary-color);
   color: var(--bb-rl-text-color);
   border: 1px solid transparent;
-  padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
+  padding: 6px var(--bb-rl-space-200);
   font-size: 0.875rem;
   font-weight: 400;
   margin: var(--bb-rl-space-200) 0 0;
@@ -1474,6 +1474,12 @@ body.ld-in-focus-mode .learndash-wrapper {
 .bb-rl-learndash-lesson .bb-rl-course-content-comments {
   max-width: 800px;
   margin: 0 auto;
+}
+
+.bb-rl-learndash-quiz .bb-rl-quiz-block + .bb-rl-course-content-comments,
+.bb-rl-learndash-topic .bb-rl-quiz-block + .bb-rl-course-content-comments,
+.bb-rl-learndash-lesson .bb-rl-quiz-block + .bb-rl-course-content-comments {
+  margin-top: var(--bb-rl-space-400);
 }
 
 .bb-rl-lms-page-title {
@@ -1941,7 +1947,7 @@ body.ld-in-focus-mode .learndash-wrapper {
   background-color: var(--bb-rl-background-brand-primary-color);
   color: var(--bb-rl-text-white-color);
   border: 1px solid var(--bb-rl-background-brand-primary-color);
-  padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
+  padding: 6px var(--bb-rl-space-200);
   font-size: 0.875rem;
   font-weight: 400;
 }
@@ -1968,6 +1974,16 @@ body.ld-in-focus-mode .learndash-wrapper {
   cursor: not-allowed;
 }
 
+.bb-rl-course-overview-footer .btn-advance-continue.btn-advance-disable .btn-advance,
+.bb-rl-course-overview-footer .btn-advance-continue.btn-advance-disable .btn-join,
+.bb-rl-course-overview-footer .learndash_join_button.btn-advance-disable .btn-advance,
+.bb-rl-course-overview-footer .learndash_join_button.btn-advance-disable .btn-join {
+  background-color: var(--bb-rl-background-brand-disabled-color);
+  border-color: var(--bb-rl-background-brand-disabled-color);
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
 .bb-rl-course-overview-footer .btn-advance-completed .btn-advance {
   display: inline-flex;
   align-items: center;
@@ -1980,7 +1996,7 @@ body.ld-in-focus-mode .learndash-wrapper {
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
   transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
-  padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
+  padding: 6px var(--bb-rl-space-200);
   font-size: 0.875rem;
   font-weight: 400;
   background-color: var(--bb-rl-background-brand-disabled-color);
@@ -2004,7 +2020,7 @@ body.ld-in-focus-mode .learndash-wrapper {
   background-color: var(--bb-rl-background-brand-primary-color);
   color: var(--bb-rl-text-white-color);
   border: 1px solid var(--bb-rl-background-brand-primary-color);
-  padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
+  padding: 6px var(--bb-rl-space-200);
   font-size: 0.875rem;
   font-weight: 400;
 }
@@ -2050,7 +2066,7 @@ body.ld-in-focus-mode .learndash-wrapper {
   background-color: var(--bb-rl-background-brand-primary-color);
   color: var(--bb-rl-text-white-color);
   border: 1px solid var(--bb-rl-background-brand-primary-color);
-  padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
+  padding: 6px var(--bb-rl-space-200);
   font-size: 0.875rem;
   font-weight: 400;
 }
@@ -2633,7 +2649,7 @@ body.ld-in-focus-mode .learndash-wrapper {
   background-color: var(--bb-rl-background-brand-primary-color);
   color: var(--bb-rl-text-white-color);
   border: 1px solid var(--bb-rl-background-brand-primary-color);
-  padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
+  padding: 6px var(--bb-rl-space-200);
   font-size: 0.875rem;
   font-weight: 400;
   width: auto;
@@ -2783,7 +2799,7 @@ body.ld-in-focus-mode .learndash-wrapper {
   background-color: var(--bb-rl-background-brand-primary-color);
   color: var(--bb-rl-text-white-color);
   border: 1px solid var(--bb-rl-background-brand-primary-color);
-  padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
+  padding: 6px var(--bb-rl-space-200);
   font-size: 0.875rem;
   font-weight: 400;
 }
@@ -3010,20 +3026,27 @@ body.ld-in-focus-mode .learndash-wrapper {
   background-color: var(--bb-rl-background-color);
 }
 
+.bb-rl-learndash-quiz:has(.bb-rl-quiz-block) {
+  padding-top: var(--bb-rl-space-400);
+}
+
 .bb-rl-quiz-block {
   max-width: 800px;
   margin: 0 auto;
-  padding: var(--bb-rl-space-400) 0;
+  padding: var(--bb-rl-space-200) 0;
+  border: 1px solid var(--bb-rl-border-secondary-color);
+  border-radius: var(--bb-rl-radius-base);
 }
 
 .bb-rl-quiz-block .bb-rl-entry-header {
   margin: 0 0 var(--bb-rl-space-300);
+  padding: 0 var(--bb-rl-space-400);
+  border-bottom: 1px solid var(--bb-rl-border-secondary-color);
 }
 
 .bb-rl-quiz-block .bb-rl-entry-header .bb-rl-quiz-meta {
   display: flex;
   align-items: center;
-  border-bottom: 1px solid var(--bb-rl-border-secondary-color);
   padding-bottom: var(--bb-rl-space-200);
 }
 
@@ -3038,7 +3061,7 @@ body.ld-in-focus-mode .learndash-wrapper {
 }
 
 .bb-rl-quiz-block .bb-rl-heading {
-  margin: 0 0 var(--bb-rl-space-200);
+  margin: 0 0 var(--bb-rl-space-50);
 }
 
 .bb-rl-quiz-block .bb-rl-heading .bb-rl-lesson-count {
@@ -3057,6 +3080,7 @@ body.ld-in-focus-mode .learndash-wrapper {
   font-weight: 400;
   line-height: 22px;
   color: var(--bb-rl-text-secondary-color);
+  padding: 0 var(--bb-rl-space-400);
 }
 
 .bb-rl-quiz-entry .ld-breadcrumbs {
@@ -3078,7 +3102,7 @@ body.ld-in-focus-mode .learndash-wrapper {
   background-color: var(--bb-rl-background-brand-primary-color);
   color: var(--bb-rl-text-white-color);
   border: 1px solid var(--bb-rl-background-brand-primary-color);
-  padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
+  padding: 6px var(--bb-rl-space-200);
   font-size: 0.875rem;
   font-weight: 400;
   font-weight: 400;
@@ -3132,7 +3156,7 @@ body.ld-in-focus-mode .learndash-wrapper {
   background-color: var(--bb-rl-background-tertiary-color);
   color: var(--bb-rl-text-color);
   border: 1px solid transparent;
-  padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
+  padding: 6px var(--bb-rl-space-200);
   font-size: 0.875rem;
   font-weight: 400;
 }
@@ -3352,6 +3376,7 @@ body.ld-in-focus-mode .learndash-wrapper {
 .bb-rl-quiz-entry .wpProQuiz_content li.wpProQuiz_listItem[data-question-meta*='"single"'] .wpProQuiz_questionListItem label {
   display: flex;
   align-items: center;
+  padding: 12px var(--bb-rl-space-200);
 }
 
 .bb-rl-quiz-entry .wpProQuiz_content li.wpProQuiz_listItem[data-question-meta*='"single"'] .wpProQuiz_questionListItem input[type="radio"] {
@@ -3361,6 +3386,7 @@ body.ld-in-focus-mode .learndash-wrapper {
 .bb-rl-quiz-entry .wpProQuiz_content li.wpProQuiz_listItem[data-question-meta*='"multiple"'] .wpProQuiz_questionListItem label {
   display: flex;
   align-items: center;
+  padding: 12px var(--bb-rl-space-200);
 }
 
 .bb-rl-quiz-entry .wpProQuiz_content li.wpProQuiz_listItem[data-question-meta*='"multiple"'] .wpProQuiz_questionListItem input[type="checkbox"] {
@@ -3530,7 +3556,7 @@ body.ld-in-focus-mode .learndash-wrapper {
   background-color: var(--bb-rl-background-tertiary-color);
   color: var(--bb-rl-text-color);
   border: 1px solid transparent;
-  padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
+  padding: 6px var(--bb-rl-space-200);
   font-size: 0.875rem;
   font-weight: 400;
 }
@@ -3565,7 +3591,7 @@ body.ld-in-focus-mode .learndash-wrapper {
   background-color: var(--bb-rl-background-brand-primary-color);
   color: var(--bb-rl-text-white-color);
   border: 1px solid var(--bb-rl-background-brand-primary-color);
-  padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
+  padding: 6px var(--bb-rl-space-200);
   font-size: 0.875rem;
   font-weight: 400;
 }
@@ -3643,7 +3669,7 @@ body.ld-in-focus-mode .learndash-wrapper {
   background-color: var(--bb-rl-background-tertiary-color);
   color: var(--bb-rl-text-color);
   border: 1px solid transparent;
-  padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
+  padding: 6px var(--bb-rl-space-200);
   font-size: 0.875rem;
   font-weight: 400;
   margin-right: var(--bb-rl-space-50);
@@ -3679,7 +3705,7 @@ body.ld-in-focus-mode .learndash-wrapper {
   background-color: transparent;
   color: var(--bb-rl-text-color);
   border: 1px solid var(--bb-rl-border-tertiary-color);
-  padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
+  padding: 6px var(--bb-rl-space-200);
   font-size: 0.875rem;
   font-weight: 400;
 }
@@ -3717,6 +3743,14 @@ body.ld-in-focus-mode .learndash-wrapper {
   align-items: center;
   flex-direction: row;
   gap: var(--bb-rl-space-200);
+}
+
+.bb-rl-quiz-entry .wpProQuiz_content .wpProQuiz_quiz .wpProQuiz_listItem .wpProQuiz_header + span {
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 400;
+  line-height: var(--bb-rl-base-line-small);
+  color: var(--bb-rl-text-secondary-color);
+  font-weight: 400 !important;
 }
 
 .bb-rl-quiz-entry .wpProQuiz_content .wpProQuiz_tipp > div {
@@ -3972,7 +4006,7 @@ body.ld-in-focus-mode .learndash-wrapper {
   border: none;
   border-radius: 0;
   border-bottom: 1px solid transparent;
-  padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
+  padding: 6px var(--bb-rl-space-200);
   font-size: 0.875rem;
   font-weight: 400;
   margin-bottom: var(--bb-rl-space-300);
@@ -4004,7 +4038,7 @@ body.ld-in-focus-mode .learndash-wrapper {
   background-color: var(--bb-rl-background-brand-primary-color);
   color: var(--bb-rl-text-white-color);
   border: 1px solid var(--bb-rl-background-brand-primary-color);
-  padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
+  padding: 6px var(--bb-rl-space-200);
   font-size: 0.875rem;
   font-weight: 400;
 }
@@ -4117,7 +4151,7 @@ body.ld-in-focus-mode .learndash-wrapper {
   background-color: var(--bb-rl-background-brand-primary-color);
   color: var(--bb-rl-text-white-color);
   border: 1px solid var(--bb-rl-background-brand-primary-color);
-  padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
+  padding: 6px var(--bb-rl-space-200);
   font-size: 0.875rem;
   font-weight: 400;
 }
@@ -4226,7 +4260,7 @@ body.ld-in-focus-mode .learndash-wrapper {
   background-color: transparent;
   color: var(--bb-rl-text-color);
   border: none;
-  padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
+  padding: 6px var(--bb-rl-space-200);
   font-size: 0.875rem;
   font-weight: 400;
 }
@@ -4352,7 +4386,7 @@ body.ld-in-focus-mode .learndash-wrapper {
   background-color: var(--bb-rl-background-brand-primary-color);
   color: var(--bb-rl-text-white-color);
   border: 1px solid var(--bb-rl-background-brand-primary-color);
-  padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
+  padding: 6px var(--bb-rl-space-200);
   font-size: 0.875rem;
   font-weight: 400;
 }
@@ -4386,6 +4420,7 @@ body.ld-in-focus-mode .learndash-wrapper {
   border: 1px solid var(--bb-rl-border-secondary-color);
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-200) 0;
+  margin-top: var(--bb-rl-space-300);
 }
 
 .bb-rl-container .learndash-wrapper .ld-course-status .ld-course-status-label {
