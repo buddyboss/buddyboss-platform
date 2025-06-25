@@ -1942,6 +1942,8 @@ body.messages .bb-rl-content-wrapper {
 
 .user-item-wrp .user-actions {
   margin-left: auto;
+  position: relative;
+  z-index: 1;
 }
 
 .user-item-wrp .user-actions > a {
