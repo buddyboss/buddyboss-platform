@@ -219,20 +219,8 @@ if ( is_user_logged_in() && ! empty( $memberships ) ) {
 					</div>
 					<div class="bb-rl-course-details-value">
 						<?php
-						// Get course content last modified date.
-						$course_modified_date = get_post_modified_time( 'U', false, $post->ID );
-						$lessons = $course->lessons();
-						$latest_modified_date = $course_modified_date;
-
-						// Check all lessons for the most recent modification date.
-						foreach ( $lessons as $lesson ) {
-							$lesson_modified_date = get_post_modified_time( 'U', false, $lesson->ID );
-							if ( $lesson_modified_date > $latest_modified_date ) {
-								$latest_modified_date = $lesson_modified_date;
-							}
-						}
-
-						echo esc_html( date_i18n( get_option( 'date_format' ), $latest_modified_date ) );
+						$course_update_date = BB_Readylaunch_Memberpress_Courses_Helper::bb_rl_mpcs_get_course_update_date( $course->ID, get_option( 'date_format' ) );
+						echo esc_html( $course_update_date );
 						?>
 					</div>
 				</div>
