@@ -541,8 +541,6 @@ class BB_Readylaunch_Memberpress_Courses_Helper {
 	 * Add "Back to Course" button to lesson sidebar menu.
 	 *
 	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @return string HTML output.
 	 */
 	public function bb_rl_mpcs_add_back_to_course_button() {
 		global $post;
@@ -551,7 +549,6 @@ class BB_Readylaunch_Memberpress_Courses_Helper {
 			$lesson = new $lesson_models[ $post->post_type ]( $post->ID );
 			$course = $lesson->course();
 
-			error_log( print_r( $course, true ) );
 			// Get the course URL.
 			$course_url = get_permalink( $course->ID );
 			
