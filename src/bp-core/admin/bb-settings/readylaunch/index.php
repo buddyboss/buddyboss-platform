@@ -123,6 +123,10 @@ add_action( 'admin_enqueue_scripts', 'bb_readylaunch_register_enqueue_style_scri
  * @param string $admin_page The admin page.
  */
 function bb_readylaunch_settings_page_enqueue_style_script( $admin_page ) {
+	if ( strpos( $admin_page, 'bb-readylaunch' ) === false ) {
+		return;
+	}
+
 	$asset_file = plugin_dir_path( __FILE__ ) . 'build/index.asset.php';
 
 	if ( ! file_exists( $asset_file ) ) {
