@@ -657,6 +657,7 @@ export const ReadyLaunchSettings = () => {
 			case 'activation':
 				return (
 					<div className="settings-content">
+						<WelcomeSection />
 						<div className="settings-card settings-card--plain">
 							<div className="settings-toggle-container">
 								<div className="toggle-content">
@@ -1218,6 +1219,32 @@ export const ReadyLaunchSettings = () => {
 				return <div>Select a tab</div>;
 		}
 	};
+
+	// --- Welcome Section ---
+	const WelcomeSection = () => (
+		<div className="bb-rl-welcome-section settings-card settings-card--plain">
+			<div className="bb-rl-welcome-content">
+				<div className="bb-rl-welcome-text">
+					<h1>{__( 'Welcome to ReadyLaunch', 'buddyboss' )}</h1>
+					<p>
+						{__( 'Build powerful online communities, courses, and memberships — all on WordPress. BuddyBoss helps you launch your own branded platform where members can connect, learn, and grow. Whether you\'re an educator, coach, or community leader, our tools are designed to give you full control, flexibility, and scalability.', 'buddyboss' )}
+					</p>
+					<Button
+						className="bb-rl-feedback-btn"
+						href="https://roadmap.buddyboss.com/p/new-ready-launch-buddyboss-platform-templates-Y8mV6D"
+						target="_blank"
+						rel="noopener noreferrer"
+						icon={<i className="bb-icons-rl-rocket-launch" />}
+					>
+						{__( 'Leave Feedback', 'buddyboss' )} <i className="bb-icons-rl-arrow-right" />
+					</Button>
+				</div>
+				<div className="bb-rl-welcome-video">
+					<iframe width="560" height="315" src="https://www.youtube.com/embed/KnaDj6VTc9Q?si=6AL2H4lIFQO5MDGm" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+				</div>
+			</div>
+		</div>
+	);
 
 	useEffect(() => {
 		const helpButton = document.querySelector('.bb-rl-header-actions-button');

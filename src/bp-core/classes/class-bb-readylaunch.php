@@ -899,6 +899,9 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 			wp_enqueue_script( 'bb-readylaunch-front', buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/js/bb-readylaunch-front{$min}.js", array( 'jquery', 'bp-select2', 'bp-nouveau' ), bp_get_version(), false );
 
+			// Enqueue select2 CSS to ensure it's available for ReadyLaunch
+			wp_enqueue_style( 'bp-select2' );
+
 			// Enqueue Cropper.js.
 			wp_enqueue_script( 'bb-readylaunch-cropper-js' );
 			wp_enqueue_style( 'bb-readylaunch-cropper-css' );
@@ -3559,6 +3562,8 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			if ( strpos( $screen_id, 'bb-readylaunch' ) === false ) {
 				return $localize_arg;
 			}
+
+			wp_dequeue_script( 'bp-fitvids-js' );
 
 			$component_pages = array();
 			if ( bp_is_active( 'activity' ) ) {
