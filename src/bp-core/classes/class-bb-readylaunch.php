@@ -3462,6 +3462,8 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				return $localize_arg;
 			}
 
+			wp_dequeue_script( 'bp-fitvids-js' );
+
 			$component_pages = array();
 			if ( bp_is_active( 'activity' ) ) {
 				$component_pages['activity'] = bp_get_activity_directory_permalink();
