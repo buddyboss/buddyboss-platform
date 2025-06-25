@@ -1968,6 +1968,16 @@ body.ld-in-focus-mode .learndash-wrapper {
   cursor: not-allowed;
 }
 
+.bb-rl-course-overview-footer .btn-advance-continue.btn-advance-disable .btn-advance,
+.bb-rl-course-overview-footer .btn-advance-continue.btn-advance-disable .btn-join,
+.bb-rl-course-overview-footer .learndash_join_button.btn-advance-disable .btn-advance,
+.bb-rl-course-overview-footer .learndash_join_button.btn-advance-disable .btn-join {
+  background-color: var(--bb-rl-background-brand-disabled-color);
+  border-color: var(--bb-rl-background-brand-disabled-color);
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
 .bb-rl-course-overview-footer .btn-advance-completed .btn-advance {
   display: inline-flex;
   align-items: center;
@@ -4386,6 +4396,7 @@ body.ld-in-focus-mode .learndash-wrapper {
   border: 1px solid var(--bb-rl-border-secondary-color);
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-200) 0;
+  margin-top: var(--bb-rl-space-300);
 }
 
 .bb-rl-container .learndash-wrapper .ld-course-status .ld-course-status-label {
