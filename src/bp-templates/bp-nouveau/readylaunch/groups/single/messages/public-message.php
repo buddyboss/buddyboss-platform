@@ -1,12 +1,18 @@
 <?php
 /**
- * BP Nouveau Group's Public Message template.
+ * ReadyLaunch - Group's Public Message template.
  *
- * This template can be overridden by copying it to yourtheme/buddypress/groups/single/messages/public-message.php.
+ * This template provides the interface for sending public messages to group members
+ * with media attachments, GIF support, and member selection functionality.
  *
- * @since   BuddyBoss 1.5.7
- * @version 1.5.7
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
+ * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 $bp_loggedin_user_id = bp_loggedin_user_id();
 $args                = array(
@@ -221,7 +227,8 @@ if ( bp_is_active( 'groups' ) && bp_is_group_single() ) {
 							<?php
 						endif;
 
-						if ( $is_media_active && bb_user_has_access_upload_emoji( $group_id, $bp_loggedin_user_id, 0, 0 ) ) : ?>
+						if ( $is_media_active && bb_user_has_access_upload_emoji( $group_id, $bp_loggedin_user_id, 0, 0 ) ) :
+							?>
 							<div class="bb-rl-separator"></div>
 							<div class="post-elements-buttons-item post-emoji bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Emoji', 'buddyboss' ); ?>"></div>
 						<?php endif; ?>

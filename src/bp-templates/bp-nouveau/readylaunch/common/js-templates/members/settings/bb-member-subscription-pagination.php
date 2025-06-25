@@ -2,8 +2,6 @@
 /**
  * BP Nouveau member subscription Pagination template
  *
- * This template can be overridden by copying it to yourtheme/buddypress/common/js-templates/members/settings/bb-member-subscription-pagination.php.
- *
  * @since   BuddyBoss 2.2.6
  * @version 1.0.0
  */

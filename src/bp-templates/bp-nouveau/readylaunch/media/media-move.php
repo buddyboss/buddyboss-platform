@@ -1,12 +1,17 @@
 <?php
 /**
- * ReadyLaunch - The template for media activity album move.
+ * ReadyLaunch - Media Move template.
  *
- * @since   BuddyBoss [BBVERSION]
- * @package BuddyBoss\Core
+ * This template handles the media move modal for moving media between albums.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 ?>
 <div class="bb-rl-media-move-file bb-rl-media-move-photo bb-rl-modal-move-file" style="display: none;">
 	<transition name="modal">

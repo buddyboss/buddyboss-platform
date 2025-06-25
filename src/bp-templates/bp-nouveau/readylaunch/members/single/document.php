@@ -1,11 +1,17 @@
 <?php
 /**
- * The template for users media
+ * ReadyLaunch - Member Document template.
  *
+ * This template handles displaying member documents with folders and search functionality.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
  * @since BuddyBoss [BBVERSION]
- *
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 $is_send_ajax_request = bb_is_send_ajax_request();
 ?>
@@ -27,7 +33,7 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 				<div class="bp-document-listing">
 					<?php
 					if ( bp_has_document( bp_ajax_querystring( 'document' ) ) ) {
-					?>
+						?>
 						<div class="bp-media-header-wrap bb-rl-documents-header-wrap">
 
 							<div id="search-documents-form" class="media-search-form" data-bp-search="document">
@@ -50,7 +56,7 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 							bp_get_template_part( 'document/add-document' );
 							?>
 						</div>
-					<?php
+						<?php
 					}
 					?>
 			</div><!-- .bp-document-listing -->

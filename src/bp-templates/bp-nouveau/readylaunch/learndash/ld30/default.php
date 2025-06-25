@@ -2,8 +2,10 @@
 /**
  * LD default template for ReadyLaunch.
  *
- * @since   BuddyBoss [BBVERSION]
- * @package BuddyBoss\Core
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @version 1.0.0
+ * @since BuddyBoss [BBVERSION]
  */
 
 // Exit if accessed directly.

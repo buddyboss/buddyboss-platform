@@ -1,11 +1,17 @@
 <?php
 /**
- * The template for users groups
+ * ReadyLaunch - Member Groups template.
  *
+ * This template handles displaying member groups with loading placeholders.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
  * @since BuddyBoss [BBVERSION]
- *
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 $is_send_ajax_request = bb_is_send_ajax_request();
 ?>
@@ -55,7 +61,6 @@ switch ( bp_current_action() ) :
 					<?php endfor; ?>
 				</div>
 				<?php
-				//bp_nouveau_user_feedback( 'member-groups-loading' );
 				echo '</div>';
 			} else {
 				bp_get_template_part( 'groups/groups-loop' );

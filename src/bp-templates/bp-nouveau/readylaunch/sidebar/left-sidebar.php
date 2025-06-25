@@ -2,9 +2,13 @@
 /**
  * The left sidebar for ReadyLaunch.
  *
- * @since   BuddyBoss [BBVERSION]
+ * This template handles the left sidebar navigation and widgets for the ReadyLaunch theme.
+ * It displays navigation menus, groups, courses, and custom links based on user permissions and context.
  *
- * @package ReadyLaunch
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
+ * @version 1.0.0
  */
 
 use memberpress\courses\helpers;
@@ -75,6 +79,13 @@ if ( $is_memberpress_inner ) {
 							?>
 							<li>
 								<a href="<?php echo esc_url( $item['url'] ); ?>" class="bb-rl-left-panel-menu-link">
+									<?php
+									if ( ! empty( $item['icon'] ) ) {
+										?>
+										<span class="menu-icon <?php echo esc_attr( $item['icon'] ); ?>"></span>
+										<?php
+									}
+									?>
 									<?php echo esc_html( $item['label'] ); ?>
 								</a>
 							</li>

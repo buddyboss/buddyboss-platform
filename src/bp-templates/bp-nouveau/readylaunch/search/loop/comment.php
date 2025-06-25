@@ -1,13 +1,17 @@
 <?php
 /**
- * Comment search Template
+ * ReadyLaunch - Search Loop Comment template.
  *
- * This template can be overridden by copying it to yourtheme/buddypress/search/loop/comment.php.
+ * The template for search results for comments.
  *
- * @package BuddyBoss\Core
- * @since   BuddyBoss 1.0.0
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 global $current_comment;
 ?>

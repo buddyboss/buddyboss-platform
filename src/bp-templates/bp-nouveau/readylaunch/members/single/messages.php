@@ -1,10 +1,17 @@
 <?php
 /**
- * ReadyLaunch - The template for users messages.
+ * ReadyLaunch - Member Messages template.
  *
- * @since   BuddyBoss [BBVERSION]
+ * This template handles displaying member messages interface.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 ?>
 

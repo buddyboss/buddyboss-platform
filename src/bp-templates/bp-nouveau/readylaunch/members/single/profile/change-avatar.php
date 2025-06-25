@@ -1,11 +1,17 @@
 <?php
 /**
- * The template for members profile change avatar
+ * ReadyLaunch - Member Profile Change Avatar template.
  *
+ * This template handles changing member profile avatars.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
  * @since BuddyBoss [BBVERSION]
- *
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 ?>
 
 <div class="bb-rl-profile-edit-header">

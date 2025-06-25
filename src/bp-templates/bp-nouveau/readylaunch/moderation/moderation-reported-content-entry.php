@@ -1,15 +1,17 @@
 <?php
 /**
- * BuddyBoss - Moderation Reported Content entry
+ * ReadyLaunch - Moderation Reported Content Entry template.
  *
  * This template is used to render each reported content entry.
  *
- * This template can be overridden by copying it to yourtheme/buddypress/moderation/moderation-reported-content-entry.php.
- *
- * @since   BuddyBoss 1.5.6
- * @package BuddyBoss\Core
- * @version 1.5.6
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
+ * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 $hide_sitewide           = 1 === (int) bp_get_moderation_hide_site_wide();
 $bp_moderation_item_id   = bp_get_moderation_item_id();

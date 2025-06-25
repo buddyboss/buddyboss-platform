@@ -1,11 +1,17 @@
 <?php
 /**
- * The template for invites
+ * ReadyLaunch - Member Invites template.
  *
+ * This template handles displaying member invitations functionality.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
  * @since BuddyBoss [BBVERSION]
- *
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 if ( bp_is_my_profile() ) {
 	echo '<div class="bb-rl-sub-ctrls flex items-center justify-between">';

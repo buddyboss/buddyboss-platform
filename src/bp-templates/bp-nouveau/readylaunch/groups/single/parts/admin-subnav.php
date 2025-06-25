@@ -1,12 +1,18 @@
 <?php
 /**
- * BuddyPress Single Groups Admin Navigation
+ * ReadyLaunch - Single Groups Admin Navigation template.
  *
- * This template can be overridden by copying it to yourtheme/buddypress/groups/single/parts/admin-subnav.php.
+ * This template displays the navigation menu for group administration pages
+ * including settings, members management, and other admin functions.
  *
- * @since   BuddyPress 3.0.0
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 ?>
 
 <nav class="<?php bp_nouveau_single_item_subnav_classes(); ?> bb-rl-admin-subnav bb-rl-group-admin-subnav" id="subnav" role="navigation" aria-label="<?php esc_attr_e( 'Group administration menu', 'buddyboss' ); ?>">

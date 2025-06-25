@@ -1,14 +1,18 @@
 <?php
 /**
- * The template for users plugins template
+ * ReadyLaunch - Member Plugins template.
  *
  * 3rd-party plugins should use this template to easily add template
  * support to their plugins for the members component.
  *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
  * @since BuddyBoss [BBVERSION]
- *
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 bp_nouveau_member_hook( 'before', 'plugin_template' );
 

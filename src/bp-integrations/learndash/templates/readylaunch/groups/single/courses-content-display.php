@@ -1,4 +1,14 @@
 <?php
+/**
+ * LearnDash Group Courses Content Display Template
+ *
+ * @package BuddyBoss\Core
+ * @subpackage BP_Integrations\LearnDash\Templates
+ * @version 1.0.0
+ * @since BuddyBoss [BBVERSION]
+ */
+
+defined( 'ABSPATH' ) || exit;
 
 // Get the ReadyLaunch instance to check if sidebar is enabled.
 $bb_readylaunch = BB_Readylaunch::instance();
@@ -317,7 +327,7 @@ $course_video_duration = get_post_meta( $course_id, '_buddyboss_lms_course_video
 										<div class="bb-rl-composite-price">
 											<div class="bb-rl-premium-price bb-rl-price-module">
 													<span class="bb-rl-price">
-														<span class="ld-currency"><?php echo wp_kses_post( $currency ); ?></span> 
+														<span class="ld-currency"><?php echo wp_kses_post( $currency ); ?></span>
 														<?php echo esc_html( $bb_trial_price ); ?>
 													</span>
 												<span class="bb-rl-price-meta">
@@ -331,7 +341,7 @@ $course_video_duration = get_post_meta( $course_id, '_buddyboss_lms_course_video
 											<span class="bb-rl-separator bb-rl-separator--vertical"></span>
 											<div class="bb-rl-full-price bb-rl-price-module">
 													<span class="bb-rl-price">
-														<span class="ld-currency"><?php echo wp_kses_post( $currency ); ?></span> 
+														<span class="ld-currency"><?php echo wp_kses_post( $currency ); ?></span>
 														<?php echo wp_kses_post( $course_pricing['price'] ); ?>
 													</span>
 												<span class="bb-rl-price-meta">

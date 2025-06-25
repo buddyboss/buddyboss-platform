@@ -1,7 +1,19 @@
+<?php
+/**
+ * LearnDash Group Reports Course Stats Template
+ *
+ * @package BuddyBoss\Core
+ * @subpackage BP_Integrations\LearnDash\Templates
+ * @version 1.0.0
+ * @since BuddyBoss [BBVERSION]
+ */
 
+defined( 'ABSPATH' ) || exit;
+
+?>
 <h3 class="ld-report-course-name">
-	<a href="<?php echo get_permalink( $course->ID ); ?>" target="_blank">
-		<?php echo $course->post_title; ?>
+	<a href="<?php echo esc_url( get_permalink( $course->ID ) ); ?>" target="_blank">
+		<?php echo esc_html( $course->post_title ); ?>
 	</a>
 </h3>
 
@@ -10,10 +22,11 @@
 		<p>
 		<?php
 		printf(
-			__( '<b>%1$d out of %2$d</b> %3$s completed', 'buddyboss' ),
-			count( $ldGroupUsersCompleted ),
-			$totalStudents = count( $ldGroupUsers ),
-			_n( 'student', 'students', $totalStudents, 'buddyboss' )
+			/* translators: 1: Number of completed students, 2: Total number of students, 3: Student/students text */
+			esc_html__( '%1$s out of %2$s %3$s completed', 'buddyboss' ),
+			'<b>' . esc_html( count( $ldGroupUsersCompleted ) ) . '</b>',
+			'<b>' . esc_html( $totalStudents = count( $ldGroupUsers ) ) . '</b>',
+			esc_html( _n( 'student', 'students', $totalStudents, 'buddyboss' ) )
 		);
 		?>
 		</p>
@@ -24,8 +37,9 @@
 			<p>
 			<?php
 			printf(
-				__( '<b>%d</b> average points', 'buddyboss' ),
-				$averagePoints
+				/* translators: %d: Average points number */
+				esc_html__( '%s average points', 'buddyboss' ),
+				'<b>' . esc_html( $averagePoints ) . '</b>'
 			);
 			?>
 			</p>

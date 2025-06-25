@@ -9,6 +9,11 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
+/**
+ * BuddyBoss Groups ReadyLaunch integration class.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
 class BB_Group_Readylaunch {
 
 	/**
@@ -26,7 +31,7 @@ class BB_Group_Readylaunch {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @return Controller|BB_Group_Readylaunch|null
+	 * @return BB_Group_Readylaunch|null
 	 */
 	public static function instance() {
 
@@ -44,8 +49,8 @@ class BB_Group_Readylaunch {
 	 * @since BuddyBoss [BBVERSION]
 	 */
 	public function __construct() {
-		add_filter( 'bb_group_subscription_button_args', array( $this, 'bb_rl_update_group_subscription_button' ), 10, 2 );
-		add_filter( 'bb_nouveau_get_groups_bubble_buttons', array( $this, 'bb_rl_get_groups_bubble_buttons' ), 10, 3 );
+		add_filter( 'bb_group_subscription_button_args', array( $this, 'bb_rl_update_group_subscription_button' ), 10, 1 );
+		add_filter( 'bb_nouveau_get_groups_bubble_buttons', array( $this, 'bb_rl_get_groups_bubble_buttons' ), 10, 2 );
 		add_filter( 'bb_group_creation_tab_number', array( $this, 'bb_group_creation_tab_number' ), 10, 2 );
 
 		add_action( 'bb_rl_footer', array( $this, 'bb_rl_load_popup' ) );
@@ -54,7 +59,16 @@ class BB_Group_Readylaunch {
 		remove_action( 'bp_before_directory_groups_page', 'bp_group_directory_page_content' );
 	}
 
-	public function bb_rl_update_group_subscription_button( $button, $r ) {
+	/**
+	 * Update group subscription button for ReadyLaunch.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $button Button arguments.
+	 *
+	 * @return array Modified button arguments.
+	 */
+	public function bb_rl_update_group_subscription_button( $button ) {
 		$button['link_text']                           = str_replace( '<i class="bb-icon-l bb-icon-bell"></i>', '<i class="bb-icons-rl-bell"></i>', $button['link_text'] );
 		$button['button_attr']['data-title']           = $button['data-balloon'];
 		$button['button_attr']['data-title-displayed'] = str_replace( '<i class="bb-icon-l bb-icon-bell"></i>', '<i class="bb-icons-rl-bell"></i>', $button['button_attr']['data-title-displayed'] );
@@ -63,7 +77,17 @@ class BB_Group_Readylaunch {
 		return $button;
 	}
 
-	public function bb_rl_get_groups_bubble_buttons( $buttons, $group, $type ) {
+	/**
+	 * Get the groups bubble buttons for ReadyLaunch.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array  $buttons Button array.
+	 * @param object $group   Group object.
+	 *
+	 * @return array Modified buttons array.
+	 */
+	public function bb_rl_get_groups_bubble_buttons( $buttons, $group ) {
 		$buttons['about-group'] = array(
 			'id'             => 'about-group',
 			'link_text'      => __( 'About group', 'buddyboss' ),
@@ -148,6 +172,11 @@ class BB_Group_Readylaunch {
 		return $buttons;
 	}
 
+	/**
+	 * Load the popup for ReadyLaunch groups.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
 	public function bb_rl_load_popup() {
 		$group_id = bp_get_current_group_id();
 		if ( empty( $group_id ) ) {
@@ -241,7 +270,7 @@ class BB_Group_Readylaunch {
 					<div class="bb-rl-group-meta-data">
 						<h3>
 							<?php
-							echo bp_get_group_member_count();
+							echo esc_html( bp_get_group_member_count() );
 							?>
 						</h3>
 						<span class="bb-rl-meta-desc flex">
@@ -318,29 +347,16 @@ class BB_Group_Readylaunch {
 								$member_user_id  = bp_get_member_user_id();
 								$group_member_id = bp_get_group_member_id();
 
-								// Member joined data.
-								$member_joined_date = bp_get_group_member_joined_since();
-
-								// Member last activity.
+								//Member's last activity.
 								$member_last_activity = bp_get_last_activity( $member_user_id );
 
-								// Primary and secondary profile action buttons.
-								$profile_actions = bb_member_directories_get_profile_actions( $member_user_id );
-
-								// Member switch button.
-								$member_switch_button = bp_get_add_switch_button( $member_user_id );
-
 								// Get Primary action.
-								$primary_action_btn = function_exists( 'bb_get_member_directory_primary_action' ) ? bb_get_member_directory_primary_action() : '';
 								$is_blocked         = false;
-								$moderation_class   = '';
-								if ( bp_is_active( 'moderation' ) ) {
-									if ( bp_moderation_is_user_suspended( $member_user_id ) ) {
-										$moderation_class .= 'bp-user-suspended';
-									} elseif ( bb_moderation_is_user_blocked_by( $member_user_id ) ) {
-										$is_blocked        = true;
-										$moderation_class .= ' bp-user-blocked';
-									}
+								if (
+									bp_is_active( 'moderation' ) &&
+									bb_moderation_is_user_blocked_by( $member_user_id )
+								) {
+									$is_blocked        = true;
 								}
 								?>
 								<li <?php bp_member_class( array( 'item-entry' ) ); ?> data-bp-item-id="<?php echo esc_attr( $group_member_id ); ?>" data-bp-item-component="members">
@@ -428,20 +444,34 @@ class BB_Group_Readylaunch {
 		<?php
 	}
 
+	/**
+	 * Display ReadyLaunch invite button.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int $group_id Group ID.
+	 */
 	public static function bb_readylaunch_invite( $group_id = 0 ) {
 		if ( bp_is_active( 'friends' ) && bp_groups_user_can_send_invites() && ! empty( $group_id ) ) {
 			$current_group = groups_get_group( $group_id );
 			$group_link    = bp_get_group_permalink( $current_group );
 			if ( $current_group->user_has_access ) {
 				$invite_link = trailingslashit( $group_link ) . 'invite';
-				echo '<span class="bb-group-member-invite"><a data-balloon-pos="right" data-balloon="' . __( 'Send Invites', 'buddyboss' ) . '" href="' . esc_url( $invite_link ) . '"><i class="bb-icons-rl-user-plus"></i><span class="bb-rl-screen-reader-text">' . __( 'Send Invites', 'buddyboss' ) . '</span></a></span>';
+				echo '<span class="bb-group-member-invite"><a data-balloon-pos="right" data-balloon="' . esc_attr__( 'Send Invites', 'buddyboss' ) . '" href="' . esc_url( $invite_link ) . '"><i class="bb-icons-rl-user-plus"></i><span class="bb-rl-screen-reader-text">' . esc_html__( 'Send Invites', 'buddyboss' ) . '</span></a></span>';
 			}
 		}
 	}
 
+	/**
+	 * Modify group buttons for ReadyLaunch.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $buttons Group buttons array.
+	 * @return array Modified buttons array.
+	 */
 	public static function bb_rl_group_buttons( $buttons ) {
 		if (
-			isset( $buttons['group_membership'] ) &&
 			isset( $buttons['group_membership']['button_attr']['class'] )
 		) {
 			$buttons['group_membership']['button_attr']['class'] = str_replace( 'bp-toggle-action-button', '', $buttons['group_membership']['button_attr']['class'] );
@@ -453,12 +483,33 @@ class BB_Group_Readylaunch {
 		return $buttons;
 	}
 
+	/**
+	 * Modify the group creation tab number display.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $html    Original HTML.
+	 * @param int    $counter Tab counter.
+	 *
+	 * @return string Modified HTML.
+	 */
 	public function bb_group_creation_tab_number( $html, $counter ) {
 		$html = '<span class="bb-rl-group-creation-tab-number">' . $counter . '</span>';
 
 		return $html;
 	}
 
+	/**
+	 * Manage member actions for ReadyLaunch.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array  $buttons Button array.
+	 * @param object $group   Group object.
+	 * @param string $type    Button type.
+	 *
+	 * @return array Modified buttons array.
+	 */
 	public static function bb_readylaunch_manage_member_actions( $buttons, $group, $type ) {
 		if ( 'manage_members' !== $type ) {
 			return $buttons;
@@ -469,6 +520,16 @@ class BB_Group_Readylaunch {
 		return $buttons;
 	}
 
+	/**
+	 * Manage negative member actions for ReadyLaunch.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array  $buttons Button array.
+	 * @param object $group   Group object.
+	 * @param string $type    Button type.
+	 * @return array Modified buttons array.
+	 */
 	public static function bb_readylaunch_manage_negative_member_actions( $buttons, $group, $type ) {
 		if ( 'manage_members' !== $type ) {
 			return $buttons;

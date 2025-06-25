@@ -500,4 +500,4 @@ if ( class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 			?>
 		</article>
 	</main>
-</div> 
+</div>

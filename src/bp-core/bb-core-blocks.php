@@ -173,8 +173,17 @@ function bb_block_render_readylaunch_header_block( $attributes = array() ) {
 		$align_class = 'align' . $attributes['align'];
 	}
 
-	// Get dark mode class.
-	$dark_mode_class = $block_args['darkMode'] ? 'bb-rl-dark-mode' : '';
+	$readylaunch_instance = bb_load_readylaunch();
+	$bb_rl_theme_mode     = $readylaunch_instance->bb_rl_get_theme_mode();
+	$dark_mode_class      = '';
+	if ( 'choice' === $bb_rl_theme_mode ) {
+		$dark_mode = isset( $_COOKIE['bb-rl-dark-mode'] ) ? sanitize_text_field( wp_unslash( $_COOKIE['bb-rl-dark-mode'] ) ) : 'false';
+		if ( 'true' === $dark_mode ) {
+			$dark_mode_class = 'bb-rl-dark-mode';
+		}
+	} elseif ( 'dark' === $bb_rl_theme_mode ) {
+		$dark_mode_class = 'bb-rl-dark-mode';
+	}
 
 	if ( $block_args['showSearch'] && bp_is_active( 'search' ) ) {
 		wp_enqueue_style( 'bp-select2' );
@@ -185,27 +194,27 @@ function bb_block_render_readylaunch_header_block( $attributes = array() ) {
 
 	wp_enqueue_script( 'bb-readylaunch-header-view' );
 
-	// Let WordPress handle the icon styles through block.json dependencies
+	// Let WordPress handle the icon styles through block.json dependencies.
 	wp_enqueue_style( 'bb-icons-rl-css' );
 
-	// Get the ReadyLaunch colors.
-	if ( function_exists( 'bp_get_option' ) ) :
+	ob_start();
+
+	// Get the ReadyLaunch colours.
+	if ( function_exists( 'bp_get_option' ) ) {
 		$color_light = bp_get_option( 'bb_rl_color_light', '#4946fe' );
 		$color_dark  = bp_get_option( 'bb_rl_color_dark', '#9747FF' );
 		?>
 		<style>
 			.bb-rl-header-block {
-				--bb-rl-primary-color: <?php echo $color_light; ?>;
+				--bb-rl-primary-color: <?php echo esc_attr( $color_light ); ?>;
 			}
 
 			.bb-rl-dark-mode .bb-rl-header-block {
-				--bb-rl-primary-color: <?php echo $color_dark; ?>;
+				--bb-rl-primary-color: <?php echo esc_attr( $color_dark ); ?>;
 			}
 		</style>
 		<?php
-	endif;
-
-	ob_start();
+	}
 	?>
 	<header id="masthead" class="bb-rl-header bb-rl-header-block <?php echo esc_attr( $dark_mode_class . ' ' . $align_class ); ?>">
 		<div class="bb-rl-container bb-rl-header-container">
@@ -259,15 +268,15 @@ function bb_block_render_readylaunch_header_block( $attributes = array() ) {
 						<div class="bb-rl-header-buttons">
 							<a href="<?php echo esc_url( wp_login_url() ); ?>" class="bb-rl-button bb-rl-button--tertiaryLink bb-rl-button--small signin-button"><?php esc_html_e( 'Sign in', 'buddyboss' ); ?></a>
 
-							<?php if ( get_option( 'users_can_register' ) ) : ?>
+							<?php if ( get_option( 'users_can_register' ) ) { ?>
 								<a href="<?php echo esc_url( wp_registration_url() ); ?>" class="bb-rl-button bb-rl-button--secondaryFill bb-rl-button--small signup"><?php esc_html_e( 'Sign up', 'buddyboss' ); ?></a>
-							<?php endif; ?>
+							<?php } ?>
 						</div>
 					<?php } ?>
 				</div>
 			</div>
 
-			<?php if ( $block_args['showSearch'] || is_user_logged_in() ) : ?>
+			<?php if ( $block_args['showSearch'] || is_user_logged_in() ) { ?>
 				<div class="bb-readylaunch-mobile-menu__wrap">
 					<?php
 					if ( $block_args['showSearch'] && bp_is_active( 'search' ) ) {
@@ -320,8 +329,11 @@ function bb_block_render_readylaunch_header_block( $attributes = array() ) {
 											<?php endif; ?>
 										</a>
 									</li>
-								<?php }
-								if ( $block_args['showNotifications'] && bp_is_active( 'notifications' ) ) { ?>
+									<?php
+								}
+
+								if ( $block_args['showNotifications'] && bp_is_active( 'notifications' ) ) {
+									?>
 									<li>
 										<a href="javascript:void(0);" ref="notification_bell" class="notification-link">
 											<i class="bb-icons-rl-bell-simple"></i>
@@ -329,10 +341,10 @@ function bb_block_render_readylaunch_header_block( $attributes = array() ) {
 											<?php
 											$notifications             = bp_notifications_get_unread_notification_count( bp_loggedin_user_id() );
 											$unread_notification_count = ! empty( $notifications ) ? $notifications : 0;
-											if ( $unread_notification_count > 0 ) :
+											if ( $unread_notification_count > 0 ) {
 												?>
 												<span class="count"><?php echo esc_html( $unread_notification_count ); ?>+</span>
-											<?php endif; ?>
+											<?php } ?>
 										</a>
 									</li>
 								<?php } ?>
@@ -340,7 +352,7 @@ function bb_block_render_readylaunch_header_block( $attributes = array() ) {
 						</div>
 					<?php } ?>
 				</div>
-			<?php endif; ?>
+			<?php } ?>
 		</div>
 	</header>
 	<?php

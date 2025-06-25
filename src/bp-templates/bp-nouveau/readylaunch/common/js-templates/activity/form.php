@@ -2,9 +2,14 @@
 /**
  * Activity Post form JS Templates for ReadyLaunch.
  *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
  * @since   BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Split each js template to its own file. Easier for child theme to

@@ -1,12 +1,17 @@
 <?php
 /**
- * The template for displaying the activity loop in the ajaxified search result.
+ * ReadyLaunch - Search Loop Activity AJAX template.
  *
- * This template can be overridden by copying it to yourtheme/buddypress/search/loop/activity-ajax.php.
+ * The template for AJAX search results for activities.
  *
- * @package BuddyBoss\Core
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 ?>
 <div class="bp-search-ajax-item bp-search-ajax-item_activity">

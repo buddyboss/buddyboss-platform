@@ -1,12 +1,18 @@
 <?php
 /**
- * BuddyBoss - Groups Messages
+ * ReadyLaunch - Groups Messages template.
  *
- * This template can be overridden by copying it to yourtheme/buddypress/groups/single/messages.php.
+ * This template handles group messaging functionality including
+ * public and private message interfaces with navigation.
  *
- * @since   BuddyPress 3.0.0
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 bp_get_template_part( 'groups/single/parts/messages-subnav' );
 ?>

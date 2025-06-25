@@ -1,12 +1,17 @@
 <?php
 /**
- * The template for media uploader
+ * ReadyLaunch - Media Uploader template.
  *
- * This template can be overridden by copying it to yourtheme/buddypress/media/uploader.php.
+ * This template handles the media upload modal and functionality for the ReadyLaunch theme.
  *
- * @since   BuddyBoss 1.0.0
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 $bp_is_single_album = bp_is_single_album();
 ?>
@@ -97,7 +102,8 @@ $bp_is_single_album = bp_is_single_album();
 										bp_get_template_part( 'media/entry' );
 									endwhile;
 
-									if ( bp_media_has_more_items() ) : ?>
+									if ( bp_media_has_more_items() ) :
+										?>
 										<li class="load-more">
 											<a class="button outline" href="<?php bp_media_load_more_link(); ?>"><?php esc_html_e( 'Load More', 'buddyboss' ); ?></a>
 										</li>

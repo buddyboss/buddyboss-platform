@@ -2,9 +2,17 @@
 /**
  * The ReadyLaunch template for BuddyBoss Activity templates.
  *
- * @since   BuddyBoss [BBVERSION]
+ * This template handles the main activity stream page layout for the ReadyLaunch theme.
+ * It includes the activity post form, search filters, activity loop, and loading placeholders.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 $is_send_ajax_request = bb_is_send_ajax_request();
 
@@ -73,7 +81,7 @@ bp_nouveau_before_activity_directory_content();
 	$sidebar = ob_get_clean();
 
 	if ( ! empty( $sidebar ) ) {
-		echo '<div class="bb-rl-secondary-container">' . $sidebar . '</div>';
+		echo '<div class="bb-rl-secondary-container">' . wp_kses_post( $sidebar ) . '</div>';
 	}
 	?>
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyBoss Messages Readylaunch Class
+ * BuddyBoss Messages ReadyLaunch Class
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -10,7 +10,7 @@
  */
 
 /**
- * BuddyBoss Messages Readylaunch.
+ * BuddyBoss Messages ReadyLaunch.
  *
  * @since   BuddyBoss [BBVERSION]
  * @package BuddyBoss\Messages\Classes
@@ -46,7 +46,7 @@ class BB_Messages_Readylaunch {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @return Controller|BB_Activity_Readylaunch|null
+	 * @return BB_Messages_Readylaunch|null
 	 */
 	public static function instance() {
 
@@ -75,7 +75,7 @@ class BB_Messages_Readylaunch {
 	}
 
 	/**
-	 * Localize the scripts.
+	 * Localise the scripts.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
@@ -159,7 +159,7 @@ class BB_Messages_Readylaunch {
 
 				if ( bp_is_active( 'moderation' ) ) {
 					$participant['is_user_blocked']    = bp_moderation_is_user_blocked( $recipient->user_id );
-					$participant['can_be_blocked']     = ( ! in_array( (int) $recipient->user_id, $admins, true ) && false === bp_moderation_is_user_suspended( $recipient->user_id ) ) ? true : false;
+					$participant['can_be_blocked']     = ! in_array( (int) $recipient->user_id, $admins, true ) && false === bp_moderation_is_user_suspended( $recipient->user_id );
 					$participant['is_user_suspended']  = bp_moderation_is_user_suspended( $recipient->user_id );
 					$participant['is_user_blocked_by'] = bb_moderation_is_user_blocked_by( $recipient->user_id );
 					$participant['is_user_reported']   = bp_moderation_report_exist( $recipient->user_id, BP_Moderation_Members::$moderation_type_report );
@@ -172,8 +172,8 @@ class BB_Messages_Readylaunch {
 		}
 
 		$first_message = BP_Messages_Thread::get_first_message( $thread_id );
-		$group_id      = (int) bp_messages_get_meta( $first_message->id, 'group_id', true );
-		$message_from  = bp_messages_get_meta( $first_message->id, 'message_from', true ); // group.
+		$group_id      = (int) bp_messages_get_meta( $first_message->id, 'group_id' );
+		$message_from  = bp_messages_get_meta( $first_message->id, 'message_from' ); // group.
 
 		// Get media attachments if BuddyBoss Media component is active.
 		$media_component = bp_is_active( 'media' ) &&
@@ -215,25 +215,46 @@ class BB_Messages_Readylaunch {
 				$media_types[] = 'video';
 			}
 
-			$media_type_condition = '';
+			$prepare_args   = array( $thread_id );
+			$prepare_args   = array_merge( $prepare_args, $media_types );
+			$prepare_args[] = $media_per_page;
+			$prepare_args[] = $offset;
+
+			// Build table names safely.
+			$media_table    = $bp->media->table_name;
+			$messages_table = $bp->messages->table_name_messages;
+
+			// Build the query properly without interpolated variables.
 			if ( ! empty( $media_types ) ) {
-				$media_type_condition = "AND ( m.type IN ('" . implode( "','", $media_types ) . "') )";
+				$placeholders = implode( ',', array_fill( 0, count( $media_types ), '%s' ) );
+				$sql_query    = sprintf(
+					'SELECT SQL_CALC_FOUND_ROWS m.*
+					FROM %s m
+					INNER JOIN %s msg ON m.message_id = msg.id
+					WHERE msg.thread_id = %%d
+					AND ( m.type IN (%s) )
+					ORDER BY m.date_created DESC
+					LIMIT %%d OFFSET %%d',
+					$media_table,
+					$messages_table,
+					$placeholders
+				);
+				$query        = $wpdb->prepare( $sql_query, $prepare_args ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+			} else {
+				$sql_query = sprintf(
+					'SELECT SQL_CALC_FOUND_ROWS m.*
+					FROM %s m
+					INNER JOIN %s msg ON m.message_id = msg.id
+					WHERE msg.thread_id = %%d
+					ORDER BY m.date_created DESC
+					LIMIT %%d OFFSET %%d',
+					$media_table,
+					$messages_table
+				);
+				$query     = $wpdb->prepare( $sql_query, $thread_id, $media_per_page, $offset ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 			}
 
-			$media_items = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-				$wpdb->prepare(
-					"SELECT SQL_CALC_FOUND_ROWS m.* 
-					FROM {$bp->media->table_name} m
-					INNER JOIN {$bp->messages->table_name_messages} msg ON m.message_id = msg.id 
-					WHERE msg.thread_id = %d 
-					{$media_type_condition}
-					ORDER BY m.date_created DESC 
-					LIMIT %d OFFSET %d",
-					$thread_id,
-					$media_per_page,
-					$offset
-				)
-			);
+			$media_items = $wpdb->get_results( $query ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
 			$total_count = $wpdb->get_var( 'SELECT FOUND_ROWS()' ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 
 			$response['has_more'] = ( $page * $media_per_page ) < (int) $total_count;
@@ -283,19 +304,24 @@ class BB_Messages_Readylaunch {
 			$files_per_page = 20; // Number of files per page.
 			$offset         = ( $page - 1 ) * $files_per_page;
 
-			$document_items = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-				$wpdb->prepare(
-					"SELECT SQL_CALC_FOUND_ROWS d.* 
-					FROM {$bp->document->table_name} d
-					INNER JOIN {$bp->messages->table_name_messages} msg ON d.message_id = msg.id 
-					WHERE msg.thread_id = %d 
-					ORDER BY d.date_created DESC 
-					LIMIT %d OFFSET %d",
-					$thread_id,
-					$files_per_page,
-					$offset
-				)
+			// Build table names safely.
+			$document_table = $bp->document->table_name;
+			$messages_table = $bp->messages->table_name_messages;
+
+			// Prepare document query safely.
+			$sql_query = sprintf(
+				'SELECT SQL_CALC_FOUND_ROWS d.*
+				FROM %s d
+				INNER JOIN %s msg ON d.message_id = msg.id
+				WHERE msg.thread_id = %%d
+				ORDER BY d.date_created DESC
+				LIMIT %%d OFFSET %%d',
+				$document_table,
+				$messages_table
 			);
+			$query     = $wpdb->prepare( $sql_query, $thread_id, $files_per_page, $offset ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+
+			$document_items = $wpdb->get_results( $query ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
 			$total_count    = $wpdb->get_var( 'SELECT FOUND_ROWS()' ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 
 			$response['has_more'] = ( $page * $files_per_page ) < (int) $total_count;
@@ -314,13 +340,13 @@ class BB_Messages_Readylaunch {
 					$filename            = basename( $attached_file );
 					$text_attachment_url = wp_get_attachment_url( $attachment_id );
 					$audio_url           = in_array( $extension, bp_get_document_preview_music_extensions(), true ) ? bp_document_get_preview_url( bp_get_document_id(), $attachment_id ) : '';
-					$video_url           = in_array( $extension, bp_get_document_preview_video_extensions(), true ) ? bb_document_video_get_symlink( bp_get_document_id(), true ) : '';
+					$video_url           = in_array( $extension, bp_get_document_preview_video_extensions(), true ) ? bb_document_video_get_symlink( bp_get_document_id() ) : '';
 
 					$response['files'][] = array(
 						'url'            => bp_document_get_preview_url( $document->id, $attachment_id ),
 						'full_title'     => $document->title,
 						'id'             => $document->id,
-						'svg_icon'       => class_exists( 'BB_Readylaunch' ) ? BB_Readylaunch::instance()->bb_rl_document_svg_icon( '', $extension ) : '',
+						'svg_icon'       => class_exists( 'BB_Readylaunch' ) ? bb_load_readylaunch()->bb_rl_document_svg_icon( '', $extension ) : '',
 						'attachment_id'  => $attachment_id,
 						'privacy'        => $document->privacy,
 						'extension'      => $extension,
@@ -328,10 +354,10 @@ class BB_Messages_Readylaunch {
 						'preview'        => bp_document_get_preview_url( $document->id, $attachment_id ),
 						'full_preview'   => bp_document_get_preview_url( $document->id, $attachment_id ),
 						'text_preview'   => ! empty( $text_attachment_url ) ? esc_url( $text_attachment_url ) : '',
-						'mp3_preview'    => $audio_url ? $audio_url : '',
+						'mp3_preview'    => $audio_url ?: '',
 						'document_title' => $filename,
 						'mirror_text'    => bp_document_mirror_text( $attachment_id ),
-						'video'          => $video_url ? $video_url : '',
+						'video'          => $video_url ?: '',
 						'title'          => $title,
 					);
 				}
@@ -346,9 +372,10 @@ class BB_Messages_Readylaunch {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param array $where_conditions The where conditions.
-	 * @param array $r The request parameters.
-	 * @return array The where conditions.
+	 * @param string $where_conditions The where conditions.
+	 * @param array  $r                The request parameters.
+	 *
+	 * @return string The where conditions.
 	 */
 	public function bb_rl_filter_message_threads_by_type( $where_conditions, $r ) {
 		if ( ! empty( $r['thread_type'] ) ) {

@@ -1,4 +1,17 @@
 <?php
+/**
+ * ReadyLaunch - Header Unread Notifications template.
+ *
+ * This template handles displaying unread notifications in the header dropdown.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
+ * @version 1.0.0
+ */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 $current_page = ! empty( $args['page'] ) ? (int) $args['page'] : 1;
 $page_param   = ! empty( $current_page ) && $current_page > 1 ? '&page=' . $current_page : '';
@@ -10,16 +23,16 @@ if ( bp_has_notifications( bp_ajax_querystring( 'notifications' ) . '&user_id=' 
 		?>
 		<li class="read-item <?php echo isset( buddypress()->notifications->query_loop->notification->is_new ) && buddypress()->notifications->query_loop->notification->is_new ? 'unread' : ''; ?>">
 			<span class="bb-full-link">
-				<?php echo $description; ?>
+				<?php echo wp_kses_post( $description ); ?>
 			</span>
 			<div class="notification-avatar">
 				<?php bb_notification_avatar(); ?>
 			</div>
 			<div class="notification-content">
 				<span class="bb-full-link">
-					<?php echo $description; ?>
+					<?php echo wp_kses_post( $description ); ?>
 				</span>
-				<span><?php echo $description; ?></span>
+				<span><?php echo wp_kses_post( $description ); ?></span>
 				<span class="posted"><?php bp_the_notification_time_since(); ?></span>
 			</div>
 			<div class="bb-rl-option-wrap">
@@ -47,20 +60,20 @@ if ( bp_has_notifications( bp_ajax_querystring( 'notifications' ) . '&user_id=' 
 				</ul>
 			</div>
 		</li>
-	<?php
+		<?php
 	endwhile;
 
 	$total       = bp_notifications_get_unread_notification_count();
 	$total_pages = ceil( $total / 25 );
 	$next_page   = $current_page + 1;
-	if ( $current_page != (int) $total_pages ) :
+	if ( $current_page !== (int) $total_pages ) :
 		?>
 		<div class="bb-rl-load-more">
 			<a class="button full outline" data-page="<?php echo esc_attr( $current_page ); ?>" data-next-page="<?php echo esc_attr( $next_page ); ?>" data-total-pages="<?php echo esc_attr( $total_pages ); ?>">
 				<?php esc_html_e( 'Load More', 'buddyboss' ); ?>
 			</a>
 		</div>
-	<?php
+		<?php
 	endif;
 else :
 	?>
@@ -69,5 +82,5 @@ else :
 			<?php esc_html_e( 'You have no notifications right now.', 'buddyboss' ); ?>
 		</div>
 	</li>
-<?php
+	<?php
 endif;

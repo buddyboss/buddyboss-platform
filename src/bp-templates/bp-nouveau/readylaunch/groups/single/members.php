@@ -1,12 +1,18 @@
 <?php
 /**
- * BuddyBoss - Groups Members
+ * ReadyLaunch - Groups Members template.
  *
- * This template can be overridden by copying it to yourtheme/buddypress/groups/single/members.php.
+ * This template displays group members with search filters and pagination.
+ * Includes views for all members and group leaders.
  *
- * @since   BuddyPress 3.0.0
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 bp_get_template_part( 'groups/single/parts/members-subnav' );
 ?>
@@ -62,11 +68,11 @@ switch ( bp_action_variable( 0 ) ) :
 		?>
 		<div id="bb-rl-members-group-list" class="group_members dir-list bb-rl-members" data-bp-list="group_members" data-ajax="<?php echo esc_attr( $is_send_ajax_request ? 'true' : 'false' ); ?>">
 			<?php
-				if ( $is_send_ajax_request ) {
-					echo '<div id="bp-ajax-loader">';
-					?>
+			if ( $is_send_ajax_request ) {
+				echo '<div id="bp-ajax-loader">';
+				?>
 					<div class="bb-rl-skeleton-grid <?php bp_nouveau_loop_classes(); ?>">
-						<?php for ( $i = 0; $i < 8; $i++ ) : ?>
+					<?php for ( $i = 0; $i < 8; $i++ ) : ?>
 							<div class="bb-rl-skeleton-grid-block">
 								<div class="bb-rl-skeleton-avatar bb-rl-skeleton-loader"></div>
 								<div class="bb-rl-skeleton-data">
@@ -84,9 +90,9 @@ switch ( bp_action_variable( 0 ) ) :
 					</div>
 					<?php
 					echo '</div>';
-				} else {
-					bp_get_template_part( 'groups/single/members-loop' );
-				}
+			} else {
+				bp_get_template_part( 'groups/single/members-loop' );
+			}
 			?>
 		</div><!-- #members-dir-list -->
 		<?php

@@ -1,13 +1,17 @@
 <?php
 /**
- * Template for displaying the search results of the topic
+ * ReadyLaunch - Search Loop SFWD Topic template.
  *
- * This template can be overridden by copying it to yourtheme/buddypress/search/loop/sfwd-topic.php.
+ * The template for search results for LearnDash topics.
  *
- * @package BuddyBoss\Core
- * @since   BuddyBoss 1.0.0
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 $topic_id           = get_the_ID();
 $total              = bp_search_get_total_quizzes_count( $topic_id );

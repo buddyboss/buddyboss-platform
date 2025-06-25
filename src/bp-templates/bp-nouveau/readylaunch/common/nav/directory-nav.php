@@ -1,10 +1,18 @@
 <?php
 /**
- * ReadyLaunch - The template for BP Nouveau Component's directory nav template.
+ * ReadyLaunch - Directory navigation template.
  *
- * @since   BuddyBoss [BBVERSION]
+ * This template handles the navigation menu for directory pages
+ * including tabs, filters, and sorting options.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 ?>
 
 <nav class="<?php bp_nouveau_directory_type_navs_class(); ?>" role="navigation" aria-label="<?php esc_attr_e( 'Directory menu', 'buddyboss' ); ?>">

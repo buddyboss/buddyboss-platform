@@ -1,4 +1,15 @@
 <?php
+/**
+ * LearnDash Group Courses Loop Template
+ *
+ * @package BuddyBoss\Core
+ * @subpackage BP_Integrations\LearnDash\Templates
+ * @version 1.0.0
+ * @since BuddyBoss [BBVERSION]
+ */
+
+defined( 'ABSPATH' ) || exit;
+
 // Get the course ID.
 $course_id = get_the_ID();
 if ( empty( $course_id ) ) {
@@ -351,7 +362,7 @@ if ( $is_enrolled && 0 === $course_progress['percentage'] ) {
 									<span class="bb-rl-price">
 										<span class="ld-currency">
 											<?php echo wp_kses_post( $currency ); ?>
-										</span> 
+										</span>
 										<?php echo wp_kses_post( $price ); ?>
 									</span>
 								</div>

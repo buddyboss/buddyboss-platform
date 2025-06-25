@@ -1,11 +1,17 @@
 <?php
 /**
- * The template for members profile change cover photo
+ * ReadyLaunch - Member Profile Change Cover Image template.
  *
+ * This template handles changing member profile cover photos.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
  * @since BuddyBoss [BBVERSION]
- *
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 ?>
 

@@ -1,12 +1,18 @@
 <?php
 /**
- * BuddyBoss - Groups Video
+ * ReadyLaunch - Groups Video template.
  *
- * This template can be overridden by copying it to yourtheme/buddypress/groups/single/videos.php.
+ * This template displays group videos with upload functionality,
+ * video theatre, and management capabilities for group administrators.
  *
- * @since   BuddyBoss 1.7.0
- * @version 1.7.0
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
+ * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 $is_send_ajax_request = bb_is_send_ajax_request();
 ?>
@@ -41,7 +47,7 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 						<h2 class="bb-title"><?php esc_html_e( 'Videos', 'buddyboss' ); ?></h2>
 						<?php
 					}
-		
+
 					bp_nouveau_group_hook( 'before', 'video_content' );
 					bp_get_template_part( 'video/actions' );
 				}

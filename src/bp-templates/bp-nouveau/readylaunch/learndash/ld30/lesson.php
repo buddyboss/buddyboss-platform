@@ -405,4 +405,4 @@ foreach ( $lesson_list as $les ) {
 			?>
 		</article>
 	</main>
-</div> 
+</div>

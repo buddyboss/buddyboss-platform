@@ -1,15 +1,17 @@
 <?php
 /**
- * BuddyBoss - Moderation Loop
+ * ReadyLaunch - Moderation Loop template.
  *
- * The template for displaying the moderation loop.
+ * This template handles displaying the moderation loop.
  *
- * This template can be overridden by copying it to yourtheme/buddypress/moderation/moderation-loop.php.
- *
- * @since   BuddyBoss 1.5.6
- * @package BuddyBoss\Core
- * @version 1.5.6
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
+ * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 bp_nouveau_before_loop();
 

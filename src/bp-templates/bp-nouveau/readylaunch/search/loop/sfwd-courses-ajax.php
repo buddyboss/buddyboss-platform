@@ -1,13 +1,17 @@
 <?php
 /**
- * Template for displaying the search results of the courses ajax
+ * ReadyLaunch - Search Loop SFWD Courses AJAX template.
  *
- * This template can be overridden by copying it to yourtheme/buddypress/search/loop/sfwd-courses-ajax.php.
+ * The template for AJAX search results for LearnDash courses.
  *
- * @package BuddyBoss\Core
- * @since   BuddyBoss 1.0.0
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 $course_id          = get_the_ID();
 $total              = bp_search_get_total_lessons_count( $course_id );

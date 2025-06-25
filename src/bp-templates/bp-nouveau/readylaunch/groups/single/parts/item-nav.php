@@ -1,12 +1,18 @@
 <?php
 /**
- * BuddyPress Single Groups item Navigation
+ * ReadyLaunch - Single Groups item Navigation template.
  *
- * This template can be overridden by copying it to yourtheme/buddypress/groups/single/parts/item-nav.php.
+ * This template displays the main navigation menu for group single pages
+ * with various group sections and features.
  *
- * @since   BuddyPress 3.0.0
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 ?>
 
 <nav class="<?php bp_nouveau_single_item_nav_classes(); ?>" id="object-nav" role="navigation" aria-label="<?php esc_attr_e( 'Group menu', 'buddyboss' ); ?>">

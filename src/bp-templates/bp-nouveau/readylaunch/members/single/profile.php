@@ -1,11 +1,17 @@
 <?php
 /**
- * The template for users profile
+ * ReadyLaunch - Member Profile template.
  *
+ * This template handles displaying member profile sections and editing.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
  * @since BuddyBoss [BBVERSION]
- *
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 bp_nouveau_member_hook( 'before', 'profile_content' );
 ?>

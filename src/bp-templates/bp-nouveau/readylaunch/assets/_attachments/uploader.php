@@ -1,12 +1,17 @@
 <?php
 /**
- * BuddyPress Uploader templates.
+ * BuddyBoss Uploader templates.
  *
- * This template is used to create the BuddyPress Uploader Backbone views.
+ * This template is used to create the BuddyBoss Uploader Backbone views.
  *
- * @since BuddyPress 2.3.0
- * @version 3.1.0
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
+ * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 ?>
 <script type="text/html" id="tmpl-upload-window">
@@ -30,7 +35,7 @@
 					</p>
 
 					<p class="drag-drop-info"><?php esc_html_e( 'Add Photos', 'buddyboss' ); ?></p>
-					<p class="drag-drop-subtitle"><?php esc_html_e( 'Or drag and drop', 'buddyboss' ); ?></p>					
+					<p class="drag-drop-subtitle"><?php esc_html_e( 'Or drag and drop', 'buddyboss' ); ?></p>
 				</div>
 			</div>
 		</div>

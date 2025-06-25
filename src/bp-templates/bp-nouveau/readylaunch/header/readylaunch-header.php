@@ -2,7 +2,14 @@
 /**
  * The header for ReadyLaunch.
  *
- * @package ReadyLaunch
+ * This template handles the main header structure for the ReadyLaunch theme.
+ * It includes the site logo, navigation menu, search functionality, user profile dropdown,
+ * message/notification counts, and responsive mobile navigation.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
+ * @version 1.0.0
  */
 
 // Exit if accessed directly.
@@ -20,7 +27,7 @@ defined( 'ABSPATH' ) || exit;
 </head>
 
 <?php
-$readylaunch_instance = BB_Readylaunch::instance();
+$readylaunch_instance = bb_load_readylaunch();
 $bb_rl_theme_mode     = $readylaunch_instance->bb_rl_get_theme_mode();
 $theme_mode_class     = '';
 if ( 'choice' === $bb_rl_theme_mode ) {
@@ -71,9 +78,9 @@ bp_get_template_part( 'sidebar/left-sidebar' );
 						?>
 						<div class="user-wrap user-wrap-container">
 							<?php
-							$current_user = wp_get_current_user();
-							$user_link    = function_exists( 'bp_core_get_user_domain' ) ? bp_core_get_user_domain( $current_user->ID ) : get_author_posts_url( $current_user->ID );
-							$display_name = function_exists( 'bp_core_get_user_displayname' ) ? bp_core_get_user_displayname( $current_user->ID ) : $current_user->display_name;
+							$logged_in_user = wp_get_current_user();
+							$user_link      = function_exists( 'bp_core_get_user_domain' ) ? bp_core_get_user_domain( $logged_in_user->ID ) : get_author_posts_url( $logged_in_user->ID );
+							$display_name   = function_exists( 'bp_core_get_user_displayname' ) ? bp_core_get_user_displayname( $logged_in_user->ID ) : $logged_in_user->display_name;
 							?>
 
 							<a class="user-link" href="<?php echo esc_url( $user_link ); ?>">

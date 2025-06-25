@@ -1,12 +1,17 @@
 <?php
 /**
- * ReadyLaunch - Video Theatre
+ * ReadyLaunch - Video Theatre template.
  *
- * @since   BuddyBoss [BBVERSION]
- * @package BuddyBoss\Core
+ * Template for video theatre/modal display.
  *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 ?>
 <div class="bb-rl-media-model-wrapper bb-rl-internal-model video bb-rl-video-theatre" style="display: none;" id="buddypress">

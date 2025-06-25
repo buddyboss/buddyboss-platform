@@ -1,13 +1,18 @@
 <?php
 /**
- * Template for displaying the search results of the no results
+ * ReadyLaunch - Search No Results template.
  *
- * This template can be overridden by copying it to yourtheme/buddypress/search/no-results.php.
+ * Template for displaying when no search results are found.
  *
- * @package BuddyBoss\Core
- * @since   BuddyBoss 1.0.0
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 ?>
 <div class="bp-search-results bp-feedback info">
 	<span class="bp-icon" aria-hidden="true"></span>

@@ -1,12 +1,17 @@
 <?php
 /**
- * The template for album entry
+ * ReadyLaunch - Album Entry template.
  *
- * This template can be overridden by copying it to yourtheme/buddypress/media/album-entry.php.
+ * This template handles displaying individual album entries in the album listing.
  *
- * @since   BuddyBoss 1.0.0
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 global $media_album_template;
 

@@ -1,11 +1,17 @@
 <?php
 /**
- * The template for members connections requests
+ * ReadyLaunch - Member Friend Requests template.
  *
+ * This template handles displaying member connection requests.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
  * @since BuddyBoss [BBVERSION]
- *
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 ?>
 
 <div class="bb-rl-container-inner bb-rl-profile-container">

@@ -2,10 +2,17 @@
 /**
  * ReadyLaunch - The template for activity document edit.
  *
- * @since   BuddyBoss [BBVERSION]
- * @package BuddyBoss\Core
+ * This template handles the modal interface for editing document properties
+ * including title and privacy settings.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 $document_id = bp_get_document_id();
 ?>
@@ -22,7 +29,7 @@ $document_id = bp_get_document_id();
 						<div class="bb-field-wrap">
 							<label for="bb-document-title" class="bb-label"><?php esc_html_e( 'Title', 'buddyboss' ); ?></label>
 							<input id="bb-document-title" value="" type="text" placeholder="<?php esc_html_e( 'Enter Document Title', 'buddyboss' ); ?>" />
-							<small class="error-box"><?php _e( 'Following special characters are not supported: \ / ? % * : | " < >', 'buddyboss' ); ?></small>
+							<small class="error-box"><?php esc_html_e( 'Following special characters are not supported: \ / ? % * : | " < >', 'buddyboss' ); ?></small>
 						</div>
 					</div>
 					<footer class="bb-model-footer">

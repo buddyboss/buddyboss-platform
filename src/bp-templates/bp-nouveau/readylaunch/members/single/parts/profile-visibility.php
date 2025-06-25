@@ -1,12 +1,17 @@
 <?php
 /**
- * The template for members single profile edit field visibility
+ * ReadyLaunch - Member Profile Visibility template.
  *
- * This template can be overridden by copying it to yourtheme/buddypress/members/single/parts/profile-visibility.php.
+ * This template handles the profile field visibility settings for member profiles.
  *
- * @since   BuddyPress 3.0.0
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 if ( empty( $GLOBALS['profile_template'] ) ) {
 	return;
@@ -46,4 +51,5 @@ if ( bp_current_user_can( 'bp_xprofile_change_field_visibility' ) ) : ?>
 		?>
 	</p>
 
-<?php endif;
+	<?php
+endif;

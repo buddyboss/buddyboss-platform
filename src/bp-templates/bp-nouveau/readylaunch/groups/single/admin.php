@@ -1,12 +1,18 @@
 <?php
 /**
- * BuddyBoss - Groups Admin
+ * ReadyLaunch - Groups Admin template.
  *
- * This template can be overridden by copying it to yourtheme/buddypress/groups/single/admin.php.
+ * This template handles the group administration interface
+ * with management forms and settings.
  *
- * @since   BuddyPress 3.0.0
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 ?>
 <div class="bb-rl-manage-group-container bb-rl-group-dashboard-panel">

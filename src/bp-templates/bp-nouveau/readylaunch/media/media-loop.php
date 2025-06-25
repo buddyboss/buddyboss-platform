@@ -1,12 +1,17 @@
 <?php
 /**
- * The template for media loop
+ * ReadyLaunch - Media Loop template.
  *
- * This template can be overridden by copying it to yourtheme/buddypress/media/media-loop.php.
+ * This template handles displaying the media loop listing with pagination.
  *
- * @since   BuddyBoss 1.0.0
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 bp_nouveau_before_loop();
 
@@ -56,9 +61,9 @@ else :
 				bp_nouveau_user_feedback( 'media-video-loop-none' );
 			} else {
 				bp_nouveau_user_feedback( 'media-loop-none' );
-				bp_get_template_part( 'media/add-media' );			
+				bp_get_template_part( 'media/add-media' );
 			}
-	?>
+			?>
 	</div>
 	<?php
 

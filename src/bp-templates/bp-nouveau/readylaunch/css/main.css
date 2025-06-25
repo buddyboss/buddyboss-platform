@@ -6987,16 +6987,15 @@ body.admin-bar .bb-rl-left-panel {
   border-radius: var(--bb-rl-radius-md);
 }
 
-.bb-rl-left-panel .bb-readylaunchpanel-menu li > a > i {
+.bb-rl-left-panel .bb-readylaunchpanel-menu li > a > .menu-icon {
   display: flex;
-  font-family: bb-icons-rl;
-  font-size: 24px;
+  font-size: 18px;
   line-height: 1;
   color: var(--bb-rl-icon-color);
-  margin-left: var(--bb-rl-space-100);
+  margin-right: var(--bb-rl-space-100);
 }
 
-.bb-rl-left-panel .bb-readylaunchpanel-menu li > a > i:before {
+.bb-rl-left-panel .bb-readylaunchpanel-menu li > a > .menu-icon:before {
   margin: 0;
 }
 
@@ -20625,16 +20624,19 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   display: none;
 }
 
+.notifications.dir-list .notification-list .actions a [class*="bb-icons-rl-"],
 .notifications.dir-list .notification-list .actions a .dashicons {
   font-size: var(--bb-rl-font-size-2xl);
   font-family: bb-icons-rl;
   color: var(--bb-rl-icon-secondary-color);
 }
 
+.notifications.dir-list .notification-list .actions a [class*="bb-icons-rl-"].dashicons-visibility:before,
 .notifications.dir-list .notification-list .actions a .dashicons.dashicons-visibility:before {
   content: "\e182";
 }
 
+.notifications.dir-list .notification-list .actions a [class*="bb-icons-rl-"].dashicons-trash:before,
 .notifications.dir-list .notification-list .actions a .dashicons.dashicons-trash:before {
   content: "\e4a6";
 }

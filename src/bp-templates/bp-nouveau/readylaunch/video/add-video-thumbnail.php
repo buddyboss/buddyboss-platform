@@ -1,12 +1,17 @@
 <?php
 /**
- * ReadyLaunch - BuddyBoss - Add/Edit Video Thumbnail.
+ * ReadyLaunch - Add Video Thumbnail template.
  *
- * @since   BuddyBoss [BBVERSION]
- * @package BuddyBoss\Core
+ * Template for adding or changing video thumbnails.
  *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 ?>
 <div class="bb-rl-video-thumbnail-uploader <?php echo bb_video_is_ffmpeg_installed() ? 'generating_thumb ' : 'no_ffmpeg'; ?>" style="display: none;">

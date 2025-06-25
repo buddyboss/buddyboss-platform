@@ -1,10 +1,15 @@
 <?php
 /**
- * ReadyLaunch - The template for displaying activity edit postin.
+ * ReadyLaunch - Activity Edit Post JS Templates.
  *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
  * @since   BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 ?>
 <script type="text/html" id="tmpl-activity-edit-postin">

@@ -1,12 +1,17 @@
 <?php
 /**
+ * ReadyLaunch - Search Loop Activity template.
+ *
  * The template for search results for the activity.
  *
- * This template can be overridden by copying it to yourtheme/buddypress/search/loop/activity.php.
- *
- * @package BuddyBoss\Core
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 ?>
 
@@ -26,12 +31,12 @@
 				<div class="activity-inner">
 					<?php
 					add_filter( 'bp_activity_allowed_tags', 'bb_network_search_allowed_tags' );
-					$content = preg_replace('/<p[^>]*>(.*?)<\/p>/is', "$1 ", bp_activity_filter_kses( bp_get_activity_content_body() ) );
+					$content = preg_replace( '/<p[^>]*>(.*?)<\/p>/is', '$1 ', bp_activity_filter_kses( bp_get_activity_content_body() ) );
 					echo bp_create_excerpt(
 						$content,
 						100,
 						array(
-							'ending' => '&hellip;'
+							'ending' => '&hellip;',
 						)
 					);
 					remove_filter( 'bp_activity_allowed_tags', 'bb_network_search_allowed_tags' );

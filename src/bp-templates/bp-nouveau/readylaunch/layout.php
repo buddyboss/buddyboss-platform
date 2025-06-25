@@ -2,7 +2,13 @@
 /**
  * The layout for templates.
  *
+ * This template handles the main layout structure for ReadyLaunch theme pages.
+ * It determines whether to load LearnDash integration or standard page content.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
  * @since BuddyBoss [BBVERSION]
+ * @version 1.0.0
  */
 
 // Exit if accessed directly.

@@ -1,11 +1,17 @@
 <?php
 /**
- * The template for displaying site logo
+ * ReadyLaunch - Header Site Logo template.
  *
- * @since   BuddyBoss [BBVERSION]
- * @package BuddyBoss\ReadyLaunch
+ * This template handles displaying the site logo in the header.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 // This is for better SEO.
 $elem = ( is_front_page() && is_home() ) ? 'h1' : 'div';
@@ -15,7 +21,7 @@ $logo = get_bloginfo( 'name' );
 <div id="site-logo" class="bb-rl-site-branding">
 	<<?php echo esc_html( $elem ); ?> class="site-title">
 	<?php
-	$bb_rl_theme_mode = BB_Readylaunch::instance()->bb_rl_get_theme_mode();
+	$bb_rl_theme_mode = bb_load_readylaunch()->bb_rl_get_theme_mode();
 	if ( 'choice' === $bb_rl_theme_mode ) {
 		$dark_mode = isset( $_COOKIE['bb-rl-dark-mode'] ) ? sanitize_text_field( wp_unslash( $_COOKIE['bb-rl-dark-mode'] ) ) : 'false';
 		$key       = 'light';
@@ -25,7 +31,7 @@ $logo = get_bloginfo( 'name' );
 	} else {
 		$key = $bb_rl_theme_mode;
 	}
-	$bb_rl_logo = BB_Readylaunch::instance()->bb_rl_get_theme_logo( $key );
+	$bb_rl_logo = bb_load_readylaunch()->bb_rl_get_theme_logo( $key );
 	if ( ! empty( $bb_rl_logo ) ) {
 		?>
 		<a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home" class="bb-rl-light-logo">

@@ -1,10 +1,15 @@
 <?php
 /**
- * ReadyLaunch - The template for displaying activity link preview.
+ * ReadyLaunch - Activity Link Preview JS Templates.
  *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
  * @since   BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 ?>
 <script type="text/html" id="tmpl-activity-link-preview">
@@ -28,12 +33,12 @@
 							</div>
 							<div class="activity-link-preview-icons">
 								<# if ( data.link_images.length > 1 ) { #>
-									<a data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_html_e( 'Change image', 'buddyboss' ) ?>" href="#" class="icon-exchange bb-rl-toolbar-button bp-tooltip" id="icon-exchange"><i class="bb-icons-rl-arrows-left-right"></i></a>
+									<a data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_html_e( 'Change image', 'buddyboss' ); ?>" href="#" class="icon-exchange bb-rl-toolbar-button bp-tooltip" id="icon-exchange"><i class="bb-icons-rl-arrows-left-right"></i></a>
 								<# } #>
 								<# if ( data.link_images.length ) { #>
-									<a data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_html_e( 'Remove image', 'buddyboss' ) ?>" href="#" class="icon-image-slash bb-rl-toolbar-button bp-tooltip" id="activity-link-preview-remove-image"><i class="bb-icons-rl-camera-slash"></i></a>
+									<a data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_html_e( 'Remove image', 'buddyboss' ); ?>" href="#" class="icon-image-slash bb-rl-toolbar-button bp-tooltip" id="activity-link-preview-remove-image"><i class="bb-icons-rl-camera-slash"></i></a>
 								<# } #>
-								<a data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_html_e( 'Confirm', 'buddyboss' ) ?>" class="bb-rl-toolbar-button bp-tooltip" href="#" id="activity-link-preview-select-image">
+								<a data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_html_e( 'Confirm', 'buddyboss' ); ?>" class="bb-rl-toolbar-button bp-tooltip" href="#" id="activity-link-preview-select-image">
 									<i class="bb-icons-rl-check"></i>
 								</a>
 							</div>
@@ -43,7 +48,7 @@
 								<button type="button" id="activity-url-prevPicButton"><span class="bb-icons-rl-caret-left"></span></button>
 								<button type="button" id="activity-url-nextPicButton"><span class="bb-icons-rl-caret-right"></span></button>
 								<div id="activity-url-scrapper-img-count">
-									<?php esc_html_e( 'Image', 'buddyboss' ) ?> <# print(data.link_image_index + 1) #>&nbsp;<?php esc_html_e( 'of', 'buddyboss' ) ?>&nbsp;<# print(data.link_images.length) #>
+									<?php esc_html_e( 'Image', 'buddyboss' ); ?> <# print(data.link_image_index + 1) #>&nbsp;<?php esc_html_e( 'of', 'buddyboss' ); ?>&nbsp;<# print(data.link_images.length) #>
 								</div>
 							</div>
 						<# } #>

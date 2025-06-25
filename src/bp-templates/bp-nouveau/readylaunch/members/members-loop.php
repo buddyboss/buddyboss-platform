@@ -1,11 +1,17 @@
 <?php
 /**
- * The template for members loop
+ * ReadyLaunch - Members Loop template.
  *
+ * This template handles displaying the members directory listing with pagination.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
  * @since BuddyBoss [BBVERSION]
- *
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 bp_nouveau_before_loop(); ?>
 

@@ -1,11 +1,17 @@
 <?php
 /**
- * The template for media actions
+ * ReadyLaunch - Media Actions template.
  *
+ * This template handles media action buttons for bulk operations.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
  * @since BuddyBoss [BBVERSION]
- *
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 $bp_loggedin_user_id     = bp_loggedin_user_id();
 $bp_get_current_group_id = function_exists( 'bp_get_current_group_id' ) ? bp_get_current_group_id() : 0;

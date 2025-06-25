@@ -1,4 +1,14 @@
 <?php
+/**
+ * LearnDash Group Courses Template
+ *
+ * @package BuddyBoss\Core
+ * @subpackage BP_Integrations\LearnDash\Templates
+ * @version 1.0.0
+ * @since BuddyBoss [BBVERSION]
+ */
+
+defined( 'ABSPATH' ) || exit;
 
 $ld_group_id =  bp_ld_sync( 'buddypress' )->helpers->getLearndashGroupId( bp_get_current_group_id() );
 

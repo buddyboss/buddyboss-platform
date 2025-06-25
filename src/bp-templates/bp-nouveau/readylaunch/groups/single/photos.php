@@ -1,12 +1,18 @@
 <?php
 /**
- * BuddyBoss - Groups Media
+ * ReadyLaunch - Groups Media template.
  *
- * This template can be overridden by copying it to yourtheme/buddypress/groups/single/photos.php.
+ * This template displays group photos with upload functionality,
+ * media theatre, and management capabilities for group administrators.
  *
- * @since   BuddyBoss 1.0.0
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 $is_send_ajax_request = bb_is_send_ajax_request();
 ?>

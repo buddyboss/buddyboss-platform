@@ -1,14 +1,17 @@
 <?php
 /**
- * BuddyBoss - Video Entry
+ * ReadyLaunch - Video Entry template.
  *
- * This template can be overridden by copying it to yourtheme/buddypress/video/entry.php.
+ * BuddyBoss Video Entry template for displaying individual video items.
  *
- * @package BuddyBoss\Core
- *
- * @since   BuddyBoss 1.7.0
- * @version 1.7.0
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
+ * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 global $video_template;
 
@@ -65,7 +68,7 @@ if ( false !== strpos( $attachment_full, 'video-placeholder.jpg' ) || false !== 
 								<a
 									href="#"
 									data-action="video"
-									data-video-attachments="<?php echo esc_html( json_encode( $attachment_urls ) ); ?>"
+									data-video-attachments="<?php echo esc_html( wp_json_encode( $attachment_urls ) ); ?>"
 									data-video-attachment-id="<?php echo esc_attr( $attachment_id ); ?>"
 									data-video-id="<?php echo esc_attr( $video_id ); ?>"
 									class="bb-rl-ac-video-thumbnail-edit">

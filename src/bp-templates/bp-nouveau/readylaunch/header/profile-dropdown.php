@@ -1,10 +1,13 @@
 <?php
 /**
- * The Profile Dropdown template in the header for ReadyLaunch.
+ * ReadyLaunch - Header Profile Dropdown template.
  *
- * @since   BuddyBoss [BBVERSION]
+ * This template handles the profile dropdown display in the header for ReadyLaunch.
  *
- * @package ReadyLaunch
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
+ * @version 1.0.0
  */
 
 // Exit if accessed directly.
@@ -228,7 +231,7 @@ $profile_url = trailingslashit( bp_loggedin_user_domain() . bp_get_profile_slug(
 	?>
 
 	<?php
-	$bb_rl_theme_mode = BB_Readylaunch::instance()->bb_rl_get_theme_mode();
+	$bb_rl_theme_mode = bb_load_readylaunch()->bb_rl_get_theme_mode();
 	if ( 'choice' === $bb_rl_theme_mode ) {
 		?>
 		<li class="bb-rl-profile-list-item">

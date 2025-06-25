@@ -1,14 +1,18 @@
 <?php
 /**
- * BuddyBoss - Groups Document
+ * ReadyLaunch - Groups Document template.
  *
- * This template is used to render group documents.
+ * This template renders group documents with search functionality,
+ * folder management, and document upload capabilities.
  *
- * This template can be overridden by copying it to yourtheme/buddypress/groups/single/documents.php.
- *
- * @since   BuddyBoss 1.4.0
- * @version 1.4.0
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
+ * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 $is_send_ajax_request = bb_is_send_ajax_request();
 ?>
@@ -37,7 +41,7 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 					<div class="bp-document-listing">
 						<?php
 						if ( bp_has_document( bp_ajax_querystring( 'document' ) ) ) {
-						?>
+							?>
 							<div class="bp-media-header-wrap bb-rl-documents-header-wrap">
 
 								<div id="search-documents-form" class="media-search-form" data-bp-search="document">
@@ -61,7 +65,7 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 								?>
 
 							</div>
-						<?php
+							<?php
 						}
 						?>
 					</div><!-- .bp-document-listing -->
@@ -70,7 +74,7 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 					bp_nouveau_group_hook( 'before', 'document_content' );
 					bp_get_template_part( 'document/actions' );
 					?>
-					
+
 					<?php
 					if ( $is_send_ajax_request ) {
 						echo '<div id="bp-ajax-loader">';

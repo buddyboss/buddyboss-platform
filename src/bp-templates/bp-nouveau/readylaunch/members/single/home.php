@@ -1,11 +1,17 @@
 <?php
 /**
- * Readylaunch - The template for members home.
+ * ReadyLaunch - Member Home template.
  *
- * @since   BuddyBoss [BBVERSION]
+ * This template handles the member profile home page layout and structure.
  *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 bp_nouveau_member_hook( 'before', 'home_content' );
 ?>

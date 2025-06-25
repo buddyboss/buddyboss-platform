@@ -2,8 +2,6 @@
 /**
  * The template for BP Nouveau Component filters template
  *
- * This template can be overridden by copying it to yourtheme/readylaunch/common/filters/common-filters.php.
- *
  * @since BuddyBoss [BBVERSION]
  * @package BuddyBoss\Templates
  *

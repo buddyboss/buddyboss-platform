@@ -2,12 +2,17 @@
 /**
  * ReadyLaunch - The template for activity feed comment.
  *
- * This template is used by bp_activity_comments() functions to show
- * each activity.
+ * This template handles the display of individual activity comments
+ * including avatar, content, reactions, and reply functionality.
  *
- * @since   BuddyBoss [BBVERSION]
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 bp_nouveau_activity_hook( 'before', 'comment_entry' );
 
@@ -49,7 +54,7 @@ $activity_comment_id = bp_get_activity_comment_id();
 						<div class="bb-rl-comment-reactions">
 							<?php
 							if ( bb_is_reaction_activity_comments_enabled() ) {
-								echo bb_get_activity_post_user_reactions_html( $activity_comment_id, 'activity_comment' );
+								echo wp_kses_post( bb_get_activity_post_user_reactions_html( $activity_comment_id, 'activity_comment' ) );
 							}
 							if ( bp_activity_can_comment_reply() ) {
 								$activity_id   = bp_get_activity_id();
@@ -72,9 +77,11 @@ $activity_comment_id = bp_get_activity_comment_id();
 										<span class="acomments-count" data-comments-count="<?php echo esc_attr( $reply_count ); ?>">
 											<?php
 											if ( $reply_count > 1 ) {
-												printf( _x( '%d replies', 'placeholder: activity replies count', 'buddyboss' ), $reply_count );
+												/* translators: %d: number of activity replies */
+												echo esc_html( sprintf( _x( '%d replies', 'placeholder: activity replies count', 'buddyboss' ), $reply_count ) );
 											} else {
-												printf( _x( '%d reply', 'placeholder: activity reply count', 'buddyboss' ), $reply_count );
+												/* translators: %d: number of activity reply */
+												echo esc_html( sprintf( _x( '%d reply', 'placeholder: activity reply count', 'buddyboss' ), $reply_count ) );
 											}
 											?>
 										</span>

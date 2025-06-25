@@ -1,14 +1,17 @@
 <?php
 /**
- * ReadyLaunch - BuddyBoss - Activity Video.
+ * ReadyLaunch - Video Activity Entry template.
  *
- * This template is used to render activity video.
+ * Template for displaying video entries in activity streams.
  *
- * @since   BuddyBoss [BBVERSION]
- * @package BuddyBoss\Core
- *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 global $video_template;
 

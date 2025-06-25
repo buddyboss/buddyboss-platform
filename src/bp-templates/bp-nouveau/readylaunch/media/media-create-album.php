@@ -1,11 +1,17 @@
 <?php
 /**
- * ReadyLaunch - The template for media create album.
+ * ReadyLaunch - Media Create Album template.
  *
- * @since   BuddyBoss [BBVERSION]
- * @package BuddyBoss\Core
+ * This template handles the inline album creation functionality.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 ?>
 

@@ -2,9 +2,17 @@
 /**
  * The ReadyLaunch template for BuddyBoss - Activity Post Form.
  *
- * @since   BuddyBoss [BBVERSION]
+ * This template handles the activity post form display and initialization.
+ * It includes capability checks, script enqueuing, and form placeholder setup.
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 /*
  * Template tag to prepare the activity post form checks capability and enqueue needed scripts.
