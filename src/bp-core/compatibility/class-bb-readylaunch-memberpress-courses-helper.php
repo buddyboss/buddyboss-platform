@@ -93,6 +93,9 @@ class BB_Readylaunch_Memberpress_Courses_Helper {
 			add_action( 'wp_footer', array( $this, 'bb_rl_meprlms_add_script' ), 10 );
 			add_filter( 'the_content', array( $this, 'bb_rl_meprlms_add_course_description' ), 9 );
 			add_filter( 'mpcs_classroom_style_handles', array( $this, 'bb_rl_mpcs_override_readylaunch_styles' ) );
+			
+			// Add "Back to Course" button to lesson sidebar menu.
+			add_action( 'mpcs_classroom_start_sidebar', array( $this, 'bb_rl_mpcs_add_back_to_course_button' ), 10 );
 		}
 	}
 
@@ -532,5 +535,39 @@ class BB_Readylaunch_Memberpress_Courses_Helper {
 		}
 
 		return $allow_handle;
+	}
+
+	/**
+	 * Add "Back to Course" button to lesson sidebar menu.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return string HTML output.
+	 */
+	public function bb_rl_mpcs_add_back_to_course_button() {
+		global $post;
+		$lesson_models = models\Lesson::lesson_cpts(true);
+		if ( array_key_exists( $post->post_type, $lesson_models ) ) {
+			$lesson = new $lesson_models[ $post->post_type ]( $post->ID );
+			$course = $lesson->course();
+
+			error_log( print_r( $course, true ) );
+			// Get the course URL.
+			$course_url = get_permalink( $course->ID );
+			
+			// Output the back to course button.
+			?>
+			<div class="mpcs-sidebar-back-to-course">
+				<a class="tile" href="<?php echo esc_url( $course_url ); ?>">
+					<div class="tile-icon">
+						<i class="bb-icons-rl-arrow-left"></i>
+					</div>
+					<div class="tile-content">
+						<p class="tile-title m-0"><?php esc_html_e( 'Back to Course', 'buddyboss' ); ?></p>
+					</div>
+				</a>
+			</div>
+			<?php
+		}
 	}
 }
