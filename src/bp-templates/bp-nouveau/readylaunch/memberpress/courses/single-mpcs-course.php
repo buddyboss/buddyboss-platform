@@ -4,7 +4,7 @@
  *
  * This template can be overridden by copying it to yourtheme/memberpress/courses/single-mpcs-course.php.
  *
- * @since 2.6.30
+ * @since [BBVERSION]
  *
  * @package BuddyBoss\MemberpressLMS
  */
@@ -248,94 +248,6 @@ if ( is_user_logged_in() && ! empty( $memberships ) ) {
 					?>
 				</div>
 			</div>
-		</div>
-		<div class="bb-rl-course-content-sidebar bb-rl-widget-sidebar">
-			<?php
-			ob_start();
-			?>
-			<div class="widget bb-rl-memprlms-widget-sidebar-menu">
-				<div class="widget-content">
-					<?php
-					if ( helpers\Courses::is_a_course( $post ) ) {
-						?>
-						<div class="section mpcs-sidebar-menu bb-rl-widget-sidebar-menu">
-							<a class="tile <?php \MeprAccountHelper::active_nav( 'home', 'is-active' ); ?>" href="<?php echo esc_url( get_permalink() ); ?>">
-								<div class="tile-icon">
-									<i class="bb-icons-rl-printer"></i>
-								</div>
-								<div class="tile-content">
-									<p class="tile-title m-0"><?php esc_html_e( 'Course Overview', 'buddyboss' ); ?></p>
-								</div>
-							</a>
-							<?php
-							do_action( 'mpcs_classroom_sidebar_menu', $course, $post );
-							if ( $course->has_resources() ) {
-								?>
-								<a class="tile <?php \MeprAccountHelper::active_nav( 'resources', 'is-active' ); ?>" href="<?php echo esc_url( get_permalink() . '?action=resources' ); ?>">
-									<div class="tile-icon">
-										<i class="bb-icons-rl-printer"></i>
-									</div>
-									<div class="tile-content">
-										<p class="tile-title m-0"><?php esc_html_e( 'Resources', 'buddyboss' ); ?></p>
-									</div>
-								</a>
-								<?php
-							}
-
-							if ( $course->user_progress( $current_user_id ) >= 100 && $course->certificates_enable == 'enabled' ) {
-								$cert_url = admin_url( 'admin-ajax.php?action=mpcs-course-certificate' );
-								$cert_url = add_query_arg(
-									array(
-										'user'   => $current_user_id,
-										'course' => $post->ID,
-									),
-									$cert_url
-								);
-								$share_link = add_query_arg(
-									array(
-										'shareable' => 'true',
-									),
-									$cert_url
-								);
-								?>
-								<a target="_blank" class="tile <?php \MeprAccountHelper::active_nav( 'certificate', 'is-active' ); ?>" href="<?php echo esc_url_raw( $cert_url ); ?>">
-									<div class="tile-icon">
-										<i class="mpcs-award"></i>
-									</div>
-									<div class="tile-content">
-										<p class="tile-title m-0">
-											<?php esc_html_e( 'Certificate', 'buddyboss' ); ?>
-											<?php if ( $course->certificates_share_link == 'enabled' ) { ?>
-												<i title="<?php esc_attr_e( 'Copied Shareable Certificate Link', 'buddyboss' ); ?>" class="mpcs-share" data-clipboard-text="<?php echo esc_url( $share_link ); ?>" onclick="return false;"></i>
-											<?php } ?>
-										</p>
-									</div>
-								</a>
-							<?php
-							}
-							$remove_instructor_link = helpers\Options::val($options, 'remove-instructor-link');
-							if ( empty( $remove_instructor_link ) ) { ?>
-								<a class="tile <?php \MeprAccountHelper::active_nav( 'instructor', 'is-active' ); ?>" href="<?php echo esc_url( get_permalink() . '?action=instructor' ); ?>">
-									<div class="tile-icon">
-										<i class="bb-icons-rl-user"></i>
-									</div>
-									<div class="tile-content">
-										<p class="tile-title m-0"><?php esc_html_e( 'Your Instructor', 'buddyboss' ); ?></p>
-									</div>
-								</a>
-							<?php } ?>
-						</div>
-						<?php
-					}
-					?>
-				</div>
-			</div>
-			<?php
-			$widget_content = ob_get_clean();
-			if ( ! empty( $widget_content ) ) {
-				echo $widget_content;
-			}
-			?>
 		</div>
 	</div>
 

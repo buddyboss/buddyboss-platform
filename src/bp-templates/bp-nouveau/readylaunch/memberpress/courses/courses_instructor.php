@@ -11,6 +11,7 @@
 
 use memberpress\courses\lib\Utils;
 use memberpress\courses as base;
+echo BB_Readylaunch_Memberpress_Courses_Helper::bb_rl_mpcs_render_course_tab_menu();
 do_action( base\SLUG_KEY . '_classroom_start_instructor' );
 ?>
 

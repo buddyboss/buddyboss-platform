@@ -1,6 +1,15 @@
-<?php if ( ! defined( 'ABSPATH' ) ) {
-	die( 'You are not allowed to call this page directly.' );
-} ?>
+<?php
+/**
+ * Template for displaying course grades in MemberPress Courses integration.
+ *
+ * @package BuddyBoss\MemberpressLMS
+ *
+ * @since [BBVERSION]
+ */
+
+defined( 'ABSPATH' ) || exit;
+echo BB_Readylaunch_Memberpress_Courses_Helper::bb_rl_mpcs_render_course_tab_menu();
+?>
 <h2><?php esc_html_e( 'Grades', 'buddyboss' ); ?></h2>
 
 <?php if ( ! empty( $quizzes ) ) : ?>

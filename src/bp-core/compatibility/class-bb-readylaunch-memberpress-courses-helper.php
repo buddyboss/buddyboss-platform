@@ -142,10 +142,17 @@ class BB_Readylaunch_Memberpress_Courses_Helper {
 	 */
 	public function bb_rl_meprlms_add_course_description( $content ) {
 		global $post;
-		if ( is_single() && ! empty( $post ) && is_a( $post, 'WP_Post' ) ) {
-			if ( class_exists( 'memberpress\courses\models\Course' ) && models\Course::$cpt === $post->post_type ) {
-				return '<div class="bb-rl-course-description"><h2>' . esc_html__( 'About this course', 'buddyboss' ) . '</h2>' . $content . '</div>';
-			}
+		if ( is_single() && ! empty( $post ) && is_a( $post, 'WP_Post' ) && helpers\Courses::is_a_course( $post ) ) {
+			ob_start();
+			?>
+			<div class="bb-rl-course-description">
+				<?php
+				echo self::bb_rl_mpcs_render_course_tab_menu();
+				echo $content;
+				?>
+			</div>
+			<?php
+			return ob_get_clean();
 		}
 		return $content;
 	}
@@ -609,5 +616,99 @@ class BB_Readylaunch_Memberpress_Courses_Helper {
 		} else {
 			return date_i18n( $format, $latest_modified_date );
 		}
+	}
+
+	/**
+	 * Render the course tab menu HTML.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return string The rendered course tab menu HTML.
+	 */
+	public static function bb_rl_mpcs_render_course_tab_menu() {
+		global $post;
+		if ( ! is_single() || ! is_a( $post, 'WP_Post' ) || ! helpers\Courses::is_a_course( $post ) ) {
+			return '';
+		}
+
+		$course  = new models\Course( $post->ID );
+		$user_id = get_current_user_id();
+
+		ob_start();
+		?>
+		<div class="section bb-rl-course-tab-menu">
+			<a class="tile <?php \MeprAccountHelper::active_nav( 'home', 'is-active' ); ?>" href="<?php echo esc_url( get_permalink() ); ?>">
+				<div class="tile-icon">
+					<i class="bb-icons-rl-printer"></i>
+				</div>
+				<div class="tile-content">
+					<p class="tile-title m-0"><?php esc_html_e( 'About Course', 'buddyboss' ); ?></p>
+				</div>
+			</a>
+			<?php
+			do_action( 'mpcs_classroom_sidebar_menu', $course, $post );
+			if ( $course->has_resources() ) {
+				?>
+				<a class="tile <?php \MeprAccountHelper::active_nav( 'resources', 'is-active' ); ?>" href="<?php echo esc_url( get_permalink() . '?action=resources' ); ?>">
+					<div class="tile-icon">
+						<i class="bb-icons-rl-printer"></i>
+					</div>
+					<div class="tile-content">
+						<p class="tile-title m-0"><?php esc_html_e( 'Resources', 'buddyboss' ); ?></p>
+					</div>
+				</a>
+				<?php
+			}
+
+			if ( $course->user_progress( $user_id ) >= 100 && 'enabled' === $course->certificates_enable ) {
+				$cert_url = admin_url( 'admin-ajax.php?action=mpcs-course-certificate' );
+				$cert_url = add_query_arg(
+					array(
+						'user'   => $user_id,
+						'course' => $post->ID,
+					),
+					$cert_url
+				);
+				$share_link = add_query_arg(
+					array(
+						'shareable' => 'true',
+					),
+					$cert_url
+				);
+				?>
+				<a target="_blank" class="tile <?php \MeprAccountHelper::active_nav( 'certificate', 'is-active' ); ?>" href="<?php echo esc_url_raw( $cert_url ); ?>">
+					<div class="tile-icon">
+						<i class="mpcs-award"></i>
+					</div>
+					<div class="tile-content">
+						<p class="tile-title m-0">
+							<?php esc_html_e( 'Certificate', 'buddyboss' ); ?>
+							<?php if ( $course->certificates_share_link == 'enabled' ) { ?>
+								<i title="<?php esc_attr_e( 'Copied Shareable Certificate Link', 'buddyboss' ); ?>" class="mpcs-share" data-clipboard-text="<?php echo esc_url( $share_link ); ?>" onclick="return false;"></i>
+							<?php } ?>
+						</p>
+					</div>
+				</a>
+				<?php
+			}
+
+			$options = get_option( 'mpcs-options' );
+			$remove_instructor_link = helpers\Options::val( $options, 'remove-instructor-link' );
+			if ( empty( $remove_instructor_link ) ) {
+				?>
+				<a class="tile <?php \MeprAccountHelper::active_nav( 'instructor', 'is-active' ); ?>" href="<?php echo esc_url( get_permalink() . '?action=instructor' ); ?>">
+					<div class="tile-icon">
+						<i class="bb-icons-rl-user"></i>
+					</div>
+					<div class="tile-content">
+						<p class="tile-title m-0"><?php esc_html_e( 'Your Instructor', 'buddyboss' ); ?></p>
+					</div>
+				</a>
+				<?php
+			}
+			?>
+		</div>
+		<?php
+		return ob_get_clean();
 	}
 }

@@ -8,6 +8,7 @@
  */
 
 defined( 'ABSPATH' ) || exit;
+echo BB_Readylaunch_Memberpress_Courses_Helper::bb_rl_mpcs_render_course_tab_menu();
 ?>
 <h2><?php esc_html_e( 'Resources', 'buddyboss-pro' ); ?></h2>
 
