@@ -7,6 +7,20 @@
 		@include bb-rl-button;
 		@include bb-rl-button--brand-fill;
 		@include bb-rl-button--small;
+
+		.mpcs-spinner {
+			line-height: 1;
+		}
+
+		.mpcs-spinner::before {
+			content: "\e66a";
+			display: inline-flex;
+			font-weight: 400;
+			font-family: bb-icons-rl;
+			font-size: 16px;
+			color: var(--bb-rl-text-white-color);
+			font-style: normal;
+		}
 	}
 
 	#mpcs-quiz-question-1 {
@@ -14,15 +28,18 @@
 	}
 
 	.mpcs-quiz-question {
-		margin-bottom: var(--bb-rl-space-400);
+		margin-bottom: var(--bb-rl-space-200);
+		border: 1px solid var(--bb-rl-border-color);
+		border-radius: var(--bb-rl-radius-base);
+		padding: var(--bb-rl-space-500) var(--bb-rl-space-400);
 	}
 
 	.mpcs-quiz-question-label {
-		margin-bottom: var(--bb-rl-space-200);
+		margin-bottom: var(--bb-rl-space-300);
 
 		> label {
 
-			@include bb-rl-base-heading-bolder;
+			@include bb-rl-base-heading-xl;
 		}
 	}
 
@@ -121,20 +138,27 @@
 				background-color: var(--bb-rl-background-color);
 				border: 1px solid var(--bb-rl-border-secondary-color);
 				border-radius: var(--bb-rl-radius-md);
-				padding: var(--bb-rl-space-100);
+				padding: 12px var(--bb-rl-space-200);
+				width: 100%;
+				max-width: 400px;
+
+				&:has(input:checked) {
+					border-color: var(--bb-rl-border-brand-secondary-color);
+				}
 
 				.mpcs-quiz-question-option-label {
 
 					@include bb-rl-label-heading-md;
 					color: var(--bb-rl-text-color);
-					padding-left: var(--bb-rl-space-100);
+					padding-left: var(--bb-rl-space-50);
 				}
 			}
 		}
 	}
 
-	.mpcs-quiz-question {
-		padding: 0;
+	.mpcs-quiz-question.mpcs-quiz-question-fill-blank .mpcs-fill-blank-field {
+		border-bottom: 1px dashed var(--bb-rl-border-secondary-color);
+		padding-bottom: 2px;
 	}
 
 	.mpcs-quiz-question .mpcs-quiz-question-input {
@@ -165,5 +189,80 @@
 
 	.mpcs-quiz-question-likert-scale .mpcs-quiz-question-option {
 		align-items: flex-start;
+		position: relative;
+		padding: 0;
+	}
+
+	.mpcs-quiz-question.mpcs-quiz-question-likert-scale .mpcs-quiz-question-options {
+		border: 1px solid var(--bb-rl-border-secondary-color);
+		background-color: var(--bb-rl-background-color);
+		border-radius: var(--bb-rl-radius-md);
+		padding: var(--bb-rl-space-200) var(--bb-rl-space-200) var(--bb-rl-space-500);
+		position: relative;
+		display: inline-flex;
+		gap: var(--bb-rl-space-200);
+	}
+
+	.mpcs-quiz-question.mpcs-quiz-question-likert-scale .mpcs-quiz-question-options .mpcs-quiz-question-option-label {
+		border: 1px solid var(--bb-rl-border-secondary-color);
+		border-radius: var(--bb-rl-radius-md);
+		padding: var(--bb-rl-space-50) var(--bb-rl-space-100);
+		min-width: 30px;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		color: var(--bb-rl-text-secondary-color);
+	}
+
+	.mpcs-quiz-question.mpcs-quiz-question-likert-scale .mpcs-quiz-question-options input:checked ~ .mpcs-quiz-question-option-label {
+		background-color: var(--bb-rl-background-secondary-color);
+		color: var(--bb-rl-text-color);
+		font-weight: 400;
+	}
+
+	.mpcs-quiz-question.mpcs-quiz-question-likert-scale .mpcs-quiz-question-options .mpcs-likert-scale-high-label,
+	.mpcs-quiz-question.mpcs-quiz-question-likert-scale .mpcs-quiz-question-options .mpcs-likert-scale-low-label {
+
+		@include bb-rl-label-heading;
+		color: var(--bb-rl-text-tertiary-color);
+		position: absolute;
+		left: var(--bb-rl-space-200);
+		bottom: var(--bb-rl-space-50);
+		max-width: 45%;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		display: block;
+	}
+
+	.mpcs-quiz-question.mpcs-quiz-question-likert-scale .mpcs-quiz-question-options .mpcs-likert-scale-high-label {
+		left: initial;
+		right: var(--bb-rl-space-200);
+	}
+
+	.mpcs-quiz-question.mpcs-quiz-question-likert-scale .mpcs-quiz-question-options input {
+		visibility: hidden;
+	}
+
+	.mpcs-quiz-question.mpcs-quiz-question-likert-scale .mpcs-quiz-question-options label:not(.mpcs-quiz-question-option-label) {
+		display: none;
+	}
+
+	.mpcs-quiz-character-counter {
+
+		@include bb-rl-label-heading;
+		color: var(--bb-rl-text-tertiary-color);
+		text-align: right;
+	}
+
+	.mpcs-quiz-question-error {
+		margin: 0;
+	}
+
+	.mpcs-quiz-question-error-inner {
+
+		@include bb-rl-notice;
+		@include bb-rl-notice--alt;
+		@include bb-rl-notice--alt-error;
 	}
 }

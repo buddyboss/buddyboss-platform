@@ -2,6 +2,31 @@
 	display: flex;
 }
 
+.bb-rl-mbprlms-inner-wrapper {
+	background-color: var(--bb-rl-background-color);
+}
+
+.bb-readylaunch-template {
+
+	&.single-mpcs-assignment,
+	&.single-mpcs-lesson,
+	&.single-mpcs-quiz {
+
+		.site.bb-readylaunch {
+			background-color: var(--bb-rl-background-color);
+		}
+	}
+}
+
+.mpcs-classroom.buddyboss-theme.bb-readylaunch-template {
+
+	.mpcs-inner-page-main {
+		width: 100%;
+		padding: 0;
+		margin: 0;
+	}
+}
+
 .bb-rl-lms-inner-block {
 
 	.mpcs-main-content {
