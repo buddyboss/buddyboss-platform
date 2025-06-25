@@ -97,12 +97,12 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 			// LearnDash integration.
 			add_filter( 'bp_is_sidebar_enabled_for_courses', array( $this, 'bb_is_sidebar_enabled_for_courses' ) );
+			
+			// Common LMS stylesheets.
+			add_action( 'wp_enqueue_scripts', array( $this, 'bb_readylaunch_lms_enqueue_styles' ), 10 );
 
 			// Set up LearnDash integration.
 			if ( $enabled_for_page && class_exists( 'SFWD_LMS' ) ) {
-				// Common LMS stylesheets.
-				add_action( 'wp_enqueue_scripts', array( $this, 'bb_readylaunch_lms_enqueue_styles' ), 10 );
-
 				require_once buddypress()->compatibility_dir . '/class-bb-readylaunch-learndash-helper.php';
 			}
 
