@@ -45,7 +45,7 @@ defined( 'ABSPATH' ) || exit;
 			<?php if ( bbp_is_single_user_replies() ) : ?>
 
 				<span class="bbp-header">
-				<?php esc_html_e( 'in reply to: ', 'buddyboss-theme' ); ?>
+				<?php esc_html_e( 'in reply to: ', 'buddyboss' ); ?>
 					<a class="bbp-topic-permalink"
 						href="<?php bbp_topic_permalink( bbp_get_reply_topic_id() ); ?>"><?php bbp_topic_title( bbp_get_reply_topic_id() ); ?></a>
 				</span>
@@ -125,7 +125,7 @@ defined( 'ABSPATH' ) || exit;
 						if ( ! $empty ) {
 							?>
 							<a href="#" class="bb-rl-context-btn bb_more_options_action bp-tooltip" data-balloon-pos="up"
-								data-balloon="<?php esc_attr_e( 'More actions', 'buddyboss-theme' ); ?>"><i
+								data-balloon="<?php esc_attr_e( 'More actions', 'buddyboss' ); ?>"><i
 										class="bb-icons-rl-dots-three"></i></a>
 							<ul class="bb_more_options_list bb_more_dropdown bb-rl-context-dropdown">
 								<li>

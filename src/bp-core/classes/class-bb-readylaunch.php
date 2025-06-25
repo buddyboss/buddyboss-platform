@@ -3068,15 +3068,15 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					'bbpReplyAjaxJS',
 					array(
 						'bbp_ajaxurl'          => bbp_get_ajax_url(),
-						'generic_ajax_error'   => esc_html__( 'Something went wrong. Refresh your browser and try again.', 'buddyboss-theme' ),
+						'generic_ajax_error'   => esc_html__( 'Something went wrong. Refresh your browser and try again.', 'buddyboss' ),
 						'is_user_logged_in'    => is_user_logged_in(),
 						'reply_nonce'          => wp_create_nonce( 'reply-ajax_' . get_the_ID() ),
 						'topic_id'             => bbp_get_topic_id(),
 						'reply_form_html'      => $reply_form_html,
 						'threaded_reply'       => bbp_allow_threaded_replies(),
 						'threaded_reply_depth' => bbp_thread_replies_depth(),
-						'reply_to_text'        => esc_html__( 'Reply to', 'buddyboss-theme' ),
-						'type_reply_here_text' => esc_html__( 'Type your reply here', 'buddyboss-theme' ),
+						'reply_to_text'        => esc_html__( 'Reply to', 'buddyboss' ),
+						'type_reply_here_text' => esc_html__( 'Type your reply here', 'buddyboss' ),
 					)
 				);
 			}
@@ -3258,11 +3258,11 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			if ( bbp_show_lead_topic() ) {
 				$topic_reply_count = (int) bbp_get_topic_reply_count( $topic_id );
 				echo $topic_reply_count;
-				$topic_reply_text = 1 !== $topic_reply_count ? esc_html__( 'Replies', 'buddyboss-theme' ) : esc_html__( 'Reply', 'buddyboss-theme' );
+				$topic_reply_text = 1 !== $topic_reply_count ? esc_html__( 'Replies', 'buddyboss' ) : esc_html__( 'Reply', 'buddyboss' );
 			} else {
 				$topic_post_count = (int) bbp_get_topic_post_count( $topic_id );
 				echo $topic_post_count;
-				$topic_reply_text = 1 !== $topic_post_count ? esc_html__( 'Posts', 'buddyboss-theme' ) : esc_html__( 'Post', 'buddyboss-theme' );
+				$topic_reply_text = 1 !== $topic_post_count ? esc_html__( 'Posts', 'buddyboss' ) : esc_html__( 'Post', 'buddyboss' );
 			}
 			echo ' ' . wp_kses_post( $topic_reply_text );
 			$topic_total_reply_count_html = ob_get_clean();
