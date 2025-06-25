@@ -978,6 +978,10 @@ body.ld-in-focus-mode .learndash-wrapper {
 		max-width: 800px;
 		margin: 0 auto;
 	}
+
+	.bb-rl-quiz-block + .bb-rl-course-content-comments {
+		margin-top: var(--bb-rl-space-400);
+	}
 }
 
 .bb-rl-lms-page-title {
