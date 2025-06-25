@@ -256,25 +256,6 @@ if ( is_user_logged_in() && ! empty( $memberships ) ) {
 			<div class="widget bb-rl-memprlms-widget-sidebar-menu">
 				<div class="widget-content">
 					<?php
-					if ( helpers\Lessons::is_a_lesson( $post ) ) {
-						do_action( 'mpcs_classroom_lesson_sidebar_menu', $course, $post );
-						if ( $course->has_resources() ) {
-							?>
-							<div class="mpcs-sidebar-resources">
-								<a class="tile mepr-resources" href="<?php echo esc_url( get_permalink( $course->ID ) . '?action=resources' ); ?>" target="_blank">
-									<div class="tile-icon">
-										<i class="mpcs-print"></i>
-									</div>
-									<div class="tile-content">
-										<p class="tile-title m-0"><?php esc_html_e( 'Resources', 'buddyboss' ); ?></p>
-									</div>
-								</a>
-							</div>
-							<?php
-						}
-						echo helpers\Courses::display_course_overview( false, true );
-					}
-
 					if ( helpers\Courses::is_a_course( $post ) ) {
 						?>
 						<div class="section mpcs-sidebar-menu bb-rl-widget-sidebar-menu">
