@@ -1476,6 +1476,32 @@ body.ld-in-focus-mode .learndash-wrapper {
   margin: 0 auto;
 }
 
+.bb-rl-lms-page-title {
+  max-width: 1032px;
+  margin: 0 auto;
+  padding: var(--bb-rl-space-400) var(--bb-rl-space-200) 0;
+}
+
+.bb-rl-lms-page-title .bb-rl-lms-page-title-text {
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 30px;
+  color: var(--bb-rl-text-color);
+  margin: 0;
+}
+
+.bb-rl-lms-default-page.bb-rl-lms-inner-block {
+  max-width: 1032px;
+  padding-left: var(--bb-rl-space-200);
+  padding-right: var(--bb-rl-space-200);
+}
+
+.bb-rl-lms-default-page.bb-rl-lms-inner-block .entry-header .entry-title {
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 28px;
+}
+
 .bb-readylaunch-template {
   /* A sidebar-conditioned grid can be used on
     single profile or group screens. */
@@ -1782,14 +1808,6 @@ body.ld-in-focus-mode .learndash-wrapper {
 .bb-rl-course-pagination .bb-rl-pagination-links span.prev,
 .bb-rl-course-pagination .bb-rl-pagination-links span.next {
   color: var(--bb-rl-text-disabled-color);
-}
-
-.bb-rl-lms-default-page .bb-rl-lms-page-title h1 {
-  font-size: var(--bb-rl-font-size-base);
-  font-weight: 500;
-  line-height: var(--bb-rl-base-line);
-  color: var(--bb-rl-text-color);
-  white-space: nowrap;
 }
 
 .bb-rl-lms-default-page .bb-rl-ld-archive,
@@ -4080,9 +4098,6 @@ body.ld-in-focus-mode .learndash-wrapper {
 }
 
 .bb-rl-container .learndash_post_groups {
-  max-width: 1032px;
-  margin: 0 auto;
-  padding: var(--bb-rl-space-300) var(--bb-rl-space-200);
   width: 100%;
 }
 
@@ -4320,6 +4335,39 @@ body.ld-in-focus-mode .learndash-wrapper {
 
 .bb-rl-container .learndash_post_groups .ld-pagination .ld-icon-arrow-right:before {
   content: "\e13a";
+}
+
+.bb-rl-container .learndash_post_groups .learndash-wrapper:not(.ld-registration__outer-wrapper) .ld-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  font-weight: 500;
+  text-align: center;
+  cursor: pointer;
+  border-radius: var(--bb-rl-radius-md);
+  padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  text-decoration: none;
+  background-color: var(--bb-rl-background-brand-primary-color);
+  color: var(--bb-rl-text-white-color);
+  border: 1px solid var(--bb-rl-background-brand-primary-color);
+  padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
+  font-size: 0.875rem;
+  font-weight: 400;
+}
+
+.bb-rl-container .learndash_post_groups .learndash-wrapper:not(.ld-registration__outer-wrapper) .ld-button:hover {
+  background-color: var(--bb-rl-background-brand-primary-hover-color);
+}
+
+.bb-rl-container .learndash_post_groups .learndash-wrapper:not(.ld-registration__outer-wrapper) .ld-button:focus-within {
+  outline: 2px solid var(--bb-rl-border-brand-primary-color);
+}
+
+.bb-rl-container .learndash_post_groups .learndash-wrapper:not(.ld-registration__outer-wrapper) .ld-button:disabled {
+  background-color: var(--bb-rl-background-brand-disabled-color);
+  cursor: not-allowed;
 }
 
 .bb-rl-container .learndash_post_groups + .comments-area {
