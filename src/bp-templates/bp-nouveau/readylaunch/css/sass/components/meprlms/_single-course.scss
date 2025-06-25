@@ -461,13 +461,35 @@
 				border-bottom: 1px solid var(--bb-rl-border-secondary-color) !important;
 				color: var(--bb-rl-text-secondary-color);
 				text-align: left;
+				padding: var(--bb-rl-space-200) var(--bb-rl-space-200);
 			}
 
 			tbody tr td {
 
 				@include bb-rl-label-heading;
 				color: var(--bb-rl-text-secondary-color);
+				padding: var(--bb-rl-space-200) var(--bb-rl-space-200);
 			}
+
+			.mpcs-lesson-row-link {
+				flex-direction: row;
+				padding: 0;
+
+				&:hover {
+					background-color: transparent;
+				}
+
+				+ .mpcs-lesson-row-link {
+					margin-left: var(--bb-rl-space-200);
+				}
+
+				i {
+					color: var(--bb-rl-icon-secondary-color);
+					font-size: var(--bb-rl-font-size-base);
+				}
+			}
+
+
 		}
 	}
 }

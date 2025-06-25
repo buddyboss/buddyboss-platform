@@ -45,7 +45,7 @@ echo BB_Readylaunch_Memberpress_Courses_Helper::bb_rl_mpcs_render_course_tab_men
 									<?php if ( $row->allow_retakes ) { ?>
 										<a href="<?php echo esc_url( $row->url ); ?>" class="mpcs-lesson-row-link" target="_blank">
 											<div class="mpcs-lesson-button">
-												<span title="<?php esc_html_e( 'Retake', 'buddyboss' ); ?>"><i class="mpcs-ccw"></i></span>
+												<span title="<?php esc_html_e( 'Retake', 'buddyboss' ); ?>"><i class="bb-icons-rl-arrow-counter-clockwise"></i></span>
 											</div>
 										</a>
 									<?php } ?>
@@ -53,7 +53,7 @@ echo BB_Readylaunch_Memberpress_Courses_Helper::bb_rl_mpcs_render_course_tab_men
 										<a href="<?php echo esc_url( $row->url ); ?>" class="mpcs-lesson-row-link mpcs-lesson-button-feedback" target="_blank">
 											<div class="mpcs-lesson-button">
 												<span title="<?php echo esc_attr( esc_html( $row->feedback ) ); ?>">
-													<i class="mpcs-chat"></i>
+													<i class="bb-icons-rl-chat-teardrop-text"></i>
 												</span>
 											</div>
 										</a>
@@ -101,7 +101,7 @@ echo BB_Readylaunch_Memberpress_Courses_Helper::bb_rl_mpcs_render_course_tab_men
 									<?php if ( $row->allow_retakes ) { ?>
 										<a href="<?php echo esc_url( $row->url ); ?>" class="mpcs-lesson-row-link" target="_blank">
 											<div class="mpcs-lesson-button">
-												<span title="<?php esc_html_e( 'Retake', 'buddyboss' ); ?>"><i class="mpcs-ccw"></i></span>
+												<span title="<?php esc_html_e( 'Retake', 'buddyboss' ); ?>"><i class="bb-icons-rl-arrow-counter-clockwise"></i></span>
 											</div>
 										</a>
 									<?php } ?>
@@ -109,7 +109,7 @@ echo BB_Readylaunch_Memberpress_Courses_Helper::bb_rl_mpcs_render_course_tab_men
 										<a href="<?php echo esc_url( $row->url ); ?>" class="mpcs-lesson-row-link mpcs-lesson-button-feedback" target="_blank">
 											<div class="mpcs-lesson-button">
 												<span title="<?php echo esc_attr( esc_html( $row->feedback ) ); ?>">
-													<i class="mpcs-chat"></i>
+													<i class="bb-icons-rl-chat-teardrop-text"></i>
 												</span>
 											</div>
 										</a>

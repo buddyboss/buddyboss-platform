@@ -1238,6 +1238,7 @@
   border-bottom: 1px solid var(--bb-rl-border-secondary-color) !important;
   color: var(--bb-rl-text-secondary-color);
   text-align: left;
+  padding: var(--bb-rl-space-200) var(--bb-rl-space-200);
 }
 
 .bb-rl-course-content .mpcs-section.mpcs-resource-section table.mp-table tbody tr td {
@@ -1245,6 +1246,25 @@
   font-weight: 400;
   line-height: var(--bb-rl-base-line-small);
   color: var(--bb-rl-text-secondary-color);
+  padding: var(--bb-rl-space-200) var(--bb-rl-space-200);
+}
+
+.bb-rl-course-content .mpcs-section.mpcs-resource-section table.mp-table .mpcs-lesson-row-link {
+  flex-direction: row;
+  padding: 0;
+}
+
+.bb-rl-course-content .mpcs-section.mpcs-resource-section table.mp-table .mpcs-lesson-row-link:hover {
+  background-color: transparent;
+}
+
+.bb-rl-course-content .mpcs-section.mpcs-resource-section table.mp-table .mpcs-lesson-row-link + .mpcs-lesson-row-link {
+  margin-left: var(--bb-rl-space-200);
+}
+
+.bb-rl-course-content .mpcs-section.mpcs-resource-section table.mp-table .mpcs-lesson-row-link i {
+  color: var(--bb-rl-icon-secondary-color);
+  font-size: var(--bb-rl-font-size-base);
 }
 
 .bb-rl-lms-inner-block .mpcs-submission {
