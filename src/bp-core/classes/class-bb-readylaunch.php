@@ -2985,7 +2985,13 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * @since BuddyBoss [BBVERSION]
 		 */
 		public function bb_readylaunch_forums_enqueue_styles() {
-			if ( ! $this->bb_is_readylaunch_forums() ) {
+			if (
+				! $this->bb_is_readylaunch_forums() &&
+				! (
+					bp_is_active( 'forums' ) &&
+					bbp_is_single_user()
+				)
+			) {
 				return;
 			}
 
@@ -3421,6 +3427,16 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			return $html;
 		}
 
+		/**
+		 * Localize script for ReadyLaunch admin.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array  $localize_arg Localized arguments.
+		 * @param string $screen_id Screen ID.
+		 *
+		 * @return array
+		 */
 		public function bb_rl_admin_localize_script( $localize_arg, $screen_id ) {
 			if ( strpos( $screen_id, 'bb-readylaunch' ) === false ) {
 				return $localize_arg;
@@ -3447,9 +3463,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				}
 			}
 
-
 			$localize_arg['component_pages'] = $component_pages;
-
 
 			return $localize_arg;
 		}
