@@ -37,6 +37,8 @@
 
 				@include bb-rl-base-heading-bolder;
 				color: var(--bb-rl-text-color);
+				padding-top: 0;
+				padding-bottom: 0;
 			}
 		}
 	}
@@ -67,6 +69,20 @@
 
 		.mpcs-section.mpcs-section-lessons.first_section {
 			margin-top: var(--bb-rl-space-200);
+		}
+	}
+
+	.mpcs-sidebar-back-to-course {
+		margin: var(--bb-rl-space-200) calc(var(--bb-rl-space-200) * -1) 0;
+		padding: 0 var(--bb-rl-space-300) 0;
+
+		a {
+			display: inline-flex;
+			gap: var(--bb-rl-space-50);
+
+			i {
+				font-size: 16px;
+			}
 		}
 	}
 }

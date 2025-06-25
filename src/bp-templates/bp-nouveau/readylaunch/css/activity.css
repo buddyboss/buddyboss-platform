@@ -4315,7 +4315,7 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
 
 .bb-rl-modal-move-file .bb-rl-model-footer .bb-rl-button {
   padding: 6px var(--bb-rl-space-200);
-  font-size: 0.875rem;
+  font-size: var(--bb-rl-font-size-sm);
   font-weight: 400;
 }
 
