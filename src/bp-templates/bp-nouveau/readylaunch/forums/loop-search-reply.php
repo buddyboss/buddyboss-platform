@@ -1,11 +1,15 @@
 <?php
-
 /**
  * Search Loop - Single Reply
  *
- * @package BuddyBoss\Theme
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch
+ * @since BuddyBoss [BBVERSION]
+ * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 ?>
 
 <div class="bbp-reply-header">
@@ -20,7 +24,7 @@
 
 	<div class="bbp-reply-title">
 
-		<h3><?php _e( 'In reply to: ', 'buddyboss' ); ?>
+		<h3><?php esc_html_e( 'In reply to: ', 'buddyboss' ); ?>
 		<a class="bbp-topic-permalink" href="<?php bbp_topic_permalink( bbp_get_reply_topic_id() ); ?>"><?php bbp_topic_title( bbp_get_reply_topic_id() ); ?></a></h3>
 
 	</div><!-- .bbp-reply-title -->
