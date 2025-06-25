@@ -229,13 +229,6 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			// Add Dynamic colours.
 			add_action( 'wp_head', array( $this, 'bb_rl_dynamic_colors' ) );
 
-			add_action( 'bb_rl_get_template_part_content', array( $this, 'bb_rl_get_template_part_content' ), 10, 1 );
-
-			// Dequeue theme/plugins styles.
-			add_action( 'wp_enqueue_scripts', array( $this, 'bb_dequeue_styles' ), PHP_INT_MAX );
-			add_action( 'wp_enqueue_scripts', array( $this, 'bb_enqueue_scripts' ), 1 );
-			add_action( 'wp_head', array( $this, 'bb_rl_start_buffering' ), 0 );
-			add_action( 'wp_footer', array( $this, 'bb_rl_end_buffering' ), 999 );
 			add_filter( 'bb_admin_localize_script', array( $this, 'bb_rl_admin_localize_script' ), 10, 2 );
 
 			add_action( 'wp_ajax_bb_fetch_header_messages', array( $this, 'bb_fetch_header_messages' ) );
@@ -257,11 +250,8 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			add_filter( 'bp_nouveau_get_nav_id', array( $this, 'bb_rl_prefix_key' ) );
 
 			add_filter( 'bp_nouveau_register_scripts', array( $this, 'bb_rl_nouveau_register_scripts' ), 99, 1 );
-			add_filter( 'paginate_links_output', array( $this, 'bb_rl_filter_paginate_links_output' ), 10, 2 );
 
 			add_filter( 'wp_ajax_bb_rl_invite_form', array( $this, 'bb_rl_invite_form_callback' ) );
-
-			add_filter( 'body_class', array( $this, 'bb_rl_theme_body_classes' ) );
 
 			add_filter( 'bp_get_send_message_button_args', array( $this, 'bb_rl_override_send_message_button_text' ) );
 
@@ -282,6 +272,18 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			add_filter( 'bp_get_the_notification_mark_unread_link', array( $this, 'bb_rl_notifications_mark_unread_link' ), 1, 1 );
 			add_filter( 'bp_get_the_notification_mark_read_link', array( $this, 'bb_rl_notifications_mark_read_link' ), 1, 1 );
 			add_filter( 'bp_get_the_notification_delete_link', array( $this, 'bb_rl_notifications_delete_link' ), 1, 1 );
+		}
+
+		protected function bb_rl_required_load() {
+
+			// Dequeue theme/plugins styles.
+			add_action( 'wp_enqueue_scripts', array( $this, 'bb_dequeue_styles' ), PHP_INT_MAX );
+			add_action( 'wp_enqueue_scripts', array( $this, 'bb_enqueue_scripts' ), 1 );
+			add_action( 'wp_head', array( $this, 'bb_rl_start_buffering' ), 0 );
+			add_action( 'wp_footer', array( $this, 'bb_rl_end_buffering' ), 999 );
+			add_filter( 'paginate_links_output', array( $this, 'bb_rl_filter_paginate_links_output' ), 10, 2 );
+			add_filter( 'body_class', array( $this, 'bb_rl_theme_body_classes' ) );
+			add_action( 'bb_rl_get_template_part_content', array( $this, 'bb_rl_get_template_part_content' ), 10, 1 );
 		}
 
 		/**
@@ -775,6 +777,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 */
 		public function override_page_templates( $template ) {
 			if ( bp_is_register_page() ) {
+				$this->bb_rl_required_load();
 				return bp_locate_template( 'register.php' );
 			}
 
@@ -782,7 +785,20 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				$this->bb_is_readylaunch_forums() ||
 				$this->bb_is_readylaunch_enabled_for_page()
 			) {
+				$this->bb_rl_required_load();
 				return bp_locate_template( 'layout.php' );
+			}
+
+			if (
+				! $this->bb_is_readylaunch_enabled_for_page() &&
+				! $this->bb_is_readylaunch_forums()
+			) {
+				add_filter( 'bp_get_template_stack', 'bp_add_template_stack_locations' );
+				add_filter( 'bbp_get_template_stack', 'bbp_add_template_stack_locations' );
+
+				// Add Readylaunch template locations.
+				remove_filter( 'bp_get_template_stack', array( $this, 'add_template_stack' ), PHP_INT_MAX );
+				remove_filter( 'bbp_get_template_stack', array( $this, 'add_forum_template_stack' ), PHP_INT_MAX );
 			}
 
 			return $template;
@@ -3087,7 +3103,13 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * @since BuddyBoss [BBVERSION]
 		 */
 		public function bb_readylaunch_forums_enqueue_styles() {
-			if ( ! $this->bb_is_readylaunch_forums() ) {
+			if (
+				! $this->bb_is_readylaunch_forums() &&
+				! (
+					bp_is_active( 'forums' ) &&
+					bbp_is_single_user()
+				)
+			) {
 				return;
 			}
 
@@ -3164,15 +3186,15 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					'bbpReplyAjaxJS',
 					array(
 						'bbp_ajaxurl'          => bbp_get_ajax_url(),
-						'generic_ajax_error'   => esc_html__( 'Something went wrong. Refresh your browser and try again.', 'buddyboss-theme' ),
+						'generic_ajax_error'   => esc_html__( 'Something went wrong. Refresh your browser and try again.', 'buddyboss' ),
 						'is_user_logged_in'    => is_user_logged_in(),
 						'reply_nonce'          => wp_create_nonce( 'reply-ajax_' . get_the_ID() ),
 						'topic_id'             => bbp_get_topic_id(),
 						'reply_form_html'      => $reply_form_html,
 						'threaded_reply'       => bbp_allow_threaded_replies(),
 						'threaded_reply_depth' => bbp_thread_replies_depth(),
-						'reply_to_text'        => esc_html__( 'Reply to', 'buddyboss-theme' ),
-						'type_reply_here_text' => esc_html__( 'Type your reply here', 'buddyboss-theme' ),
+						'reply_to_text'        => esc_html__( 'Reply to', 'buddyboss' ),
+						'type_reply_here_text' => esc_html__( 'Type your reply here', 'buddyboss' ),
 					)
 				);
 			}
@@ -3354,11 +3376,11 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			if ( bbp_show_lead_topic() ) {
 				$topic_reply_count = (int) bbp_get_topic_reply_count( $topic_id );
 				echo $topic_reply_count;
-				$topic_reply_text = 1 !== $topic_reply_count ? esc_html__( 'Replies', 'buddyboss-theme' ) : esc_html__( 'Reply', 'buddyboss-theme' );
+				$topic_reply_text = 1 !== $topic_reply_count ? esc_html__( 'Replies', 'buddyboss' ) : esc_html__( 'Reply', 'buddyboss' );
 			} else {
 				$topic_post_count = (int) bbp_get_topic_post_count( $topic_id );
 				echo $topic_post_count;
-				$topic_reply_text = 1 !== $topic_post_count ? esc_html__( 'Posts', 'buddyboss-theme' ) : esc_html__( 'Post', 'buddyboss-theme' );
+				$topic_reply_text = 1 !== $topic_post_count ? esc_html__( 'Posts', 'buddyboss' ) : esc_html__( 'Post', 'buddyboss' );
 			}
 			echo ' ' . wp_kses_post( $topic_reply_text );
 			$topic_total_reply_count_html = ob_get_clean();
@@ -3523,6 +3545,16 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			return $html;
 		}
 
+		/**
+		 * Localize script for ReadyLaunch admin.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array  $localize_arg Localized arguments.
+		 * @param string $screen_id Screen ID.
+		 *
+		 * @return array
+		 */
 		public function bb_rl_admin_localize_script( $localize_arg, $screen_id ) {
 			if ( strpos( $screen_id, 'bb-readylaunch' ) === false ) {
 				return $localize_arg;
@@ -3549,9 +3581,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				}
 			}
 
-
 			$localize_arg['component_pages'] = $component_pages;
-
 
 			return $localize_arg;
 		}

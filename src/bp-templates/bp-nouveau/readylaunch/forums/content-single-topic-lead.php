@@ -106,7 +106,7 @@ if ( function_exists( 'bbp_is_forum_group_forum' ) && bbp_is_forum_group_forum( 
 	<div class="bb-rl-topic-started-in">
 		<?php
 		/* translators: %1$s is the group avatar, %2$s is the forum title, %3$s is the forum permalink */
-		printf( __( '<a href="%1$s">%2$s%3$s</a>', 'buddyboss' ), bbp_get_forum_permalink( bbp_get_topic_forum_id() ), $group_avatar, bbp_get_forum_title( bbp_get_topic_forum_id() ) );
+		printf( wp_kses_post( '<a href="%1$s">%2$s%3$s</a>', 'buddyboss' ), bbp_get_forum_permalink( bbp_get_topic_forum_id() ), $group_avatar, bbp_get_forum_title( bbp_get_topic_forum_id() ) );
 		?>
 	</div>
 
@@ -169,7 +169,7 @@ if ( function_exists( 'bbp_is_forum_group_forum' ) && bbp_is_forum_group_forum( 
 				bbp_topic_reply_link();
 				if ( ! bbp_current_user_can_access_create_reply_form() && ! bbp_is_topic_closed() && ! bbp_is_forum_closed( bbp_get_topic_forum_id() ) && ! is_user_logged_in() ) {
 					?>
-						<a href="<?php echo esc_url( wp_login_url() ); ?>" class="bbp-topic-login-link bb-style-primary-bgr-color bb-style-border-radius"><?php esc_html_e( 'Log In to Reply', 'buddyboss-theme' ); ?></a>
+						<a href="<?php echo esc_url( wp_login_url() ); ?>" class="bbp-topic-login-link bb-style-primary-bgr-color bb-style-border-radius"><?php esc_html_e( 'Log In to Reply', 'buddyboss' ); ?></a>
 				<?php } ?>
 			</div>
 		</div><!-- .bb-rl-forum-actions -->

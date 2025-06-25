@@ -129,7 +129,7 @@ if ( function_exists( 'bbp_is_forum_group_forum' ) && bbp_is_forum_group_forum( 
 			do_action( 'bbp_theme_before_topic_started_in' );
 			?>
 			<div class="bb-rl-topic-started-in">
-				<?php printf( esc_html__( '<a href="%1$s">%2$s%3$s</a>', 'buddyboss' ), bbp_get_forum_permalink( bbp_get_topic_forum_id() ), $group_avatar, bbp_get_forum_title( bbp_get_topic_forum_id() ) ); ?>
+				<?php printf( wp_kses_post( '<a href="%1$s">%2$s%3$s</a>', 'buddyboss' ), bbp_get_forum_permalink( bbp_get_topic_forum_id() ), $group_avatar, bbp_get_forum_title( bbp_get_topic_forum_id() ) ); ?>
 			</div>
 			<?php
 			do_action( 'bbp_theme_after_topic_started_in' );
