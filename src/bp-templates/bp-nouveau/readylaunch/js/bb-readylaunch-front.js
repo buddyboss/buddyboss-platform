@@ -30,7 +30,10 @@ window.bp = window.bp || {};
 				// Listen to events ("Add hooks!").
 				this.addListeners();
 				this.mobileSubMenu();
-				this.gridListFilter();
+				
+				// Initialize select2 filters with retry mechanism
+				this.initSelect2Filters();
+				
 				this.styledSelect();
 
 				this.bbReloadWindow();
@@ -107,6 +110,50 @@ window.bp = window.bp || {};
 						$( this ).closest( '.menu-item-has-children' ).toggleClass( 'open-parent' );
 					}
 				);
+			},
+
+			initSelect2Filters: function () {
+				var self = this;
+				var maxRetries = 3;
+				var retryCount = 0;
+
+				function tryInitSelect2() {
+					// Check if document is ready
+					if ( document.readyState !== 'complete' ) {
+						if ( retryCount < maxRetries ) {
+							retryCount++;
+							setTimeout( tryInitSelect2, 500 );
+						}
+						return;
+					}
+
+					// Check if select2 library is available
+					if ( typeof $.fn.select2 === 'undefined' ) {
+						if ( retryCount < maxRetries ) {
+							retryCount++;
+							setTimeout( tryInitSelect2, 500 );
+						}
+						return;
+					}
+
+					// Check if elements exist
+					var $selects = $( '.bb-rl-filter select' );
+					if ( $selects.length === 0 ) {
+						if ( retryCount < maxRetries ) {
+							retryCount++;
+							setTimeout( tryInitSelect2, 500 );
+						}
+						return;
+					}
+
+					// Initialize select2
+					self.gridListFilter();
+				}
+
+				// Start the initialization process
+				$( document ).ready( function () {
+					tryInitSelect2();
+				} );
 			},
 
 			gridListFilter: function () {
