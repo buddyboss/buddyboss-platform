@@ -4314,8 +4314,8 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
 }
 
 .bb-rl-modal-move-file .bb-rl-model-footer .bb-rl-button {
-  padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
-  font-size: 0.875rem;
+  padding: 6px var(--bb-rl-space-200);
+  font-size: var(--bb-rl-font-size-sm);
   font-weight: 400;
 }
 
