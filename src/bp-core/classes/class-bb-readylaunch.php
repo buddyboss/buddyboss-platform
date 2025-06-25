@@ -2950,7 +2950,6 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					return true;
 				}
 
-				return;
 			}
 
 			// Method 2: Check for course archive using URL patterns.
