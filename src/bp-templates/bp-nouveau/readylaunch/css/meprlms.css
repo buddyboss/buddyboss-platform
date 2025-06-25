@@ -631,7 +631,7 @@
   color: var(--bb-rl-text-white-color);
   border: 1px solid var(--bb-rl-background-brand-primary-color);
   padding: 6px var(--bb-rl-space-200);
-  font-size: 0.875rem;
+  font-size: var(--bb-rl-font-size-sm);
   font-weight: 400;
 }
 
@@ -667,7 +667,7 @@
   color: var(--bb-rl-text-color);
   border: 1px solid transparent;
   padding: 6px var(--bb-rl-space-200);
-  font-size: 0.875rem;
+  font-size: var(--bb-rl-font-size-sm);
   font-weight: 400;
 }
 
@@ -770,7 +770,7 @@
   color: var(--bb-rl-text-white-color);
   border: 1px solid var(--bb-rl-background-brand-primary-color);
   padding: 6px var(--bb-rl-space-200);
-  font-size: 0.875rem;
+  font-size: var(--bb-rl-font-size-sm);
   font-weight: 400;
   margin-right: var(--bb-rl-space-100);
 }
@@ -1223,7 +1223,7 @@
   color: var(--bb-rl-text-white-color);
   border: 1px solid var(--bb-rl-background-brand-primary-color);
   padding: 6px var(--bb-rl-space-200);
-  font-size: 0.875rem;
+  font-size: var(--bb-rl-font-size-sm);
   font-weight: 400;
   margin: 0;
 }
@@ -1264,7 +1264,7 @@
   color: var(--bb-rl-text-white-color);
   border: 1px solid var(--bb-rl-background-brand-primary-color);
   padding: 6px var(--bb-rl-space-200);
-  font-size: 0.875rem;
+  font-size: var(--bb-rl-font-size-sm);
   font-weight: 400;
 }
 
@@ -1297,7 +1297,7 @@
   color: var(--bb-rl-text-color);
   border: 1px solid transparent;
   padding: 6px var(--bb-rl-space-200);
-  font-size: 0.875rem;
+  font-size: var(--bb-rl-font-size-sm);
   font-weight: 400;
 }
 
@@ -1448,7 +1448,7 @@
   color: var(--bb-rl-text-white-color);
   border: 1px solid var(--bb-rl-background-brand-primary-color);
   padding: 6px var(--bb-rl-space-200);
-  font-size: 0.875rem;
+  font-size: var(--bb-rl-font-size-sm);
   font-weight: 400;
 }
 
@@ -1675,6 +1675,8 @@
   font-weight: 600;
   line-height: var(--bb-rl-base-line);
   color: var(--bb-rl-text-color);
+  padding-top: 0;
+  padding-bottom: 0;
 }
 
 .bb-rl-left-panel--memprlms .mpcs-sidebar-content .mpcs-section.mpcs-section-lessons {
@@ -1698,4 +1700,18 @@
 
 .bb-rl-left-panel--memprlms .mpcs-sidebar-content .mpcs-section.mpcs-section-lessons.first_section {
   margin-top: var(--bb-rl-space-200);
+}
+
+.bb-rl-left-panel--memprlms .mpcs-sidebar-back-to-course {
+  margin: var(--bb-rl-space-200) calc(var(--bb-rl-space-200) * -1) 0;
+  padding: 0 var(--bb-rl-space-300) 0;
+}
+
+.bb-rl-left-panel--memprlms .mpcs-sidebar-back-to-course a {
+  display: inline-flex;
+  gap: var(--bb-rl-space-50);
+}
+
+.bb-rl-left-panel--memprlms .mpcs-sidebar-back-to-course a i {
+  font-size: 16px;
 }

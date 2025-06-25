@@ -555,13 +555,11 @@ class BB_Readylaunch_Memberpress_Courses_Helper {
 			// Output the back to course button.
 			?>
 			<div class="mpcs-sidebar-back-to-course">
-				<a class="tile" href="<?php echo esc_url( $course_url ); ?>">
-					<div class="tile-icon">
-						<i class="bb-icons-rl-arrow-left"></i>
-					</div>
-					<div class="tile-content">
-						<p class="tile-title m-0"><?php esc_html_e( 'Back to Course', 'buddyboss' ); ?></p>
-					</div>
+				<a class="tile bb-rl-button bb-rl-button--secondaryFill bb-rl-button--small" href="<?php echo esc_url( $course_url ); ?>">
+					<i class="bb-icons-rl-caret-left"></i>
+					<span>
+						<?php esc_html_e( 'Back to Course', 'buddyboss' ); ?>
+					</span>
 				</a>
 			</div>
 			<?php

@@ -2349,7 +2349,7 @@ div.vjs-menu li.vjs-selected .vjs-menu-item-text, div.vjs-menu li:hover .vjs-men
   color: var(--bb-rl-text-white-color);
   border: 1px solid var(--bb-rl-background-brand-primary-color);
   padding: 6px var(--bb-rl-space-200);
-  font-size: 0.875rem;
+  font-size: var(--bb-rl-font-size-sm);
   font-weight: 400;
   margin-left: var(--bb-rl-space-100);
 }
@@ -2462,7 +2462,7 @@ div.vjs-menu li.vjs-selected .vjs-menu-item-text, div.vjs-menu li:hover .vjs-men
   color: var(--bb-rl-text-color);
   border: 1px solid transparent;
   padding: 6px var(--bb-rl-space-200);
-  font-size: 0.875rem;
+  font-size: var(--bb-rl-font-size-sm);
   font-weight: 400;
   margin-right: var(--bb-rl-space-100);
 }
@@ -3654,7 +3654,7 @@ button[data-balloon] {
 
 .bb-rl-button.bb-rl-button--small {
   padding: 6px var(--bb-rl-space-200);
-  font-size: 0.875rem;
+  font-size: var(--bb-rl-font-size-sm);
   font-weight: 400;
 }
 
@@ -11063,7 +11063,7 @@ input.bb-rl-zoom-slider::-moz-range-progress {
   font-weight: 500;
   line-height: var(--bb-rl-base-line-small);
   padding: 6px var(--bb-rl-space-200);
-  font-size: 0.875rem;
+  font-size: var(--bb-rl-font-size-sm);
   font-weight: 400;
 }
 
@@ -11175,7 +11175,7 @@ input.bb-rl-zoom-slider::-moz-range-progress {
   color: var(--bb-rl-text-white-color);
   border: 1px solid var(--bb-rl-background-brand-primary-color);
   padding: 6px var(--bb-rl-space-200);
-  font-size: 0.875rem;
+  font-size: var(--bb-rl-font-size-sm);
   font-weight: 400;
 }
 
@@ -15692,7 +15692,7 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
 
 .bb-rl-modal-move-file .bb-rl-model-footer .bb-rl-button {
   padding: 6px var(--bb-rl-space-200);
-  font-size: 0.875rem;
+  font-size: var(--bb-rl-font-size-sm);
   font-weight: 400;
 }
 
@@ -17666,7 +17666,7 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   color: var(--bb-rl-text-color);
   border: 1px solid var(--bb-rl-border-tertiary-color);
   padding: 6px var(--bb-rl-space-200);
-  font-size: 0.875rem;
+  font-size: var(--bb-rl-font-size-sm);
   font-weight: 400;
 }
 
@@ -17801,7 +17801,7 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   color: var(--bb-rl-text-color);
   border: 1px solid transparent;
   padding: 6px var(--bb-rl-space-200);
-  font-size: 0.875rem;
+  font-size: var(--bb-rl-font-size-sm);
   font-weight: 400;
   font-weight: 500;
   line-height: var(--bb-rl-base-line-small);
@@ -18560,7 +18560,7 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   color: var(--bb-rl-text-color);
   border: 1px solid transparent;
   padding: 6px var(--bb-rl-space-200);
-  font-size: 0.875rem;
+  font-size: var(--bb-rl-font-size-sm);
   font-weight: 400;
 }
 
@@ -18630,7 +18630,7 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   color: var(--bb-rl-text-color);
   border: 1px solid transparent;
   padding: 6px var(--bb-rl-space-200);
-  font-size: 0.875rem;
+  font-size: var(--bb-rl-font-size-sm);
   font-weight: 400;
   margin-top: var(--bb-rl-space-50);
 }
@@ -18961,7 +18961,7 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   color: var(--bb-rl-text-color);
   border: 1px solid transparent;
   padding: 6px var(--bb-rl-space-200);
-  font-size: 0.875rem;
+  font-size: var(--bb-rl-font-size-sm);
   font-weight: 400;
 }
 
@@ -19685,7 +19685,7 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   border-radius: 0;
   border-bottom: 1px solid transparent;
   padding: 6px var(--bb-rl-space-200);
-  font-size: 0.875rem;
+  font-size: var(--bb-rl-font-size-sm);
   font-weight: 400;
   padding-left: var(--bb-rl-space-100);
 }
