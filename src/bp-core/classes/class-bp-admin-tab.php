@@ -365,6 +365,12 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 				$localize_arg['courses_integration']  = $readylaunch->bb_is_sidebar_enabled_for_courses();
 			}
 
+			$localize_arg = apply_filters(
+				'bb_admin_localize_script',
+				$localize_arg,
+				$screen_id,
+			);
+
 			wp_localize_script(
 				'bp-admin',
 				'BP_ADMIN',

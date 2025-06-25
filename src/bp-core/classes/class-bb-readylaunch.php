@@ -228,6 +228,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			add_action( 'wp_enqueue_scripts', array( $this, 'bb_enqueue_scripts' ), 1 );
 			add_action( 'wp_head', array( $this, 'bb_rl_start_buffering' ), 0 );
 			add_action( 'wp_footer', array( $this, 'bb_rl_end_buffering' ), 999 );
+			add_filter( 'bb_admin_localize_script', array( $this, 'bb_rl_admin_localize_script' ), 10, 2 );
 
 			add_action( 'wp_ajax_bb_fetch_header_messages', array( $this, 'bb_fetch_header_messages' ) );
 			add_action( 'wp_ajax_bb_fetch_header_notifications', array( $this, 'bb_fetch_header_notifications' ) );
@@ -2977,6 +2978,39 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			);
 
 			wp_localize_script( 'bb-readylaunch-forums-js', 'bbrlForumsCommonJsData', $common_array );
+		}
+
+		public function bb_rl_admin_localize_script( $localize_arg, $screen_id ) {
+			if ( strpos( $screen_id, 'bb-readylaunch' ) === false ) {
+				return $localize_arg;
+			}
+
+			$component_pages = array();
+			if ( bp_is_active( 'activity' ) ) {
+				$component_pages['activity'] = bp_get_activity_directory_permalink();
+			}
+
+			$component_pages['xprofile'] = esc_url( bp_core_get_user_domain( bp_loggedin_user_id() ) );
+
+			if ( bp_is_active( 'groups' ) ) {
+				$groups = groups_get_groups(
+					array(
+						'user_id'  => bp_loggedin_user_id(),
+						'type'     => 'active',
+						'per_page' => 1,
+					)
+				);
+
+				if ( ! empty( $groups ) && ! empty( $groups['groups'] ) ) {
+					$component_pages['single_group'] = bp_get_group_permalink( $groups['groups'][0] );
+				}
+			}
+
+
+			$localize_arg['component_pages'] = $component_pages;
+
+
+			return $localize_arg;
 		}
 	}
 }

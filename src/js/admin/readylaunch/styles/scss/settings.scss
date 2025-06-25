@@ -376,6 +376,14 @@
 		@include bb-rl-text;
 		margin: 0;
 		color: $bb-rl-text-tertiary-color;
+
+		a {
+			text-decoration: underline;
+
+			&:hover {
+				text-decoration: none;
+			}
+		}
 	}
 
 	@media screen and (max-width: $lg) {
@@ -414,6 +422,16 @@
 
 	.components-radio-control__input[type="radio"]:checked {
 		background: $bb-rl-background-brand-primary-color;
+	}
+
+	p {
+		a {
+			text-decoration: underline;
+
+			&:hover {
+				text-decoration: none;
+			}
+		}
 	}
 }
 
