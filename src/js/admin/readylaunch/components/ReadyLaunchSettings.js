@@ -1,15 +1,16 @@
-import { useState, useEffect, useCallback, useRef } from '@wordpress/element';
+import { useState, useEffect, useRef } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { ToggleControl, TextControl, Spinner, Notice, ColorPicker, RadioControl, Button, SelectControl, ColorIndicator, Popover } from '@wordpress/components';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { Sidebar } from './Sidebar';
-import { fetchSettings, saveSettings, debounce, fetchMenus, fetchHelpContent, clearHelpContentCache } from '../../utils/api';
+import { fetchSettings, saveSettings, debounce, fetchMenus, fetchHelpContent, clearHelpContentCache, fetchHelpCategories } from '../../utils/api';
 import { Accordion } from '../../components/Accordion';
 import { LinkItem } from '../../components/LinkItem';
 import { LinkModal } from '../../components/LinkModal';
 import { HelpIcon } from '../../components/HelpIcon';
 import { HelpSliderModal } from '../../components/HelpSliderModal';
 import { createInterpolateElement } from '@wordpress/element';
+import { Toast } from '../../components/Toast';
 
 // Initial structure for base menu items that are always included
 const baseMenuItems = [
@@ -111,8 +112,7 @@ export const ReadyLaunchSettings = () => {
 	const [ activeTab, setActiveTab ] = useState( 'activation' );
 	const [ settings, setSettings ] = useState( {} );
 	const [ isLoading, setIsLoading ] = useState( true );
-	const [ isSaving, setIsSaving ] = useState( false );
-	const [ notification, setNotification ] = useState( null );
+	const [ toast, setToast ] = useState(null);
 	const [ initialLoad, setInitialLoad ] = useState(true);
 	const [ hasUserMadeChanges, setHasUserMadeChanges ] = useState(false);
 	const [ changedFields, setChangedFields ] = useState({});
@@ -172,94 +172,87 @@ export const ReadyLaunchSettings = () => {
 		fetchMenus().then(setMenus);
 	}, []);
 
-	// Initialize the debounced save function
 	useEffect(() => {
-		debouncedSaveRef.current = debounce((newSettings) => {
-			if (initialLoad || Object.keys(changedFields).length === 0) {
+		debouncedSaveRef.current = debounce((fieldsToSave) => {
+			if (Object.keys(fieldsToSave).length === 0) {
 				return;
 			}
 
-			setIsSaving(true);
-			saveSettings(changedFields)
+			saveSettings(fieldsToSave)
 				.then((data) => {
 					if (data) {
-						setNotification({
+						setToast({
 							status: 'success',
 							message: __('Settings saved.', 'buddyboss'),
 						});
 						setChangedFields({});
 					} else {
-						setNotification({
+						setToast({
 							status: 'error',
-							message: __('Error saving settings.', 'buddyboss'),
+							message: __('Something went wrong. Please try again', 'buddyboss'),
 						});
 					}
 				})
 				.catch(() => {
-					setNotification({
+					setToast({
 						status: 'error',
-						message: __('Error saving settings.', 'buddyboss'),
+						message: __('Something went wrong. Please try again', 'buddyboss'),
 					});
-				})
-				.finally(() => {
-					setIsSaving(false);
-					setTimeout(() => setNotification(null), 3000);
 				});
 		}, 1000);
 
-		// Initialize the debounced text change function
-		debouncedTextChangeRef.current = debounce((name, value, currentSettings) => {
-			if (currentSettings[name] === value) {
-				return;
-			}
-			setChangedFields(prev => ({
-				...prev,
-				[name]: value
-			}));
-			setHasUserMadeChanges(true);
-		}, 1000);
-
-		// Cleanup function
 		return () => {
 			if (debouncedSaveRef.current?.cancel) {
 				debouncedSaveRef.current.cancel();
 			}
-			if (debouncedTextChangeRef.current?.cancel) {
-				debouncedTextChangeRef.current.cancel();
-			}
 		};
-	}, [initialLoad, changedFields]); // Dependencies for debouncedSave
+	}, []);
+
+	useEffect(() => {
+		if (!initialLoad && Object.keys(changedFields).length > 0) {
+			debouncedSaveRef.current(changedFields);
+		}
+	}, [changedFields, initialLoad]);
+
+	useEffect(() => {
+		if (!toast) return;
+
+		if (toast.status === 'success') {
+			const timer = setTimeout(() => {
+				setToast(null);
+			}, 3000);
+			return () => clearTimeout(timer);
+		}
+	}, [toast]);
 
 	// Generic handler for simple value changes
 	const handleSettingChange = (name) => (value) => {
+		setToast({ status: 'saving', message: __('Saving changes...', 'buddyboss') });
 		setSettings(prevSettings => ({
 			...prevSettings,
 			[name]: value
 		}));
-		setChangedFields(prev => ({
-			...prev,
-			[name]: value
-		}));
+		setChangedFields(prev => ({ ...prev, [name]: value }));
 		setHasUserMadeChanges(true);
 	};
 
 	// Specific handler for text input changes
 	const handleTextChange = (name) => (value) => {
 		// Update visual state immediately
+		setToast({ status: 'saving', message: __('Saving changes...', 'buddyboss') });
 		setSettings(prevSettings => ({
 			...prevSettings,
 			[name]: value
 		}));
 
-		// Use the debounced function from ref
-		if (debouncedTextChangeRef.current) {
-			debouncedTextChangeRef.current(name, value, settings);
-		}
+		setChangedFields(prev => ({ ...prev, [name]: value }));
+		setHasUserMadeChanges(true);
 	};
 
 	// Handler for nested settings (for pages and sidebars)
 	const handleNestedSettingChange = (category, name) => (value) => {
 		setHasUserMadeChanges(true);
+		setToast({ status: 'saving', message: __('Saving changes...', 'buddyboss') });
 
 		if (category === 'bb_rl_side_menu') {
 			setSideMenuItems(prevItems => {
@@ -281,10 +274,7 @@ export const ReadyLaunchSettings = () => {
 					...prev,
 					bb_rl_side_menu
 				}));
-				setChangedFields(prev => ({
-					...prev,
-					bb_rl_side_menu
-				}));
+				setChangedFields(prev => ({ ...prev, bb_rl_side_menu }));
 
 				return updatedItems;
 			});
@@ -295,11 +285,7 @@ export const ReadyLaunchSettings = () => {
 					...prevSettings[category],
 					[name]: value
 				};
-				// Use the updatedCategory for both settings and changedFields
-				setChangedFields(prev => ({
-					...prev,
-					[category]: updatedCategory
-				}));
+				setChangedFields(prev => ({ ...prev, [category]: updatedCategory }));
 				return {
 					...prevSettings,
 					[category]: updatedCategory
@@ -307,13 +293,6 @@ export const ReadyLaunchSettings = () => {
 			});
 		}
 	};
-
-	// Effect to trigger save when changedFields updates
-	useEffect(() => {
-		if (!initialLoad && Object.keys(changedFields).length > 0 && debouncedSaveRef.current) {
-			debouncedSaveRef.current(settings);
-		}
-	}, [changedFields, initialLoad, settings]);
 
 	// Toggle section expansion
 	const toggleSection = (section) => {
@@ -336,25 +315,16 @@ export const ReadyLaunchSettings = () => {
 
 	const handleSaveLink = (linkData) => {
 		setHasUserMadeChanges(true); // Set flag when user makes a change
+		setToast({ status: 'saving', message: __('Saving changes...', 'buddyboss') });
 
+		let updatedLinks;
 		if (currentEditingLink) {
 			// Update existing link
-			const updatedLinks = settings.bb_rl_custom_links.map(link =>
+			updatedLinks = settings.bb_rl_custom_links.map(link =>
 				link.id === currentEditingLink.id
 					? { ...link, title: linkData.title, url: linkData.url }
 					: link
 			);
-
-			// Update both settings and changedFields
-			setSettings(prevSettings => ({
-				...prevSettings,
-				bb_rl_custom_links: updatedLinks
-			}));
-
-			setChangedFields(prev => ({
-				...prev,
-				bb_rl_custom_links: updatedLinks
-			}));
 		} else {
 			// Add new link
 			const newLink = {
@@ -362,26 +332,22 @@ export const ReadyLaunchSettings = () => {
 				title: linkData.title,
 				url: linkData.url
 			};
-
-			const updatedLinks = [...(settings.bb_rl_custom_links || []), newLink];
-
-			// Update both settings and changedFields
-			setSettings(prevSettings => ({
-				...prevSettings,
-				bb_rl_custom_links: updatedLinks
-			}));
-
-			setChangedFields(prev => ({
-				...prev,
-				bb_rl_custom_links: updatedLinks
-			}));
+			updatedLinks = [...(settings.bb_rl_custom_links || []), newLink];
 		}
+
+		// Update both settings and changedFields
+		setSettings(prevSettings => ({
+			...prevSettings,
+			bb_rl_custom_links: updatedLinks
+		}));
+		setChangedFields(prev => ({ ...prev, bb_rl_custom_links: updatedLinks }));
 
 		setIsLinkModalOpen(false);
 	};
 
 	const handleDeleteLink = (id) => {
 		setHasUserMadeChanges(true); // Set flag when user makes a change
+		setToast({ status: 'saving', message: __('Saving changes...', 'buddyboss') });
 
 		const updatedLinks = settings.bb_rl_custom_links ? settings.bb_rl_custom_links.filter(link => link.id !== id) : [];
 
@@ -390,27 +356,23 @@ export const ReadyLaunchSettings = () => {
 			// Ensure bb_rl_custom_links exists before filtering
 			bb_rl_custom_links: updatedLinks
 		}));
-
-		setChangedFields(prev => ({
-			...prev,
-			bb_rl_custom_links: updatedLinks
-		}));
+		setChangedFields(prev => ({ ...prev, bb_rl_custom_links: updatedLinks }));
 	};
 
 	// Specific handler for image uploads using WordPress media library
 	const handleImageUpload = (name) => (imageData) => {
 		setHasUserMadeChanges(true); // Set flag when user makes a change
+		setToast({ status: 'saving', message: __('Saving changes...', 'buddyboss') });
+
+		// If imageData is null (i.e., Remove button clicked), set to []
+		const valueToSet = imageData === null ? [] : imageData;
 
 		// Update both settings and changedFields
 		setSettings(prevSettings => ({
 			...prevSettings,
-			[name]: imageData
+			[name]: valueToSet
 		}));
-
-		setChangedFields(prev => ({
-			...prev,
-			[name]: imageData
-		}));
+		setChangedFields(prev => ({ ...prev, [name]: valueToSet }));
 	};
 
 	// Helper function to open the WordPress media library
@@ -578,6 +540,7 @@ export const ReadyLaunchSettings = () => {
 		}
 
 		setHasUserMadeChanges(true);
+		setToast({ status: 'saving', message: __('Saving changes...', 'buddyboss') });
 
 		// Reorder Side Menu Items
 		if (source.droppableId === 'sideMenuItems') {
@@ -606,10 +569,7 @@ export const ReadyLaunchSettings = () => {
 				...prev,
 				bb_rl_side_menu
 			}));
-			setChangedFields(prev => ({
-				...prev,
-				bb_rl_side_menu
-			}));
+			setChangedFields(prev => ({ ...prev, bb_rl_side_menu }));
 		}
 
 		// Reorder Custom Links
@@ -623,11 +583,7 @@ export const ReadyLaunchSettings = () => {
 				...prevSettings,
 				bb_rl_custom_links: items
 			}));
-
-			setChangedFields(prev => ({
-				...prev,
-				bb_rl_custom_links: items
-			}));
+			setChangedFields(prev => ({ ...prev, bb_rl_custom_links: items }));
 		}
 	};
 
@@ -668,15 +624,6 @@ export const ReadyLaunchSettings = () => {
 		</Accordion>
 	);
 
-	useEffect(() => {
-		const helpBtn = document.querySelector('.bb-rl-header-actions-button[data-help-content-id]');
-		if (helpBtn) {
-			const onClick = () => handleHelpClick(helpBtn.getAttribute('data-help-content-id'));
-			helpBtn.addEventListener('click', onClick);
-			return () => helpBtn.removeEventListener('click', onClick);
-		}
-	}, [handleHelpClick]);
-
 	const renderContent = () => {
 		if ( isLoading ) {
 			return (
@@ -714,14 +661,7 @@ export const ReadyLaunchSettings = () => {
 							<div className="settings-toggle-container">
 								<div className="toggle-content">
 									<h3>{__('Enable ReadyLaunch', 'buddyboss')}</h3>
-									<p>
-										{createInterpolateElement(
-											__("Making <a>ReadyLaunch</a> your default style will override your WordPress Theme.", "buddyboss"),
-											{
-												a: <a href="https://www.buddyboss.com/resources/readylaunch/" target="_blank" rel="noopener noreferrer" />
-											}
-										)}
-									</p>
+									<p>{__('Turn on ReadyLaunch to override your theme styles on BuddyBoss pages.', 'buddyboss')}</p>
 								</div>
 								<ToggleControl
 									checked={settings.bb_rl_enabled}
@@ -739,7 +679,7 @@ export const ReadyLaunchSettings = () => {
 								<div className="settings-form-field">
 									<div className="field-label">
 										<label>{__('Site Name', 'buddyboss')}</label>
-										<p>{__('Appears in the browser title, search engine results, and possibly in the site header.', 'buddyboss')}</p>
+										<p>{__('Displays in the browser title, search engine results and site header.', 'buddyboss')}</p>
 									</div>
 									<div className="field-input">
 										<TextControl
@@ -755,7 +695,7 @@ export const ReadyLaunchSettings = () => {
 
 						{ settings.bb_rl_enabled && ( <div className="settings-card">
 							<div className="settings-header">
-								<h3>{__('Backend Settings', 'buddyboss')}</h3>
+								<h3>{__('Platform Settings', 'buddyboss')}</h3>
 								<HelpIcon onClick={() => handleHelpClick('456175')} /> {/* @todo: update when release. */}
 							</div>
 							<div className="settings-list-items-block">
@@ -836,7 +776,7 @@ export const ReadyLaunchSettings = () => {
 				return (
 					<div className="settings-content">
 						<h1>{__('Style Settings', 'buddyboss')}</h1>
-						<p className="settings-description">{__('Customize your community\'s look with mode preferences, logos, and theme colors.', 'buddyboss')}</p>
+						<p className="settings-description">{__('Customize the appearance of your community to match your brand colors and logo.', 'buddyboss')}</p>
 
 						<div className="settings-card">
 							<div className="settings-header">
@@ -848,7 +788,7 @@ export const ReadyLaunchSettings = () => {
 							<div className="settings-form-field with-toggle">
 								<div className="field-label">
 									<label>{__('Appearance', 'buddyboss')}</label>
-									<p>{__('Enable or disable dark mode for your community, allowing users to choose or set it for them.', 'buddyboss')}</p>
+									<p>{__('Choose whether you wish to support light or dark mode.', 'buddyboss')}</p>
 								</div>
 								<div className="field-input">
 									<div className="sub-field-input sub-field-input-inline">
@@ -874,7 +814,7 @@ export const ReadyLaunchSettings = () => {
 							<div className="settings-form-field">
 								<div className="field-label">
 									<label>{__('Logo', 'buddyboss')}</label>
-									<p>{__('Upload separate logos optimized for light and dark themes to ensure clear visibility.', 'buddyboss')}</p>
+									<p>{__('Upload your logo which appears along the top site header.', 'buddyboss')}</p>
 								</div>
 								<div className="field-input logo-uploaders">
 									{'dark' !== settings.bb_rl_theme_mode && (
@@ -902,7 +842,7 @@ export const ReadyLaunchSettings = () => {
 							<div className="settings-form-field">
 								<div className="field-label">
 									<label>{__('Theme Color', 'buddyboss')}</label>
-									<p>{__('Set the primary color scheme for light and dark modes, used for buttons, links, and interactive elements.', 'buddyboss')}</p>
+									<p>{__('Select the primary color of your community. This is used across buttons, links and secondary elements.', 'buddyboss')}</p>
 								</div>
 								<div className="field-input color-palettes bb-rl-color-palettes">
 									{'dark' !== settings.bb_rl_theme_mode && (
@@ -945,7 +885,7 @@ export const ReadyLaunchSettings = () => {
 								<div className="settings-form-field with-multiple-toggles">
 									<div className="field-label">
 										<label>{__('Enable Pages', 'buddyboss')}</label>
-										<p>{__('Enable pages that should have styles from ReadyLaunch.', 'buddyboss')}</p>
+										<p>{__('Apply ReadyLaunch styles to the following pages', 'buddyboss')}</p>
 									</div>
 									{window?.BP_ADMIN?.register_integration === '1' || window?.BP_ADMIN?.courses_integration === '1' ? (
 										<div className="field-toggles">
@@ -999,7 +939,12 @@ export const ReadyLaunchSettings = () => {
 									<div className="settings-form-field with-multiple-toggles">
 										<div className="field-label">
 											<label>{__('Activity Feed', 'buddyboss')}</label>
-											<p>{__('Enable or disable widgets to appear on the activity feed.', 'buddyboss')}</p>
+											<p>{createInterpolateElement(
+												__('Enable or disable widgets to appear on the <a>activity feed</a>.', 'buddyboss'),
+												{
+													a: <a href={window?.BP_ADMIN?.component_pages?.activity || ''} target="_blank" />
+												}
+											)}</p>
 										</div>
 										<div className="field-toggles">
 											<div className="toggle-item">
@@ -1039,7 +984,14 @@ export const ReadyLaunchSettings = () => {
 								<div className="settings-form-field with-multiple-toggles">
 									<div className="field-label">
 										<label>{__('Member Profile', 'buddyboss')}</label>
-										<p>{__('Enable or disable widgets to appear on the member profile.', 'buddyboss')}</p>
+										<p>
+											{createInterpolateElement(
+												__('Enable or disable widgets to appear on the <a>member profile</a>.', 'buddyboss'),
+												{
+													a: <a href={window?.BP_ADMIN?.component_pages?.xprofile || ''} target="_blank" />
+												}
+											)}
+										</p>
 									</div>
 									<div className="field-toggles">
 										<div className="toggle-item">
@@ -1088,7 +1040,14 @@ export const ReadyLaunchSettings = () => {
 									<div className="settings-form-field with-multiple-toggles">
 									<div className="field-label">
 										<label>{__('Group', 'buddyboss')}</label>
-										<p>{__('Enable or disable widgets to appear on the group single page.', 'buddyboss')}</p>
+										<p>
+											{createInterpolateElement(
+												__('Enable or disable widgets to appear on the <a>group single</a> page.', 'buddyboss'),
+												{
+													a: <a href={window?.BP_ADMIN?.component_pages?.single_group || ''} target="_blank" />
+												}
+											)}
+										</p>
 									</div>
 									<div className="field-toggles">
 										<div className="toggle-item">
@@ -1131,7 +1090,7 @@ export const ReadyLaunchSettings = () => {
 									<div className="settings-form-field menu-header-field">
 										<div className="field-label">
 											<label>{__('Header', 'buddyboss')}</label>
-											<p>{__('Select a header menu for ReadyLaunch.', 'buddyboss')}</p>
+											<p>{__('Choose a menu which displays in the top navigation bar', 'buddyboss')}</p>
 										</div>
 										<div className="field-input">
 											<SelectControl
@@ -1148,9 +1107,9 @@ export const ReadyLaunchSettings = () => {
 											/>
 											<p className="field-note">
 												{createInterpolateElement(
-													__('Update your header menu from the <a>Menus</a> tab, where you\'ll find a dedicated ReadyLaunch header menu location.', 'buddyboss'),
+													__('Update your header menu from Appearance > <a>Menus</a>. There you will find a Display Option of ReadyLaunch', 'buddyboss'),
 													{
-														a: <a href="#menus" />
+														a: <a href="/wp-admin/nav-menus.php" />
 													}
 												)}
 											</p>
@@ -1161,7 +1120,7 @@ export const ReadyLaunchSettings = () => {
 									<div className="settings-form-field with-icon-toggles">
 										<div className="field-label">
 											<label>{__('Side', 'buddyboss')}</label>
-											<p>{__('Enable the options to appear in the left-side menu.', 'buddyboss')}</p> {/* Added note */}
+											<p>{__('Enable and re-order menu items shown on the left sidebar', 'buddyboss')}</p> {/* Added note */}
 										</div>
 										<Droppable droppableId="sideMenuItems">
 											{(provided) => (
@@ -1200,7 +1159,7 @@ export const ReadyLaunchSettings = () => {
 									<div className="settings-form-field custom-links-field">
 										<div className="field-label">
 											<label>{__('Link', 'buddyboss')}</label>
-											<p>{__('Add links to the link menu.', 'buddyboss')}</p> {/* Added note */}
+											<p>{__('Add and re-order custom links which are shown on the left sidebar', 'buddyboss')}</p> {/* Added note */}
 										</div>
 										<Droppable droppableId="bb_rl_custom_links">
 											{(provided) => (
@@ -1260,29 +1219,102 @@ export const ReadyLaunchSettings = () => {
 		}
 	};
 
+	useEffect(() => {
+		const helpButton = document.querySelector('.bb-rl-header-actions-button');
+		const helpOverlay = document.getElementById('bb-rl-help-overlay');
+		const closeButton = document.getElementById('bb-rl-help-overlay-close');
+		const accordionContainer = document.querySelector('.bb-rl-help-accordion');
+
+		const renderAccordion = (categories) => {
+			if (!accordionContainer) return;
+			accordionContainer.innerHTML = ''; // Clear existing content
+			categories.forEach(category => {
+				const item = document.createElement('div');
+				item.className = 'bb-rl-help-accordion-item';
+
+				const link = document.createElement('a');
+				link.href = category.link;
+				link.target = '_blank';
+				link.rel = 'noopener noreferrer';
+				link.className = 'bb-rl-help-accordion-header';
+				link.innerHTML = `
+					<span><i class="bb-icons-rl-folder"></i> ${category.name}</span>
+					<i class="bb-icons-rl-caret-double-right"></i>
+				`;
+
+				item.appendChild(link);
+				accordionContainer.appendChild(item);
+			});
+		};
+
+		const loadHelpCategories = async () => {
+			if (!helpButton || !accordionContainer) {
+				return;
+			}
+			const parentId = helpButton.getAttribute('data-help-cat-id');
+
+			try {
+				accordionContainer.innerHTML = `<div class="bb-rl-spinner-wrapper"><span class="spinner is-active"></span></div>`;
+				const categories = await fetchHelpCategories(parentId);
+				renderAccordion(categories);
+			} catch (error) {
+				accordionContainer.innerHTML = `<p>${__('Error loading help content.', 'buddyboss')}</p>`;
+				console.error('Error fetching help categories:', error);
+			}
+		};
+
+		loadHelpCategories();
+
+		const openOverlay = (e) => {
+			e.preventDefault();
+			if (helpOverlay) {
+				helpOverlay.style.display = 'flex';
+				document.body.style.overflow = 'hidden';
+			}
+		};
+
+		const closeOverlay = () => {
+			if (helpOverlay) {
+				helpOverlay.style.display = 'none';
+				document.body.style.overflow = '';
+			}
+		};
+
+		if (helpButton) {
+			helpButton.addEventListener('click', openOverlay);
+		}
+
+		if (closeButton) {
+			closeButton.addEventListener('click', closeOverlay);
+		}
+
+		return () => {
+			if (helpButton) {
+				helpButton.removeEventListener('click', openOverlay);
+			}
+			if (closeButton) {
+				closeButton.removeEventListener('click', closeOverlay);
+			}
+		};
+	}, []);
+
 	return (
 		<>
 			<div className="bb-readylaunch-settings-container">
 				<Sidebar activeTab={activeTab} setActiveTab={setActiveTab}/>
 				<div className="bb-readylaunch-settings-content">
-					{notification && (
-						<Notice
-							status={notification.status}
-							isDismissible={false}
-							className="settings-notice"
-						>
-							{notification.message}
-						</Notice>
-					)}
-
-					{isSaving && (
-						<div className="settings-saving-indicator settings-notice components-notice">
-							<Spinner />
-							<span>{__( 'Saving...', 'buddyboss' )}</span>
-						</div>
-					)}
 					{renderContent()}
 				</div>
+			</div>
+
+			<div className="bb-rl-toast-container">
+				{toast && (
+					<Toast
+						status={toast.status}
+						message={toast.message}
+						onDismiss={() => setToast(null)}
+					/>
+				)}
 			</div>
 
 			<HelpSliderModal

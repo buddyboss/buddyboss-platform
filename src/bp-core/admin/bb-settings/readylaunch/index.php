@@ -26,7 +26,7 @@ function bb_readylaunch_settings_page_html() {
 				<img alt="" class="bb-branding-logo" src="<?php echo esc_url( buddypress()->plugin_url . 'bp-core/images/admin/BBLogo.png' ); ?>" />
 			</div>
 			<div class="bb-rl-header-actions">
-				<button class="bb-rl-header-actions-button" data-help-content-id="456175"> <!-- @todo: update when release. -->
+				<button class="bb-rl-header-actions-button" data-help-cat-id="5811">
 					<i class="bb-icons-rl-book-open"></i>
 				</button>
 			</div>
@@ -38,6 +38,35 @@ function bb_readylaunch_settings_page_html() {
 					esc_html__( 'Loading…', 'buddyboss' )
 				);
 			?>
+		</div>
+	</div>
+	<div id="bb-rl-help-overlay" class="bb-rl-help-overlay" style="display: none;">
+		<div class="bb-rl-help-overlay-header">
+			<img alt="<?php echo esc_attr__( 'BuddyBoss', 'buddyboss' ); ?>" class="bb-branding-logo" src="<?php echo esc_url( buddypress()->plugin_url . 'bp-core/images/admin/BBLogo.png' ); ?>" />
+			<button id="bb-rl-help-overlay-close" class="bb-rl-help-overlay-close">
+				<i class="bb-icons-rl-x-circle"></i>
+			</button>
+		</div>
+		<div class="bb-rl-help-overlay-content-wrap">
+			<div class="bb-rl-help-overlay-content">
+				<div class="bb-rl-help-accordion">
+					<!-- Accordion items will be loaded here -->
+				</div>
+				<div class="bb-rl-help-cards">
+					<div class="bb-rl-help-card">
+						<i class="bb-icons-rl-file-text"></i>
+						<h3><?php echo esc_html__( 'View Documentation', 'buddyboss' ); ?></h3>
+						<p><?php echo esc_html__( 'Browse documentation, reference material, and tutorials for BuddyBoss.', 'buddyboss' ); ?></p>
+						<a href="https://www.buddyboss.com/docs/" target="_blank" rel="noopener noreferrer"  class="button"><?php echo esc_html__( 'View All Documentation', 'buddyboss' ); ?></a>
+					</div>
+					<div class="bb-rl-help-card">
+						<i class="bb-icons-rl-lifebuoy"></i>
+						<h3><?php echo esc_html__( 'Get Support', 'buddyboss' ); ?></h3>
+						<p><?php echo esc_html__( 'Submit a ticket and our world class support team will be in touch soon.', 'buddyboss' ); ?></p>
+						<a href="https://www.buddyboss.com/contact/" target="_blank" rel="noopener noreferrer" class="button button-primary"><?php echo esc_html__( 'Get Support', 'buddyboss' ); ?></a>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 	<?php
@@ -59,10 +88,17 @@ function bb_readylaunch_register_enqueue_style_script() {
 
 	$asset = include $asset_file;
 
+	$dependencies = array_merge(
+		$asset['dependencies'],
+		array(
+			'bp-admin',
+		)
+	);
+
 	wp_register_script(
 		'bb-readylaunch-admin-script',
 		plugins_url( 'build/index.js', __FILE__ ),
-		$asset['dependencies'],
+		$dependencies,
 		$asset['version'],
 		array(
 			'in_footer' => true,
@@ -94,6 +130,10 @@ add_action( 'admin_enqueue_scripts', 'bb_readylaunch_register_enqueue_style_scri
  * @param string $admin_page The admin page.
  */
 function bb_readylaunch_settings_page_enqueue_style_script( $admin_page ) {
+	if ( strpos( $admin_page, 'bb-readylaunch' ) === false ) {
+		return;
+	}
+
 	$asset_file = plugin_dir_path( __FILE__ ) . 'build/index.asset.php';
 
 	if ( ! file_exists( $asset_file ) ) {
@@ -116,6 +156,14 @@ function bb_readylaunch_settings_page_enqueue_style_script( $admin_page ) {
 
 	// Enqueue the BB Icons CSS.
 	wp_enqueue_style( 'bb-icons-rl-css' );
+
+	wp_enqueue_script(
+		'bb-readylaunch-help-overlay-script',
+		plugins_url( 'build/help-overlay.js', __FILE__ ),
+		array(),
+		$asset['version'],
+		true
+	);
 }
 
 add_action( 'bp_admin_enqueue_scripts', 'bb_readylaunch_settings_page_enqueue_style_script' );

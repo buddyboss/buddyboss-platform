@@ -4860,6 +4860,12 @@ table.users {
 	font-size: 11px;
 	text-align: center;
 
+	&.color-green {
+		background-color: #5f9a22;
+		padding-left: 6px;
+		padding-right: 6px;
+	}
+
 	@media screen and (max-width: 760px) {
 		margin-top: 2px;
 	}

@@ -19,7 +19,7 @@ defined( 'ABSPATH' ) || exit;
 <header class="bb-rl-login-header">
 	<div class="bb-rl-login-header-logo">
 		<?php
-		$bb_rl_light_logo = bp_get_option( 'bb_rl_light_logo', '' );
+		$bb_rl_light_logo = bp_get_option( 'bb_rl_light_logo', array() );
 		if ( ! empty( $bb_rl_light_logo ) ) {
 			?>
 			<img src="<?php echo esc_url( $bb_rl_light_logo['url'] ); ?>" alt="<?php echo esc_attr( $bb_rl_light_logo['title'] ); ?>">

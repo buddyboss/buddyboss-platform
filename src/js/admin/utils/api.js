@@ -2,25 +2,37 @@ import apiFetch from '@wordpress/api-fetch';
 
 // Store the initial settings for comparison
 let initialSettings = null;
-
-// Static cache for help content
-const helpContentCache = new Map();
-
-// Cache duration in milliseconds (e.g., 1 hour)
-const CACHE_DURATION = 60 * 60 * 1000;
+const CACHE_DURATION_DAYS = 3;
+const CACHE_DURATION_IN_MILLIS = CACHE_DURATION_DAYS * 24 * 60 * 60 * 1000;
 
 /**
- * Check if cached content is still valid
- * 
- * @param {Object} cachedData - The cached data object
- * @returns {boolean} Whether the cache is still valid
+ * Retrieves an item from localStorage cache if it's not expired.
+ * @param {string} cacheKey - The key for the cache item.
+ * @returns {any|null} The cached data or null if not found or expired.
  */
-const isCacheValid = (cachedData) => {
-    if (!cachedData || !cachedData.timestamp) {
-        return false;
-    }
-    const now = Date.now();
-    return (now - cachedData.timestamp) < CACHE_DURATION;
+const getFromCache = (cacheKey) => {
+	const cachedData = localStorage.getItem(cacheKey);
+	if (cachedData) {
+		const { timestamp, data } = JSON.parse(cachedData);
+		const now = new Date().getTime();
+		if (now - timestamp < CACHE_DURATION_IN_MILLIS) {
+			return data;
+		}
+	}
+	return null;
+};
+
+/**
+ * Saves an item to the localStorage cache with a timestamp.
+ * @param {string} cacheKey - The key for the cache item.
+ * @param {any} data - The data to cache.
+ */
+const saveToCache = (cacheKey, data) => {
+	const cacheValue = {
+		timestamp: new Date().getTime(),
+		data: data,
+	};
+	localStorage.setItem(cacheKey, JSON.stringify(cacheValue));
 };
 
 /**
@@ -151,54 +163,69 @@ export const fetchMenus = async () => {
  * @returns {Promise} Promise that resolves to help content object.
  */
 export const fetchHelpContent = async (contentId) => {
-    if (!contentId) {
-        throw new Error('Content ID is required');
-    }
+	if (!contentId) {
+		throw new Error('Content ID is required');
+	}
 
-    // Check cache first
-    const cachedContent = helpContentCache.get(contentId);
-    if (cachedContent && isCacheValid(cachedContent)) {
-        console.log('Returning cached help content for ID:', contentId);
-        return cachedContent.data;
-    }
+	const cacheKey = `bb_help_content_${contentId}`;
+	const cached = getFromCache(cacheKey);
+	if (cached) {
+		return cached;
+	}
 
-    try {
-        const response = await fetch(`https://buddyboss.com/wp-json/wp/v2/ht-kb/${contentId}`);
-        if (!response.ok) {
-            throw new Error('Failed to fetch help content');
-        }
-        const data = await response.json();
-        
-        // Prepare content object
-        const contentObject = {
-            title: data.title.rendered,
-            content: data.content.rendered,
-            videoId: data.acf?.video_id || null,
-            imageUrl: data.acf?.featured_image || null
-        };
+	try {
+		const response = await fetch(`https://buddyboss.com/wp-json/wp/v2/ht-kb/${contentId}`);
+		if (!response.ok) {
+			throw new Error('Failed to fetch help content');
+		}
+		const data = await response.json();
 
-        // Cache the content with timestamp
-        helpContentCache.set(contentId, {
-            data: contentObject,
-            timestamp: Date.now()
-        });
+		// Prepare content object
+		const contentObject = {
+			title: data.title.rendered,
+			content: data.content.rendered,
+			videoId: data.acf?.video_id || null,
+			imageUrl: data.acf?.featured_image || null
+		};
 
-        return contentObject;
-    } catch (error) {
-        console.error('Error fetching help content:', error);
-        throw error;
-    }
+		saveToCache(cacheKey, contentObject);
+		return contentObject;
+	} catch (error) {
+		console.error('Error fetching help content:', error);
+		throw error;
+	}
 };
 
 /**
- * Clear the help content cache for a specific ID or all cache if no ID provided
- * 
- * @param {string} [contentId] - Optional ID of the content to clear from cache
+ * Fetch help categories from the BuddyBoss knowledge base API.
+ * Implements localStorage caching to avoid unnecessary API calls.
+ *
+ * @param {string} parentId - The parent category ID to fetch children for.
+ * @returns {Promise} Promise that resolves to an array of category objects.
  */
-export const clearHelpContentCache = (contentId) => {
-    if (contentId) {
-        helpContentCache.delete(contentId);
-    } else {
-        helpContentCache.clear();
-    }
+export const fetchHelpCategories = async (parentId = null) => {
+	const cacheKey = `bb_rl_help_categories_${parentId || 'root'}`;
+	const cached = getFromCache(cacheKey);
+	if (cached) {
+		return cached;
+	}
+
+	let apiUrl = 'https://www.buddyboss.com/wp-json/wp/v2/ht-kb-category?orderby=term_order&per_page=99';
+	if (parentId) {
+		apiUrl += `&parent=${parentId}`;
+	}
+
+	try {
+		const response = await fetch(apiUrl);
+		if (!response.ok) {
+			throw new Error('Failed to fetch help categories');
+		}
+		const categories = await response.json();
+
+		saveToCache(cacheKey, categories);
+		return categories;
+	} catch (error) {
+		console.error('Error fetching help categories:', error);
+		throw error;
+	}
 };

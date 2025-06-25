@@ -542,7 +542,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 				sprintf(
 					/* translators: New Tag */
 					__( 'ReadyLaunch %s', 'buddyboss' ),
-					'<span class="bb-rl-nav-tag">' . esc_html__( 'New', 'buddyboss' ) . '</span>'
+					'<span class="bb-rl-nav-tag color-green">' . esc_html__( 'BETA', 'buddyboss' ) . '</span>'
 				),
 				$this->capability,
 				'bb-readylaunch',
