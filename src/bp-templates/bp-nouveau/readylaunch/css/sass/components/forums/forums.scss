@@ -10,7 +10,7 @@
 		.select2-container .bb-rl-select2-dropdown {
 			margin-left: -54px;
 
-			.select2-results__option[aria-selected="true"]{
+			.select2-results__option[aria-selected="true"] {
 				color: var(--bb-rl-text-color);
 			}
 		}
@@ -43,6 +43,7 @@
 		padding: var(--bb-rl-space-200) var(--bb-rl-space-200) var(--bb-rl-space-300);
 
 		h3 {
+
 			@include bb-rl-base-heading;
 			margin-bottom: var(--bb-rl-space-100);
 
@@ -85,12 +86,12 @@
 	}
 
 	.bb-rl-forum-meta-item + .bb-rl-forum-meta-item:before {
-		content: '•';
+		content: "•";
 		margin: 0 6px;
 		color: var(--bb-rl-background-tertiary-color);
 	}
 
-	a  {
+	a {
 		color: var(--bb-rl-text-tertiary-color);
 	}
 }
@@ -351,7 +352,7 @@
 				border-radius: 0 0 var(--bb-rl-radius-lg) var(--bb-rl-radius-lg);
 				border: 0;
 			}
-			
+
 		}
 	}
 }
@@ -447,14 +448,14 @@
 		gap: var(--bb-rl-space-100);
 
 		.bb-rl-activity-video-elem {
-	
+
 			&.act-grid-1-1 {
 				flex: 0 0 100%;
 				max-width: 100%;
 				margin-bottom: 0;
 				padding-right: var(--bb-rl-space-100);
 			}
-	
+
 			&.act-grid-1-2 {
 				flex: 0 0 calc(50% - var(--bb-rl-space-100));
 				max-width: calc(50% - var(--bb-rl-space-100));
@@ -499,7 +500,7 @@
 				display: block;
 				padding-top: 65%;
 				position: relative;
-	
+
 				img {
 					position: absolute;
 					top: 0;
@@ -521,21 +522,21 @@
 			-webkit-box-flex: 0;
 			-ms-flex: 0 0 50%;
 			flex: 0 0 50%;
-			max-width: 50%
+			max-width: 50%;
 		}
 
-		.act-grid-1-1+.act-grid-1-2 {
+		.act-grid-1-1 + .act-grid-1-2 {
 			-webkit-box-flex: 0;
 			-ms-flex: 0 0 50%;
 			flex: 0 0 50%;
-			max-width: 50%
+			max-width: 50%;
 		}
 
 		.act-grid-1-2 {
 			-webkit-box-flex: 0;
 			-ms-flex: 0 0 33.33%;
 			flex: 0 0 33.33%;
-			max-width: 33.33%
+			max-width: 33.33%;
 		}
 	}
 }
@@ -640,32 +641,32 @@
 			flex-wrap: wrap;
 			gap: var(--bb-rl-space-200);
 		}
-	
+
 		.bb-rl-topic-meta {
 			display: flex;
 			align-items: center;
-	
+
 			.favorite-toggle {
 				display: none;
 			}
 		}
-	
+
 		.bb-rl-row-actions:has(.favorite-toggle) + .bb-rl-topic-meta-item:before {
 			display: none;
 		}
-	
+
 		.bb-rl-topic-meta-item {
 			display: flex;
 			align-items: center;
 			font-size: var(--bb-rl-font-size-sm);
 			color: var(--bb-rl-text-secondary-color);
-	
+
 			a {
 				color: var(--bb-rl-text-secondary-color);
 			}
-	
+
 			&:not(:first-child) {
-	
+
 				&:before {
 					content: "";
 					height: 4px;
