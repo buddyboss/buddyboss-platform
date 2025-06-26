@@ -1254,6 +1254,7 @@
 .bb-rl-forum-modal:not(.bb-rl-forum-modal--static) #new-post {
   max-height: 90vh;
   overflow: auto;
+  overflow-x: hidden;
 }
 
 .bb-rl-forum-modal .bb-rl-forum-form {
@@ -2415,4 +2416,19 @@
 
 .bb-rl-forums-pagination .bp-pagination-links span {
   margin-bottom: var(--bb-rl-space-200);
+}
+
+.bbp-no-reply .bp-feedback {
+  margin-top: var(--bb-rl-space-200);
+}
+
+.bb-rl-reply-single-page .bb-rl-single-forum-list .bb-rl-forum-reply-list-item {
+  background-color: transparent;
+  border-radius: 0;
+  border: 0;
+  padding: 0;
+}
+
+.bb-rl-reply-single-page .bb-rl-single-forum-list .bb-rl-forum-reply-list-item:hover {
+  background-color: transparent;
 }

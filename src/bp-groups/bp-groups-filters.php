@@ -203,7 +203,14 @@ function bp_groups_disable_at_mention_notification_for_non_public_groups( $send,
 		return $send;
 	}
 
-	if ( 'groups' === $activity->component && ! bp_user_can( $user_id, 'groups_access_group', array( 'group_id' => $activity->item_id ) ) ) {
+	if ( 'activity_update' === $activity->type ) {
+		$group_id = 'groups' === $activity->component ? $activity->item_id : 0;
+	} elseif ( 'activity_comment' === $activity->type ) {
+		$comment  = new BP_Activity_Activity( $activity->item_id );
+		$group_id = ! empty( $comment->component ) && 'groups' === $comment->component ? $comment->item_id : 0;
+	}
+
+	if ( $group_id && ! bp_user_can( $user_id, 'groups_access_group', array( 'group_id' => $group_id ) ) ) {
 		$send = false;
 	}
 
@@ -1703,6 +1710,36 @@ function bb_add_subgroups_args_single_home( $args ) {
 function bb_group_card_template() {
 	bp_get_template_part( 'groups/group-card' );
 }
+
+/**
+ * Delete group activity topic when delete the group.
+ *
+ * @since BuddyBoss 2.8.80
+ *
+ * @param int $group_id ID of the group.
+ *
+ * @return bool|int True on success, false on failure.
+ */
+function bb_delete_group_activity_topic( $group_id ) {
+	global $wpdb;
+
+	$table_prefix = bp_core_get_table_prefix();
+	$deleted      = $wpdb->delete( // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+		$table_prefix . 'bb_topic_relationships',
+		array(
+			'item_id'   => $group_id,
+			'item_type' => 'groups',
+		),
+		array( '%d', '%s' )
+	);
+
+	if ( false === $deleted ) {
+		return false;
+	}
+
+	return true;
+}
+add_action( 'groups_delete_group', 'bb_delete_group_activity_topic' );
 
 /**
  * Retrieves the groups the logged-in user is a member of and adds them to the provided arguments array.
