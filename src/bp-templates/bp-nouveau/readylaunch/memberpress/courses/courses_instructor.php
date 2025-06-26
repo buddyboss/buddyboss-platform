@@ -4,23 +4,24 @@
  *
  * This template can be overridden by copying it to yourtheme/memberpress/courses/courses_instructor.php.
  *
- * @since 2.6.30
+ * @since [BBVERSION]
  *
  * @package BuddyBoss\MemberpressLMS
  */
 
 use memberpress\courses\lib\Utils;
 use memberpress\courses as base;
-echo BB_Readylaunch_Memberpress_Courses_Helper::bb_rl_mpcs_render_course_tab_menu();
+echo wp_kses_post( BB_Readylaunch_Memberpress_Courses_Helper::bb_rl_mpcs_render_course_tab_menu() );
 do_action( base\SLUG_KEY . '_classroom_start_instructor' );
 ?>
-
 <div class="tile mpcs-instructor">
 	<div class="tile-icon">
 		<?php
-		echo Utils::get_avatar(
-			get_the_author_meta( 'ID' ),
-			'500'
+		echo wp_kses_post(
+			Utils::get_avatar(
+				get_the_author_meta( 'ID' ),
+				'500'
+			)
 		);
 		?>
 	</div>

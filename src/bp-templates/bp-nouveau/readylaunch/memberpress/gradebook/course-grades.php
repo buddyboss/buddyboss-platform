@@ -8,10 +8,8 @@
  */
 
 defined( 'ABSPATH' ) || exit;
-echo BB_Readylaunch_Memberpress_Courses_Helper::bb_rl_mpcs_render_course_tab_menu();
+echo wp_kses_post( BB_Readylaunch_Memberpress_Courses_Helper::bb_rl_mpcs_render_course_tab_menu() );
 ?>
-<h2><?php esc_html_e( 'Grades', 'buddyboss' ); ?></h2>
-
 <?php if ( ! empty( $quizzes ) ) : ?>
 	<div id="downloads" class="mpcs-section mpcs-resource-section">
 		<div class="mpcs-section-header-static">

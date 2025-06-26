@@ -9,7 +9,6 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-use memberpress\courses as base;
 use memberpress\courses\models as models;
 use memberpress\courses\helpers as helpers;
 use memberpress\courses\lib;
@@ -147,8 +146,7 @@ class BB_Readylaunch_Memberpress_Courses_Helper {
 			?>
 			<div class="bb-rl-course-description">
 				<?php
-				echo self::bb_rl_mpcs_render_course_tab_menu();
-				echo $content;
+				echo wp_kses_post( self::bb_rl_mpcs_render_course_tab_menu() . $content );
 				?>
 			</div>
 			<?php
@@ -655,8 +653,8 @@ class BB_Readylaunch_Memberpress_Courses_Helper {
 			}
 
 			if ( $course->user_progress( $user_id ) >= 100 && 'enabled' === $course->certificates_enable ) {
-				$cert_url = admin_url( 'admin-ajax.php?action=mpcs-course-certificate' );
-				$cert_url = add_query_arg(
+				$cert_url   = admin_url( 'admin-ajax.php?action=mpcs-course-certificate' );
+				$cert_url   = add_query_arg(
 					array(
 						'user'   => $user_id,
 						'course' => $post->ID,
@@ -673,17 +671,21 @@ class BB_Readylaunch_Memberpress_Courses_Helper {
 				<a target="_blank" class="bb-rl-lms-tab <?php \MeprAccountHelper::active_nav( 'certificate', 'is-active' ); ?>" href="<?php echo esc_url_raw( $cert_url ); ?>">
 					<div class="tile-content">
 						<p class="tile-title m-0">
-							<?php esc_html_e( 'Certificate', 'buddyboss' ); ?>
-							<?php if ( $course->certificates_share_link == 'enabled' ) { ?>
+							<?php
+							esc_html_e( 'Certificate', 'buddyboss' );
+							if ( 'enabled' === $course->certificates_share_link ) {
+								?>
 								<i title="<?php esc_attr_e( 'Copied Shareable Certificate Link', 'buddyboss' ); ?>" class="mpcs-share" data-clipboard-text="<?php echo esc_url( $share_link ); ?>" onclick="return false;"></i>
-							<?php } ?>
+								<?php
+							}
+							?>
 						</p>
 					</div>
 				</a>
 				<?php
 			}
 
-			$options = get_option( 'mpcs-options' );
+			$options                = get_option( 'mpcs-options' );
 			$remove_instructor_link = helpers\Options::val( $options, 'remove-instructor-link' );
 			if ( empty( $remove_instructor_link ) ) {
 				?>
