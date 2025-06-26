@@ -395,7 +395,6 @@
 		position: relative;
 		margin: var(--bb-rl-space-200) var(--bb-rl-space-300);
 		background-repeat: no-repeat;
-		max-width: 100%;
 		border-radius: var(--bb-rl-radius-lg);
 		overflow: hidden;
 		background-image: none !important;
@@ -806,7 +805,7 @@
 
 			> div {
 				margin-bottom: var(--bb-rl-space-100);
-	
+
 				label {
 					display: inline-block;
 					font-size: 14px;

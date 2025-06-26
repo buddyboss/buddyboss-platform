@@ -1477,7 +1477,6 @@
   position: relative;
   margin: var(--bb-rl-space-200) var(--bb-rl-space-300);
   background-repeat: no-repeat;
-  max-width: 100%;
   border-radius: var(--bb-rl-radius-lg);
   overflow: hidden;
   background-image: none !important;
