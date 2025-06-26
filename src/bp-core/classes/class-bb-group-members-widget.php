@@ -51,9 +51,10 @@ class BB_Group_Members_Widget extends WP_Widget {
 		$max         = 5;
 
 		$group_args = array(
-			'user_id' => bp_loggedin_user_id(),
-			'type'    => 'online',
-			'max'     => 5,
+			'user_id'             => bp_loggedin_user_id(),
+			'type'                => 'online',
+			'max'                 => 5,
+			'exclude_admins_mods' => 0,
 		);
 		if ( bp_group_has_members( $group_args ) ) {
 			?>
