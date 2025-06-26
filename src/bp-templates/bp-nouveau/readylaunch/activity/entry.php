@@ -137,6 +137,30 @@ $bb_rl_activity_class_exists = class_exists( 'BB_Activity_Readylaunch' ) ? BB_Ac
 						if ( function_exists( 'bp_nouveau_activity_privacy' ) ) {
 							bp_nouveau_activity_privacy();
 						}
+						if (
+							function_exists( 'bb_is_enabled_group_activity_topics' ) &&
+							bb_is_enabled_group_activity_topics()
+						) {
+							?>
+							<p class="activity-topic">
+								<?php
+								if (
+									function_exists( 'bb_activity_topics_manager_instance' ) &&
+									method_exists( bb_activity_topics_manager_instance(), 'bb_get_activity_topic_url' )
+								) {
+									echo wp_kses_post(
+										bb_activity_topics_manager_instance()->bb_get_activity_topic_url(
+											array(
+												'activity_id' => bp_get_activity_id(),
+												'html'        => true,
+											)
+										)
+									);
+								}
+								?>
+							</p>
+							<?php
+						}
 						?>
 					</div>
 				</div>
@@ -198,7 +222,41 @@ $bb_rl_activity_class_exists = class_exists( 'BB_Activity_Readylaunch' ) ? BB_Ac
 						bp_nouveau_activity_is_edited();
 						?>
 					</p>
-					<?php bp_nouveau_activity_privacy(); ?>
+					<?php
+					bp_nouveau_activity_privacy();
+					if (
+						(
+							'groups' === $activities_template->activity->component &&
+							function_exists( 'bb_is_enabled_group_activity_topics' ) &&
+							bb_is_enabled_group_activity_topics()
+						) ||
+						(
+							'groups' !== $activities_template->activity->component &&
+							function_exists( 'bb_is_enabled_activity_topics' ) &&
+							bb_is_enabled_activity_topics()
+						)
+					) {
+						?>
+						<p class="activity-topic">
+							<?php
+							if (
+								function_exists( 'bb_activity_topics_manager_instance' ) &&
+								method_exists( bb_activity_topics_manager_instance(), 'bb_get_activity_topic_url' )
+							) {
+								echo wp_kses_post(
+									bb_activity_topics_manager_instance()->bb_get_activity_topic_url(
+										array(
+											'activity_id' => bp_get_activity_id(),
+											'html'        => true,
+										)
+									)
+								);
+							}
+							?>
+						</p>
+						<?php
+					}
+					?>
 				</div>
 			</div>
 

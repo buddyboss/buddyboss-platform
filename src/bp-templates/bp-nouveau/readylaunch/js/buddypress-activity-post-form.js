@@ -1,4 +1,4 @@
-/* global bp, BP_Nouveau, _, Backbone, tinymce, bp_media_dropzone */
+/* global bp, BP_Nouveau, _, Backbone, tinymce, bp_media_dropzone, BBTopicsManager */
 /* @version [BBVERSION] */
 /*jshint esversion: 6 */
 window.wp = window.wp || {};
@@ -777,12 +777,63 @@ window.bp = window.bp || {};
 				self.postForm.$el.removeClass( 'bb-rl-activity-edit--privacy-idle' );
 			}
 
+			if (
+				! _.isUndefined( BP_Nouveau.activity.params.topics ) &&
+				! _.isUndefined( BP_Nouveau.activity.params.topics.bb_is_enabled_activity_topics ) &&
+				BP_Nouveau.activity.params.topics.bb_is_enabled_activity_topics &&
+				! _.isUndefined( activity_data.topics )
+			) {
+				activity_data.topics.topic_id   = activity_data.topics.topic_id || 0;
+				activity_data.topics.topic_name = activity_data.topics.topic_name || '';
+				if (
+					activity_data.item_id &&
+					'groups' === activity_data.object
+				) {
+					activity_data.topics.topic_lists = activity_data.topics.topic_lists;
+				} else {
+					activity_data.topics.topic_lists = BP_Nouveau.activity.params.topics.topic_lists;
+				}
+			}
+
 			if ( 0 < parseInt( activity_data.id ) ) {
 				Backbone.trigger( 'editactivity' );
 			} else {
 				self.postForm.$el.removeClass( 'bb-rl-focus-in--empty loading' );
 			}
 
+			if (
+				! _.isUndefined( BP_Nouveau.activity.params.topics ) &&
+				BP_Nouveau.activity.params.topics.topic_lists.length > 0 &&
+				! _.isUndefined( BP_Nouveau.activity.params.topics.bb_is_enabled_activity_topics ) &&
+				BP_Nouveau.activity.params.topics.bb_is_enabled_activity_topics &&
+				! _.isUndefined( BP_Nouveau.activity.params.topics.bb_is_activity_topic_required ) &&
+				BP_Nouveau.activity.params.topics.bb_is_activity_topic_required
+			) {
+				BBTopicsManager.bbTopicValidateContent( {
+					self         : self,
+					selector     : self.postForm.$el,
+					validContent : bp.Nouveau.Activity.postForm.validateContent(),
+					class        : 'focus-in--empty',
+					data         : activity_data,
+					action       : 'draft_activity_loaded'
+				} );
+			}
+
+			if ( activity_data && activity_data.topics ) {
+				self.postForm.model.set( 'topics', activity_data.topics );
+				bp.draft_activity.data.topics = activity_data.topics;
+				if ( 0 !== parseInt( activity_data.topics.topic_id ) ) {
+					var $topicElement = $( '.bb-topic-selector-list a[data-topic-id="' + activity_data.topics.topic_id + '"]' );
+					if ( $topicElement.length > 0 ) {
+						$topicElement.addClass( 'selected' );
+						var topicName = activity_data.topics.topic_name;
+						if ( ! topicName ) {
+							topicName = $topicElement.text();
+						}
+						$( '.bb-topic-selector-button' ).text( topicName );
+					}
+				}
+			}
 		},
 
 		getCurrentDraftActivity: function () {
@@ -957,6 +1008,18 @@ window.bp = window.bp || {};
 						! Object.keys( self.postForm.model.get( 'poll' ) ).length
 					) ||
 					_.isUndefined( self.postForm.model.get( 'poll' ) )
+				) &&
+				(
+					(
+						! _.isUndefined( self.postForm.model.get( 'topics' ) ) &&
+						! $.isEmptyObject( self.postForm.model.get( 'topics' ) ) &&
+						! Object.keys( self.postForm.model.get( 'topics' ) ).length &&
+						! self.postForm.model.get( 'topics' ).topic_id
+					) ||
+					(
+						_.isUndefined(self.postForm.model.get('topics')) ||
+						1 > parseInt( self.postForm.model.get( 'topics' ).topic_id )
+					)
 				)
 			) {
 				if ( bp.draft_content_changed ) {
@@ -1065,6 +1128,7 @@ window.bp = window.bp || {};
 				'poll',
 				'poll_id',
 				'polls_allowed',
+				'topics',
 			];
 
 			_.each(
@@ -1287,7 +1351,23 @@ window.bp = window.bp || {};
 			bp.draft_local_interval = false;
 			clearInterval( bp.draft_ajax_interval );
 			bp.draft_ajax_interval = false;
-		}
+		},
+
+		validateContent: function() {
+			var $whatsNew = $( '#bb-rl-whats-new-form' ).find( '#bb-rl-whats-new' );
+			var content = $.trim( $whatsNew[0].innerHTML.replace( /<div>/gi, '\n' ).replace( /<\/div>/gi, '' ) );
+			content     = content.replace( /&nbsp;/g, ' ' );
+
+			if ( content.replace( /<p>/gi, '' ).replace( /<\/p>/gi, '' ).replace( /<br>/gi, '' ) === '' ) {
+				$whatsNew[0].innerHTML = '';
+			}
+			
+			if ( $( $.parseHTML( content ) ).text().trim() !== '' || content.includes( 'class="emoji"' ) || ( ! _.isUndefined( this.postForm.model.get( 'link_success' ) ) && true === this.postForm.model.get( 'link_success' ) ) || ( ! _.isUndefined( this.postForm.model.get( 'video' ) ) && 0 !== this.postForm.model.get('video').length ) || ( ! _.isUndefined( this.postForm.model.get( 'document' ) ) && 0 !== this.postForm.model.get('document').length ) || ( ! _.isUndefined( this.postForm.model.get( 'media' ) ) && 0 !== this.postForm.model.get('media').length ) || ( ! _.isUndefined( this.postForm.model.get( 'gif_data' ) ) && ! _.isEmpty( this.postForm.model.get( 'gif_data' ) ) ) || ( ! _.isUndefined( this.postForm.model.get( 'poll' ) ) && ! _.isEmpty( this.postForm.model.get( 'poll' ) ) ) ) {
+				return true;
+			}
+			
+			return false;
+		},
 
 	};
 
@@ -3463,6 +3543,26 @@ window.bp = window.bp || {};
 						whats_new_form.find( '.bb-post-poll-button' ).addClass( 'bp-hide' );
 					}
 
+					// Render topic selector for the group activity.
+					if (
+						! _.isUndefined( BP_Nouveau.activity.params.topics ) &&
+						! _.isUndefined( BP_Nouveau.activity.params.topics.bb_is_enabled_activity_topics ) &&
+						BP_Nouveau.activity.params.topics.bb_is_enabled_activity_topics
+					) {
+						if (
+							this.model.get( 'topics' ) &&
+							this.model.get( 'topics' ).topic_lists
+						) {
+							if (
+								!_.isUndefined( BP_Nouveau.activity.params.topics.bb_is_enabled_group_activity_topics ) &&
+								BP_Nouveau.activity.params.topics.bb_is_enabled_group_activity_topics
+							) {
+								Backbone.trigger( 'topic:update', this.model.get( 'topics' ) );
+							} else {
+								Backbone.trigger( 'topic:update', {} );
+							}
+						}
+					}
 				} else {
 
 					// Clear schedule post data when change privacy.
@@ -3525,6 +3625,25 @@ window.bp = window.bp || {};
 							group_privacy : ''
 						}
 					);
+
+					// Set topic lists for the global activity.
+					if (
+						! _.isUndefined( BP_Nouveau.activity.params.topics ) &&
+						! _.isUndefined( BP_Nouveau.activity.params.topics.bb_is_enabled_activity_topics ) &&
+						BP_Nouveau.activity.params.topics.bb_is_enabled_activity_topics &&
+						! _.isUndefined( BP_Nouveau.activity.params.topics.topic_lists )
+					) {
+						var topic_lists = BP_Nouveau.activity.params.topics.topic_lists;
+						this.model.set( 'topics', {
+							topic_lists : topic_lists
+						} );
+						if ( topic_lists.length > 0 ) {
+							$( '.whats-new-topic-selector' ).removeClass( 'bp-hide' );
+						} else {
+							$( '.whats-new-topic-selector' ).addClass( 'bp-hide' );
+						}
+						Backbone.trigger( 'topic:update', this.model.get( 'topics' ) );
+					}
 
 					bp.draft_activity.data.item_id            = 0;
 					bp.draft_activity.data.group_name         = '';
@@ -3777,8 +3896,59 @@ window.bp = window.bp || {};
 							group_url   : model.get( 'group_url' )
 						}
 					);
+
+					// Set topic lists for the group activity.
+					if (
+						! _.isUndefined( BP_Nouveau.activity.params.topics ) &&
+						! _.isUndefined( BP_Nouveau.activity.params.topics.bb_is_enabled_activity_topics ) &&
+						BP_Nouveau.activity.params.topics.bb_is_enabled_activity_topics &&
+						! _.isUndefined( BP_Nouveau.activity.params.topics.bb_is_enabled_group_activity_topics ) &&
+						BP_Nouveau.activity.params.topics.bb_is_enabled_group_activity_topics
+					) {
+						var group_topic_lists = model.get( 'topics' );
+
+						if ( group_topic_lists && group_topic_lists.topic_lists ) {
+							group_topic_lists = group_topic_lists.topic_lists;
+						} else {
+							group_topic_lists = model.get( 'topic_lists' );
+						}
+
+						group_topic_lists = ! _.isUndefined( group_topic_lists ) ? group_topic_lists : [];
+
+						this.model.set( 'topics', {
+							topic_lists : group_topic_lists
+						} );
+
+						Backbone.trigger( 'topic:update', this.model.get( 'topics' ) );
+
+						if ( group_topic_lists.length > 0 ) {
+							$( '.whats-new-topic-selector' ).removeClass( 'bp-hide' );
+						} else {
+							$( '.whats-new-topic-selector' ).addClass( 'bp-hide' );
+						}
+					}
 				} else {
-					this.views.set( '#bb-rl-whats-new-post-in-box-items', new bp.Views.Item( { model: model } ) );
+					this.views.set('#bb-rl-whats-new-post-in-box-items', new bp.Views.Item({ model: model }));
+					
+					// Set topic lists for the global activity.
+					if (
+						! _.isUndefined( BP_Nouveau.activity.params.topics ) &&
+						! _.isUndefined( BP_Nouveau.activity.params.topics.bb_is_enabled_activity_topics ) &&
+						BP_Nouveau.activity.params.topics.bb_is_enabled_activity_topics &&
+						! _.isUndefined( BP_Nouveau.activity.params.topics.topic_lists )
+					) {
+						var topic_lists = BP_Nouveau.activity.params.topics.topic_lists;
+						topic_lists     = ! _.isUndefined( topic_lists ) ? topic_lists : [];
+
+						this.model.set( 'topics', {
+							topic_lists : topic_lists
+						} );
+						bp.draft_activity.data.topics = {
+							topic_lists : topic_lists
+						};
+
+						Backbone.trigger( 'topic:update', topic_lists );
+					}
 				}
 			},
 
@@ -4422,6 +4592,20 @@ window.bp = window.bp || {};
 					)
 				);
 
+				// Render topic selector for the global activity.
+				if (
+					! _.isUndefined( BP_Nouveau.activity.params.topics ) &&
+					! _.isUndefined( BP_Nouveau.activity.params.topics.bb_is_enabled_activity_topics ) &&
+					BP_Nouveau.activity.params.topics.bb_is_enabled_activity_topics &&
+					! _.isUndefined( bp.Views.TopicSelector ) &&
+					! this.model.get( 'has_topic_selector' )
+				) {
+					if ( 0 === $( '.whats-new-topic-selector' ).length ) {
+						this.views.add( new bp.Views.TopicSelector( { model : this.model } ) );
+						this.model.set( 'has_topic_selector', true );
+					}
+				}
+
 				this.views.add( new bp.Views.FormSubmit( { model: this.model } ) );
 			}
 		}
@@ -4542,10 +4726,30 @@ window.bp = window.bp || {};
 					$whatsNew[0].innerHTML = '';
 				}
 
-				if ( $( $.parseHTML( content ) ).text().trim() !== '' || content.includes( 'class="emoji"' ) || ( ! _.isUndefined( this.model.get( 'link_success' ) ) && true === this.model.get( 'link_success' ) ) || ( ! _.isUndefined( this.model.get( 'video' ) ) && 0 !== this.model.get( 'video' ).length ) || ( ! _.isUndefined( this.model.get( 'document' ) ) && 0 !== this.model.get( 'document' ).length ) || ( ! _.isUndefined( this.model.get( 'media' ) ) && 0 !== this.model.get( 'media' ).length ) || ( ! _.isUndefined( this.model.get( 'gif_data' ) ) && ! _.isEmpty( this.model.get( 'gif_data' ) ) ) || ( ! _.isUndefined( this.model.get( 'poll' ) ) && ! _.isEmpty( this.model.get( 'poll' ) ) ) ) {
-					this.$el.removeClass( 'bb-rl-focus-in--empty' );
+				var validContent = bp.Nouveau.Activity.postForm.validateContent();
+				if ( validContent ) {
+					this.$el.removeClass( 'bb-rl-focus-in--empty loading' );
 				} else {
 					this.$el.addClass( 'bb-rl-focus-in--empty' );
+				}
+
+				// Validate topic content.
+				if (
+					! _.isUndefined( BP_Nouveau.activity.params.topics ) &&
+					! _.isUndefined( BP_Nouveau.activity.params.topics.bb_is_enabled_activity_topics ) &&
+					BP_Nouveau.activity.params.topics.bb_is_enabled_activity_topics &&
+					! _.isUndefined( BP_Nouveau.activity.params.topics.bb_is_activity_topic_required ) &&
+					BP_Nouveau.activity.params.topics.bb_is_activity_topic_required &&
+					! _.isUndefined( BBTopicsManager )
+				) {
+					BBTopicsManager.bbTopicValidateContent( {
+						self         : this,
+						selector     : this.$el,
+						validContent : validContent,
+						class        : 'bb-rl-focus-in--empty',
+						data         : this.model.attributes,
+						action       : 'postValidate'
+					} );
 				}
 			},
 
@@ -5086,9 +5290,38 @@ window.bp = window.bp || {};
 						'can_schedule_in_feed',
 						'can_create_poll_activity',
 						'bb-poll-question-option',
-						'poll'
+						'poll',
+						'topics'
 					]
 				);
+
+				if (
+					! _.isUndefined( BP_Nouveau.activity.params.topics ) &&
+					(
+						! _.isUndefined( this.model.get( 'topics' ) ) &&
+						this.model.get( 'topics' ) &&
+						! _.isUndefined( this.model.get( 'topics' ).topic_lists ) &&
+						this.model.get( 'topics' ).topic_lists.length > 0
+					) &&
+					! _.isUndefined( BP_Nouveau.activity.params.topics.bb_is_enabled_activity_topics ) &&
+					BP_Nouveau.activity.params.topics.bb_is_enabled_activity_topics
+				) {
+					if (
+						!_.isUndefined(BP_Nouveau.activity.params.topics.bb_is_activity_topic_required) &&
+						BP_Nouveau.activity.params.topics.bb_is_activity_topic_required
+					) {
+						if ( this.model.get( 'topics' ) ) {
+							var topicId = this.model.get( 'topics' ) ? this.model.get( 'topics' ).topic_id : null;
+							if ( ! _.isUndefined( topicId ) && null !== topicId) {
+								data.topic_id = topicId;
+							}
+						}
+					} else {
+						if ( this.model.get( 'topics' ) ) {
+							data.topic_id = this.model.get( 'topics' ).topic_id;
+						}
+					}
+				}
 
 				// Form link preview data to pass in request if available.
 				if ( self.model.get( 'link_success' ) ) {
@@ -5250,6 +5483,22 @@ window.bp = window.bp || {};
 									scheduleUrl,
 									true
 								);
+							}
+						}
+
+						// Prevent activity from being prepended if it doesn't belong to the current topic.
+						var currentTopicSlug = new URLSearchParams( window.location.search ).get( 'bb-topic' );
+						if ( currentTopicSlug && '' !== response.activity ) {
+							var activityData = response.activity.match( /data-bp-activity="([^"]*)"/ );
+							if ( activityData && activityData[1] ) {
+								var parsedData = JSON.parse(self.decodeHtml( activityData[1] ) );
+								if (
+									!_.isUndefined( parsedData.topics ) &&
+									!_.isUndefined( parsedData.topics.topic_slug ) &&
+									parsedData.topics.topic_slug !== currentTopicSlug
+								) {
+									toPrepend = false;
+								}
 							}
 						}
 
@@ -5437,6 +5686,11 @@ window.bp = window.bp || {};
 					}
 				}
 
+				// Remove topic data from draft activity data.
+				if ( bp.draft_activity.data.topics ) {
+					delete bp.draft_activity.data.topics;
+				}
+
 				// Reset the model.
 				this.model.clear();
 				this.model.set( this.resetModel.attributes );
@@ -5496,6 +5750,11 @@ window.bp = window.bp || {};
 							$( '.atwho-container #atwho-ground-whats-new .atwho-view:visible' ).hide();
 						}
 					);
+				}
+
+				// Topic validates while discard draft activity.
+				if ( $( '.whats-new-topic-selector:visible' ).length ) {
+					this.postValidate();
 				}
 
 				this.updateMultiMediaOptions();
