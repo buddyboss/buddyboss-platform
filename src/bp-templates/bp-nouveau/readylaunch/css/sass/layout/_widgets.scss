@@ -396,6 +396,23 @@
 				}
 			}
 		}
+
+		.activity-update {
+			font-size: 14px;
+
+			.update-item {
+				
+				cite {
+					-webkit-box-flex: 0;
+					-ms-flex: 0 0 40px;
+					flex: 0 0 40px;
+
+					img {
+						width: 100%;
+					}
+				}
+			}
+		}
 	}
 }
 

@@ -33,8 +33,6 @@ class BB_Activity_Readylaunch {
 	 */
 	public function __construct() {
 		add_filter( 'bb_get_activity_post_user_reactions_html', array( $this, 'bb_rl_get_activity_post_user_reactions_html' ), 10, 4 );
-		add_filter( 'bp_activity_new_update_action', array( $this, 'bb_rl_activity_new_update_action' ), 10, 2 );
-		add_filter( 'bp_get_activity_action_pre_meta', array( $this, 'bb_rl_remove_secondary_avatars_for_connected_users' ), 11, 2 );
 		add_filter( 'bp_nouveau_get_activity_comment_buttons', array( $this, 'bb_rl_get_activity_comment_buttons' ), 10, 2 );
 		add_filter( 'bb_get_activity_reaction_button_html', array( $this, 'bb_rl_modify_reaction_button_html' ), 10, 2 );
 		add_filter( 'bp_get_activity_css_class', array( $this, 'bb_rl_add_empty_content_class' ), 10, 1 );
@@ -141,66 +139,6 @@ class BB_Activity_Readylaunch {
 		}
 
 		return $output;
-	}
-
-	/**
-	 * Update activity action for ReadyLaunch.
-	 * This function will only return the user link.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param string $action   The activity action.
-	 * @param object $activity The activity object.
-	 *
-	 * @return bool|string
-	 */
-	public function bb_rl_activity_new_update_action( $action, $activity ) {
-		if ( empty( $activity ) ) {
-			return $action;
-		}
-		$user_link = bp_core_get_userlink( $activity->user_id );
-		switch ( $activity->component ) {
-			case 'activity':
-				$usernames = bp_activity_find_mentions( $activity->content );
-				if ( bp_activity_do_mentions() && ! empty( $usernames ) ) {
-					$mentioned_users        = array_filter( array_map( 'bp_get_user_by_nickname', $usernames ) );
-					$mentioned_users_link   = array();
-					$mentioned_users_avatar = array();
-					foreach ( $mentioned_users as $mentioned_user ) {
-						$mentioned_users_link[]   = bp_core_get_userlink( $mentioned_user->ID );
-						$mentioned_users_avatar[] = bp_core_fetch_avatar(
-							array(
-								'item_id' => $mentioned_user->ID,
-								'type'    => 'thumb',
-							)
-						);
-					}
-
-					// Get the last user link.
-					$last_user_link = array_pop( $mentioned_users_link );
-
-					$action = sprintf(
-						/* translators: %1$s: user link, %2$s: mentioned users avatar, %3$s: mentioned users link, %4$s: mentioned users link and, %5$s: last mentioned user link */
-						__( '%1$s <span class="activity-to">to</span> %2$s%3$s%4$s%5$s', 'buddyboss' ),
-						$user_link,
-						$mentioned_users_avatar ? implode( ', ', $mentioned_users_avatar ) : '',
-						$mentioned_users_link ? implode( ', ', $mentioned_users_link ) : '',
-						$mentioned_users_link ? __( ' and ', 'buddyboss' ) : '',
-						$last_user_link
-					);
-				} else {
-					$action = $user_link;
-				}
-				break;
-			case 'groups':
-				$action = $action;
-				break;
-			default:
-				$action = $user_link;
-				break;
-		}
-
-		return $action;
 	}
 
 	/**
@@ -637,48 +575,6 @@ class BB_Activity_Readylaunch {
 	}
 
 	/**
-	 * Remove secondary avatars from friendship activities.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param string $action   The activity action HTML.
-	 * @param object $activity The activity object.
-	 *
-	 * @return string The filtered activity action HTML.
-	 */
-	public function bb_rl_remove_secondary_avatars_for_connected_users( $action, $activity ) {
-		if ( 'friends' === $activity->component && 'friendship_created' === $activity->type ) {
-			$user_link   = bp_core_get_userlink( $activity->user_id );
-			$friend_link = bp_core_get_userlink( $activity->secondary_item_id );
-
-			/* translators: %1$s: user link, %2$s: friend link */
-			return sprintf( __( '%1$s & %2$s are now connected', 'buddyboss' ), $user_link, $friend_link );
-		} elseif ( 'groups' === $activity->component ) {
-			$user_link = bp_core_get_userlink( $activity->user_id );
-			if (
-				'joined_group' === $activity->type ||
-				'group_details_updated' === $activity->type ||
-				'created_group' === $activity->type ||
-				'zoom_meeting_create' === $activity->type ||
-				'zoom_meeting_notify' === $activity->type
-			) {
-				$group            = bp_groups_get_activity_group( $activity->item_id );
-				$group_link       = '<a href="' . esc_url( bp_get_group_permalink( $group ) ) . '">' . esc_html( $group->name ) . '</a>';
-				$secondary_avatar = bp_get_activity_secondary_avatar();
-
-				$action = str_replace( $group_link, '', $action );
-				$action = str_replace( $secondary_avatar, '', $action );
-			} elseif ( 'activity_update' === $activity->type ) {
-				$action = $user_link;
-			} else {
-				return $action;
-			}
-		}
-
-		return $action;
-	}
-
-	/**
 	 * Add a class to activities with empty content.
 	 *
 	 * @since BuddyBoss [BBVERSION]
@@ -696,5 +592,110 @@ class BB_Activity_Readylaunch {
 		}
 
 		return $activity_class;
+	}
+
+	/**
+	 * Modify activity new update action.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $args The arguments.
+	 *
+	 * @return string Modified action.
+	 */
+	public function bb_rl_activity_new_update_action( $args ) {
+		$activity        = ! empty( $args['activity'] ) ? $args['activity'] : null;
+		$activity_action = ! empty( $args['activity_action'] ) ? $args['activity_action'] : '';
+
+		if ( empty( $activity ) || empty( $activity_action ) ) {
+			return $activity_action;
+		}
+
+		$user_link_with_html = bp_core_get_userlink( $activity->user_id );
+
+		if ( 'groups' === $activity->component && bp_is_active( 'groups' ) ) {
+			if (
+				'joined_group' === $activity->type ||
+				'group_details_updated' === $activity->type ||
+				'created_group' === $activity->type ||
+				'zoom_meeting_create' === $activity->type ||
+				'zoom_meeting_notify' === $activity->type
+			) {
+				$group = ! empty( $args['group'] ) ? $args['group'] : null;
+				if ( empty( $group ) ) {
+					$group = groups_get_group( $activity->item_id );
+				}
+
+				$group_link       = '<a href="' . esc_url( bp_get_group_permalink( $group ) ) . '">' . esc_html( $group->name ) . '</a>';
+				$secondary_avatar = bp_get_activity_secondary_avatar();
+
+				// Remove the group link and secondary avatar.
+				$activity_action = str_replace( $group_link, '', $activity_action );
+				$activity_action = str_replace( $secondary_avatar, '', $activity_action );
+
+				// Remove any remaining group links that might have different attributes.
+				$group_url       = preg_quote( esc_url( bp_get_group_permalink( $group ) ), '/' );
+				$activity_action = preg_replace( '/<a\s+href="' . $group_url . '"[^>]*>.*?<\/a>/i', '', $activity_action );
+
+				if (
+					'zoom_meeting_create' === $activity->type ||
+					'zoom_meeting_notify' === $activity->type
+				) {
+					// Remove everything after the second link (Zoom meeting link).
+					$activity_action = preg_replace(
+						'/^(.*?<a[^>]*>.*?<\/a>.*?<a[^>]*>.*?<\/a>).*$/is',
+						'$1',
+						$activity_action
+					);
+				}
+			} elseif ( 'activity_update' === $activity->type ) {
+				$activity_action = '<p>' . $user_link_with_html . '</p>';
+			}
+		} elseif ( 'activity' === $activity->component && 'activity_update' === $activity->type ) {
+			$user_link = bp_core_get_userlink( $activity->user_id );
+			$usernames = bp_activity_find_mentions( $activity->content );
+			if ( bp_activity_do_mentions() && ! empty( $usernames ) ) {
+				$mentioned_users        = array_filter( array_map( 'bp_get_user_by_nickname', $usernames ) );
+				$mentioned_users_link   = array();
+				$mentioned_users_avatar = array();
+				foreach ( $mentioned_users as $mentioned_user ) {
+					$mentioned_users_link[]   = bp_core_get_userlink( $mentioned_user->ID );
+					$mentioned_users_avatar[] = bp_core_fetch_avatar(
+						array(
+							'item_id' => $mentioned_user->ID,
+							'type'    => 'thumb',
+						)
+					);
+				}
+
+				// Get the last user link.
+				$last_user_link = array_pop( $mentioned_users_link );
+
+				$activity_action = sprintf(
+					/* translators: %1$s: user link, %2$s: mentioned users avatar, %3$s: mentioned users link, %4$s: mentioned users link and, %5$s: last mentioned user link */
+					__( '%1$s <span class="activity-to">to</span> %2$s%3$s%4$s%5$s', 'buddyboss' ),
+					$user_link,
+					$mentioned_users_avatar ? implode( ', ', $mentioned_users_avatar ) : '',
+					$mentioned_users_link ? implode( ', ', $mentioned_users_link ) : '',
+					$mentioned_users_link ? __( ' and ', 'buddyboss' ) : '',
+					$last_user_link
+				);
+
+				$activity_action = '<p>' . $activity_action . '</p>';
+			} else {
+				$activity_action = '<p>' . $user_link_with_html . '</p>';
+			}
+		} elseif ( 'friends' === $activity->component && 'friendship_created' === $activity->type ) {
+			$friend_link     = bp_core_get_userlink( $activity->secondary_item_id );
+			$activity_action = sprintf(
+				/* translators: %1$s: user link, %2$s: friend link */
+				__( '%1$s & %2$s are now connected', 'buddyboss' ),
+				$user_link_with_html,
+				$friend_link
+			);
+			$activity_action = '<p>' . $activity_action . '</p>';
+		}
+
+		return $activity_action;
 	}
 }

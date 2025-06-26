@@ -21,7 +21,7 @@ $activity_metas      = bb_activity_get_metadata( $activity_id );
 $link_preview_data   = ! empty( $activity_metas['_link_preview_data'][0] ) ? maybe_unserialize( $activity_metas['_link_preview_data'][0] ) : array();
 $link_preview_string = ! empty( $link_preview_data ) && count( $link_preview_data ) ? wp_json_encode( $link_preview_data ) : '';
 $link_url            = ! empty( $link_preview_data ) && count( $link_preview_data ) ? ( ! empty( $link_preview_data['url'] ) ? $link_preview_data['url'] : '' ) : '';
-$link_embed          = $activity_metas['_link_embed'][0] ?? '';
+$link_embed          = isset( $activity_metas['_link_embed'][0] ) ? $activity_metas['_link_embed'][0] : '';
 if ( ! empty( $link_embed ) ) {
 	$link_url = $link_embed;
 }
@@ -51,8 +51,9 @@ $bb_rl_activity_class_exists = class_exists( 'BB_Activity_Readylaunch' ) ? BB_Ac
 
 		<?php
 		global $activities_template;
-		$user_link = bp_get_activity_user_link();
-		$user_link = ! empty( $user_link ) ? esc_url( $user_link ) : '';
+		$user_link           = bp_get_activity_user_link();
+		$user_link           = ! empty( $user_link ) ? esc_url( $user_link ) : '';
+		$user_link_with_html = bp_core_get_userlink( $activities_template->activity->user_id );
 		if ( bp_is_active( 'groups' ) && ! bp_is_group() && buddypress()->groups->id === bp_get_activity_object_name() ) :
 
 			// If group activity.
@@ -104,7 +105,20 @@ $bb_rl_activity_class_exists = class_exists( 'BB_Activity_Readylaunch' ) ? BB_Ac
 					</div>
 					<div class="bb-rl-activity-group-post-meta">
 						<span class="bb-rl-activity-post-author">
-							<?php bp_activity_action( array( 'no_timestamp' => true ) ); ?>
+							<?php
+							$activity_type   = bp_get_activity_type();
+							$activity_object = bp_get_activity_object_name();
+							$activity_action = bp_get_activity_action( array( 'no_timestamp' => true ) );
+
+							$activity_action = $bb_rl_activity_class_exists ? $bb_rl_activity_class_exists->bb_rl_activity_new_update_action(
+								array(
+									'activity_action' => $activity_action,
+									'activity'        => $activities_template->activity,
+									'group'           => $group,
+								)
+							) : $activity_action;
+							echo wp_kses_post( $activity_action );
+							?>
 						</span>
 						<a href="<?php echo esc_url( $activity_link ); ?>">
 							<?php
@@ -155,7 +169,20 @@ $bb_rl_activity_class_exists = class_exists( 'BB_Activity_Readylaunch' ) ? BB_Ac
 					?>
 				</div>
 				<div class="bb-rl-activity-header">
-					<?php bp_activity_action( array( 'no_timestamp' => true ) ); ?>
+					<?php
+					$activity_type   = bp_get_activity_type();
+					$activity_object = bp_get_activity_object_name();
+					$activity_action = bp_get_activity_action( array( 'no_timestamp' => true ) );
+
+					$activity_action = $bb_rl_activity_class_exists ? $bb_rl_activity_class_exists->bb_rl_activity_new_update_action(
+						array(
+							'activity_action' => $activity_action,
+							'activity'        => $activities_template->activity,
+						)
+					) : $activity_action;
+
+					echo wp_kses_post( $activity_action );
+					?>
 					<p class="activity-date">
 						<a href="<?php echo esc_url( bp_activity_get_permalink( $activity_id ) ); ?>">
 							<?php

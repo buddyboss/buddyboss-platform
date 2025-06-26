@@ -10177,6 +10177,20 @@ input.bb-rl-zoom-slider::-moz-range-progress {
   text-shadow: 0 0 0.5px currentColor;
 }
 
+.bb-rl-widget-sidebar .buddypress.widget .activity-update {
+  font-size: 14px;
+}
+
+.bb-rl-widget-sidebar .buddypress.widget .activity-update .update-item cite {
+  -webkit-box-flex: 0;
+  -ms-flex: 0 0 40px;
+  flex: 0 0 40px;
+}
+
+.bb-rl-widget-sidebar .buddypress.widget .activity-update .update-item cite img {
+  width: 100%;
+}
+
 .bb-rl-widget-sidebar .widget_bp_core_friends_widget .bb-friends-list-widget {
   display: flex;
   flex-direction: column;
