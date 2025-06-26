@@ -8,7 +8,6 @@
  */
 
 defined( 'ABSPATH' ) || exit;
-echo wp_kses_post( BB_Readylaunch_Memberpress_Courses_Helper::bb_rl_mpcs_render_course_tab_menu() );
 ?>
 <?php if ( ! empty( $resources->downloads ) ) : ?>
 	<div id="downloads" class="mpcs-section mpcs-resource-section">

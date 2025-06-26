@@ -141,16 +141,10 @@ class BB_Readylaunch_Memberpress_Courses_Helper {
 	 */
 	public function bb_rl_meprlms_add_course_description( $content ) {
 		global $post;
-		if ( is_single() && ! empty( $post ) && is_a( $post, 'WP_Post' ) && helpers\Courses::is_a_course( $post ) ) {
-			ob_start();
-			?>
-			<div class="bb-rl-course-description">
-				<?php
-				echo wp_kses_post( self::bb_rl_mpcs_render_course_tab_menu() . $content );
-				?>
-			</div>
-			<?php
-			return ob_get_clean();
+		if ( is_single() && ! empty( $post ) && is_a( $post, 'WP_Post' ) ) {
+			if ( class_exists( 'memberpress\courses\models\Course' ) && models\Course::$cpt === $post->post_type ) {
+				return '<div class="bb-rl-course-description"><h2>' . esc_html__( 'About course', 'buddyboss' ) . '</h2>' . $content . '</div>';
+			}
 		}
 		return $content;
 	}
@@ -637,7 +631,7 @@ class BB_Readylaunch_Memberpress_Courses_Helper {
 		<div class="section bb-rl-lms-tab-menu">
 			<a class="bb-rl-lms-tab <?php \MeprAccountHelper::active_nav( 'home', 'is-active' ); ?>" href="<?php echo esc_url( get_permalink() ); ?>">
 				<div class="tile-content">
-					<p class="tile-title m-0"><?php esc_html_e( 'About Course', 'buddyboss' ); ?></p>
+					<p class="tile-title m-0"><?php esc_html_e( 'Course Info', 'buddyboss' ); ?></p>
 				</div>
 			</a>
 			<?php

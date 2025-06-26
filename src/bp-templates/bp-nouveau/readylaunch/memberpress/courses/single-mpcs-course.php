@@ -166,6 +166,7 @@ if ( is_user_logged_in() && ! empty( $memberships ) ) {
 				<div id="mpcs-main" class="bb-rl-course-content-module">
 					<?php
 					setup_postdata( $post->ID );
+					echo wp_kses_post( BB_Readylaunch_Memberpress_Courses_Helper::bb_rl_mpcs_render_course_tab_menu() );
 					the_content();
 					?>
 				</div>
