@@ -76,8 +76,6 @@ if ( $is_memberpress_inner ) {
 				<ul class="bb-rl-left-panel-menu-list bb-readylaunchpanel-menu">
 					<?php
 					$homepage_id = get_option( 'page_on_front' );
-					error_log( '$sidebar_order' );
-					error_log( print_r( $sidebar_order, true ) );
 					foreach ( $sidebar_order as $key => $item ) {
 						if ( ! empty( $item['enabled'] ) ) {
 							if ( function_exists( 'wp_make_link_relative' ) ) {
