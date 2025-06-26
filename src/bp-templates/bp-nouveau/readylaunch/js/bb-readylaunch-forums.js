@@ -117,7 +117,13 @@ window.bp = window.bp || {};
 		},
 
 		openReplyModal: function ( e ) {
+
+			if( $( this ).closest( '.bb-rl-reply-single-page' ).length > 0 ) {
+				return;
+			}
+
 			e.preventDefault();
+				
 			$('.bbp-reply-form.bb-rl-forum-modal').addClass( 'bb-rl-forum-modal-visible' );
 
 			if( $( this ).closest( '.bb-rl-forum-reply-list-item' ).length > 0 ) {
@@ -1319,6 +1325,18 @@ window.bp = window.bp || {};
 					}
 				);
 			}
+
+			if ( bp.Readylaunch.Forums.bb_rl_getUrlParameter( 'bbp_reply_to' ) ) {
+				if ( bp.Readylaunch.Forums.bb_rl_getUrlParameter( 'bbp_reply_to' ) ) {
+					if ( parseInt( bp.Readylaunch.Forums.bb_rl_getUrlParameter( 'bbp_reply_to' ) ) > 0 && $( document ).find( '.bb-rl-forum-reply-list-item.post-' + bp.Readylaunch.Forums.bb_rl_getUrlParameter( 'bbp_reply_to' ) ).length ) {
+						$( window ).load( function () {
+							$( '.bb-rl-forum-reply-list-item.post-' + bp.Readylaunch.Forums.bb_rl_getUrlParameter( 'bbp_reply_to' ) + ' .bbp-reply-to-link' ).trigger( 'click' );
+						} );
+					} else {
+						$( '.bbp-topic-reply-link' ).trigger( 'click' );
+					}
+				}
+			}
 		},
 
 		bbp_quick_reply : {
@@ -1438,6 +1456,21 @@ window.bp = window.bp || {};
 				}
 			}
 
+		},
+
+		bb_rl_getUrlParameter: function( sParam ) {
+			var sPageURL = window.location.search.substring( 1 ),
+				sURLVariables = sPageURL.split( '&' ),
+				sParameterName,
+				i;
+	
+			for ( i = 0; i < sURLVariables.length; i++ ) {
+				sParameterName = sURLVariables[ i ].split( '=' );
+	
+				if ( sParameterName[ 0 ] === sParam ) {
+					return sParameterName[ 1 ] === undefined ? true : decodeURIComponent( sParameterName[ 1 ] );
+				}
+			}
 		}
 	};
 
