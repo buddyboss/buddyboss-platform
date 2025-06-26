@@ -645,14 +645,71 @@
   display: none;
 }
 
-.bb-rl-mbprlms-pagination .pagination {
+.bb-rl-mbprlms-pagination .pagination,
+body[class*="mpcs-course"] .bb-rl-mbprlms-pagination .pagination {
   display: flex;
   align-items: center;
   justify-content: flex-end;
   padding-bottom: var(--bb-rl-space-400);
 }
 
-.bb-rl-mbprlms-pagination ul {
+.bb-rl-mbprlms-pagination .pagination li,
+body[class*="mpcs-course"] .bb-rl-mbprlms-pagination .pagination li {
+  margin: 0;
+}
+
+.bb-rl-mbprlms-pagination .pagination li a:has(.mpcs-angle-right),
+.bb-rl-mbprlms-pagination .pagination li a:has(.mpcs-angle-left),
+body[class*="mpcs-course"] .bb-rl-mbprlms-pagination .pagination li a:has(.mpcs-angle-right),
+body[class*="mpcs-course"] .bb-rl-mbprlms-pagination .pagination li a:has(.mpcs-angle-left) {
+  background-color: transparent;
+  border: 1px solid var(--bb-rl-border-tertiary-color);
+  padding: 0 var(--bb-rl-space-200);
+}
+
+.bb-rl-mbprlms-pagination .pagination li a:has(.mpcs-angle-right):hover,
+.bb-rl-mbprlms-pagination .pagination li a:has(.mpcs-angle-left):hover,
+body[class*="mpcs-course"] .bb-rl-mbprlms-pagination .pagination li a:has(.mpcs-angle-right):hover,
+body[class*="mpcs-course"] .bb-rl-mbprlms-pagination .pagination li a:has(.mpcs-angle-left):hover {
+  border: 1px solid var(--bb-rl-border-tertiary-color) !important;
+}
+
+.bb-rl-mbprlms-pagination .pagination li a:has(.mpcs-angle-right):hover i:before,
+.bb-rl-mbprlms-pagination .pagination li a:has(.mpcs-angle-left):hover i:before,
+body[class*="mpcs-course"] .bb-rl-mbprlms-pagination .pagination li a:has(.mpcs-angle-right):hover i:before,
+body[class*="mpcs-course"] .bb-rl-mbprlms-pagination .pagination li a:has(.mpcs-angle-left):hover i:before {
+  color: var(--bb-rl-icon-primary-color) !important;
+}
+
+.bb-rl-mbprlms-pagination .pagination .mpcs-angle-right,
+.bb-rl-mbprlms-pagination .pagination .mpcs-angle-left,
+body[class*="mpcs-course"] .bb-rl-mbprlms-pagination .pagination .mpcs-angle-right,
+body[class*="mpcs-course"] .bb-rl-mbprlms-pagination .pagination .mpcs-angle-left {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 16px;
+}
+
+.bb-rl-mbprlms-pagination .pagination .mpcs-angle-right::before,
+.bb-rl-mbprlms-pagination .pagination .mpcs-angle-left::before,
+body[class*="mpcs-course"] .bb-rl-mbprlms-pagination .pagination .mpcs-angle-right::before,
+body[class*="mpcs-course"] .bb-rl-mbprlms-pagination .pagination .mpcs-angle-left::before {
+  content: "\e13a";
+  font-family: bb-icons-rl;
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--bb-rl-icon-primary-color);
+  font-style: normal;
+}
+
+.bb-rl-mbprlms-pagination .pagination .mpcs-angle-left::before,
+body[class*="mpcs-course"] .bb-rl-mbprlms-pagination .pagination .mpcs-angle-left::before {
+  content: "\e138";
+}
+
+.bb-rl-mbprlms-pagination ul,
+body[class*="mpcs-course"] .bb-rl-mbprlms-pagination ul {
   list-style: none;
   padding: 0;
   margin: 0;
@@ -661,7 +718,11 @@
   gap: var(--bb-rl-space-100);
 }
 
-.bb-rl-mbprlms-pagination ul li a {
+.bb-rl-mbprlms-pagination ul li a,
+body[class*="mpcs-course"] .bb-rl-mbprlms-pagination ul li a {
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 500;
+  line-height: var(--bb-rl-base-line-small);
   display: inline-flex;
   min-width: var(--bb-rl-space-400);
   height: var(--bb-rl-space-400);
@@ -669,12 +730,14 @@
   border-radius: var(--bb-rl-radius-md);
   justify-content: center;
   align-items: center;
-  color: var(--bb-rl-text-tertiary-color);
+  color: var(--bb-rl-text-tertiary-color) !important;
 }
 
-.bb-rl-mbprlms-pagination ul li.active a {
-  color: var(--bb-rl-text-color);
+.bb-rl-mbprlms-pagination ul li.active a,
+body[class*="mpcs-course"] .bb-rl-mbprlms-pagination ul li.active a {
+  color: var(--bb-rl-text-color) !important;
   border: 1px solid var(--bb-rl-border-quaternary-color);
+  background-color: var(--bb-rl-background-color);
 }
 
 .bb-rl-lms-inner-block #mpcs-lesson-navigation #next_lesson_link:not(#mpcs-classroom-previous-lesson-link),

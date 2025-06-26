@@ -5623,6 +5623,9 @@ body.bb-readylaunch-template .select2-container--rl.select2-container--open:has(
 .bb-rl-container-inner .bp-pagination > .bp-pagination-links a,
 .bb-rl-content-wrapper .bp-pagination > .bp-pagination-links span,
 .bb-rl-content-wrapper .bp-pagination > .bp-pagination-links a {
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 500;
+  line-height: var(--bb-rl-base-line-small);
   line-height: var(--bb-rl-space-400);
 }
 
@@ -5715,6 +5718,7 @@ body.bb-readylaunch-template .select2-container--rl.select2-container--open:has(
 .bb-rl-content-wrapper .bp-pagination > .bp-pagination-links .bb-rl-page-numbers:not(.prev):not(.next).current {
   color: var(--bb-rl-text-color);
   border: 1px solid var(--bb-rl-border-quaternary-color);
+  background-color: var(--bb-rl-background-color);
 }
 
 .bb-rl-container-inner .bp-pagination > .bp-pagination-links a.prev,

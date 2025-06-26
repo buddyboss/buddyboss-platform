@@ -25,6 +25,8 @@
 
 			span,
 			a {
+
+				@include bb-rl-label-heading-bolder;
 				line-height: var(--bb-rl-space-400);
 			}
 
@@ -93,6 +95,7 @@
 				&.current {
 					color: var(--bb-rl-text-color);
 					border: 1px solid var(--bb-rl-border-quaternary-color);
+					background-color: var(--bb-rl-background-color);
 				}
 			}
 
