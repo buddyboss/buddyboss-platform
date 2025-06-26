@@ -184,7 +184,7 @@
 }
 
 .bb-rl-course-content-inner,
-.mpcs-sidebar-content {
+.bb-rl-left-panel--memprlms .mpcs-sidebar-content {
 
 	.mpcs-section.mpcs-section-lessons {
 		border-color: var(--bb-rl-border-secondary-color);
@@ -327,6 +327,24 @@
 
 		.mpcs-lesson-progress {
 			padding: 0;
+			line-height: 1;
+		}
+	}
+
+	.mpcs-lesson-progress {
+
+		.mpcs-circle-regular {
+			font-size: 16px;
+		}
+
+		.mpcs-circle-regular::before {
+			content: "\e18a";
+			font-family: bb-icons-rl;
+			font-size: 22px;
+			font-weight: 400;
+			color: var(--bb-rl-text-white-color);
+			margin: 0;
+			font-style: normal;
 		}
 	}
 
@@ -338,6 +356,7 @@
 
 		i:before {
 			color: var(--bb-rl-border-tertiary-color);
+			margin: 0;
 		}
 	}
 
@@ -357,6 +376,22 @@
 			font-weight: 400;
 			color: var(--bb-rl-text-white-color);
 		}
+	}
+
+	.mpcs-section .mpcs-lessons .mpcs-adjust-solid {
+		line-height: 1;
+		font-size: 16px;
+	}
+
+	.mpcs-section .mpcs-lessons .mpcs-adjust-solid:before {
+		content: "\e18c";
+		font-family: bb-icons-rl;
+		font-size: 22px;
+		font-weight: 400;
+		color: var(--bb-rl-border-tertiary-color);
+		transform: rotate(180deg);
+		margin: 0;
+		font-style: normal;
 	}
 
 	.mpcs-section.mpcs-section-lessons .mpcs-section-title .mpcs-section-title-text:before {
