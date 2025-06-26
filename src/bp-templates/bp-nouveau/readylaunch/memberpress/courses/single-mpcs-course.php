@@ -74,7 +74,7 @@ if ( is_user_logged_in() && ! empty( $memberships ) ) {
 
 				<div class="bb-rl-course-meta bb-rl-course-meta--updated">
 					<div class="bb-rl-course-meta-label">
-						<?php echo esc_html__( 'Course updated:', 'buddyboss' ); ?>
+						<?php echo esc_html__( 'This course was last updated on', 'buddyboss' ); ?>
 					</div>
 					<div class="bb-rl-course-meta-value">
 						<?php
