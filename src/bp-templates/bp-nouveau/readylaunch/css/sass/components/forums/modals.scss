@@ -200,6 +200,14 @@
 			margin: 0;
 		}
 
+		+ .bp-feedback {
+			margin: var(--bb-rl-space-200) var(--bb-rl-space-300);
+
+			+ .bb-rl-forum-modal-content {
+				border-top: 1px solid var(--bb-rl-border-secondary-color);
+			}
+		}
+
 		.bb-rl-forum-modal-type {
 			margin-left: auto;
 
