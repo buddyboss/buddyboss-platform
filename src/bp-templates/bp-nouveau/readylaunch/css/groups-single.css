@@ -6865,12 +6865,14 @@ body.ld-in-focus-mode .learndash-wrapper {
   cursor: not-allowed;
 }
 
-.bb-rl-quiz-entry .wpProQuiz_content .wpProQuiz_text input[type="checkbox"] {
+.bb-rl-quiz-entry .wpProQuiz_content .wpProQuiz_text input[type="checkbox"],
+.bb-rl-quiz-entry .learndash-wrapper .wpProQuiz_content .wpProQuiz_text input[type="checkbox"] {
   opacity: 1;
   position: static;
 }
 
-.bb-rl-quiz-entry .wpProQuiz_content .wpProQuiz_quiz .wpProQuiz_header {
+.bb-rl-quiz-entry .wpProQuiz_content .wpProQuiz_quiz .wpProQuiz_header,
+.bb-rl-quiz-entry .learndash-wrapper .wpProQuiz_content .wpProQuiz_quiz .wpProQuiz_header {
   font-size: 14px;
   font-weight: 500;
   line-height: 22px;
@@ -6879,14 +6881,17 @@ body.ld-in-focus-mode .learndash-wrapper {
 }
 
 .bb-rl-quiz-entry .wpProQuiz_content .wpProQuiz_quiz .wpProQuiz_listItem[data-type="single"] .wpProQuiz_questionListItem,
-.bb-rl-quiz-entry .wpProQuiz_content .wpProQuiz_quiz .wpProQuiz_listItem[data-type="multiple"] .wpProQuiz_questionListItem {
+.bb-rl-quiz-entry .wpProQuiz_content .wpProQuiz_quiz .wpProQuiz_listItem[data-type="multiple"] .wpProQuiz_questionListItem,
+.bb-rl-quiz-entry .learndash-wrapper .wpProQuiz_content .wpProQuiz_quiz .wpProQuiz_listItem[data-type="single"] .wpProQuiz_questionListItem,
+.bb-rl-quiz-entry .learndash-wrapper .wpProQuiz_content .wpProQuiz_quiz .wpProQuiz_listItem[data-type="multiple"] .wpProQuiz_questionListItem {
   display: flex;
   align-items: center;
   flex-direction: row;
   gap: var(--bb-rl-space-200);
 }
 
-.bb-rl-quiz-entry .wpProQuiz_content .wpProQuiz_quiz .wpProQuiz_listItem .wpProQuiz_header + span {
+.bb-rl-quiz-entry .wpProQuiz_content .wpProQuiz_quiz .wpProQuiz_listItem .wpProQuiz_header + span,
+.bb-rl-quiz-entry .learndash-wrapper .wpProQuiz_content .wpProQuiz_quiz .wpProQuiz_listItem .wpProQuiz_header + span {
   font-size: var(--bb-rl-font-size-sm);
   font-weight: 400;
   line-height: var(--bb-rl-base-line-small);
@@ -6894,64 +6899,74 @@ body.ld-in-focus-mode .learndash-wrapper {
   font-weight: 400 !important;
 }
 
-.bb-rl-quiz-entry .wpProQuiz_content .wpProQuiz_tipp > div {
+.bb-rl-quiz-entry .wpProQuiz_content .wpProQuiz_tipp > div,
+.bb-rl-quiz-entry .learndash-wrapper .wpProQuiz_content .wpProQuiz_tipp > div {
   box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.32);
   background-color: var(--bb-rl-background-secondary-color);
   padding: var(--bb-rl-space-200);
 }
 
-.bb-rl-quiz-entry .wpProQuiz_content .wpProQuiz_tipp > div:before {
+.bb-rl-quiz-entry .wpProQuiz_content .wpProQuiz_tipp > div:before,
+.bb-rl-quiz-entry .learndash-wrapper .wpProQuiz_content .wpProQuiz_tipp > div:before {
   background-color: var(--bb-rl-background-secondary-color);
 }
 
-.bb-rl-quiz-entry .wpProQuiz_content .wpProQuiz_resultTable {
+.bb-rl-quiz-entry .wpProQuiz_content .wpProQuiz_resultTable,
+.bb-rl-quiz-entry .learndash-wrapper .wpProQuiz_content .wpProQuiz_resultTable {
   border: 1px solid var(--bb-rl-border-secondary-color);
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-200);
   width: 100%;
 }
 
-.bb-rl-quiz-entry .wpProQuiz_content .wpProQuiz_resultTable .wpProQuiz_resultName {
+.bb-rl-quiz-entry .wpProQuiz_content .wpProQuiz_resultTable .wpProQuiz_resultName,
+.bb-rl-quiz-entry .learndash-wrapper .wpProQuiz_content .wpProQuiz_resultTable .wpProQuiz_resultName {
   font-size: 14px;
   font-weight: 500;
   line-height: 22px;
   color: var(--bb-rl-text-color);
 }
 
-.bb-rl-quiz-entry .wpProQuiz_content .wpProQuiz_resultTable .wpProQuiz_resultValue div {
+.bb-rl-quiz-entry .wpProQuiz_content .wpProQuiz_resultTable .wpProQuiz_resultValue div,
+.bb-rl-quiz-entry .learndash-wrapper .wpProQuiz_content .wpProQuiz_resultTable .wpProQuiz_resultValue div {
   height: var(--bb-rl-space-100);
   border-radius: var(--bb-rl-radius-md);
 }
 
-.bb-rl-quiz-entry .wpProQuiz_content .wpProQuiz_resultTable .wpProQuiz_resultValue .progress-number {
+.bb-rl-quiz-entry .wpProQuiz_content .wpProQuiz_resultTable .wpProQuiz_resultValue .progress-number,
+.bb-rl-quiz-entry .learndash-wrapper .wpProQuiz_content .wpProQuiz_resultTable .wpProQuiz_resultValue .progress-number {
   font-size: 14px;
   font-weight: 500;
   line-height: 22px;
   color: var(--bb-rl-text-secondary-color);
 }
 
-.bb-rl-quiz-entry .wpProQuiz_content .wpProQuiz_results .wpProQuiz_catOverview h4 {
+.bb-rl-quiz-entry .wpProQuiz_content .wpProQuiz_results .wpProQuiz_catOverview h4,
+.bb-rl-quiz-entry .learndash-wrapper .wpProQuiz_content .wpProQuiz_results .wpProQuiz_catOverview h4 {
   font-size: var(--bb-rl-font-size-base);
   font-weight: 500;
   line-height: var(--bb-rl-base-line);
   color: var(--bb-rl-text-color);
 }
 
-.bb-rl-quiz-entry .wpProQuiz_content .wpProQuiz_results .wpProQuiz_catOverview .wpProQuiz_catPercent {
+.bb-rl-quiz-entry .wpProQuiz_content .wpProQuiz_results .wpProQuiz_catOverview .wpProQuiz_catPercent,
+.bb-rl-quiz-entry .learndash-wrapper .wpProQuiz_content .wpProQuiz_results .wpProQuiz_catOverview .wpProQuiz_catPercent {
   font-size: 14px;
   font-weight: 500;
   line-height: 22px;
   color: var(--bb-rl-text-color);
 }
 
-.bb-rl-quiz-entry .wpProQuiz_content .wpProQuiz_toplist .wpProQuiz_toplistTable {
+.bb-rl-quiz-entry .wpProQuiz_content .wpProQuiz_toplist .wpProQuiz_toplistTable,
+.bb-rl-quiz-entry .learndash-wrapper .wpProQuiz_content .wpProQuiz_toplist .wpProQuiz_toplistTable {
   border-collapse: separate;
   border-spacing: 0;
   border: 1px solid var(--bb-rl-border-secondary-color);
   border-radius: var(--bb-rl-radius-md);
 }
 
-.bb-rl-quiz-entry .wpProQuiz_content .wpProQuiz_toplist .wpProQuiz_toplistTable caption {
+.bb-rl-quiz-entry .wpProQuiz_content .wpProQuiz_toplist .wpProQuiz_toplistTable caption,
+.bb-rl-quiz-entry .learndash-wrapper .wpProQuiz_content .wpProQuiz_toplist .wpProQuiz_toplistTable caption {
   font-size: var(--bb-rl-font-size-sm);
   font-weight: 400;
   line-height: var(--bb-rl-base-line-small);
@@ -6959,7 +6974,8 @@ body.ld-in-focus-mode .learndash-wrapper {
   margin: 0 0 var(--bb-rl-space-50);
 }
 
-.bb-rl-quiz-entry .wpProQuiz_content .wpProQuiz_toplist .wpProQuiz_toplistTable th {
+.bb-rl-quiz-entry .wpProQuiz_content .wpProQuiz_toplist .wpProQuiz_toplistTable th,
+.bb-rl-quiz-entry .learndash-wrapper .wpProQuiz_content .wpProQuiz_toplist .wpProQuiz_toplistTable th {
   font-size: var(--bb-rl-font-size-sm);
   font-weight: 400;
   line-height: var(--bb-rl-base-line-small);
@@ -6967,35 +6983,42 @@ body.ld-in-focus-mode .learndash-wrapper {
   background-color: var(--bb-rl-background-secondary-color);
 }
 
-.bb-rl-quiz-entry .wpProQuiz_content .wpProQuiz_toplist .wpProQuiz_toplistTable td {
+.bb-rl-quiz-entry .wpProQuiz_content .wpProQuiz_toplist .wpProQuiz_toplistTable td,
+.bb-rl-quiz-entry .learndash-wrapper .wpProQuiz_content .wpProQuiz_toplist .wpProQuiz_toplistTable td {
   font-size: var(--bb-rl-font-size-sm);
   font-weight: 400;
   line-height: var(--bb-rl-base-line-small);
   color: var(--bb-rl-text-secondary-color);
 }
 
-.bb-rl-quiz-entry .wpProQuiz_content .wpProQuiz_toplist .wpProQuiz_toplistTable thead tr th {
+.bb-rl-quiz-entry .wpProQuiz_content .wpProQuiz_toplist .wpProQuiz_toplistTable thead tr th,
+.bb-rl-quiz-entry .learndash-wrapper .wpProQuiz_content .wpProQuiz_toplist .wpProQuiz_toplistTable thead tr th {
   padding: var(--bb-rl-space-100);
 }
 
-.bb-rl-quiz-entry .wpProQuiz_content .wpProQuiz_toplist .wpProQuiz_toplistTable thead tr th:first-of-type {
+.bb-rl-quiz-entry .wpProQuiz_content .wpProQuiz_toplist .wpProQuiz_toplistTable thead tr th:first-of-type,
+.bb-rl-quiz-entry .learndash-wrapper .wpProQuiz_content .wpProQuiz_toplist .wpProQuiz_toplistTable thead tr th:first-of-type {
   border-top-left-radius: var(--bb-rl-radius-md);
 }
 
-.bb-rl-quiz-entry .wpProQuiz_content .wpProQuiz_toplist .wpProQuiz_toplistTable thead tr th:last-of-type {
+.bb-rl-quiz-entry .wpProQuiz_content .wpProQuiz_toplist .wpProQuiz_toplistTable thead tr th:last-of-type,
+.bb-rl-quiz-entry .learndash-wrapper .wpProQuiz_content .wpProQuiz_toplist .wpProQuiz_toplistTable thead tr th:last-of-type {
   border-top-right-radius: var(--bb-rl-radius-md);
 }
 
-.bb-rl-quiz-entry .wpProQuiz_content .wpProQuiz_toplist .wpProQuiz_toplistTable tbody tr td {
+.bb-rl-quiz-entry .wpProQuiz_content .wpProQuiz_toplist .wpProQuiz_toplistTable tbody tr td,
+.bb-rl-quiz-entry .learndash-wrapper .wpProQuiz_content .wpProQuiz_toplist .wpProQuiz_toplistTable tbody tr td {
   padding: var(--bb-rl-space-100);
   border-bottom: 1px solid var(--bb-rl-border-secondary-color);
 }
 
-.bb-rl-quiz-entry .wpProQuiz_content .wpProQuiz_toplist .wpProQuiz_toplistTable tbody tr:last-child td:first-of-type {
+.bb-rl-quiz-entry .wpProQuiz_content .wpProQuiz_toplist .wpProQuiz_toplistTable tbody tr:last-child td:first-of-type,
+.bb-rl-quiz-entry .learndash-wrapper .wpProQuiz_content .wpProQuiz_toplist .wpProQuiz_toplistTable tbody tr:last-child td:first-of-type {
   border-bottom-left-radius: var(--bb-rl-radius-md);
 }
 
-.bb-rl-quiz-entry .wpProQuiz_content .wpProQuiz_toplist .wpProQuiz_toplistTable tbody tr:last-child td:last-of-type {
+.bb-rl-quiz-entry .wpProQuiz_content .wpProQuiz_toplist .wpProQuiz_toplistTable tbody tr:last-child td:last-of-type,
+.bb-rl-quiz-entry .learndash-wrapper .wpProQuiz_content .wpProQuiz_toplist .wpProQuiz_toplistTable tbody tr:last-child td:last-of-type {
   border-bottom-right-radius: var(--bb-rl-radius-md);
 }
 

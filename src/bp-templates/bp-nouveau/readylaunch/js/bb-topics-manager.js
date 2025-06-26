@@ -1170,6 +1170,14 @@ window.bp = window.bp || {};
 				$class        = args.class,
 				data          = args.data;
 
+			// Start to handle the case when the selector is the old what's new form for poll and schedule post.
+			if ( 'focus-in--empty' === $class ) {
+				$class = 'bb-rl-focus-in--empty';
+			}
+			if ( $selector && $selector[0] === $( '#whats-new-form' )[0] ) {
+				$selector = $( '#bb-rl-whats-new-form' );
+			}
+			// End of the old what's new form for poll and schedule post.
 
 			// Need to check if the poll is enabled and the poll_id is set.
 			// It will mainly use when we change the topic from the topic selector.
