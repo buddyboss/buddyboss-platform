@@ -3060,6 +3060,11 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				bp_get_version()
 			);
 
+			// Dequeue default bbpress scripts to avoid conflict with readylaunch scripts.
+			// Should load after readylaunch scripts.
+			wp_deregister_script( 'bb-topic-reply-draft' );
+			wp_dequeue_script( 'bb-topic-reply-draft' );
+
 			// Enqueue Topic Reply Draft JavaScript.
 			wp_enqueue_script(
 				'bb-readylaunch-topic-reply-draft',
