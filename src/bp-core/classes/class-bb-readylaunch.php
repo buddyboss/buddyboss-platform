@@ -279,6 +279,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			add_action( 'wp_footer', array( $this, 'bb_rl_end_buffering' ), 999 );
 			add_filter( 'paginate_links_output', array( $this, 'bb_rl_filter_paginate_links_output' ), 10, 2 );
 			add_filter( 'body_class', array( $this, 'bb_rl_theme_body_classes' ) );
+			add_filter( 'script_loader_src', array( $this, 'bb_rl_script_loader_src' ), PHP_INT_MAX, 2 );
 		}
 
 		/**
@@ -1933,6 +1934,27 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 			return $classes;
 		}
+
+		/**
+		 * Filters the script loader source for the ReadyLaunch script.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $src    The source URL of the script.
+		 * @param string $handle The handle of the script.
+		 *
+		 * @return string Filtered source URL.
+		 */
+		public function bb_rl_script_loader_src( $src, $handle ) {
+			global $bp;
+			$min = bp_core_get_minified_asset_suffix();
+			if ( ! empty( $src ) && 'bb-topics-manager' === $handle ) {
+				$src = trailingslashit( $bp->plugin_url ) . "bp-templates/bp-nouveau/readylaunch/js/bb-topics-manager{$min}.js";
+			}
+
+			return $src;
+		}
+
 
 		/**
 		 * Override Send Message button text.

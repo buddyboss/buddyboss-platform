@@ -192,7 +192,6 @@ class BB_Topics_Manager {
 		);
 
 		// Add the JS templates for topics.
-		bp_get_template_part( 'common/js-templates/bb-topic-delete' );
 		bp_get_template_part( 'common/js-templates/bb-topic-lists' );
 	}
 
