@@ -399,6 +399,31 @@
   display: none;
 }
 
+.bb-rl-lms-tab-menu .bb-rl-lms-tab .tile-title,
+.bb-rl-lms-tab-menu .tile .tile-title,
+.bb-rl-lms-tab-menu .mepr-gradebook .tile-title {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--bb-rl-space-50);
+}
+
+.bb-rl-lms-tab-menu .bb-rl-lms-tab .mpcs-share,
+.bb-rl-lms-tab-menu .tile .mpcs-share,
+.bb-rl-lms-tab-menu .mepr-gradebook .mpcs-share {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bb-rl-lms-tab-menu .mpcs-share:before {
+  content: "\e408";
+  font-weight: 400;
+  font-family: bb-icons-rl;
+  font-size: 16px;
+  color: var(--bb-rl-icon-secondary-color);
+  font-style: normal;
+}
+
 .mpcs-classroom.bb-readylaunch-template .bb-rl-lms-tab-menu .tile .tile-title {
   font-size: var(--bb-rl-font-size-sm);
   font-weight: 500;
@@ -929,6 +954,10 @@ body[class*="mpcs-course"] .bb-rl-mbprlms-pagination ul li.active a {
   color: var(--bb-rl-text-brand-secondary-color);
 }
 
+.mpcs-classroom.bb-readylaunch-template #bookmark {
+  margin: 0;
+}
+
 .bb-rl-memprlms-course .course-curriculum:has(a) {
   border: 0;
   border-radius: 0;
@@ -1026,6 +1055,15 @@ body[class*="mpcs-course"] .bb-rl-mbprlms-pagination ul li.active a {
   height: 100%;
   object-fit: cover;
   border-radius: 50%;
+}
+
+.bb-rl-course-content-module .mpcs-instructor .tile-title,
+.bb-rl-course-description .mpcs-instructor .tile-title {
+  font-size: var(--bb-rl-font-size-base);
+  font-weight: 500;
+  line-height: var(--bb-rl-base-line);
+  color: var(--bb-rl-text-color);
+  margin: 0 0 var(--bb-rl-space-100);
 }
 
 .bb-rl-course-content-module .mpcs-instructor .tile-subtitle,

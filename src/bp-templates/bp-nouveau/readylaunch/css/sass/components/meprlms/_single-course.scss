@@ -87,6 +87,13 @@
 	}
 }
 
+.mpcs-classroom.bb-readylaunch-template {
+
+	#bookmark {
+		margin: 0;
+	}
+}
+
 .bb-rl-memprlms-course {
 
 	.course-curriculum:has(a) {
@@ -155,6 +162,13 @@
 				object-fit: cover;
 				border-radius: 50%;
 			}
+		}
+
+		.tile-title {
+
+			@include bb-rl-base-heading;
+			color: var(--bb-rl-text-color);
+			margin: 0 0 var(--bb-rl-space-100);
 		}
 
 		.tile-subtitle {
