@@ -14,6 +14,7 @@
 defined( 'ABSPATH' ) || exit;
 
 $post_title = '';
+$no_results = '';
 
 if ( empty( $_GET['s'] ) || '' === $_GET['s'] ) {
 	$post_title = __( 'No results found', 'buddyboss' );
