@@ -249,7 +249,8 @@
 		display: none;
 	}
 
-	.mpcs-quiz-character-counter {
+	.mpcs-quiz-character-counter,
+	.mpcs-quiz-question.mpcs-quiz-question-essay .mpcs-quiz-character-counter {
 
 		@include bb-rl-label-heading;
 		color: var(--bb-rl-text-tertiary-color);
@@ -258,7 +259,7 @@
 
 	.mpcs-quiz-question-error,
 	.mpcs-assignment-error {
-		margin: 0;
+		margin: var(--bb-rl-space-100) 0 0;
 	}
 
 	.mpcs-quiz-question-error-inner,
@@ -267,5 +268,63 @@
 		@include bb-rl-notice;
 		@include bb-rl-notice--alt;
 		@include bb-rl-notice--alt-error;
+	}
+
+	h4.mpcs-quiz-score {
+
+		@include bb-rl-base-heading-xl;
+		color: var(--bb-rl-text-color);
+		margin: var(--bb-rl-space-200) 0 0;
+	}
+
+	.mpcs-classroom .mpcs-main .mpcs-quiz-incorrect-answer,
+	.mpcs-classroom .mpcs-main .mpcs-quiz-question-incorrect .mpcs-quiz-question-label > label {
+		
+	}
+}
+
+.mpcs-classroom.bb-readylaunch-template {
+
+	.mpcs-main {
+
+		.mpcs-quiz-incorrect-answer,
+		.mpcs-quiz-question-incorrect .mpcs-quiz-question-label > label {
+			color: var(--bb-rl-text-danger-primary-color);
+		}
+
+		.mpcs-quiz-question-label > label > .mpcs-quiz-correct-answer,
+		.mpcs-quiz-question-label > label > .mpcs-quiz-incorrect-answer {
+			display: none;
+		}
+
+		.mpcs-quiz-correct-answer,
+		.mpcs-quiz-question-correct .mpcs-quiz-question-label > label {
+			color: var(--bb-rl-text-positive-primary-color);
+		}
+
+		.mpcs-quiz-question-correct-answer-box {
+			background-color: var(--bb-rl-background-positive-secondary-color);
+			border-radius: var(--bb-rl-radius-md);
+			padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+		}
+
+		.mpcs-retake-container a {
+
+			@include bb-rl-button--tertiary-link;
+		}
+
+		.mpcs-retake-container .mpcs-retake-limit {
+
+			@include bb-rl-label-heading-bolder;
+			color: var(--bb-rl-text-tertiary-color);
+		}
+	}
+
+	.mpcs-quiz-question-feedback {
+
+		@include bb-rl-label-heading-md-thin;
+		padding: var(--bb-rl-space-100) 0;
+		border-top-color: var(--bb-rl-border-positive-primary-color);
+		border-bottom-color: var(--bb-rl-border-positive-primary-color);
 	}
 }
