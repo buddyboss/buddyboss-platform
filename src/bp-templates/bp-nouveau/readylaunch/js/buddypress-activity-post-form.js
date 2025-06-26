@@ -813,7 +813,7 @@ window.bp = window.bp || {};
 					self         : self,
 					selector     : self.postForm.$el,
 					validContent : bp.Nouveau.Activity.postForm.validateContent(),
-					class        : 'focus-in--empty',
+					class        : 'bb-rl-focus-in--empty',
 					data         : activity_data,
 					action       : 'draft_activity_loaded'
 				} );
@@ -4981,6 +4981,9 @@ window.bp = window.bp || {};
 						}
 
 				$( 'a.bp-suggestions-mention:empty' ).remove();
+				
+				// Trigger modal opened event.
+				$( document ).trigger( 'bb_display_full_form' );
 			},
 
 			activityHideModalEvent: function () {

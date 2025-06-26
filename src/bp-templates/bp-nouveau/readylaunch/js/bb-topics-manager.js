@@ -263,7 +263,7 @@ window.bp = window.bp || {};
 								typeof bp.Nouveau.Activity !== 'undefined' &&
 								bp.Nouveau.Activity.postForm
 							) {
-								$( '#whats-new' ).trigger( 'input' );
+								$( '#bb-rl-whats-new' ).trigger( 'input' );
 							}
 						},
 
@@ -903,8 +903,8 @@ window.bp = window.bp || {};
 				if ( BBTopicsManager.isActivityTopicRequired ) {
 					// Add topic tooltip.
 					this.$document.on( 'bb_display_full_form', function () {
-						if ( $( '.activity-update-form #whats-new-submit .bb-topic-tooltip-wrapper' ).length === 0 ) {
-							$( '.activity-update-form.modal-popup #whats-new-submit' ).prepend( '<div class="bb-topic-tooltip-wrapper"><div class="bb-topic-tooltip">' + BBTopicsManager.topicTooltipError + '</div></div>' );
+						if ( $( '.bb-rl-activity-update-form #whats-new-submit .bb-topic-tooltip-wrapper' ).length === 0 ) {
+							$( '.bb-rl-activity-update-form.modal-popup #whats-new-submit' ).prepend( '<div class="bb-topic-tooltip-wrapper"><div class="bb-topic-tooltip">' + BBTopicsManager.topicTooltipError + '</div></div>' );
 						}
 					} );
 				}
@@ -927,7 +927,7 @@ window.bp = window.bp || {};
 			var $wrapper = $( event.currentTarget ),
 				$postBtn = $wrapper.closest( '#whats-new-submit' );
 
-			if ( $postBtn.closest( '.focus-in--empty' ).length > 0 ) {
+			if ( $postBtn.closest( '.bb-rl-focus-in--empty' ).length > 0 ) {
 				$postBtn.find( '.bb-topic-tooltip-wrapper' ).addClass( 'active' ).show();
 			}
 
