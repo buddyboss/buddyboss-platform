@@ -1241,6 +1241,13 @@ window.bp = window.bp || {};
 
 			// Submitting comments and replies.
 			if ( 'ac_form_submit' === target.prop( 'name' ) ) {
+
+				// Prevent duplicate submissions.
+				if ( target.prop( 'disabled' ) ) {
+					event.preventDefault();
+					return;
+				}
+				
 				self.submitActivityComment(
 					{
 						event        : event,
@@ -3147,20 +3154,17 @@ window.bp = window.bp || {};
 			    },
 			    div_editor      = ce.get( 0 );
 
-			if (!jQuery('body').hasClass('bb-is-mobile')) {
-				console.log('1clicked');
-				if (isInsideModal) {
-					console.log('1a1');
+			if ( ! jQuery( 'body' ).hasClass( 'bb-is-mobile' ) ) {
+				if ( isInsideModal ) {
 					$( '.bb-rl-modal-activity-body' ).scrollTo( form, 500, scrollOptions );
 				} else {
-					console.log('1a2');
 					$.scrollTo( form, 500, scrollOptions );
 				}
 			} else {
 				setTimeout(
 					function () {
 						var scrollInt = jQuery( window ).height() > 300 ? 200 : 100;
-						jQuery( 'html, body' ).animate( { scrollTop: jQuery( div_editor ).offset().top - scrollInt }, 500 );
+						jQuery( 'html, body' ).animate( { scrollTop : jQuery( div_editor ).offset().top - scrollInt }, 500 );
 					},
 					500
 				);
