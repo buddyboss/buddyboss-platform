@@ -1160,6 +1160,12 @@
   border-color: var(--bb-rl-border-quinery-color);
 }
 
+.bb-rl-container .learndash-wrapper .ld-tabs .ld-tabs-navigation .ld-tab:hover {
+  background-color: var(--bb-rl-background-color);
+  color: var(--bb-rl-text-color);
+  border-color: var(--bb-rl-border-quinery-color);
+}
+
 .bb-rl-entry-content .learndash-wrapper .ld-video {
   margin: 0 0 var(--bb-rl-space-300);
 }

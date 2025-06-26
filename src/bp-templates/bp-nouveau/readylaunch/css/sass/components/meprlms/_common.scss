@@ -194,8 +194,25 @@
 			border-color: var(--bb-rl-border-quinery-color);
 		}
 
+		&:hover {
+			background-color: var(--bb-rl-background-color);
+			color: var(--bb-rl-text-color);
+			border-color: var(--bb-rl-border-quinery-color);
+		}
+
 		.tile-icon {
 			display: none;
+		}
+	}
+}
+
+.mpcs-classroom.bb-readylaunch-template {
+
+	.bb-rl-lms-tab-menu {
+
+		.tile .tile-title {
+
+			@include bb-rl-label-heading-bolder;
 		}
 	}
 }

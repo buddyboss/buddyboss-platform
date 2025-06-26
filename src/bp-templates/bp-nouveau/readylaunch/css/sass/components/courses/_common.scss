@@ -755,6 +755,12 @@
 					color: var(--bb-rl-text-color);
 					border-color: var(--bb-rl-border-quinery-color);
 				}
+
+				&:hover {
+					background-color: var(--bb-rl-background-color);
+					color: var(--bb-rl-text-color);
+					border-color: var(--bb-rl-border-quinery-color);
+				}
 			}
 		}
 	}

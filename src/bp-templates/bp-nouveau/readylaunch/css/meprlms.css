@@ -385,10 +385,24 @@
   border-color: var(--bb-rl-border-quinery-color);
 }
 
+.bb-rl-lms-tab-menu .bb-rl-lms-tab:hover,
+.bb-rl-lms-tab-menu .tile:hover,
+.bb-rl-lms-tab-menu .mepr-gradebook:hover {
+  background-color: var(--bb-rl-background-color);
+  color: var(--bb-rl-text-color);
+  border-color: var(--bb-rl-border-quinery-color);
+}
+
 .bb-rl-lms-tab-menu .bb-rl-lms-tab .tile-icon,
 .bb-rl-lms-tab-menu .tile .tile-icon,
 .bb-rl-lms-tab-menu .mepr-gradebook .tile-icon {
   display: none;
+}
+
+.mpcs-classroom.bb-readylaunch-template .bb-rl-lms-tab-menu .tile .tile-title {
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 500;
+  line-height: var(--bb-rl-base-line-small);
 }
 
 .post-type-archive-mpcs-course.bb-readylaunch-template .bb-rl-meprlms-course-filters {
