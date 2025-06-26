@@ -21,7 +21,7 @@ window.bp = window.bp || {};
 		config : {
 			// Selectors.
 			topicListSelector       : '.bb-activity-topics-list',
-			modalSelector           : '#bb-activity-topic-form_modal',
+			modalSelector           : '#bb-rl-activity-topic-form_modal',
 			modalContentSelector    : '.bb-action-popup-content',
 			backdropSelector        : '#bb-hello-backdrop-activity-topic',
 			topicNameSelector       : '#bb_topic_name',
@@ -119,8 +119,8 @@ window.bp = window.bp || {};
 						className : 'whats-new-topic-selector',
 						template  : bp.template( 'bb-activity-post-form-topic-selector' ),
 						events    : {
-							'click .bb-topic-selector-button' : 'toggleTopicSelectorDropdown',
-							'click .bb-topic-selector-list a' : 'selectTopic'
+							'click .bb-rl-topic-selector-button' : 'toggleTopicSelectorDropdown',
+							'click .bb-rl-topic-selector-list a' : 'selectTopic'
 						},
 
 						initialize : function () {
@@ -241,7 +241,7 @@ window.bp = window.bp || {};
 									topic_name: '', // This will trigger the template to show "Select Topic"
 									topic_lists: this.model.get('topics').topic_lists
 								});
-								topicName = this.$el.find( '.bb-topic-selector-button' ).data( 'select-topic-text' );
+								topicName = this.$el.find( '.bb-rl-topic-selector-button' ).data( 'select-topic-text' );
 							} else {
 								this.model.set('topics', {
 									topic_id: topicId,
@@ -250,12 +250,12 @@ window.bp = window.bp || {};
 								});
 							}
 
-							this.$el.find( '.bb-topic-selector-button' ).text( topicName );
+							this.$el.find( '.bb-rl-topic-selector-button' ).text( topicName );
 							this.$el.removeClass( 'is-active' );
 
-							this.$el.find('.bb-topic-selector-list li a').removeClass('selected');
+							this.$el.find('.bb-rl-topic-selector-list li a').removeClass('selected');
 							if ( '' !== topicId ) {
-								this.$el.find( '.bb-topic-selector-list li a[data-topic-id="' + topicId + '"]' ).addClass( 'selected' );
+								this.$el.find( '.bb-rl-topic-selector-list li a[data-topic-id="' + topicId + '"]' ).addClass( 'selected' );
 							}
 
 							// Trigger input event on #whats-new to trigger postValidate.

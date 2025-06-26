@@ -13,7 +13,7 @@
 
 	<#
 	if ( data.topics && data.topics.topic_lists && data.topics.topic_lists.length > 0 ) { #>
-		<span class="bb-topic-selector-button" data-select-topic-text="<?php esc_html_e( 'Select Topic', 'buddyboss' ); ?>">
+		<span class="bb-rl-topic-selector-button" data-select-topic-text="<?php esc_html_e( 'Select Topic', 'buddyboss' ); ?>">
 			<#
 			var topicId = parseInt( data.topics.topic_id );
 			if ( 0 !== topicId && data.topics.topic_name ) { #>
@@ -22,7 +22,7 @@
 				<?php esc_html_e( 'Select Topic', 'buddyboss' ); ?>
 			<# } #>
 		</span>
-		<div class="bb-topic-selector-list">
+		<div class="bb-rl-topic-selector-list">
 			<ul>
 				<?php
 				if ( ! bb_is_activity_topic_required() ) {

@@ -823,14 +823,14 @@ window.bp = window.bp || {};
 				self.postForm.model.set( 'topics', activity_data.topics );
 				bp.draft_activity.data.topics = activity_data.topics;
 				if ( 0 !== parseInt( activity_data.topics.topic_id ) ) {
-					var $topicElement = $( '.bb-topic-selector-list a[data-topic-id="' + activity_data.topics.topic_id + '"]' );
+					var $topicElement = $( '.bb-rl-topic-selector-list a[data-topic-id="' + activity_data.topics.topic_id + '"]' );
 					if ( $topicElement.length > 0 ) {
 						$topicElement.addClass( 'selected' );
 						var topicName = activity_data.topics.topic_name;
 						if ( ! topicName ) {
 							topicName = $topicElement.text();
 						}
-						$( '.bb-topic-selector-button' ).text( topicName );
+						$( '.bb-rl-topic-selector-button' ).text( topicName );
 					}
 				}
 			}
