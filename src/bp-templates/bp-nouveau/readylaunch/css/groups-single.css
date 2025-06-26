@@ -557,6 +557,10 @@
   color: var(--bb-rl-text-secondary-color);
 }
 
+.bb-rl-group-desc .group-description .bb-rl-more-link {
+  display: table;
+}
+
 .bb-rl-group-section {
   padding: 0 var(--bb-rl-space-500);
 }

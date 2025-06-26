@@ -349,6 +349,10 @@
 		@include bb-rl-label-heading-md;
 		font-weight: 400;
 		color: var(--bb-rl-text-secondary-color);
+
+		.bb-rl-more-link {
+			display: table
+		}
 	}
 }
 
