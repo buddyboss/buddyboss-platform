@@ -6951,6 +6951,10 @@ body.admin-bar .bb-rl-left-panel {
   background-color: var(--bb-rl-background-secondary-hover-color);
 }
 
+.bb-rl-left-panel .bb-readylaunchpanel-menu li.selected > a {
+  background-color: var(--bb-rl-background-secondary-hover-color);
+}
+
 .bb-rl-left-panel .bb-readylaunchpanel-menu .current-menu-item > a {
   font-weight: 600;
   background-color: var(--bb-rl-background-secondary-hover-color);

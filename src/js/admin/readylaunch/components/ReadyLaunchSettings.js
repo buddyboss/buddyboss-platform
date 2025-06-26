@@ -561,7 +561,8 @@ export const ReadyLaunchSettings = () => {
 			updatedItems.forEach(item => {
 				bb_rl_side_menu[item.id] = {
 					enabled: item.enabled,
-					order: item.order
+					order: item.order,
+					icon: item.icon
 				};
 			});
 

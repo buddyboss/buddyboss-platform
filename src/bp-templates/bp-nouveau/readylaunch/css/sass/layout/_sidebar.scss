@@ -53,6 +53,10 @@
 			}
 		}
 
+		li.selected > a {
+			background-color: var(--bb-rl-background-secondary-hover-color);
+		}
+
 		.current-menu-item > a {
 			font-weight: 600;
 			background-color: var(--bb-rl-background-secondary-hover-color);

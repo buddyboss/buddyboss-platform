@@ -451,6 +451,10 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 						$is_active     = true;
 						$item['url']   = bp_get_groups_directory_permalink();
 						$item['label'] = __( 'Groups', 'buddyboss' );
+					} elseif ( 'forums' === $key && bp_is_active( 'forums' ) ) {
+						$is_active     = true;
+						$item['url']   = bbp_get_forums_url();
+						$item['label'] = __( 'Forums', 'buddyboss' );
 					} elseif ( 'courses' === $key ) {
 						$item['label'] = __( 'Courses', 'buddyboss' );
 						$item['url']   = '';

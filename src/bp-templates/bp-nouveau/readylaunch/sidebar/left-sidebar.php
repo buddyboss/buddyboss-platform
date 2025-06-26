@@ -70,14 +70,33 @@ if ( $is_memberpress_inner ) {
 	} else {
 		$sidebar_order = bb_load_readylaunch()->bb_rl_get_sidebar_order();
 		if ( ! empty( $sidebar_order ) ) {
+			$current_url = home_url( add_query_arg( array(), $wp->request ) );
 			?>
 			<div class="bb-rl-left-panel-widget bb-rl-left-panel-menu">
 				<ul class="bb-rl-left-panel-menu-list bb-readylaunchpanel-menu">
 					<?php
+					$homepage_id = get_option( 'page_on_front' );
+					error_log( '$sidebar_order' );
+					error_log( print_r( $sidebar_order, true ) );
 					foreach ( $sidebar_order as $key => $item ) {
 						if ( ! empty( $item['enabled'] ) ) {
+							if ( function_exists( 'wp_make_link_relative' ) ) {
+								$item_path = wp_make_link_relative( $item['url'] );
+								$item_path = trim( $item_path, '/' );
+							} else {
+								global $wp;
+								$current_url = home_url( add_query_arg( array(), $wp->request ) );
+								$item_path   = trim( $wp->request, '/' );
+							}
+							$item_page    = get_page_by_path( $item_path );
+							$item_page_id = $item_page ? $item_page->ID : 0;
+							if ( untrailingslashit( $current_url ) === untrailingslashit( site_url() ) ) {
+								$is_active = (int) $item_page_id === (int) $homepage_id;
+							} else {
+								$is_active = untrailingslashit( $item['url'] ) === untrailingslashit( $current_url );
+							}
 							?>
-							<li>
+							<li <?php echo $is_active ? 'class="selected"' : ''; ?>>
 								<a href="<?php echo esc_url( $item['url'] ); ?>" class="bb-rl-left-panel-menu-link">
 									<?php
 									if ( ! empty( $item['icon'] ) ) {
