@@ -548,7 +548,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 *
 		 * @return bool True if ReadyLaunch is enabled, false otherwise.
 		 */
-		private function bb_is_readylaunch_enabled_for_page() {
+		public function bb_is_readylaunch_enabled_for_page() {
 			return (
 				bp_is_members_directory() ||
 				bp_is_video_directory() ||
