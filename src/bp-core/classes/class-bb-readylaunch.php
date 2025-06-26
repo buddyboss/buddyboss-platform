@@ -792,7 +792,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		public function bb_enqueue_scripts() {
 			$min = bp_core_get_minified_asset_suffix();
 
-			wp_enqueue_script( 'bb-readylaunch-front', buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/js/bb-readylaunch-front{$min}.js", array( 'jquery', 'bp-select2', 'bp-nouveau' ), bp_get_version(), false );
+			wp_enqueue_script( 'bb-readylaunch-front', buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/js/bb-readylaunch-front{$min}.js", array( 'jquery', 'bp-select2', 'bp-nouveau' ), bp_get_version(), true );
 
 			// Enqueue select2 CSS to ensure it's available for ReadyLaunch
 			wp_enqueue_style( 'bp-select2' );
@@ -3037,6 +3037,8 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				return;
 			}
 
+			$min = bp_core_get_minified_asset_suffix();
+
 			// enqueue select2, emojionearea, medium editor.
 			wp_enqueue_script( 'bp-select2' );
 			wp_enqueue_style( 'bp-select2' );
@@ -3053,7 +3055,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			// Enqueue Forum ReadyLaunch styles.
 			wp_enqueue_style(
 				'bb-readylaunch-forums',
-				buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/css/forums.css',
+				buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/css/forums{$min}.css",
 				array(),
 				bp_get_version()
 			);
@@ -3061,7 +3063,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			// Enqueue Topic Reply Draft JavaScript.
 			wp_enqueue_script(
 				'bb-readylaunch-topic-reply-draft',
-				buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/js/bb-readylaunch-topic-reply-draft.js',
+				buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/js/bb-readylaunch-topic-reply-draft{$min}.js",
 				array( 'jquery' ),
 				bp_get_version(),
 				true
@@ -3070,8 +3072,8 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			// Enqueue our Forum helper JavaScript.
 			wp_enqueue_script(
 				'bb-readylaunch-forums-js',
-				buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/js/bb-readylaunch-forums.js',
-				array( 'jquery' ),
+				buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/js/bb-readylaunch-forums{$min}.js",
+				array( 'jquery', 'bp-nouveau' ),
 				bp_get_version(),
 				true
 			);
