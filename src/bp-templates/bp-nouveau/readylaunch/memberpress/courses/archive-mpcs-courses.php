@@ -135,9 +135,9 @@ if ( MeprRule::is_locked( $post ) && helpers\Courses::is_course_archive() ) {
 	<div class="bb-rl-course-card-popup">
 		<div class="bb-rl-course-timestamp">
 			<?php
-			$updated_date = get_the_modified_date();
+			$course_update_date = BB_Readylaunch_Memberpress_Courses_Helper::bb_rl_mpcs_get_course_update_date( $course->ID, get_option( 'date_format' ) );
 			// translators: %s is the updated date.
-			printf( esc_html__( 'Updated: %s', 'buddyboss' ), esc_html( $updated_date ) );
+			printf( esc_html__( 'Updated: %s', 'buddyboss' ), esc_html( $course_update_date ) );
 			?>
 		</div>
 		<div class="bb-rl-course-popup-meta">
