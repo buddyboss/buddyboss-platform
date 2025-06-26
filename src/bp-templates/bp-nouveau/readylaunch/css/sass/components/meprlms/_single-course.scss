@@ -8,7 +8,7 @@
 	}
 
 	.bb-rl-course-continue-button {
-		margin: var(--bb-rl-space-200) 0 0;
+		margin: var(--bb-rl-space-100) 0 0;
 
 		.bb-rl-button {
 			gap: var(--bb-rl-space-50);
@@ -17,6 +17,17 @@
 				position: relative;
 				top: 1px;
 			}
+		}
+	}
+
+	.bb-rl-course-purchase-button {
+		margin: var(--bb-rl-space-100) 0 0;
+
+		.button {
+
+			@include bb-rl-button;
+			@include bb-rl-button--brand-fill;
+			@include bb-rl-button--small;
 		}
 	}
 
@@ -171,6 +182,14 @@
 			a {
 
 				@include bb-rl-button--tertiary-link;
+			}
+
+			a.mpcs-btn {
+
+				@include bb-rl-button;
+				@include bb-rl-button-secondary-fill;
+				@include bb-rl-button--small;
+				margin: var(--bb-rl-space-200) 0 0;
 			}
 		}
 	}

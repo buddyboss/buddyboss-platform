@@ -663,7 +663,7 @@ body[class*="mpcs-course"] .bb-rl-mbprlms-pagination .pagination li {
 body[class*="mpcs-course"] .bb-rl-mbprlms-pagination .pagination li a:has(.mpcs-angle-right),
 body[class*="mpcs-course"] .bb-rl-mbprlms-pagination .pagination li a:has(.mpcs-angle-left) {
   background-color: transparent;
-  border: 1px solid var(--bb-rl-border-tertiary-color);
+  border: 1px solid var(--bb-rl-border-tertiary-color) !important;
   padding: 0 var(--bb-rl-space-200);
 }
 
@@ -699,7 +699,7 @@ body[class*="mpcs-course"] .bb-rl-mbprlms-pagination .pagination .mpcs-angle-lef
   font-family: bb-icons-rl;
   font-size: 16px;
   font-weight: 400;
-  color: var(--bb-rl-icon-primary-color);
+  color: var(--bb-rl-icon-primary-color) !important;
   font-style: normal;
 }
 
@@ -820,12 +820,16 @@ body[class*="mpcs-course"] .bb-rl-mbprlms-pagination ul li.active a {
   background-color: var(--bb-rl-background-tertiary-hover-color);
 }
 
+.bb-rl-lms-inner-block .mpcs-main-content + .bb-rl-course-content-comments {
+  margin-top: var(--bb-rl-space-400);
+}
+
 .bb-rl-course-overview .course-progress h1 {
   display: none;
 }
 
 .bb-rl-course-overview .bb-rl-course-continue-button {
-  margin: var(--bb-rl-space-200) 0 0;
+  margin: var(--bb-rl-space-100) 0 0;
 }
 
 .bb-rl-course-overview .bb-rl-course-continue-button .bb-rl-button {
@@ -835,6 +839,43 @@ body[class*="mpcs-course"] .bb-rl-mbprlms-pagination ul li.active a {
 .bb-rl-course-overview .bb-rl-course-continue-button .bb-rl-button i {
   position: relative;
   top: 1px;
+}
+
+.bb-rl-course-overview .bb-rl-course-purchase-button {
+  margin: var(--bb-rl-space-100) 0 0;
+}
+
+.bb-rl-course-overview .bb-rl-course-purchase-button .button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  font-weight: 500;
+  text-align: center;
+  cursor: pointer;
+  border-radius: var(--bb-rl-radius-md);
+  padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  text-decoration: none;
+  background-color: var(--bb-rl-background-brand-primary-color);
+  color: var(--bb-rl-text-white-color);
+  border: 1px solid var(--bb-rl-background-brand-primary-color);
+  padding: 6px var(--bb-rl-space-200);
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 400;
+}
+
+.bb-rl-course-overview .bb-rl-course-purchase-button .button:hover {
+  background-color: var(--bb-rl-background-brand-primary-hover-color);
+}
+
+.bb-rl-course-overview .bb-rl-course-purchase-button .button:focus-within {
+  outline: 2px solid var(--bb-rl-border-brand-primary-color);
+}
+
+.bb-rl-course-overview .bb-rl-course-purchase-button .button:disabled {
+  background-color: var(--bb-rl-background-brand-disabled-color);
+  cursor: not-allowed;
 }
 
 .bb-rl-course-overview .bb-rl-course-meta--updated {
@@ -1033,6 +1074,45 @@ body[class*="mpcs-course"] .bb-rl-mbprlms-pagination ul li.active a {
 .bb-rl-course-description .mpcs-instructor .tile-meta a:disabled {
   color: var(--bb-rl-background-brand-disabled-color);
   border-bottom-color: transparent;
+  cursor: not-allowed;
+}
+
+.bb-rl-course-content-module .mpcs-instructor .tile-meta a.mpcs-btn,
+.bb-rl-course-description .mpcs-instructor .tile-meta a.mpcs-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  font-weight: 500;
+  text-align: center;
+  cursor: pointer;
+  border-radius: var(--bb-rl-radius-md);
+  padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  text-decoration: none;
+  background-color: var(--bb-rl-background-tertiary-color);
+  color: var(--bb-rl-text-color);
+  border: 1px solid transparent;
+  padding: 6px var(--bb-rl-space-200);
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 400;
+  margin: var(--bb-rl-space-200) 0 0;
+}
+
+.bb-rl-course-content-module .mpcs-instructor .tile-meta a.mpcs-btn:hover,
+.bb-rl-course-description .mpcs-instructor .tile-meta a.mpcs-btn:hover {
+  background-color: var(--bb-rl-background-tertiary-hover-color);
+}
+
+.bb-rl-course-content-module .mpcs-instructor .tile-meta a.mpcs-btn:focus,
+.bb-rl-course-description .mpcs-instructor .tile-meta a.mpcs-btn:focus {
+  outline: 2px solid var(--bb-rl-border-quinery-color);
+}
+
+.bb-rl-course-content-module .mpcs-instructor .tile-meta a.mpcs-btn:disabled,
+.bb-rl-course-description .mpcs-instructor .tile-meta a.mpcs-btn:disabled {
+  background-color: var(--bb-rl-background-tertiary-color);
+  color: var(--bb-rl-text-disabled-color);
   cursor: not-allowed;
 }
 

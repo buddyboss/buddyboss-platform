@@ -29,4 +29,8 @@
 			}
 		}
 	}
+
+	.mpcs-main-content + .bb-rl-course-content-comments {
+		margin-top: var(--bb-rl-space-400);
+	}
 }
