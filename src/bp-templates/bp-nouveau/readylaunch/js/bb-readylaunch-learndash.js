@@ -1,3 +1,4 @@
+/* global bbReadylaunchLearnDash */
 /**
  * LearnDash JavaScript for ReadyLaunch
  *
