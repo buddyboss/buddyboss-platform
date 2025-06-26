@@ -12,22 +12,24 @@
 defined( 'ABSPATH' ) || exit;
 ?>
 
-<div id="bbpress-forums">
+<div id="bbpress-forums" class="bb-rl-forums-topic-page bb-rl-reply-single-page">
+	<div class="bb-rl-forums-container-inner">
 
-	<?php bbp_breadcrumb(); ?>
 
-	<?php do_action( 'bbp_template_before_single_reply' ); ?>
+		<div class="bb-rl-single-forum-list">
+			<?php do_action( 'bbp_template_before_single_reply' ); ?>
 
-	<?php if ( post_password_required() ) : ?>
+			<?php if ( post_password_required() ) : ?>
 
-		<?php bbp_get_template_part( 'form', 'protected' ); ?>
+				<?php bbp_get_template_part( 'form', 'protected' ); ?>
 
-	<?php else : ?>
+			<?php else : ?>
 
-		<?php bbp_get_template_part( 'loop', 'single-reply' ); ?>
+				<?php bbp_get_template_part( 'loop', 'single-reply' ); ?>
 
-	<?php endif; ?>
+			<?php endif; ?>
 
-	<?php do_action( 'bbp_template_after_single_reply' ); ?>
-
+			<?php do_action( 'bbp_template_after_single_reply' ); ?>
+		</div>
+	</div>
 </div>

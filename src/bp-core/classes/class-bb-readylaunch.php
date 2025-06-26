@@ -97,7 +97,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 			// LearnDash integration.
 			add_filter( 'bp_is_sidebar_enabled_for_courses', array( $this, 'bb_is_sidebar_enabled_for_courses' ) );
-			
+
 			// Common LMS stylesheets.
 			add_action( 'wp_enqueue_scripts', array( $this, 'bb_readylaunch_lms_enqueue_styles' ), 10 );
 
@@ -283,6 +283,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			add_action( 'wp_footer', array( $this, 'bb_rl_end_buffering' ), 999 );
 			add_filter( 'paginate_links_output', array( $this, 'bb_rl_filter_paginate_links_output' ), 10, 2 );
 			add_filter( 'body_class', array( $this, 'bb_rl_theme_body_classes' ) );
+			add_filter( 'script_loader_src', array( $this, 'bb_rl_script_loader_src' ), PHP_INT_MAX, 2 );
 			add_action( 'bb_rl_get_template_part_content', array( $this, 'bb_rl_get_template_part_content' ), 10, 1 );
 		}
 
@@ -643,7 +644,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 *
 		 * @return bool True if ReadyLaunch is enabled, false otherwise.
 		 */
-		private function bb_is_readylaunch_enabled_for_page() {
+		public function bb_is_readylaunch_enabled_for_page() {
 			return (
 				bp_is_members_directory() ||
 				bp_is_video_directory() ||
@@ -2049,6 +2050,27 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 			return $classes;
 		}
+
+		/**
+		 * Filters the script loader source for the ReadyLaunch script.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $src    The source URL of the script.
+		 * @param string $handle The handle of the script.
+		 *
+		 * @return string Filtered source URL.
+		 */
+		public function bb_rl_script_loader_src( $src, $handle ) {
+			global $bp;
+			$min = bp_core_get_minified_asset_suffix();
+			if ( ! empty( $src ) && 'bb-topics-manager' === $handle ) {
+				$src = trailingslashit( $bp->plugin_url ) . "bp-templates/bp-nouveau/readylaunch/js/bb-topics-manager{$min}.js";
+			}
+
+			return $src;
+		}
+
 
 		/**
 		 * Override Send Message button text.

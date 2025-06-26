@@ -168,6 +168,7 @@
 		#new-post {
 			max-height: 90vh;
 			overflow: auto;
+			overflow-x: hidden;
 		}
 	}
 
@@ -197,6 +198,14 @@
 			line-height: 1.2;
 			color: var(--bb-rl-text-color);
 			margin: 0;
+		}
+
+		+ .bp-feedback {
+			margin: var(--bb-rl-space-200) var(--bb-rl-space-300);
+
+			+ .bb-rl-forum-modal-content {
+				border-top: 1px solid var(--bb-rl-border-secondary-color);
+			}
 		}
 
 		.bb-rl-forum-modal-type {
@@ -777,6 +786,38 @@
 				overflow: hidden;
 				text-overflow: ellipsis;
 			}
+		}
+	}
+}
+
+// Topic Tag Edit
+
+#bbp-edit-topic-tag {
+
+	.bbp-form {
+		margin: var(--bb-rl-space-100) 0 var(--bb-rl-space-200);
+
+		legend {
+			margin-bottom: var(--bb-rl-space-100);
+		}
+
+		form {
+			margin-top: var(--bb-rl-space-200);
+
+			> div {
+				margin-bottom: var(--bb-rl-space-100);
+	
+				label {
+					display: inline-block;
+					font-size: 14px;
+					font-weight: 500;
+					min-width: 60px;
+				}
+			}
+		}
+
+		.bbp-submit-wrapper .submit {
+			position: static;
 		}
 	}
 }

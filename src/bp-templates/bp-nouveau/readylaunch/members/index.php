@@ -169,7 +169,7 @@ if ( bp_allow_user_to_send_invites() ) {
 							</a>
 						</header>
 						<div class="bb-rl-invite-content bb-rl-modal-content">
-							<form action="" method="post" class="bb-rl-invite-form" id="bb-rl-invite-form">
+							<form action="" method="post" class="bb-rl-invite-form" id="bb-rl-invite-form" novalidate>
 								<div class="bb-rl-form-field-wrapper">
 									<label for="bb-rl-invite-name"><?php esc_html_e( 'Name', 'buddyboss' ); ?></label>
 									<input type="text" name="bb-rl-invite-name" id="bb-rl-invite-name" value="" class="bb-rl-input-field">
