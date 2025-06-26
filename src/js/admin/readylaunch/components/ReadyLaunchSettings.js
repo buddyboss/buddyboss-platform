@@ -721,7 +721,7 @@ export const ReadyLaunchSettings = () => {
 											icon: 'bb-icons-rl-users-three',
 											title: __('Groups', 'buddyboss'),
 											description: __('Configure group creation, privacy, and member roles.', 'buddyboss'),
-											actionLink: 'admin.php?page=bp-groups&tab=bp-groups'
+											actionLink: 'admin.php?page=bp-settings&tab=bp-groups'
 										},
 										{
 											id: 'media',
