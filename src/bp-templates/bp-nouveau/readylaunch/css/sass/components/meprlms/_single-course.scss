@@ -162,6 +162,20 @@
 				object-fit: cover;
 				border-radius: 50%;
 			}
+
+			@media screen and (max-width: 840px) {
+				margin-left: auto;
+				margin-right: auto;
+			}
+		}
+
+		.tile-content {
+
+			@media screen and (max-width: 840px) {
+				text-align: center;
+				margin-left: auto;
+				margin-right: auto;
+			}
 		}
 
 		.tile-title {

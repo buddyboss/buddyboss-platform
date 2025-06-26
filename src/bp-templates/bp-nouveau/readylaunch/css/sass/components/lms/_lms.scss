@@ -462,9 +462,9 @@
 }
 
 .bb-rl-lms-inner-block {
-	max-width: 800px;
+	max-width: 864px;
 	margin: 0 auto;
-	padding: var(--bb-rl-space-400) 0;
+	padding: var(--bb-rl-space-400) var(--bb-rl-space-400);
 
 	&.bb-rl-lesson-block,
 	&.bb-rl-topic-block {
@@ -493,6 +493,11 @@
 
 		@include bb-rl-label-heading-md-thin;
 		color: var(--bb-rl-text-secondary-color);
+	}
+
+	@media screen and (max-width: $md) {
+		padding-left: var(--bb-rl-space-200);
+		padding-right: var(--bb-rl-space-200);
 	}
 }
 
@@ -725,6 +730,7 @@
 				align-items: center;
 				width: 100%;
 				justify-content: space-between;
+				flex-flow: wrap;
 
 				.comment-metadata {
 					display: inline-flex;

@@ -1,8 +1,10 @@
 .bb-rl-lms-course {
 	display: table;
-	max-width: 1032px;
+	max-width: 1096px;
 	margin: 0 auto;
 	width: 100%;
+	padding-left: var(--bb-rl-space-400);
+	padding-right: var(--bb-rl-space-400);
 
 	.bb-rl-entry-header {
 		background-color: var(--bb-rl-background-color);
@@ -14,6 +16,11 @@
 		@media screen and (max-width: $lg) {
 			padding: var(--bb-rl-space-300) var(--bb-rl-space-300);
 		}
+	}
+
+	@media screen and (max-width: 782px) {
+		padding-left: 0;
+		padding-right: 0;
 	}
 }
 

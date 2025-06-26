@@ -1057,6 +1057,23 @@ body[class*="mpcs-course"] .bb-rl-mbprlms-pagination ul li.active a {
   border-radius: 50%;
 }
 
+@media screen and (max-width: 840px) {
+  .bb-rl-course-content-module .mpcs-instructor .tile-icon,
+  .bb-rl-course-description .mpcs-instructor .tile-icon {
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+@media screen and (max-width: 840px) {
+  .bb-rl-course-content-module .mpcs-instructor .tile-content,
+  .bb-rl-course-description .mpcs-instructor .tile-content {
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
 .bb-rl-course-content-module .mpcs-instructor .tile-title,
 .bb-rl-course-description .mpcs-instructor .tile-title {
   font-size: var(--bb-rl-font-size-base);
