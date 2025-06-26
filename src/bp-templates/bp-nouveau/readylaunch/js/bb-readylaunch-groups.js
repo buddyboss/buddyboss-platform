@@ -28,8 +28,9 @@ window.bp = window.bp || {};
 
 			$document.on(
 				'click',
-				'.bb-rl-group-extra-info .bb_more_options .generic-button a.item-button',
+				'.bb-rl-group-extra-info .bb_more_options .generic-button a.item-button, .bb-rl-groups-single-wrapper a.bb-rl-more-link, .bb-rl-about-group a.bb-rl-more-link',
 				function ( e ) {
+					e.preventDefault();
 					var modalId = 'model--' + $( this ).attr( 'id' );
 					var $modal  = $( '#' + modalId );
 
