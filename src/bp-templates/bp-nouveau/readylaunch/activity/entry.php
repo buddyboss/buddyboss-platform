@@ -35,14 +35,14 @@ $bb_rl_activity_class_exists = class_exists( 'BB_Activity_Readylaunch' ) ? BB_Ac
 
 		<div class="bb-rl-pin-action">
 			<span class="bb-rl-pin-action_button" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'Pinned Post', 'buddyboss' ); ?>">
-				<i class="bb-icon-f bb-icon-thumbtack"></i>
+				<i class="bb-icons-rl-push-pin"></i>
 			</span>
 			<?php
 			$notification_type = bb_activity_enabled_notification( 'bb_activity_comment', bp_loggedin_user_id() );
 			if ( ! empty( $notification_type ) && ! empty( array_filter( $notification_type ) ) ) {
 				?>
 				<span class="bb-rl-mute-action_button" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'Turned off notifications', 'buddyboss' ); ?>">
-					<i class="bb-icon-f bb-icon-bell-slash"></i>
+					<i class="bb-icons-rl-bell-slash"></i>
 				</span>
 				<?php
 			}
