@@ -1819,6 +1819,33 @@
   text-overflow: ellipsis;
 }
 
+#bbp-edit-topic-tag .bbp-form {
+  margin: var(--bb-rl-space-100) 0 var(--bb-rl-space-200);
+}
+
+#bbp-edit-topic-tag .bbp-form legend {
+  margin-bottom: var(--bb-rl-space-100);
+}
+
+#bbp-edit-topic-tag .bbp-form form {
+  margin-top: var(--bb-rl-space-200);
+}
+
+#bbp-edit-topic-tag .bbp-form form > div {
+  margin-bottom: var(--bb-rl-space-100);
+}
+
+#bbp-edit-topic-tag .bbp-form form > div label {
+  display: inline-block;
+  font-size: 14px;
+  font-weight: 500;
+  min-width: 60px;
+}
+
+#bbp-edit-topic-tag .bbp-form .bbp-submit-wrapper .submit {
+  position: static;
+}
+
 .bb-rl-forums-topic-page {
   padding-top: var(--bb-rl-space-300);
 }

@@ -789,3 +789,35 @@
 		}
 	}
 }
+
+// Topic Tag Edit
+
+#bbp-edit-topic-tag {
+
+	.bbp-form {
+		margin: var(--bb-rl-space-100) 0 var(--bb-rl-space-200);
+
+		legend {
+			margin-bottom: var(--bb-rl-space-100);
+		}
+
+		form {
+			margin-top: var(--bb-rl-space-200);
+
+			> div {
+				margin-bottom: var(--bb-rl-space-100);
+	
+				label {
+					display: inline-block;
+					font-size: 14px;
+					font-weight: 500;
+					min-width: 60px;
+				}
+			}
+		}
+
+		.bbp-submit-wrapper .submit {
+			position: static;
+		}
+	}
+}
