@@ -12,7 +12,10 @@
 		}
 
 		> .bp-pagination-links {
+			display: flex;
+			align-items: center;
 			margin-left: auto;
+			gap: var(--bb-rl-space-100);
 
 			.pag-data {
 				display: flex;
@@ -77,6 +80,7 @@
 				}
 			}
 
+			.page-numbers:not(.prev):not(.next),
 			.bb-rl-page-numbers:not(.prev):not(.next) {
 				display: inline-flex;
 				min-width: var(--bb-rl-space-400);
