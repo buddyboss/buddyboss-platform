@@ -269,9 +269,13 @@
 
 		@include bb-rl-base-heading;
 		color: var(--bb-rl-text-color);
-		display: inline-flex;
-		align-items: center;
-		gap: var(--bb-rl-space-100);
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		width: 100%;
+		min-width: 0;
+		display: block;
+		position: relative;
 	}
 
 	.mpcs-section .mpcs-lessons {
@@ -433,7 +437,9 @@
 		font-family: bb-icons-rl;
 		font-size: 16px;
 		color: var(--bb-rl-icon-secondary-color);
-		margin: 0;
+		margin: 0 var(--bb-rl-space-50) 0 0;
+		position: relative;
+		top: 1px;
 	}
 
 	.mpcs-section.mpcs-section-lessons .mpcs-section-header.active .mpcs-section-title .mpcs-section-title-text:before {

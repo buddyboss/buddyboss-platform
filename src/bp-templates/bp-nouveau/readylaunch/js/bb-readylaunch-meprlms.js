@@ -20,6 +20,7 @@
             this.switchLdGridList();
             this.setupCourseCardPopups();
             this.addEvents();
+            this.sideNavToggle();
         },
 
         addEvents: function() {
@@ -28,6 +29,35 @@
 
         handleLessonExpand: function(e) {
             e.preventDefault();
+        },
+
+        sideNavToggle: function() {
+            if ( $('body').hasClass('mpcs-sidebar-with-accordion') ) {
+                var headers = $( '.mpcs-sidebar-content .mpcs-section-header' );
+                var current = $( '.mpcs-sidebar-content .mpcs-lesson.current' );
+                
+                if ( current.length ) {
+                    var header = current.closest( '.mpcs-section' ).find( '.mpcs-section-header' );
+                    header.addClass( 'active' );
+                    header.next( '.mpcs-lessons' ).css( 'display', 'block' );
+
+                    var $currentLesson = header.closest( '.mpcs-section' ).find( '.mpcs-lesson.current' );
+                    $( '.mpcs-sidebar-content' ).animate({
+                        scrollTop: $currentLesson.offset().top - 400
+                    }, 1000);
+                }
+                
+                $( headers ).on( 'click', function() {
+                    var $this = $( this );
+                    $this.toggleClass( 'active' );
+                    
+                    if ( $this.hasClass( 'active' ) ) {
+                        $this.next( '.mpcs-lessons' ).css( 'display', 'block' );
+                    } else {
+                        $this.next( '.mpcs-lessons' ).css( 'display', 'none' );
+                    }
+                });
+            }
         },
 
         /**
