@@ -133,5 +133,5 @@ defined( 'ABSPATH' ) || exit;
 <?php
 // No content available.
 if ( empty( $quizzes ) && empty( $assignments ) && empty( $resources->custom ) && empty( $resources->custom[0]->content ) ) {
-	echo '<div class="bb-rl-mpcs-no-content">' . esc_html__( 'No content available.', 'buddyboss' ) . '</div>';
+	echo '<p class="bb-rl-mpcs-no-content">' . esc_html__( 'No content available.', 'buddyboss' ) . '</p>';
 }
