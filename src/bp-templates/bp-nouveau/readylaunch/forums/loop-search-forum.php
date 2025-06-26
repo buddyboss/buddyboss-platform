@@ -12,43 +12,55 @@
 defined( 'ABSPATH' ) || exit;
 ?>
 
-<div class="bbp-forum-header">
+<li class="bb-rl-forum-list-item">
+	<?php if ( function_exists( 'bbp_get_forum_thumbnail_image' ) ) { ?>
+		<a href="<?php bbp_forum_permalink(); ?>" class="bb-rl-forum-cover" title="<?php bbp_forum_title(); ?>">
+			<?php echo bbp_get_forum_thumbnail_image( bbp_get_forum_id(), 'large', 'full' ); ?>
+		</a>
+	<?php } ?>
 
-	<div class="bbp-meta">
+	<div class="bb-rl-card-forum-details">
+		<div class="bb-rl-sec-header">
+			<?php do_action( 'bbp_theme_before_forum_title' ); ?>
+			<h3><a class="bbp-forum-title" href="<?php bbp_forum_permalink(); ?>"><?php bbp_forum_title(); ?></a></h3>
+			<?php do_action( 'bbp_theme_after_forum_title' ); ?>
+		</div>
 
-		<span class="bbp-forum-post-date">
+		<div class="bb-rl-forum-meta">
 			<?php
-			/* translators: %s: Last updated time */
-			printf( esc_html__( 'Last updated %s', 'buddyboss' ), bbp_get_forum_last_active_time() );
+				$forum_id = bbp_get_forum_id();
+				// get discussion count.
+				$discussion_count = bbp_get_forum_topic_count( $forum_id );
+				// get forum visibility/privacy status.
+				$forum_visibility   = bbp_get_forum_visibility( $forum_id );
+				$forum_visibilities = bbp_get_forum_visibilities( $forum_id );
+				$privacy_label      = isset( $forum_visibilities[ $forum_visibility ] ) ? $forum_visibilities[ $forum_visibility ] : __( 'Public', 'buddyboss' );
 			?>
-		</span>
+			<div class="bb-rl-forum-meta-item">
+				<?php echo esc_html( $privacy_label ); ?>
+			</div>
+			<div class="bb-rl-forum-meta-item <?php echo 0 === $discussion_count ? 'bb-rl-forum-meta-item-inactive' : ''; ?>">
+				<span class="bb-rl-forum-topic-count-value"><?php echo esc_html( $discussion_count ); ?></span>
+				<span class="bb-rl-forum-topic-count-label"><?php echo esc_html( _n( 'Discussion', 'Discussions', $discussion_count, 'buddyboss' ) ); ?></span>
+			</div>
+			<div class="bb-rl-forum-meta-item">
+				<?php do_action( 'bbp_theme_before_forum_freshness_link' ); ?>
+				<?php bbp_forum_freshness_link(); ?>
+				<?php do_action( 'bbp_theme_after_forum_freshness_link' ); ?>
+			</div>
+		</div>
 
-		<a href="<?php bbp_forum_permalink(); ?>" class="bbp-forum-permalink">#<?php bbp_forum_id(); ?></a>
+		<div class="bb-forum-content-wrap">
+			<?php
+				do_action( 'bbp_theme_before_forum_description' );
+				remove_filter( 'bbp_get_forum_content', 'wpautop' );
+			?>
+			<div class="bb-forum-content"><?php echo bbp_get_forum_content_excerpt_view_more( bbp_get_forum_id(), 150, '&hellip;' ); ?></div>
+			<?php
+				add_filter( 'bbp_get_forum_content', 'wpautop' );
+				do_action( 'bbp_theme_after_forum_description' );
+			?>
+		</div>
 
-	</div><!-- .bbp-meta -->
-
-	<div class="bbp-forum-title">
-
-		<?php do_action( 'bbp_theme_before_forum_title' ); ?>
-
-		<h3><?php esc_html_e( 'Forum: ', 'buddyboss' ); ?><a href="<?php bbp_forum_permalink(); ?>"><?php bbp_forum_title(); ?></a></h3>
-
-		<?php do_action( 'bbp_theme_after_forum_title' ); ?>
-
-	</div><!-- .bbp-forum-title -->
-
-</div><!-- .bbp-forum-header -->
-
-<div id="post-<?php bbp_forum_id(); ?>" <?php bbp_forum_class(); ?>>
-
-	<div class="bbp-forum-content">
-
-		<?php do_action( 'bbp_theme_before_forum_content' ); ?>
-
-		<?php bbp_forum_content(); ?>
-
-		<?php do_action( 'bbp_theme_after_forum_content' ); ?>
-
-	</div><!-- .bbp-forum-content -->
-
-</div><!-- #post-<?php bbp_forum_id(); ?> -->
+	</div>
+</li>

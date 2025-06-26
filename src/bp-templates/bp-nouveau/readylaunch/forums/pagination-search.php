@@ -14,14 +14,14 @@ defined( 'ABSPATH' ) || exit;
 
 <?php do_action( 'bbp_template_before_pagination_loop' ); ?>
 
-<div class="bbp-pagination">
-	<div class="bbp-pagination-count">
+<div class="bp-pagination">
+	<div class="bp-pagination-count">
 
 		<?php bbp_search_pagination_count(); ?>
 
 	</div>
 
-	<div class="bbp-pagination-links">
+	<div class="bp-pagination-links">
 
 		<?php bbp_search_pagination_links(); ?>
 
