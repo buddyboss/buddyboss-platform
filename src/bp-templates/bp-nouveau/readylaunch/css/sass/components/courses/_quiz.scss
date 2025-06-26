@@ -66,11 +66,8 @@
 
 .bb-rl-quiz-entry {
 
-	.ld-breadcrumbs {
-		display: none;
-	}
-
-	.wpProQuiz_content {
+	.wpProQuiz_content,
+	.learndash-wrapper .wpProQuiz_content {
 
 		.wpProQuiz_button {
 
@@ -292,7 +289,36 @@
 		}
 	}
 
-	.wpProQuiz_content {
+	.learndash-wrapper {
+
+		.ld-breadcrumbs {
+			background-color: var(--bb-rl-background-secondary-color);
+			border-radius: var(--bb-rl-radius-md);
+			padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+
+			.ld-breadcrumbs-segments span a {
+
+				@include bb-rl-button--tertiary-link;
+			}
+
+			.ld-breadcrumbs-segments span:after {
+				content: "\e13a";
+				display: inline-block;
+				font-weight: 400;
+				font-family: bb-icons-rl;
+				font-size: 14px;
+				color: var(--bb-rl-icon-tertiary-color);
+				line-height: 1;
+				position: relative;
+				top: 2px;
+				margin-left: var(--bb-rl-space-50);
+				margin-right: var(--bb-rl-space-50);
+			}
+		}
+	}
+
+	.wpProQuiz_content,
+	.learndash-wrapper .wpProQuiz_content {
 
 		li.wpProQuiz_listItem[data-question-meta*='"single"'] {
 
