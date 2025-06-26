@@ -1057,6 +1057,23 @@ body[class*="mpcs-course"] .bb-rl-mbprlms-pagination ul li.active a {
   border-radius: 50%;
 }
 
+@media screen and (max-width: 840px) {
+  .bb-rl-course-content-module .mpcs-instructor .tile-icon,
+  .bb-rl-course-description .mpcs-instructor .tile-icon {
+    margin-right: auto;
+    margin-left: auto;
+  }
+}
+
+@media screen and (max-width: 840px) {
+  .bb-rl-course-content-module .mpcs-instructor .tile-content,
+  .bb-rl-course-description .mpcs-instructor .tile-content {
+    text-align: center;
+    margin-right: auto;
+    margin-left: auto;
+  }
+}
+
 .bb-rl-course-content-module .mpcs-instructor .tile-title,
 .bb-rl-course-description .mpcs-instructor .tile-title {
   font-size: var(--bb-rl-font-size-base);
@@ -1220,9 +1237,13 @@ body[class*="mpcs-course"] .bb-rl-mbprlms-pagination ul li.active a {
   font-weight: 500;
   line-height: var(--bb-rl-base-line);
   color: var(--bb-rl-text-color);
-  display: inline-flex;
-  align-items: center;
-  gap: var(--bb-rl-space-100);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+  min-width: 0;
+  display: block;
+  position: relative;
 }
 
 .bb-rl-course-content-inner .mpcs-section .mpcs-lessons,
@@ -1396,7 +1417,9 @@ body[class*="mpcs-course"] .bb-rl-mbprlms-pagination ul li.active a {
   font-family: bb-icons-rl;
   font-size: 16px;
   color: var(--bb-rl-icon-secondary-color);
-  margin: 0;
+  margin: 0 0 0 var(--bb-rl-space-50);
+  position: relative;
+  top: 1px;
 }
 
 .bb-rl-course-content-inner .mpcs-section.mpcs-section-lessons .mpcs-section-header.active .mpcs-section-title .mpcs-section-title-text:before,
