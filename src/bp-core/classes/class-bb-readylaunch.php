@@ -471,11 +471,10 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 							$item['url'] = get_post_type_archive_link( bb_tutorlms_profile_courses_slug() );
 						} elseif (
 							class_exists( 'memberpress\courses\helpers\Courses' ) &&
-							function_exists( 'bb_meprlms_enable' ) &&
-							bb_meprlms_enable()
+							class_exists( 'memberpress\courses\models\Course' )
 						) {
 							$is_active   = true;
-							$item['url'] = get_post_type_archive_link( bb_meprlms_profile_courses_slug() );
+							$item['url'] = get_post_type_archive_link( memberpress\courses\models\Course::$cpt );
 						}
 					} elseif ( 'messages' === $key && bp_is_active( 'messages' ) ) {
 						$is_active     = true;
