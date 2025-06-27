@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
 <ul id="bbp-search-results" class="bbp-topics1 bs-item-list bs-forums-items bb-rl-single-forum-list">
 	
 	<li class="bs-item-wrap bs-header-item align-items-center no-hover-effect">
-		<div class="flex-1"><h2 class="bs-section-title"><?php _e( 'Search Results', 'buddyboss-theme' ); ?></h2></div>
+		<div class="flex-1"><h2 class="bs-section-title"><?php _e( 'Search Results', 'buddyboss' ); ?></h2></div>
 	</li>
 
 	<?php while ( bbp_search_results() ) : bbp_the_search_result(); ?>
