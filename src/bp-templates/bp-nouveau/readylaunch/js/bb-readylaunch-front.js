@@ -537,9 +537,9 @@ window.bp = window.bp || {};
 							type    : 'POST',
 							url     : bbReadyLaunchFront.ajax_url,
 							data    : {
-								action : 'bb_mark_notification_read',
-								nonce  : bbReadyLaunchFront.nonce,
-								id     : notificationId,
+								action                : 'bb_mark_notification_read',
+								nonce                 : bbReadyLaunchFront.nonce,
+								read_notification_ids : notificationId,
 							},
 							success : function ( response ) {
 								if ( response.success && response.data ) {
@@ -547,8 +547,14 @@ window.bp = window.bp || {};
 									if ( response.success && response.data && response.data.contents ) {
 										mainContainerID.find( '.header-ajax-container .notification-list' ).html( response.data.contents );
 									}
-									if ( typeof response.data.total_notifications !== 'undefined' && response.data.total_notifications > 0 && notificationsIconCount.length > 0 ) {
-										$( notificationsIconCount ).text( response.data.total_notifications );
+									if ( typeof response.data.total_notifications !== 'undefined' ) {
+										if ( notificationsIconCount.length > 0 ) {
+											if ( response.data.total_notifications > 0 ) {
+												$( notificationsIconCount ).text( response.data.total_notifications );
+											} else {
+												$( notificationsIconCount ).remove();
+											}
+										}
 									}
 								}
 							},

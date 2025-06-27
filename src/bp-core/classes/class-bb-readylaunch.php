@@ -1458,7 +1458,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				if ( false !== strpos( $id, ',' ) ) {
 					$id = array_map( 'intval', explode( ',', $id ) );
 				} else {
-					$id = intval( $id );
+					$id = array( intval( $id ) );
 				}
 			}
 
