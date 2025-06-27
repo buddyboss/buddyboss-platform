@@ -13705,6 +13705,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   border-bottom: 0;
   padding-bottom: 0;
   margin-bottom: 0;
+  margin-left: 0;
 }
 
 .activity-topic-selector {
