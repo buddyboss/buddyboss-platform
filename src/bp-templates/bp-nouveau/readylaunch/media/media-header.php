@@ -15,7 +15,13 @@ defined( 'ABSPATH' ) || exit;
 $is_group      = function_exists( 'bp_is_group' ) && bp_is_group();
 $is_my_profile = function_exists( 'bp_is_my_profile' ) && bp_is_my_profile();
 
-if ( ( $is_group || $is_my_profile ) && bp_has_media( bp_ajax_querystring( 'media' ) ) ) {
+if (
+	(
+		$is_group ||
+		$is_my_profile
+	) &&
+	bp_has_media( bp_ajax_querystring( 'media' ) )
+) {
 	?>
 	<div class="bb-media-actions-wrap bb-rl-media-actions-wrap">
 		<?php
@@ -31,6 +37,7 @@ if ( ( $is_group || $is_my_profile ) && bp_has_media( bp_ajax_querystring( 'medi
 				)
 			) {
 				bp_get_template_part( 'media/add-media' );
+				bp_nouveau_group_hook( 'before', 'media_content' );
 			} else {
 				?>
 				<h2 class="bb-title"><?php esc_html_e( 'Photos', 'buddyboss' ); ?></h2>
@@ -38,10 +45,8 @@ if ( ( $is_group || $is_my_profile ) && bp_has_media( bp_ajax_querystring( 'medi
 			}
 		} elseif ( $is_my_profile ) {
 			bp_get_template_part( 'media/add-media' );
+			bp_nouveau_member_hook( 'before', 'media_content' );
 		}
-		?>
-		<?php
-		bp_nouveau_group_hook( 'before', 'media_content' );
 		bp_get_template_part( 'media/actions' );
 		?>
 	</div>
