@@ -2467,8 +2467,18 @@ window.bp = window.bp || {};
 								$figureElem.find( 'video' ).attr( 'autoplay', true );
 								$figureElem.find( 'video' ).addClass( 'popup-video' );
 								$( '.bb-media-info-section:visible .bb-rl-activity-list' ).removeClass( 'loading' ).html( response.data.activity );
-								if ( response.data.comment_form ) {
+								if ( 'undefined' !== typeof response.data.comment_form && 'undefined' !== typeof bp.Nouveau.Activity ) {
 									$( '.bb-media-info-section:visible .bb-rl-activity-list .bb-rl-activity-comments ul:first' ).after( response.data.comment_form );
+
+									$( '.bb-media-info-section:visible' ).find( '#ac-form-' + self.current_video.activity_id ).removeClass( 'not-initialized' ).addClass( 'root events-initiated' ).find( '#ac-input-' + self.current_video.activity_id ).focus();
+									var form = $( '.bb-media-info-section:visible' ).find( '#ac-form-' + self.current_video.activity_id );
+									bp.Nouveau.Activity.clearFeedbackNotice( form );
+									form.removeClass( 'events-initiated' );
+									var ce = $( '.bb-media-info-section:visible' ).find( '.ac-form .ac-input[contenteditable]' );
+									bp.Nouveau.Activity.listenCommentInput( ce );
+									if ( ! _.isUndefined( bbRlMedia ) && ! _.isUndefined( bbRlMedia.emoji ) ) {
+										bp.Nouveau.Activity.initializeEmojioneArea( true, '#bb-rl-activity-modal ', self.current_video.activity_id );
+									}
 								}
 								$( '.bb-media-info-section:visible' ).show();
 
