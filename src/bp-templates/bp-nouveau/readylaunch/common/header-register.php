@@ -46,7 +46,9 @@ defined( 'ABSPATH' ) || exit;
 		?>
 	</div>
 	<div class="bb-rl-login-header-actions">
-		<?php if ( bp_is_register_page() ) : ?>
+		<?php if ( is_user_logged_in() ) : ?>
+			<a href="<?php echo esc_url( wp_logout_url() ); ?>" class="bb-rl-button bb-rl-button--secondary-fill bb-rl-button--small"><?php esc_html_e( 'Sign Out', 'buddyboss' ); ?></a>
+		<?php elseif ( bp_is_register_page() ) : ?>
 			<span class="bb-rl-login-header-actions-text"><?php esc_html_e( 'Already have an account?', 'buddyboss' ); ?></span>
 			<a href="<?php echo esc_url( wp_login_url() ); ?>" class="bb-rl-button bb-rl-button--secondary-fill bb-rl-button--small"><?php esc_html_e( 'Sign In', 'buddyboss' ); ?></a>
 		<?php else : ?>

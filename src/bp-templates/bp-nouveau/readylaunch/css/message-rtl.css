@@ -1942,6 +1942,8 @@ body.messages .bb-rl-content-wrapper {
 
 .user-item-wrp .user-actions {
   margin-right: auto;
+  position: relative;
+  z-index: 1;
 }
 
 .user-item-wrp .user-actions > a {
@@ -1949,6 +1951,7 @@ body.messages .bb-rl-content-wrapper {
   align-items: center;
   justify-content: center;
   font-size: 1rem;
+  font-weight: 500;
   text-align: center;
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);

@@ -57,6 +57,8 @@ class BB_Group_Readylaunch {
 
 		// Remove post content.
 		remove_action( 'bp_before_directory_groups_page', 'bp_group_directory_page_content' );
+
+		add_filter( 'bp_get_group_description_excerpt', array( $this, 'bb_rl_get_group_description_excerpt' ), 10, 1 );
 	}
 
 	/**
@@ -218,6 +220,40 @@ class BB_Group_Readylaunch {
 				</div>
 			</transition>
 		</div>
+
+
+		<div class="bb-rl-action-popup bb-rl-group-description" id="model--group-description-<?php echo esc_attr( $group_id ); ?>">
+			<transition name="modal">
+				<div class="bb-rl-modal-mask bb-white bbm-model-wrap">
+					<div class="bb-rl-modal-wrapper">
+						<div class="bb-rl-modal-container ">
+							<header class="bb-rl-modal-header">
+								<h4>
+									<span class="target_name">
+										<?php
+											esc_html_e( 'Group Description', 'buddyboss' );
+										?>
+									</span>
+								</h4>
+								<a class="bb-rl-modal-close-button bb-model-close-button" href="#">
+									<span class="bb-icons-rl-x"></span>
+								</a>
+							</header>
+
+							<div class="bb-rl-modal-content">
+								<div class="bb-rl-group-desc">
+									<div class="group-description">
+										<?php
+										echo wp_kses_post( bp_get_group_description( $group ) );
+										?>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</transition>
+		</div>
 		<?php
 	}
 
@@ -347,16 +383,16 @@ class BB_Group_Readylaunch {
 								$member_user_id  = bp_get_member_user_id();
 								$group_member_id = bp_get_group_member_id();
 
-								//Member's last activity.
+								// Member's last activity.
 								$member_last_activity = bp_get_last_activity( $member_user_id );
 
 								// Get Primary action.
-								$is_blocked         = false;
+								$is_blocked = false;
 								if (
 									bp_is_active( 'moderation' ) &&
 									bb_moderation_is_user_blocked_by( $member_user_id )
 								) {
-									$is_blocked        = true;
+									$is_blocked = true;
 								}
 								?>
 								<li <?php bp_member_class( array( 'item-entry' ) ); ?> data-bp-item-id="<?php echo esc_attr( $group_member_id ); ?>" data-bp-item-component="members">
@@ -538,5 +574,19 @@ class BB_Group_Readylaunch {
 		unset( $buttons['promote_mod'], $buttons['promote_admin'] );
 
 		return $buttons;
+	}
+
+	/**
+	 * Get group description excerpt for ReadyLaunch.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $excerpt Original excerpt.
+	 * @return string Modified excerpt.
+	 */
+	public function bb_rl_get_group_description_excerpt( $excerpt ) {
+		$group_link = '... <a href="#" id="group-description-' . esc_attr( bp_get_current_group_id() ) . '" class="bb-rl-more-link">' . esc_html__( 'Show more', 'buddyboss' ) . '</a>';
+
+		return bp_create_excerpt( $excerpt, 160, array( 'ending' => $group_link ) );
 	}
 }

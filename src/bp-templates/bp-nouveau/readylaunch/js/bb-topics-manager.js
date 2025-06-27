@@ -21,7 +21,7 @@ window.bp = window.bp || {};
 		config : {
 			// Selectors.
 			topicListSelector       : '.bb-activity-topics-list',
-			modalSelector           : '#bb-activity-topic-form_modal',
+			modalSelector           : '#bb-rl-activity-topic-form_modal',
 			modalContentSelector    : '.bb-action-popup-content',
 			backdropSelector        : '#bb-hello-backdrop-activity-topic',
 			topicNameSelector       : '#bb_topic_name',
@@ -119,8 +119,8 @@ window.bp = window.bp || {};
 						className : 'whats-new-topic-selector',
 						template  : bp.template( 'bb-activity-post-form-topic-selector' ),
 						events    : {
-							'click .bb-topic-selector-button' : 'toggleTopicSelectorDropdown',
-							'click .bb-topic-selector-list a' : 'selectTopic'
+							'click .bb-rl-topic-selector-button' : 'toggleTopicSelectorDropdown',
+							'click .bb-rl-topic-selector-list a' : 'selectTopic'
 						},
 
 						initialize : function () {
@@ -241,7 +241,7 @@ window.bp = window.bp || {};
 									topic_name: '', // This will trigger the template to show "Select Topic"
 									topic_lists: this.model.get('topics').topic_lists
 								});
-								topicName = this.$el.find( '.bb-topic-selector-button' ).data( 'select-topic-text' );
+								topicName = this.$el.find( '.bb-rl-topic-selector-button' ).data( 'select-topic-text' );
 							} else {
 								this.model.set('topics', {
 									topic_id: topicId,
@@ -250,12 +250,12 @@ window.bp = window.bp || {};
 								});
 							}
 
-							this.$el.find( '.bb-topic-selector-button' ).text( topicName );
+							this.$el.find( '.bb-rl-topic-selector-button' ).text( topicName );
 							this.$el.removeClass( 'is-active' );
 
-							this.$el.find('.bb-topic-selector-list li a').removeClass('selected');
+							this.$el.find('.bb-rl-topic-selector-list li a').removeClass('selected');
 							if ( '' !== topicId ) {
-								this.$el.find( '.bb-topic-selector-list li a[data-topic-id="' + topicId + '"]' ).addClass( 'selected' );
+								this.$el.find( '.bb-rl-topic-selector-list li a[data-topic-id="' + topicId + '"]' ).addClass( 'selected' );
 							}
 
 							// Trigger input event on #whats-new to trigger postValidate.
@@ -263,7 +263,7 @@ window.bp = window.bp || {};
 								typeof bp.Nouveau.Activity !== 'undefined' &&
 								bp.Nouveau.Activity.postForm
 							) {
-								$( '#whats-new' ).trigger( 'input' );
+								$( '#bb-rl-whats-new' ).trigger( 'input' );
 							}
 						},
 
@@ -903,8 +903,8 @@ window.bp = window.bp || {};
 				if ( BBTopicsManager.isActivityTopicRequired ) {
 					// Add topic tooltip.
 					this.$document.on( 'bb_display_full_form', function () {
-						if ( $( '.activity-update-form #whats-new-submit .bb-topic-tooltip-wrapper' ).length === 0 ) {
-							$( '.activity-update-form.modal-popup #whats-new-submit' ).prepend( '<div class="bb-topic-tooltip-wrapper"><div class="bb-topic-tooltip">' + BBTopicsManager.topicTooltipError + '</div></div>' );
+						if ( $( '.bb-rl-activity-update-form #whats-new-submit .bb-topic-tooltip-wrapper' ).length === 0 ) {
+							$( '.bb-rl-activity-update-form.modal-popup #whats-new-submit' ).prepend( '<div class="bb-topic-tooltip-wrapper"><div class="bb-topic-tooltip">' + BBTopicsManager.topicTooltipError + '</div></div>' );
 						}
 					} );
 				}
@@ -927,7 +927,7 @@ window.bp = window.bp || {};
 			var $wrapper = $( event.currentTarget ),
 				$postBtn = $wrapper.closest( '#whats-new-submit' );
 
-			if ( $postBtn.closest( '.focus-in--empty' ).length > 0 ) {
+			if ( $postBtn.closest( '.bb-rl-focus-in--empty' ).length > 0 ) {
 				$postBtn.find( '.bb-topic-tooltip-wrapper' ).addClass( 'active' ).show();
 			}
 
@@ -1170,6 +1170,14 @@ window.bp = window.bp || {};
 				$class        = args.class,
 				data          = args.data;
 
+			// Start to handle the case when the selector is the old what's new form for poll and schedule post.
+			if ( 'focus-in--empty' === $class ) {
+				$class = 'bb-rl-focus-in--empty';
+			}
+			if ( $selector && $selector[0] === $( '#whats-new-form' )[0] ) {
+				$selector = $( '#bb-rl-whats-new-form' );
+			}
+			// End of the old what's new form for poll and schedule post.
 
 			// Need to check if the poll is enabled and the poll_id is set.
 			// It will mainly use when we change the topic from the topic selector.

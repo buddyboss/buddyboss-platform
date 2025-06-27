@@ -1,24 +1,3 @@
-.bb-rl-learndash-lesson {
-
-	.bb-rl-lesson-footer {
-		position: fixed;
-		bottom: 0;
-		padding: 12px 0;
-		background-color: var(--bb-rl-background-color);
-		width: calc(100% - 300px);
-		border-top: 1px solid var(--bb-rl-border-secondary-color);
-		z-index: 100;
-	}
-
-	.bb-rl-lesson-actions {
-		max-width: 800px;
-		margin: 0 auto;
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-	}
-}
-
 .single-sfwd-lessons {
 
 	.site.bb-readylaunch {
@@ -31,77 +10,15 @@
 	background-color: var(--bb-rl-background-color);
 }
 
-.bb-rl-lesson-block {
-	max-width: 800px;
-	margin: 0 auto;
-	padding: var(--bb-rl-space-400) 0;
+.bb-rl-container {
 
-	.bb-rl-entry-header {
-		margin: 0 0 var(--bb-rl-space-300);
-	}
+	.learndash_post_sfwd-lessons > .learndash-wrapper,
+	.learndash_post_sfwd-topic > .learndash-wrapper {
+		padding-top: var(--bb-rl-space-400);
 
-	.bb-rl-heading {
-		margin: 0 0 var(--bb-rl-space-200);
-
-		.bb-rl-lesson-count {
-			margin-bottom: var(--bb-rl-space-50);
+		> .ld-alert {
+			margin: var(--bb-rl-space-200) auto;
+			max-width: 800px;
 		}
-	}
-
-	.bb-rl-entry-title {
-
-		@include bb-rl-base-heading-2xl;
-		color: var(--bb-rl-text-color);
-	}
-
-	.bb-rl-entry-content {
-
-		@include bb-rl-label-heading-md-thin;
-		color: var(--bb-rl-text-secondary-color);
-	}
-}
-
-.bb-rl-lesson-count {
-
-	@include bb-rl-label-heading;
-	color: var(--bb-rl-text-secondary-color);
-}
-
-.bb-rl-lesson-featured-image {
-
-	img {
-		width: 100%;
-		height: auto;
-		border-radius: var(--bb-rl-radius-lg);
-		object-fit: cover;
-	}
-}
-
-.bb-rl-lesson-actions {
-
-	.learndash_next_prev_link {
-		display: flex;
-		gap: var(--bb-rl-space-200);
-		align-items: center;
-	}
-
-	a.prev-link,
-	a.next-link {
-
-		@include bb-rl-button;
-		@include bb-rl-button-secondary-fill;
-		@include bb-rl-button--small;
-		gap: var(--bb-rl-space-50);
-	}
-
-	span.prev-link,
-	span.next-link {
-
-		@include bb-rl-button;
-		@include bb-rl-button--secondary-outline;
-		@include bb-rl-button--small;
-		gap: var(--bb-rl-space-50);
-		cursor: default;
-		pointer-events: none;
 	}
 }

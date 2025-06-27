@@ -6994,6 +6994,20 @@ window.bp = window.bp || {};
 							$mediaSection.find( 'video' ).attr( 'autoplay', true );
 						}
 						$infoSection.find( '.bb-rl-activity-list' ).removeClass( 'loading' ).html( response.data.description );
+
+						if ( 'undefined' !== typeof response.data.comment_form && 'undefined' !== typeof bp.Nouveau.Activity ) {
+							$infoSection.find( '.bb-rl-activity-list .bb-rl-activity-comments ul:first' ).after( response.data.comment_form );
+
+							$infoSection.find( '#ac-form-' + mediaData.activity_id ).removeClass( 'not-initialized' ).addClass( 'root events-initiated' ).find( '#ac-input-' + mediaData.activity_id ).focus();
+							var form = $infoSection.find( '#ac-form-' + mediaData.activity_id );
+							bp.Nouveau.Activity.clearFeedbackNotice( form );
+							form.removeClass( 'events-initiated' );
+							var ce = $infoSection.find( '.ac-form .ac-input[contenteditable]' );
+							bp.Nouveau.Activity.listenCommentInput( ce );
+							if ( ! _.isUndefined( bbRlMedia ) && ! _.isUndefined( bbRlMedia.emoji ) ) {
+								bp.Nouveau.Activity.initializeEmojioneArea( true, '#bb-rl-activity-modal ', mediaData.activity_id );
+							}
+						}
 						$infoSection.show();
 
 						self.updateTheaterHeaderTitle(
@@ -7112,6 +7126,20 @@ window.bp = window.bp || {};
 					success: function ( response ) {
 						if ( response.success ) {
 							$( '.bb-media-info-section:visible .bb-rl-activity-list' ).removeClass( 'loading' ).html( response.data.description );
+
+							if ( 'undefined' !== typeof response.data.comment_form && 'undefined' !== typeof bp.Nouveau.Activity ) {
+								$( '.bb-media-info-section:visible .bb-rl-activity-list .bb-rl-activity-comments ul:first' ).after( response.data.comment_form );
+
+								$( '.bb-media-info-section:visible' ).find( '#ac-form-' + self.current_document.activity_id ).removeClass( 'not-initialized' ).addClass( 'root events-initiated' ).find( '#ac-input-' + self.current_document.activity_id ).focus();
+								var form = $( '.bb-media-info-section:visible' ).find( '#ac-form-' + self.current_document.activity_id );
+								bp.Nouveau.Activity.clearFeedbackNotice( form );
+								form.removeClass( 'events-initiated' );
+								var ce = $( '.bb-media-info-section:visible' ).find( '.ac-form .ac-input[contenteditable]' );
+								bp.Nouveau.Activity.listenCommentInput( ce );
+								if ( ! _.isUndefined( bbRlMedia ) && ! _.isUndefined( bbRlMedia.emoji ) ) {
+									bp.Nouveau.Activity.initializeEmojioneArea( true, '#bb-rl-activity-modal ', self.current_document.activity_id );
+								}
+							}
 							$( '.bb-media-info-section:visible' ).show();
 
 							self.updateTheaterHeaderTitle(

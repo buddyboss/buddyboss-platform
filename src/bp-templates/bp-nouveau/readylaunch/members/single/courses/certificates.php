@@ -28,16 +28,32 @@ $certificates = bp_learndash_get_users_certificates( $user_id );
 						<div class="bb-certificate-content">
 							<h3 class="bb-certificate-title">
 								<?php
-								printf(
-									__( '<span>Certificate in </span> <a href="%1$s">%2$s</a>', 'buddyboss' ),
-									get_permalink( $certificate->ID ),
-									$certificate->title
+								echo wp_kses_post(
+									sprintf(
+										/* translators: 1: Certificate link, 2: Certificate title */
+										__( '<span>Certificate in </span> <a href="%1$s">%2$s</a>', 'buddyboss' ),
+										esc_url( get_permalink( $certificate->ID ) ),
+										esc_html( $certificate->title )
+									)
 								);
 								?>
 							</h3>
-							<div class="bb-certificate-date"><?php printf( __( '<span>Earned on</span> %s', 'buddyboss' ), bp_core_get_format_date( $certificate->date ) ); ?></div>
+							<div class="bb-certificate-date">
+								<?php
+								echo wp_kses_post(
+									sprintf(
+										/* translators: 1: Certificate date */
+										__( '<span>Earned on</span> %1$s', 'buddyboss' ),
+										esc_html( bp_core_get_format_date( $certificate->date ) )
+									)
+								);
+								?>
+							</div>
 							<p class="bb-certificate-download">
-								<a href="<?php echo $certificate->link; ?>"><i class="bb-icon-rl bb-icon-arrow-down" aria-hidden="true"></i><?php _e( 'Download PDF', 'buddyboss' ); ?></a>
+								<a href="<?php echo esc_url( $certificate->link ); ?>">
+									<i class="bb-icon-rl bb-icon-arrow-down" aria-hidden="true"></i>
+									<?php esc_html_e( 'Download PDF', 'buddyboss' ); ?>
+								</a>
 							</p>
 						</div>
 					</div>
@@ -49,7 +65,7 @@ $certificates = bp_learndash_get_users_certificates( $user_id );
 		?>
 		<aside class="bp-feedback bp-messages info">
 			<span class="bp-icon" aria-hidden="true"></span>
-			<p><?php _e( 'Sorry, no certificates were found.', 'buddyboss' ); ?></p>
+			<p><?php esc_html_e( 'Sorry, no certificates were found.', 'buddyboss' ); ?></p>
 		</aside>
 
 	<?php } ?>

@@ -366,7 +366,7 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 
 			if ( function_exists( 'bb_is_readylaunch_enabled' ) && bb_is_readylaunch_enabled() && class_exists( 'BB_Readylaunch' ) ) {
 				$readylaunch                          = new BB_Readylaunch();
-				$localize_arg['register_integration'] = bp_enable_site_registration() && '0' === bp_get_option( 'allow-custom-registration' );
+				$localize_arg['register_integration'] = bp_enable_site_registration() && ! bp_allow_custom_registration();
 				$localize_arg['courses_integration']  = $readylaunch->bb_is_sidebar_enabled_for_courses();
 			}
 

@@ -11,9 +11,6 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-// Include the ReadyLaunch LearnDash helper.
-require_once __DIR__ . '/classes/class-bb-readylaunch-learndash-helper.php';
-
 /**
  * Register a widget for ReadyLaunch
  *
@@ -317,3 +314,96 @@ add_action( 'xprofile_field_before_delete', 'bb_rl_clear_social_networks_field_c
 add_action( 'xprofile_fields_saved_field', 'bb_rl_clear_social_networks_field_cache' );
 add_action( 'bp_xprofile_admin_new_field', 'bb_rl_clear_social_networks_field_cache' );
 add_action( 'bp_xprofile_admin_edit_field', 'bb_rl_clear_social_networks_field_cache' );
+
+/**
+ * Get course category names for a specific course.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $course_id Course ID.
+ *
+ * @return string Course category names separated by comma.
+ */
+function bb_rl_mpcs_get_course_category_names( $course_id ) {
+	$categories = get_the_terms( $course_id, 'mpcs-course-categories' );
+
+	if ( is_wp_error( $categories ) || empty( $categories ) ) {
+		return '';
+	}
+
+	return implode( ', ', wp_list_pluck( $categories, 'name' ) );
+}
+
+if ( ! function_exists( 'bb_rl_get_normalized_file_type' ) ) {
+	/**
+	 * Get normalized file type from MIME type.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $file_type MIME type.
+	 *
+	 * @return string Normalized file type or empty string if invalid.
+	 */
+	function bb_rl_get_normalized_file_type( $file_type ) {
+		if ( ! $file_type ) {
+			return '';
+		}
+
+		$parts   = explode( '/', $file_type );
+		$subtype = isset( $parts[1] ) ? strtolower( $parts[1] ) : '';
+
+		// Basic normalization for common file types.
+		$normalized = array(
+			// Images.
+			'jpeg' => 'jpeg',
+			'jpg'  => 'jpeg',
+			'png'  => 'png',
+			'gif'  => 'gif',
+			'bmp'  => 'bmp',
+			'webp' => 'webp',
+			'svg'  => 'svg',
+			'tiff' => 'tiff',
+			'ico'  => 'ico',
+
+			// Video.
+			'mp4'  => 'mp4',
+			'mov'  => 'mov',
+			'mkv'  => 'mkv',
+			'avi'  => 'avi',
+			'wmv'  => 'wmv',
+			'ogg'  => 'ogg',
+			'flv'  => 'flv',
+			'3gp'  => '3gp',
+			'webm' => 'webm',
+
+			// Audio.
+			'aac'  => 'aac',
+			'flac' => 'flac',
+			'midi' => 'midi',
+			'wav'  => 'wav',
+			'wma'  => 'wma',
+			'aiff' => 'aiff',
+			'mp3'  => 'mp3',
+			'm4a'  => 'm4a',
+
+			// Documents.
+			'pdf'  => 'pdf',
+			'doc'  => 'doc',
+			'docx' => 'docx',
+			'xls'  => 'xls',
+			'xlsx' => 'xlsx',
+			'ppt'  => 'ppt',
+			'pptx' => 'pptx',
+			'txt'  => 'txt',
+			'rtf'  => 'rtf',
+			'csv'  => 'csv',
+			'xml'  => 'xml',
+			'html' => 'html',
+			'zip'  => 'zip',
+			'rar'  => 'rar',
+			'7z'   => '7z',
+		);
+
+		return isset( $normalized[ $subtype ] ) ? $normalized[ $subtype ] : $subtype;
+	}
+}

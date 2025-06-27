@@ -36,225 +36,421 @@ if ( ! empty( $filepath ) ) {
 
 }
 
-// LD_QuizPro::showModalWindow();
+// LD_QuizPro::showModalWindow().
 add_action( 'wp_footer', array( 'LD_QuizPro', 'showModalWindow' ), 20 );
 
-$user_id            = bp_displayed_user_id();
-$atts               = apply_filters( 'bp_learndash_user_courses_atts', array() );
-$user_courses       = apply_filters( 'bp_learndash_user_courses', ld_get_mycourses( $user_id, $atts ) );
-$usermeta           = get_user_meta( $user_id, '_sfwd-quizzes', true );
-$quiz_attempts_meta = empty( $usermeta ) ? false : $usermeta;
-$quiz_attempts      = array();
-
-if ( ! empty( $quiz_attempts_meta ) ) {
-	foreach ( $quiz_attempts_meta as $quiz_attempt ) {
-		$c                          = learndash_certificate_details( $quiz_attempt['quiz'], $user_id );
-		$quiz_attempt['post']       = get_post( $quiz_attempt['quiz'] );
-		$quiz_attempt['percentage'] = ! empty( $quiz_attempt['percentage'] ) ? $quiz_attempt['percentage'] : ( ! empty( $quiz_attempt['count'] ) ? $quiz_attempt['score'] * 100 / $quiz_attempt['count'] : 0 );
-
-		if ( $user_id == get_current_user_id() && ! empty( $c['certificateLink'] ) && ( ( isset( $quiz_attempt['percentage'] ) && $quiz_attempt['percentage'] >= $c['certificate_threshold'] * 100 ) ) ) {
-			$quiz_attempt['certificate'] = $c;
-		}
-		$quiz_attempts[ learndash_get_course_id( $quiz_attempt['quiz'] ) ][] = $quiz_attempt;
-	}
-}
+$user_id      = bp_displayed_user_id();
+$atts         = apply_filters( 'bp_learndash_user_courses_atts', array() );
+$user_courses = apply_filters( 'bp_learndash_user_courses', ld_get_mycourses( $user_id, $atts ) );
 ?>
-<div id="learndash_profile" class="<?php echo empty( $user_courses ) ? 'user-has-no-lessons' : ''; ?>">
-	<div id="course_list">
+<div class="bb-rl-courses-list">
+	<div class="bb-rl-courses-grid bb-rl-courses-grid--member grid bb-rl-courses-grid--ldlms">
 		<?php
 		if ( ! empty( $user_courses ) ) {
 			foreach ( $user_courses as $course_id ) {
 
-				/**
-				 * Do not show the free/open course unless those are explicitly started by the users
-				 */
+				$user_course_has_access = sfwd_lms_has_access( $course_id, $user_id );
+				$is_enrolled            = $user_course_has_access ? true : false;
 
-				// Check user have enrolled for course
-				$since = ld_course_access_from( $course_id, $user_id );
-
-				/**
-				 * if $since is empty then this could be a free/open course
-				 * however we need to check for learndash group level course enrollment status
-				 */
-				if ( empty( $since ) ) {
-
-					// Check user has mass enrolled for course
-					$since = learndash_user_group_enrolled_to_course_from( $user_id, $course_id );
-
-					/**
-					 * if $since is still empty then we absolutely sure that the course is free/open
-					 * now we only need to check "Has user started taking course? or Did he completed it?"
-					 */
-					if ( empty( $since ) ) {
-
-						// Check user has started course(topic or lesson)
-						$course_status = learndash_course_status( $course_id, $user_id, true );
-
-						if ( 'not_started' === $course_status ) {
-							continue;
-						}
-					}
-				}
-
-				$course      = get_post( $course_id );
-				$course_link = get_permalink( $course_id );
-				$progress    = learndash_course_progress(
+				// Get course progress.
+				$course_progress = learndash_course_progress(
 					array(
 						'user_id'   => $user_id,
 						'course_id' => $course_id,
 						'array'     => true,
 					)
 				);
-				$status      = ( $progress['percentage'] == 100 ) ? 'completed' : 'notcompleted';
-				?>
-				<div id="course-<?php echo $course->ID; ?>">
-					<div class="list_arrow collapse flippable" onClick="return flip_expand_collapse('#course', <?php echo $course->ID; ?>);"></div>
-					<h4>
-						<div class="learndash-course-link">
-							<a href="<?php echo esc_attr( $course_link ); ?>"><?php echo $course->post_title; ?></a>
-						</div>
 
-						<div class="learndash-course-status">
-							<a class="<?php echo esc_attr( $status ); ?>" href="<?php echo esc_attr( $course_link ); ?>">
-								<?php echo learndash_course_status( $course_id, $user_id ); ?>
+				if ( empty( $course_progress ) ) {
+					$course_progress = array(
+						'percentage' => 0,
+						'completed'  => 0,
+						'total'      => 0,
+					);
+				}
+				$course_status = ( 100 === (int) $course_progress['percentage'] ) ? 'completed' : 'notcompleted';
+				if ( $course_progress['percentage'] > 0 && 100 !== $course_progress['percentage'] ) {
+					$course_status = 'progress';
+				}
+
+				// Course data.
+				$course_settings = learndash_get_setting( $course_id );
+				$course_price    = learndash_get_course_price( $course_id );
+				$course_status   = learndash_course_status( $course_id, $user_id );
+
+				// Get course steps.
+				$course_steps  = learndash_get_course_steps( $course_id );
+				$lessons       = learndash_get_course_lessons_list( $course_id );
+				$lesson_count  = array_column( $lessons, 'post' );
+				$lessons_count = ! empty( $lesson_count ) ? count( $lesson_count ) : 0;
+
+				$course_excerpt            = get_the_excerpt( $course_id );
+				$course_excerpt_in_listing = '';
+				if ( ! empty( $course_excerpt ) ) {
+					$course_excerpt_in_listing = wp_trim_words( $course_excerpt, 10, '...' );
+				}
+
+				$resume_link = get_permalink( $course_id );
+				if ( $is_enrolled ) {
+					$user_course_last_step_id = learndash_user_progress_get_first_incomplete_step( $user_id, $course_id );
+					if ( ! empty( $user_course_last_step_id ) ) {
+						$user_course_last_step_id = learndash_user_progress_get_parent_incomplete_step( $user_id, $course_id, $user_course_last_step_id );
+						$resume_link              = learndash_get_step_permalink( $user_course_last_step_id, $course_id );
+					}
+				}
+
+				$is_completed = false;
+				$has_access   = false;
+				if ( 'sfwd-courses' === $post->post_type ) {
+					$has_access   = sfwd_lms_has_access( $post->ID, $user_id );
+					$is_completed = learndash_course_completed( $user_id, $post->ID );
+				} elseif ( 'groups' === $post->post_type ) {
+					$has_access   = learndash_is_user_in_group( $user_id, $post->ID );
+					$is_completed = learndash_get_user_group_completed_timestamp( $post->ID, $user_id );
+				} elseif ( 'sfwd-lessons' === $post->post_type || 'sfwd-topic' === $post->post_type ) {
+					$parent_course_id = learndash_get_course_id( $post->ID );
+					$has_access       = is_user_logged_in() && ! empty( $parent_course_id ) ? sfwd_lms_has_access( $post->ID, $user_id ) : false;
+					if ( 'sfwd-lessons' === $post->post_type ) {
+						$is_completed = learndash_is_lesson_complete( $user_id, $post->ID, $parent_course_id );
+					} elseif ( 'sfwd-topic' === $post->post_type ) {
+						$is_completed = learndash_is_topic_complete( $user_id, $post->ID, $parent_course_id );
+					}
+				}
+
+				$button_text = '';
+				if ( $is_enrolled && 0 === $course_progress['percentage'] ) {
+					$button_text = __( 'Continue', 'buddyboss' );
+				} elseif ( $has_access && $is_completed ) {
+					$button_text = __( 'Completed', 'buddyboss' );
+				} else {
+					$button_text = __( 'View Course', 'buddyboss' );
+				}
+
+				$author_id   = get_post_field( 'post_author', $course_id );
+				$author_name = bp_core_get_user_displayname( $author_id, bp_loggedin_user_id() );
+				$author_link = bp_core_get_user_domain( $author_id );
+				?>
+				<div class="bb-rl-course-card bb-rl-course-card--ldlms">
+					<article id="post-<?php echo esc_attr( $course_id ); ?>" <?php post_class( 'bb-rl-course-item' ); ?>>
+						<div class="bb-rl-course-image">
+							<a href="<?php echo esc_url( get_permalink( $course_id ) ); ?>">
+								<?php
+								if ( is_user_logged_in() && isset( $user_course_has_access ) && $user_course_has_access ) {
+									if (
+										(
+											'open' === $course_price['type'] &&
+											0 === (int) $course_progress['percentage']
+										) ||
+										(
+											'open' !== $course_price['type'] &&
+											$user_course_has_access &&
+											0 === $course_progress['percentage']
+										)
+									) {
+										echo '<div class="ld-status ld-status-progress ld-start-background bb-rl-ld-status">' .
+											sprintf(
+											/* translators: %s: Course label. */
+												esc_html__( 'Start %s', 'buddyboss' ),
+												esc_html( LearnDash_Custom_Label::get_label( 'course' ) )
+											) .
+											'</div>';
+									} else {
+										learndash_status_bubble( $course_status );
+									}
+								} elseif ( 'free' === $course_price['type'] ) {
+									echo '<div class="ld-status ld-status-incomplete ld-third-background">' . esc_html__( 'Free', 'buddyboss' ) . '</div>';
+								} elseif ( 'open' !== $course_price['type'] ) {
+									echo '<div class="ld-status ld-status-incomplete ld-third-background">' . esc_html__( 'Not Enrolled', 'buddyboss' ) . '</div>';
+								} elseif ( 'open' === $course_price['type'] ) {
+									echo '<div class="ld-status ld-status-progress ld-start-background bb-rl-ld-status">' .
+										sprintf(
+										/* translators: %s: Course label. */
+											esc_html__( 'Start %s', 'buddyboss' ),
+											esc_html( LearnDash_Custom_Label::get_label( 'course' ) )
+										) .
+										'</div>';
+								}
+								if ( has_post_thumbnail( $course_id ) ) {
+									echo get_the_post_thumbnail( $course_id, 'medium' );
+								} else {
+									?>
+									<img src="<?php echo esc_url( buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/images/group_cover_image.jpeg' ); ?>" alt="<?php esc_attr_e( 'Course placeholder image', 'buddyboss' ); ?>">
+									<?php
+								}
+								?>
 							</a>
 						</div>
 
-						<div class="learndash-course-certificate">
+						<div class="bb-rl-course-card-content">
+							<div class="bb-rl-course-body">
+								<h2 class="bb-rl-course-title">
+									<a href="<?php echo esc_url( get_permalink( $course_id ) ); ?>"><?php echo esc_html( get_the_title( $course_id ) ); ?></a>
+								</h2>
+								<div class="bb-rl-course-meta">
+									<?php
+									$course_category = get_the_terms( $course_id, 'ld_course_category' );
+									if ( ! empty( $course_category ) ) {
+										?>
+										<div class="bb-rl-course-category">
+											<?php
+											$category_names = array_map(
+												function ( $category ) {
+													return esc_html( $category->name );
+												},
+												$course_category
+											);
+
+											$total_categories = count( $category_names );
+											$max_display      = 1;
+
+											if ( $total_categories <= $max_display ) {
+												echo esc_html( implode( ', ', $category_names ) );
+											} else {
+												$visible_categories = array_slice( $category_names, 0, $max_display );
+												$remaining_count    = $total_categories - $max_display;
+												echo esc_html(
+													sprintf(
+													// translators: 1: comma-separated category names, 2: number of additional categories.
+														__( '%1$s, + %2$d more', 'buddyboss' ),
+														implode( ', ', $visible_categories ),
+														$remaining_count
+													)
+												);
+											}
+											?>
+										</div>
+										<?php
+									}
+									if ( ! empty( $course_excerpt_in_listing ) ) {
+										?>
+										<div class="bb-rl-course-excerpt">
+											<?php echo wp_kses_post( $course_excerpt_in_listing ); ?>
+										</div>
+										<?php
+									}
+									?>
+									<div class="bb-rl-course-author">
+										<?php
+										$user_link = bp_core_get_user_domain( get_post_field( 'post_author', $course_id ) );
+										if ( ! empty( $user_link ) ) {
+											?>
+											<a class="item-avatar bb-rl-author-avatar" href="<?php echo esc_url( $user_link ); ?>">
+												<?php echo get_avatar( get_post_field( 'post_author', $course_id ), 80, '', '', array() ); ?>
+											</a>
+											<?php
+										}
+										?>
+										<span class="bb-rl-author-name">
+											<?php
+											$author_name = get_the_author_meta( 'display_name', get_post_field( 'post_author', $course_id ) );
+											// translators: %s is the author name.
+											printf( esc_html__( 'By %s', 'buddyboss' ), '<a href="' . esc_url( $user_link ) . '">' . esc_html( $author_name ) . '</a>' );
+											?>
+										</span>
+									</div>
+									<?php
+									if ( $is_enrolled ) {
+										?>
+										<div class="bb-rl-course-status">
+											<?php
+											if ( ! empty( $course_progress ) ) {
+												?>
+												<div class="bb-rl-course-progress">
+													<div class="bb-rl-course-progress-overview flex items-center">
+														<span class="bb-rl-percentage">
+															<?php
+															echo wp_kses_post(
+																sprintf(
+																/* translators: 1: course progress percentage, 2: percentage symbol. */
+																	__( '<span class="bb-rl-percentage-figure">%1$s%2$s</span> Completed', 'buddyboss' ),
+																	(int) $course_progress['percentage'],
+																	'%'
+																)
+															);
+															?>
+														</span>
+														<?php
+														// Get completed steps.
+														$completed_steps = ! empty( $course_progress['completed'] ) ? (int) $course_progress['completed'] : 0;
+
+														// Output as "completed/total".
+														if ( $course_progress['total'] > 0 ) {
+															?>
+															<span class="bb-rl-course-steps">
+																<?php echo esc_html( $completed_steps . '/' . $course_progress['total'] ); ?>
+															</span>
+															<?php
+														}
+														?>
+													</div>
+													<div class="bb-rl-progress-bar">
+														<div class="bb-rl-progress" style="width: <?php echo (int) $course_progress['percentage']; ?>%"></div>
+													</div>
+												</div>
+												<?php
+											}
+											?>
+											<div class="bb-rl-course-link-wrap">
+												<a href="<?php echo esc_url( $resume_link ); ?>" class="bb-rl-course-link bb-rl-button bb-rl-button--secondaryFill bb-rl-button--small">
+													<?php echo esc_html( $button_text ); ?>
+													<i class="bb-icons-rl-caret-right"></i>
+												</a>
+											</div>
+										</div>
+										<?php
+									}
+									?>
+								</div>
+							</div>
 							<?php
-							$certificateLink = learndash_get_course_certificate_link( $course->ID, $user_id );
-							if ( ! empty( $certificateLink ) ) {
+							if ( ! $is_enrolled ) {
 								?>
-									<a target="_blank" href="<?php echo esc_attr( $certificateLink ); ?>">
-										<div class="certificate_icon_large"></div>
-									</a>
-								<?php
-							} else {
-								?>
-									<a style="padding: 10px 2%;" href="#">-</a>
+								<div class="bb-rl-course-footer">
+									<div class="bb-rl-course-footer-meta">
+										<?php
+										if ( class_exists( 'LearnDash_Course_Reviews_Loader' ) && $course_id ) {
+											$average = learndash_course_reviews_get_average_review_score( $course_id );
+
+											// Get reviews.
+											$reviews = get_comments(
+												wp_parse_args(
+													array(),
+													array(
+														'post_id' => $course_id,
+														'type'    => 'ld_review',
+														'status'  => 'approve',
+														'fields'  => 'ids',
+													)
+												)
+											);
+											if ( ! is_array( $reviews ) ) {
+												$reviews = array();
+											}
+											$reviews      = array_filter(
+												$reviews,
+												'is_int'
+											);
+											$review_count = count( $reviews );
+
+											// Set default values if no average.
+											$display_average = ( false !== $average ) ? $average : 0;
+											?>
+											<div class="bb-rl-course-review">
+												<span class="star">
+													<svg width="20" height="20" viewBox="0 0 20 20" fill="#FFC107" xmlns="http://www.w3.org/2000/svg" style="vertical-align:middle;">
+														<path d="M10 15l-5.878 3.09 1.122-6.545L.488 6.91l6.561-.955L10 0l2.951 5.955 6.561.955-4.756 4.635 1.122 6.545z" />
+													</svg>
+												</span>
+												<span class="average"><?php echo esc_html( number_format( $display_average, 1 ) ); ?></span>
+												<span class="count">(<?php echo esc_html( $review_count ); ?>)</span>
+											</div>
+											<?php
+										}
+										$currency = function_exists( 'learndash_get_currency_symbol' ) ? learndash_get_currency_symbol() : learndash_30_get_currency_symbol();
+										$price    = $course_price['price'];
+										if ( ! $is_enrolled ) {
+											if ( 'free' === $course_price['type'] ) {
+												?>
+												<div class="bb-rl-course-price">
+													<span class="bb-rl-price">
+														<?php esc_html_e( 'Free', 'buddyboss' ); ?>
+													</span>
+												</div>
+												<?php
+											} elseif ( ! empty( $price ) ) {
+												?>
+												<div class="bb-rl-course-price">
+													<span class="bb-rl-price">
+														<span class="ld-currency">
+															<?php echo wp_kses_post( $currency ); ?>
+														</span>
+														<?php echo wp_kses_post( $price ); ?>
+													</span>
+												</div>
+												<?php
+											}
+										}
+										?>
+									</div>
+								</div>
 								<?php
 							}
 							?>
 						</div>
-						<div class="flip" style="clear: both; display:none;">
-
-							<div class="learndash_profile_heading course_overview_heading"><?php printf( _x( '%s Progress Overview', 'Course Progress Overview Label', 'buddyboss' ), LearnDash_Custom_Label::get_label( 'course' ) ); ?></div>
-
-							<div>
-								<dd class="course_progress"
-									title='<?php printf( __( '%1$s out of %2$s steps completed', 'buddyboss' ), $progress['completed'], $progress['total'] ); ?>'>
-									<div class="course_progress_blue" style='width: <?php echo esc_attr( $progress['percentage'] ); ?>%;'></div>
-								</dd>
-
-								<div class="right">
-									<?php printf( __( '%s%% Complete', 'buddyboss' ), $progress['percentage'] ); ?>
-								</div>
-							</div>
-
-							<?php if ( ! empty( $quiz_attempts[ $course_id ] ) ) : ?>
-								<div class="learndash_profile_quizzes clear_both">
-
-									<div class="learndash_profile_quiz_heading">
-										<div class="quiz_title"><?php echo LearnDash_Custom_Label::get_label( 'quizzes' ); ?></div>
-										<div class="certificate"><?php _e( 'Certificate', 'buddyboss' ); ?></div>
-										<div class="scores"><?php _e( 'Score', 'buddyboss' ); ?></div>
-										<div class="statistics"><?php _e( 'Statistics', 'buddyboss' ); ?></div>
-										<div class="quiz_date"><?php _e( 'Date', 'buddyboss' ); ?></div>
-									</div>
-
-									<?php
-									foreach ( $quiz_attempts[ $course_id ] as $k => $quiz_attempt ) :
-										$certificateLink = null;
-
-										if ( ( isset( $quiz_attempt['has_graded'] ) ) && ( true === $quiz_attempt['has_graded'] ) && ( true === LD_QuizPro::quiz_attempt_has_ungraded_question( $quiz_attempt ) ) ) {
-											$status = 'pending';
-										} else {
-											$certificateLink = @$quiz_attempt['certificate']['certificateLink'];
-											$status          = empty( $quiz_attempt['pass'] ) ? 'failed' : 'passed';
-										}
-
-										$quiz_title = ! empty( $quiz_attempt['post']->post_title ) ? $quiz_attempt['post']->post_title : @$quiz_attempt['quiz_title'];
-										$quiz_link  = ! empty( $quiz_attempt['post']->ID ) ? get_permalink( $quiz_attempt['post']->ID ) : '#';
-
-										if ( ! empty( $quiz_title ) ) :
-											?>
-											<div class='<?php echo esc_attr( $status ); ?>'>
-
-												<div class="quiz_title">
-													<span class='<?php echo esc_attr( $status ); ?>_icon'></span>
-													<a href='<?php echo esc_attr( $quiz_link ); ?>'><?php echo esc_attr( $quiz_title ); ?></a>
-												</div>
-
-												<div class="certificate">
-													<?php if ( ! empty( $certificateLink ) ) : ?>
-														<a href='<?php echo esc_attr( $certificateLink ); ?>&time=<?php echo esc_attr( $quiz_attempt['time'] ); ?>' target="_blank">
-															<div class="certificate_icon"></div>
-														</a>
-														<?php
-													else :
-														echo '-';
-													endif;
-													?>
-												</div>
-
-												<div class="scores">
-													<?php if ( ( isset( $quiz_attempt['has_graded'] ) ) && ( true === $quiz_attempt['has_graded'] ) && ( true === LD_QuizPro::quiz_attempt_has_ungraded_question( $quiz_attempt ) ) ) : ?>
-														<?php echo _x( 'Pending', 'Pending Certificate Status Label', 'buddyboss' ); ?>
-														<?php
-													else :
-														echo round( $quiz_attempt['percentage'], 2 );
-														?>
-														%
-													<?php endif; ?>
-												</div>
-
-												<div class="statistics">
-													<?php
-													if ( ( ( $user_id == get_current_user_id() ) || ( learndash_is_admin_user() ) || ( learndash_is_group_leader_user() ) ) && ( isset( $quiz_attempt['statistic_ref_id'] ) ) && ( ! empty( $quiz_attempt['statistic_ref_id'] ) ) ) {
-														/**
-														 * @since 2.3
-														 * See snippet on use of this filter https://bitbucket.org/snippets/learndash/5o78q
-														 */
-														if ( apply_filters(
-															'show_user_profile_quiz_statistics',
-															get_post_meta( $quiz_attempt['post']->ID, '_viewProfileStatistics', true ),
-															$user_id,
-															$quiz_attempt,
-															basename( __FILE__ )
-														) ) {
-
-															?>
-															<a class="user_statistic" data-statistic_nonce="<?php echo wp_create_nonce( 'statistic_nonce_' . $quiz_attempt['statistic_ref_id'] . '_' . get_current_user_id() . '_' . $user_id ); ?>" data-user_id="<?php echo $user_id; ?>" data-quiz_id="<?php echo $quiz_attempt['pro_quizid']; ?>" data-ref_id="<?php echo intval( $quiz_attempt['statistic_ref_id'] ); ?>" href="#">
-																<div class="statistic_icon"></div>
-															</a>
-															<?php
-														}
-													}
-													?>
-												</div>
-												<div class="quiz_date"><?php echo learndash_adjust_date_time_display( $quiz_attempt['time'] ); ?></div>
-											</div>
-											<?php
-										endif;
-
-									endforeach;
-									?>
-
-								</div>
-							<?php endif; ?>
-
+					</article>
+					<div class="bb-rl-course-card-popup">
+						<div class="bb-rl-course-timestamp">
+							<?php
+							$updated_date = get_the_modified_date();
+							// translators: %s is the updated date.
+							printf( esc_html__( 'Updated: %s', 'buddyboss' ), esc_html( $updated_date ) );
+							?>
 						</div>
-					</h4>
+						<div class="bb-rl-course-popup-meta">
+							<?php
+							$total_lessons = (
+							$lessons_count > 1
+								? sprintf(
+							/* translators: 1: plugin name, 2: action number 3: total number of actions. */
+									__( '%1$s %2$s', 'buddyboss' ),
+									$lessons_count,
+									LearnDash_Custom_Label::get_label( 'lessons' )
+								)
+								: sprintf(
+							/* translators: 1: plugin name, 2: action number 3: total number of actions. */
+									__( '%1$s %2$s', 'buddyboss' ),
+									$lessons_count,
+									LearnDash_Custom_Label::get_label( 'lesson' )
+								)
+							);
+							?>
+							<span class="bb-rl-course-meta-tag"><?php echo esc_html( $total_lessons ); ?></span>
+						</div>
+						<div class="bb-rl-course-popup-caption">
+							<?php
+							echo wp_kses_post( $course_excerpt );
+							?>
+						</div>
+						<div class="bb-rl-course-author">
+							<h4><?php esc_html_e( 'Instructors', 'buddyboss' ); ?></h4>
+							<?php
+							$shared_instructor_ids = BB_Readylaunch_Learndash_Helper::instance()->bb_rl_get_course_instructor( $course_id );
+
+							// Display all instructors.
+							foreach ( $shared_instructor_ids as $instructor_id ) {
+								$instructor = get_userdata( $instructor_id );
+								if ( $instructor ) {
+									$instructor_user_link = bp_core_get_user_domain( $instructor_id );
+									?>
+									<div class="bb-rl-instructor-item">
+										<a class="item-avatar bb-rl-author-avatar" href="<?php echo esc_url( $instructor_user_link ); ?>">
+											<?php echo get_avatar( $instructor_id, 32 ); ?>
+										</a>
+										<span class="bb-rl-author-name">
+											<?php
+											if ( ! empty( $instructor_user_link ) ) {
+												echo '<a href="' . esc_url( $instructor_user_link ) . '">' . esc_html( $instructor->display_name ) . '</a>';
+											} else {
+												echo esc_html( $instructor->display_name );
+											}
+											?>
+										</span>
+									</div>
+									<?php
+								}
+							}
+							?>
+						</div>
+						<div class="bb-rl-course-popup-actions">
+							<a href="<?php echo esc_url( $resume_link ); ?>" class="bb-rl-course-link bb-rl-button bb-rl-button--brandFill bb-rl-button--small">
+								<i class="bb-icons-rl-play"></i>
+								<?php echo esc_html( $button_text ); ?>
+							</a>
+						</div>
+					</div>
 				</div>
 				<?php
 			}
-		} else {
-			?>
-			<aside class="bp-feedback bp-messages info">
-				<span class="bp-icon" aria-hidden="true"></span>
-				<p><?php printf( __( 'Sorry, no %s were found.', 'buddyboss' ), LearnDash_Custom_Label::label_to_lower( 'courses' ) ); ?></p>
-			</aside>
-			<?php
 		}
 		?>
 	</div>

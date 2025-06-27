@@ -16,20 +16,53 @@ defined( 'ABSPATH' ) || exit;
 
 bp_get_template_part( 'header/readylaunch-header' );
 
-$readylaunch_instance = bb_load_readylaunch();
+$readylaunch_instance = BB_Readylaunch::instance();
 
-if (
-	$readylaunch_instance->bb_rl_is_learndash_page() &&
-	$readylaunch_instance->bb_rl_is_page_enabled_for_integration( 'courses' )
-) {
-	$readylaunch_instance->bb_rl_courses_integration_page();
-} elseif ( have_posts() ) {
-	/* Start the Loop */
+/**
+ * Fires before the layout.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+do_action( 'bb_rl_layout_before' );
+
+if ( have_posts() ) {
+
+	/**
+	 * Fires before the loop starts.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	do_action( 'bb_rl_layout_before_loop' );
+
+		/* Start the Loop */
 	while ( have_posts() ) :
 		the_post();
 
-		the_content();
+		do_action( 'bb_rl_get_template_part_content' );
+
 	endwhile;
+
+	/**
+	 * Fires after the loop ends.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	do_action( 'bb_rl_layout_after_loop' );
+} else {
+
+	/**
+	 * Fires when no posts are found.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	do_action( 'bb_rl_layout_no_posts' );
 }
+
+/**
+ * Fires after the layout.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+do_action( 'bb_rl_layout_after' );
 
 bp_get_template_part( 'footer/readylaunch-footer' );

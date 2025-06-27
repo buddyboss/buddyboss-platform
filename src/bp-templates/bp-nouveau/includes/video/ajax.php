@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 
 add_action(
 	'admin_init',
-	function() {
+	function () {
 		$ajax_actions = array(
 			array(
 				'video_filter' => array(
@@ -959,8 +959,7 @@ function bp_nouveau_ajax_video_get_activity() {
 			'scope'       => 'video',
 			'privacy'     => false,
 		);
-	} else {
-		if ( $group_id > 0 && bp_is_active( 'groups' ) ) {
+	} elseif ( $group_id > 0 && bp_is_active( 'groups' ) ) {
 			$args = array(
 				'include'     => $post_id,
 				'object'      => buddypress()->groups->id,
@@ -969,13 +968,12 @@ function bp_nouveau_ajax_video_get_activity() {
 				'scope'       => false,
 				'show_hidden' => (bool) ( groups_is_user_member( bp_loggedin_user_id(), $group_id ) || bp_current_user_can( 'bp_moderate' ) ),
 			);
-		} else {
-			$args = array(
-				'include' => $post_id,
-				'privacy' => false,
-				'scope'   => false,
-			);
-		}
+	} else {
+		$args = array(
+			'include' => $post_id,
+			'privacy' => false,
+			'scope'   => false,
+		);
 	}
 
 	ob_start();
@@ -1001,13 +999,24 @@ function bp_nouveau_ajax_video_get_activity() {
 		ob_end_clean();
 	}
 
-	wp_send_json_success(
+	/**
+	 * Filter the video description response data.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $response_data The response data to be sent.
+	 */
+	$response_data = apply_filters(
+		'bp_nouveau_video_description_response_data',
 		array(
-			'activity'   => $activity,
-			'video_data' => $video_data,
+			'activity'      => $activity,
+			'video_data'    => $video_data,
+			'reset_comment' => $reset_comment,
+			'activity_id'   => $post_id,
 		)
 	);
 
+	wp_send_json_success( $response_data );
 }
 
 /**
@@ -1282,7 +1291,7 @@ function bp_nouveau_ajax_video_get_video_description() {
 	$display_name     = bp_core_get_user_displayname( $video->user_id );
 	$time_since       = bp_core_time_since( $video->date_created );
 	add_filter( 'bb_get_blocked_avatar_url', 'bb_moderation_fetch_avatar_url_filter', 10, 3 );
-	$avatar           = bp_core_fetch_avatar(
+	$avatar = bp_core_fetch_avatar(
 		array(
 			'item_id' => $video->user_id,
 			'object'  => 'user',
@@ -1424,11 +1433,9 @@ function bp_nouveau_ajax_video_get_album_view() {
 	$first_text = '';
 	if ( 'profile' === $type ) {
 		$first_text = esc_html__( ' Videos', 'buddyboss' );
-	} else {
-		if ( bp_is_active( 'groups' ) ) {
+	} elseif ( bp_is_active( 'groups' ) ) {
 			$group      = groups_get_group( (int) $id );
 			$first_text = bp_get_group_name( $group );
-		}
 	}
 
 	wp_send_json_success(
@@ -1511,7 +1518,6 @@ function bp_nouveau_ajax_video_move() {
 	} else {
 		wp_send_json_error( $response );
 	}
-
 }
 
 /**
@@ -1612,7 +1618,6 @@ function bp_nouveau_ajax_video_get_edit_thumbnail_data() {
 			'ffmpeg_generated' => get_post_meta( $attachment_id, 'bb_ffmpeg_preview_generated', true ),
 		)
 	);
-
 }
 
 /**

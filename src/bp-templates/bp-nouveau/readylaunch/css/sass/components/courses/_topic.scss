@@ -1,25 +1,4 @@
-.bb-rl-learndash-topic {
-
-	.bb-rl-topic-footer {
-		position: fixed;
-		bottom: 0;
-		padding: 12px 0;
-		background-color: var(--bb-rl-background-color);
-		width: calc(100% - 300px);
-		border-top: 1px solid var(--bb-rl-border-secondary-color);
-		z-index: 100;
-	}
-
-	.bb-rl-topic-actions {
-		max-width: 800px;
-		margin: 0 auto;
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-	}
-}
-
-.single-sfwd-topics {
+.single-sfwd-topic {
 
 	.site.bb-readylaunch {
 		background-color: var(--bb-rl-background-color);
@@ -31,32 +10,45 @@
 	background-color: var(--bb-rl-background-color);
 }
 
-.bb-rl-topic-block {
-	max-width: 800px;
-	margin: 0 auto;
-	padding: var(--bb-rl-space-400) 0;
+.bb-rl-lms-inner-content-block {
 
-	.bb-rl-entry-header {
-		margin: 0 0 var(--bb-rl-space-300);
-	}
+	h3 {
 
-	.bb-rl-heading {
-		margin: 0 0 var(--bb-rl-space-200);
-
-		.bb-rl-lesson-count {
-			margin-bottom: var(--bb-rl-space-50);
-		}
-	}
-
-	.bb-rl-entry-title {
-
-		@include bb-rl-base-heading-2xl;
+		@include bb-rl-base-heading;
 		color: var(--bb-rl-text-color);
+		margin: var(--bb-rl-space-200) 0;
 	}
+}
 
-	.bb-rl-entry-content {
+.bb-rl-lms-inner-content-list {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	background-color: var(--bb-rl-background-color);
+	border: 1px solid var(--bb-rl-border-secondary-color);
+	border-radius: var(--bb-rl-radius-md);
+	overflow: hidden;
 
-		@include bb-rl-label-heading-md-thin;
-		color: var(--bb-rl-text-secondary-color);
+	li {
+		margin: 0;
+		padding: 0;
+		border-bottom: 1px solid var(--bb-rl-border-secondary-color);
+
+		&:last-of-type {
+			border-bottom: none;
+		}
+
+		a {
+
+			@include bb-rl-label-heading-md;
+			padding: var(--bb-rl-space-100) var(--bb-rl-space-300);
+			display: block;
+			color: var(--bb-rl-text-color);
+			text-decoration: none;
+
+			&:hover {
+				background-color: var(--bb-rl-background-hover-color);
+			}
+		}
 	}
 }

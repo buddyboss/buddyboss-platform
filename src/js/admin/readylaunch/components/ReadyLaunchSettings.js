@@ -561,7 +561,8 @@ export const ReadyLaunchSettings = () => {
 			updatedItems.forEach(item => {
 				bb_rl_side_menu[item.id] = {
 					enabled: item.enabled,
-					order: item.order
+					order: item.order,
+					icon: item.icon
 				};
 			});
 
@@ -721,7 +722,7 @@ export const ReadyLaunchSettings = () => {
 											icon: 'bb-icons-rl-users-three',
 											title: __('Groups', 'buddyboss'),
 											description: __('Configure group creation, privacy, and member roles.', 'buddyboss'),
-											actionLink: 'admin.php?page=bp-groups&tab=bp-groups'
+											actionLink: 'admin.php?page=bp-settings&tab=bp-groups'
 										},
 										{
 											id: 'media',

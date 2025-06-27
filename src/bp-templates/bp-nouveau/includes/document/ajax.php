@@ -522,11 +522,22 @@ function bp_nouveau_ajax_document_get_document_description() {
 		}
 	}
 
-	wp_send_json_success(
+	/**
+	 * Filter the document description response data.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $response_data The response data to be sent.
+	 */
+	$response_data = apply_filters(
+		'bp_nouveau_document_description_response_data',
 		array(
 			'description' => $document_description,
+			'activity_id' => isset( $document->activity_id ) ? $document->activity_id : 0,
 		)
 	);
+
+	wp_send_json_success( $response_data );
 }
 
 /**

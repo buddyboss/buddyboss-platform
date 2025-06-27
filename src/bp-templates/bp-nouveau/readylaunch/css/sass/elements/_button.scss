@@ -41,5 +41,10 @@
 
 		@include bb-rl-button--tertiary-link;
 	}
+
+	&.bb-rl-button--disabled {
+
+		@include bb-rl-button--disabled;
+	}
 }
 
