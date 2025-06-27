@@ -22,7 +22,7 @@ defined( 'ABSPATH' ) || exit;
 		<# } #>
 
 		<# if ( data.link_success || data.link_error ) { #>
-			<a title="<?php esc_html_e( 'Cancel Preview', 'buddyboss' ); ?>" href="#" id="activity-close-link-suggestion"><?php esc_html_e( 'Remove Preview', 'buddyboss' ); ?></i></a>
+			<a title="<?php esc_html_e( 'Cancel Preview', 'buddyboss' ); ?>" href="#" id="activity-close-link-suggestion"><?php esc_html_e( 'Remove preview', 'buddyboss' ); ?></i></a>
 			<div class="activity-link-preview-container">
 
 				<# if ( data.link_images && data.link_images.length && data.link_success && ! data.link_error && '' !== data.link_image_index ) { #>
