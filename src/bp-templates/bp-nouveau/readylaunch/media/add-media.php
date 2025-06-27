@@ -16,7 +16,28 @@ defined( 'ABSPATH' ) || exit;
 if ( ( ( bp_is_my_profile() && bb_user_can_create_media() ) || ( bp_is_group() && is_user_logged_in() && groups_can_user_manage_media( bp_loggedin_user_id(), bp_get_current_group_id() ) ) ) ) { ?>
 
 	<div class="bb-media-actions-wrap">
-		<h2 class="bb-title"><?php esc_html_e( 'Photos', 'buddyboss' ); ?></h2>
+		<h2 class="bb-title">
+			<div class="bb-item-count">
+				<?php
+				$count = bp_media_get_total_group_media_count();
+				printf(
+					wp_kses(
+					/* translators: %d is the photo count */
+						_n(
+							'<span class="bb-count">%d</span> Photo',
+							'<span class="bb-count">%d</span> Photos',
+							$count,
+							'buddyboss'
+						),
+						array( 'span' => array( 'class' => true ) )
+					),
+					(int) $count
+				);
+
+				unset( $count );
+				?>
+			</div>
+		</h2>
 		<div class="bb-media-actions">
 			<a href="#" id="bp-add-media" class="bb-add-media button bb-rl-button bb-rl-button--brandFill bb-rl-button--small"><i class="bb-icons-rl-plus"></i><?php esc_html_e( 'Add Photos', 'buddyboss' ); ?></a>
 		</div>

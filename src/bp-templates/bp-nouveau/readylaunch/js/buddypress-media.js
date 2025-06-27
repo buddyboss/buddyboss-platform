@@ -800,8 +800,21 @@ window.bp = window.bp || {};
 										$( '#buddypress' ).find( '.bp-wrap .users-nav ul li#media-personal-li a span.count' ).text( response.data.media_personal_count );
 									}
 
-									if ( response.data.media_group_count ) {
-										$( '#buddypress' ).find( '.bp-wrap .groups-nav ul li#photos-groups-li a span.count' ).text( response.data.media_group_count );
+									if (
+										'undefined' !== typeof response.data &&
+										'undefined' !== typeof response.data.media_group_count
+									) {
+										if ( $( '#buddypress .bb-item-count' ).length > 0 && 'yes' !== BP_Nouveau.media.is_media_directory ) {
+											dir_label = BP_Nouveau.dir_labels.hasOwnProperty( 'media' ) ?
+											(
+												1 === parseInt( response.data.media_group_count ) ?
+												BP_Nouveau.dir_labels.media.singular : BP_Nouveau.dir_labels.media.plural
+											)
+											: '';
+											$( '#buddypress .bb-item-count' ).html( '<span class="bb-count">' + response.data.media_group_count + '</span> ' + dir_label );
+										} else {
+											$( '#buddypress' ).find( '.bp-wrap .groups-nav ul li#photos-groups-li a span.count' ).text( response.data.media_group_count );
+										}
 									}
 
 									if ( 0 !== response.data.media_html_content.length ) {
@@ -3975,7 +3988,15 @@ window.bp = window.bp || {};
 								}
 
 								if ( response.data.media_group_count ) {
-									if ( $buddypressElem.find( '.bp-wrap .groups-nav ul li#photos-groups-li a span.count' ).length ) {
+									if ( $buddypressElem.find( '.bb-item-count' ).length > 0 && 'yes' !== BP_Nouveau.media.is_media_directory ) {
+										dir_label = BP_Nouveau.dir_labels.hasOwnProperty( 'media' ) ?
+										(
+											1 === parseInt( response.data.media_group_count ) ?
+											BP_Nouveau.dir_labels.media.singular : BP_Nouveau.dir_labels.media.plural
+										)
+										: '';
+										$buddypressElem.find( '.bb-item-count' ).html( '<span class="bb-count">' + response.data.media_group_count + '</span> ' + dir_label );
+									} else if ( $buddypressElem.find( '.bp-wrap .groups-nav ul li#photos-groups-li a span.count' ).length ) {
 										$buddypressElem.find( '.bp-wrap .groups-nav ul li#photos-groups-li a span.count' ).text( response.data.media_group_count );
 									} else {
 										var photoGroupSpanTag = document.createElement( 'span' );
