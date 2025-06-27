@@ -8,40 +8,6 @@
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
-
-// Set up comment query.
-$comments_query = new WP_Comment_Query();
-
-// Base query parameters.
-$query_args = array(
-	'post_id' => get_the_ID(),
-	'status'  => 'approve',
-	'orderby' => 'comment_date',
-	'order'   => 'ASC',
-);
-
-// Check if we're viewing a specific unapproved comment via moderation hash.
-$unapproved_comment = null;
-if ( isset( $_GET['unapproved'] ) && isset( $_GET['moderation-hash'] ) ) { //phpcs:ignore WordPress.Security.NonceVerification.Recommended
-	$unapproved_comment = get_comment( intval( wp_unslash( $_GET['unapproved'] ) ) ); //phpcs:ignore WordPress.Security.NonceVerification.Recommended
-	if ( $unapproved_comment && hash_equals( wp_unslash( $_GET['moderation-hash'] ), wp_hash( $unapproved_comment->comment_date_gmt ) ) ) { //phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		// Add the specific unapproved comment to the results after querying approved comments.
-		$bb_comments   = $comments_query->query( $query_args );
-		$bb_comments[] = $unapproved_comment;
-	} else {
-		// Fallback to approved comments only.
-		$bb_comments = $comments_query->query( $query_args );
-	}
-} else {
-	// Standard query for approved comments only.
-	$bb_comments = $comments_query->query( $query_args );
-}
-
-// Set up global comment variables.
-global $wp_query, $user_identity;
-$wp_query->comments              = $bb_comments;
-$wp_query->comment_count         = count( $bb_comments );
-$wp_query->max_num_comment_pages = get_comment_pages_count( $bb_comments );
 ?>
 <div id="comments" class="comments-area">
 

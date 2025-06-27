@@ -95,6 +95,7 @@ class BB_Readylaunch_Memberpress_Courses_Helper {
 
 			// Add "Back to Course" button to lesson sidebar menu.
 			add_action( 'mpcs_classroom_start_sidebar', array( $this, 'bb_rl_mpcs_add_back_to_course_button' ), 10 );
+			add_filter( 'comments_template', array( $this, 'bb_rl_mpcs_add_comments_template' ), PHP_INT_MAX, 1 );
 		}
 	}
 
@@ -804,5 +805,20 @@ class BB_Readylaunch_Memberpress_Courses_Helper {
 			</div>
 		</article>
 		<?php
+	}
+
+	public function bb_rl_mpcs_add_comments_template( $template ) {
+		global $post;
+		if ( ! function_exists( 'buddyboss_theme' ) && ! empty( $post ) && is_a( $post, 'WP_Post' ) ) {
+			if (
+				(
+					class_exists( 'memberpress\courses\models\Course' ) && models\Course::$cpt === $post->post_type ||
+					class_exists( 'memberpress\courses\models\Lesson' ) && models\Lesson::$cpt === $post->post_type
+				)
+			) {
+				$template = buddypress()->plugin_dir . 'bp-templates/bp-nouveau/readylaunch/memberpress/courses/comments.php';
+			}
+		}
+		return $template;
 	}
 }
