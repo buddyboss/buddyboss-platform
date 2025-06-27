@@ -326,7 +326,7 @@ body[class*="mpcs-course"] .bb-rl-mbprlms-pagination {
 	}
 }
 
-.bb-rl-group-details {
+.bb-rl-container {
 
 	.mpcs-cards.columns .card {
 		border-radius: var(--bb-rl-radius-lg);
@@ -402,6 +402,23 @@ body[class*="mpcs-course"] .bb-rl-mbprlms-pagination {
 
 			@include bb-rl-label-heading;
 			color: var(--bb-rl-text-tertiary-color);
+		}
+
+		.course-author {
+
+			a {
+
+				@include bb-rl-label-heading-bolder;
+				color: var(--bb-rl-text-color);
+			}
+
+			img {
+				width: 24px;
+				height: 24px;
+				border-radius: 50%;
+				object-fit: cover;
+				margin-right: var(--bb-rl-space-50);
+			}
 		}
 	}
 
