@@ -9746,6 +9746,10 @@ input.bb-rl-zoom-slider::-moz-range-progress {
   content: "\e5d4";
 }
 
+.bb-rl-group-admin-subnav .bb-rl-admin-subnav-item#bb-rl-topics-groups-li a:before {
+  content: "\e464";
+}
+
 .bb-rl-group-admin-subnav .bb-rl-admin-subnav-item#bb-rl-group-avatar-groups-li a::before {
   content: "\e2ca";
 }

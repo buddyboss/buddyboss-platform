@@ -147,14 +147,23 @@
 		margin-bottom: var(--bb-rl-space-100);
 	}
 
+	.bb-rl-instructor-data-wrapper {
+		display: flex;
+		flex-direction: column;
+	}
+
 	.mpcs-instructor {
 		display: flex;
 		align-items: flex-start;
 		gap: var(--bb-rl-space-200);
-		padding: var(--bb-rl-space-300) 0;
+		padding: var(--bb-rl-space-400) var(--bb-rl-space-300);
+		background-color: var(--bb-rl-background-color);
+		border-radius: var(--bb-rl-radius-lg);
+		border: 1px solid var(--bb-rl-border-secondary-color);
+		margin:  0 0 var(--bb-rl-space-200);
 
 		.tile-icon {
-			width: 144px;
+			width: 80px;
 
 			.avatar {
 				width: 100%;
@@ -170,11 +179,26 @@
 		}
 
 		.tile-content {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			gap: var(--bb-rl-space-200);
+			flex: 1;
 
 			@media screen and (max-width: 840px) {
+				flex-direction: column;
 				text-align: center;
 				margin-left: auto;
 				margin-right: auto;
+
+				.bb-rl-instructor-data-header {
+					flex-direction: column;
+					align-items: center;
+
+					.tile-title {
+						margin: 0 0 var(--bb-rl-space-50);
+					}
+				}
 			}
 		}
 
@@ -182,12 +206,12 @@
 
 			@include bb-rl-base-heading;
 			color: var(--bb-rl-text-color);
-			margin: 0 0 var(--bb-rl-space-100);
+			margin: 0 var(--bb-rl-space-100) 0 0;
 		}
 
 		.tile-subtitle {
 
-			@include bb-rl-label-heading-bolder;
+			@include bb-rl-label-heading-xs;
 			display: inline-flex;
 			width: fit-content;
 			color: var(--bb-rl-text-brand-secondary-color);
@@ -197,27 +221,44 @@
 			padding: var(--bb-rl-space-50) var(--bb-rl-space-100);
 		}
 
-		.tile-meta {
+		.tile-description {
 
 			@include bb-rl-label-heading;
 			color: var(--bb-rl-text-secondary-color);
-			margin: var(--bb-rl-space-100) 0 0;
+			margin: var(--bb-rl-space-100) 0;
+		}
+
+		.tile-meta {
+
+			@include bb-rl-label-heading-bolder;
+			color: var(--bb-rl-text-tertiary-color);
+			margin: var(--bb-rl-space-50) 0 0;
 
 			p {
-				margin: 0 0 var(--bb-rl-space-100);
+				margin: 0;
 			}
 
 			a {
 
 				@include bb-rl-button--tertiary-link;
+				color: var(--bb-rl-text-secondary-color);
 			}
+		}
 
-			a.mpcs-btn {
+		.bb-rl-button--instructor {
+			white-space: nowrap;
+		}
 
-				@include bb-rl-button;
-				@include bb-rl-button-secondary-fill;
-				@include bb-rl-button--small;
-				margin: var(--bb-rl-space-200) 0 0;
+		.tile-socials {
+			list-style: none;
+			padding: 0;
+			margin: 0;
+			display: flex;
+			align-items: center;
+			gap: var(--bb-rl-space-100);
+
+			li {
+				display: inline-flex;
 			}
 		}
 	}
