@@ -420,6 +420,10 @@ window.bp = window.bp || {};
 			openMoreOption : function ( e ) {
 				e.preventDefault();
 
+				// Close all other open dropdowns.
+				$( '.bb-rl-option-wrap' ).not( $( e.currentTarget ).closest( '.bb-rl-option-wrap' ) ).removeClass( 'active' );
+
+				// Toggle the current one.
 				$( e.currentTarget ).closest( '.bb-rl-option-wrap' ).toggleClass( 'active' );
 			},
 
