@@ -939,6 +939,30 @@ html:has(.memberpressproduct-template-default.single.registration) {
 			line-height: 22px;
 		}
 
+		.mp_wrapper > .mepr_error {
+			background-color: var(--bb-rl-background-danger-secondary-color);
+			border: 1px solid var(--bb-rl-border-danger-secondary-color);
+			padding: var(--bb-rl-space-200);
+			border-radius: var(--bb-rl-radius-md);
+			font-size: var(--bb-rl-font-size-sm);
+			font-weight: 500;
+			margin-top: var(--bb-rl-space-200);
+
+			ul {
+				list-style: none;
+				padding: 0;
+				margin: 0;
+
+				li {
+					margin: 0 0 var(--bb-rl-space-100);
+
+					&:last-child {
+						margin-bottom: 0;
+					}
+				}
+			}
+		}
+
 		.mepr-signup-form,
 		.mepr-form {
 
@@ -1075,16 +1099,53 @@ html:has(.memberpressproduct-template-default.single.registration) {
 					border-bottom-color: var(--bb-rl-link-primary-hover-color);
 				}
 			}
+
+			div.mp-hide-pw {
+				position: relative;
+
+				button.mp-hide-pw {
+					position: absolute;
+					top: 50%;
+					right: var(--bb-rl-space-100);
+					transform: translateY(-50%);
+					background-color: transparent;
+					border: none;
+					padding: 0;
+					margin: 0;
+					color: var(--bb-rl-text-secondary-color);
+
+					.dashicons-visibility {
+						display: inline-flex;
+						align-items: center;
+						justify-content: center;
+					}
+
+					.dashicons-visibility::before {
+						content: "\e220";
+						font-weight: 400;
+						font-family: bb-icons-rl;
+						font-size: 14px;
+					}
+				}
+			}
 		}
 
 		.mp_invoice {
 
 			.mp-table {
+				width: 100%;
+				border-collapse: collapse;
+
+				thead {
+					background-color: var(--bb-rl-background-secondary-color);
+				}
 
 				th {
 					font-size: var(--bb-rl-font-size-base);
 					font-weight: 500;
 					line-height: var(--bb-rl-base-line);
+					border-color: var(--bb-rl-border-secondary-color);
+					color: var(--bb-rl-text-color);
 				}
 
 				td {
