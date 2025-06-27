@@ -676,6 +676,7 @@ body[class*="mpcs-course"] .bb-rl-mbprlms-pagination .pagination {
   align-items: center;
   justify-content: flex-end;
   padding-bottom: var(--bb-rl-space-400);
+  margin-bottom: 0;
 }
 
 .bb-rl-mbprlms-pagination .pagination li,
