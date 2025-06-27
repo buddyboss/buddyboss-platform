@@ -39,6 +39,11 @@ defined( 'ABSPATH' ) || exit;
 
 						<?php bbp_get_template_part( 'loop', 'replies' ); ?>
 
+					<?php else: ?>
+
+						<?php bbp_get_template_part( 'loop', 'replies' ); ?>
+						<?php bbp_get_template_part( 'feedback', 'no-replies' ); ?>
+
 					<?php endif; ?>
 
 					<?php bbp_get_template_part( 'form', 'reply' ); ?>
