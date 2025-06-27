@@ -21,9 +21,28 @@ if ( ( ( bp_is_my_profile() && bb_user_can_create_media() ) || ( $bp_is_group &&
 
 	<?php
 	if ( bp_has_albums( bp_ajax_querystring( 'albums' ) ) ) {
+		$count = bp_media_get_total_group_album_count();
 		?>
 		<div class="bb-media-actions-wrap album-actions-wrap bb-rl-media-actions-wrap">
-			<h2 class="bb-title"><?php esc_html_e( 'Albums', 'buddyboss' ); ?></h2>
+			<h2 class="bb-title">
+				<div class="bb-item-count">
+					<?php
+					printf(
+						wp_kses(
+						/* translators: %d is the album count */
+							_n(
+								'<span class="bb-count">%d</span> Album',
+								'<span class="bb-count">%d</span> Albums',
+								$count,
+								'buddyboss'
+							),
+							array( 'span' => array( 'class' => true ) )
+						),
+						(int) $count
+					);
+					?>
+				</div>
+			</h2>
 			<?php
 			if ( ( $bp_is_group && $bp_is_group_albums_support_enabled ) || $bp_is_profile_albums_support_enabled ) {
 				?>
