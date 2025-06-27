@@ -59,6 +59,10 @@ class BB_Group_Readylaunch {
 		remove_action( 'bp_before_directory_groups_page', 'bp_group_directory_page_content' );
 
 		add_filter( 'bp_get_group_description_excerpt', array( $this, 'bb_rl_get_group_description_excerpt' ), 10, 1 );
+
+		add_filter( 'bp_member_plural_label_name', array( $this, 'bb_rl_add_count_after_label' ), 10, 3 );
+		add_filter( 'bp_organizer_plural_label_name', array( $this, 'bb_rl_add_count_after_label' ), 10, 3 );
+		add_filter( 'bp_moderator_plural_label_name', array( $this, 'bb_rl_add_count_after_label' ), 10, 3 );
 	}
 
 	/**
@@ -588,5 +592,41 @@ class BB_Group_Readylaunch {
 		$group_link = '... <a href="#" id="group-description-' . esc_attr( bp_get_current_group_id() ) . '" class="bb-rl-more-link">' . esc_html__( 'Show more', 'buddyboss' ) . '</a>';
 
 		return bp_create_excerpt( $excerpt, 160, array( 'ending' => $group_link ) );
+	}
+
+	/**
+	 * Get member singular label name for ReadyLaunch.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $label       Original label.
+	 * @param int    $group_id    Group ID.
+	 * @param string $label_name  Label name.
+	 * @return string Modified label.
+	 */
+	public function bb_rl_add_count_after_label( $label, $group_id, $label_name ) {
+		if ( 'member_plural_label_name' === $label_name ) {
+			$members = groups_get_group_members(
+				array(
+					'group_id'            => $group_id,
+					'exclude_admins_mods' => true,
+					'exclude_banned'      => true,
+					'per_page'            => 1,
+					'page'                => 1,
+					'populate_extras'     => false,
+				)
+			);
+			$label   = $label . ( ! empty( $members['count'] ) ? ' (' . $members['count'] . ')' : '' );
+		} elseif ( 'organizer_plural_label_name' === $label_name ) {
+			$admins = groups_get_group_admins( $group_id );
+			$label  = $label . ( ! empty( $admins ) ? ' (' . count( $admins ) . ')' : '' );
+		} elseif ( 'moderator_plural_label_name' === $label_name ) {
+			$mods  = groups_get_group_mods( $group_id );
+			$label = $label . ( ! empty( $mods ) ? ' (' . count( $mods ) . ')' : '' );
+		} else {
+			$label = $label;
+		}
+
+		return $label;
 	}
 }
