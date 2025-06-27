@@ -2843,8 +2843,6 @@ body.login .mfp-content #privacy-modal {
   border: 1px solid var(--bb-rl-border-secondary-color);
   padding: var(--bb-rl-space-400) var(--bb-rl-space-300);
   border-radius: var(--bb-rl-radius-lg);
-  background: #fff;
-  padding: 30px;
   text-align: right;
   min-height: 400px;
   max-width: 650px;

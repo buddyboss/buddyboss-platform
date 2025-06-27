@@ -2096,7 +2096,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   display: flex;
   align-items: center;
   background-color: transparent;
-  color: var(--bb-rl-text-secondary-color);
+  color: var(--bb-rl-text-color);
   font-size: var(--bb-rl-font-size-sm);
   line-height: 1;
   font-weight: 500;
@@ -2147,7 +2147,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 .bb-subnav-filters-container-main .subnav-filters-modal li a {
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
   display: block;
-  color: var(--bb-rl-text-color);
+  color: var(--bb-rl-text-secondary-color);
   font-size: var(--bb-rl-font-size-sm);
   font-weight: 500;
   line-height: 1.5;

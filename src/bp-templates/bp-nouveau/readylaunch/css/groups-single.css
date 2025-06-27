@@ -3877,7 +3877,7 @@ div#bp-group-message-content {
 }
 
 .bb-rl-course-content-header .bb-rl-course-content-header-inner .bb-rl-course-content-meta .bb-rl-course-content-meta-item:after {
-  content: '';
+  content: "";
   display: inline-block;
   height: 4px;
   width: 4px;
@@ -4059,7 +4059,7 @@ div#bp-group-message-content {
 .ld-lesson-list .ld-item-list-item-expanded {
   display: none;
   position: relative;
-  transition: max-height .5s ease;
+  transition: max-height 0.5s ease;
 }
 
 .ld-lesson-list .ld-item-list-item-expanded .ld-table-list-header {

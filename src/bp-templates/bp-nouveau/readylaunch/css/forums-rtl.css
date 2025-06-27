@@ -258,7 +258,7 @@
 }
 
 .bb-rl-forum-meta .bb-rl-forum-meta-item + .bb-rl-forum-meta-item:before {
-  content: '•';
+  content: "•";
   margin: 0 6px;
   color: var(--bb-rl-background-tertiary-color);
 }
@@ -1041,7 +1041,7 @@
 
 .bb-rl-forum-single-header .subscription-toggle:before {
   content: "\e400";
-  font-family: "bb-icons-rl";
+  font-family: bb-icons-rl;
   font-size: 16px;
   font-weight: 400;
   line-height: 1;
@@ -1602,7 +1602,6 @@
   position: relative;
   margin: var(--bb-rl-space-200) var(--bb-rl-space-300);
   background-repeat: no-repeat;
-  max-width: 100%;
   border-radius: var(--bb-rl-radius-lg);
   overflow: hidden;
   background-image: none !important;
@@ -1863,7 +1862,7 @@
 
 .bb-rl-forum-form .bbp-form #bbp_reply_submit,
 .bb-rl-forum-form.media-uploading .bbp-form #bbp_reply_submit {
-  opacity: .4;
+  opacity: 0.4;
   pointer-events: none;
 }
 
@@ -1874,7 +1873,7 @@
 
 .bb-rl-forum-form .bbp-form #bbp_topic_submit,
 .bb-rl-forum-form.media-uploading.has-title .bbp-form #bbp_topic_submit {
-  opacity: .4;
+  opacity: 0.4;
   pointer-events: none;
 }
 
@@ -2236,7 +2235,7 @@
 .bb-rl-topic-header .bb-rl-topic-footer .favorite-toggle:before,
 .bb-rl-topic-header .bb-rl-topic-footer .subscription-toggle:before {
   content: "\e400";
-  font-family: "bb-icons-rl";
+  font-family: bb-icons-rl;
   font-size: 16px;
   font-weight: 400;
   line-height: 1;
@@ -2474,14 +2473,13 @@
 
 .forum-dropdown .bbp-admin-links > a,
 .bb-rl-container-inner .bbp-admin-links > a {
-  display: block;
+  display: inline-flex;
   font-size: var(--bb-rl-font-size-sm);
   font-weight: 500;
   line-height: var(--bb-rl-base-line-small);
   padding: 10px var(--bb-rl-space-200);
   color: var(--bb-rl-text-secondary-color);
   white-space: nowrap;
-  display: inline-flex;
   align-items: center;
   width: 100%;
   border: 0;
