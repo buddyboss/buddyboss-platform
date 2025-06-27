@@ -1404,6 +1404,7 @@ function bp_nouveau_ajax_media_get_media_description() {
 		'bp_nouveau_media_description_response_data',
 		array(
 			'description' => $media_description,
+			'activity_id' => isset( $media->activity_id ) ? $media->activity_id : 0,
 		)
 	);
 

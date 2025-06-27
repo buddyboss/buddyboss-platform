@@ -713,7 +713,14 @@ class BB_Activity_Readylaunch {
 	 * @return array Modified response data.
 	 */
 	public function bb_rl_modify_media_description_response_data( $response_data ) {
-		if ( is_user_logged_in() ) {
+		if ( empty( $response_data['activity_id'] ) ) {
+			return $response_data;
+		}
+
+		$activity_id   = $response_data['activity_id'];
+		$comment_count = $this->bb_rl_get_activity_comment_count( $activity_id );
+
+		if ( is_user_logged_in() && 0 !== (int) $comment_count ) {
 			// If reset comment is true, then don't add the comment form for video.
 			if ( isset( $response_data['reset_comment'] ) && 'true' === $response_data['reset_comment'] ) {
 				return $response_data;
