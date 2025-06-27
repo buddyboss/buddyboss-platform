@@ -100,9 +100,6 @@ class BB_Readylaunch_Memberpress_Courses_Helper {
 			add_action( 'init', array( $this, 'bb_rl_mpcs_add_rewrite_rules' ) );
 			add_filter( 'query_vars', array( $this, 'bb_rl_mpcs_add_query_vars' ) );
 
-			// Handle MemberPress slug changes.
-			add_action( 'mepr_mpcs-process-options', array( $this, 'bb_rl_mpcs_handle_slug_changes' ), 10 );
-
 			add_filter( 'comments_template', array( $this, 'bb_rl_mpcs_add_comments_template' ), PHP_INT_MAX, 1 );
 		}
 	}
@@ -865,12 +862,20 @@ class BB_Readylaunch_Memberpress_Courses_Helper {
 				$lessons_slug = helpers\Lessons::get_permalink_base();
 			}
 
-			// Add rewrite rule for lesson comments pagination using dynamic slugs.
-			add_rewrite_rule(
-				'^' . $courses_slug . '/([^/]+)/' . $lessons_slug . '/([^/]+)/comment-page-([0-9]{1,})/?$',
-				'index.php?post_type=' . models\Lesson::$cpt . '&name=$matches[2]&cpage=$matches[3]',
-				'top'
-			);
+			// Build the rewrite rule pattern for lesson comments pagination using dynamic slugs.
+			$regex       = '^' . $courses_slug . '/([^/]+)/' . $lessons_slug . '/([^/]+)/comment-page-([0-9]{1,})/?$';
+			$replacement = 'index.php?post_type=' . models\Lesson::$cpt . '&name=$matches[2]&cpage=$matches[3]';
+
+			// Get registered rewrite rules.
+			$rules = get_option( 'rewrite_rules', array() );
+
+			// Add the rewrite rule.
+			add_rewrite_rule( $regex, $replacement, 'top' );
+
+			// Maybe flush rewrite rules if it was not previously in the option.
+			if ( ! isset( $rules[ $regex ] ) ) {
+				flush_rewrite_rules();
+			}
 		}
 	}
 
@@ -888,12 +893,4 @@ class BB_Readylaunch_Memberpress_Courses_Helper {
 		return $query_vars;
 	}
 
-	/**
-	 * Handle MemberPress slug changes.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 */
-	public function bb_rl_mpcs_handle_slug_changes() {
-		flush_rewrite_rules();
-	}
 }
