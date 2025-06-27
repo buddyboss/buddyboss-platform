@@ -2044,6 +2044,28 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   #bb-rl-editor-toolbar .medium-editor-action b:before {
     font-size: 18px;
   }
+  #bb-rl-activity-form-submit-wrapper:has(.whats-new-topic-selector) {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .whats-new-topic-selector {
+    order: -1;
+    display: block;
+    width: 60%;
+    text-align: center;
+    max-width: 350px;
+    margin: 15px 20% 5px;
+  }
+  .whats-new-topic-selector .bb-rl-topic-selector-list {
+    z-index: 9;
+  }
+  .whats-new-topic-selector .bb-rl-topic-selector-button {
+    max-width: 100%;
+    margin-bottom: var(--bb-rl-space-200);
+  }
+  .whats-new-topic-selector .bb-rl-topic-selector-button:after {
+    top: 18px;
+  }
 }
 
 .bb-rl-activity-placeholder {
@@ -2201,12 +2223,12 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   padding: 0;
   border-bottom: 0;
   margin-bottom: 0;
-  margin-left: 0;
-  flex: 1;
+  margin-left: auto;
 }
 
 .activity-topic-selector {
-  flex: 1;
+  margin-right: auto;
+  max-width: 50%;
 }
 
 .activity-topic-selector > ul {
@@ -4007,6 +4029,28 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
 
 .bb-rl-activity-list li.bbp_reply_create .activity-discussion-title-wrap .activity-read-more {
   display: none;
+}
+
+@media screen and (max-width: 992px) {
+  .bb-rl-activity-filters-container {
+    flex-flow: column;
+    align-items: flex-start;
+  }
+  .bb-rl-activity-filters-container .activity-head-bar {
+    margin-left: 0;
+  }
+  .activity-topic-selector {
+    max-width: 100%;
+  }
+  .activity-topic-selector + .bb-rl-activity-filters-separator {
+    display: none;
+  }
+  .activity-topic-selector > ul > li .bb_nav_more_dropdown .bb_more_dropdown__title {
+    display: none;
+  }
+  .activity-topic-selector > ul > li .bb_more_dropdown_overlay {
+    display: none;
+  }
 }
 
 @media screen and (max-width: 544px) {

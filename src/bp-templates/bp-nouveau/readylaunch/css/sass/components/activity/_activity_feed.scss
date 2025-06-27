@@ -60,13 +60,13 @@
 		padding: 0;
 		border-bottom: 0;
 		margin-bottom: 0;
-		margin-left: 0;
-		flex: 1;
+		margin-left: auto;
 	}
 }
 
 .activity-topic-selector {
-	flex: 1;
+	margin-right: auto;
+	max-width: 50%;
 
 	> ul {
 		display: flex;
@@ -1943,6 +1943,40 @@
 			}
 
 			.activity-read-more {
+				display: none;
+			}
+		}
+	}
+}
+
+@media screen and (max-width: $lg) {
+
+	.bb-rl-activity-filters-container {
+		flex-flow: column;
+		align-items: flex-start;
+
+		.activity-head-bar {
+			margin-left: 0;
+		}
+	}
+
+	.activity-topic-selector {
+		max-width: 100%;
+
+		+ .bb-rl-activity-filters-separator {
+			display: none;
+		}
+
+		> ul > li {
+
+			.bb_nav_more_dropdown {
+
+				.bb_more_dropdown__title {
+					display: none;
+				}
+			}
+
+			.bb_more_dropdown_overlay {
 				display: none;
 			}
 		}

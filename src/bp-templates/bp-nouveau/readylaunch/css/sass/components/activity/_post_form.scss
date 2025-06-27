@@ -1328,4 +1328,31 @@
 			}
 		}
 	}
+
+	#bb-rl-activity-form-submit-wrapper:has(.whats-new-topic-selector) {
+		flex-wrap: wrap;
+		justify-content: center;
+	}
+
+	.whats-new-topic-selector {
+        order: -1;
+        display: block;
+        width: 60%;
+        text-align: center;
+        max-width: 350px;
+        margin: 15px 20% 5px;
+
+		.bb-rl-topic-selector-list {
+			z-index: 9;
+		}
+
+		.bb-rl-topic-selector-button {
+			max-width: 100%;
+			margin-bottom: var(--bb-rl-space-200);
+
+			&:after {
+				top: 18px;
+			}
+		}
+    }
 }
