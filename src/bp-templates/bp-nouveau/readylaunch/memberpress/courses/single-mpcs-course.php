@@ -177,7 +177,7 @@ if ( is_user_logged_in() && ! empty( $memberships ) ) {
 					$options              = \get_option( 'mpcs-options' );
 					$show_course_comments = helpers\Options::val( $options, 'show-course-comments' );
 					if ( ! empty( $show_course_comments ) && ( comments_open() || get_comments_number() ) ) {
-						comments_template();
+						bp_get_template_part( 'memberpress/courses/comments' );
 					}
 					?>
 				</div>

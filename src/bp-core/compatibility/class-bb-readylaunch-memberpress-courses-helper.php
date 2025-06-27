@@ -695,4 +695,114 @@ class BB_Readylaunch_Memberpress_Courses_Helper {
 		<?php
 		return ob_get_clean();
 	}
+
+	/**
+	 * Output the comment.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param object $comment The comment object.
+	 * @param array  $args    The arguments array.
+	 * @param int    $depth   The depth of the comment.
+	 */
+	public function bb_rl_mpcs_comment( $comment, $args, $depth ) {
+		// phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison
+		if ( 'div' === $args['style'] ) {
+			$tag       = 'div';
+			$add_below = 'comment';
+		} else {
+			$tag       = 'li';
+			$add_below = 'div-comment';
+		}
+		?>
+
+		<<?php echo esc_attr( $tag ); ?> <?php comment_class( $args['has_children'] ? 'parent' : '', $comment ); ?> id="comment-<?php comment_ID(); ?>">
+
+		<article id="div-comment-<?php comment_ID(); ?>" class="comment-body">
+
+			<?php
+			if ( 0 !== (int) $args['avatar_size'] ) {
+				if ( function_exists( 'bp_core_get_user_domain' ) ) {
+					$user_link = bp_core_get_user_domain( $comment->user_id );
+				} else {
+					$user_link = get_comment_author_url( $comment );
+				}
+				?>
+				<div class="comment-author vcard">
+					<a href="<?php echo ! empty( $user_link ) ? esc_url( $user_link ) : ''; ?>">
+						<?php echo get_avatar( $comment, $args['avatar_size'] ); ?>
+					</a>
+				</div>
+			<?php } ?>
+
+			<div class="comment-content-wrap">
+				<div class="comment-meta comment-metadata">
+					<?php
+					printf(
+					/* translators: %s: Author related metas. */
+						__( '%s', 'buddyboss' ), // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped, WordPress.WP.I18n.NoEmptyStrings
+						sprintf(
+							'<cite class="fn comment-author"><a href="%s" rel="external nofollow ugc" class="url">%s</a></cite>',
+							empty( $user_link ) ? '' : esc_url( $user_link ),
+							get_comment_author_link( $comment )
+						)
+					);
+					?>
+					<a class="comment-date" href="<?php echo esc_url( get_comment_link( $comment, $args ) ); ?>">
+						<?php
+						printf(
+						/* translators: %s: Author comment date. */
+							__( '%1$s', 'buddyboss' ),  // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped, WordPress.WP.I18n.NoEmptyStrings
+							get_comment_date( '', $comment ), // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped, WordPress.WP.I18n.NoEmptyStrings
+							get_comment_time() // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped, WordPress.WP.I18n.NoEmptyStrings
+						);
+						?>
+					</a>
+				</div>
+
+				<?php if ( '0' === (string) $comment->comment_approved ) { ?>
+					<p>
+						<em class="comment-awaiting-moderation"><?php esc_html_e( 'Your comment is awaiting moderation.', 'buddyboss' ); ?></em>
+					</p>
+				<?php } ?>
+
+				<div class="comment-text">
+					<?php
+					comment_text(
+						$comment,
+						array_merge(
+							$args,
+							array(
+								'add_below' => $add_below,
+								'depth'     => $depth,
+								'max_depth' => $args['max_depth'],
+							)
+						)
+					);
+					?>
+				</div>
+
+				<footer class="comment-footer">
+					<?php
+					comment_reply_link(
+						array_merge(
+							$args,
+							array(
+								'reply_text' => esc_html__( 'Reply', 'buddyboss' ),
+								'add_below'  => $add_below,
+								'depth'      => $depth,
+								'max_depth'  => $args['max_depth'],
+								'before'     => '',
+								'after'      => '',
+							)
+						)
+					);
+					?>
+
+					<?php edit_comment_link( esc_html__( 'Edit', 'buddyboss' ), '', '' ); ?>
+				</footer>
+			</div>
+		</article>
+		<?php
+	}
 }
