@@ -666,6 +666,12 @@
 				margin: var(--bb-rl-space-200) 0;
 			}
 
+			.comment-awaiting-moderation {
+
+				@include bb-rl-label-heading-md-thin;
+				color: var(--bb-rl-text-tertiary-color);
+			}
+
 			.comment-footer a,
 			.comment-reply-link,
 			.comment-edit-link {
