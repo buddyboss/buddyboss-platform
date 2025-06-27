@@ -904,6 +904,13 @@
   margin-bottom: var(--bb-rl-space-300);
 }
 
+.bb-rl-comments-area .comment-list li:last-child,
+.bb-rl-comments-area .commentlist li:last-child,
+.bb-rl-course-content-comments .comment-list li:last-child,
+.bb-rl-course-content-comments .commentlist li:last-child {
+  margin-bottom: 0;
+}
+
 .bb-rl-comments-area .comment-list .comment-body,
 .bb-rl-comments-area .comment-list .course-comment,
 .bb-rl-comments-area .commentlist .comment-body,
@@ -1161,6 +1168,39 @@
 .bb-rl-course-content-comments .comment-author .says {
   color: var(--bb-rl-text-tertiary-color);
   padding-right: var(--bb-rl-space-50);
+}
+
+.bb-rl-comments-area .comments-area > .comment-navigation a,
+.bb-rl-course-content-comments .comments-area > .comment-navigation a {
+  background-color: transparent;
+  color: var(--bb-rl-text-brand-primary-color);
+  border: none;
+  border-radius: 0;
+  border-bottom: 1px solid transparent;
+  display: inline-flex;
+  font-size: var(--bb-rl-font-size-sm);
+}
+
+.bb-rl-comments-area .comments-area > .comment-navigation a:hover,
+.bb-rl-course-content-comments .comments-area > .comment-navigation a:hover {
+  border-bottom-color: var(--bb-rl-link-primary-hover-color);
+}
+
+.bb-rl-comments-area .comments-area > .comment-navigation a:disabled,
+.bb-rl-course-content-comments .comments-area > .comment-navigation a:disabled {
+  color: var(--bb-rl-background-brand-disabled-color);
+  border-bottom-color: transparent;
+  cursor: not-allowed;
+}
+
+.bb-rl-comments-area .comments-area > .comment-navigation + .comment-list,
+.bb-rl-course-content-comments .comments-area > .comment-navigation + .comment-list {
+  margin-top: var(--bb-rl-space-200);
+}
+
+.bb-rl-comments-area .comments-area .comment-list + .comment-navigation,
+.bb-rl-course-content-comments .comments-area .comment-list + .comment-navigation {
+  margin-top: var(--bb-rl-space-200);
 }
 
 .bb-rl-comments-area > h3,

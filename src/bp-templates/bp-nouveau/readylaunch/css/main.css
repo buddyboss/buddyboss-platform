@@ -9792,6 +9792,10 @@ input.bb-rl-zoom-slider::-moz-range-progress {
   content: "\e4d2";
 }
 
+.bb-rl-profile-edit-subnav .bb-rl-profile-subnav-item#bb-rl-social-personal-li a::before {
+  content: "\e2ea";
+}
+
 .bb-rl-profile-edit-subnav .bb-rl-profile-subnav-item#bb-rl-notifications-personal-li a::before {
   content: "\e0d0";
 }
