@@ -2195,7 +2195,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * @return array $strings The modified js strings.
 		 */
 		public function bb_rl_modify_js_strings( $strings ) {
-			$translated_string = __( '\'s Post', 'buddyboss' );
+			$translated_string = __( '\'s post', 'buddyboss' );
 
 			if ( bp_is_active( 'media' ) || bp_is_active( 'video' ) || bp_is_active( 'document' ) ) {
 				$strings['media']['i18n_strings']['theater_title'] = $translated_string;
