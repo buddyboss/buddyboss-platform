@@ -684,6 +684,10 @@ window.bp = window.bp || {};
 			var target = $( event.currentTarget ), self = this;
 			event.preventDefault();
 
+			if ( target.attr( 'disabled' ) ) {
+				return false;
+			}
+
 			var media              = [],
 				buddyPressSelector = $( '#buddypress' ),
 				type               = target.attr( 'data-type' ),
