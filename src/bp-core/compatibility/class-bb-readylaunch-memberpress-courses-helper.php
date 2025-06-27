@@ -95,6 +95,14 @@ class BB_Readylaunch_Memberpress_Courses_Helper {
 
 			// Add "Back to Course" button to lesson sidebar menu.
 			add_action( 'mpcs_classroom_start_sidebar', array( $this, 'bb_rl_mpcs_add_back_to_course_button' ), 10 );
+
+			// Add rewrite rules for lesson comments pagination.
+			add_action( 'init', array( $this, 'bb_rl_mpcs_add_rewrite_rules' ) );
+			add_filter( 'query_vars', array( $this, 'bb_rl_mpcs_add_query_vars' ) );
+
+			// Handle MemberPress slug changes.
+			add_action( 'mepr_mpcs-process-options', array( $this, 'bb_rl_mpcs_handle_slug_changes' ), 10 );
+
 			add_filter( 'comments_template', array( $this, 'bb_rl_mpcs_add_comments_template' ), PHP_INT_MAX, 1 );
 		}
 	}
@@ -807,18 +815,85 @@ class BB_Readylaunch_Memberpress_Courses_Helper {
 		<?php
 	}
 
+	/**
+	 * Add comments template for MemberPress courses and lessons.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $template The template path.
+	 *
+	 * @return string The modified template path.
+	 */
 	public function bb_rl_mpcs_add_comments_template( $template ) {
 		global $post;
 		if ( ! function_exists( 'buddyboss_theme' ) && ! empty( $post ) && is_a( $post, 'WP_Post' ) ) {
 			if (
 				(
-					class_exists( 'memberpress\courses\models\Course' ) && models\Course::$cpt === $post->post_type ||
-					class_exists( 'memberpress\courses\models\Lesson' ) && models\Lesson::$cpt === $post->post_type
+					(
+						class_exists( 'memberpress\courses\models\Course' ) &&
+						models\Course::$cpt === $post->post_type
+					) ||
+					(
+						class_exists( 'memberpress\courses\models\Lesson' ) &&
+						models\Lesson::$cpt === $post->post_type
+					)
 				)
 			) {
 				$template = buddypress()->plugin_dir . 'bp-templates/bp-nouveau/readylaunch/memberpress/courses/comments.php';
 			}
 		}
 		return $template;
+	}
+
+	/**
+	 * Add rewrite rules for lesson comments pagination.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	public function bb_rl_mpcs_add_rewrite_rules() {
+		if ( class_exists( 'memberpress\courses\models\Lesson' ) ) {
+
+			// Get dynamic slugs from MemberPress configuration.
+			$courses_slug = 'courses';
+			$lessons_slug = 'lessons';
+
+			// Check if custom slugs are configured.
+			if ( class_exists( 'memberpress\courses\helpers\Courses' ) ) {
+				$courses_slug = helpers\Courses::get_permalink_base();
+			}
+			if ( class_exists( 'memberpress\courses\helpers\Lessons' ) ) {
+				$lessons_slug = helpers\Lessons::get_permalink_base();
+			}
+
+			// Add rewrite rule for lesson comments pagination using dynamic slugs.
+			add_rewrite_rule(
+				'^' . $courses_slug . '/([^/]+)/' . $lessons_slug . '/([^/]+)/comment-page-([0-9]{1,})/?$',
+				'index.php?post_type=' . models\Lesson::$cpt . '&name=$matches[2]&cpage=$matches[3]',
+				'top'
+			);
+		}
+	}
+
+	/**
+	 * Add query vars for lesson comments pagination.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $query_vars The existing query vars.
+	 *
+	 * @return array The modified query vars.
+	 */
+	public function bb_rl_mpcs_add_query_vars( $query_vars ) {
+		$query_vars[] = 'cpage';
+		return $query_vars;
+	}
+
+	/**
+	 * Handle MemberPress slug changes.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	public function bb_rl_mpcs_handle_slug_changes() {
+		flush_rewrite_rules();
 	}
 }
