@@ -6994,6 +6994,10 @@ window.bp = window.bp || {};
 							$mediaSection.find( 'video' ).attr( 'autoplay', true );
 						}
 						$infoSection.find( '.bb-rl-activity-list' ).removeClass( 'loading' ).html( response.data.description );
+
+						if ( response.data.comment_form ) {
+							$infoSection.find( '.bb-rl-activity-list .bb-rl-activity-comments ul:first' ).after( response.data.comment_form );
+						}
 						$infoSection.show();
 
 						self.updateTheaterHeaderTitle(
@@ -7112,6 +7116,10 @@ window.bp = window.bp || {};
 					success: function ( response ) {
 						if ( response.success ) {
 							$( '.bb-media-info-section:visible .bb-rl-activity-list' ).removeClass( 'loading' ).html( response.data.description );
+
+							if ( response.data.comment_form ) {
+								$( '.bb-media-info-section:visible .bb-rl-activity-list .bb-rl-activity-comments ul:first' ).after( response.data.comment_form );
+							}
 							$( '.bb-media-info-section:visible' ).show();
 
 							self.updateTheaterHeaderTitle(

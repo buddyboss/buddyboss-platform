@@ -1393,11 +1393,21 @@ function bp_nouveau_ajax_media_get_media_description() {
 		}
 	}
 
-	wp_send_json_success(
+	/**
+	 * Filter the media description response data.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $response_data The response data to be sent.
+	 */
+	$response_data = apply_filters(
+		'bp_nouveau_media_description_response_data',
 		array(
 			'description' => $media_description,
 		)
 	);
+
+	wp_send_json_success( $response_data );
 }
 
 /**

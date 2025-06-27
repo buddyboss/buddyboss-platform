@@ -52,6 +52,10 @@ class BB_Activity_Readylaunch {
 
 		// Remove post content.
 		remove_action( 'bp_before_directory_activity', 'bp_activity_directory_page_content' );
+
+		add_filter( 'bp_nouveau_media_description_response_data', array( $this, 'bb_rl_modify_media_description_response_data' ), 10 );
+		add_filter( 'bp_nouveau_document_description_response_data', array( $this, 'bb_rl_modify_media_description_response_data' ), 10 );
+		add_filter( 'bp_nouveau_video_description_response_data', array( $this, 'bb_rl_modify_media_description_response_data' ), 10 );
 	}
 
 	/**
@@ -697,5 +701,29 @@ class BB_Activity_Readylaunch {
 		}
 
 		return $activity_action;
+	}
+
+	/**
+	 * Modify media description response data.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $response_data The response data.
+	 *
+	 * @return array Modified response data.
+	 */
+	public function bb_rl_modify_media_description_response_data( $response_data ) {
+		if ( is_user_logged_in() ) {
+			// If reset comment is true, then don't add the comment form for video.
+			if ( isset( $response_data['reset_comment'] ) && 'true' === $response_data['reset_comment'] ) {
+				return $response_data;
+			}
+
+			ob_start();
+			bp_get_template_part( 'activity/comment-form' );
+			$response_data['comment_form'] = ob_get_clean();
+		}
+
+		return $response_data;
 	}
 }

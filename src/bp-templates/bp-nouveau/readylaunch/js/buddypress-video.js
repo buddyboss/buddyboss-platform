@@ -2467,6 +2467,9 @@ window.bp = window.bp || {};
 								$figureElem.find( 'video' ).attr( 'autoplay', true );
 								$figureElem.find( 'video' ).addClass( 'popup-video' );
 								$( '.bb-media-info-section:visible .bb-rl-activity-list' ).removeClass( 'loading' ).html( response.data.activity );
+								if ( response.data.comment_form ) {
+									$( '.bb-media-info-section:visible .bb-rl-activity-list .bb-rl-activity-comments ul:first' ).after( response.data.comment_form );
+								}
 								$( '.bb-media-info-section:visible' ).show();
 
 								jQuery( window ).scroll();
