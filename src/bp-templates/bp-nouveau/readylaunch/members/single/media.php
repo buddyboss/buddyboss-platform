@@ -36,19 +36,6 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 			?>
 			<div id="media-stream" class="media bb-rl-media-stream" data-bp-list="media" data-ajax="<?php echo esc_attr( $is_send_ajax_request ? 'true' : 'false' ); ?>">
 				<?php
-				if ( bp_has_media( bp_ajax_querystring( 'media' ) ) ) {
-					?>
-					<div class="bb-media-actions-wrap bb-rl-media-actions-wrap">
-						<?php
-							bp_get_template_part( 'media/add-media' );
-							bp_nouveau_member_hook( 'before', 'media_content' );
-							bp_get_template_part( 'media/actions' );
-						?>
-					</div>
-					<?php
-				}
-				?>
-				<?php
 				if ( $is_send_ajax_request ) {
 					echo '<div id="bp-ajax-loader">';
 					bp_nouveau_user_feedback( 'member-media-loading' );
