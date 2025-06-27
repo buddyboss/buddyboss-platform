@@ -61,6 +61,12 @@
 		border-bottom: 0;
 		margin-bottom: 0;
 		margin-left: auto;
+
+		.bb-rl-group-details & {
+			border-bottom: 0;
+			padding-bottom: 0;
+			margin-bottom: 0;
+		}
 	}
 }
 
@@ -172,6 +178,10 @@
 		height: 16px;
 		background-color: var(--bb-rl-border-tertiary-color);
 		margin: 0 var(--bb-rl-space-200);
+	}
+
+	.bb-rl-group-details & {
+		min-width: 40%;
 	}
 }
 
@@ -1962,6 +1972,10 @@
 
 	.activity-topic-selector {
 		max-width: 100%;
+
+		.bb-rl-group-details & {
+			min-width: 100%;
+		}
 
 		+ .bb-rl-activity-filters-separator {
 			display: none;

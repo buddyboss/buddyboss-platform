@@ -13701,6 +13701,12 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   margin-left: auto;
 }
 
+.bb-rl-group-details .bb-rl-activity-filters-container .activity-head-bar {
+  border-bottom: 0;
+  padding-bottom: 0;
+  margin-bottom: 0;
+}
+
 .activity-topic-selector {
   margin-right: auto;
   max-width: 50%;
@@ -13810,6 +13816,10 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   height: 16px;
   background-color: var(--bb-rl-border-tertiary-color);
   margin: 0 var(--bb-rl-space-200);
+}
+
+.bb-rl-group-details .activity-topic-selector {
+  min-width: 40%;
 }
 
 .bb-subnav-filters-container-main {
@@ -15516,6 +15526,9 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   }
   .activity-topic-selector {
     max-width: 100%;
+  }
+  .bb-rl-group-details .activity-topic-selector {
+    min-width: 100%;
   }
   .activity-topic-selector + .bb-rl-activity-filters-separator {
     display: none;

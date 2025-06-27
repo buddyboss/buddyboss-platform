@@ -108,6 +108,12 @@ window.bp = window.bp || {};
 			this.InitiatedCommentForms = [];
 			this.activityHasUpdates    = false; // Flag to track any activity updates.
 			this.activityPinHasUpdates = false; // Flag to track activity pin updates.
+
+			// Member and Group activity topic filter wrapper.
+			if( $( '.activity-topic-selector' ).length && $( '.activity-head-bar' ).length && ! $( '.activity-topic-selector' ).parent().hasClass( 'bb-rl-activity-filters-container') ) {
+				$( '.activity-topic-selector, .activity-topic-selector + .subnav-filters, .activity-topic-selector + .subnav-filters + .activity-head-bar' ).wrapAll( '<div class="bb-rl-activity-filters-container"></div>' );
+				$( '<div class="bb-rl-activity-filters-separator"></div>' ).insertAfter( '.activity-topic-selector' );
+			}
 		},
 
 		/**
