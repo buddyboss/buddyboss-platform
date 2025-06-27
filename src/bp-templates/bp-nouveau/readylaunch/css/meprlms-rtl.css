@@ -1197,17 +1197,27 @@ body[class*="mpcs-course"] .bb-rl-mbprlms-pagination ul li.active a {
   margin-bottom: var(--bb-rl-space-100);
 }
 
+.bb-rl-course-content-module .bb-rl-instructor-data-wrapper,
+.bb-rl-course-description .bb-rl-instructor-data-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
 .bb-rl-course-content-module .mpcs-instructor,
 .bb-rl-course-description .mpcs-instructor {
   display: flex;
   align-items: flex-start;
   gap: var(--bb-rl-space-200);
-  padding: var(--bb-rl-space-300) 0;
+  padding: var(--bb-rl-space-400) var(--bb-rl-space-300);
+  background-color: var(--bb-rl-background-color);
+  border-radius: var(--bb-rl-radius-lg);
+  border: 1px solid var(--bb-rl-border-secondary-color);
+  margin: 0 0 var(--bb-rl-space-200);
 }
 
 .bb-rl-course-content-module .mpcs-instructor .tile-icon,
 .bb-rl-course-description .mpcs-instructor .tile-icon {
-  width: 144px;
+  width: 80px;
 }
 
 .bb-rl-course-content-module .mpcs-instructor .tile-icon .avatar,
@@ -1226,12 +1236,31 @@ body[class*="mpcs-course"] .bb-rl-mbprlms-pagination ul li.active a {
   }
 }
 
+.bb-rl-course-content-module .mpcs-instructor .tile-content,
+.bb-rl-course-description .mpcs-instructor .tile-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--bb-rl-space-200);
+  flex: 1;
+}
+
 @media screen and (max-width: 840px) {
   .bb-rl-course-content-module .mpcs-instructor .tile-content,
   .bb-rl-course-description .mpcs-instructor .tile-content {
+    flex-direction: column;
     text-align: center;
     margin-right: auto;
     margin-left: auto;
+  }
+  .bb-rl-course-content-module .mpcs-instructor .tile-content .bb-rl-instructor-data-header,
+  .bb-rl-course-description .mpcs-instructor .tile-content .bb-rl-instructor-data-header {
+    flex-direction: column;
+    align-items: center;
+  }
+  .bb-rl-course-content-module .mpcs-instructor .tile-content .bb-rl-instructor-data-header .tile-title,
+  .bb-rl-course-description .mpcs-instructor .tile-content .bb-rl-instructor-data-header .tile-title {
+    margin: 0 0 var(--bb-rl-space-50);
   }
 }
 
@@ -1241,14 +1270,14 @@ body[class*="mpcs-course"] .bb-rl-mbprlms-pagination ul li.active a {
   font-weight: 500;
   line-height: var(--bb-rl-base-line);
   color: var(--bb-rl-text-color);
-  margin: 0 0 var(--bb-rl-space-100);
+  margin: 0 0 0 var(--bb-rl-space-100);
 }
 
 .bb-rl-course-content-module .mpcs-instructor .tile-subtitle,
 .bb-rl-course-description .mpcs-instructor .tile-subtitle {
-  font-size: var(--bb-rl-font-size-sm);
+  font-size: var(--bb-rl-font-size-xs);
   font-weight: 500;
-  line-height: var(--bb-rl-base-line-small);
+  line-height: var(--bb-rl-base-line-xs);
   display: inline-flex;
   width: fit-content;
   color: var(--bb-rl-text-brand-secondary-color);
@@ -1258,18 +1287,27 @@ body[class*="mpcs-course"] .bb-rl-mbprlms-pagination ul li.active a {
   padding: var(--bb-rl-space-50) var(--bb-rl-space-100);
 }
 
-.bb-rl-course-content-module .mpcs-instructor .tile-meta,
-.bb-rl-course-description .mpcs-instructor .tile-meta {
+.bb-rl-course-content-module .mpcs-instructor .tile-description,
+.bb-rl-course-description .mpcs-instructor .tile-description {
   font-size: var(--bb-rl-font-size-sm);
   font-weight: 400;
   line-height: var(--bb-rl-base-line-small);
   color: var(--bb-rl-text-secondary-color);
-  margin: var(--bb-rl-space-100) 0 0;
+  margin: var(--bb-rl-space-100) 0;
+}
+
+.bb-rl-course-content-module .mpcs-instructor .tile-meta,
+.bb-rl-course-description .mpcs-instructor .tile-meta {
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 500;
+  line-height: var(--bb-rl-base-line-small);
+  color: var(--bb-rl-text-tertiary-color);
+  margin: var(--bb-rl-space-50) 0 0;
 }
 
 .bb-rl-course-content-module .mpcs-instructor .tile-meta p,
 .bb-rl-course-description .mpcs-instructor .tile-meta p {
-  margin: 0 0 var(--bb-rl-space-100);
+  margin: 0;
 }
 
 .bb-rl-course-content-module .mpcs-instructor .tile-meta a,
@@ -1279,6 +1317,7 @@ body[class*="mpcs-course"] .bb-rl-mbprlms-pagination ul li.active a {
   border: none;
   border-radius: 0;
   border-bottom: 1px solid transparent;
+  color: var(--bb-rl-text-secondary-color);
 }
 
 .bb-rl-course-content-module .mpcs-instructor .tile-meta a:hover,
@@ -1293,43 +1332,24 @@ body[class*="mpcs-course"] .bb-rl-mbprlms-pagination ul li.active a {
   cursor: not-allowed;
 }
 
-.bb-rl-course-content-module .mpcs-instructor .tile-meta a.mpcs-btn,
-.bb-rl-course-description .mpcs-instructor .tile-meta a.mpcs-btn {
-  display: inline-flex;
+.bb-rl-course-content-module .mpcs-instructor .bb-rl-button--instructor,
+.bb-rl-course-description .mpcs-instructor .bb-rl-button--instructor {
+  white-space: nowrap;
+}
+
+.bb-rl-course-content-module .mpcs-instructor .tile-socials,
+.bb-rl-course-description .mpcs-instructor .tile-socials {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
   align-items: center;
-  justify-content: center;
-  font-size: 1rem;
-  font-weight: 500;
-  text-align: center;
-  cursor: pointer;
-  border-radius: var(--bb-rl-radius-md);
-  padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
-  text-decoration: none;
-  background-color: var(--bb-rl-background-tertiary-color);
-  color: var(--bb-rl-text-color);
-  border: 1px solid transparent;
-  padding: 6px var(--bb-rl-space-200);
-  font-size: var(--bb-rl-font-size-sm);
-  font-weight: 400;
-  margin: var(--bb-rl-space-200) 0 0;
+  gap: var(--bb-rl-space-100);
 }
 
-.bb-rl-course-content-module .mpcs-instructor .tile-meta a.mpcs-btn:hover,
-.bb-rl-course-description .mpcs-instructor .tile-meta a.mpcs-btn:hover {
-  background-color: var(--bb-rl-background-tertiary-hover-color);
-}
-
-.bb-rl-course-content-module .mpcs-instructor .tile-meta a.mpcs-btn:focus,
-.bb-rl-course-description .mpcs-instructor .tile-meta a.mpcs-btn:focus {
-  outline: 2px solid var(--bb-rl-border-quinery-color);
-}
-
-.bb-rl-course-content-module .mpcs-instructor .tile-meta a.mpcs-btn:disabled,
-.bb-rl-course-description .mpcs-instructor .tile-meta a.mpcs-btn:disabled {
-  background-color: var(--bb-rl-background-tertiary-color);
-  color: var(--bb-rl-text-disabled-color);
-  cursor: not-allowed;
+.bb-rl-course-content-module .mpcs-instructor .tile-socials li,
+.bb-rl-course-description .mpcs-instructor .tile-socials li {
+  display: inline-flex;
 }
 
 .bb-rl-course-content-inner .mpcs-section.mpcs-section-lessons {
