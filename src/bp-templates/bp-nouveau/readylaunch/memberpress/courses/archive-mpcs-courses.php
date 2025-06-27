@@ -46,8 +46,7 @@ if ( MeprRule::is_locked( $post ) && helpers\Courses::is_course_archive() ) {
 					the_post_thumbnail( apply_filters( 'mpcs_course_thumbnail_size', 'mpcs-course-thumbnail' ), array( 'class' => 'img-responsive' ) );
 				else :
 					?>
-					<img src="<?php echo esc_url( buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/images/course-placeholder.jpg' ); ?>"
-						class="img-responsive" alt="">
+					<img src="<?php echo esc_url( buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/images/group_cover_image.jpeg' ); ?>" alt="<?php esc_attr_e( 'Course placeholder image', 'buddyboss' ); ?>">
 				<?php endif; ?>
 			</a>
 		</div>
