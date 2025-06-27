@@ -150,11 +150,13 @@ if ( is_user_logged_in() && ! empty( $memberships ) ) {
 			</div>
 			<div class="bb-rl-course-figure">
 				<div class="bb-rl-course-featured-image">
-					<?php if ( ! empty( models\Lesson::get_thumbnail( $post ) ) ) : ?>
+					<?php if ( ! empty( models\Lesson::get_thumbnail( $post ) ) ) { ?>
 						<a href="<?php the_permalink(); ?>" alt="<?php the_title_attribute(); ?>">
 							<img src="<?php echo esc_url( models\Lesson::get_thumbnail( $post ) ); ?>" alt="">
 						</a>
-					<?php endif; ?>
+					<?php } else { ?>
+						<img src="<?php echo esc_url( buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/images/group_cover_image.jpeg' ); ?>" alt="<?php esc_attr_e( 'Course placeholder image', 'buddyboss' ); ?>">
+					<?php } ?>
 				</div>
 			</div>
 		</div>
