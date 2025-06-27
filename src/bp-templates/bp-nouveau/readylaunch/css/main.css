@@ -9469,6 +9469,11 @@ input.bb-rl-zoom-slider::-moz-range-progress {
   margin-left: auto;
 }
 
+.bb-rl-media-container .bb-member-media-header .bb-media-meta a[disabled] {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
 .bb-rl-media-container .bb-media-actions-wrap {
   display: flex;
   align-items: center;
