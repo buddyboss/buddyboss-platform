@@ -1,3 +1,33 @@
+.bb-readylaunch-template {
+
+	.bb-toast-messages-enable {
+		position: relative;
+
+		.bb-toast-messages {
+			position: fixed;
+			bottom: var(--bb-rl-space-700);
+			left: 50%;
+			transform: translateX(-50%);
+			z-index: 999993;
+
+			.toast-messages-list .read-item {
+				background-color: var(--bb-rl-background-black-color);
+				border: 1px solid var(--bb-rl-border-quinery-color);
+				font-size: var(--bb-rl-font-size-base);
+				font-weight: 500;
+				line-height: var(--bb-rl-base-line);
+				color: var(--bb-rl-text-white-color);
+				padding: 12px var(--bb-rl-space-300) 12px var(--bb-rl-space-200);
+				border-radius: var(--bb-rl-radius-full);
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				position: relative;
+			}
+		}
+	}
+}
+
 .bb-rl-toast-message {
 	display: flex;
 	align-items: center;

@@ -240,6 +240,7 @@
 	}
 
 	.bb-activity-topic-subtitle {
+
 		@include bb-rl-base-heading;
 		margin: 0 0 var(--bb-rl-space-200);
 	}
@@ -249,7 +250,7 @@
 		.bb-activity-topics-list {
 			border: 1px solid var(--bb-rl-border-secondary-color);
 			border-radius: var(--bb-rl-radius-base);
-	
+
 			.bb-topic-title {
 				font-size: 14px;
 				font-weight: 500;
@@ -257,7 +258,7 @@
 				color: var(--bb-rl-text-color);
 			}
 
-			.bb-activity-topic-item  {
+			.bb-activity-topic-item {
 				padding: var(--bb-rl-space-200);
 				margin-bottom: 0;
 
@@ -268,7 +269,7 @@
 
 			.bb-topic-actions-wrapper.active {
 				position: relative;
-			
+
 				.bb-topic-actions {
 					border-color: var(--bb-rl-border-secondary-color);
 					background-color: var(--bb-rl-background-secondary-hover-color);
