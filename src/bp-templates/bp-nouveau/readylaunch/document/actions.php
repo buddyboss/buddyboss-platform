@@ -20,7 +20,7 @@ if ( bp_is_my_profile() || ( bp_is_active( 'groups' ) && bp_is_group() && ( ( bp
 	<header class="bb-member-media-header bb-photos-actions">
 		<div class="bb-media-meta bb-documents-meta">
 			<a data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Select All', 'buddyboss' ); ?>" class="bb-select bp-tooltip" id="bb-select-deselect-all-media" href="#"><i class="bb-icons-rl-check-circle"></i></a>
-			<a data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Delete', 'buddyboss' ); ?>" class="bb-delete bp-tooltip" id="bb-delete-media" href="#"><i class="dashicons dashicons-trash"></i></a>
+			<a data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Delete', 'buddyboss' ); ?>" class="bb-delete bp-tooltip" id="bb-delete-media" href="#" disabled="disabled"><i class="dashicons dashicons-trash"></i></a>
 		</div>
 	</header>
 

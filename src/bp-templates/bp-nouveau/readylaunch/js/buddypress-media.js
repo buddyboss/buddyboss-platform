@@ -651,6 +651,9 @@ window.bp = window.bp || {};
 			if ( $( target ).is( ':checked' ) ) {
 				$( target ).closest( '.bb-media-check-wrap' ).find( '.bp-tooltip' ).attr( 'data-bp-tooltip', bbRlMedia.i18n_strings.unselect );
 				$( target ).closest( '.bb-item-thumb' ).addClass( 'selected' );
+				if ( $( '#bb-delete-media' ).length ) {
+					$( '#bb-delete-media' ).removeAttr( 'disabled' );
+				}
 			} else {
 				$( target ).closest( '.bb-item-thumb' ).removeClass( 'selected' );
 				$( target ).closest( '.bb-media-check-wrap' ).find( '.bp-tooltip' ).attr( 'data-bp-tooltip', bbRlMedia.i18n_strings.select );
@@ -658,6 +661,9 @@ window.bp = window.bp || {};
 				var selectAllMedia = $( '.bp-nouveau #bb-select-deselect-all-media' );
 				if ( selectAllMedia.hasClass( 'selected' ) ) {
 					selectAllMedia.removeClass( 'selected' );
+				}
+				if ( $( '#bb-delete-media' ).length ) {
+					$( '#bb-delete-media' ).attr( 'disabled', 'disabled' );
 				}
 			}
 		},
@@ -930,6 +936,14 @@ window.bp = window.bp || {};
 				isSelecting = ! $target.hasClass( 'selected' );
 
 			this.setMediaSelectionState( isSelecting );
+
+			if ( $( '#bb-delete-media' ).length ) {
+				if ( isSelecting ) {
+					$( '#bb-delete-media' ).removeAttr( 'disabled' );
+				} else {
+					$( '#bb-delete-media' ).attr( 'disabled', 'disabled' );
+				}
+			}
 
 			$target.toggleClass( 'selected', isSelecting ).data( 'bp-tooltip', isSelecting ? BP_Nouveau.media.i18n_strings.unselectall : BP_Nouveau.media.i18n_strings.selectall );
 		},
