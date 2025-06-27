@@ -638,3 +638,68 @@
 		}
 	}
 }
+
+.bb-rl-course-content-module {
+
+	.mepr-login-form-wrap {
+		background-color: var(--bb-rl-background-color);
+		border-radius: var(--bb-rl-radius-md);
+		border: 1px solid var(--bb-rl-border-secondary-color);
+		padding: var(--bb-rl-space-200);
+		margin: var(--bb-rl-space-200) 0 0;
+
+		.mp_login_form {
+			max-width: 60%;
+			margin: 0 auto;
+			padding: var(--bb-rl-space-300) 0;
+
+			.mepr-login-actions {
+				font-size: var(--bb-rl-font-size-sm);
+			}
+		}
+
+		.mepr-form {
+
+			label {
+
+				@include bb-rl-label-heading;
+				color: var(--bb-rl-text-color);
+				margin: 0 0 var(--bb-rl-space-100);
+			}
+
+			input {
+				width: 100%;
+
+				&[type="submit"] {
+
+					@include bb-rl-button;
+					@include bb-rl-button--brand-fill;
+					@include bb-rl-button--small;
+				}
+			}
+
+			div.mp-hide-pw {
+				position: relative;
+
+				button.mp-hide-pw {
+					position: absolute;
+					top: 50%;
+					right: var(--bb-rl-space-100);
+					transform: translateY(-50%);
+					background-color: transparent;
+					border: none;
+					padding: 0;
+					margin: 0;
+					color: var(--bb-rl-text-secondary-color);
+
+					.dashicons-visibility::before {
+						content: "\e220";
+						font-weight: 400;
+						font-family: bb-icons-rl;
+						font-size: 14px;
+					}
+				}
+			}
+		}
+	}
+}

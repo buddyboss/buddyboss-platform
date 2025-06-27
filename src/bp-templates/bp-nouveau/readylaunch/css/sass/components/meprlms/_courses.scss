@@ -352,6 +352,10 @@ body[class*="mpcs-course"] .bb-rl-mbprlms-pagination {
 		}
 	}
 
+	#bb_meprlms_courses_search_form {
+		margin: var(--bb-rl-space-200) 0;
+	}
+
 	.mpcs-cards.columns {
 		row-gap: var(--bb-rl-space-200);
 	}

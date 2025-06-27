@@ -813,6 +813,10 @@ body[class*="mpcs-course"] .bb-rl-mbprlms-pagination ul li.active a {
   font-style: normal;
 }
 
+.bb-rl-container #bb_meprlms_courses_search_form {
+  margin: var(--bb-rl-space-200) 0;
+}
+
 .bb-rl-container .mpcs-cards.columns {
   row-gap: var(--bb-rl-space-200);
 }
@@ -1754,6 +1758,92 @@ body[class*="mpcs-course"] .bb-rl-mbprlms-pagination ul li.active a {
 .bb-rl-course-content .mpcs-section.mpcs-resource-section table.mp-table .mpcs-lesson-row-link i {
   color: var(--bb-rl-icon-secondary-color);
   font-size: var(--bb-rl-font-size-base);
+}
+
+.bb-rl-course-content-module .mepr-login-form-wrap {
+  background-color: var(--bb-rl-background-color);
+  border-radius: var(--bb-rl-radius-md);
+  border: 1px solid var(--bb-rl-border-secondary-color);
+  padding: var(--bb-rl-space-200);
+  margin: var(--bb-rl-space-200) 0 0;
+}
+
+.bb-rl-course-content-module .mepr-login-form-wrap .mp_login_form {
+  max-width: 60%;
+  margin: 0 auto;
+  padding: var(--bb-rl-space-300) 0;
+}
+
+.bb-rl-course-content-module .mepr-login-form-wrap .mp_login_form .mepr-login-actions {
+  font-size: var(--bb-rl-font-size-sm);
+}
+
+.bb-rl-course-content-module .mepr-login-form-wrap .mepr-form label {
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 400;
+  line-height: var(--bb-rl-base-line-small);
+  color: var(--bb-rl-text-color);
+  margin: 0 0 var(--bb-rl-space-100);
+}
+
+.bb-rl-course-content-module .mepr-login-form-wrap .mepr-form input {
+  width: 100%;
+}
+
+.bb-rl-course-content-module .mepr-login-form-wrap .mepr-form input[type="submit"] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  font-weight: 500;
+  text-align: center;
+  cursor: pointer;
+  border-radius: var(--bb-rl-radius-md);
+  padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  text-decoration: none;
+  background-color: var(--bb-rl-background-brand-primary-color);
+  color: var(--bb-rl-text-white-color);
+  border: 1px solid var(--bb-rl-background-brand-primary-color);
+  padding: 6px var(--bb-rl-space-200);
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 400;
+}
+
+.bb-rl-course-content-module .mepr-login-form-wrap .mepr-form input[type="submit"]:hover {
+  background-color: var(--bb-rl-background-brand-primary-hover-color);
+}
+
+.bb-rl-course-content-module .mepr-login-form-wrap .mepr-form input[type="submit"]:focus-within {
+  outline: 2px solid var(--bb-rl-border-brand-primary-color);
+}
+
+.bb-rl-course-content-module .mepr-login-form-wrap .mepr-form input[type="submit"]:disabled {
+  background-color: var(--bb-rl-background-brand-disabled-color);
+  cursor: not-allowed;
+}
+
+.bb-rl-course-content-module .mepr-login-form-wrap .mepr-form div.mp-hide-pw {
+  position: relative;
+}
+
+.bb-rl-course-content-module .mepr-login-form-wrap .mepr-form div.mp-hide-pw button.mp-hide-pw {
+  position: absolute;
+  top: 50%;
+  right: var(--bb-rl-space-100);
+  transform: translateY(-50%);
+  background-color: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
+  color: var(--bb-rl-text-secondary-color);
+}
+
+.bb-rl-course-content-module .mepr-login-form-wrap .mepr-form div.mp-hide-pw button.mp-hide-pw .dashicons-visibility::before {
+  content: "\e220";
+  font-weight: 400;
+  font-family: bb-icons-rl;
+  font-size: 14px;
 }
 
 .bb-rl-lms-inner-block .mpcs-submission {

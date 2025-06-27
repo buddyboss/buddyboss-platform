@@ -3483,6 +3483,10 @@ body.bb-rl-register {
   color: var(--bb-rl-icon-danger-primary-color);
 }
 
+html:has(.memberpressproduct-template-default.single.registration) {
+  margin-top: 0;
+}
+
 .memberpressproduct-template-default.single.registration .register-page-main > p {
   font-size: 14px;
   font-weight: 400;
@@ -3626,6 +3630,11 @@ body.bb-rl-register {
   align-items: center;
   gap: var(--bb-rl-space-100);
   margin-top: var(--bb-rl-space-200);
+}
+
+.memberpressproduct-template-default.single.registration .register-page-main .mepr-signup-form .mepr_price > label,
+.memberpressproduct-template-default.single.registration .register-page-main .mepr-form .mepr_price > label {
+  margin-bottom: 0;
 }
 
 .memberpressproduct-template-default.single.registration .register-page-main .mepr-signup-form .mepr_price .mepr_price_cell_label,

@@ -925,6 +925,10 @@ body.bb-rl-register {
 	}
 }
 
+html:has(.memberpressproduct-template-default.single.registration) {
+	margin-top: 0;
+}
+
 .memberpressproduct-template-default.single.registration {
 
 	.register-page-main {
@@ -1038,6 +1042,10 @@ body.bb-rl-register {
 				align-items: center;
 				gap: var(--bb-rl-space-100);
 				margin-top: var(--bb-rl-space-200);
+
+				> label {
+					margin-bottom: 0;
+				}
 
 				.mepr_price_cell_label {
 					font-size: var(--bb-rl-font-size-sm);
