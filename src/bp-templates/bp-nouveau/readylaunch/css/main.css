@@ -10694,6 +10694,10 @@ input.bb-rl-zoom-slider::-moz-range-progress {
   color: var(--bb-rl-background-tertiary-color);
 }
 
+.bb-rl-members .item-entry .bb-rl-item-meta-asset .followers-wrap strong {
+  font-weight: 400;
+}
+
 .bb-rl-members .item-list.grid .only-list-view {
   display: none;
 }

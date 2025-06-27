@@ -488,6 +488,7 @@
 			text-align: right;
 
 			.button {
+
 				@include bb-rl-button;
 				@include bb-rl-button--brand-fill;
 				@include bb-rl-button--small;

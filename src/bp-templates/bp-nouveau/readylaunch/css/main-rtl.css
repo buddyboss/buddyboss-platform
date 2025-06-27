@@ -646,12 +646,12 @@ h6 {
   padding: 12px var(--bb-rl-space-300);
   margin-bottom: var(--bb-rl-space-400);
   gap: var(--bb-rl-space-100);
+  flex-flow: wrap;
+  justify-content: space-between;
 }
 
 @media screen and (max-width: 900px) {
   .bb-rl-secondary-header {
-    flex-flow: wrap;
-    gap: var(--bb-rl-space-100);
     justify-content: center;
   }
 }
@@ -797,15 +797,12 @@ h6 {
   white-space: nowrap;
 }
 
-.bb-rl-sub-ctrls {
-  margin-right: auto;
-}
-
 @media screen and (max-width: 900px) {
   .bb-rl-sub-ctrls {
     flex-flow: wrap;
     gap: var(--bb-rl-space-100);
     margin-left: auto;
+    margin-right: auto;
     justify-content: center;
   }
 }
@@ -10695,6 +10692,10 @@ input.bb-rl-zoom-slider::-moz-range-progress {
 .bb-rl-members .item-entry .bb-rl-item-meta-asset .separator {
   margin: 0 6px;
   color: var(--bb-rl-background-tertiary-color);
+}
+
+.bb-rl-members .item-entry .bb-rl-item-meta-asset .followers-wrap strong {
+  font-weight: 400;
 }
 
 .bb-rl-members .item-list.grid .only-list-view {
