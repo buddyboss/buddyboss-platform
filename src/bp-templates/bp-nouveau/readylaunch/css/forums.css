@@ -2252,14 +2252,16 @@
   align-items: center;
   justify-content: center;
   font-size: 1rem;
+  font-weight: 500;
   text-align: center;
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
   transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
-  padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
-  font-size: 0.875rem;
+  padding: 6px var(--bb-rl-space-200);
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 400;
   background-color: var(--bb-rl-background-brand-primary-color);
   color: var(--bb-rl-text-white-color);
   border: 1px solid var(--bb-rl-background-brand-primary-color);

@@ -13424,7 +13424,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   z-index: 99999;
   pointer-events: none;
   opacity: 0;
-  transition: opacity .15s;
+  transition: opacity 0.15s;
   bottom: calc(100% + 15px);
   right: 0;
 }
