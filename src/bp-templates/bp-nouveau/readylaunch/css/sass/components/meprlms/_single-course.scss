@@ -658,6 +658,10 @@
 			}
 		}
 
+		.mp-form-row {
+			margin: 0 0 var(--bb-rl-space-200);
+		}
+
 		.mepr-form {
 
 			label {
@@ -665,6 +669,7 @@
 				@include bb-rl-label-heading;
 				color: var(--bb-rl-text-color);
 				margin: 0 0 var(--bb-rl-space-100);
+				display: inline-flex;
 			}
 
 			input {
@@ -675,6 +680,13 @@
 					@include bb-rl-button;
 					@include bb-rl-button--brand-fill;
 					@include bb-rl-button--small;
+				}
+
+				&[type="checkbox"] {
+					width: auto;
+					margin-right: var(--bb-rl-space-50);
+					opacity: 1;
+					position: static;
 				}
 			}
 

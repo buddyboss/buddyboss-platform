@@ -405,6 +405,7 @@
   display: inline-flex;
   align-items: center;
   gap: var(--bb-rl-space-50);
+  color: var(--bb-rl-text-secondary-color);
 }
 
 .bb-rl-lms-tab-menu .bb-rl-lms-tab .mpcs-share,
@@ -1778,12 +1779,17 @@ body[class*="mpcs-course"] .bb-rl-mbprlms-pagination ul li.active a {
   font-size: var(--bb-rl-font-size-sm);
 }
 
+.bb-rl-course-content-module .mepr-login-form-wrap .mp-form-row {
+  margin: 0 0 var(--bb-rl-space-200);
+}
+
 .bb-rl-course-content-module .mepr-login-form-wrap .mepr-form label {
   font-size: var(--bb-rl-font-size-sm);
   font-weight: 400;
   line-height: var(--bb-rl-base-line-small);
   color: var(--bb-rl-text-color);
   margin: 0 0 var(--bb-rl-space-100);
+  display: inline-flex;
 }
 
 .bb-rl-course-content-module .mepr-login-form-wrap .mepr-form input {
@@ -1821,6 +1827,13 @@ body[class*="mpcs-course"] .bb-rl-mbprlms-pagination ul li.active a {
 .bb-rl-course-content-module .mepr-login-form-wrap .mepr-form input[type="submit"]:disabled {
   background-color: var(--bb-rl-background-brand-disabled-color);
   cursor: not-allowed;
+}
+
+.bb-rl-course-content-module .mepr-login-form-wrap .mepr-form input[type="checkbox"] {
+  width: auto;
+  margin-right: var(--bb-rl-space-50);
+  opacity: 1;
+  position: static;
 }
 
 .bb-rl-course-content-module .mepr-login-form-wrap .mepr-form div.mp-hide-pw {
