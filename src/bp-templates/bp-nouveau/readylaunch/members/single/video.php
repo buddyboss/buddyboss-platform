@@ -29,12 +29,6 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 			?>
 			<div id="video-stream" class="video bb-rl-media-stream" data-bp-list="video" data-ajax="<?php echo esc_attr( $is_send_ajax_request ? 'true' : 'false' ); ?>">
 				<?php
-				if ( bp_has_video( bp_ajax_querystring( 'video' ) ) ) {
-					bp_get_template_part( 'video/add-video' );
-					bp_nouveau_member_hook( 'before', 'video_content' );
-					bp_get_template_part( 'video/actions' );
-				}
-
 				if ( $is_send_ajax_request ) {
 					echo '<div id="bp-ajax-loader">';
 					bp_nouveau_user_feedback( 'member-video-loading' );

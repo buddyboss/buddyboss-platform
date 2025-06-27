@@ -32,27 +32,6 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 			?>
 			<div id="video-stream" class="video bb-rl-media-stream" data-bp-list="video" data-ajax="<?php echo esc_attr( $is_send_ajax_request ? 'true' : 'false' ); ?>">
 				<?php
-				if ( bp_has_video( bp_ajax_querystring( 'video' ) ) ) {
-					if (
-						bp_is_group_video() &&
-						(
-							groups_can_user_manage_video( $loggedin_user_id, $current_group_id ) ||
-							groups_is_user_mod( $loggedin_user_id, $current_group_id ) ||
-							groups_is_user_admin( $loggedin_user_id, $current_group_id )
-						)
-					) {
-						bp_get_template_part( 'video/add-video' );
-					} else {
-						?>
-						<h2 class="bb-title"><?php esc_html_e( 'Videos', 'buddyboss' ); ?></h2>
-						<?php
-					}
-
-					bp_nouveau_group_hook( 'before', 'video_content' );
-					bp_get_template_part( 'video/actions' );
-				}
-				?>
-				<?php
 				if ( $is_send_ajax_request ) {
 					echo '<div id="bp-ajax-loader">';
 					bp_nouveau_user_feedback( 'group-video-loading' );
