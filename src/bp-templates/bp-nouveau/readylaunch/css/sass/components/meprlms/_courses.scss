@@ -325,3 +325,120 @@ body[class*="mpcs-course"] .bb-rl-mbprlms-pagination {
 		}
 	}
 }
+
+.bb-rl-group-details {
+
+	.mpcs-cards.columns .card {
+		border-radius: var(--bb-rl-radius-lg);
+		background-color: var(--bb-rl-background-color);
+	}
+
+	.mpcs-cards {
+
+		.mpcs-btn-secondary {
+
+			@include bb-rl-button;
+			@include bb-rl-button-secondary-fill;
+			@include bb-rl-button--small;
+
+			.bb-icon-play:before {
+				content: "\e3d0";
+				font-family: bb-icons-rl;
+				font-size: 14px;
+				font-weight: 400;
+				font-style: normal;
+			}
+		}
+	}
+
+	.mpcs-cards.columns {
+		row-gap: var(--bb-rl-space-200);
+	}
+
+	.mpcs-cards.columns .card {
+		padding: 0 var(--bb-rl-space-200) var(--bb-rl-space-200);
+
+		.card-header {
+			padding-top: var(--bb-rl-space-200);
+		}
+
+		.card-title h2 {
+			margin: 0 0 var(--bb-rl-space-200);
+		}
+
+		.card-image {
+			margin-right: calc(var(--bb-rl-space-200) * -1);
+			margin-left: calc(var(--bb-rl-space-200) * -1);
+		}
+
+		.card-footer [class*="mpcs-btn"] {
+			margin-top: var(--bb-rl-space-200);
+		}
+
+		.card-footer [class*="mpcs-btn"] i {
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			font-size: 14px;
+			margin-right: var(--bb-rl-space-50);
+			line-height: 1;
+		}
+
+		.card-image img {
+			border-radius: var(--bb-rl-radius-lg) var(--bb-rl-radius-lg) 0 0;
+		}
+
+		.card-title a {
+
+			@include bb-rl-base-heading;
+			color: var(--bb-rl-text-color);
+		}
+
+		.card-body {
+			margin-bottom: var(--bb-rl-space-100);
+		}
+
+		.card-body p {
+
+			@include bb-rl-label-heading;
+			color: var(--bb-rl-text-tertiary-color);
+		}
+	}
+
+	.mpcs-progress-wrap .mpcs-progress-bar {
+		height: var(--bb-rl-space-100);
+		border-radius: var(--bb-rl-radius-full);
+		background: var(--bb-rl-background-brand-secondary-color);
+
+		.mpcs-progress-bar-inner {
+			background: var(--bb-rl-background-brand-primary-color);
+			height: var(--bb-rl-space-100);
+			border-radius: var(--bb-rl-radius-full);
+		}
+	}
+
+	.mpcs-cards {
+
+		.mpcs-progress-data {
+			flex-direction: row-reverse;
+		}
+
+		.mpcs-progress-data .mpcs-progress-per {
+
+			@include bb-rl-label-heading;
+			color: var(--bb-rl-text-secondary-color);
+
+			strong {
+
+				@include bb-rl-base-heading-bolder;
+				color: var(--bb-rl-text-color);
+			}
+		}
+
+		.mpcs-progress-data .mpcs-progress-lessons {
+
+			@include bb-rl-label-heading;
+			color: var(--bb-rl-text-secondary-color);
+		}
+	}
+}

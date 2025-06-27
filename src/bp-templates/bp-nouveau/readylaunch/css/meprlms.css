@@ -765,6 +765,146 @@ body[class*="mpcs-course"] .bb-rl-mbprlms-pagination ul li.active a {
   background-color: var(--bb-rl-background-color);
 }
 
+.bb-rl-group-details .mpcs-cards.columns .card {
+  border-radius: var(--bb-rl-radius-lg);
+  background-color: var(--bb-rl-background-color);
+}
+
+.bb-rl-group-details .mpcs-cards .mpcs-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  font-weight: 500;
+  text-align: center;
+  cursor: pointer;
+  border-radius: var(--bb-rl-radius-md);
+  padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  text-decoration: none;
+  background-color: var(--bb-rl-background-tertiary-color);
+  color: var(--bb-rl-text-color);
+  border: 1px solid transparent;
+  padding: 6px var(--bb-rl-space-200);
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 400;
+}
+
+.bb-rl-group-details .mpcs-cards .mpcs-btn-secondary:hover {
+  background-color: var(--bb-rl-background-tertiary-hover-color);
+}
+
+.bb-rl-group-details .mpcs-cards .mpcs-btn-secondary:focus {
+  outline: 2px solid var(--bb-rl-border-quinery-color);
+}
+
+.bb-rl-group-details .mpcs-cards .mpcs-btn-secondary:disabled {
+  background-color: var(--bb-rl-background-tertiary-color);
+  color: var(--bb-rl-text-disabled-color);
+  cursor: not-allowed;
+}
+
+.bb-rl-group-details .mpcs-cards .mpcs-btn-secondary .bb-icon-play:before {
+  content: "\e3d0";
+  font-family: bb-icons-rl;
+  font-size: 14px;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.bb-rl-group-details .mpcs-cards.columns {
+  row-gap: var(--bb-rl-space-200);
+}
+
+.bb-rl-group-details .mpcs-cards.columns .card {
+  padding: 0 var(--bb-rl-space-200) var(--bb-rl-space-200);
+}
+
+.bb-rl-group-details .mpcs-cards.columns .card .card-header {
+  padding-top: var(--bb-rl-space-200);
+}
+
+.bb-rl-group-details .mpcs-cards.columns .card .card-title h2 {
+  margin: 0 0 var(--bb-rl-space-200);
+}
+
+.bb-rl-group-details .mpcs-cards.columns .card .card-image {
+  margin-right: calc(var(--bb-rl-space-200) * -1);
+  margin-left: calc(var(--bb-rl-space-200) * -1);
+}
+
+.bb-rl-group-details .mpcs-cards.columns .card .card-footer [class*="mpcs-btn"] {
+  margin-top: var(--bb-rl-space-200);
+}
+
+.bb-rl-group-details .mpcs-cards.columns .card .card-footer [class*="mpcs-btn"] i {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  margin-right: var(--bb-rl-space-50);
+  line-height: 1;
+}
+
+.bb-rl-group-details .mpcs-cards.columns .card .card-image img {
+  border-radius: var(--bb-rl-radius-lg) var(--bb-rl-radius-lg) 0 0;
+}
+
+.bb-rl-group-details .mpcs-cards.columns .card .card-title a {
+  font-size: var(--bb-rl-font-size-base);
+  font-weight: 500;
+  line-height: var(--bb-rl-base-line);
+  color: var(--bb-rl-text-color);
+}
+
+.bb-rl-group-details .mpcs-cards.columns .card .card-body {
+  margin-bottom: var(--bb-rl-space-100);
+}
+
+.bb-rl-group-details .mpcs-cards.columns .card .card-body p {
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 400;
+  line-height: var(--bb-rl-base-line-small);
+  color: var(--bb-rl-text-tertiary-color);
+}
+
+.bb-rl-group-details .mpcs-progress-wrap .mpcs-progress-bar {
+  height: var(--bb-rl-space-100);
+  border-radius: var(--bb-rl-radius-full);
+  background: var(--bb-rl-background-brand-secondary-color);
+}
+
+.bb-rl-group-details .mpcs-progress-wrap .mpcs-progress-bar .mpcs-progress-bar-inner {
+  background: var(--bb-rl-background-brand-primary-color);
+  height: var(--bb-rl-space-100);
+  border-radius: var(--bb-rl-radius-full);
+}
+
+.bb-rl-group-details .mpcs-cards .mpcs-progress-data {
+  flex-direction: row-reverse;
+}
+
+.bb-rl-group-details .mpcs-cards .mpcs-progress-data .mpcs-progress-per {
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 400;
+  line-height: var(--bb-rl-base-line-small);
+  color: var(--bb-rl-text-secondary-color);
+}
+
+.bb-rl-group-details .mpcs-cards .mpcs-progress-data .mpcs-progress-per strong {
+  font-size: var(--bb-rl-font-size-base);
+  font-weight: 600;
+  line-height: var(--bb-rl-base-line);
+  color: var(--bb-rl-text-color);
+}
+
+.bb-rl-group-details .mpcs-cards .mpcs-progress-data .mpcs-progress-lessons {
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 400;
+  line-height: var(--bb-rl-base-line-small);
+  color: var(--bb-rl-text-secondary-color);
+}
+
 .bb-rl-lms-inner-block #mpcs-lesson-navigation #next_lesson_link:not(#mpcs-classroom-previous-lesson-link),
 .bb-rl-lms-inner-block #mpcs-lesson-navigation #next_lesson_link {
   display: inline-flex;
