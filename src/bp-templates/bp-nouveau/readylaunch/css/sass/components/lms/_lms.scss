@@ -625,6 +625,10 @@
 
 		li {
 			margin-bottom: var(--bb-rl-space-300);
+
+			&:last-child {
+				margin-bottom: 0;
+			}
 		}
 
 		.comment-body,
@@ -703,6 +707,27 @@
 		.says {
 			color: var(--bb-rl-text-tertiary-color);
 			padding-left: var(--bb-rl-space-50);
+		}
+	}
+
+	.comments-area {
+
+		> .comment-navigation {
+
+			a {
+
+				@include bb-rl-button--tertiary-link;
+				display: inline-flex;
+				font-size: var(--bb-rl-font-size-sm);
+			}
+
+			+ .comment-list {
+				margin-top: var(--bb-rl-space-200);
+			}
+		}
+
+		.comment-list + .comment-navigation {
+			margin-top: var(--bb-rl-space-200);
 		}
 	}
 }
