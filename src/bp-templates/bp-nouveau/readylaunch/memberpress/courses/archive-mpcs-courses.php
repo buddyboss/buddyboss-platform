@@ -168,16 +168,31 @@ if ( MeprRule::is_locked( $post ) && helpers\Courses::is_course_archive() ) {
 			<span class="bb-rl-author-name"><?php echo esc_html( $author_name ); ?></span>
 		</div>
 		<div class="bb-rl-course-popup-actions">
-			<a href="<?php the_permalink(); ?>" class="bb-rl-course-link bb-rl-button bb-rl-button--brandFill bb-rl-button--small">
-				<i class="bb-icons-rl-play"></i>
-				<?php
-				if ( $is_enrolled ) {
-					esc_html_e( 'Continue', 'buddyboss' );
+			<?php
+			if ( $is_enrolled ) :
+				$next_lesson = models\UserProgress::next_lesson( get_current_user_id(), $course->ID );
+				if ( false !== $next_lesson && is_object( $next_lesson ) ) {
+					?>
+					<a href="<?php echo esc_url( get_permalink( $next_lesson->ID ) ); ?>" class="bb-rl-course-link bb-rl-button bb-rl-button--brandFill bb-rl-button--small">
+						<i class="bb-icons-rl-play"></i>
+						<?php esc_html_e( 'Continue', 'buddyboss' ); ?>
+					</a>
+					<?php
 				} else {
-					esc_html_e( 'View Course', 'buddyboss' );
+					?>
+					<a href="<?php the_permalink(); ?>" class="bb-rl-course-link bb-rl-button bb-rl-button--brandFill bb-rl-button--small">
+						<i class="bb-icons-rl-play"></i>
+						<?php esc_html_e( 'Continue', 'buddyboss' ); ?>
+					</a>
+					<?php
 				}
+			else :
 				?>
-			</a>
+				<a href="<?php the_permalink(); ?>" class="bb-rl-course-link bb-rl-button bb-rl-button--brandFill bb-rl-button--small">
+					<i class="bb-icons-rl-play"></i>
+					<?php esc_html_e( 'View Course', 'buddyboss' ); ?>
+				</a>
+			<?php endif; ?>
 		</div>
 	</div>
 </div>
