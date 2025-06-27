@@ -47,6 +47,8 @@ if ( bp_has_document( bp_ajax_querystring( 'document' ) ) ) :
 		} elseif ( isset( $order_by ) && isset( $sort ) && 'group_id' === $order_by && 'DESC' === $sort ) {
 			$active_group_class = 'asce';
 		}
+
+		bp_get_template_part( 'document/document-header' );
 		?>
 
 		<div id="media-folder-document-data-table" class="document-list item-list bp-list bb-document-list grid">
