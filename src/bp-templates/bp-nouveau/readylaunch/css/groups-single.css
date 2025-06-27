@@ -187,6 +187,7 @@
   border-bottom: 1px solid var(--bb-rl-border-secondary-color);
   padding: 12px var(--bb-rl-space-300);
   gap: var(--bb-rl-space-200);
+  width: 100%;
 }
 
 .bb-rl-groups-single-wrapper .bb-rl-secondary-header .bb-rl-group-info-wrap.bb-rl-no-border {

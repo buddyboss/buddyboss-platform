@@ -18,10 +18,10 @@
 	padding: 12px var(--bb-rl-space-300);
 	margin-bottom: var(--bb-rl-space-400);
 	gap: var(--bb-rl-space-100);
+	flex-flow: wrap;
+	justify-content: space-between;
 
 	@media screen and (max-width: 900px) {
-		flex-flow: wrap;
-		gap: var(--bb-rl-space-100);
 		justify-content: center;
 	}
 
@@ -122,12 +122,12 @@
 }
 
 .bb-rl-sub-ctrls {
-	margin-left: auto;
 
 	@media screen and (max-width: 900px) {
 		flex-flow: wrap;
 		gap: var(--bb-rl-space-100);
 		margin-right: auto;
+		margin-left: auto;
 		justify-content: center;
 	}
 }
