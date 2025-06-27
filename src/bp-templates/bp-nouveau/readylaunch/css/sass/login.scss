@@ -342,8 +342,8 @@ body.login .mfp-content #terms-modal,
 body.login .mfp-content #privacy-modal {
 	background-color: var(--bb-rl-background-color);
 	border: 1px solid var(--bb-rl-border-secondary-color);
+	padding: var(--bb-rl-space-400) var(--bb-rl-space-300);
 	border-radius: var(--bb-rl-radius-lg);
-	padding: 30px;
 	text-align: left;
 	min-height: 400px;
 	max-width: 650px;

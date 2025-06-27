@@ -14,44 +14,17 @@ defined( 'ABSPATH' ) || exit;
 
 <?php do_action( 'bbp_template_before_search_results_loop' ); ?>
 
-<ul id="bbp-search-results" class="forums bbp-search-results">
+<ul id="bbp-search-results" class="bbp-topics1 bs-item-list bs-forums-items bb-rl-single-forum-list">
+	
+	<li class="bs-item-wrap bs-header-item align-items-center no-hover-effect">
+		<div class="flex-1"><h2 class="bs-section-title"><?php _e( 'Search Results', 'buddyboss' ); ?></h2></div>
+	</li>
 
-	<li class="bbp-header">
-
-		<div class="bbp-search-author"><?php esc_html_e( 'Author', 'buddyboss' ); ?></div><!-- .bbp-reply-author -->
-
-		<div class="bbp-search-content">
-
-			<?php esc_html_e( 'Search Results', 'buddyboss' ); ?>
-
-		</div><!-- .bbp-search-content -->
-
-	</li><!-- .bbp-header -->
-
-	<li class="bbp-body">
-
-		<?php
-		while ( bbp_search_results() ) :
-			bbp_the_search_result();
-			?>
-
+	<?php while ( bbp_search_results() ) : bbp_the_search_result(); ?>
+		<li>
 			<?php bbp_get_template_part( 'loop', 'search-' . get_post_type() ); ?>
-
-		<?php endwhile; ?>
-
-	</li><!-- .bbp-body -->
-
-	<li class="bbp-footer">
-
-		<div class="bbp-search-author"><?php esc_html_e( 'Author', 'buddyboss' ); ?></div>
-
-		<div class="bbp-search-content">
-
-			<?php esc_html_e( 'Search Results', 'buddyboss' ); ?>
-
-		</div><!-- .bbp-search-content -->
-
-	</li><!-- .bbp-footer -->
+		</li>
+	<?php endwhile; ?>
 
 </ul><!-- #bbp-search-results -->
 

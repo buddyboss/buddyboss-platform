@@ -11,46 +11,55 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 ?>
+<div id="post-<?php bbp_reply_id(); ?>"
+	<?php
+	bbp_reply_class(
+		bbp_get_reply_id(),
+		array(
+			'bb-rl-forum-reply-list-item',
+			'scrubberpost',
+		)
+	);
+	?>
+	data-date="<?php echo esc_attr( get_post_time( 'F Y', false, bbp_get_reply_id(), true ) ); ?>">
 
-<div class="bbp-reply-header">
+	<div class="flex items-center bb-rl-reply-header">
 
-	<div class="bbp-meta">
+		<div class="bb-rl-reply-author-avatar item-avatar">
+			<?php
+			$args = array( 'type' => 'avatar' );
+			echo bbp_get_reply_author_link( $args );
+			?>
+		</div><!-- .bbp-reply-author -->
 
-		<span class="bbp-reply-post-date"><?php bbp_reply_post_date(); ?></span>
+		<div class="bb-rl-reply-author-info">
+			<h3>
+				<?php
+				$args = array( 'type' => 'name' );
+				echo bbp_get_reply_author_link( $args );
+				?>
+			</h3>
+			<span class="bb-rl-timestamp"><?php bbp_reply_post_date(); ?></span>
 
-		<a href="<?php bbp_reply_url(); ?>" class="bbp-reply-permalink">#<?php bbp_reply_id(); ?></a>
+			<?php if ( bbp_is_single_user_replies() ) : ?>
 
-	</div><!-- .bbp-meta -->
+				<span class="bbp-header">
+				<?php esc_html_e( 'in reply to: ', 'buddyboss' ); ?>
+					<a class="bbp-topic-permalink"
+						href="<?php bbp_topic_permalink( bbp_get_reply_topic_id() ); ?>"><?php bbp_topic_title( bbp_get_reply_topic_id() ); ?></a>
+				</span>
 
-	<div class="bbp-reply-title">
+			<?php endif; ?>
 
-		<h3><?php esc_html_e( 'In reply to: ', 'buddyboss' ); ?>
-		<a class="bbp-topic-permalink" href="<?php bbp_topic_permalink( bbp_get_reply_topic_id() ); ?>"><?php bbp_topic_title( bbp_get_reply_topic_id() ); ?></a></h3>
+		</div>
 
-	</div><!-- .bbp-reply-title -->
+	</div>
 
-</div><!-- .bbp-reply-header -->
-
-<div id="post-<?php bbp_reply_id(); ?>" <?php bbp_reply_class(); ?>>
-
-	<div class="bbp-reply-author">
-
-		<?php do_action( 'bbp_theme_before_reply_author_details' ); ?>
-
-		<?php
-		bbp_reply_author_link(
-			array(
-				'sep'       => '<br />',
-				'show_role' => true,
-			)
-		);
-		?>
-
+	<div class="bbp-after-author-hook">
 		<?php do_action( 'bbp_theme_after_reply_author_details' ); ?>
+	</div>
 
-	</div><!-- .bbp-reply-author -->
-
-	<div class="bbp-reply-content">
+	<div class="bb-rl-reply-content">
 
 		<?php do_action( 'bbp_theme_before_reply_content' ); ?>
 
@@ -60,5 +69,5 @@ defined( 'ABSPATH' ) || exit;
 
 	</div><!-- .bbp-reply-content -->
 
-</div><!-- #post-<?php bbp_reply_id(); ?> -->
+</div><!-- .reply -->
 

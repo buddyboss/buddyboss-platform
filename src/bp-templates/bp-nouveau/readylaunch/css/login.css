@@ -688,7 +688,6 @@ h6 {
   align-items: center;
   justify-content: center;
   font-size: 1rem;
-  font-weight: 500;
   text-align: center;
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
@@ -728,7 +727,6 @@ h6 {
   align-items: center;
   justify-content: center;
   font-size: 1rem;
-  font-weight: 500;
   text-align: center;
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
@@ -2337,7 +2335,6 @@ div.vjs-menu li.vjs-selected .vjs-menu-item-text, div.vjs-menu li:hover .vjs-men
   align-items: center;
   justify-content: center;
   font-size: 1rem;
-  font-weight: 500;
   text-align: center;
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
@@ -2347,9 +2344,8 @@ div.vjs-menu li.vjs-selected .vjs-menu-item-text, div.vjs-menu li:hover .vjs-men
   background-color: var(--bb-rl-background-brand-primary-color);
   color: var(--bb-rl-text-white-color);
   border: 1px solid var(--bb-rl-background-brand-primary-color);
-  padding: 6px var(--bb-rl-space-200);
-  font-size: var(--bb-rl-font-size-sm);
-  font-weight: 400;
+  padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
+  font-size: 0.875rem;
   margin-left: var(--bb-rl-space-100);
 }
 
@@ -2450,7 +2446,6 @@ div.vjs-menu li.vjs-selected .vjs-menu-item-text, div.vjs-menu li:hover .vjs-men
   align-items: center;
   justify-content: center;
   font-size: 1rem;
-  font-weight: 500;
   text-align: center;
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
@@ -2460,9 +2455,8 @@ div.vjs-menu li.vjs-selected .vjs-menu-item-text, div.vjs-menu li:hover .vjs-men
   background-color: var(--bb-rl-background-tertiary-color);
   color: var(--bb-rl-text-color);
   border: 1px solid transparent;
-  padding: 6px var(--bb-rl-space-200);
-  font-size: var(--bb-rl-font-size-sm);
-  font-weight: 400;
+  padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
+  font-size: 0.875rem;
   margin-right: var(--bb-rl-space-100);
 }
 
@@ -2540,7 +2534,6 @@ div.vjs-menu li.vjs-selected .vjs-menu-item-text, div.vjs-menu li:hover .vjs-men
   align-items: center;
   justify-content: center;
   font-size: 1rem;
-  font-weight: 500;
   text-align: center;
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
@@ -2550,9 +2543,8 @@ div.vjs-menu li.vjs-selected .vjs-menu-item-text, div.vjs-menu li:hover .vjs-men
 }
 
 .bb-rl-button--small {
-  padding: 6px var(--bb-rl-space-200);
-  font-size: var(--bb-rl-font-size-sm);
-  font-weight: 400;
+  padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
+  font-size: 0.875rem;
 }
 
 .bb-rl-button--secondary-fill {
@@ -2849,8 +2841,8 @@ body.login .mfp-content #terms-modal,
 body.login .mfp-content #privacy-modal {
   background-color: var(--bb-rl-background-color);
   border: 1px solid var(--bb-rl-border-secondary-color);
+  padding: var(--bb-rl-space-400) var(--bb-rl-space-300);
   border-radius: var(--bb-rl-radius-lg);
-  padding: 30px;
   text-align: left;
   min-height: 400px;
   max-width: 650px;
@@ -3019,7 +3011,6 @@ body.bb-rl-register {
   align-items: center;
   justify-content: center;
   font-size: 1rem;
-  font-weight: 500;
   text-align: center;
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
@@ -3229,16 +3220,14 @@ body.bb-rl-register {
   align-items: center;
   justify-content: center;
   font-size: 1rem;
-  font-weight: 500;
   text-align: center;
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
   transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
-  padding: 6px var(--bb-rl-space-200);
-  font-size: var(--bb-rl-font-size-sm);
-  font-weight: 400;
+  padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
+  font-size: 0.875rem;
   background-color: transparent;
   color: var(--bb-rl-text-brand-primary-color);
   border: 1px solid var(--bb-rl-text-brand-primary-color);
@@ -3481,279 +3470,6 @@ body.bb-rl-register {
 .bp-feedback.error .bp-icon:before {
   content: "\e4e2";
   color: var(--bb-rl-icon-danger-primary-color);
-}
-
-html:has(.memberpressproduct-template-default.single.registration) {
-  margin-top: 0;
-}
-
-.memberpressproduct-template-default.single.registration .register-page-main > p {
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 22px;
-}
-
-.memberpressproduct-template-default.single.registration .register-page-main .mp_wrapper > .mepr_error {
-  background-color: var(--bb-rl-background-danger-secondary-color);
-  border: 1px solid var(--bb-rl-border-danger-secondary-color);
-  padding: var(--bb-rl-space-200);
-  border-radius: var(--bb-rl-radius-md);
-  font-size: var(--bb-rl-font-size-sm);
-  font-weight: 500;
-  margin-top: var(--bb-rl-space-200);
-}
-
-.memberpressproduct-template-default.single.registration .register-page-main .mp_wrapper > .mepr_error ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.memberpressproduct-template-default.single.registration .register-page-main .mp_wrapper > .mepr_error ul li {
-  margin: 0 0 var(--bb-rl-space-100);
-}
-
-.memberpressproduct-template-default.single.registration .register-page-main .mp_wrapper > .mepr_error ul li:last-child {
-  margin-bottom: 0;
-}
-
-.memberpressproduct-template-default.single.registration .register-page-main .mepr-signup-form .mp-form-row,
-.memberpressproduct-template-default.single.registration .register-page-main .mepr-form .mp-form-row {
-  margin: 0 0 var(--bb-rl-space-200);
-}
-
-.memberpressproduct-template-default.single.registration .register-page-main .mepr-signup-form label,
-.memberpressproduct-template-default.single.registration .register-page-main .mepr-form label {
-  display: block;
-  margin-bottom: var(--bb-rl-space-100);
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--bb-rl-text-secondary-color);
-}
-
-.memberpressproduct-template-default.single.registration .register-page-main .mepr-signup-form select,
-.memberpressproduct-template-default.single.registration .register-page-main .mepr-form select {
-  font-size: var(--bb-rl-font-size-sm);
-  background-color: var(--bb-rl-background-secondary-color);
-  border: 1px solid var(--bb-rl-border-quaternary-color);
-  border-radius: var(--bb-rl-radius-base);
-  padding: var(--bb-rl-space-100);
-  width: 100%;
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  background-image: url(../images/svg/arrow-down.svg);
-  background-size: 10px;
-  background-repeat: no-repeat;
-  background-position: right 1rem center;
-  padding-right: var(--bb-rl-space-400);
-}
-
-.memberpressproduct-template-default.single.registration .register-page-main .mepr-signup-form input,
-.memberpressproduct-template-default.single.registration .register-page-main .mepr-form input {
-  color: var(--bb-rl-text-color);
-  font-size: 14px;
-  border: 1px solid var(--bb-rl-border-tertiary-color);
-  border-radius: var(--bb-rl-radius-base);
-  padding: var(--bb-rl-space-100);
-  width: 100%;
-}
-
-.memberpressproduct-template-default.single.registration .register-page-main .mepr-signup-form input.mepr-submit,
-.memberpressproduct-template-default.single.registration .register-page-main .mepr-form input.mepr-submit {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1rem;
-  text-align: center;
-  cursor: pointer;
-  border-radius: var(--bb-rl-radius-md);
-  padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
-  text-decoration: none;
-  background-color: var(--bb-rl-background-brand-primary-color);
-  color: var(--bb-rl-text-white-color);
-  border: 1px solid var(--bb-rl-background-brand-primary-color);
-  font-weight: 500;
-  width: 100%;
-  margin: var(--bb-rl-space-200) 0 0;
-}
-
-.memberpressproduct-template-default.single.registration .register-page-main .mepr-signup-form .mp-checkbox-field,
-.memberpressproduct-template-default.single.registration .register-page-main .mepr-form .mp-checkbox-field {
-  display: flex;
-  align-items: center;
-  gap: var(--bb-rl-space-100);
-}
-
-.memberpressproduct-template-default.single.registration .register-page-main .mepr-signup-form .mp-checkbox-field input,
-.memberpressproduct-template-default.single.registration .register-page-main .mepr-form .mp-checkbox-field input {
-  width: auto;
-}
-
-.memberpressproduct-template-default.single.registration .register-page-main .mepr-signup-form .mp-checkbox-field label,
-.memberpressproduct-template-default.single.registration .register-page-main .mepr-form .mp-checkbox-field label {
-  margin-bottom: 0;
-}
-
-.memberpressproduct-template-default.single.registration .register-page-main .mepr-signup-form .cc-error,
-.memberpressproduct-template-default.single.registration .register-page-main .mepr-signup-form .mepr-form-has-errors,
-.memberpressproduct-template-default.single.registration .register-page-main .mepr-form .cc-error,
-.memberpressproduct-template-default.single.registration .register-page-main .mepr-form .mepr-form-has-errors {
-  display: flex;
-  align-items: center;
-  padding: var(--bb-rl-space-100);
-  border: 1px solid transparent;
-  border-radius: var(--bb-rl-radius-md);
-  font-size: var(--bb-rl-font-size-sm);
-  font-weight: 500;
-  background-color: var(--bb-rl-background-secondary-color);
-  padding: var(--bb-rl-space-50) var(--bb-rl-space-100);
-  font-weight: 400;
-  background-color: var(--bb-rl-background-danger-secondary-color);
-  border-color: var(--bb-rl-border-danger-secondary-color);
-  margin: var(--bb-rl-space-100) 0;
-  display: none;
-}
-
-.memberpressproduct-template-default.single.registration .register-page-main .mepr-signup-form .cc-error > [class*="bb-icons"],
-.memberpressproduct-template-default.single.registration .register-page-main .mepr-signup-form .mepr-form-has-errors > [class*="bb-icons"],
-.memberpressproduct-template-default.single.registration .register-page-main .mepr-form .cc-error > [class*="bb-icons"],
-.memberpressproduct-template-default.single.registration .register-page-main .mepr-form .mepr-form-has-errors > [class*="bb-icons"] {
-  margin-right: var(--bb-rl-space-100);
-  font-size: 20px;
-  font-family: bb-icons-rl;
-}
-
-.memberpressproduct-template-default.single.registration .register-page-main .mepr-signup-form .cc-error > [class*="bb-icons"],
-.memberpressproduct-template-default.single.registration .register-page-main .mepr-signup-form .mepr-form-has-errors > [class*="bb-icons"],
-.memberpressproduct-template-default.single.registration .register-page-main .mepr-form .cc-error > [class*="bb-icons"],
-.memberpressproduct-template-default.single.registration .register-page-main .mepr-form .mepr-form-has-errors > [class*="bb-icons"] {
-  color: var(--bb-rl-border-danger-secondary-color);
-}
-
-.memberpressproduct-template-default.single.registration .register-page-main .mepr-signup-form .mepr-hidden,
-.memberpressproduct-template-default.single.registration .register-page-main .mepr-form .mepr-hidden {
-  display: none;
-}
-
-.memberpressproduct-template-default.single.registration .register-page-main .mepr-signup-form .mepr-visuallyhidden,
-.memberpressproduct-template-default.single.registration .register-page-main .mepr-form .mepr-visuallyhidden {
-  border: 0;
-  clip: rect(0 0 0 0);
-  height: 0;
-  margin: -1px;
-  overflow: hidden;
-  position: absolute;
-  width: 1px;
-}
-
-.memberpressproduct-template-default.single.registration .register-page-main .mepr-signup-form .mepr_price,
-.memberpressproduct-template-default.single.registration .register-page-main .mepr-form .mepr_price {
-  display: flex;
-  align-items: center;
-  gap: var(--bb-rl-space-100);
-  margin-top: var(--bb-rl-space-200);
-}
-
-.memberpressproduct-template-default.single.registration .register-page-main .mepr-signup-form .mepr_price > label,
-.memberpressproduct-template-default.single.registration .register-page-main .mepr-form .mepr_price > label {
-  margin-bottom: 0;
-}
-
-.memberpressproduct-template-default.single.registration .register-page-main .mepr-signup-form .mepr_price .mepr_price_cell_label,
-.memberpressproduct-template-default.single.registration .register-page-main .mepr-form .mepr_price .mepr_price_cell_label {
-  font-size: var(--bb-rl-font-size-sm);
-  font-weight: 400;
-  line-height: var(--bb-rl-base-line-small);
-}
-
-.memberpressproduct-template-default.single.registration .register-page-main .mepr-signup-form .mepr_price .mepr_price_cell,
-.memberpressproduct-template-default.single.registration .register-page-main .mepr-form .mepr_price .mepr_price_cell {
-  font-size: 20px;
-  font-weight: 700;
-  line-height: 30px;
-}
-
-.memberpressproduct-template-default.single.registration .register-page-main .mepr-signup-form .have-coupon-link,
-.memberpressproduct-template-default.single.registration .register-page-main .mepr-form .have-coupon-link {
-  background-color: transparent;
-  color: var(--bb-rl-text-brand-primary-color);
-  border: none;
-  border-radius: 0;
-  border-bottom: 1px solid transparent;
-  margin: 0 0 var(--bb-rl-space-200);
-  display: inline-block;
-  font-size: 14px;
-  font-weight: 500;
-}
-
-.memberpressproduct-template-default.single.registration .register-page-main .mepr-signup-form .have-coupon-link:hover,
-.memberpressproduct-template-default.single.registration .register-page-main .mepr-form .have-coupon-link:hover {
-  border-bottom-color: var(--bb-rl-link-primary-hover-color);
-}
-
-.memberpressproduct-template-default.single.registration .register-page-main .mepr-signup-form div.mp-hide-pw,
-.memberpressproduct-template-default.single.registration .register-page-main .mepr-form div.mp-hide-pw {
-  position: relative;
-}
-
-.memberpressproduct-template-default.single.registration .register-page-main .mepr-signup-form div.mp-hide-pw button.mp-hide-pw,
-.memberpressproduct-template-default.single.registration .register-page-main .mepr-form div.mp-hide-pw button.mp-hide-pw {
-  position: absolute;
-  top: 50%;
-  right: var(--bb-rl-space-100);
-  transform: translateY(-50%);
-  background-color: transparent;
-  border: none;
-  padding: 0;
-  margin: 0;
-  color: var(--bb-rl-text-secondary-color);
-}
-
-.memberpressproduct-template-default.single.registration .register-page-main .mepr-signup-form div.mp-hide-pw button.mp-hide-pw .dashicons-visibility,
-.memberpressproduct-template-default.single.registration .register-page-main .mepr-form div.mp-hide-pw button.mp-hide-pw .dashicons-visibility {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.memberpressproduct-template-default.single.registration .register-page-main .mepr-signup-form div.mp-hide-pw button.mp-hide-pw .dashicons-visibility::before,
-.memberpressproduct-template-default.single.registration .register-page-main .mepr-form div.mp-hide-pw button.mp-hide-pw .dashicons-visibility::before {
-  content: "\e220";
-  font-weight: 400;
-  font-family: bb-icons-rl;
-  font-size: 14px;
-}
-
-.memberpressproduct-template-default.single.registration .register-page-main .mp_invoice .mp-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.memberpressproduct-template-default.single.registration .register-page-main .mp_invoice .mp-table thead {
-  background-color: var(--bb-rl-background-secondary-color);
-}
-
-.memberpressproduct-template-default.single.registration .register-page-main .mp_invoice .mp-table th {
-  font-size: var(--bb-rl-font-size-base);
-  font-weight: 500;
-  line-height: var(--bb-rl-base-line);
-  border-color: var(--bb-rl-border-secondary-color);
-  color: var(--bb-rl-text-color);
-}
-
-.memberpressproduct-template-default.single.registration .register-page-main .mp_invoice .mp-table td {
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 22px;
-  color: var(--bb-rl-text-secondary-color);
-}
-
-.memberpressproduct-template-default.single.registration .register-page-main .mp_invoice .mp-table th,
-.memberpressproduct-template-default.single.registration .register-page-main .mp_invoice .mp-table td {
-  text-align: left;
-  padding: var(--bb-rl-space-100);
 }
 
 @media screen and (max-width: 480px) {

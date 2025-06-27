@@ -284,7 +284,6 @@
 		@include bb-rl-button;
 		@include bb-rl-button--small;
 		@include bb-rl-button--brand-fill;
-
 		display: flex;
 		align-items: center;
 		gap: var(--bb-rl-space-50);
@@ -503,13 +502,13 @@
 	.bbp-admin-links {
 
 		> a {
+			display: inline-flex;
 			font-size: var(--bb-rl-font-size-sm);
 			font-weight: 500;
 			line-height: var(--bb-rl-base-line-small);
 			padding: 10px var(--bb-rl-space-200);
 			color: var(--bb-rl-text-secondary-color);
 			white-space: nowrap;
-			display: inline-flex;
 			align-items: center;
 			width: 100%;
 			border: 0;
