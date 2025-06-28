@@ -9067,7 +9067,7 @@ input.bb-rl-zoom-slider::-moz-range-progress {
   position: absolute;
 }
 
-.bb-rl-media-stream.bb-rl-document .document-data-table-head {
+.bb-rl-media-stream .bb-rl-document .document-data-table-head {
   display: none;
 }
 
@@ -9274,7 +9274,7 @@ input.bb-rl-zoom-slider::-moz-range-progress {
   z-index: 2;
 }
 
-.bb-rl-media-stream.bb-rl-document .media-folder_items {
+.bb-rl-media-stream .bb-rl-document .media-folder_items {
   position: relative;
   display: flex;
   flex-direction: column;
@@ -9285,14 +9285,14 @@ input.bb-rl-zoom-slider::-moz-range-progress {
   padding: var(--bb-rl-space-300) var(--bb-rl-space-200);
 }
 
-.bb-rl-media-stream.bb-rl-document .media-folder_items .media-folder_actions {
+.bb-rl-media-stream .bb-rl-document .media-folder_items .media-folder_actions {
   position: absolute;
   top: 12px;
   right: 12px;
   opacity: 1;
 }
 
-.bb-rl-media-stream.bb-rl-document .media-folder_items .media-folder_name {
+.bb-rl-media-stream .bb-rl-document .media-folder_items .media-folder_name {
   font-size: 14px;
   font-weight: 600;
   line-height: 22px;
@@ -9302,48 +9302,48 @@ input.bb-rl-zoom-slider::-moz-range-progress {
   color: var(--bb-rl-text-color);
 }
 
-.bb-rl-media-stream.bb-rl-document .media-folder_items .media-folder_name_edit_wrap {
+.bb-rl-media-stream .bb-rl-document .media-folder_items .media-folder_name_edit_wrap {
   width: 100%;
   display: none;
 }
 
-.bb-rl-media-stream.bb-rl-document .media-folder_items .media-folder_name_edit_wrap .media-folder_name_edit {
+.bb-rl-media-stream .bb-rl-document .media-folder_items .media-folder_name_edit_wrap .media-folder_name_edit {
   width: 100%;
   max-width: 100%;
 }
 
-.bb-rl-media-stream.bb-rl-document .media-folder_items .media-folder_name_edit_wrap .error-box {
+.bb-rl-media-stream .bb-rl-document .media-folder_items .media-folder_name_edit_wrap .error-box {
   display: none;
   margin-top: var(--bb-rl-space-50);
 }
 
-.bb-rl-media-stream.bb-rl-document .media-folder_items .media-folder_name_edit_wrap input.error {
+.bb-rl-media-stream .bb-rl-document .media-folder_items .media-folder_name_edit_wrap input.error {
   border-color: var(--bb-rl-border-danger-secondary-color);
   color: var(--bb-rl-text-danger-secondary-color);
 }
 
-.bb-rl-media-stream.bb-rl-document .media-folder_items .media-folder_name_edit_wrap input.error + .error-box {
+.bb-rl-media-stream .bb-rl-document .media-folder_items .media-folder_name_edit_wrap input.error + .error-box {
   display: block;
 }
 
-.bb-rl-media-stream.bb-rl-document .media-folder_items .media-folder_icon {
+.bb-rl-media-stream .bb-rl-document .media-folder_items .media-folder_icon {
   margin-bottom: var(--bb-rl-space-100);
 }
 
-.bb-rl-media-stream.bb-rl-document .media-folder_items .media-folder_icon i {
+.bb-rl-media-stream .bb-rl-document .media-folder_items .media-folder_icon i {
   font-size: 48px;
   color: var(--bb-rl-icon-tertiary-color);
 }
 
-.bb-rl-media-stream.bb-rl-document .media-folder_items .media-folder_details {
+.bb-rl-media-stream .bb-rl-document .media-folder_items .media-folder_details {
   text-align: center;
 }
 
-.bb-rl-media-stream.bb-rl-document .media-folder_items .hide {
+.bb-rl-media-stream .bb-rl-document .media-folder_items .hide {
   display: none;
 }
 
-.bb-rl-media-stream.bb-rl-document .media-folder_items .media-folder_modified {
+.bb-rl-media-stream .bb-rl-document .media-folder_items .media-folder_modified {
   font-size: var(--bb-rl-font-size-sm);
   font-weight: 400;
   line-height: var(--bb-rl-base-line-small);
@@ -9353,7 +9353,7 @@ input.bb-rl-zoom-slider::-moz-range-progress {
   margin-bottom: var(--bb-rl-space-50);
 }
 
-.bb-rl-media-stream.bb-rl-document .media-folder_items .media-folder_group {
+.bb-rl-media-stream .bb-rl-document .media-folder_items .media-folder_group {
   font-size: var(--bb-rl-font-size-sm);
   font-weight: 400;
   line-height: var(--bb-rl-base-line-small);
@@ -9362,7 +9362,7 @@ input.bb-rl-zoom-slider::-moz-range-progress {
   padding: 2px 0;
 }
 
-.bb-rl-media-stream.bb-rl-document .media-folder_items .media-folder_visibility {
+.bb-rl-media-stream .bb-rl-document .media-folder_items .media-folder_visibility {
   font-size: var(--bb-rl-font-size-sm);
   font-weight: 400;
   line-height: var(--bb-rl-base-line-small);

@@ -29,20 +29,24 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 		// Home/Media.
 		case 'my-document':
 			?>
-			<div id="media-stream" class="media bb-rl-document bb-rl-media-stream" data-bp-list="document" data-ajax="<?php echo esc_attr( $is_send_ajax_request ? 'true' : 'false' ); ?>">
+			<div class="bb-rl-media-stream">
 				<?php
-				bp_nouveau_member_hook( 'before', 'document_content' );
-
-				if ( $is_send_ajax_request ) {
-					echo '<div id="bp-ajax-loader">';
-					bp_nouveau_user_feedback( 'member-document-loading' );
-					echo '</div>';
-				} else {
-					bp_get_template_part( 'document/document-loop' );
-				}
+				bp_get_template_part( 'document/document-header' );
 				?>
-			</div><!-- .media -->
+				<div id="media-stream" class="media bb-rl-document" data-bp-list="document" data-ajax="<?php echo esc_attr( $is_send_ajax_request ? 'true' : 'false' ); ?>">
+					<?php
+					bp_nouveau_member_hook( 'before', 'document_content' );
 
+					if ( $is_send_ajax_request ) {
+						echo '<div id="bp-ajax-loader">';
+						bp_nouveau_user_feedback( 'member-document-loading' );
+						echo '</div>';
+					} else {
+						bp_get_template_part( 'document/document-loop' );
+					}
+					?>
+				</div><!-- .media -->
+			</div>
 			<?php
 			bp_nouveau_member_hook( 'after', 'document_content' );
 

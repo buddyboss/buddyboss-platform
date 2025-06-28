@@ -48,7 +48,7 @@ if ( bp_has_document( bp_ajax_querystring( 'document' ) ) ) :
 			$active_group_class = 'asce';
 		}
 
-		bp_get_template_part( 'document/document-header' );
+		//bp_get_template_part( 'document/document-header' );
 		?>
 
 		<div id="media-folder-document-data-table" class="document-list item-list bp-list bb-document-list grid">
