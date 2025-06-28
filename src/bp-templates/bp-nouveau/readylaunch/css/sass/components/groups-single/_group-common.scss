@@ -200,6 +200,7 @@
 				&.request-membership:before {
 					font-family: bb-icons-rl;
 					margin-right: 5px;
+					font-weight: 400;
 				}
 
 				&.join-group:before {
@@ -212,7 +213,7 @@
 				}
 
 				&.request-membership:before {
-					content: "\e308";
+					content: "\e2fe";
 				}
 			}
 		}

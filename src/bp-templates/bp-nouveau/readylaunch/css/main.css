@@ -11421,11 +11421,6 @@ input.bb-rl-zoom-slider::-moz-range-progress {
   content: "\e2fe";
 }
 
-.bb-rl-groups .item-entry .group-footer-wrap button.group-button:not(.bp-toggle-action-button).request-membership::before,
-.bb-rl-groups .item-entry .group-footer-wrap .generic-button a.group-button:not(.bp-toggle-action-button).request-membership::before {
-  content: "\e2fe";
-}
-
 .bb-rl-groups .item-entry .group-footer-wrap button.group-button:not(.bp-toggle-action-button).membership-requested::before,
 .bb-rl-groups .item-entry .group-footer-wrap .generic-button a.group-button:not(.bp-toggle-action-button).membership-requested::before {
   content: "\e182";

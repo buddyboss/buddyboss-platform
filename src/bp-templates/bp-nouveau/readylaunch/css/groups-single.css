@@ -389,6 +389,7 @@
 .bb-rl-groups-single-wrapper .bb-rl-secondary-header .group-actions-absolute button.group-button.join-group:before, .bb-rl-groups-single-wrapper .bb-rl-secondary-header .group-actions-absolute button.group-button.leave-group:before, .bb-rl-groups-single-wrapper .bb-rl-secondary-header .group-actions-absolute button.group-button.leave_group:before, .bb-rl-groups-single-wrapper .bb-rl-secondary-header .group-actions-absolute button.group-button.request-membership:before {
   font-family: bb-icons-rl;
   margin-right: 5px;
+  font-weight: 400;
 }
 
 .bb-rl-groups-single-wrapper .bb-rl-secondary-header .group-actions-absolute button.group-button.join-group:before {
@@ -400,7 +401,7 @@
 }
 
 .bb-rl-groups-single-wrapper .bb-rl-secondary-header .group-actions-absolute button.group-button.request-membership:before {
-  content: "\e308";
+  content: "\e2fe";
 }
 
 .bb-rl-group-details {
