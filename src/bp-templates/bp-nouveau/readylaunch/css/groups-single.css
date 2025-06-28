@@ -872,6 +872,22 @@
   display: none;
 }
 
+.bb-rl-manage-group-container form fieldset legend {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 22px;
+  color: var(--bb-rl-text-secondary-color);
+  margin-bottom: var(--bb-rl-space-100);
+}
+
+.bb-rl-manage-group-container form .bb-rl-group-settings fieldset > p {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 22px;
+  color: var(--bb-rl-text-secondary-color);
+  margin-bottom: var(--bb-rl-space-100);
+}
+
 .bb-rl-manage-group-container form .bp-screen-title {
   font-size: var(--bb-rl-font-size-base);
   font-weight: 500;
@@ -2724,18 +2740,38 @@ body.bb-readylaunch-template.groups.group-invites span.select2-dropdown.select2-
   margin-bottom: var(--bb-rl-space-100);
 }
 
-.bb-rl-create-group .bb-rl-create-screen-content > p {
+.bb-rl-create-group .bb-rl-create-screen-content > p,
+.bb-rl-create-group .bb-rl-create-screen-content .bb-group-meprlms-settings-container p {
   font-size: 14px;
   font-weight: 400;
   line-height: 22px;
   color: var(--bb-rl-text-secondary-color);
 }
 
-.bb-rl-create-group .bb-rl-create-screen-content > p label {
+.bb-rl-create-group .bb-rl-create-screen-content > p label,
+.bb-rl-create-group .bb-rl-create-screen-content .bb-group-meprlms-settings-container p label {
   font-size: 14px;
   font-weight: 500;
   line-height: 22px;
   color: var(--bb-rl-text-color);
+}
+
+.bb-rl-create-group .bb-rl-create-screen-content .bb-group-meprlms-settings-container p label:after {
+  line-height: 16px;
+}
+
+.bb-rl-create-group .bb-rl-create-screen-content .bb-group-meprlms-settings-container .select2-container--default .select2-selection--multiple {
+  border-color: var(--bb-rl-border-secondary-color);
+  border-radius: var(--bb-rl-radius-md) !important;
+}
+
+.bb-rl-create-group .bb-rl-create-screen-content .bb-group-meprlms-settings-container .select2-dropdown {
+  border-color: var(--bb-rl-border-secondary-color);
+}
+
+.bb-rl-create-group .bb-rl-create-screen-content .bb-group-meprlms-settings-container .select2-container--default .select2-results__option--highlighted[aria-selected] {
+  background-color: var(--bb-rl-background-secondary-color);
+  color: var(--bb-rl-text-secondary-color);
 }
 
 .bb-rl-create-group .bb-rl-create-screen-content .group-setting-label {
@@ -2864,6 +2900,10 @@ body.bb-readylaunch-template.groups.group-invites span.select2-dropdown.select2-
 .bb-rl-create-group .bb-rl-create-screen-content ul:not(.select2-results__options),
 .bb-rl-create-group .bb-rl-create-screen-content p {
   margin-bottom: var(--bb-rl-space-200);
+}
+
+.bb-rl-create-group .bb-rl-create-screen-content .bp-feedback p {
+  margin-bottom: 0;
 }
 
 .bb-rl-create-group .bb-rl-create-screen-content div.submit {

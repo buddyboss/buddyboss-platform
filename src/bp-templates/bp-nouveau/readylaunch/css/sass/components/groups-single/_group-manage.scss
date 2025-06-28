@@ -54,6 +54,23 @@
 			display: none;
 		}
 
+		fieldset legend {
+
+			@include bb-rl-label-heading-md;
+			color: var(--bb-rl-text-secondary-color);
+			margin-bottom: var(--bb-rl-space-100);
+		}
+
+		.bb-rl-group-settings {
+
+			fieldset > p {
+
+				@include bb-rl-label-heading-md-thin;
+				color: var(--bb-rl-text-secondary-color);
+				margin-bottom: var(--bb-rl-space-100);
+			}
+		}
+
 		.bp-screen-title {
 
 			@include bb-rl-base-heading;
