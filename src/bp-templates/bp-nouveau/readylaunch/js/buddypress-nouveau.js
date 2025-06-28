@@ -2004,7 +2004,7 @@ window.bp = window.bp || {};
 			event.preventDefault();
 
 			if ( target.hasClass( 'bp-toggle-action-button' ) ) {
-				target.text( target.data( 'title' ) );
+				target.html( target.data( 'title' ) );
 				target.removeClass( 'bp-toggle-action-button' );
 				target.addClass( 'bp-toggle-action-button-clicked' );
 				return false;
@@ -2337,7 +2337,7 @@ window.bp = window.bp || {};
 				if ( $( document.body ).hasClass( 'buddyboss-theme' ) && 'undefined' !== typeof target.data( 'balloon' ) ) {
 					target.attr( 'data-balloon', target.data( 'title-displayed' ) );
 				} else {
-					target.text( target.data( 'title-displayed' ) ); // change text to displayed context.
+					target.html( target.data( 'title-displayed' ) ); // change text to displayed context.
 				}
 
 				target.removeClass( 'bp-toggle-action-button-clicked' ).addClass( 'bp-toggle-action-button' ); // add class to detect event to confirm.
@@ -2418,7 +2418,7 @@ window.bp = window.bp || {};
 						if ( $( document.body ).hasClass( 'buddyboss-theme' ) && 'undefined' !== typeof $button.data( 'balloon' ) ) {
 							$button.attr( 'data-balloon', $button.data( 'title-displayed' ) );
 						} else {
-							$button.text( $button.data( 'title-displayed' ) ); // change text to displayed context.
+							$button.html( $button.data( 'title-displayed' ) ); // change text to displayed context.
 						}
 
 						$button.removeClass( 'bp-toggle-action-button-clicked' ).addClass( 'bp-toggle-action-button' );
