@@ -322,6 +322,10 @@
   flex: 1;
 }
 
+.bb-rl-members-directory-container [data-balloon]:after {
+  z-index: 1031;
+}
+
 .bb-rl-primary-actions button.send-message i, .bb-rl-primary-actions button.bb-rl-send-message-disabled i, .bb-rl-primary-actions button.follow-button i, .bb-rl-primary-actions button.friendship-button i,
 .bb-rl-primary-actions .generic-button a.send-message i,
 .bb-rl-primary-actions .generic-button a.bb-rl-send-message-disabled i,

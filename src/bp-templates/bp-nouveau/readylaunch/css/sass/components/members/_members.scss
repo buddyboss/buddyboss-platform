@@ -167,6 +167,10 @@
 	.bb-rl-members-directory-content {
 		flex: 1;
 	}
+
+	[data-balloon]:after {
+		z-index: 1031;
+	}
 }
 
 .bb-rl-primary-actions,
