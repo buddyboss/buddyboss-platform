@@ -91,19 +91,19 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 			?>
 
 			<div class="screen-content bb-rl-video-directory-content">
-
-				<div id="video-stream" class="video dir-list bb-rl-video bb-rl-media-stream" data-bp-list="video" data-ajax="<?php echo esc_attr( $is_send_ajax_request ? 'true' : 'false' ); ?>">
-					<?php
-					if ( $is_send_ajax_request ) {
-						echo '<div id="bp-ajax-loader">';
-						bp_nouveau_user_feedback( 'directory-video-loading' );
-						echo '</div>';
-					} else {
-						bp_get_template_part( 'video/video-loop' );
-					}
-					?>
-				</div><!-- .video -->
-
+				<div class="bb-rl-media-stream">
+					<div id="video-stream" class="video dir-list bb-rl-video" data-bp-list="video" data-ajax="<?php echo esc_attr( $is_send_ajax_request ? 'true' : 'false' ); ?>">
+						<?php
+						if ( $is_send_ajax_request ) {
+							echo '<div id="bp-ajax-loader">';
+							bp_nouveau_user_feedback( 'directory-video-loading' );
+							echo '</div>';
+						} else {
+							bp_get_template_part( 'video/video-loop' );
+						}
+						?>
+					</div><!-- .video -->
+				</div>
 
 				<?php
 					/**

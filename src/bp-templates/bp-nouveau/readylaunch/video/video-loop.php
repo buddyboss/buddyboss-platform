@@ -23,9 +23,7 @@ endif;
 
 if ( bp_has_video( bp_ajax_querystring( 'video' ) ) ) :
 
-	if ( empty( $_POST['page'] ) || 1 === (int) $_POST['page'] ) : // phpcs:ignore
-		bp_get_template_part( 'video/video-header' );
-		?>
+	if ( empty( $_POST['page'] ) || 1 === (int) $_POST['page'] ) : // phpcs:ignore ?>
 		<ul class="video-list item-list bp-list bb-video-list grid">
 		<?php
 	endif;

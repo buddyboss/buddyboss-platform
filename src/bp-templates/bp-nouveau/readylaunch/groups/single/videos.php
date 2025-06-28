@@ -30,17 +30,22 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 			$current_group_id = bp_get_current_group_id();
 			$loggedin_user_id = bp_loggedin_user_id();
 			?>
-			<div id="video-stream" class="video bb-rl-media-stream" data-bp-list="video" data-ajax="<?php echo esc_attr( $is_send_ajax_request ? 'true' : 'false' ); ?>">
+			<div class="bb-rl-media-stream">
 				<?php
-				if ( $is_send_ajax_request ) {
-					echo '<div id="bp-ajax-loader">';
-					bp_nouveau_user_feedback( 'group-video-loading' );
-					echo '</div>';
-				} else {
-					bp_get_template_part( 'video/video-loop' );
-				}
+				bp_get_template_part( 'video/video-header' );
 				?>
-			</div><!-- .media -->
+				<div id="video-stream" class="video" data-bp-list="video" data-ajax="<?php echo esc_attr( $is_send_ajax_request ? 'true' : 'false' ); ?>">
+					<?php
+					if ( $is_send_ajax_request ) {
+						echo '<div id="bp-ajax-loader">';
+						bp_nouveau_user_feedback( 'group-video-loading' );
+						echo '</div>';
+					} else {
+						bp_get_template_part( 'video/video-loop' );
+					}
+					?>
+				</div><!-- .media -->
+			</div>
 			<?php
 			bp_nouveau_group_hook( 'after', 'video_content' );
 

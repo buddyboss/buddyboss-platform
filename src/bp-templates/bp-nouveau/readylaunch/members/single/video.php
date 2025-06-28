@@ -27,17 +27,22 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 		// Home/Video.
 		case 'my-video':
 			?>
-			<div id="video-stream" class="video bb-rl-media-stream" data-bp-list="video" data-ajax="<?php echo esc_attr( $is_send_ajax_request ? 'true' : 'false' ); ?>">
+			<div class="bb-rl-media-stream">
 				<?php
-				if ( $is_send_ajax_request ) {
-					echo '<div id="bp-ajax-loader">';
-					bp_nouveau_user_feedback( 'member-video-loading' );
-					echo '</div>';
-				} else {
-					bp_get_template_part( 'video/video-loop' );
-				}
+				bp_get_template_part( 'video/video-header' );
 				?>
-			</div><!-- .video -->
+				<div id="video-stream" class="video" data-bp-list="video" data-ajax="<?php echo esc_attr( $is_send_ajax_request ? 'true' : 'false' ); ?>">
+					<?php
+					if ( $is_send_ajax_request ) {
+						echo '<div id="bp-ajax-loader">';
+						bp_nouveau_user_feedback( 'member-video-loading' );
+						echo '</div>';
+					} else {
+						bp_get_template_part( 'video/video-loop' );
+					}
+					?>
+				</div><!-- .video -->
+			</div>
 			<?php
 			bp_nouveau_member_hook( 'after', 'video_content' );
 
