@@ -374,8 +374,11 @@
 }
 
 .bb-rl-groups-single-wrapper .bb-rl-secondary-header .group-actions-absolute button.group-button.not-subscribed, .bb-rl-groups-single-wrapper .bb-rl-secondary-header .group-actions-absolute button.group-button.subscribed {
+  min-height: 34px;
+}
+
+.bb-rl-groups-single-wrapper .bb-rl-secondary-header .group-actions-absolute button.group-button.not-subscribed i, .bb-rl-groups-single-wrapper .bb-rl-secondary-header .group-actions-absolute button.group-button.subscribed i {
   font-size: var(--bb-rl-font-size-base);
-  padding: var(--bb-rl-space-100);
 }
 
 .bb-rl-groups-single-wrapper .bb-rl-secondary-header .group-actions-absolute button.group-button.not-subscribed.bp-toggle-action-button-hover i:before {

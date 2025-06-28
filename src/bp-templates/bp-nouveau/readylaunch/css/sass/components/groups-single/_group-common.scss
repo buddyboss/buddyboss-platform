@@ -182,8 +182,11 @@
 
 				&.not-subscribed,
 				&.subscribed {
-					font-size: var(--bb-rl-font-size-base);
-					padding: var(--bb-rl-space-100);
+					min-height: 34px;
+
+					i {
+						font-size: var(--bb-rl-font-size-base);	
+					}
 				}
 
 				&.not-subscribed.bp-toggle-action-button-hover i:before {
