@@ -18,14 +18,19 @@ if ( ( ( bp_is_my_profile() && bb_user_can_create_video() ) || ( bp_is_group() &
 		<h2 class="bb-title">
 			<div class="bb-item-count">
 				<?php
-				$count = bp_video_get_total_group_video_count();
+				$count = 0;
+				if ( bp_is_group() ) {
+					$count = bp_video_get_total_group_video_count();
+				} elseif ( bp_is_my_profile() ) {
+					$count = bp_get_total_video_count();
+				}
 				printf(
 					wp_kses(
 					/* translators: %d is the video count */
 						_n(
 							'<span class="bb-count">%d</span> Video',
 							'<span class="bb-count">%d</span> Videos',
-							$count,
+							bp_core_number_format( $count ),
 							'buddyboss'
 						),
 						array( 'span' => array( 'class' => true ) )

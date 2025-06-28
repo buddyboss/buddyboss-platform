@@ -18,7 +18,7 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 <div class="bb-rl-video-directory-wrapper">
 	<div class="bb-rl-secondary-header flex items-center">
 		<div class="bb-rl-entry-heading">
-			<h2><?php esc_html_e( 'Videos', 'buddyboss' ); ?> <span class="bb-rl-heading-count"><?php echo ! $is_send_ajax_request ? esc_html( bp_core_get_all_member_count() ) : ''; ?></span></h2>
+			<h2><?php esc_html_e( 'Videos', 'buddyboss' ); ?> <span class="bb-rl-heading-count"><?php echo ! $is_send_ajax_request ? esc_html( bp_core_number_format( bp_get_total_video_count() ) ) : ''; ?></span></h2>
 		</div>
 		<div class="bb-rl-sub-ctrls flex items-center">
 			<?php

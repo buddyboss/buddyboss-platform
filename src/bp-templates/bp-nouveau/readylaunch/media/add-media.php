@@ -19,19 +19,24 @@ if ( ( ( bp_is_my_profile() && bb_user_can_create_media() ) || ( bp_is_group() &
 		<h2 class="bb-title">
 			<div class="bb-item-count">
 				<?php
-				$count = bp_media_get_total_group_media_count();
+				$count = 0;
+				if ( bp_is_group() ) {
+					$count = bp_media_get_total_group_media_count();
+				} elseif ( bp_is_my_profile() ) {
+					$count = bp_get_total_media_count();
+				}
 				printf(
 					wp_kses(
 					/* translators: %d is the photo count */
 						_n(
-							'<span class="bb-count">%d</span> Photo',
-							'<span class="bb-count">%d</span> Photos',
-							$count,
+							'<span class="bb-count">%s</span> Photo',
+							'<span class="bb-count">%s</span> Photos',
+							bp_core_number_format( $count ),
 							'buddyboss'
 						),
 						array( 'span' => array( 'class' => true ) )
 					),
-					(int) $count
+					esc_html( bp_core_number_format( $count ) )
 				);
 
 				unset( $count );
