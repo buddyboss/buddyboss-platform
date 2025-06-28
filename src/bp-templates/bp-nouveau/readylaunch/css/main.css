@@ -9527,13 +9527,20 @@ input.bb-rl-zoom-slider::-moz-range-progress {
   color: var(--bb-rl-icon-secondary-color);
 }
 
-.bb-rl-media-none .bp-feedback {
+.bb-rl-media-none .bp-feedback,
+.bb-rl-media-none .bp-feedback.info {
   font-size: 18px;
   font-weight: 600;
   line-height: 28px;
   background-color: transparent;
+  border: 0;
   text-align: center;
   justify-content: center;
+}
+
+.bb-rl-media-none .bp-feedback .bp-icon,
+.bb-rl-media-none .bp-feedback.info .bp-icon {
+  display: none;
 }
 
 .bb-rl-media-none .bb-media-actions-wrap {

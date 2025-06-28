@@ -490,12 +490,18 @@
 		}
 	}
 
-	.bp-feedback {
+	.bp-feedback,
+	.bp-feedback.info {
 
 		@include bb-rl-base-heading-xl;
 		background-color: transparent;
+		border: 0;
 		text-align: center;
 		justify-content: center;
+
+		.bp-icon {
+			display: none;
+		}
 	}
 
 	.bb-media-actions-wrap {
