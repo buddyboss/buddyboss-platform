@@ -207,7 +207,7 @@
 		}
 
 		&.follow-button.not_following i::before {
-			content: "\e324";
+			content: "\e3d4";
 		}
 
 		&.follow-button.following i::before {
@@ -357,10 +357,6 @@
 
 	.friendship-button.awaiting_response_friend i::before {
 		content: "\edec";
-	}
-
-	.follow-button.not_following i::before {
-		content: "\e324";
 	}
 
 	.follow-button.not_following i::before {

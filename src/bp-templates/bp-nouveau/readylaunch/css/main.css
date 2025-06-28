@@ -10823,7 +10823,7 @@ input.bb-rl-zoom-slider::-moz-range-progress {
 .bb-rl-primary-actions .generic-button a.follow-button.not_following i::before,
 .bb-rl-member-header-actions button.follow-button.not_following i::before,
 .bb-rl-member-header-actions .generic-button a.follow-button.not_following i::before {
-  content: "\e324";
+  content: "\e3d4";
 }
 
 .bb-rl-primary-actions button.follow-button.following i::before,
@@ -11039,11 +11039,6 @@ input.bb-rl-zoom-slider::-moz-range-progress {
 .bb-rl-secondary-actions .friendship-button.awaiting_response_friend i::before,
 .bb-rl-card-action .friendship-button.awaiting_response_friend i::before {
   content: "\edec";
-}
-
-.bb-rl-secondary-actions .follow-button.not_following i::before,
-.bb-rl-card-action .follow-button.not_following i::before {
-  content: "\e324";
 }
 
 .bb-rl-secondary-actions .follow-button.not_following i::before,
