@@ -427,7 +427,7 @@
 		.bb-media-meta {
 			display: flex;
 			align-items: center;
-			gap: var(--bb-rl-space-200);
+			gap: var(--bb-rl-space-100);
 			margin-left: auto;
 
 			a[disabled] {
@@ -466,6 +466,11 @@
 	padding-bottom: var(--bb-rl-space-200);
 	border-bottom: 1px solid var(--bb-rl-border-secondary-color);
 
+	&.bb-video-actions-wrap {
+		display: flex;
+		align-items: center;
+	}
+
 	.bb-media-actions-wrap {
 		margin-bottom: 0;
 	}
@@ -474,6 +479,12 @@
 		margin: 0;
 		padding: 0;
 		gap: var(--bb-rl-space-100);
+
+		.bb-select i,
+		.bb-delete i {
+			color: var(--bb-rl-icon-secondary-color);
+			font-size: 20px;
+		}
 	}
 }
 

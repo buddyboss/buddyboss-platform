@@ -300,6 +300,14 @@ window.bp = window.bp || {};
 
 			this.setVideoSelectionState( isSelecting );
 
+			if ( $( '#bb-delete-video' ).length ) {
+				if ( isSelecting ) {
+					$( '#bb-delete-video' ).removeAttr( 'disabled' );
+				} else {
+					$( '#bb-delete-video' ).attr( 'disabled', 'disabled' );
+				}
+			}
+
 			$target.toggleClass( 'selected', isSelecting ).data( 'bp-tooltip', isSelecting ? bbRlMedia.i18n_strings.unselectall : bbRlMedia.i18n_strings.selectall );
 		},
 
@@ -320,6 +328,9 @@ window.bp = window.bp || {};
 			if ( $( target ).is( ':checked' ) ) {
 				$( target ).closest( '.bb-video-check-wrap' ).find( '.bp-tooltip' ).attr( 'data-bp-tooltip', bbRlMedia.i18n_strings.unselect );
 				$( target ).closest( '.bb-item-thumb' ).addClass( 'selected' );
+				if ( $( '#bb-delete-video' ).length ) {
+					$( '#bb-delete-video' ).removeAttr( 'disabled' );
+				}
 			} else {
 				$( target ).closest( '.bb-item-thumb' ).removeClass( 'selected' );
 				$( target ).closest( '.bb-video-check-wrap' ).find( '.bp-tooltip' ).attr( 'data-bp-tooltip', bbRlMedia.i18n_strings.select );
@@ -327,6 +338,9 @@ window.bp = window.bp || {};
 				var selectAllVideo = $( '.bp-nouveau #bb-select-deselect-all-video' );
 				if ( selectAllVideo.hasClass( 'selected' ) ) {
 					selectAllVideo.removeClass( 'selected' );
+				}
+				if ( $( '#bb-delete-video' ).length ) {
+					$( '#bb-delete-video' ).attr( 'disabled', 'disabled' );
 				}
 			}
 		},

@@ -159,7 +159,7 @@ if ( false !== strpos( $attachment_full, 'video-placeholder.jpg' ) || false !== 
 			?>
 			<div class="bb-video-check-wrap bb-action-check-wrap">
 				<input id="bb-video-<?php echo esc_attr( $video_id ); ?>" class="bb-custom-check" type="checkbox" value="<?php echo esc_attr( $video_id ); ?>" name="bb-video-select" />
-				<label class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Select', 'buddyboss' ); ?>" for="bb-video-<?php echo esc_attr( $video_id ); ?>"><span class="bb-icon-rl bb-icon-check"></span></label>
+				<label class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Select', 'buddyboss' ); ?>" for="bb-video-<?php echo esc_attr( $video_id ); ?>"><span class="bb-icons-rl-check-circle"></span></label>
 			</div>
 		<?php endif; ?>
 	</div>
