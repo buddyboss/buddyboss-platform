@@ -127,7 +127,19 @@ if ( bp_is_group_create() ) {
 
 							<div class="members-manage-buttons text-links-list bb-rl-members-manage-dropdown">
 								<select class="member-action-dropdown">
-									<option value=""><?php esc_html_e( 'Select Action', 'buddyboss' ); ?></option>
+									<option value="">
+										<?php
+										if ( groups_is_user_mod( $bp_mod_user_id, $bp_current_group_id ) ) {
+											echo esc_html( get_group_role_label( $bp_current_group_id, 'moderator_singular_label_name' ) );
+										} elseif ( groups_is_user_admin( $bp_mod_user_id, $bp_current_group_id ) ) {
+											echo esc_html( get_group_role_label( $bp_current_group_id, 'organizer_singular_label_name' ) );
+										} elseif ( groups_is_user_member( $bp_mod_user_id, $bp_current_group_id ) ) {
+											echo esc_html( get_group_role_label( $bp_current_group_id, 'member_singular_label_name' ) );
+										} else {
+											esc_html_e( 'Select Action', 'buddyboss' );
+										}
+										?>
+									</option>
 									<option value="<?php bp_group_member_promote_admin_link( array( 'user_id' => $bp_mod_user_id ) ); ?>">
 										<?php printf( esc_html__( 'Promote to co-%s', 'buddyboss' ), strtolower( get_group_role_label( $bp_current_group_id, 'organizer_singular_label_name' ) ) ); ?>
 									</option>
@@ -188,6 +200,8 @@ if ( bp_is_group_create() ) {
 					<?php
 					while ( bp_group_members() ) :
 						bp_group_the_member();
+
+						$bp_member_user_id = bp_get_member_user_id();
 						?>
 
 						<li class="<?php bp_group_member_css_class(); ?> members-entry clearfix">
@@ -209,7 +223,19 @@ if ( bp_is_group_create() ) {
 
 							<div class="members-manage-buttons text-links-list bb-rl-members-manage-dropdown">
 								<select class="member-action-dropdown">
-									<option value=""><?php esc_html_e( 'Select Action', 'buddyboss' ); ?></option>
+									<option value="">
+										<?php
+										if ( groups_is_user_mod( $bp_member_user_id, $bp_current_group_id ) ) {
+											echo esc_html( get_group_role_label( $bp_current_group_id, 'moderator_singular_label_name' ) );
+										} elseif ( groups_is_user_admin( $bp_member_user_id, $bp_current_group_id ) ) {
+											echo esc_html( get_group_role_label( $bp_current_group_id, 'organizer_singular_label_name' ) );
+										} elseif ( groups_is_user_member( $bp_member_user_id, $bp_current_group_id ) ) {
+											echo esc_html( get_group_role_label( $bp_current_group_id, 'member_singular_label_name' ) );
+										} else {
+											esc_html_e( 'Select Action', 'buddyboss' );
+										}
+										?>
+									</option>
 									<?php
 									// Get the action buttons HTML.
 									ob_start();
