@@ -34,17 +34,22 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 		// Home/Media.
 		case 'my-media':
 			?>
-			<div id="media-stream" class="media bb-rl-media-stream" data-bp-list="media" data-ajax="<?php echo esc_attr( $is_send_ajax_request ? 'true' : 'false' ); ?>">
+			<div class="bb-rl-media-stream">
 				<?php
-				if ( $is_send_ajax_request ) {
-					echo '<div id="bp-ajax-loader">';
-					bp_nouveau_user_feedback( 'member-media-loading' );
-					echo '</div>';
-				} else {
-					bp_get_template_part( 'media/media-loop' );
-				}
+				bp_get_template_part( 'media/media-header' );
 				?>
-			</div><!-- .media -->
+				<div id="media-stream" class="media" data-bp-list="media" data-ajax="<?php echo esc_attr( $is_send_ajax_request ? 'true' : 'false' ); ?>">
+					<?php
+					if ( $is_send_ajax_request ) {
+						echo '<div id="bp-ajax-loader">';
+						bp_nouveau_user_feedback( 'member-media-loading' );
+						echo '</div>';
+					} else {
+						bp_get_template_part( 'media/media-loop' );
+					}
+					?>
+				</div><!-- .media -->
+			</div>
 			<?php
 			bp_nouveau_member_hook( 'after', 'media_content' );
 			break;
