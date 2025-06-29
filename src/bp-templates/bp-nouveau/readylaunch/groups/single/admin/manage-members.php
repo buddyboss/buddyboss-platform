@@ -28,8 +28,6 @@ if ( bp_is_group_create() ) {
 	<?php esc_html_e( 'Manage Group Members', 'buddyboss' ); ?>
 </h2>
 
-<p class="bp-help-text bb-rl-manage-description-text"><?php printf( esc_html__( 'Manage group members; promote to %1$s, co-%2$s, or demote or ban.', 'buddyboss' ), strtolower( get_group_role_label( $bp_current_group_id, 'moderator_plural_label_name' ) ), strtolower( get_group_role_label( $bp_current_group_id, 'organizer_plural_label_name' ) ) ); ?></p>
-
 <dl class="groups-manage-members-list bb-rl-groups-manage-members-list">
 
 	<?php
