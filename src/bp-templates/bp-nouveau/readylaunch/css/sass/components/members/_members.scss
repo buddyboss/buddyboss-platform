@@ -295,27 +295,39 @@
 	.button-wrap {
 		display: flex;
 		align-items: center;
-		gap: 12px;
+		gap: var(--bb-rl-space-100);
 		width: 100%;
 	}
 
 	.send-message,
 	.bb-rl-send-message-disabled,
-	.friendship-button,
-	.follow-button {
+	a.friendship-button,
+	button.friendship-button,
+	a.follow-button,
+	button.follow-button {
 		font-size: 0;
 		line-height: 1;
-		display: inline-block;
+		display: inline-flex;
+		width: 32px;
+		height: 32px;
+		align-items: center;
+		justify-content: center;
 		background-color: transparent;
-		border: 0;
+		border: 1px solid transparent;
 		padding: 0;
+		border-radius: var(--bb-rl-radius-md);
 
 		i {
 
 			&::before {
-				font-size: 24px;
+				font-size: 20px;
 				color: var(--bb-rl-icon-secondary-color);
 			}
+		}
+
+		&:hover {
+			background-color: var(--bb-rl-background-secondary-hover-color);
+			border-color: var(--bb-rl-border-secondary-color);
 		}
 	}
 }
