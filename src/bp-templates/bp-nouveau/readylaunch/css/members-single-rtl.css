@@ -885,7 +885,7 @@
 }
 
 .bb-rl-profile-edit-wrapper {
-  padding: var(--bb-rl-space-400);
+  padding: var(--bb-rl-space-300) var(--bb-rl-space-400);
 }
 
 .bb-rl-profile-edit-wrapper input[type="text"],
