@@ -1,0 +1,24 @@
+.single-sfwd-lessons {
+
+	.site.bb-readylaunch {
+		background-color: var(--bb-rl-background-color);
+	}
+}
+
+.bb-learndash-content-wrap--lesson {
+	padding-bottom: 60px;
+	background-color: var(--bb-rl-background-color);
+}
+
+.bb-rl-container {
+
+	.learndash_post_sfwd-lessons > .learndash-wrapper,
+	.learndash_post_sfwd-topic > .learndash-wrapper {
+		padding-top: var(--bb-rl-space-400);
+
+		> .ld-alert {
+			margin: var(--bb-rl-space-200) auto;
+			max-width: 800px;
+		}
+	}
+}

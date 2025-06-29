@@ -1,0 +1,36 @@
+.bb-rl-lms-inner-block {
+
+	#mpcs-lesson-navigation {
+
+		#next_lesson_link:not(#mpcs-classroom-previous-lesson-link),
+		#next_lesson_link {
+
+			@include bb-rl-button;
+			@include bb-rl-button--brand-fill;
+			@include bb-rl-button--small;
+		}
+
+		#previous_lesson_link {
+
+			@include bb-rl-button;
+			@include bb-rl-button-secondary-fill;
+			@include bb-rl-button--small;
+		}
+	}
+
+	.mpcs-classroom & {
+
+		div#mpcs-lesson-navigation button#previous_lesson_link {
+			background-color: var(--bb-rl-background-tertiary-color);
+			color: var(--bb-rl-text-color) !important;
+
+			&:hover {
+				background-color: var(--bb-rl-background-tertiary-hover-color);
+			}
+		}
+	}
+
+	.mpcs-main-content + .bb-rl-course-content-comments {
+		margin-top: var(--bb-rl-space-400);
+	}
+}

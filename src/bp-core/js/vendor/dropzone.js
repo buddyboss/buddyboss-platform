@@ -755,7 +755,16 @@ var Dropzone = /*#__PURE__*/function (_Emitter) {
 						file.previewElement = Dropzone.createElement(this.options.previewTemplate.trim());
 						file.previewTemplate = file.previewElement; // Backwards compatibility
 
-						this.previewsContainer.appendChild(file.previewElement);
+						// Safety check: ensure previewElement is a valid DOM node before appending
+						if (file.previewElement && file.previewElement.nodeType) {
+							this.previewsContainer.appendChild(file.previewElement);
+						} else {
+							// If previewElement is invalid, create a basic one
+							file.previewElement = document.createElement("div");
+							file.previewElement.className = "dz-preview dz-file-preview";
+							file.previewElement.innerHTML = '<div class="dz-details"><div class="dz-filename"><span data-dz-name></span></div></div>';
+							this.previewsContainer.appendChild(file.previewElement);
+						}
 
 						var _iterator3 = _createForOfIteratorHelper(file.previewElement.querySelectorAll("[data-dz-name]")),
 							_step3;
@@ -787,7 +796,10 @@ var Dropzone = /*#__PURE__*/function (_Emitter) {
 
 						if (this.options.addRemoveLinks) {
 							file._removeLink = Dropzone.createElement("<a class=\"dz-remove\" href=\"javascript:undefined;\" data-dz-remove>".concat(this.options.dictRemoveFile, "</a>"));
-							file.previewElement.appendChild(file._removeLink);
+							// Safety check: ensure _removeLink is a valid DOM node before appending
+							if (file._removeLink && file._removeLink.nodeType) {
+								file.previewElement.appendChild(file._removeLink);
+							}
 						}
 
 						var removeFileEvent = function removeFileEvent(e) {
@@ -3004,8 +3016,27 @@ var camelize = function camelize(str) {
 
 
 Dropzone.createElement = function (string) {
+	// Handle empty or invalid strings
+	if (!string || typeof string !== 'string' || string.trim() === '') {
+		// Return a default div element if the template is empty
+		var defaultDiv = document.createElement("div");
+		defaultDiv.className = "dz-preview dz-file-preview";
+		defaultDiv.innerHTML = '<div class="dz-details"><div class="dz-filename"><span data-dz-name></span></div></div>';
+		return defaultDiv;
+	}
+	
 	var div = document.createElement("div");
 	div.innerHTML = string;
+	
+	// Check if we have a valid child node
+	if (div.childNodes.length === 0) {
+		// Return a default div element if no child nodes were created
+		var defaultDiv = document.createElement("div");
+		defaultDiv.className = "dz-preview dz-file-preview";
+		defaultDiv.innerHTML = '<div class="dz-details"><div class="dz-filename"><span data-dz-name></span></div></div>';
+		return defaultDiv;
+	}
+	
 	return div.childNodes[0];
 }; // Tests if given element is inside (or simply is) the container
 

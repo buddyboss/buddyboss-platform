@@ -21,7 +21,7 @@ window.bp = window.bp || {};
 		config : {
 			// Selectors.
 			topicListSelector       : '.bb-activity-topics-list',
-			modalSelector           : '#bb-activity-topic-form_modal',
+			modalSelector           : '#bb-rl-activity-topic-form_modal',
 			modalContentSelector    : '.bb-action-popup-content',
 			backdropSelector        : '#bb-hello-backdrop-activity-topic',
 			topicNameSelector       : '#bb_topic_name',

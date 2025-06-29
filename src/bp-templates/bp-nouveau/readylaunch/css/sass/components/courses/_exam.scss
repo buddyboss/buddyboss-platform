@@ -1,0 +1,98 @@
+.bb-rl-challenge-exam {
+
+	.ld-exam-content {
+
+		button,
+		.ld-exam-result-button {
+
+			@include bb-rl-button;
+			@include bb-rl-button--brand-fill;
+			@include bb-rl-button--small;
+		}
+
+		.ld-exam-result-message {
+			background-color: var(--bb-rl-background-color);
+			border: 1px solid var(--bb-rl-border-secondary-color);
+			border-radius: var(--bb-rl-radius-md);
+			padding: var(--bb-rl-space-200);
+			color: var(--bb-rl-text-color);
+		}
+
+		.ld-exam-questions .ld-exam-question-correct {
+
+			.ld-exam-question-correct-message {
+				background-color: var(--bb-rl-background-color);
+				border: 1px solid var(--bb-rl-border-secondary-color);
+				border-radius: var(--bb-rl-radius-md);
+			}
+		}
+
+		.ld-exam-questions .ld-exam-question-answers {
+
+			.ld-exam-question-answer-student-selected.ld-exam-question-answer-correct {
+				background-color: var(--bb-rl-background-positive-secondary-color);
+			}
+
+			.ld-exam-question-answer-student-selected.ld-exam-question-answer-incorrect {
+				background-color: var(--bb-rl-background-danger-secondary-color);
+			}
+		}
+
+		.ld-exam-questions .ld-exam-question-answers {
+
+			.ld-exam-question-answer {
+				border: 1px solid var(--bb-rl-border-secondary-color);
+				border-radius: var(--bb-rl-radius-md);
+
+				input[type="radio"] {
+					display: none;
+				}
+
+				label {
+					margin-left: 0;
+					padding: var(--bb-rl-space-200);
+				}
+			}
+		}
+
+		.ld-exam-questions {
+
+			.ld-exam-question-correct-message,
+			.ld-exam-question-incorrect-message {
+				background-color: var(--bb-rl-background-color);
+				border: 1px solid var(--bb-rl-border-secondary-color);
+				border-radius: var(--bb-rl-radius-md);
+				padding: var(--bb-rl-space-100) var(--bb-rl-space-300);
+				color: var(--bb-rl-text-secondary-color);
+
+				p {
+					margin: var(--bb-rl-space-100) 0;
+				}
+			}
+		}
+	}
+
+	.ld-exam-header {
+
+		.ld-exam-progress-text {
+
+			@include bb-rl-label-heading-md-thin;
+			color: var(--bb-rl-text-secondary-color);
+			margin: 0 0 var(--bb-rl-space-100);
+		}
+
+		.ld-exam-progress-bar {
+			height: var(--bb-rl-space-100);
+			border-radius: var(--bb-rl-radius-full);
+			background: var(--bb-rl-background-brand-secondary-color);
+			padding: 0;
+			box-shadow: none;
+
+			.ld-exam-progress-bar-fill {
+				background: var(--bb-rl-background-brand-primary-color);
+				height: var(--bb-rl-space-100);
+				border-radius: var(--bb-rl-radius-full);
+			}
+		}
+	}
+}

@@ -1,0 +1,88 @@
+.bb-rl-left-panel--memprlms {
+
+	.bb-rl-left-panel-widget {
+		display: none;
+	}
+
+	#mpcs-sidebar-header {
+		margin: 0 calc(var(--bb-rl-space-200) * -1) var(--bb-rl-space-200);
+		padding: 0 var(--bb-rl-space-200) var(--bb-rl-space-400);
+		border-bottom: 1px solid var(--bb-rl-border-secondary-color);
+
+		.figure {
+			display: none;
+		}
+
+		.course-progress {
+			display: flex;
+			flex-direction: column;
+
+			h1 {
+				order: 1;
+			}
+
+			.progress-text {
+				order: 2;
+			}
+
+			.progress-bar {
+				order: 3;
+			}
+		}
+
+		.course-progress h1 {
+			margin: var(--bb-rl-space-200) 0 var(--bb-rl-space-100);
+
+			a {
+
+				@include bb-rl-base-heading-bolder;
+				color: var(--bb-rl-text-color);
+				padding-top: 0;
+				padding-bottom: 0;
+			}
+		}
+	}
+
+	.mpcs-sidebar-content {
+
+		.mpcs-section.mpcs-section-lessons {
+			border: 0;
+		}
+
+		.mpcs-section.mpcs-section-lessons .mpcs-section-header {
+			margin: 0 calc(var(--bb-rl-space-200) * -1);
+			background-color: transparent;
+			border-bottom: 1px solid var(--bb-rl-border-secondary-color);
+			border-top: 1px solid var(--bb-rl-border-secondary-color);
+		}
+
+		.mpcs-section .mpcs-lessons .mpcs-lesson-row-link {
+			margin: 0 calc(var(--bb-rl-space-200) * -1);
+		}
+
+		.mpcs-lesson.current {
+
+			.mpcs-lesson-row-link {
+				background-color: var(--bb-rl-background-secondary-hover-color);
+			}
+		}
+
+		.mpcs-section.mpcs-section-lessons.first_section {
+			margin-top: var(--bb-rl-space-200);
+		}
+	}
+
+	.mpcs-sidebar-back-to-course {
+		margin: var(--bb-rl-space-200) calc(var(--bb-rl-space-200) * -1) 0;
+		padding: 0 var(--bb-rl-space-300) 0;
+
+		a {
+			display: inline-flex;
+			gap: var(--bb-rl-space-50);
+
+			i {
+				font-size: 16px;
+			}
+		}
+	}
+}

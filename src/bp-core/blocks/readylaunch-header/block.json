@@ -1,0 +1,47 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 2,
+  "name": "buddyboss/readylaunch-header",
+  "title": "BB ReadyLaunch Header",
+  "category": "buddyboss",
+  "icon": "align-wide",
+  "description": "Use with page templates to add the BuddyBoss ReadyLaunch menu as a Block theme heading",
+  "keywords": [
+    "BuddyBoss",
+    "Header",
+    "ReadyLaunch",
+    "BB",
+    "Navigation"
+  ],
+  "textdomain": "buddyboss",
+  "attributes": {
+    "showSearch": {
+      "type": "boolean",
+      "default": true
+    },
+    "showMessages": {
+      "type": "boolean",
+      "default": true
+    },
+    "showNotifications": {
+      "type": "boolean",
+      "default": true
+    },
+    "showProfileMenu": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "supports": {
+    "align": [
+      "wide",
+      "full"
+    ],
+    "html": false
+  },
+  "editorScript": "file:index.js",
+  "style": "file:style-index.css",
+  "editorStyle": [
+    "bb-icons-rl-css"
+  ]
+}

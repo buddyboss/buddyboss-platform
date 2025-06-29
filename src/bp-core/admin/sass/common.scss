@@ -640,6 +640,7 @@ table.extension-listing {
 	tbody td {
 		padding: 10px;
 
+		[class*="bb-icons-rl-"],
 		[class*=" bb-icon-"] {
 			font-size: 33px;
 			color: #999;
@@ -819,6 +820,7 @@ table.extension-listing {
 			i {
 				font-size: 22px;
 				color: #888;
+				margin-left: 0;
 				margin-right: 10px;
 				vertical-align: middle;
 			}
@@ -876,6 +878,7 @@ table.extension-listing {
 
 			i {
 				font-size: 28px;
+				margin-left: 0;
 				margin-right: 10px;
 				vertical-align: middle;
 				color: #888;
@@ -4840,7 +4843,8 @@ table.users {
 	}
 }
 
-.bb-upgrade-nav-tag {
+.bb-upgrade-nav-tag,
+.bb-rl-nav-tag {
 	display: inline-block;
 	vertical-align: top;
 	box-sizing: border-box;
@@ -4855,6 +4859,12 @@ table.users {
 	color: #fff;
 	font-size: 11px;
 	text-align: center;
+
+	&.color-green {
+		background-color: #5f9a22;
+		padding-left: 6px;
+		padding-right: 6px;
+	}
 
 	@media screen and (max-width: 760px) {
 		margin-top: 2px;

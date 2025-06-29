@@ -1,0 +1,240 @@
+.bb-rl-profile-edit-subnav,
+.bb-rl-network-search-subnav,
+.bb-rl-admin-subnav {
+	margin: var(--bb-rl-space-100) 0;
+
+	.component-navigation,
+	ul.subnav {
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.bb-rl-profile-subnav-item,
+	.component-navigation > li,
+	.bb-rl-admin-subnav-item {
+
+		a {
+
+			@include bb-rl-label-heading-bolder;
+			display: flex;
+			align-items: center;
+			width: 100%;
+			padding: 10px var(--bb-rl-space-200);
+			color: var(--bb-rl-text-color);
+			background-color: transparent;
+			border-radius: var(--bb-rl-radius-md);
+
+			&:hover {
+				background-color: var(--bb-rl-background-secondary-hover-color);
+			}
+		}
+
+		&.current,
+		&.selected {
+
+			a {
+				background-color: var(--bb-rl-background-secondary-hover-color);
+			}
+		}
+	}
+
+	.component-navigation .count {
+		display: inline-block;
+		margin-left: auto;
+		margin-right: 0;
+		background: var(--bb-rl-background-tertiary-color);
+		color: var(--bb-rl-text-color);
+		padding: 0 var(--bb-rl-space-100);
+		border-radius: var(--bb-rl-radius-md);
+		font-size: 12px;
+		min-width: 28px;
+		text-align: center;
+	}
+}
+
+.bb-rl-group-admin-subnav {
+
+	.bb-rl-admin-subnav-item a {
+
+		&::before {
+			content: "";
+			font-weight: 400;
+			font-family: bb-icons-rl;
+			font-size: 20px;
+			color: var(--bb-rl-icon-primary-color);
+			font-style: normal;
+			margin-right: 10px;
+		}
+	}
+
+	.bb-rl-admin-subnav-item {
+
+		&#bb-rl-edit-details-groups-li {
+
+			a::before {
+				content: "\e34c";
+			}
+		}
+
+		&#bb-rl-group-settings-groups-li {
+
+			a::before {
+				content: "\e5d4";
+			}
+		}
+
+		&#bb-rl-topics-groups-li {
+
+			a:before {
+				content: "\e464";
+			}
+		}
+
+		&#bb-rl-group-avatar-groups-li {
+
+			a::before {
+				content: "\e2ca";
+			}
+		}
+
+		&#bb-rl-group-cover-image-groups-li {
+
+			a::before {
+				content: "\ea24";
+			}
+		}
+
+		&#bb-rl-manage-members-groups-li {
+
+			a::before {
+				content: "\e4d6";
+			}
+		}
+
+		&#bb-rl-forum-groups-li {
+
+			a::before {
+				content: "\e4d6";
+			}
+		}
+
+		&#bb-rl-zoom-groups-li {
+
+			a::before {
+				content: "\e4da";
+			}
+		}
+
+		&#bb-rl-delete-group-groups-li {
+
+			a::before {
+				content: "\e4a6";
+			}
+		}
+
+		&#bb-rl-courses-groups-li {
+
+			a::before {
+				content: "\e62c";
+			}
+		}
+
+		&#bb-rl-membership-requests-groups-li {
+
+			a::before {
+				content: "\e4d0";
+			}
+		}
+
+	}
+}
+
+.bb-rl-profile-edit-subnav {
+
+	.bb-rl-profile-subnav-item {
+
+		a {
+
+			&::before {
+				content: "";
+				font-weight: 400;
+				font-family: bb-icons-rl;
+				font-size: 20px;
+				color: var(--bb-rl-icon-primary-color);
+				font-style: normal;
+				margin-right: var(--bb-rl-space-100);
+			}
+		}
+
+		&#bb-rl-general-personal-li {
+
+			a::before {
+				content: "\e4d2";
+			}
+		}
+
+		&#bb-rl-social-personal-li {
+
+			a::before {
+				content: "\e2ea";
+			}
+		}
+
+		&#bb-rl-notifications-personal-li {
+
+			a::before {
+				content: "\e0d0";
+			}
+		}
+
+		&#bb-rl-profile-personal-li {
+
+			a::before {
+				content: "\e302";
+			}
+		}
+
+		&#bb-rl-blocked-members-personal-li {
+
+			a::before {
+				content: "\e4ce";
+			}
+		}
+
+		&#bb-rl-invites-personal-li {
+
+			a::before {
+				content: "\e4d0";
+			}
+		}
+
+		&#bb-rl-export-personal-li {
+
+			a::before {
+				content: "\eaf0";
+			}
+		}
+
+		&#bb-rl-delete-account-personal-li {
+
+			a::before {
+				content: "\e4a6";
+			}
+		}
+
+		&#bb-rl-xprofile-change-avatar {
+
+			a::before {
+				content: "\e4d2";
+			}
+		}
+
+		&[id*="bb-rl-xprofile-edit-"] {
+
+			a::before {
+				content: "\e4ca";
+			}
+		}
+	}
+}

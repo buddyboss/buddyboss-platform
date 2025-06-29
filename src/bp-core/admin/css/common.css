@@ -930,6 +930,7 @@ table.extension-listing tbody td {
   padding: 10px;
 }
 
+table.extension-listing tbody td [class*="bb-icons-rl-"],
 table.extension-listing tbody td [class*=" bb-icon-"] {
   font-size: 33px;
   color: #999;
@@ -1089,6 +1090,7 @@ table.extension-listing .icon-select-main .icon-select-button li {
 table.extension-listing .icon-select-main .icon-select-button i {
   font-size: 22px;
   color: #888;
+  margin-left: 0;
   margin-right: 10px;
   vertical-align: middle;
 }
@@ -1146,6 +1148,7 @@ table.extension-listing .icon-select-main .custom-extension-list li span {
 
 table.extension-listing .icon-select-main .custom-extension-list i {
   font-size: 28px;
+  margin-left: 0;
   margin-right: 10px;
   vertical-align: middle;
   color: #888;
@@ -4802,7 +4805,8 @@ table.users .unsuspend a.disabled[data-bp-tooltip]:after {
   display: none;
 }
 
-.bb-upgrade-nav-tag {
+.bb-upgrade-nav-tag,
+.bb-rl-nav-tag {
   display: inline-block;
   vertical-align: top;
   box-sizing: border-box;
@@ -4819,8 +4823,16 @@ table.users .unsuspend a.disabled[data-bp-tooltip]:after {
   text-align: center;
 }
 
+.bb-upgrade-nav-tag.color-green,
+.bb-rl-nav-tag.color-green {
+  background-color: #5f9a22;
+  padding-left: 6px;
+  padding-right: 6px;
+}
+
 @media screen and (max-width: 760px) {
-  .bb-upgrade-nav-tag {
+  .bb-upgrade-nav-tag,
+  .bb-rl-nav-tag {
     margin-top: 2px;
   }
 }

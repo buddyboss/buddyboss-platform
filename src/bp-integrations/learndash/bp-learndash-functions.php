@@ -327,8 +327,8 @@ function bp_learndash_get_users_certificates( $user_id = '' ) {
 			foreach ( $quizzes as $quizdata ) {
 				if ( ! in_array( $quizdata['quiz'], wp_list_pluck( $certificates, 'ID' ) ) ) {
 					$quiz_settings         = learndash_get_setting( $quizdata['quiz'] );
-					$certificate_post_id   = intval( $quiz_settings['certificate'] );
-					$certificate_post_data = get_post( $certificate_post_id );
+					$certificate_post_id   = ! empty( $quiz_settings['certificate'] ) ? intval( $quiz_settings['certificate'] ) : 0;
+					$certificate_post_data = ! empty( $certificate_post_id ) ? get_post( $certificate_post_id ) : null;
 					$certificate_data      = learndash_certificate_details( $quizdata['quiz'], $user_id );
 					if ( ! empty( $certificate_data['certificateLink'] ) && $certificate_data['certificate_threshold'] <= $quizdata['percentage'] / 100 ) {
 						$filename              = sanitize_file_name( get_the_title( $quizdata['quiz'] ) ) . "-" . sanitize_file_name( get_the_title( $certificate_post_id ) ) . ".pdf";

@@ -1,0 +1,220 @@
+.bb-rl-lms-course {
+	display: table;
+	max-width: 1096px;
+	margin: 0 auto;
+	width: 100%;
+	padding-left: var(--bb-rl-space-400);
+	padding-right: var(--bb-rl-space-400);
+
+	.bb-rl-entry-header {
+		background-color: var(--bb-rl-background-color);
+		padding: var(--bb-rl-space-500) var(--bb-rl-space-600);
+		border: 1px solid var(--bb-rl-border-secondary-color);
+		border-radius: var(--bb-rl-radius-lg);
+		margin: var(--bb-rl-space-400) 0;
+
+		@media screen and (max-width: $lg) {
+			padding: var(--bb-rl-space-300) var(--bb-rl-space-300);
+		}
+	}
+
+	@media screen and (max-width: 782px) {
+		padding-left: 0;
+		padding-right: 0;
+	}
+}
+
+.bb-rl-course-featured-image {
+	position: relative;
+	display: block;
+	height: 100%;
+	padding-top: 300px;
+	border-radius: var(--bb-rl-radius-lg);
+	overflow: hidden;
+	background-color: var(--bb-rl-background-tertiary-color);
+
+	a {
+		display: block;
+		height: 100%;
+		width: 100%;
+	}
+
+	img {
+		position: absolute;
+		left: 0;
+		right: 0;
+		top: 0;
+		bottom: 0;
+		object-fit: cover;
+		height: 100%;
+		width: 100%;
+	}
+}
+
+.bb-rl-course-banner {
+	gap: var(--bb-rl-space-600);
+
+	.bb-rl-course-meta {
+		display: flex;
+		align-items: center;
+		gap: var(--bb-rl-space-100);
+	}
+
+	.bb-rl-course-price {
+
+		@include bb-rl-base-heading-2xl;
+		margin: var(--bb-rl-space-200) 0 var(--bb-rl-space-100);
+	}
+
+	.bb-rl-course-type-status:not(.bb-course-type-free):not(.bb-course-type-open) {
+
+		@include bb-rl-notice--plain;
+		@include bb-rl-notice--plain-info;
+		margin: var(--bb-rl-space-200) 0 var(--bb-rl-space-100);
+		width: fit-content;
+		padding-right: var(--bb-rl-space-500);
+	}
+
+	.bb-rl-course-type-status.bb-course-type-free {
+
+		@include bb-rl-base-heading-2xl;
+		color: var(--bb-rl-text-color);
+		margin: var(--bb-rl-space-200) 0 var(--bb-rl-space-100);
+	}
+
+	.bb-rl-course-type-status.bb-course-type-open {
+
+		@include bb-rl-label-heading-md-thin;
+		color: var(--bb-rl-text-tertiary-color);
+		margin: var(--bb-rl-space-200) 0 var(--bb-rl-space-100);
+	}
+
+	.bb-rl-course-overview {
+		flex: 1;
+		display: flex;
+		flex-direction: column;
+	}
+
+	.bb-rl-course-figure {
+		flex: 0 0 50%;
+	}
+
+	.bb-rl-entry-title {
+
+		@include bb-rl-base-heading-2xl;
+		color: var(--bb-rl-text-color);
+		margin-bottom: var(--bb-rl-space-100);
+	}
+
+	.bb-rl-course-category {
+		display: flex;
+		align-items: center;
+		flex-wrap: wrap;
+		gap: var(--bb-rl-space-100);
+		margin-bottom: var(--bb-rl-space-100);
+
+		.bb-rl-course-category-item {
+			font-size: 14px;
+			color: var(--bb-rl-text-tertiary-color);
+			display: flex;
+			align-items: center;
+
+			a {
+				color: var(--bb-rl-text-tertiary-color);
+			}
+
+			&:last-child span {
+				display: none;
+			}
+		}
+	}
+
+	.bb-rl-author-name {
+		font-size: var(--bb-rl-font-size-sm);
+		font-weight: 500;
+
+		.bb-rl-author-name-label {
+			color: var(--bb-rl-text-secondary-color);
+		}
+	}
+
+	.bb-rl-course-overview-footer {
+		margin-top: auto;
+		display: flex;
+		align-items: center;
+		flex-flow: wrap;
+		gap: var(--bb-rl-space-200);
+	}
+
+	@media screen and (max-width: $xl) {
+		flex-direction: column;
+		gap: var(--bb-rl-space-300);
+
+		.bb-rl-course-overview-footer {
+			margin-top: var(--bb-rl-space-200);
+		}
+	}
+}
+
+.bb-rl-course-content {
+	display: flex;
+	gap: var(--bb-rl-space-400);
+	margin: 0;
+
+	.bb-rl-course-content-inner {
+		flex: 1;
+	}
+
+	.bb-rl-course-content-sidebar {
+		flex: 0 0 320px;
+	}
+}
+
+.bb-rl-course-content {
+
+	@media screen and (max-width: $xl) {
+		flex-direction: column;
+
+		.bb-rl-course-content-sidebar {
+			max-width: 100%;
+			flex: 0 0 100%;
+			width: 100%;
+		}
+	}
+}
+
+.bb-rl-course-details {
+	display: flex;
+	gap: var(--bb-rl-space-200);
+	justify-content: space-between;
+	margin-top: var(--bb-rl-space-600);
+
+	.bb-rl-course-details-item {
+		display: flex;
+		align-items: center;
+		gap: var(--bb-rl-space-200);
+
+		i {
+			color: var(--bb-rl-icon-color);
+			font-size: 40px;
+		}
+
+		.bb-rl-course-details-label {
+			font-size: var(--bb-rl-font-size-sm);
+			font-weight: 400;
+			color: var(--bb-rl-text-secondary-color);
+		}
+
+		.bb-rl-course-details-value {
+			font-size: 14px;
+			font-weight: 600;
+			color: var(--bb-rl-text-color);
+		}
+	}
+
+	@media screen and (max-width: $xl) {
+		flex-flow: wrap;
+		justify-content: center;
+		gap: var(--bb-rl-space-400);
+	}
+}
