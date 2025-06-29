@@ -263,6 +263,16 @@
 					padding: 6px var(--bb-rl-space-200);
 					line-height: var(--bb-rl-base-line-small);
 				}
+
+				&.switch-button {
+
+					a {
+
+						@include bb-rl-button;
+						@include bb-rl-button--secondary-outline;
+						@include bb-rl-button--small;
+					}
+				}
 			}
 		}
 	}
