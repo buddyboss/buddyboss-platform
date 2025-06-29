@@ -322,6 +322,12 @@
   flex: 1;
 }
 
+.bb-rl-members-directory-container .bb-rl-members-directory-content .friendship-requests-screen {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 22px;
+}
+
 .bb-rl-members-directory-container [data-balloon]:after {
   z-index: 1031;
 }
@@ -528,28 +534,47 @@
 .bb-rl-secondary-actions .button-wrap {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: var(--bb-rl-space-100);
   width: 100%;
 }
 
 .bb-rl-secondary-actions .send-message,
 .bb-rl-secondary-actions .bb-rl-send-message-disabled,
-.bb-rl-secondary-actions .friendship-button,
-.bb-rl-secondary-actions .follow-button {
+.bb-rl-secondary-actions a.friendship-button,
+.bb-rl-secondary-actions button.friendship-button,
+.bb-rl-secondary-actions a.follow-button,
+.bb-rl-secondary-actions button.follow-button {
   font-size: 0;
   line-height: 1;
-  display: inline-block;
+  display: inline-flex;
+  width: 32px;
+  height: 32px;
+  align-items: center;
+  justify-content: center;
   background-color: transparent;
-  border: 0;
+  border: 1px solid transparent;
   padding: 0;
+  border-radius: var(--bb-rl-radius-md);
 }
 
 .bb-rl-secondary-actions .send-message i::before,
 .bb-rl-secondary-actions .bb-rl-send-message-disabled i::before,
-.bb-rl-secondary-actions .friendship-button i::before,
-.bb-rl-secondary-actions .follow-button i::before {
-  font-size: 24px;
+.bb-rl-secondary-actions a.friendship-button i::before,
+.bb-rl-secondary-actions button.friendship-button i::before,
+.bb-rl-secondary-actions a.follow-button i::before,
+.bb-rl-secondary-actions button.follow-button i::before {
+  font-size: 20px;
   color: var(--bb-rl-icon-secondary-color);
+}
+
+.bb-rl-secondary-actions .send-message:hover,
+.bb-rl-secondary-actions .bb-rl-send-message-disabled:hover,
+.bb-rl-secondary-actions a.friendship-button:hover,
+.bb-rl-secondary-actions button.friendship-button:hover,
+.bb-rl-secondary-actions a.follow-button:hover,
+.bb-rl-secondary-actions button.follow-button:hover {
+  background-color: var(--bb-rl-background-secondary-hover-color);
+  border-color: var(--bb-rl-border-secondary-color);
 }
 
 .bb-rl-secondary-actions .send-message i::before,
@@ -615,7 +640,7 @@
 }
 
 .bb-rl-item-actions.bb-rl-idle-primary .bb-rl-secondary-actions .button-wrap {
-  justify-content: center;
+  justify-content: left;
 }
 
 .bb-rl-invite-form .bb-rl-input-field,

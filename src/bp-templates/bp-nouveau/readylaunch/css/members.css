@@ -640,7 +640,7 @@
 }
 
 .bb-rl-item-actions.bb-rl-idle-primary .bb-rl-secondary-actions .button-wrap {
-  justify-content: center;
+  justify-content: left;
 }
 
 .bb-rl-invite-form .bb-rl-input-field,
