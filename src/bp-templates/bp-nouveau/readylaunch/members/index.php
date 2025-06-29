@@ -172,11 +172,11 @@ if ( bp_allow_user_to_send_invites() ) {
 							<form action="" method="post" class="bb-rl-invite-form" id="bb-rl-invite-form" novalidate>
 								<div class="bb-rl-form-field-wrapper">
 									<label for="bb-rl-invite-name"><?php esc_html_e( 'Name', 'buddyboss' ); ?></label>
-									<input type="text" name="bb-rl-invite-name" id="bb-rl-invite-name" value="" class="bb-rl-input-field">
+									<input type="text" name="bb-rl-invite-name" id="bb-rl-invite-name" value="" class="bb-rl-input-field" placeholder="<?php esc_html_e( 'Type name', 'buddyboss' ); ?>">
 								</div>
 								<div class="bb-rl-form-field-wrapper">
 									<label for="bb-rl-invite-email"><?php esc_html_e( 'Email Address', 'buddyboss' ); ?></label>
-									<input type="email" name="bb-rl-invite-email" id="bb-rl-invite-email" value="" class="bb-rl-input-field">
+									<input type="email" name="bb-rl-invite-email" id="bb-rl-invite-email" value="" class="bb-rl-input-field" placeholder="<?php esc_html_e( 'Enter an email address', 'buddyboss' ); ?>">
 								</div>
 								<?php
 								if ( true === $send_invite_member_type_allow ) {
