@@ -330,6 +330,7 @@
 
 		@include bb-rl-notice--plain;
 		@include bb-rl-notice--plain-info;
+		display: flex;
 	}
 
 	#account-group-invites-form {

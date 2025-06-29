@@ -3321,7 +3321,7 @@ button[data-balloon] {
 
 .bb-readylaunch-template .bp-feedback .bp-icon {
   line-height: 1;
-  margin-right: 6px;
+  margin-right: 10px;
 }
 
 .bb-readylaunch-template .bp-feedback .bp-icon::before {
@@ -19063,6 +19063,7 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   line-height: var(--bb-rl-base-line-small);
   background-color: var(--bb-rl-background-brand-secondary-color);
   border-color: var(--bb-rl-border-brand-secondary-color);
+  display: flex;
 }
 
 .bb-rl-account-settings-section #account-group-invites-form .submit {

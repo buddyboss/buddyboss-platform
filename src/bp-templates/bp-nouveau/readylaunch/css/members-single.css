@@ -1557,6 +1557,7 @@
   line-height: var(--bb-rl-base-line-small);
   background-color: var(--bb-rl-background-brand-secondary-color);
   border-color: var(--bb-rl-border-brand-secondary-color);
+  display: flex;
 }
 
 .bb-rl-account-settings-section #account-group-invites-form .submit {
