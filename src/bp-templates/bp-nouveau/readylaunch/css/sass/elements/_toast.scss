@@ -61,6 +61,10 @@
 
 	i {
 		color: var(--bb-rl-text-danger-secondary-color);
+
+		&.bb-icons-rl-warning-circle {
+			color: var(--bb-rl-text-warning-secondary-color);
+		}
 	}
 }
 

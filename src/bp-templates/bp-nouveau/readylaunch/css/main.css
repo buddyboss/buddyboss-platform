@@ -5887,6 +5887,10 @@ body.bb-readylaunch-template .select2-container--rl.select2-container--open:has(
   color: var(--bb-rl-text-danger-secondary-color);
 }
 
+.bb-rl-toast-message--error i.bb-icons-rl-warning-circle {
+  color: var(--bb-rl-text-warning-secondary-color);
+}
+
 .bb-rl-toast-message--warning .bb-rl-spinner {
   display: none;
 }
