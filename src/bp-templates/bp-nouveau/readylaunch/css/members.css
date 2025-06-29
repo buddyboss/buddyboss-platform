@@ -322,6 +322,12 @@
   flex: 1;
 }
 
+.bb-rl-members-directory-container .bb-rl-members-directory-content .friendship-requests-screen {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 22px;
+}
+
 .bb-rl-members-directory-container [data-balloon]:after {
   z-index: 1031;
 }

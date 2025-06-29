@@ -166,6 +166,11 @@
 
 	.bb-rl-members-directory-content {
 		flex: 1;
+
+		.friendship-requests-screen {
+
+			@include bb-rl-label-heading-md-bold;
+		}
 	}
 
 	[data-balloon]:after {
