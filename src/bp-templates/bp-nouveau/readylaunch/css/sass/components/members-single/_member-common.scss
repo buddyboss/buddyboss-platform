@@ -149,6 +149,7 @@
 	}
 
 	a.edit-profile,
+	a.friendship-button,
 	button.friendship-button,
 	button.follow-button,
 	a.send-message {
@@ -159,10 +160,12 @@
 		white-space: nowrap;
 	}
 
+	a.friendship-button,
 	button.friendship-button {
 
 		@include bb-rl-button--brand-fill;
 
+		&.awaiting_response_friend,
 		&.is_friend,
 		&.pending_friend {
 
