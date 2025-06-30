@@ -252,6 +252,13 @@
 		#header-cover-image {
 			display: none !important;
 		}
+
+		.bb-activity-topic-title {
+			font-size: var(--bb-rl-font-size-base);
+			font-weight: 500;
+			line-height: var(--bb-rl-base-line);
+			margin: 0 0 var(--bb-rl-space-200);
+		}
 	}
 
 	.bb-rl-upload-image-wrap {
