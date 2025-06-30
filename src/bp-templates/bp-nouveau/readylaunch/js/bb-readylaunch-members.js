@@ -18,12 +18,25 @@ window.bp = window.bp || {};
 		 */
 		start: function () {
 			this.inviteMemberPopup();
+			this.addListeners();
 		},
 
 		/**
 		 * [addListeners description]
 		 */
 		addListeners: function () {
+			$( document ).on( 'keyup', '#bb-rl-invite-name, #bb-rl-invite-email, #bb-rl-invite-custom-subject', function () {
+				var $submitButton = $( '#bb-rl-submit-invite' );
+				if (
+					'' !== $( '#bb-rl-invite-name' ).val().trim() &&
+					'' !== $( '#bb-rl-invite-email' ).val().trim() &&
+					'' !== $( '#bb-rl-invite-custom-subject' ).val().trim()
+				) {
+					$submitButton.prop( 'disabled', false );
+				} else {
+					$submitButton.prop( 'disabled', true );
+				}
+			} );
 		},
 
 		inviteMemberPopup: function () {
