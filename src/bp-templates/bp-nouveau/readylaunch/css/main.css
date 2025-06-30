@@ -14295,11 +14295,14 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 
 .bb-rl-activity-list .bb-rl-activity-header .activity-topic {
   display: inline-block;
-  color: var(--bb-rl-text-secondary-color);
   font-size: var(--bb-rl-font-size-sm);
   font-weight: 500;
   line-height: 1.5;
   margin-left: var(--bb-rl-space-100);
+}
+
+.bb-rl-activity-list .bb-rl-activity-header .activity-topic a {
+  color: var(--bb-rl-text-secondary-color);
 }
 
 .bb-rl-activity-list .bb-rl-activity-header .activity-to {
