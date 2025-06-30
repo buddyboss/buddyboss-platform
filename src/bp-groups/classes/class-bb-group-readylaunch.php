@@ -59,6 +59,10 @@ class BB_Group_Readylaunch {
 		remove_action( 'bp_before_directory_groups_page', 'bp_group_directory_page_content' );
 
 		add_filter( 'bp_get_group_description_excerpt', array( $this, 'bb_rl_get_group_description_excerpt' ), 10, 1 );
+
+		if ( function_exists( 'bp_disable_group_messages' ) && true === bp_disable_group_messages() ) {
+			add_filter( 'bp_core_get_js_strings', array( $this, 'bb_rl_get_js_strings_for_groups' ), 11, 1 );
+		}
 	}
 
 	/**
@@ -624,5 +628,22 @@ class BB_Group_Readylaunch {
 		}
 
 		return $label;
+	}
+
+	/**
+	 * Get JS strings for groups.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $params JS strings.
+	 *
+	 * @return array Modified JS strings.
+	 */
+	public function bb_rl_get_js_strings_for_groups( $params ) {
+		if ( isset( $params['group_messages'] ) && isset( $params['group_messages']['type_message'] ) ) {
+			$params['group_messages']['type_message'] = __( 'Type a message', 'buddyboss' );
+		}
+
+		return $params;
 	}
 }
