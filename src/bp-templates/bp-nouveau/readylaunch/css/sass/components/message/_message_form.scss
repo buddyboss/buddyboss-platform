@@ -404,7 +404,11 @@
 		}
 	}
 
-	#message-reply-form-submit-wrapper:has(.medium-editor-toolbar.active) {
-		margin-top: 40px;
+	#message-form-submit-wrapper,
+	#message-reply-form-submit-wrapper {
+
+		&:has(.medium-editor-toolbar.active) {
+			margin-top: 40px;
+		}
 	}
 }
