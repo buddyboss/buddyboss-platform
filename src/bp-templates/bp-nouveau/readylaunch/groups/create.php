@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
 bp_nouveau_groups_create_hook( 'before', 'page' ); ?>
 <div class="bb-rl-content-wrapper">
 	<div class="bb-rl-create-group">
-		<h2 class="bp-subhead"><?php esc_html_e( 'Create A New Group', 'buddyboss' ); ?></h2>
+		<h2 class="bp-subhead"><?php esc_html_e( 'Create a group', 'buddyboss' ); ?></h2>
 
 		<?php bp_nouveau_groups_create_hook( 'before', 'content_template' ); ?>
 
