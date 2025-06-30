@@ -3381,6 +3381,11 @@ window.bp = window.bp || {};
 				// Return early to skip unnecessary actions.
 				return;
 			}
+
+			if ( $( this ).closest( '.header-aside-inner' ).length > 0 ) {
+				return;
+			}
+
 			$( this ).data( 'last-value', $( this ).val() );
 
 			var $form        = $( this ).closest( '.search-form-has-reset' );

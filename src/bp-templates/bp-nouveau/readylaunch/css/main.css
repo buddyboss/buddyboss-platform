@@ -6271,6 +6271,11 @@ body.admin-bar .bb-rl-header {
   outline: 2px solid var(--bb-rl-border-quinery-color);
 }
 
+.header-aside .bp-dir-search-form {
+  border-radius: var(--bb-rl-radius-md);
+  margin-right: var(--bb-rl-space-300);
+}
+
 .header-aside .bb-rl-header-buttons .signin-button:hover {
   border-bottom-color: transparent;
 }

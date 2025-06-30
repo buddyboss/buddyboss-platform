@@ -358,6 +358,11 @@
 		}
 	}
 
+	.bp-dir-search-form {
+		border-radius: var(--bb-rl-radius-md);
+		margin-right: var(--bb-rl-space-300);
+	}
+
 	.bb-rl-header-buttons .signin-button:hover {
 		border-bottom-color: transparent;
 	}
