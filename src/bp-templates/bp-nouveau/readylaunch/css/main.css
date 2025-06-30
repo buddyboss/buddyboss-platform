@@ -10137,6 +10137,7 @@ input.bb-rl-zoom-slider::-moz-range-progress {
   font-weight: 400;
   line-height: var(--bb-rl-base-line-small);
   color: var(--bb-rl-text-secondary-color);
+  padding-left: var(--bb-rl-space-50);
 }
 
 .progress_bit__line {
