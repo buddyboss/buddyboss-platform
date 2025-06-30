@@ -61,6 +61,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 			// Add ReadyLaunch settings to the platform settings API.
 			add_filter( 'bp_rest_platform_settings', array( $this, 'bb_rest_readylaunch_platform_settings' ), 10, 1 );
+			add_filter( 'bb_telemetry_platform_options', array( $this, 'bb_rl_telemetry_platform_options' ), 10, 1 );
 
 			if ( ! $enabled ) {
 				return;
@@ -113,6 +114,27 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				require_once buddypress()->compatibility_dir . '/class-bb-readylaunch-memberpress-courses-helper.php';
 				BB_Readylaunch_Memberpress_Courses_Helper::instance();
 			}
+		}
+
+		/**
+		 * Register the ReadyLaunch telemetry data.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 */
+		public function bb_rl_telemetry_platform_options( $option_array ) {
+			$op_options = array(
+				'bb_rl_enabled',
+				'bb_rl_theme_mode',
+				'bb_rl_enabled_pages',
+				'bb_rl_activity_sidebars',
+				'bb_rl_member_profile_sidebars',
+				'bb_rl_groups_sidebars',
+				'bb_rl_side_menu'
+			);
+
+			$option_array = array_merge( $option_array, $op_options );
+
+			return $option_array;
 		}
 
 		/**
