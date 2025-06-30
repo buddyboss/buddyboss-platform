@@ -77,6 +77,26 @@ if ( bp_is_group_create() ) {
 								</p>
 							</div>
 
+							<div class="members-manage-buttons text-links-list bb-rl-members-manage-dropdown">
+								<select class="member-action-dropdown">
+									<option value="">
+										<?php
+										if ( groups_is_user_admin( $bp_org_user_id, $bp_current_group_id ) ) {
+											echo esc_html( get_group_role_label( $bp_current_group_id, 'organizer_singular_label_name' ) );
+										} else {
+											esc_html_e( 'Select Action', 'buddyboss' );
+										}
+										?>
+									</option>
+									<option value="<?php bp_group_member_demote_link( $bp_org_user_id ); ?>">
+										<?php echo esc_html( get_group_role_label( $bp_current_group_id, 'member_singular_label_name' ) ); ?>
+									</option>
+								</select>
+								<div class="bb-rl-group-member-action-wrapper">
+									<button href="" class="bb-rl-group-member-action-button disabled"><?php esc_html_e( 'Apply', 'buddyboss' ); ?></button>
+								</div>
+							</div>
+
 							<?php if ( count( bp_group_admin_ids( false, 'array' ) ) > 1 ) : ?>
 
 								<div class="bb_more_options action">
@@ -155,8 +175,11 @@ if ( bp_is_group_create() ) {
 										}
 										?>
 									</option>
-									<option value="<?php bp_group_member_promote_admin_link( array( 'user_id' => $bp_mod_user_id ) ); ?>">
-										<?php printf( esc_html__( 'Promote to co-%s', 'buddyboss' ), strtolower( get_group_role_label( $bp_current_group_id, 'organizer_singular_label_name' ) ) ); ?>
+									<option value="<?php bp_group_member_promote_admin_link( $bp_mod_user_id ); ?>">
+										<?php echo esc_html( get_group_role_label( $bp_current_group_id, 'organizer_singular_label_name' ) ); ?>
+									</option>
+									<option value="<?php bp_group_member_demote_link( $bp_mod_user_id ); ?>">
+										<?php echo esc_html( get_group_role_label( $bp_current_group_id, 'member_singular_label_name' ) ); ?>
 									</option>
 								</select>
 								<div class="bb-rl-group-member-action-wrapper">
@@ -258,42 +281,12 @@ if ( bp_is_group_create() ) {
 										}
 										?>
 									</option>
-									<?php
-									// Get the action buttons HTML.
-									ob_start();
-									add_filter( 'bp_nouveau_get_groups_buttons', 'BB_Group_Readylaunch::bb_readylaunch_manage_member_actions', 20, 3 );
-									bp_nouveau_groups_manage_members_buttons(
-										array(
-											'container' => 'div',
-											'container_classes' => array( 'members-manage-buttons', 'text-links-list' ),
-											'parent_element' => '',
-										)
-									);
-									remove_filter( 'bp_nouveau_get_groups_buttons', 'BB_Group_Readylaunch::bb_readylaunch_manage_member_actions', 20, 3 );
-									$buttons_html = ob_get_clean();
-
-									// Extract all links using a simple regex pattern.
-									preg_match_all( '/<a[^>]*href="([^"]*)"[^>]*>(.*?)<\/a>/', $buttons_html, $matches );
-
-									$member_actions = array();
-									if ( ! empty( $matches[1] ) && ! empty( $matches[2] ) ) {
-										foreach ( $matches[1] as $index => $url ) {
-											$member_actions[] = array(
-												'url'  => $url,
-												'text' => strip_tags( html_entity_decode( $matches[2][ $index ] ) ),
-											);
-										}
-									}
-
-										// Output each action as a dropdown option.
-									foreach ( $member_actions as $action ) {
-										printf(
-											'<option value="%s">%s</option>',
-											esc_attr( $action['url'] ),
-											esc_html( trim( $action['text'] ) )
-										);
-									}
-									?>
+									<option value="<?php bp_group_member_promote_admin_link( $bp_member_user_id ); ?>">
+										<?php echo esc_html( get_group_role_label( $bp_current_group_id, 'organizer_singular_label_name' ) ); ?>
+									</option>
+									<option value="<?php bp_group_member_promote_mod_link( $bp_member_user_id ); ?>">
+										<?php echo esc_html( get_group_role_label( $bp_current_group_id, 'moderator_singular_label_name' ) ); ?>
+									</option>
 								</select>
 								<div class="bb-rl-group-member-action-wrapper">
 									<button class="bb-rl-group-member-action-button disabled"><?php esc_html_e( 'Apply', 'buddyboss' ); ?></button>
