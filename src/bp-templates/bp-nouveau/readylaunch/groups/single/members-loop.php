@@ -27,6 +27,9 @@ $enabled_last_active   = ! function_exists( 'bb_enabled_member_directory_element
 $enabled_joined_date   = ! function_exists( 'bb_enabled_member_directory_element' ) || bb_enabled_member_directory_element( 'joined-date' );
 
 if ( bp_group_has_members( bp_ajax_querystring( 'group_members' ) . '&type=group_role' ) ) {
+	add_filter( 'bp_organizer_plural_label_name', 'BB_Group_Readylaunch::bb_rl_add_count_after_label', 10, 3 );
+	add_filter( 'bp_moderator_plural_label_name', 'BB_Group_Readylaunch::bb_rl_add_count_after_label', 10, 3 );
+	add_filter( 'bp_member_plural_label_name', 'BB_Group_Readylaunch::bb_rl_add_count_after_label', 10, 3 );	
 	?>
 
 	<ul id="members-list" class="<?php bp_nouveau_loop_classes(); ?> members-list">
@@ -270,6 +273,9 @@ if ( bp_group_has_members( bp_ajax_querystring( 'group_members' ) . '&type=group
 	</ul>
 
 	<?php
+	remove_filter( 'bp_organizer_plural_label_name', 'BB_Group_Readylaunch::bb_rl_add_count_after_label', 10 );
+	remove_filter( 'bp_moderator_plural_label_name', 'BB_Group_Readylaunch::bb_rl_add_count_after_label', 10 );
+	remove_filter( 'bp_member_plural_label_name', 'BB_Group_Readylaunch::bb_rl_add_count_after_label', 10 );
 	bp_nouveau_pagination( 'bottom' );
 } else {
 	bp_nouveau_user_feedback( 'group-members-none' );
