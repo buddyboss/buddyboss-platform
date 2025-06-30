@@ -741,6 +741,11 @@
   padding: var(--bb-rl-space-50) 0;
 }
 
+.bb-rl-profile-filter-headline .clear-from-wrap {
+  display: inline-flex;
+  align-items: center;
+}
+
 .bb-rl-profile-filter-headline .clear-from-wrap a {
   font-size: var(--bb-rl-font-size-sm);
   font-weight: 500;
