@@ -4335,6 +4335,10 @@ body.bb-readylaunch-template .select2-container--rl.select2-container--open:has(
   text-align: center;
 }
 
+.dropzone.document-dropzone .dz-progress-ring-wrap .bb-icons-rl-link:before {
+  content: "\e39a";
+}
+
 .dropzone .dz-preview {
   background-color: var(--bb-rl-background-secondary-color);
   border: 1px solid var(--bb-rl-border-secondary-color);
