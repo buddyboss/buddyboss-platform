@@ -2597,6 +2597,18 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			$settings['bb_rl_color_dark']  = (string) bp_get_option( 'bb_rl_color_dark', '#9747FF' );
 			$settings['bb_rl_theme_mode']  = (string) bp_get_option( 'bb_rl_theme_mode', 'light' );
 
+			$enabled_pages = array();
+			if ( bp_enable_site_registration() && ! bp_allow_custom_registration() ) {
+				$enabled_pages['registration'] = true;
+			} else {
+				$enabled_pages['registration'] = false;
+			}
+			if ( $this->bb_is_sidebar_enabled_for_courses() ) {
+				$enabled_pages['courses'] = true;
+			} else {
+				$enabled_pages['courses'] = false;
+			}
+
 			// Pages & Sidebars Settings - Boolean values in arrays.
 			$settings['bb_rl_enabled_pages'] = array_map(
 				function ( $value ) {
@@ -2604,12 +2616,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				},
 				bp_get_option(
 					'bb_rl_enabled_pages',
-					array(
-						'registration' => true,
-						'courses'      => true,
-						'events'       => true,
-						'gamification' => true,
-					)
+					$enabled_pages
 				)
 			);
 
@@ -2628,17 +2635,27 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				)
 			);
 
+			$member_sidebar = array(
+				'complete_profile' => true,
+				'connections'      => false,
+				'my_network'       => false
+			);
+
+			if ( bp_is_active( 'friends' ) ) {
+				$member_sidebar['connections'] = true;
+			}
+
+			if ( bp_is_active( 'activity' ) && bp_is_activity_follow_active() ) {
+				$member_sidebar['my_network'] = true;
+			}
+
 			$settings['bb_rl_member_profile_sidebars'] = array_map(
 				function ( $value ) {
 					return (bool) $value;
 				},
 				bp_get_option(
 					'bb_rl_member_profile_sidebars',
-					array(
-						'complete_profile' => true,
-						'connections'      => false,
-						'my_network'       => false
-					)
+					$member_sidebar
 				)
 			);
 
