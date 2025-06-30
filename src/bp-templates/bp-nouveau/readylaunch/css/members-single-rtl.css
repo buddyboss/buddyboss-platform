@@ -315,6 +315,7 @@
 }
 
 .bb-rl-member-header-actions a.edit-profile,
+.bb-rl-member-header-actions a.friendship-button,
 .bb-rl-member-header-actions button.friendship-button,
 .bb-rl-member-header-actions button.follow-button,
 .bb-rl-member-header-actions a.send-message {
@@ -334,39 +335,55 @@
   white-space: nowrap;
 }
 
+.bb-rl-member-header-actions a.friendship-button,
 .bb-rl-member-header-actions button.friendship-button {
   background-color: var(--bb-rl-background-brand-primary-color);
   color: var(--bb-rl-text-white-color);
   border: 1px solid var(--bb-rl-background-brand-primary-color);
 }
 
+.bb-rl-member-header-actions a.friendship-button:hover,
 .bb-rl-member-header-actions button.friendship-button:hover {
   background-color: var(--bb-rl-background-brand-primary-hover-color);
 }
 
+.bb-rl-member-header-actions a.friendship-button:focus-within,
 .bb-rl-member-header-actions button.friendship-button:focus-within {
   outline: 2px solid var(--bb-rl-border-brand-primary-color);
 }
 
+.bb-rl-member-header-actions a.friendship-button:disabled,
 .bb-rl-member-header-actions button.friendship-button:disabled {
   background-color: var(--bb-rl-background-brand-disabled-color);
   cursor: not-allowed;
 }
 
+.bb-rl-member-header-actions a.friendship-button.awaiting_response_friend, .bb-rl-member-header-actions a.friendship-button.is_friend, .bb-rl-member-header-actions a.friendship-button.pending_friend,
+.bb-rl-member-header-actions button.friendship-button.awaiting_response_friend,
+.bb-rl-member-header-actions button.friendship-button.is_friend,
 .bb-rl-member-header-actions button.friendship-button.pending_friend {
   background-color: var(--bb-rl-background-tertiary-color);
   color: var(--bb-rl-text-color);
   border: 1px solid transparent;
 }
 
+.bb-rl-member-header-actions a.friendship-button.awaiting_response_friend:hover, .bb-rl-member-header-actions a.friendship-button.is_friend:hover, .bb-rl-member-header-actions a.friendship-button.pending_friend:hover,
+.bb-rl-member-header-actions button.friendship-button.awaiting_response_friend:hover,
+.bb-rl-member-header-actions button.friendship-button.is_friend:hover,
 .bb-rl-member-header-actions button.friendship-button.pending_friend:hover {
   background-color: var(--bb-rl-background-tertiary-hover-color);
 }
 
+.bb-rl-member-header-actions a.friendship-button.awaiting_response_friend:focus, .bb-rl-member-header-actions a.friendship-button.is_friend:focus, .bb-rl-member-header-actions a.friendship-button.pending_friend:focus,
+.bb-rl-member-header-actions button.friendship-button.awaiting_response_friend:focus,
+.bb-rl-member-header-actions button.friendship-button.is_friend:focus,
 .bb-rl-member-header-actions button.friendship-button.pending_friend:focus {
   outline: 2px solid var(--bb-rl-border-quinery-color);
 }
 
+.bb-rl-member-header-actions a.friendship-button.awaiting_response_friend:disabled, .bb-rl-member-header-actions a.friendship-button.is_friend:disabled, .bb-rl-member-header-actions a.friendship-button.pending_friend:disabled,
+.bb-rl-member-header-actions button.friendship-button.awaiting_response_friend:disabled,
+.bb-rl-member-header-actions button.friendship-button.is_friend:disabled,
 .bb-rl-member-header-actions button.friendship-button.pending_friend:disabled {
   background-color: var(--bb-rl-background-tertiary-color);
   color: var(--bb-rl-text-disabled-color);
@@ -521,10 +538,21 @@
   cursor: not-allowed;
 }
 
-.bb-rl-members .bp-list.friends-request-list .action .generic-button.switch-button a,
-.bb-rl-members .bp-list.invites .action .generic-button.switch-button a,
-.bb-rl-groups .bp-list.friends-request-list .action .generic-button.switch-button a,
-.bb-rl-groups .bp-list.invites .action .generic-button.switch-button a {
+.bb-rl-members .bp-list.friends-request-list .action .generic-button .button [class*="bb-icons-rl-"],
+.bb-rl-members .bp-list.invites .action .generic-button .button [class*="bb-icons-rl-"],
+.bb-rl-groups .bp-list.friends-request-list .action .generic-button .button [class*="bb-icons-rl-"],
+.bb-rl-groups .bp-list.invites .action .generic-button .button [class*="bb-icons-rl-"] {
+  margin-left: var(--bb-rl-space-100);
+}
+
+.bb-rl-members .bp-list.friends-request-list .action .generic-button button.reject,
+.bb-rl-members .bp-list.friends-request-list .action .generic-button a.switch-button,
+.bb-rl-members .bp-list.invites .action .generic-button button.reject,
+.bb-rl-members .bp-list.invites .action .generic-button a.switch-button,
+.bb-rl-groups .bp-list.friends-request-list .action .generic-button button.reject,
+.bb-rl-groups .bp-list.friends-request-list .action .generic-button a.switch-button,
+.bb-rl-groups .bp-list.invites .action .generic-button button.reject,
+.bb-rl-groups .bp-list.invites .action .generic-button a.switch-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -544,24 +572,36 @@
   font-weight: 400;
 }
 
-.bb-rl-members .bp-list.friends-request-list .action .generic-button.switch-button a:hover,
-.bb-rl-members .bp-list.invites .action .generic-button.switch-button a:hover,
-.bb-rl-groups .bp-list.friends-request-list .action .generic-button.switch-button a:hover,
-.bb-rl-groups .bp-list.invites .action .generic-button.switch-button a:hover {
+.bb-rl-members .bp-list.friends-request-list .action .generic-button button.reject:hover,
+.bb-rl-members .bp-list.friends-request-list .action .generic-button a.switch-button:hover,
+.bb-rl-members .bp-list.invites .action .generic-button button.reject:hover,
+.bb-rl-members .bp-list.invites .action .generic-button a.switch-button:hover,
+.bb-rl-groups .bp-list.friends-request-list .action .generic-button button.reject:hover,
+.bb-rl-groups .bp-list.friends-request-list .action .generic-button a.switch-button:hover,
+.bb-rl-groups .bp-list.invites .action .generic-button button.reject:hover,
+.bb-rl-groups .bp-list.invites .action .generic-button a.switch-button:hover {
   background-color: var(--bb-rl-background-secondary-color);
 }
 
-.bb-rl-members .bp-list.friends-request-list .action .generic-button.switch-button a:focus,
-.bb-rl-members .bp-list.invites .action .generic-button.switch-button a:focus,
-.bb-rl-groups .bp-list.friends-request-list .action .generic-button.switch-button a:focus,
-.bb-rl-groups .bp-list.invites .action .generic-button.switch-button a:focus {
+.bb-rl-members .bp-list.friends-request-list .action .generic-button button.reject:focus,
+.bb-rl-members .bp-list.friends-request-list .action .generic-button a.switch-button:focus,
+.bb-rl-members .bp-list.invites .action .generic-button button.reject:focus,
+.bb-rl-members .bp-list.invites .action .generic-button a.switch-button:focus,
+.bb-rl-groups .bp-list.friends-request-list .action .generic-button button.reject:focus,
+.bb-rl-groups .bp-list.friends-request-list .action .generic-button a.switch-button:focus,
+.bb-rl-groups .bp-list.invites .action .generic-button button.reject:focus,
+.bb-rl-groups .bp-list.invites .action .generic-button a.switch-button:focus {
   outline: 2px solid var(--bb-rl-border-quinery-color);
 }
 
-.bb-rl-members .bp-list.friends-request-list .action .generic-button.switch-button a:disabled,
-.bb-rl-members .bp-list.invites .action .generic-button.switch-button a:disabled,
-.bb-rl-groups .bp-list.friends-request-list .action .generic-button.switch-button a:disabled,
-.bb-rl-groups .bp-list.invites .action .generic-button.switch-button a:disabled {
+.bb-rl-members .bp-list.friends-request-list .action .generic-button button.reject:disabled,
+.bb-rl-members .bp-list.friends-request-list .action .generic-button a.switch-button:disabled,
+.bb-rl-members .bp-list.invites .action .generic-button button.reject:disabled,
+.bb-rl-members .bp-list.invites .action .generic-button a.switch-button:disabled,
+.bb-rl-groups .bp-list.friends-request-list .action .generic-button button.reject:disabled,
+.bb-rl-groups .bp-list.friends-request-list .action .generic-button a.switch-button:disabled,
+.bb-rl-groups .bp-list.invites .action .generic-button button.reject:disabled,
+.bb-rl-groups .bp-list.invites .action .generic-button a.switch-button:disabled {
   border-color: var(--bb-rl-border-tertiary-color);
   color: var(--bb-rl-text-disabled-color);
   cursor: not-allowed;
@@ -1551,7 +1591,7 @@
   border-style: solid;
   border-radius: 0;
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  color: var(--bb-rl-text-primary-color);
+  color: var(--bb-rl-text-color);
   font-size: var(--bb-rl-font-size-sm);
   font-weight: 500;
   line-height: var(--bb-rl-base-line-small);

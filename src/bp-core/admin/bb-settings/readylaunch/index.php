@@ -89,6 +89,7 @@ function bb_readylaunch_register_enqueue_style_script() {
 	);
 
 	$min = bp_core_get_minified_asset_suffix();
+	$rtl = is_rtl() ? '-rtl' : '';
 
 	wp_register_script(
 		'bb-readylaunch-admin-script',
@@ -102,7 +103,7 @@ function bb_readylaunch_register_enqueue_style_script() {
 
 	wp_register_style(
 		'bb-readylaunch-admin-style',
-		plugins_url( "build/styles/settings{$min}.css", __FILE__ ),
+		plugins_url( "build/styles/settings{$rtl}{$min}.css", __FILE__ ),
 		array(),
 		$asset['version']
 	);

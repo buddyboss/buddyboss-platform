@@ -1455,7 +1455,7 @@
   border-style: solid;
   border-radius: 0;
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  color: var(--bb-rl-text-primary-color);
+  color: var(--bb-rl-text-color);
   font-size: var(--bb-rl-font-size-sm);
   font-weight: 500;
   line-height: var(--bb-rl-base-line-small);

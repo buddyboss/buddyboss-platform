@@ -1985,6 +1985,10 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   display: block;
 }
 
+.bb-rl-activity-modal-open {
+  overflow: hidden;
+}
+
 @media screen and (max-width: 680px) {
   .bb-rl-activity-form.bb-rl-focus-in .bb-rl-whats-new-form-footer {
     flex-flow: column;
@@ -2681,6 +2685,18 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   font-size: var(--bb-rl-font-size-sm);
 }
 
+.bb-rl-activity-list .bb-rl-activity-header .activity-topic {
+  display: inline-block;
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 500;
+  line-height: 1.5;
+  margin-right: var(--bb-rl-space-100);
+}
+
+.bb-rl-activity-list .bb-rl-activity-header .activity-topic a {
+  color: var(--bb-rl-text-secondary-color);
+}
+
 .bb-rl-activity-list .bb-rl-activity-header .activity-to {
   font-size: 0;
   line-height: 0.8;
@@ -3170,6 +3186,10 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   margin: 0;
   box-shadow: none;
   background: transparent;
+}
+
+.acomments-modal-open {
+  overflow: hidden;
 }
 
 .bb-rl-modal-activity-body {
@@ -3737,6 +3757,11 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   text-transform: lowercase;
 }
 
+.bb-rl-activity-footer-actions .comments-count:hover {
+  color: var(--bb-rl-text-color);
+  text-decoration: underline;
+}
+
 .bb-rl-activity-footer-actions .activity-state-reactions {
   cursor: pointer;
 }
@@ -3767,6 +3792,11 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
 
 .bb-rl-activity-footer-actions .activity-state-reactions .reactions_item i:before {
   margin: 0;
+}
+
+.bb-rl-activity-footer-actions .activity-state-reactions:hover .activity-reactions_count {
+  color: var(--bb-rl-text-color);
+  text-decoration: underline;
 }
 
 .bp-generic-meta {
@@ -5776,6 +5806,18 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   border-radius: var(--bb-rl-radius-md);
   transition: background-color 0.2s ease, bordfont / size / smer-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.ac-form.has-gif .bb-rl-ac-submit-wrap input[type="submit"], .ac-form.has-media .bb-rl-ac-submit-wrap input[type="submit"], .ac-form.has-content .bb-rl-ac-submit-wrap input[type="submit"] {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.ac-form.has-media.media-uploading .bb-rl-ac-submit-wrap input[type="submit"] {
+  opacity: 0.7;
+  pointer-events: none;
 }
 
 .activity-item.has-comments .bb-rl-activity-comments {
