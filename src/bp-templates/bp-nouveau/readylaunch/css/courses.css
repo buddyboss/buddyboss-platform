@@ -669,7 +669,6 @@
 .bb-rl-container .ld-alert.ld-alert-success.bb-rl-ld-alert-certificate {
   background-color: var(--bb-rl-background-brand-secondary-color);
   border-color: var(--bb-rl-border-brand-secondary-color);
-  border-color: var(--bb-rl-border-brand-primary-color);
 }
 
 .bb-rl-container .ld-alert.ld-alert-success.bb-rl-ld-alert-certificate > [class*="bb-icons"] {
