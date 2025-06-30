@@ -5010,6 +5010,7 @@ body.bb-readylaunch-template .select2-container--rl.select2-container--open:has(
   align-items: center;
   border-bottom: 1px solid var(--bb-rl-border-secondary-color);
   padding: var(--bb-rl-space-200) var(--bb-rl-space-300);
+  position: relative;
 }
 
 .bb-readylaunch-template .bb-model-header h4 {
@@ -5029,6 +5030,8 @@ body.bb-readylaunch-template .select2-container--rl.select2-container--open:has(
   width: 24px;
   height: 24px;
   cursor: pointer;
+  right: var(--bb-rl-space-200);
+  top: var(--bb-rl-space-200);
 }
 
 .bb-readylaunch-template .bb-model-header .mfp-close::before {
@@ -5076,6 +5079,10 @@ body.bb-readylaunch-template .select2-container--rl.select2-container--open:has(
   line-height: 28px;
   color: var(--bb-rl-text-color);
   margin-right: var(--bb-rl-space-100);
+}
+
+.bb-readylaunch-template .content-report-popup .bb-model-header .bp-reported-type {
+  text-transform: lowercase;
 }
 
 .bb-readylaunch-template .bb-report-type-wrp {
