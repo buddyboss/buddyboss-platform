@@ -21,6 +21,11 @@
 				border-radius: var(--bb-rl-radius-full);
 				padding: 6px var(--bb-rl-space-200);
 				color: var(--bb-rl-text-secondary-color);
+				text-transform: lowercase;
+
+				&::first-letter {
+					text-transform: uppercase;
+				}
 			}
 
 			li.selected {

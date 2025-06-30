@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
 ?>
 <script id="tmpl-bp-avatar-item" type="text/html">
 	<div class="bb-rl-avatar-panel-header">
-		<h3><?php esc_html_e( 'Crop Photo', 'buddyboss' ); ?></h3>
+		<h3><?php esc_html_e( 'Crop photo', 'buddyboss' ); ?></h3>
 		<a class="bb-rl-modal-close-button avatar-crop-cancel" href="#">
 			<i class="bb-icons-rl-x"></i>
 		</a>

@@ -105,7 +105,7 @@ endif;
 
 if ( 'crop-image' === $bp_avatar_admin_step ) {
 	?>
-	<h2><?php esc_html_e( 'Crop Group Photo', 'buddyboss' ); ?></h2>
+	<h2><?php esc_html_e( 'Crop group photo', 'buddyboss' ); ?></h2>
 	<img src="<?php bp_avatar_to_crop(); ?>" id="avatar-to-crop" class="avatar" alt="<?php esc_attr_e( 'Photo to crop', 'buddyboss' ); ?>" />
 	<div id="avatar-crop-pane">
 		<img src="<?php bp_avatar_to_crop(); ?>" id="avatar-crop-preview" class="avatar" alt="<?php esc_attr_e( 'Crop preview', 'buddyboss' ); ?>" />
