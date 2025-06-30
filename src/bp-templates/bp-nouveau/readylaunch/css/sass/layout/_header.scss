@@ -684,6 +684,63 @@
 	}
 }
 
+// Main Nav alignment
+body {
+
+	&.activity {
+
+		.bb-readylaunch-menu {
+			margin-left: 170px;
+		}
+
+		.site:not(:has(.bb-rl-activity-wrap .bb-rl-secondary-container)) {
+
+			.bb-readylaunch-menu {
+				margin-left: 320px;
+			}
+		}
+	}
+
+	&.activity,
+	&.bbp-user-page,
+	&.forums.singular,
+	&.messages.singular {
+
+		.bb-readylaunch-menu {
+			margin-left: 170px;
+
+			@media screen and (max-width: 1400px) {
+				margin-left: 0;
+			}
+		}
+	}
+
+	&.directory,
+	&.forum-archive,
+	&.forum.single,
+	&.reply-edit,
+	&.topic-edit,
+	&.topic.single,
+	&.group-admin.groups,
+	&.my-account.profile,
+	&.single-item.groups,
+	&.bbp-user-page.single.my-account,
+	&.notifications.single.my-account,
+	&.my-account.profile.edit {
+
+		.bb-readylaunch-menu {
+			margin-left: 320px;
+
+			@media screen and (max-width: 1400px) {
+				margin-left: 170px;
+			}
+
+			@media screen and (max-width: 1280px) {
+				margin-left: 0;
+			}
+		}
+	}
+}
 
 @media screen and (max-width: $lg) {
 
