@@ -757,6 +757,10 @@
 		.wpProQuiz_catOverview span {
 			background-color: transparent;
 		}
+
+		.wpProQuiz_toplistTrOdd {
+			background-color: var(--bb-rl-background-secondary-hover-color);
+		}
 	}
 
 	.wpProQuiz_content .wpProQuiz_cloze input[type="text"] {

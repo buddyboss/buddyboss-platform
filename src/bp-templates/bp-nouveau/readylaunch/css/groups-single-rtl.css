@@ -7525,6 +7525,11 @@ body.ld-in-focus-mode .learndash-wrapper {
   background-color: transparent;
 }
 
+.bb-rl-quiz-entry .wpProQuiz_content .wpProQuiz_toplistTrOdd,
+.bb-rl-quiz-entry .learndash-wrapper .wpProQuiz_content .wpProQuiz_toplistTrOdd {
+  background-color: var(--bb-rl-background-secondary-hover-color);
+}
+
 .bb-rl-quiz-entry .wpProQuiz_content .wpProQuiz_cloze input[type="text"] {
   background-color: var(--bb-rl-background-color);
   color: var(--bb-rl-text-color);
