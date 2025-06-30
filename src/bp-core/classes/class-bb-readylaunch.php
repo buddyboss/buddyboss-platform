@@ -3674,5 +3674,62 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 			return $localize_arg;
 		}
+
+		/**
+		 * Get forum freshness link.
+		 *
+		 * @param string $active_time Active time.
+		 *
+		 * @return string
+		 */
+		public function bb_rl_get_forum_last_active( $active_time ) {
+			if ( empty( $active_time ) ) {
+				return $active_time;
+			}
+
+			// Check if the time contains a comma (indicating multiple time periods).
+			if ( false !== strpos( $active_time, ',' ) ) {
+				// Extract only the first part before the comma.
+				$parts      = explode( ',', $active_time );
+				$first_part = trim( $parts[0] );
+
+				// Add "ago" if it's not already there.
+				$active_time = sprintf(
+					/* translators: %s: forum freshness link */
+					apply_filters( 'bbp_core_time_since_ago_text', __( '%s ago', 'buddyboss' ) ),
+					$first_part
+				);
+			}
+
+			return $active_time;
+		}
+
+		/**
+		 * Get forum freshness link.
+		 *
+		 * @param string $anchor Anchor.
+		 * @param int    $forum_id Forum ID.
+		 * @param string $time_since Time since.
+		 * @param string $link_url Link URL.
+		 * @param string $title Title.
+		 * @param int    $active_id Active ID.
+		 *
+		 * @return string
+		 */
+		public function bb_rl_get_forum_freshness_link( $anchor, $forum_id, $time_since, $link_url, $title, $active_id ) {
+			if ( empty( $anchor ) ) {
+				return $anchor;
+			}
+
+			if ( $time_since ) {
+				return sprintf(
+					/* translators: %s: forum freshness link */
+					__( '<span>Active</span> %s', 'buddyboss' ),
+					$anchor
+				);
+			}
+
+			return $anchor;
+		}
 	}
 }

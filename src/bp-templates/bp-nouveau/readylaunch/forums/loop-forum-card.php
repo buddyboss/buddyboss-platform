@@ -45,7 +45,18 @@ defined( 'ABSPATH' ) || exit;
 			</div>
 			<div class="bb-rl-forum-meta-item">
 				<?php do_action( 'bbp_theme_before_forum_freshness_link' ); ?>
-				<?php bbp_forum_freshness_link(); ?>
+				<?php
+				$bb_rl_instance = function_exists( 'bb_load_readylaunch' ) ? bb_load_readylaunch() : null;
+				if ( $bb_rl_instance ) {
+					add_filter( 'bbp_get_forum_last_active', array( $bb_rl_instance, 'bb_rl_get_forum_last_active' ), 10 );
+					add_filter( 'bbp_get_forum_freshness_link', array( $bb_rl_instance, 'bb_rl_get_forum_freshness_link' ), 10, 6 );
+				}
+				bbp_forum_freshness_link();
+				if ( $bb_rl_instance ) {
+					remove_filter( 'bbp_get_forum_last_active', array( $bb_rl_instance, 'bb_rl_get_forum_last_active' ), 10 );
+					remove_filter( 'bbp_get_forum_freshness_link', array( $bb_rl_instance, 'bb_rl_get_forum_freshness_link' ), 10, 6 );
+				}
+				?>
 				<?php do_action( 'bbp_theme_after_forum_freshness_link' ); ?>
 			</div>
 		</div>
