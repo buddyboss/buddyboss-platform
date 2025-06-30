@@ -117,15 +117,16 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * @since BuddyBoss [BBVERSION]
 		 */
 		public function bb_rl_telemetry_platform_options( $option_array ) {
-			$op_options = array(
-				'bb_rl_enabled',
-				'bb_rl_theme_mode',
-				'bb_rl_enabled_pages',
-				'bb_rl_activity_sidebars',
-				'bb_rl_member_profile_sidebars',
-				'bb_rl_groups_sidebars',
-				'bb_rl_side_menu'
-			);
+			$op_options = array( 'bb_rl_enabled' );
+			if ( bb_is_readylaunch_enabled() ) {
+				$op_options[] = 'bb_rl_theme_mode';
+				$op_options[] = 'bb_rl_enabled_pages';
+				$op_options[] = 'bb_rl_activity_sidebars';
+				$op_options[] = 'bb_rl_member_profile_sidebars';
+				$op_options[] = 'bb_rl_groups_sidebars';
+				$op_options[] = 'bb_rl_side_menu';
+				$op_options[] = 'bb_rl_custom_links';
+			}
 
 			$option_array = array_merge( $option_array, $op_options );
 
