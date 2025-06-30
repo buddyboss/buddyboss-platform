@@ -620,7 +620,7 @@ export const ReadyLaunchSettings = () => {
 			isExpanded={isExpanded}
 			onToggle={() => toggleSection(section)}
 			onHelpClick={() => handleHelpClick(contentId)}
-		> {/* @todo: update when release. */}
+		>
 			{/* children */}
 		</Accordion>
 	);
@@ -676,7 +676,7 @@ export const ReadyLaunchSettings = () => {
 							<div className="settings-card">
 								<div className="settings-header">
 									<h3>{__('Site Name', 'buddyboss')}</h3>
-									<HelpIcon onClick={() => handleHelpClick('456175')} /> {/* @todo: update when release. */}
+									<HelpIcon onClick={() => handleHelpClick('459612')} />
 								</div>
 								<div className="settings-form-field">
 									<div className="field-label">
@@ -698,7 +698,7 @@ export const ReadyLaunchSettings = () => {
 						{ settings.bb_rl_enabled && ( <div className="settings-card">
 							<div className="settings-header">
 								<h3>{__('Platform Settings', 'buddyboss')}</h3>
-								<HelpIcon onClick={() => handleHelpClick('456175')} /> {/* @todo: update when release. */}
+								<HelpIcon onClick={() => handleHelpClick('459617')} />
 							</div>
 							<div className="settings-list-items-block">
 								{
@@ -783,7 +783,7 @@ export const ReadyLaunchSettings = () => {
 						<div className="settings-card">
 							<div className="settings-header">
 								<h3>{__('Branding', 'buddyboss')}</h3>
-								<HelpIcon onClick={() => handleHelpClick('456175')} /> {/* @todo: update when release. */}
+								<HelpIcon onClick={() => handleHelpClick('459621')} />
 							</div>
 
 							{/* Appearance Setting */}
@@ -882,8 +882,8 @@ export const ReadyLaunchSettings = () => {
 								title={__('Pages', 'buddyboss')}
 								isExpanded={expandedSections.pages}
 								onToggle={() => toggleSection('pages')}
-								onHelpClick={() => handleHelpClick('456175')}
-							> {/* @todo: update when release. */}
+								onHelpClick={() => handleHelpClick('459627')}
+							>
 								<div className="settings-form-field with-multiple-toggles">
 									<div className="field-label">
 										<label>{__('Enable Pages', 'buddyboss')}</label>
@@ -932,8 +932,8 @@ export const ReadyLaunchSettings = () => {
 								title={__('Sidebar Widgets', 'buddyboss')}
 								isExpanded={expandedSections.sidebars}
 								onToggle={() => toggleSection('sidebars')}
-								onHelpClick={() => handleHelpClick('456175')}
-							> {/* @todo: update when release. */}
+								onHelpClick={() => handleHelpClick('459623')}
+							>
 								{
 									BP_ADMIN.components &&
 									BP_ADMIN.components.activity &&
@@ -1086,8 +1086,8 @@ export const ReadyLaunchSettings = () => {
 									title={__('Menus', 'buddyboss')}
 									isExpanded={expandedSections.menus}
 									onToggle={() => toggleSection('menus')}
-									onHelpClick={() => handleHelpClick('456175')}
-								> {/* @todo: update when release. */}
+									onHelpClick={() => handleHelpClick('459625')}
+								>
 									{/* Header Menu */}
 									<div className="settings-form-field menu-header-field">
 										<div className="field-label">
