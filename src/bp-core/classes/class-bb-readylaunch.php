@@ -2311,6 +2311,16 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				}
 			}
 
+			if ( ! empty( $buttons['reject_friendship'] ) && bp_is_current_action( 'requests' ) ) {
+				$buttons['reject_friendship']['link_text']        = esc_html__( 'Reject', 'buddyboss' );
+				$buttons['reject_friendship']['prefix_link_text'] = '<i class="bb-icons-rl-x"></i>';
+			}
+
+			if ( ! empty( $buttons['accept_friendship'] ) && bp_is_current_action( 'requests' ) ) {
+				$buttons['accept_friendship']['link_text']        = esc_html__( 'Accept', 'buddyboss' );
+				$buttons['accept_friendship']['prefix_link_text'] = '<i class="bb-icons-rl-check"></i>';
+			}
+
 			return $buttons;
 		}
 

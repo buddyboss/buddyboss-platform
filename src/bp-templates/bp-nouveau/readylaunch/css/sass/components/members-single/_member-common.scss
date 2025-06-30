@@ -266,16 +266,18 @@
 					font-size: var(--bb-rl-font-size-sm);
 					padding: 6px var(--bb-rl-space-200);
 					line-height: var(--bb-rl-base-line-small);
+
+					[class*="bb-icons-rl-"] {
+						margin-right: var(--bb-rl-space-100);
+					}
 				}
 
-				&.switch-button {
+				button.reject,
+				a.switch-button {
 
-					a {
-
-						@include bb-rl-button;
-						@include bb-rl-button--secondary-outline;
-						@include bb-rl-button--small;
-					}
+					@include bb-rl-button;
+					@include bb-rl-button--secondary-outline;
+					@include bb-rl-button--small;
 				}
 			}
 		}

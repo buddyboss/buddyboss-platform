@@ -44,7 +44,11 @@ defined( 'ABSPATH' ) || exit;
 										<?php bp_nouveau_friend_hook( 'requests_item' ); ?>
 									</div>
 									<div class="bb-rl-member-buttons-wrap">
-										<?php bp_nouveau_members_loop_buttons(); ?>
+										<?php
+										add_filter( 'bp_nouveau_get_members_buttons', 'BB_ReadyLaunch::bb_rl_member_profile_buttons', 10, 3 );
+										bp_nouveau_members_loop_buttons();
+										remove_filter( 'bp_nouveau_get_members_buttons', 'BB_ReadyLaunch::bb_rl_member_profile_buttons', 10, 3 );
+										?>
 									</div>
 								</div>
 							</div>

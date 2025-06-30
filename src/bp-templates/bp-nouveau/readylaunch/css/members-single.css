@@ -538,10 +538,21 @@
   cursor: not-allowed;
 }
 
-.bb-rl-members .bp-list.friends-request-list .action .generic-button.switch-button a,
-.bb-rl-members .bp-list.invites .action .generic-button.switch-button a,
-.bb-rl-groups .bp-list.friends-request-list .action .generic-button.switch-button a,
-.bb-rl-groups .bp-list.invites .action .generic-button.switch-button a {
+.bb-rl-members .bp-list.friends-request-list .action .generic-button .button [class*="bb-icons-rl-"],
+.bb-rl-members .bp-list.invites .action .generic-button .button [class*="bb-icons-rl-"],
+.bb-rl-groups .bp-list.friends-request-list .action .generic-button .button [class*="bb-icons-rl-"],
+.bb-rl-groups .bp-list.invites .action .generic-button .button [class*="bb-icons-rl-"] {
+  margin-right: var(--bb-rl-space-100);
+}
+
+.bb-rl-members .bp-list.friends-request-list .action .generic-button button.reject,
+.bb-rl-members .bp-list.friends-request-list .action .generic-button a.switch-button,
+.bb-rl-members .bp-list.invites .action .generic-button button.reject,
+.bb-rl-members .bp-list.invites .action .generic-button a.switch-button,
+.bb-rl-groups .bp-list.friends-request-list .action .generic-button button.reject,
+.bb-rl-groups .bp-list.friends-request-list .action .generic-button a.switch-button,
+.bb-rl-groups .bp-list.invites .action .generic-button button.reject,
+.bb-rl-groups .bp-list.invites .action .generic-button a.switch-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -561,24 +572,36 @@
   font-weight: 400;
 }
 
-.bb-rl-members .bp-list.friends-request-list .action .generic-button.switch-button a:hover,
-.bb-rl-members .bp-list.invites .action .generic-button.switch-button a:hover,
-.bb-rl-groups .bp-list.friends-request-list .action .generic-button.switch-button a:hover,
-.bb-rl-groups .bp-list.invites .action .generic-button.switch-button a:hover {
+.bb-rl-members .bp-list.friends-request-list .action .generic-button button.reject:hover,
+.bb-rl-members .bp-list.friends-request-list .action .generic-button a.switch-button:hover,
+.bb-rl-members .bp-list.invites .action .generic-button button.reject:hover,
+.bb-rl-members .bp-list.invites .action .generic-button a.switch-button:hover,
+.bb-rl-groups .bp-list.friends-request-list .action .generic-button button.reject:hover,
+.bb-rl-groups .bp-list.friends-request-list .action .generic-button a.switch-button:hover,
+.bb-rl-groups .bp-list.invites .action .generic-button button.reject:hover,
+.bb-rl-groups .bp-list.invites .action .generic-button a.switch-button:hover {
   background-color: var(--bb-rl-background-secondary-color);
 }
 
-.bb-rl-members .bp-list.friends-request-list .action .generic-button.switch-button a:focus,
-.bb-rl-members .bp-list.invites .action .generic-button.switch-button a:focus,
-.bb-rl-groups .bp-list.friends-request-list .action .generic-button.switch-button a:focus,
-.bb-rl-groups .bp-list.invites .action .generic-button.switch-button a:focus {
+.bb-rl-members .bp-list.friends-request-list .action .generic-button button.reject:focus,
+.bb-rl-members .bp-list.friends-request-list .action .generic-button a.switch-button:focus,
+.bb-rl-members .bp-list.invites .action .generic-button button.reject:focus,
+.bb-rl-members .bp-list.invites .action .generic-button a.switch-button:focus,
+.bb-rl-groups .bp-list.friends-request-list .action .generic-button button.reject:focus,
+.bb-rl-groups .bp-list.friends-request-list .action .generic-button a.switch-button:focus,
+.bb-rl-groups .bp-list.invites .action .generic-button button.reject:focus,
+.bb-rl-groups .bp-list.invites .action .generic-button a.switch-button:focus {
   outline: 2px solid var(--bb-rl-border-quinery-color);
 }
 
-.bb-rl-members .bp-list.friends-request-list .action .generic-button.switch-button a:disabled,
-.bb-rl-members .bp-list.invites .action .generic-button.switch-button a:disabled,
-.bb-rl-groups .bp-list.friends-request-list .action .generic-button.switch-button a:disabled,
-.bb-rl-groups .bp-list.invites .action .generic-button.switch-button a:disabled {
+.bb-rl-members .bp-list.friends-request-list .action .generic-button button.reject:disabled,
+.bb-rl-members .bp-list.friends-request-list .action .generic-button a.switch-button:disabled,
+.bb-rl-members .bp-list.invites .action .generic-button button.reject:disabled,
+.bb-rl-members .bp-list.invites .action .generic-button a.switch-button:disabled,
+.bb-rl-groups .bp-list.friends-request-list .action .generic-button button.reject:disabled,
+.bb-rl-groups .bp-list.friends-request-list .action .generic-button a.switch-button:disabled,
+.bb-rl-groups .bp-list.invites .action .generic-button button.reject:disabled,
+.bb-rl-groups .bp-list.invites .action .generic-button a.switch-button:disabled {
   border-color: var(--bb-rl-border-tertiary-color);
   color: var(--bb-rl-text-disabled-color);
   cursor: not-allowed;
