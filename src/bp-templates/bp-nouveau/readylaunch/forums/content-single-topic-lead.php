@@ -119,7 +119,7 @@ if ( function_exists( 'bbp_is_forum_group_forum' ) && bbp_is_forum_group_forum( 
 			<?php
 				bbp_author_link(
 					array(
-						'post_id' => bbp_get_topic_forum_id(),
+						'post_id' => bbp_get_topic_id(),
 						'type'    => 'name',
 					)
 				);
