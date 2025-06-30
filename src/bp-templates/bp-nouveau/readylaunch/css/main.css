@@ -482,6 +482,8 @@ h6 {
 .bb-readylaunch-template .atwho-view {
   background-color: var(--bb-rl-background-color);
   border-color: var(--bb-rl-border-secondary-color);
+  border-radius: 8px;
+  min-width: 220px;
 }
 
 .bb-readylaunch-template .atwho-view small {
@@ -489,7 +491,7 @@ h6 {
 }
 
 .bb-readylaunch-template .atwho-view ul li .username {
-  color: var(--bb-rl-text-secondary-color);
+  display: none;
 }
 
 .bb-readylaunch-template .emojionearea .emojionearea-picker {
@@ -847,7 +849,7 @@ ul.bp-list {
   }
 }
 
-.atwho-view {
+.bb-readylaunch-template .atwho-view {
   background-color: var(--bb-rl-background-color);
   border-color: var(--bb-rl-border-secondary-color);
   border-radius: var(--bb-rl-radius-md);
@@ -855,27 +857,27 @@ ul.bp-list {
   box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.12);
 }
 
-.atwho-view ul {
+.bb-readylaunch-template .atwho-view ul {
   margin: var(--bb-rl-space-100) 0;
 }
 
-.atwho-view ul li {
+.bb-readylaunch-template .atwho-view ul li {
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
 }
 
-.atwho-view ul .cur {
+.bb-readylaunch-template .atwho-view ul .cur {
   background-color: var(--bb-rl-background-secondary-color);
 }
 
-.atwho-view ul .cur small {
+.bb-readylaunch-template .atwho-view ul .cur small {
   color: var(--bb-rl-text-color);
 }
 
-.atwho-view ul li.list-loader {
+.bb-readylaunch-template .atwho-view ul li.list-loader {
   color: var(--bb-rl-text-secondary-color);
 }
 
-.atwho-view ul li.list-loader:before {
+.bb-readylaunch-template .atwho-view ul li.list-loader:before {
   content: "";
   display: inline-block;
   height: 16px;
@@ -887,7 +889,7 @@ ul.bp-list {
   animation: spin 3s infinite linear;
 }
 
-.atwho-view small {
+.bb-readylaunch-template .atwho-view small {
   color: var(--bb-rl-text-secondary-color);
 }
 
