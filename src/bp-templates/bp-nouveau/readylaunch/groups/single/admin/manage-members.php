@@ -38,7 +38,16 @@ if ( bp_is_group_create() ) {
 			<h3 class="bb-rl-section-sub-heading"><?php echo esc_html( get_group_role_label( $bp_current_group_id, 'organizer_plural_label_name' ) ); ?></h3>
 		</dt>
 		<dd class="admin-listing">
-			<p class="bb-rl-manage-description-text"><?php printf( esc_html__( '%1$s have total control over the contents and settings of a group. That includes all the abilities of %2$s, as well as the ability to turn group forums on or off, change group status from public to private, change the group photo,  manage group %3$s, and delete the group.', 'buddyboss' ), get_group_role_label( $bp_current_group_id, 'organizer_plural_label_name' ), strtolower( get_group_role_label( $bp_current_group_id, 'moderator_plural_label_name' ) ), strtolower( get_group_role_label( $bp_current_group_id, 'member_plural_label_name' ) ) ); ?></p>
+			<p class="bb-rl-manage-description-text">
+				<?php
+				printf(
+					/* translators: %1$s: Organizer role label, %2$s: Moderator role label */
+					esc_html__( '%1$s have full control over group settings, content, and members, including %2$s privileges, privacy adjustments, photo updates, and deletion.', 'buddyboss' ),
+					wp_kses_post( get_group_role_label( $bp_current_group_id, 'organizer_plural_label_name' ) ),
+					wp_kses_post( strtolower( get_group_role_label( $bp_current_group_id, 'moderator_plural_label_name' ) ) )
+				);
+				?>
+			</p>
 
 			<?php if ( bp_has_members( '&include=' . $bp_group_admin_ids . '&member_type__not_in=false' ) ) : ?>
 				<ul id="admins-list" class="item-list single-line">
@@ -94,7 +103,15 @@ if ( bp_is_group_create() ) {
 
 		<dd class="moderator-listing">
 
-			<p class="bb-rl-manage-description-text"><?php printf( esc_html__( 'When a group member is promoted to be a %1$s of the group, the member gains the ability to edit and delete any forum discussion within the group and delete any activity feed items, excluding those posted by %2$s.', 'buddyboss' ), strtolower( get_group_role_label( $bp_current_group_id, 'moderator_singular_label_name' ) ), strtolower( get_group_role_label( $bp_current_group_id, 'organizer_plural_label_name' ) ) ); ?></p>
+			<p class="bb-rl-manage-description-text">
+				<?php
+				printf(
+					/* translators: %1$s: Organizer role label */
+					esc_html__( 'Moderators can edit or delete group activity feed content, excluding posts created by %1$s.', 'buddyboss' ),
+					wp_kses_post( strtolower( get_group_role_label( $bp_current_group_id, 'organizer_singular_label_name' ) ) )
+				);
+				?>
+			</p>
 
 			<?php if ( bp_has_members( '&include=' . bp_group_mod_ids() . '&member_type__not_in=false' ) ) : ?>
 				<ul id="mods-list" class="item-list single-line">
@@ -183,7 +200,14 @@ if ( bp_is_group_create() ) {
 	<dd class="general-members-listing">
 
 		<p class="bb-rl-manage-description-text">
-			<?php printf( esc_html__( 'When a member joins a group, he or she is assigned the %1$s role by default. %2$s are able to contribute to the group\'s discussions, activity feeds, and view other group members.', 'buddyboss' ), strtolower( get_group_role_label( $bp_current_group_id, 'member_singular_label_name' ) ), get_group_role_label( $bp_current_group_id, 'member_plural_label_name' ) ); ?>
+			<?php
+			printf(
+				/* translators: %1$s: Member role label, %2$s: Member role label */
+				esc_html__( 'Members are automatically assigned the \'%1$s\' role, enabling them to contribute to discussions, post in activity feeds, and view other group %2$s activity.', 'buddyboss' ),
+				wp_kses_post( strtolower( get_group_role_label( $bp_current_group_id, 'member_singular_label_name' ) ) ),
+				wp_kses_post( strtolower( get_group_role_label( $bp_current_group_id, 'member_plural_label_name' ) ) ),
+			);
+			?>
 		</p>
 		<div data-bp-list="manage_group_members">
 		<?php
