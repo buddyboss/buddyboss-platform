@@ -66,6 +66,8 @@ bp_get_template_part( 'sidebar/left-sidebar' );
 					<?php
 					if ( bp_is_active( 'search' ) ) {
 						bp_get_template_part( 'common/search/search-model' );
+					} else {
+						bp_nouveau_search_form();
 					}
 
 					if ( is_user_logged_in() ) {
