@@ -15355,6 +15355,11 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   text-transform: lowercase;
 }
 
+.bb-rl-activity-footer-actions .comments-count:hover {
+  color: var(--bb-rl-text-color);
+  text-decoration: underline;
+}
+
 .bb-rl-activity-footer-actions .activity-state-reactions {
   cursor: pointer;
 }
@@ -15385,6 +15390,11 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
 
 .bb-rl-activity-footer-actions .activity-state-reactions .reactions_item i:before {
   margin: 0;
+}
+
+.bb-rl-activity-footer-actions .activity-state-reactions:hover .activity-reactions_count {
+  color: var(--bb-rl-text-color);
+  text-decoration: underline;
 }
 
 .bp-generic-meta {
