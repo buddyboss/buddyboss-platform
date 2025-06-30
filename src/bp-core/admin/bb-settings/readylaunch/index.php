@@ -88,6 +88,8 @@ function bb_readylaunch_register_enqueue_style_script() {
 		)
 	);
 
+	$min = bp_core_get_minified_asset_suffix();
+
 	wp_register_script(
 		'bb-readylaunch-admin-script',
 		plugins_url( 'build/index.js', __FILE__ ),
@@ -100,7 +102,7 @@ function bb_readylaunch_register_enqueue_style_script() {
 
 	wp_register_style(
 		'bb-readylaunch-admin-style',
-		plugins_url( 'build/styles/settings.css', __FILE__ ),
+		plugins_url( "build/styles/settings{$min}.css", __FILE__ ),
 		array(),
 		$asset['version']
 	);
@@ -108,7 +110,7 @@ function bb_readylaunch_register_enqueue_style_script() {
 	// Enqueue the BB Icons CSS.
 	wp_register_style(
 		'bb-icons-rl-css',
-		buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/icons/css/bb-icons-rl.css',
+		buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/icons/css/bb-icons-rl{$min}.css",
 		array(),
 		$asset['version']
 	);
@@ -149,14 +151,6 @@ function bb_readylaunch_settings_page_enqueue_style_script( $admin_page ) {
 
 	// Enqueue the BB Icons CSS.
 	wp_enqueue_style( 'bb-icons-rl-css' );
-
-	wp_enqueue_script(
-		'bb-readylaunch-help-overlay-script',
-		plugins_url( 'build/help-overlay.js', __FILE__ ),
-		array(),
-		$asset['version'],
-		true
-	);
 }
 
 add_action( 'bp_admin_enqueue_scripts', 'bb_readylaunch_settings_page_enqueue_style_script' );
