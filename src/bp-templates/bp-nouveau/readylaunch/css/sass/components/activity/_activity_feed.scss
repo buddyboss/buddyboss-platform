@@ -535,6 +535,15 @@
 			}
 		}
 
+		.activity-topic {
+			display: inline-block;
+			color: var(--bb-rl-text-secondary-color);
+			font-size: var(--bb-rl-font-size-sm);
+			font-weight: 500;
+			line-height: 1.5;
+			margin-left: var(--bb-rl-space-100);
+		}
+
 		.activity-to {
 			font-size: 0;
 			line-height: 0.8;
