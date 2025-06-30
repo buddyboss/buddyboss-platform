@@ -1535,6 +1535,17 @@ window.bp = window.bp || {};
 					if ( document.getElementById( 'tmpl-activity-schedule-post' ) ) {
 						this.views.add( new bp.Views.activitySchedulePost( { model: this.model } ) );
 						$( '.bb-rl-activity-form' ).addClass( 'bb-rl-activity-form--schedule' );
+
+						// Display schedule button icon when privacy is not group for admin.
+						var $whatsNewForm = $( '#bb-rl-whats-new-form' );
+						if (
+							'group' !== this.model.get( 'privacy' ) &&
+							! _.isUndefined( bbRlIsActivitySchedule ) &&
+							! _.isUndefined( bbRlIsActivitySchedule.params.can_schedule_in_feed ) &&
+							true === bbRlIsActivitySchedule.params.can_schedule_in_feed
+						) {
+							$whatsNewForm.find( '.bb-schedule-post_dropdown_section' ).removeClass( 'bp-hide' );
+						}
 					}
 				}
 
