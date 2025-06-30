@@ -974,6 +974,21 @@
   margin-top: var(--bb-rl-space-100);
 }
 
+.bb-rl-manage-group-container .bb-group-meprlms-settings-container .bb-course-activity-selection .select2-container .select2-selection--multiple {
+  border-color: var(--bb-rl-border-secondary-color);
+  border-radius: var(--bb-rl-radius-md) !important;
+}
+
+.bb-rl-manage-group-container .bb-group-meprlms-settings-container .bb-course-activity-selection .select2-dropdown {
+  border-color: var(--bb-rl-border-secondary-color);
+  border-radius: var(--bb-rl-radius-md);
+}
+
+.bb-rl-manage-group-container .bb-group-meprlms-settings-container .bb-course-activity-selection .select2-container--default .select2-results__option--highlighted[aria-selected] {
+  background-color: var(--bb-rl-background-secondary-color);
+  color: var(--bb-rl-text-color);
+}
+
 .bb-rl-delete-cover,
 .bb-rl-delete-avatar,
 .bb-rl-manage-group-container form input#delete-group-button {

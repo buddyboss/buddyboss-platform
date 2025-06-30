@@ -3150,7 +3150,7 @@ button[data-balloon] {
 }
 
 .bb-rl-notice__title {
-  color: var(--bb-rl-text-primary-color);
+  color: var(--bb-rl-text-color);
   font-weight: 500;
   margin-bottom: var(--bb-rl-space-100);
 }
@@ -3268,7 +3268,7 @@ button[data-balloon] {
   border-style: solid;
   border-radius: 0;
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  color: var(--bb-rl-text-primary-color);
+  color: var(--bb-rl-text-color);
   font-size: var(--bb-rl-font-size-sm);
   font-weight: 500;
   line-height: var(--bb-rl-base-line-small);
@@ -7362,7 +7362,7 @@ body.admin-bar .bb-rl-left-panel {
 .bb-rl-container .bb_more_options .bb_more_dropdown > ul li a:hover,
 .bb-rl-container .bb_more_options .bb_more_dropdown > ul li button:hover {
   background-color: var(--bb-rl-background-secondary-hover-color);
-  color: var(--bb-rl-text-primary-color);
+  color: var(--bb-rl-text-color);
 }
 
 .bb-rl-context-wrap .bb-rl-context-dropdown a::before,
@@ -8347,7 +8347,7 @@ body.guillotine-dragging * {
 #object-nav .bb-rl-sub-menu li a:hover,
 #menu-readylaunch .bb-rl-sub-menu li a:hover {
   background-color: var(--bb-rl-background-secondary-hover-color);
-  color: var(--bb-rl-text-primary-color);
+  color: var(--bb-rl-text-color);
 }
 
 li.bb-rl-hideshow {
@@ -8809,7 +8809,7 @@ input.bb-rl-zoom-slider::-moz-range-progress {
   border-style: solid;
   border-radius: 0;
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  color: var(--bb-rl-text-primary-color);
+  color: var(--bb-rl-text-color);
   font-size: var(--bb-rl-font-size-sm);
   font-weight: 500;
   line-height: var(--bb-rl-base-line-small);
@@ -8872,7 +8872,7 @@ input.bb-rl-zoom-slider::-moz-range-progress {
   border-style: solid;
   border-radius: 0;
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  color: var(--bb-rl-text-primary-color);
+  color: var(--bb-rl-text-color);
   font-size: var(--bb-rl-font-size-sm);
   font-weight: 500;
   line-height: var(--bb-rl-base-line-small);
@@ -11182,7 +11182,7 @@ input.bb-rl-zoom-slider::-moz-range-progress {
 
 .bb-rl-advance-profile-search .bb-rl-advance-profile-search-toggle:hover {
   background-color: var(--bb-rl-background-secondary-hover-color);
-  color: var(--bb-rl-text-primary-color);
+  color: var(--bb-rl-text-color);
 }
 
 .bb-rl-advance-profile-search .bb-rl-advance-profile-search-toggle:after {
@@ -19182,7 +19182,7 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   border-style: solid;
   border-radius: 0;
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  color: var(--bb-rl-text-primary-color);
+  color: var(--bb-rl-text-color);
   font-size: var(--bb-rl-font-size-sm);
   font-weight: 500;
   line-height: var(--bb-rl-base-line-small);
