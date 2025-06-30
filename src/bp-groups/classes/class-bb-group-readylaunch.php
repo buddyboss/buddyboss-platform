@@ -59,10 +59,6 @@ class BB_Group_Readylaunch {
 		remove_action( 'bp_before_directory_groups_page', 'bp_group_directory_page_content' );
 
 		add_filter( 'bp_get_group_description_excerpt', array( $this, 'bb_rl_get_group_description_excerpt' ), 10, 1 );
-
-		add_filter( 'bp_member_plural_label_name', array( $this, 'bb_rl_add_count_after_label' ), 10, 3 );
-		add_filter( 'bp_organizer_plural_label_name', array( $this, 'bb_rl_add_count_after_label' ), 10, 3 );
-		add_filter( 'bp_moderator_plural_label_name', array( $this, 'bb_rl_add_count_after_label' ), 10, 3 );
 	}
 
 	/**
@@ -604,7 +600,7 @@ class BB_Group_Readylaunch {
 	 * @param string $label_name  Label name.
 	 * @return string Modified label.
 	 */
-	public function bb_rl_add_count_after_label( $label, $group_id, $label_name ) {
+	public static function bb_rl_add_count_after_label( $label, $group_id, $label_name ) {
 		if ( 'member_plural_label_name' === $label_name ) {
 			$members = groups_get_group_members(
 				array(
