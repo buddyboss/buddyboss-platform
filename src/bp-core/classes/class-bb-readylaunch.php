@@ -102,11 +102,6 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			// Common LMS stylesheets.
 			add_action( 'wp_enqueue_scripts', array( $this, 'bb_readylaunch_lms_enqueue_styles' ), 10 );
 
-			// Set up LearnDash integration.
-			if ( $enabled_for_page && class_exists( 'SFWD_LMS' ) ) {
-				require_once buddypress()->compatibility_dir . '/class-bb-readylaunch-learndash-helper.php';
-			}
-
 			if ( $enabled_for_page && class_exists( 'memberpress\courses\helpers\Courses' ) ) {
 				// MemberPress Courses integration.
 				add_action( 'wp_enqueue_scripts', array( $this, 'bb_readylaunch_meprlms_enqueue_styles' ), 10 );
@@ -307,6 +302,10 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			add_filter( 'body_class', array( $this, 'bb_rl_theme_body_classes' ) );
 			add_filter( 'script_loader_src', array( $this, 'bb_rl_script_loader_src' ), PHP_INT_MAX, 2 );
 			add_action( 'bb_rl_get_template_part_content', array( $this, 'bb_rl_get_template_part_content' ), 10, 1 );
+
+			if ( class_exists( 'SFWD_LMS' ) ) {
+				require_once buddypress()->compatibility_dir . '/class-bb-readylaunch-learndash-helper.php';
+			}
 		}
 
 		/**
