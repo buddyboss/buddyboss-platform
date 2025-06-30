@@ -273,6 +273,11 @@
 			background-color: transparent;
 			padding: 0;
 			justify-content: center;
+			border: none;
+
+			.bp-icon {
+				display: none;
+			}
 
 			p {
 

@@ -19801,6 +19801,11 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   background-color: transparent;
   padding: 0;
   justify-content: center;
+  border: none;
+}
+
+.bb-rl-no-search-results .bp-search-no-results .bp-search-results.bp-feedback .bp-icon {
+  display: none;
 }
 
 .bb-rl-no-search-results .bp-search-no-results .bp-search-results.bp-feedback p {
