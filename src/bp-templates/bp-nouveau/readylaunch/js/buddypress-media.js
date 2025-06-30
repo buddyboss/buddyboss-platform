@@ -2831,8 +2831,8 @@ window.bp = window.bp || {};
 			}
 
 			$( media_move_popup ).find( '.bb-rl-media-move-file' ).addClass( 'open' ).show();
-			media_id        = eventTarget.closest( '.bb-rl-more_dropdown-wrap' ).siblings( 'a' ).data( 'id' );
-			media_parent_id = eventTarget.closest( '.bb-rl-more_dropdown-wrap' ).siblings( 'a' ).data( 'album-id' );
+			media_id        = eventTarget.closest( '.media-action-wrap' ).siblings( 'a' ).data( 'id' );
+			media_parent_id = eventTarget.closest( '.media-action-wrap' ).siblings( 'a' ).data( 'album-id' );
 
 			media_move_popup.find( '.bb-rl-media-move' ).attr( 'id', media_id );
 			media_move_popup.find( '.bb-rl-model-footer .bb-rl-media-move' ).addClass( 'is-disabled' );
