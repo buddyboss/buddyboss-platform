@@ -497,7 +497,8 @@ h6 {
 }
 
 .bb-readylaunch-template .emojionearea .emojionearea-picker .emojionearea-filters {
-  background-color: var(--bb-rl-background-color);
+  background-color: var(--bb-rl-background-secondary-color);
+  border-bottom: 1px solid var(--bb-rl-border-secondary-color);
 }
 
 .bb-readylaunch-template .emojionearea .emojionearea-picker .emojionearea-filters .emojionearea-filter {
@@ -505,7 +506,7 @@ h6 {
 }
 
 .bb-readylaunch-template .emojionearea .emojionearea-picker .emojionearea-filters .emojionearea-filter.active {
-  background-color: var(--bb-rl-background-hover-color);
+  background-color: var(--bb-rl-background-color);
 }
 
 .bb-readylaunch-template .emojionearea .emojionearea-picker .emojionearea-scroll-area .emojionearea-category-title {
