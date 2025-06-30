@@ -147,6 +147,7 @@
 		align-items: center;
 		border-bottom: 1px solid var(--bb-rl-border-secondary-color);
 		padding: var(--bb-rl-space-200) var(--bb-rl-space-300);
+		position: relative;
 
 		h4 {
 			margin: 0;
@@ -164,6 +165,8 @@
 			width: 24px;
 			height: 24px;
 			cursor: pointer;
+			right: var(--bb-rl-space-200);
+			top: var(--bb-rl-space-200);
 
 			&::before {
 				content: "\e4f6";
@@ -210,6 +213,16 @@
 			@include bb-rl-base-heading-xl;
 			color: var(--bb-rl-text-color);
 			margin-right: var(--bb-rl-space-100);
+		}
+	}
+
+	.content-report-popup {
+
+		.bb-model-header {
+
+			.bp-reported-type {
+				text-transform: lowercase;
+			}
 		}
 	}
 

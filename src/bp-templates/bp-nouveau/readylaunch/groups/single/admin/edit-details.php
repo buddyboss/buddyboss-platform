@@ -17,10 +17,6 @@ defined( 'ABSPATH' ) || exit;
 $bp_is_group_create = bp_is_group_create();
 if ( $bp_is_group_create ) : ?>
 
-	<h3 class="bp-screen-title creation-step-name">
-		<?php esc_html_e( 'Enter Group Name &amp; Description', 'buddyboss' ); ?>
-	</h3>
-
 <?php else : ?>
 
 	<h2 class="bp-screen-title">

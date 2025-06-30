@@ -323,13 +323,15 @@ h6 {
 	.atwho-view {
 		background-color: var(--bb-rl-background-color);
 		border-color: var(--bb-rl-border-secondary-color);
+		border-radius: 8px;
+		min-width: 220px;
 
 		small {
 			color: var(--bb-rl-text-color);
 		}
 
 		ul li .username {
-			color: var(--bb-rl-text-secondary-color);
+			display: none;
 		}
 	}
 

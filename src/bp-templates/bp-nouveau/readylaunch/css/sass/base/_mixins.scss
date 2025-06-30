@@ -249,7 +249,7 @@
 }
 
 @mixin bb-rl-notice__title {
-	color: var(--bb-rl-text-primary-color);
+	color: var(--bb-rl-text-color);
 	font-weight: 500;
 	margin-bottom: var(--bb-rl-space-100);
 }
@@ -367,7 +367,7 @@
 	border-style: solid;
 	border-radius: 0;
 	padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-	color: var(--bb-rl-text-primary-color);
+	color: var(--bb-rl-text-color);
 
 	@include bb-rl-label-heading-bolder;
 }

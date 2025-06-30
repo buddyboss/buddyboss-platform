@@ -1065,6 +1065,10 @@
 	}
 }
 
+.acomments-modal-open {
+	overflow: hidden;
+}
+
 .bb-rl-modal-activity-body {
 	position: relative;
 	padding: var(--bb-rl-space-200) var(--bb-rl-space-300);
@@ -1642,6 +1646,11 @@
 		color: var(--bb-rl-text-tertiary-color);
 		font-size: 14px;
 		text-transform: lowercase;
+
+		&:hover {
+			color: var(--bb-rl-text-color);
+			text-decoration: underline;
+		}
 	}
 
 	.activity-state-reactions {
@@ -1672,6 +1681,14 @@
 				&:before {
 					margin: 0;
 				}
+			}
+		}
+
+		&:hover {
+
+			.activity-reactions_count {
+				color: var(--bb-rl-text-color);
+				text-decoration: underline;
 			}
 		}
 	}

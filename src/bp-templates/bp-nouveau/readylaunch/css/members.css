@@ -690,7 +690,7 @@
 
 .bb-rl-advance-profile-search .bb-rl-advance-profile-search-toggle:hover {
   background-color: var(--bb-rl-background-secondary-hover-color);
-  color: var(--bb-rl-text-primary-color);
+  color: var(--bb-rl-text-color);
 }
 
 .bb-rl-advance-profile-search .bb-rl-advance-profile-search-toggle:after {
