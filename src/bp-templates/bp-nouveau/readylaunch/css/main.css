@@ -13579,6 +13579,10 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   display: block;
 }
 
+.bb-rl-activity-modal-open {
+  overflow: hidden;
+}
+
 @media screen and (max-width: 680px) {
   .bb-rl-activity-form.bb-rl-focus-in .bb-rl-whats-new-form-footer {
     flex-flow: column;
@@ -14773,6 +14777,10 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   margin: 0;
   box-shadow: none;
   background: transparent;
+}
+
+.acomments-modal-open {
+  overflow: hidden;
 }
 
 .bb-rl-modal-activity-body {

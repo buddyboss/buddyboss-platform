@@ -1065,6 +1065,10 @@
 	}
 }
 
+.acomments-modal-open {
+	overflow: hidden;
+}
+
 .bb-rl-modal-activity-body {
 	position: relative;
 	padding: var(--bb-rl-space-200) var(--bb-rl-space-300);
