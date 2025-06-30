@@ -124,6 +124,29 @@
 		border-radius: var(--bb-rl-radius-md);
 		transition: background-color 0.2s ease, bordfont / size / smer-color 0.2s ease, color 0.2s ease;
 		text-decoration: none;
+		opacity: 0.7;
+		pointer-events: none;
+	}
+}
+
+.ac-form {
+
+	&.has-gif,
+	&.has-media,
+	&.has-content {
+
+		.bb-rl-ac-submit-wrap input[type="submit"] {
+			opacity: 1;
+			pointer-events: auto;
+		}
+	}
+
+	&.has-media.media-uploading {
+
+		.bb-rl-ac-submit-wrap input[type="submit"] {
+			opacity: 0.7;
+			pointer-events: none;
+		}
 	}
 }
 

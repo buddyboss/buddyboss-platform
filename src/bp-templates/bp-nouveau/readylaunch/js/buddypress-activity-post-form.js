@@ -2118,7 +2118,7 @@ window.bp = window.bp || {};
 				);
 
 				if ( this.standalone ) {
-					this.$el.closest( '.screen-content, .elementor-widget-container' ).find( '#bb-rl-activity-modal .ac-form' ).removeClass( 'has-gif' );
+					this.$el.closest( '.screen-content, .elementor-widget-container, .buddypress-wrap' ).find( '#bb-rl-activity-modal .ac-form' ).removeClass( 'has-gif' );
 				} else {
 					this.$el.closest( '.ac-form' ).removeClass( 'has-gif' );
 				}
@@ -2306,7 +2306,7 @@ window.bp = window.bp || {};
 				var whatNewForm = this.$el.closest( '#bb-rl-whats-new-form' );
 
 				if ( this.standalone ) {
-					this.$el.closest( '.screen-content, .elementor-widget-container, .bb-rl-wrap' ).find( '#bb-rl-activity-modal .ac-form' ).addClass( 'has-gif' );
+					this.$el.closest( '.screen-content, .elementor-widget-container, .bb-rl-wrap, .buddypress-wrap' ).find( '#bb-rl-activity-modal .ac-form' ).addClass( 'has-gif' );
 				} else {
 					this.$el.closest( '.ac-form' ).addClass( 'has-gif' );
 				}
