@@ -73,7 +73,7 @@ if ( 0 === $total_count ) {
 			<div class="bb-groups-messages-left-inner">
 				<div class="bb-panel-head">
 					<div class="bb-panel-subhead">
-						<h4 class="total-members-text"><?php esc_html_e( 'Group Members', 'buddyboss' ); ?></h4>
+						<h4 class="total-members-text"><?php esc_html_e( 'Group members', 'buddyboss' ); ?></h4>
 
 						<div class="group-messages-search subnav-search clearfix" role="search">
 							<div class="bp-search">
@@ -95,7 +95,7 @@ if ( 0 === $total_count ) {
 						<div class="bp-group-message-wrap" data-bp-tooltip-pos="left" data-bp-tooltip="<?php esc_attr_e( 'You are not allowed to Create New Thread with all group members.', 'buddyboss' ); ?>">
 							<input id="bp-group-message-switch-checkbox" class="bp-group-message-switch-checkbox bb-input-switch bs-styled-checkbox" type="checkbox">
 							<label for="bp-group-message-switch-checkbox" class="bp-group-message-label">
-								<span class="select-members-text"><?php esc_html_e( 'Select All', 'buddyboss' ); ?></span>
+								<span class="select-members-text"><?php esc_html_e( 'Select all', 'buddyboss' ); ?></span>
 							</label>
 						</div>
 					</div>
