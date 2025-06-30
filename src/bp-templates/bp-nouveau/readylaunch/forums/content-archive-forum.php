@@ -24,9 +24,24 @@ defined( 'ABSPATH' ) || exit;
 	<div class="bb-rl-secondary-header flex items-center">
 		<div class="bb-rl-entry-heading">
 			<?php
-			// Get total forums count using bbPress statistics.
-			$stats        = bbp_get_statistics();
-			$total_forums = isset( $stats['forum_count_int'] ) ? $stats['forum_count_int'] : 0;
+			// Determine post status based on user capabilities.
+			if ( current_user_can( 'read_hidden_forums' ) ) {
+				$post_status = array( 'publish', 'private', 'hidden' );
+			} elseif ( current_user_can( 'read_private_forums' ) ) {
+				$post_status = array( 'publish', 'private' );
+			} else {
+				$post_status = array( 'publish' );
+			}
+
+			$forums_args = array(
+				'post_type'   => bbp_get_forum_post_type(),
+				'post_status' => $post_status,
+				'numberposts' => -1,
+				'fields'      => 'ids',
+			);
+
+			$forums       = get_posts( $forums_args );
+			$total_forums = ! empty( $forums ) ? count( $forums ) : 0;
 			?>
 			<h2><?php esc_html_e( 'Forums', 'buddyboss' ); ?> <span class="bb-rl-heading-count"><?php echo esc_html( $total_forums ); ?></span></h2>
 		</div>
