@@ -7520,6 +7520,11 @@ body.ld-in-focus-mode .learndash-wrapper {
   border-bottom-left-radius: var(--bb-rl-radius-md);
 }
 
+.bb-rl-quiz-entry .wpProQuiz_content .wpProQuiz_catOverview span,
+.bb-rl-quiz-entry .learndash-wrapper .wpProQuiz_content .wpProQuiz_catOverview span {
+  background-color: transparent;
+}
+
 .bb-rl-quiz-entry .wpProQuiz_content .wpProQuiz_cloze input[type="text"] {
   background-color: var(--bb-rl-background-color);
   color: var(--bb-rl-text-color);
