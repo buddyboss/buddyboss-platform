@@ -698,9 +698,8 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					$this->bb_rl_is_page_enabled_for_integration( 'registration' )
 				) ||
 				$this->bb_rl_is_learndash_page() || // Add check for LearnDash pages.
-					$this->bb_rl_is_memberpress_courses_page() // Add check for MemberPress Courses pages.
-				)
-			;
+				$this->bb_rl_is_memberpress_courses_page() // Add check for MemberPress Courses pages.
+			);
 		}
 
 		/**
@@ -925,7 +924,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 			wp_enqueue_script( 'bb-readylaunch-front', buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/js/bb-readylaunch-front{$min}.js", array( 'jquery', 'bp-select2', 'bp-nouveau' ), bp_get_version(), true );
 
-			// Enqueue select2 CSS to ensure it's available for ReadyLaunch
+			// Enqueue select2 CSS to ensure it's available for ReadyLaunch.
 			wp_enqueue_style( 'bp-select2' );
 
 			// Enqueue Cropper.js.
@@ -2591,10 +2590,23 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			$settings['blogname']      = (string) get_bloginfo( 'name' );
 
 			// Style Settings.
-			$settings['bb_rl_light_logo']  = bp_get_option( 'bb_rl_light_logo', array() );
-			$settings['bb_rl_dark_logo']   = bp_get_option( 'bb_rl_dark_logo', array() );
+			$settings['bb_rl_light_logo'] = bp_get_option( 'bb_rl_light_logo', array() );
+			$settings['bb_rl_dark_logo']  = bp_get_option( 'bb_rl_dark_logo', array() );
+
+			if ( false === bp_get_option( 'bb_rl_color_light', false ) ) {
+				bp_update_option( 'bb_rl_color_light', '#3E34FF' );
+			}
+
+			if ( false === bp_get_option( 'bb_rl_color_dark', false ) ) {
+				bp_update_option( 'bb_rl_color_dark', '#A347FF' );
+			}
+
+			if ( false === bp_get_option( 'bb_rl_theme_mode', false ) ) {
+				bp_update_option( 'bb_rl_theme_mode', 'light' );
+			}
+
 			$settings['bb_rl_color_light'] = (string) bp_get_option( 'bb_rl_color_light', '#3E34FF' );
-			$settings['bb_rl_color_dark']  = (string) bp_get_option( 'bb_rl_color_dark', '#9747FF' );
+			$settings['bb_rl_color_dark']  = (string) bp_get_option( 'bb_rl_color_dark', '#A347FF' );
 			$settings['bb_rl_theme_mode']  = (string) bp_get_option( 'bb_rl_theme_mode', 'light' );
 
 			$enabled_pages = array();
@@ -2609,6 +2621,10 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				$enabled_pages['courses'] = false;
 			}
 
+			if ( false === bp_get_option( 'bb_rl_enabled_pages', false ) ) {
+				bp_update_option( 'bb_rl_enabled_pages', $enabled_pages );
+			}
+
 			// Pages & Sidebars Settings - Boolean values in arrays.
 			$settings['bb_rl_enabled_pages'] = array_map(
 				function ( $value ) {
@@ -2620,26 +2636,28 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				)
 			);
 
+			$activity_sidebars = array(
+				'complete_profile'  => true,
+				'latest_updates'    => true,
+				'recent_blog_posts' => true,
+				'active_members'    => true,
+			);
+
+			if ( false === bp_get_option( 'bb_rl_activity_sidebars', false ) ) {
+				bp_update_option( 'bb_rl_activity_sidebars', $activity_sidebars );
+			}
+
 			$settings['bb_rl_activity_sidebars'] = array_map(
 				function ( $value ) {
 					return (bool) $value;
 				},
 				bp_get_option(
 					'bb_rl_activity_sidebars',
-					array(
-						'complete_profile'  => true,
-						'latest_updates'    => true,
-						'recent_blog_posts' => true,
-						'active_members'    => true,
-					)
+					$activity_sidebars
 				)
 			);
 
-			$member_sidebar = array(
-				'complete_profile' => true,
-				'connections'      => false,
-				'my_network'       => false
-			);
+			$member_sidebar = array( 'complete_profile' => true );
 
 			if ( bp_is_active( 'friends' ) ) {
 				$member_sidebar['connections'] = true;
@@ -2647,6 +2665,10 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 			if ( bp_is_active( 'activity' ) && bp_is_activity_follow_active() ) {
 				$member_sidebar['my_network'] = true;
+			}
+
+			if ( false === bp_get_option( 'bb_rl_member_profile_sidebars', false ) ) {
+				bp_update_option( 'bb_rl_member_profile_sidebars', $member_sidebar );
 			}
 
 			$settings['bb_rl_member_profile_sidebars'] = array_map(
@@ -2659,16 +2681,22 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				)
 			);
 
+			$group_sidebars = array(
+				'about_group'   => true,
+				'group_members' => true,
+			);
+
+			if ( false === bp_get_option( 'bb_rl_groups_sidebars', false ) ) {
+				bp_update_option( 'bb_rl_groups_sidebars', $group_sidebars );
+			}
+
 			$settings['bb_rl_groups_sidebars'] = array_map(
 				function ( $value ) {
 					return (bool) $value;
 				},
 				bp_get_option(
 					'bb_rl_groups_sidebars',
-					array(
-						'about_group'   => true,
-						'group_members' => false,
-					)
+					$group_sidebars
 				)
 			);
 
@@ -2688,11 +2716,11 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					'enabled' => true,
 					'order'   => 2,
 				),
-				'forums'        => array(
+				'courses'       => array(
 					'enabled' => true,
 					'order'   => 3,
 				),
-				'courses'       => array(
+				'forums'        => array(
 					'enabled' => true,
 					'order'   => 4,
 				),
@@ -2721,8 +2749,13 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			if ( ! bp_is_active( 'notifications' ) ) {
 				unset( $defaults['notifications'] );
 			}
+			if ( ! $this->bb_is_sidebar_enabled_for_courses() ) {
+				unset( $defaults['courses'] );
+			}
 
-			// @todo: remove 'courses' from defaults if LMS not active.
+			if ( false === bp_get_option( 'bb_rl_side_menu', false ) ) {
+				bp_update_option( 'bb_rl_side_menu', $defaults );
+			}
 
 			$raw_settings = bp_get_option( 'bb_rl_side_menu', $defaults );
 
