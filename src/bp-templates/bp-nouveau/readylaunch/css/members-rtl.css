@@ -384,7 +384,7 @@
 .bb-rl-member-header-actions button.bb-rl-send-message-disabled i::before,
 .bb-rl-member-header-actions .generic-button a.send-message i::before,
 .bb-rl-member-header-actions .generic-button a.bb-rl-send-message-disabled i::before {
-  content: "\e168";
+  content: "\e16e";
 }
 
 .bb-rl-primary-actions button.follow-button.not_following i::before,

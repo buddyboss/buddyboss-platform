@@ -732,7 +732,7 @@ div#bp-group-message-content {
 @media screen and (max-width: 1650px) {
 
 	.bb-rl-content-wrapper:has(.bb-rl-secondary-container .bb-rl-widget-sidebar) {
-		
+
 		#group-messages-container {
 
 			.group-messages.private-message & {
@@ -746,7 +746,7 @@ div#bp-group-message-content {
 				flex: 0 0 100%;
 				border-right: 0;
 				border-bottom: 1px solid var(--bb-rl-border-secondary-color);
-				padding-bottom: var(--bb-rl-space-200);	
+				padding-bottom: var(--bb-rl-space-200);
 			}
 		}
 
@@ -754,7 +754,7 @@ div#bp-group-message-content {
 			margin-right: calc(var(--bb-rl-space-200) * -1);
 		}
 	}
-	
+
 }
 
 @media screen and (max-width: 1200px) {
