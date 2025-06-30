@@ -4313,6 +4313,7 @@ body.bb-readylaunch-template .select2-container--rl.select2-container--open:has(
 }
 
 .dropzone.document-dropzone .dz-preview.dz-complete:not(.dz-error) .dz-icon [class*="bb-icons"] {
+  font-weight: 500;
   z-index: 11;
   position: relative;
   background-color: var(--bb-rl-background-secondary-color);
