@@ -17868,21 +17868,21 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   cursor: not-allowed;
 }
 
-.bb-rl-member-header-actions button.friendship-button.pending_friend {
+.bb-rl-member-header-actions button.friendship-button.is_friend, .bb-rl-member-header-actions button.friendship-button.pending_friend {
   background-color: var(--bb-rl-background-tertiary-color);
   color: var(--bb-rl-text-color);
   border: 1px solid transparent;
 }
 
-.bb-rl-member-header-actions button.friendship-button.pending_friend:hover {
+.bb-rl-member-header-actions button.friendship-button.is_friend:hover, .bb-rl-member-header-actions button.friendship-button.pending_friend:hover {
   background-color: var(--bb-rl-background-tertiary-hover-color);
 }
 
-.bb-rl-member-header-actions button.friendship-button.pending_friend:focus {
+.bb-rl-member-header-actions button.friendship-button.is_friend:focus, .bb-rl-member-header-actions button.friendship-button.pending_friend:focus {
   outline: 2px solid var(--bb-rl-border-quinery-color);
 }
 
-.bb-rl-member-header-actions button.friendship-button.pending_friend:disabled {
+.bb-rl-member-header-actions button.friendship-button.is_friend:disabled, .bb-rl-member-header-actions button.friendship-button.pending_friend:disabled {
   background-color: var(--bb-rl-background-tertiary-color);
   color: var(--bb-rl-text-disabled-color);
   cursor: not-allowed;

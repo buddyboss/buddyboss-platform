@@ -2302,6 +2302,15 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				);
 			}
 
+			foreach ( $buttons as $key => $button ) {
+				if ( ! empty( $button['button_attr'] ) ) {
+					if ( ! empty( $buttons[ $key ]['button_attr']['data-title'] ) ) {
+						$buttons[ $key ]['button_attr']['data-balloon-pos'] = 'up';
+						$buttons[ $key ]['button_attr']['data-balloon']     = $buttons[ $key ]['button_attr']['data-title'];
+					}
+				}
+			}
+
 			return $buttons;
 		}
 

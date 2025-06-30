@@ -163,6 +163,7 @@
 
 		@include bb-rl-button--brand-fill;
 
+		&.is_friend,
 		&.pending_friend {
 
 			@include bb-rl-button-secondary-fill;
