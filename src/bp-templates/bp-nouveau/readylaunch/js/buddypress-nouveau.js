@@ -926,7 +926,7 @@ window.bp = window.bp || {};
 
 					var typeType = window.location.hash.substr( 1 );
 					scope        = ( undefined !== typeType && 'following' === typeType ) ? typeType : ( undefined !== objectData.scope ? objectData.scope : '' );
-					filter       = objectData.filter ? objectData.filter : filter;
+					filter       = ( undefined !== objectData.filter && null !== objectData.filter ) ? objectData.filter : ( !_.isNull( filter ) ? filter : 0 );
 
 					if ( 'activity' === object ) {
 						var local_scope = $( '#bb-subnav-filter-show > ul > li.selected' ).data( 'bp-scope' );
