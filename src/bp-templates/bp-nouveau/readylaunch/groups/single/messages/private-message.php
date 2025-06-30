@@ -25,7 +25,7 @@ $args                = array(
 
 $group_members = groups_get_group_members( $args );
 $total_count   = 0;
-$all_text      = esc_html__( 'All Group Members', 'buddyboss' );
+$all_text      = esc_html__( 'All group members', 'buddyboss' );
 
 if ( ! empty( $group_members ) && ! empty( $group_members['members'] ) ) {
 	foreach ( $group_members['members'] as $member ) {
