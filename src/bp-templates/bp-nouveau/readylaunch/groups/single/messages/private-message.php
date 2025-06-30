@@ -78,11 +78,11 @@ if ( 0 === $total_count ) {
 						<div class="group-messages-search subnav-search clearfix" role="search">
 							<div class="bp-search">
 								<form action="" method="get" id="group_messages_search_form" class="bp-messages-search-form search-form-has-reset" data-bp-search="group-messages">
-									<label for="group_messages_search" class="bp-screen-reader-text"><?php bp_nouveau_search_default_text( __( 'Search Members', 'buddyboss' ), false ); ?></label>
-									<input type="search" id="group_messages_search" placeholder="<?php esc_attr_e( 'Search Members', 'buddyboss' ); ?>"/>
+									<label for="group_messages_search" class="bp-screen-reader-text"><?php bp_nouveau_search_default_text( __( 'Search members', 'buddyboss' ), false ); ?></label>
+									<input type="search" id="group_messages_search" placeholder="<?php esc_attr_e( 'Search members', 'buddyboss' ); ?>"/>
 									<button type="submit" id="group_messages_search_submit" class="nouveau-search-submit search-form_submit">
 										<span class="bb-icon-l bb-icon-search" aria-hidden="true"></span>
-										<span id="button-text" class="bp-screen-reader-text"><?php esc_html_e( 'Search Members', 'buddyboss' ); ?></span>
+										<span id="button-text" class="bp-screen-reader-text"><?php esc_html_e( 'Search members', 'buddyboss' ); ?></span>
 									</button>
 									<button type="reset" class="search-form_reset">
 										<span class="bb-icons-rl bb-icons-rl-x" aria-hidden="true"></span>
