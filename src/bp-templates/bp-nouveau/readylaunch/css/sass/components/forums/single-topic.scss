@@ -160,6 +160,7 @@
 		font-size: var(--bb-rl-font-size-sm);
 		line-height: var(--bb-rl-base-line-small);
 		color: var(--bb-rl-text-secondary-color);
+		flex-wrap: wrap;
 
 		img {
 			border-radius: var(--bb-rl-radius-full);
@@ -614,5 +615,25 @@
 		&:hover {
 			background-color: transparent;
 		}
+	}
+}
+
+@media screen and (max-width: $md) {
+
+	.bb-rl-topic-header .bb-rl-topic-footer {
+		flex-direction: column;
+		align-items: flex-start;
+
+		.bb-rl-topic-actions {
+			margin: var(--bb-rl-space-300) 0 0;
+			flex-wrap: wrap;
+		}
+	}
+}
+
+@media screen and (max-width: $sm) {
+
+	.bb-rl-topic-content .bb-activity-media-wrap {
+		gap: var(--bb-rl-space-100);
 	}
 }
