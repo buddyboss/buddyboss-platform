@@ -892,7 +892,8 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				! (
 					function_exists( 'wp_is_block_theme' ) &&
 					wp_is_block_theme()
-				)
+				) &&
+				! has_block( 'buddyboss/readylaunch-header', get_post( get_the_ID() ) )
 			) {
 				add_filter( 'bp_get_template_stack', 'bp_add_template_stack_locations' );
 				add_filter( 'bbp_get_template_stack', 'bbp_add_template_stack_locations' );
