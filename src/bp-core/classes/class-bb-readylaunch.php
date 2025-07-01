@@ -354,6 +354,8 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					remove_action( 'bbp_new_reply_post_extras', array( 'BBPressHelper', 'new_reply_post_extras' ), 99 );
 					remove_action( 'wp_ajax_quick_reply_ajax', array( 'BBPressHelper', 'activity_quick_reply_ajax_cb' ) );
 				}
+
+				add_filter( 'bbp_after_get_topic_stick_link_parse_args', array( $this, 'bb_rl_modify_get_topic_stick_link_parse_args' ), 10 );
 			}
 		}
 
@@ -3775,6 +3777,25 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			}
 
 			return $anchor;
+		}
+
+		/**
+		 * Modify super sticky text for readylaunch.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array $r Arguments.
+		 *
+		 * @return string
+		 */
+		public function bb_rl_modify_get_topic_stick_link_parse_args( $r ) {
+			if ( empty( $r['stick_text'] ) ) {
+				return $r;
+			}
+
+			$r['super_text'] = __( 'Super Sticky', 'buddyboss' );
+
+			return $r;
 		}
 	}
 }
