@@ -223,7 +223,7 @@ function bb_block_render_readylaunch_header_block( $attributes = array() ) {
 			bp_get_template_part( 'header/site-logo' );
 			wp_nav_menu(
 				array(
-					'menu_id'     => $readylaunch_instance->bb_rl_get_header_menu_location(),
+					'menu'     => $readylaunch_instance->bb_rl_get_header_menu_location(),
 					'container'   => false,
 					'fallback_cb' => false,
 					'menu_class'  => 'bb-readylaunch-menu',
