@@ -88,7 +88,7 @@ if ( function_exists( 'bbp_is_forum_group_forum' ) && bbp_is_forum_group_forum( 
 						<div class="bb_more_options_list bb_more_dropdown bb-rl-context-dropdown">
 							<?php
 
-							if ( ! bbp_is_topic_super_sticky( $topic_id ) && ! empty( bbp_get_topic_stick_link() ) ) {
+							if ( ! empty( bbp_get_topic_stick_link() ) ) {
 								if ( bbp_is_topic_sticky() ) {
 									?>
 									<div class="generic-button bb-rl-context-item bb-rl-unstick">
