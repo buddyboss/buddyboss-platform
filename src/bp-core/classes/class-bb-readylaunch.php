@@ -2370,6 +2370,10 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				$strings['media']['i18n_strings']['theater_title'] = $translated_string;
 			}
 
+			if ( bp_is_active( 'messages' ) ) {
+				$strings['messages']['i18n']['to_placeholder'] = __( 'Start typing a name', 'buddyboss' );
+			}
+
 			return $strings;
 		}
 

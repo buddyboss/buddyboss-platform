@@ -3948,7 +3948,7 @@ window.bp = window.bp || {};
 
 				$input.select2(
 					{
-						placeholder: '',
+						placeholder: BP_Nouveau.messages.i18n.to_placeholder,
 						minimumInputLength: 1,
 						language: {
 							errorLoading: function() {
@@ -3959,7 +3959,7 @@ window.bp = window.bp || {};
 								return bp_select2.i18n.inputTooLong.replace( '%%', n );
 							},
 							inputTooShort: function() {
-								return bp_select2.i18n.msginputTooShort;
+								return BP_Nouveau.messages.i18n.to_placeholder;
 							},
 							loadingMore: function() {
 								return bp_select2.i18n.loadingMore;
