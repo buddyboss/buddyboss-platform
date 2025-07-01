@@ -767,35 +767,15 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * @since BuddyBoss [BBVERSION]
 		 */
 		public function bb_register_readylaunch_menus() {
-			// Define the menus and their respective theme locations.
+			// Define the menus to create.
 			$menus = array(
-				'bb-readylaunch'             => __( 'ReadyLaunch', 'buddyboss' ),
-				'bb-top-readylaunchpanel'    => __( 'Top ReadyLaunchPanel', 'buddyboss' ),
-				'bb-bottom-readylaunchpanel' => __( 'Bottom ReadyLaunchPanel', 'buddyboss' ),
+				'readylaunch' => __( 'ReadyLaunch', 'buddyboss' ),
 			);
 
-			foreach ( $menus as $theme_location => $menu_name ) {
-				// Check if the menu already exists.
-				$menu_exists = wp_get_nav_menu_object( $menu_name );
-
-				// If the menu doesn't exist, create it.
-				$menu_id = ! $menu_exists ? wp_create_nav_menu( $menu_name ) : $menu_exists->term_id;
-
-				// Register the theme location if it has not been registered already.
-				if ( ! has_nav_menu( $theme_location ) ) {
-					register_nav_menu( $theme_location, $menu_name );
-				}
-
-				// If the menu exists and the theme location is ready, assign the menu to the location.
-				$nav_menu_locations = get_theme_mod( 'nav_menu_locations', array() );
-				if ( ! empty( $menu_id ) && ! isset( $nav_menu_locations[ $theme_location ] ) ) {
-					set_theme_mod(
-						'nav_menu_locations',
-						array_merge(
-							$nav_menu_locations,
-							array( $theme_location => $menu_id )
-						)
-					);
+			foreach ( $menus as $menu_slug => $menu_name ) {
+				$check_menu = wp_get_nav_menu_object( $menu_slug );
+				if ( ! $check_menu ) {
+					wp_create_nav_menu( $menu_name );
 				}
 			}
 		}
@@ -3154,30 +3134,19 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * @since BuddyBoss [BBVERSION]
 		 */
 		public function bb_rl_get_header_menu_location() {
-			$header_menu_slug = bp_get_option( 'bb_rl_header_menu', 'bb-readylaunch' );
+			$header_menu_slug = bp_get_option( 'bb_rl_header_menu', 'readylaunch' );
 
 			if ( empty( $header_menu_slug ) ) {
-				return 'bb-readylaunch';
+				return '';
 			}
 
-			$header_menu_id = null;
-			$menus          = wp_get_nav_menus();
-			foreach ( $menus as $menu ) {
-				if ( $menu->slug === $header_menu_slug ) {
-					$header_menu_id = $menu->term_id;
-					break;
-				}
-			}
-			$locations = get_nav_menu_locations();
-			if ( $header_menu_id ) {
-				foreach ( $locations as $location => $assigned_menu_id ) {
-					if ( (int) $assigned_menu_id === (int) $header_menu_id ) {
-						return $location;
-					}
-				}
+			$header_menu_id = '';
+			$menus          = wp_get_nav_menu_object( $header_menu_slug );
+			if ( ! empty( $menus ) ) {
+				$header_menu_id = $menus->term_id;
 			}
 
-			return 'bb-readylaunch';
+			return $header_menu_id;
 		}
 
 		/**

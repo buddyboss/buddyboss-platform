@@ -1098,7 +1098,7 @@ export const ReadyLaunchSettings = () => {
 											<SelectControl
 												value={settings.bb_rl_header_menu}
 												options={[
-													{ label: __('ReadyLaunch Menu', 'buddyboss'), value: 'bb-readylaunch' },
+													{ label: __('ReadyLaunch', 'buddyboss'), value: 'readylaunch' },
 													...menus.map(menu => ({
 														label: menu.name,
 														value: menu.slug

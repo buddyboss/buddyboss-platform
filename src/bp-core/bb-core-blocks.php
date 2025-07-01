@@ -223,11 +223,10 @@ function bb_block_render_readylaunch_header_block( $attributes = array() ) {
 			bp_get_template_part( 'readylaunch/header/site-logo' );
 			wp_nav_menu(
 				array(
-					'theme_location' => 'bb-readylaunch',
-					'menu_id'        => '',
-					'container'      => false,
-					'fallback_cb'    => false,
-					'menu_class'     => 'bb-readylaunch-menu',
+					'menu_id'     => $readylaunch_instance->bb_rl_get_header_menu_location(),
+					'container'   => false,
+					'fallback_cb' => false,
+					'menu_class'  => 'bb-readylaunch-menu',
 				)
 			);
 			?>
@@ -298,11 +297,10 @@ function bb_block_render_readylaunch_header_block( $attributes = array() ) {
 					<?php
 					wp_nav_menu(
 						array(
-							'theme_location' => 'bb-readylaunch',
-							'menu_id'        => '',
-							'container'      => false,
-							'fallback_cb'    => false,
-							'menu_class'     => 'bb-readylaunch-mobile-menu',
+							'menu_id'     => $readylaunch_instance->bb_rl_get_header_menu_location(),
+							'container'   => false,
+							'fallback_cb' => false,
+							'menu_class'  => 'bb-readylaunch-mobile-menu',
 						)
 					);
 

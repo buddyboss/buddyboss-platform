@@ -51,21 +51,21 @@ bp_get_template_part( 'sidebar/left-sidebar' );
 			<a href="#" class="bb-rl-left-panel-mobile"><i class="bb-icons-rl-list"></i></a>
 			<?php
 			bp_get_template_part( 'header/site-logo' );
-			
+
 			// Get menu location and generate CSS class based on parent items count.
-			$menu_location = $readylaunch_instance->bb_rl_get_header_menu_location();
-			$menu_class    = 'bb-readylaunch-menu';
-			
-			if ( has_nav_menu( $menu_location ) ) {
-				$menu_locations = get_nav_menu_locations();
-				if ( ! empty( $menu_locations[ $menu_location ] ) ) {
-					$menu_items = wp_get_nav_menu_items( $menu_locations[ $menu_location ] );
+			$menu_id = $readylaunch_instance->bb_rl_get_header_menu_location();
+			$menu_class = 'bb-readylaunch-menu';
+
+			if ( has_nav_menu( $menu_id ) ) {
+				$menu_object = wp_get_nav_menu_object( $menu_id );
+				if ( ! empty( $menu_object ) ) {
+					$menu_items = wp_get_nav_menu_items( $menu_object->term_id );
 					if ( ! empty( $menu_items ) ) {
 						// Count parent items efficiently.
 						$parent_count = 0;
 						foreach ( $menu_items as $item ) {
 							if ( 0 == $item->menu_item_parent ) {
-								$parent_count++;
+								++$parent_count;
 								// Early exit if we already know it's 'max'.
 								if ( $parent_count > 9 ) {
 									break;
@@ -76,14 +76,13 @@ bp_get_template_part( 'sidebar/left-sidebar' );
 					}
 				}
 			}
-			
+
 			wp_nav_menu(
 				array(
-					'theme_location' => $menu_location,
-					'menu_id'        => '',
-					'container'      => false,
-					'fallback_cb'    => false,
-					'menu_class'     => $menu_class,
+					'menu'        => $menu_id,
+					'container'   => false,
+					'fallback_cb' => false,
+					'menu_class'  => 'bb-readylaunch-menu',
 				)
 			);
 			?>
