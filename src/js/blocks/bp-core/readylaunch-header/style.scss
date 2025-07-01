@@ -342,11 +342,11 @@
 		background-color: var(--bb-rl-background-color);
 		border-bottom: 1px solid var(--bb-rl-border-secondary-color);
 		padding: var(--bb-rl-space-200) var(--bb-rl-space-400);
-	
+
 		body.admin-bar & {
 			top: 32px;
 		}
-	
+
 		.bb-rl-left-panel-mobile {
 			display: none;
 		}
@@ -356,7 +356,7 @@
 		display: none;
 	}
 
-	[id^="menu-readylaunch"] {
+	.bb-rl-header .bb-readylaunch-menu {
 
 		.bb-rl-sub-menu {
 			background-color: var(--bb-rl-background-color);
@@ -375,16 +375,16 @@
 			z-index: var(--bb-rl-z-index-dropdown);
 			flex-direction: column;
 			align-items: flex-start;
-	
+
 			&.active {
 				opacity: 1;
 				visibility: visible;
 			}
-	
+
 			li {
 				display: block;
 				width: 100%;
-	
+
 				a {
 					font-size: var(--bb-rl-font-size-sm);
 					font-weight: 500;
@@ -398,7 +398,7 @@
 					border: 0;
 					border-radius: 0;
 					background-color: transparent;
-	
+
 					&:hover {
 						background-color: var(--bb-rl-background-secondary-hover-color);
 						color: var(--bb-rl-text-color);
@@ -407,7 +407,7 @@
 			}
 		}
 	}
-	
+
 	li.bb-rl-hideshow {
 		position: relative;
 	}
@@ -457,7 +457,7 @@
 
 		body.wp-admin & {
 			height: 34px;
-			overflow: hidden;		
+			overflow: hidden;
 		}
 	}
 
@@ -484,7 +484,7 @@
 				border: none;
 				white-space: nowrap;
 				text-decoration: none;
-		
+
 				&:focus {
 					outline: none;
 				}
@@ -550,7 +550,7 @@
 					> a {
 						background-color: var(--bb-rl-background-secondary-hover-color);
 					}
-		
+
 					> .sub-menu {
 						top: 0;
 						left: -2px;
@@ -649,7 +649,7 @@
 				z-index: 0;
 				display: none;
 				overflow: visible;
-	
+
 				.bb-rl-loader {
 					margin: 20px auto;
 					display: table;
@@ -713,7 +713,7 @@
 					padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
 					text-align: center;
 					text-decoration: none;
-					transition: background-color .2s ease, bordfont, size, smer-color .2s ease, color .2s ease;					
+					transition: background-color .2s ease, bordfont, size, smer-color .2s ease, color .2s ease;
 					margin: 0 var(--bb-rl-space-200) 0 auto;
 				}
 
@@ -842,7 +842,7 @@
 			border-bottom-color: transparent;
 		}
 	}
-	
+
 	.notification-dropdown {
 
 		.notification-header-tabs {
@@ -863,7 +863,7 @@
 			}
 		}
 	}
-	
+
 	.notification-dropdown ul.notification-list {
 		max-height: 52vh;
 		overflow: auto;
@@ -934,12 +934,12 @@
 			}
 		}
 	}
-	
+
 	.notification-list > li:has(.bb-rl-option-wrap.active),
 	.notification-list > li:hover {
 		background-color: var(--bb-rl-background-secondary-hover-color);
 	}
-	
+
 	.notification-list .bb-full-link {
 		font-size: 0;
 
@@ -1010,12 +1010,12 @@
 				right: var(--bb-rl-space-100);
 				bottom: 24px;
 			}
-	
+
 			.notification-content .posted {
 				color: var(--bb-rl-text-color);
 				font-weight: 500;
 			}
-	
+
 			&:hover:before {
 				visibility: hidden;
 				opacity: 0;
@@ -1033,7 +1033,7 @@
 			background-color: transparent;
 		}
 	}
-	
+
 	.bb-rl-no-messages {
 		display: flex;
 		flex-direction: column;
@@ -1076,7 +1076,7 @@
 
 			.notification-avatar {
 				position: relative;
-	
+
 				img {
 					max-width: 32px;
 					max-height: 32px;
@@ -1164,23 +1164,23 @@
 				&.bb-icon-activity:before {
 					content: "\e17a";
 				}
-				
+
 				&.bb-icon-reply:before {
 					content: "\ed52";
 				}
-				
+
 				&.bb-icon-comment-square-dots:before {
 					content: "\e172";
 				}
-				
+
 				&.bb-icon-comment-square:before {
 					content: "\e16c";
 				}
-				
+
 				&.bb-icon-poll:before {
 					content: "\e150";
 				}
-				
+
 				&.bb-icon-image:before {
 					content: "\e10e";
 				}
@@ -1591,7 +1591,7 @@ button[data-balloon] {
 						align-items: center;
 						position: relative;
 						margin-bottom: 0;
-		
+
 						&:after {
 							content: "\e136";
 							font-family: bb-icons-rl;
@@ -1600,7 +1600,7 @@ button[data-balloon] {
 							color: var(--bb-rl-icon-tertiary-color);
 							margin-left: var(--bb-rl-space-100);
 						}
-		
+
 						&:before {
 							content: "\e3d4";
 							font-family: bb-icons-rl;
@@ -1614,7 +1614,7 @@ button[data-balloon] {
 							transform: translateY(-50%);
 						}
 					}
-	
+
 					> ul {
 						display: none;
 					}
@@ -2135,11 +2135,11 @@ button[data-balloon] {
 				border-bottom: 1px solid transparent;
 				padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
 				font-size: 0.875rem;
-			
+
 				&:hover {
 					border-bottom-color: var(--bb-rl-link-primary-hover-color);
 				}
-			
+
 				&:disabled {
 					color: var(--bb-rl-background-brand-disabled-color);
 					border-bottom-color: transparent;
@@ -2230,7 +2230,7 @@ button[data-balloon] {
 	}
 }
 
-// Select2 
+// Select2
 .bb-rl-select2-dropdown,
 .select2-dropdown.bb-rl-select2-dropdown {
   top: 42px;

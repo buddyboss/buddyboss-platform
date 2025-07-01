@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 2.8.90\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2025-07-01 05:31:12+00:00\n"
+"POT-Creation-Date: 2025-07-01 06:16:57+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -178,7 +178,7 @@ msgid "Like"
 msgstr ""
 
 #: bp-activity/bb-activity-reactions.php:475
-#: bp-core/classes/class-bb-readylaunch.php:1947
+#: bp-core/classes/class-bb-readylaunch.php:1927
 msgid "Nonce verification failed."
 msgstr ""
 
@@ -219,8 +219,8 @@ msgstr ""
 #: bp-activity/classes/class-bp-activity-list-table.php:347
 #: bp-core/admin/templates/upgrade-integrations-screen.php:45
 #: bp-core/bp-core-functions.php:7449
-#: bp-core/classes/class-bb-readylaunch.php:1023
-#: bp-core/classes/class-bb-readylaunch.php:2577
+#: bp-core/classes/class-bb-readylaunch.php:1003
+#: bp-core/classes/class-bb-readylaunch.php:2557
 #: bp-core/compatibility/class-bb-readylaunch-memberpress-courses-helper.php:440
 #: bp-core/compatibility/class-bb-readylaunch-memberpress-courses-helper.php:459
 #: bp-groups/classes/class-bp-groups-list-table.php:370
@@ -666,7 +666,7 @@ msgstr ""
 #: bp-activity/classes/class-bp-activity-list-table.php:665
 #: bp-core/bp-core-wp-emails.php:233
 #: bp-core/bp-core-wp-emails.php:524
-#: bp-core/classes/class-bb-readylaunch.php:3522
+#: bp-core/classes/class-bb-readylaunch.php:3491
 #: bp-core/classes/class-bp-email-tokens.php:614
 #: bp-core/classes/class-bp-email-tokens.php:645
 #: bp-core/classes/class-bp-email-tokens.php:917
@@ -3350,7 +3350,7 @@ msgstr ""
 #: bp-core/bp-core-template.php:572
 #: bp-core/classes/class-bb-post-notification.php:64
 #: bp-core/classes/class-bb-post-notification.php:65
-#: bp-core/classes/class-bb-readylaunch.php:3526
+#: bp-core/classes/class-bb-readylaunch.php:3495
 #: bp-forums/admin/settings.php:1647
 #: bp-forums/templates/default/bbpress/loop-forums.php:20
 #: bp-forums/templates/default/bbpress/loop-replies.php:23
@@ -3534,8 +3534,8 @@ msgstr ""
 
 #: bp-blogs/bp-blogs-template.php:1402
 #: bp-core/admin/settings/bp-admin-setting-search.php:22
-#: bp-core/bb-core-blocks.php:285
-#: bp-core/bb-core-blocks.php:291
+#: bp-core/bb-core-blocks.php:284
+#: bp-core/bb-core-blocks.php:290
 #: bp-core/bp-core-cssjs.php:237
 #: bp-core/compatibility/class-bb-readylaunch-memberpress-courses-helper.php:438
 #: bp-core/compatibility/class-bb-readylaunch-memberpress-courses-helper.php:457
@@ -3565,8 +3565,8 @@ msgstr ""
 #: bp-templates/bp-nouveau/readylaunch/document/document-header.php:32
 #: bp-templates/bp-nouveau/readylaunch/document/single-folder.php:48
 #: bp-templates/bp-nouveau/readylaunch/forums/form-search.php:20
-#: bp-templates/bp-nouveau/readylaunch/header/readylaunch-header.php:140
-#: bp-templates/bp-nouveau/readylaunch/header/readylaunch-header.php:146
+#: bp-templates/bp-nouveau/readylaunch/header/readylaunch-header.php:139
+#: bp-templates/bp-nouveau/readylaunch/header/readylaunch-header.php:145
 #: bp-templates/bp-nouveau/readylaunch/search/search-form.php:35
 msgid "Search"
 msgstr ""
@@ -5891,7 +5891,7 @@ msgid "Discussions"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-tools.php:193
-#: bp-core/classes/class-bb-readylaunch.php:3522
+#: bp-core/classes/class-bb-readylaunch.php:3491
 #: bp-forums/activity.php:227
 #: bp-forums/admin.php:249
 #: bp-forums/admin.php:312
@@ -7056,7 +7056,7 @@ msgid "Media"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-messages.php:21
-#: bp-core/bb-core-blocks.php:323
+#: bp-core/bb-core-blocks.php:321
 #: bp-core/classes/class-bb-readylaunch.php:518
 #: bp-media/bp-media-settings.php:201
 #: bp-media/bp-media-settings.php:208
@@ -7077,7 +7077,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/readylaunch/header/messages-dropdown.php:20
 #: bp-templates/bp-nouveau/readylaunch/header/messages-dropdown.php:21
 #: bp-templates/bp-nouveau/readylaunch/header/messages-dropdown.php:30
-#: bp-templates/bp-nouveau/readylaunch/header/readylaunch-header.php:170
+#: bp-templates/bp-nouveau/readylaunch/header/readylaunch-header.php:169
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
 msgid "Messages"
 msgstr ""
@@ -7091,7 +7091,7 @@ msgid "Moderation"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-notifications.php:28
-#: bp-core/bb-core-blocks.php:340
+#: bp-core/bb-core-blocks.php:338
 #: bp-core/bp-core-functions.php:2553
 #: bp-core/classes/class-bb-readylaunch.php:522
 #: bp-core/deprecated/buddypress/2.1.php:538
@@ -7106,7 +7106,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/readylaunch/header/notification-dropdown.php:21
 #: bp-templates/bp-nouveau/readylaunch/header/notification-dropdown.php:22
 #: bp-templates/bp-nouveau/readylaunch/header/notification-dropdown.php:31
-#: bp-templates/bp-nouveau/readylaunch/header/readylaunch-header.php:184
+#: bp-templates/bp-nouveau/readylaunch/header/readylaunch-header.php:183
 #: bp-templates/bp-nouveau/readylaunch/members/single/notifications.php:19
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
 msgid "Notifications"
@@ -7695,24 +7695,24 @@ msgstr ""
 msgid "Get BuddyBoss Theme"
 msgstr ""
 
-#: bp-core/bb-core-blocks.php:269
-#: bp-templates/bp-nouveau/readylaunch/header/readylaunch-header.php:125
+#: bp-core/bb-core-blocks.php:268
+#: bp-templates/bp-nouveau/readylaunch/header/readylaunch-header.php:124
 msgid "Sign in"
 msgstr ""
 
-#: bp-core/bb-core-blocks.php:272
-#: bp-templates/bp-nouveau/readylaunch/header/readylaunch-header.php:128
+#: bp-core/bb-core-blocks.php:271
+#: bp-templates/bp-nouveau/readylaunch/header/readylaunch-header.php:127
 msgid "Sign up"
 msgstr ""
 
-#: bp-core/bb-core-blocks.php:287
-#: bp-templates/bp-nouveau/readylaunch/header/readylaunch-header.php:142
+#: bp-core/bb-core-blocks.php:286
+#: bp-templates/bp-nouveau/readylaunch/header/readylaunch-header.php:141
 msgid "Search community..."
 msgstr ""
 
-#: bp-core/bb-core-blocks.php:293
+#: bp-core/bb-core-blocks.php:292
 #: bp-templates/bp-nouveau/readylaunch/common/search/search-model.php:35
-#: bp-templates/bp-nouveau/readylaunch/header/readylaunch-header.php:148
+#: bp-templates/bp-nouveau/readylaunch/header/readylaunch-header.php:147
 msgid "Clear Search"
 msgstr ""
 
@@ -8243,7 +8243,7 @@ msgstr ""
 #: bp-core/bp-core-cssjs.php:754
 #: bp-core/bp-core-cssjs.php:802
 #: bp-core/bp-core-functions.php:1259
-#: bp-core/classes/class-bb-readylaunch.php:3773
+#: bp-core/classes/class-bb-readylaunch.php:3742
 #: bp-forums/common/functions.php:115
 msgid "%s ago"
 msgstr ""
@@ -10505,7 +10505,7 @@ msgid "Delete notification"
 msgstr ""
 
 #: bp-core/classes/class-bb-readylaunch.php:490
-#: bp-core/classes/class-bb-readylaunch.php:1318
+#: bp-core/classes/class-bb-readylaunch.php:1298
 #: bp-core/compatibility/class-bb-readylaunch-memberpress-courses-helper.php:409
 #: bp-core/profile-search/bps-xprofile.php:414
 #: bp-core/profile-search/bps-xprofile.php:415
@@ -10520,104 +10520,97 @@ msgstr ""
 
 #: bp-core/classes/class-bb-readylaunch.php:772
 #: bp-core/classes/class-bp-admin.php:541
+#: bp-core/admin/bb-settings/readylaunch/build/index.js:1
 msgid "ReadyLaunch"
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:773
-msgid "Top ReadyLaunchPanel"
-msgstr ""
-
-#: bp-core/classes/class-bb-readylaunch.php:774
-msgid "Bottom ReadyLaunchPanel"
-msgstr ""
-
-#: bp-core/classes/class-bb-readylaunch.php:1001
+#: bp-core/classes/class-bb-readylaunch.php:981
 msgid "Name is required."
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:1002
+#: bp-core/classes/class-bb-readylaunch.php:982
 #: bp-members/bp-members-functions.php:1711
 msgid "Please enter a valid email address."
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:1003
+#: bp-core/classes/class-bb-readylaunch.php:983
 msgid "Sending invitation..."
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:1004
+#: bp-core/classes/class-bb-readylaunch.php:984
 msgid "There was an error submitting the form. Please try again."
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:1022
-#: bp-core/classes/class-bb-readylaunch.php:2576
+#: bp-core/classes/class-bb-readylaunch.php:1002
+#: bp-core/classes/class-bb-readylaunch.php:2556
 msgid "More"
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:1320
+#: bp-core/classes/class-bb-readylaunch.php:1300
 msgid "There are no courses to display."
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:1382
+#: bp-core/classes/class-bb-readylaunch.php:1362
 #: bp-templates/bp-nouveau/readylaunch/document/document-loop.php:69
 #: bp-templates/bp-nouveau/readylaunch/media/media-loop.php:43
 #: bp-templates/bp-nouveau/readylaunch/video/video-loop.php:41
 msgid "Show More"
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:1801
+#: bp-core/classes/class-bb-readylaunch.php:1781
 #: bp-templates/bp-nouveau/readylaunch/learndash/ld30/archive-course-header.php:60
 msgid "Sort by"
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:1884
+#: bp-core/classes/class-bb-readylaunch.php:1864
 msgid "Prev"
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:1885
+#: bp-core/classes/class-bb-readylaunch.php:1865
 #: bp-core/compatibility/class-bb-readylaunch-learndash-helper.php:478
 #: bp-integrations/learndash/buddypress/Reports.php:111
 #: bp-templates/bp-nouveau/readylaunch/learndash/ld30/archive-course-pagination.php:29
 msgid "Next"
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:1888
+#: bp-core/classes/class-bb-readylaunch.php:1868
 msgid "&larr; Prev"
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:1889
+#: bp-core/classes/class-bb-readylaunch.php:1869
 msgid "Next &rarr;"
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:1936
+#: bp-core/classes/class-bb-readylaunch.php:1916
 msgid "Unable to send invite."
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:1955
+#: bp-core/classes/class-bb-readylaunch.php:1935
 msgid "You should be logged in to send an invite."
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:1965
+#: bp-core/classes/class-bb-readylaunch.php:1945
 msgid "Email address already exists."
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:1968
+#: bp-core/classes/class-bb-readylaunch.php:1948
 msgid "Email address already invited."
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:1971
+#: bp-core/classes/class-bb-readylaunch.php:1951
 msgid "Email address restricted."
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:1974
+#: bp-core/classes/class-bb-readylaunch.php:1954
 #: bp-invites/classes/class-bp-rest-invites-endpoint.php:717
 msgid "Sorry, you don't have permission to view invites profile type."
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:2065
+#: bp-core/classes/class-bb-readylaunch.php:2045
 msgid "Email invite sent successfully."
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:2119
+#: bp-core/classes/class-bb-readylaunch.php:2099
 #: bp-document/classes/class-bp-document.php:728
 #: bp-integrations/learndash/templates/buddypress/groups/single/reports-user-stats.php:72
 #: bp-integrations/learndash/templates/readylaunch/groups/single/reports-user-stats.php:79
@@ -10631,7 +10624,7 @@ msgstr ""
 msgid "Message"
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:2328
+#: bp-core/classes/class-bb-readylaunch.php:2308
 #: bp-members/bp-members-adminbar.php:124
 #: bp-members/classes/class-bp-members-admin.php:565
 #: bp-members/classes/class-bp-members-admin.php:566
@@ -10641,78 +10634,78 @@ msgstr ""
 msgid "Edit Profile"
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:2345
+#: bp-core/classes/class-bb-readylaunch.php:2325
 #: bp-templates/bp-nouveau/includes/groups/template-tags.php:802
 #: bp-templates/bp-nouveau/includes/groups/template-tags.php:857
 msgid "Reject"
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:2350
+#: bp-core/classes/class-bb-readylaunch.php:2330
 #: bp-templates/bp-nouveau/includes/groups/template-tags.php:775
 #: bp-templates/bp-nouveau/includes/groups/template-tags.php:830
 #: bp-templates/bp-nouveau/includes/members/template-tags.php:372
 msgid "Accept"
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:2367
+#: bp-core/classes/class-bb-readylaunch.php:2347
 msgid "'s post"
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:2374
+#: bp-core/classes/class-bb-readylaunch.php:2354
 msgid "Start typing a name"
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:2456
+#: bp-core/classes/class-bb-readylaunch.php:2436
 msgid "Sign in to your account"
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:2473
+#: bp-core/classes/class-bb-readylaunch.php:2453
 msgid "Forgot Password?"
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:3292
+#: bp-core/classes/class-bb-readylaunch.php:3261
 msgid "Write a description"
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:3293
-#: bp-core/classes/class-bb-readylaunch.php:3329
+#: bp-core/classes/class-bb-readylaunch.php:3262
+#: bp-core/classes/class-bb-readylaunch.php:3298
 #: bp-forums/templates/default/bbpress-functions.php:278
 msgid "Type your reply here"
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:3294
+#: bp-core/classes/class-bb-readylaunch.php:3263
 #: bp-forums/templates/default/bbpress-functions.php:279
 msgid "Type your discussion content here"
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:3304
+#: bp-core/classes/class-bb-readylaunch.php:3273
 #: bp-forums/admin/admin.php:508
 #: bp-forums/templates/default/bbpress-functions.php:240
 msgid "Loading"
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:3308
+#: bp-core/classes/class-bb-readylaunch.php:3277
 #: bp-forums/templates/default/bbpress-functions.php:244
 msgid "Add Tags:"
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:3321
+#: bp-core/classes/class-bb-readylaunch.php:3290
 #: bp-forums/templates/default/bbpress-functions.php:735
 #: bp-forums/templates/default/bbpress-functions.php:748
 msgid "Something went wrong. Refresh your browser and try again."
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:3328
+#: bp-core/classes/class-bb-readylaunch.php:3297
 #: bp-forums/activity.php:430
 msgid "Reply to"
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:3380
-#: bp-core/classes/class-bb-readylaunch.php:3381
+#: bp-core/classes/class-bb-readylaunch.php:3349
+#: bp-core/classes/class-bb-readylaunch.php:3350
 msgid "Quick Reply"
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:3526
+#: bp-core/classes/class-bb-readylaunch.php:3495
 #: bp-forums/templates/default/bbpress/form-reply.php:188
 #: bp-forums/templates/default/bbpress/form-topic.php:244
 #: bp-moderation/bp-moderation-functions.php:1316
@@ -10729,7 +10722,7 @@ msgid "Post"
 msgstr ""
 
 #. translators: %s: forum freshness link
-#: bp-core/classes/class-bb-readylaunch.php:3803
+#: bp-core/classes/class-bb-readylaunch.php:3772
 msgid "<span>Active</span> %s"
 msgstr ""
 
@@ -38211,10 +38204,6 @@ msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
 msgid "Choose a menu which displays in the top navigation bar"
-msgstr ""
-
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-msgid "ReadyLaunch Menu"
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1

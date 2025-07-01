@@ -30,10 +30,10 @@ window.bp = window.bp || {};
 				// Listen to events ("Add hooks!").
 				this.addListeners();
 				this.mobileSubMenu();
-				
+
 				// Initialize select2 filters with retry mechanism
 				this.initSelect2Filters();
-				
+
 				this.styledSelect();
 
 				this.bbReloadWindow();
@@ -1051,7 +1051,7 @@ window.bp = window.bp || {};
 				}
 
 				initSelector( '#object-nav > ul', 100 );
-				initSelector( '#menu-readylaunch', 200 );
+				initSelector( '.bb-rl-header .bb-readylaunch-menu', 200 );
 
 				$( document ).on(
 					'click',

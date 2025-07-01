@@ -8337,7 +8337,7 @@ body.guillotine-dragging * {
 }
 
 #object-nav .bb-rl-sub-menu,
-#menu-readylaunch .bb-rl-sub-menu {
+.bb-rl-header .bb-readylaunch-menu .bb-rl-sub-menu {
   background-color: var(--bb-rl-background-color);
   border-radius: var(--bb-rl-radius-md);
   box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.15);
@@ -8357,19 +8357,19 @@ body.guillotine-dragging * {
 }
 
 #object-nav .bb-rl-sub-menu.active,
-#menu-readylaunch .bb-rl-sub-menu.active {
+.bb-rl-header .bb-readylaunch-menu .bb-rl-sub-menu.active {
   opacity: 1;
   visibility: visible;
 }
 
 #object-nav .bb-rl-sub-menu li,
-#menu-readylaunch .bb-rl-sub-menu li {
+.bb-rl-header .bb-readylaunch-menu .bb-rl-sub-menu li {
   display: block;
   width: 100%;
 }
 
 #object-nav .bb-rl-sub-menu li a,
-#menu-readylaunch .bb-rl-sub-menu li a {
+.bb-rl-header .bb-readylaunch-menu .bb-rl-sub-menu li a {
   font-size: var(--bb-rl-font-size-sm);
   font-weight: 500;
   line-height: var(--bb-rl-base-line-small);
@@ -8385,7 +8385,7 @@ body.guillotine-dragging * {
 }
 
 #object-nav .bb-rl-sub-menu li a:hover,
-#menu-readylaunch .bb-rl-sub-menu li a:hover {
+.bb-rl-header .bb-readylaunch-menu .bb-rl-sub-menu li a:hover {
   background-color: var(--bb-rl-background-secondary-hover-color);
   color: var(--bb-rl-text-color);
 }
