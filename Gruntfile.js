@@ -17,7 +17,6 @@ module.exports = function (grunt) {
 			'!**/*-rtl.css',
 			// '!bp-forums/**/*.css',
 			'!**/endpoints/**/*.css',
-			'!**/bp-core/admin/bb-settings/readylaunch/build/**/*.css',
 			'!**/js/admin/readylaunch/styles/**/*.css'
 		],
 
@@ -178,7 +177,7 @@ module.exports = function (grunt) {
 					dest: SOURCE_DIR,
 					extDot: 'last',
 					ext: '-rtl.css',
-					src: BP_CSS.concat( BP_EXCLUDED_CSS, BP_EXCLUDED_MISC, '**/bp-core/admin/bb-settings/readylaunch/build/styles/*.css' )
+					src: BP_CSS.concat( BP_EXCLUDED_CSS, BP_EXCLUDED_MISC )
 				}
 			},
 			checktextdomain: {
