@@ -384,9 +384,9 @@ input[type="search"]::-webkit-search-results-decoration {
 .site.bb-readylaunch {
   background-color: var(--bb-rl-background-secondary-color);
   margin-left: 0;
-  margin-top: 71px;
+  margin-top: 69px;
   padding: 0;
-  min-height: calc(100vh - 71px);
+  min-height: calc(100vh - 69px);
 }
 
 .bb-rl-left-panel ~ .site.bb-readylaunch {
