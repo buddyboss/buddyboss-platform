@@ -250,7 +250,7 @@ module.exports = function (grunt) {
 						dest: BUILD_DIR,
 						dot: true,
 						expand: true,
-						src: ['**', '!**/.{svn,git}/**'].concat( BP_EXCLUDED_MISC )
+						src: ['**', '!**/.{svn,git}/**', '!**/readylaunch/css/sass/**'].concat( BP_EXCLUDED_MISC )
 					},
 					{
 						dest: BUILD_DIR,
