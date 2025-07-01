@@ -22,9 +22,9 @@ if ( bp_has_notifications( bp_ajax_querystring( 'notifications' ) ) ) :
 			<?php
 			while ( bp_the_notifications() ) :
 				bp_the_notification();
-				$bp                 = buddypress();
-				$bp_notification_id = bp_get_the_notification_id();
-				$readonly           = isset( $bp->notifications->query_loop->notification->readonly ) ? $bp->notifications->query_loop->notification->readonly : false;
+				$bp                     = buddypress();
+				$bp_the_notification_id = bp_get_the_notification_id();
+				$readonly               = isset( $bp->notifications->query_loop->notification->readonly ) ? $bp->notifications->query_loop->notification->readonly : false;
 				?>
 				<li class="bs-item-wrap">
 					<div class="bulk-select-check">
