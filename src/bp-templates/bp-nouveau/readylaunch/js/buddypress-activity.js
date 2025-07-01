@@ -2262,7 +2262,7 @@ window.bp = window.bp || {};
 
 			bp.Nouveau.Activity.clearFeedbackNotice( form );
 			form.removeClass( 'events-initiated' );
-			var ce = modal.find( '.bb-rl-modal-activity-footer' ).find( '.ac-input[contenteditable]' );
+			var ce = modal.find( '.bb-rl-modal-activity-footer .ac-form' ).find( '.ac-input[contenteditable]' );
 			bp.Nouveau.Activity.listenCommentInput( ce );
 
 			modal.find( '.bb-activity-more-options-wrap .bb-activity-more-options-action, .bb-rl-pin-action_button, .bb-rl-mute-action_button' ).attr( 'data-balloon-pos', 'left' );
