@@ -101,7 +101,7 @@ $document_folder_link = ( $attachment_id ) ? $download_link : $folder_link;
 $class                = '';
 
 if ( $attachment_id ) {
-	$class = 'bb-open-document-theatre';
+	$class = 'bb-rl-open-document-theatre';
 }
 
 ?>

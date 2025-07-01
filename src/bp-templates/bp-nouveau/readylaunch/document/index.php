@@ -76,6 +76,14 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 
 			<div class="screen-content bb-rl-document-directory-content">
 				<div class="bb-rl-media-stream">
+					<?php
+					bp_get_template_part( 'document/theatre' );
+					bp_get_template_part( 'media/theatre' );
+
+					if ( bp_is_profile_video_support_enabled() ) {
+						bp_get_template_part( 'video/theatre' );
+					}
+					?>
 					<div id="media-stream" class="documents dir-list bb-rl-document" data-bp-list="document" data-ajax="<?php echo esc_attr( $is_send_ajax_request ? 'true' : 'false' ); ?>">
 						<?php
 						if ( $is_send_ajax_request ) {
