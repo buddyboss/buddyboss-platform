@@ -2607,16 +2607,12 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			$enabled_pages = array();
 			if ( bp_enable_site_registration() && ! bp_allow_custom_registration() ) {
 				$enabled_pages['registration'] = true;
-			} else {
-				$enabled_pages['registration'] = false;
 			}
 			if ( $this->bb_is_sidebar_enabled_for_courses() ) {
 				$enabled_pages['courses'] = true;
-			} else {
-				$enabled_pages['courses'] = false;
 			}
 
-			if ( false === bp_get_option( 'bb_rl_enabled_pages', false ) ) {
+			if ( false === bp_get_option( 'bb_rl_enabled_pages', false ) && ! empty( $enabled_pages ) ) {
 				bp_update_option( 'bb_rl_enabled_pages', $enabled_pages );
 			}
 
@@ -2666,14 +2662,16 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				bp_update_option( 'bb_rl_member_profile_sidebars', $member_sidebar );
 			}
 
+			$member_sidebar = wp_parse_args(
+				bp_get_option( 'bb_rl_member_profile_sidebars', $member_sidebar ),
+				$member_sidebar
+			);
+
 			$settings['bb_rl_member_profile_sidebars'] = array_map(
 				function ( $value ) {
 					return (bool) $value;
 				},
-				bp_get_option(
-					'bb_rl_member_profile_sidebars',
-					$member_sidebar
-				)
+				$member_sidebar
 			);
 
 			$group_sidebars = array(
@@ -2752,7 +2750,10 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				bp_update_option( 'bb_rl_side_menu', $defaults );
 			}
 
-			$raw_settings = bp_get_option( 'bb_rl_side_menu', $defaults );
+			$raw_settings = wp_parse_args(
+				bp_get_option( 'bb_rl_side_menu', $defaults ),
+				$defaults
+			);
 
 			$settings['bb_rl_side_menu'] = array_map(
 				function ( $item ) {
