@@ -276,7 +276,7 @@ window.bp = window.bp || {};
 			event.preventDefault();
 
 			var tab = $( event.currentTarget ).data( 'tab' );
-			
+
 			$( '.bb-rl-message-info-tab' ).removeClass( 'active' );
 			$( event.currentTarget ).closest( '.bb-rl-message-info-tab' ).addClass( 'active' );
 
@@ -3802,7 +3802,7 @@ window.bp = window.bp || {};
 			template  : bp.template( 'bp-messages-no-archived-threads' ),
 			initialize: function() {
 				this.$el.html( this.template() );
-				
+
 				// Hide the right panel when there are no unread threads.
 				var rightPanel = $( '#bb-rl-messages-right-panel' );
 				if ( rightPanel.length ) {
@@ -3938,8 +3938,7 @@ window.bp = window.bp || {};
 			addSelect2: function() {
 				var $input    = $( this.el ).find( '#send-to-input' );
 				var ArrayData = [];
-				var self = this;
-				
+
 				if ( typeof bbRlIsBlockedByMembers !== 'undefined' && bbRlIsBlockedByMembers.length > 1 ) {
 					ArrayData = $.merge( ArrayData, bbRlIsBlockedByMembers );
 				}
@@ -4031,7 +4030,7 @@ window.bp = window.bp || {};
 							if ( !data.id ) {
 								return data.text;
 							}
-							
+
 							return $(
 								'<div class="bb-rl-select2-selection-user">' +
 								'<img class="select2-user-avatar" src="' + data.image + '" alt=""/>' +
@@ -4053,7 +4052,7 @@ window.bp = window.bp || {};
 					// Add class to dropdown
 					$('.select2-dropdown').addClass('bb-select-dropdown bb-compose-input');
 				});
-				
+
 				// Add class to container immediately after initialization
 				$input.next('.select2-container').addClass('bb-select-container');
 
@@ -6407,18 +6406,18 @@ window.bp = window.bp || {};
 		// Helper method to append new files without recreating the entire list.
 		appendFiles : function ( files ) {
 			var appendTemplate = bp.template( 'bp-messages-right-panel-files' );
-			
+
 			// Ensure each file has a title and truncate it if necessary.
 			_.each(files, function(file) {
 				if (typeof file.full_title === 'undefined') {
 					file.full_title = file.title;
 				}
-				
+
 				if (file.title.length > 15) {
 					file.title = file.title.substr(0, 12) + '...';
 				}
 			});
-			
+
 			this.$el.append( appendTemplate( files ) );
 			return this;
 		}
@@ -6431,13 +6430,13 @@ window.bp = window.bp || {};
 			template  : bp.template( 'bp-messages-no-unread-threads' ),
 			initialize: function() {
 				this.$el.html( this.template() );
-				
+
 				// Hide the right panel when there are no unread threads.
 				var rightPanel = $( '#bb-rl-messages-right-panel' );
 				if ( rightPanel.length ) {
 					rightPanel.hide();
 				}
-           
+
 				return this;
 			},
 		}
