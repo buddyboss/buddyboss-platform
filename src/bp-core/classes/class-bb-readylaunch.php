@@ -167,15 +167,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * @since BuddyBoss [BBVERSION]
 		 */
 		protected function load_component_integration() {
-			if (
-				bp_is_active( 'activity' ) &&
-				(
-					bp_is_activity_directory() ||
-					bp_is_single_activity() ||
-					bp_is_user_activity() ||
-					bp_is_group_activity()
-				)
-			) {
+			if ( bp_is_active( 'activity' ) ) {
 				BB_Activity_Readylaunch::instance();
 			}
 
