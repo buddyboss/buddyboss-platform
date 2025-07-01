@@ -53,7 +53,7 @@ bp_get_template_part( 'sidebar/left-sidebar' );
 			bp_get_template_part( 'header/site-logo' );
 
 			// Get menu location and generate CSS class based on parent items count.
-			$menu_id = $readylaunch_instance->bb_rl_get_header_menu_location();
+			$menu_id    = $readylaunch_instance->bb_rl_get_header_menu_location();
 			$menu_class = 'bb-readylaunch-menu';
 
 			if ( has_nav_menu( $menu_id ) ) {
@@ -151,11 +151,10 @@ bp_get_template_part( 'sidebar/left-sidebar' );
 					<?php
 					wp_nav_menu(
 						array(
-							'theme_location' => $readylaunch_instance->bb_rl_get_header_menu_location(),
-							'menu_id'        => '',
-							'container'      => false,
-							'fallback_cb'    => false,
-							'menu_class'     => 'bb-readylaunch-mobile-menu',
+							'menu'        => $readylaunch_instance->bb_rl_get_header_menu_location(),
+							'container'   => false,
+							'fallback_cb' => false,
+							'menu_class'  => 'bb-readylaunch-mobile-menu',
 						)
 					);
 					if ( is_user_logged_in() && ( bp_is_active( 'messages' ) || bp_is_active( 'notifications' ) ) ) {
