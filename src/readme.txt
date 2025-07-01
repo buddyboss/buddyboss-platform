@@ -57,6 +57,10 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 2.9.00 =
+* New Feature! ReadyLaunch - launch your community with our new built in page template
+* Bug: Forums - Fixed an issue where forum reply and topic media were not being deleted upon deletion
+
 = 2.8.90 =
 * Bug: Groups - Fixed an issue where deleting activity topics removed them from group-level topics
 * Bug: Groups - Fixed an issue where uploading default cover images slowed down sites with many group subscriptions
