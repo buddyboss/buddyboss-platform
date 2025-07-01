@@ -5965,6 +5965,7 @@ body.admin-bar .bb-rl-header {
   padding: 0;
   flex: 1;
   justify-content: center;
+  min-width: 0;
 }
 
 .bb-readylaunch-menu > li:not(:last-child) {
@@ -6590,8 +6591,33 @@ body.activity .site:not(:has(.bb-rl-activity-wrap .bb-rl-secondary-container)) .
   margin-right: 320px;
 }
 
+body.activity .site:not(:has(.bb-rl-activity-wrap .bb-rl-secondary-container)) .bb-readylaunch-menu.bb-rl-items-max {
+  margin-left: var(--bb-rl-space-300);
+  margin-right: 170px;
+}
+
+@media screen and (max-width: 1400px) {
+  body.activity .site:not(:has(.bb-rl-activity-wrap .bb-rl-secondary-container)) .bb-readylaunch-menu {
+    margin-right: 170px;
+  }
+  body.activity .site:not(:has(.bb-rl-activity-wrap .bb-rl-secondary-container)) .bb-readylaunch-menu.bb-rl-items-max {
+    margin-left: var(--bb-rl-space-100);
+    margin-right: 0;
+  }
+}
+
+@media screen and (max-width: 1280px) {
+  body.activity .site:not(:has(.bb-rl-activity-wrap .bb-rl-secondary-container)) .bb-readylaunch-menu {
+    margin-right: 0;
+  }
+}
+
 body.activity .bb-readylaunch-menu, body.bbp-user-page .bb-readylaunch-menu, body.forums.singular .bb-readylaunch-menu, body.messages.singular .bb-readylaunch-menu {
   margin-right: 170px;
+}
+
+body.activity .bb-readylaunch-menu.bb-rl-items-max, body.bbp-user-page .bb-readylaunch-menu.bb-rl-items-max, body.forums.singular .bb-readylaunch-menu.bb-rl-items-max, body.messages.singular .bb-readylaunch-menu.bb-rl-items-max {
+  margin-left: var(--bb-rl-space-300);
 }
 
 @media screen and (max-width: 1400px) {
@@ -6604,9 +6630,18 @@ body.directory .bb-readylaunch-menu, body.forum-archive .bb-readylaunch-menu, bo
   margin-right: 320px;
 }
 
+body.directory .bb-readylaunch-menu.bb-rl-items-max, body.forum-archive .bb-readylaunch-menu.bb-rl-items-max, body.forum.single .bb-readylaunch-menu.bb-rl-items-max, body.reply-edit .bb-readylaunch-menu.bb-rl-items-max, body.topic-edit .bb-readylaunch-menu.bb-rl-items-max, body.topic.single .bb-readylaunch-menu.bb-rl-items-max, body.group-admin.groups .bb-readylaunch-menu.bb-rl-items-max, body.my-account.profile .bb-readylaunch-menu.bb-rl-items-max, body.single-item.groups .bb-readylaunch-menu.bb-rl-items-max, body.bbp-user-page.single.my-account .bb-readylaunch-menu.bb-rl-items-max, body.notifications.single.my-account .bb-readylaunch-menu.bb-rl-items-max, body.my-account.profile.edit .bb-readylaunch-menu.bb-rl-items-max {
+  margin-left: var(--bb-rl-space-300);
+  margin-right: 170px;
+}
+
 @media screen and (max-width: 1400px) {
   body.directory .bb-readylaunch-menu, body.forum-archive .bb-readylaunch-menu, body.forum.single .bb-readylaunch-menu, body.reply-edit .bb-readylaunch-menu, body.topic-edit .bb-readylaunch-menu, body.topic.single .bb-readylaunch-menu, body.group-admin.groups .bb-readylaunch-menu, body.my-account.profile .bb-readylaunch-menu, body.single-item.groups .bb-readylaunch-menu, body.bbp-user-page.single.my-account .bb-readylaunch-menu, body.notifications.single.my-account .bb-readylaunch-menu, body.my-account.profile.edit .bb-readylaunch-menu {
     margin-right: 170px;
+  }
+  body.directory .bb-readylaunch-menu.bb-rl-items-max, body.forum-archive .bb-readylaunch-menu.bb-rl-items-max, body.forum.single .bb-readylaunch-menu.bb-rl-items-max, body.reply-edit .bb-readylaunch-menu.bb-rl-items-max, body.topic-edit .bb-readylaunch-menu.bb-rl-items-max, body.topic.single .bb-readylaunch-menu.bb-rl-items-max, body.group-admin.groups .bb-readylaunch-menu.bb-rl-items-max, body.my-account.profile .bb-readylaunch-menu.bb-rl-items-max, body.single-item.groups .bb-readylaunch-menu.bb-rl-items-max, body.bbp-user-page.single.my-account .bb-readylaunch-menu.bb-rl-items-max, body.notifications.single.my-account .bb-readylaunch-menu.bb-rl-items-max, body.my-account.profile.edit .bb-readylaunch-menu.bb-rl-items-max {
+    margin-left: var(--bb-rl-space-100);
+    margin-right: 0;
   }
 }
 
@@ -13840,7 +13875,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   padding: 0;
   border-bottom: 0;
   margin-bottom: 0;
-  margin-right: auto;
+  flex-shrink: 0;
 }
 
 .bb-rl-group-details .bb-rl-activity-filters-container .activity-head-bar {
@@ -13851,8 +13886,8 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 }
 
 .activity-topic-selector {
-  margin-left: auto;
-  max-width: 50%;
+  flex: 1;
+  min-width: 0;
 }
 
 .activity-topic-selector > ul {
