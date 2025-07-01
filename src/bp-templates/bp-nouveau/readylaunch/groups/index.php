@@ -7,7 +7,7 @@
  *
  * @package BuddyBoss\Template
  * @subpackage BP_Nouveau\ReadyLaunch
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.9.00
  * @version 1.0.0
  */
 
@@ -29,7 +29,7 @@ bp_nouveau_template_notices();
 			/**
 			 * Fires before the display of the groups list filters.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 2.9.00
 			 */
 			do_action( 'bb_before_directory_groups_filters' );
 
@@ -97,6 +97,6 @@ bp_nouveau_template_notices();
 /**
  * Fires at the bottom of the member directory template file.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.9.00
  */
 do_action( 'bp_after_directory_members_page' );

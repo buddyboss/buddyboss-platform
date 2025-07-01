@@ -980,7 +980,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 		/**
 		 * Returns the available search types.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 *
 		 * @return array
 		 */

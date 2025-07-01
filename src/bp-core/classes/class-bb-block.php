@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  * @subpackage Core
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.9.00
  */
 
 // Exit if accessed directly.
@@ -13,14 +13,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * BB Block Class.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.9.00
  */
 class BB_Block {
 
 	/**
 	 * WP Block Type object.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.00
 	 *
 	 * @var WP_Block_Type|WP_Error
 	 */
@@ -29,7 +29,7 @@ class BB_Block {
 	/**
 	 * The script types are registered.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.00
 	 *
 	 * @var array
 	 */
@@ -38,7 +38,7 @@ class BB_Block {
 	/**
 	 * The style types are registered.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.00
 	 *
 	 * @var array
 	 */
@@ -47,7 +47,7 @@ class BB_Block {
 	/**
 	 * Construct the BuddyBoss Block.
 	 *
-	 * @since BuddyBoss [BBVERSION] Add support for WP Block API v2 { apiVersion: 2 }.
+	 * @since BuddyBoss 2.9.00 Add support for WP Block API v2 { apiVersion: 2 }.
 	 *
 	 * @param array $args {
 	 *     The registration arguments for the BB Block. Part of the arguments are the ones
@@ -80,7 +80,7 @@ class BB_Block {
 	 */
 	public function __construct( $args ) {
 		if ( ! did_action( 'bb_blocks_init' ) ) {
-			_doing_it_wrong( __METHOD__, esc_html__( 'BB Blocks needs to be registered hooking `bb_blocks_init`', 'buddyboss' ), '[BBVERSION]' );
+			_doing_it_wrong( __METHOD__, esc_html__( 'BB Blocks needs to be registered hooking `bb_blocks_init`', 'buddyboss' ), '2.9.00' );
 		}
 
 		$min          = bp_core_get_minified_asset_suffix();
@@ -258,7 +258,7 @@ class BB_Block {
 					/**
 					 * Filter here to use a custom directory to look for the JSON translation file into.
 					 *
-					 * @since BuddyBoss [BBVERSION]
+					 * @since BuddyBoss 2.9.00
 					 *
 					 * @param string $domain_path   Absolute path to the directory to look for the JSON translation file into.
 					 * @param string $editor_script The editor's script handle.
@@ -274,7 +274,7 @@ class BB_Block {
 					/**
 					 * Filter here to use a custom domain for the JSON translation file.
 					 *
-					 * @since BuddyBoss [BBVERSION]
+					 * @since BuddyBoss 2.9.00
 					 *
 					 * @param string $textdomain    The custom domain for the JSON translation file.
 					 * @param string $editor_script The editor's script handle.

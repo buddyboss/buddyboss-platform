@@ -2,7 +2,7 @@
 /**
  * Readylaunch class.
  *
- * @since   BuddyBoss [BBVERSION]
+ * @since   BuddyBoss 2.9.00
  * @package BuddyBoss\Core
  */
 
@@ -12,7 +12,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 	/**
 	 * BuddyBoss Readylaunch object.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.00
 	 */
 	#[\AllowDynamicProperties]
 	class BB_Readylaunch {
@@ -20,7 +20,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * The single instance of the class.
 		 *
-		 * @since  BuddyBoss [BBVERSION]
+		 * @since  BuddyBoss 2.9.00
 		 *
 		 * @access private
 		 * @var self
@@ -30,7 +30,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * ReadyLaunch Settings.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 * @var array
 		 */
 		public $settings = array();
@@ -38,7 +38,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Get the instance of this class.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 *
 		 * @return BB_Readylaunch|null
 		 */
@@ -54,7 +54,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Constructor method.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 */
 		public function __construct() {
 			$enabled = bb_is_readylaunch_enabled();
@@ -114,7 +114,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Register the ReadyLaunch telemetry data.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 * @param array $option_array The array of telemetry options.
 		 *
 		 * @return array The modified array of telemetry options.
@@ -139,7 +139,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Load template stack for ReadyLaunch.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 */
 		protected function load_template_stack() {
 			add_filter(
@@ -164,7 +164,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Load component integration for ReadyLaunch.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 */
 		protected function load_component_integration() {
 			if ( bp_is_active( 'activity' ) ) {
@@ -190,7 +190,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Load login registration integration for ReadyLaunch.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 */
 		protected function load_login_registration_integration() {
 			// Remove BuddyBoss Theme login hooks.
@@ -233,7 +233,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Load hooks for ReadyLaunch.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 */
 		protected function load_hooks() {
 
@@ -290,7 +290,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Required load for BuddyBoss ReadyLaunch.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 *
 		 * @return void
 		 */
@@ -313,7 +313,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Initialise the hooks on BuddyBoss init.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 */
 		public function bb_rl_init() {
 
@@ -354,7 +354,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Mark notification as unread link.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 *
 		 * @param string $link The link.
 		 *
@@ -372,7 +372,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Mark the notification as read link.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 *
 		 * @param string $link The link.
 		 *
@@ -390,7 +390,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Delete notification link.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 *
 		 * @param string $link The link.
 		 *
@@ -408,7 +408,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Generate notification link.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 *
 		 * @param string $link       The link.
 		 * @param string $bp_tooltip The tooltip.
@@ -440,7 +440,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Get the order of sidebar items.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 *
 		 * @return array The ordered array of sidebar items.
 		 */
@@ -605,7 +605,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Get the template part content for readylaunch.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 */
 		public function bb_rl_get_template_part_content() {
 			// Initialize LearnDash variables.
@@ -697,7 +697,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Override full width for avatar in ReadyLaunch.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 *
 		 * @return int
 		 */
@@ -708,7 +708,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Override full height for avatar in ReadyLaunch.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 *
 		 * @return int
 		 */
@@ -719,7 +719,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Override thumb width for avatar in ReadyLaunch.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 *
 		 * @return int
 		 */
@@ -730,7 +730,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Override thumb height for avatar in ReadyLaunch.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 *
 		 * @return int
 		 */
@@ -741,7 +741,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Check if ReadyLaunch is enabled for the current directory.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 *
 		 * @return bool True if ReadyLaunch is enabled, false otherwise.
 		 */
@@ -780,7 +780,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Check if the network search is enabled.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 *
 		 * @return bool True if the network search is enabled, false otherwise.
 		 */
@@ -800,7 +800,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Check if the admin is enabled.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 *
 		 * @return bool True if the admin is enabled, false otherwise.
 		 */
@@ -830,7 +830,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Register the ReadyLaunch menus.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 */
 		public function bb_register_readylaunch_menus() {
 
@@ -858,7 +858,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Override the page templates.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 *
 		 * @param string $template Template to override.
 		 *
@@ -901,7 +901,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Remove the page content for ReadyLaunch forums and the discussion page.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 *
 		 * @param object $retval The page object.
 		 *
@@ -925,7 +925,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Add custom template stack for ReadyLaunch.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 *
 		 * @param array $stack The current template stack.
 		 *
@@ -960,7 +960,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Add forum template stack for ReadyLaunch.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 *
 		 * @param array $stack The template stack.
 		 *
@@ -986,7 +986,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Enqueue ReadyLaunch scripts.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 */
 		public function bb_enqueue_scripts() {
 			$min = bp_core_get_minified_asset_suffix();
@@ -1091,7 +1091,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Enqueue admin styles for ReadyLaunch.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 */
 		public function bb_admin_enqueue_scripts() {
 			$min = bp_core_get_minified_asset_suffix();
@@ -1101,7 +1101,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Enqueue admin styles for ReadyLaunch.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 */
 		public function bb_rl_admin_enqueue_scripts() {
 			$min = bp_core_get_minified_asset_suffix();
@@ -1118,7 +1118,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Dequeue all styles and scripts except the ones with the allowed suffix.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 */
 		public function bb_dequeue_styles() {
 			global $wp_styles, $wp_scripts;
@@ -1175,7 +1175,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Function to check if the handle has an allowed suffix.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 *
 		 * @param string $handle       The script handle.
 		 * @param array  $allow_suffix The allowed suffix.
@@ -1195,7 +1195,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Remove specific inline styles.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 *
 		 * @param string $buffer The buffer content.
 		 *
@@ -1221,7 +1221,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Start buffering.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 */
 		public function bb_rl_start_buffering() {
 			ob_start( array( $this, 'bb_rl_remove_specific_inline_styles' ) );
@@ -1230,7 +1230,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * End buffering.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 */
 		public function bb_rl_end_buffering() {
 			ob_end_flush();
@@ -1239,7 +1239,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Fetch header messages.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 */
 		public function bb_fetch_header_messages() {
 			check_ajax_referer( 'bb-readylaunch', 'nonce' );
@@ -1255,7 +1255,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Fetch header notifications.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 */
 		public function bb_fetch_header_notifications() {
 			check_ajax_referer( 'bb-readylaunch', 'nonce' );
@@ -1271,7 +1271,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Check if the sidebar is enabled for courses.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 *
 		 * @return bool True if the sidebar is enabled for courses, false otherwise.
 		 */
@@ -1306,7 +1306,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * It applies the 'bb_readylaunch_left_sidebar_courses' filter to get the arguments and
 		 * Parses them to ensure they have the required structure.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 *
 		 * @param bool $data if true, then check for return data, otherwise it will check plugin is active or not.
 		 *
@@ -1361,7 +1361,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * This function generates the HTML for the middle section of the left sidebar,
 		 * Displaying a list of items or an error message if no items are available.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 *
 		 * @param array $args Array of arguments for the left sidebar middle content.
 		 */
@@ -1467,7 +1467,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * If both conditions are met, it retrieves the unread notifications template part and the total
 		 * Count of unread notifications, then adds them to the response array.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 *
 		 * @param array $response The existing heartbeat response array.
 		 * @param array $data     The data passed to the heartbeat request.
@@ -1530,7 +1530,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * Depending on the provided notification ID, it either marks a specific notification or all notifications as read.
 		 * Finally, it returns the updated unread notifications count and content via a JSON response.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 *
 		 * @return void
 		 */
@@ -1609,7 +1609,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Get the SVG icon for the document.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 *
 		 * @param string $icons     The icons.
 		 * @param string $extension The extension.
@@ -1786,7 +1786,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Get the icon class for the document.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 *
 		 * @param string $icon_class The icon class.
 		 *
@@ -1851,7 +1851,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Filters the label for BuddyPress Nouveau filters.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 *
 		 * @param string $label     Label for BuddyPress Nouveau filter.
 		 * @param array  $component The data filter's data-bp-filter attribute value.
@@ -1867,7 +1867,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Filters to add the ReadyLaunch prefix.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 *
 		 * @param string $key Key to readylaunch prefix.
 		 */
@@ -1878,7 +1878,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Register Scripts for the Member component
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 *
 		 * @param array $scripts The array of scripts to register.
 		 *
@@ -1930,7 +1930,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * - Ensuring "Previous" and "Next" links are always visible, even if first or last page.
 		 * - Add previous and next data labels.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 *
 		 * @param string $output The HTML output of the pagination links.
 		 * @param array  $args   The arguments passed to paginate_links().
@@ -1987,7 +1987,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Callback function for the invite form.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 *
 		 * @return void|false
 		 */
@@ -2112,7 +2112,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			/**
 			 * Fires after a member invitation is sent.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 2.9.00
 			 *
 			 * @param int $post_id Invitation post ID.
 			 *
@@ -2131,7 +2131,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Adds custom classes to the array of body classes.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 *
 		 * @param array $classes Classes for the body element.
 		 *
@@ -2148,7 +2148,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Filters the script loader source for the ReadyLaunch script.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 *
 		 * @param string $src    The source URL of the script.
 		 * @param string $handle The handle of the script.
@@ -2169,7 +2169,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Override the Send Message button text.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 *
 		 * @param array $args Button arguments.
 		 *
@@ -2184,7 +2184,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Filters the member actions for member directories.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 *
 		 * @param array  $buttons     Member profile actions.
 		 * @param int    $user_id     Member ID.
@@ -2248,7 +2248,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Filters default group avatar image URL.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 *
 		 * @param string|bool $avatar_image_url Default avatar URL, false otherwise.
 		 * @param array       $params           Parameters for the avatar image.
@@ -2266,7 +2266,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Check if the current user is a group admin.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 *
 		 * @return bool True if the user is a group admin, false otherwise.
 		 */
@@ -2279,7 +2279,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Register common scripts for ReadyLaunch.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 *
 		 * @param array $scripts Array of registered scripts.
 		 *
@@ -2315,7 +2315,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Register common styles for ReadyLaunch.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 *
 		 * @param array $styles Array of registered styles.
 		 *
@@ -2337,7 +2337,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Modify document description HTML for ReadyLaunch.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 *
 		 * @param string $html The original HTML content.
 		 */
@@ -2363,7 +2363,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Filters the member profile buttons.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 *
 		 * @param array  $buttons The member profile buttons.
 		 * @param int    $user_id The user ID.
@@ -2417,7 +2417,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Modify the JS strings.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 *
 		 * @param array $strings The JS strings.
 		 *
@@ -2440,7 +2440,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Enqueue the login scripts.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 */
 		public function bb_rl_login_enqueue_scripts() {
 			wp_enqueue_style( 'bb-rl-login-fonts', buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/assets/fonts/fonts.css', array(), bp_get_version() );
@@ -2451,7 +2451,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Modify the login header.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 */
 		public function bb_rl_login_header() {
 			bp_get_template_part( 'common/header-register' );
@@ -2461,7 +2461,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Custom Login Link
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 */
 		public function bb_rl_login_header_url() {
 			if ( function_exists( 'buddypress' ) && isset( buddypress()->buddyboss ) ) {
@@ -2478,7 +2478,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Modify the login footer.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 */
 		public function bb_rl_login_footer() {
 			?>
@@ -2495,7 +2495,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Modify the login message.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 *
 		 * @param string $message The login message.
 		 *
@@ -2526,7 +2526,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Modify the login form to add a forgot password link.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 */
 		public function bb_rl_login_custom_form() {
 			?>
@@ -2537,7 +2537,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Add dynamic colours to the frontend.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 */
 		public function bb_rl_dynamic_colors() {
 			$color_light = bp_get_option( 'bb_rl_color_light', '#4946fe' );
@@ -2558,7 +2558,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Filter the search JS settings for ReadyLaunch
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 *
 		 * @param array $settings Search settings array.
 		 *
@@ -2574,7 +2574,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Register the ReadyLaunch Header block.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 */
 		public function bb_rl_register_blocks() {
 			// Register block assets.
@@ -2591,7 +2591,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Register assets for the ReadyLaunch Header block.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 */
 		private function register_readylaunch_header_assets() {
 			$plugin_url = trailingslashit( buddypress()->plugin_url );
@@ -2651,7 +2651,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Add ReadyLaunch settings to the platform settings API.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 *
 		 * @param array $settings Array of platform settings.
 		 *
@@ -2871,7 +2871,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Enqueue LMS styles for ReadyLaunch.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 */
 		public function bb_readylaunch_lms_enqueue_styles() {
 			if ( ! bb_is_readylaunch_enabled() || ( ! class_exists( 'SFWD_LMS' ) && ! class_exists( 'memberpress\courses\helpers\Courses' ) ) ) {
@@ -2890,7 +2890,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Enqueue MemberPress Courses styles for ReadyLaunch.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 */
 		public function bb_readylaunch_meprlms_enqueue_styles() {
 			if ( ! bb_is_readylaunch_enabled() || ! class_exists( 'memberpress\courses\helpers\Courses' ) ) {
@@ -2926,7 +2926,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Check if the current page is a LearnDash page.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 *
 		 * @return bool True if the current page is a LearnDash page, false otherwise.
 		 */
@@ -3068,7 +3068,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Return the theme mode option.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 */
 		public function bb_rl_get_theme_mode() {
 			$bb_rl_theme_mode = bp_get_option( 'bb_rl_theme_mode', 'light' );
@@ -3079,7 +3079,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Return the theme logo option.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 *
 		 * @param string $key The key of the logo.
 		 *
@@ -3094,7 +3094,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Function to check pages is enabled for integration.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 *
 		 * @param string $page The page to check.
 		 *
@@ -3113,7 +3113,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Check if the current page is a MemberPress courses page.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 *
 		 * @return bool True if the current page is a MemberPress courses page, false otherwise.
 		 */
@@ -3220,7 +3220,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Get the header menu option.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 */
 		public function bb_rl_get_header_menu_location() {
 			$header_menu_slug = bp_get_option( 'bb_rl_header_menu', 'readylaunch' );
@@ -3241,7 +3241,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Check if the current page is a BuddyBoss ReadyLaunch Forums page.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 *
 		 * @return bool True if the current page is a ReadyLaunch Forums page, false otherwise.
 		 */
@@ -3283,7 +3283,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Enqueue styles and scripts for ReadyLaunch Forums.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 */
 		public function bb_readylaunch_forums_enqueue_styles() {
 			if (
@@ -3393,7 +3393,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Add the 'Quick Reply' button to the activity stream.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 *
 		 * @param array $buttons Array of buttons.
 		 * @param int   $activity_id Activity ID.
@@ -3456,7 +3456,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Handle AJAX reply submission.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 */
 		public function bb_rl_ajax_reply() {
 			// phpcs:ignore
@@ -3471,7 +3471,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * New pre-replies.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 */
 		public function bb_rl_new_reply_pre_extras() {
 			if ( ! bbp_is_ajax() ) {
@@ -3493,7 +3493,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * New replies.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 *
 		 * @param int $reply_id Reply ID.
 		 *
@@ -3511,7 +3511,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Ajax callback for Quick Reply.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 *
 		 * @uses  bbp_get_template_part() Load required template.
 		 *
@@ -3544,7 +3544,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * Generate an Ajax response.
 		 * Sends the HTML for the reply along with some extra information.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 *
 		 * @param integer $reply_id Reply ID.
 		 * @param string  $type     Type of reply ('new' or 'edit').
@@ -3605,7 +3605,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Uses a bbPress template file to generate reply HTML.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 *
 		 * @param int $reply_id Reply ID.
 		 *
@@ -3681,7 +3681,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Get group ID for forum attachments.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 *
 		 * @param int $group_id Group ID.
 		 *
@@ -3703,7 +3703,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Get forum ID for forum attachments.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 *
 		 * @param int $forum_id Forum ID.
 		 *
@@ -3726,7 +3726,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Get topic tags.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 *
 		 * @param int $topic_id Topic ID.
 		 *
@@ -3765,7 +3765,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Localize script for ReadyLaunch admin.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 *
 		 * @param array  $localize_arg Localized arguments.
 		 * @param string $screen_id Screen ID.
@@ -3808,7 +3808,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Get forum freshness link.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 *
 		 * @param string $active_time Active time.
 		 *
@@ -3839,7 +3839,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Get forum freshness link.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 *
 		 * @param string $anchor Anchor.
 		 * @param int    $forum_id Forum ID.
@@ -3869,7 +3869,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Modify super sticky text for readylaunch.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 *
 		 * @param array $r Arguments.
 		 *

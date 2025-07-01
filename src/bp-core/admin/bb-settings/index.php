@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  * @subpackage Core
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.9.00
  */
 
 if ( ! defined( 'ABSPATH' ) ) {

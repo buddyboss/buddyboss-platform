@@ -3,7 +3,7 @@
  * The template for displaying topic selector in topic list.
  *
  * @package    BuddyBoss\Template
- * @since      BuddyBoss [BBVERSION]
+ * @since      BuddyBoss 2.9.00
  * @subpackage BP_Nouveau\ReadyLaunch
  * @version    1.0.0
  */

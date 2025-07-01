@@ -2,7 +2,7 @@
 /**
  * ReadyLaunch - The template for displaying what's new toolbar
  *
- * @since   BuddyBoss [BBVERSION]
+ * @since   BuddyBoss 2.9.00
  * @version 1.0.0
  */
 
@@ -14,7 +14,7 @@
 	/**
 	 * Fires at the beginning of the what's new toolbar.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.00
 	 */
 	do_action( 'bb_whats_new_toolbar_before' );
 
@@ -60,7 +60,7 @@
 	/**
 	 * Fires at the end of the what's new toolbar.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.00
 	 */
 	do_action( 'bb_whats_new_toolbar_after' );
 	?>

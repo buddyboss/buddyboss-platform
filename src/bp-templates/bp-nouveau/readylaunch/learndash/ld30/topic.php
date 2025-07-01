@@ -2,7 +2,7 @@
 /**
  * LearnDash Single Topic Template for ReadyLaunch.
  *
- * @since   BuddyBoss [BBVERSION]
+ * @since   BuddyBoss 2.9.00
  * @package BuddyBoss\Core
  * @version 1.0.0
  *
@@ -178,7 +178,7 @@ foreach ( $topics as $topic_item ) {
 											/**
 											 * Filter to override previous step completed.
 											 *
-											 * @since BuddyBoss [BBVERSION]
+											 * @since BuddyBoss 2.9.00
 											 *
 											 * @param bool $previous_lesson_completed True if previous step completed.
 											 * @param int  $step_id                   Step Post ID.
@@ -220,7 +220,7 @@ foreach ( $topics as $topic_item ) {
 										/**
 										 * Fires before the topic progression.
 										 *
-										 * @since BuddyBoss [BBVERSION]
+										 * @since BuddyBoss 2.9.00
 										 *
 										 * @param int $topic_id  Topic ID.
 										 * @param int $course_id Course ID.
@@ -245,7 +245,7 @@ foreach ( $topics as $topic_item ) {
 										/**
 										 * Fires after the topic progression.
 										 *
-										 * @since BuddyBoss [BBVERSION]
+										 * @since BuddyBoss 2.9.00
 										 *
 										 * @param int $topic_id  Topic ID.
 										 * @param int $course_id Course ID.
@@ -300,7 +300,7 @@ foreach ( $topics as $topic_item ) {
 							/**
 							 * Fires before the lesson assignment.
 							 *
-							 * @since BuddyBoss [BBVERSION]
+							 * @since BuddyBoss 2.9.00
 							 *
 							 * @param int $post_id   Post ID.
 							 * @param int $course_id Course ID.
@@ -324,7 +324,7 @@ foreach ( $topics as $topic_item ) {
 							/**
 							 * Fires after the lesson assignment.
 							 *
-							 * @since BuddyBoss [BBVERSION]
+							 * @since BuddyBoss 2.9.00
 							 *
 							 * @param int $post_id   Post ID.
 							 * @param int $course_id Course ID.

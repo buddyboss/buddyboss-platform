@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  * @subpackage Core
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.9.00
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Render the BuddyBoss Readylaunch React Settings page.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.9.00
  *
  * @return void
  */
@@ -68,7 +68,7 @@ function bb_readylaunch_settings_page_html() {
 /**
  * Enqueue the BuddyBoss Readylaunch React Settings page styles and scripts.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.9.00
  *
  * @param string $admin_page The admin page.
  */
@@ -121,7 +121,7 @@ add_action( 'admin_enqueue_scripts', 'bb_readylaunch_register_enqueue_style_scri
 /**
  * Enqueue the BuddyBoss Readylaunch React Settings page styles and scripts.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.9.00
  *
  * @param string $admin_page The admin page.
  */

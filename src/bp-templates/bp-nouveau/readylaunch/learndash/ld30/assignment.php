@@ -3,7 +3,7 @@
  * Assignment template for ReadyLaunch.
  *
  * @package BuddyBoss\Core
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.9.00
  */
 
 // Exit if accessed directly.

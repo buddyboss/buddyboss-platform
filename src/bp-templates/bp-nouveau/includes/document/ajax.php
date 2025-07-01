@@ -499,7 +499,7 @@ function bp_nouveau_ajax_document_get_document_description() {
 			/**
 			 * Filter the document description HTML.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 2.9.00
 			 *
 			 * @param string $document_description The document description HTML.
 			 * @param object $document             Document object.
@@ -525,7 +525,7 @@ function bp_nouveau_ajax_document_get_document_description() {
 	/**
 	 * Filter the document description response data.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.00
 	 *
 	 * @param array $response_data The response data to be sent.
 	 */

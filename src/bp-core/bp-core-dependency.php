@@ -284,14 +284,14 @@ function bp_rest_api_init() {
 /**
  * BB Blocks Init hook.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.9.00
  */
 function bb_blocks_init() {
 
 	/**
 	 * Hook here to register your BuddyBoss blocks.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.00
 	 */
 	do_action( 'bb_blocks_init' );
 }

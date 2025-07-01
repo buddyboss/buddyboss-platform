@@ -451,7 +451,7 @@ class BP_Core extends BP_Component {
 	/**
 	 * Register the BB Core Blocks.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.00
 	 *
 	 * @param array $blocks Optional. See BP_Component::blocks_init() for description.
 	 */

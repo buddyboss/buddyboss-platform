@@ -350,7 +350,7 @@ class BP_Settings_Component extends BP_Component {
 	/**
 	 * Register the Settings Blocks.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.00
 	 *
 	 * @param array $blocks Optional. See BP_Component::blocks_init() for description.
 	 */

@@ -7,7 +7,7 @@
  *
  * @package BuddyBoss\Template
  * @subpackage BP_Nouveau\ReadyLaunch
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.9.00
  * @version 1.0.0
  */
 
@@ -20,7 +20,7 @@ $extension     = bp_get_document_extension();
 /**
  * Filters the document text preview.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.9.00
  *
  * @param bool $retval Whether document text preview.
  */

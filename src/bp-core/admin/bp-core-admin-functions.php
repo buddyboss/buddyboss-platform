@@ -3216,7 +3216,7 @@ function bp_block_category( $categories = array(), $editor_name_or_post = null )
 		 * As blocks are always loaded even if the category is not available, there's no more interest
 		 * in disabling the BuddyBoss category.
 		 */
-		apply_filters_deprecated( 'bp_block_category_post_types', array( $post_types ), '[BBVERSION]' );
+		apply_filters_deprecated( 'bp_block_category_post_types', array( $post_types ), '2.9.00' );
 	}
 
 	return array_merge(

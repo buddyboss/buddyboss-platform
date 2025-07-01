@@ -2,7 +2,7 @@
 /**
  * ReadyLaunch - The template for displaying activity reactions in popup modal.
  *
- * @since   BuddyBoss [BBVERSION]
+ * @since   BuddyBoss 2.9.00
  * @package BuddyBoss\Core
  */
 

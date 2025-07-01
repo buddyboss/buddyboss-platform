@@ -2,7 +2,7 @@
 /**
  * Readylaunch - Messages paginate template.
  *
- * @since   BuddyBoss [BBVERSION]
+ * @since   BuddyBoss 2.9.00
  * @version 1.0.0
  */
 ?>

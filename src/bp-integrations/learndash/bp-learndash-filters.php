@@ -488,7 +488,7 @@ function bb_support_learndash_permalinks_nested_urls( $ld_rewrite_rules, $ld_rew
  * This function retrieves the courses a user is enrolled in using the LearnDash plugin.
  * It fetches courses and includes the course title, permalink, and thumbnail.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.9.00
  *
  * @param array $args Arguments.
  *

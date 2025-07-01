@@ -15,7 +15,7 @@
  * @since 3.0.0
  * @version 4.11.0
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.9.00
  *
  * @package LearnDash\Templates\LD30
  */

@@ -7,7 +7,7 @@
  *
  * @package BuddyBoss\Template
  * @subpackage BP_Nouveau\ReadyLaunch
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.9.00
  * @version 1.0.0
  */
 
@@ -19,7 +19,7 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 /**
  * Fires at the begining of the templates BP injected content.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.9.00
  */
 do_action( 'bp_before_directory_members_page' );
 ?>
@@ -59,7 +59,7 @@ do_action( 'bp_before_directory_members_page' );
 		/**
 		 * Fires before the display of the members.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 */
 		do_action( 'bp_before_directory_members' );
 		?>
@@ -70,14 +70,14 @@ do_action( 'bp_before_directory_members_page' );
 			/**
 			 * Fires before the display of the members list tabs.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 2.9.00
 			 */
 			do_action( 'bp_before_directory_members_tabs' );
 
 			/**
 			 * Fires before the display of the members content.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 2.9.00
 			 */
 			do_action( 'bp_before_directory_members_content' );
 			?>
@@ -118,7 +118,7 @@ do_action( 'bp_before_directory_members_page' );
 				/**
 				 * Fires and displays the members content.
 				 *
-				 * @since BuddyBoss [BBVERSION]
+				 * @since BuddyBoss 2.9.00
 				 */
 				do_action( 'bp_directory_members_content' );
 				?>
@@ -131,7 +131,7 @@ do_action( 'bp_before_directory_members_page' );
 			/**
 			 * Fires after the display of the members content.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 2.9.00
 			 */
 			do_action( 'bp_after_directory_members_content' );
 			?>
@@ -142,7 +142,7 @@ do_action( 'bp_before_directory_members_page' );
 		/**
 		 * Fires after the display of the members.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 */
 		do_action( 'bp_after_directory_members' );
 		?>
@@ -264,7 +264,7 @@ if ( bp_allow_user_to_send_invites() ) {
 /**
  * Fires at the bottom of the member directory template file.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.9.00
  */
 do_action( 'bp_after_directory_members_page' );
 ?>

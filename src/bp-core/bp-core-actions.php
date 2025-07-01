@@ -1265,7 +1265,7 @@ function bb_load_topics_manager() {
 /**
  * Function to load readylaunch class.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.9.00
  */
 function bb_load_readylaunch() {
 	if ( class_exists( 'BB_Readylaunch' ) ) {

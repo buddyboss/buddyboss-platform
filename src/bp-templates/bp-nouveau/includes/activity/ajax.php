@@ -1618,7 +1618,7 @@ function bb_nouveau_ajax_activity_sync_from_modal() {
 	/**
 	 * Filters the arguments for the activity sync from modal.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.00
 	 *
 	 * @param array $args The arguments for the activity sync from modal.
 	 */

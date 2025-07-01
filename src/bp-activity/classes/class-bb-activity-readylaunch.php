@@ -2,7 +2,7 @@
 /**
  * BuddyBoss Activity Readylaunch.
  *
- * @since   BuddyBoss [BBVERSION]
+ * @since   BuddyBoss 2.9.00
  * @package BuddyBoss\Activity\Classes
  */
 
@@ -12,14 +12,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * BuddyBoss Activity ReadyLaunch Class.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.9.00
  */
 class BB_Activity_Readylaunch {
 
 	/**
 	 * The single instance of the class.
 	 *
-	 * @since  BuddyBoss [BBVERSION]
+	 * @since  BuddyBoss 2.9.00
 	 *
 	 * @access private
 	 * @var self
@@ -29,7 +29,7 @@ class BB_Activity_Readylaunch {
 	/**
 	 * Constructor method.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.00
 	 */
 	public function __construct() {
 		add_filter( 'bb_get_activity_post_user_reactions_html', array( $this, 'bb_rl_get_activity_post_user_reactions_html' ), 10, 4 );
@@ -61,7 +61,7 @@ class BB_Activity_Readylaunch {
 	/**
 	 * Get the instance of this class.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.00
 	 *
 	 * @return Controller|BB_Activity_Readylaunch|null
 	 */
@@ -78,7 +78,7 @@ class BB_Activity_Readylaunch {
 	/**
 	 * Get activity post user reactions HTML.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.00
 	 *
 	 * @param string $output       The output.
 	 * @param int    $activity_id  The activity ID.
@@ -148,7 +148,7 @@ class BB_Activity_Readylaunch {
 	/**
 	 * Get activity comment buttons for ReadyLaunch.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.00
 	 *
 	 * @param array $buttons             The activity comment buttons.
 	 * @param int   $activity_comment_id The activity comment ID.
@@ -189,7 +189,7 @@ class BB_Activity_Readylaunch {
 	/**
 	 * Modify the reaction button HTML.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.00
 	 *
 	 * @param string $button_html The default button HTML.
 	 * @param array  $args        Button arguments.
@@ -222,7 +222,7 @@ class BB_Activity_Readylaunch {
 	/**
 	 * Load more comments for the activity.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.00
 	 */
 	public function bb_rl_activity_loadmore_comments() {
 		if ( ! bp_is_post_request() ) {
@@ -350,7 +350,7 @@ class BB_Activity_Readylaunch {
 	/**
 	 * Activity state.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.00
 	 */
 	public function bb_rl_activity_state() {
 		$activity_id    = bp_get_activity_id();
@@ -402,7 +402,7 @@ class BB_Activity_Readylaunch {
 	/**
 	 * Sync activity from modal args.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.00
 	 *
 	 * @param array $args The modal arguments.
 	 *
@@ -417,7 +417,7 @@ class BB_Activity_Readylaunch {
 	/**
 	 * Get activity comment count.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.00
 	 *
 	 * @param int $activity_id The activity ID.
 	 *
@@ -433,7 +433,7 @@ class BB_Activity_Readylaunch {
 	/**
 	 * Localise the strings needed for the ReadyLaunch activity.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.00
 	 *
 	 * @param array $params Associative array containing the JS strings needed by scripts.
 	 *
@@ -463,7 +463,7 @@ class BB_Activity_Readylaunch {
 	/**
 	 * Modify document image sizes.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.00
 	 *
 	 * @param array $sizes The image sizes.
 	 *
@@ -483,7 +483,7 @@ class BB_Activity_Readylaunch {
 	/**
 	 * Modify activity max thumb length.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.00
 	 *
 	 * @return int
 	 */
@@ -494,7 +494,7 @@ class BB_Activity_Readylaunch {
 	/**
 	 * Add additional user data to reactions.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.00
 	 *
 	 * @param array $reaction_data The reaction data array.
 	 *
@@ -527,7 +527,7 @@ class BB_Activity_Readylaunch {
 	/**
 	 * Modify activity comment threading depth.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.00
 	 *
 	 * @return bool
 	 */
@@ -538,7 +538,7 @@ class BB_Activity_Readylaunch {
 	/**
 	 * Modify submit button.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.00
 	 *
 	 * @param array $button The submit button array.
 	 *
@@ -554,7 +554,7 @@ class BB_Activity_Readylaunch {
 	/**
 	 * Modify activity content with changed avatar.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.00
 	 *
 	 * @param string $content The original content.
 	 * @param object $activity The activity object.
@@ -581,7 +581,7 @@ class BB_Activity_Readylaunch {
 	/**
 	 * Add a class to activities with empty content.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.00
 	 *
 	 * @param string $activity_class The CSS classes for the activity item.
 	 *
@@ -601,7 +601,7 @@ class BB_Activity_Readylaunch {
 	/**
 	 * Modify activity new update action.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.00
 	 *
 	 * @param array $args The arguments.
 	 *
@@ -706,7 +706,7 @@ class BB_Activity_Readylaunch {
 	/**
 	 * Modify media description response data.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.00
 	 *
 	 * @param array $response_data The response data.
 	 *

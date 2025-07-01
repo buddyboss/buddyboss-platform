@@ -161,7 +161,7 @@ if ( current_user_can( 'administrator' ) && 'yes' === $admin_enrolled ) {
 					/**
 					 * Fires before the course content listing
 					 *
-					 * @since BuddyBoss [BBVERSION]
+					 * @since BuddyBoss 2.9.00
 					 *
 					 * @param int $course_id Course ID.
 					 * @param int $user_id   User ID.
@@ -193,7 +193,7 @@ if ( current_user_can( 'administrator' ) && 'yes' === $admin_enrolled ) {
 					/**
 					 * Fires before the course content listing.
 					 *
-					 * @since BuddyBoss [BBVERSION]
+					 * @since BuddyBoss 2.9.00
 					 *
 					 * @param int $course_id Course ID.
 					 * @param int $user_id   User ID.

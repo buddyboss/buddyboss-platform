@@ -4,7 +4,7 @@
  *
  * @package BuddyBossPro\Integration\MemberpressLMS
  *
- * @since [BBVERSION]
+ * @since 2.9.00
  */
 
 defined( 'ABSPATH' ) || exit;

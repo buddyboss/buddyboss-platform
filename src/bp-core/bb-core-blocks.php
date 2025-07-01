@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  * @subpackage Core
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.9.00
  */
 
 // Exit if accessed directly.
@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * BuddyBoss blocks require the BP REST API.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.9.00
  *
  * @return bool True if the current installation supports BB Blocks.
  *              False otherwise.
@@ -23,7 +23,7 @@ function bb_support_blocks() {
 	/**
 	 * Filter here, returning `false`, to completely disable BuddyBoss blocks.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.00
 	 *
 	 * @param bool $value True if the BP REST API is available. False otherwise.
 	 */
@@ -33,14 +33,14 @@ function bb_support_blocks() {
 /**
  * Enqueue additional BB Assets for the Block Editor.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.9.00
  */
 function bb_enqueue_block_editor_assets() {
 
 	/**
 	 * Fires when it's time to enqueue BuddyBoss Block assets.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.00
 	 */
 	do_action( 'bb_enqueue_block_editor_assets' );
 }
@@ -49,7 +49,7 @@ add_action( 'enqueue_block_editor_assets', 'bb_enqueue_block_editor_assets', 9 )
 /**
  * Filters the Block Editor settings to gather BuddyBoss ones into a `bb` key.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.9.00
  *
  * @param array $editor_settings Default editor settings.
  *
@@ -60,7 +60,7 @@ function bb_blocks_editor_settings( $editor_settings = array() ) {
 	/**
 	 * Filter here to include your BB Blocks specific settings.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.00
 	 *
 	 * @param array $bb_editor_settings BB blocks specific editor settings.
 	 */
@@ -77,7 +77,7 @@ add_filter( 'block_editor_settings_all', 'bb_blocks_editor_settings' );
 /**
  * Register a BuddyBoss block type.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.9.00
  *
  * @param array $args The registration arguments for the block type.
  *
@@ -100,7 +100,7 @@ function bb_register_block( $args = array() ) {
 /**
  * Gets a Widget Block list of classnames.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.9.00
  *
  * @param string $block_name The Block name.
  *
@@ -128,7 +128,7 @@ function bb_blocks_get_widget_block_classnames( $block_name = '' ) {
 /**
  * Make sure the BB Widget Block classnames are included in Widget Blocks.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.9.00
  *
  * @param string $classname  The classname to be used in the block widget's container HTML.
  * @param string $block_name The name of the block.
@@ -150,7 +150,7 @@ add_filter( 'widget_block_dynamic_classname', 'bb_widget_block_dynamic_classname
 /**
  * Callback function to render the Ready Launch Header block.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.9.00
  *
  * @param array $attributes The block attributes.
  *

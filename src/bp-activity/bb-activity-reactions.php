@@ -364,7 +364,7 @@ function bb_get_activity_post_user_reactions_html( $activity_id, $item_type = 'a
 	 * Filters the user reactions list for activity post.
 	 *
 	 * @since BuddyBoss 2.5.20
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.00
 	 * Added new params as $activity_id, $item_type, $is_popup.
 	 *
 	 * @param string $output      The user reactions list for activity post.

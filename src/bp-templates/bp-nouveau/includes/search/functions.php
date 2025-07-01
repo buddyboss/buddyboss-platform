@@ -190,7 +190,7 @@ function bp_nouveau_search_messages_autocomplete_init_jsblock() {
  * It dynamically sets parameters such as nonces, AJAX action URLs, messages, and
  * other settings required for the search feature.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.9.00
  *
  * @return void
  */

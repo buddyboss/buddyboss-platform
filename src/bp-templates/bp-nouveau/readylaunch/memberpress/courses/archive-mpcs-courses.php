@@ -4,7 +4,7 @@
  *
  * This template can be overridden by copying it to yourtheme/memberpress/courses/archive-mpcs-courses.php.
  *
- * @since [BBVERSION]
+ * @since 2.9.00
  *
  * @package BuddyBoss\MemberpressLMS
  */

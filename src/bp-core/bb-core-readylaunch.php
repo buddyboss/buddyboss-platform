@@ -5,7 +5,7 @@
  * Handles the core functions related to the BB ReadyLaunch.
  *
  * @package BuddyBoss\Core\ReadyLaunch
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.9.00
  */
 
 // Exit if accessed directly.
@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Register a widget for ReadyLaunch
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.9.00
  *
  * @param string $widget_class Widget class name.
  * @param string $widget_file Widget file path.
@@ -55,7 +55,7 @@ function bb_rl_register_single_widget( $widget_class, $widget_file ) {
 /**
  * Register ReadyLaunch widgets
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.9.00
  */
 function bb_rl_register_widgets() {
 	if ( ! bb_is_readylaunch_enabled() ) {
@@ -107,7 +107,7 @@ add_action( 'bp_register_widgets', 'bb_rl_register_widgets' );
 /**
  * Filter pre-existing widgets.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.9.00
  *
  * @param array     $instance Widget instance.
  * @param WP_Widget $widget   Widget object.
@@ -154,7 +154,7 @@ add_filter( 'widget_display_callback', 'bb_rl_modify_existing_widget_output', 10
 /**
  * Open the wrapper of the repeater set - on the View profile screen
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.9.00
  *
  * @global type $first_xpfield_in_repeater
  */
@@ -181,7 +181,7 @@ add_action( 'bp_before_profile_field_item', 'bb_rl_view_profile_repeaters_print_
 /**
  * Add social networks button to the member header area.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.9.00
  *
  * @param int|null $user_id User ID.
  * @return string
@@ -241,7 +241,7 @@ function bb_rl_get_user_social_networks_urls( $user_id = null ) {
 /**
  * Get social network field ID.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.9.00
  *
  * @return int Social network xProfile field id.
  */
@@ -272,7 +272,7 @@ function bb_rl_get_user_social_networks_field_id() {
 /**
  * Clear the cached social networks field ID.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.9.00
  */
 function bb_rl_clear_social_networks_field_cache() {
 	wp_cache_delete( 'bb_rl_social_networks_field_id' );
@@ -281,7 +281,7 @@ function bb_rl_clear_social_networks_field_cache() {
 /**
  * Clear social networks field cache when field type changes.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.9.00
  *
  * @param BP_XProfile_Field $field The field object being saved.
  */
@@ -295,7 +295,7 @@ function bb_rl_clear_cache_on_field_type_change( $field = null ) {
 /**
  * Add bb-rl-suggestions to mention selectors
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.9.00
  *
  * @param array $options Mentions options.
  * @return array Modified mentions options.
@@ -318,7 +318,7 @@ add_action( 'bp_xprofile_admin_edit_field', 'bb_rl_clear_social_networks_field_c
 /**
  * Get course category names for a specific course.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.9.00
  *
  * @param int $course_id Course ID.
  *
@@ -338,7 +338,7 @@ if ( ! function_exists( 'bb_rl_get_normalized_file_type' ) ) {
 	/**
 	 * Get normalized file type from MIME type.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.00
 	 *
 	 * @param string $file_type MIME type.
 	 *

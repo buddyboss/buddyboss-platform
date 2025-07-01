@@ -2,7 +2,7 @@
 /**
  * ReadyLaunch - The template for displaying GIF result item.
  *
- * @since   BuddyBoss [BBVERSION]
+ * @since   BuddyBoss 2.9.00
  * @version 1.0.0
  */
 

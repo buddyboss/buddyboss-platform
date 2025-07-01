@@ -2,7 +2,7 @@
 /**
  * ReadyLaunch LearnDash Helper Functions
  *
- * @since   BuddyBoss [BBVERSION]
+ * @since   BuddyBoss 2.9.00
  * @package BuddyBoss\Core
  */
 
@@ -20,21 +20,21 @@ if ( class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
  * This class provides helper functions for LearnDash integration
  * when using ReadyLaunch templates without BuddyBoss theme.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.9.00
  */
 if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 
 	/**
 	 * LearnDash helper class.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.00
 	 */
 	class BB_Readylaunch_Learndash_Helper {
 
 		/**
 		 * The single instance of the class.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 * @var BB_Readylaunch_Learndash_Helper
 		 */
 		protected static $_instance = null;
@@ -44,7 +44,7 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 		 *
 		 * Ensures only one instance of BB_Readylaunch_Learndash_Helper is loaded or can be loaded.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 * @static
 		 * @return BB_Readylaunch_Learndash_Helper - Main instance.
 		 */
@@ -59,7 +59,7 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 		/**
 		 * Constructor.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 */
 		public function __construct() {
 			remove_all_filters( 'learndash_template' );
@@ -98,7 +98,7 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 		/**
 		 * Override LearnDash template path to use ReadyLaunch templates
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 *
 		 * @param string     $filepath         Template file path.
 		 * @param string     $name             Template name.
@@ -159,7 +159,7 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 		/**
 		 * Enqueue LearnDash styles for ReadyLaunch.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 */
 		public function bb_readylaunch_learndash_enqueue_styles() {
 			if ( ! bb_is_readylaunch_enabled() || ! class_exists( 'SFWD_LMS' ) ) {
@@ -197,7 +197,7 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 		/**
 		 * Fires before the layout.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 */
 		public function bb_rl_learndash_layout_before() {
 			$is_ld_course_archive = is_post_type_archive( learndash_get_post_type_slug( 'course' ) );
@@ -232,7 +232,7 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 		/**
 		 * Fires after the layout.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 */
 		public function bb_rl_learndash_layout_after() {
 			if ( is_post_type_archive( learndash_get_post_type_slug( 'course' ) ) ) {
@@ -243,7 +243,7 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 		/**
 		 * Fires before the loop starts.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 */
 		public function bb_rl_learndash_before_loop() {
 			$is_ld_course_archive = is_post_type_archive( learndash_get_post_type_slug( 'course' ) );
@@ -274,7 +274,7 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 		/**
 		 * Fires after the loop ends.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 */
 		public function bb_rl_learndash_after_loop() {
 			$is_ld_course_archive = is_post_type_archive( learndash_get_post_type_slug( 'course' ) );
@@ -317,7 +317,7 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 		/**
 		 * Fires when no posts are found.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 */
 		public function bb_rl_learndash_no_posts() {
 			bp_get_template_part( 'learndash/ld30/archive-no-course' );
@@ -326,7 +326,7 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 		/**
 		 * Get all the URLs of current course (lesson, topic, quiz) for pagination.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 *
 		 * @param int   $course_id           The course ID.
 		 * @param array $lesson_list         Array of lesson objects.
@@ -411,7 +411,7 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 		/**
 		 * Return the next and previous URL based on the course current URL.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 *
 		 * @param array  $url_arr     Array of URLs for navigation.
 		 * @param string $current_url Optional. Current URL (auto-detected if empty).
@@ -496,7 +496,7 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 		/**
 		 * Get all the URLs of current course (lesson, topic, quiz) with completion status.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 *
 		 * @param int   $course_id           The course ID.
 		 * @param array $lesson_list         Array of lesson objects.
@@ -665,7 +665,7 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 		/**
 		 * Get all quiz URLs from the current course.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 *
 		 * @param int   $course_id           The course ID.
 		 * @param array $lesson_list         Array of lesson objects.
@@ -744,7 +744,7 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 		/**
 		 * Return the current quiz number based on URL array.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 *
 		 * @param array  $url_arr     Array of quiz URLs.
 		 * @param string $current_url Optional. Current URL (auto-detected if empty).
@@ -773,7 +773,7 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 		/**
 		 * Filter the main query for courses based on filters
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 *
 		 * @param WP_Query $query The query object.
 		 *
@@ -836,7 +836,7 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 		/**
 		 * Filter the main query for courses based on filters
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 *
 		 * @param array $args Optional. Array of arguments.
 		 *
@@ -889,7 +889,7 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 		/**
 		 * Get enrolled users for a course.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 *
 		 * @param array $args Optional. Array of arguments.
 		 */
@@ -1007,7 +1007,7 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 		/**
 		 * Get enrolled users for a course.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 *
 		 * @param array $args Optional. Array of arguments.
 		 */
@@ -1158,7 +1158,7 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 		 * Add custom classes to lesson rows in LearnDash sidebar.
 		 * Adds bb-rl-current-lesson class for current lesson or parent lesson of current topic.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 *
 		 * @param string $lesson_class The existing lesson classes.
 		 * @param array  $lesson       The lesson object.
@@ -1227,7 +1227,7 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 		 * Add custom classes to topic rows in LearnDash sidebar.
 		 * Adds bb-rl-current-topic class for current topic.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 *
 		 * @param string $topic_class The existing topic classes.
 		 * @param object $topic       The topic object.
@@ -1251,7 +1251,7 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 		 * Add custom classes to quiz rows in LearnDash sidebar.
 		 * Adds bb-rl-current-step class for current quiz.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 *
 		 * @param array $classes The existing quiz classes.
 		 * @param array $quiz    The quiz object.
@@ -1275,7 +1275,7 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 		/**
 		 * Get the orderby data.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 *
 		 * @return array The orderby data.
 		 */
@@ -1294,7 +1294,7 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 		/**
 		 * Get course instructors including main author and shared instructors.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 *
 		 * @param int $course_id Course ID.
 		 *
@@ -1315,7 +1315,7 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 		/**
 		 * Filter the content of the lesson.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 *
 		 * @param string $content The content of the lesson.
 		 * @param object $post    The post object.
@@ -1402,7 +1402,7 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 		/**
 		 * Get the courses progress.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 *
 		 * @param int    $user_id The user ID.
 		 * @param string $sort_order The sort order.
@@ -1475,7 +1475,7 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 		/**
 		 * Reset object cache for ld_courses_progress.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 *
 		 * @param array $args Details of the learndash activity.
 		 */
@@ -1488,7 +1488,7 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 		/**
 		 * Filter the content tabs.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 *
 		 * @param array  $tabs The content tabs.
 		 * @param string $context The context.
@@ -1510,7 +1510,7 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 		/**
 		 * Output the review reply template.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 *
 		 * @param int $course_id The course ID.
 		 */
@@ -1561,7 +1561,7 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 		/**
 		 * Check if the current page is a LearnDash lesson, topic, or quiz page.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 * @return bool True if on lesson, topic, or quiz page, false otherwise.
 		 */
 		public function bb_rl_is_learndash_inner_page() {
@@ -1635,7 +1635,7 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 		/**
 		 * Add meta boxes to the course post type.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 */
 		public function bb_rl_learndash_add_meta_boxes() {
 			// Get existing meta boxes to check for duplicates.
@@ -1692,7 +1692,7 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 		/**
 		 * Output the course short description.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 *
 		 * @param object $post The post object.
 		 */
@@ -1713,7 +1713,7 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 		/**
 		 * Output the course video preview.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 *
 		 * @param object $post The post object.
 		 */
@@ -1782,7 +1782,7 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 		/**
 		 * When the post is saved, saves our custom data.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 *
 		 * @param int    $post_id The ID of the post being saved.
 		 * @param object $post The post object.
@@ -1840,7 +1840,7 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 		/**
 		 * Output the comment.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 *
 		 * @param object $comment The comment object.
 		 * @param array  $args    The arguments array.
@@ -1956,7 +1956,7 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 		 * - All topics under each lesson.
 		 * - All quizzes (course-level, lesson-level, and topic-level).
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 *
 		 * @param int    $course_id The course ID.
 		 * @param string $format    Optional. Date format. Defaults to WordPress date format option. Use 'raw' for MySQL format.
@@ -2061,7 +2061,7 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 		 * - 1 day = 24 hours
 		 * - More than 1 day = days
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 *
 		 * @param int $course_id The course ID.
 		 *
@@ -2135,7 +2135,7 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 		/**
 		 * Save the view type for the course.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 */
 		public function bb_rl_lms_save_view() {
 			$nonce = isset( $_REQUEST['nonce'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['nonce'] ) ) : '';

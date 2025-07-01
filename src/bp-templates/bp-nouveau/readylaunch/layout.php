@@ -7,7 +7,7 @@
  *
  * @package BuddyBoss\Template
  * @subpackage BP_Nouveau\ReadyLaunch
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.9.00
  * @version 1.0.0
  */
 
@@ -21,7 +21,7 @@ $readylaunch_instance = BB_Readylaunch::instance();
 /**
  * Fires before the layout.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.9.00
  */
 do_action( 'bb_rl_layout_before' );
 
@@ -30,7 +30,7 @@ if ( have_posts() ) {
 	/**
 	 * Fires before the loop starts.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.00
 	 */
 	do_action( 'bb_rl_layout_before_loop' );
 
@@ -45,7 +45,7 @@ if ( have_posts() ) {
 	/**
 	 * Fires after the loop ends.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.00
 	 */
 	do_action( 'bb_rl_layout_after_loop' );
 } else {
@@ -53,7 +53,7 @@ if ( have_posts() ) {
 	/**
 	 * Fires when no posts are found.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.00
 	 */
 	do_action( 'bb_rl_layout_no_posts' );
 }
@@ -61,7 +61,7 @@ if ( have_posts() ) {
 /**
  * Fires after the layout.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.9.00
  */
 do_action( 'bb_rl_layout_after' );
 

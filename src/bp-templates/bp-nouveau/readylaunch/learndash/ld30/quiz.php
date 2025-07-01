@@ -26,7 +26,7 @@
  * $attempts_count              : (integer) No of attempts already made
  * $quiz_settings               : (array)
  *
- * @since   BuddyBoss [BBVERSION]
+ * @since   BuddyBoss 2.9.00
  * @package BuddyBoss\Core
  */
 
@@ -214,7 +214,7 @@ if ( class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 							/**
 							 * Fires before the quiz content starts.
 							 *
-							 * @since BuddyBoss [BBVERSION]
+							 * @since BuddyBoss 2.9.00
 							 *
 							 * @param int $quiz_id   Quiz ID.
 							 * @param int $course_id Course ID.
@@ -273,7 +273,7 @@ if ( class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 											/**
 											 * Filter to override previous step completed.
 											 *
-											 * @since BuddyBoss [BBVERSION]
+											 * @since BuddyBoss 2.9.00
 											 *
 											 * @param bool $previous_lesson_completed True if previous step completed.
 											 * @param int  $step_id                   Step Post ID.
@@ -315,7 +315,7 @@ if ( class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 										/**
 										 * Fires before the quiz progression.
 										 *
-										 * @since BuddyBoss [BBVERSION]
+										 * @since BuddyBoss 2.9.00
 										 *
 										 * @param int $quiz_id   Quiz ID.
 										 * @param int $course_id Course ID.
@@ -340,7 +340,7 @@ if ( class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 										/**
 										 * Fires after the quiz progress.
 										 *
-										 * @since BuddyBoss [BBVERSION]
+										 * @since BuddyBoss 2.9.00
 										 *
 										 * @param int $quiz_id   Quiz ID.
 										 * @param int $course_id Course ID.
@@ -376,7 +376,7 @@ if ( class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 									/**
 									 * Fires before the actual quiz content (not WP_Editor content).
 									 *
-									 * @since BuddyBoss [BBVERSION]
+									 * @since BuddyBoss 2.9.00
 									 *
 									 * @param int $quiz_id   Quiz ID.
 									 * @param int $course_id Course ID.
@@ -416,7 +416,7 @@ if ( class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 									/**
 									 * Fires after the actual quiz content (not WP_Editor content).
 									 *
-									 * @since BuddyBoss [BBVERSION]
+									 * @since BuddyBoss 2.9.00
 									 *
 									 * @param int $quiz_id   Quiz ID.
 									 * @param int $course_id Course ID.
@@ -444,7 +444,7 @@ if ( class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 							/**
 							 * Fires after the quiz content starts.
 							 *
-							 * @since BuddyBoss [BBVERSION]
+							 * @since BuddyBoss 2.9.00
 							 *
 							 * @param int $quiz_id   Quiz ID.
 							 * @param int $course_id Course ID.

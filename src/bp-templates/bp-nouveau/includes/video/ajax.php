@@ -1002,7 +1002,7 @@ function bp_nouveau_ajax_video_get_activity() {
 	/**
 	 * Filter the video description response data.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.00
 	 *
 	 * @param array $response_data The response data to be sent.
 	 */
@@ -1386,7 +1386,7 @@ function bp_nouveau_ajax_video_get_video_description() {
 		/**
 		 * Filter the video description HTML.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 *
 		 * @param string $video_description The video description HTML.
 		 * @param object $video             Video object.

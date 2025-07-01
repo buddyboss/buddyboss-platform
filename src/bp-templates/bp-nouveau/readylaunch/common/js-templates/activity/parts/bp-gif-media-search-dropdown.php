@@ -2,7 +2,7 @@
 /**
  * ReadyLaunch - The template for displaying gif media search dropdown.
  *
- * @since   BuddyBoss [BBVERSION]
+ * @since   BuddyBoss 2.9.00
  * @version 1.0.0
  */
 

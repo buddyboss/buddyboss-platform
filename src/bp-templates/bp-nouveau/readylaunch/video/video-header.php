@@ -4,7 +4,7 @@
  *
  * This template handles displaying the video header for group and my profile.
  *
- * @since      BuddyBoss [BBVERSION]
+ * @since      BuddyBoss 2.9.00
  * @subpackage BP_Nouveau\ReadyLaunch
  * @package    BuddyBoss\Template
  * @version    1.0.0

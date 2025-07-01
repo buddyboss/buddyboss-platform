@@ -3,7 +3,7 @@
  * ReadyLaunch Memberpress Courses Helper Class
  *
  * @package BuddyBoss\Core
- * @since   BuddyBoss [BBVERSION]
+ * @since   BuddyBoss 2.9.00
  */
 
 // Exit if accessed directly.
@@ -19,14 +19,14 @@ use memberpress\courses\lib;
  * This class provides helper functions for Memberpress Courses integration
  * when using ReadyLaunch templates without BuddyBoss theme.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.9.00
  */
 class BB_Readylaunch_Memberpress_Courses_Helper {
 
 	/**
 	 * The single instance of the class.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.00
 	 *
 	 * @var BB_Readylaunch_Memberpress_Courses_Helper
 	 */
@@ -37,7 +37,7 @@ class BB_Readylaunch_Memberpress_Courses_Helper {
 	 *
 	 * Ensures only one instance of BB_Readylaunch_Memberpress_Courses_Helper is loaded or can be loaded.
 	 *
-	 * @since  BuddyBoss [BBVERSION]
+	 * @since  BuddyBoss 2.9.00
 	 * @static
 	 *
 	 * @return BB_Readylaunch_Memberpress_Courses_Helper - Main instance.
@@ -53,7 +53,7 @@ class BB_Readylaunch_Memberpress_Courses_Helper {
 	/**
 	 * Constructor.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.00
 	 */
 	public function __construct() {
 		// Constructor can be used for initialization if needed.
@@ -110,7 +110,7 @@ class BB_Readylaunch_Memberpress_Courses_Helper {
 	 * This method removes the MemberPress Classroom controller's admin bar hiding hook
 	 * when BuddyBoss ReadyLaunch is enabled, allowing the WordPress admin bar to retain it's default behavior.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.00
 	 */
 	private function bb_rl_remove_memberpress_admin_bar_hook() {
 
@@ -139,7 +139,7 @@ class BB_Readylaunch_Memberpress_Courses_Helper {
 	/**
 	 * Add the course description to the content.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.00
 	 *
 	 * @param string $content The content of the post.
 	 *
@@ -158,7 +158,7 @@ class BB_Readylaunch_Memberpress_Courses_Helper {
 	/**
 	 * Add script and styles for MemberPress Courses integration.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.00
 	 */
 	public function bb_rl_meprlms_add_script() {
 		global $post;
@@ -215,7 +215,7 @@ class BB_Readylaunch_Memberpress_Courses_Helper {
 	/**
 	 * Enqueue classroom assets.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.00
 	 */
 	private function enqueue_classroom_assets() {
 		// Check if the script is registered.
@@ -236,7 +236,7 @@ class BB_Readylaunch_Memberpress_Courses_Helper {
 	/**
 	 * Enqueue lesson-specific assets.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.00
 	 */
 	private function enqueue_lesson_assets() {
 		wp_enqueue_style( 'mpcs-lesson-css' );
@@ -246,7 +246,7 @@ class BB_Readylaunch_Memberpress_Courses_Helper {
 	/**
 	 * Enqueue common assets for courses and lessons.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.00
 	 */
 	private function enqueue_course_lesson_common_assets() {
 		// Enqueue clipboard functionality.
@@ -272,7 +272,7 @@ class BB_Readylaunch_Memberpress_Courses_Helper {
 	/**
 	 * Enqueue assignment-specific assets.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.00
 	 *
 	 * @param int $post_id The assignment post ID.
 	 */
@@ -290,7 +290,7 @@ class BB_Readylaunch_Memberpress_Courses_Helper {
 	/**
 	 * Enqueue quiz-specific assets.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.00
 	 *
 	 * @param int $post_id The quiz post ID.
 	 */
@@ -310,7 +310,7 @@ class BB_Readylaunch_Memberpress_Courses_Helper {
 	/**
 	 * Dequeue frontend styles and scripts from pro plugin.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.00
 	 */
 	public function dequeue_pro_frontend_styles() {
 		// Only dequeue if ReadyLaunch is enabled.
@@ -323,7 +323,7 @@ class BB_Readylaunch_Memberpress_Courses_Helper {
 	/**
 	 * Add MemberPress template path filters for ReadyLaunch
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.00
 	 *
 	 * @param array $paths The array of paths to add.
 	 *
@@ -338,7 +338,7 @@ class BB_Readylaunch_Memberpress_Courses_Helper {
 	/**
 	 * Add MemberPress assignments template path filters for ReadyLaunch
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.00
 	 *
 	 * @param array $paths The array of paths to add.
 	 *
@@ -353,7 +353,7 @@ class BB_Readylaunch_Memberpress_Courses_Helper {
 	/**
 	 * Add MemberPress gradebook template path filters for ReadyLaunch
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.00
 	 *
 	 * @param array $paths The array of paths to add.
 	 *
@@ -368,7 +368,7 @@ class BB_Readylaunch_Memberpress_Courses_Helper {
 	/**
 	 * Add MemberPress quizzes template path filters for ReadyLaunch.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.00
 	 *
 	 * @param array $paths The array of paths to add.
 	 *
@@ -383,7 +383,7 @@ class BB_Readylaunch_Memberpress_Courses_Helper {
 	/**
 	 * Fires before the loop starts.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.00
 	 */
 	public function bb_rl_mpcs_before_loop() {
 		if ( memberpress\courses\helpers\Courses::is_course_archive() ) {
@@ -496,7 +496,7 @@ class BB_Readylaunch_Memberpress_Courses_Helper {
 	/**
 	 * Fires after the loop ends.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.00
 	 */
 	public function bb_rl_mpcs_after_loop() {
 		if ( memberpress\courses\helpers\Courses::is_course_archive() ) {
@@ -515,7 +515,7 @@ class BB_Readylaunch_Memberpress_Courses_Helper {
 	/**
 	 * Fires when no posts are found.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.00
 	 */
 	public function bb_rl_mpcs_no_posts() {
 		echo '<div class="bb-rl-container-inner"><p>' . esc_html__( 'No Courses found', 'buddyboss' ) . '</p></div>';
@@ -524,7 +524,7 @@ class BB_Readylaunch_Memberpress_Courses_Helper {
 	/**
 	 * Override MemberPress classroom style removal to preserve all ReadyLaunch styles.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.00
 	 *
 	 * @param array $allow_handle Allowed handles.
 	 *
@@ -545,7 +545,7 @@ class BB_Readylaunch_Memberpress_Courses_Helper {
 	/**
 	 * Add "Back to Course" button to lesson sidebar menu.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.00
 	 */
 	public function bb_rl_mpcs_add_back_to_course_button() {
 		global $post;
@@ -574,7 +574,7 @@ class BB_Readylaunch_Memberpress_Courses_Helper {
 	/**
 	 * Get the course update date including latest modification from course and all its content.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.00
 	 *
 	 * @param int|object $course Course ID or Course object.
 	 * @param string     $format Date format. Default 'U' for timestamp.
@@ -619,7 +619,7 @@ class BB_Readylaunch_Memberpress_Courses_Helper {
 	/**
 	 * Render the course tab menu HTML.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.00
 	 *
 	 * @return string The rendered course tab menu HTML.
 	 */
@@ -705,7 +705,7 @@ class BB_Readylaunch_Memberpress_Courses_Helper {
 	/**
 	 * Output the comment.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.00
 	 *
 	 * @param object $comment The comment object.
 	 * @param array  $args    The arguments array.
@@ -815,7 +815,7 @@ class BB_Readylaunch_Memberpress_Courses_Helper {
 	/**
 	 * Add comments template for MemberPress courses and lessons.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.00
 	 *
 	 * @param string $template The template path.
 	 *
@@ -845,7 +845,7 @@ class BB_Readylaunch_Memberpress_Courses_Helper {
 	/**
 	 * Add rewrite rules for lesson comments pagination.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.00
 	 */
 	public function bb_rl_mpcs_add_rewrite_rules() {
 		if ( class_exists( 'memberpress\courses\models\Lesson' ) ) {
@@ -882,7 +882,7 @@ class BB_Readylaunch_Memberpress_Courses_Helper {
 	/**
 	 * Add query vars for lesson comments pagination.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.00
 	 *
 	 * @param array $query_vars The existing query vars.
 	 *

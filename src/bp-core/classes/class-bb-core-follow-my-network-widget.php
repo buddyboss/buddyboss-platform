@@ -3,7 +3,7 @@
  * BuddyBoss Followers Following Widget.
  *
  * @package BuddyBoss
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.9.00
  */
 
 // Exit if accessed directly.
@@ -116,7 +116,7 @@ class BB_Core_Follow_My_Network_Widget extends WP_Widget {
 		/**
 		 * Filters the widget title.
 		 *
-		 * @since BuddyBoss [BBVERSION] Added 'instance' and 'id_base' to arguments passed to filter.
+		 * @since BuddyBoss 2.9.00 Added 'instance' and 'id_base' to arguments passed to filter.
 		 *
 		 * @param string $title    The widget title.
 		 * @param array  $instance The settings for the particular instance of the widget.
@@ -250,7 +250,7 @@ class BB_Core_Follow_My_Network_Widget extends WP_Widget {
 	/**
 	 * Display username to 'First Name' when they have selected 'First Name & Last Name' in display format.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.00
 	 *
 	 * @param int $user_id User ID.
 	 *
@@ -368,7 +368,7 @@ class BB_Core_Follow_My_Network_Widget extends WP_Widget {
 	/**
 	 * Enqueue scripts.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.00
 	 */
 	public static function enqueue_scripts() {
 		$min = bp_core_get_minified_asset_suffix();
@@ -378,7 +378,7 @@ class BB_Core_Follow_My_Network_Widget extends WP_Widget {
 	/**
 	 * Merge the widget settings into defaults array.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.00
 	 *
 	 * @param array $instance Widget instance settings.
 	 *

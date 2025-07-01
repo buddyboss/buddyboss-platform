@@ -6,7 +6,7 @@
  *
  * @package BuddyBoss\Template
  * @subpackage BP_Nouveau\ReadyLaunch
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.9.00
  * @version 1.0.0
  */
 
@@ -67,7 +67,7 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 			/**
 			 * Fires before the display of the video.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 2.9.00
 			 */
 			do_action( 'bp_before_directory_video' );
 		?>
@@ -78,14 +78,14 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 				/**
 				 * Fires before the display of the video list tabs.
 				 *
-				 * @since BuddyBoss [BBVERSION]
+				 * @since BuddyBoss 2.9.00
 				 */
 				do_action( 'bp_before_directory_video_tabs' );
 
 				/**
 				 * Fires before the display of the video content.
 				 *
-				 * @since BuddyBoss [BBVERSION]
+				 * @since BuddyBoss 2.9.00
 				 */
 				do_action( 'bp_before_directory_video_content' );
 			?>
@@ -109,7 +109,7 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 					/**
 					 * Fires and displays the video content.
 					 *
-					 * @since BuddyBoss [BBVERSION]
+					 * @since BuddyBoss 2.9.00
 					 */
 					do_action( 'bp_directory_video_content' );
 				?>
@@ -122,7 +122,7 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 				/**
 				 * Fires after the display of the video content.
 				 *
-				 * @since BuddyBoss [BBVERSION]
+				 * @since BuddyBoss 2.9.00
 				 */
 				do_action( 'bp_after_directory_video_content' );
 			?>
@@ -133,7 +133,7 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 			/**
 			 * Fires after the display of the video.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 2.9.00
 			 */
 			do_action( 'bp_after_directory_video' );
 		?>

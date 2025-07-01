@@ -2,7 +2,7 @@
 /**
  * BuddyBoss Video No Video Template
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.9.00
  * @version 1.0.0
  */
 

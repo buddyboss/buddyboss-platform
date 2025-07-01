@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss\Core
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.9.00
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -12,14 +12,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Class BB_Core_Connections_Widget
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.9.00
  */
 class BB_Core_Connections_Widget extends WP_Widget {
 
 	/**
 	 * Constructor.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.00
 	 */
 	public function __construct() {
 		parent::__construct(
@@ -32,7 +32,7 @@ class BB_Core_Connections_Widget extends WP_Widget {
 	/**
 	 * Widget.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.00
 	 *
 	 * @param array $args Widget arguments.
 	 * @param array $instance Widget instance.

@@ -2,7 +2,7 @@
 /**
  * Archive course footer template for ReadyLaunch.
  *
- * @since   BuddyBoss [BBVERSION]
+ * @since   BuddyBoss 2.9.00
  * @package BuddyBoss\ReadyLaunch
  * @version 1.0.0
  */

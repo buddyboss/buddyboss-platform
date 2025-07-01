@@ -3,7 +3,7 @@
  * BuddyBoss Groups Readylaunch.
  *
  * @package BuddyBoss\Groups\Classes
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.9.00
  */
 
 // Exit if accessed directly.
@@ -12,14 +12,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * BuddyBoss Groups ReadyLaunch integration class.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.9.00
  */
 class BB_Group_Readylaunch {
 
 	/**
 	 * The single instance of the class.
 	 *
-	 * @since  BuddyBoss [BBVERSION]
+	 * @since  BuddyBoss 2.9.00
 	 *
 	 * @access private
 	 * @var self
@@ -29,7 +29,7 @@ class BB_Group_Readylaunch {
 	/**
 	 * Get the instance of this class.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.00
 	 *
 	 * @return BB_Group_Readylaunch|null
 	 */
@@ -46,7 +46,7 @@ class BB_Group_Readylaunch {
 	/**
 	 * Constructor method.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.00
 	 */
 	public function __construct() {
 		add_filter( 'bb_group_subscription_button_args', array( $this, 'bb_rl_update_group_subscription_button' ), 10, 1 );
@@ -68,7 +68,7 @@ class BB_Group_Readylaunch {
 	/**
 	 * Update group subscription button for ReadyLaunch.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.00
 	 *
 	 * @param array $button Button arguments.
 	 *
@@ -86,7 +86,7 @@ class BB_Group_Readylaunch {
 	/**
 	 * Get the groups bubble buttons for ReadyLaunch.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.00
 	 *
 	 * @param array  $buttons Button array.
 	 * @param object $group   Group object.
@@ -181,7 +181,7 @@ class BB_Group_Readylaunch {
 	/**
 	 * Load the popup for ReadyLaunch groups.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.00
 	 */
 	public function bb_rl_load_popup() {
 		$group_id = bp_get_current_group_id();
@@ -264,7 +264,7 @@ class BB_Group_Readylaunch {
 	/**
 	 * Get current group info.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.00
 	 *
 	 * @param array $args Array of arguments.
 	 */
@@ -487,7 +487,7 @@ class BB_Group_Readylaunch {
 	/**
 	 * Display ReadyLaunch invite button.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.00
 	 *
 	 * @param int $group_id Group ID.
 	 */
@@ -505,7 +505,7 @@ class BB_Group_Readylaunch {
 	/**
 	 * Modify group buttons for ReadyLaunch.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.00
 	 *
 	 * @param array $buttons Group buttons array.
 	 * @return array Modified buttons array.
@@ -526,7 +526,7 @@ class BB_Group_Readylaunch {
 	/**
 	 * Modify the group creation tab number display.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.00
 	 *
 	 * @param string $html    Original HTML.
 	 * @param int    $counter Tab counter.
@@ -542,7 +542,7 @@ class BB_Group_Readylaunch {
 	/**
 	 * Manage member actions for ReadyLaunch.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.00
 	 *
 	 * @param array  $buttons Button array.
 	 * @param object $group   Group object.
@@ -563,7 +563,7 @@ class BB_Group_Readylaunch {
 	/**
 	 * Manage negative member actions for ReadyLaunch.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.00
 	 *
 	 * @param array  $buttons Button array.
 	 * @param object $group   Group object.
@@ -583,7 +583,7 @@ class BB_Group_Readylaunch {
 	/**
 	 * Get group description excerpt for ReadyLaunch.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.00
 	 *
 	 * @param string $excerpt Original excerpt.
 	 * @return string Modified excerpt.
@@ -597,7 +597,7 @@ class BB_Group_Readylaunch {
 	/**
 	 * Get member singular label name for ReadyLaunch.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.00
 	 *
 	 * @param string $label       Original label.
 	 * @param int    $group_id    Group ID.
@@ -633,7 +633,7 @@ class BB_Group_Readylaunch {
 	/**
 	 * Get JS strings for groups.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.00
 	 *
 	 * @param array $params JS strings.
 	 *

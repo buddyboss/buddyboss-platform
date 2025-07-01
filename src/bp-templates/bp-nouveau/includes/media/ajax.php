@@ -1370,7 +1370,7 @@ function bp_nouveau_ajax_media_get_media_description() {
 			/**
 			 * Filter the media description HTML.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 2.9.00
 			 *
 			 * @param string $media_description The media description HTML.
 			 * @param object $media             Media object.
@@ -1396,7 +1396,7 @@ function bp_nouveau_ajax_media_get_media_description() {
 	/**
 	 * Filter the media description response data.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.00
 	 *
 	 * @param array $response_data The response data to be sent.
 	 */

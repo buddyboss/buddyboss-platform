@@ -2,7 +2,7 @@
 /**
  * The template for BP Nouveau Component filters template
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.9.00
  * @package BuddyBoss\Templates
  *
  * @version 1.0.0

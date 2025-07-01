@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss\Template
  * @subpackage BP_Nouveau\ReadyLaunch
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.9.00
  * @version 1.0.0
  */
 
@@ -50,7 +50,7 @@ defined( 'ABSPATH' ) || exit;
 			/**
 			 * Fires before the display of the groups list filters.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 2.9.00
 			 */
 			do_action( 'bb_before_directory_groups_filters' );
 			?>

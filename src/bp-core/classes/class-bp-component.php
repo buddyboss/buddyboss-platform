@@ -143,7 +143,7 @@ if ( ! class_exists( 'BP_Component' ) ) :
 		/**
 		 * An array of globalized data for BB Blocks.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 *
 		 * @var array
 		 */
@@ -329,7 +329,7 @@ if ( ! class_exists( 'BP_Component' ) ) :
 			/**
 			 * Filters the $blocks global value.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 2.9.00
 			 *
 			 * @param array $blocks a list of global properties for blocks keyed
 			 *                      by their corresponding block name.
@@ -938,7 +938,7 @@ if ( ! class_exists( 'BP_Component' ) ) :
 		/**
 		 * Register the BB Blocks.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.00
 		 *
 		 * @see `BB_Block->construct()` for a full description of a BB Block arguments.
 		 *
@@ -951,7 +951,7 @@ if ( ! class_exists( 'BP_Component' ) ) :
 			 *
 			 * This is a dynamic hook that is based on the component string ID.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 2.9.00
 			 *
 			 * @param array $blocks The list of BB Blocks for the component.
 			 */
@@ -969,7 +969,7 @@ if ( ! class_exists( 'BP_Component' ) ) :
 			 *
 			 * This is a dynamic hook that is based on the component string ID.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 2.9.00
 			 */
 			do_action( 'bb_' . $this->id . '_blocks_init' );
 		}

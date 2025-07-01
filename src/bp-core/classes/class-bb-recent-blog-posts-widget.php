@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss\Core
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.9.00
  */
 
 // Exit if accessed directly.
@@ -13,14 +13,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * BuddyBoss Recent Blog Posts Widget.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.9.00
  */
 class BB_Recent_Blog_Posts_Widget extends WP_Widget {
 
 	/**
 	 * Constructor method.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.00
 	 */
 	public function __construct() {
 		parent::__construct(
@@ -33,7 +33,7 @@ class BB_Recent_Blog_Posts_Widget extends WP_Widget {
 	/**
 	 * Display the widget.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.00
 	 *
 	 * @param array $args Widget arguments.
 	 * @param array $instance Widget instance.

@@ -2,17 +2,17 @@
 /**
  * BuddyBoss Messages ReadyLaunch Class
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.9.00
  *
  * @package     BuddyBoss\Messages
  * @subpackage  Classes
- * @since       BuddyBoss [BBVERSION]
+ * @since       BuddyBoss 2.9.00
  */
 
 /**
  * BuddyBoss Messages ReadyLaunch.
  *
- * @since   BuddyBoss [BBVERSION]
+ * @since   BuddyBoss 2.9.00
  * @package BuddyBoss\Messages\Classes
  */
 class BB_Messages_Readylaunch {
@@ -20,7 +20,7 @@ class BB_Messages_Readylaunch {
 	/**
 	 * The single instance of the class.
 	 *
-	 * @since  BuddyBoss [BBVERSION]
+	 * @since  BuddyBoss 2.9.00
 	 *
 	 * @access private
 	 * @var self
@@ -30,7 +30,7 @@ class BB_Messages_Readylaunch {
 	/**
 	 * Constructor method.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.00
 	 */
 	public function __construct() {
 		add_filter( 'bp_messages_js_template_parts', array( $this, 'bb_messages_js_template_parts' ) );
@@ -44,7 +44,7 @@ class BB_Messages_Readylaunch {
 	/**
 	 * Get the instance of this class.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.00
 	 *
 	 * @return BB_Messages_Readylaunch|null
 	 */
@@ -61,7 +61,7 @@ class BB_Messages_Readylaunch {
 	/**
 	 * Add the right panel template part.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.00
 	 *
 	 * @param array $template_parts The template parts.
 	 *
@@ -77,7 +77,7 @@ class BB_Messages_Readylaunch {
 	/**
 	 * Localise the scripts.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.00
 	 *
 	 * @param array $params The parameters.
 	 */
@@ -90,7 +90,7 @@ class BB_Messages_Readylaunch {
 	/**
 	 * Get thread right panel data.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.00
 	 */
 	public function bb_rl_get_thread_right_panel_data() {
 		// Verify nonce.
@@ -370,7 +370,7 @@ class BB_Messages_Readylaunch {
 	/**
 	 * Filter the message threads by type.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.00
 	 *
 	 * @param string $where_conditions The where conditions.
 	 * @param array  $r                The request parameters.
@@ -393,7 +393,7 @@ class BB_Messages_Readylaunch {
 	/**
 	 * Filter the querystring.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.00
 	 *
 	 * @param string $querystring        The querystring.
 	 * @param string $querystring_object The querystring object.

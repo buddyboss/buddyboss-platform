@@ -1242,7 +1242,7 @@ function bb_is_elementor_maintenance_mode_enabled() {
  * This function retrieves the courses a user is enrolled in using the LifterLMS plugin.
  * It fetches the courses for the logged-in user and returns an array containing course details.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.9.00
  *
  * @param array $args Arguments.
  *

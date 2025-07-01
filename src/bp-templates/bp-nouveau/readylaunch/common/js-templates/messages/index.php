@@ -5,7 +5,7 @@
  * This template is used to inject the BuddyPress Backbone views
  * dealing with user's private messages.
  *
- * @since   BuddyBoss [BBVERSION]
+ * @since   BuddyBoss 2.9.00
  * @version 1.0.0
  */
 

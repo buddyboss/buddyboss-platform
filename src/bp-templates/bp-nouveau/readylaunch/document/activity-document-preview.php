@@ -2,7 +2,7 @@
 /**
  * ReadyLaunch - The template for activity document preview main.
  *
- * @since   BuddyBoss [BBVERSION]
+ * @since   BuddyBoss 2.9.00
  * @package BuddyBoss\Core
  * @version 1.0.0
  */

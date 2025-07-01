@@ -5,7 +5,7 @@
  * @package BuddyBoss\Core
  * @subpackage BP_Integrations\LearnDash\Templates
  * @version 1.0.0
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.9.00
  */
 
 defined( 'ABSPATH' ) || exit;

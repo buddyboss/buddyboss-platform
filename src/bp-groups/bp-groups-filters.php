@@ -1744,7 +1744,7 @@ add_action( 'groups_delete_group', 'bb_delete_group_activity_topic' );
 /**
  * Retrieves the groups the logged-in user is a member of and adds them to the provided arguments array.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.9.00
  *
  * @param array $args Arguments array to which the group data will be added.
  *

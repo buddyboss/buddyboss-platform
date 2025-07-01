@@ -2,7 +2,7 @@
 /**
  * ReadyLaunch - The template for activity media.
  *
- * @since   BuddyBoss [BBVERSION]
+ * @since   BuddyBoss 2.9.00
  *
  * @package BuddyBoss\Template
  * @subpackage BP_Nouveau\ReadyLaunch

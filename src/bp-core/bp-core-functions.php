@@ -1002,7 +1002,7 @@ function bp_core_get_component_search_query_arg( $component = null ) {
 /**
  * Get a list of all active component objects.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.9.00
  *
  * @param array $args {
  *     Optional. An array of key => value arguments to match against the component objects.
@@ -10085,7 +10085,7 @@ function bb_pro_group_activity_topics_version() {
 /**
  * Function to check if ReadyLaunch is enabled.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.9.00
  *
  * @return bool True if ReadyLaunch is enabled, false otherwise.
  */

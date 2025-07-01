@@ -6,7 +6,7 @@
  *
  * @package BuddyBoss\Template
  * @subpackage BP_Nouveau\ReadyLaunch
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.9.00
  * @version 1.0.0
  */
 
@@ -159,7 +159,7 @@ if ( ! bp_is_user_messages() && ! bp_is_user_settings() && ! bp_is_user_notifica
 						/**
 						 * Fires in the member header actions section.
 						 *
-						 * @since BuddyBoss [BBVERSION]
+						 * @since BuddyBoss 2.9.00
 						 */
 						do_action( 'bp_member_header_actions' );
 						$output .= ob_get_clean();
@@ -197,7 +197,7 @@ if ( ! bp_is_user_messages() && ! bp_is_user_settings() && ! bp_is_user_notifica
 						/**
 						 * Fires in the member header actions section.
 						 *
-						 * @since BuddyBoss [BBVERSION]
+						 * @since BuddyBoss 2.9.00
 						 */
 						do_action( 'bp_member_header_bubble_actions' );
 						$output .= ob_get_clean();

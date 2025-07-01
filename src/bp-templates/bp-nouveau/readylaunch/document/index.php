@@ -7,7 +7,7 @@
  *
  * @package BuddyBoss\Template
  * @subpackage BP_Nouveau\ReadyLaunch
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.9.00
  * @version 1.0.0
  */
 
@@ -51,7 +51,7 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 			/**
 			 * Fires before the display of the Document.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 2.9.00
 			 */
 			do_action( 'bp_before_directory_document' );
 		?>
@@ -62,14 +62,14 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 				/**
 				 * Fires before the display of the document list tabs.
 				 *
-				 * @since BuddyBoss [BBVERSION]
+				 * @since BuddyBoss 2.9.00
 				 */
 				do_action( 'bp_before_directory_document_tabs' );
 
 				/**
 				 * Fires before the display of the document content.
 				 *
-				 * @since BuddyBoss [BBVERSION]
+				 * @since BuddyBoss 2.9.00
 				 */
 				do_action( 'bp_before_directory_document_content' );
 			?>
@@ -102,7 +102,7 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 					/**
 					 * Fires and displays the document content.
 					 *
-					 * @since BuddyBoss [BBVERSION]
+					 * @since BuddyBoss 2.9.00
 					 */
 					do_action( 'bp_directory_document_content' );
 				?>
@@ -115,7 +115,7 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 				/**
 				 * Fires after the display of the document content.
 				 *
-				 * @since BuddyBoss [BBVERSION]
+				 * @since BuddyBoss 2.9.00
 				 */
 				do_action( 'bp_after_directory_document_content' );
 			?>
@@ -126,7 +126,7 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 			/**
 			 * Fires after the display of the document.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 2.9.00
 			 */
 			do_action( 'bp_after_directory_document' );
 		?>

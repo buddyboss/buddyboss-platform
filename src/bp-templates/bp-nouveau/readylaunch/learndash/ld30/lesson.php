@@ -27,7 +27,7 @@
  * $previous_lesson_completed  : (true/false) true if previous lesson is completed
  * $lesson_settings            : Settings specific to the current lesson.
  *
- * @since   BuddyBoss [BBVERSION]
+ * @since   BuddyBoss 2.9.00
  * @package BuddyBoss\Core
  * @version 1.0.0
  */
@@ -107,7 +107,7 @@ foreach ( $lesson_list as $les ) {
 							/**
 							 * Fires before the lesson content starts.
 							 *
-							 * @since BuddyBoss [BBVERSION]
+							 * @since BuddyBoss 2.9.00
 							 *
 							 * @param int $lesson_id Lesson ID.
 							 * @param int $course_id Course ID.
@@ -147,7 +147,7 @@ foreach ( $lesson_list as $les ) {
 											/**
 											 * Filter to override previous step completed.
 											 *
-											 * @since BuddyBoss [BBVERSION]
+											 * @since BuddyBoss 2.9.00
 											 *
 											 * @param bool $previous_lesson_completed True if previous step completed.
 											 * @param int  $step_id                   Step Post ID.
@@ -189,7 +189,7 @@ foreach ( $lesson_list as $les ) {
 										/**
 										 * Fires before the lesson progression.
 										 *
-										 * @since BuddyBoss [BBVERSION]
+										 * @since BuddyBoss 2.9.00
 										 *
 										 * @param int $lesson_id Lesson ID.
 										 * @param int $course_id Course ID.
@@ -214,7 +214,7 @@ foreach ( $lesson_list as $les ) {
 										/**
 										 * Fires after the lesson progression.
 										 *
-										 * @since BuddyBoss [BBVERSION]
+										 * @since BuddyBoss 2.9.00
 										 *
 										 * @param int $lesson_id Lesson ID.
 										 * @param int $course_id Course ID.
@@ -253,7 +253,7 @@ foreach ( $lesson_list as $les ) {
 							/**
 							 * Fires after the lesson content ends.
 							 *
-							 * @since BuddyBoss [BBVERSION]
+							 * @since BuddyBoss 2.9.00
 							 *
 							 * @param int $lesson_id Lesson ID.
 							 * @param int $course_id Course ID.
@@ -280,7 +280,7 @@ foreach ( $lesson_list as $les ) {
 								/**
 								 * Fires before the lesson assignment.
 								 *
-								 * @since BuddyBoss [BBVERSION]
+								 * @since BuddyBoss 2.9.00
 								 *
 								 * @param int $post_id   Post ID.
 								 * @param int $course_id Course ID.
@@ -304,7 +304,7 @@ foreach ( $lesson_list as $les ) {
 								/**
 								 * Fires after the lesson assignment.
 								 *
-								 * @since BuddyBoss [BBVERSION]
+								 * @since BuddyBoss 2.9.00
 								 *
 								 * @param int $post_id   Post ID.
 								 * @param int $course_id Course ID.
@@ -381,7 +381,7 @@ foreach ( $lesson_list as $les ) {
 				/**
 				 * Filters whether a user can complete the lesson or not.
 				 *
-				 * @since BuddyBoss [BBVERSION]
+				 * @since BuddyBoss 2.9.00
 				 *
 				 * @param boolean $can_complete Whether user can complete lesson or not.
 				 * @param int     $post_id      Lesson ID/Topic ID.

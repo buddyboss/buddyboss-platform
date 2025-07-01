@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss\Template
  * @subpackage BP_Nouveau\ReadyLaunch
- * @since   BuddyBoss [BBVERSION]
+ * @since   BuddyBoss 2.9.00
  * @version 1.0.0
  */
 
@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  * Split each js template to its own file. Easier for child theme to
  * overwrite individual parts.
  *
- * @version BuddyBoss [BBVERSION]
+ * @version BuddyBoss 2.9.00
  */
 $template_parts = apply_filters(
 	'bp_messages_js_template_parts',

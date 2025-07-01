@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss\Template
  * @subpackage BP_Nouveau\ReadyLaunch
- * @since   BuddyBoss [BBVERSION]
+ * @since   BuddyBoss 2.9.00
  * @version 1.0.0
  */
 
@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Fires before the activity comments template.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.9.00
  */
 do_action( 'bb_nouveau_activity_comments_before_js_template' );
 ?>
@@ -28,6 +28,6 @@ do_action( 'bb_nouveau_activity_comments_before_js_template' );
 /**
  * Fires after the activity comments template.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.9.00
  */
 do_action( 'bb_nouveau_activity_comments_after_js_template' );

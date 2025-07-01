@@ -5,7 +5,7 @@
  * @package BuddyBoss\Core
  * @subpackage BP_Integrations\LearnDash\Templates
  * @version 1.0.0
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.9.00
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -806,7 +806,7 @@ $course_video_duration = get_post_meta( $course_id, '_buddyboss_lms_course_video
 									/**
 									 * Fires before the course heading.
 									 *
-									 * @since BuddyBoss [BBVERSION]
+									 * @since BuddyBoss 2.9.00
 									 *
 									 * @param int $course_id Course ID.
 									 * @param int $user_id   User ID.
@@ -826,7 +826,7 @@ $course_video_duration = get_post_meta( $course_id, '_buddyboss_lms_course_video
 									/**
 									 * Fires after the course heading.
 									 *
-									 * @since BuddyBoss [BBVERSION]
+									 * @since BuddyBoss 2.9.00
 									 *
 									 * @param int $course_id Course ID.
 									 * @param int $user_id   User ID.
@@ -853,7 +853,7 @@ $course_video_duration = get_post_meta( $course_id, '_buddyboss_lms_course_video
 									/**
 									 * Fires before the course expand.
 									 *
-									 * @since BuddyBoss [BBVERSION]
+									 * @since BuddyBoss 2.9.00
 									 *
 									 * @param int $course_id Course ID.
 									 * @param int $user_id   User ID.
@@ -903,7 +903,7 @@ $course_video_duration = get_post_meta( $course_id, '_buddyboss_lms_course_video
 									/**
 									 * Filters whether to expand all course steps by default. Default is false.
 									 *
-									 * @since BuddyBoss [BBVERSION]
+									 * @since BuddyBoss 2.9.00
 									 *
 									 * @param boolean $expand_all Whether to expand all course steps.
 									 * @param int     $course_id  Course ID.
@@ -925,7 +925,7 @@ $course_video_duration = get_post_meta( $course_id, '_buddyboss_lms_course_video
 									/**
 									 * Fires after the course content expand button.
 									 *
-									 * @since BuddyBoss [BBVERSION]
+									 * @since BuddyBoss 2.9.00
 									 *
 									 * @param int $course_id Course ID.
 									 * @param int $user_id   User ID.
@@ -945,7 +945,7 @@ $course_video_duration = get_post_meta( $course_id, '_buddyboss_lms_course_video
 							/**
 							 * Fires before the course content listing
 							 *
-							 * @since BuddyBoss [BBVERSION]
+							 * @since BuddyBoss 2.9.00
 							 *
 							 * @param int $course_id Course ID.
 							 * @param int $user_id   User ID.
@@ -970,7 +970,7 @@ $course_video_duration = get_post_meta( $course_id, '_buddyboss_lms_course_video
 							/**
 							 * Fires before the course content listing.
 							 *
-							 * @since BuddyBoss [BBVERSION]
+							 * @since BuddyBoss 2.9.00
 							 *
 							 * @param int $course_id Course ID.
 							 * @param int $user_id   User ID.
