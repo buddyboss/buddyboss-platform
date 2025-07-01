@@ -1421,6 +1421,7 @@
 
 .bb-rl-forum-modal fieldset {
   margin-bottom: 0;
+  min-width: 0;
 }
 
 .bb-rl-forum-modal .bb-rl-forum-modal-header {
