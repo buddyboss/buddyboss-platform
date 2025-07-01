@@ -1,0 +1,64 @@
+// LinkItem Component Styles
+.bb-rl-link-item {
+	margin-bottom: 12px;
+
+	.link-item-content {
+		display: flex;
+		gap: $bb-rl-space-200;
+	}
+
+	i {
+		font-size: 20px;
+		color: $bb-rl-icon-primary-color;
+	}
+
+	.edit-link-button,
+	.delete-link-button {
+		color: $bb-rl-icon-primary-color;
+	}
+
+	.link-details > span {
+		display: flex;
+		align-items: center;
+		gap: $bb-rl-space-100;
+
+		i {
+			font-size: 16px;
+			color: $bb-rl-icon-primary-color;
+		}
+	}
+
+	.link-title {
+
+		@include bb-rl-text-medium;
+		color: $bb-rl-text-primary-color;
+	}
+
+	.link-url {
+
+		@include bb-rl-text;
+		color: $bb-rl-link-color;
+		padding: 3px 0;
+	}
+
+	+ .add-link-button {
+		margin-top: $bb-rl-space-200;
+	}
+}
+
+// Related wrapper styles
+.custom-links-wrapper {
+
+	.bb-rl-link-item:last-of-type {
+		border-bottom: 1px solid $bb-rl-border-secondary-color;
+		margin-bottom: 0;
+		padding-bottom: $bb-rl-space-200;
+	}
+}
+
+.add-link-button {
+
+	i {
+		font-size: 16px;
+	}
+}
