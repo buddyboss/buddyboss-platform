@@ -455,7 +455,7 @@
 		justify-content: center;
 		font-weight: 400;
 
-		body.wp-admin & {
+		.block-editor-block-list__block & {
 			height: 34px;
 			overflow: hidden;
 		}
