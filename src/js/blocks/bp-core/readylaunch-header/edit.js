@@ -24,9 +24,9 @@ const EditReadyLaunchHeader = ({ attributes, setAttributes }) => {
     const blockProps = useBlockProps();
 
     // Get component status from window.BP_ADMIN.components
-    const messagesEnabled = window.BP_ADMIN?.components?.messages === "1";
-    const notificationsEnabled = window.BP_ADMIN?.components?.notifications === "1";
-    const searchEnabled = window.BP_ADMIN?.components?.search === "1";
+    const messagesEnabled = window.BP_ADMIN?.components?.messages === 1;
+    const notificationsEnabled = window.BP_ADMIN?.components?.notifications === 1;
+    const searchEnabled = window.BP_ADMIN?.components?.search === 1;
 
     return (
         <div {...blockProps}>
