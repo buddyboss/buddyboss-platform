@@ -1615,6 +1615,14 @@ function bb_nouveau_ajax_activity_sync_from_modal() {
 		'in'               => $activity_id,
 		'display_comments' => true,
 	);
+	/**
+	 * Filters the arguments for the activity sync from modal.
+	 *
+	 * @since BuddyBoss 2.9.00
+	 *
+	 * @param array $args The arguments for the activity sync from modal.
+	 */
+	$args = apply_filters( 'bb_ajax_activity_sync_from_modal_args', $args );
 
 	ob_start();
 	if ( bp_has_activities( $args ) ) {
