@@ -769,6 +769,15 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * @since BuddyBoss [BBVERSION]
 		 */
 		public function bb_register_readylaunch_menus() {
+
+			// Register the ReadyLaunch menu locations for the block theme.
+			$nav_menu_locations = get_theme_mod( 'nav_menu_locations', array() );
+			if ( empty( $nav_menu_locations ) ) {
+				register_nav_menus(
+					array( 'bb-readylaunch' => __( 'ReadyLaunch', 'buddyboss' ) )
+				);
+			}
+
 			// Define the menus to create.
 			$menus = array(
 				'readylaunch' => __( 'ReadyLaunch', 'buddyboss' ),
