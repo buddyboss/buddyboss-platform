@@ -728,7 +728,7 @@
 	  i {
 		font-size: 20px;
 	  }
-	  
+
       &:hover {
         background: #009951;
         color: #fff;
@@ -744,7 +744,7 @@
     justify-content: flex-start;
     width: 46%;
     aspect-ratio: 16 / 9;
-    
+
     // For browsers that don't support aspect-ratio
     &::before {
       content: '';
@@ -775,7 +775,7 @@
       align-items: stretch;
       gap: 24px;
     }
-    .bb-rl-welcome-text, 
+    .bb-rl-welcome-text,
 	.bb-rl-welcome-video {
       width: 100%;
     }

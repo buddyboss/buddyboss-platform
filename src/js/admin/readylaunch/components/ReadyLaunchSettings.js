@@ -1228,7 +1228,10 @@ export const ReadyLaunchSettings = () => {
 				<div className="bb-rl-welcome-text">
 					<h1>{__( 'Welcome to ReadyLaunch', 'buddyboss' )}</h1>
 					<p>
-						{__( 'Build powerful online communities, courses, and memberships — all on WordPress. BuddyBoss helps you launch your own branded platform where members can connect, learn, and grow. Whether you\'re an educator, coach, or community leader, our tools are designed to give you full control, flexibility, and scalability.', 'buddyboss' )}
+						{__( 'We’re excited to reveal the brand new ReadyLaunch system; a page template design allowing you to use BuddyBoss Platform with ANY Theme. It’s easy to get started; just enable ReadyLaunch and configure the next 3 tabs - Style, Sidebars and Menus.', 'buddyboss' )}
+					</p>
+					<p>
+						{__( 'This is not a replacement for BuddyBoss Theme, but an alternative solution if you’re looking for an out-the-box community platform with a focus on core functionality without third party customisation. See the video for full details and share your experience on our new roadmap.', 'buddyboss' )}
 					</p>
 					<Button
 						className="bb-rl-feedback-btn"
@@ -1241,7 +1244,7 @@ export const ReadyLaunchSettings = () => {
 					</Button>
 				</div>
 				<div className="bb-rl-welcome-video">
-					<iframe width="560" height="315" src="https://www.youtube.com/embed/KnaDj6VTc9Q?si=6AL2H4lIFQO5MDGm" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+					<iframe width="560" height="315" src="https://www.youtube.com/embed/nV3BmJgOiQI" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 				</div>
 			</div>
 		</div>
