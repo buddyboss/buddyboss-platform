@@ -36,6 +36,24 @@ const saveToCache = (cacheKey, data) => {
 };
 
 /**
+ * Clears the help content cache for a specific content ID or all help content.
+ * @param {string} [contentId] - Optional content ID. If not provided, clears all help content cache.
+ */
+export const clearHelpContentCache = (contentId = null) => {
+	if (contentId) {
+		localStorage.removeItem(`bb_help_content_${contentId}`);
+	} else {
+		// Clear all help content cache entries
+		for (let i = 0; i < localStorage.length; i++) {
+			const key = localStorage.key(i);
+			if (key && key.startsWith('bb_help_content_')) {
+				localStorage.removeItem(key);
+			}
+		}
+	}
+};
+
+/**
  * Fetch ReadyLaunch settings from the WordPress REST API.
  *
  * @returns {Promise} Promise that resolves to settings object.
@@ -59,7 +77,7 @@ export const fetchSettings = async() => {
 
 /**
  * Get only the changed settings by comparing with initial settings
- * 
+ *
  * @param {Object} currentSettings - Current settings object
  * @returns {Object} Object containing only changed settings
  */
@@ -86,7 +104,7 @@ export const saveSettings = async(settings) => {
 	try {
 		// Get only changed settings
 		const changedSettings = getChangedSettings(settings);
-		
+
 		// If no changes, return early
 		if (Object.keys(changedSettings).length === 0) {
 			return settings;
@@ -126,17 +144,17 @@ export const saveSettings = async(settings) => {
  */
 export const debounce = (func, wait) => {
 	let timeout;
-	
+
 	return function executedFunction(...args) {
 		const later = () => {
 			clearTimeout(timeout);
 			func(...args);
 		};
-		
+
 		clearTimeout(timeout);
 		timeout = setTimeout(later, wait);
 	};
-}; 
+};
 
 export const fetchMenus = async () => {
 	try {
