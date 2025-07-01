@@ -453,7 +453,80 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * @return array The ordered array of sidebar items.
 		 */
 		public function bb_rl_get_sidebar_order() {
-			$settings = bp_get_option( 'bb_rl_side_menu', array() );
+
+			$defaults = array(
+				'activity_feed' => array(
+					'enabled' => true,
+					'order'   => 0,
+					'icon'    => 'pulse',
+				),
+				'members'       => array(
+					'enabled' => true,
+					'order'   => 1,
+					'icon'    => 'users',
+				),
+				'groups'        => array(
+					'enabled' => true,
+					'order'   => 2,
+					'icon'    => 'users-three',
+				),
+				'courses'       => array(
+					'enabled' => true,
+					'order'   => 3,
+					'icon'    => 'graduation-cap',
+				),
+				'forums'        => array(
+					'enabled' => true,
+					'order'   => 4,
+					'icon'    => 'chat-text',
+				),
+				'messages'      => array(
+					'enabled' => false,
+					'order'   => 5,
+					'icon'    => 'chat-teardrop-text',
+				),
+				'notifications' => array(
+					'enabled' => false,
+					'order'   => 6,
+					'icon'    => 'bell',
+				),
+			);
+
+			if ( ! bp_is_active( 'activity' ) ) {
+				unset( $defaults['activity_feed'] );
+			}
+			if ( ! bp_is_active( 'groups' ) ) {
+				unset( $defaults['groups'] );
+			}
+			if ( ! bp_is_active( 'forums' ) ) {
+				unset( $defaults['forums'] );
+			}
+			if ( ! bp_is_active( 'messages' ) ) {
+				unset( $defaults['messages'] );
+			}
+			if ( ! bp_is_active( 'notifications' ) ) {
+				unset( $defaults['notifications'] );
+			}
+			if ( ! $this->bb_is_sidebar_enabled_for_courses() ) {
+				unset( $defaults['courses'] );
+			}
+
+
+			$raw_settings = wp_parse_args(
+				bp_get_option( 'bb_rl_side_menu', array() ),
+				$defaults
+			);
+
+			$settings = array_map(
+				function ( $item ) {
+					return array(
+						'enabled' => ! empty( $item['enabled'] ),
+						'order'   => isset( $item['order'] ) ? (int) $item['order'] : 0,
+						'icon'    => isset( $item['icon'] ) ? $item['icon'] : '',
+					);
+				},
+				$raw_settings
+			);
 
 			if ( empty( $settings ) ) {
 				return array();
@@ -2709,30 +2782,37 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				'activity_feed' => array(
 					'enabled' => true,
 					'order'   => 0,
+					'icon'    => 'pulse',
 				),
 				'members'       => array(
 					'enabled' => true,
 					'order'   => 1,
+					'icon'    => 'users',
 				),
 				'groups'        => array(
 					'enabled' => true,
 					'order'   => 2,
+					'icon'    => 'users-three',
 				),
 				'courses'       => array(
 					'enabled' => true,
 					'order'   => 3,
+					'icon'    => 'graduation-cap',
 				),
 				'forums'        => array(
 					'enabled' => true,
 					'order'   => 4,
+					'icon'    => 'chat-text',
 				),
 				'messages'      => array(
 					'enabled' => false,
 					'order'   => 5,
+					'icon'    => 'chat-teardrop-text',
 				),
 				'notifications' => array(
 					'enabled' => false,
 					'order'   => 6,
+					'icon'    => 'bell',
 				),
 			);
 
@@ -2769,6 +2849,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					return array(
 						'enabled' => ! empty( $item['enabled'] ),
 						'order'   => isset( $item['order'] ) ? (int) $item['order'] : 0,
+						'icon'    => isset( $item['icon'] ) ? $item['icon'] : '',
 					);
 				},
 				$raw_settings
