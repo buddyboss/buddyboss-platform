@@ -51,13 +51,39 @@ bp_get_template_part( 'sidebar/left-sidebar' );
 			<a href="#" class="bb-rl-left-panel-mobile"><i class="bb-icons-rl-list"></i></a>
 			<?php
 			bp_get_template_part( 'header/site-logo' );
+			
+			// Get menu location and generate CSS class based on parent items count.
+			$menu_location = $readylaunch_instance->bb_rl_get_header_menu_location();
+			$menu_class    = 'bb-readylaunch-menu';
+			
+			if ( has_nav_menu( $menu_location ) ) {
+				$menu_locations = get_nav_menu_locations();
+				if ( ! empty( $menu_locations[ $menu_location ] ) ) {
+					$menu_items = wp_get_nav_menu_items( $menu_locations[ $menu_location ] );
+					if ( ! empty( $menu_items ) ) {
+						// Count parent items efficiently.
+						$parent_count = 0;
+						foreach ( $menu_items as $item ) {
+							if ( 0 == $item->menu_item_parent ) {
+								$parent_count++;
+								// Early exit if we already know it's 'max'.
+								if ( $parent_count > 9 ) {
+									break;
+								}
+							}
+						}
+						$menu_class .= ' bb-rl-items-' . ( $parent_count > 8 ? 'max' : 'min' );
+					}
+				}
+			}
+			
 			wp_nav_menu(
 				array(
-					'theme_location' => $readylaunch_instance->bb_rl_get_header_menu_location(),
+					'theme_location' => $menu_location,
 					'menu_id'        => '',
 					'container'      => false,
 					'fallback_cb'    => false,
-					'menu_class'     => 'bb-readylaunch-menu',
+					'menu_class'     => $menu_class,
 				)
 			);
 			?>
