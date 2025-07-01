@@ -6825,6 +6825,7 @@ body.directory .bb-readylaunch-menu.bb-rl-items-max, body.forum-archive .bb-read
     font-size: 0.85rem;
     font-weight: 500;
   }
+  .header-aside .dir-search,
   .header-aside .bb-rl-header-search {
     display: none;
   }
