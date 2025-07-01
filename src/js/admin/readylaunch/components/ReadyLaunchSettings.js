@@ -889,9 +889,9 @@ export const ReadyLaunchSettings = () => {
 										<label>{__('Enable Pages', 'buddyboss')}</label>
 										<p>{__('Apply ReadyLaunch styles to the following pages', 'buddyboss')}</p>
 									</div>
-									{window?.BP_ADMIN?.register_integration === 1 || window?.BP_ADMIN?.courses_integration === 1 ? (
+									{window?.BP_ADMIN?.register_integration === '1' || window?.BP_ADMIN?.courses_integration === '1' ? (
 										<div className="field-toggles">
-											{window?.BP_ADMIN?.register_integration === 1 && (
+											{window?.BP_ADMIN?.register_integration === '1' && (
 												<div className="toggle-item">
 													<ToggleControl
 														label={__('Login & Registration', 'buddyboss')}
@@ -900,7 +900,7 @@ export const ReadyLaunchSettings = () => {
 													/>
 												</div>
 											)}
-											{window?.BP_ADMIN?.courses_integration === 1 && (
+											{window?.BP_ADMIN?.courses_integration === '1' && (
 												<div className="toggle-item">
 													<ToggleControl
 														label={__('Courses', 'buddyboss')}
