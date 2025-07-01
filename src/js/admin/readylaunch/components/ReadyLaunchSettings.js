@@ -24,7 +24,7 @@ const getComponentMenuItems = () => {
 	let currentOrder = 0;
 
 	// Add activity feed if component is active
-	if (window?.BP_ADMIN?.components?.activity === '1') {
+	if (window?.BP_ADMIN?.components?.activity === 1) {
 		items.unshift({
 			id: 'activity_feed',
 			label: __('Activity Feed', 'buddyboss'),
@@ -42,7 +42,7 @@ const getComponentMenuItems = () => {
 	});
 
 	// Add groups if component is active
-	if (window?.BP_ADMIN?.components?.groups === '1') {
+	if (window?.BP_ADMIN?.components?.groups === 1) {
 		items.push({
 			id: 'groups',
 			label: __('Groups', 'buddyboss'),
@@ -53,7 +53,7 @@ const getComponentMenuItems = () => {
 	}
 
 	// Add forums if component is active
-	if (window?.BP_ADMIN?.components?.forums === '1') {
+	if (window?.BP_ADMIN?.components?.forums === 1) {
 		items.push({
 			id: 'forums',
 			label: __('Forums', 'buddyboss'),
@@ -71,7 +71,7 @@ const getComponentMenuItems = () => {
 	});
 
 	// Add messages if component is active
-	if (window?.BP_ADMIN?.components?.messages === '1') {
+	if (window?.BP_ADMIN?.components?.messages === 1) {
 		items.push({
 			id: 'messages',
 			label: __('Messages', 'buddyboss'),
@@ -82,7 +82,7 @@ const getComponentMenuItems = () => {
 	}
 
 	// Add notifications if component is active
-	if (window?.BP_ADMIN?.components?.notifications === '1') {
+	if (window?.BP_ADMIN?.components?.notifications === 1) {
 		items.push({
 			id: 'notifications',
 			label: __('Notifications', 'buddyboss'),
@@ -99,7 +99,7 @@ const getComponentMenuItems = () => {
 
 // Helper function to safely check component status
 const isComponentActive = (componentName) => {
-	return window?.BP_ADMIN?.components?.[componentName] === '1';
+	return window?.BP_ADMIN?.components?.[componentName] === 1;
 };
 
 const themeModeDescriptions = {
@@ -741,7 +741,7 @@ export const ReadyLaunchSettings = () => {
 									].map(item => (
 										window?.BP_ADMIN?.components &&
 										window?.BP_ADMIN?.components[item.id] &&
-										window?.BP_ADMIN?.components[item.id] === '1' && (
+										window?.BP_ADMIN?.components[item.id] === 1 && (
 										<div className="settings-list-item" key={item.id}>
 											<div className="settings-list-item-icon">
 												<span className={item.icon} />
@@ -889,9 +889,9 @@ export const ReadyLaunchSettings = () => {
 										<label>{__('Enable Pages', 'buddyboss')}</label>
 										<p>{__('Apply ReadyLaunch styles to the following pages', 'buddyboss')}</p>
 									</div>
-									{window?.BP_ADMIN?.register_integration === '1' || window?.BP_ADMIN?.courses_integration === '1' ? (
+									{window?.BP_ADMIN?.register_integration === 1 || window?.BP_ADMIN?.courses_integration === 1 ? (
 										<div className="field-toggles">
-											{window?.BP_ADMIN?.register_integration === '1' && (
+											{window?.BP_ADMIN?.register_integration === 1 && (
 												<div className="toggle-item">
 													<ToggleControl
 														label={__('Login & Registration', 'buddyboss')}
@@ -900,7 +900,7 @@ export const ReadyLaunchSettings = () => {
 													/>
 												</div>
 											)}
-											{window?.BP_ADMIN?.courses_integration === '1' && (
+											{window?.BP_ADMIN?.courses_integration === 1 && (
 												<div className="toggle-item">
 													<ToggleControl
 														label={__('Courses', 'buddyboss')}
@@ -937,7 +937,7 @@ export const ReadyLaunchSettings = () => {
 								{
 									BP_ADMIN.components &&
 									BP_ADMIN.components.activity &&
-									BP_ADMIN.components.activity === '1' && (
+									BP_ADMIN.components.activity === 1 && (
 									<div className="settings-form-field with-multiple-toggles">
 										<div className="field-label">
 											<label>{__('Activity Feed', 'buddyboss')}</label>
@@ -1006,7 +1006,7 @@ export const ReadyLaunchSettings = () => {
 										{
 											BP_ADMIN.components &&
 											BP_ADMIN.components.friends &&
-											BP_ADMIN.components.friends === '1' && (
+											BP_ADMIN.components.friends === 1 && (
 											<div className="toggle-item">
 												<ToggleControl
 													label={__('Connections', 'buddyboss')}
@@ -1019,7 +1019,7 @@ export const ReadyLaunchSettings = () => {
 										{
 											BP_ADMIN.components &&
 											BP_ADMIN.components.activity &&
-											BP_ADMIN.components.activity === '1' &&
+											BP_ADMIN.components.activity === 1 &&
 											settings.bp_enable_activity_follow === true &&
 											(
 											<div className="toggle-item">
@@ -1038,7 +1038,7 @@ export const ReadyLaunchSettings = () => {
 								{
 									BP_ADMIN.components &&
 									BP_ADMIN.components.groups &&
-									BP_ADMIN.components.groups === '1' && (
+									BP_ADMIN.components.groups === 1 && (
 									<div className="settings-form-field with-multiple-toggles">
 									<div className="field-label">
 										<label>{__('Group', 'buddyboss')}</label>

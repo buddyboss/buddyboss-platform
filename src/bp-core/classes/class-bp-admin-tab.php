@@ -344,7 +344,7 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 					'escaped_html_tags' => esc_js( __( 'Your content contains escaped HTML tags. Please fix them before submitting.', 'buddyboss' ) ),
 					'malformed_ul_li'   => esc_js( __( 'Content has malformed <ul> or <li> tags. Please fix them before submitting.', 'buddyboss' ) ),
 				),
-				'components' => bp_get_option( 'bp-active-components' ),
+				'components'                   => array_map( 'intval', bp_get_option( 'bp-active-components' ) ),
 			);
 
 			// Localize only post_type is member type and group type.
@@ -366,8 +366,8 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 
 			if ( function_exists( 'bb_is_readylaunch_enabled' ) && bb_is_readylaunch_enabled() && class_exists( 'BB_Readylaunch' ) ) {
 				$readylaunch                          = new BB_Readylaunch();
-				$localize_arg['register_integration'] = bp_enable_site_registration() && ! bp_allow_custom_registration();
-				$localize_arg['courses_integration']  = $readylaunch->bb_is_sidebar_enabled_for_courses();
+				$localize_arg['register_integration'] = (bool) bp_enable_site_registration() && ! bp_allow_custom_registration();
+				$localize_arg['courses_integration']  = (bool) $readylaunch->bb_is_sidebar_enabled_for_courses();
 			}
 
 			$localize_arg = apply_filters(

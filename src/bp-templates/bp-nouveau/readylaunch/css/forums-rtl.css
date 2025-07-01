@@ -854,6 +854,8 @@
 .bb-rl-topics-list .type-topic .bb-rl-topic-content {
   flex: 1;
   position: relative;
+  min-width: 0;
+  width: 100%;
 }
 
 .bb-rl-topics-list .type-topic .bb-rl-topic-status-wrapper {
@@ -877,6 +879,10 @@
   font-weight: 600;
   line-height: var(--bb-rl-base-line);
   margin-bottom: var(--bb-rl-space-100);
+  max-width: calc(100% - 100px);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .bb-rl-topics-list .type-topic .bb-rl-topic-title a {
@@ -993,6 +999,27 @@
   }
   .bb-rl-topics-list .type-topic {
     padding: var(--bb-rl-space-200);
+  }
+}
+
+@media screen and (max-width: 544px) {
+  .bb-rl-topics-list .type-topic {
+    flex-direction: column;
+    position: relative;
+  }
+  .bb-rl-topics-list .type-topic .bb-rl-topic-content {
+    position: static;
+  }
+  .bb-rl-topics-list .type-topic .bb-rl-topic-title {
+    width: 1000;
+    max-width: 100%;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: unset;
+  }
+  .bb-rl-topics-list .type-topic .bb-rl-topic-status-wrapper {
+    top: var(--bb-rl-space-200);
+    left: var(--bb-rl-space-200);
   }
 }
 
@@ -1144,7 +1171,7 @@
   justify-content: flex-start;
 }
 
-.bb-rl-stick .bbp-topic-super-sticky-link {
+.groups .bb-rl-stick .bbp-topic-super-sticky-link {
   display: none !important;
 }
 
@@ -1394,6 +1421,7 @@
 
 .bb-rl-forum-modal fieldset {
   margin-bottom: 0;
+  min-width: 0;
 }
 
 .bb-rl-forum-modal .bb-rl-forum-modal-header {
@@ -2129,6 +2157,7 @@
   font-size: var(--bb-rl-font-size-sm);
   line-height: var(--bb-rl-base-line-small);
   color: var(--bb-rl-text-secondary-color);
+  flex-wrap: wrap;
 }
 
 .bbp-reply-revision-log li img,
@@ -2591,4 +2620,21 @@
 
 .bb-rl-reply-single-page .bb-rl-single-forum-list .bb-rl-forum-reply-list-item:hover {
   background-color: transparent;
+}
+
+@media screen and (max-width: 800px) {
+  .bb-rl-topic-header .bb-rl-topic-footer {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .bb-rl-topic-header .bb-rl-topic-footer .bb-rl-topic-actions {
+    margin: var(--bb-rl-space-300) 0 0;
+    flex-wrap: wrap;
+  }
+}
+
+@media screen and (max-width: 544px) {
+  .bb-rl-topic-content .bb-activity-media-wrap {
+    gap: var(--bb-rl-space-100);
+  }
 }

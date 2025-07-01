@@ -2244,6 +2244,7 @@ div.vjs-menu li.vjs-selected .vjs-menu-item-text, div.vjs-menu li:hover .vjs-men
 /* Group and Member single navigations */
 .bb-rl-secondary-header #object-nav {
   padding: 12px var(--bb-rl-space-300);
+  width: 100%;
 }
 
 .bb-rl-secondary-header #object-nav ul {

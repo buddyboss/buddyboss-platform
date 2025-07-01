@@ -2245,6 +2245,7 @@ div.vjs-menu li.vjs-selected .vjs-menu-item-text, div.vjs-menu li:hover .vjs-men
 /* Group and Member single navigations */
 .bb-rl-secondary-header #object-nav {
   padding: 12px var(--bb-rl-space-300);
+  width: 100%;
 }
 
 .bb-rl-secondary-header #object-nav ul {
@@ -13877,12 +13878,17 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   border-bottom: 0;
   margin-bottom: 0;
   flex-shrink: 0;
+  margin-right: auto;
 }
 
 .bb-rl-group-details .bb-rl-activity-filters-container .activity-head-bar {
   border-bottom: 0;
   padding-bottom: 0;
   margin-bottom: 0;
+  margin-right: 0;
+}
+
+.bb-rl-activity-filters-container .activity-topic-selector ~ .activity-head-bar {
   margin-right: 0;
 }
 
