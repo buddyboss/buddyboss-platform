@@ -2160,10 +2160,12 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 					$thread->thread['recipients']['members'][ $count ]['joined_date'] = bb_get_member_joined_date( $recipient->user_id );
 					$thread->thread['recipients']['members'][ $count ]['last_active'] = bp_get_last_activity( $recipient->user_id );
 
-					$follower_ids   = bp_get_follower_ids( array( 'user_id' => $recipient->user_id ) );
-					$follower_array = explode( ',', $follower_ids );
-
-					$thread->thread['recipients']['members'][ $count ]['followers_count'] = count( $follower_array );
+					if ( bp_is_active( 'activity' ) ) {
+						$follower_ids   = bp_get_follower_ids( array( 'user_id' => $recipient->user_id ) );
+						$follower_array = explode( ',', $follower_ids );
+						
+						$thread->thread['recipients']['members'][ $count ]['followers_count'] = count( $follower_array );
+					}
 
 					// Get the member type of the user.
 					$type        = function_exists( 'bp_get_member_type_object' ) ? bp_get_member_type( $recipient->user_id ) : '';
