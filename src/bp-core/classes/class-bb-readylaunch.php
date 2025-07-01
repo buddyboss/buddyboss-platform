@@ -511,7 +511,6 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				unset( $defaults['courses'] );
 			}
 
-
 			$raw_settings = wp_parse_args(
 				bp_get_option( 'bb_rl_side_menu', array() ),
 				$defaults
@@ -889,7 +888,11 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 			if (
 				! $this->bb_is_readylaunch_enabled_for_page() &&
-				! $this->bb_is_readylaunch_forums()
+				! $this->bb_is_readylaunch_forums() &&
+				! (
+					function_exists( 'wp_is_block_theme' ) &&
+					wp_is_block_theme()
+				)
 			) {
 				add_filter( 'bp_get_template_stack', 'bp_add_template_stack_locations' );
 				add_filter( 'bbp_get_template_stack', 'bbp_add_template_stack_locations' );
