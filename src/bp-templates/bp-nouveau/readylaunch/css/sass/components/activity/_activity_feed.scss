@@ -61,6 +61,7 @@
 		border-bottom: 0;
 		margin-bottom: 0;
 		flex-shrink: 0;
+		margin-left: auto;
 
 		.bb-rl-group-details & {
 			border-bottom: 0;
@@ -68,6 +69,10 @@
 			margin-bottom: 0;
 			margin-left: 0;
 		}
+	}
+
+	.activity-topic-selector ~ .activity-head-bar {
+		margin-left: 0;
 	}
 }
 

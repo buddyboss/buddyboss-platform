@@ -13878,12 +13878,17 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   border-bottom: 0;
   margin-bottom: 0;
   flex-shrink: 0;
+  margin-left: auto;
 }
 
 .bb-rl-group-details .bb-rl-activity-filters-container .activity-head-bar {
   border-bottom: 0;
   padding-bottom: 0;
   margin-bottom: 0;
+  margin-left: 0;
+}
+
+.bb-rl-activity-filters-container .activity-topic-selector ~ .activity-head-bar {
   margin-left: 0;
 }
 
