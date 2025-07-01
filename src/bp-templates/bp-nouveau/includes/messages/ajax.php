@@ -2160,7 +2160,11 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 					$thread->thread['recipients']['members'][ $count ]['joined_date'] = bb_get_member_joined_date( $recipient->user_id );
 					$thread->thread['recipients']['members'][ $count ]['last_active'] = bp_get_last_activity( $recipient->user_id );
 
-					if ( bp_is_active( 'activity' ) ) {
+					if (
+						bp_is_active( 'activity' ) &&
+						function_exists( 'bp_is_activity_follow_active' ) &&
+						bp_is_activity_follow_active()
+					) {
 						$follower_ids   = bp_get_follower_ids( array( 'user_id' => $recipient->user_id ) );
 						$follower_array = explode( ',', $follower_ids );
 
