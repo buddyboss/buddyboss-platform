@@ -24,7 +24,7 @@ if (
 }
 
 global $bb_rl_search_nav;
-global $post;
+global $post, $wp;
 
 $bb_rl_ld_helper = null;
 if ( class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {

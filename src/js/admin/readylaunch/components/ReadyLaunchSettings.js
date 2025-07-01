@@ -100,8 +100,6 @@ const getComponentMenuItems = () => {
 		});
 	}
 
-	// @todo: remove 'courses' from items if LMS not active.
-
 	return items;
 };
 
