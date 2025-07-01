@@ -91,7 +91,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 			$enabled_for_page = $this->bb_is_readylaunch_enabled_for_page();
 			if ( $enabled_for_page ) {
-				// specific to the ReadyLaunch pages.
+				// Specific to the ReadyLaunch pages.
 			}
 
 			add_action( 'bp_admin_enqueue_scripts', array( $this, 'bb_rl_admin_enqueue_scripts' ), 1 );
@@ -115,6 +115,9 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * Register the ReadyLaunch telemetry data.
 		 *
 		 * @since BuddyBoss [BBVERSION]
+		 * @param array $option_array The array of telemetry options.
+		 *
+		 * @return array The modified array of telemetry options.
 		 */
 		public function bb_rl_telemetry_platform_options( $option_array ) {
 			$op_options = array( 'bb_rl_enabled' );
@@ -292,8 +295,14 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			add_filter( 'bp_get_the_notification_delete_link', array( $this, 'bb_rl_notifications_delete_link' ), 1, 1 );
 		}
 
+		/**
+		 * Required load for BuddyBoss ReadyLaunch.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return void
+		 */
 		protected function bb_rl_required_load() {
-
 			// Dequeue theme/plugins styles.
 			add_action( 'wp_enqueue_scripts', array( $this, 'bb_dequeue_styles' ), PHP_INT_MAX );
 			add_action( 'wp_enqueue_scripts', array( $this, 'bb_enqueue_scripts' ), 1 );
@@ -367,7 +376,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		}
 
 		/**
-		 * Mark notification as read link.
+		 * Mark the notification as read link.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
@@ -1104,7 +1113,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		}
 
 		/**
-		 * Function to check if the handle has allowed suffix.
+		 * Function to check if the handle has an allowed suffix.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
@@ -1235,11 +1244,11 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 *
 		 * This function checks if the groups or courses sections are active in the left sidebar.
 		 * It applies the 'bb_readylaunch_left_sidebar_courses' filter to get the arguments and
-		 * parses them to ensure they have the required structure.
+		 * Parses them to ensure they have the required structure.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
-		 * @param bool $data if true, then check for return data otherwise it will check plugin active or not.
+		 * @param bool $data if true, then check for return data, otherwise it will check plugin is active or not.
 		 *
 		 * @return array|bool The active courses array if any section is active, false otherwise.
 		 */
@@ -1287,10 +1296,10 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		}
 
 		/**
-		 * Render the middle content for left sidebar HTML.
+		 * Render the middle content for the left sidebar HTML.
 		 *
 		 * This function generates the HTML for the middle section of the left sidebar,
-		 * displaying a list of items or an error message if no items are available.
+		 * Displaying a list of items or an error message if no items are available.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
@@ -1396,7 +1405,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 *
 		 * This function checks if the user is logged in and if the notification component is active.
 		 * If both conditions are met, it retrieves the unread notifications template part and the total
-		 * count of unread notifications, then adds them to the response array.
+		 * Count of unread notifications, then adds them to the response array.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
@@ -1916,7 +1925,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		}
 
 		/**
-		 * Callback function for invite form.
+		 * Callback function for the invite form.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
@@ -2098,7 +2107,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 
 		/**
-		 * Override Send Message button text.
+		 * Override the Send Message button text.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
@@ -2346,13 +2355,13 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		}
 
 		/**
-		 * Modify the js strings.
+		 * Modify the JS strings.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
-		 * @param array $strings The js strings.
+		 * @param array $strings The JS strings.
 		 *
-		 * @return array $strings The modified js strings.
+		 * @return array $strings The modified JS strings.
 		 */
 		public function bb_rl_modify_js_strings( $strings ) {
 			$translated_string = __( '\'s post', 'buddyboss' );
@@ -2462,7 +2471,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		}
 
 		/**
-		 * Add dynamic colors to the frontend.
+		 * Add dynamic colours to the frontend.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 */
@@ -2842,11 +2851,11 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		}
 
 		/**
-		 * Check if current page is a LearnDash page.
+		 * Check if the current page is a LearnDash page.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
-		 * @return bool True if current page is a LearnDash page, false otherwise.
+		 * @return bool True if the current page is a LearnDash page, false otherwise.
 		 */
 		public function bb_rl_is_learndash_page() {
 			if ( ! class_exists( 'SFWD_LMS' ) ) {
@@ -3010,7 +3019,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		}
 
 		/**
-		 * Function to check pages is enable for integration.
+		 * Function to check pages is enabled for integration.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
@@ -3029,11 +3038,11 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		}
 
 		/**
-		 * Check if current page is a memberpress courses page.
+		 * Check if the current page is a MemberPress courses page.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
-		 * @return bool True if current page is a memberpress courses page, false otherwise.
+		 * @return bool True if the current page is a MemberPress courses page, false otherwise.
 		 */
 		public function bb_rl_is_memberpress_courses_page() {
 			if ( ! class_exists( 'memberpress\courses\helpers\Courses' ) || ! $this->bb_rl_is_page_enabled_for_integration( 'courses' ) ) {
@@ -3061,7 +3070,6 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				) {
 					return true;
 				}
-
 			}
 
 			// Method 2: Check for course archive using URL patterns.
@@ -3077,7 +3085,6 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					if ( strpos( $request_uri, '/' . $courses_base ) !== false ) {
 						return true;
 					}
-
 				}
 			}
 
@@ -3118,7 +3125,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					return true;
 				}
 
-				// Check if this is a lesson post type
+				// Check if this is a lesson post type.
 				if ( class_exists( 'memberpress\courses\models\Lesson' ) && memberpress\courses\models\Lesson::$cpt === $post_type ) {
 					return true;
 				}
@@ -3183,7 +3190,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 						bbp_is_topic_archive() ||
 						bbp_is_single_forum() ||
 						bbp_is_forum_edit() ||
-						bbp_is_single_topic() && ! bp_is_activity_component() ||
+						( bbp_is_single_topic() && ! bp_is_activity_component() ) ||
 						bbp_is_topic_edit() ||
 						bbp_is_topic_split() ||
 						bbp_is_topic_merge() ||
@@ -3390,6 +3397,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * @since BuddyBoss [BBVERSION]
 		 */
 		public function bb_rl_ajax_reply() {
+			// phpcs:ignore
 			$action = $_POST['bbp_reply_form_action'];
 			if ( 'bbp-new-reply' === $action ) {
 				bbp_new_reply_handler( $action );
@@ -3399,7 +3407,9 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		}
 
 		/**
-		 * New pre replies.
+		 * New pre-replies.
+		 *
+		 * @since BuddyBoss [BBVERSION]
 		 */
 		public function bb_rl_new_reply_pre_extras() {
 			if ( ! bbp_is_ajax() ) {
@@ -3421,7 +3431,13 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * New replies.
 		 *
-		 * @param integer $reply_id
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param int $reply_id Reply ID.
+		 *
+		 * @uses  bb_rl_reply_ajax_response() Generate an Ajax response.
+		 *
+		 * @return mixed HTML for the reply along with some extra information.
 		 */
 		public function bb_rl_new_reply_post_extras( $reply_id ) {
 			if ( ! bbp_is_ajax() ) {
@@ -3443,18 +3459,19 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			?>
 			<div id="bbpress-forums" class="bbpress-forums-activity bb-quick-reply-form-wrap" data-component="activity" style="display: none;">
 				<?php
+				// phpcs:ignore
 				if ( isset( $_POST['action'] ) && 'quick_reply_ajax' === $_POST['action'] ) {
 					$_POST['action'] = 'reply';
 				}
 
-					add_filter( 'bb_forum_attachment_group_id', array( $this, 'bb_rl_forum_attachment_group_id' ) );
-					add_filter( 'bb_forum_attachment_forum_id', array( $this, 'bb_rl_forum_attachment_forum_id' ) );
+				add_filter( 'bb_forum_attachment_group_id', array( $this, 'bb_rl_forum_attachment_group_id' ) );
+				add_filter( 'bb_forum_attachment_forum_id', array( $this, 'bb_rl_forum_attachment_forum_id' ) );
 
-					// Timeline quick reply form template.
-					bbp_get_template_part( 'form', 'reply-activity' );
+				// Timeline quick reply form template.
+				bbp_get_template_part( 'form', 'reply-activity' );
 
-					// Success message template.
-					bbp_get_template_part( 'form-reply', 'success' );
+				// Success message template.
+				bbp_get_template_part( 'form-reply', 'success' );
 				?>
 			</div>
 			<?php
@@ -3463,15 +3480,16 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 		/**
 		 * Generate an Ajax response.
-		 *
 		 * Sends the HTML for the reply along with some extra information.
+		 *
+		 * @since BuddyBoss [BBVERSION]
 		 *
 		 * @param integer $reply_id Reply ID.
 		 * @param string  $type     Type of reply ('new' or 'edit').
 		 */
 		private function bb_rl_reply_ajax_response( $reply_id, $type ) {
 			$reply_html = $this->bb_rl_get_reply_html( $reply_id );
-			$topic_id   = (int) ( isset( $_REQUEST['bbp_topic_id'] ) ? $_REQUEST['bbp_topic_id'] : 0 );
+			$topic_id   = (int) ( isset( $_REQUEST['bbp_topic_id'] ) ? $_REQUEST['bbp_topic_id'] : 0 ); // phpcs:ignore
 
 			/**
 			 * Redirect to last page when anyone reply from begging of the page.
@@ -3496,11 +3514,11 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			ob_start();
 			if ( bbp_show_lead_topic() ) {
 				$topic_reply_count = (int) bbp_get_topic_reply_count( $topic_id );
-				echo $topic_reply_count;
+				echo esc_html( $topic_reply_count );
 				$topic_reply_text = 1 !== $topic_reply_count ? esc_html__( 'Replies', 'buddyboss' ) : esc_html__( 'Reply', 'buddyboss' );
 			} else {
 				$topic_post_count = (int) bbp_get_topic_post_count( $topic_id );
-				echo $topic_post_count;
+				echo esc_html( $topic_post_count );
 				$topic_reply_text = 1 !== $topic_post_count ? esc_html__( 'Posts', 'buddyboss' ) : esc_html__( 'Post', 'buddyboss' );
 			}
 			echo ' ' . wp_kses_post( $topic_reply_text );
@@ -3512,7 +3530,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			$extra_info = array(
 				'reply_id'          => $reply_id,
 				'reply_type'        => $type,
-				'reply_parent'      => (int) $_REQUEST['bbp_reply_to'],
+				'reply_parent'      => (int) $_REQUEST['bbp_reply_to'], // phpcs:ignore
 				'tags'              => $this->bb_rl_get_topic_tags( $topic_id ),
 				'redirect_url'      => $reply_url, // Get last page URl - Redirect to last page when anyone reply from begging of the page.
 				'current_page'      => $current_page, // Get current page - Redirect to last page when anyone reply from begging of the page.
@@ -3525,7 +3543,9 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Uses a bbPress template file to generate reply HTML.
 		 *
-		 * @param integer $reply_id
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param int $reply_id Reply ID.
 		 *
 		 * @return string
 		 */
@@ -3597,30 +3617,44 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		}
 
 		/**
-		 * @param int $group_id Group ID.
+		 * Get group ID for forum attachments.
 		 *
 		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param int $group_id Group ID.
 		 *
 		 * @return mixed
 		 */
 		public function bb_rl_forum_attachment_group_id( $group_id ) {
-			if ( function_exists( 'bp_is_active' ) && bp_is_active( 'groups' ) && isset( $_POST['group_id'] ) && ! empty( $_POST['group_id'] ) ) {
-				$group_id = $_POST['group_id'];
+			if (
+				function_exists( 'bp_is_active' ) &&
+				bp_is_active( 'groups' ) &&
+				isset( $_POST['group_id'] ) && // phpcs:ignore
+				! empty( $_POST['group_id'] ) // phpcs:ignore
+			) {
+				$group_id = $_POST['group_id']; // phpcs:ignore
 			}
 
 			return $group_id;
 		}
 
 		/**
-		 * @param int $forum_id Forum ID.
+		 * Get forum ID for forum attachments.
 		 *
 		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param int $forum_id Forum ID.
 		 *
 		 * @return int|mixed
 		 */
 		public function bb_rl_forum_attachment_forum_id( $forum_id ) {
-			if ( function_exists( 'bp_is_active' ) && bp_is_active( 'forums' ) && isset( $_POST['topic_id'] ) && ! empty( $_POST['topic_id'] ) ) {
-				$topic_id = $_POST['topic_id'];
+			if (
+				function_exists( 'bp_is_active' ) &&
+				bp_is_active( 'forums' ) &&
+				isset( $_POST['topic_id'] ) && // phpcs:ignore
+				! empty( $_POST['topic_id'] ) // phpcs:ignore
+			) {
+				$topic_id = $_POST['topic_id']; // phpcs:ignore
 				$forum_id = bbp_get_topic_forum_id( $topic_id );
 			}
 
@@ -3712,6 +3746,8 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Get forum freshness link.
 		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
 		 * @param string $active_time Active time.
 		 *
 		 * @return string
@@ -3740,6 +3776,8 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 		/**
 		 * Get forum freshness link.
+		 *
+		 * @since BuddyBoss [BBVERSION]
 		 *
 		 * @param string $anchor Anchor.
 		 * @param int    $forum_id Forum ID.
