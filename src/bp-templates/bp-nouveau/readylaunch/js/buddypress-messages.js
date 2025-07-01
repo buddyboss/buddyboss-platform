@@ -3938,6 +3938,8 @@ window.bp = window.bp || {};
 			addSelect2: function() {
 				var $input    = $( this.el ).find( '#send-to-input' );
 				var ArrayData = [];
+				var self = this;
+				
 				if ( typeof bbRlIsBlockedByMembers !== 'undefined' && bbRlIsBlockedByMembers.length > 1 ) {
 					ArrayData = $.merge( ArrayData, bbRlIsBlockedByMembers );
 				}

@@ -15,8 +15,16 @@ import { Toast } from '../../components/Toast';
 // Initial structure for base menu items that are always included
 const baseMenuItems = [
 	{ id: 'members', label: __('Members', 'buddyboss'), icon: 'users', enabled: true, order: 1 },
-	{ id: 'courses', label: __('Courses', 'buddyboss'), icon: 'graduation-cap', enabled: true, order: 3 }
 ];
+if (window?.BP_ADMIN?.courses_integration === '1') {
+	baseMenuItems.unshift({
+		id: 'courses',
+		label: __('Courses', 'buddyboss'),
+		icon: 'graduation-cap',
+		enabled: true,
+		order: 1
+	});
+}
 
 // Helper function to get component-based menu items
 const getComponentMenuItems = () => {
