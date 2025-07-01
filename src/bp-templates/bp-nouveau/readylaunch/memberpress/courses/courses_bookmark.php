@@ -11,12 +11,12 @@
 
 defined( 'ABSPATH' ) || exit; ?>
 
-<h2><?php esc_html_e( 'Course Curriculum', 'buddyboss-pro' ); ?></h2>
+<h2><?php esc_html_e( 'Course Curriculum', 'buddyboss' ); ?></h2>
 
 <div id="bookmark" class="course-curriculum">
 	<?php if ( isset( $bookmark_url ) ) : ?>
 		<a href="<?php echo esc_url( $bookmark_url ); ?>">
-			<span><?php esc_html_e( 'Start Next Lesson', 'buddyboss-pro' ); ?></span>
+			<span><?php esc_html_e( 'Start Next Lesson', 'buddyboss' ); ?></span>
 			<i class="mpcs-angle-right"></i>
 		</a>
 	<?php endif; ?>

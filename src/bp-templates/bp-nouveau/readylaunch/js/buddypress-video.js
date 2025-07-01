@@ -130,7 +130,7 @@ window.bp = window.bp || {};
 			$document.on( 'click', '#bb-select-deselect-all-video', this.toggleSelectAllVideo.bind( this ) );
 			$document.on( 'click', '.video-action_list .bb-rl-video-file-delete, #bb-delete-video', this.deleteVideo.bind( this ) );
 			$document.on( 'click', '.bb-rl-video-thumbnail-uploader.opened-edit-thumbnail .bb-rl-video-thumbnail-custom .bb-rl-close-thumbnail-custom', this.deleteVideoThumb.bind( this ) );
-			
+
 			if ( undefined !== BP_Nouveau.is_send_ajax_request && '1' === BP_Nouveau.is_send_ajax_request ) {
 				$( '#buddypress [data-bp-list="video"]' ).on( 'bp_ajax_request', this.bp_ajax_video_request );
 			} else {
@@ -346,7 +346,7 @@ window.bp = window.bp || {};
 		},
 
 		submitVideo: function ( event ) {
-			var self = this, target = $( event.currentTarget ), data, privacy = $( '#bb-video-privacy' );
+			var self = this, target = $( event.currentTarget ), data, privacy = $( '#bb-video-privacy' ), dir_label;
 			event.preventDefault();
 
 			if ( target.hasClass( 'saving' ) ) {
@@ -1413,7 +1413,7 @@ window.bp = window.bp || {};
 		},
 
 		deleteVideo : function ( event ) {
-			var self = this, target = $( event.currentTarget );
+			var self = this, target = $( event.currentTarget ), dir_label;
 			event.preventDefault();
 
 			var video              = [],

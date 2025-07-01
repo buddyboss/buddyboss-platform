@@ -28,7 +28,7 @@ do_action( base\SLUG_KEY . '_classroom_start_instructor' );
 		<div class="bb-rl-instructor-data-wrapper">
 			<div class="flex bb-rl-instructor-data-header">
 				<div class="tile-title"><?php echo esc_html( get_the_author_meta( 'first_name' ) . ' ' . get_the_author_meta( 'last_name' ) ); ?></div>
-				<div class="tile-subtitle"><?php echo esc_html__( 'Course Instructor', 'buddyboss-pro' ); ?></div>
+				<div class="tile-subtitle"><?php echo esc_html__( 'Course Instructor', 'buddyboss' ); ?></div>
 			</div>
 			<ul class="tile-socials">
 				<?php if ( ! empty( get_the_author_meta( 'facebook' ) ) ) { ?>
@@ -51,14 +51,14 @@ do_action( base\SLUG_KEY . '_classroom_start_instructor' );
 
 			<div class="tile-meta">
 				<?php if ( ! empty( get_the_author_meta( 'user_email' ) ) ) { ?>
-					<p><?php esc_html_e( 'Email:', 'buddyboss-pro' ); ?> <a href="mailto:<?php the_author_meta( 'user_email' ); ?>" ><?php the_author_meta( 'user_email' ); ?></a></p>
+					<p><?php esc_html_e( 'Email:', 'buddyboss' ); ?> <a href="mailto:<?php the_author_meta( 'user_email' ); ?>" ><?php the_author_meta( 'user_email' ); ?></a></p>
 				<?php } ?>
 
 				<?php if ( ! empty( get_the_author_meta( 'user_url' ) ) ) { ?>
-					<p><?php esc_html_e( 'Website:', 'buddyboss-pro' ); ?> <a href="<?php the_author_meta( 'user_url' ); ?>" target="_blank" ><?php the_author_meta( 'user_url' ); ?></a></p>
+					<p><?php esc_html_e( 'Website:', 'buddyboss' ); ?> <a href="<?php the_author_meta( 'user_url' ); ?>" target="_blank" ><?php the_author_meta( 'user_url' ); ?></a></p>
 				<?php } ?>
 
-				
+
 			</div>
 		</div>
 		<div class="bb-rl-instructor-follow">
@@ -67,7 +67,7 @@ do_action( base\SLUG_KEY . '_classroom_start_instructor' );
 			if ( isset( $authordata->ID ) && function_exists( 'bb_meprlms_enable' ) && bb_meprlms_enable() ) {
 				$profile_url = bp_core_get_user_domain( $authordata->ID );
 				?>
-				<a class="bb-rl-button bb-rl-button--secondaryFill bb-rl-button--small bb-rl-button--instructor" href="<?php echo esc_url( $profile_url ); ?>"><?php esc_html_e( 'View profile', 'buddyboss-pro' ); ?></a>
+				<a class="bb-rl-button bb-rl-button--secondaryFill bb-rl-button--small bb-rl-button--instructor" href="<?php echo esc_url( $profile_url ); ?>"><?php esc_html_e( 'View profile', 'buddyboss' ); ?></a>
 				<?php
 			}
 			?>

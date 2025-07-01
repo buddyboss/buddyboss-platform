@@ -429,15 +429,15 @@ class BB_Readylaunch_Memberpress_Courses_Helper {
 							<div class="column col-sm-12">
 								<div class="dropdown">
 									<a href="#" class="btn btn-link dropdown-toggle" tabindex="0">
-										<?php esc_html_e( 'Category', 'buddyboss-pro' ); ?> <span></span><i class="bb-icons-rl-caret-down"></i>
+										<?php esc_html_e( 'Category', 'buddyboss' ); ?> <span></span><i class="bb-icons-rl-caret-down"></i>
 									</a>
 									<ul class="menu">
 										<?php
 										$terms = get_terms( 'mpcs-course-categories' ); // Get all terms of a taxonomy.
 
-										printf( '<li><input type="text" class="form-input mpcs-dropdown-search" placeholder="%s" id="mpmcSearchCategory"></li>', esc_html__( 'Search', 'buddyboss-pro' ) );
+										printf( '<li><input type="text" class="form-input mpcs-dropdown-search" placeholder="%s" id="mpmcSearchCategory"></li>', esc_html__( 'Search', 'buddyboss' ) );
 
-										printf( '<li class="%s"><a href="%s">%s</a></li>', esc_attr( '' === $category ? 'active' : 'noactive' ), esc_url( add_query_arg( 'category', '', $filter_base_url ) ), esc_html__( 'All', 'buddyboss-pro' ) );
+										printf( '<li class="%s"><a href="%s">%s</a></li>', esc_attr( '' === $category ? 'active' : 'noactive' ), esc_url( add_query_arg( 'category', '', $filter_base_url ) ), esc_html__( 'All', 'buddyboss' ) );
 										foreach ( $terms as $term ) {
 											printf( '<li class="%s"><a href="%s">%s</a></li>', esc_attr( $category === $term->slug ? 'active' : 'noactive' ), esc_url( add_query_arg( 'category', $term->slug, $filter_base_url ) ), esc_html( $term->name ) );
 										}
@@ -447,16 +447,16 @@ class BB_Readylaunch_Memberpress_Courses_Helper {
 
 								<div class="dropdown">
 									<a href="#" class="btn btn-link dropdown-toggle" tabindex="0">
-										<?php esc_html_e( 'Author', 'buddyboss-pro' ); ?> <span></span><i class="bb-icons-rl-caret-down"></i>
+										<?php esc_html_e( 'Author', 'buddyboss' ); ?> <span></span><i class="bb-icons-rl-caret-down"></i>
 									</a>
 									<!-- menu component -->
 									<ul class="menu">
 										<?php
 										$post_authors = models\Course::post_authors();
 
-										printf( '<li><input type="text" class="form-input mpcs-dropdown-search" placeholder="%s" id="mpmcSearchCourses"></li>', esc_html__( 'Search', 'buddyboss-pro' ) );
+										printf( '<li><input type="text" class="form-input mpcs-dropdown-search" placeholder="%s" id="mpmcSearchCourses"></li>', esc_html__( 'Search', 'buddyboss' ) );
 
-										printf( '<li class="%s"><a href="%s">%s</a></li>', esc_attr( empty( $author ) ? 'active' : 'noactive' ), esc_url( add_query_arg( 'author', '', $filter_base_url ) ), esc_html__( 'All', 'buddyboss-pro' ) );
+										printf( '<li class="%s"><a href="%s">%s</a></li>', esc_attr( empty( $author ) ? 'active' : 'noactive' ), esc_url( add_query_arg( 'author', '', $filter_base_url ) ), esc_html__( 'All', 'buddyboss' ) );
 
 										foreach ( $post_authors as $post_author ) {
 											printf( '<li class="%s"><a href="%s">%s</a></li>', esc_attr( $author === $post_author->user_login ? 'active' : 'noactive' ), esc_url( add_query_arg( 'author', $post_author->user_login, $filter_base_url ) ), esc_html( lib\Utils::get_full_name( $post_author->ID ) ) );
@@ -476,7 +476,7 @@ class BB_Readylaunch_Memberpress_Courses_Helper {
 								<form method="GET" class="" action="<?php echo esc_url( $courses_page ); ?>">
 									<div class="input-group">
 										<input type="text" name="s" class="form-input"
-												placeholder="<?php esc_html_e( 'Find a course', 'buddyboss-pro' ); ?>"
+												placeholder="<?php esc_html_e( 'Find a course', 'buddyboss' ); ?>"
 												value="<?php echo esc_attr( $search ); ?>">
 										<button class="btn input-group-btn"><i class="bb-icons-rl-magnifying-glass"></i></button>
 									</div>
@@ -487,7 +487,7 @@ class BB_Readylaunch_Memberpress_Courses_Helper {
 					</div>
 				</div>
 			</div>
-			<div class="bb-rl-container-inner bb-rl-meprlms-content-wrap">	
+			<div class="bb-rl-container-inner bb-rl-meprlms-content-wrap">
 				<div class="bb-rl-courses-grid grid bb-rl-courses-grid--mbprlms">
 				<?php
 		}

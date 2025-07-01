@@ -44,7 +44,7 @@ foreach ( $sections as $section ) :
 
 				if ( models\Lesson::$cpt === $lesson->post_type ) {
 					?>
-					<div id="mpcs-lesson-<?php echo esc_attr( $lesson->ID ); ?>" class="mpcs-lesson 
+					<div id="mpcs-lesson-<?php echo esc_attr( $lesson->ID ); ?>" class="mpcs-lesson
 													<?php
 													if ( $has_completed_lesson ) {
 														echo 'completed ';
@@ -85,13 +85,13 @@ foreach ( $sections as $section ) :
 						<span class="mpcs-button">
 						<?php if ( $has_completed_lesson ) : ?>
 							<span class="btn is-outline" href="<?php echo esc_url( get_permalink( $lesson->ID ) ); ?>">
-							<?php esc_html_e( 'View', 'buddyboss-pro' ); ?>
+							<?php esc_html_e( 'View', 'buddyboss' ); ?>
 						</span>
 
 						<?php elseif ( $lesson_available ) : ?>
 							<span class="btn btn-green is-purple"
 								href="<?php echo esc_url( get_permalink( $lesson->ID ) ); ?>">
-							<?php esc_html_e( 'Start', 'buddyboss-pro' ); ?>
+							<?php esc_html_e( 'Start', 'buddyboss' ); ?>
 						</span>
 						<?php endif; ?>
 					</span>
@@ -102,7 +102,7 @@ foreach ( $sections as $section ) :
 						</a>
 					<?php else : ?>
 						</span>
-						<span class="mpcs-lesson-locked-tooltip"><?php esc_html_e( 'Lesson unavailable. You must complete all previous lessons and quizzes before you start this lesson.', 'buddyboss-pro' ); ?></span>
+						<span class="mpcs-lesson-locked-tooltip"><?php esc_html_e( 'Lesson unavailable. You must complete all previous lessons and quizzes before you start this lesson.', 'buddyboss' ); ?></span>
 					<?php endif; ?>
 					</div>
 					<?php

@@ -96,7 +96,7 @@ if ( MeprRule::is_locked( $post ) && helpers\Courses::is_course_archive() ) {
 			<div class="bb-rl-course-footer">
 				<?php
 				$is_enrolled = models\UserProgress::has_started_course( get_current_user_id(), $course->ID );
-				
+
 				if ( $is_enrolled ) :
 					// Get lessons count.
 					$total_lessons = $course->number_of_lessons();
@@ -106,7 +106,7 @@ if ( MeprRule::is_locked( $post ) && helpers\Courses::is_course_archive() ) {
 					<div class="mpcs-progress-wrap">
 						<div class="mpcs-progress-data">
 							<strong class="mpcs-progress-lessons"><?php echo esc_html( $completed_lessons . '/' . $total_lessons ); ?></strong>
-							<span class="mpcs-progress-per"><strong><?php echo esc_html( $progress . '%' ); ?></strong> <?php esc_html_e( ' Complete', 'buddyboss-pro' ); ?></span>
+							<span class="mpcs-progress-per"><strong><?php echo esc_html( $progress . '%' ); ?></strong> <?php esc_html_e( ' Complete', 'buddyboss' ); ?></span>
 						</div>
 						<div class="mpcs-progress-bar">
 							<div class="mpcs-progress-bar-inner" style="width: <?php echo esc_attr( $progress ); ?>%;"></div>
@@ -117,7 +117,7 @@ if ( MeprRule::is_locked( $post ) && helpers\Courses::is_course_archive() ) {
 					if ( false !== $next_lesson && is_object( $next_lesson ) ) {
 						?>
 						<a href="<?php echo esc_url( get_permalink( $next_lesson->ID ) ); ?>" class="bb-rl-course-link bb-rl-button bb-rl-button--secondaryFill bb-rl-button--small">
-							<?php esc_html_e( 'Continue Course', 'buddyboss-pro' ); ?><i class="bb-icons-rl-caret-right"></i>
+							<?php esc_html_e( 'Continue Course', 'buddyboss' ); ?><i class="bb-icons-rl-caret-right"></i>
 						</a>
 						<?php
 					}

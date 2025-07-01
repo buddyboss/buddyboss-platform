@@ -484,7 +484,8 @@ window.bp = window.bp || {};
 		 */
 		heartbeatTick: function ( event, data ) {
 			var newestActivitiesCount, newestActivities, objects = bp.Nouveau.objects,
-				scope = bp.Nouveau.getStorage( 'bp-activity', 'scope' ), self = this;
+				scope = bp.Nouveau.getStorage( 'bp-activity', 'scope' ), self = this,
+				topicId = bp.Nouveau.getStorage( 'bp-activity', 'topic_id' );
 
 			// Only proceed if we have the newest activities.
 			if ( undefined === data || ! data.bp_activity_newest_activities ) {
@@ -498,15 +499,15 @@ window.bp = window.bp || {};
 
 			// Parse activities.
 			newestActivities = $( this.heartbeat_data.newest ).filter( '.activity-item' );
-			
+
 			// If we have a topic filter active, only show activities matching that topic.
 			if ( topicId ) {
-				newest_activities       = newest_activities.filter( function () {
+				newestActivities       = newestActivities.filter( function () {
 					var bpActivity      = this.dataset.bpActivity ? JSON.parse( this.dataset.bpActivity ) : null;
 					var activityTopicId = bpActivity && typeof bpActivity.topic_id !== 'undefined' ? bpActivity.topic_id : null;
 					return activityTopicId && parseInt( activityTopicId ) === parseInt( topicId );
 				} );
-				newest_activities_count = newest_activities.length;
+				newestActivitiesCount = newestActivities.length;
 			}
 
 			// Count them.
@@ -1253,7 +1254,7 @@ window.bp = window.bp || {};
 					event.preventDefault();
 					return;
 				}
-				
+
 				self.submitActivityComment(
 					{
 						event        : event,

@@ -13,7 +13,7 @@ use memberpress\quizzes\models as models;
 
 ?>
 
-<div id="mpcs-lesson-<?php echo esc_attr( $lesson->ID ); ?>" class="mpcs-lesson 
+<div id="mpcs-lesson-<?php echo esc_attr( $lesson->ID ); ?>" class="mpcs-lesson
 								<?php
 								if ( ! $lesson_available ) {
 									echo 'locked ';
@@ -47,15 +47,15 @@ use memberpress\quizzes\models as models;
 					<?php if ( $has_completed_lesson ) : ?>
 						<span class="mpcs-button is-outline"
 							href="<?php echo esc_url( get_permalink( $lesson->ID ) ); ?>">
-							<?php esc_html_e( 'View', 'buddyboss-pro' ); ?>
+							<?php esc_html_e( 'View', 'buddyboss' ); ?>
 						</span>
 					<?php elseif ( $lesson_available ) : ?>
 						<span class="mpcs-button is-purple"
 							href="<?php echo esc_url( get_permalink( $lesson->ID ) ); ?>">
 							<?php if ( $attempt instanceof models\Attempt && $attempt->is_draft() ) : ?>
-								<?php esc_html_e( 'Continue', 'buddyboss-pro' ); ?>
+								<?php esc_html_e( 'Continue', 'buddyboss' ); ?>
 							<?php else : ?>
-								<?php esc_html_e( 'Start', 'buddyboss-pro' ); ?>
+								<?php esc_html_e( 'Start', 'buddyboss' ); ?>
 							<?php endif; ?>
 						</span>
 					<?php endif; ?>
@@ -65,6 +65,6 @@ use memberpress\quizzes\models as models;
 	</a>
 <?php else : ?>
 	</span>
-	<span class="mpcs-lesson-locked-tooltip"><?php esc_html_e( 'Lesson unavailable. You must complete all previous lessons and quizzes before you start this lesson.', 'buddyboss-pro' ); ?></span>
+	<span class="mpcs-lesson-locked-tooltip"><?php esc_html_e( 'Lesson unavailable. You must complete all previous lessons and quizzes before you start this lesson.', 'buddyboss' ); ?></span>
 <?php endif; ?>
 </div>

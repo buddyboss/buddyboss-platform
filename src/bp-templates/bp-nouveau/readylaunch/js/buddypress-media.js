@@ -681,7 +681,7 @@ window.bp = window.bp || {};
 		},
 
 		deleteMedia: function ( event ) {
-			var target = $( event.currentTarget ), self = this;
+			var target = $( event.currentTarget ), self = this, dir_label;
 			event.preventDefault();
 
 			if ( target.attr( 'disabled' ) ) {
@@ -3934,7 +3934,7 @@ window.bp = window.bp || {};
 		},
 
 		submitMedia: function ( event ) {
-			var self = this, target = $( event.currentTarget ), data, privacy = $( '#bb-media-privacy' );
+			var self = this, target = $( event.currentTarget ), data, privacy = $( '#bb-media-privacy' ), dir_label;
 			event.preventDefault();
 
 			if ( target.hasClass( 'saving' ) ) {

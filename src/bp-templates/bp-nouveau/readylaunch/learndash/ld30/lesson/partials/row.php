@@ -38,7 +38,7 @@ $sections = ( isset( $sections ) ? $sections : array() );
  *
  * @param string $attribute Lesson row attribute. The value is data-ld-tooltip if a user does not have access to the course otherwise an empty string.
  */
-$atts = apply_filters( 'learndash_lesson_row_atts', ( isset( $has_access ) && ! $has_access && 'is_not_sample' === $lesson['sample'] ? 'data-ld-tooltip="' . esc_html__( "You don't currently have access to this content", 'learndash' ) . '"' : '' ), $lesson['post']->ID, $course_id, $user_id );
+$atts = apply_filters( 'learndash_lesson_row_atts', ( isset( $has_access ) && ! $has_access && 'is_not_sample' === $lesson['sample'] ? 'data-ld-tooltip="' . esc_html__( "You don't currently have access to this content", 'buddyboss' ) . '"' : '' ), $lesson['post']->ID, $course_id, $user_id );
 
 /**
  * New logic to override sample lessons access LEARNDASH-3854
@@ -57,7 +57,7 @@ if ( ( empty( $atts ) ) && ( ! is_user_logged_in() ) ) {
 			 * @param int    $course_id Course ID.
 			 * @param int    $user_id   User ID.
 			 */
-			$atts = apply_filters( 'learndash_lesson_row_atts_sample_no_access', 'data-ld-tooltip="' . esc_html__( 'Please login to view sample content', 'learndash' ) . '"', $lesson['post']->ID, $course_id, $user_id );
+			$atts = apply_filters( 'learndash_lesson_row_atts_sample_no_access', 'data-ld-tooltip="' . esc_html__( 'Please login to view sample content', 'buddyboss' ) . '"', $lesson['post']->ID, $course_id, $user_id );
 		}
 	}
 }
@@ -169,7 +169,7 @@ endif; ?>
 									'%1$d %2$s',
 									$content_count['topics'],
 									'placeholders: Topic Count, Topic/Topics Label',
-									'learndash'
+									'buddyboss'
 								),
 								$content_count['topics'],
 								( $content_count['topics'] < 2 ? esc_attr( LearnDash_Custom_Label::get_label( 'topic' ) ) : esc_attr( LearnDash_Custom_Label::get_label( 'topics' ) ) ),
@@ -195,7 +195,7 @@ endif; ?>
 									'%1$d %2$s',
 									$content_count['quizzes'],
 									'placeholders: Quiz Count, Quiz/Quizzes Label',
-									'learndash'
+									'buddyboss'
 								),
 								$content_count['quizzes'],
 								( $content_count['quizzes'] < 2 ? esc_attr( LearnDash_Custom_Label::get_label( 'quiz' ) ) : esc_attr( LearnDash_Custom_Label::get_label( 'quizzes' ) ) ),
@@ -299,12 +299,12 @@ endif; ?>
 					aria-controls="<?php echo esc_attr( 'ld-expand-' . $lesson['post']->ID . '-container' ); ?>"
 					aria-expanded="false"
 					class="ld-expand-button ld-button-alternate"
-					data-ld-collapse-text="<?php esc_html_e( 'Collapse', 'learndash' ); ?>"
-					data-ld-expand-text="<?php esc_html_e( 'Expand', 'learndash' ); ?>"
+					data-ld-collapse-text="<?php esc_html_e( 'Collapse', 'buddyboss' ); ?>"
+					data-ld-expand-text="<?php esc_html_e( 'Expand', 'buddyboss' ); ?>"
 					data-ld-expands="<?php echo esc_attr( 'ld-expand-' . $lesson['post']->ID. '-container' ); ?>"
 				>
 					<span class="ld-icon-arrow-down ld-icon ld-primary-background"></span>
-					<span class="ld-text ld-primary-color"><?php esc_html_e( 'Expand', 'learndash' ); ?></span>
+					<span class="ld-text ld-primary-color"><?php esc_html_e( 'Expand', 'buddyboss' ); ?></span>
 				</button> <!--/.ld-expand-button-->
 
 				<?php

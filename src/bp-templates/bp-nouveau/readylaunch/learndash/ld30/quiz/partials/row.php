@@ -31,7 +31,7 @@ $attributes = learndash_get_course_step_attributes( $quiz['post']->ID, $course_i
  *
  * @param string $attribute Quiz row attribute. The value is data-ld-tooltip if a user does not have access to quiz otherwise empty string.
  */
-$atts = apply_filters( 'learndash_quiz_row_atts', ( isset( $has_access ) && ! $has_access && ! $is_sample ? 'data-ld-tooltip="' . esc_html__( "You don't currently have access to this content", 'learndash' ) . '"' : '' ) );
+$atts = apply_filters( 'learndash_quiz_row_atts', ( isset( $has_access ) && ! $has_access && ! $is_sample ? 'data-ld-tooltip="' . esc_html__( "You don't currently have access to this content", 'buddyboss' ) . '"' : '' ) );
 
 $learndash_quiz_available_date = learndash_course_step_available_date( $quiz['post']->ID, $course_id, $user_id, true );
 if ( ! empty( $learndash_quiz_available_date ) ) {
