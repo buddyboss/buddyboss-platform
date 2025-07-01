@@ -2703,7 +2703,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			);
 
 			// Menu Settings.
-			$settings['bb_rl_header_menu'] = (string) bp_get_option( 'bb_rl_header_menu', 'default' );
+			$settings['bb_rl_header_menu'] = (string) bp_get_option( 'bb_rl_header_menu', 'readylaunch' );
 
 			$defaults = array(
 				'activity_feed' => array(
