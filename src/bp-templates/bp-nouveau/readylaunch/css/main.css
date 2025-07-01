@@ -13875,7 +13875,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   padding: 0;
   border-bottom: 0;
   margin-bottom: 0;
-  margin-left: auto;
+  flex-shrink: 0;
 }
 
 .bb-rl-group-details .bb-rl-activity-filters-container .activity-head-bar {
@@ -13886,8 +13886,8 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 }
 
 .activity-topic-selector {
-  margin-right: auto;
-  max-width: 50%;
+  flex: 1;
+  min-width: 0;
 }
 
 .activity-topic-selector > ul {

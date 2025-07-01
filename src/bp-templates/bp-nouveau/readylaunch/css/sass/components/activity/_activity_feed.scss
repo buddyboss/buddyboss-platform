@@ -60,7 +60,7 @@
 		padding: 0;
 		border-bottom: 0;
 		margin-bottom: 0;
-		margin-left: auto;
+		flex-shrink: 0;
 
 		.bb-rl-group-details & {
 			border-bottom: 0;
@@ -72,8 +72,8 @@
 }
 
 .activity-topic-selector {
-	margin-right: auto;
-	max-width: 50%;
+	flex: 1;
+	min-width: 0;
 
 	> ul {
 		display: flex;
