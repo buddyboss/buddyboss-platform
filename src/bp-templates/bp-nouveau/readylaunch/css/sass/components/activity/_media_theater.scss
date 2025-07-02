@@ -184,6 +184,17 @@
 		.edit {
 			display: none;
 		}
+
+		&.show-edit {
+
+			.add {
+				display: none;
+			}
+
+			.edit {
+				display: inline-block;
+			}
+		}
 	}
 
 	.bp-media-activity-description {
