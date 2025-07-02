@@ -23,7 +23,7 @@ defined( 'ABSPATH' ) || exit;
 				<div id="boss-media-create-album-popup" class="bb-rl-create-folder-popup modal-container has-folderlocationUI">
 					<header class="bb-model-header">
 						<h4><?php esc_html_e( 'Create new folder', 'buddyboss' ); ?></h4>
-						<a class="bb-model-close-button" id="bp-media-create-folder-close" href="#"><span class="bb-icon-l bb-icon-times"></span></a>
+						<a class="bb-model-close-button bb-rl-media-create-folder-close" id="bp-media-create-folder-close" href="#"><span class="bb-icon-l bb-icon-times"></span></a>
 					</header>
 					<div class="bb-field-wrap">
 						<label for="bb-album-title" class="bb-label"><?php esc_html_e( 'Title', 'buddyboss' ); ?></label>
@@ -36,6 +36,7 @@ defined( 'ABSPATH' ) || exit;
 							bp_get_template_part( 'document/document-privacy' );
 						endif;
 						?>
+						<a class="button bb-rl-button bb-rl-button--secondaryFill bb-rl-button--small bb-rl-media-create-folder-close" id="bp-media-create-folder-cancel" href="#"><?php esc_html_e( 'Cancel', 'buddyboss' ); ?></a>
 						<a class="button bb-rl-button bb-rl-button--brandFill bb-rl-button--small" id="bp-media-create-folder-submit" href="#"><?php esc_html_e( 'Create Folder', 'buddyboss' ); ?></a>
 					</footer>
 

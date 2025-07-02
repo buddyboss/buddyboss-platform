@@ -220,7 +220,7 @@ window.bp = window.bp || {};
 			$document.on( 'click', '#bp-media-create-child-folder-submit', this.saveChildFolder.bind( this ) );
 
 			bpNouveau.on( 'click', '#bp-media-create-album-close', this.closeCreateAlbumModal.bind( this ) );
-			$document.on( 'click', '#bp-media-create-folder-close', this.closeCreateFolderModal.bind( this ) );
+			$document.on( 'click', '.bb-rl-media-create-folder-close', this.closeCreateFolderModal.bind( this ) );
 			$document.on( 'click', '#bp-media-edit-folder-close', this.closeEditFolderModal.bind( this ) );
 			$document.on( 'click', '.open-popup .errorPopup', this.closeErrorPopup.bind( this ) );
 
