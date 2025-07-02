@@ -6163,11 +6163,14 @@ body.admin-bar .bb-rl-header {
   font-size: 1rem;
 }
 
+.header-aside .notification-wrap .notification-header .delete-all,
 .header-aside .notification-wrap .notification-header .message-view-all-link {
   margin-left: auto;
   margin-right: var(--bb-rl-space-200);
-  border-radius: var(--bb-rl-radius-full);
-  font-size: 0.85rem;
+  border-radius: var(--bb-rl-radius-md);
+  padding: var(--bb-rl-space-50) var(--bb-rl-space-100);
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 400;
 }
 
 .header-aside .notification-wrap .notification-header .mark-read-all {
