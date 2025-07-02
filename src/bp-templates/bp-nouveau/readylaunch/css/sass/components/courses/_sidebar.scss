@@ -1,0 +1,133 @@
+.bb-rl-lms-sidebar-data {
+	padding: var(--bb-rl-space-200) 0;
+}
+
+.bb-rl-lms-sidebar-header {
+	border-bottom: 1px solid var(--bb-rl-border-secondary-color);
+	margin: 0 calc(var(--bb-rl-space-200) * -1);
+	padding: 0 var(--bb-rl-space-200) var(--bb-rl-space-400);
+}
+
+.bb-rl-lms-sidebar-body {
+	margin: 0 calc(var(--bb-rl-space-200) * -1);
+}
+
+.bb-rl-lms-sidebar-course-nav {
+
+	.course-entry-title {
+
+		@include bb-rl-base-heading-bolder;
+		color: var(--bb-rl-text-color);
+		margin: var(--bb-rl-space-200) 0 var(--bb-rl-space-100);
+	}
+}
+
+.bb-rl-lms-nav-list {
+
+	.bb-rl-ld-lesson-list {
+
+		.ld-lesson-section-heading {
+			background-color: var(--bb-rl-background-color);
+		}
+
+		.ld-item-list-items {
+			border: 0;
+			border-radius: 0;
+		}
+
+		.ld-item-list-item-preview {
+			margin: var(--bb-rl-space-50);
+			padding: 12px var(--bb-rl-space-200);
+			border-radius: var(--bb-rl-radius-md);
+
+			&:hover {
+				background-color: var(--bb-rl-background-secondary-hover-color);
+			}
+
+			&.ld-expanded {
+				border-bottom: 0;
+			}
+
+			.ld-item-components {
+
+				.ld-item-component,
+				.ld-sep {
+					display: none;
+				}
+
+				.ld-status-waiting {
+					font-size: 0;
+					background-color: transparent;
+					border: 0;
+					padding: 0;
+					margin: 0;
+					border-radius: 0;
+
+					.ld-icon-calendar:before {
+						content: "\e2fa";
+						font-weight: 400;
+						font-family: bb-icons-rl;
+						font-size: 16px;
+						color: var(--bb-rl-icon-primary-color);
+						font-style: normal;
+						position: relative;
+						top: 2px;
+					}
+				}
+			}
+		}
+
+		.ld-item-list-item-expanded {
+
+			.ld-table-list-item {
+				margin: var(--bb-rl-space-50);
+				padding: 12px var(--bb-rl-space-200);
+				border-radius: var(--bb-rl-radius-md);
+				border-bottom: 0;
+
+				&.learndash-not-available {
+					pointer-events: none;
+				}
+
+				&:hover {
+					background-color: var(--bb-rl-background-secondary-hover-color);
+				}
+
+				&:has(.ld-is-current-item) {
+					background-color: var(--bb-rl-background-secondary-hover-color);
+				}
+
+				&.bb-rl-current-quiz-wrapper {
+					background-color: var(--bb-rl-background-secondary-hover-color);
+				}
+
+				.ld-status-waiting {
+					font-size: 0;
+					background-color: transparent;
+					border: 0;
+					padding: 0;
+					margin: 0;
+					border-radius: 0;
+
+					.ld-icon-calendar:before {
+						content: "\e2fa";
+						font-weight: 400;
+						font-family: bb-icons-rl;
+						font-size: 16px;
+						color: var(--bb-rl-icon-primary-color);
+						font-style: normal;
+						position: relative;
+						top: 2px;
+					}
+				}
+			}
+		}
+
+		.ld-item-list-item.bb-rl-current-lesson:not(:has(.ld-is-current-item)):not(:has(.bb-rl-current-quiz-wrapper)) {
+
+			.ld-item-list-item-preview {
+				background-color: var(--bb-rl-background-secondary-hover-color);
+			}
+		}
+	}
+}

@@ -32,7 +32,7 @@ if ( ! empty( $link_embed ) ) {
 }
 
 // translators: %s: User display name.
-$activity_popup_title = sprintf( esc_html__( '%s\'s Post', 'buddyboss' ), bp_core_get_user_displayname( bp_get_activity_user_id() ) );
+$activity_popup_title = sprintf( esc_html__( '%s\'s post', 'buddyboss' ), bp_core_get_user_displayname( bp_get_activity_user_id() ) );
 
 ?>
 

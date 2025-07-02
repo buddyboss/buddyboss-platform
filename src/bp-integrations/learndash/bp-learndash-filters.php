@@ -32,48 +32,7 @@ add_filter( 'bp_uri', 'bb_support_learndash_course_other_language_permalink', 10
 // Support for learndash nested urls.
 add_filter( 'learndash_permalinks_nested_urls', 'bb_support_learndash_permalinks_nested_urls', 9999, 3 );
 
-// user is removed from ld group.
-add_action( 'ld_removed_group_access', 'bb_ld_removed_group_access', 99, 2 );
-
-/**
- * Remove user to social group when added in LD group.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param int $user_id  User id.
- * @param int $group_id Group id.
- *
- * @return void
- */
-function bb_ld_removed_group_access( $user_id, $group_id ) {
-
-	if ( ! bp_is_active( 'groups' ) ) {
-		return;
-	}
-	bb_add_or_remove_user_in_social_group( $group_id, $user_id, 'leave' );
-}
-
-// user is added from ld group.
-add_action( 'ld_added_group_access', 'bb_ld_added_group_access', 99, 2 );
-
-/**
- * Add user to social group when added in LD group.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param int $user_id  User id.
- * @param int $group_id Group id.
- *
- * @return void
- */
-function bb_ld_added_group_access( $user_id, $group_id ) {
-
-	if ( ! bp_is_active( 'groups' ) ) {
-		return;
-	}
-	bb_add_or_remove_user_in_social_group( (int) $group_id, (int) $user_id, 'join' );
-}
-
+add_filter( 'bb_readylaunch_left_sidebar_middle_content', 'bb_readylaunch_middle_content_ld_courses', 20, 1 );
 /** Functions *****************************************************************/
 
 /**
@@ -522,33 +481,68 @@ function bb_support_learndash_permalinks_nested_urls( $ld_rewrite_rules, $ld_rew
 	return $ld_rewrite_rules;
 }
 
-
 /**
- * Function to fix the issue when adding/removing user from LD group
- * with courses from LD group is directly associated with buddyboss social groups
+ * Function to get the user enrolled course or all courses.
  *
- * Get all social groups from the courses associated with LD group
- * Add or remove user from that social groups
+ * This function retrieves the courses a user is enrolled in using the LearnDash plugin.
+ * It fetches courses and includes the course title, permalink, and thumbnail.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.9.00
  *
- * @param int $group_id learndash group id.
- * @param int $user_id  user id.
- * @param int $type     'join' or 'leave' group
+ * @param array $args Arguments.
+ *
+ * @return array The user's enrolled courses.
  */
-function bb_add_or_remove_user_in_social_group( $group_id, $user_id, $type = 'join' ) {
+function bb_readylaunch_middle_content_ld_courses( $args = array() ) {
 
-	$courses = learndash_get_group_courses_list( $group_id );
+	$course_data['integration'] = 'sfwd-courses';
 
-	foreach ( $courses as $course_id ) {
+	// Check if the sidebar data and the courses sidebar are enabled.
+	if ( $args['has_sidebar_data'] && $args['is_sidebar_enabled_for_courses'] ) {
+		$user_id = bp_loggedin_user_id();
+		if ( $user_id ) {
+			// Get enrolled courses for the logged-in user.
+			$courses_ids = learndash_user_get_enrolled_courses(
+				$user_id,
+				array(
+					'nopaging'       => false,
+					'posts_per_page' => 5,
+				)
+			);
+		} else {
+			// Get all published courses if no user is logged in.
+			$query_args = array(
+				'post_type'      => 'sfwd-courses',
+				'post_status'    => 'publish',
+				'fields'         => 'ids',
+				'orderby'        => 'title',
+				'order'          => 'ASC',
+				'nopaging'       => false,
+				'posts_per_page' => 5,
+			);
 
-		$group_attached      = (int) get_post_meta( $course_id, 'bp_course_group', true );
-		$join_or_leave_group = 'groups_' . $type . '_group';
-
-		if ( 0 === $group_attached || false === $group_attached ) {
-			continue;
+			$query       = new WP_Query( $query_args );
+			$courses_ids = ! empty( $query->posts ) ? $query->posts : array();
+			wp_reset_postdata();
 		}
 
-		$join_or_leave_group( $group_attached, $user_id );
+		// Prepare course data.
+		if ( ! empty( $courses_ids ) ) {
+			foreach ( $courses_ids as $post_id ) {
+				$thumbnail_url = '';
+				if ( has_post_thumbnail( $post_id ) ) {
+					$thumbnail_url = get_the_post_thumbnail( $post_id, 'medium' );
+				}
+
+				$course_data['items'][ $post_id ] = array(
+					'title'     => get_the_title( $post_id ),
+					'permalink' => get_the_permalink( $post_id ),
+					'thumbnail' => $thumbnail_url,
+				);
+			}
+		}
 	}
+	$args['courses'] = $course_data;
+
+	return $args;
 }

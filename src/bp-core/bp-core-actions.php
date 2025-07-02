@@ -74,6 +74,7 @@ add_action( 'bp_init', 'bp_setup_globals', 4 );
 add_action( 'bp_init', 'bp_setup_canonical_stack', 5 );
 add_action( 'bp_init', 'bp_setup_nav', 6 );
 add_action( 'bp_init', 'bp_setup_title', 8 );
+add_action( 'bp_init', 'bb_blocks_init', 10 );
 add_action( 'bp_init', 'bp_core_load_admin_bar_css', 12 );
 add_action( 'bp_init', 'bp_add_rewrite_tags', 20 );
 add_action( 'bp_init', 'bp_add_rewrite_rules', 30 );
@@ -1177,13 +1178,13 @@ function bb_bg_process_log_load() {
 add_action( 'bp_init', 'bb_bg_process_log_load' );
 
 /**
- * Remove notices from the buddyboss upgrade screens.
+ * Remove notices from the buddyboss upgrade and ReadyLaunch screens.
  *
  * @since BuddyBoss 2.6.30
  */
 function bb_remove_admin_notices() {
 	$screen = get_current_screen();
-	if ( 'buddyboss_page_bb-upgrade' === $screen->id ) {
+	if ( 'buddyboss_page_bb-upgrade' === $screen->id || 'buddyboss_page_bb-readylaunch' === $screen->id ) {
 		remove_all_actions( 'admin_notices' );
 
 		// Additional check for the common WordPress error/warning hooks.
@@ -1260,3 +1261,16 @@ function bb_load_topics_manager() {
 
 	bb_topics_manager_instance();
 }
+
+/**
+ * Function to load readylaunch class.
+ *
+ * @since BuddyBoss 2.9.00
+ */
+function bb_load_readylaunch() {
+	if ( class_exists( 'BB_Readylaunch' ) ) {
+		return BB_Readylaunch::instance();
+	}
+}
+
+add_action( 'bp_loaded', 'bb_load_readylaunch', 99 );
