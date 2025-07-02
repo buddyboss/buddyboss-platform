@@ -410,6 +410,10 @@
 		#bp-media-prev,
 		#bp-media-photo-next {
 			display: none;
+
+			&[style="display: inline;"] {
+				display: inline-flex !important;
+			}
 		}
 
 		.bb-field-steps-1.controls-added {

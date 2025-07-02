@@ -5292,6 +5292,11 @@ body.bb-readylaunch-template .select2-container--rl.select2-container--open:has(
   display: none;
 }
 
+.bb-readylaunch-template .bp-media-photo-uploader #bp-media-prev[style="display: inline;"],
+.bb-readylaunch-template .bp-media-photo-uploader #bp-media-photo-next[style="display: inline;"] {
+  display: inline-flex !important;
+}
+
 .bb-readylaunch-template .bp-media-photo-uploader .bb-field-steps-1.controls-added #bp-media-prev,
 .bb-readylaunch-template .bp-media-photo-uploader .bb-field-steps-1.controls-added #bp-media-photo-next {
   display: inline-flex !important;
