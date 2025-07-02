@@ -2055,6 +2055,10 @@ body.messages .bb-rl-content-wrapper {
   margin: auto var(--bb-rl-space-300) var(--bb-rl-space-300);
 }
 
+#send_message_form .select2-container--default .select2-selection--multiple {
+  display: flex;
+}
+
 #send_message_form .select2-container--default .select2-selection--multiple .select2-selection__choice {
   background-color: var(--bb-rl-background-color) !important;
   border: 1px solid var(--bb-rl-border-secondary-color);
