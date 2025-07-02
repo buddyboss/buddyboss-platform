@@ -3270,6 +3270,11 @@ div#bp-group-message-content {
   margin-bottom: var(--bb-rl-space-300);
 }
 
+.group-messages.private-message .bb-groups-messages-right .bb-groups-messages-right-top .bp-messages-feedback {
+  width: 100%;
+  margin: var(--bb-rl-space-100);
+}
+
 .group-messages.private-message .bb-groups-messages-right .bb-title {
   display: block;
   color: var(--bb-rl-text-color);

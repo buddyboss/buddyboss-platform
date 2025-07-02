@@ -311,6 +311,11 @@ div#bp-group-message-content {
 			.bb-groups-messages-right-top {
 				margin: 0;
 				margin-bottom: var(--bb-rl-space-300);
+
+				.bp-messages-feedback {
+					width: 100%;
+					margin: var(--bb-rl-space-100);
+				}
 			}
 
 			.bb-title {
