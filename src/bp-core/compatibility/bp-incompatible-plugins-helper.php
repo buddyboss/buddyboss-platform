@@ -303,6 +303,10 @@ function bp_helper_plugins_loaded_callback() {
 	if ( function_exists( 'tutor' ) ) {
 		require buddypress()->compatibility_dir . '/class-bb-tutor-helpers.php';
 	}
+
+	if ( class_exists( 'LifterLMS' ) ) {
+		add_filter( 'bb_readylaunch_left_sidebar_middle_content', 'bb_readylaunch_middle_content_llms_courses', 20, 1 );
+	}
 }
 
 add_action( 'init', 'bp_helper_plugins_loaded_callback', 0 );
@@ -1193,4 +1197,72 @@ function bb_is_elementor_maintenance_mode_enabled() {
 	} else {
 		return false;
 	}
+}
+
+/**
+ * Function to get the user enrolled course or all courses.
+ *
+ * This function retrieves the courses a user is enrolled in using the LifterLMS plugin.
+ * It fetches the courses for the logged-in user and returns an array containing course details.
+ *
+ * @since BuddyBoss 2.9.00
+ *
+ * @param array $args Arguments.
+ *
+ * @return array $args User enrolled courses with course details.
+ */
+function bb_readylaunch_middle_content_llms_courses( $args = array() ) {
+
+	$course_data['integration'] = 'lifterlms';
+
+	if ( $args['has_sidebar_data'] && $args['is_sidebar_enabled_for_courses'] ) {
+		$user_id = bp_loggedin_user_id();
+		if ( $user_id ) {
+			// Get enrolled courses for the logged-in user.
+			$student = llms_get_student( bp_loggedin_user_id() );
+			if ( ! $student ) {
+				return $args;
+			}
+
+			$results = $student->get_courses(
+				array(
+					'status' => 'enrolled',
+					'limit'  => 5,
+				)
+			);
+		} else {
+			// Get all published courses if no user is logged in.
+			$query_args = array(
+				'post_type'      => 'course',
+				'post_status'    => 'publish',
+				'fields'         => 'ids',
+				'orderby'        => 'title',
+				'order'          => 'ASC',
+				'nopaging'       => false,
+				'posts_per_page' => 5,
+			);
+
+			$query              = new WP_Query( $query_args );
+			$results['results'] = ! empty( $query->posts ) ? $query->posts : array();
+		}
+
+		// Prepare course data.
+		if ( ! empty( $results['results'] ) ) {
+			foreach ( $results['results'] as $post_id ) {
+				$thumbnail_url = '';
+				if ( has_post_thumbnail( $post_id ) ) {
+					$thumbnail_url = get_the_post_thumbnail( $post_id, 'full' );
+				}
+
+				$course_data['items'][ $post_id ] = array(
+					'title'     => get_the_title( $post_id ),
+					'permalink' => get_the_permalink( $post_id ),
+					'thumbnail' => $thumbnail_url,
+				);
+			}
+		}
+	}
+	$args['courses'] = $course_data;
+
+	return $args;
 }

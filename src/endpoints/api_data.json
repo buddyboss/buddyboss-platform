@@ -9761,6 +9761,17 @@
     "groupTitle": "Settings"
   },
   {
+    "type": "POST",
+    "url": "/wp-json/buddyboss/v1/settings",
+    "title": "Save Settings",
+    "name": "SaveBBSettings",
+    "group": "Settings",
+    "description": "<p>Save settings</p>",
+    "version": "1.0.0",
+    "filename": "src/bp-core/classes/class-bp-rest-settings-endpoint.php",
+    "groupTitle": "Settings"
+  },
+  {
     "type": "PATCH",
     "url": "/wp-json/buddyboss/v1/signup/activate/:activation_key",
     "title": "Activate a signup",

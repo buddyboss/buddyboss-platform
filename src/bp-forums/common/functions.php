@@ -2588,7 +2588,7 @@ function bbp_get_url_scheme() {
 /**
  * Delete media, document and video attachments when a topic or reply is deleted.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.9.00
  *
  * @param int    $post_id Post ID (topic or reply) being deleted.
  * @param object $post    Post object.
