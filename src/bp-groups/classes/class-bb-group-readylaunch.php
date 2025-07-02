@@ -688,4 +688,26 @@ class BB_Group_Readylaunch {
 
 		return $description;
 	}
+
+	/**
+	 * Modify get joined date for group members for ReadyLaunch.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $last_activity      Last joined string based on time since date given.
+	 * @param string $last_activity_date The date of joined.
+	 *
+	 * @return string Modified joined date.
+	 */
+	public static function bb_rl_modify_group_member_joined_since( $last_activity, $last_activity_date ) {
+
+		$last_activity_date = date_i18n( 'M Y', strtotime( $last_activity_date ) );
+		$last_activity      = sprintf(
+		/* translators: 1: User joined date. */
+			esc_html__( 'Joined %s', 'buddyboss' ),
+			esc_html( $last_activity_date )
+		);
+
+		return $last_activity;
+	}
 }
