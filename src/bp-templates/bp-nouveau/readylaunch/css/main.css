@@ -5866,6 +5866,41 @@ body.bb-readylaunch-template .select2-container--rl.select2-container--open:has(
   position: relative;
 }
 
+.bb-readylaunch-template .bb-toast-messages-enable .bb-toast-messages .toast-messages-list .read-item [class*="bb-icon"] {
+  display: flex;
+  content: "\e184";
+  color: var(--bb-rl-text-white-color);
+  font-size: 24px;
+  font-weight: 400;
+  margin-right: var(--bb-rl-space-100);
+}
+
+.bb-readylaunch-template .bb-toast-messages-enable .bb-toast-messages .toast-messages-list .read-item.bp-message-success [class*="bb-icon"] {
+  color: var(--bb-rl-icon-positive-secondary-color);
+}
+
+.bb-readylaunch-template .bb-toast-messages-enable .bb-toast-messages .toast-messages-list .read-item .bb-icon-check:before {
+  font-family: bb-icons-rl;
+  content: "\e184";
+}
+
+.bb-readylaunch-template .bb-toast-messages-enable .bb-toast-messages .toast-messages-list .read-item .action-close {
+  display: flex;
+}
+
+.bb-readylaunch-template .bb-toast-messages-enable .bb-toast-messages .toast-messages-list .read-item .action-close [class*="bb-icon"] {
+  color: var(--bb-rl-text-white-color);
+  font-size: 16px;
+  font-weight: 400;
+  margin-left: var(--bb-rl-space-100);
+  margin-right: 0;
+}
+
+.bb-readylaunch-template .bb-toast-messages-enable .bb-toast-messages .toast-messages-list .read-item .action-close [class*="bb-icon"]:before {
+  content: "\e4f6";
+  font-family: bb-icons-rl;
+}
+
 .bb-rl-toast-message {
   display: flex;
   align-items: center;
