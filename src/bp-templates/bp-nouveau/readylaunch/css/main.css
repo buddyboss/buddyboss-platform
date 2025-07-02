@@ -7516,6 +7516,42 @@ body.admin-bar .bb-rl-left-panel {
   content: "\e244";
 }
 
+.bb-rl-context-wrap .bb-rl-context-dropdown a.reported-content[data-bp-content-type*="groups"] .report-label, .bb-rl-context-wrap .bb-rl-context-dropdown a.report-content[data-bp-content-type*="groups"] .report-label,
+.bb-rl-context-wrap .bb-rl-context-dropdown button.reported-content[data-bp-content-type*="groups"] .report-label,
+.bb-rl-context-wrap .bb-rl-context-dropdown button.report-content[data-bp-content-type*="groups"] .report-label,
+.bb-rl-context-wrap .bb_more_dropdown a.reported-content[data-bp-content-type*="groups"] .report-label,
+.bb-rl-context-wrap .bb_more_dropdown a.report-content[data-bp-content-type*="groups"] .report-label,
+.bb-rl-context-wrap .bb_more_dropdown button.reported-content[data-bp-content-type*="groups"] .report-label,
+.bb-rl-context-wrap .bb_more_dropdown button.report-content[data-bp-content-type*="groups"] .report-label,
+.bb-rl-container .bb_more_options .bb-rl-context-dropdown a.reported-content[data-bp-content-type*="groups"] .report-label,
+.bb-rl-container .bb_more_options .bb-rl-context-dropdown a.report-content[data-bp-content-type*="groups"] .report-label,
+.bb-rl-container .bb_more_options .bb-rl-context-dropdown button.reported-content[data-bp-content-type*="groups"] .report-label,
+.bb-rl-container .bb_more_options .bb-rl-context-dropdown button.report-content[data-bp-content-type*="groups"] .report-label,
+.bb-rl-container .bb_more_options .bb_more_dropdown a.reported-content[data-bp-content-type*="groups"] .report-label,
+.bb-rl-container .bb_more_options .bb_more_dropdown a.report-content[data-bp-content-type*="groups"] .report-label,
+.bb-rl-container .bb_more_options .bb_more_dropdown button.reported-content[data-bp-content-type*="groups"] .report-label,
+.bb-rl-container .bb_more_options .bb_more_dropdown button.report-content[data-bp-content-type*="groups"] .report-label {
+  text-transform: lowercase;
+}
+
+.bb-rl-context-wrap .bb-rl-context-dropdown a.reported-content[data-bp-content-type*="groups"] .report-label::first-letter, .bb-rl-context-wrap .bb-rl-context-dropdown a.report-content[data-bp-content-type*="groups"] .report-label::first-letter,
+.bb-rl-context-wrap .bb-rl-context-dropdown button.reported-content[data-bp-content-type*="groups"] .report-label::first-letter,
+.bb-rl-context-wrap .bb-rl-context-dropdown button.report-content[data-bp-content-type*="groups"] .report-label::first-letter,
+.bb-rl-context-wrap .bb_more_dropdown a.reported-content[data-bp-content-type*="groups"] .report-label::first-letter,
+.bb-rl-context-wrap .bb_more_dropdown a.report-content[data-bp-content-type*="groups"] .report-label::first-letter,
+.bb-rl-context-wrap .bb_more_dropdown button.reported-content[data-bp-content-type*="groups"] .report-label::first-letter,
+.bb-rl-context-wrap .bb_more_dropdown button.report-content[data-bp-content-type*="groups"] .report-label::first-letter,
+.bb-rl-container .bb_more_options .bb-rl-context-dropdown a.reported-content[data-bp-content-type*="groups"] .report-label::first-letter,
+.bb-rl-container .bb_more_options .bb-rl-context-dropdown a.report-content[data-bp-content-type*="groups"] .report-label::first-letter,
+.bb-rl-container .bb_more_options .bb-rl-context-dropdown button.reported-content[data-bp-content-type*="groups"] .report-label::first-letter,
+.bb-rl-container .bb_more_options .bb-rl-context-dropdown button.report-content[data-bp-content-type*="groups"] .report-label::first-letter,
+.bb-rl-container .bb_more_options .bb_more_dropdown a.reported-content[data-bp-content-type*="groups"] .report-label::first-letter,
+.bb-rl-container .bb_more_options .bb_more_dropdown a.report-content[data-bp-content-type*="groups"] .report-label::first-letter,
+.bb-rl-container .bb_more_options .bb_more_dropdown button.reported-content[data-bp-content-type*="groups"] .report-label::first-letter,
+.bb-rl-container .bb_more_options .bb_more_dropdown button.report-content[data-bp-content-type*="groups"] .report-label::first-letter {
+  text-transform: uppercase;
+}
+
 .bb-rl-context-wrap .bb-rl-context-dropdown a.view-as::before,
 .bb-rl-context-wrap .bb-rl-context-dropdown button.view-as::before,
 .bb-rl-context-wrap .bb_more_dropdown a.view-as::before,
