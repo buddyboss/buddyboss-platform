@@ -4753,11 +4753,11 @@ body.bb-readylaunch-template .select2-container--rl.select2-container--open:has(
   content: "\e182";
   position: absolute;
   left: 3px;
-  top: 3px;
+  top: 5px;
   font-family: bb-icons-rl;
-  font-weight: 400;
+  font-weight: 700;
   color: var(--bb-rl-text-white-color);
-  font-size: 10px;
+  font-size: 12px;
   display: block;
 }
 
