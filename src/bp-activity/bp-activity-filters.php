@@ -4000,12 +4000,32 @@ function bb_activity_save_topic_data( $activity ) {
 		return;
 	}
 
-	$skip_component = apply_filters( 'bb_activity_save_topic_data_component_skip', ! in_array( $activity->component, array( 'groups', 'activity' ), true ), $activity );
+	$skip_component = ! in_array( $activity->component, array( 'groups', 'activity' ), true );
+
+	/**
+	 * Filter to skip saving topic data based on activity component.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param bool   $skip_component Whether to skip saving topic data for the component.
+	 * @param object $activity       The activity object.
+	 */
+	$skip_component = apply_filters( 'bb_activity_save_topic_data_component_skip', $skip_component, $activity );
 	if ( $skip_component ) {
 		return;
 	}
 
-	$skip_type = apply_filters( 'bb_activity_save_topic_data_type_skip', $activity->type !== 'activity_update', $activity );
+	$skip_type = isset( $activity->type ) ? 'activity_update' !== $activity->type : true;
+
+	/**
+	 * Filter to skip saving topic data based on a activity type.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param bool   $skip_type Whether to skip saving topic data for the type.
+	 * @param object $activity  The activity object.
+	 */
+	$skip_type = apply_filters( 'bb_activity_save_topic_data_type_skip', $skip_type, $activity );
 	if ( $skip_type ) {
 		return;
 	}
