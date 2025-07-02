@@ -52,12 +52,12 @@
 	&:checked + label:after {
 		content: "\e182";
 		position: absolute;
-		left: 3px;
+		left: 2px;
 		top: 5px;
 		font-family: bb-icons-rl;
 		font-weight: 700;
 		color: var(--bb-rl-text-white-color);
-		font-size: 12px;
+		font-size: 13px;
 		display: block;
 	}
 }
