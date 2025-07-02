@@ -1618,6 +1618,12 @@ body.messages .bb-rl-content-wrapper {
   margin-right: var(--bb-rl-space-100);
 }
 
+#message-form-submit-wrapper .post-elements-buttons-item.disable,
+#message-reply-form-submit-wrapper .post-elements-buttons-item.disable {
+  pointer-events: none;
+  opacity: 0.4;
+}
+
 #message-form-submit-wrapper .post-elements-buttons-item .toolbar-button,
 #message-reply-form-submit-wrapper .post-elements-buttons-item .toolbar-button {
   display: flex;
