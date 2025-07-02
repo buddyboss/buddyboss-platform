@@ -285,6 +285,8 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			add_filter( 'bp_get_the_notification_mark_unread_link', array( $this, 'bb_rl_notifications_mark_unread_link' ), 1, 1 );
 			add_filter( 'bp_get_the_notification_mark_read_link', array( $this, 'bb_rl_notifications_mark_read_link' ), 1, 1 );
 			add_filter( 'bp_get_the_notification_delete_link', array( $this, 'bb_rl_notifications_delete_link' ), 1, 1 );
+
+			add_filter( 'bp_nouveau_get_nav_link_text', array( $this, 'bb_rl_get_nav_link_text' ), 10, 3 );
 		}
 
 		/**
@@ -3873,7 +3875,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 *
 		 * @param array $r Arguments.
 		 *
-		 * @return string
+		 * @return array $r Arguments.
 		 */
 		public function bb_rl_modify_get_topic_stick_link_parse_args( $r ) {
 			if ( empty( $r['stick_text'] ) ) {
@@ -3883,6 +3885,25 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			$r['super_text'] = __( 'Super Sticky', 'buddyboss' );
 
 			return $r;
+		}
+
+		/**
+		 * Modify nav link text for readylaunch.
+		 *
+		 * @since BuddyBoss 2.9.00
+		 *
+		 * @param string $link_text  Link text.
+		 * @param object $nav_item   Nav item.
+		 * @param object $bp_nouveau BP Nouveau.
+		 *
+		 * @return string
+		 */
+		public function bb_rl_get_nav_link_text( $link_text, $nav_item, $bp_nouveau ) {
+			if ( 'subscriptions' === $nav_item->slug ) {
+				$link_text = esc_html__( 'Group Subscriptions', 'buddyboss' );
+			}
+
+			return $link_text;
 		}
 	}
 }
