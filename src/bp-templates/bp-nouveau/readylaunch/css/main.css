@@ -770,6 +770,10 @@ h6 {
   margin-left: var(--bb-rl-space-100);
 }
 
+.bb-rl-secondary-header .bb-rl-actions-buttons .bb-model-footer .button ~ .button {
+  margin-left: 0;
+}
+
 .bb-rl-secondary-header .bb-rl-entry-heading {
   align-items: center;
 }
