@@ -11628,6 +11628,18 @@ input.bb-rl-zoom-slider::-moz-range-progress {
   content: "\e182";
 }
 
+.bb-rl-groups .item-entry .group-footer-wrap .generic-button .group-button.bp-toggle-action-button.leave-group::before {
+  content: "\e182";
+  display: inline-block;
+  margin-right: var(--bb-rl-space-50);
+  font-weight: 400;
+  font-family: bb-icons-rl;
+  font-size: 16px;
+  line-height: 1;
+  color: var(--bb-rl-icon-secondary-color);
+  font-style: normal;
+}
+
 .bb-rl-groups .item-entry .bb-group-members {
   display: flex;
   margin-bottom: 0;
