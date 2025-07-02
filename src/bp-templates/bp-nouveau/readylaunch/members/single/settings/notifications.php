@@ -24,7 +24,6 @@ bp_nouveau_member_hook( 'before', 'settings_template' );
 $is_web_enabled = bb_web_notification_enabled();
 $is_app_enabled = bb_app_notification_enabled();
 
-$data  = bb_core_notification_preferences_data();
 $class = '';
 if ( $is_web_enabled && $is_app_enabled ) {
 	$class = 'bb-notification-column-3';
@@ -34,10 +33,6 @@ if ( $is_web_enabled && $is_app_enabled ) {
 ?>
 
 <?php bp_get_template_part( 'members/single/parts/notification-subnav' ); ?>
-
-<p class="bp-help-text email-notifications-info">
-	<?php echo wp_kses_post( $data['screen_description'] ); ?>
-</p>
 
 <form action="<?php echo esc_url( bp_displayed_user_domain() . bp_get_settings_slug() . '/notifications' ); ?>" method="post" class="standard-form <?php echo esc_attr( $class ); ?>" id="settings-form">
 	<?php
