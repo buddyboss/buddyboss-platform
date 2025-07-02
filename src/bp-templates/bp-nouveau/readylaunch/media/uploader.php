@@ -80,7 +80,7 @@ $bp_is_single_album = bp_is_single_album();
 								if ( bp_is_profile_albums_support_enabled() ) {
 									?>
 									<a id="bp-media-photo-next" class="bb-field-uploader-next bb-field-uploader-actions" href="#">
-										<i class="bb-icon-l bb-icon-folder"></i>
+										<i class="bb-icons-rl-plus"></i>
 										<?php esc_html_e( 'Select Album', 'buddyboss' ); ?>
 									</a>
 									<?php
@@ -126,8 +126,8 @@ $bp_is_single_album = bp_is_single_album();
 
 					<footer class="bb-model-footer media-uploader-footer">
 						<a href="#" class="bp-media-open-create-popup-folder" style="display: none;">
-							<i class="bb-icon-l bb-icon-plus"></i>
-							<?php esc_html_e( 'Create new album', 'buddyboss' ); ?>
+							<i class="bb-icons-rl-plus"></i>
+							<?php esc_html_e( 'Create Album', 'buddyboss' ); ?>
 						</a>
 						<?php if ( ! bp_is_group() ) : ?>
 							<div class="bb-dropdown-wrap">

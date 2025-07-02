@@ -73,7 +73,7 @@ defined( 'ABSPATH' ) || exit;
 								if ( bp_is_active( 'groups' ) && bp_is_group_single() && bp_is_group_albums_support_enabled() ) {
 									?>
 									<a id="bp-video-next" class="bb-field-uploader-next bb-field-uploader-actions" href="#">
-										<i class="bb-icon-l bb-icon-folder"></i>
+										<i class="bb-icons-rl-plus"></i>
 										<?php esc_html_e( 'Select Album', 'buddyboss' ); ?>
 									</a>
 									<?php
@@ -102,8 +102,8 @@ defined( 'ABSPATH' ) || exit;
 
 					<footer class="bb-model-footer video-uploader-footer">
 						<a href="#" class="bp-video-open-create-popup-album" style="display: none;">
-							<i class="bb-icon-l bb-icon-plus"></i>
-							<?php esc_html_e( 'Create new album', 'buddyboss' ); ?>
+							<i class="bb-icons-rl-plus"></i>
+							<?php esc_html_e( 'Create Album', 'buddyboss' ); ?>
 						</a>
 
 						<?php if ( ! bp_is_group() && ! bp_is_single_album() ) : ?>
