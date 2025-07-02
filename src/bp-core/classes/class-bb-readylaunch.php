@@ -109,6 +109,14 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				require_once buddypress()->compatibility_dir . '/class-bb-readylaunch-memberpress-courses-helper.php';
 				BB_Readylaunch_Memberpress_Courses_Helper::instance();
 			}
+
+			// LifterLMS integration.
+			if ( $enabled_for_page && class_exists( 'LifterLMS' ) ) {
+				// LifterLMS integration.
+				add_action( 'wp_enqueue_scripts', array( $this, 'bb_readylaunch_lifterlms_enqueue_styles' ), 10 );
+				require_once buddypress()->compatibility_dir . '/class-bb-readylaunch-lifterlms-helper.php';
+				BB_Readylaunch_LifterLMS_Helper::instance();
+			}
 		}
 
 		/**
@@ -625,6 +633,14 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			$is_mp_assignment_single = false;
 			$is_mp_quiz_single       = false;
 
+			// Initialize LifterLMS variables.
+			$is_llms_course_archive = false;
+			$is_llms_membership_archive = false;
+			$is_llms_course_single = false;
+			$is_llms_lesson_single = false;
+			$is_llms_quiz_single = false;
+			$is_llms_membership_single = false;
+
 			// Check LearnDash post types.
 			if ( function_exists( 'learndash_get_post_type_slug' ) ) {
 				$is_ld_course_archive = is_post_type_archive( learndash_get_post_type_slug( 'course' ) );
@@ -655,6 +671,24 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					$is_mp_assignment_single = true;
 				} elseif ( class_exists( 'memberpress\quizzes\models\Quiz' ) && memberpress\quizzes\models\Quiz::$cpt === $post_type ) {
 					$is_mp_quiz_single = true;
+				}
+			}
+
+			// Check for LifterLMS post types and archives.
+			if ( class_exists( 'LifterLMS' ) ) {
+				$is_llms_course_archive = is_post_type_archive( 'course' );
+				$is_llms_membership_archive = is_post_type_archive( 'llms_membership' );
+				
+				if ( is_single() && ! empty( $post ) && is_a( $post, 'WP_Post' ) ) {
+					if ( $post->post_type === 'course' ) {
+						$is_llms_course_single = true;
+					} elseif ( $post->post_type === 'lesson' ) {
+						$is_llms_lesson_single = true;
+					} elseif ( $post->post_type === 'llms_quiz' ) {
+						$is_llms_quiz_single = true;
+					} elseif ( $post->post_type === 'llms_membership' ) {
+						$is_llms_membership_single = true;
+					}
 				}
 			}
 
@@ -689,6 +723,9 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				bp_get_template_part( 'learndash/ld30/assignment' );
 			} elseif ( $is_ld_exam ) {
 				bp_get_template_part( 'learndash/ld30/challenge-exam' );
+			} elseif ( $is_llms_course_archive || $is_llms_membership_archive || $is_llms_course_single || $is_llms_lesson_single || $is_llms_quiz_single || $is_llms_membership_single ) {
+				// Let LifterLMS handle its own template loading through the helper class
+				the_content();
 			} else {
 				the_content();
 			}
@@ -773,7 +810,8 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					$this->bb_rl_is_page_enabled_for_integration( 'registration' )
 				) ||
 				$this->bb_rl_is_learndash_page() || // Add check for LearnDash pages.
-				$this->bb_rl_is_memberpress_courses_page() // Add check for MemberPress Courses pages.
+				$this->bb_rl_is_memberpress_courses_page() || // Add check for MemberPress Courses pages.
+				$this->bb_rl_is_lifterlms_page() // Add check for LifterLMS pages.
 			);
 		}
 
@@ -3106,7 +3144,13 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			}
 
 			$enabled_pages = bp_get_option( 'bb_rl_enabled_pages' );
-
+			
+			// Enable courses integration if it's not already enabled
+			if ( 'courses' === $page && empty( $enabled_pages[ $page ] ) ) {
+				$enabled_pages[ $page ] = 1;
+				bp_update_option( 'bb_rl_enabled_pages', $enabled_pages );
+			}
+			
 			return ! empty( $enabled_pages[ $page ] );
 		}
 
@@ -3210,6 +3254,86 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 				// Check if this is a quiz post type.
 				if ( class_exists( 'memberpress\quizzes\models\Quiz' ) && memberpress\quizzes\models\Quiz::$cpt === $post_type ) {
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+		/**
+		 * Check if the current page is a LifterLMS page.
+		 *
+		 * @since BuddyBoss 2.9.00
+		 *
+		 * @return bool True if the current page is a LifterLMS page, false otherwise.
+		 */
+		public function bb_rl_is_lifterlms_page() {
+			if ( ! class_exists( 'LifterLMS' ) || ! $this->bb_rl_is_page_enabled_for_integration( 'courses' ) ) {
+				return false;
+			}
+
+			global $post, $wp_query;
+
+			// Check for LifterLMS post types.
+			$lifterlms_post_types = array(
+				'course',
+				'lesson',
+				'llms_quiz',
+				'llms_question',
+				'llms_certificate',
+				'llms_my_certificate',
+				'llms_achievement',
+				'llms_my_achievement',
+				'llms_engagement',
+				'llms_email',
+				'llms_voucher',
+				'llms_coupon',
+				'llms_order',
+				'llms_transaction',
+				'llms_access_plan',
+				'llms_membership',
+			);
+
+			// Check if current post type is a LifterLMS type.
+			if ( isset( $post ) && is_a( $post, 'WP_Post' ) ) {
+				if ( in_array( $post->post_type, $lifterlms_post_types, true ) ) {
+					return true;
+				}
+			}
+
+			// Check for LifterLMS archive pages.
+			if ( is_post_type_archive( 'course' ) || is_post_type_archive( 'llms_membership' ) ) {
+				return true;
+			}
+
+			// Check for LifterLMS taxonomy pages.
+			$lifterlms_taxonomies = array(
+				'course_cat',
+				'course_tag',
+				'course_track',
+				'course_difficulty',
+				'membership_cat',
+				'membership_tag',
+			);
+
+			if ( is_tax( $lifterlms_taxonomies ) ) {
+				return true;
+			}
+
+			// Check for LifterLMS specific URLs.
+			$current_url = $_SERVER['REQUEST_URI'] ?? '';
+			$lifterlms_patterns = array(
+				'/courses/',
+				'/memberships/',
+				'/my-courses/',
+				'/my-memberships/',
+				'/certificates/',
+				'/achievements/',
+			);
+
+			foreach ( $lifterlms_patterns as $pattern ) {
+				if ( strpos( $current_url, $pattern ) !== false ) {
 					return true;
 				}
 			}
@@ -3883,6 +4007,23 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			$r['super_text'] = __( 'Super Sticky', 'buddyboss' );
 
 			return $r;
+		}
+
+		/**
+		 * Enqueue LifterLMS ReadyLaunch styles.
+		 *
+		 * @since BuddyBoss 2.9.00
+		 */
+		public function bb_readylaunch_lifterlms_enqueue_styles() {
+			if ( ! bb_is_readylaunch_enabled() || ! class_exists( 'LifterLMS' ) ) {
+				return;
+			}
+			wp_enqueue_style(
+				'bb-readylaunch-lifterlms',
+				buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/css/lifterlms.css',
+				array(),
+				bp_get_version()
+			);
 		}
 	}
 }
