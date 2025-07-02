@@ -287,6 +287,8 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			add_filter( 'bp_get_the_notification_delete_link', array( $this, 'bb_rl_notifications_delete_link' ), 1, 1 );
 
 			add_filter( 'bp_nouveau_get_nav_link_text', array( $this, 'bb_rl_get_nav_link_text' ), 10, 3 );
+
+			add_filter( 'bp_members_search_string', array( $this, 'bb_rl_modify_group_members_search_placeholder' ) );
 		}
 
 		/**
@@ -3906,6 +3908,30 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			}
 
 			return $link_text;
+		}
+
+		/**
+		 * Modify search default text for group members.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $default_text Default text.
+		 *
+		 * @return string
+		 */
+		public function bb_rl_modify_group_members_search_placeholder( $default_text ) {
+			if ( ! bp_is_active( 'groups' ) ) {
+				return $default_text;
+			}
+
+			$current_component        = function_exists( 'bp_current_component' ) ? bp_current_component() : '';
+			$current_action_variables = function_exists( 'bp_action_variables' ) ? bp_action_variables() : array();
+			$current_action_variables = ! empty( $current_action_variables ) ? $current_action_variables[0] : '';
+			if ( 'groups' === $current_component && 'members' === $current_action_variables ) {
+				$default_text = __( 'Search member', 'buddyboss' );
+			}
+
+			return $default_text;
 		}
 	}
 }
