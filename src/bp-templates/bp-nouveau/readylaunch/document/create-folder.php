@@ -30,12 +30,12 @@ defined( 'ABSPATH' ) || exit;
 						<input id="bb-album-title" value="" type="text" placeholder="<?php esc_html_e( 'Enter folder title', 'buddyboss' ); ?>" />
 						<small class="error-box"><?php esc_html_e( 'Following special characters are not supported: \ / ? % * : | " < >', 'buddyboss' ); ?></small>
 					</div>
-					<?php
-					if ( ! bp_is_group() ) :
-						bp_get_template_part( 'document/document-privacy' );
-					endif;
-					?>
 					<footer class="bb-model-footer">
+						<?php
+						if ( ! bp_is_group() ) :
+							bp_get_template_part( 'document/document-privacy' );
+						endif;
+						?>
 						<a class="button bb-rl-button bb-rl-button--brandFill bb-rl-button--small" id="bp-media-create-folder-submit" href="#"><?php esc_html_e( 'Create Folder', 'buddyboss' ); ?></a>
 					</footer>
 

@@ -5481,6 +5481,18 @@ body.bb-readylaunch-template .select2-container--rl.select2-container--open:has(
   margin: var(--bb-rl-space-100) 0 0;
 }
 
+.bb-readylaunch-template #bp-media-create-folder .bb-model-footer .bb-rl-privacy-field-wrap-hide-show,
+.bb-readylaunch-template #bp-media-create-child-folder .bb-model-footer .bb-rl-privacy-field-wrap-hide-show,
+.bb-readylaunch-template #bp-media-edit-child-folder .bb-model-footer .bb-rl-privacy-field-wrap-hide-show {
+  padding: 0;
+}
+
+.bb-readylaunch-template #bp-media-create-folder .bb-model-footer .bb-rl-privacy-field-wrap-hide-show label,
+.bb-readylaunch-template #bp-media-create-child-folder .bb-model-footer .bb-rl-privacy-field-wrap-hide-show label,
+.bb-readylaunch-template #bp-media-edit-child-folder .bb-model-footer .bb-rl-privacy-field-wrap-hide-show label {
+  display: none;
+}
+
 .bb-readylaunch-template #bp-video-create-album .bb-field-wrap,
 .bb-readylaunch-template #bp-media-create-album .bb-field-wrap {
   padding: var(--bb-rl-space-200) var(--bb-rl-space-300);
@@ -5553,6 +5565,10 @@ body.bb-readylaunch-template .select2-container--rl.select2-container--open:has(
 .bb-rl-modal-edit-file .bb-model-footer .bb-rl-field-wrap label,
 .bb-rl-modal-edit-album .bb-model-footer .bb-rl-field-wrap label {
   display: none;
+}
+
+.bb-rl-create-folder-popup .bb-model-footer .bb-rl-field-wrap {
+  margin-right: var(--bb-rl-space-200);
 }
 
 .bb-rl-modal-wrapper .bb-rl-has-warning .bb-rl-field-wrap {
