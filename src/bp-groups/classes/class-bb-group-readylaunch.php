@@ -281,7 +281,21 @@ class BB_Group_Readylaunch {
 				?>
 				<div class="highlight bb-rl-group-meta bp-group-status">
 					<div class="bb-rl-group-meta-figure">
-						<i class="bb-icons-rl-globe-simple"></i>
+						<?php
+						if ( 'public' === $group->status ) {
+							?>
+							<i class="bb-icons-rl-globe-simple"></i>
+							<?php
+						} elseif ( 'hidden' === $group->status ) {
+							?>
+							<i class="bb-icons-rl-eye-slash"></i>
+							<?php
+						} elseif ( 'private' === $group->status ) {
+							?>
+							<i class="bb-icons-rl-lock"></i>
+							<?php
+						}
+						?>
 					</div>
 					<div class="bb-rl-group-meta-data">
 						<h3>
