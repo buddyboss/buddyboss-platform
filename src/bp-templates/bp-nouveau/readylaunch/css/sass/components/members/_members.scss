@@ -409,6 +409,10 @@
 	textarea {
 		width: 100%;
 	}
+
+	textarea {
+		resize: vertical;
+	}
 }
 
 .bb-rl-block-member-content {

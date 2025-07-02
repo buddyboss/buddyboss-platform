@@ -648,6 +648,10 @@
   width: 100%;
 }
 
+.bb-rl-invite-form textarea {
+  resize: vertical;
+}
+
 .bb-rl-block-member-content > p {
   margin-bottom: var(--bb-rl-space-100);
 }
