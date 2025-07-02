@@ -318,14 +318,14 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 				return false;
 			}
 
-			// Check if the server name matches any whitelisted domain
+			// Check if the server name matches any whitelisted domain.
 			foreach ( $whitelist_domain as $domain ) {
 				if ( false !== strpos( $server_name, $domain ) ) {
-					return false; // Exclude allowlisted domains
+					return false; // Exclude allowlisted domains.
 				}
 			}
 
-			return true; // Allow telemetry data to be sent for non-allowlisted domains
+			return true; // Allow telemetry data to be sent for non-allowlisted domains.
 		}
 
 		/**
