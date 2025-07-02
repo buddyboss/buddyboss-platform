@@ -701,7 +701,7 @@ class BB_Group_Readylaunch {
 	 */
 	public static function bb_rl_modify_group_member_joined_since( $last_activity, $last_activity_date ) {
 
-		$last_activity_date = date_i18n( 'M Y', strtotime( $last_activity_date ) );
+		$last_activity_date = date_i18n( 'd M Y', strtotime( $last_activity_date ) );
 		$last_activity      = sprintf(
 		/* translators: 1: User joined date. */
 			esc_html__( 'Joined %s', 'buddyboss' ),
