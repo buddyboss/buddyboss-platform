@@ -35,7 +35,7 @@ if ( function_exists( 'bp_is_group_single' ) && bp_is_group_single() && bp_is_gr
 					</header>
 					<div class="bb-field-wrap">
 						<label for="bb-album-child-title" class="bb-label"><?php esc_html_e( 'Title', 'buddyboss' ); ?></label>
-						<input id="bb-album-child-title" value="" type="text" placeholder="<?php esc_html_e( 'Enter Folder Title', 'buddyboss' ); ?>" />
+						<input id="bb-album-child-title" value="" type="text" placeholder="<?php esc_html_e( 'Enter folder title', 'buddyboss' ); ?>" />
 						<small class="error-box"><?php esc_html_e( 'Following special characters are not supported: \ / ? % * : | " < >', 'buddyboss' ); ?></small>
 					</div>
 					<footer class="bb-model-footer">

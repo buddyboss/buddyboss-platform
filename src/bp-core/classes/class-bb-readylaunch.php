@@ -2430,6 +2430,8 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 			if ( bp_is_active( 'media' ) || bp_is_active( 'video' ) || bp_is_active( 'document' ) ) {
 				$strings['media']['i18n_strings']['theater_title'] = $translated_string;
+				$strings['media']['create_album_title']            = esc_html__( 'Create new album', 'buddyboss' );
+				$strings['media']['create_folder']                 = esc_html__( 'Create new folder', 'buddyboss' );
 			}
 
 			if ( bp_is_active( 'messages' ) ) {
