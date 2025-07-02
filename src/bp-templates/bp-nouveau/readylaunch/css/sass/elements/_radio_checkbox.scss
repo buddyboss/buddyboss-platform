@@ -6,7 +6,7 @@
 
 	+ label {
 		cursor: pointer;
-		display: inline-block;
+		display: inline-flex;
 		position: relative;
 		padding: 0;
 		line-height: 1;
@@ -53,7 +53,7 @@
 		content: "\e182";
 		position: absolute;
 		left: 2px;
-		top: 5px;
+		top: 2px;
 		font-family: bb-icons-rl;
 		font-weight: 700;
 		color: var(--bb-rl-text-white-color);
