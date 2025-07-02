@@ -201,7 +201,7 @@ class BB_Group_Readylaunch {
 								<h4>
 									<span class="target_name">
 										<?php
-											esc_html_e( 'About Group', 'buddyboss' );
+											esc_html_e( 'About group', 'buddyboss' );
 										?>
 									</span>
 								</h4>
