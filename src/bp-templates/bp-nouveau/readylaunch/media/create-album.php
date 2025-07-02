@@ -21,7 +21,7 @@ defined( 'ABSPATH' ) || exit;
 				<div id="boss-media-create-album-popup" class="modal-container">
 
 					<header class="bb-model-header">
-						<h4><?php esc_html_e( 'Create Album', 'buddyboss' ); ?></h4>
+						<h4><?php esc_html_e( 'Create new album', 'buddyboss' ); ?></h4>
 						<a class="bb-model-close-button" id="bp-media-create-album-close" href="#"><span class="bb-icon-l bb-icon-times"></span></a>
 					</header>
 
