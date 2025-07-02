@@ -16044,6 +16044,14 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   display: none;
 }
 
+.bb-rl-media-model-container .bp-add-media-activity-description.show-edit .add {
+  display: none;
+}
+
+.bb-rl-media-model-container .bp-add-media-activity-description.show-edit .edit {
+  display: inline-block;
+}
+
 .bb-rl-media-model-container .bp-media-activity-description {
   font-size: 14px;
   color: var(--bb-rl-text-color);
