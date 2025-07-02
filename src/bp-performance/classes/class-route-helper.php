@@ -44,7 +44,6 @@ class Route_Helper {
 	 * @return bool|string
 	 */
 	public static function get_route_regex( $pattern ) {
-
 		// Case-1) Invalid pattern.
 		if ( preg_match( '/[^-<\/_{}()a-zA-Z\d]>/', $pattern ) ) {
 			return false;
@@ -85,9 +84,9 @@ class Route_Helper {
 	 * @return mixed|null
 	 */
 	public static function get_parameter_from_route( $endpoint_pattern, $full_url, $parameter = 'id' ) {
-
 		$pattern_as_regex = self::get_route_regex( $endpoint_pattern );
 		$success          = preg_match( $pattern_as_regex, $full_url, $matches );
+
 		if ( $success ) {
 			if ( is_array( $matches ) && isset( $matches[ $parameter ] ) ) {
 				return $matches[ $parameter ];
@@ -109,9 +108,9 @@ class Route_Helper {
 	 * @return boolean
 	 */
 	public static function is_matched_from_route( $endpoint_pattern, $current_endpoint, $request_method = 'GET' ) {
-
 		$pattern_as_regex = self::get_route_regex( $endpoint_pattern );
 		$success          = preg_match( $pattern_as_regex, $current_endpoint, $matches );
+
 		if ( $success ) {
 			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated
 			if ( is_array( $matches ) && $request_method === $_SERVER['REQUEST_METHOD'] ) {
@@ -121,5 +120,4 @@ class Route_Helper {
 			}
 		}
 	}
-
 }
