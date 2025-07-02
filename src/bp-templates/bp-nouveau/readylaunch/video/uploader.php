@@ -45,7 +45,7 @@ defined( 'ABSPATH' ) || exit;
 								) :
 									?>
 									<div class="video-uploader-post-content">
-										<textarea name="bp-video-post-content" id="bp-video-post-content" placeholder="<?php bp_is_group() ? esc_html_e( 'Write something about your videos, to be shown on the group feed', 'buddyboss' ) : esc_html_e( 'Write something about your videos, to be shown on your timeline', 'buddyboss' ); ?>"></textarea>
+										<textarea name="bp-video-post-content" id="bp-video-post-content" placeholder="<?php esc_html_e( 'Write a description', 'buddyboss' ); ?>"></textarea>
 									</div>
 								<?php endif; ?>
 								<div class="video-uploader-wrapper">
