@@ -56,8 +56,16 @@
 		}
 
 		.bb-rl-create-album {
+			display: flex;
+			align-items: center;
+			gap: var(--bb-rl-space-50);
 			margin-right: auto;
-			font-size: 0.875rem;
+			font-size: var(--bb-rl-font-size-sm);
+			font-weight: 500;
+
+			[class*="bb-icon"] {
+				font-size: 16px;
+			}
 		}
 	}
 
