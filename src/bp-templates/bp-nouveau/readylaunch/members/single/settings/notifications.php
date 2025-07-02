@@ -33,8 +33,6 @@ if ( $is_web_enabled && $is_app_enabled ) {
 }
 ?>
 
-<h2 class="screen-heading email-settings-screen"><?php echo wp_kses_post( $data['screen_title'] ); ?></h2>
-
 <?php bp_get_template_part( 'members/single/parts/notification-subnav' ); ?>
 
 <p class="bp-help-text email-notifications-info">
