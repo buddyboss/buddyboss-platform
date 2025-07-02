@@ -1042,6 +1042,11 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   line-height: 1;
 }
 
+.bb-rl-activity-form.bb-rl-focus-in [class*="post-elements-buttons-item"].disable {
+  pointer-events: none;
+  opacity: 0.4;
+}
+
 .bb-rl-activity-form.bb-rl-focus-in [class*="post-elements-buttons-item"]:last-child {
   margin-right: 0;
 }
