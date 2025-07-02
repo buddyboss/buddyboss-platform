@@ -273,6 +273,7 @@ class BB_Group_Readylaunch {
 		$group    = $args['group'];
 		$action   = $args['action'];
 
+		add_filter( 'bp_get_group_status_description', array( $this, 'bb_rl_modify_group_status_description' ), 10, 2 );
 		?>
 		<div class="bb-rl-modal-content">
 			<?php
@@ -482,6 +483,7 @@ class BB_Group_Readylaunch {
 			?>
 		</div>
 		<?php
+		remove_filter( 'bp_get_group_status_description', array( $this, 'bb_rl_modify_group_status_description' ), 10, 2 );
 	}
 
 	/**
@@ -645,5 +647,31 @@ class BB_Group_Readylaunch {
 		}
 
 		return $params;
+	}
+
+	/**
+	 * Modify group status description for ReadyLaunch.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $description Original description.
+	 * @param object $group       Group object.
+	 *
+	 * @return string Modified description.
+	 */
+	public function bb_rl_modify_group_status_description( $description, $group ) {
+		if ( empty( $group ) || ! isset( $group->status ) ) {
+			return $description;
+		}
+
+		if ( 'public' === $group->status ) {
+			$description = __( 'Anyone can join the group.', 'buddyboss' );
+		} elseif ( 'hidden' === $group->status ) {
+			$description = __( 'Only invited member can join the group & group will not listed anywhere.', 'buddyboss' );
+		} elseif ( 'private' === $group->status ) {
+			$description = __( 'Only people who requested membership and are accepted can join the group.', 'buddyboss' );
+		}
+
+		return $description;
 	}
 }
