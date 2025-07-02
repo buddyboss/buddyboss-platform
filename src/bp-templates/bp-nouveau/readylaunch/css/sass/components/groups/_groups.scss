@@ -176,6 +176,11 @@
 						content: "\e182";
 					}
 				}
+
+				&.membership-requested {
+				
+					@include bb-rl-button--secondary-outline;
+				}
 			}
 
 			.generic-button {
