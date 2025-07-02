@@ -27,7 +27,7 @@ defined( 'ABSPATH' ) || exit;
 
 					<div class="bb-field-wrap">
 						<label for="bb-album-title" class="bb-label"><?php esc_html_e( 'Title', 'buddyboss' ); ?></label>
-						<input id="bb-album-title" type="text" placeholder="<?php esc_html_e( 'Enter Album Title', 'buddyboss' ); ?>" />
+						<input id="bb-album-title" type="text" placeholder="<?php esc_html_e( 'Enter album title', 'buddyboss' ); ?>" />
 					</div>
 
 					<?php
