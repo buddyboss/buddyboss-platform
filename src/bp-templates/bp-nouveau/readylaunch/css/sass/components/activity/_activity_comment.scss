@@ -287,6 +287,24 @@
 					}
 				}
 			}
+
+			.bb-activity-more-options-wrap .bb-activity-more-options-action[data-balloon-pos="up"] {
+				
+
+				&:after {
+
+					.bb-rl-activity-modal & {
+						transform: translate(-85%, 10px);
+					}
+				}
+
+				&:hover:after {
+
+					.bb-rl-activity-modal & {
+						transform: translate(-85%, 0);
+					}
+				}
+			}
 		}
 
 		.bb-rl-acomment_inner {

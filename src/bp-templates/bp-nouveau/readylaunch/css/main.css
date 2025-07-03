@@ -17815,6 +17815,14 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   top: 65px;
 }
 
+.bb-rl-activity-modal .activity-item.has-comments .bb-rl-activity-comments .bb-activity-more-options-wrap .bb-activity-more-options-action[data-balloon-pos="up"]:after {
+  transform: translate(-85%, 10px);
+}
+
+.bb-rl-activity-modal .activity-item.has-comments .bb-rl-activity-comments .bb-activity-more-options-wrap .bb-activity-more-options-action[data-balloon-pos="up"]:hover:after {
+  transform: translate(-85%, 0);
+}
+
 .activity-item.has-comments .bb-rl-acomment_inner {
   display: flex;
   gap: var(--bb-rl-space-200);
