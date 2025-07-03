@@ -1191,6 +1191,13 @@ body.messages .bb-rl-content-wrapper {
   margin-bottom: var(--bb-rl-space-200);
 }
 
+#bp-message-thread-list > li .bp-message-content-wrap pre {
+  background-color: var(--bb-rl-background-secondary-color);
+  padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+  margin-bottom: var(--bb-rl-space-200);
+  border-radius: var(--bb-rl-radius-md);
+}
+
 #bp-message-thread-list > li .bb-activity-media-wrap {
   margin: var(--bb-rl-space-100) 0;
 }
