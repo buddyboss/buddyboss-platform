@@ -297,5 +297,40 @@
 			display: none;
 		}
 	}
+}
 
+table.profile-settings {
+	table-layout: fixed;
+    width: 100%;
+    border: 1px solid var(--bb-rl-border-secondary-color);
+	border-spacing: 0;
+    border-radius: var(--bb-rl-radius-base);
+	margin-bottom: var(--bb-rl-space-300);
+
+	th.title {
+		text-align: left;
+		padding: calc(var(--bb-rl-space-100) + var(--bb-rl-space-50)) var(--bb-rl-space-200);
+		font-size: 15px;
+		font-weight: 600;
+	}
+
+	tbody {
+
+		tr:nth-child(odd) {
+			background-color: var(--bb-rl-background-secondary-color);
+
+			td select {
+				background-color: var(--bb-rl-background-color);
+			}
+		}
+
+		td {
+			font-size: var(--bb-rl-font-size-sm);
+			padding: calc(var(--bb-rl-space-100) + var(--bb-rl-space-50)) var(--bb-rl-space-200);
+
+			select {
+				width: 100%;
+			}
+		}
+	}
 }
