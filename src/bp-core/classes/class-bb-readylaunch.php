@@ -228,6 +228,10 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			add_action( 'login_footer', array( $this, 'bb_rl_login_footer' ), 999 );
 			add_filter( 'login_message', array( $this, 'bb_rl_signin_login_message' ) );
 			add_action( 'login_form', array( $this, 'bb_rl_login_custom_form' ) );
+
+			add_action( 'login_form_retrievepassword', array( $this, 'bb_rl_overwrite_login_email_field_label_hook' ) );
+			add_action( 'login_form_lostpassword', array( $this, 'bb_rl_overwrite_login_email_field_label_hook' ) );
+			add_action( 'login_form_login', array( $this, 'bb_rl_overwrite_login_email_field_label_hook' ) );
 		}
 
 		/**
@@ -3932,6 +3936,37 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			}
 
 			return $default_text;
+		}
+
+		/**
+		 * Overwrite login email field label.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return void
+		 */
+		public function bb_rl_overwrite_login_email_field_label_hook() {
+			add_filter( 'gettext', array( $this, 'bb_rl_overwrite_login_email_field_label' ), 10, 3 );
+		}
+
+		/**
+		 * Overwrite login email field label.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $translated_text Translated text.
+		 * @param string $text Text.
+		 * @param string $domain Domain.
+		 *
+		 * @return string
+		 */
+		public function bb_rl_overwrite_login_email_field_label( $translated_text, $text, $domain ) {
+			if ( 'Username or Email Address' === $text && 'default' === $domain ) {
+				remove_filter( 'gettext', array( $this, 'bb_rl_overwrite_login_email_field_label' ) );
+				return __( 'Email', 'buddyboss' );
+			}
+
+			return $translated_text;
 		}
 	}
 }
