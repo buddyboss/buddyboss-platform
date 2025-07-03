@@ -21,12 +21,17 @@ if ( ( ( bp_is_my_profile() && bb_user_can_create_media() ) || ( $bp_is_group &&
 
 	<?php
 	if ( bp_has_albums( bp_ajax_querystring( 'albums' ) ) ) {
-		$count = bp_media_get_total_group_album_count();
 		?>
 		<div class="bb-media-actions-wrap album-actions-wrap bb-rl-media-actions-wrap">
 			<h2 class="bb-title">
 				<div class="bb-item-count">
 					<?php
+					$count = 0;
+					if ( bp_is_group() ) {
+						$count = bp_media_get_total_group_album_count();
+					} elseif ( bp_is_my_profile() ) {
+						$count = bb_media_get_total_album_count();
+					}
 					printf(
 						wp_kses(
 						/* translators: %d is the album count */
