@@ -3165,7 +3165,7 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   border-radius: var(--bb-rl-radius-lg);
   box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(2px);
-  max-height: 85vh;
+  max-height: 94vh;
   max-width: 95%;
   width: 700px;
   position: relative;
@@ -5729,11 +5729,14 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
 
 .bb-rl-ac-reply-content {
   display: flex;
-  align-items: center;
   gap: var(--bb-rl-space-100);
+  max-height: 175px;
+  overflow-y: auto;
+  margin: var(--bb-rl-space-100) 0 var(--bb-rl-space-200);
 }
 
 .ac-textarea {
+  padding-top: calc(var(--bb-rl-space-100) + var(--bb-rl-space-50));
   flex: auto;
 }
 
@@ -5744,7 +5747,7 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
 }
 
 .bb-rl-ac-reply-avatar {
-  padding: var(--bb-rl-space-200) 0 var(--bb-rl-space-200) var(--bb-rl-space-300);
+  padding: var(--bb-rl-space-100) 0 var(--bb-rl-space-200) var(--bb-rl-space-300);
 }
 
 .bb-rl-ac-reply-avatar img {
