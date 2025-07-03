@@ -351,8 +351,10 @@
 					align-items: center;
 					cursor: pointer;
 
-					&:after {
+					~ .activity-state-comments:before {
 						content: "";
+						display: inline-block;
+						vertical-align: middle;
 						background-color: var(--bb-rl-background-tertiary-color);
 						height: 4px;
 						width: 4px;

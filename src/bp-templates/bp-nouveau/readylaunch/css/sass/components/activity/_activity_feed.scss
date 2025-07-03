@@ -1634,8 +1634,10 @@
 		display: flex;
 		align-items: center;
 
-		&::after {
+		~ .activity-state-comments:before {
 			content: "";
+			display: inline-block;
+			vertical-align: middle;
 			background-color: var(--bb-rl-background-tertiary-color);
 			height: 4px;
 			width: 4px;

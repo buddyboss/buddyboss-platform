@@ -3746,8 +3746,10 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   align-items: center;
 }
 
-.bb-rl-activity-footer-actions .activity-state-reactions::after {
+.bb-rl-activity-footer-actions .activity-state-reactions ~ .activity-state-comments:before {
   content: "";
+  display: inline-block;
+  vertical-align: middle;
   background-color: var(--bb-rl-background-tertiary-color);
   height: 4px;
   width: 4px;
@@ -6041,8 +6043,10 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   cursor: pointer;
 }
 
-.activity-item.has-comments .bb-rl-acomment-foot-actions .bb-rl-comment-reactions .activity-state-reactions:after {
+.activity-item.has-comments .bb-rl-acomment-foot-actions .bb-rl-comment-reactions .activity-state-reactions ~ .activity-state-comments:before {
   content: "";
+  display: inline-block;
+  vertical-align: middle;
   background-color: var(--bb-rl-background-tertiary-color);
   height: 4px;
   width: 4px;
