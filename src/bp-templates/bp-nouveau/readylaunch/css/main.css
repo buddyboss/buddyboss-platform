@@ -9783,6 +9783,13 @@ input.bb-rl-zoom-slider::-moz-range-progress {
   margin-top: var(--bb-rl-space-300);
 }
 
+.bb-rl-media-none .bb-rl-media-none-description {
+  font-size: 14px;
+  color: var(--bb-rl-text-secondary-color);
+  margin-top: var(--bb-rl-space-100);
+  text-align: center;
+}
+
 .bb-rl-media-stream .bb-albums-list {
   list-style: none;
   padding: 0;
