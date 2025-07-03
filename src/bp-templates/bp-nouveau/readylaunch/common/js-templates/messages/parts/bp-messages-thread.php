@@ -228,11 +228,9 @@
 							if ( data.sender_is_you && '' !== checkedContent ) {
 								displayName = true;
 								#>
-								<?php esc_html_e( 'You', 'buddyboss' ); ?>:
 							<# } else if ( data.sender_is_you && '' === checkedContent ) {
 								displayName = true;
 								#>
-								<?php esc_html_e( 'You', 'buddyboss' ); ?>
 							<# } else { #>
 								<# if ( senderName && '' !== senderName && '' !== checkedContent ) {
 									displayName = true;
