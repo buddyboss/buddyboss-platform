@@ -5755,6 +5755,13 @@ body.bb-readylaunch-template .select2-container--rl.select2-container--open:has(
   background-color: var(--bb-rl-background-color);
 }
 
+.bb-rl-container-inner .bp-pagination > .bp-pagination-links .page-numbers:not(.prev):not(.next):hover,
+.bb-rl-container-inner .bp-pagination > .bp-pagination-links .bb-rl-page-numbers:not(.prev):not(.next):hover,
+.bb-rl-content-wrapper .bp-pagination > .bp-pagination-links .page-numbers:not(.prev):not(.next):hover,
+.bb-rl-content-wrapper .bp-pagination > .bp-pagination-links .bb-rl-page-numbers:not(.prev):not(.next):hover {
+  border-color: var(--bb-rl-border-tertiary-color);
+}
+
 .bb-rl-container-inner .bp-pagination > .bp-pagination-links a.prev,
 .bb-rl-container-inner .bp-pagination > .bp-pagination-links a.next,
 .bb-rl-content-wrapper .bp-pagination > .bp-pagination-links a.prev,
@@ -5852,6 +5859,10 @@ body.bb-readylaunch-template .select2-container--rl.select2-container--open:has(
 .bb-rl-content-wrapper .bbp-pagination-links .page-numbers:not(.prev):not(.next).current {
   color: var(--bb-rl-text-color);
   border: 1px solid var(--bb-rl-border-quaternary-color);
+}
+
+.bb-rl-content-wrapper .bbp-pagination-links .page-numbers:not(.prev):not(.next):hover {
+  border-color: var(--bb-rl-border-tertiary-color);
 }
 
 .bb-rl-content-wrapper .bbp-pagination-links a.prev,

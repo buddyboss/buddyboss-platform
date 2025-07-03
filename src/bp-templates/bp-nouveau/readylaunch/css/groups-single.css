@@ -5335,6 +5335,10 @@ body.ld-in-focus-mode .learndash-wrapper {
   border: 1px solid var(--bb-rl-border-quaternary-color);
 }
 
+.bb-rl-course-pagination .bb-rl-pagination-links .bb-rl-page-numbers:not(.prev):not(.next):hover {
+  border-color: var(--bb-rl-border-tertiary-color);
+}
+
 .bb-rl-course-pagination .bb-rl-pagination-links a.prev,
 .bb-rl-course-pagination .bb-rl-pagination-links a.next {
   color: var(--bb-rl-text-color);
