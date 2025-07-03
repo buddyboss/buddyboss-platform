@@ -58,6 +58,23 @@
 
 		.list-wrap-inner {
 			align-items: center;
+
+			@media screen and (max-width: 768px) {
+				flex-flow: wrap;
+				gap: var(--bb-rl-space-100);
+
+				.item {
+					flex: 0 0 calc(100% - 130px);
+				}
+			}
+
+			@media screen and (max-width: $sm) {
+				gap: var(--bb-rl-space-100);
+
+				.bb-rl-member-buttons-wrap {
+					margin-left: 0;
+				}
+			}
 		}
 
 		.bb-rl-item-block-heading {

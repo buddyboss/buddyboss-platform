@@ -10914,6 +10914,25 @@ input.bb-rl-zoom-slider::-moz-range-progress {
   align-items: center;
 }
 
+@media screen and (max-width: 768px) {
+  .bb-rl-members .bp-list:not(.grid) .list-wrap-inner {
+    flex-flow: wrap;
+    gap: var(--bb-rl-space-100);
+  }
+  .bb-rl-members .bp-list:not(.grid) .list-wrap-inner .item {
+    flex: 0 0 calc(100% - 130px);
+  }
+}
+
+@media screen and (max-width: 544px) {
+  .bb-rl-members .bp-list:not(.grid) .list-wrap-inner {
+    gap: var(--bb-rl-space-100);
+  }
+  .bb-rl-members .bp-list:not(.grid) .list-wrap-inner .bb-rl-member-buttons-wrap {
+    margin-left: 0;
+  }
+}
+
 .bb-rl-members .bp-list:not(.grid) .bb-rl-item-block-heading {
   display: flex;
   align-items: center;
