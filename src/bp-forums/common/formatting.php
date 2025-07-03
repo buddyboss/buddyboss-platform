@@ -217,6 +217,150 @@ function bbp_encode_bad( $content = '' ) {
 	return implode( '', $content );
 }
 
+/**
+ * Convert <code> tags to backtick format for processing. This handles admin editor content that uses <code> tags instead of backticks.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $content Content to convert.
+ *
+ * @return string Converted content.
+ */
+function bbp_convert_code_tags_to_backticks( $content = '' ) {
+
+	// Convert <code> blocks to backtick format.
+	$content = preg_replace_callback(
+		'|<code>(.*?)</code>|s',
+		function( $matches ) {
+			$code_content = $matches[1];
+			// If the code content contains newlines, it's a block, otherwise inline.
+			if ( strpos( $code_content, "\n" ) !== false ) {
+				return "\n`" . $code_content . "`\n";
+			} else {
+				return "`" . trim( $code_content ) . "`";
+			}
+		},
+		$content
+	);
+
+	return $content;
+}
+
+/**
+ * Apply <code> tag conversion to admin content. This filter converts <code> tags to backtick format before other processing.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $content Content to process.
+ *
+ * @return string Processed content.
+ */
+function bbp_admin_convert_code_tags( $content = '' ) {
+
+	// Only apply to BuddyBoss forum post types in admin area.
+	if ( is_admin() && in_array( get_post_type(), array( bbp_get_forum_post_type(), bbp_get_topic_post_type(), bbp_get_reply_post_type() ) ) ) {
+		return bbp_convert_code_tags_to_backticks( $content );
+	}
+
+	return $content;
+}
+
+/**
+ * Apply bbp_encode_bad to admin content. This filter ensures admin content goes through HTML entity encoding.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $content Content to encode.
+ *
+ * @return string Encoded content.
+ */
+function bbp_admin_encode_bad( $content = '' ) {
+
+	// Only apply to BuddyBoss forum post types in admin area.
+	if ( is_admin() && in_array( get_post_type(), array( bbp_get_forum_post_type(), bbp_get_topic_post_type(), bbp_get_reply_post_type() ) ) ) {
+		return bbp_encode_bad( $content );
+	}
+
+	return $content;
+}
+
+/**
+ * Apply bbp_code_trick to admin content. This filter ensures admin content goes through code block processing.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $content Content to process.
+ *
+ * @return string Processed content.
+ */
+function bbp_admin_code_trick( $content = '' ) {
+
+	// Only apply to BuddyBoss forum post types in admin area.
+	if ( is_admin() && in_array( get_post_type(), array( bbp_get_forum_post_type(), bbp_get_topic_post_type(), bbp_get_reply_post_type() ) ) ) {
+		return bbp_code_trick( $content );
+	}
+
+	return $content;
+}
+
+/**
+ * Apply bbp_filter_kses to admin content
+ * This filter ensures admin content goes through KSES sanitization
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $content Content to sanitize.
+ *
+ * @return string Sanitized content.
+ */
+function bbp_admin_filter_kses( $content = '' ) {
+
+	// Only apply to BuddyBoss forum post types in admin area.
+	if ( is_admin() && in_array( get_post_type(), array( bbp_get_forum_post_type(), bbp_get_topic_post_type(), bbp_get_reply_post_type() ) ) ) {
+		return bbp_filter_kses( $content );
+	}
+
+	return $content;
+}
+
+/**
+ * Apply bbp_convert_mentions to admin content. This filter ensures admin content goes through mention processing.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $content Content to process.
+ *
+ * @return string Processed content.
+ */
+function bbp_admin_convert_mentions( $content = '' ) {
+
+	// Only apply to BuddyBoss forum post types in admin area.
+	if ( is_admin() && in_array( get_post_type(), array( bbp_get_forum_post_type(), bbp_get_topic_post_type(), bbp_get_reply_post_type() ) ) ) {
+		return bbp_convert_mentions( $content );
+	}
+
+	return $content;
+}
+
+/**
+ * Apply balanceTags to admin content. This filter ensures admin content goes through tag balancing.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $content Content to process.
+ *
+ * @return string Processed content.
+ */
+function bbp_admin_balance_tags( $content = '' ) {
+
+	// Only apply to BuddyBoss forum post types in admin area.
+	if ( is_admin() && in_array( get_post_type(), array( bbp_get_forum_post_type(), bbp_get_topic_post_type(), bbp_get_reply_post_type() ) ) ) {
+		return balanceTags( $content );
+	}
+
+	return $content;
+}
+
 /** Code Callbacks ************************************************************/
 
 /**
@@ -244,12 +388,26 @@ function bbp_encode_callback( $matches = array() ) {
 	$content = str_replace( '&amp;lt;', '&lt;', $content );
 	$content = str_replace( '&amp;gt;', '&gt;', $content );
 
-	// Wrap in code tags
-	$content = '<code>' . $content . '</code>';
 
-	// Wrap blocks in pre tags
-	if ( '`' !== $matches[1] ) {
-		$content = "\n<pre>" . $content . "</pre>\n";
+	// Only apply to BuddyBoss forum post types in admin area.
+	if ( is_admin() && in_array( get_post_type(), array( bbp_get_forum_post_type(), bbp_get_topic_post_type(), bbp_get_reply_post_type() ) ) ) {
+		
+		error_log( 'bbp_encode_callback '. get_the_ID() . ' : ' . $content );
+		// Wrap blocks in pre tags without code tags.
+		if ( '`' !== $matches[1] ) {
+			$content = "\n<pre>" . $content . "</pre>\n";
+		} else {
+			// Wrap in code tags
+			$content = '<code>' . $content . '</code>';
+		}
+	} else {
+		// Wrap in code tags
+		$content = '<code>' . $content . '</code>';
+
+		// Wrap blocks in pre tags
+		if ( '`' !== $matches[1] ) {
+			$content = "\n<pre>" . $content . "</pre>\n";
+		}
 	}
 
 	return $content;
