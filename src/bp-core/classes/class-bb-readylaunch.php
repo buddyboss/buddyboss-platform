@@ -270,7 +270,9 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 			add_filter( 'wp_ajax_bb_rl_invite_form', array( $this, 'bb_rl_invite_form_callback' ) );
 
-			add_filter( 'bp_get_send_message_button_args', array( $this, 'bb_rl_override_send_message_button_text' ) );
+			if ( bp_is_active( 'messages' ) ) {
+				add_filter( 'bp_get_send_message_button_args', array( $this, 'bb_rl_override_send_message_button_text' ) );
+			}
 
 			add_filter( 'bb_member_directories_get_profile_actions', array( $this, 'bb_rl_member_directories_get_profile_actions' ), 10, 3 );
 
@@ -2184,7 +2186,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * @return array $args Filtered arguments.
 		 */
 		public function bb_rl_override_send_message_button_text( $args ) {
-			$args['link_text'] = esc_html__( 'Message', 'buddyboss' );
+			$args['data-balloon'] = esc_html__( 'Message', 'buddyboss' );
 
 			return $args;
 		}
