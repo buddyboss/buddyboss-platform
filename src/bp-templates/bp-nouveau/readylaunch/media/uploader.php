@@ -111,7 +111,7 @@ $bp_is_single_album = bp_is_single_album();
 								</ul>
 								<?php
 							} else {
-								bp_nouveau_user_feedback( 'media-loop-none' );
+								bp_get_template_part( 'media/no-media' );
 							}
 							?>
 						</div>

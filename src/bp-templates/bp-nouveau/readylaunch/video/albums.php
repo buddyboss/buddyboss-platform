@@ -82,7 +82,7 @@ if ( bp_has_video_albums( bp_ajax_querystring( 'albums' ) ) ) {
 	</div>
 	<?php
 } else {
-	bp_nouveau_user_feedback( 'video-album-none' );
+	bp_get_template_part( 'video/no-video' );
 }
 
 bp_nouveau_video_hook( 'after', 'video_album_content' );

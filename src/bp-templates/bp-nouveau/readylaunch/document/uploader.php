@@ -80,7 +80,7 @@ defined( 'ABSPATH' ) || exit;
 								</ul>
 								<?php
 							else :
-								bp_nouveau_user_feedback( 'document-loop-none' );
+								bp_get_template_part( 'document/no-document' );
 							endif;
 							?>
 						</div>
