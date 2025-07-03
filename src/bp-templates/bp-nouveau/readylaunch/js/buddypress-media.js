@@ -5578,7 +5578,7 @@ window.bp = window.bp || {};
 				targetPopup        = eventCurrentTarget.closest( '.open-popup' ),
 				currentAction      = $( targetPopup ).find( '.bb-rl-' + actionType + '-create-popup-' + folderOrAlbum + '-submit' ),
 				hiddenValue        = targetPopup.find( '.bb-rl-' + folderOrAlbum + '-selected-id' ).val(),
-				titleSelector      = eventCurrentTarget.closest( '.bb-rl-modal-container' ).find( '.bb-rl-popup-on-fly-create-' + folderOrAlbum + '-title' ),
+				titleSelector      = eventCurrentTarget.closest( '.modal-container, .bb-rl-modal-container' ).find( '.bb-rl-popup-on-fly-create-' + folderOrAlbum + '-title' ),
 				title              = $.trim( titleSelector.val() );
 			if ( 'document' === actionType ) {
 				var pattern     = /[\\/?%*:|"<>]+/g; // regex to find not supported characters - \ / ? % * : | " < >
@@ -5663,9 +5663,9 @@ window.bp = window.bp || {};
 									}
 
 									targetPopup.find( 'ul' + listClass + ' span#' + newParent ).trigger( 'click' );
-									targetPopup.find( '.bb-rl-model-footer' ).show();
+									targetPopup.find( '.bb-rl-model-footer, .bb-model-footer' ).show();
 									if ( 'document' === actionType ) {
-										targetPopup.find( '.bb-rl-model-footer, #bp-media-' + actionType + '-prev' ).show();
+										targetPopup.find( '.bb-rl-model-footer, .bb-model-footer, #bp-media-' + actionType + '-prev' ).show();
 									}
 									targetPopup.find( '.bb-field-wrap-search' ).show();
 									targetPopup.find( '.bb-rl-' + actionType + '-open-create-popup-' + folderOrAlbum ).show();
