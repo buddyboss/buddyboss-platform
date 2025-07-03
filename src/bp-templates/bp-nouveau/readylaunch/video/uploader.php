@@ -101,7 +101,7 @@ defined( 'ABSPATH' ) || exit;
 					</div>
 
 					<footer class="bb-model-footer video-uploader-footer">
-						<a href="#" class="bp-video-open-create-popup-album" style="display: none;">
+						<a href="#" class="bb-rl-video-open-create-popup-album create-album" style="display: none;">
 							<i class="bb-icons-rl-plus"></i>
 							<?php esc_html_e( 'Create Album', 'buddyboss' ); ?>
 						</a>

@@ -125,7 +125,7 @@ $bp_is_single_album = bp_is_single_album();
 					</div>
 
 					<footer class="bb-model-footer media-uploader-footer">
-						<a href="#" class="bp-media-open-create-popup-folder" style="display: none;">
+						<a href="#" class="bb-rl-media-open-create-popup-folder" style="display: none;">
 							<i class="bb-icons-rl-plus"></i>
 							<?php esc_html_e( 'Create Album', 'buddyboss' ); ?>
 						</a>
