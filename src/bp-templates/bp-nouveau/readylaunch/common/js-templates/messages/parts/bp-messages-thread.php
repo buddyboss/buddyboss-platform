@@ -231,7 +231,7 @@
 							<# } else if ( data.sender_is_you && '' === checkedContent ) {
 								displayName = true;
 								#>
-							<# } else { #>
+							<# } else if ( other_recipients.length > 1 ) { #>
 								<# if ( senderName && '' !== senderName && '' !== checkedContent ) {
 									displayName = true;
 									#>
