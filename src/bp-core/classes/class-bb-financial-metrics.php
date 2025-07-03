@@ -80,17 +80,18 @@ if ( ! class_exists( 'BB_Financial_Metrics' ) ) {
 				'name'         => 'LifterLMS',
 				'file'         => 'lifterlms/lifterlms.php',
 				'post_type'    => 'llms_order',
-				'meta_key'     => '_llms_order_total',
-				'status'       => array( 'publish' ),
+				'meta_key'     => '_llms_total',
+				'status'       => array( 'llms-completed', 'llms-active' ),
 				'currency_key' => 'lifterlms_currency',
 			),
 			'tutor_lms'   => array(
 				'name'         => 'Tutor LMS',
 				'file'         => 'tutor/tutor.php',
-				'post_type'    => 'tutor_order',
-				'meta_key'     => 'tutor_order_total',
-				'status'       => array( 'publish' ),
-				'currency_key' => 'tutor_currency',
+				'post_type'    => 'shop_order',
+				'meta_key'     => '_order_total',
+				'status'       => array( 'wc-completed', 'wc-processing' ),
+				'currency_func' => 'get_woocommerce_currency',
+				'custom_where' => 'tutor_order',
 			),
 			'pmpro'       => array(
 				'name'         => 'Paid Memberships Pro',
@@ -268,16 +269,30 @@ if ( ! class_exists( 'BB_Financial_Metrics' ) ) {
 			try {
 				$status_placeholders = implode( ',', array_fill( 0, count( $config['status'] ), '%s' ) );
 
+				// Build the base query
+				$query_parts = array(
+					'SELECT COUNT(*) as order_count, SUM(CAST(meta_value AS DECIMAL(10,2))) as total_revenue',
+					'FROM ' . self::$wpdb->posts . ' p',
+					'LEFT JOIN ' . self::$wpdb->postmeta . ' pm ON p.ID = pm.post_id',
+					'WHERE p.post_type = %s',
+					"AND p.post_status IN ({$status_placeholders})",
+					'AND pm.meta_key = %s',
+					'AND pm.meta_value IS NOT NULL',
+					'AND pm.meta_value != \'\'',
+					'AND pm.meta_value != \'0\''
+				);
+
+				// Add custom WHERE clause for Tutor LMS
+				if ( isset( $config['custom_where'] ) && 'tutor_order' === $config['custom_where'] ) {
+					$query_parts[] = 'AND EXISTS (
+						SELECT 1 FROM ' . self::$wpdb->postmeta . ' pm2
+						WHERE pm2.post_id = p.ID
+						AND pm2.meta_key = \'_is_tutor_order_for_course\'
+					)';
+				}
+
 				$query = self::$wpdb->prepare(
-					'SELECT COUNT(*) as order_count, SUM(CAST(meta_value AS DECIMAL(10,2))) as total_revenue
-					FROM ' . self::$wpdb->posts . ' p
-					LEFT JOIN ' . self::$wpdb->postmeta . " pm ON p.ID = pm.post_id
-					WHERE p.post_type = %s
-					AND p.post_status IN ({$status_placeholders})
-					AND pm.meta_key = %s
-					AND pm.meta_value IS NOT NULL
-					AND pm.meta_value != ''
-					AND pm.meta_value != '0'",
+					implode( ' ', $query_parts ),
 					array_merge( array( $config['post_type'] ), $config['status'], array( $config['meta_key'] ) )
 				);
 
