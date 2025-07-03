@@ -341,6 +341,12 @@
 	}
 }
 
+.bb-rl-media-open-create-popup-folder,
+.bb-rl-video-open-create-popup-album,
+.bb-rl-document-open-create-popup-folder {
+	margin-right: auto;
+}
+
 .bb-rl-media-single-folder {
 
 	.bb-rl-media-stream {
@@ -558,6 +564,36 @@
 		font-size: 14px;
 		color: var(--bb-rl-text-secondary-color);
 		text-align: center;
+	}
+}
+
+.bb-rl-popup-on-fly-create-folder,
+.bb-rl-popup-on-fly-create-album {
+	padding: var(--bb-rl-space-200) 0;
+
+	.bb-rl-field-wrap {
+		margin-bottom: var(--bb-rl-space-200);
+
+		label {
+			font-size: 14px;
+			font-weight: 500;
+			color: var(--bb-rl-text-secondary-color);
+			margin-bottom: var(--bb-rl-space-100);
+			display: block;
+		}
+
+		select,
+		input {
+			width: 100%;
+		}
+	}
+
+	.db-modal-buttons {
+		text-align: right;
+
+		a + a {
+			margin-left: var(--bb-rl-space-100);
+		}
 	}
 }
 

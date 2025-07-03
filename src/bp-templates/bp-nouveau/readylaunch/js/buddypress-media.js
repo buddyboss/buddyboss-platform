@@ -5529,7 +5529,7 @@ window.bp = window.bp || {};
 				}
 			}
 
-			$( '.bb-rl-modal-container .bb-rl-model-footer, .bb-rl-modal-container #bp-media-document-prev' ).hide();
+			$( '.bb-rl-modal-container .bb-rl-model-footer, .modal-container .bb-model-footer, .bb-rl-modal-container #bp-media-document-prev' ).hide();
 			$( '.bb-field-wrap-search' ).hide();
 			var changedActionType = 'media' === actionType ? 'document' : actionType;
 			$( '.bb-rl-' + changedActionType + '-open-create-popup-folder' ).hide();
@@ -5548,7 +5548,7 @@ window.bp = window.bp || {};
 		},
 
 		closeCreateFolderAlbumInPopup : function ( event, actionType ) {
-			$( '.bb-rl-modal-container .bb-rl-model-footer' ).show();
+			$( '.bb-rl-modal-container .bb-rl-model-footer, .modal-container .bb-model-footer' ).show();
 			$( '.bb-field-wrap-search' ).show();
 			$( '.bb-rl-document-open-create-popup-folder' ).show();
 			if ( 'album' === actionType ) {
