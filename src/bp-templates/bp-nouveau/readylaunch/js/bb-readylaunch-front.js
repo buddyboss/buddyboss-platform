@@ -1133,10 +1133,11 @@ window.bp = window.bp || {};
 				run_alignMenu();
 			},
 
-			closePickersOnEsc: function ( event ) {
-				if (event.key === 'Escape' || event.keyCode === 27) {
-					if ( $( '#bb-rl-network-search-modal' ).length ) {
-						$( '#bb-rl-network-search-modal' ).addClass( 'bp-hide' );
+			closePickersOnEsc : function ( event ) {
+				if ( 'Escape' === event.key || 27 === event.keyCode ) {
+					$bb_rl_network_search_modal = $( '#bb-rl-network-search-modal' );
+					if ( $bb_rl_network_search_modal.length ) {
+						$bb_rl_network_search_modal.addClass( 'bp-hide' );
 					}
 				}
 			},
