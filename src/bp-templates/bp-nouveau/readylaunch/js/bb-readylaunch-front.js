@@ -59,6 +59,7 @@ window.bp = window.bp || {};
 				$document.on( 'click', '.action-delete', this.markNotificationDelete.bind( this ) );
 				$document.on( 'click', '.bb-rl-header-container .header-aside .user-link', this.profileNav.bind( this ) );
 				$document.on( 'click', '.bb-rl-header-search', this.searchModelToggle.bind( this ) );
+				$document.on( 'keydown', this.closePickersOnEsc.bind( this ) );
 			},
 
 			profileNav: function ( e ) {
@@ -1130,6 +1131,14 @@ window.bp = window.bp || {};
 				}
 
 				run_alignMenu();
+			},
+
+			closePickersOnEsc: function ( event ) {
+				if (event.key === 'Escape' || event.keyCode === 27) {
+					if ( $( '#bb-rl-network-search-modal' ).length ) {
+						$( '#bb-rl-network-search-modal' ).addClass( 'bp-hide' );
+					}
+				}
 			},
 		};
 
