@@ -710,4 +710,27 @@ class BB_Group_Readylaunch {
 
 		return $last_activity;
 	}
+
+	/**
+	 * Modify the nav link text of messages for ReadyLaunch.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $link_text Original link text.
+	 * @param object $nav_item  Nav item object.
+	 * @param string $nav_scope Nav scope.
+	 *
+	 * @return string Modified link text.
+	 */
+	public function bb_rl_modify_nav_link_text( $link_text, $nav_item, $nav_scope ) {
+		if ( ! empty( $nav_item->slug ) && ! empty( $nav_scope ) && 'groups' === $nav_scope ) {
+			if ( 'public-message' === $nav_item->slug ) {
+				$link_text = __( 'Group message', 'buddyboss' );
+			} elseif ( 'private-message' === $nav_item->slug ) {
+				$link_text = __( 'Private message', 'buddyboss' );
+			}
+		}
+
+		return $link_text;
+	}
 }
