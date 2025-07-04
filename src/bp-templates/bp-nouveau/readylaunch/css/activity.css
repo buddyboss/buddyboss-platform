@@ -2722,7 +2722,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   font-weight: 500;
 }
 
-.bb-rl-activity-list .bb-rl-activity-header .activity-to + .avatar {
+.bb-rl-activity-list .bb-rl-activity-header .activity-to ~ .avatar {
   height: 24px;
   width: 24px;
   border-radius: var(--bb-rl-radius-full);
