@@ -239,7 +239,9 @@
 
 @media screen and (max-width: 544px) {
   .bb-rl-groups .bp-list:not(.grid) .item-entry .list-wrap {
+    flex-direction: column;
     align-items: flex-start;
+    gap: var(--bb-rl-space-100);
   }
 }
 

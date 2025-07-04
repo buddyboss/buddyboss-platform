@@ -8551,6 +8551,12 @@ li.bb-rl-hideshow {
   margin: 50px auto;
 }
 
+@media (max-width: 544px) {
+  .bb-rl-crop-container > .items {
+    max-width: 388px;
+  }
+}
+
 .bb-rl-crop-container > .items > .item {
   width: auto;
   margin: 0 auto;
@@ -8677,6 +8683,12 @@ li.bb-rl-hideshow {
   width: 400px;
   height: 400px;
   margin: 0 auto var(--bb-rl-space-100);
+}
+
+@media (max-width: 544px) {
+  .bb-rl-avatar-panel #avatar-to-crop {
+    width: 340px;
+  }
 }
 
 .bb-rl-avatar-zoom-controls {
@@ -11623,7 +11635,9 @@ input.bb-rl-zoom-slider::-moz-range-progress {
 
 @media screen and (max-width: 544px) {
   .bb-rl-groups .bp-list:not(.grid) .item-entry .list-wrap {
+    flex-direction: column;
     align-items: flex-start;
+    gap: var(--bb-rl-space-100);
   }
 }
 
@@ -11891,41 +11905,6 @@ input.bb-rl-zoom-slider::-moz-range-progress {
   display: inline-block;
   margin: 0 3px 0 6px;
   color: var(--bb-rl-background-tertiary-color);
-}
-
-/* General Styling */
-.bb-rl-activity-page {
-  width: 100%;
-  max-width: 680px;
-  margin: 0 auto;
-  padding: var(--bb-rl-space-400) 0;
-}
-
-.bb-rl-activity-wrap:has(.bb-rl-secondary-container) {
-  display: flex;
-  justify-content: center;
-  gap: var(--bb-rl-space-400);
-  margin: 0 var(--bb-rl-space-300);
-}
-
-.bb-rl-activity-wrap:has(.bb-rl-secondary-container) > .bb-rl-content-wrapper {
-  width: 680px;
-  max-width: 100%;
-  padding-right: 0;
-  padding-left: 0;
-}
-
-.bb-rl-activity-wrap:has(.bb-rl-secondary-container) .bb-rl-secondary-container {
-  padding: var(--bb-rl-space-700) 0 0;
-}
-
-@media screen and (max-width: 1200px) {
-  .bb-rl-activity-wrap:has(.bb-rl-secondary-container) {
-    flex-direction: column;
-  }
-  .bb-rl-activity-wrap:has(.bb-rl-secondary-container) > .bb-rl-content-wrapper {
-    margin: auto;
-  }
 }
 
 /* CSS variables */
@@ -12678,6 +12657,47 @@ html[dir="rtl"] .wp-customizer .CodeMirror-vscrollbar {
 
 html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   margin-left: 20px;
+}
+
+/* General Styling */
+.bb-rl-activity-page {
+  width: 100%;
+  max-width: 680px;
+  margin: 0 auto;
+  padding: var(--bb-rl-space-400) 0;
+}
+
+.bb-rl-activity-wrap:has(.bb-rl-secondary-container) {
+  display: flex;
+  justify-content: center;
+  gap: var(--bb-rl-space-400);
+  margin: 0 var(--bb-rl-space-300);
+}
+
+.bb-rl-activity-wrap:has(.bb-rl-secondary-container) > .bb-rl-content-wrapper {
+  width: 680px;
+  max-width: 100%;
+  padding-right: 0;
+  padding-left: 0;
+}
+
+.bb-rl-activity-wrap:has(.bb-rl-secondary-container) .bb-rl-secondary-container {
+  padding: var(--bb-rl-space-700) 0 0;
+}
+
+@media screen and (max-width: 1200px) {
+  .bb-rl-activity-wrap:has(.bb-rl-secondary-container) {
+    flex-direction: column;
+  }
+  .bb-rl-activity-wrap:has(.bb-rl-secondary-container) > .bb-rl-content-wrapper {
+    margin: auto;
+  }
+}
+
+@media screen and (max-width: 544px) {
+  .bb-rl-activity-wrap:has(.bb-rl-secondary-container) {
+    margin: 0;
+  }
 }
 
 [class*="bb-rl-activity-form"] {
@@ -14617,7 +14637,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   font-weight: 500;
 }
 
-.bb-rl-activity-list .bb-rl-activity-header .activity-to + .avatar {
+.bb-rl-activity-list .bb-rl-activity-header .activity-to ~ .avatar {
   height: 24px;
   width: 24px;
   border-radius: var(--bb-rl-radius-full);
@@ -16065,6 +16085,9 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   }
   .bb-rl-activity-list li.activity-item {
     padding: var(--bb-rl-space-200);
+  }
+  .bb-rl-activity-modal .bb-rl-activity-list li.activity-item {
+    padding: 0;
   }
   .bb-rl-activity-list .bb-activity-more-options-wrap {
     left: var(--bb-rl-space-200);
@@ -20071,6 +20094,7 @@ table.profile-settings tbody td select {
   color: var(--bb-rl-text-tertiary-color);
   margin-top: var(--bb-rl-space-100);
   display: flex;
+  flex-flow: wrap;
   align-items: center;
   gap: var(--bb-rl-space-50);
 }
@@ -20690,10 +20714,6 @@ table.profile-settings tbody td select {
 .bb-rl-ac-results .bp-search-ac > li .entry-meta a {
   color: var(--bb-rl-text-tertiary-color);
   white-space: nowrap;
-}
-
-.bb-rl-ac-results .bp-search-ac > li:has(.results-group) {
-  display: none;
 }
 
 .bb-rl-ac-results .bp-search-ac .bbls-view_all_type-type {
