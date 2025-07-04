@@ -12,6 +12,14 @@
 			align-items: center;
 			flex-wrap: wrap;
 
+			@media (max-width: 600px) {
+				justify-content: center;
+
+				.input-group {
+					margin-top: 0;
+				}
+			}
+
 			.archives-authors-section {
 				display: none;
 			}

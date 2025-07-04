@@ -447,6 +447,15 @@
   flex-wrap: wrap;
 }
 
+@media (max-width: 600px) {
+  .post-type-archive-mpcs-course.bb-readylaunch-template .bb-rl-meprlms-course-filters > .column {
+    justify-content: center;
+  }
+  .post-type-archive-mpcs-course.bb-readylaunch-template .bb-rl-meprlms-course-filters > .column .input-group {
+    margin-top: 0;
+  }
+}
+
 .post-type-archive-mpcs-course.bb-readylaunch-template .bb-rl-meprlms-course-filters > .column .archives-authors-section {
   display: none;
 }
