@@ -62,6 +62,11 @@ function bp_core_install( $active_components = false ) {
 		BB_BG_Process_Log::instance()->create_table();
 	}
 
+	// Install activity topics manager table.
+	if ( function_exists( 'bb_topics_manager_instance' ) ) {
+		bb_topics_manager_instance()->create_tables();
+	}
+
 	// Notifications.
 	if ( ! empty( $active_components['notifications'] ) ) {
 		bp_core_install_notifications();
