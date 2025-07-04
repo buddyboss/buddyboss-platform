@@ -232,6 +232,8 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			add_action( 'login_form_retrievepassword', array( $this, 'bb_rl_overwrite_login_email_field_label_hook' ) );
 			add_action( 'login_form_lostpassword', array( $this, 'bb_rl_overwrite_login_email_field_label_hook' ) );
 			add_action( 'login_form_login', array( $this, 'bb_rl_overwrite_login_email_field_label_hook' ) );
+
+			add_action( 'wp_login_errors', array( $this, 'bb_rl_wp_login_errors' ) );
 		}
 
 		/**
@@ -2499,6 +2501,13 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					var $forgetMeNot = $( '.login p.forgetmenot' );
 					var $lostMeNot = $( '.login p.lostmenot' );
 					$( $lostMeNot ).before( $forgetMeNot );
+
+					var $updatedClose = $( '.bb-rl-updated-close' );
+					if ( $updatedClose.length > 0 ) {
+						$updatedClose.on( 'click', function() {
+							$( this ).closest( '.message' ).hide();
+						} );
+					}
 				} );
 			</script>
 			<?php
@@ -3969,6 +3978,26 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			}
 
 			return $translated_text;
+		}
+
+		/**
+		 * Modify logout message.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param object $errors Errors.
+		 *
+		 * @return object
+		 */
+		public function bb_rl_wp_login_errors( $errors ) {
+			if ( isset( $_GET['loggedout'] ) && $_GET['loggedout'] ) {
+				$errors->remove( 'loggedout' );
+				$notice  = esc_html__( 'You are logged out', 'buddyboss' );
+				$notice .= ' <span class="bb-rl-updated-close"><i class="bb-icons-rl-x"></i></span>';
+				$errors->add( 'loggedout', $notice, 'message' );
+			}
+
+			return $errors;
 		}
 	}
 }
