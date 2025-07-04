@@ -362,6 +362,7 @@
   display: flex;
   align-items: center;
   gap: var(--bb-rl-space-100);
+  flex-flow: wrap;
 }
 
 .bb-rl-lms-tab-menu .bb-rl-lms-tab,
@@ -406,6 +407,7 @@
   align-items: center;
   gap: var(--bb-rl-space-50);
   color: var(--bb-rl-text-secondary-color);
+  white-space: nowrap;
 }
 
 .bb-rl-lms-tab-menu .bb-rl-lms-tab .mpcs-share,
