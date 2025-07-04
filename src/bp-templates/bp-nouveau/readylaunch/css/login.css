@@ -2758,6 +2758,28 @@ h1.wp-login-logo a {
   line-height: 1.8;
 }
 
+.login .message p:has(.bb-rl-updated-close),
+.login .success p:has(.bb-rl-updated-close),
+.login .notice p:has(.bb-rl-updated-close) {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.login .message .bb-rl-updated-close,
+.login .success .bb-rl-updated-close,
+.login .notice .bb-rl-updated-close {
+  font-size: 16px;
+  color: var(--bb-rl-icon-tertiary-color);
+  cursor: pointer;
+}
+
+.login .message .bb-rl-updated-close i,
+.login .success .bb-rl-updated-close i,
+.login .notice .bb-rl-updated-close i {
+  font-weight: 700;
+}
+
 .login .message {
   background-color: var(--bb-rl-background-brand-secondary-color);
   border-color: var(--bb-rl-border-brand-secondary-color);
