@@ -4004,15 +4004,13 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		}
 
 		/**
-		 * Modify search results start html.
+		 * Modify search results start HTML.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
-		 * @param string $html HTML.
-		 *
-		 * @return array
+		 * @return string
 		 */
-		public function bb_rl_modify_search_results_group_start_html( $html ) {
+		public function bb_rl_modify_search_results_group_start_html() {
 			return '';
 		}
 	}
