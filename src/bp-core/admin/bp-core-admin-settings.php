@@ -390,7 +390,7 @@ function bp_admin_setting_callback_profile_avatar_type() {
 	?>
 	<div class="avatar-custom-input">
 		<select name="bp-profile-avatar-type" id="bp-profile-avatar-type">
-			<option value="BuddyBoss" <?php selected( bb_get_profile_avatar_type(), 'BuddyBoss' ); ?>><?php esc_html_e( 'BuddyBoss', 'buddyboss' ); ?></option>
+			<option value="BuddyBoss" <?php selected( bb_get_profile_avatar_type(), 'BuddyBoss' ); ?>>BuddyBoss</option>
 			<option value="WordPress" <?php selected( bb_get_profile_avatar_type(), 'WordPress' ); ?>><?php esc_html_e( 'WordPress', 'buddyboss' ); ?></option>
 		</select>
 	</div>
@@ -434,7 +434,7 @@ function bp_admin_setting_callback_default_profile_avatar_type() {
 			<div class="img-block">
 				<img class="buddyboss-profile-avatar" src="<?php echo esc_url( buddypress()->plugin_url . 'bp-core/images/bb-profile-avatar-buddyboss.jpg' ); ?>" />
 			</div>
-			<span><?php esc_html_e( 'BuddyBoss', 'buddyboss' ); ?></span>
+			<span>BuddyBoss</span>
 		</label>
 	</div>
 
@@ -563,7 +563,7 @@ function bp_admin_setting_callback_default_profile_cover_type() {
 			<div class="img-block">
 				<img src="<?php echo esc_url( buddypress()->plugin_url . 'bp-core/images/bb-cover-buddyboss.jpg' ); ?>" />
 			</div>
-			<span><?php esc_html_e( 'BuddyBoss', 'buddyboss' ); ?></span>
+			<span>BuddyBoss</span>
 		</label>
 	</div>
 
@@ -861,7 +861,7 @@ function bp_admin_setting_callback_default_group_avatar_type() {
 			<div class="img-block">
 				<img class="buddyboss-group-avatar" src="<?php echo esc_url( buddypress()->plugin_url . 'bp-core/images/bb-group-avatar-buddyboss.jpg' ); ?>" />
 			</div>
-			<span><?php esc_html_e( 'BuddyBoss', 'buddyboss' ); ?></span>
+			<span>BuddyBoss</span>
 		</label>
 	</div>
 
@@ -972,7 +972,7 @@ function bp_admin_setting_callback_default_group_cover_type() {
 			<div class="img-block">
 				<img class="buddyboss-group-cover" src="<?php echo esc_url( buddypress()->plugin_url . 'bp-core/images/bb-cover-buddyboss.jpg' ); ?>" />
 			</div>
-			<span><?php esc_html_e( 'BuddyBoss', 'buddyboss' ); ?></span>
+			<span>BuddyBoss</span>
 		</label>
 	</div>
 

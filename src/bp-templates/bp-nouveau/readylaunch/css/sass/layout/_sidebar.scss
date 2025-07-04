@@ -1,0 +1,210 @@
+.bb-rl-left-panel {
+	position: fixed;
+	left: 0;
+	z-index: var(--bb-rl-z-index-fixed);
+	background: var(--bb-rl-background-color);
+	border-right: 1px solid var(--bb-rl-border-color);
+	height: calc(100% - 71px);
+	width: 300px;
+	padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+	overflow: auto;
+	top: 71px;
+
+	body.admin-bar & {
+		top: 103px;
+		height: calc(100% - 71px - 32px);
+	}
+
+	&-widget {
+		padding: var(--bb-rl-space-200) 0;
+		border-bottom: 1px solid var(--bb-rl-border-secondary-color);
+	}
+
+	.bb-readylaunchpanel-menu {
+		padding: 0;
+		list-style: none;
+
+		li > a {
+			display: flex;
+			align-items: center;
+			color: var(--bb-rl-text-color);
+			font-size: 0.85rem;
+			font-weight: 500;
+			padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+			text-decoration: none;
+			border-radius: var(--bb-rl-radius-md);
+
+			> .menu-icon {
+				display: flex;
+				font-size: 18px;
+				line-height: 1;
+				color: var(--bb-rl-icon-color);
+				margin-right: var(--bb-rl-space-100);
+
+				&:before {
+					margin: 0;
+				}
+			}
+
+			&:focus,
+			&:hover {
+				outline: none;
+				background-color: var(--bb-rl-background-secondary-hover-color);
+			}
+		}
+
+		li.selected > a {
+			background-color: var(--bb-rl-background-secondary-hover-color);
+		}
+
+		.current-menu-item > a {
+			font-weight: 600;
+			background-color: var(--bb-rl-background-secondary-hover-color);
+		}
+
+		.menu-item.menu-item-has-children {
+			position: relative;
+
+			> a {
+				padding-right: 35px;
+			}
+		}
+
+		.submenu-toggle {
+			cursor: pointer;
+			font-size: 20px;
+			color: var(--bb-rl-text-tertiary-color);
+			line-height: var(--bb-rl-space-300);
+			position: absolute;
+			right: 10px;
+			top: 6px;
+			width: 30px;
+			height: var(--bb-rl-space-300);
+			text-align: center;
+		}
+
+		.sub-menu {
+			display: none;
+			list-style: none;
+			padding-left: var(--bb-rl-space-300);
+			margin-top: var(--bb-rl-space-100);
+		}
+
+		.open-parent {
+
+			> .sub-menu {
+				display: block;
+			}
+
+			> a {
+				background-color: var(--bb-rl-background-secondary-hover-color);
+
+				.submenu-toggle {
+					transform: rotate(-180deg);
+					margin-right: var(--bb-rl-space-100);
+					margin-left: 0;
+				}
+			}
+		}
+	}
+
+	.bb-bottom-readylaunchpanel-menu {
+
+		li > a {
+
+			> i {
+				display: none;
+			}
+
+			&:before {
+				display: flex;
+				content: "\e2e2";
+				color: var(--bb-rl-text-tertiary-color);
+				font-size: 20px;
+				font-weight: 400;
+				font-family: bb-icons-rl;
+				margin-right: var(--bb-rl-space-100);
+			}
+		}
+	}
+
+	.bb-rl-list {
+
+		h2 {
+			color: var(--bb-rl-text-tertiary-color);
+			font-size: 0.85rem;
+			font-weight: 600;
+			margin: 0 var(--bb-rl-space-200) var(--bb-rl-space-200);
+		}
+
+		.bb-rl-item-list {
+			list-style: none;
+			padding: 0;
+
+			li {
+				display: flex;
+				align-items: center;
+				border-radius: var(--bb-rl-radius-md);
+
+				&:hover,
+				&:focus-within {
+					background-color: var(--bb-rl-background-secondary-hover-color);
+				}
+			}
+
+			.item-avatar {
+
+				a {
+					display: block;
+					padding: var(--bb-rl-space-100) var(--bb-rl-space-100) var(--bb-rl-space-100) var(--bb-rl-space-200);
+					outline: none;
+				}
+
+				img {
+					height: 24px;
+					width: 24px;
+					border-radius: var(--bb-rl-radius-full);
+				}
+			}
+
+			.bb-rl-placeholder-avatar-image {
+				display: block;
+				height: 24px;
+				width: 24px;
+				border-radius: var(--bb-rl-radius-full);
+				background-color: var(--bb-rl-background-brand-secondary-color);
+			}
+
+			.item-title {
+				flex: 1;
+
+				a {
+					display: block;
+					color: var(--bb-rl-text-color);
+					font-size: 0.85rem;
+					font-weight: 500;
+					padding: var(--bb-rl-space-100) var(--bb-rl-space-200) var(--bb-rl-space-100) 0;
+					outline: none;
+				}
+			}
+		}
+	}
+
+	.bb-rl-show-more {
+		display: inline-flex;
+		align-items: center;
+		gap: var(--bb-rl-space-100);
+		padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+		color: var(--bb-rl-text-tertiary-color);
+		font-size: 0.85rem;
+		font-weight: 500;
+
+		i {
+			font-size: 16px;
+		}
+	}
+}
+
+.bb-rl-widget-sidebar {
+	width: 320px;
+}
