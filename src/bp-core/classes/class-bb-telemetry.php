@@ -340,6 +340,15 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 			global $wpdb;
 			$bb_telemetry_data = ! empty( $bb_telemetry_data ) ? $bb_telemetry_data : array();
 
+			// Include and collect financial metrics
+			$financial_metrics_file = dirname( __FILE__ ) . '/class-bb-financial-metrics.php';
+			if ( file_exists( $financial_metrics_file ) ) {
+				require_once $financial_metrics_file;
+				if ( class_exists( 'BB_Financial_Metrics' ) ) {
+					$bb_telemetry_data['financial_metrics'] = BB_Financial_Metrics::collect();
+				}
+			}
+
 			// Filterable list of BuddyBoss Platform options to fetch from the database.
 			$bb_platform_db_options = apply_filters(
 				'bb_telemetry_platform_options',
