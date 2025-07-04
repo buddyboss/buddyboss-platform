@@ -20692,10 +20692,6 @@ table.profile-settings tbody td select {
   white-space: nowrap;
 }
 
-.bb-rl-ac-results .bp-search-ac > li:has(.results-group) {
-  display: none;
-}
-
 .bb-rl-ac-results .bp-search-ac .bbls-view_all_type-type {
   padding-bottom: 10px;
 }

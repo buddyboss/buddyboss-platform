@@ -296,7 +296,10 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 			add_filter( 'bp_nouveau_get_nav_link_text', array( $this, 'bb_rl_get_nav_link_text' ), 10, 3 );
 
-			add_filter( 'bp_members_search_string', array( $this, 'bb_rl_modify_group_members_search_placeholder' ) );
+			if ( bp_is_active( 'search' ) ) {
+				add_filter( 'bp_search_results_group_start_html', array( $this, 'bb_rl_modify_search_results_group_start_html' ), 11 );
+				add_filter( 'bp_search_results_group_end_html', array( $this, 'bb_rl_modify_search_results_group_start_html' ), 11 );
+			}
 		}
 
 		/**
@@ -3998,6 +4001,19 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			}
 
 			return $errors;
+		}
+
+		/**
+		 * Modify search results start html.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $html HTML.
+		 *
+		 * @return array
+		 */
+		public function bb_rl_modify_search_results_group_start_html( $html ) {
+			return '';
 		}
 	}
 }
