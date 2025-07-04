@@ -4008,9 +4008,17 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
+		 * @param string $html HTML.
+		 *
 		 * @return string
 		 */
-		public function bb_rl_modify_search_results_group_start_html() {
+		public function bb_rl_modify_search_results_group_start_html( $html ) {
+			$bp_search = isset( $_REQUEST['bp_search'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['bp_search'] ) ) : '';
+			$view      = isset( $_REQUEST['view'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['view'] ) ) : '';
+			if ( $bp_search || $view ) {
+				return $html;
+			}
+
 			return '';
 		}
 	}
