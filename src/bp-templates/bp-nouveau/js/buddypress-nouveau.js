@@ -817,14 +817,30 @@ window.bp = window.bp || {};
 					} else {
 						/* animate to top if called from bottom pagination */
 						if ( data.caller === 'pag-bottom' ) {
-							var top = null;
-							if ( $( '#subnav' ).length ) {
-								top = $( '#subnav' ).parent();
-							} else {
+							var top = null, additionalOffset = 0, isMobile = $( 'body.bb-is-mobile' ).length;
+							if ( $( '#wpadminbar' ).length ) {
+								additionalOffset = additionalOffset + $( '#wpadminbar' ).height();
+							}
+
+							if ( $( '.sticky-header .site-header--bb' ).length ) {
+								additionalOffset = additionalOffset + $( '.sticky-header .site-header--bb' ).height();
+							}
+
+							if ( ! isMobile ) {
+								var $subnav = $( '#subnav' ), $mainNavs = $( '.main-navs.dir-navs' );
+								if ( $subnav.length ) {
+									top = $subnav.parent();
+								} else if ( $mainNavs.hasClass( 'bp-subnavs' ) || $mainNavs.hasClass( 'members-type-navs' ) || $mainNavs.hasClass( 'groups-type-navs' ) ) {
+									top = $mainNavs;
+								}
+							}
+
+							if ( ! top ) {
 								top = $( data.target );
 							}
+
 							$( 'html,body' ).animate(
-								{ scrollTop: top.offset().top },
+								{ scrollTop: top.offset().top - additionalOffset },
 								'slow',
 								function () {
 									$( data.target ).fadeOut(
@@ -4721,7 +4737,7 @@ window.bp = window.bp || {};
 					}
 				);
 
-				$( this.objectNavParent + ' [data-bp-scope="' + object + '"], #object-nav li.current' ).addClass( 'selected' );
+				$( this.objectNavParent + ' [data-bp-scope="' + object + '"], #object-nav li.current' ).addClass( 'selected loading' );
 			}
 
 			search_terms = $( '#buddypress [data-bp-search="' + object + '"] input[type=search]' ).val();
