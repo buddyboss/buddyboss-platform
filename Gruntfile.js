@@ -16,7 +16,8 @@ module.exports = function (grunt) {
 		BP_EXCLUDED_CSS = [
 			'!**/*-rtl.css',
 			// '!bp-forums/**/*.css',
-			'!**/endpoints/**/*.css'
+			'!**/endpoints/**/*.css',
+			'!**/js/admin/readylaunch/styles/**/*.css'
 		],
 
 		BP_JS = [
@@ -25,9 +26,10 @@ module.exports = function (grunt) {
 			// '!bp-forums/**/*.js',
 			'!**/vendor/**/*.js',
 			'!**/endpoints/**/*.js',
+			'!bp-templates/bp-nouveau/readylaunch/js/cropper.js'
 		],
 
-		BP_EXCLUDED_MISC = [],
+		BP_EXCLUDED_MISC = ['!js/**'],
 
 		// SASS generated "Twenty*"" CSS files.
 		BP_SCSS_CSS_FILES = [
@@ -120,6 +122,15 @@ module.exports = function (grunt) {
 					src: ['bp-templates/bp-nouveau/sass/buddypress.scss'],
 					dest: SOURCE_DIR + 'bp-templates/bp-nouveau/css/'
 				},
+				ready_launch: {
+					cwd: SOURCE_DIR,
+					extDot: 'last',
+					expand: true,
+					ext: '.css',
+					flatten: true,
+					src: ['bp-templates/bp-nouveau/readylaunch//css/sass/*.scss'],
+					dest: SOURCE_DIR + 'bp-templates/bp-nouveau/readylaunch/css'
+				},
 				admin: {
 					cwd: SOURCE_DIR,
 					extDot: 'last',
@@ -196,7 +207,7 @@ module.exports = function (grunt) {
 					expand: true
 				}
 			},
-			makepot: {
+			makepot_grunt: {
 				src: {
 					options: {
 						cwd: SOURCE_DIR,
@@ -239,7 +250,7 @@ module.exports = function (grunt) {
 						dest: BUILD_DIR,
 						dot: true,
 						expand: true,
-						src: ['**', '!**/.{svn,git}/**'].concat( BP_EXCLUDED_MISC )
+						src: ['**', '!**/.{svn,git}/**', '!**/readylaunch/css/sass/**'].concat( BP_EXCLUDED_MISC )
 					},
 					{
 						dest: BUILD_DIR,
@@ -358,12 +369,16 @@ module.exports = function (grunt) {
 					ext: '.min.js',
 					src: BP_JS.concat(
 						[
-						'!**/vendor/*.js',
-						'!**/lib/*.js',
-						'!**/*.min.js',
-						'!**/node_modules/**/*.js',
-						'!**/endpoints/**/*.js',
-						'!**/js/lib/Chart.js',
+							'!**/vendor/*.js',
+							'!**/lib/*.js',
+							'!**/*.min.js',
+							'!**/node_modules/**/*.js',
+							'!**/endpoints/**/*.js',
+							'!**/js/lib/Chart.js',
+							'!**/js/blocks/**/*.js',
+							'!**/bp-core/admin/bb-settings/**/*.js',
+							'!**/bp-core/blocks/**/*.js',
+							'!**/js/admin/**/*.js',
 						]
 					)
 				}
@@ -381,12 +396,17 @@ module.exports = function (grunt) {
 						BP_EXCLUDED_MISC,
 						BP_SCSS_CSS_FILES,
 						[
-						'!**/*.min.css',
-						'!**/admin/**/*.css',
-						'!**/emojionearea-edited.css',
-						'!**/pusher/**/*.css',
-						'!**/recaptcha/**/*.css',
-						'!**/endpoints/**/*.css'
+							'!**/*.min.css',
+							'!**/admin/**/*.css',
+							'!**/emojionearea-edited.css',
+							'!**/pusher/**/*.css',
+							'!**/recaptcha/**/*.css',
+							'!**/endpoints/**/*.css',
+							'!**/readylaunch/**/*.css',
+							'!**/js/blocks/**/*.css',
+							'!**/js/admin/**/*.css',
+							'!**/bp-core/admin/bb-settings/**/*.css',
+							'!**/bp-core/blocks/**/*.css'
 						]
 					)
 				},
@@ -453,6 +473,18 @@ module.exports = function (grunt) {
 					command: 'composer update; composer scoper;',
 					cwd: SOURCE_DIR,
 					stdout: false
+				},
+				// WP-CLI makepot with header fixing
+				makepot_wp: {
+					command: 'wp i18n make-pot src/ src/languages/buddyboss.pot --domain=buddyboss --ignore-domain --exclude="node_modules/*, vendor/*, src/vendor/*, js/*"',
+					cwd: '.',
+					stdout: true
+				},
+				// Fix POT file headers to match grunt-wp-i18n format
+				fix_wp_cli_headers: {
+					command: 'node bin/fix-wp-cli-headers.js',
+					cwd: '.',
+					stdout: true
 				}
 			},
 			jsvalidate: {
@@ -464,13 +496,17 @@ module.exports = function (grunt) {
 				src: {
 					files: {
 						src: [
-						SOURCE_DIR + '/**/*.js',
-						'!**/emojione-edited.js',
-						'!**/emojionearea-edited.js',
-						'!**/vendor/**/*.js',
-						'!**/node_modules/**/*.js',
-						'!**/endpoints/**/*.js',
-						'!**/js/lib/Chart.js',
+							SOURCE_DIR + '/**/*.js',
+							'!**/*.min.js',
+							'!**/emojione-edited.js',
+							'!**/emojionearea-edited.js',
+							'!**/vendor/**/*.js',
+							'!**/node_modules/**/*.js',
+							'!**/endpoints/**/*.js',
+							'!**/js/lib/Chart.js',
+							'!' + SOURCE_DIR + 'js/**/*.js',
+							'!' + SOURCE_DIR + 'bp-core/admin/bb-settings/**/*.js',
+							'!' + SOURCE_DIR + 'bp-core/blocks/**/*.js'
 						].concat( BP_EXCLUDED_MISC )
 					}
 				}
@@ -555,8 +591,12 @@ module.exports = function (grunt) {
 			'cssmin'
 		]
 	);
+
+	// WP-CLI makepot task with grunt-wp-i18n compatible headers
+	grunt.registerTask('makepot', ['exec:makepot_wp', 'exec:fix_wp_cli_headers']);
+
 	grunt.registerTask('pre-commit', ['checkDependencies', 'jsvalidate', 'jshint', 'stylelint']);
-	grunt.registerTask('src', ['checkDependencies', 'jsvalidate', 'jshint', 'stylelint', 'sass', 'rtlcss', 'checktextdomain', /*'imagemin',*/ 'uglify', 'cssmin', 'makepot:src']);
+	grunt.registerTask('src', ['checkDependencies', 'jsvalidate', 'jshint', 'stylelint', 'sass', 'rtlcss', 'checktextdomain', /*'imagemin',*/ 'uglify', 'cssmin', 'makepot']);
 	grunt.registerTask('bp_rest', ['clean:bp_rest', 'exec:rest_api', 'copy:bp_rest_components', 'copy:bp_rest_core', 'clean:bp_rest', 'apidoc' ]);
 	grunt.registerTask('bp_performance', ['clean:bp_rest', 'exec:rest_performance', 'copy:bp_rest_performance', 'copy:bp_rest_mu', 'clean:bp_rest']);
 	grunt.registerTask('build', ['string-replace:dist', 'exec:composer', 'exec:cli', 'clean:all', 'copy:files', 'clean:composer', 'compress', 'clean:all']);

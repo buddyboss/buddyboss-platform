@@ -317,14 +317,14 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 				return false;
 			}
 
-			// Check if the server name matches any whitelisted domain
+			// Check if the server name matches any whitelisted domain.
 			foreach ( $whitelist_domain as $domain ) {
 				if ( false !== strpos( $server_name, $domain ) ) {
-					return false; // Exclude allowlisted domains
+					return false; // Exclude allowlisted domains.
 				}
 			}
 
-			return true; // Allow telemetry data to be sent for non-allowlisted domains
+			return true; // Allow telemetry data to be sent for non-allowlisted domains.
 		}
 
 		/**
@@ -439,12 +439,32 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 					'bb_activity_timeline_filter_options',
 					'bb_activity_sorting_options',
 					'bb_enable_activity_search',
+					'bb_enable_activity_topics',
+					'bb_activity_topic_required',
 				)
 			);
 
 			// Added those options that are not available in the option table.
 			$bb_telemetry_data['bb_platform_version'] = BP_PLATFORM_VERSION;
 			$bb_telemetry_data['active_integrations'] = $this->bb_active_integrations();
+
+			if (
+				function_exists( 'bb_topics_manager_instance' ) &&
+				function_exists( 'bb_is_enabled_activity_topics' ) &&
+				bb_is_enabled_activity_topics()
+			) {
+				$global_activity_topics_count = bb_topics_manager_instance()->bb_get_topics(
+					array(
+						'item_type'   => 'activity',
+						'item_id'     => 0,
+						'count_total' => true,
+						'per_page'    => 1,
+					)
+				);
+				if ( isset( $global_activity_topics_count['total'] ) ) {
+					$bb_telemetry_data['bb_topic_count'] = $global_activity_topics_count['total'];
+				}
+			}
 
 			// Pass active or inactive components.
 			$components          = bp_core_get_components();

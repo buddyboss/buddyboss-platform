@@ -32,6 +32,7 @@ add_filter( 'bp_uri', 'bb_support_learndash_course_other_language_permalink', 10
 // Support for learndash nested urls.
 add_filter( 'learndash_permalinks_nested_urls', 'bb_support_learndash_permalinks_nested_urls', 9999, 3 );
 
+add_filter( 'bb_readylaunch_left_sidebar_middle_content', 'bb_readylaunch_middle_content_ld_courses', 20, 1 );
 /** Functions *****************************************************************/
 
 /**
@@ -479,4 +480,70 @@ function bb_support_learndash_permalinks_nested_urls( $ld_rewrite_rules, $ld_rew
 	}
 
 	return $ld_rewrite_rules;
+}
+
+/**
+ * Function to get the user enrolled course or all courses.
+ *
+ * This function retrieves the courses a user is enrolled in using the LearnDash plugin.
+ * It fetches courses and includes the course title, permalink, and thumbnail.
+ *
+ * @since BuddyBoss 2.9.00
+ *
+ * @param array $args Arguments.
+ *
+ * @return array The user's enrolled courses.
+ */
+function bb_readylaunch_middle_content_ld_courses( $args = array() ) {
+
+	$course_data['integration'] = 'sfwd-courses';
+
+	// Check if the sidebar data and the courses sidebar are enabled.
+	if ( $args['has_sidebar_data'] && $args['is_sidebar_enabled_for_courses'] ) {
+		$user_id = bp_loggedin_user_id();
+		if ( $user_id ) {
+			// Get enrolled courses for the logged-in user.
+			$courses_ids = learndash_user_get_enrolled_courses(
+				$user_id,
+				array(
+					'nopaging'       => false,
+					'posts_per_page' => 5,
+				)
+			);
+		} else {
+			// Get all published courses if no user is logged in.
+			$query_args = array(
+				'post_type'      => 'sfwd-courses',
+				'post_status'    => 'publish',
+				'fields'         => 'ids',
+				'orderby'        => 'title',
+				'order'          => 'ASC',
+				'nopaging'       => false,
+				'posts_per_page' => 5,
+			);
+
+			$query       = new WP_Query( $query_args );
+			$courses_ids = ! empty( $query->posts ) ? $query->posts : array();
+			wp_reset_postdata();
+		}
+
+		// Prepare course data.
+		if ( ! empty( $courses_ids ) ) {
+			foreach ( $courses_ids as $post_id ) {
+				$thumbnail_url = '';
+				if ( has_post_thumbnail( $post_id ) ) {
+					$thumbnail_url = get_the_post_thumbnail( $post_id, 'medium' );
+				}
+
+				$course_data['items'][ $post_id ] = array(
+					'title'     => get_the_title( $post_id ),
+					'permalink' => get_the_permalink( $post_id ),
+					'thumbnail' => $thumbnail_url,
+				);
+			}
+		}
+	}
+	$args['courses'] = $course_data;
+
+	return $args;
 }
