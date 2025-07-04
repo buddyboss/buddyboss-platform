@@ -81,7 +81,9 @@
 				padding: var(--bb-rl-space-400) var(--bb-rl-space-300);
 
 				@media screen and (max-width: $sm) {
+					flex-direction: column;
 					align-items: flex-start;
+					gap: var(--bb-rl-space-100);
 				}
 			}
 
