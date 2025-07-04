@@ -11895,41 +11895,6 @@ input.bb-rl-zoom-slider::-moz-range-progress {
   color: var(--bb-rl-background-tertiary-color);
 }
 
-/* General Styling */
-.bb-rl-activity-page {
-  width: 100%;
-  max-width: 680px;
-  margin: 0 auto;
-  padding: var(--bb-rl-space-400) 0;
-}
-
-.bb-rl-activity-wrap:has(.bb-rl-secondary-container) {
-  display: flex;
-  justify-content: center;
-  gap: var(--bb-rl-space-400);
-  margin: 0 var(--bb-rl-space-300);
-}
-
-.bb-rl-activity-wrap:has(.bb-rl-secondary-container) > .bb-rl-content-wrapper {
-  width: 680px;
-  max-width: 100%;
-  padding-left: 0;
-  padding-right: 0;
-}
-
-.bb-rl-activity-wrap:has(.bb-rl-secondary-container) .bb-rl-secondary-container {
-  padding: var(--bb-rl-space-700) 0 0;
-}
-
-@media screen and (max-width: 1200px) {
-  .bb-rl-activity-wrap:has(.bb-rl-secondary-container) {
-    flex-direction: column;
-  }
-  .bb-rl-activity-wrap:has(.bb-rl-secondary-container) > .bb-rl-content-wrapper {
-    margin: auto;
-  }
-}
-
 /* CSS variables */
 :root {
   --bb-rl-primary-color: #4946fe;
@@ -12680,6 +12645,47 @@ html[dir="rtl"] .wp-customizer .CodeMirror-vscrollbar {
 
 html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   margin-right: 20px;
+}
+
+/* General Styling */
+.bb-rl-activity-page {
+  width: 100%;
+  max-width: 680px;
+  margin: 0 auto;
+  padding: var(--bb-rl-space-400) 0;
+}
+
+.bb-rl-activity-wrap:has(.bb-rl-secondary-container) {
+  display: flex;
+  justify-content: center;
+  gap: var(--bb-rl-space-400);
+  margin: 0 var(--bb-rl-space-300);
+}
+
+.bb-rl-activity-wrap:has(.bb-rl-secondary-container) > .bb-rl-content-wrapper {
+  width: 680px;
+  max-width: 100%;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.bb-rl-activity-wrap:has(.bb-rl-secondary-container) .bb-rl-secondary-container {
+  padding: var(--bb-rl-space-700) 0 0;
+}
+
+@media screen and (max-width: 1200px) {
+  .bb-rl-activity-wrap:has(.bb-rl-secondary-container) {
+    flex-direction: column;
+  }
+  .bb-rl-activity-wrap:has(.bb-rl-secondary-container) > .bb-rl-content-wrapper {
+    margin: auto;
+  }
+}
+
+@media screen and (max-width: 544px) {
+  .bb-rl-activity-wrap:has(.bb-rl-secondary-container) {
+    margin: 0;
+  }
 }
 
 [class*="bb-rl-activity-form"] {
@@ -16067,6 +16073,9 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   }
   .bb-rl-activity-list li.activity-item {
     padding: var(--bb-rl-space-200);
+  }
+  .bb-rl-activity-modal .bb-rl-activity-list li.activity-item {
+    padding: 0;
   }
   .bb-rl-activity-list .bb-activity-more-options-wrap {
     right: var(--bb-rl-space-200);

@@ -2129,6 +2129,10 @@
 
 		li.activity-item {
 			padding: var(--bb-rl-space-200);
+
+			.bb-rl-activity-modal & {
+				padding: 0;
+			}
 		}
 
 		.bb-activity-more-options-wrap {
