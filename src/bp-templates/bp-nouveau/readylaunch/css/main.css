@@ -8551,6 +8551,12 @@ li.bb-rl-hideshow {
   margin: 50px auto;
 }
 
+@media (max-width: 544px) {
+  .bb-rl-crop-container > .items {
+    max-width: 388px;
+  }
+}
+
 .bb-rl-crop-container > .items > .item {
   width: auto;
   margin: 0 auto;
@@ -8677,6 +8683,12 @@ li.bb-rl-hideshow {
   width: 400px;
   height: 400px;
   margin: 0 auto var(--bb-rl-space-100);
+}
+
+@media (max-width: 544px) {
+  .bb-rl-avatar-panel #avatar-to-crop {
+    width: 340px;
+  }
 }
 
 .bb-rl-avatar-zoom-controls {
