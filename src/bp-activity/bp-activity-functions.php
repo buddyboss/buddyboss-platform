@@ -606,7 +606,14 @@ function bp_activity_get_post_types_tracking_args() {
 				// Used to be able to find the post type this activity type is associated to.
 				$track_post_type->comments_tracking->post_type = $post_type;
 
-				$post_types_tracking_args[ $track_post_type->comments_tracking->action_id ] = $track_post_type->comments_tracking;
+				// Attach comment tracking to respective post type.
+				if ( 'post' === $post_type ) {
+					$post_type_comment_action_id = 'new_blog_comment';
+				} else {
+					$post_type_comment_action_id = 'new_blog_' . $post_type . '_comment';
+				}
+
+				$post_types_tracking_args[ $post_type_comment_action_id ] = $track_post_type->comments_tracking;
 
 				// Used to check support for comment tracking by activity type (new_post_type)
 				$track_post_type->comments_tracking = true;
@@ -1941,6 +1948,7 @@ function bp_activity_get( $args = '' ) {
 			'filter'            => array(),
 			'pin_type'          => '',
 			'status'            => bb_get_activity_published_status(),
+			'topic_id'          => false,
 		),
 		'activity_get'
 	);
@@ -1969,6 +1977,7 @@ function bp_activity_get( $args = '' ) {
 			'fields'            => $r['fields'],
 			'pin_type'          => $r['pin_type'],
 			'status'            => $r['status'],
+			'topic_id'          => $r['topic_id'],
 		)
 	);
 
@@ -6165,6 +6174,11 @@ function bb_activity_migration( $raw_db_version, $current_db ) {
 			}
 		}
 	}
+
+	if ( function_exists( 'bb_topics_manager_instance' ) ) {
+		// Create a new table.
+		bb_topics_manager_instance()->create_tables();
+	}
 }
 
 /**
@@ -7662,4 +7676,61 @@ function bb_activity_update_date_updated_and_clear_cache( $activity, $date_updat
 			bp_activity_clear_cache_for_activity( $parent_comment_activity_object );
 		}
 	}
+}
+
+/**
+ * Check if the activity topics are enabled.
+ *
+ * @since BuddyBoss 2.8.80
+ *
+ * @param bool $retval Default value.
+ *
+ * @return bool Whether the activity topics are enabled.
+ */
+function bb_is_enabled_activity_topics( $retval = false ) {
+
+	/**
+	 * Filters the activity topics status.
+	 *
+	 * @since BuddyBoss 2.8.80
+	 *
+	 * @param bool $enable_activity_topics Whether the activity topics are enabled.
+	 */
+	return (bool) apply_filters( 'bb_is_enabled_activity_topics', bp_get_option( 'bb_enable_activity_topics', $retval ) );
+}
+
+/**
+ * Check if the activity topic is required.
+ *
+ * @since BuddyBoss 2.8.80
+ *
+ * @param bool $retval Default value.
+ *
+ * @return bool Whether the activity topic is required.
+ */
+function bb_is_activity_topic_required( $retval = false ) {
+
+	/**
+	 * Filters the activity topic required status.
+	 *
+	 * @since BuddyBoss 2.8.80
+	 *
+	 * @param bool $enable_activity_topic_required Whether the activity topic is required.
+	 */
+	return (bool) apply_filters( 'bb_is_activity_topic_required', bp_get_option( 'bb_activity_topic_required', $retval ) );
+}
+
+/**
+ * Get the singleton instance of BB_Activity_Topics_Manager.
+ *
+ * @since BuddyBoss 2.8.80
+ *
+ * @return BB_Activity_Topics_Manager|null Instance of the topics manager or null if the class doesn't exist.
+ */
+function bb_activity_topics_manager_instance() {
+	if ( class_exists( 'BB_Activity_Topics_Manager' ) ) {
+		return BB_Activity_Topics_Manager::instance();
+	}
+
+	return null;
 }

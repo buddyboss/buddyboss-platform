@@ -152,6 +152,8 @@ if ( ! class_exists( 'BB_Background_Process' ) ) {
 		 * @return void
 		 */
 		public static function create_table() {
+			static $checked_tables = [];
+
 			$sql             = array();
 			$wpdb            = $GLOBALS['wpdb'];
 			$charset_collate = $wpdb->get_charset_collate();
@@ -164,6 +166,10 @@ if ( ! class_exists( 'BB_Background_Process' ) ) {
 			// Ensure that dbDelta() is defined.
 			if ( ! function_exists( 'dbDelta' ) ) {
 				require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+			}
+
+			if ( isset( $checked_tables[ $table_name ] ) ) {
+				return;
 			}
 
 			// Table already exists, so maybe upgrade instead?
@@ -191,6 +197,8 @@ if ( ! class_exists( 'BB_Background_Process' ) ) {
 
 				dbDelta( $sql );
 			}
+
+			$checked_tables[ $table_name ] = true;
 		}
 
 		/**

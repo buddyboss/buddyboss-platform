@@ -70,7 +70,8 @@ class BP_Core extends BP_Component {
 		 *
 		 * @param array $value Array of included and optional components.
 		 */
-		$bp->optional_components = apply_filters( 'bp_optional_components',
+		$bp->optional_components = apply_filters(
+			'bp_optional_components',
 			array(
 				'settings',
 				'notifications',
@@ -363,7 +364,8 @@ class BP_Core extends BP_Component {
 				'bp_invitations',
 				'bb_subscriptions',
 				'bb_reactions',
-				'bb_reaction_data'
+				'bb_reaction_data',
+				'bb_topics',
 			)
 		);
 
@@ -425,5 +427,35 @@ class BP_Core extends BP_Component {
 		}
 
 		parent::register_post_types();
+	}
+
+	/**
+	 * Init the BuddyBoss REST API.
+	 *
+	 * @param array $controllers Optional. See BP_Component::rest_api_init() for description.
+	 *
+	 * @since BuddyBoss 2.8.80
+	 */
+	public function rest_api_init( $controllers = array() ) {
+		$controllers = array(
+			/**
+			 * As the core component is always loaded,
+			 * let's register the Components endpoint here.
+			 */
+			'BB_REST_Topics_Endpoint'
+		);
+
+		parent::rest_api_init( $controllers );
+	}
+
+	/**
+	 * Register the BB Core Blocks.
+	 *
+	 * @since BuddyBoss 2.9.00
+	 *
+	 * @param array $blocks Optional. See BP_Component::blocks_init() for description.
+	 */
+	public function blocks_init( $blocks = array() ) {
+		parent::blocks_init( array() );
 	}
 }

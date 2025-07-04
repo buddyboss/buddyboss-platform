@@ -341,4 +341,15 @@ class BP_Friends_Component extends BP_Component {
 			'BP_REST_Friends_Endpoint',
 		) );
 	}
+
+	/**
+	 * Register the Friends Blocks.
+	 *
+	 * @since BuddyBoss 2.9.00
+	 *
+	 * @param array $blocks Optional. See BP_Component::blocks_init() for description.
+	 */
+	public function blocks_init( $blocks = array() ) {
+		parent::blocks_init( array() );
+	}
 }

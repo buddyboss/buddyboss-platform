@@ -592,6 +592,13 @@ define({ "api": [
             "optional": true,
             "field": "pin_type",
             "description": "<p>Show pin activity of feed type.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "topic_id",
+            "description": "<p>Limit result set to items with a specific topic ID.</p>"
           }
         ]
       }
@@ -1136,6 +1143,322 @@ define({ "api": [
     },
     "filename": "src/bp-activity/classes/class-bp-rest-activity-endpoint.php",
     "groupTitle": "Activity"
+  },
+  {
+    "type": "POST",
+    "url": "/wp-json/buddyboss/v1/bb-topics",
+    "title": "Create Topic",
+    "name": "CreateTopic",
+    "group": "BB_Topics",
+    "description": "<p>Create a new topic</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "title",
+            "description": "<p>Topic title.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "user_id",
+            "description": "<p>User ID who created the topic. Defaults to logged in user.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "permission_type",
+            "description": "<p>Permission type for the topic.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": true,
+            "field": "permission_data",
+            "description": "<p>Permission data for the topic.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "menu_order",
+            "description": "<p>Order value for the topic.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "item_id",
+            "description": "<p>Item ID (Group ID for groups, for activity topics it is not required).</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": true,
+            "field": "item_type",
+            "description": "<p>Item type (groups or activity).</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/bp-core/classes/class-bb-rest-topics-endpoint.php",
+    "groupTitle": "BB_Topics"
+  },
+  {
+    "type": "DELETE",
+    "url": "/wp-json/buddyboss/v1/bb-topics/{id}",
+    "title": "Delete Topic",
+    "name": "DeleteTopic",
+    "group": "BB_Topics",
+    "description": "<p>Delete an existing topic</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "id",
+            "description": "<p>Topic ID.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "item_id",
+            "description": "<p>Item ID (Group ID for groups, for activity topics it is not required).</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": true,
+            "field": "item_type",
+            "description": "<p>Item type (groups or activity).</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": true,
+            "field": "migrate_type",
+            "description": "<p>Migrate type (migrate or delete).</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "new_topic_id",
+            "description": "<p>New topic ID when migrate type is migrate.</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/bp-core/classes/class-bb-rest-topics-endpoint.php",
+    "groupTitle": "BB_Topics"
+  },
+  {
+    "type": "GET",
+    "url": "/wp-json/buddyboss/v1/bb-topics/:id",
+    "title": "Get Topic",
+    "name": "GetTopic",
+    "group": "BB_Topics",
+    "description": "<p>Get Topic</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "User"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "id",
+            "description": "<p>A unique numeric ID for the topic.</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/bp-core/classes/class-bb-rest-topics-endpoint.php",
+    "groupTitle": "BB_Topics"
+  },
+  {
+    "type": "GET",
+    "url": "/wp-json/buddyboss/v1/bb-topics",
+    "title": "Get Topics",
+    "name": "GetTopics",
+    "group": "BB_Topics",
+    "description": "<p>Get Topics</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "User"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": true,
+            "field": "orderby",
+            "defaultValue": "id",
+            "description": "<p>Order by attribute.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": true,
+            "field": "order",
+            "defaultValue": "ASC",
+            "description": "<p>Order direction.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "group_id",
+            "description": "<p>Group ID.</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/bp-core/classes/class-bb-rest-topics-endpoint.php",
+    "groupTitle": "BB_Topics"
+  },
+  {
+    "type": "PUT",
+    "url": "/wp-json/buddyboss/v1/bb-topics/:id",
+    "title": "Update Topic",
+    "name": "UpdateTopic",
+    "group": "BB_Topics",
+    "description": "<p>Update an existing topic</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "id",
+            "description": "<p>A unique numeric ID for the topic.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": true,
+            "field": "title",
+            "description": "<p>The title of the topic.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": true,
+            "field": "permission_type",
+            "description": "<p>Permission type for the topic.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": true,
+            "field": "permission_data",
+            "description": "<p>Permission data for the topic.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "item_id",
+            "description": "<p>Item ID (Group ID for groups, for activity topics it is not required).</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": true,
+            "field": "item_type",
+            "description": "<p>Item type (groups or activity).</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/bp-core/classes/class-bb-rest-topics-endpoint.php",
+    "groupTitle": "BB_Topics"
+  },
+  {
+    "type": "PUT",
+    "url": "/wp-json/buddyboss/v1/bb-topics/order",
+    "title": "Update Topics Order",
+    "name": "UpdateTopicsOrder",
+    "group": "BB_Topics",
+    "description": "<p>Update the order of topics</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "item_id",
+            "description": "<p>Item ID (Group ID for groups, for activity topics it is not required).</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "item_type",
+            "description": "<p>Item type (groups or activity).</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Array",
+            "optional": false,
+            "field": "topics",
+            "description": "<p>Array of topic IDs in the desired order.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "topics[]",
+            "description": "<p>.topic_id Topic ID.</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/bp-core/classes/class-bb-rest-topics-endpoint.php",
+    "groupTitle": "BB_Topics"
   },
   {
     "type": "GET",
@@ -9433,6 +9756,17 @@ define({ "api": [
     "name": "GetBBSettings",
     "group": "Settings",
     "description": "<p>Retrieve settings</p>",
+    "version": "1.0.0",
+    "filename": "src/bp-core/classes/class-bp-rest-settings-endpoint.php",
+    "groupTitle": "Settings"
+  },
+  {
+    "type": "POST",
+    "url": "/wp-json/buddyboss/v1/settings",
+    "title": "Save Settings",
+    "name": "SaveBBSettings",
+    "group": "Settings",
+    "description": "<p>Save settings</p>",
     "version": "1.0.0",
     "filename": "src/bp-core/classes/class-bp-rest-settings-endpoint.php",
     "groupTitle": "Settings"

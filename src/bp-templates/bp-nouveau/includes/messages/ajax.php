@@ -961,7 +961,7 @@ function bp_nouveau_ajax_get_user_message_threads() {
 						'user_name'     => bp_core_get_user_displayname( $recipient->user_id ),
 						'is_deleted'    => empty( get_userdata( $recipient->user_id ) ) ? 1 : 0,
 						'is_you'        => bp_loggedin_user_id() === $recipient->user_id,
-						'user_presence' => 1 === count( (array) $check_recipients ) ? bb_get_user_presence_html( $recipient->user_id ) : '',
+						'user_presence' => 2 === count( (array) $check_recipients ) && bp_loggedin_user_id() !== $recipient->user_id ? bb_get_user_presence_html( $recipient->user_id ) : '',
 					);
 
 					if ( bp_is_active( 'moderation' ) ) {
@@ -1895,6 +1895,9 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 	$group_id                  = (int) bp_messages_get_meta( $first_message->id, 'group_id', true );
 	$message_from              = bp_messages_get_meta( $first_message->id, 'message_from', true ); // group.
 	$is_group_message_thread   = bb_messages_is_group_thread( $bp_get_the_thread_id );
+	$group_status              = '';
+	$group_last_active         = '';
+	$group_cover_image         = esc_url( buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/images/group_cover_image.jpeg' );
 
 	if ( ! $is_group_message_thread ) {
 		$thread = bb_user_can_send_messages( $thread, (array) $thread_template->thread->recipients, '' );
@@ -1950,6 +1953,16 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 					$group_joined_date = $joined_date;
 				}
 			}
+
+			$group_status      = bp_get_group_type( $get_group );
+			$group_last_active = bp_get_group_last_active( $get_group );
+			$group_cover_image = bp_attachments_get_attachment(
+				'url',
+				array(
+					'object_dir' => 'groups',
+					'item_id'    => $group_id,
+				)
+			);
 		} else {
 
 			$prefix                   = apply_filters( 'bp_core_get_table_prefix', $wpdb->base_prefix );
@@ -2096,6 +2109,9 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 		'avatars'                   => bp_messages_get_avatars( $bp_get_the_thread_id, bp_loggedin_user_id() ),
 		'is_thread_archived'        => $is_thread_archived,
 		'group_joined_date'         => $group_joined_date,
+		'group_status'              => $group_status,
+		'group_last_active'         => $group_last_active,
+		'group_cover_image'         => $group_cover_image,
 	);
 
 	if ( is_array( $thread_template->thread->recipients ) ) {
@@ -2140,7 +2156,44 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 					$thread->thread['recipients']['members'][ $count ]['reported_type']      = bp_moderation_get_report_type( BP_Moderation_Members::$moderation_type_report, $recipient->user_id );
 				}
 
-				$count ++;
+				if ( 1 === $recipients_count && $recipient->user_id !== $login_user_id ) {
+					$thread->thread['recipients']['members'][ $count ]['joined_date'] = bb_get_member_joined_date( $recipient->user_id );
+					$thread->thread['recipients']['members'][ $count ]['last_active'] = bp_get_last_activity( $recipient->user_id );
+
+					if (
+						bp_is_active( 'activity' ) &&
+						function_exists( 'bp_is_activity_follow_active' ) &&
+						bp_is_activity_follow_active()
+					) {
+						$follower_ids   = bp_get_follower_ids( array( 'user_id' => $recipient->user_id ) );
+						$follower_array = explode( ',', $follower_ids );
+
+						$thread->thread['recipients']['members'][ $count ]['followers_count'] = count( $follower_array );
+					}
+
+					// Get the member type of the user.
+					$type        = function_exists( 'bp_get_member_type_object' ) ? bp_get_member_type( $recipient->user_id ) : '';
+					$type_obj    = function_exists( 'bp_get_member_type_object' ) && ! empty( $type ) ? bp_get_member_type_object( $type ) : '';
+					$color_data  = function_exists( 'bb_get_member_type_label_colors' ) && ! empty( $type ) ? bb_get_member_type_label_colors( $type ) : '';
+					$member_type = '';
+					if (
+						! empty( $type_obj ) &&
+						function_exists( 'bp_get_xprofile_member_type_field_id' ) &&
+						function_exists( 'bp_xprofile_get_hidden_fields_for_user' ) &&
+						! in_array( bp_get_xprofile_member_type_field_id(), bp_xprofile_get_hidden_fields_for_user( $recipient->user_id ), true )
+					) {
+						$member_type = $type_obj->labels['singular_name'];
+					}
+					$thread->thread['recipients']['members'][ $count ]['member_type'] = array(
+						'label' => $member_type ?? $type,
+						'color' => array(
+							'background' => ! empty( $color_data['background-color'] ) ? $color_data['background-color'] : '',
+							'text'       => ! empty( $color_data['color'] ) ? $color_data['color'] : '',
+						),
+					);
+				}
+
+				++$count;
 			}
 		}
 

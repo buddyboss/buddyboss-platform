@@ -619,6 +619,8 @@ class BB_Groups extends Integration_Abstract {
 		Cache::instance()->purge_by_component( 'app_page' );
 		Cache::instance()->purge_by_component( 'sfwd-' );
 		Cache::instance()->purge_by_group( 'bbapp-deeplinking' );
+		Cache::instance()->purge_by_group( 'bb-subscriptions' );
+		Cache::instance()->purge_by_component( 'bb-subscriptions_' );
 	}
 
 	/**

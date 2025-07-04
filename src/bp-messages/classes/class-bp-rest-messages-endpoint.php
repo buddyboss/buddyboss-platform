@@ -371,6 +371,14 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		$thread = $this->get_thread_object( $request['id'], $request );
 
 		if ( ! isset( $request['recipients_pagination'] ) || false === $request['recipients_pagination'] ) {
+
+			if ( ! empty( $thread->flag_filter_join_sql ) ) {
+				// The main BP_Messages_Thread populate function already cached the recipients using standard queries.
+				// Clear cache since we modified the recipients query to include group members.
+				wp_cache_delete( 'thread_recipients_' . $thread->thread_id, 'bp_messages' );
+				unset( $thread->flag_filter_join_sql );
+			}
+
 			$thread->recipients = $thread->get_recipients( $thread->thread_id );
 		}
 
@@ -1031,7 +1039,6 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 	public function update_item( $request ) {
 		// Setting context.
 		$request->set_param( 'context', 'edit' );
-
 		// Get the thread.
 		$thread = $this->get_thread_object( $request['id'], $request );
 		$error  = new WP_Error(
@@ -1084,6 +1091,13 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		}
 
 		if ( ! isset( $request['recipients_pagination'] ) || false === $request['recipients_pagination'] ) {
+
+			if ( ! empty( $thread->flag_filter_join_sql ) ) {
+				// The main BP_Messages_Thread populate function already cached the recipients using standard queries.
+				// Clear cache since we modified the recipients query to include group members.
+				wp_cache_delete( 'thread_recipients_' . $thread->thread_id, 'bp_messages' );
+				unset( $thread->flag_filter_join_sql );
+			}
 			$thread->recipients = $thread->get_recipients( $thread->thread_id );
 		}
 
@@ -2090,7 +2104,30 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		if ( isset( $request['recipients_page'] ) ) {
 			$args['page'] = $request['recipients_page'];
 		}
+
+		// Check if the thread is a group thread and join with group members to the query.
+		$flag_filter_join_sql = false;
+		if (
+			bp_is_active( 'groups' ) &&
+			function_exists( 'bb_messages_is_group_thread' ) &&
+			function_exists( 'bb_recipients_recipient_get_join_sql_with_group_members' )
+		) {
+			$is_group_message_thread = bb_messages_is_group_thread( $thread_id );
+			$first_message           = BP_Messages_Thread::get_first_message( $thread_id );
+			$group_id                = (int) bp_messages_get_meta( $first_message->id, 'group_id', true );
+
+			if ( $is_group_message_thread && $group_id ) {
+				add_filter( 'bp_recipients_recipient_get_join_sql', 'bb_recipients_recipient_get_join_sql_with_group_members', 10, 2 );
+				$flag_filter_join_sql = true;
+			}
+		}
+
 		$thread = new BP_Messages_Thread( $thread_id, '', $args );
+
+		// Store flag in a thread object for later use.
+		if ( $flag_filter_join_sql ) {
+			$thread->flag_filter_join_sql = true;
+		}
 
 		return $thread;
 	}

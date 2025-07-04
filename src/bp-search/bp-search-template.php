@@ -37,8 +37,6 @@ function bp_search_search_page_content( $content ) {
 		remove_filter( 'the_content', 'bp_search_search_page_content', 9 );
 		remove_filter( 'the_content', 'wpautop' );
 		$bpgs_main_content_filter_has_run = 'yes';
-		// setup search resutls and all..
-		BP_Search::instance()->prepare_search_page();
 		ob_start();
 		bp_get_template_part( 'search/results-page' );
 		$content .= ob_get_clean();
@@ -46,6 +44,12 @@ function bp_search_search_page_content( $content ) {
 
 	return $content;
 }
+
+add_action( 'wp_loaded', function () {
+	if ( ! is_admin() && isset( $_REQUEST['bp_search'] ) ) {
+		BP_Search::instance()->prepare_search_page();
+	}
+} );
 
 /**
  * Loads BuddyBoss Search template.
@@ -125,7 +129,7 @@ function bb_search_set_block_template_content( $query_result, $query, $template_
 		bp_search_is_search() &&
 		function_exists( 'wp_is_block_theme' ) &&
 		wp_is_block_theme() &&
-		isset( $query['slug__in'] ) && 
+		isset( $query['slug__in'] ) &&
 		in_array( 'search', $query['slug__in'], true )
 	) {
 		add_filter( 'bp_locate_template_and_load', '__return_false' );
