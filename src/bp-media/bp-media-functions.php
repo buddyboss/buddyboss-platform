@@ -527,7 +527,7 @@ function bp_media_add( $args = '' ) {
 		if ( ! empty( $media->activity_id ) ) {
 			$activity = new BP_Activity_Activity( $media->activity_id );
 			if ( ! empty( $activity ) && 'activity_comment' === $activity->type ) {
-				$media->privacy = 'comment';
+				$media->privacy = $r['privacy'];
 			}
 		}
 	} elseif ( ! empty( $media->album_id ) ) {
