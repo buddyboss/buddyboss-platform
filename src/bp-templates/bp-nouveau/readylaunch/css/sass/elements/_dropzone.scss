@@ -423,6 +423,14 @@
 
 	&.dz-max-files-reached {
 
+		&.open {
+			pointer-events: none; // Prevent outside clicks to open uploader
+
+			.dz-preview {
+				pointer-events: auto;
+			}
+		}
+
 		.dz-default.dz-message {
 			display: none;
 		}
@@ -443,8 +451,16 @@
 			pointer-events: auto;
 		}
 
-		&.dz-max-files-reached .dz-default.dz-message {
-			display: none;
+		&.dz-max-files-reached.dz-started {
+			pointer-events: none;
+
+			.dz-default.dz-message {
+				display: none;
+			}
+
+			.dz-preview {
+				pointer-events: auto;
+			}
 		}
 
 		&.dz-started {
