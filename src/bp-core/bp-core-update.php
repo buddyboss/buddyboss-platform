@@ -511,6 +511,10 @@ function bp_version_updater() {
 			bb_update_to_2_8_20();
 		}
 
+		if ( $raw_db_version < 23421 ) {
+			bb_update_to_2_9_2();
+		}
+
 		if ( $raw_db_version !== $current_db ) {
 			// @todo - Write only data manipulate migration here. ( This is not for DB structure change ).
 
@@ -3918,4 +3922,28 @@ function bb_update_to_2_8_20() {
 		)
 	);
 	bp_update_option( 'bb_enable_activity_search', true );
+}
+
+/**
+ * Migrate for BuddyBoss [BBVERSION].
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_update_to_2_9_2() {
+	global $wpdb, $bp;
+
+	$postmeta_table = $wpdb->prefix . 'postmeta';
+
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+	$wpdb->query(
+		"UPDATE {$bp->media->table_name} m
+		INNER JOIN {$postmeta_table} pm
+			ON m.attachment_id = pm.post_id AND pm.meta_key = 'bp_media_activity_id'
+		INNER JOIN {$bp->activity->table_name} a
+			ON pm.meta_value = a.id AND a.type = 'activity_comment'
+		SET m.privacy = 'comment'
+		WHERE m.privacy = 'grouponly'"
+	);
 }
