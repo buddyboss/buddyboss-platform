@@ -218,7 +218,7 @@ function bbp_encode_bad( $content = '' ) {
 }
 
 /**
- * Convert <pre> tags to backtick format for processing. This handles admin editor content that uses <pre> tags instead of backticks.
+ * Convert <pre> tags to backtick format for processing and ensures admin content.
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -243,7 +243,7 @@ function bbp_convert_pre_tags_to_backticks( $content = '' ) {
 }
 
 /**
- * Apply <pre> tag conversion to admin content. This filter converts <pre> tags to backtick format before other processing.
+ * Apply <pre> tag conversion to backticks for admin content.
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -262,7 +262,7 @@ function bbp_admin_convert_pre_tags( $content = '' ) {
 }
 
 /**
- * Apply bbp_encode_bad to admin content. This filter ensures admin content goes through HTML entity encoding.
+ * Apply bbp_encode_bad to admin content and ensures admin content goes through HTML entity encoding.
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -281,7 +281,7 @@ function bbp_admin_encode_bad( $content = '' ) {
 }
 
 /**
- * Apply bbp_code_trick to admin content. This filter ensures admin content goes through code block processing.
+ * Apply bbp_code_trick to admin content and ensures admin content goes through code block processing.
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -300,8 +300,7 @@ function bbp_admin_code_trick( $content = '' ) {
 }
 
 /**
- * Apply bbp_filter_kses to admin content
- * This filter ensures admin content goes through KSES sanitization
+ * Apply bbp_filter_kses to admin content and ensures admin content goes through KSES sanitization.
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -320,7 +319,7 @@ function bbp_admin_filter_kses( $content = '' ) {
 }
 
 /**
- * Apply bbp_convert_mentions to admin content. This filter ensures admin content goes through mention processing.
+ * Apply bbp_convert_mentions to admin content and ensures admin content goes through mention processing.
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -339,7 +338,7 @@ function bbp_admin_convert_mentions( $content = '' ) {
 }
 
 /**
- * Apply balanceTags to admin content. This filter ensures admin content goes through tag balancing.
+ * Apply balanceTags to admin content and ensures admin content goes through tag balancing.
  *
  * @since BuddyBoss [BBVERSION]
  *
