@@ -2554,6 +2554,11 @@
   content: "\e3e2";
 }
 
+.forum-dropdown .bbp-admin-links > a.bbp-topic-super-sticky-link:before,
+.bb-rl-container-inner .bbp-admin-links > a.bbp-topic-super-sticky-link:before {
+  content: "\e65c";
+}
+
 .forum-dropdown .bbp-admin-links > a.bbp-topic-merge-link:before,
 .bb-rl-container-inner .bbp-admin-links > a.bbp-topic-merge-link:before {
   content: "\e09e";

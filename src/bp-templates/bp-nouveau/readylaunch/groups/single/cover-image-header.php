@@ -73,7 +73,7 @@ $has_default_cover        = bb_attachment_get_cover_image_class( bp_get_group_id
 				</a>
 				<div class="header-cover-reposition-wrap">
 					<a href="#" class="button small cover-image-cancel"><?php esc_html_e( 'Cancel', 'buddyboss' ); ?></a>
-					<a href="#" class="button small cover-image-save"><?php esc_html_e( 'Save Changes', 'buddyboss' ); ?></a>
+					<a href="#" class="button small cover-image-save"><?php esc_html_e( 'Save Change', 'buddyboss' ); ?></a>
 					<span class="drag-element-helper"><i class="bb-icons-rl-list"></i><?php esc_html_e( 'Drag to move cover photo', 'buddyboss' ); ?></span>
 					<img src="<?php echo esc_url( $group_cover_image ); ?>" alt="<?php esc_attr_e( 'Cover photo', 'buddyboss' ); ?>" />
 				</div>

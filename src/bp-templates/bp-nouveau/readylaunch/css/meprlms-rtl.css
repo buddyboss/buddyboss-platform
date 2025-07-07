@@ -362,6 +362,7 @@
   display: flex;
   align-items: center;
   gap: var(--bb-rl-space-100);
+  flex-flow: wrap;
 }
 
 .bb-rl-lms-tab-menu .bb-rl-lms-tab,
@@ -406,6 +407,7 @@
   align-items: center;
   gap: var(--bb-rl-space-50);
   color: var(--bb-rl-text-secondary-color);
+  white-space: nowrap;
 }
 
 .bb-rl-lms-tab-menu .bb-rl-lms-tab .mpcs-share,
@@ -753,17 +755,22 @@ body[class*="mpcs-course"] .bb-rl-mbprlms-pagination ul li a {
   display: inline-flex;
   min-width: var(--bb-rl-space-400);
   height: var(--bb-rl-space-400);
-  border: 1px solid transparent;
+  border: 1px solid transparent !important;
   border-radius: var(--bb-rl-radius-md);
   justify-content: center;
   align-items: center;
   color: var(--bb-rl-text-tertiary-color) !important;
 }
 
+.bb-rl-mbprlms-pagination ul li a:hover,
+body[class*="mpcs-course"] .bb-rl-mbprlms-pagination ul li a:hover {
+  border-color: var(--bb-rl-border-tertiary-color) !important;
+}
+
 .bb-rl-mbprlms-pagination ul li.active a,
 body[class*="mpcs-course"] .bb-rl-mbprlms-pagination ul li.active a {
   color: var(--bb-rl-text-color) !important;
-  border: 1px solid var(--bb-rl-border-quaternary-color);
+  border: 1px solid var(--bb-rl-border-quaternary-color) !important;
   background-color: var(--bb-rl-background-color);
 }
 

@@ -410,6 +410,10 @@
 		#bp-media-prev,
 		#bp-media-photo-next {
 			display: none;
+
+			&[style="display: inline;"] {
+				display: inline-flex !important;
+			}
 		}
 
 		.bb-field-steps-1.controls-added {
@@ -546,6 +550,17 @@
 				margin: var(--bb-rl-space-100) 0 0;
 			}
 		}
+
+		.bb-model-footer {
+
+			.bb-rl-privacy-field-wrap-hide-show {
+				padding: 0;
+
+				label {
+					display: none;
+				}
+			}
+		}
 	}
 
 	#bp-video-create-album,
@@ -620,6 +635,16 @@
 			label {
 				display: none;
 			}
+		}
+	}
+}
+
+.bb-rl-create-folder-popup {
+
+	.bb-model-footer {
+
+		.bb-rl-field-wrap {
+			margin-right: var(--bb-rl-space-200);
 		}
 	}
 }
