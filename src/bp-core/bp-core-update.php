@@ -3936,14 +3936,31 @@ function bb_update_to_2_9_2() {
 
 	$postmeta_table = $wpdb->prefix . 'postmeta';
 
-	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-	$wpdb->query(
-		"UPDATE {$bp->media->table_name} m
-		INNER JOIN {$postmeta_table} pm
-			ON m.attachment_id = pm.post_id AND pm.meta_key = 'bp_media_activity_id'
-		INNER JOIN {$bp->activity->table_name} a
-			ON pm.meta_value = a.id AND a.type = 'activity_comment'
-		SET m.privacy = 'comment'
-		WHERE m.privacy = 'grouponly'"
+	$updates = array(
+		array(
+			'table'    => $bp->media->table_name,
+			'key_name' => 'bp_media_activity_id',
+		),
+		array(
+			'table'    => $bp->document->table_name,
+			'key_name' => 'bp_document_activity_id',
+		),
+		array(
+			'table'    => $bp->media->table_name,
+			'key_name' => 'bp_video_activity_id',
+		),
 	);
+
+	foreach ( $updates as $update ) {
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$wpdb->query(
+			"UPDATE {$update['table']} m
+			INNER JOIN {$postmeta_table} pm
+				ON m.attachment_id = pm.post_id AND pm.meta_key = '{$update['key_name']}'
+			INNER JOIN {$bp->activity->table_name} a
+				ON pm.meta_value = a.id AND a.type = 'activity_comment'
+			SET m.privacy = 'comment'
+			WHERE m.privacy = 'grouponly' AND m.attachment_id IS NOT NULL"
+		);
+	}
 }
