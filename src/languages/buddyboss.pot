@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 2.9.00\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2025-07-01 13:55:03+00:00\n"
+"POT-Creation-Date: 2025-07-07 09:35:46+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -10851,6 +10851,7 @@ msgstr ""
 
 #: bp-core/classes/class-bb-readylaunch.php:1082
 #: bp-core/classes/class-bb-readylaunch.php:2636
+#: bp-templates/bp-nouveau/buddypress-functions.php:744
 msgid "More"
 msgstr ""
 
