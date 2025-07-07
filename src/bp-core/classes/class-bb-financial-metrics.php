@@ -52,7 +52,7 @@ if ( ! class_exists( 'BB_Financial_Metrics' ) ) {
 		 * @var array
 		 */
 		private static $supported_plugins = array(
-			'learndash'   => array(
+			'learndash'           => array(
 				'name'         => 'LearnDash LMS',
 				'file'         => 'sfwd-lms/sfwd_lms.php',
 				'post_type'    => 'sfwd-transactions',
@@ -60,7 +60,7 @@ if ( ! class_exists( 'BB_Financial_Metrics' ) ) {
 				'status'       => array( 'publish' ),
 				'currency_key' => 'learndash_settings_payments',
 			),
-			'memberpress' => array(
+			'memberpress'         => array(
 				'name'       => 'MemberPress',
 				'file'       => 'memberpress/memberpress.php',
 				'table'      => 'mepr_transactions',
@@ -68,7 +68,7 @@ if ( ! class_exists( 'BB_Financial_Metrics' ) ) {
 				'status'     => array( 'complete' ),
 				'currency'   => 'USD',
 			),
-			'woocommerce' => array(
+			'woocommerce'         => array(
 				'name'          => 'WooCommerce',
 				'file'          => 'woocommerce/woocommerce.php',
 				'post_type'     => 'shop_order',
@@ -76,7 +76,7 @@ if ( ! class_exists( 'BB_Financial_Metrics' ) ) {
 				'status'        => array( 'wc-completed', 'wc-processing' ),
 				'currency_func' => 'get_woocommerce_currency',
 			),
-			'lifterlms'   => array(
+			'lifterlms'           => array(
 				'name'         => 'LifterLMS',
 				'file'         => 'lifterlms/lifterlms.php',
 				'post_type'    => 'llms_order',
@@ -84,16 +84,16 @@ if ( ! class_exists( 'BB_Financial_Metrics' ) ) {
 				'status'       => array( 'llms-completed', 'llms-active' ),
 				'currency_key' => 'lifterlms_currency',
 			),
-			'tutor_lms'   => array(
-				'name'         => 'Tutor LMS',
-				'file'         => 'tutor/tutor.php',
-				'post_type'    => 'shop_order',
-				'meta_key'     => '_order_total',
-				'status'       => array( 'wc-completed', 'wc-processing' ),
+			'tutor_lms'           => array(
+				'name'          => 'Tutor LMS',
+				'file'          => 'tutor/tutor.php',
+				'post_type'     => 'shop_order',
+				'meta_key'      => '_order_total',
+				'status'        => array( 'wc-completed', 'wc-processing' ),
 				'currency_func' => 'get_woocommerce_currency',
-				'custom_where' => 'tutor_order',
+				'custom_where'  => 'tutor_order',
 			),
-			'pmpro'       => array(
+			'pmpro'               => array(
 				'name'         => 'Paid Memberships Pro',
 				'file'         => 'paid-memberships-pro/paid-memberships-pro.php',
 				'table'        => 'pmpro_membership_orders',
@@ -101,13 +101,22 @@ if ( ! class_exists( 'BB_Financial_Metrics' ) ) {
 				'status'       => array( 'success' ),
 				'currency_key' => 'pmpro_currency',
 			),
-			'affiliatewp' => array(
+			'affiliatewp'         => array(
 				'name'          => 'AffiliateWP',
 				'file'          => 'affiliate-wp/affiliate-wp.php',
 				'table'         => 'affiliate_wp_referrals',
 				'amount_col'    => 'amount',
 				'status'        => array( 'unpaid' ),
 				'currency_func' => 'affwp_get_currency',
+			),
+			'the_events_calendar' => array(
+				'name'            => 'The Events Calendar',
+				'file'            => 'the-events-calendar/the-events-calendar.php',
+				'post_type'       => 'tribe_tpp_orders',
+				'meta_key'        => 'mc_gross',
+				'status'          => array( 'publish' ),
+				'currency_func'   => 'tribe_get_option',
+				'currency_option' => 'tribe_currency_code',
 			),
 		);
 
@@ -243,6 +252,9 @@ if ( ! class_exists( 'BB_Financial_Metrics' ) ) {
 			}
 
 			if ( isset( $config['currency_func'] ) && function_exists( $config['currency_func'] ) ) {
+				if ( isset( $config['currency_option'] ) ) {
+					return call_user_func( $config['currency_func'], $config['currency_option'], 'USD' );
+				}
 				return call_user_func( $config['currency_func'] );
 			}
 
@@ -269,7 +281,7 @@ if ( ! class_exists( 'BB_Financial_Metrics' ) ) {
 			try {
 				$status_placeholders = implode( ',', array_fill( 0, count( $config['status'] ), '%s' ) );
 
-				// Build the base query
+				// Build the base query.
 				$query_parts = array(
 					'SELECT COUNT(*) as order_count, SUM(CAST(meta_value AS DECIMAL(10,2))) as total_revenue',
 					'FROM ' . self::$wpdb->posts . ' p',
@@ -279,10 +291,10 @@ if ( ! class_exists( 'BB_Financial_Metrics' ) ) {
 					'AND pm.meta_key = %s',
 					'AND pm.meta_value IS NOT NULL',
 					'AND pm.meta_value != \'\'',
-					'AND pm.meta_value != \'0\''
+					'AND pm.meta_value != \'0\'',
 				);
 
-				// Add custom WHERE clause for Tutor LMS
+				// Add custom WHERE clause for Tutor LMS.
 				if ( isset( $config['custom_where'] ) && 'tutor_order' === $config['custom_where'] ) {
 					$query_parts[] = 'AND EXISTS (
 						SELECT 1 FROM ' . self::$wpdb->postmeta . ' pm2
@@ -304,7 +316,7 @@ if ( ! class_exists( 'BB_Financial_Metrics' ) ) {
 				}
 
 				return false;
-			} catch ( Exception $e ) {
+			} catch ( \Exception $e ) {
 				// Log error silently and return false.
 				error_log( 'BB_Financial_Metrics: Error getting post type metrics for ' . $config['post_type'] . ': ' . $e->getMessage() );
 				return false;
@@ -328,7 +340,7 @@ if ( ! class_exists( 'BB_Financial_Metrics' ) ) {
 
 				// Check if table exists.
 				$table_name   = self::$wpdb->prefix . $config['table'];
-				$table_exists = self::$wpdb->get_var( "SHOW TABLES LIKE '{$table_name}'" );
+				$table_exists = self::$wpdb->get_var( self::$wpdb->prepare( "SHOW TABLES LIKE %s", $table_name ) );
 				if ( ! $table_exists ) {
 					return false;
 				}
@@ -352,7 +364,7 @@ if ( ! class_exists( 'BB_Financial_Metrics' ) ) {
 				}
 
 				return false;
-			} catch ( Exception $e ) {
+			} catch ( \Exception $e ) {
 				// Log error silently and return false.
 				error_log( 'BB_Financial_Metrics: Error getting table metrics for ' . $config['table'] . ': ' . $e->getMessage() );
 				return false;
