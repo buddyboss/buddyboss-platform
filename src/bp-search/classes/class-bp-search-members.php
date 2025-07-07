@@ -92,7 +92,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 			$WHERE        = array();
 			$WHERE[]      = '1=1';
 			$WHERE[]      = 'u.user_status = 0';
-			$WHERE[]      = "a.date_recorded IS NOT NULL";
+			$WHERE[]      = 'a.date_recorded IS NOT NULL';
 			$where_fields = array();
 
 			/*

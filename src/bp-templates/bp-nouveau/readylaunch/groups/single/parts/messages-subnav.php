@@ -14,10 +14,7 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-$bb_group_readylaunch = class_exists( 'BB_Group_Readylaunch' ) ? BB_Group_Readylaunch::instance() : null;
-if ( $bb_group_readylaunch ) {
-	add_filter( 'bp_nouveau_get_nav_link_text', array( $bb_group_readylaunch, 'bb_rl_modify_nav_link_text' ), 10, 3 );
-}
+add_filter( 'bp_nouveau_get_nav_link_text', 'BB_Group_Readylaunch::bb_rl_modify_nav_link_text', 10, 3 );
 ?>
 
 <nav class="<?php bp_nouveau_single_item_subnav_classes(); ?>" id="subnav" role="navigation" aria-label="<?php esc_attr_e( 'Group Messages menu', 'buddyboss' ); ?>">
@@ -43,7 +40,5 @@ if ( $bb_group_readylaunch ) {
 	<?php endif; ?>
 </nav><!-- #isubnav -->
 <?php
-if ( $bb_group_readylaunch ) {
-	remove_filter( 'bp_nouveau_get_nav_link_text', array( $bb_group_readylaunch, 'bb_rl_modify_nav_link_text' ), 10, 3 );
-}
+remove_filter( 'bp_nouveau_get_nav_link_text', 'BB_Group_Readylaunch::bb_rl_modify_nav_link_text', 10, 3 );
 ?>

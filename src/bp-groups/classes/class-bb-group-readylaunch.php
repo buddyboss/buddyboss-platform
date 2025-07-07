@@ -725,7 +725,7 @@ class BB_Group_Readylaunch {
 	 *
 	 * @return string Modified link text.
 	 */
-	public function bb_rl_modify_nav_link_text( $link_text, $nav_item, $nav_scope ) {
+	public static function bb_rl_modify_nav_link_text( $link_text, $nav_item, $nav_scope ) {
 		if ( ! empty( $nav_item->slug ) && ! empty( $nav_scope ) && 'groups' === $nav_scope ) {
 			if ( 'public-message' === $nav_item->slug ) {
 				$link_text = __( 'Group message', 'buddyboss' );

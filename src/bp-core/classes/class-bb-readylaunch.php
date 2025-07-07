@@ -3913,7 +3913,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Modify nav link text for readylaunch.
 		 *
-		 * @since BuddyBoss 2.9.00
+		 * @since BuddyBoss [BBVERSION]
 		 *
 		 * @param string $link_text  Link text.
 		 * @param object $nav_item   Nav item.
