@@ -218,7 +218,7 @@ function bbp_encode_bad( $content = '' ) {
 }
 
 /**
- * Convert <pre> tags to backtick format for processing and ensures admin content.
+ * Convert <pre> and <code> tags to backtick format for processing and ensures admin content.
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -226,19 +226,29 @@ function bbp_encode_bad( $content = '' ) {
  *
  * @return string Converted content.
  */
-function bbp_convert_pre_tags_to_backticks( $content = '' ) {
+function bbp_convert_pre_and_code_tags_to_backticks( $content = '' ) {
 
 	// Convert <pre> blocks to backtick format.
 	$content = preg_replace_callback(
 		'|<pre>(.*?)</pre>|s',
 		function( $matches ) {
 			$pre_content = $matches[1];
-			// Convert <pre> content to backtick format
+			// Convert <pre> content to backtick format.
 			return "\n`" . $pre_content . "`\n";
 		},
 		$content
 	);
 
+	// Convert <code> blocks to backtick format.
+	$content = preg_replace_callback(
+		'|<code>(.*?)</code>|s',
+		function( $matches ) {
+			$code_content = $matches[1];
+			// Convert <code> content to backtick format.
+			return "\n`" . $code_content . "`\n";
+		},
+		$content
+	);
 	return $content;
 }
 
@@ -255,7 +265,7 @@ function bbp_admin_convert_pre_tags( $content = '' ) {
 
 	// Only apply to BuddyBoss forum post types in admin area.
 	if ( is_admin() && in_array( get_post_type(), array( bbp_get_forum_post_type(), bbp_get_topic_post_type(), bbp_get_reply_post_type() ) ) ) {
-		return bbp_convert_pre_tags_to_backticks( $content );
+		return bbp_convert_pre_and_code_tags_to_backticks( $content );
 	}
 
 	return $content;
