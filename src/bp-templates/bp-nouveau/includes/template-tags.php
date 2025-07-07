@@ -1307,7 +1307,7 @@ function bp_nouveau_nav_has_count() {
 					}
 				}
 			}
-			
+
 		} elseif ( 'groups' === $bp_nouveau->displayed_nav && 'members' === $nav_item->slug ) {
 			$count = 0 !== (int) groups_get_current_group()->total_member_count;
 		} elseif ( 'groups' === $bp_nouveau->displayed_nav && bp_is_active( 'media' ) && bp_is_group_media_support_enabled() && 'photos' === $nav_item->slug ) {

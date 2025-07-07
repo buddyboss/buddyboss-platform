@@ -507,7 +507,7 @@ function bp_video_forums_new_post_video_save( $post_id ) {
 		$video_ids = array();
 		foreach ( $videos as $video ) {
 
-			$title             = ! empty( $video['name'] ) ? $video['name'] : '';
+			$title             = ! empty( $video['name'] ) ? sanitize_text_field( wp_unslash( $video['name'] ) ) : '';
 			$attachment_id     = ! empty( $video['id'] ) ? $video['id'] : 0;
 			$attached_video_id = ! empty( $video['video_id'] ) ? $video['video_id'] : 0;
 			$album_id          = ! empty( $video['album_id'] ) ? $video['album_id'] : 0;

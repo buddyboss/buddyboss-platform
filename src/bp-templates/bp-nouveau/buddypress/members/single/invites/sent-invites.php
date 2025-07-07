@@ -130,10 +130,10 @@ if ( isset( $restricted ) && '' !== $restricted ) {
 			?>
 			<tr>
 				<td class="field-name">
-					<span><?php echo get_post_meta( $post_id, '_bp_invitee_name', true ); ?></span>
+					<span><?php echo esc_html( get_post_meta( $post_id, '_bp_invitee_name', true ) ); ?></span>
 				</td>
 				<td class="field-email">
-					<span><?php echo get_post_meta( $post_id, '_bp_invitee_email', true ); ?></span>
+					<span><?php echo esc_html( get_post_meta( $post_id, '_bp_invitee_email', true ) ); ?></span>
 				</td>
 				<td class="field-email">
 					<span>
