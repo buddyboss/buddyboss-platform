@@ -524,6 +524,12 @@ function bp_media_add( $args = '' ) {
 		$media->privacy = $r['privacy'];
 	} elseif ( ! empty( $media->group_id ) ) {
 		$media->privacy = 'grouponly';
+		if ( ! empty( $media->activity_id ) ) {
+			$activity = new BP_Activity_Activity( $media->activity_id );
+			if ( ! empty( $activity ) && 'activity_comment' === $activity->type ) {
+				$media->privacy = 'comment';
+			}
+		}
 	} elseif ( ! empty( $media->album_id ) ) {
 		$album = new BP_Media_Album( $media->album_id );
 		if ( ! empty( $album ) ) {
