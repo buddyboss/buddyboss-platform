@@ -57,8 +57,6 @@ class BB_Activity_Readylaunch {
 		add_filter( 'bp_nouveau_document_description_response_data', array( $this, 'bb_rl_modify_media_description_response_data' ), 10 );
 		add_filter( 'bp_nouveau_video_description_response_data', array( $this, 'bb_rl_modify_media_description_response_data' ), 10 );
 
-		add_filter( 'bp_activity_get_visibility_levels', array( $this, 'bb_rl_modify_activity_visibility_levels' ), 10 );
-
 		add_filter( 'bp_nouveau_activity_widget_query', array( $this, 'bb_rl_modify_activity_widget_query' ), 10 );
 	}
 
@@ -736,25 +734,6 @@ class BB_Activity_Readylaunch {
 		}
 
 		return $response_data;
-	}
-
-	/**
-	 * Modify activity visibility levels.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param array $visibility_levels The visibility levels.
-	 *
-	 * @return array Modified visibility levels.
-	 */
-	public function bb_rl_modify_activity_visibility_levels( $visibility_levels ) {
-		$visibility_levels['loggedin'] = __( 'All members', 'buddyboss' );
-		if ( bp_is_active( 'friends' ) ) {
-			$visibility_levels['friends'] = __( 'My connections', 'buddyboss' );
-		}
-		$visibility_levels['onlyme'] = __( 'Only me', 'buddyboss' );
-
-		return $visibility_levels;
 	}
 
 	/**

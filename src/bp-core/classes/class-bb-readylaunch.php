@@ -300,6 +300,11 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				add_filter( 'bp_search_results_group_start_html', array( $this, 'bb_rl_modify_search_results_group_start_html' ), 11 );
 				add_filter( 'bp_search_results_group_end_html', array( $this, 'bb_rl_modify_search_results_group_start_html' ), 11 );
 			}
+
+			add_filter( 'bp_activity_get_visibility_levels', array( $this, 'bb_rl_modify_visibility_levels' ), 10 );
+			add_filter( 'bp_document_get_visibility_levels', array( $this, 'bb_rl_modify_visibility_levels' ), 10 );
+			add_filter( 'bp_media_get_visibility_levels', array( $this, 'bb_rl_modify_visibility_levels' ), 10 );
+			add_filter( 'bp_video_get_visibility_levels', array( $this, 'bb_rl_modify_visibility_levels' ), 10 );
 		}
 
 		/**
@@ -4021,6 +4026,25 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			}
 
 			return '';
+		}
+
+		/**
+		 * Modify visibility levels for readylaunch.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array $visibility_levels The visibility levels.
+		 *
+		 * @return array Modified visibility levels.
+		 */
+		public function bb_rl_modify_visibility_levels( $visibility_levels ) {
+			$visibility_levels['loggedin'] = __( 'All members', 'buddyboss' );
+			if ( bp_is_active( 'friends' ) ) {
+				$visibility_levels['friends'] = __( 'My connections', 'buddyboss' );
+			}
+			$visibility_levels['onlyme'] = __( 'Only me', 'buddyboss' );
+
+			return $visibility_levels;
 		}
 	}
 }
