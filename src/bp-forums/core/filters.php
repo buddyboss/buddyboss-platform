@@ -126,7 +126,7 @@ add_filter( 'bbp_edit_forum_pre_content', 'bbp_convert_mentions', 40 );
 add_filter( 'bbp_edit_forum_pre_content', 'balanceTags', 50 );
 
 // Admin content processing - apply the same filter chain as frontend.
-add_filter( 'content_save_pre', 'bbp_admin_convert_code_tags', 5, 1 );   // Convert <code> tags to backticks first.
+add_filter( 'content_save_pre', 'bbp_admin_convert_pre_tags', 5, 1 );    // Convert <pre> tags to backticks first.
 add_filter( 'content_save_pre', 'bbp_admin_encode_bad', 10, 1 );         // HTML entity encoding.
 add_filter( 'content_save_pre', 'bbp_admin_code_trick', 20, 1 );         // Code block processing.
 add_filter( 'content_save_pre', 'bbp_admin_filter_kses', 30, 1 );        // KSES sanitization.
