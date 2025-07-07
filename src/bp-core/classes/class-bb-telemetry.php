@@ -345,7 +345,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 			if ( file_exists( $financial_metrics_file ) ) {
 				require_once $financial_metrics_file;
 				if ( class_exists( 'BB_Financial_Metrics' ) ) {
-					$bb_telemetry_data['financial_metrics'] = BB_Financial_Metrics::collect();
+					$bb_telemetry_data['bb_financial_metrics'] = BB_Financial_Metrics::collect();
 				}
 			}
 
