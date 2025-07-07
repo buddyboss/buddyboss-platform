@@ -69,7 +69,7 @@ if ( bp_has_folders( array( 'include' => $folder_id ) ) ) :
 											if ( $manage ) {
 												?>
 												<a class="bp-add-document button bb-rl-button bb-rl-button--brandFill bb-rl-button--small" id="bp-add-document" href="#" >
-													<i class="bb-icons-rl-plus"></i><?php esc_html_e( 'Upload Files', 'buddyboss' ); ?>
+													<i class="bb-icons-rl-plus"></i><?php esc_html_e( 'Add Documents', 'buddyboss' ); ?>
 												</a>
 												<a href="#" id="bb-create-folder-child" class="bb-create-folder-stacked button bb-rl-button bb-rl-button--secondaryFill bb-rl-button--small">
 													<i class="bb-icons-rl-folder-plus"></i><?php esc_html_e( 'Create Folder', 'buddyboss' ); ?>
@@ -79,7 +79,7 @@ if ( bp_has_folders( array( 'include' => $folder_id ) ) ) :
 										} elseif ( ! $bp_is_group && $can_edit_btn && bb_user_can_create_document() ) {
 											?>
 											<a class="bp-add-document button bb-rl-button bb-rl-button--brandFill bb-rl-button--small" id="bp-add-document" href="#" >
-												<i class="bb-icons-rl-plus"></i><?php esc_html_e( 'Upload Files', 'buddyboss' ); ?>
+												<i class="bb-icons-rl-plus"></i><?php esc_html_e( 'Add Documents', 'buddyboss' ); ?>
 											</a>
 											<a href="#" id="bb-create-folder-child" class="bb-create-folder-stacked button bb-rl-button bb-rl-button--secondaryFill bb-rl-button--small">
 												<i class="bb-icons-rl-folder-plus"></i><?php esc_html_e( 'Create Folder', 'buddyboss' ); ?>

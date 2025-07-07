@@ -47,7 +47,7 @@ defined( 'ABSPATH' ) || exit;
 						) :
 							?>
 							<div class="media-uploader-post-content">
-								<textarea name="bp-media-post-content" id="bp-media-post-content" placeholder="<?php bp_is_group() ? esc_html_e( 'Write something about your documents, to be shown on the group feed', 'buddyboss' ) : esc_html_e( 'Write something about your photos, to be shown on your timeline', 'buddyboss' ); ?>"></textarea>
+								<textarea name="bp-media-post-content" id="bp-media-post-content" placeholder="<?php esc_html_e( 'Write a description', 'buddyboss' ); ?>"></textarea>
 							</div>
 							<?php
 						endif;
@@ -80,7 +80,7 @@ defined( 'ABSPATH' ) || exit;
 								</ul>
 								<?php
 							else :
-								bp_nouveau_user_feedback( 'document-loop-none' );
+								bp_get_template_part( 'document/no-document' );
 							endif;
 							?>
 						</div>

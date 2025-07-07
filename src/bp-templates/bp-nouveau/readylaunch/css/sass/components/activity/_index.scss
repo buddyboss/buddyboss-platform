@@ -1,3 +1,7 @@
+@import "../../base/variables";
+@import "../../base/mixins";
+@import "./code_mirror";
+
 /* General Styling */
 .bb-rl-activity-page {
 	width: 100%;
@@ -32,13 +36,13 @@
 				margin: auto;
 			}
 		}
-	}
 
+		@media screen and (max-width: $sm) {
+			margin: 0;
+		}
+	}
 }
 
-@import "../../base/variables";
-@import "../../base/mixins";
-@import "./code_mirror";
 @import "./post_form.scss";
 @import "./activity_loader.scss";
 @import "./activity_feed.scss";

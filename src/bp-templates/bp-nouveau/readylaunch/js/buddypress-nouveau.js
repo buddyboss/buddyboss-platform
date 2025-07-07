@@ -2007,7 +2007,6 @@ window.bp = window.bp || {};
 				target.html( target.data( 'title' ) );
 				target.removeClass( 'bp-toggle-action-button' );
 				target.addClass( 'bp-toggle-action-button-clicked' );
-				return false;
 			}
 
 			// check if only admin trying to leave the group.

@@ -59,7 +59,7 @@ class BB_Group_Members_Widget extends WP_Widget {
 		if ( bp_group_has_members( $group_args ) ) {
 			?>
 			<div class="widget-header">
-				<h2 class="widget-title"><?php esc_html_e( 'Group Members', 'buddyboss' ); ?></h2>
+				<h2 class="widget-title"><?php esc_html_e( 'Group members', 'buddyboss' ); ?></h2>
 				<a href="<?php echo esc_url( bp_get_group_permalink() ); ?>" class="widget-link">
 					<?php esc_html_e( 'See all', 'buddyboss' ); ?>
 				</a>

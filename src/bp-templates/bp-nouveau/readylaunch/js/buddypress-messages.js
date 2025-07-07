@@ -3947,10 +3947,23 @@ window.bp = window.bp || {};
 					return;
 				}
 
+				// Convert existing options to select2 data format
+				var existingData = [];
+				$input.find( 'option[selected]' ).each(function() {
+					var $option = $( this );
+					var imageUrl = $option.data( 'image' ) || '';
+					existingData.push({
+						id: $option.val(),
+						text: $option.text(),
+						image: imageUrl
+					});
+				});
+
 				$input.select2(
 					{
 						placeholder: BP_Nouveau.messages.i18n.to_placeholder,
 						minimumInputLength: 1,
+						data: existingData,
 						language: {
 							errorLoading: function() {
 								return bp_select2.i18n.errorLoading;
