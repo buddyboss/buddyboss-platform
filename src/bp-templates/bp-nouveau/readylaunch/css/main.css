@@ -4887,6 +4887,8 @@ body.bb-readylaunch-template .select2-container--rl.select2-container--open:has(
   display: block;
 }
 
+.bb-action-popup .modal-mask,
+.moderation-popup .modal-mask,
 .bb-rl-modal-mask {
   position: fixed;
   z-index: 9998;
