@@ -254,6 +254,7 @@ if ( bp_group_has_members( bp_ajax_querystring( 'group_members' ) . '&type=group
 						<div class="bb_more_options member-dropdown bb-rl-context-wrap">
 							<a href="#" class="bb-rl-context-btn bb_more_options_action bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_html_e( 'More Options', 'buddyboss' ); ?>">
 								<i class="bb-icons-rl-dots-three"></i>
+								<span class="bp-screen-reader-text"><?php esc_html_e( 'More options', 'buddyboss' ); ?></span>
 							</a>
 							<div class="bb_more_options_list bb_more_dropdown bb-rl-context-dropdown">
 								<?php bp_get_template_part( 'common/more-options-view' ); ?>
