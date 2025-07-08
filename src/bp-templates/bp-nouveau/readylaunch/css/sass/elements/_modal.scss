@@ -6,7 +6,8 @@
 	}
 }
 
-.modal-mask,
+.bb-action-popup .modal-mask,
+.moderation-popup .modal-mask,
 .bb-rl-modal-mask {
 	position: fixed;
 	z-index: 9998;
@@ -110,19 +111,6 @@
 }
 
 .bb-readylaunch-template {
-
-	.modal-mask {
-		position: fixed;
-		z-index: 9998;
-		top: 0;
-		left: 0;
-		width: 100vw;
-		height: 100vh;
-		background-color: rgba(0, 0, 0, 0.5);
-		transition: opacity 0.3s ease;
-		display: flex;
-		align-items: center;
-	}
 
 	.modal-wrapper {
 		max-width: 615px;
@@ -410,6 +398,10 @@
 		#bp-media-prev,
 		#bp-media-photo-next {
 			display: none;
+
+			&[style="display: inline;"] {
+				display: inline-flex !important;
+			}
 		}
 
 		.bb-field-steps-1.controls-added {
@@ -546,6 +538,17 @@
 				margin: var(--bb-rl-space-100) 0 0;
 			}
 		}
+
+		.bb-model-footer {
+
+			.bb-rl-privacy-field-wrap-hide-show {
+				padding: 0;
+
+				label {
+					display: none;
+				}
+			}
+		}
 	}
 
 	#bp-video-create-album,
@@ -620,6 +623,16 @@
 			label {
 				display: none;
 			}
+		}
+	}
+}
+
+.bb-rl-create-folder-popup {
+
+	.bb-model-footer {
+
+		.bb-rl-field-wrap {
+			margin-right: var(--bb-rl-space-200);
 		}
 	}
 }
