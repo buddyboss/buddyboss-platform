@@ -3932,7 +3932,7 @@ function bb_update_to_2_8_20() {
  * @return void
  */
 function bb_update_to_2_9_2() {
-	global $wpdb, $bp;
+	global $wpdb;
 
 	$postmeta_table = $wpdb->prefix . 'postmeta';
 	$activity_table = $wpdb->prefix . 'bp_activity';
