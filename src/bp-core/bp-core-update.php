@@ -3957,7 +3957,7 @@ function bb_update_to_2_9_2() {
 		return;
 	}
 
-	// Filter to only existing tables
+	// Filter to only existing tables.
 	$updates = array();
 	foreach ( $updates as $update ) {
 		if ( $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $update['table'] ) ) ) {
