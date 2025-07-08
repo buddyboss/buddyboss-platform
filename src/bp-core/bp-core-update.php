@@ -3935,21 +3935,35 @@ function bb_update_to_2_9_2() {
 	global $wpdb, $bp;
 
 	$postmeta_table = $wpdb->prefix . 'postmeta';
+	$activity_table = $wpdb->prefix . 'bp_activity';
 
 	$updates = array(
 		array(
-			'table'    => $bp->media->table_name,
+			'table'    => $wpdb->prefix . 'bp_media',
 			'key_name' => 'bp_media_activity_id',
 		),
 		array(
-			'table'    => $bp->document->table_name,
+			'table'    => $wpdb->prefix . 'bp_document',
 			'key_name' => 'bp_document_activity_id',
 		),
 		array(
-			'table'    => $bp->media->table_name,
+			'table'    => $wpdb->prefix . 'bp_media',
 			'key_name' => 'bp_video_activity_id',
 		),
 	);
+
+	// Check activity table exists.
+	if ( ! $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $activity_table ) ) ) {
+    	return;
+    }
+
+    // Filter to only existing tables
+    $updates = array();
+    foreach ( $updates as $update ) {
+        if ( $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $update['table'] ) ) ) {
+            $updates[] = $update;
+        }
+    }
 
 	foreach ( $updates as $update ) {
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
@@ -3957,7 +3971,7 @@ function bb_update_to_2_9_2() {
 			"UPDATE {$update['table']} m
 			INNER JOIN {$postmeta_table} pm
 				ON m.attachment_id = pm.post_id AND pm.meta_key = '{$update['key_name']}'
-			INNER JOIN {$bp->activity->table_name} a
+			INNER JOIN {$activity_table} a
 				ON pm.meta_value = a.id AND a.type = 'activity_comment'
 			SET m.privacy = 'comment'
 			WHERE m.privacy = 'grouponly' AND m.attachment_id IS NOT NULL"
