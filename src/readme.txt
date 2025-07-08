@@ -57,6 +57,13 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 2.9.10 =
+* Bug: Forums - Fixed issue where image uploads were blocked when using Forum shortcode on a page with document uploads disabled
+* Bug: Forums - Fixed search results displaying password entry forms instead of a proper message for password-protected posts
+* Bug: Header - Fixed issue where the top row of member cards was partially hidden under the sticky header after pagination in the Members directory
+* Bug: Messages - Fixed pagination issue in group messages where banned members caused incorrect member listing
+* Bug: ReadyLaunch - Fixed minor design and functional bugs in ReadyLaunch
+
 = 2.9.00 =
 * New Feature! ReadyLaunch - launch your community with our new built in page template
 * Bug: Forums - Fixed an issue where forum reply and topic media were not being deleted upon deletion
