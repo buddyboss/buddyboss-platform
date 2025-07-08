@@ -4887,7 +4887,6 @@ body.bb-readylaunch-template .select2-container--rl.select2-container--open:has(
   display: block;
 }
 
-.modal-mask,
 .bb-rl-modal-mask {
   position: fixed;
   z-index: 9998;
@@ -4995,19 +4994,6 @@ body.bb-readylaunch-template .select2-container--rl.select2-container--open:has(
 
 .mfp-hide {
   display: none !important;
-}
-
-.bb-readylaunch-template .modal-mask {
-  position: fixed;
-  z-index: 9998;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: rgba(0, 0, 0, 0.5);
-  transition: opacity 0.3s ease;
-  display: flex;
-  align-items: center;
 }
 
 .bb-readylaunch-template .modal-wrapper {
