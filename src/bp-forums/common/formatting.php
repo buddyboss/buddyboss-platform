@@ -310,22 +310,22 @@ function bbp_admin_code_trick( $content = '' ) {
 }
 
 /**
- * Apply bbp_filter_kses to admin content and ensures admin content goes through KSES sanitization.
+ * Allow supported tags from admin area.
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param string $content Content to sanitize.
+ * @param array $tags Allowed tags.
  *
- * @return string Sanitized content.
+ * @return array Allowed tags.
  */
-function bbp_admin_filter_kses( $content = '' ) {
+function bbp_admin_kses_allowed_tags( $tags = array() ) {
 
 	// Only apply to BuddyBoss forum post types in admin area.
 	if ( is_admin() && in_array( get_post_type(), array( bbp_get_forum_post_type(), bbp_get_topic_post_type(), bbp_get_reply_post_type() ) ) ) {
-		return bbp_filter_kses( $content );
+		return wp_kses_allowed_html( 'post' );
 	}
 
-	return $content;
+	return $tags;
 }
 
 /**
@@ -401,7 +401,7 @@ function bbp_encode_callback( $matches = array() ) {
 		if ( '`' !== $matches[1] ) {
 			$content = "\n<pre>" . $content . "</pre>\n";
 		} else {
-			// Wrap in code tags
+			// Wrap in code tags.
 			$content = '<code>' . $content . '</code>';
 		}
 	} else {
