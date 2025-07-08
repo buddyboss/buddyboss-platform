@@ -1,6 +1,6 @@
 <?php
 /**
- * Financial Metrics Collection Class.
+ * Report Metrics Collection Class.
  *
  * @since   BuddyBoss [BBVERSION]
  * @package BuddyBoss\Core
@@ -8,14 +8,14 @@
 
 defined( 'ABSPATH' ) || exit;
 
-if ( ! class_exists( 'BB_Financial_Metrics' ) ) {
+if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 
 	/**
-	 * BuddyBoss Financial Metrics Collection object.
+	 * BuddyBoss Report Metrics Collection object.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 */
-	class BB_Financial_Metrics {
+	class BB_Report_Metrics {
 
 		/**
 		 * The single instance of the class.
@@ -125,7 +125,7 @@ if ( ! class_exists( 'BB_Financial_Metrics' ) ) {
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
-		 * @return BB_Financial_Metrics|null
+		 * @return BB_Report_Metrics|null
 		 */
 		public static function instance() {
 			if ( null === self::$instance ) {
@@ -158,12 +158,12 @@ if ( ! class_exists( 'BB_Financial_Metrics' ) ) {
 		}
 
 		/**
-		 * Collect financial metrics from all supported plugins.
+		 * Collect report metrics from all supported plugins.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
 		 * @param bool $force_refresh Force refresh cache.
-		 * @return array Array of financial metrics from all plugins.
+		 * @return array Array of report metrics from all plugins.
 		 */
 		public static function collect( $force_refresh = false ) {
 			self::init_wpdb();
@@ -221,7 +221,7 @@ if ( ! class_exists( 'BB_Financial_Metrics' ) ) {
 				'period'        => 'all_time',
 			);
 
-			// Get financial data based on plugin type.
+			// Get report data based on plugin type.
 			if ( isset( $config['post_type'] ) ) {
 				$data = self::get_post_type_metrics( $config );
 			} elseif ( isset( $config['table'] ) ) {
@@ -318,7 +318,7 @@ if ( ! class_exists( 'BB_Financial_Metrics' ) ) {
 				return false;
 			} catch ( \Exception $e ) {
 				// Log error silently and return false.
-				error_log( 'BB_Financial_Metrics: Error getting post type metrics for ' . $config['post_type'] . ': ' . $e->getMessage() );
+				error_log( 'BB_Report_Metrics: Error getting post type metrics for ' . $config['post_type'] . ': ' . $e->getMessage() );
 				return false;
 			}
 		}
@@ -366,7 +366,7 @@ if ( ! class_exists( 'BB_Financial_Metrics' ) ) {
 				return false;
 			} catch ( \Exception $e ) {
 				// Log error silently and return false.
-				error_log( 'BB_Financial_Metrics: Error getting table metrics for ' . $config['table'] . ': ' . $e->getMessage() );
+				error_log( 'BB_Report_Metrics: Error getting table metrics for ' . $config['table'] . ': ' . $e->getMessage() );
 				return false;
 			}
 		}

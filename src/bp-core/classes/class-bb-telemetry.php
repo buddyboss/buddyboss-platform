@@ -340,12 +340,12 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 			global $wpdb;
 			$bb_telemetry_data = ! empty( $bb_telemetry_data ) ? $bb_telemetry_data : array();
 
-			// Include and collect financial metrics
-			$financial_metrics_file = dirname( __FILE__ ) . '/class-bb-financial-metrics.php';
-			if ( file_exists( $financial_metrics_file ) ) {
-				require_once $financial_metrics_file;
-				if ( class_exists( 'BB_Financial_Metrics' ) ) {
-					$bb_telemetry_data['bb_financial_metrics'] = BB_Financial_Metrics::collect();
+			// Include and collect report metrics.
+			$report_metrics_file = __DIR__ . '/class-bb-report-metrics.php';
+			if ( file_exists( $report_metrics_file ) ) {
+				require_once $report_metrics_file;
+				if ( class_exists( 'BB_Report_Metrics' ) ) {
+					$bb_telemetry_data['bb_report_metrics'] = BB_Report_Metrics::collect();
 				}
 			}
 
