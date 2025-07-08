@@ -1167,6 +1167,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					false === strpos( $src, '/sfwd-lms/' ) &&
 					false === strpos( $src, '/learndash-course-reviews/' ) &&
 					false === strpos( $src, '/instructor-role/' ) &&
+					false !== strpos( $src, 'wp-content/themes/' ) &&
 					! $this->bb_has_allowed_suffix( $handle, $allow_suffix )
 				) {
 					wp_dequeue_script( $handle );
@@ -1184,6 +1185,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 						false === strpos( $src, '/buddyboss-platform-pro/' ) &&
 						false === strpos( $src, '/sfwd-lms/' ) &&
 						false === strpos( $src, '/instructor-role/' ) &&
+						false !== strpos( $src, 'wp-content/themes/' ) &&
 						! $this->bb_has_allowed_suffix( $handle, $allow_suffix )
 					) ||
 					'bp-nouveau-bb-icons' === $handle
