@@ -3939,15 +3939,15 @@ function bb_update_to_2_9_2() {
 
 	$updates = array(
 		array(
-			'table'    => $wpdb->prefix . 'bp_media',
+			'table'    => $wpdb->base_prefix . 'bp_media',
 			'key_name' => 'bp_media_activity_id',
 		),
 		array(
-			'table'    => $wpdb->prefix . 'bp_document',
+			'table'    => $wpdb->base_prefix . 'bp_document',
 			'key_name' => 'bp_document_activity_id',
 		),
 		array(
-			'table'    => $wpdb->prefix . 'bp_media',
+			'table'    => $wpdb->base_prefix . 'bp_media',
 			'key_name' => 'bp_video_activity_id',
 		),
 	);
