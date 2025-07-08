@@ -27,7 +27,7 @@ defined( 'ABSPATH' ) || exit;
 						<?php bp_get_template_part( 'media/media-create-album' ); ?>
 					</div>
 					<footer class="bb-rl-model-footer">
-						<a href="#" class="bb-rl-create-album bb-rl-media-open-create-popup-folder"><?php esc_html_e( 'Create new album', 'buddyboss' ); ?></a>
+						<a href="#" class="bb-rl-create-album bb-rl-media-open-create-popup-folder"><i class="bb-icons-rl-plus"></i><?php esc_html_e( 'Create Album', 'buddyboss' ); ?></a>
 						<a class="bb-rl-button bb-rl-button--secondaryFill bb-rl-button--small bb-rl-ac-media-close-button" href="#"><?php esc_html_e( 'Cancel', 'buddyboss' ); ?></a>
 						<a class="bb-rl-button bb-rl-button--brandFill bb-rl-button--small bb-rl-media-move bb-rl-media-move-activity" id="" href="#"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a>
 					</footer>

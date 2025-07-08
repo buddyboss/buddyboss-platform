@@ -15,14 +15,6 @@ defined( 'ABSPATH' ) || exit;
 
 bp_nouveau_member_hook( 'before', 'settings_template' ); ?>
 
-<h2 class="screen-heading general-settings-screen">
-	<?php _e( 'Login Information', 'buddyboss' ); ?>
-</h2>
-
-<p class="info email-pwd-info">
-	<?php _e( 'Update your email and or password.', 'buddyboss' ); ?>
-</p>
-
 <form action="<?php echo esc_url( bp_displayed_user_domain() . bp_get_settings_slug() . '/general' ); ?>" method="post" class="standard-form" id="settings-form">
 
 	<?php if ( ! is_super_admin() ) : ?>

@@ -315,6 +315,15 @@ jQuery( document ).ready(
 			}
 		);
 
+		$( document ).on(
+			'keydown',
+			function ( e ) {
+				if ( 'Escape' === e.key || 27 === e.keyCode ) {
+					$( '#bb-rl-network-search-modal' ).addClass( 'bp-hide' );
+				}
+			}
+		);
+
 		/* end ajax load */
 
 		$( 'body.bp-nouveau' ).on(

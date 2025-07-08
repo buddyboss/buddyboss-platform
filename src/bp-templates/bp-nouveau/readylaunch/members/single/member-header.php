@@ -225,7 +225,7 @@ endif;
 <!-- Remove Connection confirmation popup -->
 <div class="bb-remove-connection bb-action-popup" style="display: none">
 	<transition name="modal">
-		<div class="modal-mask bb-white bbm-model-wrap">
+		<div class="bb-rl-modal-mask bb-white bbm-model-wrap">
 			<div class="modal-wrapper">
 				<div class="modal-container">
 					<header class="bb-model-header">

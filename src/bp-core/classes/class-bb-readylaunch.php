@@ -228,6 +228,12 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			add_action( 'login_footer', array( $this, 'bb_rl_login_footer' ), 999 );
 			add_filter( 'login_message', array( $this, 'bb_rl_signin_login_message' ) );
 			add_action( 'login_form', array( $this, 'bb_rl_login_custom_form' ) );
+
+			add_action( 'login_form_retrievepassword', array( $this, 'bb_rl_overwrite_login_email_field_label_hook' ) );
+			add_action( 'login_form_lostpassword', array( $this, 'bb_rl_overwrite_login_email_field_label_hook' ) );
+			add_action( 'login_form_login', array( $this, 'bb_rl_overwrite_login_email_field_label_hook' ) );
+
+			add_action( 'wp_login_errors', array( $this, 'bb_rl_wp_login_errors' ) );
 		}
 
 		/**
@@ -266,7 +272,9 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 			add_filter( 'wp_ajax_bb_rl_invite_form', array( $this, 'bb_rl_invite_form_callback' ) );
 
-			add_filter( 'bp_get_send_message_button_args', array( $this, 'bb_rl_override_send_message_button_text' ) );
+			if ( bp_is_active( 'messages' ) ) {
+				add_filter( 'bp_get_send_message_button_args', array( $this, 'bb_rl_override_send_message_button_text' ) );
+			}
 
 			add_filter( 'bb_member_directories_get_profile_actions', array( $this, 'bb_rl_member_directories_get_profile_actions' ), 10, 3 );
 
@@ -285,6 +293,18 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			add_filter( 'bp_get_the_notification_mark_unread_link', array( $this, 'bb_rl_notifications_mark_unread_link' ), 1, 1 );
 			add_filter( 'bp_get_the_notification_mark_read_link', array( $this, 'bb_rl_notifications_mark_read_link' ), 1, 1 );
 			add_filter( 'bp_get_the_notification_delete_link', array( $this, 'bb_rl_notifications_delete_link' ), 1, 1 );
+
+			add_filter( 'bp_nouveau_get_nav_link_text', array( $this, 'bb_rl_get_nav_link_text' ), 10, 3 );
+
+			if ( bp_is_active( 'search' ) ) {
+				add_filter( 'bp_search_results_group_start_html', array( $this, 'bb_rl_modify_search_results_group_start_html' ), 11 );
+				add_filter( 'bp_search_results_group_end_html', array( $this, 'bb_rl_modify_search_results_group_start_html' ), 11 );
+			}
+
+			add_filter( 'bp_activity_get_visibility_levels', array( $this, 'bb_rl_modify_visibility_levels' ), 10 );
+			add_filter( 'bp_document_get_visibility_levels', array( $this, 'bb_rl_modify_visibility_levels' ), 10 );
+			add_filter( 'bp_media_get_visibility_levels', array( $this, 'bb_rl_modify_visibility_levels' ), 10 );
+			add_filter( 'bp_video_get_visibility_levels', array( $this, 'bb_rl_modify_visibility_levels' ), 10 );
 		}
 
 		/**
@@ -300,7 +320,6 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			add_action( 'wp_enqueue_scripts', array( $this, 'bb_enqueue_scripts' ), 1 );
 			add_action( 'wp_head', array( $this, 'bb_rl_start_buffering' ), 0 );
 			add_action( 'wp_footer', array( $this, 'bb_rl_end_buffering' ), 999 );
-			add_filter( 'paginate_links_output', array( $this, 'bb_rl_filter_paginate_links_output' ), 10, 2 );
 			add_filter( 'body_class', array( $this, 'bb_rl_theme_body_classes' ) );
 			add_filter( 'script_loader_src', array( $this, 'bb_rl_script_loader_src' ), PHP_INT_MAX, 2 );
 			add_action( 'bb_rl_get_template_part_content', array( $this, 'bb_rl_get_template_part_content' ), 10, 1 );
@@ -349,6 +368,8 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 				add_filter( 'bbp_after_get_topic_stick_link_parse_args', array( $this, 'bb_rl_modify_get_topic_stick_link_parse_args' ), 10 );
 			}
+
+			add_filter( 'paginate_links_output', array( $this, 'bb_rl_filter_paginate_links_output' ), 10, 2 );
 		}
 
 		/**
@@ -1146,6 +1167,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					false === strpos( $src, '/sfwd-lms/' ) &&
 					false === strpos( $src, '/learndash-course-reviews/' ) &&
 					false === strpos( $src, '/instructor-role/' ) &&
+					false === strpos( $src, 'wp-content/plugins/' ) &&
 					! $this->bb_has_allowed_suffix( $handle, $allow_suffix )
 				) {
 					wp_dequeue_script( $handle );
@@ -1163,6 +1185,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 						false === strpos( $src, '/buddyboss-platform-pro/' ) &&
 						false === strpos( $src, '/sfwd-lms/' ) &&
 						false === strpos( $src, '/instructor-role/' ) &&
+						false === strpos( $src, 'wp-content/plugins/' ) &&
 						! $this->bb_has_allowed_suffix( $handle, $allow_suffix )
 					) ||
 					'bp-nouveau-bb-icons' === $handle
@@ -2176,7 +2199,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * @return array $args Filtered arguments.
 		 */
 		public function bb_rl_override_send_message_button_text( $args ) {
-			$args['link_text'] = esc_html__( 'Message', 'buddyboss' );
+			$args['data-balloon'] = esc_html__( 'Message', 'buddyboss' );
 
 			return $args;
 		}
@@ -2428,6 +2451,8 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 			if ( bp_is_active( 'media' ) || bp_is_active( 'video' ) || bp_is_active( 'document' ) ) {
 				$strings['media']['i18n_strings']['theater_title'] = $translated_string;
+				$strings['media']['create_album_title']            = esc_html__( 'Create new album', 'buddyboss' );
+				$strings['media']['create_folder']                 = esc_html__( 'Create new folder', 'buddyboss' );
 			}
 
 			if ( bp_is_active( 'messages' ) ) {
@@ -2487,6 +2512,13 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					var $forgetMeNot = $( '.login p.forgetmenot' );
 					var $lostMeNot = $( '.login p.lostmenot' );
 					$( $lostMeNot ).before( $forgetMeNot );
+
+					var $updatedClose = $( '.bb-rl-updated-close' );
+					if ( $updatedClose.length > 0 ) {
+						$updatedClose.on( 'click', function() {
+							$( this ).closest( '.message' ).hide();
+						} );
+					}
 				} );
 			</script>
 			<?php
@@ -3873,7 +3905,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 *
 		 * @param array $r Arguments.
 		 *
-		 * @return string
+		 * @return array $r Arguments.
 		 */
 		public function bb_rl_modify_get_topic_stick_link_parse_args( $r ) {
 			if ( empty( $r['stick_text'] ) ) {
@@ -3883,6 +3915,138 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			$r['super_text'] = __( 'Super Sticky', 'buddyboss' );
 
 			return $r;
+		}
+
+		/**
+		 * Modify nav link text for readylaunch.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $link_text  Link text.
+		 * @param object $nav_item   Nav item.
+		 * @param object $bp_nouveau BP Nouveau.
+		 *
+		 * @return string
+		 */
+		public function bb_rl_get_nav_link_text( $link_text, $nav_item, $bp_nouveau ) {
+			if ( 'subscriptions' === $nav_item->slug ) {
+				$link_text = esc_html__( 'Group Subscriptions', 'buddyboss' );
+			}
+
+			return $link_text;
+		}
+
+		/**
+		 * Modify search default text for group members.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $default_text Default text.
+		 *
+		 * @return string
+		 */
+		public function bb_rl_modify_group_members_search_placeholder( $default_text ) {
+			if ( ! bp_is_active( 'groups' ) ) {
+				return $default_text;
+			}
+
+			$current_component        = function_exists( 'bp_current_component' ) ? bp_current_component() : '';
+			$current_action_variables = function_exists( 'bp_action_variables' ) ? bp_action_variables() : array();
+			$current_action_variables = ! empty( $current_action_variables ) ? $current_action_variables[0] : '';
+			if ( 'groups' === $current_component && 'members' === $current_action_variables ) {
+				$default_text = __( 'Search member', 'buddyboss' );
+			}
+
+			return $default_text;
+		}
+
+		/**
+		 * Overwrite login email field label.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return void
+		 */
+		public function bb_rl_overwrite_login_email_field_label_hook() {
+			add_filter( 'gettext', array( $this, 'bb_rl_overwrite_login_email_field_label' ), 10, 3 );
+		}
+
+		/**
+		 * Overwrite login email field label.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $translated_text Translated text.
+		 * @param string $text Text.
+		 * @param string $domain Domain.
+		 *
+		 * @return string
+		 */
+		public function bb_rl_overwrite_login_email_field_label( $translated_text, $text, $domain ) {
+			if ( 'Username or Email Address' === $text && 'default' === $domain ) {
+				remove_filter( 'gettext', array( $this, 'bb_rl_overwrite_login_email_field_label' ) );
+				return __( 'Email', 'buddyboss' );
+			}
+
+			return $translated_text;
+		}
+
+		/**
+		 * Modify logout message.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param object $errors Errors.
+		 *
+		 * @return object
+		 */
+		public function bb_rl_wp_login_errors( $errors ) {
+			if ( isset( $_GET['loggedout'] ) && $_GET['loggedout'] ) {
+				$errors->remove( 'loggedout' );
+				$notice  = esc_html__( 'You are logged out', 'buddyboss' );
+				$notice .= ' <span class="bb-rl-updated-close"><i class="bb-icons-rl-x"></i></span>';
+				$errors->add( 'loggedout', $notice, 'message' );
+			}
+
+			return $errors;
+		}
+
+		/**
+		 * Modify search results start HTML.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $html HTML.
+		 *
+		 * @return string
+		 */
+		public function bb_rl_modify_search_results_group_start_html( $html ) {
+			$bp_search = isset( $_REQUEST['bp_search'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['bp_search'] ) ) : '';
+			$view      = isset( $_REQUEST['view'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['view'] ) ) : '';
+			if ( $bp_search || $view ) {
+				return $html;
+			}
+
+			return '';
+		}
+
+		/**
+		 * Modify visibility levels for readylaunch.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array $visibility_levels The visibility levels.
+		 *
+		 * @return array Modified visibility levels.
+		 */
+		public function bb_rl_modify_visibility_levels( $visibility_levels ) {
+			$visibility_levels['loggedin'] = __( 'All members', 'buddyboss' );
+			if ( bp_is_active( 'friends' ) ) {
+				$visibility_levels['friends'] = __( 'My connections', 'buddyboss' );
+			}
+			$visibility_levels['onlyme'] = __( 'Only me', 'buddyboss' );
+
+			return $visibility_levels;
 		}
 	}
 }
