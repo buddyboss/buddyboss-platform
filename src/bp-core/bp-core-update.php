@@ -3935,7 +3935,7 @@ function bb_update_to_2_9_2() {
 	global $wpdb;
 
 	$postmeta_table = $wpdb->prefix . 'postmeta';
-	$activity_table = $wpdb->prefix . 'bp_activity';
+	$activity_table = $wpdb->base_prefix . 'bp_activity';
 
 	$updates = array(
 		array(
