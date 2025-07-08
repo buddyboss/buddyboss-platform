@@ -3954,16 +3954,16 @@ function bb_update_to_2_9_2() {
 
 	// Check activity table exists.
 	if ( ! $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $activity_table ) ) ) {
-    	return;
-    }
+		return;
+	}
 
-    // Filter to only existing tables
-    $updates = array();
-    foreach ( $updates as $update ) {
-        if ( $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $update['table'] ) ) ) {
-            $updates[] = $update;
-        }
-    }
+	// Filter to only existing tables
+	$updates = array();
+	foreach ( $updates as $update ) {
+		if ( $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $update['table'] ) ) ) {
+			$updates[] = $update;
+		}
+	}
 
 	foreach ( $updates as $update ) {
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
