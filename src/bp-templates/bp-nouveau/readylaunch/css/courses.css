@@ -1264,6 +1264,12 @@ body.ld-in-focus-mode .learndash-wrapper {
   cursor: not-allowed;
 }
 
+body.bb-readylaunch-template:has(.learndash-wrapper-login-modal.ld-modal-open) {
+  position: fixed;
+  overflow-y: scroll;
+  width: 100%;
+}
+
 .bb-readylaunch-template .bb-learndash-content-wrap .ld-modal {
   display: flex;
   text-align: center;
@@ -1470,6 +1476,55 @@ body.ld-in-focus-mode .learndash-wrapper {
   position: static;
   opacity: 1;
   margin-right: var(--bb-rl-space-50);
+}
+
+.bb-readylaunch-template .learndash-wrapper:not(.ld-registration__outer-wrapper) .ld-alert,
+.bb-readylaunch-template .learndash-wrapper.learndash-wrapper-login-modal .ld-alert {
+  display: flex;
+  align-items: center;
+  padding: var(--bb-rl-space-100);
+  border: 1px solid transparent;
+  border-radius: var(--bb-rl-radius-md);
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 500;
+  background-color: var(--bb-rl-background-secondary-color);
+  padding: var(--bb-rl-space-50) var(--bb-rl-space-100);
+  font-weight: 400;
+  min-height: auto;
+}
+
+.bb-readylaunch-template .learndash-wrapper:not(.ld-registration__outer-wrapper) .ld-alert > [class*="bb-icons"],
+.bb-readylaunch-template .learndash-wrapper.learndash-wrapper-login-modal .ld-alert > [class*="bb-icons"] {
+  margin-right: var(--bb-rl-space-100);
+  font-size: 20px;
+  font-family: bb-icons-rl;
+}
+
+.bb-readylaunch-template .learndash-wrapper:not(.ld-registration__outer-wrapper) .ld-alert.ld-alert-warning,
+.bb-readylaunch-template .learndash-wrapper.learndash-wrapper-login-modal .ld-alert.ld-alert-warning {
+  background-color: var(--bb-rl-background-warning-secondary-color);
+  border-color: var(--bb-rl-border-warning-secondary-color);
+}
+
+.bb-readylaunch-template .learndash-wrapper:not(.ld-registration__outer-wrapper) .ld-alert.ld-alert-warning > [class*="bb-icons"],
+.bb-readylaunch-template .learndash-wrapper.learndash-wrapper-login-modal .ld-alert.ld-alert-warning > [class*="bb-icons"] {
+  color: var(--bb-rl-border-warning-secondary-color);
+}
+
+.bb-readylaunch-template .learndash-wrapper:not(.ld-registration__outer-wrapper) .ld-alert.ld-alert-error,
+.bb-readylaunch-template .learndash-wrapper.learndash-wrapper-login-modal .ld-alert.ld-alert-error {
+  background-color: var(--bb-rl-background-danger-secondary-color);
+  border-color: var(--bb-rl-border-danger-secondary-color);
+}
+
+.bb-readylaunch-template .learndash-wrapper:not(.ld-registration__outer-wrapper) .ld-alert.ld-alert-error > [class*="bb-icons"],
+.bb-readylaunch-template .learndash-wrapper.learndash-wrapper-login-modal .ld-alert.ld-alert-error > [class*="bb-icons"] {
+  color: var(--bb-rl-border-danger-secondary-color);
+}
+
+.bb-readylaunch-template .learndash-wrapper:not(.ld-registration__outer-wrapper) .ld-alert .ld-alert-icon,
+.bb-readylaunch-template .learndash-wrapper.learndash-wrapper-login-modal .ld-alert .ld-alert-icon {
+  display: none;
 }
 
 .bb-readylaunch-template .bb-learndash-content-wrap .ld-modal .ld-modal-closer {

@@ -831,6 +831,12 @@ body.ld-in-focus-mode .learndash-wrapper {
 	}
 }
 
+body.bb-readylaunch-template:has(.learndash-wrapper-login-modal.ld-modal-open) {
+	position: fixed;
+	overflow-y: scroll;
+	width: 100%;
+}
+
 .bb-readylaunch-template {
 
 	.bb-learndash-content-wrap .ld-modal {
@@ -975,6 +981,27 @@ body.ld-in-focus-mode .learndash-wrapper {
 				position: static;
 				opacity: 1;
 				margin-right: var(--bb-rl-space-50);
+			}
+		}
+
+		.ld-alert {
+
+			@include bb-rl-notice;
+			@include bb-rl-notice--alt;
+			min-height: auto;
+
+			&.ld-alert-warning {
+
+				@include bb-rl-notice--alt-warning;
+			}
+
+			&.ld-alert-error {
+
+				@include bb-rl-notice--alt-error;
+			}
+
+			.ld-alert-icon {
+				display: none;
 			}
 		}
 	}
