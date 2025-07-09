@@ -623,10 +623,14 @@ class BB_Activity_Readylaunch {
 			in_array( $activity->component, array( 'groups', 'bbpress' ), true ) &&
 			in_array( $activity->type, array( 'bbp_topic_create', 'bbp_reply_create' ), true )
 		) {
-			if ( preg_match( '/^(.*?<a[^>]*>.*?<\\/a>[^<]*)(?=<a|$)/is', $activity_action, $matches ) ) {
-				$clean_activity_action = preg_replace( '/<\\/?p[^>]*>/', '', $matches[1] );
-				$activity_action       = '<p>' . trim( $clean_activity_action ) . '</p>';
+			if ( 'bbp_topic_create' === $activity->type ) {
+				/* Translators: %s: user link */
+				$activity_action = sprintf( __( '%s started the discussion', 'buddyboss' ), $user_link_with_html );
+			} elseif ( 'bbp_reply_create' === $activity->type ) {
+				/* Translators: %s: user link */
+				$activity_action = sprintf( __( '%s replied to the discussion', 'buddyboss' ), $user_link_with_html );
 			}
+			$activity_action = '<p>' . $activity_action . '</p>';
 		} elseif ( 'groups' === $activity->component && bp_is_active( 'groups' ) ) {
 			if (
 				'joined_group' === $activity->type ||
@@ -662,16 +666,10 @@ class BB_Activity_Readylaunch {
 						$activity_action
 					);
 				} elseif ( 'group_details_updated' === $activity->type ) {
-					$user_link = '';
+					$user_link = bp_core_get_userlink( $activity->user_id );
 					/* Translators: %s: user link */
-					$translation_string = __( '%s updated group details', 'buddyboss' );
-					if ( preg_match( '/<p>.*?(<a[^>]*>.*?<\\/a>).*?<\\/p>/is', $activity_action, $matches ) ) {
-						$user_link       = $matches[1];
-						$activity_action = '<p>' . sprintf( $translation_string, $user_link ) . '</p>';
-					} elseif ( preg_match( '/(<a[^>]*>.*?<\\/a>)/is', $activity_action, $matches ) ) {
-						$user_link       = $matches[1];
-						$activity_action = sprintf( $translation_string, $user_link );
-					}
+					$activity_action = sprintf( __( '%s updated group details', 'buddyboss' ), $user_link );
+					$activity_action = '<p>' . $activity_action . '</p>';
 				}
 			} elseif ( 'activity_update' === $activity->type ) {
 				$activity_action = '<p>' . $user_link_with_html . '</p>';
