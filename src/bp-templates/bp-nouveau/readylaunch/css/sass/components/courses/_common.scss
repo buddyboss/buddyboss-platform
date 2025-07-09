@@ -855,6 +855,130 @@ body.ld-in-focus-mode .learndash-wrapper {
 		transition: all 0.3s ease;
 	}
 
+	.learndash-wrapper:not(.ld-registration__outer-wrapper),
+	.learndash-wrapper.learndash-wrapper-login-modal {
+
+		.ld-login-modal {
+			border-radius: var(--bb-rl-radius-lg);
+		}
+
+		.ld-button.ld-button-reverse {
+
+			@include bb-rl-button;
+			@include bb-rl-button-secondary-fill;
+			@include bb-rl-button--small;
+			line-height: var(--bb-rl-font-size-2xl);
+
+			&:hover {
+				box-shadow: none !important;
+			}
+		}
+
+		.ld-login-modal-login .ld-modal-heading {
+
+			@include bb-rl-base-heading;
+			color: var(--bb-rl-text-color);
+			margin: 0 0 var(--bb-rl-space-200);
+		}
+
+		.ld-login-modal-login .ld-modal-text {
+			color: var(--bb-rl-text-secondary-color);
+			line-height: 1.5;
+			margin-bottom: var(--bb-rl-space-300);
+			font-size: var(--bb-rl-font-size-sm);
+		}
+
+		.ld-login-modal-form label {
+
+			@include bb-rl-label-heading;
+			display: block;
+			margin: 0 0 var(--bb-rl-space-50);
+			text-align: left;
+		}
+
+		input[type=text],
+		input[type=password],
+		input[type=email],
+		.ld-login-field,
+		.ld-password-field {
+
+			@include bb-rl-label-heading-md-thin;
+			background-color: var(--bb-rl-background-color);
+			border: 1px solid var(--bb-rl-border-tertiary-color);
+			display: inline-block;
+			font-family: inherit;
+			font-style: inherit;
+			outline: none;
+			vertical-align: middle;
+			border-radius: var(--bb-rl-radius-base);
+			padding: 5px var(--bb-rl-space-100) 5px var(--bb-rl-space-400);
+			color: var(--bb-rl-text-color);
+		}
+
+		.ld-login-modal-form .login-username:before,
+		.ld-login-modal-form .login-password:before {
+			content: "";
+			font-weight: 400;
+			font-family: bb-icons-rl !important;
+			font-size: 16px;
+			color: var(--bb-rl-icon-secondary-color);
+			top: 2.1em;
+		}
+
+		.ld-login-modal-form .login-username:before {
+			content: "\e4c2";
+		}
+
+		.ld-login-modal-form .login-password:before {
+			content: "\e308";
+		}
+
+		.ld-forgot-password-link {
+
+			@include bb-rl-button--tertiary-link;
+			@include bb-rl-label-heading;
+			margin: var(--bb-rl-space-200) 0;
+			display: block;
+		}
+
+		.ld-login-modal-register {
+
+			.ld-modal-heading {
+
+				@include bb-rl-base-heading;
+				color: var(--bb-rl-text-white-color);
+				margin: 0 0 var(--bb-rl-space-200);
+			}
+
+			.ld-modal-text {
+				color: var(--bb-rl-text-white-color);
+				margin-bottom: var(--bb-rl-space-100);
+				font-size: var(--bb-rl-font-size-sm);
+			}
+		}
+
+		.ld-icon.ld-icon-delete:before {
+			content: "\e4f6";
+			font-weight: 400;
+			font-family: bb-icons-rl;
+			font-size: 24px;
+			color: var(--bb-rl-text-white-color);
+		}
+
+		.ld-login-modal .ld-login-modal-form {
+			margin: var(--bb-rl-space-200) 0 0;
+		}
+
+		.login-remember {
+
+			input[type="checkbox"] {
+				position: static;
+				opacity: 1;
+				margin-right: var(--bb-rl-space-50);
+			}
+		}
+	}
+
 	.bb-learndash-content-wrap .ld-modal .ld-modal-closer {
 		position: absolute;
 		top: var(--bb-rl-space-100);
@@ -892,18 +1016,18 @@ body.ld-in-focus-mode .learndash-wrapper {
 	}
 
 	.ld-modal.ld-login-modal .ld-login-modal-branding {
-		margin-bottom: var(--bb-rl-space-300);
+		margin-bottom: 0;
+		padding-top: var(--bb-rl-space-200);
+
+		&::before {
+			background-color: var(--bb-rl-border-secondary-color);
+			height: 1px;
+		}
 	}
 
 	.ld-modal.ld-login-modal .ld-login-modal-wrapper .ld-login-modal-branding > img {
 		max-width: 250px;
-	}
-
-	.bb-learndash-content-wrap .ld-login-modal .ld-login-modal-login .ld-modal-heading {
-
-		@include bb-rl-base-heading;
-		color: var(--bb-rl-text-color);
-		margin: 0 0 var(--bb-rl-space-200);
+		margin: 0 auto;
 	}
 
 	.bb-learndash-content-wrap .ld-login-modal .ld-login-modal-login .ld-modal-text {
@@ -946,14 +1070,6 @@ body.ld-in-focus-mode .learndash-wrapper {
 		input[type="checkbox"]:not(.bb-custom-check) {
 			position: static;
 			opacity: 1;
-		}
-
-		.ld-icon.ld-icon-delete:before {
-			content: "\e4f6";
-			font-weight: 400;
-			font-family: bb-icons-rl;
-			font-size: 16px;
-			color: var(--bb-rl-text-white-color);
 		}
 	}
 
