@@ -68,37 +68,35 @@ if ( $post_query->have_posts() ) {
 ?>
 
 <div class="bb-learndash-content-wrap">
-	<main class="bb-learndash-content-area">
-		<article id="post-<?php echo esc_attr( $ld_register_id ); ?>" class="bb-rl-learndash-registration bb-rl-lms-registration">
-			<header class="bb-rl-entry-header">
-				<div class="bb-rl-registration-banner">
-					<div class="bb-rl-registration-overview">
-						<h1 class="bb-rl-entry-title">
-							<?php 
-							if ( 'sfwd-courses' === $post_type ) {
-								printf( 
-									/* translators: %s: Course title */
-									esc_html__( 'Register for %s', 'buddyboss' ), 
-									esc_html( $post_title ) 
-								);
-							} else {
-								printf( 
-									/* translators: %s: Group title */
-									esc_html__( 'Join %s', 'buddyboss' ), 
-									esc_html( $post_title ) 
-								);
-							}
-							?>
-						</h1>
-						<div class="bb-rl-registration-description">
-							<?php 
-							if ( 'sfwd-courses' === $post_type ) {
-								esc_html_e( 'Complete the registration form below to enroll in this course.', 'buddyboss' );
-							} else {
-								esc_html_e( 'Complete the registration form below to join this group.', 'buddyboss' );
-							}
-							?>
-						</div>
+	<article id="post-<?php echo esc_attr( $ld_register_id ); ?>" class="bb-rl-learndash-registration bb-rl-lms-registration bb-rl-lms-course">
+		<div class="bb-rl-lms-inner-block">
+			<header class="bb-rl-heading">
+				<div class="bb-rl-registration-overview">
+					<h1 class="bb-rl-entry-title">
+						<?php 
+						if ( 'sfwd-courses' === $post_type ) {
+							printf( 
+								/* translators: %s: Course title */
+								esc_html__( 'Register for %s', 'buddyboss' ), 
+								esc_html( $post_title ) 
+							);
+						} else {
+							printf( 
+								/* translators: %s: Group title */
+								esc_html__( 'Join %s', 'buddyboss' ), 
+								esc_html( $post_title ) 
+							);
+						}
+						?>
+					</h1>
+					<div class="bb-rl-registration-description">
+						<?php 
+						if ( 'sfwd-courses' === $post_type ) {
+							esc_html_e( 'Complete the registration form below to enroll in this course.', 'buddyboss' );
+						} else {
+							esc_html_e( 'Complete the registration form below to join this group.', 'buddyboss' );
+						}
+						?>
 					</div>
 				</div>
 			</header>
@@ -136,8 +134,8 @@ if ( $post_query->have_posts() ) {
 					</div>
 				</div>
 			</div>
-		</article>
-	</main>
+		</div>
+	</article>
 </div>
 
 <?php

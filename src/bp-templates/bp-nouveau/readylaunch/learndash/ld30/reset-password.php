@@ -38,9 +38,9 @@ $active_template_key = function_exists( 'LearnDash_Theme_Register::get_active_th
 ?>
 
 <div class="bb-learndash-content-wrap">
-	<main class="bb-learndash-content-area">
-		<article id="post-<?php echo esc_attr( get_the_ID() ); ?>" <?php post_class( array( 'bb-rl-learndash-reset-password', 'bb-rl-lms-reset-password' ) ); ?>>
-			<header class="bb-rl-entry-header">
+	<article id="post-<?php echo esc_attr( get_the_ID() ); ?>" <?php post_class( array( 'bb-rl-learndash-reset-password', 'bb-rl-lms-reset-password', 'bb-rl-lms-course' ) ); ?>>
+		<div class="bb-rl-lms-inner-block">
+			<header class="bb-rl-heading">
 				<div class="bb-rl-reset-password-banner">
 					<h1 class="bb-rl-entry-title"><?php esc_html_e( 'Reset Your Password', 'buddyboss' ); ?></h1>
 					<p class="bb-rl-reset-password-subtitle"><?php esc_html_e( 'Enter your email address and we\'ll send you a link to reset your password.', 'buddyboss' ); ?></p>
@@ -107,8 +107,8 @@ $active_template_key = function_exists( 'LearnDash_Theme_Register::get_active_th
 					</div>
 				</div>
 			</div>
-		</article>
-	</main>
+		</div>
+	</article>
 
 	<?php 
 	// Check if sidebar is enabled for password reset pages

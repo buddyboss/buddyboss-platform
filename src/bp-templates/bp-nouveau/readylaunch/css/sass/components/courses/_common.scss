@@ -1155,3 +1155,71 @@ body.bb-readylaunch-template:has(.learndash-wrapper-login-modal.ld-modal-open) {
 		@include bb-rl-base-heading-xl;
 	}
 }
+
+.bb-rl-learndash-registration {
+
+	.learndash-wrapper:not(.ld-registration__outer-wrapper) {
+
+		.order-overview {
+			background-color: var(--bb-rl-background-color);
+			border-radius: var(--bb-rl-radius-lg);
+			padding: var(--bb-rl-space-300);
+			margin: var(--bb-rl-space-200) 0;
+			box-shadow: none;
+			border: 1px solid var(--bb-rl-border-secondary-color);
+		}
+
+		.order-heading {
+
+			@include bb-rl-base-heading;
+			color: var(--bb-rl-text-color);
+			margin: 0 0 var(--bb-rl-space-200);
+		}
+
+		.purchase-title {
+
+			@include bb-rl-label-heading-md;
+			color: var(--bb-rl-text-color);
+			margin: 0 0 var(--bb-rl-space-100);
+		}
+	}
+
+	.learndash-wrapper #learndash-registration-wrapper,
+	.learndash-wrapper #learndash-reset-password-wrapper  {
+
+		form {
+
+			input {
+			
+				@include bb-rl-label-heading-md-thin;
+				background-color: var(--bb-rl-background-color);
+				border: 1px solid var(--bb-rl-border-tertiary-color);
+				display: inline-block;
+				font-family: inherit;
+				font-style: inherit;
+				outline: none;
+				vertical-align: middle;
+				border-radius: var(--bb-rl-radius-base);
+				padding: 5px var(--bb-rl-space-100);
+				color: var(--bb-rl-text-color);
+				margin: 0;
+
+				&[type="submit"] {
+
+					@include bb-rl-button;
+					@include bb-rl-button-secondary-fill;
+					@include bb-rl-button--small;
+					margin: var(--bb-rl-space-200) 0 0;
+				}
+			}
+
+			label {
+				
+				@include bb-rl-label-heading-md;
+				display: block;
+				margin: 0 0 var(--bb-rl-space-100);
+				color: var(--bb-rl-text-secondary-color);
+			}
+		}
+	}
+}
