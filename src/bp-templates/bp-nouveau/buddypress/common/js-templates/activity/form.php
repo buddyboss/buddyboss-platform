@@ -36,6 +36,7 @@ $template_parts = apply_filters(
 		'parts/bp-editor-toolbar',
 		'parts/bp-activity-post-form-privacy',
 		'parts/bp-activity-edit-postin',
+		'parts/bb-activity-post-form-topic-selector',
 		'parts/bp-activity-post-privacy-stage-footer',
 	)
 );

@@ -714,7 +714,7 @@ function bp_member_object_template_results_members_all_scope( $querystring, $obj
 			'following' === $querystring['scope'] ||
 			'followers' === $querystring['scope']
 		)
-		
+
 	) {
 		$counts = bp_total_follow_counts();
 		if ( 'following' === $querystring['scope'] && ! empty( $counts['following'] ) ) {
@@ -4591,7 +4591,7 @@ add_action( 'user_register', 'bp_assign_default_member_type_to_activate_user_on_
 function bp_allow_user_to_send_invites() {
 
 	// if user not logged in and component not active then return false.
-	if ( ! bp_is_active( 'invites' ) && ! is_user_logged_in() ) {
+	if ( ! bp_is_active( 'invites' ) || ! is_user_logged_in() ) {
 		return false;
 	}
 
