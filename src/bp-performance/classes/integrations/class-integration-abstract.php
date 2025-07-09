@@ -436,8 +436,8 @@ abstract class Integration_Abstract {
 				exit;
 			}
 
-			$header                 = apply_filters( 'rest_post_dispatch_header_cache', $this->api_cache_data['header'], $this->get_cached_endpoints() );
-			$header['bb-api-cache'] = 'hit';
+			$header                    = apply_filters( 'rest_post_dispatch_header_cache', $this->api_cache_data['header'], $this->get_cached_endpoints() );
+			$header['X-App-Api-Cache'] = 'hit';
 
 			if ( ! empty( $header ) ) {
 				foreach ( $header as $header_key => $header_value ) {
@@ -462,7 +462,7 @@ abstract class Integration_Abstract {
 	 * @return mixed
 	 */
 	public function do_endpoint_cache( $result, $server, $request ) {
-		$server->send_header( 'bb-api-cache', 'miss' );
+		$server->send_header( 'X-App-Api-Cache', 'miss' );
 
 		// Check if we are in WP API.
 		if ( strpos( $this->get_current_path(), 'wp-json/' ) !== false ) {
@@ -613,10 +613,9 @@ abstract class Integration_Abstract {
 	private function prepare_header( $results ) {
 		$headers          = array();
 		$disallow_headers = array(
-			'bbapp-logged-in',
-			'bbapp-unread-notifications',
+			'X-App-Logged-In',
+			'X-App-Unread-Notifications',
 			'bbp-unread-messages',
-			'bbp-unread-notifications',
 			'Expires',
 			'Cache-Control',
 		);
