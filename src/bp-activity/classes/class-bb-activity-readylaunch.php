@@ -654,6 +654,19 @@ class BB_Activity_Readylaunch {
 						$activity_action
 					);
 				}
+
+				if ( 'group_details_updated' === $activity->type ) {
+					$user_link = '';
+					/* Translators: %s: user link */
+					$translation_string = __( '%s updated group details', 'buddyboss' );
+					if ( preg_match( '/<p>.*?(<a[^>]*>.*?<\\/a>).*?<\\/p>/is', $activity_action, $matches ) ) {
+						$user_link       = $matches[1];
+						$activity_action = '<p>' . sprintf( $translation_string, $user_link ) . '</p>';
+					} elseif ( preg_match( '/(<a[^>]*>.*?<\\/a>)/is', $activity_action, $matches ) ) {
+						$user_link       = $matches[1];
+						$activity_action = sprintf( $translation_string, $user_link );
+					}
+				}
 			} elseif ( 'activity_update' === $activity->type ) {
 				$activity_action = '<p>' . $user_link_with_html . '</p>';
 			}
