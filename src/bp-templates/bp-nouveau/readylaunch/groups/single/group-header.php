@@ -141,7 +141,7 @@ add_filter( 'bp_get_group_description_excerpt', 'bb_get_group_description_excerp
 <!-- Group description popup -->
 <div class="bb-action-popup" id="group-description-popup" style="display: none">
 	<transition name="modal">
-		<div class="modal-mask bb-white bbm-model-wrap">
+		<div class="bb-rl-modal-mask bb-white bbm-model-wrap">
 			<div class="modal-wrapper">
 				<div class="modal-container">
 					<header class="bb-model-header">

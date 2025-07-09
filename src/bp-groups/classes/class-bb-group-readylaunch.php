@@ -669,7 +669,7 @@ class BB_Group_Readylaunch {
 	/**
 	 * Modify group status description for ReadyLaunch.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.10
 	 *
 	 * @param string $description Original description.
 	 * @param object $group       Group object.
@@ -695,7 +695,7 @@ class BB_Group_Readylaunch {
 	/**
 	 * Modify get joined date for group members for ReadyLaunch.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.10
 	 *
 	 * @param string $last_activity      Last joined string based on time since date given.
 	 * @param string $last_activity_date The date of joined.
@@ -717,7 +717,7 @@ class BB_Group_Readylaunch {
 	/**
 	 * Modify the nav link text of messages for ReadyLaunch.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.10
 	 *
 	 * @param string $link_text Original link text.
 	 * @param object $nav_item  Nav item object.

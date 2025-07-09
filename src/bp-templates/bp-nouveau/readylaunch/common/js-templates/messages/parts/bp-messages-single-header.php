@@ -323,7 +323,7 @@
 		</div>
 		<?php if ( bp_is_active( 'moderation' ) && ( bp_is_moderation_member_blocking_enable() || bb_is_moderation_member_reporting_enable() ) ) { ?>
 			<div id="mass-user-block-list" class="mass-user-block-list moderation-popup mfp-hide">
-				<div class="modal-mask bb-white bbm-model-wrap bbm-uploader-model-wrap">
+				<div class="bb-rl-modal-mask bb-white bbm-model-wrap bbm-uploader-model-wrap">
 					<div class="modal-wrapper">
 						<div class="modal-container">
 							<header class="bb-model-header">
@@ -339,7 +339,7 @@
 		}
 		?>
 		<div id="message-members-list" class="message-members-list member-popup mfp-hide">
-			<div class="modal-mask bb-white bbm-model-wrap bbm-uploader-model-wrap">
+			<div class="bb-rl-modal-mask bb-white bbm-model-wrap bbm-uploader-model-wrap">
 				<div class="modal-wrapper">
 					<div class="modal-container">
 						<header class="bb-model-header">

@@ -1167,6 +1167,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					false === strpos( $src, '/sfwd-lms/' ) &&
 					false === strpos( $src, '/learndash-course-reviews/' ) &&
 					false === strpos( $src, '/instructor-role/' ) &&
+					false === strpos( $src, 'wp-content/plugins/' ) &&
 					! $this->bb_has_allowed_suffix( $handle, $allow_suffix )
 				) {
 					wp_dequeue_script( $handle );
@@ -1184,6 +1185,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 						false === strpos( $src, '/buddyboss-platform-pro/' ) &&
 						false === strpos( $src, '/sfwd-lms/' ) &&
 						false === strpos( $src, '/instructor-role/' ) &&
+						false === strpos( $src, 'wp-content/plugins/' ) &&
 						! $this->bb_has_allowed_suffix( $handle, $allow_suffix )
 					) ||
 					'bp-nouveau-bb-icons' === $handle
@@ -3918,7 +3920,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Modify nav link text for readylaunch.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.10
 		 *
 		 * @param string $link_text  Link text.
 		 * @param object $nav_item   Nav item.
@@ -3937,7 +3939,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Modify search default text for group members.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.10
 		 *
 		 * @param string $default_text Default text.
 		 *
@@ -3961,7 +3963,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Overwrite login email field label.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.10
 		 *
 		 * @return void
 		 */
@@ -3972,7 +3974,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Overwrite login email field label.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.10
 		 *
 		 * @param string $translated_text Translated text.
 		 * @param string $text Text.
@@ -3992,7 +3994,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Modify logout message.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.10
 		 *
 		 * @param object $errors Errors.
 		 *
@@ -4012,7 +4014,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Modify search results start HTML.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.10
 		 *
 		 * @param string $html HTML.
 		 *
@@ -4031,7 +4033,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Modify visibility levels for readylaunch.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.10
 		 *
 		 * @param array $visibility_levels The visibility levels.
 		 *
