@@ -619,7 +619,15 @@ class BB_Activity_Readylaunch {
 
 		$user_link_with_html = bp_core_get_userlink( $activity->user_id );
 
-		if ( 'groups' === $activity->component && bp_is_active( 'groups' ) ) {
+		if (
+			in_array( $activity->component, array( 'groups', 'bbpress' ), true ) &&
+			in_array( $activity->type, array( 'bbp_topic_create', 'bbp_reply_create' ), true )
+		) {
+			if ( preg_match( '/^(.*?<a[^>]*>.*?<\\/a>[^<]*)(?=<a|$)/is', $activity_action, $matches ) ) {
+				$clean_activity_action = preg_replace( '/<\\/?p[^>]*>/', '', $matches[1] );
+				$activity_action       = '<p>' . trim( $clean_activity_action ) . '</p>';
+			}
+		} elseif ( 'groups' === $activity->component && bp_is_active( 'groups' ) ) {
 			if (
 				'joined_group' === $activity->type ||
 				'group_details_updated' === $activity->type ||
@@ -653,9 +661,7 @@ class BB_Activity_Readylaunch {
 						'$1',
 						$activity_action
 					);
-				}
-
-				if ( 'group_details_updated' === $activity->type ) {
+				} elseif ( 'group_details_updated' === $activity->type ) {
 					$user_link = '';
 					/* Translators: %s: user link */
 					$translation_string = __( '%s updated group details', 'buddyboss' );
