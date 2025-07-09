@@ -323,10 +323,6 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			add_filter( 'body_class', array( $this, 'bb_rl_theme_body_classes' ) );
 			add_filter( 'script_loader_src', array( $this, 'bb_rl_script_loader_src' ), PHP_INT_MAX, 2 );
 			add_action( 'bb_rl_get_template_part_content', array( $this, 'bb_rl_get_template_part_content' ), 10, 1 );
-
-			if ( class_exists( 'SFWD_LMS' ) ) {
-				require_once buddypress()->compatibility_dir . '/class-bb-readylaunch-learndash-helper.php';
-			}
 		}
 
 		/**
@@ -370,6 +366,10 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			}
 
 			add_filter( 'paginate_links_output', array( $this, 'bb_rl_filter_paginate_links_output' ), 10, 2 );
+
+			if ( class_exists( 'SFWD_LMS' ) ) {
+				require_once buddypress()->compatibility_dir . '/class-bb-readylaunch-learndash-helper.php';
+			}
 		}
 
 		/**

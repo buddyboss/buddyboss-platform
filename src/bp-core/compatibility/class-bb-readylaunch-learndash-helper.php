@@ -187,7 +187,7 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 				'bb-readylaunch-learndash-js',
 				'bbReadylaunchLearnDash',
 				array(
-					'courses_url'     => home_url( '/courses/' ),
+					'courses_url'     => home_url( '/' . LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_Permalinks', 'courses' ) ),
 					'ajaxurl'         => admin_url( 'admin-ajax.php' ),
 					'nonce_list_grid' => wp_create_nonce( 'list-grid-settings' ),
 				)
