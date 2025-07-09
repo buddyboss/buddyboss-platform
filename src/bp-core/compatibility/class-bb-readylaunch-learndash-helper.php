@@ -93,6 +93,262 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 
 			add_action( 'wp_ajax_bb_rl_lms_save_view', array( $this, 'bb_rl_lms_save_view' ) );
 			add_action( 'wp_ajax_nopriv_bb_rl_lms_save_view', array( $this, 'bb_rl_lms_save_view' ) );
+
+			// Override LearnDash registration and password reset shortcodes
+			$this->bb_rl_override_learndash_shortcodes();
+		}
+
+		/**
+		 * Override LearnDash registration and password reset shortcodes
+		 *
+		 * @since BuddyBoss 2.9.00
+		 */
+		public function bb_rl_override_learndash_shortcodes() {
+			// Override the registration shortcode
+			remove_shortcode( 'ld_registration' );
+			add_shortcode( 'ld_registration', array( $this, 'bb_rl_learndash_registration_shortcode' ) );
+
+			// Override the password reset shortcode
+			remove_shortcode( 'ld_reset_password' );
+			add_shortcode( 'ld_reset_password', array( $this, 'bb_rl_learndash_reset_password_shortcode' ) );
+		}
+
+		/**
+		 * ReadyLaunch registration shortcode handler.
+		 *
+		 * @since BuddyBoss 2.9.00
+		 *
+		 * @param array  $attr Shortcode attributes.
+		 * @param string $content Shortcode content.
+		 * @param string $shortcode_slug Shortcode slug.
+		 * @return string Registration form HTML.
+		 */
+		public function bb_rl_learndash_registration_shortcode( $attr = array(), $content = '', $shortcode_slug = 'ld_registration' ) {
+			global $learndash_shortcode_used;
+
+			$learndash_shortcode_used = true;
+
+			if ( ! is_array( $attr ) ) {
+				$attr = array();
+			}
+
+			$attr = shortcode_atts(
+				array(
+					'width' => '',
+				),
+				$attr
+			);
+
+			/** This filter is documented in includes/shortcodes/ld_course_resume.php */
+			$attr = apply_filters( 'learndash_shortcode_atts', $attr, $shortcode_slug );
+
+			$level = ob_get_level();
+			ob_start();
+
+			$this->bb_rl_learndash_registration_output( $attr );
+
+			$content .= learndash_ob_get_clean( $level );
+			return $content;
+		}
+
+		/**
+		 * ReadyLaunch password reset shortcode handler.
+		 *
+		 * @since BuddyBoss 2.9.00
+		 *
+		 * @param array  $attr Shortcode attributes.
+		 * @param string $content Shortcode content.
+		 * @param string $shortcode_slug Shortcode slug.
+		 * @return string Password reset form HTML.
+		 */
+		public function bb_rl_learndash_reset_password_shortcode( $attr = array(), $content = '', $shortcode_slug = 'ld_reset_password' ) {
+			global $learndash_shortcode_used;
+
+			$learndash_shortcode_used = true;
+
+			if ( ! is_array( $attr ) ) {
+				$attr = array();
+			}
+
+			$attr = shortcode_atts(
+				array(
+					'width' => '',
+				),
+				$attr
+			);
+
+			/** This filter is documented in includes/shortcodes/ld_course_resume.php */
+			$attr = apply_filters( 'learndash_shortcode_atts', $attr, $shortcode_slug );
+
+			$level = ob_get_level();
+			ob_start();
+
+			$this->bb_rl_learndash_reset_password_output( $attr );
+
+			$content .= learndash_ob_get_clean( $level );
+			return $content;
+		}
+
+		/**
+		 * Force ReadyLaunch detection for registration pages.
+		 *
+		 * @since BuddyBoss 2.9.00
+		 *
+		 * @param array $classes Body classes.
+		 * @return array Modified body classes.
+		 */
+		public function bb_rl_force_readylaunch_for_registration( $classes ) {
+			// Check if we're on a registration page with LearnDash parameters.
+			if ( isset( $_GET['ld_register_id'] ) || isset( $_GET['course_id'] ) || isset( $_GET['group_id'] ) ) {
+				$classes[] = 'bb-readylaunch-template';
+			}
+
+			return $classes;
+		}
+
+		/**
+		 * Force ReadyLaunch detection for reset password pages.
+		 *
+		 * @since BuddyBoss 2.9.00
+		 *
+		 * @param array $classes Body classes.
+		 * @return array Modified body classes.
+		 */
+		public function bb_rl_force_readylaunch_for_reset_password( $classes ) {
+			// Check if we're on a reset password page with LearnDash parameters.
+			if ( isset( $_GET['ld-resetpw'] ) || isset( $_GET['password_reset'] ) || isset( $_GET['key'] ) || isset( $_GET['login'] ) ) {
+				$classes[] = 'bb-readylaunch-template';
+			}
+
+			// Check if this is the LearnDash reset password page.
+			if ( function_exists( 'learndash_get_reset_password_page_id' ) ) {
+				$reset_password_page_id = learndash_get_reset_password_page_id();
+				if ( ! empty( $reset_password_page_id ) && is_page( $reset_password_page_id ) ) {
+					$classes[] = 'bb-readylaunch-template';
+				}
+			}
+
+			return $classes;
+		}
+
+		/**
+		 * Override LearnDash registration output to use ReadyLaunch template.
+		 *
+		 * @since BuddyBoss 2.9.00
+		 *
+		 * @param array $attr Registration attributes.
+		 */
+		public function bb_rl_learndash_registration_output( $attr = array() ) {
+			// Prevent infinite loops by checking if we're already processing registration.
+			static $processing_registration = false;
+			if ( $processing_registration ) {
+				return;
+			}
+			$processing_registration = true;
+
+			// Force ReadyLaunch layout for registration pages.
+			$bb_readylaunch = null;
+			if ( class_exists( 'BB_Readylaunch' ) ) {
+				$bb_readylaunch = BB_Readylaunch::instance();
+				// Only call bb_rl_required_load if the required hooks haven't been added yet.
+				if ( method_exists( $bb_readylaunch, 'bb_rl_required_load' ) && ! has_action( 'wp_enqueue_scripts', array( $bb_readylaunch, 'bb_dequeue_styles' ) ) ) {
+					// Use reflection to call the protected method
+					$reflection = new ReflectionClass( $bb_readylaunch );
+					$method = $reflection->getMethod( 'bb_rl_required_load' );
+					$method->setAccessible( true );
+					$method->invoke( $bb_readylaunch );
+				}
+			}
+
+			
+			
+			// Load the ReadyLaunch registration template
+			$template_path = buddypress()->plugin_dir . 'bp-templates/bp-nouveau/readylaunch/learndash/ld30/registration.php';
+			
+			if ( file_exists( $template_path ) ) {
+				// Pass the ReadyLaunch instance to the template to avoid infinite loops.
+				$bb_readylaunch = $bb_readylaunch;
+				include $template_path;
+			} else {
+				// Fallback to default LearnDash registration
+				$this->bb_rl_learndash_registration_output_original( $attr );
+			}
+
+			$processing_registration = false;
+		}
+
+		/**
+		 * Original LearnDash registration output (without our override).
+		 *
+		 * @since BuddyBoss 2.9.00
+		 *
+		 * @param array $attr Registration attributes.
+		 */
+		public function bb_rl_learndash_registration_output_original( $attr = array() ) {
+			// Call the original LearnDash function directly
+			if ( function_exists( 'learndash_registration_output' ) ) {
+				learndash_registration_output( $attr );
+			}
+		}
+
+		/**
+		 * Override LearnDash password reset output to use ReadyLaunch template.
+		 *
+		 * @since BuddyBoss 2.9.00
+		 *
+		 * @param array $attr Password reset attributes.
+		 */
+		public function bb_rl_learndash_reset_password_output( $attr = array() ) {
+			// Prevent infinite loops by checking if we're already processing password reset.
+			static $processing_password_reset = false;
+			if ( $processing_password_reset ) {
+				return;
+			}
+			$processing_password_reset = true;
+
+			// Force ReadyLaunch layout for reset password pages.
+			$bb_readylaunch = null;
+			if ( class_exists( 'BB_Readylaunch' ) ) {
+				$bb_readylaunch = BB_Readylaunch::instance();
+				// Only call bb_rl_required_load if the required hooks haven't been added yet.
+				if ( method_exists( $bb_readylaunch, 'bb_rl_required_load' ) && ! has_action( 'wp_enqueue_scripts', array( $bb_readylaunch, 'bb_dequeue_styles' ) ) ) {
+					// Use reflection to call the protected method
+					$reflection = new ReflectionClass( $bb_readylaunch );
+					$method = $reflection->getMethod( 'bb_rl_required_load' );
+					$method->setAccessible( true );
+					$method->invoke( $bb_readylaunch );
+				}
+				
+				// Force ReadyLaunch layout by ensuring the page is detected as a ReadyLaunch page
+				if ( ! $bb_readylaunch->bb_is_readylaunch_enabled_for_page() ) {
+					// Add a filter to force ReadyLaunch detection for this page
+					add_filter( 'bb_is_readylaunch_enabled_for_page', '__return_true', 999 );
+				}
+			}
+
+
+
+			// Load the ReadyLaunch password reset template
+			$template_path = buddypress()->plugin_dir . 'bp-templates/bp-nouveau/readylaunch/learndash/ld30/reset-password.php';
+			
+			if ( file_exists( $template_path ) ) {
+				// Force ReadyLaunch layout by adding body class
+				add_filter( 'body_class', function( $classes ) {
+					$classes[] = 'bb-readylaunch-template';
+					return $classes;
+				});
+				
+				// Pass the ReadyLaunch instance to the template to avoid infinite loops.
+				$bb_readylaunch = $bb_readylaunch;
+				include $template_path;
+			} else {
+				// Fallback to default LearnDash password reset
+				if ( function_exists( 'learndash_reset_password_output' ) ) {
+					learndash_reset_password_output( $attr );
+				}
+			}
+
+			$processing_password_reset = false;
 		}
 
 		/**

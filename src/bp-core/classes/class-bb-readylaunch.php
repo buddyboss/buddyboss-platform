@@ -786,7 +786,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * @return bool True if ReadyLaunch is enabled, false otherwise.
 		 */
 		public function bb_is_readylaunch_enabled_for_page() {
-			return (
+			$is_enabled = (
 				bp_is_members_directory() ||
 				bp_is_video_directory() ||
 				bp_is_media_directory() ||
@@ -813,8 +813,14 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					$this->bb_rl_is_page_enabled_for_integration( 'registration' )
 				) ||
 				$this->bb_rl_is_learndash_page() || // Add check for LearnDash pages.
-				$this->bb_rl_is_memberpress_courses_page() // Add check for MemberPress Courses pages.
+				$this->bb_rl_is_memberpress_courses_page() || // Add check for MemberPress Courses pages.
+				$this->bb_rl_is_learndash_registration_page() || // Add check for LearnDash registration pages.
+				$this->bb_rl_is_learndash_reset_password_page() // Add check for LearnDash reset password pages.
 			);
+			
+
+			
+			return $is_enabled;
 		}
 
 		/**
@@ -3159,6 +3165,69 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			$enabled_pages = bp_get_option( 'bb_rl_enabled_pages' );
 
 			return ! empty( $enabled_pages[ $page ] );
+		}
+
+		/**
+		 * Check if the current page is a LearnDash registration page.
+		 *
+		 * @since BuddyBoss 2.9.00
+		 *
+		 * @return bool True if the current page is a LearnDash registration page, false otherwise.
+		 */
+		public function bb_rl_is_learndash_registration_page() {
+			// Check if we're on a registration page with LearnDash parameters.
+			if ( isset( $_GET['ld_register_id'] ) || isset( $_GET['course_id'] ) || isset( $_GET['group_id'] ) ) {
+				return true;
+			}
+
+			// Check if the current page template is being used for registration.
+			global $post;
+			if ( $post && has_shortcode( $post->post_content, 'ld_registration' ) ) {
+				return true;
+			}
+
+			return false;
+		}
+
+		/**
+		 * Check if the current page is a LearnDash reset password page.
+		 *
+		 * @since BuddyBoss 2.9.00
+		 *
+		 * @return bool True if the current page is a LearnDash reset password page, false otherwise.
+		 */
+		public function bb_rl_is_learndash_reset_password_page() {
+			// Check if LearnDash is active and integration is enabled.
+			// For reset password pages, we'll bypass this check to ensure it works
+			$integration_enabled = $this->bb_rl_is_page_enabled_for_integration( 'learndash' );
+			if ( ! $integration_enabled ) {
+				// Don't return false here - continue with detection
+			}
+
+			// Check for URL parameters that indicate password reset.
+			if ( isset( $_GET['ld-resetpw'] ) || isset( $_GET['password_reset'] ) || isset( $_GET['key'] ) || isset( $_GET['login'] ) ) {
+				return true;
+			}
+
+			// Check if the current page template is being used for password reset.
+			global $post;
+			if ( $post && has_shortcode( $post->post_content, 'ld_reset_password' ) ) {
+				return true;
+			}
+
+			// Check if this is the LearnDash reset password page.
+			if ( function_exists( 'learndash_get_reset_password_page_id' ) ) {
+				$reset_password_page_id = learndash_get_reset_password_page_id();
+				if ( ! empty( $reset_password_page_id ) ) {
+					// Use get_queried_object_id() instead of is_page() to avoid early query issues
+					$current_page_id = get_queried_object_id();
+					if ( $current_page_id && $current_page_id == $reset_password_page_id ) {
+						return true;
+					}
+				}
+			}
+
+			return false;
 		}
 
 		/**
