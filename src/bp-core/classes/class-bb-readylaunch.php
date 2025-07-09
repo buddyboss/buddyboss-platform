@@ -347,6 +347,11 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			remove_filter( 'bp_get_the_notification_mark_read_link', 'bp_nouveau_notifications_mark_read_link', 10, 1 );
 			remove_filter( 'bp_get_the_notification_delete_link', 'bp_nouveau_notifications_delete_link', 10, 1 );
 
+			// Remove BuddyPressHelper search filter at a later priority to ensure it's already added.
+			if ( bp_is_active( 'search' ) ) {
+				add_action( 'bp_init', array( $this, 'bb_rl_remove_buddypress_helper_search_filter' ), 20 );
+			}
+
 			if ( bp_is_active( 'forums' ) ) {
 				add_filter( 'bb_nouveau_get_activity_inner_buttons', array( $this, 'bb_rl_activity_inner_buttons' ), 20, 2 );
 				add_filter( 'bbp_ajax_reply', array( $this, 'bb_rl_ajax_reply' ) );
@@ -369,6 +374,20 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 			if ( class_exists( 'SFWD_LMS' ) ) {
 				require_once buddypress()->compatibility_dir . '/class-bb-readylaunch-learndash-helper.php';
+			}
+		}
+
+		/**
+		 * Remove BuddyPressHelper search filter at a later priority.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 */
+		public function bb_rl_remove_buddypress_helper_search_filter() {
+			if ( function_exists( 'buddyboss_theme' ) && buddyboss_theme()->buddypress_helper() ) {
+				$buddypress_helper = buddyboss_theme()->buddypress_helper();
+				if ( $buddypress_helper && is_object( $buddypress_helper ) ) {
+					remove_filter( 'bp_search_results_group_start_html', array( $buddypress_helper, 'filter_bp_search_results_group_start_html' ), 10, 2 );
+				}
 			}
 		}
 
