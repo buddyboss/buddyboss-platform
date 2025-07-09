@@ -45,11 +45,6 @@ $bp_moderation_item_type = bp_get_moderation_item_type();
 		}
 		?>
 	</td>
-	<td class="moderation-item-last-updated" data-title="<?php esc_html_e( 'Blocked', 'buddyboss' ); ?>">
-		<?php
-		echo esc_html( bp_get_moderation_last_updated() );
-		?>
-	</td>
 	<td class="moderation-item-actions">
 		<?php
 		$btn_cls = ( true === $hide_sitewide ) ? 'button disabled' : 'button bp-unblock-user';
