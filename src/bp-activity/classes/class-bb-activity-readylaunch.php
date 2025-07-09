@@ -739,7 +739,7 @@ class BB_Activity_Readylaunch {
 	/**
 	 * Modify activity widget query to remove public scope when relevant feed is enabled.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.10
 	 *
 	 * @param array $args The activity widget arguments.
 	 * @return array Modified arguments.

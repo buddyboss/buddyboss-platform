@@ -20,7 +20,7 @@ defined( 'ABSPATH' ) || exit;
 </button>
 <div id="bb-rl-network-search-modal" class="bb-rl-network-search-modal bb-rl-search-modal bp-hide">
 	<transition name="modal">
-		<div class="modal-mask bb-rl-modal-mask">
+		<div class="bb-rl-modal-mask">
 			<div class="bb-rl-modal-wrapper">
 				<div class="bp-search-form-wrapper header-search-wrap">
 					<form action="<?php echo esc_url( home_url( '/' ) ); ?>" method="get" class="bp-dir-search-form search-form" id="search-form">

@@ -18,7 +18,7 @@ $bp_is_group = bp_is_group();
 
 <div id="bp-video-create-album" style="display: none;">
 	<transition name="modal">
-		<div class="modal-mask bb-white bbm-model-wrap">
+		<div class="bb-white bbm-model-wrap">
 			<div class="modal-wrapper">
 				<div id="boss-video-create-album-popup" class="modal-container">
 					<header class="bb-model-header">
