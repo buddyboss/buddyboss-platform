@@ -340,6 +340,15 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 			global $wpdb;
 			$bb_telemetry_data = ! empty( $bb_telemetry_data ) ? $bb_telemetry_data : array();
 
+			// Include and collect report metrics.
+			$report_metrics_file = __DIR__ . '/class-bb-report-metrics.php';
+			if ( file_exists( $report_metrics_file ) ) {
+				require_once $report_metrics_file;
+				if ( class_exists( 'BB_Report_Metrics' ) ) {
+					$bb_telemetry_data['bb_report_metrics'] = BB_Report_Metrics::collect();
+				}
+			}
+
 			// Filterable list of BuddyBoss Platform options to fetch from the database.
 			$bb_platform_db_options = apply_filters(
 				'bb_telemetry_platform_options',
