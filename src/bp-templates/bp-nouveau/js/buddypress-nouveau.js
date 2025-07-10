@@ -105,6 +105,32 @@ window.bp = window.bp || {};
 			// Initialize cache
 			this.cacheProfileCard = {};
 			this.cacheGroupCard = {};
+
+			// wrapNavigation dropdown events
+			$( document ).on(
+				'click',
+				'.more-action-button',
+				function ( e ) {
+					e.preventDefault();
+					$( this ).toggleClass( 'active open' ).next().toggleClass( 'active open' );
+					$( 'body' ).toggleClass( 'nav_more_option_open' );
+				}
+			);
+
+			$( document ).click(
+				function ( e ) {
+					var container = $( '.more-action-button, .sub-menu' );
+					if ( ! container.is( e.target ) && container.has( e.target ).length === 0 ) {
+						$( '.more-action-button' ).removeClass( 'active open' ).next().removeClass( 'active open' );
+						$( 'body' ).removeClass( 'nav_more_option_open' );
+					}
+
+					if ( $( e.target ).hasClass( 'bb_more_dropdown__title' ) || $( e.target ).closest( '.bb_more_dropdown__title' ).length > 0 ) {
+						$( '.more-action-button' ).removeClass( 'active open' ).next().removeClass( 'active open' );
+						$( 'body' ).removeClass( 'nav_more_option_open' );
+					}
+				}
+			);
 		},
 
 		/*
@@ -520,8 +546,8 @@ window.bp = window.bp || {};
 				data.target = '#buddypress [data-bp-list] ul.bp-list:not(#bb-media-model-container ul.bp-list)';
 			}
 
-			// if object is members, media, document and object nav does not exists fallback to scope = all.
-			if ( [ 'members', 'media', 'activity', 'document' ].includes( data.object ) && ! $( this.objectNavParent + ' [data-bp-scope="' + data.scope + '"]' ).length ) {
+			// if object is members, media, document, video, groups and object nav does not exists fallback to scope = all.
+			if ( [ 'members', 'media', 'activity', 'document', 'video', 'groups' ].includes( data.object ) && ! $( this.objectNavParent + ' [data-bp-scope="' + data.scope + '"]' ).length ) {
 				data.scope = 'all';
 
 				if ( 'activity' === data.object ) {
@@ -791,14 +817,30 @@ window.bp = window.bp || {};
 					} else {
 						/* animate to top if called from bottom pagination */
 						if ( data.caller === 'pag-bottom' ) {
-							var top = null;
-							if ( $( '#subnav' ).length ) {
-								top = $( '#subnav' ).parent();
-							} else {
+							var top = null, additionalOffset = 0, isMobile = $( 'body.bb-is-mobile' ).length;
+							if ( $( '#wpadminbar' ).length ) {
+								additionalOffset = additionalOffset + $( '#wpadminbar' ).height();
+							}
+
+							if ( $( '.sticky-header .site-header--bb' ).length ) {
+								additionalOffset = additionalOffset + $( '.sticky-header .site-header--bb' ).height();
+							}
+
+							if ( ! isMobile ) {
+								var $subnav = $( '#subnav' ), $mainNavs = $( '.main-navs.dir-navs' );
+								if ( $subnav.length ) {
+									top = $subnav.parent();
+								} else if ( $mainNavs.hasClass( 'bp-subnavs' ) || $mainNavs.hasClass( 'members-type-navs' ) || $mainNavs.hasClass( 'groups-type-navs' ) ) {
+									top = $mainNavs;
+								}
+							}
+
+							if ( ! top ) {
 								top = $( data.target );
 							}
+
 							$( 'html,body' ).animate(
-								{ scrollTop: top.offset().top },
+								{ scrollTop: top.offset().top - additionalOffset },
 								'slow',
 								function () {
 									$( data.target ).fadeOut(
@@ -966,6 +1008,18 @@ window.bp = window.bp || {};
 							queryData.ajaxload = false;
 						}
 
+						// Topic selector.
+						if ( $( '.activity-topic-selector li a' ).length ) {
+							var topicId = $( '.activity-topic-selector li a.selected' ).data( 'topic-id' );
+							if ( topicId ) {
+								queryData.topic_id = topicId;
+							} else {
+								queryData.topic_id = '';
+							}
+						} else {
+							delete queryData.topic_id;
+							self.setStorage( 'bp-activity', 'topic_id', '' );
+						}
 						// Populate the object list.
 						self.objectRequest( queryData );
 					}
@@ -1086,7 +1140,12 @@ window.bp = window.bp || {};
 			$( document ).keydown( this.mediumFormAction.bind( this ) );
 
 			// Profile/Group Popup Card.
-			$( document ).on( 'mouseenter', '[data-bb-hp-profile]', function () {
+			$( document ).on( 'mouseenter', '[data-bb-hp-profile]', function ( event ) {
+
+				if ( 0 === $( event.currentTarget ).data( 'bb-hp-profile' ) ) {
+					return;
+				}
+
 				hoverAvatar = true;
 				hoverProfileAvatar = true;
 
@@ -1105,7 +1164,10 @@ window.bp = window.bp || {};
 				// Always attempt to load the profile card
 				bp.Nouveau.profilePopupCard.call( this );
 			} );
-			$( document ).on( 'mouseenter', '[data-bb-hp-group]', function () {
+			$( document ).on( 'mouseenter', '[data-bb-hp-group]', function ( event ) {
+				if ( 0 === $( event.currentTarget ).data( 'bb-hp-group' ) ) {
+					return;
+				}
 				hoverAvatar = true;
 				hoverGroupAvatar = true;
 
@@ -4668,7 +4730,7 @@ window.bp = window.bp || {};
 					}
 				);
 
-				$( this.objectNavParent + ' [data-bp-scope="' + object + '"], #object-nav li.current' ).addClass( 'selected' );
+				$( this.objectNavParent + ' [data-bp-scope="' + object + '"], #object-nav li.current' ).addClass( 'selected loading' );
 			}
 
 			search_terms = $( '#buddypress [data-bp-search="' + object + '"] input[type=search]' ).val();
@@ -5333,6 +5395,98 @@ window.bp = window.bp || {};
 			hideCardTimeout = null;
 			popupCardLoaded = false;
 		},
+
+		wrapNavigation: function ( selector, reduceWidth, recalculateWidth ) {
+			if( 'undefined' === typeof recalculateWidth ) {
+				recalculateWidth = false;
+			}
+
+			$( selector ).each( function () {
+				//alignMenu( this );
+				var elem = this,
+					$elem = $( this );
+	
+				window.addEventListener( 'resize', run_alignMenu );
+				window.addEventListener( 'load', run_alignMenu );
+
+				if ( recalculateWidth ) {
+					run_alignMenu();
+				}
+	
+				function run_alignMenu() {
+					$elem.find( 'li.bb_more_dropdown__title' ).remove();
+	
+					$elem.append( $( $( $elem.children( 'li.hideshow' ) ).children( 'ul' ) ).html() );
+					$elem.children( 'li.hideshow' ).remove();
+					alignMenu( elem );
+				}
+	
+				function alignMenu( obj ) {
+					var self = $( obj ),
+						w = 0,
+						i = -1,
+						menuhtml = '',
+						mw = self.width() - reduceWidth;
+	
+					$.each( self.children( 'li' ).not( '.bb_more_dropdown__title' ), function () {
+						i++;
+						w += $( this ).outerWidth( true );
+						if ( mw < w ) {
+							menuhtml += $( '<div>' ).append( $( this ).clone() ).html();
+							$( this ).remove();
+						}
+					} );
+	
+					self.append( '<li class="hideshow menu-item-has-children" data-no-dynamic-translation>' +
+					  '<a class="more-action-button" href="#">more <i class="bb-icon-l bb-icon-angle-down"></i></a>' +
+					  '<ul class="sub-menu bb_nav_more_dropdown" data-no-dynamic-translation>' + menuhtml + '</ul>' +
+					  '<div class="bb_more_dropdown_overlay"></div></li>' );
+	
+					if ( self.find( '.hideshow .bb_nav_more_dropdown .bb_more_dropdown__title' ).length < 1 && $( window ).width() < 981 ) {
+						$( self ).find( '.hideshow .bb_nav_more_dropdown' ).append( '<li class="bb_more_dropdown__title">' +
+						  '<span class="bb_more_dropdown__title__text">' + BP_Nouveau.more_menu_items + '</span>' +
+						  '<span class="bb_more_dropdown__close_button" role="button">' +
+						  '<i class="bb-icon-l bb-icon-times"></i></span></li>' );
+					}
+	
+					if ( self.find( 'li.hideshow' ).find( 'li' ).not( '.bb_more_dropdown__title' ).length > 0 ) {
+						self.find( 'li.hideshow' ).show();
+					} else {
+						self.find( 'li.hideshow' ).hide();
+					}
+				}
+	
+				//Vertical nav condition
+				function checkVerticalMenu() {
+	
+					if( $( window ).width() > 738 && $elem.parent().hasClass( 'vertical' ) ) {
+	
+						if( $elem.find( 'li.hideshow' ).length ) {
+	
+							var verticalmenuhtml = '';
+	
+							$.each( $elem.find( 'li.hideshow ul' ).children(), function () {
+								verticalmenuhtml +=  $( this ).wrap('<p/>').parent().html();
+								$( this ).parent().remove();
+							} );
+	
+							$elem.append( verticalmenuhtml );
+							$elem.append( $( $( $elem.children( 'li.hideshow' ) ).children( 'ul' ) ).html() );
+							$elem.children( 'li.hideshow' ).remove();
+	
+						} else {
+							return;
+						}
+	
+					}
+	
+				}
+	
+				window.addEventListener( 'resize', checkVerticalMenu );
+				window.addEventListener( 'load', checkVerticalMenu );
+	
+			} );
+		}
 	};
 
    // Launch BP Nouveau.

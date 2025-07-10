@@ -1,4 +1,4 @@
-/* global BP_ADMIN, BP_Uploader, BP_Confirm, bp */
+/* global BP_ADMIN, BP_Uploader, BP_Confirm, bp, BBTopicsManager */
 
 window.bp = window.bp || {};
 
@@ -2057,17 +2057,17 @@ window.bp = window.bp || {};
 							var iconsArray = [];
 							$( this ).closest( 'td' ).find( 'select.extension-icon option' ).each(
 								function(){
-									var iconClass = $( this ).val();
+									var iconClass = $( this ).attr('data-value');
 									var text      = this.innerText;
 									var item      = '<li><i class="' + iconClass + '"></i><span>' + text + '</span></li>';
 									iconsArray.push( item );
 								}
 							);
 
-							$( this ).closest( 'td' ).find( 'select.extension-icon' ).parent().append( '<div class="icon-select-main"><span class="icon-select-button"></span><div class="custom-extension-list"> <ul class="custom-extension-list-select">' + iconsArray + '</ul></div></div>' );
+							$( this ).closest( 'td' ).find( 'select.extension-icon' ).parent().append( '<div class="icon-select-main"><span class="icon-select-button"></span><div class="custom-extension-list"> <ul class="custom-extension-list-select">' + iconsArray.join('') + '</ul></div></div>' );
 
 							// Set the button value to the first el of the array by default.
-							var currentSelectedIcon     = $( this ).closest( 'td' ).find( '.extension-icon' ).val();
+							var currentSelectedIcon     = $( this ).closest( 'td' ).find( '.extension-icon option:selected' ).attr('data-value');
 							var currentSelectedIconText = $( this ).closest( 'td' ).find( '.extension-icon option:selected' ).text();
 							$( this ).closest( 'td' ).find( '.icon-select-main .icon-select-button' ).html( '<li><i class="' + currentSelectedIcon + '"></i><span>' + currentSelectedIconText + '</span></li>' );
 						}
@@ -2113,7 +2113,7 @@ window.bp = window.bp || {};
 					var totalCount = parseInt( $( '.extension-listing tr.extra-extension' ).length );
 					totalCount     = 1;
 					var media_type = 'bp_document';
-					if ( 
+					if (
 						$( this ).closest('tr.custom-extension').length > 0 &&
 						$( this ).closest('tr.custom-extension').hasClass('video-extensions')
 					) {
@@ -2948,7 +2948,7 @@ window.bp = window.bp || {};
 		// Show telemetry no-reporting setting and mark as checked.
 		var $no_reporting_setting = jQuery( '.bb-setting-telemetry-no-reporting' );
 		$no_reporting_setting.removeClass( 'bp-hide' );
-	
+
 		// Update telemetry mode description with data from the first telemetry input field.
 		var notice_text = jQuery( '#bb_advanced_telemetry input[name="bb_advanced_telemetry_reporting"]' ).first().data( 'notice' );
 		jQuery( '.bb-telemetry-mode-description' ).html( notice_text );
@@ -3014,5 +3014,47 @@ window.bp = window.bp || {};
 			}
 		});
 	}
+
+	function activityTopicHandle() {
+		// Initialize the BBTopicsManager with admin-specific configuration for activity topics.
+		if ( 'undefined' !== typeof BBTopicsManager ) {
+			BBTopicsManager.config.modalSelector          = '#bb-hello-container';
+			BBTopicsManager.config.modalContentSelector   = '.bb-hello-content';
+			BBTopicsManager.config.backdropSelector       = '#bb-hello-backdrop';
+			BBTopicsManager.config.modalOpenClass         = 'bp-disable-scroll';
+			BBTopicsManager.config.closeModalSelector     = '.close-modal, #bb_topic_cancel';
+			BBTopicsManager.config.errorContainer         = '<div class="bb-hello-error"><i class="bb-icon-rf bb-icon-exclamation"></i></div>';
+			BBTopicsManager.config.errorContainerSelector = '.bb-hello-error';
+			BBTopicsManager.config.ajaxUrl                = BP_ADMIN.ajax_url;
+			BBTopicsManager.config.nonce                  = BP_ADMIN.nonce;
+			BBTopicsManager.config.topicsLimit            = BP_ADMIN.topics_limit;
+
+			// Migrate topic elements.
+			BBTopicsManager.config.migrateTopicBackdropModal  = '#bb-hello-topic-migrate-backdrop';
+			BBTopicsManager.config.migrateTopicContainerModal = '#bb-hello-topic-migrate-container';
+			BBTopicsManager.config.migrateAjaxAction          = 'bb_migrate_topic';
+		}
+
+		$( document ).on(
+			'change',
+			'#bb_enable_group_activity_topics',
+			function ( e ) {
+				// Prevent default action and stop event propagation.
+				e.preventDefault();
+				e.stopPropagation();
+
+				var enableGroupTopicsChecked = $( '#bb_enable_group_activity_topics' ).is( ':checked' );
+
+				// Show/hide only group topics dependent fields.
+				if ( enableGroupTopicsChecked ) {
+					$( '.bb_enable_group_activity_topics_required' ).removeClass( 'bp-hide' );
+				} else {
+					$( '.bb_enable_group_activity_topics_required' ).addClass( 'bp-hide' );
+				}
+			}
+		);
+	}
+
+	activityTopicHandle();
 
 }());
