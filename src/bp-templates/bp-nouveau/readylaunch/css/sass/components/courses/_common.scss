@@ -1167,6 +1167,29 @@ body.bb-readylaunch-template:has(.learndash-wrapper-login-modal.ld-modal-open) {
 			margin: var(--bb-rl-space-200) 0;
 			box-shadow: none;
 			border: 1px solid var(--bb-rl-border-secondary-color);
+
+			.purchase-rows {
+				border-color: var(--bb-rl-border-secondary-color);
+				border-radius: var(--bb-rl-radius-md);
+
+				.purchase-label {
+
+					@include bb-rl-label-heading-md;
+				}
+
+				.purchase-value {
+
+					@include bb-rl-label-heading-md-bold;
+					color: var(--bb-rl-text-color);
+				}
+			}
+
+			.order-overview-return {
+
+				@include bb-rl-label-heading;
+				color: var(--bb-rl-text-secondary-color);
+				padding-top: var(--bb-rl-space-300);
+			}
 		}
 
 		.order-heading {
@@ -1181,6 +1204,21 @@ body.bb-readylaunch-template:has(.learndash-wrapper-login-modal.ld-modal-open) {
 			@include bb-rl-label-heading-md;
 			color: var(--bb-rl-text-color);
 			margin: 0 0 var(--bb-rl-space-100);
+		}
+
+		.registration-login {
+
+			@include bb-rl-label-heading;
+			color: var(--bb-rl-text-secondary-color);
+		}
+	}
+
+	.learndash-wrapper #learndash-registration-wrapper,
+	.learndash-wrapper #learndash-reset-password-wrapper {
+
+		#learndash_registerform #wp-submit {
+
+			margin-top: var(--bb-rl-space-200);
 		}
 	}
 
@@ -1207,9 +1245,14 @@ body.bb-readylaunch-template:has(.learndash-wrapper-login-modal.ld-modal-open) {
 				&[type="submit"] {
 
 					@include bb-rl-button;
-					@include bb-rl-button-secondary-fill;
+					@include bb-rl-button--brand-fill;
 					@include bb-rl-button--small;
 					margin: var(--bb-rl-space-200) 0 0;
+					width: auto;
+				}
+
+				&[type="checkbox"] {
+					margin-right: var(--bb-rl-space-50);
 				}
 			}
 

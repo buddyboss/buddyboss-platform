@@ -5278,6 +5278,32 @@ body.bb-readylaunch-template:has(.learndash-wrapper-login-modal.ld-modal-open) {
   border: 1px solid var(--bb-rl-border-secondary-color);
 }
 
+.bb-rl-learndash-registration .learndash-wrapper:not(.ld-registration__outer-wrapper) .order-overview .purchase-rows {
+  border-color: var(--bb-rl-border-secondary-color);
+  border-radius: var(--bb-rl-radius-md);
+}
+
+.bb-rl-learndash-registration .learndash-wrapper:not(.ld-registration__outer-wrapper) .order-overview .purchase-rows .purchase-label {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 22px;
+}
+
+.bb-rl-learndash-registration .learndash-wrapper:not(.ld-registration__outer-wrapper) .order-overview .purchase-rows .purchase-value {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 22px;
+  color: var(--bb-rl-text-color);
+}
+
+.bb-rl-learndash-registration .learndash-wrapper:not(.ld-registration__outer-wrapper) .order-overview .order-overview-return {
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 400;
+  line-height: var(--bb-rl-base-line-small);
+  color: var(--bb-rl-text-secondary-color);
+  padding-top: var(--bb-rl-space-300);
+}
+
 .bb-rl-learndash-registration .learndash-wrapper:not(.ld-registration__outer-wrapper) .order-heading {
   font-size: var(--bb-rl-font-size-base);
   font-weight: 500;
@@ -5292,6 +5318,18 @@ body.bb-readylaunch-template:has(.learndash-wrapper-login-modal.ld-modal-open) {
   line-height: 22px;
   color: var(--bb-rl-text-color);
   margin: 0 0 var(--bb-rl-space-100);
+}
+
+.bb-rl-learndash-registration .learndash-wrapper:not(.ld-registration__outer-wrapper) .registration-login {
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 400;
+  line-height: var(--bb-rl-base-line-small);
+  color: var(--bb-rl-text-secondary-color);
+}
+
+.bb-rl-learndash-registration .learndash-wrapper #learndash-registration-wrapper #learndash_registerform #wp-submit,
+.bb-rl-learndash-registration .learndash-wrapper #learndash-reset-password-wrapper #learndash_registerform #wp-submit {
+  margin-top: var(--bb-rl-space-200);
 }
 
 .bb-rl-learndash-registration .learndash-wrapper #learndash-registration-wrapper form input,
@@ -5325,30 +5363,35 @@ body.bb-readylaunch-template:has(.learndash-wrapper-login-modal.ld-modal-open) {
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
   transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
-  background-color: var(--bb-rl-background-tertiary-color);
-  color: var(--bb-rl-text-color);
-  border: 1px solid transparent;
+  background-color: var(--bb-rl-background-brand-primary-color);
+  color: var(--bb-rl-text-white-color);
+  border: 1px solid var(--bb-rl-background-brand-primary-color);
   padding: 6px var(--bb-rl-space-200);
   font-size: var(--bb-rl-font-size-sm);
   font-weight: 400;
   margin: var(--bb-rl-space-200) 0 0;
+  width: auto;
 }
 
 .bb-rl-learndash-registration .learndash-wrapper #learndash-registration-wrapper form input[type="submit"]:hover,
 .bb-rl-learndash-registration .learndash-wrapper #learndash-reset-password-wrapper form input[type="submit"]:hover {
-  background-color: var(--bb-rl-background-tertiary-hover-color);
+  background-color: var(--bb-rl-background-brand-primary-hover-color);
 }
 
-.bb-rl-learndash-registration .learndash-wrapper #learndash-registration-wrapper form input[type="submit"]:focus,
-.bb-rl-learndash-registration .learndash-wrapper #learndash-reset-password-wrapper form input[type="submit"]:focus {
-  outline: 2px solid var(--bb-rl-border-quinery-color);
+.bb-rl-learndash-registration .learndash-wrapper #learndash-registration-wrapper form input[type="submit"]:focus-within,
+.bb-rl-learndash-registration .learndash-wrapper #learndash-reset-password-wrapper form input[type="submit"]:focus-within {
+  outline: 2px solid var(--bb-rl-border-brand-primary-color);
 }
 
 .bb-rl-learndash-registration .learndash-wrapper #learndash-registration-wrapper form input[type="submit"]:disabled,
 .bb-rl-learndash-registration .learndash-wrapper #learndash-reset-password-wrapper form input[type="submit"]:disabled {
-  background-color: var(--bb-rl-background-tertiary-color);
-  color: var(--bb-rl-text-disabled-color);
+  background-color: var(--bb-rl-background-brand-disabled-color);
   cursor: not-allowed;
+}
+
+.bb-rl-learndash-registration .learndash-wrapper #learndash-registration-wrapper form input[type="checkbox"],
+.bb-rl-learndash-registration .learndash-wrapper #learndash-reset-password-wrapper form input[type="checkbox"] {
+  margin-right: var(--bb-rl-space-50);
 }
 
 .bb-rl-learndash-registration .learndash-wrapper #learndash-registration-wrapper form label,
