@@ -4892,14 +4892,14 @@ body.bb-readylaunch-template:has(.learndash-wrapper-login-modal.ld-modal-open) {
   text-align: left;
 }
 
-.bb-readylaunch-template .learndash-wrapper:not(.ld-registration__outer-wrapper) input[type=text],
-.bb-readylaunch-template .learndash-wrapper:not(.ld-registration__outer-wrapper) input[type=password],
-.bb-readylaunch-template .learndash-wrapper:not(.ld-registration__outer-wrapper) input[type=email],
+.bb-readylaunch-template .learndash-wrapper:not(.ld-registration__outer-wrapper) input[type="text"],
+.bb-readylaunch-template .learndash-wrapper:not(.ld-registration__outer-wrapper) input[type="password"],
+.bb-readylaunch-template .learndash-wrapper:not(.ld-registration__outer-wrapper) input[type="email"],
 .bb-readylaunch-template .learndash-wrapper:not(.ld-registration__outer-wrapper) .ld-login-field,
 .bb-readylaunch-template .learndash-wrapper:not(.ld-registration__outer-wrapper) .ld-password-field,
-.bb-readylaunch-template .learndash-wrapper.learndash-wrapper-login-modal input[type=text],
-.bb-readylaunch-template .learndash-wrapper.learndash-wrapper-login-modal input[type=password],
-.bb-readylaunch-template .learndash-wrapper.learndash-wrapper-login-modal input[type=email],
+.bb-readylaunch-template .learndash-wrapper.learndash-wrapper-login-modal input[type="text"],
+.bb-readylaunch-template .learndash-wrapper.learndash-wrapper-login-modal input[type="password"],
+.bb-readylaunch-template .learndash-wrapper.learndash-wrapper-login-modal input[type="email"],
 .bb-readylaunch-template .learndash-wrapper.learndash-wrapper-login-modal .ld-login-field,
 .bb-readylaunch-template .learndash-wrapper.learndash-wrapper-login-modal .ld-password-field {
   font-size: 14px;
@@ -5044,6 +5044,17 @@ body.bb-readylaunch-template:has(.learndash-wrapper-login-modal.ld-modal-open) {
 .bb-readylaunch-template .learndash-wrapper:not(.ld-registration__outer-wrapper) .ld-alert.ld-alert-error > [class*="bb-icons"],
 .bb-readylaunch-template .learndash-wrapper.learndash-wrapper-login-modal .ld-alert.ld-alert-error > [class*="bb-icons"] {
   color: var(--bb-rl-border-danger-secondary-color);
+}
+
+.bb-readylaunch-template .learndash-wrapper:not(.ld-registration__outer-wrapper) .ld-alert.ld-alert-success,
+.bb-readylaunch-template .learndash-wrapper.learndash-wrapper-login-modal .ld-alert.ld-alert-success {
+  background-color: var(--bb-rl-background-positive-secondary-color);
+  border-color: var(--bb-rl-border-positive-secondary-color);
+}
+
+.bb-readylaunch-template .learndash-wrapper:not(.ld-registration__outer-wrapper) .ld-alert.ld-alert-success > [class*="bb-icons"],
+.bb-readylaunch-template .learndash-wrapper.learndash-wrapper-login-modal .ld-alert.ld-alert-success > [class*="bb-icons"] {
+  color: var(--bb-rl-border-positive-secondary-color);
 }
 
 .bb-readylaunch-template .learndash-wrapper:not(.ld-registration__outer-wrapper) .ld-alert .ld-alert-icon,

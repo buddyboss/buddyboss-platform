@@ -902,9 +902,9 @@ body.bb-readylaunch-template:has(.learndash-wrapper-login-modal.ld-modal-open) {
 			text-align: left;
 		}
 
-		input[type=text],
-		input[type=password],
-		input[type=email],
+		input[type="text"],
+		input[type="password"],
+		input[type="email"],
 		.ld-login-field,
 		.ld-password-field {
 
@@ -998,6 +998,11 @@ body.bb-readylaunch-template:has(.learndash-wrapper-login-modal.ld-modal-open) {
 			&.ld-alert-error {
 
 				@include bb-rl-notice--alt-error;
+			}
+
+			&.ld-alert-success {
+
+				@include bb-rl-notice--alt-success;
 			}
 
 			.ld-alert-icon {
@@ -1231,12 +1236,12 @@ body.bb-readylaunch-template:has(.learndash-wrapper-login-modal.ld-modal-open) {
 	}
 
 	.learndash-wrapper #learndash-registration-wrapper,
-	.learndash-wrapper #learndash-reset-password-wrapper  {
+	.learndash-wrapper #learndash-reset-password-wrapper {
 
 		form {
 
 			input {
-			
+
 				@include bb-rl-label-heading-md-thin;
 				background-color: var(--bb-rl-background-color);
 				border: 1px solid var(--bb-rl-border-tertiary-color);
@@ -1265,7 +1270,7 @@ body.bb-readylaunch-template:has(.learndash-wrapper-login-modal.ld-modal-open) {
 			}
 
 			label {
-				
+
 				@include bb-rl-label-heading-md;
 				display: block;
 				margin: 0 0 var(--bb-rl-space-100);
