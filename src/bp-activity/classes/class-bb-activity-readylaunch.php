@@ -808,6 +808,7 @@ class BB_Activity_Readylaunch {
 			$unfollow_text          = __( 'Unfollow', 'buddyboss' );
 			$button['data-balloon'] = $unfollow_text;
 			if ( empty( $button['is_tooltips'] ) ) {
+				$button['link_class']               .= ' bb-rl-primary-hover-action';
 				$button['button_attr']['data-hover'] = $unfollow_text;
 			}
 		}
