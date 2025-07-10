@@ -114,6 +114,10 @@
 		.item-avatar {
 			display: flex;
 			justify-content: center;
+
+			.gamipress-buddypress-user-details {
+				display: none;
+			}
 		}
 
 		.avatar {

@@ -277,6 +277,10 @@
   justify-content: center;
 }
 
+.bb-rl-members .item-entry .item-avatar .gamipress-buddypress-user-details {
+  display: none;
+}
+
 .bb-rl-members .item-entry .avatar {
   max-width: 104px;
   height: auto;
