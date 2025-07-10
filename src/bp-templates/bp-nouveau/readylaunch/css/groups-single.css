@@ -5269,7 +5269,8 @@ body.bb-readylaunch-template:has(.learndash-wrapper-login-modal.ld-modal-open) {
   line-height: 28px;
 }
 
-.bb-rl-learndash-registration .learndash-wrapper:not(.ld-registration__outer-wrapper) .order-overview {
+.bb-rl-learndash-registration .learndash-wrapper:not(.ld-registration__outer-wrapper) .order-overview,
+.bb-rl-learndash-reset-password .learndash-wrapper:not(.ld-registration__outer-wrapper) .order-overview {
   background-color: var(--bb-rl-background-color);
   border-radius: var(--bb-rl-radius-lg);
   padding: var(--bb-rl-space-300);
@@ -5278,25 +5279,29 @@ body.bb-readylaunch-template:has(.learndash-wrapper-login-modal.ld-modal-open) {
   border: 1px solid var(--bb-rl-border-secondary-color);
 }
 
-.bb-rl-learndash-registration .learndash-wrapper:not(.ld-registration__outer-wrapper) .order-overview .purchase-rows {
+.bb-rl-learndash-registration .learndash-wrapper:not(.ld-registration__outer-wrapper) .order-overview .purchase-rows,
+.bb-rl-learndash-reset-password .learndash-wrapper:not(.ld-registration__outer-wrapper) .order-overview .purchase-rows {
   border-color: var(--bb-rl-border-secondary-color);
   border-radius: var(--bb-rl-radius-md);
 }
 
-.bb-rl-learndash-registration .learndash-wrapper:not(.ld-registration__outer-wrapper) .order-overview .purchase-rows .purchase-label {
+.bb-rl-learndash-registration .learndash-wrapper:not(.ld-registration__outer-wrapper) .order-overview .purchase-rows .purchase-label,
+.bb-rl-learndash-reset-password .learndash-wrapper:not(.ld-registration__outer-wrapper) .order-overview .purchase-rows .purchase-label {
   font-size: 14px;
   font-weight: 500;
   line-height: 22px;
 }
 
-.bb-rl-learndash-registration .learndash-wrapper:not(.ld-registration__outer-wrapper) .order-overview .purchase-rows .purchase-value {
+.bb-rl-learndash-registration .learndash-wrapper:not(.ld-registration__outer-wrapper) .order-overview .purchase-rows .purchase-value,
+.bb-rl-learndash-reset-password .learndash-wrapper:not(.ld-registration__outer-wrapper) .order-overview .purchase-rows .purchase-value {
   font-size: 14px;
   font-weight: 600;
   line-height: 22px;
   color: var(--bb-rl-text-color);
 }
 
-.bb-rl-learndash-registration .learndash-wrapper:not(.ld-registration__outer-wrapper) .order-overview .order-overview-return {
+.bb-rl-learndash-registration .learndash-wrapper:not(.ld-registration__outer-wrapper) .order-overview .order-overview-return,
+.bb-rl-learndash-reset-password .learndash-wrapper:not(.ld-registration__outer-wrapper) .order-overview .order-overview-return {
   font-size: var(--bb-rl-font-size-sm);
   font-weight: 400;
   line-height: var(--bb-rl-base-line-small);
@@ -5304,7 +5309,8 @@ body.bb-readylaunch-template:has(.learndash-wrapper-login-modal.ld-modal-open) {
   padding-top: var(--bb-rl-space-300);
 }
 
-.bb-rl-learndash-registration .learndash-wrapper:not(.ld-registration__outer-wrapper) .order-heading {
+.bb-rl-learndash-registration .learndash-wrapper:not(.ld-registration__outer-wrapper) .order-heading,
+.bb-rl-learndash-reset-password .learndash-wrapper:not(.ld-registration__outer-wrapper) .order-heading {
   font-size: var(--bb-rl-font-size-base);
   font-weight: 500;
   line-height: var(--bb-rl-base-line);
@@ -5312,7 +5318,8 @@ body.bb-readylaunch-template:has(.learndash-wrapper-login-modal.ld-modal-open) {
   margin: 0 0 var(--bb-rl-space-200);
 }
 
-.bb-rl-learndash-registration .learndash-wrapper:not(.ld-registration__outer-wrapper) .purchase-title {
+.bb-rl-learndash-registration .learndash-wrapper:not(.ld-registration__outer-wrapper) .purchase-title,
+.bb-rl-learndash-reset-password .learndash-wrapper:not(.ld-registration__outer-wrapper) .purchase-title {
   font-size: 14px;
   font-weight: 500;
   line-height: 22px;
@@ -5320,7 +5327,18 @@ body.bb-readylaunch-template:has(.learndash-wrapper-login-modal.ld-modal-open) {
   margin: 0 0 var(--bb-rl-space-100);
 }
 
-.bb-rl-learndash-registration .learndash-wrapper:not(.ld-registration__outer-wrapper) .registration-login {
+.bb-rl-learndash-registration .learndash-wrapper:not(.ld-registration__outer-wrapper) .registration-login,
+.bb-rl-learndash-reset-password .learndash-wrapper:not(.ld-registration__outer-wrapper) .registration-login {
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 400;
+  line-height: var(--bb-rl-base-line-small);
+  color: var(--bb-rl-text-secondary-color);
+}
+
+.bb-rl-learndash-registration .bb-rl-reset-password-subtitle,
+.bb-rl-learndash-registration .bb-rl-registration-description,
+.bb-rl-learndash-reset-password .bb-rl-reset-password-subtitle,
+.bb-rl-learndash-reset-password .bb-rl-registration-description {
   font-size: var(--bb-rl-font-size-sm);
   font-weight: 400;
   line-height: var(--bb-rl-base-line-small);
@@ -5328,12 +5346,16 @@ body.bb-readylaunch-template:has(.learndash-wrapper-login-modal.ld-modal-open) {
 }
 
 .bb-rl-learndash-registration .learndash-wrapper #learndash-registration-wrapper #learndash_registerform #wp-submit,
-.bb-rl-learndash-registration .learndash-wrapper #learndash-reset-password-wrapper #learndash_registerform #wp-submit {
+.bb-rl-learndash-registration .learndash-wrapper #learndash-reset-password-wrapper #learndash_registerform #wp-submit,
+.bb-rl-learndash-reset-password .learndash-wrapper #learndash-registration-wrapper #learndash_registerform #wp-submit,
+.bb-rl-learndash-reset-password .learndash-wrapper #learndash-reset-password-wrapper #learndash_registerform #wp-submit {
   margin-top: var(--bb-rl-space-200);
 }
 
 .bb-rl-learndash-registration .learndash-wrapper #learndash-registration-wrapper form input,
-.bb-rl-learndash-registration .learndash-wrapper #learndash-reset-password-wrapper form input {
+.bb-rl-learndash-registration .learndash-wrapper #learndash-reset-password-wrapper form input,
+.bb-rl-learndash-reset-password .learndash-wrapper #learndash-registration-wrapper form input,
+.bb-rl-learndash-reset-password .learndash-wrapper #learndash-reset-password-wrapper form input {
   font-size: 14px;
   font-weight: 400;
   line-height: 22px;
@@ -5351,7 +5373,9 @@ body.bb-readylaunch-template:has(.learndash-wrapper-login-modal.ld-modal-open) {
 }
 
 .bb-rl-learndash-registration .learndash-wrapper #learndash-registration-wrapper form input[type="submit"],
-.bb-rl-learndash-registration .learndash-wrapper #learndash-reset-password-wrapper form input[type="submit"] {
+.bb-rl-learndash-registration .learndash-wrapper #learndash-reset-password-wrapper form input[type="submit"],
+.bb-rl-learndash-reset-password .learndash-wrapper #learndash-registration-wrapper form input[type="submit"],
+.bb-rl-learndash-reset-password .learndash-wrapper #learndash-reset-password-wrapper form input[type="submit"] {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -5374,28 +5398,38 @@ body.bb-readylaunch-template:has(.learndash-wrapper-login-modal.ld-modal-open) {
 }
 
 .bb-rl-learndash-registration .learndash-wrapper #learndash-registration-wrapper form input[type="submit"]:hover,
-.bb-rl-learndash-registration .learndash-wrapper #learndash-reset-password-wrapper form input[type="submit"]:hover {
+.bb-rl-learndash-registration .learndash-wrapper #learndash-reset-password-wrapper form input[type="submit"]:hover,
+.bb-rl-learndash-reset-password .learndash-wrapper #learndash-registration-wrapper form input[type="submit"]:hover,
+.bb-rl-learndash-reset-password .learndash-wrapper #learndash-reset-password-wrapper form input[type="submit"]:hover {
   background-color: var(--bb-rl-background-brand-primary-hover-color);
 }
 
 .bb-rl-learndash-registration .learndash-wrapper #learndash-registration-wrapper form input[type="submit"]:focus-within,
-.bb-rl-learndash-registration .learndash-wrapper #learndash-reset-password-wrapper form input[type="submit"]:focus-within {
+.bb-rl-learndash-registration .learndash-wrapper #learndash-reset-password-wrapper form input[type="submit"]:focus-within,
+.bb-rl-learndash-reset-password .learndash-wrapper #learndash-registration-wrapper form input[type="submit"]:focus-within,
+.bb-rl-learndash-reset-password .learndash-wrapper #learndash-reset-password-wrapper form input[type="submit"]:focus-within {
   outline: 2px solid var(--bb-rl-border-brand-primary-color);
 }
 
 .bb-rl-learndash-registration .learndash-wrapper #learndash-registration-wrapper form input[type="submit"]:disabled,
-.bb-rl-learndash-registration .learndash-wrapper #learndash-reset-password-wrapper form input[type="submit"]:disabled {
+.bb-rl-learndash-registration .learndash-wrapper #learndash-reset-password-wrapper form input[type="submit"]:disabled,
+.bb-rl-learndash-reset-password .learndash-wrapper #learndash-registration-wrapper form input[type="submit"]:disabled,
+.bb-rl-learndash-reset-password .learndash-wrapper #learndash-reset-password-wrapper form input[type="submit"]:disabled {
   background-color: var(--bb-rl-background-brand-disabled-color);
   cursor: not-allowed;
 }
 
 .bb-rl-learndash-registration .learndash-wrapper #learndash-registration-wrapper form input[type="checkbox"],
-.bb-rl-learndash-registration .learndash-wrapper #learndash-reset-password-wrapper form input[type="checkbox"] {
+.bb-rl-learndash-registration .learndash-wrapper #learndash-reset-password-wrapper form input[type="checkbox"],
+.bb-rl-learndash-reset-password .learndash-wrapper #learndash-registration-wrapper form input[type="checkbox"],
+.bb-rl-learndash-reset-password .learndash-wrapper #learndash-reset-password-wrapper form input[type="checkbox"] {
   margin-right: var(--bb-rl-space-50);
 }
 
 .bb-rl-learndash-registration .learndash-wrapper #learndash-registration-wrapper form label,
-.bb-rl-learndash-registration .learndash-wrapper #learndash-reset-password-wrapper form label {
+.bb-rl-learndash-registration .learndash-wrapper #learndash-reset-password-wrapper form label,
+.bb-rl-learndash-reset-password .learndash-wrapper #learndash-registration-wrapper form label,
+.bb-rl-learndash-reset-password .learndash-wrapper #learndash-reset-password-wrapper form label {
   font-size: 14px;
   font-weight: 500;
   line-height: 22px;

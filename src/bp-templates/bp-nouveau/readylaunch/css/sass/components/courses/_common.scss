@@ -1156,7 +1156,8 @@ body.bb-readylaunch-template:has(.learndash-wrapper-login-modal.ld-modal-open) {
 	}
 }
 
-.bb-rl-learndash-registration {
+.bb-rl-learndash-registration,
+.bb-rl-learndash-reset-password {
 
 	.learndash-wrapper:not(.ld-registration__outer-wrapper) {
 
@@ -1211,6 +1212,13 @@ body.bb-readylaunch-template:has(.learndash-wrapper-login-modal.ld-modal-open) {
 			@include bb-rl-label-heading;
 			color: var(--bb-rl-text-secondary-color);
 		}
+	}
+
+	.bb-rl-reset-password-subtitle,
+	.bb-rl-registration-description {
+
+		@include bb-rl-label-heading;
+		color: var(--bb-rl-text-secondary-color);
 	}
 
 	.learndash-wrapper #learndash-registration-wrapper,

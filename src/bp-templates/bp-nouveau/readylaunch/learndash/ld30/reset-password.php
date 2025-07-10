@@ -41,10 +41,8 @@ $active_template_key = function_exists( 'LearnDash_Theme_Register::get_active_th
 	<article id="post-<?php echo esc_attr( get_the_ID() ); ?>" <?php post_class( array( 'bb-rl-learndash-reset-password', 'bb-rl-lms-reset-password', 'bb-rl-lms-course' ) ); ?>>
 		<div class="bb-rl-lms-inner-block">
 			<header class="bb-rl-heading">
-				<div class="bb-rl-reset-password-banner">
-					<h1 class="bb-rl-entry-title"><?php esc_html_e( 'Reset Your Password', 'buddyboss' ); ?></h1>
-					<p class="bb-rl-reset-password-subtitle"><?php esc_html_e( 'Enter your email address and we\'ll send you a link to reset your password.', 'buddyboss' ); ?></p>
-				</div>
+				<h1 class="bb-rl-entry-title"><?php esc_html_e( 'Reset Your Password', 'buddyboss' ); ?></h1>
+				<p class="bb-rl-reset-password-subtitle"><?php esc_html_e( 'Enter your email address and we\'ll send you a link to reset your password.', 'buddyboss' ); ?></p>
 			</header>
 
 			<div class="bb-rl-reset-password-content">
