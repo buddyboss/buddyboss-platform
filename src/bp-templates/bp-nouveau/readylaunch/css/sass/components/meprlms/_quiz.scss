@@ -152,6 +152,16 @@
 					color: var(--bb-rl-text-color);
 					padding-left: var(--bb-rl-space-50);
 				}
+
+				label:has(.mpcs-radio-checked),
+				label:has(.mpcs-radio-unchecked),
+				label:has(.mpcs-checkbox-unchecked),
+				label:has(.mpcs-checkbox-checked) {
+
+					&::before {
+						display: none;
+					}
+				}
 			}
 		}
 	}
