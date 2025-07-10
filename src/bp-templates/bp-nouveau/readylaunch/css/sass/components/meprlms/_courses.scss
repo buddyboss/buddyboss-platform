@@ -483,6 +483,7 @@ body[class*="mpcs-course"] .bb-rl-mbprlms-pagination {
 	padding-bottom: var(--bb-rl-space-400);
 
 	> p {
+
 		@include bb-rl-label-heading;
 		color: var(--bb-rl-text-secondary-color);
 	}

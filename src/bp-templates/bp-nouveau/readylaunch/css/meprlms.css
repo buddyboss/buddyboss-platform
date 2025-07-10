@@ -2354,19 +2354,85 @@ body[class*="mpcs-course"] .bb-rl-mbprlms-pagination ul li.active a {
   padding-left: var(--bb-rl-space-50);
 }
 
-.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-true-false .mpcs-quiz-question-options .mpcs-quiz-question-option label:has(.mpcs-radio-checked)::before,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-true-false .mpcs-quiz-question-options .mpcs-quiz-question-option label:has(.mpcs-radio-checked)::before, .bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-true-false .mpcs-quiz-question-options .mpcs-quiz-question-option label:has(.mpcs-radio-checked)::after,
 .bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-true-false .mpcs-quiz-question-options .mpcs-quiz-question-option label:has(.mpcs-radio-unchecked)::before,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-true-false .mpcs-quiz-question-options .mpcs-quiz-question-option label:has(.mpcs-radio-unchecked)::after,
 .bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-true-false .mpcs-quiz-question-options .mpcs-quiz-question-option label:has(.mpcs-checkbox-unchecked)::before,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-true-false .mpcs-quiz-question-options .mpcs-quiz-question-option label:has(.mpcs-checkbox-unchecked)::after,
 .bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-true-false .mpcs-quiz-question-options .mpcs-quiz-question-option label:has(.mpcs-checkbox-checked)::before,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-true-false .mpcs-quiz-question-options .mpcs-quiz-question-option label:has(.mpcs-checkbox-checked)::after,
 .bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-choice .mpcs-quiz-question-options .mpcs-quiz-question-option label:has(.mpcs-radio-checked)::before,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-choice .mpcs-quiz-question-options .mpcs-quiz-question-option label:has(.mpcs-radio-checked)::after,
 .bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-choice .mpcs-quiz-question-options .mpcs-quiz-question-option label:has(.mpcs-radio-unchecked)::before,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-choice .mpcs-quiz-question-options .mpcs-quiz-question-option label:has(.mpcs-radio-unchecked)::after,
 .bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-choice .mpcs-quiz-question-options .mpcs-quiz-question-option label:has(.mpcs-checkbox-unchecked)::before,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-choice .mpcs-quiz-question-options .mpcs-quiz-question-option label:has(.mpcs-checkbox-unchecked)::after,
 .bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-choice .mpcs-quiz-question-options .mpcs-quiz-question-option label:has(.mpcs-checkbox-checked)::before,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-choice .mpcs-quiz-question-options .mpcs-quiz-question-option label:has(.mpcs-checkbox-checked)::after,
 .bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-answer .mpcs-quiz-question-options .mpcs-quiz-question-option label:has(.mpcs-radio-checked)::before,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-answer .mpcs-quiz-question-options .mpcs-quiz-question-option label:has(.mpcs-radio-checked)::after,
 .bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-answer .mpcs-quiz-question-options .mpcs-quiz-question-option label:has(.mpcs-radio-unchecked)::before,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-answer .mpcs-quiz-question-options .mpcs-quiz-question-option label:has(.mpcs-radio-unchecked)::after,
 .bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-answer .mpcs-quiz-question-options .mpcs-quiz-question-option label:has(.mpcs-checkbox-unchecked)::before,
-.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-answer .mpcs-quiz-question-options .mpcs-quiz-question-option label:has(.mpcs-checkbox-checked)::before {
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-answer .mpcs-quiz-question-options .mpcs-quiz-question-option label:has(.mpcs-checkbox-unchecked)::after,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-answer .mpcs-quiz-question-options .mpcs-quiz-question-option label:has(.mpcs-checkbox-checked)::before,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-answer .mpcs-quiz-question-options .mpcs-quiz-question-option label:has(.mpcs-checkbox-checked)::after {
   display: none;
+}
+
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-true-false .mpcs-quiz-question-options .mpcs-quiz-question-option .mpcs-radio-checked,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-true-false .mpcs-quiz-question-options .mpcs-quiz-question-option .mpcs-radio-unchecked,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-true-false .mpcs-quiz-question-options .mpcs-quiz-question-option .mpcs-checkbox-unchecked,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-true-false .mpcs-quiz-question-options .mpcs-quiz-question-option .mpcs-checkbox-checked,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-choice .mpcs-quiz-question-options .mpcs-quiz-question-option .mpcs-radio-checked,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-choice .mpcs-quiz-question-options .mpcs-quiz-question-option .mpcs-radio-unchecked,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-choice .mpcs-quiz-question-options .mpcs-quiz-question-option .mpcs-checkbox-unchecked,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-choice .mpcs-quiz-question-options .mpcs-quiz-question-option .mpcs-checkbox-checked,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-answer .mpcs-quiz-question-options .mpcs-quiz-question-option .mpcs-radio-checked,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-answer .mpcs-quiz-question-options .mpcs-quiz-question-option .mpcs-radio-unchecked,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-answer .mpcs-quiz-question-options .mpcs-quiz-question-option .mpcs-checkbox-unchecked,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-answer .mpcs-quiz-question-options .mpcs-quiz-question-option .mpcs-checkbox-checked {
+  margin-right: var(--bb-rl-space-50);
+}
+
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-true-false .mpcs-quiz-question-options .mpcs-quiz-question-option .mpcs-checkbox-unchecked::before,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-choice .mpcs-quiz-question-options .mpcs-quiz-question-option .mpcs-checkbox-unchecked::before,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-answer .mpcs-quiz-question-options .mpcs-quiz-question-option .mpcs-checkbox-unchecked::before {
+  content: "";
+  display: inline-flex;
+  width: 20px;
+  height: 20px;
+  border: 1px solid var(--bb-rl-border-secondary-color);
+  border-radius: var(--bb-rl-radius-sm);
+  background-color: var(--bb-rl-background-color);
+  vertical-align: middle;
+}
+
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-true-false .mpcs-quiz-question-options .mpcs-quiz-question-option input:checked + label .mpcs-checkbox-checked,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-choice .mpcs-quiz-question-options .mpcs-quiz-question-option input:checked + label .mpcs-checkbox-checked,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-answer .mpcs-quiz-question-options .mpcs-quiz-question-option input:checked + label .mpcs-checkbox-checked {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  background-color: var(--bb-rl-icon-brand-secondary-color);
+  border-radius: var(--bb-rl-radius-sm);
+}
+
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-true-false .mpcs-quiz-question-options .mpcs-quiz-question-option input:checked + label .mpcs-checkbox-checked::before,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-choice .mpcs-quiz-question-options .mpcs-quiz-question-option input:checked + label .mpcs-checkbox-checked::before,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-answer .mpcs-quiz-question-options .mpcs-quiz-question-option input:checked + label .mpcs-checkbox-checked::before {
+  content: "\e182";
+  display: inline-flex;
+  font-weight: 400;
+  font-family: bb-icons-rl;
+  font-size: 14px;
+  color: var(--bb-rl-text-white-color);
+  font-style: normal;
+  line-height: 1;
+  position: relative;
+  top: 0;
 }
 
 .bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-fill-blank .mpcs-fill-blank-field {

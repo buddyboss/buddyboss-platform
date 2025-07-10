@@ -158,8 +158,53 @@
 				label:has(.mpcs-checkbox-unchecked),
 				label:has(.mpcs-checkbox-checked) {
 
-					&::before {
+					&::before,
+					&::after {
 						display: none;
+					}
+				}
+
+				.mpcs-radio-checked,
+				.mpcs-radio-unchecked,
+				.mpcs-checkbox-unchecked,
+				.mpcs-checkbox-checked {
+					margin-right: var(--bb-rl-space-50);
+				}
+
+				.mpcs-checkbox-unchecked {
+
+					&::before {
+						content: "";
+						display: inline-flex;
+						width: 20px;
+						height: 20px;
+						border: 1px solid var(--bb-rl-border-secondary-color);
+						border-radius: var(--bb-rl-radius-sm);
+						background-color: var(--bb-rl-background-color);
+						vertical-align: middle;
+					}
+				}
+
+				input:checked + label .mpcs-checkbox-checked {
+					display: inline-flex;
+					align-items: center;
+					justify-content: center;
+					width: 20px;
+					height: 20px;
+					background-color: var(--bb-rl-icon-brand-secondary-color);
+					border-radius: var(--bb-rl-radius-sm);
+
+					&::before {
+						content: "\e182";
+						display: inline-flex;
+						font-weight: 400;
+						font-family: bb-icons-rl;
+						font-size: 14px;
+						color: var(--bb-rl-text-white-color);
+						font-style: normal;
+						line-height: 1;
+						position: relative;
+						top: 0;
 					}
 				}
 			}
