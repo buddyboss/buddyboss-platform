@@ -14,6 +14,10 @@
 		max-width: 448px;
 		margin: 50px auto;
 
+		@media (max-width: $sm) {
+			max-width: 388px;
+		}
+
 		> .item {
 			width: auto;
 			margin: 0 auto;
@@ -91,6 +95,10 @@
 		width: 400px;
 		height: 400px;
 		margin: 0 auto var(--bb-rl-space-100);
+
+		@media (max-width: $sm) {
+			width: 340px;
+		}
 	}
 }
 

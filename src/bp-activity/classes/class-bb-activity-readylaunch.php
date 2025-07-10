@@ -56,6 +56,8 @@ class BB_Activity_Readylaunch {
 		add_filter( 'bp_nouveau_media_description_response_data', array( $this, 'bb_rl_modify_media_description_response_data' ), 10 );
 		add_filter( 'bp_nouveau_document_description_response_data', array( $this, 'bb_rl_modify_media_description_response_data' ), 10 );
 		add_filter( 'bp_nouveau_video_description_response_data', array( $this, 'bb_rl_modify_media_description_response_data' ), 10 );
+
+		add_filter( 'bp_nouveau_activity_widget_query', array( $this, 'bb_rl_modify_activity_widget_query' ), 10 );
 	}
 
 	/**
@@ -732,5 +734,40 @@ class BB_Activity_Readylaunch {
 		}
 
 		return $response_data;
+	}
+
+	/**
+	 * Modify activity widget query to remove public scope when relevant feed is enabled.
+	 *
+	 * @since BuddyBoss 2.9.10
+	 *
+	 * @param array $args The activity widget arguments.
+	 * @return array Modified arguments.
+	 */
+	public function bb_rl_modify_activity_widget_query( $args ) {
+		// Check if relevant feed is enabled and scope exists.
+		if ( ! bp_is_relevant_feed_enabled() || ! isset( $args['scope'] ) || empty( $args['scope'] ) ) {
+			return $args;
+		}
+
+		// Check if 'public' is in the scope.
+		if ( false === strpos( $args['scope'], 'public' ) ) {
+			return $args;
+		}
+
+		// Parse the scope into an array.
+		$scope_array = explode( ',', $args['scope'] );
+
+		// Remove 'public' from the scope array.
+		$key = array_search( 'public', $scope_array, true );
+		if ( false !== $key ) {
+			unset( $scope_array[ $key ] );
+		}
+
+		// Rebuild the scope string, filtering out empty values and reindexing.
+		$filtered_scope = array_values( array_filter( $scope_array ) );
+		$args['scope']  = ! empty( $filtered_scope ) ? implode( ',', $filtered_scope ) : '';
+
+		return $args;
 	}
 }

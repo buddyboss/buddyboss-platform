@@ -17,8 +17,8 @@ defined( 'ABSPATH' ) || exit;
 
 <div class="bb-rl-create-popup-album-wrap bb-rl-popup-on-fly-create-album" style="display: none;">
 	<div class="bb-rl-field-wrap">
-		<label for="bb_rl_new_album_name_input" class="bb-label"><?php esc_attr_e( 'Album Title', 'buddyboss' ); ?></label>
-		<input id="bb_rl_new_album_name_input" class="bb-rl-popup-on-fly-create-album-title" value="" type="text" placeholder="<?php esc_attr_e( 'Enter Album Title', 'buddyboss' ); ?>">
+		<label for="bb_rl_new_album_name_input" class="bb-label"><?php esc_attr_e( 'Title', 'buddyboss' ); ?></label>
+		<input id="bb_rl_new_album_name_input" class="bb-rl-popup-on-fly-create-album-title" value="" type="text" placeholder="<?php esc_attr_e( 'Enter album title', 'buddyboss' ); ?>">
 	</div>
 	<?php
 	if ( ! bp_is_group() ) :

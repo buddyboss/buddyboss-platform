@@ -12,6 +12,14 @@
 			align-items: center;
 			flex-wrap: wrap;
 
+			@media (max-width: 600px) {
+				justify-content: center;
+
+				.input-group {
+					margin-top: 0;
+				}
+			}
+
 			.archives-authors-section {
 				display: none;
 			}
@@ -312,16 +320,20 @@ body[class*="mpcs-course"] .bb-rl-mbprlms-pagination {
 			display: inline-flex;
 			min-width: var(--bb-rl-space-400);
 			height: var(--bb-rl-space-400);
-			border: 1px solid transparent;
+			border: 1px solid transparent !important; // !important is required to override the platform-pro styles
 			border-radius: var(--bb-rl-radius-md);
 			justify-content: center;
 			align-items: center;
 			color: var(--bb-rl-text-tertiary-color) !important; // !important is required to override the platform-pro styles
+
+			&:hover {
+				border-color: var(--bb-rl-border-tertiary-color) !important; // !important is required to override the platform-pro styles
+			}
 		}
 
 		li.active a {
 			color: var(--bb-rl-text-color) !important; // !important is required to override the platform-pro styles
-			border: 1px solid var(--bb-rl-border-quaternary-color);
+			border: 1px solid var(--bb-rl-border-quaternary-color) !important; // !important is required to override the platform-pro styles
 			background-color: var(--bb-rl-background-color);
 		}
 	}

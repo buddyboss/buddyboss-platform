@@ -135,6 +135,11 @@
 		display: flex;
 		margin-right: var(--bb-rl-space-100);
 
+		&.disable {
+			pointer-events: none;
+			opacity: 0.4;
+		}
+
 		.toolbar-button {
 			display: flex;
 		}

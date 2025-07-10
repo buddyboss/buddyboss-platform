@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
 	<h2 class="screen-heading change-avatar-screen">
 		<?php
 		if ( ! (int) bp_get_option( 'bp-disable-avatar-uploads' ) ) {
-			esc_html_e( 'Change Profile Photo', 'buddyboss' );
+			esc_html_e( 'Edit profile', 'buddyboss' );
 		} else {
 			esc_html_e( 'Profile Photo', 'buddyboss' );
 		}

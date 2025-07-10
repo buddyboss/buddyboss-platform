@@ -1287,6 +1287,39 @@
   display: none;
 }
 
+table.profile-settings {
+  table-layout: fixed;
+  width: 100%;
+  border: 1px solid var(--bb-rl-border-secondary-color);
+  border-spacing: 0;
+  border-radius: var(--bb-rl-radius-base);
+  margin-bottom: var(--bb-rl-space-300);
+}
+
+table.profile-settings th.title {
+  text-align: right;
+  padding: calc(var(--bb-rl-space-100) + var(--bb-rl-space-50)) var(--bb-rl-space-200);
+  font-size: 15px;
+  font-weight: 600;
+}
+
+table.profile-settings tbody tr:nth-child(odd) {
+  background-color: var(--bb-rl-background-secondary-color);
+}
+
+table.profile-settings tbody tr:nth-child(odd) td select {
+  background-color: var(--bb-rl-background-color);
+}
+
+table.profile-settings tbody td {
+  font-size: var(--bb-rl-font-size-sm);
+  padding: calc(var(--bb-rl-space-100) + var(--bb-rl-space-50)) var(--bb-rl-space-200);
+}
+
+table.profile-settings tbody td select {
+  width: 100%;
+}
+
 .bb-rl-account-settings-section .main-notification-settings {
   width: 100%;
   margin: 0 0 var(--bb-rl-space-500);

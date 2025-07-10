@@ -18,17 +18,29 @@ defined( 'ABSPATH' ) || exit;
 	<div class="bb-rl-media-none-figure"><i class="bb-icons-rl-file-video"></i></div>
 	<aside class="bp-feedback bp-messages info">
 		<span class="bp-icon" aria-hidden="true"></span>
-		<p><?php esc_html_e( 'Sorry, no videos were found', 'buddyboss' ); ?></p>
+		<p><?php esc_html_e( 'No videos found', 'buddyboss' ); ?></p>
 	</aside>
-	<div class="bb-video-actions-wrap bb-media-actions-wrap bb-rl-media-actions-wrap">
-		<h2 class="bb-title"><?php esc_html_e( 'Videos', 'buddyboss' ); ?></h2>
-		<div class="bb-video-actions">
-			<a href="#" id="bp-add-video" class="bb-add-video button bb-rl-button bb-rl-button--brandFill bb-rl-button--small">
-				<i class="bb-icons-rl-plus"></i><?php esc_html_e( 'Add Videos', 'buddyboss' ); ?>
-			</a>
-		</div>
-	</div>
+	<p class="bb-rl-media-none-description"><?php esc_html_e( 'It looks like there aren\'t any videos in this directory.', 'buddyboss' ); ?></p>
+	<?php
+	if (
+		! bp_is_video_directory() &&
+		! bp_is_user_albums() &&
+		! bp_is_group_albums() &&
+		! bp_is_single_album()
+	) {
+		bp_get_template_part( 'video/add-video' );
+	} elseif (
+		(
+			bp_is_group() &&
+			bp_is_group_video_support_enabled()
+		) ||
+		(
+			bp_is_my_profile() &&
+			bp_is_profile_video_support_enabled()
+		)
+	) {
+		bp_get_template_part( 'video/create-album' );
+	}
+	?>
 </div>
-<?php
-	bp_get_template_part( 'video/uploader' );
-?>
+

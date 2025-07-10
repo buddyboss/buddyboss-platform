@@ -41,8 +41,18 @@ $os = bb_core_get_os();
 					$user_id = bp_core_get_userid_from_nicename( $_GET['r'] );
 				}
 				$name = bp_core_get_user_displayname( $user_id );
+				$avatar_url = bp_core_fetch_avatar(
+					array(
+						'item_id' => $user_id,
+						'object'  => 'user',
+						'type'    => 'thumb',
+						'width'   => BP_AVATAR_THUMB_WIDTH,
+						'height'  => BP_AVATAR_THUMB_HEIGHT,
+						'html'    => false,
+					)
+				);
 				?>
-				<option value="@<?php echo esc_attr( $_GET['r'] ); ?>" selected data-action="<?php echo $user_id; ?>"><?php echo esc_html( $name ); ?></option>
+				<option value="@<?php echo esc_attr( $_GET['r'] ); ?>" selected data-action="<?php echo $user_id; ?>" data-image="<?php echo esc_url( $avatar_url ); ?>"><?php echo esc_html( $name ); ?></option>
 			<?php endif; ?>
 
 		</select>

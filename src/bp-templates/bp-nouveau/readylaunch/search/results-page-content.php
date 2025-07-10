@@ -24,7 +24,7 @@ $no_results_class = ! BP_Search::instance()->has_search_results() ? 'bp-search-n
 
 		<div id="bb-rl-search-modal" class="bb-rl-search-modal" style="display: none;">
 			<transition name="modal">
-				<div class="modal-mask bb-rl-modal-mask">
+				<div class="bb-rl-modal-mask">
 					<div class="bb-rl-modal-wrapper">
 						<div class="bp-search-form-wrapper dir-search no-ajax">
 							<?php bp_search_buffer_template_part( 'search-form' ); ?>

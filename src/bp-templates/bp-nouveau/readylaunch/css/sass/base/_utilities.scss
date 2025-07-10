@@ -90,6 +90,13 @@
 				margin-left: var(--bb-rl-space-100);
 			}
 		}
+
+		.bb-model-footer {
+
+			.button ~ .button {
+				margin-left: 0;
+			}
+		}
 	}
 
 	.bb-rl-entry-heading {

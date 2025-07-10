@@ -97,7 +97,12 @@ if ( bp_has_groups() ) {
 
 			<div class="bb-rl-group-section">
 				<?php
-				if ( bp_group_use_cover_image_header() && ! BB_Readylaunch::bb_is_group_admin() ) {
+				if (
+					bp_group_use_cover_image_header() &&
+					function_exists( 'bp_attachments_get_group_has_cover_image' ) &&
+					bp_attachments_get_group_has_cover_image( bp_get_current_group_id() ) &&
+					! BB_Readylaunch::bb_is_group_admin()
+				) {
 					bp_get_template_part( 'groups/single/cover-image-header' );
 				}
 				?>

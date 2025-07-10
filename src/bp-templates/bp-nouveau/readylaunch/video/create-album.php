@@ -18,17 +18,17 @@ $bp_is_group = bp_is_group();
 
 <div id="bp-video-create-album" style="display: none;">
 	<transition name="modal">
-		<div class="modal-mask bb-white bbm-model-wrap">
+		<div class="bb-white bbm-model-wrap">
 			<div class="modal-wrapper">
 				<div id="boss-video-create-album-popup" class="modal-container">
 					<header class="bb-model-header">
-						<h4><?php esc_attr_e( 'Create Album', 'buddyboss' ); ?></h4>
+						<h4><?php esc_attr_e( 'Create new album', 'buddyboss' ); ?></h4>
 						<a class="bb-model-close-button" id="bp-video-create-album-close" href="#"><span class="bb-icon-l bb-icon-times"></span></a>
 					</header>
 
 					<div class="bb-field-wrap">
 						<label for="bb-album-title" class="bb-label"><?php esc_attr_e( 'Title', 'buddyboss' ); ?></label>
-						<input id="bb-album-title" type="text" placeholder="<?php esc_attr_e( 'Enter Album Title', 'buddyboss' ); ?>"/>
+						<input id="bb-album-title" type="text" placeholder="<?php esc_attr_e( 'Enter album title', 'buddyboss' ); ?>"/>
 					</div>
 
 					<footer class="bb-model-footer">

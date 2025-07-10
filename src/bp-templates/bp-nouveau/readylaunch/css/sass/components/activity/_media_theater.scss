@@ -184,6 +184,17 @@
 		.edit {
 			display: none;
 		}
+
+		&.show-edit {
+
+			.add {
+				display: none;
+			}
+
+			.edit {
+				display: inline-block;
+			}
+		}
 	}
 
 	.bp-media-activity-description {
@@ -233,9 +244,9 @@
 	}
 }
 
-.bb-rl-media-model-wrapper.video {
+.bb-rl-media-model-wrapper {
 
-	.bb-rl-media-section figure .video-js {
+	.bb-rl-media-section .video-js {
 		padding: 0;
 		height: 100% !important;
 		border-radius: var(--bb-rl-radius-lg);

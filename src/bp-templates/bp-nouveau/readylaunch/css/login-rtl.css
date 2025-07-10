@@ -769,6 +769,10 @@ h6 {
   margin-right: var(--bb-rl-space-100);
 }
 
+.bb-rl-secondary-header .bb-rl-actions-buttons .bb-model-footer .button ~ .button {
+  margin-right: 0;
+}
+
 .bb-rl-secondary-header .bb-rl-entry-heading {
   align-items: center;
 }
@@ -2752,6 +2756,28 @@ h1.wp-login-logo a {
   font-size: 13px;
   font-weight: 500;
   line-height: 1.8;
+}
+
+.login .message p:has(.bb-rl-updated-close),
+.login .success p:has(.bb-rl-updated-close),
+.login .notice p:has(.bb-rl-updated-close) {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.login .message .bb-rl-updated-close,
+.login .success .bb-rl-updated-close,
+.login .notice .bb-rl-updated-close {
+  font-size: 16px;
+  color: var(--bb-rl-icon-tertiary-color);
+  cursor: pointer;
+}
+
+.login .message .bb-rl-updated-close i,
+.login .success .bb-rl-updated-close i,
+.login .notice .bb-rl-updated-close i {
+  font-weight: 700;
 }
 
 .login .message {

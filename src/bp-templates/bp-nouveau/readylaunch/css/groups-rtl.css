@@ -237,6 +237,14 @@
   padding: var(--bb-rl-space-400) var(--bb-rl-space-300);
 }
 
+@media screen and (max-width: 544px) {
+  .bb-rl-groups .bp-list:not(.grid) .item-entry .list-wrap {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--bb-rl-space-100);
+  }
+}
+
 .bb-rl-groups .bp-list:not(.grid) .item-entry .item-avatar {
   margin-left: var(--bb-rl-space-200);
 }
@@ -247,10 +255,31 @@
   flex: 1;
 }
 
+@media screen and (max-width: 768px) {
+  .bb-rl-groups .bp-list:not(.grid) .item-entry .item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--bb-rl-space-100);
+  }
+}
+
 .bb-rl-groups .bp-list:not(.grid) .item-entry .group-footer-wrap {
   display: flex;
   align-items: center;
   gap: var(--bb-rl-space-200);
+}
+
+@media screen and (max-width: 768px) {
+  .bb-rl-groups .bp-list:not(.grid) .item-entry .group-footer-wrap {
+    margin-right: 0;
+  }
+}
+
+@media screen and (max-width: 544px) {
+  .bb-rl-groups .bp-list:not(.grid) .item-entry .group-footer-wrap {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }
 
 .bb-rl-groups .item-entry .list-wrap {
@@ -362,6 +391,42 @@
   content: "\e182";
 }
 
+.bb-rl-groups .item-entry .group-footer-wrap button.membership-requested,
+.bb-rl-groups .item-entry .group-footer-wrap .generic-button a.membership-requested {
+  background-color: transparent;
+  color: var(--bb-rl-text-color);
+  border: 1px solid var(--bb-rl-border-tertiary-color);
+}
+
+.bb-rl-groups .item-entry .group-footer-wrap button.membership-requested:hover,
+.bb-rl-groups .item-entry .group-footer-wrap .generic-button a.membership-requested:hover {
+  background-color: var(--bb-rl-background-secondary-color);
+}
+
+.bb-rl-groups .item-entry .group-footer-wrap button.membership-requested:focus,
+.bb-rl-groups .item-entry .group-footer-wrap .generic-button a.membership-requested:focus {
+  outline: 2px solid var(--bb-rl-border-quinery-color);
+}
+
+.bb-rl-groups .item-entry .group-footer-wrap button.membership-requested:disabled,
+.bb-rl-groups .item-entry .group-footer-wrap .generic-button a.membership-requested:disabled {
+  border-color: var(--bb-rl-border-tertiary-color);
+  color: var(--bb-rl-text-disabled-color);
+  cursor: not-allowed;
+}
+
+.bb-rl-groups .item-entry .group-footer-wrap .generic-button .group-button.bp-toggle-action-button.leave-group::before {
+  content: "\e182";
+  display: inline-block;
+  margin-left: var(--bb-rl-space-50);
+  font-weight: 400;
+  font-family: bb-icons-rl;
+  font-size: 16px;
+  line-height: 1;
+  color: var(--bb-rl-icon-secondary-color);
+  font-style: normal;
+}
+
 .bb-rl-groups .item-entry .bb-group-members {
   display: flex;
   margin-bottom: 0;
@@ -371,6 +436,7 @@
 
 .bb-rl-groups .item-entry .bb-group-members .bb-group-member {
   max-width: 24px;
+  min-width: 24px;
   float: right;
   margin-left: -4px;
   position: relative;

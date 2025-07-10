@@ -48,7 +48,7 @@ $bp_is_single_album = bp_is_single_album();
 							) :
 								?>
 								<div class="media-uploader-post-content">
-									<textarea name="bp-media-post-content" id="bp-media-post-content" placeholder="<?php bp_is_group() ? esc_html_e( 'Write something about your photos, to be shown on the group feed', 'buddyboss' ) : esc_html_e( 'Write something about your photos, to be shown on your timeline', 'buddyboss' ); ?>"></textarea>
+									<textarea name="bp-media-post-content" id="bp-media-post-content" placeholder="<?php esc_html_e( 'Write a description', 'buddyboss' ); ?>"></textarea>
 								</div>
 							<?php endif; ?>
 
@@ -80,7 +80,7 @@ $bp_is_single_album = bp_is_single_album();
 								if ( bp_is_profile_albums_support_enabled() ) {
 									?>
 									<a id="bp-media-photo-next" class="bb-field-uploader-next bb-field-uploader-actions" href="#">
-										<i class="bb-icon-l bb-icon-folder"></i>
+										<i class="bb-icons-rl-plus"></i>
 										<?php esc_html_e( 'Select Album', 'buddyboss' ); ?>
 									</a>
 									<?php
@@ -111,7 +111,7 @@ $bp_is_single_album = bp_is_single_album();
 								</ul>
 								<?php
 							} else {
-								bp_nouveau_user_feedback( 'media-loop-none' );
+								bp_get_template_part( 'media/no-media' );
 							}
 							?>
 						</div>
@@ -125,9 +125,9 @@ $bp_is_single_album = bp_is_single_album();
 					</div>
 
 					<footer class="bb-model-footer media-uploader-footer">
-						<a href="#" class="bp-media-open-create-popup-folder" style="display: none;">
-							<i class="bb-icon-l bb-icon-plus"></i>
-							<?php esc_html_e( 'Create new album', 'buddyboss' ); ?>
+						<a href="#" class="bb-rl-media-open-create-popup-folder" style="display: none;">
+							<i class="bb-icons-rl-plus"></i>
+							<?php esc_html_e( 'Create Album', 'buddyboss' ); ?>
 						</a>
 						<?php if ( ! bp_is_group() ) : ?>
 							<div class="bb-dropdown-wrap">

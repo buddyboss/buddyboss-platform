@@ -154,7 +154,11 @@ function bp_nouveau_ajax_followunfollow_member() {
 			} else {
 				wp_send_json_success(
 					array(
-						'contents' => '',
+						'contents' => bp_get_add_follow_button(
+							$leader_id,
+							bp_loggedin_user_id(),
+							$button_arguments
+						),
 						'count'    => $total_followers,
 					)
 				);
@@ -200,7 +204,11 @@ function bp_nouveau_ajax_followunfollow_member() {
 			} else {
 				wp_send_json_success(
 					array(
-						'contents' => '',
+						'contents' => bp_get_add_follow_button(
+							$leader_id,
+							bp_loggedin_user_id(),
+							$button_arguments
+						),
 						'count'    => $total_followers,
 					)
 				);

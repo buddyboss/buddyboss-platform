@@ -159,7 +159,7 @@ if ( bp_allow_user_to_send_invites() ) {
 	?>
 	<div id="bb-rl-invite-modal" class="bb-rl-invite-modal bb-rl-modal"  style="display: none;">
 		<transition name="modal">
-			<div class="modal-mask bb-rl-modal-mask">
+			<div class="bb-rl-modal-mask">
 				<div class="bb-rl-modal-wrapper">
 					<div class="bb-rl-modal-container">
 						<header class="bb-rl-modal-header">

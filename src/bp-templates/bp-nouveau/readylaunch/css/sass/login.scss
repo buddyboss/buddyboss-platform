@@ -234,6 +234,22 @@ h1.wp-login-logo {
 			font-size: 13px;
 			font-weight: 500;
 			line-height: 1.8;
+
+			&:has(.bb-rl-updated-close) {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+			}
+		}
+
+		.bb-rl-updated-close {
+			font-size: 16px;
+			color: var(--bb-rl-icon-tertiary-color);
+			cursor: pointer;
+
+			i {
+				font-weight: 700;
+			}
 		}
 	}
 

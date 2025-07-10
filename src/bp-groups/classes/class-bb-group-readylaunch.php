@@ -201,7 +201,7 @@ class BB_Group_Readylaunch {
 								<h4>
 									<span class="target_name">
 										<?php
-											esc_html_e( 'About Group', 'buddyboss' );
+											esc_html_e( 'About group', 'buddyboss' );
 										?>
 									</span>
 								</h4>
@@ -273,6 +273,7 @@ class BB_Group_Readylaunch {
 		$group    = $args['group'];
 		$action   = $args['action'];
 
+		add_filter( 'bp_get_group_status_description', array( $this, 'bb_rl_modify_group_status_description' ), 10, 2 );
 		?>
 		<div class="bb-rl-modal-content">
 			<?php
@@ -280,7 +281,21 @@ class BB_Group_Readylaunch {
 				?>
 				<div class="highlight bb-rl-group-meta bp-group-status">
 					<div class="bb-rl-group-meta-figure">
-						<i class="bb-icons-rl-globe-simple"></i>
+						<?php
+						if ( 'public' === $group->status ) {
+							?>
+							<i class="bb-icons-rl-globe-simple"></i>
+							<?php
+						} elseif ( 'hidden' === $group->status ) {
+							?>
+							<i class="bb-icons-rl-eye-slash"></i>
+							<?php
+						} elseif ( 'private' === $group->status ) {
+							?>
+							<i class="bb-icons-rl-lock"></i>
+							<?php
+						}
+						?>
 					</div>
 					<div class="bb-rl-group-meta-data">
 						<h3>
@@ -482,6 +497,7 @@ class BB_Group_Readylaunch {
 			?>
 		</div>
 		<?php
+		remove_filter( 'bp_get_group_status_description', array( $this, 'bb_rl_modify_group_status_description' ), 10, 2 );
 	}
 
 	/**
@@ -517,6 +533,9 @@ class BB_Group_Readylaunch {
 			$buttons['group_membership']['button_attr']['class'] = str_replace( 'bp-toggle-action-button', '', $buttons['group_membership']['button_attr']['class'] );
 			if ( strpos( $buttons['group_membership']['button_attr']['class'], 'leave-group' ) !== false ) {
 				$buttons['group_membership']['button_attr']['class'] = str_replace( 'leave-group', 'leave_group', $buttons['group_membership']['button_attr']['class'] );
+				
+				// Ensure data-bp-btn-action attribute is set for leave group button
+				$buttons['group_membership']['button_attr']['data-bp-btn-action'] = 'leave_group';
 			}
 		}
 
@@ -645,5 +664,76 @@ class BB_Group_Readylaunch {
 		}
 
 		return $params;
+	}
+
+	/**
+	 * Modify group status description for ReadyLaunch.
+	 *
+	 * @since BuddyBoss 2.9.10
+	 *
+	 * @param string $description Original description.
+	 * @param object $group       Group object.
+	 *
+	 * @return string Modified description.
+	 */
+	public function bb_rl_modify_group_status_description( $description, $group ) {
+		if ( empty( $group ) || ! isset( $group->status ) ) {
+			return $description;
+		}
+
+		if ( 'public' === $group->status ) {
+			$description = __( 'Anyone can join the group.', 'buddyboss' );
+		} elseif ( 'hidden' === $group->status ) {
+			$description = __( 'Only invited member can join the group & group will not listed anywhere.', 'buddyboss' );
+		} elseif ( 'private' === $group->status ) {
+			$description = __( 'Only people who requested membership and are accepted can join the group.', 'buddyboss' );
+		}
+
+		return $description;
+	}
+
+	/**
+	 * Modify get joined date for group members for ReadyLaunch.
+	 *
+	 * @since BuddyBoss 2.9.10
+	 *
+	 * @param string $last_activity      Last joined string based on time since date given.
+	 * @param string $last_activity_date The date of joined.
+	 *
+	 * @return string Modified joined date.
+	 */
+	public static function bb_rl_modify_group_member_joined_since( $last_activity, $last_activity_date ) {
+
+		$last_activity_date = date_i18n( 'd M Y', strtotime( $last_activity_date ) );
+		$last_activity      = sprintf(
+		/* translators: 1: User joined date. */
+			esc_html__( 'Joined %s', 'buddyboss' ),
+			esc_html( $last_activity_date )
+		);
+
+		return $last_activity;
+	}
+
+	/**
+	 * Modify the nav link text of messages for ReadyLaunch.
+	 *
+	 * @since BuddyBoss 2.9.10
+	 *
+	 * @param string $link_text Original link text.
+	 * @param object $nav_item  Nav item object.
+	 * @param string $nav_scope Nav scope.
+	 *
+	 * @return string Modified link text.
+	 */
+	public static function bb_rl_modify_nav_link_text( $link_text, $nav_item, $nav_scope ) {
+		if ( ! empty( $nav_item->slug ) && ! empty( $nav_scope ) && 'groups' === $nav_scope ) {
+			if ( 'public-message' === $nav_item->slug ) {
+				$link_text = __( 'Group message', 'buddyboss' );
+			} elseif ( 'private-message' === $nav_item->slug ) {
+				$link_text = __( 'Private message', 'buddyboss' );
+			}
+		}
+
+		return $link_text;
 	}
 }

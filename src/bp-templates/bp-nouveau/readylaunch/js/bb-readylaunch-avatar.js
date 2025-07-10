@@ -630,13 +630,18 @@ window.bp = window.bp || {};
 				this.originalWidth = tocrop.width();
 				this.originalHeight = tocrop.height();
 			
+				var minContainerWidth = 400;
+				if ( window.innerWidth < 544 ) {
+					minContainerWidth = 340;
+				}
+			
 				// Initialize Cropper.js
 				this.cropper = new Cropper( tocrop[0], {
 					aspectRatio: 1,
 					viewMode: 1,
 					dragMode: 'move',
 					autoCropArea: 1,
-					minContainerWidth: 400,
+					minContainerWidth: minContainerWidth,
 					minContainerHeight: 400,
 					cropBoxMovable: false,
 					cropBoxResizable: false,

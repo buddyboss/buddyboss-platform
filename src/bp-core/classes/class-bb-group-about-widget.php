@@ -53,7 +53,7 @@ class BB_Group_About_Widget extends WP_Widget {
 
 		echo wp_kses_post( $args['before_widget'] );
 		?>
-		<h2 class="widget-title"><?php esc_html_e( 'About Group', 'buddyboss' ); ?></h2>
+		<h2 class="widget-title"><?php esc_html_e( 'About group', 'buddyboss' ); ?></h2>
 		<div class="bb-group-about-widget">
 			<?php
 			$bb_rl_group->bb_rl_get_current_group_info(

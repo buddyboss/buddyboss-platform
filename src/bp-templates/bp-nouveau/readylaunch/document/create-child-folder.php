@@ -26,7 +26,7 @@ if ( function_exists( 'bp_is_group_single' ) && bp_is_group_single() && bp_is_gr
 
 <div id="bp-media-create-child-folder" style="display: none;">
 	<transition name="modal">
-		<div class="modal-mask bb-white bbm-model-wrap">
+		<div class="bb-rl-modal-mask bb-white bbm-model-wrap">
 			<div class="modal-wrapper bb-rl-modal-wrapper">
 				<div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI">
 					<header class="bb-model-header">
@@ -35,11 +35,11 @@ if ( function_exists( 'bp_is_group_single' ) && bp_is_group_single() && bp_is_gr
 					</header>
 					<div class="bb-field-wrap">
 						<label for="bb-album-child-title" class="bb-label"><?php esc_html_e( 'Title', 'buddyboss' ); ?></label>
-						<input id="bb-album-child-title" value="" type="text" placeholder="<?php esc_html_e( 'Enter Folder Title', 'buddyboss' ); ?>" />
+						<input id="bb-album-child-title" value="" type="text" placeholder="<?php esc_html_e( 'Enter folder title', 'buddyboss' ); ?>" />
 						<small class="error-box"><?php esc_html_e( 'Following special characters are not supported: \ / ? % * : | " < >', 'buddyboss' ); ?></small>
 					</div>
 					<footer class="bb-model-footer">
-						<a class="button bb-rl-button bb-rl-button--brandFill bb-rl-button--small" id="bp-media-create-child-folder-submit" href="#"><?php esc_html_e( 'Create new folder', 'buddyboss' ); ?></a>
+						<a class="button bb-rl-button bb-rl-button--brandFill bb-rl-button--small" id="bp-media-create-child-folder-submit" href="#"><i class="bb-icons-rl-plus"></i><?php esc_html_e( 'Create Folder', 'buddyboss' ); ?></a>
 					</footer>
 				</div>
 			</div>

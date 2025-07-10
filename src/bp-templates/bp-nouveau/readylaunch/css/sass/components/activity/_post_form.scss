@@ -260,6 +260,11 @@
 			margin-right: var(--bb-rl-space-100);
 			line-height: 1;
 
+			&.disable {
+				pointer-events: none;
+				opacity: 0.4;
+			}
+
 			&:last-child {
 				margin-right: 0;
 			}

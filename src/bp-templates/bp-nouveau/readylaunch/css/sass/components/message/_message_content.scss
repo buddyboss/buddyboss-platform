@@ -407,6 +407,13 @@
 				padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
 				margin-bottom: var(--bb-rl-space-200);
 			}
+
+			pre {
+				background-color: var(--bb-rl-background-secondary-color);
+				padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+				margin-bottom: var(--bb-rl-space-200);
+				border-radius: var(--bb-rl-radius-md);
+			}
 		}
 
 		.bb-activity-media-wrap {

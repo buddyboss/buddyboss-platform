@@ -58,10 +58,21 @@ if ( ! $has_nav || $nav_count <= 1 ) {
 			while ( bp_profile_groups() ) {
 				bp_the_profile_group();
 
-				$class = bp_is_user_profile_edit() && bp_get_the_profile_group_name() === $group_name ? 'selected' : '';
+				$profile_group_id   = (int) bp_get_the_profile_group_id();
+				$profile_group_name = bp_get_the_profile_group_name();
+
+				$class = bp_is_user_profile_edit() && $profile_group_name === $group_name ? 'selected' : '';
 				?>
 				<li class="bb-rl-profile-subnav-item <?php echo esc_attr( $class ); ?>" id="bb-rl-xprofile-edit-<?php echo esc_attr( bp_get_the_profile_group_id() ); ?>">
-					<a href="<?php echo esc_url( $edit_profile_link . bp_get_the_profile_group_id() ); ?>"><?php bp_the_profile_group_name(); ?></a>
+					<a href="<?php echo esc_url( $edit_profile_link . bp_get_the_profile_group_id() ); ?>">
+						<?php
+						if ( 1 === $profile_group_id ) {
+							echo esc_html__( 'General Information', 'buddyboss' );
+						} else {
+							echo esc_html( $profile_group_name );
+						}
+						?>
+					</a>
 				</li>
 				<?php
 			}

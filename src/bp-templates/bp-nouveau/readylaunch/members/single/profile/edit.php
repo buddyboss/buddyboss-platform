@@ -15,7 +15,9 @@ defined( 'ABSPATH' ) || exit;
 
 bp_nouveau_xprofile_hook( 'before', 'edit_content' );
 
-if ( bp_has_profile( 'profile_group_id=' . bp_get_current_profile_group_id() ) ) {
+$profile_group_id = (int) bp_get_current_profile_group_id();
+
+if ( bp_has_profile( 'profile_group_id=' . $profile_group_id ) ) {
 
 	while ( bp_profile_groups() ) :
 		bp_the_profile_group();
@@ -24,11 +26,15 @@ if ( bp_has_profile( 'profile_group_id=' . bp_get_current_profile_group_id() ) )
 		<div class="bb-rl-profile-edit-header">
 			<h2 class="screen-heading edit-profile-screen">
 				<?php
-				printf(
-				/* translators: %s = profile field group name */
-					__( 'Edit "%s" Information', 'buddyboss' ),
-					bp_get_the_profile_group_name()
-				)
+				if ( 1 === $profile_group_id ) {
+					echo esc_html__( 'Edit profile', 'buddyboss' );
+				} else {
+					printf(
+						/* translators: %s = profile field group name */
+						__( 'Edit "%s" Information', 'buddyboss' ),
+						bp_get_the_profile_group_name()
+					);
+				}
 				?>
 			</h2>
 		</div>

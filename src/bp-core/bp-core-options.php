@@ -2804,7 +2804,7 @@ function bb_enable_content_counts( $default = false ) {
 /**
  * Get all activity filters option labels.
  *
- * @since BuddyBoss [BBVERSION}
+ * @since BuddyBoss 2.8.20
  *
  * @return array Array of all activity filters option labels.
  */
@@ -2828,7 +2828,7 @@ function bb_get_activity_filter_options_labels() {
 /**
  * Get enabled activity filters options.
  *
- * @since BuddyBoss [BBVERSION}
+ * @since BuddyBoss 2.8.20
  *
  * @param array $args Array of default activity filter options.
  *
@@ -2862,7 +2862,7 @@ function bb_get_enabled_activity_filter_options( $args = array() ) {
 /**
  * Get all activity timeline filters option labels.
  *
- * @since BuddyBoss [BBVERSION}
+ * @since BuddyBoss 2.8.20
  *
  * @return array Array of all activity timeline filters option labels.
  */
@@ -2885,7 +2885,7 @@ function bb_get_activity_timeline_filter_options_labels() {
 /**
  * Get enabled activity timeline filters options.
  *
- * @since BuddyBoss [BBVERSION}
+ * @since BuddyBoss 2.8.20
  *
  * @param array $args Array of default activity timeline filter options.
  *
@@ -2918,7 +2918,7 @@ function bb_get_enabled_activity_timeline_filter_options( $args = array() ) {
 /**
  * Get all activity sorting options labels.
  *
- * @since BuddyBoss [BBVERSION}
+ * @since BuddyBoss 2.8.20
  *
  * @return array Array of all activity sorting options labels.
  */
@@ -2933,7 +2933,7 @@ function bb_get_activity_sorting_options_labels() {
 /**
  * Get enabled activity sorting options.
  *
- * @since BuddyBoss [BBVERSION}
+ * @since BuddyBoss 2.8.20
  *
  * @param array $args Array of default activity sorting options.
  *

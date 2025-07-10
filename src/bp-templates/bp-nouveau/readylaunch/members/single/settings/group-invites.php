@@ -12,13 +12,7 @@
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
-?>
 
-<h2 class="screen-heading group-invites-screen">
-	<?php esc_html_e( 'Group Invites', 'buddyboss' ); ?>
-</h2>
-
-<?php
 $group_invites_setting = bp_nouveau_groups_get_group_invites_setting();
 if ( 1 === $group_invites_setting ) {
 	bp_nouveau_user_feedback( 'member-group-invites-friends-only' );

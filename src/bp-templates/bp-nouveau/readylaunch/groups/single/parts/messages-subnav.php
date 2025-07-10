@@ -13,6 +13,8 @@
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
+
+add_filter( 'bp_nouveau_get_nav_link_text', 'BB_Group_Readylaunch::bb_rl_modify_nav_link_text', 10, 3 );
 ?>
 
 <nav class="<?php bp_nouveau_single_item_subnav_classes(); ?>" id="subnav" role="navigation" aria-label="<?php esc_attr_e( 'Group Messages menu', 'buddyboss' ); ?>">
@@ -37,3 +39,6 @@ defined( 'ABSPATH' ) || exit;
 		</ul>
 	<?php endif; ?>
 </nav><!-- #isubnav -->
+<?php
+remove_filter( 'bp_nouveau_get_nav_link_text', 'BB_Group_Readylaunch::bb_rl_modify_nav_link_text', 10, 3 );
+?>

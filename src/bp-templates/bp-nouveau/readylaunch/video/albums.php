@@ -24,13 +24,13 @@ if ( bp_is_my_profile() || ( $bp_is_group && groups_can_user_manage_albums( bp_l
 		if ( $bp_is_group && $bp_is_group_albums_support_enabled ) {
 			?>
 			<div class="bb-video-actions">
-				<a href="#" id="bb-create-album" class="bb-create-album button small outline"><i class="bb-icon-l bb-icon-plus"></i> <?php esc_html_e( 'Create Album', 'buddyboss' ); ?></a>
+				<a href="#" id="bb-create-album" class="bb-create-album button small outline"><i class="bb-icons-rl-plus"></i> <?php esc_html_e( 'Create Album', 'buddyboss' ); ?></a>
 			</div>
 			<?php
 		} elseif ( $bp_is_profile_albums_support_enabled ) {
 			?>
 			<div class="bb-video-actions">
-				<a href="#" id="bb-create-album" class="bb-create-album button small outline"><i class="bb-icon-l bb-icon-plus"></i> <?php esc_html_e( 'Create Album', 'buddyboss' ); ?></a>
+				<a href="#" id="bb-create-album" class="bb-create-album button small outline"><i class="bb-icons-rl-plus"></i> <?php esc_html_e( 'Create Album', 'buddyboss' ); ?></a>
 			</div>
 		<?php } ?>
 	</div>
@@ -82,7 +82,7 @@ if ( bp_has_video_albums( bp_ajax_querystring( 'albums' ) ) ) {
 	</div>
 	<?php
 } else {
-	bp_nouveau_user_feedback( 'video-album-none' );
+	bp_get_template_part( 'video/no-video' );
 }
 
 bp_nouveau_video_hook( 'after', 'video_album_content' );
