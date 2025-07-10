@@ -778,11 +778,13 @@ window.bp = window.bp || {};
 								var errorMessage = response && response.data && response.data.feedback || bbRlMedia.connection_lost_error;
 								$( file.previewElement ).find( '.dz-error-message span' ).text( errorMessage );
 							} else {
+								var bbRlErrorMessage = bbRlMedia.invalid_media_type + '. ' + ( response || '' );
+								if ( config.errorMessage ) {
+									bbRlErrorMessage = config.errorMessage;
+								}
 								Backbone.trigger(
 									'onError',
-									'<div>' + bbRlMedia.invalid_media_type + '. ' + (
-												response || ''
-											) + '<div>'
+									'<div>' + bbRlErrorMessage + '<div>'
 								);
 								dropzone.removeFile( file );
 								view.$el.closest( parentSelector ).removeClass( 'media-uploading' );

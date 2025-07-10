@@ -2478,6 +2478,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				$strings['media']['i18n_strings']['theater_title'] = $translated_string;
 				$strings['media']['create_album_title']            = esc_html__( 'Create new album', 'buddyboss' );
 				$strings['media']['create_folder']                 = esc_html__( 'Create new folder', 'buddyboss' );
+				$strings['media']['bb_rl_invalid_media_type']      = __( 'Different types of media cannot be uploaded to a post', 'buddyboss' );
 			}
 
 			if ( bp_is_active( 'messages' ) ) {

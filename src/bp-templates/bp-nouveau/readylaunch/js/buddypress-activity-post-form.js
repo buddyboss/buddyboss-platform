@@ -1719,7 +1719,8 @@ window.bp = window.bp || {};
 							'#bb-rl-activity-document-button',
 							'#bb-rl-activity-video-button',
 							'#bb-rl-activity-gif-button'
-						]
+						],
+						errorMessage             : bbRlMedia.bb_rl_invalid_media_type,
 					}
 				);
 			}
@@ -1801,7 +1802,8 @@ window.bp = window.bp || {};
 							'#bb-rl-activity-media-button',
 							'#bb-rl-activity-gif-button',
 							'#bb-rl-activity-video-button'
-						]
+						],
+						errorMessage             : bbRlMedia.bb_rl_invalid_media_type,
 					}
 				);
 			}
@@ -1886,7 +1888,8 @@ window.bp = window.bp || {};
 							'#bb-rl-activity-media-button',
 							'#bb-rl-activity-gif-button',
 							'#bb-rl-activity-document-button'
-						]
+						],
+						errorMessage             : bbRlMedia.bb_rl_invalid_media_type,
 					}
 				);
 
