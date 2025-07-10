@@ -10417,6 +10417,10 @@ input.bb-rl-zoom-slider::-moz-range-progress {
   background-color: var(--bb-rl-background-brand-primary-color);
 }
 
+.bb-rl-widget-sidebar .widget_bp_core_recently_active_widget .item-avatar .gamipress-buddypress-user-details {
+  display: none;
+}
+
 .widget_bp_core_recently_active_widget .avatar-block {
   display: flex;
   align-items: center;
