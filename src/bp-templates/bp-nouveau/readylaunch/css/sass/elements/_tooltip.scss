@@ -874,7 +874,8 @@ button[data-balloon] {
 	}
 }
 
-.bb-rl-member-buttons-wrap .bb-rl-primary-hover-action.following {
+.bb-rl-member-buttons-wrap .bb-rl-primary-hover-action.following,
+.bb-rl-member-buttons-wrap .bb-rl-primary-hover-action.is_friend {
 	position: relative;
 
 	&:after {

@@ -4186,9 +4186,12 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			}
 
 			if ( false !== strpos( $button['link_href'], 'remove-friend' ) ) {
-				$remove_connection_text              = __( 'Remove connection', 'buddyboss' );
-				$button['link_text']                 = $remove_connection_text;
-				$button['button_attr']['data-title'] = $remove_connection_text;
+				$remove_connection_text = __( 'Remove connection', 'buddyboss' );
+				$button['data-balloon'] = $remove_connection_text;
+				if ( empty( $button['is_tooltips'] ) ) {
+					$button['link_class']               .= ' bb-rl-primary-hover-action';
+					$button['button_attr']['data-hover'] = $remove_connection_text;
+				}
 			}
 			if ( false !== strpos( $button['link_href'], 'requests/cancel' ) ) {
 				$cancel_request_text                 = __( 'Cancel request', 'buddyboss' );
