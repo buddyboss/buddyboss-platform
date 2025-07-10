@@ -385,8 +385,16 @@ function bbp_encode_callback( $matches = array() ) {
 		$content = $matches[2];
 	}
 
-	// Do some replacing
-	$content = htmlspecialchars( $content, ENT_QUOTES );
+
+	$bbp_is_admin_editor = is_admin() && in_array( get_post_type(), array( bbp_get_forum_post_type(), bbp_get_topic_post_type(), bbp_get_reply_post_type() ) );
+
+	// Do some replacing.
+	if ( $bbp_is_admin_editor ) {
+		$content = htmlspecialchars( $content, ENT_NOQUOTES, null, false );
+	} else {
+		$content = htmlspecialchars( $content, ENT_QUOTES );
+	}
+
 	$content = str_replace( array( "\r\n", "\r" ), "\n", $content );
 	$content = preg_replace( "|\n\n\n+|", "\n\n", $content );
 	$content = str_replace( '&amp;amp;', '&amp;', $content );
@@ -395,7 +403,7 @@ function bbp_encode_callback( $matches = array() ) {
 
 
 	// Only apply to BuddyBoss forum post types in admin area.
-	if ( is_admin() && in_array( get_post_type(), array( bbp_get_forum_post_type(), bbp_get_topic_post_type(), bbp_get_reply_post_type() ) ) ) {
+	if ( $bbp_is_admin_editor ) {
 
 		// Wrap blocks in pre tags without code tags.
 		if ( '`' !== $matches[1] ) {
