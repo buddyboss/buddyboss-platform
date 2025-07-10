@@ -957,7 +957,7 @@ window.bp = window.bp || {};
 					}
 
 					if ( $( '#buddypress [data-bp-filter="' + object + '"]' ).length ) {
-						if ( undefined !== objectData.filter ) {
+						if ( undefined !== objectData.filter && ! _.isUndefined( BP_Nouveau.is_send_ajax_request ) && '' !== BP_Nouveau.is_send_ajax_request ) {
 							filter = objectData.filter;
 							$( '#buddypress [data-bp-filter="' + object + '"] option[value="' + filter + '"]' ).prop( 'selected', true );
 						} else if ( '-1' !== $( '#buddypress [data-bp-filter="' + object + '"]' ).val() && '0' !== $( '#buddypress [data-bp-filter="' + object + '"]' ).val() ) {
