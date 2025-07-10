@@ -305,6 +305,10 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			add_filter( 'bp_document_get_visibility_levels', array( $this, 'bb_rl_modify_visibility_levels' ), 10 );
 			add_filter( 'bp_media_get_visibility_levels', array( $this, 'bb_rl_modify_visibility_levels' ), 10 );
 			add_filter( 'bp_video_get_visibility_levels', array( $this, 'bb_rl_modify_visibility_levels' ), 10 );
+
+			if ( bp_is_active( 'friends' ) ) {
+				add_filter( 'bp_get_add_friend_button', array( $this, 'bb_rl_modify_add_friend_button' ) );
+			}
 		}
 
 		/**
@@ -4136,6 +4140,22 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			$visibility_levels['onlyme'] = __( 'Only me', 'buddyboss' );
 
 			return $visibility_levels;
+		}
+
+		/**
+		 * Modify the data-balloon attribute for the add friend button.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $button The button HTML.
+		 *
+		 * @return string The modified button HTML.
+		 */
+		public function bb_rl_modify_add_friend_button( $button ) {
+			if ( false !== strpos( $button['link_href'], 'remove-friend' ) ) {
+				$button['link_text'] = __( 'Remove connection', 'buddyboss' );
+			}
+			return $button;
 		}
 	}
 }
