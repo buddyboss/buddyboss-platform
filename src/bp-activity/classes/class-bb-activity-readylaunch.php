@@ -805,7 +805,11 @@ class BB_Activity_Readylaunch {
 		}
 
 		if ( false !== strpos( $button['link_href'], 'stop-following' ) ) {
-			$button['data-balloon'] = __( 'Unfollow', 'buddyboss' );
+			$unfollow_text          = __( 'Unfollow', 'buddyboss' );
+			$button['data-balloon'] = $unfollow_text;
+			if ( empty( $button['is_tooltips'] ) ) {
+				$button['button_attr']['data-hover'] = $unfollow_text;
+			}
 		}
 
 		return $button;
