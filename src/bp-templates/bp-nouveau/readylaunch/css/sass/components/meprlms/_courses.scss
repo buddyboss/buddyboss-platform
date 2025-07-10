@@ -477,3 +477,13 @@ body[class*="mpcs-course"] .bb-rl-mbprlms-pagination {
 		}
 	}
 }
+
+.bb-rl-container-inner.bb-rl-meprlms-no-courses {
+	padding-top: var(--bb-rl-space-400);
+	padding-bottom: var(--bb-rl-space-400);
+
+	> p {
+		@include bb-rl-label-heading;
+		color: var(--bb-rl-text-secondary-color);
+	}
+}
