@@ -1756,12 +1756,16 @@ body.bb-readylaunch-template:has(.learndash-wrapper-login-modal.ld-modal-open) {
   line-height: 28px;
 }
 
+.bb-rl-lms-inner-block--ld-registration.bb-rl-lms-inner-block {
+  padding-top: var(--bb-rl-space-200);
+}
+
 .bb-rl-learndash-registration .learndash-wrapper:not(.ld-registration__outer-wrapper) .order-overview,
 .bb-rl-learndash-reset-password .learndash-wrapper:not(.ld-registration__outer-wrapper) .order-overview {
   background-color: var(--bb-rl-background-color);
   border-radius: var(--bb-rl-radius-lg);
   padding: var(--bb-rl-space-300);
-  margin: var(--bb-rl-space-200) 0;
+  margin: 0 0 var(--bb-rl-space-200);
   box-shadow: none;
   border: 1px solid var(--bb-rl-border-secondary-color);
 }
@@ -1820,6 +1824,39 @@ body.bb-readylaunch-template:has(.learndash-wrapper-login-modal.ld-modal-open) {
   font-weight: 400;
   line-height: var(--bb-rl-base-line-small);
   color: var(--bb-rl-text-secondary-color);
+}
+
+.bb-rl-learndash-registration .ldregister,
+.bb-rl-learndash-reset-password .ldregister {
+  margin-top: var(--bb-rl-space-200);
+}
+
+.bb-rl-learndash-registration .show-password-reset-link,
+.bb-rl-learndash-registration .show-register-form,
+.bb-rl-learndash-reset-password .show-password-reset-link,
+.bb-rl-learndash-reset-password .show-register-form {
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 400;
+  line-height: var(--bb-rl-base-line-small);
+  color: var(--bb-rl-text-secondary-color);
+  margin-top: var(--bb-rl-space-100);
+  display: block;
+}
+
+.bb-rl-learndash-registration .ldregister .learndash-registration-field,
+.bb-rl-learndash-registration .ldregister .login-username,
+.bb-rl-learndash-registration .registration-login-form .learndash-registration-field,
+.bb-rl-learndash-registration .registration-login-form .login-username,
+.bb-rl-learndash-reset-password .ldregister .learndash-registration-field,
+.bb-rl-learndash-reset-password .ldregister .login-username,
+.bb-rl-learndash-reset-password .registration-login-form .learndash-registration-field,
+.bb-rl-learndash-reset-password .registration-login-form .login-username {
+  margin-bottom: var(--bb-rl-space-100);
+}
+
+.bb-rl-learndash-registration .registration-login-form .login-remember,
+.bb-rl-learndash-reset-password .registration-login-form .login-remember {
+  margin-top: var(--bb-rl-space-200);
 }
 
 .bb-rl-learndash-registration .bb-rl-reset-password-subtitle,

@@ -1161,6 +1161,10 @@ body.bb-readylaunch-template:has(.learndash-wrapper-login-modal.ld-modal-open) {
 	}
 }
 
+.bb-rl-lms-inner-block--ld-registration.bb-rl-lms-inner-block {
+	padding-top: var(--bb-rl-space-200);
+}
+
 .bb-rl-learndash-registration,
 .bb-rl-learndash-reset-password {
 
@@ -1170,7 +1174,7 @@ body.bb-readylaunch-template:has(.learndash-wrapper-login-modal.ld-modal-open) {
 			background-color: var(--bb-rl-background-color);
 			border-radius: var(--bb-rl-radius-lg);
 			padding: var(--bb-rl-space-300);
-			margin: var(--bb-rl-space-200) 0;
+			margin: 0 0 var(--bb-rl-space-200);
 			box-shadow: none;
 			border: 1px solid var(--bb-rl-border-secondary-color);
 
@@ -1216,6 +1220,35 @@ body.bb-readylaunch-template:has(.learndash-wrapper-login-modal.ld-modal-open) {
 
 			@include bb-rl-label-heading;
 			color: var(--bb-rl-text-secondary-color);
+		}
+	}
+
+	.ldregister {
+		margin-top: var(--bb-rl-space-200);
+	}
+
+	.show-password-reset-link,
+	.show-register-form {
+
+		@include bb-rl-label-heading;
+		color: var(--bb-rl-text-secondary-color);
+		margin-top: var(--bb-rl-space-100);
+		display: block;
+	}
+
+	.ldregister,
+	.registration-login-form {
+
+		.learndash-registration-field,
+		.login-username {
+			margin-bottom: var(--bb-rl-space-100);
+		}
+	}
+
+	.registration-login-form {
+
+		.login-remember {
+			margin-top: var(--bb-rl-space-200);
 		}
 	}
 
