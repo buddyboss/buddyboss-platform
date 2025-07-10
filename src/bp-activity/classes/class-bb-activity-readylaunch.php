@@ -58,6 +58,8 @@ class BB_Activity_Readylaunch {
 		add_filter( 'bp_nouveau_video_description_response_data', array( $this, 'bb_rl_modify_media_description_response_data' ), 10 );
 
 		add_filter( 'bp_nouveau_activity_widget_query', array( $this, 'bb_rl_modify_activity_widget_query' ), 10 );
+
+		add_filter( 'bp_get_add_follow_button', array( $this, 'bb_rl_modify_add_follow_button' ) );
 	}
 
 	/**
@@ -786,5 +788,22 @@ class BB_Activity_Readylaunch {
 		$args['scope']  = ! empty( $filtered_scope ) ? implode( ',', $filtered_scope ) : '';
 
 		return $args;
+	}
+
+	/**
+	 * Modify the data-balloon attribute for the follow button when hover on follow button.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $button The button HTML.
+	 *
+	 * @return string The modified button HTML.
+	 */
+	public function bb_rl_modify_add_follow_button( $button ) {
+		if ( false !== strpos( $button['link_href'], 'stop-following' ) ) {
+			$button['data-balloon'] = __( 'Unfollow', 'buddyboss' );
+		}
+
+		return $button;
 	}
 }
