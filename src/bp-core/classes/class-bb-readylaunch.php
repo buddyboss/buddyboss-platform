@@ -4152,8 +4152,19 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * @return string The modified button HTML.
 		 */
 		public function bb_rl_modify_add_friend_button( $button ) {
+			if ( empty( $button['link_href'] ) ) {
+				return $button;
+			}
+
 			if ( false !== strpos( $button['link_href'], 'remove-friend' ) ) {
-				$button['link_text'] = __( 'Remove connection', 'buddyboss' );
+				$remove_connection_text              = __( 'Remove connection', 'buddyboss' );
+				$button['link_text']                 = $remove_connection_text;
+				$button['button_attr']['data-title'] = $remove_connection_text;
+			}
+			if ( false !== strpos( $button['link_href'], 'requests/cancel' ) ) {
+				$cancel_request_text                 = __( 'Cancel request', 'buddyboss' );
+				$button['link_text']                 = $cancel_request_text;
+				$button['button_attr']['data-title'] = $cancel_request_text;
 			}
 			return $button;
 		}

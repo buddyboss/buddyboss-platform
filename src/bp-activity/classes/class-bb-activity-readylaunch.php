@@ -800,6 +800,10 @@ class BB_Activity_Readylaunch {
 	 * @return string The modified button HTML.
 	 */
 	public function bb_rl_modify_add_follow_button( $button ) {
+		if ( empty( $button['link_href'] ) ) {
+			return $button;
+		}
+
 		if ( false !== strpos( $button['link_href'], 'stop-following' ) ) {
 			$button['data-balloon'] = __( 'Unfollow', 'buddyboss' );
 		}
