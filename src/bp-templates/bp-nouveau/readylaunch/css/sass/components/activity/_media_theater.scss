@@ -159,7 +159,8 @@
 		}
 	}
 
-	.bp-add-media-activity-description {
+	.bp-add-media-activity-description,
+	.bp-add-video-activity-description {
 		display: inline-block;
 		font-size: var(--bb-rl-font-size-sm);
 		color: var(--bb-rl-text-color);

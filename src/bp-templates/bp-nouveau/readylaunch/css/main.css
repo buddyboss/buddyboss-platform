@@ -16379,7 +16379,8 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   min-height: 100%;
 }
 
-.bb-rl-media-model-container .bp-add-media-activity-description {
+.bb-rl-media-model-container .bp-add-media-activity-description,
+.bb-rl-media-model-container .bp-add-video-activity-description {
   display: inline-block;
   font-size: var(--bb-rl-font-size-sm);
   color: var(--bb-rl-text-color);
@@ -16388,13 +16389,15 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
 }
 
-.bb-rl-media-model-container .bp-add-media-activity-description [class*="bb-icon"] {
+.bb-rl-media-model-container .bp-add-media-activity-description [class*="bb-icon"],
+.bb-rl-media-model-container .bp-add-video-activity-description [class*="bb-icon"] {
   display: inline-block;
   vertical-align: middle;
   line-height: 1.2;
 }
 
-.bb-rl-media-model-container .bp-add-media-activity-description [class*="bb-icon"]:before {
+.bb-rl-media-model-container .bp-add-media-activity-description [class*="bb-icon"]:before,
+.bb-rl-media-model-container .bp-add-video-activity-description [class*="bb-icon"]:before {
   content: "\e3d4";
   color: var(--bb-rl-icon-color);
   font-size: 16px;
@@ -16402,15 +16405,18 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   margin: 0;
 }
 
-.bb-rl-media-model-container .bp-add-media-activity-description .edit {
+.bb-rl-media-model-container .bp-add-media-activity-description .edit,
+.bb-rl-media-model-container .bp-add-video-activity-description .edit {
   display: none;
 }
 
-.bb-rl-media-model-container .bp-add-media-activity-description.show-edit .add {
+.bb-rl-media-model-container .bp-add-media-activity-description.show-edit .add,
+.bb-rl-media-model-container .bp-add-video-activity-description.show-edit .add {
   display: none;
 }
 
-.bb-rl-media-model-container .bp-add-media-activity-description.show-edit .edit {
+.bb-rl-media-model-container .bp-add-media-activity-description.show-edit .edit,
+.bb-rl-media-model-container .bp-add-video-activity-description.show-edit .edit {
   display: inline-block;
 }
 
