@@ -241,6 +241,19 @@
 		}
 	}
 
+	.bb-rl-filter--light & {
+
+		.select2-selection__arrow {
+
+			b::before {
+				font-weight: 400;
+				font-size: 16px;
+				position: relative;
+				top: 1px;
+			}
+		}	
+	}
+
 	&.select2-container--open {
 
 		.bb-rl-select2-dropdown.select2-dropdown--above,

@@ -1013,14 +1013,25 @@
 
 		@include bb-rl-button;
 		@include bb-rl-button-secondary-fill;
-		padding: 6px var(--bb-rl-space-200);
-		font-size: 0.875rem;
+		@include bb-rl-button--small;
+		padding: 4px var(--bb-rl-space-200);
 
 		&.disabled {
 			background-color: var(--bb-rl-background-tertiary-color);
 			color: var(--bb-rl-text-disabled-color);
 			cursor: not-allowed;
 			pointer-events: none;
+		}
+	}
+}
+
+.bb-rl-container .bb-rl-groups-manage-members-list {
+
+	.bb_more_options {
+
+		.bb_more_dropdown {
+			width: auto;
+			min-width: 195px;
 		}
 	}
 }

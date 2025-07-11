@@ -78,20 +78,22 @@ if ( bp_is_group_create() ) {
 							</div>
 
 							<div class="members-manage-buttons text-links-list bb-rl-members-manage-dropdown">
-								<select class="member-action-dropdown">
-									<option value="">
-										<?php
-										if ( groups_is_user_admin( $bp_org_user_id, $bp_current_group_id ) ) {
-											echo esc_html( get_group_role_label( $bp_current_group_id, 'organizer_singular_label_name' ) );
-										} else {
-											esc_html_e( 'Select Action', 'buddyboss' );
-										}
-										?>
-									</option>
-									<option value="<?php bp_group_member_demote_link( $bp_org_user_id ); ?>">
-										<?php echo esc_html( get_group_role_label( $bp_current_group_id, 'member_singular_label_name' ) ); ?>
-									</option>
-								</select>
+								<div class="bb-rl-filter bb-rl-filter--light">
+									<select class="member-action-dropdown">
+										<option value="">
+											<?php
+											if ( groups_is_user_admin( $bp_org_user_id, $bp_current_group_id ) ) {
+												echo esc_html( get_group_role_label( $bp_current_group_id, 'organizer_singular_label_name' ) );
+											} else {
+												esc_html_e( 'Select Action', 'buddyboss' );
+											}
+											?>
+										</option>
+										<option value="<?php bp_group_member_demote_link( $bp_org_user_id ); ?>">
+											<?php echo esc_html( get_group_role_label( $bp_current_group_id, 'member_singular_label_name' ) ); ?>
+										</option>
+									</select>
+								</div>
 								<div class="bb-rl-group-member-action-wrapper">
 									<button href="" class="bb-rl-group-member-action-button disabled"><?php esc_html_e( 'Apply', 'buddyboss' ); ?></button>
 								</div>
@@ -161,27 +163,29 @@ if ( bp_is_group_create() ) {
 							</div>
 
 							<div class="members-manage-buttons text-links-list bb-rl-members-manage-dropdown">
-								<select class="member-action-dropdown">
-									<option value="">
-										<?php
-										if ( groups_is_user_mod( $bp_mod_user_id, $bp_current_group_id ) ) {
-											echo esc_html( get_group_role_label( $bp_current_group_id, 'moderator_singular_label_name' ) );
-										} elseif ( groups_is_user_admin( $bp_mod_user_id, $bp_current_group_id ) ) {
-											echo esc_html( get_group_role_label( $bp_current_group_id, 'organizer_singular_label_name' ) );
-										} elseif ( groups_is_user_member( $bp_mod_user_id, $bp_current_group_id ) ) {
-											echo esc_html( get_group_role_label( $bp_current_group_id, 'member_singular_label_name' ) );
-										} else {
-											esc_html_e( 'Select Action', 'buddyboss' );
-										}
-										?>
-									</option>
-									<option value="<?php bp_group_member_promote_admin_link( $bp_mod_user_id ); ?>">
-										<?php echo esc_html( get_group_role_label( $bp_current_group_id, 'organizer_singular_label_name' ) ); ?>
-									</option>
-									<option value="<?php bp_group_member_demote_link( $bp_mod_user_id ); ?>">
-										<?php echo esc_html( get_group_role_label( $bp_current_group_id, 'member_singular_label_name' ) ); ?>
-									</option>
-								</select>
+								<div class="bb-rl-filter bb-rl-filter--light">
+									<select class="member-action-dropdown">
+										<option value="">
+											<?php
+											if ( groups_is_user_mod( $bp_mod_user_id, $bp_current_group_id ) ) {
+												echo esc_html( get_group_role_label( $bp_current_group_id, 'moderator_singular_label_name' ) );
+											} elseif ( groups_is_user_admin( $bp_mod_user_id, $bp_current_group_id ) ) {
+												echo esc_html( get_group_role_label( $bp_current_group_id, 'organizer_singular_label_name' ) );
+											} elseif ( groups_is_user_member( $bp_mod_user_id, $bp_current_group_id ) ) {
+												echo esc_html( get_group_role_label( $bp_current_group_id, 'member_singular_label_name' ) );
+											} else {
+												esc_html_e( 'Select Action', 'buddyboss' );
+											}
+											?>
+										</option>
+										<option value="<?php bp_group_member_promote_admin_link( $bp_mod_user_id ); ?>">
+											<?php echo esc_html( get_group_role_label( $bp_current_group_id, 'organizer_singular_label_name' ) ); ?>
+										</option>
+										<option value="<?php bp_group_member_demote_link( $bp_mod_user_id ); ?>">
+											<?php echo esc_html( get_group_role_label( $bp_current_group_id, 'member_singular_label_name' ) ); ?>
+										</option>
+									</select>
+								</div>
 								<div class="bb-rl-group-member-action-wrapper">
 									<button href="" class="bb-rl-group-member-action-button disabled"><?php esc_html_e( 'Apply', 'buddyboss' ); ?></button>
 								</div>
@@ -267,27 +271,29 @@ if ( bp_is_group_create() ) {
 							</div>
 
 							<div class="members-manage-buttons text-links-list bb-rl-members-manage-dropdown">
-								<select class="member-action-dropdown">
-									<option value="">
-										<?php
-										if ( groups_is_user_mod( $bp_member_user_id, $bp_current_group_id ) ) {
-											echo esc_html( get_group_role_label( $bp_current_group_id, 'moderator_singular_label_name' ) );
-										} elseif ( groups_is_user_admin( $bp_member_user_id, $bp_current_group_id ) ) {
-											echo esc_html( get_group_role_label( $bp_current_group_id, 'organizer_singular_label_name' ) );
-										} elseif ( groups_is_user_member( $bp_member_user_id, $bp_current_group_id ) ) {
-											echo esc_html( get_group_role_label( $bp_current_group_id, 'member_singular_label_name' ) );
-										} else {
-											esc_html_e( 'Select Action', 'buddyboss' );
-										}
-										?>
-									</option>
-									<option value="<?php bp_group_member_promote_admin_link( $bp_member_user_id ); ?>">
-										<?php echo esc_html( get_group_role_label( $bp_current_group_id, 'organizer_singular_label_name' ) ); ?>
-									</option>
-									<option value="<?php bp_group_member_promote_mod_link( $bp_member_user_id ); ?>">
-										<?php echo esc_html( get_group_role_label( $bp_current_group_id, 'moderator_singular_label_name' ) ); ?>
-									</option>
-								</select>
+								<div class="bb-rl-filter bb-rl-filter--light">
+									<select class="member-action-dropdown">
+										<option value="">
+											<?php
+											if ( groups_is_user_mod( $bp_member_user_id, $bp_current_group_id ) ) {
+												echo esc_html( get_group_role_label( $bp_current_group_id, 'moderator_singular_label_name' ) );
+											} elseif ( groups_is_user_admin( $bp_member_user_id, $bp_current_group_id ) ) {
+												echo esc_html( get_group_role_label( $bp_current_group_id, 'organizer_singular_label_name' ) );
+											} elseif ( groups_is_user_member( $bp_member_user_id, $bp_current_group_id ) ) {
+												echo esc_html( get_group_role_label( $bp_current_group_id, 'member_singular_label_name' ) );
+											} else {
+												esc_html_e( 'Select Action', 'buddyboss' );
+											}
+											?>
+										</option>
+										<option value="<?php bp_group_member_promote_admin_link( $bp_member_user_id ); ?>">
+											<?php echo esc_html( get_group_role_label( $bp_current_group_id, 'organizer_singular_label_name' ) ); ?>
+										</option>
+										<option value="<?php bp_group_member_promote_mod_link( $bp_member_user_id ); ?>">
+											<?php echo esc_html( get_group_role_label( $bp_current_group_id, 'moderator_singular_label_name' ) ); ?>
+										</option>
+									</select>
+								</div>
 								<div class="bb-rl-group-member-action-wrapper">
 									<button class="bb-rl-group-member-action-button disabled"><?php esc_html_e( 'Apply', 'buddyboss' ); ?></button>
 								</div>
