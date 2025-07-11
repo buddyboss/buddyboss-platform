@@ -228,13 +228,134 @@ function bbp_encode_bad( $content = '' ) {
  */
 function bbp_convert_pre_and_code_tags_to_backticks( $content = '' ) {
 
+	// Helper function to clean syntax highlighting classes.
+	$clean_syntax_highlighting = function( $content ) {
+		// First decode HTML entities if they exist.
+		$content = html_entity_decode( $content, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 );
+
+		// Remove specific syntax highlighting classes (targeted approach)
+		$syntax_classes = array(
+			// PHP specific classes
+			'phptagcolor',
+			'phpkeywordcolor',
+			'phpstringcolor',
+			'phpnumbercolor',
+			'phpoperatorcolor',
+			
+			// HTML/XML specific classes
+			'tagnamecolor',
+			'tagcolor',
+			'attributecolor',
+			'attributevaluecolor',
+			
+			// CSS specific classes
+			'csspropertycolor',
+			'cssvaluecolor',
+			'cssselectorcolor',
+			
+			// JavaScript specific classes
+			'jskeywordcolor',
+			'jsstringcolor',
+			'jsnumbercolor',
+			'jsoperatorcolor',
+			'jsfunctioncolor',
+			'jspropertycolor',
+
+			// General syntax highlighting classes
+			'commentcolor',
+			'stringcolor',
+			'keywordcolor',
+			'numbercolor',
+			'operatorcolor',
+			'functioncolor',
+			'classcolor',
+			'variablecolor',
+			'constantcolor',
+			'punctuationcolor',
+			'namespacecolor',
+			'builtincolor',
+			'deletedcolor',
+			'insertedcolor',
+			'selectorcolor',
+			'propertycolor',
+			'valuecolor',
+			'entitycolor',
+			'urlcolor',
+			'charcolor',
+			'symbolcolor',
+			'booleancolor',
+			'regexcolor',
+			'importantcolor',
+			'atrulecolor',
+			'rulecolor',
+			'prologcolor',
+			'doctypecolor',
+			'cdatacolor',
+		);
+
+		foreach ( $syntax_classes as $class ) {
+			$content = preg_replace( '/<span class=\\\"' . $class . '\\\">/', '', $content );
+		}
+
+		// Remove all closing span tags
+		$content = preg_replace( '/<\/span>/', '', $content );
+
+		return $content;
+	};
+
+	// Clean syntax highlighting only from <pre> tags that contain syntax highlighting classes.
+	$content = preg_replace_callback(
+		'|<pre>(.*?)</pre>|s',
+		function( $matches ) use ( $clean_syntax_highlighting ) {
+			$tag_content = $matches[1];
+
+			// Check if content contains syntax highlighting classes (multiple formats).
+			$has_class_attr   = strpos( $tag_content, 'class=\"' ) !== false;
+			$has_encoded_span = strpos( $tag_content, '&lt;span' ) !== false;
+			$has_span_tag     = strpos( $tag_content, '<span' ) !== false;
+
+			if ( $has_class_attr || $has_encoded_span || $has_span_tag ) {
+				$tag_content = $clean_syntax_highlighting( $tag_content );
+			}
+
+			return '<pre>' . $tag_content . '</pre>';
+		},
+		$content
+	);
+
+	// Clean syntax highlighting only from <code> tags that contain syntax highlighting classes.
+	$content = preg_replace_callback(
+		'|<code>(.*?)</code>|s',
+		function( $matches ) use ( $clean_syntax_highlighting ) {
+			$tag_content = $matches[1];
+
+			// Check if content contains syntax highlighting classes (multiple formats).
+			$has_class_attr = strpos( $tag_content, 'class=\"' ) !== false;
+			$has_encoded_span = strpos( $tag_content, '&lt;span' ) !== false;
+			$has_span_tag = strpos( $tag_content, '<span' ) !== false;
+
+			if ( $has_class_attr || $has_encoded_span || $has_span_tag ) {
+				$tag_content = $clean_syntax_highlighting( $tag_content );
+			}
+
+			return '<code>' . $tag_content . '</code>';
+		},
+		$content
+	);
+
 	// Convert <pre> blocks to backtick format.
 	$content = preg_replace_callback(
 		'|<pre>(.*?)</pre>|s',
 		function( $matches ) {
 			$pre_content = $matches[1];
-			// Convert <pre> content to backtick format.
-			return "\n`" . $pre_content . "`\n";
+			// Check if content has newlines.
+			$has_newlines = strpos( $pre_content, "\n" ) !== false;
+			
+			if ( $has_newlines ) {
+				return "\n`" . $pre_content . "`\n";
+			} else {
+				return "`" . $pre_content . "`";
+			}
 		},
 		$content
 	);
@@ -243,12 +364,19 @@ function bbp_convert_pre_and_code_tags_to_backticks( $content = '' ) {
 	$content = preg_replace_callback(
 		'|<code>(.*?)</code>|s',
 		function( $matches ) {
-			$code_content = $matches[1];
-			// Convert <code> content to backtick format.
-			return "\n`" . $code_content . "`\n";
+			$pre_content = $matches[1];
+			// Check if content has newlines.
+			$has_newlines = strpos( $pre_content, "\n" ) !== false;
+			
+			if ( $has_newlines ) {
+				return "\n`" . $pre_content . "`\n";
+			} else {
+				return "`" . $pre_content . "`";
+			}
 		},
 		$content
 	);
+
 	return $content;
 }
 
