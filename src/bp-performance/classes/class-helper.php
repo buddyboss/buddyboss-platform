@@ -54,7 +54,7 @@ class Helper {
 		$settings = \BuddyBoss\Performance\Settings::get_settings( $group );
 
 		if ( ! empty( $setting_key ) ) {
-			return $settings[ $setting_key ] ?? $default_value;
+			return isset( $settings[ $setting_key ] ) ? $settings[ $setting_key ] : $default_value;
 		} else {
 			return $settings;
 		}

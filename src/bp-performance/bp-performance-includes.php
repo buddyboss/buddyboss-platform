@@ -361,6 +361,7 @@ if ( ! class_exists( 'BuddyBoss\Performance\BP_Performance_Includes' ) ) {
 					'bp-media',
 					'bp-document',
 					'bp-video',
+					'bb-subscription',
 				);
 			}
 
