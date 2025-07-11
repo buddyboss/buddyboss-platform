@@ -6269,6 +6269,10 @@ window.bp = window.bp || {};
 			var target = data.target,
 			    action = data.action;
 
+			if ( 'comment' === target.data( 'privacy' ) ) {
+				return false;
+			}
+
 			var hiddenParentIdElem       = $( '#hidden_parent_id' ),
 			    parentActivityId         = hiddenParentIdElem.val(),
 			    parentActivityIdForModel = target.closest( '.bb-rl-' + action + '-model-wrapper' ).find( '#bb-rl-' + action + '-model-container .bb-rl-activity-list li.activity-item' ).data( 'bp-activity-id' );
