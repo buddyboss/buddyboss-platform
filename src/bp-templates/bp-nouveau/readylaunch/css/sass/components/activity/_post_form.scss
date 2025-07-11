@@ -97,6 +97,14 @@
 	}
 }
 
+#bb-rl-whats-new-form:not(.bb-rl-activity-edit--privacy-idle) #bb-rl-activity-privacy-point[data-bp-tooltip][data-bp-tooltip-pos=up] {
+
+	&:after,
+	&:before {
+		display: none;
+	}
+}
+
 .bb-rl-activity-form {
 
 	.activity-header-data {
