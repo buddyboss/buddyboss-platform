@@ -2418,6 +2418,10 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   margin-right: var(--bb-rl-space-50);
 }
 
+.bb-subnav-filters-container-main .subnav-filters-opener .bb-icons-rl-caret-down {
+  margin-left: var(--bb-rl-space-50);
+}
+
 .bb-subnav-filters-container-main .subnav-filters-opener [class*="bb-icon"] {
   color: var(--bb-rl-icon-color);
   font-size: 16px;
