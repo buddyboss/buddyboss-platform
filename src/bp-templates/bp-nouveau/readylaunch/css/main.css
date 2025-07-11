@@ -5999,6 +5999,7 @@ body.bb-readylaunch-template .select2-container--rl.select2-container--open:has(
   color: var(--bb-rl-text-white-color);
   font-size: 16px;
   font-weight: 400;
+  font-style: normal;
   margin-left: var(--bb-rl-space-100);
   margin-right: 0;
 }
@@ -6006,6 +6007,14 @@ body.bb-readylaunch-template .select2-container--rl.select2-container--open:has(
 .bb-readylaunch-template .bb-toast-messages-enable .bb-toast-messages .toast-messages-list .read-item .action-close [class*="bb-icon"]:before {
   content: "\e4f6";
   font-family: bb-icons-rl;
+}
+
+.bb-readylaunch-template .bb-onscreen-notification-enable .bb-remove-all-notification {
+  display: none;
+}
+
+.bb-readylaunch-template .bb-onscreen-notification-enable ul.notification-list {
+  padding: 0;
 }
 
 .bb-rl-toast-message {
