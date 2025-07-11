@@ -11422,7 +11422,7 @@ input.bb-rl-zoom-slider::-moz-range-progress {
 
 .bb-rl-secondary-actions .friendship-button.pending_friend i::before,
 .bb-rl-card-action .friendship-button.pending_friend i::before {
-  content: "\edec";
+  content: "\eafa";
 }
 
 .bb-rl-secondary-actions .friendship-button.awaiting_response_friend i::before,
