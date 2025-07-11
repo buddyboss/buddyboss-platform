@@ -214,7 +214,10 @@
 .bb-rl-lms-inner-block .mpcs-main-content .mpcs-breadcrumbs span.mpcs-breadcrumb {
   display: inline-flex;
   align-items: center;
-  gap: var(--bb-rl-space-50);
+}
+
+.bb-rl-lms-inner-block .mpcs-main-content .mpcs-breadcrumbs span.mpcs-breadcrumb a {
+  color: var(--bb-rl-text-secondary-color);
 }
 
 .bb-rl-lms-inner-block .mpcs-main-content .mpcs-breadcrumbs span.mpcs-breadcrumb:not(:last-child)::after {

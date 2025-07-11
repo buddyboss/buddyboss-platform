@@ -51,7 +51,10 @@
 			span.mpcs-breadcrumb {
 				display: inline-flex;
 				align-items: center;
-				gap: var(--bb-rl-space-50);
+
+				a {
+					color: var(--bb-rl-text-secondary-color);
+				}
 			}
 
 			span.mpcs-breadcrumb:not(:last-child)::after {
