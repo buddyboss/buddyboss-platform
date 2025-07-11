@@ -3137,6 +3137,73 @@ button[data-balloon] {
   width: 100%;
 }
 
+.bb-rl-member-buttons-wrap .bb-rl-primary-hover-action.following,
+.bb-rl-member-buttons-wrap .bb-rl-primary-hover-action.is_friend,
+.bb-rl-member-buttons-wrap .bb-rl-primary-hover-action.pending_friend,
+.bb-rl-member-buttons-wrap .bb-rl-primary-hover-action.awaiting_response_friend {
+  position: relative;
+}
+
+.bb-rl-member-buttons-wrap .bb-rl-primary-hover-action.following:after,
+.bb-rl-member-buttons-wrap .bb-rl-primary-hover-action.is_friend:after,
+.bb-rl-member-buttons-wrap .bb-rl-primary-hover-action.pending_friend:after,
+.bb-rl-member-buttons-wrap .bb-rl-primary-hover-action.awaiting_response_friend:after {
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.18s ease-out 0.18s;
+  font-weight: 500;
+  font-size: 0.85rem;
+  letter-spacing: -0.24px;
+  background: var(--bb-rl-background-black-color);
+  border-radius: var(--bb-rl-radius-md);
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.22);
+  color: var(--bb-rl-text-white-color);
+  content: attr(data-hover);
+  line-height: 1.3;
+  padding: 7px 15px;
+  position: absolute;
+  white-space: nowrap;
+  z-index: 10;
+  bottom: 100%;
+  right: 50%;
+  margin-bottom: 11px;
+  transform: translate(50%, 10px);
+  transform-origin: top;
+}
+
+.bb-rl-member-buttons-wrap .bb-rl-primary-hover-action.following:before,
+.bb-rl-member-buttons-wrap .bb-rl-primary-hover-action.is_friend:before,
+.bb-rl-member-buttons-wrap .bb-rl-primary-hover-action.pending_friend:before,
+.bb-rl-member-buttons-wrap .bb-rl-primary-hover-action.awaiting_response_friend:before {
+  background: no-repeat url("data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http://www.w3.org/2000/svg%22%20width%3D%2236px%22%20height%3D%2212px%22%3E%3Cpath%20fill%3D%22var(--bb-rl-background-black-color)%22%20transform%3D%22rotate(0)%22%20d%3D%22M2.658,0.000%20C-13.615,0.000%2050.938,0.000%2034.662,0.000%20C28.662,0.000%2023.035,12.002%2018.660,12.002%20C14.285,12.002%208.594,0.000%202.658,0.000%20Z%22/%3E%3C/svg%3E");
+  background-size: 100% auto;
+  width: 18px;
+  height: 6px;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.18s ease-out 0.18s;
+  content: "";
+  position: absolute;
+  z-index: 10;
+  bottom: 100%;
+  right: 50%;
+  margin-bottom: 5px;
+  transform: translate(50%, 10px);
+  transform-origin: top;
+}
+
+.bb-rl-member-buttons-wrap .bb-rl-primary-hover-action.following:hover:before, .bb-rl-member-buttons-wrap .bb-rl-primary-hover-action.following:hover:after,
+.bb-rl-member-buttons-wrap .bb-rl-primary-hover-action.is_friend:hover:before,
+.bb-rl-member-buttons-wrap .bb-rl-primary-hover-action.is_friend:hover:after,
+.bb-rl-member-buttons-wrap .bb-rl-primary-hover-action.pending_friend:hover:before,
+.bb-rl-member-buttons-wrap .bb-rl-primary-hover-action.pending_friend:hover:after,
+.bb-rl-member-buttons-wrap .bb-rl-primary-hover-action.awaiting_response_friend:hover:before,
+.bb-rl-member-buttons-wrap .bb-rl-primary-hover-action.awaiting_response_friend:hover:after {
+  opacity: 1;
+  transform: translate(50%, 0);
+  pointer-events: auto;
+}
+
 .bb-rl-notice {
   display: flex;
   align-items: center;
@@ -5932,6 +5999,7 @@ body.bb-readylaunch-template .select2-container--rl.select2-container--open:has(
   color: var(--bb-rl-text-white-color);
   font-size: 16px;
   font-weight: 400;
+  font-style: normal;
   margin-right: var(--bb-rl-space-100);
   margin-left: 0;
 }
@@ -5939,6 +6007,14 @@ body.bb-readylaunch-template .select2-container--rl.select2-container--open:has(
 .bb-readylaunch-template .bb-toast-messages-enable .bb-toast-messages .toast-messages-list .read-item .action-close [class*="bb-icon"]:before {
   content: "\e4f6";
   font-family: bb-icons-rl;
+}
+
+.bb-readylaunch-template .bb-onscreen-notification-enable .bb-remove-all-notification {
+  display: none;
+}
+
+.bb-readylaunch-template .bb-onscreen-notification-enable ul.notification-list {
+  padding: 0;
 }
 
 .bb-rl-toast-message {
@@ -10417,6 +10493,10 @@ input.bb-rl-zoom-slider::-moz-range-progress {
   background-color: var(--bb-rl-background-brand-primary-color);
 }
 
+.bb-rl-widget-sidebar .widget_bp_core_recently_active_widget .item-avatar .gamipress-buddypress-user-details {
+  display: none;
+}
+
 .widget_bp_core_recently_active_widget .avatar-block {
   display: flex;
   align-items: center;
@@ -10985,6 +11065,10 @@ input.bb-rl-zoom-slider::-moz-range-progress {
   justify-content: center;
 }
 
+.bb-rl-members .item-entry .item-avatar .gamipress-buddypress-user-details {
+  display: none;
+}
+
 .bb-rl-members .item-entry .avatar {
   max-width: 104px;
   height: auto;
@@ -11142,6 +11226,31 @@ input.bb-rl-zoom-slider::-moz-range-progress {
   content: "\eafa";
 }
 
+.bb-rl-primary-actions button.friendship-button.pending_friend.loading i,
+.bb-rl-primary-actions .generic-button a.friendship-button.pending_friend.loading i,
+.bb-rl-member-header-actions button.friendship-button.pending_friend.loading i,
+.bb-rl-member-header-actions .generic-button a.friendship-button.pending_friend.loading i {
+  height: 16px;
+}
+
+.bb-rl-primary-actions button.friendship-button.pending_friend.loading i::before,
+.bb-rl-primary-actions .generic-button a.friendship-button.pending_friend.loading i::before,
+.bb-rl-member-header-actions button.friendship-button.pending_friend.loading i::before,
+.bb-rl-member-header-actions .generic-button a.friendship-button.pending_friend.loading i::before {
+  content: "";
+  display: inline-block;
+  height: 20px;
+  width: 20px;
+  border: 2px solid var(--bb-rl-border-quaternary-color);
+  border-top-color: var(--bb-rl-border-tertiary-color);
+  border-radius: var(--bb-rl-radius-full);
+  animation: spin 3s infinite linear;
+  height: 16px;
+  width: 16px;
+  border-width: 2px;
+  margin-left: var(--bb-rl-space-50);
+}
+
 .bb-rl-primary-actions button.friendship-button.awaiting_response_friend i::before,
 .bb-rl-primary-actions .generic-button a.friendship-button.awaiting_response_friend i::before,
 .bb-rl-member-header-actions button.friendship-button.awaiting_response_friend i::before,
@@ -11154,6 +11263,12 @@ input.bb-rl-zoom-slider::-moz-range-progress {
 .bb-rl-member-header-actions button.friendship-button.is_friend i::before,
 .bb-rl-member-header-actions .generic-button a.friendship-button.is_friend i::before {
   content: "\e182";
+}
+
+.bb-rl-member-header-actions button.friendship-button i {
+  max-height: 20px;
+  display: inline-flex;
+  align-items: center;
 }
 
 .bb-rl-primary-actions {
@@ -11347,7 +11462,7 @@ input.bb-rl-zoom-slider::-moz-range-progress {
 
 .bb-rl-secondary-actions .friendship-button.pending_friend i::before,
 .bb-rl-card-action .friendship-button.pending_friend i::before {
-  content: "\edec";
+  content: "\eafa";
 }
 
 .bb-rl-secondary-actions .friendship-button.awaiting_response_friend i::before,
@@ -15730,6 +15845,14 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   text-decoration: underline;
 }
 
+.bb-rl-activity-footer-actions .bp-generic-meta .generic-button a .reactions_item {
+  color: var(--bb-rl-text-tertiary-color) !important;
+}
+
+.bb-rl-acomment-foot-actions .bp-generic-meta .generic-button a .reactions_item {
+  color: var(--bb-rl-text-tertiary-color) !important;
+}
+
 .bp-generic-meta {
   display: flex;
   align-items: center;
@@ -16296,7 +16419,8 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   min-height: 100%;
 }
 
-.bb-rl-media-model-container .bp-add-media-activity-description {
+.bb-rl-media-model-container .bp-add-media-activity-description,
+.bb-rl-media-model-container .bp-add-video-activity-description {
   display: inline-block;
   font-size: var(--bb-rl-font-size-sm);
   color: var(--bb-rl-text-color);
@@ -16305,13 +16429,15 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
 }
 
-.bb-rl-media-model-container .bp-add-media-activity-description [class*="bb-icon"] {
+.bb-rl-media-model-container .bp-add-media-activity-description [class*="bb-icon"],
+.bb-rl-media-model-container .bp-add-video-activity-description [class*="bb-icon"] {
   display: inline-block;
   vertical-align: middle;
   line-height: 1.2;
 }
 
-.bb-rl-media-model-container .bp-add-media-activity-description [class*="bb-icon"]:before {
+.bb-rl-media-model-container .bp-add-media-activity-description [class*="bb-icon"]:before,
+.bb-rl-media-model-container .bp-add-video-activity-description [class*="bb-icon"]:before {
   content: "\e3d4";
   color: var(--bb-rl-icon-color);
   font-size: 16px;
@@ -16319,15 +16445,18 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   margin: 0;
 }
 
-.bb-rl-media-model-container .bp-add-media-activity-description .edit {
+.bb-rl-media-model-container .bp-add-media-activity-description .edit,
+.bb-rl-media-model-container .bp-add-video-activity-description .edit {
   display: none;
 }
 
-.bb-rl-media-model-container .bp-add-media-activity-description.show-edit .add {
+.bb-rl-media-model-container .bp-add-media-activity-description.show-edit .add,
+.bb-rl-media-model-container .bp-add-video-activity-description.show-edit .add {
   display: none;
 }
 
-.bb-rl-media-model-container .bp-add-media-activity-description.show-edit .edit {
+.bb-rl-media-model-container .bp-add-media-activity-description.show-edit .edit,
+.bb-rl-media-model-container .bp-add-video-activity-description.show-edit .edit {
   display: inline-block;
 }
 
@@ -16338,11 +16467,13 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   margin-bottom: var(--bb-rl-space-200);
 }
 
-.bb-rl-media-model-container .bp-edit-media-activity-description {
+.bb-rl-media-model-container .bp-edit-media-activity-description,
+.bb-rl-media-model-container .bp-edit-video-activity-description {
   padding-bottom: var(--bb-rl-space-100);
 }
 
-.bb-rl-media-model-container .bp-edit-media-activity-description textarea {
+.bb-rl-media-model-container .bp-edit-media-activity-description textarea,
+.bb-rl-media-model-container .bp-edit-video-activity-description textarea {
   color: var(--bb-rl-text-tertiary-color);
   font-size: 14px;
   font-weight: 400;

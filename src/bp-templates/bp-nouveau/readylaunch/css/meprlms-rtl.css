@@ -214,7 +214,10 @@
 .bb-rl-lms-inner-block .mpcs-main-content .mpcs-breadcrumbs span.mpcs-breadcrumb {
   display: inline-flex;
   align-items: center;
-  gap: var(--bb-rl-space-50);
+}
+
+.bb-rl-lms-inner-block .mpcs-main-content .mpcs-breadcrumbs span.mpcs-breadcrumb a {
+  color: var(--bb-rl-text-secondary-color);
 }
 
 .bb-rl-lms-inner-block .mpcs-main-content .mpcs-breadcrumbs span.mpcs-breadcrumb:not(:last-child)::after {
@@ -247,7 +250,10 @@
 .mpcs-classroom .bb-rl-widget-sidebar-menu .mepr-resources,
 .bb-rl-left-panel--memprlms a,
 .bb-rl-left-panel--memprlms .mpcs-grades-menu,
-.bb-rl-left-panel--memprlms .mepr-resources {
+.bb-rl-left-panel--memprlms .mepr-resources,
+.mpcs-classroom .bb-rl-left-panel--memprlms .mpcs-sidebar-wrapper a,
+.mpcs-classroom .bb-rl-left-panel--memprlms .mpcs-sidebar-wrapper .mpcs-grades-menu,
+.mpcs-classroom .bb-rl-left-panel--memprlms .mpcs-sidebar-wrapper .mepr-resources {
   display: flex;
   align-items: center;
   gap: var(--bb-rl-space-100);
@@ -265,7 +271,10 @@
 .mpcs-classroom .bb-rl-widget-sidebar-menu .mepr-resources:hover,
 .bb-rl-left-panel--memprlms a:hover,
 .bb-rl-left-panel--memprlms .mpcs-grades-menu:hover,
-.bb-rl-left-panel--memprlms .mepr-resources:hover {
+.bb-rl-left-panel--memprlms .mepr-resources:hover,
+.mpcs-classroom .bb-rl-left-panel--memprlms .mpcs-sidebar-wrapper a:hover,
+.mpcs-classroom .bb-rl-left-panel--memprlms .mpcs-sidebar-wrapper .mpcs-grades-menu:hover,
+.mpcs-classroom .bb-rl-left-panel--memprlms .mpcs-sidebar-wrapper .mepr-resources:hover {
   background-color: var(--bb-rl-background-secondary-hover-color);
 }
 
@@ -277,7 +286,10 @@
 .mpcs-classroom .bb-rl-widget-sidebar-menu .mepr-resources .tile-icon,
 .bb-rl-left-panel--memprlms a .tile-icon,
 .bb-rl-left-panel--memprlms .mpcs-grades-menu .tile-icon,
-.bb-rl-left-panel--memprlms .mepr-resources .tile-icon {
+.bb-rl-left-panel--memprlms .mepr-resources .tile-icon,
+.mpcs-classroom .bb-rl-left-panel--memprlms .mpcs-sidebar-wrapper a .tile-icon,
+.mpcs-classroom .bb-rl-left-panel--memprlms .mpcs-sidebar-wrapper .mpcs-grades-menu .tile-icon,
+.mpcs-classroom .bb-rl-left-panel--memprlms .mpcs-sidebar-wrapper .mepr-resources .tile-icon {
   line-height: 1;
   max-width: 20px;
 }
@@ -290,7 +302,10 @@
 .mpcs-classroom .bb-rl-widget-sidebar-menu .mepr-resources .tile-icon i,
 .bb-rl-left-panel--memprlms a .tile-icon i,
 .bb-rl-left-panel--memprlms .mpcs-grades-menu .tile-icon i,
-.bb-rl-left-panel--memprlms .mepr-resources .tile-icon i {
+.bb-rl-left-panel--memprlms .mepr-resources .tile-icon i,
+.mpcs-classroom .bb-rl-left-panel--memprlms .mpcs-sidebar-wrapper a .tile-icon i,
+.mpcs-classroom .bb-rl-left-panel--memprlms .mpcs-sidebar-wrapper .mpcs-grades-menu .tile-icon i,
+.mpcs-classroom .bb-rl-left-panel--memprlms .mpcs-sidebar-wrapper .mepr-resources .tile-icon i {
   font-size: 20px;
   color: var(--bb-rl-icon-secondary-color);
   font-style: normal;
@@ -304,7 +319,10 @@
 .mpcs-classroom .bb-rl-widget-sidebar-menu .mepr-resources .tile-icon i:before,
 .bb-rl-left-panel--memprlms a .tile-icon i:before,
 .bb-rl-left-panel--memprlms .mpcs-grades-menu .tile-icon i:before,
-.bb-rl-left-panel--memprlms .mepr-resources .tile-icon i:before {
+.bb-rl-left-panel--memprlms .mepr-resources .tile-icon i:before,
+.mpcs-classroom .bb-rl-left-panel--memprlms .mpcs-sidebar-wrapper a .tile-icon i:before,
+.mpcs-classroom .bb-rl-left-panel--memprlms .mpcs-sidebar-wrapper .mpcs-grades-menu .tile-icon i:before,
+.mpcs-classroom .bb-rl-left-panel--memprlms .mpcs-sidebar-wrapper .mepr-resources .tile-icon i:before {
   margin: 0;
 }
 
@@ -316,7 +334,10 @@
 .mpcs-classroom .bb-rl-widget-sidebar-menu .mepr-resources .tile-title,
 .bb-rl-left-panel--memprlms a .tile-title,
 .bb-rl-left-panel--memprlms .mpcs-grades-menu .tile-title,
-.bb-rl-left-panel--memprlms .mepr-resources .tile-title {
+.bb-rl-left-panel--memprlms .mepr-resources .tile-title,
+.mpcs-classroom .bb-rl-left-panel--memprlms .mpcs-sidebar-wrapper a .tile-title,
+.mpcs-classroom .bb-rl-left-panel--memprlms .mpcs-sidebar-wrapper .mpcs-grades-menu .tile-title,
+.mpcs-classroom .bb-rl-left-panel--memprlms .mpcs-sidebar-wrapper .mepr-resources .tile-title {
   font-size: 14px;
   font-weight: 500;
   line-height: 22px;
@@ -328,7 +349,9 @@
 .mpcs-classroom .bb-rl-widget-sidebar-menu .mepr-gradebook .tile-icon i:before,
 .mpcs-classroom .bb-rl-widget-sidebar-menu .mpcs-grades-menu .tile-icon i:before,
 .bb-rl-left-panel--memprlms .mepr-gradebook .tile-icon i:before,
-.bb-rl-left-panel--memprlms .mpcs-grades-menu .tile-icon i:before {
+.bb-rl-left-panel--memprlms .mpcs-grades-menu .tile-icon i:before,
+.mpcs-classroom .bb-rl-left-panel--memprlms .mpcs-sidebar-wrapper .mepr-gradebook .tile-icon i:before,
+.mpcs-classroom .bb-rl-left-panel--memprlms .mpcs-sidebar-wrapper .mpcs-grades-menu .tile-icon i:before {
   content: "\e154";
   font-weight: 400;
   font-family: bb-icons-rl;
@@ -337,7 +360,8 @@
 
 .bb-rl-widget-sidebar-menu .mepr-resources .tile-icon i:before,
 .mpcs-classroom .bb-rl-widget-sidebar-menu .mepr-resources .tile-icon i:before,
-.bb-rl-left-panel--memprlms .mepr-resources .tile-icon i:before {
+.bb-rl-left-panel--memprlms .mepr-resources .tile-icon i:before,
+.mpcs-classroom .bb-rl-left-panel--memprlms .mpcs-sidebar-wrapper .mepr-resources .tile-icon i:before {
   content: "\e3dc";
   font-weight: 400;
   font-family: bb-icons-rl;
@@ -937,6 +961,18 @@ body[class*="mpcs-course"] .bb-rl-mbprlms-pagination ul li.active a {
 }
 
 .bb-rl-container .mpcs-cards .mpcs-progress-data .mpcs-progress-lessons {
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 400;
+  line-height: var(--bb-rl-base-line-small);
+  color: var(--bb-rl-text-secondary-color);
+}
+
+.bb-rl-container-inner.bb-rl-meprlms-no-courses {
+  padding-top: var(--bb-rl-space-400);
+  padding-bottom: var(--bb-rl-space-400);
+}
+
+.bb-rl-container-inner.bb-rl-meprlms-no-courses > p {
   font-size: var(--bb-rl-font-size-sm);
   font-weight: 400;
   line-height: var(--bb-rl-base-line-small);
@@ -2342,6 +2378,128 @@ body[class*="mpcs-course"] .bb-rl-mbprlms-pagination ul li.active a {
   padding-right: var(--bb-rl-space-50);
 }
 
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-true-false .mpcs-quiz-question-options .mpcs-quiz-question-option label:has(.mpcs-radio-checked)::before, .bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-true-false .mpcs-quiz-question-options .mpcs-quiz-question-option label:has(.mpcs-radio-checked)::after,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-true-false .mpcs-quiz-question-options .mpcs-quiz-question-option label:has(.mpcs-radio-unchecked)::before,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-true-false .mpcs-quiz-question-options .mpcs-quiz-question-option label:has(.mpcs-radio-unchecked)::after,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-true-false .mpcs-quiz-question-options .mpcs-quiz-question-option label:has(.mpcs-checkbox-unchecked)::before,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-true-false .mpcs-quiz-question-options .mpcs-quiz-question-option label:has(.mpcs-checkbox-unchecked)::after,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-true-false .mpcs-quiz-question-options .mpcs-quiz-question-option label:has(.mpcs-checkbox-checked)::before,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-true-false .mpcs-quiz-question-options .mpcs-quiz-question-option label:has(.mpcs-checkbox-checked)::after,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-choice .mpcs-quiz-question-options .mpcs-quiz-question-option label:has(.mpcs-radio-checked)::before,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-choice .mpcs-quiz-question-options .mpcs-quiz-question-option label:has(.mpcs-radio-checked)::after,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-choice .mpcs-quiz-question-options .mpcs-quiz-question-option label:has(.mpcs-radio-unchecked)::before,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-choice .mpcs-quiz-question-options .mpcs-quiz-question-option label:has(.mpcs-radio-unchecked)::after,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-choice .mpcs-quiz-question-options .mpcs-quiz-question-option label:has(.mpcs-checkbox-unchecked)::before,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-choice .mpcs-quiz-question-options .mpcs-quiz-question-option label:has(.mpcs-checkbox-unchecked)::after,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-choice .mpcs-quiz-question-options .mpcs-quiz-question-option label:has(.mpcs-checkbox-checked)::before,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-choice .mpcs-quiz-question-options .mpcs-quiz-question-option label:has(.mpcs-checkbox-checked)::after,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-answer .mpcs-quiz-question-options .mpcs-quiz-question-option label:has(.mpcs-radio-checked)::before,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-answer .mpcs-quiz-question-options .mpcs-quiz-question-option label:has(.mpcs-radio-checked)::after,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-answer .mpcs-quiz-question-options .mpcs-quiz-question-option label:has(.mpcs-radio-unchecked)::before,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-answer .mpcs-quiz-question-options .mpcs-quiz-question-option label:has(.mpcs-radio-unchecked)::after,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-answer .mpcs-quiz-question-options .mpcs-quiz-question-option label:has(.mpcs-checkbox-unchecked)::before,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-answer .mpcs-quiz-question-options .mpcs-quiz-question-option label:has(.mpcs-checkbox-unchecked)::after,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-answer .mpcs-quiz-question-options .mpcs-quiz-question-option label:has(.mpcs-checkbox-checked)::before,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-answer .mpcs-quiz-question-options .mpcs-quiz-question-option label:has(.mpcs-checkbox-checked)::after {
+  display: none;
+}
+
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-true-false .mpcs-quiz-question-options .mpcs-quiz-question-option .mpcs-radio-checked,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-true-false .mpcs-quiz-question-options .mpcs-quiz-question-option .mpcs-radio-unchecked,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-true-false .mpcs-quiz-question-options .mpcs-quiz-question-option .mpcs-checkbox-unchecked,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-true-false .mpcs-quiz-question-options .mpcs-quiz-question-option .mpcs-checkbox-checked,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-choice .mpcs-quiz-question-options .mpcs-quiz-question-option .mpcs-radio-checked,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-choice .mpcs-quiz-question-options .mpcs-quiz-question-option .mpcs-radio-unchecked,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-choice .mpcs-quiz-question-options .mpcs-quiz-question-option .mpcs-checkbox-unchecked,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-choice .mpcs-quiz-question-options .mpcs-quiz-question-option .mpcs-checkbox-checked,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-answer .mpcs-quiz-question-options .mpcs-quiz-question-option .mpcs-radio-checked,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-answer .mpcs-quiz-question-options .mpcs-quiz-question-option .mpcs-radio-unchecked,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-answer .mpcs-quiz-question-options .mpcs-quiz-question-option .mpcs-checkbox-unchecked,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-answer .mpcs-quiz-question-options .mpcs-quiz-question-option .mpcs-checkbox-checked {
+  margin-left: var(--bb-rl-space-50);
+}
+
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-true-false .mpcs-quiz-question-options .mpcs-quiz-question-option input + label i.mpcs-radio-unchecked::before,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-choice .mpcs-quiz-question-options .mpcs-quiz-question-option input + label i.mpcs-radio-unchecked::before,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-answer .mpcs-quiz-question-options .mpcs-quiz-question-option input + label i.mpcs-radio-unchecked::before {
+  content: "";
+  display: inline-flex;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 1px solid var(--bb-rl-border-quaternary-color);
+  background-color: var(--bb-rl-background-color);
+  vertical-align: middle;
+}
+
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-true-false .mpcs-quiz-question-options .mpcs-quiz-question-option input + label i.mpcs-radio-checked::before,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-choice .mpcs-quiz-question-options .mpcs-quiz-question-option input + label i.mpcs-radio-checked::before,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-answer .mpcs-quiz-question-options .mpcs-quiz-question-option input + label i.mpcs-radio-checked::before {
+  content: "";
+  display: inline-flex;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 4px solid var(--bb-rl-background-brand-primary-color);
+  background-color: var(--bb-rl-background-color);
+  vertical-align: middle;
+}
+
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-true-false .mpcs-quiz-question-options .mpcs-quiz-question-option .mpcs-checkbox-unchecked::before,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-choice .mpcs-quiz-question-options .mpcs-quiz-question-option .mpcs-checkbox-unchecked::before,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-answer .mpcs-quiz-question-options .mpcs-quiz-question-option .mpcs-checkbox-unchecked::before {
+  content: "";
+  display: inline-flex;
+  width: 16px;
+  height: 16px;
+  border: 1px solid var(--bb-rl-border-quaternary-color);
+  border-radius: var(--bb-rl-radius-sm);
+  background-color: var(--bb-rl-background-color);
+  vertical-align: middle;
+}
+
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-true-false .mpcs-quiz-question-options .mpcs-quiz-question-option input:checked + label .mpcs-checkbox-checked,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-choice .mpcs-quiz-question-options .mpcs-quiz-question-option input:checked + label .mpcs-checkbox-checked,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-answer .mpcs-quiz-question-options .mpcs-quiz-question-option input:checked + label .mpcs-checkbox-checked {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  background-color: var(--bb-rl-background-brand-primary-color);
+  border-radius: var(--bb-rl-radius-sm);
+}
+
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-true-false .mpcs-quiz-question-options .mpcs-quiz-question-option input:checked + label .mpcs-checkbox-checked::before,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-choice .mpcs-quiz-question-options .mpcs-quiz-question-option input:checked + label .mpcs-checkbox-checked::before,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-answer .mpcs-quiz-question-options .mpcs-quiz-question-option input:checked + label .mpcs-checkbox-checked::before {
+  content: "\e182";
+  display: inline-flex;
+  font-weight: 400;
+  font-family: bb-icons-rl;
+  font-size: 11px;
+  color: var(--bb-rl-text-white-color);
+  font-style: normal;
+  line-height: 1;
+  position: relative;
+  top: -1px;
+}
+
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-true-false .mpcs-quiz-question-options .mpcs-quiz-question-option input:checked + label i.mpcs-radio-checked,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-true-false .mpcs-quiz-question-options .mpcs-quiz-question-option input:checked + label i.mpcs-checkbox-checked,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-true-false .mpcs-quiz-question-options .mpcs-quiz-question-option input:checked + label i.mpcs-radio-checked,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-true-false .mpcs-quiz-question-options .mpcs-quiz-question-option input:checked + label i.mpcs-checkbox-checked,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-choice .mpcs-quiz-question-options .mpcs-quiz-question-option input:checked + label i.mpcs-radio-checked,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-choice .mpcs-quiz-question-options .mpcs-quiz-question-option input:checked + label i.mpcs-checkbox-checked,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-choice .mpcs-quiz-question-options .mpcs-quiz-question-option input:checked + label i.mpcs-radio-checked,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-choice .mpcs-quiz-question-options .mpcs-quiz-question-option input:checked + label i.mpcs-checkbox-checked,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-answer .mpcs-quiz-question-options .mpcs-quiz-question-option input:checked + label i.mpcs-radio-checked,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-answer .mpcs-quiz-question-options .mpcs-quiz-question-option input:checked + label i.mpcs-checkbox-checked,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-answer .mpcs-quiz-question-options .mpcs-quiz-question-option input:checked + label i.mpcs-radio-checked,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-answer .mpcs-quiz-question-options .mpcs-quiz-question-option input:checked + label i.mpcs-checkbox-checked {
+  color: var(--bb-rl-background-brand-primary-color);
+}
+
 .bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-fill-blank .mpcs-fill-blank-field {
   border-bottom: 1px dashed var(--bb-rl-border-secondary-color);
   padding-bottom: 2px;
@@ -2621,4 +2779,13 @@ body[class*="mpcs-course"] .bb-rl-mbprlms-pagination ul li.active a {
 
 .bb-rl-left-panel--memprlms .mpcs-sidebar-back-to-course a i {
   font-size: 16px;
+}
+
+.bb-rl-left-panel--memprlms .mpcs-sidebar-back-to-course a.tile {
+  background-color: var(--bb-rl-background-tertiary-color);
+  color: var(--bb-rl-text-color);
+}
+
+.bb-rl-left-panel--memprlms .mpcs-sidebar-back-to-course a.tile:hover {
+  background-color: var(--bb-rl-background-tertiary-hover-color);
 }

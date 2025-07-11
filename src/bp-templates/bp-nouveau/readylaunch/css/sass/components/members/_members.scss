@@ -257,7 +257,7 @@
 		}
 
 		&.friendship-button.pending_friend.loading i::before {
-		
+
 			@include bb-rl-spinner;
 			@include bb-rl-spinner--sm;
 			margin-right: var(--bb-rl-space-50);
