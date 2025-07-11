@@ -752,6 +752,54 @@ class BB_Activity_Readylaunch {
 			$response_data['comment_form'] = ob_get_clean();
 		}
 
+		if ( ! empty( $response_data['description'] ) ) {
+			$description = $response_data['description'];
+			$modified    = false;
+
+			// Prepare all replacement arrays for single str_replace call.
+			$search_replacements = array();
+			$replace_values      = array();
+
+			// Check for add-activity-description element.
+			if (
+				false !== strpos( $description, 'id="add-activity-description"' ) &&
+				! empty( $response_data['type'] )
+			) {
+				$add_description_text = esc_attr__( 'Add a description', 'buddyboss' );
+
+				// Use single translatable string with placeholder for better performance.
+				$type_image_text = sprintf(
+					/* translators: %s: media type */
+					esc_attr__( 'Type %s description', 'buddyboss' ),
+					esc_attr( $response_data['type'] )
+				);
+
+				$search_replacements[] = 'title="' . $add_description_text . '"';
+				$replace_values[]      = 'title="' . $type_image_text . '"';
+
+				$search_replacements[] = 'placeholder="' . $add_description_text . '"';
+				$replace_values[]      = 'placeholder="' . $type_image_text . '"';
+
+				$modified = true;
+			}
+
+			// Check for submit button element.
+			if ( false !== strpos( $description, 'id="bp-activity-description-new-submit"' ) ) {
+				$done_editing_text = esc_attr__( 'Done Editing', 'buddyboss' );
+				$done_text         = esc_attr__( 'Done', 'buddyboss' );
+
+				$search_replacements[] = 'value="' . $done_editing_text . '"';
+				$replace_values[]      = 'value="' . $done_text . '"';
+
+				$modified = true;
+			}
+
+			// Perform single str_replace with all replacements.
+			if ( $modified && ! empty( $search_replacements ) ) {
+				$response_data['description'] = str_replace( $search_replacements, $replace_values, $description );
+			}
+		}
+
 		return $response_data;
 	}
 

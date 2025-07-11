@@ -1011,6 +1011,7 @@ function bp_nouveau_ajax_video_get_activity() {
 		array(
 			'activity'      => $activity,
 			'video_data'    => $video_data,
+			'type'          => 'video',
 			'reset_comment' => $reset_comment,
 			'activity_id'   => $post_id,
 		)
