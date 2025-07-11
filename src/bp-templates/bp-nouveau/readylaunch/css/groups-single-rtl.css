@@ -1946,7 +1946,9 @@
   color: var(--bb-rl-text-color);
   border: 1px solid transparent;
   padding: 6px var(--bb-rl-space-200);
-  font-size: 0.875rem;
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 400;
+  padding: 4px var(--bb-rl-space-200);
 }
 
 .bb-rl-groups-manage-members-list .bb-rl-group-member-action-button:hover {
@@ -1968,6 +1970,11 @@
   color: var(--bb-rl-text-disabled-color);
   cursor: not-allowed;
   pointer-events: none;
+}
+
+.bb-rl-container .bb-rl-groups-manage-members-list .bb_more_options .bb_more_dropdown {
+  width: auto;
+  min-width: 195px;
 }
 
 .bb-rl-group-invites-dashboard.bb-rl-group-dashboard-panel {
