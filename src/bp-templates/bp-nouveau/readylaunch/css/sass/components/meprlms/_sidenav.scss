@@ -83,6 +83,15 @@
 			i {
 				font-size: 16px;
 			}
+
+			&.tile {
+				background-color: var(--bb-rl-background-tertiary-color);
+				color: var(--bb-rl-text-color);
+
+				&:hover {
+					background-color: var(--bb-rl-background-tertiary-hover-color);
+				}
+			}
 		}
 	}
 }

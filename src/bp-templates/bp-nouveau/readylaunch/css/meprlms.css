@@ -2715,3 +2715,12 @@ body[class*="mpcs-course"] .bb-rl-mbprlms-pagination ul li.active a {
 .bb-rl-left-panel--memprlms .mpcs-sidebar-back-to-course a i {
   font-size: 16px;
 }
+
+.bb-rl-left-panel--memprlms .mpcs-sidebar-back-to-course a.tile {
+  background-color: var(--bb-rl-background-tertiary-color);
+  color: var(--bb-rl-text-color);
+}
+
+.bb-rl-left-panel--memprlms .mpcs-sidebar-back-to-course a.tile:hover {
+  background-color: var(--bb-rl-background-tertiary-hover-color);
+}
