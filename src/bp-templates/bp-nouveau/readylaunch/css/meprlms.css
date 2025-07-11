@@ -2461,7 +2461,7 @@ body[class*="mpcs-course"] .bb-rl-mbprlms-pagination ul li.active a {
   font-style: normal;
   line-height: 1;
   position: relative;
-  top: 0;
+  top: -1px;
 }
 
 .bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-true-false .mpcs-quiz-question-options .mpcs-quiz-question-option input:checked + label i.mpcs-radio-checked,
