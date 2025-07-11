@@ -1702,6 +1702,23 @@
 			}
 		}
 	}
+
+	.bp-generic-meta .generic-button a {
+
+		.reactions_item {
+			color: var(--bb-rl-text-tertiary-color) !important;
+		}
+	}
+}
+
+.bb-rl-acomment-foot-actions {
+
+	.bp-generic-meta .generic-button a {
+
+		.reactions_item {
+			color: var(--bb-rl-text-tertiary-color) !important;
+		}
+	}
 }
 
 .bp-generic-meta {

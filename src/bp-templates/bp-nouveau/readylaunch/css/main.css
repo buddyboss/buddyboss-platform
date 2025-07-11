@@ -15805,6 +15805,14 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   text-decoration: underline;
 }
 
+.bb-rl-activity-footer-actions .bp-generic-meta .generic-button a .reactions_item {
+  color: var(--bb-rl-text-tertiary-color) !important;
+}
+
+.bb-rl-acomment-foot-actions .bp-generic-meta .generic-button a .reactions_item {
+  color: var(--bb-rl-text-tertiary-color) !important;
+}
+
 .bp-generic-meta {
   display: flex;
   align-items: center;
