@@ -55,6 +55,7 @@ class BB_Activity_Readylaunch {
 
 		add_filter( 'bp_nouveau_media_description_response_data', array( $this, 'bb_rl_modify_media_description_response_data' ), 10 );
 		add_filter( 'bp_nouveau_document_description_response_data', array( $this, 'bb_rl_modify_media_description_response_data' ), 10 );
+		add_filter( 'bp_nouveau_video_activity_response_data', array( $this, 'bb_rl_modify_media_description_response_data' ), 10 );
 		add_filter( 'bp_nouveau_video_description_response_data', array( $this, 'bb_rl_modify_media_description_response_data' ), 10 );
 
 		add_filter( 'bp_nouveau_activity_widget_query', array( $this, 'bb_rl_modify_activity_widget_query' ), 10 );

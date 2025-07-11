@@ -205,7 +205,8 @@
 		margin-bottom: var(--bb-rl-space-200);
 	}
 
-	.bp-edit-media-activity-description {
+	.bp-edit-media-activity-description,
+	.bp-edit-video-activity-description {
 		padding-bottom: var(--bb-rl-space-100);
 
 		textarea {

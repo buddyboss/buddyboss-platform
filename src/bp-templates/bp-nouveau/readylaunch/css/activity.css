@@ -4439,11 +4439,13 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   margin-bottom: var(--bb-rl-space-200);
 }
 
-.bb-rl-media-model-container .bp-edit-media-activity-description {
+.bb-rl-media-model-container .bp-edit-media-activity-description,
+.bb-rl-media-model-container .bp-edit-video-activity-description {
   padding-bottom: var(--bb-rl-space-100);
 }
 
-.bb-rl-media-model-container .bp-edit-media-activity-description textarea {
+.bb-rl-media-model-container .bp-edit-media-activity-description textarea,
+.bb-rl-media-model-container .bp-edit-video-activity-description textarea {
   color: var(--bb-rl-text-tertiary-color);
   font-size: 14px;
   font-weight: 400;
