@@ -4185,20 +4185,26 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				return $button;
 			}
 
-			if ( false !== strpos( $button['link_href'], 'remove-friend' ) ) {
+			if ( false !== strpos( $button['link_href'], '/remove-friend/' ) ) {
 				$remove_connection_text = __( 'Remove connection', 'buddyboss' );
 				$button['data-balloon'] = $remove_connection_text;
 				if ( empty( $button['is_tooltips'] ) ) {
 					$button['link_class']               .= ' bb-rl-primary-hover-action';
 					$button['button_attr']['data-hover'] = $remove_connection_text;
 				}
-			}
-			if ( false !== strpos( $button['link_href'], 'requests/cancel' ) ) {
+			} elseif ( false !== strpos( $button['link_href'], '/requests/cancel' ) ) {
 				$cancel_request_text    = __( 'Cancel request', 'buddyboss' );
 				$button['data-balloon'] = $cancel_request_text;
 				if ( empty( $button['is_tooltips'] ) ) {
 					$button['link_class']               .= ' bb-rl-primary-hover-action';
 					$button['button_attr']['data-hover'] = $cancel_request_text;
+				}
+			} elseif ( false !== strpos( $button['link_href'], '/requests/' ) ) {
+				$accept_request_text    = __( 'Review request', 'buddyboss' );
+				$button['data-balloon'] = $accept_request_text;
+				if ( empty( $button['is_tooltips'] ) ) {
+					$button['link_class']               .= ' bb-rl-primary-hover-action';
+					$button['button_attr']['data-hover'] = $accept_request_text;
 				}
 			}
 			return $button;
