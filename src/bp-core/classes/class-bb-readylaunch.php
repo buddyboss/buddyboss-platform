@@ -4194,9 +4194,12 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				}
 			}
 			if ( false !== strpos( $button['link_href'], 'requests/cancel' ) ) {
-				$cancel_request_text                 = __( 'Cancel request', 'buddyboss' );
-				$button['link_text']                 = $cancel_request_text;
-				$button['button_attr']['data-title'] = $cancel_request_text;
+				$cancel_request_text    = __( 'Cancel request', 'buddyboss' );
+				$button['data-balloon'] = $cancel_request_text;
+				if ( empty( $button['is_tooltips'] ) ) {
+					$button['link_class']               .= ' bb-rl-primary-hover-action';
+					$button['button_attr']['data-hover'] = $cancel_request_text;
+				}
 			}
 			return $button;
 		}
