@@ -11256,6 +11256,12 @@ input.bb-rl-zoom-slider::-moz-range-progress {
   content: "\e182";
 }
 
+.bb-rl-member-header-actions button.friendship-button i {
+  max-height: 20px;
+  display: inline-flex;
+  align-items: center;
+}
+
 .bb-rl-primary-actions {
   margin-left: auto;
 }
