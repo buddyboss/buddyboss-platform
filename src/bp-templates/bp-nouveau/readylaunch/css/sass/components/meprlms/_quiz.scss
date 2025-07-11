@@ -207,6 +207,13 @@
 						top: 0;
 					}
 				}
+
+				input:checked + label i.mpcs-radio-checked,
+				input:checked + label i.mpcs-checkbox-checked,
+				input:checked + label i.mpcs-radio-checked,
+				input:checked + label i.mpcs-checkbox-checked {
+					color: var(--bb-rl-icon-brand-secondary-color);
+				}
 			}
 		}
 	}
