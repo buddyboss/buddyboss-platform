@@ -311,6 +311,8 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			}
 
 			add_action( 'bp_template_title', array( $this, 'bb_rl_remove_sso_template_title' ), 0 );
+
+			add_filter( 'bp_nouveau_get_notifications_filters', array( $this, 'bb_rl_modify_notifications_filters' ) );
 		}
 
 		/**
@@ -4219,6 +4221,25 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 */
 		public function bb_rl_remove_sso_template_title() {
 			remove_action( 'bp_template_title', 'BB_SSO::bp_template_title' );
+		}
+
+		/**
+		 * Modify view all option for notifications filter.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $output The output.
+		 *
+		 * @return string The modified output.
+		 */
+		public function bb_rl_modify_notifications_filters( $output ) {
+			$output = str_replace(
+				esc_html__( '- View All -', 'buddyboss' ),
+				esc_html__( 'View All', 'buddyboss' ),
+				$output
+			);
+
+			return $output;
 		}
 	}
 }
