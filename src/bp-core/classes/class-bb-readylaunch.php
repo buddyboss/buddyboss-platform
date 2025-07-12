@@ -309,6 +309,8 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			if ( bp_is_active( 'friends' ) ) {
 				add_filter( 'bp_get_add_friend_button', array( $this, 'bb_rl_modify_add_friend_button' ) );
 			}
+
+			add_action( 'bp_template_title', array( $this, 'bb_rl_remove_sso_template_title' ), 0 );
 		}
 
 		/**
@@ -4208,6 +4210,15 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				}
 			}
 			return $button;
+		}
+
+		/**
+		 * Remove SSO template title.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 */
+		public function bb_rl_remove_sso_template_title() {
+			remove_action( 'bp_template_title', 'BB_SSO::bp_template_title' );
 		}
 	}
 }
