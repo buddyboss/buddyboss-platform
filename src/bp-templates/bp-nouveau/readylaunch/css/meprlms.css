@@ -1695,7 +1695,6 @@ body[class*="mpcs-course"] .bb-rl-mbprlms-pagination ul li.active a {
   align-items: center;
   gap: var(--bb-rl-space-50);
   margin: 0 0 var(--bb-rl-space-100);
-  text-transform: lowercase;
 }
 
 .bb-readylaunch-template .mpcs-sidebar-wrapper .progress-text > span,
