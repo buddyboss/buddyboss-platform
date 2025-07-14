@@ -308,8 +308,10 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 			if ( bp_is_active( 'friends' ) ) {
 				add_filter( 'bp_get_add_friend_button', array( $this, 'bb_rl_modify_add_friend_button' ) );
-				add_filter( 'bp_nouveau_nav_has_count', array( $this, 'bb_rl_modify_nav_has_count' ), 10, 2 );
-				add_filter( 'bp_nouveau_get_nav_count', array( $this, 'bb_rl_modify_nav_get_count' ), 10, 2 );
+				if ( bb_enable_content_counts() ) {
+					add_filter( 'bp_nouveau_nav_has_count', array( $this, 'bb_rl_modify_nav_has_count' ), 10, 2 );
+					add_filter( 'bp_nouveau_get_nav_count', array( $this, 'bb_rl_modify_nav_get_count' ), 10, 2 );
+				}
 			}
 
 			add_action( 'bp_template_title', array( $this, 'bb_rl_remove_sso_template_title' ), 0 );
