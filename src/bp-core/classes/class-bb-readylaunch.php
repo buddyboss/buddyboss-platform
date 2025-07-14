@@ -4241,5 +4241,27 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 			return $output;
 		}
+
+		/**
+		 * Modify member joined date.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $user_registered_date The user registered date.
+		 * @param string $register_date The register date.
+		 *
+		 * @return string The modified user registered date.
+		 */
+		public static function bb_rl_modify_member_joined_date( $user_registered_date, $register_date ) {
+
+			$register_date        = date_i18n( 'd M Y', strtotime( $register_date ) );
+			$user_registered_date = sprintf(
+			/* translators: 1: User joined date. */
+				esc_html__( 'Joined %s', 'buddyboss' ),
+				esc_html( $register_date )
+			);
+
+			return $user_registered_date;
+		}
 	}
 }
