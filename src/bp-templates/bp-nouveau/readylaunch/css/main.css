@@ -19893,6 +19893,11 @@ table.profile-settings tbody td select {
   z-index: 10;
 }
 
+.last-editfield .bb-rl-field-visibility-block .field-visibility-settings {
+  top: initial;
+  bottom: calc(100% + var(--bb-rl-space-100));
+}
+
 .bb-rl-field-visibility-block .field-visibility-settings fieldset {
   margin: 0;
 }

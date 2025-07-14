@@ -424,6 +424,11 @@
 		padding: var(--bb-rl-space-100) 0;
 		z-index: 10;
 
+		.last-editfield & {
+			top: initial;
+			bottom: calc(100% + var(--bb-rl-space-100));
+		}
+
 		fieldset {
 			margin: 0;
 		}
