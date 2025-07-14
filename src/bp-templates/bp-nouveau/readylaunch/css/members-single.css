@@ -1406,6 +1406,59 @@ table.profile-settings tbody td select {
   margin-bottom: var(--bb-rl-space-100);
 }
 
+.bb-rl-account-settings-section .onesignal-user-preference {
+  border: 1px solid var(--bb-rl-border-secondary-color);
+  border-radius: var(--bb-rl-radius-base);
+}
+
+.bb-rl-account-settings-section .onesignal-user-preference .web-notification-toggle .web-notification-icon-text .web-browser-text .web-notification-text {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 22px;
+  color: var(--bb-rl-text-color);
+}
+
+.bb-rl-account-settings-section .onesignal-user-preference .web-notification-toggle .web-notification-icon-text .web-browser-text .web-notification-icon.chrome {
+  background-image: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bb-rl-account-settings-section .onesignal-user-preference .web-notification-toggle .web-notification-icon-text .web-browser-text .web-notification-icon.chrome::before {
+  content: "\e976";
+  font-family: "bb-icons-rl";
+  font-size: 18px;
+  color: var(--bb-rl-icon-primary-color);
+  line-height: 1;
+}
+
+.bb-rl-account-settings-section .onesignal-user-preference .web-notification-toggle .web-notification-icon-text p {
+  font-size: var(--bb-rl-font-size-xs);
+  font-weight: 500;
+  line-height: var(--bb-rl-base-line-xs);
+  font-weight: 400;
+  color: var(--bb-rl-text-secondary-color);
+  padding-left: 26px;
+}
+
+.bb-rl-account-settings-section .onesignal-user-preference .web-notification-field .slider {
+  background-color: var(--bb-rl-background-color);
+  border-color: var(--bb-rl-background-brand-primary-color);
+}
+
+.bb-rl-account-settings-section .onesignal-user-preference .web-notification-field .slider:before {
+  background-color: var(--bb-rl-background-brand-primary-color);
+}
+
+.bb-rl-account-settings-section .onesignal-user-preference .web-notification-field input:checked + .slider {
+  background-color: var(--bb-rl-background-brand-primary-color);
+}
+
+.bb-rl-account-settings-section .onesignal-user-preference .web-notification-field input:checked + .slider:before {
+  background-color: var(--bb-rl-background-color);
+}
+
 @media screen and (min-width: 800px) {
   .bb-rl-account-settings-section .main-notification-settings .bb-mobile-setting {
     display: none;

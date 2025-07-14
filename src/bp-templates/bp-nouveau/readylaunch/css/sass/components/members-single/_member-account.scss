@@ -76,6 +76,63 @@
 		}
 	}
 
+	.onesignal-user-preference {
+		border: 1px solid var(--bb-rl-border-secondary-color);
+		border-radius: var(--bb-rl-radius-base);
+
+		.web-notification-toggle .web-notification-icon-text {
+
+			.web-browser-text {
+
+				.web-notification-text {
+
+					@include bb-rl-label-heading-md;
+					color: var(--bb-rl-text-color);
+				}
+
+				.web-notification-icon.chrome {
+					background-image: none;
+					display: inline-flex;
+					align-items: center;
+					justify-content: center;
+
+					&::before {
+						content: "\e976";
+						font-family: "bb-icons-rl";
+						font-size: 18px;
+						color: var(--bb-rl-icon-primary-color);
+						line-height: 1;
+					}
+				}
+			}
+
+			p {
+
+				@include bb-rl-label-heading-xs;
+				font-weight: 400;
+				color: var(--bb-rl-text-secondary-color);
+				padding-left: 26px;
+			}
+		}
+
+		.web-notification-field .slider {
+			background-color: var(--bb-rl-background-color);
+			border-color: var(--bb-rl-background-brand-primary-color);
+
+			&:before {
+				background-color: var(--bb-rl-background-brand-primary-color);
+			}
+		}
+
+		.web-notification-field input:checked + .slider {
+			background-color: var(--bb-rl-background-brand-primary-color);
+
+			&:before {
+				background-color: var(--bb-rl-background-color);
+			}
+		}
+	}
+
 	@media screen and (min-width: $md) {
 
 		.main-notification-settings .bb-mobile-setting {
