@@ -308,10 +308,6 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 			if ( bp_is_active( 'friends' ) ) {
 				add_filter( 'bp_get_add_friend_button', array( $this, 'bb_rl_modify_add_friend_button' ) );
-				if ( bb_enable_content_counts() ) {
-					add_filter( 'bp_nouveau_nav_has_count', array( $this, 'bb_rl_modify_nav_has_count' ), 10, 2 );
-					add_filter( 'bp_nouveau_get_nav_count', array( $this, 'bb_rl_modify_nav_get_count' ), 10, 2 );
-				}
 			}
 
 			add_action( 'bp_template_title', array( $this, 'bb_rl_remove_sso_template_title' ), 0 );
@@ -319,6 +315,11 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			add_filter( 'bp_nouveau_get_notifications_filters', array( $this, 'bb_rl_modify_notifications_filters' ) );
 
 			add_filter( 'bp_moderation_user_report_button', array( $this, 'bb_rl_modify_member_report_button' ), 10 );
+
+			if ( bb_enable_content_counts() ) {
+				add_filter( 'bp_nouveau_nav_has_count', array( $this, 'bb_rl_modify_nav_has_count' ), 10, 2 );
+				add_filter( 'bp_nouveau_get_nav_count', array( $this, 'bb_rl_modify_nav_get_count' ), 10, 2 );
+			}
 		}
 
 		/**
@@ -4305,9 +4306,18 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			}
 
 			if (
-				'my-friends' === $nav_item->slug ||
-				'requests' === $nav_item->slug ||
-				'mutual' === $nav_item->slug
+				(
+					bp_is_active( 'friends' ) &&
+					(
+						'my-friends' === $nav_item->slug ||
+						'requests' === $nav_item->slug ||
+						'mutual' === $nav_item->slug
+					)
+				) ||
+				(
+					bp_is_active( 'groups' ) &&
+					'my-groups' === $nav_item->slug
+				)
 			) {
 				return true;
 			}
@@ -4330,14 +4340,21 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				return $count;
 			}
 
-			if ( 'my-friends' === $nav_item->slug ) {
-				$count = friends_get_total_friend_count();
-			} elseif ( 'requests' === $nav_item->slug ) {
-				$count = bp_friend_get_total_requests_count();
-			} elseif ( 'mutual' === $nav_item->slug ) {
-				$mutual_friendships_ids      = bp_get_mutual_friendships();
-				$mutual_friendships_exploded = ! empty( $mutual_friendships_ids ) ? explode( ',', $mutual_friendships_ids ) : array();
-				$count                       = ! empty( $mutual_friendships_exploded ) ? count( $mutual_friendships_exploded ) : 0;
+			if ( bp_is_active( 'friends' ) ) {
+				if ( 'my-friends' === $nav_item->slug ) {
+					$count = friends_get_total_friend_count();
+				} elseif ( 'requests' === $nav_item->slug ) {
+					$count = bp_friend_get_total_requests_count();
+				} elseif ( 'mutual' === $nav_item->slug ) {
+					$mutual_friendships_ids      = bp_get_mutual_friendships();
+					$mutual_friendships_exploded = ! empty( $mutual_friendships_ids ) ? explode( ',', $mutual_friendships_ids ) : array();
+					$count                       = ! empty( $mutual_friendships_exploded ) ? count( $mutual_friendships_exploded ) : 0;
+				}
+			}
+			if ( bp_is_active( 'groups' ) ) {
+				if ( 'my-groups' === $nav_item->slug ) {
+					$count = bp_get_total_group_count_for_user( bp_loggedin_user_id() );
+				}
 			}
 
 			return $count;
