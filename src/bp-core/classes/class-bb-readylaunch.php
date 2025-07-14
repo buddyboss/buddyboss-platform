@@ -313,6 +313,8 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			add_action( 'bp_template_title', array( $this, 'bb_rl_remove_sso_template_title' ), 0 );
 
 			add_filter( 'bp_nouveau_get_notifications_filters', array( $this, 'bb_rl_modify_notifications_filters' ) );
+
+			add_filter( 'bp_moderation_user_report_button', array( $this, 'bb_rl_modify_member_report_button' ), 10 );
 		}
 
 		/**
@@ -4262,6 +4264,25 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			);
 
 			return $user_registered_date;
+		}
+
+		/**
+		 * Modify member report button.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array $button The button.
+		 *
+		 * @return array The modified button.
+		 */
+		public function bb_rl_modify_member_report_button( $button ) {
+			if ( empty( $button['link_text'] ) ) {
+				return $button;
+			}
+
+			$button['link_text'] = str_replace( __( 'Report Member', 'buddyboss' ), __( 'Report', 'buddyboss' ), $button['link_text'] );
+
+			return $button;
 		}
 	}
 }
