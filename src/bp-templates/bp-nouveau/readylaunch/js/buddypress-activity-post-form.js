@@ -5792,19 +5792,20 @@ window.bp = window.bp || {};
 								)
 							)
 						) {
-							var $whatsNew = $( '#bb-rl-whats-new' );
-							if( $whatsNew.data('emojioneArea') ) {
+							var $bbRlWhatNew     = $( '#bb-rl-whats-new' );
+							var $bbRlWhatNewForm = $( '#bb-rl-whats-new-form' );
+							if( $bbRlWhatNew.data('emojioneArea') ) {
 								// Clean up the existing instance
-								var emojiContainer = $whatsNew.closest('form').find('.bb-rl-post-emoji');
+								var emojiContainer = $bbRlWhatNew.closest('form').find('.bb-rl-post-emoji');
 
 								// Remove the emojioneArea instance
-								delete $whatsNew[0].emojioneArea;
+								delete $bbRlWhatNew[0].emojioneArea;
 
 								// Clean up the container
 								emojiContainer.empty();
 							}
 
-							$whatsNew.emojioneArea(
+							$bbRlWhatNew.emojioneArea(
 								{
 									standalone: true,
 									hideSource: false,
@@ -5815,7 +5816,7 @@ window.bp = window.bp || {};
 									useInternalCDN: false,
 									events: {
 										emojibtn_click: function () {
-											$whatsNew[0].emojioneArea.hidePicker();
+											$bbRlWhatNew[0].emojioneArea.hidePicker();
 											if ( window.getSelection && document.createRange ) { // Get caret position when user adds emoji.
 												var sel = window.getSelection && window.getSelection();
 												if ( sel && sel.rangeCount > 0 ) {
@@ -5826,7 +5827,7 @@ window.bp = window.bp || {};
 											}
 
 											// Enable post submit button.
-											$whatsNewForm.removeClass( 'bb-rl-focus-in--empty' );
+											$bbRlWhatNewForm.removeClass( 'bb-rl-focus-in--empty' );
 										},
 
 										picker_show: function () {
