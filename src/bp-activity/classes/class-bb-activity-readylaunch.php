@@ -61,6 +61,8 @@ class BB_Activity_Readylaunch {
 		add_filter( 'bp_nouveau_activity_widget_query', array( $this, 'bb_rl_modify_activity_widget_query' ), 10 );
 
 		add_filter( 'bp_get_add_follow_button', array( $this, 'bb_rl_modify_add_follow_button' ) );
+
+		add_filter( 'bb_nouveau_get_activity_entry_bubble_buttons', array( $this, 'bb_rl_modify_activity_entry_bubble_buttons' ) );
 	}
 
 	/**
@@ -863,5 +865,39 @@ class BB_Activity_Readylaunch {
 		}
 
 		return $button;
+	}
+
+	/**
+	 * Modify the media activity entry bubble buttons.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $buttons The buttons.
+	 *
+	 * @return array The modified buttons.
+	 */
+	public function bb_rl_modify_activity_entry_bubble_buttons( $buttons ) {
+		if ( empty( $buttons ) ) {
+			return $buttons;
+		}
+
+		$replace_text = array();
+		if ( ! empty( $buttons['activity_document_download'] ) ) {
+			$replace_text['activity_document_download'] = esc_html__( 'Download document', 'buddyboss' );
+		}
+		if ( ! empty( $buttons['activity_media_download'] ) ) {
+			$replace_text['activity_media_download'] = esc_html__( 'Download photo', 'buddyboss' );
+		}
+		if ( ! empty( $buttons['activity_video_download'] ) ) {
+			$replace_text['activity_video_download'] = esc_html__( 'Download video', 'buddyboss' );
+		}
+
+		if ( ! empty( $replace_text ) ) {
+			foreach ( $replace_text as $button_key => $replacement_text ) {
+				$buttons[ $button_key ]['link_text'] = str_replace( esc_html__( 'Download', 'buddyboss' ), $replacement_text, $buttons[ $button_key ]['link_text'] );
+			}
+		}
+
+		return $buttons;
 	}
 }
