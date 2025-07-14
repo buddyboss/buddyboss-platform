@@ -17,9 +17,6 @@ defined( 'ABSPATH' ) || exit;
 <div class="bb-rl-container-inner bb-rl-profile-container">
 	<div class="bb-rl-members-directory-container">
 		<div class="screen-content bb-rl-members-directory-content bb-rl-members">
-
-			<h2 class="screen-heading friendship-requests-screen"><?php esc_html_e( 'Requests to Connect', 'buddyboss' ); ?></h2>
-
 			<?php
 			bp_nouveau_member_hook( 'before', 'friend_requests_content' );
 
