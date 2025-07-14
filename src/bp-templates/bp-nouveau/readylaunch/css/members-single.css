@@ -960,6 +960,10 @@
   margin-bottom: var(--bb-rl-space-50);
 }
 
+.bb-rl-profile-edit-wrapper .editfield {
+  margin-bottom: var(--bb-rl-space-100);
+}
+
 .bb-rl-profile-edit-wrapper #profile-group-edit-submit {
   display: inline-flex;
   align-items: center;

@@ -27,6 +27,10 @@
 		}
 	}
 
+	.editfield {
+		margin-bottom: var(--bb-rl-space-100);
+	}
+
 	#profile-group-edit-submit {
 
 		@include bb-rl-button;
