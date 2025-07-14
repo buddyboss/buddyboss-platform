@@ -1789,6 +1789,10 @@
   background-color: var(--bb-rl-background-secondary-color);
 }
 
+.bb-rl-group-manage-form .bb-zoom-setting-tab .bb-zoom-setting-tabs li a:hover {
+  color: var(--bb-rl-text-color);
+}
+
 .bb-rl-group-manage-form .bb-zoom-setting-tab .bb-zoom-setting-description {
   margin-bottom: var(--bb-rl-space-200);
 }

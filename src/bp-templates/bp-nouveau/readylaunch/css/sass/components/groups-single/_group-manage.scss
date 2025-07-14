@@ -858,6 +858,10 @@
 					color: var(--bb-rl-text-color);
 					background-color: var(--bb-rl-background-secondary-color);
 				}
+
+				&:hover {
+					color: var(--bb-rl-text-color);
+				}
 			}
 		}
 
