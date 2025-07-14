@@ -752,6 +752,14 @@ window.bp = window.bp || {};
 						} else {
 							$( data.target ).parent().addClass( 'has-content' );
 						}
+						var schedulePostCount = $( '.bb-view-schedule-posts_modal .bb-rl-schedule-post-count' );
+						if (
+							schedulePostCount.length &&
+							! _.isUndefined( response.data.count ) &&
+							response.data.count > 0
+						) {
+							schedulePostCount.text( '(' + response.data.count + ')' );
+						}
 					}
 
 					if ( ! _.isUndefined( response.data.layout ) ) {

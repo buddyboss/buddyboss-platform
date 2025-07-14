@@ -63,6 +63,8 @@ class BB_Activity_Readylaunch {
 		add_filter( 'bp_get_add_follow_button', array( $this, 'bb_rl_modify_add_follow_button' ) );
 
 		add_filter( 'bb_nouveau_get_activity_entry_bubble_buttons', array( $this, 'bb_rl_modify_activity_entry_bubble_buttons' ) );
+
+		add_filter( 'bp_nouveau_object_template_result', array( $this, 'bb_rl_modify_object_template_result' ), 10, 2 );
 	}
 
 	/**
@@ -899,5 +901,44 @@ class BB_Activity_Readylaunch {
 		}
 
 		return $buttons;
+	}
+
+	/**
+	 * Add the scheduled posts count to the object template result.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array  $result          The result.
+	 * @param string $template_object The object.
+	 *
+	 * @return array The modified result.
+	 */
+	public function bb_rl_modify_object_template_result( $result, $template_object ) {
+		if ( 'activity' === $template_object ) {
+			// phpcs:disable WordPress.Security.NonceVerification.Missing
+			$status   = isset( $_POST['status'] ) ? sanitize_text_field( wp_unslash( $_POST['status'] ) ) : '';
+			$template = isset( $_POST['template'] ) ? sanitize_text_field( wp_unslash( $_POST['template'] ) ) : '';
+
+			if ( 'scheduled' === $status && 'activity_schedule' === $template ) {
+				$args = array(
+					'user_id'     => bp_loggedin_user_id(),
+					'status'      => $status,
+					'count_total' => true,
+					'fields'      => 'ids',
+					'per_page'    => 1,
+					'scope'       => '',
+				);
+				if ( bp_is_active( 'groups' ) && bp_is_group() ) {
+					$args['filter']['object'] = 'groups';
+				} else {
+					$args['filter']['object'] = 'activity';
+				}
+
+				$scheduled_posts = bp_activity_get( $args );
+				$result['count'] = ! empty( $scheduled_posts['total'] ) ? bp_core_number_format( $scheduled_posts['total'] ) : 0;
+			}
+		}
+
+		return $result;
 	}
 }
