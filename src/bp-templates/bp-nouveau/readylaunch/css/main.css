@@ -17657,6 +17657,10 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   background-color: var(--bb-rl-background-secondary-color);
 }
 
+.bb-rl-activity-list .activity-state-popup .activity-state-popup_tab .activity-state-popup_tab_panel .bb-rl-all-reaction-count {
+  margin-left: var(--bb-rl-space-50);
+}
+
 .bb-rl-activity-list .activity-state-popup .activity-state-popup_tab .activity-state-popup_tab_item {
   display: none;
 }
