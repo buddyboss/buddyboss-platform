@@ -1,0 +1,287 @@
+/* ==========================================================================
+   ReadyLaunch Onboarding Modal Styles (SCSS)
+   ========================================================================== */
+
+// Variables
+$primary-color: #0073aa;
+$secondary-color: #f0f0f1;
+$text-color: #1e1e1e;
+$border-color: #ddd;
+$white: #ffffff;
+$overlay-color: rgba(0, 0, 0, 0.8);
+$border-radius: 8px;
+$transition: all 0.3s ease;
+
+// Overlay
+.bb-rl-onboarding-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: $overlay-color;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999999;
+    padding: 20px;
+}
+
+// Modal
+.bb-rl-onboarding-modal {
+    background: $white;
+    border-radius: $border-radius;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    max-width: 1200px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+// Header
+.bb-rl-onboarding-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px 32px;
+    border-bottom: 1px solid $border-color;
+    
+    .bb-rl-logo {
+        img {
+            height: 32px;
+            width: auto;
+        }
+    }
+    
+    .bb-rl-close-button {
+        background: none;
+        border: none;
+        font-size: 18px;
+        cursor: pointer;
+        color: #666;
+        padding: 8px;
+        border-radius: 4px;
+        
+        &:hover {
+            background: #f0f0f0;
+            color: #000;
+        }
+        
+        .dashicons {
+            font-size: 20px;
+        }
+    }
+}
+
+// Content
+.bb-rl-onboarding-content {
+    padding: 40px 32px;
+}
+
+.bb-rl-onboarding-title {
+    text-align: center;
+    margin-bottom: 40px;
+    
+    h1 {
+        font-size: 32px;
+        font-weight: 600;
+        color: $text-color;
+        margin: 0 0 12px 0;
+        line-height: 1.2;
+    }
+    
+    .bb-rl-subtitle {
+        font-size: 16px;
+        color: #666;
+        margin: 0;
+        line-height: 1.5;
+    }
+}
+
+// Options container
+.bb-rl-onboarding-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    margin-bottom: 20px;
+    
+    @media (max-width: 768px) {
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+}
+
+// Option cards
+.bb-rl-option-card {
+    background: $white;
+    border: 2px solid $border-color;
+    border-radius: $border-radius;
+    padding: 32px;
+    text-align: center;
+    transition: $transition;
+    
+    &:hover {
+        border-color: $primary-color;
+        box-shadow: 0 4px 12px rgba(0, 115, 170, 0.15);
+    }
+    
+    .bb-rl-option-header {
+        margin-bottom: 24px;
+        
+        h3 {
+            font-size: 24px;
+            font-weight: 600;
+            color: $text-color;
+            margin: 0 0 8px 0;
+        }
+        
+        .bb-rl-option-subtitle {
+            font-size: 14px;
+            color: #666;
+            margin: 0;
+            font-weight: 500;
+        }
+    }
+    
+    .bb-rl-option-preview {
+        margin-bottom: 24px;
+        
+        img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 6px;
+            border: 1px solid $border-color;
+        }
+    }
+    
+    .bb-rl-option-description {
+        font-size: 14px;
+        color: #666;
+        line-height: 1.6;
+        margin-bottom: 20px;
+    }
+    
+    .bb-rl-option-features {
+        margin-bottom: 24px;
+        
+        .bb-rl-feature {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 8px;
+            
+            .bb-rl-feature-icon {
+                color: #00a32a;
+                margin-right: 8px;
+                font-weight: bold;
+            }
+        }
+    }
+    
+    .bb-rl-option-button {
+        width: 100%;
+        padding: 12px 24px;
+        border-radius: 6px;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: $transition;
+        margin-bottom: 12px;
+        
+        &:last-child {
+            margin-bottom: 0;
+        }
+        
+        &.bb-rl-button-primary {
+            background: #e57e3a;
+            color: $white;
+            border: 2px solid #e57e3a;
+            
+            &:hover {
+                background: #d4722f;
+                border-color: #d4722f;
+            }
+        }
+        
+        &.bb-rl-button-secondary {
+            background: transparent;
+            color: #666;
+            border: 2px solid #ddd;
+            
+            &:hover {
+                background: #f5f5f5;
+                border-color: #999;
+            }
+        }
+    }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+    .bb-rl-onboarding-modal {
+        margin: 10px;
+        max-height: calc(100vh - 20px);
+    }
+    
+    .bb-rl-onboarding-header {
+        padding: 20px;
+    }
+    
+    .bb-rl-onboarding-content {
+        padding: 30px 20px;
+    }
+    
+    .bb-rl-onboarding-title {
+        h1 {
+            font-size: 26px;
+        }
+    }
+    
+    .bb-rl-option-card {
+        padding: 24px;
+        
+        .bb-rl-option-header h3 {
+            font-size: 20px;
+        }
+        
+        .bb-rl-option-preview img {
+            height: 150px;
+        }
+    }
+}
+
+@media (max-width: 480px) {
+    .bb-rl-onboarding-title {
+        h1 {
+            font-size: 22px;
+        }
+        
+        .bb-rl-subtitle {
+            font-size: 14px;
+        }
+    }
+    
+    .bb-rl-option-card {
+        padding: 20px;
+        
+        .bb-rl-option-preview img {
+            height: 120px;
+        }
+    }
+}

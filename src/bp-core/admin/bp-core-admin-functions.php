@@ -452,6 +452,12 @@ function bp_do_activation_redirect() {
 		}
 		update_user_option( bp_loggedin_user_id(), 'metaboxhidden_nav-menus', $get_existing_option ); // update the user metaboxes.
 	}
+
+	// If this is a new install, redirect to admin with onboarding parameters
+	if ( ! empty( $query_args['is_new_install'] ) ) {
+		wp_safe_redirect( bp_get_admin_url( add_query_arg( $query_args, 'admin.php?page=bp-components' ) ) );
+		exit;
+	}
 }
 
 /**

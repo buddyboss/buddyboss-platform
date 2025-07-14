@@ -16,27 +16,55 @@ if (cssRuleIndex !== -1) {
     rules[cssRuleIndex] = cssRule;
 }
 
-module.exports = {
-    ...defaultConfig,
-    entry: {
-        'index': path.resolve(__dirname, 'readylaunch/index.js'),
+module.exports = [
+    // ReadyLaunch configuration
+    {
+        ...defaultConfig,
+        entry: {
+            'index': path.resolve(__dirname, 'readylaunch/index.js'),
+        },
+        output: {
+            path: path.resolve(__dirname, '../../bp-core/admin/bb-settings/readylaunch/build'),
+            filename: '[name].js',
+        },
+        module: {
+            ...defaultConfig.module,
+            rules: [
+                ...rules,
+                {
+                    test: /\.scss$/,
+                    use: [
+                        'style-loader',
+                        'css-loader',
+                        'sass-loader',
+                    ],
+                },
+            ],
+        },
     },
-    output: {
-        path: path.resolve(__dirname, '../../bp-core/admin/bb-settings/readylaunch/build'),
-        filename: '[name].js',
-    },
-    module: {
-        ...defaultConfig.module,
-        rules: [
-            ...rules,
-            {
-                test: /\.scss$/,
-                use: [
-                    'style-loader',
-                    'css-loader',
-                    'sass-loader',
-                ],
-            },
-        ],
-    },
-}; 
+    // RL Onboarding configuration
+    {
+        ...defaultConfig,
+        entry: {
+            'rl-onboarding': path.resolve(__dirname, 'rl-onboarding/onboarding.js'),
+        },
+        output: {
+            path: path.resolve(__dirname, '../../bp-core/admin/bb-settings/rl-onboarding/build'),
+            filename: '[name].js',
+        },
+        module: {
+            ...defaultConfig.module,
+            rules: [
+                ...rules,
+                {
+                    test: /\.scss$/,
+                    use: [
+                        'style-loader',
+                        'css-loader',
+                        'sass-loader',
+                    ],
+                },
+            ],
+        },
+    }
+]; 
