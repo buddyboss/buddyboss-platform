@@ -4375,9 +4375,18 @@ window.bp = window.bp || {};
 						! _.isUndefined( BP_Nouveau.activity.params.topics.topic_lists )
 					) {
 						var topic_lists = BP_Nouveau.activity.params.topics.topic_lists;
-						this.model.set( 'topics', {
-							topic_lists : topic_lists
-						} );
+
+						var topicData = {
+							topic_lists : topic_lists,
+						};
+						if ( this.model.get( 'topics' ) && this.model.get( 'topics' ).topic_id ) {
+							topicData.topic_id = this.model.get( 'topics' ).topic_id;
+						}
+						if ( this.model.get( 'topics' ) && this.model.get( 'topics' ).topic_name ) {
+							topicData.topic_name = this.model.get( 'topics' ).topic_name;
+						}
+						this.model.set( 'topics', topicData );
+
 						if ( topic_lists.length > 0 ) {
 							$( '.whats-new-topic-selector' ).removeClass( 'bp-hide' );
 						} else {
