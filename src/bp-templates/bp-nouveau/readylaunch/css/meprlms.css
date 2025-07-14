@@ -1670,6 +1670,11 @@ body[class*="mpcs-course"] .bb-rl-mbprlms-pagination ul li.active a {
   order: 99;
 }
 
+.bb-rl-course-content-module#mpcs-main {
+  background-color: transparent;
+  padding: 0;
+}
+
 .bb-readylaunch-template .mpcs-sidebar-wrapper .progress-bar,
 .mpcs-classroom.bb-readylaunch-template .mpcs-sidebar-wrapper .progress-bar {
   height: var(--bb-rl-space-100);
