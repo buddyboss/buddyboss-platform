@@ -5780,6 +5780,67 @@ window.bp = window.bp || {};
 
 				this.updateMultiMediaOptions();
 
+				// Reinitialize emoji.
+				if ( ! _.isUndefined( bbRlMedia ) &&
+							! _.isUndefined( bbRlMedia.emoji ) &&
+							(
+								(
+									! _.isUndefined( bbRlMedia.emoji.profile ) && bbRlMedia.emoji.profile
+								) ||
+								(
+									! _.isUndefined( bbRlMedia.emoji.groups ) && bbRlMedia.emoji.groups
+								)
+							)
+						) {
+							var $whatsNew = $( '#bb-rl-whats-new' );
+							if( $whatsNew.data('emojioneArea') ) {
+								// Clean up the existing instance
+								var emojiContainer = $whatsNew.closest('form').find('.bb-rl-post-emoji');
+
+								// Remove the emojioneArea instance
+								delete $whatsNew[0].emojioneArea;
+
+								// Clean up the container
+								emojiContainer.empty();
+							}
+
+							$whatsNew.emojioneArea(
+								{
+									standalone: true,
+									hideSource: false,
+									container: '#bb-rl-whats-new-toolbar .bb-rl-post-emoji',
+									autocomplete: false,
+									pickerPosition: 'top',
+									hidePickerOnBlur: true,
+									useInternalCDN: false,
+									events: {
+										emojibtn_click: function () {
+											$whatsNew[0].emojioneArea.hidePicker();
+											if ( window.getSelection && document.createRange ) { // Get caret position when user adds emoji.
+												var sel = window.getSelection && window.getSelection();
+												if ( sel && sel.rangeCount > 0 ) {
+													window.activityCaretPosition = sel.getRangeAt( 0 );
+												}
+											} else {
+												window.activityCaretPosition = document.selection.createRange();
+											}
+
+											// Enable post submit button.
+											$whatsNewForm.removeClass( 'bb-rl-focus-in--empty' );
+										},
+
+										picker_show: function () {
+											$( this.button[0] ).closest( '.bb-rl-post-emoji' ).addClass( 'active' );
+										},
+
+										picker_hide: function () {
+											$( this.button[0] ).closest( '.bb-rl-post-emoji' ).removeClass( 'active' );
+										},
+									}
+								}
+							);
+						}
+
 				// Delete the activity from the database.
 				bp.Nouveau.Activity.postForm.resetDraftActivity( true );
 			},
