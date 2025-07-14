@@ -1121,6 +1121,11 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   position: relative;
 }
 
+.bb-rl-ac-topic-required .bb-rl-activity-form.bb-rl-focus-in #whats-new-submit:hover:not(:has(#bb-rl-aw-whats-new-reset:hover)) .bb-topic-tooltip-wrapper {
+  opacity: 1;
+  cursor: default;
+}
+
 .bb-rl-activity-form.bb-rl-focus-in .bb-rl-button {
   font-size: 0.85rem;
 }

@@ -339,6 +339,14 @@
 			flex-flow: row-reverse;
 			gap: var(--bb-rl-space-100);
 			position: relative;
+
+			&:hover:not(:has(#bb-rl-aw-whats-new-reset:hover)) .bb-topic-tooltip-wrapper {
+
+				.bb-rl-ac-topic-required & {
+					opacity: 1;
+					cursor: default;
+				}
+			}
 		}
 
 		.bb-rl-button {

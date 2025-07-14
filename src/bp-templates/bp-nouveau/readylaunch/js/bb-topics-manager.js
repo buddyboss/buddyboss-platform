@@ -896,8 +896,7 @@ window.bp = window.bp || {};
 		addFrontendListeners : function () {
 			if ( BBTopicsManager.isEnabledActivityTopic ) {
 				if ( this.isActivityTopicRequired ) {
-					this.$document.on( 'mouseenter focus', '#whats-new-submit', this.showTopicTooltip.bind( this ) );
-					this.$document.on( 'mouseleave blur', '#whats-new-submit', this.hideTopicTooltip.bind( this ) );
+					$( 'body' ).addClass( 'bb-rl-ac-topic-required' );
 				}
 
 				if ( BBTopicsManager.isActivityTopicRequired ) {
@@ -921,20 +920,6 @@ window.bp = window.bp || {};
 				$( window ).on( 'hashchange', this.handleBrowserNavigation.bind( this ) );
 				$( window ).on( 'popstate', this.handleBrowserNavigation.bind( this ) );
 			}
-		},
-
-		showTopicTooltip : function ( event ) {
-			var $wrapper = $( event.currentTarget ),
-				$postBtn = $wrapper.closest( '#whats-new-submit' );
-
-			if ( $postBtn.closest( '.bb-rl-focus-in--empty' ).length > 0 ) {
-				$postBtn.find( '.bb-topic-tooltip-wrapper' ).addClass( 'active' ).show();
-			}
-
-		},
-
-		hideTopicTooltip : function () {
-			$( '.bb-topic-tooltip-wrapper' ).removeClass( 'active' ).hide();
 		},
 
 		topicActivityFilter : function ( event ) {
