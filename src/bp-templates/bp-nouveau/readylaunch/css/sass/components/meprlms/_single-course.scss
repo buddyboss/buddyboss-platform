@@ -352,6 +352,7 @@
 	.mpcs-section.mpcs-section-lessons .mpcs-section-title {
 		margin: 0;
 		padding: 0;
+		background-color: transparent;
 	}
 
 	.mpcs-section.mpcs-section-lessons .mpcs-section-title .mpcs-section-title-text {
@@ -591,6 +592,18 @@
 	}
 }
 
+.mpcs-course-with-accordion .bb-rl-course-content {
+
+	#mpcs-main .mpcs-section.mpcs-resource-section:last-of-type {
+		margin-bottom: var(--bb-rl-space-200);
+	}
+
+	.mpcs-resource-section:not(:last-of-type),
+	#mpcs-main .mpcs-resource-section:not(:last-of-type) {
+		margin-bottom: var(--bb-rl-space-200);
+	}
+}
+
 .bb-rl-course-content {
 
 	.mpcs-section.mpcs-resource-section {
@@ -706,6 +719,10 @@
 
 				&:hover {
 					background-color: transparent;
+				}
+
+				&:focus {
+					box-shadow: none;
 				}
 
 				+ .mpcs-lesson-row-link {

@@ -242,6 +242,16 @@
   padding: var(--bb-rl-space-100);
 }
 
+.bb-rl-widget-sidebar-menu .mpcs-sidebar-grades,
+.mpcs-classroom .bb-rl-widget-sidebar-menu .mpcs-sidebar-grades,
+.bb-rl-left-panel--memprlms .mpcs-sidebar-grades,
+.mpcs-classroom .bb-rl-left-panel--memprlms .mpcs-sidebar-wrapper .mpcs-sidebar-grades {
+  padding: 0;
+  border: 0;
+  background-color: transparent;
+  border-radius: 0;
+}
+
 .bb-rl-widget-sidebar-menu a,
 .bb-rl-widget-sidebar-menu .mpcs-grades-menu,
 .bb-rl-widget-sidebar-menu .mepr-resources,
@@ -276,6 +286,21 @@
 .mpcs-classroom .bb-rl-left-panel--memprlms .mpcs-sidebar-wrapper .mpcs-grades-menu:hover,
 .mpcs-classroom .bb-rl-left-panel--memprlms .mpcs-sidebar-wrapper .mepr-resources:hover {
   background-color: var(--bb-rl-background-secondary-hover-color);
+}
+
+.bb-rl-widget-sidebar-menu a:focus,
+.bb-rl-widget-sidebar-menu .mpcs-grades-menu:focus,
+.bb-rl-widget-sidebar-menu .mepr-resources:focus,
+.mpcs-classroom .bb-rl-widget-sidebar-menu a:focus,
+.mpcs-classroom .bb-rl-widget-sidebar-menu .mpcs-grades-menu:focus,
+.mpcs-classroom .bb-rl-widget-sidebar-menu .mepr-resources:focus,
+.bb-rl-left-panel--memprlms a:focus,
+.bb-rl-left-panel--memprlms .mpcs-grades-menu:focus,
+.bb-rl-left-panel--memprlms .mepr-resources:focus,
+.mpcs-classroom .bb-rl-left-panel--memprlms .mpcs-sidebar-wrapper a:focus,
+.mpcs-classroom .bb-rl-left-panel--memprlms .mpcs-sidebar-wrapper .mpcs-grades-menu:focus,
+.mpcs-classroom .bb-rl-left-panel--memprlms .mpcs-sidebar-wrapper .mepr-resources:focus {
+  box-shadow: none;
 }
 
 .bb-rl-widget-sidebar-menu a .tile-icon,
@@ -326,6 +351,21 @@
   margin: 0;
 }
 
+.bb-rl-widget-sidebar-menu a .tile-content:not(:first-child),
+.bb-rl-widget-sidebar-menu .mpcs-grades-menu .tile-content:not(:first-child),
+.bb-rl-widget-sidebar-menu .mepr-resources .tile-content:not(:first-child),
+.mpcs-classroom .bb-rl-widget-sidebar-menu a .tile-content:not(:first-child),
+.mpcs-classroom .bb-rl-widget-sidebar-menu .mpcs-grades-menu .tile-content:not(:first-child),
+.mpcs-classroom .bb-rl-widget-sidebar-menu .mepr-resources .tile-content:not(:first-child),
+.bb-rl-left-panel--memprlms a .tile-content:not(:first-child),
+.bb-rl-left-panel--memprlms .mpcs-grades-menu .tile-content:not(:first-child),
+.bb-rl-left-panel--memprlms .mepr-resources .tile-content:not(:first-child),
+.mpcs-classroom .bb-rl-left-panel--memprlms .mpcs-sidebar-wrapper a .tile-content:not(:first-child),
+.mpcs-classroom .bb-rl-left-panel--memprlms .mpcs-sidebar-wrapper .mpcs-grades-menu .tile-content:not(:first-child),
+.mpcs-classroom .bb-rl-left-panel--memprlms .mpcs-sidebar-wrapper .mepr-resources .tile-content:not(:first-child) {
+  padding-left: 0;
+}
+
 .bb-rl-widget-sidebar-menu a .tile-title,
 .bb-rl-widget-sidebar-menu .mpcs-grades-menu .tile-title,
 .bb-rl-widget-sidebar-menu .mepr-resources .tile-title,
@@ -342,6 +382,7 @@
   font-weight: 500;
   line-height: 22px;
   color: var(--bb-rl-text-secondary-color);
+  margin: 0;
 }
 
 .bb-rl-widget-sidebar-menu .mepr-gradebook .tile-icon i:before,
@@ -418,10 +459,22 @@
   border-color: var(--bb-rl-border-quinery-color);
 }
 
+.bb-rl-lms-tab-menu .bb-rl-lms-tab:focus,
+.bb-rl-lms-tab-menu .tile:focus,
+.bb-rl-lms-tab-menu .mepr-gradebook:focus {
+  box-shadow: none;
+}
+
 .bb-rl-lms-tab-menu .bb-rl-lms-tab .tile-icon,
 .bb-rl-lms-tab-menu .tile .tile-icon,
 .bb-rl-lms-tab-menu .mepr-gradebook .tile-icon {
   display: none;
+}
+
+.bb-rl-lms-tab-menu .bb-rl-lms-tab .tile-content:not(:first-child),
+.bb-rl-lms-tab-menu .tile .tile-content:not(:first-child),
+.bb-rl-lms-tab-menu .mepr-gradebook .tile-content:not(:first-child) {
+  padding-left: 0;
 }
 
 .bb-rl-lms-tab-menu .bb-rl-lms-tab .tile-title,
@@ -1527,6 +1580,7 @@ body[class*="mpcs-course"] .bb-rl-mbprlms-pagination ul li.active a {
 .bb-rl-left-panel--memprlms .mpcs-sidebar-content .mpcs-section.mpcs-section-lessons .mpcs-section-title {
   margin: 0;
   padding: 0;
+  background-color: transparent;
 }
 
 .bb-rl-course-content-inner .mpcs-section.mpcs-section-lessons .mpcs-section-title .mpcs-section-title-text,
@@ -1780,6 +1834,15 @@ body[class*="mpcs-course"] .bb-rl-mbprlms-pagination ul li.active a {
   color: var(--bb-rl-text-color);
 }
 
+.mpcs-course-with-accordion .bb-rl-course-content #mpcs-main .mpcs-section.mpcs-resource-section:last-of-type {
+  margin-bottom: var(--bb-rl-space-200);
+}
+
+.mpcs-course-with-accordion .bb-rl-course-content .mpcs-resource-section:not(:last-of-type),
+.mpcs-course-with-accordion .bb-rl-course-content #mpcs-main .mpcs-resource-section:not(:last-of-type) {
+  margin-bottom: var(--bb-rl-space-200);
+}
+
 .bb-rl-course-content .mpcs-section.mpcs-resource-section {
   background-color: var(--bb-rl-background-color);
   border-radius: var(--bb-rl-radius-md);
@@ -1897,6 +1960,10 @@ body[class*="mpcs-course"] .bb-rl-mbprlms-pagination ul li.active a {
 
 .bb-rl-course-content .mpcs-section.mpcs-resource-section table.mp-table .mpcs-lesson-row-link:hover {
   background-color: transparent;
+}
+
+.bb-rl-course-content .mpcs-section.mpcs-resource-section table.mp-table .mpcs-lesson-row-link:focus {
+  box-shadow: none;
 }
 
 .bb-rl-course-content .mpcs-section.mpcs-resource-section table.mp-table .mpcs-lesson-row-link + .mpcs-lesson-row-link {
@@ -2791,6 +2858,7 @@ body[class*="mpcs-course"] .bb-rl-mbprlms-pagination ul li.active a {
 .bb-rl-left-panel--memprlms #mpcs-sidebar-header .course-progress {
   display: flex;
   flex-direction: column;
+  margin-left: 0;
 }
 
 .bb-rl-left-panel--memprlms #mpcs-sidebar-header .course-progress h1 {
