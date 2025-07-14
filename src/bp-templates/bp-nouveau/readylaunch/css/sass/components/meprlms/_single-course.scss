@@ -96,6 +96,24 @@
 
 .bb-rl-memprlms-course {
 
+	#mpcs-main #bookmark.course-curriculum {
+		margin: 0;
+		background-color: transparent;
+		border-radius: 0;
+	}
+
+	#mpcs-main #bookmark.course-curriculum a {
+		@include bb-rl-button;
+		@include bb-rl-button--brand-fill;
+		@include bb-rl-button--small;
+		margin-right: var(--bb-rl-space-100);
+
+		i {
+			font-size: var(--bb-rl-font-size-sm);
+			line-height: 1;
+		}
+	}
+
 	.course-curriculum:has(a) {
 		border: 0;
 		border-radius: 0;
@@ -271,6 +289,22 @@
 	}
 }
 
+.mpcs-course-with-accordion .bb-rl-course-content-inner {
+
+	#mpcs-main .mpcs-section-title {
+		padding: 0;
+		background-color: transparent;
+	}
+
+	#mpcs-main .mpcs-section-header:after {
+		display: none;
+	}
+
+	#mpcs-main .mpcs-section.last_section {
+		margin-bottom: var(--bb-rl-space-300);
+	}
+}
+
 .bb-rl-course-content-inner,
 .bb-rl-left-panel--memprlms .mpcs-sidebar-content {
 
@@ -335,6 +369,10 @@
 
 	.mpcs-section .mpcs-lessons {
 		padding: var(--bb-rl-space-100) 0;
+
+		.mpcs-lesson:hover {
+			background-color: transparent;
+		}
 	}
 
 	.mpcs-section .mpcs-lessons > .mpcs-lesson {
@@ -513,6 +551,7 @@
 	&#mpcs-main {
 		background-color: transparent;
 		padding: 0;
+		min-height: auto;
 	}
 }
 
