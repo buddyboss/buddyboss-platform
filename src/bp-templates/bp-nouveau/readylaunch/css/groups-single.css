@@ -986,7 +986,7 @@
   border-radius: var(--bb-rl-radius-md);
 }
 
-.bb-rl-manage-group-container .bb-group-meprlms-settings-container .bb-course-activity-selection .select2-dropdown li.select2-results__option[aria-selected=true] {
+.bb-rl-manage-group-container .bb-group-meprlms-settings-container .bb-course-activity-selection .select2-dropdown li.select2-results__option[aria-selected="true"] {
   background-color: var(--bb-rl-background-secondary-color);
   color: var(--bb-rl-text-color);
 }

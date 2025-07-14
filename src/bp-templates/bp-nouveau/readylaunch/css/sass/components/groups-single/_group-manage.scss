@@ -139,7 +139,7 @@
 			border-color: var(--bb-rl-border-secondary-color);
 			border-radius: var(--bb-rl-radius-md);
 
-			li.select2-results__option[aria-selected=true] {
+			li.select2-results__option[aria-selected="true"] {
 				background-color: var(--bb-rl-background-secondary-color);
 				color: var(--bb-rl-text-color);
 			}

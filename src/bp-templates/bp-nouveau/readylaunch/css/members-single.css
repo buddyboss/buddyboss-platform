@@ -1427,7 +1427,7 @@ table.profile-settings tbody td select {
 
 .bb-rl-account-settings-section .onesignal-user-preference .web-notification-toggle .web-notification-icon-text .web-browser-text .web-notification-icon.chrome::before {
   content: "\e976";
-  font-family: "bb-icons-rl";
+  font-family: bb-icons-rl;
   font-size: 18px;
   color: var(--bb-rl-icon-primary-color);
   line-height: 1;

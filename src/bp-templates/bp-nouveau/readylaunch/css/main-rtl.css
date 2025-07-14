@@ -13156,6 +13156,11 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   position: relative;
 }
 
+.bb-rl-ac-topic-required .bb-rl-activity-form.bb-rl-focus-in #whats-new-submit:hover:not(:has(#bb-rl-aw-whats-new-reset:hover)) .bb-topic-tooltip-wrapper {
+  opacity: 1;
+  cursor: default;
+}
+
 .bb-rl-activity-form.bb-rl-focus-in .bb-rl-button {
   font-size: 0.85rem;
 }
@@ -17657,6 +17662,10 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   background-color: var(--bb-rl-background-secondary-color);
 }
 
+.bb-rl-activity-list .activity-state-popup .activity-state-popup_tab .activity-state-popup_tab_panel .bb-rl-all-reaction-count {
+  margin-right: var(--bb-rl-space-50);
+}
+
 .bb-rl-activity-list .activity-state-popup .activity-state-popup_tab .activity-state-popup_tab_item {
   display: none;
 }
@@ -18996,6 +19005,10 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   margin: var(--bb-rl-space-300) 0 0;
 }
 
+.bb-rl-profile-header + .bp-wrap .item-body > .bb-rl-profile-subnav + .bb-item-count {
+  display: none;
+}
+
 .bb-rl-profile-subnav ul.subnav {
   list-style: none;
   margin: 0;
@@ -19058,6 +19071,10 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   color: var(--bb-rl-text-tertiary-color);
   margin-top: calc(var(--bb-rl-space-50) * -1);
   margin-bottom: var(--bb-rl-space-50);
+}
+
+.bb-rl-profile-edit-wrapper .editfield {
+  margin-bottom: var(--bb-rl-space-100);
 }
 
 .bb-rl-profile-edit-wrapper #profile-group-edit-submit {
@@ -19502,6 +19519,59 @@ table.profile-settings tbody td select {
   margin-bottom: var(--bb-rl-space-100);
 }
 
+.bb-rl-account-settings-section .onesignal-user-preference {
+  border: 1px solid var(--bb-rl-border-secondary-color);
+  border-radius: var(--bb-rl-radius-base);
+}
+
+.bb-rl-account-settings-section .onesignal-user-preference .web-notification-toggle .web-notification-icon-text .web-browser-text .web-notification-text {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 22px;
+  color: var(--bb-rl-text-color);
+}
+
+.bb-rl-account-settings-section .onesignal-user-preference .web-notification-toggle .web-notification-icon-text .web-browser-text .web-notification-icon.chrome {
+  background-image: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bb-rl-account-settings-section .onesignal-user-preference .web-notification-toggle .web-notification-icon-text .web-browser-text .web-notification-icon.chrome::before {
+  content: "\e976";
+  font-family: bb-icons-rl;
+  font-size: 18px;
+  color: var(--bb-rl-icon-primary-color);
+  line-height: 1;
+}
+
+.bb-rl-account-settings-section .onesignal-user-preference .web-notification-toggle .web-notification-icon-text p {
+  font-size: var(--bb-rl-font-size-xs);
+  font-weight: 500;
+  line-height: var(--bb-rl-base-line-xs);
+  font-weight: 400;
+  color: var(--bb-rl-text-secondary-color);
+  padding-right: 26px;
+}
+
+.bb-rl-account-settings-section .onesignal-user-preference .web-notification-field .slider {
+  background-color: var(--bb-rl-background-color);
+  border-color: var(--bb-rl-background-brand-primary-color);
+}
+
+.bb-rl-account-settings-section .onesignal-user-preference .web-notification-field .slider:before {
+  background-color: var(--bb-rl-background-brand-primary-color);
+}
+
+.bb-rl-account-settings-section .onesignal-user-preference .web-notification-field input:checked + .slider {
+  background-color: var(--bb-rl-background-brand-primary-color);
+}
+
+.bb-rl-account-settings-section .onesignal-user-preference .web-notification-field input:checked + .slider:before {
+  background-color: var(--bb-rl-background-color);
+}
+
 @media screen and (min-width: 800px) {
   .bb-rl-account-settings-section .main-notification-settings .bb-mobile-setting {
     display: none;
@@ -19874,6 +19944,11 @@ table.profile-settings tbody td select {
   border-radius: var(--bb-rl-radius-base);
   padding: var(--bb-rl-space-100) 0;
   z-index: 10;
+}
+
+.last-editfield .bb-rl-field-visibility-block .field-visibility-settings {
+  top: initial;
+  bottom: calc(100% + var(--bb-rl-space-100));
 }
 
 .bb-rl-field-visibility-block .field-visibility-settings fieldset {
