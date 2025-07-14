@@ -308,6 +308,8 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 			if ( bp_is_active( 'friends' ) ) {
 				add_filter( 'bp_get_add_friend_button', array( $this, 'bb_rl_modify_add_friend_button' ) );
+				add_filter( 'bp_nouveau_nav_has_count', array( $this, 'bb_rl_modify_nav_has_count' ), 10, 2 );
+				add_filter( 'bp_nouveau_get_nav_count', array( $this, 'bb_rl_modify_nav_get_count' ), 10, 2 );
 			}
 
 			add_action( 'bp_template_title', array( $this, 'bb_rl_remove_sso_template_title' ), 0 );
@@ -4283,6 +4285,60 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			$button['link_text'] = str_replace( __( 'Report Member', 'buddyboss' ), __( 'Report', 'buddyboss' ), $button['link_text'] );
 
 			return $button;
+		}
+
+		/**
+		 * Modify nav has count.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param bool   $has_count The has count.
+		 * @param object $nav_item The nav item.
+		 *
+		 * @return bool The modified has count.
+		 */
+		public function bb_rl_modify_nav_has_count( $has_count, $nav_item ) {
+			if ( empty( $nav_item ) ) {
+				return $has_count;
+			}
+
+			if (
+				'my-friends' === $nav_item->slug ||
+				'requests' === $nav_item->slug ||
+				'mutual' === $nav_item->slug
+			) {
+				return true;
+			}
+
+			return $has_count;
+		}
+
+		/**
+		 * Modify nav get count.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param int    $count The count.
+		 * @param object $nav_item The nav item.
+		 *
+		 * @return int The modified count.
+		 */
+		public function bb_rl_modify_nav_get_count( $count, $nav_item ) {
+			if ( empty( $nav_item ) ) {
+				return $count;
+			}
+
+			if ( 'my-friends' === $nav_item->slug ) {
+				$count = friends_get_total_friend_count();
+			} elseif ( 'requests' === $nav_item->slug ) {
+				$count = bp_friend_get_total_requests_count();
+			} elseif ( 'mutual' === $nav_item->slug ) {
+				$mutual_friendships_ids      = bp_get_mutual_friendships();
+				$mutual_friendships_exploded = ! empty( $mutual_friendships_ids ) ? explode( ',', $mutual_friendships_ids ) : array();
+				$count                       = ! empty( $mutual_friendships_exploded ) ? count( $mutual_friendships_exploded ) : 0;
+			}
+
+			return $count;
 		}
 	}
 }
