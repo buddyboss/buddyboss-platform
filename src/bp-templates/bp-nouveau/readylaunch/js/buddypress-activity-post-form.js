@@ -820,8 +820,12 @@ window.bp = window.bp || {};
 			}
 
 			if ( activity_data && activity_data.topics ) {
-				self.postForm.model.set( 'topics', activity_data.topics );
-				bp.draft_activity.data.topics = activity_data.topics;
+				if ( '' === bp.draft_activity.display_post ) {
+					if ( 'scheduled' !== activity_data.status ) {
+						self.postForm.model.set( 'topics', activity_data.topics );
+						bp.draft_activity.data.topics = activity_data.topics;
+					}
+				}
 				if ( 0 !== parseInt( activity_data.topics.topic_id ) ) {
 					var $topicElement = $( '.bb-rl-topic-selector-list a[data-topic-id="' + activity_data.topics.topic_id + '"]' );
 					if ( $topicElement.length > 0 ) {
@@ -1017,7 +1021,7 @@ window.bp = window.bp || {};
 						! self.postForm.model.get( 'topics' ).topic_id
 					) ||
 					(
-						_.isUndefined(self.postForm.model.get('topics')) ||
+						_.isUndefined( self.postForm.model.get( 'topics' ) ) ||
 						1 > parseInt( self.postForm.model.get( 'topics' ).topic_id )
 					)
 				)
