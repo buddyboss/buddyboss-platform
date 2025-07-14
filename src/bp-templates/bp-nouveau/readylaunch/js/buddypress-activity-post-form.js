@@ -1000,7 +1000,7 @@ window.bp = window.bp || {};
 
 			// validation for content editor.
 			if ( '' === filteredContent &&
-				_.every( ['media', 'document', 'video', 'gif_data'], isUndefinedOrEmpty ) &&
+				_.every( [self.postForm.model.get( 'media' ), self.postForm.model.get( 'document' ), self.postForm.model.get( 'video' ), self.postForm.model.get( 'gif_data' )], isUndefinedOrEmpty ) &&
 				(
 					(
 						! _.isUndefined( self.postForm.model.get( 'poll' ) ) &&
