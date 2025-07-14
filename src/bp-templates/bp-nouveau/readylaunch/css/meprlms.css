@@ -242,6 +242,12 @@
   padding: var(--bb-rl-space-100);
 }
 
+.mpcs-classroom .bb-rl-left-panel--memprlms .mpcs-sidebar-wrapper .mpcs-sidebar-back-to-course a {
+  display: inline-flex;
+  padding: 6px var(--bb-rl-space-200);
+  gap: var(--bb-rl-space-50);
+}
+
 .bb-rl-widget-sidebar-menu .mpcs-sidebar-grades,
 .mpcs-classroom .bb-rl-widget-sidebar-menu .mpcs-sidebar-grades,
 .bb-rl-left-panel--memprlms .mpcs-sidebar-grades,
