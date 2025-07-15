@@ -1,0 +1,56 @@
+.bb-rl-members ul.bp-list,
+.bb-rl-groups ul.bp-list {
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+	gap: var(--bb-rl-space-200);
+
+	&.grid {
+
+		/* A sidebar-conditioned grid can be used on
+		single profile or group screens. */
+
+		.bb-rl-primary-container & {
+			grid-template-columns: repeat(3, 1fr);
+
+			@media screen and (max-width: 1600px) {
+				grid-template-columns: repeat(2, 1fr);
+			}
+
+			@media screen and (min-width: 1200px) and (max-width: 1400px) {
+				grid-template-columns: 1fr;
+			}
+
+			@media screen and (max-width: $md) {
+				grid-template-columns: 1fr;
+			}
+		}
+
+		.item-entry {
+			width: 100%;
+
+			&.item-entry-header {
+				grid-column: 1 / -1; // Span all columns
+			}
+		}
+
+		@media screen and (max-width: $xl) {
+			grid-template-columns: repeat(3, 1fr);
+		}
+
+		@media screen and (max-width: $md) {
+			grid-template-columns: repeat(2, 1fr);
+		}
+
+		@media screen and (max-width: $sm) {
+			grid-template-columns: 1fr;
+		}
+	}
+
+	&:not(.grid) {
+		grid-template-columns: 1fr;
+
+		.item-entry {
+			width: 100%;
+		}
+	}
+}

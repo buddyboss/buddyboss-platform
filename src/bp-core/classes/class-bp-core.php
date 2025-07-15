@@ -70,7 +70,8 @@ class BP_Core extends BP_Component {
 		 *
 		 * @param array $value Array of included and optional components.
 		 */
-		$bp->optional_components = apply_filters( 'bp_optional_components',
+		$bp->optional_components = apply_filters(
+			'bp_optional_components',
 			array(
 				'settings',
 				'notifications',
@@ -445,5 +446,16 @@ class BP_Core extends BP_Component {
 		);
 
 		parent::rest_api_init( $controllers );
+	}
+
+	/**
+	 * Register the BB Core Blocks.
+	 *
+	 * @since BuddyBoss 2.9.00
+	 *
+	 * @param array $blocks Optional. See BP_Component::blocks_init() for description.
+	 */
+	public function blocks_init( $blocks = array() ) {
+		parent::blocks_init( array() );
 	}
 }
