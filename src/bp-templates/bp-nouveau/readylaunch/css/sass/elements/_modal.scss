@@ -222,6 +222,28 @@
 		color: var(--bb-rl-text-secondary-color);
 	}
 
+	.mass-user-block-list {
+
+		.bb-report-type-pagination {
+			padding: var(--bb-rl-space-100) var(--bb-rl-space-300);
+
+			.load_more_rl.button,
+			.loading.button {
+
+				@include bb-rl-button;
+				@include bb-rl-button--tertiary-text;
+				@include bb-rl-button--small;
+			}
+		}
+
+		&.moderation-popup {
+
+			.bb-report-type-pagination {
+				border-top: 1px solid var(--bb-rl-border-secondary-color);
+			}
+		}
+	}
+
 	.bb-report-type-wrp {
 
 		> p {

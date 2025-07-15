@@ -5215,6 +5215,51 @@ body.bb-readylaunch-template .select2-container--rl.select2-container--open:has(
   color: var(--bb-rl-text-secondary-color);
 }
 
+.bb-readylaunch-template .mass-user-block-list .bb-report-type-pagination {
+  padding: var(--bb-rl-space-100) var(--bb-rl-space-300);
+}
+
+.bb-readylaunch-template .mass-user-block-list .bb-report-type-pagination .load_more_rl.button,
+.bb-readylaunch-template .mass-user-block-list .bb-report-type-pagination .loading.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  font-weight: 500;
+  text-align: center;
+  cursor: pointer;
+  border-radius: var(--bb-rl-radius-md);
+  padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  text-decoration: none;
+  background-color: transparent;
+  color: var(--bb-rl-text-color);
+  border: none;
+  padding: 6px var(--bb-rl-space-200);
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 400;
+}
+
+.bb-readylaunch-template .mass-user-block-list .bb-report-type-pagination .load_more_rl.button:hover,
+.bb-readylaunch-template .mass-user-block-list .bb-report-type-pagination .loading.button:hover {
+  background-color: var(--bb-rl-background-secondary-hover-color);
+}
+
+.bb-readylaunch-template .mass-user-block-list .bb-report-type-pagination .load_more_rl.button:focus,
+.bb-readylaunch-template .mass-user-block-list .bb-report-type-pagination .loading.button:focus {
+  outline: 2px solid var(--bb-rl-border-quinery-color);
+}
+
+.bb-readylaunch-template .mass-user-block-list .bb-report-type-pagination .load_more_rl.button:disabled,
+.bb-readylaunch-template .mass-user-block-list .bb-report-type-pagination .loading.button:disabled {
+  color: var(--bb-rl-text-disabled-color);
+  cursor: not-allowed;
+}
+
+.bb-readylaunch-template .mass-user-block-list.moderation-popup .bb-report-type-pagination {
+  border-top: 1px solid var(--bb-rl-border-secondary-color);
+}
+
 .bb-readylaunch-template .bb-report-type-wrp > p {
   margin-bottom: var(--bb-rl-space-100);
 }
