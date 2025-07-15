@@ -28,7 +28,7 @@
 		.dropdown a.dropdown-toggle {
 
 			@include bb-rl-label-heading;
-			color: var(--bb-rl-text-secondary-color);
+			color: var(--bb-rl-text-secondary-color) !important; // !important is required to override the platform-pro styles
 			display: flex;
 			align-items: center;
 			background-color: var(--bb-rl-background-secondary-color);
@@ -40,6 +40,7 @@
 
 			i {
 				font-weight: 500;
+				color: var(--bb-rl-icon-primary-color) !important; // !important is required to override the platform-pro styles
 			}
 
 			span {
