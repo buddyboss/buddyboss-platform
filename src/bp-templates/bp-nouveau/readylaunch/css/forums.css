@@ -1189,7 +1189,8 @@
   justify-content: flex-start;
 }
 
-.groups .bb-rl-stick .bbp-topic-super-sticky-link {
+.groups .bb-rl-stick .bbp-topic-super-sticky-link,
+.groups .bbp-admin-links .bbp-topic-super-sticky-link {
   display: none !important;
 }
 

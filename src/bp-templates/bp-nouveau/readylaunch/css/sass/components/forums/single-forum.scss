@@ -169,10 +169,14 @@
 	}
 }
 
-.groups .bb-rl-stick {
+.groups {
 
-	.bbp-topic-super-sticky-link {
-		display: none !important;
+	.bb-rl-stick,
+	.bbp-admin-links {
+
+		.bbp-topic-super-sticky-link {
+			display: none !important;
+		}
 	}
 }
 
