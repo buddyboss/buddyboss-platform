@@ -19258,6 +19258,27 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   margin-bottom: var(--bb-rl-space-400);
 }
 
+.bb-rl-container .buddypress-wrap:has(.edit.bb-rl-profile-panel) #item-header {
+  padding-left: var(--bb-rl-space-600);
+  padding-right: var(--bb-rl-space-600);
+}
+
+@media screen and (max-width: 992px) {
+  .bb-rl-container .buddypress-wrap:has(.edit.bb-rl-profile-panel) #item-header {
+    padding-left: var(--bb-rl-space-200);
+    padding-right: var(--bb-rl-space-200);
+  }
+}
+
+.bb-rl-container .buddypress-wrap:has(.edit.bb-rl-profile-panel) #item-header:has(.bp-feedback) {
+  padding-top: var(--bb-rl-space-300);
+}
+
+.bb-rl-container .buddypress-wrap:has(.edit.bb-rl-profile-panel) #item-header:has(.bp-feedback) .bp-feedback {
+  max-width: 720px;
+  margin: 0 auto;
+}
+
 .bb-rl-account-settings-section {
   background: var(--bb-rl-background-color);
   border-radius: var(--bb-rl-radius-lg);
