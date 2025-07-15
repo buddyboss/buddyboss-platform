@@ -2788,32 +2788,40 @@ window.bp = window.bp || {};
 				}
 			);
 
-			$bbReportContent.submit(
-				function ( e ) {
-					handleFormSubmission(
-						{
-							'event'   : e,
-							'target'  : $( this ),
-							'action'  : 'bp_moderation_content_report',
-							'context' : _this
-						}
-					);
-				}
-			);
+			// Prevent duplicate event bindings by checking if already bound
+			if ( ! $bbReportContent.data( 'report-submit-bound' ) ) {
+				$bbReportContent.submit(
+					function ( e ) {
+						handleFormSubmission(
+							{
+								'event'   : e,
+								'target'  : $( this ),
+								'action'  : 'bp_moderation_content_report',
+								'context' : _this
+							}
+						);
+					}
+				);
+				$bbReportContent.data( 'report-submit-bound', true );
+			}
 
 			var $bbBlockMember = $( '#bb-block-member' );
-			$bbBlockMember.submit(
-				function ( e ) {
-					handleFormSubmission(
-						{
-							'event'   : e,
-							'target'  : $( this ),
-							'action'  : 'bp_moderation_block_member',
-							'context' : _this
-						}
-					);
-				}
-			);
+			// Prevent duplicate event bindings for block member form
+			if ( ! $bbBlockMember.data( 'block-member-submit-bound' ) ) {
+				$bbBlockMember.submit(
+					function ( e ) {
+						handleFormSubmission(
+							{
+								'event'   : e,
+								'target'  : $( this ),
+								'action'  : 'bp_moderation_block_member',
+								'context' : _this
+							}
+						);
+					}
+				);
+				$bbBlockMember.data( 'block-member-submit-bound', true );
+			}
 
 			function handleFormSubmission( args ) {
 				var e                = args.event,
