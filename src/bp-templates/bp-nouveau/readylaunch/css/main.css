@@ -19652,6 +19652,105 @@ table.profile-settings tbody td select {
   }
 }
 
+.bb-readylaunch-template .mfp-wrap {
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 999999;
+  position: fixed;
+  outline: 0 !important;
+  -webkit-backface-visibility: hidden;
+}
+
+.bb-readylaunch-template .mfp-container {
+  text-align: center;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  padding: 0 8px;
+  box-sizing: border-box;
+}
+
+.bb-readylaunch-template .mfp-container:before {
+  content: '';
+  display: inline-block;
+  height: 100%;
+  vertical-align: middle;
+}
+
+.bb-readylaunch-template .bb-onesignal-popup,
+.bb-readylaunch-template .bb-onesignal-popup-close {
+  position: relative;
+  max-height: 90vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  max-width: 615px;
+  vertical-align: middle;
+  width: 90%;
+  margin: 0 auto;
+  padding: var(--bb-rl-space-200) var(--bb-rl-space-300);
+  background-color: var(--bb-rl-background-color);
+  border-radius: var(--bb-rl-radius-lg);
+  border: 1px solid var(--bb-rl-border-secondary-color);
+  box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.1);
+}
+
+.bb-readylaunch-template .mfp-content {
+  position: relative;
+  display: inline-block;
+  vertical-align: middle;
+  margin: 0 auto;
+  text-align: left;
+  z-index: 1045;
+}
+
+.bb-readylaunch-template .mfp-ajax-holder .mfp-content,
+.bb-readylaunch-template .mfp-inline-holder .mfp-content {
+  width: 100%;
+  cursor: alias;
+}
+
+.bb-readylaunch-template .bb-onesignal-popup-close .mfp-close {
+  width: 24px;
+  height: 24px;
+  line-height: 24px;
+  position: absolute;
+  right: var(--bb-rl-space-300);
+  top: var(--bb-rl-space-200);
+  text-decoration: none;
+  text-align: center;
+  padding: 0;
+  border: 0;
+  color: var(--bb-rl-icon-color) !important;
+  font-style: normal;
+  font-size: 24px;
+  background-color: transparent;
+  box-shadow: none;
+  opacity: 1;
+  cursor: pointer;
+}
+
+.bb-readylaunch-template .bb-onesignal-popup-close .bb-onesignal-popup-content ul {
+  margin: var(--bb-rl-space-200) 0 0;
+}
+
+.bb-readylaunch-template .bb-onesignal-popup-close .bb-onesignal-popup-content ul li {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 22px;
+  color: var(--bb-rl-text-secondary-color);
+  display: flex;
+  align-items: center;
+  gap: var(--bb-rl-space-100);
+}
+
+.bb-readylaunch-template .mfp-s-ready .mfp-preloader {
+  display: none;
+}
+
 .bb-rl-account-settings-section .subscription-views .bb-accordion_head {
   display: flex;
   align-items: center;
