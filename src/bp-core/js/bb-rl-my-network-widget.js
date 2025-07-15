@@ -14,8 +14,8 @@ function my_network_click_handler() {
 			var link          = this;
 			var currentWidget = jQuery( link ).parents( widget );
 
-			jQuery( this ).addClass( 'loading selected' );
 			jQuery( currentWidget ).find( widgetTabLinks ).removeClass( 'selected' );
+			jQuery( this ).addClass( 'loading selected' );
 
 			var seeAllLink = jQuery( this ).data( 'see-all-link' );
 			if ( '' !== seeAllLink ) {
