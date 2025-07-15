@@ -232,7 +232,7 @@
 	}
 
 	.mfp-container:before {
-		content: '';
+		content: "";
 		display: inline-block;
 		height: 100%;
 		vertical-align: middle;
@@ -330,7 +330,7 @@
 				margin: var(--bb-rl-space-200) 0 0;
 			}
 
-			 ul li {
+			ul li {
 
 				@include bb-rl-label-heading-md-thin;
 				color: var(--bb-rl-text-secondary-color);
@@ -342,7 +342,7 @@
 					opacity: 0.4;
 					max-height: 14px;
 				}
-			 }
+			}
 		}
 	}
 

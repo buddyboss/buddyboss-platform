@@ -19789,7 +19789,7 @@ table.profile-settings tbody td select {
 }
 
 .bb-readylaunch-template .mfp-container:before {
-  content: '';
+  content: "";
   display: inline-block;
   height: 100%;
   vertical-align: middle;

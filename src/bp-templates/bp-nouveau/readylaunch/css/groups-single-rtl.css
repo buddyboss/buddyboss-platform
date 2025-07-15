@@ -535,6 +535,7 @@
 
 .bb-rl-group-organizers .item-entry .list-meta {
   display: flex;
+  gap: var(--bb-rl-space-50);
   align-items: center;
   color: var(--bb-rl-text-tertiary-color);
   font-size: 14px;

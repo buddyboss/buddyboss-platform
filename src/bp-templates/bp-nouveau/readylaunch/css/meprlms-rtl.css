@@ -553,7 +553,7 @@
   font-size: var(--bb-rl-font-size-sm);
   font-weight: 400;
   line-height: var(--bb-rl-base-line-small);
-  color: var(--bb-rl-text-secondary-color);
+  color: var(--bb-rl-text-secondary-color) !important;
   display: flex;
   align-items: center;
   background-color: var(--bb-rl-background-secondary-color);
@@ -566,6 +566,7 @@
 
 .post-type-archive-mpcs-course.bb-readylaunch-template .bb-rl-meprlms-course-filters .dropdown a.dropdown-toggle i {
   font-weight: 500;
+  color: var(--bb-rl-icon-primary-color) !important;
 }
 
 .post-type-archive-mpcs-course.bb-readylaunch-template .bb-rl-meprlms-course-filters .dropdown a.dropdown-toggle span {
