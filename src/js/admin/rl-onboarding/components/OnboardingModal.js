@@ -2,16 +2,27 @@ import { useState, useEffect } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { Button } from '@wordpress/components';
 
-export const OnboardingModal = ({ isOpen, onClose, onContinue }) => {
+export const OnboardingModal = ({ isOpen, onClose, onContinue, onSkip, onSaveStep }) => {
     const [currentStep, setCurrentStep] = useState(0);
     const [selectedOption, setSelectedOption] = useState(null);
     const [isConfiguring, setIsConfiguring] = useState(false);
+    const [isProcessing, setIsProcessing] = useState(false);
+    const [configData, setConfigData] = useState({
+        siteName: '',
+        siteDescription: '',
+        activityFeed: true,
+        userGroups: true,
+        privateMessages: true,
+        memberDirectory: true,
+        primaryColor: '#e57e3a',
+        layoutStyle: 'default',
+    });
 
     // Modal steps content
     const steps = [
         {
             title: __('Welcome to BuddyBoss', 'buddyboss'),
-            subtitle: __('Let\'s bring your community to life by choose the look and feel that matches your vision.', 'buddyboss'),
+            subtitle: __('Let\'s bring your community to life by choosing the look and feel that matches your vision.', 'buddyboss'),
             content: (
                 <div className="bb-rl-onboarding-step">
                     <div className="bb-rl-onboarding-options">
@@ -39,12 +50,14 @@ export const OnboardingModal = ({ isOpen, onClose, onContinue }) => {
                             <Button 
                                 className="bb-rl-option-button bb-rl-button-secondary"
                                 onClick={() => handleOptionSelect('buddyboss-theme')}
+                                disabled={isProcessing}
                             >
                                 {__('Configure BuddyBoss Theme', 'buddyboss')}
                             </Button>
                             <Button 
                                 className="bb-rl-option-button bb-rl-button-primary"
                                 onClick={() => handleOptionSelect('buddyboss-theme-buy')}
+                                disabled={isProcessing}
                             >
                                 {__('Buy Theme', 'buddyboss')}
                             </Button>
@@ -74,8 +87,9 @@ export const OnboardingModal = ({ isOpen, onClose, onContinue }) => {
                             <Button 
                                 className="bb-rl-option-button bb-rl-button-primary"
                                 onClick={() => handleOptionSelect('readylaunch')}
+                                disabled={isProcessing}
                             >
-                                {__('Configure ReadyLaunch', 'buddyboss')}
+                                {isProcessing && selectedOption === 'readylaunch' ? __('Processing...', 'buddyboss') : __('Configure ReadyLaunch', 'buddyboss')}
                             </Button>
                         </div>
                     </div>
@@ -84,19 +98,31 @@ export const OnboardingModal = ({ isOpen, onClose, onContinue }) => {
         }
     ];
 
-    const handleOptionSelect = (option) => {
+    const handleOptionSelect = async (option) => {
         setSelectedOption(option);
-        window.bbRlOnboarding.selectedOption = option;
+        setIsProcessing(true);
+        
+        // Save welcome step data
+        if (onSaveStep) {
+            const stepData = {
+                step: 'welcome',
+                selected_option: option,
+                timestamp: new Date().toISOString(),
+            };
+            await onSaveStep(stepData);
+        }
         
         if (option === 'readylaunch') {
             // Start the ReadyLaunch configuration process
             setIsConfiguring(true);
             enableFullscreenMode();
+            setIsProcessing(false);
         } else {
             // Handle other options (BuddyBoss theme, etc.)
             if (onContinue) {
-                onContinue(option);
+                await onContinue(option);
             }
+            setIsProcessing(false);
         }
     };
 
@@ -167,35 +193,48 @@ export const OnboardingModal = ({ isOpen, onClose, onContinue }) => {
         }
     };
 
+    const handleSkip = () => {
+        if (onSkip) {
+            onSkip();
+        }
+    };
+
     const handleBackToSelection = () => {
         setIsConfiguring(false);
         setSelectedOption(null);
         disableFullscreenMode();
     };
 
-    const completeOnboarding = async (skipped = false) => {
-        try {
-            const response = await fetch(window.ajaxurl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: new URLSearchParams({
-                    action: 'bb_rl_complete_onboarding',
-                    nonce: window.bbRlOnboarding?.nonce || '',
-                    skipped: skipped ? '1' : '0',
-                    selected_option: selectedOption || '',
-                }),
-            });
+    const handleConfigChange = (field, value) => {
+        setConfigData(prev => ({
+            ...prev,
+            [field]: value,
+        }));
+    };
 
-            const data = await response.json();
-            
-            if (data.success) {
-                handleClose();
-            }
-        } catch (error) {
-            console.error('Error completing onboarding:', error);
+    const completeOnboarding = async () => {
+        setIsProcessing(true);
+        
+        // Save configuration step data
+        if (onSaveStep) {
+            const stepData = {
+                step: 'configuration',
+                readylaunch_settings: {
+                    theme_mode: 'light',
+                    enabled_pages: ['activity', 'members', 'groups'],
+                    config_data: configData,
+                },
+                timestamp: new Date().toISOString(),
+            };
+            await onSaveStep(stepData);
         }
+        
+        if (onContinue) {
+            await onContinue(selectedOption || '');
+        }
+        
+        setIsProcessing(false);
+        handleClose();
     };
 
     const renderConfigurationScreen = () => {
@@ -206,6 +245,7 @@ export const OnboardingModal = ({ isOpen, onClose, onContinue }) => {
                         <Button 
                             className="bb-rl-back-button"
                             onClick={handleBackToSelection}
+                            disabled={isProcessing}
                         >
                             ← {__('Back', 'buddyboss')}
                         </Button>
@@ -214,9 +254,10 @@ export const OnboardingModal = ({ isOpen, onClose, onContinue }) => {
                     <div className="bb-rl-config-header-right">
                         <Button 
                             className="bb-rl-finish-button"
-                            onClick={() => completeOnboarding(false)}
+                            onClick={completeOnboarding}
+                            disabled={isProcessing}
                         >
-                            {__('Finish Setup', 'buddyboss')}
+                            {isProcessing ? __('Processing...', 'buddyboss') : __('Finish Setup', 'buddyboss')}
                         </Button>
                     </div>
                 </div>
@@ -227,11 +268,20 @@ export const OnboardingModal = ({ isOpen, onClose, onContinue }) => {
                             <h3>{__('Site Information', 'buddyboss')}</h3>
                             <div className="bb-rl-config-field">
                                 <label>{__('Site Name', 'buddyboss')}</label>
-                                <input type="text" placeholder={__('Enter your site name', 'buddyboss')} />
+                                <input 
+                                    type="text" 
+                                    value={configData.siteName}
+                                    onChange={(e) => handleConfigChange('siteName', e.target.value)}
+                                    placeholder={__('Enter your site name', 'buddyboss')} 
+                                />
                             </div>
                             <div className="bb-rl-config-field">
                                 <label>{__('Site Description', 'buddyboss')}</label>
-                                <textarea placeholder={__('Enter your site description', 'buddyboss')}></textarea>
+                                <textarea 
+                                    value={configData.siteDescription}
+                                    onChange={(e) => handleConfigChange('siteDescription', e.target.value)}
+                                    placeholder={__('Enter your site description', 'buddyboss')}
+                                ></textarea>
                             </div>
                         </div>
 
@@ -239,25 +289,41 @@ export const OnboardingModal = ({ isOpen, onClose, onContinue }) => {
                             <h3>{__('Community Features', 'buddyboss')}</h3>
                             <div className="bb-rl-config-field">
                                 <label className="bb-rl-checkbox-label">
-                                    <input type="checkbox" defaultChecked />
+                                    <input 
+                                        type="checkbox" 
+                                        checked={configData.activityFeed}
+                                        onChange={(e) => handleConfigChange('activityFeed', e.target.checked)}
+                                    />
                                     {__('Enable Activity Feed', 'buddyboss')}
                                 </label>
                             </div>
                             <div className="bb-rl-config-field">
                                 <label className="bb-rl-checkbox-label">
-                                    <input type="checkbox" defaultChecked />
+                                    <input 
+                                        type="checkbox" 
+                                        checked={configData.userGroups}
+                                        onChange={(e) => handleConfigChange('userGroups', e.target.checked)}
+                                    />
                                     {__('Enable User Groups', 'buddyboss')}
                                 </label>
                             </div>
                             <div className="bb-rl-config-field">
                                 <label className="bb-rl-checkbox-label">
-                                    <input type="checkbox" defaultChecked />
+                                    <input 
+                                        type="checkbox" 
+                                        checked={configData.privateMessages}
+                                        onChange={(e) => handleConfigChange('privateMessages', e.target.checked)}
+                                    />
                                     {__('Enable Private Messages', 'buddyboss')}
                                 </label>
                             </div>
                             <div className="bb-rl-config-field">
                                 <label className="bb-rl-checkbox-label">
-                                    <input type="checkbox" defaultChecked />
+                                    <input 
+                                        type="checkbox" 
+                                        checked={configData.memberDirectory}
+                                        onChange={(e) => handleConfigChange('memberDirectory', e.target.checked)}
+                                    />
                                     {__('Enable Member Directory', 'buddyboss')}
                                 </label>
                             </div>
@@ -267,11 +333,18 @@ export const OnboardingModal = ({ isOpen, onClose, onContinue }) => {
                             <h3>{__('Appearance', 'buddyboss')}</h3>
                             <div className="bb-rl-config-field">
                                 <label>{__('Primary Color', 'buddyboss')}</label>
-                                <input type="color" defaultValue="#e57e3a" />
+                                <input 
+                                    type="color" 
+                                    value={configData.primaryColor}
+                                    onChange={(e) => handleConfigChange('primaryColor', e.target.value)}
+                                />
                             </div>
                             <div className="bb-rl-config-field">
                                 <label>{__('Layout Style', 'buddyboss')}</label>
-                                <select>
+                                <select 
+                                    value={configData.layoutStyle}
+                                    onChange={(e) => handleConfigChange('layoutStyle', e.target.value)}
+                                >
                                     <option value="default">{__('Default', 'buddyboss')}</option>
                                     <option value="boxed">{__('Boxed', 'buddyboss')}</option>
                                     <option value="wide">{__('Wide', 'buddyboss')}</option>
@@ -283,10 +356,11 @@ export const OnboardingModal = ({ isOpen, onClose, onContinue }) => {
                     <div className="bb-rl-config-preview">
                         <div className="bb-rl-preview-header">
                             <h3>{__('Live Preview', 'buddyboss')}</h3>
+                            <p className="bb-rl-preview-note">{__('Preview will update based on your configuration', 'buddyboss')}</p>
                         </div>
                         <div className="bb-rl-preview-content">
                             <iframe 
-                                src={window.location.origin} 
+                                src={window.location.origin + '?bb_rl_preview=1'} 
                                 frameBorder="0"
                                 className="bb-rl-preview-iframe"
                                 title={__('Site Preview', 'buddyboss')}
@@ -323,13 +397,23 @@ export const OnboardingModal = ({ isOpen, onClose, onContinue }) => {
                     <div className="bb-rl-logo">
                         <img src={window.bbRlOnboarding?.assets?.logo || ''} alt="BuddyBoss" />
                     </div>
-                    <Button 
-                        className="bb-rl-close-button"
-                        onClick={handleClose}
-                        label={__('Close', 'buddyboss')}
-                    >
-                        <span className="dashicons dashicons-no-alt"></span>
-                    </Button>
+                    <div className="bb-rl-header-actions">
+                        <Button 
+                            className="bb-rl-skip-button"
+                            onClick={handleSkip}
+                            disabled={isProcessing}
+                        >
+                            {__('Skip for now', 'buddyboss')}
+                        </Button>
+                        <Button 
+                            className="bb-rl-close-button"
+                            onClick={handleClose}
+                            label={__('Close', 'buddyboss')}
+                            disabled={isProcessing}
+                        >
+                            <span className="dashicons dashicons-no-alt"></span>
+                        </Button>
+                    </div>
                 </div>
 
                 <div className="bb-rl-onboarding-content">

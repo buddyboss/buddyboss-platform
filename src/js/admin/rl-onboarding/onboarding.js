@@ -16,13 +16,13 @@ const OnboardingApp = () => {
 
     const checkShouldShowOnboarding = async () => {
         try {
-            const response = await fetch(window.ajaxurl, {
+            const response = await fetch(window.bbRlOnboarding?.ajaxUrl || window.ajaxurl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
                 },
                 body: new URLSearchParams({
-                    action: 'bb_rl_should_show_onboarding',
+                    action: window.bbRlOnboarding.wizardId + '_should_show',
                     nonce: window.bbRlOnboarding?.nonce || '',
                 }),
             });
@@ -41,13 +41,123 @@ const OnboardingApp = () => {
         setShowModal(false);
     };
 
-    const handleContinue = (selectedOption) => {
+    const handleContinue = async (selectedOption) => {
         // Handle the continue action with the selected option
         console.log('Selected option:', selectedOption);
 
-        // You can add additional logic here for handling the selected option
-        // For now, we'll just close the modal
-        setShowModal(false);
+        try {
+            const response = await fetch(window.bbRlOnboarding?.ajaxUrl || window.ajaxurl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: new URLSearchParams({
+                    action: window.bbRlOnboarding.wizardId + '_complete',
+                    nonce: window.bbRlOnboarding?.nonce || '',
+                    selectedOption: selectedOption,
+                    skipped: '0',
+                }),
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                console.log('Onboarding completed successfully:', data.data);
+                
+                // Trigger custom event for extensibility
+                const event = new CustomEvent('bb_rl_onboarding_completed', {
+                    detail: {
+                        selectedOption: selectedOption,
+                        data: data.data
+                    }
+                });
+                document.dispatchEvent(event);
+                
+                // Handle different completion scenarios
+                if (selectedOption === 'readylaunch') {
+                    // Redirect to ReadyLaunch settings page
+                    window.location.href = window.location.origin + '/wp-admin/admin.php?page=buddyboss-platform&tab=buddyboss_readylaunch';
+                } else if (selectedOption === 'buddyboss-theme-buy') {
+                    // Redirect to BuddyBoss theme purchase page
+                    window.open('https://www.buddyboss.com/theme/', '_blank');
+                } else {
+                    // Just close the modal for other options
+                    setShowModal(false);
+                }
+            } else {
+                console.error('Error completing onboarding:', data.data?.message || 'Unknown error');
+            }
+        } catch (error) {
+            console.error('Error completing onboarding:', error);
+        }
+    };
+
+    const handleSkip = async () => {
+        // Handle skipping the onboarding
+        try {
+            const response = await fetch(window.bbRlOnboarding?.ajaxUrl || window.ajaxurl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: new URLSearchParams({
+                    action: window.bbRlOnboarding.wizardId + '_complete',
+                    nonce: window.bbRlOnboarding?.nonce || '',
+                    selectedOption: '',
+                    skipped: '1',
+                }),
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                console.log('Onboarding skipped successfully');
+                
+                // Trigger custom event for extensibility
+                const event = new CustomEvent('bb_rl_onboarding_skipped', {
+                    detail: {
+                        data: data.data
+                    }
+                });
+                document.dispatchEvent(event);
+                
+                setShowModal(false);
+            } else {
+                console.error('Error skipping onboarding:', data.data?.message || 'Unknown error');
+            }
+        } catch (error) {
+            console.error('Error skipping onboarding:', error);
+        }
+    };
+
+    const saveStep = async (stepData) => {
+        // Save current step data
+        try {
+            const response = await fetch(window.bbRlOnboarding?.ajaxUrl || window.ajaxurl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: new URLSearchParams({
+                    action: window.bbRlOnboarding.wizardId + '_save_step',
+                    nonce: window.bbRlOnboarding?.nonce || '',
+                    stepData: JSON.stringify(stepData),
+                }),
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                console.log('Step saved successfully:', data.data);
+                return true;
+            } else {
+                console.error('Error saving step:', data.data?.message || 'Unknown error');
+                return false;
+            }
+        } catch (error) {
+            console.error('Error saving step:', error);
+            return false;
+        }
     };
 
     return (
@@ -55,6 +165,8 @@ const OnboardingApp = () => {
             isOpen={showModal}
             onClose={handleModalClose}
             onContinue={handleContinue}
+            onSkip={handleSkip}
+            onSaveStep={saveStep}
         />
     );
 };

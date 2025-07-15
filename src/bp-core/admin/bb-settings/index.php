@@ -11,11 +11,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+// Load the base Setup Wizard Manager class first.
+require_once buddypress()->plugin_dir . 'bp-core/classes/class-bb-setup-wizard-manager.php';
+
 // Load the readylaunch settings.
 require_once __DIR__ . '/readylaunch/index.php';
 
-require_once __DIR__ . '/rl-onboarding/class-bb-readylaunch-onboarding.php';
-
-if ( class_exists( 'BB_ReadyLaunch_Onboarding' ) ) {
-	return BB_ReadyLaunch_Onboarding::instance();
-}
+// Load the ReadyLaunch onboarding system.
+require_once __DIR__ . '/rl-onboarding/index.php';
