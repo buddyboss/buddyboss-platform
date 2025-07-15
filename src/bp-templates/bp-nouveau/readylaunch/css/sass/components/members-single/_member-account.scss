@@ -259,6 +259,13 @@
 			@include bb-rl-label-heading-md-thin;
 			color: var(--bb-rl-text-color);
 		}
+
+		.bb-onesignal-popup-content ul li:before {
+			background-color: var(--bb-rl-background-tertiary-color);
+			color: var(--bb-rl-text-secondary-color);
+			top: 0;
+			font-size: var(--bb-rl-font-size-sm);
+		}
 	}
 
 	.bb-onesignal-popup .bb-onesignal-popup-header,
@@ -303,11 +310,18 @@
 			border: 0;
 			color: var(--bb-rl-icon-color) !important;
 			font-style: normal;
-			font-size: 24px;
 			background-color: transparent;
 			box-shadow: none;
 			opacity: 1;
 			cursor: pointer;
+			font-size: 0;
+
+			&::before {
+				content: "\e4f6";
+				font-family: bb-icons-rl;
+				font-size: 24px;
+				color: var(--bb-rl-icon-color);
+			}
 		}
 
 		.bb-onesignal-popup-content {
@@ -323,6 +337,11 @@
 				display: flex;
 				align-items: center;
 				gap: var(--bb-rl-space-100);
+
+				img {
+					opacity: 0.4;
+					max-height: 14px;
+				}
 			 }
 		}
 	}

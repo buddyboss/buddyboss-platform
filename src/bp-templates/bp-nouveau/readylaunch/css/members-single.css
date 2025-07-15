@@ -1578,6 +1578,14 @@ table.profile-settings tbody td select {
   color: var(--bb-rl-text-color);
 }
 
+.bb-readylaunch-template .bb-onesignal-popup .bb-onesignal-popup-content ul li:before,
+.bb-readylaunch-template .bb-onesignal-popup-close .bb-onesignal-popup-content ul li:before {
+  background-color: var(--bb-rl-background-tertiary-color);
+  color: var(--bb-rl-text-secondary-color);
+  top: 0;
+  font-size: var(--bb-rl-font-size-sm);
+}
+
 .bb-readylaunch-template .bb-onesignal-popup .bb-onesignal-popup-header,
 .bb-readylaunch-template .bb-onesignal-popup-close .bb-onesignal-popup-header {
   font-size: var(--bb-rl-font-size-base);
@@ -1619,11 +1627,18 @@ table.profile-settings tbody td select {
   border: 0;
   color: var(--bb-rl-icon-color) !important;
   font-style: normal;
-  font-size: 24px;
   background-color: transparent;
   box-shadow: none;
   opacity: 1;
   cursor: pointer;
+  font-size: 0;
+}
+
+.bb-readylaunch-template .bb-onesignal-popup-close .mfp-close::before {
+  content: "\e4f6";
+  font-family: bb-icons-rl;
+  font-size: 24px;
+  color: var(--bb-rl-icon-color);
 }
 
 .bb-readylaunch-template .bb-onesignal-popup-close .bb-onesignal-popup-content ul {
@@ -1638,6 +1653,11 @@ table.profile-settings tbody td select {
   display: flex;
   align-items: center;
   gap: var(--bb-rl-space-100);
+}
+
+.bb-readylaunch-template .bb-onesignal-popup-close .bb-onesignal-popup-content ul li img {
+  opacity: 0.4;
+  max-height: 14px;
 }
 
 .bb-readylaunch-template .mfp-s-ready .mfp-preloader {
