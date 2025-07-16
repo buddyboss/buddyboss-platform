@@ -24,6 +24,78 @@ export const OnboardingModal = ({ isOpen, onClose, onContinue, onSkip, onSaveSte
         setStepData(savedData);
     }, []);
 
+    // Enable/disable fullscreen mode based on current step
+    useEffect(() => {
+        if (isOpen && currentStep.component && currentStep.component !== 'SplashScreen') {
+            enableFullscreenMode();
+        } else {
+            disableFullscreenMode();
+        }
+
+        // Cleanup on unmount
+        return () => {
+            disableFullscreenMode();
+        };
+    }, [isOpen, currentStep.component]);
+
+    const enableFullscreenMode = () => {
+        // Hide WordPress admin elements for fullscreen experience
+        document.body.classList.add('bb-rl-fullscreen-mode');
+        
+        // Hide admin bar
+        const adminBar = document.getElementById('wpadminbar');
+        if (adminBar) {
+            adminBar.style.display = 'none';
+        }
+        
+        // Hide admin menu
+        const adminMenu = document.getElementById('adminmenumain');
+        if (adminMenu) {
+            adminMenu.style.display = 'none';
+        }
+        
+        // Hide admin footer
+        const adminFooter = document.getElementById('wpfooter');
+        if (adminFooter) {
+            adminFooter.style.display = 'none';
+        }
+        
+        // Adjust main content area
+        const wpwrap = document.getElementById('wpwrap');
+        if (wpwrap) {
+            wpwrap.style.marginLeft = '0';
+        }
+    };
+
+    const disableFullscreenMode = () => {
+        // Restore WordPress admin elements
+        document.body.classList.remove('bb-rl-fullscreen-mode');
+        
+        // Restore admin bar
+        const adminBar = document.getElementById('wpadminbar');
+        if (adminBar) {
+            adminBar.style.display = '';
+        }
+        
+        // Restore admin menu
+        const adminMenu = document.getElementById('adminmenumain');
+        if (adminMenu) {
+            adminMenu.style.display = '';
+        }
+        
+        // Restore admin footer
+        const adminFooter = document.getElementById('wpfooter');
+        if (adminFooter) {
+            adminFooter.style.display = '';
+        }
+        
+        // Restore main content area
+        const wpwrap = document.getElementById('wpwrap');
+        if (wpwrap) {
+            wpwrap.style.marginLeft = '';
+        }
+    };
+
     const handleNext = async (formData = {}) => {
         setIsProcessing(true);
 
@@ -117,6 +189,13 @@ export const OnboardingModal = ({ isOpen, onClose, onContinue, onSkip, onSaveSte
         }
     };
 
+    const handleClose = () => {
+        disableFullscreenMode();
+        if (onClose) {
+            onClose();
+        }
+    };
+
     const renderCurrentStep = () => {
         if (!currentStep || !currentStep.component) {
             return (
@@ -151,7 +230,7 @@ export const OnboardingModal = ({ isOpen, onClose, onContinue, onSkip, onSaveSte
             );
         }
 
-        // Handle special cases for components that don't use BaseStepLayout
+        // Handle special case for SplashScreen (doesn't use BaseStepLayout)
         if (currentStep.component === 'SplashScreen') {
             return (
                 <StepComponent
@@ -162,6 +241,7 @@ export const OnboardingModal = ({ isOpen, onClose, onContinue, onSkip, onSaveSte
             );
         }
 
+        // Handle FinishScreen (custom fullscreen layout)
         if (currentStep.component === 'FinishScreen') {
             return (
                 <StepComponent
@@ -193,8 +273,8 @@ export const OnboardingModal = ({ isOpen, onClose, onContinue, onSkip, onSaveSte
         return null;
     }
 
-    // Special handling for splash screen and finish screen (full modal)
-    if (currentStep.component === 'SplashScreen' || currentStep.component === 'FinishScreen') {
+    // Special handling for splash screen only (modal popup)
+    if (currentStep.component === 'SplashScreen') {
         return (
             <div className="bb-rl-onboarding-overlay">
                 <div className="bb-rl-onboarding-modal bb-rl-special-step">
@@ -202,16 +282,14 @@ export const OnboardingModal = ({ isOpen, onClose, onContinue, onSkip, onSaveSte
                         <div className="bb-rl-logo">
                             <img src={window.bbRlOnboarding?.assets?.logo || ''} alt="BuddyBoss" />
                         </div>
-                        {currentStep.component === 'SplashScreen' && (
-                            <Button 
-                                className="bb-rl-close-button"
-                                onClick={onClose}
-                                label={__('Close', 'buddyboss')}
-                                disabled={isProcessing}
-                            >
-                                <span className="dashicons dashicons-no-alt"></span>
-                            </Button>
-                        )}
+                        <Button 
+                            className="bb-rl-close-button"
+                            onClick={handleClose}
+                            label={__('Close', 'buddyboss')}
+                            disabled={isProcessing}
+                        >
+                            <span className="dashicons dashicons-no-alt"></span>
+                        </Button>
                     </div>
                     
                     <div className="bb-rl-modal-content">
@@ -222,25 +300,36 @@ export const OnboardingModal = ({ isOpen, onClose, onContinue, onSkip, onSaveSte
         );
     }
 
-    // Standard step layout (left/right panels)
+    // Full screen layout for all step-based components (including FinishScreen)
     return (
-        <div className="bb-rl-onboarding-overlay">
-            <div className="bb-rl-onboarding-modal bb-rl-step-modal">
-                <div className="bb-rl-modal-header">
+        <div className="bb-rl-onboarding-overlay bb-rl-fullscreen">
+            <div className="bb-rl-onboarding-modal bb-rl-fullscreen-modal">
+                <div className="bb-rl-fullscreen-header">
                     <div className="bb-rl-logo">
                         <img src={window.bbRlOnboarding?.assets?.logo || ''} alt="BuddyBoss" />
                     </div>
-                    <Button 
-                        className="bb-rl-close-button"
-                        onClick={onClose}
-                        label={__('Close', 'buddyboss')}
-                        disabled={isProcessing}
-                    >
-                        <span className="dashicons dashicons-no-alt"></span>
-                    </Button>
+                    <div className="bb-rl-header-actions">
+                        {currentStep.component !== 'FinishScreen' && (
+                            <Button 
+                                className="bb-rl-back-to-selection"
+                                onClick={() => setCurrentStepIndex(0)}
+                                disabled={isProcessing}
+                            >
+                                ← {__('Back to Start', 'buddyboss')}
+                            </Button>
+                        )}
+                        <Button 
+                            className="bb-rl-close-button"
+                            onClick={handleClose}
+                            label={__('Close', 'buddyboss')}
+                            disabled={isProcessing}
+                        >
+                            <span className="dashicons dashicons-no-alt"></span>
+                        </Button>
+                    </div>
                 </div>
                 
-                <div className="bb-rl-modal-content">
+                <div className="bb-rl-fullscreen-content">
                     {renderCurrentStep()}
                 </div>
             </div>

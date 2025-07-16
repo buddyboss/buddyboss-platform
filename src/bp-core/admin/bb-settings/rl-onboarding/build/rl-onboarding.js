@@ -151,6 +151,76 @@ const OnboardingModal = ({
     }
     setStepData(savedData);
   }, []);
+
+  // Enable/disable fullscreen mode based on current step
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
+    if (isOpen && currentStep.component && currentStep.component !== 'SplashScreen') {
+      enableFullscreenMode();
+    } else {
+      disableFullscreenMode();
+    }
+
+    // Cleanup on unmount
+    return () => {
+      disableFullscreenMode();
+    };
+  }, [isOpen, currentStep.component]);
+  const enableFullscreenMode = () => {
+    // Hide WordPress admin elements for fullscreen experience
+    document.body.classList.add('bb-rl-fullscreen-mode');
+
+    // Hide admin bar
+    const adminBar = document.getElementById('wpadminbar');
+    if (adminBar) {
+      adminBar.style.display = 'none';
+    }
+
+    // Hide admin menu
+    const adminMenu = document.getElementById('adminmenumain');
+    if (adminMenu) {
+      adminMenu.style.display = 'none';
+    }
+
+    // Hide admin footer
+    const adminFooter = document.getElementById('wpfooter');
+    if (adminFooter) {
+      adminFooter.style.display = 'none';
+    }
+
+    // Adjust main content area
+    const wpwrap = document.getElementById('wpwrap');
+    if (wpwrap) {
+      wpwrap.style.marginLeft = '0';
+    }
+  };
+  const disableFullscreenMode = () => {
+    // Restore WordPress admin elements
+    document.body.classList.remove('bb-rl-fullscreen-mode');
+
+    // Restore admin bar
+    const adminBar = document.getElementById('wpadminbar');
+    if (adminBar) {
+      adminBar.style.display = '';
+    }
+
+    // Restore admin menu
+    const adminMenu = document.getElementById('adminmenumain');
+    if (adminMenu) {
+      adminMenu.style.display = '';
+    }
+
+    // Restore admin footer
+    const adminFooter = document.getElementById('wpfooter');
+    if (adminFooter) {
+      adminFooter.style.display = '';
+    }
+
+    // Restore main content area
+    const wpwrap = document.getElementById('wpwrap');
+    if (wpwrap) {
+      wpwrap.style.marginLeft = '';
+    }
+  };
   const handleNext = async (formData = {}) => {
     setIsProcessing(true);
     try {
@@ -236,6 +306,12 @@ const OnboardingModal = ({
       handleComplete();
     }
   };
+  const handleClose = () => {
+    disableFullscreenMode();
+    if (onClose) {
+      onClose();
+    }
+  };
   const renderCurrentStep = () => {
     if (!currentStep || !currentStep.component) {
       return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
@@ -258,7 +334,7 @@ const OnboardingModal = ({
       }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h2", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Component Load Error', 'buddyboss')), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Failed to load the step component.', 'buddyboss')));
     }
 
-    // Handle special cases for components that don't use BaseStepLayout
+    // Handle special case for SplashScreen (doesn't use BaseStepLayout)
     if (currentStep.component === 'SplashScreen') {
       return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(StepComponent, {
         stepData: currentStep,
@@ -266,6 +342,8 @@ const OnboardingModal = ({
         onSkip: handleSkip
       });
     }
+
+    // Handle FinishScreen (custom fullscreen layout)
     if (currentStep.component === 'FinishScreen') {
       return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(StepComponent, {
         stepData: currentStep,
@@ -292,8 +370,8 @@ const OnboardingModal = ({
     return null;
   }
 
-  // Special handling for splash screen and finish screen (full modal)
-  if (currentStep.component === 'SplashScreen' || currentStep.component === 'FinishScreen') {
+  // Special handling for splash screen only (modal popup)
+  if (currentStep.component === 'SplashScreen') {
     return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "bb-rl-onboarding-overlay"
     }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
@@ -305,9 +383,9 @@ const OnboardingModal = ({
     }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("img", {
       src: window.bbRlOnboarding?.assets?.logo || '',
       alt: "BuddyBoss"
-    })), currentStep.component === 'SplashScreen' && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.Button, {
+    })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.Button, {
       className: "bb-rl-close-button",
-      onClick: onClose,
+      onClick: handleClose,
       label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Close', 'buddyboss'),
       disabled: isProcessing
     }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
@@ -317,27 +395,33 @@ const OnboardingModal = ({
     }, renderCurrentStep())));
   }
 
-  // Standard step layout (left/right panels)
+  // Full screen layout for all step-based components (including FinishScreen)
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "bb-rl-onboarding-overlay"
+    className: "bb-rl-onboarding-overlay bb-rl-fullscreen"
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "bb-rl-onboarding-modal bb-rl-step-modal"
+    className: "bb-rl-onboarding-modal bb-rl-fullscreen-modal"
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "bb-rl-modal-header"
+    className: "bb-rl-fullscreen-header"
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "bb-rl-logo"
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("img", {
     src: window.bbRlOnboarding?.assets?.logo || '',
     alt: "BuddyBoss"
-  })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.Button, {
+  })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "bb-rl-header-actions"
+  }, currentStep.component !== 'FinishScreen' && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.Button, {
+    className: "bb-rl-back-to-selection",
+    onClick: () => setCurrentStepIndex(0),
+    disabled: isProcessing
+  }, "\u2190 ", (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Back to Start', 'buddyboss')), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.Button, {
     className: "bb-rl-close-button",
-    onClick: onClose,
+    onClick: handleClose,
     label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Close', 'buddyboss'),
     disabled: isProcessing
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
     className: "dashicons dashicons-no-alt"
-  }))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "bb-rl-modal-content"
+  })))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "bb-rl-fullscreen-content"
   }, renderCurrentStep())));
 };
 
@@ -878,7 +962,11 @@ const FinishScreen = ({
     window.location.href = window.bbRlOnboarding?.readylaunch?.admin_url + 'admin.php?page=buddyboss-platform';
   };
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "bb-rl-finish-screen"
+    className: "bb-rl-finish-screen bb-rl-fullscreen-finish"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "bb-rl-finish-container"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "bb-rl-finish-left"
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "bb-rl-finish-content"
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
@@ -901,12 +989,7 @@ const FinishScreen = ({
     className: "bb-rl-checkmark-check-path",
     fill: "none",
     d: "M14.1 27.2l7.1 7.2 16.7-16.8"
-  })))), imageUrl && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "bb-rl-finish-image"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("img", {
-    src: imageUrl,
-    alt: title
-  })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  })))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "bb-rl-finish-text"
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h1", {
     className: "bb-rl-finish-title"
@@ -959,7 +1042,16 @@ const FinishScreen = ({
     onClick: handleFinish,
     variant: "link",
     disabled: isFinishing
-  }, isFinishing ? (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Finishing...', 'buddyboss') : (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Close Setup', 'buddyboss'))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }, isFinishing ? (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Finishing...', 'buddyboss') : (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Close Setup', 'buddyboss'))))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "bb-rl-finish-right"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "bb-rl-finish-sidebar"
+  }, imageUrl && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "bb-rl-finish-image"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("img", {
+    src: imageUrl,
+    alt: title
+  })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "bb-rl-next-steps"
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h3", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('What\'s next?', 'buddyboss')), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "bb-rl-next-steps-list"
@@ -1002,7 +1094,7 @@ const FinishScreen = ({
     className: "bb-rl-resource-link"
   }, "\uD83D\uDC65 ", (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Join Community', 'buddyboss')))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "bb-rl-thank-you"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Thank you for choosing BuddyBoss! We\'re excited to see what you build with your new community.', 'buddyboss')))));
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Thank you for choosing BuddyBoss! We\'re excited to see what you build with your new community.', 'buddyboss')))))));
 };
 
 /***/ }),

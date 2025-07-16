@@ -35,6 +35,7 @@ $error-color: #d63638;
         padding: 0;
         align-items: stretch;
         justify-content: stretch;
+        background: $white;
     }
 }
 
@@ -59,6 +60,16 @@ $error-color: #d63638;
     &.bb-rl-step-modal {
         height: 90vh;
         overflow: hidden;
+    }
+    
+    &.bb-rl-fullscreen-modal {
+        max-width: none;
+        max-height: none;
+        height: 100vh;
+        width: 100vw;
+        border-radius: 0;
+        box-shadow: none;
+        animation: none;
     }
 }
 
@@ -119,11 +130,94 @@ $error-color: #d63638;
     }
 }
 
+// ==========================================================================
+// Fullscreen Header
+// ==========================================================================
+
+.bb-rl-fullscreen-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 32px;
+    border-bottom: 1px solid $border-color;
+    background: $white;
+    flex-shrink: 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    
+    .bb-rl-logo {
+        img {
+            height: 32px;
+            width: auto;
+        }
+    }
+    
+    .bb-rl-header-actions {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+    }
+    
+    .bb-rl-back-to-selection {
+        background: none;
+        border: 1px solid $border-color;
+        color: #666;
+        padding: 8px 16px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+        transition: $transition;
+        
+        &:hover {
+            background: #f0f0f0;
+            border-color: #999;
+            color: #333;
+        }
+        
+        &:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+    }
+    
+    .bb-rl-close-button {
+        background: none;
+        border: none;
+        font-size: 18px;
+        cursor: pointer;
+        color: #666;
+        padding: 8px;
+        border-radius: 4px;
+        transition: $transition;
+        
+        &:hover {
+            background: #f0f0f0;
+            color: #000;
+        }
+        
+        &:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
+        .dashicons {
+            font-size: 20px;
+        }
+    }
+}
+
 .bb-rl-modal-content {
     flex: 1;
     overflow: hidden;
     display: flex;
     flex-direction: column;
+}
+
+.bb-rl-fullscreen-content {
+    flex: 1;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 80px); // Subtract header height
 }
 
 // ==========================================================================
@@ -197,6 +291,7 @@ $error-color: #d63638;
     display: grid;
     grid-template-columns: 1fr 1fr;
     overflow: hidden;
+    min-height: 0; // Important for proper flex behavior
 }
 
 .bb-rl-left-panel {
@@ -206,6 +301,7 @@ $error-color: #d63638;
     border-right: 1px solid $border-color;
     display: flex;
     flex-direction: column;
+    min-height: 0; // Important for proper flex behavior
 }
 
 .bb-rl-right-panel {
@@ -216,10 +312,12 @@ $error-color: #d63638;
     align-items: center;
     justify-content: center;
     padding: 32px;
+    min-height: 0; // Important for proper flex behavior
 }
 
 .bb-rl-step-info {
     margin-bottom: 32px;
+    flex-shrink: 0;
     
     .bb-rl-step-title {
         font-size: 28px;
@@ -240,6 +338,8 @@ $error-color: #d63638;
 .bb-rl-step-options {
     flex: 1;
     margin-bottom: 32px;
+    overflow-y: auto;
+    min-height: 0; // Important for proper flex behavior
 }
 
 .bb-rl-step-navigation {
@@ -247,6 +347,7 @@ $error-color: #d63638;
     gap: 12px;
     padding-top: 20px;
     border-top: 1px solid $border-color;
+    flex-shrink: 0;
     
     .bb-rl-nav-button {
         padding: 12px 24px;
@@ -774,6 +875,81 @@ $error-color: #d63638;
     margin: 0 auto;
     overflow-y: auto;
     
+    // Fullscreen layout
+    &.bb-rl-fullscreen-finish {
+        max-width: none;
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        text-align: left;
+        
+        .bb-rl-finish-container {
+            height: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            overflow: hidden;
+        }
+        
+        .bb-rl-finish-left {
+            padding: 40px;
+            overflow-y: auto;
+            background: $white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .bb-rl-finish-right {
+            padding: 40px;
+            overflow-y: auto;
+            background: #f8f9fa;
+            border-left: 1px solid $border-color;
+        }
+        
+        .bb-rl-finish-sidebar {
+            max-width: 500px;
+        }
+        
+        // Adjust styles for fullscreen layout
+        .bb-rl-finish-text {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        
+        .bb-rl-setup-summary {
+            margin-bottom: 32px;
+            
+            .bb-rl-summary-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+            }
+        }
+        
+        .bb-rl-finish-actions {
+            text-align: center;
+            margin-bottom: 0;
+        }
+        
+        .bb-rl-next-steps {
+            text-align: left;
+            margin-bottom: 32px;
+        }
+        
+        .bb-rl-support-resources {
+            margin-bottom: 24px;
+            
+            .bb-rl-resource-links {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+        }
+        
+        .bb-rl-thank-you {
+            text-align: left;
+        }
+    }
+    
     .bb-rl-finish-content {
         .bb-rl-success-animation {
             margin-bottom: 32px;
@@ -817,11 +993,13 @@ $error-color: #d63638;
         
         .bb-rl-finish-image {
             margin-bottom: 32px;
+            text-align: center;
             
             img {
                 max-width: 100%;
                 height: auto;
                 border-radius: $border-radius;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             }
         }
         
@@ -1038,6 +1216,28 @@ $error-color: #d63638;
 }
 
 // ==========================================================================
+// Fullscreen Mode Body Styles
+// ==========================================================================
+
+body.bb-rl-fullscreen-mode {
+    #wpadminbar,
+    #adminmenumain,
+    #wpfooter {
+        display: none !important;
+    }
+    
+    #wpwrap {
+        margin-left: 0 !important;
+        padding-top: 0 !important;
+    }
+    
+    #wpcontent {
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+}
+
+// ==========================================================================
 // Responsive Design
 // ==========================================================================
 
@@ -1050,6 +1250,29 @@ $error-color: #d63638;
     .bb-rl-left-panel {
         border-right: none;
         border-bottom: 1px solid $border-color;
+        max-height: 50vh;
+    }
+    
+    .bb-rl-right-panel {
+        min-height: 50vh;
+    }
+    
+    // Fullscreen finish screen responsive
+    .bb-rl-finish-screen.bb-rl-fullscreen-finish {
+        .bb-rl-finish-container {
+            grid-template-columns: 1fr;
+            grid-template-rows: auto 1fr;
+        }
+        
+        .bb-rl-finish-left {
+            max-height: 60vh;
+            border-bottom: 1px solid $border-color;
+        }
+        
+        .bb-rl-finish-right {
+            border-left: none;
+            min-height: 40vh;
+        }
     }
 }
 
@@ -1061,10 +1284,31 @@ $error-color: #d63638;
         &.bb-rl-step-modal {
             height: calc(100vh - 20px);
         }
+        
+        &.bb-rl-fullscreen-modal {
+            margin: 0;
+            max-height: none;
+        }
     }
     
-    .bb-rl-modal-header {
+    .bb-rl-modal-header,
+    .bb-rl-fullscreen-header {
         padding: 16px 20px;
+    }
+    
+    .bb-rl-fullscreen-header {
+        .bb-rl-header-actions {
+            gap: 12px;
+        }
+        
+        .bb-rl-back-to-selection {
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+    }
+    
+    .bb-rl-fullscreen-content {
+        height: calc(100vh - 70px); // Adjust for smaller header
     }
     
     .bb-rl-step-header {
@@ -1109,12 +1353,51 @@ $error-color: #d63638;
     .bb-rl-layout-options {
         grid-template-columns: 1fr;
     }
+    
+    // Fullscreen finish screen mobile
+    .bb-rl-finish-screen.bb-rl-fullscreen-finish {
+        .bb-rl-finish-left,
+        .bb-rl-finish-right {
+            padding: 20px;
+        }
+        
+        .bb-rl-setup-summary {
+            .bb-rl-summary-grid {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+        }
+        
+        .bb-rl-finish-text {
+            .bb-rl-finish-title {
+                font-size: 28px;
+            }
+        }
+    }
 }
 
 @media (max-width: 480px) {
     .bb-rl-onboarding-modal {
         margin: 5px;
         max-height: calc(100vh - 10px);
+        
+        &.bb-rl-fullscreen-modal {
+            margin: 0;
+            max-height: none;
+        }
+    }
+    
+    .bb-rl-fullscreen-header {
+        padding: 12px 16px;
+        
+        .bb-rl-header-actions {
+            flex-direction: column;
+            gap: 8px;
+        }
+    }
+    
+    .bb-rl-fullscreen-content {
+        height: calc(100vh - 80px); // Adjust for header changes
     }
     
     .bb-rl-step-info {
@@ -1156,6 +1439,58 @@ $error-color: #d63638;
             }
         }
     }
+    
+    // Fullscreen finish screen small mobile
+    .bb-rl-finish-screen.bb-rl-fullscreen-finish {
+        .bb-rl-finish-left {
+            padding: 16px;
+        }
+        
+        .bb-rl-finish-right {
+            padding: 16px;
+        }
+        
+        .bb-rl-finish-text {
+            .bb-rl-finish-title {
+                font-size: 20px;
+            }
+            
+            .bb-rl-finish-description,
+            .bb-rl-finish-subtitle {
+                font-size: 14px;
+            }
+        }
+        
+        .bb-rl-finish-actions {
+            .bb-rl-finish-button {
+                &.bb-rl-primary-action,
+                &.bb-rl-secondary-action {
+                    padding: 12px 20px;
+                    font-size: 14px;
+                }
+            }
+        }
+        
+        .bb-rl-next-steps {
+            .bb-rl-next-step {
+                .bb-rl-step-number {
+                    width: 28px;
+                    height: 28px;
+                    font-size: 12px;
+                }
+                
+                .bb-rl-step-content {
+                    h4 {
+                        font-size: 14px;
+                    }
+                    
+                    p {
+                        font-size: 12px;
+                    }
+                }
+            }
+        }
+    }
 }
 
 // ==========================================================================
@@ -1175,3 +1510,4 @@ $error-color: #d63638;
         display: none !important;
     }
 }
+
