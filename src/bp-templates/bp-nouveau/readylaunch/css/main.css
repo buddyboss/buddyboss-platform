@@ -2230,6 +2230,17 @@ div.vjs-menu li.vjs-selected .vjs-menu-item-text, div.vjs-menu li:hover .vjs-men
   background-color: var(--bb-rl-background-secondary-color);
 }
 
+.bb-rl-view-more--pagination .bb-rl-button.bb-rl-button--small {
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 500;
+  line-height: 1.7;
+  gap: var(--bb-rl-space-50);
+}
+
+.bb-rl-view-more--pagination .bb-rl-button.bb-rl-button--small [class*="bb-icons"] {
+  font-size: 16px;
+}
+
 /* List items headings */
 .item .list-title {
   font-size: var(--bb-rl-font-size-base);
@@ -6589,7 +6600,7 @@ body.admin-bar .bb-rl-header {
   left: auto;
 }
 
-.notification-list > li:has(.bb-rl-option-wrap.active), .notification-list > li:hover {
+.notification-list > li:has(.bb-rl-option-wrap.active), .notification-list > li:hover:not(.bb-rl-view-more--pagination) {
   background-color: var(--bb-rl-background-secondary-hover-color);
 }
 

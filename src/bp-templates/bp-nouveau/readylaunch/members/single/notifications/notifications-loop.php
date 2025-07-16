@@ -81,8 +81,8 @@ if ( bp_has_notifications( bp_ajax_querystring( 'notifications' ) ) ) {
 			$notifications_url
 		);
 		?>
-		<li class="bb-rl-view-more" data-bp-pagination="<?php echo esc_attr( $notifications_page_arg ); ?>">
-			<a class="bb-rl-button bb-rl-button--brandFill" href="<?php echo esc_url( $next_page_url ); ?>" data-method="append">
+		<li class="bb-rl-view-more bb-rl-view-more--pagination" data-bp-pagination="<?php echo esc_attr( $notifications_page_arg ); ?>">
+			<a class="bb-rl-button bb-rl-button--secondaryFill bb-rl-button--small" href="<?php echo esc_url( $next_page_url ); ?>" data-method="append">
 				<?php
 				printf(
 					/* translators: %d: number of remaining notifications */
@@ -90,7 +90,7 @@ if ( bp_has_notifications( bp_ajax_querystring( 'notifications' ) ) ) {
 					esc_html( number_format_i18n( $total_notification_count - ( $current_page * $notifications_per_page ) ) )
 				);
 				?>
-				<i class="bb-icons-rl-arrow-down"></i>
+				<i class="bb-icons-rl-caret-down"></i>
 			</a>
 		</li>
 		<?php
