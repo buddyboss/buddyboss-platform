@@ -279,8 +279,9 @@ export const OnboardingModal = ({ isOpen, onClose, onContinue, onSkip, onSaveSte
             <div className="bb-rl-onboarding-overlay">
                 <div className="bb-rl-onboarding-modal bb-rl-special-step">
                     <div className="bb-rl-modal-header">
-                        <div className="bb-rl-logo">
-                            <img src={window.bbRlOnboarding?.assets?.logo || ''} alt="BuddyBoss" />
+                        <div className="bb-rl-modal-header-content">
+                            <h2 className="bb-rl-modal-title">{__('Welcome to BuddyBoss', 'buddyboss')}</h2>
+                            <p className="bb-rl-modal-description">{__('Let\'s bring your community to life by choose the look and feel that matches your vision.', 'buddyboss')}</p>
                         </div>
                         <Button 
                             className="bb-rl-close-button"
@@ -288,7 +289,7 @@ export const OnboardingModal = ({ isOpen, onClose, onContinue, onSkip, onSaveSte
                             label={__('Close', 'buddyboss')}
                             disabled={isProcessing}
                         >
-                            <span className="dashicons dashicons-no-alt"></span>
+                            <span className="bb-icons-rl-x"></span>
                         </Button>
                     </div>
                     

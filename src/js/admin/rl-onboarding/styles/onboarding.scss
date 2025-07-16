@@ -6,6 +6,9 @@
 $primary-color: #e57e3a;
 $secondary-color: #f0f0f1;
 $text-color: #1e1e1e;
+$text-secondary-color: #2f2f2f;
+$icon-color: #2f2f2f;
+$icon-secondary-color: #666666;
 $border-color: #ddd;
 $white: #ffffff;
 $overlay-color: rgba(0, 0, 0, 0.8);
@@ -92,31 +95,35 @@ $error-color: #d63638;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 20px 32px;
-    border-bottom: 1px solid $border-color;
+    padding: 32px 40px;
     background: $white;
     flex-shrink: 0;
-    
-    .bb-rl-logo {
-        img {
-            height: 32px;
-            width: auto;
-        }
+
+    .bb-rl-modal-title {
+        color: $text-color;
+        font-size: 22px;
+        font-weight: 600;
+        line-height: 1.4;
+        margin: 0 0 6px 0;
+    }
+
+    .bb-rl-modal-description {
+        color: $text-secondary-color;
+        font-size: 14px;
+        font-weight: 400;
+        margin: 0;
     }
     
     .bb-rl-close-button {
+        color: $icon-secondary-color;
         background: none;
         border: none;
-        font-size: 18px;
+        font-size: 24px;
         cursor: pointer;
-        color: #666;
-        padding: 8px;
-        border-radius: 4px;
-        transition: $transition;
+        padding: 0;
         
         &:hover {
-            background: #f0f0f0;
-            color: #000;
+            color: $icon-color;
         }
         
         &:disabled {
