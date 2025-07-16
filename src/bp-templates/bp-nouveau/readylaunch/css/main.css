@@ -6102,6 +6102,7 @@ body.bb-readylaunch-template .select2-container--rl.select2-container--open:has(
   font-style: normal;
   margin-left: var(--bb-rl-space-100);
   margin-right: 0;
+  font-style: normal;
 }
 
 .bb-readylaunch-template .bb-toast-messages-enable .bb-toast-messages .toast-messages-list .read-item .action-close [class*="bb-icon"]:before {
