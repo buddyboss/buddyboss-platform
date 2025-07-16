@@ -16,7 +16,8 @@ $icon-secondary-color: #666666;
 $border-color: #ddd;
 $border-tertiary-color: #cccccc;
 $white: #ffffff;
-$overlay-color: rgba(0, 0, 0, 0.8);
+$overlay-color: rgba(0, 0, 0, 0.6);
+$border-radius-lg: 20px;
 $border-radius: 8px;
 $transition: all 0.3s ease;
 $success-color: #00a32a;
@@ -88,8 +89,9 @@ $lg: 1024px;
 
 .bb-rl-onboarding-modal {
     background: $white;
-    border-radius: $border-radius;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    border: 1px solid $border-tertiary-color;
+    border-radius: $border-radius-lg;
+    box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.12);
     max-width: 1400px;
     width: 100%;
     max-height: 95vh;
