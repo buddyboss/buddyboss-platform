@@ -5,21 +5,56 @@
 // Variables
 $primary-color: #e57e3a;
 $secondary-color: #f0f0f1;
+$background-color: #f6f6f6;
+$background-brand-primary-color: #ef5d33;
 $text-color: #1e1e1e;
+$text-brand-primary-color: #ef5d33;
 $text-secondary-color: #2f2f2f;
+$text-disabled-color: #999999;
 $icon-color: #2f2f2f;
 $icon-secondary-color: #666666;
 $border-color: #ddd;
+$border-tertiary-color: #cccccc;
 $white: #ffffff;
 $overlay-color: rgba(0, 0, 0, 0.8);
 $border-radius: 8px;
 $transition: all 0.3s ease;
 $success-color: #00a32a;
 $error-color: #d63638;
+$sm: 480px;
+$md: 640px;
+$lg: 1024px;
+
 
 // ==========================================================================
 // Base Overlay and Modal
 // ==========================================================================
+
+.bb-rl-button {
+    background: $background-brand-primary-color;
+    color: $white;
+    display: inline-block;
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+
+    &[disabled],
+    &.bb-rl-button--disabled {
+        color: $text-disabled-color;
+        background-color: transparent;
+        border: 1px solid $border-tertiary-color;
+        pointer-events: none;
+    }
+}
+
+// ==========================================================================
+// Base Overlay and Modal
+// ==========================================================================
+
+#bb-rl-onboarding-root * {
+    box-sizing: border-box;
+}
 
 .bb-rl-onboarding-overlay {
     position: fixed;
@@ -40,6 +75,10 @@ $error-color: #d63638;
         justify-content: stretch;
         background: $white;
     }
+
+    .bb-rl-modal-content {
+        overflow: initial;
+    }
 }
 
 .bb-rl-onboarding-modal {
@@ -56,7 +95,7 @@ $error-color: #d63638;
     flex-direction: column;
     
     &.bb-rl-special-step {
-        max-width: 900px;
+        max-width: 1190px;
         overflow-y: auto;
     }
     
@@ -97,7 +136,7 @@ $error-color: #d63638;
     align-items: center;
     padding: 32px 40px;
     background: $white;
-    flex-shrink: 0;
+    position: relative;
 
     .bb-rl-modal-title {
         color: $text-color;
@@ -118,6 +157,9 @@ $error-color: #d63638;
         color: $icon-secondary-color;
         background: none;
         border: none;
+        position: absolute;
+        right: 20px;
+        top: 20px;
         font-size: 24px;
         cursor: pointer;
         padding: 0;
@@ -764,110 +806,99 @@ $error-color: #d63638;
 // ==========================================================================
 
 .bb-rl-splash-screen {
+    padding: 0 40px 40px;
+    height: 100%;
+    width: 100%;
+}
+
+.bb-rl-splash-content-product-container {
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+    gap: 24px;
+    width: 100%;
+}
+
+.bb-rl-splash-content-product {
+    background: $background-color;
+    border-radius: 16px;
+    padding: 32px;
     text-align: center;
-    padding: 40px;
-    max-width: 600px;
-    margin: 0 auto;
-    
-    .bb-rl-splash-content {
-        .bb-rl-splash-logo {
-            margin-bottom: 32px;
-            
-            .bb-rl-logo-image {
-                height: 48px;
-                width: auto;
-            }
+
+    p {
+        margin: 0;
+    }
+
+    .bb-rl-splash-content-product-name {
+        font-size: 14px;
+        font-weight: 500;
+        color: $text-brand-primary-color;
+        margin-bottom: 10px;
+    }
+
+    .bb-rl-splash-content-product-baseline {
+        font-size: 16px;
+        font-weight: 500;
+        color: $text-color;
+        margin-bottom: 35px;
+    }
+
+    .bb-rl-product-preview {
+        border: 1px solid $border-color;
+        border-radius: 8px;
+        margin-bottom: 35px;
+        width: 100%;
+        height: auto;
+        max-width: 100%;
+        box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.12);
+    }
+
+    .bb-rl-splash-content-product-description {
+        font-size: 13px;
+        font-weight: 400;
+        color: $text-secondary-color;
+        margin-bottom: 15px;
+        text-align: center;
+    }
+}
+
+.bb-rl-splash-content-product-features {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    margin-bottom: 30px;
+
+    li {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 13px;
+        font-weight: 500;
+        color: $text-secondary-color;
+        list-style: none;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin: 0;
+
+        [class*="bb-icons"] {
+            font-size: 16px;
+            color: $icon-color;
         }
-        
-        .bb-rl-splash-image {
-            margin-bottom: 32px;
-            
-            img {
-                max-width: 100%;
-                height: auto;
-                border-radius: $border-radius;
-                box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-            }
-        }
-        
-        .bb-rl-splash-text {
-            margin-bottom: 40px;
-            
-            .bb-rl-splash-title {
-                font-size: 36px;
-                font-weight: 700;
-                color: $text-color;
-                margin: 0 0 16px 0;
-                line-height: 1.2;
-            }
-            
-            .bb-rl-splash-description {
-                font-size: 18px;
-                color: #666;
-                margin: 0 0 12px 0;
-                line-height: 1.5;
-            }
-            
-            .bb-rl-splash-subtitle {
-                font-size: 16px;
-                color: #888;
-                margin: 0;
-                line-height: 1.5;
-            }
-        }
-        
-        .bb-rl-splash-actions {
-            margin-bottom: 40px;
-            
-            .bb-rl-splash-button {
-                margin-bottom: 12px;
-                
-                &.bb-rl-get-started-button {
-                    background: $primary-color;
-                    color: $white;
-                    border: none;
-                    padding: 16px 32px;
-                    font-size: 16px;
-                    font-weight: 600;
-                    border-radius: 8px;
-                    cursor: pointer;
-                    transition: $transition;
-                    
-                    &:hover {
-                        background: darken($primary-color, 10%);
-                        transform: translateY(-2px);
-                    }
-                }
-                
-                &.bb-rl-skip-splash-button {
-                    color: #666;
-                    font-size: 14px;
-                    text-decoration: none;
-                    
-                    &:hover {
-                        color: $text-color;
-                    }
-                }
-            }
-        }
-        
-        .bb-rl-splash-features {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
-            
-            .bb-rl-feature-item {
-                display: flex;
-                align-items: center;
-                gap: 8px;
-                font-size: 14px;
-                color: #666;
-                
-                .bb-rl-feature-icon {
-                    font-size: 16px;
-                }
-            }
-        }
+    }
+}
+
+.bb-rl-splash-content-product-button-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+}
+
+@media screen and (max-width: $lg) {
+    .bb-rl-splash-content-product-container {
+        flex-direction: column;
     }
 }
 
