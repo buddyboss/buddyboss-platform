@@ -54,22 +54,22 @@ export const SplashScreen = ({ stepData, onNext, onSkip }) => {
                     </div>
 
                     <div className="bb-rl-splash-content-product">
-                        <p className="bb-rl-splash-content-product-name">{__('BuddyBoss Theme', 'buddyboss')}</p>
-                        <p className="bb-rl-splash-content-product-baseline">{__('Customizable WordPress theme', 'buddyboss')}</p>
+                        <p className="bb-rl-splash-content-product-name">{__('ReadyLaunch', 'buddyboss')}</p>
+                        <p className="bb-rl-splash-content-product-baseline">{__('Community features for any WordPress theme', 'buddyboss')}</p>
                         <img 
                             src={`${window.bbRlOnboarding.assets.assetsUrl}readylaunch-preview.jpg`}
                             alt="BuddyBoss Theme Preview" 
                             className="bb-rl-product-preview"
                         />
-                        <p className="bb-rl-splash-content-product-description">{__('Our crafted theme made just for the BuddyBoss Platform giving you full control to design a community that feels truly yours.', 'buddybos s')}</p>
+                        <p className="bb-rl-splash-content-product-description">{__('Get your community up and running in no time with our easy to use template system.', 'buddybos s')}</p>
                         <ul className="bb-rl-splash-content-product-features">
                             <li className="bb-rl-splash-content-product-feature">
                                 <i className="bb-icons-rl-check"></i>
-                                {__('Advanced customization', 'buddyboss')}
+                                {__('Minimal configuration', 'buddyboss')}
                             </li>
                             <li className="bb-rl-splash-content-product-feature">
                                 <i className="bb-icons-rl-check"></i>
-                                {__('Deep integration support', 'buddyboss')}
+                                {__('Supports any WordPress Theme', 'buddyboss')}
                             </li>
                         </ul>
                         <a className="bb-rl-button" onClick={handleGetStarted}>
