@@ -62,13 +62,15 @@ if ( bp_is_group_create() ) {
 
 							<div class="bb-rl-group-member-id">
 								<?php
-								echo bp_core_fetch_avatar(
-									array(
-										'item_id' => $bp_org_user_id,
-										'type'    => 'thumb',
-										'width'   => 30,
-										'height'  => 30,
-										'alt'     => '',
+								echo wp_kses_post(
+									bp_core_fetch_avatar(
+										array(
+											'item_id' => $bp_org_user_id,
+											'type'    => 'thumb',
+											'width'   => 30,
+											'height'  => 30,
+											'alt'     => '',
+										)
 									)
 								);
 								?>
@@ -105,7 +107,12 @@ if ( bp_is_group_create() ) {
 									<a href="#" class="bb_more_options_action" aria-label="More Options"><i class="bb-icons-rl-dots-three"></i></a>
 									<div class="bb_more_options_list bb_more_dropdown">
 										<div class="generic-button">
-											<a class="button confirm admin-demote-to-member" href="<?php bp_group_member_demote_link( $bp_org_user_id ); ?>"><?php printf( esc_html__( 'Demote to regular %s', 'buddyboss' ), strtolower( get_group_role_label( $bp_current_group_id, 'member_singular_label_name' ) ) ); ?></a>
+											<a class="button confirm admin-demote-to-member" href="<?php bp_group_member_demote_link( $bp_org_user_id ); ?>">
+												<?php
+												/* translators: %s: Member role label */
+												printf( esc_html__( 'Demote to regular %s', 'buddyboss' ), esc_html( strtolower( get_group_role_label( $bp_current_group_id, 'member_singular_label_name' ) ) ) );
+												?>
+											</a>
 										</div>
 									</div>
 									<div class="bb_more_dropdown_overlay"></div>
@@ -147,13 +154,15 @@ if ( bp_is_group_create() ) {
 						<li class="members-entry clearfix">
 							<div class="bb-rl-group-member-id">
 								<?php
-								echo bp_core_fetch_avatar(
-									array(
-										'item_id' => $bp_mod_user_id,
-										'type'    => 'thumb',
-										'width'   => 30,
-										'height'  => 30,
-										'alt'     => '',
+								echo wp_kses_post(
+									bp_core_fetch_avatar(
+										array(
+											'item_id' => $bp_mod_user_id,
+											'type'    => 'thumb',
+											'width'   => 30,
+											'height'  => 30,
+											'alt'     => '',
+										)
 									)
 								);
 								?>
@@ -195,7 +204,12 @@ if ( bp_is_group_create() ) {
 								<a href="#" class="bb_more_options_action" aria-label="More Options"><i class="bb-icons-rl-dots-three"></i></a>
 								<div class="bb_more_options_list bb_more_dropdown">
 									<div class="generic-button">
-										<a class="button confirm mod-demote-to-member" href="<?php bp_group_member_demote_link( $bp_mod_user_id ); ?>"><?php printf( esc_html__( 'Demote to regular %s', 'buddyboss' ), strtolower( get_group_role_label( $bp_current_group_id, 'member_singular_label_name' ) ) ); ?></a>
+										<a class="button confirm mod-demote-to-member" href="<?php bp_group_member_demote_link( $bp_mod_user_id ); ?>">
+											<?php
+											/* translators: %s: Member role label */
+											printf( esc_html__( 'Demote to regular %s', 'buddyboss' ), esc_html( strtolower( get_group_role_label( $bp_current_group_id, 'member_singular_label_name' ) ) ) );
+											?>
+										</a>
 									</div>
 								</div>
 								<div class="bb_more_dropdown_overlay"></div>
@@ -232,36 +246,41 @@ if ( bp_is_group_create() ) {
 				/* translators: %1$s: Member role label, %2$s: Member role label */
 				esc_html__( 'Members are automatically assigned the \'%1$s\' role, enabling them to contribute to discussions, post in activity feeds, and view other group %2$s activity.', 'buddyboss' ),
 				wp_kses_post( strtolower( get_group_role_label( $bp_current_group_id, 'member_singular_label_name' ) ) ),
-				wp_kses_post( strtolower( get_group_role_label( $bp_current_group_id, 'member_plural_label_name' ) ) ),
+				wp_kses_post( strtolower( get_group_role_label( $bp_current_group_id, 'member_plural_label_name' ) ) )
 			);
 			?>
 		</p>
 		<div data-bp-list="manage_group_members">
 		<?php
 		if ( bp_group_has_members( 'per_page=15&exclude_banned=0' ) ) {
-		?>
+			global $members_template;
 
-			<ul id="members-list" class="item-list single-line">
+			// Check if this is the first page (used for AJAX pagination, nonce verification handled by BuddyPress core).
+			$is_first_page = empty( $_POST['page'] ) || 1 === (int) $_POST['page']; // phpcs:ignore WordPress.Security.NonceVerification.Missing
+			if ( $is_first_page ) {
+				?>
+			<ul id="members-list" class="item-list single-line bb-rl-list">
 				<?php
-				while ( bp_group_members() ) :
-					bp_group_the_member();
+			}
+			while ( bp_group_members() ) :
+				bp_group_the_member();
 
-					$bp_member_user_id = bp_get_member_user_id();
-					?>
+				$bp_member_user_id = bp_get_member_user_id();
+				?>
 
 					<li class="<?php bp_group_member_css_class(); ?> members-entry clearfix">
 						<div class="bb-rl-group-member-id">
-							<?php bp_group_member_avatar_mini(); ?>
+						<?php bp_group_member_avatar_mini(); ?>
 
 							<p class="list-title member-name">
-								<?php bp_group_member_link(); ?>
+							<?php bp_group_member_link(); ?>
 								<span class="banned warn">
-										<?php
-										if ( bp_get_group_member_is_banned() ) :
-											/* translators: indicates a user is banned from a group, e.g. "Mike (banned)". */
-											esc_html_e( '(banned)', 'buddyboss' );
+									<?php
+									if ( bp_get_group_member_is_banned() ) :
+										/* translators: indicates a user is banned from a group, e.g. "Mike (banned)". */
+										esc_html_e( '(banned)', 'buddyboss' );
 										endif;
-										?>
+									?>
 								</span>
 							</p>
 						</div>
@@ -270,17 +289,17 @@ if ( bp_is_group_create() ) {
 							<div class="bb-rl-filter bb-rl-filter--light">
 								<select class="member-action-dropdown">
 									<option value="">
-										<?php
-										if ( groups_is_user_mod( $bp_member_user_id, $bp_current_group_id ) ) {
-											echo esc_html( get_group_role_label( $bp_current_group_id, 'moderator_singular_label_name' ) );
-										} elseif ( groups_is_user_admin( $bp_member_user_id, $bp_current_group_id ) ) {
-											echo esc_html( get_group_role_label( $bp_current_group_id, 'organizer_singular_label_name' ) );
-										} elseif ( groups_is_user_member( $bp_member_user_id, $bp_current_group_id ) ) {
-											echo esc_html( get_group_role_label( $bp_current_group_id, 'member_singular_label_name' ) );
-										} else {
-											esc_html_e( 'Select Action', 'buddyboss' );
-										}
-										?>
+									<?php
+									if ( groups_is_user_mod( $bp_member_user_id, $bp_current_group_id ) ) {
+										echo esc_html( get_group_role_label( $bp_current_group_id, 'moderator_singular_label_name' ) );
+									} elseif ( groups_is_user_admin( $bp_member_user_id, $bp_current_group_id ) ) {
+										echo esc_html( get_group_role_label( $bp_current_group_id, 'organizer_singular_label_name' ) );
+									} elseif ( groups_is_user_member( $bp_member_user_id, $bp_current_group_id ) ) {
+										echo esc_html( get_group_role_label( $bp_current_group_id, 'member_singular_label_name' ) );
+									} else {
+										esc_html_e( 'Select Action', 'buddyboss' );
+									}
+									?>
 									</option>
 									<option value="<?php bp_group_member_promote_admin_link( $bp_member_user_id ); ?>">
 										<?php echo esc_html( get_group_role_label( $bp_current_group_id, 'organizer_singular_label_name' ) ); ?>
@@ -299,15 +318,15 @@ if ( bp_is_group_create() ) {
 							<a href="#" class="bb_more_options_action" aria-label="More Options"><i class="bb-icons-rl-dots-three"></i></a>
 							<div class="bb_more_options_list bb_more_dropdown">
 								<?php
-									add_filter( 'bp_nouveau_get_groups_buttons', 'BB_Group_Readylaunch::bb_readylaunch_manage_negative_member_actions', 20, 3 );
-									bp_nouveau_groups_manage_members_buttons(
-										array(
-											'container'         => 'div',
-											'container_classes' => array( 'members-manage-buttons', 'text-links-list' ),
-											'parent_element'    => '',
-										)
-									);
-									remove_filter( 'bp_nouveau_get_groups_buttons', 'BB_Group_Readylaunch::bb_readylaunch_manage_negative_member_actions', 20, 3 );
+								add_filter( 'bp_nouveau_get_groups_buttons', 'BB_Group_Readylaunch::bb_readylaunch_manage_negative_member_actions', 20, 3 );
+								bp_nouveau_groups_manage_members_buttons(
+									array(
+										'container'      => 'div',
+										'container_classes' => array( 'members-manage-buttons', 'text-links-list' ),
+										'parent_element' => '',
+									)
+								);
+								remove_filter( 'bp_nouveau_get_groups_buttons', 'BB_Group_Readylaunch::bb_readylaunch_manage_negative_member_actions', 20, 3 );
 								?>
 							</div>
 							<div class="bb_more_dropdown_overlay"></div>
@@ -316,12 +335,22 @@ if ( bp_is_group_create() ) {
 					</li>
 
 				<?php endwhile; ?>
-			</ul>
-
-			<?php
-			if ( bp_group_member_needs_pagination() ) {
-				bp_nouveau_pagination( 'bottom' );
-			}
+				<?php
+				if ( bb_group_members_has_more_items() ) {
+					?>
+					<li class="bb-rl-view-more" data-bp-pagination="<?php echo esc_attr( $members_template->pag_arg ); ?>">
+						<a class="bb-rl-button bb-rl-button--brandFill" href="<?php echo esc_url( bb_get_groups_members_load_more_link() ); ?>" data-method="append">
+							<?php esc_html_e( 'Show More', 'buddyboss' ); ?>
+							<i class="bb-icons-rl-arrow-down"></i>
+						</a>
+					</li>
+					<?php
+				}
+				if ( $is_first_page ) {
+					?>
+				</ul>
+					<?php
+				}
 		} else {
 			bp_nouveau_user_feedback( 'group-manage-members-none' );
 		}

@@ -29,35 +29,37 @@ if ( ! empty( $group->id ) ) {
 bp_nouveau_group_hook( 'before', 'manage_members_list' );
 ?>
 
-<?php if ( bp_group_has_members( bp_ajax_querystring( 'manage_group_members' ) . '&per_page=15&type=group_role&exclude_banned=0' ) ) : ?>
+<?php
+if ( bp_group_has_members( bp_ajax_querystring( 'manage_group_members' ) . '&per_page=15&type=group_role&exclude_banned=0' ) ) {
 
-	<?php
-	if ( bp_group_member_needs_pagination() ) {
-		bp_nouveau_pagination( 'top' );
-	}
-	?>
-
-	<ul id="members-list" class="item-list single-line">
+	// Check if this is the first page (used for AJAX pagination, nonce verification handled by BuddyPress core).
+	$is_first_page = empty( $_POST['page'] ) || 1 === (int) $_POST['page']; // phpcs:ignore WordPress.Security.NonceVerification.Missing
+	if ( $is_first_page ) {
+		?>
+	<ul id="members-list" class="item-list single-line bb-rl-list">
 		<?php
-		while ( bp_group_members() ) :
-			bp_group_the_member();
+	}
+	global $members_template;
 
-			$bp_member_user_id = bp_get_member_user_id();
-			?>
+	while ( bp_group_members() ) :
+		bp_group_the_member();
+
+		$bp_member_user_id = bp_get_member_user_id();
+		?>
 
 			<li class="<?php bp_group_member_css_class(); ?> members-entry clearfix">
 				<div class="bb-rl-group-member-id">
-					<?php bp_group_member_avatar_mini(); ?>
+				<?php bp_group_member_avatar_mini(); ?>
 
 					<p class="list-title member-name">
-						<?php bp_group_member_link(); ?>
+					<?php bp_group_member_link(); ?>
 						<span class="banned warn">
-							<?php
-							if ( bp_get_group_member_is_banned() ) :
-								/* translators: indicates a user is banned from a group, e.g. "Mike (banned)". */
-								esc_html_e( '(banned)', 'buddyboss' );
+						<?php
+						if ( bp_get_group_member_is_banned() ) :
+							/* translators: indicates a user is banned from a group, e.g. "Mike (banned)". */
+							esc_html_e( '(banned)', 'buddyboss' );
 							endif;
-							?>
+						?>
 						</span>
 					</p>
 				</div>
@@ -65,17 +67,17 @@ bp_nouveau_group_hook( 'before', 'manage_members_list' );
 				<div class="members-manage-buttons text-links-list bb-rl-members-manage-dropdown">
 					<select class="member-action-dropdown">
 						<option value="">
-							<?php
-							if ( groups_is_user_mod( $bp_member_user_id, $group->id ) ) {
-								echo esc_html( get_group_role_label( $group->id, 'moderator_singular_label_name' ) );
-							} elseif ( groups_is_user_admin( $bp_member_user_id, $group->id ) ) {
-								echo esc_html( get_group_role_label( $group->id, 'organizer_singular_label_name' ) );
-							} elseif ( groups_is_user_member( $bp_member_user_id, $group->id ) ) {
-								echo esc_html( get_group_role_label( $group->id, 'member_singular_label_name' ) );
-							} else {
-								esc_html_e( 'Select Action', 'buddyboss' );
-							}
-							?>
+						<?php
+						if ( groups_is_user_mod( $bp_member_user_id, $group->id ) ) {
+							echo esc_html( get_group_role_label( $group->id, 'moderator_singular_label_name' ) );
+						} elseif ( groups_is_user_admin( $bp_member_user_id, $group->id ) ) {
+							echo esc_html( get_group_role_label( $group->id, 'organizer_singular_label_name' ) );
+						} elseif ( groups_is_user_member( $bp_member_user_id, $group->id ) ) {
+							echo esc_html( get_group_role_label( $group->id, 'member_singular_label_name' ) );
+						} else {
+							esc_html_e( 'Select Action', 'buddyboss' );
+						}
+						?>
 						</option>
 						<option value="<?php bp_group_member_promote_admin_link( $bp_member_user_id ); ?>">
 							<?php echo esc_html( get_group_role_label( $group->id, 'organizer_singular_label_name' ) ); ?>
@@ -111,15 +113,23 @@ bp_nouveau_group_hook( 'before', 'manage_members_list' );
 
 		<?php endwhile; ?>
 
-	</ul>
-
-	<?php
-	if ( bp_group_member_needs_pagination() ) :
-		bp_nouveau_pagination( 'bottom' );
-	endif;
-	?>
-	<?php
-else :
+		<?php
+		if ( bb_group_members_has_more_items() ) {
+			?>
+			<li class="bb-rl-view-more" data-bp-pagination="<?php echo esc_attr( $members_template->pag_arg ); ?>">
+				<a class="bb-rl-button bb-rl-button--brandFill" href="<?php echo esc_url( bb_get_groups_members_load_more_link() ); ?>" data-method="append">
+					<?php esc_html_e( 'Show More', 'buddyboss' ); ?>
+					<i class="bb-icons-rl-arrow-down"></i>
+				</a>
+			</li>
+			<?php
+		}
+		if ( $is_first_page ) {
+			?>
+		</ul>
+			<?php
+		}
+} else {
 	bp_nouveau_user_feedback( 'group-members-search-none' );
-endif;
+}
 ?>

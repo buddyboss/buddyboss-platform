@@ -46,7 +46,7 @@ window.bp = window.bp || {};
 			addListeners : function () {
 				var $document = $( document );
 				$( '.bb-nouveau-list' ).on( 'scroll', this.bbScrollHeaderDropDown.bind( this ) );
-				$document.on( 'click', '.notification-link, .notification-header-tab-action, .bb-rl-load-more a', this.bbHandleLoadMore.bind( this ) );
+				$document.on( 'click', '.notification-link, .notification-header-tab-action, .bb-rl-header-container .bb-rl-load-more a', this.bbHandleLoadMore.bind( this ) );
 				$document.on( 'heartbeat-send', this.bbHeartbeatSend.bind( this ) );
 				$document.on( 'heartbeat-tick', this.bbHeartbeatTick.bind( this ) );
 				$document.on( 'click', '.bb-rl-option-wrap__action', this.openMoreOption.bind( this ) );

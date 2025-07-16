@@ -1273,6 +1273,8 @@ window.bp = window.bp || {};
 			} );
 
 			$( window ).on( 'scroll', this.hidePopupCard );
+			
+			$document.on( 'click', '[data-bp-list] .bb-rl-view-more a', this.loadMoreData.bind( this ) );
 		},
 
 		bindPopoverEvents: function() {
@@ -5310,7 +5312,39 @@ window.bp = window.bp || {};
 				window.addEventListener( 'load', checkVerticalMenu );
 	
 			} );
-		}
+		},
+
+		/**
+		 * Load more data.
+		 *
+		 * @param {Object} event The event object
+		 * @return {void}
+		 */
+		loadMoreData: function( event ) {
+			event.preventDefault();
+			var $this   = $( event.currentTarget );
+			var method  = $this.data( 'method' );
+			var $target = $this.closest( '.bb-rl-view-more' );
+			var page    = $this.attr( 'href' ).split( 'page=' )[1];
+			var object  = $target.closest( '[data-bp-list]' ).data( 'bp-list' );
+
+			bp.Nouveau.objectRequest(
+				{
+					object : object,
+					page   : page,
+					method : method,
+					target : '#buddypress [data-bp-list] ul.bb-rl-list'
+				}
+			).done(
+				function ( response ) {
+					if ( true === response.success ) {
+						$target.remove();
+						// replace fake image with original image by faking scroll event to call bp.Nouveau.lazyLoad.
+						jQuery( window ).scroll();
+					}
+				}
+			);
+		},
 	};
 
 	// Launch BP Nouveau.
