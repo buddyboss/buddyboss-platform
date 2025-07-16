@@ -988,7 +988,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 						<?php
 
 						// Topic edit
-						if ( bp_action_variable( $offset + 2 ) === bbp_get_edit_rewrite_id() ) :
+						if ( bp_action_variable( $offset + 2 ) === bbp_get_edit_slug() ) :
 
 							// Unset the super sticky link on edit topic template
 							add_filter( 'bbp_get_topic_types', array( $this, 'unset_super_sticky' ), 10, 1 );
@@ -1052,7 +1052,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 					<h3><?php bbp_reply_title(); ?></h3>
 
 						<?php
-						if ( bp_action_variable( $offset + 2 ) === bbp_get_edit_rewrite_id() ) :
+						if ( bp_action_variable( $offset + 2 ) === bbp_get_edit_slug() ) :
 
 							// Set the edit switches
 							$wp_query->bbp_is_edit       = true;
@@ -1438,7 +1438,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 				return $url;
 			}
 
-			return trailingslashit( $new ) . bbpress()->edit_id . '/';
+			return trailingslashit( $new ) . bbp_get_edit_slug() . '/';
 		}
 
 		/**
