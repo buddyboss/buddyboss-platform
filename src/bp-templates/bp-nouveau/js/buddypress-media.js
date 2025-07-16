@@ -344,6 +344,23 @@ window.bp = window.bp || {};
 				window.addEventListener( 'scroll', this.autoPlayGifVideos, false );
 				window.addEventListener( 'resize', this.autoPlayGifVideos, false );
 
+				// Add scroll event listener for message thread container
+				var messageThreadList = $( '#bp-message-thread-list' );
+				if ( messageThreadList.length ) {
+					messageThreadList.on( 'scroll', this.autoPlayGifVideos.bind( this ) );
+				}
+
+				// Add document-level scroll event delegation as fallback
+				$( document ).on( 'scroll', '#bp-message-thread-list', this.autoPlayGifVideos.bind( this ) );
+
+				// Use addEventListener directly
+				setTimeout( function() {
+					var messageThreadList = document.getElementById( 'bp-message-thread-list' );
+					if ( messageThreadList ) {
+						messageThreadList.addEventListener( 'scroll', bp.Nouveau.Media.autoPlayGifVideos.bind( bp.Nouveau.Media ), false );
+					}
+				}, 1000 );
+
 				document.addEventListener( 'keydown', _.bind( this.closePickersOnEsc, this ) );
 				$( document ).on( 'click', _.bind( this.closePickersOnClick, this ) );
 			}
@@ -6313,6 +6330,35 @@ window.bp = window.bp || {};
 		},
 
 		/**
+		 * Check if element is visible within its scrollable container
+		 */
+		isElementInScrollableContainer: function( element ) {
+			var $element = $( element );
+			var elementRect = element.getBoundingClientRect();
+			
+			// Find the closest scrollable container
+			var $scrollableContainer = $element.closest( '#bp-message-thread-list' );
+			
+			if ( $scrollableContainer.length ) {
+				// Check if element is visible within the scrollable container
+				var containerRect = $scrollableContainer[0].getBoundingClientRect();
+				
+				// Element is visible if it overlaps with the container bounds (allows partial visibility)
+				var isVisible = (
+					elementRect.bottom > containerRect.top &&
+					elementRect.top < containerRect.bottom &&
+					elementRect.right > containerRect.left &&
+					elementRect.left < containerRect.right
+				);
+				
+				return isVisible;
+			} else {
+				// Fallback to regular viewport check
+				return $element.is( ':in-viewport' );
+			}
+		},
+
+		/**
 		 * When the GIF comes into your screen it should auto play
 		 */
 		autoPlayGifVideos: function () {
@@ -6321,7 +6367,7 @@ window.bp = window.bp || {};
 					var video = $( this ).find( 'video' ).get( 0 ),
 						$button = $( this ).find( '.gif-play-button' );
 
-					if ( $( this ).is( ':in-viewport' ) ) {
+					if ( bp.Nouveau.Media.isElementInScrollableContainer( this ) ) {
 						// Play the video.
 						video.play();
 
