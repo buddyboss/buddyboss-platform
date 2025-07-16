@@ -2,8 +2,8 @@
 Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 6.8.1
-Requires PHP: 5.6.20
-Stable tag: 2.8.90
+Requires PHP: 7.4.0
+Stable tag: 2.9.10
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,17 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 2.9.10 =
+* Bug: Forums - Fixed issue where image uploads were blocked when using Forum shortcode on a page with document uploads disabled
+* Bug: Forums - Fixed search results displaying password entry forms instead of a proper message for password-protected posts
+* Bug: Header - Fixed issue where the top row of member cards was partially hidden under the sticky header after pagination in the Members directory
+* Bug: Messages - Fixed pagination issue in group messages where banned members caused incorrect member listing
+* Bug: ReadyLaunch - Fixed minor design and functional bugs in ReadyLaunch
+
+= 2.9.00 =
+* New Feature! ReadyLaunch - launch your community with our new built in page template
+* Bug: Forums - Fixed an issue where forum reply and topic media were not being deleted upon deletion
 
 = 2.8.90 =
 * Bug: Groups - Fixed an issue where deleting activity topics removed them from group-level topics

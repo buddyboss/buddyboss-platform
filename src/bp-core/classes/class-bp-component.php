@@ -140,6 +140,15 @@ if ( ! class_exists( 'BP_Component' ) ) :
 		 */
 		public $search_query_arg = 's';
 
+		/**
+		 * An array of globalized data for BB Blocks.
+		 *
+		 * @since BuddyBoss 2.9.00
+		 *
+		 * @var array
+		 */
+		public $block_globals = array();
+
 		/** Methods ***************************************************************/
 
 		/**
@@ -220,6 +229,7 @@ if ( ! class_exists( 'BP_Component' ) ) :
 		 *                                           'Search Groups...'.
 		 *     @type array    $global_tables         Optional. An array of database table names.
 		 *     @type array    $meta_tables           Optional. An array of metadata table names.
+		 *     @type array    $block_globals         An array of globalized data for BB Blocks.
 		 * }
 		 */
 		public function setup_globals( $args = array() ) {
@@ -242,6 +252,7 @@ if ( ! class_exists( 'BP_Component' ) ) :
 					'search_string'         => '',
 					'global_tables'         => '',
 					'meta_tables'           => '',
+					'block_globals'         => array(),
 				)
 			);
 
@@ -314,6 +325,27 @@ if ( ! class_exists( 'BP_Component' ) ) :
 
 			// Register this component in the loaded components array.
 			buddypress()->loaded_components[ $this->slug ] = $this->id;
+
+			/**
+			 * Filters the $blocks global value.
+			 *
+			 * @since BuddyBoss 2.9.00
+			 *
+			 * @param array $blocks a list of global properties for blocks keyed
+			 *                      by their corresponding block name.
+			 */
+			$block_globals = apply_filters( 'bb_' . $this->id . '_block_globals', $r['block_globals'] );
+			if ( is_array( $block_globals ) && array_filter( $block_globals ) ) {
+				foreach ( $block_globals as $block_name => $block_props ) {
+					$this->block_globals[ $block_name ] = new stdClass();
+
+					// Initialize an `items` property for Widget Block occurrences.
+					$this->block_globals[ $block_name ]->items = array();
+
+					// Set the global properties for the Block.
+					$this->block_globals[ $block_name ]->props = (array) $block_props;
+				}
+			}
 
 			/**
 			 * Fires at the end of the setup_globals method inside BP_Component.
@@ -467,6 +499,11 @@ if ( ! class_exists( 'BP_Component' ) ) :
 			// Register BP REST Endpoints.
 			if ( bp_rest_in_buddypress() && bp_rest_api_is_available() ) {
 				add_action( 'bp_rest_api_init', array( $this, 'rest_api_init' ), 10 );
+			}
+
+			// Register BB Blocks.
+			if ( bb_support_blocks() ) {
+				add_action( 'bb_blocks_init', array( $this, 'blocks_init' ), 10 );
 			}
 
 			/**
@@ -896,6 +933,45 @@ if ( ! class_exists( 'BP_Component' ) ) :
 			 * @since BuddyBoss 1.3.5
 			 */
 			do_action( 'bp_' . $this->id . '_rest_api_init' );
+		}
+
+		/**
+		 * Register the BB Blocks.
+		 *
+		 * @since BuddyBoss 2.9.00
+		 *
+		 * @see `BB_Block->construct()` for a full description of a BB Block arguments.
+		 *
+		 * @param array $blocks The list of BB Blocks to register.
+		 */
+		public function blocks_init( $blocks = array() ) {
+
+			/**
+			 * Filter here to add new BB Blocks, disable some or all BB Blocks for a component.
+			 *
+			 * This is a dynamic hook that is based on the component string ID.
+			 *
+			 * @since BuddyBoss 2.9.00
+			 *
+			 * @param array $blocks The list of BB Blocks for the component.
+			 */
+			$blocks = (array) apply_filters( 'bb_' . $this->id . '_register_blocks', $blocks );
+			$blocks = array_filter( $blocks );
+
+			if ( $blocks ) {
+				foreach ( $blocks as $block ) {
+					bb_register_block( $block );
+				}
+			}
+
+			/**
+			 * Fires in the blocks_init method inside BP_Component.
+			 *
+			 * This is a dynamic hook that is based on the component string ID.
+			 *
+			 * @since BuddyBoss 2.9.00
+			 */
+			do_action( 'bb_' . $this->id . '_blocks_init' );
 		}
 	}
 endif; // BP_Component.
