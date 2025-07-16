@@ -10,7 +10,10 @@ export const SplashScreen = ({ stepData, onNext, onSkip }) => {
         ? `${window.bbRlOnboarding.assets.assetsUrl}${image}`
         : '';
 
-    const handleGetStarted = () => {
+    const handleGetStarted = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+
         if (onNext) {
             onNext();
         }
@@ -69,7 +72,7 @@ export const SplashScreen = ({ stepData, onNext, onSkip }) => {
                                 {__('Deep integration support', 'buddyboss')}
                             </li>
                         </ul>
-                        <a className="bb-rl-button">
+                        <a className="bb-rl-button" onClick={handleGetStarted}>
                             {__('Configure ReadyLaunch', 'buddyboss')}
                         </a>
                     </div>
