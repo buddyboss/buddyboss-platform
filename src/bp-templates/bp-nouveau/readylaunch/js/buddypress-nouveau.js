@@ -1141,7 +1141,7 @@ window.bp = window.bp || {};
 			$( '[data-bp-close]' ).on( 'click', this, this.closeNotice );
 
 			// Pagination.
-			$( '#buddypress [data-bp-list]' ).on( 'click', '[data-bp-pagination] a', this, this.paginateAction );
+			$( '#buddypress [data-bp-list]' ).on( 'click', '[data-bp-pagination] a:not([data-method])', this, this.paginateAction );
 
 			$document.on( 'click', this.closePickersOnClick );
 			document.addEventListener( 'keydown', this.closePickersOnEsc );

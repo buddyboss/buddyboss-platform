@@ -116,10 +116,10 @@ if ( bp_group_has_members( bp_ajax_querystring( 'manage_group_members' ) . '&per
 		<?php
 		if ( bb_group_members_has_more_items() ) {
 			?>
-			<li class="bb-rl-view-more" data-bp-pagination="<?php echo esc_attr( $members_template->pag_arg ); ?>">
-				<a class="bb-rl-button bb-rl-button--brandFill" href="<?php echo esc_url( bb_get_groups_members_load_more_link() ); ?>" data-method="append">
+			<li class="bb-rl-view-more bb-rl-view-more--pagination" data-bp-pagination="<?php echo esc_attr( $members_template->pag_arg ); ?>">
+				<a class="bb-rl-button bb-rl-button--secondaryFill bb-rl-button--small" href="<?php echo esc_url( bb_get_groups_members_load_more_link() ); ?>" data-method="append">
 					<?php esc_html_e( 'Show More', 'buddyboss' ); ?>
-					<i class="bb-icons-rl-arrow-down"></i>
+					<i class="bb-icons-rl-caret-down"></i>
 				</a>
 			</li>
 			<?php
