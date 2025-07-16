@@ -673,7 +673,8 @@
   margin-right: var(--bb-rl-space-50);
 }
 
-.post-type-archive-mpcs-course.bb-readylaunch-template .bb-rl-meprlms-course-filters .input-group .form-input {
+.post-type-archive-mpcs-course.bb-readylaunch-template .bb-rl-meprlms-course-filters .input-group .form-input,
+.post-type-archive-mpcs-course.bb-readylaunch-template .bb-rl-meprlms-course-filters .input-group input[type="text"].form-input {
   display: block;
   color: var(--bb-rl-text-secondary-color) !important;
   background-color: transparent;

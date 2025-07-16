@@ -146,7 +146,8 @@
 				margin-right: var(--bb-rl-space-50);
 			}
 
-			.form-input {
+			.form-input,
+			input[type="text"].form-input {
 				display: block;
 				color: var(--bb-rl-text-secondary-color) !important;
 				background-color: transparent;
