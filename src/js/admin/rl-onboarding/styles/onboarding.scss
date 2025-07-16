@@ -38,6 +38,11 @@ $lg: 1024px;
     border-radius: 8px;
     font-size: 14px;
     font-weight: 500;
+    cursor: pointer;
+
+    &:hover {
+        color: $white;
+    }
 
     &[disabled],
     &.bb-rl-button--disabled {
