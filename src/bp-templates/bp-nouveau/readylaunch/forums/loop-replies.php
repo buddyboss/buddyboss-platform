@@ -139,7 +139,7 @@ $topic_id = bbp_get_topic_id();
 							bbp_topic_reply_count( $topic_id );
 							$topic_reply_text = (int) $topic_reply_count > 1 ? esc_html__( 'Replies', 'buddyboss' ) : esc_html__( 'Reply', 'buddyboss' );
 
-							echo wp_kses_post( $topic_reply_text );
+							echo ' ' . wp_kses_post( $topic_reply_text );
 							?>
 						</span>
 					</span>
