@@ -2735,6 +2735,11 @@ window.bp = window.bp || {};
 									$reportContent.filter( '.members' ).hide();
 								}
 
+								var $blockMemberPopup = $( '.bb-readylaunch-template .block-member-popup .bb-model-header h4' );
+								if ( $blockMemberPopup.length > 0 ) {
+									$blockMemberPopup.text( bpNouveau.moderation.block_member );
+								}
+
 								var $firstVisibleRadio = $( '#bb-report-content .form-item-category:visible:first label input[type="radio"]' );
 								$firstVisibleRadio.attr( 'checked', true );
 

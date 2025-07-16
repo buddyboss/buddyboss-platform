@@ -2505,6 +2505,10 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				$strings['messages']['i18n']['to_placeholder'] = __( 'Start typing a name', 'buddyboss' );
 			}
 
+			if ( bp_is_active( 'moderation' ) ) {
+				$strings['moderation']['block_member'] = __( 'Block member', 'buddyboss' );
+			}
+
 			return $strings;
 		}
 
