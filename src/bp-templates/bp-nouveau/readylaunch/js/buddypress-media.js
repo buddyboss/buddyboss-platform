@@ -7053,6 +7053,8 @@ window.bp = window.bp || {};
 						}
 						$infoSection.show();
 
+						$infoSection.find( '.bb-activity-more-options-action' ).attr( 'data-balloon-pos', 'left' );
+
 						self.updateTheaterHeaderTitle(
 							{
 								wrapper : $mediaWrapper,
@@ -7200,6 +7202,9 @@ window.bp = window.bp || {};
 								},
 								10
 							);
+
+							$( '.bb-media-info-section:visible' ).find( '.bb-activity-more-options-action' ).attr( 'data-balloon-pos', 'left' );
+
 						} else {
 							$( '.bb-media-info-section.document' ).hide();
 						}
