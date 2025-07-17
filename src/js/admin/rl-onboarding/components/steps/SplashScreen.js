@@ -19,7 +19,8 @@ export const SplashScreen = ({ stepData, onNext, onSkip }) => {
         }
     };
 
-	const has_theme = window.bbRlOnboarding?.currentTheme === 'buddyboss-theme' || false;
+	const activated = window.bbRlOnboarding?.readylaunch?.is_buddyboss_theme_active || false;
+	const has_theme = window.bbRlOnboarding?.readylaunch?.buddyboss_theme_installed || false;
 
 	return (
         <div className="bb-rl-splash-screen">
@@ -46,15 +47,23 @@ export const SplashScreen = ({ stepData, onNext, onSkip }) => {
                             </li>
                         </ul>
                         <div className="bb-rl-splash-content-product-button-container">
-                            { has_theme ? (
-	                            <a href={window?.bbRlOnboarding?.buddybossTheme} className="bb-rl-button bb-rl-button--outline">
-	                                {__('Configure BuddyBoss Theme', 'buddyboss')}
-	                            </a>
-                            ) : (
-	                            <a href='https://www.buddyboss.com/website-platform/#platform_pricing_box' target="_blank" className="bb-rl-button">
-	                                {__('Buy Theme', 'buddyboss')}
-	                            </a>
-                            )}
+                            {
+								activated ? (
+		                            <a href={window?.bbRlOnboarding?.readylaunch?.theme_settings} className="bb-rl-button bb-rl-button--outline">
+		                                {__('Configure BuddyBoss Theme', 'buddyboss')}
+		                            </a>
+	                            ) : (
+		                            has_theme ? (
+			                            <a href={window?.bbRlOnboarding?.readylaunch?.themes} className="bb-rl-button bb-rl-button--outline">
+			                                {__('Activate BuddyBoss Theme', 'buddyboss')}
+			                            </a>
+	                                ) : (
+			                            <a href='https://www.buddyboss.com/website-platform/#platform_pricing_box' target="_blank" className="bb-rl-button">
+				                            {__('Buy Theme', 'buddyboss')}
+			                            </a>
+                                    )
+								)
+							}
                         </div>
                     </div>
 

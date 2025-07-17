@@ -298,9 +298,6 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 		add_action( 'wp_ajax_bb_rl_get_theme_info', array( $this, 'ajax_get_theme_info' ) );
 		add_action( 'wp_ajax_bb_rl_install_theme', array( $this, 'ajax_install_theme' ) );
 
-		// Filter localized data for ReadyLaunch specific needs.
-		add_filter( 'bb_rl_onboarding_localize_data', array( $this, 'filter_localize_data' ) );
-
 		// Handle completion specific to ReadyLaunch.
 		add_action( 'bb_readylaunch_onboarding_completed', array( $this, 'on_readylaunch_completed' ) );
 	}
@@ -388,8 +385,6 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 		$base_data = array(
 			'shouldShow'   => $this->should_show(),
 			'completed'    => $this->is_completed(),
-			'currentTheme' => get_template(),
-			'buddybossTheme' => esc_url( bp_get_admin_url( add_query_arg( array( 'page' => 'buddyboss_theme_options' ), 'admin.php' ) ) ),
 			'assets'       => $this->get_wizard_assets(),
 			'steps'        => $this->steps,
 			'stepOptions'  => $this->get_config( 'step_options', array() ),
@@ -398,25 +393,11 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 			'ajaxUrl'      => admin_url( 'admin-ajax.php' ),
 			'dashboardUrl' => admin_url(),
 			'nonce'        => wp_create_nonce( $this->wizard_id . '_wizard_nonce' ),
-			'translations' => array(
-				'welcome'          => __( 'Welcome', 'buddyboss' ),
-				'next'             => __( 'Next', 'buddyboss' ),
-				'skip'             => __( 'Skip', 'buddyboss' ),
-				'finish'           => __( 'Finish', 'buddyboss' ),
-				'close'            => __( 'Close', 'buddyboss' ),
-				'configuring'      => __( 'Configuring...', 'buddyboss' ),
-				'setupComplete'    => __( 'Setup Complete!', 'buddyboss' ),
-				'errorOccurred'    => __( 'An error occurred. Please try again.', 'buddyboss' ),
-				'selectOption'     => __( 'Select an option to continue', 'buddyboss' ),
-				'buddybossTheme'   => __( 'BuddyBoss Theme', 'buddyboss' ),
-				'currentTheme'     => __( 'Current Theme', 'buddyboss' ),
-				'recommended'      => __( 'Recommended', 'buddyboss' ),
-				'letsGetStarted'   => __( 'Let\'s get started!', 'buddyboss' ),
-				'selectYourTheme'  => __( 'Select your preferred theme', 'buddyboss' ),
-				'communityIsReady' => __( 'Your community is ready!', 'buddyboss' ),
-			),
+			'translations' => array(),
 			'readylaunch'  => array(
 				'current_theme'             => wp_get_theme()->get( 'Name' ),
+				'theme_settings'            => esc_url( bp_get_admin_url( add_query_arg( array( 'page' => 'buddyboss_theme_options' ), 'admin.php' ) ) ),
+				'themes'                    => esc_url( bp_get_admin_url( 'themes.php' ) ),
 				'is_buddyboss_theme_active' => get_template() === 'buddyboss-theme',
 				'buddyboss_theme_installed' => wp_get_theme( 'buddyboss-theme' )->exists(),
 				'site_url'                  => home_url(),
@@ -772,27 +753,6 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 			'success' => true,
 			'message' => __( 'BuddyBoss Theme activated successfully!', 'buddyboss' ),
 		);
-	}
-
-	/**
-	 * Filter localised data for ReadyLaunch-specific needs
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param array $data Localised data.
-	 * @return array Filtered data.
-	 */
-	public function filter_localize_data( $data ) {
-		// Add ReadyLaunch specific data.
-		$data['readylaunch'] = array(
-			'current_theme'             => wp_get_theme()->get( 'Name' ),
-			'is_buddyboss_theme_active' => get_template() === 'buddyboss-theme',
-			'buddyboss_theme_installed' => wp_get_theme( 'buddyboss-theme' )->exists(),
-			'site_url'                  => home_url(),
-			'admin_url'                 => admin_url(),
-		);
-
-		return $data;
 	}
 
 	/**
