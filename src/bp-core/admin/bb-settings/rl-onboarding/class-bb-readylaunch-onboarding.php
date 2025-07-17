@@ -187,7 +187,7 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 					'color_description'    => array(
 						'type'        => 'description',
 						'description' => __( 'Primary color used for buttons, links, and interactive elements.', 'buddyboss' ),
-					),					
+					),
 				),
 				'pages'           => array(
 					'create_essential_pages' => array(
@@ -267,8 +267,6 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 			'react_dependencies'    => array( 'react', 'wp-components', 'wp-element', 'wp-i18n' ),
 			'custom_hooks'          => array(
 				'completion'      => array(
-					'bb_readylaunch_onboarding_completed',
-					'bb_rl_setup_complete',
 				),
 				'step_completion' => array(
 					'bb_rl_step_completed',
@@ -313,12 +311,6 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 	 * @return void
 	 */
 	private function init_readylaunch_hooks() {
-		// Add ReadyLaunch specific AJAX actions.
-		add_action( 'wp_ajax_bb_rl_get_theme_info', array( $this, 'ajax_get_theme_info' ) );
-		add_action( 'wp_ajax_bb_rl_install_theme', array( $this, 'ajax_install_theme' ) );
-
-		// Handle completion specific to ReadyLaunch.
-		add_action( 'bb_readylaunch_onboarding_completed', array( $this, 'on_readylaunch_completed' ) );
 	}
 
 	/**
@@ -529,253 +521,6 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 	}
 
 	/**
-	 * Configure ReadyLaunch settings.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param string $selected_option The selected configuration option.
-	 * @return void
-	 */
-	private function configure_readylaunch( $selected_option ) {
-		switch ( $selected_option ) {
-			case 'buddyboss_theme':
-				// Activate ReadyLaunch and BuddyBoss theme if available.
-				if ( wp_get_theme( 'buddyboss-theme' )->exists() ) {
-					switch_theme( 'buddyboss-theme' );
-				}
-				break;
-
-			case 'current_theme':
-				// Keep current theme, just activate ReadyLaunch.
-				break;
-
-			default:
-				// Default action.
-				break;
-		}
-
-		// Set ReadyLaunch as configured.
-		bp_update_option( 'bb_readylaunch_setup_completed', true );
-	}
-
-	/**
-	 * Handle ReadyLaunch completion
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param string $wizard_id The wizard ID.
-	 * @return void
-	 */
-	public function on_readylaunch_completed( $wizard_id ) {
-		if ( $wizard_id !== $this->wizard_id ) {
-			return;
-		}
-
-		$preferences = $this->get_preferences();
-
-		// Perform additional setup based on preferences.
-		if ( isset( $preferences['selected_option'] ) ) {
-			switch ( $preferences['selected_option'] ) {
-				case 'buddyboss_theme':
-					$this->setup_buddyboss_theme();
-					break;
-
-				case 'current_theme':
-					$this->setup_current_theme();
-					break;
-			}
-		}
-
-		// Send completion email or perform other actions.
-		$this->send_completion_notification();
-	}
-
-	/**
-	 * Setup BuddyBoss theme configuration
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 * @return void
-	 */
-	private function setup_buddyboss_theme() {
-		// Additional BuddyBoss theme configuration.
-		bp_update_option( 'bb_theme_configured_via_rl', true );
-
-		// Track theme selection analytics.
-		if ( $this->get_config( 'enable_analytics' ) ) {
-			$this->save_step_progress(
-				999,
-				array(
-					'event'          => 'theme_selected',
-					'selected_theme' => 'buddyboss_theme',
-				)
-			);
-		}
-	}
-
-	/**
-	 * Setup current theme configuration
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 * @return void
-	 */
-	private function setup_current_theme() {
-		// Track current theme retention.
-		bp_update_option( 'bb_current_theme_retained_via_rl', true );
-
-		// Track theme selection analytics.
-		if ( $this->get_config( 'enable_analytics' ) ) {
-			$this->save_step_progress(
-				999,
-				array(
-					'event'          => 'theme_selected',
-					'selected_theme' => 'current_theme',
-					'theme_name'     => wp_get_theme()->get( 'Name' ),
-				)
-			);
-		}
-	}
-
-	/**
-	 * Send completion notification
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 * @return void
-	 */
-	private function send_completion_notification() {
-		// Send welcome email to admin (optional).
-		$admin_email = get_option( 'admin_email' );
-		if ( $admin_email ) {
-			$subject = __( 'BuddyBoss ReadyLaunch Setup Complete', 'buddyboss' );
-			$message = __( 'Congratulations! Your BuddyBoss community setup is now complete and ready to use.', 'buddyboss' );
-
-			/**
-			 * Filter the completion notification email
-			 *
-			 * @since BuddyBoss [BBVERSION]
-			 *
-			 * @param array $email_data Email data array.
-			 */
-			$email_data = apply_filters(
-				'bb_rl_completion_notification_email',
-				array(
-					'to'      => $admin_email,
-					'subject' => $subject,
-					'message' => $message,
-				)
-			);
-
-			if ( ! empty( $email_data['to'] ) ) {
-				wp_mail( $email_data['to'], $email_data['subject'], $email_data['message'] );
-			}
-		}
-	}
-
-	/**
-	 * AJAX handler to get theme information
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 * @return void
-	 */
-	public function ajax_get_theme_info() {
-		// Verify nonce.
-		if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), $this->wizard_id . '_wizard_nonce' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid security token.', 'buddyboss' ) ) );
-		}
-
-		$theme_slug = isset( $_POST['theme_slug'] ) ? sanitize_text_field( wp_unslash( $_POST['theme_slug'] ) ) : '';
-
-		$theme_info = array();
-
-		if ( 'buddyboss-theme' === $theme_slug ) {
-			$theme_info = array(
-				'name'         => __( 'BuddyBoss Theme', 'buddyboss' ),
-				'description'  => __( 'Premium theme designed for BuddyBoss Platform', 'buddyboss' ),
-				'version'      => '1.0.0',
-				'author'       => 'BuddyBoss',
-				'is_installed' => wp_get_theme( 'buddyboss-theme' )->exists(),
-				'is_active'    => get_template() === 'buddyboss-theme',
-				'download_url' => 'https://buddyboss.com/theme-download',
-			);
-		} else {
-			$current_theme = wp_get_theme();
-			$theme_info    = array(
-				'name'         => $current_theme->get( 'Name' ),
-				'description'  => $current_theme->get( 'Description' ),
-				'version'      => $current_theme->get( 'Version' ),
-				'author'       => $current_theme->get( 'Author' ),
-				'is_installed' => true,
-				'is_active'    => true,
-			);
-		}
-
-		wp_send_json_success( array( 'theme_info' => $theme_info ) );
-	}
-
-	/**
-	 * AJAX handler to install/activate theme
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 * @return void
-	 */
-	public function ajax_install_theme() {
-		// Verify nonce and capabilities.
-		if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), $this->wizard_id . '_wizard_nonce' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid security token.', 'buddyboss' ) ) );
-		}
-
-		if ( ! current_user_can( 'install_themes' ) ) {
-			wp_send_json_error( array( 'message' => __( 'You do not have permission to install themes.', 'buddyboss' ) ) );
-		}
-
-		$theme_slug  = isset( $_POST['theme_slug'] ) ? sanitize_text_field( wp_unslash( $_POST['theme_slug'] ) ) : '';
-		$action_type = isset( $_POST['action_type'] ) ? sanitize_text_field( wp_unslash( $_POST['action_type'] ) ) : 'activate';
-
-		if ( 'buddyboss-theme' === $theme_slug ) {
-			// Handle BuddyBoss theme installation/activation.
-			$result = $this->handle_buddyboss_theme_activation();
-		} else {
-			// Keep current theme - no action needed.
-			$result = array(
-				'success' => true,
-				'message' => __( 'Current theme maintained.', 'buddyboss' ),
-			);
-		}
-
-		if ( $result['success'] ) {
-			wp_send_json_success( $result );
-		} else {
-			wp_send_json_error( $result );
-		}
-	}
-
-	/**
-	 * Handle BuddyBoss theme activation
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 * @return array Result of theme activation.
-	 */
-	private function handle_buddyboss_theme_activation() {
-		// Check if theme is already installed.
-		if ( ! wp_get_theme( 'buddyboss-theme' )->exists() ) {
-			// Theme installation logic would go here
-			// For now, return instruction to download.
-			return array(
-				'success'      => false,
-				'message'      => __( 'Please download and install the BuddyBoss Theme first.', 'buddyboss' ),
-				'download_url' => 'https://buddyboss.com/theme-download',
-			);
-		}
-
-		// Activate the theme.
-		switch_theme( 'buddyboss-theme' );
-
-		return array(
-			'success' => true,
-			'message' => __( 'BuddyBoss Theme activated successfully!', 'buddyboss' ),
-		);
-	}
-
-	/**
 	 * Sanitise final settings from the onboarding form.
 	 *
 	 * @since BuddyBoss [BBVERSION]
@@ -790,29 +535,57 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 
 		$sanitized = array();
 
-		// Sanitize community setup settings.
-		if ( isset( $settings['community_setup'] ) ) {
-			$sanitized['community_setup'] = array(
-				'site_title'   => isset( $settings['community_setup']['site_title'] ) ? sanitize_text_field( wp_unslash( $settings['community_setup']['site_title'] ) ) : '',
-				'privacy_mode' => isset( $settings['community_setup']['privacy_mode'] ) ? sanitize_text_field( wp_unslash( $settings['community_setup']['privacy_mode'] ) ) : 'public',
-			);
-		}
+		// Get step options configuration to validate field types
+		$step_options = $this->get_config( 'step_options', array() );
 
-		// Sanitize site appearance settings.
-		if ( isset( $settings['site_appearance'] ) ) {
-			$sanitized['site_appearance'] = array(
-				'color_scheme' => isset( $settings['site_appearance']['color_scheme'] ) ? sanitize_text_field( wp_unslash( $settings['site_appearance']['color_scheme'] ) ) : 'default',
-				'site_layout'  => isset( $settings['site_appearance']['site_layout'] ) ? sanitize_text_field( wp_unslash( $settings['site_appearance']['site_layout'] ) ) : 'fullwidth',
-			);
-		}
+		// Process all step data and extract field values
+		foreach ( $settings as $step_key => $step_data ) {
+			if ( ! is_array( $step_data ) || ! isset( $step_options[ $step_key ] ) ) {
+				continue;
+			}
 
-		// Sanitize branding settings.
-		if ( isset( $settings['brandings'] ) ) {
-			$sanitized['brandings'] = array(
-				'site_logo'    => isset( $settings['brandings']['site_logo'] ) ? intval( $settings['brandings']['site_logo'] ) : 0,
-				'favicon'      => isset( $settings['brandings']['favicon'] ) ? intval( $settings['brandings']['favicon'] ) : 0,
-				'brand_colors' => isset( $settings['brandings']['brand_colors'] ) ? sanitize_hex_color( $settings['brandings']['brand_colors'] ) : '',
-			);
+			foreach ( $step_data as $field_key => $field_value ) {
+				if ( ! isset( $step_options[ $step_key ][ $field_key ] ) ) {
+					continue;
+				}
+
+				$field_config = $step_options[ $step_key ][ $field_key ];
+				$field_type = $field_config['type'] ?? 'text';
+
+				// Sanitize based on field type and save directly using field key
+				switch ( $field_type ) {
+					case 'text':
+						$sanitized[ $field_key ] = sanitize_text_field( wp_unslash( $field_value ) );
+						break;
+
+					case 'select':
+					case 'radio':
+					case 'visual_options':
+						$allowed_values = isset( $field_config['options'] ) ? array_keys( $field_config['options'] ) : array();
+						$sanitized[ $field_key ] = in_array( $field_value, $allowed_values, true ) ? $field_value : ( $field_config['default'] ?? '' );
+						break;
+
+					case 'checkbox':
+						$sanitized[ $field_key ] = ! empty( $field_value );
+						break;
+
+					case 'color':
+						$sanitized[ $field_key ] = sanitize_hex_color( $field_value ) ?: ( $field_config['default'] ?? '#e57e3a' );
+						break;
+
+					case 'media':
+						$sanitized[ $field_key ] = intval( $field_value );
+						// Also save the URL if provided
+						if ( isset( $step_data[ $field_key . '_url' ] ) ) {
+							$sanitized[ $field_key . '_url' ] = esc_url_raw( $step_data[ $field_key . '_url' ] );
+						}
+						break;
+
+					default:
+						$sanitized[ $field_key ] = sanitize_text_field( wp_unslash( $field_value ) );
+						break;
+				}
+			}
 		}
 
 		// Sanitize pages settings.
@@ -845,6 +618,40 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 	}
 
 	/**
+	 * Override sanitize_preferences to handle step-based field structure.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $preferences_json JSON string of preferences.
+	 * @return array Sanitized preferences.
+	 */
+	protected function sanitize_preferences( $preferences_json ) {
+		$preferences = json_decode( $preferences_json, true );
+
+		if ( ! is_array( $preferences ) ) {
+			return array();
+		}
+
+		return $this->sanitize_final_settings( $preferences );
+	}
+
+	/**
+	 * Override save_preferences to apply settings immediately.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $preferences User preferences.
+	 * @return void
+	 */
+	public function save_preferences( $preferences ) {
+		// Save to parent preferences system first
+		parent::save_preferences( $preferences );
+
+		// Apply the configuration immediately for real-time updates
+		$this->apply_readylaunch_configuration( $preferences );
+	}
+
+	/**
 	 * Apply ReadyLaunch configuration based on final settings.
 	 *
 	 * @since BuddyBoss [BBVERSION]
@@ -857,25 +664,43 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 			return;
 		}
 
-		// Apply community setup.
-		if ( isset( $final_settings['community_setup'] ) ) {
-			$community_setup = $final_settings['community_setup'];
+		// Apply community setup - blogname field
+		if ( ! empty( $final_settings['blogname'] ) ) {
+			update_option( 'blogname', $final_settings['blogname'] );
+		}
 
-			// Update site title if provided.
-			if ( ! empty( $community_setup['site_title'] ) ) {
-				update_option( 'blogname', $community_setup['site_title'] );
-			}
+		// Apply theme mode setting
+		if ( ! empty( $final_settings['bb_rl_theme_mode'] ) ) {
+			// Save theme mode preference
+			$this->save_readylaunch_option( 'theme_mode', $final_settings['bb_rl_theme_mode'] );
+		}
 
-			// Configure privacy mode.
-			if ( isset( $community_setup['privacy_mode'] ) ) {
-				// This would typically involve setting registration options.
-				if ( 'private' === $community_setup['privacy_mode'] ) {
-					update_option( 'users_can_register', 0 );
-				} else {
-					update_option( 'users_can_register', 1 );
-				}
+		// Apply branding settings - logos
+		if ( ! empty( $final_settings['bb_rl_light_logo'] ) ) {
+			$this->save_readylaunch_option( 'light_logo', $final_settings['bb_rl_light_logo'] );
+			if ( ! empty( $final_settings['bb_rl_light_logo_url'] ) ) {
+				$this->save_readylaunch_option( 'light_logo_url', $final_settings['bb_rl_light_logo_url'] );
 			}
 		}
+
+		if ( ! empty( $final_settings['bb_rl_dark_logo'] ) ) {
+			$this->save_readylaunch_option( 'dark_logo', $final_settings['bb_rl_dark_logo'] );
+			if ( ! empty( $final_settings['bb_rl_dark_logo_url'] ) ) {
+				$this->save_readylaunch_option( 'dark_logo_url', $final_settings['bb_rl_dark_logo_url'] );
+			}
+		}
+
+		// Apply color settings
+		if ( ! empty( $final_settings['bb_rl_color_light'] ) ) {
+			$this->save_readylaunch_option( 'primary_color_light', $final_settings['bb_rl_color_light'] );
+		}
+
+		if ( ! empty( $final_settings['bb_rl_color_dark'] ) ) {
+			$this->save_readylaunch_option( 'primary_color_dark', $final_settings['bb_rl_color_dark'] );
+		}
+
+		// Apply remaining step settings dynamically
+		$this->apply_remaining_step_settings( $final_settings );
 
 		// Apply site appearance settings.
 		if ( isset( $final_settings['site_appearance'] ) ) {
@@ -1056,6 +881,69 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 			}
 
 			update_option( 'sidebars_widgets', $sidebar_widgets );
+		}
+	}
+
+	/**
+	 * Save ReadyLaunch specific option.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $option_name The option name.
+	 * @param mixed  $option_value The option value.
+	 * @return void
+	 */
+	private function save_readylaunch_option( $option_name, $option_value ) {
+		// Save as BuddyPress option with bb_rl_ prefix
+		bp_update_option( 'bb_rl_' . $option_name, $option_value );
+	}
+
+	/**
+	 * Apply remaining step settings that weren't handled specifically.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $final_settings The final configuration settings.
+	 * @return void
+	 */
+	private function apply_remaining_step_settings( $final_settings ) {
+		$step_options = $this->get_config( 'step_options', array() );
+
+		// Get list of fields that were already handled above
+		$handled_fields = array(
+			'blogname',
+			'bb_rl_theme_mode',
+			'bb_rl_light_logo',
+			'bb_rl_light_logo_url',
+			'bb_rl_dark_logo',
+			'bb_rl_dark_logo_url',
+			'bb_rl_color_light',
+			'bb_rl_color_dark'
+		);
+
+		// Process any remaining fields
+		foreach ( $final_settings as $field_key => $field_value ) {
+			// Skip if already handled or if it's a non-interactive field
+			if ( in_array( $field_key, $handled_fields, true ) ) {
+				continue;
+			}
+
+			// Find the field config to determine how to save it
+			$field_config = null;
+			foreach ( $step_options as $step_key => $step_fields ) {
+				if ( isset( $step_fields[ $field_key ] ) ) {
+					$field_config = $step_fields[ $field_key ];
+					break;
+				}
+			}
+
+			// Skip non-interactive fields
+			if ( ! $field_config || in_array( $field_config['type'] ?? '', array( 'description', 'hr' ), true ) ) {
+				continue;
+			}
+
+			// Save as ReadyLaunch option
+			$this->save_readylaunch_option( $field_key, $field_value );
 		}
 	}
 }
