@@ -62,6 +62,11 @@ $lg: 1024px;
     box-sizing: border-box;
 }
 
+// Prevent body scroll when onboarding is active
+body.bb-rl-fullscreen-mode {
+    overflow: hidden !important;
+}
+
 .bb-rl-onboarding-overlay {
     position: fixed;
     top: 0;
