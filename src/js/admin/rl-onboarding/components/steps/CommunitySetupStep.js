@@ -3,17 +3,17 @@ import { __ } from '@wordpress/i18n';
 import { TextControl, SelectControl } from '@wordpress/components';
 import { BaseStepLayout } from '../BaseStepLayout';
 
-export const CommunitySetupStep = ({ 
-    stepData, 
-    onNext, 
-    onPrevious, 
-    onSkip, 
-    currentStep, 
-    totalSteps, 
-    onSaveStep 
+export const CommunitySetupStep = ({
+    stepData,
+    onNext,
+    onPrevious,
+    onSkip,
+    currentStep,
+    totalSteps,
+    onSaveStep
 }) => {
     const [formData, setFormData] = useState({
-        site_title: '',
+        blogname: '',
         privacy_mode: 'public'
     });
 
@@ -49,8 +49,8 @@ export const CommunitySetupStep = ({
         const newErrors = {};
 
         // Check required fields
-        if (stepOptions.site_title?.required && !formData.site_title.trim()) {
-            newErrors.site_title = __('Community name is required', 'buddyboss');
+        if (stepOptions.blogname?.required && !formData.blogname.trim()) {
+            newErrors.blogname = __('Community name is required', 'buddyboss');
         }
 
         setErrors(newErrors);
@@ -80,17 +80,17 @@ export const CommunitySetupStep = ({
         return (
             <div className="bb-rl-form-fields">
                 {/* Site Title Field */}
-                {stepOptions.site_title && (
+                {stepOptions.blogname && (
                     <div className="bb-rl-field-group">
                         <TextControl
-                            help={stepOptions.site_title.description}
-                            value={formData.site_title}
-                            onChange={(value) => handleInputChange('site_title', value)}
+                            help={stepOptions.blogname.description}
+                            value={stepOptions.blogname?.value || ''}
+                            onChange={(value) => handleInputChange('blogname', value)}
                             placeholder={__('Enter your community name', 'buddyboss')}
-                            className={errors.site_title ? 'bb-rl-field-error' : ''}
+                            className={errors.blogname ? 'bb-rl-field-error' : ''}
                         />
-                        {errors.site_title && (
-                            <p className="bb-rl-error-message">{errors.site_title}</p>
+                        {errors.blogname && (
+                            <p className="bb-rl-error-message">{errors.blogname}</p>
                         )}
                     </div>
                 )}
@@ -128,4 +128,4 @@ export const CommunitySetupStep = ({
             {renderFormFields()}
         </BaseStepLayout>
     );
-}; 
+};

@@ -124,10 +124,11 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 			),
 			'step_options'          => array(
 				'community_setup' => array(
-					'site_title'   => array(
+					'blogname' => array(
 						'type'        => 'text',
 						'description' => __( 'This matches the WordPress Site Title. Updating it here will update it site-wide.', 'buddyboss' ),
 						'required'    => true,
+						'value'       => get_bloginfo( 'name' ),
 					),
 				),
 				'site_appearance' => array(
