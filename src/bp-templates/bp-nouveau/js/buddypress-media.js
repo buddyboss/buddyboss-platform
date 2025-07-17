@@ -341,23 +341,23 @@ window.bp = window.bp || {};
 
 			// Gifs autoplay.
 			if ( !_.isUndefined( BP_Nouveau.media.gif_api_key ) ) {
-				window.addEventListener( 'scroll', this.autoPlayGifVideos, false );
-				window.addEventListener( 'resize', this.autoPlayGifVideos, false );
+				window.addEventListener( 'scroll', this.throttledAutoPlayGifVideos.bind( this ), false );
+				window.addEventListener( 'resize', this.throttledAutoPlayGifVideos.bind( this ), false );
 
 				// Add scroll event listener for message thread container
 				var messageThreadList = $( '#bp-message-thread-list' );
 				if ( messageThreadList.length ) {
-					messageThreadList.on( 'scroll', this.autoPlayGifVideos.bind( this ) );
+					messageThreadList.on( 'scroll', this.throttledAutoPlayGifVideos.bind( this ) );
 				}
 
 				// Add document-level scroll event delegation as fallback
-				$( document ).on( 'scroll', '#bp-message-thread-list', this.autoPlayGifVideos.bind( this ) );
+				$( document ).on( 'scroll', '#bp-message-thread-list', this.throttledAutoPlayGifVideos.bind( this ) );
 
 				// Use addEventListener directly
 				setTimeout( function() {
 					var messageThreadList = document.getElementById( 'bp-message-thread-list' );
 					if ( messageThreadList ) {
-						messageThreadList.addEventListener( 'scroll', bp.Nouveau.Media.autoPlayGifVideos.bind( bp.Nouveau.Media ), false );
+						messageThreadList.addEventListener( 'scroll', bp.Nouveau.Media.throttledAutoPlayGifVideos.bind( bp.Nouveau.Media ), false );
 					}
 				}, 1000 );
 
@@ -6359,6 +6359,20 @@ window.bp = window.bp || {};
 		},
 
 		/**
+		 * Throttle function to limit how often autoPlayGifVideos runs
+		 */
+		throttledAutoPlayGifVideos: function() {
+			if ( this.throttleTimer ) {
+				return;
+			}
+			
+			this.throttleTimer = setTimeout( function() {
+				bp.Nouveau.Media.throttleTimer = null;
+				bp.Nouveau.Media.autoPlayGifVideos();
+			}, 100 ); // Throttle to max 10 times per second
+		},
+
+		/**
 		 * When the GIF comes into your screen it should auto play
 		 */
 		autoPlayGifVideos: function () {
@@ -6367,16 +6381,18 @@ window.bp = window.bp || {};
 					var video = $( this ).find( 'video' ).get( 0 ),
 						$button = $( this ).find( '.gif-play-button' );
 
-					if ( bp.Nouveau.Media.isElementInScrollableContainer( this ) ) {
+					var isVisible = bp.Nouveau.Media.isElementInScrollableContainer( this );
+					
+					if ( isVisible ) {
 						// Play the video.
 						video.play();
-
+						
 						// Update the button text to 'Pause'.
 						$button.hide();
 					} else {
 						// Pause the video
 						video.pause();
-
+						
 						// Update the button text to 'Play'.
 						$button.show();
 					}

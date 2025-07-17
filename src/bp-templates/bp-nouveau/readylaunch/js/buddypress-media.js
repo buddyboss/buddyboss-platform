@@ -345,8 +345,25 @@ window.bp = window.bp || {};
 
 			// Gifs autoplay.
 			if ( ! _.isUndefined( bbRlMedia.gif_api_key ) ) {
-				window.addEventListener( 'scroll', this.autoPlayGifVideos, false );
-				window.addEventListener( 'resize', this.autoPlayGifVideos, false );
+				window.addEventListener( 'scroll', this.throttledAutoPlayGifVideos.bind( this ), false );
+				window.addEventListener( 'resize', this.throttledAutoPlayGifVideos.bind( this ), false );
+
+				// Add scroll event listener for message thread container
+				var messageThreadList = $( '#bp-message-thread-list' );
+				if ( messageThreadList.length ) {
+					messageThreadList.on( 'scroll', this.throttledAutoPlayGifVideos.bind( this ) );
+				}
+
+				// Add document-level scroll event delegation as fallback
+				$( document ).on( 'scroll', '#bp-message-thread-list', this.throttledAutoPlayGifVideos.bind( this ) );
+
+				// Use addEventListener directly
+				setTimeout( function() {
+					var messageThreadList = document.getElementById( 'bp-message-thread-list' );
+					if ( messageThreadList ) {
+						messageThreadList.addEventListener( 'scroll', bp.Nouveau.Media.throttledAutoPlayGifVideos.bind( bp.Nouveau.Media ), false );
+					}
+				}, 1000 );
 
 				document.addEventListener( 'keydown', _.bind( this.closePickersOnEsc, this ) );
 				$document.on( 'click', _.bind( this.closePickersOnClick, this ) );
@@ -4604,6 +4621,46 @@ window.bp = window.bp || {};
 		},
 
 		/**
+		 * Throttle function to limit how often autoPlayGifVideos runs
+		 */
+		throttledAutoPlayGifVideos: function() {
+			if ( this.throttleTimer ) {
+				return;
+			}
+			
+			this.throttleTimer = setTimeout( function() {
+				bp.Nouveau.Media.throttleTimer = null;
+				bp.Nouveau.Media.autoPlayGifVideos();
+			}, 100 ); // Throttle to max 10 times per second
+		},
+
+		/**
+		 * Check if element is visible within a scrollable container
+		 */
+		isElementInScrollableContainer: function( element ) {
+			var $element = $( element );
+			var container = $element.closest( '#bp-message-thread-list' );
+			
+			if ( container.length ) {
+				var elementRect = element.getBoundingClientRect();
+				var containerRect = container[0].getBoundingClientRect();
+				
+				// Check if element is visible within the container
+				var isVisible = (
+					elementRect.bottom > containerRect.top &&
+					elementRect.top < containerRect.bottom &&
+					elementRect.right > containerRect.left &&
+					elementRect.left < containerRect.right
+				);
+				
+				return isVisible;
+			} else {
+				// Fallback to regular viewport check
+				return $element.is( ':in-viewport' );
+			}
+		},
+
+		/**
 		 * When the GIF comes into your screen it should auto play
 		 */
 		autoPlayGifVideos: function () {
@@ -4612,13 +4669,17 @@ window.bp = window.bp || {};
 					var video   = $( this ).find( 'video' ).get( 0 ),
 						$button = $( this ).find( '.gif-play-button' );
 
-					if ( $( this ).is( ':in-viewport' ) ) {
-						video.play(); // Play the video.
-
+					var isVisible = bp.Nouveau.Media.isElementInScrollableContainer( this );
+					
+					if ( isVisible ) {
+						// Play the video.
+						video.play();
+						
 						$button.hide(); // Update the button text to 'Pause'.
 					} else {
-						video.pause(); // Pause the video.
-
+						// Pause the video
+						video.pause();
+						
 						$button.show(); // Update the button text to 'Play'.
 					}
 				}
