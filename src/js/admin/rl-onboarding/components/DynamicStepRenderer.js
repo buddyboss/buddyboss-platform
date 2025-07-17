@@ -22,6 +22,11 @@ export const DynamicStepRenderer = ({
     const getDefaultValues = () => {
         const defaults = {};
         Object.entries(stepOptions).forEach(([fieldKey, fieldConfig]) => {
+            // Skip description and hr fields as they're not form inputs
+            if (fieldConfig.type === 'description' || fieldConfig.type === 'hr') {
+                return;
+            }
+            
             // Check for both 'value' and 'default' properties
             if (fieldConfig.value !== undefined) {
                 defaults[fieldKey] = fieldConfig.value;
@@ -75,15 +80,21 @@ export const DynamicStepRenderer = ({
     const renderField = (fieldKey, fieldConfig) => {
         const { type, label, description, options, required, default: defaultValue, value: configValue } = fieldConfig;
         // Use value from formData, or fall back to 'value' or 'default' from config
-        const value = formData[fieldKey] !== undefined ? formData[fieldKey] : (configValue !== undefined ? configValue : defaultValue);
+        // Check if formData has a non-empty value, otherwise fall back to config value or default
+        const hasValidFormValue = formData[fieldKey] !== undefined && formData[fieldKey] !== '' && formData[fieldKey] !== null;
+        const value = hasValidFormValue ? formData[fieldKey] : (configValue !== undefined ? configValue : defaultValue);
 
         switch (type) {
             case 'text':
+                // Add placeholder for fields without labels
+                const placeholder = !label && fieldKey === 'blogname' ? __('Enter site title...', 'buddyboss') : '';
+                
                 return (
                     <TextControl
                         key={fieldKey}
-                        label={label}
-                        help={description}
+                        label={label || ''}
+                        help={description || ''}
+                        placeholder={placeholder}
                         value={value || ''}
                         onChange={(newValue) => handleFieldChange(fieldKey, newValue)}
                         required={required}
@@ -94,8 +105,8 @@ export const DynamicStepRenderer = ({
                 return (
                     <SelectControl
                         key={fieldKey}
-                        label={label}
-                        help={description}
+                        label={label || ''}
+                        help={description || ''}
                         value={value || ''}
                         onChange={(newValue) => handleFieldChange(fieldKey, newValue)}
                         options={Object.entries(options || {}).map(([optionValue, optionLabel]) => ({
@@ -109,8 +120,8 @@ export const DynamicStepRenderer = ({
                 return (
                     <CheckboxControl
                         key={fieldKey}
-                        label={label}
-                        help={description}
+                        label={label || ''}
+                        help={description || ''}
                         checked={Boolean(value)}
                         onChange={(newValue) => handleFieldChange(fieldKey, newValue)}
                     />
@@ -119,12 +130,14 @@ export const DynamicStepRenderer = ({
             case 'radio':
                 return (
                     <div key={fieldKey} className="bb-rl-field-group">
-                        <div className="bb-rl-field-label">
-                            <h4>{label}</h4>
-                            {description && (
-                                <p className="bb-rl-field-description">{description}</p>
-                            )}
-                        </div>
+                        {label && (
+                            <div className="bb-rl-field-label">
+                                <h4>{label}</h4>
+                                {description && (
+                                    <p className="bb-rl-field-description">{description}</p>
+                                )}
+                            </div>
+                        )}
                         <RadioControl
                             selected={value || ''}
                             options={Object.entries(options || {}).map(([optionValue, optionLabel]) => ({
@@ -139,12 +152,14 @@ export const DynamicStepRenderer = ({
             case 'color':
                 return (
                     <div key={fieldKey} className="bb-rl-field-group">
-                        <div className="bb-rl-field-label">
-                            <h4>{label}</h4>
-                            {description && (
-                                <p className="bb-rl-field-description">{description}</p>
-                            )}
-                        </div>
+                        {label && (
+                            <div className="bb-rl-field-label">
+                                <h4>{label}</h4>
+                                {description && (
+                                    <p className="bb-rl-field-description">{description}</p>
+                                )}
+                            </div>
+                        )}
                         <div className="bb-rl-color-picker-wrapper">
                             <ColorPicker
                                 color={value || '#e57e3a'}
@@ -158,12 +173,14 @@ export const DynamicStepRenderer = ({
             case 'media':
                 return (
                     <div key={fieldKey} className="bb-rl-field-group">
-                        <div className="bb-rl-field-label">
-                            <h4>{label}</h4>
-                            {description && (
-                                <p className="bb-rl-field-description">{description}</p>
-                            )}
-                        </div>
+                        {label && (
+                            <div className="bb-rl-field-label">
+                                <h4>{label}</h4>
+                                {description && (
+                                    <p className="bb-rl-field-description">{description}</p>
+                                )}
+                            </div>
+                        )}
                         <div className="bb-rl-media-field">
                             <Button
                                 variant="secondary"
@@ -213,29 +230,60 @@ export const DynamicStepRenderer = ({
             case 'visual_options':
                 return (
                     <div key={fieldKey} className="bb-rl-field-group">
-                        <div className="bb-rl-field-label">
-                            <h4>{label}</h4>
-                            {description && (
-                                <p className="bb-rl-field-description">{description}</p>
-                            )}
-                        </div>
+                        {label && (
+                            <div className="bb-rl-field-label">
+                                <h4>{label}</h4>
+                                {description && (
+                                    <p className="bb-rl-field-description">{description}</p>
+                                )}
+                            </div>
+                        )}
                         <div className="bb-rl-visual-options">
-                            {Object.entries(options || {}).map(([optionValue, optionLabel]) => (
-                                <div 
-                                    key={optionValue}
-                                    className={`bb-rl-visual-option ${value === optionValue ? 'bb-rl-selected' : ''}`}
-                                    onClick={() => handleFieldChange(fieldKey, optionValue)}
-                                >
-                                    <div className={`bb-rl-option-preview bb-rl-${fieldKey}-${optionValue}`}>
-                                        {renderVisualPreview(fieldKey, optionValue)}
+                            {Object.entries(options || {}).map(([optionValue, optionConfig]) => {
+                                // Handle both old string format and new object format
+                                const optionLabel = typeof optionConfig === 'string' ? optionConfig : optionConfig.label;
+                                const optionDescription = typeof optionConfig === 'object' ? optionConfig.description : '';
+                                const iconClass = typeof optionConfig === 'object' ? optionConfig.icon_class : '';
+                                
+                                return (
+                                    <div 
+                                        key={optionValue}
+                                        className={`bb-rl-visual-option ${value === optionValue ? 'bb-rl-selected' : ''}`}
+                                        onClick={() => handleFieldChange(fieldKey, optionValue)}
+                                    >
+                                        <div className={`bb-rl-option-preview bb-rl-${fieldKey}-${optionValue}`}>
+                                            {iconClass && <span className={iconClass}></span>}
+                                            {renderVisualPreview(fieldKey, optionValue)}
+                                        </div>
+                                        <div className="bb-rl-option-content">
+                                            <span className="bb-rl-option-label">{optionLabel}</span>
+                                            {optionDescription && (
+                                                <span className="bb-rl-option-description">{optionDescription}</span>
+                                            )}
+                                        </div>
+                                        {value === optionValue && (
+                                            <span className="bb-rl-selected-icon">✓</span>
+                                        )}
                                     </div>
-                                    <span className="bb-rl-option-label">{optionLabel}</span>
-                                    {value === optionValue && (
-                                        <span className="bb-rl-selected-icon">✓</span>
-                                    )}
-                                </div>
-                            ))}
+                                );
+                            })}
                         </div>
+                    </div>
+                );
+
+            case 'description':
+                return (
+                    <div key={fieldKey} className="bb-rl-field-group bb-rl-description">
+                        <p className="bb-rl-field-description">
+                            {description}
+                        </p>
+                    </div>
+                );
+
+            case 'hr':
+                return (
+                    <div key={fieldKey} className="bb-rl-field-group bb-rl-separator">
+                        <hr className="bb-rl-horizontal-rule" />
                     </div>
                 );
 
@@ -253,7 +301,8 @@ export const DynamicStepRenderer = ({
     const renderVisualPreview = (fieldKey, optionValue) => {
         // Custom preview renderers for different field types
         switch (fieldKey) {
-            case 'color_scheme':
+            case 'bb_rl_theme_mode':
+            case 'color_scheme': // Keep backward compatibility
                 return (
                     <div className="bb-rl-color-scheme-preview">
                         <div className={`bb-rl-color-swatch bb-rl-primary-${optionValue}`}></div>
@@ -349,11 +398,19 @@ export const DynamicStepRenderer = ({
     return (
         <div className="bb-rl-dynamic-step-renderer">
             <div className="bb-rl-form-fields">
-                {Object.entries(stepOptions).map(([fieldKey, fieldConfig]) => (
-                    <div key={fieldKey} className="bb-rl-field-group">
-                        {renderField(fieldKey, fieldConfig)}
-                    </div>
-                ))}
+                {Object.entries(stepOptions).map(([fieldKey, fieldConfig]) => {
+                    // Render description and hr fields directly without the wrapper div
+                    if (fieldConfig.type === 'description' || fieldConfig.type === 'hr') {
+                        return renderField(fieldKey, fieldConfig);
+                    }
+                    
+                    // For all other field types, wrap in field-group
+                    return (
+                        <div key={fieldKey} className="bb-rl-field-group">
+                            {renderField(fieldKey, fieldConfig)}
+                        </div>
+                    );
+                })}
             </div>
         </div>
     );

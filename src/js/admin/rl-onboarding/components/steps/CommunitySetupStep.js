@@ -15,8 +15,6 @@ export const CommunitySetupStep = ({
     savedData = {}
 }) => {
     const [formData, setFormData] = useState({
-        blogname: '',
-        privacy_mode: 'public',
         ...savedData
     });
 
@@ -27,7 +25,8 @@ export const CommunitySetupStep = ({
 
     useEffect(() => {
         // Initialize with defaults from step options and saved data
-        const initialData = {};
+        const initialData = {}; // Set base defaults
+        
         Object.entries(stepOptions).forEach(([key, config]) => {
             if (config.value !== undefined) {
                 initialData[key] = config.value;
@@ -36,11 +35,18 @@ export const CommunitySetupStep = ({
             }
         });
 
-        setFormData(prev => ({
+        // Only use savedData for fields that have actual values (not empty strings)
+        const validSavedData = {};
+        Object.entries(savedData).forEach(([key, value]) => {
+            if (value !== '' && value !== null && value !== undefined) {
+                validSavedData[key] = value;
+            }
+        });
+
+        setFormData({
             ...initialData,
-            ...prev,
-            ...savedData
-        }));
+            ...validSavedData
+        });
     }, [savedData, stepOptions]);
 
     const handleFormChange = (newFormData) => {

@@ -132,42 +132,62 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 					),
 				),
 				'site_appearance' => array(
-					'color_scheme' => array(
+					'bb_rl_theme_mode' => array(
 						'type'       => 'visual_options',
 						'options'    => array(
 							'light'  => array(
 								'label'       => __( 'Light Mode', 'buddyboss' ),
 								'description' => __( 'The site will be shown in light mode.', 'buddyboss' ),
+								'icon_class' => 'bb-icon-rl-light',
 							),
 							'dark'   => array(
 								'label'       => __( 'Dark Mode', 'buddyboss' ),
 								'description' => __( 'The site will be shown in dark mode.', 'buddyboss' ),
+								'icon_class' => 'bb-icon-rl-dark',
 							),
 							'choice' => array(
 								'label'       => __( 'Both', 'buddyboss' ),
 								'description' => __( 'Users can switch between modes.', 'buddyboss' ),
+								'icon_class' => 'bb-icon-rl-both',
 							),
 						),
 						'default'     => 'light',
 					),
 				),
 				'brandings'       => array(
-					'site_logo'    => array(
+					'bb_rl_light_logo'    => array(
 						'type'        => 'media',
-						'label'       => __( 'Site Logo', 'buddyboss' ),
+						'label'       => __( 'Logo (Light mode)', 'buddyboss' ),
 						'description' => __( 'Upload your site logo', 'buddyboss' ),
 					),
-					'favicon'      => array(
+					'bb_rl_dark_logo'    => array(
 						'type'        => 'media',
-						'label'       => __( 'Favicon', 'buddyboss' ),
-						'description' => __( 'Upload your site favicon', 'buddyboss' ),
+						'label'       => __( 'Logo (Dark mode)', 'buddyboss' ),
+						'description' => __( 'Upload your site logo', 'buddyboss' ),
 					),
-					'brand_colors' => array(
+					'logo_description'    => array(
+						'type'        => 'description',
+						'description' => __( 'Recommended to upload a light-colored logo for dark mode and a dark-colored logo for light mode, 280x80 px, in JPG or PNG format.', 'buddyboss' ),
+					),
+					'logo_color_separator'    => array(
+						'type'        => 'hr'
+					),
+					'bb_rl_color_light' => array(
 						'type'        => 'color',
-						'label'       => __( 'Brand Colors', 'buddyboss' ),
+						'label'       => __( 'Primary Color (Light mode)', 'buddyboss' ),
 						'description' => __( 'Set your primary brand colors', 'buddyboss' ),
-						'default'     => '#e57e3a',
+						'default'     => '#3E34FF',
 					),
+					'bb_rl_color_dark' => array(
+						'type'        => 'color',
+						'label'       => __( 'Primary Color (Dark mode)', 'buddyboss' ),
+						'description' => __( 'Set your primary brand colors', 'buddyboss' ),
+						'default'     => '#A347FF',
+					),
+					'color_description'    => array(
+						'type'        => 'description',
+						'description' => __( 'Primary color used for buttons, links, and interactive elements.', 'buddyboss' ),
+					),					
 				),
 				'pages'           => array(
 					'create_essential_pages' => array(
@@ -389,6 +409,7 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 			'stepOptions'  => $this->get_config( 'step_options', array() ),
 			'progress'     => $this->get_progress(),
 			'preferences'  => $this->get_preferences(),
+			'wizardId'     => $this->wizard_id,
 			'ajaxUrl'      => admin_url( 'admin-ajax.php' ),
 			'dashboardUrl' => admin_url(),
 			'nonce'        => wp_create_nonce( $this->wizard_id . '_wizard_nonce' ),
