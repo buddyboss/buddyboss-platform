@@ -359,6 +359,9 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 			'version'      => $this->wizard_version,
 		);
 
+		$min = bp_core_get_minified_asset_suffix();
+		$rtl = is_rtl() ? '-rtl' : '';
+
 		// Enqueue the React script.
 		wp_enqueue_script(
 			$this->get_config( 'react_script_handle' ),
@@ -372,6 +375,14 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 		wp_enqueue_style(
 			$this->get_config( 'react_style_handle' ),
 			buddypress()->plugin_url . 'bp-core/admin/bb-settings/rl-onboarding/build/onboarding.css',
+			array(),
+			$asset_data['version']
+		);
+
+		// Enqueue the BB Icons CSS.
+		wp_enqueue_style(
+			'bb-icons-rl-css',
+			buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/icons/css/bb-icons-rl{$min}.css",
 			array(),
 			$asset_data['version']
 		);
