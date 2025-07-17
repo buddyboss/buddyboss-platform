@@ -19,7 +19,9 @@ $border-secondary-color: #d9d9d9;
 $border-tertiary-color: #cccccc;
 $white: #ffffff;
 $overlay-color: rgba(0, 0, 0, 0.6);
+$border-radius-full: 999px;
 $border-radius-lg: 20px;
+$border-radius-md: 16px;
 $border-radius: 8px;
 $transition: all 0.3s ease;
 $success-color: #00a32a;
@@ -58,6 +60,41 @@ $lg: 1024px;
         color: $text-disabled-color;
         background-color: transparent;
         border: 1px solid $border-tertiary-color;
+    }
+}
+
+.bb-rl-custom-radio-input {
+    cursor: pointer;
+
+    input {
+        position: absolute;
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    .bb-rl-custom-radio-icon {
+        display: block;
+        height: 20px;
+        width: 20px;
+        border: 1px solid $background-brand-primary-color;
+        border-radius: $border-radius-full;
+    }
+
+
+    input:checked + .bb-rl-custom-radio-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        &:before {
+            content: '';
+            display: block;
+            width: 14px;
+            height: 14px;
+            background-color: $background-brand-primary-color;
+            border-radius: $border-radius-full;
+        }
     }
 }
 
@@ -519,65 +556,66 @@ body.bb-rl-fullscreen-mode {
 // ==========================================================================
 
 .bb-rl-color-scheme-options {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-    gap: 16px;
-    
-    .bb-rl-color-option {
-        text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+
+    .bb-rl-color-preview {
+        display: flex;
+        align-items: center;
+        gap: 24px;
+        padding: 24px 16px;
+        border: 1px solid $border-secondary-color;
+        border-radius: $border-radius-md;
         cursor: pointer;
-        padding: 12px;
-        border: 2px solid transparent;
-        border-radius: $border-radius;
-        transition: $transition;
-        
-        &:hover {
-            border-color: $border-color;
-        }
-        
-        &.bb-rl-selected {
-            border-color: $primary-color;
-            background: rgba(229, 126, 58, 0.05);
-        }
-        
-        .bb-rl-color-preview {
+
+        > .bb-icons-rl {
             display: flex;
-            gap: 4px;
-            margin-bottom: 8px;
+            align-items: center;
             justify-content: center;
-            
-            .bb-rl-color-swatch {
-                width: 20px;
-                height: 20px;
-                border-radius: 50%;
-                border: 1px solid $border-color;
-                
-                &.bb-rl-primary {
-                    background: $primary-color;
-                }
-                
-                &.bb-rl-secondary {
-                    background: #0073aa;
-                }
-                
-                &.bb-rl-accent {
-                    background: #00a32a;
-                }
+            height: 56px;
+            width: 56px;
+            background-color: $background-color;
+            border-radius: $border-radius-full;
+
+            &:before {
+                content: '';
+                color: $icon-color;
+                font-family: bb-icons-rl;
+                font-size: 28px;
             }
         }
-        
-        .bb-rl-color-label {
-            font-size: 12px;
-            color: $text-color;
-            font-weight: 500;
+
+        &.bb-rl-color-light > .bb-icons-rl:before {
+            content: '\e472';
         }
-        
-        .bb-rl-selected-icon {
-            color: $primary-color;
-            font-weight: bold;
-            margin-left: 4px;
+
+        &.bb-rl-color-dark > .bb-icons-rl:before {
+            content: '\e330';
+        }
+
+        &.bb-rl-color-custom > .bb-icons-rl:before {
+            content: '\e18c';
         }
     }
+
+    .bb-rl-color-details {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .bb-rl-color-label {
+        color: $text-color;
+        font-size: 16px;
+        font-weight: 500;
+        margin-bottom: 4px;
+    }
+
+    .bb-rl-color-description {
+        font-size: 14px;
+        color: $text-tertiary-color;
+    } 
 }
 
 // Color scheme variations

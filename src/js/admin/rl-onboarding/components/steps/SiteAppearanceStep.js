@@ -56,93 +56,29 @@ export const SiteAppearanceStep = ({
                 {/* Color Scheme Field */}
                 {stepOptions.color_scheme && (
                     <div className="bb-rl-field-group">
-                        <div className="bb-rl-field-label">
-                            <h4>{stepOptions.color_scheme.label}</h4>
-                            <p className="bb-rl-field-description">
-                                {stepOptions.color_scheme.description}
-                            </p>
-                        </div>
                         
                         <div className="bb-rl-color-scheme-options">
-                            {Object.entries(stepOptions.color_scheme.options || {}).map(([value, label]) => (
+                            {Object.entries(stepOptions.color_scheme.options || {}).map((option,index) => (
                                 <div 
-                                    key={value}
-                                    className={`bb-rl-color-option ${formData.color_scheme === value ? 'bb-rl-selected' : ''}`}
-                                    onClick={() => handleInputChange('color_scheme', value)}
+                                    key={index}
+                                    className={`bb-rl-color-option ${formData.color_scheme === option[0] ? 'bb-rl-selected' : ''}`}
                                 >
-                                    <div className={`bb-rl-color-preview bb-rl-color-${value}`}>
-                                        <div className="bb-rl-color-swatch bb-rl-primary"></div>
-                                        <div className="bb-rl-color-swatch bb-rl-secondary"></div>
-                                        <div className="bb-rl-color-swatch bb-rl-accent"></div>
-                                    </div>
-                                    <span className="bb-rl-color-label">{label}</span>
-                                    {formData.color_scheme === value && (
-                                        <span className="bb-rl-selected-icon">✓</span>
-                                    )}
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                )}
-
-                {/* Site Layout Field */}
-                {stepOptions.site_layout && (
-                    <div className="bb-rl-field-group">
-                        <div className="bb-rl-field-label">
-                            <h4>{stepOptions.site_layout.label}</h4>
-                            <p className="bb-rl-field-description">
-                                {stepOptions.site_layout.description}
-                            </p>
-                        </div>
-                        
-                        <div className="bb-rl-layout-options">
-                            {Object.entries(stepOptions.site_layout.options || {}).map(([value, label]) => (
-                                <div 
-                                    key={value}
-                                    className={`bb-rl-layout-option ${formData.site_layout === value ? 'bb-rl-selected' : ''}`}
-                                    onClick={() => handleInputChange('site_layout', value)}
-                                >
-                                    <div className={`bb-rl-layout-preview bb-rl-layout-${value}`}>
-                                        <div className="bb-rl-layout-header"></div>
-                                        <div className="bb-rl-layout-content">
-                                            <div className="bb-rl-layout-main"></div>
-                                            {value === 'boxed' && <div className="bb-rl-layout-sidebar"></div>}
+                                    <label className={`bb-rl-color-preview bb-rl-color-${option[0]}`}>
+                                        <i className='bb-icons-rl'></i>
+                                        <span className="bb-rl-color-details">
+                                            <span className="bb-rl-color-label">{option[1].label}</span>
+                                            <span className="bb-rl-color-description">{option[1].description}</span>
+                                        </span>
+                                        <div className="bb-rl-custom-radio-input">
+                                            <input type="radio" name="color_scheme" value={option[0]} checked={formData.color_scheme === option[0]} onChange={() => handleInputChange('color_scheme', option[0])} />
+                                            <span className="bb-rl-custom-radio-icon"></span>
                                         </div>
-                                    </div>
-                                    <span className="bb-rl-layout-label">{label}</span>
-                                    {formData.site_layout === value && (
-                                        <span className="bb-rl-selected-icon">✓</span>
-                                    )}
+                                    </label>
                                 </div>
                             ))}
                         </div>
                     </div>
                 )}
-
-                {/* Preview section */}
-                <div className="bb-rl-field-group">
-                    <div className="bb-rl-appearance-preview">
-                        <h4>{__('Preview', 'buddyboss')}</h4>
-                        <div className="bb-rl-preview-container">
-                            <div className={`bb-rl-site-preview bb-rl-${formData.color_scheme} bb-rl-${formData.site_layout}`}>
-                                <div className="bb-rl-preview-header">
-                                    <div className="bb-rl-preview-logo"></div>
-                                    <div className="bb-rl-preview-nav"></div>
-                                </div>
-                                <div className="bb-rl-preview-content">
-                                    <div className="bb-rl-preview-sidebar">
-                                        <div className="bb-rl-preview-widget"></div>
-                                        <div className="bb-rl-preview-widget"></div>
-                                    </div>
-                                    <div className="bb-rl-preview-main">
-                                        <div className="bb-rl-preview-activity"></div>
-                                        <div className="bb-rl-preview-activity"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
         );
     };

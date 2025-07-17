@@ -82,7 +82,7 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 				2 => array(
 					'key'         => 'site_appearance',
 					'title'       => __( 'Site Appearance', 'buddyboss' ),
-					'description' => __( 'Customize your site appearance and styling', 'buddyboss' ),
+					'description' => __( 'Set your community appearance to light, dark, or both.', 'buddyboss' ),
 					'component'   => 'SiteAppearanceStep',
 					'image'       => 'onboardingModal-step-2.png',
 				),
@@ -133,25 +133,22 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 				),
 				'site_appearance' => array(
 					'color_scheme' => array(
-						'type'        => 'select',
-						'label'       => __( 'Color Scheme', 'buddyboss' ),
-						'description' => __( 'Choose your site color scheme', 'buddyboss' ),
-						'options'     => array(
-							'default' => __( 'Default', 'buddyboss' ),
-							'dark'    => __( 'Dark Mode', 'buddyboss' ),
-							'custom'  => __( 'Custom Colors', 'buddyboss' ),
+						'type'       => 'radio',
+						'options'    => array(
+							'light'  => array(
+								'label'       => __( 'Light Mode', 'buddyboss' ),
+								'description' => __( 'The site will be shown in light mode.', 'buddyboss' ),
+							),
+							'dark'   => array(
+								'label'       => __( 'Dark Mode', 'buddyboss' ),
+								'description' => __( 'The site will be shown in dark mode.', 'buddyboss' ),
+							),
+							'custom' => array(
+								'label'       => __( 'Both', 'buddyboss' ),
+								'description' => __( 'Users can switch between modes.', 'buddyboss' ),
+							),
 						),
-						'default'     => 'default',
-					),
-					'site_layout'  => array(
-						'type'        => 'select',
-						'label'       => __( 'Site Layout', 'buddyboss' ),
-						'description' => __( 'Select your preferred layout style', 'buddyboss' ),
-						'options'     => array(
-							'boxed'     => __( 'Boxed Layout', 'buddyboss' ),
-							'fullwidth' => __( 'Full Width', 'buddyboss' ),
-						),
-						'default'     => 'fullwidth',
+						'default'     => 'custom',
 					),
 				),
 				'brandings'       => array(
