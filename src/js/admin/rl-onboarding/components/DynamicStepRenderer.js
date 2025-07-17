@@ -227,6 +227,31 @@ export const DynamicStepRenderer = ({
                     </div>
                 );
 
+            case 'visual_radio_options':
+                return (
+                        <div className="bb-rl-field-group"><div className="bb-rl-color-scheme-options">
+                                {Object.entries(stepOptions.bb_rl_theme_mode.options || {}).map((option,index) => (
+                                    <div 
+                                        key={index}
+                                        className={`bb-rl-color-option ${formData.color_scheme === option[0] ? 'bb-rl-selected' : ''}`}
+                                    >
+                                        <label className={`bb-rl-color-preview bb-rl-color-${option[0]}`}>
+                                            <i className={option[1].icon_class}></i>
+                                            <span className="bb-rl-color-details">
+                                                <span className="bb-rl-color-label">{option[1].label}</span>
+                                                <span className="bb-rl-color-description">{option[1].description}</span>
+                                            </span>
+                                            <div className="bb-rl-custom-radio-input">
+                                                <input type="radio" name="color_scheme" value={option[0]} checked={formData.color_scheme === option[0]} onChange={() => handleInputChange('color_scheme', option[0])} />
+                                                <span className="bb-rl-custom-radio-icon"></span>
+                                            </div>
+                                        </label>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                );
+
             case 'visual_options':
                 return (
                     <div key={fieldKey} className="bb-rl-field-group">

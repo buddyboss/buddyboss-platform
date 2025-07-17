@@ -599,33 +599,17 @@ body.bb-rl-fullscreen-mode {
         border-radius: $border-radius-md;
         cursor: pointer;
 
-        > .bb-icons-rl {
+        > [class*="bb-icons"] {
             display: flex;
             align-items: center;
             justify-content: center;
+            color: $icon-color;
+            font-family: bb-icons-rl;
+            font-size: 28px;
             height: 56px;
             width: 56px;
             background-color: $background-color;
             border-radius: $border-radius-full;
-
-            &:before {
-                content: '';
-                color: $icon-color;
-                font-family: bb-icons-rl;
-                font-size: 28px;
-            }
-        }
-
-        &.bb-rl-color-light > .bb-icons-rl:before {
-            content: '\e472';
-        }
-
-        &.bb-rl-color-dark > .bb-icons-rl:before {
-            content: '\e330';
-        }
-
-        &.bb-rl-color-custom > .bb-icons-rl:before {
-            content: '\e18c';
         }
     }
 

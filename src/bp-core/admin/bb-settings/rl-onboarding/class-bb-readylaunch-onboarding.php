@@ -133,22 +133,22 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 				),
 				'site_appearance' => array(
 					'bb_rl_theme_mode' => array(
-						'type'       => 'visual_options',
+						'type'       => 'visual_radio_options',
 						'options'    => array(
 							'light'  => array(
 								'label'       => __( 'Light Mode', 'buddyboss' ),
 								'description' => __( 'The site will be shown in light mode.', 'buddyboss' ),
-								'icon_class' => 'bb-icon-rl-light',
+								'icon_class' => 'bb-icons-rl-sun',
 							),
 							'dark'   => array(
 								'label'       => __( 'Dark Mode', 'buddyboss' ),
 								'description' => __( 'The site will be shown in dark mode.', 'buddyboss' ),
-								'icon_class' => 'bb-icon-rl-dark',
+								'icon_class' => 'bb-icons-rl-moon',
 							),
 							'choice' => array(
 								'label'       => __( 'Both', 'buddyboss' ),
 								'description' => __( 'Users can switch between modes.', 'buddyboss' ),
-								'icon_class' => 'bb-icon-rl-both',
+								'icon_class' => 'bb-icons-rl-circle-half',
 							),
 						),
 						'default'     => 'light',
