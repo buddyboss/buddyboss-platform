@@ -57,6 +57,9 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 2.9.11 =
+* Enhancement: Improved code structure for better performance and maintainability
+
 = 2.9.10 =
 * Bug: Forums - Fixed issue where image uploads were blocked when using Forum shortcode on a page with document uploads disabled
 * Bug: Forums - Fixed search results displaying password entry forms instead of a proper message for password-protected posts
