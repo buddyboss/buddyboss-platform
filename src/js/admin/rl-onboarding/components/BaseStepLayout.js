@@ -33,7 +33,7 @@ export const BaseStepLayout = ({
                 {/* Left Panel - Options and Controls */}
                 <div className="bb-rl-left-panel">
                     <div className="bb-rl-step-header">
-                        <a href='#' className="bb-rl-step-back-button">
+                        <a href={window.bbRlOnboarding?.dashboardUrl} className="bb-rl-step-back-button">
                             <span className="bb-icons-rl-caret-left"></span>
                             {__('WP Admin', 'buddyboss')}
                         </a>

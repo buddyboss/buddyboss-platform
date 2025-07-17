@@ -395,6 +395,7 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 			'progress'     => $this->get_progress(),
 			'preferences'  => $this->get_preferences(),
 			'ajaxUrl'      => admin_url( 'admin-ajax.php' ),
+			'dashboardUrl' => admin_url(),
 			'nonce'        => wp_create_nonce( $this->wizard_id . '_wizard_nonce' ),
 			'translations' => array(
 				'welcome'          => __( 'Welcome', 'buddyboss' ),
