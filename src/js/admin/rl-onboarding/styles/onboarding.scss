@@ -10,6 +10,7 @@ $background-brand-primary-color: #ef5d33;
 $text-color: #1e1e1e;
 $text-brand-primary-color: #ef5d33;
 $text-secondary-color: #2f2f2f;
+$text-tertiary-color: #666666;
 $text-disabled-color: #999999;
 $icon-color: #2f2f2f;
 $icon-secondary-color: #666666;
@@ -63,7 +64,7 @@ $lg: 1024px;
 // ==========================================================================
 // Base Overlay and Modal
 // ==========================================================================
-
+.bb-rl-onboarding-modal *,
 #bb-rl-onboarding-root * {
     box-sizing: border-box;
 }
@@ -203,7 +204,6 @@ body.bb-rl-fullscreen-mode {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin: -32px -32px 35px;
 
     .bb-rl-step-back-button {
         display: flex;
@@ -213,10 +213,16 @@ body.bb-rl-fullscreen-mode {
         color: $text-color;
         padding: 8px;
         text-decoration: none;
+        margin-right: auto;
 
         [class*="bb-icons"] {
             font-size: 16px;
         }
+    }
+
+    .bb-rl-logo {
+        margin-right: auto;
+        transform: translateX(-50%);
     }
 }
 
@@ -332,21 +338,28 @@ body.bb-rl-fullscreen-mode {
 }
 
 .bb-rl-step-content {
-    flex: 1;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    overflow: hidden;
+    display: flex;
     min-height: 0; // Important for proper flex behavior
 }
 
 .bb-rl-left-panel {
-    padding: 32px;
     overflow-y: auto;
     background: $white;
     border-right: 1px solid $border-color;
     display: flex;
     flex-direction: column;
+    flex: 1;
     min-height: 0; // Important for proper flex behavior
+    max-width: 600px;
+}
+
+.bb-rl-left-panel-content {
+    padding: 32px;
+    max-height: calc(100vh - 70px);
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
 }
 
 .bb-rl-right-panel {
@@ -356,16 +369,17 @@ body.bb-rl-fullscreen-mode {
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    flex: 1;
     padding: 32px;
     min-height: 0; // Important for proper flex behavior
 }
 
 .bb-rl-step-info {
-    margin-bottom: 32px;
+    margin-bottom: 20px;
     flex-shrink: 0;
     
     .bb-rl-step-title {
-        font-size: 28px;
+        font-size: 22px;
         font-weight: 600;
         color: $text-color;
         margin: 0 0 12px 0;
@@ -373,38 +387,42 @@ body.bb-rl-fullscreen-mode {
     }
     
     .bb-rl-step-description {
-        font-size: 16px;
-        color: #666;
+        font-size: 14px;
+        color: $text-secondary-color;
         margin: 0;
         line-height: 1.5;
     }
 }
 
 .bb-rl-step-options {
-    flex: 1;
     margin-bottom: 32px;
-    overflow-y: auto;
-    min-height: 0; // Important for proper flex behavior
 }
 
 .bb-rl-step-navigation {
     display: flex;
-    gap: 12px;
-    padding-top: 20px;
+    align-items: center;
+    padding: 24px 32px 0;
     border-top: 1px solid $border-color;
-    flex-shrink: 0;
+    margin: auto -32px 0;
     
     .bb-rl-nav-button {
-        padding: 12px 24px;
-        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        padding: 10px 20px;
+        border-radius: $border-radius;
         font-size: 14px;
         font-weight: 500;
         cursor: pointer;
         transition: $transition;
+
+        [class*="bb-icons"] {
+            font-size: 20px;
+        }
         
         &.bb-rl-previous-button {
             background: transparent;
-            color: #666;
+            color: $text-color;
             border: 1px solid $border-color;
             
             &:hover {
@@ -459,50 +477,40 @@ body.bb-rl-fullscreen-mode {
 // ==========================================================================
 
 .bb-rl-form-fields {
-    .bb-rl-field-group {
-        margin-bottom: 24px;
-        
-        .bb-rl-field-label {
-            margin-bottom: 12px;
-            
-            h4 {
-                font-size: 16px;
-                font-weight: 600;
-                color: $text-color;
-                margin: 0 0 4px 0;
-            }
-            
-            .bb-rl-field-description {
-                font-size: 14px;
-                color: #666;
-                margin: 0;
-                line-height: 1.4;
-            }
-        }
-        
-        .bb-rl-error-message {
-            color: $error-color;
-            font-size: 12px;
-            margin: 4px 0 0 0;
-        }
-    }
     
     // WordPress Components styling
-    .components-text-control__input,
-    .components-select-control__input {
-        border-radius: 4px;
-        border: 1px solid $border-color;
-        
+    .components-select-control__input,
+    .components-text-control__input {
+        color: $text-color;
+        font-size: 14px;
+        font-weight: 400;
+        background-color: $background-color;
+        border: 1px solid $border-tertiary-color;
+        border-radius: $border-radius;
+        padding: 5px 8px;
+        width: 100%;
+
         &:focus {
             border-color: $primary-color;
             box-shadow: 0 0 0 2px rgba(229, 126, 58, 0.1);
         }
+    }
+
+    .components-base-control__help {
+        color: $text-tertiary-color;
+        font-size: 13px;
+        font-weight: 400;
     }
     
     .bb-rl-field-error {
         .components-text-control__input {
             border-color: $error-color;
         }
+    }
+
+    .bb-rl-error-message {
+        font-size: 13px;
+        color: $error-color;
     }
 }
 

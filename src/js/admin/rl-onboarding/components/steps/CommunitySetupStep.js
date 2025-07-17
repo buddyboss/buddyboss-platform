@@ -83,7 +83,6 @@ export const CommunitySetupStep = ({
                 {stepOptions.site_title && (
                     <div className="bb-rl-field-group">
                         <TextControl
-                            label={stepOptions.site_title.label}
                             help={stepOptions.site_title.description}
                             value={formData.site_title}
                             onChange={(value) => handleInputChange('site_title', value)}
@@ -111,31 +110,6 @@ export const CommunitySetupStep = ({
                         />
                     </div>
                 )}
-
-                {/* Additional community setup options */}
-                <div className="bb-rl-field-group">
-                    <div className="bb-rl-info-section">
-                        <h4>{__('What you\'ll get:', 'buddyboss')}</h4>
-                        <ul className="bb-rl-feature-list">
-                            <li>
-                                <span className="bb-rl-check-icon">✓</span>
-                                {__('Member profiles and directories', 'buddyboss')}
-                            </li>
-                            <li>
-                                <span className="bb-rl-check-icon">✓</span>
-                                {__('Activity feeds and social interactions', 'buddyboss')}
-                            </li>
-                            <li>
-                                <span className="bb-rl-check-icon">✓</span>
-                                {__('Private messaging system', 'buddyboss')}
-                            </li>
-                            <li>
-                                <span className="bb-rl-check-icon">✓</span>
-                                {__('Groups and forums', 'buddyboss')}
-                            </li>
-                        </ul>
-                    </div>
-                </div>
             </div>
         );
     };

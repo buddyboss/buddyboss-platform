@@ -21,8 +21,8 @@ export const BaseStepLayout = ({
         ? `${window.bbRlOnboarding.assets.assetsUrl}${image}`
         : '';
 
-    const stepsProgress = totalSteps > 0 ? Array.from({ length: totalSteps }, (_, index) => (
-        <div className={`bb-rl-progress-step ${index < currentStep ? 'bb-rl-step-active' : ''}`} key={index}></div>
+    const stepsProgress = totalSteps > 0 ? Array.from({ length: totalSteps - 1 }, (_, index) => (
+        <div className={`bb-rl-progress-step ${index + 1 < currentStep ? 'bb-rl-step-active' : ''}`} key={index}></div>
     )) : null;
 
     return (
@@ -41,37 +41,43 @@ export const BaseStepLayout = ({
                             <img src={window.bbRlOnboarding?.assets?.logo || ''} alt="BuddyBoss" />
                         </div>
                     </div>
-                    <div className="bb-rl-step-info">
-                        <h1 className="bb-rl-step-title">{title}</h1>
-                        <p className="bb-rl-step-description">{description}</p>
-                    </div>
 
-                    <div className='bb-rl-step-progress'>
-                        { stepsProgress }
-                    </div>
-                    
-                    <div className="bb-rl-step-options">
-                        {children}
-                    </div>
-                    
-                    {/* Navigation buttons */}
-                    <div className="bb-rl-step-navigation">
-                        {!isFirstStep && (
-                            <Button 
-                                className="bb-rl-nav-button bb-rl-previous-button"
-                                onClick={onPrevious}
-                            >
-                                {__('Previous', 'buddyboss')}
-                            </Button>
-                        )}
+                    <div className="bb-rl-left-panel-content">
+
+                        <div className="bb-rl-step-info">
+                            <h1 className="bb-rl-step-title">{title}</h1>
+                            <p className="bb-rl-step-description">{description}</p>
+                        </div>
+
+                        <div className='bb-rl-step-progress'>
+                            { stepsProgress }
+                        </div>
                         
-                        <Button 
-                            className="bb-rl-nav-button bb-rl-next-button"
-                            onClick={onNext}
-                            variant="primary"
-                        >
-                            {isLastStep ? __('Finish', 'buddyboss') : __('Next', 'buddyboss')}
-                        </Button>
+                        <div className="bb-rl-step-options">
+                            {children}
+                        </div>
+                        
+                        {/* Navigation buttons */}
+                        <div className="bb-rl-step-navigation">
+                            {!isFirstStep && (
+                                <Button 
+                                    className="bb-rl-nav-button bb-rl-previous-button"
+                                    onClick={onPrevious}
+                                >
+                                    <span className="bb-icons-rl-arrow-left"></span>
+                                    {__('Back', 'buddyboss')}
+                                </Button>
+                            )}
+                            
+                            <Button 
+                                className="bb-rl-nav-button bb-rl-next-button"
+                                onClick={onNext}
+                                variant="primary"
+                            >
+                                {isLastStep ? __('Finish', 'buddyboss') : __('Next', 'buddyboss')}
+                                {!isLastStep && <span className="bb-icons-rl-arrow-right"></span>}
+                            </Button>
+                        </div>
                     </div>
                 </div>
 

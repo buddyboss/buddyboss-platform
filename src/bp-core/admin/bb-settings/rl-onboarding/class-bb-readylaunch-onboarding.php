@@ -74,8 +74,8 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 				),
 				1 => array(
 					'key'         => 'community_setup',
-					'title'       => __( 'Community Setup', 'buddyboss' ),
-					'description' => __( 'Configure your community basics', 'buddyboss' ),
+					'title'       => __( 'Site Name', 'buddyboss' ),
+					'description' => __( 'This matches the WordPress Site Title. Updating it here will update it site-wide.', 'buddyboss' ),
 					'component'   => 'CommunitySetupStep',
 					'image'       => 'onboardingModal-step-1.png',
 				),
@@ -126,18 +126,8 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 				'community_setup' => array(
 					'site_title'   => array(
 						'type'        => 'text',
-						'label'       => __( 'Community Name', 'buddyboss' ),
-						'description' => __( 'What would you like to call your community?', 'buddyboss' ),
+						'description' => __( 'This matches the WordPress Site Title. Updating it here will update it site-wide.', 'buddyboss' ),
 						'required'    => true,
-					),
-					'privacy_mode' => array(
-						'type'        => 'select',
-						'label'       => __( 'Privacy Mode', 'buddyboss' ),
-						'description' => __( 'How open should your community be?', 'buddyboss' ),
-						'options'     => array(
-							'public'  => __( 'Public - Anyone can join', 'buddyboss' ),
-							'private' => __( 'Private - Invitation only', 'buddyboss' ),
-						),
 					),
 				),
 				'site_appearance' => array(
@@ -250,7 +240,7 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 				),
 			),
 			'react_assets'          => array(
-				'logo'                  => buddypress()->plugin_url . 'bp-core/images/bb-icon.svg',
+				'logo'                  => buddypress()->plugin_url . 'bp-core/admin/bb-settings/rl-onboarding/assets/bb-logo.png',
 				'assetsBaseUrl'         => buddypress()->plugin_url . 'bp-core/admin/bb-settings/rl-onboarding/assets/',
 				'buddybossThemePreview' => buddypress()->plugin_url . 'bp-core/admin/bb-settings/rl-onboarding/assets/buddyboss-theme-preview.svg',
 				'currentThemePreview'   => buddypress()->plugin_url . 'bp-core/admin/bb-settings/rl-onboarding/assets/current-theme-preview.svg',
