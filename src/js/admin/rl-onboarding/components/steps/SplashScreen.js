@@ -44,10 +44,10 @@ export const SplashScreen = ({ stepData, onNext, onSkip }) => {
                             </li>
                         </ul>
                         <div className="bb-rl-splash-content-product-button-container">
-                            <a className="bb-rl-button bb-rl-button--disabled">
+                            <a href='#' className="bb-rl-button bb-rl-button--outline">
                                 {__('Configure BuddyBoss Theme', 'buddyboss')}
                             </a>
-                            <a className="bb-rl-button">
+                            <a href='#' className="bb-rl-button">
                                 {__('Buy Theme', 'buddyboss')}
                             </a>
                         </div>

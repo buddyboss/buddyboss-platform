@@ -41,6 +41,7 @@ $lg: 1024px;
     font-size: 14px;
     font-weight: 500;
     cursor: pointer;
+    text-decoration: none;
 
     &:hover {
         color: $white;
@@ -48,10 +49,14 @@ $lg: 1024px;
 
     &[disabled],
     &.bb-rl-button--disabled {
+        opacity: 0.6;
+        pointer-events: none;
+    }
+
+    &.bb-rl-button--outline {
         color: $text-disabled-color;
         background-color: transparent;
         border: 1px solid $border-tertiary-color;
-        pointer-events: none;
     }
 }
 
