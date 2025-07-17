@@ -931,6 +931,265 @@ body.bb-rl-fullscreen-mode {
 }
 
 // ==========================================================================
+// Dynamic Visual Options Styling
+// ==========================================================================
+
+.bb-rl-visual-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-top: 16px;
+
+    .bb-rl-visual-option {
+        border: 2px solid $border-color;
+        border-radius: $border-radius;
+        padding: 16px;
+        cursor: pointer;
+        transition: $transition;
+        background: $white;
+        position: relative;
+
+        &:hover {
+            border-color: $primary-color;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        &.bb-rl-selected {
+            border-color: $primary-color;
+            background-color: rgba($primary-color, 0.05);
+        }
+
+        .bb-rl-option-preview {
+            margin-bottom: 12px;
+            min-height: 80px;
+            border-radius: 4px;
+            overflow: hidden;
+            background: #f5f5f5;
+            position: relative;
+        }
+
+        .bb-rl-option-label {
+            font-weight: 500;
+            color: $text-color;
+            display: block;
+            text-align: center;
+        }
+
+        .bb-rl-selected-icon {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: $primary-color;
+            color: $white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+    }
+}
+
+// Color scheme preview styles
+.bb-rl-color-scheme-preview {
+    display: flex;
+    gap: 4px;
+    padding: 16px;
+    align-items: center;
+    justify-content: center;
+
+    .bb-rl-color-swatch {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+
+        &.bb-rl-primary-default { background: #e57e3a; }
+        &.bb-rl-secondary-default { background: #f0f0f1; }
+        &.bb-rl-accent-default { background: #1e1e1e; }
+
+        &.bb-rl-primary-dark { background: #2c3338; }
+        &.bb-rl-secondary-dark { background: #32373c; }
+        &.bb-rl-accent-dark { background: #e57e3a; }
+
+        &.bb-rl-primary-custom { background: linear-gradient(45deg, #e57e3a, #d63638); }
+        &.bb-rl-secondary-custom { background: linear-gradient(45deg, #f0f0f1, #e0e0e0); }
+        &.bb-rl-accent-custom { background: linear-gradient(45deg, #1e1e1e, #666); }
+    }
+}
+
+// Layout preview styles
+.bb-rl-layout-preview {
+    padding: 12px;
+    background: $white;
+    border: 1px solid $border-color;
+    border-radius: 4px;
+
+    .bb-rl-layout-header {
+        height: 20px;
+        background: #e0e0e0;
+        margin-bottom: 8px;
+        border-radius: 2px;
+    }
+
+    .bb-rl-layout-content {
+        display: flex;
+        gap: 8px;
+        min-height: 40px;
+
+        .bb-rl-layout-main {
+            flex: 1;
+            background: #f5f5f5;
+            border-radius: 2px;
+        }
+
+        .bb-rl-layout-sidebar {
+            width: 30%;
+            background: #e8e8e8;
+            border-radius: 2px;
+        }
+    }
+}
+
+// Homepage layout preview styles
+.bb-rl-activity-item {
+    height: 16px;
+    background: #e0e0e0;
+    margin-bottom: 4px;
+    border-radius: 2px;
+
+    &:last-child {
+        margin-bottom: 0;
+    }
+}
+
+.bb-rl-custom-content {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 8px;
+
+    .bb-rl-custom-block {
+        height: 20px;
+        background: #e0e0e0;
+        border-radius: 2px;
+    }
+}
+
+.bb-rl-hero-section {
+    height: 40px;
+    background: linear-gradient(to right, #e57e3a, #d63638);
+    border-radius: 2px;
+    margin-bottom: 8px;
+}
+
+.bb-rl-features-section {
+    height: 20px;
+    background: #e0e0e0;
+    border-radius: 2px;
+}
+
+// Menu style preview styles
+.bb-rl-menu-preview {
+    padding: 8px;
+
+    &.bb-rl-horizontal {
+        .bb-rl-menu-item {
+            display: inline-block;
+            width: 20px;
+            height: 8px;
+            background: #e0e0e0;
+            margin-right: 4px;
+            border-radius: 2px;
+        }
+    }
+
+    &.bb-rl-vertical {
+        .bb-rl-menu-item {
+            width: 100%;
+            height: 8px;
+            background: #e0e0e0;
+            margin-bottom: 4px;
+            border-radius: 2px;
+
+            &:last-child {
+                margin-bottom: 0;
+            }
+        }
+    }
+}
+
+// Widget area preview styles
+.bb-rl-widget-area-preview {
+    padding: 8px;
+    background: $white;
+    border: 1px solid $border-color;
+    border-radius: 4px;
+    min-height: 60px;
+
+    .bb-rl-content-area {
+        display: flex;
+        gap: 6px;
+        margin-bottom: 6px;
+
+        .bb-rl-sidebar-area {
+            width: 30%;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+
+            .bb-rl-widget-placeholder {
+                height: 12px;
+                background: #e0e0e0;
+                border-radius: 2px;
+            }
+        }
+
+        .bb-rl-main-content-area {
+            flex: 1;
+            background: #f5f5f5;
+            border-radius: 2px;
+            min-height: 30px;
+        }
+    }
+
+    .bb-rl-footer-area {
+        display: flex;
+        gap: 4px;
+        height: 16px;
+
+        .bb-rl-widget-placeholder {
+            flex: 1;
+            background: #e0e0e0;
+            border-radius: 2px;
+        }
+    }
+}
+
+// Color picker wrapper
+.bb-rl-color-picker-wrapper {
+    margin-top: 8px;
+    
+    .components-color-picker {
+        width: 100%;
+    }
+}
+
+// Media field styling
+.bb-rl-media-field {
+    .bb-rl-media-preview {
+        margin-top: 12px;
+        
+        img {
+            border-radius: 4px;
+            border: 1px solid $border-color;
+        }
+    }
+}
+
+// ==========================================================================
 // Finish Screen Styles
 // ==========================================================================
 

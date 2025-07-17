@@ -14,7 +14,13 @@ export const OnboardingModal = ({ isOpen, onClose, onContinue, onSkip, onSaveSte
     const currentStep = steps[currentStepIndex] || {};
 
     useEffect(() => {
-        // Initialize step data from saved preferences
+        // Initialize step data and restore progress from backend
+        initializeOnboarding();
+    }, []);
+
+    // Initialize onboarding data and restore progress
+    const initializeOnboarding = async () => {
+        // Load saved preferences
         const savedData = {};
         if (window.bbRlOnboarding?.preferences) {
             Object.keys(window.bbRlOnboarding.preferences).forEach(key => {
@@ -22,7 +28,13 @@ export const OnboardingModal = ({ isOpen, onClose, onContinue, onSkip, onSaveSte
             });
         }
         setStepData(savedData);
-    }, []);
+
+        // Restore step progress
+        const progress = window.bbRlOnboarding?.progress;
+        if (progress && progress.current_step > 0 && progress.current_step < totalSteps) {
+            setCurrentStepIndex(progress.current_step);
+        }
+    };
 
     // Enable/disable fullscreen mode based on current step
     useEffect(() => {
@@ -41,25 +53,28 @@ export const OnboardingModal = ({ isOpen, onClose, onContinue, onSkip, onSaveSte
     const enableFullscreenMode = () => {
         // Hide WordPress admin elements for fullscreen experience
         document.body.classList.add('bb-rl-fullscreen-mode');
-
+        
+        // Prevent body scroll
+        document.body.style.overflow = 'hidden';
+        
         // Hide admin bar
         const adminBar = document.getElementById('wpadminbar');
         if (adminBar) {
             adminBar.style.display = 'none';
         }
-
+        
         // Hide admin menu
         const adminMenu = document.getElementById('adminmenumain');
         if (adminMenu) {
             adminMenu.style.display = 'none';
         }
-
+        
         // Hide admin footer
         const adminFooter = document.getElementById('wpfooter');
         if (adminFooter) {
             adminFooter.style.display = 'none';
         }
-
+        
         // Adjust main content area
         const wpwrap = document.getElementById('wpwrap');
         if (wpwrap) {
@@ -70,25 +85,28 @@ export const OnboardingModal = ({ isOpen, onClose, onContinue, onSkip, onSaveSte
     const disableFullscreenMode = () => {
         // Restore WordPress admin elements
         document.body.classList.remove('bb-rl-fullscreen-mode');
-
+        
+        // Restore body scroll
+        document.body.style.overflow = '';
+        
         // Restore admin bar
         const adminBar = document.getElementById('wpadminbar');
         if (adminBar) {
             adminBar.style.display = '';
         }
-
+        
         // Restore admin menu
         const adminMenu = document.getElementById('adminmenumain');
         if (adminMenu) {
             adminMenu.style.display = '';
         }
-
+        
         // Restore admin footer
         const adminFooter = document.getElementById('wpfooter');
         if (adminFooter) {
             adminFooter.style.display = '';
         }
-
+        
         // Restore main content area
         const wpwrap = document.getElementById('wpwrap');
         if (wpwrap) {
@@ -96,96 +114,185 @@ export const OnboardingModal = ({ isOpen, onClose, onContinue, onSkip, onSaveSte
         }
     };
 
+    // Save step progress and data to backend
+    const saveStepProgress = async (stepIndex, formData = {}) => {
+        try {
+            const response = await fetch(window.bbRlOnboarding?.ajaxUrl || window.ajaxurl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: new URLSearchParams({
+                    action: 'rl_onboarding_save_step_progress',
+                    nonce: window.bbRlOnboarding?.nonce || '',
+                    step: stepIndex,
+                    data: JSON.stringify({
+                        step_key: currentStep.key,
+                        form_data: formData,
+                        timestamp: new Date().toISOString()
+                    }),
+                }),
+            });
+
+            const data = await response.json();
+            
+            if (data.success) {
+                // Update local progress data
+                if (window.bbRlOnboarding?.progress) {
+                    window.bbRlOnboarding.progress = data.data.progress;
+                }
+                return true;
+            } else {
+                console.error('Error saving step progress:', data.data?.message || 'Unknown error');
+                return false;
+            }
+        } catch (error) {
+            console.error('Error saving step progress:', error);
+            return false;
+        }
+    };
+
+    // Auto-save preferences for dynamic options
+    const autoSavePreferences = async (preferences) => {
+        try {
+            const response = await fetch(window.bbRlOnboarding?.ajaxUrl || window.ajaxurl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: new URLSearchParams({
+                    action: 'rl_onboarding_save_preferences',
+                    nonce: window.bbRlOnboarding?.nonce || '',
+                    preferences: JSON.stringify(preferences),
+                }),
+            });
+
+            const data = await response.json();
+            
+            if (data.success) {
+                // Update local preferences
+                if (window.bbRlOnboarding?.preferences) {
+                    window.bbRlOnboarding.preferences = { ...window.bbRlOnboarding.preferences, ...preferences };
+                }
+                return true;
+            } else {
+                console.error('Error saving preferences:', data.data?.message || 'Unknown error');
+                return false;
+            }
+        } catch (error) {
+            console.error('Error saving preferences:', error);
+            return false;
+        }
+    };
+
     const handleNext = async (formData = {}) => {
         setIsProcessing(true);
 
         try {
-            // Save current step data if provided
-            if (formData && currentStep.key) {
+            // Save current step progress
+            const saveSuccess = await saveStepProgress(currentStepIndex, formData);
+            
+            if (saveSuccess) {
+                // Update step data
+                const stepKey = currentStep.key;
                 setStepData(prev => ({
                     ...prev,
-                    [currentStep.key]: formData
+                    [stepKey]: formData
                 }));
 
-                // Save step data via callback
-                if (onSaveStep) {
-                    await onSaveStep({
-                        step: currentStep.key,
-                        data: formData,
-                        timestamp: new Date().toISOString()
-                    });
+                // Auto-save preferences
+                await autoSavePreferences({ [stepKey]: formData });
+
+                // Check if this is the last step
+                if (currentStepIndex >= totalSteps - 1) {
+                    await handleComplete(formData);
+                } else {
+                    setCurrentStepIndex(prev => prev + 1);
                 }
             }
-
-            // Check if this is the last step
-            if (currentStepIndex >= totalSteps - 1) {
-                // This is the finish step
-                handleComplete();
-            } else {
-                // Move to next step
-                setCurrentStepIndex(prev => Math.min(prev + 1, totalSteps - 1));
-            }
         } catch (error) {
-            console.error('Error proceeding to next step:', error);
+            console.error('Error handling next step:', error);
         } finally {
             setIsProcessing(false);
         }
     };
 
     const handlePrevious = () => {
-        setCurrentStepIndex(prev => Math.max(prev - 1, 0));
+        if (currentStepIndex > 0) {
+            setCurrentStepIndex(prev => prev - 1);
+        }
     };
 
-    const handleSkip = async () => {
+    const handleStepSkip = async () => {
         setIsProcessing(true);
 
         try {
-            // Skip the entire onboarding
-            if (onSkip) {
-                await onSkip();
+            // Save step as skipped
+            await saveStepProgress(currentStepIndex, { skipped: true });
+            
+            // Move to next step
+            if (currentStepIndex < totalSteps - 1) {
+                setCurrentStepIndex(prev => prev + 1);
+            } else {
+                await handleComplete();
             }
         } catch (error) {
-            console.error('Error skipping onboarding:', error);
+            console.error('Error skipping step:', error);
         } finally {
             setIsProcessing(false);
         }
     };
 
-    const handleComplete = async () => {
+    const handleComplete = async (finalData = {}) => {
         setIsProcessing(true);
 
         try {
-            // Complete the onboarding with all collected data
-            if (onContinue) {
-                await onContinue(stepData);
+            // Collect all step data for final settings
+            const finalSettings = { ...stepData };
+            if (finalData && Object.keys(finalData).length > 0) {
+                const stepKey = currentStep.key;
+                finalSettings[stepKey] = finalData;
             }
 
-            // Trigger completion event
-            const event = new CustomEvent('bb_rl_onboarding_completed', {
-                detail: {
-                    stepData: stepData,
-                    completedAt: new Date().toISOString()
-                }
+            const response = await fetch(window.bbRlOnboarding?.ajaxUrl || window.ajaxurl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: new URLSearchParams({
+                    action: 'rl_onboarding_complete',
+                    nonce: window.bbRlOnboarding?.nonce || '',
+                    finalSettings: JSON.stringify(finalSettings),
+                }),
             });
-            document.dispatchEvent(event);
 
-            // Close the modal
-            if (onClose) {
-                onClose();
+            const data = await response.json();
+
+            if (data.success) {
+                console.log('Onboarding completed successfully:', data.data);
+                
+                // Trigger completion event
+                const event = new CustomEvent('bb_rl_onboarding_completed', {
+                    detail: { data: data.data, finalSettings }
+                });
+                document.dispatchEvent(event);
+
+                // Close modal and redirect to dashboard
+                if (onClose) {
+                    onClose();
+                }
+                
+                // Redirect to dashboard after brief delay
+                setTimeout(() => {
+                    window.location.href = window.bbRlOnboarding?.dashboardUrl || '/wp-admin/';
+                }, 1000);
+            } else {
+                console.error('Error completing onboarding:', data.data?.message || 'Unknown error');
             }
         } catch (error) {
             console.error('Error completing onboarding:', error);
         } finally {
             setIsProcessing(false);
-        }
-    };
-
-    const handleStepSkip = () => {
-        // Skip current step and move to next
-        if (currentStepIndex < totalSteps - 1) {
-            setCurrentStepIndex(prev => prev + 1);
-        } else {
-            handleComplete();
         }
     };
 
@@ -196,6 +303,7 @@ export const OnboardingModal = ({ isOpen, onClose, onContinue, onSkip, onSaveSte
         }
     };
 
+    // Enhanced step component render with auto-save support
     const renderCurrentStep = () => {
         if (!currentStep || !currentStep.component) {
             return (
@@ -236,7 +344,7 @@ export const OnboardingModal = ({ isOpen, onClose, onContinue, onSkip, onSaveSte
                 <StepComponent
                     stepData={currentStep}
                     onNext={handleNext}
-                    onSkip={handleSkip}
+                    onSkip={handleStepSkip}
                 />
             );
         }
@@ -264,7 +372,9 @@ export const OnboardingModal = ({ isOpen, onClose, onContinue, onSkip, onSaveSte
                 currentStep={currentStepIndex}
                 totalSteps={totalSteps}
                 onSaveStep={onSaveStep}
+                onAutoSave={autoSavePreferences}
                 isProcessing={isProcessing}
+                savedData={stepData[currentStep.key] || {}}
             />
         );
     };

@@ -1,7 +1,7 @@
 import { useState, useEffect } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
-import { TextControl, SelectControl } from '@wordpress/components';
 import { BaseStepLayout } from '../BaseStepLayout';
+import { DynamicStepRenderer } from '../DynamicStepRenderer';
 
 export const CommunitySetupStep = ({
     stepData,
@@ -10,11 +10,14 @@ export const CommunitySetupStep = ({
     onSkip,
     currentStep,
     totalSteps,
-    onSaveStep
+    onSaveStep,
+    onAutoSave,
+    savedData = {}
 }) => {
     const [formData, setFormData] = useState({
         blogname: '',
-        privacy_mode: 'public'
+        privacy_mode: 'public',
+        ...savedData
     });
 
     const [errors, setErrors] = useState({});
@@ -23,35 +26,41 @@ export const CommunitySetupStep = ({
     const stepOptions = window.bbRlOnboarding?.stepOptions?.community_setup || {};
 
     useEffect(() => {
-        // Load any saved data for this step
-        const savedData = window.bbRlOnboarding?.preferences?.community_setup || {};
-        if (Object.keys(savedData).length > 0) {
-            setFormData(prev => ({ ...prev, ...savedData }));
-        }
-    }, []);
+        // Initialize with defaults from step options and saved data
+        const initialData = {};
+        Object.entries(stepOptions).forEach(([key, config]) => {
+            if (config.value !== undefined) {
+                initialData[key] = config.value;
+            } else if (config.default !== undefined) {
+                initialData[key] = config.default;
+            }
+        });
 
-    const handleInputChange = (field, value) => {
         setFormData(prev => ({
+            ...initialData,
             ...prev,
-            [field]: value
+            ...savedData
         }));
+    }, [savedData, stepOptions]);
 
-        // Clear error for this field
-        if (errors[field]) {
-            setErrors(prev => ({
-                ...prev,
-                [field]: null
-            }));
-        }
+    const handleFormChange = (newFormData) => {
+        setFormData(newFormData);
+        
+        // Clear any validation errors
+        setErrors({});
     };
 
     const validateForm = () => {
         const newErrors = {};
 
         // Check required fields
-        if (stepOptions.blogname?.required && !formData.blogname.trim()) {
-            newErrors.blogname = __('Community name is required', 'buddyboss');
-        }
+        Object.entries(stepOptions).forEach(([key, config]) => {
+            if (config.required && (!formData[key] || formData[key].trim() === '')) {
+                newErrors[key] = config.label 
+                    ? __(`${config.label} is required`, 'buddyboss')
+                    : __('This field is required', 'buddyboss');
+            }
+        });
 
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
@@ -76,56 +85,34 @@ export const CommunitySetupStep = ({
         }
     };
 
-    const renderFormFields = () => {
-        return (
-            <div className="bb-rl-form-fields">
-                {/* Site Title Field */}
-                {stepOptions.blogname && (
-                    <div className="bb-rl-field-group">
-                        <TextControl
-                            help={stepOptions.blogname.description}
-                            value={stepOptions.blogname?.value || ''}
-                            onChange={(value) => handleInputChange('blogname', value)}
-                            placeholder={__('Enter your community name', 'buddyboss')}
-                            className={errors.blogname ? 'bb-rl-field-error' : ''}
-                        />
-                        {errors.blogname && (
-                            <p className="bb-rl-error-message">{errors.blogname}</p>
-                        )}
-                    </div>
-                )}
-
-                {/* Privacy Mode Field */}
-                {stepOptions.privacy_mode && (
-                    <div className="bb-rl-field-group">
-                        <SelectControl
-                            label={stepOptions.privacy_mode.label}
-                            help={stepOptions.privacy_mode.description}
-                            value={formData.privacy_mode}
-                            onChange={(value) => handleInputChange('privacy_mode', value)}
-                            options={Object.entries(stepOptions.privacy_mode.options || {}).map(([value, label]) => ({
-                                value,
-                                label
-                            }))}
-                        />
-                    </div>
-                )}
-            </div>
-        );
-    };
-
     return (
         <BaseStepLayout
             stepData={stepData}
             onNext={handleNext}
             onPrevious={onPrevious}
             onSkip={onSkip}
-            isFirstStep={currentStep === 0}
+            isFirstStep={currentStep === 1} // Skip splash screen
             isLastStep={currentStep === totalSteps - 1}
             currentStep={currentStep}
             totalSteps={totalSteps}
         >
-            {renderFormFields()}
+            <DynamicStepRenderer
+                stepKey="community_setup"
+                stepOptions={stepOptions}
+                initialData={formData}
+                onChange={handleFormChange}
+                onAutoSave={onAutoSave}
+            />
+            
+            {Object.keys(errors).length > 0 && (
+                <div className="bb-rl-form-errors">
+                    {Object.entries(errors).map(([field, message]) => (
+                        <p key={field} className="bb-rl-error-message">
+                            {message}
+                        </p>
+                    ))}
+                </div>
+            )}
         </BaseStepLayout>
     );
 };

@@ -133,7 +133,7 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 				),
 				'site_appearance' => array(
 					'color_scheme' => array(
-						'type'       => 'radio',
+						'type'       => 'visual_options',
 						'options'    => array(
 							'light'  => array(
 								'label'       => __( 'Light Mode', 'buddyboss' ),
@@ -143,12 +143,12 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 								'label'       => __( 'Dark Mode', 'buddyboss' ),
 								'description' => __( 'The site will be shown in dark mode.', 'buddyboss' ),
 							),
-							'custom' => array(
+							'choice' => array(
 								'label'       => __( 'Both', 'buddyboss' ),
 								'description' => __( 'Users can switch between modes.', 'buddyboss' ),
 							),
 						),
-						'default'     => 'custom',
+						'default'     => 'light',
 					),
 				),
 				'brandings'       => array(
@@ -166,6 +166,7 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 						'type'        => 'color',
 						'label'       => __( 'Brand Colors', 'buddyboss' ),
 						'description' => __( 'Set your primary brand colors', 'buddyboss' ),
+						'default'     => '#e57e3a',
 					),
 				),
 				'pages'           => array(
@@ -176,7 +177,7 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 						'default'     => true,
 					),
 					'homepage_layout'        => array(
-						'type'        => 'select',
+						'type'        => 'visual_options',
 						'label'       => __( 'Homepage Layout', 'buddyboss' ),
 						'description' => __( 'Choose your homepage layout', 'buddyboss' ),
 						'options'     => array(
@@ -201,7 +202,7 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 						'default'     => true,
 					),
 					'menu_style'          => array(
-						'type'        => 'select',
+						'type'        => 'visual_options',
 						'label'       => __( 'Menu Style', 'buddyboss' ),
 						'description' => __( 'Choose navigation menu style', 'buddyboss' ),
 						'options'     => array(
@@ -225,7 +226,7 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 						'default'     => true,
 					),
 					'widget_areas'           => array(
-						'type'        => 'select',
+						'type'        => 'visual_options',
 						'label'       => __( 'Widget Areas', 'buddyboss' ),
 						'description' => __( 'Choose which widget areas to enable', 'buddyboss' ),
 						'options'     => array(
