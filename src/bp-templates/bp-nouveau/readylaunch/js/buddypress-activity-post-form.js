@@ -5325,32 +5325,10 @@ window.bp = window.bp || {};
 					]
 				);
 
-				if (
-					! _.isUndefined( BP_Nouveau.activity.params.topics ) &&
-					(
-						! _.isUndefined( this.model.get( 'topics' ) ) &&
-						this.model.get( 'topics' ) &&
-						! _.isUndefined( this.model.get( 'topics' ).topic_lists ) &&
-						this.model.get( 'topics' ).topic_lists.length > 0
-					) &&
-					! _.isUndefined( BP_Nouveau.activity.params.topics.bb_is_enabled_activity_topics ) &&
-					BP_Nouveau.activity.params.topics.bb_is_enabled_activity_topics
-				) {
-					if (
-						!_.isUndefined(BP_Nouveau.activity.params.topics.bb_is_activity_topic_required) &&
-						BP_Nouveau.activity.params.topics.bb_is_activity_topic_required
-					) {
-						if ( this.model.get( 'topics' ) ) {
-							var topicId = this.model.get( 'topics' ) ? this.model.get( 'topics' ).topic_id : null;
-							if ( ! _.isUndefined( topicId ) && null !== topicId) {
-								data.topic_id = topicId;
-							}
-						}
-					} else {
-						if ( this.model.get( 'topics' ) ) {
-							data.topic_id = this.model.get( 'topics' ).topic_id;
-						}
-					}
+				var topicSelector = $( '#buddypress .whats-new-topic-selector .bb-topic-selector-list li' );
+				if ( topicSelector.length ) {
+					var topicId   = topicSelector.find( 'a.selected' ).data( 'topic-id' ) || 0;
+					data.topic_id = topicId;
 				}
 
 				// Form link preview data to pass in request if available.
