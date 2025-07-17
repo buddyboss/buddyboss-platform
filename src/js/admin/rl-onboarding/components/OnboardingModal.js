@@ -41,25 +41,25 @@ export const OnboardingModal = ({ isOpen, onClose, onContinue, onSkip, onSaveSte
     const enableFullscreenMode = () => {
         // Hide WordPress admin elements for fullscreen experience
         document.body.classList.add('bb-rl-fullscreen-mode');
-        
+
         // Hide admin bar
         const adminBar = document.getElementById('wpadminbar');
         if (adminBar) {
             adminBar.style.display = 'none';
         }
-        
+
         // Hide admin menu
         const adminMenu = document.getElementById('adminmenumain');
         if (adminMenu) {
             adminMenu.style.display = 'none';
         }
-        
+
         // Hide admin footer
         const adminFooter = document.getElementById('wpfooter');
         if (adminFooter) {
             adminFooter.style.display = 'none';
         }
-        
+
         // Adjust main content area
         const wpwrap = document.getElementById('wpwrap');
         if (wpwrap) {
@@ -70,25 +70,25 @@ export const OnboardingModal = ({ isOpen, onClose, onContinue, onSkip, onSaveSte
     const disableFullscreenMode = () => {
         // Restore WordPress admin elements
         document.body.classList.remove('bb-rl-fullscreen-mode');
-        
+
         // Restore admin bar
         const adminBar = document.getElementById('wpadminbar');
         if (adminBar) {
             adminBar.style.display = '';
         }
-        
+
         // Restore admin menu
         const adminMenu = document.getElementById('adminmenumain');
         if (adminMenu) {
             adminMenu.style.display = '';
         }
-        
+
         // Restore admin footer
         const adminFooter = document.getElementById('wpfooter');
         if (adminFooter) {
             adminFooter.style.display = '';
         }
-        
+
         // Restore main content area
         const wpwrap = document.getElementById('wpwrap');
         if (wpwrap) {
@@ -280,10 +280,14 @@ export const OnboardingModal = ({ isOpen, onClose, onContinue, onSkip, onSaveSte
                 <div className="bb-rl-onboarding-modal bb-rl-special-step">
                     <div className="bb-rl-modal-header">
                         <div className="bb-rl-modal-header-content">
-                            <h2 className="bb-rl-modal-title">{__('Welcome to BuddyBoss', 'buddyboss')}</h2>
-                            <p className="bb-rl-modal-description">{__('Let\'s bring your community to life by choose the look and feel that matches your vision.', 'buddyboss')}</p>
+                            <h2 className="bb-rl-modal-title">
+	                            { currentStep?.title }
+							</h2>
+                            <p className="bb-rl-modal-description">
+	                            { currentStep?.description }
+							</p>
                         </div>
-                        <Button 
+                        <Button
                             className="bb-rl-close-button"
                             onClick={handleClose}
                             label={__('Close', 'buddyboss')}
@@ -292,7 +296,7 @@ export const OnboardingModal = ({ isOpen, onClose, onContinue, onSkip, onSaveSte
                             <span className="bb-icons-rl-x"></span>
                         </Button>
                     </div>
-                    
+
                     <div className="bb-rl-modal-content">
                         {renderCurrentStep()}
                     </div>
@@ -304,11 +308,11 @@ export const OnboardingModal = ({ isOpen, onClose, onContinue, onSkip, onSaveSte
     // Full screen layout for all step-based components (including FinishScreen)
     return (
         <div className="bb-rl-onboarding-overlay bb-rl-fullscreen">
-            <div className="bb-rl-onboarding-modal bb-rl-fullscreen-modal">                
+            <div className="bb-rl-onboarding-modal bb-rl-fullscreen-modal">
                 <div className="bb-rl-fullscreen-content">
                     {renderCurrentStep()}
                 </div>
             </div>
         </div>
     );
-}; 
+};

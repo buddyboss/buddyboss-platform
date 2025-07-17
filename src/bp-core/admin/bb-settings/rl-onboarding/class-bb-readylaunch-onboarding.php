@@ -68,7 +68,7 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 				0 => array(
 					'key'         => 'splash',
 					'title'       => __( 'Welcome to BuddyBoss', 'buddyboss' ),
-					'description' => __( 'Ready to launch your community?', 'buddyboss' ),
+					'description' => __( 'Let\'s bring your community to life by choose the look and feel that matches your vision.', 'buddyboss' ),
 					'component'   => 'SplashScreen',
 					'image'       => 'onboardingModal-splash.png',
 				),
@@ -388,7 +388,8 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 		$base_data = array(
 			'shouldShow'   => $this->should_show(),
 			'completed'    => $this->is_completed(),
-			'currentTheme' => wp_get_theme()->get( 'Name' ),
+			'currentTheme' => get_template(),
+			'buddybossTheme' => esc_url( bp_get_admin_url( add_query_arg( array( 'page' => 'buddyboss_theme_options' ), 'admin.php' ) ) ),
 			'assets'       => $this->get_wizard_assets(),
 			'steps'        => $this->steps,
 			'stepOptions'  => $this->get_config( 'step_options', array() ),
