@@ -758,7 +758,7 @@ window.bp = window.bp || {};
 							! _.isUndefined( response.data.count ) &&
 							response.data.count > 0
 						) {
-							schedulePostCount.text( '(' + response.data.count + ')' );
+							schedulePostCount.text( response.data.count );
 						}
 					}
 
