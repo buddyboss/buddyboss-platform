@@ -304,32 +304,7 @@ export const OnboardingModal = ({ isOpen, onClose, onContinue, onSkip, onSaveSte
     // Full screen layout for all step-based components (including FinishScreen)
     return (
         <div className="bb-rl-onboarding-overlay bb-rl-fullscreen">
-            <div className="bb-rl-onboarding-modal bb-rl-fullscreen-modal">
-                <div className="bb-rl-fullscreen-header">
-                    <div className="bb-rl-logo">
-                        <img src={window.bbRlOnboarding?.assets?.logo || ''} alt="BuddyBoss" />
-                    </div>
-                    <div className="bb-rl-header-actions">
-                        {currentStep.component !== 'FinishScreen' && (
-                            <Button 
-                                className="bb-rl-back-to-selection"
-                                onClick={() => setCurrentStepIndex(0)}
-                                disabled={isProcessing}
-                            >
-                                ← {__('Back to Start', 'buddyboss')}
-                            </Button>
-                        )}
-                        <Button 
-                            className="bb-rl-close-button"
-                            onClick={handleClose}
-                            label={__('Close', 'buddyboss')}
-                            disabled={isProcessing}
-                        >
-                            <span className="dashicons dashicons-no-alt"></span>
-                        </Button>
-                    </div>
-                </div>
-                
+            <div className="bb-rl-onboarding-modal bb-rl-fullscreen-modal">                
                 <div className="bb-rl-fullscreen-content">
                     {renderCurrentStep()}
                 </div>

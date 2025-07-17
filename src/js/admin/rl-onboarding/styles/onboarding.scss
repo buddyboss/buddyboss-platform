@@ -14,6 +14,7 @@ $text-disabled-color: #999999;
 $icon-color: #2f2f2f;
 $icon-secondary-color: #666666;
 $border-color: #ddd;
+$border-secondary-color: #d9d9d9;
 $border-tertiary-color: #cccccc;
 $white: #ffffff;
 $overlay-color: rgba(0, 0, 0, 0.6);
@@ -191,6 +192,29 @@ body.bb-rl-fullscreen-mode {
     }
 }
 
+.bb-rl-step-header {
+    padding: 16px 24px;
+    border-bottom: 1px solid $border-secondary-color;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: -32px -32px 35px;
+
+    .bb-rl-step-back-button {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 14px;
+        color: $text-color;
+        padding: 8px;
+        text-decoration: none;
+
+        [class*="bb-icons"] {
+            font-size: 16px;
+        }
+    }
+}
+
 // ==========================================================================
 // Fullscreen Header
 // ==========================================================================
@@ -284,65 +308,20 @@ body.bb-rl-fullscreen-mode {
 // ==========================================================================
 // Step Layout (Left/Right Panels)
 // ==========================================================================
-
-.bb-rl-step-layout {
-    height: 100%;
+.bb-rl-step-progress {
     display: flex;
-    flex-direction: column;
-}
+    gap: 16px;
+    margin-bottom: 35px;
 
-.bb-rl-step-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 16px 32px;
-    border-bottom: 1px solid $border-color;
-    background: #f8f9fa;
-    flex-shrink: 0;
-    
-    .bb-rl-step-progress {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        
-        .bb-rl-progress-bar {
-            width: 200px;
-            height: 6px;
-            background: #e0e0e0;
-            border-radius: 3px;
-            overflow: hidden;
-            
-            .bb-rl-progress-fill {
-                height: 100%;
-                background: $primary-color;
-                transition: width 0.3s ease;
-                border-radius: 3px;
-            }
-        }
-        
-        .bb-rl-progress-text {
-            font-size: 12px;
-            color: #666;
-            font-weight: 500;
-        }
-    }
-    
-    .bb-rl-step-actions {
-        .bb-rl-skip-button {
-            background: none;
-            border: 1px solid $border-color;
-            color: #666;
-            padding: 6px 12px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 12px;
-            transition: $transition;
-            
-            &:hover {
-                background: #f0f0f0;
-                border-color: #999;
-                color: #333;
-            }
+    .bb-rl-progress-step {
+        flex: 1;
+        height: 4px;
+        background-color: $border-color;
+        border-radius: 2px;
+
+        &.bb-rl-step-active {
+            border-radius: 10px;
+            background-color: $primary-color;
         }
     }
 }
@@ -796,21 +775,6 @@ body.bb-rl-fullscreen-mode {
     color: $success-color;
     font-weight: bold;
     margin-right: 8px;
-}
-
-.bb-rl-info-section,
-.bb-rl-tips-section {
-    background: #f8f9fa;
-    padding: 20px;
-    border-radius: $border-radius;
-    border: 1px solid $border-color;
-    
-    h4 {
-        font-size: 16px;
-        font-weight: 600;
-        color: $text-color;
-        margin: 0 0 12px 0;
-    }
 }
 
 // ==========================================================================
@@ -1360,16 +1324,6 @@ body.bb-rl-fullscreen-mode {
     
     .bb-rl-fullscreen-content {
         height: calc(100vh - 70px); // Adjust for smaller header
-    }
-    
-    .bb-rl-step-header {
-        padding: 12px 20px;
-        
-        .bb-rl-step-progress {
-            .bb-rl-progress-bar {
-                width: 120px;
-            }
-        }
     }
     
     .bb-rl-left-panel,

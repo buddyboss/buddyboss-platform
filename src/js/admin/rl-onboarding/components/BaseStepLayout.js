@@ -21,41 +21,33 @@ export const BaseStepLayout = ({
         ? `${window.bbRlOnboarding.assets.assetsUrl}${image}`
         : '';
 
-    const progressPercentage = totalSteps > 0 ? ((currentStep + 1) / totalSteps) * 100 : 0;
+    const stepsProgress = totalSteps > 0 ? Array.from({ length: totalSteps }, (_, index) => (
+        <div className={`bb-rl-progress-step ${index < currentStep ? 'bb-rl-step-active' : ''}`} key={index}></div>
+    )) : null;
 
     return (
         <div className="bb-rl-step-layout">
-            {/* Header with progress */}
-            <div className="bb-rl-step-header">
-                <div className="bb-rl-step-progress">
-                    <div className="bb-rl-progress-bar">
-                        <div 
-                            className="bb-rl-progress-fill" 
-                            style={{ width: `${progressPercentage}%` }}
-                        />
-                    </div>
-                    <div className="bb-rl-progress-text">
-                        {__('Step', 'buddyboss')} {currentStep + 1} {__('of', 'buddyboss')} {totalSteps}
-                    </div>
-                </div>
-                
-                <div className="bb-rl-step-actions">
-                    <Button 
-                        className="bb-rl-skip-button"
-                        onClick={onSkip}
-                    >
-                        {__('Skip for now', 'buddyboss')}
-                    </Button>
-                </div>
-            </div>
 
             {/* Main content area with left and right panels */}
             <div className="bb-rl-step-content">
                 {/* Left Panel - Options and Controls */}
                 <div className="bb-rl-left-panel">
+                    <div className="bb-rl-step-header">
+                        <a href='#' className="bb-rl-step-back-button">
+                            <span className="bb-icons-rl-caret-left"></span>
+                            {__('WP Admin', 'buddyboss')}
+                        </a>
+                        <div className="bb-rl-logo">
+                            <img src={window.bbRlOnboarding?.assets?.logo || ''} alt="BuddyBoss" />
+                        </div>
+                    </div>
                     <div className="bb-rl-step-info">
                         <h1 className="bb-rl-step-title">{title}</h1>
                         <p className="bb-rl-step-description">{description}</p>
+                    </div>
+
+                    <div className='bb-rl-step-progress'>
+                        { stepsProgress }
                     </div>
                     
                     <div className="bb-rl-step-options">
