@@ -1127,6 +1127,8 @@ window.bp = window.bp || {};
 			$document.on( 'click', '#buddypress .bb-leave-group-popup .bb-close-leave-group', this.leaveGroupClose );
 			$document.on( 'click', '#buddypress .bb-remove-connection .bb-confirm-remove-connection', this.removeConnectionAction );
 			$document.on( 'click', '#buddypress .bb-remove-connection .bb-close-remove-connection', this.removeConnectionClose );
+			$document.on( 'click', '#buddypress .bb-cancel-request-group-popup .bb-confirm-cancel-request-group', this.cancelRequestGroupAction );
+			$document.on( 'click', '#buddypress .bb-cancel-request-group-popup .bb-close-cancel-request-group', this.closeRequestGroupAction );
 			$document.on( 'click', '#buddypress table.invite-settings .field-actions .field-actions-remove, #buddypress table.invite-settings .field-actions-add', this, this.addRemoveInvite );
 			$document.on( 'click', '.show-action-popup', this.showActionPopup );
 			$document.on( 'click', '#bb-rl-message-threads .block-member', this.threadListBlockPopup );
@@ -2041,8 +2043,16 @@ window.bp = window.bp || {};
 			}
 
 			if ( 'is_friend' !== action ) {
-
-				if ( ( undefined !== BP_Nouveau[ action + '_confirm' ] && false === window.confirm( BP_Nouveau[ action + '_confirm' ] ) ) || target.hasClass( 'pending' ) ) {
+				if (
+					(
+						undefined !== BP_Nouveau[ action + '_confirm' ] &&
+						false === window.confirm( BP_Nouveau[action + '_confirm' ] )
+					) ||
+					(
+						target.hasClass( 'pending' ) &&
+						! target.hasClass( 'bb-rl-cancel-request' ) // Class is pending but make sure not for Cancel request button.
+					)
+				) {
 					return false;
 				}
 
@@ -2074,6 +2084,30 @@ window.bp = window.bp || {};
 				body.find( '[data-current-anchor="true"]' ).attr( 'data-current-anchor' , 'false' );
 				leave_group_popup.find( '.bb-leave-group-content .bb-group-name' ).html( '' );
 				leave_group_popup.hide();
+			}
+
+			// show popup if it is cancel_request_group action.
+			var cancel_request_group_popup        = $( '.bb-cancel-request-group-popup' ),
+				cancel_request_group__name        = $.trim( $( target ).closest( '.bb-rl-group-block' ).find( '.bp-group-home-link' ).text() ),
+				cancel_request_group_anchor__link = $( target ).closest( '.bb-rl-group-block' ).find( '.bp-group-home-link' ).attr('href');
+			if ( 'membership_requested' === action && 'active' !== $( target ).attr( 'data-popup-shown' ) ) {
+				if ( cancel_request_group_popup.length ) {
+
+					var cancel_request_group_content = cancel_request_group_popup.find( '.bb-cancel-request-group-content' );
+					cancel_request_group_content.find( '.bb-rl-modal-group-name' ).html( '<a href="' + cancel_request_group_anchor__link + '">' + cancel_request_group__name + '</a>' );
+
+
+					body.find( '[data-current-anchor="true"]' ).removeClass( 'bp-toggle-action-button bp-toggle-action-button-hover' ).addClass( 'bp-toggle-action-button-clicked' ); // Add clicked class manually to run function.
+					cancel_request_group_popup.show();
+					$( target ).attr( 'data-current-anchor', 'true' );
+					$( target ).attr( 'data-popup-shown', 'active' );
+					return false;
+				}
+			} else {
+				body.find( '[data-popup-shown="active"]' ).attr( 'data-popup-shown' , 'inactive' );
+				body.find( '[data-current-anchor="true"]' ).attr( 'data-current-anchor' , 'false' );
+				cancel_request_group_popup.find( '.bb-cancel-request-group-content .bb-rl-modal-group-name' ).html( '' );
+				cancel_request_group_popup.hide();
 			}
 
 			// show popup if it is is_friend action.
@@ -2394,6 +2428,16 @@ window.bp = window.bp || {};
 			bp.Nouveau.handleActionButtonState( event, 'bp-toggle-action-button-clicked' );
 		},
 
+
+		/**
+		 * [Cancel Request Group Action]
+		 *
+		 * @param event
+		 */
+		cancelRequestGroupAction : function ( event ) {
+			bp.Nouveau.handleActionButtonState( event, 'bp-toggle-action-button-clicked' );
+		},
+
 		/**
 		 * [Leave Group Close]
 		 *
@@ -2408,6 +2452,26 @@ window.bp = window.bp || {};
 					dataAnchorSelector : '[data-current-anchor="true"]',
 					dataPopupSelector  : '[data-popup-shown="true"]',
 					contentSelector    : '.bb-leave-group-content .bb-group-name',
+					contentPlaceholder : '',
+					newPopupState      : 'false'
+				}
+			);
+		},
+
+		/**
+		 * [Cancel Request Group Action]
+		 *
+		 * @param event
+		 */
+		closeRequestGroupAction: function ( event ) {
+			event.preventDefault();
+			bp.Nouveau.closePopup(
+				event,
+				{
+					popupSelector      : '.bb-cancel-request-group-popup',
+					dataAnchorSelector : '[data-current-anchor="true"]',
+					dataPopupSelector  : '[data-popup-shown="true"]',
+					contentSelector    : '.bb-cancel-request-group-content .bb-rl-modal-group-name',
 					contentPlaceholder : '',
 					newPopupState      : 'false'
 				}
