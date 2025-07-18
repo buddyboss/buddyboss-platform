@@ -6,6 +6,7 @@
 $primary-color: #e57e3a;
 $secondary-color: #f0f0f1;
 $background-color: #f6f6f6;
+$background-secondary-color: #f0f0f0;
 $background-brand-primary-color: #ef5d33;
 $text-color: #1e1e1e;
 $text-brand-primary-color: #ef5d33;
@@ -556,14 +557,10 @@ body.bb-rl-fullscreen-mode {
         margin: 16px 0;
 
         .bb-rl-field-description {
-            font-size: 14px;
+            font-size: 13px;
             color: $text-tertiary-color;
             line-height: 1.5;
             margin: 0;
-            padding: 12px 16px;
-            background-color: rgba($border-tertiary-color, 0.1);
-            border-radius: $border-radius;
-            border-left: 3px solid $primary-color;
         }
     }
 
@@ -582,6 +579,18 @@ body.bb-rl-fullscreen-mode {
     }
 
     // Media field styling to match ImageSelector
+
+    .bb-rl-field-group {
+        margin-bottom: 24px;
+    }
+
+    .bb-rl-field-label h4 {
+        color: $text-secondary-color;
+        font-size: 13px;
+        font-weight: 500;
+        margin: 0 0 16px;
+    }
+
     .image-selector-component {
         .image-selector-control {
             margin-top: 8px;
@@ -593,16 +602,29 @@ body.bb-rl-fullscreen-mode {
             }
 
             .bb-rl-image-preview-wrapper {
-                display: inline-block;
-                border-radius: $border-radius;
-                overflow: hidden;
-                background: #f5f5f5;
-                border: 2px solid $border-tertiary-color;
+                display: flex;
+                align-items: center;
+                gap: 16px;
                 
                 .image-preview {
-                    max-width: 280px;
                     height: auto;
                     display: block;
+                }
+            }
+
+            .bb-rl-image-preview-block {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                border-radius: $border-radius;
+                border: 1px solid $border-tertiary-color;
+                width: 180px;
+                height: 60px;
+
+                img {
+                    max-width: 90%;
+                    max-height: 90%;
+                    object-fit: contain;
                 }
             }
             
@@ -610,12 +632,12 @@ body.bb-rl-fullscreen-mode {
                 display: flex;
                 flex-direction: column;
                 gap: 8px;
-                margin-top: 8px;
                 
                 .bb-rl-button {
-                    border-radius: 4px;
-                    font-size: 12px;
-                    padding: 6px 12px;
+                    border-radius: $border-radius;
+                    font-size: 13px;
+                    line-height: 1.2;
+                    padding: 4px 8px;
                     border: 1px solid;
                     cursor: pointer;
                     display: flex;
@@ -626,34 +648,19 @@ body.bb-rl-fullscreen-mode {
                     transition: all 0.2s ease;
                     
                     i {
-                        font-size: 14px;
+                        font-size: 16px;
                     }
                     
                     &--secondary {
-                        background: $primary-color;
-                        border-color: $primary-color;
-                        color: white;
-                        
-                        &:hover {
-                            background: darken($primary-color, 10%);
-                            border-color: darken($primary-color, 10%);
-                        }
+                        background: $background-secondary-color;
+                        border-color: transparent;
+                        color: $text-color;
                     }
                     
                     &--outline {
-                        background: white;
+                        background: transparent;
                         border-color: $border-tertiary-color;
                         color: $text-color;
-                        
-                        &:hover {
-                            border-color: $error-color;
-                            color: $error-color;
-                        }
-                    }
-                    
-                    &--small {
-                        padding: 4px 8px;
-                        font-size: 11px;
                     }
                 }
             }
@@ -662,8 +669,8 @@ body.bb-rl-fullscreen-mode {
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                width: 280px;
-                height: 160px;
+                width: 180px;
+                height: 60px;
                 border: 2px dashed $border-tertiary-color;
                 border-radius: $border-radius;
                 background: transparent;

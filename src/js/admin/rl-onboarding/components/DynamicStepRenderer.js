@@ -218,11 +218,13 @@ export const DynamicStepRenderer = ({
                             <div className="image-selector-control">
                                 {value && value.url ? (
                                     <div className="bb-rl-image-preview-wrapper">
-                                        <img
-                                            src={value.url}
-                                            alt={value.alt || ''}
-                                            className="image-preview"
-                                        />
+                                        <div className="bb-rl-image-preview-block">
+                                            <img
+                                                src={value.url}
+                                                alt={value.alt || ''}
+                                                className="image-preview"
+                                            />
+                                        </div>
                                         <div className="image-actions">
                                             <Button
                                                 onClick={() => openMediaLibrary(label, onChange)}
