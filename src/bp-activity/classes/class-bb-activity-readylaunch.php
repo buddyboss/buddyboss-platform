@@ -920,25 +920,38 @@ class BB_Activity_Readylaunch {
 			$template = isset( $_POST['template'] ) ? sanitize_text_field( wp_unslash( $_POST['template'] ) ) : '';
 
 			if ( 'scheduled' === $status && 'activity_schedule' === $template ) {
-				$args = array(
-					'user_id'     => bp_loggedin_user_id(),
-					'status'      => $status,
-					'count_total' => true,
-					'fields'      => 'ids',
-					'per_page'    => 1,
-					'scope'       => '',
-				);
-				if ( bp_is_active( 'groups' ) && bp_is_group() ) {
-					$args['filter']['object'] = 'groups';
-				} else {
-					$args['filter']['object'] = 'activity';
-				}
-
-				$scheduled_posts = bp_activity_get( $args );
-				$result['count'] = ! empty( $scheduled_posts['total'] ) ? bp_core_number_format( $scheduled_posts['total'] ) : 0;
+				add_filter( 'bp_ajax_querystring', array( $this, 'bb_rl_get_activity_schedule_count_query' ), 20 );
+				bp_has_activities( bp_ajax_querystring( 'activity' ) );
+				$result['count'] = bp_core_number_format( $GLOBALS['activities_template']->activity_count );
+				remove_filter( 'bp_ajax_querystring', array( $this, 'bb_rl_get_activity_schedule_count_query' ), 20 );
 			}
 		}
 
 		return $result;
+	}
+
+	/**
+	 * Get the activity schedule count query.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $querystring The querystring.
+	 *
+	 * @return array The modified querystring.
+	 */
+	public function bb_rl_get_activity_schedule_count_query( $querystring ) {
+		$querystring = bp_parse_args( $querystring );
+
+		$querystring['status'] = 'scheduled';
+
+		$querystring['user_id'] = bp_loggedin_user_id();
+		if ( bp_is_active( 'groups' ) && bp_is_group() ) {
+			$querystring['object'] = 'groups';
+		} else {
+			$querystring['object'] = 'activity';
+		}
+		$querystring['scope'] = '';
+
+		return http_build_query( $querystring );
 	}
 }
