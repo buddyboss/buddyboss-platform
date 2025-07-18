@@ -158,12 +158,20 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 					'bb_rl_light_logo'    => array(
 						'type'        => 'media',
 						'label'       => __( 'Logo (Light mode)', 'buddyboss' ),
-						'description' => __( 'Upload your site logo', 'buddyboss' ),
+						'conditional' => array(
+							'dependsOn' => 'bb_rl_theme_mode',
+							'value'     => 'dark',
+							'operator'  => '!==', // Show when NOT dark mode
+						),
 					),
 					'bb_rl_dark_logo'    => array(
 						'type'        => 'media',
 						'label'       => __( 'Logo (Dark mode)', 'buddyboss' ),
-						'description' => __( 'Upload your site logo', 'buddyboss' ),
+						'conditional' => array(
+							'dependsOn' => 'bb_rl_theme_mode',
+							'value'     => 'light',
+							'operator'  => '!==', // Show when NOT light mode
+						),
 					),
 					'logo_description'    => array(
 						'type'        => 'description',
@@ -311,6 +319,19 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 	 * @return void
 	 */
 	private function init_readylaunch_hooks() {
+		// Debug: Log that the wizard is initialized
+		if (defined('WP_DEBUG') && WP_DEBUG) {
+			error_log('ReadyLaunch Onboarding initialized with wizard_id: ' . $this->wizard_id);
+
+			// Check if AJAX actions are registered
+			add_action('init', function() {
+				if (has_action('wp_ajax_' . $this->wizard_id . '_save_preferences')) {
+					error_log('AJAX action registered: wp_ajax_' . $this->wizard_id . '_save_preferences');
+				} else {
+					error_log('AJAX action NOT registered: wp_ajax_' . $this->wizard_id . '_save_preferences');
+				}
+			}, 20);
+		}
 	}
 
 	/**
@@ -351,6 +372,9 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 	 * @return void
 	 */
 	protected function enqueue_wizard_assets() {
+		// Enqueue WordPress media library for image uploads
+		wp_enqueue_media();
+
 		$asset_file = __DIR__ . '/build/rl-onboarding.asset.php';
 		$asset_data = file_exists( $asset_file ) ? include $asset_file : array(
 			'dependencies' => $this->get_config( 'react_dependencies', array( 'react', 'wp-components', 'wp-element', 'wp-i18n' ) ),
@@ -572,10 +596,24 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 						break;
 
 					case 'media':
-						$sanitized[ $field_key ] = intval( $field_value );
-						// Also save the URL if provided
-						if ( isset( $step_data[ $field_key . '_url' ] ) ) {
-							$sanitized[ $field_key . '_url' ] = esc_url_raw( $step_data[ $field_key . '_url' ] );
+						if ( is_array( $field_value ) && isset( $field_value['id'] ) ) {
+							// New format: complete image object with id, url, alt, etc.
+							$sanitized[ $field_key ] = array(
+								'id' => intval( $field_value['id'] ),
+								'url' => isset( $field_value['url'] ) ? esc_url_raw( $field_value['url'] ) : '',
+								'alt' => isset( $field_value['alt'] ) ? sanitize_text_field( $field_value['alt'] ) : '',
+								'title' => isset( $field_value['title'] ) ? sanitize_text_field( $field_value['title'] ) : '',
+							);
+						} elseif ( is_numeric( $field_value ) ) {
+							// Legacy format: just the ID
+							$sanitized[ $field_key ] = intval( $field_value );
+							// Also save the URL if provided
+							if ( isset( $step_data[ $field_key . '_url' ] ) ) {
+								$sanitized[ $field_key . '_url' ] = esc_url_raw( $step_data[ $field_key . '_url' ] );
+							}
+						} else {
+							// Invalid or empty value
+							$sanitized[ $field_key ] = null;
 						}
 						break;
 
@@ -675,16 +713,30 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 
 		// Apply branding settings - logos
 		if ( ! empty( $final_settings['bb_rl_light_logo'] ) ) {
-			$this->save_readylaunch_option( 'light_logo', $final_settings['bb_rl_light_logo'] );
-			if ( ! empty( $final_settings['bb_rl_light_logo_url'] ) ) {
-				$this->save_readylaunch_option( 'light_logo_url', $final_settings['bb_rl_light_logo_url'] );
+			if ( is_array( $final_settings['bb_rl_light_logo'] ) ) {
+				// New format: complete image object
+				$this->save_readylaunch_option( 'light_logo', $final_settings['bb_rl_light_logo']['id'] );
+				$this->save_readylaunch_option( 'light_logo_url', $final_settings['bb_rl_light_logo']['url'] );
+			} else {
+				// Legacy format: just the ID
+				$this->save_readylaunch_option( 'light_logo', $final_settings['bb_rl_light_logo'] );
+				if ( ! empty( $final_settings['bb_rl_light_logo_url'] ) ) {
+					$this->save_readylaunch_option( 'light_logo_url', $final_settings['bb_rl_light_logo_url'] );
+				}
 			}
 		}
 
 		if ( ! empty( $final_settings['bb_rl_dark_logo'] ) ) {
-			$this->save_readylaunch_option( 'dark_logo', $final_settings['bb_rl_dark_logo'] );
-			if ( ! empty( $final_settings['bb_rl_dark_logo_url'] ) ) {
-				$this->save_readylaunch_option( 'dark_logo_url', $final_settings['bb_rl_dark_logo_url'] );
+			if ( is_array( $final_settings['bb_rl_dark_logo'] ) ) {
+				// New format: complete image object
+				$this->save_readylaunch_option( 'dark_logo', $final_settings['bb_rl_dark_logo']['id'] );
+				$this->save_readylaunch_option( 'dark_logo_url', $final_settings['bb_rl_dark_logo']['url'] );
+			} else {
+				// Legacy format: just the ID
+				$this->save_readylaunch_option( 'dark_logo', $final_settings['bb_rl_dark_logo'] );
+				if ( ! empty( $final_settings['bb_rl_dark_logo_url'] ) ) {
+					$this->save_readylaunch_option( 'dark_logo_url', $final_settings['bb_rl_dark_logo_url'] );
+				}
 			}
 		}
 

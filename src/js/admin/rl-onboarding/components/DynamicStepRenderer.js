@@ -78,7 +78,12 @@ export const DynamicStepRenderer = ({
     };
 
     const renderField = (fieldKey, fieldConfig) => {
-        const { type, label, description, options, required, default: defaultValue, value: configValue } = fieldConfig;
+        const { type, options, required, default: defaultValue, value: configValue } = fieldConfig;
+        
+        // Use dynamic label and description functions
+        const label = getDynamicLabel(fieldKey, fieldConfig);
+        const description = getDynamicDescription(fieldKey, fieldConfig);
+        
         // Use value from formData, or fall back to 'value' or 'default' from config
         // Check if formData has a non-empty value, otherwise fall back to config value or default
         const hasValidFormValue = formData[fieldKey] !== undefined && formData[fieldKey] !== '' && formData[fieldKey] !== null;
@@ -171,6 +176,86 @@ export const DynamicStepRenderer = ({
                 );
 
             case 'media':
+                // Helper function to open the WordPress media library (same as ReadyLaunch)
+                const openMediaLibrary = (fieldLabel, onSelect) => {
+                    // Check if wp is defined and media is available
+                    if (typeof window.wp === 'undefined' || !window.wp.media) {
+                        console.error('WordPress Media API is not available');
+                        alert('WordPress Media API is not available. Please make sure WordPress Media is properly loaded.');
+                        return;
+                    }
+
+                    // Create the media frame
+                    const mediaFrame = window.wp.media({
+                        title: __('Select or Upload Media', 'buddyboss'),
+                        button: {
+                            text: __('Use this media', 'buddyboss'),
+                        },
+                        multiple: false,
+                        library: {
+                            type: 'image'
+                        }
+                    });
+
+                    mediaFrame.on('select', function() {
+                        const attachment = mediaFrame.state().get('selection').first().toJSON();
+                        const imageData = {
+                            id: attachment.id, // Save the WordPress attachment ID
+                            url: attachment.url,
+                            alt: attachment.alt || '',
+                            title: attachment.title || ''
+                        };
+                        onSelect(imageData);
+                    });
+
+                    mediaFrame.open();
+                };
+
+                // ImageSelector component (same as ReadyLaunch)
+                const ImageSelector = ({ label, value, onChange, description, customClass }) => {
+                    return (
+                        <div className={`image-selector-component ${customClass || ''}`}>
+                            <label>{label}</label>
+                            <div className="image-selector-control">
+                                {value && value.url ? (
+                                    <div className="bb-rl-image-preview-wrapper">
+                                        <img
+                                            src={value.url}
+                                            alt={value.alt || ''}
+                                            className="image-preview"
+                                        />
+                                        <div className="image-actions">
+                                            <Button
+                                                onClick={() => openMediaLibrary(label, onChange)}
+                                                className="change-image-button bb-rl-button bb-rl-button--secondary bb-rl-button--small"
+                                                icon={<i className="bb-icons-rl-upload-simple" />}
+                                            >
+                                                {__('Replace', 'buddyboss')}
+                                            </Button>
+                                            <Button
+                                                onClick={() => onChange(null)}
+                                                className="remove-image-button bb-rl-button bb-rl-button--outline bb-rl-button--small"
+                                                icon={<i className="bb-icons-rl-x" />}
+                                            >
+                                                {__('Remove', 'buddyboss')}
+                                            </Button>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <Button
+                                        onClick={() => openMediaLibrary(label, onChange)}
+                                        className="bb-rl-upload-image-button"
+                                        icon={<i className="bb-icons-rl-plus" />}
+                                    />
+                                )}
+                                {description && (
+                                    <p className="field-description">{description}</p>
+                                )}
+                            </div>
+                        </div>
+                    );
+                };
+
                 return (
                     <div key={fieldKey} className="bb-rl-field-group">
                         {label && (
@@ -181,49 +266,13 @@ export const DynamicStepRenderer = ({
                                 )}
                             </div>
                         )}
-                        <div className="bb-rl-media-field">
-                            <Button
-                                variant="secondary"
-                                onClick={() => {
-                                    // Open WordPress media library
-                                    const mediaFrame = wp.media({
-                                        title: label,
-                                        multiple: false,
-                                        library: { type: 'image' }
-                                    });
-
-                                    mediaFrame.on('select', () => {
-                                        const attachment = mediaFrame.state().get('selection').first().toJSON();
-                                        handleFieldChange(fieldKey, attachment.id);
-                                        handleFieldChange(fieldKey + '_url', attachment.url);
-                                    });
-
-                                    mediaFrame.open();
-                                }}
-                            >
-                                {value ? __('Change Image', 'buddyboss') : __('Select Image', 'buddyboss')}
-                            </Button>
-
-                            {formData[fieldKey + '_url'] && (
-                                <div className="bb-rl-media-preview">
-                                    <img
-                                        src={formData[fieldKey + '_url']}
-                                        alt={label}
-                                        style={{ maxWidth: '200px', height: 'auto' }}
-                                    />
-                                    <Button
-                                        variant="link"
-                                        isDestructive
-                                        onClick={() => {
-                                            handleFieldChange(fieldKey, '');
-                                            handleFieldChange(fieldKey + '_url', '');
-                                        }}
-                                    >
-                                        {__('Remove', 'buddyboss')}
-                                    </Button>
-                                </div>
-                            )}
-                        </div>
+                        <ImageSelector
+                            label={label}
+                            value={value}
+                            onChange={(imageData) => handleFieldChange(fieldKey, imageData)}
+                            description={description}
+                            customClass="bb-rl-media-field"
+                        />
                     </div>
                 );
 
@@ -250,7 +299,7 @@ export const DynamicStepRenderer = ({
 		                                key={optionValue}
 			                            className={`bb-rl-color-option ${value === optionValue ? 'bb-rl-selected' : ''}`}
 		                            >
-				                        <label className={`bb-rl-color-preview bb-rl-color-optionValue`} onClick={() => handleFieldChange(fieldKey, optionValue)}>
+				                        <label className={`bb-rl-color-preview bb-rl-color-${optionValue}`} onClick={() => handleFieldChange(fieldKey, optionValue)}>
 					                        {iconClass && <i className={iconClass}></i>}
 					                        <span className="bb-rl-color-details">
 		                                        <span className="bb-rl-color-label">{optionLabel}</span>
@@ -438,10 +487,55 @@ export const DynamicStepRenderer = ({
         }
     };
 
+    // Check if a field should be rendered based on conditional logic
+    const shouldRenderField = (fieldKey, fieldConfig) => {
+        // If no conditional logic is defined, always render
+        if (!fieldConfig.conditional) {
+            return true;
+        }
+
+        const { dependsOn, value: expectedValue, operator = '===' } = fieldConfig.conditional;
+        const actualValue = formData[dependsOn];
+
+        switch (operator) {
+            case '===':
+                return actualValue === expectedValue;
+            case '!==':
+                return actualValue !== expectedValue;
+            case 'in':
+                return Array.isArray(expectedValue) && expectedValue.includes(actualValue);
+            case 'not_in':
+                return Array.isArray(expectedValue) && !expectedValue.includes(actualValue);
+            default:
+                return true;
+        }
+    };
+
+    // Get dynamic label based on form context
+    const getDynamicLabel = (fieldKey, fieldConfig) => {
+        if (fieldConfig.dynamicLabel && typeof fieldConfig.dynamicLabel === 'function') {
+            return fieldConfig.dynamicLabel(formData);
+        }
+        return fieldConfig.label;
+    };
+
+    // Get dynamic description based on form context  
+    const getDynamicDescription = (fieldKey, fieldConfig) => {
+        if (fieldConfig.dynamicDescription && typeof fieldConfig.dynamicDescription === 'function') {
+            return fieldConfig.dynamicDescription(formData);
+        }
+        return fieldConfig.description;
+    };
+
     return (
         <div className="bb-rl-dynamic-step-renderer">
             <div className="bb-rl-form-fields">
                 {Object.entries(stepOptions).map(([fieldKey, fieldConfig]) => {
+                    // Check conditional rendering
+                    if (!shouldRenderField(fieldKey, fieldConfig)) {
+                        return null;
+                    }
+
                     // Render description and hr fields directly without the wrapper div
                     if (fieldConfig.type === 'description' || fieldConfig.type === 'hr') {
                         return renderField(fieldKey, fieldConfig);

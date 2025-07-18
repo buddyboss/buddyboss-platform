@@ -155,19 +155,51 @@ export const OnboardingModal = ({ isOpen, onClose, onContinue, onSkip, onSaveSte
     // Auto-save preferences for dynamic options
     const autoSavePreferences = async (preferences) => {
         try {
-            const response = await fetch(window.bbRlOnboarding?.ajaxUrl || window.ajaxurl, {
+            // Debug the request parameters
+            const ajaxUrl = window.bbRlOnboarding?.ajaxUrl || window.ajaxurl;
+            const nonce = window.bbRlOnboarding?.nonce || '';
+            const wizardId = window.bbRlOnboarding?.wizardId || '';
+            const action = wizardId + '_save_preferences';
+            
+            console.log('AutoSave Debug:', {
+                ajaxUrl,
+                nonce,
+                wizardId,
+                action,
+                preferences
+            });
+
+            if (!ajaxUrl) {
+                console.error('AJAX URL not available');
+                return false;
+            }
+
+            if (!nonce) {
+                console.error('Nonce not available');
+                return false;
+            }
+
+            const response = await fetch(ajaxUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
                 },
                 body: new URLSearchParams({
-                    action: 'rl_onboarding_save_preferences',
-                    nonce: window.bbRlOnboarding?.nonce || '',
+                    action: action,
+                    nonce: nonce,
                     preferences: JSON.stringify(preferences),
                 }),
             });
 
+            console.log('Response status:', response.status);
+            console.log('Response ok:', response.ok);
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
             const data = await response.json();
+            console.log('Response data:', data);
             
             if (data.success) {
                 // Update local preferences
@@ -181,6 +213,7 @@ export const OnboardingModal = ({ isOpen, onClose, onContinue, onSkip, onSaveSte
             }
         } catch (error) {
             console.error('Error saving preferences:', error);
+            console.error('Error details:', error.message);
             return false;
         }
     };

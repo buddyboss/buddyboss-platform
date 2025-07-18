@@ -2,6 +2,7 @@ import { useState, useEffect } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { BaseStepLayout } from '../BaseStepLayout';
 import { DynamicStepRenderer } from '../DynamicStepRenderer';
+import { BrandingPreview } from '../BrandingPreview';
 
 export const BrandingsStep = ({ 
     stepData, 
@@ -69,6 +70,7 @@ export const BrandingsStep = ({
             isLastStep={currentStep === totalSteps - 1}
             currentStep={currentStep}
             totalSteps={totalSteps}
+            rightPanelContent={<BrandingPreview formData={formData} />}
         >
             <DynamicStepRenderer
                 stepKey="brandings"
