@@ -2029,12 +2029,21 @@ window.bp = window.bp || {};
 				return false;
 			}
 
-			if ( 'request_membership' === action ) {
+			var allowToast = false,
+				toastMessage = '';
+			if ( 'request_membership' === action  ) {
+				allowToast   = true;
+				toastMessage = bpNouveau.groups.i18n.sending_request;
+			} else if ( 'membership_requested' === action && 'active' === $( target ).attr( 'data-popup-shown' ) ) {
+				allowToast   = true;
+				toastMessage = bpNouveau.groups.i18n.cancel_request_group;
+			}
+			if ( allowToast ) {
 				jQuery( document ).trigger(
 					'bb_trigger_toast_message',
 					[
 						'',
-						'<div>' + bpNouveau.groups.i18n.sending_request + '</div>',
+						'<div>' + toastMessage + '</div>',
 						'loading',
 						null,
 						true
@@ -2245,22 +2254,30 @@ window.bp = window.bp || {};
 						if ( 'groups' === object ) {
 							
 							// Close modal if request membership is successful.
-							if ( 'request_membership' === action && undefined !== response.data.feedback ) {
+							if (
+								'request_membership' === action ||
+								(
+									'membership_requested' === action &&
+									'inactive' === $( target ).attr( 'data-popup-shown' )
+								)
+							) {
 								// Remove existing toast message if it exists.
 								if ( $( '.bb-toast-messages-list li' ).length ) {
 									$( '.bb-toast-messages-list li' ).remove();
 								}
-								// Display feedback for request membership.
-								jQuery( document ).trigger(
-									'bb_trigger_toast_message',
-									[
-										'',
-										'<div>' + response.data.feedback + '</div>',
-										'success',
-										null,
-										true
-									]
-								);
+								if ( undefined !== response.data.feedback ) {
+									// Display feedback for request membership.
+									jQuery(document).trigger(
+										'bb_trigger_toast_message',
+										[
+											'',
+											'<div>' + response.data.feedback + '</div>',
+											'success',
+											null,
+											true
+										]
+									);
+								}
 							}
 
 							// Group's header button.
