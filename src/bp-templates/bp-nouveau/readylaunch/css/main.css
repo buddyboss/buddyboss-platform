@@ -6091,6 +6091,11 @@ body.bb-readylaunch-template .select2-container--rl.select2-container--open:has(
   content: "\e184";
 }
 
+.bb-readylaunch-template .bb-toast-messages-enable .bb-toast-messages .toast-messages-list .read-item .toast-messages-action_link {
+  color: var(--bb-rl-primary-color);
+  cursor: pointer;
+}
+
 .bb-readylaunch-template .bb-toast-messages-enable .bb-toast-messages .toast-messages-list .read-item .action-close {
   display: flex;
 }

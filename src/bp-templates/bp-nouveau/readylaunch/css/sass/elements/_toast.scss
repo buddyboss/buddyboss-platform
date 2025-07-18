@@ -45,6 +45,11 @@
 					content: "\e184";
 				}
 
+				.toast-messages-action_link {
+					color: var(--bb-rl-primary-color);
+					cursor: pointer;
+				}
+
 				.action-close {
 					display: flex;
 
