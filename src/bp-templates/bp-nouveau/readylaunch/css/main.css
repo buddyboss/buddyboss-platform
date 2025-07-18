@@ -5458,8 +5458,27 @@ body.bb-readylaunch-template .select2-container--rl.select2-container--open:has(
   resize: none;
 }
 
-.bb-readylaunch-template .modal-container .bb-leave-group-content {
+.bb-readylaunch-template .modal-container .bb-leave-group-content,
+.bb-readylaunch-template .modal-container .bb-cancel-request-group-content {
   padding: var(--bb-rl-space-200) var(--bb-rl-space-300);
+}
+
+.bb-readylaunch-template .modal-container .bb-cancel-request-group-content {
+  padding-bottom: var(--bb-rl-space-100);
+}
+
+.bb-readylaunch-template .modal-container .bb-cancel-request-group-content p {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 22px;
+  color: var(--bb-rl-text-secondary-color);
+}
+
+.bb-readylaunch-template .modal-container .bb-cancel-request-group-content .bb-rl-modal-group-name a {
+  font-size: var(--bb-rl-font-size-base);
+  font-weight: 500;
+  line-height: var(--bb-rl-base-line);
+  color: var(--bb-rl-text-color);
 }
 
 .bb-readylaunch-template .bp-media-photo-uploader #bp-media-prev,
@@ -6089,6 +6108,7 @@ body.bb-readylaunch-template .select2-container--rl.select2-container--open:has(
 .bb-readylaunch-template .bb-toast-messages-enable .bb-toast-messages .toast-messages-list .read-item .bb-icon-check:before {
   font-family: bb-icons-rl;
   content: "\e184";
+  font-style: normal;
 }
 
 .bb-readylaunch-template .bb-toast-messages-enable .bb-toast-messages .toast-messages-list .read-item .toast-messages-action_link {
@@ -12010,8 +12030,8 @@ input.bb-rl-zoom-slider::-moz-range-progress {
   cursor: not-allowed;
 }
 
-.bb-rl-groups .item-entry .group-footer-wrap button.group-button:not(.bp-toggle-action-button)::before,
-.bb-rl-groups .item-entry .group-footer-wrap .generic-button a.group-button:not(.bp-toggle-action-button)::before {
+.bb-rl-groups .item-entry .group-footer-wrap button.group-button::before,
+.bb-rl-groups .item-entry .group-footer-wrap .generic-button a.group-button::before {
   content: "";
   display: inline-block;
   margin-right: var(--bb-rl-space-50);
@@ -12023,19 +12043,24 @@ input.bb-rl-zoom-slider::-moz-range-progress {
   font-style: normal;
 }
 
-.bb-rl-groups .item-entry .group-footer-wrap button.group-button:not(.bp-toggle-action-button).join-group::before,
-.bb-rl-groups .item-entry .group-footer-wrap .generic-button a.group-button:not(.bp-toggle-action-button).join-group::before {
+.bb-rl-groups .item-entry .group-footer-wrap button.group-button.join-group::before,
+.bb-rl-groups .item-entry .group-footer-wrap .generic-button a.group-button.join-group::before {
   content: "\e3d4";
 }
 
-.bb-rl-groups .item-entry .group-footer-wrap button.group-button:not(.bp-toggle-action-button).request-membership::before,
-.bb-rl-groups .item-entry .group-footer-wrap .generic-button a.group-button:not(.bp-toggle-action-button).request-membership::before {
+.bb-rl-groups .item-entry .group-footer-wrap button.group-button.request-membership::before,
+.bb-rl-groups .item-entry .group-footer-wrap .generic-button a.group-button.request-membership::before {
   content: "\e2fe";
 }
 
-.bb-rl-groups .item-entry .group-footer-wrap button.group-button:not(.bp-toggle-action-button).membership-requested::before,
-.bb-rl-groups .item-entry .group-footer-wrap .generic-button a.group-button:not(.bp-toggle-action-button).membership-requested::before {
+.bb-rl-groups .item-entry .group-footer-wrap button.group-button.membership-requested::before,
+.bb-rl-groups .item-entry .group-footer-wrap .generic-button a.group-button.membership-requested::before {
   content: "\e182";
+}
+
+.bb-rl-groups .item-entry .group-footer-wrap button.group-button.membership-requested.bp-toggle-action-button-clicked::before,
+.bb-rl-groups .item-entry .group-footer-wrap .generic-button a.group-button.membership-requested.bp-toggle-action-button-clicked::before {
+  content: "\e2fe";
 }
 
 .bb-rl-groups .item-entry .group-footer-wrap button.membership-requested,

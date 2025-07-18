@@ -410,8 +410,25 @@
 			resize: none;
 		}
 
-		.bb-leave-group-content {
+		.bb-leave-group-content,
+		.bb-cancel-request-group-content {
 			padding: var(--bb-rl-space-200) var(--bb-rl-space-300);
+		}
+
+		.bb-cancel-request-group-content {
+			padding-bottom: var(--bb-rl-space-100);
+
+			p {
+
+				@include bb-rl-label-heading-md-thin;
+				color: var(--bb-rl-text-secondary-color);
+			}
+
+			.bb-rl-modal-group-name a {
+
+				@include bb-rl-base-heading;
+				color: var(--bb-rl-text-color);
+			}
 		}
 	}
 
