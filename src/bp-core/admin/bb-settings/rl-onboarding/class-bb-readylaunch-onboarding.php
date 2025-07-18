@@ -158,6 +158,7 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 					'bb_rl_light_logo'    => array(
 						'type'        => 'media',
 						'label'       => __( 'Logo (Light mode)', 'buddyboss' ),
+						'customClass' => 'bb-rl-light-logo',
 						'conditional' => array(
 							'dependsOn' => 'bb_rl_theme_mode',
 							'value'     => 'dark',
@@ -167,6 +168,7 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 					'bb_rl_dark_logo'    => array(
 						'type'        => 'media',
 						'label'       => __( 'Logo (Dark mode)', 'buddyboss' ),
+						'customClass' => 'bb-rl-dark-logo',
 						'conditional' => array(
 							'dependsOn' => 'bb_rl_theme_mode',
 							'value'     => 'light',

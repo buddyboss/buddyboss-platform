@@ -695,6 +695,13 @@ body.bb-rl-fullscreen-mode {
                 }
             }
         }
+
+        &.bb-rl-dark-logo {
+
+            .image-selector-control .bb-rl-image-preview-block {
+                background: #000;
+            }
+        }
     }
 }
 

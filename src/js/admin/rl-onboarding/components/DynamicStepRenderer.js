@@ -272,7 +272,7 @@ export const DynamicStepRenderer = ({
                             value={value}
                             onChange={(imageData) => handleFieldChange(fieldKey, imageData)}
                             description={description}
-                            customClass="bb-rl-media-field"
+                            customClass={fieldConfig.customClass}
                         />
                     </div>
                 );
