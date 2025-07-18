@@ -430,6 +430,13 @@
 			}
 		}
 
+		&.bb-rl-view-more--pagination {
+			flex-direction: row;
+			padding: 0;
+			border: 0;
+			margin: var(--bb-rl-space-200) 0 0;
+		}
+
 		@media screen and (max-width: $md) {
 			flex-flow: wrap;
 		}

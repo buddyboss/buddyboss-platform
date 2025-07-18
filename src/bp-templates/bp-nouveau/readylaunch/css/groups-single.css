@@ -1347,6 +1347,13 @@
   content: "\e4f6";
 }
 
+.bb-rl-requests-list li.bb-rl-view-more--pagination {
+  flex-direction: row;
+  padding: 0;
+  border: 0;
+  margin: var(--bb-rl-space-200) 0 0;
+}
+
 @media screen and (max-width: 800px) {
   .bb-rl-requests-list li {
     flex-flow: wrap;
