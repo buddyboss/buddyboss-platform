@@ -125,18 +125,23 @@ export const DynamicStepRenderer = ({
 
             case 'checkbox':
                 return (
-                    <div className='bb-rl-toggle-wrapper'>
+                    <div className={`bb-rl-toggle-wrapper ${fieldConfig.not_available ? 'bb-rl-not-available' : ''}`}>
                         { fieldConfig.icon && (
-                            <div className="bb-rl-toggle-icon">
+                            <div className='bb-rl-toggle-icon'>
                                 <i className={fieldConfig.icon}></i>
                             </div>
                         )}
                         <ToggleControl
                             key={fieldKey}
-                            label={label || ''}
+                            label={
+                                <>
+                                    {label || ''}
+                                    {fieldConfig.not_available && <span className="bb-rl-coming-soon">Coming Soon</span>}
+                                </>
+                            }
                             help={description || ''}
                             checked={Boolean(value)}
-                            onChange={(newValue) => handleFieldChange(fieldKey, newValue)}
+                            onChange={fieldConfig.not_available ? undefined : (newValue) => handleFieldChange(fieldKey, newValue)}
                         />
                     </div>
                 );

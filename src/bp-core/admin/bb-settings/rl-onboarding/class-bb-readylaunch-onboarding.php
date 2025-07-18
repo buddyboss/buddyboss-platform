@@ -210,6 +210,20 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 						'icon'       => 'bb-icons-rl-file-text',
 						'default'     => true,
 					),
+					'gamification'        => array(
+						'type'        => 'checkbox',
+						'label'       => __( 'Gamification', 'buddyboss' ),
+						'icon'       => 'bb-icons-rl-file-text',
+						'default'     => false,
+						'not_available' => true,
+					),
+					'events'        => array(
+						'type'        => 'checkbox',
+						'label'       => __( 'Events', 'buddyboss' ),
+						'icon'       => 'bb-icons-rl-file-text',
+						'default'     => false,
+						'not_available' => true,
+					),
 				),
 				'side_menus'      => array(
 					'enable_primary_menu' => array(
