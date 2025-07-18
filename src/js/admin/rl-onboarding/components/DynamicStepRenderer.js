@@ -3,7 +3,7 @@ import { __ } from '@wordpress/i18n';
 import {
     TextControl,
     SelectControl,
-    CheckboxControl,
+    ToggleControl,
     RadioControl,
     ColorPicker,
     ColorIndicator,
@@ -125,13 +125,20 @@ export const DynamicStepRenderer = ({
 
             case 'checkbox':
                 return (
-                    <CheckboxControl
-                        key={fieldKey}
-                        label={label || ''}
-                        help={description || ''}
-                        checked={Boolean(value)}
-                        onChange={(newValue) => handleFieldChange(fieldKey, newValue)}
-                    />
+                    <div className='bb-rl-toggle-wrapper'>
+                        { fieldConfig.icon && (
+                            <div className="bb-rl-toggle-icon">
+                                <i className={fieldConfig.icon}></i>
+                            </div>
+                        )}
+                        <ToggleControl
+                            key={fieldKey}
+                            label={label || ''}
+                            help={description || ''}
+                            checked={Boolean(value)}
+                            onChange={(newValue) => handleFieldChange(fieldKey, newValue)}
+                        />
+                    </div>
                 );
 
             case 'radio':

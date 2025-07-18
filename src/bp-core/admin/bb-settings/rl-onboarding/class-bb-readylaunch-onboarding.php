@@ -96,7 +96,7 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 				4 => array(
 					'key'         => 'pages',
 					'title'       => __( 'Pages', 'buddyboss' ),
-					'description' => __( 'Set up your essential pages and content', 'buddyboss' ),
+					'description' => __( 'Select pages that should have styles from ReadyLaunch.', 'buddyboss' ),
 					'component'   => 'PagesStep',
 					'image'       => 'onboardingModal-step-4.png',
 				),
@@ -198,22 +198,17 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 					),
 				),
 				'pages'           => array(
-					'create_essential_pages' => array(
+					'registration'        => array(
 						'type'        => 'checkbox',
-						'label'       => __( 'Create Essential Pages', 'buddyboss' ),
-						'description' => __( 'Auto-create Privacy Policy, Terms of Service, and About pages', 'buddyboss' ),
+						'label'       => __( 'Login & Registration', 'buddyboss' ),
+						'icon'       => 'bb-icons-rl-file-text',
 						'default'     => true,
 					),
-					'homepage_layout'        => array(
-						'type'        => 'visual_options',
-						'label'       => __( 'Homepage Layout', 'buddyboss' ),
-						'description' => __( 'Choose your homepage layout', 'buddyboss' ),
-						'options'     => array(
-							'activity' => __( 'Activity Feed', 'buddyboss' ),
-							'custom'   => __( 'Custom Page', 'buddyboss' ),
-							'landing'  => __( 'Landing Page', 'buddyboss' ),
-						),
-						'default'     => 'activity',
+					'courses'        => array(
+						'type'        => 'checkbox',
+						'label'       => __( 'Courses', 'buddyboss' ),
+						'icon'       => 'bb-icons-rl-file-text',
+						'default'     => true,
 					),
 				),
 				'side_menus'      => array(

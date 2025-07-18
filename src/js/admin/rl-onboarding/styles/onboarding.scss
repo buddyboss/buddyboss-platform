@@ -16,6 +16,7 @@ $text-disabled-color: #999999;
 $icon-color: #2f2f2f;
 $icon-secondary-color: #666666;
 $border-color: #ddd;
+$border-brand-primary-color: #ef5d33;
 $border-secondary-color: #d9d9d9;
 $border-tertiary-color: #cccccc;
 $white: #ffffff;
@@ -838,6 +839,102 @@ body.bb-rl-fullscreen-mode {
 			border-color: $background-brand-primary-color;
 		}
 	}
+}
+
+// Form Toggle
+.bb-rl-field-group {
+
+    .bb-rl-toggle-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 16px;
+        border-radius: 12px;
+        border: 1px solid $border-brand-primary-color;
+
+        .components-toggle-control {
+            flex: 1;
+            margin-bottom: 0;
+        }
+
+        .bb-rl-toggle-icon {
+            height: 40px;
+            width: 40px;
+            background-color: $background-color;
+            border-radius: $border-radius-full;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            [class*="bb-icons"] {
+                color: $icon-color;
+                font-size: 24px;
+            }
+        }
+    }
+
+    .components-form-toggle {
+        height: 20px;
+        position: relative;
+        order: 2;
+        cursor: pointer;
+    }
+
+    .components-toggle-control__label {
+        font-size: 14px;
+        font-weight: 500;
+        color: $text-color;
+        order: 1;
+    }
+    
+    .components-form-toggle .components-form-toggle__track {
+        display: inline-block;
+        background-color: #b2b2b2;
+        border: 1px solid rgba(0,0,0,0);
+        height: 20px;
+        width: 32px;
+        border-radius: $border-radius-full;
+        transition: background-color 0.2s ease;
+    }
+    
+    .components-form-toggle .components-form-toggle__thumb {
+        display: inline-block;
+        background-color: #fff;
+        box-shadow: none;
+        width: 14px;
+        height: 14px;
+        position: absolute;
+        top: 3px;
+        left: 3px;
+        border-radius: $border-radius-full;
+        transition: all 0.2s ease;
+    }
+    
+    .components-form-toggle.is-checked .components-form-toggle__track {
+        background-color: #fff;
+        border: 1px solid $primary-color;
+    }
+    
+    .components-form-toggle.is-checked .components-form-toggle__thumb {
+        background-color: $primary-color;
+        transform: translateX(16px);
+        left: unset;
+        right: 20px;
+    }
+
+    .components-form-toggle input.components-form-toggle__input[type=checkbox]{
+        border:none;
+        height:100%;
+        left:0;
+        margin:0;
+        opacity:0;
+        padding:0;
+        position:absolute;
+        top:0;
+        width:100%;
+        min-width: auto;
+        z-index:1;
+    }
 }
 
 // Color scheme variations
