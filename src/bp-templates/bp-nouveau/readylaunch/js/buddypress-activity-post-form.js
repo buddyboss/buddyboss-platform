@@ -5325,7 +5325,7 @@ window.bp = window.bp || {};
 					]
 				);
 
-				var topicSelector = $( '#buddypress .whats-new-topic-selector .bb-topic-selector-list li' );
+				var topicSelector = $( '#buddypress .whats-new-topic-selector .bb-rl-topic-selector-list li' );
 				if ( topicSelector.length ) {
 					var topicId   = topicSelector.find( 'a.selected' ).data( 'topic-id' ) || 0;
 					data.topic_id = topicId;
