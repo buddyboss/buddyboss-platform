@@ -2,7 +2,7 @@
 /**
  * BuddyBoss Performance Files include.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.9.11
  * @package BuddyBoss\Performance
  */
 
@@ -35,13 +35,13 @@ if ( ! class_exists( 'BuddyBoss\Performance\BP_Performance_Includes' ) ) {
 	 * This class is responsible for integrating BuddyBoss platform-specific performance components
 	 * into the BuddyBoss Performance system, allowing for caching and purging of various BuddyBoss features.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.11
 	 */
 	class BP_Performance_Includes {
 		/**
 		 * Constructor.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.11
 		 */
 		public function __construct() {
 			add_filter( 'performance_components', array( $this, 'bb_performance_components' ), 10, 3 );
@@ -58,7 +58,7 @@ if ( ! class_exists( 'BuddyBoss\Performance\BP_Performance_Includes' ) ) {
 		 * Adds BuddyBoss platform-specific performance components to the provided components array.
 		 * These components facilitate caching and purging operations for various BuddyBoss features.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.11
 		 *
 		 * @param array  $components  Array of performance components.
 		 * @param string $purge_url   Base URL used to construct purge URLs for each component.
@@ -278,7 +278,7 @@ if ( ! class_exists( 'BuddyBoss\Performance\BP_Performance_Includes' ) ) {
 				/**
 				 * Fires after cache purge for symlink expired.
 				 *
-				 * @since BuddyBoss [BBVERSION]
+				 * @since BuddyBoss 2.9.11
 				 */
 				do_action( 'bb_purge_symlink_cache_after' );
 			}
@@ -287,7 +287,7 @@ if ( ! class_exists( 'BuddyBoss\Performance\BP_Performance_Includes' ) ) {
 		/**
 		 * Modifies the list of components that should be purged based on specific configuration changes.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.11
 		 *
 		 * @param string $option           The name of the option being updated.
 		 * @param mixed  $old_value        The old value of the option.
@@ -371,7 +371,7 @@ if ( ! class_exists( 'BuddyBoss\Performance\BP_Performance_Includes' ) ) {
 		/**
 		 * Check for platform components deeplinking caching.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.11
 		 *
 		 * @param array $deeplinking_cache_args Array of enabled components for deeplinking.
 		 *
