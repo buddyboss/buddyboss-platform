@@ -123,7 +123,7 @@ body.bb-rl-fullscreen-mode {
     justify-content: center;
     z-index: 999999;
     padding: 20px;
-    
+
     &.bb-rl-fullscreen {
         padding: 0;
         align-items: stretch;
@@ -149,17 +149,17 @@ body.bb-rl-fullscreen-mode {
     animation: slideIn 0.3s ease-out;
     display: flex;
     flex-direction: column;
-    
+
     &.bb-rl-special-step {
         max-width: 1190px;
         overflow-y: auto;
     }
-    
+
     &.bb-rl-step-modal {
         height: 90vh;
         overflow: hidden;
     }
-    
+
     &.bb-rl-fullscreen-modal {
         max-width: none;
         max-height: none;
@@ -208,7 +208,7 @@ body.bb-rl-fullscreen-mode {
         font-weight: 400;
         margin: 0;
     }
-    
+
     .bb-rl-close-button {
         color: $icon-secondary-color;
         background: none;
@@ -219,16 +219,16 @@ body.bb-rl-fullscreen-mode {
         font-size: 24px;
         cursor: pointer;
         padding: 0;
-        
+
         &:hover {
             color: $icon-color;
         }
-        
+
         &:disabled {
             opacity: 0.6;
             cursor: not-allowed;
         }
-        
+
         .dashicons {
             font-size: 20px;
         }
@@ -276,20 +276,20 @@ body.bb-rl-fullscreen-mode {
     background: $white;
     flex-shrink: 0;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    
+
     .bb-rl-logo {
         img {
             height: 32px;
             width: auto;
         }
     }
-    
+
     .bb-rl-header-actions {
         display: flex;
         align-items: center;
         gap: 16px;
     }
-    
+
     .bb-rl-back-to-selection {
         background: none;
         border: 1px solid $border-color;
@@ -299,19 +299,19 @@ body.bb-rl-fullscreen-mode {
         cursor: pointer;
         font-size: 14px;
         transition: $transition;
-        
+
         &:hover {
             background: #f0f0f0;
             border-color: #999;
             color: #333;
         }
-        
+
         &:disabled {
             opacity: 0.6;
             cursor: not-allowed;
         }
     }
-    
+
     .bb-rl-close-button {
         background: none;
         border: none;
@@ -321,17 +321,17 @@ body.bb-rl-fullscreen-mode {
         padding: 8px;
         border-radius: 4px;
         transition: $transition;
-        
+
         &:hover {
             background: #f0f0f0;
             color: #000;
         }
-        
+
         &:disabled {
             opacity: 0.6;
             cursor: not-allowed;
         }
-        
+
         .dashicons {
             font-size: 20px;
         }
@@ -414,7 +414,7 @@ body.bb-rl-fullscreen-mode {
 .bb-rl-step-info {
     margin-bottom: 20px;
     flex-shrink: 0;
-    
+
     .bb-rl-step-title {
         font-size: 22px;
         font-weight: 600;
@@ -422,7 +422,7 @@ body.bb-rl-fullscreen-mode {
         margin: 0 0 12px 0;
         line-height: 1.2;
     }
-    
+
     .bb-rl-step-description {
         font-size: 14px;
         color: $text-secondary-color;
@@ -441,7 +441,7 @@ body.bb-rl-fullscreen-mode {
     padding: 24px 32px 0;
     border-top: 1px solid $border-color;
     margin: auto -32px 0;
-    
+
     .bb-rl-nav-button {
         display: flex;
         align-items: center;
@@ -456,24 +456,24 @@ body.bb-rl-fullscreen-mode {
         [class*="bb-icons"] {
             font-size: 20px;
         }
-        
+
         &.bb-rl-previous-button {
             background: transparent;
             color: $text-color;
             border: 1px solid $border-color;
-            
+
             &:hover {
                 background: #f5f5f5;
                 border-color: #999;
             }
         }
-        
+
         &.bb-rl-next-button {
             background: $primary-color;
             color: $white;
             border: 1px solid $primary-color;
             margin-left: auto;
-            
+
             &:hover {
                 background: darken($primary-color, 10%);
                 border-color: darken($primary-color, 10%);
@@ -484,10 +484,10 @@ body.bb-rl-fullscreen-mode {
 
 .bb-rl-step-preview {
     text-align: center;
-    
+
     .bb-rl-preview-image {
         margin-bottom: 20px;
-        
+
         img {
             max-width: 100%;
             height: auto;
@@ -495,13 +495,13 @@ body.bb-rl-fullscreen-mode {
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
     }
-    
+
     .bb-rl-preview-placeholder {
         padding: 40px;
         border: 2px dashed $border-color;
         border-radius: $border-radius;
         color: #999;
-        
+
         p {
             margin: 0;
             font-style: italic;
@@ -514,7 +514,7 @@ body.bb-rl-fullscreen-mode {
 // ==========================================================================
 
 .bb-rl-form-fields {
-    
+
     // WordPress Components styling
     .components-select-control__input,
     .components-text-control__input {
@@ -538,7 +538,7 @@ body.bb-rl-fullscreen-mode {
         font-size: 13px;
         font-weight: 400;
     }
-    
+
     .bb-rl-field-error {
         .components-text-control__input {
             border-color: $error-color;
@@ -553,7 +553,7 @@ body.bb-rl-fullscreen-mode {
     // Description field - renders as informational text
     .bb-rl-description {
         margin: 16px 0;
-        
+
         .bb-rl-field-description {
             font-size: 14px;
             color: $text-tertiary-color;
@@ -569,7 +569,7 @@ body.bb-rl-fullscreen-mode {
     // Horizontal rule separator
     .bb-rl-separator {
         margin: 24px 0;
-        
+
         .bb-rl-horizontal-rule {
             margin: 0;
             padding: 0;
@@ -629,7 +629,7 @@ body.bb-rl-fullscreen-mode {
     .bb-rl-color-description {
         font-size: 14px;
         color: $text-tertiary-color;
-    } 
+    }
 }
 
 // Color scheme variations
@@ -659,7 +659,7 @@ body.bb-rl-fullscreen-mode {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 16px;
-    
+
     .bb-rl-layout-option {
         text-align: center;
         cursor: pointer;
@@ -667,16 +667,16 @@ body.bb-rl-fullscreen-mode {
         border: 2px solid transparent;
         border-radius: $border-radius;
         transition: $transition;
-        
+
         &:hover {
             border-color: $border-color;
         }
-        
+
         &.bb-rl-selected {
             border-color: $primary-color;
             background: rgba(229, 126, 58, 0.05);
         }
-        
+
         .bb-rl-layout-preview {
             width: 80px;
             height: 60px;
@@ -684,23 +684,23 @@ body.bb-rl-fullscreen-mode {
             border-radius: 4px;
             margin: 0 auto 8px;
             overflow: hidden;
-            
+
             &.bb-rl-layout-boxed {
                 .bb-rl-layout-header {
                     height: 12px;
                     background: #e0e0e0;
                 }
-                
+
                 .bb-rl-layout-content {
                     display: flex;
                     height: 48px;
-                    
+
                     .bb-rl-layout-main {
                         flex: 1;
                         background: #f5f5f5;
                         margin: 2px;
                     }
-                    
+
                     .bb-rl-layout-sidebar {
                         width: 20px;
                         background: #ddd;
@@ -708,16 +708,16 @@ body.bb-rl-fullscreen-mode {
                     }
                 }
             }
-            
+
             &.bb-rl-layout-fullwidth {
                 .bb-rl-layout-header {
                     height: 12px;
                     background: #e0e0e0;
                 }
-                
+
                 .bb-rl-layout-content {
                     height: 48px;
-                    
+
                     .bb-rl-layout-main {
                         height: 100%;
                         background: #f5f5f5;
@@ -726,7 +726,7 @@ body.bb-rl-fullscreen-mode {
                 }
             }
         }
-        
+
         .bb-rl-layout-label {
             font-size: 12px;
             color: $text-color;
@@ -742,7 +742,7 @@ body.bb-rl-fullscreen-mode {
 .bb-rl-file-upload {
     .bb-rl-file-preview {
         text-align: center;
-        
+
         .bb-rl-uploaded-image {
             max-width: 200px;
             max-height: 100px;
@@ -750,17 +750,17 @@ body.bb-rl-fullscreen-mode {
             border: 1px solid $border-color;
             margin-bottom: 8px;
         }
-        
+
         .bb-rl-remove-file {
             font-size: 12px;
         }
     }
-    
+
     .bb-rl-upload-area {
         .bb-rl-file-input {
             display: none;
         }
-        
+
         .bb-rl-upload-label {
             display: block;
             padding: 32px;
@@ -769,17 +769,17 @@ body.bb-rl-fullscreen-mode {
             text-align: center;
             cursor: pointer;
             transition: $transition;
-            
+
             &:hover {
                 border-color: $primary-color;
                 background: rgba(229, 126, 58, 0.05);
             }
-            
+
             .bb-rl-upload-icon {
                 font-size: 24px;
                 margin-bottom: 8px;
             }
-            
+
             .bb-rl-upload-text {
                 font-size: 14px;
                 color: #666;
@@ -798,14 +798,14 @@ body.bb-rl-fullscreen-mode {
         align-items: center;
         gap: 12px;
         margin-bottom: 12px;
-        
+
         .bb-rl-color-swatch {
             width: 40px;
             height: 40px;
             border-radius: 50%;
             border: 2px solid $border-color;
         }
-        
+
         .bb-rl-color-value {
             font-family: monospace;
             font-size: 14px;
@@ -825,11 +825,11 @@ body.bb-rl-fullscreen-mode {
     list-style: none;
     padding: 0;
     margin: 0;
-    
+
     li {
         padding: 8px 0;
         border-bottom: 1px solid #f0f0f0;
-        
+
         &:last-child {
             border-bottom: none;
         }
@@ -980,7 +980,7 @@ body.bb-rl-fullscreen-mode {
             overflow: hidden;
             background: #f5f5f5;
             position: relative;
-            
+
             // Icon support for visual options
             .bb-icons-rl,
             [class*="bb-icon-rl-"] {
@@ -1209,7 +1209,7 @@ body.bb-rl-fullscreen-mode {
 // Color picker wrapper
 .bb-rl-color-picker-wrapper {
     margin-top: 8px;
-    
+
     .components-color-picker {
         width: 100%;
     }
@@ -1219,7 +1219,7 @@ body.bb-rl-fullscreen-mode {
 .bb-rl-media-field {
     .bb-rl-media-preview {
         margin-top: 12px;
-        
+
         img {
             border-radius: 4px;
             border: 1px solid $border-color;
@@ -1237,7 +1237,7 @@ body.bb-rl-fullscreen-mode {
     max-width: 800px;
     margin: 0 auto;
     overflow-y: auto;
-    
+
     // Fullscreen layout
     &.bb-rl-fullscreen-finish {
         max-width: none;
@@ -1245,14 +1245,14 @@ body.bb-rl-fullscreen-mode {
         padding: 0;
         height: 100%;
         text-align: left;
-        
+
         .bb-rl-finish-container {
             height: 100%;
             display: grid;
             grid-template-columns: 1fr 1fr;
             overflow: hidden;
         }
-        
+
         .bb-rl-finish-left {
             padding: 40px;
             overflow-y: auto;
@@ -1261,72 +1261,72 @@ body.bb-rl-fullscreen-mode {
             flex-direction: column;
             justify-content: center;
         }
-        
+
         .bb-rl-finish-right {
             padding: 40px;
             overflow-y: auto;
             background: #f8f9fa;
             border-left: 1px solid $border-color;
         }
-        
+
         .bb-rl-finish-sidebar {
             max-width: 500px;
         }
-        
+
         // Adjust styles for fullscreen layout
         .bb-rl-finish-text {
             text-align: center;
             margin-bottom: 32px;
         }
-        
+
         .bb-rl-setup-summary {
             margin-bottom: 32px;
-            
+
             .bb-rl-summary-grid {
                 grid-template-columns: repeat(2, 1fr);
                 gap: 12px;
             }
         }
-        
+
         .bb-rl-finish-actions {
             text-align: center;
             margin-bottom: 0;
         }
-        
+
         .bb-rl-next-steps {
             text-align: left;
             margin-bottom: 32px;
         }
-        
+
         .bb-rl-support-resources {
             margin-bottom: 24px;
-            
+
             .bb-rl-resource-links {
                 flex-direction: column;
                 align-items: flex-start;
                 gap: 12px;
             }
         }
-        
+
         .bb-rl-thank-you {
             text-align: left;
         }
     }
-    
+
     .bb-rl-finish-content {
         .bb-rl-success-animation {
             margin-bottom: 32px;
-            
+
             .bb-rl-checkmark {
                 width: 80px;
                 height: 80px;
                 margin: 0 auto;
                 position: relative;
-                
+
                 .bb-rl-checkmark-circle {
                     width: 80px;
                     height: 80px;
-                    
+
                     .bb-rl-checkmark-circle-path {
                         stroke: $success-color;
                         stroke-width: 3;
@@ -1335,14 +1335,14 @@ body.bb-rl-fullscreen-mode {
                         animation: checkmarkCircle 0.6s ease-in-out forwards;
                     }
                 }
-                
+
                 .bb-rl-checkmark-check {
                     width: 80px;
                     height: 80px;
                     position: absolute;
                     top: 0;
                     left: 0;
-                    
+
                     .bb-rl-checkmark-check-path {
                         stroke: $success-color;
                         stroke-width: 3;
@@ -1353,11 +1353,11 @@ body.bb-rl-fullscreen-mode {
                 }
             }
         }
-        
+
         .bb-rl-finish-image {
             margin-bottom: 32px;
             text-align: center;
-            
+
             img {
                 max-width: 100%;
                 height: auto;
@@ -1365,17 +1365,17 @@ body.bb-rl-fullscreen-mode {
                 box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             }
         }
-        
+
         .bb-rl-finish-text {
             margin-bottom: 40px;
-            
+
             .bb-rl-finish-title {
                 font-size: 32px;
                 font-weight: 700;
                 color: $text-color;
                 margin: 0 0 16px 0;
             }
-            
+
             .bb-rl-finish-description,
             .bb-rl-finish-subtitle {
                 font-size: 16px;
@@ -1384,42 +1384,42 @@ body.bb-rl-fullscreen-mode {
                 line-height: 1.5;
             }
         }
-        
+
         .bb-rl-setup-summary {
             margin-bottom: 40px;
-            
+
             h3 {
                 font-size: 18px;
                 margin-bottom: 20px;
                 color: $text-color;
             }
-            
+
             .bb-rl-summary-grid {
                 display: grid;
                 grid-template-columns: repeat(3, 1fr);
                 gap: 16px;
-                
+
                 .bb-rl-summary-item {
                     display: flex;
                     align-items: center;
                     gap: 8px;
                     font-size: 14px;
                     color: #666;
-                    
+
                     .bb-rl-summary-icon {
                         font-size: 16px;
                     }
                 }
             }
         }
-        
+
         .bb-rl-finish-actions {
             margin-bottom: 40px;
             display: flex;
             flex-direction: column;
             gap: 12px;
             align-items: center;
-            
+
             .bb-rl-finish-button {
                 &.bb-rl-primary-action {
                     background: $primary-color;
@@ -1429,12 +1429,12 @@ body.bb-rl-fullscreen-mode {
                     font-size: 16px;
                     font-weight: 600;
                     border-radius: 6px;
-                    
+
                     &:hover {
                         background: darken($primary-color, 10%);
                     }
                 }
-                
+
                 &.bb-rl-secondary-action {
                     background: transparent;
                     color: $text-color;
@@ -1442,41 +1442,41 @@ body.bb-rl-fullscreen-mode {
                     padding: 12px 24px;
                     font-size: 14px;
                     border-radius: 6px;
-                    
+
                     &:hover {
                         background: #f5f5f5;
                     }
                 }
-                
+
                 &.bb-rl-close-action {
                     color: #666;
                     font-size: 14px;
                     text-decoration: none;
-                    
+
                     &:hover {
                         color: $text-color;
                     }
                 }
             }
         }
-        
+
         .bb-rl-next-steps {
             margin-bottom: 40px;
             text-align: left;
-            
+
             h3 {
                 font-size: 18px;
                 margin-bottom: 20px;
                 color: $text-color;
                 text-align: center;
             }
-            
+
             .bb-rl-next-steps-list {
                 .bb-rl-next-step {
                     display: flex;
                     gap: 16px;
                     margin-bottom: 20px;
-                    
+
                     .bb-rl-step-number {
                         width: 32px;
                         height: 32px;
@@ -1490,7 +1490,7 @@ body.bb-rl-fullscreen-mode {
                         font-size: 14px;
                         flex-shrink: 0;
                     }
-                    
+
                     .bb-rl-step-content {
                         h4 {
                             font-size: 16px;
@@ -1498,7 +1498,7 @@ body.bb-rl-fullscreen-mode {
                             color: $text-color;
                             margin: 0 0 4px 0;
                         }
-                        
+
                         p {
                             font-size: 14px;
                             color: #666;
@@ -1509,33 +1509,33 @@ body.bb-rl-fullscreen-mode {
                 }
             }
         }
-        
+
         .bb-rl-support-resources {
             margin-bottom: 32px;
-            
+
             h3 {
                 font-size: 18px;
                 margin-bottom: 16px;
                 color: $text-color;
             }
-            
+
             .bb-rl-resource-links {
                 display: flex;
                 justify-content: center;
                 gap: 24px;
-                
+
                 .bb-rl-resource-link {
                     color: $primary-color;
                     text-decoration: none;
                     font-size: 14px;
-                    
+
                     &:hover {
                         text-decoration: underline;
                     }
                 }
             }
         }
-        
+
         .bb-rl-thank-you {
             p {
                 font-size: 14px;
@@ -1566,12 +1566,12 @@ body.bb-rl-fullscreen-mode {
 .bb-rl-error-state {
     text-align: center;
     padding: 40px;
-    
+
     h2 {
         color: $error-color;
         margin-bottom: 12px;
     }
-    
+
     p {
         color: #666;
         margin: 0;
@@ -1588,12 +1588,12 @@ body.bb-rl-fullscreen-mode {
     #wpfooter {
         display: none !important;
     }
-    
+
     #wpwrap {
         margin-left: 0 !important;
         padding-top: 0 !important;
     }
-    
+
     #wpcontent {
         margin: 0 !important;
         padding: 0 !important;

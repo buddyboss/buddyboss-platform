@@ -490,9 +490,6 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 			// Apply all ReadyLaunch configurations.
 			$this->apply_readylaunch_configuration( $final_settings );
 
-			// Send completion notification.
-			$this->send_completion_notification();
-
 			// Clean up ReadyLaunch specific transients.
 			delete_transient( '_bb_rl_show_onboarding' );
 
@@ -561,6 +558,7 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 					case 'select':
 					case 'radio':
 					case 'visual_options':
+					case 'visual_radio_options':
 						$allowed_values = isset( $field_config['options'] ) ? array_keys( $field_config['options'] ) : array();
 						$sanitized[ $field_key ] = in_array( $field_value, $allowed_values, true ) ? $field_value : ( $field_config['default'] ?? '' );
 						break;
