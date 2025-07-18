@@ -2,9 +2,9 @@
 # This file is distributed under the GPLv2 or later (license.txt).
 msgid ""
 msgstr ""
-"Project-Id-Version: BuddyBoss Platform 2.9.10\n"
+"Project-Id-Version: BuddyBoss Platform 2.9.11\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2025-07-09 04:41:12+00:00\n"
+"POT-Creation-Date: 2025-07-18 03:41:12+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -28742,49 +28742,49 @@ msgstr ""
 
 #: bp-messages/bp-messages-functions.php:2220
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:1059
-#: bp-templates/bp-nouveau/includes/messages/functions.php:195
+#: bp-templates/bp-nouveau/includes/messages/functions.php:196
 #: bp-templates/bp-nouveau/readylaunch/header/unread-messages.php:432
 msgid "Sent a photo"
 msgstr ""
 
 #: bp-messages/bp-messages-functions.php:2222
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:1061
-#: bp-templates/bp-nouveau/includes/messages/functions.php:196
+#: bp-templates/bp-nouveau/includes/messages/functions.php:197
 #: bp-templates/bp-nouveau/readylaunch/header/unread-messages.php:435
 msgid "Sent some photos"
 msgstr ""
 
 #: bp-messages/bp-messages-functions.php:2234
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:1073
-#: bp-templates/bp-nouveau/includes/messages/functions.php:197
+#: bp-templates/bp-nouveau/includes/messages/functions.php:198
 #: bp-templates/bp-nouveau/readylaunch/header/unread-messages.php:448
 msgid "Sent a video"
 msgstr ""
 
 #: bp-messages/bp-messages-functions.php:2236
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:1075
-#: bp-templates/bp-nouveau/includes/messages/functions.php:198
+#: bp-templates/bp-nouveau/includes/messages/functions.php:199
 #: bp-templates/bp-nouveau/readylaunch/header/unread-messages.php:451
 msgid "Sent some videos"
 msgstr ""
 
 #: bp-messages/bp-messages-functions.php:2248
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:1087
-#: bp-templates/bp-nouveau/includes/messages/functions.php:199
+#: bp-templates/bp-nouveau/includes/messages/functions.php:200
 #: bp-templates/bp-nouveau/readylaunch/header/unread-messages.php:464
 msgid "Sent a document"
 msgstr ""
 
 #: bp-messages/bp-messages-functions.php:2250
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:1089
-#: bp-templates/bp-nouveau/includes/messages/functions.php:200
+#: bp-templates/bp-nouveau/includes/messages/functions.php:201
 #: bp-templates/bp-nouveau/readylaunch/header/unread-messages.php:467
 msgid "Sent some documents"
 msgstr ""
 
 #: bp-messages/bp-messages-functions.php:2260
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:1099
-#: bp-templates/bp-nouveau/includes/messages/functions.php:194
+#: bp-templates/bp-nouveau/includes/messages/functions.php:195
 #: bp-templates/bp-nouveau/readylaunch/header/unread-messages.php:477
 msgid "Sent a gif"
 msgstr ""
@@ -28869,7 +28869,7 @@ msgid "%1$s and %2$s joined the group."
 msgstr ""
 
 #: bp-messages/bp-messages-functions.php:2727
-#: bp-templates/bp-nouveau/includes/messages/functions.php:182
+#: bp-templates/bp-nouveau/includes/messages/functions.php:183
 msgid "%d others"
 msgstr ""
 
@@ -28915,32 +28915,32 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: bp-messages/bp-messages-star.php:108
-#: bp-templates/bp-nouveau/includes/messages/functions.php:209
+#: bp-templates/bp-nouveau/includes/messages/functions.php:210
 msgid "Unstar"
 msgstr ""
 
 #: bp-messages/bp-messages-star.php:109
-#: bp-templates/bp-nouveau/includes/messages/functions.php:210
+#: bp-templates/bp-nouveau/includes/messages/functions.php:211
 msgid "Star"
 msgstr ""
 
 #: bp-messages/bp-messages-star.php:110
-#: bp-templates/bp-nouveau/includes/messages/functions.php:211
+#: bp-templates/bp-nouveau/includes/messages/functions.php:212
 msgid "Starred"
 msgstr ""
 
 #: bp-messages/bp-messages-star.php:111
-#: bp-templates/bp-nouveau/includes/messages/functions.php:212
+#: bp-templates/bp-nouveau/includes/messages/functions.php:213
 msgid "Not starred"
 msgstr ""
 
 #: bp-messages/bp-messages-star.php:112
-#: bp-templates/bp-nouveau/includes/messages/functions.php:213
+#: bp-templates/bp-nouveau/includes/messages/functions.php:214
 msgid "Remove all starred messages in this thread"
 msgstr ""
 
 #: bp-messages/bp-messages-star.php:113
-#: bp-templates/bp-nouveau/includes/messages/functions.php:214
+#: bp-templates/bp-nouveau/includes/messages/functions.php:215
 msgid "Star the first message in this thread"
 msgstr ""
 
@@ -33999,7 +33999,7 @@ msgid "An error occurred while saving your post."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/activity/functions.php:111
-#: bp-templates/bp-nouveau/includes/messages/functions.php:159
+#: bp-templates/bp-nouveau/includes/messages/functions.php:160
 msgid "To change the media type, remove existing media from your post."
 msgstr ""
 
@@ -35278,13 +35278,13 @@ msgstr ""
 
 #: bp-templates/bp-nouveau/includes/groups/functions.php:1379
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:485
-#: bp-templates/bp-nouveau/includes/messages/functions.php:157
+#: bp-templates/bp-nouveau/includes/messages/functions.php:158
 msgid "Please add some content to your message."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/groups/functions.php:1380
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:180
-#: bp-templates/bp-nouveau/includes/messages/functions.php:156
+#: bp-templates/bp-nouveau/includes/messages/functions.php:157
 msgid "Please add at least one recipient."
 msgstr ""
 
@@ -35564,7 +35564,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:685
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:1204
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:1766
-#: bp-templates/bp-nouveau/includes/messages/functions.php:158
+#: bp-templates/bp-nouveau/includes/messages/functions.php:159
 msgid "Sorry, no messages were found."
 msgstr ""
 
@@ -35712,72 +35712,72 @@ msgstr ""
 msgid "Thread un-archived successfully."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/functions.php:165
+#: bp-templates/bp-nouveau/includes/messages/functions.php:166
 msgid "Loading messages."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/functions.php:167
+#: bp-templates/bp-nouveau/includes/messages/functions.php:168
 msgid "Marking read."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/functions.php:168
+#: bp-templates/bp-nouveau/includes/messages/functions.php:169
 msgid "Marking unread."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/functions.php:169
+#: bp-templates/bp-nouveau/includes/messages/functions.php:170
 msgid "Deleting messages."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/functions.php:170
+#: bp-templates/bp-nouveau/includes/messages/functions.php:171
 msgid "Starring messages."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/functions.php:171
+#: bp-templates/bp-nouveau/includes/messages/functions.php:172
 msgid "Unstarring messages."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/functions.php:172
+#: bp-templates/bp-nouveau/includes/messages/functions.php:173
 msgid "Archiving conversation."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/functions.php:173
+#: bp-templates/bp-nouveau/includes/messages/functions.php:174
 msgid "Unarchiving conversation."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/functions.php:175
+#: bp-templates/bp-nouveau/includes/messages/functions.php:176
 msgid "Write a message..."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/functions.php:176
+#: bp-templates/bp-nouveau/includes/messages/functions.php:177
 msgid "Are you sure you want to permanently delete all of your messages from this conversation? This cannot be undone."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/functions.php:177
+#: bp-templates/bp-nouveau/includes/messages/functions.php:178
 msgid "As a site admin you are able to delete conversations. Are you sure you want to permanently delete this conversation and all of its messages? This cannot be undone."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/functions.php:179
+#: bp-templates/bp-nouveau/includes/messages/functions.php:180
 msgid "Use the select box to define your bulk action and click on the &#10003; button to apply."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/functions.php:181
+#: bp-templates/bp-nouveau/includes/messages/functions.php:182
 msgid "1 other"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/functions.php:183
+#: bp-templates/bp-nouveau/includes/messages/functions.php:184
 #: bp-templates/bp-nouveau/readylaunch/header/unread-messages.php:401
 msgid "others"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/functions.php:187
+#: bp-templates/bp-nouveau/includes/messages/functions.php:188
 msgid "Today"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/functions.php:337
+#: bp-templates/bp-nouveau/includes/messages/functions.php:338
 msgid "New sitewide notice"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/functions.php:573
+#: bp-templates/bp-nouveau/includes/messages/functions.php:574
 msgid "New private messages"
 msgstr ""
 

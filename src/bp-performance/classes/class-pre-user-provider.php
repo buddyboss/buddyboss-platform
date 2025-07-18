@@ -63,8 +63,6 @@ class Pre_User_Provider {
 				return $get_user->ID;
 			}
 		}
-
-		return $user_id;
 	}
 
 	/**
