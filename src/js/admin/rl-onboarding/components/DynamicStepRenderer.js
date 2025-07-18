@@ -79,11 +79,11 @@ export const DynamicStepRenderer = ({
 
     const renderField = (fieldKey, fieldConfig) => {
         const { type, options, required, default: defaultValue, value: configValue } = fieldConfig;
-        
+
         // Use dynamic label and description functions
         const label = getDynamicLabel(fieldKey, fieldConfig);
         const description = getDynamicDescription(fieldKey, fieldConfig);
-        
+
         // Use value from formData, or fall back to 'value' or 'default' from config
         // Check if formData has a non-empty value, otherwise fall back to config value or default
         const hasValidFormValue = formData[fieldKey] !== undefined && formData[fieldKey] !== '' && formData[fieldKey] !== null;
@@ -215,7 +215,6 @@ export const DynamicStepRenderer = ({
                 const ImageSelector = ({ label, value, onChange, description, customClass }) => {
                     return (
                         <div className={`image-selector-component ${customClass || ''}`}>
-                            <label>{label}</label>
                             <div className="image-selector-control">
                                 {value && value.url ? (
                                     <div className="bb-rl-image-preview-wrapper">
@@ -519,7 +518,7 @@ export const DynamicStepRenderer = ({
         return fieldConfig.label;
     };
 
-    // Get dynamic description based on form context  
+    // Get dynamic description based on form context
     const getDynamicDescription = (fieldKey, fieldConfig) => {
         if (fieldConfig.dynamicDescription && typeof fieldConfig.dynamicDescription === 'function') {
             return fieldConfig.dynamicDescription(formData);
