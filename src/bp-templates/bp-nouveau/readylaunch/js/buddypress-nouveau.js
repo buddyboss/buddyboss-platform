@@ -2027,6 +2027,19 @@ window.bp = window.bp || {};
 				return false;
 			}
 
+			if ( 'request_membership' === action ) {
+				jQuery( document ).trigger(
+					'bb_trigger_toast_message',
+					[
+						'',
+						'<div>' + bpNouveau.groups.i18n.sending_request + '</div>',
+						'loading',
+						null,
+						true
+					]
+				);
+			}
+
 			if ( 'is_friend' !== action ) {
 
 				if ( ( undefined !== BP_Nouveau[ action + '_confirm' ] && false === window.confirm( BP_Nouveau[ action + '_confirm' ] ) ) || target.hasClass( 'pending' ) ) {
@@ -2196,6 +2209,25 @@ window.bp = window.bp || {};
 					} else {
 						// Specific cases for groups.
 						if ( 'groups' === object ) {
+							
+							// Close modal if request membership is successful.
+							if ( 'request_membership' === action && undefined !== response.data.feedback ) {
+								// Remove existing toast message if it exists.
+								if ( $( '.bb-toast-messages-list li' ).length ) {
+									$( '.bb-toast-messages-list li' ).remove();
+								}
+								// Display feedback for request membership.
+								jQuery( document ).trigger(
+									'bb_trigger_toast_message',
+									[
+										'',
+										'<div>' + response.data.feedback + '</div>',
+										'success',
+										null,
+										true
+									]
+								);
+							}
 
 							// Group's header button.
 							if ( undefined !== response.data.is_group && response.data.is_group ) {

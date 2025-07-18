@@ -2509,6 +2509,10 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				$strings['moderation']['block_member'] = __( 'Block member', 'buddyboss' );
 			}
 
+			if ( bp_is_active( 'groups' ) ) {
+				$strings['groups']['i18n']['sending_request'] = __( 'Sending request', 'buddyboss' );
+			}
+
 			return $strings;
 		}
 

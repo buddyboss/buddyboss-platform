@@ -63,6 +63,8 @@ class BB_Group_Readylaunch {
 		if ( function_exists( 'bp_disable_group_messages' ) && true === bp_disable_group_messages() ) {
 			add_filter( 'bp_core_get_js_strings', array( $this, 'bb_rl_get_js_strings_for_groups' ), 11, 1 );
 		}
+
+		add_filter( 'bp_nouveau_ajax_joinleave_group', array( $this, 'bb_rl_modify_group_request_membership_response' ), 10 );
 	}
 
 	/**
@@ -735,5 +737,26 @@ class BB_Group_Readylaunch {
 		}
 
 		return $link_text;
+	}
+
+	/**
+	 * Modify group request membership response for ReadyLaunch.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $response Response array.
+	 *
+	 * @return array Modified response array.
+	 */
+	public function bb_rl_modify_group_request_membership_response( $response ) {
+		$action = isset( $_POST['action'] ) ? sanitize_text_field( wp_unslash( $_POST['action'] ) ) : '';
+		if ( empty( $action ) ) {
+			return $response;
+		}
+
+		if ( 'groups_request_membership' === $action ) {
+			$response['feedback'] = esc_html__( 'Your membership request has been sent! The group organizer will review it, and you\'ll be notified once they respond. ', 'buddyboss' );
+		}
+		return $response;
 	}
 }
