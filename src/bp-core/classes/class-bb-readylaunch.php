@@ -4320,7 +4320,10 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				) ||
 				(
 					bp_is_active( 'groups' ) &&
-					'my-groups' === $nav_item->slug
+					(
+						'my-groups' === $nav_item->slug ||
+						'invites' === $nav_item->slug
+					)
 				)
 			) {
 				return true;
@@ -4358,6 +4361,8 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			if ( bp_is_active( 'groups' ) ) {
 				if ( 'my-groups' === $nav_item->slug ) {
 					$count = bp_get_total_group_count_for_user( bp_loggedin_user_id() );
+				} elseif ( 'invites' === $nav_item->slug ) {
+					$count = groups_get_invite_count_for_user();
 				}
 			}
 
