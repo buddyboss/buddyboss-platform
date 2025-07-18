@@ -58,7 +58,7 @@ if ( bp_is_group_create() ) {
 
 						$bp_org_user_id = bp_get_member_user_id();
 						?>
-						<li class="member-entry clearfix">
+						<li class="member-entry clearfix bb-rl-members-manage-vip">
 
 							<div class="bb-rl-group-member-id">
 								<?php
@@ -101,24 +101,6 @@ if ( bp_is_group_create() ) {
 								</div>
 							</div>
 
-							<?php if ( count( bp_group_admin_ids( false, 'array' ) ) > 1 ) : ?>
-
-								<div class="bb_more_options action">
-									<a href="#" class="bb_more_options_action" aria-label="More Options"><i class="bb-icons-rl-dots-three"></i></a>
-									<div class="bb_more_options_list bb_more_dropdown">
-										<div class="generic-button">
-											<a class="button confirm admin-demote-to-member" href="<?php bp_group_member_demote_link( $bp_org_user_id ); ?>">
-												<?php
-												/* translators: %s: Member role label */
-												printf( esc_html__( 'Demote to regular %s', 'buddyboss' ), esc_html( strtolower( get_group_role_label( $bp_current_group_id, 'member_singular_label_name' ) ) ) );
-												?>
-											</a>
-										</div>
-									</div>
-									<div class="bb_more_dropdown_overlay"></div>
-								</div>
-							<?php endif; ?>
-
 						</li>
 					<?php endwhile; ?>
 
@@ -151,7 +133,7 @@ if ( bp_is_group_create() ) {
 
 						$bp_mod_user_id = bp_get_member_user_id();
 						?>
-						<li class="members-entry clearfix">
+						<li class="members-entry clearfix bb-rl-members-manage-vip">
 							<div class="bb-rl-group-member-id">
 								<?php
 								echo wp_kses_post(
@@ -198,21 +180,6 @@ if ( bp_is_group_create() ) {
 								<div class="bb-rl-group-member-action-wrapper">
 									<button href="" class="bb-rl-group-member-action-button disabled"><?php esc_html_e( 'Apply', 'buddyboss' ); ?></button>
 								</div>
-							</div>
-
-							<div class="bb_more_options action">
-								<a href="#" class="bb_more_options_action" aria-label="More Options"><i class="bb-icons-rl-dots-three"></i></a>
-								<div class="bb_more_options_list bb_more_dropdown">
-									<div class="generic-button">
-										<a class="button confirm mod-demote-to-member" href="<?php bp_group_member_demote_link( $bp_mod_user_id ); ?>">
-											<?php
-											/* translators: %s: Member role label */
-											printf( esc_html__( 'Demote to regular %s', 'buddyboss' ), esc_html( strtolower( get_group_role_label( $bp_current_group_id, 'member_singular_label_name' ) ) ) );
-											?>
-										</a>
-									</div>
-								</div>
-								<div class="bb_more_dropdown_overlay"></div>
 							</div>
 						</li>
 

@@ -1169,6 +1169,14 @@
   }
 }
 
+@media screen and (max-width: 544px) {
+  .bb-rl-groups-manage-members-list .members-entry .bb-rl-group-member-id,
+  .bb-rl-groups-manage-members-list .member-entry .bb-rl-group-member-id {
+    width: 100%;
+    margin-bottom: var(--bb-rl-space-200);
+  }
+}
+
 .bb-rl-groups-manage-members-list ul.item-list {
   list-style: none;
   padding: 0;
@@ -1941,6 +1949,10 @@
 
 .bb-rl-group-settings select {
   width: 245px;
+}
+
+.bb-rl-groups-manage-members-list .bb-rl-members-manage-vip {
+  padding-right: var(--bb-rl-space-600);
 }
 
 .bb-rl-groups-manage-members-list .bb-rl-members-manage-dropdown {

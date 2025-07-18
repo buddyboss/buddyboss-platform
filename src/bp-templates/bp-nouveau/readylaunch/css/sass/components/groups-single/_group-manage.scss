@@ -294,6 +294,14 @@
 		@media screen and (max-width: $lg) {
 			flex-flow: wrap;
 		}
+
+		@media screen and (max-width: $sm) {
+			
+			.bb-rl-group-member-id {
+				width: 100%;
+				margin-bottom: var(--bb-rl-space-200);
+			}
+		}
 	}
 
 	ul.item-list {
@@ -1020,6 +1028,10 @@
 }
 
 .bb-rl-groups-manage-members-list {
+
+	.bb-rl-members-manage-vip {
+		padding-right: var(--bb-rl-space-600);
+	}
 
 	.bb-rl-members-manage-dropdown {
 		display: flex;
