@@ -317,7 +317,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			add_filter( 'bp_moderation_user_report_button', array( $this, 'bb_rl_modify_member_report_button' ), 10 );
 
 			if ( bb_enable_content_counts() ) {
-				add_filter( 'bp_nouveau_nav_has_count', array( $this, 'bb_rl_modify_nav_has_count' ), 10, 2 );
+				add_filter( 'bp_nouveau_nav_has_count', array( $this, 'bb_rl_modify_nav_get_count' ), 10, 2 );
 				add_filter( 'bp_nouveau_get_nav_count', array( $this, 'bb_rl_modify_nav_get_count' ), 10, 2 );
 			}
 		}
@@ -4292,44 +4292,6 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			$button['link_text'] = str_replace( __( 'Report Member', 'buddyboss' ), __( 'Report', 'buddyboss' ), $button['link_text'] );
 
 			return $button;
-		}
-
-		/**
-		 * Modify nav has count.
-		 *
-		 * @since BuddyBoss [BBVERSION]
-		 *
-		 * @param bool   $has_count The has count.
-		 * @param object $nav_item The nav item.
-		 *
-		 * @return bool The modified has count.
-		 */
-		public function bb_rl_modify_nav_has_count( $has_count, $nav_item ) {
-			if ( empty( $nav_item ) ) {
-				return $has_count;
-			}
-
-			if (
-				(
-					bp_is_active( 'friends' ) &&
-					(
-						'my-friends' === $nav_item->slug ||
-						'requests' === $nav_item->slug ||
-						'mutual' === $nav_item->slug
-					)
-				) ||
-				(
-					bp_is_active( 'groups' ) &&
-					(
-						'my-groups' === $nav_item->slug ||
-						'invites' === $nav_item->slug
-					)
-				)
-			) {
-				return true;
-			}
-
-			return $has_count;
 		}
 
 		/**
