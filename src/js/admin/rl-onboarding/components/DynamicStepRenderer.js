@@ -6,7 +6,9 @@ import {
     CheckboxControl,
     RadioControl,
     ColorPicker,
+    ColorIndicator,
     Button,
+    Popover,
     Panel,
     PanelBody
 } from '@wordpress/components';
@@ -166,11 +168,7 @@ export const DynamicStepRenderer = ({
                             </div>
                         )}
                         <div className="bb-rl-color-picker-wrapper">
-                            <ColorPicker
-                                color={value || '#e57e3a'}
-                                onChange={(newValue) => handleFieldChange(fieldKey, newValue)}
-                                disableAlpha
-                            />
+                            <ColorPickerButton color={value} onChange={(newValue) => handleFieldChange(fieldKey, newValue)} />
                         </div>
                     </div>
                 );
@@ -527,6 +525,72 @@ export const DynamicStepRenderer = ({
         }
         return fieldConfig.description;
     };
+
+    // Component for color picker with popover
+	const ColorPickerButton = ({ color, onChange }) => {
+		const [isPickerOpen, setIsPickerOpen] = useState(false);
+		const [tempColor, setTempColor] = useState(color);
+
+		const togglePicker = () => {
+			setIsPickerOpen(!isPickerOpen);
+			setTempColor(color); // Reset temp color when opening
+		};
+
+		const closePicker = () => setIsPickerOpen(false);
+
+		const applyColor = () => {
+			onChange(tempColor);
+			closePicker();
+		};
+
+		// Ensure we have a valid color value
+		const colorValue = color || '#3E34FF'; // Default to blue if no color is set
+
+		return (
+			<div className="color-picker-button-component bb-rl-color-picker-button-component">
+				<div className="color-picker-button-wrapper">
+					<Button
+						className="color-picker-button"
+						onClick={togglePicker}
+						aria-expanded={isPickerOpen}
+						aria-label={__('Select color', 'buddyboss')}
+					>
+						<div className="color-indicator-wrapper">
+							<ColorIndicator colorValue={colorValue} />
+						</div>
+						<span className="color-picker-value">{colorValue}</span>
+					</Button>
+					{isPickerOpen && (
+						<Popover
+							className="color-picker-popover"
+							onClose={closePicker}
+							position="bottom center"
+						>
+							<div className="color-picker-popover-content">
+								<ColorPicker
+									color={tempColor || colorValue}
+									onChange={(newColor) => {
+										setTempColor(newColor);
+										// Don't call onChange here to keep the popover open
+									}}
+									enableAlpha={false}
+									copyFormat="hex"
+								/>
+								<div className="color-picker-popover-footer">
+									<Button
+										onClick={applyColor}
+										className="apply-color-button"
+									>
+										{__('Apply', 'buddyboss')}
+									</Button>
+								</div>
+							</div>
+						</Popover>
+					)}
+				</div>
+			</div>
+		);
+	};
 
     return (
         <div className="bb-rl-dynamic-step-renderer">

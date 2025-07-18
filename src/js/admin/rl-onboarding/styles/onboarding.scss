@@ -705,9 +705,87 @@ body.bb-rl-fullscreen-mode {
     }
 }
 
+
 // ==========================================================================
 // Color Scheme Options
 // ==========================================================================
+
+// Color Picker 
+.components-popover {
+    z-index: 999999;
+}
+.components-popover__content {
+    background:#fff;
+    border-radius:4px;
+    box-shadow:0 0 0 1px #ccc,0 2px 3px #0000000d,0 4px 5px #0000000a,0 12px 12px #00000008,0 16px 16px #00000005;
+    box-sizing:border-box;
+    width:min-content;
+
+    .components-button.is-compact.has-icon {
+        border: 0;
+        background-color: transparent;
+    }
+}
+
+.color-picker-button-component .color-picker-button {
+    display: inline-flex;
+    border: 1px solid $border-tertiary-color;
+    box-shadow: none;
+    border-radius: 8px;
+    height: 40px;
+    background-color: $background-color;
+    cursor: pointer;
+}
+
+.color-picker-button-component .color-picker-button .color-indicator-wrapper {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+}
+
+.color-picker-button-component .color-picker-button .component-color-indicator {
+    width: 24px;
+    height: 24px;
+    border-radius: 4px
+}
+
+.color-picker-button-component .color-picker-button .color-picker-value {
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 40px;
+    display: inline-flex;
+    align-items: center;
+    color: #2f2f2f;
+    padding: 0 16px 0 0;
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px
+}
+
+.color-picker-popover-footer {
+    padding: 0 8px 8px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+
+    > button {
+        background: $background-brand-primary-color;
+        color: $white;
+        display: inline-block;
+        padding: 8px 14px;
+        border-radius: 6px;
+        font-size: 13px;
+        font-weight: 400;
+        cursor: pointer;
+        text-decoration: none;
+        outline: none;
+        border: 0;
+
+        &:hover {
+            color: $white;
+        }
+    }
+}
 
 .bb-rl-color-scheme-options {
     display: flex;

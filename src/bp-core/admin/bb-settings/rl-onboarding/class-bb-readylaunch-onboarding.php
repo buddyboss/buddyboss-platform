@@ -185,13 +185,11 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 					'bb_rl_color_light' => array(
 						'type'        => 'color',
 						'label'       => __( 'Primary Color (Light mode)', 'buddyboss' ),
-						'description' => __( 'Set your primary brand colors', 'buddyboss' ),
 						'default'     => '#3E34FF',
 					),
 					'bb_rl_color_dark' => array(
 						'type'        => 'color',
 						'label'       => __( 'Primary Color (Dark mode)', 'buddyboss' ),
-						'description' => __( 'Set your primary brand colors', 'buddyboss' ),
 						'default'     => '#A347FF',
 					),
 					'color_description'    => array(
