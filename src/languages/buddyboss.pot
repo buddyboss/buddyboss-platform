@@ -2,9 +2,9 @@
 # This file is distributed under the GPLv2 or later (license.txt).
 msgid ""
 msgstr ""
-"Project-Id-Version: BuddyBoss Platform 2.9.10\n"
+"Project-Id-Version: BuddyBoss Platform 2.9.11\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2025-07-08 12:44:15+00:00\n"
+"POT-Creation-Date: 2025-07-17 14:36:15+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -30,7 +30,7 @@ msgstr ""
 #: bp-loader.php
 #: bp-core/admin/bp-core-admin-functions.php:3786
 #: bp-core/admin/settings/bp-admin-setting-activity.php:222
-#: bp-performance/classes/class-settings.php:87
+#: bp-performance/bp-performance-includes.php:71
 #: bp-templates/bp-nouveau/includes/customizer.php:29
 msgid "BuddyBoss Platform"
 msgstr ""
@@ -2066,7 +2066,7 @@ msgstr ""
 #: bp-core/admin/templates/upgrade-screen.php:47
 #: bp-core/bp-core-functions.php:2586
 #: bp-groups/classes/class-bp-rest-group-settings-endpoint.php:677
-#: bp-performance/classes/class-settings.php:91
+#: bp-performance/bp-performance-includes.php:75
 #: bp-templates/bp-nouveau/buddypress/groups/single/admin/group-settings.php:91
 #: bp-templates/bp-nouveau/readylaunch/groups/single/admin/group-settings.php:62
 msgid "Activity Feeds"
@@ -5845,7 +5845,7 @@ msgstr ""
 #: bp-media/bp-media-settings.php:1482
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:1313
 #: bp-moderation/classes/class-bp-moderation-document.php:119
-#: bp-performance/classes/class-settings.php:147
+#: bp-performance/bp-performance-includes.php:131
 #: bp-search/bp-search-settings.php:830
 #: bp-templates/bp-nouveau/buddypress/document/location-move.php:32
 #: bp-templates/bp-nouveau/buddypress/groups/single/documents.php:39
@@ -5865,7 +5865,7 @@ msgstr ""
 #: bp-media/bp-media-settings.php:36
 #: bp-media/bp-media-settings.php:1746
 #: bp-moderation/classes/class-bp-moderation-video.php:119
-#: bp-performance/classes/class-settings.php:154
+#: bp-performance/bp-performance-includes.php:138
 #: bp-search/bp-search-settings.php:808
 #: bp-templates/bp-nouveau/buddypress/groups/single/videos.php:64
 #: bp-templates/bp-nouveau/includes/customizer.php:211
@@ -7055,7 +7055,7 @@ msgstr ""
 #: bp-core/admin/settings/bp-admin-setting-groups.php:137
 #: bp-forums/admin/settings.php:140
 #: bp-forums/admin/settings.php:381
-#: bp-performance/classes/class-settings.php:161
+#: bp-performance/bp-performance-includes.php:145
 #: bp-settings/classes/class-bp-settings-component.php:198
 msgid "Subscriptions"
 msgstr ""
@@ -7295,7 +7295,7 @@ msgstr ""
 #: bp-notifications/classes/class-bp-notifications-component.php:168
 #: bp-notifications/classes/class-bp-notifications-component.php:226
 #: bp-notifications/classes/class-bp-notifications-component.php:271
-#: bp-performance/classes/class-settings.php:133
+#: bp-performance/bp-performance-includes.php:117
 #: bp-templates/bp-nouveau/readylaunch/header/notification-dropdown.php:21
 #: bp-templates/bp-nouveau/readylaunch/header/notification-dropdown.php:22
 #: bp-templates/bp-nouveau/readylaunch/header/notification-dropdown.php:31
@@ -7795,7 +7795,7 @@ msgstr ""
 
 #: bp-core/admin/templates/upgrade-screen.php:39
 #: bp-core/bp-core-functions.php:2526
-#: bp-performance/classes/class-settings.php:98
+#: bp-performance/bp-performance-includes.php:82
 msgid "Member Profiles"
 msgstr ""
 
@@ -7808,7 +7808,7 @@ msgstr ""
 #: bp-groups/classes/class-bp-groups-notification.php:64
 #: bp-groups/classes/class-bp-groups-theme-compat.php:184
 #: bp-integrations/learndash/templates/admin/integration-tab-intro.php:22
-#: bp-performance/classes/class-settings.php:112
+#: bp-performance/bp-performance-includes.php:96
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:862
 msgid "Social Groups"
 msgstr ""
@@ -7817,7 +7817,7 @@ msgstr ""
 #: bp-core/bp-core-functions.php:2647
 #: bp-friends/classes/class-bp-friends-notification.php:63
 #: bp-friends/classes/class-bp-friends-notification.php:64
-#: bp-performance/classes/class-settings.php:105
+#: bp-performance/bp-performance-includes.php:89
 msgid "Member Connections"
 msgstr ""
 
@@ -7834,14 +7834,14 @@ msgstr ""
 #: bp-forums/admin/metaboxes.php:40
 #: bp-forums/classes/class-bbpress.php:489
 #: bp-moderation/classes/class-bp-moderation-forum-topics.php:123
-#: bp-performance/classes/class-settings.php:126
+#: bp-performance/bp-performance-includes.php:110
 #: bp-search/bp-search-functions.php:370
 msgid "Forum Discussions"
 msgstr ""
 
 #: bp-core/admin/templates/upgrade-screen.php:46
 #: bp-core/bp-core-functions.php:2642
-#: bp-performance/classes/class-settings.php:119
+#: bp-performance/bp-performance-includes.php:103
 msgid "Private Messaging"
 msgstr ""
 
@@ -8839,7 +8839,7 @@ msgstr ""
 #: bp-media/classes/class-bp-media-theme-compat.php:168
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:1282
 #: bp-moderation/classes/class-bp-moderation-media.php:119
-#: bp-performance/classes/class-settings.php:140
+#: bp-performance/bp-performance-includes.php:124
 #: bp-search/bp-search-settings.php:764
 #: bp-templates/bp-nouveau/buddypress/groups/single/photos.php:70
 #: bp-templates/bp-nouveau/includes/customizer.php:205
@@ -10650,7 +10650,7 @@ msgid "%1$s replied to your comment"
 msgstr ""
 
 #: bp-core/classes/class-bb-presence.php:333
-#: bp-performance/classes/class-performance.php:460
+#: bp-performance/classes/class-performance.php:338
 msgid "Download the plugin"
 msgstr ""
 
@@ -10663,13 +10663,13 @@ msgid "BuddyBoss Performance API cannot be automatically installed on your serve
 msgstr ""
 
 #: bp-core/classes/class-bb-presence.php:359
-#: bp-performance/classes/class-performance.php:458
-#: bp-performance/classes/class-performance.php:485
+#: bp-performance/classes/class-performance.php:336
+#: bp-performance/classes/class-performance.php:362
 msgid "must-use plugins"
 msgstr ""
 
 #: bp-core/classes/class-bb-presence.php:362
-#: bp-performance/classes/class-performance.php:461
+#: bp-performance/classes/class-performance.php:339
 msgid "and then upload it into the \"/wp-content/mu-plugins/\" directory on your server."
 msgstr ""
 
@@ -32101,75 +32101,75 @@ msgstr ""
 msgid "Notification successfully marked read."
 msgstr ""
 
+#: bp-performance/bp-performance-includes.php:76
+msgid "Cache Activity Feeds"
+msgstr ""
+
+#: bp-performance/bp-performance-includes.php:83
+msgid "Cache Member Profiles"
+msgstr ""
+
+#: bp-performance/bp-performance-includes.php:90
+msgid "Cache Member Connections"
+msgstr ""
+
+#: bp-performance/bp-performance-includes.php:97
+msgid "Cache Social Groups"
+msgstr ""
+
+#: bp-performance/bp-performance-includes.php:104
+msgid "Cache Private Messaging"
+msgstr ""
+
+#: bp-performance/bp-performance-includes.php:111
+msgid "Cache Forum Discussions"
+msgstr ""
+
+#: bp-performance/bp-performance-includes.php:118
+msgid "Cache Notifications"
+msgstr ""
+
+#: bp-performance/bp-performance-includes.php:125
+msgid "Cache Photos/Albums"
+msgstr ""
+
+#: bp-performance/bp-performance-includes.php:132
+msgid "Cache Document Files/Folders"
+msgstr ""
+
+#: bp-performance/bp-performance-includes.php:139
+msgid "Cache Videos"
+msgstr ""
+
+#: bp-performance/bp-performance-includes.php:146
+msgid "Cache Subscriptions"
+msgstr ""
+
 #: bp-performance/bp-performance-settings.php:25
 msgid "API Caching"
 msgstr ""
 
-#: bp-performance/classes/class-performance.php:456
+#: bp-performance/classes/class-performance.php:334
 msgid "API Caching cannot be automatically installed on your server. To enable caching, you need to manually install the \"BuddyBoss API Caching\" plugin in your"
 msgstr ""
 
-#: bp-performance/classes/class-performance.php:483
+#: bp-performance/classes/class-performance.php:360
 msgid "API Caching could not be automatically updated on your server. To enable caching, you need to manually update the \"BuddyBoss API Caching\" plugin in your"
 msgstr ""
 
-#: bp-performance/classes/class-performance.php:487
+#: bp-performance/classes/class-performance.php:364
 msgid "Download v1.0.1"
 msgstr ""
 
-#: bp-performance/classes/class-performance.php:488
+#: bp-performance/classes/class-performance.php:365
 msgid "and then upload the plugin manually into the \"/wp-content/mu-plugins/\" directory on your server."
 msgstr ""
 
-#: bp-performance/classes/class-settings.php:92
-msgid "Cache Activity Feeds"
-msgstr ""
-
-#: bp-performance/classes/class-settings.php:99
-msgid "Cache Member Profiles"
-msgstr ""
-
-#: bp-performance/classes/class-settings.php:106
-msgid "Cache Member Connections"
-msgstr ""
-
-#: bp-performance/classes/class-settings.php:113
-msgid "Cache Social Groups"
-msgstr ""
-
-#: bp-performance/classes/class-settings.php:120
-msgid "Cache Private Messaging"
-msgstr ""
-
-#: bp-performance/classes/class-settings.php:127
-msgid "Cache Forum Discussions"
-msgstr ""
-
-#: bp-performance/classes/class-settings.php:134
-msgid "Cache Notifications"
-msgstr ""
-
-#: bp-performance/classes/class-settings.php:141
-msgid "Cache Photos/Albums"
-msgstr ""
-
-#: bp-performance/classes/class-settings.php:148
-msgid "Cache Document Files/Folders"
-msgstr ""
-
-#: bp-performance/classes/class-settings.php:155
-msgid "Cache Videos"
-msgstr ""
-
-#: bp-performance/classes/class-settings.php:162
-msgid "Cache Subscriptions"
-msgstr ""
-
-#: bp-performance/classes/class-settings.php:253
+#: bp-performance/classes/class-settings.php:165
 msgid "Cache Purge Successfully"
 msgstr ""
 
-#: bp-performance/classes/integrations/class-integration-abstract.php:432
+#: bp-performance/classes/integrations/class-integration-abstract.php:430
 msgid "Sorry, something went wrong. Please try again later."
 msgstr ""
 
