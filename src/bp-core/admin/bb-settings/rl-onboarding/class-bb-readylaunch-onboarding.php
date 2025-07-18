@@ -103,7 +103,7 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 				5 => array(
 					'key'         => 'side_menus',
 					'title'       => __( 'Side Menus', 'buddyboss' ),
-					'description' => __( 'Configure navigation and menu structure', 'buddyboss' ),
+					'description' => __( 'Enable the options to appear in the left-side menu.', 'buddyboss' ),
 					'component'   => 'SideMenusStep',
 					'image'       => 'onboardingModal-step-5.png',
 				),
