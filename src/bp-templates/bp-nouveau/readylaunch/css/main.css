@@ -11588,7 +11588,8 @@ input.bb-rl-zoom-slider::-moz-range-progress {
 
 .bb-rl-secondary-actions .friendship-button.is_friend i::before,
 .bb-rl-card-action .friendship-button.is_friend i::before {
-  content: "\e4ce";
+  content: "\e4d0";
+  font-weight: 500;
 }
 
 .bb-rl-secondary-actions .friendship-button.pending_friend i::before,
