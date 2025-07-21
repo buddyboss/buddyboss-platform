@@ -125,7 +125,7 @@ export const DynamicStepRenderer = ({
 
             case 'checkbox':
                 return (
-                    <div className={`bb-rl-toggle-wrapper ${fieldConfig.not_available ? 'bb-rl-not-available' : ''}`}>
+                    <div className={`bb-rl-toggle-wrapper ${fieldConfig.not_available ? 'bb-rl-not-available' : ''} ${Boolean(value) ? 'bb-rl-toggle-checked' : ''}`}>
                         { fieldConfig.icon && (
                             <div className='bb-rl-toggle-icon'>
                                 <i className={fieldConfig.icon}></i>

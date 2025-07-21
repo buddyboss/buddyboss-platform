@@ -851,7 +851,12 @@ body.bb-rl-fullscreen-mode {
         gap: 8px;
         padding: 8px 16px;
         border-radius: 12px;
-        border: 1px solid $border-brand-primary-color;
+        border: 1px solid $border-secondary-color;
+
+        &.bb-rl-toggle-checked {
+            
+            border-color: $border-brand-primary-color;
+        }
 
         .components-toggle-control {
             flex: 1;
