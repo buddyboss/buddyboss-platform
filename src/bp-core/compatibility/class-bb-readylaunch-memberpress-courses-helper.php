@@ -426,7 +426,7 @@ class BB_Readylaunch_Memberpress_Courses_Helper {
 			$this->bb_rl_mpcs_output_secondary_header();
 			?>
 			<div class="bb-rl-container-inner bb-rl-meprlms-no-courses">
-				<p><?php esc_html_e( 'No Courses found', 'buddyboss' ); ?></p>
+				<p><?php esc_html_e( 'No courses found', 'buddyboss' ); ?></p>
 			</div>
 			<?php
 		}
