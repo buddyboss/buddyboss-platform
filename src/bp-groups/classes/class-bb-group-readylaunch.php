@@ -538,7 +538,7 @@ class BB_Group_Readylaunch {
 			$buttons['group_membership']['button_attr']['class'] = str_replace( 'bp-toggle-action-button', '', $buttons['group_membership']['button_attr']['class'] );
 			if ( strpos( $buttons['group_membership']['button_attr']['class'], 'leave-group' ) !== false ) {
 				$buttons['group_membership']['button_attr']['class'] = str_replace( 'leave-group', 'leave_group', $buttons['group_membership']['button_attr']['class'] );
-				
+
 				// Ensure data-bp-btn-action attribute is set for leave group button
 				$buttons['group_membership']['button_attr']['data-bp-btn-action'] = 'leave_group';
 			}
@@ -757,9 +757,8 @@ class BB_Group_Readylaunch {
 		}
 
 		if ( 'membership_requested' === $button['id'] ) {
-			$button['link_class']                         .= ' bb-rl-cancel-request bp-toggle-action-button';
-			$button['button_attr']['data-title']           = esc_html__( 'Cancel Request', 'buddyboss' );
-			$button['button_attr']['data-title-displayed'] = $button['link_text'];
+			$button['link_class']               .= ' bb-rl-cancel-request bp-toggle-action-button';
+			$button['button_attr']['data-title'] = esc_html__( 'Cancel Request', 'buddyboss' );
 		}
 		return $button;
 	}
