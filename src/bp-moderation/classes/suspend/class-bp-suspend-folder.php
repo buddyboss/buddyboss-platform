@@ -193,13 +193,7 @@ class BP_Suspend_Folder extends BP_Suspend_Abstract {
 		$where = apply_filters( 'bp_suspend_document_folder_get_where_conditions', $where, $this );
 
 		if ( ! empty( array_filter( $where ) ) ) {
-			$exclude_group_sql = '';
-			// Allow group medias from blocked/suspended users.
-			if ( bp_is_active( 'groups' ) ) {
-				$exclude_group_sql = ' OR f.privacy = "grouponly" ';
-			}
-
-			$where_conditions['suspend_where'] = '( ( ' . implode( ' AND ', $where ) . ' ) ' . $exclude_group_sql . ' )';
+			$where_conditions['suspend_where'] = '( ( ' . implode( ' AND ', $where ) . ' ) )';
 		}
 
 		return $where_conditions;
@@ -396,5 +390,22 @@ class BP_Suspend_Folder extends BP_Suspend_Abstract {
 		foreach ( $folders as $folder ) {
 			BP_Core_Suspend::delete_suspend( $folder->id, $this->item_type );
 		}
+	}
+
+	/**
+	 * Prepare where sql for exclude suspended items.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return string
+	 */
+	protected function exclude_where_query() {
+
+		// suspended users group folder should be visible to group members.
+		$grouponly_bypass = '';
+		if ( bp_is_active( 'groups' ) ) {
+			$grouponly_bypass = " OR f.privacy = 'grouponly'";
+		}
+		return "( {$this->alias}.user_suspended = 0 OR {$this->alias}.user_suspended IS NULL " . $grouponly_bypass . " )";
 	}
 }

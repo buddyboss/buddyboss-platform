@@ -334,12 +334,7 @@ class BP_Suspend_Video extends BP_Suspend_Abstract {
 		$where = apply_filters( 'bp_suspend_video_get_where_conditions', $where, $this );
 
 		if ( ! empty( array_filter( $where ) ) ) {
-			$exclude_group_sql = '';
-			// Allow group medias from blocked/suspended users.
-			if ( bp_is_active( 'groups' ) ) {
-				$exclude_group_sql = ' OR m.privacy = "grouponly" ';
-			}
-			$exclude_group_sql .= ' OR ( m.privacy = "comment" OR m.privacy = "forums" ) ';
+			$exclude_group_sql = ' OR ( m.privacy = "comment" OR m.privacy = "forums" ) ';
 
 			$where_conditions['suspend_where'] = '( ( ' . implode( ' AND ', $where ) . ' ) ' . $exclude_group_sql . ' )';
 		}
@@ -771,5 +766,22 @@ class BP_Suspend_Video extends BP_Suspend_Abstract {
 				}
 			}
 		}
+	}
+
+	/**
+	 * Prepare where sql for exclude suspended items.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return string
+	 */
+	protected function exclude_where_query() {
+
+		// suspended users group video should be visible to group members.
+		$grouponly_bypass = '';
+		if ( bp_is_active( 'groups' ) ) {
+			$grouponly_bypass = " OR m.privacy = 'grouponly'";
+		}
+		return "( {$this->alias}.user_suspended = 0 OR {$this->alias}.user_suspended IS NULL " . $grouponly_bypass . " )";
 	}
 }
