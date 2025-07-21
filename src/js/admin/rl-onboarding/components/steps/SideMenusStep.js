@@ -12,7 +12,8 @@ export const SideMenusStep = ({
     totalSteps, 
     onSaveStep,
     onAutoSave,
-    savedData = {}
+    savedData = {},
+    allStepData = {}
 }) => {
     const [formData, setFormData] = useState({
         enable_primary_menu: true,
@@ -76,6 +77,7 @@ export const SideMenusStep = ({
                 initialData={formData}
                 onChange={handleFormChange}
                 onAutoSave={onAutoSave}
+                allStepData={allStepData}
             />
         </BaseStepLayout>
     );

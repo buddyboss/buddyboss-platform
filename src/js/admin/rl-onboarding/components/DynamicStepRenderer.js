@@ -18,7 +18,8 @@ export const DynamicStepRenderer = ({
     stepOptions = {},
     initialData = {},
     onChange,
-    onAutoSave
+    onAutoSave,
+    allStepData = {} // Add access to all step data for conditional logic
 }) => {
     // Extract default values from stepOptions configuration
     const getDefaultValues = () => {
@@ -498,6 +499,90 @@ export const DynamicStepRenderer = ({
         }
     };
 
+    // Evaluate a single condition
+    const evaluateCondition = (condition, fieldKey, isDebugMode) => {
+        const { dependsOn, value: expectedValue, operator = '===' } = condition;
+        
+        // First check current step's formData, then check all step data
+        let actualValue = formData[dependsOn];
+        
+        // If not found in current step data, search in all step data
+        if (actualValue === undefined || actualValue === null) {
+            // Search through all step data for the field
+            Object.values(allStepData).forEach(stepData => {
+                if (stepData && stepData[dependsOn] !== undefined) {
+                    actualValue = stepData[dependsOn];
+                }
+            });
+            
+            // Also check global preferences from window
+            if ((actualValue === undefined || actualValue === null) && window.bbRlOnboarding?.preferences) {
+                Object.values(window.bbRlOnboarding.preferences).forEach(stepPrefs => {
+                    if (stepPrefs && stepPrefs[dependsOn] !== undefined) {
+                        actualValue = stepPrefs[dependsOn];
+                    }
+                });
+            }
+        }
+        
+        let result;
+        switch (operator) {
+            case '===':
+                result = actualValue === expectedValue;
+                break;
+            case '!==':
+                result = actualValue !== expectedValue;
+                break;
+            case '==':
+                // Loose equality for backwards compatibility
+                result = actualValue == expectedValue;
+                break;
+            case '!=':
+                // Loose inequality for backwards compatibility
+                result = actualValue != expectedValue;
+                break;
+            case 'in':
+                result = Array.isArray(expectedValue) && expectedValue.includes(actualValue);
+                break;
+            case 'not_in':
+                result = Array.isArray(expectedValue) && !expectedValue.includes(actualValue);
+                break;
+            case 'empty':
+                result = !actualValue || actualValue === '' || actualValue === null || actualValue === undefined;
+                break;
+            case 'not_empty':
+                result = actualValue && actualValue !== '' && actualValue !== null && actualValue !== undefined;
+                break;
+            case 'truthy':
+                result = !!actualValue;
+                break;
+            case 'falsy':
+                result = !actualValue;
+                break;
+            default:
+                if (isDebugMode) {
+                    console.warn(`Unknown conditional operator '${operator}' for field '${fieldKey}'. Defaulting to true.`);
+                }
+                result = true;
+        }
+
+        // Debug logging for individual condition
+        if (isDebugMode) {
+            console.log(`Condition evaluation for '${fieldKey}':`, {
+                dependsOn,
+                actualValue,
+                operator,
+                expectedValue,
+                result,
+                searchedInAllStepData: actualValue !== formData[dependsOn],
+                formDataValue: formData[dependsOn],
+                allStepDataKeys: Object.keys(allStepData)
+            });
+        }
+
+        return result;
+    };
+
     // Check if a field should be rendered based on conditional logic
     const shouldRenderField = (fieldKey, fieldConfig) => {
         // If no conditional logic is defined, always render
@@ -505,21 +590,36 @@ export const DynamicStepRenderer = ({
             return true;
         }
 
-        const { dependsOn, value: expectedValue, operator = '===' } = fieldConfig.conditional;
-        const actualValue = formData[dependsOn];
+        const isDebugMode = window.bbRlOnboarding?.debug || false;
+        const conditional = fieldConfig.conditional;
 
-        switch (operator) {
-            case '===':
-                return actualValue === expectedValue;
-            case '!==':
-                return actualValue !== expectedValue;
-            case 'in':
-                return Array.isArray(expectedValue) && expectedValue.includes(actualValue);
-            case 'not_in':
-                return Array.isArray(expectedValue) && !expectedValue.includes(actualValue);
-            default:
-                return true;
+        // Handle array of conditions (AND logic by default)
+        if (Array.isArray(conditional)) {
+            const logic = conditional.logic || 'AND'; // Support AND/OR logic
+            
+            if (logic === 'OR') {
+                // OR logic: if ANY condition is true, show the field
+                const result = conditional.some(condition => evaluateCondition(condition, fieldKey, isDebugMode));
+                
+                if (isDebugMode) {
+                    console.log(`Multiple conditions (OR) for '${fieldKey}':`, { result, conditions: conditional });
+                }
+                
+                return result;
+            } else {
+                // AND logic: ALL conditions must be true to show the field
+                const result = conditional.every(condition => evaluateCondition(condition, fieldKey, isDebugMode));
+                
+                if (isDebugMode) {
+                    console.log(`Multiple conditions (AND) for '${fieldKey}':`, { result, conditions: conditional });
+                }
+                
+                return result;
+            }
         }
+
+        // Handle single condition (backwards compatibility)
+        return evaluateCondition(conditional, fieldKey, isDebugMode);
     };
 
     // Get dynamic label based on form context

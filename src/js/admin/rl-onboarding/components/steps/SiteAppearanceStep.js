@@ -12,7 +12,8 @@ export const SiteAppearanceStep = ({
     totalSteps,
     onSaveStep,
     onAutoSave,
-    savedData = {}
+    savedData = {},
+    allStepData = {}
 }) => {
     const [formData, setFormData] = useState({
         color_scheme: 'default',
@@ -75,6 +76,7 @@ export const SiteAppearanceStep = ({
                 initialData={formData}
                 onChange={handleFormChange}
                 onAutoSave={onAutoSave}
+                allStepData={allStepData}
             />
         </BaseStepLayout>
     );

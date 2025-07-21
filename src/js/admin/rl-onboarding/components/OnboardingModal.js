@@ -408,6 +408,7 @@ export const OnboardingModal = ({ isOpen, onClose, onContinue, onSkip, onSaveSte
                 onAutoSave={autoSavePreferences}
                 isProcessing={isProcessing}
                 savedData={stepData[currentStep.key] || {}}
+                allStepData={stepData}
             />
         );
     };

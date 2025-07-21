@@ -4,16 +4,17 @@ import { BaseStepLayout } from '../BaseStepLayout';
 import { DynamicStepRenderer } from '../DynamicStepRenderer';
 import { BrandingPreview } from '../BrandingPreview';
 
-export const BrandingsStep = ({ 
-    stepData, 
-    onNext, 
-    onPrevious, 
-    onSkip, 
-    currentStep, 
-    totalSteps, 
+export const BrandingsStep = ({
+    stepData,
+    onNext,
+    onPrevious,
+    onSkip,
+    currentStep,
+    totalSteps,
     onSaveStep,
     onAutoSave,
-    savedData = {}
+    savedData = {},
+    allStepData = {} // Add access to all step data
 }) => {
     const [formData, setFormData] = useState({
         site_logo: '',
@@ -78,6 +79,7 @@ export const BrandingsStep = ({
                 initialData={formData}
                 onChange={handleFormChange}
                 onAutoSave={onAutoSave}
+                allStepData={allStepData}
             />
         </BaseStepLayout>
     );

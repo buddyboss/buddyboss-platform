@@ -12,7 +12,8 @@ export const WidgetsStep = ({
     totalSteps, 
     onSaveStep,
     onAutoSave,
-    savedData = {}
+    savedData = {},
+    allStepData = {}
 }) => {
     const [formData, setFormData] = useState({
         enable_sidebar_widgets: true,
@@ -76,6 +77,7 @@ export const WidgetsStep = ({
                 initialData={formData}
                 onChange={handleFormChange}
                 onAutoSave={onAutoSave}
+                allStepData={allStepData}
             />
         </BaseStepLayout>
     );

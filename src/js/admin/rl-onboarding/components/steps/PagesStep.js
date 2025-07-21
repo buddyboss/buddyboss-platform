@@ -12,7 +12,8 @@ export const PagesStep = ({
     totalSteps, 
     onSaveStep,
     onAutoSave,
-    savedData = {}
+    savedData = {},
+    allStepData = {}
 }) => {
     const [formData, setFormData] = useState({
         create_essential_pages: true,
@@ -75,6 +76,7 @@ export const PagesStep = ({
                 initialData={formData}
                 onChange={handleFormChange}
                 onAutoSave={onAutoSave}
+                allStepData={allStepData}
             />
         </BaseStepLayout>
     );

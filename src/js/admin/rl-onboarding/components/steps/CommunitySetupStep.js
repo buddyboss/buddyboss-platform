@@ -12,7 +12,8 @@ export const CommunitySetupStep = ({
     totalSteps,
     onSaveStep,
     onAutoSave,
-    savedData = {}
+    savedData = {},
+    allStepData = {}
 }) => {
     const [formData, setFormData] = useState({
         ...savedData
@@ -108,6 +109,7 @@ export const CommunitySetupStep = ({
                 initialData={formData}
                 onChange={handleFormChange}
                 onAutoSave={onAutoSave}
+                allStepData={allStepData}
             />
             
             {Object.keys(errors).length > 0 && (
