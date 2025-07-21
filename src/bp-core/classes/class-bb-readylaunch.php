@@ -931,6 +931,14 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * @return string ReadyLaunch layout template.
 		 */
 		public function override_page_templates( $template ) {
+			// Check if this is a 404 page.
+			global $wp_query;
+			if ( $wp_query->is_404() ) {
+				// For 404 pages, don't use ReadyLaunch layout.
+				// Let WordPress handle the 404 template naturally.
+				return $template;
+			}
+
 			if ( bp_is_register_page() ) {
 				$this->bb_rl_required_load();
 				return bp_locate_template( 'register.php' );
