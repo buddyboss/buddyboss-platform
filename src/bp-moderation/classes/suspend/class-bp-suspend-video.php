@@ -334,12 +334,7 @@ class BP_Suspend_Video extends BP_Suspend_Abstract {
 		$where = apply_filters( 'bp_suspend_video_get_where_conditions', $where, $this );
 
 		if ( ! empty( array_filter( $where ) ) ) {
-			$exclude_group_sql = '';
-			// Allow group medias from blocked/suspended users.
-			if ( bp_is_active( 'groups' ) ) {
-				$exclude_group_sql = ' OR m.privacy = "grouponly" ';
-			}
-			$exclude_group_sql .= ' OR ( m.privacy = "comment" OR m.privacy = "forums" ) ';
+			$exclude_group_sql = ' OR ( m.privacy = "comment" OR m.privacy = "forums" ) ';
 
 			$where_conditions['suspend_where'] = '( ( ' . implode( ' AND ', $where ) . ' ) ' . $exclude_group_sql . ' )';
 		}
