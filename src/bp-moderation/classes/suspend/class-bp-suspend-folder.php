@@ -391,4 +391,21 @@ class BP_Suspend_Folder extends BP_Suspend_Abstract {
 			BP_Core_Suspend::delete_suspend( $folder->id, $this->item_type );
 		}
 	}
+
+	/**
+	 * Prepare where sql for exclude suspended items.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return string
+	 */
+	protected function exclude_where_query() {
+
+		// suspended users group folder should be visible to group members.
+		$grouponly_bypass = '';
+		if ( bp_is_active( 'groups' ) ) {
+			$grouponly_bypass = " OR f.privacy = 'grouponly'";
+		}
+		return "( {$this->alias}.user_suspended = 0 OR {$this->alias}.user_suspended IS NULL " . $grouponly_bypass . " )";
+	}
 }

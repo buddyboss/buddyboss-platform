@@ -698,7 +698,7 @@ class BP_Suspend_Media extends BP_Suspend_Abstract {
 	}
 
 	/**
-	 * Prepare Where sql for exclude Suspended items.
+	 * Prepare where sql for exclude suspended items.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
@@ -706,7 +706,7 @@ class BP_Suspend_Media extends BP_Suspend_Abstract {
 	 */
 	protected function exclude_where_query() {
 
-		// suspended users media should be be visible to group members.
+		// suspended users group media should be visible to group members.
 		$grouponly_bypass = '';
 		if ( bp_is_active( 'groups' ) ) {
 			$grouponly_bypass = " OR m.privacy = 'grouponly'";

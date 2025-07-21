@@ -682,4 +682,21 @@ class BP_Suspend_Document extends BP_Suspend_Abstract {
 			}
 		}
 	}
+
+	/**
+	 * Prepare where sql for exclude suspended items.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return string
+	 */
+	protected function exclude_where_query() {
+
+		// suspended users group document should be visible to group members.
+		$grouponly_bypass = '';
+		if ( bp_is_active( 'groups' ) ) {
+			$grouponly_bypass = " OR d.privacy = 'grouponly'";
+		}
+		return "( {$this->alias}.user_suspended = 0 OR {$this->alias}.user_suspended IS NULL " . $grouponly_bypass . " )";
+	}
 }
