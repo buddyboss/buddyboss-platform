@@ -697,6 +697,6 @@ class BP_Suspend_Document extends BP_Suspend_Abstract {
 		if ( bp_is_active( 'groups' ) ) {
 			$grouponly_bypass = " OR d.privacy = 'grouponly'";
 		}
-		return "( {$this->alias}.user_suspended = 0 OR {$this->alias}.user_suspended IS NULL " . $grouponly_bypass . " )";
+		return "( {$this->alias}.user_suspended = 0 OR {$this->alias}.user_suspended IS NULL " . $grouponly_bypass . ' )';
 	}
 }
