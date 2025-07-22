@@ -306,6 +306,10 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			add_filter( 'bp_media_get_visibility_levels', array( $this, 'bb_rl_modify_visibility_levels' ), 10 );
 			add_filter( 'bp_video_get_visibility_levels', array( $this, 'bb_rl_modify_visibility_levels' ), 10 );
 
+			if ( bp_is_active( 'xprofile' ) ) {
+				add_filter( 'bp_xprofile_get_visibility_levels', array( $this, 'bb_rl_modify_xprofile_visibility_levels' ) );
+			}
+
 			if ( bp_is_active( 'friends' ) ) {
 				add_filter( 'bp_get_add_friend_button', array( $this, 'bb_rl_modify_add_friend_button' ) );
 			}
@@ -4361,6 +4365,25 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			}
 
 			return $actions;
+		}
+
+		/**
+		 * Modify visibility levels for xprofile.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array $visibility_levels The visibility levels.
+		 *
+		 * @return array Modified visibility levels.
+		 */
+		public function bb_rl_modify_xprofile_visibility_levels( $visibility_levels ) {
+			$visibility_levels['loggedin']['label'] = __( 'All members', 'buddyboss' );
+			if ( bp_is_active( 'friends' ) ) {
+				$visibility_levels['friends']['label'] = __( 'My connections', 'buddyboss' );
+			}
+			$visibility_levels['adminsonly']['label'] = __( 'Only me', 'buddyboss' );
+
+			return $visibility_levels;
 		}
 	}
 }
