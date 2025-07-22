@@ -449,14 +449,30 @@ function bp_ps_gender_setup( $fields ) {
 
 		$options = array();
 		$rows    = $field->get_children();
+		if ( isset( $field->id ) && ! empty( $field->id ) ) {
+			$order = bp_xprofile_get_meta( $field->id, 'field', 'gender-option-order' );
+		} else {
+			$order = array();
+		}
 		if ( is_array( $rows ) ) {
-			foreach ( $rows as $row ) {
-				if ( '1' === $row->option_order ) {
-					$option_value = 'his_' . $row->name;
-				} elseif ( '2' === $row->option_order ) {
-					$option_value = 'her_' . $row->name;
+			foreach ( $rows as $k => $row ) {
+				if ( ! empty( $order ) ) {
+					$key = $order[ $k ];
+					if ( 'male' === $key ) {
+						$option_value = 'his_' . $row->name;
+					} elseif ( 'female' === $key ) {
+						$option_value = 'her_' . $row->name;
+					} else {
+						$option_value = 'their_' . $row->name;
+					}
 				} else {
-					$option_value = 'their_' . $row->name;
+					if ( '1' === $row->option_order ) {
+						$option_value = 'his_' . $row->name;
+					} elseif ( '2' === $row->option_order ) {
+						$option_value = 'her_' . $row->name;
+					} else {
+						$option_value = 'their_' . $row->name;
+					}
 				}
 				$options[ stripslashes( trim( $option_value ) ) ] = stripslashes( trim( $row->name ) );
 			}
