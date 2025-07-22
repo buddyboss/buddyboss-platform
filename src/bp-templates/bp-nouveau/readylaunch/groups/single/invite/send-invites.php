@@ -89,7 +89,7 @@ defined( 'ABSPATH' ) || exit;
 				<div class="bb-groups-invites-right-bottom">
 					<div id="bp-group-invite-content">
 						<h2 class="bb-title"><?php esc_html_e( 'Message (optional)', 'buddyboss' ); ?></h2>
-						<textarea class="bp-faux-placeholder-label" id="send-invites-control" name="group_invite_content" rows="120" cols="150" placeholder="<?php esc_attr_e( 'Customize the message of your invite.', 'buddyboss' ); ?>"></textarea>
+						<textarea class="bp-faux-placeholder-label" id="send-invites-control" name="group_invite_content" rows="120" cols="150" placeholder="<?php esc_attr_e( 'Write an invitation message...', 'buddyboss' ); ?>"></textarea>
 						<input type="hidden" id="group_invite_content_hidden" name="group_invite_content_hidden" value="">
 						<div id="whats-new-toolbar">
 							<div id="group-invites-new-submit" class="submit">
