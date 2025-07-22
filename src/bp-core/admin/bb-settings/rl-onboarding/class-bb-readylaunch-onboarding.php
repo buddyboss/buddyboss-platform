@@ -218,6 +218,12 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 						'description' => __( 'Reorder menu items as needed', 'buddyboss' ),
 						'options'     => $this->getComponentMenuItems(),
 					),
+					'link_items' => array(
+						'type'        => 'draggable_links',
+						'label'       => __( 'Link', 'buddyboss' ),
+						// TODO: Get these links from the database
+						'options'     => array(),
+					),
 				),
 				'widgets'         => array(
 					'enable_sidebar_widgets' => array(
@@ -593,6 +599,39 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 						} else {
 							// Invalid or empty value
 							$sanitized[ $field_key ] = null;
+						}
+						break;
+
+					case 'draggable':
+					case 'draggable_links':
+						if ( is_array( $field_value ) ) {
+							$sanitized_items = array();
+							foreach ( $field_value as $item ) {
+								if ( is_array( $item ) ) {
+									if ( $field_type === 'draggable_links' ) {
+										// Sanitize link items
+										$sanitized_items[] = array(
+											'id' => isset( $item['id'] ) ? sanitize_text_field( $item['id'] ) : '',
+											'title' => isset( $item['title'] ) ? sanitize_text_field( $item['title'] ) : '',
+											'url' => isset( $item['url'] ) ? esc_url_raw( $item['url'] ) : '',
+											'isEditing' => false, // Always set to false for safety
+										);
+									} else {
+										// Sanitize draggable menu items
+										$sanitized_items[] = array(
+											'id' => isset( $item['id'] ) ? sanitize_text_field( $item['id'] ) : '',
+											'label' => isset( $item['label'] ) ? sanitize_text_field( $item['label'] ) : '',
+											'icon' => isset( $item['icon'] ) ? sanitize_text_field( $item['icon'] ) : '',
+											'enabled' => isset( $item['enabled'] ) ? (bool) $item['enabled'] : true,
+											'order' => isset( $item['order'] ) ? intval( $item['order'] ) : 0,
+										);
+									}
+								}
+							}
+							$sanitized[ $field_key ] = $sanitized_items;
+						} else {
+							// Fall back to default if not array
+							$sanitized[ $field_key ] = isset( $field_config['options'] ) ? $field_config['options'] : array();
 						}
 						break;
 

@@ -48,6 +48,7 @@ $lg: 1024px;
     font-weight: 500;
     cursor: pointer;
     text-decoration: none;
+    border: 0;
 
     &:hover {
         color: $white;
@@ -63,6 +64,16 @@ $lg: 1024px;
         color: $text-disabled-color;
         background-color: transparent;
         border: 1px solid $border-tertiary-color;
+    }
+
+    &.bb-rl-button-primary--outline {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+        color: $text-brand-primary-color;
+        background-color: transparent;
+        border: 1px solid $text-brand-primary-color;
     }
 }
 
@@ -2239,6 +2250,150 @@ body.bb-rl-fullscreen-mode {
             .components-form-toggle {
                 margin-left: auto;
             }
+        }
+    }
+}
+
+// ==========================================================================
+// Draggable Links Component Styles
+// ==========================================================================
+
+.bb-rl-link-item {
+    margin-bottom: 12px;
+
+    .bb-rl-link-item-content {
+        display: flex;
+        gap: 16px;
+        align-items: flex-start;
+
+        > i {
+            font-size: 20px;
+            color: $icon-secondary-color;
+            cursor: grab;
+            margin-top: 3px;
+        }
+    }
+
+    .bb-rl-edit-link-button,
+    .bb-rl-delete-link-button {
+        color: $icon-secondary-color;
+        background: none;
+        border: none;
+        padding: 4px;
+        border-radius: 4px;
+        transition: $transition;
+
+        &:hover {
+            color: $icon-color;
+            background: $background-secondary-color;
+        }
+
+        i {
+            font-size: 16px;
+        }
+    }
+
+    .bb-rl-link-details {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+
+        .bb-rl-link-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+
+            i {
+                font-size: 16px;
+                color: $icon-color;
+            }
+
+            .bb-rl-link-actions {
+                display: flex;
+                gap: 4px;
+            }
+        }
+    }
+
+    .bb-rl-link-title {
+        font-size: 14px;
+        font-weight: 500;
+        color: $text-color;
+    }
+
+    .bb-rl-link-url {
+        font-size: 13px;
+        color: #004dff;
+    }
+
+    &.is-dragging {
+        transform: rotate(2deg);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+}
+
+.bb-rl-link-item-edit {
+    margin-bottom: 12px;
+
+    .bb-rl-edit-form {
+        padding: 16px;
+        background-color: $white;
+        border: 1px solid $border-brand-primary-color;
+        border-radius: $border-radius;
+
+        .components-base-control {
+            margin-bottom: 16px;
+
+            &:last-of-type {
+                margin-bottom: 0;
+            }
+        }
+
+        .bb-rl-edit-actions {
+            display: flex;
+            gap: 8px;
+            justify-content: flex-end;
+            margin-top: 16px;
+        }
+    }
+}
+
+.bb-rl-add-link-form {
+    margin-bottom: 12px;
+    padding: 16px;
+    background-color: $background-color;
+    border: 1px solid $border-secondary-color;
+    border-radius: $border-radius;
+
+    .components-base-control {
+        margin-bottom: 16px;
+
+        &:last-of-type {
+            margin-bottom: 0;
+        }
+    }
+
+    .bb-rl-add-link-actions {
+        display: flex;
+        gap: 8px;
+        justify-content: flex-end;
+        margin-top: 16px;
+    }
+}
+
+.bb-rl-custom-links-wrapper {
+    .bb-rl-link-item:last-of-type {
+        border-bottom: 1px solid $border-color;
+        margin-bottom: 0;
+        padding-bottom: 20px;
+    }
+
+    .bb-rl-add-link-button {
+        margin-top: 16px;
+
+        i {
+            font-size: 16px;
         }
     }
 }

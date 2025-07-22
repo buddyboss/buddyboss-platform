@@ -47,6 +47,11 @@ export const DynamicStepRenderer = ({
         return { ...defaults, ...initialData };
     });
     const [autoSaveTimeout, setAutoSaveTimeout] = useState(null);
+    
+    // State for managing link editing (for draggable_links)
+    const [editingLink, setEditingLink] = useState(null);
+    const [showAddForm, setShowAddForm] = useState(false);
+    const [linkFormData, setLinkFormData] = useState({ title: '', url: '' });
 
     useEffect(() => {
         // Update form data when initial data changes, preserving defaults
@@ -439,6 +444,223 @@ export const DynamicStepRenderer = ({
                             )}
                         </Droppable>
                     </DragDropContext>
+                );
+
+            case 'draggable_links':
+                // Helper function to handle draggable link changes
+                const handleDraggableLinkChange = (newLinks) => {
+                    handleFieldChange(fieldKey, newLinks);
+                };
+
+                // Get current draggable links from formData or fall back to options
+                const currentDraggableLinks = formData[fieldKey] || options || [];
+
+                // Handle adding a new link
+                const handleAddLink = () => {
+                    if (linkFormData.title && linkFormData.url) {
+                        const newLink = {
+                            id: Date.now().toString(), // Simple ID generation
+                            title: linkFormData.title,
+                            url: linkFormData.url,
+                            isEditing: false
+                        };
+                        const updatedLinks = [...currentDraggableLinks, newLink];
+                        handleDraggableLinkChange(updatedLinks);
+                        setLinkFormData({ title: '', url: '' });
+                        setShowAddForm(false);
+                    }
+                };
+
+                // Handle editing a link
+                const handleEditLink = (link) => {
+                    setEditingLink(link.id);
+                    setLinkFormData({ title: link.title, url: link.url });
+                };
+
+                // Handle saving edited link
+                const handleSaveEditedLink = () => {
+                    if (linkFormData.title && linkFormData.url) {
+                        const updatedLinks = currentDraggableLinks.map(link =>
+                            link.id === editingLink
+                                ? { ...link, title: linkFormData.title, url: linkFormData.url }
+                                : link
+                        );
+                        handleDraggableLinkChange(updatedLinks);
+                        setEditingLink(null);
+                        setLinkFormData({ title: '', url: '' });
+                    }
+                };
+
+                // Handle deleting a link
+                const handleDeleteLink = (linkId) => {
+                    const updatedLinks = currentDraggableLinks.filter(link => link.id !== linkId);
+                    handleDraggableLinkChange(updatedLinks);
+                };
+
+                // Cancel editing
+                const handleCancelEdit = () => {
+                    setEditingLink(null);
+                    setShowAddForm(false);
+                    setLinkFormData({ title: '', url: '' });
+                };
+
+                // LinkItem component for draggable links
+                const LinkItem = ({ link, onEdit, onDelete, innerRef, draggableProps, dragHandleProps, isDragging }) => {
+                    if (editingLink === link.id) {
+                        return (
+                            <div className="bb-rl-link-item-edit" ref={innerRef} {...draggableProps}>
+                                <div className="bb-rl-edit-form">
+                                    <TextControl
+                                        label={__('Link Title', 'buddyboss')}
+                                        value={linkFormData.title}
+                                        onChange={(value) => setLinkFormData({ ...linkFormData, title: value })}
+                                        placeholder={__('Enter link title', 'buddyboss')}
+                                    />
+                                    <TextControl
+                                        label={__('Link URL', 'buddyboss')}
+                                        value={linkFormData.url}
+                                        onChange={(value) => setLinkFormData({ ...linkFormData, url: value })}
+                                        placeholder={__('Enter link URL', 'buddyboss')}
+                                        type="url"
+                                    />
+                                    <div className="bb-rl-edit-actions">
+                                        <Button
+                                            className="bb-rl-button bb-rl-button--primary bb-rl-button--small"
+                                            onClick={handleSaveEditedLink}
+                                        >
+                                            {__('Save', 'buddyboss')}
+                                        </Button>
+                                        <Button
+                                            className="bb-rl-button bb-rl-button--outline bb-rl-button--small"
+                                            onClick={handleCancelEdit}
+                                        >
+                                            {__('Cancel', 'buddyboss')}
+                                        </Button>
+                                    </div>
+                                </div>
+                            </div>
+                        );
+                    }
+
+                    return (
+                        <div 
+                            className={`bb-rl-link-item ${isDragging ? 'is-dragging' : ''}`}
+                            ref={innerRef} 
+                            {...draggableProps}
+                        >
+                            <div className="bb-rl-link-item-content">
+                                <i className="bb-icons-rl-list" {...dragHandleProps} />
+                                <div className="bb-rl-link-details">
+                                    <div className="bb-rl-link-info">
+                                        <i className="bb-icons-rl-link" />
+                                        <span className="bb-rl-link-title">{link.title}</span>
+                                        <div className="bb-rl-link-actions">
+                                            <Button
+                                                className="bb-rl-edit-link-button"
+                                                icon={<i className="bb-icons-rl-pencil-simple" />}
+                                                onClick={onEdit}
+                                                label={__('Edit', 'buddyboss')}
+                                                isSmall
+                                            />
+                                            <Button
+                                                className="bb-rl-delete-link-button" 
+                                                icon={<i className="bb-icons-rl-trash" />}
+                                                onClick={onDelete}
+                                                label={__('Delete', 'buddyboss')}
+                                                isSmall
+                                            />
+                                        </div>
+                                    </div>
+                                    <span className="bb-rl-link-url">{link.url}</span>
+                                </div>
+                            </div>
+                        </div>
+                    );
+                };
+
+                return (
+                    <div key={fieldKey} className="bb-rl-field-group">
+                        {label && (
+                            <div className="bb-rl-field-label">
+                                <h4>{label}</h4>
+                                {description && (
+                                    <p className="bb-rl-field-description">{description}</p>
+                                )}
+                            </div>
+                        )}
+                        <DragDropContext onDragEnd={(result) => handleDragEndForField(result, fieldKey)}>
+                            <Droppable droppableId={fieldKey}>
+                                {(provided) => (
+                                    <div
+                                        className="bb-rl-custom-links-wrapper"
+                                        {...provided.droppableProps}
+                                        ref={provided.innerRef}
+                                    >
+                                        {currentDraggableLinks?.length > 0 && currentDraggableLinks.map((link, index) => (
+                                            <Draggable key={link.id} draggableId={link.id.toString()} index={index}>
+                                                {(providedDraggable, snapshot) => (
+                                                    <LinkItem
+                                                        link={link}
+                                                        onEdit={() => handleEditLink(link)}
+                                                        onDelete={() => handleDeleteLink(link.id)}
+                                                        innerRef={providedDraggable.innerRef}
+                                                        draggableProps={providedDraggable.draggableProps}
+                                                        dragHandleProps={providedDraggable.dragHandleProps}
+                                                        isDragging={snapshot.isDragging}
+                                                    />
+                                                )}
+                                            </Draggable>
+                                        ))}
+                                        {provided.placeholder}
+
+                                        {/* Add New Link Form */}
+                                        {showAddForm && (
+                                            <div className="bb-rl-add-link-form">
+                                                <TextControl
+                                                    label={__('Link Title', 'buddyboss')}
+                                                    value={linkFormData.title}
+                                                    onChange={(value) => setLinkFormData({ ...linkFormData, title: value })}
+                                                    placeholder={__('Enter link title', 'buddyboss')}
+                                                />
+                                                <TextControl
+                                                    label={__('Link URL', 'buddyboss')}
+                                                    value={linkFormData.url}
+                                                    onChange={(value) => setLinkFormData({ ...linkFormData, url: value })}
+                                                    placeholder={__('Enter link URL', 'buddyboss')}
+                                                    type="url"
+                                                />
+                                                <div className="bb-rl-add-link-actions">
+                                                    <Button
+                                                        className="bb-rl-button bb-rl-button--primary bb-rl-button--small"
+                                                        onClick={handleAddLink}
+                                                    >
+                                                        {__('Add Link', 'buddyboss')}
+                                                    </Button>
+                                                    <Button
+                                                        className="bb-rl-button bb-rl-button--outline bb-rl-button--small"
+                                                        onClick={handleCancelEdit}
+                                                    >
+                                                        {__('Cancel', 'buddyboss')}
+                                                    </Button>
+                                                </div>
+                                            </div>
+                                        )}
+
+                                        {/* Add New Link Button */}
+                                        {!showAddForm && (
+                                            <Button
+                                                className="bb-rl-add-link-button bb-rl-button bb-rl-button-primary--outline bb-rl-button--small"
+                                                onClick={() => setShowAddForm(true)}
+                                                icon={<i className="bb-icons-rl-plus" />}
+                                            >
+                                                {__('Add New Link', 'buddyboss')}
+                                            </Button>
+                                        )}
+                                    </div>
+                                )}
+                            </Droppable>
+                        </DragDropContext>
+                    </div>
                 );
 
             default:
