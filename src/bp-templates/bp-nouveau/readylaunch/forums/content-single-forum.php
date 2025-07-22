@@ -40,10 +40,16 @@ global $post;
 						<div class="bb-rl-forum-meta-item">
 						<?php echo esc_html( $privacy_label ); ?>
 						</div>
-						<div class="bb-rl-forum-meta-item <?php echo 0 === $discussion_count ? 'bb-rl-forum-meta-item-inactive' : ''; ?>">
-							<span class="bb-rl-forum-topic-count-value"><?php echo esc_html( $discussion_count ); ?></span>
-							<span class="bb-rl-forum-topic-count-label"><?php echo esc_html( _n( 'Discussion', 'Discussions', $discussion_count, 'buddyboss' ) ); ?></span>
-						</div>
+						<?php
+						if ( 0 < (int) $discussion_count ) {
+							?>
+							<div class="bb-rl-forum-meta-item <?php echo 0 === $discussion_count ? 'bb-rl-forum-meta-item-inactive' : ''; ?>">
+								<span class="bb-rl-forum-topic-count-value"><?php echo esc_html( $discussion_count ); ?></span>
+								<span class="bb-rl-forum-topic-count-label"><?php echo esc_html( _n( 'Discussion', 'Discussions', $discussion_count, 'buddyboss' ) ); ?></span>
+							</div>
+							<?php
+						}
+						?>
 						<div class="bb-rl-forum-meta-item">
 						<?php do_action( 'bbp_theme_before_forum_freshness_link' ); ?>
 						<?php bbp_forum_freshness_link(); ?>
