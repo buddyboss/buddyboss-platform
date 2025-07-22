@@ -15,8 +15,8 @@ defined( 'ABSPATH' ) || exit;
 
 <div class="bb-rl-create-popup-folder-wrap bb-rl-popup-on-fly-create-folder" style="display: none;">
 	<div class="bb-rl-field-wrap">
-		<label for="bb_rl_new_folder_name_input" class="bb-label"><?php esc_html_e( 'Folder Title', 'buddyboss' ); ?></label>
-		<input class="bb-rl-popup-on-fly-create-folder-title" value="" type="text" placeholder="<?php esc_attr_e( 'Enter Folder Title', 'buddyboss' ); ?>">
+		<label for="bb_rl_new_folder_name_input" class="bb-label"><?php esc_html_e( 'Title', 'buddyboss' ); ?></label>
+		<input class="bb-rl-popup-on-fly-create-folder-title" value="" type="text" placeholder="<?php esc_attr_e( 'Enter folder title', 'buddyboss' ); ?>">
 		<small class="error-box"><?php esc_html_e( 'Following special characters are not supported: \ / ? % * : | " < >', 'buddyboss' ); ?></small>
 	</div>
 	<?php

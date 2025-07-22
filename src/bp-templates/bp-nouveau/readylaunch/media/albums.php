@@ -21,12 +21,17 @@ if ( ( ( bp_is_my_profile() && bb_user_can_create_media() ) || ( $bp_is_group &&
 
 	<?php
 	if ( bp_has_albums( bp_ajax_querystring( 'albums' ) ) ) {
-		$count = bp_media_get_total_group_album_count();
 		?>
 		<div class="bb-media-actions-wrap album-actions-wrap bb-rl-media-actions-wrap">
 			<h2 class="bb-title">
 				<div class="bb-item-count">
 					<?php
+					$count = 0;
+					if ( bp_is_group() ) {
+						$count = bp_media_get_total_group_album_count();
+					} elseif ( bp_is_my_profile() ) {
+						$count = bb_media_get_total_album_count();
+					}
 					printf(
 						wp_kses(
 						/* translators: %d is the album count */
@@ -105,22 +110,7 @@ if ( bp_has_albums( bp_ajax_querystring( 'albums' ) ) ) :
 	<?php
 
 else :
-	?>
-	<div class="bb-rl-media-none">
-		<div class="bb-rl-media-none-figure"><i class="bb-icons-rl-file-image"></i></div>
-		<?php
-		bp_nouveau_user_feedback( 'media-album-none' );
-		if ( ( $bp_is_group && $bp_is_group_albums_support_enabled ) || $bp_is_profile_albums_support_enabled ) {
-			?>
-			<div class="bb-media-actions bb-rl-media-none-actions">
-				<a href="#" id="bb-create-album" class="bb-create-album button bb-rl-button bb-rl-button--brandFill bb-rl-button--small"><i class="bb-icons-rl-images"></i> <?php esc_html_e( 'Create Album', 'buddyboss' ); ?></a>
-			</div>
-			<?php
-			bp_get_template_part( 'media/create-album' );
-		}
-		?>
-	</div>
-	<?php
+	bp_get_template_part( 'media/no-media' );
 endif;
 
 bp_nouveau_media_hook( 'after', 'media_album_content' );

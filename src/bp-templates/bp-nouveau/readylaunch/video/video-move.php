@@ -30,7 +30,7 @@ defined( 'ABSPATH' ) || exit;
 						?>
 					</div>
 					<footer class="bb-rl-model-footer">
-						<a href="#" class="bb-rl-create-album bb-rl-video-open-create-popup-album"><?php esc_html_e( 'Create new album', 'buddyboss' ); ?></a>
+						<a href="#" class="bb-rl-create-album bb-rl-video-open-create-popup-album"><i class="bb-icons-rl-plus"></i><?php esc_html_e( 'Create Album', 'buddyboss' ); ?></a>
 						<a class="bb-rl-button bb-rl-button--secondaryFill bb-rl-button--small bb-rl-ac-video-close-button" href="#"><?php esc_html_e( 'Cancel', 'buddyboss' ); ?></a>
 						<a class="bb-rl-button bb-rl-button--brandFill bb-rl-button--small bb-rl-video-move bb-rl-video-move-activity" id="" href="#"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a>
 					</footer>

@@ -300,7 +300,7 @@ div#bp-group-message-content {
 				margin-left: auto;
 				background-color: var(--bb-rl-background-secondary-color);
 				border-color: var(--bb-rl-border-secondary-color);
-				padding: 4px var(--bb-rl-space-200) 4px var(--bb-rl-space-100);
+				padding: 4px var(--bb-rl-space-400) 4px var(--bb-rl-space-100);
 				background-position: right 10px center;
 			}
 
@@ -311,6 +311,11 @@ div#bp-group-message-content {
 			.bb-groups-messages-right-top {
 				margin: 0;
 				margin-bottom: var(--bb-rl-space-300);
+
+				.bp-messages-feedback {
+					width: 100%;
+					margin: var(--bb-rl-space-100);
+				}
 			}
 
 			.bb-title {

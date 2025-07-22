@@ -15,14 +15,6 @@ defined( 'ABSPATH' ) || exit;
 
 bp_nouveau_member_hook( 'before', 'settings_template' ); ?>
 
-<h2 class="screen-heading profile-settings-screen">
-	<?php esc_html_e( 'Profile Visibility Settings', 'buddyboss' ); ?>
-</h2>
-
-<p class="bp-help-text profile-visibility-info">
-	<?php esc_html_e( 'Select who may see your profile details.', 'buddyboss' ); ?>
-</p>
-
 <form action="<?php echo esc_url( bp_displayed_user_domain() . bp_get_settings_slug() . '/profile/' ); ?>" method="post" class="standard-form" id="settings-form">
 
 	<?php
