@@ -320,6 +320,8 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				add_filter( 'bp_nouveau_nav_has_count', array( $this, 'bb_rl_modify_nav_get_count' ), 10, 2 );
 				add_filter( 'bp_nouveau_get_nav_count', array( $this, 'bb_rl_modify_nav_get_count' ), 10, 2 );
 			}
+
+			add_filter( 'bp_nouveau_get_submit_button', array( $this, 'bb_rl_modify_bp_nouveau_get_submit_button' ) );
 		}
 
 		/**
@@ -4342,6 +4344,23 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			}
 
 			return $count;
+		}
+
+		/**
+		 * Modify the save changes button for group invites for ReadyLaunch.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array $actions The list of submit buttons.
+		 *
+		 * @return array Modified actions array.
+		 */
+		public function bb_rl_modify_bp_nouveau_get_submit_button( $actions ) {
+			if ( isset( $actions['member-group-invites']['attributes']['value'] ) ) {
+				$actions['member-group-invites']['attributes']['value'] = esc_html__( 'Save Changes', 'buddyboss' );
+			}
+
+			return $actions;
 		}
 	}
 }
