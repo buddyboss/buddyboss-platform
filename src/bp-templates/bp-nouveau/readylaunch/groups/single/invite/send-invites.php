@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
 ?>
 <div class="bb-rl-group-invites-dashboard bb-rl-group-dashboard-panel">
 	<div class="bb-rl-group-invites-header">
-		<h2 class="bb-rl-entry-title"><?php esc_html_e( 'Send Invites', 'buddyboss' ); ?></h2>
+		<h2 class="bb-rl-entry-title"><?php esc_html_e( 'Group Invites', 'buddyboss' ); ?></h2>
 	</div>
 	<div id="group-invites-container" class="bb-rl-group-invites-container">
 		<div class="bb-groups-invites-left">
