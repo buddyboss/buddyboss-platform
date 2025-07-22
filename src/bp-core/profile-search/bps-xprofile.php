@@ -458,7 +458,7 @@ function bp_ps_gender_setup( $fields ) {
 			foreach ( $rows as $k => $row ) {
 
 				// Determine gender prefix based on order saved in meta or option_order.
-				$gender_key = ! empty( $order[ $k ] ) ? $order[ $k ] : $row->option_order;
+				$gender_key = ! empty( $order ) && isset( $order[ $k ] ) ? $order[ $k ] : $row->option_order;
 				$prefix     = 'their_'; // others.
 				if ( 'male' === $gender_key || '1' === $gender_key ) {
 					$prefix = 'his_';
