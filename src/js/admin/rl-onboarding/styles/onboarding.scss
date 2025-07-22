@@ -2187,3 +2187,58 @@ body.bb-rl-fullscreen-mode {
     }
 }
 
+.bb-rl-draggable-item {
+    padding-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 12px;
+
+    > i {
+        font-size: 20px;
+        color: $icon-secondary-color;
+    }
+
+    .components-toggle-control {
+        display: flex;
+        align-items: center;
+        flex: 1;
+        padding: 10px;
+        margin-bottom: 0;
+        background-color: $white;
+        border: 1px solid $border-brand-primary-color;
+        border-radius: $border-radius;
+        transition: $transition;
+    
+        &:hover {
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+        }
+
+        .components-base-control__field {
+            width: 100%;
+        }
+
+        .components-toggle-control__label {
+            display: flex;
+            align-items: center;
+            color: $text-color;
+            font-size: 13px;
+        }
+
+        .menu-icon {
+            color: $icon-color;
+            font-size: 24px;
+            margin-right: 8px;
+        }
+
+        .components-h-stack {
+            width: 100%;
+            display: flex;
+            align-items: center;
+
+            .components-form-toggle {
+                margin-left: auto;
+            }
+        }
+    }
+}

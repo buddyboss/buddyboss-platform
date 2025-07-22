@@ -212,27 +212,11 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 					),
 				),
 				'side_menus'      => array(
-					'enable_primary_menu' => array(
-						'type'        => 'checkbox',
-						'label'       => __( 'Enable Primary Navigation', 'buddyboss' ),
-						'description' => __( 'Show main navigation menu', 'buddyboss' ),
-						'default'     => true,
-					),
-					'enable_member_menu'  => array(
-						'type'        => 'checkbox',
-						'label'       => __( 'Enable Member Menu', 'buddyboss' ),
-						'description' => __( 'Show member-specific navigation', 'buddyboss' ),
-						'default'     => true,
-					),
-					'menu_style'          => array(
-						'type'        => 'visual_options',
-						'label'       => __( 'Menu Style', 'buddyboss' ),
-						'description' => __( 'Choose navigation menu style', 'buddyboss' ),
-						'options'     => array(
-							'horizontal' => __( 'Horizontal', 'buddyboss' ),
-							'vertical'   => __( 'Vertical Sidebar', 'buddyboss' ),
-						),
-						'default'     => 'horizontal',
+					'menu_items' => array(
+						'type'        => 'draggable',
+						'label'       => __( 'Menu Items', 'buddyboss' ),
+						'description' => __( 'Reorder menu items as needed', 'buddyboss' ),
+						'options'     => $this->getComponentMenuItems(),
 					),
 				),
 				'widgets'         => array(
@@ -990,5 +974,90 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 			// Save as ReadyLaunch option
 			$this->save_readylaunch_option( $field_key, $field_value );
 		}
+	}
+
+	private function getComponentMenuItems() {
+		$items = [
+			[
+				'id' => 'members',
+				'label' => __('Members', 'buddyboss'),
+				'icon' => 'users',
+				'enabled' => true,
+				'order' => 1
+			],
+		];
+
+		$currentOrder = 0;
+
+		// Add activity feed if component is active
+		if (bp_is_active('activity')) {
+			array_unshift($items, [
+				'id' => 'activity_feed',
+				'label' => __('Activity Feed', 'buddyboss'),
+				'icon' => 'pulse',
+				'enabled' => true,
+				'order' => $currentOrder++
+			]);
+		}
+
+		// Update order for base items
+		foreach ($items as &$item) {
+			if ($item['id'] === 'members') {
+				$item['order'] = $currentOrder++;
+			}
+		}
+
+		// Add groups if component is active
+		if (bp_is_active('groups')) {
+			$items[] = [
+				'id' => 'groups',
+				'label' => __('Groups', 'buddyboss'),
+				'icon' => 'users-three',
+				'enabled' => true,
+				'order' => $currentOrder++
+			];
+		}
+
+		// Add forums if component is active
+		if (bp_is_active('forums')) {
+			$items[] = [
+				'id' => 'forums',
+				'label' => __('Forums', 'buddyboss'),
+				'icon' => 'chat-text',
+				'enabled' => true,
+				'order' => $currentOrder++
+			];
+		}
+
+		// Update order for remaining base items
+		foreach ($items as &$item) {
+			if ($item['id'] === 'courses') {
+				$item['order'] = $currentOrder++;
+			}
+		}
+
+		// Add messages if component is active
+		if (bp_is_active('messages')) {
+			$items[] = [
+				'id' => 'messages',
+				'label' => __('Messages', 'buddyboss'),
+				'icon' => 'chat-teardrop-text',
+				'enabled' => true,
+				'order' => $currentOrder++
+			];
+		}
+
+		// Add notifications if component is active
+		if (bp_is_active('notifications')) {
+			$items[] = [
+				'id' => 'notifications',
+				'label' => __('Notifications', 'buddyboss'),
+				'icon' => 'bell',
+				'enabled' => true,
+				'order' => $currentOrder
+			];
+		}
+
+		return $items;
 	}
 }

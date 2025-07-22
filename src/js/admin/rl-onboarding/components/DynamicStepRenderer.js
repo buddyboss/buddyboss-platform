@@ -12,6 +12,7 @@ import {
     Panel,
     PanelBody
 } from '@wordpress/components';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
 export const DynamicStepRenderer = ({
     stepKey,
@@ -391,6 +392,55 @@ export const DynamicStepRenderer = ({
                     </div>
                 );
 
+            case 'draggable':
+                // Helper function to handle draggable item changes
+                const handleDraggableItemChange = (itemId, newValue) => {
+                    // Get current value from formData (should be an array of items)
+                    const currentItems = formData[fieldKey] || options || [];
+                    
+                    // Update the specific item
+                    const updatedItems = currentItems.map(item => 
+                        item.id === itemId ? { ...item, enabled: newValue } : item
+                    );
+                    
+                    // Update formData with the new array
+                    handleFieldChange(fieldKey, updatedItems);
+                };
+
+                // Get current draggable items from formData or fall back to options
+                const currentDraggableItems = formData[fieldKey] || options || [];
+
+                return (
+                    <DragDropContext onDragEnd={(result) => handleDragEndForField(result, fieldKey)}>
+                        <Droppable droppableId={fieldKey}>
+                            {(provided) => (
+                                <div {...provided.droppableProps} ref={provided.innerRef}>
+                                    {currentDraggableItems.map((item, index) => (
+                                        <Draggable key={item.id} draggableId={item.id} index={index}>
+                                            {(providedDraggable, snapshot) => (
+                                                <div
+                                                    ref={providedDraggable.innerRef}
+                                                    {...providedDraggable.draggableProps}
+                                                    {...providedDraggable.dragHandleProps}
+                                                    className={`bb-rl-draggable-item ${snapshot.isDragging ? 'is-dragging' : ''}`}
+                                                >
+                                                    <i className="bb-icons-rl-list" />
+                                                    <ToggleControl
+                                                        label={<><span className={`menu-icon bb-icons-rl-${item.icon}`}></span> {item.label}</>}
+                                                        checked={Boolean(item.enabled)}
+                                                        onChange={(newValue) => handleDraggableItemChange(item.id, newValue)}
+                                                    />
+                                                </div>
+                                            )}
+                                        </Draggable>
+                                    ))}
+                                    {provided.placeholder}
+                                </div>
+                            )}
+                        </Droppable>
+                    </DragDropContext>
+                );
+
             default:
                 return (
                     <div key={fieldKey} className="bb-rl-field-group">
@@ -400,6 +450,29 @@ export const DynamicStepRenderer = ({
                     </div>
                 );
         }
+    };
+
+    // Handle drag end for specific field
+    const handleDragEndForField = (result, fieldKey) => {
+        if (!result.destination) return;
+        
+        // Get current items from formData or options
+        const currentItems = formData[fieldKey] || stepOptions[fieldKey]?.options || [];
+        const items = Array.from(currentItems);
+        
+        // Reorder items
+        const [reorderedItem] = items.splice(result.source.index, 1);
+        items.splice(result.destination.index, 0, reorderedItem);
+        
+        // Update formData with reordered items
+        handleFieldChange(fieldKey, items);
+    };
+
+    // Ensure handleDragEnd is defined for backward compatibility
+    const handleDragEnd = (result) => {
+        if (!result.destination) return;
+        // This is a fallback - ideally we should know which field we're dealing with
+        console.warn('handleDragEnd called without field context');
     };
 
     const renderVisualPreview = (fieldKey, optionValue) => {
