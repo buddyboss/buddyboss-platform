@@ -456,24 +456,17 @@ function bp_ps_gender_setup( $fields ) {
 		}
 		if ( is_array( $rows ) ) {
 			foreach ( $rows as $k => $row ) {
-				if ( ! empty( $order ) ) {
-					$key = $order[ $k ];
-					if ( 'male' === $key ) {
-						$option_value = 'his_' . $row->name;
-					} elseif ( 'female' === $key ) {
-						$option_value = 'her_' . $row->name;
-					} else {
-						$option_value = 'their_' . $row->name;
-					}
-				} else {
-					if ( '1' === $row->option_order ) {
-						$option_value = 'his_' . $row->name;
-					} elseif ( '2' === $row->option_order ) {
-						$option_value = 'her_' . $row->name;
-					} else {
-						$option_value = 'their_' . $row->name;
-					}
+
+				// Determine gender prefix based on order saved in meta or option_order.
+				$gender_key = ! empty( $order ) ? $order[ $k ] : $row->option_order;
+				$prefix     = 'their_'; // others.
+				if ( 'male' === $gender_key || '1' === $gender_key ) {
+					$prefix = 'his_';
+				} elseif ( 'female' === $gender_key || '2' === $gender_key ) {
+					$prefix = 'her_';
 				}
+				$option_value = $prefix . $row->name;
+
 				$options[ stripslashes( trim( $option_value ) ) ] = stripslashes( trim( $row->name ) );
 			}
 
