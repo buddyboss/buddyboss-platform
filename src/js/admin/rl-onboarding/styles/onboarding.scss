@@ -1807,328 +1807,100 @@ body.bb-rl-fullscreen-mode {
 .bb-rl-finish-screen {
     text-align: center;
     padding: 40px;
-    max-width: 800px;
-    margin: 0 auto;
+    height: 100%;
+    max-width: 100%;
     overflow-y: auto;
+    display: flex;
 
-    // Fullscreen layout
-    &.bb-rl-fullscreen-finish {
-        max-width: none;
-        margin: 0;
-        padding: 0;
-        height: 100%;
-        text-align: left;
-
-        .bb-rl-finish-container {
-            height: 100%;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            overflow: hidden;
-        }
-
-        .bb-rl-finish-left {
-            padding: 40px;
-            overflow-y: auto;
-            background: $white;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-
-        .bb-rl-finish-right {
-            padding: 40px;
-            overflow-y: auto;
-            background: #f8f9fa;
-            border-left: 1px solid $border-color;
-        }
-
-        .bb-rl-finish-sidebar {
-            max-width: 500px;
-        }
-
-        // Adjust styles for fullscreen layout
-        .bb-rl-finish-text {
-            text-align: center;
-            margin-bottom: 32px;
-        }
-
-        .bb-rl-setup-summary {
-            margin-bottom: 32px;
-
-            .bb-rl-summary-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 12px;
-            }
-        }
-
-        .bb-rl-finish-actions {
-            text-align: center;
-            margin-bottom: 0;
-        }
-
-        .bb-rl-next-steps {
-            text-align: left;
-            margin-bottom: 32px;
-        }
-
-        .bb-rl-support-resources {
-            margin-bottom: 24px;
-
-            .bb-rl-resource-links {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 12px;
-            }
-        }
-
-        .bb-rl-thank-you {
-            text-align: left;
-        }
+    .bb-rl-finish-container {
+        max-width: 655px;
+        width: 100%;
+        margin: auto;
     }
 
     .bb-rl-finish-content {
-        .bb-rl-success-animation {
-            margin-bottom: 32px;
+        width: 100%;
+    }
 
-            .bb-rl-checkmark {
-                width: 80px;
-                height: 80px;
-                margin: 0 auto;
-                position: relative;
+    .bb-rl-finish-icon {
+        color: #009951;
+        font-size: 64px;
+        line-height: 1;
+        margin: 0 0 20px;
+    }
 
-                .bb-rl-checkmark-circle {
-                    width: 80px;
-                    height: 80px;
+    .bb-rl-finish-title {
+        color: $text-color;
+        font-size: 22px;
+        font-weight: 600;
+        margin-bottom: 10px;
+    }
 
-                    .bb-rl-checkmark-circle-path {
-                        stroke: $success-color;
-                        stroke-width: 3;
-                        stroke-dasharray: 166;
-                        stroke-dashoffset: 166;
-                        animation: checkmarkCircle 0.6s ease-in-out forwards;
-                    }
-                }
+    .bb-rl-finish-description {
+        font-size: 14px;
+        font-weight: 500;
+        color: $text-tertiary-color;
+        margin-bottom: 18px;
+    }
 
-                .bb-rl-checkmark-check {
-                    width: 80px;
-                    height: 80px;
-                    position: absolute;
-                    top: 0;
-                    left: 0;
+    .bb-rl-step-progress {
+        margin-bottom: 55px;
+    }
 
-                    .bb-rl-checkmark-check-path {
-                        stroke: $success-color;
-                        stroke-width: 3;
-                        stroke-dasharray: 48;
-                        stroke-dashoffset: 48;
-                        animation: checkmarkCheck 0.3s ease-in-out 0.6s forwards;
-                    }
-                }
-            }
-        }
+    .bb-rl-finish-action {
+        padding: 12px 24px;
+        background-color: #fff;
+        border-radius: $border-radius-md;
+        border: 1px solid $border-secondary-color;
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        text-align: left;
+        margin-bottom: 32px;
 
-        .bb-rl-finish-image {
-            margin-bottom: 32px;
-            text-align: center;
+        .bb-rl-finish-action-content {
+            flex: 1;
 
-            img {
-                max-width: 100%;
-                height: auto;
-                border-radius: $border-radius;
-                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            }
-        }
-
-        .bb-rl-finish-text {
-            margin-bottom: 40px;
-
-            .bb-rl-finish-title {
-                font-size: 32px;
-                font-weight: 700;
-                color: $text-color;
-                margin: 0 0 16px 0;
-            }
-
-            .bb-rl-finish-description,
-            .bb-rl-finish-subtitle {
-                font-size: 16px;
-                color: #666;
-                margin: 0 0 12px 0;
-                line-height: 1.5;
-            }
-        }
-
-        .bb-rl-setup-summary {
-            margin-bottom: 40px;
-
-            h3 {
+            h2 {
                 font-size: 18px;
-                margin-bottom: 20px;
+                font-weight: 500;
+                line-height: 1.4;
                 color: $text-color;
+                margin: 0 0 4px;
             }
-
-            .bb-rl-summary-grid {
-                display: grid;
-                grid-template-columns: repeat(3, 1fr);
-                gap: 16px;
-
-                .bb-rl-summary-item {
-                    display: flex;
-                    align-items: center;
-                    gap: 8px;
-                    font-size: 14px;
-                    color: #666;
-
-                    .bb-rl-summary-icon {
-                        font-size: 16px;
-                    }
-                }
+    
+            p {
+                color: $text-tertiary-color;
+                font-size: 14px;
+                font-weight: 400;
+                line-height: 1.4;
+                margin: 0 0 8px;
             }
         }
+    }
 
-        .bb-rl-finish-actions {
-            margin-bottom: 40px;
-            display: flex;
+    .bb-rl-finish-action-button {
+        color: $background-brand-primary-color;
+        font-size: 14px;
+        line-height: 1.4;
+        border: 1px solid $background-brand-primary-color;
+        border-radius: $border-radius;
+        padding: 6px 15px;
+        text-decoration: none;
+        outline: none;
+        box-shadow: none;
+    }
+
+    @media screen and (max-width: 480px) {
+        .bb-rl-finish-action {
             flex-direction: column;
-            gap: 12px;
-            align-items: center;
+            padding: 16px;
 
-            .bb-rl-finish-button {
-                &.bb-rl-primary-action {
-                    background: $primary-color;
-                    color: $white;
-                    border: none;
-                    padding: 14px 28px;
-                    font-size: 16px;
-                    font-weight: 600;
-                    border-radius: 6px;
-
-                    &:hover {
-                        background: darken($primary-color, 10%);
-                    }
-                }
-
-                &.bb-rl-secondary-action {
-                    background: transparent;
-                    color: $text-color;
-                    border: 1px solid $border-color;
-                    padding: 12px 24px;
-                    font-size: 14px;
-                    border-radius: 6px;
-
-                    &:hover {
-                        background: #f5f5f5;
-                    }
-                }
-
-                &.bb-rl-close-action {
-                    color: #666;
-                    font-size: 14px;
-                    text-decoration: none;
-
-                    &:hover {
-                        color: $text-color;
-                    }
-                }
-            }
-        }
-
-        .bb-rl-next-steps {
-            margin-bottom: 40px;
-            text-align: left;
-
-            h3 {
-                font-size: 18px;
-                margin-bottom: 20px;
-                color: $text-color;
+            .bb-rl-finish-action-content {
+                width: 100%;
                 text-align: center;
             }
-
-            .bb-rl-next-steps-list {
-                .bb-rl-next-step {
-                    display: flex;
-                    gap: 16px;
-                    margin-bottom: 20px;
-
-                    .bb-rl-step-number {
-                        width: 32px;
-                        height: 32px;
-                        background: $primary-color;
-                        color: $white;
-                        border-radius: 50%;
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        font-weight: 600;
-                        font-size: 14px;
-                        flex-shrink: 0;
-                    }
-
-                    .bb-rl-step-content {
-                        h4 {
-                            font-size: 16px;
-                            font-weight: 600;
-                            color: $text-color;
-                            margin: 0 0 4px 0;
-                        }
-
-                        p {
-                            font-size: 14px;
-                            color: #666;
-                            margin: 0;
-                            line-height: 1.4;
-                        }
-                    }
-                }
-            }
         }
-
-        .bb-rl-support-resources {
-            margin-bottom: 32px;
-
-            h3 {
-                font-size: 18px;
-                margin-bottom: 16px;
-                color: $text-color;
-            }
-
-            .bb-rl-resource-links {
-                display: flex;
-                justify-content: center;
-                gap: 24px;
-
-                .bb-rl-resource-link {
-                    color: $primary-color;
-                    text-decoration: none;
-                    font-size: 14px;
-
-                    &:hover {
-                        text-decoration: underline;
-                    }
-                }
-            }
-        }
-
-        .bb-rl-thank-you {
-            p {
-                font-size: 14px;
-                color: #888;
-                margin: 0;
-                line-height: 1.5;
-            }
-        }
-    }
-}
-
-@keyframes checkmarkCircle {
-    to {
-        stroke-dashoffset: 0;
-    }
-}
-
-@keyframes checkmarkCheck {
-    to {
-        stroke-dashoffset: 0;
     }
 }
 
