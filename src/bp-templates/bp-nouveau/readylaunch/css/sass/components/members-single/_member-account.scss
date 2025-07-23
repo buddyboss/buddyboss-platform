@@ -278,6 +278,7 @@
 		border-radius: 0;
 		border-bottom: 1px solid var(--bb-rl-border-secondary-color);
 		box-shadow: none;
+		color: var(--bb-rl-text-color);
 	}
 
 	.mfp-content {
@@ -348,6 +349,23 @@
 
 	.mfp-s-ready .mfp-preloader {
 		display: none;
+	}
+
+	&.bb-rl-dark-mode {
+
+		.bb-onesignal-popup-close {
+	
+			.bb-onesignal-popup-content {
+	
+				ul li {
+	
+					img {
+						filter: brightness(0) invert(1);
+						opacity: 0.6;
+					}
+				}
+			}
+		}
 	}
 }
 
