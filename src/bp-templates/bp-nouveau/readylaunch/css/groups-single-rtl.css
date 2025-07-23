@@ -1169,6 +1169,14 @@
   }
 }
 
+@media screen and (max-width: 544px) {
+  .bb-rl-groups-manage-members-list .members-entry .bb-rl-group-member-id,
+  .bb-rl-groups-manage-members-list .member-entry .bb-rl-group-member-id {
+    width: 100%;
+    margin-bottom: var(--bb-rl-space-200);
+  }
+}
+
 .bb-rl-groups-manage-members-list ul.item-list {
   list-style: none;
   padding: 0;
@@ -1345,6 +1353,13 @@
 
 .bb-rl-requests-list li .item-card .action .button.reject::before {
   content: "\e4f6";
+}
+
+.bb-rl-requests-list li.bb-rl-view-more--pagination {
+  flex-direction: row;
+  padding: 0;
+  border: 0;
+  margin: var(--bb-rl-space-200) 0 0;
 }
 
 @media screen and (max-width: 800px) {
@@ -1798,6 +1813,10 @@
   margin-bottom: var(--bb-rl-space-200);
 }
 
+.bb-rl-group-manage-form .bb-zoom-setting-tab select#bp-group-zoom-manager {
+  margin-bottom: var(--bb-rl-space-200);
+}
+
 .bb-rl-group-manage-form .bb-group-zoom-settings-container .bb-section-title {
   display: flex;
   align-items: center;
@@ -1934,6 +1953,10 @@
 
 .bb-rl-group-settings select {
   width: 245px;
+}
+
+.bb-rl-groups-manage-members-list .bb-rl-members-manage-vip {
+  padding-left: var(--bb-rl-space-600);
 }
 
 .bb-rl-groups-manage-members-list .bb-rl-members-manage-dropdown {

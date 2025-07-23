@@ -1813,6 +1813,10 @@
   margin-bottom: var(--bb-rl-space-200);
 }
 
+.bb-rl-group-manage-form .bb-zoom-setting-tab select#bp-group-zoom-manager {
+  margin-bottom: var(--bb-rl-space-200);
+}
+
 .bb-rl-group-manage-form .bb-group-zoom-settings-container .bb-section-title {
   display: flex;
   align-items: center;
