@@ -110,7 +110,7 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 				6 => array(
 					'key'         => 'widgets',
 					'title'       => __( 'Widgets', 'buddyboss' ),
-					'description' => __( 'Customize widgets and layout components', 'buddyboss' ),
+					'description' => __( 'Enable or disable sidebar widgets on different community pages.', 'buddyboss' ),
 					'component'   => 'WidgetsStep',
 					'image'       => 'onboardingModal-step-6.png',
 				),
@@ -214,8 +214,7 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 				'side_menus'      => array(
 					'menu_items' => array(
 						'type'        => 'draggable',
-						'label'       => __( 'Menu Items', 'buddyboss' ),
-						'description' => __( 'Reorder menu items as needed', 'buddyboss' ),
+						'label'       => __( 'Navigation', 'buddyboss' ),
 						'options'     => $this->getComponentMenuItems(),
 					),
 					'link_items' => array(
@@ -226,28 +225,79 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 					),
 				),
 				'widgets'         => array(
-					'enable_sidebar_widgets' => array(
-						'type'        => 'checkbox',
-						'label'       => __( 'Enable Sidebar Widgets', 'buddyboss' ),
-						'description' => __( 'Show widgets in sidebar areas', 'buddyboss' ),
-						'default'     => true,
+					'bb_rl_activity_sidebars' => array(
+						'type'        => 'draggable',
+						'label'       => __( 'Activity Feed', 'buddyboss' ),
+						'options'     => [
+							[
+								'id' => 'complete_profile',
+								'label' => __('Complete Profile', 'buddyboss'),
+								'enabled' => true,
+								'order' => 1,
+							],
+							[
+								'id' => 'latest_updates',
+								'label' => __('Latest Updates', 'buddyboss'),
+								'enabled' => true,
+								'order' => 2,
+							],
+							[
+								'id' => 'recent_blog_posts',
+								'label' => __('Recent Blog Posts', 'buddyboss'),
+								'enabled' => true,
+								'order' => 3,
+							],
+							[
+								'id' => 'active_members',
+								'label' => __('Active Members', 'buddyboss'),
+								'enabled' => true,
+								'order' => 4,
+							],
+							
+						],
 					),
-					'default_widgets'        => array(
-						'type'        => 'checkbox',
-						'label'       => __( 'Install Default Widgets', 'buddyboss' ),
-						'description' => __( 'Add common widgets like Recent Activity, Member List', 'buddyboss' ),
-						'default'     => true,
+					'bb_rl_member_profile_sidebars' => array(
+						'type'        => 'draggable',
+						'label'       => __( 'Member Profile', 'buddyboss' ),
+						'options'     => [
+							[
+								'id' => 'complete_profile',
+								'label' => __('Complete Profile', 'buddyboss'),
+								'enabled' => true,
+								'order' => 1,
+							],
+							[
+								'id' => 'connections',
+								'label' => __('Connections', 'buddyboss'),
+								'enabled' => true,
+								'order' => 2,
+							],
+							[
+								'id' => 'my_network',
+								'label' => __('Network (Follow, Followers)', 'buddyboss'),
+								'enabled' => true,
+								'order' => 3,
+							],
+							
+						],
 					),
-					'widget_areas'           => array(
-						'type'        => 'visual_options',
-						'label'       => __( 'Widget Areas', 'buddyboss' ),
-						'description' => __( 'Choose which widget areas to enable', 'buddyboss' ),
-						'options'     => array(
-							'all'     => __( 'All Areas', 'buddyboss' ),
-							'sidebar' => __( 'Sidebar Only', 'buddyboss' ),
-							'footer'  => __( 'Footer Only', 'buddyboss' ),
-						),
-						'default'     => 'all',
+					'bb_rl_groups_sidebars' => array(
+						'type'        => 'draggable',
+						'label'       => __( 'Group', 'buddyboss' ),
+						'options'     => [
+							[
+								'id' => 'about_group',
+								'label' => __('About Group', 'buddyboss'),
+								'enabled' => true,
+								'order' => 1,
+							],
+							[
+								'id' => 'group_members',
+								'label' => __('Group Members', 'buddyboss'),
+								'enabled' => true,
+								'order' => 2,
+							],							
+						],
 					),
 				),
 			),

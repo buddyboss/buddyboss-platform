@@ -416,34 +416,44 @@ export const DynamicStepRenderer = ({
                 const currentDraggableItems = formData[fieldKey] || options || [];
 
                 return (
-                    <DragDropContext onDragEnd={(result) => handleDragEndForField(result, fieldKey)}>
-                        <Droppable droppableId={fieldKey}>
-                            {(provided) => (
-                                <div {...provided.droppableProps} ref={provided.innerRef}>
-                                    {currentDraggableItems.map((item, index) => (
-                                        <Draggable key={item.id} draggableId={item.id} index={index}>
-                                            {(providedDraggable, snapshot) => (
-                                                <div
-                                                    ref={providedDraggable.innerRef}
-                                                    {...providedDraggable.draggableProps}
-                                                    {...providedDraggable.dragHandleProps}
-                                                    className={`bb-rl-draggable-item ${snapshot.isDragging ? 'is-dragging' : ''}`}
-                                                >
-                                                    <i className="bb-icons-rl-list" />
-                                                    <ToggleControl
-                                                        label={<><span className={`menu-icon bb-icons-rl-${item.icon}`}></span> {item.label}</>}
-                                                        checked={Boolean(item.enabled)}
-                                                        onChange={(newValue) => handleDraggableItemChange(item.id, newValue)}
-                                                    />
-                                                </div>
-                                            )}
-                                        </Draggable>
-                                    ))}
-                                    {provided.placeholder}
-                                </div>
-                            )}
-                        </Droppable>
-                    </DragDropContext>
+                    <>
+                        {label && (
+                            <div className="bb-rl-field-label">
+                                <h4>{label}</h4>
+                                {description && (
+                                    <p className="bb-rl-field-description">{description}</p>
+                                )}
+                            </div>
+                        )}
+                        <DragDropContext onDragEnd={(result) => handleDragEndForField(result, fieldKey)}>
+                            <Droppable droppableId={fieldKey}>
+                                {(provided) => (
+                                    <div {...provided.droppableProps} ref={provided.innerRef}>
+                                        {currentDraggableItems.map((item, index) => (
+                                            <Draggable key={item.id} draggableId={item.id} index={index}>
+                                                {(providedDraggable, snapshot) => (
+                                                    <div
+                                                        ref={providedDraggable.innerRef}
+                                                        {...providedDraggable.draggableProps}
+                                                        {...providedDraggable.dragHandleProps}
+                                                        className={`bb-rl-draggable-item ${snapshot.isDragging ? 'is-dragging' : ''}`}
+                                                    >
+                                                        <i className="bb-icons-rl-list" />
+                                                        <ToggleControl
+                                                            label={<>{item.icon && <span className={`menu-icon bb-icons-rl-${item.icon}`}></span>} {item.label}</>}
+                                                            checked={Boolean(item.enabled)}
+                                                            onChange={(newValue) => handleDraggableItemChange(item.id, newValue)}
+                                                        />
+                                                    </div>
+                                                )}
+                                            </Draggable>
+                                        ))}
+                                        {provided.placeholder}
+                                    </div>
+                                )}
+                            </Droppable>
+                        </DragDropContext>
+                    </>
                 );
 
             case 'draggable_links':
