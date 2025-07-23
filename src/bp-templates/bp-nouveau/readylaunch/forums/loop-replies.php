@@ -25,125 +25,58 @@ $topic_id = bbp_get_topic_id();
 		<li class="bb-rl-item-wrap bb-rl-header-item align-items-center no-hover-effect">
 
 			<div class="item flex-1">
-				<div class="item-title">
-					<h1 class="bb-rl-reply-topic-title"><?php bbp_reply_topic_title( bbp_get_reply_id() ); ?></h1>
+				<div class="bb-rl-topic-header">
+					<div class="bb-rl-topic-header-meta">
+						<div class="bb_more_options forum-dropdown bb-rl-context-wrap">
+							<a href="#" class="bb-rl-context-btn bb_more_options_action bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="More Options">
+								<i class="bb-icons-rl-dots-three"></i>
+							</a>
+							<div class="bb_more_options_list bb_more_dropdown bb-rl-context-dropdown">
+								<div class="generic-button bb-rl-context-item">
+									<span class="bbp-admin-links">
+										<?php 
+										/**
+										 * Checked bbp_get_topic_close_link() is empty or not
+										 */
+										if ( ! empty( bbp_get_topic_close_link() ) ) {
+											bbp_topic_close_link();
+										}
 
-					<?php if ( ! bbp_show_lead_topic() && is_user_logged_in() ) : ?>
-						<div class="bb-rl-topic-states">
-							<?php
-							/**
-							 * Checked bbp_get_topic_close_link() is empty or not
-							 */
-							if ( ! empty( bbp_get_topic_close_link() ) ) {
-								if ( bbp_is_topic_open() ) {
-									?>
-									<span data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'Close', 'buddyboss' ); ?>">
-										<i class="bb-icon-rl bb-icon-lock-alt bb-topic-status open"><?php bbp_topic_close_link(); ?></i>
-									</span>
-								<?php } else { ?>
-									<span data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'Open', 'buddyboss' ); ?>">
-										<i class="bb-icon-rl bb-icon-lock-alt-open bb-topic-status closed"><?php bbp_topic_close_link(); ?></i>
-									</span>
-									<?php
-								}
-							}
-
-							/**
-							 * Checked bbp_get_topic_stick_link() is empty or not
-							 */
-							if ( ! bbp_is_topic_super_sticky( $topic_id ) && ! empty( bbp_get_topic_stick_link() ) ) {
-								if ( bbp_is_topic_sticky() ) {
-									?>
-									<span data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'Unstick', 'buddyboss' ); ?>">
-										<i class="bb-icon-rl bb-icon-thumbtack bb-topic-status bb-sticky sticky"><?php bbp_topic_stick_link(); ?></i>
-									</span>
-									<?php
-								} else {
-									?>
-									<span data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'Sticky', 'buddyboss' ); ?>">
-										<i class="bb-icon-rl bb-icon-thumbtack bb-topic-status bb-sticky unsticky"><?php bbp_topic_stick_link(); ?></i>
-									</span>
-									<?php
-								}
-							}
-
-							/**
-							 * Checked bbp_get_topic_stick_link() is empty or not
-							 */
-							if ( ! empty( bbp_get_topic_stick_link() ) ) {
-								if ( bbp_is_topic_super_sticky( $topic_id ) ) {
-									?>
-									<span class="bb-topic-status-wrapper" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'Unstick', 'buddyboss' ); ?>">
-										<i class="bb-icon-rl bb-icon-thumbtack-star bb-topic-status bb-super-sticky super-sticky"><?php bbp_topic_stick_link(); ?></i>
-									</span>
-									<?php
-								} elseif ( ( ! bp_is_group() && ! bp_is_group_forum_topic() ) && ! bbp_is_topic_sticky() ) {
-									?>
-									<span class="bb-topic-status-wrapper" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'Super Sticky', 'buddyboss' ); ?>">
-										<i class="bb-icon-rl bb-icon-thumbtack-star bb-topic-status bb-super-sticky super-sticky unsticky"><?php bbp_topic_stick_link(); ?></i>
-									</span>
-									<?php
-								}
-							}
-							?>
-
-							<?php if ( function_exists( 'bp_is_active' ) && bp_is_active( 'moderation' ) && function_exists( 'bbp_get_topic_report_link' ) && bbp_get_topic_report_link( array( 'id' => get_the_ID() ) ) ) { ?>
-								<div class="forum_single_action_wrap">
-									<span class="forum_single_action_more-wrap" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'More Options', 'buddyboss' ); ?>">
-										<i class="bb-icon-f bb-icon-ellipsis-v"></i>
-									</span>
-									<div class="forum_single_action_options">
-										<?php
-										if ( bp_is_active( 'moderation' ) && function_exists( 'bbp_get_topic_report_link' ) ) {
-											?>
-											<p class="bb-topic-report-link-wrap">
-												<?php echo wp_kses_post( bbp_get_topic_report_link( array( 'id' => get_the_ID() ) ) ); ?>
-											</p>
-											<?php
+										/**
+										 * Checked bbp_get_topic_stick_link() is empty or not
+										 */
+										if ( ! bbp_is_topic_super_sticky( $topic_id ) && ! empty( bbp_get_topic_stick_link() ) ) {
+											bbp_topic_stick_link();
 										}
 										?>
-									</div>
-								</div><!-- .forum_single_action_wrap -->
-							<?php } ?>
+									</span>
+								</div>
+							</div>
 						</div>
-					<?php endif; ?>
-				</div>
+						<?php if ( ! bbp_show_lead_topic() && is_user_logged_in() ) : ?>
+							<div class="bb-rl-topic-states">
 
-				<div class="item-meta">
-					<span class="bs-replied">
-						<span class="bbp-topic-freshness-author">
-							<?php
-							bbp_author_link(
-								array(
-									'post_id' => bbp_get_topic_last_active_id(),
-									'size'    => 1,
-								)
-							);
-							?>
-						</span> <?php esc_html_e( 'updated', 'buddyboss' ); ?> <?php bbp_topic_freshness_link(); ?>
-					</span>
-					<span class="bs-voices-wrap">
-						<?php
-						$voice_count = bbp_get_topic_voice_count( $topic_id );
-						$voice_text  = $voice_count > 1 ? __( 'Members', 'buddyboss' ) : __( 'Member', 'buddyboss' );
-
-						$topic_reply_count = bbp_get_topic_reply_count( $topic_id );
-						$topic_post_count  = bbp_get_topic_post_count( $topic_id );
-						$reply_count       = bbp_get_topic_replies_link( $topic_id );
-						$topic_reply_text  = '';
-						?>
-						<span class="bs-voices"><?php bbp_topic_voice_count(); ?> <?php echo wp_kses_post( $voice_text ); ?></span>
-						<span class="bs-separator">&middot;</span>
-						<span class="bs-replies">
-							<?php
-							bbp_topic_reply_count( $topic_id );
-							$topic_reply_text = (int) $topic_reply_count > 1 ? esc_html__( 'Replies', 'buddyboss' ) : esc_html__( 'Reply', 'buddyboss' );
-
-							echo ' ' . wp_kses_post( $topic_reply_text );
-							?>
-						</span>
-					</span>
-
+								<?php //if ( function_exists( 'bp_is_active' ) && bp_is_active( 'moderation' ) && function_exists( 'bbp_get_topic_report_link' ) && bbp_get_topic_report_link( array( 'id' => get_the_ID() ) ) ) { ?>
+									<div class="forum_single_action_wrap">
+										<span class="forum_single_action_more-wrap" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'More Options', 'buddyboss' ); ?>">
+											<i class="bb-icon-f bb-icon-ellipsis-v"></i>
+										</span>
+										<div class="forum_single_action_options">
+											<?php
+											if ( bp_is_active( 'moderation' ) && function_exists( 'bbp_get_topic_report_link' ) ) {
+												?>
+												<p class="bb-topic-report-link-wrap">
+													<?php echo wp_kses_post( bbp_get_topic_report_link( array( 'id' => get_the_ID() ) ) ); ?>
+												</p>
+												<?php
+											}
+											?>
+										</div>
+									</div><!-- .forum_single_action_wrap -->
+								<?php //} ?>
+							</div>
+						<?php endif; ?>
+					</div>
 					<?php
 					if ( ! empty( bbp_get_topic_forum_title() ) ) {
 
@@ -153,11 +86,43 @@ $topic_id = bbp_get_topic_id();
 
 						?>
 						<div class="action bs-forums-meta flex align-items-center">
-							<span class="color bs-meta-item forum-label" style="background: <?php echo esc_attr( color2rgba( textToColor( bbp_get_topic_forum_title() ), 0.6 ) ); ?>">
+							<span class="color bs-meta-item forum-label bb-rl-topic-started-in">
 								<a href="<?php bbp_forum_permalink( bbp_get_topic_forum_id() ); ?>"><?php echo esc_html( $forum_title ); ?></a>
 							</span>
 						</div>
 					<?php } ?>
+					<div class="item-title">
+						<h1 class="bb-rl-topic-title"><?php bbp_reply_topic_title( bbp_get_reply_id() ); ?></h1>
+					</div>
+				</div>
+
+				<div class="item-meta">
+					<div class="bb-rl-topic-author">
+						<div class="bb-rl-topic-author-details">
+							<div class="bb-rl-topic-author-name">
+								<?php
+								bbp_author_link(
+									array(
+										'post_id' => bbp_get_topic_last_active_id(),
+										'size'    => 1,
+									)
+								);
+								?>
+							</div>
+							<div class="bb-rl-topic-time"><?php bbp_topic_freshness_link(); ?></div>
+						</div>
+					</div>
+					<div class="bb-rl-topic-stats">
+						<?php
+						$topic_reply_count = bbp_get_topic_reply_count( $topic_id );
+						?>
+						<div class="bb-rl-topic-voice-count">
+							<i class="bb-icons-rl-user"></i> <span class="bs-voices"><?php bbp_topic_voice_count(); ?>
+						</div>
+						<div class="bb-rl-topic-reply-count">
+							<i class="bb-icons-rl-chat"></i> <span class="bs-replies"><?php echo $topic_reply_count; ?></span>
+						</div>
+					</div>
 				</div>
 				<?php
 				$terms = bbp_get_form_topic_tags();
