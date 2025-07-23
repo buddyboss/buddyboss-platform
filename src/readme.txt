@@ -57,6 +57,12 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 2.9.20 =
+* Bug: Activity - Fixed an issue where the schedule post dropdown menu was not fully visible, causing options to overflow or become inaccessible
+* Bug: Forums - Fixed a 404 error when using a custom slug on forum discussion edit links with the BuddyBoss theme
+* Bug: Groups - Fixed an issue where only one video was visible after editing a comment with multiple videos in the Group Media section
+* Bug: Groups - Fixed misalignment of the Zoom integration field style in group settings when vertical group navigation is enabled in the latest BuddyBoss theme
+
 = 2.9.11 =
 * Enhancement: Improved code structure for better performance and maintainability
 
