@@ -2528,6 +2528,11 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				$strings['groups']['i18n']['cancel_request_group'] = esc_html__( 'Canceling request', 'buddyboss' );
 			}
 
+			if ( bp_is_active( 'friends' ) ) {
+				$strings['friends']['member_requests_none'] = bp_nouveau_get_user_feedback( 'member-requests-none' );
+				$strings['friends']['members_loop_none']    = bp_nouveau_get_user_feedback( 'members-loop-none' );
+			}
+
 			return $strings;
 		}
 

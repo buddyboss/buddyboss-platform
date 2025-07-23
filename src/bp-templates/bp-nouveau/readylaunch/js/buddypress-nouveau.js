@@ -2316,6 +2316,7 @@ window.bp = window.bp || {};
 						if ( $( '#bb-rl-friends-my-friends-personal-li' ).length ) {
 							var friend_with_count    = $( '#bb-rl-friends-my-friends-personal-li a span' );
 							var friend_without_count = $( '#bb-rl-friends-my-friends-personal-li a' );
+							var friends_content      = $( '.friends.bb-rl-members' );
 
 							// Check friend count set.
 							if ( undefined !== response.data.is_user && response.data.is_user && undefined !== response.data.friend_count ) {
@@ -2331,6 +2332,7 @@ window.bp = window.bp || {};
 								} else {
 									// If no friend then hide count span.
 									$( friend_with_count ).hide();
+									friends_content.html( bp.Nouveau.createFeedbackHtml( bpNouveau.friends.members_loop_none ) );
 								}
 							} else if ( undefined !== response.data.friend_count ) {
 								if ( '0' !== response.data.friend_count ) {
@@ -2339,11 +2341,51 @@ window.bp = window.bp || {};
 										$( friend_with_count ).html( response.data.friend_count );
 									} else {
 										// If no friend then add count span.
-										$( friend_without_count ).append( '<span class="count">' + response.data.friend_count + '</span>' );
+										$( friend_without_count ).append( '<span class="count bb-rl-heading-count">' + response.data.friend_count + '</span>' );
 									}
 								} else {
 									// If no friend then hide count span.
 									$( friend_with_count ).hide();
+									friends_content.html( bp.Nouveau.createFeedbackHtml( bpNouveau.friends.members_loop_none ) );
+								}
+							}
+						}
+
+						// User main nav update requests counts.
+						if ( $( '#bb-rl-requests-personal-li' ).length ) {
+							var requests_with_count    = $( '#bb-rl-requests-personal-li a span' );
+							var requests_without_count = $('#bb-rl-requests-personal-li a');
+							var requests_content       = $( '.bb-rl-members-directory-content' );
+
+							// Check friend count set.
+							if ( undefined !== response.data.is_user && response.data.is_user && undefined !== response.data.requests_count ) {
+								// Check friend count > 0 then show the count span.
+								if ( '0' !== response.data.requests_count ) {
+									if ( ( requests_with_count ).length ) {
+										// Update count span.
+										$( requests_with_count ).html( response.data.requests_count );
+									} else {
+										// If no friend then add count span.
+										$( requests_without_count ).append( '<span class="count bb-rl-heading-count">' + response.data.requests_count + '</span>' );
+									}
+								} else {
+									// If no friend then hide count span.
+									$( requests_with_count ).hide();
+									requests_content.html( bp.Nouveau.createFeedbackHtml( bpNouveau.friends.member_requests_none ) );
+								}
+							} else if ( undefined !== response.data.requests_count ) {
+								if ( '0' !== response.data.requests_count ) {
+									if ( ( requests_with_count ).length ) {
+										// Update count span.
+										$( requests_with_count ).html( response.data.requests_count );
+									} else {
+										// If no friend then add count span.
+										$( requests_without_count ).append( '<span class="count bb-rl-heading-count">' + response.data.requests_count + '</span>' );
+									}
+								} else {
+									// If no friend then hide count span.
+									$( requests_with_count ).hide();
+									requests_content.html( bp.Nouveau.createFeedbackHtml( bpNouveau.friends.member_requests_none ) );
 								}
 							}
 						}
@@ -5462,6 +5504,27 @@ window.bp = window.bp || {};
 					}
 				}
 			);
+		},
+
+		/**
+		 * Create feedback HTML from feedback data.
+		 *
+		 * @param {Object|string} feedbackData - Feedback data object or string message.
+		 * @return {string} HTML string for feedback.
+		 */
+		createFeedbackHtml: function ( feedbackData ) {
+			var message, type;
+
+			// Handle both object and string inputs.
+			if ( 'object' === typeof feedbackData && null !== feedbackData ) {
+				message = feedbackData.message || '';
+				type    = feedbackData.type || 'info';
+			} else {
+				message = feedbackData || '';
+				type    = 'info';
+			}
+
+			return '<aside class="bp-feedback bp-messages ' + type + '"><span class="bp-icon" aria-hidden="true"></span><p>' + message + '</p></aside>';
 		},
 	};
 
