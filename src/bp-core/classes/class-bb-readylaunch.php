@@ -2107,7 +2107,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				$response['message'] = esc_html__( 'Email address already exists.', 'buddyboss' );
 				wp_send_json_error( $response );
 			} elseif ( bb_is_email_address_already_invited( $email, $loggedin_user_id ) ) {
-				$response['message'] = esc_html__( 'Email address already invited.', 'buddyboss' );
+				$response['message'] = esc_html__( 'The email has already been invited', 'buddyboss' );
 				wp_send_json_error( $response );
 			} elseif ( ! bb_is_allowed_register_email_address( $email ) ) {
 				$response['message'] = esc_html__( 'Email address restricted.', 'buddyboss' );
@@ -2204,7 +2204,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 			wp_send_json_success(
 				array(
-					'message' => esc_html__( 'Email invite sent successfully.', 'buddyboss' ),
+					'message' => esc_html__( 'Invitation sent successfully', 'buddyboss' ),
 					'type'    => 'success',
 				)
 			);
