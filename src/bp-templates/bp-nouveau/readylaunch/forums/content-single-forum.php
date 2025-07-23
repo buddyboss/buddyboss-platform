@@ -157,13 +157,16 @@ global $post;
 
 				<?php elseif ( ! bbp_is_forum_category() ) : ?>
 
-					<?php bbp_get_template_part( 'feedback', 'no-topics' ); ?>
+					<div class="bb-rl-forum-tabs-content selected" id="bb-rl-forum-discussions">
+						<?php bbp_get_template_part( 'feedback', 'no-topics' ); ?>
+					</div>
 
 					<?php bbp_get_template_part( 'form', 'topic' ); ?>
 
 				<?php elseif ( bbp_is_forum_category() ) : ?>
-
-					<?php bbp_get_template_part( 'feedback', 'forum-category' ); ?>
+					<div class="bb-rl-forum-tabs-content selected" id="bb-rl-forum-discussions">
+						<?php bbp_get_template_part( 'feedback', 'forum-category' ); ?>
+					</div>
 
 				<?php endif; ?>
 
