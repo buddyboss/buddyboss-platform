@@ -103,19 +103,19 @@ global $post;
 
 			<?php else : ?>
 					<ul class="bb-rl-forum-tabs">
-						<?php
-						if ( 0 < (int) $discussion_count ) {
-							?>
-							<li data-id="bb-rl-forum-discussions" class="bb-rl-forum-tabs-item selected">
-								<a href="#" id="public-message">
-									<?php
+						<li data-id="bb-rl-forum-discussions" class="bb-rl-forum-tabs-item selected">
+							<a href="#" id="public-message">
+								<?php
+								if ( 0 < (int) $discussion_count ) {
 									/* translators: %d: number of discussions */
 									echo esc_html( sprintf( _n( 'Discussion (%d)', 'Discussions (%d)', $discussion_count, 'buddyboss' ), $discussion_count ) );
-									?>
-								</a>
-							</li>
-							<?php
-						}
+								} else {
+									echo esc_html__( 'Discussions', 'buddyboss' );
+								}
+								?>
+							</a>
+						</li>
+						<?php
 						if ( bbp_has_forums() ) {
 							?>
 							<li data-id="bb-rl-forum-subforums" class="bb-rl-forum-tabs-item">
