@@ -5498,8 +5498,8 @@ window.bp = window.bp || {};
 				friends  : {
 					selector        : '.bb-rl-profile-subnav #bb-rl-friends-personal-li',
 					increaseActions : ['accept_friendship'],
-					contentSelector : null,
-					noneMessage     : null
+					contentSelector : '.friends.bb-rl-members',
+					noneMessage     : bpNouveau.friends.members_loop_none
 				}
 			};
 
