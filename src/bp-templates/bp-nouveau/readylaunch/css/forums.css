@@ -1231,6 +1231,23 @@
   margin-bottom: var(--bb-rl-space-200);
 }
 
+.groups .bb-rl-group-forum-header:has(+ .bb-rl-forum-tabs) {
+  justify-content: flex-end;
+}
+
+.groups .bb-rl-group-forum-header + .bb-rl-forum-tabs {
+  margin-top: -50px;
+}
+
+@media (max-width: 544px) {
+  .groups .bb-rl-group-forum-header:has(+ .bb-rl-forum-tabs) {
+    justify-content: flex-start;
+  }
+  .groups .bb-rl-group-forum-header + .bb-rl-forum-tabs {
+    margin-top: 0;
+  }
+}
+
 .groups .bb-rl-group-forum-header h2 {
   font-size: 18px;
   font-weight: 600;

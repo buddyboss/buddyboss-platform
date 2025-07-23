@@ -228,6 +228,25 @@
 		gap: var(--bb-rl-space-200);
 		margin-bottom: var(--bb-rl-space-200);
 
+		&:has(+ .bb-rl-forum-tabs) {
+			justify-content: flex-end;
+		}
+
+		+ .bb-rl-forum-tabs {
+			margin-top: -50px;
+		}
+
+		@media (max-width: $sm) {
+			
+			&:has(+ .bb-rl-forum-tabs) {
+				justify-content: flex-start;
+			}
+	
+			+ .bb-rl-forum-tabs {
+				margin-top: 0;
+			}
+		}
+
 		h2 {
 			font-size: 18px;
 			font-weight: 600;
