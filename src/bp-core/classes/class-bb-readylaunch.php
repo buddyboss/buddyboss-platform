@@ -2526,6 +2526,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			if ( bp_is_active( 'groups' ) ) {
 				$strings['groups']['i18n']['sending_request']      = esc_html__( 'Sending request', 'buddyboss' );
 				$strings['groups']['i18n']['cancel_request_group'] = esc_html__( 'Canceling request', 'buddyboss' );
+				$strings['groups']['member_invites_none']          = bp_nouveau_get_user_feedback( 'member-invites-none' );
 			}
 
 			if ( bp_is_active( 'friends' ) ) {
