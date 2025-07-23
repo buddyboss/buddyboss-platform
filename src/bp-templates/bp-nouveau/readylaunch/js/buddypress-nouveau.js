@@ -2313,9 +2313,9 @@ window.bp = window.bp || {};
 						}
 
 						// User main nav update friends counts.
-						if ( $( '#friends-personal-li' ).length ) {
-							var friend_with_count    = $( '#friends-personal-li a span' );
-							var friend_without_count = $( '#friends-personal-li a' );
+						if ( $( '#bb-rl-friends-my-friends-personal-li' ).length ) {
+							var friend_with_count    = $( '#bb-rl-friends-my-friends-personal-li a span' );
+							var friend_without_count = $( '#bb-rl-friends-my-friends-personal-li a' );
 
 							// Check friend count set.
 							if ( undefined !== response.data.is_user && response.data.is_user && undefined !== response.data.friend_count ) {
@@ -2326,7 +2326,7 @@ window.bp = window.bp || {};
 										$( friend_with_count ).html( response.data.friend_count );
 									} else {
 										// If no friend then add count span.
-										$( friend_without_count ).append( '<span class="count">' + response.data.friend_count + '</span>' );
+										$( friend_without_count ).append( '<span class="count bb-rl-heading-count">' + response.data.friend_count + '</span>' );
 									}
 								} else {
 									// If no friend then hide count span.
