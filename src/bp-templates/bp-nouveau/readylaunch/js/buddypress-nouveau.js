@@ -2351,44 +2351,8 @@ window.bp = window.bp || {};
 							}
 						}
 
-						// User main nav update requests counts.
-						if ( $( '#bb-rl-requests-personal-li' ).length ) {
-							var requests_with_count    = $( '#bb-rl-requests-personal-li a span' );
-							var requests_without_count = $('#bb-rl-requests-personal-li a');
-							var requests_content       = $( '.bb-rl-members-directory-content' );
-
-							// Check friend count set.
-							if ( undefined !== response.data.is_user && response.data.is_user && undefined !== response.data.requests_count ) {
-								// Check friend count > 0 then show the count span.
-								if ( '0' !== response.data.requests_count ) {
-									if ( ( requests_with_count ).length ) {
-										// Update count span.
-										$( requests_with_count ).html( response.data.requests_count );
-									} else {
-										// If no friend then add count span.
-										$( requests_without_count ).append( '<span class="count bb-rl-heading-count">' + response.data.requests_count + '</span>' );
-									}
-								} else {
-									// If no friend then hide count span.
-									$( requests_with_count ).hide();
-									requests_content.html( bp.Nouveau.createFeedbackHtml( bpNouveau.friends.member_requests_none ) );
-								}
-							} else if ( undefined !== response.data.requests_count ) {
-								if ( '0' !== response.data.requests_count ) {
-									if ( ( requests_with_count ).length ) {
-										// Update count span.
-										$( requests_with_count ).html( response.data.requests_count );
-									} else {
-										// If no friend then add count span.
-										$( requests_without_count ).append( '<span class="count bb-rl-heading-count">' + response.data.requests_count + '</span>' );
-									}
-								} else {
-									// If no friend then hide count span.
-									$( requests_with_count ).hide();
-									requests_content.html( bp.Nouveau.createFeedbackHtml( bpNouveau.friends.member_requests_none ) );
-								}
-							}
-						}
+						// Update sub nav counts for group invitations, my group, friend requests, and friend counts.
+						bp.Nouveau.updateSubNavCount( action );
 
 						// User's groups invitations screen & User's friend screens.
 						if ( undefined !== response.data.is_user && response.data.is_user ) {
@@ -5504,6 +5468,78 @@ window.bp = window.bp || {};
 					}
 				}
 			);
+		},
+
+		/**
+		 * Update sub nav count.
+		 * @param {string} action - The action being performed.
+		 */
+		updateSubNavCount: function ( action ) {
+
+			var countConfig = {
+				invites  : {
+					selector        : '.bb-rl-profile-subnav #bb-rl-invites-personal-li',
+					decreaseActions : ['accept_invite', 'reject_invite'],
+					contentSelector : '.groups-directory-content.bb-rl-groups',
+					noneMessage     : bpNouveau.groups.member_invites_none
+				},
+				myGroups : {
+					selector        : '.bb-rl-profile-subnav #bb-rl-groups-my-groups-personal-li',
+					increaseActions : ['accept_invite'],
+					contentSelector : null,
+					noneMessage     : null
+				},
+				requests : {
+					selector        : '.bb-rl-profile-subnav #bb-rl-requests-personal-li',
+					decreaseActions : ['accept_friendship', 'reject_friendship'],
+					contentSelector : '.bb-rl-members-directory-content.bb-rl-members',
+					noneMessage     : bpNouveau.friends.member_requests_none
+				},
+				friends  : {
+					selector        : '.bb-rl-profile-subnav #bb-rl-friends-personal-li',
+					increaseActions : ['accept_friendship'],
+					contentSelector : null,
+					noneMessage     : null
+				}
+			};
+
+			// Process each count type
+			$.each( countConfig, function ( type, config ) {
+				var $element = $( config.selector );
+				if ( ! $element.length ) {
+					return;
+				}
+
+				var $withCount    = $element.find( 'a span' );
+				var $withoutCount = $element.find( 'a' );
+				var $content      = $( config.contentSelector );
+
+				var currentCount = Number( $withCount.html() ) || 0;
+				var shouldUpdate = false;
+
+				// Check if action affects this count type
+				if ( config.decreaseActions && -1 !== $.inArray( action, config.decreaseActions ) ) {
+					currentCount -= 1;
+					shouldUpdate = true;
+				} else if ( config.increaseActions && -1 !== $.inArray( action, config.increaseActions ) ) {
+					currentCount += 1;
+					shouldUpdate = true;
+				}
+
+				// Only update if action affects this count
+				if ( shouldUpdate ) {
+					if ( currentCount > 0 ) {
+						if ( $withCount.length ) {
+							$withCount.html( currentCount );
+						} else {
+							$withoutCount.append( '<span class="count bb-rl-heading-count">' + currentCount + '</span>' );
+						}
+					} else {
+						$withCount.hide();
+						$content.html( bp.Nouveau.createFeedbackHtml( config.noneMessage ) );
+					}
+				}
+			} );
 		},
 
 		/**

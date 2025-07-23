@@ -148,14 +148,13 @@ function bp_nouveau_ajax_addremove_friend() {
 
 			$type     = 'success';
 			$response = array(
-				'feedback'       => sprintf(
+				'feedback'     => sprintf(
 					'<div class="bp-feedback success">%s</div>',
 					esc_html__( 'Connection accepted.', 'buddyboss' )
 				),
-				'type'           => 'success',
-				'is_user'        => true,
-				'friend_count'   => bp_core_number_format( friends_get_friend_count_for_user( bp_loggedin_user_id() ) ),
-				'requests_count' => bp_core_number_format( bp_friend_get_total_requests_count( bp_loggedin_user_id() ) ),
+				'type'         => 'success',
+				'is_user'      => true,
+				'friend_count' => bp_core_number_format( friends_get_friend_count_for_user( bp_loggedin_user_id() ) ),
 			);
 		}
 
@@ -174,14 +173,13 @@ function bp_nouveau_ajax_addremove_friend() {
 
 			$type     = 'success';
 			$response = array(
-				'feedback'       => sprintf(
+				'feedback'     => sprintf(
 					'<div class="bp-feedback success">%s</div>',
 					esc_html__( 'Connection rejected.', 'buddyboss' )
 				),
-				'type'           => 'success',
-				'is_user'        => true,
-				'friend_count'   => bp_core_number_format( friends_get_friend_count_for_user( bp_loggedin_user_id() ) ),
-				'requests_count' => bp_core_number_format( bp_friend_get_total_requests_count( bp_loggedin_user_id() ) ),
+				'type'         => 'success',
+				'is_user'      => true,
+				'friend_count' => bp_core_number_format( friends_get_friend_count_for_user( bp_loggedin_user_id() ) ),
 			);
 		}
 
@@ -199,24 +197,22 @@ function bp_nouveau_ajax_addremove_friend() {
 
 			if ( ! $is_user ) {
 				$response = array(
-					'contents'       => bp_get_add_friend_button(
+					'contents'     => bp_get_add_friend_button(
 						$friend_id,
 						false,
 						$button_arguments
 					),
-					'friend_count'   => bp_core_number_format( friends_get_friend_count_for_user( bp_loggedin_user_id() ) ),
-					'requests_count' => bp_core_number_format( bp_friend_get_total_requests_count( bp_loggedin_user_id() ) ),
+					'friend_count' => bp_core_number_format( friends_get_friend_count_for_user( bp_loggedin_user_id() ) ),
 				);
 			} else {
 				$response = array(
-					'feedback'       => sprintf(
+					'feedback'     => sprintf(
 						'<div class="bp-feedback success">%s</div>',
 						esc_html__( 'Connection removed.', 'buddyboss' )
 					),
-					'type'           => 'success',
-					'is_user'        => $is_user,
-					'friend_count'   => bp_core_number_format( friends_get_friend_count_for_user( bp_loggedin_user_id() ) ),
-					'requests_count' => bp_core_number_format( bp_friend_get_total_requests_count( bp_loggedin_user_id() ) ),
+					'type'         => 'success',
+					'is_user'      => $is_user,
+					'friend_count' => bp_core_number_format( friends_get_friend_count_for_user( bp_loggedin_user_id() ) ),
 				);
 			}
 
