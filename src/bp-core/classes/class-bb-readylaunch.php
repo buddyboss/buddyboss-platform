@@ -1140,7 +1140,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					array(
 						'invite_invalid_name_message' => esc_html__( 'Name is required.', 'buddyboss' ),
 						'invite_valid_email'          => esc_html__( 'Please enter a valid email address.', 'buddyboss' ),
-						'invite_sending_invite'       => esc_html__( 'Sending invitation...', 'buddyboss' ),
+						'invite_sending_invite'       => esc_html__( 'Sending invitation', 'buddyboss' ),
 						'invite_error_notice'         => esc_html__( 'There was an error submitting the form. Please try again.', 'buddyboss' ),
 					)
 				);
