@@ -595,9 +595,6 @@ body.bb-rl-fullscreen-mode {
 
     .bb-rl-field-group {
         margin-bottom: 24px;
-        opacity: 1;
-        transform: translateY(0);
-        transition: opacity 0.3s ease, transform 0.3s ease, margin 0.3s ease, height 0.3s ease;
 
         // Conditional field animation states
         &.bb-rl-field-entering {
