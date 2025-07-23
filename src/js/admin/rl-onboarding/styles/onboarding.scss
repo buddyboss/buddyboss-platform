@@ -2214,9 +2214,13 @@ body.bb-rl-fullscreen-mode {
         padding: 10px;
         margin-bottom: 0;
         background-color: $white;
-        border: 1px solid $border-brand-primary-color;
+        border: 1px solid $border-secondary-color;
         border-radius: $border-radius;
         transition: $transition;
+        
+        &:has(.components-form-toggle.is-checked) {
+            border-color: $border-brand-primary-color;
+        }
     
         &:hover {
             box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
