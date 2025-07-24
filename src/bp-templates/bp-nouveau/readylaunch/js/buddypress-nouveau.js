@@ -4590,6 +4590,25 @@ window.bp = window.bp || {};
 				popup  = $( target ).closest( options.popupSelector ),
 				$body  = $( 'body' );
 
+			// Find and update the current anchor before resetting it for friendship button.
+			var $currentAnchor = $body.find( '[data-current-anchor="true"]' );
+			if ( $currentAnchor.length && $currentAnchor.hasClass( 'friendship-button' ) ) {
+				var titleValue = $currentAnchor.attr( 'data-title' );
+				if ( titleValue ) {
+					// Decode HTML entities and update balloon.
+					var decodedTitle = $( '<div/>' ).html( titleValue ).text();
+					$currentAnchor.attr( 'data-balloon', decodedTitle );
+				}
+
+				// For primary hover actions, also update the HTML content.
+				if ( $currentAnchor.hasClass( 'bb-rl-primary-hover-action' ) ) {
+					var aTagText = $currentAnchor.attr( 'data-title-displayed' );
+					if ( aTagText ) {
+						$currentAnchor.html( aTagText );
+					}
+				}
+			}
+
 			// Reset data attributes and content.
 			$body.find( options.dataAnchorSelector ).attr( 'data-current-anchor', 'false' );
 			$body.find( options.dataPopupSelector ).attr( 'data-popup-shown', options.newPopupState );
