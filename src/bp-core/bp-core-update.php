@@ -3925,9 +3925,9 @@ function bb_update_to_2_8_20() {
 }
 
 /**
- * Migrate for BuddyBoss [BBVERSION].
+ * Migrate for BuddyBoss 2.9.20.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.9.20
  *
  * @return void
  */
