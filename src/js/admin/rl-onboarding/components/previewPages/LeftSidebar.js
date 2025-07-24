@@ -1,4 +1,4 @@
-export const PreviewSidebar = () => {
+export const Sidebar = () => {
     return (
         <div className="bb-rl-preview-sidebar">
             <ul className="bb-rl-preview-nav-list">

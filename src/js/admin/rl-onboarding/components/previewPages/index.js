@@ -1,17 +1,21 @@
-import { PreviewHeader } from './PreviewHeader';
-import { PreviewSidebar } from './PreviewSidebar';
+import { Header } from './Header';
+import { Sidebar } from './LeftSidebar';
+import { Feed } from './Feed';
+import { RightSidebar } from './RightSidebar';
 
 export const PreviewPages = () => {
     return (
         <div className="bb-rl-preview-activity">
-            <PreviewHeader />
+            <Header />
 
             <div className="bb-rl-preview-content">
-                <PreviewSidebar />
+                <Sidebar />
 
                 <div className="bb-rl-preview-main">
-                    {/* Main content area - can be populated later */}
+                    <Feed />
                 </div>
+
+                <RightSidebar />
             </div>
         </div>
     );

@@ -1,4 +1,4 @@
-export const PreviewHeader = () => {
+export const Header = () => {
     return (
         <div className="bb-rl-preview-page-header">
             <div className="bb-rl-preview-site-title">BuddyBoss</div>
