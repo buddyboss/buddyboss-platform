@@ -245,7 +245,7 @@ $enabled_joined_date   = ! function_exists( 'bb_enabled_member_directory_element
 
 					<?php if ( ! empty( $member_switch_button ) || ! empty( $member_report_button ) || ! empty( $member_block_button ) ) { ?>
 					<div class="bb_more_options member-dropdown bb-rl-context-wrap">
-						<a href="#" class="bb-rl-context-btn bb_more_options_action bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_html_e( 'More Options', 'buddyboss' ); ?>">
+						<a href="#" class="bb-rl-context-btn bb_more_options_action bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_html_e( 'More Options', 'buddyboss' ); ?>" aria-label="<?php esc_html_e( 'More Options', 'buddyboss' ); ?>">
 							<i class="bb-icons-rl-dots-three"></i>
 						</a>
 						<div class="bb_more_options_list bb_more_dropdown bb-rl-context-dropdown">
