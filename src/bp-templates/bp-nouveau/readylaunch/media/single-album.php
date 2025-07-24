@@ -66,7 +66,7 @@ if ( bp_has_albums( array( 'include' => $album_id ) ) ) : ?>
 						if ( ( $bp_is_my_profile || $bp_is_user_media ) || ( $bp_is_group ) ) {
 							?>
 								<div class="video-action-wrap item-action-wrap bb_more_options action">
-									<a href="#" class="album-action_more bb_more_options_action" data-balloon-pos="up" data-balloon="<?php esc_html_e( 'More actions', 'buddyboss' ); ?>">
+									<a href="#" class="album-action_more bb_more_options_action" data-balloon-pos="up" data-balloon="<?php esc_html_e( 'More actions', 'buddyboss' ); ?>" aria-label="<?php esc_html_e( 'More actions', 'buddyboss' ); ?>">
 										<i class="bb-icons-rl-dots-three"></i>
 									</a>
 									<div class="media-action_list bb_more_dropdown bb_more_options_list">

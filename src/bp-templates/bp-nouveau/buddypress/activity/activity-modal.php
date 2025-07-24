@@ -12,8 +12,8 @@
 
 	<div id="activity-modal" class="activity-modal activity">
 		<div class="bb-modal-activity-header">
-			<h2></h2>
-			<a class="bb-close-action-popup bb-model-close-button" href="#">
+			<h2><span class="screen-reader-text"><?php esc_attr_e( 'Activity modal title', 'buddyboss' ); ?></span></h2>
+			<a class="bb-close-action-popup bb-model-close-button" href="#" aria-label="<?php esc_attr_e( 'Close', 'buddyboss' ); ?>">
 				<span class="bb-icon-l bb-icon-times"></span>
 			</a>
 		</div>
@@ -33,26 +33,26 @@
 								if ( bp_is_active( 'media' ) ) {
 									?>
 									<div class="post-elements-buttons-item post-media media-support">
-										<a href="#" class="toolbar-button bp-tooltip ac-reply-media-button" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Attach photo', 'buddyboss' ); ?>" data-ac-id="536">
+										<a href="#" class="toolbar-button bp-tooltip ac-reply-media-button" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Attach photo', 'buddyboss' ); ?>" data-ac-id="536" aria-label="<?php esc_attr_e( 'Attach photo', 'buddyboss' ); ?>">
 											<i class="bb-icon-l bb-icon-camera"></i>
 										</a>
 									</div>
 
 									<div class="post-elements-buttons-item post-video video-support">
-										<a href="#" class="toolbar-button bp-tooltip ac-reply-video-button" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Attach video', 'buddyboss' ); ?>" data-ac-id="536">
+										<a href="#" class="toolbar-button bp-tooltip ac-reply-video-button" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Attach video', 'buddyboss' ); ?>" data-ac-id="536" aria-label="<?php esc_attr_e( 'Attach video', 'buddyboss' ); ?>">
 											<i class="bb-icon-l bb-icon-video"></i>
 										</a>
 									</div>
 
 									<div class="post-elements-buttons-item post-media document-support">
-										<a href="#" class="toolbar-button bp-tooltip ac-reply-document-button" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Attach document', 'buddyboss' ); ?>" data-ac-id="536">
+										<a href="#" class="toolbar-button bp-tooltip ac-reply-document-button" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Attach document', 'buddyboss' ); ?>" data-ac-id="536" aria-label="<?php esc_attr_e( 'Attach document', 'buddyboss' ); ?>">
 											<i class="bb-icon-l bb-icon-attach"></i>
 										</a>
 									</div>
 
 									<div class="post-elements-buttons-item post-gif">
 										<div class="gif-media-search">
-											<a href="#" class="toolbar-button bp-tooltip ac-reply-gif-button" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Choose a GIF', 'buddyboss' ); ?>">
+											<a href="#" class="toolbar-button bp-tooltip ac-reply-gif-button" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Choose a GIF', 'buddyboss' ); ?>" aria-label="<?php esc_attr_e( 'Choose a GIF', 'buddyboss' ); ?>">
 												<i class="bb-icon-l bb-icon-gif"></i>
 											</a>
 											<div class="gif-media-search-dropdown"></div>

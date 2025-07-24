@@ -125,7 +125,7 @@ defined( 'ABSPATH' ) || exit;
 						if ( ! $empty ) {
 							?>
 							<a href="#" class="bb-rl-context-btn bb_more_options_action bp-tooltip" data-balloon-pos="up"
-								data-balloon="<?php esc_attr_e( 'More actions', 'buddyboss' ); ?>"><i
+								data-balloon="<?php esc_attr_e( 'More actions', 'buddyboss' ); ?>" aria-label="<?php esc_attr_e( 'More actions', 'buddyboss' ); ?>"><i
 										class="bb-icons-rl-dots-three"></i></a>
 							<ul class="bb_more_options_list bb_more_dropdown bb-rl-context-dropdown">
 								<li>

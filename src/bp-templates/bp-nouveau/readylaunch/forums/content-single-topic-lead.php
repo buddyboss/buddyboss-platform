@@ -87,7 +87,7 @@ if ( function_exists( 'bbp_is_forum_group_forum' ) && bbp_is_forum_group_forum( 
 			if ( ! $empty ) {
 				?>
 				<div class="bb_more_options forum-dropdown bb-rl-context-wrap">
-					<a href="#" class="bb-rl-context-btn bb_more_options_action bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'More Options', 'buddyboss' ); ?>">
+					<a href="#" class="bb-rl-context-btn bb_more_options_action bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'More Options', 'buddyboss' ); ?>" aria-label="<?php esc_attr_e( 'More Options', 'buddyboss' ); ?>">
 						<i class="bb-icons-rl-dots-three"></i>
 					</a>
 					<div class="bb_more_options_list bb_more_dropdown bb-rl-context-dropdown">

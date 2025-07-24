@@ -72,7 +72,7 @@
 	#>
 
 	<div class="bb_more_options message-thread-options">
-		<a href="#" class="bb_more_options_action bp-tooltip">
+		<a href="#" class="bb_more_options_action bp-tooltip" aria-label="<?php esc_attr_e( 'More options', 'buddyboss' ); ?>">
 			<i class="bb-icon-menu-dots-h"></i>
 		</a>
 		<ul class="bb_more_options_list message_action__list" data-bp-thread-id="{{ data.id }}">

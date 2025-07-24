@@ -14,7 +14,8 @@
 	if ( ( bp_is_activity_directory() || bp_is_user_activity() ) && bb_is_activity_search_enabled() ) {
 		?>
 		<button class="subnav-filters-opener" aria-expanded="false" aria-controls="subnav-filters">
-			<i class="bb-icon-f bb-icon-search"></i>	
+			<i class="bb-icon-f bb-icon-search"></i>
+			<span class="screen-reader-text"><?php esc_html_e( 'Open search filters', 'buddyboss' ); ?></span>
 		</button>
 		<?php
 	}

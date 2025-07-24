@@ -207,7 +207,7 @@ class BB_Activity_Readylaunch {
 
 		// Return your custom HTML structure.
 		return sprintf(
-			'<a href="%1$s" class="button bp-like-button bp-secondary-action %5$s" aria-pressed="false" data-reacted-id="%6$s">
+			'<a href="%1$s" class="button bp-like-button bp-secondary-action %5$s" data-pressed="false" data-reacted-id="%6$s">
 				<span class="bp-screen-reader-text">%2$s</span>
 				%3$s
 				<span class="like-count reactions_item" style="%4$s">%2$s</span>

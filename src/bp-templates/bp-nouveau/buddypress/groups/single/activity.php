@@ -23,6 +23,7 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 	<div class="bb-subnav-filters-container bb-subnav-filters-search">
 		<button class="subnav-filters-opener" aria-expanded="false" aria-controls="subnav-filters">
 			<i class="bb-icon-f bb-icon-search"></i>
+			<span class="screen-reader-text"><?php esc_html_e( 'Open search filters', 'buddyboss' ); ?></span>
 		</button>
 		<div class="subnav-filters filters clearfix subnav-filters-modal">
 			<ul>

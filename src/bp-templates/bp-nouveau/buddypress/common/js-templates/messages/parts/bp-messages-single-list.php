@@ -225,7 +225,7 @@
 								<video preload="auto" playsinline poster="{{data.gif.preview_url}}" loop muted>
 									<source src="{{data.gif.video_url}}" type="video/mp4">
 								</video>
-								<a href="#" class="gif-play-button">
+								<a href="#" class="gif-play-button" aria-label="<?php esc_attr_e( 'Play GIF', 'buddyboss' ); ?>">
 									<span class="bb-icon-bl bb-icon-play"></span>
 								</a>
 								<span class="gif-icon"></span>
