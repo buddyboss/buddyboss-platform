@@ -1913,22 +1913,6 @@ function bp_core_signup_user( $user_login, $user_password, $user_email, $usermet
 		);
 
 		BP_Signup::add( $args );
-
-		/**
-		 * Filters if BuddyPress should send an activation key for a new signup.
-		 *
-		 * @since BuddyPress 1.2.3
-		 *
-		 * @param bool   $value          Whether or not to send the activation key.
-		 * @param int    $user_id        User ID to send activation key to.
-		 * @param string $user_email     User email to send activation key to.
-		 * @param string $activation_key Activation key to be sent.
-		 * @param array  $usermeta       Miscellaneous metadata about the user (blog-specific
-		 *                               signup data, xprofile data, etc).
-		 */
-		if ( apply_filters( 'bp_core_signup_send_activation_key', true, $user_id, $user_email, $activation_key, $usermeta ) ) {
-			bp_core_signup_send_validation_email( $user_id, $user_email, $activation_key, $user_login );
-		}
 	}
 
 	$bp->signup->username = $user_login;
