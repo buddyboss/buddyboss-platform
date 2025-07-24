@@ -34,6 +34,8 @@ add_action( 'deleted_user', 'bb_member_remove_default_png_avatar_on_deleted_user
 // Exclude account related notifications.
 add_filter( 'bp_notifications_get_where_conditions', 'bb_members_hide_account_settings_notifications', 10, 2 );
 
+// Hook into the signup process to send activation email.
+add_action( 'bp_core_signup_user', 'bb_core_signup_send_activation_email', 11, 5 );
 /**
  * Load additional sign-up sanitization filters on bp_loaded.
  *
@@ -1022,4 +1024,46 @@ function bb_member_remove_default_png_avatar_on_deleted_user( $id ) {
  */
 function bb_profile_card_template() {
 	bp_get_template_part( 'members/profile-card' );
+}
+
+/**
+ * Send activation email on user signup.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int|bool $user_id       User ID.
+ * @param string   $user_login    Login name requested by the user.
+ * @param string   $user_password Password requested by the user.
+ * @param string   $user_email    Email address requested by the user.
+ * @param array    $usermeta      Miscellaneous metadata about the user.
+ *
+ * @return void
+ */
+function bb_core_signup_send_activation_email( $user_id, $user_login, $user_password, $user_email, $usermeta ) {
+	if ( ! is_multisite() ) {
+
+		// Get the activation key from BP_Signup.
+		$signup = BP_Signup::get( array( 'user_login' => $user_login ) );
+		if ( empty( $signup['signups'] ) || empty( $signup['signups'][0] ) || empty( $signup['signups'][0]->activation_key ) ) {
+			return;
+		}
+
+		$activation_key = $signup['signups'][0]->activation_key;
+
+		/**
+		 * Filters if BuddyPress should send an activation key for a new signup.
+		 *
+		 * @since BuddyPress 1.2.3
+		 *
+		 * @param bool   $value          Whether or not to send the activation key.
+		 * @param int    $user_id        User ID to send activation key to.
+		 * @param string $user_email     User email to send activation key to.
+		 * @param string $activation_key Activation key to be sent.
+		 * @param array  $usermeta       Miscellaneous metadata about the user (blog-specific
+		 *                               signup data, xprofile data, etc).
+		 */
+		if ( apply_filters( 'bp_core_signup_send_activation_key', true, $user_id, $user_email, $activation_key, $usermeta ) ) {
+			bp_core_signup_send_validation_email( $user_id, $user_email, $activation_key, $user_login );
+		}
+	}
 }
