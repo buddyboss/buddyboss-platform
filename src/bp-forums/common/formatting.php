@@ -217,6 +217,283 @@ function bbp_encode_bad( $content = '' ) {
 	return implode( '', $content );
 }
 
+/**
+ * Convert <pre> and <code> tags to backtick format for processing and ensures admin content.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $content Content to convert.
+ *
+ * @return string Converted content.
+ */
+function bbp_convert_pre_and_code_tags_to_backticks( $content = '' ) {
+
+	// Helper function to clean syntax highlighting classes.
+	$clean_syntax_highlighting = function( $content ) {
+		// First decode HTML entities if they exist.
+		$content = html_entity_decode( $content, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 );
+
+		// Remove specific syntax highlighting classes (targeted approach)
+		$syntax_classes = array(
+			// PHP specific classes
+			'phptagcolor',
+			'phpkeywordcolor',
+			'phpstringcolor',
+			'phpnumbercolor',
+			'phpoperatorcolor',
+			
+			// HTML/XML specific classes
+			'tagnamecolor',
+			'tagcolor',
+			'attributecolor',
+			'attributevaluecolor',
+			
+			// CSS specific classes
+			'csspropertycolor',
+			'cssvaluecolor',
+			'cssselectorcolor',
+			
+			// JavaScript specific classes
+			'jskeywordcolor',
+			'jsstringcolor',
+			'jsnumbercolor',
+			'jsoperatorcolor',
+			'jsfunctioncolor',
+			'jspropertycolor',
+
+			// General syntax highlighting classes
+			'commentcolor',
+			'stringcolor',
+			'keywordcolor',
+			'numbercolor',
+			'operatorcolor',
+			'functioncolor',
+			'classcolor',
+			'variablecolor',
+			'constantcolor',
+			'punctuationcolor',
+			'namespacecolor',
+			'builtincolor',
+			'deletedcolor',
+			'insertedcolor',
+			'selectorcolor',
+			'propertycolor',
+			'valuecolor',
+			'entitycolor',
+			'urlcolor',
+			'charcolor',
+			'symbolcolor',
+			'booleancolor',
+			'regexcolor',
+			'importantcolor',
+			'atrulecolor',
+			'rulecolor',
+			'prologcolor',
+			'doctypecolor',
+			'cdatacolor',
+		);
+
+		foreach ( $syntax_classes as $class ) {
+			$content = preg_replace( '/<span class=\\\"' . $class . '\\\">/', '', $content );
+		}
+
+		// Remove all closing span tags
+		$content = preg_replace( '/<\/span>/', '', $content );
+
+		return $content;
+	};
+
+	// Clean syntax highlighting only from <pre> tags that contain syntax highlighting classes.
+	$content = preg_replace_callback(
+		'|<pre>(.*?)</pre>|s',
+		function( $matches ) use ( $clean_syntax_highlighting ) {
+			$tag_content = $matches[1];
+
+			// Check if content contains syntax highlighting classes (multiple formats).
+			$has_class_attr   = strpos( $tag_content, 'class=\"' ) !== false;
+			$has_encoded_span = strpos( $tag_content, '&lt;span' ) !== false;
+			$has_span_tag     = strpos( $tag_content, '<span' ) !== false;
+
+			if ( $has_class_attr || $has_encoded_span || $has_span_tag ) {
+				$tag_content = $clean_syntax_highlighting( $tag_content );
+			}
+
+			return '<pre>' . $tag_content . '</pre>';
+		},
+		$content
+	);
+
+	// Clean syntax highlighting only from <code> tags that contain syntax highlighting classes.
+	$content = preg_replace_callback(
+		'|<code>(.*?)</code>|s',
+		function( $matches ) use ( $clean_syntax_highlighting ) {
+			$tag_content = $matches[1];
+
+			// Check if content contains syntax highlighting classes (multiple formats).
+			$has_class_attr = strpos( $tag_content, 'class=\"' ) !== false;
+			$has_encoded_span = strpos( $tag_content, '&lt;span' ) !== false;
+			$has_span_tag = strpos( $tag_content, '<span' ) !== false;
+
+			if ( $has_class_attr || $has_encoded_span || $has_span_tag ) {
+				$tag_content = $clean_syntax_highlighting( $tag_content );
+			}
+
+			return '<code>' . $tag_content . '</code>';
+		},
+		$content
+	);
+
+	// Convert <pre> blocks to backtick format.
+	$content = preg_replace_callback(
+		'|<pre>(.*?)</pre>|s',
+		function( $matches ) {
+			$pre_content = $matches[1];
+			// Check if content has newlines.
+			$has_newlines = strpos( $pre_content, "\n" ) !== false;
+			
+			if ( $has_newlines ) {
+				return "\n`" . $pre_content . "`\n";
+			} else {
+				return "`" . $pre_content . "`";
+			}
+		},
+		$content
+	);
+
+	// Convert <code> blocks to backtick format.
+	$content = preg_replace_callback(
+		'|<code>(.*?)</code>|s',
+		function( $matches ) {
+			$pre_content = $matches[1];
+			// Check if content has newlines.
+			$has_newlines = strpos( $pre_content, "\n" ) !== false;
+			
+			if ( $has_newlines ) {
+				return "\n`" . $pre_content . "`\n";
+			} else {
+				return "`" . $pre_content . "`";
+			}
+		},
+		$content
+	);
+
+	return $content;
+}
+
+/**
+ * Apply <pre> tag conversion to backticks for admin content.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $content Content to process.
+ *
+ * @return string Processed content.
+ */
+function bbp_admin_convert_pre_tags( $content = '' ) {
+
+	// Only apply to BuddyBoss forum post types in admin area.
+	if ( is_admin() && in_array( get_post_type(), array( bbp_get_forum_post_type(), bbp_get_topic_post_type(), bbp_get_reply_post_type() ) ) ) {
+		return bbp_convert_pre_and_code_tags_to_backticks( $content );
+	}
+
+	return $content;
+}
+
+/**
+ * Apply bbp_encode_bad to admin content and ensures admin content goes through HTML entity encoding.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $content Content to encode.
+ *
+ * @return string Encoded content.
+ */
+function bbp_admin_encode_bad( $content = '' ) {
+
+	// Only apply to BuddyBoss forum post types in admin area.
+	if ( is_admin() && in_array( get_post_type(), array( bbp_get_forum_post_type(), bbp_get_topic_post_type(), bbp_get_reply_post_type() ) ) ) {
+		return bbp_encode_bad( $content );
+	}
+
+	return $content;
+}
+
+/**
+ * Apply bbp_code_trick to admin content and ensures admin content goes through code block processing.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $content Content to process.
+ *
+ * @return string Processed content.
+ */
+function bbp_admin_code_trick( $content = '' ) {
+
+	// Only apply to BuddyBoss forum post types in admin area.
+	if ( is_admin() && in_array( get_post_type(), array( bbp_get_forum_post_type(), bbp_get_topic_post_type(), bbp_get_reply_post_type() ) ) ) {
+		return bbp_code_trick( $content );
+	}
+
+	return $content;
+}
+
+/**
+ * Allow supported tags from admin area.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $tags Allowed tags.
+ *
+ * @return array Allowed tags.
+ */
+function bbp_admin_kses_allowed_tags( $tags = array() ) {
+
+	// Only apply to BuddyBoss forum post types in admin area.
+	if ( is_admin() && in_array( get_post_type(), array( bbp_get_forum_post_type(), bbp_get_topic_post_type(), bbp_get_reply_post_type() ) ) ) {
+		return wp_kses_allowed_html( 'post' );
+	}
+
+	return $tags;
+}
+
+/**
+ * Apply bbp_convert_mentions to admin content and ensures admin content goes through mention processing.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $content Content to process.
+ *
+ * @return string Processed content.
+ */
+function bbp_admin_convert_mentions( $content = '' ) {
+
+	// Only apply to BuddyBoss forum post types in admin area.
+	if ( is_admin() && in_array( get_post_type(), array( bbp_get_forum_post_type(), bbp_get_topic_post_type(), bbp_get_reply_post_type() ) ) ) {
+		return bbp_convert_mentions( $content );
+	}
+
+	return $content;
+}
+
+/**
+ * Apply balanceTags to admin content and ensures admin content goes through tag balancing.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $content Content to process.
+ *
+ * @return string Processed content.
+ */
+function bbp_admin_balance_tags( $content = '' ) {
+
+	// Only apply to BuddyBoss forum post types in admin area.
+	if ( is_admin() && in_array( get_post_type(), array( bbp_get_forum_post_type(), bbp_get_topic_post_type(), bbp_get_reply_post_type() ) ) ) {
+		return balanceTags( $content );
+	}
+
+	return $content;
+}
+
 /** Code Callbacks ************************************************************/
 
 /**
@@ -236,20 +513,41 @@ function bbp_encode_callback( $matches = array() ) {
 		$content = $matches[2];
 	}
 
-	// Do some replacing
-	$content = htmlspecialchars( $content, ENT_QUOTES );
+
+	$bbp_is_admin_editor = is_admin() && in_array( get_post_type(), array( bbp_get_forum_post_type(), bbp_get_topic_post_type(), bbp_get_reply_post_type() ) );
+
+	// Do some replacing.
+	if ( $bbp_is_admin_editor ) {
+		$content = htmlspecialchars( $content, ENT_NOQUOTES, null, false );
+	} else {
+		$content = htmlspecialchars( $content, ENT_QUOTES );
+	}
+
 	$content = str_replace( array( "\r\n", "\r" ), "\n", $content );
 	$content = preg_replace( "|\n\n\n+|", "\n\n", $content );
 	$content = str_replace( '&amp;amp;', '&amp;', $content );
 	$content = str_replace( '&amp;lt;', '&lt;', $content );
 	$content = str_replace( '&amp;gt;', '&gt;', $content );
 
-	// Wrap in code tags
-	$content = '<code>' . $content . '</code>';
 
-	// Wrap blocks in pre tags
-	if ( '`' !== $matches[1] ) {
-		$content = "\n<pre>" . $content . "</pre>\n";
+	// Only apply to BuddyBoss forum post types in admin area.
+	if ( $bbp_is_admin_editor ) {
+
+		// Wrap blocks in pre tags without code tags.
+		if ( '`' !== $matches[1] ) {
+			$content = "\n<pre>" . $content . "</pre>\n";
+		} else {
+			// Wrap in code tags.
+			$content = '<code>' . $content . '</code>';
+		}
+	} else {
+		// Wrap in code tags
+		$content = '<code>' . $content . '</code>';
+
+		// Wrap blocks in pre tags
+		if ( '`' !== $matches[1] ) {
+			$content = "\n<pre>" . $content . "</pre>\n";
+		}
 	}
 
 	return $content;

@@ -2558,15 +2558,6 @@ window.bp = window.bp || {};
 
 				var decodedContent = $( '<textarea>' ).html( content ).text();
 
-				var escapedHtmlRegex = /&lt;.*?&gt;/;
-
-				// Check for escaped HTML tags
-				if ( escapedHtmlRegex.test( content ) ) {
-					alert( BP_ADMIN.forum_validation.escaped_html_tags );
-					event.preventDefault();
-					return;
-				}
-
 				// Parse decoded content for further validation
 				var contentWrapper = $('<div>').html(decodedContent);
 
