@@ -4,7 +4,7 @@ export const Header = () => {
             <div className="bb-rl-preview-site-title">BuddyBoss</div>
 
             <ul className="bb-rl-preview-menu">
-                <li className="menu-item">Home</li>
+                <li className="menu-item active">Home</li>
                 <li className="menu-item">Groups</li>
                 <li className="menu-item">Members</li>
                 <li className="menu-item">Courses</li>
@@ -25,7 +25,7 @@ export const Header = () => {
             </span>
 
             <a className="bb-rl-preview-user-img" href="http://localhost:8888/bb/members/john/">
-                <img alt="" src="http://localhost:8888/bb/wp-content/uploads/avatars/2/67b8591eb4224-bpthumb.jpg" />
+                <img src={`${window.bbRlOnboarding?.assets?.assetsUrl || ''}john.png`} alt="John Muller" />
             </a>
         </div>
     );
