@@ -4045,7 +4045,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * @return string
 		 */
 		public function bb_rl_get_forum_freshness_link( $anchor, $forum_id, $time_since, $link_url, $title, $active_id ) {
-			if ( empty( $anchor ) ) {
+			if ( empty( $anchor ) || empty( $link_url ) ) {
 				return $anchor;
 			}
 
