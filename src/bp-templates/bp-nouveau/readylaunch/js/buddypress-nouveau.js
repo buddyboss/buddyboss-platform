@@ -2431,13 +2431,6 @@ window.bp = window.bp || {};
 
 			if ( target.hasClass( 'bp-toggle-action-button-clicked' ) && ! target.hasClass( 'loading' ) ) {
 
-				// support for buddyboss theme for button actions and icons and texts.
-				if ( $( document.body ).hasClass( 'buddyboss-theme' ) && 'undefined' !== typeof target.data( 'balloon' ) ) {
-					target.attr( 'data-balloon', target.data( 'title-displayed' ) );
-				} else {
-					target.html( target.data( 'title-displayed' ) ); // change text to displayed context.
-				}
-
 				target.removeClass( 'bp-toggle-action-button-clicked' ).addClass( 'bp-toggle-action-button' ); // add class to detect event to confirm.
 			}
 		},
@@ -2541,13 +2534,6 @@ window.bp = window.bp || {};
 				function () {
 					var $button = $( this );
 					if ( $button.hasClass( 'bp-toggle-action-button-clicked' ) && ! $button.hasClass( 'loading' ) ) {
-
-						// support for buddyboss theme for button actions and icons and texts.
-						if ( $( document.body ).hasClass( 'buddyboss-theme' ) && 'undefined' !== typeof $button.data( 'balloon' ) ) {
-							$button.attr( 'data-balloon', $button.data( 'title-displayed' ) );
-						} else {
-							$button.html( $button.data( 'title-displayed' ) ); // change text to displayed context.
-						}
 
 						$button.removeClass( 'bp-toggle-action-button-clicked' ).addClass( 'bp-toggle-action-button' );
 						$button.trigger( 'blur' );
