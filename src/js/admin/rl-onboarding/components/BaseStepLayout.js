@@ -21,7 +21,7 @@ export const BaseStepLayout = ({
         ? `${window.bbRlOnboarding.assets.assetsUrl}${image}`
         : '';
 
-    const stepsProgress = totalSteps > 0 ? Array.from({ length: totalSteps - 1 }, (_, index) => (
+    const stepsProgress = totalSteps > 0 ? Array.from({ length: totalSteps - 2 }, (_, index) => (
         <div className={`bb-rl-progress-step ${index + 1 < currentStep ? 'bb-rl-step-active' : ''}`} key={index}></div>
     )) : null;
 
