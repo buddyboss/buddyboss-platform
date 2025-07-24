@@ -553,29 +553,9 @@ function bp_core_get_user_displayname( $user_id_or_username, $current_user_id = 
 		$current_user_id = bp_loggedin_user_id();
 	}
 
-	// Check if user is pending (inactive signup).
-	$user_data  = get_userdata( $user_id );
-	$is_pending = false;
-
-	if ( ! empty( $user_data ) ) {
-		$signup = BP_Signup::get( array( 'user_login' => $user_data->data->user_login, 'exclude_active' => true ) );
-
-		// Check if signup exists and is not active.
-		$is_pending = ! empty( $signup['signups'][0] ) && 0 === (int) $signup['signups'][0]->active;
-	}
-
-	// Determine the display name based on user status.
-	if ( $is_pending && bp_is_active( 'xprofile' ) ) {
-
-		// For pending users, get the display name from the profile.
-		$user_display_name = bp_xprofile_get_member_display_name( $user_id );
-	} else {
-		$user_display_name = get_the_author_meta( 'display_name', $user_id );
-	}
-
 	$list_fields = bp_xprofile_get_hidden_fields_for_user( $user_id, $current_user_id );
 	if ( empty( $list_fields ) ) {
-		$full_name = $user_display_name;
+		$full_name = get_the_author_meta( 'display_name', $user_id );
 		if ( empty( $full_name ) ) {
 			$full_name = get_the_author_meta( 'nickname', $user_id );
 		}
@@ -583,9 +563,9 @@ function bp_core_get_user_displayname( $user_id_or_username, $current_user_id = 
 		$last_name_field_id = bp_xprofile_lastname_field_id();
 		if ( in_array( $last_name_field_id, $list_fields ) && ! empty( xprofile_get_field_data( $last_name_field_id, $user_id ) ) ) {
 			$last_name = xprofile_get_field_data( $last_name_field_id, $user_id );
-			$full_name = str_replace( ' ' . $last_name, '', $user_display_name );
+			$full_name = str_replace( ' ' . $last_name, '', get_the_author_meta( 'display_name', $user_id ) );
 		} else {
-			$full_name = $user_display_name;
+			$full_name = get_the_author_meta( 'display_name', $user_id );
 		}
 	}
 
