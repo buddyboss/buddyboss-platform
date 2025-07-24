@@ -757,8 +757,9 @@ class BB_Group_Readylaunch {
 		}
 
 		if ( 'membership_requested' === $button['id'] ) {
-			$button['link_class']               .= ' bb-rl-cancel-request bp-toggle-action-button';
-			$button['button_attr']['data-title'] = esc_html__( 'Cancel Request', 'buddyboss' );
+			$button['link_class']                         .= ' bb-rl-cancel-request bp-toggle-action-button';
+			$button['button_attr']['data-title']           = esc_html__( 'Cancel Request', 'buddyboss' );
+			$button['button_attr']['data-title-displayed'] = esc_html__( 'Request Sent', 'buddyboss' );
 		}
 		return $button;
 	}

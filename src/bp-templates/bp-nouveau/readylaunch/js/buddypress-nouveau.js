@@ -2493,7 +2493,7 @@ window.bp = window.bp || {};
 				{
 					popupSelector      : '.bb-cancel-request-group-popup',
 					dataAnchorSelector : '[data-current-anchor="true"]',
-					dataPopupSelector  : '[data-popup-shown="true"]',
+					dataPopupSelector  : '[data-popup-shown="active"]',
 					contentSelector    : '.bb-cancel-request-group-content .bb-rl-modal-group-name',
 					contentPlaceholder : '',
 					newPopupState      : 'false'
