@@ -19155,7 +19155,8 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   margin: var(--bb-rl-space-300) 0 0;
 }
 
-.bb-rl-profile-header + .bp-wrap .item-body > .bb-rl-profile-subnav + .bb-item-count {
+.bb-rl-profile-header + .bp-wrap .item-body > .bb-rl-profile-subnav + .bb-item-count,
+.bb-rl-profile-header + .bp-wrap .item-body > .bb-rl-profile-subnav + h2 + .bb-item-count {
   display: none;
 }
 

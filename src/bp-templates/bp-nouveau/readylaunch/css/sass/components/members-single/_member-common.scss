@@ -506,7 +506,8 @@
 .bb-rl-profile-header + .bp-wrap .item-body > .bb-rl-profile-subnav {
 	margin: var(--bb-rl-space-300) 0 0;
 
-	+ .bb-item-count {
+	+ .bb-item-count,
+	+ h2 + .bb-item-count {
 		display: none;
 	}
 }
