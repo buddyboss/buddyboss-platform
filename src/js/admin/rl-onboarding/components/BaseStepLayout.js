@@ -1,6 +1,7 @@
 import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { Button } from '@wordpress/components';
+import { PreviewPages } from './previewPages';
 
 export const BaseStepLayout = ({ 
     stepData, 
@@ -86,15 +87,8 @@ export const BaseStepLayout = ({
                     {rightPanelContent ? (
                         rightPanelContent
                     ) : (
-                        <div className="bb-rl-step-preview">
-                            {imageUrl && (
-                                <div className="bb-rl-preview-image">
-                                    <img src={imageUrl} alt={title} />
-                                </div>
-                            )}
-                            <div className="bb-rl-preview-placeholder">
-                                <p>{__('Live preview will appear here', 'buddyboss')}</p>
-                            </div>
+                        <div className="bb-rl-preview-pages">
+                            <PreviewPages />
                         </div>
                     )}
                 </div>
