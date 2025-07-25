@@ -18,38 +18,22 @@ export const FeedRightSidebar = () => {
                     </div>
 
                     <div className="bb-rl-preview-update-item">
-                        <div className="bb-rl-preview-update-avatar bb-rl-preview-update-avatar-group">
-                            <img src={`${window.bbRlOnboarding?.assets?.assetsUrl || ''}group-avatar.png`} alt="UX Writers" />
-                            <div className="bb-rl-preview-update-user-avatar">
-                                <img src={`${window.bbRlOnboarding?.assets?.assetsUrl || ''}elena.png`} alt="Elena Mathew" />
-                            </div>
-                        </div>
-                        <div className="bb-rl-preview-update-content">
-                            <span className="bb-rl-preview-update-text"><strong>UX Writers</strong><br />Elena Mathew posted an update</span>
-                            <span className="bb-rl-preview-update-time">2 minutes ago</span>
-                        </div>
-                    </div>
-
-                    <div className="bb-rl-preview-update-item">
                         <div className="bb-rl-preview-update-avatar">
-                            <img src={`${window.bbRlOnboarding?.assets?.assetsUrl || ''}elena.png`} alt="Elena Mathew" />
+                            <img src={`${window.bbRlOnboarding?.assets?.assetsUrl || ''}john.png`} alt="John Muller" />
                         </div>
                         <div className="bb-rl-preview-update-content">
-                            <span className="bb-rl-preview-update-text">Elena Mathew posted an update</span>
-                            <span className="bb-rl-preview-update-time">2 minutes ago</span>
+                            <span className="bb-rl-preview-update-text">John Muller posted an update</span>
+                            <span className="bb-rl-preview-update-time">32 minutes ago</span>
                         </div>
                     </div>
 
                     <div className="bb-rl-preview-update-item">
                         <div className="bb-rl-preview-update-avatar bb-rl-preview-update-avatar-group">
-                            <img src={`${window.bbRlOnboarding?.assets?.assetsUrl || ''}group-avatar.png`} alt="UX Writers" />
-                            <div className="bb-rl-preview-update-user-avatar">
-                                <img src={`${window.bbRlOnboarding?.assets?.assetsUrl || ''}elena.png`} alt="Elena Mathew" />
-                            </div>
+                            <img src={`${window.bbRlOnboarding?.assets?.assetsUrl || ''}ros.png`} alt="Ros" />
                         </div>
                         <div className="bb-rl-preview-update-content">
-                            <span className="bb-rl-preview-update-text"><strong>UX Writers</strong><br />Elena Mathew posted an update</span>
-                            <span className="bb-rl-preview-update-time">2 minutes ago</span>
+                            <span className="bb-rl-preview-update-text"><strong>Ros Taylor</strong> posted an update</span>
+                            <span className="bb-rl-preview-update-time">1 hour ago</span>
                         </div>
                     </div>
 
@@ -59,7 +43,7 @@ export const FeedRightSidebar = () => {
                         </div>
                         <div className="bb-rl-preview-update-content">
                             <span className="bb-rl-preview-update-text">Elena Mathew reposted an update</span>
-                            <span className="bb-rl-preview-update-time">2 minutes ago</span>
+                            <span className="bb-rl-preview-update-time">6 hours ago</span>
                         </div>
                     </div>
                 </div>
@@ -83,7 +67,7 @@ export const FeedRightSidebar = () => {
                             <img src={`${window.bbRlOnboarding?.assets?.assetsUrl || ''}mira.png`} alt="Member" />
                         </div>
                         <div className="bb-rl-preview-member-avatar">
-                            <img src={`${window.bbRlOnboarding?.assets?.assetsUrl || ''}elena.png`} alt="Member" />
+                            <img src={`${window.bbRlOnboarding?.assets?.assetsUrl || ''}ros.png`} alt="Member" />
                         </div>
                         <div className="bb-rl-preview-member-avatar">
                             <img src={`${window.bbRlOnboarding?.assets?.assetsUrl || ''}john.png`} alt="Member" />
@@ -92,7 +76,7 @@ export const FeedRightSidebar = () => {
                             <img src={`${window.bbRlOnboarding?.assets?.assetsUrl || ''}mira.png`} alt="Member" />
                         </div>
                         <div className="bb-rl-preview-member-avatar">
-                            <img src={`${window.bbRlOnboarding?.assets?.assetsUrl || ''}elena.png`} alt="Member" />
+                            <img src={`${window.bbRlOnboarding?.assets?.assetsUrl || ''}ros.png`} alt="Member" />
                         </div>
                         <div className="bb-rl-preview-member-avatar">
                             <img src={`${window.bbRlOnboarding?.assets?.assetsUrl || ''}john.png`} alt="Member" />
