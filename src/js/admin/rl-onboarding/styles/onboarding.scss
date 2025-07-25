@@ -2157,12 +2157,20 @@ body.bb-rl-fullscreen-mode {
     --bb-rl-preview-border-color: #f3f3f3;
     --bb-rl-preview-border-tertiary-color: #cececf;
     --bb-rl-preview-border-secondary-color: #e7e7e7;
+    --bb-rl-preview-border-brand-secondary-color: #4946fe;
+    --bb-rl-preview-border-quinery-color: #6d6d6e;
     --bb-rl-preview-text-color: #242425;
+    --bb-rl-preview-text-secondary-color: #555556;
     --bb-rl-preview-text-tertiary-color: #858586;
+    --bb-rl-preview-text-brand-primary-color: #3325ae;
+    --bb-rl-preview-text-white-color: #fff;
     --bb-rl-preview-background-color: #fff;
     --bb-rl-preview-background-secondary-color: #f6f6f6;
     --bb-rl-preview-background-secondary-hover-color: #f3f3f3;
     --bb-rl-preview-background-tertiary-color: #dbdbdb;
+    --bb-rl-preview-background-brand-color: #4946fe;
+    --bb-rl-preview-background-brand-secondary-color: #dde4ff;
+    --bb-rl-preview-background-positive-color: #14ae5c;
 }
 
 .bb-rl-preview-pages {
@@ -2880,6 +2888,386 @@ body.bb-rl-fullscreen-mode {
         .bb-rl-preview-blog-time {
             font-size: 12px;
             color: var(--bb-rl-preview-text-tertiary-color);
+        }
+    }
+}
+
+// ==========================================================================
+// Member Profile Styles
+// ==========================================================================
+
+.bb-rl-preview-member-profile {
+    display: flex;
+    flex-direction: column;
+}
+
+.bb-rl-preview-member-profile-header {
+    padding: 24px;
+    background-color: var(--bb-rl-preview-background-color);
+    border-radius: 12px;
+    border: 1px solid var(--bb-rl-preview-border-secondary-color);
+    margin-bottom: 24px;
+
+    &-top {
+        display: flex;
+        align-items: flex-start;
+        gap: 24px;
+        padding-bottom: 24px;
+        border-bottom: 1px solid var(--bb-rl-preview-border-secondary-color);
+        margin-bottom: 16px;
+    }
+
+    .bb-rl-preview-member-profile-avatar {
+        img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+    }
+
+    .bb-rl-preview-member-profile-info {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+
+        .bb-rl-preview-member-profile-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 8px;
+
+            .bb-rl-preview-member-badge {
+                background-color: var(--bb-rl-preview-background-brand-secondary-color);
+                color: var(--bb-rl-preview-text-brand-primary-color);
+                border: 1px solid var(--bb-rl-preview-border-brand-secondary-color);
+                padding: 2px 8px;
+                border-radius: 16px;
+                font-size: 11px;
+                font-weight: 500;
+            }
+
+            .bb-rl-preview-member-menu {
+
+                i {
+                    font-size: 24px;
+                    color: var(--bb-rl-preview-icon-tertiary-color);
+                }
+            }
+        }
+
+        .bb-rl-preview-member-profile-name {
+            font-size: 20px;
+            font-weight: 700;
+            line-height: 1.5;
+            color: var(--bb-rl-preview-text-color);
+            margin: 0;
+        }
+
+        .bb-rl-preview-member-profile-meta {
+            color: var(--bb-rl-preview-text-tertiary-color);
+            font-size: 13px;
+            display: flex;
+            margin-bottom: 20px;
+
+            span + span {
+                display: flex;
+                align-items: center;
+
+                &:before {
+                    content: "";
+                    height: 4px;
+                    width: 4px;
+                    background-color: var(--bb-rl-preview-background-tertiary-color);
+                    border-radius: 50%;
+                    display: inline-block;
+                    vertical-align: middle;
+                    margin: 0 6px;
+                }
+            }
+        }
+
+        .bb-rl-preview-member-profile-actions {
+            display: flex;
+            gap: 12px;
+
+            .bb-rl-preview-member-action-btn {
+                display: flex;
+                align-items: center;
+                gap: 4px;
+                padding: 8px 15px;
+                border-radius: 8px;
+                font-size: 13px;
+                font-weight: 500;
+                border: 1px solid;
+                background: transparent;
+
+                i {
+                    font-size: 16px;
+                }
+
+                &.bb-rl-preview-member-action-primary {
+                    background-color: var(--bb-rl-preview-background-brand-color);
+                    border-color: transparent;
+                    color: var(--bb-rl-preview-text-white-color);
+
+                    i {
+                        color: var(--bb-rl-preview-text-white-color);
+                    }
+                }
+
+                &.bb-rl-preview-member-action-secondary {
+                    border-color: var(--bb-rl-preview-border-tertiary-color);
+                    color: var(--bb-rl-preview-text-color);
+
+                    i {
+                        color: var(--bb-rl-preview-icon-color);
+                    }
+                }
+            }
+        }
+    }
+}
+
+.bb-rl-preview-member-profile-nav {
+    display: flex;
+    background-color: var(--bb-rl-preview-background-color);
+
+         .bb-rl-preview-member-nav-item {
+         color: var(--bb-rl-preview-text-secondary-color);
+         padding: 6px 16px;
+         font-size: 13px;
+         font-weight: 500;
+         text-align: center;
+
+         &.bb-rl-preview-member-nav-active {
+             color: var(--bb-rl-preview-text-color);
+             background-color: var(--bb-rl-preview-background-secondary-color);
+             border-radius: 18px;
+         }
+     }
+ }
+
+// Member Filter Area
+.bb-rl-preview-member-filter-area {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--bb-rl-preview-border-secondary-color);
+
+    .bb-rl-preview-member-filter-left {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+
+        .bb-rl-preview-filter-category {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 6px 15px;
+            border-radius: 18px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--bb-rl-preview-text-secondary-color);
+            border: 1px solid var(--bb-rl-preview-border-secondary-color);
+
+            &.bb-rl-preview-filter-category-active {
+                color: var(--bb-rl-preview-text-color);
+                background-color: var(--bb-rl-preview-background-color);
+                border-color: var(--bb-rl-preview-border-quinery-color);
+            }
+
+            &.bb-rl-preview-filter-category-more {
+                padding: 6px 12px;
+                i {
+                    font-size: 12px;
+                    color: var(--bb-rl-preview-icon-secondary-color);
+                }
+            }
+        }
+    }
+
+    .bb-rl-preview-member-filter-right {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+
+        .bb-rl-preview-filter-dropdown {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 6px 10px;
+            border: 1px solid var(--bb-rl-preview-border-secondary-color);
+            border-radius: 16px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--bb-rl-preview-text-color);
+
+            i {
+                font-size: 18px;
+                color: var(--bb-rl-preview-icon-color);
+            }
+
+            .bb-icons-rl-caret-down {
+                font-size: 16px;
+            }
+        }
+
+                 .bb-rl-preview-icon-button {
+             color: var(--bb-rl-preview-icon-tertiary-color);
+             font-size: 28px;
+
+             &-active {
+                 color: var(--bb-rl-preview-icon-color);
+             }
+         }
+     }
+ }
+
+// Member Listing & Cards
+.bb-rl-preview-member-listing {
+    margin-top: 24px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.bb-rl-preview-member-card {
+    background-color: var(--bb-rl-preview-background-color);
+    border: 1px solid var(--bb-rl-preview-border-secondary-color);
+    border-radius: 12px;
+    padding: 24px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .bb-rl-preview-member-badge {
+        background-color: var(--bb-rl-preview-background-brand-secondary-color);
+        color: var(--bb-rl-preview-text-brand-primary-color);
+        border: 1px solid var(--bb-rl-preview-border-brand-secondary-color);
+        padding: 4px 12px;
+        border-radius: 16px;
+        font-size: 11px;
+        font-weight: 500;
+        margin-bottom: 10px;
+    }
+
+    .bb-rl-preview-member-card-avatar {
+        position: relative;
+        margin-bottom: 10px;
+
+        img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .bb-rl-preview-member-online-status {
+            position: absolute;
+            bottom: 12px;
+            right: 4px;
+            width: 16px;
+            height: 16px;
+            background-color: var(--bb-rl-preview-background-positive-color);
+            border: 2px solid var(--bb-rl-preview-background-color);
+            border-radius: 50%;
+        }
+    }
+
+    .bb-rl-preview-member-card-info {
+        margin-bottom: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        .bb-rl-preview-member-card-name {
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--bb-rl-preview-text-color);
+            margin: 0 0 4px 0;
+        }
+
+        .bb-rl-preview-member-card-role {
+            font-size: 13px;
+            color: var(--bb-rl-preview-text-tertiary-color);
+            margin-bottom: 12px;
+        }
+
+        .bb-rl-preview-member-card-meta {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 4px;
+            font-size: 12px;
+            color: var(--bb-rl-preview-text-tertiary-color);
+            text-align: center;
+
+            span {
+                line-height: 1.3;
+
+                + span:not(:last-child) {
+                    display: flex;
+                    align-items: center;
+                    gap: 4px;
+
+                    &:before {
+                        content: "";
+                        height: 4px;
+                        width: 4px;
+                        background-color: var(--bb-rl-preview-background-tertiary-color);
+                        border-radius: 50%;
+                        display: inline-block;
+                        vertical-align: middle;
+                        margin: 0 2px;
+                    }
+                }
+            }
+        }
+    }
+
+    .bb-rl-preview-member-card-actions {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+
+        .bb-rl-preview-member-card-icons {
+            display: flex;
+            gap: 8px;
+
+            .bb-rl-preview-member-action-icon {
+                color: var(--bb-rl-preview-icon-secondary-color);
+                height: 32px;
+                width: 32px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                i {
+                    font-size: 24px;
+                }
+            }
+        }
+
+        .bb-rl-preview-member-card-btn {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 8px 16px;
+            background-color: var(--bb-rl-preview-background-secondary-color);
+            border: 1px solid var(--bb-rl-preview-border-secondary-color);
+            border-radius: 8px;
+            color: var(--bb-rl-preview-text-color);
+            font-size: 13px;
+            font-weight: 500;
+
+            i {
+                font-size: 14px;
+                color: var(--bb-rl-preview-icon-color);
+            }
         }
     }
 }

@@ -88,7 +88,7 @@ export const BaseStepLayout = ({
                         rightPanelContent
                     ) : (
                         <div className="bb-rl-preview-pages">
-                            <PreviewPages />
+                            <PreviewPages page="members" />
                         </div>
                     )}
                 </div>

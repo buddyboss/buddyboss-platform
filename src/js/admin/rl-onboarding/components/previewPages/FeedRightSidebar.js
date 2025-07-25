@@ -12,18 +12,44 @@ export const FeedRightSidebar = () => {
                             <img src={`${window.bbRlOnboarding?.assets?.assetsUrl || ''}elena.png`} alt="Elena Mathew" />
                         </div>
                         <div className="bb-rl-preview-update-content">
-                            <span className="bb-rl-preview-update-text"><strong>Elena Mathew</strong> posted an update</span>
+                            <span className="bb-rl-preview-update-text">Elena Mathew posted an update</span>
+                            <span className="bb-rl-preview-update-time">2 minutes ago</span>
+                        </div>
+                    </div>
+
+                    <div className="bb-rl-preview-update-item">
+                        <div className="bb-rl-preview-update-avatar bb-rl-preview-update-avatar-group">
+                            <img src={`${window.bbRlOnboarding?.assets?.assetsUrl || ''}group-avatar.png`} alt="UX Writers" />
+                            <div className="bb-rl-preview-update-user-avatar">
+                                <img src={`${window.bbRlOnboarding?.assets?.assetsUrl || ''}elena.png`} alt="Elena Mathew" />
+                            </div>
+                        </div>
+                        <div className="bb-rl-preview-update-content">
+                            <span className="bb-rl-preview-update-text"><strong>UX Writers</strong><br />Elena Mathew posted an update</span>
                             <span className="bb-rl-preview-update-time">2 minutes ago</span>
                         </div>
                     </div>
 
                     <div className="bb-rl-preview-update-item">
                         <div className="bb-rl-preview-update-avatar">
-                            <img src={`${window.bbRlOnboarding?.assets?.assetsUrl || ''}john.png`} alt="John" />
+                            <img src={`${window.bbRlOnboarding?.assets?.assetsUrl || ''}elena.png`} alt="Elena Mathew" />
                         </div>
                         <div className="bb-rl-preview-update-content">
-                            <span className="bb-rl-preview-update-text"><strong>John</strong> posted an update</span>
-                            <span className="bb-rl-preview-update-time">1 hour ago</span>
+                            <span className="bb-rl-preview-update-text">Elena Mathew posted an update</span>
+                            <span className="bb-rl-preview-update-time">2 minutes ago</span>
+                        </div>
+                    </div>
+
+                    <div className="bb-rl-preview-update-item">
+                        <div className="bb-rl-preview-update-avatar bb-rl-preview-update-avatar-group">
+                            <img src={`${window.bbRlOnboarding?.assets?.assetsUrl || ''}group-avatar.png`} alt="UX Writers" />
+                            <div className="bb-rl-preview-update-user-avatar">
+                                <img src={`${window.bbRlOnboarding?.assets?.assetsUrl || ''}elena.png`} alt="Elena Mathew" />
+                            </div>
+                        </div>
+                        <div className="bb-rl-preview-update-content">
+                            <span className="bb-rl-preview-update-text"><strong>UX Writers</strong><br />Elena Mathew posted an update</span>
+                            <span className="bb-rl-preview-update-time">2 minutes ago</span>
                         </div>
                     </div>
 
@@ -32,28 +58,8 @@ export const FeedRightSidebar = () => {
                             <img src={`${window.bbRlOnboarding?.assets?.assetsUrl || ''}elena.png`} alt="Elena Mathew" />
                         </div>
                         <div className="bb-rl-preview-update-content">
-                            <span className="bb-rl-preview-update-text"><strong>Elena Mathew</strong> posted an update</span>
-                            <span className="bb-rl-preview-update-time">6 hours ago</span>
-                        </div>
-                    </div>
-
-                    <div className="bb-rl-preview-update-item">
-                        <div className="bb-rl-preview-update-avatar">
-                            <img src={`${window.bbRlOnboarding?.assets?.assetsUrl || ''}elena.png`} alt="Elena Mathew" />
-                        </div>
-                        <div className="bb-rl-preview-update-content">
-                            <span className="bb-rl-preview-update-text"><strong>Elena Mathew</strong> posted an update</span>
-                            <span className="bb-rl-preview-update-time">1 day ago</span>
-                        </div>
-                    </div>
-
-                    <div className="bb-rl-preview-update-item">
-                        <div className="bb-rl-preview-update-avatar">
-                            <img src={`${window.bbRlOnboarding?.assets?.assetsUrl || ''}john.png`} alt="John" />
-                        </div>
-                        <div className="bb-rl-preview-update-content">
-                            <span className="bb-rl-preview-update-text"><strong>John</strong> reposted an update</span>
-                            <span className="bb-rl-preview-update-time">4 days ago</span>
+                            <span className="bb-rl-preview-update-text">Elena Mathew reposted an update</span>
+                            <span className="bb-rl-preview-update-time">2 minutes ago</span>
                         </div>
                     </div>
                 </div>
