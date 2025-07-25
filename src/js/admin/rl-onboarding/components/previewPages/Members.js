@@ -122,14 +122,14 @@ export const Members = () => {
                 <div className="bb-rl-preview-member-card">
                     
                     <div className="bb-rl-preview-member-card-avatar">
-                        <img src={`${window.bbRlOnboarding?.assets?.assetsUrl || ''}john-144.png`} alt="John Muller" />
+                        <img src={`${window.bbRlOnboarding?.assets?.assetsUrl || ''}ros.png`} alt="Ros Taylor" />
                         <div className="bb-rl-preview-member-online-status"></div>
                     </div>
 
                     <div className="bb-rl-preview-member-badge">Admin</div>
                     
                     <div className="bb-rl-preview-member-card-info">
-                        <h3 className="bb-rl-preview-member-card-name">John Muller</h3>
+                        <h3 className="bb-rl-preview-member-card-name">Ros Taylor</h3>
                         <div className="bb-rl-preview-member-card-role">UX Writer</div>
                         
                         <div className="bb-rl-preview-member-card-meta">
