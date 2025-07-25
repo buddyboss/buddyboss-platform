@@ -6,20 +6,23 @@ import { Members } from './Members';
 import { MembersRightSidebar } from './MembersRightSidebar';
 
 export const PreviewPages = ({ page = 'activity' }) => {
+    let mainFeed = <Feed />;
+    let feedRightSidebar = <FeedRightSidebar />;
+    if ( page === 'members' ) {
+        mainFeed = <Members />;
+        feedRightSidebar = <MembersRightSidebar />;
+    }
+
     return (
         <div className="bb-rl-preview-activity">
             <Header />
 
             <div className="bb-rl-preview-content">
                 <LeftSidebar />
-
                 <div className="bb-rl-preview-main">
-                    {page === 'activity' && <Feed />}
-                    {page === 'members' && <Members />}
+                    {mainFeed}
                 </div>
-
-                {page === 'activity' && <FeedRightSidebar />}
-                {page === 'members' && <MembersRightSidebar />}
+                {feedRightSidebar}
             </div>
         </div>
     );

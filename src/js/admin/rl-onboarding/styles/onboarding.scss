@@ -2747,7 +2747,8 @@ body.bb-rl-fullscreen-mode {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 16px 20px;
+    padding: 16px 0;
+    margin: 0 20px;
     border-bottom: 1px solid var(--bb-rl-preview-border-color);
 
     .bb-rl-preview-widget-title {
@@ -3124,6 +3125,74 @@ body.bb-rl-fullscreen-mode {
          }
      }
  }
+
+// Profile Fields Styles
+.bb-rl-preview-profile-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    .bb-rl-preview-profile-field {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+
+        .bb-rl-preview-field-label {
+            font-size: 14px;
+            font-weight: 400;
+            color: var(--bb-rl-preview-text-tertiary-color);
+            letter-spacing: 0.5px;
+        }
+
+        .bb-rl-preview-field-value {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--bb-rl-preview-text-color);
+            line-height: 1.4;
+
+            &.bb-rl-preview-field-link {
+                color: var(--bb-rl-preview-text-brand-primary-color);
+            }
+        }
+    }
+}
+
+// Network Widget Styles
+.bb-rl-preview-network-tabs {
+    display: flex;
+    margin-bottom: 24px;
+
+    .bb-rl-preview-network-tab {
+        text-align: center;
+        padding: 6px 16px;
+        font-size: 12px;
+        font-weight: 500;
+        color: var(--bb-rl-preview-text-secondary-color);
+
+        &.bb-rl-preview-network-tab-active {
+            font-weight: 600;
+            background-color: var(--bb-rl-preview-background-secondary-color);
+            color: var(--bb-rl-preview-text-color);
+            border-radius: 25px;
+        }
+    }
+}
+
+.bb-rl-preview-network-grid {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+
+    .bb-rl-preview-network-avatar {
+        img {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+    }
+}
 
 // Member Listing & Cards
 .bb-rl-preview-member-listing {
