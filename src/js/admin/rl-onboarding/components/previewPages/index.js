@@ -1,7 +1,7 @@
 import { Header } from './Header';
 import { Sidebar } from './LeftSidebar';
 import { Feed } from './Feed';
-import { RightSidebar } from './RightSidebar';
+import { FeedRightSidebar } from './FeedRightSidebar';
 
 export const PreviewPages = () => {
     return (
@@ -15,7 +15,7 @@ export const PreviewPages = () => {
                     <Feed />
                 </div>
 
-                <RightSidebar />
+                <FeedRightSidebar />
             </div>
         </div>
     );

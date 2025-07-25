@@ -1,4 +1,4 @@
-export const RightSidebar = () => {
+export const FeedRightSidebar = () => {
     return (
         <div className="bb-rl-preview-right-sidebar">
             {/* Updates Widget */}

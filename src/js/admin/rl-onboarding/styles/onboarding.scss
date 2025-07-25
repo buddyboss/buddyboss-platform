@@ -2255,6 +2255,8 @@ body.bb-rl-fullscreen-mode {
 .bb-rl-preview-main {
     flex: 1;
     padding: 24px;
+    max-width: 800px;
+    margin: 0 auto;
 }
 
 // Navigation List
@@ -2719,6 +2721,7 @@ body.bb-rl-fullscreen-mode {
 .bb-rl-preview-right-sidebar {
     width: 340px;
     padding: 24px;
+    padding-left: 0;
     display: flex;
     flex-direction: column;
     gap: 24px;
