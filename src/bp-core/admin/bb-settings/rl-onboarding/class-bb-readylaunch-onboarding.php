@@ -133,171 +133,204 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 				),
 				'site_appearance' => array(
 					'bb_rl_theme_mode' => array(
-						'type'       => 'visual_radio_options',
-						'options'    => array(
+						'type'    => 'visual_radio_options',
+						'options' => array(
 							'light'  => array(
 								'label'       => __( 'Light Mode', 'buddyboss' ),
 								'description' => __( 'The site will be shown in light mode.', 'buddyboss' ),
-								'icon_class' => 'bb-icons-rl-sun',
+								'icon_class'  => 'bb-icons-rl-sun',
 							),
 							'dark'   => array(
 								'label'       => __( 'Dark Mode', 'buddyboss' ),
 								'description' => __( 'The site will be shown in dark mode.', 'buddyboss' ),
-								'icon_class' => 'bb-icons-rl-moon',
+								'icon_class'  => 'bb-icons-rl-moon',
 							),
 							'choice' => array(
 								'label'       => __( 'Both', 'buddyboss' ),
 								'description' => __( 'Users can switch between modes.', 'buddyboss' ),
-								'icon_class' => 'bb-icons-rl-circle-half',
+								'icon_class'  => 'bb-icons-rl-circle-half',
 							),
 						),
-						'default'     => 'light',
+						'default' => 'light',
 					),
 				),
 				'brandings'       => array(
-					'bb_rl_light_logo'    => array(
+					'bb_rl_light_logo'        => array(
 						'type'        => 'media',
 						'label'       => __( 'Logo (Light mode)', 'buddyboss' ),
 						'customClass' => 'bb-rl-light-logo',
 						'conditional' => array(
 							'dependsOn' => 'bb_rl_theme_mode',
 							'value'     => 'dark',
-							'operator'  => '!==', // Show when NOT dark mode
+							'operator'  => '!==', // Show when NOT dark mode.
 						),
 					),
-					'bb_rl_dark_logo'    => array(
+					'bb_rl_dark_logo'         => array(
 						'type'        => 'media',
 						'label'       => __( 'Logo (Dark mode)', 'buddyboss' ),
 						'customClass' => 'bb-rl-dark-logo',
 						'conditional' => array(
 							'dependsOn' => 'bb_rl_theme_mode',
 							'value'     => 'light',
-							'operator'  => '!==', // Show when NOT light mode
+							'operator'  => '!==', // Show when NOT light mode.
 						),
 					),
-					'logo_description'    => array(
+					'logo_description_light'  => array(
+						'type'        => 'description',
+						'description' => __( 'Recommended to upload a dark-colored logo for light mode, 280x80 px, in JPG or PNG format.', 'buddyboss' ),
+						'conditional' => array(
+							'dependsOn' => 'bb_rl_theme_mode',
+							'value'     => 'light',
+							'operator'  => '===',
+						),
+					),
+					'logo_description_dark'   => array(
+						'type'        => 'description',
+						'description' => __( 'Recommended to upload a light-colored logo for dark mode, 280x80 px, in JPG or PNG format.', 'buddyboss' ),
+						'conditional' => array(
+							'dependsOn' => 'bb_rl_theme_mode',
+							'value'     => 'dark',
+							'operator'  => '===',
+						),
+					),
+					'logo_description_choice' => array(
 						'type'        => 'description',
 						'description' => __( 'Recommended to upload a light-colored logo for dark mode and a dark-colored logo for light mode, 280x80 px, in JPG or PNG format.', 'buddyboss' ),
+						'conditional' => array(
+							'dependsOn' => 'bb_rl_theme_mode',
+							'value'     => 'choice',
+							'operator'  => '===',
+						),
 					),
 					'logo_color_separator'    => array(
-						'type'        => 'hr'
+						'type' => 'hr',
 					),
-					'bb_rl_color_light' => array(
+					'bb_rl_color_light'       => array(
 						'type'        => 'color',
 						'label'       => __( 'Primary Color (Light mode)', 'buddyboss' ),
 						'default'     => '#3E34FF',
+						'conditional' => array(
+							'dependsOn' => 'bb_rl_theme_mode',
+							'value'     => 'dark',
+							'operator'  => '!==', // Show when NOT dark mode.
+						),
 					),
-					'bb_rl_color_dark' => array(
+					'bb_rl_color_dark'        => array(
 						'type'        => 'color',
 						'label'       => __( 'Primary Color (Dark mode)', 'buddyboss' ),
 						'default'     => '#A347FF',
+						'conditional' => array(
+							'dependsOn' => 'bb_rl_theme_mode',
+							'value'     => 'light',
+							'operator'  => '!==', // Show when NOT light mode.
+						),
 					),
-					'color_description'    => array(
+					'color_description'       => array(
 						'type'        => 'description',
 						'description' => __( 'Primary color used for buttons, links, and interactive elements.', 'buddyboss' ),
 					),
 				),
 				'pages'           => array(
-					'registration'        => array(
-						'type'        => 'checkbox',
-						'label'       => __( 'Login & Registration', 'buddyboss' ),
-						'icon'       => 'bb-icons-rl-file-text',
-						'default'     => true,
+					'registration' => array(
+						'type'    => 'checkbox',
+						'label'   => __( 'Login & Registration', 'buddyboss' ),
+						'icon'    => 'bb-icons-rl-file-text',
+						'default' => true,
 					),
-					'courses'        => array(
-						'type'        => 'checkbox',
-						'label'       => __( 'Courses', 'buddyboss' ),
-						'icon'       => 'bb-icons-rl-file-text',
-						'default'     => true,
+					'courses'      => array(
+						'type'    => 'checkbox',
+						'label'   => __( 'Courses', 'buddyboss' ),
+						'icon'    => 'bb-icons-rl-file-text',
+						'default' => true,
 					),
 				),
 				'side_menus'      => array(
 					'menu_items' => array(
-						'type'        => 'draggable',
-						'label'       => __( 'Navigation', 'buddyboss' ),
-						'options'     => $this->getComponentMenuItems(),
+						'type'    => 'draggable',
+						'label'   => __( 'Navigation', 'buddyboss' ),
+						'options' => $this->getComponentMenuItems(),
 					),
 					'link_items' => array(
-						'type'        => 'draggable_links',
-						'label'       => __( 'Link', 'buddyboss' ),
-						// TODO: Get these links from the database
-						'options'     => array(),
+						'type'    => 'draggable_links',
+						'label'   => __( 'Link', 'buddyboss' ),
+						// TODO: Get these links from the database.
+						'options' => array(),
 					),
 				),
 				'widgets'         => array(
-					'bb_rl_activity_sidebars' => array(
-						'type'        => 'draggable',
-						'label'       => __( 'Activity Feed', 'buddyboss' ),
-						'options'     => [
-							[
-								'id' => 'complete_profile',
-								'label' => __('Complete Profile', 'buddyboss'),
+					'bb_rl_activity_sidebars'       => array(
+						'type'    => 'draggable',
+						'label'   => __( 'Activity Feed', 'buddyboss' ),
+						'options' => array(
+							array(
+								'id'      => 'complete_profile',
+								'label'   => __( 'Complete Profile', 'buddyboss' ),
 								'enabled' => true,
-								'order' => 1,
-							],
-							[
-								'id' => 'latest_updates',
-								'label' => __('Latest Updates', 'buddyboss'),
+								'order'   => 1,
+							),
+							array(
+								'id'      => 'latest_updates',
+								'label'   => __( 'Latest Updates', 'buddyboss' ),
 								'enabled' => true,
-								'order' => 2,
-							],
-							[
-								'id' => 'recent_blog_posts',
-								'label' => __('Recent Blog Posts', 'buddyboss'),
+								'order'   => 2,
+							),
+							array(
+								'id'      => 'recent_blog_posts',
+								'label'   => __( 'Recent Blog Posts', 'buddyboss' ),
 								'enabled' => true,
-								'order' => 3,
-							],
-							[
-								'id' => 'active_members',
-								'label' => __('Active Members', 'buddyboss'),
+								'order'   => 3,
+							),
+							array(
+								'id'      => 'active_members',
+								'label'   => __( 'Active Members', 'buddyboss' ),
 								'enabled' => true,
-								'order' => 4,
-							],
-							
-						],
+								'order'   => 4,
+							),
+
+						),
 					),
 					'bb_rl_member_profile_sidebars' => array(
-						'type'        => 'draggable',
-						'label'       => __( 'Member Profile', 'buddyboss' ),
-						'options'     => [
-							[
-								'id' => 'complete_profile',
-								'label' => __('Complete Profile', 'buddyboss'),
+						'type'    => 'draggable',
+						'label'   => __( 'Member Profile', 'buddyboss' ),
+						'options' => array(
+							array(
+								'id'      => 'complete_profile',
+								'label'   => __( 'Complete Profile', 'buddyboss' ),
 								'enabled' => true,
-								'order' => 1,
-							],
-							[
-								'id' => 'connections',
-								'label' => __('Connections', 'buddyboss'),
+								'order'   => 1,
+							),
+							array(
+								'id'      => 'connections',
+								'label'   => __( 'Connections', 'buddyboss' ),
 								'enabled' => true,
-								'order' => 2,
-							],
-							[
-								'id' => 'my_network',
-								'label' => __('Network (Follow, Followers)', 'buddyboss'),
+								'order'   => 2,
+							),
+							array(
+								'id'      => 'my_network',
+								'label'   => __( 'Network (Follow, Followers)', 'buddyboss' ),
 								'enabled' => true,
-								'order' => 3,
-							],
-							
-						],
+								'order'   => 3,
+							),
+
+						),
 					),
-					'bb_rl_groups_sidebars' => array(
-						'type'        => 'draggable',
-						'label'       => __( 'Group', 'buddyboss' ),
-						'options'     => [
-							[
-								'id' => 'about_group',
-								'label' => __('About Group', 'buddyboss'),
+					'bb_rl_groups_sidebars'         => array(
+						'type'    => 'draggable',
+						'label'   => __( 'Group', 'buddyboss' ),
+						'options' => array(
+							array(
+								'id'      => 'about_group',
+								'label'   => __( 'About Group', 'buddyboss' ),
 								'enabled' => true,
-								'order' => 1,
-							],
-							[
-								'id' => 'group_members',
-								'label' => __('Group Members', 'buddyboss'),
+								'order'   => 1,
+							),
+							array(
+								'id'      => 'group_members',
+								'label'   => __( 'Group Members', 'buddyboss' ),
 								'enabled' => true,
-								'order' => 2,
-							],							
-						],
+								'order'   => 2,
+							),
+						),
 					),
 				),
 			),
@@ -309,8 +342,7 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 			),
 			'react_dependencies'    => array( 'react', 'wp-components', 'wp-element', 'wp-i18n' ),
 			'custom_hooks'          => array(
-				'completion'      => array(
-				),
+				'completion'      => array(),
 				'step_completion' => array(
 					'bb_rl_step_completed',
 				),
@@ -355,17 +387,21 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 	 */
 	private function init_readylaunch_hooks() {
 		// Debug: Log that the wizard is initialized
-		if (defined('WP_DEBUG') && WP_DEBUG) {
-			error_log('ReadyLaunch Onboarding initialized with wizard_id: ' . $this->wizard_id);
+		if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+			error_log( 'ReadyLaunch Onboarding initialized with wizard_id: ' . $this->wizard_id );
 
 			// Check if AJAX actions are registered
-			add_action('init', function() {
-				if (has_action('wp_ajax_' . $this->wizard_id . '_save_preferences')) {
-					error_log('AJAX action registered: wp_ajax_' . $this->wizard_id . '_save_preferences');
-				} else {
-					error_log('AJAX action NOT registered: wp_ajax_' . $this->wizard_id . '_save_preferences');
-				}
-			}, 20);
+			add_action(
+				'init',
+				function () {
+					if ( has_action( 'wp_ajax_' . $this->wizard_id . '_save_preferences' ) ) {
+						error_log( 'AJAX action registered: wp_ajax_' . $this->wizard_id . '_save_preferences' );
+					} else {
+						error_log( 'AJAX action NOT registered: wp_ajax_' . $this->wizard_id . '_save_preferences' );
+					}
+				},
+				20
+			);
 		}
 	}
 
@@ -606,7 +642,7 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 				}
 
 				$field_config = $step_options[ $step_key ][ $field_key ];
-				$field_type = $field_config['type'] ?? 'text';
+				$field_type   = $field_config['type'] ?? 'text';
 
 				// Sanitize based on field type and save directly using field key
 				switch ( $field_type ) {
@@ -618,7 +654,7 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 					case 'radio':
 					case 'visual_options':
 					case 'visual_radio_options':
-						$allowed_values = isset( $field_config['options'] ) ? array_keys( $field_config['options'] ) : array();
+						$allowed_values          = isset( $field_config['options'] ) ? array_keys( $field_config['options'] ) : array();
 						$sanitized[ $field_key ] = in_array( $field_value, $allowed_values, true ) ? $field_value : ( $field_config['default'] ?? '' );
 						break;
 
@@ -634,9 +670,9 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 						if ( is_array( $field_value ) && isset( $field_value['id'] ) ) {
 							// New format: complete image object with id, url, alt, etc.
 							$sanitized[ $field_key ] = array(
-								'id' => intval( $field_value['id'] ),
-								'url' => isset( $field_value['url'] ) ? esc_url_raw( $field_value['url'] ) : '',
-								'alt' => isset( $field_value['alt'] ) ? sanitize_text_field( $field_value['alt'] ) : '',
+								'id'    => intval( $field_value['id'] ),
+								'url'   => isset( $field_value['url'] ) ? esc_url_raw( $field_value['url'] ) : '',
+								'alt'   => isset( $field_value['alt'] ) ? sanitize_text_field( $field_value['alt'] ) : '',
 								'title' => isset( $field_value['title'] ) ? sanitize_text_field( $field_value['title'] ) : '',
 							);
 						} elseif ( is_numeric( $field_value ) ) {
@@ -661,19 +697,19 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 									if ( $field_type === 'draggable_links' ) {
 										// Sanitize link items
 										$sanitized_items[] = array(
-											'id' => isset( $item['id'] ) ? sanitize_text_field( $item['id'] ) : '',
-											'title' => isset( $item['title'] ) ? sanitize_text_field( $item['title'] ) : '',
-											'url' => isset( $item['url'] ) ? esc_url_raw( $item['url'] ) : '',
+											'id'        => isset( $item['id'] ) ? sanitize_text_field( $item['id'] ) : '',
+											'title'     => isset( $item['title'] ) ? sanitize_text_field( $item['title'] ) : '',
+											'url'       => isset( $item['url'] ) ? esc_url_raw( $item['url'] ) : '',
 											'isEditing' => false, // Always set to false for safety
 										);
 									} else {
 										// Sanitize draggable menu items
 										$sanitized_items[] = array(
-											'id' => isset( $item['id'] ) ? sanitize_text_field( $item['id'] ) : '',
-											'label' => isset( $item['label'] ) ? sanitize_text_field( $item['label'] ) : '',
-											'icon' => isset( $item['icon'] ) ? sanitize_text_field( $item['icon'] ) : '',
+											'id'      => isset( $item['id'] ) ? sanitize_text_field( $item['id'] ) : '',
+											'label'   => isset( $item['label'] ) ? sanitize_text_field( $item['label'] ) : '',
+											'icon'    => isset( $item['icon'] ) ? sanitize_text_field( $item['icon'] ) : '',
 											'enabled' => isset( $item['enabled'] ) ? (bool) $item['enabled'] : true,
-											'order' => isset( $item['order'] ) ? intval( $item['order'] ) : 0,
+											'order'   => isset( $item['order'] ) ? intval( $item['order'] ) : 0,
 										);
 									}
 								}
@@ -1036,7 +1072,7 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 			'bb_rl_dark_logo',
 			'bb_rl_dark_logo_url',
 			'bb_rl_color_light',
-			'bb_rl_color_dark'
+			'bb_rl_color_dark',
 		);
 
 		// Process any remaining fields
@@ -1066,85 +1102,88 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 	}
 
 	private function getComponentMenuItems() {
-		$items = [
-			[
-				'id' => 'members',
-				'label' => __('Members', 'buddyboss'),
-				'icon' => 'users',
+		$items = array(
+			array(
+				'id'      => 'members',
+				'label'   => __( 'Members', 'buddyboss' ),
+				'icon'    => 'users',
 				'enabled' => true,
-				'order' => 1
-			],
-		];
+				'order'   => 1,
+			),
+		);
 
 		$currentOrder = 0;
 
 		// Add activity feed if component is active
-		if (bp_is_active('activity')) {
-			array_unshift($items, [
-				'id' => 'activity_feed',
-				'label' => __('Activity Feed', 'buddyboss'),
-				'icon' => 'pulse',
-				'enabled' => true,
-				'order' => $currentOrder++
-			]);
+		if ( bp_is_active( 'activity' ) ) {
+			array_unshift(
+				$items,
+				array(
+					'id'      => 'activity_feed',
+					'label'   => __( 'Activity Feed', 'buddyboss' ),
+					'icon'    => 'pulse',
+					'enabled' => true,
+					'order'   => $currentOrder++,
+				)
+			);
 		}
 
 		// Update order for base items
-		foreach ($items as &$item) {
-			if ($item['id'] === 'members') {
+		foreach ( $items as &$item ) {
+			if ( $item['id'] === 'members' ) {
 				$item['order'] = $currentOrder++;
 			}
 		}
 
 		// Add groups if component is active
-		if (bp_is_active('groups')) {
-			$items[] = [
-				'id' => 'groups',
-				'label' => __('Groups', 'buddyboss'),
-				'icon' => 'users-three',
+		if ( bp_is_active( 'groups' ) ) {
+			$items[] = array(
+				'id'      => 'groups',
+				'label'   => __( 'Groups', 'buddyboss' ),
+				'icon'    => 'users-three',
 				'enabled' => true,
-				'order' => $currentOrder++
-			];
+				'order'   => $currentOrder++,
+			);
 		}
 
 		// Add forums if component is active
-		if (bp_is_active('forums')) {
-			$items[] = [
-				'id' => 'forums',
-				'label' => __('Forums', 'buddyboss'),
-				'icon' => 'chat-text',
+		if ( bp_is_active( 'forums' ) ) {
+			$items[] = array(
+				'id'      => 'forums',
+				'label'   => __( 'Forums', 'buddyboss' ),
+				'icon'    => 'chat-text',
 				'enabled' => true,
-				'order' => $currentOrder++
-			];
+				'order'   => $currentOrder++,
+			);
 		}
 
 		// Update order for remaining base items
-		foreach ($items as &$item) {
-			if ($item['id'] === 'courses') {
+		foreach ( $items as &$item ) {
+			if ( $item['id'] === 'courses' ) {
 				$item['order'] = $currentOrder++;
 			}
 		}
 
 		// Add messages if component is active
-		if (bp_is_active('messages')) {
-			$items[] = [
-				'id' => 'messages',
-				'label' => __('Messages', 'buddyboss'),
-				'icon' => 'chat-teardrop-text',
+		if ( bp_is_active( 'messages' ) ) {
+			$items[] = array(
+				'id'      => 'messages',
+				'label'   => __( 'Messages', 'buddyboss' ),
+				'icon'    => 'chat-teardrop-text',
 				'enabled' => true,
-				'order' => $currentOrder++
-			];
+				'order'   => $currentOrder++,
+			);
 		}
 
 		// Add notifications if component is active
-		if (bp_is_active('notifications')) {
-			$items[] = [
-				'id' => 'notifications',
-				'label' => __('Notifications', 'buddyboss'),
-				'icon' => 'bell',
+		if ( bp_is_active( 'notifications' ) ) {
+			$items[] = array(
+				'id'      => 'notifications',
+				'label'   => __( 'Notifications', 'buddyboss' ),
+				'icon'    => 'bell',
 				'enabled' => true,
-				'order' => $currentOrder
-			];
+				'order'   => $currentOrder,
+			);
 		}
 
 		return $items;
