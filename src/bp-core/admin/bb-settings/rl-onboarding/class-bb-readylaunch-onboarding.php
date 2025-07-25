@@ -386,11 +386,11 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 	 * @return void
 	 */
 	private function init_readylaunch_hooks() {
-		// Debug: Log that the wizard is initialized
+		// Debug: Log that the wizard is initialized.
 		if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
 			error_log( 'ReadyLaunch Onboarding initialized with wizard_id: ' . $this->wizard_id );
 
-			// Check if AJAX actions are registered
+			// Check if AJAX actions are registered.
 			add_action(
 				'init',
 				function () {
@@ -443,7 +443,7 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 	 * @return void
 	 */
 	protected function enqueue_wizard_assets() {
-		// Enqueue WordPress media library for image uploads
+		// Enqueue WordPress media library for image uploads.
 		wp_enqueue_media();
 
 		$asset_file = __DIR__ . '/build/rl-onboarding.asset.php';
@@ -627,10 +627,10 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 
 		$sanitized = array();
 
-		// Get step options configuration to validate field types
+		// Get step options configuration to validate field types.
 		$step_options = $this->get_config( 'step_options', array() );
 
-		// Process all step data and extract field values
+		// Process all step data and extract field values.
 		foreach ( $settings as $step_key => $step_data ) {
 			if ( ! is_array( $step_data ) || ! isset( $step_options[ $step_key ] ) ) {
 				continue;
@@ -644,7 +644,7 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 				$field_config = $step_options[ $step_key ][ $field_key ];
 				$field_type   = $field_config['type'] ?? 'text';
 
-				// Sanitize based on field type and save directly using field key
+				// Sanitize based on field type and save directly using field key.
 				switch ( $field_type ) {
 					case 'text':
 						$sanitized[ $field_key ] = sanitize_text_field( wp_unslash( $field_value ) );
@@ -676,14 +676,14 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 								'title' => isset( $field_value['title'] ) ? sanitize_text_field( $field_value['title'] ) : '',
 							);
 						} elseif ( is_numeric( $field_value ) ) {
-							// Legacy format: just the ID
+							// Legacy format: just the ID.
 							$sanitized[ $field_key ] = intval( $field_value );
-							// Also save the URL if provided
+							// Also save the URL if provided.
 							if ( isset( $step_data[ $field_key . '_url' ] ) ) {
 								$sanitized[ $field_key . '_url' ] = esc_url_raw( $step_data[ $field_key . '_url' ] );
 							}
 						} else {
-							// Invalid or empty value
+							// Invalid or empty value.
 							$sanitized[ $field_key ] = null;
 						}
 						break;
@@ -694,16 +694,16 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 							$sanitized_items = array();
 							foreach ( $field_value as $item ) {
 								if ( is_array( $item ) ) {
-									if ( $field_type === 'draggable_links' ) {
-										// Sanitize link items
+									if ( 'draggable_links' === $field_type ) {
+										// Sanitize link items.
 										$sanitized_items[] = array(
 											'id'        => isset( $item['id'] ) ? sanitize_text_field( $item['id'] ) : '',
 											'title'     => isset( $item['title'] ) ? sanitize_text_field( $item['title'] ) : '',
 											'url'       => isset( $item['url'] ) ? esc_url_raw( $item['url'] ) : '',
-											'isEditing' => false, // Always set to false for safety
+											'isEditing' => false, // Always set to false for safety.
 										);
 									} else {
-										// Sanitize draggable menu items
+										// Sanitize draggable menu items.
 										$sanitized_items[] = array(
 											'id'      => isset( $item['id'] ) ? sanitize_text_field( $item['id'] ) : '',
 											'label'   => isset( $item['label'] ) ? sanitize_text_field( $item['label'] ) : '',
@@ -716,7 +716,7 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 							}
 							$sanitized[ $field_key ] = $sanitized_items;
 						} else {
-							// Fall back to default if not array
+							// Fall back to default if not array.
 							$sanitized[ $field_key ] = isset( $field_config['options'] ) ? $field_config['options'] : array();
 						}
 						break;
@@ -784,10 +784,10 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 	 * @return void
 	 */
 	public function save_preferences( $preferences ) {
-		// Save to parent preferences system first
+		// Save to parent preferences system first.
 		parent::save_preferences( $preferences );
 
-		// Apply the configuration immediately for real-time updates
+		// Apply the configuration immediately for real-time updates.
 		$this->apply_readylaunch_configuration( $preferences );
 	}
 
@@ -804,25 +804,25 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 			return;
 		}
 
-		// Apply community setup - blogname field
+		// Apply community setup - blogname field.
 		if ( ! empty( $final_settings['blogname'] ) ) {
 			update_option( 'blogname', $final_settings['blogname'] );
 		}
 
-		// Apply theme mode setting
+		// Apply theme mode setting.
 		if ( ! empty( $final_settings['bb_rl_theme_mode'] ) ) {
-			// Save theme mode preference
+			// Save theme mode preference.
 			$this->save_readylaunch_option( 'theme_mode', $final_settings['bb_rl_theme_mode'] );
 		}
 
-		// Apply branding settings - logos
+		// Apply branding settings - logos.
 		if ( ! empty( $final_settings['bb_rl_light_logo'] ) ) {
 			if ( is_array( $final_settings['bb_rl_light_logo'] ) ) {
-				// New format: complete image object
+				// New format: complete image object.
 				$this->save_readylaunch_option( 'light_logo', $final_settings['bb_rl_light_logo']['id'] );
 				$this->save_readylaunch_option( 'light_logo_url', $final_settings['bb_rl_light_logo']['url'] );
 			} else {
-				// Legacy format: just the ID
+				// Legacy format: just the ID.
 				$this->save_readylaunch_option( 'light_logo', $final_settings['bb_rl_light_logo'] );
 				if ( ! empty( $final_settings['bb_rl_light_logo_url'] ) ) {
 					$this->save_readylaunch_option( 'light_logo_url', $final_settings['bb_rl_light_logo_url'] );
@@ -832,11 +832,11 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 
 		if ( ! empty( $final_settings['bb_rl_dark_logo'] ) ) {
 			if ( is_array( $final_settings['bb_rl_dark_logo'] ) ) {
-				// New format: complete image object
+				// New format: complete image object.
 				$this->save_readylaunch_option( 'dark_logo', $final_settings['bb_rl_dark_logo']['id'] );
 				$this->save_readylaunch_option( 'dark_logo_url', $final_settings['bb_rl_dark_logo']['url'] );
 			} else {
-				// Legacy format: just the ID
+				// Legacy format: just the ID.
 				$this->save_readylaunch_option( 'dark_logo', $final_settings['bb_rl_dark_logo'] );
 				if ( ! empty( $final_settings['bb_rl_dark_logo_url'] ) ) {
 					$this->save_readylaunch_option( 'dark_logo_url', $final_settings['bb_rl_dark_logo_url'] );
@@ -844,7 +844,7 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 			}
 		}
 
-		// Apply color settings
+		// Apply color settings.
 		if ( ! empty( $final_settings['bb_rl_color_light'] ) ) {
 			$this->save_readylaunch_option( 'primary_color_light', $final_settings['bb_rl_color_light'] );
 		}
@@ -853,7 +853,7 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 			$this->save_readylaunch_option( 'primary_color_dark', $final_settings['bb_rl_color_dark'] );
 		}
 
-		// Apply remaining step settings dynamically
+		// Apply remaining step settings dynamically.
 		$this->apply_remaining_step_settings( $final_settings );
 
 		// Apply site appearance settings.
@@ -1048,7 +1048,7 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 	 * @return void
 	 */
 	private function save_readylaunch_option( $option_name, $option_value ) {
-		// Save as BuddyPress option with bb_rl_ prefix
+		// Save as BuddyPress option with bb_rl_ prefix.
 		bp_update_option( 'bb_rl_' . $option_name, $option_value );
 	}
 
@@ -1063,7 +1063,7 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 	private function apply_remaining_step_settings( $final_settings ) {
 		$step_options = $this->get_config( 'step_options', array() );
 
-		// Get list of fields that were already handled above
+		// Get list of fields that were already handled above.
 		$handled_fields = array(
 			'blogname',
 			'bb_rl_theme_mode',
@@ -1075,14 +1075,14 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 			'bb_rl_color_dark',
 		);
 
-		// Process any remaining fields
+		// Process any remaining fields.
 		foreach ( $final_settings as $field_key => $field_value ) {
-			// Skip if already handled or if it's a non-interactive field
+			// Skip if already handled or if it's a non-interactive field.
 			if ( in_array( $field_key, $handled_fields, true ) ) {
 				continue;
 			}
 
-			// Find the field config to determine how to save it
+			// Find the field config to determine how to save it.
 			$field_config = null;
 			foreach ( $step_options as $step_key => $step_fields ) {
 				if ( isset( $step_fields[ $field_key ] ) ) {
@@ -1091,12 +1091,12 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 				}
 			}
 
-			// Skip non-interactive fields
+			// Skip non-interactive fields.
 			if ( ! $field_config || in_array( $field_config['type'] ?? '', array( 'description', 'hr' ), true ) ) {
 				continue;
 			}
 
-			// Save as ReadyLaunch option
+			// Save as ReadyLaunch option.
 			$this->save_readylaunch_option( $field_key, $field_value );
 		}
 	}
@@ -1114,7 +1114,7 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 
 		$currentOrder = 0;
 
-		// Add activity feed if component is active
+		// Add activity feed if component is active.
 		if ( bp_is_active( 'activity' ) ) {
 			array_unshift(
 				$items,
@@ -1128,14 +1128,14 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 			);
 		}
 
-		// Update order for base items
+		// Update order for base items.
 		foreach ( $items as &$item ) {
-			if ( $item['id'] === 'members' ) {
+			if ( 'members' === $item['id'] ) {
 				$item['order'] = $currentOrder++;
 			}
 		}
 
-		// Add groups if component is active
+		// Add groups if component is active.
 		if ( bp_is_active( 'groups' ) ) {
 			$items[] = array(
 				'id'      => 'groups',
@@ -1146,7 +1146,7 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 			);
 		}
 
-		// Add forums if component is active
+		// Add forums if component is active.
 		if ( bp_is_active( 'forums' ) ) {
 			$items[] = array(
 				'id'      => 'forums',
@@ -1157,14 +1157,14 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 			);
 		}
 
-		// Update order for remaining base items
+		// Update order for remaining base items.
 		foreach ( $items as &$item ) {
-			if ( $item['id'] === 'courses' ) {
+			if ( 'courses' === $item['id'] ) {
 				$item['order'] = $currentOrder++;
 			}
 		}
 
-		// Add messages if component is active
+		// Add messages if component is active.
 		if ( bp_is_active( 'messages' ) ) {
 			$items[] = array(
 				'id'      => 'messages',
@@ -1175,7 +1175,7 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 			);
 		}
 
-		// Add notifications if component is active
+		// Add notifications if component is active.
 		if ( bp_is_active( 'notifications' ) ) {
 			$items[] = array(
 				'id'      => 'notifications',
