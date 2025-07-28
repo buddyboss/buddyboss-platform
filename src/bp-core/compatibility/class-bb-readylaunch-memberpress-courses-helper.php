@@ -9,8 +9,8 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-use memberpress\courses\models as models;
-use memberpress\courses\helpers as helpers;
+use memberpress\courses\models;
+use memberpress\courses\helpers;
 use memberpress\courses\lib;
 
 /**
@@ -387,7 +387,7 @@ class BB_Readylaunch_Memberpress_Courses_Helper {
 	 */
 	public function bb_rl_mpcs_before_loop() {
 		if ( memberpress\courses\helpers\Courses::is_course_archive() ) {
-			// Output the secondary header
+			// Output the secondary header.
 			$this->bb_rl_mpcs_output_secondary_header();
 			?>
 			<div class="bb-rl-container-inner bb-rl-meprlms-content-wrap">
@@ -422,7 +422,7 @@ class BB_Readylaunch_Memberpress_Courses_Helper {
 	 */
 	public function bb_rl_mpcs_no_posts() {
 		if ( memberpress\courses\helpers\Courses::is_course_archive() ) {
-			// Output the secondary header
+			// Output the secondary header.
 			$this->bb_rl_mpcs_output_secondary_header();
 			?>
 			<div class="bb-rl-container-inner bb-rl-meprlms-no-courses">
@@ -435,13 +435,13 @@ class BB_Readylaunch_Memberpress_Courses_Helper {
 	/**
 	 * Output the secondary header for MemberPress courses archive.
 	 *
-	 * @since BuddyBoss 2.9.00
+	 * @since BuddyBoss [BBVERSION]
 	 */
 	private function bb_rl_mpcs_output_secondary_header() {
 		global $wp_query, $wp;
-		$search          = isset( $_GET['s'] ) ? esc_attr( $_GET['s'] ) : '';  // phpcs:ignore
+		$search          = isset( $_GET['s'] ) ? esc_attr( $_GET['s'] ) : '';               // phpcs:ignore
 		$category        = isset( $_GET['category'] ) ? esc_attr( $_GET['category'] ) : ''; // phpcs:ignore
-		$author          = isset( $_GET['author'] ) ? esc_attr( $_GET['author'] ) : ''; // phpcs:ignore
+		$author          = isset( $_GET['author'] ) ? esc_attr( $_GET['author'] ) : '';     // phpcs:ignore
 		$filter_base_url = home_url( $wp->request );
 		$pos             = strpos( $filter_base_url, '/page' );
 		$courses_page    = get_home_url( null, helpers\Courses::get_permalink_base() );
@@ -480,7 +480,8 @@ class BB_Readylaunch_Memberpress_Courses_Helper {
 						<div class="column col-sm-12">
 							<div class="dropdown">
 								<a href="#" class="btn btn-link dropdown-toggle" tabindex="0">
-									<?php esc_html_e( 'Category', 'buddyboss' ); ?> <span></span><i class="bb-icons-rl-caret-down"></i>
+									<?php esc_html_e( 'Category', 'buddyboss' ); ?>
+									<span></span><i class="bb-icons-rl-caret-down"></i>
 								</a>
 								<ul class="menu">
 									<?php
@@ -498,16 +499,27 @@ class BB_Readylaunch_Memberpress_Courses_Helper {
 
 							<div class="dropdown">
 								<a href="#" class="btn btn-link dropdown-toggle" tabindex="0">
-									<?php esc_html_e( 'Author', 'buddyboss' ); ?> <span></span><i class="bb-icons-rl-caret-down"></i>
+									<?php esc_html_e( 'Author', 'buddyboss' ); ?>
+									<span></span><i class="bb-icons-rl-caret-down"></i>
 								</a>
 								<!-- menu component -->
 								<ul class="menu">
 									<?php
 									$post_authors = models\Course::post_authors();
 
-									printf( '<li><input type="text" class="form-input mpcs-dropdown-search" placeholder="%s" id="mpmcSearchCourses"></li>', esc_html__( 'Search', 'buddyboss' ) );
+									printf(
+										/* translators: %s: search placeholder */
+										'<li><input type="text" class="form-input mpcs-dropdown-search" placeholder="%s" id="mpmcSearchCourses"></li>',
+										esc_html__( 'Search', 'buddyboss' )
+									);
 
-									printf( '<li class="%s"><a href="%s">%s</a></li>', esc_attr( empty( $author ) ? 'active' : 'noactive' ), esc_url( add_query_arg( 'author', '', $filter_base_url ) ), esc_html__( 'All', 'buddyboss' ) );
+									printf(
+										/* translators: %s: search placeholder */
+										'<li class="%s"><a href="%s">%s</a></li>',
+										esc_attr( empty( $author ) ? 'active' : 'noactive' ),
+										esc_url( add_query_arg( 'author', '', $filter_base_url ) ),
+										esc_html__( 'All', 'buddyboss' )
+									);
 
 									foreach ( $post_authors as $post_author ) {
 										printf( '<li class="%s"><a href="%s">%s</a></li>', esc_attr( $author === $post_author->user_login ? 'active' : 'noactive' ), esc_url( add_query_arg( 'author', $post_author->user_login, $filter_base_url ) ), esc_html( lib\Utils::get_full_name( $post_author->ID ) ) );
@@ -912,5 +924,4 @@ class BB_Readylaunch_Memberpress_Courses_Helper {
 		$query_vars[] = 'cpage';
 		return $query_vars;
 	}
-
 }

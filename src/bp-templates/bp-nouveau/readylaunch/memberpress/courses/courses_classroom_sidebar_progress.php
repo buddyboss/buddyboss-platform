@@ -1,8 +1,8 @@
 <?php
 /**
- * Template for displaying course progress in classroom sidebar.
+ * Template for displaying course progress in the classroom sidebar.
  *
- * @package BuddyBoss Platform
+ * @package BuddyBoss
  * @version BuddyBoss [BBVERSION]
  */
 

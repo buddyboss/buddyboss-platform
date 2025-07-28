@@ -3165,7 +3165,7 @@ window.bp = window.bp || {};
 				if ( isInsideModal ) {
 					$( '.bb-rl-modal-activity-body' ).scrollTo( form, 500, scrollOptions );
 				} else if ( isInsideMediaTheatre ) {
-					// Scroll only the media info section container
+					// Scroll only the media info section container.
 					$( '.bb-media-info-section' ).scrollTo( form, 500, scrollOptions );
 				} else {
 					$.scrollTo( form, 500, scrollOptions );
@@ -3175,7 +3175,7 @@ window.bp = window.bp || {};
 					function () {
 						var scrollInt = jQuery( window ).height() > 300 ? 200 : 100;
 						if ( isInsideMediaTheatre ) {
-							// If inside media theatre, scroll the info section container
+							// If inside the media theater, scroll the info section container.
 							var $mediaInfoSection = $( '.bb-media-info-section' );
 							var formOffset = jQuery( div_editor ).offset().top - $mediaInfoSection.offset().top;
 							$mediaInfoSection.animate( { scrollTop : formOffset - scrollInt }, 500 );

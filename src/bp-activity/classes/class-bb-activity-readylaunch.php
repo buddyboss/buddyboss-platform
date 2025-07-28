@@ -761,18 +761,15 @@ class BB_Activity_Readylaunch {
 			$description = $response_data['description'];
 			$modified    = false;
 
-			// Prepare all replacement arrays for single str_replace call.
 			$search_replacements = array();
 			$replace_values      = array();
 
-			// Check for add-activity-description element.
 			if (
 				false !== strpos( $description, 'id="add-activity-description"' ) &&
 				! empty( $response_data['type'] )
 			) {
 				$add_description_text = esc_attr__( 'Add a description', 'buddyboss' );
 
-				// Use single translatable string with placeholder for better performance.
 				$type_image_text = sprintf(
 					/* translators: %s: media type */
 					esc_attr__( 'Type %s description', 'buddyboss' ),
@@ -848,12 +845,13 @@ class BB_Activity_Readylaunch {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param string $button The button HTML.
+	 * @param array|string $button The button array or HTML string.
 	 *
-	 * @return string The modified button HTML.
+	 * @return array|string The modified button array or HTML string.
 	 */
 	public function bb_rl_modify_add_follow_button( $button ) {
-		if ( empty( $button['link_href'] ) ) {
+		// Check if $button is an array and has the required keys.
+		if ( ! is_array( $button ) || empty( $button['link_href'] ) ) {
 			return $button;
 		}
 
@@ -937,7 +935,7 @@ class BB_Activity_Readylaunch {
 	 *
 	 * @param array $querystring The querystring.
 	 *
-	 * @return array The modified querystring.
+	 * @return string The modified querystring.
 	 */
 	public function bb_rl_get_activity_schedule_count_query( $querystring ) {
 		$querystring = bp_parse_args( $querystring );

@@ -3691,9 +3691,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 *
 		 * @param int $reply_id Reply ID.
 		 *
-		 * @uses  bb_rl_reply_ajax_response() Generate an Ajax response.
-		 *
-		 * @return mixed HTML for the reply along with some extra information.
+		 * @uses bb_rl_reply_ajax_response() Generate an Ajax response.
 		 */
 		public function bb_rl_new_reply_post_extras( $reply_id ) {
 			if ( ! bbp_is_ajax() ) {
@@ -4216,12 +4214,13 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
-		 * @param string $button The button HTML.
+		 * @param array|string $button The button array or HTML string.
 		 *
-		 * @return string The modified button HTML.
+		 * @return array|string The modified button array or HTML string.
 		 */
 		public function bb_rl_modify_add_friend_button( $button ) {
-			if ( empty( $button['link_href'] ) ) {
+			// Check if $button is an array and has the required keys.
+			if ( ! is_array( $button ) || empty( $button['link_href'] ) ) {
 				return $button;
 			}
 
@@ -4284,7 +4283,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * @since BuddyBoss [BBVERSION]
 		 *
 		 * @param string $user_registered_date The user registered date.
-		 * @param string $register_date The register date.
+		 * @param string $register_date        The register date.
 		 *
 		 * @return string The modified user registered date.
 		 */
@@ -4324,7 +4323,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
-		 * @param int    $count The count.
+		 * @param int    $count    The count.
 		 * @param object $nav_item The nav item.
 		 *
 		 * @return int The modified count.

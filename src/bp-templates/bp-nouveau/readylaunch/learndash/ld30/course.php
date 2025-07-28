@@ -1155,7 +1155,7 @@ $course_video_duration = get_post_meta( $course_id, '_buddyboss_lms_course_video
 		</aside>
 	<?php endif; ?>
 	<?php
-	// Load login modal for non-logged in users
+	// Load login modal for non-logged in users.
 	if ( ! is_user_logged_in() ) {
 		global $login_model_load_once;
 		$login_model_load_once      = false;

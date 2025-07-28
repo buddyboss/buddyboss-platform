@@ -2029,9 +2029,9 @@ window.bp = window.bp || {};
 				return false;
 			}
 
-			var allowToast = false,
-				toastMessage = '';
-			if ( 'request_membership' === action  ) {
+			var allowToast   = false,
+			    toastMessage = '';
+			if ( 'request_membership' === action ) {
 				allowToast   = true;
 				toastMessage = bpNouveau.groups.i18n.sending_request;
 			} else if ( 'membership_requested' === action && 'active' === $( target ).attr( 'data-popup-shown' ) ) {
@@ -2900,7 +2900,7 @@ window.bp = window.bp || {};
 				}
 			);
 
-			// Prevent duplicate event bindings by checking if already bound
+			// Prevent duplicate event bindings by checking if already bound.
 			if ( ! $bbReportContent.data( 'report-submit-bound' ) ) {
 				$bbReportContent.submit(
 					function ( e ) {
@@ -2918,7 +2918,7 @@ window.bp = window.bp || {};
 			}
 
 			var $bbBlockMember = $( '#bb-block-member' );
-			// Prevent duplicate event bindings for block member form
+			// Prevent duplicate event bindings for a block member form.
 			if ( ! $bbBlockMember.data( 'block-member-submit-bound' ) ) {
 				$bbBlockMember.submit(
 					function ( e ) {
@@ -5508,7 +5508,7 @@ window.bp = window.bp || {};
 				}
 			};
 
-			// Process each count type
+			// Process each count type.
 			$.each( countConfig, function ( type, config ) {
 				var $element = $( config.selector );
 				if ( ! $element.length ) {
@@ -5522,7 +5522,7 @@ window.bp = window.bp || {};
 				var currentCount = Number( $withCount.html() ) || 0;
 				var shouldUpdate = false;
 
-				// Check if action affects this count type
+				// Check if action affects this count type.
 				if ( config.decreaseActions && -1 !== $.inArray( action, config.decreaseActions ) ) {
 					currentCount -= 1;
 					shouldUpdate = true;
@@ -5531,7 +5531,7 @@ window.bp = window.bp || {};
 					shouldUpdate = true;
 				}
 
-				// Only update if action affects this count
+				// Only update if action affects this count.
 				if ( shouldUpdate ) {
 					if ( currentCount > 0 ) {
 						if ( $withCount.length ) {
