@@ -2294,6 +2294,10 @@
   content: "\e2aa";
 }
 
+.bb-rl-topic-header .bb-rl-topic-footer .bb-topic-content-meta-sep {
+  display: none;
+}
+
 .bb-rl-topic-reply-link-wrap a {
   display: inline-flex;
   align-items: center;
