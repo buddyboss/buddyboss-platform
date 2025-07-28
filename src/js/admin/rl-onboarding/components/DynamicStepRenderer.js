@@ -25,19 +25,35 @@ export const DynamicStepRenderer = ({
     // Extract default values from stepOptions configuration
     const getDefaultValues = () => {
         const defaults = {};
+
         Object.entries(stepOptions).forEach(([fieldKey, fieldConfig]) => {
-            // Skip description and hr fields as they're not form inputs
-            if (fieldConfig.type === 'description' || fieldConfig.type === 'hr') {
+            // Skip non-interactive fields
+            if (['description', 'hr'].includes(fieldConfig.type)) {
                 return;
             }
 
-            // Check for both 'value' and 'default' properties
+            // checkbox_group needs special handling – the default
+            // selected list is derived from the options where default === true.
+            if (fieldConfig.type === 'checkbox_group') {
+                if (Array.isArray(fieldConfig.value)) {
+                    defaults[fieldKey] = fieldConfig.value;
+                } else {
+                    const selected = Object.entries(fieldConfig.options || {})
+                        .filter(([, optCfg]) => optCfg && optCfg.default)
+                        .map(([optKey]) => optKey);
+                    defaults[fieldKey] = selected;
+                }
+                return;
+            }
+
+            // Generic handling for other field types
             if (fieldConfig.value !== undefined) {
                 defaults[fieldKey] = fieldConfig.value;
             } else if (fieldConfig.default !== undefined) {
                 defaults[fieldKey] = fieldConfig.default;
             }
         });
+
         return defaults;
     };
 
@@ -99,6 +115,53 @@ export const DynamicStepRenderer = ({
         const value = hasValidFormValue ? formData[fieldKey] : (configValue !== undefined ? configValue : defaultValue);
 
         switch (type) {
+            case 'checkbox_group':
+                // Ensure value is an array of selected option keys
+                const selectedValues = Array.isArray(value) ? value : [];
+
+                return (
+                    <div key={fieldKey} className="bb-rl-field-group bb-rl-checkbox-group">
+                        {label && (
+                            <div className="bb-rl-field-label">
+                                <h4>{label}</h4>
+                                {description && <p className="bb-rl-field-description">{description}</p>}
+                            </div>
+                        )}
+
+                        {Object.entries(options || {}).map(([optKey, optCfg]) => {
+                            const optLabel = typeof optCfg === 'string' ? optCfg : optCfg.label;
+                            const iconClass = typeof optCfg === 'object' ? optCfg.icon : (optCfg.icon_class || '');
+                            const notAvailable = typeof optCfg === 'object' ? optCfg.not_available : false;
+
+                            const isChecked = selectedValues.includes(optKey);
+
+                            const toggleSelection = (checked) => {
+                                const newSelected = [...selectedValues];
+                                if (checked) {
+                                    if (!newSelected.includes(optKey)) newSelected.push(optKey);
+                                } else {
+                                    const idx = newSelected.indexOf(optKey);
+                                    if (idx > -1) newSelected.splice(idx, 1);
+                                }
+                                handleFieldChange(fieldKey, newSelected);
+                            };
+
+                            return (
+                                <div key={optKey} className={`bb-rl-toggle-wrapper ${notAvailable ? 'bb-rl-not-available' : ''} ${isChecked ? 'bb-rl-toggle-checked' : ''}`}>
+                                    {iconClass && (
+                                        <div className="bb-rl-toggle-icon"><i className={iconClass} /></div>
+                                    )}
+                                    <ToggleControl
+                                        label={optLabel}
+                                        checked={isChecked}
+                                        onChange={notAvailable ? undefined : toggleSelection}
+                                    />
+                                </div>
+                            );
+                        })}
+                    </div>
+                );
+
             case 'text':
                 // Add placeholder for fields without labels
                 const placeholder = !label && fieldKey === 'blogname' ? __('Enter site title...', 'buddyboss') : '';

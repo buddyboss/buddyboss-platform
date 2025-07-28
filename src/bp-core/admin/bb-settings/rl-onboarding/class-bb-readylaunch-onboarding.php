@@ -231,26 +231,29 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 					),
 				),
 				'pages'           => array(
-					'registration' => array(
-						'type'    => 'checkbox',
-						'label'   => __( 'Login & Registration', 'buddyboss' ),
-						'icon'    => 'bb-icons-rl-file-text',
-						'default' => true,
-					),
-					'courses'      => array(
-						'type'    => 'checkbox',
-						'label'   => __( 'Courses', 'buddyboss' ),
-						'icon'    => 'bb-icons-rl-file-text',
-						'default' => true,
+					'bb_rl_enabled_pages' => array(
+						'type'    => 'checkbox_group',
+						'options' => array(
+							'registration' => array(
+								'label'   => __( 'Login & Registration', 'buddyboss' ),
+								'icon'    => 'bb-icons-rl-file-text',
+								'default' => true,
+							),
+							'courses'      => array(
+								'label'   => __( 'Courses', 'buddyboss' ),
+								'icon'    => 'bb-icons-rl-file-text',
+								'default' => true,
+							),
+						),
 					),
 				),
 				'side_menus'      => array(
-					'menu_items' => array(
+					'bb_rl_side_menu' => array(
 						'type'    => 'draggable',
 						'label'   => __( 'Navigation', 'buddyboss' ),
 						'options' => $this->getComponentMenuItems(),
 					),
-					'link_items' => array(
+					'bb_rl_custom_links' => array(
 						'type'    => 'draggable_links',
 						'label'   => __( 'Link', 'buddyboss' ),
 						// TODO: Get these links from the database.
@@ -730,10 +733,24 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 
 		// Sanitize pages settings.
 		if ( isset( $settings['pages'] ) ) {
-			$sanitized['pages'] = array(
-				'create_essential_pages' => ! empty( $settings['pages']['create_essential_pages'] ),
-				'homepage_layout'        => isset( $settings['pages']['homepage_layout'] ) ? sanitize_text_field( wp_unslash( $settings['pages']['homepage_layout'] ) ) : 'activity',
-			);
+			$pages_settings = $settings['pages'];
+
+			// Handle the new checkbox_group: bb_rl_enabled_pages.
+			if ( isset( $pages_settings['bb_rl_enabled_pages'] ) && is_array( $pages_settings['bb_rl_enabled_pages'] ) ) {
+				$selected_pages                        = $pages_settings['bb_rl_enabled_pages'];
+				$sanitized['bb_rl_enabled_pages']      = array(
+					'registration' => in_array( 'registration', $selected_pages, true ),
+					'courses'      => in_array( 'courses', $selected_pages, true ),
+				);
+			}
+
+			// Preserve other page-related preferences (if any).
+			if ( isset( $pages_settings['create_essential_pages'] ) || isset( $pages_settings['homepage_layout'] ) ) {
+				$sanitized['pages'] = array(
+					'create_essential_pages' => ! empty( $pages_settings['create_essential_pages'] ),
+					'homepage_layout'        => isset( $pages_settings['homepage_layout'] ) ? sanitize_text_field( wp_unslash( $pages_settings['homepage_layout'] ) ) : 'activity',
+				);
+			}
 		}
 
 		// Sanitize side menus settings.
