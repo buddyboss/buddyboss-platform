@@ -71,6 +71,7 @@ export const SideMenusStep = ({
             currentStep={currentStep}
             totalSteps={totalSteps}
             formData={formData}
+            allStepData={allStepData}
         >
             <DynamicStepRenderer
                 stepKey="side_menus"

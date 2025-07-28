@@ -13,7 +13,7 @@ export const BrandingsStep = ({
     onSaveStep,
     onAutoSave,
     savedData = {},
-    allStepData = {} // Add access to all step data
+    allStepData = {}
 }) => {
     const [formData, setFormData] = useState({
         site_logo: '',
@@ -71,6 +71,7 @@ export const BrandingsStep = ({
             currentStep={currentStep}
             totalSteps={totalSteps}
             formData={formData}
+            allStepData={allStepData}
         >
             <DynamicStepRenderer
                 stepKey="brandings"

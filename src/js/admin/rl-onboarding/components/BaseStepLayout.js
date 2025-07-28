@@ -13,7 +13,8 @@ export const BaseStepLayout = ({
     isLastStep = false,
     currentStep = 0,
     totalSteps = 0,
-    formData = {}
+    formData = {},
+    allStepData = {}
 }) => {
     const { title, description, image } = stepData;
 
@@ -25,6 +26,17 @@ export const BaseStepLayout = ({
     const stepsProgress = totalSteps > 0 ? Array.from({ length: totalSteps - 2 }, (_, index) => (
         <div className={`bb-rl-progress-step ${index + 1 < currentStep ? 'bb-rl-step-active' : ''}`} key={index}></div>
     )) : null;
+
+    // Merge all step data with current form data for preview
+    // Current step's formData takes precedence over saved allStepData
+    const mergedFormData = {
+        ...Object.values(allStepData).reduce((acc, stepData) => ({ ...acc, ...stepData }), {}),
+        ...formData
+    };
+
+    console.log('All Step Data:', allStepData);
+    console.log('Current Form Data:', formData);
+    console.log('Merged Form Data:', mergedFormData);
 
     return (
         <div className="bb-rl-step-layout">
@@ -85,7 +97,7 @@ export const BaseStepLayout = ({
                 {/* Right Panel - Preview/Visual */}
                 <div className="bb-rl-right-panel">
                     <div className="bb-rl-preview-pages">
-                        <PreviewPages page="activity" formData={formData} />
+                        <PreviewPages page="activity" formData={mergedFormData} />
                     </div>
                 </div>
             </div>
