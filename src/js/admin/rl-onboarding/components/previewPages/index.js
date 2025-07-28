@@ -7,10 +7,10 @@ import { MembersRightSidebar } from './MembersRightSidebar';
 
 export const PreviewPages = ({ page = 'activity', formData = {} }) => {
     let mainFeed = <Feed />;
-    let feedRightSidebar = <FeedRightSidebar />;
+    let feedRightSidebar = <FeedRightSidebar formData={formData} />;
     if (page === 'members') {
         mainFeed = <Members />;
-        feedRightSidebar = <MembersRightSidebar />;
+        feedRightSidebar = <MembersRightSidebar formData={formData} />;
     }
 
     const previewMode = formData.bb_rl_theme_mode || 'light';
