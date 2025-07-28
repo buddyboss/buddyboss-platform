@@ -23,7 +23,7 @@ export const PreviewPages = ({ page = 'activity', formData = {} }) => {
         >
             <Header formData={formData} previewMode={previewMode} />
             <div className="bb-rl-preview-content">
-                <LeftSidebar />
+                <LeftSidebar sideMenuItems={formData.bb_rl_side_menu || []} customLinks={formData.bb_rl_custom_links || []} />
                 <div className="bb-rl-preview-main">
                     {mainFeed}
                 </div>

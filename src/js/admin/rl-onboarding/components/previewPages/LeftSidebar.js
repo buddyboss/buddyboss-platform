@@ -1,19 +1,46 @@
-export const LeftSidebar = () => {
+export const LeftSidebar = ({ sideMenuItems = [], customLinks = [] }) => {
+    console.log(sideMenuItems);
+
     return (
         <div className="bb-rl-preview-sidebar">
             <ul className="bb-rl-preview-nav-list">
-                <li className="bb-rl-preview-nav-item active">
-                    <i className="bb-icons-rl-pulse"></i>
-                    <span>News Feed</span>
-                </li>
-                <li className="bb-rl-preview-nav-item">
-                    <i className="bb-icons-rl-users"></i>
-                    <span>Members</span>
-                </li>
-                <li className="bb-rl-preview-nav-item">
-                    <i className="bb-icons-rl-users-three"></i>
-                    <span>Groups</span>
-                </li>
+                {
+                    sideMenuItems.length > 0 ? (
+                        sideMenuItems.map((item) => (
+                            <li className="bb-rl-preview-nav-item" key={item.id} style={{ display: item.enabled ? 'flex' : 'none' }}>
+                                <i className={`bb-icons-rl-${item.icon}`}></i>
+                                <span>{item.label}</span>
+                            </li>
+                        ))
+                    ) : (
+                        <>
+                            <li className="bb-rl-preview-nav-item active">
+                                <i className="bb-icons-rl-pulse"></i>
+                                <span>News Feed</span>
+                            </li>
+                            <li className="bb-rl-preview-nav-item">
+                                <i className="bb-icons-rl-users"></i>
+                                <span>Members</span>
+                            </li>
+                            <li className="bb-rl-preview-nav-item">
+                                <i className="bb-icons-rl-users-three"></i>
+                                <span>Groups</span>
+                            </li>
+                            <li className="bb-rl-preview-nav-item">
+                                <i className="bb-icons-rl-chat-text"></i>
+                                <span>Forums</span>
+                            </li>
+                            <li className="bb-rl-preview-nav-item">
+                                <i className="bb-icons-rl-chat-teardrop-text"></i>
+                                <span>Messages</span>
+                            </li>
+                            <li className="bb-rl-preview-nav-item">
+                                <i className="bb-icons-rl-bell"></i>
+                                <span>Notifications</span>
+                            </li>
+                        </>
+                    )
+                }
             </ul>
 
             <div className="bb-rl-preview-nav-section">
@@ -83,18 +110,14 @@ export const LeftSidebar = () => {
             <div className="bb-rl-preview-nav-section">
                 <h4 className="bb-rl-preview-nav-section-title">Links</h4>
                 <ul className="bb-rl-preview-link-list">
-                    <li className="bb-rl-preview-link-item">
-                        <i className="bb-icons-rl-link"></i>
-                        <span>Download iOS App</span>
-                    </li>
-                    <li className="bb-rl-preview-link-item">
-                        <i className="bb-icons-rl-link"></i>
-                        <span>Download Android App</span>
-                    </li>
-                    <li className="bb-rl-preview-link-item">
-                        <i className="bb-icons-rl-link"></i>
-                        <span>Course Resources</span>
-                    </li>
+                    {
+                        customLinks.map((link) => (
+                            <li className="bb-rl-preview-link-item" key={link.id}>
+                                <i className="bb-icons-rl-link"></i>
+                                <span>{link.title}</span>
+                            </li>
+                        ))
+                    }                    
                 </ul>
             </div>
         </div>

@@ -61,9 +61,14 @@ $lg: 1024px;
     }
 
     &.bb-rl-button--outline {
-        color: $text-disabled-color;
-        background-color: transparent;
-        border: 1px solid $border-tertiary-color;
+        background: transparent;
+        color: $text-color;
+        border: 1px solid $border-color;
+
+        &:hover {
+            background: #f5f5f5;
+            border-color: #999;
+        }
     }
 
     &.bb-rl-button-primary--outline {
@@ -2226,7 +2231,7 @@ body.bb-rl-fullscreen-mode {
         }
     }
 
-    .bb-rl-preview-split-view-right > .bb-rl-preview-activity {
+    .bb-rl-preview-split-view-right > .bb-rl-preview-split-view-left {
         transform: translateX(-50%);
     }
 

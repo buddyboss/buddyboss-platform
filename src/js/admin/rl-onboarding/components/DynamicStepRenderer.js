@@ -694,6 +694,7 @@ export const DynamicStepRenderer = ({
                                                     value={linkFormData.title}
                                                     onChange={(value) => setLinkFormData({ ...linkFormData, title: value })}
                                                     placeholder={__('Enter link title', 'buddyboss')}
+                                                    required
                                                 />
                                                 <TextControl
                                                     label={__('Link URL', 'buddyboss')}
@@ -701,6 +702,7 @@ export const DynamicStepRenderer = ({
                                                     onChange={(value) => setLinkFormData({ ...linkFormData, url: value })}
                                                     placeholder={__('Enter link URL', 'buddyboss')}
                                                     type="url"
+                                                    required
                                                 />
                                                 <div className="bb-rl-add-link-actions">
                                                     <Button
