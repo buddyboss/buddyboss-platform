@@ -296,6 +296,7 @@ jQuery( document ).ready( function() {
 							html_serror += '</div>';
 
                 		jQuery( document ).find( signup_email ).before( html_serror );
+						jQuery( document ).find( signup_email ).parents( '.bb-signup-field.signup_email' ).removeClass( 'bp-hide' );
                 		return_val = false;
                 	}
                 	var nickname = 'field_'+response.field_id;
@@ -305,6 +306,7 @@ jQuery( document ).ready( function() {
 							html_uerror += '<p>' + response.signup_username + '</p>';
 							html_uerror += '</div>';
                 		jQuery( document ).find( '#'+nickname ).before( html_uerror );
+                		jQuery( document ).find( '#'+nickname ).parents( '.editfield' ).removeClass( 'bp-hide' );
                 		return_val = false;
                 	}
 	                return true;
