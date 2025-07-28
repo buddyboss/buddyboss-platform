@@ -2226,7 +2226,7 @@ body.bb-rl-fullscreen-mode {
         }
     }
 
-    .bb-rl-preview-split-view-right > [class*="bb-rl-preview"] {
+    .bb-rl-preview-split-view-right > .bb-rl-preview-activity {
         transform: translateX(-50%);
     }
 

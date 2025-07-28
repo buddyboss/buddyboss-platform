@@ -14,7 +14,8 @@ export const BaseStepLayout = ({
     currentStep = 0,
     totalSteps = 0,
     formData = {},
-    allStepData = {}
+    allStepData = {},
+    page = 'activity'
 }) => {
     const { title, description, image } = stepData;
 
@@ -97,7 +98,7 @@ export const BaseStepLayout = ({
                 {/* Right Panel - Preview/Visual */}
                 <div className="bb-rl-right-panel">
                     <div className="bb-rl-preview-pages">
-                        <PreviewPages page="activity" formData={mergedFormData} />
+                        <PreviewPages page={page} formData={mergedFormData} />
                     </div>
                 </div>
             </div>

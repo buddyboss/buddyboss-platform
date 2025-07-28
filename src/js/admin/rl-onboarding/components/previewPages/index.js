@@ -18,7 +18,7 @@ export const PreviewPages = ({ page = 'activity', formData = {} }) => {
 
     const pageView = (page = 'activity', previewMode = 'light') => (
         <div
-            className={`bb-rl-preview-activity bb-rl-preview-theme-${previewMode}`}
+            className={`bb-rl-preview-${page} bb-rl-preview-theme-${previewMode}`}
             style={{ '--bb-rl-preview-primary-color': primaryColor }}
         >
             <Header formData={formData} previewMode={previewMode} />

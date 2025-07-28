@@ -72,6 +72,7 @@ export const BrandingsStep = ({
             totalSteps={totalSteps}
             formData={formData}
             allStepData={allStepData}
+            page="members"
         >
             <DynamicStepRenderer
                 stepKey="brandings"
