@@ -874,13 +874,16 @@ window.bp = window.bp || {};
 								$( '.document-detail-wrap.document-detail-wrap-description-popup' ).attr( 'data-extension', response.data.extension );
 							}
 
-							var myPlayer = videojs( response.data.video_js_id );
-							myPlayer.src(
-								{
-									type: response.data.video_extension,
-									src: response.data.video_symlink
-								}
-							);
+							// Check if videojs is available before using it
+							if ( typeof videojs !== 'undefined' ) {
+								var myPlayer = videojs( response.data.video_js_id );
+								myPlayer.src(
+									{
+										type: response.data.video_extension,
+										src: response.data.video_symlink
+									}
+								);
+							}
 						}
 
 						// Update the edited text.
@@ -3996,13 +3999,16 @@ window.bp = window.bp || {};
 
 							video_element.addClass('video-js');
 
-							videojs(video_element_id, {
-									'controls': true,
-									'aspectRatio': '16:9',
-									'fluid': true,
-									'playbackRates': [0.5, 1, 1.5, 2],
-									'fullscreenToggle': false,
-							});
+							// Check if videojs is available before using it
+							if ( typeof videojs !== 'undefined' ) {
+								videojs(video_element_id, {
+										'controls': true,
+										'aspectRatio': '16:9',
+										'fluid': true,
+										'playbackRates': [0.5, 1, 1.5, 2],
+										'fullscreenToggle': false,
+								});
+							}
 					});
 			});
 
