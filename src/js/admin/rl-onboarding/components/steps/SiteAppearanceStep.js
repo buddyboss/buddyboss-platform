@@ -69,6 +69,7 @@ export const SiteAppearanceStep = ({
             isLastStep={currentStep === totalSteps - 1}
             currentStep={currentStep}
             totalSteps={totalSteps}
+            formData={formData}
         >
             <DynamicStepRenderer
                 stepKey="site_appearance"

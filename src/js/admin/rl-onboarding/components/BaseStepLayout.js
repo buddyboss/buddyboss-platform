@@ -13,10 +13,10 @@ export const BaseStepLayout = ({
     isLastStep = false,
     currentStep = 0,
     totalSteps = 0,
-    rightPanelContent = null
+    formData = {}
 }) => {
     const { title, description, image } = stepData;
-    
+
     // Get the image URL from the assets
     const imageUrl = window.bbRlOnboarding?.assets?.assetsUrl 
         ? `${window.bbRlOnboarding.assets.assetsUrl}${image}`
@@ -84,13 +84,9 @@ export const BaseStepLayout = ({
 
                 {/* Right Panel - Preview/Visual */}
                 <div className="bb-rl-right-panel">
-                    {rightPanelContent ? (
-                        rightPanelContent
-                    ) : (
-                        <div className="bb-rl-preview-pages">
-                            <PreviewPages page="activity" />
-                        </div>
-                    )}
+                    <div className="bb-rl-preview-pages">
+                        <PreviewPages page="activity" formData={formData} />
+                    </div>
                 </div>
             </div>
         </div>

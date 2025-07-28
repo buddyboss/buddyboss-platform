@@ -1,7 +1,23 @@
-export const Header = () => {
+import { __ } from '@wordpress/i18n';
+
+export const Header = ({ formData = {} }) => {
+    const lightLogo = formData.bb_rl_light_logo?.url || (typeof formData.bb_rl_light_logo === 'string' ? formData.bb_rl_light_logo : null);
+    const darkLogo = formData.bb_rl_dark_logo?.url || (typeof formData.bb_rl_dark_logo === 'string' ? formData.bb_rl_dark_logo : null);
+    const blogname = formData.blogname;
+
     return (
         <div className="bb-rl-preview-page-header">
-            <div className="bb-rl-preview-site-title">BuddyBoss</div>
+            <div className="bb-rl-preview-site-title">
+                {darkLogo ? (
+                    <img src={darkLogo} alt={__('Site Logo Dark', 'buddyboss')} />
+                ) : lightLogo ? (
+                    <img src={lightLogo} alt={__('Site Logo', 'buddyboss')} />
+                ) : (
+                    <div className="bb-rl-preview-logo-placeholder">
+                        {blogname}
+                    </div>
+                )}
+            </div>
 
             <ul className="bb-rl-preview-menu">
                 <li className="menu-item active">Home</li>

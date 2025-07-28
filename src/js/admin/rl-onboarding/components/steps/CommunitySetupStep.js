@@ -102,6 +102,7 @@ export const CommunitySetupStep = ({
             isLastStep={currentStep === totalSteps - 1}
             currentStep={currentStep}
             totalSteps={totalSteps}
+            formData={formData}
         >
             <DynamicStepRenderer
                 stepKey="community_setup"

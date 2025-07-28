@@ -2179,6 +2179,31 @@ body.bb-rl-fullscreen-mode {
     --bb-rl-preview-background-positive-color: #14ae5c;
 }
 
+.bb-rl-preview-theme-dark {
+    --bb-rl-preview-icon-color: #cececf;
+    --bb-rl-preview-icon-secondary-color: #cececf;
+    --bb-rl-preview-icon-tertiary-color: #9e9e9e;
+    --bb-rl-preview-border-color: #2f2f2f;
+    --bb-rl-preview-border-tertiary-color: #555556;
+    --bb-rl-preview-border-secondary-color: #3d3d3d;
+    --bb-rl-preview-border-brand-secondary-color: #4946fe;
+    --bb-rl-preview-border-quinery-color: #f6f6f6;
+    --bb-rl-preview-text-color: #fff;
+    --bb-rl-preview-text-secondary-color: #cececf;
+    --bb-rl-preview-text-tertiary-color: #b6b6b6;
+    --bb-rl-preview-text-brand-primary-color: #4946fe;
+    --bb-rl-preview-text-white-color: #fff;
+    --bb-rl-preview-background-color: #242425;
+    --bb-rl-preview-background-secondary-color: #2f2f2f;
+    --bb-rl-preview-background-secondary-hover-color: #3d3d3d;
+    --bb-rl-preview-background-tertiary-color: #6d6d6e;
+    --bb-rl-preview-background-brand-color: #4946fe;
+    --bb-rl-preview-background-brand-secondary-color: #3325ae;
+    --bb-rl-preview-background-positive-color: #14ae5c;
+    scrollbar-color: #666 transparent;
+    color-scheme: dark;
+}
+
 .bb-rl-preview-pages {
     box-shadow: 0px -8.84px 47.13px 0px rgba(0, 0, 0, 0.16);
     border-radius: 12px;
@@ -2198,6 +2223,12 @@ body.bb-rl-fullscreen-mode {
     font-size: 16px;
     font-weight: 600;
     color: var(--bb-rl-preview-text-color);
+
+    img {
+        max-width: 125px;
+        height: auto;
+        object-fit: contain;
+    }
 }
 
 .bb-rl-preview-menu {
@@ -2222,7 +2253,7 @@ body.bb-rl-fullscreen-mode {
 .bb-rl-preview-header-search {
     color: var(--bb-rl-preview-text-color);
     font-size: 13px;
-    border: 1px solid $border-tertiary-color;
+    border: 1px solid var(--bb-rl-preview-border-tertiary-color);
     background-color: transparent;
     padding: 8px 16px;
     border-radius: 6px;
@@ -2232,7 +2263,7 @@ body.bb-rl-fullscreen-mode {
     margin-right: 24px;
 
     i {
-        color: $icon-secondary-color;
+        color: var(--bb-rl-preview-icon-secondary-color);
         font-size: 16px;
         margin-right: 8px;
     }
@@ -2260,7 +2291,7 @@ body.bb-rl-fullscreen-mode {
 
 .bb-rl-preview-sidebar {
     width: 282px;
-    background-color: #fff;
+    background-color: var(--bb-rl-preview-background-color);
     border-right: 1px solid var(--bb-rl-preview-border-secondary-color);
     padding: 24px 0;
     overflow-y: auto;
@@ -2289,7 +2320,6 @@ body.bb-rl-fullscreen-mode {
         font-size: 13px;
         font-weight: 500;
         cursor: pointer;
-        transition: background-color 0.2s ease;
 
         &.active {
             background-color: var(--bb-rl-preview-background-secondary-hover-color);
@@ -2495,7 +2525,6 @@ body.bb-rl-fullscreen-mode {
     background-color: var(--bb-rl-preview-background-color);
     border-radius: 12px;
     border: 1px solid var(--bb-rl-preview-border-tertiary-color);
-    box-shadow: 0px 2px 2px 0px rgba(219, 219, 219, 0.5);
     margin-bottom: 24px;
 
     .bb-rl-preview-feed-form-avatar {
