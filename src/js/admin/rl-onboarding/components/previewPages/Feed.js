@@ -49,7 +49,9 @@ export const Feed = () => {
                         <p>Unlock your potential through immersive educational journeys. Gain skills that empower you to thrive in an ever-changing world.</p>
                     </div>
                     <div className="bb-rl-preview-post-image">
-                        <div className="bb-rl-preview-post-image-placeholder"></div>
+                        <div className="bb-rl-preview-post-image-placeholder">
+                            <img src={`${window.bbRlOnboarding?.assets?.assetsUrl || ''}placeholder-media.png`} alt="placeholder image" />
+                        </div>
                     </div>
                 </div>
 
