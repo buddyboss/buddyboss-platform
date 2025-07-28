@@ -718,6 +718,43 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 								}
 							}
 							$sanitized[ $field_key ] = $sanitized_items;
+
+							// For some draggable fields ReadyLaunch expects a specific structure.
+							switch ( $field_key ) {
+								case 'bb_rl_side_menu':
+									// Convert sequential list into associative map id => {enabled, order, icon}
+									$menu_map = array();
+									foreach ( $sanitized_items as $menu_item ) {
+										if ( empty( $menu_item['id'] ) ) {
+											continue;
+										}
+										$menu_map[ $menu_item['id'] ] = array(
+											'enabled' => isset( $menu_item['enabled'] ) ? (bool) $menu_item['enabled'] : true,
+											'order'   => isset( $menu_item['order'] ) ? (int) $menu_item['order'] : 0,
+											'icon'    => isset( $menu_item['icon'] ) ? $menu_item['icon'] : '',
+										);
+									}
+									$sanitized[ $field_key ] = $menu_map;
+									break;
+
+								case 'bb_rl_activity_sidebars':
+								case 'bb_rl_member_profile_sidebars':
+								case 'bb_rl_groups_sidebars':
+									// Convert list into boolean map id => enabled
+									$sidebar_map = array();
+									foreach ( $sanitized_items as $sidebar_item ) {
+										if ( empty( $sidebar_item['id'] ) ) {
+											continue;
+										}
+										$sidebar_map[ $sidebar_item['id'] ] = isset( $sidebar_item['enabled'] ) ? (bool) $sidebar_item['enabled'] : true;
+									}
+									$sanitized[ $field_key ] = $sidebar_map;
+									break;
+
+								default:
+									$sanitized[ $field_key ] = $sanitized_items;
+									break;
+							}
 						} else {
 							// Fall back to default if not array.
 							$sanitized[ $field_key ] = isset( $field_config['options'] ) ? $field_config['options'] : array();
@@ -800,12 +837,22 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 	 * @param array $preferences User preferences.
 	 * @return void
 	 */
-	public function save_preferences( $preferences ) {
+	public function save_preferences( $preferences, $pref_key = '' ) {
 		// Save to parent preferences system first.
-		parent::save_preferences( $preferences );
+		parent::save_preferences( $preferences, $pref_key );
+
+		error_log( print_r( 'parent::save_preferences', 1 ) );
+		error_log( print_r( $preferences, 1 ) );
+
+		// Flatten & sanitise the data so it matches the structure expected by
+		// apply_readylaunch_configuration(). This ensures that when auto-save
+		// fires from an individual step (e.g. theme mode), the option is
+		// persisted immediately.
+		$sanitised = $this->sanitize_final_settings( $preferences );
+		error_log( print_r( $sanitised, 1 ) );
 
 		// Apply the configuration immediately for real-time updates.
-		$this->apply_readylaunch_configuration( $preferences );
+		$this->apply_readylaunch_configuration( $sanitised );
 	}
 
 	/**
@@ -872,19 +919,6 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 
 		// Apply remaining step settings dynamically.
 		$this->apply_remaining_step_settings( $final_settings );
-
-		// Apply site appearance settings.
-		if ( isset( $final_settings['site_appearance'] ) ) {
-			$site_appearance = $final_settings['site_appearance'];
-
-			if ( isset( $site_appearance['color_scheme'] ) ) {
-				bp_update_option( 'bb_rl_color_scheme', $site_appearance['color_scheme'] );
-			}
-
-			if ( isset( $site_appearance['site_layout'] ) ) {
-				bp_update_option( 'bb_rl_site_layout', $site_appearance['site_layout'] );
-			}
-		}
 
 		// Apply branding settings.
 		if ( isset( $final_settings['brandings'] ) ) {

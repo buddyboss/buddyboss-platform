@@ -187,7 +187,8 @@ export const OnboardingModal = ({ isOpen, onClose, onContinue, onSkip, onSaveSte
                 body: new URLSearchParams({
                     action: action,
                     nonce: nonce,
-                    preferences: JSON.stringify(preferences),
+                    preference_key: Object.keys(preferences)[0] || '',
+                    preferences: JSON.stringify(Object.values(preferences)[0] || {}),
                 }),
             });
 

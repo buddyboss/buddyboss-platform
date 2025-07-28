@@ -532,10 +532,12 @@ abstract class BB_Setup_Wizard_Manager {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param array $preferences User preferences.
+	 * @param array  $preferences User preferences.
+	 * @param string $pref_key    Preference key (optional).
+	 *
 	 * @return void
 	 */
-	public function save_preferences( $preferences ) {
+	public function save_preferences( $preferences, $pref_key ) {
 		$option_name = $this->config['option_prefix'] . '_preferences_' . $this->wizard_id;
 		$this->update_option( $option_name, $preferences );
 
@@ -546,8 +548,9 @@ abstract class BB_Setup_Wizard_Manager {
 		 *
 		 * @param string $wizard_id   The wizard ID.
 		 * @param array  $preferences User preferences.
+		 * @param string $pref_key    Preference key.
 		 */
-		do_action( 'bb_setup_wizard_preferences_saved', $this->wizard_id, $preferences );
+		do_action( 'bb_setup_wizard_preferences_saved', $this->wizard_id, $preferences, $pref_key );
 	}
 
 	/**
@@ -827,11 +830,19 @@ abstract class BB_Setup_Wizard_Manager {
 		}
 
 		// Get and sanitize step data.
-		$step = isset( $_POST['step'] ) ? intval( $_POST['step'] ) : 0;
-		$data = isset( $_POST['data'] ) ? $this->sanitize_step_data( $_POST['data'] ) : array();
+		$step       = isset( $_POST['step'] ) ? intval( $_POST['step'] ) : 0;
+		$raw_data   = isset( $_POST['data'] ) ? wp_unslash( $_POST['data'] ) : '';
+		$data       = $this->sanitize_step_data( $raw_data );
+
+		// If wrapper keys are present (as sent from React) use only the inner form_data array for tracking.
+		if ( is_array( $data ) && isset( $data['form_data'] ) && is_array( $data['form_data'] ) ) {
+			$data_for_tracking = $data['form_data'];
+		} else {
+			$data_for_tracking = $data;
+		}
 
 		// Save step progress.
-		$this->save_step_progress( $step, $data );
+		$this->save_step_progress( $step, $data_for_tracking );
 
 		wp_send_json_success(
 			array(
@@ -868,10 +879,18 @@ abstract class BB_Setup_Wizard_Manager {
 		}
 
 		// Get and sanitize preferences.
-		$preferences = isset( $_POST['preferences'] ) ? $this->sanitize_preferences( $_POST['preferences'] ) : array();
+		$raw_prefs = isset( $_POST['preferences'] ) ? wp_unslash( $_POST['preferences'] ) : '';
+		$preferences = $this->sanitize_preferences( $raw_prefs );
+
+
+		$pref_key = isset( $_POST['preference_key'] ) ? sanitize_key( wp_unslash( $_POST['preference_key'] ) ) : '';
+
+		if ( ! empty( $pref_key ) ) {
+			$preferences = array( $pref_key => $preferences );
+		}
 
 		// Save preferences.
-		$this->save_preferences( $preferences );
+		$this->save_preferences( $preferences, $pref_key );
 
 		wp_send_json_success(
 			array(
@@ -924,8 +943,18 @@ abstract class BB_Setup_Wizard_Manager {
 	 * @return array Sanitized step data.
 	 */
 	private function sanitize_step_data( $data ) {
+		// Allow JSON strings coming from JS – decode them first.
 		if ( ! is_array( $data ) ) {
-			return array();
+			if ( is_string( $data ) ) {
+				$maybe_array = json_decode( $data, true );
+				if ( json_last_error() === JSON_ERROR_NONE && is_array( $maybe_array ) ) {
+					$data = $maybe_array;
+				} else {
+					return array();
+				}
+			} else {
+				return array();
+			}
 		}
 
 		$sanitized = array();
@@ -951,8 +980,18 @@ abstract class BB_Setup_Wizard_Manager {
 	 * @return array Sanitized preferences.
 	 */
 	private function sanitize_preferences( $preferences ) {
+		// Accept JSON strings coming from AJAX and decode them first.
 		if ( ! is_array( $preferences ) ) {
-			return array();
+			if ( is_string( $preferences ) ) {
+				$decoded = json_decode( $preferences, true );
+				if ( json_last_error() === JSON_ERROR_NONE && is_array( $decoded ) ) {
+					$preferences = $decoded;
+				} else {
+					return array();
+				}
+			} else {
+				return array();
+			}
 		}
 
 		$sanitized = array();
