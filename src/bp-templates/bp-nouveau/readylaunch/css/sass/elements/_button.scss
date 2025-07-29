@@ -1,0 +1,50 @@
+.bb-rl-button {
+
+	@include bb-rl-button;
+
+	&.bb-rl-button--small {
+
+		@include bb-rl-button--small;
+	}
+
+	&.bb-rl-button--brandFill {
+
+		@include bb-rl-button--brand-fill;
+	}
+
+	&.bb-rl-button--brandOutline {
+
+		@include bb-rl-button--brand-outline;
+	}
+
+	&.bb-rl-button--secondaryFill {
+
+		@include bb-rl-button-secondary-fill;
+	}
+
+	&.bb-rl-button--secondaryOutline {
+
+		@include bb-rl-button--secondary-outline;
+	}
+
+	&.bb-rl-button--dangerFill {
+
+		@include bb-rl-button--danger-fill;
+	}
+
+	&.bb-rl-button--tertiaryText {
+
+		@include bb-rl-button--tertiary-text;
+	}
+
+	&.bb-rl-button--tertiaryLink {
+
+		@include bb-rl-button--tertiary-link;
+	}
+
+	&.bb-rl-button--disabled {
+
+		@include bb-rl-button--disabled;
+	}
+}
+

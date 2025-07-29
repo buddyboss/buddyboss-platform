@@ -1,0 +1,242 @@
+.bb-rl-meprlms-inner-block {
+	display: flex;
+}
+
+.bb-rl-mbprlms-inner-wrapper {
+	background-color: var(--bb-rl-background-color);
+}
+
+.bb-readylaunch-template {
+
+	&.single-mpcs-assignment,
+	&.single-mpcs-lesson,
+	&.single-mpcs-quiz {
+
+		.site.bb-readylaunch {
+			background-color: var(--bb-rl-background-color);
+		}
+	}
+}
+
+.mpcs-classroom.buddyboss-theme.bb-readylaunch-template {
+
+	.mpcs-inner-page-main {
+		width: 100%;
+		padding: 0;
+		margin: 0;
+	}
+}
+
+.bb-rl-lms-inner-block {
+
+	.mpcs-main-content {
+
+		p {
+
+			@include bb-rl-label-heading-md-thin;
+			color: var(--bb-rl-text-secondary-color);
+			margin-bottom: var(--bb-rl-space-200);
+
+			&:empty {
+				margin: 0;
+			}
+		}
+
+		.mpcs-breadcrumbs {
+
+			@include bb-rl-label-heading;
+			color: var(--bb-rl-text-secondary-color);
+			margin: var(--bb-rl-space-50) 0 var(--bb-rl-space-300);
+
+			span.mpcs-breadcrumb {
+				display: inline-flex;
+				align-items: center;
+				gap: var(--bb-rl-space-50);
+			}
+
+			span.mpcs-breadcrumb:not(:last-child)::after {
+				content: "\e13a";
+				font-weight: 400;
+				font-family: bb-icons-rl;
+				font-size: 16px;
+				color: var(--bb-rl-icon-tertiary-color);
+				font-style: normal;
+				margin-right: var(--bb-rl-space-50);
+			}
+		}
+	}
+}
+
+.mpcs-classroom.buddyboss-theme.bb-readylaunch-template {
+
+	.mpcs-sidebar-wrapper {
+
+		.mpcs-sidebar-menu,
+		.mpcs-sidebar-grades,
+		.mpcs-sidebar-resources {
+			margin: 0;
+
+			a {
+				padding: var(--bb-rl-space-100);
+			}
+		}
+	}
+}
+
+.bb-rl-widget-sidebar-menu,
+.mpcs-classroom .bb-rl-widget-sidebar-menu,
+.bb-rl-left-panel--memprlms {
+
+	a,
+	.mpcs-grades-menu,
+	.mepr-resources {
+		display: flex;
+		align-items: center;
+		gap: var(--bb-rl-space-100);
+		margin: 0 calc(var(--bb-rl-space-100) * -1);
+		padding: var(--bb-rl-space-100);
+		color: var(--bb-rl-text-color);
+		border-radius: var(--bb-rl-radius-md);
+
+		&:hover {
+			background-color: var(--bb-rl-background-secondary-hover-color);
+		}
+
+		.tile-icon {
+			line-height: 1;
+			max-width: 20px;
+
+			i {
+				font-size: 20px;
+				color: var(--bb-rl-icon-secondary-color);
+				font-style: normal;
+
+				&:before {
+					margin: 0;
+				}
+			}
+		}
+
+		.tile-title {
+
+			@include bb-rl-label-heading-md;
+			color: var(--bb-rl-text-secondary-color);
+		}
+	}
+
+	.mepr-gradebook,
+	.mpcs-grades-menu {
+
+		.tile-icon {
+
+			i:before {
+				content: "\e154";
+				font-weight: 400;
+				font-family: bb-icons-rl;
+				font-size: 20px;
+			}
+		}
+	}
+
+	.mepr-resources {
+
+		.tile-icon {
+
+			i:before {
+				content: "\e3dc";
+				font-weight: 400;
+				font-family: bb-icons-rl;
+				font-size: 20px;
+			}
+		}
+	}
+}
+
+.bb-rl-widget-sidebar .widget {
+
+	&.bb-rl-memprlms-widget-sidebar-menu {
+		padding: var(--bb-rl-space-200) var(--bb-rl-space-300);
+	}
+}
+
+.bb-rl-container {
+
+	.mpcs-ccw:before {
+		content: "\e038";
+		font-weight: 400;
+		font-family: bb-icons-rl;
+		font-size: 16px;
+		color: var(--bb-rl-icon-secondary-color);
+	}
+}
+
+.bb-rl-lms-tab-menu {
+	margin: 0 0 var(--bb-rl-space-300);
+	padding: 0;
+	display: flex;
+	align-items: center;
+	gap: var(--bb-rl-space-100);
+	flex-flow: wrap;
+
+	.bb-rl-lms-tab,
+	.tile,
+	.mepr-gradebook {
+
+		@include bb-rl-label-heading-bolder;
+		padding: 6px var(--bb-rl-space-200);
+		border: 1px solid var(--bb-rl-border-secondary-color);
+		color: var(--bb-rl-text-secondary-color);
+		border-radius: var(--bb-rl-radius-full);
+		background-color: transparent;
+
+		&.is-active {
+			background-color: var(--bb-rl-background-color);
+			color: var(--bb-rl-text-color);
+			border-color: var(--bb-rl-border-quinery-color);
+		}
+
+		&:hover {
+			background-color: var(--bb-rl-background-color);
+			color: var(--bb-rl-text-color);
+			border-color: var(--bb-rl-border-quinery-color);
+		}
+
+		.tile-icon {
+			display: none;
+		}
+
+		.tile-title {
+			display: inline-flex;
+			align-items: center;
+			gap: var(--bb-rl-space-50);
+			color: var(--bb-rl-text-secondary-color);
+			white-space: nowrap;
+		}
+
+		.mpcs-share {
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+		}
+	}
+
+	.mpcs-share:before {
+		content: "\e408";
+		font-weight: 400;
+		font-family: bb-icons-rl;
+		font-size: 16px;
+		color: var(--bb-rl-icon-secondary-color);
+		font-style: normal;
+	}
+}
+
+.mpcs-classroom.bb-readylaunch-template {
+
+	.bb-rl-lms-tab-menu {
+
+		.tile .tile-title {
+
+			@include bb-rl-label-heading-bolder;
+		}
+	}
+}
