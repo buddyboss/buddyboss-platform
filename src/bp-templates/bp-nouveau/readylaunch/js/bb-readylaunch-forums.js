@@ -1262,25 +1262,31 @@ window.bp = window.bp || {};
 						if ( typeof window.bb_rl_forums_medium_reply_editor !== 'undefined' && typeof window.bb_rl_forums_medium_reply_editor[editor_key] !== 'undefined' ) {
 							editor = window.bb_rl_forums_medium_reply_editor[editor_key];
 						}
+
+						// Check if GIF support is enabled (GIF button exists and is not disabled)
+						var gif_support_enabled = $( this ).find( '#bb-rl-forums-gif-button' ).length > 0 && ! $( this ).find( '#bb-rl-forums-gif-button' ).parents( '.bb-rl-post-elements-buttons-item' ).hasClass( 'disable' );
+
 						if (
 						(
 						$( this ).find( '#bbp_media' ).length > 0 &&
 						$( this ).find( '#bbp_document' ).length > 0 &&
 						$( this ).find( '#bbp_video' ).length > 0 &&
+						gif_support_enabled &&
 						$( this ).find( '#bbp_media_gif' ).length > 0 &&
-						$( this ).find( '#bbp_media' ).val() == '' &&
-						$( this ).find( '#bbp_document' ).val() == '' &&
-						$( this ).find( '#bbp_video' ).val() == '' &&
+						( $( this ).find( '#bbp_media' ).val() == '' || $( this ).find( '#bbp_media' ).val() == '[]' ) &&
+						( $( this ).find( '#bbp_document' ).val() == '' || $( this ).find( '#bbp_document' ).val() == '[]' ) &&
+						( $( this ).find( '#bbp_video' ).val() == '' || $( this ).find( '#bbp_video' ).val() == '[]' ) &&
 						$( this ).find( '#bbp_media_gif' ).val() == ''
 						) || (
 						$( this ).find( '#bbp_media' ).length > 0 &&
 						$( this ).find( '#bbp_document' ).length > 0 &&
 						$( this ).find( '#bbp_video' ).length > 0 &&
-						$( this ).find( '#bbp_media_gif' ).length <= 0 &&
-						$( this ).find( '#bbp_media' ).val() == '' &&
-						$( this ).find( '#bbp_video' ).val() == '' &&
-						$( this ).find( '#bbp_document' ).val() == ''
+						! gif_support_enabled &&
+						( $( this ).find( '#bbp_media' ).val() == '' || $( this ).find( '#bbp_media' ).val() == '[]' ) &&
+						( $( this ).find( '#bbp_video' ).val() == '' || $( this ).find( '#bbp_video' ).val() == '[]' ) &&
+						( $( this ).find( '#bbp_document' ).val() == '' || $( this ).find( '#bbp_document' ).val() == '[]' )
 						) || (
+						gif_support_enabled &&
 						$( this ).find( '#bbp_media_gif' ).length > 0 &&
 						$( this ).find( '#bbp_media' ).length <= 0 &&
 						$( this ).find( '#bbp_document' ).length <= 0 &&
