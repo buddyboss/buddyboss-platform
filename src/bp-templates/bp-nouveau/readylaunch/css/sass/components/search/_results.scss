@@ -130,6 +130,7 @@
 			color: var(--bb-rl-text-tertiary-color);
 			margin-top: var(--bb-rl-space-100);
 			display: flex;
+			flex-flow: wrap;
 			align-items: center;
 			gap: var(--bb-rl-space-50);
 

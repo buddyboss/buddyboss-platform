@@ -644,6 +644,12 @@ function bp_video_add( $args = '' ) {
 		$video->privacy = $r['privacy'];
 	} elseif ( ! empty( $video->group_id ) ) {
 		$video->privacy = 'grouponly';
+		if ( ! empty( $video->activity_id ) ) {
+			$activity = new BP_Activity_Activity( $video->activity_id );
+			if ( ! empty( $activity ) && 'activity_comment' === $activity->type ) {
+				$video->privacy = $r['privacy'];
+			}
+		}
 	} elseif ( ! empty( $video->album_id ) ) {
 		$album = new BP_Video_Album( $video->album_id );
 		if ( ! empty( $album ) ) {

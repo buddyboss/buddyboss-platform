@@ -540,6 +540,12 @@ function bp_document_add( $args = '' ) {
 		$document->privacy = $r['privacy'];
 	} elseif ( ! empty( $document->group_id ) ) {
 		$document->privacy = 'grouponly';
+		if ( ! empty( $document->activity_id ) ) {
+			$activity = new BP_Activity_Activity( $document->activity_id );
+			if ( ! empty( $activity ) && 'activity_comment' === $activity->type ) {
+				$document->privacy = $r['privacy'];
+			}
+		}
 	} elseif ( ! empty( $document->folder_id ) ) {
 		$folder = new BP_Document_Folder( $document->folder_id );
 		if ( ! empty( $folder ) ) {
