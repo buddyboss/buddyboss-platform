@@ -3836,6 +3836,9 @@ function bb_media_user_can_access( $id, $type, $attachment_id = 0 ) {
 					if ( 'video' === $type && ( $is_admin || 'members' === bp_group_get_video_status( $media_group_id ) ) ) {
 						$can_edit = true;
 					}
+					if ( 'album' === $type && ( $is_admin || 'members' === bp_group_get_album_status( $media_group_id ) ) ) {
+						$can_edit = true;
+					}
 					$can_move = true;
 				} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
 					$can_view     = true;
