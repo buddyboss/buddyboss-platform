@@ -63,7 +63,7 @@ export const DynamicStepRenderer = ({
         return { ...defaults, ...initialData };
     });
     const [autoSaveTimeout, setAutoSaveTimeout] = useState(null);
-    
+
     // State for managing link editing (for draggable_links)
     const [editingLink, setEditingLink] = useState(null);
     const [showAddForm, setShowAddForm] = useState(false);
@@ -465,12 +465,12 @@ export const DynamicStepRenderer = ({
                 const handleDraggableItemChange = (itemId, newValue) => {
                     // Get current value from formData (should be an array of items)
                     const currentItems = formData[fieldKey] || options || [];
-                    
+
                     // Update the specific item
-                    const updatedItems = currentItems.map(item => 
+                    const updatedItems = currentItems.map(item =>
                         item.id === itemId ? { ...item, enabled: newValue } : item
                     );
-                    
+
                     // Update formData with the new array
                     handleFieldChange(fieldKey, updatedItems);
                 };
@@ -616,9 +616,9 @@ export const DynamicStepRenderer = ({
                     }
 
                     return (
-                        <div 
+                        <div
                             className={`bb-rl-link-item ${isDragging ? 'is-dragging' : ''}`}
-                            ref={innerRef} 
+                            ref={innerRef}
                             {...draggableProps}
                         >
                             <div className="bb-rl-link-item-content">
@@ -636,7 +636,7 @@ export const DynamicStepRenderer = ({
                                                 isSmall
                                             />
                                             <Button
-                                                className="bb-rl-delete-link-button" 
+                                                className="bb-rl-delete-link-button"
                                                 icon={<i className="bb-icons-rl-trash" />}
                                                 onClick={onDelete}
                                                 label={__('Delete', 'buddyboss')}
@@ -752,15 +752,15 @@ export const DynamicStepRenderer = ({
     // Handle drag end for specific field
     const handleDragEndForField = (result, fieldKey) => {
         if (!result.destination) return;
-        
+
         // Get current items from formData or options
         const currentItems = formData[fieldKey] || stepOptions[fieldKey]?.options || [];
         const items = Array.from(currentItems);
-        
+
         // Reorder items
         const [reorderedItem] = items.splice(result.source.index, 1);
         items.splice(result.destination.index, 0, reorderedItem);
-        
+
         // Update formData with reordered items
         handleFieldChange(fieldKey, items);
     };
@@ -776,7 +776,6 @@ export const DynamicStepRenderer = ({
         // Custom preview renderers for different field types
         switch (fieldKey) {
             case 'bb_rl_theme_mode':
-            case 'color_scheme': // Keep backward compatibility
                 return (
                     <div className="bb-rl-color-scheme-preview">
                         <div className={`bb-rl-color-swatch bb-rl-primary-${optionValue}`}></div>
@@ -872,10 +871,10 @@ export const DynamicStepRenderer = ({
     // Evaluate a single condition
     const evaluateCondition = (condition, fieldKey, isDebugMode) => {
         const { dependsOn, value: expectedValue, operator = '===' } = condition;
-        
+
         // First check current step's formData, then check all step data
         let actualValue = formData[dependsOn];
-        
+
         // If not found in current step data, search in all step data
         if (actualValue === undefined || actualValue === null) {
             // Search through all step data for the field
@@ -884,7 +883,7 @@ export const DynamicStepRenderer = ({
                     actualValue = stepData[dependsOn];
                 }
             });
-            
+
             // Also check global preferences from window
             if ((actualValue === undefined || actualValue === null) && window.bbRlOnboarding?.preferences) {
                 Object.values(window.bbRlOnboarding.preferences).forEach(stepPrefs => {
@@ -894,7 +893,7 @@ export const DynamicStepRenderer = ({
                 });
             }
         }
-        
+
         let result;
         switch (operator) {
             case '===':
@@ -966,24 +965,24 @@ export const DynamicStepRenderer = ({
         // Handle array of conditions (AND logic by default)
         if (Array.isArray(conditional)) {
             const logic = conditional.logic || 'AND'; // Support AND/OR logic
-            
+
             if (logic === 'OR') {
                 // OR logic: if ANY condition is true, show the field
                 const result = conditional.some(condition => evaluateCondition(condition, fieldKey, isDebugMode));
-                
+
                 if (isDebugMode) {
                     console.log(`Multiple conditions (OR) for '${fieldKey}':`, { result, conditions: conditional });
                 }
-                
+
                 return result;
             } else {
                 // AND logic: ALL conditions must be true to show the field
                 const result = conditional.every(condition => evaluateCondition(condition, fieldKey, isDebugMode));
-                
+
                 if (isDebugMode) {
                     console.log(`Multiple conditions (AND) for '${fieldKey}':`, { result, conditions: conditional });
                 }
-                
+
                 return result;
             }
         }

@@ -16,8 +16,6 @@ export const SiteAppearanceStep = ({
     allStepData = {}
 }) => {
     const [formData, setFormData] = useState({
-        color_scheme: 'default',
-        site_layout: 'fullwidth',
         ...savedData
     });
 

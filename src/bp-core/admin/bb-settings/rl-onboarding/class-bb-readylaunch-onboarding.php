@@ -908,87 +908,9 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 			}
 		}
 
-		// Apply color settings.
-		if ( ! empty( $final_settings['bb_rl_color_light'] ) ) {
-			$this->save_readylaunch_option( 'primary_color_light', $final_settings['bb_rl_color_light'] );
-		}
-
-		if ( ! empty( $final_settings['bb_rl_color_dark'] ) ) {
-			$this->save_readylaunch_option( 'primary_color_dark', $final_settings['bb_rl_color_dark'] );
-		}
-
 		// Apply remaining step settings dynamically.
 		$this->apply_remaining_step_settings( $final_settings );
 
-		// Apply branding settings.
-		if ( isset( $final_settings['brandings'] ) ) {
-			$brandings = $final_settings['brandings'];
-
-			if ( isset( $brandings['site_logo'] ) && $brandings['site_logo'] ) {
-				update_option( 'custom_logo', $brandings['site_logo'] );
-			}
-
-			if ( isset( $brandings['favicon'] ) && $brandings['favicon'] ) {
-				update_option( 'site_icon', $brandings['favicon'] );
-			}
-
-			if ( isset( $brandings['brand_colors'] ) && $brandings['brand_colors'] ) {
-				bp_update_option( 'bb_rl_brand_colors', $brandings['brand_colors'] );
-			}
-		}
-
-		// Apply pages settings.
-		if ( isset( $final_settings['pages'] ) ) {
-			$pages = $final_settings['pages'];
-
-			if ( isset( $pages['create_essential_pages'] ) && $pages['create_essential_pages'] ) {
-				$this->create_essential_pages();
-			}
-
-			if ( isset( $pages['homepage_layout'] ) ) {
-				bp_update_option( 'bb_rl_homepage_layout', $pages['homepage_layout'] );
-
-				// Set homepage based on layout choice.
-				if ( 'activity' === $pages['homepage_layout'] ) {
-					update_option( 'show_on_front', 'page' );
-					// Set to activity page if exists.
-				}
-			}
-		}
-
-		// Apply side menus settings.
-		if ( isset( $final_settings['side_menus'] ) ) {
-			$side_menus = $final_settings['side_menus'];
-
-			if ( isset( $side_menus['enable_primary_menu'] ) ) {
-				bp_update_option( 'bb_rl_enable_primary_menu', $side_menus['enable_primary_menu'] ? 1 : 0 );
-			}
-
-			if ( isset( $side_menus['enable_member_menu'] ) ) {
-				bp_update_option( 'bb_rl_enable_member_menu', $side_menus['enable_member_menu'] ? 1 : 0 );
-			}
-
-			if ( isset( $side_menus['menu_style'] ) ) {
-				bp_update_option( 'bb_rl_menu_style', $side_menus['menu_style'] );
-			}
-		}
-
-		// Apply widgets settings.
-		if ( isset( $final_settings['widgets'] ) ) {
-			$widgets = $final_settings['widgets'];
-
-			if ( isset( $widgets['enable_sidebar_widgets'] ) ) {
-				bp_update_option( 'bb_rl_enable_sidebar_widgets', $widgets['enable_sidebar_widgets'] ? 1 : 0 );
-			}
-
-			if ( isset( $widgets['default_widgets'] ) && $widgets['default_widgets'] ) {
-				$this->setup_default_widgets();
-			}
-
-			if ( isset( $widgets['widget_areas'] ) ) {
-				bp_update_option( 'bb_rl_widget_areas', $widgets['widget_areas'] );
-			}
-		}
 
 		/**
 		 * Fires after ReadyLaunch configuration has been applied.

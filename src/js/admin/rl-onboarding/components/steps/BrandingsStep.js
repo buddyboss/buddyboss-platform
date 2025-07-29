@@ -16,9 +16,6 @@ export const BrandingsStep = ({
     allStepData = {}
 }) => {
     const [formData, setFormData] = useState({
-        site_logo: '',
-        favicon: '',
-        brand_colors: '#e57e3a',
         ...savedData
     });
 
@@ -84,4 +81,4 @@ export const BrandingsStep = ({
             />
         </BaseStepLayout>
     );
-}; 
+};
