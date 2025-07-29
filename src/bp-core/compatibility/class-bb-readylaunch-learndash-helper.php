@@ -37,7 +37,7 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 		 * @since BuddyBoss 2.9.00
 		 * @var BB_Readylaunch_Learndash_Helper
 		 */
-		protected static $_instance = null;
+		protected static $instance = null;
 
 		/**
 		 * Main BB_Readylaunch_Learndash_Helper Instance.
@@ -49,11 +49,11 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 		 * @return BB_Readylaunch_Learndash_Helper - Main instance.
 		 */
 		public static function instance() {
-			if ( is_null( self::$_instance ) ) {
-				self::$_instance = new self();
+			if ( is_null( self::$instance ) ) {
+				self::$instance = new self();
 			}
 
-			return self::$_instance;
+			return self::$instance;
 		}
 
 		/**
@@ -103,12 +103,12 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 		 * @param string     $filepath         Template file path.
 		 * @param string     $name             Template name.
 		 * @param array|null $args             Template data.
-		 * @param bool|null  $echo             Whether to echo the template output or not.
+		 * @param bool|null  $out              Whether to echo the template output or not.
 		 * @param bool       $return_file_path Whether to return file or path or not.
 		 *
 		 * @return string Modified template path
 		 */
-		public function bb_rl_override_learndash_template_path( $filepath, $name, $args, $echo, $return_file_path ) {
+		public function bb_rl_override_learndash_template_path( $filepath, $name, $args, $out, $return_file_path ) {
 			if (
 				bp_is_active( 'groups' ) &&
 				function_exists( 'bp_is_group_single' ) &&
@@ -1307,9 +1307,9 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 		 * @return array The orderby data.
 		 */
 		public function bb_rl_get_orderby_data() {
-			$current_orderby    = isset( $_GET['orderby'] ) ? sanitize_text_field( wp_unslash( $_GET['orderby'] ) ) : 'alphabetical';
-			$current_category   = isset( $_GET['categories'] ) ? sanitize_text_field( wp_unslash( $_GET['categories'] ) ) : '';
-			$current_instructor = isset( $_GET['instructors'] ) ? sanitize_text_field( wp_unslash( $_GET['instructors'] ) ) : '';
+			$current_orderby    = isset( $_GET['orderby'] ) ? sanitize_text_field( wp_unslash( $_GET['orderby'] ) ) : 'alphabetical'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$current_category   = isset( $_GET['categories'] ) ? sanitize_text_field( wp_unslash( $_GET['categories'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$current_instructor = isset( $_GET['instructors'] ) ? sanitize_text_field( wp_unslash( $_GET['instructors'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
 			return array(
 				'current_orderby'    => $current_orderby,
@@ -1362,8 +1362,8 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 			if ( 'sfwd-lessons' === $post->post_type ) {
 				$lesson_id = $post->ID;
 			} elseif ( 'sfwd-topic' === $post->post_type || 'sfwd-quiz' === $post->post_type ) {
-					$topic_id = $post->ID;
-				if ( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Courses_Builder', 'shared_steps' ) == 'yes' ) {
+				$topic_id = $post->ID;
+				if ( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Courses_Builder', 'shared_steps' ) === 'yes' ) {
 					$lesson_id = learndash_course_get_single_parent_step( $course_id, $post->ID );
 				} else {
 					$lesson_id = learndash_get_setting( $post, 'lesson' );
