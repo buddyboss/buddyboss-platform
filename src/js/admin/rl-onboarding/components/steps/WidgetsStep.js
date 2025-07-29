@@ -72,7 +72,7 @@ export const WidgetsStep = ({
             totalSteps={totalSteps}
             formData={formData}
             allStepData={allStepData}
-            page="groups"
+            page="all"
         >
             <DynamicStepRenderer
                 stepKey="widgets"

@@ -2,6 +2,7 @@ import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { Button } from '@wordpress/components';
 import { PreviewPages } from './previewPages';
+import { PreviewSlider } from './PreviewSlider';
 
 export const BaseStepLayout = ({ 
     stepData, 
@@ -98,7 +99,13 @@ export const BaseStepLayout = ({
                 {/* Right Panel - Preview/Visual */}
                 <div className="bb-rl-right-panel">
                     <div className="bb-rl-preview-pages">
-                        <PreviewPages page={page} formData={mergedFormData} />
+                        {
+                            page === 'all' ? (
+                                <PreviewSlider formData={mergedFormData} />
+                            ) : (
+                                <PreviewPages page={page} formData={mergedFormData} />
+                            )
+                        }
                     </div>
                 </div>
             </div>

@@ -71,6 +71,7 @@ export const PagesStep = ({
             totalSteps={totalSteps}
             formData={formData}
             allStepData={allStepData}
+            page="all"
         >
             <DynamicStepRenderer
                 stepKey="pages"
