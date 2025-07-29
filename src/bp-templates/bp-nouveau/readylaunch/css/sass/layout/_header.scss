@@ -241,11 +241,14 @@
 				font-size: 1rem;
 			}
 
+			.delete-all,
 			.message-view-all-link {
 				margin-left: auto;
 				margin-right: var(--bb-rl-space-200);
-				border-radius: var(--bb-rl-radius-full);
-				font-size: 0.85rem;
+				border-radius: var(--bb-rl-radius-md);
+				padding: var(--bb-rl-space-50) var(--bb-rl-space-100);
+				font-size: var(--bb-rl-font-size-sm);
+				font-weight: 400;
 			}
 
 			.mark-read-all {

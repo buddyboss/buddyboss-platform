@@ -491,9 +491,9 @@ if ( bp_has_message_threads( bp_ajax_querystring( 'messages' ) . '&user_id=' . g
 
 					if ( (int) bp_loggedin_user_id() === (int) $messages_template->thread->last_sender_id ) {
 						if ( $send_media ) {
-							echo esc_html__( 'You', 'buddyboss' ) . ' ' . esc_html( stripslashes_deep( strtolower( $exerpt ) ) );
+							echo esc_html( stripslashes_deep( strtolower( $exerpt ) ) );
 						} else {
-							echo esc_html__( 'You', 'buddyboss' ) . ': ' . esc_html( stripslashes_deep( $exerpt ) );
+							echo esc_html( stripslashes_deep( $exerpt ) );
 						}
 					} else {
 						$last_sender = bp_core_get_user_displayname( $messages_template->thread->last_sender_id );

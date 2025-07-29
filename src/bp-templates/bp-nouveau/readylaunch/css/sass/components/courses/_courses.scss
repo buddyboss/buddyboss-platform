@@ -280,6 +280,10 @@
 				color: var(--bb-rl-text-color);
 				border: 1px solid var(--bb-rl-border-quaternary-color);
 			}
+
+			&:hover {
+				border-color: var(--bb-rl-border-tertiary-color);
+			}
 		}
 
 		a.prev,

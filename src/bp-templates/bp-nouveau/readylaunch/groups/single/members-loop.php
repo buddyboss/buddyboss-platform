@@ -57,7 +57,13 @@ if ( bp_group_has_members( bp_ajax_querystring( 'group_members' ) . '&type=group
 			}
 
 			// Member joined data.
+			if ( class_exists( 'BB_Group_Readylaunch' ) ) {
+				add_filter( 'bp_core_get_last_activity', 'BB_Group_Readylaunch::bb_rl_modify_group_member_joined_since', 10, 2 );
+			}
 			$member_joined_date = bp_get_group_member_joined_since();
+			if ( class_exists( 'BB_Group_Readylaunch' ) ) {
+				remove_filter( 'bp_core_get_last_activity', 'BB_Group_Readylaunch::bb_rl_modify_group_member_joined_since', 10, 2 );
+			}
 
 			// Member last activity.
 			$member_last_activity = bp_get_last_activity( $member_user_id );

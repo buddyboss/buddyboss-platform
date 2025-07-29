@@ -35,7 +35,7 @@
 								) :
 									?>
 								<div class="media-uploader-post-content">
-									<textarea name="bp-media-post-content" id="bp-media-post-content" placeholder="<?php bp_is_group() ? esc_html_e( 'Write something about your documents, to be shown on the group feed', 'buddyboss' ) : esc_html_e( 'Write something about your documents, to be shown on your timeline', 'buddyboss' ); ?>"></textarea>
+									<textarea name="bp-media-post-content" id="bp-media-post-content" placeholder="<?php esc_html_e( 'Write a description', 'buddyboss' ); ?>"></textarea>
 								</div>
 								<?php endif; ?>
 								<div class="media-uploader-wrapper">
@@ -72,9 +72,9 @@
 						</div>
 					</div>
 					<footer class="bb-model-footer document-uploader-footer">
-						<a href="#" class="bp-document-open-create-popup-folder" style="display: none;" >
-							<i class="bb-icon-l bb-icon-plus"></i>
-							<?php esc_html_e( 'Create new folder', 'buddyboss' ); ?>
+						<a href="#" class="bb-rl-document-open-create-popup-folder" style="display: none;" >
+							<i class="bb-icons-rl-plus"></i>
+							<?php esc_html_e( 'Create Folder', 'buddyboss' ); ?>
 						</a>
 						<?php if ( ! bp_is_group() ) : ?>
 							<div class="bb-dropdown-wrap">

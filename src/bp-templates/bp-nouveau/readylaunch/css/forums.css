@@ -1123,10 +1123,28 @@
   font-weight: 500;
 }
 
+[id*="single-forum-description-popup"] .bb-action-popup-content {
+  max-height: calc(85vh - 100px);
+  overflow: auto;
+  padding: var(--bb-rl-space-300);
+  margin-bottom: var(--bb-rl-space-100);
+}
+
 [id*="single-forum-description-popup"] .bb-action-popup-content p {
   font-size: var(--bb-rl-font-size-sm);
   line-height: 1.5;
-  padding: var(--bb-rl-space-200);
+  margin-bottom: var(--bb-rl-space-100);
+}
+
+[id*="single-forum-description-popup"] .bb-action-popup-content ul,
+[id*="single-forum-description-popup"] .bb-action-popup-content ol {
+  margin-bottom: var(--bb-rl-space-100);
+  padding: 0;
+  list-style-position: inside;
+}
+
+[id*="single-forum-description-popup"] .bb-action-popup-content li {
+  font-size: var(--bb-rl-font-size-sm);
 }
 
 .forums .bb-rl-profile-subnav ul.subnav {
@@ -2552,6 +2570,11 @@
 .forum-dropdown .bbp-admin-links > a.bbp-topic-sticky-link:before,
 .bb-rl-container-inner .bbp-admin-links > a.bbp-topic-sticky-link:before {
   content: "\e3e2";
+}
+
+.forum-dropdown .bbp-admin-links > a.bbp-topic-super-sticky-link:before,
+.bb-rl-container-inner .bbp-admin-links > a.bbp-topic-super-sticky-link:before {
+  content: "\e65c";
 }
 
 .forum-dropdown .bbp-admin-links > a.bbp-topic-merge-link:before,
