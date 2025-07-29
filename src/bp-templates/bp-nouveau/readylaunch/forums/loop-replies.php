@@ -26,6 +26,28 @@ $topic_id = bbp_get_topic_id();
 
 			<div class="item flex-1">
 				<div class="bb-rl-topic-header">
+					<div class="bb-rl-topic-header-meta">
+						<?php if ( ! bbp_show_lead_topic() && is_user_logged_in() ) : ?>
+							<?php if ( function_exists( 'bp_is_active' ) && bp_is_active( 'moderation' ) && function_exists( 'bbp_get_topic_report_link' ) && bbp_get_topic_report_link( array( 'id' => get_the_ID() ) ) ) { ?>
+								<div class="bb_more_options forum-dropdown bb-rl-context-wrap">
+									<a href="#" class="bb-rl-context-btn bb_more_options_action bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="More Options">
+										<i class="bb-icons-rl-dots-three"></i>
+									</a>
+									<div class="bb_more_options_list bb_more_dropdown bb-rl-context-dropdown">
+										<div class="generic-button bb-rl-context-item">
+											<?php
+											if ( bp_is_active( 'moderation' ) && function_exists( 'bbp_get_topic_report_link' ) ) {
+												?>
+													<?php echo wp_kses_post( bbp_get_topic_report_link( array( 'id' => get_the_ID() ) ) ); ?>
+												<?php
+											}
+											?>
+										</div>
+									</div>
+								</div>
+							<?php } ?>
+						<?php endif; ?>
+					</div>
 					<?php
 					if ( ! empty( bbp_get_topic_forum_title() ) ) {
 
