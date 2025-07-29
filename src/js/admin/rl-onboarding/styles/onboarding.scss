@@ -2317,6 +2317,13 @@ body.bb-rl-fullscreen-mode {
     display: flex;
     background-color: var(--bb-rl-preview-background-secondary-color);
     min-height: 500px;
+
+    .bb-rl-preview-main-content {
+        display: flex;
+        flex: 1;
+        flex-wrap: wrap;
+        width: calc(100% - 282px);
+    }
 }
 
 .bb-rl-preview-sidebar {
@@ -2325,6 +2332,7 @@ body.bb-rl-fullscreen-mode {
     border-right: 1px solid var(--bb-rl-preview-border-secondary-color);
     padding: 24px 0;
     overflow-y: auto;
+    flex-shrink: 0;
 }
 
 .bb-rl-preview-main {
@@ -2548,7 +2556,7 @@ body.bb-rl-fullscreen-mode {
 
 // Feed Form
 .bb-rl-preview-feed-form {
-    display: flex;
+    display: none;
     align-items: center;
     gap: 12px;
     padding: 12px 24px;
@@ -2556,6 +2564,10 @@ body.bb-rl-fullscreen-mode {
     border-radius: 12px;
     border: 1px solid var(--bb-rl-preview-border-tertiary-color);
     margin-bottom: 24px;
+
+    &.bb-rl-preview-feed-form-visible {
+        display: flex;
+    }
 
     .bb-rl-preview-feed-form-avatar {
         img {
@@ -2825,7 +2837,7 @@ body.bb-rl-fullscreen-mode {
 
     .bb-rl-preview-widget-link {
         font-size: 13px;
-        color: var(--bb-rl-preview-text-tertiary-color);
+        color: var(--bb-rl-preview-text-color);
         text-decoration: none;
     }
 }
@@ -3048,6 +3060,393 @@ body.bb-rl-fullscreen-mode {
         .bb-rl-preview-blog-time {
             font-size: 12px;
             color: var(--bb-rl-preview-text-tertiary-color);
+        }
+    }
+}
+
+// Group Info Widget Styles
+.bb-rl-preview-group-info {
+    margin-bottom: 20px;
+
+    .bb-rl-preview-group-info-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        margin-bottom: 16px;
+
+        &:last-child {
+            margin-bottom: 0;
+        }
+
+        .bb-rl-preview-group-info-icon {
+            flex-shrink: 0;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 2px;
+
+            i {
+                font-size: 20px;
+                color: var(--bb-rl-preview-icon-secondary-color);
+            }
+        }
+
+        .bb-rl-preview-group-info-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+
+            .bb-rl-preview-group-info-label {
+                font-size: 14px;
+                font-weight: 500;
+                color: var(--bb-rl-preview-text-color);
+                line-height: 1.3;
+            }
+
+            .bb-rl-preview-group-info-description {
+                font-size: 13px;
+                font-weight: 400;
+                color: var(--bb-rl-preview-text-tertiary-color);
+                line-height: 1.3;
+            }
+        }
+    }
+}
+
+.bb-rl-preview-group-organizers {
+    margin-bottom: 20px;
+
+    .bb-rl-preview-group-organizers-header {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+
+        .bb-rl-preview-group-organizers-title {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--bb-rl-preview-text-color);
+            line-height: 1.3;
+        }
+
+        .bb-rl-preview-group-organizers-avatars {
+            display: flex;
+            align-items: center;
+
+            .bb-rl-preview-organizer-avatar {
+                display: flex;
+
+                img {
+                    width: 24px;
+                    height: 24px;
+                    border-radius: 50%;
+                    object-fit: cover;
+                }
+
+                + .bb-rl-preview-organizer-avatar {
+                    margin-left: -4px;
+                }
+            }
+
+            .bb-rl-preview-organizers-more {
+                font-size: 13px;
+                font-weight: 500;
+                color: var(--bb-rl-preview-text-tertiary-color);
+                margin-left: 4px;
+            }
+        }
+    }
+}
+
+.bb-rl-preview-group-description {
+    p {
+        font-size: 14px;
+        font-weight: 400;
+        color: var(--bb-rl-preview-text-secondary-color);
+        line-height: 1.4;
+        margin: 0 0 12px 0;
+    }
+
+    .bb-rl-preview-show-more-btn {
+        background: none;
+        border: none;
+        padding: 0;
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--bb-rl-preview-text-brand-primary-color);
+        cursor: pointer;
+        line-height: 1.3;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+}
+
+// Group Members Widget Styles
+.bb-rl-preview-group-members {
+    .bb-rl-preview-group-members-tabs {
+        display: flex;
+        gap: 0;
+        margin-bottom: 20px;
+
+        .bb-rl-preview-group-tab {
+            background: none;
+            border: none;
+            padding: 8px 16px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--bb-rl-preview-text-secondary-color);
+            cursor: pointer;
+            border-radius: 20px;
+            transition: all 0.2s ease;
+
+            &.bb-rl-preview-group-tab-active {
+                background-color: var(--bb-rl-preview-background-secondary-color);
+                color: var(--bb-rl-preview-text-color);
+            }
+
+            &:hover:not(.bb-rl-preview-group-tab-active) {
+                background-color: var(--bb-rl-preview-background-secondary-hover-color);
+            }
+        }
+    }
+
+    .bb-rl-preview-group-members-list {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+
+        .bb-rl-preview-group-member-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+
+            .bb-rl-preview-group-member-avatar {
+                flex-shrink: 0;
+
+                img {
+                    width: 40px;
+                    height: 40px;
+                    border-radius: 50%;
+                    object-fit: cover;
+                }
+            }
+
+            .bb-rl-preview-group-member-info {
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                gap: 2px;
+
+                .bb-rl-preview-group-member-name {
+                    font-size: 14px;
+                    font-weight: 500;
+                    color: var(--bb-rl-preview-text-color);
+                    line-height: 1.3;
+                }
+
+                .bb-rl-preview-group-member-status {
+                    font-size: 13px;
+                    font-weight: 400;
+                    color: var(--bb-rl-preview-text-tertiary-color);
+                    line-height: 1.3;
+                }
+            }
+        }
+    }
+}
+
+.bb-rl-preview-group-header {
+    padding: 24px 24px 0;
+
+    img {
+        border-radius: 12px;
+        width: 100%;
+    }
+}
+
+.bb-rl-preview-group-nav {
+    background-color: var(--bb-rl-preview-background-color);
+    padding: 12px 16px;
+    border: 1px solid var(--bb-rl-preview-border-secondary-color);
+    border-radius: 12px;
+    margin-bottom: 24px;
+    
+    ul {
+        display: flex;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+
+        li {
+            color: var(--bb-rl-preview-text-secondary-color);
+            font-size: 13px;
+            line-height: 1.3;
+            font-weight: 500;
+            padding: 6px 16px;
+
+            &.bb-rl-preview-group-nav-active {
+                color: var(--bb-rl-preview-text-color);
+                background-color: var(--bb-rl-preview-background-secondary-color);
+                border-radius: 99px;
+            }
+        }
+    }
+}
+// ==========================================================================
+// Group Head Bar Styles (Top Navigation + Group Info)
+// ==========================================================================
+
+.bb-rl-preview-group-head-bar {
+    background-color: var(--bb-rl-preview-background-color);
+    border-bottom: 1px solid var(--bb-rl-preview-border-secondary-color);
+    overflow: hidden;
+    width: 100%;
+}
+
+// Group Info Bar
+.bb-rl-preview-group-info-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 24px;
+
+    .bb-rl-preview-group-info-left {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex: 1;
+
+        .bb-rl-preview-group-avatar {
+            flex-shrink: 0;
+
+            .bb-rl-preview-group-avatar-icon {
+                width: 32px;
+                height: 32px;
+                background: linear-gradient(135deg, #4ade80 0%, #16a34a 100%);
+                border-radius: 99px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                i {
+                    font-size: 18px;
+                    color: white;
+                }
+            }
+        }
+
+        .bb-rl-preview-group-details {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-right: 12px;
+
+            .bb-rl-preview-group-title {
+                font-size: 16px;
+                font-weight: 500;
+                color: var(--bb-rl-preview-text-color);
+                margin: 0;
+                line-height: 1.3;
+            }
+
+            .bb-rl-preview-group-meta {
+                .bb-rl-preview-group-members {
+                    display: flex;
+                    align-items: center;
+                    gap: 4px;
+                    border: 1px solid var(--bb-rl-preview-border-secondary-color);
+                    border-radius: 6px;
+                    padding: 8px;
+
+                    .bb-rl-preview-group-member-avatars {
+                        display: flex;
+                        align-items: center;
+
+                        .bb-rl-preview-member-avatar {
+                            display: flex;
+
+                            img {
+                                width: 20px;
+                                height: 20px;
+                                border-radius: 50%;
+                                object-fit: cover;
+                            }
+
+                            + .bb-rl-preview-member-avatar {
+                                margin-left: -8px;
+                            }
+                        }
+                    }
+
+                    .bb-rl-preview-member-count {
+                        font-size: 11px;
+                        font-weight: 500;
+                        color: var(--bb-rl-preview-text-tertiary-color);
+                    }
+
+                    .bb-rl-preview-group-privacy {
+                        padding-left: 9px;
+                        border-left: 1px solid var(--bb-rl-preview-border-secondary-color);
+
+                        i {
+                            font-size: 16px;
+                            color: var(--bb-rl-preview-icon-secondary-color);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    .bb-rl-preview-group-info-right {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+
+        .bb-rl-preview-join-button {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background-color: var(--bb-rl-preview-background-brand-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 16px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+
+            i {
+                font-size: 16px;
+            }
+
+            &:hover {
+                background-color: var(--bb-rl-preview-background-brand-secondary-color);
+            }
+        }
+
+        .bb-rl-preview-more-button {
+            background: none;
+            border: none;
+            padding: 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+
+            i {
+                font-size: 20px;
+                color: var(--bb-rl-preview-icon-secondary-color);
+            }
+
+            &:hover {
+                background-color: var(--bb-rl-preview-background-secondary-hover-color);
+            }
         }
     }
 }

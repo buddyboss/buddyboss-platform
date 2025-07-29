@@ -1,8 +1,8 @@
-export const Feed = () => {
+export const Feed = ({ showForm = true }) => {
     return (
         <div className="bb-rl-preview-feed">
             {/* Feed Form */}
-            <div className="bb-rl-preview-feed-form">
+            <div className={`bb-rl-preview-feed-form ${showForm ? 'bb-rl-preview-feed-form-visible' : ''}`}>
                 <div className="bb-rl-preview-feed-form-avatar">
                 <img src={`${window.bbRlOnboarding?.assets?.assetsUrl || ''}john.png`} alt="John Muller" />
                 </div>
