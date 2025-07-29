@@ -18,6 +18,14 @@ export const OnboardingModal = ({ isOpen, onClose, onContinue, onSkip, onSaveSte
         initializeOnboarding();
     }, []);
 
+    // Mark step as visited when currentStepIndex changes (for progress bar)
+    useEffect(() => {
+        if (!currentStep?.skip_progress) {
+            // Fire and forget – we don't care about the promise here
+            saveStepProgress(currentStepIndex, {});
+        }
+    }, [currentStepIndex]);
+
     // Initialize onboarding data and restore progress
     const initializeOnboarding = async () => {
         // Load saved preferences

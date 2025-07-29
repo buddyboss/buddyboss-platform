@@ -509,9 +509,17 @@ abstract class BB_Setup_Wizard_Manager {
 			);
 		}
 
-		$tracking['steps'][ $step ]['status']       = 'completed';
-		$tracking['steps'][ $step ]['form_data']    = $data;
-		$tracking['steps'][ $step ]['completed_at'] = current_time( 'mysql' );
+		// Only mark as completed if we actually have form data (indicates user progressed).
+		if ( ! empty( $data ) ) {
+			$tracking['steps'][ $step ]['status']       = 'completed';
+			$tracking['steps'][ $step ]['form_data']    = $data;
+			$tracking['steps'][ $step ]['completed_at'] = current_time( 'mysql' );
+		} else {
+			// Ensure status is at least visited.
+			if ( 'visited' !== $tracking['steps'][ $step ]['status'] ) {
+				$tracking['steps'][ $step ]['status'] = 'visited';
+			}
+		}
 
 		$this->update_option( $option_name, $tracking );
 	}
