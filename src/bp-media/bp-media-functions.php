@@ -3827,13 +3827,16 @@ function bb_media_user_can_access( $id, $type, $attachment_id = 0 ) {
 					$can_add      = true;
 					$can_delete   = true;
 					// Use can only do the thing if the user is admin OR status will be a members.
-					if ( ( 'photo' === $type || 'album' === $type ) && ( $is_admin || 'members' === bp_group_get_media_status( $media_group_id ) ) ) {
+					if ( 'photo' === $type && ( $is_admin || 'members' === bp_group_get_media_status( $media_group_id ) ) ) {
 						$can_edit = true;
 					}
 					if ( ( 'document' === $type || 'folder' === $type ) && ( $is_admin || 'members' === bp_group_get_document_status( $media_group_id ) ) ) {
 						$can_edit = true;
 					}
 					if ( 'video' === $type && ( $is_admin || 'members' === bp_group_get_video_status( $media_group_id ) ) ) {
+						$can_edit = true;
+					}
+					if ( 'album' === $type && ( $is_admin || 'members' === bp_group_get_album_status( $media_group_id ) ) ) {
 						$can_edit = true;
 					}
 					$can_move = true;
