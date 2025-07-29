@@ -3239,7 +3239,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			}
 
 			// Check for URL parameters that indicate registration.
-			if ( isset( $_GET['ld_register_id'] ) || isset( $_GET['course_id'] ) || isset( $_GET['group_id'] ) ) {
+			if ( isset( $_GET['ld_register_id'] ) || isset( $_GET['course_id'] ) || isset( $_GET['group_id'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 				return true;
 			}
 
@@ -3280,7 +3280,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			}
 
 			// Check for URL parameters that indicate password reset.
-			if ( isset( $_GET['ld-resetpw'] ) || isset( $_GET['password_reset'] ) || isset( $_GET['key'] ) || isset( $_GET['login'] ) ) {
+			if ( isset( $_GET['ld-resetpw'] ) || isset( $_GET['password_reset'] ) || isset( $_GET['key'] ) || isset( $_GET['login'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 				return true;
 			}
 
@@ -4278,7 +4278,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		}
 
 		/**
-		 * Modify member joined date.
+		 * Modify member's joined date.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
@@ -4291,7 +4291,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 			$register_date        = date_i18n( 'd M Y', strtotime( $register_date ) );
 			$user_registered_date = sprintf(
-			/* translators: 1: User joined date. */
+				/* translators: 1: User joined date. */
 				esc_html__( 'Joined %s', 'buddyboss' ),
 				esc_html( $register_date )
 			);
@@ -4300,7 +4300,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		}
 
 		/**
-		 * Modify member report button.
+		 * Modify the member report button.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
@@ -4319,7 +4319,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		}
 
 		/**
-		 * Modify nav get count.
+		 * Modify the nav get count.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
