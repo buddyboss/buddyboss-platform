@@ -538,8 +538,11 @@ abstract class BB_Setup_Wizard_Manager {
 	 * @return void
 	 */
 	public function save_preferences( $preferences, $pref_key ) {
-		$option_name = $this->config['option_prefix'] . '_preferences_' . $this->wizard_id;
-		$this->update_option( $option_name, $preferences );
+		$option_name        = $this->config['option_prefix'] . '_preferences_' . $this->wizard_id;
+		$stored_preferences = $this->get_preferences();
+		$new_preferences    = wp_parse_args( $preferences, $stored_preferences );
+
+		$this->update_option( $option_name, $new_preferences );
 
 		/**
 		 * Fires when wizard preferences are saved

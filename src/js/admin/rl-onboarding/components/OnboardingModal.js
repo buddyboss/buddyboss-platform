@@ -116,6 +116,11 @@ export const OnboardingModal = ({ isOpen, onClose, onContinue, onSkip, onSaveSte
 
     // Save step progress and data to backend
     const saveStepProgress = async (stepIndex, formData = {}) => {
+        // Skip if the step is flagged to ignore progress.
+        if (currentStep.skip_progress) {
+            return true;
+        }
+
         try {
             const response = await fetch(window.bbRlOnboarding?.ajaxUrl || window.ajaxurl, {
                 method: 'POST',
@@ -154,6 +159,9 @@ export const OnboardingModal = ({ isOpen, onClose, onContinue, onSkip, onSaveSte
 
     // Auto-save preferences for dynamic options
     const autoSavePreferences = async (preferences) => {
+        if (currentStep.skip_progress) {
+            return true;
+        }
         try {
             // Debug the request parameters
             const ajaxUrl = window.bbRlOnboarding?.ajaxUrl || window.ajaxurl;
@@ -223,8 +231,10 @@ export const OnboardingModal = ({ isOpen, onClose, onContinue, onSkip, onSaveSte
         setIsProcessing(true);
 
         try {
-            // Save current step progress
-            const saveSuccess = await saveStepProgress(currentStepIndex, formData);
+            let saveSuccess = true;
+            if (!currentStep.skip_progress) {
+                saveSuccess = await saveStepProgress(currentStepIndex, formData);
+            }
             
             if (saveSuccess) {
                 // Update step data
@@ -234,8 +244,9 @@ export const OnboardingModal = ({ isOpen, onClose, onContinue, onSkip, onSaveSte
                     [stepKey]: formData
                 }));
 
-                // Auto-save preferences
-                await autoSavePreferences({ [stepKey]: formData });
+                if (!currentStep.skip_progress) {
+                    await autoSavePreferences({ [stepKey]: formData });
+                }
 
                 // Check if this is the last step
                 if (currentStepIndex >= totalSteps - 1) {

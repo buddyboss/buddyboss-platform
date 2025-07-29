@@ -71,6 +71,7 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 					'description' => __( 'Let\'s bring your community to life by choose the look and feel that matches your vision.', 'buddyboss' ),
 					'component'   => 'SplashScreen',
 					'image'       => 'onboardingModal-splash.png',
+					'skip_progress' => true,
 				),
 				1 => array(
 					'key'         => 'community_setup',
@@ -881,31 +882,11 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 
 		// Apply branding settings - logos.
 		if ( ! empty( $final_settings['bb_rl_light_logo'] ) ) {
-			if ( is_array( $final_settings['bb_rl_light_logo'] ) ) {
-				// New format: complete image object.
-				$this->save_readylaunch_option( 'light_logo', $final_settings['bb_rl_light_logo']['id'] );
-				$this->save_readylaunch_option( 'light_logo_url', $final_settings['bb_rl_light_logo']['url'] );
-			} else {
-				// Legacy format: just the ID.
-				$this->save_readylaunch_option( 'light_logo', $final_settings['bb_rl_light_logo'] );
-				if ( ! empty( $final_settings['bb_rl_light_logo_url'] ) ) {
-					$this->save_readylaunch_option( 'light_logo_url', $final_settings['bb_rl_light_logo_url'] );
-				}
-			}
+			$this->save_readylaunch_option( 'light_logo', $final_settings['bb_rl_light_logo'] );
 		}
 
 		if ( ! empty( $final_settings['bb_rl_dark_logo'] ) ) {
-			if ( is_array( $final_settings['bb_rl_dark_logo'] ) ) {
-				// New format: complete image object.
-				$this->save_readylaunch_option( 'dark_logo', $final_settings['bb_rl_dark_logo']['id'] );
-				$this->save_readylaunch_option( 'dark_logo_url', $final_settings['bb_rl_dark_logo']['url'] );
-			} else {
-				// Legacy format: just the ID.
-				$this->save_readylaunch_option( 'dark_logo', $final_settings['bb_rl_dark_logo'] );
-				if ( ! empty( $final_settings['bb_rl_dark_logo_url'] ) ) {
-					$this->save_readylaunch_option( 'dark_logo_url', $final_settings['bb_rl_dark_logo_url'] );
-				}
-			}
+			$this->save_readylaunch_option( 'dark_logo', $final_settings['bb_rl_dark_logo'] );
 		}
 
 		// Apply remaining step settings dynamically.
@@ -1041,9 +1022,7 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 			'blogname',
 			'bb_rl_theme_mode',
 			'bb_rl_light_logo',
-			'bb_rl_light_logo_url',
 			'bb_rl_dark_logo',
-			'bb_rl_dark_logo_url',
 			'bb_rl_color_light',
 			'bb_rl_color_dark',
 		);
