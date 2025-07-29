@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 2.9.20\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2025-07-23 13:50:04+00:00\n"
+"POT-Creation-Date: 2025-07-29 10:16:59+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -520,7 +520,6 @@ msgid "Spam"
 msgstr ""
 
 #. Translators: Publish box date format, see http://php.net/date.
-#. translators: Publish box date format, see http://php.net/date
 #: bp-activity/bp-activity-admin.php:844
 #: bp-forums/admin/forums.php:665
 #: bp-forums/admin/replies.php:954
@@ -10857,6 +10856,7 @@ msgstr ""
 
 #: bp-core/classes/class-bb-readylaunch.php:1103
 #: bp-core/classes/class-bb-readylaunch.php:2668
+#: bp-templates/bp-nouveau/buddypress-functions.php:744
 msgid "More"
 msgstr ""
 
@@ -15555,7 +15555,6 @@ msgstr ""
 msgid "Forum updated."
 msgstr ""
 
-#. translators: %s: date and time of the revision
 #: bp-forums/admin/forums.php:648
 #, php-format
 msgid "Forum restored to revision from %s"
@@ -16019,7 +16018,6 @@ msgstr ""
 msgid "Reply updated."
 msgstr ""
 
-#. translators: %s: date and time of the revision
 #: bp-forums/admin/replies.php:937
 #, php-format
 msgid "Reply restored to revision from %s"
@@ -17118,7 +17116,6 @@ msgstr ""
 msgid "Discussion updated."
 msgstr ""
 
-#. translators: %s: date and time of the revision
 #: bp-forums/admin/topics.php:1070
 #, php-format
 msgid "Discussion restored to revision from %s"
