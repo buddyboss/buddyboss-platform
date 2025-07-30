@@ -2115,7 +2115,9 @@ body.messages .bb-rl-content-wrapper {
 
 #send_message_form .select2-selection__choice__remove {
   font-size: 0;
-  line-height: 1;
+  position: static;
+  border: 0;
+  line-height: normal !important;
 }
 
 #send_message_form .select2-selection__choice__remove:before {

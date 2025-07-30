@@ -115,6 +115,10 @@
 					transform: translateY(-50%);
 					right: 5px;
 					cursor: pointer;
+					left: inherit;
+					border: 0;
+					line-height: 1 !important;
+					margin: 0 5px 0 0 !important;
 
 					&:before {
 						content: "\e4f6";

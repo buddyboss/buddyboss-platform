@@ -1804,6 +1804,10 @@
 .bb-rl-forum-tags .select2-container--default .select2-selection--multiple .select2-selection__choice .select2-selection__choice__remove {
   font-size: 0;
   order: 2;
+  position: static;
+  border: 0;
+  line-height: 1 !important;
+  margin: 0 0 0 5px !important;
 }
 
 .bb-rl-forum-tags .select2-container--default .select2-selection--multiple .select2-selection__choice .select2-selection__choice__remove:before {
