@@ -1,6 +1,6 @@
 <?php
 /**
- * ReadyLaunch Memberpress Courses Helper Class
+ * ReadyLaunch MemberPress Courses Helper Class
  *
  * @package BuddyBoss\Core
  * @since   BuddyBoss 2.9.00
@@ -14,10 +14,10 @@ use memberpress\courses\helpers;
 use memberpress\courses\lib;
 
 /**
- * ReadyLaunch Memberpress Courses Helper Class
+ * ReadyLaunch MemberPress Courses Helper Class
  *
- * This class provides helper functions for Memberpress Courses integration
- * when using ReadyLaunch templates without BuddyBoss theme.
+ * This class provides helper functions for MemberPress Courses integration
+ * when using ReadyLaunch templates without the BuddyBoss theme.
  *
  * @since BuddyBoss 2.9.00
  */

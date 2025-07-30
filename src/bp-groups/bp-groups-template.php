@@ -7971,7 +7971,7 @@ function bb_platform_group_headers_element_enable( $element ) {
  *
  * @since 1.9.1
  *
- * @param bool $default Optional. Fallback value if not found in the database.
+ * @param string $default Optional. Fallback value if not found in the database.
  *                      Default: left.
  *
  * @return string grid style for group directory
@@ -8007,7 +8007,7 @@ function bb_platform_group_element_enable( $element ) {
  *
  * @since 1.9.1
  *
- * @param bool $default Optional. Fallback value if not found in the database.
+ * @param string $default Optional. Fallback value if not found in the database.
  *                      Default: left.
  *
  * @return string grid style for group directory
@@ -8022,7 +8022,7 @@ function bb_platform_group_grid_style( $default = 'left' ) {
 }
 
 /**
- * Return true when there are more group members items to be shown than currently appear.
+ * Return true when there are more group members' items to be shown than currently appear.
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -8046,11 +8046,11 @@ function bb_group_members_has_more_items() {
 	}
 
 	/**
-	 * Filters whether there are more group members items to display.
+	 * Filters whether there are more group members' items to display.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param bool $has_more_items Whether or not there are more members items to display.
+	 * @param bool $has_more_items Whether or not there are more members' items to display.
 	 */
 	return apply_filters( 'bb_group_members_has_more_items', $has_more_items );
 }
