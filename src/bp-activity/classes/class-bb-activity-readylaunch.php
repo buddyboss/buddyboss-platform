@@ -67,6 +67,7 @@ class BB_Activity_Readylaunch {
 		add_filter( 'bp_nouveau_object_template_result', array( $this, 'bb_rl_modify_object_template_result' ), 10, 2 );
 
 		add_filter( 'bb_get_close_activity_comments_notice', array( $this, 'bb_rl_modify_close_activity_comments_notice' ) );
+		add_filter( 'bb_ajax_activity_update_close_comments', array( $this, 'bb_rl_modify_close_activity_comments_notice' ) );
 	}
 
 	/**
@@ -958,9 +959,32 @@ class BB_Activity_Readylaunch {
 	/**
 	 * Modify the close activity comments notice.
 	 *
+	 * This method handles both:
+	 * - bb_get_close_activity_comments_notice filter (for template display)
+	 * - bb_ajax_activity_update_close_comments filter (for AJAX responses)
+	 *
 	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array|string $closed_notice The closed notice.
+	 *
+	 * @return array|string The modified closed notice.
 	 */
-	public function bb_rl_modify_close_activity_comments_notice() {
-		return esc_html__( 'Comments are closed for this post', 'buddyboss' );
+	public function bb_rl_modify_close_activity_comments_notice( $closed_notice ) {
+		if ( empty( $closed_notice ) ) {
+			return $closed_notice;
+		}
+
+		$custom_notice = esc_html__( 'Comments are closed for this post', 'buddyboss' );
+
+		// Handle array format for AJAX response.
+		if ( is_array( $closed_notice ) && isset( $closed_notice['feedback'] ) ) {
+			if ( isset( $_POST['close_comments_action'] ) && 'close_comments' === $_POST['close_comments_action'] ) {
+				$closed_notice['feedback'] = $custom_notice;
+			}
+			return $closed_notice;
+		}
+
+		return $custom_notice;
 	}
 }
+
