@@ -275,6 +275,10 @@
 		.favorite-toggle:before {
 			content: "\e2aa";
 		}
+
+		.bb-topic-content-meta-sep {
+			display: none;
+		}
 	}
 }
 
@@ -478,6 +482,21 @@
 
 		.bbp-admin-links {
 			font-size: 0;
+		}
+	}
+}
+
+.bb-rl-forums-content-wrapper {
+
+	ul.bb-rl-forums-items {
+
+		> li.bb-rl-header-item {
+
+			> .item {
+				margin-bottom: var(--bb-rl-space-200);
+				border-bottom: 1px solid var(--bb-rl-border-secondary-color);
+				padding-bottom: var(--bb-rl-space-200);
+			}
 		}
 	}
 }

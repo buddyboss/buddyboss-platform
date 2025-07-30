@@ -2234,8 +2234,12 @@ function _bbp_has_replies_where( $where = '', $query = false ) {
 		return $where;
 	}
 
-	// Bail if not a topic and reply query.
-	if ( array( bbp_get_topic_post_type(), bbp_get_reply_post_type() ) !== $query->get( 'post_type' ) ) {
+	// Get post_type from query, define array to diff against
+	$queried_types = (array) $query->get( 'post_type' );
+	$post_types    = array( bbp_get_topic_post_type(), bbp_get_reply_post_type() );
+
+	// Bail if query is not already for both topic and reply post types
+	if ( array_diff( $post_types, $queried_types ) ) {
 		return $where;
 	}
 

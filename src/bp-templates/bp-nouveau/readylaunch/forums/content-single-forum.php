@@ -23,7 +23,17 @@ global $post;
 				?>
 			<div class="bb-rl-forum-single-header">
 				<div class="bb-rl-forum-single-header-cover">
-					<img src="<?php echo esc_url( $forum_cover_photo ); ?>" alt="<?php the_title_attribute( array( 'post' => $post->ID ) ); ?>" class="banner-img wp-post-image"/>
+					<?php
+					if ( ! empty( $forum_cover_photo ) ) {
+						?>
+						<img src="<?php echo esc_url( $forum_cover_photo ); ?>" alt="<?php the_title_attribute( array( 'post' => $post->ID ) ); ?>" class="banner-img wp-post-image" alt="<?php esc_attr_e( 'Forum cover image', 'buddyboss' ); ?>"/>
+						<?php
+					} else {
+						?>
+						<img src="<?php echo esc_url( buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/images/group_cover_image.jpeg' ); ?>" alt="<?php esc_attr_e( 'Forum placeholder image', 'buddyboss' ); ?>">
+						<?php
+					}
+					?>
 				</div>
 				<div class="bb-rl-forum-single-header-content">
 					<h1 class="entry-title"><?php echo esc_html( bbp_get_forum_title() ); ?></h1>
