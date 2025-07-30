@@ -218,7 +218,7 @@ class BP_Core_Members_Switching {
 	 *
 	 * @return string The URL to redirect to.
 	 */
-	protected static function get_redirect( WP_User $new_user = null, WP_User $old_user = null ) {
+	protected static function get_redirect( ?WP_User $new_user = null, ?WP_User $old_user = null ) {
 
 		if ( ! $new_user ) {
 			$redirect_to = bp_core_get_user_domain( $old_user->ID );
