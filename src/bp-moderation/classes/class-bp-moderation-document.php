@@ -142,7 +142,14 @@ class BP_Moderation_Document extends BP_Moderation_Abstract {
 		if ( isset( $where['moderation_where'] ) && ! empty( $where['moderation_where'] ) ) {
 			$where['moderation_where'] .= ' AND ';
 		}
-		$where['moderation_where'] .= ' ( d.user_id NOT IN ( ' . bb_moderation_get_blocked_by_sql() . ' ) OR ( d.privacy = "comment" OR d.privacy = "forums" ) ) ';
+
+		// Check if groups component is active before applying grouponly bypass.
+		$grouponly_bypass = '';
+		if ( bp_is_active( 'groups' ) ) {
+			$grouponly_bypass = ' OR d.privacy = "grouponly"';
+		}
+
+		$where['moderation_where'] .= ' ( d.user_id NOT IN ( ' . bb_moderation_get_blocked_by_sql() . ' ) OR ( d.privacy = "comment" OR d.privacy = "forums"' . $grouponly_bypass . ' ) ) ';
 		return $where;
 	}
 
@@ -291,7 +298,14 @@ class BP_Moderation_Document extends BP_Moderation_Abstract {
 				if ( ! empty( $where ) ) {
 					$where .= ' AND ';
 				}
-				$where .= "( ( {$this->alias}.id NOT IN ( $blocked_query ) OR ( d.privacy = 'comment' OR d.privacy = 'forums' ) ) OR {$this->alias}.id IS NULL )";
+
+				// Check if groups component is active before applying grouponly bypass.
+				$grouponly_bypass = '';
+				if ( bp_is_active( 'groups' ) ) {
+					$grouponly_bypass = " OR d.privacy = 'grouponly'";
+				}
+
+				$where .= "( ( {$this->alias}.id NOT IN ( $blocked_query ) OR ( d.privacy = 'comment' OR d.privacy = 'forums'{$grouponly_bypass} ) ) OR {$this->alias}.id IS NULL )";
 			}
 		}
 
