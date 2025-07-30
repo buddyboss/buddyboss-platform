@@ -77,6 +77,7 @@ function bp_nouveau_messages_enqueue_scripts() {
 		return;
 	}
 
+	wp_enqueue_script( 'wp-embed' );
 	wp_enqueue_script( 'bp-nouveau-messages' );
 	wp_enqueue_script( 'bp-select2' );
 	wp_enqueue_script( 'bp-medium-editor' );

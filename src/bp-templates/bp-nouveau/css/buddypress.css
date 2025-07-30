@@ -14290,11 +14290,6 @@ html[dir="rtl"] .pc_detailed_progress li span.completed_staus {
   font-size: 18px;
 }
 
-.bp-message-content-wrap blockquote.wp-embedded-content + p iframe.wp-embedded-content {
-  min-height: 0;
-  height: 0;
-}
-
 div.bp-navs#subsubnav.bp-messages-filters .user-messages-bulk-actions {
   margin-right: 15px;
   max-width: 42.5%;
