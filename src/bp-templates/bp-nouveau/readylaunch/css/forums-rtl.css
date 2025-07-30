@@ -2304,6 +2304,10 @@
   content: "\e2aa";
 }
 
+.bb-rl-topic-header .bb-rl-topic-footer .bb-topic-content-meta-sep {
+  display: none;
+}
+
 .bb-rl-topic-reply-link-wrap a {
   display: inline-flex;
   align-items: center;
@@ -2514,6 +2518,12 @@
 
 .bb-rl-single-forum-list .bb_more_options .bbp-admin-links {
   font-size: 0;
+}
+
+.bb-rl-forums-content-wrapper ul.bb-rl-forums-items > li.bb-rl-header-item > .item {
+  margin-bottom: var(--bb-rl-space-200);
+  border-bottom: 1px solid var(--bb-rl-border-secondary-color);
+  padding-bottom: var(--bb-rl-space-200);
 }
 
 .bb-rl-forums-content-wrapper:has(.bbp-no-reply) {
