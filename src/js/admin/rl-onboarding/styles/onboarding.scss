@@ -4090,3 +4090,42 @@ body.bb-rl-fullscreen-mode {
         width: 236px;
     }
 }
+
+@media (max-width: 1620px) {
+
+    .bb-rl-right-panel {
+        overflow: auto;
+        align-items: flex-start;
+    }
+
+    .bb-rl-preview-pages {
+        min-width: 1135px;
+    }
+    
+}
+
+@media (max-width: 1200px) {
+    .bb-rl-right-panel {
+        display: none;
+    }
+
+    .bb-rl-left-panel {
+        max-width: inherit;
+        height: 100vh;
+    }
+}
+
+@media (max-width: 480px) {
+
+    .bb-rl-step-header {
+
+        .bb-rl-step-back-button {
+            margin-right: 0;
+        }
+
+        .bb-rl-logo {
+            margin: 0 auto;
+            transform: translateX(-16px);
+        }
+    }
+}
