@@ -2366,11 +2366,7 @@ body.bb-readylaunch-template.groups.group-invites span.select2-dropdown.select2-
 }
 
 .bb-rl-group-invites-container .select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
-  background-color: var(--bb-rl-background-secondary-hover-color);
-  border: 1px solid var(--bb-rl-border-secondary-color);
   border-radius: var(--bb-rl-radius-xs);
-  margin-right: var(--bb-rl-space-50);
-  margin-left: 0;
   display: inline-flex;
   width: 16px;
   height: 16px;
@@ -2378,6 +2374,19 @@ body.bb-readylaunch-template.groups.group-invites span.select2-dropdown.select2-
   justify-content: center;
   font-weight: 400;
   color: var(--bb-rl-icon-primary-color);
+  line-height: 1;
+  position: static;
+  margin: 0 var(--bb-rl-space-50) 0 0 !important;
+  background-color: transparent;
+  border: 0;
+  font-size: 0;
+}
+
+.bb-rl-group-invites-container .select2-container--default .select2-selection--multiple .select2-selection__choice__remove:before {
+  content: "\e4f6";
+  color: var(--bb-rl-icon-secondary-color);
+  font-family: bb-icons-rl;
+  font-size: 16px;
   line-height: 1;
 }
 
@@ -3088,6 +3097,10 @@ body.private-message #group-messages-container .bp-select-members-wrap .select2.
   transform: translateY(-50%);
   left: 5px;
   cursor: pointer;
+  right: inherit;
+  border: 0;
+  line-height: 1 !important;
+  margin: 0 0 0 5px !important;
 }
 
 body.private-message #group-messages-container .bp-select-members-wrap .select2.select2-container .select2-selection__choice__remove:before {

@@ -553,6 +553,10 @@
 			.select2-selection__choice__remove {
 				font-size: 0;
 				order: 2;
+				position: static;
+				border: 0;
+				line-height: 1 !important;
+				margin: 0 0 0 5px !important;
 
 				&:before {
 					content: "\e4f6";
