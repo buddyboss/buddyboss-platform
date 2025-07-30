@@ -35,13 +35,7 @@ $topic_id = bbp_get_topic_id();
 									</a>
 									<div class="bb_more_options_list bb_more_dropdown bb-rl-context-dropdown">
 										<div class="generic-button bb-rl-context-item">
-											<?php
-											if ( bp_is_active( 'moderation' ) && function_exists( 'bbp_get_topic_report_link' ) ) {
-												?>
-													<?php echo wp_kses_post( bbp_get_topic_report_link( array( 'id' => get_the_ID() ) ) ); ?>
-												<?php
-											}
-											?>
+											<?php echo wp_kses_post( bbp_get_topic_report_link( array( 'id' => get_the_ID() ) ) ); ?>
 										</div>
 									</div>
 								</div>
