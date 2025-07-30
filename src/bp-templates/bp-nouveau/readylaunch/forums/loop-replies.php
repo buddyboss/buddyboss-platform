@@ -61,21 +61,6 @@ $topic_id = bbp_get_topic_id();
 					</div>
 
 					<div class="item-meta">
-						<div class="bb-rl-topic-author">
-							<div class="bb-rl-topic-author-details">
-								<div class="bb-rl-topic-author-name">
-									<?php
-									bbp_author_link(
-										array(
-											'post_id' => bbp_get_topic_last_active_id(),
-											'size'    => 1,
-										)
-									);
-									?>
-								</div>
-								<div class="bb-rl-topic-time"><?php bbp_topic_freshness_link(); ?></div>
-							</div>
-						</div>
 						<div class="bb-rl-topic-footer">
 							<div class="bb-rl-topic-stats">
 								<?php
