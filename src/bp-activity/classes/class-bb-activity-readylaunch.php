@@ -65,6 +65,8 @@ class BB_Activity_Readylaunch {
 		add_filter( 'bb_nouveau_get_activity_entry_bubble_buttons', array( $this, 'bb_rl_modify_activity_entry_bubble_buttons' ) );
 
 		add_filter( 'bp_nouveau_object_template_result', array( $this, 'bb_rl_modify_object_template_result' ), 10, 2 );
+
+		add_filter( 'bb_get_close_activity_comments_notice', array( $this, 'bb_rl_modify_close_activity_comments_notice' ) );
 	}
 
 	/**
@@ -951,5 +953,14 @@ class BB_Activity_Readylaunch {
 		$querystring['scope'] = '';
 
 		return http_build_query( $querystring );
+	}
+
+	/**
+	 * Modify the close activity comments notice.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	public function bb_rl_modify_close_activity_comments_notice() {
+		return esc_html__( 'Comments are closed for this post', 'buddyboss' );
 	}
 }

@@ -16,6 +16,10 @@ defined( 'ABSPATH' ) || exit;
 <div class="bb-rl-container-inner bb-rl-profile-container">
 	<div class="groups-directory-container">
 		<div class="screen-content groups-directory-content bb-rl-groups">
+
+			<h2 class="screen-heading group-invites-screen bb-screen-reader-text">
+				<?php esc_html_e( 'Group Invites', 'buddyboss' ); ?>
+			</h2>
 			<?php
 			bp_nouveau_group_hook( 'before', 'invites_content' );
 
