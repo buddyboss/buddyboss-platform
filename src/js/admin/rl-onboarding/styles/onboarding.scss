@@ -429,6 +429,10 @@ body.bb-rl-fullscreen-mode {
     max-height: 100vh;
     overflow: auto;
     min-height: 0; // Important for proper flex behavior
+
+    &:has(.bb-rl-preview-split-view) {
+        padding: 60px 30px 0;
+    }
 }
 
 .bb-rl-step-info {
@@ -2216,6 +2220,10 @@ body.bb-rl-fullscreen-mode {
     &:not(:has(.bb-rl-preview-slider)) {
         box-shadow: 0px -8.84px 47.13px 0px rgba(0, 0, 0, 0.16);
     }
+    
+    &:has(.bb-rl-preview-split-view) {
+        width: 1245px;
+    }
 
     .bb-rl-preview-groups,
     .bb-rl-preview-members,
@@ -2497,6 +2505,10 @@ body.bb-rl-fullscreen-mode {
             color: var(--bb-rl-preview-text-color);
             font-weight: 500;
             flex: 1;
+            white-space: nowrap;
+            width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
     }
 }
@@ -3656,6 +3668,7 @@ body.bb-rl-fullscreen-mode {
             color: var(--bb-rl-preview-text-tertiary-color);
             font-size: 13px;
             display: flex;
+            flex-wrap: wrap;
             margin-bottom: 20px;
 
             span + span {
@@ -4025,5 +4038,55 @@ body.bb-rl-fullscreen-mode {
                 color: var(--bb-rl-preview-icon-color);
             }
         }
+    }
+}
+
+// Responsive UI
+@media (max-width: 1850px) {
+    .bb-rl-left-panel {
+        max-width: 430px;
+    }
+
+    .bb-rl-step-header {
+        padding: 12px 16px;
+    }
+
+    .bb-rl-left-panel-content {
+        padding: 22px;
+    }
+
+    .bb-rl-step-navigation {
+        margin: auto -22px 0;
+    }
+
+    .bb-rl-right-panel {
+        padding: 50px 40px 0;
+    }
+
+    .bb-rl-preview-sidebar {
+        width: 260px;
+    }
+
+    .bb-rl-preview-right-sidebar {
+        width: 300px;
+    }
+}
+
+@media (max-width: 1735px) {
+
+    .bb-rl-preview-pages:has(.bb-rl-preview-split-view) {
+        width: 1135px;
+    }
+
+    .bb-rl-preview-split-view .bb-rl-preview-split-view-left,
+    .bb-rl-preview-split-view .bb-rl-preview-split-view-right {
+
+        &>[class*=bb-rl-preview] {
+            min-width: 1135px;
+        }
+    }
+
+    .bb-rl-preview-sidebar {
+        width: 236px;
     }
 }

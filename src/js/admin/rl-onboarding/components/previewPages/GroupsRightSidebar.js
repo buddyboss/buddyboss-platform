@@ -82,9 +82,6 @@ export const GroupsRightSidebar = ({ formData = {} }) => {
                                         <img src={`${window.bbRlOnboarding?.assets?.assetsUrl || ''}john.png`} alt="Organizer" />
                                     </div>
                                     <div className="bb-rl-preview-organizer-avatar">
-                                        <img src={`${window.bbRlOnboarding?.assets?.assetsUrl || ''}ros.png`} alt="Organizer" />
-                                    </div>
-                                    <div className="bb-rl-preview-organizer-avatar">
                                         <img src={`${window.bbRlOnboarding?.assets?.assetsUrl || ''}mira.png`} alt="Organizer" />
                                     </div>
                                     <span className="bb-rl-preview-organizers-more">+2 more</span>
