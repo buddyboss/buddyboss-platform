@@ -3164,6 +3164,9 @@ window.bp = window.bp || {};
 			if ( ! jQuery( 'body' ).hasClass( 'bb-is-mobile' ) ) {
 				if ( isInsideModal ) {
 					$( '.bb-rl-modal-activity-body' ).scrollTo( form, 500, scrollOptions );
+				} else if ( isInsideMediaTheatre ) {
+					// Scroll only the media info section container.
+					$( '.bb-media-info-section' ).scrollTo( form, 500, scrollOptions );
 				} else {
 					$.scrollTo( form, 500, scrollOptions );
 				}
@@ -3171,7 +3174,14 @@ window.bp = window.bp || {};
 				setTimeout(
 					function () {
 						var scrollInt = jQuery( window ).height() > 300 ? 200 : 100;
-						jQuery( 'html, body' ).animate( { scrollTop : jQuery( div_editor ).offset().top - scrollInt }, 500 );
+						if ( isInsideMediaTheatre ) {
+							// If inside the media theater, scroll the info section container.
+							var $mediaInfoSection = $( '.bb-media-info-section' );
+							var formOffset = jQuery( div_editor ).offset().top - $mediaInfoSection.offset().top;
+							$mediaInfoSection.animate( { scrollTop : formOffset - scrollInt }, 500 );
+						} else {
+							jQuery( 'html, body' ).animate( { scrollTop : jQuery( div_editor ).offset().top - scrollInt }, 500 );
+						}
 					},
 					500
 				);
@@ -3826,14 +3836,14 @@ window.bp = window.bp || {};
 								target.addClass( 'unclose-activity-comment' ).removeClass( 'close-activity-comment' );
 								target.find( 'span' ).html( bbRlActivity.strings.uncloseComments );
 								$activityItem.find( '.edit-activity, .acomment-edit' ).parents( '.generic-button' ).hide();
-								$activityItem.find( '.bb-rl-activity-comments' ).before( '<div class="bb-rl-activity-closed-comments-notice">' + response.data.feedback + '</div>' );
+								$activityItem.find( '.bb-rl-activity-comments' ).after( '<div class="bb-rl-activity-closed-comments-notice">' + response.data.feedback + '</div>' );
 								// Handle event from media theater.
 								if ( target.parents( '.bb-rl-media-model-wrapper' ).length > 0 && $media_parent.length > 0 ) {
 									$media_parent.addClass( 'bb-closed-comments' );
 									$media_parent.find( '.bb-activity-more-options .close-activity-comment span' ).html( bbRlActivity.strings.uncloseComments );
 									$media_parent.find( '.bb-activity-more-options .close-activity-comment' ).addClass( 'unclose-activity-comment' ).removeClass( 'close-activity-comment' );
 									$media_parent.find( '.edit-activity, .acomment-edit' ).parents( '.generic-button' ).hide();
-									$media_parent.find( '.bb-rl-activity-comments' ).before( '<div class="bb-rl-activity-closed-comments-notice">' + response.data.feedback + '</div>' );
+									$media_parent.find( '.bb-rl-activity-comments' ).after( '<div class="bb-rl-activity-closed-comments-notice">' + response.data.feedback + '</div>' );
 								}
 							} else if ( 'unclose_comments' === close_comments_action ) {
 								$activityItem.find( '.edit-activity, .acomment-edit' ).parents( '.generic-button' ).show();

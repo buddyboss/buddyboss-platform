@@ -277,6 +277,10 @@
   justify-content: center;
 }
 
+.bb-rl-members .item-entry .item-avatar .gamipress-buddypress-user-details {
+  display: none;
+}
+
 .bb-rl-members .item-entry .avatar {
   max-width: 104px;
   height: auto;
@@ -434,6 +438,31 @@
   content: "\eafa";
 }
 
+.bb-rl-primary-actions button.friendship-button.pending_friend.loading i,
+.bb-rl-primary-actions .generic-button a.friendship-button.pending_friend.loading i,
+.bb-rl-member-header-actions button.friendship-button.pending_friend.loading i,
+.bb-rl-member-header-actions .generic-button a.friendship-button.pending_friend.loading i {
+  height: 16px;
+}
+
+.bb-rl-primary-actions button.friendship-button.pending_friend.loading i::before,
+.bb-rl-primary-actions .generic-button a.friendship-button.pending_friend.loading i::before,
+.bb-rl-member-header-actions button.friendship-button.pending_friend.loading i::before,
+.bb-rl-member-header-actions .generic-button a.friendship-button.pending_friend.loading i::before {
+  content: "";
+  display: inline-block;
+  height: 20px;
+  width: 20px;
+  border: 2px solid var(--bb-rl-border-quaternary-color);
+  border-top-color: var(--bb-rl-border-tertiary-color);
+  border-radius: var(--bb-rl-radius-full);
+  animation: spin 3s infinite linear;
+  height: 16px;
+  width: 16px;
+  border-width: 2px;
+  margin-right: var(--bb-rl-space-50);
+}
+
 .bb-rl-primary-actions button.friendship-button.awaiting_response_friend i::before,
 .bb-rl-primary-actions .generic-button a.friendship-button.awaiting_response_friend i::before,
 .bb-rl-member-header-actions button.friendship-button.awaiting_response_friend i::before,
@@ -446,6 +475,12 @@
 .bb-rl-member-header-actions button.friendship-button.is_friend i::before,
 .bb-rl-member-header-actions .generic-button a.friendship-button.is_friend i::before {
   content: "\e182";
+}
+
+.bb-rl-member-header-actions button.friendship-button i {
+  max-height: 20px;
+  display: inline-flex;
+  align-items: center;
 }
 
 .bb-rl-primary-actions {
@@ -634,12 +669,13 @@
 
 .bb-rl-secondary-actions .friendship-button.is_friend i::before,
 .bb-rl-card-action .friendship-button.is_friend i::before {
-  content: "\e4ce";
+  content: "\e4d0";
+  font-weight: 500;
 }
 
 .bb-rl-secondary-actions .friendship-button.pending_friend i::before,
 .bb-rl-card-action .friendship-button.pending_friend i::before {
-  content: "\edec";
+  content: "\eafa";
 }
 
 .bb-rl-secondary-actions .friendship-button.awaiting_response_friend i::before,
