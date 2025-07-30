@@ -19,6 +19,10 @@ if ( ! function_exists( 'buddyboss_theme_sudharo_tapas' ) ) {
 		if ( ! function_exists( 'buddyboss_theme' ) ) {
 			return;
 		}
+		static $is_cached = false;
+		if ( $is_cached ) {
+			return;
+		}
 		$saved_licenses = get_option( 'bboss_updater_saved_licenses' );
 		if ( is_multisite() ) {
 			$saved_site_licenses = get_site_option( 'bboss_updater_saved_licenses' );
@@ -51,6 +55,7 @@ if ( ! function_exists( 'buddyboss_theme_sudharo_tapas' ) ) {
 				delete_option( 'be5f330bbd49d6160ff4658ac3d219ee' );
 			}
 		}
+		$is_cached = true;
 	}
 
 	add_action( 'admin_init', 'buddyboss_theme_sudharo_tapas', 999999 );
