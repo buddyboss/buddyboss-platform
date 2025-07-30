@@ -1034,8 +1034,12 @@ window.bp = window.bp || {};
 			}
 
 			if ( activity_data && activity_data.topics ) {
-				self.postForm.model.set( 'topics', activity_data.topics );
-				bp.draft_activity.data.topics = activity_data.topics;
+				if ( '' === bp.draft_activity.display_post ) {
+					if ( 'scheduled' !== activity_data.status ) {
+						self.postForm.model.set( 'topics', activity_data.topics );
+						bp.draft_activity.data.topics = activity_data.topics;
+					}
+				}
 				if ( 0 !== parseInt( activity_data.topics.topic_id ) ) {
 					var $topicElement = $( '.bb-topic-selector-list a[data-topic-id="' + activity_data.topics.topic_id + '"]' );
 					if ( $topicElement.length > 0 ) {
@@ -1046,6 +1050,8 @@ window.bp = window.bp || {};
 						}
 						$( '.bb-topic-selector-button' ).text( topicName );
 					}
+				} else {
+					Backbone.trigger( 'topic:update', activity_data.topics );
 				}
 			}
 		},
@@ -4677,9 +4683,25 @@ window.bp = window.bp || {};
 						! _.isUndefined( BP_Nouveau.activity.params.topics.topic_lists )
 					) {
 						var topic_lists = BP_Nouveau.activity.params.topics.topic_lists;
-						this.model.set( 'topics', {
-							topic_lists : topic_lists
-						} );
+
+						var topicData = {
+							topic_lists : topic_lists,
+						};
+						if (
+							whats_new_form.find( '.bb-rl-topic-selector-list li a.selected' ).length > 0 &&
+							whats_new_form.find( '.bb-rl-topic-selector-list li a.selected' ).data( 'topic-id' )
+						) {
+							topicData.topic_id   = whats_new_form.find( '.bb-rl-topic-selector-list li a.selected' ).data( 'topic-id' );
+							topicData.topic_name = $.trim( whats_new_form.find( '.bb-rl-topic-selector-list li a.selected' ).html() );
+						}
+						if ( ! topicData.topic_id && this.model.get( 'topics' ) && this.model.get( 'topics' ).topic_id ) {
+							topicData.topic_id = this.model.get( 'topics' ).topic_id;
+						}
+						if ( ! topicData.topic_name && this.model.get( 'topics' ) && this.model.get( 'topics' ).topic_name ) {
+							topicData.topic_name = this.model.get( 'topics' ).topic_name;
+						}
+						this.model.set( 'topics', topicData );
+
 						if ( topic_lists.length > 0 ) {
 							$( '.whats-new-topic-selector' ).removeClass( 'bp-hide' );
 						} else {
@@ -6355,32 +6377,10 @@ window.bp = window.bp || {};
 					]
 				);
 
-				if (
-					! _.isUndefined( BP_Nouveau.activity.params.topics ) &&
-					(
-						! _.isUndefined( this.model.get( 'topics' ) ) &&
-						this.model.get( 'topics' ) &&
-						! _.isUndefined( this.model.get( 'topics' ).topic_lists ) &&
-						this.model.get( 'topics' ).topic_lists.length > 0
-					) &&
-					! _.isUndefined( BP_Nouveau.activity.params.topics.bb_is_enabled_activity_topics ) &&
-					BP_Nouveau.activity.params.topics.bb_is_enabled_activity_topics
-				) {
-					if (
-						!_.isUndefined(BP_Nouveau.activity.params.topics.bb_is_activity_topic_required) &&
-						BP_Nouveau.activity.params.topics.bb_is_activity_topic_required
-					) {
-						if ( this.model.get( 'topics' ) ) {
-							var topicId = this.model.get( 'topics' ) ? this.model.get( 'topics' ).topic_id : null;
-							if ( ! _.isUndefined( topicId ) && null !== topicId) {
-								data.topic_id = topicId;
-							}
-						}
-					} else {
-						if ( this.model.get( 'topics' ) ) {
-							data.topic_id = this.model.get( 'topics' ).topic_id;
-						}
-					}
+				var topicSelector = $( '#buddypress .whats-new-topic-selector .bb-topic-selector-list li' );
+				if ( topicSelector.length ) {
+					var topicId   = topicSelector.find( 'a.selected' ).data( 'topic-id' ) || 0;
+					data.topic_id = topicId;
 				}
 
 

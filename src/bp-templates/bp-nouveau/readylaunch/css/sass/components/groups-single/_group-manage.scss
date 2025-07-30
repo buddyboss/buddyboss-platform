@@ -129,13 +129,20 @@
 	.bb-group-meprlms-settings-container .bb-course-activity-selection {
 
 		.select2-container .select2-selection--multiple {
+			background-color: var(--bb-rl-background-color);
 			border-color: var(--bb-rl-border-secondary-color);
 			border-radius: var(--bb-rl-radius-md) !important;
 		}
 
 		.select2-dropdown {
+			background-color: var(--bb-rl-background-color);
 			border-color: var(--bb-rl-border-secondary-color);
 			border-radius: var(--bb-rl-radius-md);
+
+			li.select2-results__option[aria-selected="true"] {
+				background-color: var(--bb-rl-background-secondary-color);
+				color: var(--bb-rl-text-color);
+			}
 		}
 
 		.select2-container--default .select2-results__option--highlighted[aria-selected] {
@@ -287,6 +294,14 @@
 		@media screen and (max-width: $lg) {
 			flex-flow: wrap;
 		}
+
+		@media screen and (max-width: $sm) {
+			
+			.bb-rl-group-member-id {
+				width: 100%;
+				margin-bottom: var(--bb-rl-space-200);
+			}
+		}
 	}
 
 	ul.item-list {
@@ -421,6 +436,13 @@
 					content: "\e4f6";
 				}
 			}
+		}
+
+		&.bb-rl-view-more--pagination {
+			flex-direction: row;
+			padding: 0;
+			border: 0;
+			margin: var(--bb-rl-space-200) 0 0;
 		}
 
 		@media screen and (max-width: $md) {
@@ -851,10 +873,18 @@
 					color: var(--bb-rl-text-color);
 					background-color: var(--bb-rl-background-secondary-color);
 				}
+
+				&:hover {
+					color: var(--bb-rl-text-color);
+				}
 			}
 		}
 
 		.bb-zoom-setting-description {
+			margin-bottom: var(--bb-rl-space-200);
+		}
+
+		select#bp-group-zoom-manager {
 			margin-bottom: var(--bb-rl-space-200);
 		}
 	}
@@ -1003,6 +1033,10 @@
 
 .bb-rl-groups-manage-members-list {
 
+	.bb-rl-members-manage-vip {
+		padding-right: var(--bb-rl-space-600);
+	}
+
 	.bb-rl-members-manage-dropdown {
 		display: flex;
 		align-items: center;
@@ -1013,14 +1047,25 @@
 
 		@include bb-rl-button;
 		@include bb-rl-button-secondary-fill;
-		padding: 6px var(--bb-rl-space-200);
-		font-size: 0.875rem;
+		@include bb-rl-button--small;
+		padding: 4px var(--bb-rl-space-200);
 
 		&.disabled {
 			background-color: var(--bb-rl-background-tertiary-color);
 			color: var(--bb-rl-text-disabled-color);
 			cursor: not-allowed;
 			pointer-events: none;
+		}
+	}
+}
+
+.bb-rl-container .bb-rl-groups-manage-members-list {
+
+	.bb_more_options {
+
+		.bb_more_dropdown {
+			width: auto;
+			min-width: 195px;
 		}
 	}
 }

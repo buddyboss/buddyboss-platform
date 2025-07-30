@@ -1189,7 +1189,8 @@
   justify-content: flex-start;
 }
 
-.groups .bb-rl-stick .bbp-topic-super-sticky-link {
+.groups .bb-rl-stick .bbp-topic-super-sticky-link,
+.groups .bbp-admin-links .bbp-topic-super-sticky-link {
   display: none !important;
 }
 
@@ -1765,12 +1766,17 @@
   height: 190px;
 }
 
+.bb-rl-forum-modal .select2-dropdown {
+  background-color: var(--bb-rl-background-color);
+}
+
 .bb-rl-forum-tags {
   border-top: 1px solid var(--bb-rl-border-secondary-color);
   padding: var(--bb-rl-space-200) 0;
 }
 
 .bb-rl-forum-tags .select2-container--default .select2-selection--multiple {
+  background-color: var(--bb-rl-background-color);
   display: flex;
   border: 0 !important;
   min-height: 24px;

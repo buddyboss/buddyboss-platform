@@ -86,7 +86,7 @@ foreach ( $lesson_list as $les ) {
 				<header class="bb-rl-entry-header">
 					<div class="bb-rl-heading">
 						<div class="bb-rl-lesson-count bb-rl-lms-inner-count">
-							<span class="bb-pages"><?php echo esc_html( LearnDash_Custom_Label::get_label( 'lesson' ) ); ?> <?php echo esc_html( $lesson_no ); ?> <span class="bb-total"><?php esc_html_e( 'of', 'buddyboss' ); ?><?php echo esc_html( count( $lesson_list ) ); ?></span></span>
+							<span class="bb-pages"><?php echo esc_html( LearnDash_Custom_Label::get_label( 'lesson' ) ); ?> <?php echo esc_html( $lesson_no ); ?> <span class="bb-total"><?php esc_html_e( 'of', 'buddyboss' ); ?> <?php echo esc_html( count( $lesson_list ) ); ?></span></span>
 						</div>
 						<div class="bb-rl-lesson-title">
 							<h1 class="bb-rl-entry-title"><?php the_title(); ?></h1>
