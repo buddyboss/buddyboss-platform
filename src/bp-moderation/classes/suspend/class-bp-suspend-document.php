@@ -248,7 +248,7 @@ class BP_Suspend_Document extends BP_Suspend_Abstract {
 			$exclude_group_sql = '';
 			// Allow group medias from blocked/suspended users.
 			if ( bp_is_active( 'groups' ) ) {
-				$exclude_group_sql = ' OR d.privacy = "grouponly" ';
+				$exclude_group_sql = ' OR ( d.privacy = "grouponly" AND ( ' . $this->alias . '.hide_sitewide = 0 OR ' . $this->alias . '.hide_sitewide IS NULL ) AND ( ' . $this->alias . '.hide_parent = 0 OR ' . $this->alias . '.hide_parent IS NULL ) )';
 			}
 			$exclude_group_sql .= ' OR ( d.privacy = "comment" OR d.privacy = "forums" ) ';
 
