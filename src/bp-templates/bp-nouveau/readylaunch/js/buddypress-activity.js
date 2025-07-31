@@ -1182,9 +1182,11 @@ window.bp = window.bp || {};
 			if ( target.closest( 'span' ).hasClass( 'activity-read-more' ) ) {
 				self.readMoreActivity(
 					{
-						event     : event,
-						target    : target,
-						activityId: activityId,
+						event       : event,
+						target      : target,
+						activityId  : activityId,
+						parent      : parent,
+						activityItem: activityItem,
 					}
 				);
 			}
