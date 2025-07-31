@@ -1440,7 +1440,11 @@
 }
 
 .bb-rl-forum-modal:not(.bb-rl-forum-modal--static) #new-post {
-  max-height: 90vh;
+  overflow: hidden;
+}
+
+.bb-rl-forum-modal:not(.bb-rl-forum-modal--static) #new-post .bb-rl-forum-modal-content {
+  max-height: 60vh;
   overflow: auto;
   overflow-x: hidden;
 }
