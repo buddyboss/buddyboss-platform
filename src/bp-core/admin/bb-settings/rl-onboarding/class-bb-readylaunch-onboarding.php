@@ -876,6 +876,49 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 			$this->save_readylaunch_option( 'dark_logo', $final_settings['bb_rl_dark_logo'] );
 		}
 
+		// Force enabled registration when enabled from settings.
+		if ( ! empty( $final_settings['bb_rl_enabled_pages'] ) ) {
+			$pages = $final_settings['bb_rl_enabled_pages'];
+			if (
+				! empty( $pages['registration'] ) &&
+				! bp_enable_site_registration( false ) &&
+				! bp_allow_custom_registration()
+			) {
+				// Enable registration page.
+				bp_update_option( 'bp-enable-site-registration', true );
+				bp_update_option( 'allow-custom-registration', 0 );
+			}
+		}
+
+		// Force enabled components based on side menu settings.
+		if ( ! empty( $final_settings['bb_rl_side_menu'] ) ) {
+			$side_menu = $final_settings['bb_rl_side_menu'];
+
+			// Enable or disable BuddyBoss components based on the side menu toggle.
+			$component_map = array(
+				'activity_feed' => 'activity',
+				'groups'        => 'groups',
+				'forums'        => 'forums',
+				'messages'      => 'messages',
+				'notifications' => 'notifications',
+			);
+
+			$active_components = bp_get_option( 'bp-active-components', array() );
+
+			foreach ( $component_map as $menu_id => $component_key ) {
+				if ( isset( $side_menu[ $menu_id ] ) ) {
+					$enabled = ! empty( $side_menu[ $menu_id ]['enabled'] );
+					if ( $enabled ) {
+						$active_components[ $component_key ] = 1;
+					}
+				}
+			}
+
+			bp_update_option( 'bp-active-components', $active_components );
+
+			bp_core_install();
+		}
+
 		// Apply remaining step settings dynamically.
 		$this->apply_remaining_step_settings( $final_settings );
 
