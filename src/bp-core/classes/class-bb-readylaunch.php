@@ -844,6 +844,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					) &&
 					$this->bb_rl_is_page_enabled_for_integration( 'registration' )
 				) ||
+				bp_is_activation_page() ||
 				$this->bb_rl_is_learndash_page() || // Add check for LearnDash pages.
 				$this->bb_rl_is_memberpress_courses_page() // Add check for MemberPress Courses pages.
 			);
@@ -948,6 +949,10 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			if ( bp_is_register_page() ) {
 				$this->bb_rl_required_load();
 				return bp_locate_template( 'register.php' );
+			}
+
+			if ( bp_is_activation_page() ) {
+				return bp_locate_template( 'activate.php' );
 			}
 
 			if (
