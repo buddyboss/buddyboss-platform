@@ -916,6 +916,10 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 
 			bp_update_option( 'bp-active-components', $active_components );
 
+			// Save settings and upgrade schema.
+			require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+			require_once buddypress()->plugin_dir . '/bp-core/admin/bp-core-admin-schema.php';
+
 			bp_core_install();
 		}
 
