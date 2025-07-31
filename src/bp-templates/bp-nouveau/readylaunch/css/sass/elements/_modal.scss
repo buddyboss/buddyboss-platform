@@ -224,18 +224,6 @@
 
 	.mass-user-block-list {
 
-		.bb-report-type-pagination {
-			padding: var(--bb-rl-space-100) var(--bb-rl-space-300);
-
-			.load_more_rl.button,
-			.loading.button {
-
-				@include bb-rl-button;
-				@include bb-rl-button--tertiary-text;
-				@include bb-rl-button--small;
-			}
-		}
-
 		&.moderation-popup {
 
 			.bb-report-type-pagination {
@@ -324,6 +312,46 @@
 		.bb-model-footer {
 			padding: var(--bb-rl-space-200) var(--bb-rl-space-300) 0;
 			margin: var(--bb-rl-space-200) -24px 0;
+		}
+	}
+
+	.modal-container .bb-report-type-pagination {
+
+		&:not(:has(.loading.button)) {
+			border: 0;
+		}
+
+		&:has(.loading.button) {
+			border-top: 1px solid var(--bb-rl-border-secondary-color);
+			padding: var(--bb-rl-space-100) var(--bb-rl-space-300);
+		}
+
+
+		.load_more_rl.button,
+		.loading.button {
+
+			@include bb-rl-button;
+			@include bb-rl-button--tertiary-text;
+			@include bb-rl-button--small;
+			display: none;
+			padding: var(--bb-rl-space-50) 0;
+			text-align: center;
+
+			&:before {
+				content: "";
+				display: inline-block;
+				height: 18px;
+				width: 18px;
+				border: 2px solid var(--bb-rl-border-quaternary-color);
+				border-top-color: var(--bb-rl-border-tertiary-color);
+				border-radius: var(--bb-rl-radius-full);
+				animation: spin 3s infinite linear;
+				margin-right: var(--bb-rl-space-100);
+			}
+
+			&.loading {
+				display: inline-flex;
+			}
 		}
 	}
 

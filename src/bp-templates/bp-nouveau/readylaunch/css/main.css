@@ -5226,47 +5226,6 @@ body.bb-readylaunch-template .select2-container--rl.select2-container--open:has(
   color: var(--bb-rl-text-secondary-color);
 }
 
-.bb-readylaunch-template .mass-user-block-list .bb-report-type-pagination {
-  padding: var(--bb-rl-space-100) var(--bb-rl-space-300);
-}
-
-.bb-readylaunch-template .mass-user-block-list .bb-report-type-pagination .load_more_rl.button,
-.bb-readylaunch-template .mass-user-block-list .bb-report-type-pagination .loading.button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1rem;
-  font-weight: 500;
-  text-align: center;
-  cursor: pointer;
-  border-radius: var(--bb-rl-radius-md);
-  padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
-  text-decoration: none;
-  background-color: transparent;
-  color: var(--bb-rl-text-color);
-  border: none;
-  padding: 6px var(--bb-rl-space-200);
-  font-size: var(--bb-rl-font-size-sm);
-  font-weight: 400;
-}
-
-.bb-readylaunch-template .mass-user-block-list .bb-report-type-pagination .load_more_rl.button:hover,
-.bb-readylaunch-template .mass-user-block-list .bb-report-type-pagination .loading.button:hover {
-  background-color: var(--bb-rl-background-secondary-hover-color);
-}
-
-.bb-readylaunch-template .mass-user-block-list .bb-report-type-pagination .load_more_rl.button:focus,
-.bb-readylaunch-template .mass-user-block-list .bb-report-type-pagination .loading.button:focus {
-  outline: 2px solid var(--bb-rl-border-quinery-color);
-}
-
-.bb-readylaunch-template .mass-user-block-list .bb-report-type-pagination .load_more_rl.button:disabled,
-.bb-readylaunch-template .mass-user-block-list .bb-report-type-pagination .loading.button:disabled {
-  color: var(--bb-rl-text-disabled-color);
-  cursor: not-allowed;
-}
-
 .bb-readylaunch-template .mass-user-block-list.moderation-popup .bb-report-type-pagination {
   border-top: 1px solid var(--bb-rl-border-secondary-color);
 }
@@ -5343,6 +5302,73 @@ body.bb-readylaunch-template .select2-container--rl.select2-container--open:has(
 .bb-readylaunch-template .bb-report-type-wrp .bb-model-footer {
   padding: var(--bb-rl-space-200) var(--bb-rl-space-300) 0;
   margin: var(--bb-rl-space-200) -24px 0;
+}
+
+.bb-readylaunch-template .modal-container .bb-report-type-pagination:not(:has(.loading.button)) {
+  border: 0;
+}
+
+.bb-readylaunch-template .modal-container .bb-report-type-pagination:has(.loading.button) {
+  border-top: 1px solid var(--bb-rl-border-secondary-color);
+  padding: var(--bb-rl-space-100) var(--bb-rl-space-300);
+}
+
+.bb-readylaunch-template .modal-container .bb-report-type-pagination .load_more_rl.button,
+.bb-readylaunch-template .modal-container .bb-report-type-pagination .loading.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  font-weight: 500;
+  text-align: center;
+  cursor: pointer;
+  border-radius: var(--bb-rl-radius-md);
+  padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  text-decoration: none;
+  background-color: transparent;
+  color: var(--bb-rl-text-color);
+  border: none;
+  padding: 6px var(--bb-rl-space-200);
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 400;
+  display: none;
+  padding: var(--bb-rl-space-50) 0;
+  text-align: center;
+}
+
+.bb-readylaunch-template .modal-container .bb-report-type-pagination .load_more_rl.button:hover,
+.bb-readylaunch-template .modal-container .bb-report-type-pagination .loading.button:hover {
+  background-color: var(--bb-rl-background-secondary-hover-color);
+}
+
+.bb-readylaunch-template .modal-container .bb-report-type-pagination .load_more_rl.button:focus,
+.bb-readylaunch-template .modal-container .bb-report-type-pagination .loading.button:focus {
+  outline: 2px solid var(--bb-rl-border-quinery-color);
+}
+
+.bb-readylaunch-template .modal-container .bb-report-type-pagination .load_more_rl.button:disabled,
+.bb-readylaunch-template .modal-container .bb-report-type-pagination .loading.button:disabled {
+  color: var(--bb-rl-text-disabled-color);
+  cursor: not-allowed;
+}
+
+.bb-readylaunch-template .modal-container .bb-report-type-pagination .load_more_rl.button:before,
+.bb-readylaunch-template .modal-container .bb-report-type-pagination .loading.button:before {
+  content: "";
+  display: inline-block;
+  height: 18px;
+  width: 18px;
+  border: 2px solid var(--bb-rl-border-quaternary-color);
+  border-top-color: var(--bb-rl-border-tertiary-color);
+  border-radius: var(--bb-rl-radius-full);
+  animation: spin 3s infinite linear;
+  margin-right: var(--bb-rl-space-100);
+}
+
+.bb-readylaunch-template .modal-container .bb-report-type-pagination .load_more_rl.button.loading,
+.bb-readylaunch-template .modal-container .bb-report-type-pagination .loading.button.loading {
+  display: inline-flex;
 }
 
 .bb-readylaunch-template .bb-model-footer {
@@ -19897,7 +19923,6 @@ table.profile-settings tbody td select {
 .bb-readylaunch-template .mfp-ajax-holder .mfp-content,
 .bb-readylaunch-template .mfp-inline-holder .mfp-content {
   width: 100%;
-  cursor: alias;
 }
 
 .bb-readylaunch-template .bb-onesignal-popup-close .mfp-close {

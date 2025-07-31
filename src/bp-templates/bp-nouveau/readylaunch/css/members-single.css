@@ -1634,7 +1634,6 @@ table.profile-settings tbody td select {
 .bb-readylaunch-template .mfp-ajax-holder .mfp-content,
 .bb-readylaunch-template .mfp-inline-holder .mfp-content {
   width: 100%;
-  cursor: alias;
 }
 
 .bb-readylaunch-template .bb-onesignal-popup-close .mfp-close {

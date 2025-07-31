@@ -237,11 +237,11 @@
 		}
 
 		@media (max-width: $sm) {
-			
+
 			&:has(+ .bb-rl-forum-tabs) {
 				justify-content: flex-start;
 			}
-	
+
 			+ .bb-rl-forum-tabs {
 				margin-top: 0;
 			}
