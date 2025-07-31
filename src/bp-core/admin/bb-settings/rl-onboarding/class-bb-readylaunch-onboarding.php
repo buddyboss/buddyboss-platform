@@ -66,11 +66,11 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 			'react_localize_object' => 'bbRlOnboarding',
 			'steps'                 => array(
 				0 => array(
-					'key'         => 'splash',
-					'title'       => __( 'Welcome to BuddyBoss', 'buddyboss' ),
-					'description' => __( 'Let\'s bring your community to life by choose the look and feel that matches your vision.', 'buddyboss' ),
-					'component'   => 'SplashScreen',
-					'image'       => 'onboardingModal-splash.png',
+					'key'           => 'splash',
+					'title'         => __( 'Welcome to BuddyBoss', 'buddyboss' ),
+					'description'   => __( 'Let\'s bring your community to life by choose the look and feel that matches your vision.', 'buddyboss' ),
+					'component'     => 'SplashScreen',
+					'image'         => 'onboardingModal-splash.png',
 					'skip_progress' => true,
 				),
 				1 => array(
@@ -234,22 +234,11 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 				'pages'           => array(
 					'bb_rl_enabled_pages' => array(
 						'type'    => 'checkbox_group',
-						'options' => array(
-							'registration' => array(
-								'label'   => __( 'Login & Registration', 'buddyboss' ),
-								'icon'    => 'bb-icons-rl-file-text',
-								'default' => true,
-							),
-							'courses'      => array(
-								'label'   => __( 'Courses', 'buddyboss' ),
-								'icon'    => 'bb-icons-rl-file-text',
-								'default' => true,
-							),
-						),
+						'options' => $this->get_enabled_pages_options(),
 					),
 				),
 				'side_menus'      => array(
-					'bb_rl_side_menu' => array(
+					'bb_rl_side_menu'    => array(
 						'type'    => 'draggable',
 						'label'   => __( 'Navigation', 'buddyboss' ),
 						'options' => $this->getComponentMenuItems(),
@@ -568,7 +557,7 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 		}
 
 		// Get all onboarding configuration data.
-		$final_settings  = isset( $_POST['finalSettings'] ) ? $this->sanitize_final_settings( $_POST['finalSettings'] ) : array();
+		$final_settings  = isset( $_POST['finalSettings'] ) ? $this->sanitize_final_settings( $_POST['finalSettings'] ) : array(); // phpcs:ignore
 		$completion_data = array(
 			'final_settings' => $final_settings,
 			'completed_at'   => current_time( 'mysql' ),
@@ -667,7 +656,7 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 						break;
 
 					case 'color':
-						$sanitized[ $field_key ] = sanitize_hex_color( $field_value ) ?: ( $field_config['default'] ?? '#e57e3a' );
+						$sanitized[ $field_key ] = sanitize_hex_color( $field_value ) ? sanitize_hex_color( $field_value ) : ( $field_config['default'] ?? '#e57e3a' );
 						break;
 
 					case 'media':
@@ -723,7 +712,7 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 							// For some draggable fields ReadyLaunch expects a specific structure.
 							switch ( $field_key ) {
 								case 'bb_rl_side_menu':
-									// Convert sequential list into associative map id => {enabled, order, icon}
+									// Convert sequential list into associative map id => {enabled, order, icon}.
 									$menu_map = array();
 									foreach ( $sanitized_items as $menu_item ) {
 										if ( empty( $menu_item['id'] ) ) {
@@ -741,7 +730,7 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 								case 'bb_rl_activity_sidebars':
 								case 'bb_rl_member_profile_sidebars':
 								case 'bb_rl_groups_sidebars':
-									// Convert list into boolean map id => enabled
+									// Convert list into boolean map id => enabled.
 									$sidebar_map = array();
 									foreach ( $sanitized_items as $sidebar_item ) {
 										if ( empty( $sidebar_item['id'] ) ) {
@@ -775,8 +764,8 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 
 			// Handle the new checkbox_group: bb_rl_enabled_pages.
 			if ( isset( $pages_settings['bb_rl_enabled_pages'] ) && is_array( $pages_settings['bb_rl_enabled_pages'] ) ) {
-				$selected_pages                        = $pages_settings['bb_rl_enabled_pages'];
-				$sanitized['bb_rl_enabled_pages']      = array(
+				$selected_pages                   = $pages_settings['bb_rl_enabled_pages'];
+				$sanitized['bb_rl_enabled_pages'] = array(
 					'registration' => in_array( 'registration', $selected_pages, true ),
 					'courses'      => in_array( 'courses', $selected_pages, true ),
 				);
@@ -835,22 +824,20 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param array $preferences User preferences.
+	 * @param array  $preferences User preferences.
+	 * @param string $pref_key    Optional preference key to save under.
+	 *
 	 * @return void
 	 */
 	public function save_preferences( $preferences, $pref_key = '' ) {
 		// Save to parent preferences system first.
 		parent::save_preferences( $preferences, $pref_key );
 
-		error_log( print_r( 'parent::save_preferences', 1 ) );
-		error_log( print_r( $preferences, 1 ) );
-
 		// Flatten & sanitise the data so it matches the structure expected by
 		// apply_readylaunch_configuration(). This ensures that when auto-save
 		// fires from an individual step (e.g. theme mode), the option is
 		// persisted immediately.
 		$sanitised = $this->sanitize_final_settings( $preferences );
-		error_log( print_r( $sanitised, 1 ) );
 
 		// Apply the configuration immediately for real-time updates.
 		$this->apply_readylaunch_configuration( $sanitised );
@@ -891,7 +878,6 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 
 		// Apply remaining step settings dynamically.
 		$this->apply_remaining_step_settings( $final_settings );
-
 
 		/**
 		 * Fires after ReadyLaunch configuration has been applied.
@@ -1002,6 +988,15 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 	 * @return void
 	 */
 	private function save_readylaunch_option( $option_name, $option_value ) {
+		if ( empty( $option_name ) || ! is_string( $option_name ) ) {
+			return; // Invalid option name.
+		}
+
+		if ( strpos( $option_name, 'bb_rl_' ) === 0 ) {
+			// Ensure the option name starts with bb_rl_ prefix.
+			$option_name = substr( $option_name, 6 );
+		}
+
 		// Save as BuddyPress option with bb_rl_ prefix.
 		bp_update_option( 'bb_rl_' . $option_name, $option_value );
 	}
@@ -1020,11 +1015,6 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 		// Get list of fields that were already handled above.
 		$handled_fields = array(
 			'blogname',
-			'bb_rl_theme_mode',
-			'bb_rl_light_logo',
-			'bb_rl_dark_logo',
-			'bb_rl_color_light',
-			'bb_rl_color_dark',
 		);
 
 		// Process any remaining fields.
@@ -1053,8 +1043,47 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 		}
 	}
 
+	/**
+	 * Get the enabled pages options.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 * @return array
+	 */
+	private function get_enabled_pages_options() {
+		$retval = array(
+			'registration' => array(
+				'label'   => __( 'Login & Registration', 'buddyboss' ),
+				'icon'    => 'bb-icons-rl-file-text',
+				'default' => true,
+			),
+		);
+
+		if ( bb_load_readylaunch()->bb_is_sidebar_enabled_for_courses() ) {
+			$retval['courses'] = array(
+				'label'   => __( 'Courses', 'buddyboss' ),
+				'icon'    => 'bb-icons-rl-file-text',
+				'default' => true,
+			);
+		}
+
+		return $retval;
+	}
+
+	/**
+	 * Get the default component menu items.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 * @return array
+	 */
 	private function getComponentMenuItems() {
 		$items = array(
+			array(
+				'id'      => 'activity_feed',
+				'label'   => __( 'Activity Feed', 'buddyboss' ),
+				'icon'    => 'pulse',
+				'enabled' => true,
+				'order'   => 0,
+			),
 			array(
 				'id'      => 'members',
 				'label'   => __( 'Members', 'buddyboss' ),
@@ -1062,81 +1091,50 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 				'enabled' => true,
 				'order'   => 1,
 			),
-		);
-
-		$currentOrder = 0;
-
-		// Add activity feed if component is active.
-		if ( bp_is_active( 'activity' ) ) {
-			array_unshift(
-				$items,
-				array(
-					'id'      => 'activity_feed',
-					'label'   => __( 'Activity Feed', 'buddyboss' ),
-					'icon'    => 'pulse',
-					'enabled' => true,
-					'order'   => $currentOrder++,
-				)
-			);
-		}
-
-		// Update order for base items.
-		foreach ( $items as &$item ) {
-			if ( 'members' === $item['id'] ) {
-				$item['order'] = $currentOrder++;
-			}
-		}
-
-		// Add groups if component is active.
-		if ( bp_is_active( 'groups' ) ) {
-			$items[] = array(
+			array(
 				'id'      => 'groups',
 				'label'   => __( 'Groups', 'buddyboss' ),
 				'icon'    => 'users-three',
 				'enabled' => true,
-				'order'   => $currentOrder++,
-			);
-		}
+				'order'   => 2,
+			),
+		);
 
-		// Add forums if component is active.
-		if ( bp_is_active( 'forums' ) ) {
+		$current_order = 3;
+
+		if ( bb_load_readylaunch()->bb_is_sidebar_enabled_for_courses() ) {
 			$items[] = array(
-				'id'      => 'forums',
-				'label'   => __( 'Forums', 'buddyboss' ),
-				'icon'    => 'chat-text',
+				'id'      => 'courses',
+				'label'   => __( 'Courses', 'buddyboss' ),
+				'icon'    => 'graduation-cap',
 				'enabled' => true,
-				'order'   => $currentOrder++,
+				'order'   => $current_order++,
 			);
 		}
 
-		// Update order for remaining base items.
-		foreach ( $items as &$item ) {
-			if ( 'courses' === $item['id'] ) {
-				$item['order'] = $currentOrder++;
-			}
-		}
+		$items[] = array(
+			'id'      => 'forums',
+			'label'   => __( 'Forums', 'buddyboss' ),
+			'icon'    => 'chat-text',
+			'enabled' => true,
+			'order'   => $current_order++,
+		);
 
-		// Add messages if component is active.
-		if ( bp_is_active( 'messages' ) ) {
-			$items[] = array(
-				'id'      => 'messages',
-				'label'   => __( 'Messages', 'buddyboss' ),
-				'icon'    => 'chat-teardrop-text',
-				'enabled' => true,
-				'order'   => $currentOrder++,
-			);
-		}
+		$items[] = array(
+			'id'      => 'messages',
+			'label'   => __( 'Messages', 'buddyboss' ),
+			'icon'    => 'chat-teardrop-text',
+			'enabled' => true,
+			'order'   => $current_order++,
+		);
 
-		// Add notifications if component is active.
-		if ( bp_is_active( 'notifications' ) ) {
-			$items[] = array(
-				'id'      => 'notifications',
-				'label'   => __( 'Notifications', 'buddyboss' ),
-				'icon'    => 'bell',
-				'enabled' => true,
-				'order'   => $currentOrder,
-			);
-		}
+		$items[] = array(
+			'id'      => 'notifications',
+			'label'   => __( 'Notifications', 'buddyboss' ),
+			'icon'    => 'bell',
+			'enabled' => true,
+			'order'   => $current_order,
+		);
 
 		return $items;
 	}

@@ -15,7 +15,33 @@ export const SplashScreen = ({ stepData, onNext, onSkip }) => {
         e.stopPropagation();
 
         if (onNext) {
-            onNext();
+            // Pass a flag so step_0 is marked completed with complete = 0
+            onNext({ complete: 0 });
+        }
+    };
+
+    const markStepCompletedAndFollow = (e, url, bb_theme) => {
+        e.preventDefault();
+
+        // Fire AJAX to mark step 0 complete with flag 1
+        const ajaxUrl = window.bbRlOnboarding?.ajaxUrl || window.ajaxurl;
+        const nonce   = window.bbRlOnboarding?.nonce || '';
+
+        if (ajaxUrl && nonce) {
+            fetch(ajaxUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: new URLSearchParams({
+                    action: 'rl_onboarding_save_step_progress',
+                    nonce: nonce,
+                    step: 0,
+                    data: JSON.stringify({ step_key: 'step_0', form_data: { bb_theme: bb_theme } })
+                })
+            }).finally(() => {
+                window.location.href = url;
+            });
+        } else {
+            window.location.href = url;
         }
     };
 
@@ -49,12 +75,12 @@ export const SplashScreen = ({ stepData, onNext, onSkip }) => {
                         <div className="bb-rl-splash-content-product-button-container">
                             {
 								activated ? (
-		                            <a href={window?.bbRlOnboarding?.readylaunch?.theme_settings} className="bb-rl-button bb-rl-button--outline">
+		                            <a href={window?.bbRlOnboarding?.readylaunch?.theme_settings} onClick={(e)=>markStepCompletedAndFollow(e, window?.bbRlOnboarding?.readylaunch?.theme_settings, 1)} className="bb-rl-button bb-rl-button--outline">
 		                                {__('Configure BuddyBoss Theme', 'buddyboss')}
 		                            </a>
 	                            ) : (
 		                            has_theme ? (
-			                            <a href={window?.bbRlOnboarding?.readylaunch?.themes} className="bb-rl-button bb-rl-button--outline">
+			                            <a href={window?.bbRlOnboarding?.readylaunch?.themes} onClick={(e)=>markStepCompletedAndFollow(e, window?.bbRlOnboarding?.readylaunch?.themes, 0)} className="bb-rl-button bb-rl-button--outline">
 			                                {__('Activate BuddyBoss Theme', 'buddyboss')}
 			                            </a>
 	                                ) : (

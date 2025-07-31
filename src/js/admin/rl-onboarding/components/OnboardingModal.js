@@ -223,6 +223,14 @@ export const OnboardingModal = ({ isOpen, onClose, onContinue, onSkip, onSaveSte
                 if (window.bbRlOnboarding?.preferences) {
                     window.bbRlOnboarding.preferences = { ...window.bbRlOnboarding.preferences, ...preferences };
                 }
+                // Update local stepData so returning to the step shows latest values
+                const prefKey = Object.keys(preferences)[0];
+                if (prefKey) {
+                    setStepData(prev => ({
+                        ...prev,
+                        [prefKey]: preferences[prefKey],
+                    }));
+                }
                 return true;
             } else {
                 console.error('Error saving preferences:', data.data?.message || 'Unknown error');
