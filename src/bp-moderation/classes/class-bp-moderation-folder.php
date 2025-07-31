@@ -97,14 +97,7 @@ class BP_Moderation_Folder extends BP_Moderation_Abstract {
 		if ( isset( $where['moderation_where'] ) && ! empty( $where['moderation_where'] ) ) {
 			$where['moderation_where'] .= ' AND ';
 		}
-
-		// Check if groups component is active before applying grouponly bypass.
-		$grouponly_bypass = '';
-		if ( bp_is_active( 'groups' ) ) {
-			$grouponly_bypass = ' OR f.privacy = "grouponly"';
-		}
-
-		$where['moderation_where'] .= '( f.user_id NOT IN ( ' . bb_moderation_get_blocked_by_sql() . ' ) ' . $grouponly_bypass . ' )';
+		$where['moderation_where'] .= '( f.user_id NOT IN ( ' . bb_moderation_get_blocked_by_sql() . ' ) )';
 
 		return $where;
 	}
@@ -131,39 +124,5 @@ class BP_Moderation_Folder extends BP_Moderation_Abstract {
 		}
 
 		return $retval;
-	}
-
-	/**
-	 * Prepare Where sql for exclude Blocked items.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param bool $blocked_user_query If true then blocked user query will fire.
-	 *
-	 * @return string|void
-	 */
-	protected function exclude_where_query( $blocked_user_query = true ) {
-		$where = '';
-
-		$where .= "( {$this->alias}.hide_parent = 0 OR {$this->alias}.hide_parent IS NULL ) AND
-		( {$this->alias}.hide_sitewide = 0 OR {$this->alias}.hide_sitewide IS NULL )";
-
-		if ( true === $blocked_user_query ) {
-			$blocked_query = $this->blocked_user_query();
-			if ( ! empty( $blocked_query ) ) {
-				if ( ! empty( $where ) ) {
-					$where .= ' AND ';
-				}
-
-				// Check if groups component is active before applying grouponly bypass.
-				$grouponly_bypass = '';
-				if ( bp_is_active( 'groups' ) ) {
-					$grouponly_bypass = " OR f.privacy = 'grouponly'";
-				}
-				$where .= "( ( {$this->alias}.id NOT IN ( $blocked_query ) {$grouponly_bypass} ) OR {$this->alias}.id IS NULL )";
-			}
-		}
-
-		return $where;
 	}
 }
