@@ -43,7 +43,7 @@ if ( 'choice' === $bb_rl_theme_mode ) {
 bp_get_template_part( 'common/header-register' );
 ?>
 
-<div class="site bb-readylaunch" id="activate-page">
+<div class="bb-readylaunch" id="activate-page">
 
 	<?php
 	bp_nouveau_template_notices();
