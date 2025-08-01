@@ -127,7 +127,7 @@ if ( bp_is_activity_directory() || bp_is_user_activity() ) {
 							unset( $default_filter_label );
 						?>
 					</span>
-					<i class="bb-icon-l bb-icon-angle-down"></i>
+					<i class="bb-icons-rl-caret-down"></i>
 				</button>
 				<div id="bb-subnav-filter-show" class="subnav-filters-modal">
 					<ul role="listbox">
@@ -176,7 +176,7 @@ if ( bp_is_activity_directory() || bp_is_user_activity() ) {
 				<?php $sorting_labels = bb_get_activity_sorting_options_labels(); ?>
 				<button class="subnav-filters-opener" aria-expanded="false" aria-controls="bb-subnav-filter-by">
 					<span class="selected"><?php echo esc_html( strtolower( $sorting_labels[ $default_selected ] ) ); ?></span>
-					<i class="bb-icon-l bb-icon-angle-down"></i>
+					<i class="bb-icons-rl-caret-down"></i>
 				</button>
 
 				<div class="subnav-filters-modal" id="bb-subnav-filter-by">

@@ -14,8 +14,9 @@ function my_network_click_handler() {
 			var link          = this;
 			var currentWidget = jQuery( link ).parents( widget );
 
-			jQuery( this ).addClass( 'loading selected' );
 			jQuery( currentWidget ).find( widgetTabLinks ).removeClass( 'selected' );
+			jQuery( this ).addClass( 'loading selected' );
+			jQuery( widgetMemberList ).addClass( 'loading' );
 
 			var seeAllLink = jQuery( this ).data( 'see-all-link' );
 			if ( '' !== seeAllLink ) {
@@ -33,6 +34,7 @@ function my_network_click_handler() {
 				},
 				function( response ) {
 					jQuery( link ).removeClass( 'loading' );
+					jQuery( widgetMemberList ).removeClass( 'loading' );
 					var targetList = jQuery( currentWidget ).find( widgetMemberList );
 					if ( 'undefined' !== typeof response.success && response.success === 1 ) {
 						jQuery( targetList ).fadeOut(

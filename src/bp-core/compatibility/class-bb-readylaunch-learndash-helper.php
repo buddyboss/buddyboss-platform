@@ -37,7 +37,7 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 		 * @since BuddyBoss 2.9.00
 		 * @var BB_Readylaunch_Learndash_Helper
 		 */
-		protected static $_instance = null;
+		protected static $instance = null;
 
 		/**
 		 * Main BB_Readylaunch_Learndash_Helper Instance.
@@ -49,11 +49,11 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 		 * @return BB_Readylaunch_Learndash_Helper - Main instance.
 		 */
 		public static function instance() {
-			if ( is_null( self::$_instance ) ) {
-				self::$_instance = new self();
+			if ( is_null( self::$instance ) ) {
+				self::$instance = new self();
 			}
 
-			return self::$_instance;
+			return self::$instance;
 		}
 
 		/**
@@ -103,12 +103,12 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 		 * @param string     $filepath         Template file path.
 		 * @param string     $name             Template name.
 		 * @param array|null $args             Template data.
-		 * @param bool|null  $echo             Whether to echo the template output or not.
+		 * @param bool|null  $out              Whether to echo the template output or not.
 		 * @param bool       $return_file_path Whether to return file or path or not.
 		 *
 		 * @return string Modified template path
 		 */
-		public function bb_rl_override_learndash_template_path( $filepath, $name, $args, $echo, $return_file_path ) {
+		public function bb_rl_override_learndash_template_path( $filepath, $name, $args, $out, $return_file_path ) {
 			if (
 				bp_is_active( 'groups' ) &&
 				function_exists( 'bp_is_group_single' ) &&
@@ -187,7 +187,7 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 				'bb-readylaunch-learndash-js',
 				'bbReadylaunchLearnDash',
 				array(
-					'courses_url'     => home_url( '/courses/' ),
+					'courses_url'     => home_url( '/' . LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_Permalinks', 'courses' ) ),
 					'ajaxurl'         => admin_url( 'admin-ajax.php' ),
 					'nonce_list_grid' => wp_create_nonce( 'list-grid-settings' ),
 				)
@@ -200,11 +200,13 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 		 * @since BuddyBoss 2.9.00
 		 */
 		public function bb_rl_learndash_layout_before() {
-			$is_ld_course_archive = is_post_type_archive( learndash_get_post_type_slug( 'course' ) );
-			$is_ld_topic_archive  = is_post_type_archive( learndash_get_post_type_slug( 'topic' ) );
-			$is_ld_lesson_archive = is_post_type_archive( learndash_get_post_type_slug( 'lesson' ) );
-			$is_ld_quiz_archive   = is_post_type_archive( learndash_get_post_type_slug( 'quiz' ) );
-			$is_ld_group_archive  = is_post_type_archive( learndash_get_post_type_slug( 'group' ) );
+			$is_ld_course_archive      = is_post_type_archive( learndash_get_post_type_slug( 'course' ) );
+			$is_ld_topic_archive       = is_post_type_archive( learndash_get_post_type_slug( 'topic' ) );
+			$is_ld_lesson_archive      = is_post_type_archive( learndash_get_post_type_slug( 'lesson' ) );
+			$is_ld_quiz_archive        = is_post_type_archive( learndash_get_post_type_slug( 'quiz' ) );
+			$is_ld_group_archive       = is_post_type_archive( learndash_get_post_type_slug( 'group' ) );
+			$is_ld_registration_page   = bb_load_readylaunch()->bb_rl_is_learndash_registration_page();
+			$is_ld_reset_password_page = bb_load_readylaunch()->bb_rl_is_learndash_reset_password_page();
 
 			if ( $is_ld_course_archive ) {
 				bp_get_template_part( 'learndash/ld30/archive-course-header' );
@@ -214,14 +216,24 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 				$is_ld_topic_archive ||
 				$is_ld_lesson_archive ||
 				$is_ld_quiz_archive ||
-				$is_ld_group_archive
+				$is_ld_group_archive ||
+				$is_ld_registration_page ||
+				$is_ld_reset_password_page
 			) {
-				$post_type_obj = get_post_type_object( get_post_type() );
-				if ( $post_type_obj && ! empty( $post_type_obj->labels->name ) ) {
+				$page_title = '';
+				if ( 'page' === get_post_type() ) {
+					$page_title = get_the_title();
+				} else {
+					$post_type_obj = get_post_type_object( get_post_type() );
+					if ( $post_type_obj && ! empty( $post_type_obj->labels->name ) ) {
+						$page_title = $post_type_obj->labels->name;
+					}
+				}
+				if ( ! empty( $page_title ) ) {
 					?>
 					<div class="bb-rl-lms-page-title">
 						<h1 class="bb-rl-lms-page-title-text">
-							<?php echo esc_html( $post_type_obj->labels->name ); ?>
+							<?php echo esc_html( $page_title ); ?>
 						</h1>
 					</div>
 					<?php
@@ -246,12 +258,14 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 		 * @since BuddyBoss 2.9.00
 		 */
 		public function bb_rl_learndash_before_loop() {
-			$is_ld_course_archive = is_post_type_archive( learndash_get_post_type_slug( 'course' ) );
-			$is_ld_topic_archive  = is_post_type_archive( learndash_get_post_type_slug( 'topic' ) );
-			$is_ld_lesson_archive = is_post_type_archive( learndash_get_post_type_slug( 'lesson' ) );
-			$is_ld_quiz_archive   = is_post_type_archive( learndash_get_post_type_slug( 'quiz' ) );
-			$is_ld_group_archive  = is_post_type_archive( learndash_get_post_type_slug( 'group' ) );
-			$is_ld_group_single   = is_singular( learndash_get_post_type_slug( 'group' ) );
+			$is_ld_course_archive      = is_post_type_archive( learndash_get_post_type_slug( 'course' ) );
+			$is_ld_topic_archive       = is_post_type_archive( learndash_get_post_type_slug( 'topic' ) );
+			$is_ld_lesson_archive      = is_post_type_archive( learndash_get_post_type_slug( 'lesson' ) );
+			$is_ld_quiz_archive        = is_post_type_archive( learndash_get_post_type_slug( 'quiz' ) );
+			$is_ld_group_archive       = is_post_type_archive( learndash_get_post_type_slug( 'group' ) );
+			$is_ld_group_single        = is_singular( learndash_get_post_type_slug( 'group' ) );
+			$is_ld_registration_page   = bb_load_readylaunch()->bb_rl_is_learndash_registration_page();
+			$is_ld_reset_password_page = bb_load_readylaunch()->bb_rl_is_learndash_reset_password_page();
 			if ( $is_ld_course_archive ) {
 				?>
 				<div class="bb-rl-courses-grid grid bb-rl-courses-grid--ldlms">
@@ -262,11 +276,20 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 				$is_ld_lesson_archive ||
 				$is_ld_quiz_archive ||
 				$is_ld_group_archive ||
-				$is_ld_group_single
+				$is_ld_group_single ||
+				$is_ld_registration_page ||
+				$is_ld_reset_password_page
 			) {
-				$single_class = $is_ld_group_single ? 'single' : 'archive';
+				$page_class = 'archive';
+				if ( $is_ld_group_single ) {
+					$page_class = 'single';
+				} elseif ( $is_ld_registration_page ) {
+					$page_class = 'registration';
+				} elseif ( $is_ld_reset_password_page ) {
+					$page_class = 'reset-password';
+				}
 				?>
-				<div class="bb-rl-lms-default-page bb-rl-lms-inner-block bb-rl-lms-inner-block--ld-<?php echo esc_attr( $single_class ); ?>">
+				<div class="bb-rl-lms-default-page bb-rl-lms-inner-block bb-rl-lms-inner-block--ld-<?php echo esc_attr( $page_class ); ?>">
 				<?php
 			}
 		}
@@ -277,12 +300,14 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 		 * @since BuddyBoss 2.9.00
 		 */
 		public function bb_rl_learndash_after_loop() {
-			$is_ld_course_archive = is_post_type_archive( learndash_get_post_type_slug( 'course' ) );
-			$is_ld_topic_archive  = is_post_type_archive( learndash_get_post_type_slug( 'topic' ) );
-			$is_ld_lesson_archive = is_post_type_archive( learndash_get_post_type_slug( 'lesson' ) );
-			$is_ld_quiz_archive   = is_post_type_archive( learndash_get_post_type_slug( 'quiz' ) );
-			$is_ld_group_archive  = is_post_type_archive( learndash_get_post_type_slug( 'group' ) );
-			$is_ld_group_single   = is_singular( learndash_get_post_type_slug( 'group' ) );
+			$is_ld_course_archive      = is_post_type_archive( learndash_get_post_type_slug( 'course' ) );
+			$is_ld_topic_archive       = is_post_type_archive( learndash_get_post_type_slug( 'topic' ) );
+			$is_ld_lesson_archive      = is_post_type_archive( learndash_get_post_type_slug( 'lesson' ) );
+			$is_ld_quiz_archive        = is_post_type_archive( learndash_get_post_type_slug( 'quiz' ) );
+			$is_ld_group_archive       = is_post_type_archive( learndash_get_post_type_slug( 'group' ) );
+			$is_ld_group_single        = is_singular( learndash_get_post_type_slug( 'group' ) );
+			$is_ld_registration_page   = bb_load_readylaunch()->bb_rl_is_learndash_registration_page();
+			$is_ld_reset_password_page = bb_load_readylaunch()->bb_rl_is_learndash_reset_password_page();
 			if ( $is_ld_course_archive ) {
 				echo '</div>';
 				bp_get_template_part( 'learndash/ld30/archive-course-pagination' );
@@ -293,7 +318,9 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 				$is_ld_lesson_archive ||
 				$is_ld_quiz_archive ||
 				$is_ld_group_archive ||
-				$is_ld_group_single
+				$is_ld_group_single ||
+				$is_ld_registration_page ||
+				$is_ld_reset_password_page
 			) {
 				if (
 					$is_ld_group_single &&
@@ -1280,9 +1307,9 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 		 * @return array The orderby data.
 		 */
 		public function bb_rl_get_orderby_data() {
-			$current_orderby    = isset( $_GET['orderby'] ) ? sanitize_text_field( wp_unslash( $_GET['orderby'] ) ) : 'alphabetical';
-			$current_category   = isset( $_GET['categories'] ) ? sanitize_text_field( wp_unslash( $_GET['categories'] ) ) : '';
-			$current_instructor = isset( $_GET['instructors'] ) ? sanitize_text_field( wp_unslash( $_GET['instructors'] ) ) : '';
+			$current_orderby    = isset( $_GET['orderby'] ) ? sanitize_text_field( wp_unslash( $_GET['orderby'] ) ) : 'alphabetical'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$current_category   = isset( $_GET['categories'] ) ? sanitize_text_field( wp_unslash( $_GET['categories'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$current_instructor = isset( $_GET['instructors'] ) ? sanitize_text_field( wp_unslash( $_GET['instructors'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
 			return array(
 				'current_orderby'    => $current_orderby,
@@ -1335,8 +1362,8 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 			if ( 'sfwd-lessons' === $post->post_type ) {
 				$lesson_id = $post->ID;
 			} elseif ( 'sfwd-topic' === $post->post_type || 'sfwd-quiz' === $post->post_type ) {
-					$topic_id = $post->ID;
-				if ( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Courses_Builder', 'shared_steps' ) == 'yes' ) {
+				$topic_id = $post->ID;
+				if ( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Courses_Builder', 'shared_steps' ) === 'yes' ) {
 					$lesson_id = learndash_course_get_single_parent_step( $course_id, $post->ID );
 				} else {
 					$lesson_id = learndash_get_setting( $post, 'lesson' );

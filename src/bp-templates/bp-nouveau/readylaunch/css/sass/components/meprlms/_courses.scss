@@ -28,7 +28,7 @@
 		.dropdown a.dropdown-toggle {
 
 			@include bb-rl-label-heading;
-			color: var(--bb-rl-text-secondary-color);
+			color: var(--bb-rl-text-secondary-color) !important; // !important is required to override the platform-pro styles
 			display: flex;
 			align-items: center;
 			background-color: var(--bb-rl-background-secondary-color);
@@ -40,6 +40,7 @@
 
 			i {
 				font-weight: 500;
+				color: var(--bb-rl-icon-primary-color) !important; // !important is required to override the platform-pro styles
 			}
 
 			span {
@@ -145,7 +146,8 @@
 				margin-right: var(--bb-rl-space-50);
 			}
 
-			.form-input {
+			.form-input,
+			input[type="text"].form-input {
 				display: block;
 				color: var(--bb-rl-text-secondary-color) !important;
 				background-color: transparent;
@@ -475,5 +477,16 @@ body[class*="mpcs-course"] .bb-rl-mbprlms-pagination {
 			@include bb-rl-label-heading;
 			color: var(--bb-rl-text-secondary-color);
 		}
+	}
+}
+
+.bb-rl-container-inner.bb-rl-meprlms-no-courses {
+	padding-top: var(--bb-rl-space-400);
+	padding-bottom: var(--bb-rl-space-400);
+
+	> p {
+
+		@include bb-rl-label-heading;
+		color: var(--bb-rl-text-secondary-color);
 	}
 }

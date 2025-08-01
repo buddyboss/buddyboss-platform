@@ -11,18 +11,24 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-$is_ld_group_single = isset( $args['is_ld_group_single'] ) ? $args['is_ld_group_single'] : false;
-$single_class       = $is_ld_group_single ? 'single' : 'archive';
+$page_class       = isset( $args['page_class'] ) ? $args['page_class'] : 'archive';
+$course_post_type = isset( $args['post_type'] ) ? $args['post_type'] : '';
 ?>
 
-<div class="bb-rl-ld-<?php echo esc_attr( $single_class ); ?>">
-	<header class="entry-header">
-		<h2 class="entry-title">
-			<a href="<?php the_permalink(); ?>" rel="bookmark">
-				<?php the_title(); ?>
-			</a>
-		</h2>
-	</header>
+<div class="bb-rl-ld-default bb-rl-ld-<?php echo esc_attr( $page_class ); ?> bb-rl-<?php echo esc_attr( $page_class ); ?>" >
+	<?php
+	if ( 'page' !== $course_post_type ) {
+		?>
+		<header class="entry-header">
+			<h2 class="entry-title">
+				<a href="<?php the_permalink(); ?>" rel="bookmark">
+					<?php the_title(); ?>
+				</a>
+			</h2>
+		</header>
+		<?php
+	}
+	?>
 	<div class="entry-content">
 		<?php the_content(); ?>
 	</div>

@@ -574,7 +574,7 @@
 		#cancel-comment-reply-link {
 
 			@include bb-rl-button;
-			@include bb-rl-button--tertiary-text;
+			@include bb-rl-button-secondary-fill;
 			@include bb-rl-button--small;
 			margin-right: var(--bb-rl-space-100);
 		}

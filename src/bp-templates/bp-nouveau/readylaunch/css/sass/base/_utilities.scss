@@ -1673,6 +1673,17 @@ div.vjs-menu {
 	}
 }
 
+.bb-rl-view-more--pagination .bb-rl-button.bb-rl-button--small {
+	font-size: var(--bb-rl-font-size-sm);
+	font-weight: 500;
+	line-height: 1.7;
+	gap: var(--bb-rl-space-50);
+
+	[class*="bb-icons"] {
+		font-size: 16px;
+	}
+}
+
 /* List items headings */
 .item .list-title {
 

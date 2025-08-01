@@ -163,6 +163,32 @@ if ( bp_has_groups( bp_ajax_querystring( 'groups' ) ) ) {
 		</transition>
 	</div> <!-- .bb-leave-group-popup -->
 
+	<!-- Leave Group confirmation popup -->
+	<div class="bb-cancel-request-group-popup bb-action-popup" style="display: none">
+		<transition name="modal">
+			<div class="bb-rl-modal-mask bb-white bbm-model-wrap">
+				<div class="bb-rl-modal-wrapper">
+					<div class="modal-container">
+						<header class="bb-model-header">
+							<h4><span class="target_name"><?php esc_html_e( 'Cancel Request?', 'buddyboss' ); ?></span></h4>
+							<a class="bb-close-cancel-request-group bb-model-close-button" href="#">
+								<span class="bb-icon-l bb-icon-times"></span>
+							</a>
+						</header>
+						<div class="bb-cancel-request-group-content bb-action-popup-content">
+							<p><?php esc_html_e( 'You\'re about to cancel your request to join the group', 'buddyboss' ); ?></p>
+							<span class="bb-rl-modal-group-name"></span>
+						</div>
+						<footer class="bb-model-footer flex align-items-center">
+							<a class="bb-close-cancel-request-group bb-close-action-popup bb-rl-button bb-rl-button--secondaryFill bb-rl-button--small" href="#"><?php esc_html_e( 'Cancel', 'buddyboss' ); ?></a>
+							<a class="button push-right bb-confirm-cancel-request-group bb-rl-button bb-rl-button--brandFill bb-rl-button--small" href="#"><?php esc_html_e( 'Confirm', 'buddyboss' ); ?></a>
+						</footer>
+					</div>
+				</div>
+			</div>
+		</transition>
+	</div> <!-- .bb-cancel-request-group-popup -->
+
 	<?php
 	bp_nouveau_pagination( 'bottom' );
 } else {

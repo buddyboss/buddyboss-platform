@@ -110,7 +110,7 @@ if ( count( $available_widgets ) || ! empty( $static_sidebar_widget ) ) {
 			$output = ob_get_clean();
 
 			if ( ! empty( trim( $output ) ) ) {
-				echo wp_kses_post( $output );
+				echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			}
 		}
 		?>

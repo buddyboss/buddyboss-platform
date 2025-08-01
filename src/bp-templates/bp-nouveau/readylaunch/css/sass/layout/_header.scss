@@ -441,7 +441,7 @@
 		}
 
 		&:has(.bb-rl-option-wrap.active),
-		&:hover {
+		&:hover:not(.bb-rl-view-more--pagination) {
 			background-color: var(--bb-rl-background-secondary-hover-color);
 		}
 	}

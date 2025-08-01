@@ -22,7 +22,7 @@
 			<div class="bb-rl-message-header-loading_description bb-bg-animation bb-loading-bg bb-loading-input"></div>
 		</div>
 		<div id="bb-rl-messages-thread-list-nav"></div>
-		<div class="subnav-filters filters user-subnav bb-rl-messages-filters push-right" id="subsubnav"></div><!--This is required for filters-->
+		<div class="subnav-filters filters user-subnav bb-rl-messages-filters" id="subsubnav"></div><!--This is required for filters-->
 		<!-- Message Tabs -->
 		<div class="bb-rl-messages-tabs">
 			<ul class="bb-rl-messages-tabs-list">

@@ -155,8 +155,6 @@ add_filter( 'widget_display_callback', 'bb_rl_modify_existing_widget_output', 10
  * Open the wrapper of the repeater set - on the View profile screen
  *
  * @since BuddyBoss 2.9.00
- *
- * @global type $first_xpfield_in_repeater
  */
 function bb_rl_view_profile_repeaters_print_group_html_start() {
 	$group_id            = bp_get_the_profile_group_id();
@@ -187,7 +185,7 @@ add_action( 'bp_before_profile_field_item', 'bb_rl_view_profile_repeaters_print_
  * @return string
  */
 function bb_rl_get_user_social_networks_urls( $user_id = null ) {
-	$social_networks_id                = bb_rl_get_user_social_networks_field_id();
+	$social_networks_id = bb_rl_get_user_social_networks_field_id();
 
 	$html = '';
 
@@ -253,6 +251,7 @@ function bb_rl_get_user_social_networks_field_id() {
 	$field_id  = wp_cache_get( $cache_key );
 
 	if ( false === $field_id ) {
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Direct query to get the social networks field ID.
 		$social_networks_field = $wpdb->get_row(
 			$wpdb->prepare(
 				"SELECT a.id FROM {$wpdb->base_prefix}bp_xprofile_fields a WHERE parent_id = %d AND type = %s",

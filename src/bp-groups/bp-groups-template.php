@@ -7971,7 +7971,7 @@ function bb_platform_group_headers_element_enable( $element ) {
  *
  * @since 1.9.1
  *
- * @param bool $default Optional. Fallback value if not found in the database.
+ * @param string $default Optional. Fallback value if not found in the database.
  *                      Default: left.
  *
  * @return string grid style for group directory
@@ -8007,7 +8007,7 @@ function bb_platform_group_element_enable( $element ) {
  *
  * @since 1.9.1
  *
- * @param bool $default Optional. Fallback value if not found in the database.
+ * @param string $default Optional. Fallback value if not found in the database.
  *                      Default: left.
  *
  * @return string grid style for group directory
@@ -8019,4 +8019,72 @@ function bb_platform_group_grid_style( $default = 'left' ) {
 	}
 
 	return $default;
+}
+
+/**
+ * Return true when there are more group members' items to be shown than currently appear.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @global object $members_template {@link BP_Members_Template}
+ *
+ * @return bool $has_more_items True if more items, false if not.
+ */
+function bb_group_members_has_more_items() {
+	global $members_template;
+
+	if ( ! empty( $members_template->has_more_items ) ) {
+		$has_more_items = true;
+	} else {
+		$remaining_pages = 0;
+
+		if ( ! empty( $members_template->pag_page ) ) {
+			$remaining_pages = floor( ( $members_template->total_member_count - 1 ) / ( $members_template->pag_num * $members_template->pag_page ) );
+		}
+
+		$has_more_items = (int) $remaining_pages > 0;
+	}
+
+	/**
+	 * Filters whether there are more group members' items to display.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param bool $has_more_items Whether or not there are more members' items to display.
+	 */
+	return apply_filters( 'bb_group_members_has_more_items', $has_more_items );
+}
+
+/**
+ * Output the URL for the Load More link.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_groups_members_load_more_link() {
+	echo esc_url( bb_get_groups_members_load_more_link() );
+}
+
+/**
+ * Get the URL for the Load More link.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string $link
+ */
+function bb_get_groups_members_load_more_link() {
+	global $members_template;
+
+	$url  = bp_get_requested_url();
+	$link = add_query_arg( $members_template->pag_arg, $members_template->pag_page + 1, $url );
+
+	/**
+	 * Filters the Load More link URL.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $link                The "Load More" link URL with appropriate query args.
+	 * @param string $url                 The original URL.
+	 * @param object $members_template The members template loop global.
+	 */
+	return apply_filters( 'bb_get_groups_members_load_more_link', $link, $url, $members_template );
 }

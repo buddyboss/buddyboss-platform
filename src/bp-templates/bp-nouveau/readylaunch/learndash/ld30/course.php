@@ -1154,4 +1154,15 @@ $course_video_duration = get_post_meta( $course_id, '_buddyboss_lms_course_video
 			</div>
 		</aside>
 	<?php endif; ?>
+	<?php
+	// Load login modal for non-logged in users.
+	if ( ! is_user_logged_in() ) {
+		global $login_model_load_once;
+		$login_model_load_once      = false;
+		$learndash_login_model_html = learndash_get_template_part( 'modules/login-modal.php', array(), false );
+		if ( false !== $learndash_login_model_html ) {
+			echo '<div class="learndash-wrapper learndash-wrapper-login-modal ld-modal-closed">' . $learndash_login_model_html . '</div>';
+		}
+	}
+	?>
 </div>

@@ -34,6 +34,7 @@
 				<a href="javascript:void(0);" class="{{ isFirstItem ? 'active' : '' }}" data-tab="activity-state_{{key}}" reaction-id="{{ reaction.id ? reaction.id : '0' }}">
 					<# if ( 'all' === reaction.type  ) { #>
 						{{ reaction.icon_text }}
+						<span class="bb-rl-all-reaction-count">({{ reaction.total_count }})</span>
 					<# } else if ( 'bb-icons' === reaction.type  ) { #>
 						<i class="bb-icon-{{ reaction.icon }}" style="font-weight:200;color:{{ reaction.icon_color }};"></i>
 						<span>{{ reaction.total_count }}</span>

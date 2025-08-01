@@ -114,6 +114,10 @@
 		.item-avatar {
 			display: flex;
 			justify-content: center;
+
+			.gamipress-buddypress-user-details {
+				display: none;
+			}
 		}
 
 		.avatar {
@@ -248,6 +252,17 @@
 			content: "\eafa";
 		}
 
+		&.friendship-button.pending_friend.loading i {
+			height: 16px;
+		}
+
+		&.friendship-button.pending_friend.loading i::before {
+
+			@include bb-rl-spinner;
+			@include bb-rl-spinner--sm;
+			margin-right: var(--bb-rl-space-50);
+		}
+
 		&.friendship-button.awaiting_response_friend i::before {
 			content: "\edec";
 		}
@@ -255,6 +270,15 @@
 		&.friendship-button.is_friend i::before {
 			content: "\e182";
 		}
+	}
+}
+
+.bb-rl-member-header-actions {
+
+	button.friendship-button i {
+		max-height: 20px;
+		display: inline-flex;
+		align-items: center;
 	}
 }
 
@@ -386,11 +410,12 @@
 	}
 
 	.friendship-button.is_friend i::before {
-		content: "\e4ce";
+		content: "\e4d0";
+		font-weight: 500;
 	}
 
 	.friendship-button.pending_friend i::before {
-		content: "\edec";
+		content: "\eafa";
 	}
 
 	.friendship-button.awaiting_response_friend i::before {

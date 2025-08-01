@@ -224,6 +224,8 @@ window.bp = window.bp || {};
         }
     } );
 
+    $( '.profile-edit .editfield' ).last().addClass( 'last-editfield' );
+
     $( '.field-visibility-settings input[type="radio"]' ).on( 'change', function() {
         var $radio = $( this );
         var settings_div = $radio.closest( '.field-visibility-settings' );

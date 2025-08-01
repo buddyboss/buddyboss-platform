@@ -30,7 +30,7 @@ defined( 'ABSPATH' ) || exit;
 			<?php
 				$forum_id = bbp_get_forum_id();
 				// get discussion count.
-				$discussion_count = bbp_get_forum_topic_count( $forum_id );
+				$discussion_count = bbp_get_forum_topic_count( $forum_id, false );
 				// get forum visibility/privacy status.
 				$forum_visibility   = bbp_get_forum_visibility( $forum_id );
 				$forum_visibilities = bbp_get_forum_visibilities( $forum_id );
@@ -39,10 +39,16 @@ defined( 'ABSPATH' ) || exit;
 			<div class="bb-rl-forum-meta-item">
 				<?php echo esc_html( $privacy_label ); ?>
 			</div>
-			<div class="bb-rl-forum-meta-item <?php echo 0 === $discussion_count ? 'bb-rl-forum-meta-item-inactive' : ''; ?>">
-				<span class="bb-rl-forum-topic-count-value"><?php echo esc_html( $discussion_count ); ?></span>
-				<span class="bb-rl-forum-topic-count-label"><?php echo esc_html( _n( 'Discussion', 'Discussions', $discussion_count, 'buddyboss' ) ); ?></span>
-			</div>
+			<?php
+			if ( 0 < (int) $discussion_count ) {
+				?>
+				<div class="bb-rl-forum-meta-item <?php echo 0 === (int) $discussion_count ? 'bb-rl-forum-meta-item-inactive' : ''; ?>">
+					<span class="bb-rl-forum-topic-count-value"><?php echo esc_html( $discussion_count ); ?></span>
+					<span class="bb-rl-forum-topic-count-label"><?php echo esc_html( _n( 'Discussion', 'Discussions', $discussion_count, 'buddyboss' ) ); ?></span>
+				</div>
+				<?php
+			}
+			?>
 			<div class="bb-rl-forum-meta-item">
 				<?php do_action( 'bbp_theme_before_forum_freshness_link' ); ?>
 				<?php

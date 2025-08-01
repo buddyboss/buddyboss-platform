@@ -257,17 +257,18 @@ window.bp = window.bp || {};
 		},
 
 		triggerLoadMore: function () {
+			var load_more_rl = jQuery( this ).closest( '.modal-container' ).find( '#load_more_rl' );
 
 			if (
-				0 === jQuery( this ).find( '#load_more_rl' ).length ||
-				jQuery( this ).find( '#load_more_rl' ).hasClass( 'loading' ) ||
-				jQuery( this ).find( '#load_more_rl' ).hasClass( 'hidden' )
+				0 === load_more_rl.length ||
+				load_more_rl.hasClass( 'loading' ) ||
+				load_more_rl.hasClass( 'hidden' )
 			) {
 				return;
 			}
 
-			if ( jQuery( this ).offset().top + jQuery( this ).innerHeight() > jQuery( this ).find( '#load_more_rl' ).offset().top ) {
-				jQuery( this ).find( '#load_more_rl' ).trigger( 'click' );
+			if ( jQuery( this ).offset().top + jQuery( this ).innerHeight() > load_more_rl.offset().top ) {
+				load_more_rl.trigger( 'click' );
 			}
 
 		},
@@ -676,7 +677,7 @@ window.bp = window.bp || {};
 							if ( membersListElem.length > 0 ) {
 								membersListElem.html( response.data.content ).addClass( 'is_not_empty' );
 								if ( ! $( '#message-members-list' ).hasClass( 'event-triggered' ) ) {
-									var modalContainerElem = $( '#message-members-list .modal-container' );
+									var modalContainerElem = $( '#message-members-list .bb-report-type-wrp' );
 									modalContainerElem.on( 'scroll', bp.Nouveau.Messages.triggerLoadMore );
 									modalContainerElem.addClass( 'event-triggered' );
 								}
@@ -996,7 +997,7 @@ window.bp = window.bp || {};
 							if ( moderatedUserList.length ) {
 								moderatedUserList.html( response.data.content ).addClass( 'is_not_empty' );
 								if ( ! $( '#mass-user-block-list' ).hasClass( 'event-triggered' ) ) {
-									var modalContainer = $( '#mass-user-block-list .modal-container' );
+									var modalContainer = $( '#mass-user-block-list .bb-report-type-wrp' );
 									modalContainer.on( 'scroll', bp.Nouveau.Messages.triggerLoadMore );
 									modalContainer.addClass( 'event-triggered' );
 								}

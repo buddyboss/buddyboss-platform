@@ -771,9 +771,9 @@
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
   transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
-  background-color: transparent;
+  background-color: var(--bb-rl-background-tertiary-color);
   color: var(--bb-rl-text-color);
-  border: none;
+  border: 1px solid transparent;
   padding: 6px var(--bb-rl-space-200);
   font-size: var(--bb-rl-font-size-sm);
   font-weight: 400;
@@ -782,7 +782,7 @@
 
 .bb-rl-comments-area .form-submit #cancel-comment-reply-link:hover,
 .bb-rl-course-content-comments .form-submit #cancel-comment-reply-link:hover {
-  background-color: var(--bb-rl-background-secondary-hover-color);
+  background-color: var(--bb-rl-background-tertiary-hover-color);
 }
 
 .bb-rl-comments-area .form-submit #cancel-comment-reply-link:focus,
@@ -792,6 +792,7 @@
 
 .bb-rl-comments-area .form-submit #cancel-comment-reply-link:disabled,
 .bb-rl-course-content-comments .form-submit #cancel-comment-reply-link:disabled {
+  background-color: var(--bb-rl-background-tertiary-color);
   color: var(--bb-rl-text-disabled-color);
   cursor: not-allowed;
 }

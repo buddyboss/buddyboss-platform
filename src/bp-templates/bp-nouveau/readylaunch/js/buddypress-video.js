@@ -2528,6 +2528,8 @@ window.bp = window.bp || {};
 								}
 								$( '.bb-media-info-section:visible' ).show();
 
+								$( '.bb-media-info-section:visible' ).find( '.bb-activity-more-options-action' ).attr( 'data-balloon-pos', 'left' );
+
 								jQuery( window ).scroll();
 								setTimeout(
 									function () {

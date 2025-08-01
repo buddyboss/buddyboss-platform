@@ -15,9 +15,22 @@
 defined( 'ABSPATH' ) || exit;
 
 if ( bp_group_has_membership_requests( bp_ajax_querystring( 'membership_requests' ) ) ) {
-	?>
-	<ul id="request-list" class="item-list bp-list membership-requests-list bb-rl-requests-list">
+	$is_first_page = empty( $_POST['page'] ) || 1 === (int) $_POST['page']; // phpcs:ignore WordPress.Security.NonceVerification.Missing
+	if ( $is_first_page ) {
+		?>
+	<ul id="request-list" class="item-list bp-list membership-requests-list bb-rl-requests-list bb-rl-list">
 		<?php
+	}
+	?>
+
+		<?php
+		global $requests_template;
+		$total_request_count   = $requests_template->total_request_count;
+		$requests_current_page = $requests_template->pag_page;
+		$requests_per_page     = $requests_template->pag_num;
+		$requests_page_arg     = $requests_template->pag_arg;
+		$requests_total_pages  = ceil( $total_request_count / $requests_per_page );
+
 		while ( bp_group_membership_requests() ) :
 			bp_group_the_membership_request();
 			?>
@@ -42,10 +55,32 @@ if ( bp_group_has_membership_requests( bp_ajax_querystring( 'membership_requests
 				</div>
 			</li>
 		<?php endwhile; ?>
-	</ul>
+		<?php
+		if ( $requests_total_pages > $requests_current_page ) {
+			$requests_url  = bp_get_groups_action_link( 'admin', 'membership-requests' );
+			$next_page     = $requests_current_page + 1;
+			$next_page_url = add_query_arg(
+				$requests_page_arg,
+				$next_page,
+				$requests_url
+			);
+			?>
+			<li class="bb-rl-view-more bb-rl-view-more--pagination" data-bp-pagination="<?php echo esc_attr( $requests_page_arg ); ?>">
+				<a class="bb-rl-button bb-rl-button--secondaryFill bb-rl-button--small" href="<?php echo esc_url( $next_page_url ); ?>" data-method="append">
+					<?php esc_html_e( 'Show More', 'buddyboss' ); ?>
+					<i class="bb-icons-rl-caret-down"></i>
+				</a>
+			</li>
+			<?php
+		}
+		?>
 
 	<?php
-	bp_nouveau_pagination( 'bottom' );
+	if ( $is_first_page ) {
+		?>
+		</ul>
+		<?php
+	}
 } else {
 	bp_nouveau_user_feedback( 'group-requests-none' );
 }

@@ -25,11 +25,34 @@ window.bp = window.bp || {};
 		 * [addListeners description]
 		 */
 		addListeners: function () {
+			$( document ).on( 'keyup blur', '#bb-rl-invite-email', function () {
+				var $emailField   = $( this );
+				var $emailWrapper = $emailField.closest( '.bb-rl-form-field-wrapper' );
+				var emailValue    = $emailField.val().trim();
+				var emailRegex    = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+
+				// Remove existing error messages.
+				$emailWrapper.find( '.bb-rl-notice' ).remove();
+				$emailField.removeClass( 'bb-rl-input-field--error' );
+
+				if ( '' !== emailValue ) {
+					if ( ! emailRegex.test( emailValue ) ) {
+						$emailField.addClass( 'bb-rl-input-field--error' );
+						bp.Readylaunch.Members.appendMessage( $emailWrapper, bbReadyLaunchMembersVars.invite_valid_email );
+					}
+				}
+			} );
+
 			$( document ).on( 'keyup', '#bb-rl-invite-name, #bb-rl-invite-email, #bb-rl-invite-custom-subject', function () {
 				var $submitButton = $( '#bb-rl-submit-invite' );
+				var $emailField   = $( '#bb-rl-invite-email' );
+				var emailValue    = $emailField.val().trim();
+				var emailRegex    = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+
 				if (
 					'' !== $( '#bb-rl-invite-name' ).val().trim() &&
-					'' !== $( '#bb-rl-invite-email' ).val().trim() &&
+					'' !== emailValue &&
+					emailRegex.test( emailValue ) &&
 					'' !== $( '#bb-rl-invite-custom-subject' ).val().trim()
 				) {
 					$submitButton.prop( 'disabled', false );
