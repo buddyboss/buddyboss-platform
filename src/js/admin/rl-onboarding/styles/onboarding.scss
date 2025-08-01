@@ -1508,6 +1508,13 @@ body.bb-rl-fullscreen-mode {
     }
 }
 
+@media screen and (max-width: 640px) {
+    .bb-rl-splash-content-product-features {
+        flex-direction: column;
+        gap: 8px;
+    }
+}
+
 // ==========================================================================
 // Dynamic Visual Options Styling
 // ==========================================================================
