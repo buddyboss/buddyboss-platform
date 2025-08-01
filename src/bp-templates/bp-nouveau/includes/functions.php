@@ -1128,7 +1128,12 @@ function bp_nouveau_get_user_feedback( $feedback_id = '' ) {
 				'type'    => 'info',
 				'message' => __( 'No blocked members found.', 'buddyboss' ),
 			),
-	) );
+			'group-request-join-member-type'    => array(
+				'type'    => 'info',
+				'message' => __( 'Click the <strong>"Join Group"</strong> button to access the group.', 'buddyboss' ),
+			),
+		)
+	);
 
 	if ( ! isset( $feedback_messages[ $feedback_id ] ) ) {
 		return false;
