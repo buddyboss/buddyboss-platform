@@ -135,6 +135,16 @@ class BP_Email_Recipient {
 			$this->name = $name;
 		}
 
+		if ( ! $this->avatar ) {
+			$this->avatar = bp_core_fetch_avatar(
+				array(
+					'object'  => 'user',
+					'item_id' => $this->user_object ? $this->user_object->ID : '',
+					'html'    => false,
+				)
+			);
+		}
+
 		/**
 		 * Fires inside __construct() method for BP_Email_Recipient class.
 		 *
