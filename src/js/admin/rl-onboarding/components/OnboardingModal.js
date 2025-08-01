@@ -7,6 +7,7 @@ export const OnboardingModal = ({ isOpen, onClose, onContinue, onSkip, onSaveSte
     const [currentStepIndex, setCurrentStepIndex] = useState(0);
     const [stepData, setStepData] = useState({});
     const [isProcessing, setIsProcessing] = useState(false);
+    const [isSaving, setIsSaving] = useState(false);
 
     // Get steps from window.bbRlOnboarding
     const steps = window.bbRlOnboarding?.steps || [];
@@ -129,6 +130,8 @@ export const OnboardingModal = ({ isOpen, onClose, onContinue, onSkip, onSaveSte
             return true;
         }
 
+        setIsSaving(true);
+
         try {
             const response = await fetch(window.bbRlOnboarding?.ajaxUrl || window.ajaxurl, {
                 method: 'POST',
@@ -162,6 +165,8 @@ export const OnboardingModal = ({ isOpen, onClose, onContinue, onSkip, onSaveSte
         } catch (error) {
             console.error('Error saving step progress:', error);
             return false;
+        } finally {
+            setIsSaving(false);
         }
     };
 
@@ -170,6 +175,9 @@ export const OnboardingModal = ({ isOpen, onClose, onContinue, onSkip, onSaveSte
         if (currentStep.skip_progress) {
             return true;
         }
+        
+        setIsSaving(true);
+        
         try {
             // Debug the request parameters
             const ajaxUrl = window.bbRlOnboarding?.ajaxUrl || window.ajaxurl;
@@ -240,6 +248,8 @@ export const OnboardingModal = ({ isOpen, onClose, onContinue, onSkip, onSaveSte
             console.error('Error saving preferences:', error);
             console.error('Error details:', error.message);
             return false;
+        } finally {
+            setIsSaving(false);
         }
     };
 
@@ -306,6 +316,7 @@ export const OnboardingModal = ({ isOpen, onClose, onContinue, onSkip, onSaveSte
 
     const handleComplete = async (finalData = {}) => {
         setIsProcessing(true);
+        setIsSaving(true);
 
         try {
             // Collect all step data for final settings
@@ -354,6 +365,7 @@ export const OnboardingModal = ({ isOpen, onClose, onContinue, onSkip, onSaveSte
             console.error('Error completing onboarding:', error);
         } finally {
             setIsProcessing(false);
+            setIsSaving(false);
         }
     };
 
@@ -448,7 +460,7 @@ export const OnboardingModal = ({ isOpen, onClose, onContinue, onSkip, onSaveSte
     // Special handling for splash screen only (modal popup)
     if (currentStep.component === 'SplashScreen') {
         return (
-            <div className="bb-rl-onboarding-overlay">
+            <div className={`bb-rl-onboarding-overlay ${isProcessing || isSaving ? 'bb-rl-loading' : ''}`}>
                 <div className="bb-rl-onboarding-modal bb-rl-special-step">
                     <div className="bb-rl-modal-header">
                         <div className="bb-rl-modal-header-content">
@@ -479,7 +491,7 @@ export const OnboardingModal = ({ isOpen, onClose, onContinue, onSkip, onSaveSte
 
     // Full screen layout for all step-based components (including FinishScreen)
     return (
-        <div className="bb-rl-onboarding-overlay bb-rl-fullscreen">
+        <div className={`bb-rl-onboarding-overlay bb-rl-fullscreen ${isProcessing || isSaving ? 'bb-rl-loading' : ''}`}>
             <div className="bb-rl-onboarding-modal bb-rl-fullscreen-modal">
                 <div className="bb-rl-fullscreen-content">
                     {renderCurrentStep()}
