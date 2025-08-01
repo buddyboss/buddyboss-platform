@@ -412,7 +412,7 @@ body.bb-rl-fullscreen-mode {
 
 .bb-rl-left-panel-content {
     padding: 32px;
-    max-height: calc(100vh - 70px);
+    max-height: calc(100vh - 153px);
     overflow-y: auto;
     display: flex;
     flex-direction: column;
@@ -462,9 +462,13 @@ body.bb-rl-fullscreen-mode {
 .bb-rl-step-navigation {
     display: flex;
     align-items: center;
-    padding: 24px 32px 0;
+    padding: 20px 24px;
     border-top: 1px solid $border-color;
-    margin: auto -32px 0;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 540px;
+    background-color: #fff;
 
     .bb-rl-nav-button {
         display: flex;
@@ -4063,7 +4067,7 @@ body.bb-rl-fullscreen-mode {
     }
 
     .bb-rl-step-navigation {
-        margin: auto -22px 0;
+        width: 430px;
     }
 
     .bb-rl-right-panel {
