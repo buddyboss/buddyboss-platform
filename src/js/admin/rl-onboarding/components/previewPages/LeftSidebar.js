@@ -77,7 +77,7 @@ export const LeftSidebar = ({ sideMenuItems = [], customLinks = [] }) => {
                 </button>
             </div>
 
-            <div className="bb-rl-preview-nav-section">
+            <div className={`bb-rl-preview-nav-section ${bbRlOnboarding.stepOptions.pages.bb_rl_enabled_pages.options?.courses == undefined ? 'bb-rl-nav-hidden' : ''}`}>
                 <h4 className="bb-rl-preview-nav-section-title">My Courses</h4>
                 <ul className="bb-rl-preview-course-list">
                     <li className="bb-rl-preview-course-item">

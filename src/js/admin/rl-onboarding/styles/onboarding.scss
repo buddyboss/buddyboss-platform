@@ -2435,6 +2435,10 @@ body.bb-rl-fullscreen-mode {
         padding-bottom: 0;
     }
 
+    &.bb-rl-nav-hidden {
+        display: none;
+    }
+
     .bb-rl-preview-nav-section-title {
         font-size: 13px;
         font-weight: 600;
