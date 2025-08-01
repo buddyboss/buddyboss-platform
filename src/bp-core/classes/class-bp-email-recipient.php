@@ -139,7 +139,7 @@ class BP_Email_Recipient {
 			$this->avatar = bp_core_fetch_avatar(
 				array(
 					'object'  => 'user',
-					'item_id' => $this->user_object ? $this->user_object->ID : 0,
+					'item_id' => $this->user_object ? $this->user_object->ID : '',
 					'html'    => false,
 				)
 			);
