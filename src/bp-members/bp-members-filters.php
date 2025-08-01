@@ -31,8 +31,6 @@ add_action( 'bb_assign_default_member_type_to_activate_user_on_admin', 'bb_set_d
 add_action( 'update_option_bp-display-name-format', 'bb_member_remove_default_png_avatar_on_update_display_name', 10, 3 );
 add_action( 'deleted_user', 'bb_member_remove_default_png_avatar_on_deleted_user' );
 
-add_action( 'bp_core_signup_user', 'bb_regenerate_default_avatar', 11, 1 );
-
 // Exclude account related notifications.
 add_filter( 'bp_notifications_get_where_conditions', 'bb_members_hide_account_settings_notifications', 10, 2 );
 
@@ -1024,25 +1022,4 @@ function bb_member_remove_default_png_avatar_on_deleted_user( $id ) {
  */
 function bb_profile_card_template() {
 	bp_get_template_part( 'members/profile-card' );
-}
-
-/**
- * Regenerate the default avatar for the user.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param int $user_id ID of the user.
- */
-function bb_regenerate_default_avatar( $user_id ) {
-	$default_profile_avatar_type = bb_get_default_profile_avatar_type();
-	if ( 'display-name' === $default_profile_avatar_type ) {
-		bb_delete_default_user_png_avatar( array( $user_id ) );
-		bb_get_default_png_avatar(
-			array(
-				'size'    => 'thumb',
-				'item_id' => $user_id,
-				'object'  => 'user',
-			)
-		);
-	}
 }
