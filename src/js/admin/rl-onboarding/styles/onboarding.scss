@@ -4100,20 +4100,67 @@ body.bb-rl-fullscreen-mode {
 
 @media (max-width: 1620px) {
 
+    .bb-rl-preview-pages:has(.bb-rl-preview-split-view) {
+        width: 1245px;
+    }
+
+    .bb-rl-preview-split-view .bb-rl-preview-split-view-left,
+    .bb-rl-preview-split-view .bb-rl-preview-split-view-right {
+
+        &>[class*=bb-rl-preview] {
+            min-width: 1245px;
+        }
+    }
+
     .bb-rl-right-panel {
-        overflow: auto;
-        align-items: flex-start;
+        position: relative;
+        width: 100%;
+        height: 100vh;
     }
 
     .bb-rl-preview-pages {
-        min-width: 1135px;
+        transform: scale(0.8) translateX(-62%);
+        transform-origin: top;
+        position: absolute;
+        left: 50%;
+        top: 50px;
+        width: 1245px;
     }
-    
+}
+
+@media (max-width: 1500px) {
+
+    .bb-rl-preview-pages {
+        transform: scale(0.7) translateX(-71.5%);
+    }
+}
+
+@media (max-width: 1350px) {
+
+    .bb-rl-preview-pages {
+        transform: scale(0.58) translateX(-86.3%);
+    }
+
+    .bb-rl-preview-slider {
+        margin-top: 20px;
+    }
 }
 
 @media (max-width: 1200px) {
+
+    .bb-rl-preview-pages {
+        transform: scale(0.45) translateX(-111.3%);
+    }
+
+    .bb-rl-preview-slider {
+        margin-top: 0;
+    }
+}
+
+@media (max-width: 1023px) {
     .bb-rl-right-panel {
         display: none;
+
     }
 
     .bb-rl-left-panel {
