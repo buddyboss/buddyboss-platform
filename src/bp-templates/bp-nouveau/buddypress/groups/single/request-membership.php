@@ -97,8 +97,6 @@ if ( groups_check_user_has_invite( $loggedin_user_id, $current_group_id ) ) {
 			</form><!-- #request-membership-form -->
 			<?php
 		}
-		?>
-		<?php
 	} else {
 		$parent_group      = groups_get_group( $parent_group_id );
 		$parent_group_name = sprintf(
