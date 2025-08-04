@@ -2872,6 +2872,10 @@ body.bb-rl-fullscreen-mode {
     display: flex;
     flex-direction: column;
     gap: 24px;
+
+    &:empty {
+        display: none;
+    }
 }
 
 // Widget Base Styles
