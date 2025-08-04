@@ -246,7 +246,6 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 					'bb_rl_custom_links' => array(
 						'type'    => 'draggable_links',
 						'label'   => __( 'Link', 'buddyboss' ),
-						// TODO: Get these links from the database.
 						'options' => array(),
 					),
 				),
@@ -770,14 +769,6 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 					'courses'      => in_array( 'courses', $selected_pages, true ),
 				);
 			}
-
-			// Preserve other page-related preferences (if any).
-			if ( isset( $pages_settings['create_essential_pages'] ) || isset( $pages_settings['homepage_layout'] ) ) {
-				$sanitized['pages'] = array(
-					'create_essential_pages' => ! empty( $pages_settings['create_essential_pages'] ),
-					'homepage_layout'        => isset( $pages_settings['homepage_layout'] ) ? sanitize_text_field( wp_unslash( $pages_settings['homepage_layout'] ) ) : 'activity',
-				);
-			}
 		}
 
 		// Sanitize side menus settings.
@@ -978,50 +969,6 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 					update_option( 'wp_page_for_privacy_policy', $page_id );
 				}
 			}
-		}
-	}
-
-	/**
-	 * Setup default widgets for the community.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 * @return void
-	 */
-	private function setup_default_widgets() {
-		// Get current widget options.
-		$sidebar_widgets = get_option( 'sidebars_widgets', array() );
-
-		// Define default widgets for primary sidebar.
-		$default_widgets = array(
-			'bb_recent_activity' => array(
-				'title' => __( 'Recent Activity', 'buddyboss' ),
-				'count' => 5,
-			),
-			'bb_member_list'     => array(
-				'title' => __( 'Community Members', 'buddyboss' ),
-				'count' => 8,
-			),
-			'bb_groups_widget'   => array(
-				'title' => __( 'Active Groups', 'buddyboss' ),
-				'count' => 5,
-			),
-		);
-
-		// Add widgets to primary sidebar if it exists.
-		if ( isset( $sidebar_widgets['sidebar-1'] ) ) {
-			foreach ( $default_widgets as $widget_id => $widget_config ) {
-				// Add widget instance.
-				$widget_instances = get_option( 'widget_' . $widget_id, array() );
-				$instance_id      = count( $widget_instances ) + 1;
-
-				$widget_instances[ $instance_id ] = $widget_config;
-				update_option( 'widget_' . $widget_id, $widget_instances );
-
-				// Add to sidebar.
-				$sidebar_widgets['sidebar-1'][] = $widget_id . '-' . $instance_id;
-			}
-
-			update_option( 'sidebars_widgets', $sidebar_widgets );
 		}
 	}
 
