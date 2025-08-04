@@ -73,7 +73,6 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 			'woocommerce'         => array(
 				'name'               => 'WooCommerce',
 				'file'               => 'woocommerce/woocommerce.php',
-				'post_type_func'     => 'wc_get_order_post_type',
 				'post_type_fallback' => 'shop_order',
 				'meta_key'           => '_order_total',
 				'status_func'        => 'wc_get_order_statuses',
@@ -92,7 +91,6 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 			'tutor_lms'           => array(
 				'name'               => 'Tutor LMS',
 				'file'               => 'tutor/tutor.php',
-				'post_type_func'     => 'wc_get_order_post_type',
 				'post_type_fallback' => 'shop_order',
 				'meta_key'           => '_order_total',
 				'status'             => array( 'wc-completed', 'wc-processing' ),
@@ -476,44 +474,61 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 			}
 
 			try {
-				// Get dynamic configuration.
-				$config    = self::$supported_plugins['woocommerce'];
-				$post_type = self::get_dynamic_post_type( $config );
+				// Check if WooCommerce is using HPOS (High Performance Order Storage).
+				$using_hpos = false;
+				if ( class_exists( 'Automattic\WooCommerce\Utilities\OrderUtil' ) && 
+				     method_exists( 'Automattic\WooCommerce\Utilities\OrderUtil', 'custom_orders_table_usage_is_enabled' ) ) {
+					$using_hpos = \Automattic\WooCommerce\Utilities\OrderUtil::custom_orders_table_usage_is_enabled();
+				}
 
-				// Get dynamic order statuses if available.
+				// Get order statuses.
 				$order_statuses = array( 'wc-completed', 'wc-processing' );
+				$config = self::$supported_plugins['woocommerce'];
 				if ( isset( $config['status_func'] ) && function_exists( $config['status_func'] ) ) {
 					$all_statuses = call_user_func( $config['status_func'] );
 					// Filter to completed and processing only.
 					$order_statuses = array_intersect( array( 'wc-completed', 'wc-processing' ), array_keys( $all_statuses ) );
 				}
 
-				$placeholders = array_fill( 0, count( $order_statuses ), '%s' );
+				if ( $using_hpos ) {
+					// Use HPOS tables directly for better performance.
+					$order_table      = self::$wpdb->prefix . 'wc_orders';
+					$order_meta_table = self::$wpdb->prefix . 'wc_order_meta';
+					
+					// Check if HPOS tables exist.
+					$table_exists = self::$wpdb->get_var( self::$wpdb->prepare( 'SHOW TABLES LIKE %s', $order_table ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+					if ( ! $table_exists ) {
+						// Fallback to legacy method if tables don't exist.
+						return self::get_woocommerce_legacy_metrics( $order_statuses );
+					}
 
-				// For large datasets, use direct SQL query for better performance.
-				$results = self::$wpdb->get_row( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-					self::$wpdb->prepare(
-						'
-					SELECT COUNT(DISTINCT p.ID) as order_count,
-					       SUM(CAST(pm.meta_value AS DECIMAL(10,2))) as total_revenue
-					FROM ' . self::$wpdb->posts . ' p
-					INNER JOIN ' . self::$wpdb->postmeta . ' pm ON p.ID = pm.post_id
-					LEFT JOIN ' . self::$wpdb->posts . " p2 ON p.ID = p2.post_parent AND p2.post_type = 'shop_order_refund'
-					WHERE p.post_type = %s
-					AND p.post_status IN (" . implode( ',', $placeholders ) . ")
-					AND pm.meta_key = '_order_total'
-					AND pm.meta_value > 0
-					AND p2.ID IS NULL
-				",
-						array_merge( array( $post_type ), $order_statuses )
-					)
-				);
+					// HPOS stores statuses WITH the 'wc-' prefix, so we use them as-is.
+					$status_placeholders = implode( ',', array_fill( 0, count( $order_statuses ), '%s' ) );
 
-				if ( $results ) {
-					return array(
-						'order_count'   => (int) $results->order_count,
-						'total_revenue' => (float) $results->total_revenue,
+					// Build the query with proper placeholders.
+					$query = 'SELECT COUNT(DISTINCT o.id) as order_count,
+							 SUM(o.total_amount) as total_revenue
+							 FROM ' . esc_sql( $order_table ) . ' o
+							 WHERE o.type = %s
+							 AND o.status IN (' . $status_placeholders . ')
+							 AND o.total_amount > 0';
+
+					// Prepare the query arguments.
+					$query_args = array_merge( array( 'shop_order' ), $order_statuses );
+
+					$results = self::$wpdb->get_row( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
+						self::$wpdb->prepare( $query, $query_args )
 					);
+
+					if ( $results ) {
+						return array(
+							'order_count'   => (int) $results->order_count,
+							'total_revenue' => (float) $results->total_revenue,
+						);
+					}
+				} else {
+					// Use legacy post-based storage.
+					return self::get_woocommerce_legacy_metrics( $order_statuses );
 				}
 
 				return false;
@@ -521,6 +536,63 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 				// Silently return false on error.
 				return false;
 			}
+		}
+
+		/**
+		 * Get WooCommerce metrics using legacy post storage.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array $order_statuses Order statuses to query.
+		 * @return array|false
+		 */
+		private static function get_woocommerce_legacy_metrics( $order_statuses ) {
+			$placeholders = array_fill( 0, count( $order_statuses ), '%s' );
+
+			// Query both shop_order and shop_order_placehold post types.
+			$post_types = array( 'shop_order' );
+
+			// Check if placeholder post type exists (used during HPOS migration).
+			if ( post_type_exists( 'shop_order_placehold' ) ) {
+				$post_types[] = 'shop_order_placehold';
+			}
+
+			$type_placeholders = implode( ',', array_fill( 0, count( $post_types ), '%s' ) );
+
+			// Build query with proper placeholders.
+			$query = '
+				SELECT COUNT(DISTINCT p.ID) as order_count,
+				       SUM(CAST(pm.meta_value AS DECIMAL(10,2))) as total_revenue
+				FROM ' . self::$wpdb->posts . ' p
+				INNER JOIN ' . self::$wpdb->postmeta . ' pm ON p.ID = pm.post_id
+				LEFT JOIN ' . self::$wpdb->posts . ' p2 ON p.ID = p2.post_parent AND p2.post_type = %s
+				WHERE p.post_type IN (' . $type_placeholders . ')
+				AND p.post_status IN (' . implode( ',', $placeholders ) . ')
+				AND pm.meta_key = %s
+				AND pm.meta_value > 0
+				AND p2.ID IS NULL
+			';
+
+			// Prepare query arguments.
+			$query_args = array_merge(
+				array( 'shop_order_refund' ),
+				$post_types,
+				$order_statuses,
+				array( '_order_total' )
+			);
+
+			$results = self::$wpdb->get_row( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
+				self::$wpdb->prepare( $query, $query_args )
+			);
+
+			if ( $results ) {
+				return array(
+					'order_count'   => (int) $results->order_count,
+					'total_revenue' => (float) $results->total_revenue,
+				);
+			}
+
+			return false;
 		}
 
 		/**
@@ -543,9 +615,7 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 				$statuses  = $config['status'];
 
 				// LearnDash uses custom post type for transactions.
-				$results = self::$wpdb->get_row( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-					self::$wpdb->prepare(
-						'
+				$query = '
 					SELECT COUNT(*) as order_count,
 					       SUM(CAST(pm.meta_value AS DECIMAL(10,2))) as total_revenue
 					FROM ' . self::$wpdb->posts . ' p
@@ -554,11 +624,10 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 					AND p.post_status = %s
 					AND pm.meta_key = %s
 					AND pm.meta_value > 0
-				',
-						$post_type,
-						$statuses[0],
-						$meta_key
-					)
+				';
+
+				$results = self::$wpdb->get_row( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
+					self::$wpdb->prepare( $query, $post_type, $statuses[0], $meta_key )
 				);
 
 				if ( $results ) {
@@ -599,10 +668,10 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 				// Use direct query for efficiency.
 				$results = self::$wpdb->get_row( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 					self::$wpdb->prepare(
-						"SELECT COUNT(*) as order_count, SUM(amount) as total_revenue
+						'SELECT COUNT(*) as order_count, SUM(amount) as total_revenue
 						FROM %i
 						WHERE status = %s
-						AND amount > 0",
+						AND amount > 0',
 						$table,
 						'complete'
 					)
@@ -643,20 +712,21 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 				$status_placeholders = implode( ',', array_fill( 0, count( $statuses ), '%s' ) );
 
 				// LifterLMS stores order data in postmeta.
-				$results = self::$wpdb->get_row( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-					self::$wpdb->prepare(
-						'
+				$query = '
 					SELECT COUNT(DISTINCT p.ID) as order_count,
 					       SUM(CAST(pm.meta_value AS DECIMAL(10,2))) as total_revenue
 					FROM ' . self::$wpdb->posts . ' p
-					INNER JOIN ' . self::$wpdb->postmeta . " pm ON p.ID = pm.post_id
+					INNER JOIN ' . self::$wpdb->postmeta . ' pm ON p.ID = pm.post_id
 					WHERE p.post_type = %s
-					AND p.post_status IN (" . $status_placeholders . ")
+					AND p.post_status IN (' . $status_placeholders . ')
 					AND pm.meta_key = %s
 					AND pm.meta_value > 0
-				",
-						array_merge( array( $post_type ), $statuses, array( $meta_key ) )
-					)
+				';
+
+				$query_args = array_merge( array( $post_type ), $statuses, array( $meta_key ) );
+
+				$results = self::$wpdb->get_row( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
+					self::$wpdb->prepare( $query, $query_args )
 				);
 
 				if ( $results ) {
