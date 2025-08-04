@@ -156,7 +156,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 					$selected_xprofile_fields = array(
 						'word_search' => array( 0 ), // Search for whole word in field of type checkbox and radio
 						'char_search' => array( 0 ), // Search for character in field of type textbox, textarea and etc
-						'date_search' => array( 0 ), // Search for date fields using smart date search
+						'date_search' => array(), // Search for date fields using smart date search
 					);
 
 					$selected_xprofile_repeater_fields = array();
