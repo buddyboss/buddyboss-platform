@@ -251,76 +251,58 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 				),
 				'widgets'         => array(
 					'bb_rl_activity_sidebars'       => array(
-						'type'    => 'draggable',
+						'type'    => 'checkbox_group',
 						'label'   => __( 'Activity Feed', 'buddyboss' ),
 						'options' => array(
-							array(
-								'id'      => 'complete_profile',
+							'complete_profile' => array(
 								'label'   => __( 'Complete Profile', 'buddyboss' ),
-								'enabled' => true,
-								'order'   => 1,
+								'default' => true,
 							),
-							array(
-								'id'      => 'latest_updates',
+							'latest_updates' => array(
 								'label'   => __( 'Latest Updates', 'buddyboss' ),
-								'enabled' => true,
-								'order'   => 2,
+								'default' => true,
 							),
-							array(
-								'id'      => 'recent_blog_posts',
+							'recent_blog_posts' => array(
 								'label'   => __( 'Recent Blog Posts', 'buddyboss' ),
-								'enabled' => true,
-								'order'   => 3,
+								'default' => true,
 							),
-							array(
-								'id'      => 'active_members',
+							'active_members' => array(
 								'label'   => __( 'Active Members', 'buddyboss' ),
-								'enabled' => true,
-								'order'   => 4,
+								'default' => true,
 							),
 
 						),
 					),
 					'bb_rl_member_profile_sidebars' => array(
-						'type'    => 'draggable',
+						'type'    => 'checkbox_group',
 						'label'   => __( 'Member Profile', 'buddyboss' ),
 						'options' => array(
-							array(
-								'id'      => 'complete_profile',
+							'complete_profile' => array(
 								'label'   => __( 'Complete Profile', 'buddyboss' ),
-								'enabled' => true,
-								'order'   => 1,
+								'default' => true,
 							),
-							array(
-								'id'      => 'connections',
+							'connections' => array(
 								'label'   => __( 'Connections', 'buddyboss' ),
-								'enabled' => true,
-								'order'   => 2,
+								'default' => true,
 							),
-							array(
-								'id'      => 'my_network',
+							'my_network' => array(
 								'label'   => __( 'Network (Follow, Followers)', 'buddyboss' ),
-								'enabled' => true,
-								'order'   => 3,
+								'default' => true,
 							),
 
 						),
 					),
 					'bb_rl_groups_sidebars'         => array(
-						'type'    => 'draggable',
+						'type'    => 'checkbox_group',
 						'label'   => __( 'Group', 'buddyboss' ),
 						'options' => array(
-							array(
-								'id'      => 'about_group',
+							'about_group' => array(
 								'label'   => __( 'About Group', 'buddyboss' ),
-								'enabled' => true,
-								'order'   => 1,
+								'default' => true,
 							),
-							array(
-								'id'      => 'group_members',
+							'group_members' => array(
 								'label'   => __( 'Group Members', 'buddyboss' ),
-								'enabled' => true,
-								'order'   => 2,
+								'default' => true,
 							),
 						),
 					),

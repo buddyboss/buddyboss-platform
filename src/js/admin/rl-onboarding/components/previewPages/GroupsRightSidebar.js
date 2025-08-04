@@ -1,38 +1,21 @@
 export const GroupsRightSidebar = ({ formData = {} }) => {
-    const { bb_rl_groups_sidebars = [] } = formData;
+    const { bb_rl_groups_sidebars } = formData;
     
-    // Helper function to check if a widget is enabled
-    const isWidgetEnabled = (widgetId) => {
+    // Helper function to check if a widget should be shown
+    const shouldShowWidget = (widgetId) => {
         // If no configuration exists, show all widgets by default
-        if (!bb_rl_groups_sidebars || bb_rl_groups_sidebars.length === 0) {
+        if ( typeof bb_rl_groups_sidebars === 'undefined' ) {
             return true;
         }
         
-        const widget = bb_rl_groups_sidebars.find(item => item.id === widgetId);
-        return widget ? widget.enabled : false;
+        // Show widget if it's in the array
+        return bb_rl_groups_sidebars.includes(widgetId);
     };
 
-    // Helper function to get widget order
-    const getWidgetOrder = (widgetId) => {
-        // If no configuration exists, use default order
-        if (!bb_rl_groups_sidebars || bb_rl_groups_sidebars.length === 0) {
-            const defaultOrders = {
-                'about_group': 1,
-                'group_members': 2
-            };
-            return defaultOrders[widgetId] || 999;
-        }
-        
-        const widget = bb_rl_groups_sidebars.find(item => item.id === widgetId);
-        return widget ? widget.order : 999; // Default high order for widgets not in config
-    };
-
-    // Define all widgets with their configurations
+    // Define all widgets
     const widgets = [
         {
             id: 'about_group',
-            order: getWidgetOrder('about_group'),
-            enabled: isWidgetEnabled('about_group'),
             component: (
                 <div className="bb-rl-preview-widget" key="about_group">
                     <div className="bb-rl-preview-widget-header">
@@ -99,8 +82,6 @@ export const GroupsRightSidebar = ({ formData = {} }) => {
         },
         {
             id: 'group_members',
-            order: getWidgetOrder('group_members'),
-            enabled: isWidgetEnabled('group_members'),
             component: (
                 <div className="bb-rl-preview-widget" key="group_members">
                     <div className="bb-rl-preview-widget-header">
@@ -173,14 +154,12 @@ export const GroupsRightSidebar = ({ formData = {} }) => {
         }
     ];
 
-    // Filter enabled widgets and sort by order
-    const enabledWidgets = widgets
-        .filter(widget => widget.enabled)
-        .sort((a, b) => a.order - b.order);
+    // Filter widgets based on configuration
+    const visibleWidgets = widgets.filter(widget => shouldShowWidget(widget.id));
 
     return (
         <div className="bb-rl-preview-right-sidebar">
-            {enabledWidgets.map(widget => widget.component)}
+            {visibleWidgets.map(widget => widget.component)}
         </div>
     );
 };

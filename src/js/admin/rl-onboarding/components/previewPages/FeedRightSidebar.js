@@ -1,40 +1,21 @@
 export const FeedRightSidebar = ({ formData = {} }) => {
-    const { bb_rl_activity_sidebars = [] } = formData;
+    const { bb_rl_activity_sidebars } = formData;
     
-    // Helper function to check if a widget is enabled
-    const isWidgetEnabled = (widgetId) => {
+    // Helper function to check if a widget should be shown
+    const shouldShowWidget = (widgetId) => {
         // If no configuration exists, show all widgets by default
-        if (!bb_rl_activity_sidebars || bb_rl_activity_sidebars.length === 0) {
+        if ( typeof bb_rl_activity_sidebars === 'undefined' ) {
             return true;
         }
         
-        const widget = bb_rl_activity_sidebars.find(item => item.id === widgetId);
-        return widget ? widget.enabled : false;
+        // Show widget if it's in the array
+        return bb_rl_activity_sidebars.includes(widgetId);
     };
 
-    // Helper function to get widget order
-    const getWidgetOrder = (widgetId) => {
-        // If no configuration exists, use default order
-        if (!bb_rl_activity_sidebars || bb_rl_activity_sidebars.length === 0) {
-            const defaultOrders = {
-                'complete_profile': 1,
-                'latest_updates': 2, 
-                'active_members': 3,
-                'recent_blog_posts': 4
-            };
-            return defaultOrders[widgetId] || 999;
-        }
-        
-        const widget = bb_rl_activity_sidebars.find(item => item.id === widgetId);
-        return widget ? widget.order : 999; // Default high order for widgets not in config
-    };
-
-    // Define all widgets with their configurations
+    // Define all widgets
     const widgets = [
         {
             id: 'complete_profile',
-            order: getWidgetOrder('complete_profile'),
-            enabled: isWidgetEnabled('complete_profile'),
             component: (
                 <div className="bb-rl-preview-widget" key="complete_profile">
                     <div className="bb-rl-preview-widget-header">
@@ -78,8 +59,6 @@ export const FeedRightSidebar = ({ formData = {} }) => {
         },
         {
             id: 'latest_updates',
-            order: getWidgetOrder('latest_updates'),
-            enabled: isWidgetEnabled('latest_updates'),
             component: (
                 <div className="bb-rl-preview-widget" key="latest_updates">
                     <div className="bb-rl-preview-widget-header">
@@ -131,8 +110,6 @@ export const FeedRightSidebar = ({ formData = {} }) => {
         },
         {
             id: 'active_members',
-            order: getWidgetOrder('active_members'),
-            enabled: isWidgetEnabled('active_members'),
             component: (
                 <div className="bb-rl-preview-widget" key="active_members">
                     <div className="bb-rl-preview-widget-header">
@@ -172,8 +149,6 @@ export const FeedRightSidebar = ({ formData = {} }) => {
         },
         {
             id: 'recent_blog_posts',
-            order: getWidgetOrder('recent_blog_posts'),
-            enabled: isWidgetEnabled('recent_blog_posts'),
             component: (
                 <div className="bb-rl-preview-widget" key="recent_blog_posts">
                     <div className="bb-rl-preview-widget-header">
@@ -206,14 +181,12 @@ export const FeedRightSidebar = ({ formData = {} }) => {
         }
     ];
 
-    // Filter enabled widgets and sort by order
-    const enabledWidgets = widgets
-        .filter(widget => widget.enabled)
-        .sort((a, b) => a.order - b.order);
+    // Filter widgets based on configuration
+    const visibleWidgets = widgets.filter(widget => shouldShowWidget(widget.id));
 
     return (
         <div className="bb-rl-preview-right-sidebar">
-            {enabledWidgets.map(widget => widget.component)}
+            {visibleWidgets.map(widget => widget.component)}
         </div>
     );
 };
