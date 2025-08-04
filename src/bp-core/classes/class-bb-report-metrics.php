@@ -53,12 +53,14 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 		 */
 		private static $supported_plugins = array(
 			'learndash'           => array(
-				'name'         => 'LearnDash LMS',
-				'file'         => 'sfwd-lms/sfwd_lms.php',
-				'post_type'    => 'sfwd-transactions',
-				'meta_key'     => 'order_total',
-				'status'       => array( 'publish' ),
-				'currency_key' => 'learndash_settings_payments',
+				'name'               => 'LearnDash LMS',
+				'file'               => 'sfwd-lms/sfwd_lms.php',
+				'post_type_func'     => 'get_learndash_post_type',
+				'post_type_const'    => 'LEARNDASH_TRANSACTION_CPT',
+				'post_type_fallback' => 'sfwd-transactions',
+				'meta_key'           => 'order_total',
+				'status'             => array( 'publish' ),
+				'currency_key'       => 'learndash_settings_payments',
 			),
 			'memberpress'         => array(
 				'name'       => 'MemberPress',
@@ -69,29 +71,33 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 				'currency'   => 'USD',
 			),
 			'woocommerce'         => array(
-				'name'          => 'WooCommerce',
-				'file'          => 'woocommerce/woocommerce.php',
-				'post_type'     => 'shop_order',
-				'meta_key'      => '_order_total',
-				'status'        => array( 'wc-completed', 'wc-processing' ),
-				'currency_func' => 'get_woocommerce_currency',
+				'name'               => 'WooCommerce',
+				'file'               => 'woocommerce/woocommerce.php',
+				'post_type_func'     => 'wc_get_order_post_type',
+				'post_type_fallback' => 'shop_order',
+				'meta_key'           => '_order_total',
+				'status_func'        => 'wc_get_order_statuses',
+				'status'             => array( 'wc-completed', 'wc-processing' ),
+				'currency_func'      => 'get_woocommerce_currency',
 			),
 			'lifterlms'           => array(
-				'name'         => 'LifterLMS',
-				'file'         => 'lifterlms/lifterlms.php',
-				'post_type'    => 'llms_order',
-				'meta_key'     => '_llms_total',
-				'status'       => array( 'llms-completed', 'llms-active' ),
-				'currency_key' => 'lifterlms_currency',
+				'name'               => 'LifterLMS',
+				'file'               => 'lifterlms/lifterlms.php',
+				'post_type_getter'   => array( 'LLMS_Post_Types', 'get_order_post_type' ),
+				'post_type_fallback' => 'llms_order',
+				'meta_key'           => '_llms_total',
+				'status'             => array( 'llms-completed', 'llms-active' ),
+				'currency_key'       => 'lifterlms_currency',
 			),
 			'tutor_lms'           => array(
-				'name'          => 'Tutor LMS',
-				'file'          => 'tutor/tutor.php',
-				'post_type'     => 'shop_order',
-				'meta_key'      => '_order_total',
-				'status'        => array( 'wc-completed', 'wc-processing' ),
-				'currency_func' => 'get_woocommerce_currency',
-				'custom_where'  => 'tutor_order',
+				'name'               => 'Tutor LMS',
+				'file'               => 'tutor/tutor.php',
+				'post_type_func'     => 'wc_get_order_post_type',
+				'post_type_fallback' => 'shop_order',
+				'meta_key'           => '_order_total',
+				'status'             => array( 'wc-completed', 'wc-processing' ),
+				'currency_func'      => 'get_woocommerce_currency',
+				'custom_where'       => 'tutor_order',
 			),
 			'pmpro'               => array(
 				'name'         => 'Paid Memberships Pro',
@@ -110,13 +116,14 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 				'currency_func' => 'affwp_get_currency',
 			),
 			'the_events_calendar' => array(
-				'name'            => 'The Events Calendar',
-				'file'            => 'the-events-calendar/the-events-calendar.php',
-				'post_type'       => 'tribe_tpp_orders',
-				'meta_key'        => 'mc_gross',
-				'status'          => array( 'publish' ),
-				'currency_func'   => 'tribe_get_option',
-				'currency_option' => 'tribe_currency_code',
+				'name'               => 'The Events Calendar',
+				'file'               => 'the-events-calendar/the-events-calendar.php',
+				'post_type_const'    => 'Tribe__Tickets__Commerce__PayPal__Orders::ORDER_POST_TYPE',
+				'post_type_fallback' => 'tribe_tpp_orders',
+				'meta_key'           => 'mc_gross',
+				'status'             => array( 'publish' ),
+				'currency_func'      => 'tribe_get_option',
+				'currency_option'    => 'tribe_currency_code',
 			),
 		);
 
@@ -168,7 +175,15 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 		public static function collect( $force_refresh = false ) {
 			self::init_wpdb();
 
-			// Return cached data if available and not forcing refresh.
+			// Try to get from WordPress cache first.
+			$cache_key   = 'bb_report_metrics_data';
+			$cached_data = wp_cache_get( $cache_key, 'bb_metrics' );
+
+			if ( ! $force_refresh && false !== $cached_data ) {
+				return $cached_data;
+			}
+
+			// Return memory cache if available and not forcing refresh.
 			if ( ! $force_refresh && null !== self::$metrics_cache ) {
 				return self::$metrics_cache;
 			}
@@ -186,6 +201,9 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 
 			// Cache the results.
 			self::$metrics_cache = $metrics;
+
+			// Cache in WordPress cache for 1 hour.
+			wp_cache_set( $cache_key, $metrics, 'bb_metrics', HOUR_IN_SECONDS );
 
 			return $metrics;
 		}
@@ -221,8 +239,11 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 				'period'        => 'all_time',
 			);
 
-			// Get report data based on plugin type.
-			if ( isset( $config['post_type'] ) ) {
+			// Try to use native plugin methods first.
+			$method_name = 'get_' . $plugin_slug . '_native_metrics';
+			if ( method_exists( __CLASS__, $method_name ) ) {
+				$data = self::$method_name();
+			} elseif ( isset( $config['post_type'] ) ) {
 				$data = self::get_post_type_metrics( $config );
 			} elseif ( isset( $config['table'] ) ) {
 				$data = self::get_table_metrics( $config );
@@ -231,11 +252,55 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 			}
 
 			if ( $data ) {
-				$metrics['num_orders']    = (int) $data->order_count;
-				$metrics['total_revenue'] = (float) $data->total_revenue;
+				$metrics['num_orders']    = (int) ( isset( $data->order_count ) ? $data->order_count : $data['order_count'] );
+				$metrics['total_revenue'] = (float) ( isset( $data->total_revenue ) ? $data->total_revenue : $data['total_revenue'] );
 			}
 
 			return $metrics;
+		}
+
+		/**
+		 * Get dynamic post type for a plugin.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array $config Plugin configuration.
+		 * @return string Post type.
+		 */
+		private static function get_dynamic_post_type( $config ) {
+			// Try function first.
+			if ( isset( $config['post_type_func'] ) && function_exists( $config['post_type_func'] ) ) {
+				$post_type = call_user_func( $config['post_type_func'] );
+				if ( ! empty( $post_type ) ) {
+					return $post_type;
+				}
+			}
+
+			// Try class method.
+			if ( isset( $config['post_type_getter'] ) && is_array( $config['post_type_getter'] ) ) {
+				if ( class_exists( $config['post_type_getter'][0] ) && method_exists( $config['post_type_getter'][0], $config['post_type_getter'][1] ) ) {
+					$post_type = call_user_func( $config['post_type_getter'] );
+					if ( ! empty( $post_type ) ) {
+						return $post_type;
+					}
+				}
+			}
+
+			// Try constant.
+			if ( isset( $config['post_type_const'] ) ) {
+				// Handle class constants.
+				if ( strpos( $config['post_type_const'], '::' ) !== false ) {
+					$parts = explode( '::', $config['post_type_const'] );
+					if ( class_exists( $parts[0] ) && defined( $config['post_type_const'] ) ) {
+						return constant( $config['post_type_const'] );
+					}
+				} elseif ( defined( $config['post_type_const'] ) ) {
+					return constant( $config['post_type_const'] );
+				}
+			}
+
+			// Fallback to static value.
+			return isset( $config['post_type_fallback'] ) ? $config['post_type_fallback'] : '';
 		}
 
 		/**
@@ -279,6 +344,12 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 		 */
 		private static function get_post_type_metrics( $config ) {
 			try {
+				// Get dynamic post type.
+				$post_type = self::get_dynamic_post_type( $config );
+				if ( empty( $post_type ) ) {
+					return false;
+				}
+
 				$status_placeholders = implode( ',', array_fill( 0, count( $config['status'] ), '%s' ) );
 
 				// Build the base query.
@@ -305,7 +376,7 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 
 				$query = self::$wpdb->prepare(
 					implode( ' ', $query_parts ),
-					array_merge( array( $config['post_type'] ), $config['status'], array( $config['meta_key'] ) )
+					array_merge( array( $post_type ), $config['status'], array( $config['meta_key'] ) )
 				);
 
 				$result = self::$wpdb->get_row( $query );
@@ -317,8 +388,7 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 
 				return false;
 			} catch ( \Exception $e ) {
-				// Log error silently and return false.
-				error_log( 'BB_Report_Metrics: Error getting post type metrics for ' . $config['post_type'] . ': ' . $e->getMessage() );
+				// Silently return false on error.
 				return false;
 			}
 		}
@@ -340,23 +410,25 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 
 				// Check if table exists.
 				$table_name   = self::$wpdb->prefix . $config['table'];
-				$table_exists = self::$wpdb->get_var( self::$wpdb->prepare( "SHOW TABLES LIKE %s", $table_name ) );
+				$table_exists = self::$wpdb->get_var( self::$wpdb->prepare( 'SHOW TABLES LIKE %s', $table_name ) );
 				if ( ! $table_exists ) {
 					return false;
 				}
 
 				$status_placeholders = implode( ',', array_fill( 0, count( $config['status'] ), '%s' ) );
 
+				// Build safe query with proper placeholders.
+				$amount_col = esc_sql( $config['amount_col'] );
 				$query = self::$wpdb->prepare(
-					"SELECT COUNT(*) as order_count, SUM(CAST({$config['amount_col']} AS DECIMAL(10,2))) as total_revenue
-					FROM " . self::$wpdb->prefix . $config['table'] . "
-					WHERE status IN ({$status_placeholders})
-					AND {$config['amount_col']} IS NOT NULL
-					AND {$config['amount_col']} > 0",
-					$config['status']
+					"SELECT COUNT(*) as order_count, SUM(CAST($amount_col AS DECIMAL(10,2))) as total_revenue
+					FROM %i
+					WHERE status IN (" . $status_placeholders . ")
+					AND $amount_col IS NOT NULL
+					AND $amount_col > 0",
+					array_merge( array( $table_name ), $config['status'] )
 				);
 
-				$result = self::$wpdb->get_row( $query );
+				$result = self::$wpdb->get_row( $query ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
 
 				// Validate result.
 				if ( $result && ( $result->order_count > 0 || $result->total_revenue > 0 ) ) {
@@ -365,8 +437,7 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 
 				return false;
 			} catch ( \Exception $e ) {
-				// Log error silently and return false.
-				error_log( 'BB_Report_Metrics: Error getting table metrics for ' . $config['table'] . ': ' . $e->getMessage() );
+				// Silently return false on error.
 				return false;
 			}
 		}
@@ -378,6 +449,7 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 		 */
 		public static function clear_cache() {
 			self::$metrics_cache = null;
+			wp_cache_delete( 'bb_report_metrics_data', 'bb_metrics' );
 		}
 
 		/**
@@ -389,6 +461,415 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 		 */
 		public static function is_cached() {
 			return null !== self::$metrics_cache;
+		}
+
+		/**
+		 * Get WooCommerce metrics using native methods.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return array|false
+		 */
+		private static function get_woocommerce_native_metrics() {
+			if ( ! function_exists( 'WC' ) ) {
+				return false;
+			}
+
+			try {
+				// Get dynamic configuration.
+				$config    = self::$supported_plugins['woocommerce'];
+				$post_type = self::get_dynamic_post_type( $config );
+
+				// Get dynamic order statuses if available.
+				$order_statuses = array( 'wc-completed', 'wc-processing' );
+				if ( isset( $config['status_func'] ) && function_exists( $config['status_func'] ) ) {
+					$all_statuses = call_user_func( $config['status_func'] );
+					// Filter to completed and processing only.
+					$order_statuses = array_intersect( array( 'wc-completed', 'wc-processing' ), array_keys( $all_statuses ) );
+				}
+
+				$placeholders = array_fill( 0, count( $order_statuses ), '%s' );
+
+				// For large datasets, use direct SQL query for better performance.
+				$results = self::$wpdb->get_row( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+					self::$wpdb->prepare(
+						'
+					SELECT COUNT(DISTINCT p.ID) as order_count,
+					       SUM(CAST(pm.meta_value AS DECIMAL(10,2))) as total_revenue
+					FROM ' . self::$wpdb->posts . ' p
+					INNER JOIN ' . self::$wpdb->postmeta . ' pm ON p.ID = pm.post_id
+					LEFT JOIN ' . self::$wpdb->posts . " p2 ON p.ID = p2.post_parent AND p2.post_type = 'shop_order_refund'
+					WHERE p.post_type = %s
+					AND p.post_status IN (" . implode( ',', $placeholders ) . ")
+					AND pm.meta_key = '_order_total'
+					AND pm.meta_value > 0
+					AND p2.ID IS NULL
+				",
+						array_merge( array( $post_type ), $order_statuses )
+					)
+				);
+
+				if ( $results ) {
+					return array(
+						'order_count'   => (int) $results->order_count,
+						'total_revenue' => (float) $results->total_revenue,
+					);
+				}
+
+				return false;
+			} catch ( Exception $e ) {
+				// Silently return false on error.
+				return false;
+			}
+		}
+
+		/**
+		 * Get LearnDash metrics using native methods.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return array|false
+		 */
+		private static function get_learndash_native_metrics() {
+			if ( ! defined( 'LEARNDASH_VERSION' ) ) {
+				return false;
+			}
+
+			try {
+				// Get dynamic configuration.
+				$config    = self::$supported_plugins['learndash'];
+				$post_type = self::get_dynamic_post_type( $config );
+				$meta_key  = $config['meta_key'];
+				$statuses  = $config['status'];
+
+				// LearnDash uses custom post type for transactions.
+				$results = self::$wpdb->get_row( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+					self::$wpdb->prepare(
+						'
+					SELECT COUNT(*) as order_count,
+					       SUM(CAST(pm.meta_value AS DECIMAL(10,2))) as total_revenue
+					FROM ' . self::$wpdb->posts . ' p
+					INNER JOIN ' . self::$wpdb->postmeta . ' pm ON p.ID = pm.post_id
+					WHERE p.post_type = %s
+					AND p.post_status = %s
+					AND pm.meta_key = %s
+					AND pm.meta_value > 0
+				',
+						$post_type,
+						$statuses[0],
+						$meta_key
+					)
+				);
+
+				if ( $results ) {
+					return array(
+						'order_count'   => (int) $results->order_count,
+						'total_revenue' => (float) $results->total_revenue,
+					);
+				}
+
+				return false;
+			} catch ( Exception $e ) {
+				// Silently return false on error.
+				return false;
+			}
+		}
+
+		/**
+		 * Get MemberPress metrics using native methods.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return array|false
+		 */
+		private static function get_memberpress_native_metrics() {
+			if ( ! defined( 'MEPR_VERSION' ) || ! class_exists( 'MeprTransaction' ) ) {
+				return false;
+			}
+
+			try {
+				$table = self::$wpdb->prefix . 'mepr_transactions';
+
+				// Check if table exists.
+				$table_check = self::$wpdb->get_var( self::$wpdb->prepare( 'SHOW TABLES LIKE %s', $table ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+				if ( $table_check !== $table ) {
+					return false;
+				}
+
+				// Use direct query for efficiency.
+				$results = self::$wpdb->get_row( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+					self::$wpdb->prepare(
+						"SELECT COUNT(*) as order_count, SUM(amount) as total_revenue
+						FROM %i
+						WHERE status = %s
+						AND amount > 0",
+						$table,
+						'complete'
+					)
+				);
+
+				if ( $results ) {
+					return array(
+						'order_count'   => (int) $results->order_count,
+						'total_revenue' => (float) $results->total_revenue,
+					);
+				}
+
+				return false;
+			} catch ( Exception $e ) {
+				// Silently return false on error.
+				return false;
+			}
+		}
+
+		/**
+		 * Get LifterLMS metrics using native methods.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return array|false
+		 */
+		private static function get_lifterlms_native_metrics() {
+			if ( ! function_exists( 'llms' ) || ! class_exists( 'LLMS_Order' ) ) {
+				return false;
+			}
+
+			try {
+				// Get dynamic configuration.
+				$config              = self::$supported_plugins['lifterlms'];
+				$post_type           = self::get_dynamic_post_type( $config );
+				$meta_key            = $config['meta_key'];
+				$statuses            = $config['status'];
+				$status_placeholders = implode( ',', array_fill( 0, count( $statuses ), '%s' ) );
+
+				// LifterLMS stores order data in postmeta.
+				$results = self::$wpdb->get_row( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+					self::$wpdb->prepare(
+						'
+					SELECT COUNT(DISTINCT p.ID) as order_count,
+					       SUM(CAST(pm.meta_value AS DECIMAL(10,2))) as total_revenue
+					FROM ' . self::$wpdb->posts . ' p
+					INNER JOIN ' . self::$wpdb->postmeta . " pm ON p.ID = pm.post_id
+					WHERE p.post_type = %s
+					AND p.post_status IN (" . $status_placeholders . ")
+					AND pm.meta_key = %s
+					AND pm.meta_value > 0
+				",
+						array_merge( array( $post_type ), $statuses, array( $meta_key ) )
+					)
+				);
+
+				if ( $results ) {
+					return array(
+						'order_count'   => (int) $results->order_count,
+						'total_revenue' => (float) $results->total_revenue,
+					);
+				}
+
+				return false;
+			} catch ( Exception $e ) {
+				// Silently return false on error.
+				return false;
+			}
+		}
+
+		/**
+		 * Get Tutor LMS metrics using native methods.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return array|false
+		 */
+		private static function get_tutor_lms_native_metrics() {
+			if ( ! function_exists( 'tutor' ) || ! function_exists( 'WC' ) ) {
+				return false;
+			}
+
+			try {
+				// Get dynamic configuration.
+				$config              = self::$supported_plugins['tutor_lms'];
+				$post_type           = self::get_dynamic_post_type( $config );
+				$meta_key            = $config['meta_key'];
+				$statuses            = $config['status'];
+				$status_placeholders = implode( ',', array_fill( 0, count( $statuses ), '%s' ) );
+
+				// Tutor uses WooCommerce orders with special meta.
+				$results = self::$wpdb->get_row( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+					self::$wpdb->prepare(
+						'
+					SELECT COUNT(DISTINCT p.ID) as order_count,
+					       SUM(CAST(pm_total.meta_value AS DECIMAL(10,2))) as total_revenue
+					FROM ' . self::$wpdb->posts . ' p
+					INNER JOIN ' . self::$wpdb->postmeta . ' pm_tutor ON p.ID = pm_tutor.post_id
+					INNER JOIN ' . self::$wpdb->postmeta . " pm_total ON p.ID = pm_total.post_id
+					WHERE p.post_type = %s
+					AND p.post_status IN (" . $status_placeholders . ")
+					AND pm_tutor.meta_key = '_is_tutor_order_for_course'
+					AND pm_tutor.meta_value = 'yes'
+					AND pm_total.meta_key = %s
+					AND pm_total.meta_value > 0
+				",
+						array_merge( array( $post_type ), $statuses, array( $meta_key ) )
+					)
+				);
+
+				if ( $results ) {
+					return array(
+						'order_count'   => (int) $results->order_count,
+						'total_revenue' => (float) $results->total_revenue,
+					);
+				}
+
+				return false;
+			} catch ( Exception $e ) {
+				// Silently return false on error.
+				return false;
+			}
+		}
+
+		/**
+		 * Get Paid Memberships Pro metrics using native methods.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return array|false
+		 */
+		private static function get_pmpro_native_metrics() {
+			if ( ! defined( 'PMPRO_VERSION' ) ) {
+				return false;
+			}
+
+			try {
+				$table = self::$wpdb->prefix . 'pmpro_membership_orders';
+
+				// Check if table exists.
+				$table_check = self::$wpdb->get_var( self::$wpdb->prepare( 'SHOW TABLES LIKE %s', $table ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+				if ( $table_check !== $table ) {
+					return false;
+				}
+
+				// Use direct query.
+				$results = self::$wpdb->get_row( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+					self::$wpdb->prepare(
+						"SELECT COUNT(*) as order_count, SUM(total) as total_revenue
+						FROM %i
+						WHERE status = %s
+						AND total > 0",
+						$table,
+						'success'
+					)
+				);
+
+				if ( $results ) {
+					return array(
+						'order_count'   => (int) $results->order_count,
+						'total_revenue' => (float) $results->total_revenue,
+					);
+				}
+
+				return false;
+			} catch ( Exception $e ) {
+				// Silently return false on error.
+				return false;
+			}
+		}
+
+		/**
+		 * Get AffiliateWP metrics using native methods.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return array|false
+		 */
+		private static function get_affiliatewp_native_metrics() {
+			if ( ! function_exists( 'affiliate_wp' ) ) {
+				return false;
+			}
+
+			try {
+				$affiliatewp = affiliate_wp();
+				if ( ! isset( $affiliatewp->referrals ) ) {
+					return false;
+				}
+
+				// Use AffiliateWP's database class.
+				$table = $affiliatewp->referrals->table_name;
+
+				$results = self::$wpdb->get_row( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+					self::$wpdb->prepare(
+						"SELECT COUNT(*) as order_count, SUM(amount) as total_revenue
+						FROM %i
+						WHERE status = %s
+						AND amount > 0",
+						$table,
+						'unpaid'
+					)
+				);
+
+				if ( $results ) {
+					return array(
+						'order_count'   => (int) $results->order_count,
+						'total_revenue' => (float) $results->total_revenue,
+					);
+				}
+
+				return false;
+			} catch ( Exception $e ) {
+				// Silently return false on error.
+				return false;
+			}
+		}
+
+		/**
+		 * Get The Events Calendar metrics using native methods.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return array|false
+		 */
+		private static function get_the_events_calendar_native_metrics() {
+			if ( ! class_exists( 'Tribe__Events__Main' ) ) {
+				return false;
+			}
+
+			try {
+				// Get dynamic configuration.
+				$config    = self::$supported_plugins['the_events_calendar'];
+				$post_type = self::get_dynamic_post_type( $config );
+				$meta_key  = $config['meta_key'];
+				$statuses  = $config['status'];
+
+				// The Events Calendar uses custom post type for orders.
+				$results = self::$wpdb->get_row( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+					self::$wpdb->prepare(
+						'
+					SELECT COUNT(*) as order_count,
+					       SUM(CAST(pm.meta_value AS DECIMAL(10,2))) as total_revenue
+					FROM ' . self::$wpdb->posts . ' p
+					INNER JOIN ' . self::$wpdb->postmeta . ' pm ON p.ID = pm.post_id
+					WHERE p.post_type = %s
+					AND p.post_status = %s
+					AND pm.meta_key = %s
+					AND pm.meta_value > 0
+				',
+						$post_type,
+						$statuses[0],
+						$meta_key
+					)
+				);
+
+				if ( $results ) {
+					return array(
+						'order_count'   => (int) $results->order_count,
+						'total_revenue' => (float) $results->total_revenue,
+					);
+				}
+
+				return false;
+			} catch ( Exception $e ) {
+				// Silently return false on error.
+				return false;
+			}
 		}
 	}
 }
