@@ -2647,19 +2647,20 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		}
 
 		/**
-		 * Generate color shades from base color (500 level)
+		 * Generate color shades from base color (500 level).
 		 *
-		 * @since BuddyBoss 2.9.00
-		 * 
-		 * @param string $base_color Hex color code (will be used as 500 level)
-		 * @return array Array of color shades from 100 to 900
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $base_color Hex color code (will be used as level 500).
+		 *
+		 * @return array Array of color shades from 100 to 900.
 		 */
 		private function bb_rl_generate_color_shades( $base_color ) {
-			// Normalize base color
+			// Normalize base color.
 			$base_color = strtoupper( ltrim( $base_color, '#' ) );
-			
-			// If the base color is the default #4946FE, return the exact palette
-			if ( $base_color === '4946FE' ) {
+
+			// If the base color is the default #4946FE, return the exact palette.
+			if ( '4946FE' === $base_color ) {
 				return array(
 					100 => '#DDE4FF',
 					200 => '#C2CDFF',
@@ -2672,23 +2673,23 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					900 => '#2E2689',
 				);
 			}
-			
-			// For other colors, use HSL-based generation
-			$hsl = $this->bb_rl_hex_to_hsl( $base_color );
+
+			// For other colors, use HSL-based generation.
+			$hsl    = $this->bb_rl_hex_to_hsl( $base_color );
 			$shades = array();
 
 			$adjustments = array(
-				100 => array( 'h' => 4, 's' => -0.35, 'l' => 0.42 ),
-				200 => array( 'h' => 2, 's' => -0.20, 'l' => 0.32 ),
-				300 => array( 'h' => 1, 's' => -0.10, 'l' => 0.22 ),
-				400 => array( 'h' => 0, 's' => -0.02, 'l' => 0.12 ),
+				100 => array( 'h' => 4, 's' => - 0.35, 'l' => 0.42 ),
+				200 => array( 'h' => 2, 's' => - 0.20, 'l' => 0.32 ),
+				300 => array( 'h' => 1, 's' => - 0.10, 'l' => 0.22 ),
+				400 => array( 'h' => 0, 's' => - 0.02, 'l' => 0.12 ),
 				500 => array( 'h' => 0, 's' => 0, 'l' => 0 ),
-				600 => array( 'h' => -1, 's' => 0.03, 'l' => -0.08 ),
-				700 => array( 'h' => -3, 's' => 0.08, 'l' => -0.18 ),
-				800 => array( 'h' => -6, 's' => 0.12, 'l' => -0.32 ),
-				900 => array( 'h' => -8, 's' => 0.18, 'l' => -0.45 ),
+				600 => array( 'h' => - 1, 's' => 0.03, 'l' => - 0.08 ),
+				700 => array( 'h' => - 3, 's' => 0.08, 'l' => - 0.18 ),
+				800 => array( 'h' => - 6, 's' => 0.12, 'l' => - 0.32 ),
+				900 => array( 'h' => - 8, 's' => 0.18, 'l' => - 0.45 ),
 			);
-			
+
 			foreach ( $adjustments as $level => $adj ) {
 				if ( $level == 500 ) {
 					$shades[ $level ] = '#' . $base_color;
@@ -2697,39 +2698,42 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					$new_h = $hsl['h'] + $adj['h'];
 					$new_s = max( 0, min( 1, $hsl['s'] + $adj['s'] ) );
 					$new_l = max( 0, min( 1, $hsl['l'] + $adj['l'] ) );
-					
+
 					// Convert back to hex
 					$shades[ $level ] = $this->bb_rl_hsl_to_hex( $new_h, $new_s, $new_l );
 				}
 			}
-			
+
 			return $shades;
 		}
-		
+
 		/**
-		 * Convert hex color to HSL
+		 * Convert hex color to HSL.
 		 *
-		 * @param string $hex Hex color without #
-		 * @return array HSL values
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $hex Hex color without #.
+		 *
+		 * @return array HSL values.
 		 */
 		private function bb_rl_hex_to_hsl( $hex ) {
 			$r = hexdec( substr( $hex, 0, 2 ) ) / 255;
 			$g = hexdec( substr( $hex, 2, 2 ) ) / 255;
 			$b = hexdec( substr( $hex, 4, 2 ) ) / 255;
-			
-			$max = max( $r, $g, $b );
-			$min = min( $r, $g, $b );
+
+			$max  = max( $r, $g, $b );
+			$min  = min( $r, $g, $b );
 			$diff = $max - $min;
-			
+
 			// Lightness
 			$l = ( $max + $min ) / 2;
-			
+
 			if ( $diff == 0 ) {
 				$h = $s = 0; // achromatic
 			} else {
 				// Saturation
 				$s = $l > 0.5 ? $diff / ( 2 - $max - $min ) : $diff / ( $max + $min );
-				
+
 				// Hue
 				switch ( $max ) {
 					case $r:
@@ -2744,47 +2748,63 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				}
 				$h /= 6;
 			}
-			
+
 			return array( 'h' => $h * 360, 's' => $s, 'l' => $l );
 		}
-		
+
 		/**
-		 * Convert HSL to hex color
+		 * Convert HSL to hex color.
 		 *
-		 * @param float $h Hue (0-360)
-		 * @param float $s Saturation (0-1)
-		 * @param float $l Lightness (0-1)
-		 * @return string Hex color with #
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param float $h Hue (0-360).
+		 * @param float $s Saturation (0-1).
+		 * @param float $l Lightness (0-1).
+		 *
+		 * @return string Hex color with #.
 		 */
 		private function bb_rl_hsl_to_hex( $h, $s, $l ) {
 			$h = fmod( $h, 360 );
-			if ( $h < 0 ) $h += 360;
+			if ( $h < 0 ) {
+				$h += 360;
+			}
 			$h /= 360;
-			
+
 			if ( $s == 0 ) {
 				$r = $g = $b = $l; // achromatic
 			} else {
-				$hue2rgb = function( $p, $q, $t ) {
-					if ( $t < 0 ) $t += 1;
-					if ( $t > 1 ) $t -= 1;
-					if ( $t < 1/6 ) return $p + ( $q - $p ) * 6 * $t;
-					if ( $t < 1/2 ) return $q;
-					if ( $t < 2/3 ) return $p + ( $q - $p ) * ( 2/3 - $t ) * 6;
+				$hue2rgb = function ( $p, $q, $t ) {
+					if ( $t < 0 ) {
+						$t += 1;
+					}
+					if ( $t > 1 ) {
+						$t -= 1;
+					}
+					if ( $t < 1 / 6 ) {
+						return $p + ( $q - $p ) * 6 * $t;
+					}
+					if ( $t < 1 / 2 ) {
+						return $q;
+					}
+					if ( $t < 2 / 3 ) {
+						return $p + ( $q - $p ) * ( 2 / 3 - $t ) * 6;
+					}
+
 					return $p;
 				};
-				
+
 				$q = $l < 0.5 ? $l * ( 1 + $s ) : $l + $s - $l * $s;
 				$p = 2 * $l - $q;
-				
-				$r = $hue2rgb( $p, $q, $h + 1/3 );
+
+				$r = $hue2rgb( $p, $q, $h + 1 / 3 );
 				$g = $hue2rgb( $p, $q, $h );
-				$b = $hue2rgb( $p, $q, $h - 1/3 );
+				$b = $hue2rgb( $p, $q, $h - 1 / 3 );
 			}
-			
-			return sprintf( '#%02x%02x%02x', 
-				round( $r * 255 ), 
-				round( $g * 255 ), 
-				round( $b * 255 ) 
+
+			return sprintf( '#%02x%02x%02x',
+				round( $r * 255 ),
+				round( $g * 255 ),
+				round( $b * 255 )
 			);
 		}
 
@@ -2797,15 +2817,15 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			$color_light = bp_get_option( 'bb_rl_color_light', '#4946fe' );
 			$color_dark  = bp_get_option( 'bb_rl_color_dark', '#9747FF' );
 			
-			// Generate color shades for light mode (500 is base)
+			// Generate color shades for light mode (500 is base).
 			$light_shades = $this->bb_rl_generate_color_shades( $color_light );
 			
-			// Generate color shades for dark mode (500 is base)
+			// Generate color shades for dark mode (500 is base).
 			$dark_shades = $this->bb_rl_generate_color_shades( $color_dark );
 			?>
 			<style>
 				:root {
-					/* Light mode color shades */
+					/* Light mode color shades. */
 					--bb-rl-background-brand-secondary-color: <?php echo esc_attr( $light_shades[100] ); ?>;
 					--bb-rl-background-brand-secondary-hover-color: <?php echo esc_attr( $light_shades[200] ); ?>;
 					--bb-rl-background-brand-disabled-color: <?php echo esc_attr( $light_shades[400] ); ?>;
@@ -2815,12 +2835,12 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					--bb-rl-icon-brand-primary-color: <?php echo esc_attr( $light_shades[800] ); ?>;
 					--bb-rl-border-brand-primary-color: <?php echo esc_attr( $light_shades[800] ); ?>;
 					
-					/* Keep backward compatibility */
+					/* Keep backward compatibility. */
 					--bb-rl-primary-color: <?php echo esc_attr( $color_light ); ?>;
 				}
 
 				.bb-rl-dark-mode {
-					/* Dark mode color shades */
+					/* Dark mode color shades. */
 					--bb-rl-background-brand-secondary-color: <?php echo esc_attr( $dark_shades[100] ); ?>;
 					--bb-rl-text-brand-secondary-color: <?php echo esc_attr( $dark_shades[200] ); ?>;
 					--bb-rl-border-brand-primary-color: <?php echo esc_attr( $dark_shades[200] ); ?>;
@@ -2833,7 +2853,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					--bb-rl-background-brand-secondary-color: <?php echo esc_attr( $dark_shades[800] ); ?>;
 					--bb-rl-background-brand-secondary-hover-color: <?php echo esc_attr( $dark_shades[900] ); ?>;
 					
-					/* Keep backward compatibility */
+					/* Keep backward compatibility. */
 					--bb-rl-primary-color: <?php echo esc_attr( $color_dark ); ?>;
 				}
 			</style>
