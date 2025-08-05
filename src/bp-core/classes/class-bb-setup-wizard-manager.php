@@ -488,6 +488,16 @@ abstract class BB_Setup_Wizard_Manager {
 		$option_name = $this->config['option_prefix'] . '_step_tracking_' . $this->wizard_id;
 		$tracking    = $this->get_option( $option_name, array( 'steps' => array() ) );
 
+		$conf_steps = $this->config['step'];
+		if (
+			! empty( $conf_steps ) &&
+			! empty( $conf_steps[ $step ] ) &&
+			! empty( $conf_steps[ $step ]['skip_progress'] )
+		) {
+			// If the step is configured to skip progress, do not track it.
+			return;
+		}
+
 		if ( ! isset( $tracking['steps'][ $step ] ) ) {
 			$tracking['steps'][ $step ] = array(
 				'step_key'         => $data['step_key'] ?? "step_{$step}",
@@ -512,6 +522,11 @@ abstract class BB_Setup_Wizard_Manager {
 		}
 
 		$this->update_option( $option_name, $tracking );
+
+		// Send to BB_Telemetry if enabled and available.
+		if ( $this->config['enable_analytics'] ) {
+			$this->send_telemetry_event( 'step_tracking', $tracking );
+		}
 	}
 
 	/**
