@@ -254,11 +254,11 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 						'type'    => 'checkbox_group',
 						'label'   => __( 'Activity Feed', 'buddyboss' ),
 						'options' => array(
-							'complete_profile' => array(
+							'complete_profile'  => array(
 								'label'   => __( 'Complete Profile', 'buddyboss' ),
 								'default' => true,
 							),
-							'latest_updates' => array(
+							'latest_updates'    => array(
 								'label'   => __( 'Latest Updates', 'buddyboss' ),
 								'default' => true,
 							),
@@ -266,7 +266,7 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 								'label'   => __( 'Recent Blog Posts', 'buddyboss' ),
 								'default' => true,
 							),
-							'active_members' => array(
+							'active_members'    => array(
 								'label'   => __( 'Active Members', 'buddyboss' ),
 								'default' => true,
 							),
@@ -281,11 +281,11 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 								'label'   => __( 'Complete Profile', 'buddyboss' ),
 								'default' => true,
 							),
-							'connections' => array(
+							'connections'      => array(
 								'label'   => __( 'Connections', 'buddyboss' ),
 								'default' => true,
 							),
-							'my_network' => array(
+							'my_network'       => array(
 								'label'   => __( 'Network (Follow, Followers)', 'buddyboss' ),
 								'default' => true,
 							),
@@ -296,7 +296,7 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 						'type'    => 'checkbox_group',
 						'label'   => __( 'Group', 'buddyboss' ),
 						'options' => array(
-							'about_group' => array(
+							'about_group'   => array(
 								'label'   => __( 'About Group', 'buddyboss' ),
 								'default' => true,
 							),
