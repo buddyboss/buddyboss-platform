@@ -917,50 +917,72 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 		}
 
 		/**
-		 * Get month number from month name.
+		 * Get month number from month name (supports translated month names).
+		 *
+		 * This function gets month numbers from month names, supporting both English
+		 * and translated month names from WordPress translations. It follows the same
+		 * approach as time elapsed - translate the search term to English first.
+		 *
+		 * Process:
+		 * 1. Try direct English month name lookup first
+		 * 2. Translate the search term to English using reverse lookup
+		 * 3. Match the translated term against English month names
+		 *
+		 * Example:
+		 * Input: "juni" (Dutch for June).
+		 * Translates to English: "juni" → "june" (reverse lookup).
+		 * Match: "june" found in English months.
+		 * Result: 6 (June is month 6).
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
-		 * @param string $month_name Month name or abbreviation.
+		 * @param string $month_name Month name or abbreviation (can be translated).
 		 *
 		 * @return int|false Month number (1-12) or false if not found.
 		 */
 		private function bb_get_month_number( $month_name ) {
-			// Cache months for performance.
-			static $months_cache = null;
-
-			// Initialize cache only once.
-			if ( null === $months_cache ) {
-				$months_cache = array(
-					'january'   => 1,
-					'jan'       => 1,
-					'february'  => 2,
-					'feb'       => 2,
-					'march'     => 3,
-					'mar'       => 3,
-					'april'     => 4,
-					'apr'       => 4,
-					'may'       => 5,
-					'june'      => 6,
-					'jun'       => 6,
-					'july'      => 7,
-					'jul'       => 7,
-					'august'    => 8,
-					'aug'       => 8,
-					'september' => 9,
-					'sep'       => 9,
-					'october'   => 10,
-					'oct'       => 10,
-					'november'  => 11,
-					'nov'       => 11,
-					'december'  => 12,
-					'dec'       => 12,
-				);
-			}
-
 			$month_name = strtolower( trim( $month_name ) );
 
-			return isset( $months_cache[ $month_name ] ) ? $months_cache[ $month_name ] : false;
+			// English month names for direct lookup.
+			$english_months = array(
+				'january'   => 1,
+				'february'  => 2,
+				'march'     => 3,
+				'april'     => 4,
+				'may'       => 5,
+				'june'      => 6,
+				'july'      => 7,
+				'august'    => 8,
+				'september' => 9,
+				'october'   => 10,
+				'november'  => 11,
+				'december'  => 12,
+			);
+
+			// First, try direct English lookup.
+			if ( isset( $english_months[ $month_name ] ) ) {
+				return $english_months[ $month_name ];
+			}
+
+			// If not found, translate the search term to English first.
+			foreach ( $english_months as $english_name => $month_num ) {
+				// Get the translation for this month using date_i18n().
+				$timestamp       = mktime( 0, 0, 0, $month_num, 1, 2025 );
+				$translated_name = date_i18n( 'F', $timestamp );
+
+				// Check if input matches the translation.
+				if ( strtolower( $translated_name ) === $month_name ) {
+					return $month_num; // Return the month number directly.
+				}
+
+				// Also check abbreviated forms.
+				$translated_abbr = date_i18n( 'M', $timestamp );
+				if ( strtolower( $translated_abbr ) === $month_name ) {
+					return $month_num; // Return the month number directly.
+				}
+			}
+
+			return false;
 		}
 
 		/**
