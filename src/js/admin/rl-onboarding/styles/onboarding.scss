@@ -154,32 +154,6 @@ body.bb-rl-fullscreen-mode {
     .bb-rl-modal-content {
         overflow: initial;
     }
-
-    &.bb-rl-loading {
-        &:after {
-            content: '';
-            position: fixed;
-            inset: 0;
-            background-color: rgba(0, 0, 0, 0.3);
-            z-index: 9999999;
-        }
-        
-
-        &:before {
-            content: "";
-            animation: spin 3s linear infinite;
-            border: 2px solid #f2f2f2;
-            border-radius: 99px;
-            border-top-color: #777474;
-            display: inline-block;
-            height: 22px;
-            width: 22px;
-            z-index: 99999991;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-        }
-    }
 }
 
 .bb-rl-onboarding-modal {
@@ -508,6 +482,7 @@ body.bb-rl-fullscreen-mode {
         transition: $transition;
 
         [class*="bb-icons"] {
+            display: flex;
             font-size: 20px;
         }
 
@@ -534,6 +509,19 @@ body.bb-rl-fullscreen-mode {
             }
         }
     }
+}
+
+.bb-rl-onboarding-overlay.bb-rl-loading .bb-rl-step-navigation .bb-rl-nav-button [class*="bb-icons"]:before {
+    content: "";
+    animation: spin 3s linear infinite;
+    border: 2px solid #f2f2f2;
+    border-radius: 99px;
+    border-top-color: #777474;
+    display: inline-block;
+    height: 14px;
+    width: 14px;
+    vertical-align: middle;
+    margin-left: 4px;
 }
 
 .bb-rl-step-preview {

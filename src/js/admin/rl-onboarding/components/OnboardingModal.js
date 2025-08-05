@@ -447,7 +447,7 @@ export const OnboardingModal = ({ isOpen, onClose, onContinue, onSkip, onSaveSte
     // Special handling for splash screen only (modal popup)
     if (currentStep.component === 'SplashScreen') {
         return (
-            <div className={`bb-rl-onboarding-overlay ${isProcessing || isSaving ? 'bb-rl-loading' : ''}`}>
+            <div className={`bb-rl-onboarding-overlay ${isProcessing ? 'bb-rl-loading' : ''}`}>
                 <div className="bb-rl-onboarding-modal bb-rl-special-step">
                     <div className="bb-rl-modal-header">
                         <div className="bb-rl-modal-header-content">
@@ -478,7 +478,7 @@ export const OnboardingModal = ({ isOpen, onClose, onContinue, onSkip, onSaveSte
 
     // Full screen layout for all step-based components (including FinishScreen)
     return (
-        <div className={`bb-rl-onboarding-overlay bb-rl-fullscreen ${isProcessing || isSaving ? 'bb-rl-loading' : ''}`}>
+        <div className={`bb-rl-onboarding-overlay bb-rl-fullscreen ${isProcessing ? 'bb-rl-loading' : ''}`}>
             <div className="bb-rl-onboarding-modal bb-rl-fullscreen-modal">
                 <div className="bb-rl-fullscreen-content">
                     {renderCurrentStep()}
