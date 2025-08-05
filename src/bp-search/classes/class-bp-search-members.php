@@ -521,17 +521,11 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 			// First, try to translate time elapsed expressions to English.
 			$english_search = $this->bb_translate_time_elapsed_to_english( $search_term );
 
-			// Check for time elapsed patterns in English.
-			$time_elapsed_patterns = array(
-				'/^(\d+)\s+(year|month|day)s?\s+(ago|from now)$/i',
-				'/^(ago|from now)\s+(\d+)\s+(year|month|day)s?$/i',
-				'/^(sometime|some time)\s+(ago|from now)$/i',
-			);
+			// Check for time elapsed patterns in English using a single combined regex.
+			$time_elapsed_pattern = '/^(?:(?:(\d+)|(a|one))\s+(year|month|day)s?\s+(ago|from now)|(ago|from now)\s+(\d+)\s+(year|month|day)s?|(sometime|some time)\s+(ago|from now))$/i';
 
-			foreach ( $time_elapsed_patterns as $pattern ) {
-				if ( preg_match( $pattern, $english_search ) ) {
-					return true;
-				}
+			if ( preg_match( $time_elapsed_pattern, $english_search ) ) {
+				return true;
 			}
 
 			// Check for other date patterns.
@@ -549,9 +543,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 								'[a-z]+\s+\d{1,2}\s*,\s*\d{4}|' . // Month name + day + comma + year.
 								'[a-z]+|' . // Month name only.
 								'[a-z]+\s+\d{1,2}|' . // Month name + day.
-								'\d{1,2}[\/\-\.\s]\d{1,2}|' . // MM/DD, MM-DD, MM.DD, MM DD.
-								'\d+\s+[a-z]+\s+[a-z\s]+|' . // Time elapsed: "34 years ago".
-								'[a-z]+\s+\d+\s+[a-z\s]+)$/i'; // Time elapsed: "vor 34 Jahren".
+								'\d{1,2}[\/\-\.\s]\d{1,2})$/i'; // MM/DD, MM-DD, MM.DD, MM DD.
 
 			return preg_match( $combined_pattern, $search_term );
 		}
@@ -576,50 +568,72 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 			// First, try to translate time elapsed expressions to English.
 			$english_search = $this->bb_translate_time_elapsed_to_english( $search_term );
 
-			// Parse time elapsed patterns in English.
-			if ( preg_match( '/^(\d+)\s+(year|month|day)s?\s+(ago|from now)$/i', $english_search, $matches ) ) {
-				// Time elapsed format: "34 years ago".
-				$amount    = intval( $matches[1] );
-				$unit      = $matches[2];
-				$direction = $matches[3];
+			// Parse time elapsed patterns in English using a single combined regex.
+			$time_elapsed_pattern = '/^(?:(?:(\d+)|(a|one))\s+(year|month|day)s?\s+(ago|from now)|(ago|from now)\s+(\d+)\s+(year|month|day)s?|(sometime|some time)\s+(ago|from now))$/i';
 
-				$target_time = $this->bb_calculate_time_elapsed_date( $amount, $unit, $direction, time() );
+			if ( preg_match( $time_elapsed_pattern, $english_search, $matches ) ) {
 
-				if ( $target_time ) {
-					$target_year   = wp_date( 'Y', $target_time );
+				// Determine the pattern type and extract values.
+				if ( ! empty( $matches[1] ) ) {
+					// Pattern: "34 years ago" - amount in group 1, unit in group 3, direction in group 4.
+					$amount    = intval( $matches[1] );
+					$unit      = $matches[3];
+					$direction = $matches[4];
+
+					// Calculate target time for numeric patterns.
+					$target_time = $this->bb_calculate_time_elapsed_date( $amount, $unit, $direction, time() );
+
+					if ( $target_time ) {
+						$target_year   = wp_date( 'Y', $target_time );
+						$date_values[] = array(
+							'type'  => 'range',
+							'start' => $target_year . '-01-01 00:00:00',
+							'end'   => $target_year . '-12-31 23:59:59',
+						);
+					}
+				} elseif ( ! empty( $matches[2] ) ) {
+					// Pattern: "a year ago" or "one year ago" - amount is 1, unit in group 3, direction in group 4.
+					$amount    = 1;
+					$unit      = $matches[3];
+					$direction = $matches[4];
+
+					// Calculate target time for numeric patterns.
+					$target_time = $this->bb_calculate_time_elapsed_date( $amount, $unit, $direction, time() );
+
+					if ( $target_time ) {
+						$target_year   = wp_date( 'Y', $target_time );
+						$date_values[] = array(
+							'type'  => 'range',
+							'start' => $target_year . '-01-01 00:00:00',
+							'end'   => $target_year . '-12-31 23:59:59',
+						);
+					}
+				} elseif ( ! empty( $matches[5] ) ) {
+					// Pattern: "ago 34 years" - direction in group 5, amount in group 6, unit in group 7.
+					$direction = $matches[5];
+					$amount    = intval( $matches[6] );
+					$unit      = $matches[7];
+
+					// Calculate target time for numeric patterns.
+					$target_time = $this->bb_calculate_time_elapsed_date( $amount, $unit, $direction, time() );
+
+					if ( $target_time ) {
+						$target_year   = wp_date( 'Y', $target_time );
+						$date_values[] = array(
+							'type'  => 'range',
+							'start' => $target_year . '-01-01 00:00:00',
+							'end'   => $target_year . '-12-31 23:59:59',
+						);
+					}
+				} elseif ( ! empty( $matches[8] ) ) {
+					// Pattern: "sometime ago" - special case for sometime.
+					$year_range    = $this->bb_get_dynamic_year_range();
 					$date_values[] = array(
 						'type'  => 'range',
-						'start' => $target_year . '-01-01 00:00:00',
-						'end'   => $target_year . '-12-31 23:59:59',
+						'start' => wp_date( 'Y-m-d H:i:s' ),
+						'end'   => $year_range['max'] . '-12-31 23:59:59',
 					);
 				}
-			} elseif ( preg_match( '/^(ago|from now)\s+(\d+)\s+(year|month|day)s?$/i', $english_search, $matches ) ) {
-				// Time elapsed format: "ago 34 years".
-				$direction = $matches[1];
-				$amount    = intval( $matches[2] );
-				$unit      = $matches[3];
-
-				$target_time = $this->bb_calculate_time_elapsed_date( $amount, $unit, $direction, time() );
-
-				if ( $target_time ) {
-					$target_year   = wp_date( 'Y', $target_time );
-					$date_values[] = array(
-						'type'  => 'range',
-						'start' => $target_year . '-01-01 00:00:00',
-						'end'   => $target_year . '-12-31 23:59:59',
-					);
-				}
-			} elseif ( preg_match( '/^(sometime|some time)\s+(ago|from now)$/i', $english_search, $matches ) ) {
-				// Time elapsed format: "sometime ago" or "some time ago".
-				$year_range = $this->bb_get_dynamic_year_range();
-
-				// For "sometime ago", we want to search for dates from the past to the future.
-				// Use the minimum year from the range as the start, and maximum year as the end.
-				$date_values[] = array(
-					'type'  => 'range',
-					'start' => wp_date( 'Y-m-d H:i:s' ),
-					'end'   => $year_range['max'] . '-12-31 23:59:59',
-				);
 			} else {
 				// Handle other date formats (existing logic).
 				// Full date formats.
@@ -1305,6 +1319,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 				array( 'singular' => 'month', 'plural' => 'months' ), // Process month/months.  
 				array( 'singular' => 'day', 'plural' => 'days' ),     // Process day/days.
 				array( 'singular' => 'sometime', 'plural' => 'sometime' ), // Process sometime.
+				array( 'singular' => 'a year', 'plural' => 'a year' ), // Process a year.
 			);
 
 			// Translate all time units with caching.
@@ -1321,6 +1336,11 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 						$translation_cache[ $cache_key ] = array(
 							'singular' => __( 'sometime', 'buddyboss' ),
 							'plural'   => __( 'sometime', 'buddyboss' ),
+						);
+					} elseif ( 'a year' === $unit['singular'] ) {
+						$translation_cache[ $cache_key ] = array(
+							'singular' => __( 'a year', 'buddyboss' ),
+							'plural'   => __( 'a year', 'buddyboss' ),
 						);
 					} else {
 						$translation_cache[ $cache_key ] = array(
@@ -1535,8 +1555,8 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 		 * @return string The base time unit.
 		 */
 		private function bb_extract_base_time_unit( $time_unit, $english_singular = '' ) {
-			// Special handling for "sometime" - return the entire phrase as its used for feature.
-			if ( 'sometime' === $english_singular ) {
+			// Special handling for phrases that should be treated as complete units.
+			if ( in_array( $english_singular, array( 'sometime', 'a year' ) ) ) {
 				return $time_unit;
 			}
 
