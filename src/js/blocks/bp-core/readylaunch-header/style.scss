@@ -628,6 +628,21 @@
 		}
 	}
 
+	&.bb-rl-dark-mode .bb-rl-site-branding {
+
+		.bb-rl-light-logo,
+		.bb-rl-light-logo-text {
+			display: none;
+		}
+	}
+
+	&:not(.bb-rl-dark-mode) .bb-rl-site-branding {
+
+		.bb-rl-dark-logo,
+		.bb-rl-dark-logo-text {
+			display: none;
+		}
+	}
 
 	.bb-readylaunch-mobile-menu__wrap {
 		display: none;
@@ -1325,7 +1340,7 @@
 	}
 }
 
-body:not(.bb-rl-dark-mode) #bb-rl-profile-theme-light a {
+.bb-rl-header-block:not(.bb-rl-dark-mode) #bb-rl-profile-theme-light a {
 	padding-right: 30px;
 
 	&:after {
@@ -1339,7 +1354,7 @@ body:not(.bb-rl-dark-mode) #bb-rl-profile-theme-light a {
 	}
 }
 
-body.bb-rl-dark-mode #bb-rl-profile-theme-dark a {
+.bb-rl-header-block.bb-rl-dark-mode #bb-rl-profile-theme-dark a {
 	padding-right: 30px;
 
 	&:after {

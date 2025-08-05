@@ -175,6 +175,32 @@
 	}
 }
 
+body {
+
+	&.bb-rl-dark-mode {
+
+		.bb-rl-site-branding {
+
+			.bb-rl-light-logo-text,
+			.bb-rl-light-logo {
+				display: none;
+			}
+		}
+
+	}
+
+	&:not(.bb-rl-dark-mode) {
+
+		.bb-rl-site-branding {
+
+			.bb-rl-dark-logo-text,
+			.bb-rl-dark-logo {
+				display: none;
+			}
+		}
+	}
+}
+
 .header-aside {
 
 	.header-aside-inner {
