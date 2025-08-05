@@ -585,7 +585,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 				$target_time = $this->bb_calculate_time_elapsed_date( $amount, $unit, $direction, time() );
 
 				if ( $target_time ) {
-					$target_year   = gmdate( 'Y', $target_time );
+					$target_year   = wp_date( 'Y', $target_time );
 					$date_values[] = array(
 						'type'  => 'range',
 						'start' => $target_year . '-01-01 00:00:00',
@@ -601,7 +601,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 				$target_time = $this->bb_calculate_time_elapsed_date( $amount, $unit, $direction, time() );
 
 				if ( $target_time ) {
-					$target_year   = gmdate( 'Y', $target_time );
+					$target_year   = wp_date( 'Y', $target_time );
 					$date_values[] = array(
 						'type'  => 'range',
 						'start' => $target_year . '-01-01 00:00:00',
@@ -684,7 +684,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 					$date_values[] = array(
 						'type'  => 'range',
 						'start' => $year . '-' . $month . '-01 00:00:00',
-						'end'   => $year . '-' . $month . '-' . gmdate( 't', strtotime( $year . '-' . $month . '-01' ) ) . ' 23:59:59',
+						'end'   => $year . '-' . $month . '-' . wp_date( 't', strtotime( $year . '-' . $month . '-01' ) ) . ' 23:59:59',
 					);
 				} elseif ( preg_match( '/^(\d{4})\.(\d{1,2})$/', $search_term, $matches ) ) {
 					// YYYY.MM format.
@@ -693,7 +693,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 					$date_values[] = array(
 						'type'  => 'range',
 						'start' => $year . '-' . $month . '-01 00:00:00',
-						'end'   => $year . '-' . $month . '-' . gmdate( 't', strtotime( $year . '-' . $month . '-01' ) ) . ' 23:59:59',
+						'end'   => $year . '-' . $month . '-' . wp_date( 't', strtotime( $year . '-' . $month . '-01' ) ) . ' 23:59:59',
 					);
 				} elseif ( preg_match( '/^(\d{1,2})\/(\d{4})$/', $search_term, $matches ) ) {
 					// MM/YYYY format.
@@ -702,7 +702,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 					$date_values[] = array(
 						'type'  => 'range',
 						'start' => $year . '-' . $month . '-01 00:00:00',
-						'end'   => $year . '-' . $month . '-' . gmdate( 't', strtotime( $year . '-' . $month . '-01' ) ) . ' 23:59:59',
+						'end'   => $year . '-' . $month . '-' . wp_date( 't', strtotime( $year . '-' . $month . '-01' ) ) . ' 23:59:59',
 					);
 				} elseif ( preg_match( '/^(\d{4})-(\d{1,2})$/', $search_term, $matches ) ) {
 					// YYYY-MM format.
@@ -711,7 +711,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 					$date_values[] = array(
 						'type'  => 'range',
 						'start' => $year . '-' . $month . '-01 00:00:00',
-						'end'   => $year . '-' . $month . '-' . gmdate( 't', strtotime( $year . '-' . $month . '-01' ) ) . ' 23:59:59',
+						'end'   => $year . '-' . $month . '-' . wp_date( 't', strtotime( $year . '-' . $month . '-01' ) ) . ' 23:59:59',
 					);
 				} elseif ( preg_match( '/^(\d{1,2})-(\d{4})$/', $search_term, $matches ) ) {
 					// MM-YYYY format.
@@ -720,7 +720,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 					$date_values[] = array(
 						'type'  => 'range',
 						'start' => $year . '-' . $month . '-01 00:00:00',
-						'end'   => $year . '-' . $month . '-' . gmdate( 't', strtotime( $year . '-' . $month . '-01' ) ) . ' 23:59:59',
+						'end'   => $year . '-' . $month . '-' . wp_date( 't', strtotime( $year . '-' . $month . '-01' ) ) . ' 23:59:59',
 					);
 				} elseif ( preg_match( '/^(\d{1,2})\/(\d{1,2})$/', $search_term, $matches ) ) {
 					// MM/DD or DD/MM format without year - try both interpretations.
@@ -730,7 +730,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 					// Try MM/DD interpretation (first as month, second as day).
 					if ( $first >= 1 && $first <= 12 && $second >= 1 && $second <= 31 ) {
 						// Validate the date using checkdate with current year.
-						if ( checkdate( $first, $second, (int) gmdate( 'Y' ) ) ) {
+						if ( checkdate( $first, $second, (int) wp_date( 'Y' ) ) ) {
 							$month         = str_pad( $first, 2, '0', STR_PAD_LEFT );
 							$day           = str_pad( $second, 2, '0', STR_PAD_LEFT );
 							$date_values[] = array(
@@ -743,7 +743,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 					// Try DD/MM interpretation (first as day, second as month).
 					if ( $second >= 1 && $second <= 12 && $first >= 1 && $first <= 31 ) {
 						// Validate the date using checkdate with current year.
-						if ( checkdate( $second, $first, (int) gmdate( 'Y' ) ) ) {
+						if ( checkdate( $second, $first, (int) wp_date( 'Y' ) ) ) {
 							$month         = str_pad( $second, 2, '0', STR_PAD_LEFT );
 							$day           = str_pad( $first, 2, '0', STR_PAD_LEFT );
 							$date_values[] = array(
@@ -760,7 +760,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 					// Try MM-DD interpretation (first as month, second as day).
 					if ( $first >= 1 && $first <= 12 && $second >= 1 && $second <= 31 ) {
 						// Validate the date using checkdate with current year.
-						if ( checkdate( $first, $second, (int) gmdate( 'Y' ) ) ) {
+						if ( checkdate( $first, $second, (int) wp_date( 'Y' ) ) ) {
 							$month         = str_pad( $first, 2, '0', STR_PAD_LEFT );
 							$day           = str_pad( $second, 2, '0', STR_PAD_LEFT );
 							$date_values[] = array(
@@ -773,7 +773,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 					// Try DD-MM interpretation (first as day, second as month).
 					if ( $second >= 1 && $second <= 12 && $first >= 1 && $first <= 31 ) {
 						// Validate the date using checkdate with current year.
-						if ( checkdate( $second, $first, (int) gmdate( 'Y' ) ) ) {
+						if ( checkdate( $second, $first, (int) wp_date( 'Y' ) ) ) {
 							$month         = str_pad( $second, 2, '0', STR_PAD_LEFT );
 							$day           = str_pad( $first, 2, '0', STR_PAD_LEFT );
 							$date_values[] = array(
@@ -790,7 +790,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 					// Try MM.DD interpretation (first as month, second as day).
 					if ( $first >= 1 && $first <= 12 && $second >= 1 && $second <= 31 ) {
 						// Validate the date using checkdate with current year.
-						if ( checkdate( $first, $second, (int) gmdate( 'Y' ) ) ) {
+						if ( checkdate( $first, $second, (int) wp_date( 'Y' ) ) ) {
 							$month         = str_pad( $first, 2, '0', STR_PAD_LEFT );
 							$day           = str_pad( $second, 2, '0', STR_PAD_LEFT );
 							$date_values[] = array(
@@ -803,7 +803,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 					// Try DD.MM interpretation (first as day, second as month).
 					if ( $second >= 1 && $second <= 12 && $first >= 1 && $first <= 31 ) {
 						// Validate the date using checkdate with current year.
-						if ( checkdate( $second, $first, (int) gmdate( 'Y' ) ) ) {
+						if ( checkdate( $second, $first, (int) wp_date( 'Y' ) ) ) {
 							$month         = str_pad( $second, 2, '0', STR_PAD_LEFT );
 							$day           = str_pad( $first, 2, '0', STR_PAD_LEFT );
 							$date_values[] = array(
@@ -820,7 +820,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 					// Try MM DD interpretation (first as month, second as day).
 					if ( $first >= 1 && $first <= 12 && $second >= 1 && $second <= 31 ) {
 						// Validate the date using checkdate with current year.
-						if ( checkdate( $first, $second, (int) gmdate( 'Y' ) ) ) {
+						if ( checkdate( $first, $second, (int) wp_date( 'Y' ) ) ) {
 							$month         = str_pad( $first, 2, '0', STR_PAD_LEFT );
 							$day           = str_pad( $second, 2, '0', STR_PAD_LEFT );
 							$date_values[] = array(
@@ -833,7 +833,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 					// Try DD MM interpretation (first as day, second as month).
 					if ( $second >= 1 && $second <= 12 && $first >= 1 && $first <= 31 ) {
 						// Validate the date using checkdate with current year.
-						if ( checkdate( $second, $first, (int) gmdate( 'Y' ) ) ) {
+						if ( checkdate( $second, $first, (int) wp_date( 'Y' ) ) ) {
 							$month         = str_pad( $second, 2, '0', STR_PAD_LEFT );
 							$day           = str_pad( $first, 2, '0', STR_PAD_LEFT );
 							$date_values[] = array(
@@ -853,7 +853,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 						$date_values[] = array(
 							'type'  => 'range',
 							'start' => $year . '-' . $month . '-01 00:00:00',
-							'end'   => $year . '-' . $month . '-' . gmdate( 't', strtotime( $year . '-' . $month . '-01' ) ) . ' 23:59:59',
+							'end'   => $year . '-' . $month . '-' . wp_date( 't', strtotime( $year . '-' . $month . '-01' ) ) . ' 23:59:59',
 						);
 					}
 				} elseif ( preg_match( '/^([a-z]+)\s*,\s*(\d{4})$/i', $search_term, $matches ) ) {
@@ -868,7 +868,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 						$date_values[] = array(
 							'type'  => 'range',
 							'start' => $year . '-' . $month . '-01 00:00:00',
-							'end'   => $year . '-' . $month . '-' . gmdate( 't', strtotime( $year . '-' . $month . '-01' ) ) . ' 23:59:59',
+							'end'   => $year . '-' . $month . '-' . wp_date( 't', strtotime( $year . '-' . $month . '-01' ) ) . ' 23:59:59',
 						);
 					}
 				} elseif ( preg_match( '/^([a-z]+)$/i', $search_term, $matches ) ) {
@@ -889,7 +889,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 					$month_num  = $this->bb_get_month_number( $month_name );
 					if ( $month_num && $day >= 1 && $day <= 31 ) {
 						// Validate the date using checkdate with current year.
-						if ( checkdate( $month_num, $day, (int) gmdate( 'Y' ) ) ) {
+						if ( checkdate( $month_num, $day, (int) wp_date( 'Y' ) ) ) {
 							$month         = str_pad( $month_num, 2, '0', STR_PAD_LEFT );
 							$day_padded    = str_pad( $day, 2, '0', STR_PAD_LEFT );
 							$date_values[] = array(
@@ -1618,7 +1618,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 		 * @return array Array with 'min' and 'max' year values.
 		 */
 		private function bb_get_dynamic_year_range() {
-			$current_year = (int) gmdate( 'Y' );
+			$current_year = (int) wp_date( 'Y' );
 
 			return array(
 				'min' => $current_year - 100,
