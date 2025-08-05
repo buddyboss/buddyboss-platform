@@ -525,6 +525,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 			$time_elapsed_patterns = array(
 				'/^(\d+)\s+(year|month|day)s?\s+(ago|from now)$/i',
 				'/^(ago|from now)\s+(\d+)\s+(year|month|day)s?$/i',
+				'/^(sometime|some time)\s+(ago|from now)$/i',
 			);
 
 			foreach ( $time_elapsed_patterns as $pattern ) {
@@ -608,6 +609,17 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 						'end'   => $target_year . '-12-31 23:59:59',
 					);
 				}
+			} elseif ( preg_match( '/^(sometime|some time)\s+(ago|from now)$/i', $english_search, $matches ) ) {
+				// Time elapsed format: "sometime ago" or "some time ago".
+				$year_range = $this->bb_get_dynamic_year_range();
+
+				// For "sometime ago", we want to search for dates from the past to the future.
+				// Use the minimum year from the range as the start, and maximum year as the end.
+				$date_values[] = array(
+					'type'  => 'range',
+					'start' => wp_date( 'Y-m-d H:i:s' ),
+					'end'   => $year_range['max'] . '-12-31 23:59:59',
+				);
 			} else {
 				// Handle other date formats (existing logic).
 				// Full date formats.
@@ -1292,6 +1304,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 				array( 'singular' => 'year', 'plural' => 'years' ),   // Process year/years.
 				array( 'singular' => 'month', 'plural' => 'months' ), // Process month/months.  
 				array( 'singular' => 'day', 'plural' => 'days' ),     // Process day/days.
+				array( 'singular' => 'sometime', 'plural' => 'sometime' ), // Process sometime.
 			);
 
 			// Translate all time units with caching.
@@ -1304,12 +1317,19 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 				// Cache WordPress translations to avoid repeated function calls.
 				// This improves performance significantly for repeated searches.
 				if ( ! isset( $translation_cache[ $cache_key ] ) ) {
-					$translation_cache[ $cache_key ] = array(
-						// Get singular form translation (e.g., "one year" for "year").
-						'singular' => _n( '%s ' . $unit['singular'], '%s ' . $unit['plural'], 1, 'buddyboss' ),
-						// Get plural form translation (e.g., "two years" for "years").
-						'plural'   => _n( '%s ' . $unit['singular'], '%s ' . $unit['plural'], 2, 'buddyboss' ),
-					);
+					if ( 'sometime' === $unit['singular'] ) {
+						$translation_cache[ $cache_key ] = array(
+							'singular' => __( 'sometime', 'buddyboss' ),
+							'plural'   => __( 'sometime', 'buddyboss' ),
+						);
+					} else {
+						$translation_cache[ $cache_key ] = array(
+							// Get singular form translation (e.g., "one year" for "year").
+							'singular' => _n( '%s ' . $unit['singular'], '%s ' . $unit['plural'], 1, 'buddyboss' ),
+							// Get plural form translation (e.g., "two years" for "years").
+							'plural'   => _n( '%s ' . $unit['singular'], '%s ' . $unit['plural'], 2, 'buddyboss' ),
+						);
+					}
 				}
 
 				// Get the cached translations for this time unit.
@@ -1392,10 +1412,10 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 
 			// Remove direction words and extract base time units.
 			// This step removes words like "ago", "since" from the translation to get just the time unit.
-			$singular_base = $this->bb_extract_base_time_unit( $this->bb_remove_direction_words( $singular_word ) );
+			$singular_base = $this->bb_extract_base_time_unit( $this->bb_remove_direction_words( $singular_word ), $english_singular );
 			// Example: "one year" → "year".
 
-			$plural_base = $this->bb_extract_base_time_unit( $this->bb_remove_direction_words( $plural_word ) );
+			$plural_base = $this->bb_extract_base_time_unit( $this->bb_remove_direction_words( $plural_word ), $english_singular );
 			// Example: "two years" → "two years".
 
 			// Replace digits in the base units with the actual amount from search term.
@@ -1510,10 +1530,16 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 		 * @since BuddyBoss [BBVERSION]
 		 *
 		 * @param string $time_unit The time unit to extract base from.
+		 * @param string $english_singular The English singular form.
 		 *
 		 * @return string The base time unit.
 		 */
-		private function bb_extract_base_time_unit( $time_unit ) {
+		private function bb_extract_base_time_unit( $time_unit, $english_singular = '' ) {
+			// Special handling for "sometime" - return the entire phrase as its used for feature.
+			if ( 'sometime' === $english_singular ) {
+				return $time_unit;
+			}
+
 			// Split the time unit into individual words.
 			// This separates the time unit from any modifiers or additional words.
 			$words = preg_split( '/\s+/', $time_unit );
