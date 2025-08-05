@@ -495,12 +495,8 @@ abstract class BB_Setup_Wizard_Manager {
 		$option_name = $this->config['option_prefix'] . '_step_tracking_' . $this->wizard_id;
 		$tracking    = $this->get_option( $option_name, array( 'steps' => array() ) );
 
-		$conf_steps = $this->config['step'];
-		if (
-			! empty( $conf_steps ) &&
-			! empty( $conf_steps[ $step ] ) &&
-			! empty( $conf_steps[ $step ]['skip_progress'] )
-		) {
+		// Check if this step should skip progress tracking.
+		if ( ! empty( $this->steps ) && isset( $this->steps[ $step ] ) && ! empty( $this->steps[ $step ]['skip_progress'] ) ) {
 			// If the step is configured to skip progress, do not track it.
 			return;
 		}
@@ -532,7 +528,18 @@ abstract class BB_Setup_Wizard_Manager {
 
 		// Send to BB_Telemetry if enabled and available.
 		if ( $this->config['enable_analytics'] ) {
-			$this->send_telemetry_event( 'step_tracking', $tracking );
+			// Filter out steps with skip_progress before sending to telemetry.
+			$telemetry_tracking = $tracking;
+			if ( ! empty( $telemetry_tracking['steps'] ) ) {
+				$telemetry_tracking['steps'] = array_filter(
+					$telemetry_tracking['steps'],
+					function ( $step_data, $step_index ) {
+						return empty( $this->steps[ $step_index ]['skip_progress'] );
+					},
+					ARRAY_FILTER_USE_BOTH
+				);
+			}
+			$this->send_telemetry_event( 'step_tracking', $telemetry_tracking );
 		}
 	}
 
@@ -854,6 +861,18 @@ abstract class BB_Setup_Wizard_Manager {
 			$data_for_tracking = $data['form_data'];
 		} else {
 			$data_for_tracking = $data;
+		}
+
+		// Check if this step should skip progress tracking.
+		if ( ! empty( $this->steps ) && isset( $this->steps[ $step ] ) && ! empty( $this->steps[ $step ]['skip_progress'] ) ) {
+			// Skip progress tracking but still return success.
+			wp_send_json_success(
+				array(
+					'message'  => __( 'Step acknowledged.', 'buddyboss' ),
+					'step'     => $step,
+					'progress' => $this->get_progress(),
+				)
+			);
 		}
 
 		// Save step progress.
