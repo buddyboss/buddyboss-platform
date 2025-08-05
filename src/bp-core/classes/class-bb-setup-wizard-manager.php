@@ -440,8 +440,15 @@ abstract class BB_Setup_Wizard_Manager {
 			$progress['started_at'] = current_time( 'mysql' );
 		}
 
+		$filtered_steps = array_filter(
+			$this->steps,
+			function ( $step ) {
+				return empty( $step['skip_progress'] );
+			}
+		);
+
 		// Calculate completion percentage.
-		$progress['total_steps']           = count( $this->steps );
+		$progress['total_steps']           = count( $filtered_steps );
 		$progress['completion_percentage'] = $progress['total_steps'] > 0 ? ( $step / $progress['total_steps'] ) * 100 : 0;
 
 		// Save progress.
@@ -838,9 +845,9 @@ abstract class BB_Setup_Wizard_Manager {
 		}
 
 		// Get and sanitize step data.
-		$step       = isset( $_POST['step'] ) ? intval( $_POST['step'] ) : 0;
-		$raw_data   = isset( $_POST['data'] ) ? wp_unslash( $_POST['data'] ) : '';
-		$data       = $this->sanitize_step_data( $raw_data );
+		$step     = isset( $_POST['step'] ) ? intval( $_POST['step'] ) : 0;
+		$raw_data = isset( $_POST['data'] ) ? wp_unslash( $_POST['data'] ) : '';
+		$data     = $this->sanitize_step_data( $raw_data );
 
 		// If wrapper keys are present (as sent from React) use only the inner form_data array for tracking.
 		if ( is_array( $data ) && isset( $data['form_data'] ) && is_array( $data['form_data'] ) ) {
@@ -887,9 +894,8 @@ abstract class BB_Setup_Wizard_Manager {
 		}
 
 		// Get and sanitize preferences.
-		$raw_prefs = isset( $_POST['preferences'] ) ? wp_unslash( $_POST['preferences'] ) : '';
+		$raw_prefs   = isset( $_POST['preferences'] ) ? wp_unslash( $_POST['preferences'] ) : '';
 		$preferences = $this->sanitize_preferences( $raw_prefs );
-
 
 		$pref_key = isset( $_POST['preference_key'] ) ? sanitize_key( wp_unslash( $_POST['preference_key'] ) ) : '';
 
