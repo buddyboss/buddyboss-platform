@@ -1621,7 +1621,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 			$current_year = (int) wp_date( 'Y' );
 
 			return array(
-				'min' => $current_year - 100,
+				'min' => 1965, // Set the minimum year to 1965 as per date range filter.
 				'max' => $current_year + 50,
 			);
 		}
