@@ -43,7 +43,6 @@ const OnboardingApp = () => {
 
     const handleContinue = async (selectedOption) => {
         // Handle the continue action with the selected option
-        console.log('Selected option:', selectedOption);
 
         try {
             const response = await fetch(window.bbRlOnboarding?.ajaxUrl || window.ajaxurl, {
@@ -62,8 +61,6 @@ const OnboardingApp = () => {
             const data = await response.json();
 
             if (data.success) {
-                console.log('Onboarding completed successfully:', data.data);
-                
                 // Trigger custom event for extensibility
                 const event = new CustomEvent('bb_rl_onboarding_completed', {
                     detail: {
@@ -72,7 +69,7 @@ const OnboardingApp = () => {
                     }
                 });
                 document.dispatchEvent(event);
-                
+
                 // Handle different completion scenarios
                 if (selectedOption === 'readylaunch') {
                     // Redirect to ReadyLaunch settings page
@@ -111,8 +108,6 @@ const OnboardingApp = () => {
             const data = await response.json();
 
             if (data.success) {
-                console.log('Onboarding skipped successfully');
-                
                 // Trigger custom event for extensibility
                 const event = new CustomEvent('bb_rl_onboarding_skipped', {
                     detail: {
@@ -120,7 +115,7 @@ const OnboardingApp = () => {
                     }
                 });
                 document.dispatchEvent(event);
-                
+
                 setShowModal(false);
             } else {
                 console.error('Error skipping onboarding:', data.data?.message || 'Unknown error');
@@ -148,7 +143,6 @@ const OnboardingApp = () => {
             const data = await response.json();
 
             if (data.success) {
-                console.log('Step saved successfully:', data.data);
                 return true;
             } else {
                 console.error('Error saving step:', data.data?.message || 'Unknown error');

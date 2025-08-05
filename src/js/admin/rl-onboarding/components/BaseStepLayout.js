@@ -4,13 +4,13 @@ import { Button } from '@wordpress/components';
 import { PreviewPages } from './previewPages';
 import { PreviewSlider } from './PreviewSlider';
 
-export const BaseStepLayout = ({ 
-    stepData, 
-    children, 
-    onNext, 
-    onPrevious, 
-    onSkip, 
-    isFirstStep = false, 
+export const BaseStepLayout = ({
+    stepData,
+    children,
+    onNext,
+    onPrevious,
+    onSkip,
+    isFirstStep = false,
     isLastStep = false,
     currentStep = 0,
     totalSteps = 0,
@@ -21,7 +21,7 @@ export const BaseStepLayout = ({
     const { title, description, image } = stepData;
 
     // Get the image URL from the assets
-    const imageUrl = window.bbRlOnboarding?.assets?.assetsUrl 
+    const imageUrl = window.bbRlOnboarding?.assets?.assetsUrl
         ? `${window.bbRlOnboarding.assets.assetsUrl}${image}`
         : '';
 
@@ -35,10 +35,6 @@ export const BaseStepLayout = ({
         ...Object.values(allStepData).reduce((acc, stepData) => ({ ...acc, ...stepData }), {}),
         ...formData
     };
-
-    console.log('All Step Data:', allStepData);
-    console.log('Current Form Data:', formData);
-    console.log('Merged Form Data:', mergedFormData);
 
     return (
         <div className="bb-rl-step-layout">
@@ -67,15 +63,15 @@ export const BaseStepLayout = ({
                         <div className='bb-rl-step-progress'>
                             { stepsProgress }
                         </div>
-                        
+
                         <div className="bb-rl-step-options">
                             {children}
                         </div>
-                        
+
                         {/* Navigation buttons */}
                         <div className="bb-rl-step-navigation">
                             {!isFirstStep && (
-                                <Button 
+                                <Button
                                     className="bb-rl-nav-button bb-rl-previous-button"
                                     onClick={onPrevious}
                                 >
@@ -83,8 +79,8 @@ export const BaseStepLayout = ({
                                     {__('Back', 'buddyboss')}
                                 </Button>
                             )}
-                            
-                            <Button 
+
+                            <Button
                                 className="bb-rl-nav-button bb-rl-next-button"
                                 onClick={onNext}
                                 variant="primary"
@@ -111,4 +107,4 @@ export const BaseStepLayout = ({
             </div>
         </div>
     );
-}; 
+};

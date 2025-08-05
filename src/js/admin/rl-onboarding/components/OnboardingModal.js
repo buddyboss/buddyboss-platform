@@ -62,28 +62,28 @@ export const OnboardingModal = ({ isOpen, onClose, onContinue, onSkip, onSaveSte
     const enableFullscreenMode = () => {
         // Hide WordPress admin elements for fullscreen experience
         document.body.classList.add('bb-rl-fullscreen-mode');
-        
+
         // Prevent body scroll
         document.body.style.overflow = 'hidden';
-        
+
         // Hide admin bar
         const adminBar = document.getElementById('wpadminbar');
         if (adminBar) {
             adminBar.style.display = 'none';
         }
-        
+
         // Hide admin menu
         const adminMenu = document.getElementById('adminmenumain');
         if (adminMenu) {
             adminMenu.style.display = 'none';
         }
-        
+
         // Hide admin footer
         const adminFooter = document.getElementById('wpfooter');
         if (adminFooter) {
             adminFooter.style.display = 'none';
         }
-        
+
         // Adjust main content area
         const wpwrap = document.getElementById('wpwrap');
         if (wpwrap) {
@@ -94,28 +94,28 @@ export const OnboardingModal = ({ isOpen, onClose, onContinue, onSkip, onSaveSte
     const disableFullscreenMode = () => {
         // Restore WordPress admin elements
         document.body.classList.remove('bb-rl-fullscreen-mode');
-        
+
         // Restore body scroll
         document.body.style.overflow = '';
-        
+
         // Restore admin bar
         const adminBar = document.getElementById('wpadminbar');
         if (adminBar) {
             adminBar.style.display = '';
         }
-        
+
         // Restore admin menu
         const adminMenu = document.getElementById('adminmenumain');
         if (adminMenu) {
             adminMenu.style.display = '';
         }
-        
+
         // Restore admin footer
         const adminFooter = document.getElementById('wpfooter');
         if (adminFooter) {
             adminFooter.style.display = '';
         }
-        
+
         // Restore main content area
         const wpwrap = document.getElementById('wpwrap');
         if (wpwrap) {
@@ -151,7 +151,7 @@ export const OnboardingModal = ({ isOpen, onClose, onContinue, onSkip, onSaveSte
             });
 
             const data = await response.json();
-            
+
             if (data.success) {
                 // Update local progress data
                 if (window.bbRlOnboarding?.progress) {
@@ -175,23 +175,15 @@ export const OnboardingModal = ({ isOpen, onClose, onContinue, onSkip, onSaveSte
         if (currentStep.skip_progress) {
             return true;
         }
-        
+
         setIsSaving(true);
-        
+
         try {
             // Debug the request parameters
             const ajaxUrl = window.bbRlOnboarding?.ajaxUrl || window.ajaxurl;
             const nonce = window.bbRlOnboarding?.nonce || '';
             const wizardId = window.bbRlOnboarding?.wizardId || '';
             const action = wizardId + '_save_preferences';
-            
-            console.log('AutoSave Debug:', {
-                ajaxUrl,
-                nonce,
-                wizardId,
-                action,
-                preferences
-            });
 
             if (!ajaxUrl) {
                 console.error('AJAX URL not available');
@@ -216,16 +208,12 @@ export const OnboardingModal = ({ isOpen, onClose, onContinue, onSkip, onSaveSte
                 }),
             });
 
-            console.log('Response status:', response.status);
-            console.log('Response ok:', response.ok);
-
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
 
             const data = await response.json();
-            console.log('Response data:', data);
-            
+
             if (data.success) {
                 // Update local preferences
                 if (window.bbRlOnboarding?.preferences) {
@@ -261,7 +249,7 @@ export const OnboardingModal = ({ isOpen, onClose, onContinue, onSkip, onSaveSte
             if (!currentStep.skip_progress) {
                 saveSuccess = await saveStepProgress(currentStepIndex, formData);
             }
-            
+
             if (saveSuccess) {
                 // Update step data
                 const stepKey = currentStep.key;
@@ -300,7 +288,7 @@ export const OnboardingModal = ({ isOpen, onClose, onContinue, onSkip, onSaveSte
         try {
             // Save step as skipped
             await saveStepProgress(currentStepIndex, { skipped: true });
-            
+
             // Move to next step
             if (currentStepIndex < totalSteps - 1) {
                 setCurrentStepIndex(prev => prev + 1);
@@ -341,8 +329,7 @@ export const OnboardingModal = ({ isOpen, onClose, onContinue, onSkip, onSaveSte
             const data = await response.json();
 
             if (data.success) {
-                console.log('Onboarding completed successfully:', data.data);
-                
+
                 // Trigger completion event
                 const event = new CustomEvent('bb_rl_onboarding_completed', {
                     detail: { data: data.data, finalSettings }
@@ -353,7 +340,7 @@ export const OnboardingModal = ({ isOpen, onClose, onContinue, onSkip, onSaveSte
                 if (onClose) {
                     onClose();
                 }
-                
+
                 // Redirect to dashboard after brief delay
                 setTimeout(() => {
                     window.location.href = window.bbRlOnboarding?.dashboardUrl || '/wp-admin/';

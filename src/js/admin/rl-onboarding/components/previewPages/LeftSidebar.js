@@ -1,6 +1,4 @@
 export const LeftSidebar = ({ sideMenuItems = [], customLinks = [] }) => {
-    console.log(sideMenuItems);
-
     return (
         <div className="bb-rl-preview-sidebar">
             <ul className="bb-rl-preview-nav-list">
@@ -117,9 +115,9 @@ export const LeftSidebar = ({ sideMenuItems = [], customLinks = [] }) => {
                                 <span>{link.title}</span>
                             </li>
                         ))
-                    }                    
+                    }
                 </ul>
             </div>
         </div>
     );
-}; 
+};
