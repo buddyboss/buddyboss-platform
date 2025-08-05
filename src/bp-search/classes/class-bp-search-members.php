@@ -965,7 +965,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 			}
 
 			// If not found, translate the search term to English first.
-			foreach ( $english_months as $english_name => $month_num ) {
+			foreach ( $english_months as $month_num ) {
 				// Get the translation for this month using date_i18n().
 				$timestamp       = mktime( 0, 0, 0, $month_num, 1, 2025 );
 				$translated_name = date_i18n( 'F', $timestamp );
