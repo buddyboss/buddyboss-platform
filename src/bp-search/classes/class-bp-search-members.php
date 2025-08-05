@@ -1223,46 +1223,50 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 		 * @return string The search term in English.
 		 */
 		private function translate_time_elapsed_to_english( $search_term ) {
+			// Static cache for translations to avoid repeated function calls.
+			static $translation_cache = array();
+
 			// Extract the amount from the search term to get the correct plural form.
 			if ( preg_match( '/(\d+)/', $search_term, $matches ) ) {
 				$actual_amount = intval( $matches[1] );
 			} else {
-				$actual_amount = 1; // Default fallback.
-			}
-
-			// Check if BuddyBoss is active and use its translations.
-			$text_domain = 'buddyboss';
-			if ( ! function_exists( 'bp_is_active' ) || ! bp_is_active( 'xprofile' ) ) {
-				$text_domain = 'default'; // Fallback to WordPress translations.
+				$actual_amount = 1;
 			}
 
 			// Define time units to translate.
 			$time_units = array(
-				array(
-					'singular' => 'year',
-					'plural'   => 'years',
-				),
-				array(
-					'singular' => 'month',
-					'plural'   => 'months',
-				),
-				array(
-					'singular' => 'day',
-					'plural'   => 'days',
-				),
+				array( 'singular' => 'year', 'plural' => 'years' ),
+				array( 'singular' => 'month', 'plural' => 'months' ),
+				array( 'singular' => 'day', 'plural' => 'days' ),
 			);
 
-			// Translate all time units.
+			// Translate all time units with caching.
 			foreach ( $time_units as $unit ) {
-				$search_term = $this->translate_time_unit( $search_term, $unit['singular'], $unit['plural'], $text_domain, $actual_amount );
+				$cache_key = $unit['singular'] . '_' . $actual_amount;
+
+				if ( ! isset( $translation_cache[ $cache_key ] ) ) {
+					$translation_cache[ $cache_key ] = array(
+						'singular' => _n( '%s ' . $unit['singular'], '%s ' . $unit['plural'], 1, 'buddyboss' ),
+						'plural'   => _n( '%s ' . $unit['singular'], '%s ' . $unit['plural'], 2, 'buddyboss' ),
+					);
+				}
+
+				$translations = $translation_cache[ $cache_key ];
+				$search_term  = $this->translate_time_unit_cached( $search_term, $unit['singular'], $unit['plural'], $translations, $actual_amount );
 			}
 
 			// Define direction words to translate.
-			$directions = array( 'ago', 'from now' );
+			$directions = array( 'ago', 'since', 'from now' );
 
-			// Translate all direction words.
+			// Translate all direction words with caching.
 			foreach ( $directions as $direction ) {
-				$search_term = $this->translate_direction_word( $search_term, $direction, $text_domain );
+				$cache_key = 'direction_' . $direction;
+
+				if ( ! isset( $translation_cache[ $cache_key ] ) ) {
+					$translation_cache[ $cache_key ] = __( '%s ' . $direction, 'buddyboss' );
+				}
+
+				$search_term = $this->translate_direction_word_cached( $search_term, $direction, $translation_cache[ $cache_key ] );
 			}
 
 			return $search_term;
@@ -1270,26 +1274,36 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 
 		/**
 		 * Translate a time unit from other language to English.
+		 * i.e. Unit: year, month, day.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
 		 * @param string $search_term      The search term to translate.
 		 * @param string $english_singular The English singular form.
 		 * @param string $english_plural   The English plural form.
-		 * @param string $text_domain      The text domain for translations.
+		 * @param array  $translations     Cached translations.
 		 * @param int    $actual_amount    The actual amount for plural determination.
 		 *
 		 * @return string The translated search term.
 		 */
-		private function translate_time_unit( $search_term, $english_singular, $english_plural, $text_domain, $actual_amount ) {
-			$singular_translation = _n( '%s ' . $english_singular, '%s ' . $english_plural, 1, $text_domain );
-			$plural_translation   = _n( '%s ' . $english_singular, '%s ' . $english_plural, 2, $text_domain );
+		private function translate_time_unit_cached( $search_term, $english_singular, $english_plural, $translations, $actual_amount ) {
+			$singular_word = trim( str_replace( '%s', '', $translations['singular'] ) );
+			$plural_word   = trim( str_replace( '%s', '', $translations['plural'] ) );
 
-			$singular_word = trim( str_replace( '%s', '', $singular_translation ) );
-			$plural_word   = trim( str_replace( '%s', '', $plural_translation ) );
+			// Remove direction words and extract base time units.
+			$singular_base = $this->extract_base_time_unit( $this->remove_direction_words( $singular_word ) );
+			$plural_base   = $this->extract_base_time_unit( $this->remove_direction_words( $plural_word ) );
 
-			// Replace based on what's actually in the search term.
-			if ( stripos( $search_term, $plural_word ) !== false ) {
+			// Replace digits and try partial matching.
+			$singular_base = preg_replace( '/\d+/', $actual_amount, $singular_base );
+			$plural_base   = preg_replace( '/\d+/', $actual_amount, $plural_base );
+
+			// Try partial matching first, then fallback to exact matching.
+			if ( stripos( $search_term, $plural_base ) !== false ) {
+				$search_term = str_ireplace( $plural_base, $english_plural, $search_term );
+			} elseif ( stripos( $search_term, $singular_base ) !== false ) {
+				$search_term = str_ireplace( $singular_base, ( $actual_amount == 1 ? $english_singular : $english_plural ), $search_term );
+			} elseif ( stripos( $search_term, $plural_word ) !== false ) {
 				$search_term = str_ireplace( $plural_word, $english_plural, $search_term );
 			} elseif ( stripos( $search_term, $singular_word ) !== false ) {
 				$search_term = str_ireplace( $singular_word, ( $actual_amount == 1 ? $english_singular : $english_plural ), $search_term );
@@ -1299,22 +1313,82 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 		}
 
 		/**
+		 * Remove direction words from translation using WordPress translations.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $translation The translation to process.
+		 *
+		 * @return string The translation without direction words.
+		 */
+		private function remove_direction_words( $translation ) {
+			// Get direction words from WordPress translations.
+			$directions = array( 'ago', 'since', 'from now' );
+
+			foreach ( $directions as $direction ) {
+				$direction_translation = __( '%s ' . $direction, 'buddyboss' );
+				$direction_clean       = trim( str_replace( '%s', '', $direction_translation ) );
+				$translation           = str_replace( $direction_clean, '', $translation );
+			}
+
+			return trim( preg_replace( '/\s+/', ' ', $translation ) );
+		}
+
+		/**
+		 * Extract the base time unit by finding the shortest word.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $time_unit The time unit to extract base from.
+		 *
+		 * @return string The base time unit.
+		 */
+		private function extract_base_time_unit( $time_unit ) {
+			$words           = preg_split( '/\s+/', $time_unit );
+			$shortest_word   = '';
+			$shortest_length = PHP_INT_MAX;
+
+			foreach ( $words as $word ) {
+				if ( strlen( $word ) < $shortest_length && ! empty( $word ) ) {
+					$shortest_word   = $word;
+					$shortest_length = strlen( $word );
+				}
+			}
+
+			return $shortest_word;
+		}
+
+		/**
 		 * Translate a direction word from other language to English.
+		 * i.e. Direction: ago, since, from now.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
 		 * @param string $search_term The search term to translate.
 		 * @param string $direction   The direction word to translate.
-		 * @param string $text_domain The text domain for translations.
+		 * @param string $translation Cached translation.
 		 *
 		 * @return string The translated search term.
 		 */
-		private function translate_direction_word( $search_term, $direction, $text_domain ) {
-			$direction_translation = __( '%s ' . $direction, $text_domain );
-			$direction_clean       = trim( str_replace( '%s', '', $direction_translation ) );
+		private function translate_direction_word_cached( $search_term, $direction, $translation ) {
+			$direction_clean = trim( str_replace( '%s', '', $translation ) );
+			$direction_words = preg_split( '/\s+/', $direction_clean );
 
-			if ( stripos( $search_term, $direction_clean ) !== false ) {
-				$search_term = str_ireplace( $direction_clean, $direction, $search_term );
+			// Check if all direction words are present in the search term.
+			$all_words_present = true;
+			foreach ( $direction_words as $word ) {
+				if ( stripos( $search_term, $word ) === false ) {
+					$all_words_present = false;
+					break;
+				}
+			}
+
+			// If all direction words are present, replace them with the English direction.
+			if ( $all_words_present ) {
+				foreach ( $direction_words as $word ) {
+					$search_term = str_ireplace( $word, '', $search_term );
+				}
+				$search_term = trim( $search_term ) . ' ' . $direction;
 			}
 
 			return $search_term;
