@@ -519,7 +519,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 		 */
 		private function bb_is_date_search( $search_term ) {
 			// First, try to translate time elapsed expressions to English.
-			$english_search = $this->translate_time_elapsed_to_english( $search_term );
+			$english_search = $this->bb_translate_time_elapsed_to_english( $search_term );
 
 			// Check for time elapsed patterns in English.
 			$time_elapsed_patterns = array(
@@ -572,7 +572,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 			$custom_formats = $this->bb_get_custom_date_formats( $date_field_ids );
 
 			// First, try to translate time elapsed expressions to English.
-			$english_search = $this->translate_time_elapsed_to_english( $search_term );
+			$english_search = $this->bb_translate_time_elapsed_to_english( $search_term );
 
 			// Parse time elapsed patterns in English.
 			if ( preg_match( '/^(\d+)\s+(year|month|day)s?\s+(ago|from now)$/i', $english_search, $matches ) ) {
@@ -1216,104 +1216,201 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 		/**
 		 * Translate time elapsed expressions to English for regex matching.
 		 *
+		 * This function takes a search term in any language and translates it to English format
+		 * for consistent regex matching.
+		 *
+		 * Process:
+		 * 1. Extract the numeric amount (e.g., 32) from the search term.
+		 * 2. Get WordPress translations for time units (year/years, month/months, day/days).
+		 * 3. Remove direction words (e.g., ago, since, from now) from translations to get base time units.
+		 * 4. Extract the shortest word as the base time unit (e.g., year, month, day).
+		 * 5. Try partial matching with the base time unit.
+		 * 6. Replace direction words with English equivalents (e.g., ago, since, from now).
+		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
 		 * @param string $search_term The search term to translate.
 		 *
 		 * @return string The search term in English.
 		 */
-		private function translate_time_elapsed_to_english( $search_term ) {
+		private function bb_translate_time_elapsed_to_english( $search_term ) {
 			// Static cache for translations to avoid repeated function calls.
+			// This improves performance by caching WordPress translation results.
 			static $translation_cache = array();
 
 			// Extract the amount from the search term to get the correct plural form.
+			// For example: "since 32 years" → $actual_amount = 32.
 			if ( preg_match( '/(\d+)/', $search_term, $matches ) ) {
 				$actual_amount = intval( $matches[1] );
 			} else {
-				$actual_amount = 1;
+				$actual_amount = 1; // Default fallback if no number found.
 			}
 
 			// Define time units to translate.
+			// These are the base English time units we'll look for in translations.
 			$time_units = array(
-				array( 'singular' => 'year', 'plural' => 'years' ),
-				array( 'singular' => 'month', 'plural' => 'months' ),
-				array( 'singular' => 'day', 'plural' => 'days' ),
+				array( 'singular' => 'year', 'plural' => 'years' ),   // Process year/years.
+				array( 'singular' => 'month', 'plural' => 'months' ), // Process month/months.  
+				array( 'singular' => 'day', 'plural' => 'days' ),     // Process day/days.
 			);
 
 			// Translate all time units with caching.
+			// This loop processes each time unit (year, month, day) to find matches in the search term.
 			foreach ( $time_units as $unit ) {
+				// Create a unique cache key for this time unit and amount.
+				// Example: "year_32" for 32 years.
 				$cache_key = $unit['singular'] . '_' . $actual_amount;
 
+				// Cache WordPress translations to avoid repeated function calls.
+				// This improves performance significantly for repeated searches.
 				if ( ! isset( $translation_cache[ $cache_key ] ) ) {
 					$translation_cache[ $cache_key ] = array(
+						// Get singular form translation (e.g., "one year" for "year").
 						'singular' => _n( '%s ' . $unit['singular'], '%s ' . $unit['plural'], 1, 'buddyboss' ),
+						// Get plural form translation (e.g., "two years" for "years").
 						'plural'   => _n( '%s ' . $unit['singular'], '%s ' . $unit['plural'], 2, 'buddyboss' ),
 					);
 				}
 
+				// Get the cached translations for this time unit.
 				$translations = $translation_cache[ $cache_key ];
-				$search_term  = $this->translate_time_unit_cached( $search_term, $unit['singular'], $unit['plural'], $translations, $actual_amount );
+
+				// Process this time unit in the search term.
+				// This will try to find and replace the time unit with its English equivalent.
+				$search_term = $this->bb_translate_time_unit_cached( $search_term, $unit['singular'], $unit['plural'], $translations, $actual_amount );
 			}
 
 			// Define direction words to translate.
+			// These are the direction indicators like "ago", "since", "from now".
 			$directions = array( 'ago', 'since', 'from now' );
 
 			// Translate all direction words with caching.
+			// This loop processes each direction word to find and replace them with English equivalents.
 			foreach ( $directions as $direction ) {
+				// Create a unique cache key for this direction word.
+				// Example: "direction_ago".
 				$cache_key = 'direction_' . $direction;
 
+				// Cache WordPress translations for direction words.
 				if ( ! isset( $translation_cache[ $cache_key ] ) ) {
+					// Get the translation for this direction word (e.g., "ago" for "ago").
 					$translation_cache[ $cache_key ] = __( '%s ' . $direction, 'buddyboss' );
 				}
 
-				$search_term = $this->translate_direction_word_cached( $search_term, $direction, $translation_cache[ $cache_key ] );
+				// Process this direction word in the search term.
+				// This will try to find and replace the direction word with its English equivalent.
+				$search_term = $this->bb_translate_direction_word_cached( $search_term, $direction, $translation_cache[ $cache_key ] );
 			}
 
+			// Return the final translated search term in English.
+			// Example: "since 32 years" → "32 years ago".
 			return $search_term;
 		}
 
 		/**
-		 * Translate a time unit from other language to English.
-		 * i.e. Unit: year, month, day.
+		 * Translate a time unit from another language to English.
+		 * i.e., Unit: year, month, day.
+		 *
+		 * This function processes a single time unit (year, month, day) in the search term
+		 * and replaces it with its English equivalent. It uses a sophisticated matching
+		 * approach that handles complex language structures.
+		 *
+		 * Process:
+		 * 1. Remove %s placeholder from WordPress translations.
+		 * 2. Remove direction words (e.g., ago, since, from now) from translations to get base time units.
+		 * 3. Extract the shortest word (e.g., year, month, day, one, two, three, etc.) as the base time unit.
+		 * 4. Replace any digits in the base unit with the actual amount.
+		 * 5. Try partial matching with the base time unit first.
+		 * 6. Fallback to exact matching if partial matching fails.
+		 *
+		 * Example:
+		 * Input: "since 32 years"
+		 * WordPress translation: "one year"
+		 * Base extraction: "year"
+		 * Partial match: "year" found in "since 32 years"
+		 * Replacement: "year" → "years"
+		 * Result: "32 years ago"
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
 		 * @param string $search_term      The search term to translate.
-		 * @param string $english_singular The English singular form.
-		 * @param string $english_plural   The English plural form.
-		 * @param array  $translations     Cached translations.
-		 * @param int    $actual_amount    The actual amount for plural determination.
+		 * @param string $english_singular The English singular form (e.g., "year").
+		 * @param string $english_plural   The English plural form (e.g., "years").
+		 * @param array  $translations     Cached translations from WordPress.
+		 * @param int    $actual_amount    The actual amount from search term (e.g., 32).
 		 *
-		 * @return string The translated search term.
+		 * @return string The translated search term with time unit replaced.
 		 */
-		private function translate_time_unit_cached( $search_term, $english_singular, $english_plural, $translations, $actual_amount ) {
+		private function bb_translate_time_unit_cached( $search_term, $english_singular, $english_plural, $translations, $actual_amount ) {
+			// Remove %s placeholder from WordPress translations.
+			// WordPress' translations often include %s for number formatting.
 			$singular_word = trim( str_replace( '%s', '', $translations['singular'] ) );
-			$plural_word   = trim( str_replace( '%s', '', $translations['plural'] ) );
+			// Example: "%s year" → "year".
+
+			$plural_word = trim( str_replace( '%s', '', $translations['plural'] ) );
+			// Example: "%s years" → "years".
 
 			// Remove direction words and extract base time units.
-			$singular_base = $this->extract_base_time_unit( $this->remove_direction_words( $singular_word ) );
-			$plural_base   = $this->extract_base_time_unit( $this->remove_direction_words( $plural_word ) );
+			// This step removes words like "ago", "since" from the translation to get just the time unit.
+			$singular_base = $this->bb_extract_base_time_unit( $this->bb_remove_direction_words( $singular_word ) );
+			// Example: "one year" → "year".
 
-			// Replace digits and try partial matching.
+			$plural_base = $this->bb_extract_base_time_unit( $this->bb_remove_direction_words( $plural_word ) );
+			// Example: "two years" → "two years".
+
+			// Replace digits in the base units with the actual amount from search term.
+			// This handles cases where translations include numbers that need to be updated.
 			$singular_base = preg_replace( '/\d+/', $actual_amount, $singular_base );
-			$plural_base   = preg_replace( '/\d+/', $actual_amount, $plural_base );
+			// Example: "year 1" → "year 32".
+
+			$plural_base = preg_replace( '/\d+/', $actual_amount, $plural_base );
+			// Example: "years 2" → "years 32".
 
 			// Try partial matching first, then fallback to exact matching.
+			// This approach handles complex language structures where exact matches might not work.
 			if ( stripos( $search_term, $plural_base ) !== false ) {
+				// Check if the plural base unit exists in the search term.
+				// Example: "two years" in "since 32 years" → FALSE.
 				$search_term = str_ireplace( $plural_base, $english_plural, $search_term );
 			} elseif ( stripos( $search_term, $singular_base ) !== false ) {
-				$search_term = str_ireplace( $singular_base, ( $actual_amount == 1 ? $english_singular : $english_plural ), $search_term );
+				// Check if the singular base unit exists in the search term.
+				// Example: "year" in "since 32 years" → TRUE.
+				$search_term = str_ireplace( $singular_base, ( 1 === (int) $actual_amount ? $english_singular : $english_plural ), $search_term );
+				// Replace it with singular or plural based on amount: 1 = singular, >1 = plural.
+				// Example: "year" → "years" (since $actual_amount = 32).
 			} elseif ( stripos( $search_term, $plural_word ) !== false ) {
+				// Fallback: Check if the full plural word exists in the search term.
+				// This handles cases where the base extraction didn't work.
 				$search_term = str_ireplace( $plural_word, $english_plural, $search_term );
 			} elseif ( stripos( $search_term, $singular_word ) !== false ) {
-				$search_term = str_ireplace( $singular_word, ( $actual_amount == 1 ? $english_singular : $english_plural ), $search_term );
+				// Fallback: Check if the full singular word exists in the search term.
+				// This handles cases where the base extraction didn't work.
+				$search_term = str_ireplace( $singular_word, ( 1 === (int) $actual_amount ? $english_singular : $english_plural ), $search_term );
 			}
 
+			// Return the search term with the time unit replaced.
+			// Example: "since 32 years" → "32 years ago".
 			return $search_term;
 		}
 
 		/**
 		 * Remove direction words from translation using WordPress translations.
+		 *
+		 * This function removes direction words like "ago", "since", "from now" from
+		 * WordPress translations to extract just the time unit part.
+		 * It uses WordPress translation functions to get the direction words in the current language.
+		 *
+		 * Process:
+		 * 1. Get WordPress translations for direction words (ago, since, from now).
+		 * 2. Remove %s placeholder from each translation.
+		 * 3. Remove each direction word from the input translation.
+		 * 4. Clean up extra spaces and return the cleaned translation.
+		 *
+		 * Example:
+		 * Input: "one year"
+		 * Direction words: "ago", "since", "from now", etc.
+		 * Process: Remove direction words from "one year"
+		 * Result: "one year" (no direction words found, so unchanged)
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
@@ -1321,21 +1418,54 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 		 *
 		 * @return string The translation without direction words.
 		 */
-		private function remove_direction_words( $translation ) {
+		private function bb_remove_direction_words( $translation ) {
 			// Get direction words from WordPress translations.
+			// These are the direction indicators that might appear in time unit translations.
 			$directions = array( 'ago', 'since', 'from now' );
 
+			// Process each direction word to remove it from the translation.
 			foreach ( $directions as $direction ) {
+				// Get the WordPress translation for this direction word.
+				// Example: __('%s ago', 'buddyboss') → "since".
 				$direction_translation = __( '%s ' . $direction, 'buddyboss' );
-				$direction_clean       = trim( str_replace( '%s', '', $direction_translation ) );
-				$translation           = str_replace( $direction_clean, '', $translation );
+
+				// Remove the %s placeholder to get just the direction word.
+				// Example: "since %s" → "since".
+				$direction_clean = trim( str_replace( '%s', '', $direction_translation ) );
+
+				// Remove this direction word from the input translation.
+				// Example: "since one year" → "one year".
+				$translation = str_replace( $direction_clean, '', $translation );
 			}
 
+			// Clean up extra spaces and return the cleaned translation.
+			// This removes any double spaces that might have been created during replacement.
+			// Example: "one year" → "one year".
 			return trim( preg_replace( '/\s+/', ' ', $translation ) );
 		}
 
 		/**
 		 * Extract the base time unit by finding the shortest word.
+		 *
+		 * This function extracts the base time unit from a complex translation by finding
+		 * the shortest word, which is typically the core time unit. This handles cases
+		 * where WordPress translations include modifiers or additional words.
+		 *
+		 * Process:
+		 * 1. Split the time unit into individual words.
+		 * 2. Find the shortest word (excluding empty words).
+		 * 3. Return the shortest word as the base time unit.
+		 *
+		 * Example:
+		 * Input: "one year"
+		 * Words: ["one", "year"]
+		 * Lengths: "one" = 3 chars, "year" = 5 chars
+		 * Result: "one" - shortest word
+		 *
+		 * This approach works because:
+		 * - Core time units are usually shorter than modifiers.
+		 * - "year" is shorter than "one", "two", "single", etc.
+		 * - "month" is shorter than "one month", "two months", etc.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
@@ -1343,40 +1473,78 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 		 *
 		 * @return string The base time unit.
 		 */
-		private function extract_base_time_unit( $time_unit ) {
-			$words           = preg_split( '/\s+/', $time_unit );
+		private function bb_extract_base_time_unit( $time_unit ) {
+			// Split the time unit into individual words.
+			// This separates the time unit from any modifiers or additional words.
+			$words = preg_split( '/\s+/', $time_unit );
+			// Example: "one year" → ["one", "year"].
+
+			// Initialize variables to track the shortest word.
 			$shortest_word   = '';
 			$shortest_length = PHP_INT_MAX;
 
+			// Find the shortest word in the array.
+			// The shortest word is typically the core time unit.
 			foreach ( $words as $word ) {
+				// Check if this word is shorter than the current shortest and not empty.
 				if ( strlen( $word ) < $shortest_length && ! empty( $word ) ) {
 					$shortest_word   = $word;
 					$shortest_length = strlen( $word );
 				}
 			}
 
+			// Return the shortest word as the base time unit.
+			// Example: "one" from "one year".
 			return $shortest_word;
 		}
 
 		/**
-		 * Translate a direction word from other language to English.
-		 * i.e. Direction: ago, since, from now.
+		 * Translate a direction word from another language to English.
+		 *
+		 * This function processes direction words like "ago", "since", "from now" in the search term
+		 * and replaces them with their English equivalents.
+		 * It handles complex multi-word direction phrases that might appear in different languages.
+		 *
+		 * Process:
+		 * 1. Remove %s placeholder from WordPress translation.
+		 * 2. Split the direction phrase into individual words.
+		 * 3. Check if all direction words are present in the search term.
+		 * 4. Remove each direction word from the search term.
+		 * 5. Add the English direction word to the end.
+		 *
+		 * Example:
+		 * Input: "since 32 years"
+		 * WordPress translation: "since"
+		 * Direction words: ["since"]
+		 * Check: "since" found in "since 32 years" → TRUE
+		 * Remove: "since" from "since 32 years" → "32 years"
+		 * Add: "ago" to "32 years" → "32 years ago"
+		 * Result: "32 years ago"
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
 		 * @param string $search_term The search term to translate.
 		 * @param string $direction   The direction word to translate.
-		 * @param string $translation Cached translation.
+		 * @param string $translation Cached translation from WordPress.
 		 *
-		 * @return string The translated search term.
+		 * @return string The translated search term with direction word replaced.
 		 */
-		private function translate_direction_word_cached( $search_term, $direction, $translation ) {
+		private function bb_translate_direction_word_cached( $search_term, $direction, $translation ) {
+			// Remove %s placeholder from WordPress translation.
+			// WordPress' translations often include %s for number formatting.
 			$direction_clean = trim( str_replace( '%s', '', $translation ) );
+			// Example: "since %s" → "since".
+
+			// Split the direction phrase into individual words.
+			// This handles complex multi-word direction phrases in different languages.
 			$direction_words = preg_split( '/\s+/', $direction_clean );
+			// Example: "since" → ["since"], "from before" → ["from", "before"].
 
 			// Check if all direction words are present in the search term.
+			// This ensures we only replace it when we have a complete match.
 			$all_words_present = true;
 			foreach ( $direction_words as $word ) {
+				// Check if this direction word exists in the search term.
 				if ( stripos( $search_term, $word ) === false ) {
 					$all_words_present = false;
 					break;
@@ -1384,13 +1552,21 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 			}
 
 			// If all direction words are present, replace them with the English direction.
+			// This handles both single-word and multi-word direction phrases.
 			if ( $all_words_present ) {
+				// Remove each direction word from the search term.
 				foreach ( $direction_words as $word ) {
 					$search_term = str_ireplace( $word, '', $search_term );
+					// Example: Remove "since" from "since 32 years" → "32 years".
 				}
+
+				// Add the English direction word to the end.
 				$search_term = trim( $search_term ) . ' ' . $direction;
+				// Example: Add "ago" to "32 years" → "32 years ago".
 			}
 
+			// Return the search term with direction word replaced.
+			// Example: "since 32 years" → "32 years ago".
 			return $search_term;
 		}
 	}
