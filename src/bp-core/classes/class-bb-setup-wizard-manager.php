@@ -624,6 +624,12 @@ abstract class BB_Setup_Wizard_Manager {
 					'wp_version' => get_bloginfo( 'version' ),
 				)
 			);
+
+			// Force immediate telemetry sending after each onboarding step.
+			$telemetry_instance = BB_Telemetry::instance();
+			if ( $telemetry_instance ) {
+				$telemetry_instance->bb_send_telemetry_report_to_analytics();
+			}
 		}
 
 		// Fire custom analytics hooks.
