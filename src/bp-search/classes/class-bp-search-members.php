@@ -509,18 +509,31 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 		}
 
 		/**
-		 * Check if the search term contains date patterns.
+		 * Check if the search term is a date search.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
-		 * @param string $search_term Search term to check.
+		 * @param string $search_term The search term to check.
 		 *
-		 * @return bool True if search term matches date patterns.
+		 * @return bool True if it's a date search, false otherwise.
 		 */
 		private function bb_is_date_search( $search_term ) {
-			$search_term = trim( strtolower( $search_term ) );
+			// First, try to translate time elapsed expressions to English.
+			$english_search = $this->translate_time_elapsed_to_english( $search_term );
 
-			// Combined regex pattern for all date formats (more efficient than multiple loops).
+			// Check for time elapsed patterns in English.
+			$time_elapsed_patterns = array(
+				'/^(\d+)\s+(year|month|day)s?\s+(ago|from now)$/i',
+				'/^(ago|from now)\s+(\d+)\s+(year|month|day)s?$/i',
+			);
+
+			foreach ( $time_elapsed_patterns as $pattern ) {
+				if ( preg_match( $pattern, $english_search ) ) {
+					return true;
+				}
+			}
+
+			// Check for other date patterns.
 			$combined_pattern = '/^(?:\d{4}-\d{1,2}-\d{1,2}|' . // YYYY-MM-DD.
 								'\d{4}\.\d{1,2}\.\d{1,2}|' . // YYYY.MM.DD format.
 								'\d{4}\/\d{1,2}\/\d{1,2}|' . // YYYY/MM/DD format.
@@ -535,20 +548,21 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 								'[a-z]+|' . // Month name only.
 								'[a-z]+\s+\d{1,2}|' . // Month name + day.
 								'\d{1,2}[\/\-\.\s]\d{1,2}|' . // MM/DD, MM-DD, MM.DD, MM DD.
-								'\d+\s+(?:year|month|day)s?\s+(?:ago|from\s+now))$/i';
+								'\d+\s+[a-z]+\s+[a-z\s]+|' . // Time elapsed: "34 years ago".
+								'[a-z]+\s+\d+\s+[a-z\s]+)$/i'; // Time elapsed: "vor 34 Jahren".
 
 			return preg_match( $combined_pattern, $search_term );
 		}
 
 		/**
-		 * Parse date search term and return normalized date values.
+		 * Parse date search terms and convert to normalized date values.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
-		 * @param string $search_term    Search term to parse.
-		 * @param array  $date_field_ids Array of date field IDs to consider custom formats.
+		 * @param string $search_term    The search term to parse.
+		 * @param array  $date_field_ids Array of date field IDs.
 		 *
-		 * @return array Array of normalized date values for database query.
+		 * @return array Array of normalized date values.
 		 */
 		private function bb_parse_date_search( $search_term, $date_field_ids = array() ) {
 			$search_term = trim( strtolower( $search_term ) );
@@ -557,319 +571,333 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 			// Get custom date formats for the fields.
 			$custom_formats = $this->bb_get_custom_date_formats( $date_field_ids );
 
-			// Full date formats.
-			if ( preg_match( '/^(\d{4})-(\d{1,2})-(\d{1,2})$/', $search_term, $matches ) ) {
-				// YYYY-MM-DD format.
-				$date_values[] = array(
-					'type'  => 'exact',
-					'value' => $matches[1] . '-' . str_pad( $matches[2], 2, '0', STR_PAD_LEFT ) . '-' . str_pad( $matches[3], 2, '0', STR_PAD_LEFT ) . ' 00:00:00',
-				);
-			} elseif ( preg_match( '/^(\d{4})\.(\d{1,2})\.(\d{1,2})$/', $search_term, $matches ) ) {
-				// YYYY.MM.DD format.
-				$date_values[] = array(
-					'type'  => 'exact',
-					'value' => $matches[1] . '-' . str_pad( $matches[2], 2, '0', STR_PAD_LEFT ) . '-' . str_pad( $matches[3], 2, '0', STR_PAD_LEFT ) . ' 00:00:00',
-				);
-			} elseif ( preg_match( '/^(\d{4})\/(\d{1,2})\/(\d{1,2})$/', $search_term, $matches ) ) {
-				// YYYY/MM/DD format.
-				$date_values[] = array(
-					'type'  => 'exact',
-					'value' => $matches[1] . '-' . str_pad( $matches[2], 2, '0', STR_PAD_LEFT ) . '-' . str_pad( $matches[3], 2, '0', STR_PAD_LEFT ) . ' 00:00:00',
-				);
-			} elseif ( preg_match( '/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/', $search_term, $matches ) ) {
-				// MM/DD/YYYY or DD/MM/YYYY format - try both interpretations.
-				$date_values[] = array(
-					'type'  => 'exact',
-					'value' => $matches[3] . '-' . str_pad( $matches[1], 2, '0', STR_PAD_LEFT ) . '-' . str_pad( $matches[2], 2, '0', STR_PAD_LEFT ) . ' 00:00:00',
-				);
-				$date_values[] = array(
-					'type'  => 'exact',
-					'value' => $matches[3] . '-' . str_pad( $matches[2], 2, '0', STR_PAD_LEFT ) . '-' . str_pad( $matches[1], 2, '0', STR_PAD_LEFT ) . ' 00:00:00',
-				);
-			} elseif ( preg_match( '/^(\d{1,2})-(\d{1,2})-(\d{4})$/', $search_term, $matches ) ) {
-				// MM-DD-YYYY or DD-MM-YYYY format - try both interpretations.
-				$date_values[] = array(
-					'type'  => 'exact',
-					'value' => $matches[3] . '-' . str_pad( $matches[1], 2, '0', STR_PAD_LEFT ) . '-' . str_pad( $matches[2], 2, '0', STR_PAD_LEFT ) . ' 00:00:00',
-				);
-				$date_values[] = array(
-					'type'  => 'exact',
-					'value' => $matches[3] . '-' . str_pad( $matches[2], 2, '0', STR_PAD_LEFT ) . '-' . str_pad( $matches[1], 2, '0', STR_PAD_LEFT ) . ' 00:00:00',
-				);
-			} elseif ( preg_match( '/^(\d{1,2})\.(\d{1,2})\.(\d{4})$/', $search_term, $matches ) ) {
-				// MM.DD.YYYY or DD.MM.YYYY format - try both interpretations.
-				$date_values[] = array(
-					'type'  => 'exact',
-					'value' => $matches[3] . '-' . str_pad( $matches[1], 2, '0', STR_PAD_LEFT ) . '-' . str_pad( $matches[2], 2, '0', STR_PAD_LEFT ) . ' 00:00:00',
-				);
-				$date_values[] = array(
-					'type'  => 'exact',
-					'value' => $matches[3] . '-' . str_pad( $matches[2], 2, '0', STR_PAD_LEFT ) . '-' . str_pad( $matches[1], 2, '0', STR_PAD_LEFT ) . ' 00:00:00',
-				);
-			} elseif ( preg_match( '/^(\d{1,2})\s+(\d{1,2})\s+(\d{4})$/', $search_term, $matches ) ) {
-				// MM DD YYYY or DD MM YYYY format - try both interpretations.
-				$date_values[] = array(
-					'type'  => 'exact',
-					'value' => $matches[3] . '-' . str_pad( $matches[1], 2, '0', STR_PAD_LEFT ) . '-' . str_pad( $matches[2], 2, '0', STR_PAD_LEFT ) . ' 00:00:00',
-				);
-				$date_values[] = array(
-					'type'  => 'exact',
-					'value' => $matches[3] . '-' . str_pad( $matches[2], 2, '0', STR_PAD_LEFT ) . '-' . str_pad( $matches[1], 2, '0', STR_PAD_LEFT ) . ' 00:00:00',
-				);
-			} elseif ( preg_match( '/^(\d{4})$/', $search_term, $matches ) ) {
-				// Year only - return range for entire year.
-				$year          = $matches[1];
-				$date_values[] = array(
-					'type'  => 'range',
-					'start' => $year . '-01-01 00:00:00',
-					'end'   => $year . '-12-31 23:59:59',
-				);
-			} elseif ( preg_match( '/^(\d{4})\/(\d{1,2})$/', $search_term, $matches ) ) {
-				// YYYY/MM format.
-				$year          = $matches[1];
-				$month         = str_pad( $matches[2], 2, '0', STR_PAD_LEFT );
-				$date_values[] = array(
-					'type'  => 'range',
-					'start' => $year . '-' . $month . '-01 00:00:00',
-					'end'   => $year . '-' . $month . '-' . gmdate( 't', strtotime( $year . '-' . $month . '-01' ) ) . ' 23:59:59',
-				);
-			} elseif ( preg_match( '/^(\d{4})\.(\d{1,2})$/', $search_term, $matches ) ) {
-				// YYYY.MM format.
-				$year          = $matches[1];
-				$month         = str_pad( $matches[2], 2, '0', STR_PAD_LEFT );
-				$date_values[] = array(
-					'type'  => 'range',
-					'start' => $year . '-' . $month . '-01 00:00:00',
-					'end'   => $year . '-' . $month . '-' . gmdate( 't', strtotime( $year . '-' . $month . '-01' ) ) . ' 23:59:59',
-				);
-			} elseif ( preg_match( '/^(\d{1,2})\/(\d{4})$/', $search_term, $matches ) ) {
-				// MM/YYYY format.
-				$month         = str_pad( $matches[1], 2, '0', STR_PAD_LEFT );
-				$year          = $matches[2];
-				$date_values[] = array(
-					'type'  => 'range',
-					'start' => $year . '-' . $month . '-01 00:00:00',
-					'end'   => $year . '-' . $month . '-' . gmdate( 't', strtotime( $year . '-' . $month . '-01' ) ) . ' 23:59:59',
-				);
-			} elseif ( preg_match( '/^(\d{4})-(\d{1,2})$/', $search_term, $matches ) ) {
-				// YYYY-MM format.
-				$year          = $matches[1];
-				$month         = str_pad( $matches[2], 2, '0', STR_PAD_LEFT );
-				$date_values[] = array(
-					'type'  => 'range',
-					'start' => $year . '-' . $month . '-01 00:00:00',
-					'end'   => $year . '-' . $month . '-' . gmdate( 't', strtotime( $year . '-' . $month . '-01' ) ) . ' 23:59:59',
-				);
-			} elseif ( preg_match( '/^(\d{1,2})-(\d{4})$/', $search_term, $matches ) ) {
-				// MM-YYYY format.
-				$month         = str_pad( $matches[1], 2, '0', STR_PAD_LEFT );
-				$year          = $matches[2];
-				$date_values[] = array(
-					'type'  => 'range',
-					'start' => $year . '-' . $month . '-01 00:00:00',
-					'end'   => $year . '-' . $month . '-' . gmdate( 't', strtotime( $year . '-' . $month . '-01' ) ) . ' 23:59:59',
-				);
-			} elseif ( preg_match( '/^(\d{1,2})\/(\d{1,2})$/', $search_term, $matches ) ) {
-				// MM/DD or DD/MM format without year - try both interpretations.
-				$first  = intval( $matches[1] );
-				$second = intval( $matches[2] );
+			// First, try to translate time elapsed expressions to English.
+			$english_search = $this->translate_time_elapsed_to_english( $search_term );
 
-				// Try MM/DD interpretation (first as month, second as day).
-				if ( $first >= 1 && $first <= 12 && $second >= 1 && $second <= 31 ) {
-					// Validate the date using checkdate with current year.
-					if ( checkdate( $first, $second, (int) gmdate( 'Y' ) ) ) {
-						$month         = str_pad( $first, 2, '0', STR_PAD_LEFT );
-						$day           = str_pad( $second, 2, '0', STR_PAD_LEFT );
-						$date_values[] = array(
-							'type'    => 'partial',
-							'pattern' => $month . '-' . $day,
-						);
-					}
+			// Parse time elapsed patterns in English.
+			if ( preg_match( '/^(\d+)\s+(year|month|day)s?\s+(ago|from now)$/i', $english_search, $matches ) ) {
+				// Time elapsed format: "34 years ago".
+				$amount    = intval( $matches[1] );
+				$unit      = $matches[2];
+				$direction = $matches[3];
+
+				$target_time = $this->bb_calculate_time_elapsed_date( $amount, $unit, $direction, time() );
+
+				if ( $target_time ) {
+					$target_year = gmdate( 'Y', $target_time );
+					$date_values[] = array(
+						'type'  => 'range',
+						'start' => $target_year . '-01-01 00:00:00',
+						'end'   => $target_year . '-12-31 23:59:59',
+					);
 				}
+			} elseif ( preg_match( '/^(ago|from now)\s+(\d+)\s+(year|month|day)s?$/i', $english_search, $matches ) ) {
+				// Time elapsed format: "ago 34 years".
+				$direction = $matches[1];
+				$amount    = intval( $matches[2] );
+				$unit      = $matches[3];
 
-				// Try DD/MM interpretation (first as day, second as month).
-				if ( $second >= 1 && $second <= 12 && $first >= 1 && $first <= 31 ) {
-					// Validate the date using checkdate with current year.
-					if ( checkdate( $second, $first, (int) gmdate( 'Y' ) ) ) {
-						$month         = str_pad( $second, 2, '0', STR_PAD_LEFT );
-						$day           = str_pad( $first, 2, '0', STR_PAD_LEFT );
-						$date_values[] = array(
-							'type'    => 'partial',
-							'pattern' => $month . '-' . $day,
-						);
-					}
+				$target_time = $this->bb_calculate_time_elapsed_date( $amount, $unit, $direction, time() );
+
+				if ( $target_time ) {
+					$target_year = gmdate( 'Y', $target_time );
+					$date_values[] = array(
+						'type'  => 'range',
+						'start' => $target_year . '-01-01 00:00:00',
+						'end'   => $target_year . '-12-31 23:59:59',
+					);
 				}
-			} elseif ( preg_match( '/^(\d{1,2})-(\d{1,2})$/', $search_term, $matches ) ) {
-				// MM-DD or DD-MM format without year - try both interpretations.
-				$first  = intval( $matches[1] );
-				$second = intval( $matches[2] );
-
-				// Try MM-DD interpretation (first as month, second as day).
-				if ( $first >= 1 && $first <= 12 && $second >= 1 && $second <= 31 ) {
-					// Validate the date using checkdate with current year.
-					if ( checkdate( $first, $second, (int) gmdate( 'Y' ) ) ) {
-						$month         = str_pad( $first, 2, '0', STR_PAD_LEFT );
-						$day           = str_pad( $second, 2, '0', STR_PAD_LEFT );
-						$date_values[] = array(
-							'type'    => 'partial',
-							'pattern' => $month . '-' . $day,
-						);
-					}
-				}
-
-				// Try DD-MM interpretation (first as day, second as month).
-				if ( $second >= 1 && $second <= 12 && $first >= 1 && $first <= 31 ) {
-					// Validate the date using checkdate with current year.
-					if ( checkdate( $second, $first, (int) gmdate( 'Y' ) ) ) {
-						$month         = str_pad( $second, 2, '0', STR_PAD_LEFT );
-						$day           = str_pad( $first, 2, '0', STR_PAD_LEFT );
-						$date_values[] = array(
-							'type'    => 'partial',
-							'pattern' => $month . '-' . $day,
-						);
-					}
-				}
-			} elseif ( preg_match( '/^(\d{1,2})\.(\d{1,2})$/', $search_term, $matches ) ) {
-				// MM.DD or DD.MM format without year - try both interpretations.
-				$first  = intval( $matches[1] );
-				$second = intval( $matches[2] );
-
-				// Try MM.DD interpretation (first as month, second as day).
-				if ( $first >= 1 && $first <= 12 && $second >= 1 && $second <= 31 ) {
-					// Validate the date using checkdate with current year.
-					if ( checkdate( $first, $second, (int) gmdate( 'Y' ) ) ) {
-						$month         = str_pad( $first, 2, '0', STR_PAD_LEFT );
-						$day           = str_pad( $second, 2, '0', STR_PAD_LEFT );
-						$date_values[] = array(
-							'type'    => 'partial',
-							'pattern' => $month . '-' . $day,
-						);
-					}
-				}
-
-				// Try DD.MM interpretation (first as day, second as month).
-				if ( $second >= 1 && $second <= 12 && $first >= 1 && $first <= 31 ) {
-					// Validate the date using checkdate with current year.
-					if ( checkdate( $second, $first, (int) gmdate( 'Y' ) ) ) {
-						$month         = str_pad( $second, 2, '0', STR_PAD_LEFT );
-						$day           = str_pad( $first, 2, '0', STR_PAD_LEFT );
-						$date_values[] = array(
-							'type'    => 'partial',
-							'pattern' => $month . '-' . $day,
-						);
-					}
-				}
-			} elseif ( preg_match( '/^(\d{1,2})\s+(\d{1,2})$/', $search_term, $matches ) ) {
-				// MM DD or DD MM format without year - try both interpretations.
-				$first  = intval( $matches[1] );
-				$second = intval( $matches[2] );
-
-				// Try MM DD interpretation (first as month, second as day).
-				if ( $first >= 1 && $first <= 12 && $second >= 1 && $second <= 31 ) {
-					// Validate the date using checkdate with current year.
-					if ( checkdate( $first, $second, (int) gmdate( 'Y' ) ) ) {
-						$month         = str_pad( $first, 2, '0', STR_PAD_LEFT );
-						$day           = str_pad( $second, 2, '0', STR_PAD_LEFT );
-						$date_values[] = array(
-							'type'    => 'partial',
-							'pattern' => $month . '-' . $day,
-						);
-					}
-				}
-
-				// Try DD MM interpretation (first as day, second as month).
-				if ( $second >= 1 && $second <= 12 && $first >= 1 && $first <= 31 ) {
-					// Validate the date using checkdate with current year.
-					if ( checkdate( $second, $first, (int) gmdate( 'Y' ) ) ) {
-						$month         = str_pad( $second, 2, '0', STR_PAD_LEFT );
-						$day           = str_pad( $first, 2, '0', STR_PAD_LEFT );
-						$date_values[] = array(
-							'type'    => 'partial',
-							'pattern' => $month . '-' . $day,
-						);
-					}
-				}
-			} elseif ( preg_match( '/^([a-z]+)\s+(\d{4})$/i', $search_term, $matches ) ) {
-				// Month name + year.
-				$month_name = strtolower( $matches[1] );
-				$year       = $matches[2];
-				$month_num  = $this->bb_get_month_number( $month_name );
-
-				if ( $month_num ) {
-					$month         = str_pad( $month_num, 2, '0', STR_PAD_LEFT );
+			} else {
+				// Handle other date formats (existing logic).
+				// Full date formats.
+				if ( preg_match( '/^(\d{4})-(\d{1,2})-(\d{1,2})$/', $search_term, $matches ) ) {
+					// YYYY-MM-DD format.
+					$date_values[] = array(
+						'type'  => 'exact',
+						'value' => $matches[1] . '-' . str_pad( $matches[2], 2, '0', STR_PAD_LEFT ) . '-' . str_pad( $matches[3], 2, '0', STR_PAD_LEFT ) . ' 00:00:00',
+					);
+				} elseif ( preg_match( '/^(\d{4})\.(\d{1,2})\.(\d{1,2})$/', $search_term, $matches ) ) {
+					// YYYY.MM.DD format.
+					$date_values[] = array(
+						'type'  => 'exact',
+						'value' => $matches[1] . '-' . str_pad( $matches[2], 2, '0', STR_PAD_LEFT ) . '-' . str_pad( $matches[3], 2, '0', STR_PAD_LEFT ) . ' 00:00:00',
+					);
+				} elseif ( preg_match( '/^(\d{4})\/(\d{1,2})\/(\d{1,2})$/', $search_term, $matches ) ) {
+					// YYYY/MM/DD format.
+					$date_values[] = array(
+						'type'  => 'exact',
+						'value' => $matches[1] . '-' . str_pad( $matches[2], 2, '0', STR_PAD_LEFT ) . '-' . str_pad( $matches[3], 2, '0', STR_PAD_LEFT ) . ' 00:00:00',
+					);
+				} elseif ( preg_match( '/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/', $search_term, $matches ) ) {
+					// MM/DD/YYYY or DD/MM/YYYY format - try both interpretations.
+					$date_values[] = array(
+						'type'  => 'exact',
+						'value' => $matches[3] . '-' . str_pad( $matches[1], 2, '0', STR_PAD_LEFT ) . '-' . str_pad( $matches[2], 2, '0', STR_PAD_LEFT ) . ' 00:00:00',
+					);
+					$date_values[] = array(
+						'type'  => 'exact',
+						'value' => $matches[3] . '-' . str_pad( $matches[2], 2, '0', STR_PAD_LEFT ) . '-' . str_pad( $matches[1], 2, '0', STR_PAD_LEFT ) . ' 00:00:00',
+					);
+				} elseif ( preg_match( '/^(\d{1,2})-(\d{1,2})-(\d{4})$/', $search_term, $matches ) ) {
+					// MM-DD-YYYY or DD-MM-YYYY format - try both interpretations.
+					$date_values[] = array(
+						'type'  => 'exact',
+						'value' => $matches[3] . '-' . str_pad( $matches[1], 2, '0', STR_PAD_LEFT ) . '-' . str_pad( $matches[2], 2, '0', STR_PAD_LEFT ) . ' 00:00:00',
+					);
+					$date_values[] = array(
+						'type'  => 'exact',
+						'value' => $matches[3] . '-' . str_pad( $matches[2], 2, '0', STR_PAD_LEFT ) . '-' . str_pad( $matches[1], 2, '0', STR_PAD_LEFT ) . ' 00:00:00',
+					);
+				} elseif ( preg_match( '/^(\d{1,2})\.(\d{1,2})\.(\d{4})$/', $search_term, $matches ) ) {
+					// MM.DD.YYYY or DD.MM.YYYY format - try both interpretations.
+					$date_values[] = array(
+						'type'  => 'exact',
+						'value' => $matches[3] . '-' . str_pad( $matches[1], 2, '0', STR_PAD_LEFT ) . '-' . str_pad( $matches[2], 2, '0', STR_PAD_LEFT ) . ' 00:00:00',
+					);
+					$date_values[] = array(
+						'type'  => 'exact',
+						'value' => $matches[3] . '-' . str_pad( $matches[2], 2, '0', STR_PAD_LEFT ) . '-' . str_pad( $matches[1], 2, '0', STR_PAD_LEFT ) . ' 00:00:00',
+					);
+				} elseif ( preg_match( '/^(\d{1,2})\s+(\d{1,2})\s+(\d{4})$/', $search_term, $matches ) ) {
+					// MM DD YYYY or DD MM YYYY format - try both interpretations.
+					$date_values[] = array(
+						'type'  => 'exact',
+						'value' => $matches[3] . '-' . str_pad( $matches[1], 2, '0', STR_PAD_LEFT ) . '-' . str_pad( $matches[2], 2, '0', STR_PAD_LEFT ) . ' 00:00:00',
+					);
+					$date_values[] = array(
+						'type'  => 'exact',
+						'value' => $matches[3] . '-' . str_pad( $matches[2], 2, '0', STR_PAD_LEFT ) . '-' . str_pad( $matches[1], 2, '0', STR_PAD_LEFT ) . ' 00:00:00',
+					);
+				} elseif ( preg_match( '/^(\d{4})$/', $search_term, $matches ) ) {
+					// Year only - return range for entire year.
+					$year          = $matches[1];
+					$date_values[] = array(
+						'type'  => 'range',
+						'start' => $year . '-01-01 00:00:00',
+						'end'   => $year . '-12-31 23:59:59',
+					);
+				} elseif ( preg_match( '/^(\d{4})\/(\d{1,2})$/', $search_term, $matches ) ) {
+					// YYYY/MM format.
+					$year          = $matches[1];
+					$month         = str_pad( $matches[2], 2, '0', STR_PAD_LEFT );
 					$date_values[] = array(
 						'type'  => 'range',
 						'start' => $year . '-' . $month . '-01 00:00:00',
 						'end'   => $year . '-' . $month . '-' . gmdate( 't', strtotime( $year . '-' . $month . '-01' ) ) . ' 23:59:59',
 					);
-				}
-			} elseif ( preg_match( '/^([a-z]+)$/i', $search_term, $matches ) ) {
-				// Month name only.
-				$month_name = strtolower( $matches[1] );
-				$month_num  = $this->bb_get_month_number( $month_name );
-				if ( $month_num ) {
-					$month         = str_pad( $month_num, 2, '0', STR_PAD_LEFT );
+				} elseif ( preg_match( '/^(\d{4})\.(\d{1,2})$/', $search_term, $matches ) ) {
+					// YYYY.MM format.
+					$year          = $matches[1];
+					$month         = str_pad( $matches[2], 2, '0', STR_PAD_LEFT );
 					$date_values[] = array(
-						'type'    => 'partial',
-						'pattern' => $month,
+						'type'  => 'range',
+						'start' => $year . '-' . $month . '-01 00:00:00',
+						'end'   => $year . '-' . $month . '-' . gmdate( 't', strtotime( $year . '-' . $month . '-01' ) ) . ' 23:59:59',
 					);
-				}
-			} elseif ( preg_match( '/^([a-z]+)\s+(\d{1,2})$/i', $search_term, $matches ) ) {
-				// Month name + day.
-				$month_name = strtolower( $matches[1] );
-				$day        = intval( $matches[2] );
-				$month_num  = $this->bb_get_month_number( $month_name );
-				if ( $month_num && $day >= 1 && $day <= 31 ) {
-					// Validate the date using checkdate with current year.
-					if ( checkdate( $month_num, $day, (int) gmdate( 'Y' ) ) ) {
-						$month         = str_pad( $month_num, 2, '0', STR_PAD_LEFT );
-						$day_padded    = str_pad( $day, 2, '0', STR_PAD_LEFT );
-						$date_values[] = array(
-							'type'    => 'partial',
-							'pattern' => $month . '-' . $day_padded,
-						);
-					}
-				}
-			} elseif ( preg_match( '/^([a-z]+)\s+(\d{1,2})\s*,\s*(\d{4})$/i', $search_term, $matches ) ) {
-				// Month name + day + comma + year.
-				$month_name = strtolower( $matches[1] );
-				$day        = intval( $matches[2] );
-				$year       = intval( $matches[3] );
-				$month_num  = $this->bb_get_month_number( $month_name );
-				if ( $month_num && $day >= 1 && $day <= 31 && $year >= 1900 && $year <= 2100 ) {
-					// Validate the date using checkdate with current year.
-					if ( checkdate( $month_num, $day, $year ) ) {
-						$month         = str_pad( $month_num, 2, '0', STR_PAD_LEFT );
-						$day_padded    = str_pad( $day, 2, '0', STR_PAD_LEFT );
-						$date_values[] = array(
-							'type'  => 'exact',
-							'value' => $year . '-' . $month . '-' . $day_padded . ' 00:00:00',
-						);
-					}
-				}
-			} elseif ( preg_match( '/^(\d+)\s+(year|month|day)s?\s+(ago|from now)$/i', $search_term, $matches ) ) {
-				// Time elapsed format.
-				$amount    = intval( $matches[1] );
-				$unit      = strtolower( $matches[2] );
-				$direction = strtolower( $matches[3] );
+				} elseif ( preg_match( '/^(\d{1,2})\/(\d{4})$/', $search_term, $matches ) ) {
+					// MM/YYYY format.
+					$month         = str_pad( $matches[1], 2, '0', STR_PAD_LEFT );
+					$year          = $matches[2];
+					$date_values[] = array(
+						'type'  => 'range',
+						'start' => $year . '-' . $month . '-01 00:00:00',
+						'end'   => $year . '-' . $month . '-' . gmdate( 't', strtotime( $year . '-' . $month . '-01' ) ) . ' 23:59:59',
+					);
+				} elseif ( preg_match( '/^(\d{4})-(\d{1,2})$/', $search_term, $matches ) ) {
+					// YYYY-MM format.
+					$year          = $matches[1];
+					$month         = str_pad( $matches[2], 2, '0', STR_PAD_LEFT );
+					$date_values[] = array(
+						'type'  => 'range',
+						'start' => $year . '-' . $month . '-01 00:00:00',
+						'end'   => $year . '-' . $month . '-' . gmdate( 't', strtotime( $year . '-' . $month . '-01' ) ) . ' 23:59:59',
+					);
+				} elseif ( preg_match( '/^(\d{1,2})-(\d{4})$/', $search_term, $matches ) ) {
+					// MM-YYYY format.
+					$month         = str_pad( $matches[1], 2, '0', STR_PAD_LEFT );
+					$year          = $matches[2];
+					$date_values[] = array(
+						'type'  => 'range',
+						'start' => $year . '-' . $month . '-01 00:00:00',
+						'end'   => $year . '-' . $month . '-' . gmdate( 't', strtotime( $year . '-' . $month . '-01' ) ) . ' 23:59:59',
+					);
+				} elseif ( preg_match( '/^(\d{1,2})\/(\d{1,2})$/', $search_term, $matches ) ) {
+					// MM/DD or DD/MM format without year - try both interpretations.
+					$first  = intval( $matches[1] );
+					$second = intval( $matches[2] );
 
-				$target_time = $this->bb_calculate_time_elapsed_date( $amount, $unit, $direction, time() );
+					// Try MM/DD interpretation (first as month, second as day).
+					if ( $first >= 1 && $first <= 12 && $second >= 1 && $second <= 31 ) {
+						// Validate the date using checkdate with current year.
+						if ( checkdate( $first, $second, (int) gmdate( 'Y' ) ) ) {
+							$month         = str_pad( $first, 2, '0', STR_PAD_LEFT );
+							$day           = str_pad( $second, 2, '0', STR_PAD_LEFT );
+							$date_values[] = array(
+								'type'    => 'partial',
+								'pattern' => $month . '-' . $day,
+							);
+						}
+					}
 
-				if ( $target_time ) {
-					if ( 'year' === $unit ) {
-						// For years, create a year range instead of exact date.
-						$target_year   = gmdate( 'Y', $target_time );
+					// Try DD/MM interpretation (first as day, second as month).
+					if ( $second >= 1 && $second <= 12 && $first >= 1 && $first <= 31 ) {
+						// Validate the date using checkdate with current year.
+						if ( checkdate( $second, $first, (int) gmdate( 'Y' ) ) ) {
+							$month         = str_pad( $second, 2, '0', STR_PAD_LEFT );
+							$day           = str_pad( $first, 2, '0', STR_PAD_LEFT );
+							$date_values[] = array(
+								'type'    => 'partial',
+								'pattern' => $month . '-' . $day,
+							);
+						}
+					}
+				} elseif ( preg_match( '/^(\d{1,2})-(\d{1,2})$/', $search_term, $matches ) ) {
+					// MM-DD or DD-MM format without year - try both interpretations.
+					$first  = intval( $matches[1] );
+					$second = intval( $matches[2] );
+
+					// Try MM-DD interpretation (first as month, second as day).
+					if ( $first >= 1 && $first <= 12 && $second >= 1 && $second <= 31 ) {
+						// Validate the date using checkdate with current year.
+						if ( checkdate( $first, $second, (int) gmdate( 'Y' ) ) ) {
+							$month         = str_pad( $first, 2, '0', STR_PAD_LEFT );
+							$day           = str_pad( $second, 2, '0', STR_PAD_LEFT );
+							$date_values[] = array(
+								'type'    => 'partial',
+								'pattern' => $month . '-' . $day,
+							);
+						}
+					}
+
+					// Try DD-MM interpretation (first as day, second as month).
+					if ( $second >= 1 && $second <= 12 && $first >= 1 && $first <= 31 ) {
+						// Validate the date using checkdate with current year.
+						if ( checkdate( $second, $first, (int) gmdate( 'Y' ) ) ) {
+							$month         = str_pad( $second, 2, '0', STR_PAD_LEFT );
+							$day           = str_pad( $first, 2, '0', STR_PAD_LEFT );
+							$date_values[] = array(
+								'type'    => 'partial',
+								'pattern' => $month . '-' . $day,
+							);
+						}
+					}
+				} elseif ( preg_match( '/^(\d{1,2})\.(\d{1,2})$/', $search_term, $matches ) ) {
+					// MM.DD or DD.MM format without year - try both interpretations.
+					$first  = intval( $matches[1] );
+					$second = intval( $matches[2] );
+
+					// Try MM.DD interpretation (first as month, second as day).
+					if ( $first >= 1 && $first <= 12 && $second >= 1 && $second <= 31 ) {
+						// Validate the date using checkdate with current year.
+						if ( checkdate( $first, $second, (int) gmdate( 'Y' ) ) ) {
+							$month         = str_pad( $first, 2, '0', STR_PAD_LEFT );
+							$day           = str_pad( $second, 2, '0', STR_PAD_LEFT );
+							$date_values[] = array(
+								'type'    => 'partial',
+								'pattern' => $month . '-' . $day,
+							);
+						}
+					}
+
+					// Try DD.MM interpretation (first as day, second as month).
+					if ( $second >= 1 && $second <= 12 && $first >= 1 && $first <= 31 ) {
+						// Validate the date using checkdate with current year.
+						if ( checkdate( $second, $first, (int) gmdate( 'Y' ) ) ) {
+							$month         = str_pad( $second, 2, '0', STR_PAD_LEFT );
+							$day           = str_pad( $first, 2, '0', STR_PAD_LEFT );
+							$date_values[] = array(
+								'type'    => 'partial',
+								'pattern' => $month . '-' . $day,
+							);
+						}
+					}
+				} elseif ( preg_match( '/^(\d{1,2})\s+(\d{1,2})$/', $search_term, $matches ) ) {
+					// MM DD or DD MM format without year - try both interpretations.
+					$first  = intval( $matches[1] );
+					$second = intval( $matches[2] );
+
+					// Try MM DD interpretation (first as month, second as day).
+					if ( $first >= 1 && $first <= 12 && $second >= 1 && $second <= 31 ) {
+						// Validate the date using checkdate with current year.
+						if ( checkdate( $first, $second, (int) gmdate( 'Y' ) ) ) {
+							$month         = str_pad( $first, 2, '0', STR_PAD_LEFT );
+							$day           = str_pad( $second, 2, '0', STR_PAD_LEFT );
+							$date_values[] = array(
+								'type'    => 'partial',
+								'pattern' => $month . '-' . $day,
+							);
+						}
+					}
+
+					// Try DD MM interpretation (first as day, second as month).
+					if ( $second >= 1 && $second <= 12 && $first >= 1 && $first <= 31 ) {
+						// Validate the date using checkdate with current year.
+						if ( checkdate( $second, $first, (int) gmdate( 'Y' ) ) ) {
+							$month         = str_pad( $second, 2, '0', STR_PAD_LEFT );
+							$day           = str_pad( $first, 2, '0', STR_PAD_LEFT );
+							$date_values[] = array(
+								'type'    => 'partial',
+								'pattern' => $month . '-' . $day,
+							);
+						}
+					}
+				} elseif ( preg_match( '/^([a-z]+)\s+(\d{4})$/i', $search_term, $matches ) ) {
+					// Month name + year.
+					$month_name = strtolower( $matches[1] );
+					$year       = $matches[2];
+					$month_num  = $this->bb_get_month_number( $month_name );
+
+					if ( $month_num ) {
+						$month         = str_pad( $month_num, 2, '0', STR_PAD_LEFT );
 						$date_values[] = array(
 							'type'  => 'range',
-							'start' => $target_year . '-01-01 00:00:00',
-							'end'   => $target_year . '-12-31 23:59:59',
+							'start' => $year . '-' . $month . '-01 00:00:00',
+							'end'   => $year . '-' . $month . '-' . gmdate( 't', strtotime( $year . '-' . $month . '-01' ) ) . ' 23:59:59',
 						);
-					} else {
-						// For months and days, use exact date.
+					}
+				} elseif ( preg_match( '/^([a-z]+)$/i', $search_term, $matches ) ) {
+					// Month name only.
+					$month_name = strtolower( $matches[1] );
+					$month_num  = $this->bb_get_month_number( $month_name );
+					if ( $month_num ) {
+						$month         = str_pad( $month_num, 2, '0', STR_PAD_LEFT );
 						$date_values[] = array(
-							'type'  => 'exact',
-							'value' => gmdate( 'Y-m-d 00:00:00', $target_time ),
+							'type'    => 'partial',
+							'pattern' => $month,
 						);
+					}
+				} elseif ( preg_match( '/^([a-z]+)\s+(\d{1,2})$/i', $search_term, $matches ) ) {
+					// Month name + day.
+					$month_name = strtolower( $matches[1] );
+					$day        = intval( $matches[2] );
+					$month_num  = $this->bb_get_month_number( $month_name );
+					if ( $month_num && $day >= 1 && $day <= 31 ) {
+						// Validate the date using checkdate with current year.
+						if ( checkdate( $month_num, $day, (int) gmdate( 'Y' ) ) ) {
+							$month         = str_pad( $month_num, 2, '0', STR_PAD_LEFT );
+							$day_padded    = str_pad( $day, 2, '0', STR_PAD_LEFT );
+							$date_values[] = array(
+								'type'    => 'partial',
+								'pattern' => $month . '-' . $day_padded,
+							);
+						}
+					}
+				} elseif ( preg_match( '/^([a-z]+)\s+(\d{1,2})\s*,\s*(\d{4})$/i', $search_term, $matches ) ) {
+					// Month name + day + comma + year.
+					$month_name = strtolower( $matches[1] );
+					$day        = intval( $matches[2] );
+					$year       = intval( $matches[3] );
+					$month_num  = $this->bb_get_month_number( $month_name );
+					if ( $month_num && $day >= 1 && $day <= 31 && $year >= 1900 && $year <= 2100 ) {
+						// Validate the date using checkdate with current year.
+						if ( checkdate( $month_num, $day, $year ) ) {
+							$month         = str_pad( $month_num, 2, '0', STR_PAD_LEFT );
+							$day_padded    = str_pad( $day, 2, '0', STR_PAD_LEFT );
+							$date_values[] = array(
+								'type'  => 'exact',
+								'value' => $year . '-' . $month . '-' . $day_padded . ' 00:00:00',
+							);
+						}
 					}
 				}
 			}
@@ -936,21 +964,24 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 		}
 
 		/**
-		 * Calculate date from time elapsed expression.
+		 * Calculate target date based on time elapsed expression.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
-		 * @param int    $amount       Amount of time.
-		 * @param string $unit         Unit of time (year, month, day).
-		 * @param string $direction    Direction (ago, from now).
+		 * @param int    $amount       The amount of time.
+		 * @param string $unit         The time unit (year, month, day).
+		 * @param string $direction    The direction ('ago' or 'from now').
 		 * @param int    $current_time Current timestamp.
 		 *
-		 * @return int|false Calculated timestamp or false on error
+		 * @return int|false Target timestamp or false on error.
 		 */
 		private function bb_calculate_time_elapsed_date( $amount, $unit, $direction, $current_time ) {
-			$multiplier = ( 'ago' === $direction ) ? - 1 : 1;
+			$multiplier = ( 'ago' === $direction ) ? -1 : 1;
 
-			switch ( $unit ) {
+			// Handle both singular and plural units.
+			$unit_singular = rtrim( $unit, 's' ); // Remove 's' to get singular form.
+
+			switch ( $unit_singular ) {
 				case 'year':
 					$target_time = strtotime( ( $amount * $multiplier ) . ' years', $current_time );
 					break;
@@ -1180,6 +1211,113 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 			}
 
 			return false;
+		}
+
+		/**
+		 * Translate time elapsed expressions to English for regex matching.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $search_term The search term to translate.
+		 *
+		 * @return string The search term in English.
+		 */
+		private function translate_time_elapsed_to_english( $search_term ) {
+			// Extract the amount from the search term to get the correct plural form.
+			if ( preg_match( '/(\d+)/', $search_term, $matches ) ) {
+				$actual_amount = intval( $matches[1] );
+			} else {
+				$actual_amount = 1; // Default fallback.
+			}
+
+			// Check if BuddyBoss is active and use its translations.
+			$text_domain = 'buddyboss';
+			if ( ! function_exists( 'bp_is_active' ) || ! bp_is_active( 'xprofile' ) ) {
+				$text_domain = 'default'; // Fallback to WordPress translations.
+			}
+
+			// Define time units to translate.
+			$time_units = array(
+				array(
+					'singular' => 'year',
+					'plural'   => 'years',
+				),
+				array(
+					'singular' => 'month',
+					'plural'   => 'months',
+				),
+				array(
+					'singular' => 'day',
+					'plural'   => 'days',
+				),
+			);
+
+			// Translate all time units.
+			foreach ( $time_units as $unit ) {
+				$search_term = $this->translate_time_unit( $search_term, $unit['singular'], $unit['plural'], $text_domain, $actual_amount );
+			}
+
+			// Define direction words to translate.
+			$directions = array( 'ago', 'from now' );
+
+			// Translate all direction words.
+			foreach ( $directions as $direction ) {
+				$search_term = $this->translate_direction_word( $search_term, $direction, $text_domain );
+			}
+
+			return $search_term;
+		}
+
+		/**
+		 * Translate a time unit from other language to English.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $search_term      The search term to translate.
+		 * @param string $english_singular The English singular form.
+		 * @param string $english_plural   The English plural form.
+		 * @param string $text_domain      The text domain for translations.
+		 * @param int    $actual_amount    The actual amount for plural determination.
+		 *
+		 * @return string The translated search term.
+		 */
+		private function translate_time_unit( $search_term, $english_singular, $english_plural, $text_domain, $actual_amount ) {
+			$singular_translation = _n( '%s ' . $english_singular, '%s ' . $english_plural, 1, $text_domain );
+			$plural_translation   = _n( '%s ' . $english_singular, '%s ' . $english_plural, 2, $text_domain );
+
+			$singular_word = trim( str_replace( '%s', '', $singular_translation ) );
+			$plural_word   = trim( str_replace( '%s', '', $plural_translation ) );
+
+			// Replace based on what's actually in the search term.
+			if ( stripos( $search_term, $plural_word ) !== false ) {
+				$search_term = str_ireplace( $plural_word, $english_plural, $search_term );
+			} elseif ( stripos( $search_term, $singular_word ) !== false ) {
+				$search_term = str_ireplace( $singular_word, ( $actual_amount == 1 ? $english_singular : $english_plural ), $search_term );
+			}
+
+			return $search_term;
+		}
+
+		/**
+		 * Translate a direction word from other language to English.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $search_term The search term to translate.
+		 * @param string $direction   The direction word to translate.
+		 * @param string $text_domain The text domain for translations.
+		 *
+		 * @return string The translated search term.
+		 */
+		private function translate_direction_word( $search_term, $direction, $text_domain ) {
+			$direction_translation = __( '%s ' . $direction, $text_domain );
+			$direction_clean       = trim( str_replace( '%s', '', $direction_translation ) );
+
+			if ( stripos( $search_term, $direction_clean ) !== false ) {
+				$search_term = str_ireplace( $direction_clean, $direction, $search_term );
+			}
+
+			return $search_term;
 		}
 	}
 
