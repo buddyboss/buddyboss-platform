@@ -584,7 +584,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 				$target_time = $this->bb_calculate_time_elapsed_date( $amount, $unit, $direction, time() );
 
 				if ( $target_time ) {
-					$target_year = gmdate( 'Y', $target_time );
+					$target_year   = gmdate( 'Y', $target_time );
 					$date_values[] = array(
 						'type'  => 'range',
 						'start' => $target_year . '-01-01 00:00:00',
@@ -600,7 +600,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 				$target_time = $this->bb_calculate_time_elapsed_date( $amount, $unit, $direction, time() );
 
 				if ( $target_time ) {
-					$target_year = gmdate( 'Y', $target_time );
+					$target_year   = gmdate( 'Y', $target_time );
 					$date_values[] = array(
 						'type'  => 'range',
 						'start' => $target_year . '-01-01 00:00:00',
@@ -1039,7 +1039,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 
 					case 'partial':
 						// Partial date search (month-only or day/month).
-						if ( strpos( $date_value['pattern'], '-' ) !== false ) {
+						if ( false !== strpos( $date_value['pattern'], '-' ) ) {
 							// Day/month pattern (e.g., "06-18").
 							$conditions[] = $wpdb->prepare(
 								"field_id IN ({$field_ids_imploded}) AND DATE_FORMAT(DATE(value), '%%m-%%d') = %s",
