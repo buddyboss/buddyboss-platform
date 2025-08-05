@@ -544,6 +544,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 								'\d{4}\.\d{1,2}|' . // YYYY.MM format.
 								'\d{1,2}[\/\-]\d{4}|' . // MM/YYYY, MM-YYYY.
 								'[a-z]+\s+\d{4}|' . // Month name + year.
+								'[a-z]+\s*,\s*\d{4}|' . // Month name + comma + year.
 								'[a-z]+\s+\d{1,2}\s*,\s*\d{4}|' . // Month name + day + comma + year.
 								'[a-z]+|' . // Month name only.
 								'[a-z]+\s+\d{1,2}|' . // Month name + day.
@@ -855,6 +856,21 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 							'end'   => $year . '-' . $month . '-' . gmdate( 't', strtotime( $year . '-' . $month . '-01' ) ) . ' 23:59:59',
 						);
 					}
+				} elseif ( preg_match( '/^([a-z]+)\s*,\s*(\d{4})$/i', $search_term, $matches ) ) {
+					// Month name + comma + year.
+					$month_name = strtolower( $matches[1] );
+					$year       = intval( $matches[2] );
+					$month_num  = $this->bb_get_month_number( $month_name );
+					$year_range = $this->bb_get_dynamic_year_range();
+
+					if ( $month_num && $year >= $year_range['min'] && $year <= $year_range['max'] ) {
+						$month         = str_pad( $month_num, 2, '0', STR_PAD_LEFT );
+						$date_values[] = array(
+							'type'  => 'range',
+							'start' => $year . '-' . $month . '-01 00:00:00',
+							'end'   => $year . '-' . $month . '-' . gmdate( 't', strtotime( $year . '-' . $month . '-01' ) ) . ' 23:59:59',
+						);
+					}
 				} elseif ( preg_match( '/^([a-z]+)$/i', $search_term, $matches ) ) {
 					// Month name only.
 					$month_name = strtolower( $matches[1] );
@@ -888,7 +904,9 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 					$day        = intval( $matches[2] );
 					$year       = intval( $matches[3] );
 					$month_num  = $this->bb_get_month_number( $month_name );
-					if ( $month_num && $day >= 1 && $day <= 31 && $year >= 1900 && $year <= 2100 ) {
+					$year_range = $this->bb_get_dynamic_year_range();
+
+					if ( $month_num && $day >= 1 && $day <= 31 && $year >= $year_range['min'] && $year <= $year_range['max'] ) {
 						// Validate the date using checkdate with current year.
 						if ( checkdate( $month_num, $day, $year ) ) {
 							$month         = str_pad( $month_num, 2, '0', STR_PAD_LEFT );
@@ -1590,6 +1608,22 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 			// Return the search term with direction word replaced.
 			// Example: "since 32 years" → "32 years ago".
 			return $search_term;
+		}
+
+		/**
+		 * Calculate dynamic year range for date validation.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return array Array with 'min' and 'max' year values.
+		 */
+		private function bb_get_dynamic_year_range() {
+			$current_year = (int) gmdate( 'Y' );
+
+			return array(
+				'min' => $current_year - 100,
+				'max' => $current_year + 50,
+			);
 		}
 	}
 
