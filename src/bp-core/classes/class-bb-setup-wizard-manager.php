@@ -383,11 +383,6 @@ abstract class BB_Setup_Wizard_Manager {
 			 */
 			do_action( 'bb_setup_wizard_completed', $this->wizard_id, $data );
 
-			// Send to BB_Telemetry if enabled and available.
-			if ( $this->config['enable_analytics'] ) {
-				$this->send_telemetry_event( 'wizard_completion', $data );
-			}
-
 			// Cleanup old data if enabled.
 			if ( $this->config['auto_cleanup'] ) {
 				$this->cleanup_wizard_data();
@@ -456,15 +451,9 @@ abstract class BB_Setup_Wizard_Manager {
 		// Save step tracking.
 		$this->save_step_tracking( $step, $data );
 
-		// Track with analytics if enabled.
+		// Send to BB_Telemetry if enabled and available.
 		if ( $this->config['enable_analytics'] ) {
-			$this->send_telemetry_event(
-				'wizard_step_completion',
-				array(
-					'step' => $step,
-					'data' => $data,
-				)
-			);
+			$this->send_telemetry_event( 'progress', $progress );
 		}
 
 		// Fire custom step completion hooks.
@@ -514,11 +503,12 @@ abstract class BB_Setup_Wizard_Manager {
 			$tracking['steps'][ $step ]['status']       = 'completed';
 			$tracking['steps'][ $step ]['form_data']    = $data;
 			$tracking['steps'][ $step ]['completed_at'] = current_time( 'mysql' );
-		} else {
 			// Ensure status is at least visited.
-			if ( 'visited' !== $tracking['steps'][ $step ]['status'] ) {
-				$tracking['steps'][ $step ]['status'] = 'visited';
-			}
+		} elseif (
+			'visited' !== $tracking['steps'][ $step ]['status'] &&
+			'completed' !== $tracking['steps'][ $step ]['status']
+		) {
+			$tracking['steps'][ $step ]['status'] = 'visited';
 		}
 
 		$this->update_option( $option_name, $tracking );
@@ -606,23 +596,9 @@ abstract class BB_Setup_Wizard_Manager {
 			add_filter(
 				'bb_telemetry_platform_options',
 				function ( $options ) use ( $event_type ) {
-					$options[] = "bb_wizard_{$event_type}_{$this->wizard_id}";
+					$options[] = $this->config['option_prefix'] . "_{$event_type}_{$this->wizard_id}";
 					return $options;
 				}
-			);
-
-			// Store the event data for telemetry collection.
-			$telemetry_option = "bb_wizard_{$event_type}_{$this->wizard_id}";
-			$this->update_option(
-				$telemetry_option,
-				array(
-					'wizard_id'  => $this->wizard_id,
-					'event_type' => $event_type,
-					'data'       => $data,
-					'timestamp'  => current_time( 'mysql' ),
-					'site_url'   => site_url(),
-					'wp_version' => get_bloginfo( 'version' ),
-				)
 			);
 
 			// Force immediate telemetry sending after each onboarding step.
