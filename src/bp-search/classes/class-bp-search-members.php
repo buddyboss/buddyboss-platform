@@ -518,7 +518,42 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 		 * @return bool True if it's a date search, false otherwise.
 		 */
 		private function bb_is_date_search( $search_term ) {
-			// First, try to translate time elapsed expressions to English.
+			// Standard date formats.
+			$dd_mm_y_pattern = '/^(?:\d{4}-\d{1,2}-\d{1,2}|' . // YYYY-MM-DD.
+								'\d{4}\.\d{1,2}\.\d{1,2}|' . // YYYY.MM.DD format.
+								'\d{4}\/\d{1,2}\/\d{1,2}|' . // YYYY/MM/DD format.
+								'\d{1,2}[\/\-\.\s]\d{1,2}[\/\-\.\s]\d{4}|' . // MM/DD/YYYY, MM-DD-YYYY, MM.DD.YYYY, MM DD YYYY.
+								'\d{4}|' . // Year only.
+								'\d{4}-\d{1,2}|' . // YYYY-MM format.
+								'\d{4}\/\d{1,2}|' . // YYYY/MM format.
+								'\d{4}\.\d{1,2}|' . // YYYY.MM format.
+								'\d{1,2}[\/\-]\d{4}|' . // MM/YYYY, MM-YYYY.
+								'\d{1,2}[\/\-\.\s]\d{1,2})$/i'; // MM/DD, MM-DD, MM.DD, MM DD.
+
+			if ( preg_match( $dd_mm_y_pattern, $search_term ) ) {
+				return true;
+			}
+
+			// Month name patterns.
+			$english_search_term = $this->bb_convert_date_format_term_to_english( $search_term );
+
+			$month_name_pattern = '/^([a-z]+\s+\d{4}|' . // Month name + year.
+								'[a-z]+\s*,\s*\d{4}|' . // Month name + comma + year.
+								'[a-z]+\s+\d{1,2}\s*,\s*\d{4}|' . // Month name + day + comma + year.
+								'\d{1,2}\s*[a-z]+|' . // Day + Month name.
+								'\d{1,2}\s*[a-z]+\s*\d{4}|' . // Day + Month name + year.
+								'\d{1,2}\s*[a-z]+\s*,\s*\d{4}|' . // Day + Month name + comma + year.
+								'[a-z]+|' . // Month name only.
+								'[a-z]+\s+\d{1,2}|' . // Month name + day.
+								'[a-z]+\s+\d{1,2}(st|nd|rd|th)\s*,\s*\d{4}|' . // Month name + day with ordinal + comma + year.
+								'[a-z]+\s+\d{1,2}(st|nd|rd|th))$/i'; // Month name + day with ordinal.
+
+			// Check both original and English-converted search terms for month name patterns.
+			if ( preg_match( $month_name_pattern, $english_search_term ) ) {
+				return true;
+			}
+
+			// Time elapsed patterns.
 			$english_search = $this->bb_translate_time_elapsed_to_english( $search_term );
 
 			// Check for time elapsed patterns in English using a single combined regex.
@@ -528,26 +563,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 				return true;
 			}
 
-			// Check for other date patterns.
-			$combined_pattern = '/^(?:\d{4}-\d{1,2}-\d{1,2}|' . // YYYY-MM-DD.
-								'\d{4}\.\d{1,2}\.\d{1,2}|' . // YYYY.MM.DD format.
-								'\d{4}\/\d{1,2}\/\d{1,2}|' . // YYYY/MM/DD format.
-								'\d{1,2}[\/\-\.\s]\d{1,2}[\/\-\.\s]\d{4}|' . // MM/DD/YYYY, MM-DD-YYYY, MM.DD.YYYY, MM DD YYYY.
-								'\d{4}|' . // Year only.
-								'\d{4}-\d{1,2}|' . // YYYY-MM format.
-								'\d{4}\/\d{1,2}|' . // YYYY/MM format.
-								'\d{4}\.\d{1,2}|' . // YYYY.MM format.
-								'\d{1,2}[\/\-]\d{4}|' . // MM/YYYY, MM-YYYY.
-								'[a-z]+\s+\d{4}|' . // Month name + year.
-								'[a-z]+\s*,\s*\d{4}|' . // Month name + comma + year.
-								'[a-z]+\s+\d{1,2}\s*,\s*\d{4}|' . // Month name + day + comma + year.
-								'[a-z]+|' . // Month name only.
-								'[a-z]+\s+\d{1,2}|' . // Month name + day.
-								'[a-z]+\s+\d{1,2}(st|nd|rd|th)\s*,\s*\d{4}|' . // Month name + day with ordinal + comma + year.
-								'[a-z]+\s+\d{1,2}(st|nd|rd|th)|' . // Month name + day with ordinal.
-								'\d{1,2}[\/\-\.\s]\d{1,2})$/i'; // MM/DD, MM-DD, MM.DD, MM DD.
-
-			return preg_match( $combined_pattern, $search_term );
+			return false;
 		}
 
 		/**
@@ -567,8 +583,11 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 			// Get custom date formats for the fields.
 			$custom_formats = $this->bb_get_custom_date_formats( $date_field_ids );
 
-			// First, try to translate time elapsed expressions to English.
-			$english_search = $this->bb_translate_time_elapsed_to_english( $search_term );
+			// Convert month names to English for consistent processing.
+			$english_search = $this->bb_convert_date_format_term_to_english( $search_term );
+
+			// Then, try to translate time elapsed expressions to English.
+			$english_search = $this->bb_translate_time_elapsed_to_english( $english_search );
 
 			// Parse time elapsed patterns in English using a single combined regex.
 			$time_elapsed_pattern = '/^(?:(?:(\d+)|(a|one|an))\s+(year|month|week|day|hour|minute)s?\s+(ago|from now)|(ago|from now)\s+(\d+)\s+(year|month|week|day|hour|minute)s?|(sometime|some time)\s+(ago|from now)|(year|month|week|day|hour|minute)s?\s+(ago|from now))$/i';
@@ -879,7 +898,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 							);
 						}
 					}
-				} elseif ( preg_match( '/^([a-z]+)\s+(\d{4})$/i', $search_term, $matches ) ) {
+				} elseif ( preg_match( '/^([a-z]+)\s+(\d{4})$/i', $english_search, $matches ) ) {
 					// Month name + year.
 					$month_name = strtolower( $matches[1] );
 					$year       = $matches[2];
@@ -893,7 +912,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 							'end'   => $year . '-' . $month . '-' . wp_date( 't', strtotime( $year . '-' . $month . '-01' ) ) . ' 23:59:59',
 						);
 					}
-				} elseif ( preg_match( '/^([a-z]+)\s*,\s*(\d{4})$/i', $search_term, $matches ) ) {
+				} elseif ( preg_match( '/^([a-z]+)\s*,\s*(\d{4})$/i', $english_search, $matches ) ) {
 					// Month name + comma + year.
 					$month_name = strtolower( $matches[1] );
 					$year       = intval( $matches[2] );
@@ -908,7 +927,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 							'end'   => $year . '-' . $month . '-' . wp_date( 't', strtotime( $year . '-' . $month . '-01' ) ) . ' 23:59:59',
 						);
 					}
-				} elseif ( preg_match( '/^([a-z]+)$/i', $search_term, $matches ) ) {
+				} elseif ( preg_match( '/^([a-z]+)$/i', $english_search, $matches ) ) {
 					// Month name only.
 					$month_name = strtolower( $matches[1] );
 					$month_num  = $this->bb_get_month_number( $month_name );
@@ -919,7 +938,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 							'pattern' => $month,
 						);
 					}
-				} elseif ( preg_match( '/^([a-z]+)\s+(\d{1,2})$/i', $search_term, $matches ) ) {
+				} elseif ( preg_match( '/^([a-z]+)\s+(\d{1,2})$/i', $english_search, $matches ) ) {
 					// Month name + day.
 					$month_name = strtolower( $matches[1] );
 					$day        = intval( $matches[2] );
@@ -935,7 +954,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 							);
 						}
 					}
-				} elseif ( preg_match( '/^([a-z]+)\s+(\d{1,2})\s*,\s*(\d{4})$/i', $search_term, $matches ) ) {
+				} elseif ( preg_match( '/^([a-z]+)\s+(\d{1,2})\s*,\s*(\d{4})$/i', $english_search, $matches ) ) {
 					// Month name + day + comma + year.
 					$month_name = strtolower( $matches[1] );
 					$day        = intval( $matches[2] );
@@ -954,7 +973,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 							);
 						}
 					}
-				} elseif ( preg_match( '/^([a-z]+)\s+(\d{1,2})(st|nd|rd|th)\s*,\s*(\d{4})$/i', $search_term, $matches ) ) {
+				} elseif ( preg_match( '/^([a-z]+)\s+(\d{1,2})(st|nd|rd|th)\s*,\s*(\d{4})$/i', $english_search, $matches ) ) {
 					// Month name + day with ordinal + comma + year (e.g., "August 6th, 2025").
 					$month_name = strtolower( $matches[1] );
 					$day        = intval( $matches[2] );
@@ -973,7 +992,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 							);
 						}
 					}
-				} elseif ( preg_match( '/^([a-z]+)\s+(\d{1,2})(st|nd|rd|th)$/i', $search_term, $matches ) ) {
+				} elseif ( preg_match( '/^([a-z]+)\s+(\d{1,2})(st|nd|rd|th)$/i', $english_search, $matches ) ) {
 					// Month name + day with ordinal (e.g., "August 6th").
 					$month_name = strtolower( $matches[1] );
 					$day        = intval( $matches[2] );
@@ -989,11 +1008,43 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 							);
 						}
 					}
+				} elseif ( preg_match( '/^(\d{1,2})\s*([a-z]+)\s*,\s*(\d{4})$/i', $english_search, $matches ) ) {
+					// Day + Month name + comma + year.
+					$day        = intval( $matches[1] );
+					$month_name = strtolower( $matches[2] );
+					$year       = intval( $matches[3] );
+					$month_num  = $this->bb_get_month_number( $month_name );
+					$year_range = $this->bb_get_dynamic_year_range();
+
+					if ( $month_num && $day >= 1 && $day <= 31 && $year >= $year_range['min'] && $year <= $year_range['max'] ) {
+						// Validate the date using checkdate with current year.
+						if ( checkdate( $month_num, $day, $year ) ) {
+							$month         = str_pad( $month_num, 2, '0', STR_PAD_LEFT );
+							$day_padded    = str_pad( $day, 2, '0', STR_PAD_LEFT );
+							$date_values[] = array(
+								'type'    => 'partial',
+								'pattern' => $month . '-' . $day_padded,
+							);
+						}
+					}
+				} elseif ( preg_match( '/^(\d{1,2})\s*([a-z]+)$/i', $english_search, $matches ) ) {
+					// Day + Month name.
+					$day        = intval( $matches[1] );
+					$month_name = strtolower( $matches[2] );
+					$month_num  = $this->bb_get_month_number( $month_name );
+					if ( $month_num && $day >= 1 && $day <= 31 ) {
+						$month         = str_pad( $month_num, 2, '0', STR_PAD_LEFT );
+						$day_padded    = str_pad( $day, 2, '0', STR_PAD_LEFT );
+						$date_values[] = array(
+							'type'    => 'partial',
+							'pattern' => $month . '-' . $day_padded,
+						);
+					}
 				}
 			}
 
-			// Try parsing with custom formats.
-			$custom_date_values = $this->bb_parse_custom_date_formats( $search_term, $custom_formats );
+			// Try parsing with custom formats using English-converted search term.
+			$custom_date_values = $this->bb_parse_custom_date_formats( $english_search, $custom_formats );
 			if ( ! empty( $custom_date_values ) ) {
 				foreach ( $custom_date_values as $custom_value ) {
 					$date_values[] = array(
@@ -1007,31 +1058,98 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 		}
 
 		/**
-		 * Get month number from month name (supports translated month names).
-		 *
-		 * This function gets month numbers from month names, supporting both English
-		 * and translated month names from WordPress translations. It follows the same
-		 * approach as time elapsed - translate the search term to English first.
-		 *
-		 * Process:
-		 * 1. Try direct English month name lookup first
-		 * 2. Translate the search term to English using reverse lookup
-		 * 3. Match the translated term against English month names
-		 *
-		 * Example:
-		 * Input: "juni" (Dutch for June).
-		 * Translates to English: "juni" → "june" (reverse lookup).
-		 * Match: "june" found in English months.
-		 * Result: 6 (June is month 6).
+		 * Convert date format term to English.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
-		 * @param string $month_name Month name or abbreviation (can be translated).
+		 * @param string $search_term The search term that may contain month names.
+		 *
+		 * @return string The search term with month names converted to English.
+		 */
+		private function bb_convert_date_format_term_to_english( $search_term ) {
+
+			if ( ! class_exists( 'IntlDateFormatter' ) ) { // @TODO Will remove ! later.
+				$locale = get_locale();
+
+				$patterns = array(
+					'MMMM yyyy',
+					'MMMM, yyyy',
+					'MMMM d, yyyy',
+					'd MMMM',
+					'd MMMM yyyy',
+					'd MMMM, yyyy',
+					'MMMM',
+					'MMMM d',
+				);
+
+				foreach ( $patterns as $pattern ) {
+					$formatter = new IntlDateFormatter(
+						$locale,
+						IntlDateFormatter::FULL,
+						IntlDateFormatter::NONE,
+						'UTC',
+						null,
+						$pattern
+					);
+
+					$timestamp = $formatter->parse( $search_term );
+
+					if ( false !== $timestamp ) {
+						$english_formatter = new IntlDateFormatter(
+							'en_US',
+							IntlDateFormatter::FULL,
+							IntlDateFormatter::NONE,
+							'UTC',
+							null,
+							$pattern
+						);
+
+						return $english_formatter->format( $timestamp );
+					}
+				}
+			} else {
+				// Split by space and comma while preserving separators.
+				$split_search_term = preg_split( '/([\s,]+)/', trim( $search_term ), -1, PREG_SPLIT_DELIM_CAPTURE );
+
+				$string_parts = array();
+				foreach ( $split_search_term as $part ) {
+					if ( ! is_numeric( $part ) && ! empty( trim( $part ) ) && ! preg_match( '/[\s,]+/', $part ) ) {
+						// Handle ordinal suffixes (st, nd, rd, th) - keep them with the number.
+						if ( preg_match( '/(\d+)(st|nd|rd|th)$/i', $part, $ordinal_match ) ) {
+							$string_parts[] = $part; // Keep ordinals as-is.
+						} else {
+							$translated_month = $this->bb_get_month_number( $part, 'translated_month' );
+							$string_parts[] = $translated_month;
+						}
+					} else {
+						$string_parts[] = $part;
+					}
+				}
+
+				// Join back together preserving original separators.
+				$search_term = implode( '', $string_parts );
+
+				return $search_term;
+			}
+
+			return $search_term; // fallback to original if no match.
+		}
+
+		/**
+		 * Get month number from month name (supports multiple languages).
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $input_month_name The month name to convert.
 		 *
 		 * @return int|false Month number (1-12) or false if not found.
 		 */
-		private function bb_get_month_number( $month_name ) {
-			$month_name = strtolower( trim( $month_name ) );
+		private function bb_get_month_number( $input_month_name, $return_type = 'number' ) {
+			if ( 'number' === $return_type ) {
+				$input_month_name = function_exists( 'mb_strtolower' ) ? mb_strtolower( trim( $input_month_name ) ) : strtolower( trim( $input_month_name ) );
+			}
+
+			$input_translated_month = 'translated_month' === $return_type ? _x( $input_month_name, 'buddyboss' ) : '';
 
 			// English month names for direct lookup.
 			$english_months = array(
@@ -1050,24 +1168,34 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 			);
 
 			// First, try direct English lookup.
-			if ( isset( $english_months[ $month_name ] ) ) {
-				return $english_months[ $month_name ];
+			if ( isset( $english_months[ $input_month_name ] ) ) {
+				return $english_months[ $input_month_name ];
 			}
 
 			// If not found, translate the search term to English first.
-			foreach ( $english_months as $month_num ) {
+			foreach ( $english_months as $month_name => $month_num ) {
+
+				if ( 'translated_month' === $return_type ) {
+					$lower_input_translated_month = function_exists( 'mb_strtolower' ) ? mb_strtolower( $input_translated_month ) : strtolower( $input_translated_month );
+					$translated_month_name        = _x( ucfirst( $month_name ), 'genitive' );
+					$lower_month_name             = function_exists( 'mb_strtolower' ) ? mb_strtolower( $translated_month_name ) : strtolower( $translated_month_name );
+					if ( $lower_input_translated_month === $lower_month_name ) {
+						return $month_name;
+					}
+				}
+
 				// Get the translation for this month using date_i18n().
 				$timestamp       = mktime( 0, 0, 0, $month_num, 1, 2025 );
 				$translated_name = date_i18n( 'F', $timestamp );
 
 				// Check if input matches the translation.
-				if ( strtolower( $translated_name ) === $month_name ) {
+				if ( strtolower( $translated_name ) === $input_month_name ) {
 					return $month_num; // Return the month number directly.
 				}
 
 				// Also check abbreviated forms.
 				$translated_abbr = date_i18n( 'M', $timestamp );
-				if ( strtolower( $translated_abbr ) === $month_name ) {
+				if ( strtolower( $translated_abbr ) === $input_month_name ) {
 					return $month_num; // Return the month number directly.
 				}
 			}
