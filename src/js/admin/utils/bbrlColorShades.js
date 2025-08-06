@@ -204,14 +204,14 @@ export function applyDynamicColors(colorLight, colorDark) {
     const cssString = generateDynamicColorCSS(colorLight, colorDark);
     
     // Remove existing dynamic color styles
-    const existingStyle = document.getElementById('bb-rl-dynamic-colors');
+    const existingStyle = document.getElementById(`bb-rl-dynamic-colors-${colorLight ? 'bb-rl-dynamic-colors-light' : ''}${colorDark ? 'bb-rl-dynamic-colors-dark' : ''}`);
     if (existingStyle) {
         existingStyle.remove();
     }
     
     // Add new dynamic color styles
     const style = document.createElement('style');
-    style.id = 'bb-rl-dynamic-colors';
+    style.id = `bb-rl-dynamic-colors-${colorLight ? 'bb-rl-dynamic-colors-light' : ''}${colorDark ? 'bb-rl-dynamic-colors-dark' : ''}`;
     style.textContent = cssString;
     document.head.appendChild(style);
 }
