@@ -360,23 +360,7 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 	 * @return void
 	 */
 	private function init_readylaunch_hooks() {
-		// Debug: Log that the wizard is initialized.
-		if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-			error_log( 'ReadyLaunch Onboarding initialized with wizard_id: ' . $this->wizard_id );
-
-			// Check if AJAX actions are registered.
-			add_action(
-				'init',
-				function () {
-					if ( has_action( 'wp_ajax_' . $this->wizard_id . '_save_preferences' ) ) {
-						error_log( 'AJAX action registered: wp_ajax_' . $this->wizard_id . '_save_preferences' );
-					} else {
-						error_log( 'AJAX action NOT registered: wp_ajax_' . $this->wizard_id . '_save_preferences' );
-					}
-				},
-				20
-			);
-		}
+		// ReadyLaunch specific hooks can be added here if needed in the future.
 	}
 
 	/**
@@ -475,6 +459,13 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 			'dashboardUrl' => admin_url(),
 			'nonce'        => wp_create_nonce( $this->wizard_id . '_wizard_nonce' ),
 			'translations' => array(),
+			'actions'      => array(
+				'shouldShow'      => $this->wizard_id . '_should_show',
+				'saveProgress'    => $this->wizard_id . '_save_step_progress',
+				'complete'        => $this->wizard_id . '_complete',
+				'savePreferences' => $this->wizard_id . '_save_preferences',
+				'getWizardData'   => $this->wizard_id . '_get_wizard_data',
+			),
 			'readylaunch'  => array(
 				'current_theme'             => wp_get_theme()->get( 'Name' ),
 				'theme_settings'            => esc_url( bp_get_admin_url( add_query_arg( array( 'page' => 'buddyboss_theme_options' ), 'admin.php' ) ) ),
@@ -556,6 +547,18 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 		$result = $this->mark_completed( $completion_data );
 
 		if ( $result ) {
+			// Save ReadyLaunch enabled option.
+			$this->save_readylaunch_option( 'bb_rl_enabled', true );
+
+			// Mark step 7 (finish) as completed in step tracking.
+			$this->save_step_tracking_for_completion( 7 );
+
+			// Mark progress as completed.
+			$this->mark_progress_as_completed();
+
+			// Send analytics events for completion.
+			$this->send_completion_analytics( $completion_data );
+
 			// Apply all ReadyLaunch configurations.
 			$this->apply_readylaunch_configuration( $final_settings );
 
@@ -1113,5 +1116,96 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 		);
 
 		return $items;
+	}
+
+	/**
+	 * Save step tracking for completion (step 7 - finish).
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int $step Step number (7 for finish step).
+	 * @return void
+	 */
+	private function save_step_tracking_for_completion( $step ) {
+		// Use the base class method to save step progress with completion data.
+		$step_data = array(
+			'step_key'     => 'finish',
+			'status'       => 'completed',
+			'completed_at' => current_time( 'mysql' ),
+		);
+
+		$this->save_step_progress( $step, $step_data );
+	}
+
+	/**
+	 * Mark progress as completed for ReadyLaunch onboarding.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 * @return void
+	 */
+	private function mark_progress_as_completed() {
+		// Save step 7 progress which will automatically update the overall progress
+		// to completed status since it's the final step.
+		$step_data = array(
+			'step_key'     => 'finish',
+			'status'       => 'completed',
+			'completed_at' => current_time( 'mysql' ),
+		);
+
+		$this->save_step_progress( 7, $step_data );
+	}
+
+	/**
+	 * Send analytics events for ReadyLaunch onboarding completion.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $completion_data Completion data.
+	 * @return void
+	 */
+	private function send_completion_analytics( $completion_data ) {
+		// Send completion analytics event if analytics is enabled.
+		if ( $this->config['enable_analytics'] ) {
+			// Trigger analytics by calling save_step_progress which will automatically
+			// send telemetry events through the base class infrastructure.
+			$step_data = array(
+				'step_key'     => 'finish',
+				'status'       => 'completed',
+				'completed_at' => current_time( 'mysql' ),
+				'analytics'    => true, // Flag to indicate this is for analytics.
+			);
+
+			// This will trigger the base class analytics events.
+			$this->save_step_progress( 7, $step_data );
+
+			// Send ReadyLaunch specific analytics through BB_Telemetry if available.
+			if ( class_exists( 'BB_Telemetry' ) ) {
+				$telemetry_instance = BB_Telemetry::instance();
+				if ( $telemetry_instance ) {
+					// Add ReadyLaunch completion data to telemetry.
+					add_filter(
+						'bb_telemetry_platform_options',
+						function ( $options ) {
+							$options[] = 'bb_rl_onboarding_completed';
+							$options[] = 'bb_rl_enabled';
+							return $options;
+						}
+					);
+
+					// Force immediate telemetry sending.
+					$telemetry_instance->bb_send_telemetry_report_to_analytics();
+				}
+			}
+		}
+
+		/**
+		 * Fires when ReadyLaunch onboarding analytics are sent.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $wizard_id       The wizard ID.
+		 * @param array  $completion_data Completion data.
+		 */
+		do_action( 'bb_rl_onboarding_analytics_sent', $this->wizard_id, $completion_data );
 	}
 }

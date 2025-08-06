@@ -3,22 +3,19 @@ import { __ } from '@wordpress/i18n';
 import { BaseStepLayout } from '../BaseStepLayout';
 import { DynamicStepRenderer } from '../DynamicStepRenderer';
 
-export const SideMenusStep = ({ 
-    stepData, 
-    onNext, 
-    onPrevious, 
-    onSkip, 
-    currentStep, 
-    totalSteps, 
+export const SideMenusStep = ({
+    stepData,
+    onNext,
+    onPrevious,
+    onSkip,
+    currentStep,
+    totalSteps,
     onSaveStep,
     onAutoSave,
     savedData = {},
     allStepData = {}
 }) => {
     const [formData, setFormData] = useState({
-        enable_primary_menu: true,
-        enable_member_menu: true,
-        menu_style: 'horizontal',
         ...savedData
     });
 
@@ -83,4 +80,4 @@ export const SideMenusStep = ({
             />
         </BaseStepLayout>
     );
-}; 
+};

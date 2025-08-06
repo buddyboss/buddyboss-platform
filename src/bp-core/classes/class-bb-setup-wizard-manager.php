@@ -324,6 +324,7 @@ abstract class BB_Setup_Wizard_Manager {
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 		add_action( 'wp_ajax_' . $this->wizard_id . '_should_show', array( $this, 'ajax_should_show' ) );
 		add_action( 'wp_ajax_' . $this->wizard_id . '_save_step', array( $this, 'ajax_save_step' ) );
+		add_action( 'wp_ajax_' . $this->wizard_id . '_complete', array( $this, 'ajax_complete' ) );
 
 		// Initialise React frontend if enabled.
 		if ( $this->config['enable_react_frontend'] ) {

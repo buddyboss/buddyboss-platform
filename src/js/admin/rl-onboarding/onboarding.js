@@ -51,7 +51,7 @@ const OnboardingApp = () => {
                     'Content-Type': 'application/x-www-form-urlencoded',
                 },
                 body: new URLSearchParams({
-                    action: window.bbRlOnboarding.wizardId + '_complete',
+                    action: window.bbRlOnboarding?.actions?.complete || window.bbRlOnboarding.wizardId + '_complete',
                     nonce: window.bbRlOnboarding?.nonce || '',
                     selectedOption: selectedOption,
                     skipped: '0',
@@ -98,7 +98,7 @@ const OnboardingApp = () => {
                     'Content-Type': 'application/x-www-form-urlencoded',
                 },
                 body: new URLSearchParams({
-                    action: window.bbRlOnboarding.wizardId + '_complete',
+                    action: window.bbRlOnboarding?.actions?.complete || window.bbRlOnboarding.wizardId + '_complete',
                     nonce: window.bbRlOnboarding?.nonce || '',
                     selectedOption: '',
                     skipped: '1',
@@ -134,7 +134,7 @@ const OnboardingApp = () => {
                     'Content-Type': 'application/x-www-form-urlencoded',
                 },
                 body: new URLSearchParams({
-                    action: window.bbRlOnboarding.wizardId + '_save_step',
+                    action: window.bbRlOnboarding?.actions?.saveProgress || window.bbRlOnboarding.wizardId + '_save_step',
                     nonce: window.bbRlOnboarding?.nonce || '',
                     stepData: JSON.stringify(stepData),
                 }),

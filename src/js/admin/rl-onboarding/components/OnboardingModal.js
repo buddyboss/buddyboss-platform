@@ -320,7 +320,7 @@ export const OnboardingModal = ({ isOpen, onClose, onContinue, onSkip, onSaveSte
                     'Content-Type': 'application/x-www-form-urlencoded',
                 },
                 body: new URLSearchParams({
-                    action: 'rl_onboarding_complete',
+                    action: window.bbRlOnboarding?.actions?.complete || window.bbRlOnboarding?.wizardId + '_complete',
                     nonce: window.bbRlOnboarding?.nonce || '',
                     finalSettings: JSON.stringify(finalSettings),
                 }),

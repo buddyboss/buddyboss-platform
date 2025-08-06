@@ -3,22 +3,19 @@ import { __ } from '@wordpress/i18n';
 import { BaseStepLayout } from '../BaseStepLayout';
 import { DynamicStepRenderer } from '../DynamicStepRenderer';
 
-export const WidgetsStep = ({ 
-    stepData, 
-    onNext, 
-    onPrevious, 
-    onSkip, 
-    currentStep, 
-    totalSteps, 
+export const WidgetsStep = ({
+    stepData,
+    onNext,
+    onPrevious,
+    onSkip,
+    currentStep,
+    totalSteps,
     onSaveStep,
     onAutoSave,
     savedData = {},
     allStepData = {}
 }) => {
     const [formData, setFormData] = useState({
-        enable_sidebar_widgets: true,
-        default_widgets: true,
-        widget_areas: 'all',
         ...savedData
     });
 
@@ -84,4 +81,4 @@ export const WidgetsStep = ({
             />
         </BaseStepLayout>
     );
-}; 
+};
