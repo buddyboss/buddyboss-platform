@@ -70,6 +70,17 @@ export const DynamicStepRenderer = ({
     const [showAddForm, setShowAddForm] = useState(false);
     const [linkFormData, setLinkFormData] = useState({ title: '', url: '' });
 
+    // Generate dynamic colors for light and dark mode
+    const lightColor = initialData.bb_rl_color_light ? initialData.bb_rl_color_light : stepOptions.bb_rl_color_light?.default ? stepOptions.bb_rl_color_light.default : null;
+    if (lightColor) {
+        applyDynamicColors(lightColor, null);
+    }
+
+    const darkColor = initialData.bb_rl_color_dark ? initialData.bb_rl_color_dark : stepOptions.bb_rl_color_dark?.default ? stepOptions.bb_rl_color_dark.default : null;
+    if (darkColor) {
+        applyDynamicColors(null, darkColor);
+    }
+
     useEffect(() => {
         // Update form data when initial data changes, preserving defaults
         const defaults = getDefaultValues();
