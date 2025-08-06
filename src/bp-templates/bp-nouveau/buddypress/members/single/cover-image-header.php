@@ -95,7 +95,7 @@ if ( ! bp_is_user_messages() && ! bp_is_user_settings() && ! bp_is_user_notifica
 				<?php
 				if ( ! empty( $cover_image_url ) && bp_attachments_get_user_has_cover_image( $bp_displayed_user_id ) ) {
 					?>
-					<a href="#" class="position-change-cover-image bp-tooltip" data-bp-tooltip-pos="right" data-bp-tooltip="<?php esc_attr_e( 'Reposition Cover Photo', 'buddyboss' ); ?>">
+					<a href="#" class="position-change-cover-image bp-tooltip" data-bp-tooltip-pos="right" data-bp-tooltip="<?php esc_attr_e( 'Reposition Cover Photo', 'buddyboss' ); ?>" aria-label="<?php esc_attr_e( 'Reposition Cover Photo', 'buddyboss' ); ?>">
 						<i class="bb-icon-bf bb-icon-arrows"></i>
 					</a>
 					<div class="header-cover-reposition-wrap">
