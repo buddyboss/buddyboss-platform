@@ -543,6 +543,8 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 								'[a-z]+\s+\d{1,2}\s*,\s*\d{4}|' . // Month name + day + comma + year.
 								'[a-z]+|' . // Month name only.
 								'[a-z]+\s+\d{1,2}|' . // Month name + day.
+								'[a-z]+\s+\d{1,2}(st|nd|rd|th)\s*,\s*\d{4}|' . // Month name + day with ordinal + comma + year.
+								'[a-z]+\s+\d{1,2}(st|nd|rd|th)|' . // Month name + day with ordinal.
 								'\d{1,2}[\/\-\.\s]\d{1,2})$/i'; // MM/DD, MM-DD, MM.DD, MM DD.
 
 			return preg_match( $combined_pattern, $search_term );
@@ -949,6 +951,41 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 							$date_values[] = array(
 								'type'  => 'exact',
 								'value' => $year . '-' . $month . '-' . $day_padded . ' 00:00:00',
+							);
+						}
+					}
+				} elseif ( preg_match( '/^([a-z]+)\s+(\d{1,2})(st|nd|rd|th)\s*,\s*(\d{4})$/i', $search_term, $matches ) ) {
+					// Month name + day with ordinal + comma + year (e.g., "August 6th, 2025").
+					$month_name = strtolower( $matches[1] );
+					$day        = intval( $matches[2] );
+					$year       = intval( $matches[4] );
+					$month_num  = $this->bb_get_month_number( $month_name );
+					$year_range = $this->bb_get_dynamic_year_range();
+
+					if ( $month_num && $day >= 1 && $day <= 31 && $year >= $year_range['min'] && $year <= $year_range['max'] ) {
+						// Validate the date using checkdate with current year.
+						if ( checkdate( $month_num, $day, $year ) ) {
+							$month         = str_pad( $month_num, 2, '0', STR_PAD_LEFT );
+							$day_padded    = str_pad( $day, 2, '0', STR_PAD_LEFT );
+							$date_values[] = array(
+								'type'  => 'exact',
+								'value' => $year . '-' . $month . '-' . $day_padded . ' 00:00:00',
+							);
+						}
+					}
+				} elseif ( preg_match( '/^([a-z]+)\s+(\d{1,2})(st|nd|rd|th)$/i', $search_term, $matches ) ) {
+					// Month name + day with ordinal (e.g., "August 6th").
+					$month_name = strtolower( $matches[1] );
+					$day        = intval( $matches[2] );
+					$month_num  = $this->bb_get_month_number( $month_name );
+					if ( $month_num && $day >= 1 && $day <= 31 ) {
+						// Validate the date using checkdate with current year.
+						if ( checkdate( $month_num, $day, (int) wp_date( 'Y' ) ) ) {
+							$month         = str_pad( $month_num, 2, '0', STR_PAD_LEFT );
+							$day_padded    = str_pad( $day, 2, '0', STR_PAD_LEFT );
+							$date_values[] = array(
+								'type'    => 'partial',
+								'pattern' => $month . '-' . $day_padded,
 							);
 						}
 					}
