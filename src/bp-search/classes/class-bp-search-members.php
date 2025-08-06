@@ -520,9 +520,8 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 		private function bb_is_date_search( $search_term ) {
 			// First, try to translate time elapsed expressions to English.
 			$english_search = $this->bb_translate_time_elapsed_to_english( $search_term );
-
 			// Check for time elapsed patterns in English using a single combined regex.
-			$time_elapsed_pattern = '/^(?:(?:(\d+)|(a|one))\s+(year|month|day)s?\s+(ago|from now)|(ago|from now)\s+(\d+)\s+(year|month|day)s?|(sometime|some time)\s+(ago|from now))$/i';
+			$time_elapsed_pattern = '/^(?:(?:(\d+)|(a|one))\s+(year|month|week|day)s?\s+(ago|from now)|(ago|from now)\s+(\d+)\s+(year|month|week|day)s?|(sometime|some time)\s+(ago|from now)|(year|month|week|day)s?\s+(ago|from now))$/i';
 
 			if ( preg_match( $time_elapsed_pattern, $english_search ) ) {
 				return true;
@@ -569,7 +568,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 			$english_search = $this->bb_translate_time_elapsed_to_english( $search_term );
 
 			// Parse time elapsed patterns in English using a single combined regex.
-			$time_elapsed_pattern = '/^(?:(?:(\d+)|(a|one))\s+(year|month|day)s?\s+(ago|from now)|(ago|from now)\s+(\d+)\s+(year|month|day)s?|(sometime|some time)\s+(ago|from now))$/i';
+			$time_elapsed_pattern = '/^(?:(?:(\d+)|(a|one))\s+(year|month|week|day)s?\s+(ago|from now)|(ago|from now)\s+(\d+)\s+(year|month|week|day)s?|(sometime|some time)\s+(ago|from now)|(year|month|week|day)s?\s+(ago|from now))$/i';
 
 			if ( preg_match( $time_elapsed_pattern, $english_search, $matches ) ) {
 
@@ -584,11 +583,14 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 					$target_time = $this->bb_calculate_time_elapsed_date( $amount, $unit, $direction, time() );
 
 					if ( $target_time ) {
-						$target_year   = wp_date( 'Y', $target_time );
+						// Use optimal date ranges based on time unit for more accommodating matching.
+						$unit_singular = rtrim( $unit, 's' );
+						$date_range    = $this->bb_get_optimal_date_range( $target_time, $unit_singular );
+
 						$date_values[] = array(
 							'type'  => 'range',
-							'start' => $target_year . '-01-01 00:00:00',
-							'end'   => $target_year . '-12-31 23:59:59',
+							'start' => $date_range['start'] . ' 00:00:00',
+							'end'   => $date_range['end'] . ' 23:59:59',
 						);
 					}
 				} elseif ( ! empty( $matches[2] ) ) {
@@ -601,11 +603,14 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 					$target_time = $this->bb_calculate_time_elapsed_date( $amount, $unit, $direction, time() );
 
 					if ( $target_time ) {
-						$target_year   = wp_date( 'Y', $target_time );
+						// Use optimal date ranges based on time unit for more accommodating matching.
+						$unit_singular = rtrim( $unit, 's' );
+						$date_range    = $this->bb_get_optimal_date_range( $target_time, $unit_singular );
+
 						$date_values[] = array(
 							'type'  => 'range',
-							'start' => $target_year . '-01-01 00:00:00',
-							'end'   => $target_year . '-12-31 23:59:59',
+							'start' => $date_range['start'] . ' 00:00:00',
+							'end'   => $date_range['end'] . ' 23:59:59',
 						);
 					}
 				} elseif ( ! empty( $matches[5] ) ) {
@@ -618,11 +623,14 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 					$target_time = $this->bb_calculate_time_elapsed_date( $amount, $unit, $direction, time() );
 
 					if ( $target_time ) {
-						$target_year   = wp_date( 'Y', $target_time );
+						// Use optimal date ranges based on time unit for more accommodating matching.
+						$unit_singular = rtrim( $unit, 's' );
+						$date_range    = $this->bb_get_optimal_date_range( $target_time, $unit_singular );
+
 						$date_values[] = array(
 							'type'  => 'range',
-							'start' => $target_year . '-01-01 00:00:00',
-							'end'   => $target_year . '-12-31 23:59:59',
+							'start' => $date_range['start'] . ' 00:00:00',
+							'end'   => $date_range['end'] . ' 23:59:59',
 						);
 					}
 				} elseif ( ! empty( $matches[8] ) ) {
@@ -1670,6 +1678,54 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 				'min' => 1965, // Set the minimum year to 1965 as per date range filter.
 				'max' => $current_year + 50,
 			);
+		}
+
+		/**
+		 * Get the optimal date range for time elapsed searches.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param int    $target_time   The calculated target timestamp.
+		 * @param string $unit_singular The time unit (year, month, week, day).
+		 *
+		 * @return array Array with 'start' and 'end' dates.
+		 */
+		private function bb_get_optimal_date_range( $target_time, $unit_singular ) {
+			switch ( $unit_singular ) {
+				case 'year':
+					// For years, use the entire year for birth dates.
+					// This ensures we catch all birth dates in that year regardless of calculation precision.
+					$target_year = (int) wp_date( 'Y', $target_time );
+
+					return array(
+						'start' => $target_year . '-01-01',
+						'end'   => $target_year . '-12-31',
+					);
+				case 'month':
+					// For months, use a 2-month range (±1 month).
+					return array(
+						'start' => wp_date( 'Y-m-d', strtotime( '-1 month', $target_time ) ),
+						'end'   => wp_date( 'Y-m-d', strtotime( '+1 month', $target_time ) ),
+					);
+				case 'week':
+					// For weeks, use a 2-week range (±1 week).
+					return array(
+						'start' => wp_date( 'Y-m-d', strtotime( '-1 week', $target_time ) ),
+						'end'   => wp_date( 'Y-m-d', strtotime( '+1 week', $target_time ) ),
+					);
+				case 'day':
+					// For days, use a 7-day range (±3 days).
+					return array(
+						'start' => wp_date( 'Y-m-d', strtotime( '-3 days', $target_time ) ),
+						'end'   => wp_date( 'Y-m-d', strtotime( '+3 days', $target_time ) ),
+					);
+				default:
+					// Default to 15-day range.
+					return array(
+						'start' => wp_date( 'Y-m-d', strtotime( '-7 days', $target_time ) ),
+						'end'   => wp_date( 'Y-m-d', strtotime( '+7 days', $target_time ) ),
+					);
+			}
 		}
 	}
 
