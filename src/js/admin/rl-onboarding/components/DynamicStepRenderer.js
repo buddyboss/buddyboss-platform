@@ -13,6 +13,7 @@ import {
     PanelBody
 } from '@wordpress/components';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import { applyDynamicColors } from '../../utils/bbrlColorShades';
 
 export const DynamicStepRenderer = ({
     stepKey,
@@ -86,6 +87,12 @@ export const DynamicStepRenderer = ({
         // Trigger onChange immediately
         if (onChange) {
             onChange(newFormData);
+        }
+
+        if( field === 'bb_rl_color_light' ) {
+            applyDynamicColors(value, null);
+        } else if( field === 'bb_rl_color_dark' ) {
+            applyDynamicColors(null, value);
         }
 
         // Auto-save with debounce

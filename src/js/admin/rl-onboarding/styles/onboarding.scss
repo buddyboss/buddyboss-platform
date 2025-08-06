@@ -2204,6 +2204,7 @@ body.bb-rl-fullscreen-mode {
     --bb-rl-preview-text-secondary-color: #555556;
     --bb-rl-preview-text-tertiary-color: #858586;
     --bb-rl-preview-text-brand-primary-color: #3325ae;
+    --bb-rl-preview-text-brand-secondary-color: #c2cdff;
     --bb-rl-preview-text-white-color: #fff;
     --bb-rl-preview-background-color: #fff;
     --bb-rl-preview-background-secondary-color: #f6f6f6;
@@ -2227,6 +2228,7 @@ body.bb-rl-fullscreen-mode {
     --bb-rl-preview-text-secondary-color: #cececf;
     --bb-rl-preview-text-tertiary-color: #b6b6b6;
     --bb-rl-preview-text-brand-primary-color: #4946fe;
+    --bb-rl-preview-text-brand-secondary-color: #c2cdff;
     --bb-rl-preview-text-white-color: #fff;
     --bb-rl-preview-background-color: #242425;
     --bb-rl-preview-background-secondary-color: #2f2f2f;
@@ -3673,7 +3675,7 @@ body.bb-rl-fullscreen-mode {
 
             .bb-rl-preview-member-badge {
                 background-color: var(--bb-rl-preview-background-brand-secondary-color);
-                color: var(--bb-rl-preview-text-brand-primary-color);
+                color: var(--bb-rl-preview-text-brand-secondary-color);
                 border: 1px solid var(--bb-rl-preview-border-brand-secondary-color);
                 padding: 2px 8px;
                 border-radius: 16px;
