@@ -520,6 +520,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 		private function bb_is_date_search( $search_term ) {
 			// First, try to translate time elapsed expressions to English.
 			$english_search = $this->bb_translate_time_elapsed_to_english( $search_term );
+
 			// Check for time elapsed patterns in English using a single combined regex.
 			$time_elapsed_pattern = '/^(?:(?:(\d+)|(a|one))\s+(year|month|week|day)s?\s+(ago|from now)|(ago|from now)\s+(\d+)\s+(year|month|week|day)s?|(sometime|some time)\s+(ago|from now)|(year|month|week|day)s?\s+(ago|from now))$/i';
 
@@ -1062,6 +1063,9 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 				case 'month':
 					$target_time = strtotime( ( $amount * $multiplier ) . ' months', $current_time );
 					break;
+				case 'week':
+					$target_time = strtotime( ( $amount * $multiplier ) . ' weeks', $current_time );
+					break;
 				case 'day':
 					$target_time = strtotime( ( $amount * $multiplier ) . ' days', $current_time );
 					break;
@@ -1323,34 +1327,40 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 			// Define time units to translate.
 			// These are the base English time units we'll look for in translations.
 			$time_units = array(
-				array( 'singular' => 'year', 'plural' => 'years' ),   // Process year/years.
-				array( 'singular' => 'month', 'plural' => 'months' ), // Process month/months.  
-				array( 'singular' => 'day', 'plural' => 'days' ),     // Process day/days.
-				array( 'singular' => 'sometime', 'plural' => 'sometime' ), // Process sometime.
-				array( 'singular' => 'a year', 'plural' => 'a year' ), // Process a year.
+				'sometime', // Process sometime.
+				array(
+					'singular' => 'year',
+					'plural'   => 'years',
+				), // Process year/years.
+				array(
+					'singular' => 'month',
+					'plural'   => 'months',
+				), // Process month/months.
+				array(
+					'singular' => 'week',
+					'plural'   => 'weeks',
+				), // Process week/weeks.
+				array(
+					'singular' => 'day',
+					'plural'   => 'days',
+				), // Process day/days.
+				'a year', // Process a year.
+				'a week', // Process a week.
+				'a day', // Process a day.
 			);
 
 			// Translate all time units with caching.
 			// This loop processes each time unit (year, month, day) to find matches in the search term.
 			foreach ( $time_units as $unit ) {
-				// Create a unique cache key for this time unit and amount.
-				// Example: "year_32" for 32 years.
-				$cache_key = $unit['singular'] . '_' . $actual_amount;
+				// Handle both array items (with singular/plural) and string items (like 'sometime').
+				if ( is_array( $unit ) ) {
+					// Create a unique cache key for this time unit and amount.
+					// Example: "year_32" for 32 years.
+					$cache_key = $unit['singular'] . '_' . $actual_amount;
 
-				// Cache WordPress translations to avoid repeated function calls.
-				// This improves performance significantly for repeated searches.
-				if ( ! isset( $translation_cache[ $cache_key ] ) ) {
-					if ( 'sometime' === $unit['singular'] ) {
-						$translation_cache[ $cache_key ] = array(
-							'singular' => __( 'sometime', 'buddyboss' ),
-							'plural'   => __( 'sometime', 'buddyboss' ),
-						);
-					} elseif ( 'a year' === $unit['singular'] ) {
-						$translation_cache[ $cache_key ] = array(
-							'singular' => __( 'a year', 'buddyboss' ),
-							'plural'   => __( 'a year', 'buddyboss' ),
-						);
-					} else {
+					// Cache WordPress translations to avoid repeated function calls.
+					// This improves performance significantly for repeated searches.
+					if ( ! isset( $translation_cache[ $cache_key ] ) ) {
 						$translation_cache[ $cache_key ] = array(
 							// Get singular form translation (e.g., "one year" for "year").
 							'singular' => _n( '%s ' . $unit['singular'], '%s ' . $unit['plural'], 1, 'buddyboss' ),
@@ -1358,14 +1368,29 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 							'plural'   => _n( '%s ' . $unit['singular'], '%s ' . $unit['plural'], 2, 'buddyboss' ),
 						);
 					}
+
+					// Get the cached translations for this time unit.
+					$translations = $translation_cache[ $cache_key ];
+
+					// Process this time unit in the search term.
+					// This will try to find and replace the time unit with its English equivalent.
+					$search_term = $this->bb_translate_time_unit_cached( $search_term, $unit['singular'], $unit['plural'], $translations, $actual_amount );
+				} else {
+					// Handle string items like 'sometime'.
+					$cache_key = $unit . '_' . $actual_amount;
+
+					if ( ! isset( $translation_cache[ $cache_key ] ) ) {
+						$translation_cache[ $cache_key ] = array(
+							'singular' => __( $unit, 'buddyboss' ),
+							'plural'   => __( $unit, 'buddyboss' ),
+						);
+					}
+
+					$translations = $translation_cache[ $cache_key ];
+
+					// Process this time unit in the search term.
+					$search_term = $this->bb_translate_time_unit_cached( $search_term, $unit, $unit, $translations, $actual_amount );
 				}
-
-				// Get the cached translations for this time unit.
-				$translations = $translation_cache[ $cache_key ];
-
-				// Process this time unit in the search term.
-				// This will try to find and replace the time unit with its English equivalent.
-				$search_term = $this->bb_translate_time_unit_cached( $search_term, $unit['singular'], $unit['plural'], $translations, $actual_amount );
 			}
 
 			// Define direction words to translate.
@@ -1388,6 +1413,26 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 				// Process this direction word in the search term.
 				// This will try to find and replace the direction word with its English equivalent.
 				$search_term = $this->bb_translate_direction_word_cached( $search_term, $direction, $translation_cache[ $cache_key ] );
+			}
+
+			// Add "a" article for single time units if missing.
+			// This handles cases like "year ago" → "a year ago".
+			// Check for patterns like "week ago", "اسبوع ago", etc.
+			if ( preg_match( '/^([^\s]+)\s+(ago|from now)$/i', $search_term ) ) {
+				// Extract the time unit word
+				preg_match( '/^([^\s]+)\s+(ago|from now)$/i', $search_term, $matches );
+				$time_unit = $matches[1];
+				$direction = $matches[2];
+
+				// Check if this looks like a single time unit (not a number)
+				// Exclude special words that don't need "a" article.
+				if (
+					! is_numeric( $time_unit ) &&
+					! preg_match( '/^(a|one|two|three|four|five|six|seven|eight|nine|ten)$/i', $time_unit ) &&
+					! preg_match( '/^(sometime|some time)$/i', $time_unit )
+				) {
+					$search_term = 'a ' . $search_term;
+				}
 			}
 
 			// Return the final translated search term in English.
@@ -1440,10 +1485,12 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 
 			// Remove direction words and extract base time units.
 			// This step removes words like "ago", "since" from the translation to get just the time unit.
-			$singular_base = $this->bb_extract_base_time_unit( $this->bb_remove_direction_words( $singular_word ), $english_singular );
+			$remove_direction_words = $this->bb_remove_direction_words( $singular_word );
+			$singular_base          = $this->bb_extract_base_time_unit( $remove_direction_words, $english_singular );
 			// Example: "one year" → "year".
 
-			$plural_base = $this->bb_extract_base_time_unit( $this->bb_remove_direction_words( $plural_word ), $english_singular );
+			$remove_direction_words = $this->bb_remove_direction_words( $plural_word );
+			$plural_base            = $this->bb_extract_base_time_unit( $remove_direction_words, $english_singular );
 			// Example: "two years" → "two years".
 
 			// Replace digits in the base units with the actual amount from search term.
@@ -1564,32 +1611,50 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 		 */
 		private function bb_extract_base_time_unit( $time_unit, $english_singular = '' ) {
 			// Special handling for phrases that should be treated as complete units.
-			if ( in_array( $english_singular, array( 'sometime', 'a year' ) ) ) {
+			if ( in_array( $english_singular, array( 'sometime', 'a year', 'a week', 'a day' ), true ) ) {
 				return $time_unit;
 			}
 
+			// Remove direction words first.
+			$time_unit = $this->bb_remove_direction_words( $time_unit );
+
 			// Split the time unit into individual words.
-			// This separates the time unit from any modifiers or additional words.
 			$words = preg_split( '/\s+/', $time_unit );
-			// Example: "one year" → ["one", "year"].
 
-			// Initialize variables to track the shortest word.
-			$shortest_word   = '';
-			$shortest_length = PHP_INT_MAX;
+			// If there's only one word, return it directly.
+			if ( count( $words ) === 1 ) {
+				return $words[0];
+			}
 
-			// Find the shortest word in the array.
-			// The shortest word is typically the core time unit.
+			// For multiple words, use a simple heuristic:
+			// Return the first word that's not a common English number word.
 			foreach ( $words as $word ) {
-				// Check if this word is shorter than the current shortest and not empty.
-				if ( strlen( $word ) < $shortest_length && ! empty( $word ) ) {
-					$shortest_word   = $word;
-					$shortest_length = strlen( $word );
+				if ( empty( $word ) ) {
+					continue;
+				}
+
+				// Skip very short words that are likely articles or modifiers.
+				if ( strlen( $word ) <= 2 ) {
+					continue;
+				}
+
+				// Skip common English number words.
+				if ( preg_match( '/^(one|two|three|four|five|six|seven|eight|nine|ten|first|second|third|fourth|fifth|sixth|seventh|eighth|ninth|tenth)$/i', $word ) ) {
+					continue;
+				}
+
+				// Return the first suitable word found.
+				return $word;
+			}
+
+			// If no suitable word found, return the first non-empty word.
+			foreach ( $words as $word ) {
+				if ( ! empty( $word ) ) {
+					return $word;
 				}
 			}
 
-			// Return the shortest word as the base time unit.
-			// Example: "one" from "one year".
-			return $shortest_word;
+			return '';
 		}
 
 		/**
