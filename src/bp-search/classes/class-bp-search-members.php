@@ -522,7 +522,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 			$english_search = $this->bb_translate_time_elapsed_to_english( $search_term );
 
 			// Check for time elapsed patterns in English using a single combined regex.
-			$time_elapsed_pattern = '/^(?:(?:(\d+)|(a|one))\s+(year|month|week|day)s?\s+(ago|from now)|(ago|from now)\s+(\d+)\s+(year|month|week|day)s?|(sometime|some time)\s+(ago|from now)|(year|month|week|day)s?\s+(ago|from now))$/i';
+			$time_elapsed_pattern = '/^(?:(?:(\d+)|(a|one))\s+(year|month|week|day|hour)s?\s+(ago|from now)|(ago|from now)\s+(\d+)\s+(year|month|week|day|hour)s?|(sometime|some time)\s+(ago|from now)|(year|month|week|day|hour)s?\s+(ago|from now))$/i';
 
 			if ( preg_match( $time_elapsed_pattern, $english_search ) ) {
 				return true;
@@ -569,7 +569,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 			$english_search = $this->bb_translate_time_elapsed_to_english( $search_term );
 
 			// Parse time elapsed patterns in English using a single combined regex.
-			$time_elapsed_pattern = '/^(?:(?:(\d+)|(a|one))\s+(year|month|week|day)s?\s+(ago|from now)|(ago|from now)\s+(\d+)\s+(year|month|week|day)s?|(sometime|some time)\s+(ago|from now)|(year|month|week|day)s?\s+(ago|from now))$/i';
+			$time_elapsed_pattern = '/^(?:(?:(\d+)|(a|one))\s+(year|month|week|day|hour)s?\s+(ago|from now)|(ago|from now)\s+(\d+)\s+(year|month|week|day|hour)s?|(sometime|some time)\s+(ago|from now)|(year|month|week|day|hour)s?\s+(ago|from now))$/i';
 
 			if ( preg_match( $time_elapsed_pattern, $english_search, $matches ) ) {
 
@@ -1069,6 +1069,9 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 				case 'day':
 					$target_time = strtotime( ( $amount * $multiplier ) . ' days', $current_time );
 					break;
+				case 'hour':
+					$target_time = strtotime( ( $amount * $multiplier ) . ' hours', $current_time );
+					break;
 				default:
 					return false;
 			}
@@ -1344,6 +1347,10 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 					'singular' => 'day',
 					'plural'   => 'days',
 				), // Process day/days.
+				array(
+					'singular' => 'hour',
+					'plural'   => 'hours',
+				), // Process hour/hours.
 				'a year', // Process a year.
 				'a week', // Process a week.
 				'a day', // Process a day.
