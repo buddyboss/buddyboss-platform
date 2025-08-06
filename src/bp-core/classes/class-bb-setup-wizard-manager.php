@@ -452,6 +452,14 @@ abstract class BB_Setup_Wizard_Manager {
 		$progress['total_steps']           = count( $filtered_steps );
 		$progress['completion_percentage'] = $progress['total_steps'] > 0 ? ( $step / $progress['total_steps'] ) * 100 : 0;
 
+		if ( 100 === $progress['completion_percentage'] && 'completed' !== $progress['status'] ) {
+			$progress['status']       = 'completed';
+			$progress['completed_at'] = current_time( 'mysql' );
+		} elseif ( $progress['completion_percentage'] < 100 && 'completed' === $progress['status'] ) {
+			$progress['status']       = 'in_progress';
+			$progress['completed_at'] = null;
+		}
+
 		// Save progress.
 		$option_name = $this->config['option_prefix'] . '_progress_' . $this->wizard_id;
 		$this->update_option( $option_name, $progress );
@@ -504,7 +512,7 @@ abstract class BB_Setup_Wizard_Manager {
 
 		if ( ! isset( $tracking['steps'][ $step ] ) ) {
 			$tracking['steps'][ $step ] = array(
-				'step_key'         => $data['step_key'] ?? "step_{$step}",
+				'step_key'         => $data['step_key'] ?? $this->steps[ $step ]['key'],
 				'status'           => 'visited',
 				'form_data'        => array(),
 				'first_visited_at' => current_time( 'mysql' ),
@@ -515,7 +523,7 @@ abstract class BB_Setup_Wizard_Manager {
 		// Only mark as completed if we actually have form data (indicates user progressed).
 		if ( ! empty( $data ) ) {
 			$tracking['steps'][ $step ]['status']       = 'completed';
-			$tracking['steps'][ $step ]['form_data']    = $data;
+			$tracking['steps'][ $step ]['form_data']    = isset( $data['form_data'] ) ? $data['form_data'] : $data;
 			$tracking['steps'][ $step ]['completed_at'] = current_time( 'mysql' );
 			// Ensure status is at least visited.
 		} elseif (
@@ -858,7 +866,7 @@ abstract class BB_Setup_Wizard_Manager {
 		$data     = $this->sanitize_step_data( $raw_data );
 
 		// If wrapper keys are present (as sent from React) use only the inner form_data array for tracking.
-		if ( is_array( $data ) && isset( $data['form_data'] ) && is_array( $data['form_data'] ) ) {
+		if ( is_array( $data ) && ! empty( $data['form_data'] ) && is_array( $data['form_data'] ) ) {
 			$data_for_tracking = $data['form_data'];
 		} else {
 			$data_for_tracking = $data;
