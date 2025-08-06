@@ -125,34 +125,7 @@ const OnboardingApp = () => {
         }
     };
 
-    const saveStep = async (stepData) => {
-        // Save current step data
-        try {
-            const response = await fetch(window.bbRlOnboarding?.ajaxUrl || window.ajaxurl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: new URLSearchParams({
-                    action: window.bbRlOnboarding?.actions?.saveProgress || window.bbRlOnboarding.wizardId + '_save_step',
-                    nonce: window.bbRlOnboarding?.nonce || '',
-                    stepData: JSON.stringify(stepData),
-                }),
-            });
 
-            const data = await response.json();
-
-            if (data.success) {
-                return true;
-            } else {
-                console.error('Error saving step:', data.data?.message || 'Unknown error');
-                return false;
-            }
-        } catch (error) {
-            console.error('Error saving step:', error);
-            return false;
-        }
-    };
 
     return (
         <OnboardingModal
@@ -160,7 +133,6 @@ const OnboardingApp = () => {
             onClose={handleModalClose}
             onContinue={handleContinue}
             onSkip={handleSkip}
-            onSaveStep={saveStep}
         />
     );
 };

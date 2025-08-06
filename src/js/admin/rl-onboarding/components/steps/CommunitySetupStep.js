@@ -10,7 +10,6 @@ export const CommunitySetupStep = ({
     onSkip,
     currentStep,
     totalSteps,
-    onSaveStep,
     onAutoSave,
     savedData = {},
     allStepData = {}
@@ -78,14 +77,7 @@ export const CommunitySetupStep = ({
             return;
         }
 
-        // Save step data
-        if (onSaveStep) {
-            await onSaveStep({
-                step: 'community_setup',
-                data: formData,
-                timestamp: new Date().toISOString()
-            });
-        }
+
 
         if (onNext) {
             onNext(formData);

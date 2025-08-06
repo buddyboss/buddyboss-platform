@@ -10,7 +10,6 @@ export const SideMenusStep = ({
     onSkip,
     currentStep,
     totalSteps,
-    onSaveStep,
     onAutoSave,
     savedData = {},
     allStepData = {}
@@ -43,14 +42,7 @@ export const SideMenusStep = ({
     };
 
     const handleNext = async () => {
-        // Save step data
-        if (onSaveStep) {
-            await onSaveStep({
-                step: 'side_menus',
-                data: formData,
-                timestamp: new Date().toISOString()
-            });
-        }
+
 
         if (onNext) {
             onNext(formData);

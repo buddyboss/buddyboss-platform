@@ -10,7 +10,6 @@ export const SiteAppearanceStep = ({
     onSkip,
     currentStep,
     totalSteps,
-    onSaveStep,
     onAutoSave,
     savedData = {},
     allStepData = {}
@@ -43,14 +42,7 @@ export const SiteAppearanceStep = ({
     };
 
     const handleNext = async () => {
-        // Save step data
-        if (onSaveStep) {
-            await onSaveStep({
-                step: 'site_appearance',
-                data: formData,
-                timestamp: new Date().toISOString()
-            });
-        }
+
 
         if (onNext) {
             onNext(formData);

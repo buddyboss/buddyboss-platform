@@ -3,14 +3,13 @@ import { __ } from '@wordpress/i18n';
 import { BaseStepLayout } from '../BaseStepLayout';
 import { DynamicStepRenderer } from '../DynamicStepRenderer';
 
-export const PagesStep = ({ 
-    stepData, 
-    onNext, 
-    onPrevious, 
-    onSkip, 
-    currentStep, 
-    totalSteps, 
-    onSaveStep,
+export const PagesStep = ({
+    stepData,
+    onNext,
+    onPrevious,
+    onSkip,
+    currentStep,
+    totalSteps,
     onAutoSave,
     savedData = {},
     allStepData = {}
@@ -45,14 +44,7 @@ export const PagesStep = ({
     };
 
     const handleNext = async () => {
-        // Save step data
-        if (onSaveStep) {
-            await onSaveStep({
-                step: 'pages',
-                data: formData,
-                timestamp: new Date().toISOString()
-            });
-        }
+
 
         if (onNext) {
             onNext(formData);

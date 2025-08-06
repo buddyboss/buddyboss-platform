@@ -529,19 +529,10 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 		}
 
 		// Get all onboarding configuration data.
-		$final_settings  = isset( $_POST['finalSettings'] ) ? $this->sanitize_final_settings( $_POST['finalSettings'] ) : array(); // phpcs:ignore
 		$completion_data = array(
-			'final_settings' => $final_settings,
-			'completed_at'   => current_time( 'mysql' ),
-			'total_steps'    => count( $this->get_config( 'steps', array() ) ),
+			'completed_at' => current_time( 'mysql' ),
+			'total_steps'  => count( $this->get_config( 'steps', array() ) ),
 		);
-
-		// Save all settings as preferences.
-		if ( ! empty( $final_settings ) ) {
-			$preferences                   = $this->get_preferences();
-			$preferences['final_settings'] = $final_settings;
-			$this->save_preferences( $preferences );
-		}
 
 		// Mark wizard as completed.
 		$result = $this->mark_completed( $completion_data );
@@ -559,9 +550,6 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 			// Send analytics events for completion.
 			$this->send_completion_analytics( $completion_data );
 
-			// Apply all ReadyLaunch configurations.
-			$this->apply_readylaunch_configuration( $final_settings );
-
 			// Clean up ReadyLaunch specific transients.
 			delete_transient( '_bb_rl_show_onboarding' );
 
@@ -569,10 +557,8 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 			 * Fires after ReadyLaunch onboarding is completed.
 			 *
 			 * @since BuddyBoss [BBVERSION]
-			 *
-			 * @param array $final_settings The final configuration settings.
 			 */
-			do_action( 'bb_rl_onboarding_completed', $final_settings );
+			do_action( 'bb_rl_onboarding_completed' );
 
 			wp_send_json_success(
 				array(

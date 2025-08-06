@@ -3,7 +3,7 @@ import { __ } from '@wordpress/i18n';
 import { Button } from '@wordpress/components';
 import { getStepComponent, hasStepComponent } from './StepRegistry';
 
-export const OnboardingModal = ({ isOpen, onClose, onContinue, onSkip, onSaveStep }) => {
+export const OnboardingModal = ({ isOpen, onClose, onContinue, onSkip }) => {
     const [currentStepIndex, setCurrentStepIndex] = useState(0);
     const [stepData, setStepData] = useState({});
     const [isProcessing, setIsProcessing] = useState(false);
@@ -307,13 +307,6 @@ export const OnboardingModal = ({ isOpen, onClose, onContinue, onSkip, onSaveSte
         setIsSaving(true);
 
         try {
-            // Collect all step data for final settings
-            const finalSettings = { ...stepData };
-            if (finalData && Object.keys(finalData).length > 0) {
-                const stepKey = currentStep.key;
-                finalSettings[stepKey] = finalData;
-            }
-
             const response = await fetch(window.bbRlOnboarding?.ajaxUrl || window.ajaxurl, {
                 method: 'POST',
                 headers: {
@@ -322,17 +315,15 @@ export const OnboardingModal = ({ isOpen, onClose, onContinue, onSkip, onSaveSte
                 body: new URLSearchParams({
                     action: window.bbRlOnboarding?.actions?.complete || window.bbRlOnboarding?.wizardId + '_complete',
                     nonce: window.bbRlOnboarding?.nonce || '',
-                    finalSettings: JSON.stringify(finalSettings),
                 }),
             });
 
             const data = await response.json();
 
             if (data.success) {
-
                 // Trigger completion event
                 const event = new CustomEvent('bb_rl_onboarding_completed', {
-                    detail: { data: data.data, finalSettings }
+                    detail: { data: data.data }
                 });
                 document.dispatchEvent(event);
 
@@ -431,7 +422,7 @@ export const OnboardingModal = ({ isOpen, onClose, onContinue, onSkip, onSaveSte
                 onSkip={handleStepSkip}
                 currentStep={currentStepIndex}
                 totalSteps={totalSteps}
-                onSaveStep={onSaveStep}
+
                 onAutoSave={autoSavePreferences}
                 isProcessing={isProcessing}
                 savedData={stepData[currentStep.key] || {}}

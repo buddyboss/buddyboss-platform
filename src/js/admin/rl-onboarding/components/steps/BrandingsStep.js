@@ -10,7 +10,6 @@ export const BrandingsStep = ({
     onSkip,
     currentStep,
     totalSteps,
-    onSaveStep,
     onAutoSave,
     savedData = {},
     allStepData = {}
@@ -43,14 +42,7 @@ export const BrandingsStep = ({
     };
 
     const handleNext = async () => {
-        // Save step data
-        if (onSaveStep) {
-            await onSaveStep({
-                step: 'brandings',
-                data: formData,
-                timestamp: new Date().toISOString()
-            });
-        }
+
 
         if (onNext) {
             onNext(formData);
