@@ -522,7 +522,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 			$english_search = $this->bb_translate_time_elapsed_to_english( $search_term );
 
 			// Check for time elapsed patterns in English using a single combined regex.
-			$time_elapsed_pattern = '/^(?:(?:(\d+)|(a|one))\s+(year|month|week|day|hour)s?\s+(ago|from now)|(ago|from now)\s+(\d+)\s+(year|month|week|day|hour)s?|(sometime|some time)\s+(ago|from now)|(year|month|week|day|hour)s?\s+(ago|from now))$/i';
+			$time_elapsed_pattern = '/^(?:(?:(\d+)|(a|one|an))\s+(year|month|week|day|hour)s?\s+(ago|from now)|(ago|from now)\s+(\d+)\s+(year|month|week|day|hour)s?|(sometime|some time)\s+(ago|from now)|(year|month|week|day|hour)s?\s+(ago|from now))$/i';
 
 			if ( preg_match( $time_elapsed_pattern, $english_search ) ) {
 				return true;
@@ -569,7 +569,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 			$english_search = $this->bb_translate_time_elapsed_to_english( $search_term );
 
 			// Parse time elapsed patterns in English using a single combined regex.
-			$time_elapsed_pattern = '/^(?:(?:(\d+)|(a|one))\s+(year|month|week|day|hour)s?\s+(ago|from now)|(ago|from now)\s+(\d+)\s+(year|month|week|day|hour)s?|(sometime|some time)\s+(ago|from now)|(year|month|week|day|hour)s?\s+(ago|from now))$/i';
+			$time_elapsed_pattern = '/^(?:(?:(\d+)|(a|one|an))\s+(year|month|week|day|hour)s?\s+(ago|from now)|(ago|from now)\s+(\d+)\s+(year|month|week|day|hour)s?|(sometime|some time)\s+(ago|from now)|(year|month|week|day|hour)s?\s+(ago|from now))$/i';
 
 			if ( preg_match( $time_elapsed_pattern, $english_search, $matches ) ) {
 
@@ -1354,6 +1354,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 				'a year', // Process a year.
 				'a week', // Process a week.
 				'a day', // Process a day.
+				'an hour', // Process an hour.
 			);
 
 			// Translate all time units with caching.
@@ -1424,9 +1425,8 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 
 			// Add "a" article for single time units if missing.
 			// This handles cases like "year ago" → "a year ago".
-			// Check for patterns like "week ago", "اسبوع ago", etc.
 			if ( preg_match( '/^([^\s]+)\s+(ago|from now)$/i', $search_term ) ) {
-				// Extract the time unit word
+				// Extract the time unit word.
 				preg_match( '/^([^\s]+)\s+(ago|from now)$/i', $search_term, $matches );
 				$time_unit = $matches[1];
 				$direction = $matches[2];
@@ -1435,7 +1435,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 				// Exclude special words that don't need "a" article.
 				if (
 					! is_numeric( $time_unit ) &&
-					! preg_match( '/^(a|one|two|three|four|five|six|seven|eight|nine|ten)$/i', $time_unit ) &&
+					! preg_match( '/^(a|one|an|two|three|four|five|six|seven|eight|nine|ten)$/i', $time_unit ) &&
 					! preg_match( '/^(sometime|some time)$/i', $time_unit )
 				) {
 					$search_term = 'a ' . $search_term;
@@ -1618,7 +1618,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 		 */
 		private function bb_extract_base_time_unit( $time_unit, $english_singular = '' ) {
 			// Special handling for phrases that should be treated as complete units.
-			if ( in_array( $english_singular, array( 'sometime', 'a year', 'a week', 'a day' ), true ) ) {
+			if ( in_array( $english_singular, array( 'sometime', 'a year', 'a week', 'a day', 'an hour' ), true ) ) {
 				return $time_unit;
 			}
 
