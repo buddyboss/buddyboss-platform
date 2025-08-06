@@ -522,7 +522,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 			$english_search = $this->bb_translate_time_elapsed_to_english( $search_term );
 
 			// Check for time elapsed patterns in English using a single combined regex.
-			$time_elapsed_pattern = '/^(?:(?:(\d+)|(a|one|an))\s+(year|month|week|day|hour)s?\s+(ago|from now)|(ago|from now)\s+(\d+)\s+(year|month|week|day|hour)s?|(sometime|some time)\s+(ago|from now)|(year|month|week|day|hour)s?\s+(ago|from now))$/i';
+			$time_elapsed_pattern = '/^(?:(?:(\d+)|(a|one|an))\s+(year|month|week|day|hour|minute)s?\s+(ago|from now)|(ago|from now)\s+(\d+)\s+(year|month|week|day|hour|minute)s?|(sometime|some time)\s+(ago|from now)|(year|month|week|day|hour|minute)s?\s+(ago|from now))$/i';
 
 			if ( preg_match( $time_elapsed_pattern, $english_search ) ) {
 				return true;
@@ -569,7 +569,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 			$english_search = $this->bb_translate_time_elapsed_to_english( $search_term );
 
 			// Parse time elapsed patterns in English using a single combined regex.
-			$time_elapsed_pattern = '/^(?:(?:(\d+)|(a|one|an))\s+(year|month|week|day|hour)s?\s+(ago|from now)|(ago|from now)\s+(\d+)\s+(year|month|week|day|hour)s?|(sometime|some time)\s+(ago|from now)|(year|month|week|day|hour)s?\s+(ago|from now))$/i';
+			$time_elapsed_pattern = '/^(?:(?:(\d+)|(a|one|an))\s+(year|month|week|day|hour|minute)s?\s+(ago|from now)|(ago|from now)\s+(\d+)\s+(year|month|week|day|hour|minute)s?|(sometime|some time)\s+(ago|from now)|(year|month|week|day|hour|minute)s?\s+(ago|from now))$/i';
 
 			if ( preg_match( $time_elapsed_pattern, $english_search, $matches ) ) {
 
@@ -1072,6 +1072,9 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 				case 'hour':
 					$target_time = strtotime( ( $amount * $multiplier ) . ' hours', $current_time );
 					break;
+				case 'minute':
+					$target_time = strtotime( ( $amount * $multiplier ) . ' minutes', $current_time );
+					break;
 				default:
 					return false;
 			}
@@ -1351,10 +1354,15 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 					'singular' => 'hour',
 					'plural'   => 'hours',
 				), // Process hour/hours.
+				array(
+					'singular' => 'minute',
+					'plural'   => 'minutes',
+				), // Process minute/minutes.
 				'a year', // Process a year.
 				'a week', // Process a week.
 				'a day', // Process a day.
 				'an hour', // Process an hour.
+				'a minute', // Process a minute.
 			);
 
 			// Translate all time units with caching.
@@ -1618,7 +1626,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 		 */
 		private function bb_extract_base_time_unit( $time_unit, $english_singular = '' ) {
 			// Special handling for phrases that should be treated as complete units.
-			if ( in_array( $english_singular, array( 'sometime', 'a year', 'a week', 'a day', 'an hour' ), true ) ) {
+			if ( in_array( $english_singular, array( 'sometime', 'a year', 'a week', 'a day', 'an hour', 'a minute' ), true ) ) {
 				return $time_unit;
 			}
 
