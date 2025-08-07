@@ -166,9 +166,13 @@
 	&:not(.bb-rl-forum-modal--static) {
 
 		#new-post {
-			max-height: 90vh;
-			overflow: auto;
-			overflow-x: hidden;
+			overflow: hidden;
+
+			.bb-rl-forum-modal-content {
+				max-height: 60vh;
+				overflow: auto;
+				overflow-x: hidden;
+			}
 		}
 	}
 

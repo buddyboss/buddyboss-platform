@@ -221,6 +221,31 @@
 			}
 		}
 	}
+
+	> .bb-rl-secondary-header {
+		top: 71px;
+		position: sticky;
+		z-index: 9999;
+
+		.admin-bar & {
+			top: 103px;
+		}
+
+		@media screen and (max-width: $lg) {
+			top: 65px;
+
+			.admin-bar & {
+				top: 97px;
+			}
+		}
+
+		@media screen and (max-width: 782px) {
+
+			.admin-bar & {
+				top: 111px;
+			}
+		}
+	}
 }
 
 .bb-rl-group-details {

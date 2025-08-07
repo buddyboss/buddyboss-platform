@@ -86,7 +86,7 @@ global $post;
 
 			<?php
 				$current_forum_id = bbp_get_forum_id();
-				$discussion_count = bbp_get_forum_topic_count( $current_forum_id );
+				$discussion_count = bbp_get_forum_topic_count( $current_forum_id, false );
 				$subforum_count   = bbp_get_forum_subforum_count( $current_forum_id );
 			if ( bp_is_group() ) {
 				?>
