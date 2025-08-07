@@ -62,7 +62,9 @@ $enabled_joined_date   = ! function_exists( 'bb_enabled_member_directory_element
 			}
 
 			// Member joined data.
+			add_filter( 'bb_get_member_joined_date', 'BB_Readylaunch::bb_rl_modify_member_joined_date', 10, 2 );
 			$member_joined_date = bb_get_member_joined_date( $bp_get_member_user_id );
+			remove_filter( 'bb_get_member_joined_date', 'BB_Readylaunch::bb_rl_modify_member_joined_date', 10, 2 );
 
 			// Member last activity.
 			$member_last_activity = bp_get_last_activity( $bp_get_member_user_id );
