@@ -75,6 +75,7 @@ if ( groups_check_user_has_invite( $loggedin_user_id, $current_group_id ) ) {
 		}
 		if (
 			! empty( $get_selected_member_type_join ) &&
+			is_array( $get_selected_member_type_join ) &&
 			! empty( $get_requesting_user_member_type ) &&
 			in_array( $get_requesting_user_member_type, $get_selected_member_type_join, true )
 		) {
@@ -96,8 +97,6 @@ if ( groups_check_user_has_invite( $loggedin_user_id, $current_group_id ) ) {
 			</form><!-- #request-membership-form -->
 			<?php
 		}
-		?>
-		<?php
 	} else {
 		$parent_group      = groups_get_group( $parent_group_id );
 		$parent_group_name = sprintf(
