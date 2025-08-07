@@ -1957,15 +1957,16 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 			// Special handling for phrases that should be treated as complete units.
 			if (
 				in_array(
-					$english_singular, array(
-					'a month',
-					'sometime',
-					'a year',
-					'a week',
-					'a day',
-					'an hour',
-					'a minute',
-				),
+					$english_singular,
+					array(
+						'a month',
+						'sometime',
+						'a year',
+						'a week',
+						'a day',
+						'an hour',
+						'a minute',
+					),
 					true
 				)
 			) {
