@@ -18,6 +18,58 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 		private $type = 'members';
 
 		/**
+		 * Date search patterns registry.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @var array
+		 */
+		private $date_patterns = array(
+			'standard_formats'     => array(
+				'yyyy_mm_dd' => '/^(\d{4})-(\d{1,2})-(\d{1,2})$/', // YYYY-MM-DD.
+				'yyyy.mm.dd' => '/^(\d{4})\.(\d{1,2})\.(\d{1,2})$/', // YYYY.MM.DD.
+				'yyyy/mm/dd' => '/^(\d{4})\/(\d{1,2})\/(\d{1,2})$/', // YYYY/MM/DD.
+				'mm/dd/yyyy' => '/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/', // MM/DD/YYYY.
+				'dd/mm/yyyy' => '/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/', // DD/MM/YYYY.
+				'mm-dd-yyyy' => '/^(\d{1,2})-(\d{1,2})-(\d{4})$/', // MM-DD-YYYY.
+				'dd-mm-yyyy' => '/^(\d{1,2})-(\d{1,2})-(\d{4})$/', // DD-MM-YYYY.
+				'mm.dd.yyyy' => '/^(\d{1,2})\.(\d{1,2})\.(\d{4})$/', // MM.DD.YYYY.
+				'dd.mm.yyyy' => '/^(\d{1,2})\.(\d{1,2})\.(\d{4})$/', // DD.MM.YYYY.
+				'mm dd yyyy' => '/^(\d{1,2})\s+(\d{1,2})\s+(\d{4})$/', // MM DD YYYY.
+				'dd mm yyyy' => '/^(\d{1,2})\s+(\d{1,2})\s+(\d{4})$/', // DD MM YYYY.
+				'year_only'  => '/^(\d{4})$/', // YYYY.
+				'yyyy/mm'    => '/^(\d{4})\/(\d{1,2})$/', // YYYY/MM.
+				'yyyy.mm'    => '/^(\d{4})\.(\d{1,2})$/', // YYYY.MM.
+				'mm/yyyy'    => '/^(\d{1,2})\/(\d{4})$/', // MM/YYYY.
+				'yyyy-mm'    => '/^(\d{4})-(\d{1,2})$/', // YYYY-MM.
+				'mm-yyyy'    => '/^(\d{1,2})-(\d{4})$/', // MM-YYYY.
+				'mm/dd'      => '/^(\d{1,2})\/(\d{1,2})$/', // MM/DD.
+				'dd/mm'      => '/^(\d{1,2})\/(\d{1,2})$/', // DD/MM.
+				'mm-dd'      => '/^(\d{1,2})-(\d{1,2})$/', // MM-DD.
+				'dd-mm'      => '/^(\d{1,2})-(\d{1,2})$/', // DD-MM.
+				'mm.dd'      => '/^(\d{1,2})\.(\d{1,2})$/', // MM.DD.
+				'dd.mm'      => '/^(\d{1,2})\.(\d{1,2})$/', // DD.MM.
+				'mm dd'      => '/^(\d{1,2})\s+(\d{1,2})$/', // MM DD.
+				'dd mm'      => '/^(\d{1,2})\s+(\d{1,2})$/', // DD MM.
+			),
+			'month_name_formats'   => array(
+				'month_year'                   => '/^([a-z]+)\s+(\d{4})$/i', // Month name + year.
+				'month_comma_year'             => '/^([a-z]+)\s*,\s*(\d{4})$/i', // Month name + comma + year.
+				'month_only'                   => '/^([a-z]+)$/i', // Month name only.
+				'month_day'                    => '/^([a-z]+)\s+(\d{1,2})$/i', // Month name + day.
+				'month_day_comma_year'         => '/^([a-z]+)\s+(\d{1,2})\s*,\s*(\d{4})$/i', // Month name + day + comma + year.
+				'day_month'                    => '/^(\d{1,2})\s*([a-z]+)$/i', // Day + Month name.
+				'day_month_year'               => '/^(\d{1,2})\s*([a-z]+)\s*\d{4}$/i', // Day + Month name + year.
+				'day_month_comma_year'         => '/^(\d{1,2})\s*([a-z]+)\s*,\s*(\d{4})$/i', // Day + Month name + comma + year.
+				'month_day_ordinal_comma_year' => '/^([a-z]+)\s+(\d{1,2})(st|nd|rd|th)\s*,\s*(\d{4})$/i', // Month name + day with ordinal + comma + year.
+				'month_day_ordinal_year'       => '/^([a-z]+)\s+(\d{1,2})(st|nd|rd|th)$/i', // Month name + day with ordinal + year.
+			),
+			'time_elapsed_formats' => array(
+				'amount_unit_direction' => '/^(?:(?:(\d+)|(a|one|an))\s+(year|month|week|day|hour|minute)s?\s+(ago|from now)|(ago|from now)\s+(\d+)\s+(year|month|week|day|hour|minute)s?|(sometime|some time)\s+(ago|from now)|(year|month|week|day|hour|minute)s?\s+(ago|from now))$/i',
+			),
+		);
+
+		/**
 		 * Insures that only one instance of Class exists in memory at any
 		 * one time. Also prevents needing to define globals all over the place.
 		 *
@@ -672,236 +724,91 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 		private function bb_parse_standard_date_formats( $search_term ) {
 			$date_values = array();
 
-			if ( preg_match( '/^(\d{4})-(\d{1,2})-(\d{1,2})$/', $search_term, $matches ) ) {
-				// YYYY-MM-DD format.
-				$date_values[] = array(
-					'type'  => 'exact',
-					'value' => $matches[1] . '-' . str_pad( $matches[2], 2, '0', STR_PAD_LEFT ) . '-' . str_pad( $matches[3], 2, '0', STR_PAD_LEFT ) . ' 00:00:00',
-				);
-			} elseif ( preg_match( '/^(\d{4})\.(\d{1,2})\.(\d{1,2})$/', $search_term, $matches ) ) {
-				// YYYY.MM.DD format.
-				$date_values[] = array(
-					'type'  => 'exact',
-					'value' => $matches[1] . '-' . str_pad( $matches[2], 2, '0', STR_PAD_LEFT ) . '-' . str_pad( $matches[3], 2, '0', STR_PAD_LEFT ) . ' 00:00:00',
-				);
-			} elseif ( preg_match( '/^(\d{4})\/(\d{1,2})\/(\d{1,2})$/', $search_term, $matches ) ) {
-				// YYYY/MM/DD format.
-				$date_values[] = array(
-					'type'  => 'exact',
-					'value' => $matches[1] . '-' . str_pad( $matches[2], 2, '0', STR_PAD_LEFT ) . '-' . str_pad( $matches[3], 2, '0', STR_PAD_LEFT ) . ' 00:00:00',
-				);
-			} elseif ( preg_match( '/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/', $search_term, $matches ) ) {
-				// MM/DD/YYYY or DD/MM/YYYY format - try both interpretations.
-				$date_values[] = array(
-					'type'  => 'exact',
-					'value' => $matches[3] . '-' . str_pad( $matches[1], 2, '0', STR_PAD_LEFT ) . '-' . str_pad( $matches[2], 2, '0', STR_PAD_LEFT ) . ' 00:00:00',
-				);
-				$date_values[] = array(
-					'type'  => 'exact',
-					'value' => $matches[3] . '-' . str_pad( $matches[2], 2, '0', STR_PAD_LEFT ) . '-' . str_pad( $matches[1], 2, '0', STR_PAD_LEFT ) . ' 00:00:00',
-				);
-			} elseif ( preg_match( '/^(\d{1,2})-(\d{1,2})-(\d{4})$/', $search_term, $matches ) ) {
-				// MM-DD-YYYY or DD-MM-YYYY format - try both interpretations.
-				$date_values[] = array(
-					'type'  => 'exact',
-					'value' => $matches[3] . '-' . str_pad( $matches[1], 2, '0', STR_PAD_LEFT ) . '-' . str_pad( $matches[2], 2, '0', STR_PAD_LEFT ) . ' 00:00:00',
-				);
-				$date_values[] = array(
-					'type'  => 'exact',
-					'value' => $matches[3] . '-' . str_pad( $matches[2], 2, '0', STR_PAD_LEFT ) . '-' . str_pad( $matches[1], 2, '0', STR_PAD_LEFT ) . ' 00:00:00',
-				);
-			} elseif ( preg_match( '/^(\d{1,2})\.(\d{1,2})\.(\d{4})$/', $search_term, $matches ) ) {
-				// MM.DD.YYYY or DD.MM.YYYY format - try both interpretations.
-				$date_values[] = array(
-					'type'  => 'exact',
-					'value' => $matches[3] . '-' . str_pad( $matches[1], 2, '0', STR_PAD_LEFT ) . '-' . str_pad( $matches[2], 2, '0', STR_PAD_LEFT ) . ' 00:00:00',
-				);
-				$date_values[] = array(
-					'type'  => 'exact',
-					'value' => $matches[3] . '-' . str_pad( $matches[2], 2, '0', STR_PAD_LEFT ) . '-' . str_pad( $matches[1], 2, '0', STR_PAD_LEFT ) . ' 00:00:00',
-				);
-			} elseif ( preg_match( '/^(\d{1,2})\s+(\d{1,2})\s+(\d{4})$/', $search_term, $matches ) ) {
-				// MM DD YYYY or DD MM YYYY format - try both interpretations.
-				$date_values[] = array(
-					'type'  => 'exact',
-					'value' => $matches[3] . '-' . str_pad( $matches[1], 2, '0', STR_PAD_LEFT ) . '-' . str_pad( $matches[2], 2, '0', STR_PAD_LEFT ) . ' 00:00:00',
-				);
-				$date_values[] = array(
-					'type'  => 'exact',
-					'value' => $matches[3] . '-' . str_pad( $matches[2], 2, '0', STR_PAD_LEFT ) . '-' . str_pad( $matches[1], 2, '0', STR_PAD_LEFT ) . ' 00:00:00',
-				);
-			} elseif ( preg_match( '/^(\d{4})$/', $search_term, $matches ) ) {
-				// Year only - return range for entire year.
-				$year          = $matches[1];
-				$date_values[] = array(
-					'type'  => 'range',
-					'start' => $year . '-01-01 00:00:00',
-					'end'   => $year . '-12-31 23:59:59',
-				);
-			} elseif ( preg_match( '/^(\d{4})\/(\d{1,2})$/', $search_term, $matches ) ) {
-				// YYYY/MM format.
-				$year          = $matches[1];
-				$month         = str_pad( $matches[2], 2, '0', STR_PAD_LEFT );
-				$date_values[] = array(
-					'type'  => 'range',
-					'start' => $year . '-' . $month . '-01 00:00:00',
-					'end'   => $year . '-' . $month . '-' . wp_date( 't', strtotime( $year . '-' . $month . '-01' ) ) . ' 23:59:59',
-				);
-			} elseif ( preg_match( '/^(\d{4})\.(\d{1,2})$/', $search_term, $matches ) ) {
-				// YYYY.MM format.
-				$year          = $matches[1];
-				$month         = str_pad( $matches[2], 2, '0', STR_PAD_LEFT );
-				$date_values[] = array(
-					'type'  => 'range',
-					'start' => $year . '-' . $month . '-01 00:00:00',
-					'end'   => $year . '-' . $month . '-' . wp_date( 't', strtotime( $year . '-' . $month . '-01' ) ) . ' 23:59:59',
-				);
-			} elseif ( preg_match( '/^(\d{1,2})\/(\d{4})$/', $search_term, $matches ) ) {
-				// MM/YYYY format.
-				$month         = str_pad( $matches[1], 2, '0', STR_PAD_LEFT );
-				$year          = $matches[2];
-				$date_values[] = array(
-					'type'  => 'range',
-					'start' => $year . '-' . $month . '-01 00:00:00',
-					'end'   => $year . '-' . $month . '-' . wp_date( 't', strtotime( $year . '-' . $month . '-01' ) ) . ' 23:59:59',
-				);
-			} elseif ( preg_match( '/^(\d{4})-(\d{1,2})$/', $search_term, $matches ) ) {
-				// YYYY-MM format.
-				$year          = $matches[1];
-				$month         = str_pad( $matches[2], 2, '0', STR_PAD_LEFT );
-				$date_values[] = array(
-					'type'  => 'range',
-					'start' => $year . '-' . $month . '-01 00:00:00',
-					'end'   => $year . '-' . $month . '-' . wp_date( 't', strtotime( $year . '-' . $month . '-01' ) ) . ' 23:59:59',
-				);
-			} elseif ( preg_match( '/^(\d{1,2})-(\d{4})$/', $search_term, $matches ) ) {
-				// MM-YYYY format.
-				$month         = str_pad( $matches[1], 2, '0', STR_PAD_LEFT );
-				$year          = $matches[2];
-				$date_values[] = array(
-					'type'  => 'range',
-					'start' => $year . '-' . $month . '-01 00:00:00',
-					'end'   => $year . '-' . $month . '-' . wp_date( 't', strtotime( $year . '-' . $month . '-01' ) ) . ' 23:59:59',
-				);
-			} elseif ( preg_match( '/^(\d{1,2})\/(\d{1,2})$/', $search_term, $matches ) ) {
-				// MM/DD or DD/MM format without year - try both interpretations.
-				$first  = intval( $matches[1] );
-				$second = intval( $matches[2] );
+			// Use the pattern registry to parse standard date formats.
+			foreach ( $this->date_patterns['standard_formats'] as $format_type => $pattern ) {
 
-				// Try MM/DD interpretation (first as month, second as day).
-				if ( $first >= 1 && $first <= 12 && $second >= 1 && $second <= 31 ) {
-					// Validate the date using checkdate with current year.
-					if ( checkdate( $first, $second, (int) wp_date( 'Y' ) ) ) {
-						$month         = str_pad( $first, 2, '0', STR_PAD_LEFT );
-						$day           = str_pad( $second, 2, '0', STR_PAD_LEFT );
-						$date_values[] = array(
-							'type'    => 'partial',
-							'pattern' => $month . '-' . $day,
-						);
-					}
+				if ( ! preg_match( $pattern, $search_term, $matches ) ) {
+					continue;
 				}
 
-				// Try DD/MM interpretation (first as day, second as month).
-				if ( $second >= 1 && $second <= 12 && $first >= 1 && $first <= 31 ) {
-					// Validate the date using checkdate with current year.
-					if ( checkdate( $second, $first, (int) wp_date( 'Y' ) ) ) {
-						$month         = str_pad( $second, 2, '0', STR_PAD_LEFT );
-						$day           = str_pad( $first, 2, '0', STR_PAD_LEFT );
-						$date_values[] = array(
-							'type'    => 'partial',
-							'pattern' => $month . '-' . $day,
-						);
-					}
-				}
-			} elseif ( preg_match( '/^(\d{1,2})-(\d{1,2})$/', $search_term, $matches ) ) {
-				// MM-DD or DD-MM format without year - try both interpretations.
-				$first  = intval( $matches[1] );
-				$second = intval( $matches[2] );
+				switch ( $format_type ) {
+					case 'yyyy_mm_dd':
+					case 'yyyy.mm.dd':
+					case 'yyyy/mm/dd':
+						$year  = intval( $matches[1] );
+						$month = intval( $matches[2] );
+						$day   = intval( $matches[3] );
+						$date  = $this->bb_validate_and_format_date( $year, $month, $day );
+						if ( $date ) {
+							$date_values[] = $this->bb_create_date_value( 'exact', array( 'value' => $date ) );
+						}
+						break;
 
-				// Try MM-DD interpretation (first as month, second as day).
-				if ( $first >= 1 && $first <= 12 && $second >= 1 && $second <= 31 ) {
-					// Validate the date using checkdate with current year.
-					if ( checkdate( $first, $second, (int) wp_date( 'Y' ) ) ) {
-						$month         = str_pad( $first, 2, '0', STR_PAD_LEFT );
-						$day           = str_pad( $second, 2, '0', STR_PAD_LEFT );
-						$date_values[] = array(
-							'type'    => 'partial',
-							'pattern' => $month . '-' . $day,
-						);
-					}
-				}
+					case 'mm/dd/yyyy':
+					case 'dd/mm/yyyy':
+					case 'mm-dd-yyyy':
+					case 'mm.dd.yyyy':
+					case 'dd.mm.yyyy':
+					case 'mm dd yyyy':
+					case 'dd mm yyyy':
+						$year   = intval( $matches[3] );
+						$first  = intval( $matches[1] );
+						$second = intval( $matches[2] );
 
-				// Try DD-MM interpretation (first as day, second as month).
-				if ( $second >= 1 && $second <= 12 && $first >= 1 && $first <= 31 ) {
-					// Validate the date using checkdate with current year.
-					if ( checkdate( $second, $first, (int) wp_date( 'Y' ) ) ) {
-						$month         = str_pad( $second, 2, '0', STR_PAD_LEFT );
-						$day           = str_pad( $first, 2, '0', STR_PAD_LEFT );
-						$date_values[] = array(
-							'type'    => 'partial',
-							'pattern' => $month . '-' . $day,
-						);
-					}
-				}
-			} elseif ( preg_match( '/^(\d{1,2})\.(\d{1,2})$/', $search_term, $matches ) ) {
-				// MM.DD or DD.MM format without year - try both interpretations.
-				$first  = intval( $matches[1] );
-				$second = intval( $matches[2] );
+						// Try both interpretations.
+						$date1 = $this->bb_validate_and_format_date( $year, $first, $second );
+						$date2 = $this->bb_validate_and_format_date( $year, $second, $first );
 
-				// Try MM.DD interpretation (first as month, second as day).
-				if ( $first >= 1 && $first <= 12 && $second >= 1 && $second <= 31 ) {
-					// Validate the date using checkdate with current year.
-					if ( checkdate( $first, $second, (int) wp_date( 'Y' ) ) ) {
-						$month         = str_pad( $first, 2, '0', STR_PAD_LEFT );
-						$day           = str_pad( $second, 2, '0', STR_PAD_LEFT );
-						$date_values[] = array(
-							'type'    => 'partial',
-							'pattern' => $month . '-' . $day,
-						);
-					}
-				}
+						if ( $date1 ) {
+							$date_values[] = $this->bb_create_date_value( 'exact', array( 'value' => $date1 ) );
+						}
+						if ( $date2 ) {
+							$date_values[] = $this->bb_create_date_value( 'exact', array( 'value' => $date2 ) );
+						}
+						break;
 
-				// Try DD.MM interpretation (first as day, second as month).
-				if ( $second >= 1 && $second <= 12 && $first >= 1 && $first <= 31 ) {
-					// Validate the date using checkdate with current year.
-					if ( checkdate( $second, $first, (int) wp_date( 'Y' ) ) ) {
-						$month         = str_pad( $second, 2, '0', STR_PAD_LEFT );
-						$day           = str_pad( $first, 2, '0', STR_PAD_LEFT );
-						$date_values[] = array(
-							'type'    => 'partial',
-							'pattern' => $month . '-' . $day,
-						);
-					}
-				}
-			} elseif ( preg_match( '/^(\d{1,2})\s+(\d{1,2})$/', $search_term, $matches ) ) {
-				// MM DD or DD MM format without year - try both interpretations.
-				$first  = intval( $matches[1] );
-				$second = intval( $matches[2] );
+					case 'yyyy/mm':
+					case 'yyyy.mm':
+					case 'mm/yyyy':
+					case 'yyyy-mm':
+					case 'mm-yyyy':
+						$year  = intval( $matches[1] );
+						$month = intval( $matches[2] );
 
-				// Try MM DD interpretation (first as month, second as day).
-				if ( $first >= 1 && $first <= 12 && $second >= 1 && $second <= 31 ) {
-					// Validate the date using checkdate with current year.
-					if ( checkdate( $first, $second, (int) wp_date( 'Y' ) ) ) {
-						$month         = str_pad( $first, 2, '0', STR_PAD_LEFT );
-						$day           = str_pad( $second, 2, '0', STR_PAD_LEFT );
-						$date_values[] = array(
-							'type'    => 'partial',
-							'pattern' => $month . '-' . $day,
-						);
-					}
-				}
+						$range         = $this->bb_create_month_range( $year, $month );
+						$date_values[] = $this->bb_create_date_value( 'range', $range );
+						break;
 
-				// Try DD MM interpretation (first as day, second as month).
-				if ( $second >= 1 && $second <= 12 && $first >= 1 && $first <= 31 ) {
-					// Validate the date using checkdate with current year.
-					if ( checkdate( $second, $first, (int) wp_date( 'Y' ) ) ) {
-						$month         = str_pad( $second, 2, '0', STR_PAD_LEFT );
-						$day           = str_pad( $first, 2, '0', STR_PAD_LEFT );
+					case 'mm/dd':
+					case 'dd/mm':
+					case 'mm-dd':
+					case 'dd-mm':
+					case 'mm.dd':
+					case 'dd.mm':
+					case 'mm dd':
+					case 'dd mm':
+						$first  = intval( $matches[1] );
+						$second = intval( $matches[2] );
+
+						// Try both interpretations with current year.
+						$current_year = (int) wp_date( 'Y' );
+						$date1        = $this->bb_validate_and_format_date( $current_year, $first, $second );
+						$date2        = $this->bb_validate_and_format_date( $current_year, $second, $first );
+
+						if ( $date1 ) {
+							$date_values[] = $this->bb_create_date_value( 'partial', array( 'pattern' => substr( $date1, 5 ) ) );
+						}
+						if ( $date2 && $date2 !== $date1 ) {
+							$date_values[] = $this->bb_create_date_value( 'partial', array( 'pattern' => substr( $date2, 5 ) ) );
+						}
+						break;
+
+					default:
 						$date_values[] = array(
-							'type'    => 'partial',
-							'pattern' => $month . '-' . $day,
+							'type'  => 'exact',
+							'value' => $matches[1] . '-' . str_pad( $matches[2], 2, '0', STR_PAD_LEFT ) . '-' . str_pad( $matches[3], 2, '0', STR_PAD_LEFT ) . ' 00:00:00',
 						);
-					}
+						break;
 				}
 			}
 
@@ -918,153 +825,224 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 		 * @return array Array of normalized date values.
 		 */
 		private function bb_parse_month_name_patterns( $search_term ) {
+
 			$date_values = array();
 
-			if ( preg_match( '/^([a-z]+)\s+(\d{4})$/i', $search_term, $matches ) ) {
-				// Month name + year.
-				$month_name = strtolower( $matches[1] );
-				$year       = $matches[2];
-				$month_num  = $this->bb_get_month_number( $month_name );
+			// Use the pattern registry to parse standard date formats.
+			foreach ( $this->date_patterns['month_name_formats'] as $format_type => $pattern ) {
+				if ( ! preg_match( $pattern, $search_term, $matches ) ) {
+					continue;
+				}
 
-				if ( $month_num ) {
-					$month         = str_pad( $month_num, 2, '0', STR_PAD_LEFT );
-					$date_values[] = array(
-						'type'  => 'range',
-						'start' => $year . '-' . $month . '-01 00:00:00',
-						'end'   => $year . '-' . $month . '-' . wp_date( 't', strtotime( $year . '-' . $month . '-01' ) ) . ' 23:59:59',
-					);
-				}
-			} elseif ( preg_match( '/^([a-z]+)\s*,\s*(\d{4})$/i', $search_term, $matches ) ) {
-				// Month name + comma + year.
-				$month_name = strtolower( $matches[1] );
-				$year       = intval( $matches[2] );
-				$month_num  = $this->bb_get_month_number( $month_name );
-				$year_range = $this->bb_get_dynamic_year_range();
+				switch ( $format_type ) {
+					case 'month_year':
+						$month_name = strtolower( $matches[1] );
+						$year       = $matches[2];
+						$month_num  = $this->bb_get_month_number( $month_name );
 
-				if ( $month_num && $year >= $year_range['min'] && $year <= $year_range['max'] ) {
-					$month         = str_pad( $month_num, 2, '0', STR_PAD_LEFT );
-					$date_values[] = array(
-						'type'  => 'range',
-						'start' => $year . '-' . $month . '-01 00:00:00',
-						'end'   => $year . '-' . $month . '-' . wp_date( 't', strtotime( $year . '-' . $month . '-01' ) ) . ' 23:59:59',
-					);
-				}
-			} elseif ( preg_match( '/^([a-z]+)$/i', $search_term, $matches ) ) {
-				// Month name only.
-				$month_name = strtolower( $matches[1] );
-				$month_num  = $this->bb_get_month_number( $month_name );
-				if ( $month_num ) {
-					$month         = str_pad( $month_num, 2, '0', STR_PAD_LEFT );
-					$date_values[] = array(
-						'type'    => 'partial',
-						'pattern' => $month,
-					);
-				}
-			} elseif ( preg_match( '/^([a-z]+)\s+(\d{1,2})$/i', $search_term, $matches ) ) {
-				// Month name + day.
-				$month_name = strtolower( $matches[1] );
-				$day        = intval( $matches[2] );
-				$month_num  = $this->bb_get_month_number( $month_name );
-				if ( $month_num && $day >= 1 && $day <= 31 ) {
-					// Validate the date using checkdate with current year.
-					if ( checkdate( $month_num, $day, (int) wp_date( 'Y' ) ) ) {
-						$month         = str_pad( $month_num, 2, '0', STR_PAD_LEFT );
-						$day_padded    = str_pad( $day, 2, '0', STR_PAD_LEFT );
-						$date_values[] = array(
-							'type'    => 'partial',
-							'pattern' => $month . '-' . $day_padded,
-						);
-					}
-				}
-			} elseif ( preg_match( '/^([a-z]+)\s+(\d{1,2})\s*,\s*(\d{4})$/i', $search_term, $matches ) ) {
-				// Month name + day + comma + year.
-				$month_name = strtolower( $matches[1] );
-				$day        = intval( $matches[2] );
-				$year       = intval( $matches[3] );
-				$month_num  = $this->bb_get_month_number( $month_name );
-				$year_range = $this->bb_get_dynamic_year_range();
+						if ( $month_num ) {
+							$month         = str_pad( $month_num, 2, '0', STR_PAD_LEFT );
+							$range         = $this->bb_create_month_range( $year, $month );
+							$date_values[] = $this->bb_create_date_value( 'range', $range );
+						}
+						break;
 
-				if ( $month_num && $day >= 1 && $day <= 31 && $year >= $year_range['min'] && $year <= $year_range['max'] ) {
-					// Validate the date using checkdate with current year.
-					if ( checkdate( $month_num, $day, $year ) ) {
-						$month         = str_pad( $month_num, 2, '0', STR_PAD_LEFT );
-						$day_padded    = str_pad( $day, 2, '0', STR_PAD_LEFT );
-						$date_values[] = array(
-							'type'  => 'exact',
-							'value' => $year . '-' . $month . '-' . $day_padded . ' 00:00:00',
-						);
-					}
-				}
-			} elseif ( preg_match( '/^([a-z]+)\s+(\d{1,2})(st|nd|rd|th)\s*,\s*(\d{4})$/i', $search_term, $matches ) ) {
-				// Month name + day with ordinal + comma + year (e.g., "August 6th, 2025").
-				$month_name = strtolower( $matches[1] );
-				$day        = intval( $matches[2] );
-				$year       = intval( $matches[4] );
-				$month_num  = $this->bb_get_month_number( $month_name );
-				$year_range = $this->bb_get_dynamic_year_range();
+					case 'month_comma_year':
+						$month_name = strtolower( $matches[1] );
+						$year       = $matches[2];
+						$month_num  = $this->bb_get_month_number( $month_name );
 
-				if ( $month_num && $day >= 1 && $day <= 31 && $year >= $year_range['min'] && $year <= $year_range['max'] ) {
-					// Validate the date using checkdate with current year.
-					if ( checkdate( $month_num, $day, $year ) ) {
-						$month         = str_pad( $month_num, 2, '0', STR_PAD_LEFT );
-						$day_padded    = str_pad( $day, 2, '0', STR_PAD_LEFT );
-						$date_values[] = array(
-							'type'  => 'exact',
-							'value' => $year . '-' . $month . '-' . $day_padded . ' 00:00:00',
-						);
-					}
-				}
-			} elseif ( preg_match( '/^([a-z]+)\s+(\d{1,2})(st|nd|rd|th)$/i', $search_term, $matches ) ) {
-				// Month name + day with ordinal (e.g., "August 6th").
-				$month_name = strtolower( $matches[1] );
-				$day        = intval( $matches[2] );
-				$month_num  = $this->bb_get_month_number( $month_name );
-				if ( $month_num && $day >= 1 && $day <= 31 ) {
-					// Validate the date using checkdate with current year.
-					if ( checkdate( $month_num, $day, (int) wp_date( 'Y' ) ) ) {
-						$month         = str_pad( $month_num, 2, '0', STR_PAD_LEFT );
-						$day_padded    = str_pad( $day, 2, '0', STR_PAD_LEFT );
-						$date_values[] = array(
-							'type'    => 'partial',
-							'pattern' => $month . '-' . $day_padded,
-						);
-					}
-				}
-			} elseif ( preg_match( '/^(\d{1,2})\s*([a-z]+)\s*,\s*(\d{4})$/i', $search_term, $matches ) ) {
-				// Day + Month name + comma + year.
-				$day        = intval( $matches[1] );
-				$month_name = strtolower( $matches[2] );
-				$year       = intval( $matches[3] );
-				$month_num  = $this->bb_get_month_number( $month_name );
-				$year_range = $this->bb_get_dynamic_year_range();
+						if ( $month_num ) {
+							$month         = str_pad( $month_num, 2, '0', STR_PAD_LEFT );
+							$range         = $this->bb_create_month_range( $year, $month );
+							$date_values[] = $this->bb_create_date_value( 'range', $range );
+						}
+						break;
 
-				if ( $month_num && $day >= 1 && $day <= 31 && $year >= $year_range['min'] && $year <= $year_range['max'] ) {
-					// Validate the date using checkdate with current year.
-					if ( checkdate( $month_num, $day, $year ) ) {
-						$month         = str_pad( $month_num, 2, '0', STR_PAD_LEFT );
-						$day_padded    = str_pad( $day, 2, '0', STR_PAD_LEFT );
-						$date_values[] = array(
-							'type'    => 'partial',
-							'pattern' => $month . '-' . $day_padded,
-						);
-					}
-				}
-			} elseif ( preg_match( '/^(\d{1,2})\s*([a-z]+)$/i', $search_term, $matches ) ) {
-				// Day + Month name.
-				$day        = intval( $matches[1] );
-				$month_name = strtolower( $matches[2] );
-				$month_num  = $this->bb_get_month_number( $month_name );
-				if ( $month_num && $day >= 1 && $day <= 31 ) {
-					$month         = str_pad( $month_num, 2, '0', STR_PAD_LEFT );
-					$day_padded    = str_pad( $day, 2, '0', STR_PAD_LEFT );
-					$date_values[] = array(
-						'type'    => 'partial',
-						'pattern' => $month . '-' . $day_padded,
-					);
+					case 'month_only':
+						$month_name = strtolower( $matches[1] );
+						$month_num  = $this->bb_get_month_number( $month_name );
+						if ( $month_num ) {
+							$month         = str_pad( $month_num, 2, '0', STR_PAD_LEFT );
+							$date_values[] = $this->bb_create_date_value( 'partial', array( 'pattern' => $month ) );
+						}
+						break;
+
+					case 'month_day':
+						$month_name = strtolower( $matches[1] );
+						$day        = intval( $matches[2] );
+						$month_num  = $this->bb_get_month_number( $month_name );
+						if ( $month_num && $day >= 1 && $day <= 31 ) {
+							$month         = str_pad( $month_num, 2, '0', STR_PAD_LEFT );
+							$date_values[] = $this->bb_create_date_value( 'partial', array( 'pattern' => $month . '-' . $day ) );
+						}
+						break;
+
+					case 'month_day_comma_year':
+						$month_name = strtolower( $matches[1] );
+						$day        = intval( $matches[2] );
+						$year       = intval( $matches[3] );
+						$month_num  = $this->bb_get_month_number( $month_name );
+						$year_range = $this->bb_get_dynamic_year_range();
+
+						if ( $month_num && $day >= 1 && $day <= 31 && $year >= $year_range['min'] && $year <= $year_range['max'] ) {
+							$month         = str_pad( $month_num, 2, '0', STR_PAD_LEFT );
+							$date_values[] = $this->bb_create_date_value( 'partial', array( 'pattern' => $month . '-' . $day ) );
+						}
+						break;
+
+					case 'day_month':
+						$day        = intval( $matches[1] );
+						$month_name = strtolower( $matches[2] );
+						$month_num  = $this->bb_get_month_number( $month_name );
+						if ( $month_num && $day >= 1 && $day <= 31 ) {
+							$month         = str_pad( $month_num, 2, '0', STR_PAD_LEFT );
+							$date_values[] = $this->bb_create_date_value( 'partial', array( 'pattern' => $month . '-' . $day ) );
+						}
+						break;
+
+					case 'day_month_year':
+						$day        = intval( $matches[1] );
+						$month_name = strtolower( $matches[2] );
+						$year       = intval( $matches[3] );
+						$month_num  = $this->bb_get_month_number( $month_name );
+						$year_range = $this->bb_get_dynamic_year_range();
+
+						if ( $month_num && $day >= 1 && $day <= 31 && $year >= $year_range['min'] && $year <= $year_range['max'] ) {
+							$month         = str_pad( $month_num, 2, '0', STR_PAD_LEFT );
+							$date_values[] = $this->bb_create_date_value( 'partial', array( 'pattern' => $month . '-' . $day ) );
+						}
+						break;
+
+					case 'day_month_comma_year':
+						$day        = intval( $matches[1] );
+						$month_name = strtolower( $matches[2] );
+						$year       = intval( $matches[3] );
+						$month_num  = $this->bb_get_month_number( $month_name );
+						$year_range = $this->bb_get_dynamic_year_range();
+
+						if ( $month_num && $day >= 1 && $day <= 31 && $year >= $year_range['min'] && $year <= $year_range['max'] ) {
+							$month         = str_pad( $month_num, 2, '0', STR_PAD_LEFT );
+							$date_values[] = $this->bb_create_date_value( 'partial', array( 'pattern' => $month . '-' . $day ) );
+						}
+						break;
+
+					case 'month_day_ordinal_comma_year':
+						$month_name = strtolower( $matches[1] );
+						$day        = intval( $matches[2] );
+						$year       = intval( $matches[3] );
+						$month_num  = $this->bb_get_month_number( $month_name );
+						$year_range = $this->bb_get_dynamic_year_range();
+
+						if ( $month_num && $day >= 1 && $day <= 31 && $year >= $year_range['min'] && $year <= $year_range['max'] ) {
+							$month         = str_pad( $month_num, 2, '0', STR_PAD_LEFT );
+							$date_values[] = $this->bb_create_date_value( 'partial', array( 'pattern' => $month . '-' . $day ) );
+						}
+						break;
+
+					case 'month_day_ordinal_year':
+						$month_name = strtolower( $matches[1] );
+						$day        = intval( $matches[2] );
+						$year       = intval( $matches[3] );
+						$month_num  = $this->bb_get_month_number( $month_name );
+						$year_range = $this->bb_get_dynamic_year_range();
+
+						if ( $month_num && $day >= 1 && $day <= 31 && $year >= $year_range['min'] && $year <= $year_range['max'] ) {
+							$month         = str_pad( $month_num, 2, '0', STR_PAD_LEFT );
+							$date_values[] = $this->bb_create_date_value( 'partial', array( 'pattern' => $month . '-' . $day ) );
+						}
+						break;
+
+					default:
+						break;
 				}
 			}
 
 			return $date_values;
+		}
+
+		/**
+		 * Validate and format a date.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param int $year  The year.
+		 * @param int $month The month.
+		 * @param int $day   The day.
+		 *
+		 * @return string|false The formatted date string or false if invalid.
+		 */
+		private function bb_validate_and_format_date( $year, $month, $day ) {
+			if ( checkdate( $month, $day, $year ) ) {
+				return $this->bb_format_date_string( $year, $month, $day );
+			}
+
+			return false;
+		}
+
+		/**
+		 * Format date components into a standardized date string.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param int $year  The year.
+		 * @param int $month The month.
+		 * @param int $day   The day.
+		 *
+		 * @return string The formatted date string.
+		 */
+		private function bb_format_date_string( $year, $month, $day ) {
+			return $year . '-' . str_pad( $month, 2, '0', STR_PAD_LEFT ) . '-' . str_pad( $day, 2, '0', STR_PAD_LEFT );
+		}
+
+		/**
+		 * Create a month range for a given year and month.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param int $year  The year.
+		 * @param int $month The month.
+		 *
+		 * @return array The month range.
+		 */
+		private function bb_create_month_range( $year, $month ) {
+			$month_padded = str_pad( $month, 2, '0', STR_PAD_LEFT );
+			$start_date   = $this->bb_format_date_string( $year, $month, 1 );
+			$end_date     = $this->bb_format_date_string( $year, $month, wp_date( 't', strtotime( $year . '-' . $month_padded . '-01' ) ) );
+
+			return array(
+				'start' => $start_date,
+				'end'   => $end_date,
+			);
+		}
+
+		/**
+		 * Create a date value array.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $type The type of date value (exact, range, partial).
+		 * @param array  $data The date data.
+		 *
+		 * @return array The date value array.
+		 */
+		private function bb_create_date_value( $type, $data = array() ) {
+			$date_value = array( 'type' => $type );
+
+			switch ( $type ) {
+				case 'exact':
+					$date_value['value'] = $data['value'] . ' 00:00:00';
+					break;
+				case 'range':
+					$date_value['start'] = $data['start'] . ' 00:00:00';
+					$date_value['end']   = $data['end'] . ' 23:59:59';
+					break;
+				case 'partial':
+					$date_value['pattern'] = $data['pattern'];
+					break;
+			}
+
+			return $date_value;
 		}
 
 		/**
