@@ -1122,99 +1122,13 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 		}
 
 		/**
-		 * Convert date format term to English.
+		 * Get month names.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
-		 * @param string $search_term The search term that may contain month names.
-		 *
-		 * @return string The search term with month names converted to English.
+		 * @return array Array of month names.
 		 */
-		private function bb_convert_date_format_with_month_name_to_english( $search_term ) {
-
-			if ( ! class_exists( 'IntlDateFormatter' ) ) { // @TODO Will remove ! later.
-				$locale = get_locale();
-
-				$patterns = array(
-					'MMMM yyyy',
-					'MMMM, yyyy',
-					'MMMM d, yyyy',
-					'd MMMM',
-					'd MMMM yyyy',
-					'd MMMM, yyyy',
-					'MMMM',
-					'MMMM d',
-				);
-
-				foreach ( $patterns as $pattern ) {
-					$formatter = new IntlDateFormatter(
-						$locale,
-						IntlDateFormatter::FULL,
-						IntlDateFormatter::NONE,
-						'UTC',
-						null,
-						$pattern
-					);
-
-					$timestamp = $formatter->parse( $search_term );
-
-					if ( false !== $timestamp ) {
-						$english_formatter = new IntlDateFormatter(
-							'en_US',
-							IntlDateFormatter::FULL,
-							IntlDateFormatter::NONE,
-							'UTC',
-							null,
-							$pattern
-						);
-
-						return $english_formatter->format( $timestamp );
-					}
-				}
-			} else {
-				// Split by space and comma while preserving separators.
-				$split_search_term = preg_split( '/([\s,]+)/', trim( $search_term ), -1, PREG_SPLIT_DELIM_CAPTURE );
-				$string_parts      = array();
-				foreach ( $split_search_term as $part ) {
-					if ( ! is_numeric( $part ) && ! empty( trim( $part ) ) && ! preg_match( '/[\s,]+/', $part ) ) {
-						// Handle ordinal suffixes (st, nd, rd, th) - keep them with the number.
-						if ( preg_match( '/(\d+)(st|nd|rd|th)$/i', $part, $ordinal_match ) ) {
-							$string_parts[] = $part; // Keep ordinals as-is.
-						} else {
-							$translated_month = $this->bb_get_month_number( $part, 'translated_month' );
-							$string_parts[]   = $translated_month;
-						}
-					} else {
-						$string_parts[] = $part;
-					}
-				}
-
-				// Join back together preserving original separators.
-				$search_term = implode( '', $string_parts );
-
-				return $search_term;
-			}
-
-			return $search_term; // fallback to original if no match.
-		}
-
-		/**
-		 * Get month number from month name (supports multiple languages).
-		 *
-		 * @since BuddyBoss [BBVERSION]
-		 *
-		 * @param string $input_month_name The month name to convert.
-		 * @param string $return_type      The type of return value.
-		 *
-		 * @return int|false Month number (1-12) or false if not found.
-		 */
-		private function bb_get_month_number( $input_month_name, $return_type = 'number' ) {
-			if ( 'number' === $return_type ) {
-				$input_month_name = function_exists( 'mb_strtolower' ) ? mb_strtolower( trim( $input_month_name ) ) : strtolower( trim( $input_month_name ) );
-			}
-
-			$input_translated_month = 'translated_month' === $return_type ? _x( $input_month_name, 'buddyboss' ) : '';
-
+		public function bb_get_month_names() {
 			// English month names for direct lookup.
 			$english_months = array(
 				'january'   => 1,
@@ -1231,41 +1145,54 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 				'december'  => 12,
 			);
 
-			// First, try direct English lookup.
-			if ( isset( $english_months[ $input_month_name ] ) ) {
-				if ( 'translated_month' === $return_type ) {
-					return $input_month_name; // Return the English month name.
-				}
+			return $english_months;
+		}
 
-				return $english_months[ $input_month_name ];
+		/**
+		 * Convert date format term to English.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $search_term The search term that may contain month names.
+		 *
+		 * @return string The search term with month names converted to English.
+		 */
+		private function bb_convert_date_format_with_month_name_to_english( $search_term ) {
+
+			$english_months = $this->bb_get_month_names();
+
+			// Generate month names for current locale.
+			for ( $month_num = 1; $month_num <= 12; $month_num++ ) {
+				$timestamp  = mktime( 0, 0, 0, $month_num, 1, 2025 );
+				$month_name = date_i18n( 'F', $timestamp );
+				if ( strpos( $search_term, $month_name ) !== false ) {
+					$english_month_name = array_search( $month_num, $english_months, true );
+
+					$search_term = str_replace( $month_name, $english_month_name, $search_term );
+					break;
+				}
 			}
 
-			// If not found, translate the search term to English first.
-			foreach ( $english_months as $month_name => $month_num ) {
+			return $search_term;
+		}
 
-				if ( 'translated_month' === $return_type ) {
-					$lower_input_translated_month = function_exists( 'mb_strtolower' ) ? mb_strtolower( $input_translated_month ) : strtolower( $input_translated_month );
-					$translated_month_name        = _x( ucfirst( $month_name ), 'genitive' );
-					$lower_month_name             = function_exists( 'mb_strtolower' ) ? mb_strtolower( $translated_month_name ) : strtolower( $translated_month_name );
-					if ( $lower_input_translated_month === $lower_month_name ) {
-						return $month_name;
-					}
-				}
+		/**
+		 * Get month number from month name (supports multiple languages).
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $input_month_name The month name to convert.
+		 *
+		 * @return int|false Month number (1-12) or false if not found.
+		 */
+		private function bb_get_month_number( $input_month_name ) {
+			$english_months = $this->bb_get_month_names();
 
-				// Get the translation for this month using date_i18n().
-				$timestamp       = mktime( 0, 0, 0, $month_num, 1, 2025 );
-				$translated_name = date_i18n( 'F', $timestamp );
+			$input_month_name = function_exists( 'mb_strtolower' ) ? mb_strtolower( trim( $input_month_name ) ) : strtolower( trim( $input_month_name ) );
 
-				// Check if input matches the translation.
-				if ( strtolower( $translated_name ) === $input_month_name ) {
-					return $month_num; // Return the month number directly.
-				}
-
-				// Also check abbreviated forms.
-				$translated_abbr = date_i18n( 'M', $timestamp );
-				if ( strtolower( $translated_abbr ) === $input_month_name ) {
-					return $month_num; // Return the month number directly.
-				}
+			// First, try direct English lookup.
+			if ( isset( $english_months[ $input_month_name ] ) ) {
+				return $english_months[ $input_month_name ];
 			}
 
 			return false;
