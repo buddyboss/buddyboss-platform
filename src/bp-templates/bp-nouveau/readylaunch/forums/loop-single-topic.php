@@ -81,7 +81,7 @@ if ( function_exists( 'bbp_is_forum_group_forum' ) && bbp_is_forum_group_forum( 
 					?>
 					<div class="bb_more_options forum-dropdown bb-rl-context-wrap">
 
-						<a href="#" class="bb-rl-context-btn bb_more_options_action bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="More Options">
+						<a href="#" class="bb-rl-context-btn bb_more_options_action bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="More Options" aria-label="<?php esc_html_e( 'More Options', 'buddyboss' ); ?>">
 							<i class="bb-icons-rl-dots-three"></i>
 						</a>
 

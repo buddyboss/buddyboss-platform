@@ -55,7 +55,7 @@ if ( false !== strpos( $attachment_full, 'video-placeholder.jpg' ) || false !== 
 			$report_btn = bp_video_get_report_link( array( 'id' => $video_id ) );
 			if ( $can_edit || $can_move || $can_delete || $report_btn ) {
 				?>
-				<a href="#" class="video-action_more item-action_more bb_more_options_action" data-balloon-pos="up" data-balloon="<?php esc_html_e( 'More actions', 'buddyboss' ); ?>">
+				<a href="#" class="video-action_more item-action_more bb_more_options_action" data-balloon-pos="up" data-balloon="<?php esc_html_e( 'More actions', 'buddyboss' ); ?>" aria-label="<?php esc_attr_e( 'More actions', 'buddyboss' ); ?>">
 					<i class="bb-icons-rl-dots-three"></i>
 				</a>
 				<div class="video-action_list item-action_list bb_more_dropdown bb_more_options_list">

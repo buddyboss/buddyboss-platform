@@ -151,7 +151,7 @@ if ( is_user_logged_in() && ! empty( $memberships ) ) {
 			<div class="bb-rl-course-figure">
 				<div class="bb-rl-course-featured-image">
 					<?php if ( ! empty( models\Lesson::get_thumbnail( $post ) ) ) { ?>
-						<a href="<?php the_permalink(); ?>" alt="<?php the_title_attribute(); ?>">
+						<a href="<?php the_permalink(); ?>" alt="<?php the_title_attribute(); ?>" aria-label="<?php the_title_attribute(); ?>">
 							<img src="<?php echo esc_url( models\Lesson::get_thumbnail( $post ) ); ?>" alt="">
 						</a>
 					<?php } else { ?>

@@ -8,5 +8,5 @@
 ?>
 
 <script type="text/html" id="tmpl-bp-messages-editor">
-	<div id="message_content" name="message_content" tabindex="3"></div>
+	<div id="message_content" name="message_content" tabindex="3" aria-label="<?php echo esc_attr( __( 'Message content', 'buddyboss' ) ); ?>"></div>
 </script>

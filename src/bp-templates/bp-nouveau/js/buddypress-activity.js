@@ -1049,10 +1049,10 @@ window.bp = window.bp || {};
 								200,
 								function() {
 
-									if ('false' === $( this ).attr( 'aria-pressed' ) ) {
-										$( this ).attr( 'aria-pressed', 'true' );
+									if ('false' === $( this ).attr( 'data-pressed' ) ) {
+										$( this ).attr( 'data-pressed', 'true' );
 									} else {
-										$( this ).attr( 'aria-pressed', 'false' );
+										$( this ).attr( 'data-pressed', 'false' );
 									}
 
 									// Update reacted user name and counts.

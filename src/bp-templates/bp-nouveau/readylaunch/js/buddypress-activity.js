@@ -2622,8 +2622,8 @@ window.bp = window.bp || {};
 							200,
 							function () {
 								var $this       = $( this );
-								var ariaPressed = 'false' === $this.attr( 'aria-pressed' ) ? 'true' : 'false';
-								$this.attr( 'aria-pressed', ariaPressed );
+								var ariaPressed = 'false' === $this.attr( 'data-pressed' ) ? 'true' : 'false';
+								$this.attr( 'data-pressed', ariaPressed );
 
 								// Update reacted username and counts.
 								if ( 'undefined' !== typeof response.data.reaction_count ) {

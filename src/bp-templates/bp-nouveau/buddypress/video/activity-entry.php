@@ -85,7 +85,7 @@ echo esc_attr( $has_no_thumbnail );
 			$item_id = 0;
 			if ( bp_loggedin_user_id() === $video_user_id || bp_current_user_can( 'bp_moderate' ) || $can_edit ) {
 				?>
-				<a href="#" class="video-action_more item-action_more" data-balloon-pos="up" data-balloon="<?php esc_html_e( 'More actions', 'buddyboss' ); ?>">
+				<a href="#" class="video-action_more item-action_more" data-balloon-pos="up" data-balloon="<?php esc_html_e( 'More actions', 'buddyboss' ); ?>" aria-label="<?php esc_attr_e( 'More actions', 'buddyboss' ); ?>">
 					<i class="bb-icon-rl bb-icon-ellipsis-v"></i>
 				</a>
 				<div class="video-action_list item-action_list bb_more_dropdown">
