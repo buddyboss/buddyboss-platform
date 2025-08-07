@@ -25,7 +25,7 @@
 							<i class="user-status-icon bb-icon-f bb-icon-lock"></i>
 						<# } #>
 					<# } else { #>
-						<a href="{{data.sender_link}}" class="bp-user-avatar" data-bb-hp-profile="{{data.sender_id}}">
+						<a href="{{data.sender_link}}" class="bp-user-avatar" data-bb-hp-profile="{{data.sender_id}}" aria-label="{{{data.sender_name}}}">
 							<img class="avatar" src="{{{data.sender_avatar}}}" alt="" />
 							<# if ( data.is_user_blocked_by ) { #>
 								<i class="user-status-icon bb-icon-f bb-icon-lock"></i>

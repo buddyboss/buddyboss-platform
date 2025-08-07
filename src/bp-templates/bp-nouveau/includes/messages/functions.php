@@ -152,6 +152,9 @@ function bp_nouveau_messages_localize_scripts( $params = array() ) {
 	}
 
 	$params['messages'] = array(
+		'i18n'                       => array(
+			'search_recipients' => __( 'Search members', 'buddyboss' ),
+		),
 		'errors'                     => array(
 			'send_to'         => __( 'Please add at least one recipient.', 'buddyboss' ),
 			'message_content' => __( 'Please add some content to your message.', 'buddyboss' ),
