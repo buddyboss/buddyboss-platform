@@ -189,6 +189,10 @@ body .select2-container .select2-dropdown.bb-compose-input {
 			background-color: var(--bb-rl-background-secondary-hover-color);
 		}
 
+		&[aria-selected="true"] {
+			display: none;
+		}
+
 		&.select2-results__option--load-more {
 			display: flex;
 			align-items: center;

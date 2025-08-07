@@ -229,6 +229,7 @@ $enabled_joined_date   = ! function_exists( 'bb_enabled_member_directory_element
 					<div class="bb_more_options member-dropdown">
 						<a href="#" class="bb_more_options_action bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_html_e( 'More Options', 'buddyboss' ); ?>">
 							<i class="bb-icon-menu-dots-h"></i>
+							<span class="bp-screen-reader-text"><?php esc_html_e( 'More options', 'buddyboss' ); ?></span>
 						</a>
 						<div class="bb_more_options_list bb_more_dropdown">
 							<?php bp_get_template_part( 'common/more-options-view' ); ?>

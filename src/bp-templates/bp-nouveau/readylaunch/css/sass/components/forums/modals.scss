@@ -166,9 +166,13 @@
 	&:not(.bb-rl-forum-modal--static) {
 
 		#new-post {
-			max-height: 90vh;
-			overflow: auto;
-			overflow-x: hidden;
+			overflow: hidden;
+
+			.bb-rl-forum-modal-content {
+				max-height: 60vh;
+				overflow: auto;
+				overflow-x: hidden;
+			}
 		}
 	}
 
@@ -515,6 +519,10 @@
 			}
 		}
 	}
+
+	.select2-dropdown {
+		background-color: var(--bb-rl-background-color);
+	}
 }
 
 .bb-rl-forum-tags {
@@ -522,6 +530,7 @@
 	padding: var(--bb-rl-space-200) 0;
 
 	.select2-container--default .select2-selection--multiple {
+		background-color: var(--bb-rl-background-color);
 		display: flex;
 		border: 0 !important;
 		min-height: 24px;
@@ -539,15 +548,15 @@
 		}
 
 		.select2-selection__choice {
+
+			@include bb-rl-label-heading-bolder;
 			display: flex;
 			align-items: center;
 			border: 1px solid var(--bb-rl-border-secondary-color);
 			border-radius: var(--bb-rl-radius-full);
-			padding: var(--bb-rl-space-50) var(--bb-rl-space-100);
+			padding: 1px var(--bb-rl-space-100);
 			background-color: transparent;
 			color: var(--bb-rl-text-color);
-			font-size: var(--bb-rl-font-size-sm);
-			font-weight: 500;
 			margin: 0;
 
 			.select2-selection__choice__remove {
@@ -556,14 +565,15 @@
 				position: static;
 				border: 0;
 				line-height: 1 !important;
-				margin: 0 0 0 5px !important;
+				margin: 0 0 0 var(--bb-rl-space-50) !important;
+				position: relative;
+				top: 1px;
 
 				&:before {
 					content: "\e4f6";
 					font-family: bb-icons-rl;
 					font-size: 14px;
 					color: var(--bb-rl-icon-secondary-color);
-					margin-right: var(--bb-rl-space-50);
 				}
 			}
 		}
@@ -573,14 +583,14 @@
 .bb-rl-forum-modal {
 
 	.select2-dropdown {
-		border: 0;
-		border-radius: var(--bb-rl-radius-lg);
-		box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.1);
+		border: 1px solid var(--bb-rl-border-secondary-color);
+		border-radius: var(--bb-rl-radius-md);
+		box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.12);
 		max-width: 320px;
 
 		&.select2-dropdown--above,
 		&.select2-dropdown--below {
-			border-radius: var(--bb-rl-radius-lg);
+			border-radius: var(--bb-rl-radius-md);
 		}
 	}
 
@@ -595,8 +605,13 @@
 		color: var(--bb-rl-text-color);
 		background-color: var(--bb-rl-background-color);
 		border: 0;
-		border-radius: var(--bb-rl-radius-base);
+		border-radius: var(--bb-rl-radius-md);
 		cursor: pointer;
+	}
+
+	.select2-container--default .select2-results__option--highlighted[aria-selected] {
+		color: var(--bb-rl-text-color);
+		background-color: var(--bb-rl-background-secondary-hover-color);
 	}
 
 	.select2-selection__rendered li {
