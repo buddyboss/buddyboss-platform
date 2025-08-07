@@ -57,6 +57,16 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 2.9.30 =
+* Bug: Activity - Fixed issue where the "More" label in topics was not translatable
+* Bug: Core - Fixed broken cross (X) icon UI in tag selectors across multiple screens, ensuring proper display even with the Modern Events Calendar plugin active
+* Bug: Core - Fixed critical accessibility issues, including missing labels and empty anchor tags
+* Bug: Forums - Fixed an issue where lead discussion content was missing on single discussion pages, ensuring compatibility with WP 6.8+ query changes.
+* Bug: Forums - Fixed issue where discussions couldn't be posted with only a title and media when GIFs were disabled in forum settings
+* Bug: Groups - Improved album creation UX to prevent partial photo uploads when "Create Album" is clicked before all images finish uploading.
+* Bug: Messages - Added support for URL embed preview in messaging
+* Bug: ReadyLaunch - Fixed minor UI and functional issues
+
 = 2.9.20 =
 * Bug: Activity - Fixed an issue where the schedule post dropdown menu was not fully visible, causing options to overflow or become inaccessible
 * Bug: Forums - Fixed a 404 error when using a custom slug on forum discussion edit links with the BuddyBoss theme
