@@ -1615,8 +1615,21 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 
 			// Define time units to translate.
 			// These are the base English time units we'll look for in translations.
+			// IMPORTANT: Process string formats BEFORE array formats to avoid conflicts.
+			// String formats are more specific and should be matched first.
 			$time_units = array(
+				// String formats (more specific) - process these FIRST
+				// Note: Only use string formats for singular cases (like "a year", "a day")
+				// For plural cases, use array formats to get proper plural handling.
+				'a year', // Process a year (singular only).
 				'sometime', // Process sometime.
+				'a week', // Process a week (singular only).
+				'a day', // Process a day (singular only).
+				'an hour', // Process an hour (singular only).
+				'a minute', // Process a minute (singular only).
+
+				// Array formats (more general) - process these AFTER string formats
+				// These handle both singular and plural cases properly.
 				array(
 					'singular' => 'year',
 					'plural'   => 'years',
@@ -1641,11 +1654,6 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 					'singular' => 'minute',
 					'plural'   => 'minutes',
 				), // Process minute/minutes.
-				'a year', // Process a year.
-				'a week', // Process a week.
-				'a day', // Process a day.
-				'an hour', // Process an hour.
-				'a minute', // Process a minute.
 			);
 
 			// Translate all time units with caching.
@@ -1676,19 +1684,23 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 					$search_term = $this->bb_translate_elipsed_time_unit( $search_term, $unit['singular'], $unit['plural'], $translations, $actual_amount );
 				} else {
 					// Handle string items like 'sometime'.
-					$cache_key = $unit . '_' . $actual_amount;
+					// IMPORTANT: Only process string formats for singular cases (amount = 1)
+					// For plural cases, skip string formats and let array formats handle them
+					if ( 1 === $actual_amount ) {
+						$cache_key = $unit . '_' . $actual_amount;
 
-					if ( ! isset( $translation_cache[ $cache_key ] ) ) {
-						$translation_cache[ $cache_key ] = array(
-							'singular' => __( $unit, 'buddyboss' ),
-							'plural'   => __( $unit, 'buddyboss' ),
-						);
+						if ( ! isset( $translation_cache[ $cache_key ] ) ) {
+							$translation_cache[ $cache_key ] = array(
+								'singular' => __( $unit, 'buddyboss' ),
+								'plural'   => __( $unit, 'buddyboss' ),
+							);
+						}
+
+						$translations = $translation_cache[ $cache_key ];
+
+						// Process this time unit in the search term.
+						$search_term = $this->bb_translate_elipsed_time_unit( $search_term, $unit, $unit, $translations, $actual_amount );
 					}
-
-					$translations = $translation_cache[ $cache_key ];
-
-					// Process this time unit in the search term.
-					$search_term = $this->bb_translate_elipsed_time_unit( $search_term, $unit, $unit, $translations, $actual_amount );
 				}
 			}
 
