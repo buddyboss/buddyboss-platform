@@ -1300,50 +1300,6 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 		}
 
 		/**
-		 * Calculate target date based on time elapsed expression.
-		 *
-		 * @since BuddyBoss [BBVERSION]
-		 *
-		 * @param int    $amount       The amount of time.
-		 * @param string $unit         The time unit (year, month, day).
-		 * @param string $direction    The direction ('ago' or 'from now').
-		 * @param int    $current_time Current timestamp.
-		 *
-		 * @return int|false Target timestamp or false on error.
-		 */
-		private function bb_calculate_time_elapsed_date( $amount, $unit, $direction, $current_time ) {
-			$multiplier = ( 'ago' === $direction ) ? -1 : 1;
-
-			// Handle both singular and plural units.
-			$unit_singular = rtrim( $unit, 's' ); // Remove 's' to get singular form.
-
-			switch ( $unit_singular ) {
-				case 'year':
-					$target_time = strtotime( ( $amount * $multiplier ) . ' years', $current_time );
-					break;
-				case 'month':
-					$target_time = strtotime( ( $amount * $multiplier ) . ' months', $current_time );
-					break;
-				case 'week':
-					$target_time = strtotime( ( $amount * $multiplier ) . ' weeks', $current_time );
-					break;
-				case 'day':
-					$target_time = strtotime( ( $amount * $multiplier ) . ' days', $current_time );
-					break;
-				case 'hour':
-					$target_time = strtotime( ( $amount * $multiplier ) . ' hours', $current_time );
-					break;
-				case 'minute':
-					$target_time = strtotime( ( $amount * $multiplier ) . ' minutes', $current_time );
-					break;
-				default:
-					return false;
-			}
-
-			return $target_time;
-		}
-
-		/**
 		 * Generate SQL conditions for date search.
 		 *
 		 * @since BuddyBoss [BBVERSION]
@@ -1559,6 +1515,114 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 		}
 
 		/**
+		 * Calculate dynamic year range for date validation.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return array Array with 'min' and 'max' year values.
+		 */
+		private function bb_get_dynamic_year_range() {
+			$current_year = (int) wp_date( 'Y' );
+
+			return array(
+				'min' => 1965, // Set the minimum year to 1965 as per date range filter.
+				'max' => $current_year + 50,
+			);
+		}
+
+		/**
+		 * Get the optimal date range for time elapsed searches.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param int    $target_time   The calculated target timestamp.
+		 * @param string $unit_singular The time unit (year, month, week, day).
+		 *
+		 * @return array Array with 'start' and 'end' dates.
+		 */
+		private function bb_get_optimal_date_range( $target_time, $unit_singular ) {
+			switch ( $unit_singular ) {
+				case 'year':
+					// For years, use the entire year for birth dates.
+					// This ensures we catch all birth dates in that year regardless of calculation precision.
+					$target_year = (int) wp_date( 'Y', $target_time );
+
+					return array(
+						'start' => $target_year . '-01-01',
+						'end'   => $target_year . '-12-31',
+					);
+				case 'month':
+					// For months, use a 2-month range (±1 month).
+					return array(
+						'start' => wp_date( 'Y-m-d', strtotime( '-1 month', $target_time ) ),
+						'end'   => wp_date( 'Y-m-d', strtotime( '+1 month', $target_time ) ),
+					);
+				case 'week':
+					// For weeks, use a 2-week range (±1 week).
+					return array(
+						'start' => wp_date( 'Y-m-d', strtotime( '-1 week', $target_time ) ),
+						'end'   => wp_date( 'Y-m-d', strtotime( '+1 week', $target_time ) ),
+					);
+				case 'day':
+					// For days, use a 7-day range (±3 days).
+					return array(
+						'start' => wp_date( 'Y-m-d', strtotime( '-3 days', $target_time ) ),
+						'end'   => wp_date( 'Y-m-d', strtotime( '+3 days', $target_time ) ),
+					);
+				default:
+					// Default to 15-day range.
+					return array(
+						'start' => wp_date( 'Y-m-d', strtotime( '-7 days', $target_time ) ),
+						'end'   => wp_date( 'Y-m-d', strtotime( '+7 days', $target_time ) ),
+					);
+			}
+		}
+
+		/**
+		 * Calculate target date based on time elapsed expression.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param int    $amount       The amount of time.
+		 * @param string $unit         The time unit (year, month, day).
+		 * @param string $direction    The direction ('ago' or 'from now').
+		 * @param int    $current_time Current timestamp.
+		 *
+		 * @return int|false Target timestamp or false on error.
+		 */
+		private function bb_calculate_time_elapsed_date( $amount, $unit, $direction, $current_time ) {
+			$multiplier = ( 'ago' === $direction ) ? -1 : 1;
+
+			// Handle both singular and plural units.
+			$unit_singular = rtrim( $unit, 's' ); // Remove 's' to get singular form.
+
+			switch ( $unit_singular ) {
+				case 'year':
+					$target_time = strtotime( ( $amount * $multiplier ) . ' years', $current_time );
+					break;
+				case 'month':
+					$target_time = strtotime( ( $amount * $multiplier ) . ' months', $current_time );
+					break;
+				case 'week':
+					$target_time = strtotime( ( $amount * $multiplier ) . ' weeks', $current_time );
+					break;
+				case 'day':
+					$target_time = strtotime( ( $amount * $multiplier ) . ' days', $current_time );
+					break;
+				case 'hour':
+					$target_time = strtotime( ( $amount * $multiplier ) . ' hours', $current_time );
+					break;
+				case 'minute':
+					$target_time = strtotime( ( $amount * $multiplier ) . ' minutes', $current_time );
+					break;
+				default:
+					return false;
+			}
+
+			return $target_time;
+		}
+
+		/**
 		 * Translate time elapsed expressions to English for regex matching.
 		 *
 		 * This function takes a search term in any language and translates it to English format
@@ -1651,7 +1715,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 
 					// Process this time unit in the search term.
 					// This will try to find and replace the time unit with its English equivalent.
-					$search_term = $this->bb_translate_time_unit_cached( $search_term, $unit['singular'], $unit['plural'], $translations, $actual_amount );
+					$search_term = $this->bb_translate_elipsed_time_unit( $search_term, $unit['singular'], $unit['plural'], $translations, $actual_amount );
 				} else {
 					// Handle string items like 'sometime'.
 					$cache_key = $unit . '_' . $actual_amount;
@@ -1666,7 +1730,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 					$translations = $translation_cache[ $cache_key ];
 
 					// Process this time unit in the search term.
-					$search_term = $this->bb_translate_time_unit_cached( $search_term, $unit, $unit, $translations, $actual_amount );
+					$search_term = $this->bb_translate_elipsed_time_unit( $search_term, $unit, $unit, $translations, $actual_amount );
 				}
 			}
 
@@ -1689,7 +1753,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 
 				// Process this direction word in the search term.
 				// This will try to find and replace the direction word with its English equivalent.
-				$search_term = $this->bb_translate_direction_word_cached( $search_term, $direction, $translation_cache[ $cache_key ] );
+				$search_term = $this->bb_translate_elipsed_direction_word( $search_term, $direction, $translation_cache[ $cache_key ] );
 			}
 
 			// Add "a" article for single time units if missing.
@@ -1750,7 +1814,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 		 *
 		 * @return string The translated search term with time unit replaced.
 		 */
-		private function bb_translate_time_unit_cached( $search_term, $english_singular, $english_plural, $translations, $actual_amount ) {
+		private function bb_translate_elipsed_time_unit( $search_term, $english_singular, $english_plural, $translations, $actual_amount ) {
 			// Remove %s placeholder from WordPress translations.
 			// WordPress' translations often include %s for number formatting.
 			$singular_word = trim( str_replace( '%s', '', $translations['singular'] ) );
@@ -1761,12 +1825,12 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 
 			// Remove direction words and extract base time units.
 			// This step removes words like "ago", "since" from the translation to get just the time unit.
-			$remove_direction_words = $this->bb_remove_direction_words( $singular_word );
-			$singular_base          = $this->bb_extract_base_time_unit( $remove_direction_words, $english_singular );
+			$remove_direction_words = $this->bb_remove_direction_words_for_elipsed( $singular_word );
+			$singular_base          = $this->bb_extract_base_time_unit_for_elipsed( $remove_direction_words, $english_singular );
 			// Example: "one year" → "year".
 
-			$remove_direction_words = $this->bb_remove_direction_words( $plural_word );
-			$plural_base            = $this->bb_extract_base_time_unit( $remove_direction_words, $english_singular );
+			$remove_direction_words = $this->bb_remove_direction_words_for_elipsed( $plural_word );
+			$plural_base            = $this->bb_extract_base_time_unit_for_elipsed( $remove_direction_words, $english_singular );
 			// Example: "two years" → "two years".
 
 			// Replace digits in the base units with the actual amount from search term.
@@ -1829,7 +1893,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 		 *
 		 * @return string The translation without direction words.
 		 */
-		private function bb_remove_direction_words( $translation ) {
+		private function bb_remove_direction_words_for_elipsed( $translation ) {
 			// Get direction words from WordPress translations.
 			// These are the direction indicators that might appear in time unit translations.
 			$directions = array( 'ago', 'since', 'from now' );
@@ -1885,14 +1949,14 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 		 *
 		 * @return string The base time unit.
 		 */
-		private function bb_extract_base_time_unit( $time_unit, $english_singular = '' ) {
+		private function bb_extract_base_time_unit_for_elipsed( $time_unit, $english_singular = '' ) {
 			// Special handling for phrases that should be treated as complete units.
 			if ( in_array( $english_singular, array( 'sometime', 'a year', 'a week', 'a day', 'an hour', 'a minute' ), true ) ) {
 				return $time_unit;
 			}
 
 			// Remove direction words first.
-			$time_unit = $this->bb_remove_direction_words( $time_unit );
+			$time_unit = $this->bb_remove_direction_words_for_elipsed( $time_unit );
 
 			// Split the time unit into individual words.
 			$words = preg_split( '/\s+/', $time_unit );
@@ -1964,7 +2028,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 		 *
 		 * @return string The translated search term with direction word replaced.
 		 */
-		private function bb_translate_direction_word_cached( $search_term, $direction, $translation ) {
+		private function bb_translate_elipsed_direction_word( $search_term, $direction, $translation ) {
 			// Remove %s placeholder from WordPress translation.
 			// WordPress' translations often include %s for number formatting.
 			$direction_clean = trim( str_replace( '%s', '', $translation ) );
@@ -2003,70 +2067,6 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 			// Return the search term with direction word replaced.
 			// Example: "since 32 years" → "32 years ago".
 			return $search_term;
-		}
-
-		/**
-		 * Calculate dynamic year range for date validation.
-		 *
-		 * @since BuddyBoss [BBVERSION]
-		 *
-		 * @return array Array with 'min' and 'max' year values.
-		 */
-		private function bb_get_dynamic_year_range() {
-			$current_year = (int) wp_date( 'Y' );
-
-			return array(
-				'min' => 1965, // Set the minimum year to 1965 as per date range filter.
-				'max' => $current_year + 50,
-			);
-		}
-
-		/**
-		 * Get the optimal date range for time elapsed searches.
-		 *
-		 * @since BuddyBoss [BBVERSION]
-		 *
-		 * @param int    $target_time   The calculated target timestamp.
-		 * @param string $unit_singular The time unit (year, month, week, day).
-		 *
-		 * @return array Array with 'start' and 'end' dates.
-		 */
-		private function bb_get_optimal_date_range( $target_time, $unit_singular ) {
-			switch ( $unit_singular ) {
-				case 'year':
-					// For years, use the entire year for birth dates.
-					// This ensures we catch all birth dates in that year regardless of calculation precision.
-					$target_year = (int) wp_date( 'Y', $target_time );
-
-					return array(
-						'start' => $target_year . '-01-01',
-						'end'   => $target_year . '-12-31',
-					);
-				case 'month':
-					// For months, use a 2-month range (±1 month).
-					return array(
-						'start' => wp_date( 'Y-m-d', strtotime( '-1 month', $target_time ) ),
-						'end'   => wp_date( 'Y-m-d', strtotime( '+1 month', $target_time ) ),
-					);
-				case 'week':
-					// For weeks, use a 2-week range (±1 week).
-					return array(
-						'start' => wp_date( 'Y-m-d', strtotime( '-1 week', $target_time ) ),
-						'end'   => wp_date( 'Y-m-d', strtotime( '+1 week', $target_time ) ),
-					);
-				case 'day':
-					// For days, use a 7-day range (±3 days).
-					return array(
-						'start' => wp_date( 'Y-m-d', strtotime( '-3 days', $target_time ) ),
-						'end'   => wp_date( 'Y-m-d', strtotime( '+3 days', $target_time ) ),
-					);
-				default:
-					// Default to 15-day range.
-					return array(
-						'start' => wp_date( 'Y-m-d', strtotime( '-7 days', $target_time ) ),
-						'end'   => wp_date( 'Y-m-d', strtotime( '+7 days', $target_time ) ),
-					);
-			}
 		}
 	}
 
