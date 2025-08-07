@@ -110,7 +110,7 @@ data-group-id="<?php bp_document_group_id(); ?>" data-activity-id="<?php echo es
 data-id="<?php echo esc_attr( $document_id ); ?>" data-parent-id="<?php bp_document_parent_id(); ?>"
 id="div-listing-<?php echo esc_attr( $document_id ); ?>">
 	<div class="media-folder_icon">
-		<a href="<?php echo esc_url( $document_folder_link ); ?>"> <i class="<?php echo esc_attr( $svg_icon ); ?>"></i> </a>
+		<a href="<?php echo esc_url( $document_folder_link ); ?>" aria-label="<?php esc_attr_e( 'View document', 'buddyboss' ); ?>"> <i class="<?php echo esc_attr( $svg_icon ); ?>"></i> </a>
 	</div>
 	<div class="media-folder_details">
 		<a class="media-folder_name <?php echo esc_attr( $class ); ?>" href="<?php echo esc_url( $document_folder_link ); ?>"
