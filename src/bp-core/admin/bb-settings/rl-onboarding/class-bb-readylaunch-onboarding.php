@@ -1022,6 +1022,14 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 				'icon'    => 'bb-icons-rl-file-text',
 				'default' => true,
 			);
+		} else {
+			$retval['courses'] = array(
+				'label'   => __( 'Courses', 'buddyboss' ),
+				'icon'    => 'bb-icons-rl-file-text',
+				'default' => false,
+				'not_available' => true,
+				'notice' => __( 'Requires LearnDash or MemberPress courses to activate.', 'buddyboss' ),
+			);
 		}
 
 		return $retval;

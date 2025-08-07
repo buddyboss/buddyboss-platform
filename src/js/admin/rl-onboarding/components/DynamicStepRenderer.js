@@ -147,6 +147,7 @@ export const DynamicStepRenderer = ({
                                         checked={isChecked}
                                         onChange={notAvailable ? undefined : toggleSelection}
                                     />
+                                    {fieldConfig.options[optKey].not_available ? <span className="bb-rl-checkbox-notice">{fieldConfig.options[optKey].notice}</span> : ''}
                                 </div>
                             );
                         })}

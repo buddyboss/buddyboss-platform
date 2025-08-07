@@ -949,6 +949,7 @@ body.bb-rl-fullscreen-mode {
         &.bb-rl-not-available {
             border-color: $border-secondary-color;
             pointer-events: none;
+            position: relative;
 
             .bb-rl-toggle-icon,
             .components-form-toggle {
@@ -957,6 +958,32 @@ body.bb-rl-fullscreen-mode {
 
             .components-toggle-control__label {
                 color: $text-disabled-color;
+            }
+
+            .bb-rl-checkbox-notice {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                color: $text-color;
+                font-size: 13px;
+                font-weight: 500;
+                background: $background-color;
+                border: 1px solid $border-secondary-color;
+                border-radius: 6px;
+                padding: 8px;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                margin-top: 8px;
+
+                &:before {
+                    content: "\e2ce";
+                    font-family: bb-icons-rl;
+                    font-size: 20px;
+                    font-style: normal;
+                    font-weight: 400;
+                }
             }
         }
         
