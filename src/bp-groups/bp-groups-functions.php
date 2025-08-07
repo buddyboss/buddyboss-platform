@@ -5139,6 +5139,7 @@ function bb_get_group_subscription_button( $args, $html = true ) {
 			'add_pre_post_text'    => false,
 			'href'                 => $url,
 			'data-bp-btn-action'   => $action,
+			'aria-label'           => $button_text,
 		),
 	);
 
@@ -5156,7 +5157,7 @@ function bb_get_group_subscription_button( $args, $html = true ) {
 
 	if ( ! empty( $html ) ) {
 		$button = sprintf(
-			'<a href="%s" id="%s" class="%s" data-bp-content-id="%s" data-bp-content-type="%s" data-bp-nonce="%s" data-bp-btn-action="%s">%s</a>',
+			'<a href="%s" id="%s" class="%s" data-bp-content-id="%s" data-bp-content-type="%s" data-bp-nonce="%s" data-bp-btn-action="%s" aria-label="%s">%s</a>',
 			esc_url( $button['link_href'] ),
 			esc_attr( $button['id'] ),
 			esc_attr( $button['link_class'] ),
@@ -5164,6 +5165,7 @@ function bb_get_group_subscription_button( $args, $html = true ) {
 			'group',
 			esc_url( $button['link_href'] ),
 			esc_attr( $action ),
+			esc_attr( $button['aria-label'] ),
 			wp_kses_post( $button['link_text'] )
 		);
 	}
