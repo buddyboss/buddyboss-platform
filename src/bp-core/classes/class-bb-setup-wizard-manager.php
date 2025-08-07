@@ -513,7 +513,6 @@ abstract class BB_Setup_Wizard_Manager {
 		if ( ! isset( $tracking['steps'][ $step ] ) ) {
 			$tracking['steps'][ $step ] = array(
 				'step_key'         => $data['step_key'] ?? $this->steps[ $step ]['key'],
-				'status'           => 'visited',
 				'form_data'        => array(),
 				'first_visited_at' => current_time( 'mysql' ),
 				'completed_at'     => null,
@@ -521,14 +520,24 @@ abstract class BB_Setup_Wizard_Manager {
 		}
 
 		// Only mark as completed if we actually have form data (indicates user progressed).
-		if ( ! empty( $data ) ) {
+		if (
+			isset( $data['form_data'] ) &&
+			! empty( $data['form_data'] ) &&
+			(
+				! isset( $tracking['steps'][ $step ]['status'] ) ||
+				'visited' === $tracking['steps'][ $step ]['status']
+			)
+		) {
 			$tracking['steps'][ $step ]['status']       = 'completed';
-			$tracking['steps'][ $step ]['form_data']    = isset( $data['form_data'] ) ? $data['form_data'] : $data;
+			$tracking['steps'][ $step ]['form_data']    = isset( $data['form_data'] ) ? $data['form_data'] : array();
 			$tracking['steps'][ $step ]['completed_at'] = current_time( 'mysql' );
 			// Ensure status is at least visited.
 		} elseif (
-			'visited' !== $tracking['steps'][ $step ]['status'] &&
-			'completed' !== $tracking['steps'][ $step ]['status']
+			! isset( $tracking['steps'][ $step ]['status'] ) ||
+			(
+				'visited' !== $tracking['steps'][ $step ]['status'] &&
+				'completed' !== $tracking['steps'][ $step ]['status']
+			)
 		) {
 			$tracking['steps'][ $step ]['status'] = 'visited';
 		}
@@ -866,11 +875,7 @@ abstract class BB_Setup_Wizard_Manager {
 		$data     = $this->sanitize_step_data( $raw_data );
 
 		// If wrapper keys are present (as sent from React) use only the inner form_data array for tracking.
-		if ( is_array( $data ) && ! empty( $data['form_data'] ) && is_array( $data['form_data'] ) ) {
-			$data_for_tracking = $data['form_data'];
-		} else {
-			$data_for_tracking = $data;
-		}
+		$data_for_tracking = $data;
 
 		// Check if this step should skip progress tracking.
 		if ( ! empty( $this->steps ) && isset( $this->steps[ $step ] ) && ! empty( $this->steps[ $step ]['skip_progress'] ) ) {
