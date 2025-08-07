@@ -1242,6 +1242,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 		 * @since BuddyBoss [BBVERSION]
 		 *
 		 * @param string $input_month_name The month name to convert.
+		 * @param string $return_type      The type of return value.
 		 *
 		 * @return int|false Month number (1-12) or false if not found.
 		 */
@@ -1269,6 +1270,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 				if ( 'translated_month' === $return_type ) {
 					return $input_month_name; // Return the English month name.
 				}
+
 				return $english_months[ $input_month_name ];
 			}
 
@@ -1283,6 +1285,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 					if ( 'translated_month' === $return_type ) {
 						return $month_name; // Return the English month name.
 					}
+
 					return $month_num; // Return the month number directly.
 				}
 
@@ -1292,6 +1295,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 					if ( 'translated_month' === $return_type ) {
 						return $month_name; // Return the English month name.
 					}
+
 					return $month_num; // Return the month number directly.
 				}
 			}
@@ -1944,14 +1948,27 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
-		 * @param string $time_unit The time unit to extract base from.
+		 * @param string $time_unit        The time unit to extract base from.
 		 * @param string $english_singular The English singular form.
 		 *
 		 * @return string The base time unit.
 		 */
 		private function bb_extract_base_time_unit_for_elipsed( $time_unit, $english_singular = '' ) {
 			// Special handling for phrases that should be treated as complete units.
-			if ( in_array( $english_singular, array( 'sometime', 'a year', 'a week', 'a day', 'an hour', 'a minute' ), true ) ) {
+			if (
+				in_array(
+					$english_singular, array(
+					'a month',
+					'sometime',
+					'a year',
+					'a week',
+					'a day',
+					'an hour',
+					'a minute',
+				),
+					true
+				)
+			) {
 				return $time_unit;
 			}
 
