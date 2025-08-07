@@ -62,7 +62,7 @@ export const MembersRightSidebar = ({ formData = {} }) => {
         {
             id: 'connections',
             component: (
-                <div className="bb-rl-preview-widget" key="network">
+                <div className="bb-rl-preview-widget" key="connections-widget">
                     <div className="bb-rl-preview-widget-header">
                         <h3 className="bb-rl-preview-widget-title">Connections</h3>
                         <span className="bb-rl-preview-widget-link">See all</span>
@@ -92,7 +92,7 @@ export const MembersRightSidebar = ({ formData = {} }) => {
         {
             id: 'my_network',
             component: (
-                <div className="bb-rl-preview-widget" key="network">
+                <div className="bb-rl-preview-widget" key="my-network">
                     <div className="bb-rl-preview-widget-header">
                         <h3 className="bb-rl-preview-widget-title">Network</h3>
                     </div>

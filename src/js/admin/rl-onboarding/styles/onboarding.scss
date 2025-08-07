@@ -4196,6 +4196,10 @@ body.bb-rl-fullscreen-mode {
         max-width: inherit;
         height: 100vh;
     }
+
+    .bb-rl-step-navigation {
+        width: 100%;
+    }
 }
 
 @media (max-width: 480px) {
