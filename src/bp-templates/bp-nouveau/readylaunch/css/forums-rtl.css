@@ -1836,11 +1836,11 @@
 .bb-rl-forum-tags .select2-container--default .select2-selection--multiple .select2-selection__choice .select2-selection__choice__remove {
   font-size: 0;
   order: 2;
-  margin-left: 0;
-  margin-right: var(--bb-rl-space-50);
+  border: 0;
+  line-height: 1 !important;
+  margin: 0 var(--bb-rl-space-50) 0 0 !important;
   position: relative;
   top: 1px;
-  line-height: 1;
 }
 
 .bb-rl-forum-tags .select2-container--default .select2-selection--multiple .select2-selection__choice .select2-selection__choice__remove:before {
