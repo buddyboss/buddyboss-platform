@@ -901,9 +901,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 								if ( $year_condition ) {
 									$date_values[] = $this->bb_create_date_value( 'exact', array( 'value' => $year . '-' . $month . '-' . $day . ' 00:00:00' ) );
 								}
-							}
-
-							if ( $year_condition ) {
+							} else {
 								$date_values[] = $this->bb_create_date_value( 'partial', array( 'pattern' => $month . '-' . $day ) );
 							}
 						}
@@ -932,9 +930,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 								if ( $year_condition ) {
 									$date_values[] = $this->bb_create_date_value( 'exact', array( 'value' => $year . '-' . $month . '-' . $day . ' 00:00:00' ) );
 								}
-							}
-
-							if ( $year_condition ) {
+							} else {
 								$date_values[] = $this->bb_create_date_value( 'partial', array( 'pattern' => $month . '-' . $day ) );
 							}
 						}
@@ -1213,7 +1209,11 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 		 * @return int|false Month number (1-12) or false if not found.
 		 */
 		private function bb_get_month_number( $input_month_name, $return_type = 'number' ) {
-			$input_month_name = function_exists( 'mb_strtolower' ) ? mb_strtolower( trim( $input_month_name ) ) : strtolower( trim( $input_month_name ) );
+			if ( 'number' === $return_type ) {
+				$input_month_name = function_exists( 'mb_strtolower' ) ? mb_strtolower( trim( $input_month_name ) ) : strtolower( trim( $input_month_name ) );
+			}
+
+			$input_translated_month = 'translated_month' === $return_type ? _x( $input_month_name, 'buddyboss' ) : '';
 
 			// English month names for direct lookup.
 			$english_months = array(
@@ -1242,26 +1242,28 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 
 			// If not found, translate the search term to English first.
 			foreach ( $english_months as $month_name => $month_num ) {
+
+				if ( 'translated_month' === $return_type ) {
+					$lower_input_translated_month = function_exists( 'mb_strtolower' ) ? mb_strtolower( $input_translated_month ) : strtolower( $input_translated_month );
+					$translated_month_name        = _x( ucfirst( $month_name ), 'genitive' );
+					$lower_month_name             = function_exists( 'mb_strtolower' ) ? mb_strtolower( $translated_month_name ) : strtolower( $translated_month_name );
+					if ( $lower_input_translated_month === $lower_month_name ) {
+						return $month_name;
+					}
+				}
+
 				// Get the translation for this month using date_i18n().
 				$timestamp       = mktime( 0, 0, 0, $month_num, 1, 2025 );
 				$translated_name = date_i18n( 'F', $timestamp );
 
 				// Check if input matches the translation.
 				if ( strtolower( $translated_name ) === $input_month_name ) {
-					if ( 'translated_month' === $return_type ) {
-						return $month_name; // Return the English month name.
-					}
-
 					return $month_num; // Return the month number directly.
 				}
 
 				// Also check abbreviated forms.
 				$translated_abbr = date_i18n( 'M', $timestamp );
 				if ( strtolower( $translated_abbr ) === $input_month_name ) {
-					if ( 'translated_month' === $return_type ) {
-						return $month_name; // Return the English month name.
-					}
-
 					return $month_num; // Return the month number directly.
 				}
 			}
