@@ -10,6 +10,7 @@ export const SideMenusStep = ({
     onSkip,
     currentStep,
     totalSteps,
+    skipProgressCount = 0,
     onAutoSave,
     savedData = {},
     allStepData = {}
@@ -56,7 +57,7 @@ export const SideMenusStep = ({
             onPrevious={onPrevious}
             onSkip={onSkip}
             isFirstStep={false}
-            isLastStep={currentStep === totalSteps - 1}
+            isLastStep={currentStep === totalSteps - skipProgressCount - 1}
             currentStep={currentStep}
             totalSteps={totalSteps}
             formData={formData}

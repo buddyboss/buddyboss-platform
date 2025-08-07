@@ -10,6 +10,7 @@ export const CommunitySetupStep = ({
     onSkip,
     currentStep,
     totalSteps,
+    skipProgressCount = 0,
     onAutoSave,
     savedData = {},
     allStepData = {}
@@ -26,7 +27,7 @@ export const CommunitySetupStep = ({
     useEffect(() => {
         // Initialize with defaults from step options and saved data
         const initialData = {}; // Set base defaults
-        
+
         Object.entries(stepOptions).forEach(([key, config]) => {
             if (config.value !== undefined) {
                 initialData[key] = config.value;
@@ -51,7 +52,7 @@ export const CommunitySetupStep = ({
 
     const handleFormChange = (newFormData) => {
         setFormData(newFormData);
-        
+
         // Clear any validation errors
         setErrors({});
     };
@@ -62,7 +63,7 @@ export const CommunitySetupStep = ({
         // Check required fields
         Object.entries(stepOptions).forEach(([key, config]) => {
             if (config.required && (!formData[key] || formData[key].trim() === '')) {
-                newErrors[key] = config.label 
+                newErrors[key] = config.label
                     ? __(`${config.label} is required`, 'buddyboss')
                     : __('This field is required', 'buddyboss');
             }
@@ -91,7 +92,7 @@ export const CommunitySetupStep = ({
             onPrevious={onPrevious}
             onSkip={onSkip}
             isFirstStep={currentStep === 1} // Skip splash screen
-            isLastStep={currentStep === totalSteps - 1}
+            isLastStep={currentStep === totalSteps - skipProgressCount - 1}
             currentStep={currentStep}
             totalSteps={totalSteps}
             formData={formData}
@@ -105,7 +106,7 @@ export const CommunitySetupStep = ({
                 onAutoSave={onAutoSave}
                 allStepData={allStepData}
             />
-            
+
             {Object.keys(errors).length > 0 && (
                 <div className="bb-rl-form-errors">
                     {Object.entries(errors).map(([field, message]) => (

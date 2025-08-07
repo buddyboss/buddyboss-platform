@@ -14,6 +14,8 @@ export const OnboardingModal = ({ isOpen, onClose, onContinue, onSkip }) => {
     const totalSteps = steps.length;
     const currentStep = steps[currentStepIndex] || {};
 
+    const skipProgressCount = steps.filter(step => step.skip_progress === true).length;
+
     useEffect(() => {
         // Initialize step data and restore progress from backend
         initializeOnboarding();
@@ -422,7 +424,7 @@ export const OnboardingModal = ({ isOpen, onClose, onContinue, onSkip }) => {
                 onSkip={handleStepSkip}
                 currentStep={currentStepIndex}
                 totalSteps={totalSteps}
-
+                skipProgressCount={skipProgressCount}
                 onAutoSave={autoSavePreferences}
                 isProcessing={isProcessing}
                 savedData={stepData[currentStep.key] || {}}
