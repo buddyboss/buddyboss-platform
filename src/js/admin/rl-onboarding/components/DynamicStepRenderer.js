@@ -552,8 +552,7 @@ export const DynamicStepRenderer = ({
                         const newLink = {
                             id: Date.now().toString(), // Simple ID generation
                             title: linkFormData.title,
-                            url: linkFormData.url,
-                            isEditing: false
+                            url: linkFormData.url
                         };
                         const updatedLinks = [...currentDraggableLinks, newLink];
                         handleDraggableLinkChange(updatedLinks);

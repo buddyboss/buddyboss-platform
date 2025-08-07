@@ -621,6 +621,17 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 						$sanitized[ $field_key ] = in_array( $field_value, $allowed_values, true ) ? $field_value : ( $field_config['default'] ?? '' );
 						break;
 
+					case 'checkbox_group':
+						if ( is_array( $field_value ) ) {
+							// Ensure all values are sanitized and valid.
+							$allowed_values = isset( $field_config['options'] ) ? array_keys( $field_config['options'] ) : array();
+							$sanitized[ $field_key ] = array_intersect( $field_value, $allowed_values );
+						} else {
+							// If not an array, default to empty array.
+							$sanitized[ $field_key ] = array();
+						}
+						break;
+
 					case 'checkbox':
 						$sanitized[ $field_key ] = ! empty( $field_value );
 						break;
@@ -740,24 +751,6 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 					'courses'      => in_array( 'courses', $selected_pages, true ),
 				);
 			}
-		}
-
-		// Sanitize side menus settings.
-		if ( isset( $settings['side_menus'] ) ) {
-			$sanitized['side_menus'] = array(
-				'enable_primary_menu' => ! empty( $settings['side_menus']['enable_primary_menu'] ),
-				'enable_member_menu'  => ! empty( $settings['side_menus']['enable_member_menu'] ),
-				'menu_style'          => isset( $settings['side_menus']['menu_style'] ) ? sanitize_text_field( wp_unslash( $settings['side_menus']['menu_style'] ) ) : 'horizontal',
-			);
-		}
-
-		// Sanitize widgets settings.
-		if ( isset( $settings['widgets'] ) ) {
-			$sanitized['widgets'] = array(
-				'enable_sidebar_widgets' => ! empty( $settings['widgets']['enable_sidebar_widgets'] ),
-				'default_widgets'        => ! empty( $settings['widgets']['default_widgets'] ),
-				'widget_areas'           => isset( $settings['widgets']['widget_areas'] ) ? sanitize_text_field( wp_unslash( $settings['widgets']['widget_areas'] ) ) : 'all',
-			);
 		}
 
 		return $sanitized;
