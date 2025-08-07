@@ -435,7 +435,7 @@ class BB_Readylaunch_Memberpress_Courses_Helper {
 	/**
 	 * Output the secondary header for MemberPress courses archive.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.30
 	 */
 	private function bb_rl_mpcs_output_secondary_header() {
 		global $wp_query, $wp;

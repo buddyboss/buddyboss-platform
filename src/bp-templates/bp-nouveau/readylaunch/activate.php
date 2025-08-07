@@ -3,7 +3,7 @@
  * ReadyLaunch - The template for members activate.
  *
  * @since   BuddyPress 3.0.0
- * @since   BuddyBoss [BBVERSION]
+ * @since   BuddyBoss 2.9.30
  * @version 1.0.0
  */
 

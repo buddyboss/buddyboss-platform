@@ -3,7 +3,7 @@
  * Template for displaying course progress in the classroom sidebar.
  *
  * @package BuddyBoss
- * @version BuddyBoss [BBVERSION]
+ * @version BuddyBoss 2.9.30
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
