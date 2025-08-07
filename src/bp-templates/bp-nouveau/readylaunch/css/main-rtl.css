@@ -6405,6 +6405,16 @@ body.admin-bar .bb-rl-header {
   outline: 2px solid var(--bb-rl-border-quinery-color);
 }
 
+body.bb-rl-dark-mode .bb-rl-site-branding .bb-rl-light-logo-text,
+body.bb-rl-dark-mode .bb-rl-site-branding .bb-rl-light-logo {
+  display: none;
+}
+
+body:not(.bb-rl-dark-mode) .bb-rl-site-branding .bb-rl-dark-logo-text,
+body:not(.bb-rl-dark-mode) .bb-rl-site-branding .bb-rl-dark-logo {
+  display: none;
+}
+
 .header-aside .header-aside-inner {
   gap: var(--bb-rl-space-100);
 }
