@@ -61,8 +61,8 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 				'day_month'                    => '/^(\d{1,2})\s*([a-z]+)$/i', // Day + Month name.
 				'day_month_year'               => '/^(\d{1,2})\s*([a-z]+)\s*\d{4}$/i', // Day + Month name + year.
 				'day_month_comma_year'         => '/^(\d{1,2})\s*([a-z]+)\s*,\s*(\d{4})$/i', // Day + Month name + comma + year.
-				'month_day_ordinal_comma_year' => '/^([a-z]+)\s+(\d{1,2})(st|nd|rd|th)\s*,\s*(\d{4})$/i', // Month name + day with ordinal + comma + year.
-				'month_day_ordinal_year'       => '/^([a-z]+)\s+(\d{1,2})(st|nd|rd|th)$/i', // Month name + day with ordinal + year.
+				'month_day_ordinal_comma_year' => '/^([a-z]+)\s+(\d{1,2})(?:st|nd|rd|th)\s*,\s*(\d{4})$/i', // Month name + day with ordinal + comma + year.
+				'month_day_ordinal_year'       => '/^([a-z]+)\s+(\d{1,2})(?:st|nd|rd|th)$/i', // Month name + day with ordinal + year.
 			),
 			'time_elapsed_formats' => array(
 				'amount_unit_direction' => '/^(?:(?:(\d+)|(a|one|an))\s+(year|month|week|day|hour|minute)s?\s+(ago|from now)|(ago|from now)\s+(\d+)\s+(year|month|week|day|hour|minute)s?|(sometime|some time)\s+(ago|from now)|(year|month|week|day|hour|minute)s?\s+(ago|from now))$/i',
@@ -769,11 +769,18 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 
 					case 'yyyy/mm':
 					case 'yyyy.mm':
-					case 'mm/yyyy':
 					case 'yyyy-mm':
-					case 'mm-yyyy':
 						$year  = intval( $matches[1] );
 						$month = intval( $matches[2] );
+
+						$range         = $this->bb_create_month_range( $year, $month );
+						$date_values[] = $this->bb_create_date_value( 'range', $range );
+						break;
+
+					case 'mm/yyyy':
+					case 'mm-yyyy':
+						$month = intval( $matches[1] );
+						$year  = intval( $matches[2] );
 
 						$range         = $this->bb_create_month_range( $year, $month );
 						$date_values[] = $this->bb_create_date_value( 'range', $range );
@@ -801,6 +808,15 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 						if ( $date2 && $date2 !== $date1 ) {
 							$date_values[] = $this->bb_create_date_value( 'partial', array( 'pattern' => substr( $date2, 5 ) ) );
 						}
+						break;
+
+					case 'year_only':
+						$year          = intval( $matches[1] );
+						$range         = array(
+							'start' => $year . '-01-01 00:00:00',
+							'end'   => $year . '-12-31 23:59:59',
+						);
+						$date_values[] = $this->bb_create_date_value( 'range', $range );
 						break;
 
 					default:
@@ -866,16 +882,32 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 					case 'month_day_comma_year':
 					case 'month_day_ordinal_comma_year':
 					case 'month_day_ordinal_year':
-						$month_name = strtolower( $matches[1] );
-						$day        = intval( $matches[2] );
-						$year       = intval( $matches[3] );
-						$month_num  = $this->bb_get_month_number( $month_name );
-						$year_range = $this->bb_get_dynamic_year_range();
+						$month_name          = strtolower( $matches[1] );
+						$day                 = intval( $matches[2] );
+						$month_num           = $this->bb_get_month_number( $month_name );
+						$day_month_condition = $month_num && $day >= 1 && $day <= 31;
 
-						if ( $month_num && $day >= 1 && $day <= 31 && $year >= $year_range['min'] && $year <= $year_range['max'] ) {
-							$month         = $this->bb_format_number_with_leading_zero( $month_num );
-							$date_values[] = $this->bb_create_date_value( 'partial', array( 'pattern' => $month . '-' . $day ) );
+						$year           = ! empty( $matches[3] ) ? intval( $matches[3] ) : 0;
+						$year_condition = true;
+
+						if ( $day_month_condition ) {
+							$month = $this->bb_format_number_with_leading_zero( $month_num );
+							$day   = $this->bb_format_number_with_leading_zero( $day );
+
+							if ( ! empty( $year ) ) {
+								$year_range     = $this->bb_get_dynamic_year_range();
+								$year_condition = $year >= $year_range['min'] && $year <= $year_range['max'];
+
+								if ( $year_condition ) {
+									$date_values[] = $this->bb_create_date_value( 'exact', array( 'value' => $year . '-' . $month . '-' . $day . ' 00:00:00' ) );
+								}
+							}
+
+							if ( $year_condition ) {
+								$date_values[] = $this->bb_create_date_value( 'partial', array( 'pattern' => $month . '-' . $day ) );
+							}
 						}
+
 						break;
 
 					case 'day_month':
@@ -898,7 +930,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 								$year_condition = $year >= $year_range['min'] && $year <= $year_range['max'];
 
 								if ( $year_condition ) {
-									$date_values[] = $this->bb_create_date_value( 'partial', array( 'pattern' => $year . '-' . $month . '-' . $day ) );
+									$date_values[] = $this->bb_create_date_value( 'exact', array( 'value' => $year . '-' . $month . '-' . $day . ' 00:00:00' ) );
 								}
 							}
 
@@ -981,7 +1013,6 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 			$month_padded = $this->bb_format_number_with_leading_zero( $month );
 			$start_date   = $this->bb_format_date_string( $year, $month, 1 );
 			$end_date     = $this->bb_format_date_string( $year, $month, wp_date( 't', strtotime( $year . '-' . $month_padded . '-01' ) ) );
-
 			return array(
 				'start' => $start_date,
 				'end'   => $end_date,
