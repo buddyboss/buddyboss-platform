@@ -15,8 +15,6 @@ export const PagesStep = ({
     allStepData = {}
 }) => {
     const [formData, setFormData] = useState({
-        create_essential_pages: true,
-        homepage_layout: 'activity',
         ...savedData
     });
 
@@ -75,4 +73,4 @@ export const PagesStep = ({
             />
         </BaseStepLayout>
     );
-}; 
+};
