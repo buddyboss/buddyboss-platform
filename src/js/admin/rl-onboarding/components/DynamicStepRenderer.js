@@ -14,6 +14,7 @@ import {
 } from '@wordpress/components';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { applyDynamicColors } from '../../utils/bbrlColorShades';
+import { extractFormDefaults } from '../../utils/formDefaults';
 
 export const DynamicStepRenderer = ({
     stepKey,
@@ -23,45 +24,17 @@ export const DynamicStepRenderer = ({
     onAutoSave,
     allStepData = {} // Add access to all step data for conditional logic
 }) => {
-    // Extract default values from stepOptions configuration
-    const getDefaultValues = () => {
-        const defaults = {};
-
-        Object.entries(stepOptions).forEach(([fieldKey, fieldConfig]) => {
-            // Skip non-interactive fields
-            if (['description', 'hr'].includes(fieldConfig.type)) {
-                return;
-            }
-
-            // checkbox_group needs special handling – the default
-            // selected list is derived from the options where default === true.
-            if (fieldConfig.type === 'checkbox_group') {
-                if (Array.isArray(fieldConfig.value)) {
-                    defaults[fieldKey] = fieldConfig.value;
-                } else {
-                    const selected = Object.entries(fieldConfig.options || {})
-                        .filter(([, optCfg]) => optCfg && optCfg.default)
-                        .map(([optKey]) => optKey);
-                    defaults[fieldKey] = selected;
-                }
-                return;
-            }
-
-            // Generic handling for other field types
-            if (fieldConfig.value !== undefined) {
-                defaults[fieldKey] = fieldConfig.value;
-            } else if (fieldConfig.default !== undefined) {
-                defaults[fieldKey] = fieldConfig.default;
-            }
-        });
-
-        return defaults;
-    };
-
     // Initialize form data with defaults from stepOptions, then overlay initialData
     const [formData, setFormData] = useState(() => {
-        const defaults = getDefaultValues();
-        return { ...defaults, ...initialData };
+        const initialFormData = extractFormDefaults(stepOptions, initialData);
+        
+        // Notify parent of initial values on first render
+        if (onChange) {
+            // Use setTimeout to avoid calling setState during render
+            setTimeout(() => onChange(initialFormData), 0);
+        }
+        
+        return initialFormData;
     });
     const [autoSaveTimeout, setAutoSaveTimeout] = useState(null);
 
@@ -80,11 +53,11 @@ export const DynamicStepRenderer = ({
     if (darkColor) {
         applyDynamicColors(null, darkColor);
     }
-
+    
     useEffect(() => {
         // Update form data when initial data changes, preserving defaults
-        const defaults = getDefaultValues();
-        setFormData(prev => ({ ...defaults, ...prev, ...initialData }));
+        const newFormData = extractFormDefaults(stepOptions, initialData);
+        setFormData(newFormData);
     }, [initialData, stepOptions]);
 
     const handleFieldChange = (field, value) => {

@@ -2,6 +2,7 @@ import { useState, useEffect } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { BaseStepLayout } from '../BaseStepLayout';
 import { DynamicStepRenderer } from '../DynamicStepRenderer';
+import { getInitialFormData } from '../../../utils/formDefaults';
 
 export const PagesStep = ({
     stepData,
@@ -15,28 +16,10 @@ export const PagesStep = ({
     savedData = {},
     allStepData = {}
 }) => {
-    const [formData, setFormData] = useState({
-        ...savedData
-    });
-
     // Get step options from window.bbRlOnboarding
     const stepOptions = window.bbRlOnboarding?.stepOptions?.pages || {};
-
-    useEffect(() => {
-        // Initialize with defaults from step options and saved data
-        const initialData = {};
-        Object.entries(stepOptions).forEach(([key, config]) => {
-            if (config.default !== undefined) {
-                initialData[key] = config.default;
-            }
-        });
-
-        setFormData(prev => ({
-            ...initialData,
-            ...prev,
-            ...savedData
-        }));
-    }, [savedData, stepOptions]);
+    
+    const [formData, setFormData] = useState(() => getInitialFormData(stepOptions, savedData));
 
     const handleFormChange = (newFormData) => {
         setFormData(newFormData);

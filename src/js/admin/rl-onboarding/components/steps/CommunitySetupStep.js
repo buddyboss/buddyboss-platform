@@ -2,6 +2,7 @@ import { useState, useEffect } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { BaseStepLayout } from '../BaseStepLayout';
 import { DynamicStepRenderer } from '../DynamicStepRenderer';
+import { getInitialFormData } from '../../../utils/formDefaults';
 
 export const CommunitySetupStep = ({
     stepData,
@@ -15,40 +16,12 @@ export const CommunitySetupStep = ({
     savedData = {},
     allStepData = {}
 }) => {
-    const [formData, setFormData] = useState({
-        ...savedData
-    });
-
     const [errors, setErrors] = useState({});
 
     // Get step options from window.bbRlOnboarding
     const stepOptions = window.bbRlOnboarding?.stepOptions?.community_setup || {};
-
-    useEffect(() => {
-        // Initialize with defaults from step options and saved data
-        const initialData = {}; // Set base defaults
-
-        Object.entries(stepOptions).forEach(([key, config]) => {
-            if (config.value !== undefined) {
-                initialData[key] = config.value;
-            } else if (config.default !== undefined) {
-                initialData[key] = config.default;
-            }
-        });
-
-        // Only use savedData for fields that have actual values (not empty strings)
-        const validSavedData = {};
-        Object.entries(savedData).forEach(([key, value]) => {
-            if (value !== '' && value !== null && value !== undefined) {
-                validSavedData[key] = value;
-            }
-        });
-
-        setFormData({
-            ...initialData,
-            ...validSavedData
-        });
-    }, [savedData, stepOptions]);
+    
+    const [formData, setFormData] = useState(() => getInitialFormData(stepOptions, savedData));
 
     const handleFormChange = (newFormData) => {
         setFormData(newFormData);
