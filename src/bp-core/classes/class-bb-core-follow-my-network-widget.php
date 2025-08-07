@@ -46,7 +46,7 @@ class BB_Core_Follow_My_Network_Widget extends WP_Widget {
 	 * @param array $args     Widget arguments.
 	 * @param array $instance Widget instance.
 	 *
-	 * return void
+	 * @return void
 	 */
 	public function widget( $args, $instance ) {
 
@@ -54,8 +54,6 @@ class BB_Core_Follow_My_Network_Widget extends WP_Widget {
 		if ( ! is_user_logged_in() || ! bp_is_activity_follow_active() ) {
 			return;
 		}
-
-		global $members_template;
 
 		$id     = bp_displayed_user_id();
 		$filter = false;
@@ -72,29 +70,23 @@ class BB_Core_Follow_My_Network_Widget extends WP_Widget {
 			}
 		}
 
-		// Get widget settings.
-		$settings = $this->parse_settings( $instance );
-
-		$follower  = bp_get_follower_ids( array( 'user_id' => $id ) );
-		$following = bp_get_following_ids( array( 'user_id' => $id ) );
+		$total_counts    = bp_total_follow_counts( array( 'user_id' => $id ) );
+		$follower_count  = isset( $total_counts['followers'] ) ? $total_counts['followers'] : 0;
+		$following_count = isset( $total_counts['following'] ) ? $total_counts['following'] : 0;
 
 		// No followers and following.
-		if ( ! $follower && ! $following ) {
+		if ( 0 === $follower_count && 0 === $following_count ) {
 			return false;
 		}
 
-		if ( empty( $settings['member_default'] ) || 'followers' === $settings['member_default'] ) {
-			$ids                  = $follower;
-			$see_all_query_string = '?bb-rl-scope=follower';
-		} else {
-			$ids                  = $following;
-			$see_all_query_string = '?bb-rl-scope=following';
-		}
+		$ids = 0 !== $follower_count ? bp_get_followers(
+			array(
+				'user_id'  => $id,
+				'per_page' => 10,
+			)
+		) : array();
 
-		$follower_array  = ! empty( $follower ) ? explode( ',', $follower ) : array();
-		$follower_count  = count( $follower_array );
-		$following_array = ! empty( $following ) ? explode( ',', $following ) : array();
-		$following_count = count( $following_array );
+		$see_all_query_string = '?bb-rl-scope=follower';
 
 		$instance['title'] = (
 			bp_loggedin_user_id() === bp_displayed_user_id()
@@ -108,61 +100,80 @@ class BB_Core_Follow_My_Network_Widget extends WP_Widget {
 			remove_filter( 'bp_displayed_user_id', array( $this, 'set_display_user' ), 9999, 1 );
 		}
 
-		// Back up the global.
-		$old_members_template = $members_template;
-
 		$members_dir_url = esc_url( bp_get_members_directory_permalink() );
-
-		/**
-		 * Filters the widget title.
-		 *
-		 * @since BuddyBoss 2.9.00 Added 'instance' and 'id_base' to arguments passed to filter.
-		 *
-		 * @param string $title    The widget title.
-		 * @param array  $instance The settings for the particular instance of the widget.
-		 * @param string $id_base  Root ID for all widgets of this type.
-		 */
-		$title = apply_filters( 'widget_title', $instance['title'], $instance, $this->id_base );
-		$title = $settings['link_title'] ? '<a href="' . esc_url( $members_dir_url ) . '">' . esc_html( $title ) . '</a>' : esc_html( $title );
 
 		do_action( 'bb_before_my_network_widget' );
 
 		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		echo $args['before_widget'];
-		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-		echo $args['before_title']
-			. esc_html( $title )
-			. '<div class="bb-rl-see-all"><a target="_blank" href="' . esc_url( $members_dir_url . $see_all_query_string ) . '" class="count-more">' . esc_html__( 'See all', 'buddyboss' ) . '<i class="bb-icon-l bb-icon-angle-right"></i></a></div>'
-			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-			. $args['after_title'];
 		?>
+			<h2 class="widget-title">
+				<a href="<?php echo esc_url( $members_dir_url ); ?>">
+					<?php
+					if ( bp_loggedin_user_id() === bp_displayed_user_id() ) {
+						esc_html_e( 'My Network', 'buddyboss' );
+					} else {
+						/* translators: %s is the user's display name */
+						printf( esc_html__( "%s's Network", 'buddyboss' ), esc_html( $this->get_user_display_name( $id ) ) );
+					}
+					?>
+				</a>
+				<div class="bb-rl-see-all">
+					<a target="_blank" href="<?php echo esc_url( $members_dir_url . $see_all_query_string ); ?>" class="count-more">
+						<?php esc_html_e( 'See all', 'buddyboss' ); ?>
+						<i class="bb-icon-l bb-icon-angle-right"></i>
+					</a>
+				</div>
+			</h2>
 			<div class="bb-rl-members-item-options">
-				<a href="javascript:void(0);" id="bb-rl-my-network-followers" data-see-all-link="<?php echo esc_url( $members_dir_url . '?bb-rl-scope=follower' ); ?>"
-					<?php echo ( empty( $settings['member_default'] ) || 'followers' === $settings['member_default'] ) ? 'class="selected"' : ''; ?>><?php esc_html_e( 'Followers', 'buddyboss' ); ?><span class="bb-rl-widget-tab-count"><?php echo esc_html( $follower_count ); ?></span></a>
-				<a href="javascript:void(0);" id="bb-rl-my-network-following" data-max="<?php echo esc_attr( $settings['max_users'] ); ?>" data-see-all-link="<?php echo esc_url( $members_dir_url . '?bb-rl-scope=following' ); ?>"
-				<?php echo ( 'following' === $settings['member_default'] ) ? 'class="selected"' : ''; ?>><?php esc_html_e( 'Following', 'buddyboss' ); ?><span class="bb-rl-widget-tab-count"><?php echo esc_html( $following_count ); ?></span></a>
+				<a href="javascript:void(0);" id="bb-rl-my-network-followers" data-see-all-link="<?php echo esc_url( $members_dir_url . '?bb-rl-scope=follower' ); ?>" <?php echo ( empty( $settings['member_default'] ) || 'followers' === $settings['member_default'] ) ? 'class="selected"' : ''; ?>>
+					<?php
+					esc_html_e( 'Followers', 'buddyboss' );
+					if ( $follower_count > 0 ) {
+						?>
+						<span class="bb-rl-widget-tab-count"><?php echo absint( $follower_count ); ?></span>
+						<?php
+					}
+					?>
+				</a>
+				<a href="javascript:void(0);" id="bb-rl-my-network-following" data-max="<?php echo esc_attr( $settings['max_users'] ); ?>" data-see-all-link="<?php echo esc_url( $members_dir_url . '?bb-rl-scope=following' ); ?>" <?php echo ( 'following' === $settings['member_default'] ) ? 'class="selected"' : ''; ?>>
+					<?php
+					esc_html_e( 'Following', 'buddyboss' );
+					if ( $following_count > 0 ) {
+						?>
+						<span class="bb-rl-widget-tab-count"><?php echo absint( $following_count ); ?></span>
+						<?php
+					}
+					?>
+				</a>
 			</div>
 			<div class="bb-rl-my-network-members-list bb-rl-avatar-block">
 		<?php
 
 		// show the members lists.
-		if ( bp_has_members(
-			array(
-				'include'             => $ids,
-				'per_page'            => $settings['max_users'],
-				'populate_extras'     => false,
-				'member_type__not_in' => false,
-			)
-		) ) {
-			while ( bp_members() ) :
-				bp_the_member();
+		if ( $ids ) {
+			foreach ( $ids as $member_id ) {
 				?>
 				<div class="item-avatar">
-					<a href="<?php bp_members_directory_permalink(); ?>" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo esc_attr( bp_core_get_user_displayname( bp_get_member_user_id() ) ); ?>"><?php bp_member_avatar(); ?></a>
-					<?php bb_user_presence_html( $members_template->member->id ); ?>
+					<a href="<?php echo esc_url( bp_core_get_user_domain( $member_id ) ); ?>" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo esc_attr( bp_core_get_user_displayname( $member_id ) ); ?>">
+						<?php
+						echo wp_kses_post(
+							bp_core_fetch_avatar(
+								array(
+									'item_id' => $member_id,
+									'type'    => 'thumb',
+									'width'   => 30,
+									'height'  => 30,
+									'alt'     => '',
+								)
+							)
+						);
+						?>
+					</a>
+					<?php bb_user_presence_html( $member_id ); ?>
 				</div>
 				<?php
-			endwhile;
+			}
 		}
 		?>
 		</div>
@@ -178,63 +189,12 @@ class BB_Core_Follow_My_Network_Widget extends WP_Widget {
 		echo $args['after_widget'];
 
 		do_action( 'bb_after_my_network_widget' );
-
-		// Restore the global.
-		$members_template = $old_members_template;
-	}
-
-	/**
-	 * Callback to save widget settings.
-	 *
-	 * @param array $new_instance New widget instance.
-	 * @param array $old_instance Old widget instance.
-	 *
-	 * @return array Updated instance.
-	 */
-	public function update( $new_instance, $old_instance ) {
-		$instance                   = $old_instance;
-		$instance['max_users']      = (int) $new_instance['max_users'];
-		$instance['member_default'] = wp_strip_all_tags( $new_instance['member_default'] );
-
-		return $instance;
-	}
-
-	/**
-	 * Widget settings form.
-	 *
-	 * @param array $instance Widget instance.
-	 */
-	public function form( $instance ) {
-		$settings       = $this->parse_settings( $instance );
-		$max_members    = wp_strip_all_tags( $settings['max_users'] );
-		$member_default = wp_strip_all_tags( $settings['member_default'] );
-		?>
-
-		<p>
-			<label for="<?php echo esc_attr( $this->get_field_id( 'max_users' ) ); ?>"><?php esc_html_e( 'Max members to show:', 'buddyboss' ); ?> <input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'max_users' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'max_users' ) ); ?>" type="number" value="<?php echo esc_attr( (int) $max_members ); ?>" style="width: 30%" /></label>
-		</p>
-		<p>
-		<label for="<?php echo esc_attr( $this->get_field_id( 'member_default' ) ); ?>"><?php esc_html_e( 'Default members to show:', 'buddyboss' ); ?></label>
-		<select name="<?php echo esc_attr( $this->get_field_name( 'member_default' ) ); ?>" id="<?php echo esc_attr( $this->get_field_id( 'member_default' ) ); ?>">
-				<option value="followers"
-				<?php
-				if ( 'followers' === $member_default ) :
-					?>
-					selected="selected"<?php endif; ?>><?php esc_html_e( 'Followers', 'buddyboss' ); ?></option>
-				<option value="following"
-				<?php
-				if ( 'following' === $member_default ) :
-					?>
-					selected="selected"<?php endif; ?>><?php esc_html_e( 'Following', 'buddyboss' ); ?></option>
-			</select>
-		</p>
-		<?php
 	}
 
 	/**
 	 * Set Display user_id to loggedin_user_id if someone added the widget on outside bp pages.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 2.9.00
 	 *
 	 * @param int $id User ID.
 	 *
@@ -277,15 +237,14 @@ class BB_Core_Follow_My_Network_Widget extends WP_Widget {
 	/**
 	 * AJAX callback for the widget.
 	 *
-	 * @since BuddyPress 1.0.0
+	 * @since BuddyBoss 2.9.00
 	 */
 	public function bb_ajax_widget_follow_my_network() {
-		global $members_template;
 		check_ajax_referer( 'bb_core_widget_follow_my_network' );
 
 		// Set up some variables to check.
 		$filter      = ! empty( $_POST['filter'] ) ? sanitize_text_field( wp_unslash( $_POST['filter'] ) ) : 'recently-active-members';
-		$max_members = ! empty( $_POST['max-members'] ) ? absint( $_POST['max-members'] ) : 5;
+		$max_members = ! empty( $_POST['max-members'] ) ? absint( $_POST['max-members'] ) : 10;
 
 		// Determine the type of member query to perform.
 		switch ( $filter ) {
@@ -314,14 +273,20 @@ class BB_Core_Follow_My_Network_Widget extends WP_Widget {
 			}
 		}
 
-		if ( empty( $instance['max_users'] ) ) {
-			$instance['max_users'] = 15;
-		}
-
 		if ( 'following' === $type ) {
-			$ids = bp_get_following_ids( array( 'user_id' => $id ) );
+			$ids = bp_get_following(
+				array(
+					'user_id'  => $id,
+					'per_page' => $max_members,
+				)
+			);
 		} else {
-			$ids = bp_get_follower_ids( array( 'user_id' => $id ) );
+			$ids = bp_get_followers(
+				array(
+					'user_id'  => $id,
+					'per_page' => $max_members,
+				)
+			);
 		}
 
 		$result = array(
@@ -331,36 +296,39 @@ class BB_Core_Follow_My_Network_Widget extends WP_Widget {
 		// No data.
 		if ( $ids ) {
 
-			// Setup args for querying members.
-			$members_args = array(
-				'include'             => $ids,
-				'per_page'            => $instance['max_users'],
-				'populate_extras'     => false,
-				'member_type__not_in' => false,
-			);
-
 			$content = '';
+			ob_start();
+			foreach ( $ids as $member_id ) {
+				?>
+				<div class="item-avatar">
+					<a href="<?php echo esc_url( bp_core_get_user_domain( $member_id ) ); ?>" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo esc_attr( bp_core_get_user_displayname( $member_id ) ); ?>">
+						<?php
+						echo wp_kses_post(
+							bp_core_fetch_avatar(
+								array(
+									'item_id' => $member_id,
+									'type'    => 'thumb',
+									'width'   => 30,
+									'height'  => 30,
+									'alt'     => '',
+								)
+							)
+						);
+						?>
+					</a>
+					<?php bb_user_presence_html( $member_id ); ?>
+				</div>
+				<?php
+			}
+			$content .= ob_get_clean();
 
-			// Query for members.
-			if ( bp_has_members( $members_args ) ) :
-				ob_start();
-				while ( bp_members() ) :
-					bp_the_member();
-					?>
-					<div class="item-avatar">
-						<a href="<?php bp_members_directory_permalink(); ?>" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo esc_attr( bp_core_get_user_displayname( bp_get_member_user_id() ) ); ?>"><?php bp_member_avatar(); ?></a>
-						<?php bb_user_presence_html( $members_template->member->id ); ?>
-					</div>
-					<?php
-				endwhile;
-				$content .= ob_get_clean();
-
-				$result = array(
-					'success' => 1,
-					'data'    => $content,
-					'count'   => $members_template->total_member_count,
-				);
-			endif;
+			$result = array(
+				'success' => 1,
+				'data'    => $content,
+				'count'   => ! empty( $ids ) ? count( $ids ) : 0,
+			);
+			wp_send_json( $result );
+		} else {
 			wp_send_json( $result );
 		}
 	}
@@ -373,27 +341,5 @@ class BB_Core_Follow_My_Network_Widget extends WP_Widget {
 	public static function enqueue_scripts() {
 		$min = bp_core_get_minified_asset_suffix();
 		wp_enqueue_script( 'bb_rl_my_network_widget_js', buddypress()->plugin_url . "bp-core/js/bb-rl-my-network-widget{$min}.js", array( 'jquery', 'wp-ajax-response' ), bp_get_version(), true );
-	}
-
-	/**
-	 * Merge the widget settings into defaults array.
-	 *
-	 * @since BuddyBoss 2.9.00
-	 *
-	 * @param array $instance Widget instance settings.
-	 *
-	 * @return array
-	 */
-	public function parse_settings( $instance = array() ) {
-		return bp_parse_args(
-			$instance,
-			array(
-				'title'          => __( 'My Network', 'buddyboss' ),
-				'max_users'      => 15,
-				'member_default' => 'followers',
-				'link_title'     => false,
-			),
-			'my_network_widget_settings'
-		);
 	}
 }

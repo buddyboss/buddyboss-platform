@@ -37,7 +37,11 @@ $is_memberpress_inner = (
 	is_single() &&
 	class_exists( 'memberpress\courses\helpers\Courses' ) &&
 	! helpers\Courses::is_a_course( $post ) &&
-	( ! $bb_rl_ld_helper || ! $bb_rl_ld_helper->bb_rl_is_learndash_inner_page() )
+	( ! $bb_rl_ld_helper || ! $bb_rl_ld_helper->bb_rl_is_learndash_inner_page() ) &&
+	! bbp_is_single_forum() &&
+	! bbp_is_single_topic() &&
+	! bbp_is_single_reply() &&
+	! is_bbpress()
 );
 $panel_classes = 'bb-rl-left-panel widget-area';
 if ( $is_memberpress_inner ) {
@@ -47,13 +51,7 @@ if ( $is_memberpress_inner ) {
 
 <div id="secondary" class="<?php echo esc_attr( $panel_classes ); ?>" role="complementary">
 	<?php
-	if (
-		bb_is_readylaunch_enabled() &&
-		is_single() &&
-		class_exists( 'memberpress\courses\helpers\Courses' ) &&
-		! helpers\Courses::is_a_course( $post ) &&
-		( ! $bb_rl_ld_helper || ! $bb_rl_ld_helper->bb_rl_is_learndash_inner_page() )
-	) {
+	if ( $is_memberpress_inner ) {
 		echo memberpress\courses\helpers\Courses::get_classroom_sidebar( $post );
 	}
 
