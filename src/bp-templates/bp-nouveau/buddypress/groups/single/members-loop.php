@@ -189,6 +189,7 @@ if ( bp_group_has_members( bp_ajax_querystring( 'group_members' ) . '&type=group
 						<div class="bb_more_options member-dropdown">
 							<a href="#" class="bb_more_options_action" aria-label="<?php esc_attr_e( 'More options', 'buddyboss' ); ?>">
 								<i class="bb-icon-menu-dots-h"></i>
+								<span class="bp-screen-reader-text"><?php esc_html_e( 'More options', 'buddyboss' ); ?></span>
 							</a>
 							<div class="bb_more_options_list bb_more_dropdown">
 								<?php bp_get_template_part( 'common/more-options-view' ); ?>

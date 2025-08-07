@@ -117,16 +117,17 @@ if ( function_exists( 'bbp_is_forum_group_forum' ) && bbp_is_forum_group_forum( 
 		<div class="bb-rl-topic-author-details">
 			<div class="bb-rl-topic-author-name">
 			<?php
+				$bbp_topic_id = bbp_get_topic_id();
 				bbp_author_link(
 					array(
-						'post_id' => bbp_get_topic_id(),
+						'post_id' => $bbp_topic_id,
 						'type'    => 'name',
 					)
 				);
 				?>
 			</div>
 			<div class="bb-rl-topic-time">
-				<?php bbp_topic_freshness_link(); ?>
+				<?php bbp_topic_post_date( $bbp_topic_id ); ?>
 			</div>
 		</div>
 	</div>

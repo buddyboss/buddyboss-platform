@@ -511,6 +511,10 @@ function bp_version_updater() {
 			bb_update_to_2_8_20();
 		}
 
+		if ( $raw_db_version < 23421 ) {
+			bb_update_to_2_9_2();
+		}
+
 		if ( $raw_db_version !== $current_db ) {
 			// @todo - Write only data manipulate migration here. ( This is not for DB structure change ).
 
@@ -3918,4 +3922,59 @@ function bb_update_to_2_8_20() {
 		)
 	);
 	bp_update_option( 'bb_enable_activity_search', true );
+}
+
+/**
+ * Migrate for BuddyBoss 2.9.20.
+ *
+ * @since BuddyBoss 2.9.20
+ *
+ * @return void
+ */
+function bb_update_to_2_9_2() {
+	global $wpdb;
+
+	$postmeta_table = $wpdb->prefix . 'postmeta';
+	$activity_table = $wpdb->base_prefix . 'bp_activity';
+
+	$updates = array(
+		array(
+			'table'    => $wpdb->base_prefix . 'bp_media',
+			'key_name' => 'bp_media_activity_id',
+		),
+		array(
+			'table'    => $wpdb->base_prefix . 'bp_document',
+			'key_name' => 'bp_document_activity_id',
+		),
+		array(
+			'table'    => $wpdb->base_prefix . 'bp_media',
+			'key_name' => 'bp_video_activity_id',
+		),
+	);
+
+	// Check activity table exists.
+	if ( ! $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $activity_table ) ) ) {
+		return;
+	}
+
+	// Filter to only existing tables.
+	$updates = array();
+	foreach ( $updates as $update ) {
+		if ( $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $update['table'] ) ) ) {
+			$updates[] = $update;
+		}
+	}
+
+	foreach ( $updates as $update ) {
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$wpdb->query(
+			"UPDATE {$update['table']} m
+			INNER JOIN {$postmeta_table} pm
+				ON m.attachment_id = pm.post_id AND pm.meta_key = '{$update['key_name']}'
+			INNER JOIN {$activity_table} a
+				ON pm.meta_value = a.id AND a.type = 'activity_comment'
+			SET m.privacy = 'comment'
+			WHERE m.privacy = 'grouponly' AND m.attachment_id IS NOT NULL"
+		);
+	}
 }

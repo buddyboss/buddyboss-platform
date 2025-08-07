@@ -994,6 +994,7 @@ function bb_messages_compose_action_sub_nav() {
 	<div class="bb_more_options message-action-options">
 		<a href="#" class="bb_more_options_action" data-action="more_options" aria-label="<?php esc_html_e( 'More options', 'buddyboss' ); ?>">
 			<i class="bb-icon-f bb-icon-ellipsis-h"></i>
+			<span class="bp-screen-reader-text"><?php esc_html_e( 'More options', 'buddyboss' ); ?></span>
 		</a>
 		<ul class="bb_more_options_list message_action__list">
 			<li class="archived-messages">
