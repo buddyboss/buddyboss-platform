@@ -1872,6 +1872,8 @@ function bp_core_signup_user( $user_login, $user_password, $user_email, $usermet
 	// We need to cast $user_id to pass to the filters.
 	$user_id = false;
 
+	$activation_key = '';
+
 	// Multisite installs have their own install procedure.
 	if ( is_multisite() ) {
 		wpmu_signup_user( $user_login, $user_email, $usermeta );
@@ -1930,6 +1932,25 @@ function bp_core_signup_user( $user_login, $user_password, $user_email, $usermet
 	 *                                       signup data, xprofile data, etc).
 	 */
 	do_action( 'bp_core_signup_user', $user_id, $user_login, $user_password, $user_email, $usermeta );
+
+	/**
+	 * Filters if BuddyPress should send an activation key for a new signup.
+	 *
+	 * @since BuddyPress 1.2.3
+	 *
+	 * @param bool   $value          Whether or not to send the activation key.
+	 * @param int    $user_id        User ID to send activation key to.
+	 * @param string $user_email     User email to send activation key to.
+	 * @param string $activation_key Activation key to be sent.
+	 * @param array  $usermeta       Miscellaneous metadata about the user (blog-specific
+	 *                               signup data, xprofile data, etc).
+	 */
+	if (
+		! empty( $activation_key ) &&
+		apply_filters( 'bp_core_signup_send_activation_key', true, $user_id, $user_email, $activation_key, $usermeta )
+	) {
+		bp_core_signup_send_validation_email( $user_id, $user_email, $activation_key, $user_login );
+	}
 
 	return $user_id;
 }
