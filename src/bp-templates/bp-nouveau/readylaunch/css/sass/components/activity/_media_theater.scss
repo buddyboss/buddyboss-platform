@@ -159,7 +159,8 @@
 		}
 	}
 
-	.bp-add-media-activity-description {
+	.bp-add-media-activity-description,
+	.bp-add-video-activity-description {
 		display: inline-block;
 		font-size: var(--bb-rl-font-size-sm);
 		color: var(--bb-rl-text-color);
@@ -204,7 +205,8 @@
 		margin-bottom: var(--bb-rl-space-200);
 	}
 
-	.bp-edit-media-activity-description {
+	.bp-edit-media-activity-description,
+	.bp-edit-video-activity-description {
 		padding-bottom: var(--bb-rl-space-100);
 
 		textarea {

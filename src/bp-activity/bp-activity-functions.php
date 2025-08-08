@@ -6928,7 +6928,15 @@ function bb_get_close_activity_comments_notice( $activity_id = 0 ) {
 		}
 	}
 
-	return $closed_notice;
+	/**
+	 * Filter the close activity comments notice.
+	 *
+	 * @since BuddyBoss 2.9.30
+	 *
+	 * @param string $closed_notice The close activity comments notice.
+	 * @param int    $activity_id   The activity ID.
+	 */
+	return apply_filters( 'bb_get_close_activity_comments_notice', $closed_notice, $activity_id );
 }
 
 /**
