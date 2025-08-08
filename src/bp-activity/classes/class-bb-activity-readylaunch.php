@@ -846,7 +846,7 @@ class BB_Activity_Readylaunch {
 	/**
 	 * Modify the data-balloon attribute for the follow button when hover on follow button.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.30
 	 *
 	 * @param array|string $button The button array or HTML string.
 	 *
@@ -873,7 +873,7 @@ class BB_Activity_Readylaunch {
 	/**
 	 * Modify the media activity entry bubble buttons.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.30
 	 *
 	 * @param array $buttons The buttons.
 	 *
@@ -907,7 +907,7 @@ class BB_Activity_Readylaunch {
 	/**
 	 * Add the scheduled posts count to the object template result.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.30
 	 *
 	 * @param array  $result          The result.
 	 * @param string $template_object The object.
@@ -934,7 +934,7 @@ class BB_Activity_Readylaunch {
 	/**
 	 * Get the activity schedule count query.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.30
 	 *
 	 * @param array $querystring The querystring.
 	 *
@@ -963,7 +963,7 @@ class BB_Activity_Readylaunch {
 	 * - bb_get_close_activity_comments_notice filter (for template display)
 	 * - bb_ajax_activity_update_close_comments filter (for AJAX responses)
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.30
 	 *
 	 * @param array|string $closed_notice The closed notice.
 	 *

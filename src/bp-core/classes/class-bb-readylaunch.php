@@ -401,7 +401,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Remove BuddyPressHelper search filter at a later priority.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.30
 		 */
 		public function bb_rl_remove_buddypress_helper_search_filter() {
 			if ( function_exists( 'buddyboss_theme' ) && buddyboss_theme()->buddypress_helper() ) {
@@ -2649,7 +2649,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Generate color shades from base color (500 level).
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.30
 		 *
 		 * @param string $base_color Hex color code (will be used as level 500).
 		 *
@@ -2710,7 +2710,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Convert hex color to HSL.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.30
 		 *
 		 * @param string $hex Hex color without #.
 		 *
@@ -2755,7 +2755,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Convert HSL to hex color.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.30
 		 *
 		 * @param float $h Hue (0-360).
 		 * @param float $s Saturation (0-1).
@@ -3426,7 +3426,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Check if current page is a LearnDash registration page
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.30
 		 *
 		 * @return bool True if current page is a LearnDash registration page
 		 */
@@ -3465,7 +3465,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Check if the current page is a LearnDash reset password page.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.30
 		 *
 		 * @return bool True if the current page is a LearnDash reset password page, false otherwise.
 		 */
@@ -4410,7 +4410,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Modify the data-balloon attribute for the add friend button.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.30
 		 *
 		 * @param array|string $button The button array or HTML string.
 		 *
@@ -4450,7 +4450,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Remove SSO template title.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.30
 		 */
 		public function bb_rl_remove_sso_template_title() {
 			remove_action( 'bp_template_title', 'BB_SSO::bp_template_title' );
@@ -4459,7 +4459,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Modify view all option for notifications filter.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.30
 		 *
 		 * @param string $output The output.
 		 *
@@ -4478,7 +4478,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Modify member's joined date.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.30
 		 *
 		 * @param string $user_registered_date The user registered date.
 		 * @param string $register_date        The register date.
@@ -4500,7 +4500,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Modify the member report button.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.30
 		 *
 		 * @param array $button The button.
 		 *
@@ -4519,7 +4519,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Modify the nav get count.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.30
 		 *
 		 * @param int    $count    The count.
 		 * @param object $nav_item The nav item.
@@ -4556,7 +4556,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Modify the save changes button for group invites for ReadyLaunch.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.30
 		 *
 		 * @param array $actions The list of submit buttons.
 		 *
@@ -4573,7 +4573,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Modify visibility levels for xprofile.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.30
 		 *
 		 * @param array $visibility_levels The visibility levels.
 		 *

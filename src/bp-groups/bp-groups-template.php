@@ -8024,7 +8024,7 @@ function bb_platform_group_grid_style( $default = 'left' ) {
 /**
  * Return true when there are more group members' items to be shown than currently appear.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.9.30
  *
  * @global object $members_template {@link BP_Members_Template}
  *
@@ -8048,7 +8048,7 @@ function bb_group_members_has_more_items() {
 	/**
 	 * Filters whether there are more group members' items to display.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.30
 	 *
 	 * @param bool $has_more_items Whether or not there are more members' items to display.
 	 */
@@ -8058,7 +8058,7 @@ function bb_group_members_has_more_items() {
 /**
  * Output the URL for the Load More link.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.9.30
  */
 function bb_groups_members_load_more_link() {
 	echo esc_url( bb_get_groups_members_load_more_link() );
@@ -8067,7 +8067,7 @@ function bb_groups_members_load_more_link() {
 /**
  * Get the URL for the Load More link.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.9.30
  *
  * @return string $link
  */
@@ -8080,7 +8080,7 @@ function bb_get_groups_members_load_more_link() {
 	/**
 	 * Filters the Load More link URL.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.30
 	 *
 	 * @param string $link                The "Load More" link URL with appropriate query args.
 	 * @param string $url                 The original URL.

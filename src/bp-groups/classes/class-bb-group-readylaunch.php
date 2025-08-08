@@ -745,7 +745,7 @@ class BB_Group_Readylaunch {
 	/**
 	 * Modify Request sent button text for ReadyLaunch.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.30
 	 *
 	 * @param array $button Button array.
 	 *
@@ -767,7 +767,7 @@ class BB_Group_Readylaunch {
 	/**
 	 * Modify group request membership response for ReadyLaunch.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.30
 	 *
 	 * @param array $response Response array.
 	 *

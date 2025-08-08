@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 6.8.1
 Requires PHP: 8.0
-Stable tag: 2.9.20
+Stable tag: 2.9.30
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,16 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 2.9.30 =
+* Bug: Activity - Fixed issue where the "More" label in topics was not translatable
+* Bug: Core - Fixed broken cross (X) icon UI in tag selectors across multiple screens, ensuring proper display even with the Modern Events Calendar plugin active
+* Bug: Core - Fixed critical accessibility issues, including missing labels and empty anchor tags
+* Bug: Forums - Fixed an issue where lead discussion content was missing on single discussion pages, ensuring compatibility with WP 6.8+ query changes.
+* Bug: Forums - Fixed issue where discussions couldn't be posted with only a title and media when GIFs were disabled in forum settings
+* Bug: Groups - Improved album creation UX to prevent partial photo uploads when "Create Album" is clicked before all images finish uploading.
+* Bug: Messages - Added support for URL embed preview in messaging
+* Bug: ReadyLaunch - Fixed minor UI and functional issues
 
 = 2.9.20 =
 * Bug: Activity - Fixed an issue where the schedule post dropdown menu was not fully visible, causing options to overflow or become inaccessible

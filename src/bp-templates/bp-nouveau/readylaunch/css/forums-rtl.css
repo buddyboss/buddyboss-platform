@@ -1836,11 +1836,11 @@
 .bb-rl-forum-tags .select2-container--default .select2-selection--multiple .select2-selection__choice .select2-selection__choice__remove {
   font-size: 0;
   order: 2;
-  margin-left: 0;
-  margin-right: var(--bb-rl-space-50);
+  border: 0;
+  line-height: 1 !important;
+  margin: 0 var(--bb-rl-space-50) 0 0 !important;
   position: relative;
   top: 1px;
-  line-height: 1;
 }
 
 .bb-rl-forum-tags .select2-container--default .select2-selection--multiple .select2-selection__choice .select2-selection__choice__remove:before {
@@ -2335,6 +2335,10 @@
   content: "\e2aa";
 }
 
+.bb-rl-topic-header .bb-rl-topic-footer .bb-topic-content-meta-sep {
+  display: none;
+}
+
 .bb-rl-topic-reply-link-wrap a {
   display: inline-flex;
   align-items: center;
@@ -2545,6 +2549,12 @@
 
 .bb-rl-single-forum-list .bb_more_options .bbp-admin-links {
   font-size: 0;
+}
+
+.bb-rl-forums-content-wrapper ul.bb-rl-forums-items > li.bb-rl-header-item > .item {
+  margin-bottom: var(--bb-rl-space-200);
+  border-bottom: 1px solid var(--bb-rl-border-secondary-color);
+  padding-bottom: var(--bb-rl-space-200);
 }
 
 .bb-rl-forums-content-wrapper:has(.bbp-no-reply) {
