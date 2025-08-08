@@ -20,8 +20,6 @@ if ( ! class_exists( 'Bp_Search_bbPress_Forums' ) ) :
 		function sql( $search_term, $only_totalrow_count = false ) {
 			global $wpdb;
 
-			$bp_prefix = bp_core_get_table_prefix();
-
 			$query_placeholder = array();
 
 			if ( $only_totalrow_count ) {
@@ -65,51 +63,31 @@ if ( ! class_exists( 'Bp_Search_bbPress_Forums' ) ) :
 				$post_status = array( 'publish' );
 			}
 
-			$where_sql = '( post_status IN (\'' . join( '\',\'', $post_status ) . '\')';
+			// Create the post_status SQL condition once.
+			$post_status_sql = "post_status IN ('" . join( "','", $post_status ) . "')";
 
-			if ( bp_is_active( 'groups' ) ) {
-				$group_memberships = bp_get_user_groups(
-					get_current_user_id(),
-					array(
-						'is_admin' => null,
-						'is_mod'   => null,
-					)
-				);
+			// Different logic for group-enabled sites with non-admin users.
+			if ( bp_is_active( 'groups' ) && ! current_user_can( 'administrator' ) ) {
+				$bp      = buddypress();
+				$user_id = get_current_user_id();
 
-				$group_memberships = wp_list_pluck( $group_memberships, 'group_id' );
+				// For forums not associated with groups, apply post_status filter.
+				$where_sql = '( ( pm.meta_value IS NULL AND ' . $post_status_sql . ' )';
 
-				$public_groups = groups_get_groups(
-					array(
-						'fields'   => 'ids',
-						'status'   => 'public',
-						'per_page' => - 1,
-					)
-				);
+				// For forums associated with groups, check group membership.
+				$group_query = "SELECT DISTINCT CONCAT('a:1:{i:0;i:', g.id, ';}')
+					FROM {$bp->groups->global_tables['table_name']} g
+					LEFT JOIN {$bp->groups->global_tables['table_name_members']} m 
+						ON g.id = m.group_id 
+						AND m.user_id = {$user_id} 
+						AND m.is_confirmed = 1
+					WHERE g.status = 'public' OR m.id IS NOT NULL";
 
-				if ( ! empty( $public_groups ) && ! empty( $public_groups['groups'] ) ) {
-					$public_groups = $public_groups['groups'];
-				} else {
-					$public_groups = array();
-				}
-
-				$group_memberships = array_merge( $public_groups, $group_memberships );
-				$group_memberships = array_unique( $group_memberships );
-
-				if ( ! empty( $group_memberships ) ) {
-					$in = array_map(
-						function ( $group_id ) {
-							return ',\'' . maybe_serialize( array( $group_id ) ) . '\'';
-						},
-						$group_memberships
-					);
-
-					$in = implode( '', $in );
-
-					$where_sql .= ' OR pm.meta_value IN (' . trim( $in, ',' ) . ')';
-				}
+				$where_sql .= " OR pm.meta_value IN ({$group_query}) )";
+			} else {
+				// For admins or sites without groups, just use post_status.
+				$where_sql = '( ' . $post_status_sql . ' )';
 			}
-
-			$where_sql .= ')';
 
 			$where[] = $where_sql;
 
