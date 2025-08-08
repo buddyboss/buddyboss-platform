@@ -673,13 +673,12 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 		 */
 		private function bb_parse_date_search( $search_term, $date_field_ids = array() ) {
 			$search_term = trim( strtolower( $search_term ) );
-			$date_values = array();
 
 			// Handle other date formats (existing logic).
 			// Full date formats.
 			$standard_date_values = $this->bb_parse_standard_date_formats( $search_term ); // Use the original search term.
 			if ( ! empty( $standard_date_values ) ) {
-				$date_values = array_merge( $date_values, $standard_date_values );
+				return $standard_date_values;
 			}
 
 			// Convert month names to English for consistent processing.
@@ -687,29 +686,17 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 			// Month name patterns.
 			$month_name_values = $this->bb_parse_month_name_patterns( $converted_month_name_search_term );
 			if ( ! empty( $month_name_values ) ) {
-				$date_values = array_merge( $date_values, $month_name_values );
+				return $month_name_values;
 			}
 
 			// Parse time elapsed patterns in English using a single combined regex.
 			$elapsed_search      = $this->bb_translate_time_elapsed_to_english( $search_term );
 			$time_elapsed_values = $this->bb_parse_time_elapsed_patterns( $elapsed_search );
 			if ( ! empty( $time_elapsed_values ) ) {
-				$date_values = array_merge( $date_values, $time_elapsed_values );
+				return $time_elapsed_values;
 			}
 
-			// Try parsing with custom formats using English-converted search term.
-			$custom_formats     = $this->bb_get_custom_date_formats( $date_field_ids );
-			$custom_date_values = $this->bb_parse_custom_date_formats( $search_term, $custom_formats );
-			if ( ! empty( $custom_date_values ) ) {
-				foreach ( $custom_date_values as $custom_value ) {
-					$date_values[] = array(
-						'type'  => 'exact',
-						'value' => $custom_value,
-					);
-				}
-			}
-
-			return $date_values;
+			return false;
 		}
 
 		/**
@@ -1158,6 +1145,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 		 * @return string The search term with month names converted to English.
 		 */
 		private function bb_convert_date_format_with_month_name_to_english( $search_term ) {
+			global $wp_locale;
 
 			$english_months = $this->bb_get_month_names();
 
@@ -1165,11 +1153,22 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 			for ( $month_num = 1; $month_num <= 12; $month_num++ ) {
 				$timestamp  = mktime( 0, 0, 0, $month_num, 1, 2025 );
 				$month_name = date_i18n( 'F', $timestamp );
+
+				// Check for nominative case match.
 				if ( strpos( $search_term, $month_name ) !== false ) {
 					$english_month_name = array_search( $month_num, $english_months, true );
-
-					$search_term = str_replace( $month_name, $english_month_name, $search_term );
+					$search_term        = str_replace( $month_name, $english_month_name, $search_term );
 					break;
+				}
+
+				if ( isset( $wp_locale->month_genitive[ zeroise( $month_num, 2 ) ] ) ) {
+					$genitive_month_name = $wp_locale->month_genitive[ zeroise( $month_num, 2 ) ];
+
+					if ( strpos( $search_term, $genitive_month_name ) !== false ) {
+						$english_month_name = array_search( $month_num, $english_months, true );
+						$search_term        = str_replace( $genitive_month_name, $english_month_name, $search_term );
+						break;
+					}
 				}
 			}
 
@@ -1193,6 +1192,26 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 			// First, try direct English lookup.
 			if ( isset( $english_months[ $input_month_name ] ) ) {
 				return $english_months[ $input_month_name ];
+			}
+
+			global $wp_locale;
+
+			// Check nominative case month names.
+			foreach ( $wp_locale->month as $month_key => $month_name ) {
+				$month_name_lower = function_exists( 'mb_strtolower' ) ? mb_strtolower( $month_name ) : strtolower( $month_name );
+				if ( $input_month_name === $month_name_lower ) {
+					return intval( $month_key );
+				}
+			}
+
+			// Check genitive case month names.
+			if ( isset( $wp_locale->month_genitive ) ) {
+				foreach ( $wp_locale->month_genitive as $month_key => $month_name ) {
+					$month_name_lower = function_exists( 'mb_strtolower' ) ? mb_strtolower( $month_name ) : strtolower( $month_name );
+					if ( $input_month_name === $month_name_lower ) {
+						return intval( $month_key );
+					}
+				}
 			}
 
 			return false;
@@ -1257,146 +1276,6 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 			}
 
 			return '(' . implode( ' OR ', $conditions ) . ')';
-		}
-
-		/**
-		 * Get custom date formats for date fields.
-		 *
-		 * @since BuddyBoss [BBVERSION]
-		 *
-		 * @param array $field_ids Array of field IDs.
-		 *
-		 * @return array Array of custom date formats.
-		 */
-		private function bb_get_custom_date_formats( $field_ids ) {
-			$custom_formats = array();
-
-			if ( ! empty( $field_ids ) ) {
-				foreach ( $field_ids as $field_id ) {
-					// Skip placeholder field ID.
-					if ( 0 === $field_id ) {
-						continue;
-					}
-
-					$settings = BP_XProfile_Field_Type_Datebox::get_field_settings( $field_id );
-
-					if ( isset( $settings['date_format'] ) && 'custom' === $settings['date_format'] && ! empty( $settings['date_format_custom'] ) ) {
-						$custom_formats[] = array(
-							'field_id' => $field_id,
-							'format'   => $settings['date_format_custom'],
-						);
-					} elseif ( isset( $settings['date_format'] ) && 'elapsed' !== $settings['date_format'] ) {
-						$custom_formats[] = array(
-							'field_id' => $field_id,
-							'format'   => $settings['date_format'],
-						);
-					}
-				}
-			}
-
-			return $custom_formats;
-		}
-
-		/**
-		 * Parse search term using custom date formats.
-		 *
-		 * @since BuddyBoss [BBVERSION]
-		 *
-		 * @param string $search_term    Search term.
-		 * @param array  $custom_formats Array of custom formats.
-		 *
-		 * @return array Array of parsed date values.
-		 */
-		private function bb_parse_custom_date_formats( $search_term, $custom_formats ) {
-			$date_values = array();
-
-			if ( empty( $custom_formats ) ) {
-				return $date_values;
-			}
-
-			foreach ( $custom_formats as $format_info ) {
-				// Try to parse the search term using this custom format.
-				$parsed_date = $this->bb_parse_date_with_format( $search_term, $format_info['format'] );
-
-				if ( $parsed_date ) {
-					$date_values[] = $parsed_date . ' 00:00:00';
-				}
-			}
-
-			return $date_values;
-		}
-
-		/**
-		 * Parse date string using a specific format.
-		 *
-		 * @since BuddyBoss [BBVERSION]
-		 *
-		 * @param string $date_string Date string to parse.
-		 * @param string $format      Date format to use.
-		 *
-		 * @return string|false Parsed date in Y-m-d format or false on failure.
-		 */
-		private function bb_parse_date_with_format( $date_string, $format ) {
-			// Handle common formats directly for reliability.
-			switch ( $format ) {
-				case 'm/d/Y':
-					if ( preg_match( '/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/', $date_string, $matches ) ) {
-						$month = $this->bb_format_number_with_leading_zero( $matches[1] );
-						$day   = $this->bb_format_number_with_leading_zero( $matches[2] );
-						$year  = $matches[3];
-
-						return $this->bb_validate_and_format_date( $year, $month, $day );
-					}
-					break;
-
-				case 'd/m/Y':
-					if ( preg_match( '/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/', $date_string, $matches ) ) {
-						$day   = $this->bb_format_number_with_leading_zero( $matches[1] );
-						$month = $this->bb_format_number_with_leading_zero( $matches[2] );
-						$year  = $matches[3];
-
-						return $this->bb_validate_and_format_date( $year, $month, $day );
-					}
-					break;
-
-				case 'Y-m-d':
-					if ( preg_match( '/^(\d{4})-(\d{1,2})-(\d{1,2})$/', $date_string, $matches ) ) {
-						$year  = $matches[1];
-						$month = $this->bb_format_number_with_leading_zero( $matches[2] );
-						$day   = $this->bb_format_number_with_leading_zero( $matches[3] );
-
-						return $this->bb_validate_and_format_date( $year, $month, $day );
-					}
-					break;
-
-				case 'F j, Y':
-					if ( preg_match( '/^([a-zA-Z]+)\s+(\d{1,2}),\s+(\d{4})$/', $date_string, $matches ) ) {
-						$month_name = $matches[1];
-						$day        = intval( $matches[2] );
-						$year       = intval( $matches[3] );
-
-						$month_num = $this->bb_get_month_number( $month_name );
-						if ( $month_num ) {
-							return $this->bb_validate_and_format_date( $year, $month_num, $day );
-						}
-					}
-					break;
-
-				case 'M j, Y':
-					if ( preg_match( '/^([a-zA-Z]{3})\s+(\d{1,2}),\s+(\d{4})$/', $date_string, $matches ) ) {
-						$month_name = $matches[1];
-						$day        = intval( $matches[2] );
-						$year       = intval( $matches[3] );
-
-						$month_num = $this->bb_get_month_number( $month_name );
-						if ( $month_num ) {
-							return $this->bb_validate_and_format_date( $year, $month_num, $day );
-						}
-					}
-					break;
-			}
-
-			return false;
 		}
 
 		/**
