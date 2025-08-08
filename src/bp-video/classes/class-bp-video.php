@@ -1263,9 +1263,10 @@ class BP_Video {
 
 		$total_count = self::get(
 			array(
-				'group_id'    => $group_id,
-				'privacy'     => array( 'grouponly' ),
-				'count_total' => true,
+				'group_id'         => $group_id,
+				'privacy'          => array( 'grouponly' ),
+				'count_total'      => true,
+				'moderation_query' => true,
 			)
 		);
 
