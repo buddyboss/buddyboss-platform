@@ -1,6 +1,6 @@
 <?php
 /**
- * ReadyLaunch Memberpress Courses Helper Class
+ * ReadyLaunch MemberPress Courses Helper Class
  *
  * @package BuddyBoss\Core
  * @since   BuddyBoss 2.9.00
@@ -9,15 +9,15 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-use memberpress\courses\models as models;
-use memberpress\courses\helpers as helpers;
+use memberpress\courses\models;
+use memberpress\courses\helpers;
 use memberpress\courses\lib;
 
 /**
- * ReadyLaunch Memberpress Courses Helper Class
+ * ReadyLaunch MemberPress Courses Helper Class
  *
- * This class provides helper functions for Memberpress Courses integration
- * when using ReadyLaunch templates without BuddyBoss theme.
+ * This class provides helper functions for MemberPress Courses integration
+ * when using ReadyLaunch templates without the BuddyBoss theme.
  *
  * @since BuddyBoss 2.9.00
  */
@@ -387,106 +387,9 @@ class BB_Readylaunch_Memberpress_Courses_Helper {
 	 */
 	public function bb_rl_mpcs_before_loop() {
 		if ( memberpress\courses\helpers\Courses::is_course_archive() ) {
-			global $wp_query, $wp;
-			$search          = isset( $_GET['s'] ) ? esc_attr( $_GET['s'] ) : '';  // phpcs:ignore
-			$category        = isset( $_GET['category'] ) ? esc_attr( $_GET['category'] ) : ''; // phpcs:ignore
-			$author          = isset( $_GET['author'] ) ? esc_attr( $_GET['author'] ) : ''; // phpcs:ignore
-			$filter_base_url = home_url( $wp->request );
-			$pos             = strpos( $filter_base_url, '/page' );
-			$courses_page    = get_home_url( null, helpers\Courses::get_permalink_base() );
-
-			if ( $pos > 0 ) {
-				$filter_base_url = substr( $filter_base_url, 0, $pos );
-			}
+			// Output the secondary header.
+			$this->bb_rl_mpcs_output_secondary_header();
 			?>
-			<div class="bb-rl-secondary-header flex items-center bb-rl-secondary-header--mbprlms">
-				<div class="bb-rl-entry-heading">
-					<h1 class="bb-rl-page-title bb-rl-base-heading">
-						<?php
-						if ( is_tax() ) {
-							echo single_term_title( '', false );
-						} else {
-							esc_html_e( 'Courses', 'buddyboss' );
-						}
-						?>
-						<span class="bb-rl-heading-count"><?php echo esc_html( $wp_query->found_posts ); ?></span>
-					</h1>
-				</div>
-
-				<div class="bb-rl-course-filters bb-rl-sub-ctrls flex items-center">
-
-					<div class="bb-rl-grid-filters flex items-center" data-view="ld-course">
-						<a href="#" class="layout-view layout-view-course layout-grid-view bp-tooltip active" data-view="grid" data-bp-tooltip-pos="down" data-bp-tooltip="<?php esc_html_e( 'Grid View', 'buddyboss' ); ?>">
-							<i class="bb-icons-rl-squares-four"></i>
-						</a>
-						<a href="#" class="layout-view layout-view-course layout-list-view bp-tooltip" data-view="list" data-bp-tooltip-pos="down" data-bp-tooltip="<?php esc_html_e( 'List View', 'buddyboss' ); ?>">
-							<i class="bb-icons-rl-rows"></i>
-						</a>
-					</div>
-
-					<div class="component-filters">
-						<div class="mpcs-course-filter columns bb-rl-meprlms-course-filters">
-							<div class="column col-sm-12">
-								<div class="dropdown">
-									<a href="#" class="btn btn-link dropdown-toggle" tabindex="0">
-										<?php esc_html_e( 'Category', 'buddyboss' ); ?> <span></span><i class="bb-icons-rl-caret-down"></i>
-									</a>
-									<ul class="menu">
-										<?php
-										$terms = get_terms( 'mpcs-course-categories' ); // Get all terms of a taxonomy.
-
-										printf( '<li><input type="text" class="form-input mpcs-dropdown-search" placeholder="%s" id="mpmcSearchCategory"></li>', esc_html__( 'Search', 'buddyboss' ) );
-
-										printf( '<li class="%s"><a href="%s">%s</a></li>', esc_attr( '' === $category ? 'active' : 'noactive' ), esc_url( add_query_arg( 'category', '', $filter_base_url ) ), esc_html__( 'All', 'buddyboss' ) );
-										foreach ( $terms as $term ) {
-											printf( '<li class="%s"><a href="%s">%s</a></li>', esc_attr( $category === $term->slug ? 'active' : 'noactive' ), esc_url( add_query_arg( 'category', $term->slug, $filter_base_url ) ), esc_html( $term->name ) );
-										}
-										?>
-									</ul>
-								</div>
-
-								<div class="dropdown">
-									<a href="#" class="btn btn-link dropdown-toggle" tabindex="0">
-										<?php esc_html_e( 'Author', 'buddyboss' ); ?> <span></span><i class="bb-icons-rl-caret-down"></i>
-									</a>
-									<!-- menu component -->
-									<ul class="menu">
-										<?php
-										$post_authors = models\Course::post_authors();
-
-										printf( '<li><input type="text" class="form-input mpcs-dropdown-search" placeholder="%s" id="mpmcSearchCourses"></li>', esc_html__( 'Search', 'buddyboss' ) );
-
-										printf( '<li class="%s"><a href="%s">%s</a></li>', esc_attr( empty( $author ) ? 'active' : 'noactive' ), esc_url( add_query_arg( 'author', '', $filter_base_url ) ), esc_html__( 'All', 'buddyboss' ) );
-
-										foreach ( $post_authors as $post_author ) {
-											printf( '<li class="%s"><a href="%s">%s</a></li>', esc_attr( $author === $post_author->user_login ? 'active' : 'noactive' ), esc_url( add_query_arg( 'author', $post_author->user_login, $filter_base_url ) ), esc_html( lib\Utils::get_full_name( $post_author->ID ) ) );
-										}
-										?>
-									</ul>
-								</div>
-
-								<div class="archives-authors-section">
-									<ul>
-
-									</ul>
-								</div>
-							</div>
-
-							<div class="column col-sm-12">
-								<form method="GET" class="" action="<?php echo esc_url( $courses_page ); ?>">
-									<div class="input-group">
-										<input type="text" name="s" class="form-input"
-												placeholder="<?php esc_html_e( 'Find a course', 'buddyboss' ); ?>"
-												value="<?php echo esc_attr( $search ); ?>">
-										<button class="btn input-group-btn"><i class="bb-icons-rl-magnifying-glass"></i></button>
-									</div>
-								</form>
-
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
 			<div class="bb-rl-container-inner bb-rl-meprlms-content-wrap">
 				<div class="bb-rl-courses-grid grid bb-rl-courses-grid--mbprlms">
 				<?php
@@ -518,7 +421,136 @@ class BB_Readylaunch_Memberpress_Courses_Helper {
 	 * @since BuddyBoss 2.9.00
 	 */
 	public function bb_rl_mpcs_no_posts() {
-		echo '<div class="bb-rl-container-inner"><p>' . esc_html__( 'No Courses found', 'buddyboss' ) . '</p></div>';
+		if ( memberpress\courses\helpers\Courses::is_course_archive() ) {
+			// Output the secondary header.
+			$this->bb_rl_mpcs_output_secondary_header();
+			?>
+			<div class="bb-rl-container-inner bb-rl-meprlms-no-courses">
+				<p><?php esc_html_e( 'No courses found', 'buddyboss' ); ?></p>
+			</div>
+			<?php
+		}
+	}
+
+	/**
+	 * Output the secondary header for MemberPress courses archive.
+	 *
+	 * @since BuddyBoss 2.9.30
+	 */
+	private function bb_rl_mpcs_output_secondary_header() {
+		global $wp_query, $wp;
+		$search          = isset( $_GET['s'] ) ? esc_attr( $_GET['s'] ) : '';               // phpcs:ignore
+		$category        = isset( $_GET['category'] ) ? esc_attr( $_GET['category'] ) : ''; // phpcs:ignore
+		$author          = isset( $_GET['author'] ) ? esc_attr( $_GET['author'] ) : '';     // phpcs:ignore
+		$filter_base_url = home_url( $wp->request );
+		$pos             = strpos( $filter_base_url, '/page' );
+		$courses_page    = get_home_url( null, helpers\Courses::get_permalink_base() );
+
+		if ( $pos > 0 ) {
+			$filter_base_url = substr( $filter_base_url, 0, $pos );
+		}
+		?>
+		<div class="bb-rl-secondary-header flex items-center bb-rl-secondary-header--mbprlms">
+			<div class="bb-rl-entry-heading">
+				<h1 class="bb-rl-page-title bb-rl-base-heading">
+					<?php
+					if ( is_tax() ) {
+						echo single_term_title( '', false );
+					} else {
+						esc_html_e( 'Courses', 'buddyboss' );
+					}
+					?>
+					<span class="bb-rl-heading-count"><?php echo esc_html( $wp_query->found_posts ); ?></span>
+				</h1>
+			</div>
+
+			<div class="bb-rl-course-filters bb-rl-sub-ctrls flex items-center">
+
+				<div class="bb-rl-grid-filters flex items-center" data-view="ld-course">
+					<a href="#" class="layout-view layout-view-course layout-grid-view bp-tooltip active" data-view="grid" data-bp-tooltip-pos="down" data-bp-tooltip="<?php esc_html_e( 'Grid View', 'buddyboss' ); ?>">
+						<i class="bb-icons-rl-squares-four"></i>
+					</a>
+					<a href="#" class="layout-view layout-view-course layout-list-view bp-tooltip" data-view="list" data-bp-tooltip-pos="down" data-bp-tooltip="<?php esc_html_e( 'List View', 'buddyboss' ); ?>">
+						<i class="bb-icons-rl-rows"></i>
+					</a>
+				</div>
+
+				<div class="component-filters">
+					<div class="mpcs-course-filter columns bb-rl-meprlms-course-filters">
+						<div class="column col-sm-12">
+							<div class="dropdown">
+								<a href="#" class="btn btn-link dropdown-toggle" tabindex="0">
+									<?php esc_html_e( 'Category', 'buddyboss' ); ?>
+									<span></span><i class="bb-icons-rl-caret-down"></i>
+								</a>
+								<ul class="menu">
+									<?php
+									$terms = get_terms( 'mpcs-course-categories' ); // Get all terms of a taxonomy.
+
+									printf( '<li><input type="text" class="form-input mpcs-dropdown-search" placeholder="%s" id="mpmcSearchCategory"></li>', esc_html__( 'Search', 'buddyboss' ) );
+
+									printf( '<li class="%s"><a href="%s">%s</a></li>', esc_attr( '' === $category ? 'active' : 'noactive' ), esc_url( add_query_arg( 'category', '', $filter_base_url ) ), esc_html__( 'All', 'buddyboss' ) );
+									foreach ( $terms as $term ) {
+										printf( '<li class="%s"><a href="%s">%s</a></li>', esc_attr( $category === $term->slug ? 'active' : 'noactive' ), esc_url( add_query_arg( 'category', $term->slug, $filter_base_url ) ), esc_html( $term->name ) );
+									}
+									?>
+								</ul>
+							</div>
+
+							<div class="dropdown">
+								<a href="#" class="btn btn-link dropdown-toggle" tabindex="0">
+									<?php esc_html_e( 'Author', 'buddyboss' ); ?>
+									<span></span><i class="bb-icons-rl-caret-down"></i>
+								</a>
+								<!-- menu component -->
+								<ul class="menu">
+									<?php
+									$post_authors = models\Course::post_authors();
+
+									printf(
+										/* translators: %s: search placeholder */
+										'<li><input type="text" class="form-input mpcs-dropdown-search" placeholder="%s" id="mpmcSearchCourses"></li>',
+										esc_html__( 'Search', 'buddyboss' )
+									);
+
+									printf(
+										/* translators: %s: search placeholder */
+										'<li class="%s"><a href="%s">%s</a></li>',
+										esc_attr( empty( $author ) ? 'active' : 'noactive' ),
+										esc_url( add_query_arg( 'author', '', $filter_base_url ) ),
+										esc_html__( 'All', 'buddyboss' )
+									);
+
+									foreach ( $post_authors as $post_author ) {
+										printf( '<li class="%s"><a href="%s">%s</a></li>', esc_attr( $author === $post_author->user_login ? 'active' : 'noactive' ), esc_url( add_query_arg( 'author', $post_author->user_login, $filter_base_url ) ), esc_html( lib\Utils::get_full_name( $post_author->ID ) ) );
+									}
+									?>
+								</ul>
+							</div>
+
+							<div class="archives-authors-section">
+								<ul>
+
+								</ul>
+							</div>
+						</div>
+
+						<div class="column col-sm-12">
+							<form method="GET" class="" action="<?php echo esc_url( $courses_page ); ?>">
+								<div class="input-group">
+									<input type="text" name="s" class="form-input"
+											placeholder="<?php esc_html_e( 'Find a course', 'buddyboss' ); ?>"
+											value="<?php echo esc_attr( $search ); ?>">
+									<button class="btn input-group-btn"><i class="bb-icons-rl-magnifying-glass"></i></button>
+								</div>
+							</form>
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<?php
 	}
 
 	/**
@@ -892,5 +924,4 @@ class BB_Readylaunch_Memberpress_Courses_Helper {
 		$query_vars[] = 'cpage';
 		return $query_vars;
 	}
-
 }

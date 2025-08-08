@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
 ?>
 <div class="bb-rl-group-invites-dashboard bb-rl-group-dashboard-panel">
 	<div class="bb-rl-group-invites-header">
-		<h2 class="bb-rl-entry-title"><?php esc_html_e( 'Send Invites', 'buddyboss' ); ?></h2>
+		<h2 class="bb-rl-entry-title"><?php esc_html_e( 'Group invites', 'buddyboss' ); ?></h2>
 	</div>
 	<div id="group-invites-container" class="bb-rl-group-invites-container">
 		<div class="bb-groups-invites-left">
@@ -31,11 +31,11 @@ defined( 'ABSPATH' ) || exit;
 				<div class="group-invites-search subnav-search clearfix" role="search">
 					<div class="bp-search">
 						<form action="" method="get" id="group_invites_search_form" class="bp-invites-search-form search-form-has-reset" data-bp-search="group-invites">
-							<label for="group_invites_search" class="bp-screen-reader-text"><?php bp_nouveau_search_default_text( esc_html__( 'Search Members', 'buddyboss' ), false ); ?></label>
-							<input type="search" id="group_invites_search" placeholder="<?php esc_attr_e( 'Search Members', 'buddyboss' ); ?>"/>
+							<label for="group_invites_search" class="bp-screen-reader-text"><?php bp_nouveau_search_default_text( esc_html__( 'Search members', 'buddyboss' ), false ); ?></label>
+							<input type="search" id="group_invites_search" placeholder="<?php esc_attr_e( 'Search members', 'buddyboss' ); ?>"/>
 							<button type="submit" id="group_invites_search_submit" class="nouveau-search-submit search-form_submit">
 								<span class="bb-icons-rl-magnifying-glass" aria-hidden="true"></span>
-								<span id="button-text" class="bp-screen-reader-text"><?php esc_html_e( 'Search Members', 'buddyboss' ); ?></span>
+								<span id="button-text" class="bp-screen-reader-text"><?php esc_html_e( 'Search members', 'buddyboss' ); ?></span>
 							</button>
 							<button type="reset" class="search-form_reset">
 								<span class="bb-icons-rl-x" aria-hidden="true"></span>
@@ -89,15 +89,15 @@ defined( 'ABSPATH' ) || exit;
 				<div class="bb-groups-invites-right-bottom">
 					<div id="bp-group-invite-content">
 						<h2 class="bb-title"><?php esc_html_e( 'Message (optional)', 'buddyboss' ); ?></h2>
-						<textarea class="bp-faux-placeholder-label" id="send-invites-control" name="group_invite_content" rows="120" cols="150" placeholder="<?php esc_attr_e( 'Customize the message of your invite.', 'buddyboss' ); ?>"></textarea>
+						<textarea class="bp-faux-placeholder-label" id="send-invites-control" name="group_invite_content" rows="120" cols="150" placeholder="<?php esc_attr_e( 'Write an invitation message...', 'buddyboss' ); ?>"></textarea>
 						<input type="hidden" id="group_invite_content_hidden" name="group_invite_content_hidden" value="">
 						<div id="whats-new-toolbar">
 							<div id="group-invites-new-submit" class="submit">
 								<div id="bp-invites-submit-loader" class="bp-invites-submit-loader-hide">
 									<i class="bb-icons-rl-spinner animate-spin"></i>
 								</div>
-								<input type="submit" name="send_group_invite_button" value="<?php esc_attr_e( 'Send Invite', 'buddyboss' ); ?>" id="send_group_invite_button" class="small">
 								<input type="submit" name="bp_invites_reset" value="<?php esc_attr_e( 'Cancel', 'buddyboss' ); ?>" id="bp_invites_reset" class="small">
+								<input type="submit" name="send_group_invite_button" value="<?php esc_attr_e( 'Send Invite', 'buddyboss' ); ?>" id="send_group_invite_button" class="small" disabled>
 							</div>
 						</div>
 					</div>

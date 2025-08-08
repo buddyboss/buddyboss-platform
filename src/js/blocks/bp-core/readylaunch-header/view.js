@@ -412,10 +412,10 @@ window.bp = window.bp || {};
 			ToggleDarkMode: function ( e ) {
 				e.preventDefault();
 
-				var $body = $( 'body' );
-				$body.toggleClass( 'bb-rl-dark-mode' );
+				var $header = $( '.bb-rl-header-block' );
+				$header.toggleClass( 'bb-rl-dark-mode' );
 
-				if ( $body.hasClass( 'bb-rl-dark-mode' ) ) {
+				if ( $header.hasClass( 'bb-rl-dark-mode' ) ) {
 					$.cookie( 'bb-rl-dark-mode', 'true', { expires: 365, path: '/' } );
 				} else {
 					$.cookie( 'bb-rl-dark-mode', 'false', { expires: 365, path: '/' } );
