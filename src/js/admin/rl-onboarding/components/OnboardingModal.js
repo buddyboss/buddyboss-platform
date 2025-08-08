@@ -270,14 +270,14 @@ export const OnboardingModal = ({ isOpen, onClose, onContinue, onSkip }) => {
                 // Check if we're moving to the FinishScreen
                 const nextStepIndex = currentStepIndex + 1;
                 const nextStep = steps[nextStepIndex];
-                
+
                 if (nextStep && nextStep.component === 'FinishScreen') {
                     // Save the FinishScreen step progress first with the correct step data
                     await saveStepProgress(nextStepIndex, {}, nextStep);
                     // Then trigger completion
                     await handleComplete(formData);
                 }
-                
+
                 // Move to the next step
                 setCurrentStepIndex(prev => prev + 1);
             }
@@ -339,15 +339,8 @@ export const OnboardingModal = ({ isOpen, onClose, onContinue, onSkip }) => {
                 });
                 document.dispatchEvent(event);
 
-                // Close modal and redirect to dashboard
-                if (onClose) {
-                    onClose();
-                }
-
-                // Redirect to dashboard after brief delay
-                setTimeout(() => {
-                    window.location.href = window.bbRlOnboarding?.dashboardUrl || '/wp-admin/';
-                }, 1000);
+                // Don't close modal or redirect - let FinishScreen handle user interactions
+                console.log('Onboarding completed successfully');
             } else {
                 console.error('Error completing onboarding:', data.data?.message || 'Unknown error');
             }
