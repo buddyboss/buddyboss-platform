@@ -126,9 +126,12 @@ export const OnboardingModal = ({ isOpen, onClose, onContinue, onSkip }) => {
     };
 
     // Save step progress and data to backend
-    const saveStepProgress = async (stepIndex, formData = {}) => {
+    const saveStepProgress = async (stepIndex, formData = {}, stepOverride = null) => {
+        // Use the provided step or get it from the steps array
+        const targetStep = stepOverride || steps[stepIndex] || currentStep;
+        
         // Skip if the step is flagged to ignore progress.
-        if (currentStep.skip_progress) {
+        if (targetStep.skip_progress) {
             return true;
         }
 
@@ -145,7 +148,7 @@ export const OnboardingModal = ({ isOpen, onClose, onContinue, onSkip }) => {
                     nonce: window.bbRlOnboarding?.nonce || '',
                     step: stepIndex,
                     data: JSON.stringify({
-                        step_key: currentStep.key,
+                        step_key: targetStep.key,
                         form_data: formData,
                         timestamp: new Date().toISOString()
                     }),
@@ -264,12 +267,19 @@ export const OnboardingModal = ({ isOpen, onClose, onContinue, onSkip }) => {
                     await autoSavePreferences({ [stepKey]: formData });
                 }
 
-                // Check if this is the last step
-                if (currentStepIndex >= totalSteps - 1) {
+                // Check if we're moving to the FinishScreen
+                const nextStepIndex = currentStepIndex + 1;
+                const nextStep = steps[nextStepIndex];
+                
+                if (nextStep && nextStep.component === 'FinishScreen') {
+                    // Save the FinishScreen step progress first with the correct step data
+                    await saveStepProgress(nextStepIndex, {}, nextStep);
+                    // Then trigger completion
                     await handleComplete(formData);
-                } else {
-                    setCurrentStepIndex(prev => prev + 1);
                 }
+                
+                // Move to the next step
+                setCurrentStepIndex(prev => prev + 1);
             }
         } catch (error) {
             console.error('Error handling next step:', error);
@@ -440,7 +450,7 @@ export const OnboardingModal = ({ isOpen, onClose, onContinue, onSkip }) => {
     // Special handling for splash screen only (modal popup)
     if (currentStep.component === 'SplashScreen') {
         return (
-            <div className={`bb-rl-onboarding-overlay ${isProcessing ? 'bb-rl-loading' : ''}`}>
+            <div className="bb-rl-onboarding-overlay">
                 <div className="bb-rl-onboarding-modal bb-rl-special-step">
                     <div className="bb-rl-modal-header">
                         <div className="bb-rl-modal-header-content">
@@ -471,7 +481,7 @@ export const OnboardingModal = ({ isOpen, onClose, onContinue, onSkip }) => {
 
     // Full screen layout for all step-based components (including FinishScreen)
     return (
-        <div className={`bb-rl-onboarding-overlay bb-rl-fullscreen ${isProcessing ? 'bb-rl-loading' : ''}`}>
+        <div className="bb-rl-onboarding-overlay bb-rl-fullscreen">
             <div className="bb-rl-onboarding-modal bb-rl-fullscreen-modal">
                 <div className="bb-rl-fullscreen-content">
                     {renderCurrentStep()}

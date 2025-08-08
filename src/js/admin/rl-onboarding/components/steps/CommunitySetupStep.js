@@ -51,10 +51,8 @@ export const CommunitySetupStep = ({
             return;
         }
 
-
-
         if (onNext) {
-            onNext(formData);
+            return await onNext(formData);
         }
     };
 

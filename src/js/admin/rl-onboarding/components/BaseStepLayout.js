@@ -19,6 +19,7 @@ export const BaseStepLayout = ({
     page = 'activity'
 }) => {
     const { title, description, image } = stepData;
+    const [loadingAction, setLoadingAction] = useState(null); // 'next', 'previous', or null
 
     // Get the image URL from the assets
     const imageUrl = window.bbRlOnboarding?.assets?.assetsUrl
@@ -34,6 +35,30 @@ export const BaseStepLayout = ({
     const mergedFormData = {
         ...Object.values(allStepData).reduce((acc, stepData) => ({ ...acc, ...stepData }), {}),
         ...formData
+    };
+    
+    // Handle next button click with loading state
+    const handleNext = async () => {
+        setLoadingAction('next');
+        try {
+            if (onNext) {
+                await onNext();
+            }
+        } finally {
+            setLoadingAction(null);
+        }
+    };
+    
+    // Handle previous button click with loading state
+    const handlePrevious = async () => {
+        setLoadingAction('previous');
+        try {
+            if (onPrevious) {
+                await onPrevious();
+            }
+        } finally {
+            setLoadingAction(null);
+        }
     };
 
     return (
@@ -72,21 +97,37 @@ export const BaseStepLayout = ({
                         <div className="bb-rl-step-navigation">
                             {!isFirstStep && (
                                 <Button
-                                    className="bb-rl-nav-button bb-rl-previous-button"
-                                    onClick={onPrevious}
+                                    className={`bb-rl-nav-button bb-rl-previous-button ${loadingAction === 'previous' ? 'bb-rl-button-loading' : ''}`}
+                                    onClick={handlePrevious}
+                                    disabled={loadingAction !== null}
                                 >
-                                    <span className="bb-icons-rl-arrow-left"></span>
+                                    {loadingAction === 'previous' ? (
+                                        <>
+                                            <span className="bb-rl-spinner" aria-hidden="true"></span>
+                                            <span className="screen-reader-text">{__('Loading...', 'buddyboss')}</span>
+                                        </>
+                                    ) : (
+                                        <span className="bb-icons-rl-arrow-left"></span>
+                                    )}
                                     {__('Back', 'buddyboss')}
                                 </Button>
                             )}
 
                             <Button
-                                className="bb-rl-nav-button bb-rl-next-button"
-                                onClick={onNext}
+                                className={`bb-rl-nav-button bb-rl-next-button ${loadingAction === 'next' ? 'bb-rl-button-loading' : ''}`}
+                                onClick={handleNext}
                                 variant="primary"
+                                disabled={loadingAction !== null}
                             >
                                 {isLastStep ? __('Finish', 'buddyboss') : __('Next', 'buddyboss')}
-                                {!isLastStep && <span className="bb-icons-rl-arrow-right"></span>}
+                                {loadingAction === 'next' ? (
+                                    <>
+                                        <span className="bb-rl-spinner" aria-hidden="true"></span>
+                                        <span className="screen-reader-text">{__('Loading...', 'buddyboss')}</span>
+                                    </>
+                                ) : (
+                                    !isLastStep && <span className="bb-icons-rl-arrow-right"></span>
+                                )}
                             </Button>
                         </div>
                     </div>

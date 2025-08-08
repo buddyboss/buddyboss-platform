@@ -26,10 +26,8 @@ export const PagesStep = ({
     };
 
     const handleNext = async () => {
-
-
         if (onNext) {
-            onNext(formData);
+            await onNext(formData);
         }
     };
 

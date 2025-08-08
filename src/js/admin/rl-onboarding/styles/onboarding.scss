@@ -511,17 +511,48 @@ body.bb-rl-fullscreen-mode {
     }
 }
 
-.bb-rl-onboarding-overlay.bb-rl-loading .bb-rl-step-navigation .bb-rl-nav-button [class*="bb-icons"]:before {
-    content: "";
-    animation: spin 3s linear infinite;
-    border: 2px solid #f2f2f2;
-    border-radius: 99px;
-    border-top-color: #777474;
-    display: inline-block;
-    height: 14px;
-    width: 14px;
-    vertical-align: middle;
-    margin-left: 4px;
+// Individual button loading states
+.bb-rl-step-navigation .bb-rl-nav-button {
+    &.bb-rl-button-loading {
+        position: relative;
+        pointer-events: none;
+        opacity: 0.7;
+        
+        .bb-rl-spinner {
+            content: '';
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 2px solid #ffffff;
+            animation: spin 0.8s linear infinite;
+            vertical-align: middle;
+            margin: 0 8px;
+            box-sizing: border-box;
+        }
+        
+        // For the previous button (secondary style)
+        &.bb-rl-previous-button .bb-rl-spinner {
+            border: 2px solid rgba(0, 0, 0, 0.2);
+            border-top: 2px solid #666666;
+        }
+        
+        // Hide the normal icon when loading
+        [class*="bb-icons"] {
+            display: none;
+        }
+        
+        .screen-reader-text {
+            position: absolute;
+            left: -9999px;
+        }
+    }
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 
 .bb-rl-step-preview {

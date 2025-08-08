@@ -26,10 +26,8 @@ export const SiteAppearanceStep = ({
     };
 
     const handleNext = async () => {
-
-
         if (onNext) {
-            onNext(formData);
+            return await onNext(formData);
         }
     };
 

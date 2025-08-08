@@ -1,9 +1,9 @@
-import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { Button } from '@wordpress/components';
 
 export const FinishScreen = ({ stepData, onFinish, onViewSite }) => {
     const { title, description } = stepData;
+    // Note: Completion is now handled by OnboardingModal when navigating to this screen
 
     return (
         <div className="bb-rl-finish-screen bb-rl-fullscreen-finish">
