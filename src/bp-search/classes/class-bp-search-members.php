@@ -281,7 +281,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 							// Add date search if date fields exist and search term is a date.
 							if ( ! empty( $selected_xprofile_fields['date_search'] ) && $this->bb_is_date_search( $search_term ) ) {
 								$date_field_ids = $selected_xprofile_fields['date_search'];
-								$date_values    = $this->bb_parse_date_search( $search_term, $date_field_ids );
+								$date_values    = $this->bb_parse_date_search( $search_term );
 
 								if ( ! empty( $date_field_ids ) && ! empty( $date_values ) ) {
 									$date_sql = $this->bb_generate_date_search_sql( $date_values, $date_field_ids );
@@ -666,12 +666,11 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
-		 * @param string $search_term    The search term to parse.
-		 * @param array  $date_field_ids Array of date field IDs.
+		 * @param string $search_term The search term to parse.
 		 *
-		 * @return array Array of normalized date values.
+		 * @return array|false Array of normalized date values or false if no date values are found.
 		 */
-		private function bb_parse_date_search( $search_term, $date_field_ids = array() ) {
+		private function bb_parse_date_search( $search_term ) {
 			$search_term = trim( strtolower( $search_term ) );
 
 			// Handle other date formats (existing logic).
@@ -1155,7 +1154,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 				$month_name = date_i18n( 'F', $timestamp );
 
 				// Check for nominative case match.
-				if ( strpos( $search_term, $month_name ) !== false ) {
+				if ( false !== strpos( $search_term, $month_name ) ) {
 					$english_month_name = array_search( $month_num, $english_months, true );
 					$search_term        = str_replace( $month_name, $english_month_name, $search_term );
 					break;
@@ -1164,7 +1163,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 				if ( isset( $wp_locale->month_genitive[ zeroise( $month_num, 2 ) ] ) ) {
 					$genitive_month_name = $wp_locale->month_genitive[ zeroise( $month_num, 2 ) ];
 
-					if ( strpos( $search_term, $genitive_month_name ) !== false ) {
+					if ( false !== strpos( $search_term, $genitive_month_name ) ) {
 						$english_month_name = array_search( $month_num, $english_months, true );
 						$search_term        = str_replace( $genitive_month_name, $english_month_name, $search_term );
 						break;
@@ -1412,7 +1411,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 			static $translation_cache = array();
 
 			// Extract the amount from the search term to get the correct plural form.
-			// For example: "since 32 years" → $actual_amount = 32.
+			// For example, "since 32 years" → $actual_amount = 32.
 			if ( preg_match( '/(\d+)/', $search_term, $matches ) ) {
 				$actual_amount = intval( $matches[1] );
 			} else {
@@ -1619,21 +1618,21 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 
 			// Try partial matching first, then fallback to exact matching.
 			// This approach handles complex language structures where exact matches might not work.
-			if ( stripos( $search_term, $plural_base ) !== false ) {
+			if ( false !== stripos( $search_term, $plural_base ) ) {
 				// Check if the plural base unit exists in the search term.
 				// Example: "two years" in "since 32 years" → FALSE.
 				$search_term = str_ireplace( $plural_base, $english_plural, $search_term );
-			} elseif ( stripos( $search_term, $singular_base ) !== false ) {
+			} elseif ( false !== stripos( $search_term, $singular_base ) ) {
 				// Check if the singular base unit exists in the search term.
 				// Example: "year" in "since 32 years" → TRUE.
 				$search_term = str_ireplace( $singular_base, ( 1 === (int) $actual_amount ? $english_singular : $english_plural ), $search_term );
 				// Replace it with singular or plural based on amount: 1 = singular, >1 = plural.
 				// Example: "year" → "years" (since $actual_amount = 32).
-			} elseif ( stripos( $search_term, $plural_word ) !== false ) {
+			} elseif ( false !== stripos( $search_term, $plural_word ) ) {
 				// Fallback: Check if the full plural word exists in the search term.
 				// This handles cases where the base extraction didn't work.
 				$search_term = str_ireplace( $plural_word, $english_plural, $search_term );
-			} elseif ( stripos( $search_term, $singular_word ) !== false ) {
+			} elseif ( false !== stripos( $search_term, $singular_word ) ) {
 				// Fallback: Check if the full singular word exists in the search term.
 				// This handles cases where the base extraction didn't work.
 				$search_term = str_ireplace( $singular_word, ( 1 === (int) $actual_amount ? $english_singular : $english_plural ), $search_term );
