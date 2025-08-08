@@ -6931,7 +6931,7 @@ function bb_get_close_activity_comments_notice( $activity_id = 0 ) {
 	/**
 	 * Filter the close activity comments notice.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.30
 	 *
 	 * @param string $closed_notice The close activity comments notice.
 	 * @param int    $activity_id   The activity ID.

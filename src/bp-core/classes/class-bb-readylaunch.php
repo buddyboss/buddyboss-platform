@@ -401,7 +401,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Remove BuddyPressHelper search filter at a later priority.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.30
 		 */
 		public function bb_rl_remove_buddypress_helper_search_filter() {
 			if ( function_exists( 'buddyboss_theme' ) && buddyboss_theme()->buddypress_helper() ) {
@@ -844,6 +844,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					) &&
 					$this->bb_rl_is_page_enabled_for_integration( 'registration' )
 				) ||
+				bp_is_activation_page() ||
 				$this->bb_rl_is_learndash_page() || // Add check for LearnDash pages.
 				$this->bb_rl_is_memberpress_courses_page() // Add check for MemberPress Courses pages.
 			);
@@ -948,6 +949,10 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			if ( bp_is_register_page() ) {
 				$this->bb_rl_required_load();
 				return bp_locate_template( 'register.php' );
+			}
+
+			if ( bp_is_activation_page() ) {
+				return bp_locate_template( 'activate.php' );
 			}
 
 			if (
@@ -2642,6 +2647,168 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		}
 
 		/**
+		 * Generate color shades from base color (500 level).
+		 *
+		 * @since BuddyBoss 2.9.30
+		 *
+		 * @param string $base_color Hex color code (will be used as level 500).
+		 *
+		 * @return array Array of color shades from 100 to 900.
+		 */
+		private function bb_rl_generate_color_shades( $base_color ) {
+			// Normalize base color.
+			$base_color = strtoupper( ltrim( $base_color, '#' ) );
+
+			// If the base color is the default #4946FE, return the exact palette.
+			if ( '4946FE' === $base_color ) {
+				return array(
+					100 => '#DDE4FF',
+					200 => '#C2CDFF',
+					300 => '#9DABFF',
+					400 => '#767EFF',
+					500 => '#4946FE',
+					600 => '#4937F4',
+					700 => '#3E2BD7',
+					800 => '#3325AE',
+					900 => '#2E2689',
+				);
+			}
+
+			// For other colors, use HSL-based generation.
+			$hsl    = $this->bb_rl_hex_to_hsl( $base_color );
+			$shades = array();
+
+			$adjustments = array(
+				100 => array( 'h' => 4, 's' => - 0.35, 'l' => 0.42 ),
+				200 => array( 'h' => 2, 's' => - 0.20, 'l' => 0.32 ),
+				300 => array( 'h' => 1, 's' => - 0.10, 'l' => 0.22 ),
+				400 => array( 'h' => 0, 's' => - 0.02, 'l' => 0.12 ),
+				500 => array( 'h' => 0, 's' => 0, 'l' => 0 ),
+				600 => array( 'h' => - 1, 's' => 0.03, 'l' => - 0.08 ),
+				700 => array( 'h' => - 3, 's' => 0.08, 'l' => - 0.18 ),
+				800 => array( 'h' => - 6, 's' => 0.12, 'l' => - 0.32 ),
+				900 => array( 'h' => - 8, 's' => 0.18, 'l' => - 0.45 ),
+			);
+
+			foreach ( $adjustments as $level => $adj ) {
+				if ( $level == 500 ) {
+					$shades[ $level ] = '#' . $base_color;
+				} else {
+					// Apply HSL adjustments
+					$new_h = $hsl['h'] + $adj['h'];
+					$new_s = max( 0, min( 1, $hsl['s'] + $adj['s'] ) );
+					$new_l = max( 0, min( 1, $hsl['l'] + $adj['l'] ) );
+
+					// Convert back to hex
+					$shades[ $level ] = $this->bb_rl_hsl_to_hex( $new_h, $new_s, $new_l );
+				}
+			}
+
+			return $shades;
+		}
+
+		/**
+		 * Convert hex color to HSL.
+		 *
+		 * @since BuddyBoss 2.9.30
+		 *
+		 * @param string $hex Hex color without #.
+		 *
+		 * @return array HSL values.
+		 */
+		private function bb_rl_hex_to_hsl( $hex ) {
+			$r = hexdec( substr( $hex, 0, 2 ) ) / 255;
+			$g = hexdec( substr( $hex, 2, 2 ) ) / 255;
+			$b = hexdec( substr( $hex, 4, 2 ) ) / 255;
+
+			$max  = max( $r, $g, $b );
+			$min  = min( $r, $g, $b );
+			$diff = $max - $min;
+
+			// Lightness
+			$l = ( $max + $min ) / 2;
+
+			if ( $diff == 0 ) {
+				$h = $s = 0; // achromatic
+			} else {
+				// Saturation
+				$s = $l > 0.5 ? $diff / ( 2 - $max - $min ) : $diff / ( $max + $min );
+
+				// Hue
+				switch ( $max ) {
+					case $r:
+						$h = ( $g - $b ) / $diff + ( $g < $b ? 6 : 0 );
+						break;
+					case $g:
+						$h = ( $b - $r ) / $diff + 2;
+						break;
+					case $b:
+						$h = ( $r - $g ) / $diff + 4;
+						break;
+				}
+				$h /= 6;
+			}
+
+			return array( 'h' => $h * 360, 's' => $s, 'l' => $l );
+		}
+
+		/**
+		 * Convert HSL to hex color.
+		 *
+		 * @since BuddyBoss 2.9.30
+		 *
+		 * @param float $h Hue (0-360).
+		 * @param float $s Saturation (0-1).
+		 * @param float $l Lightness (0-1).
+		 *
+		 * @return string Hex color with #.
+		 */
+		private function bb_rl_hsl_to_hex( $h, $s, $l ) {
+			$h = fmod( $h, 360 );
+			if ( $h < 0 ) {
+				$h += 360;
+			}
+			$h /= 360;
+
+			if ( $s == 0 ) {
+				$r = $g = $b = $l; // achromatic
+			} else {
+				$hue2rgb = function ( $p, $q, $t ) {
+					if ( $t < 0 ) {
+						$t += 1;
+					}
+					if ( $t > 1 ) {
+						$t -= 1;
+					}
+					if ( $t < 1 / 6 ) {
+						return $p + ( $q - $p ) * 6 * $t;
+					}
+					if ( $t < 1 / 2 ) {
+						return $q;
+					}
+					if ( $t < 2 / 3 ) {
+						return $p + ( $q - $p ) * ( 2 / 3 - $t ) * 6;
+					}
+
+					return $p;
+				};
+
+				$q = $l < 0.5 ? $l * ( 1 + $s ) : $l + $s - $l * $s;
+				$p = 2 * $l - $q;
+
+				$r = $hue2rgb( $p, $q, $h + 1 / 3 );
+				$g = $hue2rgb( $p, $q, $h );
+				$b = $hue2rgb( $p, $q, $h - 1 / 3 );
+			}
+
+			return sprintf( '#%02x%02x%02x',
+				round( $r * 255 ),
+				round( $g * 255 ),
+				round( $b * 255 )
+			);
+		}
+
+		/**
 		 * Add dynamic colours to the frontend.
 		 *
 		 * @since BuddyBoss 2.9.00
@@ -2649,14 +2816,45 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		public function bb_rl_dynamic_colors() {
 			$color_light = bp_get_option( 'bb_rl_color_light', '#4946fe' );
 			$color_dark  = bp_get_option( 'bb_rl_color_dark', '#9747FF' );
+			
+			// Generate color shades for light mode (500 is base).
+			$light_shades = $this->bb_rl_generate_color_shades( $color_light );
+			
+			// Generate color shades for dark mode (500 is base).
+			$dark_shades = $this->bb_rl_generate_color_shades( $color_dark );
 			?>
 			<style>
 				:root {
+					/* Light mode color shades. */
+					--bb-rl-background-brand-secondary-color: <?php echo esc_attr( $light_shades[100] ); ?>;
+					--bb-rl-background-brand-secondary-hover-color: <?php echo esc_attr( $light_shades[200] ); ?>;
+					--bb-rl-background-brand-disabled-color: <?php echo esc_attr( $light_shades[400] ); ?>;
+					--bb-rl-icon-brand-disabled-color: <?php echo esc_attr( $light_shades[400] ); ?>;
+					--bb-rl-background-brand-primary-hover-color: <?php echo esc_attr( $light_shades[600] ); ?>;
+					--bb-rl-text-brand-secondary-color: <?php echo esc_attr( $light_shades[800] ); ?>;
+					--bb-rl-icon-brand-primary-color: <?php echo esc_attr( $light_shades[800] ); ?>;
+					--bb-rl-border-brand-primary-color: <?php echo esc_attr( $light_shades[800] ); ?>;
+					
+					/* Keep backward compatibility. */
 					--bb-rl-primary-color: <?php echo esc_attr( $color_light ); ?>;
+				}
 
-					.bb-rl-dark-mode {
-						--bb-rl-primary-color: <?php echo esc_attr( $color_dark ); ?>;
-					}
+				.bb-rl-dark-mode {
+					/* Dark mode color shades. */
+					--bb-rl-background-brand-secondary-color: <?php echo esc_attr( $dark_shades[100] ); ?>;
+					--bb-rl-text-brand-secondary-color: <?php echo esc_attr( $dark_shades[200] ); ?>;
+					--bb-rl-border-brand-primary-color: <?php echo esc_attr( $dark_shades[200] ); ?>;
+					--bb-rl-icon-brand-primary-color: <?php echo esc_attr( $dark_shades[200] ); ?>;
+					--bb-rl-primary-300: <?php echo esc_attr( $dark_shades[300] ); ?>;
+					--bb-rl-background-brand-disabled-color: <?php echo esc_attr( $dark_shades[400] ); ?>;
+					--bb-rl-icon-brand-disabled-color: <?php echo esc_attr( $dark_shades[400] ); ?>;
+					--bb-rl-background-brand-primary-hover-color: <?php echo esc_attr( $dark_shades[600] ); ?>;
+					--bb-rl-primary-700: <?php echo esc_attr( $dark_shades[700] ); ?>;
+					--bb-rl-background-brand-secondary-color: <?php echo esc_attr( $dark_shades[800] ); ?>;
+					--bb-rl-background-brand-secondary-hover-color: <?php echo esc_attr( $dark_shades[900] ); ?>;
+					
+					/* Keep backward compatibility. */
+					--bb-rl-primary-color: <?php echo esc_attr( $color_dark ); ?>;
 				}
 			</style>
 			<?php
@@ -3228,7 +3426,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Check if current page is a LearnDash registration page
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.30
 		 *
 		 * @return bool True if current page is a LearnDash registration page
 		 */
@@ -3267,7 +3465,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Check if the current page is a LearnDash reset password page.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.30
 		 *
 		 * @return bool True if the current page is a LearnDash reset password page, false otherwise.
 		 */
@@ -4212,7 +4410,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Modify the data-balloon attribute for the add friend button.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.30
 		 *
 		 * @param array|string $button The button array or HTML string.
 		 *
@@ -4252,7 +4450,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Remove SSO template title.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.30
 		 */
 		public function bb_rl_remove_sso_template_title() {
 			remove_action( 'bp_template_title', 'BB_SSO::bp_template_title' );
@@ -4261,7 +4459,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Modify view all option for notifications filter.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.30
 		 *
 		 * @param string $output The output.
 		 *
@@ -4280,7 +4478,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Modify member's joined date.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.30
 		 *
 		 * @param string $user_registered_date The user registered date.
 		 * @param string $register_date        The register date.
@@ -4302,7 +4500,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Modify the member report button.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.30
 		 *
 		 * @param array $button The button.
 		 *
@@ -4321,7 +4519,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Modify the nav get count.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.30
 		 *
 		 * @param int    $count    The count.
 		 * @param object $nav_item The nav item.
@@ -4358,7 +4556,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Modify the save changes button for group invites for ReadyLaunch.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.30
 		 *
 		 * @param array $actions The list of submit buttons.
 		 *
@@ -4375,7 +4573,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Modify visibility levels for xprofile.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.30
 		 *
 		 * @param array $visibility_levels The visibility levels.
 		 *

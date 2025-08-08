@@ -293,7 +293,6 @@
 	.mfp-ajax-holder .mfp-content,
 	.mfp-inline-holder .mfp-content {
 		width: 100%;
-		cursor: alias;
 	}
 
 	.bb-onesignal-popup-close {
@@ -354,11 +353,11 @@
 	&.bb-rl-dark-mode {
 
 		.bb-onesignal-popup-close {
-	
+
 			.bb-onesignal-popup-content {
-	
+
 				ul li {
-	
+
 					img {
 						filter: brightness(0) invert(1);
 						opacity: 0.6;

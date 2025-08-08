@@ -2,7 +2,7 @@
 /**
  * Report Metrics Collection Class.
  *
- * @since   BuddyBoss [BBVERSION]
+ * @since   BuddyBoss 2.9.30
  * @package BuddyBoss\Core
  */
 
@@ -13,14 +13,14 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 	/**
 	 * BuddyBoss Report Metrics Collection object.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.9.30
 	 */
 	class BB_Report_Metrics {
 
 		/**
 		 * The single instance of the class.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.30
 		 *
 		 * @var self
 		 */
@@ -29,7 +29,7 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 		/**
 		 * Global $wpdb object.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.30
 		 *
 		 * @var wpdb
 		 */
@@ -38,7 +38,7 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 		/**
 		 * Cache for collected metrics.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.30
 		 *
 		 * @var array
 		 */
@@ -47,7 +47,7 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 		/**
 		 * Supported plugins configuration.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.30
 		 *
 		 * @var array
 		 */
@@ -128,7 +128,7 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 		/**
 		 * Get the instance of this class.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.30
 		 *
 		 * @return BB_Report_Metrics|null
 		 */
@@ -143,7 +143,7 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 		/**
 		 * Constructor method.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.30
 		 */
 		public function __construct() {
 			global $wpdb;
@@ -153,7 +153,7 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 		/**
 		 * Initialize wpdb if not already set.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.30
 		 */
 		private static function init_wpdb() {
 			if ( null === self::$wpdb ) {
@@ -165,7 +165,7 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 		/**
 		 * Collect report metrics from all supported plugins.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.30
 		 *
 		 * @param bool $force_refresh Force refresh cache.
 		 * @return array Array of report metrics from all plugins.
@@ -209,7 +209,7 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 		/**
 		 * Check if a plugin is active.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.30
 		 *
 		 * @param string $plugin_file Plugin file path.
 		 * @return bool
@@ -221,7 +221,7 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 		/**
 		 * Get metrics for a specific plugin.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.30
 		 *
 		 * @param string $plugin_slug Plugin slug.
 		 * @param array  $config      Plugin configuration.
@@ -260,7 +260,7 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 		/**
 		 * Get dynamic post type for a plugin.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.30
 		 *
 		 * @param array $config Plugin configuration.
 		 * @return string Post type.
@@ -304,7 +304,7 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 		/**
 		 * Get currency for a plugin.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.30
 		 *
 		 * @param array $config Plugin configuration.
 		 * @return string Currency code.
@@ -335,7 +335,7 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 		/**
 		 * Get metrics from post types (LearnDash, WooCommerce, LifterLMS, Tutor LMS).
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.30
 		 *
 		 * @param array $config Plugin configuration.
 		 * @return object|false Database result or false on failure.
@@ -394,7 +394,7 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 		/**
 		 * Get metrics from custom tables (MemberPress, PMPro, AffiliateWP).
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.30
 		 *
 		 * @param array $config Plugin configuration.
 		 * @return object|false Database result or false on failure.
@@ -443,7 +443,7 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 		/**
 		 * Clear metrics cache.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.30
 		 */
 		public static function clear_cache() {
 			self::$metrics_cache = null;
@@ -453,7 +453,7 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 		/**
 		 * Get cache status.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.30
 		 *
 		 * @return bool True if cache is available.
 		 */
@@ -464,7 +464,7 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 		/**
 		 * Get WooCommerce metrics using native methods.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.30
 		 *
 		 * @return array|false
 		 */
@@ -541,7 +541,7 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 		/**
 		 * Get WooCommerce metrics using legacy post storage.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.30
 		 *
 		 * @param array $order_statuses Order statuses to query.
 		 * @return array|false
@@ -598,7 +598,7 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 		/**
 		 * Get LearnDash metrics using native methods.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.30
 		 *
 		 * @return array|false
 		 */
@@ -647,7 +647,7 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 		/**
 		 * Get MemberPress metrics using native methods.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.30
 		 *
 		 * @return array|false
 		 */
@@ -694,7 +694,7 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 		/**
 		 * Get LifterLMS metrics using native methods.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.30
 		 *
 		 * @return array|false
 		 */
@@ -746,7 +746,7 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 		/**
 		 * Get Tutor LMS metrics using native methods.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.30
 		 *
 		 * @return array|false
 		 */
@@ -800,7 +800,7 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 		/**
 		 * Get Paid Memberships Pro metrics using native methods.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.30
 		 *
 		 * @return array|false
 		 */
@@ -847,7 +847,7 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 		/**
 		 * Get AffiliateWP metrics using native methods.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.30
 		 *
 		 * @return array|false
 		 */
@@ -893,7 +893,7 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 		/**
 		 * Get The Events Calendar metrics using native methods.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.9.30
 		 *
 		 * @return array|false
 		 */
