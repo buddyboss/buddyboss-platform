@@ -521,11 +521,18 @@ abstract class BB_Setup_Wizard_Manager {
 
 		// Only mark as completed if we actually have form data (indicates user progressed).
 		if (
-			isset( $data['form_data'] ) &&
-			! empty( $data['form_data'] ) &&
 			(
-				! isset( $tracking['steps'][ $step ]['status'] ) ||
-				'visited' === $tracking['steps'][ $step ]['status']
+				isset( $data['form_data'] ) &&
+				! empty( $data['form_data'] ) &&
+				(
+					! isset( $tracking['steps'][ $step ]['status'] ) ||
+					'visited' === $tracking['steps'][ $step ]['status']
+				)
+			) ||
+			(
+				! empty( $tracking['steps'][ $step ]['step_key'] ) &&
+				$tracking['steps'][ $step ]['step_key'] === $data['step_key'] &&
+				end( $this->steps )['key'] === $data['step_key']
 			)
 		) {
 			$tracking['steps'][ $step ]['status']       = 'completed';
