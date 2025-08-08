@@ -104,7 +104,9 @@
 
 	.select2-selection__choice__remove {
 		font-size: 0;
-		line-height: 1;
+		position: static;
+		border: 0;
+		line-height: normal !important;
 
 		&:before {
 			content: "\e4f6";
