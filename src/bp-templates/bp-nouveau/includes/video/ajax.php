@@ -1000,17 +1000,18 @@ function bp_nouveau_ajax_video_get_activity() {
 	}
 
 	/**
-	 * Filter the video description response data.
+	 * Filter the video activity response data.
 	 *
 	 * @since BuddyBoss 2.9.00
 	 *
 	 * @param array $response_data The response data to be sent.
 	 */
 	$response_data = apply_filters(
-		'bp_nouveau_video_description_response_data',
+		'bp_nouveau_video_activity_response_data',
 		array(
 			'activity'      => $activity,
 			'video_data'    => $video_data,
+			'type'          => 'video',
 			'reset_comment' => $reset_comment,
 			'activity_id'   => $post_id,
 		)
@@ -1406,12 +1407,24 @@ function bp_nouveau_ajax_video_get_video_description() {
 		);
 	}
 
-	wp_send_json_success(
+	/**
+	 * Filter the video description response data.
+	 *
+	 * @since BuddyBoss 2.9.30
+	 *
+	 * @param array $response_data The response data to be sent.
+	 */
+	$response_data = apply_filters(
+		'bp_nouveau_video_description_response_data',
 		array(
 			'description' => $video_description,
 			'video_data'  => $video_data,
+			'type'        => 'video',
+			'activity_id' => ! empty( $video->activity_id ) ? $video->activity_id : 0,
 		)
 	);
+
+	wp_send_json_success( $response_data );
 }
 
 /**

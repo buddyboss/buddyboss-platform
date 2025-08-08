@@ -69,7 +69,7 @@ switch ( bp_current_action() ) :
 	case 'mutual':
 		bp_nouveau_member_hook( 'before', 'friends_content' );
 		?>
-		<div class="members mutual-friends" data-bp-list="members" data-ajax="<?php echo esc_attr( $is_send_ajax_request ? 'true' : 'false' ); ?>">
+		<div class="members mutual-friends bb-rl-members" data-bp-list="members" data-ajax="<?php echo esc_attr( $is_send_ajax_request ? 'true' : 'false' ); ?>">
 			<?php
 			if ( $is_send_ajax_request ) {
 				echo '<div id="bp-ajax-loader">';

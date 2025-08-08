@@ -1169,7 +1169,21 @@ window.bp = window.bp || {};
 			    $validContent = args.validContent,
 			    $class        = args.class,
 			    data          = args.data;
-
+				
+			var topic_id = '';
+			if (
+				! _.isUndefined( data.topics ) &&
+				! _.isUndefined( data.topics.topic_id ) &&
+				0 !== parseInt( data.topics.topic_id )
+			) {
+				topic_id = data.topics.topic_id;
+			} else {
+				var topicSelector = $( '#buddypress .whats-new-topic-selector .bb-topic-selector-list li' );
+				if ( topicSelector.length ) {
+					var topicId   = topicSelector.find( 'a.selected' ).data( 'topic-id' ) || 0;
+					topic_id = topicId;
+				}
+			}
 
 			// Need to check if the poll is enabled and the poll_id is set.
 			// It will mainly use when we change the topic from the topic selector.
@@ -1188,24 +1202,24 @@ window.bp = window.bp || {};
 				// If the post is not empty and the topic is selected, remove the empty class and the tooltip.
 				if (
 					$validContent &&
-					! _.isUndefined( data.topics.topic_id ) &&
-					0 !== parseInt( data.topics.topic_id )
+					! _.isUndefined( topic_id ) &&
+					0 !== parseInt( topic_id )
 				) {
 					$selector.removeClass( $class );
 					$( '#whats-new-submit' ).find( '.bb-topic-tooltip-wrapper' ).remove();
 				} else if (
 					$validContent &&
 					(
-						_.isUndefined( data.topics.topic_id ) ||
-						0 === parseInt( data.topics.topic_id )
+						_.isUndefined( topic_id ) ||
+						0 === parseInt( topic_id )
 					)
 				) {
 					$selector.addClass( $class );
 					$( document ).trigger( 'bb_display_full_form' ); // Trigger the display full form event to show the tooltip.
 				} else if (
 					! $validContent &&
-					! _.isUndefined( data.topics.topic_id ) &&
-					0 !== parseInt( data.topics.topic_id )
+					! _.isUndefined( topic_id ) &&
+					0 !== parseInt( topic_id )
 				) {
 					// If the post is empty and the topic is selected, add the empty class and the tooltip.
 					$selector.addClass( $class );
@@ -1213,8 +1227,8 @@ window.bp = window.bp || {};
 				} else if (
 					! $validContent &&
 					(
-						_.isUndefined( data.topics.topic_id ) ||
-						0 === parseInt( data.topics.topic_id )
+						_.isUndefined( topic_id ) ||
+						0 === parseInt( topic_id )
 					)
 				) {
 					// If the post is empty and the topic is not selected, add the empty class and the tooltip.

@@ -574,7 +574,11 @@ window.bp = window.bp || {};
 			if ( 'undefined' !== typeof meta.bbp_video && ( '' !== meta.bbp_video && '[]' !== meta.bbp_video ) ) {
 				media_valid = true;
 			}
-			if ( 'undefined' !== typeof meta.bbp_media_gif && ( '' !== meta.bbp_media_gif && '[]' !== meta.bbp_media_gif ) ) {
+			
+			// Check if GIF support is enabled (GIF button exists and is not disabled)
+			var gif_support_enabled = currentForm.find( '#bb-rl-forums-gif-button' ).length > 0 && ! currentForm.find( '#bb-rl-forums-gif-button' ).parents( '.bb-rl-post-elements-buttons-item' ).hasClass( 'disable' );
+			
+			if ( gif_support_enabled && 'undefined' !== typeof meta.bbp_media_gif && ( '' !== meta.bbp_media_gif && '[]' !== meta.bbp_media_gif ) ) {
 				media_valid = true;
 			}
 			if ( 'undefined' !== typeof meta.link_preview_data && ( '' !== meta.link_preview_data && '[]' !== meta.link_preview_data ) ) {
