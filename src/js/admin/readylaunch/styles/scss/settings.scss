@@ -711,6 +711,13 @@
       margin-bottom: 15px;
     }
 
+    .bb-rl-button-group {
+      display: flex;
+      gap: 12px;
+      margin-top: 8px;
+    }
+
+    .bb-rl-setup-wizard-btn,
     .bb-rl-feedback-btn {
       font-size: 14px;
 	  line-height: 20px;
@@ -722,7 +729,6 @@
       padding: 10px;
       transition: background 0.2s, color 0.2s;
       box-shadow: none;
-      margin-top: 8px;
 	  height: auto;
 
 	  i {
@@ -734,6 +740,17 @@
         color: #fff;
       }
     }
+
+  	.bb-rl-setup-wizard-btn {
+		color: $bb-rl-border-brand-primary-color;
+		border-color: $bb-rl-border-brand-primary-color;
+		padding: 10px 20px;
+
+		&:hover {
+			background: $bb-rl-border-brand-primary-color;
+			color: #fff;
+		}
+	}
   }
 
   .bb-rl-welcome-video {

@@ -101,7 +101,7 @@ abstract class BB_Setup_Wizard_Manager {
 		'transient_timeout'          => 30,
 		'enable_analytics'           => true,
 		'enable_activation_redirect' => true,
-		'enable_new_activation'      => true,
+		'enable_new_activation'      => false,
 		'auto_cleanup'               => true,
 		'capability_required'        => 'manage_options',
 		'wizard_title'               => 'Setup Wizard',
