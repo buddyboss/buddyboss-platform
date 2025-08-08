@@ -845,6 +845,8 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 			}
 		}
 
+		$component_activated = false;
+
 		// Force enabled components based on side menu settings.
 		if ( ! empty( $final_settings['bb_rl_side_menu'] ) ) {
 			$side_menu = $final_settings['bb_rl_side_menu'];
@@ -863,14 +865,53 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 			foreach ( $component_map as $menu_id => $component_key ) {
 				if ( isset( $side_menu[ $menu_id ] ) ) {
 					$enabled = ! empty( $side_menu[ $menu_id ]['enabled'] );
-					if ( $enabled ) {
+					if ( $enabled && empty( $active_components[ $component_key ] ) ) {
 						$active_components[ $component_key ] = 1;
+						$component_activated                 = true;
 					}
 				}
 			}
 
-			bp_update_option( 'bp-active-components', $active_components );
+			if ( $component_activated ) {
+				bp_update_option( 'bp-active-components', $active_components );
+			}
+		}
 
+		$component_map = array();
+		if ( ! empty( $final_settings['bb_rl_activity_sidebars'] ) ) {
+			$component_map[] = 'activity';
+		}
+
+		if ( ! empty( $final_settings['bb_rl_groups_sidebars'] ) ) {
+			$component_map[] = 'groups';
+		}
+
+		if (
+			! empty( $final_settings['bb_rl_member_profile_sidebars'] ) &&
+			in_array( 'my_network', $final_settings['bb_rl_member_profile_sidebars'], true )
+		) {
+			$component_map[] = 'activity';
+
+			bp_update_option( '_bp_enable_activity_follow', true );
+		}
+
+		if ( ! empty( array_unique( $component_map ) ) ) {
+			$component_map     = array_unique( $component_map );
+			$active_components = bp_get_option( 'bp-active-components', array() );
+
+			foreach ( $component_map as $k => $component_key ) {
+				if ( empty( $active_components[ $component_key ] ) ) {
+					$active_components[ $component_key ] = 1;
+					$component_activated                 = true;
+				}
+			}
+
+			if ( $component_activated ) {
+				bp_update_option( 'bp-active-components', $active_components );
+			}
+		}
+
+		if ( true === $component_activated ) {
 			// Save settings and upgrade schema.
 			require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 			require_once buddypress()->plugin_dir . '/bp-core/admin/bp-core-admin-schema.php';
