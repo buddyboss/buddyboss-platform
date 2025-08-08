@@ -13,5 +13,5 @@ if ( ! defined( 'ABSPATH' ) ) {
 ?>
 
 <div class="bb-rl-no-courses">
-	<p><?php esc_html_e( 'No courses found.', 'buddyboss' ); ?></p>
+	<p><?php esc_html_e( 'No courses found', 'buddyboss' ); ?></p>
 </div>

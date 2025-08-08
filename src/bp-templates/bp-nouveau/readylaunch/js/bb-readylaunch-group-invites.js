@@ -92,6 +92,10 @@ window.bp = window.bp || {};
 					);
 					$( '#group-invites-container .bb-groups-invites-left #members-list li.' + data.id ).removeClass( 'selected' );
 					$( '#group-invites-container .bb-groups-invites-left #members-list li.' + data.id + ' .action button' ).attr( 'data-bp-tooltip', bbRlGroupInvites.add_recipient );
+					
+					if ( 0 === $( '#group-invites-send-to-input' ).val().length ) {
+						$( '#send_group_invite_button' ).attr( 'disabled', true );
+					}
 				}
 			);
 
@@ -513,12 +517,17 @@ window.bp = window.bp || {};
 
 				$button.attr( 'data-bp-tooltip', bbRlGroupInvites.add_invite_tooltip );
 
+				if ( 0 === newArray.length ) {
+					$( '#send_group_invite_button' ).attr( 'disabled', true );
+				}
+
 			} else {
 				$button.closest( 'li' ).addClass( 'selected' );
 				if ( ! self.selectors.groupInvitesSelect.find( 'option[value="' + data.id + '"]' ).length ) { // jshint ignore:line
 					var newOption = new Option( data.text, data.id, true, true );
 					$( newOption ).attr( 'data-avatar', data.avatar );
 					self.selectors.groupInvitesSelect.append( newOption ).trigger( 'change' );
+					$( '#send_group_invite_button' ).removeAttr( 'disabled' );
 				}
 				$button.attr( 'data-bp-tooltip', bbRlGroupInvites.cancel_invite_tooltip );
 			}
