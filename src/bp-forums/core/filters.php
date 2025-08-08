@@ -125,6 +125,14 @@ add_filter( 'bbp_edit_forum_pre_content', 'bbp_filter_kses', 30 );
 add_filter( 'bbp_edit_forum_pre_content', 'bbp_convert_mentions', 40 );
 add_filter( 'bbp_edit_forum_pre_content', 'balanceTags', 50 );
 
+// Admin content processing - apply the same filter chain as frontend.
+add_filter( 'content_save_pre', 'bbp_admin_convert_pre_tags', 5, 1 );    // Convert <pre> tags to backticks first.
+add_filter( 'content_save_pre', 'bbp_admin_encode_bad', 10, 1 );         // HTML entity encoding.
+add_filter( 'content_save_pre', 'bbp_admin_code_trick', 20, 1 );         // Code block processing.
+add_filter( 'content_save_pre', 'bbp_admin_convert_mentions', 40, 1 );   // Mention processing.
+add_filter( 'content_save_pre', 'bbp_admin_balance_tags', 50, 1 );       // Tag balancing.
+add_filter( 'bbp_kses_allowed_tags', 'bbp_admin_kses_allowed_tags' ); // KSES allowed tags from the admin area.
+
 // No follow and stripslashes on user profile links
 add_filter( 'bbp_get_reply_author_link', 'bbp_rel_nofollow' );
 add_filter( 'bbp_get_reply_author_link', 'stripslashes' );
