@@ -1055,7 +1055,7 @@ class BB_Activity_Topics_Manager {
 		$link_text = $args['link_text'];
 
 		$topic = $this->bb_get_activity_topic( $activity_id, 'all' );
-		if ( ! $topic || ! is_object( $topic ) ) {
+		if ( ! $topic || ! is_object( $topic ) || empty( $topic->slug ) ) {
 			return '';
 		}
 
