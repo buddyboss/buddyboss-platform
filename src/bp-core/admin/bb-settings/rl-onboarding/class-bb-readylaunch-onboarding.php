@@ -425,7 +425,7 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 		// Enqueue the CSS.
 		wp_enqueue_style(
 			$this->get_config( 'react_style_handle' ),
-			buddypress()->plugin_url . 'bp-core/admin/bb-settings/rl-onboarding/build/onboarding.css',
+			buddypress()->plugin_url . "bp-core/admin/bb-settings/rl-onboarding/build/onboarding{$rtl}.css",
 			array(),
 			$asset_data['version']
 		);
@@ -440,10 +440,10 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 	}
 
 	/**
-	 * Localize wizard data for JavaScript.
+	 * Localise wizard data for JavaScript.
 	 *
 	 * @since BuddyBoss [BBVERSION]
-	 * @return array Localized data array.
+	 * @return array Localised data array.
 	 */
 	protected function localize_wizard_data() {
 		$base_data = array(
@@ -609,10 +609,6 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 
 				// Sanitize based on field type and save directly using field key.
 				switch ( $field_type ) {
-					case 'text':
-						$sanitized[ $field_key ] = sanitize_text_field( wp_unslash( $field_value ) );
-						break;
-
 					case 'select':
 					case 'radio':
 					case 'visual_options':
@@ -623,11 +619,11 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 
 					case 'checkbox_group':
 						if ( is_array( $field_value ) ) {
-							// Ensure all values are sanitized and valid.
-							$allowed_values = isset( $field_config['options'] ) ? array_keys( $field_config['options'] ) : array();
+							// Ensure all values are sanitised and valid.
+							$allowed_values          = isset( $field_config['options'] ) ? array_keys( $field_config['options'] ) : array();
 							$sanitized[ $field_key ] = array_intersect( $field_value, $allowed_values );
 						} else {
-							// If not an array, default to empty array.
+							// If not an array, default to an empty array.
 							$sanitized[ $field_key ] = array();
 						}
 						break;
@@ -652,7 +648,7 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 						} elseif ( is_numeric( $field_value ) ) {
 							// Legacy format: just the ID.
 							$sanitized[ $field_key ] = intval( $field_value );
-							// Also save the URL if provided.
+							// Also, save the URL if provided.
 							if ( isset( $step_data[ $field_key . '_url' ] ) ) {
 								$sanitized[ $field_key . '_url' ] = esc_url_raw( $step_data[ $field_key . '_url' ] );
 							}
@@ -690,7 +686,7 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 							}
 							$sanitized[ $field_key ] = $sanitized_items;
 
-							// For some draggable fields ReadyLaunch expects a specific structure.
+							// For some draggable fields, ReadyLaunch expects a specific structure.
 							switch ( $field_key ) {
 								case 'bb_rl_side_menu':
 									// Convert sequential list into associative map id => {enabled, order, icon}.
@@ -727,7 +723,7 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 									break;
 							}
 						} else {
-							// Fall back to default if not array.
+							// Fall back to default if not an array.
 							$sanitized[ $field_key ] = isset( $field_config['options'] ) ? $field_config['options'] : array();
 						}
 						break;
@@ -762,7 +758,7 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param string $preferences_json JSON string of preferences.
-	 * @return array Sanitized preferences.
+	 * @return array Sanitised preferences.
 	 */
 	protected function sanitize_preferences( $preferences_json ) {
 		$preferences = json_decode( $preferences_json, true );
@@ -1025,7 +1021,7 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 
 			// Find the field config to determine how to save it.
 			$field_config = null;
-			foreach ( $step_options as $step_key => $step_fields ) {
+			foreach ( $step_options as $step_fields ) {
 				if ( isset( $step_fields[ $field_key ] ) ) {
 					$field_config = $step_fields[ $field_key ];
 					break;
@@ -1065,11 +1061,11 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 			);
 		} else {
 			$retval['courses'] = array(
-				'label'   => __( 'Courses', 'buddyboss' ),
-				'icon'    => 'bb-icons-rl-file-text',
-				'default' => false,
+				'label'         => __( 'Courses', 'buddyboss' ),
+				'icon'          => 'bb-icons-rl-file-text',
+				'default'       => false,
 				'not_available' => true,
-				'notice' => __( 'Requires LearnDash or MemberPress courses to activate.', 'buddyboss' ),
+				'notice'        => __( 'Requires LearnDash or MemberPress courses to activate.', 'buddyboss' ),
 			);
 		}
 
