@@ -48,7 +48,7 @@ bp_get_template_part( 'sidebar/left-sidebar' );
 <div id="page" class="site bb-readylaunch">
 	<header id="masthead" class="bb-rl-header">
 		<div class="bb-rl-container bb-rl-header-container flex justify-between items-center">
-			<a href="#" class="bb-rl-left-panel-mobile"><i class="bb-icons-rl-list"></i></a>
+			<a href="#" class="bb-rl-left-panel-mobile" aria-label="<?php esc_html_e( 'Open left panel', 'buddyboss' ); ?>"><i class="bb-icons-rl-list"></i></a>
 			<?php
 			bp_get_template_part( 'header/site-logo' );
 

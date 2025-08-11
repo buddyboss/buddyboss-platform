@@ -21,10 +21,10 @@
 		</div>
 		<div class="bb-rl-media-model-inner">
 			<div class="bb-rl-media-section bb-rl-document-section">
-				<a class="bb-rl-theater-command bb-rl-prev-document" href="#previous">
+				<a class="bb-rl-theater-command bb-rl-prev-document" href="#previous" aria-label="<?php esc_html_e( 'Previous', 'buddyboss' ); ?>">
 					<i class="bb-icons-rl-caret-left"></i>
 				</a>
-				<a class="bb-rl-theater-command bb-rl-next-document" href="#next">
+				<a class="bb-rl-theater-command bb-rl-next-document" href="#next" aria-label="<?php esc_html_e( 'Next', 'buddyboss' ); ?>">
 					<i class="bb-icons-rl-caret-right"></i>
 				</a>
 				<div class="document-preview"></div>

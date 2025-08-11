@@ -166,7 +166,7 @@
 							<div class="bb-activity-media-elem document-activity " data-id="">
 								<# if ( data.document[i].id ) { #>
 									<div class="document-description-wrap">
-										<a href="{{data.document[i].url}}" class="entry-img" data-id="{{data.document[i].id}}" data-activity-id="{{data.document[i].id}}">
+										<a href="{{data.document[i].url}}" class="entry-img" data-id="{{data.document[i].id}}" data-activity-id="{{data.document[i].id}}" aria-label="{{data.document[i].title}}">
 											<i class="{{data.document[i].svg_icon}}" ></i>
 										</a>
 										<a href="{{data.document[i].url}}"

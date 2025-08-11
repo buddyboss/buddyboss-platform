@@ -27,10 +27,10 @@ defined( 'ABSPATH' ) || exit;
 		</div>
 		<div class="bb-rl-media-model-inner">
 			<div class="bb-rl-media-section">
-				<a class="bb-rl-theater-command bb-rl-prev-media" href="#previous">
+				<a class="bb-rl-theater-command bb-rl-prev-media" href="#previous" aria-label="<?php esc_html_e( 'Previous', 'buddyboss' ); ?>">
 					<i class="bb-icons-rl-caret-left"></i>
 				</a>
-				<a class="bb-rl-theater-command bb-rl-next-media" href="#next">
+				<a class="bb-rl-theater-command bb-rl-next-media" href="#next" aria-label="<?php esc_html_e( 'Next', 'buddyboss' ); ?>">
 					<i class="bb-icons-rl-caret-right"></i>
 				</a>
 				<figure class="">

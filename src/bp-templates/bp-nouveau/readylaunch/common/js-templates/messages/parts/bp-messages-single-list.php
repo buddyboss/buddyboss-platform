@@ -164,7 +164,7 @@
 							<div class="bb-rl-activity-media-elem bb-rl-document-activity " data-id="">
 								<# if ( data.document[i].id ) { #>
 									<div class="bb-rl-document-description-wrap">
-										<a href="{{data.document[i].url}}" class="bb-rl-entry-img" data-id="{{data.document[i].id}}" data-activity-id="{{data.document[i].id}}">
+										<a href="{{data.document[i].url}}" class="bb-rl-entry-img" data-id="{{data.document[i].id}}" data-activity-id="{{data.document[i].id}}" aria-label="<?php esc_html_e( 'Open document', 'buddyboss' ); ?>">
 											<i class="{{data.document[i].svg_icon}}" ></i>
 										</a>
 										<a href="{{data.document[i].url}}"
