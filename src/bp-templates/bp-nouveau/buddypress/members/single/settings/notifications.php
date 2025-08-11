@@ -43,7 +43,7 @@ if ( $is_web_enabled && $is_app_enabled ) {
 		<div class="notification_info">
 
 			<div class="notification_type email_notification">
-				<span class="notification_type_icon">
+				<span class="notification_type_icon" aria-label="<?php esc_attr_e( 'Email', 'buddyboss' ); ?>">
 					<i class="bb-icon bb-icon-mail"></i>
 				</span>
 
@@ -55,7 +55,7 @@ if ( $is_web_enabled && $is_app_enabled ) {
 
 			<?php if ( $is_web_enabled ) { ?>
 			<div class="notification_type web_notification">
-				<span class="notification_type_icon">
+				<span class="notification_type_icon" aria-label="<?php esc_attr_e( 'Web', 'buddyboss' ); ?>">
 					<i class="bb-icon bb-icon-monitor"></i>
 				</span>
 
@@ -68,7 +68,7 @@ if ( $is_web_enabled && $is_app_enabled ) {
 
 			<?php if ( $is_app_enabled ) { ?>
 			<div class="notification_type app_notification">
-				<span class="notification_type_icon">
+				<span class="notification_type_icon" aria-label="<?php esc_attr_e( 'App', 'buddyboss' ); ?>">
 					<i class="bb-icon bb-icon-smartphone"></i>
 				</span>
 

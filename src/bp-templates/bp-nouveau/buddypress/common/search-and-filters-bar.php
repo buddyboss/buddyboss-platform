@@ -15,6 +15,7 @@
 		?>
 		<button class="subnav-filters-opener" aria-expanded="false" aria-controls="subnav-filters">
 			<i class="bb-icon-f bb-icon-search"></i>
+			<span class="screen-reader-text"><?php esc_html_e( 'Open search filters', 'buddyboss' ); ?></span>
 		</button>
 		<?php
 	}
