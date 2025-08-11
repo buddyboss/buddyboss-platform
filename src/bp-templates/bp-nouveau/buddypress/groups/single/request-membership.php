@@ -88,7 +88,7 @@ if ( groups_check_user_has_invite( $loggedin_user_id, $current_group_id ) ) {
 
 			<form action="<?php bp_group_form_action( 'request-membership' ); ?>" method="post" name="request-membership-form" id="request-membership-form" class="standard-form">
 				<label for="group-request-membership-comments"><?php esc_html( 'Comments (optional)', 'buddyboss' ); ?></label>
-				<textarea name="group-request-membership-comments" id="group-request-membership-comments"></textarea>
+				<textarea name="group-request-membership-comments" id="group-request-membership-comments" aria-label="<?php esc_attr_e( 'Group Request Comments', 'buddyboss' ); ?>"></textarea>
 
 				<?php bp_nouveau_group_hook( '', 'request_membership_content' ); ?>
 
