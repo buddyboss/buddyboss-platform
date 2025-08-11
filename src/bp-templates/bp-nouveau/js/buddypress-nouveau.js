@@ -957,7 +957,7 @@ window.bp = window.bp || {};
 					}
 
 					if ( $( '#buddypress [data-bp-filter="' + object + '"]' ).length ) {
-						if ( undefined !== objectData.filter ) {
+						if ( undefined !== objectData.filter && ! _.isUndefined( BP_Nouveau.is_send_ajax_request ) && '' !== BP_Nouveau.is_send_ajax_request ) {
 							filter = objectData.filter;
 							$( '#buddypress [data-bp-filter="' + object + '"] option[value="' + filter + '"]' ).prop( 'selected', true );
 						} else if ( '-1' !== $( '#buddypress [data-bp-filter="' + object + '"]' ).val() && '0' !== $( '#buddypress [data-bp-filter="' + object + '"]' ).val() ) {
@@ -5438,7 +5438,7 @@ window.bp = window.bp || {};
 					} );
 	
 					self.append( '<li class="hideshow menu-item-has-children" data-no-dynamic-translation>' +
-					  '<a class="more-action-button" href="#">more <i class="bb-icon-l bb-icon-angle-down"></i></a>' +
+					  '<a class="more-action-button" href="#">' + BP_Nouveau.more_menu_text + ' <i class="bb-icon-l bb-icon-angle-down"></i></a>' +
 					  '<ul class="sub-menu bb_nav_more_dropdown" data-no-dynamic-translation>' + menuhtml + '</ul>' +
 					  '<div class="bb_more_dropdown_overlay"></div></li>' );
 	

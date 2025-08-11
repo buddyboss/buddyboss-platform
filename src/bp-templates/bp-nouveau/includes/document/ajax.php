@@ -533,6 +533,7 @@ function bp_nouveau_ajax_document_get_document_description() {
 		'bp_nouveau_document_description_response_data',
 		array(
 			'description' => $document_description,
+			'type'        => 'document',
 			'activity_id' => isset( $document->activity_id ) ? $document->activity_id : 0,
 		)
 	);

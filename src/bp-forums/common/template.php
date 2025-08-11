@@ -331,7 +331,7 @@ function bbp_is_topic_edit() {
 	if ( ! empty( $wp_query->bbp_is_topic_edit ) && ( $wp_query->bbp_is_topic_edit === true ) ) {
 		$retval = true;
 
-	} elseif ( function_exists( 'bp_action_variable' ) && bp_action_variable( 0 ) == get_option( '_bbp_topic_slug', 'discussions' ) && bp_action_variable( 2 ) === bbp_get_edit_rewrite_id() ) {
+	} elseif ( function_exists( 'bp_action_variable' ) && bp_action_variable( 0 ) == get_option( '_bbp_topic_slug', 'discussions' ) && bp_action_variable( 2 ) === bbp_get_edit_slug() ) {
 		$retval = true;
 	}
 
@@ -528,7 +528,7 @@ function bbp_is_reply_edit() {
 	if ( ! empty( $wp_query->bbp_is_reply_edit ) && ( true === $wp_query->bbp_is_reply_edit ) ) {
 		$retval = true;
 
-	} elseif ( function_exists( 'bp_action_variable' ) && bp_action_variable( 0 ) == get_option( '_bbp_reply_slug', 'reply' ) && bp_action_variable( 2 ) === bbp_get_edit_rewrite_id() ) {
+	} elseif ( function_exists( 'bp_action_variable' ) && bp_action_variable( 0 ) == get_option( '_bbp_reply_slug', 'reply' ) && bp_action_variable( 2 ) === bbp_get_edit_slug() ) {
 		$retval = true;
 	}
 
