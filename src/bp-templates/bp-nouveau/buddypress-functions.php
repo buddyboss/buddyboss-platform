@@ -737,6 +737,12 @@ class BP_Nouveau extends BP_Theme_Compat {
 		// Add localize variable for enable content counts.
 		$params['bb_enable_content_counts'] = bb_enable_content_counts();
 
+		// Add localize variable for more menu items.
+		$params['more_menu_items'] = esc_html__( 'Menu Items', 'buddyboss' );
+
+		// Add localize variable for more menu text.
+		$params['more_menu_text'] = esc_html__( 'More', 'buddyboss' );
+
 		/**
 		 * Filters core JavaScript strings for internationalization before AJAX usage.
 		 *

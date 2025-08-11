@@ -1,9 +1,9 @@
 === BuddyBoss Platform ===
 Contributors: buddyboss
 Requires at least: 4.9.1
-Tested up to: 6.7.2
-Requires PHP: 5.6.20
-Stable tag: 2.8.60
+Tested up to: 6.8.1
+Requires PHP: 7.4.0
+Stable tag: 2.9.30
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,59 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 2.9.30 =
+* Bug: Activity - Fixed issue where the "More" label in topics was not translatable
+* Bug: Core - Fixed broken cross (X) icon UI in tag selectors across multiple screens, ensuring proper display even with the Modern Events Calendar plugin active
+* Bug: Core - Fixed critical accessibility issues, including missing labels and empty anchor tags
+* Bug: Forums - Fixed an issue where lead discussion content was missing on single discussion pages, ensuring compatibility with WP 6.8+ query changes.
+* Bug: Forums - Fixed issue where discussions couldn't be posted with only a title and media when GIFs were disabled in forum settings
+* Bug: Groups - Improved album creation UX to prevent partial photo uploads when "Create Album" is clicked before all images finish uploading.
+* Bug: Messages - Added support for URL embed preview in messaging
+* Bug: ReadyLaunch - Fixed minor UI and functional issues
+
+= 2.9.20 =
+* Bug: Activity - Fixed an issue where the schedule post dropdown menu was not fully visible, causing options to overflow or become inaccessible
+* Bug: Forums - Fixed a 404 error when using a custom slug on forum discussion edit links with the BuddyBoss theme
+* Bug: Groups - Fixed an issue where only one video was visible after editing a comment with multiple videos in the Group Media section
+* Bug: Groups - Fixed misalignment of the Zoom integration field style in group settings when vertical group navigation is enabled in the latest BuddyBoss theme
+
+= 2.9.11 =
+* Enhancement: Improved code structure for better performance and maintainability
+
+= 2.9.10 =
+* Bug: Forums - Fixed issue where image uploads were blocked when using Forum shortcode on a page with document uploads disabled
+* Bug: Forums - Fixed search results displaying password entry forms instead of a proper message for password-protected posts
+* Bug: Header - Fixed issue where the top row of member cards was partially hidden under the sticky header after pagination in the Members directory
+* Bug: Messages - Fixed pagination issue in group messages where banned members caused incorrect member listing
+* Bug: ReadyLaunch - Fixed minor design and functional bugs in ReadyLaunch
+
+= 2.9.00 =
+* New Feature! ReadyLaunch - launch your community with our new built in page template
+* Bug: Forums - Fixed an issue where forum reply and topic media were not being deleted upon deletion
+
+= 2.8.90 =
+* Bug: Groups - Fixed an issue where deleting activity topics removed them from group-level topics
+* Bug: Groups - Fixed an issue where uploading default cover images slowed down sites with many group subscriptions
+* Bug: Notifications - Fixed an issue where user hover info was not displaying in notifications after sending a connection request
+
+= 2.8.80 =
+* New Feature! – Added Activity Topics for categorizing and filtering posts in activity feeds and groups
+* Bug: Activity - Fixed an issue where the activity feed showed duplicate job posts across multiple WPML site languages
+* Bug: Core - Fixed an issue where translating the “BuddyBoss” admin menu title caused moderation features to stop working
+* Bug: Groups - Fixed an issue where the recipient count in group messages didn’t update after members were deleted
+* Bug: Widgets - Fixed issue where the BB Latest Update widget wasn’t showing activity comments or blog comments
+
+= 2.8.70 =
+* Bug: Activity - Fixed issue where changing the activity post’s privacy incorrectly updated the posting date. The original date now remains unchanged
+* Bug: Activity - Fixed issue where emoji functionality wasn’t working in all areas due to JS files
+* Bug: Activity - Fixed issue where Follow/Unfollow functionality did not work when accessing user profiles from the Activity Feed
+* Bug: Groups - Fixed @mention issue in Hidden and Private groups, only group members can now be tagged
+* Bug: Groups - Fixed issue with the "Select Multiple Videos" feature, enabling associated actions like delete on the user's profile page and group page
+* Bug: Media - Fixed issue where video count showed as undefined when videos page, group videos, or user videos page were opened directly via URL
+
+= 2.8.61 =
+* Bug: Groups - Fixed an issue where regular group post activity headers incorrectly displayed post content instead of showing only basic activity details
 
 = 2.8.60 =
 * Bug: Activity - Fixed an issue where the Activity “Load More” button wrapper was being triggered even when clicking outside the button

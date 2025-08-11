@@ -524,6 +524,12 @@ function bp_media_add( $args = '' ) {
 		$media->privacy = $r['privacy'];
 	} elseif ( ! empty( $media->group_id ) ) {
 		$media->privacy = 'grouponly';
+		if ( ! empty( $media->activity_id ) ) {
+			$activity = new BP_Activity_Activity( $media->activity_id );
+			if ( ! empty( $activity ) && 'activity_comment' === $activity->type ) {
+				$media->privacy = $r['privacy'];
+			}
+		}
 	} elseif ( ! empty( $media->album_id ) ) {
 		$album = new BP_Media_Album( $media->album_id );
 		if ( ! empty( $album ) ) {
@@ -2811,7 +2817,7 @@ function bp_media_album_recursive_li_list( $array, $first = false ) {
 	}
 
 	foreach ( $array as $item ) {
-		$output .= '<li data-id="' . esc_attr( $item['id'] ) . '" data-privacy="' . esc_attr( $item['privacy'] ) . '"><span id="' . esc_attr( $item['id'] ) . '" data-id="' . esc_attr( $item['id'] ) . '">' . stripslashes( $item['title'] ) . '</span>' . bp_media_album_recursive_li_list( $item['children'], true ) . '</li>';
+		$output .= '<li data-id="' . esc_attr( $item['id'] ) . '" data-privacy="' . esc_attr( $item['privacy'] ) . '"><span id="' . esc_attr( $item['id'] ) . '" data-id="' . esc_attr( $item['id'] ) . '">' . esc_html( stripslashes( $item['title'] ) ) . '</span>' . bp_media_album_recursive_li_list( $item['children'], true ) . '</li>';
 	}
 	$output .= '</ul>';
 

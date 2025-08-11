@@ -1,8 +1,20 @@
 {
 	"description": "BuddyBoss adds community features to WordPress. Member Profiles, Activity Streams, Direct Messaging, Notifications, and more!",
 	"devDependencies": {
+		"@wordpress/api-fetch": "^5.2.6",
+		"@wordpress/babel-preset-default": "^7.32.0",
+		"@wordpress/browserslist-config": "^5.31.0",
+		"@wordpress/components": "^19.17.0",
+		"@wordpress/element": "^4.20.0",
+		"@wordpress/env": "^10.8.0",
+		"@wordpress/i18n": "^4.0.0",
+		"@wordpress/icons": "^9.0.0",
+		"@wordpress/media-utils": "^4.19.0",
+		"@wordpress/scripts": "^26.19.0",
 		"@wordpress/stylelint-config": "^19.1.0",
 		"apidoc": "^0.22.0",
+		"concurrently": "^8.2.2",
+		"css-loader": "^6.11.0",
 		"grunt": "^1.4.1",
 		"grunt-apidoc": "^0.11.0",
 		"grunt-check-dependencies": "~1.0.0",
@@ -31,15 +43,27 @@
 		"node-sass": "^7.0.0",
 		"postcss": "^8.4.4",
 		"postcss-scss": "^4.0.2",
-		"stylelint": "~13.13.1"
+		"react-beautiful-dnd": "^13.1.1",
+		"sass": "^1.71.0",
+		"sass-loader": "^13.3.3",
+		"style-loader": "^3.3.4",
+		"stylelint": "^13.13.1"
 	},
 	"scripts": {
-		"prepare": "npm install husky jira-prepare-commit-msg --save-dev && npx husky install"
+		"prepare": "npm install husky jira-prepare-commit-msg --save-dev && npx husky install",
+		"build:blocks": "npm run build:block:core",
+		"build:block:core": "wp-scripts build --webpack-src-dir=src/js/blocks/bp-core --config src/js/blocks/bp-core/webpack.config.js",
+		"watch:readylaunch-header": "wp-scripts start --webpack-src-dir=src/js/blocks/bp-core/readylaunch-header --config src/js/blocks/bp-core/webpack.config.js",
+		"build:admin": "npm run build:admin:readylaunch",
+		"build:admin:readylaunch": "wp-scripts build --webpack-src-dir=src/js/admin/readylaunch --config src/js/admin/webpack.config.js && npm run build:admin:readylaunch:scss",
+		"build:admin:readylaunch:scss": "sass --style=compressed --no-source-map src/js/admin/readylaunch/styles/scss/settings.scss:src/bp-core/admin/bb-settings/readylaunch/build/styles/settings.css",
+		"watch:admin:readylaunch": "concurrently \"npm run watch:admin:readylaunch:scss\" \"wp-scripts start --webpack-src-dir=src/js/admin/readylaunch --config src/js/admin/webpack.config.js\"",
+		"watch:admin:readylaunch:scss": "sass --watch src/js/admin/readylaunch/styles/scss/settings.scss:src/bp-core/admin/bb-settings/readylaunch/build/styles/settings.css"
 	},
 	"engines": {
 		"node": ">=14.15.0"
 	},
 	"license": "GPL-2.0-or-later",
 	"version": "3.1.0",
-	"BBVersion": "2.8.60"
+	"BBVersion": "2.9.30"
 }

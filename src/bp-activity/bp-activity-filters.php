@@ -199,6 +199,9 @@ add_action( 'bp_activity_after_save', 'bb_clear_activity_parent_cache' );
 add_action( 'bp_activity_after_delete', 'bb_clear_activity_comment_parent_cache' );
 add_action( 'bp_activity_after_save', 'bb_clear_activity_comment_parent_cache' );
 add_action( 'bp_activity_after_delete', 'bb_clear_activity_all_comment_parent_caches' );
+add_action( 'bp_init', 'bb_load_activity_topics_manager' );
+
+add_action( 'bp_activity_after_save', 'bb_activity_save_topic_data', 2, 1 );
 
 /** Functions *****************************************************************/
 
@@ -937,6 +940,11 @@ function bp_activity_heartbeat_last_recorded( $response = array(), $data = array
 
 	if ( ! empty( $data['bp_activity_last_recorded_search_terms'] ) && empty( $activity_latest_args['search_terms'] ) ) {
 		$activity_latest_args['search_terms'] = addslashes( $data['bp_activity_last_recorded_search_terms'] );
+	}
+
+	// Add topic id to fetch activity by topic.
+	if ( ! empty( $data['bp_heartbeat']['topic_id'] ) && empty( $activity_latest_args['topic_id'] ) ) {
+		$activity_latest_args['topic_id'] = $data['bp_heartbeat']['topic_id'];
 	}
 
 	$newest_activities      = array();
@@ -3603,7 +3611,6 @@ add_action( 'bp_start_following', 'bb_send_email_to_follower' );
  * @param int    $activity_id ID of the activity item being updated.
  */
 function bb_activity_at_name_send_emails( $content, $user_id, $activity_id ) {
-	add_filter( 'bp_activity_at_name_do_notifications', '__return_true' );
 	$activity = new BP_Activity_Activity( $activity_id );
 	bp_activity_at_name_send_emails( $activity );
 }
@@ -3619,7 +3626,6 @@ function bb_activity_at_name_send_emails( $content, $user_id, $activity_id ) {
  * @param bool   $activity_id Whether or not the activity recording succeeded.
  */
 function bb_group_activity_at_name_send_emails( $content, $user_id, $group_id, $activity_id ) {
-	add_filter( 'bp_activity_at_name_do_notifications', '__return_true' );
 	$activity = new BP_Activity_Activity( $activity_id );
 	bp_activity_at_name_send_emails( $activity );
 }
@@ -3956,4 +3962,66 @@ function bb_clear_activity_all_comment_parent_caches( $activities ) {
 			}
 		}
 	}
+}
+
+/**
+ * Initialize the Activity Topics Manager.
+ * This ensures we only load the manager when needed.
+ *
+ * @since BuddyBoss 2.8.80
+ *
+ * @return void True if the activity topics manager is loaded, false otherwise.
+ */
+function bb_load_activity_topics_manager() {
+	// Only load if activity topics are enabled.
+	if ( ! bb_is_enabled_activity_topics() ) {
+		return;
+	}
+
+	bb_activity_topics_manager_instance();
+}
+
+/**
+ * Save topic data for the activity.
+ *
+ * @since BuddyBoss 2.8.80
+ *
+ * @param object $activity The activity object.
+ *
+ * @return void
+ */
+function bb_activity_save_topic_data( $activity ) {
+
+	if ( ! bb_is_enabled_activity_topics() ) {
+		return;
+	}
+
+	if ( ! isset( $_POST['topic_id'] ) ) {
+		return;
+	}
+
+	if ( ! in_array( $activity->component, array( 'groups', 'activity' ), true ) ) {
+		return;
+	}
+
+	if ( 'activity_update' !== $activity->type ) {
+		return;
+	}
+
+	$topic_id = intval( $_POST['topic_id'] );
+	if ( bb_is_activity_topic_required() && empty( $topic_id ) ) {
+		return;
+	}
+
+	$item_id = isset( $_POST['group_id'] ) ? intval( $_POST['group_id'] ) : 0;
+
+	// Add/update the activity topic relationship.
+	bb_activity_topics_manager_instance()->bb_add_activity_topic_relationship(
+		array(
+			'topic_id'    => $topic_id,
+			'activity_id' => $activity->id,
+			'component'   => $activity->component,
+			'item_id'     => $item_id,
+		)
+	);
 }
