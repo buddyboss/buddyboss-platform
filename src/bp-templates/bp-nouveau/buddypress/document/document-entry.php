@@ -259,7 +259,7 @@ id="div-listing-<?php echo esc_attr( $document_id ); ?>">
 		<?php
 		if ( $show ) {
 			?>
-			<a href="#" class="media-folder_action__anchor" aria-label="<?php esc_html_e( 'More options', 'buddyboss' ); ?>"> <i class="bb-icon-f bb-icon-ellipsis-v"></i> </a>
+			<a href="#" class="media-folder_action__anchor" aria-label="<?php esc_attr_e( 'More options', 'buddyboss' ); ?>"> <i class="bb-icon-f bb-icon-ellipsis-v"></i> </a>
 			<div class="media-folder_action__list bb_more_dropdown">
 				<?php bp_get_template_part( 'common/more-options-view' ); ?>
 				<ul>

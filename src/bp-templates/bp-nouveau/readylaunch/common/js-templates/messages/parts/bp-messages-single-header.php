@@ -316,7 +316,7 @@
 			}
 			?>
 			<div class="bb-rl-messages-info">
-				<a href="#" class="message_action__info" aria-label="<?php esc_html_e( 'Info', 'buddyboss' ); ?>">
+				<a href="#" class="message_action__info" aria-label="<?php esc_attr_e( 'Info', 'buddyboss' ); ?>">
 					<i class="bb-icons-rl-info"></i>
 				</a>
 			</div>

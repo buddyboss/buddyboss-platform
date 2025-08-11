@@ -218,7 +218,7 @@ function bb_block_render_readylaunch_header_block( $attributes = array() ) {
 	?>
 	<header id="masthead" class="bb-rl-header bb-rl-header-block <?php echo esc_attr( $dark_mode_class . ' ' . $align_class ); ?>">
 		<div class="bb-rl-container bb-rl-header-container">
-			<a href="#" class="bb-rl-left-panel-mobile" aria-label="<?php esc_html_e( 'Open left panel', 'buddyboss' ); ?>"><i class="bb-icons-rl-list"></i></a>
+			<a href="#" class="bb-rl-left-panel-mobile" aria-label="<?php esc_attr_e( 'Open left panel', 'buddyboss' ); ?>"><i class="bb-icons-rl-list"></i></a>
 			<?php
 			bp_get_template_part( 'header/site-logo' );
 			wp_nav_menu(

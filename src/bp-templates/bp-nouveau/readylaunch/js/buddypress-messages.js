@@ -4066,19 +4066,19 @@ window.bp = window.bp || {};
 					// Add class to dropdown
 					$('.select2-dropdown').addClass('bb-select-dropdown bb-compose-input');
 					
-					// Add aria-label to search field for accessibility
-					setTimeout(function() {
-						$('.select2-search__field').attr('aria-label', BP_Nouveau.messages.i18n.search_recipients);
+					// Add aria-label to search field for accessibility.
+					setTimeout(function () {
+						$( '.select2-search__field' ).attr( 'aria-label', BP_Nouveau.messages.i18n.search_recipients );
 					}, 0);
 				});
 
 				// Add class to container immediately after initialization
 				$input.next('.select2-container').addClass('bb-select-container');
 				
-				// Add aria-label to search field after initialization (for initial load)
-				setTimeout(function() {
-					$('.select2-search__field').attr('aria-label', BP_Nouveau.messages.i18n.search_recipients);
-				}, 100);
+				// Add aria-label to search field after initialization (for initial load).
+				setTimeout( function () {
+					$( '.select2-search__field' ).attr( 'aria-label', BP_Nouveau.messages.i18n.search_recipients );
+				}, 100 );
 
 				// Add element into the Arrdata array.
 				$input.on(

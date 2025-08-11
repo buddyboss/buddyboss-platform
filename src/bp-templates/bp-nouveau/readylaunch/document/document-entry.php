@@ -252,7 +252,7 @@ id="div-listing-<?php echo esc_attr( $document_id ); ?>">
 		<?php
 		if ( $show ) {
 			?>
-			<a href="#" class="media-folder_action__anchor bb_more_options_action" aria-label="<?php esc_html_e( 'More actions', 'buddyboss' ); ?>">
+			<a href="#" class="media-folder_action__anchor bb_more_options_action" aria-label="<?php esc_attr_e( 'More actions', 'buddyboss' ); ?>">
 				<i class="bb-icons-rl-dots-three"></i>
 			</a>
 			<div class="media-folder_action__list bb_more_dropdown bb_more_options_list">

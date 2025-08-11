@@ -20,7 +20,7 @@ defined( 'ABSPATH' ) || exit;
 		<h3 class="bb-rl-right-panel_title">
 			<?php esc_html_e( 'About', 'buddyboss' ); ?>
 		</h3>
-		<a href="#" class="message_action__close_info" aria-label="<?php esc_html_e( 'Close', 'buddyboss' ); ?>">
+		<a href="#" class="message_action__close_info" aria-label="<?php esc_attr_e( 'Close', 'buddyboss' ); ?>">
 			<i class="bb-icons-rl-x"></i>
 		</a>
 	</div>

@@ -541,7 +541,7 @@ class BB_Readylaunch_Memberpress_Courses_Helper {
 									<input type="text" name="s" class="form-input"
 											placeholder="<?php esc_html_e( 'Find a course', 'buddyboss' ); ?>"
 											value="<?php echo esc_attr( $search ); ?>">
-									<button class="btn input-group-btn" aria-label="<?php esc_html_e( 'Find a course', 'buddyboss' ); ?>"><i class="bb-icons-rl-magnifying-glass"></i></button>
+									<button class="btn input-group-btn" aria-label="<?php esc_attr_e( 'Find a course', 'buddyboss' ); ?>"><i class="bb-icons-rl-magnifying-glass"></i></button>
 								</div>
 							</form>
 

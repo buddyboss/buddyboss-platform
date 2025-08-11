@@ -63,7 +63,7 @@ class BP_Core_Recently_Active_Widget extends WP_Widget {
 		 */
 		$title = apply_filters( 'widget_title', $settings['title'], $settings, $this->id_base );
 
-		$refresh_recent_users = '<a href="" class="bs-widget-reload bs-heartbeat-reload hide" aria-label="' . esc_html__( 'Reload', 'buddyboss' ) . '"><i class="bb-icon-spin6"></i></a>';
+		$refresh_recent_users = '<a href="" class="bs-widget-reload bs-heartbeat-reload hide" aria-label="' . esc_attr__( 'Reload', 'buddyboss' ) . '"><i class="bb-icon-spin6"></i></a>';
 
 		echo $args['before_widget'];
 		echo $args['before_title'] . $title . $refresh_recent_users . $args['after_title'];
