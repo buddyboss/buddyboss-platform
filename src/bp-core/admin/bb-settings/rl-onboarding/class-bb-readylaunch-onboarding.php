@@ -883,10 +883,15 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 		}
 
 		if (
-			! empty( $final_settings['bb_rl_member_profile_sidebars'] ) &&
-			in_array( 'my_network', $final_settings['bb_rl_member_profile_sidebars'], true )
+			! empty( $final_settings['bb_rl_member_profile_sidebars'] )
 		) {
-			$component_map[] = 'activity';
+			if ( in_array( 'my_network', $final_settings['bb_rl_member_profile_sidebars'], true ) ) {
+				$component_map[] = 'activity';
+			}
+
+			if ( in_array( 'connections', $final_settings['bb_rl_member_profile_sidebars'], true ) ) {
+				$component_map[] = 'friends';
+			}
 
 			bp_update_option( '_bp_enable_activity_follow', true );
 		}
