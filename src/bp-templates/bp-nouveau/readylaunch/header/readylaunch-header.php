@@ -110,7 +110,7 @@ bp_get_template_part( 'sidebar/left-sidebar' );
 							$display_name   = function_exists( 'bp_core_get_user_displayname' ) ? bp_core_get_user_displayname( $logged_in_user->ID ) : $logged_in_user->display_name;
 							?>
 
-							<a class="user-link" href="<?php echo esc_url( $user_link ); ?>" aria-label="<?php esc_html_e( $display_name ); ?>">
+							<a class="user-link" href="<?php echo esc_url( $user_link ); ?>" aria-label="<?php echo esc_attr( $display_name ); ?>">
 								<?php echo get_avatar( get_current_user_id(), 100 ); ?>
 							</a>
 							<?php if ( is_user_logged_in() ) { ?>
