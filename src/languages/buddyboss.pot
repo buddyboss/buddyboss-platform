@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 2.9.30\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2025-08-11 06:12:21+00:00\n"
+"POT-Creation-Date: 2025-08-11 07:13:47+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -272,7 +272,6 @@ msgstr ""
 #: bp-search/bp-search-functions.php:376
 #: bp-search/bp-search-settings.php:952
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:13344
 msgid "Activity"
 msgstr ""
 
@@ -399,7 +398,6 @@ msgstr ""
 #: bp-activity/bp-activity-admin.php:883
 #: bp-core/admin/bb-settings/rl-onboarding/class-bb-readylaunch-onboarding.php:248
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:13797
 msgid "Link"
 msgstr ""
 
@@ -564,7 +562,6 @@ msgstr ""
 #: bp-xprofile/classes/class-bp-xprofile-component.php:393
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
 #: bp-core/admin/bb-settings/rl-onboarding/build/rl-onboarding.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:12464
 msgid "Edit"
 msgstr ""
 
@@ -761,7 +758,6 @@ msgstr ""
 #: bp-xprofile/classes/class-bp-xprofile-group.php:1000
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
 #: bp-core/admin/bb-settings/rl-onboarding/build/rl-onboarding.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:12586
 msgid "Cancel"
 msgstr ""
 
@@ -849,8 +845,6 @@ msgstr ""
 #: bp-core/admin/bb-settings/rl-onboarding/class-bb-readylaunch-onboarding.php:1085
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:792
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:12667
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:13578
 msgid "Activity Feed"
 msgstr ""
 
@@ -1486,7 +1480,6 @@ msgstr ""
 #: bp-xprofile/classes/class-bp-xprofile-field-type.php:417
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
 #: bp-core/admin/bb-settings/rl-onboarding/build/rl-onboarding.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:12471
 msgid "Delete"
 msgstr ""
 
@@ -2071,7 +2064,6 @@ msgstr ""
 #: bp-templates/bp-nouveau/readylaunch/forums/content-archive-topic.php:51
 #: bp-video/classes/class-bp-video.php:739
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:12696
 msgid "Forums"
 msgstr ""
 
@@ -3916,15 +3908,12 @@ msgstr ""
 
 #: bp-core/admin/bb-settings/rl-onboarding/class-bb-readylaunch-onboarding.php:78
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:13313
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:13318
 msgid "Site Name"
 msgstr ""
 
 #: bp-core/admin/bb-settings/rl-onboarding/class-bb-readylaunch-onboarding.php:79
 #: bp-core/admin/bb-settings/rl-onboarding/class-bb-readylaunch-onboarding.php:130
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:13327
 msgid "This matches the WordPress Site Title. Updating it here will update it site-wide."
 msgstr ""
 
@@ -3938,7 +3927,6 @@ msgstr ""
 
 #: bp-core/admin/bb-settings/rl-onboarding/class-bb-readylaunch-onboarding.php:92
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:13420
 msgid "Branding"
 msgstr ""
 
@@ -3956,7 +3944,6 @@ msgstr ""
 #: bp-forums/admin/settings.php:1652
 #: bp-search/bp-search-functions.php:362
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:13517
 msgid "Pages"
 msgstr ""
 
@@ -3990,25 +3977,21 @@ msgstr ""
 
 #: bp-core/admin/bb-settings/rl-onboarding/class-bb-readylaunch-onboarding.php:140
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:13435
 msgid "Light Mode"
 msgstr ""
 
 #: bp-core/admin/bb-settings/rl-onboarding/class-bb-readylaunch-onboarding.php:141
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:12741
 msgid "The site will be shown in light mode."
 msgstr ""
 
 #: bp-core/admin/bb-settings/rl-onboarding/class-bb-readylaunch-onboarding.php:145
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:13436
 msgid "Dark Mode"
 msgstr ""
 
 #: bp-core/admin/bb-settings/rl-onboarding/class-bb-readylaunch-onboarding.php:146
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:12742
 msgid "The site will be shown in dark mode."
 msgstr ""
 
@@ -4022,13 +4005,11 @@ msgstr ""
 
 #: bp-core/admin/bb-settings/rl-onboarding/class-bb-readylaunch-onboarding.php:161
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:13459
 msgid "Logo (Light mode)"
 msgstr ""
 
 #: bp-core/admin/bb-settings/rl-onboarding/class-bb-readylaunch-onboarding.php:171
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:13468
 msgid "Logo (Dark mode)"
 msgstr ""
 
@@ -4063,33 +4044,27 @@ msgstr ""
 #: bp-core/admin/bb-settings/rl-onboarding/class-bb-readylaunch-onboarding.php:258
 #: bp-core/admin/bb-settings/rl-onboarding/class-bb-readylaunch-onboarding.php:281
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:13589
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:13636
 msgid "Complete Profile"
 msgstr ""
 
 #: bp-core/admin/bb-settings/rl-onboarding/class-bb-readylaunch-onboarding.php:262
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:13596
 msgid "Latest Updates"
 msgstr ""
 
 #: bp-core/admin/bb-settings/rl-onboarding/class-bb-readylaunch-onboarding.php:266
 #: bp-core/classes/class-bb-recent-blog-posts-widget.php:28
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:13603
 msgid "Recent Blog Posts"
 msgstr ""
 
 #: bp-core/admin/bb-settings/rl-onboarding/class-bb-readylaunch-onboarding.php:270
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:13610
 msgid "Active Members"
 msgstr ""
 
 #: bp-core/admin/bb-settings/rl-onboarding/class-bb-readylaunch-onboarding.php:278
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:13623
 msgid "Member Profile"
 msgstr ""
 
@@ -4115,7 +4090,6 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/customizer.php:196
 #: bp-video/classes/class-bp-video.php:735
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:13647
 msgid "Connections"
 msgstr ""
 
@@ -4148,14 +4122,12 @@ msgstr ""
 #: bp-templates/bp-nouveau/readylaunch/common/js-templates/activity/parts/bp-activity-post-case-privacy.php:23
 #: bp-templates/bp-nouveau/readylaunch/common/js-templates/activity/parts/bp-activity-post-form-privacy.php:54
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:13679
 msgid "Group"
 msgstr ""
 
 #: bp-core/admin/bb-settings/rl-onboarding/class-bb-readylaunch-onboarding.php:300
 #: bp-core/classes/class-bb-group-about-widget.php:27
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:13692
 msgid "About Group"
 msgstr ""
 
@@ -4172,7 +4144,6 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/groups/single/messages/private-message.php:70
 #: bp-video/classes/class-bp-video.php:728
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:13699
 msgid "Group Members"
 msgstr ""
 
@@ -4232,7 +4203,6 @@ msgstr ""
 
 #: bp-core/admin/bb-settings/rl-onboarding/class-bb-readylaunch-onboarding.php:1050
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:13532
 msgid "Login & Registration"
 msgstr ""
 
@@ -4250,8 +4220,6 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/groups/classes.php:346
 #: bp-templates/bp-nouveau/readylaunch/learndash/ld30/archive-course-header.php:27
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:12651
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:13541
 msgid "Courses"
 msgstr ""
 
@@ -4295,7 +4263,6 @@ msgstr ""
 #: bp-templates/bp-nouveau/readylaunch/common/js-templates/messages/parts/bp-messages-single-header.php:346
 #: bp-templates/bp-nouveau/readylaunch/members/index.php:30
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:12646
 msgid "Members"
 msgstr ""
 
@@ -4335,8 +4302,6 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/groups/functions.php:123
 #: bp-templates/bp-nouveau/readylaunch/groups/index.php:25
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:12685
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:13358
 msgid "Groups"
 msgstr ""
 
@@ -4365,7 +4330,6 @@ msgstr ""
 #: bp-templates/bp-nouveau/readylaunch/header/messages-dropdown.php:30
 #: bp-templates/bp-nouveau/readylaunch/header/readylaunch-header.php:168
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:12714
 msgid "Messages"
 msgstr ""
 
@@ -4389,7 +4353,6 @@ msgstr ""
 #: bp-templates/bp-nouveau/readylaunch/header/readylaunch-header.php:182
 #: bp-templates/bp-nouveau/readylaunch/members/single/notifications.php:19
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:12725
 msgid "Notifications"
 msgstr ""
 
@@ -4556,7 +4519,6 @@ msgstr ""
 #: bp-templates/bp-nouveau/readylaunch/groups/single/admin/search-manage-members.php:90
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
 #: bp-core/admin/bb-settings/rl-onboarding/build/rl-onboarding.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:13149
 msgid "Apply"
 msgstr ""
 
@@ -4617,7 +4579,6 @@ msgstr ""
 #: bp-groups/classes/class-bp-groups-component.php:917
 #: bp-integrations/compatibility/bp-compatibility-integration.php:80
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:13400
 msgid "Settings"
 msgstr ""
 
@@ -5609,7 +5570,6 @@ msgstr ""
 #: bp-groups/bp-groups-admin.php:1512
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
 #: bp-core/admin/bb-settings/rl-onboarding/build/rl-onboarding.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:13074
 msgid "Remove"
 msgstr ""
 
@@ -7546,7 +7506,6 @@ msgstr ""
 #: bp-media/bp-media-filters.php:1407
 #: bp-templates/bp-nouveau/readylaunch/common/js-templates/messages/parts/bp-messages-right-panel.php:179
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:13365
 msgid "Media"
 msgstr ""
 
@@ -7555,7 +7514,6 @@ msgstr ""
 #: bp-moderation/bp-moderation-admin.php:73
 #: bp-moderation/bp-moderation-admin.php:74
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:13372
 msgid "Moderation"
 msgstr ""
 
@@ -7597,7 +7555,6 @@ msgstr ""
 #: bp-xprofile/bp-xprofile-admin.php:29
 #: bp-xprofile/bp-xprofile-admin.php:30
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:13351
 msgid "Profiles"
 msgstr ""
 
@@ -8857,7 +8814,6 @@ msgstr ""
 
 #: bp-core/bp-core-customizer-email.php:141
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:13729
 msgid "Header"
 msgstr ""
 
@@ -15941,7 +15897,6 @@ msgstr ""
 #: bp-templates/bp-nouveau/readylaunch/video/single-album.php:43
 #: bp-templates/bp-nouveau/readylaunch/video/video-create-album.php:20
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:12563
 msgid "Title"
 msgstr ""
 
@@ -16471,8 +16426,6 @@ msgstr ""
 
 #: bp-forums/admin/settings.php:1667
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:13721
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:14054
 msgid "Menus"
 msgstr ""
 
@@ -21686,7 +21639,6 @@ msgstr ""
 #: bp-xprofile/classes/class-bp-xprofile-group.php:881
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
 #: bp-core/admin/bb-settings/rl-onboarding/build/rl-onboarding.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:12592
 msgid "Save"
 msgstr ""
 
@@ -38513,134 +38465,103 @@ msgid "%1$s wrote a new post, %2$s"
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:14039
 msgid "Activation Settings"
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:14044
 msgid "Styles"
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:14049
 msgid "Pages & Sidebars"
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:12556
 msgid "Edit Link"
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
 #: bp-core/admin/bb-settings/rl-onboarding/build/rl-onboarding.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:12556
 msgid "Add Link"
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:12567
 msgid "Type a title"
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:12572
 msgid "URL"
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:12576
 msgid "Paste link"
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:12515
 msgid "Title is required"
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:12521
 msgid "Please enter a valid URL"
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:12519
 msgid "URL is required"
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:12384
 msgid "Contents"
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:12743
 msgid "Users will be able switch between the modes."
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:12821
 msgid "Settings saved."
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:12827
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:12834
 msgid "Something went wrong. Please try again"
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:12865
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:12877
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:12890
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:12953
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:12985
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:13000
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:13178
 msgid "Saving changes..."
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
 #: bp-core/admin/bb-settings/rl-onboarding/build/rl-onboarding.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:13024
 msgid "Select or Upload Media"
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
 #: bp-core/admin/bb-settings/rl-onboarding/build/rl-onboarding.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:13026
 msgid "Use this media"
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
 #: bp-core/admin/bb-settings/rl-onboarding/build/rl-onboarding.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:13067
 msgid "Replace"
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
 #: bp-core/admin/bb-settings/rl-onboarding/build/rl-onboarding.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:13121
 msgid "Select color"
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:13863
 msgid "Welcome to ReadyLaunch"
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:13865
 msgid "We’re excited to reveal the brand new ReadyLaunch system; a page template design allowing you to use BuddyBoss Platform with ANY Theme. It’s easy to get started; just enable ReadyLaunch and configure the next 3 tabs - Style, Sidebars and Menus."
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:13868
 msgid "This is not a replacement for BuddyBoss Theme, but an alternative solution if you’re looking for an out-the-box community platform with a focus on core functionality without third party customisation. See the video for full details and share your experience on our new roadmap."
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:13877
 msgid "Leave Feedback"
 msgstr ""
 
@@ -38649,250 +38570,200 @@ msgid "Setup Wizard"
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:13926
 msgid "Error loading help content."
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:13268
 msgid "Loading settings..."
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:13280
 msgid "ReadyLaunch is disabled"
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:13281
 msgid "To enable ReadyLaunch and access its features, go to the Activation menu."
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:13286
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:13300
 msgid "Enable ReadyLaunch"
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:13301
 msgid "Turn on ReadyLaunch to override your theme styles on BuddyBoss pages."
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:13319
 msgid "Displays in the browser title, search engine results and site header."
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:13323
 msgid "Type your community/site title"
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
 #: bp-core/admin/bb-settings/rl-onboarding/build/rl-onboarding.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:13335
 msgid "Platform Settings"
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:13345
 msgid "Control activity streams and user engagement settings."
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:13352
 msgid "Manage profile fields, visibility, and user profile options."
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:13359
 msgid "Configure group creation, privacy, and member roles."
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:13366
 msgid "Enable or restrict user-uploaded media across the platform."
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:13373
 msgid "Set rules and tools for reporting and content moderation."
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:13415
 msgid "Style Settings"
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:13416
 msgid "Customize the appearance of your community to match your brand colors and logo."
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:13427
 msgid "Appearance"
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:13428
 msgid "Choose whether you wish to support light or dark mode."
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:13437
 msgid "User Preference"
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:13453
 msgid "Logo"
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:13454
 msgid "Upload your logo which appears along the top site header."
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:13462
 msgid "Recommended to use a dark-colored logo, 280x80 px, in JPG or PNG format."
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:13471
 msgid "Recommended to use a light-colored logo, 280x80 px, in JPG or PNG format."
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:13481
 msgid "Theme Color"
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:13482
 msgid "Select the primary color of your community. This is used across buttons, links and secondary elements."
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:13488
 msgid "Primary Color (Light Mode)"
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:13497
 msgid "Primary Color (Dark Mode)"
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:13512
 msgid "Pages and Widgets Settings"
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:13513
 msgid "Enable or disable page styles, and customize sidebar widgets for different sections of your community."
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:13524
 msgid "Enable Pages"
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:13525
 msgid "Apply ReadyLaunch styles to the following pages"
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:13554
 msgid "No pages found"
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:13556
 msgid "Enable the corresponding pages from your backend settings to manage them here with ReadyLaunch styles."
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:13567
 msgid "Sidebar Widgets"
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:13580
 msgid "Enable or disable widgets to appear on the <a>activity feed</a>."
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:13626
 msgid "Enable or disable widgets to appear on the <a>member profile</a>."
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:13662
 msgid "My Network (Follow, Followers)"
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:13682
 msgid "Enable or disable widgets to appear on the <a>group single</a> page."
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:13715
 msgid "Menu Settings"
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:13716
 msgid "Configure header, sidebar, and custom link menus to control navigation across your community."
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:13730
 msgid "Choose a menu which displays in the top navigation bar"
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:13736
 msgid "Select Menu"
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:13746
 msgid "Update your header menu from Appearance > <a>Menus</a>. There you will find a Display Option of ReadyLaunch"
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:13758
 msgid "Side"
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:13759
 msgid "Enable and re-order menu items shown on the left sidebar"
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:13798
 msgid "Add and re-order custom links which are shown on the left sidebar"
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
 #: bp-core/admin/bb-settings/rl-onboarding/build/rl-onboarding.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:13831
 msgid "Add New Link"
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:13993
 msgid "Loading help content..."
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:14026
 msgid "No help content available."
 msgstr ""
 

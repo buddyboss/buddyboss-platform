@@ -715,6 +715,7 @@
       display: flex;
       gap: 12px;
       margin-top: 8px;
+	  flex-wrap: wrap;
     }
 
     .bb-rl-setup-wizard-btn,
@@ -730,6 +731,7 @@
       transition: background 0.2s, color 0.2s;
       box-shadow: none;
 	  height: auto;
+	  white-space: nowrap;
 
 	  i {
 		font-size: 20px;
