@@ -449,11 +449,9 @@ function bp_ps_gender_setup( $fields ) {
 
 		$options = array();
 		$rows    = $field->get_children();
-		if ( isset( $field->id ) && ! empty( $field->id ) ) {
-			$order = bp_xprofile_get_meta( $field->id, 'field', 'gender-option-order' );
-		} else {
-			$order = array();
-		}
+		$order   = bp_xprofile_get_meta( $field->id, 'field', 'gender-option-order' );
+		$order   = ! empty( $order ) ? $order : array();
+
 		if ( is_array( $rows ) ) {
 			foreach ( $rows as $k => $row ) {
 
