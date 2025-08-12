@@ -230,7 +230,7 @@ if ( ! class_exists( 'Bp_Search_bbPress_Replies' ) ) :
 		/**
 		 * Get all nested child forum ids.
 		 *
-		 * @since BuddyBoss 2.9.30
+		 * @since BuddyBoss [BBVERSION]
 		 *
 		 * @uses bbp_get_forum_post_type() Get forum post type.
 		 *
