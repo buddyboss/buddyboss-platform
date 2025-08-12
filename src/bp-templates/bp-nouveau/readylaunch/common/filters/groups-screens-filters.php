@@ -33,7 +33,7 @@ if ( ! empty( $avail_sorting_options ) && in_array( 1, $avail_sorting_options, t
 		<?php $sorting_labels = bb_get_activity_sorting_options_labels(); ?>
 		<button class="subnav-filters-opener" aria-expanded="false" aria-controls="bb-subnav-filter-by">
 			<span class="selected"><?php echo esc_html( strtolower( $sorting_labels[ $default_selected ] ) ); ?></span>
-			<i class="bb-icon-l bb-icon-angle-down"></i>
+			<i class="bb-icons-rl-caret-down"></i>
 		</button>
 
 		<div class="subnav-filters-modal" id="bb-subnav-filter-by">
