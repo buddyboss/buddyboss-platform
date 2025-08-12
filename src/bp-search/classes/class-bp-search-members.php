@@ -1,6 +1,6 @@
 <?php
 /**
- * @todo    add description
+ * @todo    add description.
  *
  * @package BuddyBoss\Search
  * @since   BuddyBoss 1.0.0
