@@ -1,6 +1,6 @@
 <?php
 /**
- * @todo    add description.
+ * Class for searching members.
  *
  * @package BuddyBoss\Search
  * @since   BuddyBoss 1.0.0
@@ -18,11 +18,29 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 		private $type = 'members';
 
 		/**
-		 * Date search patterns registry.
+		 * Maximum input length for search term.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
-		 * @var array
+		 * @var int
+		 */
+		private static $max_cache_size = 100;
+
+		/**
+		 * Date search patterns registry.
+		 *
+		 * Contains regex patterns for parsing various date formats.
+		 * - standard_formats: Numeric date formats (YYYY-MM-DD, MM/DD/YYYY, etc.)
+		 * - month_name_formats: Text-based formats with month names.
+		 * - time_elapsed_formats: Relative time expressions (5 years ago, etc.).
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @var array {
+		 *     @type array $standard_formats     Numeric date format patterns.
+		 *     @type array $month_name_formats   Month name format patterns.
+		 *     @type array $time_elapsed_formats Relative time format patterns.
+		 * }
 		 */
 		private $date_patterns = array(
 			'standard_formats'     => array(
@@ -994,7 +1012,18 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 		private function bb_create_month_range( $year, $month ) {
 			$month_padded = $this->bb_format_number_with_leading_zero( $month );
 			$start_date   = $this->bb_format_date_string( $year, $month, 1 );
-			$end_date     = $this->bb_format_date_string( $year, $month, wp_date( 't', strtotime( $year . '-' . $month_padded . '-01' ) ) );
+			$timestamp    = strtotime( $year . '-' . $month_padded . '-01' );
+
+			if ( false === $timestamp ) {
+				return array(
+					'start' => $start_date,
+					'end'   => $start_date,
+				);
+			}
+
+			$last_day = wp_date( 't', $timestamp );
+			$end_date = $this->bb_format_date_string( $year, $month, $last_day );
+
 			return array(
 				'start' => $start_date,
 				'end'   => $end_date,
@@ -1233,25 +1262,25 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 				return '';
 			}
 
-			$field_ids_imploded = implode( ',', $field_ids );
-			$conditions         = array();
+			$field_ids_sanitized    = array_map( 'intval', $field_ids );
+			$field_ids_placeholders = implode( ',', array_fill( 0, count( $field_ids_sanitized ), '%d' ) );
+			$conditions             = array();
 
 			foreach ( $date_values as $date_value ) {
 				switch ( $date_value['type'] ) {
 					case 'exact':
 						// Exact date search.
 						$conditions[] = $wpdb->prepare(
-							"field_id IN ({$field_ids_imploded}) AND DATE(value) = %s",
-							$date_value['value']
+							"field_id IN ({$field_ids_placeholders}) AND DATE(value) = %s",
+							array_merge( $field_ids_sanitized, array( $date_value['value'] ) )
 						);
 						break;
 
 					case 'range':
 						// Date range search.
 						$conditions[] = $wpdb->prepare(
-							"field_id IN ({$field_ids_imploded}) AND DATE(value) BETWEEN %s AND %s",
-							$date_value['start'],
-							$date_value['end']
+							"field_id IN ({$field_ids_placeholders}) AND DATE(value) BETWEEN %s AND %s",
+							array_merge( $field_ids_sanitized, array( $date_value['start'], $date_value['end'] ) )
 						);
 						break;
 
@@ -1260,14 +1289,14 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 						if ( false !== strpos( $date_value['pattern'], '-' ) ) {
 							// Day/month pattern (e.g., "06-18").
 							$conditions[] = $wpdb->prepare(
-								"field_id IN ({$field_ids_imploded}) AND DATE_FORMAT(DATE(value), '%%m-%%d') = %s",
-								$date_value['pattern']
+								"field_id IN ({$field_ids_placeholders}) AND DATE_FORMAT(DATE(value), '%%m-%%d') = %s",
+								array_merge( $field_ids_sanitized, array( $date_value['pattern'] ) )
 							);
 						} else {
 							// Month-only pattern (e.g., "06").
 							$conditions[] = $wpdb->prepare(
-								"field_id IN ({$field_ids_imploded}) AND DATE_FORMAT(DATE(value), '%%m') = %s",
-								$date_value['pattern']
+								"field_id IN ({$field_ids_placeholders}) AND DATE_FORMAT(DATE(value), '%%m') = %s",
+								array_merge( $field_ids_sanitized, array( $date_value['pattern'] ) )
 							);
 						}
 						break;
@@ -1406,12 +1435,27 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 		 * @return string The search term in English.
 		 */
 		private function bb_translate_time_elapsed_to_english( $search_term ) {
+			$search_term = $this->bb_translate_time_units( $search_term );
+			$search_term = $this->bb_translate_direction_words( $search_term );
+			$search_term = $this->bb_add_missing_articles( $search_term );
+
+			return $search_term;
+		}
+
+		/**
+		 * Translate time units in the search term to English.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $search_term The search term to process.
+		 *
+		 * @return string The processed search term with translated time units.
+		 */
+		private function bb_translate_time_units( $search_term ) {
 			// Static cache for translations to avoid repeated function calls.
-			// This improves performance by caching WordPress translation results.
 			static $translation_cache = array();
 
 			// Extract the amount from the search term to get the correct plural form.
-			// For example, "since 32 years" → $actual_amount = 32.
 			if ( preg_match( '/(\d+)/', $search_term, $matches ) ) {
 				$actual_amount = intval( $matches[1] );
 			} else {
@@ -1419,13 +1463,8 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 			}
 
 			// Define time units to translate.
-			// These are the base English time units we'll look for in translations.
-			// IMPORTANT: Process string formats BEFORE array formats to avoid conflicts.
-			// String formats are more specific and should be matched first.
 			$time_units = array(
 				// String formats (more specific) - process these FIRST
-				// Note: Only use string formats for singular cases (like "a year", "a day")
-				// For plural cases, use array formats to get proper plural handling.
 				'a year', // Process a year (singular only).
 				'sometime', // Process sometime.
 				'a week', // Process a week (singular only).
@@ -1434,7 +1473,6 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 				'a minute', // Process a minute (singular only).
 
 				// Array formats (more general) - process these AFTER string formats
-				// These handle both singular and plural cases properly.
 				array(
 					'singular' => 'year',
 					'plural'   => 'years',
@@ -1462,16 +1500,13 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 			);
 
 			// Translate all time units with caching.
-			// This loop processes each time unit (year, month, day) to find matches in the search term.
 			foreach ( $time_units as $unit ) {
 				// Handle both array items (with singular/plural) and string items (like 'sometime').
 				if ( is_array( $unit ) ) {
 					// Create a unique cache key for this time unit and amount.
-					// Example: "year_32" for 32 years.
 					$cache_key = $unit['singular'] . '_' . $actual_amount;
 
 					// Cache WordPress translations to avoid repeated function calls.
-					// This improves performance significantly for repeated searches.
 					if ( ! isset( $translation_cache[ $cache_key ] ) ) {
 						$translation_cache[ $cache_key ] = array(
 							// Get singular form translation (e.g., "one year" for "year").
@@ -1479,18 +1514,21 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 							// Get plural form translation (e.g., "two years" for "years").
 							'plural'   => _n( '%s ' . $unit['singular'], '%s ' . $unit['plural'], 2, 'buddyboss' ),
 						);
+
+						// Clean up cache if it exceeds the size limit.
+						if ( count( $translation_cache ) > self::$max_cache_size ) {
+							$translation_cache = array_slice( $translation_cache, -50, null, true );
+						}
 					}
 
 					// Get the cached translations for this time unit.
 					$translations = $translation_cache[ $cache_key ];
 
 					// Process this time unit in the search term.
-					// This will try to find and replace the time unit with its English equivalent.
 					$search_term = $this->bb_translate_elipsed_time_unit( $search_term, $unit['singular'], $unit['plural'], $translations, $actual_amount );
 				} else {
 					// Handle string items like 'sometime'.
 					// IMPORTANT: Only process string formats for singular cases (amount = 1)
-					// For plural cases, skip string formats and let array formats handle them
 					if ( 1 === $actual_amount ) {
 						$cache_key = $unit . '_' . $actual_amount;
 
@@ -1499,6 +1537,11 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 								'singular' => __( $unit, 'buddyboss' ),
 								'plural'   => __( $unit, 'buddyboss' ),
 							);
+
+							// Clean up cache if it exceeds the size limit.
+							if ( count( $translation_cache ) > self::$max_cache_size ) {
+								$translation_cache = array_slice( $translation_cache, -50, null, true );
+							}
 						}
 
 						$translations = $translation_cache[ $cache_key ];
@@ -1509,28 +1552,58 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 				}
 			}
 
+			return $search_term;
+		}
+
+		/**
+		 * Translate direction words in the search term to English.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $search_term The search term to process.
+		 *
+		 * @return string The processed search term with translated direction words.
+		 */
+		private function bb_translate_direction_words( $search_term ) {
+			// Static cache for translations to avoid repeated function calls.
+			static $translation_cache = array();
+
 			// Define direction words to translate.
-			// These are the direction indicators like "ago", "since", "from now".
 			$directions = array( 'ago', 'since', 'from now' );
 
 			// Translate all direction words with caching.
-			// This loop processes each direction word to find and replace them with English equivalents.
 			foreach ( $directions as $direction ) {
 				// Create a unique cache key for this direction word.
-				// Example: "direction_ago".
 				$cache_key = 'direction_' . $direction;
 
 				// Cache WordPress translations for direction words.
 				if ( ! isset( $translation_cache[ $cache_key ] ) ) {
 					// Get the translation for this direction word (e.g., "ago" for "ago").
 					$translation_cache[ $cache_key ] = __( '%s ' . $direction, 'buddyboss' );
+
+					// Clean up cache if it exceeds the size limit.
+					if ( count( $translation_cache ) > self::$max_cache_size ) {
+						$translation_cache = array_slice( $translation_cache, -25, null, true );
+					}
 				}
 
 				// Process this direction word in the search term.
-				// This will try to find and replace the direction word with its English equivalent.
 				$search_term = $this->bb_translate_elipsed_direction_word( $search_term, $direction, $translation_cache[ $cache_key ] );
 			}
 
+			return $search_term;
+		}
+
+		/**
+		 * Add missing articles for single time units.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $search_term The search term to process.
+		 *
+		 * @return string The processed search term with added articles where needed.
+		 */
+		private function bb_add_missing_articles( $search_term ) {
 			// Add "a" article for single time units if missing.
 			// This handles cases like "year ago" → "a year ago".
 			if ( preg_match( '/^([^\s]+)\s+(ago|from now)$/i', $search_term ) ) {
