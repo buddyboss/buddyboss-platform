@@ -54,7 +54,7 @@ if ( ! $has_nav || $nav_count <= 1 ) {
 
 					if ( bp_nouveau_nav_has_count() ) :
 						?>
-						<span class="count"><?php bp_nouveau_nav_count(); ?></span>
+						<span class="count bb-rl-heading-count"><?php bp_nouveau_nav_count(); ?></span>
 					<?php endif; ?>
 				</a>
 
