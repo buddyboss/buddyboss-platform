@@ -112,6 +112,8 @@ add_action( 'bp_after_group_body', 'bb_after_group_body_callback' );
 add_action( 'bp_before_subgroups_loop', 'bb_before_group_body_callback' );
 add_action( 'bp_after_subgroups_loop', 'bb_after_group_body_callback' );
 
+add_filter( 'bb_readylaunch_left_sidebar_middle_content', 'bb_readylaunch_middle_content_my_groups', 10, 1 );
+
 /**
  * Filter output of Group Description through WordPress's KSES API.
  *
@@ -201,7 +203,14 @@ function bp_groups_disable_at_mention_notification_for_non_public_groups( $send,
 		return $send;
 	}
 
-	if ( 'groups' === $activity->component && ! bp_user_can( $user_id, 'groups_access_group', array( 'group_id' => $activity->item_id ) ) ) {
+	if ( 'activity_update' === $activity->type ) {
+		$group_id = 'groups' === $activity->component ? $activity->item_id : 0;
+	} elseif ( 'activity_comment' === $activity->type ) {
+		$comment  = new BP_Activity_Activity( $activity->item_id );
+		$group_id = ! empty( $comment->component ) && 'groups' === $comment->component ? $comment->item_id : 0;
+	}
+
+	if ( $group_id && ! bp_user_can( $user_id, 'groups_access_group', array( 'group_id' => $group_id ) ) ) {
 		$send = false;
 	}
 
@@ -1096,6 +1105,9 @@ function bb_load_group_type_label_custom_css() {
 		}
 		wp_add_inline_style( 'bp-nouveau', $group_type_custom_css );
 	}
+
+	// load the group card template.
+	bb_group_card_template();
 }
 add_action( 'bp_enqueue_scripts', 'bb_load_group_type_label_custom_css', 12 );
 
@@ -1688,4 +1700,96 @@ function bb_add_subgroups_args_single_home( $args ) {
 	 * @param array $args Group args.
 	 */
 	return apply_filters( 'bb_add_subgroups_args_single_home', $args );
+}
+
+/**
+ * Add group hover card template.
+ *
+ * @since BuddyBoss 2.8.20
+ */
+function bb_group_card_template() {
+	bp_get_template_part( 'groups/group-card' );
+}
+
+/**
+ * Delete group activity topic when delete the group.
+ *
+ * @since BuddyBoss 2.8.80
+ *
+ * @param int $group_id ID of the group.
+ *
+ * @return bool|int True on success, false on failure.
+ */
+function bb_delete_group_activity_topic( $group_id ) {
+	global $wpdb;
+
+	$table_prefix = bp_core_get_table_prefix();
+	$deleted      = $wpdb->delete( // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+		$table_prefix . 'bb_topic_relationships',
+		array(
+			'item_id'   => $group_id,
+			'item_type' => 'groups',
+		),
+		array( '%d', '%s' )
+	);
+
+	if ( false === $deleted ) {
+		return false;
+	}
+
+	return true;
+}
+add_action( 'groups_delete_group', 'bb_delete_group_activity_topic' );
+
+/**
+ * Retrieves the groups the logged-in user is a member of and adds them to the provided arguments array.
+ *
+ * @since BuddyBoss 2.9.00
+ *
+ * @param array $args Arguments array to which the group data will be added.
+ *
+ * @return array Modified arguments array with the user's groups data.
+ */
+function bb_readylaunch_middle_content_my_groups( $args = array() ) {
+	$group_data = array(
+		'integration' => 'groups',
+	);
+
+	if ( $args['has_sidebar_data'] && $args['is_sidebar_enabled_for_groups'] ) {
+		$group_data['heading']    = __( 'My Groups', 'buddyboss' );
+		$group_data['error_text'] = __( 'There are no groups to display.', 'buddyboss' );
+
+		$user_id    = bp_loggedin_user_id();
+		$group_args = array(
+			'user_id'  => $user_id,
+			'per_page' => 6,
+		);
+		if ( ! empty( $user_id ) ) {
+			$count = groups_total_groups_for_user( $user_id );
+		} else {
+			$count = bp_get_total_group_count();
+		}
+
+		$groups = groups_get_groups( $group_args );
+		if ( ! empty( $groups['groups'] ) ) {
+			foreach ( $groups['groups'] as $group ) {
+				$group_id                         = $group->id;
+				$thumbnail_url                    = bp_get_group_avatar_url( $group );
+				$group_data['items'][ $group_id ] = array(
+					'title'     => $group->name,
+					'permalink' => bp_get_group_permalink( $group ),
+					'thumbnail' => '<img src="' . $thumbnail_url . '" alt="' . $group->name . '" class="avatar group--avatar avatar-200 photo" width="200" height="200"/>',
+				);
+			}
+
+			if ( $count > 6 ) {
+				$group_data['has_more_items'] = true;
+				$group_data['show_more_link'] = bp_get_groups_directory_permalink();
+			}
+		}
+	}
+
+	$args['groups'] = $group_data;
+
+	return $args;
 }

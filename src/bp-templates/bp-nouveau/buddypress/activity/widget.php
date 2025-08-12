@@ -13,12 +13,14 @@ if ( bp_has_activities( bp_nouveau_activity_widget_query() ) ) : ?>
 		<?php
 		while ( bp_activities() ) :
 			bp_the_activity();
+			$activity_user_id           = bp_get_activity_user_id();
+			$activity_user_display_name = bp_get_activity_member_display_name();
 			?>
 			<div class="activity-update">
 
 				<div class="update-item">
 					<cite>
-						<a href="<?php bp_activity_user_link(); ?>" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo esc_attr( bp_get_activity_member_display_name() ); ?>">
+						<a href="<?php bp_activity_user_link(); ?>" class="bp-tooltip" data-bp-tooltip-pos="up" <?php echo ! empty( $activity_user_display_name ) ? 'data-bp-tooltip="' . esc_attr( $activity_user_display_name ) . '"' : ''; ?> <?php echo ! empty( $activity_user_id ) ? 'data-bb-hp-profile="' . esc_attr( $activity_user_id ) . '"' : ''; ?>">
 							<?php
 							bp_activity_avatar(
 								array(

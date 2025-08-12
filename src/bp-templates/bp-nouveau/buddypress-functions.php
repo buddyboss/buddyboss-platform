@@ -445,11 +445,10 @@ class BP_Nouveau extends BP_Theme_Compat {
 					array(
 						'dependencies' => array(),
 						'version'      => $this->version,
-						'type'         => 'screen',
 					)
 				);
 
-				wp_enqueue_style( $handle, $file, $data['dependencies'], $data['version'], $data['type'] );
+				wp_enqueue_style( $handle, $file, $data['dependencies'], $data['version'] );
 
 				if ( $min ) {
 					wp_style_add_data( $handle, 'suffix', $min );
@@ -671,6 +670,10 @@ class BP_Nouveau extends BP_Theme_Compat {
 					'plural'   => esc_html__( 'Followers', 'buddyboss' ),
 				),
 			),
+			'rest_url'                   => home_url( 'wp-json/buddyboss/v1' ),
+			'rest_nonce'                 => wp_create_nonce( 'wp_rest' ),
+			'member_label'               => __( 'member', 'buddyboss' ),
+			'members_label'              => __( 'members', 'buddyboss' ),
 		);
 
 		if ( bp_is_active( 'friends' ) ) {
@@ -733,6 +736,12 @@ class BP_Nouveau extends BP_Theme_Compat {
 
 		// Add localize variable for enable content counts.
 		$params['bb_enable_content_counts'] = bb_enable_content_counts();
+
+		// Add localize variable for more menu items.
+		$params['more_menu_items'] = esc_html__( 'Menu Items', 'buddyboss' );
+
+		// Add localize variable for more menu text.
+		$params['more_menu_text'] = esc_html__( 'More', 'buddyboss' );
 
 		/**
 		 * Filters core JavaScript strings for internationalization before AJAX usage.

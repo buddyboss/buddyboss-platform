@@ -239,6 +239,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 	 * @apiParam {String=stream,threaded,false} [display_comments=false] No comments by default, stream for within stream display, threaded for below each activity item.
 	 * @apiParam {Array=public,loggedin,onlyme,friends,media} [privacy] Privacy of the activity.
 	 * @apiParam {String=activity,group} [pin_type] Show pin activity of feed type.
+	 * @apiParam {Number} [topic_id] Limit result set to items with a specific topic ID.
 	 */
 	public function get_items( $request ) {
 		global $bp;
@@ -264,6 +265,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			'filter'            => array(),
 			'pin_type'          => $request['pin_type'],
 			'status'            => ( ! empty( $request['activity_status'] ) ? $request['activity_status'] : bb_get_activity_published_status() ),
+			'topic_id'          => $request['topic_id'],
 		);
 
 		if ( empty( $args['display_comments'] ) || 'false' === $args['display_comments'] ) {
@@ -3071,7 +3073,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			'description'       => __( 'Order by a specific parameter.', 'buddyboss' ),
 			'default'           => '',
 			'type'              => 'string',
-			'enum'              => array( 'id', 'include' ),
+			'enum'              => array( 'id', 'include', 'date_recorded', 'date_updated' ),
 			'sanitize_callback' => 'sanitize_key',
 		);
 
@@ -3272,9 +3274,12 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		if (
 			bp_loggedin_user_id()
 			&& (
-				'all' === $scope
-				|| empty( $scope )
-				|| 'just-me' === $scope
+				'all' === $scope ||
+				empty( $scope ) ||
+				(
+					'just-me' === $scope &&
+					empty( $user_id )
+				)
 			)
 		) {
 			if ( bp_is_active( 'groups' ) && ( ! empty( $group_id ) || ( ! empty( $component ) && 'groups' === $component && ! empty( $primary_id ) ) ) ) {
@@ -3284,10 +3289,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 
 				if (
 					empty( $user_id ) ||
-					(
-						bp_loggedin_user_id() === $user_id &&
-						( ! function_exists( 'bp_is_activity_tabs_active' ) || ! bp_is_activity_tabs_active() )
-					)
+					bp_loggedin_user_id() === $user_id
 				) {
 					if ( empty( $user_id ) ) {
 						$new_scope[] = 'public';

@@ -1114,8 +1114,16 @@ function bb_notification_avatar() {
 
 			$moderation_class = isset( $user ) && function_exists( 'bp_moderation_is_user_suspended' ) && bp_moderation_is_user_suspended( $user->ID ) ? 'bp-user-suspended' : '';
 			$moderation_class = isset( $user ) && function_exists( 'bp_moderation_is_user_blocked' ) && bp_moderation_is_user_blocked( $user->ID ) ? $moderation_class . ' bp-user-blocked' : $moderation_class;
+			$data_hp          = '';
+			if ( ! empty( $item_id ) ) {
+				if ( 'user' === $object ) {
+					$data_hp = 'data-bb-hp-profile="' . esc_attr( $item_id ) . '"';
+				} elseif ( 'group' === $object ) {
+					$data_hp = 'data-bb-hp-group="' . esc_attr( $item_id ) . '"';
+				}
+			}
 			?>
-			<a href="<?php echo ! empty( $link ) ? esc_url( $link ) : ''; ?>" class="<?php echo esc_attr( $moderation_class ); ?>">
+			<a href="<?php echo ! empty( $link ) ? esc_url( $link ) : ''; ?>" class="<?php echo esc_attr( $moderation_class ); ?>" <?php echo $data_hp; ?>>
 				<?php
 				echo bp_core_fetch_avatar(
 					array(

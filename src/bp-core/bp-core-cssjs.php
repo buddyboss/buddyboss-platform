@@ -90,12 +90,6 @@ function bp_core_register_common_scripts() {
 			'footer'       => true,
 		),
 
-		// Version 3.1.1
-		'bp-jquery-validate'  => array(
-			'file'         => "{$url}vendor/jquery.validate{$min}.js",
-			'dependencies' => array( 'jquery' ),
-			'footer'       => true,
-		),
 		'jquery-mask'         => array(
 			'file'         => "{$url}vendor/jquery.mask{$min}.js",
 			'dependencies' => array( 'jquery' ),
@@ -108,7 +102,7 @@ function bp_core_register_common_scripts() {
 			'footer'       => true,
 		),
 		'emojione'                      => array(
-			'file'         => "{$url}emojione-edited.js",
+			'file'         => "{$url}emojione-edited{$min}.js",
 			'dependencies' => array(),
 			'footer'       => true,
 		),
@@ -824,40 +818,6 @@ function bp_core_enqueue_livestamp() {
 	);
 
 	wp_enqueue_script( 'bp-livestamp' );
-}
-
-/**
- * Enqueues the jQuery validate js.
- *
- * @since BuddyPress 3.1.1
- */
-function bp_core_jquery_validate_scripts() {
-
-	// wp_enqueue_script( 'bp-jquery-validate' );
-	// add_action( 'wp_head', 'bp_core_add_jquery_validate_inline_js' );
-}
-add_action( 'bp_enqueue_scripts', 'bp_core_jquery_validate_scripts' );
-
-
-/**
- * Output the inline JS needed for the jQuery validate
- *
- * @since BuddyPress 3.1.1
- */
-function bp_core_add_jquery_validate_inline_js() {
-	?>
-
-	<script>
-		jQuery(document).ready(function(){
-			jQuery('#buddypress #signup-form').validate({
-				submitHandler: function(form) {
-				  jQuery(form).submit();
-				}
-			});
-		});
-	</script>
-
-	<?php
 }
 
 /**

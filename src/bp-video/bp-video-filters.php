@@ -158,12 +158,14 @@ function bp_video_activity_comment_entry( $comment_id ) {
 		'order_by' => 'menu_order',
 		'sort'     => 'ASC',
 		'user_id'  => false,
+		'privacy'  => array(),
 		'per_page' => 0,
 	);
 
 	if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ) {
 		if ( bp_is_group_video_support_enabled() ) {
-			$args['privacy'] = array( 'comment' );
+			$args['privacy'][] = 'comment';
+			$args['privacy'][] = 'grouponly';
 			if ( ! bp_is_group_albums_support_enabled() ) {
 				$args['album_id'] = 'existing-video';
 			}
@@ -181,7 +183,7 @@ function bp_video_activity_comment_entry( $comment_id ) {
 		}
 	}
 
-	$args['privacy'] = array( 'comment' );
+	$args['privacy'][] = 'comment';
 	if ( ! isset( $args['album_id'] ) ) {
 		$args['album_id'] = 'existing-video';
 	}
@@ -193,6 +195,8 @@ function bp_video_activity_comment_entry( $comment_id ) {
 	) {
 		$args['privacy'][] = 'forums';
 	}
+
+	$args['privacy'] = array_unique( $args['privacy'] );
 
 	if ( ! empty( $video_ids ) && bp_has_video( $args ) ) {
 		$max_length = bb_video_get_activity_comment_max_thumb_length();
@@ -503,7 +507,7 @@ function bp_video_forums_new_post_video_save( $post_id ) {
 		$video_ids = array();
 		foreach ( $videos as $video ) {
 
-			$title             = ! empty( $video['name'] ) ? $video['name'] : '';
+			$title             = ! empty( $video['name'] ) ? sanitize_text_field( wp_unslash( $video['name'] ) ) : '';
 			$attachment_id     = ! empty( $video['id'] ) ? $video['id'] : 0;
 			$attached_video_id = ! empty( $video['video_id'] ) ? $video['video_id'] : 0;
 			$album_id          = ! empty( $video['album_id'] ) ? $video['album_id'] : 0;

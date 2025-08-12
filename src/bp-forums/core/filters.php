@@ -309,6 +309,8 @@ add_filter( 'bbp_get_forum_content', 'make_clickable', 9 );
 
 add_filter( 'post_type_link', 'bb_pretty_link_trash_topics', 10, 2 );
 
+add_filter( 'posts_clauses', 'bb_modify_topics_query_for_sticky', 10, 2 );
+
 /** Deprecated ****************************************************************/
 
 /**
@@ -668,4 +670,76 @@ function bb_pretty_link_trash_topics( $permalink, $post ) {
 	}
 
 	return $permalink;
+}
+
+/**
+ * Modify the WHERE and ORDER BY clauses to handle sticky topics.
+ *
+ * @since BuddyBoss 2.8.40
+ *
+ * @param array    $clauses  Query clauses.
+ * @param WP_Query $wp_query The WP_Query instance.
+ *
+ * @return array Modified query clauses.
+ */
+function bb_modify_topics_query_for_sticky( $clauses, $wp_query ) {
+	global $wpdb;
+
+	if (
+		! isset( $wp_query->query_vars['post_type'] ) ||
+		empty( $wp_query->query_vars['show_stickies'] ) ||
+		bbp_get_topic_post_type() !== $wp_query->query_vars['post_type']
+	) {
+		return $clauses;
+	}
+
+	$super_stickies = bbp_get_super_stickies();
+	$stickies       = ! empty( $wp_query->query_vars['post_parent'] ) && is_numeric( $wp_query->query_vars['post_parent'] ) ? bbp_get_stickies( $wp_query->query_vars['post_parent'] ) : array();
+
+	// Merge and sanitize sticky topic IDs.
+	$sticky_ids = array_unique( array_merge( (array) $super_stickies, (array) $stickies ) );
+	$sticky_ids = array_filter( array_map( 'absint', $sticky_ids ) ); // Ensure all are valid IDs.
+
+	if ( empty( $sticky_ids ) ) {
+		return $clauses; // No sticky topics, return early.
+	}
+
+	$sticky_ids_csv = implode( ',', $sticky_ids );
+
+	// Get spam status ID.
+	$spam_status = bbp_get_spam_status_id();
+
+	// Modify WHERE clause to include sticky topics even if they are spam.
+	if ( ! empty( $spam_status ) ) {
+		$clauses['where'] .= " OR ({$wpdb->posts}.ID IN ({$sticky_ids_csv}) AND {$wpdb->posts}.post_status = '{$spam_status}')";
+	}
+
+	// Modify ORDER BY clause to prioritize sticky topics **without changing spam order**.
+	$case_statements = array();
+
+	if ( ! empty( $super_stickies ) ) {
+		$super_stickies_csv = implode( ',', array_map( 'intval', $super_stickies ) );
+		$case_statements[]  = "WHEN {$wpdb->posts}.ID IN ($super_stickies_csv) THEN 1";
+	}
+
+	if ( ! empty( $stickies ) ) {
+		$stickies = array_diff( $stickies, $super_stickies ); // Remove duplicates.
+		if ( ! empty( $stickies ) ) {
+			$forum_stickies_csv = implode( ',', array_map( 'intval', $stickies ) );
+			$case_statements[]  = "WHEN {$wpdb->posts}.ID IN ($forum_stickies_csv) THEN 2";
+		}
+	}
+
+	// DO NOT modify spam sticky post order; just keep them where they are.
+	$case_statements[] = 'ELSE 3'; // Normal posts after stickies.
+	$case_sql          = 'CASE ' . implode( ' ', $case_statements ) . ' END';
+
+	$clauses['orderby'] = "$case_sql, {$wpdb->posts}.post_date DESC";
+
+	// If meta ordering needs to be preserved, append it consistently.
+	if ( isset( $wp_query->query_vars['orderby'] ) && 'meta_value' === $wp_query->query_vars['orderby'] ) {
+		$clauses['orderby'] .= ", CAST({$wpdb->postmeta}.meta_value AS DATETIME) DESC";
+	}
+
+	return $clauses;
 }
