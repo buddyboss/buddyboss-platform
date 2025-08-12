@@ -63,6 +63,11 @@ class BB_Group_Readylaunch {
 		if ( function_exists( 'bp_disable_group_messages' ) && true === bp_disable_group_messages() ) {
 			add_filter( 'bp_core_get_js_strings', array( $this, 'bb_rl_get_js_strings_for_groups' ), 11, 1 );
 		}
+
+		add_filter( 'bp_get_group_join_button', array( $this, 'bb_rl_modify_bp_get_group_join_button' ) );
+		add_filter( 'bp_nouveau_ajax_joinleave_group', array( $this, 'bb_rl_modify_group_request_membership_response' ), 10 );
+
+		add_action( 'wp_ajax_groups_membership_requested', 'bp_nouveau_ajax_joinleave_group' );
 	}
 
 	/**
@@ -533,7 +538,7 @@ class BB_Group_Readylaunch {
 			$buttons['group_membership']['button_attr']['class'] = str_replace( 'bp-toggle-action-button', '', $buttons['group_membership']['button_attr']['class'] );
 			if ( strpos( $buttons['group_membership']['button_attr']['class'], 'leave-group' ) !== false ) {
 				$buttons['group_membership']['button_attr']['class'] = str_replace( 'leave-group', 'leave_group', $buttons['group_membership']['button_attr']['class'] );
-				
+
 				// Ensure data-bp-btn-action attribute is set for leave group button
 				$buttons['group_membership']['button_attr']['data-bp-btn-action'] = 'leave_group';
 			}
@@ -735,5 +740,75 @@ class BB_Group_Readylaunch {
 		}
 
 		return $link_text;
+	}
+
+	/**
+	 * Modify Request sent button text for ReadyLaunch.
+	 *
+	 * @since BuddyBoss 2.9.30
+	 *
+	 * @param array $button Button array.
+	 *
+	 * @return array Modified button array.
+	 */
+	public function bb_rl_modify_bp_get_group_join_button( $button ) {
+		if ( ! isset( $button['id'] ) || ! isset( $button['link_text'] ) ) {
+			return $button;
+		}
+
+		if ( 'membership_requested' === $button['id'] ) {
+			$button['link_class']                         .= ' bb-rl-cancel-request bp-toggle-action-button';
+			$button['button_attr']['data-title']           = esc_html__( 'Cancel Request', 'buddyboss' );
+			$button['button_attr']['data-title-displayed'] = esc_html__( 'Request Sent', 'buddyboss' );
+		}
+		return $button;
+	}
+
+	/**
+	 * Modify group request membership response for ReadyLaunch.
+	 *
+	 * @since BuddyBoss 2.9.30
+	 *
+	 * @param array $response Response array.
+	 *
+	 * @return array Modified response array.
+	 */
+	public function bb_rl_modify_group_request_membership_response( $response ) {
+		$action = isset( $_POST['action'] ) ? sanitize_text_field( wp_unslash( $_POST['action'] ) ) : '';
+		if ( empty( $action ) ) {
+			return $response;
+		}
+
+		if ( 'groups_request_membership' === $action ) {
+			$response['feedback'] = esc_html__( 'Your membership request has been sent! The group organizer will review it, and you\'ll be notified once they respond. ', 'buddyboss' );
+		}
+
+		if ( 'groups_membership_requested' === $action ) {
+			$group_id = isset( $_POST['item_id'] ) ? absint( sanitize_text_field( wp_unslash( $_POST['item_id'] ) ) ) : 0;
+			if ( ! $group_id ) {
+				return $response;
+			}
+
+			$group = groups_get_group( $group_id );
+
+			if ( ! groups_delete_membership_request( false, bp_loggedin_user_id(), $group_id ) ) {
+				$response = array(
+					'feedback' => sprintf( '<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>', esc_html__( 'Error canceling membership request.', 'buddyboss' ) ),
+					'type'     => 'error',
+				);
+			} else {
+				// Request is canceled.
+				$group->is_pending = '0';
+
+				$response = array(
+					'contents'  => bp_get_group_join_button( $group ),
+					'is_group'  => bp_is_group(),
+					'type'      => 'success',
+					'group_url' => ( bp_is_group() ? bp_get_group_permalink( $group ) : '' ),
+				);
+			}
+		}
+
+		return $response;
 	}
 }

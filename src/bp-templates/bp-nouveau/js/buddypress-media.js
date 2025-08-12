@@ -3990,7 +3990,7 @@ window.bp = window.bp || {};
 					'queuecomplete',
 					function () {
 						$( '#bp-media-uploader-modal-title' ).text( BP_Nouveau.media.i18n_strings.upload );
-						$( '.bb-field-steps-1 #bp-media-photo-next, #bp-media-submit' ).show();
+						$( '.bb-field-steps-1 #bp-media-photo-next, #bp-media-submit, #bp-media-create-album-submit' ).show();
 					}
 				);
 
@@ -3998,7 +3998,7 @@ window.bp = window.bp || {};
 					'processing',
 					function () {
 						$( '#bp-media-uploader-modal-title' ).text( BP_Nouveau.media.i18n_strings.uploading + '...' );
-						$( '.bb-field-steps-1 #bp-media-photo-next, #bp-media-submit' ).hide();
+						$( '.bb-field-steps-1 #bp-media-photo-next, #bp-media-submit, #bp-media-create-album-submit' ).hide();
 					}
 				);
 

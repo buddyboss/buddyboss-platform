@@ -917,17 +917,6 @@
 	}
 }
 
-.bp-message-content-wrap {
-
-	blockquote.wp-embedded-content {
-
-		+ p iframe.wp-embedded-content {
-			min-height: 0;
-			height: 0;
-		}
-	}
-}
-
 // close #bp-message-thread-list
 
 // Bulk Message styles
