@@ -235,7 +235,13 @@ if ( bp_is_group_create() ) : ?>
 		<?php
 	endif;
 
-	$group_types = bp_groups_get_group_types( array( 'show_in_create_screen' => true ), 'objects' );
+	// Get group types to show in frontend. If group type creation is not disabled, show all types.
+	// Otherwise, only show types explicitly marked for create screen.
+	if ( false === bp_disable_group_type_creation() ) {
+		$group_types = bp_groups_get_group_types( array(), 'objects' );
+	} else {
+		$group_types = bp_groups_get_group_types( array( 'show_in_create_screen' => true ), 'objects' );
+	}
 
 	// Hide Group Types if none is selected in Users > Profile Type > E.g. (Students) > Allowed Group Types meta box.
 	if ( false === bp_restrict_group_creation() && true === bp_member_type_enable_disable() ) {
