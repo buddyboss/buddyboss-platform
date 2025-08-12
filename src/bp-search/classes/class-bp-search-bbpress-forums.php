@@ -75,13 +75,16 @@ if ( ! class_exists( 'Bp_Search_bbPress_Forums' ) ) :
 				$where_sql = '( ( pm.meta_value IS NULL AND ' . $post_status_sql . ' )';
 
 				// For forums associated with groups, check group membership.
-				$group_query = "SELECT DISTINCT CONCAT('a:1:{i:0;i:', g.id, ';}')
+				$group_query = $wpdb->prepare(
+					"SELECT DISTINCT CONCAT('a:1:{i:0;i:', g.id, ';}')
 					FROM {$bp->groups->global_tables['table_name']} g
 					LEFT JOIN {$bp->groups->global_tables['table_name_members']} m 
 						ON g.id = m.group_id 
-						AND m.user_id = {$user_id} 
+						AND m.user_id = %d 
 						AND m.is_confirmed = 1
-					WHERE g.status = 'public' OR m.id IS NOT NULL";
+					WHERE g.status = 'public' OR m.id IS NOT NULL",
+					$user_id
+				);
 
 				$where_sql .= " OR pm.meta_value IN ({$group_query}) )";
 			} else {
