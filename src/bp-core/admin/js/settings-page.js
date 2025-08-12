@@ -1,4 +1,4 @@
-/* global BP_ADMIN, BP_Uploader, BP_Confirm, bp */
+/* global BP_ADMIN, BP_Uploader, BP_Confirm, bp, BBTopicsManager */
 
 window.bp = window.bp || {};
 
@@ -2057,17 +2057,17 @@ window.bp = window.bp || {};
 							var iconsArray = [];
 							$( this ).closest( 'td' ).find( 'select.extension-icon option' ).each(
 								function(){
-									var iconClass = $( this ).val();
+									var iconClass = $( this ).attr('data-value');
 									var text      = this.innerText;
 									var item      = '<li><i class="' + iconClass + '"></i><span>' + text + '</span></li>';
 									iconsArray.push( item );
 								}
 							);
 
-							$( this ).closest( 'td' ).find( 'select.extension-icon' ).parent().append( '<div class="icon-select-main"><span class="icon-select-button"></span><div class="custom-extension-list"> <ul class="custom-extension-list-select">' + iconsArray + '</ul></div></div>' );
+							$( this ).closest( 'td' ).find( 'select.extension-icon' ).parent().append( '<div class="icon-select-main"><span class="icon-select-button"></span><div class="custom-extension-list"> <ul class="custom-extension-list-select">' + iconsArray.join('') + '</ul></div></div>' );
 
 							// Set the button value to the first el of the array by default.
-							var currentSelectedIcon     = $( this ).closest( 'td' ).find( '.extension-icon' ).val();
+							var currentSelectedIcon     = $( this ).closest( 'td' ).find( '.extension-icon option:selected' ).attr('data-value');
 							var currentSelectedIconText = $( this ).closest( 'td' ).find( '.extension-icon option:selected' ).text();
 							$( this ).closest( 'td' ).find( '.icon-select-main .icon-select-button' ).html( '<li><i class="' + currentSelectedIcon + '"></i><span>' + currentSelectedIconText + '</span></li>' );
 						}
@@ -2113,7 +2113,7 @@ window.bp = window.bp || {};
 					var totalCount = parseInt( $( '.extension-listing tr.extra-extension' ).length );
 					totalCount     = 1;
 					var media_type = 'bp_document';
-					if ( 
+					if (
 						$( this ).closest('tr.custom-extension').length > 0 &&
 						$( this ).closest('tr.custom-extension').hasClass('video-extensions')
 					) {
@@ -2470,16 +2470,26 @@ window.bp = window.bp || {};
 			// Redirection select box Select2
 			if( typeof $.fn.select2 !== 'undefined' ) {
 				if( $( '#bb-login-redirection' ).length > 0 ) {
-					$( '#bb-login-redirection' ).select2({
-						containerCssClass: 'custom-select2',
-						dropdownCssClass: 'custom-dropdown-select2'
-					});
+					$( '#bb-login-redirection' ).select2();
+
+					// Apply CSS classes after initialization
+					$('#bb-login-redirection').next('.select2-container').find( '.select2-selection' ).addClass('custom-select2');
+        
+					// Add class to dropdown when it opens
+					$( '#bb-login-redirection' ).on( 'select2:open', function() {
+						$( '.select2-dropdown' ).addClass( 'custom-dropdown-select2' );
+					} );
 				}
 				if( $( '#bb-logout-redirection' ).length > 0 ) {
-					$( '#bb-logout-redirection' ).select2({
-						containerCssClass: 'custom-select2',
-						dropdownCssClass: 'custom-dropdown-select2'
-					});
+					$( '#bb-logout-redirection' ).select2();
+
+					// Apply CSS classes after initialization
+					$( '#bb-logout-redirection' ).next( '.select2-container' ).find( '.select2-selection' ).addClass( 'custom-select2' );
+        
+					// Add class to dropdown when it opens
+					$( '#bb-logout-redirection' ).on( 'select2:open', function() {
+						$( '.select2-dropdown' ).addClass( 'custom-dropdown-select2' );
+					} );
 				}
 			}
 
@@ -2542,6 +2552,38 @@ window.bp = window.bp || {};
 					}
 				);
 			}
+
+			$( '.post-type-forum #post, .post-type-topic #post, .post-type-reply #post' ).on( 'submit', function ( event ) {
+				var content = $( '#content' ).val();
+
+				var decodedContent = $( '<textarea>' ).html( content ).text();
+
+				var escapedHtmlRegex = /&lt;.*?&gt;/;
+
+				// Check for escaped HTML tags
+				if ( escapedHtmlRegex.test( content ) ) {
+					alert( BP_ADMIN.forum_validation.escaped_html_tags );
+					event.preventDefault();
+					return;
+				}
+
+				// Parse decoded content for further validation
+				var contentWrapper = $('<div>').html(decodedContent);
+
+				// Structural validation for <ul> and <li>
+				var isValid = true;
+				contentWrapper.find( 'ul' ).each( function () {
+					if ( $( this ).find( 'li' ).length === 0 ) {
+						isValid = false;
+					}
+				} );
+
+				if ( !isValid ) {
+					alert( BP_ADMIN.forum_validation.malformed_ul_li );
+					event.preventDefault();
+					return;
+				}
+			} );
 		}
 	);
 
@@ -2906,7 +2948,7 @@ window.bp = window.bp || {};
 		// Show telemetry no-reporting setting and mark as checked.
 		var $no_reporting_setting = jQuery( '.bb-setting-telemetry-no-reporting' );
 		$no_reporting_setting.removeClass( 'bp-hide' );
-	
+
 		// Update telemetry mode description with data from the first telemetry input field.
 		var notice_text = jQuery( '#bb_advanced_telemetry input[name="bb_advanced_telemetry_reporting"]' ).first().data( 'notice' );
 		jQuery( '.bb-telemetry-mode-description' ).html( notice_text );
@@ -2939,5 +2981,80 @@ window.bp = window.bp || {};
 	});
 
 	/* jshint ignore:end */
+
+	function handleDragDrop( sortableParent,onUpdateFun ){
+		$( sortableParent ).sortable( {
+			update: function ( event, ui ) {
+				onUpdateFun( event, ui );
+			},
+		} );
+	}
+
+	// Handle Activity filter and sortring drag-drop.
+	handleDragDrop( '.bb-activity-sorting-list', handleUpdateActivityFilter );
+	function handleUpdateActivityFilter( event ) {
+		var activityFilter = [];
+		$( event.target ).find( '.bb-activity-sorting-item' ).each( function () {
+			activityFilter.push( $( this ).find( 'input' ).val() );
+		} );
+	}
+
+	// Handle Activity filter option save.
+	if ( $( 'body.buddyboss_page_bp-settings' ).length > 0 ) {
+		$( '.bb-activity-sorting-item input[type="checkbox"]' ).on( 'change', function () {
+			var checkbox = $( this ),
+				hiddenInput = checkbox.siblings( 'input[type="hidden"]' );
+	
+			if ( checkbox.is( ':checked' ) ) {
+				// Disable the hidden input when checkbox is checked.
+				hiddenInput.prop( 'disabled', true );
+			} else {
+				// Enable the hidden input when checkbox is unchecked.
+				hiddenInput.prop( 'disabled', false );
+			}
+		});
+	}
+
+	function activityTopicHandle() {
+		// Initialize the BBTopicsManager with admin-specific configuration for activity topics.
+		if ( 'undefined' !== typeof BBTopicsManager ) {
+			BBTopicsManager.config.modalSelector          = '#bb-hello-container';
+			BBTopicsManager.config.modalContentSelector   = '.bb-hello-content';
+			BBTopicsManager.config.backdropSelector       = '#bb-hello-backdrop';
+			BBTopicsManager.config.modalOpenClass         = 'bp-disable-scroll';
+			BBTopicsManager.config.closeModalSelector     = '.close-modal, #bb_topic_cancel';
+			BBTopicsManager.config.errorContainer         = '<div class="bb-hello-error"><i class="bb-icon-rf bb-icon-exclamation"></i></div>';
+			BBTopicsManager.config.errorContainerSelector = '.bb-hello-error';
+			BBTopicsManager.config.ajaxUrl                = BP_ADMIN.ajax_url;
+			BBTopicsManager.config.nonce                  = BP_ADMIN.nonce;
+			BBTopicsManager.config.topicsLimit            = BP_ADMIN.topics_limit;
+
+			// Migrate topic elements.
+			BBTopicsManager.config.migrateTopicBackdropModal  = '#bb-hello-topic-migrate-backdrop';
+			BBTopicsManager.config.migrateTopicContainerModal = '#bb-hello-topic-migrate-container';
+			BBTopicsManager.config.migrateAjaxAction          = 'bb_migrate_topic';
+		}
+
+		$( document ).on(
+			'change',
+			'#bb_enable_group_activity_topics',
+			function ( e ) {
+				// Prevent default action and stop event propagation.
+				e.preventDefault();
+				e.stopPropagation();
+
+				var enableGroupTopicsChecked = $( '#bb_enable_group_activity_topics' ).is( ':checked' );
+
+				// Show/hide only group topics dependent fields.
+				if ( enableGroupTopicsChecked ) {
+					$( '.bb_enable_group_activity_topics_required' ).removeClass( 'bp-hide' );
+				} else {
+					$( '.bb_enable_group_activity_topics_required' ).addClass( 'bp-hide' );
+				}
+			}
+		);
+	}
+
+	activityTopicHandle();
 
 }());

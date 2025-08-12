@@ -123,6 +123,17 @@ class BP_REST_Messages_Actions_Endpoint extends WP_REST_Controller {
 		// Clear recipients cache after update hidden property.
 		wp_cache_delete( 'thread_recipients_' . $thread_id, 'bp_messages' );
 
+		// Check if the thread is a group thread and join with group members to the query.
+		if ( bp_is_active( 'groups' ) && function_exists( 'bb_messages_is_group_thread' ) && function_exists( 'bb_recipients_recipient_get_join_sql_with_group_members' ) ) {
+			$is_group_message_thread = bb_messages_is_group_thread( $thread_id );
+			$first_message           = BP_Messages_Thread::get_first_message( $thread_id );
+			$group_id                = (int) bp_messages_get_meta( $first_message->id, 'group_id', true );
+
+			if ( $is_group_message_thread && $group_id ) {
+				add_filter( 'bp_recipients_recipient_get_join_sql', 'bb_recipients_recipient_get_join_sql_with_group_members', 10, 2 );
+			}
+		}
+
 		$thread = new BP_Messages_Thread( $thread_id );
 
 		$retval = $this->prepare_response_for_collection(

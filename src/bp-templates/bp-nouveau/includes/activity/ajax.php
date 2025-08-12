@@ -695,6 +695,50 @@ function bp_nouveau_ajax_post_update() {
 		wp_send_json_error();
 	}
 
+	if ( bb_is_activity_topic_required() && isset( $_POST['topic_id'] ) ) {
+		$topic_id = ! empty( $_POST['topic_id'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['topic_id'] ) ) : 0;
+		if ( empty( $topic_id ) ) {
+			wp_send_json_error( array( 'message' => esc_html__( 'Please select a topic before posting.', 'buddyboss' ) ) );
+		}
+		$activity_id       = ! empty( $_POST['id'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['id'] ) ) : 0;
+		$existing_topic_id = bb_activity_topics_manager_instance()->bb_get_activity_topic( $activity_id );
+		if (
+			empty( $existing_topic_id ) ||
+			(int) $existing_topic_id !== (int) $topic_id
+		) {
+			$object  = ! empty( $_POST['object'] ) ? sanitize_text_field( wp_unslash( $_POST['object'] ) ) : '';
+			$item_id = ! empty( $_POST['item_id'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['item_id'] ) ) : 0;
+
+			$args = array(
+				'topic_id'  => $topic_id,
+				'item_type' => 'activity',
+				'fields'    => 'id',
+			);
+			if ( 'group' === $object ) {
+				$args['item_type'] = 'groups';
+				$args['item_id']   = $item_id;
+			}
+			$topic_exists = function_exists( 'bb_topics_manager_instance' ) ? bb_topics_manager_instance()->bb_get_topics( $args ) : false;
+			if ( empty( $topic_exists ) || empty( $topic_exists['topics'] ) ) {
+				wp_send_json_error( array( 'message' => esc_html__( 'The topic does not exist.', 'buddyboss' ) ) );
+			} elseif (
+				'user' === $object &&
+				function_exists( 'bb_activity_topics_manager_instance' ) &&
+				! bb_activity_topics_manager_instance()->bb_can_user_post_to_activity_topic( $topic_id )
+			) {
+				wp_send_json_error( array( 'message' => esc_html__( 'You do not have permission to post in this topic.', 'buddyboss' ) ) );
+			} elseif (
+				'group' === $object &&
+				bp_is_active( 'groups' ) &&
+				! empty( $item_id ) &&
+				function_exists( 'bb_can_user_post_to_group_activity_topic' ) &&
+				! bb_can_user_post_to_group_activity_topic( bp_loggedin_user_id(), $item_id, $topic_id )
+			) {
+				wp_send_json_error( array( 'message' => esc_html__( 'You do not have permission to post in this topic.', 'buddyboss' ) ) );
+			}
+		}
+	}
+
 	if ( ! strlen( trim( html_entity_decode( wp_strip_all_tags( $_POST['content'] ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) ) ) ) {
 
 		// check activity toolbar options if one of them is set, activity can be empty.
@@ -1022,9 +1066,9 @@ function bp_nouveau_ajax_post_update() {
 
 	wp_send_json_success(
 		array(
-			'id'                      => $activity_id,
-			'message'                 => esc_html__( 'Update posted.', 'buddyboss' ) . ' ' . sprintf( '<a href="%s" class="just-posted">%s</a>', esc_url( bp_activity_get_permalink( $activity_id ) ), esc_html__( 'View activity.', 'buddyboss' ) ),
-			'activity'                => $activity,
+			'id'               => $activity_id,
+			'message'          => esc_html__( 'Update posted.', 'buddyboss' ) . ' ' . sprintf( '<a href="%s" class="just-posted">%s</a>', esc_url( bp_activity_get_permalink( $activity_id ) ), esc_html__( 'View activity.', 'buddyboss' ) ),
+			'activity'         => $activity,
 
 			/**
 			 * Filters whether or not an AJAX post update is private.
@@ -1033,10 +1077,9 @@ function bp_nouveau_ajax_post_update() {
 			 *
 			 * @param bool $is_private Privacy status for the update.
 			 */
-			'is_private'              => apply_filters( 'bp_nouveau_ajax_post_update_is_private', $is_private ),
-			'is_directory'            => bp_is_activity_directory(),
-			'is_user_activity'        => bp_is_user_activity(),
-			'is_active_activity_tabs' => bp_is_activity_tabs_active(),
+			'is_private'       => apply_filters( 'bp_nouveau_ajax_post_update_is_private', $is_private ),
+			'is_directory'     => bp_is_activity_directory(),
+			'is_user_activity' => bp_is_user_activity(),
 		)
 	);
 }
@@ -1243,11 +1286,25 @@ function bp_nouveau_ajax_activity_update_privacy() {
 
 	if ( bp_activity_user_can_delete( $activity ) ) {
 		remove_action( 'bp_activity_before_save', 'bp_activity_check_moderation_keys', 2 );
-		$activity->privacy = $_POST['privacy'];
+		$activity->privacy       = sanitize_text_field( wp_unslash( $_POST['privacy'] ) );
 		$activity->save();
+
+		if ( function_exists( 'bp_activity_update_meta' ) ) {	
+			// Add meta to ensure that this activity has been edited.
+			bp_activity_update_meta( $activity->id, '_is_edited', bp_core_current_time() );
+		}
+
+		$data_response = array();
+		if ( function_exists( 'bp_nouveau_activity_is_edited' ) ) {
+			$edited_text = bp_nouveau_activity_is_edited( $activity->id, false );
+			if ( $edited_text ) {
+				$data_response = array( 'edited_text' => $edited_text );
+			}
+		}
+
 		add_action( 'bp_activity_before_save', 'bp_activity_check_moderation_keys', 2 );
 
-		$response = apply_filters( 'bb_ajax_activity_update_privacy', array(), $_POST );
+		$response = apply_filters( 'bb_ajax_activity_update_privacy', $data_response, $_POST );
 
 		wp_send_json_success( $response );
 	} else {
@@ -1306,7 +1363,7 @@ function bb_nouveau_ajax_activity_update_pinned_post() {
 		} elseif ( 'pinned' === $retval ) {
 			$response['feedback'] = esc_html__( 'Your post has been pinned', 'buddyboss' );
 		} elseif ( 'not_allowed' === $retval || 'not_member' === $retval ) {
-			$response['feedback'] = esc_html__( 'Your are not allowed to pinned or unpinned the post', 'buddyboss' );
+			$response['feedback'] = esc_html__( 'You are not allowed to pin or unpin this post', 'buddyboss' );
 		} elseif ( 'pin_updated' === $retval ) {
 			$response['feedback'] = esc_html__( 'Your pinned post has been updated', 'buddyboss' );
 		}
@@ -1558,6 +1615,14 @@ function bb_nouveau_ajax_activity_sync_from_modal() {
 		'in'               => $activity_id,
 		'display_comments' => true,
 	);
+	/**
+	 * Filters the arguments for the activity sync from modal.
+	 *
+	 * @since BuddyBoss 2.9.00
+	 *
+	 * @param array $args The arguments for the activity sync from modal.
+	 */
+	$args = apply_filters( 'bb_ajax_activity_sync_from_modal_args', $args );
 
 	ob_start();
 	if ( bp_has_activities( $args ) ) {

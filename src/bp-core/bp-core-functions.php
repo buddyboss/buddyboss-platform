@@ -798,11 +798,9 @@ function bp_core_get_directory_page_default_titles() {
 		'video'           => __( 'Videos', 'buddyboss' ),
 		'activate'        => __( 'Activate', 'buddyboss' ),
 		'register'        => __( 'Register', 'buddyboss' ),
-		// 'profile_dashboard' => __( 'Dashboard', 'buddyboss' ),
 		'new_forums_page' => __( 'Forums', 'buddyboss' ),
 		'terms'           => __( 'Terms of Service', 'buddyboss' ),
 		'privacy'         => __( 'Privacy Policy', 'buddyboss' ),
-		'moderation'      => __( 'Moderation', 'buddyboss' ),
 	);
 
 	/**
@@ -999,6 +997,54 @@ function bp_core_get_component_search_query_arg( $component = null ) {
 	 * @param string $component Component name.
 	 */
 	return apply_filters( 'bp_core_get_component_search_query_arg', $query_arg, $component );
+}
+
+/**
+ * Get a list of all active component objects.
+ *
+ * @since BuddyBoss 2.9.00
+ *
+ * @param array $args {
+ *     Optional. An array of key => value arguments to match against the component objects.
+ *     Default empty array.
+ *
+ *     @type string $name          Translatable name for the component.
+ *     @type string $id            Unique ID for the component.
+ *     @type string $slug          Unique slug for the component, for use in query strings and URLs.
+ *     @type bool   $has_directory True if the component has a top-level directory. False otherwise.
+ *     @type string $root_slug     Slug used by the component's directory page.
+ * }
+ * @param string $output   Optional. The type of output to return. Accepts 'ids'
+ *                         or 'objects'. Default 'ids'.
+ * @param string $operator Optional. The logical operation to perform. 'or' means only one
+ *                         element from the array needs to match; 'and' means all elements
+ *                         must match. Accepts 'or' or 'and'. Default 'and'.
+ * @return array A list of component ids or objects.
+ */
+function bb_core_get_active_components( $args = array(), $output = 'ids', $operator = 'and' ) {
+	$bp = buddypress();
+
+	$active_components = array_keys( $bp->active_components );
+
+	$xprofile_id = array_search( 'xprofile', $active_components, true );
+	if ( false !== $xprofile_id ) {
+		$active_components[ $xprofile_id ] = 'profile';
+	}
+
+	$components = array();
+	foreach ( $active_components as $id ) {
+		if ( isset( $bp->{$id} ) && $bp->{$id} instanceof BP_Component ) {
+			$components[ $id ] = $bp->{$id};
+		}
+	}
+
+	$components = wp_filter_object_list( $components, $args, $operator );
+
+	if ( 'ids' === $output ) {
+		$components = wp_list_pluck( $components, 'id' );
+	}
+
+	return $components;
 }
 
 /** URI ***********************************************************************/
@@ -1504,11 +1550,15 @@ function bp_core_add_message( $message, $type = '' ) {
  */
 function bp_core_setup_message() {
 
+	if ( ! is_user_logged_in() ) {
+		return;
+	}
+
 	// Get BuddyPress.
 	$bp = buddypress();
 
 	if ( empty( $bp->template_message ) && isset( $_COOKIE['bp-message'] ) ) {
-		$bp->template_message = stripslashes( rawurldecode( $_COOKIE['bp-message'] ) );
+		$bp->template_message = strip_shortcodes( stripslashes( rawurldecode( $_COOKIE['bp-message'] ) ) );
 	}
 
 	if ( empty( $bp->template_message_type ) && isset( $_COOKIE['bp-message-type'] ) ) {
@@ -2873,22 +2923,6 @@ function bp_nav_menu_get_loggedin_pages() {
 			);
 		}
 
-		if ( 'activity' === $bp_item['slug'] ) {
-			$page_args['activity-posts'] = (object) array(
-				'ID'             => hexdec( uniqid() ),
-				'post_title'     => __( 'Posts', 'buddyboss' ),
-				'object_id'      => hexdec( uniqid() ),
-				'post_author'    => 0,
-				'post_date'      => 0,
-				'post_excerpt'   => 'activity-posts',
-				'post_type'      => 'page',
-				'post_status'    => 'publish',
-				'comment_status' => 'closed',
-				'guid'           => trailingslashit( bp_loggedin_user_domain() . bp_get_activity_slug() ),
-				'post_parent'    => $nav_counter,
-			);
-		}
-
 		if ( ! empty( $nav_sub ) ) {
 			foreach ( $nav_sub as $s_nav ) {
 
@@ -4188,11 +4222,13 @@ function bp_get_allowedtags() {
 		$allowedtags,
 		array(
 			'a'       => array(
-				'aria-label'      => array(),
-				'class'           => array(),
-				'data-bp-tooltip' => array(),
-				'id'              => array(),
-				'rel'             => array(),
+				'aria-label'         => array(),
+				'class'              => array(),
+				'data-bp-tooltip'    => array(),
+				'data-bb-hp-profile' => array(), // used to show the profie hover popup.
+				'data-bb-hp-group'   => array(), // used to show the group hover popup.
+				'id'                 => array(),
+				'rel'                => array(),
 			),
 			'img'     => array(
 				'src'    => array(),
@@ -4721,9 +4757,10 @@ function bp_core_get_group_avatar( $legacy_user_avatar_name, $legacy_group_avata
 					}
 				}
 			}
+
+			// Close the avatar directory.
+			closedir( $av_dir );
 		}
-		// Close the avatar directory.
-		closedir( $av_dir );
 	}
 
 	return $group_avatar;
@@ -5363,14 +5400,23 @@ function bb_xprofile_search_bp_user_query_search_first_last_nickname( $sql, BP_U
 /**
  * Check given directory is empty or not.
  *
- * @param string $dir The directory path.
- * @return bool True OR False whether directory is empty or not.
- *
  * @since BuddyBoss 1.7.0
+ *
+ * @param string $dir The directory path.
+ *
+ * @return bool|null True if empty, false if not empty, null if directory does not exist.
  */
 function bp_core_is_empty_directory( $dir ) {
+	if ( ! is_dir( $dir ) ) {
+		// Directory does not exist.
+		return null;
+	}
 	$handle = opendir( $dir );
-	while ( ( $entry  = readdir( $handle ) ) !== $entry ) {
+	if ( false === $handle ) {
+		return true;
+	}
+
+	while ( ( $entry = readdir( $handle ) ) !== $entry ) {
 		if ( '.' !== $entry && '..' !== $entry ) {
 			closedir( $handle );
 
@@ -6414,10 +6460,10 @@ function bb_get_default_custom_avatar( $object = 'user', $size = 'thumb' ) {
 					}
 				}
 			}
-		}
 
-		// Close the avatar directory.
-		closedir( $av_dir );
+			// Close the avatar directory.
+			closedir( $av_dir );
+		}
 
 		// If we found a locally uploaded avatar.
 		if ( isset( $avatar_url ) && ! empty( $avatar_url ) ) {
@@ -7702,7 +7748,7 @@ function bb_core_get_encoded_image( $attachment_id, $size = 'full' ) {
  *
  * @since BuddyBoss 2.0.0
  *
- * @param $id Id of the section.
+ * @param string $id Id of the section.
  *
  * @return string Return icon name.
  */
@@ -7780,6 +7826,9 @@ function bb_admin_icons( $id ) {
 			break;
 		case 'bb_activity_comments':
 			$meta_icon = $bb_icon_bf . ' bb-icon-activity-comment';
+			break;
+		case 'bb_activity_topics':
+			$meta_icon = $bb_icon_bf . ' bb-icon-grid-large';
 			break;
 		case 'bp_custom_post_type':
 			$meta_icon = $bb_icon_bf . ' bb-icon-thumbtack';
@@ -9978,4 +10027,72 @@ function bb_get_all_headers() {
  */
 function bb_pro_sso_version() {
 	return '2.6.30';
+}
+
+/**
+ * Common function to filter activity filter options or labels based on related components and settings active.
+ *
+ * @since BuddyBoss 2.8.20
+ *
+ * @param array $filters Array of filter options.
+ *
+ * @return array $filters Array of allowed filter options.
+ */
+function bb_filter_activity_filter_scope_keys( $filters = array() ) {
+
+	if ( ! empty( $filters ) && is_array( $filters ) ) {
+
+		// Remove filters based on component availability and respecting settings.
+		foreach ( array_keys( $filters ) as $key ) {
+			if (
+				( 'friends' === $key && ! bp_is_active( 'friends' ) ) ||
+				( 'following' === $key && ! bp_is_activity_follow_active() ) ||
+				( 'groups' === $key && ! bp_is_active( 'groups' ) ) ||
+				( 'mentions' === $key && ( ! function_exists( 'bp_activity_do_mentions' ) || ! bp_activity_do_mentions() ) ) ||
+				( 'favorites' === $key && ! bp_is_activity_like_active() )
+			) {
+				unset( $filters[ $key ] );
+			}
+		}
+	}
+
+	return $filters;
+}
+
+/**
+ * Get the singleton instance of BB_Topics_Manager.
+ *
+ * @since BuddyBoss 2.8.80
+ *
+ * @return BB_Topics_Manager|null Instance of the topics manager or null if class doesn't exist.
+ */
+function bb_topics_manager_instance() {
+	if ( class_exists( 'BB_Topics_Manager' ) ) {
+		return BB_Topics_Manager::instance();
+	}
+
+	return null;
+}
+
+/**
+ * Function to return the minimum pro version to show notice for group activity topics.
+ *
+ * @since BuddyBoss 2.8.80
+ *
+ * @return string
+ */
+function bb_pro_group_activity_topics_version() {
+	return '2.7.40';
+}
+
+
+/**
+ * Function to check if ReadyLaunch is enabled.
+ *
+ * @since BuddyBoss 2.9.00
+ *
+ * @return bool True if ReadyLaunch is enabled, false otherwise.
+ */
+function bb_is_readylaunch_enabled() {
+	return bp_get_option( 'bb_rl_enabled', false );
 }

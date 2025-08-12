@@ -102,6 +102,14 @@ class BP_Activity_Activity {
 	var $date_recorded;
 
 	/**
+	 * The date the activity item was recorded, in 'Y-m-d h:i:s' format.
+	 *
+	 * @since BuddyBoss 2.8.20
+	 * @var string
+	 */
+	var $date_updated;
+
+	/**
 	 * Whether the item should be hidden in sitewide streams.
 	 *
 	 * @since BuddyPress 1.1.0
@@ -232,6 +240,7 @@ class BP_Activity_Activity {
 		$this->action            = $row->action;
 		$this->content           = $row->content;
 		$this->date_recorded     = $row->date_recorded;
+		$this->date_updated      = $row->date_updated;
 		$this->hide_sitewide     = (int) $row->hide_sitewide;
 		$this->mptt_left         = (int) $row->mptt_left;
 		$this->mptt_right        = (int) $row->mptt_right;
@@ -271,6 +280,7 @@ class BP_Activity_Activity {
 		$this->action            = ! empty( $this->action ) ? apply_filters_ref_array( 'bp_activity_action_before_save', array( $this->action, &$this ) ) : '';
 		$this->content           = ! empty( $this->content ) ? apply_filters_ref_array( 'bp_activity_content_before_save', array( $this->content, &$this ) ) : '';
 		$this->date_recorded     = apply_filters_ref_array( 'bp_activity_date_recorded_before_save', array( $this->date_recorded, &$this ) );
+		$this->date_updated      = apply_filters_ref_array( 'bp_activity_date_updated_before_save', array( $this->date_updated, &$this ) );
 		$this->hide_sitewide     = apply_filters_ref_array( 'bp_activity_hide_sitewide_before_save', array( $this->hide_sitewide, &$this ) );
 		$this->mptt_left         = apply_filters_ref_array( 'bp_activity_mptt_left_before_save', array( $this->mptt_left, &$this ) );
 		$this->mptt_right        = apply_filters_ref_array( 'bp_activity_mptt_right_before_save', array( $this->mptt_right, &$this ) );
@@ -314,9 +324,9 @@ class BP_Activity_Activity {
 
 			$prev_activity_status = self::bb_get_activity_status( $this->id );
 
-			$q = $wpdb->prepare( "UPDATE {$bp->activity->table_name} SET user_id = %d, component = %s, type = %s, action = %s, content = %s, primary_link = %s, date_recorded = %s, item_id = %d, secondary_item_id = %d, hide_sitewide = %d, is_spam = %d, privacy = %s, status = %s WHERE id = %d", $this->user_id, $this->component, $this->type, $this->action, $this->content, $this->primary_link, $this->date_recorded, $this->item_id, $this->secondary_item_id, $this->hide_sitewide, $this->is_spam, $this->privacy, $this->status, $this->id );
+			$q = $wpdb->prepare( "UPDATE {$bp->activity->table_name} SET user_id = %d, component = %s, type = %s, action = %s, content = %s, primary_link = %s, date_recorded = %s, date_updated = %s, item_id = %d, secondary_item_id = %d, hide_sitewide = %d, is_spam = %d, privacy = %s, status = %s WHERE id = %d", $this->user_id, $this->component, $this->type, $this->action, $this->content, $this->primary_link, $this->date_recorded, $this->date_updated, $this->item_id, $this->secondary_item_id, $this->hide_sitewide, $this->is_spam, $this->privacy, $this->status, $this->id );
 		} else {
-			$q = $wpdb->prepare( "INSERT INTO {$bp->activity->table_name} ( user_id, component, type, action, content, primary_link, date_recorded, item_id, secondary_item_id, hide_sitewide, is_spam, privacy, status ) VALUES ( %d, %s, %s, %s, %s, %s, %s, %d, %d, %d, %d, %s, %s )", $this->user_id, $this->component, $this->type, $this->action, $this->content, $this->primary_link, $this->date_recorded, $this->item_id, $this->secondary_item_id, $this->hide_sitewide, $this->is_spam, $this->privacy, $this->status );
+			$q = $wpdb->prepare( "INSERT INTO {$bp->activity->table_name} ( user_id, component, type, action, content, primary_link, date_recorded, date_updated, item_id, secondary_item_id, hide_sitewide, is_spam, privacy, status ) VALUES ( %d, %s, %s, %s, %s, %s, %s, %s, %d, %d, %d, %d, %s, %s )", $this->user_id, $this->component, $this->type, $this->action, $this->content, $this->primary_link, $this->date_recorded, $this->date_updated, $this->item_id, $this->secondary_item_id, $this->hide_sitewide, $this->is_spam, $this->privacy, $this->status );
 		}
 
 		if ( false === $wpdb->query( $q ) ) {
@@ -333,9 +343,11 @@ class BP_Activity_Activity {
 			bb_get_activity_published_status() === $this->status
 		) {
 			add_filter( 'bp_activity_at_name_do_notifications', '__return_true' );
-		} else {
+		} elseif ( ! in_array( $this->privacy, array( 'media', 'video', 'document' ), true ) ) {
 			add_filter( 'bp_activity_at_name_do_notifications', '__return_false' );
 		}
+
+		bb_activity_update_date_updated_and_clear_cache( $this, $this->date_updated );
 
 		/**
 		 * Fires after an activity item has been saved to the database.
@@ -485,6 +497,10 @@ class BP_Activity_Activity {
 			}
 		}
 
+		if ( isset( $r['filter'] ) && is_array( $r['filter'] ) && ! empty( $r['order_by'] ) ) {
+			$r['filter']['since_date_column'] = $r['order_by'];
+		}
+
 		// Regular filtering.
 		if ( $r['filter'] && $filter_sql = self::get_filter_sql( $r['filter'] ) ) {
 			$where_conditions['filter_sql'] = $filter_sql;
@@ -541,6 +557,7 @@ class BP_Activity_Activity {
 			case 'item_id':
 			case 'secondary_item_id':
 			case 'date_recorded':
+			case 'date_updated':
 			case 'hide_sitewide':
 			case 'mptt_left':
 			case 'mptt_right':
@@ -587,6 +604,7 @@ class BP_Activity_Activity {
 				}
 			}
 		}
+		$r['pinned_id'] = $pinned_id;
 
 		// Hide Hidden Items?
 		if ( ! $r['show_hidden'] ) {
@@ -1260,9 +1278,10 @@ class BP_Activity_Activity {
 	 * @param string $action            Action to filter by.
 	 * @param string $content           Content to filter by.
 	 * @param string $date_recorded     Date to filter by.
+	 * @param string $date_updated      Date to filter by.
 	 * @return int|false Activity ID on success, false if none is found.
 	 */
-	public static function get_id( $user_id, $component, $type, $item_id, $secondary_item_id, $action, $content, $date_recorded ) {
+	public static function get_id( $user_id, $component, $type, $item_id, $secondary_item_id, $action, $content, $date_recorded, $date_updated ) {
 		global $wpdb;
 
 		$bp = buddypress();
@@ -1299,6 +1318,10 @@ class BP_Activity_Activity {
 
 		if ( ! empty( $date_recorded ) ) {
 			$where_args[] = $wpdb->prepare( 'date_recorded = %s', $date_recorded );
+		}
+
+		if ( ! empty( $date_updated ) ) {
+			$where_args[] = $wpdb->prepare( 'date_updated = %s', $date_updated );
 		}
 
 		if ( ! empty( $where_args ) ) {
@@ -1351,6 +1374,7 @@ class BP_Activity_Activity {
 				'item_id'           => false,
 				'secondary_item_id' => false,
 				'date_recorded'     => false,
+				'date_updated'      => false,
 				'hide_sitewide'     => false,
 				'status'            => false,
 			)
@@ -1407,6 +1431,11 @@ class BP_Activity_Activity {
 		// Date Recorded.
 		if ( ! empty( $r['date_recorded'] ) ) {
 			$where_args[] = $wpdb->prepare( 'date_recorded = %s', $r['date_recorded'] );
+		}
+
+		// Date Updated.
+		if ( ! empty( $r['date_updated'] ) ) {
+			$where_args[] = $wpdb->prepare( 'date_updated = %s', $r['date_updated'] );
 		}
 
 		// Hidden sitewide.
@@ -1803,7 +1832,7 @@ class BP_Activity_Activity {
 					}
 
 					if ( bb_is_rest() && ! isset( $_GET['apply_limit'] ) ) {
-						$sql['limit'] = "";
+						$sql['limit'] = '';
 					} else {
 						$sql['limit'] = 'limit ' . $limit;
 					}
@@ -1859,7 +1888,6 @@ class BP_Activity_Activity {
 					}
 				}
 			}
-
 
 			// Calculate depth for each item.
 			foreach ( $ref as &$r ) {
@@ -2149,7 +2177,11 @@ class BP_Activity_Activity {
 			// Trick: parse to UNIX date then translate back.
 			$translated_date = date( 'Y-m-d H:i:s', strtotime( $filter_array['since'] ) );
 			if ( $translated_date === $filter_array['since'] ) {
-				$filter_sql[] = "a.date_recorded > '{$translated_date}'";
+				if ( ! empty( $filter_array['since_date_column'] ) && 'date_updated' === $filter_array['since_date_column'] ) {
+					$filter_sql[] = "a.date_updated > '{$translated_date}'";
+				} else {
+					$filter_sql[] = "a.date_recorded > '{$translated_date}'";
+				}
 			}
 		}
 
@@ -2157,7 +2189,15 @@ class BP_Activity_Activity {
 			return false;
 		}
 
-		return join( ' AND ', $filter_sql );
+		/**
+		 * Filter the activity get filter sql.
+		 *
+		 * @since BuddyBoss 2.8.80
+		 *
+		 * @param string $filter_sql   The filter sql.
+		 * @param array  $filter_array The filter array.
+		 */
+		return apply_filters( 'bb_activity_activity_get_filter_sql', join( ' AND ', $filter_sql ), $filter_array );
 	}
 
 	/**

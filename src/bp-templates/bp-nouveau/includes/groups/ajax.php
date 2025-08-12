@@ -1836,7 +1836,7 @@ function bp_groups_messages_validate_message( $send, $type = 'all' ) {
 /**
  * Subscribe or un-subscribe a group when clicking the bell button via a POST request.
  *
- * @since BuddyBoss [BBVERIOSN]
+ * @since BuddyBoss 2.2.9
  */
 function bb_nouveau_ajax_group_subscription() {
 	$response = array(
@@ -1999,7 +1999,7 @@ function bb_nouveau_ajax_group_subscription() {
 	/**
 	 * Filters change the success/fail message.
 	 *
-	 * @since BuddyBoss [BBVERIOSN]
+	 * @since BuddyBoss 2.2.9
 	 *
 	 * @param array $response Array of response message.
 	 * @param int   $group_id Group id.

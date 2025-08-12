@@ -24,13 +24,16 @@ function bp_nouveau_search_register_scripts( $scripts = array() ) {
 		return $scripts;
 	}
 
-	return array_merge( $scripts, array(
-		'bp-nouveau-search' => array(
-			'file'         => 'js/buddypress-search%s.js',
-			'dependencies' => array( 'bp-nouveau' ),
-			'footer'       => true,
-		),
-	) );
+	return array_merge(
+		$scripts,
+		array(
+			'bp-nouveau-search' => array(
+				'file'         => 'js/buddypress-search%s.js',
+				'dependencies' => array( 'bp-nouveau' ),
+				'footer'       => true,
+			),
+		)
+	);
 }
 
 /**
@@ -49,9 +52,9 @@ function bp_nouveau_search_enqueue_scripts() {
 	$data = array(
 		'nonce'                 => wp_create_nonce( 'bp_search_ajax' ),
 		'action'                => 'bp_search_ajax',
-		'debug'                 => true,//set it to false on production
+		'debug'                 => true, // set it to false on production
 		'ajaxurl'               => admin_url( 'admin-ajax.php', is_ssl() ? 'admin' : 'http' ),
-		//'search_url'    => home_url( '/' ), Now we are using form[role='search'] selector
+		// 'search_url'    => home_url( '/' ), Now we are using form[role='search'] selector
 		'loading_msg'           => esc_html__( 'Loading suggestions...', 'buddyboss' ),
 		'enable_ajax_search'    => function_exists( 'bp_is_search_autocomplete_enable' ) && bp_is_search_autocomplete_enable(),
 		'per_page'              => $per_page,
@@ -60,8 +63,8 @@ function bp_nouveau_search_enqueue_scripts() {
 		'forums_autocomplete'   => false,
 	);
 
-	if ( isset( $_GET["s"] ) ) {
-		$data["search_term"] = $_GET["s"];
+	if ( isset( $_GET['s'] ) ) {
+		$data['search_term'] = $_GET['s'];
 	}
 
 	if ( bp_is_active( 'forums' ) ) {
@@ -177,4 +180,50 @@ function bp_nouveau_search_messages_autocomplete_init_jsblock() {
 	</script>
 
 	<?php
+}
+
+/**
+ * Enqueue scripts and localize data for BuddyBoss ReadyLaunch search functionality.
+ *
+ * This function registers the necessary JavaScript files and provides localization
+ * data for handling search functionalities in the BuddyBoss ReadyLaunch theme.
+ * It dynamically sets parameters such as nonces, AJAX action URLs, messages, and
+ * other settings required for the search feature.
+ *
+ * @since BuddyBoss 2.9.00
+ *
+ * @return void
+ */
+function bb_rl_search_enqueue_scripts() {
+	global $bp;
+
+	/* To show the number of listings per page. */
+	$per_page = '5';
+	if ( function_exists( 'bp_search_get_form_option' ) ) {
+		$per_page = bp_search_get_form_option( 'bp_search_number_of_results', 5 );
+	}
+
+	$data = array(
+		'nonce'                 => wp_create_nonce( 'bp_search_ajax' ),
+		'action'                => 'bp_search_ajax',
+		'debug'                 => true, // set it to false on production.
+		'ajaxurl'               => admin_url( 'admin-ajax.php', is_ssl() ? 'admin' : 'http' ),
+		'loading_msg'           => esc_html__( 'Loading suggestions...', 'buddyboss' ),
+		'enable_ajax_search'    => function_exists( 'bp_is_search_autocomplete_enable' ) && bp_is_search_autocomplete_enable(),
+		'per_page'              => $per_page,
+		'autocomplete_selector' => '.bb-rl-network-search-modal .search-form',
+		'form_selector'         => '.bp-search-form-wrapper #search-form',
+		'forums_autocomplete'   => false,
+	);
+
+	if ( isset( $_GET['s'] ) ) {
+		$data['search_term'] = $_GET['s'];
+	}
+
+	$min = bp_core_get_minified_asset_suffix();
+
+	wp_enqueue_script( 'jquery-ui-autocomplete' );
+	wp_enqueue_script( 'bb-rl-nouveau-search', trailingslashit( $bp->plugin_url ) . "bp-templates/bp-nouveau/readylaunch/js/buddypress-search{$min}.js", array( 'bp-nouveau' ), bp_get_version(), true );
+
+	wp_localize_script( 'bb-rl-nouveau-search', 'BP_SEARCH', apply_filters( 'bp_search_js_settings', $data ) );
 }

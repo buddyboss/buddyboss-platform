@@ -618,7 +618,7 @@
 		border-top: 1px solid $bp-border-color;
 	}
 
-	@media screen and (max-width: 580px) {
+	@media screen and (max-width: 768px) {
 
 		.whats-new-form-footer {
 			flex-direction: column;
@@ -1486,6 +1486,7 @@
 	margin: $marg-sml 0 $marg-sml auto;
 	display: flex;
 	flex-flow: row-reverse;
+	position: relative;
 
 	input {
 
@@ -1934,6 +1935,90 @@ input.search-query-input {
 
 }
 
+// Topic selector styles
+.whats-new-topic-selector {
+	position: relative;
+	margin-right: 8px;
+
+	.bb-topic-selector-button {
+		display: block;
+		cursor: pointer;
+		padding: 6px 25px 6px 12px;
+		border-radius: $block-radius-inner;
+		background-color: $white;
+		border: 1px solid $bp-border-color;
+		font-size: 14px;
+		color: $black;
+		max-width: 160px;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+
+		&:after {
+			content: "\e826";
+			font-family: 'bb-icons';/* stylelint-disable-line */
+			font-size: 20px;
+			line-height: 1;
+			position: absolute;
+			top: 50%;
+			right: 5px;
+			transform: translateY(-50%);
+		}
+	}
+
+	.bb-topic-selector-list {
+		position: absolute;
+		top: 45px;
+		left: 0;
+		width: 200px;
+		display: none;
+
+		ul {
+			list-style: none;
+			margin: 0;
+			padding: 8px;
+			background-color: $white;
+			border-radius: $block-radius;
+			max-height: 160px;
+			overflow: auto;
+			margin-bottom: 30px;
+			box-shadow: 0 2px 7px 1px rgba(0, 0, 0, 0.05), 0 6px 32px 0 rgba(18, 43, 70, 0.1);
+
+			a {
+				display: block;
+				padding: 5px 15px;
+				border-radius: $block-radius-inner;
+				color: $black;
+				font-size: 13px;
+				font-weight: 400;
+				text-decoration: none;
+				white-space: nowrap;
+				overflow: hidden;
+				text-overflow: ellipsis;
+
+				&.selected {
+					font-weight: 600;
+				}
+
+				&:hover {
+					background-color: $light-grey;
+				}
+			}
+		}
+	}
+
+	#whats-new-topic-selector {
+		display: none;
+	}
+
+	&.is-active {
+
+		.bb-topic-selector-list {
+			display: block;
+		}
+	}
+}
+
 @media screen and (max-width: 768px) {
 
 	.bbp-topic-form #whats-new-toolbar {
@@ -1963,10 +2048,86 @@ input.search-query-input {
 	}
 }
 
+@media screen and (max-width: 580px) {
+
+	.whats-new-topic-selector {
+		order: -1;
+		display: block;
+		width: 60%;
+		text-align: center;
+		max-width: 350px;
+		margin: 15px 20% 5px;
+
+		.bb-topic-selector-button {
+			width: 100%;
+			max-width: 350px;
+			justify-content: center;
+		}
+
+		.bb-topic-selector-list {
+			top: 60px;
+			left: 50%;
+			transform: translateX(-50%);
+			z-index: 9;
+		}
+	}
+
+	.activity-update-form .activity-form.focus-in #activity-form-submit-wrapper:has(.whats-new-topic-selector) {
+		justify-content: center;
+
+		#whats-new-submit {
+			margin-left: 0;
+		}
+	}
+}
+
 .media-support-hide,
 .document-support-hide,
 .video-support-hide,
 .post-emoji-hide,
 .post-gif-hide {
 	display: none;
+}
+
+/* Topic tooltip */
+.bb-topic-tooltip-wrapper {
+	position: absolute;
+	z-index: 99999;
+	pointer-events: none;
+	opacity: 0;
+	transition: opacity 0.15s;
+	bottom: calc(100% + 15px);
+	left: 50%;
+	transform: translateX(-50%);
+
+	&.active {
+		opacity: 1;
+		pointer-events: auto;
+	}
+
+	.bb-topic-tooltip {
+		background: #1e2132;
+		color: #fff;
+		padding: 4px 14px;
+		border-radius: 4px;
+		font-size: 12px;
+		font-weight: 600;
+		white-space: nowrap;
+		box-shadow: 0 2.45px 3.68px 0 rgba(0, 0, 0, 0.15);
+		position: relative;
+	}
+
+	&:after {
+		content: "";
+		position: absolute;
+		bottom: -7px;
+		left: 50%;
+		transform: translateX(-50%);
+		border-width: 7px 7px 0 7px;
+		border-style: solid;
+		border-color: #1e2132 transparent transparent transparent;
+		width: 0;
+		height: 0;
+		display: block;
+	}
 }

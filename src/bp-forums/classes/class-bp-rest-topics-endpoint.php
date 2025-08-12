@@ -205,7 +205,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 			&& ! empty( $args['orderby'] )
 			&& 'include' === $args['orderby']
 		) {
-			$bbp_t['orderby'] = 'post__in';
+			$args['orderby'] = 'post__in';
 		}
 
 		/**
@@ -296,145 +296,6 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 
 		// Run the query.
 		$topics_query = new WP_Query( $bbp_t );
-
-		/** Stickies */
-		// Put sticky posts at the top of the posts array.
-		if ( ! empty( $bbp_t['show_stickies'] ) && $bbp_t['paged'] <= 1 ) {
-
-			// Strip the super stickies from topic query.
-			// bp-forums/groups.php L791.
-			if (
-				! empty( $bbp_t['post_parent'] )
-				&& 'forum' === get_post_type( $bbp_t['post_parent'] )
-			) {
-				$group_ids = bbp_get_forum_group_ids( $bbp_t['post_parent'] );
-				if ( ! empty( $group_ids ) ) {
-					add_filter( 'bbp_get_super_stickies', array( $this, 'no_super_stickies' ), 10, 1 );
-				}
-			}
-
-			// Get super stickies and stickies in this forum.
-			$stickies = bbp_get_super_stickies();
-
-			// Strip the super stickies from topic query.
-			if (
-				! empty( $bbp_t['post_parent'] )
-				&& 'forum' === get_post_type( $bbp_t['post_parent'] )
-			) {
-				$group_ids = bbp_get_forum_group_ids( $bbp_t['post_parent'] );
-				if ( ! empty( $group_ids ) ) {
-					remove_filter( 'bbp_get_super_stickies', array( $this, 'no_super_stickies' ), 10, 1 );
-				}
-			}
-
-			// Get stickies for current forum.
-			if ( ! empty( $bbp_t['post_parent'] ) ) {
-				$stickies = array_merge( $stickies, bbp_get_stickies( $bbp_t['post_parent'] ) );
-			}
-
-			// Remove any duplicate stickies.
-			$stickies = array_unique( $stickies );
-
-			// We have stickies.
-			if ( is_array( $stickies ) && ! empty( $stickies ) ) {
-
-				// Start the offset at -1 so first sticky is at correct 0 offset.
-				$sticky_offset = - 1;
-
-				// Loop over topics and relocate stickies to the front.
-				foreach ( $stickies as $sticky_index => $sticky_id ) {
-
-					// Get the post offset from the posts array.
-					$post_offsets = wp_filter_object_list( $topics_query->posts, array( 'ID' => $sticky_id ), 'OR', 'ID' );
-
-					// Continue if no post offsets.
-					if ( empty( $post_offsets ) ) {
-						continue;
-					}
-
-					// Loop over posts in current query and splice them into position.
-					foreach ( array_keys( $post_offsets ) as $post_offset ) {
-						$sticky_offset ++;
-
-						$sticky = $topics_query->posts[ $post_offset ];
-
-						// Remove sticky from current position.
-						array_splice( $topics_query->posts, $post_offset, 1 );
-
-						// Move to front, after other stickies.
-						array_splice( $topics_query->posts, $sticky_offset, 0, array( $sticky ) );
-
-						// Cleanup.
-						unset( $stickies[ $sticky_index ] );
-						unset( $sticky );
-					}
-
-					// Cleanup.
-					unset( $post_offsets );
-				}
-
-				// Cleanup.
-				unset( $sticky_offset );
-
-				// If any posts have been excluded specifically, Ignore those that are sticky.
-				if ( ! empty( $stickies ) && ! empty( $bbp_t['post__not_in'] ) ) {
-					$stickies = array_diff( $stickies, $bbp_t['post__not_in'] );
-				}
-
-				// Fetch sticky posts that weren't in the query results.
-				if ( ! empty( $stickies ) ) {
-
-					// Query to use in get_posts to get sticky posts.
-					$sticky_query = array(
-						'post_type'              => bbp_get_topic_post_type(),
-						'post_parent'            => 'any',
-						'meta_key'               => '_bbp_last_active_time', // phpcs:ignore
-						'orderby'                => 'meta_value',
-						'order'                  => 'DESC',
-						'include'                => $stickies,
-						'suppress_filters'       => false,
-						'update_post_term_cache' => false,
-					);
-
-					// Cleanup.
-					unset( $stickies );
-
-					// Conditionally exclude private/hidden forum ID's.
-					$exclude_forum_ids = bbp_exclude_forum_ids( 'array' );
-					if ( ! empty( $exclude_forum_ids ) ) {
-						$sticky_query['post_parent__not_in'] = $exclude_forum_ids;
-					}
-
-					// What are the default allowed statuses (based on user caps).
-					if ( bbp_get_view_all( 'edit_others_topics' ) ) {
-						$sticky_query['post_status'] = $bbp_t['post_status'];
-
-						// Lean on the 'perm' query var value of 'readable' to provide statuses.
-					} else {
-						$sticky_query['post_status'] = $bbp_t['perm'];
-					}
-
-					// Get all stickies.
-					$sticky_posts = get_posts( $sticky_query );
-
-					if ( ! empty( $sticky_posts ) ) {
-
-						// Get a count of the visible stickies.
-						$sticky_count = count( $sticky_posts );
-
-						// Merge the stickies topics with the query topics.
-						$topics_query->posts = array_merge( $sticky_posts, $topics_query->posts );
-
-						// Adjust loop and counts for new sticky positions.
-						$topics_query->found_posts = (int) $topics_query->found_posts + (int) $sticky_count;
-						$topics_query->post_count  = (int) $topics_query->post_count + (int) $sticky_count;
-
-						// Cleanup.
-						unset( $sticky_posts );
-					}
-				}
-			}
-		}
 
 		// If no limit to posts per page, set it to the current post_count.
 		if ( - 1 === $bbp_t['posts_per_page'] ) {
@@ -1466,7 +1327,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 
 		/** Discussion Title */
 		if ( ! empty( $topic_new->bbp_topic_title ) ) {
-			$topic_title = esc_attr( wp_strip_all_tags( $topic_new->bbp_topic_title ) );
+			$topic_title = sanitize_text_field( wp_unslash( $topic_new->bbp_topic_title ) );
 		}
 
 		// Filter and sanitize.
@@ -2929,7 +2790,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 			$topic->bbp_group_id = $request['group'];
 		}
 		if ( isset( $request['title'] ) ) {
-			$topic->bbp_topic_title = $request['title'];
+			$topic->bbp_topic_title = sanitize_text_field( wp_unslash( $request['title'] ) );
 		}
 		if ( isset( $request['status'] ) ) {
 			$topic->bbp_topic_status = $request['status'];

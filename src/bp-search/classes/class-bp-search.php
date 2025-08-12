@@ -261,11 +261,18 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 			$args = array(
 				'search_term'   => $_REQUEST['search_term'],
 				// How many results should be displyed in autosuggest?
-				// @todo: give a settings field for this value
+				// @todo: give a settings field for this value.
 				'ajax_per_page' => $_REQUEST['per_page'],
 				'count_total'   => true,
 				'template_type' => 'ajax',
 			);
+
+			$key = 'all';
+
+			if ( isset( $_REQUEST['subset'] ) && ! empty( $_REQUEST['subset'] ) ) {
+				$args['search_subset'] = $_REQUEST['subset'];
+				$key                   = $_REQUEST['subset'];
+			}
 
 			if ( isset( $_REQUEST['forum_search_term'] ) ) {
 				$args['forum_search'] = true;
@@ -274,7 +281,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 			$this->do_search( $args );
 
 			$search_results = array();
-			if ( isset( $this->search_results['all']['items'] ) && ! empty( $this->search_results['all']['items'] ) ) {
+			if ( isset( $this->search_results[$key]['items'] ) && ! empty( $this->search_results[$key]['items'] ) ) {
 				/*
 				 ++++++++++++++++++++++++++++++++++
 				group items of same type together
@@ -282,7 +289,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 				if ( ! isset( $args['forum_search'] ) || ! $args['forum_search'] ) {
 
 					$types = array();
-					foreach ( $this->search_results['all']['items'] as $item_id => $item ) {
+					foreach ( $this->search_results[$key]['items'] as $item_id => $item ) {
 						$type = $item['type'];
 						if ( empty( $types ) || ! in_array( $type, $types ) ) {
 							$types[] = $type;
@@ -292,7 +299,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 					$new_items = array();
 					foreach ( $types as $type ) {
 						$first_html_changed = false;
-						foreach ( $this->search_results['all']['items'] as $item_id => $item ) {
+						foreach ( $this->search_results[$key]['items'] as $item_id => $item ) {
 							if ( $item['type'] != $type ) {
 								continue;
 							}
@@ -313,7 +320,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 						}
 					}
 
-					$this->search_results['all']['items'] = $new_items;
+					$this->search_results[$key]['items'] = $new_items;
 				}
 
 				/* _______________________________ */
@@ -335,7 +342,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 				}
 
 				$type_mem = '';
-				foreach ( $this->search_results['all']['items'] as $item_id => $item ) {
+				foreach ( $this->search_results[$key]['items'] as $item_id => $item ) {
 					$new_row               = array( 'value' => $item['html'] );
 					$type_label            = apply_filters( 'bp_search_label_search_type', $item['type'] );
 					$new_row['type']       = $item['type'];
@@ -365,7 +372,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 				}
 
 				// Show "View All" link.
-				if ( absint( $this->search_results['all']['total_match_count'] ) > absint( bp_search_get_form_option( 'bp_search_number_of_results', 5 ) ) ) {
+				if ( absint( $this->search_results[$key]['total_match_count'] ) > absint( bp_search_get_form_option( 'bp_search_number_of_results', 5 ) ) ) {
 					$all_results_row  = array(
 						'value'      => "<div class='bp-search-ajax-item allresults'><a href='" . esc_url( $url ) . "'>" . __( 'View all', 'buddyboss' ) . '</a></div>',
 						'type'       => 'view_all_type',
@@ -383,7 +390,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 				);
 			}
 
-			die( json_encode( $search_results ) );
+			wp_send_json( $search_results );
 		}
 
 		/**
@@ -435,9 +442,9 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 				$this->searchable_items = array( 'forum', 'topic', 'reply' );
 			}
 
-			$this->search_args = $args;// save it for using in other methods
+			$this->search_args = $args; // save it for using in other methods.
 
-			// bail out if nothing to search for
+			// bail out if nothing to search for.
 			if ( ! $args['search_term'] ) {
 				return;
 			}
@@ -690,8 +697,10 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 					$pre_search_query = $obj->union_sql( $args['search_term'] ) . ' ORDER BY relevance DESC, entry_date DESC ';
 				}
 
-				if ( $args['per_page'] > 0 ) {
-					$offset            = ( $args['current_page'] * $args['per_page'] ) - $args['per_page'];
+				if ( isset( $args['ajax_per_page'] ) && $args['ajax_per_page'] > 0 ) {
+					$pre_search_query .= " LIMIT {$args['ajax_per_page']} ";
+				} elseif ( $args['per_page'] > 0 ) {
+					$offset           = ( $args['current_page'] * $args['per_page'] ) - $args['per_page'];
 					$pre_search_query .= " LIMIT {$offset}, {$args['per_page']} ";
 				}
 
@@ -965,6 +974,29 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 		public function has_search_results() {
 			$current_tab = isset( $this->search_args['search_subset'] ) ? $this->search_args['search_subset'] : '';
 			return isset( $this->search_results[ $current_tab ]['items'] ) && ! empty( $this->search_results[ $current_tab ]['items'] );
+		}
+
+
+		/**
+		 * Returns the available search types.
+		 *
+		 * @since BuddyBoss 2.9.00
+		 *
+		 * @return array
+		 */
+		public function get_available_search() {
+			$retval = array(
+				'' => __( 'All', 'buddyboss' ),
+			);
+
+			if ( ! empty( $this->searchable_items ) && is_array( $this->searchable_items ) ) {
+				foreach ( $this->searchable_items as $item ) {
+					$label           = isset( $search_items[ $item ] ) ? $search_items[ $item ] : $item;
+					$retval[ $item ] = apply_filters( 'bp_search_label_search_type', $label );
+				}
+			}
+
+			return $retval;
 		}
 	}
 

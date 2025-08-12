@@ -74,6 +74,7 @@ add_action( 'bp_init', 'bp_setup_globals', 4 );
 add_action( 'bp_init', 'bp_setup_canonical_stack', 5 );
 add_action( 'bp_init', 'bp_setup_nav', 6 );
 add_action( 'bp_init', 'bp_setup_title', 8 );
+add_action( 'bp_init', 'bb_blocks_init', 10 );
 add_action( 'bp_init', 'bp_core_load_admin_bar_css', 12 );
 add_action( 'bp_init', 'bp_add_rewrite_tags', 20 );
 add_action( 'bp_init', 'bp_add_rewrite_rules', 30 );
@@ -82,6 +83,7 @@ add_action( 'bp_init', 'bp_init_background_updater', 50 );
 add_action( 'bp_init', 'bb_init_email_background_updater', 51 );
 add_action( 'bp_init', 'bb_init_notifications_background_updater', 52 );
 add_action( 'bp_init', 'bb_init_background_updater', 50 );
+add_action( 'bp_init', 'bb_load_topics_manager' );
 
 /**
  * The bp_register_taxonomies hook - Attached to 'bp_init' @ priority 2 above.
@@ -923,7 +925,7 @@ function bb_mention_post_type_comment( $comment_id = 0, $is_approved = true ) {
 
 	// Replace @mention text with userlinks.
 	foreach ( (array) $usernames as $user_id => $username ) {
-		$replacement = "<a class='bp-suggestions-mention' href='{{mention_user_id_" . $user_id . "}}' rel='nofollow'>@$username</a>";
+		$replacement = "<a class='bp-suggestions-mention' data-bb-hp-profile='" . esc_attr( $user_id ) . "' href='{{mention_user_id_" . $user_id . "}}' rel='nofollow'>@$username</a>";
 		if ( false === strpos( $post_type_comment->comment_content, $replacement ) ) {
 			// Pattern for cases with existing <a>@mention</a> or @mention.
 			$pattern                            = '/(?<=[^A-Za-z0-9\_\/\.\-\*\+\=\%\$\#\?]|^)@' . preg_quote( $username, '/' ) . '(?!\/)|<a[^>]*>@' . preg_quote( $username, '/' ) . '<\/a>/';
@@ -1176,13 +1178,13 @@ function bb_bg_process_log_load() {
 add_action( 'bp_init', 'bb_bg_process_log_load' );
 
 /**
- * Remove notices from the buddyboss upgrade screens.
+ * Remove notices from the buddyboss upgrade and ReadyLaunch screens.
  *
  * @since BuddyBoss 2.6.30
  */
 function bb_remove_admin_notices() {
 	$screen = get_current_screen();
-	if ( 'buddyboss_page_bb-upgrade' === $screen->id ) {
+	if ( 'buddyboss_page_bb-upgrade' === $screen->id || 'buddyboss_page_bb-readylaunch' === $screen->id ) {
 		remove_all_actions( 'admin_notices' );
 
 		// Additional check for the common WordPress error/warning hooks.
@@ -1238,3 +1240,37 @@ function bb_telemetry_load() {
 }
 
 add_action( 'bp_init', 'bb_telemetry_load' );
+
+/**
+ * Initialize the Topics Manager.
+ * This ensures we only load the manager when needed.
+ *
+ * @since BuddyBoss 2.8.80
+ *
+ * @return void True if the topics manager is loaded, false otherwise.
+ */
+function bb_load_topics_manager() {
+	// @todo: Only load if activity topics are enabled for now.
+	if (
+		! bp_is_active( 'activity' ) ||
+		! function_exists( 'bb_is_enabled_activity_topics' ) ||
+		! bb_is_enabled_activity_topics()
+	) {
+		return;
+	}
+
+	bb_topics_manager_instance();
+}
+
+/**
+ * Function to load readylaunch class.
+ *
+ * @since BuddyBoss 2.9.00
+ */
+function bb_load_readylaunch() {
+	if ( class_exists( 'BB_Readylaunch' ) ) {
+		return BB_Readylaunch::instance();
+	}
+}
+
+add_action( 'bp_loaded', 'bb_load_readylaunch', 99 );
