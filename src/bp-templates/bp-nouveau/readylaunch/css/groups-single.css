@@ -11,7 +11,7 @@
   --bb-rl-background-tertiary-hover-color: #cececf;
   --bb-rl-background-black-color: #0c0c0d;
   --bb-rl-background-disabled-color: #dbdbdb;
-  --bb-rl-background-brand-primary-color: #4946fe;
+  --bb-rl-background-brand-primary-color: var(--bb-rl-primary-color);
   --bb-rl-background-brand-primary-hover-color: #4937f4;
   --bb-rl-background-brand-secondary-color: #dde4ff;
   --bb-rl-background-brand-secondary-hover-color: #c2cdff;
@@ -35,7 +35,7 @@
   --bb-rl-border-quinery-color: #6d6d6e;
   --bb-rl-border-quaternary-color: #9e9e9e;
   --bb-rl-border-brand-primary-color: #3325ae;
-  --bb-rl-border-brand-secondary-color: #4946fe;
+  --bb-rl-border-brand-secondary-color: var(--bb-rl-primary-color);
   --bb-rl-border-positive-primary-color: #02542d;
   --bb-rl-border-positive-secondary-color: #14ae5c;
   --bb-rl-border-warning-primary-color: #682d03;
@@ -47,7 +47,7 @@
   --bb-rl-text-secondary-color: #555556;
   --bb-rl-text-tertiary-color: #858586;
   --bb-rl-text-disabled-color: #9e9e9e;
-  --bb-rl-text-brand-primary-color: #4946fe;
+  --bb-rl-text-brand-primary-color: var(--bb-rl-primary-color);
   --bb-rl-text-brand-secondary-color: #3325ae;
   --bb-rl-text-positive-primary-color: #02542d;
   --bb-rl-text-positive-secondary-color: #14ae5c;
@@ -61,7 +61,8 @@
   --bb-rl-icon-tertiary-color: #9e9e9e;
   --bb-rl-icon-disabled-color: #cececf;
   --bb-rl-icon-brand-primary-color: #3325ae;
-  --bb-rl-icon-brand-secondary-color: #4946fe;
+  --bb-rl-icon-brand-secondary-color: var(--bb-rl-primary-color);
+  --bb-rl-icon-brand-disabled-color: #767eff;
   --bb-rl-icon-positive-primary-color: #02542d;
   --bb-rl-icon-positive-secondary-color: #14ae5c;
   --bb-rl-icon-warning-primary-color: #682d03;
@@ -104,6 +105,7 @@
 
 /* Dark Mode Variables */
 .bb-rl-dark-mode {
+  --bb-rl-primary-color: #4946fe;
   --bb-rl-background-color: #242425;
   --bb-rl-background-hover-color: #555556;
   --bb-rl-background-secondary-color: #2f2f2f;
@@ -112,7 +114,7 @@
   --bb-rl-background-tertiary-hover-color: #555556;
   --bb-rl-background-black-color: #0c0c0d;
   --bb-rl-background-disabled-color: #dbdbdb;
-  --bb-rl-background-brand-primary-color: #4946fe;
+  --bb-rl-background-brand-primary-color: var(--bb-rl-primary-color);
   --bb-rl-background-brand-primary-hover-color: #4937f4;
   --bb-rl-background-brand-secondary-color: #3325ae;
   --bb-rl-background-brand-secondary-hover-color: #2e2689;
@@ -136,7 +138,7 @@
   --bb-rl-border-quinery-color: #f6f6f6;
   --bb-rl-border-quaternary-color: #f3f3f3;
   --bb-rl-border-brand-primary-color: #c2cdff;
-  --bb-rl-border-brand-secondary-color: #4946fe;
+  --bb-rl-border-brand-secondary-color: var(--bb-rl-primary-color);
   --bb-rl-border-positive-primary-color: #cff7d3;
   --bb-rl-border-positive-secondary-color: #14ae5c;
   --bb-rl-border-warning-primary-color: #fff1c2;
@@ -148,7 +150,7 @@
   --bb-rl-text-secondary-color: #cececf;
   --bb-rl-text-tertiary-color: #b6b6b6;
   --bb-rl-text-disabled-color: #e7e7e7;
-  --bb-rl-text-brand-primary-color: #4946fe;
+  --bb-rl-text-brand-primary-color: var(--bb-rl-primary-color);
   --bb-rl-text-brand-secondary-color: #c2cdff;
   --bb-rl-text-positive-primary-color: #cff7d3;
   --bb-rl-text-positive-secondary-color: #14ae5c;
@@ -162,7 +164,8 @@
   --bb-rl-icon-tertiary-color: #9e9e9e;
   --bb-rl-icon-disabled-color: #858586;
   --bb-rl-icon-brand-primary-color: #c2cdff;
-  --bb-rl-icon-brand-secondary-color: #4946fe;
+  --bb-rl-icon-brand-secondary-color: var(--bb-rl-primary-color);
+  --bb-rl-icon-brand-disabled-color: #767eff;
   --bb-rl-icon-positive-primary-color: #cff7d3;
   --bb-rl-icon-positive-secondary-color: #14ae5c;
   --bb-rl-icon-warning-primary-color: #fff1c2;
@@ -407,6 +410,31 @@
   content: "\e2fe";
 }
 
+.bb-rl-groups-single-wrapper > .bb-rl-secondary-header {
+  top: 71px;
+  position: sticky;
+  z-index: 9999;
+}
+
+.admin-bar .bb-rl-groups-single-wrapper > .bb-rl-secondary-header {
+  top: 103px;
+}
+
+@media screen and (max-width: 992px) {
+  .bb-rl-groups-single-wrapper > .bb-rl-secondary-header {
+    top: 65px;
+  }
+  .admin-bar .bb-rl-groups-single-wrapper > .bb-rl-secondary-header {
+    top: 97px;
+  }
+}
+
+@media screen and (max-width: 782px) {
+  .admin-bar .bb-rl-groups-single-wrapper > .bb-rl-secondary-header {
+    top: 111px;
+  }
+}
+
 .bb-rl-group-details {
   padding: 0 0 var(--bb-rl-space-400);
 }
@@ -535,6 +563,7 @@
 
 .bb-rl-group-organizers .item-entry .list-meta {
   display: flex;
+  gap: var(--bb-rl-space-50);
   align-items: center;
   color: var(--bb-rl-text-tertiary-color);
   font-size: 14px;
@@ -975,13 +1004,20 @@
 }
 
 .bb-rl-manage-group-container .bb-group-meprlms-settings-container .bb-course-activity-selection .select2-container .select2-selection--multiple {
+  background-color: var(--bb-rl-background-color);
   border-color: var(--bb-rl-border-secondary-color);
   border-radius: var(--bb-rl-radius-md) !important;
 }
 
 .bb-rl-manage-group-container .bb-group-meprlms-settings-container .bb-course-activity-selection .select2-dropdown {
+  background-color: var(--bb-rl-background-color);
   border-color: var(--bb-rl-border-secondary-color);
   border-radius: var(--bb-rl-radius-md);
+}
+
+.bb-rl-manage-group-container .bb-group-meprlms-settings-container .bb-course-activity-selection .select2-dropdown li.select2-results__option[aria-selected="true"] {
+  background-color: var(--bb-rl-background-secondary-color);
+  color: var(--bb-rl-text-color);
 }
 
 .bb-rl-manage-group-container .bb-group-meprlms-settings-container .bb-course-activity-selection .select2-container--default .select2-results__option--highlighted[aria-selected] {
@@ -1161,6 +1197,14 @@
   }
 }
 
+@media screen and (max-width: 544px) {
+  .bb-rl-groups-manage-members-list .members-entry .bb-rl-group-member-id,
+  .bb-rl-groups-manage-members-list .member-entry .bb-rl-group-member-id {
+    width: 100%;
+    margin-bottom: var(--bb-rl-space-200);
+  }
+}
+
 .bb-rl-groups-manage-members-list ul.item-list {
   list-style: none;
   padding: 0;
@@ -1337,6 +1381,13 @@
 
 .bb-rl-requests-list li .item-card .action .button.reject::before {
   content: "\e4f6";
+}
+
+.bb-rl-requests-list li.bb-rl-view-more--pagination {
+  flex-direction: row;
+  padding: 0;
+  border: 0;
+  margin: var(--bb-rl-space-200) 0 0;
 }
 
 @media screen and (max-width: 800px) {
@@ -1782,7 +1833,15 @@
   background-color: var(--bb-rl-background-secondary-color);
 }
 
+.bb-rl-group-manage-form .bb-zoom-setting-tab .bb-zoom-setting-tabs li a:hover {
+  color: var(--bb-rl-text-color);
+}
+
 .bb-rl-group-manage-form .bb-zoom-setting-tab .bb-zoom-setting-description {
+  margin-bottom: var(--bb-rl-space-200);
+}
+
+.bb-rl-group-manage-form .bb-zoom-setting-tab select#bp-group-zoom-manager {
   margin-bottom: var(--bb-rl-space-200);
 }
 
@@ -1924,6 +1983,10 @@
   width: 245px;
 }
 
+.bb-rl-groups-manage-members-list .bb-rl-members-manage-vip {
+  padding-right: var(--bb-rl-space-600);
+}
+
 .bb-rl-groups-manage-members-list .bb-rl-members-manage-dropdown {
   display: flex;
   align-items: center;
@@ -1946,7 +2009,9 @@
   color: var(--bb-rl-text-color);
   border: 1px solid transparent;
   padding: 6px var(--bb-rl-space-200);
-  font-size: 0.875rem;
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 400;
+  padding: 4px var(--bb-rl-space-200);
 }
 
 .bb-rl-groups-manage-members-list .bb-rl-group-member-action-button:hover {
@@ -1968,6 +2033,11 @@
   color: var(--bb-rl-text-disabled-color);
   cursor: not-allowed;
   pointer-events: none;
+}
+
+.bb-rl-container .bb-rl-groups-manage-members-list .bb_more_options .bb_more_dropdown {
+  width: auto;
+  min-width: 195px;
 }
 
 .bb-rl-group-invites-dashboard.bb-rl-group-dashboard-panel {
@@ -2366,11 +2436,7 @@ body.bb-readylaunch-template.groups.group-invites span.select2-dropdown.select2-
 }
 
 .bb-rl-group-invites-container .select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
-  background-color: var(--bb-rl-background-secondary-hover-color);
-  border: 1px solid var(--bb-rl-border-secondary-color);
   border-radius: var(--bb-rl-radius-xs);
-  margin-left: var(--bb-rl-space-50);
-  margin-right: 0;
   display: inline-flex;
   width: 16px;
   height: 16px;
@@ -2378,6 +2444,19 @@ body.bb-readylaunch-template.groups.group-invites span.select2-dropdown.select2-
   justify-content: center;
   font-weight: 400;
   color: var(--bb-rl-icon-primary-color);
+  line-height: 1;
+  position: static;
+  margin: 0 0 0 var(--bb-rl-space-50) !important;
+  background-color: transparent;
+  border: 0;
+  font-size: 0;
+}
+
+.bb-rl-group-invites-container .select2-container--default .select2-selection--multiple .select2-selection__choice__remove:before {
+  content: "\e4f6";
+  color: var(--bb-rl-icon-secondary-color);
+  font-family: bb-icons-rl;
+  font-size: 16px;
   line-height: 1;
 }
 
@@ -3088,6 +3167,10 @@ body.private-message #group-messages-container .bp-select-members-wrap .select2.
   transform: translateY(-50%);
   right: 5px;
   cursor: pointer;
+  left: inherit;
+  border: 0;
+  line-height: 1 !important;
+  margin: 0 5px 0 0 !important;
 }
 
 body.private-message #group-messages-container .bp-select-members-wrap .select2.select2-container .select2-selection__choice__remove:before {
@@ -3257,7 +3340,7 @@ div#bp-group-message-content {
   margin-left: auto;
   background-color: var(--bb-rl-background-secondary-color);
   border-color: var(--bb-rl-border-secondary-color);
-  padding: 4px var(--bb-rl-space-200) 4px var(--bb-rl-space-100);
+  padding: 4px var(--bb-rl-space-400) 4px var(--bb-rl-space-100);
   background-position: right 10px center;
 }
 
@@ -3268,6 +3351,11 @@ div#bp-group-message-content {
 .group-messages.private-message .bb-groups-messages-right .bb-groups-messages-right-top {
   margin: 0;
   margin-bottom: var(--bb-rl-space-300);
+}
+
+.group-messages.private-message .bb-groups-messages-right .bb-groups-messages-right-top .bp-messages-feedback {
+  width: 100%;
+  margin: var(--bb-rl-space-100);
 }
 
 .group-messages.private-message .bb-groups-messages-right .bb-title {
@@ -4783,6 +4871,12 @@ body.ld-in-focus-mode .learndash-wrapper {
   cursor: not-allowed;
 }
 
+body.bb-readylaunch-template:has(.learndash-wrapper-login-modal.ld-modal-open) {
+  position: fixed;
+  overflow-y: scroll;
+  width: 100%;
+}
+
 .bb-readylaunch-template .bb-learndash-content-wrap .ld-modal {
   display: flex;
   text-align: center;
@@ -4803,6 +4897,252 @@ body.ld-in-focus-mode .learndash-wrapper {
   opacity: 0;
   visibility: hidden;
   transition: all 0.3s ease;
+}
+
+.bb-readylaunch-template .learndash-wrapper:not(.ld-registration__outer-wrapper) .ld-login-modal,
+.bb-readylaunch-template .learndash-wrapper.learndash-wrapper-login-modal .ld-login-modal {
+  border-radius: var(--bb-rl-radius-lg);
+}
+
+.bb-readylaunch-template .learndash-wrapper:not(.ld-registration__outer-wrapper) .ld-button.ld-button-reverse,
+.bb-readylaunch-template .learndash-wrapper.learndash-wrapper-login-modal .ld-button.ld-button-reverse {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  font-weight: 500;
+  text-align: center;
+  cursor: pointer;
+  border-radius: var(--bb-rl-radius-md);
+  padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  text-decoration: none;
+  background-color: var(--bb-rl-background-tertiary-color);
+  color: var(--bb-rl-text-color);
+  border: 1px solid transparent;
+  padding: 6px var(--bb-rl-space-200);
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 400;
+  line-height: var(--bb-rl-font-size-2xl);
+}
+
+.bb-readylaunch-template .learndash-wrapper:not(.ld-registration__outer-wrapper) .ld-button.ld-button-reverse:hover,
+.bb-readylaunch-template .learndash-wrapper.learndash-wrapper-login-modal .ld-button.ld-button-reverse:hover {
+  background-color: var(--bb-rl-background-tertiary-hover-color);
+}
+
+.bb-readylaunch-template .learndash-wrapper:not(.ld-registration__outer-wrapper) .ld-button.ld-button-reverse:focus,
+.bb-readylaunch-template .learndash-wrapper.learndash-wrapper-login-modal .ld-button.ld-button-reverse:focus {
+  outline: 2px solid var(--bb-rl-border-quinery-color);
+}
+
+.bb-readylaunch-template .learndash-wrapper:not(.ld-registration__outer-wrapper) .ld-button.ld-button-reverse:disabled,
+.bb-readylaunch-template .learndash-wrapper.learndash-wrapper-login-modal .ld-button.ld-button-reverse:disabled {
+  background-color: var(--bb-rl-background-tertiary-color);
+  color: var(--bb-rl-text-disabled-color);
+  cursor: not-allowed;
+}
+
+.bb-readylaunch-template .learndash-wrapper:not(.ld-registration__outer-wrapper) .ld-button.ld-button-reverse:hover,
+.bb-readylaunch-template .learndash-wrapper.learndash-wrapper-login-modal .ld-button.ld-button-reverse:hover {
+  box-shadow: none !important;
+}
+
+.bb-readylaunch-template .learndash-wrapper:not(.ld-registration__outer-wrapper) .ld-login-modal-login .ld-modal-heading,
+.bb-readylaunch-template .learndash-wrapper.learndash-wrapper-login-modal .ld-login-modal-login .ld-modal-heading {
+  font-size: var(--bb-rl-font-size-base);
+  font-weight: 500;
+  line-height: var(--bb-rl-base-line);
+  color: var(--bb-rl-text-color);
+  margin: 0 0 var(--bb-rl-space-200);
+}
+
+.bb-readylaunch-template .learndash-wrapper:not(.ld-registration__outer-wrapper) .ld-login-modal-login .ld-modal-text,
+.bb-readylaunch-template .learndash-wrapper.learndash-wrapper-login-modal .ld-login-modal-login .ld-modal-text {
+  color: var(--bb-rl-text-secondary-color);
+  line-height: 1.5;
+  margin-bottom: var(--bb-rl-space-300);
+  font-size: var(--bb-rl-font-size-sm);
+}
+
+.bb-readylaunch-template .learndash-wrapper:not(.ld-registration__outer-wrapper) .ld-login-modal-form label,
+.bb-readylaunch-template .learndash-wrapper.learndash-wrapper-login-modal .ld-login-modal-form label {
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 400;
+  line-height: var(--bb-rl-base-line-small);
+  display: block;
+  margin: 0 0 var(--bb-rl-space-50);
+  text-align: left;
+}
+
+.bb-readylaunch-template .learndash-wrapper:not(.ld-registration__outer-wrapper) input[type="text"],
+.bb-readylaunch-template .learndash-wrapper:not(.ld-registration__outer-wrapper) input[type="password"],
+.bb-readylaunch-template .learndash-wrapper:not(.ld-registration__outer-wrapper) input[type="email"],
+.bb-readylaunch-template .learndash-wrapper:not(.ld-registration__outer-wrapper) .ld-login-field,
+.bb-readylaunch-template .learndash-wrapper:not(.ld-registration__outer-wrapper) .ld-password-field,
+.bb-readylaunch-template .learndash-wrapper.learndash-wrapper-login-modal input[type="text"],
+.bb-readylaunch-template .learndash-wrapper.learndash-wrapper-login-modal input[type="password"],
+.bb-readylaunch-template .learndash-wrapper.learndash-wrapper-login-modal input[type="email"],
+.bb-readylaunch-template .learndash-wrapper.learndash-wrapper-login-modal .ld-login-field,
+.bb-readylaunch-template .learndash-wrapper.learndash-wrapper-login-modal .ld-password-field {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 22px;
+  background-color: var(--bb-rl-background-color);
+  border: 1px solid var(--bb-rl-border-tertiary-color);
+  display: inline-block;
+  font-family: inherit;
+  font-style: inherit;
+  outline: none;
+  vertical-align: middle;
+  border-radius: var(--bb-rl-radius-base);
+  padding: 5px var(--bb-rl-space-100) 5px var(--bb-rl-space-400);
+  color: var(--bb-rl-text-color);
+}
+
+.bb-readylaunch-template .learndash-wrapper:not(.ld-registration__outer-wrapper) .ld-login-modal-form .login-username:before,
+.bb-readylaunch-template .learndash-wrapper:not(.ld-registration__outer-wrapper) .ld-login-modal-form .login-password:before,
+.bb-readylaunch-template .learndash-wrapper.learndash-wrapper-login-modal .ld-login-modal-form .login-username:before,
+.bb-readylaunch-template .learndash-wrapper.learndash-wrapper-login-modal .ld-login-modal-form .login-password:before {
+  content: "";
+  font-weight: 400;
+  font-family: bb-icons-rl !important;
+  font-size: 16px;
+  color: var(--bb-rl-icon-secondary-color);
+  top: 2.1em;
+}
+
+.bb-readylaunch-template .learndash-wrapper:not(.ld-registration__outer-wrapper) .ld-login-modal-form .login-username:before,
+.bb-readylaunch-template .learndash-wrapper.learndash-wrapper-login-modal .ld-login-modal-form .login-username:before {
+  content: "\e4c2";
+}
+
+.bb-readylaunch-template .learndash-wrapper:not(.ld-registration__outer-wrapper) .ld-login-modal-form .login-password:before,
+.bb-readylaunch-template .learndash-wrapper.learndash-wrapper-login-modal .ld-login-modal-form .login-password:before {
+  content: "\e308";
+}
+
+.bb-readylaunch-template .learndash-wrapper:not(.ld-registration__outer-wrapper) .ld-forgot-password-link,
+.bb-readylaunch-template .learndash-wrapper.learndash-wrapper-login-modal .ld-forgot-password-link {
+  background-color: transparent;
+  color: var(--bb-rl-text-brand-primary-color);
+  border: none;
+  border-radius: 0;
+  border-bottom: 1px solid transparent;
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 400;
+  line-height: var(--bb-rl-base-line-small);
+  margin: var(--bb-rl-space-200) 0;
+  display: block;
+}
+
+.bb-readylaunch-template .learndash-wrapper:not(.ld-registration__outer-wrapper) .ld-forgot-password-link:hover,
+.bb-readylaunch-template .learndash-wrapper.learndash-wrapper-login-modal .ld-forgot-password-link:hover {
+  border-bottom-color: var(--bb-rl-link-primary-hover-color);
+}
+
+.bb-readylaunch-template .learndash-wrapper:not(.ld-registration__outer-wrapper) .ld-forgot-password-link:disabled,
+.bb-readylaunch-template .learndash-wrapper.learndash-wrapper-login-modal .ld-forgot-password-link:disabled {
+  color: var(--bb-rl-background-brand-disabled-color);
+  border-bottom-color: transparent;
+  cursor: not-allowed;
+}
+
+.bb-readylaunch-template .learndash-wrapper:not(.ld-registration__outer-wrapper) .ld-login-modal-register .ld-modal-heading,
+.bb-readylaunch-template .learndash-wrapper.learndash-wrapper-login-modal .ld-login-modal-register .ld-modal-heading {
+  font-size: var(--bb-rl-font-size-base);
+  font-weight: 500;
+  line-height: var(--bb-rl-base-line);
+  color: var(--bb-rl-text-white-color);
+  margin: 0 0 var(--bb-rl-space-200);
+}
+
+.bb-readylaunch-template .learndash-wrapper:not(.ld-registration__outer-wrapper) .ld-login-modal-register .ld-modal-text,
+.bb-readylaunch-template .learndash-wrapper.learndash-wrapper-login-modal .ld-login-modal-register .ld-modal-text {
+  color: var(--bb-rl-text-white-color);
+  margin-bottom: var(--bb-rl-space-100);
+  font-size: var(--bb-rl-font-size-sm);
+}
+
+.bb-readylaunch-template .learndash-wrapper:not(.ld-registration__outer-wrapper) .ld-icon.ld-icon-delete:before,
+.bb-readylaunch-template .learndash-wrapper.learndash-wrapper-login-modal .ld-icon.ld-icon-delete:before {
+  content: "\e4f6";
+  font-weight: 400;
+  font-family: bb-icons-rl;
+  font-size: 24px;
+  color: var(--bb-rl-text-white-color);
+}
+
+.bb-readylaunch-template .learndash-wrapper:not(.ld-registration__outer-wrapper) .ld-login-modal .ld-login-modal-form,
+.bb-readylaunch-template .learndash-wrapper.learndash-wrapper-login-modal .ld-login-modal .ld-login-modal-form {
+  margin: var(--bb-rl-space-200) 0 0;
+}
+
+.bb-readylaunch-template .learndash-wrapper:not(.ld-registration__outer-wrapper) .login-remember input[type="checkbox"],
+.bb-readylaunch-template .learndash-wrapper.learndash-wrapper-login-modal .login-remember input[type="checkbox"] {
+  position: static;
+  opacity: 1;
+  margin-right: var(--bb-rl-space-50);
+}
+
+.bb-readylaunch-template .learndash-wrapper:not(.ld-registration__outer-wrapper) .ld-alert,
+.bb-readylaunch-template .learndash-wrapper.learndash-wrapper-login-modal .ld-alert {
+  display: flex;
+  align-items: center;
+  padding: var(--bb-rl-space-100);
+  border: 1px solid transparent;
+  border-radius: var(--bb-rl-radius-md);
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 500;
+  background-color: var(--bb-rl-background-secondary-color);
+  padding: var(--bb-rl-space-50) var(--bb-rl-space-100);
+  font-weight: 400;
+  min-height: auto;
+}
+
+.bb-readylaunch-template .learndash-wrapper:not(.ld-registration__outer-wrapper) .ld-alert > [class*="bb-icons"],
+.bb-readylaunch-template .learndash-wrapper.learndash-wrapper-login-modal .ld-alert > [class*="bb-icons"] {
+  margin-right: var(--bb-rl-space-100);
+  font-size: 20px;
+  font-family: bb-icons-rl;
+}
+
+.bb-readylaunch-template .learndash-wrapper:not(.ld-registration__outer-wrapper) .ld-alert.ld-alert-warning,
+.bb-readylaunch-template .learndash-wrapper.learndash-wrapper-login-modal .ld-alert.ld-alert-warning {
+  background-color: var(--bb-rl-background-warning-secondary-color);
+  border-color: var(--bb-rl-border-warning-secondary-color);
+}
+
+.bb-readylaunch-template .learndash-wrapper:not(.ld-registration__outer-wrapper) .ld-alert.ld-alert-warning > [class*="bb-icons"],
+.bb-readylaunch-template .learndash-wrapper.learndash-wrapper-login-modal .ld-alert.ld-alert-warning > [class*="bb-icons"] {
+  color: var(--bb-rl-border-warning-secondary-color);
+}
+
+.bb-readylaunch-template .learndash-wrapper:not(.ld-registration__outer-wrapper) .ld-alert.ld-alert-error,
+.bb-readylaunch-template .learndash-wrapper.learndash-wrapper-login-modal .ld-alert.ld-alert-error {
+  background-color: var(--bb-rl-background-danger-secondary-color);
+  border-color: var(--bb-rl-border-danger-secondary-color);
+}
+
+.bb-readylaunch-template .learndash-wrapper:not(.ld-registration__outer-wrapper) .ld-alert.ld-alert-error > [class*="bb-icons"],
+.bb-readylaunch-template .learndash-wrapper.learndash-wrapper-login-modal .ld-alert.ld-alert-error > [class*="bb-icons"] {
+  color: var(--bb-rl-border-danger-secondary-color);
+}
+
+.bb-readylaunch-template .learndash-wrapper:not(.ld-registration__outer-wrapper) .ld-alert.ld-alert-success,
+.bb-readylaunch-template .learndash-wrapper.learndash-wrapper-login-modal .ld-alert.ld-alert-success {
+  background-color: var(--bb-rl-background-positive-secondary-color);
+  border-color: var(--bb-rl-border-positive-secondary-color);
+}
+
+.bb-readylaunch-template .learndash-wrapper:not(.ld-registration__outer-wrapper) .ld-alert.ld-alert-success > [class*="bb-icons"],
+.bb-readylaunch-template .learndash-wrapper.learndash-wrapper-login-modal .ld-alert.ld-alert-success > [class*="bb-icons"] {
+  color: var(--bb-rl-border-positive-secondary-color);
+}
+
+.bb-readylaunch-template .learndash-wrapper:not(.ld-registration__outer-wrapper) .ld-alert .ld-alert-icon,
+.bb-readylaunch-template .learndash-wrapper.learndash-wrapper-login-modal .ld-alert .ld-alert-icon {
+  display: none;
 }
 
 .bb-readylaunch-template .bb-learndash-content-wrap .ld-modal .ld-modal-closer {
@@ -4842,19 +5182,18 @@ body.ld-in-focus-mode .learndash-wrapper {
 }
 
 .bb-readylaunch-template .ld-modal.ld-login-modal .ld-login-modal-branding {
-  margin-bottom: var(--bb-rl-space-300);
+  margin-bottom: 0;
+  padding-top: var(--bb-rl-space-200);
+}
+
+.bb-readylaunch-template .ld-modal.ld-login-modal .ld-login-modal-branding::before {
+  background-color: var(--bb-rl-border-secondary-color);
+  height: 1px;
 }
 
 .bb-readylaunch-template .ld-modal.ld-login-modal .ld-login-modal-wrapper .ld-login-modal-branding > img {
   max-width: 250px;
-}
-
-.bb-readylaunch-template .bb-learndash-content-wrap .ld-login-modal .ld-login-modal-login .ld-modal-heading {
-  font-size: var(--bb-rl-font-size-base);
-  font-weight: 500;
-  line-height: var(--bb-rl-base-line);
-  color: var(--bb-rl-text-color);
-  margin: 0 0 var(--bb-rl-space-200);
+  margin: 0 auto;
 }
 
 .bb-readylaunch-template .bb-learndash-content-wrap .ld-login-modal .ld-login-modal-login .ld-modal-text {
@@ -4921,14 +5260,6 @@ body.ld-in-focus-mode .learndash-wrapper {
 .bb-readylaunch-template .bb-learndash-content-wrap .ld-login-modal input[type="checkbox"]:not(.bb-custom-check) {
   position: static;
   opacity: 1;
-}
-
-.bb-readylaunch-template .bb-learndash-content-wrap .ld-login-modal .ld-icon.ld-icon-delete:before {
-  content: "\e4f6";
-  font-weight: 400;
-  font-family: bb-icons-rl;
-  font-size: 16px;
-  color: var(--bb-rl-text-white-color);
 }
 
 .bb-readylaunch-template .bb-learndash-content-wrap .ld-login-modal .ld-forgot-password-link {
@@ -5030,6 +5361,212 @@ body.ld-in-focus-mode .learndash-wrapper {
   font-size: 18px;
   font-weight: 600;
   line-height: 28px;
+}
+
+.bb-rl-lms-inner-block--ld-registration.bb-rl-lms-inner-block {
+  padding-top: var(--bb-rl-space-200);
+}
+
+.bb-rl-learndash-registration .learndash-wrapper:not(.ld-registration__outer-wrapper) .order-overview,
+.bb-rl-learndash-reset-password .learndash-wrapper:not(.ld-registration__outer-wrapper) .order-overview {
+  background-color: var(--bb-rl-background-color);
+  border-radius: var(--bb-rl-radius-lg);
+  padding: var(--bb-rl-space-300);
+  margin: 0 0 var(--bb-rl-space-200);
+  box-shadow: none;
+  border: 1px solid var(--bb-rl-border-secondary-color);
+}
+
+.bb-rl-learndash-registration .learndash-wrapper:not(.ld-registration__outer-wrapper) .order-overview .purchase-rows,
+.bb-rl-learndash-reset-password .learndash-wrapper:not(.ld-registration__outer-wrapper) .order-overview .purchase-rows {
+  border-color: var(--bb-rl-border-secondary-color);
+  border-radius: var(--bb-rl-radius-md);
+}
+
+.bb-rl-learndash-registration .learndash-wrapper:not(.ld-registration__outer-wrapper) .order-overview .purchase-rows .purchase-label,
+.bb-rl-learndash-reset-password .learndash-wrapper:not(.ld-registration__outer-wrapper) .order-overview .purchase-rows .purchase-label {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 22px;
+}
+
+.bb-rl-learndash-registration .learndash-wrapper:not(.ld-registration__outer-wrapper) .order-overview .purchase-rows .purchase-value,
+.bb-rl-learndash-reset-password .learndash-wrapper:not(.ld-registration__outer-wrapper) .order-overview .purchase-rows .purchase-value {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 22px;
+  color: var(--bb-rl-text-color);
+}
+
+.bb-rl-learndash-registration .learndash-wrapper:not(.ld-registration__outer-wrapper) .order-overview .order-overview-return,
+.bb-rl-learndash-reset-password .learndash-wrapper:not(.ld-registration__outer-wrapper) .order-overview .order-overview-return {
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 400;
+  line-height: var(--bb-rl-base-line-small);
+  color: var(--bb-rl-text-secondary-color);
+  padding-top: var(--bb-rl-space-300);
+}
+
+.bb-rl-learndash-registration .learndash-wrapper:not(.ld-registration__outer-wrapper) .order-heading,
+.bb-rl-learndash-reset-password .learndash-wrapper:not(.ld-registration__outer-wrapper) .order-heading {
+  font-size: var(--bb-rl-font-size-base);
+  font-weight: 500;
+  line-height: var(--bb-rl-base-line);
+  color: var(--bb-rl-text-color);
+  margin: 0 0 var(--bb-rl-space-200);
+}
+
+.bb-rl-learndash-registration .learndash-wrapper:not(.ld-registration__outer-wrapper) .purchase-title,
+.bb-rl-learndash-reset-password .learndash-wrapper:not(.ld-registration__outer-wrapper) .purchase-title {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 22px;
+  color: var(--bb-rl-text-color);
+  margin: 0 0 var(--bb-rl-space-100);
+}
+
+.bb-rl-learndash-registration .learndash-wrapper:not(.ld-registration__outer-wrapper) .registration-login,
+.bb-rl-learndash-reset-password .learndash-wrapper:not(.ld-registration__outer-wrapper) .registration-login {
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 400;
+  line-height: var(--bb-rl-base-line-small);
+  color: var(--bb-rl-text-secondary-color);
+}
+
+.bb-rl-learndash-registration .ldregister,
+.bb-rl-learndash-reset-password .ldregister {
+  margin-top: var(--bb-rl-space-200);
+}
+
+.bb-rl-learndash-registration .show-password-reset-link,
+.bb-rl-learndash-registration .show-register-form,
+.bb-rl-learndash-reset-password .show-password-reset-link,
+.bb-rl-learndash-reset-password .show-register-form {
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 400;
+  line-height: var(--bb-rl-base-line-small);
+  color: var(--bb-rl-text-secondary-color);
+  margin-top: var(--bb-rl-space-100);
+  display: block;
+}
+
+.bb-rl-learndash-registration .ldregister .learndash-registration-field,
+.bb-rl-learndash-registration .ldregister .login-username,
+.bb-rl-learndash-registration .registration-login-form .learndash-registration-field,
+.bb-rl-learndash-registration .registration-login-form .login-username,
+.bb-rl-learndash-reset-password .ldregister .learndash-registration-field,
+.bb-rl-learndash-reset-password .ldregister .login-username,
+.bb-rl-learndash-reset-password .registration-login-form .learndash-registration-field,
+.bb-rl-learndash-reset-password .registration-login-form .login-username {
+  margin-bottom: var(--bb-rl-space-100);
+}
+
+.bb-rl-learndash-registration .registration-login-form .login-remember,
+.bb-rl-learndash-reset-password .registration-login-form .login-remember {
+  margin-top: var(--bb-rl-space-200);
+}
+
+.bb-rl-learndash-registration .bb-rl-reset-password-subtitle,
+.bb-rl-learndash-registration .bb-rl-registration-description,
+.bb-rl-learndash-reset-password .bb-rl-reset-password-subtitle,
+.bb-rl-learndash-reset-password .bb-rl-registration-description {
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 400;
+  line-height: var(--bb-rl-base-line-small);
+  color: var(--bb-rl-text-secondary-color);
+}
+
+.bb-rl-learndash-registration .learndash-wrapper #learndash-registration-wrapper #learndash_registerform #wp-submit,
+.bb-rl-learndash-registration .learndash-wrapper #learndash-reset-password-wrapper #learndash_registerform #wp-submit,
+.bb-rl-learndash-reset-password .learndash-wrapper #learndash-registration-wrapper #learndash_registerform #wp-submit,
+.bb-rl-learndash-reset-password .learndash-wrapper #learndash-reset-password-wrapper #learndash_registerform #wp-submit {
+  margin-top: var(--bb-rl-space-200);
+}
+
+.bb-rl-learndash-registration .learndash-wrapper #learndash-registration-wrapper form input,
+.bb-rl-learndash-registration .learndash-wrapper #learndash-reset-password-wrapper form input,
+.bb-rl-learndash-reset-password .learndash-wrapper #learndash-registration-wrapper form input,
+.bb-rl-learndash-reset-password .learndash-wrapper #learndash-reset-password-wrapper form input {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 22px;
+  background-color: var(--bb-rl-background-color);
+  border: 1px solid var(--bb-rl-border-tertiary-color);
+  display: inline-block;
+  font-family: inherit;
+  font-style: inherit;
+  outline: none;
+  vertical-align: middle;
+  border-radius: var(--bb-rl-radius-base);
+  padding: 5px var(--bb-rl-space-100);
+  color: var(--bb-rl-text-color);
+  margin: 0;
+}
+
+.bb-rl-learndash-registration .learndash-wrapper #learndash-registration-wrapper form input[type="submit"],
+.bb-rl-learndash-registration .learndash-wrapper #learndash-reset-password-wrapper form input[type="submit"],
+.bb-rl-learndash-reset-password .learndash-wrapper #learndash-registration-wrapper form input[type="submit"],
+.bb-rl-learndash-reset-password .learndash-wrapper #learndash-reset-password-wrapper form input[type="submit"] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  font-weight: 500;
+  text-align: center;
+  cursor: pointer;
+  border-radius: var(--bb-rl-radius-md);
+  padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  text-decoration: none;
+  background-color: var(--bb-rl-background-brand-primary-color);
+  color: var(--bb-rl-text-white-color);
+  border: 1px solid var(--bb-rl-background-brand-primary-color);
+  padding: 6px var(--bb-rl-space-200);
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 400;
+  margin: var(--bb-rl-space-200) 0 0;
+  width: auto;
+}
+
+.bb-rl-learndash-registration .learndash-wrapper #learndash-registration-wrapper form input[type="submit"]:hover,
+.bb-rl-learndash-registration .learndash-wrapper #learndash-reset-password-wrapper form input[type="submit"]:hover,
+.bb-rl-learndash-reset-password .learndash-wrapper #learndash-registration-wrapper form input[type="submit"]:hover,
+.bb-rl-learndash-reset-password .learndash-wrapper #learndash-reset-password-wrapper form input[type="submit"]:hover {
+  background-color: var(--bb-rl-background-brand-primary-hover-color);
+}
+
+.bb-rl-learndash-registration .learndash-wrapper #learndash-registration-wrapper form input[type="submit"]:focus-within,
+.bb-rl-learndash-registration .learndash-wrapper #learndash-reset-password-wrapper form input[type="submit"]:focus-within,
+.bb-rl-learndash-reset-password .learndash-wrapper #learndash-registration-wrapper form input[type="submit"]:focus-within,
+.bb-rl-learndash-reset-password .learndash-wrapper #learndash-reset-password-wrapper form input[type="submit"]:focus-within {
+  outline: 2px solid var(--bb-rl-border-brand-primary-color);
+}
+
+.bb-rl-learndash-registration .learndash-wrapper #learndash-registration-wrapper form input[type="submit"]:disabled,
+.bb-rl-learndash-registration .learndash-wrapper #learndash-reset-password-wrapper form input[type="submit"]:disabled,
+.bb-rl-learndash-reset-password .learndash-wrapper #learndash-registration-wrapper form input[type="submit"]:disabled,
+.bb-rl-learndash-reset-password .learndash-wrapper #learndash-reset-password-wrapper form input[type="submit"]:disabled {
+  background-color: var(--bb-rl-background-brand-disabled-color);
+  cursor: not-allowed;
+}
+
+.bb-rl-learndash-registration .learndash-wrapper #learndash-registration-wrapper form input[type="checkbox"],
+.bb-rl-learndash-registration .learndash-wrapper #learndash-reset-password-wrapper form input[type="checkbox"],
+.bb-rl-learndash-reset-password .learndash-wrapper #learndash-registration-wrapper form input[type="checkbox"],
+.bb-rl-learndash-reset-password .learndash-wrapper #learndash-reset-password-wrapper form input[type="checkbox"] {
+  margin-right: var(--bb-rl-space-50);
+}
+
+.bb-rl-learndash-registration .learndash-wrapper #learndash-registration-wrapper form label,
+.bb-rl-learndash-registration .learndash-wrapper #learndash-reset-password-wrapper form label,
+.bb-rl-learndash-reset-password .learndash-wrapper #learndash-registration-wrapper form label,
+.bb-rl-learndash-reset-password .learndash-wrapper #learndash-reset-password-wrapper form label {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 22px;
+  display: block;
+  margin: 0 0 var(--bb-rl-space-100);
+  color: var(--bb-rl-text-secondary-color);
 }
 
 .bb-readylaunch-template {
@@ -5328,6 +5865,10 @@ body.ld-in-focus-mode .learndash-wrapper {
 .bb-rl-course-pagination .bb-rl-pagination-links .bb-rl-page-numbers:not(.prev):not(.next).current {
   color: var(--bb-rl-text-color);
   border: 1px solid var(--bb-rl-border-quaternary-color);
+}
+
+.bb-rl-course-pagination .bb-rl-pagination-links .bb-rl-page-numbers:not(.prev):not(.next):hover {
+  border-color: var(--bb-rl-border-tertiary-color);
 }
 
 .bb-rl-course-pagination .bb-rl-pagination-links a.prev,

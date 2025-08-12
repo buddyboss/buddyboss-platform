@@ -79,6 +79,12 @@
 				display: flex;
 				align-items: center;
 				padding: var(--bb-rl-space-400) var(--bb-rl-space-300);
+
+				@media screen and (max-width: $sm) {
+					flex-direction: column;
+					align-items: flex-start;
+					gap: var(--bb-rl-space-100);
+				}
 			}
 
 			.item-avatar {
@@ -89,12 +95,27 @@
 				display: flex;
 				align-items: center;
 				flex: 1;
+
+				@media screen and (max-width: 768px) {
+					flex-direction: column;
+					align-items: flex-start;
+					gap: var(--bb-rl-space-100);
+				}
 			}
 
 			.group-footer-wrap {
 				display: flex;
 				align-items: center;
 				gap: var(--bb-rl-space-200);
+
+				@media screen and (max-width: 768px) {
+					margin-left: 0;
+				}
+
+				@media screen and (max-width: $sm) {
+					flex-direction: column;
+					align-items: flex-start;
+				}
 			}
 		}
 	}
@@ -150,7 +171,7 @@
 				padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
 				white-space: nowrap;
 
-				&.group-button:not(.bp-toggle-action-button) {
+				&.group-button {
 
 					&::before {
 						content: "";
@@ -175,6 +196,33 @@
 					&.membership-requested::before {
 						content: "\e182";
 					}
+
+					&.membership-requested.bp-toggle-action-button-clicked::before {
+						content: "\e2fe";
+					}
+				}
+
+				&.membership-requested {
+
+					@include bb-rl-button--secondary-outline;
+				}
+			}
+
+			.generic-button {
+
+				.group-button.bp-toggle-action-button {
+
+					&.leave-group::before {
+						content: "\e182";
+						display: inline-block;
+						margin-right: var(--bb-rl-space-50);
+						font-weight: 400;
+						font-family: bb-icons-rl;
+						font-size: 16px;
+						line-height: 1;
+						color: var(--bb-rl-icon-secondary-color);
+						font-style: normal;
+					}
 				}
 			}
 		}
@@ -187,6 +235,7 @@
 
 			.bb-group-member {
 				max-width: 24px;
+				min-width: 24px;
 				float: left;
 				margin-right: -4px;
 				position: relative;

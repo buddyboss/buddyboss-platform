@@ -97,6 +97,14 @@
 	}
 }
 
+#bb-rl-whats-new-form:not(.bb-rl-activity-edit--privacy-idle) #bb-rl-activity-privacy-point[data-bp-tooltip][data-bp-tooltip-pos="up"] {
+
+	&:after,
+	&:before {
+		display: none;
+	}
+}
+
 .bb-rl-activity-form {
 
 	.activity-header-data {
@@ -260,6 +268,11 @@
 			margin-right: var(--bb-rl-space-100);
 			line-height: 1;
 
+			&.disable {
+				pointer-events: none;
+				opacity: 0.4;
+			}
+
 			&:last-child {
 				margin-right: 0;
 			}
@@ -326,6 +339,14 @@
 			flex-flow: row-reverse;
 			gap: var(--bb-rl-space-100);
 			position: relative;
+
+			&:hover:not(:has(#bb-rl-aw-whats-new-reset:hover)) .bb-topic-tooltip-wrapper {
+
+				.bb-rl-ac-topic-required & {
+					opacity: 1;
+					cursor: default;
+				}
+			}
 		}
 
 		.bb-rl-button {

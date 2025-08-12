@@ -58,6 +58,7 @@
 	}
 
 	.select2-container--default .select2-selection--multiple {
+		display: flex;
 
 		.select2-selection__choice {
 			background-color: var(--bb-rl-background-color) !important;
@@ -103,7 +104,9 @@
 
 	.select2-selection__choice__remove {
 		font-size: 0;
-		line-height: 1;
+		position: static;
+		border: 0;
+		line-height: normal !important;
 
 		&:before {
 			content: "\e4f6";
@@ -184,6 +187,10 @@ body .select2-container .select2-dropdown.bb-compose-input {
 
 		&.select2-results__option--highlighted[aria-selected] {
 			background-color: var(--bb-rl-background-secondary-hover-color);
+		}
+
+		&[aria-selected="true"] {
+			display: none;
 		}
 
 		&.select2-results__option--load-more {

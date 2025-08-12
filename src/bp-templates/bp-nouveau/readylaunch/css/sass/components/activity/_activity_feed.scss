@@ -235,6 +235,10 @@
 			margin-right: var(--bb-rl-space-50);
 		}
 
+		.bb-icons-rl-caret-down {
+			margin-left: var(--bb-rl-space-50);
+		}
+
 		[class*="bb-icon"] {
 			color: var(--bb-rl-icon-color);
 			font-size: 16px;
@@ -566,7 +570,7 @@
 				font-weight: 500;
 			}
 
-			+ .avatar {
+			~ .avatar {
 				height: 24px;
 				width: 24px;
 				border-radius: var(--bb-rl-radius-full);
@@ -1039,7 +1043,7 @@
 		border-radius: var(--bb-rl-radius-lg);
 		box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.1);
 		backdrop-filter: blur(2px);
-		max-height: 85vh;
+		max-height: 94vh;
 		max-width: 95%;
 		width: 700px;
 		position: relative;
@@ -1634,8 +1638,10 @@
 		display: flex;
 		align-items: center;
 
-		&::after {
+		~ .activity-state-comments:before {
 			content: "";
+			display: inline-block;
+			vertical-align: middle;
 			background-color: var(--bb-rl-background-tertiary-color);
 			height: 4px;
 			width: 4px;
@@ -1698,6 +1704,23 @@
 				color: var(--bb-rl-text-color);
 				text-decoration: underline;
 			}
+		}
+	}
+
+	.bp-generic-meta .generic-button a {
+
+		.reactions_item {
+			color: var(--bb-rl-text-tertiary-color) !important;
+		}
+	}
+}
+
+.bb-rl-acomment-foot-actions {
+
+	.bp-generic-meta .generic-button a {
+
+		.reactions_item {
+			color: var(--bb-rl-text-tertiary-color) !important;
 		}
 	}
 }
@@ -2127,6 +2150,10 @@
 
 		li.activity-item {
 			padding: var(--bb-rl-space-200);
+
+			.bb-rl-activity-modal & {
+				padding: 0;
+			}
 		}
 
 		.bb-activity-more-options-wrap {

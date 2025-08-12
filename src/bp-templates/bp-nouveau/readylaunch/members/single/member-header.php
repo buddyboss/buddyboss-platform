@@ -225,7 +225,7 @@ endif;
 <!-- Remove Connection confirmation popup -->
 <div class="bb-remove-connection bb-action-popup" style="display: none">
 	<transition name="modal">
-		<div class="modal-mask bb-white bbm-model-wrap">
+		<div class="bb-rl-modal-mask bb-white bbm-model-wrap">
 			<div class="modal-wrapper">
 				<div class="modal-container">
 					<header class="bb-model-header">
@@ -234,7 +234,7 @@ endif;
 							<span class="bb-icon-l bb-icon-times"></span>
 						</a>
 					</header>
-					<div class="bb-remove-connection-content bb-action-popup-content">
+					<div class="bb-remove-connection-content bb-action-popup-content bb-rl-modal-content">
 						<p>
 							<?php
 							printf(
@@ -246,8 +246,8 @@ endif;
 						</p>
 					</div>
 					<footer class="bb-model-footer flex align-items-center">
-						<a class="bb-close-remove-connection bb-close-action-popup" href="#"><?php echo esc_html__( 'Cancel', 'buddyboss' ); ?></a>
-						<a class="button push-right bb-confirm-remove-connection" href="#"><?php echo esc_html__( 'Confirm', 'buddyboss' ); ?></a>
+						<a class="bb-close-remove-connection bb-close-action-popup bb-rl-button bb-rl-button--secondaryFill bb-rl-button--small" href="#"><?php echo esc_html__( 'Cancel', 'buddyboss' ); ?></a>
+						<a class="button push-right bb-confirm-remove-connection bb-rl-button bb-rl-button--brandFill bb-rl-button--small" href="#"><?php echo esc_html__( 'Confirm', 'buddyboss' ); ?></a>
 					</footer>
 				</div>
 			</div>

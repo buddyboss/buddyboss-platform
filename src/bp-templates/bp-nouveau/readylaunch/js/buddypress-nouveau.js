@@ -752,6 +752,14 @@ window.bp = window.bp || {};
 						} else {
 							$( data.target ).parent().addClass( 'has-content' );
 						}
+						var schedulePostCount = $( '.bb-view-schedule-posts_modal .bb-rl-schedule-post-count' );
+						if (
+							schedulePostCount.length &&
+							! _.isUndefined( response.data.count ) &&
+							response.data.count > 0
+						) {
+							schedulePostCount.text( response.data.count );
+						}
 					}
 
 					if ( ! _.isUndefined( response.data.layout ) ) {
@@ -1119,6 +1127,8 @@ window.bp = window.bp || {};
 			$document.on( 'click', '#buddypress .bb-leave-group-popup .bb-close-leave-group', this.leaveGroupClose );
 			$document.on( 'click', '#buddypress .bb-remove-connection .bb-confirm-remove-connection', this.removeConnectionAction );
 			$document.on( 'click', '#buddypress .bb-remove-connection .bb-close-remove-connection', this.removeConnectionClose );
+			$document.on( 'click', '#buddypress .bb-cancel-request-group-popup .bb-confirm-cancel-request-group', this.cancelRequestGroupAction );
+			$document.on( 'click', '#buddypress .bb-cancel-request-group-popup .bb-close-cancel-request-group', this.closeRequestGroupAction );
 			$document.on( 'click', '#buddypress table.invite-settings .field-actions .field-actions-remove, #buddypress table.invite-settings .field-actions-add', this, this.addRemoveInvite );
 			$document.on( 'click', '.show-action-popup', this.showActionPopup );
 			$document.on( 'click', '#bb-rl-message-threads .block-member', this.threadListBlockPopup );
@@ -1133,7 +1143,7 @@ window.bp = window.bp || {};
 			$( '[data-bp-close]' ).on( 'click', this, this.closeNotice );
 
 			// Pagination.
-			$( '#buddypress [data-bp-list]' ).on( 'click', '[data-bp-pagination] a', this, this.paginateAction );
+			$( '#buddypress [data-bp-list]' ).on( 'click', '[data-bp-pagination] a:not([data-method])', this, this.paginateAction );
 
 			$document.on( 'click', this.closePickersOnClick );
 			document.addEventListener( 'keydown', this.closePickersOnEsc );
@@ -1265,6 +1275,8 @@ window.bp = window.bp || {};
 			} );
 
 			$( window ).on( 'scroll', this.hidePopupCard );
+			
+			$document.on( 'click', '[data-bp-list] .bb-rl-view-more a', this.loadMoreData.bind( this ) );
 		},
 
 		bindPopoverEvents: function() {
@@ -2007,7 +2019,6 @@ window.bp = window.bp || {};
 				target.html( target.data( 'title' ) );
 				target.removeClass( 'bp-toggle-action-button' );
 				target.addClass( 'bp-toggle-action-button-clicked' );
-				return false;
 			}
 
 			// check if only admin trying to leave the group.
@@ -2018,9 +2029,39 @@ window.bp = window.bp || {};
 				return false;
 			}
 
-			if ( 'is_friend' !== action ) {
+			var allowToast   = false,
+			    toastMessage = '';
+			if ( 'request_membership' === action ) {
+				allowToast   = true;
+				toastMessage = bpNouveau.groups.i18n.sending_request;
+			} else if ( 'membership_requested' === action && 'active' === $( target ).attr( 'data-popup-shown' ) ) {
+				allowToast   = true;
+				toastMessage = bpNouveau.groups.i18n.cancel_request_group;
+			}
+			if ( allowToast ) {
+				jQuery( document ).trigger(
+					'bb_trigger_toast_message',
+					[
+						'',
+						'<div>' + toastMessage + '</div>',
+						'loading',
+						null,
+						true
+					]
+				);
+			}
 
-				if ( ( undefined !== BP_Nouveau[ action + '_confirm' ] && false === window.confirm( BP_Nouveau[ action + '_confirm' ] ) ) || target.hasClass( 'pending' ) ) {
+			if ( 'is_friend' !== action ) {
+				if (
+					(
+						undefined !== BP_Nouveau[ action + '_confirm' ] &&
+						false === window.confirm( BP_Nouveau[action + '_confirm' ] )
+					) ||
+					(
+						target.hasClass( 'pending' ) &&
+						! target.hasClass( 'bb-rl-cancel-request' ) // Class is pending but make sure not for Cancel request button.
+					)
+				) {
 					return false;
 				}
 
@@ -2052,6 +2093,30 @@ window.bp = window.bp || {};
 				body.find( '[data-current-anchor="true"]' ).attr( 'data-current-anchor' , 'false' );
 				leave_group_popup.find( '.bb-leave-group-content .bb-group-name' ).html( '' );
 				leave_group_popup.hide();
+			}
+
+			// show popup if it is cancel_request_group action.
+			var cancel_request_group_popup        = $( '.bb-cancel-request-group-popup' ),
+				cancel_request_group__name        = $.trim( $( target ).closest( '.bb-rl-group-block' ).find( '.bp-group-home-link' ).text() ),
+				cancel_request_group_anchor__link = $( target ).closest( '.bb-rl-group-block' ).find( '.bp-group-home-link' ).attr('href');
+			if ( 'membership_requested' === action && 'active' !== $( target ).attr( 'data-popup-shown' ) ) {
+				if ( cancel_request_group_popup.length ) {
+
+					var cancel_request_group_content = cancel_request_group_popup.find( '.bb-cancel-request-group-content' );
+					cancel_request_group_content.find( '.bb-rl-modal-group-name' ).html( '<a href="' + cancel_request_group_anchor__link + '">' + cancel_request_group__name + '</a>' );
+
+
+					body.find( '[data-current-anchor="true"]' ).removeClass( 'bp-toggle-action-button bp-toggle-action-button-hover' ).addClass( 'bp-toggle-action-button-clicked' ); // Add clicked class manually to run function.
+					cancel_request_group_popup.show();
+					$( target ).attr( 'data-current-anchor', 'true' );
+					$( target ).attr( 'data-popup-shown', 'active' );
+					return false;
+				}
+			} else {
+				body.find( '[data-popup-shown="active"]' ).attr( 'data-popup-shown' , 'inactive' );
+				body.find( '[data-current-anchor="true"]' ).attr( 'data-current-anchor' , 'false' );
+				cancel_request_group_popup.find( '.bb-cancel-request-group-content .bb-rl-modal-group-name' ).html( '' );
+				cancel_request_group_popup.hide();
 			}
 
 			// show popup if it is is_friend action.
@@ -2187,6 +2252,33 @@ window.bp = window.bp || {};
 					} else {
 						// Specific cases for groups.
 						if ( 'groups' === object ) {
+							
+							// Close modal if request membership is successful.
+							if (
+								'request_membership' === action ||
+								(
+									'membership_requested' === action &&
+									'inactive' === $( target ).attr( 'data-popup-shown' )
+								)
+							) {
+								// Remove existing toast message if it exists.
+								if ( $( '.bb-toast-messages-list li' ).length ) {
+									$( '.bb-toast-messages-list li' ).remove();
+								}
+								if ( undefined !== response.data.feedback ) {
+									// Display feedback for request membership.
+									jQuery(document).trigger(
+										'bb_trigger_toast_message',
+										[
+											'',
+											'<div>' + response.data.feedback + '</div>',
+											'success',
+											null,
+											true
+										]
+									);
+								}
+							}
 
 							// Group's header button.
 							if ( undefined !== response.data.is_group && response.data.is_group ) {
@@ -2221,9 +2313,10 @@ window.bp = window.bp || {};
 						}
 
 						// User main nav update friends counts.
-						if ( $( '#friends-personal-li' ).length ) {
-							var friend_with_count    = $( '#friends-personal-li a span' );
-							var friend_without_count = $( '#friends-personal-li a' );
+						if ( $( '#bb-rl-friends-my-friends-personal-li' ).length ) {
+							var friend_with_count    = $( '#bb-rl-friends-my-friends-personal-li a span' );
+							var friend_without_count = $( '#bb-rl-friends-my-friends-personal-li a' );
+							var friends_content      = $( '.friends.bb-rl-members' );
 
 							// Check friend count set.
 							if ( undefined !== response.data.is_user && response.data.is_user && undefined !== response.data.friend_count ) {
@@ -2234,11 +2327,12 @@ window.bp = window.bp || {};
 										$( friend_with_count ).html( response.data.friend_count );
 									} else {
 										// If no friend then add count span.
-										$( friend_without_count ).append( '<span class="count">' + response.data.friend_count + '</span>' );
+										$( friend_without_count ).append( '<span class="count bb-rl-heading-count">' + response.data.friend_count + '</span>' );
 									}
 								} else {
 									// If no friend then hide count span.
 									$( friend_with_count ).hide();
+									friends_content.html( bp.Nouveau.createFeedbackHtml( bpNouveau.friends.members_loop_none ) );
 								}
 							} else if ( undefined !== response.data.friend_count ) {
 								if ( '0' !== response.data.friend_count ) {
@@ -2247,14 +2341,18 @@ window.bp = window.bp || {};
 										$( friend_with_count ).html( response.data.friend_count );
 									} else {
 										// If no friend then add count span.
-										$( friend_without_count ).append( '<span class="count">' + response.data.friend_count + '</span>' );
+										$( friend_without_count ).append( '<span class="count bb-rl-heading-count">' + response.data.friend_count + '</span>' );
 									}
 								} else {
 									// If no friend then hide count span.
 									$( friend_with_count ).hide();
+									friends_content.html( bp.Nouveau.createFeedbackHtml( bpNouveau.friends.members_loop_none ) );
 								}
 							}
 						}
+
+						// Update sub nav counts for group invitations, my group, friend requests, and friend counts.
+						bp.Nouveau.updateSubNavCount( action );
 
 						// User's groups invitations screen & User's friend screens.
 						if ( undefined !== response.data.is_user && response.data.is_user ) {
@@ -2333,13 +2431,6 @@ window.bp = window.bp || {};
 
 			if ( target.hasClass( 'bp-toggle-action-button-clicked' ) && ! target.hasClass( 'loading' ) ) {
 
-				// support for buddyboss theme for button actions and icons and texts.
-				if ( $( document.body ).hasClass( 'buddyboss-theme' ) && 'undefined' !== typeof target.data( 'balloon' ) ) {
-					target.attr( 'data-balloon', target.data( 'title-displayed' ) );
-				} else {
-					target.html( target.data( 'title-displayed' ) ); // change text to displayed context.
-				}
-
 				target.removeClass( 'bp-toggle-action-button-clicked' ).addClass( 'bp-toggle-action-button' ); // add class to detect event to confirm.
 			}
 		},
@@ -2350,6 +2441,16 @@ window.bp = window.bp || {};
 		 * @param event
 		 */
 		leaveGroupAction : function ( event ) {
+			bp.Nouveau.handleActionButtonState( event, 'bp-toggle-action-button-clicked' );
+		},
+
+
+		/**
+		 * [Cancel Request Group Action]
+		 *
+		 * @param event
+		 */
+		cancelRequestGroupAction : function ( event ) {
 			bp.Nouveau.handleActionButtonState( event, 'bp-toggle-action-button-clicked' );
 		},
 
@@ -2367,6 +2468,26 @@ window.bp = window.bp || {};
 					dataAnchorSelector : '[data-current-anchor="true"]',
 					dataPopupSelector  : '[data-popup-shown="true"]',
 					contentSelector    : '.bb-leave-group-content .bb-group-name',
+					contentPlaceholder : '',
+					newPopupState      : 'false'
+				}
+			);
+		},
+
+		/**
+		 * [Cancel Request Group Action]
+		 *
+		 * @param event
+		 */
+		closeRequestGroupAction: function ( event ) {
+			event.preventDefault();
+			bp.Nouveau.closePopup(
+				event,
+				{
+					popupSelector      : '.bb-cancel-request-group-popup',
+					dataAnchorSelector : '[data-current-anchor="true"]',
+					dataPopupSelector  : '[data-popup-shown="active"]',
+					contentSelector    : '.bb-cancel-request-group-content .bb-rl-modal-group-name',
 					contentPlaceholder : '',
 					newPopupState      : 'false'
 				}
@@ -2413,13 +2534,6 @@ window.bp = window.bp || {};
 				function () {
 					var $button = $( this );
 					if ( $button.hasClass( 'bp-toggle-action-button-clicked' ) && ! $button.hasClass( 'loading' ) ) {
-
-						// support for buddyboss theme for button actions and icons and texts.
-						if ( $( document.body ).hasClass( 'buddyboss-theme' ) && 'undefined' !== typeof $button.data( 'balloon' ) ) {
-							$button.attr( 'data-balloon', $button.data( 'title-displayed' ) );
-						} else {
-							$button.html( $button.data( 'title-displayed' ) ); // change text to displayed context.
-						}
 
 						$button.removeClass( 'bp-toggle-action-button-clicked' ).addClass( 'bp-toggle-action-button' );
 						$button.trigger( 'blur' );
@@ -2726,6 +2840,11 @@ window.bp = window.bp || {};
 									$reportContent.filter( '.members' ).hide();
 								}
 
+								var $blockMemberPopup = $( '.bb-readylaunch-template .block-member-popup .bb-model-header h4' );
+								if ( $blockMemberPopup.length > 0 ) {
+									$blockMemberPopup.text( bpNouveau.moderation.block_member );
+								}
+
 								var $firstVisibleRadio = $( '#bb-report-content .form-item-category:visible:first label input[type="radio"]' );
 								$firstVisibleRadio.attr( 'checked', true );
 
@@ -2781,32 +2900,40 @@ window.bp = window.bp || {};
 				}
 			);
 
-			$bbReportContent.submit(
-				function ( e ) {
-					handleFormSubmission(
-						{
-							'event'   : e,
-							'target'  : $( this ),
-							'action'  : 'bp_moderation_content_report',
-							'context' : _this
-						}
-					);
-				}
-			);
+			// Prevent duplicate event bindings by checking if already bound.
+			if ( ! $bbReportContent.data( 'report-submit-bound' ) ) {
+				$bbReportContent.submit(
+					function ( e ) {
+						handleFormSubmission(
+							{
+								'event'   : e,
+								'target'  : $( this ),
+								'action'  : 'bp_moderation_content_report',
+								'context' : _this
+							}
+						);
+					}
+				);
+				$bbReportContent.data( 'report-submit-bound', true );
+			}
 
 			var $bbBlockMember = $( '#bb-block-member' );
-			$bbBlockMember.submit(
-				function ( e ) {
-					handleFormSubmission(
-						{
-							'event'   : e,
-							'target'  : $( this ),
-							'action'  : 'bp_moderation_block_member',
-							'context' : _this
-						}
-					);
-				}
-			);
+			// Prevent duplicate event bindings for a block member form.
+			if ( ! $bbBlockMember.data( 'block-member-submit-bound' ) ) {
+				$bbBlockMember.submit(
+					function ( e ) {
+						handleFormSubmission(
+							{
+								'event'   : e,
+								'target'  : $( this ),
+								'action'  : 'bp_moderation_block_member',
+								'context' : _this
+							}
+						);
+					}
+				);
+				$bbBlockMember.data( 'block-member-submit-bound', true );
+			}
 
 			function handleFormSubmission( args ) {
 				var e                = args.event,
@@ -4449,6 +4576,25 @@ window.bp = window.bp || {};
 				popup  = $( target ).closest( options.popupSelector ),
 				$body  = $( 'body' );
 
+			// Find and update the current anchor before resetting it for friendship button.
+			var $currentAnchor = $body.find( '[data-current-anchor="true"]' );
+			if ( $currentAnchor.length && $currentAnchor.hasClass( 'friendship-button' ) ) {
+				var titleValue = $currentAnchor.attr( 'data-title' );
+				if ( titleValue ) {
+					// Decode HTML entities and update balloon.
+					var decodedTitle = $( '<div/>' ).html( titleValue ).text();
+					$currentAnchor.attr( 'data-balloon', decodedTitle );
+				}
+
+				// For primary hover actions, also update the HTML content.
+				if ( $currentAnchor.hasClass( 'bb-rl-primary-hover-action' ) ) {
+					var aTagText = $currentAnchor.attr( 'data-title-displayed' );
+					if ( aTagText ) {
+						$currentAnchor.html( aTagText );
+					}
+				}
+			}
+
 			// Reset data attributes and content.
 			$body.find( options.dataAnchorSelector ).attr( 'data-current-anchor', 'false' );
 			$body.find( options.dataPopupSelector ).attr( 'data-popup-shown', options.newPopupState );
@@ -5295,7 +5441,132 @@ window.bp = window.bp || {};
 				window.addEventListener( 'load', checkVerticalMenu );
 	
 			} );
-		}
+		},
+
+		/**
+		 * Load more data.
+		 *
+		 * @param {Object} event The event object
+		 * @return {void}
+		 */
+		loadMoreData: function( event ) {
+			event.preventDefault();
+			var $this   = $( event.currentTarget );
+			var method  = $this.data( 'method' );
+			var $target = $this.closest( '.bb-rl-view-more' );
+			var page    = $this.attr( 'href' ).split( 'page=' )[1];
+			var object  = $target.closest( '[data-bp-list]' ).data( 'bp-list' );
+
+			bp.Nouveau.objectRequest(
+				{
+					object : object,
+					page   : page,
+					method : method,
+					target : '#buddypress [data-bp-list] ul.bb-rl-list'
+				}
+			).done(
+				function ( response ) {
+					if ( true === response.success ) {
+						$target.remove();
+						// replace fake image with original image by faking scroll event to call bp.Nouveau.lazyLoad.
+						jQuery( window ).scroll();
+					}
+				}
+			);
+		},
+
+		/**
+		 * Update sub nav count.
+		 * @param {string} action - The action being performed.
+		 */
+		updateSubNavCount: function ( action ) {
+
+			var countConfig = {
+				invites  : {
+					selector        : '.bb-rl-profile-subnav #bb-rl-invites-personal-li',
+					decreaseActions : ['accept_invite', 'reject_invite'],
+					contentSelector : '.groups-directory-content.bb-rl-groups',
+					noneMessage     : bpNouveau.groups.member_invites_none
+				},
+				myGroups : {
+					selector        : '.bb-rl-profile-subnav #bb-rl-groups-my-groups-personal-li',
+					increaseActions : ['accept_invite'],
+					contentSelector : null,
+					noneMessage     : null
+				},
+				requests : {
+					selector        : '.bb-rl-profile-subnav #bb-rl-requests-personal-li',
+					decreaseActions : ['accept_friendship', 'reject_friendship'],
+					contentSelector : '.bb-rl-members-directory-content.bb-rl-members',
+					noneMessage     : bpNouveau.friends.member_requests_none
+				},
+				friends  : {
+					selector        : '.bb-rl-profile-subnav #bb-rl-friends-personal-li',
+					increaseActions : ['accept_friendship'],
+					contentSelector : '.friends.bb-rl-members',
+					noneMessage     : bpNouveau.friends.members_loop_none
+				}
+			};
+
+			// Process each count type.
+			$.each( countConfig, function ( type, config ) {
+				var $element = $( config.selector );
+				if ( ! $element.length ) {
+					return;
+				}
+
+				var $withCount    = $element.find( 'a span' );
+				var $withoutCount = $element.find( 'a' );
+				var $content      = $( config.contentSelector );
+
+				var currentCount = Number( $withCount.html() ) || 0;
+				var shouldUpdate = false;
+
+				// Check if action affects this count type.
+				if ( config.decreaseActions && -1 !== $.inArray( action, config.decreaseActions ) ) {
+					currentCount -= 1;
+					shouldUpdate = true;
+				} else if ( config.increaseActions && -1 !== $.inArray( action, config.increaseActions ) ) {
+					currentCount += 1;
+					shouldUpdate = true;
+				}
+
+				// Only update if action affects this count.
+				if ( shouldUpdate ) {
+					if ( currentCount > 0 ) {
+						if ( $withCount.length ) {
+							$withCount.html( currentCount );
+						} else {
+							$withoutCount.append( '<span class="count bb-rl-heading-count">' + currentCount + '</span>' );
+						}
+					} else {
+						$withCount.hide();
+						$content.html( bp.Nouveau.createFeedbackHtml( config.noneMessage ) );
+					}
+				}
+			} );
+		},
+
+		/**
+		 * Create feedback HTML from feedback data.
+		 *
+		 * @param {Object|string} feedbackData - Feedback data object or string message.
+		 * @return {string} HTML string for feedback.
+		 */
+		createFeedbackHtml: function ( feedbackData ) {
+			var message, type;
+
+			// Handle both object and string inputs.
+			if ( 'object' === typeof feedbackData && null !== feedbackData ) {
+				message = feedbackData.message || '';
+				type    = feedbackData.type || 'info';
+			} else {
+				message = feedbackData || '';
+				type    = 'info';
+			}
+
+			return '<aside class="bp-feedback bp-messages ' + type + '"><span class="bp-icon" aria-hidden="true"></span><p>' + message + '</p></aside>';
+		},
 	};
 
 	// Launch BP Nouveau.

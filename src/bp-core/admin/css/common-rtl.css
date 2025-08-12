@@ -5624,6 +5624,15 @@ h1.bb-advance-heading {
   background-color: #f0f0f1;
 }
 
+.bb-activity-topics-wrapper .bb-topic-actions-wrapper .bb-topic-more-dropdown .bp-screen-reader-text {
+  clip: rect(1px, 1px, 1px, 1px);
+  height: 1px;
+  overflow: hidden;
+  position: absolute;
+  width: 1px;
+  word-wrap: normal;
+}
+
 .bb-activity-topics-wrapper .bb-topic-actions-wrapper.active .bb-topic-more-dropdown {
   display: block;
 }

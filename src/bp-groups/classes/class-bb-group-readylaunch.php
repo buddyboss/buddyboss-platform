@@ -63,6 +63,11 @@ class BB_Group_Readylaunch {
 		if ( function_exists( 'bp_disable_group_messages' ) && true === bp_disable_group_messages() ) {
 			add_filter( 'bp_core_get_js_strings', array( $this, 'bb_rl_get_js_strings_for_groups' ), 11, 1 );
 		}
+
+		add_filter( 'bp_get_group_join_button', array( $this, 'bb_rl_modify_bp_get_group_join_button' ) );
+		add_filter( 'bp_nouveau_ajax_joinleave_group', array( $this, 'bb_rl_modify_group_request_membership_response' ), 10 );
+
+		add_action( 'wp_ajax_groups_membership_requested', 'bp_nouveau_ajax_joinleave_group' );
 	}
 
 	/**
@@ -201,7 +206,7 @@ class BB_Group_Readylaunch {
 								<h4>
 									<span class="target_name">
 										<?php
-											esc_html_e( 'About Group', 'buddyboss' );
+											esc_html_e( 'About group', 'buddyboss' );
 										?>
 									</span>
 								</h4>
@@ -273,6 +278,7 @@ class BB_Group_Readylaunch {
 		$group    = $args['group'];
 		$action   = $args['action'];
 
+		add_filter( 'bp_get_group_status_description', array( $this, 'bb_rl_modify_group_status_description' ), 10, 2 );
 		?>
 		<div class="bb-rl-modal-content">
 			<?php
@@ -280,7 +286,21 @@ class BB_Group_Readylaunch {
 				?>
 				<div class="highlight bb-rl-group-meta bp-group-status">
 					<div class="bb-rl-group-meta-figure">
-						<i class="bb-icons-rl-globe-simple"></i>
+						<?php
+						if ( 'public' === $group->status ) {
+							?>
+							<i class="bb-icons-rl-globe-simple"></i>
+							<?php
+						} elseif ( 'hidden' === $group->status ) {
+							?>
+							<i class="bb-icons-rl-eye-slash"></i>
+							<?php
+						} elseif ( 'private' === $group->status ) {
+							?>
+							<i class="bb-icons-rl-lock"></i>
+							<?php
+						}
+						?>
 					</div>
 					<div class="bb-rl-group-meta-data">
 						<h3>
@@ -482,6 +502,7 @@ class BB_Group_Readylaunch {
 			?>
 		</div>
 		<?php
+		remove_filter( 'bp_get_group_status_description', array( $this, 'bb_rl_modify_group_status_description' ), 10, 2 );
 	}
 
 	/**
@@ -517,6 +538,9 @@ class BB_Group_Readylaunch {
 			$buttons['group_membership']['button_attr']['class'] = str_replace( 'bp-toggle-action-button', '', $buttons['group_membership']['button_attr']['class'] );
 			if ( strpos( $buttons['group_membership']['button_attr']['class'], 'leave-group' ) !== false ) {
 				$buttons['group_membership']['button_attr']['class'] = str_replace( 'leave-group', 'leave_group', $buttons['group_membership']['button_attr']['class'] );
+
+				// Ensure data-bp-btn-action attribute is set for leave group button
+				$buttons['group_membership']['button_attr']['data-bp-btn-action'] = 'leave_group';
 			}
 		}
 
@@ -645,5 +669,146 @@ class BB_Group_Readylaunch {
 		}
 
 		return $params;
+	}
+
+	/**
+	 * Modify group status description for ReadyLaunch.
+	 *
+	 * @since BuddyBoss 2.9.10
+	 *
+	 * @param string $description Original description.
+	 * @param object $group       Group object.
+	 *
+	 * @return string Modified description.
+	 */
+	public function bb_rl_modify_group_status_description( $description, $group ) {
+		if ( empty( $group ) || ! isset( $group->status ) ) {
+			return $description;
+		}
+
+		if ( 'public' === $group->status ) {
+			$description = __( 'Anyone can join the group.', 'buddyboss' );
+		} elseif ( 'hidden' === $group->status ) {
+			$description = __( 'Only invited member can join the group & group will not listed anywhere.', 'buddyboss' );
+		} elseif ( 'private' === $group->status ) {
+			$description = __( 'Only people who requested membership and are accepted can join the group.', 'buddyboss' );
+		}
+
+		return $description;
+	}
+
+	/**
+	 * Modify get joined date for group members for ReadyLaunch.
+	 *
+	 * @since BuddyBoss 2.9.10
+	 *
+	 * @param string $last_activity      Last joined string based on time since date given.
+	 * @param string $last_activity_date The date of joined.
+	 *
+	 * @return string Modified joined date.
+	 */
+	public static function bb_rl_modify_group_member_joined_since( $last_activity, $last_activity_date ) {
+
+		$last_activity_date = date_i18n( 'd M Y', strtotime( $last_activity_date ) );
+		$last_activity      = sprintf(
+		/* translators: 1: User joined date. */
+			esc_html__( 'Joined %s', 'buddyboss' ),
+			esc_html( $last_activity_date )
+		);
+
+		return $last_activity;
+	}
+
+	/**
+	 * Modify the nav link text of messages for ReadyLaunch.
+	 *
+	 * @since BuddyBoss 2.9.10
+	 *
+	 * @param string $link_text Original link text.
+	 * @param object $nav_item  Nav item object.
+	 * @param string $nav_scope Nav scope.
+	 *
+	 * @return string Modified link text.
+	 */
+	public static function bb_rl_modify_nav_link_text( $link_text, $nav_item, $nav_scope ) {
+		if ( ! empty( $nav_item->slug ) && ! empty( $nav_scope ) && 'groups' === $nav_scope ) {
+			if ( 'public-message' === $nav_item->slug ) {
+				$link_text = __( 'Group message', 'buddyboss' );
+			} elseif ( 'private-message' === $nav_item->slug ) {
+				$link_text = __( 'Private message', 'buddyboss' );
+			}
+		}
+
+		return $link_text;
+	}
+
+	/**
+	 * Modify Request sent button text for ReadyLaunch.
+	 *
+	 * @since BuddyBoss 2.9.30
+	 *
+	 * @param array $button Button array.
+	 *
+	 * @return array Modified button array.
+	 */
+	public function bb_rl_modify_bp_get_group_join_button( $button ) {
+		if ( ! isset( $button['id'] ) || ! isset( $button['link_text'] ) ) {
+			return $button;
+		}
+
+		if ( 'membership_requested' === $button['id'] ) {
+			$button['link_class']                         .= ' bb-rl-cancel-request bp-toggle-action-button';
+			$button['button_attr']['data-title']           = esc_html__( 'Cancel Request', 'buddyboss' );
+			$button['button_attr']['data-title-displayed'] = esc_html__( 'Request Sent', 'buddyboss' );
+		}
+		return $button;
+	}
+
+	/**
+	 * Modify group request membership response for ReadyLaunch.
+	 *
+	 * @since BuddyBoss 2.9.30
+	 *
+	 * @param array $response Response array.
+	 *
+	 * @return array Modified response array.
+	 */
+	public function bb_rl_modify_group_request_membership_response( $response ) {
+		$action = isset( $_POST['action'] ) ? sanitize_text_field( wp_unslash( $_POST['action'] ) ) : '';
+		if ( empty( $action ) ) {
+			return $response;
+		}
+
+		if ( 'groups_request_membership' === $action ) {
+			$response['feedback'] = esc_html__( 'Your membership request has been sent! The group organizer will review it, and you\'ll be notified once they respond. ', 'buddyboss' );
+		}
+
+		if ( 'groups_membership_requested' === $action ) {
+			$group_id = isset( $_POST['item_id'] ) ? absint( sanitize_text_field( wp_unslash( $_POST['item_id'] ) ) ) : 0;
+			if ( ! $group_id ) {
+				return $response;
+			}
+
+			$group = groups_get_group( $group_id );
+
+			if ( ! groups_delete_membership_request( false, bp_loggedin_user_id(), $group_id ) ) {
+				$response = array(
+					'feedback' => sprintf( '<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>', esc_html__( 'Error canceling membership request.', 'buddyboss' ) ),
+					'type'     => 'error',
+				);
+			} else {
+				// Request is canceled.
+				$group->is_pending = '0';
+
+				$response = array(
+					'contents'  => bp_get_group_join_button( $group ),
+					'is_group'  => bp_is_group(),
+					'type'      => 'success',
+					'group_url' => ( bp_is_group() ? bp_get_group_permalink( $group ) : '' ),
+				);
+			}
+		}
+
+		return $response;
 	}
 }

@@ -18,11 +18,14 @@
 
 .bb-rl-ac-reply-content {
 	display: flex;
-	align-items: center;
 	gap: var(--bb-rl-space-100);
+	max-height: 175px;
+	overflow-y: auto;
+	margin: var(--bb-rl-space-100) 0 var(--bb-rl-space-200);
 }
 
 .ac-textarea {
+	padding-top: calc(var(--bb-rl-space-100) + var(--bb-rl-space-50));
 	flex: auto;
 
 	.ac-input {
@@ -33,7 +36,7 @@
 }
 
 .bb-rl-ac-reply-avatar {
-	padding: var(--bb-rl-space-200) 0 var(--bb-rl-space-200) var(--bb-rl-space-300);
+	padding: var(--bb-rl-space-100) 0 var(--bb-rl-space-200) var(--bb-rl-space-300);
 
 	img {
 		border-radius: var(--bb-rl-radius-full);
@@ -284,6 +287,24 @@
 					}
 				}
 			}
+
+			.bb-activity-more-options-wrap .bb-activity-more-options-action[data-balloon-pos="up"] {
+
+
+				&:after {
+
+					.bb-rl-activity-modal & {
+						transform: translate(-85%, 10px);
+					}
+				}
+
+				&:hover:after {
+
+					.bb-rl-activity-modal & {
+						transform: translate(-85%, 0);
+					}
+				}
+			}
 		}
 
 		.bb-rl-acomment_inner {
@@ -348,8 +369,10 @@
 					align-items: center;
 					cursor: pointer;
 
-					&:after {
+					~ .activity-state-comments:before {
 						content: "";
+						display: inline-block;
+						vertical-align: middle;
 						background-color: var(--bb-rl-background-tertiary-color);
 						height: 4px;
 						width: 4px;

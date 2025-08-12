@@ -56,8 +56,16 @@
 		}
 
 		.bb-rl-create-album {
+			display: flex;
+			align-items: center;
+			gap: var(--bb-rl-space-50);
 			margin-right: auto;
-			font-size: 0.875rem;
+			font-size: var(--bb-rl-font-size-sm);
+			font-weight: 500;
+
+			[class*="bb-icon"] {
+				font-size: 16px;
+			}
 		}
 	}
 
@@ -113,6 +121,7 @@
 }
 
 .bb-rl-location-album-list-wrap {
+	padding-top: var(--bb-rl-space-100);
 
 	.bb-rl-breadcrumbs-append-ul-li .item {
 		padding: var(--bb-rl-space-100) 0;
@@ -896,7 +905,7 @@
 		border-bottom: 1px solid var(--bb-rl-border-secondary-color);
 
 		h4 {
-			font-size: 20px;
+			font-size: 18px;
 			font-weight: 600;
 			line-height: 1;
 		}
@@ -980,6 +989,10 @@
 						}
 					}
 				}
+			}
+
+			.bb-rl-all-reaction-count {
+				margin-left: var(--bb-rl-space-50);
 			}
 		}
 

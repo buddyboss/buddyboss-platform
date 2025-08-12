@@ -275,6 +275,10 @@
 		.favorite-toggle:before {
 			content: "\e2aa";
 		}
+
+		.bb-topic-content-meta-sep {
+			display: none;
+		}
 	}
 }
 
@@ -482,6 +486,21 @@
 	}
 }
 
+.bb-rl-forums-content-wrapper {
+
+	ul.bb-rl-forums-items {
+
+		> li.bb-rl-header-item {
+
+			> .item {
+				margin-bottom: var(--bb-rl-space-200);
+				border-bottom: 1px solid var(--bb-rl-border-secondary-color);
+				padding-bottom: var(--bb-rl-space-200);
+			}
+		}
+	}
+}
+
 .bb-rl-forums-content-wrapper:has(.bbp-no-reply) {
 	display: flex;
 	flex-direction: column;
@@ -544,6 +563,10 @@
 
 			&.bbp-topic-sticky-link:before {
 				content: "\e3e2";
+			}
+
+			&.bbp-topic-super-sticky-link:before {
+				content: "\e65c";
 			}
 
 			&.bbp-topic-merge-link:before {

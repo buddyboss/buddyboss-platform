@@ -12,6 +12,14 @@
 			align-items: center;
 			flex-wrap: wrap;
 
+			@media (max-width: 600px) {
+				justify-content: center;
+
+				.input-group {
+					margin-top: 0;
+				}
+			}
+
 			.archives-authors-section {
 				display: none;
 			}
@@ -20,7 +28,7 @@
 		.dropdown a.dropdown-toggle {
 
 			@include bb-rl-label-heading;
-			color: var(--bb-rl-text-secondary-color);
+			color: var(--bb-rl-text-secondary-color) !important; // !important is required to override the platform-pro styles
 			display: flex;
 			align-items: center;
 			background-color: var(--bb-rl-background-secondary-color);
@@ -32,6 +40,7 @@
 
 			i {
 				font-weight: 500;
+				color: var(--bb-rl-icon-primary-color) !important; // !important is required to override the platform-pro styles
 			}
 
 			span {
@@ -137,7 +146,8 @@
 				margin-right: var(--bb-rl-space-50);
 			}
 
-			.form-input {
+			.form-input,
+			input[type="text"].form-input {
 				display: block;
 				color: var(--bb-rl-text-secondary-color) !important;
 				background-color: transparent;
@@ -312,16 +322,20 @@ body[class*="mpcs-course"] .bb-rl-mbprlms-pagination {
 			display: inline-flex;
 			min-width: var(--bb-rl-space-400);
 			height: var(--bb-rl-space-400);
-			border: 1px solid transparent;
+			border: 1px solid transparent !important; // !important is required to override the platform-pro styles
 			border-radius: var(--bb-rl-radius-md);
 			justify-content: center;
 			align-items: center;
 			color: var(--bb-rl-text-tertiary-color) !important; // !important is required to override the platform-pro styles
+
+			&:hover {
+				border-color: var(--bb-rl-border-tertiary-color) !important; // !important is required to override the platform-pro styles
+			}
 		}
 
 		li.active a {
 			color: var(--bb-rl-text-color) !important; // !important is required to override the platform-pro styles
-			border: 1px solid var(--bb-rl-border-quaternary-color);
+			border: 1px solid var(--bb-rl-border-quaternary-color) !important; // !important is required to override the platform-pro styles
 			background-color: var(--bb-rl-background-color);
 		}
 	}
@@ -463,5 +477,16 @@ body[class*="mpcs-course"] .bb-rl-mbprlms-pagination {
 			@include bb-rl-label-heading;
 			color: var(--bb-rl-text-secondary-color);
 		}
+	}
+}
+
+.bb-rl-container-inner.bb-rl-meprlms-no-courses {
+	padding-top: var(--bb-rl-space-400);
+	padding-bottom: var(--bb-rl-space-400);
+
+	> p {
+
+		@include bb-rl-label-heading;
+		color: var(--bb-rl-text-secondary-color);
 	}
 }

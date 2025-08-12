@@ -55,7 +55,19 @@ class BB_Activity_Readylaunch {
 
 		add_filter( 'bp_nouveau_media_description_response_data', array( $this, 'bb_rl_modify_media_description_response_data' ), 10 );
 		add_filter( 'bp_nouveau_document_description_response_data', array( $this, 'bb_rl_modify_media_description_response_data' ), 10 );
+		add_filter( 'bp_nouveau_video_activity_response_data', array( $this, 'bb_rl_modify_media_description_response_data' ), 10 );
 		add_filter( 'bp_nouveau_video_description_response_data', array( $this, 'bb_rl_modify_media_description_response_data' ), 10 );
+
+		add_filter( 'bp_nouveau_activity_widget_query', array( $this, 'bb_rl_modify_activity_widget_query' ), 10 );
+
+		add_filter( 'bp_get_add_follow_button', array( $this, 'bb_rl_modify_add_follow_button' ) );
+
+		add_filter( 'bb_nouveau_get_activity_entry_bubble_buttons', array( $this, 'bb_rl_modify_activity_entry_bubble_buttons' ) );
+
+		add_filter( 'bp_nouveau_object_template_result', array( $this, 'bb_rl_modify_object_template_result' ), 10, 2 );
+
+		add_filter( 'bb_get_close_activity_comments_notice', array( $this, 'bb_rl_modify_close_activity_comments_notice' ) );
+		add_filter( 'bb_ajax_activity_update_close_comments', array( $this, 'bb_rl_modify_close_activity_comments_notice' ) );
 	}
 
 	/**
@@ -617,7 +629,19 @@ class BB_Activity_Readylaunch {
 
 		$user_link_with_html = bp_core_get_userlink( $activity->user_id );
 
-		if ( 'groups' === $activity->component && bp_is_active( 'groups' ) ) {
+		if (
+			in_array( $activity->component, array( 'groups', 'bbpress' ), true ) &&
+			in_array( $activity->type, array( 'bbp_topic_create', 'bbp_reply_create' ), true )
+		) {
+			if ( 'bbp_topic_create' === $activity->type ) {
+				/* Translators: %s: user link */
+				$activity_action = sprintf( __( '%s started the discussion', 'buddyboss' ), $user_link_with_html );
+			} elseif ( 'bbp_reply_create' === $activity->type ) {
+				/* Translators: %s: user link */
+				$activity_action = sprintf( __( '%s replied to the discussion', 'buddyboss' ), $user_link_with_html );
+			}
+			$activity_action = '<p>' . $activity_action . '</p>';
+		} elseif ( 'groups' === $activity->component && bp_is_active( 'groups' ) ) {
 			if (
 				'joined_group' === $activity->type ||
 				'group_details_updated' === $activity->type ||
@@ -651,6 +675,11 @@ class BB_Activity_Readylaunch {
 						'$1',
 						$activity_action
 					);
+				} elseif ( 'group_details_updated' === $activity->type ) {
+					$user_link = bp_core_get_userlink( $activity->user_id );
+					/* Translators: %s: user link */
+					$activity_action = sprintf( __( '%s updated group details', 'buddyboss' ), $user_link );
+					$activity_action = '<p>' . $activity_action . '</p>';
 				}
 			} elseif ( 'activity_update' === $activity->type ) {
 				$activity_action = '<p>' . $user_link_with_html . '</p>';
@@ -731,6 +760,231 @@ class BB_Activity_Readylaunch {
 			$response_data['comment_form'] = ob_get_clean();
 		}
 
+		if ( ! empty( $response_data['description'] ) ) {
+			$description = $response_data['description'];
+			$modified    = false;
+
+			$search_replacements = array();
+			$replace_values      = array();
+
+			if (
+				false !== strpos( $description, 'id="add-activity-description"' ) &&
+				! empty( $response_data['type'] )
+			) {
+				$add_description_text = esc_attr__( 'Add a description', 'buddyboss' );
+
+				$type_image_text = sprintf(
+					/* translators: %s: media type */
+					esc_attr__( 'Type %s description', 'buddyboss' ),
+					esc_attr( $response_data['type'] )
+				);
+
+				$search_replacements[] = 'title="' . $add_description_text . '"';
+				$replace_values[]      = 'title="' . $type_image_text . '"';
+
+				$search_replacements[] = 'placeholder="' . $add_description_text . '"';
+				$replace_values[]      = 'placeholder="' . $type_image_text . '"';
+
+				$modified = true;
+			}
+
+			// Check for submit button element.
+			if ( false !== strpos( $description, 'id="bp-activity-description-new-submit"' ) ) {
+				$done_editing_text = esc_attr__( 'Done Editing', 'buddyboss' );
+				$done_text         = esc_attr__( 'Done', 'buddyboss' );
+
+				$search_replacements[] = 'value="' . $done_editing_text . '"';
+				$replace_values[]      = 'value="' . $done_text . '"';
+
+				$modified = true;
+			}
+
+			// Perform single str_replace with all replacements.
+			if ( $modified && ! empty( $search_replacements ) ) {
+				$response_data['description'] = str_replace( $search_replacements, $replace_values, $description );
+			}
+		}
+
 		return $response_data;
 	}
+
+	/**
+	 * Modify activity widget query to remove public scope when relevant feed is enabled.
+	 *
+	 * @since BuddyBoss 2.9.10
+	 *
+	 * @param array $args The activity widget arguments.
+	 * @return array Modified arguments.
+	 */
+	public function bb_rl_modify_activity_widget_query( $args ) {
+		// Check if relevant feed is enabled and scope exists.
+		if ( ! bp_is_relevant_feed_enabled() || ! isset( $args['scope'] ) || empty( $args['scope'] ) ) {
+			return $args;
+		}
+
+		// Check if 'public' is in the scope.
+		if ( false === strpos( $args['scope'], 'public' ) ) {
+			return $args;
+		}
+
+		// Parse the scope into an array.
+		$scope_array = explode( ',', $args['scope'] );
+
+		// Remove 'public' from the scope array.
+		$key = array_search( 'public', $scope_array, true );
+		if ( false !== $key ) {
+			unset( $scope_array[ $key ] );
+		}
+
+		// Rebuild the scope string, filtering out empty values and reindexing.
+		$filtered_scope = array_values( array_filter( $scope_array ) );
+		$args['scope']  = ! empty( $filtered_scope ) ? implode( ',', $filtered_scope ) : '';
+
+		return $args;
+	}
+
+	/**
+	 * Modify the data-balloon attribute for the follow button when hover on follow button.
+	 *
+	 * @since BuddyBoss 2.9.30
+	 *
+	 * @param array|string $button The button array or HTML string.
+	 *
+	 * @return array|string The modified button array or HTML string.
+	 */
+	public function bb_rl_modify_add_follow_button( $button ) {
+		// Check if $button is an array and has the required keys.
+		if ( ! is_array( $button ) || empty( $button['link_href'] ) ) {
+			return $button;
+		}
+
+		if ( false !== strpos( $button['link_href'], 'stop-following' ) ) {
+			$unfollow_text          = __( 'Unfollow', 'buddyboss' );
+			$button['data-balloon'] = $unfollow_text;
+			if ( empty( $button['is_tooltips'] ) ) {
+				$button['link_class']               .= ' bb-rl-primary-hover-action';
+				$button['button_attr']['data-hover'] = $unfollow_text;
+			}
+		}
+
+		return $button;
+	}
+
+	/**
+	 * Modify the media activity entry bubble buttons.
+	 *
+	 * @since BuddyBoss 2.9.30
+	 *
+	 * @param array $buttons The buttons.
+	 *
+	 * @return array The modified buttons.
+	 */
+	public function bb_rl_modify_activity_entry_bubble_buttons( $buttons ) {
+		if ( empty( $buttons ) ) {
+			return $buttons;
+		}
+
+		$replace_text = array();
+		if ( ! empty( $buttons['activity_document_download'] ) ) {
+			$replace_text['activity_document_download'] = esc_html__( 'Download document', 'buddyboss' );
+		}
+		if ( ! empty( $buttons['activity_media_download'] ) ) {
+			$replace_text['activity_media_download'] = esc_html__( 'Download photo', 'buddyboss' );
+		}
+		if ( ! empty( $buttons['activity_video_download'] ) ) {
+			$replace_text['activity_video_download'] = esc_html__( 'Download video', 'buddyboss' );
+		}
+
+		if ( ! empty( $replace_text ) ) {
+			foreach ( $replace_text as $button_key => $replacement_text ) {
+				$buttons[ $button_key ]['link_text'] = str_replace( esc_html__( 'Download', 'buddyboss' ), $replacement_text, $buttons[ $button_key ]['link_text'] );
+			}
+		}
+
+		return $buttons;
+	}
+
+	/**
+	 * Add the scheduled posts count to the object template result.
+	 *
+	 * @since BuddyBoss 2.9.30
+	 *
+	 * @param array  $result          The result.
+	 * @param string $template_object The object.
+	 *
+	 * @return array The modified result.
+	 */
+	public function bb_rl_modify_object_template_result( $result, $template_object ) {
+		if ( 'activity' === $template_object ) {
+			// phpcs:disable WordPress.Security.NonceVerification.Missing
+			$status   = isset( $_POST['status'] ) ? sanitize_text_field( wp_unslash( $_POST['status'] ) ) : '';
+			$template = isset( $_POST['template'] ) ? sanitize_text_field( wp_unslash( $_POST['template'] ) ) : '';
+
+			if ( 'scheduled' === $status && 'activity_schedule' === $template ) {
+				add_filter( 'bp_ajax_querystring', array( $this, 'bb_rl_get_activity_schedule_count_query' ), 20 );
+				bp_has_activities( bp_ajax_querystring( 'activity' ) );
+				$result['count'] = bp_core_number_format( $GLOBALS['activities_template']->activity_count );
+				remove_filter( 'bp_ajax_querystring', array( $this, 'bb_rl_get_activity_schedule_count_query' ), 20 );
+			}
+		}
+
+		return $result;
+	}
+
+	/**
+	 * Get the activity schedule count query.
+	 *
+	 * @since BuddyBoss 2.9.30
+	 *
+	 * @param array $querystring The querystring.
+	 *
+	 * @return string The modified querystring.
+	 */
+	public function bb_rl_get_activity_schedule_count_query( $querystring ) {
+		$querystring = bp_parse_args( $querystring );
+
+		$querystring['status'] = 'scheduled';
+
+		$querystring['user_id'] = bp_loggedin_user_id();
+		if ( bp_is_active( 'groups' ) && bp_is_group() ) {
+			$querystring['object'] = 'groups';
+		} else {
+			$querystring['object'] = 'activity';
+		}
+		$querystring['scope'] = '';
+
+		return http_build_query( $querystring );
+	}
+
+	/**
+	 * Modify the close activity comments notice.
+	 *
+	 * This method handles both:
+	 * - bb_get_close_activity_comments_notice filter (for template display)
+	 * - bb_ajax_activity_update_close_comments filter (for AJAX responses)
+	 *
+	 * @since BuddyBoss 2.9.30
+	 *
+	 * @param array|string $closed_notice The closed notice.
+	 *
+	 * @return array|string The modified closed notice.
+	 */
+	public function bb_rl_modify_close_activity_comments_notice( $closed_notice ) {
+		if ( empty( $closed_notice ) ) {
+			return $closed_notice;
+		}
+
+		$custom_notice = esc_html__( 'Comments are closed for this post', 'buddyboss' );
+
+		// Handle array format for AJAX response.
+		if ( is_array( $closed_notice ) && isset( $closed_notice['feedback'] ) ) {
+			if ( isset( $_POST['close_comments_action'] ) && 'close_comments' === $_POST['close_comments_action'] ) {
+				$closed_notice['feedback'] = $custom_notice;
+			}
+			return $closed_notice;
+		}
+
+		return $custom_notice;
+	}
 }
+

@@ -234,6 +234,22 @@ h1.wp-login-logo {
 			font-size: 13px;
 			font-weight: 500;
 			line-height: 1.8;
+
+			&:has(.bb-rl-updated-close) {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+			}
+		}
+
+		.bb-rl-updated-close {
+			font-size: 16px;
+			color: var(--bb-rl-icon-tertiary-color);
+			cursor: pointer;
+
+			i {
+				font-weight: 700;
+			}
 		}
 	}
 
@@ -1180,5 +1196,46 @@ html:has(.memberpressproduct-template-default.single.registration) {
 	.register-page-main {
 		max-width: 100%;
 		margin: 0 var(--bb-rl-space-200);
+	}
+}
+
+// Activation Page
+
+.activation #activate-page {
+	background-color: var(--bb-rl-background-color);
+	border: 1px solid var(--bb-rl-border-secondary-color);
+	padding: var(--bb-rl-space-300) var(--bb-rl-space-300);
+	border-radius: var(--bb-rl-radius-lg);
+	max-width: 432px;
+	margin: 0 auto var(--bb-rl-space-500);
+
+	> p {
+		font-size: 16px;
+		color: var(--bb-rl-text-secondary-color);
+		margin-bottom: var(--bb-rl-space-200);
+	}
+
+	.standard-form {
+		margin-bottom: 0;
+
+		label {
+			font-weight: 500;
+			font-size: 15px;
+		}
+
+		input[type="text"] {
+			height: 36px;
+			margin-right: var(--bb-rl-space-100);
+		}
+
+		.submit {
+			margin: var(--bb-rl-space-200) 0 0;
+
+			input {
+				height: 35px;
+				line-height: 1;
+				padding: var(--bb-rl-space-100);
+			}
+		}
 	}
 }

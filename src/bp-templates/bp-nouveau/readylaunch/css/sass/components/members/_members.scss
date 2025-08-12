@@ -58,6 +58,23 @@
 
 		.list-wrap-inner {
 			align-items: center;
+
+			@media screen and (max-width: 768px) {
+				flex-flow: wrap;
+				gap: var(--bb-rl-space-100);
+
+				.item {
+					flex: 0 0 calc(100% - 130px);
+				}
+			}
+
+			@media screen and (max-width: $sm) {
+				gap: var(--bb-rl-space-100);
+
+				.bb-rl-member-buttons-wrap {
+					margin-left: 0;
+				}
+			}
 		}
 
 		.bb-rl-item-block-heading {
@@ -97,6 +114,10 @@
 		.item-avatar {
 			display: flex;
 			justify-content: center;
+
+			.gamipress-buddypress-user-details {
+				display: none;
+			}
 		}
 
 		.avatar {
@@ -231,6 +252,17 @@
 			content: "\eafa";
 		}
 
+		&.friendship-button.pending_friend.loading i {
+			height: 16px;
+		}
+
+		&.friendship-button.pending_friend.loading i::before {
+
+			@include bb-rl-spinner;
+			@include bb-rl-spinner--sm;
+			margin-right: var(--bb-rl-space-50);
+		}
+
 		&.friendship-button.awaiting_response_friend i::before {
 			content: "\edec";
 		}
@@ -238,6 +270,15 @@
 		&.friendship-button.is_friend i::before {
 			content: "\e182";
 		}
+	}
+}
+
+.bb-rl-member-header-actions {
+
+	button.friendship-button i {
+		max-height: 20px;
+		display: inline-flex;
+		align-items: center;
 	}
 }
 
@@ -369,11 +410,12 @@
 	}
 
 	.friendship-button.is_friend i::before {
-		content: "\e4ce";
+		content: "\e4d0";
+		font-weight: 500;
 	}
 
 	.friendship-button.pending_friend i::before {
-		content: "\edec";
+		content: "\eafa";
 	}
 
 	.friendship-button.awaiting_response_friend i::before {
@@ -408,6 +450,10 @@
 	.bb-rl-input-field,
 	textarea {
 		width: 100%;
+	}
+
+	textarea {
+		resize: vertical;
 	}
 }
 

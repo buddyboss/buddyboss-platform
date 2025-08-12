@@ -90,6 +90,13 @@
 				margin-left: var(--bb-rl-space-100);
 			}
 		}
+
+		.bb-model-footer {
+
+			.button ~ .button {
+				margin-left: 0;
+			}
+		}
 	}
 
 	.bb-rl-entry-heading {
@@ -1663,6 +1670,17 @@ div.vjs-menu {
 		.CodeMirror {
 			background-color: var(--bb-rl-background-secondary-color);
 		}
+	}
+}
+
+.bb-rl-view-more--pagination .bb-rl-button.bb-rl-button--small {
+	font-size: var(--bb-rl-font-size-sm);
+	font-weight: 500;
+	line-height: 1.7;
+	gap: var(--bb-rl-space-50);
+
+	[class*="bb-icons"] {
+		font-size: 16px;
 	}
 }
 
