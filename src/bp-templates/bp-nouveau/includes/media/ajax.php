@@ -289,7 +289,30 @@ function bp_nouveau_ajax_media_save() {
 		ob_end_clean();
 	}
 
-	if ( empty( $media ) ) {
+	$skip_error       = false;
+	$current_album_id = bp_is_single_album() ? (int) bp_action_variable( 0 ) : false;
+	$album_id         = filter_input( INPUT_POST, 'album_id', FILTER_VALIDATE_INT );
+
+	// Do not send the error if is album page and the current album id is not the same as the album id in the request.
+	// This is scenario when user selects the album from the dropdown and after uploading the media.
+	if ( bp_is_single_album() && $current_album_id !== $album_id && empty( $media ) && ! empty( $media_ids ) && ! empty( $album_id ) ) {
+		$tmp_args = array(
+			'include'  => implode( ',', $media_ids ),
+			'per_page' => 0,
+			'album_id' => $album_id,
+		);
+
+		if ( ! empty( $group_id ) ) {
+			$tmp_args['group_id'] = $group_id;
+		}
+
+		$has_media_in_album = bp_has_media( $tmp_args );
+		if ( $has_media_in_album ) {
+			$skip_error = true;
+		}
+	}
+
+	if ( empty( $media ) && ! $skip_error ) {
 		$response['feedback'] = sprintf(
 			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
 			esc_html__( 'There was a problem saving media.', 'buddyboss' )

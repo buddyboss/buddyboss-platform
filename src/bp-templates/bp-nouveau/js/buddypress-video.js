@@ -430,69 +430,72 @@ window.bp = window.bp || {};
 
 								}
 
-								var dir_label;
-								if ( response.data.video_personal_count ) {
-									if ( $( '#buddypress .bb-item-count' ).length > 0 && 'yes' !== BP_Nouveau.video.is_video_directory ) {
-										dir_label = BP_Nouveau.dir_labels.hasOwnProperty( 'video' ) ?
-										(
-											1 === parseInt( response.data.video_personal_count ) ?
-											BP_Nouveau.dir_labels.video.singular : BP_Nouveau.dir_labels.video.plural
-										)
-										: '';
-										$( '#buddypress .bb-item-count' ).html( '<span class="bb-count">' + response.data.video_personal_count + '</span> ' + dir_label );
-									} else if ( $( '#buddypress' ).find( '.bp-wrap .users-nav ul li#video-personal-li a span.count' ).length ) {
-										$( '#buddypress' ).find( '.bp-wrap .users-nav ul li#video-personal-li a span.count' ).text( response.data.video_personal_count );
-									} else if ( '1' === BP_Nouveau.bb_enable_content_counts ) {
-										var videoPersonalSpanTag = document.createElement( 'span' );
-										videoPersonalSpanTag.setAttribute( 'class', 'count' );
-										var videoPersonalSpanTagTextNode = document.createTextNode( response.data.video_personal_count );
-										videoPersonalSpanTag.appendChild( videoPersonalSpanTagTextNode );
-										$( '#buddypress' ).find( '.bp-wrap .users-nav ul li#video-personal-li a' ).append( videoPersonalSpanTag );
-									}
-								}
-
-								if ( response.data.video_group_count ) {
-									if ( $( '#buddypress .bb-item-count' ).length > 0 && 'yes' !== BP_Nouveau.video.is_video_directory ) {
-										dir_label = BP_Nouveau.dir_labels.hasOwnProperty( 'video' ) ?
-										(
-											1 === parseInt( response.data.video_group_count ) ?
-											BP_Nouveau.dir_labels.video.singular : BP_Nouveau.dir_labels.video.plural
-										)
-										: '';
-										$( '#buddypress .bb-item-count' ).html( '<span class="bb-count">' + response.data.video_group_count + '</span> ' + dir_label );
-									} else if ( $( '#buddypress' ).find( '.bp-wrap .groups-nav ul li#videos-groups-li a span.count' ).length ) {
-										$( '#buddypress' ).find( '.bp-wrap .groups-nav ul li#videos-groups-li a span.count' ).text( response.data.video_group_count );
-									} else if ( '1' === BP_Nouveau.bb_enable_content_counts ) {
-										var videoGroupSpanTag = document.createElement( 'span' );
-										videoGroupSpanTag.setAttribute( 'class', 'count' );
-										var videoGroupSpanTagTextNode = document.createTextNode( response.data.video_group_count );
-										videoGroupSpanTag.appendChild( videoGroupSpanTagTextNode );
-										$( '#buddypress' ).find( '.bp-wrap .groups-nav ul li#videos-groups-li a' ).append( videoGroupSpanTag );
-									}
-								}
-
-								if ( 'yes' === BP_Nouveau.video.is_video_directory ) {
-									if ( $( '#buddypress .bb-item-count' ).length > 0 ) {
-										var dir_scope = $( '#buddypress .bp-navs.dir-navs > ul > li.selected' ).data( 'bp-scope' );
-										var dir_count = 0;
-										if ( 'all' === dir_scope ) {
-											dir_count = response.data.video_all_count;
-										} else if ( 'personal' === dir_scope ) {
-											dir_count = response.data.video_personal_count;
-										} else if ( 'groups' === dir_scope ) {
-											dir_count = response.data.video_group_count;
+								// Do not show count on single album page.
+								if ( ! $( '#buddypress #bp-media-single-album' ).length ) {
+									var dir_label;
+									if ( response.data.video_personal_count ) {
+										if ( $( '#buddypress .bb-item-count' ).length > 0 && 'yes' !== BP_Nouveau.video.is_video_directory ) {
+											dir_label = BP_Nouveau.dir_labels.hasOwnProperty( 'video' ) ?
+											(
+												1 === parseInt( response.data.video_personal_count ) ?
+												BP_Nouveau.dir_labels.video.singular : BP_Nouveau.dir_labels.video.plural
+											)
+											: '';
+											$( '#buddypress .bb-item-count' ).html( '<span class="bb-count">' + response.data.video_personal_count + '</span> ' + dir_label );
+										} else if ( $( '#buddypress' ).find( '.bp-wrap .users-nav ul li#video-personal-li a span.count' ).length ) {
+											$( '#buddypress' ).find( '.bp-wrap .users-nav ul li#video-personal-li a span.count' ).text( response.data.video_personal_count );
+										} else if ( '1' === BP_Nouveau.bb_enable_content_counts ) {
+											var videoPersonalSpanTag = document.createElement( 'span' );
+											videoPersonalSpanTag.setAttribute( 'class', 'count' );
+											var videoPersonalSpanTagTextNode = document.createTextNode( response.data.video_personal_count );
+											videoPersonalSpanTag.appendChild( videoPersonalSpanTagTextNode );
+											$( '#buddypress' ).find( '.bp-wrap .users-nav ul li#video-personal-li a' ).append( videoPersonalSpanTag );
 										}
+									}
 
-										dir_label = BP_Nouveau.dir_labels.hasOwnProperty( 'video' ) ?
-										(
-											1 === dir_count ? BP_Nouveau.dir_labels.video.singular : BP_Nouveau.dir_labels.video.plural
-										)
-										: '';
-										$( '#buddypress .bb-item-count' ).html( '<span class="bb-count">' + dir_count + '</span> ' + dir_label );
-									} else {
-										$( '#buddypress' ).find( '.video-type-navs ul.video-nav li#video-all a span.count' ).text( response.data.video_all_count );
-										$( '#buddypress' ).find( '.video-type-navs ul.video-nav li#video-personal a span.count' ).text( response.data.video_personal_count );
-										$( '#buddypress' ).find( '.video-type-navs ul.video-nav li#video-groups a span.count' ).text( response.data.video_group_count );
+									if ( response.data.video_group_count ) {
+										if ( $( '#buddypress .bb-item-count' ).length > 0 && 'yes' !== BP_Nouveau.video.is_video_directory ) {
+											dir_label = BP_Nouveau.dir_labels.hasOwnProperty( 'video' ) ?
+											(
+												1 === parseInt( response.data.video_group_count ) ?
+												BP_Nouveau.dir_labels.video.singular : BP_Nouveau.dir_labels.video.plural
+											)
+											: '';
+											$( '#buddypress .bb-item-count' ).html( '<span class="bb-count">' + response.data.video_group_count + '</span> ' + dir_label );
+										} else if ( $( '#buddypress' ).find( '.bp-wrap .groups-nav ul li#videos-groups-li a span.count' ).length ) {
+											$( '#buddypress' ).find( '.bp-wrap .groups-nav ul li#videos-groups-li a span.count' ).text( response.data.video_group_count );
+										} else if ( '1' === BP_Nouveau.bb_enable_content_counts ) {
+											var videoGroupSpanTag = document.createElement( 'span' );
+											videoGroupSpanTag.setAttribute( 'class', 'count' );
+											var videoGroupSpanTagTextNode = document.createTextNode( response.data.video_group_count );
+											videoGroupSpanTag.appendChild( videoGroupSpanTagTextNode );
+											$( '#buddypress' ).find( '.bp-wrap .groups-nav ul li#videos-groups-li a' ).append( videoGroupSpanTag );
+										}
+									}
+
+									if ( 'yes' === BP_Nouveau.video.is_video_directory ) {
+										if ( $( '#buddypress .bb-item-count' ).length > 0 ) {
+											var dir_scope = $( '#buddypress .bp-navs.dir-navs > ul > li.selected' ).data( 'bp-scope' );
+											var dir_count = 0;
+											if ( 'all' === dir_scope ) {
+												dir_count = response.data.video_all_count;
+											} else if ( 'personal' === dir_scope ) {
+												dir_count = response.data.video_personal_count;
+											} else if ( 'groups' === dir_scope ) {
+												dir_count = response.data.video_group_count;
+											}
+
+											dir_label = BP_Nouveau.dir_labels.hasOwnProperty( 'video' ) ?
+											(
+												1 === dir_count ? BP_Nouveau.dir_labels.video.singular : BP_Nouveau.dir_labels.video.plural
+											)
+											: '';
+											$( '#buddypress .bb-item-count' ).html( '<span class="bb-count">' + dir_count + '</span> ' + dir_label );
+										} else {
+											$( '#buddypress' ).find( '.video-type-navs ul.video-nav li#video-all a span.count' ).text( response.data.video_all_count );
+											$( '#buddypress' ).find( '.video-type-navs ul.video-nav li#video-personal a span.count' ).text( response.data.video_personal_count );
+											$( '#buddypress' ).find( '.video-type-navs ul.video-nav li#video-groups a span.count' ).text( response.data.video_group_count );
+										}
 									}
 								}
 
