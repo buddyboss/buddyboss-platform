@@ -644,7 +644,10 @@ window.bp = window.bp || {};
 						if ( eventCurrentTargetClosest.find( '.bb-model-footer .bb-rl-media-move' ).hasClass( 'is-disabled' ) ) {
 							return; // return if parent album is same.
 						}
-						eventCurrentTargetClosest.find( '.bb-rl-album-selected-id' ).val( $( e.currentTarget ).data( 'id' ) );
+
+						( eventCurrentTargetClosest.length ? eventCurrentTargetClosest : eventCurrentTarget.closest('.bb-field-wrap') )
+							.find('.bb-rl-album-selected-id')
+							.val( $(e.currentTarget).data('id') );
 						var mediaPrivacy = eventCurrentTarget.closest( '#bp-video-uploader' ).find( '#bb-video-privacy' );
 						if ( Number( eventCurrentTarget.data( 'id' ) ) !== 0 ) {
 							mediaPrivacy.find( 'option' ).removeAttr( 'selected' );
