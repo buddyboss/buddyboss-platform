@@ -147,7 +147,10 @@
 			if ( bp_current_user_can( 'bp_moderate' ) ) {
 				?>
 				<div class="message_actions">
-					<a href="#" class="message_action__anchor"> <i class="bb-icon-f bb-icon-ellipsis-h"></i> </a>
+					<a href="#" class="message_action__anchor">
+						<i class="bb-icon-f bb-icon-ellipsis-h"></i>
+						<span class="bp-screen-reader-text"><?php esc_html_e( 'More options', 'buddyboss' ); ?></span>
+					</a>
 					<div class="message_action__list bb_more_dropdown" data-bp-thread-id="{{ data.id }}">
 						<?php bp_get_template_part( 'common/more-options-view' ); ?>
 						<ul>

@@ -11,7 +11,7 @@
   --bb-rl-background-tertiary-hover-color: #cececf;
   --bb-rl-background-black-color: #0c0c0d;
   --bb-rl-background-disabled-color: #dbdbdb;
-  --bb-rl-background-brand-primary-color: #4946fe;
+  --bb-rl-background-brand-primary-color: var(--bb-rl-primary-color);
   --bb-rl-background-brand-primary-hover-color: #4937f4;
   --bb-rl-background-brand-secondary-color: #dde4ff;
   --bb-rl-background-brand-secondary-hover-color: #c2cdff;
@@ -35,7 +35,7 @@
   --bb-rl-border-quinery-color: #6d6d6e;
   --bb-rl-border-quaternary-color: #9e9e9e;
   --bb-rl-border-brand-primary-color: #3325ae;
-  --bb-rl-border-brand-secondary-color: #4946fe;
+  --bb-rl-border-brand-secondary-color: var(--bb-rl-primary-color);
   --bb-rl-border-positive-primary-color: #02542d;
   --bb-rl-border-positive-secondary-color: #14ae5c;
   --bb-rl-border-warning-primary-color: #682d03;
@@ -47,7 +47,7 @@
   --bb-rl-text-secondary-color: #555556;
   --bb-rl-text-tertiary-color: #858586;
   --bb-rl-text-disabled-color: #9e9e9e;
-  --bb-rl-text-brand-primary-color: #4946fe;
+  --bb-rl-text-brand-primary-color: var(--bb-rl-primary-color);
   --bb-rl-text-brand-secondary-color: #3325ae;
   --bb-rl-text-positive-primary-color: #02542d;
   --bb-rl-text-positive-secondary-color: #14ae5c;
@@ -61,7 +61,8 @@
   --bb-rl-icon-tertiary-color: #9e9e9e;
   --bb-rl-icon-disabled-color: #cececf;
   --bb-rl-icon-brand-primary-color: #3325ae;
-  --bb-rl-icon-brand-secondary-color: #4946fe;
+  --bb-rl-icon-brand-secondary-color: var(--bb-rl-primary-color);
+  --bb-rl-icon-brand-disabled-color: #767eff;
   --bb-rl-icon-positive-primary-color: #02542d;
   --bb-rl-icon-positive-secondary-color: #14ae5c;
   --bb-rl-icon-warning-primary-color: #682d03;
@@ -104,6 +105,7 @@
 
 /* Dark Mode Variables */
 .bb-rl-dark-mode {
+  --bb-rl-primary-color: #4946fe;
   --bb-rl-background-color: #242425;
   --bb-rl-background-hover-color: #555556;
   --bb-rl-background-secondary-color: #2f2f2f;
@@ -112,7 +114,7 @@
   --bb-rl-background-tertiary-hover-color: #555556;
   --bb-rl-background-black-color: #0c0c0d;
   --bb-rl-background-disabled-color: #dbdbdb;
-  --bb-rl-background-brand-primary-color: #4946fe;
+  --bb-rl-background-brand-primary-color: var(--bb-rl-primary-color);
   --bb-rl-background-brand-primary-hover-color: #4937f4;
   --bb-rl-background-brand-secondary-color: #3325ae;
   --bb-rl-background-brand-secondary-hover-color: #2e2689;
@@ -136,7 +138,7 @@
   --bb-rl-border-quinery-color: #f6f6f6;
   --bb-rl-border-quaternary-color: #f3f3f3;
   --bb-rl-border-brand-primary-color: #c2cdff;
-  --bb-rl-border-brand-secondary-color: #4946fe;
+  --bb-rl-border-brand-secondary-color: var(--bb-rl-primary-color);
   --bb-rl-border-positive-primary-color: #cff7d3;
   --bb-rl-border-positive-secondary-color: #14ae5c;
   --bb-rl-border-warning-primary-color: #fff1c2;
@@ -148,7 +150,7 @@
   --bb-rl-text-secondary-color: #cececf;
   --bb-rl-text-tertiary-color: #b6b6b6;
   --bb-rl-text-disabled-color: #e7e7e7;
-  --bb-rl-text-brand-primary-color: #4946fe;
+  --bb-rl-text-brand-primary-color: var(--bb-rl-primary-color);
   --bb-rl-text-brand-secondary-color: #c2cdff;
   --bb-rl-text-positive-primary-color: #cff7d3;
   --bb-rl-text-positive-secondary-color: #14ae5c;
@@ -162,7 +164,8 @@
   --bb-rl-icon-tertiary-color: #9e9e9e;
   --bb-rl-icon-disabled-color: #858586;
   --bb-rl-icon-brand-primary-color: #c2cdff;
-  --bb-rl-icon-brand-secondary-color: #4946fe;
+  --bb-rl-icon-brand-secondary-color: var(--bb-rl-primary-color);
+  --bb-rl-icon-brand-disabled-color: #767eff;
   --bb-rl-icon-positive-primary-color: #cff7d3;
   --bb-rl-icon-positive-secondary-color: #14ae5c;
   --bb-rl-icon-warning-primary-color: #fff1c2;
@@ -205,8 +208,9 @@
 
 .bb-rl-forums-list .bb-rl-forum-cover img {
   border-radius: var(--bb-rl-radius-lg) var(--bb-rl-radius-lg) 0 0;
-  height: 120px;
-  width: 100%;
+  height: 120px !important;
+  width: 100% !important;
+  max-width: 100% !important;
   object-fit: cover;
 }
 
@@ -1189,7 +1193,8 @@
   justify-content: flex-start;
 }
 
-.groups .bb-rl-stick .bbp-topic-super-sticky-link {
+.groups .bb-rl-stick .bbp-topic-super-sticky-link,
+.groups .bbp-admin-links .bbp-topic-super-sticky-link {
   display: none !important;
 }
 
@@ -1228,6 +1233,23 @@
   align-items: center;
   gap: var(--bb-rl-space-200);
   margin-bottom: var(--bb-rl-space-200);
+}
+
+.groups .bb-rl-group-forum-header:has(+ .bb-rl-forum-tabs) {
+  justify-content: flex-end;
+}
+
+.groups .bb-rl-group-forum-header + .bb-rl-forum-tabs {
+  margin-top: -50px;
+}
+
+@media (max-width: 544px) {
+  .groups .bb-rl-group-forum-header:has(+ .bb-rl-forum-tabs) {
+    justify-content: flex-start;
+  }
+  .groups .bb-rl-group-forum-header + .bb-rl-forum-tabs {
+    margin-top: 0;
+  }
 }
 
 .groups .bb-rl-group-forum-header h2 {
@@ -1422,7 +1444,11 @@
 }
 
 .bb-rl-forum-modal:not(.bb-rl-forum-modal--static) #new-post {
-  max-height: 90vh;
+  overflow: hidden;
+}
+
+.bb-rl-forum-modal:not(.bb-rl-forum-modal--static) #new-post .bb-rl-forum-modal-content {
+  max-height: 60vh;
   overflow: auto;
   overflow-x: hidden;
 }
@@ -1765,12 +1791,17 @@
   height: 190px;
 }
 
+.bb-rl-forum-modal .select2-dropdown {
+  background-color: var(--bb-rl-background-color);
+}
+
 .bb-rl-forum-tags {
   border-top: 1px solid var(--bb-rl-border-secondary-color);
   padding: var(--bb-rl-space-200) 0;
 }
 
 .bb-rl-forum-tags .select2-container--default .select2-selection--multiple {
+  background-color: var(--bb-rl-background-color);
   display: flex;
   border: 0 !important;
   min-height: 24px;
@@ -1789,21 +1820,27 @@
 }
 
 .bb-rl-forum-tags .select2-container--default .select2-selection--multiple .select2-selection__choice {
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 500;
+  line-height: var(--bb-rl-base-line-small);
   display: flex;
   align-items: center;
   border: 1px solid var(--bb-rl-border-secondary-color);
   border-radius: var(--bb-rl-radius-full);
-  padding: var(--bb-rl-space-50) var(--bb-rl-space-100);
+  padding: 1px var(--bb-rl-space-100);
   background-color: transparent;
   color: var(--bb-rl-text-color);
-  font-size: var(--bb-rl-font-size-sm);
-  font-weight: 500;
   margin: 0;
 }
 
 .bb-rl-forum-tags .select2-container--default .select2-selection--multiple .select2-selection__choice .select2-selection__choice__remove {
   font-size: 0;
   order: 2;
+  border: 0;
+  line-height: 1 !important;
+  margin: 0 0 0 var(--bb-rl-space-50) !important;
+  position: relative;
+  top: 1px;
 }
 
 .bb-rl-forum-tags .select2-container--default .select2-selection--multiple .select2-selection__choice .select2-selection__choice__remove:before {
@@ -1811,18 +1848,17 @@
   font-family: bb-icons-rl;
   font-size: 14px;
   color: var(--bb-rl-icon-secondary-color);
-  margin-right: var(--bb-rl-space-50);
 }
 
 .bb-rl-forum-modal .select2-dropdown {
-  border: 0;
-  border-radius: var(--bb-rl-radius-lg);
-  box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--bb-rl-border-secondary-color);
+  border-radius: var(--bb-rl-radius-md);
+  box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.12);
   max-width: 320px;
 }
 
 .bb-rl-forum-modal .select2-dropdown.select2-dropdown--above, .bb-rl-forum-modal .select2-dropdown.select2-dropdown--below {
-  border-radius: var(--bb-rl-radius-lg);
+  border-radius: var(--bb-rl-radius-md);
 }
 
 .bb-rl-forum-modal .select2-results__options {
@@ -1836,8 +1872,13 @@
   color: var(--bb-rl-text-color);
   background-color: var(--bb-rl-background-color);
   border: 0;
-  border-radius: var(--bb-rl-radius-base);
+  border-radius: var(--bb-rl-radius-md);
   cursor: pointer;
+}
+
+.bb-rl-forum-modal .select2-container--default .select2-results__option--highlighted[aria-selected] {
+  color: var(--bb-rl-text-color);
+  background-color: var(--bb-rl-background-secondary-hover-color);
 }
 
 .bb-rl-forum-modal .select2-selection__rendered li {
@@ -2294,6 +2335,10 @@
   content: "\e2aa";
 }
 
+.bb-rl-topic-header .bb-rl-topic-footer .bb-topic-content-meta-sep {
+  display: none;
+}
+
 .bb-rl-topic-reply-link-wrap a {
   display: inline-flex;
   align-items: center;
@@ -2504,6 +2549,12 @@
 
 .bb-rl-single-forum-list .bb_more_options .bbp-admin-links {
   font-size: 0;
+}
+
+.bb-rl-forums-content-wrapper ul.bb-rl-forums-items > li.bb-rl-header-item > .item {
+  margin-bottom: var(--bb-rl-space-200);
+  border-bottom: 1px solid var(--bb-rl-border-secondary-color);
+  padding-bottom: var(--bb-rl-space-200);
 }
 
 .bb-rl-forums-content-wrapper:has(.bbp-no-reply) {
