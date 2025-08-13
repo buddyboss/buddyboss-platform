@@ -3642,7 +3642,7 @@ window.bp = window.bp || {};
 											hideOnClick: true
 										},
 										toolbar: {
-											buttons: [ 'bold', 'italic', 'unorderedlist', 'orderedlist', 'quote', 'anchor', 'pre' ],
+											buttons: [ 'bold', 'italic', 'unorderedlist', 'orderedlist', 'quote', 'anchor', 'pre', 'h3', 'h4' ],
 											relativeContainer: whatsnewcontent,
 											static: true,
 											updateOnEmptySelection: true

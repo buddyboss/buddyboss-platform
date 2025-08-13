@@ -2106,6 +2106,28 @@ ul.medium-editor-toolbar-actions {
 		content: "\ee25";
 	}
 
+	.medium-editor-action-h3 b:before {
+		content: "\eeb0";
+	}
+
+	.medium-editor-action-h3:after {
+		content: "3";
+		font-size: 12px;
+		margin: 0 0 0 -6px;
+		font-weight: 500;
+	}
+
+	.medium-editor-action-h4 b:before {
+		content: "\eeb0";
+	}
+
+	.medium-editor-action-h4:after {
+		content: "4";
+		font-size: 12px;
+		margin: 0 0 0 -6px;
+		font-weight: 500;
+	}
+
 	.medium-editor-action-close b:before {
 		content: "\e828";
 		font-family: "bb-icons";/* stylelint-disable-line */

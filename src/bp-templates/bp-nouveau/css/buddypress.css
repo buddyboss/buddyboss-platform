@@ -2742,6 +2742,16 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
   max-width: 100%;
 }
 
+.activity-update-form #whats-new h3 {
+  font-size: 17px;
+  font-weight: 500;
+}
+
+.activity-update-form #whats-new h4 {
+  font-size: 16px;
+  font-weight: 500;
+}
+
 .bbpress #bbpress-forums #whats-new-toolbar.media-off .medium-editor-toolbar,
 .bp-messages-content #bp-message-content #whats-new-messages-toolbar .media-off + .medium-editor-toolbar,
 .buddypress #buddypress.buddypress-wrap .activity-update-form.media-off #whats-new-content .medium-editor-toolbar,
@@ -5604,6 +5614,28 @@ ul.medium-editor-toolbar-actions .medium-editor-action-anchor b:before {
 
 ul.medium-editor-toolbar-actions .medium-editor-action-pre b:before {
   content: "\ee25";
+}
+
+ul.medium-editor-toolbar-actions .medium-editor-action-h3 b:before {
+  content: "\eeb0";
+}
+
+ul.medium-editor-toolbar-actions .medium-editor-action-h3:after {
+  content: "3";
+  font-size: 12px;
+  margin: 0 0 0 -6px;
+  font-weight: 500;
+}
+
+ul.medium-editor-toolbar-actions .medium-editor-action-h4 b:before {
+  content: "\eeb0";
+}
+
+ul.medium-editor-toolbar-actions .medium-editor-action-h4:after {
+  content: "4";
+  font-size: 12px;
+  margin: 0 0 0 -6px;
+  font-weight: 500;
 }
 
 ul.medium-editor-toolbar-actions .medium-editor-action-close b:before {
