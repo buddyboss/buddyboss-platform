@@ -90,7 +90,7 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 				3 => array(
 					'key'         => 'brandings',
 					'title'       => __( 'Branding', 'buddyboss' ),
-					'description' => __( 'Configure your brand identity and assets', 'buddyboss' ),
+					'description' => __( 'Personalize your community with logos and theme colors.', 'buddyboss' ),
 					'component'   => 'BrandingsStep',
 					'image'       => 'onboardingModal-step-3.png',
 				),
@@ -110,15 +110,15 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 				),
 				6 => array(
 					'key'         => 'widgets',
-					'title'       => __( 'Widgets', 'buddyboss' ),
+					'title'       => __( 'Sidebar Widgets', 'buddyboss' ),
 					'description' => __( 'Enable or disable sidebar widgets on different community pages.', 'buddyboss' ),
 					'component'   => 'WidgetsStep',
 					'image'       => 'onboardingModal-step-6.png',
 				),
 				7 => array(
 					'key'         => 'finish',
-					'title'       => __( 'Setup Complete!', 'buddyboss' ),
-					'description' => __( 'Your BuddyBoss community is ready to go!', 'buddyboss' ),
+					'title'       => __( 'You\'re All Set!', 'buddyboss' ),
+					'description' => __( 'Your community is ready to connect, share, and grow together.', 'buddyboss' ),
 					'component'   => 'FinishScreen',
 					'image'       => 'onboardingModal-finish.png',
 				),

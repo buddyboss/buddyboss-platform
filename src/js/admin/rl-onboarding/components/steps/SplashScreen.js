@@ -1,4 +1,4 @@
-import { useState } from '@wordpress/element';
+import { useState, createInterpolateElement } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { Button } from '@wordpress/components';
 
@@ -69,7 +69,10 @@ export const SplashScreen = ({ stepData, onNext, onSkip }) => {
                             <li className="bb-rl-splash-content-product-feature">
                                 <i className="bb-icons-rl-check"></i>
 
-                                {__('Deep integration support', 'buddyboss')}
+						{ createInterpolateElement(
+							__('Deep <link>integration</link> support', 'buddyboss'),
+							{ link: <a href={window?.bbRlOnboarding?.dashboardUrl + 'admin.php?page=bp-integrations'} /> }
+						) }
                             </li>
                         </ul>
                         <div className="bb-rl-splash-content-product-button-container">

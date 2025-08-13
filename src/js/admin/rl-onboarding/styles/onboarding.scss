@@ -1555,19 +1555,22 @@ body.bb-rl-fullscreen-mode {
     li {
         display: flex;
         align-items: center;
-        gap: 8px;
         font-size: 13px;
         font-weight: 500;
         color: $text-secondary-color;
         list-style: none;
         display: flex;
         align-items: center;
-        gap: 8px;
         margin: 0;
+
+        > a {
+            margin: 0 4px;
+        }
 
         [class*="bb-icons"] {
             font-size: 16px;
             color: $icon-color;
+            margin-right: 8px;
         }
     }
 }
