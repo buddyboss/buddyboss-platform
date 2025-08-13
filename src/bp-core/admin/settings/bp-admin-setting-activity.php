@@ -69,6 +69,9 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 
 		// Allow Activity edit setting.
 		$this->add_field( '_bp_enable_activity_edit', __( 'Edit Activity', 'buddyboss' ), 'bp_admin_setting_callback_enable_activity_edit', 'intval' );
+
+		$this->add_field( '_bb_enable_activity_post_title', __( 'Post Title', 'buddyboss' ), array( $this, 'bb_admin_setting_callback_enable_activity_post_title' ), 'intval' );
+
 		$this->add_field( '_bp_activity_edit_time', __( 'Edit Activity Time Limit', 'buddyboss' ), '__return_true', 'intval', array(
 			'class' => 'hidden',
 		) );
@@ -749,6 +752,20 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 			?>
 		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
 		</p>
+		<?php
+	}
+
+	/**
+	 * Enable activity post title.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	public function bb_admin_setting_callback_enable_activity_post_title() {
+		?>
+
+		<input id="_bb_enable_activity_post_title" name="_bb_enable_activity_post_title" type="checkbox" value="1" <?php checked( bb_is_enabled_activity_post_title() ); ?> />
+		<label for="_bb_enable_activity_post_title"><?php esc_html_e( 'Make post titles mandatory', 'buddyboss' ); ?></label>
+
 		<?php
 	}
 }
