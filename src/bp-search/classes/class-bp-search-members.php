@@ -624,6 +624,11 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 		 */
 		private function bb_is_standard_date_format( $search_term ) {
 
+			// Prevent ReDoS attacks by limiting input length.
+			if ( strlen( $search_term ) > 50 ) {
+				return false;
+			}
+
 			$dd_mm_y_pattern = '/^(?:\d{4}-\d{1,2}-\d{1,2}|' . // YYYY-MM-DD.
 								'\d{4}\.\d{1,2}\.\d{1,2}|' . // YYYY.MM.DD format.
 								'\d{4}\/\d{1,2}\/\d{1,2}|' . // YYYY/MM/DD format.
@@ -651,6 +656,11 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 
 			// Month name patterns.
 			$english_search_term = $this->bb_convert_date_format_with_month_name_to_english( $search_term );
+
+			// Prevent ReDoS attacks by limiting input length.
+			if ( strlen( $english_search_term ) > 100 ) {
+				return false;
+			}
 
 			$month_name_pattern = '/^([a-z]+\s+\d{4}|' . // Month name + year.
 								'[a-z]+\s*,\s*\d{4}|' . // Month name + comma + year.
@@ -1474,11 +1484,15 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 		 * @return string The search term in English.
 		 */
 		private function bb_translate_time_elapsed_to_english( $search_term ) {
+			// Prevent ReDoS attacks by limiting input length before regex processing.
+			if ( strlen( $search_term ) > 100 ) {
+				return $search_term;
+			}
+
 			$search_term = $this->bb_translate_time_units( $search_term );
 			$search_term = $this->bb_translate_direction_words( $search_term );
-			$search_term = $this->bb_add_missing_articles( $search_term );
 
-			return $search_term;
+			return $this->bb_add_missing_articles( $search_term );
 		}
 
 		/**
@@ -1491,6 +1505,11 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 		 * @return string The processed search term with translated time units.
 		 */
 		private function bb_translate_time_units( $search_term ) {
+			// Prevent ReDoS attacks by limiting input length before regex processing.
+			if ( strlen( $search_term ) > 100 ) {
+				return $search_term;
+			}
+
 			// Static cache for translations to avoid repeated function calls.
 			static $translation_cache = array();
 
