@@ -16302,6 +16302,12 @@ ul.bbp-stats .bbp-count {
   display: none;
 }
 
+.buddypress-wrap .members-search .bp-dir-search-form input[type="search"],
+.buddypress-wrap .groups-search .bp-dir-search-form input[type="search"] {
+  padding-left: 35px;
+  width: 100%;
+}
+
 .buddypress-wrap ul.filters li form label input {
   line-height: 1.4;
   padding: 0.1em 0.7em;
@@ -16309,6 +16315,15 @@ ul.bbp-stats .bbp-count {
 
 .buddypress-wrap .dir-form {
   clear: both;
+}
+
+.members-search .bp-dir-search-form .search-form_submit,
+.groups-search .bp-dir-search-form .search-form_submit {
+  opacity: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  visibility: hidden;
 }
 
 .budypress.no-js form.bp-dir-search-form button[type="submit"] {

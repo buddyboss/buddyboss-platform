@@ -71,6 +71,18 @@
 
 	} // close form
 
+	.members-search,
+	.groups-search {
+
+		.bp-dir-search-form {
+
+			input[type="search"] {
+				padding-left: 35px;
+				width: 100%;
+			}
+		}
+	}
+
 	// this block needs to be moved really.
 	ul.filters {
 
@@ -94,6 +106,21 @@
 	}
 
 } // close .buddypress-wrap
+
+.members-search,
+.groups-search {
+
+	.bp-dir-search-form {
+
+		.search-form_submit {
+			opacity: 0;
+			position: absolute;
+			right: 0;
+			top: 0;
+			visibility: hidden;
+		}
+	}
+}
 
 // If js disabled ensure we show the submit overriding earlier rule
 // @todo the whole show/hide could be wrapped in a :not(.no-js)
