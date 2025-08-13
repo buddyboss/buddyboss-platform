@@ -4519,7 +4519,7 @@ window.bp = window.bp || {};
 			},
 
 			initialize: function () {
-				this.$el.html( '<input type="text" class="whats-new-title" name="whats-new-title" placeholder="' + BP_Nouveau.activity.strings.whatsNewTitle + '" />' );
+				this.$el.html( '<input type="text" class="whats-new-title" name="whats-new-title" maxlength="80" placeholder="' + BP_Nouveau.activity.strings.whatsNewTitle + '" />' );
 				this.$el.append( $( '<div></div>' ).prop( 'id', 'whats-new-textarea' ) );
 				this.$el.append( '<input type="hidden" name="id" id="bp-activity-id" value="0"/>' );
 				this.views.set( '#whats-new-textarea', new bp.Views.WhatsNew( { activity: this.options.activity } ) );
@@ -5837,6 +5837,7 @@ window.bp = window.bp || {};
 				$( '#bp-nouveau-activity-form-placeholder' ).hide();
 
 				$( '#whats-new-content' ).find( '#bp-activity-id' ).val( '' ); // reset activity id if in edit mode.
+				$( '#whats-new-content' ).find( '.whats-new-title' ).val( '' );
 				bp.Nouveau.Activity.postForm.postForm.$el.removeClass( 'bp-activity-edit hide-schedule-button' );
 
 				if ( ! _.isUndefined( BP_Nouveau.activity.params.objects ) ) {
@@ -5944,7 +5945,7 @@ window.bp = window.bp || {};
 						if ( pair.name.startsWith( 'bb-poll-question-option[' ) ) {
 							pair.name = pair.name.replace( /\[\d+\]/, '' );
 						}
-						if ( -1 === _.indexOf( [ 'aw-whats-new-submit', 'whats-new-post-in', 'bb-schedule-activity-date-field', 'bb-schedule-activity-meridian', 'bb-schedule-activity-time-field', 'bb-poll-question-field', 'bb-poll-duration', 'bb-poll-question-option', 'bb-poll-allow-multiple-answer', 'bb-poll-allow-new-option' ], pair.name ) ) {
+						if ( -1 === _.indexOf( [ 'aw-whats-new-submit', 'whats-new-post-in', 'bb-schedule-activity-date-field', 'bb-schedule-activity-meridian', 'bb-schedule-activity-time-field', 'bb-poll-question-field', 'bb-poll-duration', 'bb-poll-question-option', 'bb-poll-allow-multiple-answer', 'bb-poll-allow-new-option', 'whats-new-title' ], pair.name ) ) {
 							if ( _.isUndefined( meta[ pair.name ] ) ) {
 								meta[ pair.name ] = pair.value;
 							} else {
@@ -5988,6 +5989,16 @@ window.bp = window.bp || {};
 				content     = content.replace( /&nbsp;/g, ' ' );
 
 				self.model.set( 'content', content, { silent: true } );
+
+				var postTitle = self.$el.find( '.whats-new-title' );
+				if ( postTitle.length && postTitle.val() !== '' ) {
+					postTitle = postTitle.val();
+					// Maximum 80 characters allowed.
+					if ( postTitle.length > 80 ) {
+						postTitle = postTitle.slice( 0, 80 );
+					}
+					self.model.set( 'post_title', postTitle, { silent: true } );
+				}
 
 				// Silently add meta.
 				self.model.set( meta, { silent: true } );
@@ -6068,7 +6079,8 @@ window.bp = window.bp || {};
 						'can_create_poll_activity',
 						'bb-poll-question-option',
 						'poll',
-						'topics'
+						'topics',
+						'whats-new-title'
 					]
 				);
 
