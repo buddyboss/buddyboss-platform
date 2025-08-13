@@ -617,6 +617,7 @@ function bbp_template_include_theme_compat( $template = '' ) {
 				'post_status'    => bbp_get_public_status_id(),
 				'is_archive'     => true,
 				'comment_status' => 'closed',
+				'post_password'  => false,
 			)
 		);
 
@@ -719,6 +720,7 @@ function bbp_template_include_theme_compat( $template = '' ) {
 				'post_type'      => '',
 				'post_status'    => bbp_get_public_status_id(),
 				'comment_status' => 'closed',
+				'post_password'  => false,
 			)
 		);
 
@@ -737,6 +739,7 @@ function bbp_template_include_theme_compat( $template = '' ) {
 				'post_type'      => '',
 				'post_status'    => bbp_get_public_status_id(),
 				'comment_status' => 'closed',
+				'post_password'  => false,
 			)
 		);
 

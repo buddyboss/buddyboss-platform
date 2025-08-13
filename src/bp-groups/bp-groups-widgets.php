@@ -66,7 +66,7 @@ function groups_ajax_widget_groups_list() {
 			<li <?php bp_group_class(); ?>>
 				<?php if ( ! bp_disable_group_avatar_uploads() ) : ?>
 					<div class="item-avatar">
-						<a href="<?php bp_group_permalink(); ?>"><?php bp_group_avatar_thumb(); ?></a>
+						<a href="<?php bp_group_permalink(); ?>" data-bb-hp-group="<?php echo esc_attr( bp_get_group_id() ); ?>"><?php bp_group_avatar_thumb(); ?></a>
 					</div>
 				<?php endif; ?>
 

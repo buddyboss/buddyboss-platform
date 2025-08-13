@@ -124,11 +124,33 @@ window.bp = window.bp || {};
 			}
 			$( '#buddypress' ).on( 'bp_heartbeat_tick', this.heartbeatTick.bind( this ) );
 
+			// Fix theme class type for the backward compatibility.
+			if ( $( '.actvity-head-bar' ).length ) {
+				$( '.actvity-head-bar' ).addClass( 'activity-head-bar' ).removeClass( 'actvity-head-bar' );
+
+				// Remove old activity nav as we have new design for filter.
+				if ( $( '.activity-head-bar > nav.activity-type-navs' ).length && $( '.activity-head-bar .bb-subnav-filters-filtering' ).length ) {
+					$( '.activity-head-bar > nav.activity-type-navs' ).remove();
+				}
+			}
+
 			// Inject Activities.
 			$( '#buddypress [data-bp-list="activity"]:not( #bb-schedule-posts_modal [data-bp-list="activity"] )' ).on( 'click', 'li.load-newest, li.load-more', this.injectActivities.bind( this ) );
 
 			// Highlight new activities & clean up the stream.
-			$( '#buddypress' ).on( 'bp_ajax_request', '[data-bp-list="activity"]', this.scopeLoaded.bind( this ) );
+			if ( BP_Nouveau.is_send_ajax_request !== undefined && BP_Nouveau.is_send_ajax_request === '1' ) {
+				$( '#buddypress' ).on( 'bp_ajax_request', '[data-bp-list="activity"]', this.scopeLoaded.bind( this ) );
+			} else {
+				// For page request 1, call openEditActivityPopup after page is completely loaded.
+				$( window ).on( 'load', function() {
+					setTimeout(
+						function() {
+							bp.Nouveau.Activity.openEditActivityPopup();
+						}.bind( this ),
+						0
+					);
+				});
+			}
 
 			// Activity comments effect.
 			$( '#activity-stream' ).on( 'click', '.acomments-view-more', this.showActivity );
@@ -136,14 +158,15 @@ window.bp = window.bp || {};
 
 			$( document ).on( 'activityModalOpened', function( event, data ) {
 				var activityId = data.activityId;
-		
-				$( document ).on( 'click', function( event ) {
+
+				$( document ).on( 'click', '.bb-activity-model-wrapper.activity-theatre', function( event ) {
 					if (
 						$( '#activity-modal:visible' ).length > 0 &&
 						0 === $( '#bp-nouveau-activity-form-placeholder:visible' ).length &&
 						! $( event.target ).closest( '#activity-modal' ).length &&
 						! $( event.target ).closest( '.gif-media-search-dropdown-standalone' ).length &&
-						! $( event.target ).closest( '.emojionearea-theatre' ).length
+						! $( event.target ).closest( '.emojionearea-theatre' ).length &&
+						! $( event.target ).hasClass( 'dz-hidden-input' ) // Dropzone file input for media upload which is outside modal.
 					) {
 						this.closeActivity( event );
 						this.activitySyncOnModalClose( event, activityId );
@@ -176,6 +199,11 @@ window.bp = window.bp || {};
 				$( window ).scroll( this.loadMoreActivities );
 			}
 
+			// Activity search filter
+			$( document ).on( 'click', '.bb-subnav-filters-container .subnav-filters-opener', this.openActivityFilter.bind( this ) );
+			$( document ).on( 'click', this.closeActivityFilter.bind( this ) );
+			$( document ).on( 'click', '.bb-subnav-filters-container .subnav-filters-modal a', this.filterActivity.bind( this ) );
+
 			$( '.bb-activity-model-wrapper, .bb-media-model-wrapper' ).on( 'click', '.acomments-view-more', this.viewMoreComments.bind( this ) );
 			$( document ).on( 'click', '#activity-stream .activity-comments .view-more-comments, #activity-stream .activity-state-comments > .comments-count', function ( e ) {
 				e.preventDefault();
@@ -207,6 +235,9 @@ window.bp = window.bp || {};
 					});
 				}, 1000 );
 			}
+
+			// Wrap Activity Topics
+			bp.Nouveau.wrapNavigation( '.activity-topic-selector ul', 120 );
 		},
 
 		/**
@@ -217,7 +248,31 @@ window.bp = window.bp || {};
 		 * @return {[type]}       [description]
 		 */
 		heartbeatSend: function( event, data ) {
-			this.heartbeat_data.first_recorded = $( '#buddypress [data-bp-list] [data-bp-activity-id]:not(.bb-pinned)' ).first().data( 'bp-timestamp' ) || 0;
+			if ( $( bp.Nouveau.objectNavParent + ' [data-bp-orderby=date_updated].selected' ).length ) {
+				var first_unpinned_activity = $( '#buddypress [data-bp-list] [data-bp-activity-id]:not(.bb-pinned)' ).first();
+				if ( 'undefined' !== typeof first_unpinned_activity.data( 'bb-updated-timestamp' ) ) {
+					this.heartbeat_data.first_recorded = first_unpinned_activity.data( 'bb-updated-timestamp' );
+				} else if (
+					first_unpinned_activity.length &&
+					'undefined' !== typeof first_unpinned_activity.data( 'bp-activity' ).date_updated &&
+					'' !== first_unpinned_activity.data( 'bp-activity' ).date_updated
+				) {
+					// convert to timestamp.
+					var dateString = first_unpinned_activity.data( 'bp-activity' ).date_updated ;
+
+					// Convert directly to a Date object in UTC by appending 'Z' (UTC designator).
+					var utcDate = new Date( dateString.replace( ' ', 'T') + 'Z' );
+
+					// Get the Unix timestamp in seconds.
+					var activity_timestamp = utcDate.getTime() / 1000;
+
+					this.heartbeat_data.first_recorded = activity_timestamp;
+				} else {
+					this.heartbeat_data.first_recorded = first_unpinned_activity.data( 'bp-timestamp' ) || 0;
+				}
+			} else {
+				this.heartbeat_data.first_recorded = $( '#buddypress [data-bp-list] [data-bp-activity-id]:not(.bb-pinned)' ).first().data( 'bp-timestamp' ) || 0;
+			}
 
 			// Handle the first item is already latest and pinned.
 			var first_activity_timestamp = $( '#buddypress [data-bp-list] [data-bp-activity-id]' ).first().data( 'bp-timestamp' ) || 0;
@@ -231,11 +286,63 @@ window.bp = window.bp || {};
 
 			data.bp_activity_last_recorded = this.heartbeat_data.last_recorded;
 
-			if ( $( '#buddypress .dir-search input[type=search]' ).length ) {
-				data.bp_activity_last_recorded_search_terms = $( '#buddypress .dir-search input[type=search]' ).val();
+			if ( $( '#buddypress .activity-head-bar .activity-search input[type=search]' ).length ) {
+				data.bp_activity_last_recorded_search_terms = $( '#buddypress .activity-head-bar .activity-search input[type=search]' ).val();
 			}
 
-			$.extend( data, { bp_heartbeat: bp.Nouveau.getStorage( 'bp-activity' ) } );
+			$.extend(data, {
+				bp_heartbeat: (function() {
+					var heartbeatData = { scope: 'all' };
+
+					// Check if the page is a user activity page.
+					if ( $( 'body.my-activity:not(.activity-singular)' ).length ) {
+						heartbeatData = bp.Nouveau.getStorage( 'bp-user-activity' ) || { scope: 'just-me' };
+					} else {
+
+						// Otherwise, retrieve the activity data.
+						heartbeatData = bp.Nouveau.getStorage( 'bp-activity' ) || { scope: 'all' };
+
+						// If the page is a single group activity page, set the scope to 'all'.
+						if ( $( 'body.activity.buddypress.groups.single-item' ).length ) {
+							heartbeatData.scope = 'all';
+						}
+					}
+
+					if ( $( bp.Nouveau.objectNavParent + ' #bb-subnav-filter-show [data-bp-scope].selected' ).length ) {
+						var scope = $( bp.Nouveau.objectNavParent + ' #bb-subnav-filter-show [data-bp-scope].selected' ).data( 'bp-scope' );
+
+						// Heartbeat check the value from the available.
+						if ( 'undefined' === typeof heartbeatData.scope || heartbeatData.scope !== scope ) {
+							heartbeatData.scope = scope;
+
+							if ( 'undefined' !== BP_Nouveau.is_send_ajax_request && '1' === BP_Nouveau.is_send_ajax_request ) {
+
+								// Add to the storage if page request 2.
+								if ( $( 'body.my-activity:not(.activity-singular)' ).length ) {
+									bp.Nouveau.setStorage( 'bp-user-activity', 'scope', scope );
+								} else {
+									bp.Nouveau.setStorage( 'bp-activity', 'scope', scope );
+								}
+							}
+						}
+					}
+
+					// Add `order_by` only if it's not already set.
+					if ( $( bp.Nouveau.objectNavParent + ' [data-bp-order].selected' ).length ) {
+						var order_by = $( bp.Nouveau.objectNavParent + ' [data-bp-order].selected' ).data( 'bp-orderby' );
+						heartbeatData.order_by = order_by;
+					}
+
+					// Get the current topic ID from storage.
+					var topicId = bp.Nouveau.getStorage( 'bp-activity', 'topic_id' );
+					if ( topicId ) {
+						data.bp_heartbeat          = data.bp_heartbeat || {};
+						data.bp_heartbeat.topic_id = topicId;
+					}
+
+					return heartbeatData;
+				})()
+			});
 		},
 
 		/**
@@ -247,7 +354,8 @@ window.bp = window.bp || {};
 		 */
 		heartbeatTick: function( event, data ) {
 			var newest_activities_count, newest_activities, objects = bp.Nouveau.objects,
-				scope = bp.Nouveau.getStorage( 'bp-activity', 'scope' ), self = this;
+				scope = bp.Nouveau.getStorage( 'bp-activity', 'scope' ), self = this,
+				topicId = bp.Nouveau.getStorage( 'bp-activity', 'topic_id' );
 
 			// Only proceed if we have newest activities.
 			if ( undefined === data || ! data.bp_activity_newest_activities ) {
@@ -259,6 +367,16 @@ window.bp = window.bp || {};
 
 			// Parse activities.
 			newest_activities = $( this.heartbeat_data.newest ).filter( '.activity-item' );
+			
+			// If we have a topic filter active, only show activities matching that topic.
+			if ( topicId ) {
+				newest_activities       = newest_activities.filter( function () {
+					var bpActivity      = this.dataset.bpActivity ? JSON.parse( this.dataset.bpActivity ) : null;
+					var activityTopicId = bpActivity && typeof bpActivity.topic_id !== 'undefined' ? bpActivity.topic_id : null;
+					return activityTopicId && parseInt( activityTopicId ) === parseInt( topicId );
+				} );
+				newest_activities_count = newest_activities.length;
+			}
 
 			// Count them.
 			newest_activities_count = Number( newest_activities.length );
@@ -370,7 +488,7 @@ window.bp = window.bp || {};
 		 * @return {[type]}       [description]
 		 */
 		injectActivities: function( event ) {
-			var store = bp.Nouveau.getStorage( 'bp-activity' ),
+			var store = $( 'body.my-activity:not(.activity-singular)' ).length ? bp.Nouveau.getStorage( 'bp-user-activity' ) : bp.Nouveau.getStorage( 'bp-activity' ),
 				scope = store.scope || null, filter = store.filter || null;
 
 			// Load newest activities.
@@ -470,6 +588,8 @@ window.bp = window.bp || {};
 
 				if ( $( '#buddypress .dir-search input[type=search]' ).length ) {
 					search_terms = $( '#buddypress .dir-search input[type=search]' ).val();
+				} else if ( $( '#buddypress .activity-search.bp-search input[type=search]' ).length ) {
+					search_terms = $( '#buddypress .activity-search.bp-search input[type=search]' ).val();
 				}
 
 				bp.Nouveau.objectRequest(
@@ -705,7 +825,7 @@ window.bp = window.bp || {};
 		openEditActivityPopup: function() {
 			if ( ! _.isUndefined( BP_Nouveau.activity.params.is_activity_edit ) && 0 < BP_Nouveau.activity.params.is_activity_edit ) {
 				var activity_item = $( '#activity-' + BP_Nouveau.activity.params.is_activity_edit );
-				if ( activity_item.length ) {
+				if ( activity_item.length && activity_item.children( '.bb-activity-more-options-wrap' ).find( '.button.edit-activity' ).length ) {
 					var activity_data        = activity_item.data( 'bp-activity' );
 					var activity_URL_preview = ( activity_item.data( 'link-url' ) ) !== '' ? activity_item.data( 'link-url' ) : null;
 
@@ -761,6 +881,23 @@ window.bp = window.bp || {};
 									src: response.data.video_symlink
 								}
 							);
+						}
+
+						// Update the edited text.
+						if (
+							'undefined' !== typeof response &&
+							'undefined' !== typeof response.data &&
+							'undefined' !== typeof response.data.edited_text &&
+							'' !== response.data.edited_text
+						) {
+
+							if ( activity_item.find( '.activity-date span.bb-activity-edited-text' ).length ) {
+								// Completely remove and replace the edited text with new content.
+								activity_item.find( '.activity-date span.bb-activity-edited-text' ).replaceWith( response.data.edited_text );
+							} else {
+								// Append the edited text to the activity date.
+								activity_item.find( '.activity-date' ).append( response.data.edited_text );
+							}
 						}
 
 						bp.Nouveau.Activity.activityHasUpdates = true;
@@ -962,6 +1099,13 @@ window.bp = window.bp || {};
 									target.removeClass( 'loading' );
 								}
 							);
+
+							// Add flag for ajax load for getting reactions.
+							if ( 'activity_comment' === item_type ) {
+								$( '.activity-comment[data-bp-activity-comment-id=' + item_id + '] > .acomment-display > .acomment_inner' ).find( '.activity-state-reactions' ).parent().addClass( 'bb-has-reaction_update' );
+							} else if ( 'activity' === item_type ) {
+								$( '.activity[data-bp-activity-id=' + item_id + '] > .activity-content' ).find( '.activity-state-reactions' ).parent().addClass( 'bb-has-reaction_update' );
+							}
 						}
 
 						// Add "Likes/Emotions" menu item on activity directory nav menu.
@@ -1827,21 +1971,34 @@ window.bp = window.bp || {};
 							response = JSON.parse( response );
 						}
 						if ( 'undefined' !== typeof response.data && 'undefined' !== typeof response.data.feedback ) {
-							var activity_list   = target.closest( 'ul.activity-list' );
-							var activity_stream;
-							if ( isInsideModal ) {
-								activity_stream = target.closest( '.buddypress-wrap' ).find( '#activity-stream' );
-							} else {
-								activity_stream = target.closest( '#activity-stream' );
-							}
-
-
+							var activity_list         = target.closest( 'ul.activity-list' );
+							var activity_stream       = target.closest( '.buddypress-wrap:not(.bb-internal-model)' ).find( '#activity-stream' );
+							var isInsideTheatreModal  = target.closest( '.bb-media-model-wrapper' ).length > 0;
+							var $mainActivityList     = activity_stream.children( 'ul.activity-list' );
+							var $pageActivityListItem = $mainActivityList.children( '[data-bp-activity-id=' + activity_id + ']' );
+							var targetClassSelector   = '.' + target.attr('class').split(' ').join('.');
+							var $mainTargetElement    = $pageActivityListItem.find( targetClassSelector );
 							if ( response.success ) {
 
 								var scope = bp.Nouveau.getStorage( 'bp-activity', 'scope' );
+								if (
+									(
+										'' === scope ||
+										false === scope ||
+										(
+											'undefined' !== BP_Nouveau.is_send_ajax_request &&
+											'' === BP_Nouveau.is_send_ajax_request
+										)
+									) &&
+									$( bp.Nouveau.objectNavParent + ' #bb-subnav-filter-show [data-bp-scope].selected' ).length
+								) {
+									// Get the filter selected.
+									scope = $( bp.Nouveau.objectNavParent + ' #bb-subnav-filter-show [data-bp-scope].selected' ).data( 'bp-scope' );
+								}
 								var update_pinned_icon = false;
 								var is_group_activity  = false;
 								var activity_group_id  = '';
+
 
 								if ( target.closest( 'li.activity-item' ).hasClass('groups') ) {
 									is_group_activity = true;
@@ -1857,7 +2014,7 @@ window.bp = window.bp || {};
 									! is_group_activity
 								) {
 									update_pinned_icon = true;
-								} else if (  activity_stream.hasClass( 'single-group' ) ) {
+								} else if ( activity_stream.hasClass( 'single-group' ) ) {
 									update_pinned_icon = true;
 								}
 
@@ -1886,6 +2043,21 @@ window.bp = window.bp || {};
 										}
 									});
 
+									// Menu sync for other activities in main activity stream.
+									if ( ( isInsideModal || isInsideTheatreModal ) && $mainActivityList.length > 0 ) {
+
+										$mainActivityList.find( update_pin_actions ).each( function() {
+											var action = $( this ).find( '.unpin-activity' );
+											action.removeClass( 'unpin-activity' ).addClass( 'pin-activity' );
+
+											if ( is_group_activity ) {
+												action.find('span').html( BP_Nouveau.activity.strings.pinGroupPost );
+											} else {
+												action.find('span').html( BP_Nouveau.activity.strings.pinPost );
+											}
+										});
+									}
+
 									if ( update_pinned_icon ) {
 										target.closest( 'li.activity-item' ).addClass( 'bb-pinned' );
 									}
@@ -1898,6 +2070,18 @@ window.bp = window.bp || {};
 									} else {
 										target.find('span').html( BP_Nouveau.activity.strings.unpinPost );
 									}
+
+									// Menu sync for same activity in mainstream.
+									if ( ( isInsideModal || isInsideTheatreModal ) && $mainTargetElement.length > 0 ) {
+										$mainTargetElement.addClass( 'unpin-activity' );
+										$mainTargetElement.removeClass( 'pin-activity' );
+
+										if ( $mainTargetElement.closest( 'li.activity-item' ).hasClass('groups') ) {
+											$mainTargetElement.find('span').html( BP_Nouveau.activity.strings.unpinGroupPost );
+										} else {
+											$mainTargetElement.find('span').html( BP_Nouveau.activity.strings.unpinPost );
+										}
+									}
 								} else if ( 'unpin' === pin_action ) {
 									target.closest( 'li.activity-item' ).removeClass( 'bb-pinned' );
 									target.addClass( 'pin-activity' );
@@ -1907,11 +2091,31 @@ window.bp = window.bp || {};
 									} else {
 										target.find('span').html( BP_Nouveau.activity.strings.pinPost );
 									}
+
+									// Menu sync for same activity in mainstream.
+									if ( ( isInsideModal || isInsideTheatreModal ) && $mainTargetElement.length > 0 ) {
+										$mainTargetElement.addClass( 'pin-activity' );
+										$mainTargetElement.removeClass( 'unpin-activity' );
+
+										if ( $mainTargetElement.closest( 'li.activity-item' ).hasClass('groups') ) {
+											$mainTargetElement.find('span').html( BP_Nouveau.activity.strings.pinGroupPost );
+										} else {
+											$mainTargetElement.find('span').html( BP_Nouveau.activity.strings.pinPost );
+										}
+									}
 								}
 
-								if ( 'all' === scope && update_pinned_icon ) {
-									bp.Nouveau.Activity.heartbeat_data.last_recorded = 0;
-									bp.Nouveau.refreshActivities();
+								if ( update_pinned_icon ) {
+
+									// Activity view more comments modal.
+									if ( isInsideModal || isInsideTheatreModal ) {
+										if ( 'undefined' !== typeof bp.Nouveau.Activity.activityPinHasUpdates ) {
+											bp.Nouveau.Activity.activityPinHasUpdates = true;
+										}
+									} else {
+										bp.Nouveau.Activity.heartbeat_data.last_recorded = 0;
+										bp.Nouveau.refreshActivities();
+									}
 								}
 							}
 
@@ -1920,11 +2124,20 @@ window.bp = window.bp || {};
 								[
 									'',
 									'<div>' + response.data.feedback + '</div>',
-									'success',
+									response.success ? 'success' : 'error',
 									null,
 									true
 								]
 							);
+
+							if ( isInsideModal ) {
+								if ( 'undefined' !== typeof bp.Nouveau.Activity.activityHasUpdates ) {
+									bp.Nouveau.Activity.activityHasUpdates = true;
+								}
+								if ( 'undefined' !== typeof bp.Nouveau.Activity.activityPinHasUpdates ) {
+									bp.Nouveau.Activity.activityPinHasUpdates = true;
+								}
+							}
 						}
 					}
 				).fail(
@@ -2303,7 +2516,7 @@ window.bp = window.bp || {};
 				dropzone_container = target.closest( '.bp-ac-form-container' ).find( '#ac-reply-post-media-uploader-' + key );
 
 			// Check if target is inside #activity-modal
-			var isInsideModal = target.closest( '#activity-modal' ).length > 0;
+			var isInsideModal  = target.closest( '#activity-modal' ).length > 0;
 			var hasParentModal = isInsideModal ? '#activity-modal ' : '';
 
 			event.preventDefault();
@@ -4001,29 +4214,40 @@ window.bp = window.bp || {};
 			var $activityListItem = currentTargetModal.find( 'ul.activity-list > li' ),
 				activityListItemId = $activityListItem.data( 'bp-activity-id' ),
 				activityId = activityID !== undefined ? activityID : activityListItemId,
-				$pageActivitylistItem = $( '#activity-stream li.activity-item[data-bp-activity-id=' + activityId + ']' );
+				$pageActivityListItem = $( '#activity-stream li.activity-item[data-bp-activity-id=' + activityId + ']' );
 
-			if ( $pageActivitylistItem.length > 0 && bp.Nouveau.Activity.activityHasUpdates ) {
+			// If pin post udpate then refresh list.
+			if ( 'undefined' !== typeof bp.Nouveau.Activity.activityPinHasUpdates && bp.Nouveau.Activity.activityPinHasUpdates ) {
+				if ( $pageActivityListItem.length > 0 ) {
 
-				$pageActivitylistItem.addClass( 'activity-sync' );
+					// Mock loader meanwhile the list refreshes.
+					$pageActivityListItem.addClass( 'activity-sync' );
+				}
+				bp.Nouveau.Activity.heartbeat_data.last_recorded = 0;
+				bp.Nouveau.refreshActivities();
+			} else {
+				if ( $pageActivityListItem.length > 0 && bp.Nouveau.Activity.activityHasUpdates ) {
 
-				var data = {
-					action: 'activity_sync_from_modal',
-					activity_id: activityId,
-				};
+					$pageActivityListItem.addClass( 'activity-sync' );
 
-				bp.Nouveau.ajax( data, 'activity' ).done(
-					function ( response ) {
-						if ( false === response.success ) {
-							return;
-						} else if ( 'undefined' !== typeof response.data && 'undefined' !== typeof response.data.activity ) {
-							// success
-							$pageActivitylistItem.replaceWith( $.parseHTML( response.data.activity ) );
-							// replace dummy image with original image by faking scroll event to call bp.Nouveau.lazyLoad.
-							jQuery( window ).scroll();
+					var data = {
+						action: 'activity_sync_from_modal',
+						activity_id: activityId,
+					};
 
-							// Refresh activities after updating pin/unpin post status.
-							if ( bp.Nouveau.Activity.activityPinHasUpdates ) {
+					bp.Nouveau.ajax( data, 'activity' ).done(
+						function ( response ) {
+							if ( false === response.success ) {
+								return;
+							} else if ( 'undefined' !== typeof response.data && 'undefined' !== typeof response.data.activity ) {
+								// success
+								$pageActivityListItem.replaceWith( $.parseHTML( response.data.activity ) );
+								// replace dummy image with original image by faking scroll event to call bp.Nouveau.lazyLoad.
+								jQuery( window ).scroll();
+
+								// Refresh activities after updating pin/unpin post status.
+								if ( bp.Nouveau.Activity.activityPinHasUpdates ) {
+									bp.Nouveau.Activity.heartbeat_data.last_recorded = 0;
 								bp.Nouveau.refreshActivities();
 							}
 						}
@@ -4032,11 +4256,12 @@ window.bp = window.bp || {};
 					function ( $xhr ) {
 						console.error('Request failed:', $xhr);
 					}
-				);
+				);}
 			}
 
-			bp.Nouveau.Activity.activityHasUpdates = false;
-			bp.Nouveau.Activity.currentActivityId = null;
+			bp.Nouveau.Activity.activityHasUpdates    = false;
+			bp.Nouveau.Activity.activityPinHasUpdates = false;
+			bp.Nouveau.Activity.currentActivityId     = null;
 		},
 
 		discardGifEmojiPicker: function () {
@@ -4099,6 +4324,107 @@ window.bp = window.bp || {};
 					},
 				}
 			);
+		},
+
+		openActivityFilter: function ( e ) {
+			e.preventDefault();
+			$( '.bb-subnav-filters-container:not(.bb-subnav-filters-search)' ).removeClass( 'active' ).find( '.subnav-filters-opener' ).attr( 'aria-expanded', 'false' );
+			var $parent = $( e.currentTarget ).parent( '.bb-subnav-filters-container' );
+			$parent.addClass( 'active' ).find( '.subnav-filters-opener' ).attr( 'aria-expanded', 'true' );
+
+			if ( $parent.find( 'input[type="search"]' ).length ){
+				$parent.find( 'input[type="search"]' ).focus();
+			}
+		},
+
+		closeActivityFilter: function ( e ) {
+			if ( ! $( e.target ).closest( '.bb-subnav-filters-container' ).length ) {
+				$.each( $( '.bb-subnav-filters-container' ), function() {
+					if ( $( this ).hasClass( 'bb-subnav-filters-search' ) ) {
+						if( $( this ).find( 'input[name="activity_search"]' ).val() === '' ) {
+							$( this ) .removeClass( 'active' ) .find( '.subnav-filters-opener' ) .attr( 'aria-expanded', 'false' );
+						}
+					} else {
+						$( this ) .removeClass( 'active' ) .find( '.subnav-filters-opener' ) .attr( 'aria-expanded', 'false' );
+					}
+				});
+			}
+		},
+
+		filterActivity: function ( e ) {
+			e.preventDefault();
+			var $this = $( e.currentTarget );
+			var $parent = $this.closest( '.bb-subnav-filters-container' );
+			$this.parent().addClass( 'selected' ).siblings().removeClass( 'selected' );
+			$parent.removeClass( 'active' ).find( '.subnav-filters-opener' ).attr( 'aria-expanded', 'false' );
+			$parent.find( '.subnav-filters-opener .selected' ).text( $this.text() );
+
+			// Reset the pagination for the scope.
+			bp.Nouveau.Activity.current_page = 1;
+
+			// Filter activity with below selections
+			var objectNavParent = bp.Nouveau.objectNavParent;
+			var object          = 'activity';
+			var filter          = $( '#buddypress' ).find( '[data-bp-filter="' + object + '"]' ).first().val();
+			var scope           = '';
+			var search_terms    = '';
+			var order           = '';
+			var extras          = '';
+			var save_scope	    = false;
+			var user_timeline   = false;
+
+			if ( $( objectNavParent + ' [data-bp-object].selected' ).length ) {
+				scope = $( objectNavParent + ' [data-bp-object].selected' ).data( 'bp-scope' );
+
+				if( $this.closest( '#bb-subnav-filter-show' ).length ) {
+					save_scope = true;
+
+					if( $( 'body' ).hasClass( 'my-activity') ) {
+						save_scope = false;
+						user_timeline = true;
+					}
+				}
+			}
+
+			if ( $( '#buddypress [data-bp-search="' + object + '"] input[type=search]' ).length ) {
+				search_terms = $( '#buddypress [data-bp-search="' + object + '"] input[type=search]' ).val();
+			}
+
+			if ( $( objectNavParent + ' [data-bp-order]' ).length ) {
+				order = $( objectNavParent + ' [data-bp-order="' + object + '"].selected' ).data( 'bp-orderby' );
+			}
+
+			var objectData = bp.Nouveau.getStorage( 'bp-' + object );
+
+			// Notifications always need to start with Newest ones.
+			if ( undefined !== objectData.extras && 'notifications' !== object ) {
+				extras = objectData.extras;
+			}
+
+			// On filter update reset last_recorded.
+			bp.Nouveau.Activity.heartbeat_data.last_recorded = 0;
+
+			var queryData = {
+				object: object,
+				scope: scope,
+				filter: filter,
+				search_terms: search_terms,
+				extras: extras,
+				order_by: order,
+				save_scope: save_scope,
+				event_element: $this,
+			};
+
+			if( user_timeline ) {
+				queryData.user_timeline = true;
+			}
+
+			if ( objectData.topic_id ) {
+				queryData.topic_id = objectData.topic_id;
+			}
+
+			bp.Nouveau.objectRequest( queryData );
+
 		}
 
 	};

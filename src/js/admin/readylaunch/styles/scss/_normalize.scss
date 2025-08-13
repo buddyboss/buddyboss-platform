@@ -1,0 +1,79 @@
+/* Minimal Normalize/Reset CSS */
+
+.bb-rl-settings {
+
+	/* 1. Set box-sizing to border-box for all elements */
+	*,
+	*::before,
+	*::after {
+		box-sizing: border-box;
+	}
+
+	/* 2. Remove default margin and padding */
+	h1,
+	h2,
+	h3,
+	h4,
+	h5,
+	h6,
+	p,
+	figure,
+	blockquote,
+	dl,
+	dd {
+		margin: 0;
+		padding: 0;
+	}
+
+	/* 3. Remove list styles on ul, ol elements */
+	ul,
+	ol {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+	}
+
+	/* 4. Remove default link styles */
+	a {
+		text-decoration: none;
+		color: inherit;
+	}
+
+	/* 5. Make images easier to work with */
+	img,
+	picture {
+		max-width: 100%;
+		display: block;
+	}
+
+	/* 6. Inherit fonts for form elements */
+	input,
+	textarea,
+	select {
+		font: inherit;
+	}
+
+	/* 7. Remove built-in form element styling */
+	button,
+	input,
+	select,
+	textarea {
+		border: none;
+		background: none;
+		padding: 0;
+		margin: 0;
+		outline: none;
+	}
+
+	/* 8. Remove animations and transitions
+    for people that prefer reduced motion */
+	@media (prefers-reduced-motion: reduce) {
+
+		* {
+			animation-duration: 0.01ms !important;
+			animation-iteration-count: 1 !important;
+			transition-duration: 0.01ms !important;
+			scroll-behavior: auto !important;
+		}
+	}
+}

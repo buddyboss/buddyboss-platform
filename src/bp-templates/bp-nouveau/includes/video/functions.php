@@ -188,7 +188,7 @@ function bp_nouveau_get_video_directory_nav_items() {
 		'li_class'  => array( 'selected' ),
 		'link'      => bp_get_video_directory_permalink(),
 		'text'      => __( 'All Videos', 'buddyboss' ),
-		'count'     => bp_get_total_video_count(),
+		'count'     => false,
 		'position'  => 5,
 	);
 
@@ -199,7 +199,7 @@ function bp_nouveau_get_video_directory_nav_items() {
 			'li_class'  => array(),
 			'link'      => bp_loggedin_user_domain() . bp_get_video_slug() . '/my-video/',
 			'text'      => __( 'My Videos', 'buddyboss' ),
-			'count'     => bp_video_get_total_video_count(),
+			'count'     => false,
 			'position'  => 15,
 		);
 	}
@@ -211,7 +211,7 @@ function bp_nouveau_get_video_directory_nav_items() {
 			'li_class'  => array(),
 			'link'      => bp_loggedin_user_domain() . bp_get_video_slug() . '/groups-video/',
 			'text'      => __( 'My Groups', 'buddyboss' ),
-			'count'     => bp_video_get_user_total_group_video_count(),
+			'count'     => false,
 			'position'  => 15,
 		);
 	}

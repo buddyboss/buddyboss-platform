@@ -592,7 +592,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		?>
 
 		<p>
-			<a class="button" href="
+			<a class="button" target="_blank" href="
 			<?php
 			echo bp_get_admin_url(
 				add_query_arg(
@@ -648,7 +648,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		?>
 
 		<p>
-			<a class="button" href="
+			<a class="button" target="_blank" href="
 			<?php
 			echo bp_get_admin_url(
 				add_query_arg(
@@ -730,7 +730,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		?>
 
 		<p>
-			<a class="button" href="
+			<a class="button" target="_blank" href="
 			<?php
 			echo bp_get_admin_url(
 				add_query_arg(
@@ -832,6 +832,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 			esc_html__( 'Select the format of your member’s profile links (i.e. /members/username). Both formats will open the member’s profile, so you can safely change without breaking previously shared links.', 'buddyboss' )
 		);
 	}
+
 }
 
 return new BP_Admin_Setting_Xprofile();

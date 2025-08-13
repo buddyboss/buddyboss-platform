@@ -3807,8 +3807,6 @@ window.bp = window.bp || {};
 					{
 						placeholder: '',
 						minimumInputLength: 1,
-						dropdownCssClass: 'bb-select-dropdown bb-compose-input',
-						containerCssClass: 'bb-select-container',
 						language: {
 							errorLoading: function() {
 								return bp_select2.i18n.errorLoading;
@@ -3892,6 +3890,15 @@ window.bp = window.bp || {};
 						}
 					}
 				);
+
+				// Apply CSS classes after initialization
+				$input.on('select2:open', function() {
+					// Add class to dropdown
+					$('.select2-dropdown').addClass('bb-select-dropdown bb-compose-input');
+				});
+				
+				// Add class to container immediately after initialization
+				$input.next('.select2-container').addClass('bb-select-container');
 
 				// Add element into the Arrdata array.
 				$input.on(
@@ -4908,6 +4915,7 @@ window.bp = window.bp || {};
 						if ( $( event.target ).hasClass( 'message_action__anchor' ) || $( event.target ).parent().hasClass( 'message_action__anchor' ) ) {
 							return event;
 						} else {
+							$( '.message_actions.open' ).removeClass( 'open' );
 							$( '.message_action__list.open' ).removeClass( 'open' );
 							$( 'body' ).removeClass( 'message_more_option_open' );
 						}

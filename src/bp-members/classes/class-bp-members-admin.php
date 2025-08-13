@@ -1268,9 +1268,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 
 					<div class="misc-pub-section curtime misc-pub-section-last">
 							<?php
-
-							// Translators: Publish box date format, see http://php.net/date.
-							$date = date_i18n( bp_core_date_format( true ), strtotime( $user->user_registered ) );
+							$date = bp_format_time( strtotime( $user->user_registered ), false, true );
 							?>
 						<span id="timestamp"><?php printf( __( 'Registered on: %s', 'buddyboss' ), '<strong>' . $date . '</strong>' ); ?></span>
 					</div>
@@ -1342,7 +1340,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 				$last_active = bp_get_user_last_activity( $user->ID );
 			}
 
-			$date = date_i18n( bp_core_date_format( true ), strtotime( $last_active ) );
+			$date = bp_format_time( strtotime( $last_active ), false, true );
 			?>
 
 		<ul>

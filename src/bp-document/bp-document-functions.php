@@ -540,6 +540,12 @@ function bp_document_add( $args = '' ) {
 		$document->privacy = $r['privacy'];
 	} elseif ( ! empty( $document->group_id ) ) {
 		$document->privacy = 'grouponly';
+		if ( ! empty( $document->activity_id ) ) {
+			$activity = new BP_Activity_Activity( $document->activity_id );
+			if ( ! empty( $activity ) && 'activity_comment' === $activity->type ) {
+				$document->privacy = $r['privacy'];
+			}
+		}
 	} elseif ( ! empty( $document->folder_id ) ) {
 		$folder = new BP_Document_Folder( $document->folder_id );
 		if ( ! empty( $folder ) ) {
@@ -629,7 +635,7 @@ function bp_document_add_handler( $documents = array(), $privacy = 'public', $co
 							'blog_id'       => $bp_document->blog_id,
 							'attachment_id' => $bp_document->attachment_id,
 							'user_id'       => $bp_document->user_id,
-							'title'         => $bp_document->title,
+							'title'         => sanitize_text_field( wp_unslash( $bp_document->title ) ),
 							'folder_id'     => ! empty( $document['folder_id'] ) ? $document['folder_id'] : $folder_id,
 							'group_id'      => ! empty( $document['group_id'] ) ? $document['group_id'] : $group_id,
 							'activity_id'   => $bp_document->activity_id,
@@ -665,7 +671,7 @@ function bp_document_add_handler( $documents = array(), $privacy = 'public', $co
 				$document_id = bp_document_add(
 					array(
 						'attachment_id' => $document['id'],
-						'title'         => $document['name'],
+						'title'         => sanitize_text_field( wp_unslash( $document['name'] ) ),
 						'folder_id'     => ! empty( $document['folder_id'] ) ? $document['folder_id'] : $folder_id,
 						'group_id'      => ! empty( $document['group_id'] ) ? $document['group_id'] : $group_id,
 						'privacy'       => ! empty( $document['privacy'] ) && in_array( $document['privacy'], array_merge( array_keys( bp_document_get_visibility_levels() ), array( 'message' ) ) ) ? $document['privacy'] : $privacy,
@@ -3824,7 +3830,11 @@ function bp_document_delete_document_previews() {
 	if ( ! is_dir( $inner_directory_name ) ) {
 		return;
 	}
-	$dir          = opendir( $inner_directory_name );
+
+	$dir = opendir( $inner_directory_name );
+	if ( false === $dir ) {
+		return;
+	}
 	$five_minutes = strtotime( '-5 minutes' );
 	while ( false != ( $file = readdir( $dir ) ) ) { // phpcs:ignore WordPress.CodeAnalysis.AssignmentInCondition.FoundInWhileCondition, WordPress.PHP.StrictComparisons.LooseComparison
 		if ( file_exists( $inner_directory_name . '/' . $file ) && is_writable( $inner_directory_name . '/' . $file ) && filemtime( $inner_directory_name . '/' . $file ) < $five_minutes ) {
@@ -5075,7 +5085,13 @@ function bb_document_delete_older_symlinks() {
 
 	return $list;
 }
-bp_core_schedule_cron( 'bb_document_deleter_older_symlink', 'bb_document_delete_older_symlinks', 'bb_schedule_15days' );
+
+add_action(
+	'bp_init',
+	function () {
+		bp_core_schedule_cron( 'bb_document_deleter_older_symlink', 'bb_document_delete_older_symlinks', 'bb_schedule_15days' );
+	}
+);
 
 
 /**

@@ -54,7 +54,7 @@
 				);
 				?>
 				<div class="bbapp-tutorial-btn">
-					<a class="button" href="<?php echo bp_get_admin_url(
+					<a class="button" target="_blank" href="<?php echo bp_get_admin_url(
 						add_query_arg(
 							array(
 								'page'    => 'bp-help',
@@ -72,7 +72,7 @@
 					sprintf(
 						'<a href="%s">%s</a>',
 						'https://learndash.idevaffiliate.com/111.html',
-						__( 'LearnDash LMS', 'buddyboss' )
+						'LearnDash LMS'
 					)
 				)
 				?>

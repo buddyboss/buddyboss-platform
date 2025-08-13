@@ -25,7 +25,7 @@ class BP_Settings_Component extends BP_Component {
 	public function __construct() {
 		parent::start(
 			'settings',
-			__( 'Account', 'buddyboss' ),
+			'Account',
 			buddypress()->plugin_dir,
 			array(
 				'adminbar_myaccount_order' => 21,
@@ -345,5 +345,16 @@ class BP_Settings_Component extends BP_Component {
 			'BP_REST_Account_Settings_Endpoint',
 			'BP_REST_Account_Settings_Options_Endpoint',
 		) );
+	}
+
+	/**
+	 * Register the Settings Blocks.
+	 *
+	 * @since BuddyBoss 2.9.00
+	 *
+	 * @param array $blocks Optional. See BP_Component::blocks_init() for description.
+	 */
+	public function blocks_init( $blocks = array() ) {
+		parent::blocks_init( array() );
 	}
 }

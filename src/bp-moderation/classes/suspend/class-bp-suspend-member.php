@@ -715,10 +715,22 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 		$action           = ! empty( $args['action'] ) ? $args['action'] : '';
 		$page             = ! empty( $args['page'] ) ? $args['page'] : - 1;
 		$related_contents = array();
+		$member_id        = (int) $member_id;
 
 		// Update friend count.
-		if ( bp_is_active( 'friends' ) && $page <= 1 ) {
+		if (
+			bp_is_active( 'friends' ) &&
+			$page <= 1
+		) {
+
+			remove_filter( 'bb_get_friendship_ids_for_user_join_sql', 'bb_moderation_get_friendship_ids_for_user_join_sql', 10, 2 );
+			remove_filter( 'bb_get_friendship_ids_for_user_where_sql', 'bb_moderation_get_friendship_ids_for_user_where_sql', 10, 1 );
+
+			// Update friend count for the suspend users only not for the blocked users.
 			$friend_ids = friends_get_friend_user_ids( $member_id );
+
+			add_filter( 'bb_get_friendship_ids_for_user_join_sql', 'bb_moderation_get_friendship_ids_for_user_join_sql', 10, 2 );
+			add_filter( 'bb_get_friendship_ids_for_user_where_sql', 'bb_moderation_get_friendship_ids_for_user_where_sql', 10, 1 );
 
 			if ( ! empty( $friend_ids ) ) {
 				if ( $this->background_disabled || count( $friend_ids ) < 50 ) {
@@ -743,6 +755,16 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 						}
 					}
 				}
+			}
+
+			wp_cache_delete( $member_id, 'bp_friends_friendships_for_user' );
+			wp_cache_delete( 'get_friendship_ids_for_user_' . $member_id, 'bp_friends_friendships_for_user' );
+
+			// Update friend count for the suspend users only not for the blocked users.
+			$current_friend_ids = friends_get_friend_user_ids( $member_id );
+			if ( ! empty( $current_friend_ids ) ) {
+				$current_total_friend_count = count( $current_friend_ids );
+				bp_update_user_meta( $member_id, 'total_friend_count', (int) $current_total_friend_count );
 			}
 		}
 
@@ -1182,13 +1204,6 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 
 				if ( ! empty( $friend_ids ) ) {
 					$total_friend_count = count( $friend_ids );
-
-					if ( 'hide' === $type && in_array( $user_id, $friend_ids, true ) ) {
-						--$total_friend_count;
-					} elseif ( 'unhide' === $type && ! in_array( $user_id, $friend_ids, true ) ) {
-						++$total_friend_count;
-					}
-
 					bp_update_user_meta( $member_id, 'total_friend_count', (int) $total_friend_count );
 				}
 

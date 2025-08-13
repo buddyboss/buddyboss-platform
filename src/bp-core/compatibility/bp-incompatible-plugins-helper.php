@@ -303,6 +303,10 @@ function bp_helper_plugins_loaded_callback() {
 	if ( function_exists( 'tutor' ) ) {
 		require buddypress()->compatibility_dir . '/class-bb-tutor-helpers.php';
 	}
+
+	if ( class_exists( 'LifterLMS' ) ) {
+		add_filter( 'bb_readylaunch_left_sidebar_middle_content', 'bb_readylaunch_middle_content_llms_courses', 20, 1 );
+	}
 }
 
 add_action( 'init', 'bp_helper_plugins_loaded_callback', 0 );
@@ -1175,3 +1179,127 @@ function mpcs_add_buddyboss_style( $allow_handle ) {
 }
 
 add_filter( 'mpcs_classroom_style_handles', 'mpcs_add_buddyboss_style' );
+
+/**
+ * Helper function to check if Elementor Maintenance Mode is enabled.
+ *
+ * @return bool
+ */
+function bb_is_elementor_maintenance_mode_enabled() {
+	if ( ! defined( 'ELEMENTOR_VERSION' ) || ! class_exists( '\Elementor\Plugin' ) ) {
+		return false;
+	}
+
+	static $user = null;
+
+	if ( isset( $_GET['elementor-preview'] ) && get_the_ID() === (int) $_GET['elementor-preview'] ) {
+		return false;
+	}
+
+	$is_login_page = apply_filters( 'elementor/maintenance_mode/is_login_page', false );
+
+	if ( $is_login_page ) {
+		return false;
+	}
+
+	if ( null === $user ) {
+		$user = wp_get_current_user();
+	}
+
+	$exclude_mode = get_option( 'elementor_maintenance_mode_exclude_mode' );
+
+	if ( 'logged_in' === $exclude_mode && is_user_logged_in() ) {
+		return false;
+	}
+
+	if ( 'custom' === $exclude_mode ) {
+		$exclude_roles = get_option( 'elementor_maintenance_mode_exclude_roles' );
+		$user_roles    = $user->roles;
+
+		if ( is_multisite() && is_super_admin() ) {
+			$user_roles[] = 'super_admin';
+		}
+
+		$compare_roles = array_intersect( $user_roles, $exclude_roles );
+
+		if ( ! empty( $compare_roles ) ) {
+			return false;
+		}
+	}
+
+	$mode = get_option( 'elementor_maintenance_mode_mode' );
+
+	if ( 'maintenance' === $mode || 'coming_soon' === $mode ) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
+/**
+ * Function to get the user enrolled course or all courses.
+ *
+ * This function retrieves the courses a user is enrolled in using the LifterLMS plugin.
+ * It fetches the courses for the logged-in user and returns an array containing course details.
+ *
+ * @since BuddyBoss 2.9.00
+ *
+ * @param array $args Arguments.
+ *
+ * @return array $args User enrolled courses with course details.
+ */
+function bb_readylaunch_middle_content_llms_courses( $args = array() ) {
+
+	$course_data['integration'] = 'lifterlms';
+
+	if ( $args['has_sidebar_data'] && $args['is_sidebar_enabled_for_courses'] ) {
+		$user_id = bp_loggedin_user_id();
+		if ( $user_id ) {
+			// Get enrolled courses for the logged-in user.
+			$student = llms_get_student( bp_loggedin_user_id() );
+			if ( ! $student ) {
+				return $args;
+			}
+
+			$results = $student->get_courses(
+				array(
+					'status' => 'enrolled',
+					'limit'  => 5,
+				)
+			);
+		} else {
+			// Get all published courses if no user is logged in.
+			$query_args = array(
+				'post_type'      => 'course',
+				'post_status'    => 'publish',
+				'fields'         => 'ids',
+				'orderby'        => 'title',
+				'order'          => 'ASC',
+				'nopaging'       => false,
+				'posts_per_page' => 5,
+			);
+
+			$query              = new WP_Query( $query_args );
+			$results['results'] = ! empty( $query->posts ) ? $query->posts : array();
+		}
+
+		// Prepare course data.
+		if ( ! empty( $results['results'] ) ) {
+			foreach ( $results['results'] as $post_id ) {
+				$thumbnail_url = '';
+				if ( has_post_thumbnail( $post_id ) ) {
+					$thumbnail_url = get_the_post_thumbnail( $post_id, 'full' );
+				}
+
+				$course_data['items'][ $post_id ] = array(
+					'title'     => get_the_title( $post_id ),
+					'permalink' => get_the_permalink( $post_id ),
+					'thumbnail' => $thumbnail_url,
+				);
+			}
+		}
+	}
+	$args['courses'] = $course_data;
+
+	return $args;
+}

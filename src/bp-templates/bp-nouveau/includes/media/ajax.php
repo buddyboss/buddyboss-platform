@@ -465,12 +465,7 @@ function bp_nouveau_ajax_media_delete() {
 				<?php
 			}
 		} else {
-			?>
-			<aside class="bp-feedback bp-messages info">
-				<span class="bp-icon" aria-hidden="true"></span>
-				<p><?php ( bp_is_active( 'video' ) && ( bp_is_profile_video_support_enabled() && bp_is_user_albums() ) || ( bp_is_group_video_support_enabled() && bp_is_group_albums() ) ) ? esc_html_e( 'Sorry, no photos or videos were found.', 'buddyboss' ) : esc_html_e( 'Sorry, no photos were found.', 'buddyboss' ); ?></p>
-			</aside>
-			<?php
+			bp_get_template_part( 'media/no-media' );
 		}
 
 		$media_html_content = ob_get_clean();
@@ -508,12 +503,7 @@ function bp_nouveau_ajax_media_delete() {
 				<?php
 			}
 		} else {
-			?>
-			<aside class="bp-feedback bp-messages info">
-				<span class="bp-icon" aria-hidden="true"></span>
-				<p><?php ( bp_is_active( 'video' ) && ( bp_is_profile_video_support_enabled() && bp_is_user_albums() ) || ( bp_is_group_video_support_enabled() && bp_is_group_albums() ) ) ? esc_html_e( 'Sorry, no photos & videos were found.', 'buddyboss' ) : esc_html_e( 'Sorry, no photos were found.', 'buddyboss' ); ?></p>
-			</aside>
-			<?php
+			bp_get_template_part( 'media/no-media' );
 		}
 
 		$group_media_html_content = ob_get_clean();
@@ -685,7 +675,7 @@ function bp_nouveau_ajax_media_album_save() {
 		wp_send_json_error( $response );
 	}
 
-	$title = bb_filter_input_string( INPUT_POST, 'title' );
+	$title = sanitize_text_field( wp_unslash( $_POST['title'] ) );
 
 	if ( empty( $title ) ) {
 		$response['feedback'] = sprintf(
@@ -1080,7 +1070,7 @@ function bp_nouveau_ajax_media_description_save() {
 	}
 
 	$attachment_id = filter_input( INPUT_POST, 'attachment_id', FILTER_VALIDATE_INT );
-	$description   = bb_filter_input_string( INPUT_POST, 'description' );
+	$description   = sanitize_textarea_field( wp_unslash( $_POST['description'] ) );
 
 	// check description empty.
 	if ( empty( $description ) ) {
@@ -1376,14 +1366,50 @@ function bp_nouveau_ajax_media_get_media_description() {
 			<?php
 			$media_description = ob_get_contents();
 			ob_end_clean();
+
+			/**
+			 * Filter the media description HTML.
+			 *
+			 * @since BuddyBoss 2.9.00
+			 *
+			 * @param string $media_description The media description HTML.
+			 * @param object $media             Media object.
+			 * @param int    $media_id          Media ID.
+			 * @param int    $attachment_id     Attachment ID.
+			 * @param bool   $can_edit_btn      Whether the user can edit.
+			 * @param bool   $can_download_btn  Whether the user can download.
+			 *
+			 * @return string The modified document description HTML.
+			 */
+			$media_description = apply_filters(
+				'bp_nouveau_get_media_description_html',
+				$media_description,
+				$media,
+				$media_id,
+				$attachment_id,
+				$can_edit_btn,
+				$can_download_btn
+			);
 		}
 	}
 
-	wp_send_json_success(
+	/**
+	 * Filter the media description response data.
+	 *
+	 * @since BuddyBoss 2.9.00
+	 *
+	 * @param array $response_data The response data to be sent.
+	 */
+	$response_data = apply_filters(
+		'bp_nouveau_media_description_response_data',
 		array(
 			'description' => $media_description,
+			'type'        => 'media',
+			'activity_id' => isset( $media->activity_id ) ? $media->activity_id : 0,
 		)
 	);
+
+	wp_send_json_success( $response_data );
 }
 
 /**

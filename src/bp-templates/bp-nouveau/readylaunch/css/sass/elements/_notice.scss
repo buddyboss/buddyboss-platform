@@ -1,0 +1,292 @@
+.bb-rl-notice {
+
+	@include bb-rl-notice;
+
+	&__title {
+
+		@include bb-rl-notice__title;
+	}
+
+	&__close {
+
+		@include bb-rl-notice__close;
+	}
+
+	&--info {
+
+		@include bb-rl-notice--info;
+	}
+
+	&--success {
+
+		@include bb-rl-notice--success;
+	}
+
+	&--warning {
+
+		@include bb-rl-notice--warning;
+	}
+
+	&--error {
+
+		@include bb-rl-notice--error;
+	}
+
+	&--alt {
+
+		@include bb-rl-notice--alt;
+
+		&.bb-rl-notice--info {
+
+			@include bb-rl-notice--alt-info;
+		}
+
+		&.bb-rl-notice--success {
+
+			@include bb-rl-notice--alt-success;
+		}
+
+		&.bb-rl-notice--warning {
+
+			@include bb-rl-notice--alt-warning;
+		}
+
+		&.bb-rl-notice--error {
+
+			@include bb-rl-notice--alt-error;
+		}
+	}
+
+	&--plain {
+
+		@include bb-rl-notice--plain;
+
+		&.bb-rl-notice--info {
+
+			@include bb-rl-notice--plain-info;
+		}
+
+		&.bb-rl-notice--success {
+
+			@include bb-rl-notice--plain-success;
+		}
+
+		&.bb-rl-notice--warning {
+
+			@include bb-rl-notice--plain-warning;
+		}
+
+		&.bb-rl-notice--error {
+
+			@include bb-rl-notice--plain-error;
+		}
+	}
+}
+
+.bp-feedback {
+
+	@include bb-rl-feedback;
+}
+
+.bb-readylaunch-template {
+
+	.bp-feedback {
+
+		.bp-icon {
+			line-height: 1;
+			margin-right: 10px;
+
+			&::before {
+				content: "";
+				font-weight: 500;
+				font-family: bb-icons-rl;
+				font-size: var(--bb-rl-base-line-small);
+				color: var(--bb-rl-icon-primary-color);
+				font-style: normal;
+			}
+		}
+
+		&.info {
+			background-color: var(--bb-rl-background-brand-secondary-color);
+			border-color: var(--bb-rl-border-brand-primary-color);
+
+			> [class*="bb-icons"] {
+				color: var(--bb-rl-icon-primary-color);
+
+				&:before {
+					content: "\e4e2";
+				}
+			}
+
+			.bp-icon::before {
+				content: "\e2ce";
+				color: var(--bb-rl-icon-brand-primary-color);
+			}
+		}
+
+		&.success {
+			background-color: var(--bb-rl-background-positive-secondary-color);
+			border-color: var(--bb-rl-border-positive-primary-color);
+
+			> [class*="bb-icons"] {
+				color: var(--bb-rl-icon-positive-primary-color);
+
+				&:before {
+					content: "\e184";
+				}
+			}
+
+			.bp-icon::before {
+				content: "\e184";
+				color: var(--bb-rl-icon-positive-primary-color);
+			}
+		}
+
+		&.warning {
+			background-color: var(--bb-rl-background-warning-secondary-color);
+			border-color: var(--bb-rl-border-warning-primary-color);
+
+			> [class*="bb-icons"] {
+				color: var(--bb-rl-icon-warning-primary-color);
+
+				&:before {
+					content: "\e4e0";
+				}
+			}
+
+			.bp-icon::before {
+				content: "\e4e0";
+				color: var(--bb-rl-icon-warning-primary-color);
+			}
+		}
+
+		&.error {
+			background-color: var(--bb-rl-background-danger-secondary-color);
+			border-color: var(--bb-rl-border-danger-primary-color);
+
+			> [class*="bb-icons"] {
+				color: var(--bb-rl-text-danger-primary-color);
+
+				&:before {
+					content: "\e4e2";
+				}
+			}
+
+			.bp-icon::before {
+				content: "\e4e2";
+				color: var(--bb-rl-icon-danger-primary-color);
+			}
+		}
+
+		&--alt {
+			padding: var(--bb-rl-space-50) var(--bb-rl-space-100);
+			font-weight: 400;
+
+			&.info {
+				background-color: var(--bb-rl-background-brand-secondary-color);
+				border-color: var(--bb-rl-border-brand-secondary-color);
+
+				> [class*="bb-icons"] {
+					color: var(--bb-rl-border-brand-secondary-color);
+				}
+			}
+
+			&.success {
+				background-color: var(--bb-rl-background-positive-secondary-color);
+				border-color: var(--bb-rl-border-positive-secondary-color);
+
+				> [class*="bb-icons"] {
+					color: var(--bb-rl-border-positive-secondary-color);
+				}
+			}
+
+			&.warning {
+				background-color: var(--bb-rl-background-warning-secondary-color);
+				border-color: var(--bb-rl-border-warning-secondary-color);
+
+				> [class*="bb-icons"] {
+					color: var(--bb-rl-border-warning-secondary-color);
+				}
+			}
+
+			&.error {
+				background-color: var(--bb-rl-background-danger-secondary-color);
+				border-color: var(--bb-rl-border-danger-secondary-color);
+
+				> [class*="bb-icons"] {
+					color: var(--bb-rl-border-danger-secondary-color);
+				}
+			}
+		}
+
+		&--plain {
+			display: block;
+			border-width: 0;
+			border-left-width: 2px;
+			border-radius: 0;
+			padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+
+			@include bb-rl-label-heading-bolder;
+
+			&.info {
+				background-color: var(--bb-rl-background-brand-secondary-color);
+				border-color: var(--bb-rl-border-brand-secondary-color);
+			}
+
+			&.success {
+				background-color: var(--bb-rl-background-positive-secondary-color);
+				border-color: var(--bb-rl-border-positive-secondary-color);
+			}
+
+			&.warning {
+				background-color: var(--bb-rl-background-warning-secondary-color);
+				border-color: var(--bb-rl-border-warning-secondary-color);
+			}
+
+			&.error {
+				background-color: var(--bb-rl-background-danger-secondary-color);
+				border-color: var(--bb-rl-border-danger-secondary-color);
+			}
+		}
+	}
+}
+
+/*
+
+<div class="notice notice--info">
+	<span class="notice__icon">ℹ️</span>
+	<div class="notice__content">
+		<div class="notice__content-title">Title</div>
+		<div class="notice__content-description">Description</div>
+	</div>
+	<button class="notice__close">✖</button>
+</div>
+
+<div class="notice notice--success">
+	<span class="notice__icon">✔️</span>
+	<div class="notice__content">
+		<div class="notice__content-title">Title</div>
+		<div class="notice__content-description">Description</div>
+	</div>
+	<button class="notice__close">✖</button>
+</div>
+
+<div class="notice notice--warning">
+	<span class="notice__icon">⚠️</span>
+	<div class="notice__content">
+		<div class="notice__content-title">Title</div>
+		<div class="notice__content-description">Description</div>
+	</div>
+	<button class="notice__close">✖</button>
+</div>
+
+<div class="notice notice--error">
+	<span class="notice__icon">❌</span>
+	<div class="notice__content">
+		<div class="notice__content-title">Title</div>
+		<div class="notice__content-description">Description</div>
+	</div>
+	<button class="notice__close">✖</button>
+</div>
+
+*/

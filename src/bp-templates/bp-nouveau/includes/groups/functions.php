@@ -117,6 +117,12 @@ function bp_nouveau_groups_disallow_all_members_invites( $default = false ) {
  * @return array The same array with specific strings for the Group's Invite UI if needed.
  */
 function bp_nouveau_groups_localize_scripts( $params = array() ) {
+
+	$params['dir_labels']['groups'] = array(
+		'singular' => esc_html__( 'Group', 'buddyboss' ),
+		'plural'   => esc_html__( 'Groups', 'buddyboss' ),
+	);
+
 	if ( ! bp_is_group_invites() && ! ( bp_is_group_create() && bp_is_group_creation_step( 'group-invites' ) ) ) {
 		return $params;
 	}
@@ -500,6 +506,17 @@ function bp_nouveau_prepare_group_for_js( $item ) {
 		}
 	}
 
+	if ( function_exists( 'bb_is_enabled_group_activity_topics' ) && bb_is_enabled_group_activity_topics() ) {
+		$topics = function_exists( 'bb_get_group_activity_topics' ) ? bb_get_group_activity_topics(
+			array(
+				'item_id'  => $item->id,
+				'can_post' => true,
+			)
+		) : array();
+
+		$args['topics']['topic_lists'] = ! empty( $topics ) ? $topics : array();
+	}
+
 	return $args;
 }
 
@@ -599,7 +616,8 @@ function bp_nouveau_groups_screen_invites_restriction() {
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_get_groups_directory_nav_items() {
-	$nav_items = array();
+	$enable_count = bb_enable_content_counts();
+	$nav_items    = array();
 
 	$nav_items['all'] = array(
 		'component' => 'groups',
@@ -607,8 +625,8 @@ function bp_nouveau_get_groups_directory_nav_items() {
 		'li_class'  => array( 'selected' ),
 		'link'      => bp_get_groups_directory_permalink(),
 		'text'      => __( 'All Groups', 'buddyboss' ),
-		'count'     => bp_get_total_group_count(),
 		'position'  => 5,
+		'count'     => false,
 	);
 
 	if ( is_user_logged_in() ) {
@@ -636,9 +654,12 @@ function bp_nouveau_get_groups_directory_nav_items() {
 				'li_class'  => array(),
 				'link'      => bp_loggedin_user_domain() . bp_get_groups_slug() . '/my-groups/',
 				'text'      => __( 'My Groups', 'buddyboss' ),
-				'count'     => $my_groups_count,
 				'position'  => 15,
 			);
+
+			if ( $enable_count ) {
+				$nav_items['personal']['count'] = $my_groups_count;
+			}
 		}
 
 		// If the user can create groups, add the create nav
@@ -661,6 +682,8 @@ function bp_nouveau_get_groups_directory_nav_items() {
 	if ( ! empty( $extra_nav_items ) ) {
 		$nav_items = array_merge( $nav_items, $extra_nav_items );
 	}
+
+	unset( $enable_count, $extra_nav_items );
 
 	/**
 	 * Use this filter to introduce your custom nav items for the groups directory.

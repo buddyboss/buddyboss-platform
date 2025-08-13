@@ -44,7 +44,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 	 */
 	public static function get_instance() {
 		if ( null === self::$instance ) {
-			self::$instance = new self;
+			self::$instance = new self();
 		}
 
 		return self::$instance;
@@ -92,20 +92,28 @@ class BP_Nouveau extends BP_Theme_Compat {
 		if ( function_exists( 'tests_add_filter' ) ) {
 			require $this->includes_dir . 'ajax.php';
 
-		// Load AJAX code only on AJAX requests.
+			// Load AJAX code only on AJAX requests.
 		} else {
-			add_action( 'admin_init', function() {
-				if ( defined( 'DOING_AJAX' ) && true === DOING_AJAX ) {
-					require $this->includes_dir . 'ajax.php';
-				}
-			}, 0 );
+			add_action(
+				'admin_init',
+				function() {
+					if ( defined( 'DOING_AJAX' ) && true === DOING_AJAX ) {
+						require $this->includes_dir . 'ajax.php';
+					}
+				},
+				0
+			);
 		}
 
-		add_action( 'bp_customize_register', function() {
-			if ( bp_is_root_blog() && current_user_can( 'customize' ) ) {
-				require $this->includes_dir . 'customizer.php';
-			}
-		}, 0 );
+		add_action(
+			'bp_customize_register',
+			function() {
+				if ( bp_is_root_blog() && current_user_can( 'customize' ) ) {
+					require $this->includes_dir . 'customizer.php';
+				}
+			},
+			0
+		);
 
 		foreach ( bp_core_get_packaged_component_ids() as $component ) {
 			$component_loader = trailingslashit( $this->includes_dir ) . $component . '/loader.php';
@@ -114,14 +122,14 @@ class BP_Nouveau extends BP_Theme_Compat {
 				continue;
 			}
 
-			require( $component_loader );
+			require $component_loader;
 		}
 
 		if ( bp_is_active( 'activity' ) && bp_is_activity_follow_active() ) {
 			$component_loader = trailingslashit( $this->includes_dir ) . 'follow/loader.php';
 
 			if ( file_exists( $component_loader ) ) {
-				require( $component_loader );
+				require $component_loader;
 			}
 		}
 
@@ -141,8 +149,8 @@ class BP_Nouveau extends BP_Theme_Compat {
 	 * @since BuddyPress 3.0.0
 	 */
 	protected function setup_support() {
-		$width         = 1178;
-		$top_offset    = 200;
+		$width      = 1178;
+		$top_offset = 200;
 
 		/** This filter is documented in bp-core/bp-core-avatars.php. */
 		$avatar_height = apply_filters( 'bp_core_avatar_full_height', $top_offset );
@@ -151,16 +159,19 @@ class BP_Nouveau extends BP_Theme_Compat {
 			$top_offset = $avatar_height;
 		}
 
-		bp_set_theme_compat_feature( $this->id, array(
-			'name'     => 'cover_image',
-			'settings' => array(
-				'components'   => array( 'xprofile', 'groups' ),
-				'width'        => $width,
-				'height'       => $top_offset + round( $avatar_height / 2 ),
-				'callback'     => 'bp_nouveau_theme_cover_image',
-				'theme_handle' => 'bp-nouveau',
-			),
-		) );
+		bp_set_theme_compat_feature(
+			$this->id,
+			array(
+				'name'     => 'cover_image',
+				'settings' => array(
+					'components'   => array( 'xprofile', 'groups' ),
+					'width'        => $width,
+					'height'       => $top_offset + round( $avatar_height / 2 ),
+					'callback'     => 'bp_nouveau_theme_cover_image',
+					'theme_handle' => 'bp-nouveau',
+				),
+			)
+		);
 	}
 
 	/**
@@ -207,12 +218,12 @@ class BP_Nouveau extends BP_Theme_Compat {
 		add_filter( 'bp_uri', array( $this, 'customizer_set_uri' ), 10, 1 );
 
 		// Set the forum slug on edit page from backend.
-		add_action( 'save_post', array( $this, 'bp_change_forum_slug_on_edit_save_page'), 10, 2 );
+		add_action( 'save_post', array( $this, 'bp_change_forum_slug_on_edit_save_page' ), 10, 2 );
 
 		// Set the Forums to selected in menu items.
-		add_filter( 'nav_menu_css_class', array( $this, 'bbp_set_forum_selected_menu_class'), 10, 3 );
+		add_filter( 'nav_menu_css_class', array( $this, 'bbp_set_forum_selected_menu_class' ), 10, 3 );
 
-		/** Override **********************************************************/
+		/** Override */
 
 		/**
 		 * Fires after all of the BuddyPress theme compat actions have been added.
@@ -228,7 +239,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 	 * Set the Forums to selected in menu items
 	 *
 	 * @param array $classes
-	 * @param bool $item
+	 * @param bool  $item
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *
@@ -278,22 +289,25 @@ class BP_Nouveau extends BP_Theme_Compat {
 	 */
 	public function bp_change_forum_slug_on_edit_save_page( $post_id, $post ) {
 		// if called by autosave, then bail here
-		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE )
+		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
 			return;
+		}
 
 		// if this "post" post type?
-		if ( $post->post_type != 'page' )
+		if ( $post->post_type != 'page' ) {
 			return;
+		}
 
 		// does this user have permissions?
-		if ( ! current_user_can( 'edit_post', $post_id ) )
+		if ( ! current_user_can( 'edit_post', $post_id ) ) {
 			return;
+		}
 
 		// update!
-		$forum_page_id = (int) bp_get_option('_bbp_root_slug_custom_slug');
+		$forum_page_id = (int) bp_get_option( '_bbp_root_slug_custom_slug' );
 
-		if ( $forum_page_id > 0  && $forum_page_id === $post_id ) {
-			$slug    = get_page_uri( $forum_page_id );
+		if ( $forum_page_id > 0 && $forum_page_id === $post_id ) {
+			$slug = get_page_uri( $forum_page_id );
 			if ( '' !== $slug ) {
 				bp_update_option( '_bbp_root_slug', urldecode( $slug ) );
 				bp_update_option( 'rewrite_rules', '' );
@@ -319,10 +333,10 @@ class BP_Nouveau extends BP_Theme_Compat {
 				}
 				if ( jQuery('.popup-modal-login').length ) {
 					jQuery('.popup-modal-login').magnificPopup({
-                        type: 'inline',
-    					preloader: false,
-                        fixedBgPos: true,
-    					fixedContentPos: true
+						type: 'inline',
+						preloader: false,
+						fixedBgPos: true,
+						fixedContentPos: true
 					});
 					jQuery('.popup-modal-dismiss').click(function (e) {
 						e.preventDefault();
@@ -426,13 +440,15 @@ class BP_Nouveau extends BP_Theme_Compat {
 					$file = $asset['uri'];
 				}
 
-				$data = bp_parse_args( $style, array(
-					'dependencies' => array(),
-					'version'      => $this->version,
-					'type'         => 'screen',
-				) );
+				$data = bp_parse_args(
+					$style,
+					array(
+						'dependencies' => array(),
+						'version'      => $this->version,
+					)
+				);
 
-				wp_enqueue_style( $handle, $file, $data['dependencies'], $data['version'], $data['type'] );
+				wp_enqueue_style( $handle, $file, $data['dependencies'], $data['version'] );
 
 				if ( $min ) {
 					wp_style_add_data( $handle, 'suffix', $min );
@@ -464,20 +480,23 @@ class BP_Nouveau extends BP_Theme_Compat {
 		 *
 		 * @param array $value Array of scripts to register.
 		 */
-		$scripts = apply_filters( 'bp_nouveau_register_scripts', array(
-			'bp-nouveau' => array(
-				'file'         => 'js/buddypress-nouveau%s.js',
-				'dependencies' => $dependencies,
-				'version'      => $this->version,
-				'footer'       => true,
-			),
-			'guillotine-js' => array(
-				'file'         => 'js/jquery.guillotine.min.js',
-				'dependencies' => $dependencies,
-				'version'      => $this->version,
-				'footer'       => true,
-			),
-		) );
+		$scripts = apply_filters(
+			'bp_nouveau_register_scripts',
+			array(
+				'bp-nouveau'    => array(
+					'file'         => 'js/buddypress-nouveau%s.js',
+					'dependencies' => $dependencies,
+					'version'      => $this->version,
+					'footer'       => true,
+				),
+				'guillotine-js' => array(
+					'file'         => 'js/jquery.guillotine.min.js',
+					'dependencies' => $dependencies,
+					'version'      => $this->version,
+					'footer'       => true,
+				),
+			)
+		);
 
 		// Bail if no scripts
 		if ( empty( $scripts ) ) {
@@ -533,11 +552,14 @@ class BP_Nouveau extends BP_Theme_Compat {
 				$file = $asset['uri'];
 			}
 
-			$data = bp_parse_args( $script, array(
-				'dependencies' => array(),
-				'version'      => $this->version,
-				'footer'       => false,
-			) );
+			$data = bp_parse_args(
+				$script,
+				array(
+					'dependencies' => array(),
+					'version'      => $this->version,
+					'footer'       => false,
+				)
+			);
 
 			wp_register_script( $handle, $file, $data['dependencies'], $data['version'], $data['footer'] );
 		}
@@ -553,12 +575,11 @@ class BP_Nouveau extends BP_Theme_Compat {
 	public function enqueue_scripts() {
 
 		if ( bp_is_register_page() || ( isset( $GLOBALS['pagenow'] ) && 'wp-login.php' === $GLOBALS['pagenow'] ) || bp_is_active( 'moderation' ) ) {
-		    wp_enqueue_script( 'bp-nouveau-magnific-popup' );
-	    }
+			wp_enqueue_script( 'bp-nouveau-magnific-popup' );
+		}
 
 		wp_enqueue_script( 'bp-nouveau' );
 		wp_enqueue_script( 'guillotine-js' );
-
 
 		if ( bp_is_register_page() || bp_is_user_settings_general() ) {
 			wp_enqueue_script( 'bp-nouveau-password-verify' );
@@ -580,16 +601,16 @@ class BP_Nouveau extends BP_Theme_Compat {
 
 	/**
 	 * Check the Heartbeat API if it is enabled or not on front end
-     *
-     * @since BuddyBoss 1.1.2
+	 *
+	 * @since BuddyBoss 1.1.2
 	 */
 	public function check_heartbeat_api() {
 		if ( ! wp_script_is( 'heartbeat', 'registered' ) && ! is_admin() ) {
 			update_option( 'bp_wp_heartbeat_disabled', '1' );
 		} else {
 			update_option( 'bp_wp_heartbeat_disabled', '0' );
-        }
-    }
+		}
+	}
 
 	/**
 	 * Adds the no-js class to the body tag.
@@ -639,7 +660,28 @@ class BP_Nouveau extends BP_Theme_Compat {
 			),
 			'wpTime'                     => current_time( 'Y-m-d H:i:s' ),
 			'wpTimezone'                 => bp_get_option( 'timezone_string' ),
+			'dir_labels'                 => array(
+				'members'   => array(
+					'singular' => esc_html__( 'Member', 'buddyboss' ),
+					'plural'   => esc_html__( 'Members', 'buddyboss' ),
+				),
+				'followers' => array(
+					'singular' => esc_html__( 'Follower', 'buddyboss' ),
+					'plural'   => esc_html__( 'Followers', 'buddyboss' ),
+				),
+			),
+			'rest_url'                   => home_url( 'wp-json/buddyboss/v1' ),
+			'rest_nonce'                 => wp_create_nonce( 'wp_rest' ),
+			'member_label'               => __( 'member', 'buddyboss' ),
+			'members_label'              => __( 'members', 'buddyboss' ),
 		);
+
+		if ( bp_is_active( 'friends' ) ) {
+			$params['dir_labels']['connections'] = array(
+				'singular' => esc_html__( 'Connection', 'buddyboss' ),
+				'plural'   => esc_html__( 'Connections', 'buddyboss' ),
+			);
+		}
 
 		// If the Object/Item nav are in the sidebar.
 		if ( bp_nouveau_is_object_nav_in_sidebar() ) {
@@ -673,12 +715,12 @@ class BP_Nouveau extends BP_Theme_Compat {
 		if ( true === $group_sub_objects ) {
 			$supported_objects = array_merge( $supported_objects, array( 'group_members', 'group_requests', 'group_subgroups' ) );
 			// Group sub objects nonce.
-			$object_nonces[ 'group_members' ] = wp_create_nonce( 'bp_nouveau_group_members' );
+			$object_nonces['group_members'] = wp_create_nonce( 'bp_nouveau_group_members' );
 		}
 
-//		if ( bp_is_active( 'media' ) ) {
-//			$supported_objects = array_merge( $supported_objects, array( 'document' ) );
-//		}
+		// if ( bp_is_active( 'media' ) ) {
+		// $supported_objects = array_merge( $supported_objects, array( 'document' ) );
+		// }
 
 		// Add components & nonces
 		$params['objects'] = $supported_objects;
@@ -691,6 +733,15 @@ class BP_Nouveau extends BP_Theme_Compat {
 
 		// Add localize variable for performance tab.
 		$params['is_send_ajax_request'] = function_exists( 'bb_is_send_ajax_request' ) ? bb_is_send_ajax_request() : '';
+
+		// Add localize variable for enable content counts.
+		$params['bb_enable_content_counts'] = bb_enable_content_counts();
+
+		// Add localize variable for more menu items.
+		$params['more_menu_items'] = esc_html__( 'Menu Items', 'buddyboss' );
+
+		// Add localize variable for more menu text.
+		$params['more_menu_text'] = esc_html__( 'More', 'buddyboss' );
 
 		/**
 		 * Filters core JavaScript strings for internationalization before AJAX usage.

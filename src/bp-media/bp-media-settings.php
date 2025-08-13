@@ -643,7 +643,7 @@ function bp_photo_uploading_tutorial() {
 	?>
 
 	<p>
-		<a class="button" href="
+		<a class="button" target="_blank" href="
 		<?php
 		echo bp_get_admin_url(
 			add_query_arg(
@@ -670,7 +670,7 @@ function bp_document_uploading_tutorial() {
 	?>
 
 	<p>
-		<a class="button" href="
+		<a class="button" target="_blank" href="
 		<?php
 		echo bp_get_admin_url(
 			add_query_arg(
@@ -841,7 +841,7 @@ function bp_emoji_tutorial() {
 	?>
 
 	<p>
-		<a class="button" href="
+		<a class="button" target="_blank" href="
 		<?php
 		echo bp_get_admin_url(
 			add_query_arg(
@@ -1081,7 +1081,7 @@ function bp_animated_gifs_tutorial() {
 	?>
 
 	<p>
-		<a class="button" href="
+		<a class="button" target="_blank" href="
 		<?php
 		echo bp_get_admin_url(
 			add_query_arg(
@@ -1308,6 +1308,8 @@ function bp_media_settings_callback_extension_document_support() {
 				$document_icon           = bp_document_svg_icon( $document_file_extension );
 			}
 
+			$render_icon = apply_filters( 'bb_document_icon_class', $document_icon );
+
 			?>
 			<tr class="document-extensions <?php echo esc_attr( $tr_class ); ?> <?php echo esc_attr( $k ); ?>">
 				<td>
@@ -1323,7 +1325,11 @@ function bp_media_settings_callback_extension_document_support() {
 				<td data-colname="<?php esc_attr_e( 'Icon', 'buddyboss' ); ?>">
 					<?php
 					if ( $is_default ) {
-						echo '<i class="bb-icon-l ' . esc_attr( $document_icon ) . '"></i>';
+						if ( strpos( $render_icon, 'bb-icons-rl' ) !== false ) {
+							echo '<i class="' . esc_attr( $render_icon ) . '"></i>';
+						} else {
+							echo '<i class="bb-icon-l ' . esc_attr( $render_icon ) . '"></i>';
+						}
 					}
 					if ( ! $is_default ) {
 						?>
@@ -1331,8 +1337,10 @@ function bp_media_settings_callback_extension_document_support() {
 							<?php
 							$icons = bp_document_svg_icon_list();
 							foreach ( $icons as $icon ) {
+								$render_icon = apply_filters( 'bb_document_icon_class', $icon['icon'] );
+
 								?>
-								<option <?php selected( $icon['icon'], $extension['icon'] ); ?> value="<?php echo esc_attr( $icon['icon'] ); ?>"><?php echo esc_attr( $icon['title'] ); ?></option>
+								<option <?php selected( $icon['icon'], $extension['icon'] ); ?> data-value="<?php echo esc_attr( $render_icon ); ?>" value="<?php echo esc_attr( $icon['icon'] ); ?>"><?php echo esc_attr( $icon['title'] ); ?></option>
 								<?php
 							}
 							?>
@@ -1379,8 +1387,9 @@ function bp_media_settings_callback_extension_document_support() {
 					<?php
 					$icons = bp_document_svg_icon_list();
 					foreach ( $icons as $icon ) {
+						$render_icon = apply_filters( 'bb_document_icon_class', $icon['icon'] );
 						?>
-						<option value="<?php echo esc_attr( $icon['icon'] ); ?>"><?php echo esc_attr( $icon['title'] ); ?></option>
+						<option data-value="<?php echo esc_attr( $render_icon ); ?>" value="<?php echo esc_attr( $icon['icon'] ); ?>"><?php echo esc_attr( $icon['title'] ); ?></option>
 						<?php
 					}
 					?>

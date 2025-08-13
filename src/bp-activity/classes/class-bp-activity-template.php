@@ -204,6 +204,8 @@ class BP_Activity_Template {
 			'update_meta_cache' => true,
 			'pin_type'          => '',
 			'status'            => bb_get_activity_published_status(),
+			'order_by'          => 'date_recorded',
+			'topic_id'          => false,
 		);
 		$r        = bp_parse_args( $args, $defaults );
 
@@ -263,6 +265,8 @@ class BP_Activity_Template {
 					'update_meta_cache' => $update_meta_cache,
 					'pin_type'          => $pin_type,
 					'status'            => $status,
+					'order_by'          => $order_by,
+					'topic_id'          => $topic_id,
 				)
 			);
 

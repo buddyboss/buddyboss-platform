@@ -62,6 +62,11 @@ function bp_core_install( $active_components = false ) {
 		BB_BG_Process_Log::instance()->create_table();
 	}
 
+	// Install activity topics manager table.
+	if ( function_exists( 'bb_topics_manager_instance' ) ) {
+		bb_topics_manager_instance()->create_tables();
+	}
+
 	// Notifications.
 	if ( ! empty( $active_components['notifications'] ) ) {
 		bp_core_install_notifications();
@@ -204,6 +209,7 @@ function bp_core_install_activity_streams() {
 				item_id bigint(20) NOT NULL,
 				secondary_item_id bigint(20) DEFAULT NULL,
 				date_recorded datetime NOT NULL,
+				date_updated datetime NOT NULL,
 				hide_sitewide bool DEFAULT 0,
 				mptt_left int(11) NOT NULL DEFAULT 0,
 				mptt_right int(11) NOT NULL DEFAULT 0,
@@ -212,6 +218,7 @@ function bp_core_install_activity_streams() {
 				status varchar(20) NOT NULL DEFAULT 'published',
 				PRIMARY KEY  (id),
 				KEY date_recorded (date_recorded),
+				KEY date_updated (date_updated),
 				KEY user_id (user_id),
 				KEY item_id (item_id),
 				KEY secondary_item_id (secondary_item_id),
@@ -1236,7 +1243,7 @@ function bp_core_install_suspend() {
 	   KEY user_suspended (user_suspended),
 	   KEY hide_parent (hide_parent),
 	   KEY hide_sitewide (hide_sitewide),
-	   KEY suspend_conditions (user_suspended, hide_parent, hide_sitewide),
+	   KEY suspend_conditions (user_suspended, hide_parent, hide_sitewide)
     ) {$charset_collate};";
 
 	$sql[] = "CREATE TABLE {$bp_prefix}bp_suspend_details (

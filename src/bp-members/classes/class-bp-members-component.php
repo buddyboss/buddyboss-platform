@@ -35,7 +35,7 @@ class BP_Members_Component extends BP_Component {
 	public function __construct() {
 		parent::start(
 			'members',
-			__( 'Members', 'buddyboss' ),
+			'Members',
 			buddypress()->plugin_dir,
 			array(
 				'adminbar_myaccount_order' => 10,
@@ -533,5 +533,16 @@ class BP_Members_Component extends BP_Component {
 		}
 
 		parent::rest_api_init( $controllers );
+	}
+
+	/**
+	 * Register the Members Blocks.
+	 *
+	 * @since BuddyBoss 2.9.00
+	 *
+	 * @param array $blocks Optional. See BP_Component::blocks_init() for description.
+	 */
+	public function blocks_init( $blocks = array() ) {
+		parent::blocks_init( array() );
 	}
 }

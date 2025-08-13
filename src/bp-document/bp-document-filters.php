@@ -581,7 +581,7 @@ function bp_document_forums_new_post_document_save( $post_id ) {
 		$document_ids = array();
 		foreach ( $documents as $document ) {
 
-			$title                = ! empty( $document['name'] ) ? $document['name'] : '';
+			$title                = ! empty( $document['name'] ) ? sanitize_text_field( wp_unslash( $document['name'] ) ) : '';
 			$attachment_id        = ! empty( $document['id'] ) ? $document['id'] : 0;
 			$attached_document_id = ! empty( $document['document_id'] ) ? $document['document_id'] : 0;
 			$folder_id            = ! empty( $document['folder_id'] ) ? $document['folder_id'] : 0;
@@ -917,6 +917,10 @@ function bp_document_delete_attachment_document( $attachment_id ) {
  */
 function bp_document_download_url_file() {
 	if ( isset( $_GET['attachment'] ) && isset( $_GET['download_document_file'] ) && isset( $_GET['document_file'] ) && isset( $_GET['document_type'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+
+		// Remove action to remove meta query for forums while download check.
+		remove_action( 'pre_get_posts', 'bbp_pre_get_posts_normalize_forum_visibility', 4 );
+
 		if ( 'folder' !== $_GET['document_type'] ) {
 			$document_privacy = bb_media_user_can_access( $_GET['document_file'], 'document', $_GET['attachment'] ); // phpcs:ignore WordPress.Security.NonceVerification
 			$can_download_btn = ( true === (bool) $document_privacy['can_download'] ) ? true : false;
@@ -924,6 +928,10 @@ function bp_document_download_url_file() {
 			$folder_privacy   = bb_media_user_can_access( $_GET['document_file'], 'folder' ); // phpcs:ignore WordPress.Security.NonceVerification
 			$can_download_btn = ( true === (bool) $folder_privacy['can_download'] ) ? true : false;
 		}
+
+		// Add pre_get_posts action hook back.
+		add_action( 'pre_get_posts', 'bbp_pre_get_posts_normalize_forum_visibility', 4 );
+
 		if ( $can_download_btn ) {
 			bp_document_download_file( $_GET['attachment'], $_GET['document_type'] ); // phpcs:ignore WordPress.Security.NonceVerification
 		} else {

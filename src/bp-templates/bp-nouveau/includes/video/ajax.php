@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 
 add_action(
 	'admin_init',
-	function() {
+	function () {
 		$ajax_actions = array(
 			array(
 				'video_filter' => array(
@@ -557,12 +557,7 @@ function bp_nouveau_ajax_video_delete() {
 				<?php
 			}
 		} else {
-			?>
-			<aside class="bp-feedback bp-messages info">
-				<span class="bp-icon" aria-hidden="true"></span>
-				<p><?php esc_html_e( 'Sorry, no videos were found', 'buddyboss' ); ?></p>
-			</aside>
-			<?php
+			bp_get_template_part( 'video/no-video' );
 		}
 
 		$video_html_content = ob_get_clean();
@@ -600,12 +595,7 @@ function bp_nouveau_ajax_video_delete() {
 				<?php
 			}
 		} else {
-			?>
-			<aside class="bp-feedback bp-messages info">
-				<span class="bp-icon" aria-hidden="true"></span>
-				<p><?php esc_html_e( 'Sorry, no videos were found', 'buddyboss' ); ?></p>
-			</aside>
-			<?php
+			bp_get_template_part( 'video/no-video' );
 		}
 
 		$group_video_html_content = ob_get_clean();
@@ -764,7 +754,7 @@ function bp_nouveau_ajax_video_album_save() {
 		wp_send_json_error( $response );
 	}
 
-	$title = bb_filter_input_string( INPUT_POST, 'title' );
+	$title = sanitize_text_field( wp_unslash( $_POST['title'] ) );
 
 	if ( empty( $title ) ) {
 		$response['feedback'] = sprintf(
@@ -969,8 +959,7 @@ function bp_nouveau_ajax_video_get_activity() {
 			'scope'       => 'video',
 			'privacy'     => false,
 		);
-	} else {
-		if ( $group_id > 0 && bp_is_active( 'groups' ) ) {
+	} elseif ( $group_id > 0 && bp_is_active( 'groups' ) ) {
 			$args = array(
 				'include'     => $post_id,
 				'object'      => buddypress()->groups->id,
@@ -979,13 +968,12 @@ function bp_nouveau_ajax_video_get_activity() {
 				'scope'       => false,
 				'show_hidden' => (bool) ( groups_is_user_member( bp_loggedin_user_id(), $group_id ) || bp_current_user_can( 'bp_moderate' ) ),
 			);
-		} else {
-			$args = array(
-				'include' => $post_id,
-				'privacy' => false,
-				'scope'   => false,
-			);
-		}
+	} else {
+		$args = array(
+			'include' => $post_id,
+			'privacy' => false,
+			'scope'   => false,
+		);
 	}
 
 	ob_start();
@@ -1011,13 +999,25 @@ function bp_nouveau_ajax_video_get_activity() {
 		ob_end_clean();
 	}
 
-	wp_send_json_success(
+	/**
+	 * Filter the video activity response data.
+	 *
+	 * @since BuddyBoss 2.9.00
+	 *
+	 * @param array $response_data The response data to be sent.
+	 */
+	$response_data = apply_filters(
+		'bp_nouveau_video_activity_response_data',
 		array(
-			'activity'   => $activity,
-			'video_data' => $video_data,
+			'activity'      => $activity,
+			'video_data'    => $video_data,
+			'type'          => 'video',
+			'reset_comment' => $reset_comment,
+			'activity_id'   => $post_id,
 		)
 	);
 
+	wp_send_json_success( $response_data );
 }
 
 /**
@@ -1144,7 +1144,7 @@ function bp_nouveau_ajax_video_description_save() {
 	}
 
 	$attachment_id = filter_input( INPUT_POST, 'attachment_id', FILTER_VALIDATE_INT );
-	$description   = bb_filter_input_string( INPUT_POST, 'description' );
+	$description   = sanitize_textarea_field( wp_unslash( $_POST['description'] ) );
 
 	// check description empty.
 	if ( empty( $description ) ) {
@@ -1292,7 +1292,7 @@ function bp_nouveau_ajax_video_get_video_description() {
 	$display_name     = bp_core_get_user_displayname( $video->user_id );
 	$time_since       = bp_core_time_since( $video->date_created );
 	add_filter( 'bb_get_blocked_avatar_url', 'bb_moderation_fetch_avatar_url_filter', 10, 3 );
-	$avatar           = bp_core_fetch_avatar(
+	$avatar = bp_core_fetch_avatar(
 		array(
 			'item_id' => $video->user_id,
 			'object'  => 'user',
@@ -1383,14 +1383,48 @@ function bp_nouveau_ajax_video_get_video_description() {
 			}
 			$video_data = ob_get_clean();
 		}
+
+		/**
+		 * Filter the video description HTML.
+		 *
+		 * @since BuddyBoss 2.9.00
+		 *
+		 * @param string $video_description The video description HTML.
+		 * @param object $video             Video object.
+		 * @param int    $video_id          Video ID.
+		 * @param int    $attachment_id     Attachment ID.
+		 * @param bool   $can_edit_btn      Whether the user can edit.
+		 * @param bool   $can_download_btn  Whether the user can download.
+		 */
+		$video_description = apply_filters(
+			'bp_nouveau_get_video_description_html',
+			$video_description,
+			$video,
+			$video_id,
+			$attachment_id,
+			$can_edit_btn,
+			$can_download_btn
+		);
 	}
 
-	wp_send_json_success(
+	/**
+	 * Filter the video description response data.
+	 *
+	 * @since BuddyBoss 2.9.30
+	 *
+	 * @param array $response_data The response data to be sent.
+	 */
+	$response_data = apply_filters(
+		'bp_nouveau_video_description_response_data',
 		array(
 			'description' => $video_description,
 			'video_data'  => $video_data,
+			'type'        => 'video',
+			'activity_id' => ! empty( $video->activity_id ) ? $video->activity_id : 0,
 		)
 	);
+
+	wp_send_json_success( $response_data );
 }
 
 /**
@@ -1412,11 +1446,9 @@ function bp_nouveau_ajax_video_get_album_view() {
 	$first_text = '';
 	if ( 'profile' === $type ) {
 		$first_text = esc_html__( ' Videos', 'buddyboss' );
-	} else {
-		if ( bp_is_active( 'groups' ) ) {
+	} elseif ( bp_is_active( 'groups' ) ) {
 			$group      = groups_get_group( (int) $id );
 			$first_text = bp_get_group_name( $group );
-		}
 	}
 
 	wp_send_json_success(
@@ -1499,7 +1531,6 @@ function bp_nouveau_ajax_video_move() {
 	} else {
 		wp_send_json_error( $response );
 	}
-
 }
 
 /**
@@ -1600,7 +1631,6 @@ function bp_nouveau_ajax_video_get_edit_thumbnail_data() {
 			'ffmpeg_generated' => get_post_meta( $attachment_id, 'bb_ffmpeg_preview_generated', true ),
 		)
 	);
-
 }
 
 /**

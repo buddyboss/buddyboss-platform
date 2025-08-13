@@ -898,6 +898,10 @@
 
 	}
 
+	a.bp-user-avatar {
+		display: inline-block;
+	}
+
 	img.avatar {
 		float: left;
 		margin: 0 $marg-sml 0 0;
@@ -909,17 +913,6 @@
 
 		a:before {
 			font-size: 18px;
-		}
-	}
-}
-
-.bp-message-content-wrap {
-
-	blockquote.wp-embedded-content {
-
-		+ p iframe.wp-embedded-content {
-			min-height: 0;
-			height: 0;
 		}
 	}
 }
@@ -1304,6 +1297,10 @@ input#send-to-input {
 			}
 		}
 	}
+
+	#bb-messages-thread-list-nav .bp-navs.bp-subnavs {
+		overflow: initial;
+	}
 }
 
 .messages-wrapper #subnav {
@@ -1549,6 +1546,11 @@ input#send-to-input {
 		}
 
 	}
+}
+
+#send_message_form .dropzone {
+
+	@include center-vert();
 }
 
 .bp-messages-search-form #user_messages_search_reset {

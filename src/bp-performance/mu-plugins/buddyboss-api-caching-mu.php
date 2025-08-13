@@ -48,7 +48,7 @@ if ( file_exists( $buddyboss_platform_api ) && is_plugin_active( 'buddyboss-plat
 }
 
 /**
- * Load the class from Bundle BuddyBoss APP.
+ * Load the class from Bundle BuddyBoss App.
  */
 $include = WP_PLUGIN_DIR . '/buddyboss-app/include/Performance/buddyboss-app-mu-loader.php';
 // Cache [ performance ].

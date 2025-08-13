@@ -36,7 +36,7 @@ class BP_Messages_Component extends BP_Component {
 	public function __construct() {
 		parent::start(
 			'messages',
-			__( 'Private Messages', 'buddyboss' ),
+			'Private Messages',
 			buddypress()->plugin_dir,
 			array(
 				'adminbar_myaccount_order' => 50,
@@ -441,5 +441,16 @@ class BP_Messages_Component extends BP_Component {
 				'BP_REST_Messages_Actions_Endpoint',
 			)
 		);
+	}
+
+	/**
+	 * Register the Messages Blocks.
+	 *
+	 * @since BuddyBoss 2.9.00
+	 *
+	 * @param array $blocks Optional. See BP_Component::blocks_init() for description.
+	 */
+	public function blocks_init( $blocks = array() ) {
+		parent::blocks_init( array() );
 	}
 }

@@ -36,7 +36,7 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 		public function __construct() {
 			parent::start(
 				'forums',
-				__( 'Forums', 'buddyboss' ),
+				'Forums',
 				buddypress()->plugin_dir
 			);
 			// $this->includes();
@@ -577,6 +577,17 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 			);
 
 			parent::setup_cache_groups();
+		}
+
+		/**
+		 * Register the Forums Blocks.
+		 *
+		 * @since BuddyBoss 2.9.00
+		 *
+		 * @param array $blocks Optional. See BP_Component::blocks_init() for description.
+		 */
+		public function blocks_init( $blocks = array() ) {
+			parent::blocks_init( array() );
 		}
 	}
 endif;

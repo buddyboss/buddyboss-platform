@@ -1,9 +1,9 @@
 === BuddyBoss Platform ===
 Contributors: buddyboss
 Requires at least: 4.9.1
-Tested up to: 6.6.2
-Requires PHP: 5.6.20
-Stable tag: 2.7.30
+Tested up to: 6.8.1
+Requires PHP: 7.4.0
+Stable tag: 2.9.30
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,202 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 2.9.30 =
+* Bug: Activity - Fixed issue where the "More" label in topics was not translatable
+* Bug: Core - Fixed broken cross (X) icon UI in tag selectors across multiple screens, ensuring proper display even with the Modern Events Calendar plugin active
+* Bug: Core - Fixed critical accessibility issues, including missing labels and empty anchor tags
+* Bug: Forums - Fixed an issue where lead discussion content was missing on single discussion pages, ensuring compatibility with WP 6.8+ query changes.
+* Bug: Forums - Fixed issue where discussions couldn't be posted with only a title and media when GIFs were disabled in forum settings
+* Bug: Groups - Improved album creation UX to prevent partial photo uploads when "Create Album" is clicked before all images finish uploading.
+* Bug: Messages - Added support for URL embed preview in messaging
+* Bug: ReadyLaunch - Fixed minor UI and functional issues
+
+= 2.9.20 =
+* Bug: Activity - Fixed an issue where the schedule post dropdown menu was not fully visible, causing options to overflow or become inaccessible
+* Bug: Forums - Fixed a 404 error when using a custom slug on forum discussion edit links with the BuddyBoss theme
+* Bug: Groups - Fixed an issue where only one video was visible after editing a comment with multiple videos in the Group Media section
+* Bug: Groups - Fixed misalignment of the Zoom integration field style in group settings when vertical group navigation is enabled in the latest BuddyBoss theme
+
+= 2.9.11 =
+* Enhancement: Improved code structure for better performance and maintainability
+
+= 2.9.10 =
+* Bug: Forums - Fixed issue where image uploads were blocked when using Forum shortcode on a page with document uploads disabled
+* Bug: Forums - Fixed search results displaying password entry forms instead of a proper message for password-protected posts
+* Bug: Header - Fixed issue where the top row of member cards was partially hidden under the sticky header after pagination in the Members directory
+* Bug: Messages - Fixed pagination issue in group messages where banned members caused incorrect member listing
+* Bug: ReadyLaunch - Fixed minor design and functional bugs in ReadyLaunch
+
+= 2.9.00 =
+* New Feature! ReadyLaunch - launch your community with our new built in page template
+* Bug: Forums - Fixed an issue where forum reply and topic media were not being deleted upon deletion
+
+= 2.8.90 =
+* Bug: Groups - Fixed an issue where deleting activity topics removed them from group-level topics
+* Bug: Groups - Fixed an issue where uploading default cover images slowed down sites with many group subscriptions
+* Bug: Notifications - Fixed an issue where user hover info was not displaying in notifications after sending a connection request
+
+= 2.8.80 =
+* New Feature! – Added Activity Topics for categorizing and filtering posts in activity feeds and groups
+* Bug: Activity - Fixed an issue where the activity feed showed duplicate job posts across multiple WPML site languages
+* Bug: Core - Fixed an issue where translating the “BuddyBoss” admin menu title caused moderation features to stop working
+* Bug: Groups - Fixed an issue where the recipient count in group messages didn’t update after members were deleted
+* Bug: Widgets - Fixed issue where the BB Latest Update widget wasn’t showing activity comments or blog comments
+
+= 2.8.70 =
+* Bug: Activity - Fixed issue where changing the activity post’s privacy incorrectly updated the posting date. The original date now remains unchanged
+* Bug: Activity - Fixed issue where emoji functionality wasn’t working in all areas due to JS files
+* Bug: Activity - Fixed issue where Follow/Unfollow functionality did not work when accessing user profiles from the Activity Feed
+* Bug: Groups - Fixed @mention issue in Hidden and Private groups, only group members can now be tagged
+* Bug: Groups - Fixed issue with the "Select Multiple Videos" feature, enabling associated actions like delete on the user's profile page and group page
+* Bug: Media - Fixed issue where video count showed as undefined when videos page, group videos, or user videos page were opened directly via URL
+
+= 2.8.61 =
+* Bug: Groups - Fixed an issue where regular group post activity headers incorrectly displayed post content instead of showing only basic activity details
+
+= 2.8.60 =
+* Bug: Activity - Fixed an issue where the Activity “Load More” button wrapper was being triggered even when clicking outside the button
+* Bug: Core - Added a check to ensure opendir() succeeds before calling closedir() to prevent potential errors, following PHP best practices for high-security environments like WordPress VIP
+* Bug: Moderation - Fixed an issue where activating the Moderation component incorrectly created a component page
+* Bug: Moderation API - Fixed an issue where admins or organizers couldn’t delete suspended members’ posts in groups on the app, while it worked on the web
+* Bug: Reactions - Fixed an issue in the WP Admin where a backslash was being added after an apostrophe in the Reactions button text each time it was saved
+* Bug: WPML - Fixed an issue where search results were incorrect for the Jobs post type from WP Job Manager when WPML Multilingual CMS was activated
+
+= 2.8.51 =
+* Bug: Core - Fixed Vulnerability issues
+
+= 2.8.50 =
+* Bug: Activity - Fixed an issue allowing site admins to pin posts in groups without needing to be a group member
+* Bug: Activity - Fixed an issue that caused problems when saving large videos as drafts
+* Bug: Activity - Fixed an issue where hover-over popups were not closing properly
+* Bug: Forums - Resolved a media display issue in edited forum topics and replies when the Redis cache was active
+* Bug: Learndash - Fixed an issue where admin quiz email notifications were not sent in the latest version of the LearnDash plugin
+* Bug: Members - Fixed an issue where member profiles displayed single and double quotes incorrectly
+* Bug: Notifications - Fixed an issue where double notifications were sent when someone was mentioned in replies
+
+= 2.8.41 =
+* Bug: Notifications - Fixed an issue where unwanted paragraph tags appeared in notifications
+
+= 2.8.40 =
+* Bug: Activity - Resolved a UI issue with the "Read More" link
+* Bug: Core - Disabled hover popups on mobile and touch devices to improve user experience and prevent unintended interactions
+* Bug: Core - Fixed an issue in the admin where the timestamp in a user's extended profile did not correctly reflect the selected timezone
+* Bug: Core - Fixed invalid HTML tags in templates
+* Bug: Core - Fixed Vulnerability issues
+* Bug: Core - Resolved an issue where duplicated activity form templates were being loaded.
+* Bug: Forum - Resolved an issue where the pagination for sticky and super sticky forum discussions did not work correctly based on the settings
+* Bug: Media - Corrected the filter name for the function {{bp_get_media_parent_activity_id}}
+* Bug: Media - Fixed a UI issue related to Directory Count on the Profile > Photos page
+* Bug: Media - Fixed an issue where photos were partially uploaded
+* Bug: Messages - Resolved console errors on the message screen.
+* Bug: Notifications - Improved message handling by showing messages only to logged-in users and enhancing security
+
+= 2.8.30 =
+* Bug: Activity - Fixed an issue where the checkbox in Report options was not selectable when the feed opened in a popup
+* Bug: Activity - Improved the Activity Filter by hiding the dropdown when only one option is available, displaying it as a label instead
+* Bug: Core - Updated “Select2” and “jQuery Validation” libraries in the latest BuddyBoss Plugin/Theme to ensure compatibility and improved functionality
+* Bug: Media - Fixed an issue where the “Group” column on the “All Documents” tab table did not load after refreshing the page in the Documents directory.
+
+= 2.8.20 =
+* Enhancement: Activity - Added hover pop-ups for improved interaction—hovering over a user's avatar now displays a user pop-up, and hovering over a group link in the feed shows a group pop-up
+* Enhancement: Activity - Enhanced the user experience with improved activity sorting and filtering functionality
+* Enhancement: Members - Introduced a new Followers page, allowing users to view a list of people following them
+* Bug: Core - Fixed an issue where display names showed as nicknames in wp-admin and caused inconsistencies between the member directory on mobile and web
+* Bug: Core - Fixed an issue where moderation component texts appeared during browser print of a LearnDash lesson with non-BuddyBoss themes
+* Bug: Elementor - Resolved an issue where the BuddyBoss Platform was restricting the display of Elementor maintenance mode content
+* Bug: Email - Resolved an issue with the recipient name token in the Activation Email Template
+* Bug: Forums - Resolved an issue where incomplete HTML tags in forum replies were breaking the page layout
+* Bug: Moderation - Resolved incorrect counts for "My Connections" and "Following" when a member is suspended
+
+= 2.8.10 =
+* Enhancement: Added new settings to allow admins to enable or disable member and group counts on the Members and Groups directory pages
+* Bug: Activity - Fixed an issue where email notifications were not being sent for second, third, and fourth-tier replies, ensuring all reply levels trigger email notifications
+* Bug: Activity - Fixed an issue where the "Abort" link was incorrectly displayed in comments
+* Bug: Activity - Fixed issues with the pin post functionality in the media theatre and activity "view more comments" popup
+* Bug: Activity - Removed extra question mark-like symbols around mentioned usernames in the Comments API
+* Bug: Core - Fixed an API issue where the privacy checkbox was not displayed in the app
+* Bug: Events Calendar - Fixed an issue where the “Latest Updates” widget did not display any activity when the Events Calendar plugin was activated.
+* Bug: Groups - Fixed an issue where the Groups widget displayed the "See All" button even when all groups were already listed
+* Bug: Members - Fixed an issue where the wrong display name was shown to non-connected users
+* Bug: Moderation - Optimised the query for suspended users to prevent crashes on sites with a large number of users
+* Bug: Notifications - Fixed an issue where the sort-by-date option on the notifications screen displayed a duplicated icon on the initial load
+* Bug: PM Pro - Fixed an error that occurred when deleting a user with a 'Paid Memberships Pro' membership
+* Bug: Profile - Fixed an issue in the Edit Profile > Biography section where incorrect validation messages were displayed while editing social links
+* Bug: WPML - Fixed an issue where the Group Directory search was not working in other languages
+
+= 2.8.00 =
+* Bug: Core- Fixed an issue with the invites table sorting
+* Bug: Core - Fixed Vulnerability issues
+* Bug: Groups - Fixed an issue where groups with the “Hide all groups of this type from Groups Directory” setting were also hidden from the backend Groups Directory
+
+= 2.7.91 =
+* Bug: Translations - Fixed an error caused by the latest French translations
+
+= 2.7.90 =
+* Bug: Courses - Fixed an issue where the member directory page displayed incorrect users when filtering by the Course option
+* Bug: Forums - Fixed a pagination issue for forum discussions
+* Bug: Members - Fixed an issue where deleting a user account from the app disrupted pagination on the members page
+* Bug: Translations - Fixed a bug causing “PHP Notice” in the debug log after WordPress 6.7 and 6.7.1 updates
+
+= 2.7.80 =
+* Bug: Core - Fixed color functionality and spacing issues in the WordPress Customizer when using a default theme
+* Bug: Profiles - Fixed an issue where adding or removing repeater fields in a repeater fieldset was not functioning correctly
+* Bug: Performance - Removed an unused variable from class-bp-search.php and ensured network search functionality works as expected
+
+= 2.7.70 =
+* Enhancement: Forums - Added a new hook to control forum-related notifications
+* Enhancement: Social Login - Enhanced the web social login registration process to auto-populate fields with data from the social account, allowing users to manually complete any remaining mandatory fields
+* Bug: Activity - Fixed an issue where the “Add More” media button was not working correctly in the activity modal popup
+* Bug: Activity - Fixed an issue where the “Read More” link in the new topic activity entry did not redirect to the correct discussion page
+* Bug: Activity - Fixed an issue where the “Who Reacted” pop-up on the newsfeed did not update to reflect a user’s most recent reaction change
+* Bug: Core - Fixed an issue where the grunt uglify command encountered errors due to strict mode argument handling
+* Bug: Email - Fixed an issue where media file previews in email notifications did not display correctly in Gmail
+* Bug: Groups - Fixed an issue where documents uploaded to discussions within private groups were downloadable and are now restricted
+* Bug: Groups - Fixed an issue where the “Hide all groups of this group type from Groups Directory” setting was not functioning correctly
+* Bug: Groups - Fixed the issue where some groups were not showing in activity post selection due to incorrect filtering
+* Bug: Media - Fixed an issue where changing the video thumbnail required a page reload; it now updates automatically upon clicking the change button
+* Bug: Media - Fixed an issue where the “Select” option in the Photos tab of group/user profile pages was missing functionality for deleting multiple selected images
+* Bug: Members - Fixed an issue where the member status UI was not displaying properly with the default theme enabled
+* Bug: Styling - Fixed an issue where the box style for icon file export displayed incorrectly when the icon style was set to filled
+* Bug: Translations - Fixed an issue where French translation strings were not updated correctly
+
+= 2.7.60 =
+* Bug: Activity - Fixed a security issue where private or connections-related activity post comments could be exposed using inspection tools
+* Bug: Activity - Fixed an issue where the reaction tab was still displayed after the activity tab was disabled on the news feed page
+* Bug: Activity - Fixed cursor placement issue in the draft activity form popup on Safari browsers
+* Bug: Core - Fixed a error that occurred when clicking the link in the confirmation email to change the admin email id
+* Bug: Core - Fixed an issue where copying text on mobile devices (Android and iOS) was not working as expected
+* Bug: Core - Fixed an issue where member’s last activity time did not align with the timezone selected
+* Bug: Core - Fixed an issue where non-English pages/URLs could not be added as public content, they now work correctly when site privacy is enabled
+* Bug: Core - Fixed UI spacing issues in the General Settings admin card on smaller screens within BuddyBoss settings
+* Bug: Core - Code refactoring to improve security and fix vulnerabilities
+* Bug: Elementor - Fixed an issue where the page count in search results was incorrect for pages edited with Elementor
+* Bug: Forum - Fixed an issue where disabling autocomplete in the forum search bar caused the page to reload with search results after typing a character
+* Bug: Forums - Fixed a JavaScript error on the Forums > Discussions page caused by the BuddyBoss Platform plugin, ensuring compatibility with Yoast SEO features like meta descriptions and readability analysis
+* Bug: Groups - Fixed an issue where a Private Group incorrectly displayed a message indicating it was a subgroup, even when it was a parent group
+* Bug: Members - Fixed spacing issue with the display name separator when the first name contains multiple names and no last name, in the member list API for logged-out users
+* Bug: Messages - Fixed an issue where the “More Options” button remained active after closing the dropdown
+* Bug: Messages - Fixed the alignment issue with the upload media button on the message screen
+* Bug: Profiles - Fixed an issue where profile avatars were distorted on the Members index page when using default WordPress themes like Twenty Twenty One
+* Bug: Translations - Fixed an issue where the title of the “Like/Likes” modal was not translatable
+
+= 2.7.50 =
+* Enhancement: Core - Updated all “View Tutorial” links across the platform to open in a new tab
+* Enhancement: Core- Updated Telemetry configuration to be anonymous by default
+* Bug: Translations - Addressed translation compatibility issues for BuddyBoss with WordPress 6.7, 6.7.1, and ensured support for future WordPress updates.
+
+= 2.7.40 =
+* Enhancement: MemberPress - We have added full integration of MemberPress into Buddyboss including their most recent Courses feature
+* Bug: Core - Fixed accessibility issues on the platform and theme
+* Bug: Members - Fixed issue where the Follow option appeared in the primary action dropdown when the Follow feature was disabled
+* Bug: Messages - Fixed overlapping issue with the ellipsis button on the messaging sidebar
+* Bug: Notifications - Fixed issue with notifications to mentioned moderators in Group Forum discussions/replies
+* Bug: Translation - Fixed translation issue that occurred after WordPress 6.7 update
+* Bug: Translations - Fixed ordering of translated dropdown options
+
+= 2.7.31 =
+* Bug: Moderation - Resolved missing wp_bp_suspend table causing frontend pages to fail loading
 
 = 2.7.30 =
 * Enhancement: Moderation - Optimized moderation for improved performance

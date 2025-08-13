@@ -107,7 +107,7 @@ function bp_groups_format_activity_action_created_group( $action, $activity ) {
 	$user_link = bp_core_get_userlink( $activity->user_id );
 
 	$group      = groups_get_group( $activity->item_id );
-	$group_link = '<a href="' . esc_url( bp_get_group_permalink( $group ) ) . '">' . esc_html( $group->name ) . '</a>';
+	$group_link = '<a href="' . esc_url( bp_get_group_permalink( $group ) ) . '" data-bb-hp-group="' . esc_attr( $group->id ) . '">' . esc_html( $group->name ) . '</a>';
 
 	$action = sprintf( __( '%1$s created the group %2$s', 'buddyboss' ), $user_link, $group_link );
 
@@ -135,7 +135,7 @@ function bp_groups_format_activity_action_joined_group( $action, $activity ) {
 	$user_link = bp_core_get_userlink( $activity->user_id );
 
 	$group      = groups_get_group( $activity->item_id );
-	$group_link = '<a href="' . esc_url( bp_get_group_permalink( $group ) ) . '">' . esc_html( $group->name ) . '</a>';
+	$group_link = '<a href="' . esc_url( bp_get_group_permalink( $group ) ) . '" data-bb-hp-group="' . esc_attr( $group->id ) . '">' . esc_html( $group->name ) . '</a>';
 
 	$action = sprintf( __( '%1$s joined the group %2$s', 'buddyboss' ), $user_link, $group_link );
 
@@ -174,7 +174,7 @@ function bp_groups_format_activity_action_activity_update( $action, $activity ) 
 	$user_link = bp_core_get_userlink( $activity->user_id );
 
 	$group      = groups_get_group( $activity->item_id );
-	$group_link = '<a href="' . esc_url( bp_get_group_permalink( $group ) ) . '">' . bp_get_group_name( $group ) . '</a>';
+	$group_link = '<a href="' . esc_url( bp_get_group_permalink( $group ) ) . '" data-bb-hp-group="' . esc_attr( $group->id ) . '">' . bp_get_group_name( $group ) . '</a>';
 
 	$action = sprintf( __( '%1$s posted an update in the group %2$s', 'buddyboss' ), $user_link, $group_link );
 
@@ -202,7 +202,7 @@ function bp_groups_format_activity_action_group_details_updated( $action, $activ
 	$user_link = bp_core_get_userlink( $activity->user_id );
 
 	$group      = bp_groups_get_activity_group( $activity->item_id );
-	$group_link = '<a href="' . esc_url( bp_get_group_permalink( $group ) ) . '">' . esc_html( $group->name ) . '</a>';
+	$group_link = '<a href="' . esc_url( bp_get_group_permalink( $group ) ) . '" data-bb-hp-group="' . esc_attr( $group->id ) . '">' . esc_html( $group->name ) . '</a>';
 
 	/*
 	 * Changed group details are stored in groupmeta, keyed by the activity
@@ -802,8 +802,12 @@ add_action( 'groups_ban_member', 'bp_groups_leave_group_delete_recent_activity',
  * @return string
  */
 function bb_groups_get_join_sql_for_activity( $sql, $r ) {
+	if ( empty( $r['user_id'] ) ) {
+		return $sql;
+	}
+
 	$bp_prefix = bp_core_get_table_prefix();
-	$sql      .= ' LEFT JOIN ' . $bp_prefix . 'bp_groups_groupmeta mt ON ( g.id = mt.group_id )';
+	$sql      .= ' LEFT JOIN ' . $bp_prefix . 'bp_groups_groupmeta mt ON ( g.id = mt.group_id AND mt.meta_key = "activity_feed_status" )';
 
 	return $sql;
 }
@@ -819,12 +823,19 @@ function bb_groups_get_join_sql_for_activity( $sql, $r ) {
  * @return mixed
  */
 function bb_groups_get_where_conditions_for_activity( $where_conditions, $r ) {
+	if ( empty( $r['user_id'] ) ) {
+		return $where_conditions;
+	}
+
 	$where_conditions['exclude_where'] = ' (
-		mt.meta_key = "activity_feed_status" AND
+		mt.meta_key IS NULL OR
 		(
-			( mt.meta_value = "mods" AND ( m.is_mod = "1" OR m.is_admin = "1" ) ) OR
-			( mt.meta_value = "admins" AND m.is_admin = "1" ) OR
-			( mt.meta_value = "members" )
+			mt.meta_key = "activity_feed_status" AND
+			(
+				( mt.meta_value = "mods" AND ( m.is_mod = "1" OR m.is_admin = "1" ) ) OR
+				( mt.meta_value = "admins" AND m.is_admin = "1" ) OR
+				( mt.meta_value = "members" )
+			)
 		)
 	)';
 

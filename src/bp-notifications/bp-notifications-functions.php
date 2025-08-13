@@ -1114,8 +1114,16 @@ function bb_notification_avatar() {
 
 			$moderation_class = isset( $user ) && function_exists( 'bp_moderation_is_user_suspended' ) && bp_moderation_is_user_suspended( $user->ID ) ? 'bp-user-suspended' : '';
 			$moderation_class = isset( $user ) && function_exists( 'bp_moderation_is_user_blocked' ) && bp_moderation_is_user_blocked( $user->ID ) ? $moderation_class . ' bp-user-blocked' : $moderation_class;
+			$data_hp          = '';
+			if ( ! empty( $item_id ) ) {
+				if ( 'user' === $object ) {
+					$data_hp = 'data-bb-hp-profile="' . esc_attr( $item_id ) . '"';
+				} elseif ( 'group' === $object ) {
+					$data_hp = 'data-bb-hp-group="' . esc_attr( $item_id ) . '"';
+				}
+			}
 			?>
-			<a href="<?php echo ! empty( $link ) ? esc_url( $link ) : ''; ?>" class="<?php echo esc_attr( $moderation_class ); ?>">
+			<a href="<?php echo ! empty( $link ) ? esc_url( $link ) : ''; ?>" class="<?php echo esc_attr( $moderation_class ); ?>" <?php echo $data_hp; ?>>
 				<?php
 				echo bp_core_fetch_avatar(
 					array(
@@ -1975,26 +1983,36 @@ function bb_notification_read_for_moderated_members() {
 
 	$read_notification_migration = bp_get_user_meta( $current_user_id, 'bb_read_notification_migration', true );
 
-	if ( $read_notification_migration ) {
+	if ( ! bp_is_active( 'moderation' ) || $read_notification_migration ) {
 		return;
 	}
 
 	global $bp, $wpdb;
-	$select_sql  = "SELECT id FROM ( SELECT DISTINCT id FROM {$bp->notifications->table_name}";
-	$select_sql .= ' WHERE is_new = 1 AND user_id = ' . bp_loggedin_user_id();
 
-	$select_sql_where = array();
-	$all_users        = ( function_exists( 'bb_moderation_moderated_user_ids' ) ? bb_moderation_moderated_user_ids() : array() );
+	// Get the moderated user IDs using the relevant function, if available.
+	$all_users_sql = function_exists( 'bb_moderation_moderated_user_ids_sql' ) ? bb_moderation_moderated_user_ids_sql() : '';
 
-	if ( ! empty( $all_users ) ) {
-		$select_sql_where[] = 'secondary_item_id IN ( ' . implode( ',', $all_users ) . ' )';
-		$select_sql        .= " AND component_action IN ( 'bb_connections_request_accepted', 'bb_connections_new_request' ) AND item_id IN ( " . implode( ',', $all_users ) . ' )';
+	// Start building the query with JOINs instead of nested SELECT.
+	$update_query  = "
+		UPDATE {$bp->notifications->table_name} n
+		LEFT JOIN {$wpdb->users} u
+			ON n.secondary_item_id = u.ID
+		SET n.is_new = 0
+		WHERE n.is_new = 1
+		AND n.user_id = {$current_user_id}
+	";
+
+	// Handle conditions for moderated users IDs if the SQL is provided.
+	if ( ! empty( $all_users_sql ) ) {
+		$update_query .= "
+			AND (
+				n.secondary_item_id IN ( {$all_users_sql} )
+				AND n.component_action IN ( 'bb_connections_request_accepted', 'bb_connections_new_request' )
+				AND n.item_id IN ( {$all_users_sql} )
+			)";
 	}
-	$select_sql_where[] = "secondary_item_id NOT IN ( SELECT DISTINCT ID from {$wpdb->users} )";
 
-	$select_sql .= ' AND ( ' . implode( ' OR ', $select_sql_where ) . ' ) ) AS notifications';
-
-	$update_query = "UPDATE {$bp->notifications->table_name} SET `is_new` = 0 WHERE id IN ({$select_sql})";
+	// Execute the optimized query.
 	$wpdb->query( $update_query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 
 	// Clear notifications cache.
@@ -2008,6 +2026,7 @@ function bb_notification_read_for_moderated_members() {
 		wp_cache_flush();
 	}
 
+	// Mark the notification migration as completed for the current user.
 	bp_update_user_meta( $current_user_id, 'bb_read_notification_migration', true );
 }
 

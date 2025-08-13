@@ -80,6 +80,13 @@ function xprofile_screen_edit_profile() {
 			$field = new BP_XProfile_Field( $field_id );
 			if ( 'membertypes' === $field->type ) {
 
+				$enabled = get_post_meta( $_POST[ 'field_' . $field_id ], '_bp_member_type_enable_profile_field', true );
+				if ( '' === $enabled || '0' === $enabled ) {
+					$errors        = true;
+					$validations[] = __( 'Invalid option selected. Please try again', 'buddyboss' );
+					continue;
+				}
+
 				$member_type_name = bp_get_member_type_key( $_POST[ 'field_' . $field_id ] );
 
 				// Get selected profile type role.
@@ -139,9 +146,16 @@ function xprofile_screen_edit_profile() {
 				}
 			}
 
-			if ( isset( $_POST[ 'field_' . $field_id ] ) && $message = xprofile_validate_field( $field_id, $_POST[ 'field_' . $field_id ], bp_displayed_user_id() ) ) {
-				$errors                                = true;
-				$validations[]                         = is_array( $message ) ? reset( $message ) : $message;
+			if ( empty( $social_fields_validation[ $field_id ] ) && isset( $_POST[ 'field_' . $field_id ] ) && $message = xprofile_validate_field( $field_id, $_POST[ 'field_' . $field_id ], bp_displayed_user_id() ) ) {
+				$errors = true;
+
+				// Add social networks validation messages to validations array.
+				if ( is_array( $message ) ) {
+					$validations = array_merge( $validations, array_values( $message ) );
+				} else {
+					$validations[] = $message;
+				}
+
 				$social_fields_validation[ $field_id ] = $message;
 			}
 		}
@@ -200,27 +214,25 @@ function xprofile_screen_edit_profile() {
 			}
 
 			// Save other social fields.
-			if ( ! empty( $social_posted_id ) && isset( $_POST[ 'field_' . $social_posted_id ] ) ) {
+			if ( ! empty( $social_posted_id ) && isset( $_POST[ 'field_' . $social_posted_id ] ) && count( $social_fields_validation ) <= 1 ) {
 				bb_xprofile_save_fields( $posted_field_ids, $is_required );
+			}
+		}
+
+		// Required fields error.
+		if ( ! empty( $errors ) && ! empty( $is_required_fields_error ) ) {
+			if ( count( $is_required_fields_error ) > 1 ) {
+				$validations[] = __( 'Please fill in all required fields, and save your changes again.', 'buddyboss' );
+			} else {
+				$validations[] = sprintf( __( '%s is required and not allowed to be empty.', 'buddyboss' ), implode( ', ', $is_required_fields_error ) );
 			}
 		}
 
 		// There are validation errors.
 		if ( ! empty( $errors ) && $validations ) {
-			foreach ( $validations as $validation ) {
-				bp_core_add_message( $validation, 'error' );
-			}
 
-			// There are errors.
-		} elseif ( ! empty( $errors ) ) {
-			if ( count( $is_required_fields_error ) > 1 ) {
-				bp_core_add_message( __( 'Your changes have not been saved. Please fill in all required fields, and save your changes again.', 'buddyboss' ), 'error' );
-			} else {
-				$message_error = sprintf( __( '%s is required and not allowed to be empty.', 'buddyboss' ), implode( ', ', $is_required_fields_error ) );
-				bp_core_add_message( $message_error, 'error' );
-			}
-
-			// No errors.
+			// Add validation messages all together.
+			bp_core_add_message( implode( "\n", $validations ), 'error' );
 		} else {
 
 			// Reset the errors var.
@@ -232,10 +244,10 @@ function xprofile_screen_edit_profile() {
 			} else {
 				bp_core_add_message( __( 'Changes saved.', 'buddyboss' ) );
 			}
-
-			// Redirect back to the edit screen to display the updates and message.
-			bp_core_redirect( trailingslashit( bp_displayed_user_domain() . bp_get_profile_slug() . '/edit/group/' . bp_action_variable( 1 ) ) );
 		}
+
+		// Redirect back to the edit screen to display the updates and message.
+		bp_core_redirect( trailingslashit( bp_displayed_user_domain() . bp_get_profile_slug() . '/edit/group/' . bp_action_variable( 1 ) ) );
 	}
 
 	/**

@@ -46,7 +46,7 @@ class BP_XProfile_Component extends BP_Component {
 	public function __construct() {
 		parent::start(
 			'xprofile',
-			__( 'Profile Fields', 'buddyboss' ),
+			'Profile Fields',
 			buddypress()->plugin_dir,
 			array(
 				'adminbar_myaccount_order' => 20,
@@ -520,5 +520,16 @@ class BP_XProfile_Component extends BP_Component {
 			'BP_REST_XProfile_Search_Form_Fields_Endpoint',
 			'BP_REST_XProfile_Types_Endpoint',
 		) );
+	}
+
+	/**
+	 * Register the xProfile Blocks.
+	 *
+	 * @since BuddyBoss 2.9.00
+	 *
+	 * @param array $blocks Optional. See BP_Component::blocks_init() for description.
+	 */
+	public function blocks_init( $blocks = array() ) {
+		parent::blocks_init( array() );
 	}
 }

@@ -27,7 +27,7 @@ class BP_Blogs_Component extends BP_Component {
 	public function __construct() {
 		parent::start(
 			'blogs',
-			__( 'Site Directory', 'buddyboss' ),
+			'Site Directory',
 			buddypress()->plugin_dir,
 			array(
 				'adminbar_myaccount_order' => 30,
@@ -376,5 +376,16 @@ class BP_Blogs_Component extends BP_Component {
 		}
 
 		parent::rest_api_init( $controllers );
+	}
+
+	/**
+	 * Register the Blogs Blocks.
+	 *
+	 * @since BuddyBoss 2.9.00
+	 *
+	 * @param array $blocks Optional. See BP_Component::blocks_init() for description.
+	 */
+	public function blocks_init( $blocks = array() ) {
+		parent::blocks_init( array() );
 	}
 }

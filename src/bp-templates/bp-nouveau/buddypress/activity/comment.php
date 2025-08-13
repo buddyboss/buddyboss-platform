@@ -24,12 +24,14 @@ $activity_comment_id = bp_get_activity_comment_id();
 
 		<div class="acomment_inner">
 			<div class="acomment-avatar item-avatar">
-				<a href="<?php echo esc_url( bp_get_activity_comment_user_link() ); ?>">
+				<?php $user_id = bp_get_activity_comment_user_id(); ?>
+				<a href="<?php echo esc_url( bp_get_activity_comment_user_link() ); ?>" <?php echo ! empty( $user_id ) ? 'data-bb-hp-profile="' . esc_attr( $user_id ) . '"' : ''; ?>>
 					<?php
 					bp_activity_avatar(
 						array(
 							'type'    => 'thumb',
-							'user_id' => bp_get_activity_comment_user_id(),
+							'user_id' => $user_id,
+							'class'   => 'avatar bb-hp-profile-avatar',
 						)
 					);
 					?>
