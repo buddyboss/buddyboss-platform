@@ -1954,11 +1954,30 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 			// If all direction words are present, replace them with the English direction.
 			// This handles both single-word and multi-word direction phrases.
 			if ( $all_words_present ) {
-				// Remove each direction word from the search term.
-				foreach ( $direction_words as $word ) {
-					$search_term = str_ireplace( $word, '', $search_term );
-					// Example: Remove "since" from "since 32 years" → "32 years".
+				// Use a safer approach to remove direction words to prevent partial replacements.
+				// Split the search term into words and check each word individually.
+				$words     = preg_split( '/\s+/', $search_term );
+				$new_words = array();
+
+				foreach ( $words as $word ) {
+					$word_removed = false;
+
+					// Check for exact matches with direction words.
+					foreach ( $direction_words as $direction_word ) {
+						if ( strcasecmp( $word, $direction_word ) === 0 ) {
+							$word_removed = true;
+							break;
+						}
+					}
+
+					// If the word is not a direction word, keep it.
+					if ( ! $word_removed ) {
+						$new_words[] = $word;
+					}
 				}
+
+				// Reconstruct the search term without direction words.
+				$search_term = implode( ' ', $new_words );
 
 				// Add the English direction word to the end.
 				$search_term = trim( $search_term ) . ' ' . $direction;
