@@ -435,6 +435,26 @@
 
 	}
 
+	.whats-new-title {
+		display: none;
+		color: $black;
+		font-size: 18px;
+		line-height: 1.3;
+		font-weight: 600;
+		padding: 0 0 12px 0;
+		margin: 0 25px 12px;
+		border: 0;
+		border-bottom: 1px solid $bp-border-color;
+		border-radius: 0;
+		outline: none;
+		width: calc(100% - 50px);
+	}
+
+	input[type="text"].whats-new-title:focus {
+		box-shadow: none;
+		border-color: $bp-border-color;
+	}
+
 	#whats-new-submit #aw-whats-new-reset {
 		display: none;
 	}
@@ -448,6 +468,10 @@
 
 		.bb-model-header {
 			padding: 15px 25px;
+		}
+
+		.whats-new-title {
+			display: block;
 		}
 
 		#whats-new {

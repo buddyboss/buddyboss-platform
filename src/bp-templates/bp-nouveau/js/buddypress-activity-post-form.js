@@ -4519,7 +4519,8 @@ window.bp = window.bp || {};
 			},
 
 			initialize: function () {
-				this.$el.html( $( '<div></div>' ).prop( 'id', 'whats-new-textarea' ) );
+				this.$el.html( '<input type="text" class="whats-new-title" name="whats-new-title" placeholder="' + BP_Nouveau.activity.strings.whatsNewTitle + '" />' );
+				this.$el.append( $( '<div></div>' ).prop( 'id', 'whats-new-textarea' ) );
 				this.$el.append( '<input type="hidden" name="id" id="bp-activity-id" value="0"/>' );
 				this.views.set( '#whats-new-textarea', new bp.Views.WhatsNew( { activity: this.options.activity } ) );
 			},

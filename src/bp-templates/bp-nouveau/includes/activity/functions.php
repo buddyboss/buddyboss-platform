@@ -241,6 +241,7 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 		'whatsnewLabel'       => esc_html__( 'Post what\'s new', 'buddyboss' ),
 		'whatsnewpostinLabel' => esc_html__( 'Post in', 'buddyboss' ),
 		'postUpdateButton'    => esc_html__( 'Post', 'buddyboss' ),
+		'whatsNewTitle'       => esc_html__( 'Title (optional)', 'buddyboss' ),
 		'updatePostButton'    => esc_html__( 'Update Post', 'buddyboss' ),
 		'cancelButton'        => esc_html__( 'Cancel', 'buddyboss' ),
 		'commentLabel'        => esc_html__( '%d Comment', 'buddyboss' ),
