@@ -71,18 +71,6 @@
 
 	} // close form
 
-	.members-search,
-	.groups-search {
-
-		.bp-dir-search-form {
-
-			input[type="search"] {
-				padding-left: 35px;
-				width: 100%;
-			}
-		}
-	}
-
 	// this block needs to be moved really.
 	ul.filters {
 
@@ -113,18 +101,25 @@
 	.bp-dir-search-form {
 
 		.search-form_submit {
-			opacity: 0;
 			position: absolute;
 			right: 0;
 			top: 0;
-			visibility: hidden;
+			opacity: 0;
+		}
+
+		.buddypress-wrap & {
+
+			input[type="search"] {
+				padding-left: 35px;
+				width: 100%;
+			}
 		}
 	}
 }
 
 // If js disabled ensure we show the submit overriding earlier rule
 // @todo the whole show/hide could be wrapped in a :not(.no-js)
-.budypress.no-js {
+.buddypress.no-js {
 
 	form.bp-dir-search-form {
 
