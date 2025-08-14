@@ -386,6 +386,12 @@
 		}
 	}
 
+	.bb-rl-activity-title h2 {
+		font-size: 18px;
+		font-weight: 600;
+		margin-bottom: var(--bb-rl-space-100);
+	}
+
 	.bb-activity-more-options-wrap {
 		position: absolute;
 		right: var(--bb-rl-space-300);
