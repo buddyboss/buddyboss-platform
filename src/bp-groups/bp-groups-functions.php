@@ -1768,6 +1768,7 @@ function groups_post_update( $args = '' ) {
 		$args,
 		array(
 			'id'            => false,
+			'title'         => false,
 			'content'       => false,
 			'user_id'       => bp_loggedin_user_id(),
 			'group_id'      => 0,
@@ -1819,11 +1820,25 @@ function groups_post_update( $args = '' ) {
 	 */
 	$content_filtered = apply_filters( 'groups_activity_new_update_content', $activity_content );
 
+	/**
+	 * Filters the title for the new group activity update.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $title The title of the update.
+	 */
+	$title_filtered = apply_filters( 'bb_groups_activity_new_update_title', $title );
+
+	if ( ! empty( $title_filtered ) ) {
+		$title_filtered = bb_activity_strip_post_title( $title_filtered );
+	}
+
 	$activity_id = groups_record_activity(
 		array(
 			'id'            => $id,
 			'user_id'       => $user_id,
 			'action'        => $action,
+			'title'         => $title_filtered,
 			'content'       => $content_filtered,
 			'type'          => 'activity_update',
 			'item_id'       => $group_id,
