@@ -27,9 +27,9 @@
 					<?php esc_html_e( 'Create a post', 'buddyboss' ); ?>
 				<# } #>
 			<# } #>
-		<span>
+		</span>
 	</h3>
-	<span class="bb-model-header-actions">
+	<span class="bb-modal-header-actions">
 		<a class="bb-model-close-button" href="#">
 			<span class="bb-icon-l bb-icon-times"></span>
 		</a>
