@@ -6034,9 +6034,10 @@ window.bp = window.bp || {};
 				var postTitle = self.$el.find( '#whats-new-title' );
 				if ( postTitle.length && postTitle.val() !== '' ) {
 					postTitle = postTitle.val();
+					var maxPostTitleLength = BP_Nouveau.activity.params.activity_post_title_maxlength;
 					// Maximum 80 characters allowed.
-					if ( postTitle.length > 80 ) {
-						postTitle = postTitle.slice( 0, 80 );
+					if ( postTitle.length > maxPostTitleLength ) {
+						postTitle = postTitle.slice( 0, maxPostTitleLength );
 					}
 					self.model.set( 'post_title', postTitle, { silent: true } );
 				}
