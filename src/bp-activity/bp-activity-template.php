@@ -296,7 +296,6 @@ function bp_has_activities( $args = '' ) {
 
 			// Pinned post.
 			'pin_type'          => '',           // Show pinned post for type of feed - group, activity.
-			'unanswered_only'   => false,
 
 			// Searching.
 			'search_terms'      => $search_terms_default,
@@ -392,8 +391,13 @@ function bp_has_activities( $args = '' ) {
 
 	// Set to default scope with unanswered only.
 	if ( $unanswered_only ) {
-		$r[ 'unanswered_only' ] = true;
-		$r[ 'scope' ]           = $scope;
+
+		// Ensure filter array is initialized.
+		if ( ! isset( $r['filter'] ) || ! is_array( $r['filter'] ) ) {
+			$r['filter'] = array();
+		}
+		$r['filter']['unanswered_only'] = true;
+		$r['scope']                     = $scope;
 	}
 
 	/*

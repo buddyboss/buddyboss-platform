@@ -1949,7 +1949,6 @@ function bp_activity_get( $args = '' ) {
 			'pin_type'          => '',
 			'status'            => bb_get_activity_published_status(),
 			'topic_id'          => false,
-			'unanswered_only'   => false,
 		),
 		'activity_get'
 	);
@@ -1979,7 +1978,6 @@ function bp_activity_get( $args = '' ) {
 			'pin_type'          => $r['pin_type'],
 			'status'            => $r['status'],
 			'topic_id'          => $r['topic_id'],
-			'unanswered_only'   => $r['unanswered_only'],
 		)
 	);
 

@@ -501,6 +501,10 @@ class BP_Activity_Activity {
 			$r['filter']['since_date_column'] = $r['order_by'];
 		}
 
+		if ( ! empty( $r['filter']['unanswered_only'] ) && ! ( false === $r['display_comments'] || 'threaded' === $r['display_comments'] ) ) {
+			$r['filter']['unanswered_only'] = false;
+		}
+
 		// Regular filtering.
 		if ( $r['filter'] && $filter_sql = self::get_filter_sql( $r['filter'] ) ) {
 			$where_conditions['filter_sql'] = $filter_sql;
@@ -636,16 +640,6 @@ class BP_Activity_Activity {
 				$where_conditions['status'] = "a.status IN ({$status})";
 			} else {
 				$where_conditions['status'] = "a.status = '{$r['status']}'";
-			}
-		}
-
-		// Show unanswered activites only.
-		if ( ! empty( $r[ 'unanswered_only' ] ) && 'threaded' === $r['display_comments'] ) {
-			$unanswered_only_condition = "NOT EXISTS ( SELECT 1 FROM {$bp->activity->table_name} uac WHERE uac.item_id = a.id AND uac.type = 'activity_comment' )";
-			if ( ! empty( $where_conditions['filter_sql'] ) ) {
-				$where_conditions['filter_sql'] = '(' . $where_conditions['filter_sql'] . ' AND ' . $unanswered_only_condition . ')';
-			} else {
-				$where_conditions['filter_sql'] = $unanswered_only_condition;
 			}
 		}
 
@@ -807,8 +801,6 @@ class BP_Activity_Activity {
 				// populate the has_more_items flag.
 				$activity_ids_sql .= $wpdb->prepare( ' LIMIT %d, %d', absint( ( $page - 1 ) * $per_page ), $per_page + 1 );
 			}
-
-			error_log(print_r($activity_ids_sql, true));
 
 			/**
 			 * Filters the paged activities MySQL statement.
@@ -2141,6 +2133,8 @@ class BP_Activity_Activity {
 	 * @return string The filter clause, for use in a SQL query.
 	 */
 	public static function get_filter_sql( $filter_array ) {
+		global $wpdb;
+		$bp = buddypress();
 
 		$filter_sql = array();
 
@@ -2195,6 +2189,11 @@ class BP_Activity_Activity {
 					$filter_sql[] = "a.date_recorded > '{$translated_date}'";
 				}
 			}
+		}
+
+		// Show unanswered activites only.
+		if ( ! empty( $filter_array['unanswered_only'] ) ) {
+			$filter_sql[] = $wpdb->prepare( "NOT EXISTS ( SELECT 1 FROM {$bp->activity->table_name} uac WHERE uac.item_id = a.id AND uac.type = %s )", 'activity_comment' ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		}
 
 		if ( empty( $filter_sql ) ) {
