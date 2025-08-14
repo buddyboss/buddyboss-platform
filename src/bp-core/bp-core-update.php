@@ -515,6 +515,10 @@ function bp_version_updater() {
 			bb_update_to_2_9_2();
 		}
 
+		if ( $raw_db_version < 23451 ) {
+			bb_update_to_2_9_5();
+		}
+
 		if ( $raw_db_version !== $current_db ) {
 			// @todo - Write only data manipulate migration here. ( This is not for DB structure change ).
 
@@ -3976,5 +3980,33 @@ function bb_update_to_2_9_2() {
 			SET m.privacy = 'comment'
 			WHERE m.privacy = 'grouponly' AND m.attachment_id IS NOT NULL"
 		);
+	}
+}
+
+/**
+ * Migrate for BuddyBoss [BBVERSION].
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_update_to_2_9_5() {
+	global $wpdb;
+
+	$bp_prefix = function_exists( 'bp_core_get_table_prefix' ) ? bp_core_get_table_prefix() : $wpdb->base_prefix;
+
+	$table_exists = $wpdb->get_var( $wpdb->prepare( "SHOW TABLES LIKE %s", $bp_prefix . 'bp_activity' ) );
+	if ( $table_exists ) {
+		// Add 'title' column in 'bp_activity' table.
+		$row = $wpdb->get_results( $wpdb->prepare( "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_schema= %s AND table_name = %s AND column_name = 'title'", DB_NAME, $bp_prefix . 'bp_activity' ) ); //phpcs:ignore
+		if ( empty( $row ) ) {
+			$wpdb->query( "ALTER TABLE {$bp_prefix}bp_activity ADD `title` varchar( 80 ) DEFAULT NULL AFTER `action`" ); //phpcs:ignore
+
+			// Add key for title if it doesn't exist.
+			$indexes = $wpdb->get_col( $wpdb->prepare( 'SELECT index_name FROM INFORMATION_SCHEMA.STATISTICS WHERE table_schema = DATABASE() AND table_name = %s', $bp_prefix . 'bp_activity' ) ); //phpcs:ignore
+			if ( ! in_array( 'title', $indexes, true ) ) {
+				$wpdb->query( "ALTER TABLE {$bp_prefix}bp_activity ADD KEY `title` (`title`)" ); //phpcs:ignore
+			}
+		}
 	}
 }
