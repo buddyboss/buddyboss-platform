@@ -95,7 +95,7 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 		$draft_activity_meta_key = 'draft_user_' . bp_displayed_user_id();
 	}
 
-	$is_activity_post_title_required = bb_is_enabled_activity_post_title();
+	$is_activity_post_title_required = bb_is_activity_post_title_enabled();
 
 	$activity_params = array(
 		'user_id'                         => bp_loggedin_user_id(),
@@ -263,7 +263,7 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 		'commentPostError'    => esc_html__( 'There was a problem posting your comment.', 'buddyboss' ),
 		'muteNotification'    => esc_html__( 'Turn off notifications', 'buddyboss' ),
 		'unmuteNotification'  => esc_html__( 'Turn on notifications', 'buddyboss' ),
-		'whatsNewTitle'       => $is_activity_post_title_required ? esc_html__( 'Title', 'buddyboss' ) : esc_html__( 'Title (optional)', 'buddyboss' ),
+		'whatsNewTitle'       => $is_activity_post_title_required ? esc_attr__( 'Title', 'buddyboss' ) : esc_attr__( 'Title (optional)', 'buddyboss' ),
 	);
 
 	if ( bp_get_displayed_user() && ! bp_is_my_profile() ) {

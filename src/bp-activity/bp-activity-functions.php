@@ -7748,18 +7748,18 @@ function bb_activity_topics_manager_instance() {
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param bool $enable_activity_post_title Whether to enable activity post title.
+ * @param bool $default_value Default value if option is not set.
  *
  * @return bool True if activity post title is enabled, false otherwise.
  */
-function bb_is_enabled_activity_post_title( $enable_activity_post_title = false ) {
+function bb_is_activity_post_title_enabled( $default_value = false ) {
 
 	/**
 	 * Filters whether to enable activity post title.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param bool $enable_activity_post_title Whether to enable activity post title.
+	 * @param bool $is_enabled Whether the activity post title is enabled.
 	 */
-	return (bool) apply_filters( 'bb_is_enabled_activity_post_title', bp_get_option( '_bb_enable_activity_post_title', $enable_activity_post_title ) );
+	return (bool) apply_filters( 'bb_is_activity_post_title_enabled', bp_get_option( 'bb_activity_post_title_enabled', $default_value ) );
 }
