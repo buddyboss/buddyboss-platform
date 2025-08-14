@@ -3995,10 +3995,11 @@ function bb_update_to_2_9_5() {
 
 	$bp_prefix = function_exists( 'bp_core_get_table_prefix' ) ? bp_core_get_table_prefix() : $wpdb->base_prefix;
 
-	$table_exists = $wpdb->get_var( $wpdb->prepare( "SHOW TABLES LIKE %s", $bp_prefix . 'bp_activity' ) );
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+	$table_exists = $wpdb->get_var( $wpdb->prepare( "SHOW TABLES LIKE %s", $bp_prefix . 'bp_activity' ) ); // phpcs:ignore
 	if ( $table_exists ) {
 		// Add 'title' column in 'bp_activity' table.
-		$row = $wpdb->get_results( $wpdb->prepare( "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_schema= %s AND table_name = %s AND column_name = 'title'", DB_NAME, $bp_prefix . 'bp_activity' ) ); //phpcs:ignore
+		$row = $wpdb->get_results( $wpdb->prepare( "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_schema= %s AND table_name = %s AND column_name = 'title'", DB_NAME, $bp_prefix . 'bp_activity' ) ); // phpcs:ignore
 		if ( empty( $row ) ) {
 			$wpdb->query( "ALTER TABLE {$bp_prefix}bp_activity ADD `title` varchar( 80 ) DEFAULT NULL AFTER `action`" ); //phpcs:ignore
 
