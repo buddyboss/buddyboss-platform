@@ -515,6 +515,10 @@ function bp_version_updater() {
 			bb_update_to_2_9_2();
 		}
 
+		if ( $raw_db_version < 23521 ) {
+			bb_update_to_2_9_40();
+		}
+
 		if ( $raw_db_version !== $current_db ) {
 			// @todo - Write only data manipulate migration here. ( This is not for DB structure change ).
 
@@ -3976,5 +3980,39 @@ function bb_update_to_2_9_2() {
 			SET m.privacy = 'comment'
 			WHERE m.privacy = 'grouponly' AND m.attachment_id IS NOT NULL"
 		);
+	}
+}
+
+/**
+ * Add index for activity table.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_update_to_2_9_40() {
+	global $wpdb;
+
+	$is_already_run = get_transient( 'bb_update_to_2_9_40' );
+	if ( $is_already_run ) {
+		return;
+	}
+
+	set_transient( 'bb_update_to_2_9_40', 'yes', HOUR_IN_SECONDS );
+
+	$bp_prefix      = function_exists( 'bp_core_get_table_prefix' ) ? bp_core_get_table_prefix() : $wpdb->base_prefix;
+	$activity_table = $bp_prefix . 'bp_activity';
+	$table_exists   = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $activity_table ) ); // phpcs:ignore
+
+	// Check if the activity table exists.
+	if ( $table_exists ) {
+
+		// Check if index activity_item_id_type exists for the table.
+		$index_exists = $wpdb->get_var( $wpdb->prepare( 'SELECT index_name FROM INFORMATION_SCHEMA.STATISTICS WHERE table_schema = DATABASE() AND table_name = %s AND index_name = %s', $activity_table, 'activity_item_id_type' ) ); //phpcs:ignore
+
+		// Add index for activity_item_id_type if it doesn't exist.
+		if ( empty( $index_exists ) ) {
+			$wpdb->query( $wpdb->prepare( "ALTER TABLE {$activity_table} ADD KEY activity_item_id_type (item_id,type)" ) ); //phpcs:ignore
+		}
 	}
 }

@@ -2191,7 +2191,7 @@ class BP_Activity_Activity {
 			}
 		}
 
-		// Show unanswered activites only.
+		// Show unanswered activities only.
 		if ( ! empty( $filter_array['unanswered_only'] ) ) {
 			$filter_sql[] = $wpdb->prepare( "NOT EXISTS ( SELECT 1 FROM {$bp->activity->table_name} uac WHERE uac.item_id = a.id AND uac.type = %s )", 'activity_comment' ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		}
