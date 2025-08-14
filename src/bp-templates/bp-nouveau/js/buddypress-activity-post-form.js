@@ -355,6 +355,7 @@ window.bp = window.bp || {};
 
 			self.postForm.$el.parent( '#bp-nouveau-activity-form' ).removeClass( 'bp-hide' );
 			self.postForm.$el.find( '#whats-new' ).html( activity_data.content );
+			self.postForm.$el.find( '#whats-new-title' ).val( activity_data.post_title );
 			if( activity_URL_preview != null ) {
 				self.postForm.$el.find( '#whats-new' ).data( 'activity-url-preview', activity_URL_preview );
 			}
@@ -1164,7 +1165,7 @@ window.bp = window.bp || {};
 					if ( pair.name.startsWith( 'bb-poll-question-option[' ) ) {
 						pair.name = pair.name.replace( /\[\d+\]/, '' );
 					}
-					if ( - 1 === _.indexOf( ['aw-whats-new-submit', 'whats-new-post-in', 'bb-schedule-activity-date-field', 'bb-schedule-activity-meridian', 'bb-schedule-activity-time-field', 'bb-poll-question-field', 'bb-poll-duration', 'bb-poll-question-option', 'bb-poll-allow-multiple-answer', 'bb-poll-allow-new-option'], pair.name ) ) {
+					if ( - 1 === _.indexOf( ['aw-whats-new-submit', 'whats-new-post-in', 'bb-schedule-activity-date-field', 'bb-schedule-activity-meridian', 'bb-schedule-activity-time-field', 'bb-poll-question-field', 'bb-poll-duration', 'bb-poll-question-option', 'bb-poll-allow-multiple-answer', 'bb-poll-allow-new-option', 'whats-new-title'], pair.name ) ) {
 						if ( _.isUndefined( meta[ pair.name ] ) ) {
 							meta[ pair.name ] = pair.value;
 						} else {
@@ -1183,6 +1184,11 @@ window.bp = window.bp || {};
 			content     = content.replace( /&nbsp;/g, ' ' );
 
 			self.postForm.model.set( 'content', content, {silent: true} );
+
+			var post_title = self.postForm.$el.find( '#whats-new-title' ).val();
+			if ( post_title ) {
+				self.postForm.model.set( 'post_title', post_title, {silent: true} );
+			}
 
 			// Silently add meta.
 			self.postForm.model.set( meta, {silent: true} );
@@ -1717,6 +1723,7 @@ window.bp = window.bp || {};
 				item_name: '',
 				object: '',
 				content: '',
+				post_title: '',
 				posting: false,
 				link_success: false,
 				link_error: false,
@@ -3356,7 +3363,7 @@ window.bp = window.bp || {};
 			initialize: function () {
 				this.on( 'ready', this.adjustContent, this );
 				this.on( 'ready', this.activateTinyMce, this );
-				this.options.activity.on( 'change:content', this.resetContent, this );
+				this.options.activity.on( 'change:content change:post_title', this.resetContent, this );
 				this.linkTimeout = null;
 			},
 
@@ -3385,6 +3392,7 @@ window.bp = window.bp || {};
 				}
 
 				this.$el.html( activity.get( 'content' ) );
+				this.$el.closest( '#whats-new-content' ).find( '#whats-new-title' ).val( activity.get( 'post_title' ) );
 			},
 
 			handlePaste: function () {
