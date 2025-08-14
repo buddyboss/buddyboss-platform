@@ -11,8 +11,8 @@
 
 $reply_id = get_the_ID();
 ?>
-<div class="bp-search-ajax-item bp-search-ajax-item_reply">
-	<a href="<?php echo esc_url( add_query_arg( array( 'no_frame' => '1' ), bbp_get_reply_url( $reply_id ) ) ); ?>">
+<a href="<?php bbp_reply_url( $reply_id ); ?>" class="bb-search-item-anchor">
+	<div class="bp-search-ajax-item bp-search-ajax-item_reply">
 		<div class="item-avatar">
 			<?php
 			$args   = array(
@@ -22,7 +22,9 @@ $reply_id = get_the_ID();
 			$avatar = bbp_get_reply_author_link( $args );
 
 			if ( $avatar ) {
-				echo wp_kses_post( $avatar );
+				?>
+				<span class="bb-search-item-avatar-wrap"><?php echo wp_kses_post( strip_tags( $avatar, '<img>' ) ); ?></span>
+				<?php
 			} else {
 				?>
 				<i class="<?php echo esc_attr( bp_search_get_post_thumbnail_default( get_post_type(), 'icon' ) ); ?>"></i>
@@ -32,7 +34,7 @@ $reply_id = get_the_ID();
 		</div>
 		<div class="item">
 			<div class="entry-title item-title">
-				<a href="<?php bbp_reply_url( get_the_ID() ); ?>"><?php bbp_reply_author_display_name( get_the_ID() ); ?></a>
+				<span class="bb-search-item-author-name"><?php bbp_reply_author_display_name( get_the_ID() ); ?></span>
 				<?php esc_html_e( 'replied to a discussion', 'buddyboss' ); ?>
 			</div>
 			<div class="item-desc">
@@ -43,5 +45,5 @@ $reply_id = get_the_ID();
 				<?php bbp_reply_post_date( $reply_id, true ); ?>
 			</div>
 		</div>
-	</a>
-</div>
+	</div>
+</a>

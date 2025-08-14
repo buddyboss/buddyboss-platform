@@ -14,7 +14,7 @@ $product       = wc_get_product( $product_id );
 $product_thumb = get_the_post_thumbnail_url();
 ?>
 <div class="bp-search-ajax-item bp-search-ajax-item_product">
-	<a href="<?php echo esc_url( add_query_arg( array( 'no_frame' => '1' ), get_permalink() ) ); ?>">
+	<a href="<?php echo esc_url( get_permalink() ); ?>">
 		<div class="item-avatar">
 			<?php
 			if ( $product_thumb ) {
@@ -28,20 +28,22 @@ $product_thumb = get_the_post_thumbnail_url();
 			}
 			?>
 		</div>
-
-		<div class="item">
-			<div class="item-title"><?php the_title(); ?></div>
-			<?php wc_get_template( 'single-product/short-description.php' ); ?>
-			<div class="entry-meta">
-				<?php
-				$category = wc_get_product_category_list( $product_id );
-				if ( $category ) {
-					echo wc_get_product_category_list( $product_id, '<span class="middot">&middot;</span>' );
-				}
-				?>
-				<span class="middot">&middot;</span>
-				<?php echo wp_kses_post( $product->get_price_html() ); ?>
-			</div>
-		</div>
 	</a>
+
+	<div class="item">
+		<div class="item-title">
+			<a href="<?php echo esc_url( get_permalink() ); ?>"><?php the_title(); ?></a>
+		</div>
+		<?php wc_get_template( 'single-product/short-description.php' ); ?>
+		<div class="entry-meta">
+			<?php
+			$category = wc_get_product_category_list( $product_id );
+			if ( $category ) {
+				echo wc_get_product_category_list( $product_id, '<span class="middot">&middot;</span>' );
+			}
+			?>
+			<span class="middot">&middot;</span>
+			<?php echo wp_kses_post( $product->get_price_html() ); ?>
+		</div>
+	</div>
 </div>

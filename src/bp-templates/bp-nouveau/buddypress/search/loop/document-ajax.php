@@ -44,20 +44,22 @@ if ( $attachment_id && $bp_doc_activity_id ) {
 ?>
 
 <div class="bp-search-ajax-item bboss_ajax_search_document search-document-list">
-	<a href="">
-		<div class="item">
-			<div class="media-folder_items <?php echo esc_attr( $listing_class ); ?>" data-activity-id="<?php echo esc_attr( $bp_doc_activity_id ); ?>" data-id="<?php echo esc_attr( $document_id ); ?>" data-parent-id="<?php bp_document_parent_id(); ?>" id="div-listing-<?php echo esc_attr( $document_id ); ?>">
-				<div class="media-folder_icon">
-					<a href="<?php echo esc_url( $link ); ?>"> <i class="<?php echo esc_attr( $svg_icon ); ?>"></i> </a>
-				</div>
-				<div class="media-folder_details">
-					<a class="media-folder_name <?php echo esc_attr( $class ); ?>" href="<?php echo esc_url( $link ); ?>" data-id="<?php echo esc_attr( $document_id ); ?>" data-attachment-full="" data-privacy="<?php bp_db_document_privacy(); ?>" data-extension="<?php echo $extension ? esc_attr( $extension ) : ''; ?>" data-parent-activity-id="<?php bp_document_parent_activity_id(); ?>" data-activity-id="<?php echo esc_attr( $bp_doc_activity_id ); ?>" data-full-preview="<?php echo $attachment_url ? esc_url( $attachment_url ) : ''; ?>" data-preview="<?php echo $attachment_url ? esc_url( $attachment_url ) : ''; ?>" data-text-preview="<?php echo $text_attachment_url ? esc_url( $text_attachment_url ) : ''; ?>" data-album-id="<?php bp_document_folder_id(); ?>" data-group-id="<?php bp_document_group_id(); ?>" data-document-title="<?php echo esc_html( $filename ); ?>" data-mirror-text="<?php echo esc_html( $mirror_text ); ?>" data-icon-class="<?php echo esc_attr( $svg_icon ); ?>">
-						<span><?php echo esc_html( $document_title ); ?></span><?php echo $extension ? '.' . esc_html( $extension ) : ''; ?>
-						<i class="media-document-id" data-item-id="<?php echo esc_attr( $document_id ); ?>" style="display: none;"></i>
-						<i class="media-document-attachment-id" data-item-id="<?php echo esc_attr( $attachment_id ); ?>" style="display: none;"></i>
-						<i class="media-document-type" data-item-id="<?php echo esc_attr( $document_type ); ?>" style="display: none;"></i>
-					</a>
-				</div>
+	<a href="<?php echo esc_url( $link ); ?>">
+		<div class="item-avatar">
+			<i class="<?php echo esc_attr( $svg_icon ); ?>"></i>
+		</div>
+	</a>
+	<div class="item">
+		<div class="media-folder_items <?php echo esc_attr( $listing_class ); ?>" data-activity-id="<?php echo esc_attr( $bp_doc_activity_id ); ?>" data-id="<?php echo esc_attr( $document_id ); ?>" data-parent-id="<?php bp_document_parent_id(); ?>" id="div-listing-<?php echo esc_attr( $document_id ); ?>">
+			<div class="media-folder_details">
+				<a class="media-folder_name <?php echo esc_attr( $class ); ?>" href="<?php echo esc_url( $link ); ?>" data-id="<?php echo esc_attr( $document_id ); ?>" data-attachment-full="" data-privacy="<?php bp_db_document_privacy(); ?>" data-extension="<?php echo $extension ? esc_attr( $extension ) : ''; ?>" data-parent-activity-id="<?php bp_document_parent_activity_id(); ?>" data-activity-id="<?php echo esc_attr( $bp_doc_activity_id ); ?>" data-full-preview="<?php echo $attachment_url ? esc_url( $attachment_url ) : ''; ?>" data-preview="<?php echo $attachment_url ? esc_url( $attachment_url ) : ''; ?>" data-text-preview="<?php echo $text_attachment_url ? esc_url( $text_attachment_url ) : ''; ?>" data-album-id="<?php bp_document_folder_id(); ?>" data-group-id="<?php bp_document_group_id(); ?>" data-document-title="<?php echo esc_html( $filename ); ?>" data-mirror-text="<?php echo esc_html( $mirror_text ); ?>" data-icon-class="<?php echo esc_attr( $svg_icon ); ?>">
+					<span><?php echo esc_html( $document_title ); ?></span><?php echo $extension ? '.' . esc_html( $extension ) : ''; ?>
+					<i class="media-document-id" data-item-id="<?php echo esc_attr( $document_id ); ?>" style="display: none;"></i>
+					<i class="media-document-attachment-id" data-item-id="<?php echo esc_attr( $attachment_id ); ?>" style="display: none;"></i>
+					<i class="media-document-type" data-item-id="<?php echo esc_attr( $document_type ); ?>" style="display: none;"></i>
+				</a>
+			</div>
+			<div class="entry-meta">
 				<div class="media-folder_modified">
 					<div class="media-folder_details__bottom">
 						<span class="media-folder_author"><?php esc_html_e( 'By ', 'buddyboss' ); ?>
@@ -103,5 +105,5 @@ if ( $attachment_id && $bp_doc_activity_id ) {
 				</div>
 			</div>
 		</div>
-	</a>
+	</div>
 </div>
