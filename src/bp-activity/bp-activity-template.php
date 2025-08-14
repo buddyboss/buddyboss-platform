@@ -347,7 +347,7 @@ function bp_has_activities( $args = '' ) {
 			'object' => $_GET['afilter'],
 		);
 	} elseif (
-		( 
+		(
 			'just-me' === $scope &&
 			bp_is_activity_directory()
 		) ||
@@ -364,7 +364,7 @@ function bp_has_activities( $args = '' ) {
 		if ( 'just-me' === $scope && bp_is_activity_directory() ) {
 			$r['user_id'] = bp_loggedin_user_id();
 		}
-	
+
 		$r['filter'] = array(
 			'user_id'      => $r['user_id'],
 			'object'       => $r['object'],
