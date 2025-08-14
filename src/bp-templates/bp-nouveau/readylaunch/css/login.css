@@ -936,6 +936,17 @@ span.atwho-inserted {
   padding: 0 0 var(--bb-rl-space-200) var(--bb-rl-space-300);
 }
 
+.medium-editor-element h3,
+.medium-editor-element h4 {
+  font-size: 17px;
+  font-weight: 600;
+  margin-bottom: var(--bb-rl-space-100);
+}
+
+.medium-editor-element h4 {
+  font-size: 16px;
+}
+
 .emojionearea .emojionearea-button:before {
   content: "\e436";
   font-family: bb-icons-rl;

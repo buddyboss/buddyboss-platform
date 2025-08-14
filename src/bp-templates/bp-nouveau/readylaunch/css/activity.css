@@ -1651,6 +1651,14 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   content: "\e1bc";
 }
 
+#bb-rl-editor-toolbar .medium-editor-action-h3 b:before {
+  content: "\e6c0";
+}
+
+#bb-rl-editor-toolbar .medium-editor-action-h4 b:before {
+  content: "\e6c2";
+}
+
 #bb-rl-editor-toolbar .medium-editor-toolbar-form {
   background-color: transparent;
   border-radius: 0;

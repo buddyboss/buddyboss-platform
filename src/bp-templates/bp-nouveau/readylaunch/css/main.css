@@ -937,6 +937,17 @@ span.atwho-inserted {
   padding: 0 0 var(--bb-rl-space-200) var(--bb-rl-space-300);
 }
 
+.medium-editor-element h3,
+.medium-editor-element h4 {
+  font-size: 17px;
+  font-weight: 600;
+  margin-bottom: var(--bb-rl-space-100);
+}
+
+.medium-editor-element h4 {
+  font-size: 16px;
+}
+
 .emojionearea .emojionearea-button:before {
   content: "\e436";
   font-family: bb-icons-rl;
@@ -13873,6 +13884,14 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 
 #bb-rl-editor-toolbar .medium-editor-action-pre b:before {
   content: "\e1bc";
+}
+
+#bb-rl-editor-toolbar .medium-editor-action-h3 b:before {
+  content: "\e6c0";
+}
+
+#bb-rl-editor-toolbar .medium-editor-action-h4 b:before {
+  content: "\e6c2";
 }
 
 #bb-rl-editor-toolbar .medium-editor-toolbar-form {

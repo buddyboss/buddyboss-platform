@@ -896,6 +896,14 @@
 		content: "\e1bc";
 	}
 
+	.medium-editor-action-h3 b:before {
+		content: "\e6c0";
+	}
+
+	.medium-editor-action-h4 b:before {
+		content: "\e6c2";
+	}
+
 	.medium-editor-toolbar-form {
 		background-color: transparent;
 		border-radius: 0;
