@@ -740,6 +740,13 @@ function bp_nouveau_ajax_post_update() {
 	}
 
 	$post_title = ! empty( $_POST['title'] ) ? sanitize_text_field( wp_unslash( $_POST['title'] ) ) : '';
+	if ( bb_is_activity_post_title_enabled() && empty( $post_title ) ) {
+		wp_send_json_error(
+			array(
+				'message' => __( 'Please enter a title for your activity.', 'buddyboss' ),
+			)
+		);
+	}
 	if ( ! empty( $post_title ) ) {
 		$is_valid_title = bb_activity_post_title_length( $post_title ); // Returns false if the post title is invalid.
 		if ( ! $is_valid_title ) {
