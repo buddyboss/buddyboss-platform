@@ -979,6 +979,7 @@ function bp_nouveau_ajax_post_update() {
 
 		$post_array = array(
 			'id'         => $activity_id,
+			'title'      => $post_title,
 			'content'    => $content,
 			'privacy'    => $privacy,
 			'error_type' => 'wp_error',
@@ -1016,6 +1017,7 @@ function bp_nouveau_ajax_post_update() {
 
 			$post_array = array(
 				'id'       => $activity_id,
+				'title'    => $post_title,
 				'content'  => $_POST['content'],
 				'group_id' => $item_id,
 			);
