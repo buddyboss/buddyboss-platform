@@ -4519,7 +4519,15 @@ window.bp = window.bp || {};
 			},
 
 			initialize: function () {
-				this.$el.html( '<input type="text" class="whats-new-title" name="whats-new-title" maxlength="80" placeholder="' + BP_Nouveau.activity.strings.whatsNewTitle + '" />' );
+				// Title template.
+				var $titleTemplate = bp.template( 'bb-activity-post-form-title' ),
+				    html           = $titleTemplate( {
+					    placeholder : BP_Nouveau.activity.strings.whatsNewTitle,
+					    required    : BP_Nouveau.activity.params.is_activity_post_title_required,
+					    maxlength   : BP_Nouveau.activity.params.activity_post_title_maxlength,
+				    } );
+
+				this.$el.html( html );
 				this.$el.append( $( '<div></div>' ).prop( 'id', 'whats-new-textarea' ) );
 				this.$el.append( '<input type="hidden" name="id" id="bp-activity-id" value="0"/>' );
 				this.views.set( '#whats-new-textarea', new bp.Views.WhatsNew( { activity: this.options.activity } ) );
