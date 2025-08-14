@@ -1367,12 +1367,43 @@ window.bp = window.bp || {};
 			if ( content.replace( /<p>/gi, '' ).replace( /<\/p>/gi, '' ).replace( /<br>/gi, '' ) === '' ) {
 				$whatsNew[0].innerHTML = '';
 			}
-			
-			if ( $( $.parseHTML( content ) ).text().trim() !== '' || content.includes( 'class="emoji"' ) || ( ! _.isUndefined( this.postForm.model.get( 'link_success' ) ) && true === this.postForm.model.get( 'link_success' ) ) || ( ! _.isUndefined( this.postForm.model.get( 'video' ) ) && 0 !== this.postForm.model.get('video').length ) || ( ! _.isUndefined( this.postForm.model.get( 'document' ) ) && 0 !== this.postForm.model.get('document').length ) || ( ! _.isUndefined( this.postForm.model.get( 'media' ) ) && 0 !== this.postForm.model.get('media').length ) || ( ! _.isUndefined( this.postForm.model.get( 'gif_data' ) ) && ! _.isEmpty( this.postForm.model.get( 'gif_data' ) ) ) || ( ! _.isUndefined( this.postForm.model.get( 'poll' ) ) && ! _.isEmpty( this.postForm.model.get( 'poll' ) ) ) ) {
-				return true;
-			}
-			
-			return false;
+
+			// Get title from the dedicated title input field.
+			var isTitleRequired = BP_Nouveau.activity.params.is_activity_post_title_required;
+			var title           = isTitleRequired ? $.trim( $( '#bb-rl-whats-new-title' ).val() || '' ) : true;
+
+			var contentValidate = (
+				$( $.parseHTML( content ) ).text().trim() !== '' ||
+				content.includes( 'class="emoji"' ) ||
+				(
+					! _.isUndefined( this.postForm.model.get( 'link_success' ) ) &&
+					true === this.postForm.model.get( 'link_success' )
+				) ||
+				(
+					! _.isUndefined( this.postForm.model.get( 'video' ) ) &&
+					0 !== this.postForm.model.get( 'video' ).length
+				) ||
+				(
+					! _.isUndefined( this.postForm.model.get( 'document' ) ) &&
+					0 !== this.postForm.model.get( 'document' ).length
+				) ||
+				(
+					! _.isUndefined( this.postForm.model.get( 'media' ) ) &&
+					0 !== this.postForm.model.get( 'media' ).length
+				) ||
+				(
+					! _.isUndefined( this.postForm.model.get( 'gif_data' ) ) &&
+					! _.isEmpty( this.postForm.model.get( 'gif_data' ) )
+				) ||
+				(
+					! _.isUndefined( this.postForm.model.get( 'poll' ) ) &&
+					! _.isEmpty( this.postForm.model.get( 'poll' ) )
+				)
+			);
+
+			return !! (
+				title && contentValidate
+			);
 		},
 
 	};
@@ -3791,7 +3822,16 @@ window.bp = window.bp || {};
 			},
 
 			initialize: function () {
-				this.$el.html( $( '<div></div>' ).prop( 'id', 'bb-rl-whats-new-textarea' ) );
+				// Title template.
+				var $titleTemplate = bp.template( 'bb-activity-post-form-title' ),
+				    html           = $titleTemplate( {
+					    placeholder : BP_Nouveau.activity.strings.whatsNewTitle,
+					    required    : BP_Nouveau.activity.params.is_activity_post_title_required,
+					    maxlength   : BP_Nouveau.activity.params.activity_post_title_maxlength,
+				    } );
+
+				this.$el.html( html );
+				this.$el.append( $( '<div></div>' ).prop( 'id', 'bb-rl-whats-new-textarea' ) );
 				this.$el.append( '<input type="hidden" name="id" id="bb-rl-activity-id" value="0"/>' );
 				this.views.set( '#bb-rl-whats-new-textarea', new bp.Views.WhatsNew( { activity: this.options.activity } ) );
 			},
@@ -4661,6 +4701,7 @@ window.bp = window.bp || {};
 			events: {
 				'focus #bb-rl-whats-new': 'displayFull',
 				'input #bb-rl-whats-new': 'postValidate',
+				'input #bb-rl-whats-new-title': 'postValidate',
 				'reset': 'resetForm',
 				'submit': 'postUpdate',
 				'keydown': 'postUpdate',
@@ -5199,7 +5240,7 @@ window.bp = window.bp || {};
 						if ( pair.name.startsWith( 'bb-poll-question-option[' ) ) {
 							pair.name = pair.name.replace( /\[\d+\]/, '' );
 						}
-						if ( -1 === _.indexOf( [ 'aw-whats-new-submit', 'whats-new-post-in', 'bb-schedule-activity-date-field', 'bb-schedule-activity-meridian', 'bb-schedule-activity-time-field', 'bb-poll-question-field', 'bb-poll-duration', 'bb-poll-question-option', 'bb-poll-allow-multiple-answer', 'bb-poll-allow-new-option' ], pair.name ) ) {
+						if ( -1 === _.indexOf( [ 'aw-whats-new-submit', 'whats-new-post-in', 'bb-schedule-activity-date-field', 'bb-schedule-activity-meridian', 'bb-schedule-activity-time-field', 'bb-poll-question-field', 'bb-poll-duration', 'bb-poll-question-option', 'bb-poll-allow-multiple-answer', 'bb-poll-allow-new-option', 'bb-rl-whats-new-title' ], pair.name ) ) {
 							if ( _.isUndefined( meta[ pair.name ] ) ) {
 								meta[ pair.name ] = pair.value;
 							} else {
@@ -5243,6 +5284,17 @@ window.bp = window.bp || {};
 				content     = content.replace( /&nbsp;/g, ' ' );
 
 				self.model.set( 'content', content, { silent: true } );
+
+				var postTitle = self.$el.find( '#bb-rl-whats-new-title' );
+				if ( postTitle.length && postTitle.val() !== '' ) {
+					postTitle = postTitle.val();
+					var maxPostTitleLength = BP_Nouveau.activity.params.activity_post_title_maxlength;
+					// Maximum 80 characters allowed.
+					if ( postTitle.length > maxPostTitleLength ) {
+						postTitle = postTitle.slice( 0, maxPostTitleLength );
+					}
+					self.model.set( 'post_title', postTitle, { silent: true } );
+				}
 
 				// Silently add meta.
 				self.model.set( meta, { silent: true } );
@@ -5330,7 +5382,8 @@ window.bp = window.bp || {};
 						'can_create_poll_activity',
 						'bb-poll-question-option',
 						'poll',
-						'topics'
+						'topics',
+						'bb-rl-whats-new-title'
 					]
 				);
 

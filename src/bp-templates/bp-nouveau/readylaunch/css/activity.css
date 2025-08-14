@@ -825,6 +825,10 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   flex: 1;
 }
 
+[class*="bb-rl-activity-form"] #bb-rl-whats-new-content .bb-rl-whats-new-title {
+  display: none;
+}
+
 [class*="bb-rl-activity-form"] .bb-rl-activity-post-user-name,
 [class*="bb-rl-activity-form"] #bb-rl-activity-privacy-point {
   display: none;
@@ -953,6 +957,22 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 
 .bb-rl-activity-form.bb-rl-focus-in #bb-rl-whats-new-content {
   width: 100%;
+}
+
+.bb-rl-activity-form.bb-rl-focus-in #bb-rl-whats-new-content .bb-rl-whats-new-title {
+  display: block;
+  margin: 0 var(--bb-rl-space-300);
+  padding: var(--bb-rl-space-200) 0;
+  border: 0;
+  border-top: 1px solid var(--bb-rl-border-secondary-color);
+  border-bottom: 1px solid var(--bb-rl-border-secondary-color);
+  border-radius: 0;
+  color: var(--bb-rl-text-color);
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.5;
+  width: calc(100% - var(--bb-rl-space-600));
+  outline: none;
 }
 
 .bb-rl-activity-form.bb-rl-focus-in .bb-rl-activity-post-user-name {

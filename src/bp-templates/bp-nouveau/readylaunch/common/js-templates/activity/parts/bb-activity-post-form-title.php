@@ -10,9 +10,9 @@
 <script type="text/html" id="tmpl-bb-activity-post-form-title">
 	<# var required = data.required ? 'required' : ''; #>
 	<input type="text"
-	       class="whats-new-title"
-	       name="whats-new-title"
-	       id="whats-new-title"
+	       class="bb-rl-whats-new-title"
+	       name="bb-rl-whats-new-title"
+	       id="bb-rl-whats-new-title"
 	       maxlength="{{{data.maxlength}}}"
 	       placeholder="{{{data.placeholder}}}"
 	       {{{required}}} />
