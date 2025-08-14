@@ -739,6 +739,18 @@ function bp_nouveau_ajax_post_update() {
 		}
 	}
 
+	$post_title = ! empty( $_POST['post_title'] ) ? sanitize_text_field( wp_unslash( $_POST['post_title'] ) ) : '';
+	if ( ! empty( $post_title ) ) {
+		$no_valid_title = bb_activity_post_title_length( $post_title ); // As return false if the post title is invalid.
+		if ( $no_valid_title ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'Title must be less than 80 characters.', 'buddyboss' ),
+				)
+			);
+		}
+	}
+
 	if ( ! strlen( trim( html_entity_decode( wp_strip_all_tags( $_POST['content'] ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) ) ) ) {
 
 		// check activity toolbar options if one of them is set, activity can be empty.

@@ -7763,3 +7763,29 @@ function bb_is_activity_post_title_enabled( $default_value = false ) {
 	 */
 	return (bool) apply_filters( 'bb_is_activity_post_title_enabled', bp_get_option( 'bb_activity_post_title_enabled', $default_value ) );
 }
+
+/**
+ * Activity post title length.
+ * If the post title is empty, return the maximum length of the post title.
+ * If the post title is not empty, return true if the post title is valid, false if the post title is invalid.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $post_title The post title.
+ *
+ * @return bool|int True if the post title is valid, false if the post title is invalid, and the maximum length of the post title if the post title is empty.
+ */
+function bb_activity_post_title_length( $post_title = '' ) {
+
+	$max_length = 80;
+
+	if ( ! empty( $post_title ) ) {
+		if ( strlen( $post_title ) > $max_length ) {
+			return false;
+		}
+
+		return true;
+	}
+
+	return $max_length;
+}

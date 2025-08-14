@@ -113,7 +113,7 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 			'media_fail'        => esc_html__( 'To change the media type, remove existing media from your post.', 'buddyboss' ),
 		),
 		'is_activity_post_title_required' => $is_activity_post_title_required,
-		'activity_post_title_maxlength'   => 80,
+		'activity_post_title_maxlength'   => bb_activity_post_title_length(),
 	);
 
 	$user_displayname = bp_get_loggedin_user_fullname();
