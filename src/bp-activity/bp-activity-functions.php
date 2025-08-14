@@ -7765,27 +7765,39 @@ function bb_is_activity_post_title_enabled( $default_value = false ) {
 }
 
 /**
- * Activity post title length.
- * If the post title is empty, return the maximum length of the post title.
- * If the post title is not empty, return true if the post title is valid, false if the post title is invalid.
+ * Activity post title length validation and maximum length retrieval.
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param string $post_title The post title.
+ * @param string $post_title The post title to validate. If empty, returns maximum length.
  *
- * @return bool|int True if the post title is valid, false if the post title is invalid, and the maximum length of the post title if the post title is empty.
+ * @return bool|int True if the post title is valid, false if invalid, or maximum length if no title provided.
  */
 function bb_activity_post_title_length( $post_title = '' ) {
 
+	/**
+	 * Filters the maximum length for activity post titles.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int $max_length Maximum allowed length for activity post titles.
+	 */
 	$max_length = 80;
 
-	if ( ! empty( $post_title ) ) {
-		if ( strlen( $post_title ) > $max_length ) {
-			return false;
-		}
-
-		return true;
+	// If no title provided, return the maximum length.
+	if ( empty( $post_title ) ) {
+		return $max_length;
 	}
 
-	return $max_length;
+	$post_title = sanitize_text_field( $post_title );
+
+	// Use mb_strlen for proper Unicode character counting.
+	$title_length = function_exists( 'mb_strlen' ) ? mb_strlen( $post_title ) : strlen( $post_title );
+
+	// Check if title exceeds maximum length.
+	if ( $title_length > $max_length ) {
+		return false;
+	}
+
+	return true;
 }

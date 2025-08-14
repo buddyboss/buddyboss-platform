@@ -741,11 +741,16 @@ function bp_nouveau_ajax_post_update() {
 
 	$post_title = ! empty( $_POST['post_title'] ) ? sanitize_text_field( wp_unslash( $_POST['post_title'] ) ) : '';
 	if ( ! empty( $post_title ) ) {
-		$no_valid_title = bb_activity_post_title_length( $post_title ); // As return false if the post title is invalid.
-		if ( $no_valid_title ) {
+		$is_valid_title = bb_activity_post_title_length( $post_title ); // Returns false if the post title is invalid.
+		if ( ! $is_valid_title ) {
+			$max_length = bb_activity_post_title_length();
 			wp_send_json_error(
 				array(
-					'message' => __( 'Title must be less than 80 characters.', 'buddyboss' ),
+					'message' => sprintf(
+						/* translators: maximum length of the post title. */
+						__( 'Title must be less than %d characters.', 'buddyboss' ),
+						$max_length
+					),
 				)
 			);
 		}

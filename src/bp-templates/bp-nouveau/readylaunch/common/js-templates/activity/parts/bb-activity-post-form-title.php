@@ -12,7 +12,8 @@
 	<input type="text"
 	       class="whats-new-title"
 	       name="whats-new-title"
-	       maxlength="{{data.maxlength}}"
-	       placeholder="{{data.placeholder}}"
-	       {{required}} />
+	       id="whats-new-title"
+	       maxlength="{{{data.maxlength}}}"
+	       placeholder="{{{data.placeholder}}}"
+	       {{{required}}} />
 </script>
