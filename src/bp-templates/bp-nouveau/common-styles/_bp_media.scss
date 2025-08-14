@@ -463,6 +463,14 @@
 	color: rgba(17, 49, 80, 0.4);
 }
 
+.bb-model-header-actions {
+	display: inline-flex;
+	flex-direction: row-reverse;
+	align-items: center;
+	gap: 8px;
+	margin-left: auto;
+}
+
 .bb-photos-wrap {
 
 	.bb-title {
