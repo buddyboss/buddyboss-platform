@@ -5582,6 +5582,7 @@ function bp_activity_get_edit_data( $activity_id = 0 ) {
 			'group_id'              => $group_id,
 			'group_name'            => $group_name,
 			'folder_id'             => $folder_id,
+			'post_title'            => $activity->title,
 			'content'               => stripslashes( $activity->content ),
 			'item_id'               => $activity->item_id,
 			'object'                => $activity->component,
