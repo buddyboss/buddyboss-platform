@@ -220,11 +220,16 @@ function bp_has_activities( $args = '' ) {
 
 	if ( bp_is_user_activity() || bp_is_activity_directory() ) {
 
-		// Scope from the heartbeat passed from the filter dropdown.	
+		// Scope from the heartbeat passed from the filter dropdown.
 		$scope = ! empty( $args['scope'] ) ? $args['scope'] : $scope;
-	}	
+	}
 
-	$scope = bp_activity_default_scope( $scope );	
+	$unanswered_only = false;
+	if ( 'unanswered' === $scope ) {
+		$unanswered_only = true;
+	}
+
+	$scope = bp_activity_default_scope( $scope );
 
 	// Group filtering.
 	if ( bp_is_group() ) {
@@ -291,6 +296,7 @@ function bp_has_activities( $args = '' ) {
 
 			// Pinned post.
 			'pin_type'          => '',           // Show pinned post for type of feed - group, activity.
+			'unanswered_only'   => false,
 
 			// Searching.
 			'search_terms'      => $search_terms_default,
@@ -382,6 +388,12 @@ function bp_has_activities( $args = '' ) {
 	// Pinned post.
 	if ( empty( $r['pin_type'] ) ) {
 		$r['pin_type'] = bb_activity_pin_type( $r );
+	}
+
+	// Set to default scope with unanswered only.
+	if ( $unanswered_only ) {
+		$r[ 'unanswered_only' ] = true;
+		$r[ 'scope' ]           = $scope;
 	}
 
 	/*

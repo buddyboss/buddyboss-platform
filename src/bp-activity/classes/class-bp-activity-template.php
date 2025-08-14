@@ -206,6 +206,7 @@ class BP_Activity_Template {
 			'status'            => bb_get_activity_published_status(),
 			'order_by'          => 'date_recorded',
 			'topic_id'          => false,
+			'unanswered_only'   => false,
 		);
 		$r        = bp_parse_args( $args, $defaults );
 
@@ -267,6 +268,7 @@ class BP_Activity_Template {
 					'status'            => $status,
 					'order_by'          => $order_by,
 					'topic_id'          => $topic_id,
+					'unanswered_only'   => $unanswered_only,
 				)
 			);
 

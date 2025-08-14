@@ -1949,6 +1949,7 @@ function bp_activity_get( $args = '' ) {
 			'pin_type'          => '',
 			'status'            => bb_get_activity_published_status(),
 			'topic_id'          => false,
+			'unanswered_only'   => false,
 		),
 		'activity_get'
 	);
@@ -1978,6 +1979,7 @@ function bp_activity_get( $args = '' ) {
 			'pin_type'          => $r['pin_type'],
 			'status'            => $r['status'],
 			'topic_id'          => $r['topic_id'],
+			'unanswered_only'   => $r['unanswered_only'],
 		)
 	);
 
@@ -5412,6 +5414,11 @@ add_action( 'bp_before_directory_activity', 'bp_activity_directory_page_content'
  */
 function bp_activity_default_scope( $scope = 'all' ) {
 	$new_scope = array();
+
+	// Handle unanswered scope with actual scope to all.
+	if ( 'unanswered' === $scope ) {
+		$scope = 'all';
+	}
 
 	if ( bp_loggedin_user_id() && ( 'all' === $scope || empty( $scope ) ) ) {
 

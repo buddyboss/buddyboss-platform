@@ -639,6 +639,16 @@ class BP_Activity_Activity {
 			}
 		}
 
+		// Show unanswered activites only.
+		if ( ! empty( $r[ 'unanswered_only' ] ) && 'threaded' === $r['display_comments'] ) {
+			$unanswered_only_condition = "NOT EXISTS ( SELECT 1 FROM {$bp->activity->table_name} uac WHERE uac.item_id = a.id AND uac.type = 'activity_comment' )";
+			if ( ! empty( $where_conditions['filter_sql'] ) ) {
+				$where_conditions['filter_sql'] = '(' . $where_conditions['filter_sql'] . ' AND ' . $unanswered_only_condition . ')';
+			} else {
+				$where_conditions['filter_sql'] = $unanswered_only_condition;
+			}
+		}
+
 		// Process meta_query into SQL.
 		$meta_query_sql = self::get_meta_query_sql( $r['meta_query'] );
 
@@ -797,6 +807,8 @@ class BP_Activity_Activity {
 				// populate the has_more_items flag.
 				$activity_ids_sql .= $wpdb->prepare( ' LIMIT %d, %d', absint( ( $page - 1 ) * $per_page ), $per_page + 1 );
 			}
+
+			error_log(print_r($activity_ids_sql, true));
 
 			/**
 			 * Filters the paged activities MySQL statement.
@@ -2440,3 +2452,4 @@ class BP_Activity_Activity {
 		return $status;
 	}
 }
+
