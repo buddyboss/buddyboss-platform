@@ -2800,6 +2800,18 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   margin-bottom: 0;
 }
 
+.bb-rl-activity-list .bb-rl-activity-inner h3,
+.bb-rl-activity-list .bb-rl-activity-inner h4 {
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--bb-rl-text-color);
+  margin-bottom: var(--bb-rl-space-200);
+}
+
+.bb-rl-activity-list .bb-rl-activity-inner h4 {
+  font-size: 16px;
+}
+
 .bb-rl-activity-list .bb-rl-activity-inner > ol,
 .bb-rl-activity-list .bb-rl-activity-inner > ul {
   margin: 0 0 var(--bb-rl-space-200);

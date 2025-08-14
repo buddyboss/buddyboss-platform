@@ -599,6 +599,18 @@
 			}
 		}
 
+		h3,
+		h4 {
+			font-size: 17px;
+			font-weight: 600;
+			color: var(--bb-rl-text-color);
+			margin-bottom: var(--bb-rl-space-200);
+		}
+
+		h4 {
+			font-size: 16px;
+		}
+
 		> ol,
 		> ul {
 			margin: 0 0 var(--bb-rl-space-200);
