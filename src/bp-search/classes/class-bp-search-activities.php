@@ -110,7 +110,7 @@ if ( ! class_exists( 'Bp_Search_Activities' ) ) :
 			if ( $only_totalrow_count ) {
 				$sql['select'] .= ' COUNT( DISTINCT a.id ) ';
 			} else {
-				$sql['select'] .= $wpdb->prepare( " DISTINCT a.id , 'activity' as type, a.content LIKE %s AS relevance, a.date_recorded as entry_date  ", '%' . $wpdb->esc_like( $search_term ) . '%' );
+				$sql['select'] .= $wpdb->prepare( " DISTINCT a.id , 'activity' as type, ( CASE WHEN a.content LIKE %s THEN 1 ELSE 0 END ) + ( CASE WHEN a.title LIKE %s THEN 1 ELSE 0 END ) AS relevance, a.date_recorded as entry_date  ", '%' . $wpdb->esc_like( $search_term ) . '%', '%' . $wpdb->esc_like( $search_term ) . '%' );
 			}
 
 			$privacy = array( 'public' );
@@ -140,6 +140,9 @@ if ( ! class_exists( 'Bp_Search_Activities' ) ) :
 						(
 							m.meta_key = 'post_title'
 							AND m.meta_value LIKE %s
+						) OR
+						(
+							a.title LIKE %s
 						)
 				)
 				AND
@@ -166,6 +169,7 @@ if ( ! class_exists( 'Bp_Search_Activities' ) ) :
 			$sql = "{$sql['select']} {$sql['from']} {$sql['where']}";
 
 			$search_term_placeholder = '%' . $wpdb->esc_like( $search_term ) . '%';
+			$query_placeholder[]     = $search_term_placeholder;
 			$query_placeholder[]     = $search_term_placeholder;
 			$query_placeholder[]     = $search_term_placeholder;
 			$sql                     = $wpdb->prepare( $sql, $query_placeholder );
