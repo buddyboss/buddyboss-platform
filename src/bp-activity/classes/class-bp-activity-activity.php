@@ -286,7 +286,7 @@ class BP_Activity_Activity {
 		$this->component         = apply_filters_ref_array( 'bp_activity_component_before_save', array( $this->component, &$this ) );
 		$this->type              = apply_filters_ref_array( 'bp_activity_type_before_save', array( $this->type, &$this ) );
 		$this->action            = ! empty( $this->action ) ? apply_filters_ref_array( 'bp_activity_action_before_save', array( $this->action, &$this ) ) : '';
-		$this->title             = ! empty( $this->title ) ? apply_filters_ref_array( 'bp_activity_title_before_save', array( $this->title, &$this ) ) : '';
+		$this->title             = ! empty( $this->title ) ? apply_filters_ref_array( 'bb_activity_title_before_save', array( $this->title, &$this ) ) : '';
 		$this->content           = ! empty( $this->content ) ? apply_filters_ref_array( 'bp_activity_content_before_save', array( $this->content, &$this ) ) : '';
 		$this->date_recorded     = apply_filters_ref_array( 'bp_activity_date_recorded_before_save', array( $this->date_recorded, &$this ) );
 		$this->date_updated      = apply_filters_ref_array( 'bp_activity_date_updated_before_save', array( $this->date_updated, &$this ) );
@@ -324,6 +324,11 @@ class BP_Activity_Activity {
 
 				return $this->errors;
 			}
+		}
+
+		// Validate the title.
+		if ( ! empty( $this->title ) ) {
+			$this->title = bb_activity_strip_post_title( $this->title );
 		}
 
 		$prev_activity_status = '';
