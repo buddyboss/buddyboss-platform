@@ -756,7 +756,7 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 	}
 
 	/**
-	 * Enable activity post title.
+	 * Settings for activity post title.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 */
