@@ -380,6 +380,7 @@ window.bp = window.bp || {};
 
 			self.postForm.$el.parent( '#bb-rl-activity-form' ).removeClass( 'bp-hide' );
 			self.postForm.$el.find( '#bb-rl-whats-new' ).html( activity_data.content );
+			self.postForm.$el.find( '#bb-rl-whats-new-title' ).val( activity_data.title );
 			if ( activity_URL_preview != null ) {
 				self.postForm.$el.find( '#bb-rl-whats-new' ).data( 'activity-url-preview', activity_URL_preview );
 			}
@@ -950,7 +951,7 @@ window.bp = window.bp || {};
 					if ( pair.name.startsWith( 'bb-poll-question-option[' ) ) {
 						pair.name = pair.name.replace( /\[\d+\]/, '' );
 					}
-					if ( - 1 === _.indexOf( ['aw-whats-new-submit', 'whats-new-post-in', 'bb-schedule-activity-date-field', 'bb-schedule-activity-meridian', 'bb-schedule-activity-time-field', 'bb-poll-question-field', 'bb-poll-duration', 'bb-poll-question-option', 'bb-poll-allow-multiple-answer', 'bb-poll-allow-new-option'], pair.name ) ) {
+					if ( - 1 === _.indexOf( ['aw-whats-new-submit', 'whats-new-post-in', 'bb-schedule-activity-date-field', 'bb-schedule-activity-meridian', 'bb-schedule-activity-time-field', 'bb-poll-question-field', 'bb-poll-duration', 'bb-poll-question-option', 'bb-poll-allow-multiple-answer', 'bb-poll-allow-new-option', 'bb-rl-whats-new-title'], pair.name ) ) {
 						if ( _.isUndefined( meta[ pair.name ] ) ) {
 							meta[ pair.name ] = pair.value;
 						} else {
@@ -969,6 +970,11 @@ window.bp = window.bp || {};
 			content     = content.replace( /&nbsp;/g, ' ' );
 
 			self.postForm.model.set( 'content', content, {silent: true} );
+
+			var activityPostTitle = self.postForm.$el.find( '#bb-rl-whats-new-title' ).val();
+			if ( activityPostTitle ) {
+				self.postForm.model.set( 'title', activityPostTitle, {silent: true} );
+			}
 
 			// Silently add meta.
 			self.postForm.model.set( meta, {silent: true} );
@@ -1449,6 +1455,7 @@ window.bp = window.bp || {};
 				item_name: '',
 				object: '',
 				content: '',
+				title: '',
 				posting: false,
 				link_success: false,
 				link_error: false,
@@ -2555,7 +2562,7 @@ window.bp = window.bp || {};
 			initialize: function () {
 				this.on( 'ready', this.adjustContent, this );
 				this.on( 'ready', this.activateTinyMce, this );
-				this.options.activity.on( 'change:content', this.resetContent, this );
+				this.options.activity.on( 'change:content change:title', this.resetContent, this );
 				this.linkTimeout = null;
 			},
 
@@ -2584,6 +2591,7 @@ window.bp = window.bp || {};
 				}
 
 				this.$el.html( activity.get( 'content' ) );
+				this.$el.closest( '#bb-rl-whats-new-content' ).find( '#bb-rl-whats-new-title' ).val( activity.get( 'title' ) );
 			},
 
 			handlePaste: function () {
@@ -5293,7 +5301,7 @@ window.bp = window.bp || {};
 					if ( postTitle.length > maxPostTitleLength ) {
 						postTitle = postTitle.slice( 0, maxPostTitleLength );
 					}
-					self.model.set( 'post_title', postTitle, { silent: true } );
+					self.model.set( 'title', postTitle, { silent: true } );
 				}
 
 				// Silently add meta.
