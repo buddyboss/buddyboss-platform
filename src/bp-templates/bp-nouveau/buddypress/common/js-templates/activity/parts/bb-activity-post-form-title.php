@@ -15,6 +15,7 @@
 	<input type="text"
 	       class="whats-new-title"
 	       name="whats-new-title"
+	       id="whats-new-title"
 	       maxlength="{{data.maxlength}}"
 	       placeholder="{{data.placeholder}}"
 	       {{required}} />

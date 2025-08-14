@@ -1637,7 +1637,7 @@ window.bp = window.bp || {};
 
 			// Get title from the dedicated title input field.
 			var isTitleRequired = BP_Nouveau.activity.params.is_activity_post_title_required;
-			var title           = isTitleRequired ? $.trim( $( '.whats-new-title' ).val() || '' ) : true;
+			var title           = isTitleRequired ? $.trim( $( '#whats-new-title' ).val() || '' ) : true;
 
 			var contentValidate = (
 				$( $.parseHTML( content ) ).text().trim() !== '' ||
@@ -5486,6 +5486,7 @@ window.bp = window.bp || {};
 			events: {
 				'focus #whats-new': 'displayFull',
 				'input #whats-new': 'postValidate',
+				'input #whats-new-title': 'postValidate',
 				'reset': 'resetForm',
 				'submit': 'postUpdate',
 				'keydown': 'postUpdate',
@@ -5877,7 +5878,7 @@ window.bp = window.bp || {};
 				$( '#bp-nouveau-activity-form-placeholder' ).hide();
 
 				$( '#whats-new-content' ).find( '#bp-activity-id' ).val( '' ); // reset activity id if in edit mode.
-				$( '#whats-new-content' ).find( '.whats-new-title' ).val( '' );
+				$( '#whats-new-content' ).find( '#whats-new-title' ).val( '' );
 				bp.Nouveau.Activity.postForm.postForm.$el.removeClass( 'bp-activity-edit hide-schedule-button' );
 
 				if ( ! _.isUndefined( BP_Nouveau.activity.params.objects ) ) {
@@ -6030,7 +6031,7 @@ window.bp = window.bp || {};
 
 				self.model.set( 'content', content, { silent: true } );
 
-				var postTitle = self.$el.find( '.whats-new-title' );
+				var postTitle = self.$el.find( '#whats-new-title' );
 				if ( postTitle.length && postTitle.val() !== '' ) {
 					postTitle = postTitle.val();
 					// Maximum 80 characters allowed.
