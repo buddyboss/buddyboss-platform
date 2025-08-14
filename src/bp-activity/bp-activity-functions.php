@@ -2295,11 +2295,7 @@ function bp_activity_post_update( $args = '' ) {
 
 	// Validate title length after filter to ensure it doesn't exceed maximum length.
 	if ( ! empty( $add_title ) ) {
-		$is_valid_title = bb_activity_post_title_length( $add_title );
-		if ( ! $is_valid_title ) {
-			$max_length = bb_activity_post_title_length();
-			$add_title  = function_exists( 'mb_substr' ) ? mb_substr( $add_title, 0, $max_length ) : substr( $add_title, 0, $max_length );
-		}
+		$add_title = bb_activity_strip_post_title( $add_title );
 	}
 
 	if ( ! empty( $r['id'] ) ) {
@@ -7825,4 +7821,40 @@ function bb_activity_post_title_length( $post_title = '' ) {
 	}
 
 	return true;
+}
+
+/**
+ * Strip the activity post title if it exceeds the maximum length.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $post_title The post title to strip.
+ *
+ * @return string The stripped activity post title.
+ */
+function bb_activity_strip_post_title( $post_title = '' ) {
+	if ( ! empty( $post_title ) ) {
+		$is_valid_title = bb_activity_post_title_length( $post_title );
+		if ( ! $is_valid_title ) {
+			$max_length = bb_activity_post_title_length();
+			$post_title = function_exists( 'mb_substr' ) ? mb_substr( $post_title, 0, $max_length ) : substr( $post_title, 0, $max_length );
+		}
+	}
+
+	return $post_title;
+}
+
+/**
+ * Get the activity title by ID.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $activity_id The activity ID.
+ *
+ * @return string The activity title.
+ */
+function bb_get_activity_title_by_id( $activity_id ) {
+	$activity = new BP_Activity_Activity( $activity_id );
+
+	return ! empty( $activity->id ) ? $activity->title : '';
 }

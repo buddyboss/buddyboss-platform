@@ -86,6 +86,14 @@ class BP_Activity_Activity {
 	var $action;
 
 	/**
+	 * The title of the activity item.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 * @var string
+	 */
+	var $title;
+
+	/**
 	 * The content of the activity item.
 	 *
 	 * @since BuddyPress 1.2.0

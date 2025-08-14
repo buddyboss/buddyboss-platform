@@ -4600,3 +4600,66 @@ function bb_get_activity_comment_unfavorite_link( $activity_comment_id = 0 ) {
 	 */
 	return apply_filters( 'bb_get_activity_comment_unfavorite_link', wp_nonce_url( home_url( bp_get_activity_root_slug() . '/unfavorite/' . $activity_comment_id . '/' ), 'unmark_favorite' ) );
 }
+
+/**
+ * Check if the Activity has a title.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return bool True if the activity has a title, false otherwise.
+ */
+function bb_activity_has_post_title() {
+	global $activities_template;
+
+	if ( ! empty( $activities_template->activity->title ) ) {
+		return true;
+	}
+
+	return false;
+}
+
+
+/**
+ * Output the activity post title.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_activity_post_title() {
+	echo esc_html( bb_activity_get_post_title() );
+}
+
+/**
+ * Return the activity post title.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @global object $activities_template {@link BP_Activity_Template}
+ *
+ * @return string The activity post title.
+ */
+function bb_activity_get_post_title() {
+	global $activities_template;
+
+	$activity_title = $activities_template->activity->title;
+
+	/**
+	 * Filters the activity post title.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $activity_title Activity title.
+	 */
+	$activity_title = apply_filters_ref_array(
+		'bb_activity_get_post_title',
+		array(
+			$activity_title,
+			&$activities_template->activity,
+		)
+	);
+
+	if ( ! empty( $activity_title ) ) {
+		$activity_title = bb_activity_strip_post_title( $activity_title );
+	}
+
+	return $activity_title;
+}
