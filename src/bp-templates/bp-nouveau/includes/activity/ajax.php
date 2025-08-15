@@ -740,27 +740,13 @@ function bp_nouveau_ajax_post_update() {
 	}
 
 	$post_title = ! empty( $_POST['post_title'] ) ? sanitize_text_field( wp_unslash( $_POST['post_title'] ) ) : '';
-	if ( bb_is_activity_post_title_enabled() && empty( $post_title ) ) {
+	$validation = bb_validate_activity_post_title( $post_title );
+	if ( ! $validation['valid'] ) {
 		wp_send_json_error(
 			array(
-				'message' => __( 'Please enter a title for your activity.', 'buddyboss' ),
+				'message' => $validation['message'],
 			)
 		);
-	}
-	if ( ! empty( $post_title ) ) {
-		$is_valid_title = bb_activity_post_title_length( $post_title ); // Returns false if the post title is invalid.
-		if ( ! $is_valid_title ) {
-			$max_length = bb_activity_post_title_length();
-			wp_send_json_error(
-				array(
-					'message' => sprintf(
-						/* translators: maximum length of the post title. */
-						__( 'Title must be less than %d characters.', 'buddyboss' ),
-						$max_length
-					),
-				)
-			);
-		}
 	}
 
 	if ( ! strlen( trim( html_entity_decode( wp_strip_all_tags( $_POST['content'] ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) ) ) ) {

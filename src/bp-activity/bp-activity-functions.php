@@ -7857,3 +7857,45 @@ function bb_get_activity_post_title_by_id( $activity_id ) {
 
 	return ! empty( $activity->id ) ? $activity->post_title : '';
 }
+
+/**
+ * Validation for activity post title.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $post_title The post title to validate.
+ *
+ * @return array Validation result with 'valid' and 'message' keys.
+ */
+function bb_validate_activity_post_title( $post_title ) {
+	$result = array(
+		'valid'   => true,
+		'message' => '',
+	);
+
+	// Check if title is required and empty.
+	if ( bb_is_activity_post_title_enabled() && empty( $post_title ) ) {
+		$result['valid']   = false;
+		$result['message'] = __( 'Please enter a title for your activity.', 'buddyboss' );
+
+		return $result;
+	}
+
+	// Check length if title is not empty.
+	if ( ! empty( $post_title ) ) {
+		$max_length     = bb_activity_post_title_length();
+		$current_length = function_exists( 'mb_strlen' ) ? mb_strlen( $post_title ) : strlen( $post_title );
+
+		if ( $current_length > $max_length ) {
+			$result['valid']   = false;
+			$result['message'] = sprintf(
+			/* translators: 1: maximum length of the post title, 2: current length of the post title. */
+				__( 'Title must be less than %1$d characters. You used %2$d characters.', 'buddyboss' ),
+				$max_length,
+				$current_length
+			);
+		}
+	}
+
+	return $result;
+}
