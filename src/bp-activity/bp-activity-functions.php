@@ -2103,7 +2103,7 @@ function bp_activity_add( $args = '' ) {
 		array(
 			'id'                => false,                              // Pass an existing activity ID to update an existing entry.
 			'action'            => '',                                 // The activity action - e.g. "Jon Doe posted an update"
-			'title'             => '',                                 // The activity title.
+			'post_title'        => '',                                 // The activity title.
 			'content'           => '',                                 // Optional: The content of the activity item e.g. "BuddyPress is awesome guys!"
 			'component'         => false,                              // The name/ID of the component e.g. groups, profile, mycomponent.
 			'type'              => false,                              // The activity type e.g. activity_update, profile_updated.
@@ -2136,7 +2136,7 @@ function bp_activity_add( $args = '' ) {
 	$activity->user_id           = $r['user_id'];
 	$activity->component         = $r['component'];
 	$activity->type              = $r['type'];
-	$activity->title             = $r['title'];
+	$activity->post_title        = $r['post_title'];
 	$activity->content           = $r['content'];
 	$activity->primary_link      = $r['primary_link'];
 	$activity->item_id           = $r['item_id'];
@@ -2228,7 +2228,7 @@ function bp_activity_post_update( $args = '' ) {
 		$args,
 		array(
 			'id'            => false,
-			'title'         => false,
+			'post_title'    => false,
 			'content'       => false,
 			'user_id'       => bp_loggedin_user_id(),
 			'component'     => buddypress()->activity->id,
@@ -2282,20 +2282,18 @@ function bp_activity_post_update( $args = '' ) {
 	 */
 	$add_primary_link = apply_filters( 'bp_activity_new_update_primary_link', '' );
 
-	$activity_title = $r['title'];
-
 	/**
-	 * Filters the new activity title for current activity item.
+	 * Filters the new activity post title for current activity item.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param string $activity_title Activity title posted by user.
+	 * @param string $activity_post_title Activity post title posted by user.
 	 */
-	$add_title = apply_filters( 'bb_activity_new_update_title', $activity_title );
+	$add_post_title = apply_filters( 'bb_activity_new_update_post_title', $r['post_title'] );
 
 	// Validate title length after filter to ensure it doesn't exceed maximum length.
-	if ( ! empty( $add_title ) ) {
-		$add_title = bb_activity_strip_post_title( $add_title );
+	if ( ! empty( $add_post_title ) ) {
+		$add_post_title = bb_activity_strip_post_title( $add_post_title );
 	}
 
 	if ( ! empty( $r['id'] ) ) {
@@ -2319,7 +2317,7 @@ function bp_activity_post_update( $args = '' ) {
 				array(
 					'id'                => $activity->id,
 					'action'            => $activity->action,
-					'title'             => $add_title,
+					'post_title'        => $add_post_title,
 					'content'           => $add_content,
 					'component'         => $activity->component,
 					'type'              => $activity->type,
@@ -2352,7 +2350,7 @@ function bp_activity_post_update( $args = '' ) {
 		$activity_id = bp_activity_add(
 			array(
 				'user_id'       => $r['user_id'],
-				'title'         => $add_title,
+				'post_title'    => $add_post_title,
 				'content'       => $add_content,
 				'primary_link'  => $add_primary_link,
 				'component'     => $r['component'],
@@ -5582,7 +5580,7 @@ function bp_activity_get_edit_data( $activity_id = 0 ) {
 			'group_id'              => $group_id,
 			'group_name'            => $group_name,
 			'folder_id'             => $folder_id,
-			'title'                 => $activity->title,
+			'post_title'            => $activity->post_title,
 			'content'               => stripslashes( $activity->content ),
 			'item_id'               => $activity->item_id,
 			'object'                => $activity->component,
@@ -7846,16 +7844,16 @@ function bb_activity_strip_post_title( $post_title = '' ) {
 }
 
 /**
- * Get the activity title by ID.
+ * Get the activity post title by ID.
  *
  * @since BuddyBoss [BBVERSION]
  *
  * @param int $activity_id The activity ID.
  *
- * @return string The activity title.
+ * @return string The activity post title.
  */
-function bb_get_activity_title_by_id( $activity_id ) {
+function bb_get_activity_post_title_by_id( $activity_id ) {
 	$activity = new BP_Activity_Activity( $activity_id );
 
-	return ! empty( $activity->id ) ? $activity->title : '';
+	return ! empty( $activity->id ) ? $activity->post_title : '';
 }

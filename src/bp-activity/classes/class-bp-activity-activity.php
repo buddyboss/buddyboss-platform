@@ -86,12 +86,12 @@ class BP_Activity_Activity {
 	var $action;
 
 	/**
-	 * The title of the activity item.
+	 * The post title of the activity item.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 * @var string
 	 */
-	var $title;
+	var $post_title;
 
 	/**
 	 * The content of the activity item.
@@ -246,6 +246,7 @@ class BP_Activity_Activity {
 		$this->component         = $row->component;
 		$this->type              = $row->type;
 		$this->action            = $row->action;
+		$this->post_title        = $row->post_title;
 		$this->content           = $row->content;
 		$this->date_recorded     = $row->date_recorded;
 		$this->date_updated      = $row->date_updated;
@@ -286,7 +287,7 @@ class BP_Activity_Activity {
 		$this->component         = apply_filters_ref_array( 'bp_activity_component_before_save', array( $this->component, &$this ) );
 		$this->type              = apply_filters_ref_array( 'bp_activity_type_before_save', array( $this->type, &$this ) );
 		$this->action            = ! empty( $this->action ) ? apply_filters_ref_array( 'bp_activity_action_before_save', array( $this->action, &$this ) ) : '';
-		$this->title             = ! empty( $this->title ) ? apply_filters_ref_array( 'bb_activity_title_before_save', array( $this->title, &$this ) ) : '';
+		$this->post_title        = ! empty( $this->post_title ) ? apply_filters_ref_array( 'bb_activity_post_title_before_save', array( $this->post_title, &$this ) ) : '';
 		$this->content           = ! empty( $this->content ) ? apply_filters_ref_array( 'bp_activity_content_before_save', array( $this->content, &$this ) ) : '';
 		$this->date_recorded     = apply_filters_ref_array( 'bp_activity_date_recorded_before_save', array( $this->date_recorded, &$this ) );
 		$this->date_updated      = apply_filters_ref_array( 'bp_activity_date_updated_before_save', array( $this->date_updated, &$this ) );
@@ -326,9 +327,9 @@ class BP_Activity_Activity {
 			}
 		}
 
-		// Validate the title.
-		if ( ! empty( $this->title ) ) {
-			$this->title = bb_activity_strip_post_title( $this->title );
+		// Validate the post title.
+		if ( ! empty( $this->post_title ) ) {
+			$this->post_title = bb_activity_strip_post_title( $this->post_title );
 		}
 
 		$prev_activity_status = '';
@@ -338,9 +339,9 @@ class BP_Activity_Activity {
 
 			$prev_activity_status = self::bb_get_activity_status( $this->id );
 
-			$q = $wpdb->prepare( "UPDATE {$bp->activity->table_name} SET user_id = %d, component = %s, type = %s, action = %s, title = %s, content = %s, primary_link = %s, date_recorded = %s, date_updated = %s, item_id = %d, secondary_item_id = %d, hide_sitewide = %d, is_spam = %d, privacy = %s, status = %s WHERE id = %d", $this->user_id, $this->component, $this->type, $this->action, $this->title, $this->content, $this->primary_link, $this->date_recorded, $this->date_updated, $this->item_id, $this->secondary_item_id, $this->hide_sitewide, $this->is_spam, $this->privacy, $this->status, $this->id );
+			$q = $wpdb->prepare( "UPDATE {$bp->activity->table_name} SET user_id = %d, component = %s, type = %s, action = %s, post_title = %s, content = %s, primary_link = %s, date_recorded = %s, date_updated = %s, item_id = %d, secondary_item_id = %d, hide_sitewide = %d, is_spam = %d, privacy = %s, status = %s WHERE id = %d", $this->user_id, $this->component, $this->type, $this->action, $this->post_title, $this->content, $this->primary_link, $this->date_recorded, $this->date_updated, $this->item_id, $this->secondary_item_id, $this->hide_sitewide, $this->is_spam, $this->privacy, $this->status, $this->id );
 		} else {
-			$q = $wpdb->prepare( "INSERT INTO {$bp->activity->table_name} ( user_id, component, type, action, title, content, primary_link, date_recorded, date_updated, item_id, secondary_item_id, hide_sitewide, is_spam, privacy, status ) VALUES ( %d, %s, %s, %s, %s, %s, %s, %s, %s, %d, %d, %d, %d, %s, %s )", $this->user_id, $this->component, $this->type, $this->action, $this->title, $this->content, $this->primary_link, $this->date_recorded, $this->date_updated, $this->item_id, $this->secondary_item_id, $this->hide_sitewide, $this->is_spam, $this->privacy, $this->status );
+			$q = $wpdb->prepare( "INSERT INTO {$bp->activity->table_name} ( user_id, component, type, action, post_title, content, primary_link, date_recorded, date_updated, item_id, secondary_item_id, hide_sitewide, is_spam, privacy, status ) VALUES ( %d, %s, %s, %s, %s, %s, %s, %s, %s, %d, %d, %d, %d, %s, %s )", $this->user_id, $this->component, $this->type, $this->action, $this->post_title, $this->content, $this->primary_link, $this->date_recorded, $this->date_updated, $this->item_id, $this->secondary_item_id, $this->hide_sitewide, $this->is_spam, $this->privacy, $this->status );
 		}
 
 		if ( false === $wpdb->query( $q ) ) {
@@ -530,7 +531,7 @@ class BP_Activity_Activity {
 		// Searching.
 		if ( $r['search_terms'] ) {
 			$search_terms_like              = '%' . bp_esc_like( $r['search_terms'] ) . '%';
-			$where_conditions['search_sql'] = $wpdb->prepare( 'ExtractValue( a.content, "//text()" ) LIKE %s OR a.title LIKE %s', $search_terms_like, $search_terms_like );
+			$where_conditions['search_sql'] = $wpdb->prepare( 'ExtractValue( a.content, "//text()" ) LIKE %s OR a.post_title LIKE %s', $search_terms_like, $search_terms_like );
 
 			// Allow search CPT's post title in the activity feed.
 			$join_sql                       .= "LEFT JOIN {$bp->activity->table_name_meta} m ON ( m.activity_id = a.id )";

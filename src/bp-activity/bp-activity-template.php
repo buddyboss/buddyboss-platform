@@ -4611,7 +4611,7 @@ function bb_get_activity_comment_unfavorite_link( $activity_comment_id = 0 ) {
 function bb_activity_has_post_title() {
 	global $activities_template;
 
-	if ( ! empty( $activities_template->activity->title ) ) {
+	if ( ! empty( $activities_template->activity->post_title ) ) {
 		return true;
 	}
 
@@ -4640,26 +4640,26 @@ function bb_activity_post_title() {
 function bb_activity_get_post_title() {
 	global $activities_template;
 
-	$activity_title = $activities_template->activity->title;
+	$activity_post_title = $activities_template->activity->post_title;
 
 	/**
 	 * Filters the activity post title.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param string $activity_title Activity title.
+	 * @param string $activity_post_title Activity post title.
 	 */
-	$activity_title = apply_filters_ref_array(
+	$activity_post_title = apply_filters_ref_array(
 		'bb_activity_get_post_title',
 		array(
-			$activity_title,
+			$activity_post_title,
 			&$activities_template->activity,
 		)
 	);
 
-	if ( ! empty( $activity_title ) ) {
-		$activity_title = bb_activity_strip_post_title( $activity_title );
+	if ( ! empty( $activity_post_title ) ) {
+		$activity_post_title = bb_activity_strip_post_title( $activity_post_title );
 	}
 
-	return $activity_title;
+	return $activity_post_title;
 }

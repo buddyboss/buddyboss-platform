@@ -739,7 +739,7 @@ function bp_nouveau_ajax_post_update() {
 		}
 	}
 
-	$post_title = ! empty( $_POST['title'] ) ? sanitize_text_field( wp_unslash( $_POST['title'] ) ) : '';
+	$post_title = ! empty( $_POST['post_title'] ) ? sanitize_text_field( wp_unslash( $_POST['post_title'] ) ) : '';
 	if ( bb_is_activity_post_title_enabled() && empty( $post_title ) ) {
 		wp_send_json_error(
 			array(
@@ -986,7 +986,7 @@ function bp_nouveau_ajax_post_update() {
 
 		$post_array = array(
 			'id'         => $activity_id,
-			'title'      => $post_title,
+			'post_title' => $post_title,
 			'content'    => $content,
 			'privacy'    => $privacy,
 			'error_type' => 'wp_error',
@@ -1023,10 +1023,10 @@ function bp_nouveau_ajax_post_update() {
 			}
 
 			$post_array = array(
-				'id'       => $activity_id,
-				'title'    => $post_title,
-				'content'  => $_POST['content'],
-				'group_id' => $item_id,
+				'id'         => $activity_id,
+				'post_title' => $post_title,
+				'content'    => $_POST['content'],
+				'group_id'   => $item_id,
 			);
 
 			if ( $is_scheduled ) {

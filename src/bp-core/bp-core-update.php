@@ -3998,15 +3998,15 @@ function bb_update_to_2_9_5() {
 	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 	$table_exists = $wpdb->get_var( $wpdb->prepare( "SHOW TABLES LIKE %s", $bp_prefix . 'bp_activity' ) ); // phpcs:ignore
 	if ( $table_exists ) {
-		// Add 'title' column in 'bp_activity' table.
-		$row = $wpdb->get_results( $wpdb->prepare( "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_schema= %s AND table_name = %s AND column_name = 'title'", DB_NAME, $bp_prefix . 'bp_activity' ) ); // phpcs:ignore
+		// Add 'post_title' column in 'bp_activity' table.
+		$row = $wpdb->get_results( $wpdb->prepare( "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_schema= %s AND table_name = %s AND column_name = 'post_title'", DB_NAME, $bp_prefix . 'bp_activity' ) ); // phpcs:ignore
 		if ( empty( $row ) ) {
-			$wpdb->query( "ALTER TABLE {$bp_prefix}bp_activity ADD `title` varchar( 80 ) DEFAULT NULL AFTER `action`" ); //phpcs:ignore
+			$wpdb->query( "ALTER TABLE {$bp_prefix}bp_activity ADD `post_title` varchar( 80 ) DEFAULT NULL AFTER `action`" ); //phpcs:ignore
 
-			// Add key for title if it doesn't exist.
+			// Add key for post_title if it doesn't exist.
 			$indexes = $wpdb->get_col( $wpdb->prepare( 'SELECT index_name FROM INFORMATION_SCHEMA.STATISTICS WHERE table_schema = DATABASE() AND table_name = %s', $bp_prefix . 'bp_activity' ) ); //phpcs:ignore
-			if ( ! in_array( 'title', $indexes, true ) ) {
-				$wpdb->query( "ALTER TABLE {$bp_prefix}bp_activity ADD KEY `title` (`title`)" ); //phpcs:ignore
+			if ( ! in_array( 'post_title', $indexes, true ) ) {
+				$wpdb->query( "ALTER TABLE {$bp_prefix}bp_activity ADD KEY `post_title` (`post_title`)" ); //phpcs:ignore
 			}
 		}
 	}

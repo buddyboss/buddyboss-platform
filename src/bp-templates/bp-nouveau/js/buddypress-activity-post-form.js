@@ -355,7 +355,7 @@ window.bp = window.bp || {};
 
 			self.postForm.$el.parent( '#bp-nouveau-activity-form' ).removeClass( 'bp-hide' );
 			self.postForm.$el.find( '#whats-new' ).html( activity_data.content );
-			self.postForm.$el.find( '#whats-new-title' ).val( activity_data.title );
+			self.postForm.$el.find( '#whats-new-title' ).val( activity_data.post_title );
 			if( activity_URL_preview != null ) {
 				self.postForm.$el.find( '#whats-new' ).data( 'activity-url-preview', activity_URL_preview );
 			}
@@ -1187,7 +1187,7 @@ window.bp = window.bp || {};
 
 			var activityPostTitle = self.postForm.$el.find( '#whats-new-title' ).val();
 			if ( activityPostTitle ) {
-				self.postForm.model.set( 'title', activityPostTitle, {silent: true} );
+				self.postForm.model.set( 'post_title', activityPostTitle, {silent: true} );
 			}
 
 			// Silently add meta.
@@ -1723,7 +1723,7 @@ window.bp = window.bp || {};
 				item_name: '',
 				object: '',
 				content: '',
-				title: '',
+				post_title: '',
 				posting: false,
 				link_success: false,
 				link_error: false,
@@ -3363,7 +3363,7 @@ window.bp = window.bp || {};
 			initialize: function () {
 				this.on( 'ready', this.adjustContent, this );
 				this.on( 'ready', this.activateTinyMce, this );
-				this.options.activity.on( 'change:content change:title', this.resetContent, this );
+				this.options.activity.on( 'change:content change:post_title', this.resetContent, this );
 				this.linkTimeout = null;
 			},
 
@@ -3392,7 +3392,7 @@ window.bp = window.bp || {};
 				}
 
 				this.$el.html( activity.get( 'content' ) );
-				this.$el.closest( '#whats-new-content' ).find( '#whats-new-title' ).val( activity.get( 'title' ) );
+				this.$el.closest( '#whats-new-content' ).find( '#whats-new-title' ).val( activity.get( 'post_title' ) );
 			},
 
 			handlePaste: function () {
@@ -6047,7 +6047,7 @@ window.bp = window.bp || {};
 					if ( activityPostTitle.length > maxPostTitleLength ) {
 						activityPostTitle = activityPostTitle.slice( 0, maxPostTitleLength );
 					}
-					self.model.set( 'title', activityPostTitle, { silent: true } );
+					self.model.set( 'post_title', activityPostTitle, { silent: true } );
 				}
 
 				// Silently add meta.
