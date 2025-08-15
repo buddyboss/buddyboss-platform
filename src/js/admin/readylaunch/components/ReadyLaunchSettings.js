@@ -1238,15 +1238,32 @@ export const ReadyLaunchSettings = () => {
 					<p>
 						{__( 'This is not a replacement for BuddyBoss Theme, but an alternative solution if you’re looking for an out-the-box community platform with a focus on core functionality without third party customisation. See the video for full details and share your experience on our new roadmap.', 'buddyboss' )}
 					</p>
-					<Button
-						className="bb-rl-feedback-btn"
-						href="https://roadmap.buddyboss.com/p/new-ready-launch-buddyboss-platform-templates-Y8mV6D"
-						target="_blank"
-						rel="noopener noreferrer"
-						icon={<i className="bb-icons-rl-rocket-launch" />}
-					>
-						{__( 'Leave Feedback', 'buddyboss' )} <i className="bb-icons-rl-arrow-right" />
-					</Button>
+					<div className="bb-rl-button-group">
+						<Button
+							className="bb-rl-feedback-btn"
+							href="https://roadmap.buddyboss.com/p/new-ready-launch-buddyboss-platform-templates-Y8mV6D"
+							target="_blank"
+							rel="noopener noreferrer"
+							icon={<i className="bb-icons-rl-rocket-launch" />}
+						>
+							{__( 'Leave Feedback', 'buddyboss' )} <i className="bb-icons-rl-arrow-right" />
+						</Button>
+						{/* Only show Setup Wizard button if onboarding not completed */}
+						{(!window.BP_ADMIN || !window.BP_ADMIN.rl_onboarding_completed) && (
+							<Button
+								className="bb-rl-setup-wizard-btn"
+								onClick={() => {
+									// Open the onboarding wizard.
+									if (window.location) {
+										window.location.href = window.location.origin + window.location.pathname + '?page=bp-components&bb_wizard_activation=rl_onboarding';
+									}
+								}}
+								icon=""
+							>
+								{__( 'Setup Wizard', 'buddyboss' )}
+							</Button>
+						)}
+					</div>
 				</div>
 				<div className="bb-rl-welcome-video">
 					<iframe width="560" height="315" src="https://www.youtube.com/embed/3-JhzDr1gLc" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>

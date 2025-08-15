@@ -452,6 +452,13 @@ function bp_do_activation_redirect() {
 		}
 		update_user_option( bp_loggedin_user_id(), 'metaboxhidden_nav-menus', $get_existing_option ); // update the user metaboxes.
 	}
+
+	/**
+	 * Fires before the BuddyBoss activation redirect.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	do_action( 'bb_do_activation_redirect', $query_args );
 }
 
 /**
