@@ -7873,6 +7873,8 @@ function bb_validate_activity_post_title( $post_title ) {
 		'message' => '',
 	);
 
+	$post_title = sanitize_text_field( wp_unslash( $post_title ) );
+
 	// Check if title is required and empty.
 	if ( bb_is_activity_post_title_enabled() && empty( $post_title ) ) {
 		$result['valid']   = false;
