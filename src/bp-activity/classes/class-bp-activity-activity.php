@@ -503,6 +503,12 @@ class BP_Activity_Activity {
 
 		if ( ! empty( $r['filter']['unanswered_only'] ) && ! ( false === $r['display_comments'] || 'threaded' === $r['display_comments'] ) ) {
 			$r['filter']['unanswered_only'] = false;
+		} elseif ( ! empty( $r['filter']['unanswered_only'] ) ) {
+			// Ensure unanswered_only is an array before adding spam property.
+			if ( ! is_array( $r['filter']['unanswered_only'] ) ) {
+				$r['filter']['unanswered_only'] = array();
+			}
+			$r['filter']['unanswered_only']['spam'] = $r['spam'];
 		}
 
 		// Regular filtering.
@@ -2193,7 +2199,34 @@ class BP_Activity_Activity {
 
 		// Show unanswered activities only.
 		if ( ! empty( $filter_array['unanswered_only'] ) ) {
-			$filter_sql[] = $wpdb->prepare( "NOT EXISTS ( SELECT 1 FROM {$bp->activity->table_name} uac WHERE uac.secondary_item_id = a.id AND uac.type = %s )", 'activity_comment' ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			// Build the base subquery for unanswered activities.
+			$select_sql = 'SELECT 1';
+			$from_sql   = "FROM {$bp->activity->table_name} uac";
+			
+			// Where conditions array for the subquery.
+			$where_conditions        = array();
+			$where_conditions['uac'] = "uac.secondary_item_id = a.id AND uac.type = 'activity_comment'";
+			
+			// Add spam filter conditions to the subquery
+			if ( ! empty( $filter_array['unanswered_only']['spam'] ) ) {
+				if ( 'ham_only' == $filter_array['unanswered_only']['spam'] ) {
+					$where_conditions['uac.is_spam'] = 'uac.is_spam = 0';
+				} elseif ( 'spam_only' == $filter_array['unanswered_only']['spam'] ) {
+					$where_conditions['uac.is_spam'] = 'uac.is_spam = 1';
+				} else {
+					$where_conditions['uac.is_spam'] = 'uac.is_spam = ""';
+				}
+			}
+			
+			// Apply filters to allow customization of the where conditions.
+			$where_conditions = apply_filters( 'bb_activity_unanswered_only_where_conditions', $where_conditions, '' );
+			$where_sql        = 'WHERE ' . join( ' AND ', $where_conditions );
+			
+			// Apply join filter similar to comment count function for conditions like moderation.
+			$join_sql = apply_filters( 'bb_activity_unanswered_only_get_join_sql', '', array( 'item_id_field' => 'uac.id' ) );
+			
+			$unanswered_subquery = "{$select_sql} {$from_sql} {$join_sql} {$where_sql}";
+			$filter_sql[]        = "NOT EXISTS ( {$unanswered_subquery} )";
 		}
 
 		if ( empty( $filter_sql ) ) {
