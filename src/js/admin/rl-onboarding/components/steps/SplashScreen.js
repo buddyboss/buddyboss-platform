@@ -71,7 +71,7 @@ export const SplashScreen = ({ stepData, onNext, onSkip }) => {
 
 						{ createInterpolateElement(
 							__('Deep <link>integration</link> support', 'buddyboss'),
-							{ link: <a href={window?.bbRlOnboarding?.dashboardUrl + 'admin.php?page=bp-integrations'} /> }
+							{ link: <a href='https://www.buddyboss.com/integrations/' target={'_blank'} /> }
 						) }
                             </li>
                         </ul>

@@ -517,7 +517,7 @@ body.bb-rl-fullscreen-mode {
         position: relative;
         pointer-events: none;
         opacity: 0.7;
-        
+
         .bb-rl-spinner {
             content: '';
             display: inline-block;
@@ -531,18 +531,18 @@ body.bb-rl-fullscreen-mode {
             margin: 0 8px;
             box-sizing: border-box;
         }
-        
+
         // For the previous button (secondary style)
         &.bb-rl-previous-button .bb-rl-spinner {
             border: 2px solid rgba(0, 0, 0, 0.2);
             border-top: 2px solid #666666;
         }
-        
+
         // Hide the normal icon when loading
         [class*="bb-icons"] {
             display: none;
         }
-        
+
         .screen-reader-text {
             position: absolute;
             left: -9999px;
@@ -804,7 +804,7 @@ body.bb-rl-fullscreen-mode {
 // Color Scheme Options
 // ==========================================================================
 
-// Color Picker 
+// Color Picker
 .components-popover {
     z-index: 999999;
 }
@@ -953,7 +953,7 @@ body.bb-rl-fullscreen-mode {
         }
 
         &.bb-rl-toggle-checked {
-            
+
             border-color: $border-brand-primary-color;
         }
 
@@ -1017,7 +1017,7 @@ body.bb-rl-fullscreen-mode {
                 }
             }
         }
-        
+
         .bb-rl-coming-soon {
             display: inline-block;
             color: $text-color;
@@ -1044,7 +1044,7 @@ body.bb-rl-fullscreen-mode {
         color: $text-color;
         order: 1;
     }
-    
+
     .components-form-toggle .components-form-toggle__track {
         display: inline-block;
         background-color: #b2b2b2;
@@ -1054,7 +1054,7 @@ body.bb-rl-fullscreen-mode {
         border-radius: $border-radius-full;
         transition: background-color 0.2s ease;
     }
-    
+
     .components-form-toggle .components-form-toggle__thumb {
         display: inline-block;
         background-color: #fff;
@@ -1067,12 +1067,12 @@ body.bb-rl-fullscreen-mode {
         border-radius: $border-radius-full;
         transition: all 0.2s ease;
     }
-    
+
     .components-form-toggle.is-checked .components-form-toggle__track {
         background-color: #fff;
         border: 1px solid $primary-color;
     }
-    
+
     .components-form-toggle.is-checked .components-form-toggle__thumb {
         background-color: $primary-color;
         transform: translateX(16px);
@@ -1562,6 +1562,7 @@ body.bb-rl-fullscreen-mode {
         display: flex;
         align-items: center;
         margin: 0;
+		text-align: left;
 
         > a {
             margin: 0 4px;
@@ -1946,7 +1947,7 @@ body.bb-rl-fullscreen-mode {
                 color: $text-color;
                 margin: 0 0 4px;
             }
-    
+
             p {
                 color: $text-tertiary-color;
                 font-size: 14px;
@@ -2067,11 +2068,11 @@ body.bb-rl-fullscreen-mode {
         border: 1px solid $border-secondary-color;
         border-radius: $border-radius;
         transition: $transition;
-        
+
         &:has(.components-form-toggle.is-checked) {
             border-color: $border-brand-primary-color;
         }
-    
+
         &:hover {
             box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
         }
@@ -2309,7 +2310,7 @@ body.bb-rl-fullscreen-mode {
     &:not(:has(.bb-rl-preview-slider)) {
         box-shadow: 0px -8.84px 47.13px 0px rgba(0, 0, 0, 0.16);
     }
-    
+
     &:has(.bb-rl-preview-split-view) {
         width: 1245px;
     }
@@ -3391,7 +3392,7 @@ body.bb-rl-fullscreen-mode {
     border: 1px solid var(--bb-rl-preview-border-secondary-color);
     border-radius: 12px;
     margin-bottom: 24px;
-    
+
     ul {
         display: flex;
         list-style: none;
@@ -3678,10 +3679,10 @@ body.bb-rl-fullscreen-mode {
 .bb-rl-preview-theme-dark {
     .bb-rl-preview-slider-dots {
         background: rgba(0, 0, 0, 0.8);
-        
+
         .bb-rl-preview-slider-dot {
             background-color: rgba(255, 255, 255, 0.3);
-            
+
             &:hover {
                 background-color: rgba(255, 255, 255, 0.5);
             }
