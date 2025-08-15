@@ -532,7 +532,7 @@ function bp_activity_admin_load() {
 
 		// Activity title.
 		if ( isset( $_POST['bb-activities-title'] ) ) {
-			$activity->title = sanitize_text_field( wp_unslash( $_POST['bb-activities-title'] ) );
+			$activity->post_title = sanitize_text_field( wp_unslash( $_POST['bb-activities-title'] ) );
 		}
 
 		// Activity content.
@@ -764,7 +764,7 @@ function bp_activity_admin_edit() {
 										<?php
 										$is_activity_post_title_required = bb_is_activity_post_title_enabled();
 										?>
-										<input type="text" name="bb-activities-title" id="bb-activities-title" value="<?php echo esc_attr( $activity->title ); ?>" placeholder="<?php echo $is_activity_post_title_required ? esc_html_e( 'Title', 'buddyboss' ) : esc_html_e( 'Title (optional)', 'buddyboss' ); ?>" <?php echo $is_activity_post_title_required ? 'required' : ''; ?> />
+										<input type="text" name="bb-activities-title" id="bb-activities-title" value="<?php echo esc_attr( $activity->post_title ); ?>" placeholder="<?php echo $is_activity_post_title_required ? esc_html_e( 'Title', 'buddyboss' ) : esc_html_e( 'Title (optional)', 'buddyboss' ); ?>" <?php echo $is_activity_post_title_required ? 'required' : ''; ?> />
 									</div>
 								</div>
 
