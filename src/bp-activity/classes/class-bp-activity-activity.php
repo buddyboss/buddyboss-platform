@@ -246,7 +246,7 @@ class BP_Activity_Activity {
 		$this->component         = $row->component;
 		$this->type              = $row->type;
 		$this->action            = $row->action;
-		$this->post_title        = $row->post_title;
+		$this->post_title        = ! empty( $row->post_title ) ? $row->post_title : '';
 		$this->content           = $row->content;
 		$this->date_recorded     = $row->date_recorded;
 		$this->date_updated      = $row->date_updated;
