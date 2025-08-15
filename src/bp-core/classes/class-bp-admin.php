@@ -539,11 +539,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			$hooks[] = add_submenu_page(
 				$this->settings_page,
 				__( 'ReadyLaunch', 'buddyboss' ),
-				sprintf(
-					/* translators: New Tag */
-					__( 'ReadyLaunch %s', 'buddyboss' ),
-					'<span class="bb-rl-nav-tag color-green">' . esc_html__( 'BETA', 'buddyboss' ) . '</span>'
-				),
+				__( 'ReadyLaunch', 'buddyboss' ),
 				$this->capability,
 				'bb-readylaunch',
 				'bb_readylaunch_settings_page_html',
