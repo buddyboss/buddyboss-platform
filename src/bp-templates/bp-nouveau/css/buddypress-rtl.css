@@ -2664,6 +2664,19 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
   height: auto;
 }
 
+.activity-update-form .medium-editor-toolbar .medium-editor-action-more > ul .medium-editor-action-h3,
+.activity-update-form .medium-editor-toolbar .medium-editor-action-more > ul .medium-editor-action-h4 {
+  position: relative;
+}
+
+.activity-update-form .medium-editor-toolbar .medium-editor-action-more > ul .medium-editor-action-h3:after,
+.activity-update-form .medium-editor-toolbar .medium-editor-action-more > ul .medium-editor-action-h4:after {
+  position: absolute;
+  left: 3px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
 .activity-update-form .medium-editor-toolbar .medium-editor-action-more.active > ul {
   display: flex;
 }
