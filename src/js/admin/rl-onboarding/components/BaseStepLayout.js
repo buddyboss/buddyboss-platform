@@ -1,0 +1,151 @@
+import { useState } from '@wordpress/element';
+import { __ } from '@wordpress/i18n';
+import { Button } from '@wordpress/components';
+import { PreviewPages } from './previewPages';
+import { PreviewSlider } from './PreviewSlider';
+
+export const BaseStepLayout = ({
+    stepData,
+    children,
+    onNext,
+    onPrevious,
+    onSkip,
+    isFirstStep = false,
+    isLastStep = false,
+    currentStep = 0,
+    totalSteps = 0,
+    formData = {},
+    allStepData = {},
+    page = 'activity'
+}) => {
+    const { title, description, image } = stepData;
+    const [loadingAction, setLoadingAction] = useState(null); // 'next', 'previous', or null
+
+    // Get the image URL from the assets
+    const imageUrl = window.bbRlOnboarding?.assets?.assetsUrl
+        ? `${window.bbRlOnboarding.assets.assetsUrl}${image}`
+        : '';
+
+    const stepsProgress = totalSteps > 0 ? Array.from({ length: totalSteps - 2 }, (_, index) => (
+        <div className={`bb-rl-progress-step ${index + 1 < currentStep ? 'bb-rl-step-active' : ''}`} key={index}></div>
+    )) : null;
+
+    // Merge all step data with current form data for preview
+    // Current step's formData takes precedence over saved allStepData
+    const mergedFormData = {
+        ...Object.values(allStepData).reduce((acc, stepData) => ({ ...acc, ...stepData }), {}),
+        ...formData
+    };
+    
+    // Handle next button click with loading state
+    const handleNext = async () => {
+        setLoadingAction('next');
+        try {
+            if (onNext) {
+                await onNext();
+            }
+        } finally {
+            setLoadingAction(null);
+        }
+    };
+    
+    // Handle previous button click with loading state
+    const handlePrevious = async () => {
+        setLoadingAction('previous');
+        try {
+            if (onPrevious) {
+                await onPrevious();
+            }
+        } finally {
+            setLoadingAction(null);
+        }
+    };
+
+    return (
+        <div className="bb-rl-step-layout">
+
+            {/* Main content area with left and right panels */}
+            <div className="bb-rl-step-content">
+                {/* Left Panel - Options and Controls */}
+                <div className="bb-rl-left-panel">
+                    <div className="bb-rl-step-header">
+                        <a href={window.bbRlOnboarding?.dashboardUrl} className="bb-rl-step-back-button">
+                            <span className="bb-icons-rl-caret-left"></span>
+                            {__('WP Admin', 'buddyboss')}
+                        </a>
+                        <div className="bb-rl-logo">
+                            <img src={window.bbRlOnboarding?.assets?.logo || ''} alt="BuddyBoss" />
+                        </div>
+                    </div>
+
+                    <div className="bb-rl-left-panel-content">
+
+                        <div className="bb-rl-step-info">
+                            <h1 className="bb-rl-step-title">{title}</h1>
+                            <p className="bb-rl-step-description">{description}</p>
+                        </div>
+
+                        <div className='bb-rl-step-progress'>
+                            { stepsProgress }
+                        </div>
+
+                        <div className="bb-rl-step-options">
+                            {children}
+                        </div>
+
+                        {/* Navigation buttons */}
+                        <div className="bb-rl-step-navigation">
+                            {!isFirstStep && (
+                                <Button
+                                    className={`bb-rl-nav-button bb-rl-previous-button ${loadingAction === 'previous' ? 'bb-rl-button-loading' : ''}`}
+                                    onClick={handlePrevious}
+                                    disabled={loadingAction !== null}
+                                >
+                                    {loadingAction === 'previous' ? (
+                                        <>
+                                            <span className="bb-rl-spinner" aria-hidden="true"></span>
+                                            <span className="screen-reader-text">{__('Loading...', 'buddyboss')}</span>
+                                        </>
+                                    ) : (
+                                        <span className="bb-icons-rl-arrow-left"></span>
+                                    )}
+                                    {__('Back', 'buddyboss')}
+                                </Button>
+                            )}
+
+                            <Button
+                                className={`bb-rl-nav-button bb-rl-next-button ${loadingAction === 'next' ? 'bb-rl-button-loading' : ''}`}
+                                onClick={handleNext}
+                                variant="primary"
+                                disabled={loadingAction !== null}
+                            >
+                                {isLastStep ? __('Finish', 'buddyboss') : __('Next', 'buddyboss')}
+                                {loadingAction === 'next' ? (
+                                    <>
+                                        <span className="bb-rl-spinner" aria-hidden="true"></span>
+                                        <span className="screen-reader-text">{__('Loading...', 'buddyboss')}</span>
+                                    </>
+                                ) : (
+                                    !isLastStep && <span className="bb-icons-rl-arrow-right"></span>
+                                )}
+                            </Button>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Right Panel - Preview/Visual */}
+                <div className="bb-rl-right-panel">
+                    <div className="bb-rl-preview-pages">
+                        {
+                            page === 'all' ? (
+                                <PreviewSlider formData={mergedFormData} />
+                            ) : (
+                                <PreviewPages page={page} formData={mergedFormData} />
+                            )
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
