@@ -504,13 +504,6 @@ class BP_Activity_Activity {
 		if ( ! empty( $r['filter']['unanswered_only'] ) && ! ( false === $r['display_comments'] || 'threaded' === $r['display_comments'] ) ) {
 			$r['filter']['unanswered_only'] = false;
 		}
-		// elseif ( ! empty( $r['filter']['unanswered_only'] ) ) {
-		// 	// Ensure unanswered_only is an array before adding spam property.
-		// 	if ( ! is_array( $r['filter']['unanswered_only'] ) ) {
-		// 		$r['filter']['unanswered_only'] = array();
-		// 	}
-		// 	$r['filter']['unanswered_only']['spam'] = $r['spam'];
-		// }
 
 		// Regular filtering.
 		if ( $r['filter'] && $filter_sql = self::get_filter_sql( $r['filter'] ) ) {
@@ -823,7 +816,7 @@ class BP_Activity_Activity {
 			 * @param array  $r                Array of arguments passed into method.
 			 */
 			$activity_ids_sql = apply_filters( 'bp_activity_paged_activities_sql', $activity_ids_sql, $r );
-			error_log( $activity_ids_sql );
+
 			/*
 			 * Queries that include 'last_activity' are cached separately,
 			 * since they are generally much less long-lived.
