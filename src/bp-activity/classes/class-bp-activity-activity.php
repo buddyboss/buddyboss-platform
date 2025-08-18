@@ -2133,9 +2133,6 @@ class BP_Activity_Activity {
 	 * @return string The filter clause, for use in a SQL query.
 	 */
 	public static function get_filter_sql( $filter_array ) {
-		global $wpdb;
-		$bp = buddypress();
-
 		$filter_sql = array();
 
 		if ( ! empty( $filter_array['user_id'] ) ) {
@@ -2451,4 +2448,3 @@ class BP_Activity_Activity {
 		return $status;
 	}
 }
-
