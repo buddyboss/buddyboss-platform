@@ -922,17 +922,25 @@ function bp_document_download_url_file() {
 		// Critical security fix: Validate attachment parameter.
 		$attachment_id    = absint( $_GET['attachment'] );
 		$document_file_id = absint( $_GET['document_file'] );
-		$document_type    = sanitize_text_field( $_GET['document_type'] );
+		$document_type    = sanitize_text_field( wp_unslash( $_GET['document_type'] ) );
 
 		// Reject invalid IDs.
 		if ( $attachment_id <= 0 || $document_file_id <= 0 ) {
-			wp_die( 'Invalid document parameters', 'Security Error', array( 'response' => 400 ) );
+			wp_die(
+				esc_html__( 'Invalid document parameters', 'buddyboss' ),
+				esc_html__( 'Security Error', 'buddyboss' ),
+				array( 'response' => 400 )
+			);
 			return;
 		}
 
 		// Validate document type.
 		if ( ! in_array( $document_type, array( 'document', 'folder' ), true ) ) {
-			wp_die( 'Invalid document type', 'Security Error', array( 'response' => 400 ) );
+			wp_die(
+				esc_html__( 'Invalid document type', 'buddyboss' ),
+				esc_html__( 'Security Error', 'buddyboss' ),
+				array( 'response' => 400 )
+			);
 			return;
 		}
 
@@ -953,7 +961,7 @@ function bp_document_download_url_file() {
 			$can_download_btn = ( true === (bool) $folder_privacy['can_download'] ) ? true : false;
 
 			// Additional check: Prevent downloading root folder.
-			if ( $attachment_id === 0 ) {
+			if ( 0 === $attachment_id ) {
 				$can_download_btn = false;
 			}
 		}
