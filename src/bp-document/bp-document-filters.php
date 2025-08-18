@@ -924,8 +924,6 @@ function bp_document_download_url_file() {
 		$document_file_id = absint( $_GET['document_file'] );
 		$document_type    = sanitize_text_field( $_GET['document_type'] );
 
-		error_log( print_r( $attachment_id, 1 ) );
-
 		// Reject invalid IDs.
 		if ( $attachment_id <= 0 || $document_file_id <= 0 ) {
 			wp_die( 'Invalid document parameters', 'Security Error', array( 'response' => 400 ) );
