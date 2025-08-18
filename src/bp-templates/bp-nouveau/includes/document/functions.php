@@ -825,13 +825,21 @@ function bp_document_download_file( $attachment_id, $type = 'document' ) {
 	// Security: Validate input parameters.
 	$attachment_id = absint( $attachment_id );
 	if ( $attachment_id <= 0 ) {
-		wp_die( 'Invalid attachment ID', 'Security Error', array( 'response' => 400 ) );
+		wp_die(
+			esc_html__( 'Invalid attachment ID', 'buddyboss' ),
+			esc_html__( 'Security Error', 'buddyboss' ),
+			array( 'response' => 400 )
+		);
 		return;
 	}
 
 	$type = sanitize_text_field( $type );
 	if ( ! in_array( $type, array( 'document', 'folder' ), true ) ) {
-		wp_die( 'Invalid document type', 'Security Error', array( 'response' => 400 ) );
+		wp_die(
+			esc_html__( 'Invalid document type', 'buddyboss' ),
+			esc_html__( 'Security Error', 'buddyboss' ),
+			array( 'response' => 400 )
+		);
 		return;
 	}
 
@@ -891,13 +899,21 @@ function bp_document_download_file( $attachment_id, $type = 'document' ) {
 
 		// Security: Validate folder exists and is valid.
 		if ( ! $folder || ! isset( $folder->id ) || $folder->id <= 0 ) {
-			wp_die( 'Invalid folder', 'Security Error', array( 'response' => 404 ) );
+			wp_die(
+				esc_html__( 'Invalid folder', 'buddyboss' ),
+				esc_html__( 'Security Error', 'buddyboss' ),
+				array( 'response' => 404 )
+			);
 			return;
 		}
 
 		// Security: Prevent downloading all folders (ID 0).
-		if ( $folder->id === 0 || $attachment_id === 0 ) {
-			wp_die( 'Access denied', 'Security Error', array( 'response' => 403 ) );
+		if ( 0 === $folder->id || 0 === $attachment_id ) {
+			wp_die(
+				esc_html__( 'Access denied', 'buddyboss' ),
+				esc_html__( 'Security Error', 'buddyboss' ),
+				array( 'response' => 403 )
+			);
 			return;
 		}
 
@@ -919,7 +935,7 @@ function bp_document_download_file( $attachment_id, $type = 'document' ) {
 
 			// Create given main parent folder with sanitized name.
 			$safe_folder_title = sanitize_file_name( $folder->title );
-			$parent_folder = $upload_dir . '/' . $safe_folder_title;
+			$parent_folder     = $upload_dir . '/' . $safe_folder_title;
 			wp_mkdir_p( $parent_folder );
 
 			// Fetch all the attachments of the parent folder.
