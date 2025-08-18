@@ -3915,6 +3915,13 @@ input.search-query-input {
   display: none;
 }
 
+.activity-list .activity-item .activity-title h2 {
+  color: #333;
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 10px 0;
+}
+
 .activity-list .activity-item .activity-content .activity-header,
 .activity-list .activity-item .activity-content .comment-header {
   color: #767676;
