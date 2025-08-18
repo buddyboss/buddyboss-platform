@@ -202,7 +202,7 @@ add_action( 'bp_activity_after_delete', 'bb_clear_activity_all_comment_parent_ca
 add_action( 'bp_init', 'bb_load_activity_topics_manager' );
 
 add_action( 'bp_activity_after_save', 'bb_activity_save_topic_data', 2, 1 );
-add_filter( 'bp_activity_get_join_sql', 'bb_activity_unanswered_only_join_sql_filter', 11, 5 );
+add_filter( 'bp_activity_get_join_sql', 'bb_activity_unanswered_only_join_sql_filter', 11, 2 );
 
 /** Functions *****************************************************************/
 
@@ -4035,13 +4035,10 @@ function bb_activity_save_topic_data( $activity ) {
  *
  * @param string $join_sql   The JOIN SQL to be filtered.
  * @param array  $r          The arguments passed to BP_Activity_Activity::get().
- * @param string $select_sql The SELECT SQL.
- * @param string $from_sql   The FROM SQL.
- * @param string $where_sql  The WHERE SQL.
  *
  * @return string Modified JOIN SQL.
  */
-function bb_activity_unanswered_only_join_sql_filter( $join_sql, $r, $select_sql, $from_sql, $where_sql ) {
+function bb_activity_unanswered_only_join_sql_filter( $join_sql, $r ) {
 	// Only add the join when unanswered_only is enabled.
 	if ( ! empty( $r['filter']['unanswered_only'] ) ) {
 		global $bp;
