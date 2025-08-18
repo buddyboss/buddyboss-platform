@@ -455,21 +455,21 @@ function bp_activity_filter_kses( $content ) {
 /**
  * Allow h3 and h4 tags in BuddyBoss activity content.
  *
- * @since BuddyBoss 2.6.90
+ * @since BuddyBoss [BBVERSION]
  *
  * @param array $allowed_tags Array of allowed HTML tags and attributes.
  * @return array Modified array with h3 and h4 tags added.
  */
-function bb_activity_allow_h3_h4_tags( $allowed_tags ) {
-	// Add h3 tag without any attributes
+function bb_activity_extend_allowed_tags( $allowed_tags ) {
+	// Add h3 tag without any attributes.
 	$allowed_tags['h3'] = array();
 
-	// Add h4 tag without any attributes
+	// Add h4 tag without any attributes.
 	$allowed_tags['h4'] = array();
 
 	return $allowed_tags;
 }
-add_filter( 'bp_activity_allowed_tags', 'bb_activity_allow_h3_h4_tags' );
+add_filter( 'bp_activity_allowed_tags', 'bb_activity_extend_allowed_tags' );
 
 /**
  * Find and link @-mentioned users in the contents of a given item.
