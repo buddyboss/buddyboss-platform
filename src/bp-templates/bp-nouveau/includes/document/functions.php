@@ -907,7 +907,7 @@ function bp_document_download_file( $attachment_id, $type = 'document' ) {
 
 		// Create temp folder with random name for security.
 		$random_suffix = wp_generate_password( 12, false );
-		$upload_dir = $upload_dir . '/' . $folder->user_id . '-download-folder-' . time() . '-' . $random_suffix;
+		$upload_dir    = $upload_dir . '/' . $folder->user_id . '-download-folder-' . time() . '-' . $random_suffix;
 
 		// If folder not exists then create.
 		if ( ! is_dir( $upload_dir ) ) {

@@ -916,28 +916,30 @@ function bp_document_delete_attachment_document( $attachment_id ) {
  * @since BuddyBoss 1.4.0
  */
 function bp_document_download_url_file() {
-	// Security: Validate all input parameters first
+	// Security: Validate all input parameters first.
 	if ( isset( $_GET['attachment'] ) && isset( $_GET['download_document_file'] ) && isset( $_GET['document_file'] ) && isset( $_GET['document_type'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 
-		// Critical security fix: Validate attachment parameter
-		$attachment_id = absint( $_GET['attachment'] );
+		// Critical security fix: Validate attachment parameter.
+		$attachment_id    = absint( $_GET['attachment'] );
 		$document_file_id = absint( $_GET['document_file'] );
-		$document_type = sanitize_text_field( $_GET['document_type'] );
+		$document_type    = sanitize_text_field( $_GET['document_type'] );
 
-		// Reject invalid IDs
+		error_log( print_r( $attachment_id, 1 ) );
+
+		// Reject invalid IDs.
 		if ( $attachment_id <= 0 || $document_file_id <= 0 ) {
 			wp_die( 'Invalid document parameters', 'Security Error', array( 'response' => 400 ) );
 			return;
 		}
 
-		// Validate document type
+		// Validate document type.
 		if ( ! in_array( $document_type, array( 'document', 'folder' ), true ) ) {
 			wp_die( 'Invalid document type', 'Security Error', array( 'response' => 400 ) );
 			return;
 		}
 
-		// Update GET variables with sanitized values
-		$_GET['attachment'] = $attachment_id;
+		// Update GET variables with sanitized values.
+		$_GET['attachment']    = $attachment_id;
 		$_GET['document_file'] = $document_file_id;
 		$_GET['document_type'] = $document_type;
 
@@ -948,11 +950,11 @@ function bp_document_download_url_file() {
 			$document_privacy = bb_media_user_can_access( $document_file_id, 'document', $attachment_id );
 			$can_download_btn = ( true === (bool) $document_privacy['can_download'] ) ? true : false;
 		} else {
-			// Security fix: Use attachment_id for folder permission check, not document_file_id
+			// Security fix: Use attachment_id for folder permission check, not document_file_id.
 			$folder_privacy   = bb_media_user_can_access( $attachment_id, 'folder' );
 			$can_download_btn = ( true === (bool) $folder_privacy['can_download'] ) ? true : false;
 
-			// Additional check: Prevent downloading root folder
+			// Additional check: Prevent downloading root folder.
 			if ( $attachment_id === 0 ) {
 				$can_download_btn = false;
 			}
@@ -962,7 +964,7 @@ function bp_document_download_url_file() {
 		add_action( 'pre_get_posts', 'bbp_pre_get_posts_normalize_forum_visibility', 4 );
 
 		if ( $can_download_btn ) {
-			// Pass sanitized values
+			// Pass sanitized values.
 			bp_document_download_file( $attachment_id, $document_type );
 		} else {
 			wp_safe_redirect( site_url() );
@@ -973,7 +975,7 @@ function bp_document_download_url_file() {
 
 /** Sync the description of the document with the media attachment.
  *
- * @param $attachment_id
+ * @param int $attachment_id ID of the attachment being synced.
  *
  * @since BuddyBoss 1.4.0
  */
@@ -993,7 +995,7 @@ function bp_document_sync_document_data( $attachment_id ) {
 /**
  * Update document privacy when activity is updated.
  *
- * @param $activity Activity object.
+ * @param object $activity Activity object.
  *
  * @since BuddyBoss 1.4.0
  */
