@@ -708,11 +708,6 @@ class BP_Activity_Activity {
 		// Join the where conditions together.
 		$where_sql = 'WHERE ' . join( ' AND ', $where_conditions );
 
-		// Handle Unanswered related conditions.
-		if ( ! empty( $r['filter']['unanswered_only'] ) ) {
-			$join_sql .= self::get_unanswered_only_join_sql( $r );
-		}
-
 		/**
 		 * Filter the MySQL JOIN clause for the main activity query.
 		 *
@@ -2198,7 +2193,7 @@ class BP_Activity_Activity {
 
 		// Show unanswered activities only where clause.
 		if ( ! empty( $filter_array['unanswered_only'] ) && ! apply_filters( 'bb_activity_unanswered_only_remove_sql', false ) ) {
-			$filter_sql[] = "act_comments.secondary_item_id IS NULL";
+			$filter_sql[] = "act_comments.item_id IS NULL";
 		}
 
 		if ( empty( $filter_sql ) ) {
@@ -2454,69 +2449,6 @@ class BP_Activity_Activity {
 		}
 
 		return $status;
-	}
-
-	/**
-	 * Get the join sql for unanswered only activities.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param array $args Array of arguments.
-	 *
-	 * @return string Join sql.
-	 */
-	public static function get_unanswered_only_join_sql( $args ) {
-		$bp       = buddypress();
-		$join_sql = '';
-
-		// Show unanswered activities only.
-		if ( ! empty( $args['filter']['unanswered_only'] ) && ! apply_filters( 'bb_activity_unanswered_only_remove_sql', false ) ) {
-
-			/* Output example query.
-			LEFT JOIN (
-				SELECT uac.secondary_item_id
-				FROM wp_bp_activity uac
-				LEFT JOIN wp_bp_suspend s ON (s.item_type = 'activity_comment' AND s.item_id = uac.id)
-				WHERE uac.type = 'activity_comment'
-					AND uac.is_spam = 0
-					AND moderation_conditions
-				LIMIT 1
-			) comments ON comments.secondary_item_id = a.id
-			WHERE comments.secondary_item_id IS NULL
-			*/
-			// Build the base subquery for unanswered activities.
-			$select_sql = 'SELECT uac.secondary_item_id';
-			$from_sql   = "FROM {$bp->activity->table_name} uac";
-
-			// Where conditions array for the subquery.
-			$where_conditions             = array();
-			$where_conditions['uac.type'] = "uac.type = 'activity_comment'";
-
-			// Add spam filter conditions to the subquery
-			if ( ! empty( $args['spam'] ) ) {
-				if ( 'ham_only' == $args['spam'] ) {
-					$where_conditions['uac.is_spam'] = 'uac.is_spam = 0';
-				} elseif ( 'spam_only' == $args['spam'] ) {
-					$where_conditions['uac.is_spam'] = 'uac.is_spam = 1';
-				} else {
-					$where_conditions['uac.is_spam'] = 'uac.is_spam = ""';
-				}
-			}
-			
-			// Apply filters to allow customization of the where conditions.
-			$where_conditions = apply_filters( 'bb_activity_unanswered_only_where_conditions', $where_conditions, '' );
-			$where_sql        = 'WHERE ' . join( ' AND ', $where_conditions );
-			
-			// Apply join filter similar to comment count function for conditions like moderation.
-			$join_sql = apply_filters( 'bb_activity_unanswered_only_get_join_sql', '', array( 'item_id_field' => 'uac.id' ) );
-			
-			$unanswered_subquery = "{$select_sql} {$from_sql} {$join_sql} {$where_sql}";
-			$join_sql        = " LEFT JOIN ( {$unanswered_subquery} ) act_comments ON act_comments.secondary_item_id = a.id ";
-
-			$join_sql = apply_filters( 'bb_activity_get_unanswered_only_join_sql', $join_sql, '' );
-		}
-
-		return $join_sql;
 	}
 }
 
