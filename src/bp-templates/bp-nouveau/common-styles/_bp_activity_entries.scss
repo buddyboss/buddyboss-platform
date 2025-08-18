@@ -481,6 +481,17 @@
 			p:empty {
 				min-height: 1em;
 			}
+
+			h3,
+			h4 {
+				font-size: 17px;
+				font-weight: 500;
+				margin: 0 0 15px;
+			}
+
+			h4 {
+				font-size: 16px;
+			}
 		}
 
 		.activity-read-more {

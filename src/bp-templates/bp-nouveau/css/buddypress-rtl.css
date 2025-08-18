@@ -2742,14 +2742,15 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
   max-width: 100%;
 }
 
-.activity-update-form #whats-new h3 {
+.activity-update-form #whats-new h3,
+.activity-update-form #whats-new h4 {
   font-size: 17px;
   font-weight: 500;
+  margin: 0 0 15px;
 }
 
 .activity-update-form #whats-new h4 {
   font-size: 16px;
-  font-weight: 500;
 }
 
 .bbpress #bbpress-forums #whats-new-toolbar.media-off .medium-editor-toolbar,
@@ -4116,6 +4117,17 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
 
 .activity-list .activity-item .activity-inner p:empty {
   min-height: 1em;
+}
+
+.activity-list .activity-item .activity-inner h3,
+.activity-list .activity-item .activity-inner h4 {
+  font-size: 17px;
+  font-weight: 500;
+  margin: 0 0 15px;
+}
+
+.activity-list .activity-item .activity-inner h4 {
+  font-size: 16px;
 }
 
 .activity-list .activity-item .activity-read-more {
