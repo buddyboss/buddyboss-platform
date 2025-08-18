@@ -391,13 +391,13 @@ function bp_has_activities( $args = '' ) {
 
 	// Set to default scope with unanswered only.
 	if ( $unanswered_only ) {
+		$r['scope'] = $scope;
 
 		// Ensure filter array is initialized.
 		if ( ! isset( $r['filter'] ) || ! is_array( $r['filter'] ) ) {
 			$r['filter'] = array();
 		}
 		$r['filter']['unanswered_only'] = true;
-		$r['scope']                     = $scope;
 	}
 
 	/*
