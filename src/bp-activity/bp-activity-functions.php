@@ -5413,6 +5413,11 @@ add_action( 'bp_before_directory_activity', 'bp_activity_directory_page_content'
 function bp_activity_default_scope( $scope = 'all' ) {
 	$new_scope = array();
 
+	// Handle unanswered scope with actual scope to all.
+	if ( 'unanswered' === $scope ) {
+		$scope = 'all';
+	}
+
 	if ( bp_loggedin_user_id() && ( 'all' === $scope || empty( $scope ) ) ) {
 
 		$new_scope[] = 'public';

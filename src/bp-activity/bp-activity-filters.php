@@ -202,6 +202,7 @@ add_action( 'bp_activity_after_delete', 'bb_clear_activity_all_comment_parent_ca
 add_action( 'bp_init', 'bb_load_activity_topics_manager' );
 
 add_action( 'bp_activity_after_save', 'bb_activity_save_topic_data', 2, 1 );
+add_filter( 'bp_activity_get_join_sql', 'bb_activity_unanswered_only_join_sql_filter', 11, 2 );
 
 /** Functions *****************************************************************/
 
@@ -4046,4 +4047,55 @@ function bb_activity_save_topic_data( $activity ) {
 			'item_id'     => $item_id,
 		)
 	);
+}
+
+/**
+ * Add LEFT JOIN for unanswered activities filter.
+ * This replaces the NOT EXISTS clause with a more performant LEFT JOIN approach.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $join_sql   The JOIN SQL to be filtered.
+ * @param array  $r          The arguments passed to BP_Activity_Activity::get().
+ *
+ * @return string Modified JOIN SQL.
+ */
+function bb_activity_unanswered_only_join_sql_filter( $join_sql, $r ) {
+	// Only add the join when unanswered_only is enabled.
+	if ( ! empty( $r['filter']['unanswered_only'] ) ) {
+		global $bp;
+
+		// Build the base subquery for unanswered activities.
+		$select_sql = 'SELECT uac.item_id';
+		$from_sql   = "FROM {$bp->activity->table_name} uac";
+
+		// Where conditions array for the subquery.
+		$where_conditions             = array();
+		$where_conditions['uac.type'] = "uac.type = 'activity_comment'";
+
+		// Add spam filter conditions to the subquery.
+		if ( ! empty( $r['spam'] ) ) {
+			if ( 'ham_only' === $r['spam'] ) {
+				$where_conditions['uac.is_spam'] = 'uac.is_spam = 0';
+			} elseif ( 'spam_only' === $r['spam'] ) {
+				$where_conditions['uac.is_spam'] = 'uac.is_spam = 1';
+			} else {
+				$where_conditions['uac.is_spam'] = 'uac.is_spam = ""';
+			}
+		}
+
+		// Apply filters to allow customization of the where conditions.
+		$where_conditions = apply_filters( 'bb_activity_unanswered_only_where_conditions', $where_conditions, '' );
+		$where_sql        = 'WHERE ' . join( ' AND ', $where_conditions );
+
+		// Apply join filter similar to comment count function for conditions like moderation.
+		$join_sql_subquery = apply_filters( 'bb_activity_unanswered_only_get_join_sql', '', array( 'item_id_field' => 'uac.id' ) );
+
+		$unanswered_subquery = "{$select_sql} {$from_sql} {$join_sql_subquery} {$where_sql}";
+		$join_sql           .= " LEFT JOIN ( {$unanswered_subquery} ) act_comments ON act_comments.item_id = a.id ";
+
+		$join_sql = apply_filters( 'bb_activity_get_unanswered_only_join_sql', $join_sql, '' );
+	}
+
+	return $join_sql;
 }

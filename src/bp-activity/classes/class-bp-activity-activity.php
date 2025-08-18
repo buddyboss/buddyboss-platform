@@ -501,6 +501,10 @@ class BP_Activity_Activity {
 			$r['filter']['since_date_column'] = $r['order_by'];
 		}
 
+		if ( ! empty( $r['filter']['unanswered_only'] ) && ! ( false === $r['display_comments'] || 'threaded' === $r['display_comments'] ) ) {
+			$r['filter']['unanswered_only'] = false;
+		}
+
 		// Regular filtering.
 		if ( $r['filter'] && $filter_sql = self::get_filter_sql( $r['filter'] ) ) {
 			$where_conditions['filter_sql'] = $filter_sql;
@@ -2129,7 +2133,6 @@ class BP_Activity_Activity {
 	 * @return string The filter clause, for use in a SQL query.
 	 */
 	public static function get_filter_sql( $filter_array ) {
-
 		$filter_sql = array();
 
 		if ( ! empty( $filter_array['user_id'] ) ) {
@@ -2183,6 +2186,11 @@ class BP_Activity_Activity {
 					$filter_sql[] = "a.date_recorded > '{$translated_date}'";
 				}
 			}
+		}
+
+		// Show unanswered activities only where clause.
+		if ( ! empty( $filter_array['unanswered_only'] ) && ! apply_filters( 'bb_activity_unanswered_only_remove_sql', false ) ) {
+			$filter_sql[] = "act_comments.item_id IS NULL";
 		}
 
 		if ( empty( $filter_sql ) ) {

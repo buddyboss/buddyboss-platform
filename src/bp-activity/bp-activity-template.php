@@ -220,11 +220,16 @@ function bp_has_activities( $args = '' ) {
 
 	if ( bp_is_user_activity() || bp_is_activity_directory() ) {
 
-		// Scope from the heartbeat passed from the filter dropdown.	
+		// Scope from the heartbeat passed from the filter dropdown.
 		$scope = ! empty( $args['scope'] ) ? $args['scope'] : $scope;
-	}	
+	}
 
-	$scope = bp_activity_default_scope( $scope );	
+	$unanswered_only = false;
+	if ( 'unanswered' === $scope ) {
+		$unanswered_only = true;
+	}
+
+	$scope = bp_activity_default_scope( $scope );
 
 	// Group filtering.
 	if ( bp_is_group() ) {
@@ -342,7 +347,7 @@ function bp_has_activities( $args = '' ) {
 			'object' => $_GET['afilter'],
 		);
 	} elseif (
-		( 
+		(
 			'just-me' === $scope &&
 			bp_is_activity_directory()
 		) ||
@@ -359,7 +364,7 @@ function bp_has_activities( $args = '' ) {
 		if ( 'just-me' === $scope && bp_is_activity_directory() ) {
 			$r['user_id'] = bp_loggedin_user_id();
 		}
-	
+
 		$r['filter'] = array(
 			'user_id'      => $r['user_id'],
 			'object'       => $r['object'],
@@ -382,6 +387,17 @@ function bp_has_activities( $args = '' ) {
 	// Pinned post.
 	if ( empty( $r['pin_type'] ) ) {
 		$r['pin_type'] = bb_activity_pin_type( $r );
+	}
+
+	// Set to default scope with unanswered only.
+	if ( $unanswered_only ) {
+		$r['scope'] = $scope;
+
+		// Ensure filter array is initialized.
+		if ( ! isset( $r['filter'] ) || ! is_array( $r['filter'] ) ) {
+			$r['filter'] = array();
+		}
+		$r['filter']['unanswered_only'] = true;
 	}
 
 	/*
