@@ -4007,12 +4007,12 @@ function bb_update_to_2_9_40() {
 	// Check if the activity table exists.
 	if ( $table_exists ) {
 
-		// Check if index activity_secondary_item_id_type exists for the table.
-		$index_exists = $wpdb->get_var( $wpdb->prepare( 'SELECT index_name FROM INFORMATION_SCHEMA.STATISTICS WHERE table_schema = DATABASE() AND table_name = %s AND index_name = %s', $activity_table, 'activity_secondary_item_id_type' ) ); //phpcs:ignore
+		// Check if index activity_item_id_type exists for the table.
+		$index_exists = $wpdb->get_var( $wpdb->prepare( 'SELECT index_name FROM INFORMATION_SCHEMA.STATISTICS WHERE table_schema = DATABASE() AND table_name = %s AND index_name = %s', $activity_table, 'activity_item_id_type' ) ); //phpcs:ignore
 
-		// Add index for activity_secondary_item_id_type if it doesn't exist.
+		// Add index for activity_item_id_type if it doesn't exist.
 		if ( empty( $index_exists ) ) {
-			$wpdb->query( $wpdb->prepare( "ALTER TABLE {$activity_table} ADD KEY activity_secondary_item_id_type (secondary_item_id,type)" ) ); //phpcs:ignore
+			$wpdb->query( $wpdb->prepare( "ALTER TABLE {$activity_table} ADD KEY activity_item_id_type (item_id,type)" ) ); //phpcs:ignore
 		}
 	}
 }
