@@ -59,9 +59,6 @@ class BP_Suspend_Activity_Comment extends BP_Suspend_Abstract {
 		add_filter( 'bp_activity_comments_get_where_conditions', array( $this, 'bb_update_where_sql' ), 10, 2 );
 
 		add_filter( 'bp_locate_template_names', array( $this, 'locate_blocked_template' ) );
-
-		add_filter( 'bb_activity_unanswered_only_get_join_sql', array( $this, 'bb_update_join_sql' ), 10, 2 );
-		add_filter( 'bb_activity_unanswered_only_where_conditions', array( $this, 'bb_update_where_sql' ), 10, 2 );
 	}
 
 	/**
@@ -571,12 +568,7 @@ class BP_Suspend_Activity_Comment extends BP_Suspend_Abstract {
 			return $join_sql;
 		}
 
-		$item_id_field = 'a.id';
-		if ( ! empty( $args['item_id_field'] ) ) {
-			$item_id_field = $args['item_id_field'];
-		}
-
-		$join_sql .= $this->exclude_joint_query( $item_id_field );
+		$join_sql .= $this->exclude_joint_query( 'a.id' );
 
 		/**
 		 * Filters the hidden activity comment count Where SQL statement.
