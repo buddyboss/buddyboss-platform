@@ -1486,7 +1486,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 								if ( ! empty( $item['thumbnail'] ) ) {
 									?>
 												<div class="item-avatar">
-													<a href="<?php echo esc_url( $item['permalink'] ); ?>">
+													<a href="<?php echo esc_url( $item['permalink'] ); ?>" aria-label="<?php echo esc_attr( $item['title'] ); ?>">
 											<?php
 												echo wp_kses(
 													$item['thumbnail'],
