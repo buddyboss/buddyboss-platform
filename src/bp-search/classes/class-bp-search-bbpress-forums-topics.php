@@ -104,15 +104,30 @@ if ( ! class_exists( 'Bp_Search_bbPress_Topics' ) ) :
 				// Note: We don't need to get public groups separately
 				// We only need to identify restricted groups the user can't access.
 
-				// Get all private and hidden groups.
-				$restricted_groups = groups_get_groups(
-					array(
-						'fields'   => 'ids',
-						'status'   => array( 'private', 'hidden' ),
-						'per_page' => -1,
-					)
-				);
-				$restricted_group_ids = ! empty( $restricted_groups['groups'] ) ? $restricted_groups['groups'] : array();
+				// Use static cache for restricted groups to avoid multiple database queries.
+				static $restricted_groups_cache = null;
+				static $cache_timestamp = null;
+				
+				// Check if cache needs to be invalidated
+				$cache_invalidated = get_option( 'bbp_search_cache_invalidated', 0 );
+				if ( null === $cache_timestamp || $cache_invalidated > $cache_timestamp ) {
+					$restricted_groups_cache = null;
+					$cache_timestamp = time();
+				}
+				
+				if ( null === $restricted_groups_cache ) {
+					// Get all private and hidden groups.
+					$restricted_groups = groups_get_groups(
+						array(
+							'fields'   => 'ids',
+							'status'   => array( 'private', 'hidden' ),
+							'per_page' => -1,
+						)
+					);
+					$restricted_groups_cache = ! empty( $restricted_groups['groups'] ) ? $restricted_groups['groups'] : array();
+				}
+				
+				$restricted_group_ids = $restricted_groups_cache;
 
 				// Groups that user cannot access.
 				$excluded_group_ids = array_diff( $restricted_group_ids, $user_group_ids );
