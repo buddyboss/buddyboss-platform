@@ -85,13 +85,13 @@ if ( ! class_exists( 'Bp_Search_bbPress_Topics' ) ) :
 				$post_status = array( 'publish' );
 			}
 
-			// Initialize forum exclusion variables
+			// Initialize forum exclusion variables.
 			$excluded_forum_ids = array();
 
 			if ( bp_is_active( 'groups' ) ) {
 				$current_user_id = get_current_user_id();
-				
-				// Get user's group memberships
+
+				// Get user's group memberships.
 				$user_groups = bp_get_user_groups(
 					$current_user_id,
 					array(
@@ -102,38 +102,25 @@ if ( ! class_exists( 'Bp_Search_bbPress_Topics' ) ) :
 				$user_group_ids = wp_list_pluck( $user_groups, 'group_id' );
 
 				// Note: We don't need to get public groups separately
-				// We only need to identify restricted groups the user can't access
+				// We only need to identify restricted groups the user can't access.
 
-				// Get all private groups
-				$private_groups = groups_get_groups(
+				// Get all private and hidden groups.
+				$restricted_groups = groups_get_groups(
 					array(
 						'fields'   => 'ids',
-						'status'   => 'private',
+						'status'   => array( 'private', 'hidden' ),
 						'per_page' => -1,
 					)
 				);
-				$private_group_ids = ! empty( $private_groups['groups'] ) ? $private_groups['groups'] : array();
+				$restricted_group_ids = ! empty( $restricted_groups['groups'] ) ? $restricted_groups['groups'] : array();
 
-				// Get all hidden groups
-				$hidden_groups = groups_get_groups(
-					array(
-						'fields'   => 'ids',
-						'status'   => 'hidden',
-						'per_page' => -1,
-					)
-				);
-				$hidden_group_ids = ! empty( $hidden_groups['groups'] ) ? $hidden_groups['groups'] : array();
-
-				// Combine all restricted groups
-				$restricted_group_ids = array_merge( $private_group_ids, $hidden_group_ids );
-				
-				// Groups that user cannot access
+				// Groups that user cannot access.
 				$excluded_group_ids = array_diff( $restricted_group_ids, $user_group_ids );
-				
+
 				// Note: We're focusing on exclusion rather than inclusion
-				// This ensures we don't accidentally exclude standalone forums
-				
-				// Get forums from excluded groups (forums we need to exclude)
+				// This ensures we don't accidentally exclude standalone forums.
+
+				// Get forums from excluded groups (forums we need to exclude).
 				if ( ! empty( $excluded_group_ids ) ) {
 					$excluded_serialized = array_map(
 						function ( $group_id ) {
@@ -141,7 +128,7 @@ if ( ! class_exists( 'Bp_Search_bbPress_Topics' ) ) :
 						},
 						$excluded_group_ids
 					);
-					
+
 					$excluded_forum_args = array(
 						'fields'      => 'ids',
 						'post_status' => $post_status,
@@ -160,11 +147,11 @@ if ( ! class_exists( 'Bp_Search_bbPress_Topics' ) ) :
 					$excluded_forum_args = array();
 				}
 			} else {
-				// Groups not active - no exclusions needed
+				// Groups not active - no exclusions needed.
 				$excluded_forum_args = array();
 			}
 
-			// Get excluded forum IDs
+			// Get excluded forum IDs.
 			if ( ! empty( $excluded_forum_args ) ) {
 				$excluded_forum_ids_cache_key = 'bbp_search_excluded_forum_ids_' . md5( maybe_serialize( $excluded_forum_args ) );
 				if ( ! isset( $bbp_search_group_forum_ids[ $excluded_forum_ids_cache_key ] ) ) {
@@ -173,28 +160,28 @@ if ( ! class_exists( 'Bp_Search_bbPress_Topics' ) ) :
 				} else {
 					$excluded_forum_ids = $bbp_search_group_forum_ids[ $excluded_forum_ids_cache_key ];
 				}
-				
-				// Get child forum IDs for excluded forums
+
+				// Get child forum IDs for excluded forums.
 				$excluded_child_forum_ids = array();
 				foreach ( $excluded_forum_ids as $forum_id ) {
 					$child_ids = $this->nested_child_forum_ids( $forum_id );
 					$excluded_child_forum_ids = array_merge( $excluded_child_forum_ids, $child_ids );
 				}
-				
-				// Combine parent and child forum IDs to exclude
+
+				// Combine parent and child forum IDs to exclude.
 				$excluded_forum_ids = array_merge( $excluded_forum_ids, $excluded_child_forum_ids );
 				$excluded_forum_ids = array_unique( $excluded_forum_ids );
 			}
 
-			// Get all accessible forums (not in excluded list)
+			// Get all accessible forums (not in excluded list).
 			$forum_args = array(
 				'fields'      => 'ids',
 				'post_status' => $post_status,
 				'post_type'   => bbp_get_forum_post_type(),
 				'numberposts' => -1,
 			);
-			
-			// Add exclusion if we have forums to exclude
+
+			// Add exclusion if we have forums to exclude.
 			if ( ! empty( $excluded_forum_ids ) ) {
 				$forum_args['post__not_in'] = $excluded_forum_ids;
 			}

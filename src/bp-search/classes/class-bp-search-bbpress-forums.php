@@ -80,48 +80,19 @@ if ( ! class_exists( 'Bp_Search_bbPress_Forums' ) ) :
 
 				$user_group_ids = wp_list_pluck( $user_groups, 'group_id' );
 
-				// Get all public groups (these are always visible).
-				$public_groups = groups_get_groups(
+				// Get all private and hidden groups (to exclude if user is not member).
+				$restricted_groups = groups_get_groups(
 					array(
 						'fields'   => 'ids',
-						'status'   => 'public',
+						'status'   => array( 'private', 'hidden' ),
 						'per_page' => -1,
 					)
 				);
 
-				$public_group_ids = ! empty( $public_groups['groups'] ) ? $public_groups['groups'] : array();
-
-				// Get all private groups (to exclude if user is not member).
-				$private_groups = groups_get_groups(
-					array(
-						'fields'   => 'ids',
-						'status'   => 'private',
-						'per_page' => -1,
-					)
-				);
-
-				$private_group_ids = ! empty( $private_groups['groups'] ) ? $private_groups['groups'] : array();
-
-				// Get all hidden groups (to exclude if user is not member).
-				$hidden_groups = groups_get_groups(
-					array(
-						'fields'   => 'ids',
-						'status'   => 'hidden',
-						'per_page' => -1,
-					)
-				);
-
-				$hidden_group_ids = ! empty( $hidden_groups['groups'] ) ? $hidden_groups['groups'] : array();
-
-				// Combine private and hidden groups.
-				$restricted_group_ids = array_merge( $private_group_ids, $hidden_group_ids );
+				$restricted_group_ids = ! empty( $restricted_groups['groups'] ) ? $restricted_groups['groups'] : array();
 
 				// Groups that user cannot access (private/hidden groups where user is not a member).
 				$excluded_group_ids = array_diff( $restricted_group_ids, $user_group_ids );
-
-				// Groups that user can access (public groups + groups where user is member).
-				$allowed_group_ids = array_merge( $public_group_ids, $user_group_ids );
-				$allowed_group_ids = array_unique( $allowed_group_ids );
 
 				// Build WHERE clause.
 				$where_parts = array();
@@ -133,9 +104,9 @@ if ( ! class_exists( 'Bp_Search_bbPress_Forums' ) ) :
 				$where_parts[] = "(pm.meta_value IS NULL OR pm.meta_value = '' OR pm.meta_value = 'a:0:{}')";
 
 				// Condition 2: Forums associated with allowed groups.
-				if ( ! empty( $allowed_group_ids ) ) {
+				if ( ! empty( $user_group_ids ) ) {
 					$serialized_values = array();
-					foreach ( $allowed_group_ids as $group_id ) {
+					foreach ( $user_group_ids as $group_id ) {
 						$serialized_values[] = $wpdb->prepare( '%s', maybe_serialize( array( $group_id ) ) );
 					}
 					$where_parts[] = 'pm.meta_value IN (' . implode( ',', $serialized_values ) . ')';

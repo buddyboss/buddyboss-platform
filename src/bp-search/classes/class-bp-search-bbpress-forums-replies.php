@@ -42,13 +42,13 @@ if ( ! class_exists( 'Bp_Search_bbPress_Replies' ) ) :
 			 */
 			$from = apply_filters( 'bp_forum_reply_search_join_sql', $from );
 
-			// Initialize forum access variables
+			// Initialize forum access variables.
 			$excluded_forum_ids = array();
-			
+
 			if ( bp_is_active( 'groups' ) ) {
 				$current_user_id = get_current_user_id();
-				
-				// Get user's group memberships
+
+				// Get user's group memberships.
 				$user_groups = bp_get_user_groups(
 					$current_user_id,
 					array(
@@ -58,33 +58,20 @@ if ( ! class_exists( 'Bp_Search_bbPress_Replies' ) ) :
 				);
 				$user_group_ids = wp_list_pluck( $user_groups, 'group_id' );
 
-				// Get all private groups
-				$private_groups = groups_get_groups(
+				// Get all private and hidden groups.
+				$restricted_groups    = groups_get_groups(
 					array(
 						'fields'   => 'ids',
-						'status'   => 'private',
-						'per_page' => -1,
+						'status'   => array( 'private', 'hidden' ),
+						'per_page' => - 1,
 					)
 				);
-				$private_group_ids = ! empty( $private_groups['groups'] ) ? $private_groups['groups'] : array();
+				$restricted_group_ids = ! empty( $restricted_groups['groups'] ) ? $restricted_groups['groups'] : array();
 
-				// Get all hidden groups
-				$hidden_groups = groups_get_groups(
-					array(
-						'fields'   => 'ids',
-						'status'   => 'hidden',
-						'per_page' => -1,
-					)
-				);
-				$hidden_group_ids = ! empty( $hidden_groups['groups'] ) ? $hidden_groups['groups'] : array();
-
-				// Combine all restricted groups
-				$restricted_group_ids = array_merge( $private_group_ids, $hidden_group_ids );
-				
-				// Groups that user cannot access
+				// Groups that user cannot access.
 				$excluded_group_ids = array_diff( $restricted_group_ids, $user_group_ids );
-				
-				// Get forums from excluded groups
+
+				// Get forums from excluded groups.
 				if ( ! empty( $excluded_group_ids ) ) {
 					$excluded_forum_args = array(
 						'fields'      => 'ids',
@@ -95,8 +82,8 @@ if ( ! class_exists( 'Bp_Search_bbPress_Replies' ) ) :
 							'relation' => 'OR',
 						),
 					);
-					
-					// Add meta queries for each excluded group
+
+					// Add meta queries for each excluded group.
 					foreach ( $excluded_group_ids as $group_id ) {
 						$excluded_forum_args['meta_query'][] = array(
 							'key'     => '_bbp_group_ids',
@@ -104,7 +91,7 @@ if ( ! class_exists( 'Bp_Search_bbPress_Replies' ) ) :
 							'compare' => '=',
 						);
 					}
-					
+
 					$excluded_forum_ids = get_posts( $excluded_forum_args );
 				}
 			}
@@ -132,15 +119,15 @@ if ( ! class_exists( 'Bp_Search_bbPress_Replies' ) ) :
 
 			$where[] = "post_type = '{$this->type}'";
 
-			// Build the forum restriction clause
+			// Build the forum restriction clause.
 			if ( ! empty( $excluded_forum_ids ) ) {
 				// Exclude replies from restricted forums
 				$excluded_forum_ids = array_map( 'intval', $excluded_forum_ids );
 				$excluded_forum_ids_str = implode( ',', $excluded_forum_ids );
 				$where[] = "pm.meta_value NOT IN ( $excluded_forum_ids_str )";
 			}
-			
-			// Only show replies from forums with allowed post status
+
+			// Only show replies from forums with allowed post status.
 			$post_status_str = "'" . implode( "','", $post_status ) . "'";
 			$where[] = "pm.meta_value IN ( SELECT ID FROM {$wpdb->posts} WHERE post_type = 'forum' AND post_status IN ( $post_status_str ) )";
 
