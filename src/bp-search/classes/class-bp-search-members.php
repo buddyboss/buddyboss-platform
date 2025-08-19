@@ -20,7 +20,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 		/**
 		 * Maximum input length for search term.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.10.0
 		 *
 		 * @var int
 		 */
@@ -34,7 +34,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 		 * - month_name_formats: Text-based formats with month names.
 		 * - time_elapsed_formats: Relative time expressions (5 years ago, etc.).
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.10.0
 		 *
 		 * @var array {
 		 *     @type array $standard_formats     Numeric date format patterns.
@@ -587,7 +587,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 		/**
 		 * Check if the search term is a date search.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.10.0
 		 *
 		 * @param string $search_term The search term to check.
 		 *
@@ -616,7 +616,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 		/**
 		 * Check if the search term matches standard date formats.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.10.0
 		 *
 		 * @param string $search_term The search term to check.
 		 *
@@ -646,7 +646,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 		/**
 		 * Check if the search term matches month name patterns.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.10.0
 		 *
 		 * @param string $search_term The search term to check.
 		 *
@@ -679,7 +679,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 		/**
 		 * Check if the search term matches time elapsed patterns.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.10.0
 		 *
 		 * @param string $search_term The search term to check.
 		 *
@@ -707,7 +707,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 		/**
 		 * Parse date search terms and convert to normalized date values.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.10.0
 		 *
 		 * @param string $search_term The search term to parse.
 		 *
@@ -744,7 +744,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 		/**
 		 * Parse standard date formats.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.10.0
 		 *
 		 * @param string $search_term The search term to parse.
 		 *
@@ -863,7 +863,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 		/**
 		 * Parse month name patterns.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.10.0
 		 *
 		 * @param string $search_term The search term to parse.
 		 *
@@ -976,7 +976,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 		/**
 		 * Validate and format a date.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.10.0
 		 *
 		 * @param int $year  The year.
 		 * @param int $month The month.
@@ -999,7 +999,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 		/**
 		 * Format date components into a standardized date string.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.10.0
 		 *
 		 * @param int $year  The year.
 		 * @param int $month The month.
@@ -1014,7 +1014,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 		/**
 		 * Format number with leading zero.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.10.0
 		 *
 		 * @param int $number The number to format.
 		 *
@@ -1027,7 +1027,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 		/**
 		 * Create a month range for a given year and month.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.10.0
 		 *
 		 * @param int $year  The year.
 		 * @param int $month The month.
@@ -1058,7 +1058,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 		/**
 		 * Create a date value array.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.10.0
 		 *
 		 * @param string $type The type of date value (exact, range, partial).
 		 * @param array  $data The date data.
@@ -1087,7 +1087,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 		/**
 		 * Parse time elapsed patterns.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.10.0
 		 *
 		 * @param string $search_term Search term.
 		 *
@@ -1184,7 +1184,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 		/**
 		 * Get month names.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.10.0
 		 *
 		 * @return array Array of month names.
 		 */
@@ -1211,7 +1211,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 		/**
 		 * Convert date format term to English.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.10.0
 		 *
 		 * @param string $search_term The search term that may contain month names.
 		 *
@@ -1251,7 +1251,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 		/**
 		 * Get month number from month name (supports multiple languages).
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.10.0
 		 *
 		 * @param string $input_month_name The month name to convert.
 		 *
@@ -1293,7 +1293,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 		/**
 		 * Generate SQL conditions for date search.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.10.0
 		 *
 		 * @param array $date_values Array of normalized date values.
 		 * @param array $field_ids   Array of date field IDs to search in.
@@ -1358,7 +1358,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 		/**
 		 * Calculate dynamic year range for date validation.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.10.0
 		 *
 		 * @return array Array with 'min' and 'max' year values.
 		 */
@@ -1374,7 +1374,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 		/**
 		 * Get the optimal date range for time elapsed searches.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.10.0
 		 *
 		 * @param int    $target_time   The calculated target timestamp.
 		 * @param string $unit_singular The time unit (year, month, week, day).
@@ -1422,7 +1422,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 		/**
 		 * Calculate target date based on time elapsed expression.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.10.0
 		 *
 		 * @param int    $amount       The amount of time.
 		 * @param string $unit         The time unit (year, month, day).
@@ -1477,7 +1477,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 		 * 5. Try partial matching with the base time unit.
 		 * 6. Replace direction words with English equivalents (e.g., ago, since, from now).
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.10.0
 		 *
 		 * @param string $search_term The search term to translate.
 		 *
@@ -1498,7 +1498,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 		/**
 		 * Translate time units in the search term to English.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.10.0
 		 *
 		 * @param string $search_term The search term to process.
 		 *
@@ -1616,7 +1616,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 		/**
 		 * Translate direction words in the search term to English.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.10.0
 		 *
 		 * @param string $search_term The search term to process.
 		 *
@@ -1655,7 +1655,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 		/**
 		 * Add missing articles for single time units.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.10.0
 		 *
 		 * @param string $search_term The search term to process.
 		 *
@@ -1710,7 +1710,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 		 * Replacement: "year" → "years"
 		 * Result: "32 years ago"
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.10.0
 		 *
 		 * @param string $search_term      The search term to translate.
 		 * @param string $english_singular The English singular form (e.g., "year").
@@ -1793,7 +1793,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 		 * Process: Remove direction words from "one year"
 		 * Result: "one year" (no direction words found, so unchanged)
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.10.0
 		 *
 		 * @param string $translation The translation to process.
 		 *
@@ -1848,7 +1848,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 		 * - "year" is shorter than "one", "two", "single", etc.
 		 * - "month" is shorter than "one month", "two months", etc.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.10.0
 		 *
 		 * @param string $time_unit        The time unit to extract base from.
 		 * @param string $english_singular The English singular form.
@@ -1940,7 +1940,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 		 * Add: "ago" to "32 years" → "32 years ago"
 		 * Result: "32 years ago"
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.10.0
 		 *
 		 * @param string $search_term The search term to translate.
 		 * @param string $direction   The direction word to translate.
