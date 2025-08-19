@@ -134,6 +134,8 @@ add_action( 'bp_activity_add', 'bp_activity_reset_cache_incrementor' );
 add_action( 'added_activity_meta', 'bp_activity_reset_cache_incrementor' );
 add_action( 'updated_activity_meta', 'bp_activity_reset_cache_incrementor' );
 add_action( 'deleted_activity_meta', 'bp_activity_reset_cache_incrementor' );
+add_action( 'bp_activity_mark_as_spam', 'bp_activity_reset_cache_incrementor' );
+add_action( 'bp_activity_mark_as_ham', 'bp_activity_reset_cache_incrementor' );
 
 /**
  * Clear cached data for deleted users.
