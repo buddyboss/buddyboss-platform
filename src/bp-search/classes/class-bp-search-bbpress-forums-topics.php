@@ -85,104 +85,123 @@ if ( ! class_exists( 'Bp_Search_bbPress_Topics' ) ) :
 				$post_status = array( 'publish' );
 			}
 
-			$group_memberships = '';
-			$membership_in     = array();
+			// Initialize forum exclusion variables
+			$excluded_forum_ids = array();
 
 			if ( bp_is_active( 'groups' ) ) {
-				$group_memberships = bp_get_user_groups(
-					get_current_user_id(),
+				$current_user_id = get_current_user_id();
+				
+				// Get user's group memberships
+				$user_groups = bp_get_user_groups(
+					$current_user_id,
 					array(
 						'is_admin' => null,
 						'is_mod'   => null,
 					)
 				);
+				$user_group_ids = wp_list_pluck( $user_groups, 'group_id' );
 
-				$group_memberships = wp_list_pluck( $group_memberships, 'group_id' );
+				// Note: We don't need to get public groups separately
+				// We only need to identify restricted groups the user can't access
 
-				$public_groups = groups_get_groups(
+				// Get all private groups
+				$private_groups = groups_get_groups(
 					array(
 						'fields'   => 'ids',
-						'status'   => 'public',
-						'per_page' => - 1,
+						'status'   => 'private',
+						'per_page' => -1,
 					)
 				);
+				$private_group_ids = ! empty( $private_groups['groups'] ) ? $private_groups['groups'] : array();
 
-				if ( ! empty( $public_groups ) && ! empty( $public_groups['groups'] ) ) {
-					$public_groups = $public_groups['groups'];
-				} else {
-					$public_groups = array();
-				}
-
-				$group_memberships = array_merge( $public_groups, $group_memberships );
-				$group_memberships = array_unique( $group_memberships );
-			}
-
-			if ( ! empty( $group_memberships ) ) {
-				$membership_in = array_map(
-					function ( $group_id ) {
-						return maybe_serialize( array( $group_id ) );
-					},
-					$group_memberships
+				// Get all hidden groups
+				$hidden_groups = groups_get_groups(
+					array(
+						'fields'   => 'ids',
+						'status'   => 'hidden',
+						'per_page' => -1,
+					)
 				);
+				$hidden_group_ids = ! empty( $hidden_groups['groups'] ) ? $hidden_groups['groups'] : array();
+
+				// Combine all restricted groups
+				$restricted_group_ids = array_merge( $private_group_ids, $hidden_group_ids );
+				
+				// Groups that user cannot access
+				$excluded_group_ids = array_diff( $restricted_group_ids, $user_group_ids );
+				
+				// Note: We're focusing on exclusion rather than inclusion
+				// This ensures we don't accidentally exclude standalone forums
+				
+				// Get forums from excluded groups (forums we need to exclude)
+				if ( ! empty( $excluded_group_ids ) ) {
+					$excluded_serialized = array_map(
+						function ( $group_id ) {
+							return maybe_serialize( array( $group_id ) );
+						},
+						$excluded_group_ids
+					);
+					
+					$excluded_forum_args = array(
+						'fields'      => 'ids',
+						'post_status' => $post_status,
+						'post_type'   => bbp_get_forum_post_type(),
+						'numberposts' => -1,
+						'meta_query'  => array(
+							'relation' => 'AND',
+							array(
+								'key'     => '_bbp_group_ids',
+								'value'   => $excluded_serialized,
+								'compare' => 'IN',
+							),
+						),
+					);
+				} else {
+					$excluded_forum_args = array();
+				}
+			} else {
+				// Groups not active - no exclusions needed
+				$excluded_forum_args = array();
 			}
 
-			// Get all private group forum ids where current user is not enrolled.
-			$group_forum_args = array(
+			// Get excluded forum IDs
+			if ( ! empty( $excluded_forum_args ) ) {
+				$excluded_forum_ids_cache_key = 'bbp_search_excluded_forum_ids_' . md5( maybe_serialize( $excluded_forum_args ) );
+				if ( ! isset( $bbp_search_group_forum_ids[ $excluded_forum_ids_cache_key ] ) ) {
+					$excluded_forum_ids = get_posts( $excluded_forum_args );
+					$bbp_search_group_forum_ids[ $excluded_forum_ids_cache_key ] = $excluded_forum_ids;
+				} else {
+					$excluded_forum_ids = $bbp_search_group_forum_ids[ $excluded_forum_ids_cache_key ];
+				}
+				
+				// Get child forum IDs for excluded forums
+				$excluded_child_forum_ids = array();
+				foreach ( $excluded_forum_ids as $forum_id ) {
+					$child_ids = $this->nested_child_forum_ids( $forum_id );
+					$excluded_child_forum_ids = array_merge( $excluded_child_forum_ids, $child_ids );
+				}
+				
+				// Combine parent and child forum IDs to exclude
+				$excluded_forum_ids = array_merge( $excluded_forum_ids, $excluded_child_forum_ids );
+				$excluded_forum_ids = array_unique( $excluded_forum_ids );
+			}
+
+			// Get all accessible forums (not in excluded list)
+			$forum_args = array(
 				'fields'      => 'ids',
 				'post_status' => $post_status,
 				'post_type'   => bbp_get_forum_post_type(),
-				'numberposts' => '-1',
-				'meta_query'  => array(
-					array(
-						'key'     => '_bbp_group_ids',
-						'compare' => 'EXISTS',
-					),
-					array(
-						'key'     => '_bbp_group_ids',
-						'value'   => 'a:0:{}',
-						'compare' => '!=',
-					),
-					array(
-						'key'     => '_bbp_group_ids',
-						'value'   => $membership_in,
-						'compare' => 'NOT IN',
-					),
-				),
+				'numberposts' => -1,
 			);
-
-			$group_forum_ids_cache_key = 'bbp_search_group_forum_ids_' . md5( maybe_serialize( $group_forum_args ) );
-			if ( ! isset( $bbp_search_group_forum_ids[ $group_forum_ids_cache_key ] ) ) {
-				$group_forum_ids = get_posts( $group_forum_args );
-
-				$bbp_search_group_forum_ids[ $group_forum_ids_cache_key ] = $group_forum_ids;
-			} else {
-				$group_forum_ids = $bbp_search_group_forum_ids[ $group_forum_ids_cache_key ];
+			
+			// Add exclusion if we have forums to exclude
+			if ( ! empty( $excluded_forum_ids ) ) {
+				$forum_args['post__not_in'] = $excluded_forum_ids;
 			}
-
-			$group_forum_child_ids = array();
-
-			// Get child forum ids where parent forum are associated with private group.
-			foreach ( $group_forum_ids as $forum_id ) {
-				$single_forum_child_ids = $this->nested_child_forum_ids( $forum_id );
-				$group_forum_child_ids  = array_merge( $group_forum_child_ids, $single_forum_child_ids );
-			}
-
-			// Merge all forum ids and its child forum ids.
-			$group_forum_ids = array_merge( $group_forum_ids, $group_forum_child_ids );
-
-			// Get group associated forum ids. Where current user is not connected to those groups.
-			$forum_args = array(
-				'fields'       => 'ids',
-				'post_status'  => $post_status,
-				'post_type'    => bbp_get_forum_post_type(),
-				'numberposts'  => '-1',
-				'post__not_in' => $group_forum_ids
-			);
 
 			$forum_ids_cache_key = 'bbp_search_forum_ids_' . md5( maybe_serialize( $forum_args ) );
 			if ( ! isset( $bbp_search_forum_ids[ $forum_ids_cache_key ] ) ) {
 				$forum_ids = get_posts( $forum_args );
-
 				$bbp_search_forum_ids[ $forum_ids_cache_key ] = $forum_ids;
 			} else {
 				$forum_ids = $bbp_search_forum_ids[ $forum_ids_cache_key ];
@@ -203,9 +222,18 @@ if ( ! class_exists( 'Bp_Search_bbPress_Topics' ) ) :
 
 			$where[] = "post_type = '{$this->type}'";
 
+			// Only show topics from accessible forums
 			if ( ! empty( $forum_ids ) ) {
+				// Sanitize forum IDs to prevent SQL injection
+				$forum_ids = array_map( 'intval', $forum_ids );
 				$forum_id_in = implode( ',', $forum_ids );
-				$where[]     = " p.post_parent IN ( $forum_id_in ) ";
+				$where[] = "p.post_parent IN ( $forum_id_in )";
+			} else {
+				// No accessible forums - return no results
+				if ( bp_is_active( 'groups' ) && ! empty( $excluded_forum_ids ) ) {
+					// If we have excluded forums but no allowed forums, return empty
+					$where[] = '1=0';
+				}
 			}
 
 			/**

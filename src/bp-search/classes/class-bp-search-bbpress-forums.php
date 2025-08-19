@@ -65,51 +65,98 @@ if ( ! class_exists( 'Bp_Search_bbPress_Forums' ) ) :
 				$post_status = array( 'publish' );
 			}
 
-			$where_sql = '( post_status IN (\'' . join( '\',\'', $post_status ) . '\')';
-
+			// Build complex WHERE clause for forum visibility.
 			if ( bp_is_active( 'groups' ) ) {
-				$group_memberships = bp_get_user_groups(
-					get_current_user_id(),
+				$current_user_id = get_current_user_id();
+
+				// Get user's group memberships (where they are member, admin, or mod).
+				$user_groups = bp_get_user_groups(
+					$current_user_id,
 					array(
 						'is_admin' => null,
 						'is_mod'   => null,
 					)
 				);
 
-				$group_memberships = wp_list_pluck( $group_memberships, 'group_id' );
+				$user_group_ids = wp_list_pluck( $user_groups, 'group_id' );
 
+				// Get all public groups (these are always visible).
 				$public_groups = groups_get_groups(
 					array(
 						'fields'   => 'ids',
 						'status'   => 'public',
-						'per_page' => - 1,
+						'per_page' => -1,
 					)
 				);
 
-				if ( ! empty( $public_groups ) && ! empty( $public_groups['groups'] ) ) {
-					$public_groups = $public_groups['groups'];
-				} else {
-					$public_groups = array();
+				$public_group_ids = ! empty( $public_groups['groups'] ) ? $public_groups['groups'] : array();
+
+				// Get all private groups (to exclude if user is not member).
+				$private_groups = groups_get_groups(
+					array(
+						'fields'   => 'ids',
+						'status'   => 'private',
+						'per_page' => -1,
+					)
+				);
+
+				$private_group_ids = ! empty( $private_groups['groups'] ) ? $private_groups['groups'] : array();
+
+				// Get all hidden groups (to exclude if user is not member).
+				$hidden_groups = groups_get_groups(
+					array(
+						'fields'   => 'ids',
+						'status'   => 'hidden',
+						'per_page' => -1,
+					)
+				);
+
+				$hidden_group_ids = ! empty( $hidden_groups['groups'] ) ? $hidden_groups['groups'] : array();
+
+				// Combine private and hidden groups.
+				$restricted_group_ids = array_merge( $private_group_ids, $hidden_group_ids );
+
+				// Groups that user cannot access (private/hidden groups where user is not a member).
+				$excluded_group_ids = array_diff( $restricted_group_ids, $user_group_ids );
+
+				// Groups that user can access (public groups + groups where user is member).
+				$allowed_group_ids = array_merge( $public_group_ids, $user_group_ids );
+				$allowed_group_ids = array_unique( $allowed_group_ids );
+
+				// Build WHERE clause.
+				$where_parts = array();
+
+				// Forums with allowed post status.
+				$where_parts[] = "post_status IN ('" . join( "','", $post_status ) . "')";
+
+				// Condition 1: Forums not associated with any group (standalone forums).
+				$where_parts[] = "(pm.meta_value IS NULL OR pm.meta_value = '' OR pm.meta_value = 'a:0:{}')";
+
+				// Condition 2: Forums associated with allowed groups.
+				if ( ! empty( $allowed_group_ids ) ) {
+					$serialized_values = array();
+					foreach ( $allowed_group_ids as $group_id ) {
+						$serialized_values[] = $wpdb->prepare( '%s', maybe_serialize( array( $group_id ) ) );
+					}
+					$where_parts[] = 'pm.meta_value IN (' . implode( ',', $serialized_values ) . ')';
 				}
 
-				$group_memberships = array_merge( $public_groups, $group_memberships );
-				$group_memberships = array_unique( $group_memberships );
+				// Combine conditions with OR (forum must match one of the conditions).
+				$where_sql = '((' . implode( ') OR (', $where_parts ) . '))';
 
-				if ( ! empty( $group_memberships ) ) {
-					$in = array_map(
-						function ( $group_id ) {
-							return ',\'' . maybe_serialize( array( $group_id ) ) . '\'';
-						},
-						$group_memberships
-					);
-
-					$in = implode( '', $in );
-
-					$where_sql .= ' OR pm.meta_value IN (' . trim( $in, ',' ) . ')';
+				// Explicitly exclude forums from restricted groups if user is not a member.
+				if ( ! empty( $excluded_group_ids ) ) {
+					$excluded_values = array();
+					foreach ( $excluded_group_ids as $group_id ) {
+						$excluded_values[] = $wpdb->prepare( '%s', maybe_serialize( array( $group_id ) ) );
+					}
+					// Add exclusion condition.
+					$where_sql .= ' AND (pm.meta_value IS NULL OR pm.meta_value NOT IN (' . implode( ',', $excluded_values ) . '))';
 				}
+			} else {
+				// Groups not active, just check post status.
+				$where_sql = "post_status IN ('" . join( "','", $post_status ) . "')";
 			}
-
-			$where_sql .= ')';
 
 			$where[] = $where_sql;
 
