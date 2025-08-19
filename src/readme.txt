@@ -57,6 +57,20 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 2.10.0 =
+* New Feature! ReadyLaunch - Introduced a ReadyLaunch onboarding setup to guide users through initial configuration
+* Bug: Activity - Added new hooks in Activity Topics to provide extensibility support
+* Bug: Activity - Fixed an issue where replies to cached activity comments showed undefined instead of the correct user
+* Bug: Core -  Fixed accessibility issues across Platform and Theme for improved usability
+* Bug: Core - Enhanced advanced search to support flexible date formats and multiple languages for accurate member search on date fields
+* Bug: Core - Fixed PHP 8.4 warnings and removed extra database queries for better stability and performance
+* Bug: Groups - Fixed issue where the 'Send Request' button appeared for users allowed to join groups without approval
+* Bug: Media - Fixed a critical security vulnerability in the document download function to prevent unauthorized file access
+* Bug: Moderation - Fixed an issue where reported media from group feeds was still visible in group and media directories
+* Bug: Moderation - Fixed incorrect media counts in groups when moderation and content reporting settings were enabled
+* Bug: Profiles - Fixed default avatar initials showing incorrectly by using nickname instead of the selected display name format
+* Bug: Profiles - Fixed issue where the default Gender filter in profile fields did not work correctly when the option order was changed
+
 = 2.9.30 =
 * Bug: Activity - Fixed issue where the "More" label in topics was not translatable
 * Bug: Core - Fixed broken cross (X) icon UI in tag selectors across multiple screens, ensuring proper display even with the Modern Events Calendar plugin active
