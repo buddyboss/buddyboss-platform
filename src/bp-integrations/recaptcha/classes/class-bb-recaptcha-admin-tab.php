@@ -557,7 +557,7 @@ class BB_Recaptcha_Admin_Tab extends BP_Admin_Integration_tab {
 					</h2>
 				</div>
 				<div class="bp-hello-close">
-					<button type="button" class="close-modal button">
+					<button type="button" class="close-modal button" aria-label="<?php esc_attr_e( 'Close', 'buddyboss' ); ?>">
 						<i class="bb-icon-f bb-icon-times"></i>
 					</button>
 				</div>
