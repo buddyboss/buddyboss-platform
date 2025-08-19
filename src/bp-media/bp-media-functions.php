@@ -421,6 +421,7 @@ function bp_media_get_specific( $args = '' ) {
 			'album_id'         => false,      // Album ID.
 			'user_id'          => false,      // User ID.
 			'moderation_query' => true,
+			'count_total'      => false,
 			'status'           => bb_media_get_published_status(),
 		),
 		'media_get_specific'
@@ -438,6 +439,7 @@ function bp_media_get_specific( $args = '' ) {
 		'user_id'          => $r['user_id'],
 		'moderation_query' => $r['moderation_query'],
 		'status'           => $r['status'],
+		'count_total'      => $r['count_total'],
 	);
 
 	/**

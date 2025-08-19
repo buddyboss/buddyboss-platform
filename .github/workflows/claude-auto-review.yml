@@ -30,8 +30,6 @@ jobs:
             - Potential bugs or issues
             - Performance considerations
             - Security implications
-            - Test coverage
-            - Documentation updates if needed
 
             Provide constructive feedback with specific suggestions for improvement.
             Use inline comments to highlight specific areas of concern.
