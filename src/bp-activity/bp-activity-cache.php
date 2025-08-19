@@ -240,6 +240,11 @@ add_action( 'added_activity_meta', 'bb_activity_clear_metadata', 10, 2 );
  */
 function bb_activity_comment_reset_count( $activities ) {
 	if ( ! empty( $activities ) ) {
+
+		if ( ! is_array( $activities ) && $activities instanceof BP_Activity_Activity ) {
+			$activities = array( $activities );
+		}
+
 		foreach ( $activities as $activity ) {
 			// Clear the comment count cache based on its own id and parent activity ID.
 			wp_cache_delete( 'bp_activity_comment_count_' . $activity->id, 'bp_activity_comments' );
@@ -268,6 +273,8 @@ function bb_activity_comment_reset_count( $activities ) {
 }
 
 add_action( 'bp_activity_after_delete', 'bb_activity_comment_reset_count' );
+add_action( 'bp_activity_mark_as_spam', 'bb_activity_comment_reset_count' );
+add_action( 'bp_activity_mark_as_ham', 'bb_activity_comment_reset_count' );
 
 /**
  * Reset cache incrementor for the activity when privacy is changed.
