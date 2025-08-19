@@ -811,7 +811,7 @@ class BP_Activity_Activity {
 			 * @param array  $r                Array of arguments passed into method.
 			 */
 			$activity_ids_sql = apply_filters( 'bp_activity_paged_activities_sql', $activity_ids_sql, $r );
-			error_log( $activity_ids_sql );
+
 			/*
 			 * Queries that include 'last_activity' are cached separately,
 			 * since they are generally much less long-lived.
@@ -2133,6 +2133,7 @@ class BP_Activity_Activity {
 	 * @return string The filter clause, for use in a SQL query.
 	 */
 	public static function get_filter_sql( $filter_array ) {
+
 		$filter_sql = array();
 
 		if ( ! empty( $filter_array['user_id'] ) ) {
