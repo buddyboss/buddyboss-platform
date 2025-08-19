@@ -739,6 +739,24 @@ function bp_nouveau_ajax_post_update() {
 		}
 	}
 
+	if (
+		function_exists( 'bb_pro_activity_post_feature_image_instance' ) &&
+		bb_pro_activity_post_feature_image_instance() &&
+		method_exists( bb_pro_activity_post_feature_image_instance(), 'bb_can_user_upload_feature_image' ) &&
+		! bb_pro_activity_post_feature_image_instance()->bb_can_user_upload_feature_image(
+			array(
+				'object'   => ! empty( $_POST['object'] ) ? sanitize_text_field( wp_unslash( $_POST['object'] ) ) : '',
+				'group_id' => ! empty( $_POST['item_id'] ) ? absint( $_POST['item_id'] ) : 0,
+			)
+		)
+	) {
+		wp_send_json_error(
+			array(
+				'message' => esc_html__( 'You do not have permission to upload feature image.', 'buddyboss' ),
+			)
+		);
+	}
+
 	if ( ! strlen( trim( html_entity_decode( wp_strip_all_tags( $_POST['content'] ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) ) ) ) {
 
 		// check activity toolbar options if one of them is set, activity can be empty.
