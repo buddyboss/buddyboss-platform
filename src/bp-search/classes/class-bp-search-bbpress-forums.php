@@ -67,46 +67,10 @@ if ( ! class_exists( 'Bp_Search_bbPress_Forums' ) ) :
 
 			// Build complex WHERE clause for forum visibility.
 			if ( bp_is_active( 'groups' ) ) {
-				$current_user_id = get_current_user_id();
-
-				// Get user's group memberships (where they are member, admin, or mod).
-				$user_groups = bp_get_user_groups(
-					$current_user_id,
-					array(
-						'is_admin' => null,
-						'is_mod'   => null,
-					)
-				);
-
-				$user_group_ids = wp_list_pluck( $user_groups, 'group_id' );
-
-				// Use static cache for restricted groups to avoid multiple database queries.
-				static $restricted_groups_cache = null;
-				static $cache_timestamp = null;
-				
-				// Check if cache needs to be invalidated
-				$cache_invalidated = get_option( 'bbp_search_cache_invalidated', 0 );
-				if ( null === $cache_timestamp || $cache_invalidated > $cache_timestamp ) {
-					$restricted_groups_cache = null;
-					$cache_timestamp = time();
-				}
-				
-				if ( null === $restricted_groups_cache ) {
-					// Get all private and hidden groups (to exclude if user is not member).
-					$restricted_groups = groups_get_groups(
-						array(
-							'fields'   => 'ids',
-							'status'   => array( 'private', 'hidden' ),
-							'per_page' => -1,
-						)
-					);
-					$restricted_groups_cache = ! empty( $restricted_groups['groups'] ) ? $restricted_groups['groups'] : array();
-				}
-				
-				$restricted_group_ids = $restricted_groups_cache;
-
-				// Groups that user cannot access (private/hidden groups where user is not a member).
-				$excluded_group_ids = array_diff( $restricted_group_ids, $user_group_ids );
+				// Get user accessible groups using shared method from parent class.
+				$groups_data = $this->get_user_accessible_groups();
+				$user_group_ids = $groups_data['user_group_ids'];
+				$excluded_group_ids = $groups_data['excluded_group_ids'];
 
 				// Build WHERE clause.
 				$where_parts = array();
@@ -120,6 +84,7 @@ if ( ! class_exists( 'Bp_Search_bbPress_Forums' ) ) :
 				// Condition 2: Forums associated with allowed groups.
 				if ( ! empty( $user_group_ids ) ) {
 					$serialized_values = array();
+					$user_group_ids = array_map( 'intval', $user_group_ids );
 					foreach ( $user_group_ids as $group_id ) {
 						$serialized_values[] = $wpdb->prepare( '%s', maybe_serialize( array( $group_id ) ) );
 					}

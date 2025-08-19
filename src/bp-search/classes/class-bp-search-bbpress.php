@@ -17,6 +17,37 @@ if ( ! class_exists( 'Bp_Search_bbPress' ) ) :
 	abstract class Bp_Search_bbPress extends Bp_Search_Type {
 		public $type;
 
+		/**
+		 * Static cache variables for group data.
+		 */
+		private static $user_cache = null;
+		private static $user_cache_timestamp = null;
+		private static $user_id_cache = null;
+		private static $restricted_groups_cache = null;
+		private static $restricted_cache_timestamp = null;
+
+		/**
+		 * Constructor to set up cache clearing hooks.
+		 */
+		public function __construct() {
+			// Clear cache when groups are updated
+			add_action( 'groups_group_after_save', array( __CLASS__, 'clear_groups_cache' ) );
+			add_action( 'groups_delete_group', array( __CLASS__, 'clear_groups_cache' ) );
+			add_action( 'groups_update_group_status', array( __CLASS__, 'clear_groups_cache' ) );
+		}
+
+		/**
+		 * Clear static caches when groups are updated.
+		 */
+		public static function clear_groups_cache() {
+			// Reset static variables to force cache refresh
+			self::$user_cache = null;
+			self::$user_cache_timestamp = null;
+			self::$user_id_cache = null;
+			self::$restricted_groups_cache = null;
+			self::$restricted_cache_timestamp = null;
+		}
+
 		function sql( $search_term, $only_totalrow_count = false ) {
 			global $wpdb;
 			$query_placeholder = array();
@@ -55,6 +86,65 @@ if ( ! class_exists( 'Bp_Search_bbPress' ) ) :
 					'only_totalrow_count' => $only_totalrow_count,
 				)
 			);
+		}
+
+		/**
+		 * Get user accessible groups with static caching to avoid code duplication.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return array Array containing user_group_ids and excluded_group_ids
+		 */
+		protected function get_user_accessible_groups() {
+			static $cache = null;
+
+			if ( null !== $cache ) {
+				return $cache;
+			}
+
+			$user_group_ids     = array();
+			$excluded_group_ids = array();
+
+			if ( bp_is_active( 'groups' ) ) {
+				$current_user_id = get_current_user_id();
+
+				// Get user's group memberships.
+				$user_groups    = bp_get_user_groups(
+					$current_user_id,
+					array(
+						'is_admin' => null,
+						'is_mod'   => null,
+					)
+				);
+				$user_group_ids = wp_list_pluck( $user_groups, 'group_id' );
+
+				// Use static cache for restricted groups to avoid multiple database queries.
+				static $restricted_groups_cache = null;
+
+				if ( null === $restricted_groups_cache ) {
+					// Get all private and hidden groups.
+					$restricted_groups       = groups_get_groups(
+						array(
+							'fields'   => 'ids',
+							'status'   => array( 'private', 'hidden' ),
+							'per_page' => - 1,
+						)
+					);
+					$restricted_groups_cache = ! empty( $restricted_groups['groups'] ) ? $restricted_groups['groups'] : array();
+				}
+
+				$restricted_group_ids = $restricted_groups_cache;
+
+				// Groups that user cannot access.
+				$excluded_group_ids = array_diff( $restricted_group_ids, $user_group_ids );
+			}
+
+			$cache = array(
+				'user_group_ids'     => $user_group_ids,
+				'excluded_group_ids' => $excluded_group_ids
+			);
+
+			return $cache;
 		}
 
 		protected function generate_html( $template_type = '' ) {
