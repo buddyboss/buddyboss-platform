@@ -822,6 +822,27 @@ function bp_media_allowed_document_type() {
 
 function bp_document_download_file( $attachment_id, $type = 'document' ) {
 
+	// Security: Validate input parameters.
+	$attachment_id = absint( $attachment_id );
+	if ( $attachment_id <= 0 ) {
+		wp_die(
+			esc_html__( 'Invalid attachment ID', 'buddyboss' ),
+			esc_html__( 'Security Error', 'buddyboss' ),
+			array( 'response' => 400 )
+		);
+		return;
+	}
+
+	$type = sanitize_text_field( $type );
+	if ( ! in_array( $type, array( 'document', 'folder' ), true ) ) {
+		wp_die(
+			esc_html__( 'Invalid document type', 'buddyboss' ),
+			esc_html__( 'Security Error', 'buddyboss' ),
+			array( 'response' => 400 )
+		);
+		return;
+	}
+
 	// Add action to prevent issues in IE.
 	add_action( 'nocache_headers', 'bp_document_ie_nocache_headers_fix' );
 
@@ -876,22 +897,45 @@ function bp_document_download_file( $attachment_id, $type = 'document' ) {
 		// Get folder object.
 		$folder = folders_get_folder( $attachment_id );
 
+		// Security: Validate folder exists and is valid.
+		if ( ! $folder || ! isset( $folder->id ) || $folder->id <= 0 ) {
+			wp_die(
+				esc_html__( 'Invalid folder', 'buddyboss' ),
+				esc_html__( 'Security Error', 'buddyboss' ),
+				array( 'response' => 404 )
+			);
+			return;
+		}
+
+		// Security: Prevent downloading all folders (ID 0).
+		if ( 0 === $folder->id || 0 === $attachment_id ) {
+			wp_die(
+				esc_html__( 'Access denied', 'buddyboss' ),
+				esc_html__( 'Security Error', 'buddyboss' ),
+				array( 'response' => 403 )
+			);
+			return;
+		}
+
 		// Get Upload directory.
 		$upload     = wp_upload_dir();
 		$upload_dir = $upload['basedir'];
 
-		// Create temp folder.
-		$upload_dir = $upload_dir . '/' . $folder->user_id . '-download-folder-' . time();
+		// Create temp folder with random name for security.
+		$random_suffix = wp_generate_password( 12, false );
+		$upload_dir    = $upload_dir . '/' . $folder->user_id . '-download-folder-' . time() . '-' . $random_suffix;
 
 		// If folder not exists then create.
 		if ( ! is_dir( $upload_dir ) ) {
 
 			// Create temp folder.
 			wp_mkdir_p( $upload_dir );
-			chmod( $upload_dir, 0777 );
+			// Security: Use safer permissions.
+			chmod( $upload_dir, 0755 );
 
-			// Create given main parent folder.
-			$parent_folder = $upload_dir . '/' . $folder->title;
+			// Create given main parent folder with sanitized name.
+			$safe_folder_title = sanitize_file_name( $folder->title );
+			$parent_folder     = $upload_dir . '/' . $safe_folder_title;
 			wp_mkdir_p( $parent_folder );
 
 			// Fetch all the attachments of the parent folder.
@@ -899,7 +943,7 @@ function bp_document_download_file( $attachment_id, $type = 'document' ) {
 			if ( ! empty( $get_parent_attachments ) ) {
 				foreach ( $get_parent_attachments as $attachment ) {
 					$the_file  = get_attached_file( $attachment->attachment_id );
-					$file_name = basename( $the_file );
+					$file_name = sanitize_file_name( basename( $the_file ) );
 					copy( $the_file, $parent_folder . '/' . $file_name );
 				}
 			}
@@ -1014,7 +1058,9 @@ function bp_document_get_child_folders( $folder_id = 0, $parent_folder = '' ) {
 
 	$document_folder_table = $bp->document->table_name_folder;
 
-	if ( 0 === $folder_id ) {
+	$folder_id = absint( $folder_id );
+
+	if ( $folder_id <= 0 ) {
 		return;
 	}
 
