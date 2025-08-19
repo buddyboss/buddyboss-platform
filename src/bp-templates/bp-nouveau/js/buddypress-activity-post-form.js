@@ -5398,9 +5398,9 @@ window.bp = window.bp || {};
 					this.views.add( new bp.Views.activityPollForm( { model: this.model } ) );
 				}
 
-				// Add BB Featured Image View.
-				if ( ! _.isUndefined( bp.Views.featuredImageForm ) ) {
-					this.views.add( new bp.Views.featuredImageForm( { model: this.model } ) );
+				// Add BB Activity Post Feature Image View.
+				if ( ! _.isUndefined( bp.Views.activityPostFeatureImageForm ) ) {
+					this.views.add( new bp.Views.activityPostFeatureImageForm( { model: this.model } ) );
 				}
 
 				this.views.add( new bp.Views.ActivityInput(
