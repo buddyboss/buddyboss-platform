@@ -237,6 +237,27 @@ $activity_popup_title = sprintf( esc_html__( '%s\'s post', 'buddyboss' ), bp_cor
 
 	<?php endif; ?>
 
+	<?php
+	if (
+		function_exists( 'bb_pro_activity_post_feature_image_instance' ) &&
+		bb_pro_activity_post_feature_image_instance() &&
+		method_exists( bb_pro_activity_post_feature_image_instance(), 'bb_get_feature_image_data' )
+	) {
+		?>
+		<div class="activity-feature-image">
+			<?php
+			$feature_image_data = bb_pro_activity_post_feature_image_instance()->bb_get_feature_image_data( $activity_id );
+			if ( ! empty( $feature_image_data ) ) {
+				?>
+				<img src="<?php echo esc_url( $feature_image_data['url'] ); ?>" alt="<?php echo esc_attr( $feature_image_data['alt'] ); ?>" />
+				<?php
+			}
+			?>
+		</div>
+		<?php
+	}
+	?>
+
 	<div class="activity-content <?php bp_activity_entry_css_class(); ?>">
 
 		<?php
