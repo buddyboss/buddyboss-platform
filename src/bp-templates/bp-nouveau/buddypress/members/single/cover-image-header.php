@@ -88,14 +88,14 @@ if ( ! bp_is_user_messages() && ! bp_is_user_settings() && ! bp_is_user_notifica
 			}
 			if ( $bp_is_my_profile ) {
 				?>
-				<a href="<?php echo esc_url( bp_get_members_component_link( 'profile', 'change-cover-image' ) ); ?>" class="link-change-cover-image bp-tooltip" data-bp-tooltip-pos="right" data-bp-tooltip="<?php esc_attr_e( 'Change Cover Photo', 'buddyboss' ); ?>">
+				<a href="<?php echo esc_url( bp_get_members_component_link( 'profile', 'change-cover-image' ) ); ?>" class="link-change-cover-image bp-tooltip" data-bp-tooltip-pos="right" data-bp-tooltip="<?php esc_attr_e( 'Change Cover Photo', 'buddyboss' ); ?>" aria-label="<?php esc_attr_e( 'Change Cover Photo', 'buddyboss' ); ?>">
 					<i class="bb-icon-bf bb-icon-camera"></i>
 				</a>
 
 				<?php
 				if ( ! empty( $cover_image_url ) && bp_attachments_get_user_has_cover_image( $bp_displayed_user_id ) ) {
 					?>
-					<a href="#" class="position-change-cover-image bp-tooltip" data-bp-tooltip-pos="right" data-bp-tooltip="<?php esc_attr_e( 'Reposition Cover Photo', 'buddyboss' ); ?>">
+					<a href="#" class="position-change-cover-image bp-tooltip" data-bp-tooltip-pos="right" data-bp-tooltip="<?php esc_attr_e( 'Reposition Cover Photo', 'buddyboss' ); ?>" aria-label="<?php esc_attr_e( 'Reposition Cover Photo', 'buddyboss' ); ?>">
 						<i class="bb-icon-bf bb-icon-arrows"></i>
 					</a>
 					<div class="header-cover-reposition-wrap">
@@ -124,7 +124,7 @@ if ( ! bp_is_user_messages() && ! bp_is_user_settings() && ! bp_is_user_notifica
 
 				if ( $bp_is_my_profile && ! bp_disable_avatar_uploads() ) {
 					?>
-					<a href="<?php bp_members_component_link( 'profile', 'change-avatar' ); ?>" class="link-change-profile-image bp-tooltip" data-bp-tooltip-pos="down" data-bp-tooltip="<?php esc_attr_e( 'Change Profile Photo', 'buddyboss' ); ?>">
+					<a href="<?php bp_members_component_link( 'profile', 'change-avatar' ); ?>" class="link-change-profile-image bp-tooltip" data-bp-tooltip-pos="down" data-bp-tooltip="<?php esc_attr_e( 'Change Profile Photo', 'buddyboss' ); ?>" aria-label="<?php esc_attr_e( 'Change Profile Photo', 'buddyboss' ); ?>">
 						<i class="bb-icon-rf bb-icon-camera"></i>
 					</a>
 					<span class="link-change-overlay"></span>
