@@ -520,7 +520,7 @@ function bp_version_updater() {
 		}
 
 		if ( $raw_db_version < 23521 ) {
-			bb_update_to_2_9_40();
+			bb_update_to_2_9_50();
 		}
 
 		if ( $raw_db_version !== $current_db ) {
@@ -4007,15 +4007,15 @@ function bb_update_to_2_9_4() {
  *
  * @return void
  */
-function bb_update_to_2_9_40() {
+function bb_update_to_2_9_50() {
 	global $wpdb;
 
-	$is_already_run = get_transient( 'bb_update_to_2_9_40' );
+	$is_already_run = get_transient( 'bb_update_to_2_9_50' );
 	if ( $is_already_run ) {
 		return;
 	}
 
-	set_transient( 'bb_update_to_2_9_40', 'yes', HOUR_IN_SECONDS );
+	set_transient( 'bb_update_to_2_9_50', 'yes', HOUR_IN_SECONDS );
 
 	$bp_prefix      = function_exists( 'bp_core_get_table_prefix' ) ? bp_core_get_table_prefix() : $wpdb->base_prefix;
 	$activity_table = $bp_prefix . 'bp_activity';
