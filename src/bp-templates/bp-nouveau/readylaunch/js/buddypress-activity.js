@@ -1739,16 +1739,18 @@ window.bp = window.bp || {};
 		toggleMultiMediaOptions: function ( form, target, placeholder ) {
 			if ( ! _.isUndefined( bbRlMedia ) ) {
 
-				var parent_activity, activity_data;
+				var parent_activity, activity_data, parent_activity_data;
 
 				if ( placeholder ) {
 					target          = target ? $( target ) : $( placeholder );
 					parent_activity = target.closest( '.bb-rl-activity-modal' ).find( '.activity-item' );
 					activity_data   = target.closest( '.bb-rl-activity-modal' ).find( '.activity-item' ).data( 'bp-activity' );
+					parent_activity_data   = parent_activity.data( 'bp-activity' );
 					form            = $( placeholder );
 				} else {
 					parent_activity = target.closest( '.activity-item' );
-					activity_data   = target.closest( '.activity-item' ).data( 'bp-activity' );
+					activity_data = target.closest( '.activity-item' ).data( 'bp-activity' );
+					parent_activity_data = parent_activity.data( 'bp-activity' );
 				}
 
 				var targetLi = target.closest( 'li' ).data( 'bp-activity-comment' );
@@ -1765,14 +1767,30 @@ window.bp = window.bp || {};
 					return fallbackValue;
 				};
 
+				var mediaGroupSettings = function ( mediaType, fallbackValue ) {
+					if (
+						activity_data &&
+						! _.isUndefined( activity_data[mediaType] ) &&
+						parent_activity_data &&
+						! _.isUndefined( parent_activity_data[mediaType] )
+					) {
+						return activity_data[mediaType] && parent_activity_data[mediaType];
+					} else if ( false === bbRlMedia[mediaType] ) {
+						return bbRlMedia[mediaType];
+					}
+					return fallbackValue;
+				};
+
+
+
 				if (
 					target.closest( 'li' ).hasClass( 'groups' ) ||
 					parent_activity.hasClass( 'groups' )
 				) {
 					var groupMediaSettings = {
-						group_media   : mediaSettings( 'group_media', false ),
-						group_document: mediaSettings( 'group_document', false ),
-						group_video   : mediaSettings( 'group_video', false ),
+						group_media   : mediaGroupSettings( 'group_media', false ),
+						group_document: mediaGroupSettings( 'group_document', false ),
+						group_video   : mediaGroupSettings( 'group_video', false ),
 						gif           : bbRlMedia.gif.groups,
 						emoji         : bbRlMedia.emoji.groups
 					};
