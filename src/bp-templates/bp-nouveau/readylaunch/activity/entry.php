@@ -274,7 +274,7 @@ $bb_rl_activity_class_exists = class_exists( 'BB_Activity_Readylaunch' ) ? BB_Ac
 				$feature_image_data = bb_pro_activity_post_feature_image_instance()->bb_get_feature_image_data( $activity_id );
 				if ( ! empty( $feature_image_data ) ) {
 					?>
-					<img src="<?php echo esc_url( $feature_image_data['url'] ); ?>" alt="<?php echo esc_attr( $feature_image_data['alt'] ); ?>" />
+					<img src="<?php echo esc_url( $feature_image_data['url'] ); ?>" alt="<?php echo esc_attr( $feature_image_data['title'] ); ?>" />
 					<?php
 				}
 				?>
