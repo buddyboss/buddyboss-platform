@@ -383,6 +383,12 @@ window.bp = window.bp || {};
 				}
 			}
 
+			// Trigger custom event for edit activity loaded.
+			$( 'body' ).trigger( 'bb_activity_edit_loaded', {
+				model: self.model,
+				activity_data: activity_data,
+			} );
+
 			// Set link image index and confirm image index.
 			self.postForm.model.set( 'link_image_index', activity_data.link_image_index_save );
 			self.postForm.model.set( 'link_image_index_save', activity_data.link_image_index_save );
@@ -1050,6 +1056,13 @@ window.bp = window.bp || {};
 				return;
 			}
 
+			// Trigger custom event for draft activity loaded.
+			$( 'body' ).trigger( 'bb_activity_draft_loaded', {
+				model: this.model,
+				activity_data: activity_data,
+				draft_activity: bp.draft_activity
+			} );
+
 			var is_profile_activity = this.isProfileDraftActivity( activity_data );
 
 			// Sync profile/group media.
@@ -1390,6 +1403,12 @@ window.bp = window.bp || {};
 				'polls_allowed',
 				'topics',
 			];
+			
+			// Trigger custom event for draft activity loaded.
+			$( 'body' ).trigger( 'bb_activity_draft_data_keys', {
+				model: this.model,
+				draft_data_keys: draft_data_keys
+			} );		
 
 			_.each(
 				draft_data_keys,

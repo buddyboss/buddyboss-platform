@@ -742,8 +742,8 @@ function bp_nouveau_ajax_post_update() {
 	if (
 		function_exists( 'bb_pro_activity_post_feature_image_instance' ) &&
 		bb_pro_activity_post_feature_image_instance() &&
-		method_exists( bb_pro_activity_post_feature_image_instance(), 'bb_can_user_upload_feature_image' ) &&
-		! bb_pro_activity_post_feature_image_instance()->bb_can_user_upload_feature_image(
+		method_exists( bb_pro_activity_post_feature_image_instance(), 'bb_user_has_access_feature_image' ) &&
+		! bb_pro_activity_post_feature_image_instance()->bb_user_has_access_feature_image(
 			array(
 				'object'   => ! empty( $_POST['object'] ) ? sanitize_text_field( wp_unslash( $_POST['object'] ) ) : '',
 				'group_id' => ! empty( $_POST['item_id'] ) ? absint( $_POST['item_id'] ) : 0,
