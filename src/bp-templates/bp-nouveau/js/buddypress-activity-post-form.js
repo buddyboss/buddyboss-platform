@@ -1273,6 +1273,11 @@ window.bp = window.bp || {};
 						(
 							! _.isUndefined( self.postForm.model.get( 'gif_data' ) ) && ! Object.keys( self.postForm.model.get( 'gif_data' ) ).length
 						) || _.isUndefined( self.postForm.model.get( 'media' ) )
+					) &&
+					(
+						'undefined' === typeof BBActivityPostFeatureImage || 
+						'function' !== typeof BBActivityPostFeatureImage.hasFeatureImages ||
+						! BBActivityPostFeatureImage.hasFeatureImages()
 					)
 				) &&
 				(
