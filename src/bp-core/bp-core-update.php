@@ -3984,9 +3984,9 @@ function bb_update_to_2_9_2() {
 }
 
 /**
- * Migrate for BuddyBoss [BBVERSION].
+ * Migrate for BuddyBoss 2.10.0.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.10.0
  */
 function bb_update_to_2_9_4() {
 	// Purge all the cache for API.
