@@ -1238,6 +1238,12 @@ window.bp = window.bp || {};
 				}
 				self.postForm.model.set( 'video', video );
 			}
+			
+			$( 'body' ).trigger( 'bb_activity_draft_collect_activity', {
+				model: this.model,
+				activity_data: self.postForm.model.attributes,
+				meta: meta
+			} );
 
 			var filtered_content = $( $.parseHTML( content ) ).text().trim();
 			if ( content.includes( 'data-emoji-char' ) && '' === filtered_content ) {
