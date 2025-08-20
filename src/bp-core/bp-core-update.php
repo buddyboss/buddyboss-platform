@@ -515,8 +515,12 @@ function bp_version_updater() {
 			bb_update_to_2_9_2();
 		}
 
+		if ( $raw_db_version < 23431 ) {
+			bb_update_to_2_9_4();
+		}
+
 		if ( $raw_db_version < 23521 ) {
-			bb_update_to_2_9_40();
+			bb_update_to_2_9_50();
 		}
 
 		if ( $raw_db_version !== $current_db ) {
@@ -3984,21 +3988,34 @@ function bb_update_to_2_9_2() {
 }
 
 /**
+ * Migrate for BuddyBoss 2.10.0.
+ *
+ * @since BuddyBoss 2.10.0
+ */
+function bb_update_to_2_9_4() {
+	// Purge all the cache for API.
+	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
+		// Clear groups API cache.
+		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-groups' );
+	}
+}
+
+/**
  * Add index for activity table.
  *
  * @since BuddyBoss [BBVERSION]
  *
  * @return void
  */
-function bb_update_to_2_9_40() {
+function bb_update_to_2_9_50() {
 	global $wpdb;
 
-	$is_already_run = get_transient( 'bb_update_to_2_9_40' );
+	$is_already_run = get_transient( 'bb_update_to_2_9_50' );
 	if ( $is_already_run ) {
 		return;
 	}
 
-	set_transient( 'bb_update_to_2_9_40', 'yes', HOUR_IN_SECONDS );
+	set_transient( 'bb_update_to_2_9_50', 'yes', HOUR_IN_SECONDS );
 
 	$bp_prefix      = function_exists( 'bp_core_get_table_prefix' ) ? bp_core_get_table_prefix() : $wpdb->base_prefix;
 	$activity_table = $bp_prefix . 'bp_activity';

@@ -63,6 +63,9 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			add_filter( 'bp_rest_platform_settings', array( $this, 'bb_rest_readylaunch_platform_settings' ), 10, 1 );
 			add_filter( 'bb_telemetry_platform_options', array( $this, 'bb_rl_telemetry_platform_options' ), 10, 1 );
 
+			//Localise the script for admin.
+			add_filter( 'bb_admin_localize_script', array( $this, 'bb_rl_admin_localize_script' ), 10, 2 );
+
 			if ( ! $enabled ) {
 				return;
 			}
@@ -247,8 +250,6 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 			// Add Dynamic colours.
 			add_action( 'wp_head', array( $this, 'bb_rl_dynamic_colors' ) );
-
-			add_filter( 'bb_admin_localize_script', array( $this, 'bb_rl_admin_localize_script' ), 10, 2 );
 
 			add_action( 'wp_ajax_bb_fetch_header_messages', array( $this, 'bb_fetch_header_messages' ) );
 			add_action( 'wp_ajax_bb_fetch_header_notifications', array( $this, 'bb_fetch_header_notifications' ) );
@@ -1485,7 +1486,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 								if ( ! empty( $item['thumbnail'] ) ) {
 									?>
 												<div class="item-avatar">
-													<a href="<?php echo esc_url( $item['permalink'] ); ?>">
+													<a href="<?php echo esc_url( $item['permalink'] ); ?>" aria-label="<?php echo esc_attr( $item['title'] ); ?>">
 											<?php
 												echo wp_kses(
 													$item['thumbnail'],
@@ -4191,6 +4192,9 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			}
 
 			$localize_arg['component_pages'] = $component_pages;
+
+			// Check if ReadyLaunch onboarding is completed.
+			$localize_arg['rl_onboarding_completed'] = bp_get_option( 'bb_rl_onboarding_completed', false );
 
 			return $localize_arg;
 		}
