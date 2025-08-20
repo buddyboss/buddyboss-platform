@@ -4583,6 +4583,14 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
   }
 }
 
+.activity-list .has-featured-image .bb-activity-more-options-wrap {
+  top: 208px;
+}
+
+.activity-list .has-featured-image .bb-pin-action {
+  top: 208px;
+}
+
 .activity-list .bb-pin-action {
   position: absolute;
   right: 20px;
