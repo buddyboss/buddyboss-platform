@@ -39,55 +39,6 @@ class Pre_User_Provider {
 	 */
 	public function load() {
 		add_filter( 'rest_cache_pre_current_user_id', array( $this, 'cookie_support' ), 1 );
-		add_filter( 'rest_cache_pre_current_user_id', array( $this, 'bbapp_auth' ), 2 );
-	}
-
-	/**
-	 * Get the Pre User ID from BuddyBoss APP JWT Token.
-	 *
-	 * @param int $user_id User ID.
-	 *
-	 * @return int|void
-	 */
-	public function bbapp_auth( $user_id ) {
-
-		$header = $this->get_all_headers();
-
-		$jwt_token = false;
-		if ( ! empty( $header ) ) {
-			foreach ( $header as $k => $v ) {
-				if ( strtolower( $k ) === 'accesstoken' ) {
-					$jwt_token = $v;
-					break;
-				}
-			}
-		}
-
-		if ( $jwt_token ) {
-
-			$token = explode( '.', $jwt_token );
-			// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode
-			$token = (array) json_decode( base64_decode( $token[1] ) );
-
-			if ( isset( $token['data'] ) && isset( $token['data']->user ) && isset( $token['data']->user->id ) ) {
-				$user_id = $token['data']->user->id;
-
-				// Check if there is any switch user.
-				$switch_data = get_user_meta( $user_id, '_bbapp_jwt_switch_user', true );
-				$switch_data = ( ! is_array( $switch_data ) ) ? array() : $switch_data;
-				$jti         = ( isset( $token['jti'] ) ) ? $token['jti'] : false;
-
-				// if switch user is found for current access token pass it.
-				if ( $jti && isset( $switch_data[ $jti ] ) && is_numeric( $switch_data[ $jti ] ) ) {
-					return (int) $switch_data[ $jti ];
-				}
-
-				// End Switch user logic's.
-
-				return $user_id;
-			}
-		}
-
 	}
 
 	/**
@@ -126,9 +77,9 @@ class Pre_User_Provider {
 	 */
 	public function wp_parse_auth_cookie( $cookie = '', $scheme = '' ) {
 		if ( empty( $cookie ) ) {
-
 			// @see wp_cookie_constants()..
 			$siteurl = get_site_option( 'siteurl' );
+
 			if ( $siteurl ) {
 				$cookie_hash = md5( $siteurl );
 			} else {
@@ -153,6 +104,7 @@ class Pre_User_Provider {
 		}
 
 		$cookie_elements = explode( '|', $cookie );
+
 		if ( count( $cookie_elements ) !== 4 ) {
 			return false;
 		}
@@ -160,30 +112,5 @@ class Pre_User_Provider {
 		list( $username, $expiration, $token, $hmac ) = $cookie_elements;
 
 		return compact( 'username', 'expiration', 'token', 'hmac', 'scheme' );
-	}
-
-	/**
-	 * Get Headers.
-	 *
-	 * @return array|false|string
-	 */
-	public function get_all_headers() {
-
-		if ( function_exists( 'getallheaders' ) ) {
-			return getallheaders();
-		}
-
-		if ( ! is_array( $_SERVER ) ) {
-			return array();
-		}
-
-		$headers = array();
-		foreach ( $_SERVER as $name => $value ) {
-			if ( substr( $name, 0, 5 ) === 'HTTP_' ) {
-				$headers[ str_replace( ' ', '-', ucwords( strtolower( str_replace( '_', ' ', substr( $name, 5 ) ) ) ) ) ] = $value;
-			}
-		}
-
-		return $headers;
 	}
 }

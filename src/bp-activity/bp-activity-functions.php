@@ -606,7 +606,14 @@ function bp_activity_get_post_types_tracking_args() {
 				// Used to be able to find the post type this activity type is associated to.
 				$track_post_type->comments_tracking->post_type = $post_type;
 
-				$post_types_tracking_args[ $track_post_type->comments_tracking->action_id ] = $track_post_type->comments_tracking;
+				// Attach comment tracking to respective post type.
+				if ( 'post' === $post_type ) {
+					$post_type_comment_action_id = 'new_blog_comment';
+				} else {
+					$post_type_comment_action_id = 'new_blog_' . $post_type . '_comment';
+				}
+
+				$post_types_tracking_args[ $post_type_comment_action_id ] = $track_post_type->comments_tracking;
 
 				// Used to check support for comment tracking by activity type (new_post_type)
 				$track_post_type->comments_tracking = true;
@@ -1941,6 +1948,7 @@ function bp_activity_get( $args = '' ) {
 			'filter'            => array(),
 			'pin_type'          => '',
 			'status'            => bb_get_activity_published_status(),
+			'topic_id'          => false,
 		),
 		'activity_get'
 	);
@@ -1969,6 +1977,7 @@ function bp_activity_get( $args = '' ) {
 			'fields'            => $r['fields'],
 			'pin_type'          => $r['pin_type'],
 			'status'            => $r['status'],
+			'topic_id'          => $r['topic_id'],
 		)
 	);
 
@@ -6165,6 +6174,11 @@ function bb_activity_migration( $raw_db_version, $current_db ) {
 			}
 		}
 	}
+
+	if ( function_exists( 'bb_topics_manager_instance' ) ) {
+		// Create a new table.
+		bb_topics_manager_instance()->create_tables();
+	}
 }
 
 /**
@@ -6344,7 +6358,7 @@ function bb_activity_comment_get_edit_data( $activity_comment_id = 0 ) {
 		return false;
 	}
 
-	$edit_data = wp_cache_get( $activity_comment_id, 'activity_edit_data' );
+	$edit_data = wp_cache_get( 'comment_' . $activity_comment_id, 'activity_edit_data' );
 	if ( false === $edit_data ) {
 		// Get activity metas.
 		$activity_comment_metas    = bb_activity_get_metadata( $activity_comment_id );
@@ -6383,6 +6397,8 @@ function bb_activity_comment_get_edit_data( $activity_comment_id = 0 ) {
 			'user_id'          => $activity_comment_user_id,
 			'nickname'         => $activity_comment_nickname,
 		);
+
+		wp_cache_set( 'comment_' . $activity_comment_id, $edit_data, 'activity_edit_data' );
 	}
 
 	/**
@@ -6482,28 +6498,35 @@ function bb_activity_pin_unpin_post( $args = array() ) {
 
 		// Check if group activity or normal activity.
 		if ( 'groups' === $activity->component && ! empty( $activity->item_id ) ) {
+			$has_permission = false;
 
-			// Check the user is moderator or organizer and part of the group.
-			if ( ! groups_is_user_member( $r['user_id'], $activity->item_id ) ) {
-				$retval = 'not_member';
+			// First check if user is a site administrator.
+			if ( bp_current_user_can( 'administrator' ) ) {
+				$has_permission = true;
 			} else {
+				// Check group organizer or moderator permissions if not a site admin.
 				$is_admin = groups_is_user_admin( $r['user_id'], $activity->item_id );
 				$is_mod   = groups_is_user_mod( $r['user_id'], $activity->item_id );
 
-				if ( $is_admin || $is_mod || bp_current_user_can( 'administrator' ) ) {
-					$old_value = groups_get_groupmeta( $activity->item_id, 'bb_pinned_post' );
-					groups_update_groupmeta( $activity->item_id, 'bb_pinned_post', $updated_value );
-				} else {
-					$retval = 'not_allowed';
+				if (
+					( $is_admin || $is_mod ) &&
+					bb_is_active_activity_pinned_posts()
+				) {
+					$has_permission = true;
 				}
 			}
-		} else {
-			if ( bp_current_user_can( 'administrator' ) ) {
-				$old_value = bp_get_option( 'bb_pinned_post' );
-				bp_update_option( 'bb_pinned_post', $updated_value );
+
+			if ( $has_permission ) {
+				$old_value = groups_get_groupmeta( $activity->item_id, 'bb_pinned_post' );
+				groups_update_groupmeta( $activity->item_id, 'bb_pinned_post', $updated_value );
 			} else {
 				$retval = 'not_allowed';
 			}
+		} elseif ( bp_current_user_can( 'administrator' ) ) {
+			$old_value = bp_get_option( 'bb_pinned_post' );
+			bp_update_option( 'bb_pinned_post', $updated_value );
+		} else {
+			$retval = 'not_allowed';
 		}
 
 		// Check if already exists and updating new value.
@@ -6905,7 +6928,15 @@ function bb_get_close_activity_comments_notice( $activity_id = 0 ) {
 		}
 	}
 
-	return $closed_notice;
+	/**
+	 * Filter the close activity comments notice.
+	 *
+	 * @since BuddyBoss 2.9.30
+	 *
+	 * @param string $closed_notice The close activity comments notice.
+	 * @param int    $activity_id   The activity ID.
+	 */
+	return apply_filters( 'bb_get_close_activity_comments_notice', $closed_notice, $activity_id );
 }
 
 /**
@@ -7452,7 +7483,7 @@ function bb_activity_update_date_updated( $activity_id, $time ) {
  * @since BuddyBoss 2.8.20
  *
  * @param object $activity Activity object.
- * 
+ *
  * @return object Activity object.
  */
 function bb_activity_get_comment_parent_activity_object( $activity ) {
@@ -7655,4 +7686,61 @@ function bb_activity_update_date_updated_and_clear_cache( $activity, $date_updat
 			bp_activity_clear_cache_for_activity( $parent_comment_activity_object );
 		}
 	}
+}
+
+/**
+ * Check if the activity topics are enabled.
+ *
+ * @since BuddyBoss 2.8.80
+ *
+ * @param bool $retval Default value.
+ *
+ * @return bool Whether the activity topics are enabled.
+ */
+function bb_is_enabled_activity_topics( $retval = false ) {
+
+	/**
+	 * Filters the activity topics status.
+	 *
+	 * @since BuddyBoss 2.8.80
+	 *
+	 * @param bool $enable_activity_topics Whether the activity topics are enabled.
+	 */
+	return (bool) apply_filters( 'bb_is_enabled_activity_topics', bp_get_option( 'bb_enable_activity_topics', $retval ) );
+}
+
+/**
+ * Check if the activity topic is required.
+ *
+ * @since BuddyBoss 2.8.80
+ *
+ * @param bool $retval Default value.
+ *
+ * @return bool Whether the activity topic is required.
+ */
+function bb_is_activity_topic_required( $retval = false ) {
+
+	/**
+	 * Filters the activity topic required status.
+	 *
+	 * @since BuddyBoss 2.8.80
+	 *
+	 * @param bool $enable_activity_topic_required Whether the activity topic is required.
+	 */
+	return (bool) apply_filters( 'bb_is_activity_topic_required', bp_get_option( 'bb_activity_topic_required', $retval ) );
+}
+
+/**
+ * Get the singleton instance of BB_Activity_Topics_Manager.
+ *
+ * @since BuddyBoss 2.8.80
+ *
+ * @return BB_Activity_Topics_Manager|null Instance of the topics manager or null if the class doesn't exist.
+ */
+function bb_activity_topics_manager_instance() {
+	if ( class_exists( 'BB_Activity_Topics_Manager' ) ) {
+		return BB_Activity_Topics_Manager::instance();
+	}
+
+	return null;
 }

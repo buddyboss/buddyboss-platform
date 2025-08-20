@@ -563,7 +563,7 @@ function bp_media_forums_new_post_media_save( $post_id ) {
 		$media_ids = array();
 		foreach ( $medias as $media ) {
 
-			$title             = ! empty( $media['name'] ) ? $media['name'] : '';
+			$title             = ! empty( $media['name'] ) ? sanitize_text_field( wp_unslash( $media['name'] ) ) : '';
 			$attachment_id     = ! empty( $media['id'] ) ? $media['id'] : 0;
 			$attached_media_id = ! empty( $media['media_id'] ) ? $media['media_id'] : 0;
 			$album_id          = ! empty( $media['album_id'] ) ? $media['album_id'] : 0;
@@ -778,7 +778,7 @@ function bp_media_forums_embed_gif( $content, $id ) {
 				<video preload="auto" playsinline poster="<?php echo $preview_url; ?>" loop muted>
 					<source src="<?php echo $video_url; ?>" type="video/mp4">
 				</video>
-				<a href="#" class="gif-play-button">
+				<a href="#" class="gif-play-button" aria-label="<?php esc_attr_e( 'Play GIF', 'buddyboss' ); ?>">
 					<span class="bb-icon-bl bb-icon-play"></span>
 				</a>
 				<span class="gif-icon"></span>
@@ -1144,7 +1144,7 @@ function bp_media_activity_embed_gif_content( $activity_id ) {
 				<video preload="auto" playsinline poster="<?php echo $preview_url; ?>" loop muted>
 					<source src="<?php echo $video_url; ?>" type="video/mp4">
 				</video>
-				<a href="#" class="gif-play-button">
+				<a href="#" class="gif-play-button" aria-label="<?php esc_attr_e( 'Play GIF', 'buddyboss' ); ?>">
 					<span class="bb-icon-bl bb-icon-play"></span>
 				</a>
 				<span class="gif-icon"></span>

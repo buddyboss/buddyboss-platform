@@ -343,7 +343,7 @@ class BP_Activity_Activity {
 			bb_get_activity_published_status() === $this->status
 		) {
 			add_filter( 'bp_activity_at_name_do_notifications', '__return_true' );
-		} else {
+		} elseif ( ! in_array( $this->privacy, array( 'media', 'video', 'document' ), true ) ) {
 			add_filter( 'bp_activity_at_name_do_notifications', '__return_false' );
 		}
 
@@ -604,6 +604,7 @@ class BP_Activity_Activity {
 				}
 			}
 		}
+		$r['pinned_id'] = $pinned_id;
 
 		// Hide Hidden Items?
 		if ( ! $r['show_hidden'] ) {
@@ -2188,7 +2189,15 @@ class BP_Activity_Activity {
 			return false;
 		}
 
-		return join( ' AND ', $filter_sql );
+		/**
+		 * Filter the activity get filter sql.
+		 *
+		 * @since BuddyBoss 2.8.80
+		 *
+		 * @param string $filter_sql   The filter sql.
+		 * @param array  $filter_array The filter array.
+		 */
+		return apply_filters( 'bb_activity_activity_get_filter_sql', join( ' AND ', $filter_sql ), $filter_array );
 	}
 
 	/**

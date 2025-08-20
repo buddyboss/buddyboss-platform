@@ -433,6 +433,7 @@ function bp_document_get_specific( $args = '' ) {
 			'meta_query'       => false,
 			'privacy'          => false,      // privacy to filter.
 			'moderation_query' => true,
+			'count_total'      => false,
 			'status'           => bb_document_get_published_status(), // Filter by document status. published, scheduled.
 		),
 		'document_get_specific'
@@ -451,6 +452,7 @@ function bp_document_get_specific( $args = '' ) {
 		'meta_query'       => $r['meta_query'],
 		'moderation_query' => $r['moderation_query'],
 		'status'           => $r['status'],
+		'count_total'      => $r['count_total'],
 	);
 
 	/**
@@ -540,6 +542,12 @@ function bp_document_add( $args = '' ) {
 		$document->privacy = $r['privacy'];
 	} elseif ( ! empty( $document->group_id ) ) {
 		$document->privacy = 'grouponly';
+		if ( ! empty( $document->activity_id ) ) {
+			$activity = new BP_Activity_Activity( $document->activity_id );
+			if ( ! empty( $activity ) && 'activity_comment' === $activity->type ) {
+				$document->privacy = $r['privacy'];
+			}
+		}
 	} elseif ( ! empty( $document->folder_id ) ) {
 		$folder = new BP_Document_Folder( $document->folder_id );
 		if ( ! empty( $folder ) ) {
@@ -3824,7 +3832,11 @@ function bp_document_delete_document_previews() {
 	if ( ! is_dir( $inner_directory_name ) ) {
 		return;
 	}
-	$dir          = opendir( $inner_directory_name );
+
+	$dir = opendir( $inner_directory_name );
+	if ( false === $dir ) {
+		return;
+	}
 	$five_minutes = strtotime( '-5 minutes' );
 	while ( false != ( $file = readdir( $dir ) ) ) { // phpcs:ignore WordPress.CodeAnalysis.AssignmentInCondition.FoundInWhileCondition, WordPress.PHP.StrictComparisons.LooseComparison
 		if ( file_exists( $inner_directory_name . '/' . $file ) && is_writable( $inner_directory_name . '/' . $file ) && filemtime( $inner_directory_name . '/' . $file ) < $five_minutes ) {

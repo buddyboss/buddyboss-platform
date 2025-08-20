@@ -330,7 +330,7 @@ class BuddyPress {
 
 		/** Versions */
 		$this->version    = defined( 'BP_PLATFORM_VERSION' ) ? BP_PLATFORM_VERSION : ( defined( 'BP_VERSION' ) ? BP_VERSION : '1.0.0' );
-		$this->db_version = 23321;
+		$this->db_version = 23431;
 
 		/** Loading */
 
@@ -560,6 +560,7 @@ class BuddyPress {
 		require $this->plugin_dir . 'bp-core/bp-core-notification.php';
 		require $this->plugin_dir . 'bp-core/bp-core-invitation.php';
 		require $this->plugin_dir . 'bp-core/bb-core-subscriptions.php';
+		require $this->plugin_dir . 'bp-core/bb-core-blocks.php';
 
 		// Maybe load deprecated buddypress functionality (this double negative is proof positive!).
 		if ( ! bp_get_option( '_bp_ignore_deprecated_code', ! $this->load_deprecated ) ) {
@@ -601,6 +602,10 @@ class BuddyPress {
 
 		if ( defined( 'WP_CLI' ) && file_exists( $this->plugin_dir . 'cli/wp-cli-bp.php' ) ) {
 			require $this->plugin_dir . 'cli/wp-cli-bp.php';
+		}
+
+		if ( bb_is_readylaunch_enabled() ) {
+			require $this->plugin_dir . 'bp-core/bb-core-readylaunch.php';
 		}
 	}
 
@@ -652,6 +657,7 @@ class BuddyPress {
 			'BP_Attachment_Cover_Image'                    => 'core',
 			'BP_Attachment'                                => 'core',
 			'BP_Button'                                    => 'core',
+			'BB_Block'                                     => 'core',
 			'BP_Component'                                 => 'core',
 			'BP_Integration'                               => 'core',
 			'BP_Customizer_Control_Range'                  => 'core',
@@ -694,6 +700,7 @@ class BuddyPress {
 			'BP_Core_Follow_Follower_Widget'               => 'core',
 			'BP_Group_Extension'                           => 'groups',
 			'BP_Group_Member_Query'                        => 'groups',
+			'BB_Group_Readylaunch'                        => 'groups',
 			'BP_Core_Members_Template'                     => 'members',
 			'BP_Core_Members_Widget'                       => 'members',
 			'BP_Core_Recently_Active_Widget'               => 'members',
@@ -721,9 +728,14 @@ class BuddyPress {
 			'BB_Reaction'                                  => 'core',
 			'BB_BG_Process_Log'                            => 'core',
 			'BB_Telemetry'                                 => 'core',
+			'BB_Topics_Manager'                            => 'core',
+			'BB_Activity_Topics_Manager'                   => 'activity',
+			'BB_Readylaunch'                               => 'core',
+			'BB_Activity_Readylaunch'                      => 'activity',
 
 			// BuddyBoss Platform Rest API classes.
 			'BP_REST_Components_Endpoint'                  => 'core',
+			'BB_REST_Topics_Endpoint'                      => 'core',
 			'BP_REST_Attachments'                          => 'core',
 			'BP_REST_Settings_Endpoint'                    => 'core',
 			'BP_REST_Mention_Endpoint'                     => 'core',

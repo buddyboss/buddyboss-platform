@@ -310,6 +310,9 @@ add_action( 'bbp_new_reply', 'bb_forums_save_link_preview_data' );
 add_action( 'bbp_edit_topic', 'bb_forums_save_link_preview_data' );
 add_action( 'bbp_edit_reply', 'bb_forums_save_link_preview_data' );
 
+// When deleting reply and topic, delete the media attachments.
+add_action( 'before_delete_post', 'bb_forums_delete_topic_reply_media_attachments', 10, 2 );
+
 /**
  * Register the forum notifications.
  *
@@ -589,7 +592,7 @@ function bb_forum_add_content_popup() {
 						<div class="modal-container">
 							<header class="bb-model-header">
 								<h4><span class="target_name"><?php echo esc_html__( 'Forum Description', 'buddyboss' ); ?></span></h4>
-								<a class="bb-close-action-popup bb-model-close-button" href="#">
+								<a class="bb-close-action-popup bb-model-close-button" href="#" aria-label="<?php esc_attr_e( 'Close', 'buddyboss' ); ?>">
 									<span class="bb-icon-l bb-icon-times"></span>
 								</a>
 							</header>

@@ -581,7 +581,7 @@ function bp_document_forums_new_post_document_save( $post_id ) {
 		$document_ids = array();
 		foreach ( $documents as $document ) {
 
-			$title                = ! empty( $document['name'] ) ? $document['name'] : '';
+			$title                = ! empty( $document['name'] ) ? sanitize_text_field( wp_unslash( $document['name'] ) ) : '';
 			$attachment_id        = ! empty( $document['id'] ) ? $document['id'] : 0;
 			$attached_document_id = ! empty( $document['document_id'] ) ? $document['document_id'] : 0;
 			$folder_id            = ! empty( $document['folder_id'] ) ? $document['folder_id'] : 0;
@@ -916,24 +916,62 @@ function bp_document_delete_attachment_document( $attachment_id ) {
  * @since BuddyBoss 1.4.0
  */
 function bp_document_download_url_file() {
+	// Security: Validate all input parameters first.
 	if ( isset( $_GET['attachment'] ) && isset( $_GET['download_document_file'] ) && isset( $_GET['document_file'] ) && isset( $_GET['document_type'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+
+		// Critical security fix: Validate attachment parameter.
+		$attachment_id    = absint( $_GET['attachment'] );
+		$document_file_id = absint( $_GET['document_file'] );
+		$document_type    = sanitize_text_field( wp_unslash( $_GET['document_type'] ) );
+
+		// Reject invalid IDs.
+		if ( $attachment_id <= 0 || $document_file_id <= 0 ) {
+			wp_die(
+				esc_html__( 'Invalid document parameters', 'buddyboss' ),
+				esc_html__( 'Security Error', 'buddyboss' ),
+				array( 'response' => 400 )
+			);
+			return;
+		}
+
+		// Validate document type.
+		if ( ! in_array( $document_type, array( 'document', 'folder' ), true ) ) {
+			wp_die(
+				esc_html__( 'Invalid document type', 'buddyboss' ),
+				esc_html__( 'Security Error', 'buddyboss' ),
+				array( 'response' => 400 )
+			);
+			return;
+		}
+
+		// Update GET variables with sanitized values.
+		$_GET['attachment']    = $attachment_id;
+		$_GET['document_file'] = $document_file_id;
+		$_GET['document_type'] = $document_type;
 
 		// Remove action to remove meta query for forums while download check.
 		remove_action( 'pre_get_posts', 'bbp_pre_get_posts_normalize_forum_visibility', 4 );
 
-		if ( 'folder' !== $_GET['document_type'] ) {
-			$document_privacy = bb_media_user_can_access( $_GET['document_file'], 'document', $_GET['attachment'] ); // phpcs:ignore WordPress.Security.NonceVerification
+		if ( 'folder' !== $document_type ) {
+			$document_privacy = bb_media_user_can_access( $document_file_id, 'document', $attachment_id );
 			$can_download_btn = ( true === (bool) $document_privacy['can_download'] ) ? true : false;
 		} else {
-			$folder_privacy   = bb_media_user_can_access( $_GET['document_file'], 'folder' ); // phpcs:ignore WordPress.Security.NonceVerification
+			// Security fix: Use attachment_id for folder permission check, not document_file_id.
+			$folder_privacy   = bb_media_user_can_access( $attachment_id, 'folder' );
 			$can_download_btn = ( true === (bool) $folder_privacy['can_download'] ) ? true : false;
+
+			// Additional check: Prevent downloading root folder.
+			if ( 0 === $attachment_id ) {
+				$can_download_btn = false;
+			}
 		}
 
 		// Add pre_get_posts action hook back.
 		add_action( 'pre_get_posts', 'bbp_pre_get_posts_normalize_forum_visibility', 4 );
 
 		if ( $can_download_btn ) {
-			bp_document_download_file( $_GET['attachment'], $_GET['document_type'] ); // phpcs:ignore WordPress.Security.NonceVerification
+			// Pass sanitized values.
+			bp_document_download_file( $attachment_id, $document_type );
 		} else {
 			wp_safe_redirect( site_url() );
 			exit;
@@ -943,7 +981,7 @@ function bp_document_download_url_file() {
 
 /** Sync the description of the document with the media attachment.
  *
- * @param $attachment_id
+ * @param int $attachment_id ID of the attachment being synced.
  *
  * @since BuddyBoss 1.4.0
  */
@@ -963,7 +1001,7 @@ function bp_document_sync_document_data( $attachment_id ) {
 /**
  * Update document privacy when activity is updated.
  *
- * @param $activity Activity object.
+ * @param object $activity Activity object.
  *
  * @since BuddyBoss 1.4.0
  */

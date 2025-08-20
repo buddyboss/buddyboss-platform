@@ -77,6 +77,7 @@ function bp_nouveau_messages_enqueue_scripts() {
 		return;
 	}
 
+	wp_enqueue_script( 'wp-embed' );
 	wp_enqueue_script( 'bp-nouveau-messages' );
 	wp_enqueue_script( 'bp-select2' );
 	wp_enqueue_script( 'bp-medium-editor' );
@@ -152,6 +153,9 @@ function bp_nouveau_messages_localize_scripts( $params = array() ) {
 	}
 
 	$params['messages'] = array(
+		'i18n'                       => array(
+			'search_recipients' => __( 'Search members', 'buddyboss' ),
+		),
 		'errors'                     => array(
 			'send_to'         => __( 'Please add at least one recipient.', 'buddyboss' ),
 			'message_content' => __( 'Please add some content to your message.', 'buddyboss' ),

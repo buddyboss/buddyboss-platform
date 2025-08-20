@@ -452,6 +452,13 @@ function bp_do_activation_redirect() {
 		}
 		update_user_option( bp_loggedin_user_id(), 'metaboxhidden_nav-menus', $get_existing_option ); // update the user metaboxes.
 	}
+
+	/**
+	 * Fires before the BuddyBoss activation redirect.
+	 *
+	 * @since BuddyBoss 2.10.0
+	 */
+	do_action( 'bb_do_activation_redirect', $query_args );
 }
 
 /**
@@ -698,7 +705,6 @@ function bp_core_get_admin_tabs( $active_tab = '' ) {
 			'name'  => __( 'Credits', 'buddyboss' ),
 			'class' => 'bp-credits',
 		),
-
 	);
 
 	/**
@@ -1208,7 +1214,7 @@ function bp_admin_wp_nav_menu_meta_box() {
 		return;
 	}
 
-	add_meta_box( 'add-buddypress-nav-menu', __( 'BuddyBoss', 'buddyboss' ), 'bp_admin_do_wp_nav_menu_meta_box', 'nav-menus', 'side', 'default' );
+	add_meta_box( 'add-buddypress-nav-menu', 'BuddyBoss', 'bp_admin_do_wp_nav_menu_meta_box', 'nav-menus', 'side', 'default' );
 
 	add_action( 'admin_print_footer_scripts', 'bp_admin_wp_nav_menu_restrict_items' );
 }
@@ -3206,37 +3212,18 @@ add_action( 'save_post', 'bp_change_forum_slug_quickedit_save_page', 10, 2 );
  *
  * @since BuddyBoss 1.3.5
  *
- * @param array          $categories Array of block categories.
- * @param string|WP_Post $post       Post being loaded.
+ * @param array               $categories          Array of block categories.
+ * @param string|WP_Post|null $editor_name_or_post Post being loaded.
  */
-function bp_block_category( $categories = array(), $post = null ) {
+function bp_block_category( $categories = array(), $editor_name_or_post = null ) {
+	if ( $editor_name_or_post instanceof WP_Post ) {
+		$post_types = array( 'post', 'page' );
 
-	if ( class_exists( 'WP_Block_Editor_Context' ) && $post instanceof WP_Block_Editor_Context && ! empty( $post->post ) ) {
-		$post = $post->post;
-	}
-
-	if ( ! ( $post instanceof WP_Post ) ) {
-		return $categories;
-	}
-
-	/**
-	 * Filter here to add/remove the supported post types for the BuddyPress blocks category.
-	 *
-	 * @since 5.0.0
-	 *
-	 * @param array $value The list of supported post types. Defaults to WordPress built-in ones.
-	 */
-	$post_types = apply_filters( 'bp_block_category_post_types', array( 'post', 'page' ) );
-
-	if ( ! $post_types ) {
-		return $categories;
-	}
-
-	// Get the post type of the current item.
-	$post_type = get_post_type( $post );
-
-	if ( ! in_array( $post_type, $post_types, true ) ) {
-		return $categories;
+		/*
+		 * As blocks are always loaded even if the category is not available, there's no more interest
+		 * in disabling the BuddyBoss category.
+		 */
+		apply_filters_deprecated( 'bp_block_category_post_types', array( $post_types ), '2.9.00' );
 	}
 
 	return array_merge(
@@ -3244,7 +3231,7 @@ function bp_block_category( $categories = array(), $post = null ) {
 		array(
 			array(
 				'slug'  => 'buddyboss',
-				'title' => __( 'BuddyBoss', 'buddyboss' ),
+				'title' => 'BuddyBoss',
 				'icon'  => '',
 			),
 		)
@@ -3258,9 +3245,9 @@ function bp_block_category( $categories = array(), $post = null ) {
  */
 function bb_block_init_category_filter() {
 	if ( function_exists( 'get_default_block_categories' ) ) {
-		add_filter( 'block_categories_all', 'bp_block_category', 30, 2 );
+		add_filter( 'block_categories_all', 'bp_block_category', 1, 2 );
 	} else {
-		add_filter( 'block_categories', 'bp_block_category', 30, 2 );
+		add_filter( 'block_categories', 'bp_block_category', 1, 2 );
 	}
 }
 
@@ -3433,6 +3420,10 @@ function bb_get_pro_label_notice( $type = 'default' ) {
 			(
 				'sso' === $type &&
 				version_compare( bb_platform_pro()->version, bb_pro_sso_version(), '<' )
+			) ||
+			(
+				'group_activity_topics' === $type &&
+				version_compare( bb_platform_pro()->version, bb_pro_group_activity_topics_version(), '<' )
 			)
 		)
 	) {
@@ -3501,6 +3492,10 @@ function bb_get_pro_fields_class( $type = 'default' ) {
 			(
 				'sso' === $type &&
 				version_compare( bb_platform_pro()->version, bb_pro_sso_version(), '<' )
+			) ||
+			(
+				'group_activity_topics' === $type &&
+				version_compare( bb_platform_pro()->version, bb_pro_group_activity_topics_version(), '<' )
 			)
 		)
 	) {

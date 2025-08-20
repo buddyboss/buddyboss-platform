@@ -541,6 +541,7 @@ function bp_video_get_specific( $args = '' ) {
 			'album_id'         => false,      // Album ID.
 			'user_id'          => false,      // User ID.
 			'moderation_query' => true,
+			'count_total'      => false,
 			'status'           => bb_video_get_published_status(),
 		),
 		'video_get_specific'
@@ -558,6 +559,7 @@ function bp_video_get_specific( $args = '' ) {
 		'user_id'          => $r['user_id'],
 		'moderation_query' => $r['moderation_query'],
 		'status'           => $r['status'],
+		'count_total'      => $r['count_total'],
 	);
 
 	/**
@@ -644,6 +646,12 @@ function bp_video_add( $args = '' ) {
 		$video->privacy = $r['privacy'];
 	} elseif ( ! empty( $video->group_id ) ) {
 		$video->privacy = 'grouponly';
+		if ( ! empty( $video->activity_id ) ) {
+			$activity = new BP_Activity_Activity( $video->activity_id );
+			if ( ! empty( $activity ) && 'activity_comment' === $activity->type ) {
+				$video->privacy = $r['privacy'];
+			}
+		}
 	} elseif ( ! empty( $video->album_id ) ) {
 		$album = new BP_Video_Album( $video->album_id );
 		if ( ! empty( $album ) ) {
@@ -3427,7 +3435,12 @@ function bp_video_delete_video_previews() {
 		return;
 	}
 
-	$dir          = opendir( $inner_directory_name );
+	$dir = opendir( $inner_directory_name );
+
+	if ( false === $dir ) {
+		return;
+	}
+
 	$five_minutes = strtotime( '-5 minutes' );
 	while ( false != ( $file = readdir( $dir ) ) ) { // phpcs:ignore WordPress.CodeAnalysis.AssignmentInCondition.FoundInWhileCondition, WordPress.PHP.StrictComparisons.LooseComparison
 		if ( file_exists( $inner_directory_name . '/' . $file ) && is_writable( $inner_directory_name . '/' . $file ) && filemtime( $inner_directory_name . '/' . $file ) < $five_minutes ) {

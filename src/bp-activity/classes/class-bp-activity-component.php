@@ -371,6 +371,7 @@ class BP_Activity_Component extends BP_Component {
 				'activity_meta',
 				'bp_activity_follow',
 				'activity_edit_data',
+				'bb_activity_topics',
 			)
 		);
 
@@ -391,5 +392,16 @@ class BP_Activity_Component extends BP_Component {
 			'BP_REST_Activity_Details_Endpoint',
 			'BP_REST_Activity_Link_Preview_Endpoint',
 		) );
+	}
+
+	/**
+	 * Register the Activity Blocks.
+	 *
+	 * @since BuddyBoss 2.9.00
+	 *
+	 * @param array $blocks Optional. See BP_Component::blocks_init() for description.
+	 */
+	public function blocks_init( $blocks = array() ) {
+		parent::blocks_init( array() );
 	}
 }

@@ -107,7 +107,7 @@ function bp_invite_show_data( $column, $post_id ) {
 			break;
 
 		case 'invitee_name':
-			echo get_post_meta( $post_id, '_bp_invitee_name', true );
+			echo esc_html( get_post_meta( $post_id, '_bp_invitee_name', true ) );
 
 			break;
 

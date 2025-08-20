@@ -235,6 +235,9 @@ window.bp = window.bp || {};
 					});
 				}, 1000 );
 			}
+
+			// Wrap Activity Topics
+			bp.Nouveau.wrapNavigation( '.activity-topic-selector ul', 120 );
 		},
 
 		/**
@@ -330,6 +333,13 @@ window.bp = window.bp || {};
 						heartbeatData.order_by = order_by;
 					}
 
+					// Get the current topic ID from storage.
+					var topicId = bp.Nouveau.getStorage( 'bp-activity', 'topic_id' );
+					if ( topicId ) {
+						data.bp_heartbeat          = data.bp_heartbeat || {};
+						data.bp_heartbeat.topic_id = topicId;
+					}
+
 					return heartbeatData;
 				})()
 			});
@@ -344,7 +354,8 @@ window.bp = window.bp || {};
 		 */
 		heartbeatTick: function( event, data ) {
 			var newest_activities_count, newest_activities, objects = bp.Nouveau.objects,
-				scope = bp.Nouveau.getStorage( 'bp-activity', 'scope' ), self = this;
+				scope = bp.Nouveau.getStorage( 'bp-activity', 'scope' ), self = this,
+				topicId = bp.Nouveau.getStorage( 'bp-activity', 'topic_id' );
 
 			// Only proceed if we have newest activities.
 			if ( undefined === data || ! data.bp_activity_newest_activities ) {
@@ -356,6 +367,16 @@ window.bp = window.bp || {};
 
 			// Parse activities.
 			newest_activities = $( this.heartbeat_data.newest ).filter( '.activity-item' );
+			
+			// If we have a topic filter active, only show activities matching that topic.
+			if ( topicId ) {
+				newest_activities       = newest_activities.filter( function () {
+					var bpActivity      = this.dataset.bpActivity ? JSON.parse( this.dataset.bpActivity ) : null;
+					var activityTopicId = bpActivity && typeof bpActivity.topic_id !== 'undefined' ? bpActivity.topic_id : null;
+					return activityTopicId && parseInt( activityTopicId ) === parseInt( topicId );
+				} );
+				newest_activities_count = newest_activities.length;
+			}
 
 			// Count them.
 			newest_activities_count = Number( newest_activities.length );
@@ -1028,10 +1049,10 @@ window.bp = window.bp || {};
 								200,
 								function() {
 
-									if ('false' === $( this ).attr( 'aria-pressed' ) ) {
-										$( this ).attr( 'aria-pressed', 'true' );
+									if ('false' === $( this ).attr( 'data-pressed' ) ) {
+										$( this ).attr( 'data-pressed', 'true' );
 									} else {
-										$( this ).attr( 'aria-pressed', 'false' );
+										$( this ).attr( 'data-pressed', 'false' );
 									}
 
 									// Update reacted user name and counts.
@@ -2103,7 +2124,7 @@ window.bp = window.bp || {};
 								[
 									'',
 									'<div>' + response.data.feedback + '</div>',
-									'success',
+									response.success ? 'success' : 'error',
 									null,
 									true
 								]
@@ -4396,6 +4417,10 @@ window.bp = window.bp || {};
 
 			if( user_timeline ) {
 				queryData.user_timeline = true;
+			}
+
+			if ( objectData.topic_id ) {
+				queryData.topic_id = objectData.topic_id;
 			}
 
 			bp.Nouveau.objectRequest( queryData );
