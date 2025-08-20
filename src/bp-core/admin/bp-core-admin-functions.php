@@ -456,7 +456,7 @@ function bp_do_activation_redirect() {
 	/**
 	 * Fires before the BuddyBoss activation redirect.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.10.0
 	 */
 	do_action( 'bb_do_activation_redirect', $query_args );
 }
