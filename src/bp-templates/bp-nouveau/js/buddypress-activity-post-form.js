@@ -6020,6 +6020,11 @@ window.bp = window.bp || {};
 					self.model.set( 'video', video );
 				}
 
+				// Trigger custom event for form preparation.
+				$( 'body' ).trigger( 'bb_activity_form_prep', {
+					model: self.model
+				} );
+
 				// validation for content editor.
 				if (
 					$( $.parseHTML( content ) ).text().trim() === '' &&
@@ -6206,6 +6211,12 @@ window.bp = window.bp || {};
 							}
 							self.model.set( 'video', videos );
 						}
+
+						// Trigger custom event for post-success handling.
+						$( 'body' ).trigger( 'bb_activity_post_success', {
+							model: self.model,
+							response: response
+						} );
 
 						if ( '' === self.model.get( 'id' ) || 0 === parseInt( self.model.get( 'id' ) ) ) {
 							// Reset draft activity.
