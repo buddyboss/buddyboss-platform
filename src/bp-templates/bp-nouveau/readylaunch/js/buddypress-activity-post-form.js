@@ -3380,13 +3380,14 @@ window.bp = window.bp || {};
 					var group_name = bbRlActivity.params.item_name;
 					whats_new_form.find( '.bb-rl-activity-privacy-status' ).text( group_name );
 
-					this.$el.find( '#bb-rl-activity-privacy-point' ).removeClass().addClass( 'group bp-activity-focus-group-active' );
+					var $privacy_point = this.$el.find( '#bb-rl-activity-privacy-point' );
+					$privacy_point.removeClass().addClass( 'group bb-rl-activity-edit-group' );
 					// Display image of the group.
 					if ( bbRlActivity.params.group_avatar && false === bbRlActivity.params.group_avatar.includes( 'mystery-group' ) ) {
-						this.$el.find( '#bb-rl-activity-privacy-point span.bb-rl-bb-rl-privacy-point-icon' ).removeClass( 'bb-rl-privacy-point-icon' ).addClass( 'group-bb-rl-privacy-point-icon' ).html( '<img src="' + bbRlActivity.params.group_avatar + '" alt=""/>' );
+						$privacy_point.find( 'span.bb-rl-privacy-point-icon' ).removeClass( 'bb-rl-privacy-point-icon' ).addClass( 'group-bb-rl-privacy-point-icon' ).html( '<img src="' + bbRlActivity.params.group_avatar + '" alt=""/>' );
 					} else {
-						this.$el.find( '#bb-rl-activity-privacy-point span.group-bb-rl-privacy-point-icon img' ).remove();
-						this.$el.find( '#bb-rl-activity-privacy-point span.group-bb-rl-privacy-point-icon' ).removeClass( 'group-bb-rl-privacy-point-icon' ).addClass( 'bb-rl-privacy-point-icon' );
+						$privacy_point.find( 'span.group-bb-rl-privacy-point-icon img' ).remove();
+						$privacy_point.find( 'span.group-bb-rl-privacy-point-icon' ).removeClass( 'group-bb-rl-privacy-point-icon' ).addClass( 'bb-rl-privacy-point-icon' );
 					}
 
 					bp.draft_activity.data.item_id            = bbRlActivity.params.item_id;
@@ -3409,7 +3410,7 @@ window.bp = window.bp || {};
 
 					whats_new_form.find( '.bb-rl-activity-privacy-status' ).text( bp.draft_activity.data.item_name );
 
-					this.$el.find( '#bb-rl-activity-privacy-point' ).removeClass().addClass( 'group bp-activity-focus-group-active' );
+					this.$el.find( '#bb-rl-activity-privacy-point' ).removeClass().addClass( 'group bb-rl-activity-edit-group' );
 					// display image of the group.
 					if ( bp.draft_activity.data.group_image && false === bp.draft_activity.data.group_image.includes( 'mystery-group' ) ) {
 						this.$el.find( '#bb-rl-activity-privacy-point span.bb-rl-privacy-point-icon' ).removeClass( 'bb-rl-privacy-point-icon' ).addClass( 'group-bb-rl-privacy-point-icon' ).html( '<img src="' + bp.draft_activity.data.group_image + '" alt=""/>' );
