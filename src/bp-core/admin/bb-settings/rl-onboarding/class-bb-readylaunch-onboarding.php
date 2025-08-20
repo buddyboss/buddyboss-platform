@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss\Core\Administration
  * @subpackage ReadyLaunchOnboarding
- * @since   BuddyBoss [BBVERSION]
+ * @since   BuddyBoss 2.10.0
  * @author  BuddyBoss
  */
 
@@ -17,14 +17,14 @@ defined( 'ABSPATH' ) || exit;
  * Handles the onboarding modal for first-time BuddyBoss Platform activation.
  * Extends the base Setup Wizard Manager to provide ReadyLaunch-specific functionality.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.10.0
  */
 class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 
 	/**
 	 * The single instance of the class.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.10.0
 	 * @var   BB_ReadyLaunch_Onboarding|null
 	 */
 	private static $instance = null;
@@ -32,7 +32,7 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 	/**
 	 * Ensures only one instance of BB_ReadyLaunch_Onboarding is loaded or can be loaded.
 	 *
-	 * @since  BuddyBoss [BBVERSION]
+	 * @since  BuddyBoss 2.10.0
 	 * @static
 	 * @return BB_ReadyLaunch_Onboarding Main instance.
 	 */
@@ -46,7 +46,7 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 	/**
 	 * Private constructor to prevent direct instantiation.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.10.0
 	 */
 	private function __construct() {
 		// Build configuration array with ReadyLaunch-specific settings.
@@ -333,7 +333,7 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 	/**
 	 * Initialise the ReadyLaunch onboarding wizard.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.10.0
 	 * @return void
 	 */
 	protected function init() {
@@ -356,7 +356,7 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 	/**
 	 * Initialise ReadyLaunch specific hooks and filters
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.10.0
 	 * @return void
 	 */
 	private function init_readylaunch_hooks() {
@@ -368,7 +368,7 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 	 *
 	 * Uses the existing BP activation mechanism with the bb_wizard_activation URL parameter.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.10.0
 	 * @return bool True if onboarding should be shown, false otherwise.
 	 */
 	public function should_show() {
@@ -397,7 +397,7 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 	/**
 	 * Enqueue wizard-specific assets.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.10.0
 	 * @return void
 	 */
 	protected function enqueue_wizard_assets() {
@@ -442,7 +442,7 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 	/**
 	 * Localise wizard data for JavaScript.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.10.0
 	 * @return array Localised data array.
 	 */
 	protected function localize_wizard_data() {
@@ -480,7 +480,7 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 		/**
 		 * Filter the localised data for ReadyLaunch onboarding
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.10.0
 		 *
 		 * @param array $base_data The base localised data.
 		 */
@@ -490,7 +490,7 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 	/**
 	 * Get wizard assets.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.10.0
 	 * @return array
 	 */
 	protected function get_wizard_assets() {
@@ -506,7 +506,7 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 	/**
 	 * AJAX handler to complete the wizard.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.10.0
 	 * @return void
 	 */
 	public function ajax_complete() {
@@ -556,7 +556,7 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 			/**
 			 * Fires after ReadyLaunch onboarding is completed.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 2.10.0
 			 */
 			do_action( 'bb_rl_onboarding_completed' );
 
@@ -578,7 +578,7 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 	/**
 	 * Sanitise final settings from the onboarding form.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.10.0
 	 *
 	 * @param array $settings Raw settings data.
 	 * @return array Sanitised settings.
@@ -755,7 +755,7 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 	/**
 	 * Override sanitize_preferences to handle step-based field structure.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.10.0
 	 *
 	 * @param string $preferences_json JSON string of preferences.
 	 * @return array Sanitised preferences.
@@ -773,7 +773,7 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 	/**
 	 * Override save_preferences to apply settings immediately.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.10.0
 	 *
 	 * @param array  $preferences User preferences.
 	 * @param string $pref_key    Optional preference key to save under.
@@ -797,7 +797,7 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 	/**
 	 * Apply ReadyLaunch configuration based on final settings.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.10.0
 	 *
 	 * @param array $final_settings The final configuration settings.
 	 * @return void
@@ -926,7 +926,7 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 		/**
 		 * Fires after ReadyLaunch configuration has been applied.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.10.0
 		 *
 		 * @param array $final_settings The final configuration settings.
 		 */
@@ -936,7 +936,7 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 	/**
 	 * Create essential pages (Privacy Policy, Terms of Service, About).
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.10.0
 	 * @return void
 	 */
 	private function create_essential_pages() {
@@ -981,7 +981,7 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 	/**
 	 * Save ReadyLaunch specific option.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.10.0
 	 *
 	 * @param string $option_name The option name.
 	 * @param mixed  $option_value The option value.
@@ -1004,7 +1004,7 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 	/**
 	 * Apply remaining step settings that weren't handled specifically.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.10.0
 	 *
 	 * @param array $final_settings The final configuration settings.
 	 * @return void
@@ -1046,7 +1046,7 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 	/**
 	 * Get the enabled pages options.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.10.0
 	 * @return array
 	 */
 	private function get_enabled_pages_options() {
@@ -1080,7 +1080,7 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 	/**
 	 * Get the default component menu items.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.10.0
 	 * @return array
 	 */
 	private function getComponentMenuItems() {
@@ -1150,7 +1150,7 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 	/**
 	 * Save step tracking for completion (step 7 - finish).
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.10.0
 	 *
 	 * @param int $step Step number (7 for finish step).
 	 * @return void
@@ -1169,7 +1169,7 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 	/**
 	 * Mark progress as completed for ReadyLaunch onboarding.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.10.0
 	 * @return void
 	 */
 	private function mark_progress_as_completed() {
@@ -1187,7 +1187,7 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 	/**
 	 * Send analytics events for ReadyLaunch onboarding completion.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.10.0
 	 *
 	 * @param array $completion_data Completion data.
 	 * @return void
@@ -1230,7 +1230,7 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 		/**
 		 * Fires when ReadyLaunch onboarding analytics are sent.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.10.0
 		 *
 		 * @param string $wizard_id       The wizard ID.
 		 * @param array  $completion_data Completion data.

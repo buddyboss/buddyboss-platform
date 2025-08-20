@@ -7,7 +7,7 @@
  *
  * @package BuddyBoss\Core\Administration
  * @subpackage SetupWizard
- * @since   BuddyBoss [BBVERSION]
+ * @since   BuddyBoss 2.10.0
  * @author  BuddyBoss
  */
 
@@ -20,14 +20,14 @@ defined( 'ABSPATH' ) || exit;
  * Provides common functionality for all setup wizards in the BuddyBoss Platform.
  * This abstract class should be extended by specific wizard implementations.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.10.0
  */
 abstract class BB_Setup_Wizard_Manager {
 
 	/**
 	 * Wizard identifier
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.10.0
 	 * @var   string
 	 */
 	protected $wizard_id = '';
@@ -35,7 +35,7 @@ abstract class BB_Setup_Wizard_Manager {
 	/**
 	 * Wizard name
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.10.0
 	 * @var   string
 	 */
 	protected $wizard_name = '';
@@ -43,7 +43,7 @@ abstract class BB_Setup_Wizard_Manager {
 	/**
 	 * Wizard version
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.10.0
 	 * @var   string
 	 */
 	protected $wizard_version = '1.0.0';
@@ -51,7 +51,7 @@ abstract class BB_Setup_Wizard_Manager {
 	/**
 	 * Assets directory path
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.10.0
 	 * @var   string
 	 */
 	protected $assets_dir = '';
@@ -59,7 +59,7 @@ abstract class BB_Setup_Wizard_Manager {
 	/**
 	 * Assets directory URL
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.10.0
 	 * @var   string
 	 */
 	protected $assets_url = '';
@@ -67,7 +67,7 @@ abstract class BB_Setup_Wizard_Manager {
 	/**
 	 * Wizard steps
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.10.0
 	 * @var   array
 	 */
 	protected $steps = array();
@@ -75,7 +75,7 @@ abstract class BB_Setup_Wizard_Manager {
 	/**
 	 * Current step
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.10.0
 	 * @var   string
 	 */
 	protected $current_step = '';
@@ -83,7 +83,7 @@ abstract class BB_Setup_Wizard_Manager {
 	/**
 	 * Configuration options
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.10.0
 	 * @var   array
 	 */
 	protected $config = array();
@@ -91,7 +91,7 @@ abstract class BB_Setup_Wizard_Manager {
 	/**
 	 * Default configuration options
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.10.0
 	 * @var   array
 	 */
 	private $default_config = array(
@@ -124,7 +124,7 @@ abstract class BB_Setup_Wizard_Manager {
 	/**
 	 * Constructor
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.10.0
 	 *
 	 * @param array $config Configuration options.
 	 */
@@ -139,7 +139,7 @@ abstract class BB_Setup_Wizard_Manager {
 	/**
 	 * Initialize the wizard (must be implemented by child classes)
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.10.0
 	 * @return void
 	 */
 	abstract protected function init();
@@ -147,7 +147,7 @@ abstract class BB_Setup_Wizard_Manager {
 	/**
 	 * Check if the wizard should be shown (must be implemented by child classes)
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.10.0
 	 * @return bool
 	 */
 	abstract public function should_show();
@@ -155,7 +155,7 @@ abstract class BB_Setup_Wizard_Manager {
 	/**
 	 * AJAX handler to complete wizard (must be implemented by child classes)
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.10.0
 	 * @return void
 	 */
 	abstract public function ajax_complete();
@@ -163,7 +163,7 @@ abstract class BB_Setup_Wizard_Manager {
 	/**
 	 * Enqueue wizard-specific assets (must be implemented by child classes)
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.10.0
 	 * @return void
 	 */
 	abstract protected function enqueue_wizard_assets();
@@ -171,7 +171,7 @@ abstract class BB_Setup_Wizard_Manager {
 	/**
 	 * Localize wizard data for JavaScript (should be implemented by child classes)
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.10.0
 	 * @return array
 	 */
 	protected function localize_wizard_data() {
@@ -181,7 +181,7 @@ abstract class BB_Setup_Wizard_Manager {
 	/**
 	 * Validate required configuration options
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.10.0
 	 * @return void
 	 */
 	private function validate_config() {
@@ -212,7 +212,7 @@ abstract class BB_Setup_Wizard_Manager {
 	/**
 	 * Get configuration option
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.10.0
 	 *
 	 * @param string $key     Configuration key.
 	 * @param mixed  $default Default value if key doesn't exist.
@@ -225,7 +225,7 @@ abstract class BB_Setup_Wizard_Manager {
 	/**
 	 * Update configuration option
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.10.0
 	 *
 	 * @param string $key   Configuration key.
 	 * @param mixed  $value New value.
@@ -238,7 +238,7 @@ abstract class BB_Setup_Wizard_Manager {
 	/**
 	 * Initialise activation hooks for first-time setup
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.10.0
 	 * @return void
 	 */
 	private function init_activation_hooks() {
@@ -253,7 +253,7 @@ abstract class BB_Setup_Wizard_Manager {
 	/**
 	 * Handle activation redirect to wizard
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.10.0
 	 * @return void
 	 */
 	public function handle_activation_redirect( $query_args ) {
@@ -281,7 +281,7 @@ abstract class BB_Setup_Wizard_Manager {
 	/**
 	 * Perform the actual activation redirect (should be implemented by child classes)
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.10.0
 	 * @param array $query_args Query arguments for the redirect.
 	 * @return void
 	 */
@@ -305,7 +305,7 @@ abstract class BB_Setup_Wizard_Manager {
 	/**
 	 * Check if this is a new installation
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.10.0
 	 * @return bool
 	 */
 	private function is_new_install() {
@@ -317,7 +317,7 @@ abstract class BB_Setup_Wizard_Manager {
 	/**
 	 * Set up WordPress hooks
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.10.0
 	 * @return void
 	 */
 	protected function setup_hooks() {
@@ -335,7 +335,7 @@ abstract class BB_Setup_Wizard_Manager {
 	/**
 	 * Initialise React frontend integration
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.10.0
 	 * @return void
 	 */
 	private function init_react_frontend() {
@@ -348,7 +348,7 @@ abstract class BB_Setup_Wizard_Manager {
 	/**
 	 * Get wizard completion status
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.10.0
 	 * @return bool
 	 */
 	public function is_completed() {
@@ -358,7 +358,7 @@ abstract class BB_Setup_Wizard_Manager {
 	/**
 	 * Mark wizard as completed
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.10.0
 	 *
 	 * @param array $data Completion data.
 	 * @return bool
@@ -377,7 +377,7 @@ abstract class BB_Setup_Wizard_Manager {
 			/**
 			 * Fires when a setup wizard is completed
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 2.10.0
 			 *
 			 * @param string $wizard_id The wizard ID.
 			 * @param array  $data      Completion data.
@@ -396,7 +396,7 @@ abstract class BB_Setup_Wizard_Manager {
 	/**
 	 * Get wizard progress data
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.10.0
 	 * @return array Progress data.
 	 */
 	public function get_progress() {
@@ -423,7 +423,7 @@ abstract class BB_Setup_Wizard_Manager {
 	/**
 	 * Save step progress
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.10.0
 	 *
 	 * @param int   $step Step number.
 	 * @param array $data Step data.
@@ -482,7 +482,7 @@ abstract class BB_Setup_Wizard_Manager {
 		/**
 		 * Fires when a setup wizard step is completed
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.10.0
 		 *
 		 * @param string $wizard_id The wizard ID.
 		 * @param int    $step      Step number.
@@ -494,7 +494,7 @@ abstract class BB_Setup_Wizard_Manager {
 	/**
 	 * Save step tracking data
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.10.0
 	 *
 	 * @param int   $step Step number.
 	 * @param array $data Step data.
@@ -571,7 +571,7 @@ abstract class BB_Setup_Wizard_Manager {
 	/**
 	 * Get user preferences for this wizard
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.10.0
 	 * @return array User preferences.
 	 */
 	public function get_preferences() {
@@ -582,7 +582,7 @@ abstract class BB_Setup_Wizard_Manager {
 	/**
 	 * Save user preferences
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.10.0
 	 *
 	 * @param array  $preferences User preferences.
 	 * @param string $pref_key    Preference key (optional).
@@ -599,7 +599,7 @@ abstract class BB_Setup_Wizard_Manager {
 		/**
 		 * Fires when wizard preferences are saved
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.10.0
 		 *
 		 * @param string $wizard_id   The wizard ID.
 		 * @param array  $preferences User preferences.
@@ -611,7 +611,7 @@ abstract class BB_Setup_Wizard_Manager {
 	/**
 	 * Reset wizard progress
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.10.0
 	 * @return void
 	 */
 	public function reset_wizard() {
@@ -627,7 +627,7 @@ abstract class BB_Setup_Wizard_Manager {
 		/**
 		 * Fires when a setup wizard is reset
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.10.0
 		 *
 		 * @param string $wizard_id The wizard ID.
 		 */
@@ -637,7 +637,7 @@ abstract class BB_Setup_Wizard_Manager {
 	/**
 	 * Send telemetry event if BB_Telemetry is available
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.10.0
 	 *
 	 * @param string $event_type Event type.
 	 * @param array  $data       Event data.
@@ -672,7 +672,7 @@ abstract class BB_Setup_Wizard_Manager {
 		/**
 		 * Fires when a wizard analytics event occurs
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.10.0
 		 *
 		 * @param string $wizard_id  The wizard ID.
 		 * @param string $event_type Event type.
@@ -684,7 +684,7 @@ abstract class BB_Setup_Wizard_Manager {
 	/**
 	 * Clean up wizard data after completion
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.10.0
 	 * @return void
 	 */
 	private function cleanup_wizard_data() {
@@ -692,7 +692,7 @@ abstract class BB_Setup_Wizard_Manager {
 		/**
 		 * Fires when wizard cleanup occurs
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.10.0
 		 *
 		 * @param string $wizard_id The wizard ID.
 		 */
@@ -702,7 +702,7 @@ abstract class BB_Setup_Wizard_Manager {
 	/**
 	 * Get option value using the configured method
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.10.0
 	 *
 	 * @param string $option_name Option name.
 	 * @param mixed  $default     Default value.
@@ -718,7 +718,7 @@ abstract class BB_Setup_Wizard_Manager {
 	/**
 	 * Update option value using configured method
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.10.0
 	 *
 	 * @param string $option_name Option name.
 	 * @param mixed  $value       Option value.
@@ -735,7 +735,7 @@ abstract class BB_Setup_Wizard_Manager {
 	/**
 	 * Enqueue scripts and styles for the wizard
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.10.0
 	 *
 	 * @param string $hook_suffix Current admin page hook suffix.
 	 * @return void
@@ -767,7 +767,7 @@ abstract class BB_Setup_Wizard_Manager {
 	/**
 	 * Check if scripts should be enqueued
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.10.0
 	 *
 	 * @param string $hook_suffix Current admin page hook suffix.
 	 *
@@ -787,7 +787,7 @@ abstract class BB_Setup_Wizard_Manager {
 	/**
 	 * Get data to localize for React components
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.10.0
 	 * @return array Localized data for React.
 	 */
 	private function get_localize_data() {
@@ -829,7 +829,7 @@ abstract class BB_Setup_Wizard_Manager {
 	/**
 	 * AJAX handler to check if wizard should be shown
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.10.0
 	 * @return void
 	 */
 	public function ajax_should_show() {
@@ -854,7 +854,7 @@ abstract class BB_Setup_Wizard_Manager {
 	/**
 	 * AJAX handler to save step progress
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.10.0
 	 * @return void
 	 */
 	public function ajax_save_step_progress() {
@@ -911,7 +911,7 @@ abstract class BB_Setup_Wizard_Manager {
 	/**
 	 * AJAX handler to save preferences
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.10.0
 	 * @return void
 	 */
 	public function ajax_save_preferences() {
@@ -957,7 +957,7 @@ abstract class BB_Setup_Wizard_Manager {
 	/**
 	 * AJAX handler to get wizard data
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.10.0
 	 * @return void
 	 */
 	public function ajax_get_wizard_data() {
@@ -980,7 +980,7 @@ abstract class BB_Setup_Wizard_Manager {
 	/**
 	 * AJAX handler for step save (legacy support)
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.10.0
 	 * @return void
 	 */
 	public function ajax_save_step() {
@@ -991,7 +991,7 @@ abstract class BB_Setup_Wizard_Manager {
 	/**
 	 * Sanitize step data for storage
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.10.0
 	 *
 	 * @param mixed $data Raw step data.
 	 * @return array Sanitized step data.
@@ -1028,7 +1028,7 @@ abstract class BB_Setup_Wizard_Manager {
 	/**
 	 * Sanitize preferences for storage
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.10.0
 	 *
 	 * @param mixed $preferences Raw preferences data.
 	 * @return array Sanitized preferences.

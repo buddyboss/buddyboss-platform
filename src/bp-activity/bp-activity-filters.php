@@ -4005,7 +4005,7 @@ function bb_activity_save_topic_data( $activity ) {
 	/**
 	 * Filter to skip saving topic data based on activity component.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.10.0
 	 *
 	 * @param bool   $skip_component Whether to skip saving topic data for the component.
 	 * @param object $activity       The activity object.
@@ -4020,7 +4020,7 @@ function bb_activity_save_topic_data( $activity ) {
 	/**
 	 * Filter to skip saving topic data based on a activity type.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.10.0
 	 *
 	 * @param bool   $skip_type Whether to skip saving topic data for the type.
 	 * @param object $activity  The activity object.
