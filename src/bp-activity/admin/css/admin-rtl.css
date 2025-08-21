@@ -84,7 +84,7 @@
 	position: inherit;
 	margin-top: -2px;
 }
-
+#bb_activity_title input,
 #bp_activity_link input {
 	width: 99%;
 }
