@@ -60,9 +60,7 @@ window.bp = window.bp || {};
 			this.ActivityObjects = new bp.Collections.ActivityObjects();
 			this.buttons         = new Backbone.Collection();
 
-			if ( ! _.isUndefined( window.Dropzone ) && ! _.isUndefined( bbRlMedia ) ) {
-				this.dropzoneView();
-			}
+			this.dropzoneView();
 
 			this.postFormView();
 
@@ -174,26 +172,28 @@ window.bp = window.bp || {};
 			// set up dropzones auto discover to false so it does not automatically set dropzones.
 			window.Dropzone.autoDiscover = false;
 
-			this.dropzone_options = {
-				url                 		: bbRlAjaxUrl,
-				timeout             		: 3 * 60 * 60 * 1000,
-				dictFileTooBig      		: bbRlMedia.dictFileTooBig,
-				dictDefaultMessage  		: bbRlMedia.dropzone_media_message,
-				acceptedFiles       		: 'image/*',
-				autoProcessQueue    		: true,
-				addRemoveLinks      		: true,
-				uploadMultiple      		: false,
-				maxFiles            		: ! _.isUndefined( bbRlMedia.maxFiles ) ? bbRlMedia.maxFiles : 10,
-				maxFilesize         		: ! _.isUndefined( bbRlMedia.max_upload_size ) ? bbRlMedia.max_upload_size : 2,
-				dictMaxFilesExceeded		: bbRlMedia.media_dict_file_exceeded,
-				dictCancelUploadConfirmation: bbRlMedia.dictCancelUploadConfirmation,
-				// previewTemplate : document.getElementsByClassName( 'activity-post-media-template' )[0].innerHTML.
-				maxThumbnailFilesize: ! _.isUndefined( bbRlMedia.max_upload_size ) ? bbRlMedia.max_upload_size : 2,
-			};
+			if ( ! _.isUndefined( bbRlMedia ) ) {
+				this.dropzone_options = {
+					url                          : bbRlAjaxUrl,
+					timeout                      : 3 * 60 * 60 * 1000,
+					dictFileTooBig               : bbRlMedia.dictFileTooBig,
+					dictDefaultMessage           : bbRlMedia.dropzone_media_message,
+					acceptedFiles                : 'image/*',
+					autoProcessQueue             : true,
+					addRemoveLinks               : true,
+					uploadMultiple               : false,
+					maxFiles                     : ! _.isUndefined( bbRlMedia.maxFiles ) ? bbRlMedia.maxFiles : 10,
+					maxFilesize                  : ! _.isUndefined( bbRlMedia.max_upload_size ) ? bbRlMedia.max_upload_size : 2,
+					dictMaxFilesExceeded         : bbRlMedia.media_dict_file_exceeded,
+					dictCancelUploadConfirmation : bbRlMedia.dictCancelUploadConfirmation,
+					// previewTemplate : document.getElementsByClassName( 'activity-post-media-template' )[0].innerHTML.
+					maxThumbnailFilesize : ! _.isUndefined( bbRlMedia.max_upload_size ) ? bbRlMedia.max_upload_size : 2,
+				};
 
-			// if defined, add custom dropzone options.
-			if ( ! _.isUndefined( bbRlMedia.dropzone_options ) ) {
-				Object.assign( this.dropzone_options, bbRlMedia.dropzone_options );
+				// if defined, add custom dropzone options.
+				if ( ! _.isUndefined( bbRlMedia.dropzone_options ) ) {
+					Object.assign( this.dropzone_options, bbRlMedia.dropzone_options );
+				}
 			}
 		},
 
