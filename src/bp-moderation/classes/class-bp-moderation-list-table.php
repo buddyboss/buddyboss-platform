@@ -119,11 +119,29 @@ class BP_Moderation_List_Table extends WP_List_Table {
 		// Set per page from the screen options.
 		$per_page = $this->get_items_per_page( str_replace( '-', '_', "{$this->screen->id}_per_page" ) );
 
+		// Check if we're doing a search (only for flagged members).
+		$search_terms = false;
+		if ( 'reported-content' !== $current_tab && ! empty( $_REQUEST['s'] ) ) {
+			$search_terms = sanitize_text_field( $_REQUEST['s'] );
+		}
+
+		// Check for content type filter (only for reported content).
+		$content_type_filter = false;
+		if ( 'reported-content' === $current_tab && ! empty( $_REQUEST['content_type'] ) ) {
+			$content_type_filter = sanitize_text_field( $_REQUEST['content_type'] );
+		}
+
 		$moderation_request_args = array(
-			'page'        => $page,
-			'per_page'    => $per_page,
-			'count_total' => true,
+			'page'         => $page,
+			'per_page'     => $per_page,
+			'count_total'  => true,
+			'search_terms' => $search_terms,
 		);
+
+		// Add content type filter if provided.
+		if ( $content_type_filter ) {
+			$moderation_request_args['in_types'] = array( $content_type_filter );
+		}
 
 		if ( 'reported-content' === $current_tab ) {
 			$moderation_request_args['exclude_types'] = array( BP_Moderation_Members::$moderation_type );
@@ -215,6 +233,72 @@ class BP_Moderation_List_Table extends WP_List_Table {
 		<?php
 
 		$this->display_tablenav( 'bottom' );
+	}
+
+	/**
+	 * Generate the table navigation above or below the table
+	 *
+	 * @since BuddyBoss 1.5.6
+	 * @param string $which Position of navigation (top or bottom).
+	 */
+	protected function display_tablenav( $which ) {
+		if ( 'top' === $which ) {
+			wp_nonce_field( 'bulk-' . $this->_args['plural'] );
+		}
+		?>
+		<div class="tablenav <?php echo esc_attr( $which ); ?>">
+
+			<?php if ( $this->has_items() ) : ?>
+			<div class="alignleft actions bulkactions">
+				<?php $this->bulk_actions( $which ); ?>
+			</div>
+			<?php endif;
+
+			// Add content type filter after bulk actions for reported content.
+			if ( 'top' === $which ) {
+				$current_tab = bb_filter_input_string( INPUT_GET, 'tab' );
+				$current_tab = ( ! bp_is_moderation_member_blocking_enable() ) ? 'reported-content' : $current_tab;
+
+				if ( 'reported-content' === $current_tab ) {
+					// Get content types for filter dropdown.
+					$content_types = bp_moderation_content_types();
+					// Remove member type from content types.
+					if ( isset( $content_types[ BP_Moderation_Members::$moderation_type ] ) ) {
+						unset( $content_types[ BP_Moderation_Members::$moderation_type ] );
+					}
+					if ( isset( $content_types[ BP_Moderation_Members::$moderation_type_report ] ) ) {
+						unset( $content_types[ BP_Moderation_Members::$moderation_type_report ] );
+					}
+
+					// Get current filter value.
+					$selected_type = isset( $_GET['content_type'] ) ? sanitize_text_field( $_GET['content_type'] ) : '';
+
+					if ( ! empty( $content_types ) ) {
+						?>
+						<div class="alignleft actions">
+							<label for="content-type-filter" class="screen-reader-text"><?php esc_html_e( 'Filter by content type', 'buddyboss' ); ?></label>
+							<select name="content_type" id="content-type-filter">
+								<option value=""><?php esc_html_e( 'All Content Types', 'buddyboss' ); ?></option>
+								<?php foreach ( $content_types as $type_key => $type_label ) : ?>
+									<option value="<?php echo esc_attr( $type_key ); ?>" <?php selected( $selected_type, $type_key ); ?>>
+										<?php echo esc_html( $type_label ); ?>
+									</option>
+								<?php endforeach; ?>
+							</select>
+							<input type="submit" name="filter_action" class="button" value="<?php esc_attr_e( 'Filter', 'buddyboss' ); ?>">
+						</div>
+						<?php
+					}
+				}
+			}
+
+			$this->extra_tablenav( $which );
+			$this->pagination( $which );
+			?>
+
+			<br class="clear" />
+		</div>
+		<?php
 	}
 
 	/**
