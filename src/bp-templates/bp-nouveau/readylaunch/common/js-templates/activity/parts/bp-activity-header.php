@@ -28,5 +28,14 @@ defined( 'ABSPATH' ) || exit;
 	</h3>
 	<a class="bb-rl-model-close-button" href="#">
 		<span class="bb-icons-rl-x"></span>
+
+		<?php
+		/**
+		* Fires after the activity header close button.
+		*
+		* @since BuddyBoss [BBVERSION]
+		*/
+		do_action( 'bb_activity_header_after' );
+		?>
 	</a>
 </script>
