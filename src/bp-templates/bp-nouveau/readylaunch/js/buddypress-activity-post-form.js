@@ -379,7 +379,11 @@ window.bp = window.bp || {};
 			var self = this;
 
 			self.postForm.$el.parent( '#bb-rl-activity-form' ).removeClass( 'bp-hide' );
-			self.postForm.$el.find( '#bb-rl-whats-new' ).html( activity_data.content );
+			// Delay content application to ensure emojioneArea should not override the content.
+			setTimeout( function() {
+				self.postForm.$el.find( '#bb-rl-whats-new' ).html( activity_data.content );
+			}, 0 );
+
 			self.postForm.$el.find( '#bb-rl-whats-new-title' ).val( activity_data.post_title );
 			if ( activity_URL_preview != null ) {
 				self.postForm.$el.find( '#bb-rl-whats-new' ).data( 'activity-url-preview', activity_URL_preview );
