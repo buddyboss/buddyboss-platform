@@ -234,7 +234,7 @@ window.bp = window.bp || {};
 						hideOnClick: true
 					},
 					toolbar: {
-						buttons: [ 'bold', 'italic', 'unorderedlist', 'orderedlist', 'quote', 'anchor', 'pre' ],
+						buttons: [ 'bold', 'italic', 'unorderedlist', 'orderedlist', 'quote', 'anchor', 'pre', 'h3', 'h4' ],
 						relativeContainer: edit_activity_editor_content,
 						static: true,
 						updateOnEmptySelection: true
@@ -3693,8 +3693,8 @@ window.bp = window.bp || {};
 											cleanReplacements: [
 												[ new RegExp( /<div/gi ), '<p' ],
 												[ new RegExp( /<\/div/gi ), '</p' ],
-												[ new RegExp( /<h[1-6]/gi ), '<b' ],
-												[ new RegExp( /<\/h[1-6]/gi ), '</b' ],
+												[ new RegExp( /<h[1256]/gi ), '<b' ],
+												[ new RegExp( /<\/h[1256]/gi ), '</b' ],
 											],
 											cleanAttrs: [ 'class', 'style', 'dir', 'id' ],
 											cleanTags: [ 'meta', 'div', 'main', 'section', 'article', 'aside', 'button', 'svg', 'canvas', 'figure', 'input', 'textarea', 'select', 'label', 'form', 'table', 'thead', 'tfooter', 'colgroup', 'col', 'tr', 'td', 'th', 'dl', 'dd', 'center', 'caption', 'nav', 'img' ],
