@@ -4832,7 +4832,7 @@ function bb_groups_loop_members( $group_id = 0, $role = array( 'member', 'mod', 
 			printf( wp_kses_post( _nx( '%s member', '%s members', $member_count, 'group member count', 'buddyboss' ) ), esc_html( number_format_i18n( $member_count ) ) );
 			?>
 			">
-				<a href="<?php echo esc_url( bp_get_group_permalink() . 'members' ); ?>">
+				<a href="<?php echo esc_url( bp_get_group_permalink() . 'members' ); ?>" aria-label="<?php esc_attr_e( 'More members', 'buddyboss' ); ?>">
 					<span class="bb-icon-f bb-icon-ellipsis-h"></span>
 				</a>
 			</span>
@@ -5139,6 +5139,7 @@ function bb_get_group_subscription_button( $args, $html = true ) {
 			'add_pre_post_text'    => false,
 			'href'                 => $url,
 			'data-bp-btn-action'   => $action,
+			'aria-label'           => $button_text,
 		),
 	);
 
@@ -5156,7 +5157,7 @@ function bb_get_group_subscription_button( $args, $html = true ) {
 
 	if ( ! empty( $html ) ) {
 		$button = sprintf(
-			'<a href="%s" id="%s" class="%s" data-bp-content-id="%s" data-bp-content-type="%s" data-bp-nonce="%s" data-bp-btn-action="%s">%s</a>',
+			'<a href="%s" id="%s" class="%s" data-bp-content-id="%s" data-bp-content-type="%s" data-bp-nonce="%s" data-bp-btn-action="%s" aria-label="%s">%s</a>',
 			esc_url( $button['link_href'] ),
 			esc_attr( $button['id'] ),
 			esc_attr( $button['link_class'] ),
@@ -5164,6 +5165,7 @@ function bb_get_group_subscription_button( $args, $html = true ) {
 			'group',
 			esc_url( $button['link_href'] ),
 			esc_attr( $action ),
+			esc_attr( $button['aria-label'] ),
 			wp_kses_post( $button['link_text'] )
 		);
 	}

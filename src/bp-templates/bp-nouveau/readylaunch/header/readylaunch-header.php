@@ -48,7 +48,7 @@ bp_get_template_part( 'sidebar/left-sidebar' );
 <div id="page" class="site bb-readylaunch">
 	<header id="masthead" class="bb-rl-header">
 		<div class="bb-rl-container bb-rl-header-container flex justify-between items-center">
-			<a href="#" class="bb-rl-left-panel-mobile"><i class="bb-icons-rl-list"></i></a>
+			<a href="#" class="bb-rl-left-panel-mobile" aria-label="<?php esc_attr_e( 'Open left panel', 'buddyboss' ); ?>"><i class="bb-icons-rl-list"></i></a>
 			<?php
 			bp_get_template_part( 'header/site-logo' );
 
@@ -110,7 +110,7 @@ bp_get_template_part( 'sidebar/left-sidebar' );
 							$display_name   = function_exists( 'bp_core_get_user_displayname' ) ? bp_core_get_user_displayname( $logged_in_user->ID ) : $logged_in_user->display_name;
 							?>
 
-							<a class="user-link" href="<?php echo esc_url( $user_link ); ?>">
+							<a class="user-link" href="<?php echo esc_url( $user_link ); ?>" aria-label="<?php echo esc_attr( $display_name ); ?>">
 								<?php echo get_avatar( get_current_user_id(), 100 ); ?>
 							</a>
 							<?php if ( is_user_logged_in() ) { ?>
