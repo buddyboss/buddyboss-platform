@@ -2558,10 +2558,19 @@ window.bp = window.bp || {};
 
 				var decodedContent = $( '<textarea>' ).html( content ).text();
 
+				// Remove content inside <pre> and <code> tags before checking for escaped HTML
+				var contentWithoutCodeBlocks = content;
+				
+				// Remove <pre>...</pre> blocks
+				contentWithoutCodeBlocks = contentWithoutCodeBlocks.replace(/<pre[^>]*>[\s\S]*?<\/pre>/gi, '');
+				
+				// Remove <code>...</code> blocks
+				contentWithoutCodeBlocks = contentWithoutCodeBlocks.replace(/<code[^>]*>[\s\S]*?<\/code>/gi, '');
+
 				var escapedHtmlRegex = /&lt;.*?&gt;/;
 
-				// Check for escaped HTML tags
-				if ( escapedHtmlRegex.test( content ) ) {
+				// Check for escaped HTML tags (excluding content in pre and code tags)
+				if ( escapedHtmlRegex.test( contentWithoutCodeBlocks ) ) {
 					alert( BP_ADMIN.forum_validation.escaped_html_tags );
 					event.preventDefault();
 					return;

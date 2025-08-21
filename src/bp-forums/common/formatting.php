@@ -560,3 +560,62 @@ function bbp_remove_html_tags( $content ) {
 
 	return $content;
 }
+
+/**
+ * Convert <code> tags to <pre> tags when saving from backend editor.
+ * This ensures code snippets maintain their formatting when edited in the backend.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $content Content to filter.
+ * @return string Content with <code> converted to <pre> when appropriate.
+ */
+function bbp_admin_convert_code_to_pre( $content ) {
+	// Only apply this conversion when saving from the admin area.
+	if ( ! is_admin() || wp_doing_ajax() ) {
+		return $content;
+	}
+
+	// Pattern to match standalone <code> blocks (not already wrapped in <pre>)
+	// This regex looks for <code> tags that are not immediately preceded by <pre>
+	// and not immediately followed by </pre>.
+	$pattern = '/(?<!<pre>)(<code>)(.*?)(<\/code>)(?!<\/pre>)/s';
+
+	// Replace <code> with <pre> for code blocks.
+	$content = preg_replace_callback(
+		$pattern,
+		function ( $matches ) {
+			// Get the content inside the code tags.
+			$code_content = $matches[2];
+
+			// If the content contains line breaks, treat it as a code block.
+			// Otherwise, keep it as inline code.
+			if ( strpos( $code_content, "\n" ) !== false || strpos( $code_content, '<br' ) !== false ) {
+				// Trim the content to remove leading/trailing whitespace.
+				$code_content = trim( $code_content );
+
+				// Split content by line breaks.
+				$lines = preg_split( '/\r\n|\r|\n/', $code_content );
+
+				// Wrap each line in <p> tags with properly encoded content.
+				$wrapped_lines = array();
+				foreach ( $lines as $line ) {
+					// Encode HTML entities to prevent HTML rendering.
+					$encoded_line    = htmlspecialchars( $line, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 );
+					$wrapped_lines[] = '<p>' . $encoded_line . '</p>';
+				}
+
+				// Join the wrapped lines and wrap in <pre> tag.
+				$formatted_content = implode( '', $wrapped_lines );
+
+				return '<pre>' . $formatted_content . '</pre>';
+			}
+
+			// Keep inline code as is.
+			return $matches[0];
+		},
+		$content
+	);
+
+	return $content;
+}
