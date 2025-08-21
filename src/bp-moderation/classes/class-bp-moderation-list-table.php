@@ -122,7 +122,10 @@ class BP_Moderation_List_Table extends WP_List_Table {
 		// Check if we're doing a search (only for flagged members).
 		$search_terms = false;
 		if ( 'reported-content' !== $current_tab && ! empty( $_REQUEST['s'] ) ) {
-			$search_terms = sanitize_text_field( $_REQUEST['s'] );
+			$search_terms = trim( sanitize_text_field( $_REQUEST['s'] ) );
+			if ( strlen( $search_terms ) > 100 ) { // Reasonable limit
+				$search_terms = substr( $search_terms, 0, 100 );
+			}
 		}
 
 		// Check for content type filter (only for reported content).
