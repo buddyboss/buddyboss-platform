@@ -410,8 +410,8 @@ window.bp = window.bp || {};
 
 			// Trigger custom event for edit activity loaded.
 			$( 'body' ).trigger( 'bb_activity_edit_loaded', {
-				model: self.model,
-				activity_data: activity_data,
+				model         : self.model,
+				activity_data : activity_data,
 			} );
 
 			// Set link image index and confirm image index.
@@ -896,9 +896,9 @@ window.bp = window.bp || {};
 
 			// Trigger custom event for draft activity loaded.
 			$( 'body' ).trigger( 'bb_activity_draft_loaded', {
-				model: this.model,
-				activity_data: activity_data,
-				draft_activity: bp.draft_activity
+				model          : this.model,
+				activity_data  : activity_data,
+				draft_activity : bp.draft_activity
 			} );
 
 			var is_profile_activity = this.isProfileDraftActivity( activity_data ),
@@ -1013,11 +1013,11 @@ window.bp = window.bp || {};
 			);
 
 			$( 'body' ).trigger( 'bb_activity_draft_collect_activity', {
-				model: this.model,
-				activity_data: self.postForm.model.attributes,
-				meta: meta
+				model         : this.model,
+				activity_data : self.postForm.model.attributes,
+				meta          : meta
 			} );
-			
+
 			var noFeatureImages = (
 				'undefined' === typeof BBActivityPostFeatureImage ||
 				'function' !== typeof BBActivityPostFeatureImage.hasFeatureImages ||
@@ -1164,8 +1164,8 @@ window.bp = window.bp || {};
 
 			// Trigger custom event for draft activity loaded.
 			$( 'body' ).trigger( 'bb_activity_draft_data_keys', {
-				model: this.model,
-				draft_data_keys: draft_data_keys
+				model           : this.model,
+				draft_data_keys : draft_data_keys
 			} );
 
 			_.each(
@@ -4648,7 +4648,7 @@ window.bp = window.bp || {};
 
 				// Add BB Activity Post Feature Image View.
 				if ( ! _.isUndefined( bp.Views.activityPostFeatureImageForm ) ) {
-					this.views.add( new bp.Views.activityPostFeatureImageForm( { model: this.model } ) );
+					this.views.add( new bp.Views.activityPostFeatureImageForm( { model : this.model } ) );
 				}
 
 				this.views.add(
@@ -5313,7 +5313,7 @@ window.bp = window.bp || {};
 
 				// Trigger custom event for form preparation.
 				$( 'body' ).trigger( 'bb_activity_form_prep', {
-					model: self.model
+					model : self.model
 				} );
 
 				// validation for content editor.
@@ -5510,8 +5510,8 @@ window.bp = window.bp || {};
 
 						// Trigger custom event for post-success handling.
 						$( 'body' ).trigger( 'bb_activity_post_success', {
-							model: self.model,
-							response: response
+							model    : self.model,
+							response : response
 						} );
 
 						if ( '' === self.model.get( 'id' ) || 0 === parseInt( self.model.get( 'id' ) ) ) {
