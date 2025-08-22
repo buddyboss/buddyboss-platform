@@ -739,22 +739,36 @@ function bp_nouveau_ajax_post_update() {
 		}
 	}
 
-	if (
-		function_exists( 'bb_pro_activity_post_feature_image_instance' ) &&
-		bb_pro_activity_post_feature_image_instance() &&
-		method_exists( bb_pro_activity_post_feature_image_instance(), 'bb_user_has_access_feature_image' ) &&
-		! bb_pro_activity_post_feature_image_instance()->bb_user_has_access_feature_image(
-			array(
-				'object'   => ! empty( $_POST['object'] ) ? sanitize_text_field( wp_unslash( $_POST['object'] ) ) : '',
-				'group_id' => ! empty( $_POST['item_id'] ) ? absint( $_POST['item_id'] ) : 0,
-			)
-		)
-	) {
-		wp_send_json_error(
-			array(
-				'message' => esc_html__( 'You do not have permission to upload feature image.', 'buddyboss' ),
-			)
-		);
+	if ( function_exists( 'bb_pro_activity_post_feature_image_instance' ) ) {
+		if ( method_exists( bb_pro_activity_post_feature_image_instance(), 'bb_user_has_access_feature_image' ) ) {
+			$object  = ! empty( $_POST['object'] ) ? sanitize_text_field( wp_unslash( $_POST['object'] ) ) : '';
+			$item_id = ! empty( $_POST['item_id'] ) ? absint( $_POST['item_id'] ) : ( function_exists( 'bp_get_current_group_id' ) ? bp_get_current_group_id() : 0 );
+
+			$can_upload_feature_image = bb_pro_activity_post_feature_image_instance()->bb_user_has_access_feature_image(
+				array(
+					'user_id'  => bp_loggedin_user_id(),
+					'group_id' => $item_id,
+					'object'   => $object,
+				)
+			);
+			if ( ! $can_upload_feature_image ) {
+				wp_send_json_error(
+					array(
+						'message' => __( 'You do not have permission to upload feature image.', 'buddyboss' ),
+					)
+				);
+			}
+		}
+
+		if ( method_exists( bb_pro_activity_post_feature_image_instance(), 'bb_validate_attachment_by_id' ) ) {
+			$feature_image_id = ! empty( $_POST['bb_activity_post_feature_image'] ) && ! empty( $_POST['bb_activity_post_feature_image']['id'] ) ? sanitize_text_field( wp_unslash( $_POST['bb_activity_post_feature_image']['id'] ) ) : 0;
+			if ( ! empty( $feature_image_id ) ) {
+				$validate_attachment = bb_pro_activity_post_feature_image_instance()->bb_validate_attachment_by_id( $feature_image_id );
+				if ( ! empty( $validate_attachment ) && is_array( $validate_attachment ) ) {
+					wp_send_json_error( $validate_attachment );
+				}
+			}
+		}
 	}
 
 	if ( ! strlen( trim( html_entity_decode( wp_strip_all_tags( $_POST['content'] ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) ) ) ) {
