@@ -1971,6 +1971,25 @@ window.bp = window.bp || {};
 				bp.Nouveau.Activity.postForm.dropzone.on(
 					'addedfile',
 					function ( file ) {
+						if (file.type === "image/heic" || file.name.toLowerCase().endsWith(".heic")) {
+							heic2any({
+								blob: file,          // file is already a Blob
+								toType: "image/jpeg",
+								quality: 0.9
+							}).then(converted => {
+								const newFile = new File(
+									[converted],
+									file.name.replace(/\.heic$/i, ".jpg"),
+									{ type: "image/jpeg", lastModified: new Date().getTime() }
+								);
+
+								// Replace the HEIC with JPEG in Dropzone
+								this.removeFile(file);
+								this.addFile(newFile);
+							}).catch(err => {
+								console.error("HEIC conversion error:", err);
+							});
+						}
 						if ( file.media_edit_data ) {
 							self.media.push( file.media_edit_data );
 							self.model.set( 'media', self.media );
