@@ -739,7 +739,11 @@ function bp_nouveau_ajax_post_update() {
 		}
 	}
 
-	if ( function_exists( 'bb_pro_activity_post_feature_image_instance' ) ) {
+	$post_feature_image = ! empty( $_POST['bb_activity_post_feature_image'] ) ? $_POST['bb_activity_post_feature_image'] : array(); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash
+	if (
+		! empty( $post_feature_image ) &&
+		function_exists( 'bb_pro_activity_post_feature_image_instance' )
+	) {
 		if ( method_exists( bb_pro_activity_post_feature_image_instance(), 'bb_user_has_access_feature_image' ) ) {
 			$object  = ! empty( $_POST['object'] ) ? sanitize_text_field( wp_unslash( $_POST['object'] ) ) : '';
 			$item_id = ! empty( $_POST['item_id'] ) ? absint( $_POST['item_id'] ) : ( function_exists( 'bp_get_current_group_id' ) ? bp_get_current_group_id() : 0 );
@@ -761,7 +765,7 @@ function bp_nouveau_ajax_post_update() {
 		}
 
 		if ( method_exists( bb_pro_activity_post_feature_image_instance(), 'bb_validate_attachment_by_id' ) ) {
-			$feature_image_id = ! empty( $_POST['bb_activity_post_feature_image'] ) && ! empty( $_POST['bb_activity_post_feature_image']['id'] ) ? sanitize_text_field( wp_unslash( $_POST['bb_activity_post_feature_image']['id'] ) ) : 0;
+			$feature_image_id = ! empty( $post_feature_image['id'] ) ? sanitize_text_field( wp_unslash( $post_feature_image['id'] ) ) : 0;
 			if ( ! empty( $feature_image_id ) ) {
 				$validate_attachment = bb_pro_activity_post_feature_image_instance()->bb_validate_attachment_by_id( $feature_image_id );
 				if ( ! empty( $validate_attachment ) && is_array( $validate_attachment ) ) {
