@@ -224,7 +224,7 @@ window.bp = window.bp || {};
 
 			$document.on(
 				'click',
-				'#bb-rl-activity-stream .activity-state-comments > .comments-count, #bb-rl-activity-stream .activity-meta > .generic-button .acomment-reply',
+				'#bb-rl-activity-stream .activity-state-comments > .comments-count, #bb-rl-activity-stream .groups-meta > .generic-button .acomment-reply, #bb-rl-activity-stream .activity-meta > .generic-button .acomment-reply',
 				function ( e ) {
 					e.preventDefault();
 					var liElem     = $( this ).closest( '.activity-item' );
