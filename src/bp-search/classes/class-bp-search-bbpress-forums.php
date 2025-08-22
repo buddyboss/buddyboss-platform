@@ -65,51 +65,88 @@ if ( ! class_exists( 'Bp_Search_bbPress_Forums' ) ) :
 				$post_status = array( 'publish' );
 			}
 
-			$where_sql = '( post_status IN (\'' . join( '\',\'', $post_status ) . '\')';
+			// Build complex WHERE clause for forum visibility.
+			if ( bp_is_active( 'groups' ) && ! current_user_can( 'administrator' ) ) {
+				// Get user accessible groups using shared method from parent class.
+				$groups_data        = $this->get_user_accessible_groups();
+				$user_group_ids     = $groups_data['user_group_ids'];
+				$excluded_group_ids = $groups_data['excluded_group_ids'];
 
-			if ( bp_is_active( 'groups' ) ) {
-				$group_memberships = bp_get_user_groups(
-					get_current_user_id(),
-					array(
-						'is_admin' => null,
-						'is_mod'   => null,
-					)
-				);
+				// Build WHERE clause.
+				$where_parts = array();
 
-				$group_memberships = wp_list_pluck( $group_memberships, 'group_id' );
+				// Condition 1: Forums not associated with any group (standalone forums).
+				$where_parts[] = "(pm.meta_value IS NULL OR pm.meta_value = '' OR pm.meta_value = 'a:0:{}') AND post_status IN ('" . join( "','", $post_status ) . "')";
 
-				$public_groups = groups_get_groups(
-					array(
-						'fields'   => 'ids',
-						'status'   => 'public',
-						'per_page' => - 1,
-					)
-				);
-
-				if ( ! empty( $public_groups ) && ! empty( $public_groups['groups'] ) ) {
-					$public_groups = $public_groups['groups'];
-				} else {
-					$public_groups = array();
+				// Condition 2: Forums associated with allowed groups.
+				if ( ! empty( $user_group_ids ) ) {
+					$serialized_values = array();
+					$user_group_ids    = array_map( 'intval', $user_group_ids );
+					foreach ( $user_group_ids as $group_id ) {
+						$serialized_values[] = $wpdb->prepare( '%s', maybe_serialize( array( $group_id ) ) );
+					}
+					$where_parts[] = 'pm.meta_value IN (' . implode( ',', $serialized_values ) . ')';
 				}
 
-				$group_memberships = array_merge( $public_groups, $group_memberships );
-				$group_memberships = array_unique( $group_memberships );
+				// Combine conditions with OR (forum must match one of the conditions).
+				$where_sql = '((' . implode( ') OR (', $where_parts ) . '))';
 
-				if ( ! empty( $group_memberships ) ) {
-					$in = array_map(
-						function ( $group_id ) {
-							return ',\'' . maybe_serialize( array( $group_id ) ) . '\'';
-						},
-						$group_memberships
+				// Explicitly exclude forums from restricted groups if user is not a member.
+				if ( ! empty( $excluded_group_ids ) ) {
+					$excluded_values = array();
+					foreach ( $excluded_group_ids as $group_id ) {
+						$excluded_values[] = $wpdb->prepare( '%s', maybe_serialize( array( $group_id ) ) );
+					}
+					// Add exclusion condition.
+					$where_sql .= ' AND (pm.meta_value IS NULL OR pm.meta_value NOT IN (' . implode( ',', $excluded_values ) . '))';
+				}
+
+				if ( ! empty( $excluded_group_ids ) ) {
+					$excluded_forum_args = array(
+						'fields'      => 'ids',
+						'post_status' => array( 'publish', 'private', 'hidden' ),
+						'post_type'   => bbp_get_forum_post_type(),
+						'numberposts' => -1,
+						'meta_query'  => array(
+							'relation' => 'OR',
+						),
 					);
 
-					$in = implode( '', $in );
+					// Add meta queries for each excluded group.
+					foreach ( $excluded_group_ids as $group_id ) {
+						$excluded_forum_args['meta_query'][] = array(
+							'key'     => '_bbp_group_ids',
+							'value'   => maybe_serialize( array( $group_id ) ),
+							'compare' => '=',
+						);
+					}
 
-					$where_sql .= ' OR pm.meta_value IN (' . trim( $in, ',' ) . ')';
+					$excluded_forum_ids     = get_posts( $excluded_forum_args );
+					$excluded_forum_ids_str = '';
+
+					// Build the forum restriction clause.
+					if ( ! empty( $excluded_forum_ids ) ) {
+						// Exclude replies from restricted forums.
+						$excluded_forum_ids = array_map( 'intval', $excluded_forum_ids );
+
+						$excluded_child_forum_ids = array();
+
+						// Get child forum ids where parent forum are restricted.
+						if ( method_exists( $this, 'nested_child_forum_ids' ) ) {
+							foreach ( $excluded_forum_ids as $forum_id ) {
+								$single_forum_child_ids   = $this->nested_child_forum_ids( $forum_id );
+								$excluded_child_forum_ids = array_merge( $excluded_child_forum_ids, $single_forum_child_ids );
+							}
+						}
+						$excluded_forum_ids_str = implode( ',', array_unique( array_merge( $excluded_forum_ids, $excluded_child_forum_ids ) ) );
+
+						$where_sql .= ' AND p.id NOT IN ( ' . $excluded_forum_ids_str . ' )';
+					}
 				}
+			} else {
+				// Groups not active, just check post status.
+				$where_sql = "post_status IN ('" . join( "','", $post_status ) . "')";
 			}
-
-			$where_sql .= ')';
 
 			$where[] = $where_sql;
 
@@ -144,15 +181,15 @@ if ( ! class_exists( 'Bp_Search_bbPress_Forums' ) ) :
 		 * @return object Bp_Search_Forums
 		 */
 		public static function instance() {
-			// Store the instance locally to avoid private static replication
+			// Store the instance locally to avoid private static replication.
 			static $instance = null;
 
-			// Only run these methods if they haven't been run previously
+			// Only run these methods if they haven't been run previously.
 			if ( null === $instance ) {
 				$instance = new Bp_Search_bbPress_Forums();
 			}
 
-			// Always return the instance
+			// Always return the instance.
 			return $instance;
 		}
 
@@ -167,7 +204,7 @@ if ( ! class_exists( 'Bp_Search_bbPress_Forums' ) ) :
 
 	}
 
-	// End class Bp_Search_Posts
+	// End class Bp_Search_bbPress_Forums.
 
 endif;
 
