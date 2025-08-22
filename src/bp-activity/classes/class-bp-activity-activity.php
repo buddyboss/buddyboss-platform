@@ -2191,7 +2191,7 @@ class BP_Activity_Activity {
 
 		// Show unanswered activities only where clause.
 		if ( ! empty( $filter_array['unanswered_only'] ) && ! apply_filters( 'bb_activity_unanswered_only_remove_sql', false ) ) {
-			$filter_sql[] = "act_comments.item_id IS NULL";
+			$filter_sql[] = "uac.id IS NULL";
 		}
 
 		if ( empty( $filter_sql ) ) {
