@@ -389,7 +389,7 @@ function bp_has_activities( $args = '' ) {
 		$r['pin_type'] = bb_activity_pin_type( $r );
 	}
 
-	// Set to default scope with unanswered only.
+	// Replace with calculated default scope when there is unanswered only.
 	if ( $unanswered_only ) {
 		$r['scope'] = $scope;
 

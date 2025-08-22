@@ -2817,7 +2817,7 @@ function bb_get_activity_filter_options_labels() {
 		'friends'    => __( 'From my connections', 'buddyboss' ),
 		'mentions'   => __( "I'm mentioned in", 'buddyboss' ),
 		'following'  => __( "I'm following", 'buddyboss' ),
-		'unanswered' => __( "Unanswered", 'buddyboss' ),
+		'unanswered' => __( 'Unanswered', 'buddyboss' ),
 	);
 
 	// Common function to get only allowed ones.
