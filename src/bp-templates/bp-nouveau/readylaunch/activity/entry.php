@@ -61,11 +61,11 @@ $bb_rl_activity_class_exists = class_exists( 'BB_Activity_Readylaunch' ) ? BB_Ac
 				$feature_image_data = bb_pro_activity_post_feature_image_instance()->bb_get_feature_image_data( $activity_id );
 				if ( ! empty( $feature_image_data ) ) {
 					$position_style = '';
-					if ( ! empty( $feature_image_data['position'] ) && $feature_image_data['position'] !== 'center' ) {
+					if ( ! empty( $feature_image_data['position'] ) && 'center' !== $feature_image_data['position'] ) {
 						$position_style = ' style="object-position: center ' . esc_attr( $feature_image_data['position'] ) . 'px;"';
 					}
 					?>
-					<img class="activity-feature-image-media<?php echo ! empty( $feature_image_data['position'] ) && $feature_image_data['position'] !== 'center' ? ' is-positioned' : ''; ?>" src="<?php echo esc_url( $feature_image_data['url'] ); ?>" alt="<?php echo esc_attr( $feature_image_data['title'] ); ?>"<?php echo $position_style; ?> />
+					<img class="activity-feature-image-media<?php echo esc_attr( ! empty( $feature_image_data['position'] ) && 'center' !== $feature_image_data['position'] ? ' is-positioned' : '' ); ?>" src="<?php echo esc_url( $feature_image_data['url'] ); ?>" alt="<?php echo esc_attr( $feature_image_data['title'] ); ?>"<?php echo wp_kses_post( $position_style ); ?> />
 					<?php
 				}
 				?>
@@ -177,7 +177,7 @@ $bb_rl_activity_class_exists = class_exists( 'BB_Activity_Readylaunch' ) ? BB_Ac
 										bb_activity_topics_manager_instance()->bb_get_activity_topic_url(
 											array(
 												'activity_id' => bp_get_activity_id(),
-												'html'        => true,
+												'html' => true,
 											)
 										)
 									);

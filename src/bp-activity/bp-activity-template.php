@@ -2932,7 +2932,7 @@ function bp_get_activity_css_class() {
 		$class .= ' bb-muted';
 	}
 
-	// Check if activity has featured image
+	// Check if activity has featured image.
 	if (
 		function_exists( 'bb_pro_activity_post_feature_image_instance' ) &&
 		bb_pro_activity_post_feature_image_instance() &&
