@@ -126,7 +126,7 @@ if ( ! class_exists( 'Bp_Search_bbPress_Forums' ) ) :
 
 					// Build the forum restriction clause.
 					if ( ! empty( $excluded_forum_ids ) ) {
-						// Exclude replies from restricted forums
+						// Exclude replies from restricted forums.
 						$excluded_forum_ids = array_map( 'intval', $excluded_forum_ids );
 
 						$excluded_child_forum_ids = array();
@@ -181,15 +181,15 @@ if ( ! class_exists( 'Bp_Search_bbPress_Forums' ) ) :
 		 * @return object Bp_Search_Forums
 		 */
 		public static function instance() {
-			// Store the instance locally to avoid private static replication
+			// Store the instance locally to avoid private static replication.
 			static $instance = null;
 
-			// Only run these methods if they haven't been run previously
+			// Only run these methods if they haven't been run previously.
 			if ( null === $instance ) {
 				$instance = new Bp_Search_bbPress_Forums();
 			}
 
-			// Always return the instance
+			// Always return the instance.
 			return $instance;
 		}
 
@@ -204,7 +204,7 @@ if ( ! class_exists( 'Bp_Search_bbPress_Forums' ) ) :
 
 	}
 
-	// End class Bp_Search_Posts
+	// End class Bp_Search_bbPress_Forums.
 
 endif;
 

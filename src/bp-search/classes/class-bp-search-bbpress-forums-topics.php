@@ -140,7 +140,7 @@ if ( ! class_exists( 'Bp_Search_bbPress_Topics' ) ) :
 				// Get child forum IDs for excluded forums.
 				$excluded_child_forum_ids = array();
 				foreach ( $excluded_forum_ids as $forum_id ) {
-					$child_ids = $this->nested_child_forum_ids( $forum_id );
+					$child_ids                = $this->nested_child_forum_ids( $forum_id );
 					$excluded_child_forum_ids = array_merge( $excluded_child_forum_ids, $child_ids );
 				}
 
@@ -165,6 +165,7 @@ if ( ! class_exists( 'Bp_Search_bbPress_Topics' ) ) :
 			$forum_ids_cache_key = 'bbp_search_forum_ids_' . md5( maybe_serialize( $forum_args ) );
 			if ( ! isset( $bbp_search_forum_ids[ $forum_ids_cache_key ] ) ) {
 				$forum_ids = get_posts( $forum_args );
+
 				$bbp_search_forum_ids[ $forum_ids_cache_key ] = $forum_ids;
 			} else {
 				$forum_ids = $bbp_search_forum_ids[ $forum_ids_cache_key ];
@@ -185,18 +186,16 @@ if ( ! class_exists( 'Bp_Search_bbPress_Topics' ) ) :
 
 			$where[] = "post_type = '{$this->type}'";
 
-			// Only show topics from accessible forums
+			// Only show topics from accessible forums.
 			if ( ! empty( $forum_ids ) ) {
-				// Sanitize forum IDs to prevent SQL injection
-				$forum_ids = array_map( 'intval', $forum_ids );
+				// Sanitize forum IDs to prevent SQL injection.
+				$forum_ids   = array_map( 'intval', $forum_ids );
 				$forum_id_in = implode( ',', $forum_ids );
-				$where[] = "p.post_parent IN ( $forum_id_in )";
-			} else {
-				// No accessible forums - return no results
-				if ( bp_is_active( 'groups' ) && ! empty( $excluded_forum_ids ) ) {
-					// If we have excluded forums but no allowed forums, return empty
-					$where[] = '1=0';
-				}
+				$where[]     = "p.post_parent IN ( $forum_id_in )";
+				// No accessible forums - return no results.
+			} elseif ( bp_is_active( 'groups' ) && ! empty( $excluded_forum_ids ) ) {
+				// If we have excluded forums but no allowed forums, return empty.
+				$where[] = '1=0';
 			}
 
 			/**
@@ -230,15 +229,15 @@ if ( ! class_exists( 'Bp_Search_bbPress_Topics' ) ) :
 		 * @since BuddyBoss 1.0.0
 		 */
 		public static function instance() {
-			// Store the instance locally to avoid private static replication
+			// Store the instance locally to avoid private static replication.
 			static $instance = null;
 
-			// Only run these methods if they haven't been run previously
+			// Only run these methods if they haven't been run previously.
 			if ( null === $instance ) {
 				$instance = new Bp_Search_bbPress_Topics();
 			}
 
-			// Always return the instance
+			// Always return the instance.
 			return $instance;
 		}
 
@@ -250,9 +249,8 @@ if ( ! class_exists( 'Bp_Search_bbPress_Topics' ) ) :
 		private function __construct() {
 			/* Do nothing here */
 		}
-
 	}
 
-	// End class Bp_Search_Posts
+	// End class Bp_Search_bbPress_Topics.
 
 endif;

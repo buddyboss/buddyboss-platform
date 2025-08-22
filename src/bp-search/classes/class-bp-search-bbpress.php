@@ -17,37 +17,6 @@ if ( ! class_exists( 'Bp_Search_bbPress' ) ) :
 	abstract class Bp_Search_bbPress extends Bp_Search_Type {
 		public $type;
 
-		/**
-		 * Static cache variables for group data.
-		 */
-		private static $user_cache = null;
-		private static $user_cache_timestamp = null;
-		private static $user_id_cache = null;
-		private static $restricted_groups_cache = null;
-		private static $restricted_cache_timestamp = null;
-
-		/**
-		 * Constructor to set up cache clearing hooks.
-		 */
-		public function __construct() {
-			// Clear cache when groups are updated
-			add_action( 'groups_group_after_save', array( __CLASS__, 'clear_groups_cache' ) );
-			add_action( 'groups_delete_group', array( __CLASS__, 'clear_groups_cache' ) );
-			add_action( 'groups_update_group_status', array( __CLASS__, 'clear_groups_cache' ) );
-		}
-
-		/**
-		 * Clear static caches when groups are updated.
-		 */
-		public static function clear_groups_cache() {
-			// Reset static variables to force cache refresh
-			self::$user_cache = null;
-			self::$user_cache_timestamp = null;
-			self::$user_id_cache = null;
-			self::$restricted_groups_cache = null;
-			self::$restricted_cache_timestamp = null;
-		}
-
 		function sql( $search_term, $only_totalrow_count = false ) {
 			global $wpdb;
 			$query_placeholder = array();
@@ -141,7 +110,7 @@ if ( ! class_exists( 'Bp_Search_bbPress' ) ) :
 
 			$cache = array(
 				'user_group_ids'     => $user_group_ids,
-				'excluded_group_ids' => $excluded_group_ids
+				'excluded_group_ids' => $excluded_group_ids,
 			);
 
 			return $cache;
@@ -197,7 +166,7 @@ if ( ! class_exists( 'Bp_Search_bbPress' ) ) :
 		 *
 		 * @uses bbp_get_forum_post_type() Get forum post type.
 		 *
-		 * @param int $forum_id
+		 * @param int $forum_id Forum ID to get nested child forum ids for.
 		 *
 		 * @return array
 		 */

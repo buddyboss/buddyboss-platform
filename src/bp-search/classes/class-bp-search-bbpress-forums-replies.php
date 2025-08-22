@@ -218,15 +218,15 @@ if ( ! class_exists( 'Bp_Search_bbPress_Replies' ) ) :
 		 * @return object Bp_Search_Forums
 		 */
 		public static function instance() {
-			// Store the instance locally to avoid private static replication
+			// Store the instance locally to avoid private static replication.
 			static $instance = null;
 
-			// Only run these methods if they haven't been run previously
+			// Only run these methods if they haven't been run previously.
 			if ( null === $instance ) {
 				$instance = new Bp_Search_bbPress_Replies();
 			}
 
-			// Always return the instance
+			// Always return the instance.
 			return $instance;
 		}
 
@@ -240,7 +240,7 @@ if ( ! class_exists( 'Bp_Search_bbPress_Replies' ) ) :
 		}
 	}
 
-	// End class Bp_Search_Posts
+	// End class Bp_Search_bbPress_Replies.
 
 endif;
 
