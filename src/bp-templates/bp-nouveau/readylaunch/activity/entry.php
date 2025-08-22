@@ -62,7 +62,7 @@ $bb_rl_activity_class_exists = class_exists( 'BB_Activity_Readylaunch' ) ? BB_Ac
 				if ( ! empty( $feature_image_data ) ) {
 					$position_style = '';
 					if ( ! empty( $feature_image_data['position'] ) && 'center' !== $feature_image_data['position'] ) {
-						$position_style = ' style="object-position: center ' . esc_attr( $feature_image_data['position'] ) . 'px;"';
+						$position_style = ' style="top: ' . esc_attr( $feature_image_data['position'] ) . 'px;"';
 					}
 					?>
 					<img class="activity-feature-image-media<?php echo esc_attr( ! empty( $feature_image_data['position'] ) && 'center' !== $feature_image_data['position'] ? ' is-positioned' : '' ); ?>" src="<?php echo esc_url( $feature_image_data['url'] ); ?>" alt="<?php echo esc_attr( $feature_image_data['title'] ); ?>"<?php echo wp_kses_post( $position_style ); ?> />
