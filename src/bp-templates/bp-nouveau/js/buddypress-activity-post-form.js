@@ -1579,6 +1579,11 @@ window.bp = window.bp || {};
 			) {
 				$( '#whats-new-form' ).find( '.bb-post-poll-button' ).removeClass( 'bp-hide' );
 			}
+
+			// Trigger custom event for reset draft.
+			$( 'body' ).trigger( 'bb_activity_reset_draft', {
+				model: self.model
+			} );
 		},
 
 		reloadWindow: function() {
@@ -4452,6 +4457,14 @@ window.bp = window.bp || {};
 
 					bp.Nouveau.Activity.postForm.checkAndStoreDraftToLocalStorage( bp.draft_activity );
 				}
+
+				// Trigger the event to handle privacy change data.
+				$( 'body' ).trigger( 'bb_activity_privacy_changed', {
+					element: this.$el,
+					model: this.model,
+					whats_new_form: whats_new_form,
+					draft_activity: bp.draft_activity,
+				} );
 			},
 
 			backPrivacySelector: function ( e ) {
@@ -4503,6 +4516,8 @@ window.bp = window.bp || {};
 					// Update multi media options dependent on profile/group view
 					Backbone.trigger('mediaprivacytoolbar');
 				}
+
+				Backbone.trigger( 'privacySelector' );
 
 				bp.mentions.clearCache();
 			}
@@ -6172,6 +6187,12 @@ window.bp = window.bp || {};
 				) {
 					data.link_description = '';
 				}
+
+				// Trigger custom event for form data.
+				$( 'body' ).trigger( 'bb_activity_form_data', {
+					model: self.model,
+					data: data
+				} );
 
 				bp.ajax.post( 'post_update', data ).done(
 					function ( response ) {
