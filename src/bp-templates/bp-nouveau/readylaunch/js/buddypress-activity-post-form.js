@@ -3037,16 +3037,16 @@ window.bp = window.bp || {};
 				types.forEach(
 					function ( type ) {
 						var groupType  = 'group_' + type,
-							changeType = 'document' === type ? 'media' : type;
+							changeType = type;
 						if ( 'undefined' !== typeof modelAttributes[ groupType ] && false === modelAttributes[ groupType ] ) {
 							var dropzone = bp.Nouveau.Activity.postForm.dropzone;
 
 							if ( ! dropzone || 'bb-rl-activity-post-' + type + '-uploader' === dropzone.element.id ) {
-								typeSupport.find( 'bb-rl-post-' + changeType + '.bb-rl-' + type + '-support' ).removeClass( 'active' ).addClass( 'bb-rl-' + type + '-support-hide' );
+								typeSupport.find( '.bb-rl-post-' + changeType + '.bb-rl-' + type + '-support' ).removeClass( 'active' ).addClass( 'bb-rl-' + type + '-support-hide' );
 								Backbone.trigger( 'activity_' + type + '_close' );
 							}
 						} else {
-							typeSupport.find( 'bb-rl-post-' + changeType + '.bb-rl-' + type + '-support' ).removeClass( 'bb-rl-' + type + '-support-hide' );
+							typeSupport.find( '.bb-rl-post-' + changeType + '.bb-rl-' + type + '-support' ).removeClass( 'bb-rl-' + type + '-support-hide' );
 						}
 					}
 				);
