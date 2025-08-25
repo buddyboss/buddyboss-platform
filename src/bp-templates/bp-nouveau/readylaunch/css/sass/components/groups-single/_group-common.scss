@@ -225,7 +225,11 @@
 	> .bb-rl-secondary-header {
 		top: 71px;
 		position: sticky;
-		z-index: 9999;
+		z-index: 9991;
+
+		.bb-rl-activity-modal-open & {
+			z-index: 999;
+		}
 
 		.admin-bar & {
 			top: 103px;
