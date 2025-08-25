@@ -520,7 +520,7 @@ function bp_version_updater() {
 		}
 
 		if ( $raw_db_version < 23451 ) {
-			bb_update_to_2_9_5();
+			bb_update_to_2_10_1();
 		}
 
 		if ( $raw_db_version !== $current_db ) {
@@ -4007,7 +4007,7 @@ function bb_update_to_2_9_4() {
  *
  * @return void
  */
-function bb_update_to_2_9_5() {
+function bb_update_to_2_10_1() {
 	global $wpdb;
 
 	$bp_prefix = function_exists( 'bp_core_get_table_prefix' ) ? bp_core_get_table_prefix() : $wpdb->base_prefix;
