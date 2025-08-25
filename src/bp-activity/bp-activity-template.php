@@ -224,11 +224,6 @@ function bp_has_activities( $args = '' ) {
 		$scope = ! empty( $args['scope'] ) ? $args['scope'] : $scope;
 	}
 
-	$unanswered_only = false;
-	if ( 'unanswered' === $scope ) {
-		$unanswered_only = true;
-	}
-
 	$scope = bp_activity_default_scope( $scope );
 
 	// Group filtering.
@@ -387,17 +382,6 @@ function bp_has_activities( $args = '' ) {
 	// Pinned post.
 	if ( empty( $r['pin_type'] ) ) {
 		$r['pin_type'] = bb_activity_pin_type( $r );
-	}
-
-	// Replace with calculated default scope when there is unanswered only.
-	if ( $unanswered_only ) {
-		$r['scope'] = $scope;
-
-		// Ensure filter array is initialized.
-		if ( ! isset( $r['filter'] ) || ! is_array( $r['filter'] ) ) {
-			$r['filter'] = array();
-		}
-		$r['filter']['unanswered_only'] = true;
 	}
 
 	/*
