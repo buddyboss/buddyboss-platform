@@ -1660,14 +1660,14 @@ window.bp = window.bp || {};
 										}
 									}
 
-									if ( 0 !== response.data.video_html_content.length ) {
+									if ( 0 !== response.data.video_html_content.length && ! BP_Nouveau.video.current_album ) {
 										if ( 0 === parseInt( response.data.video_personal_count ) ) {
 											$( '.bb-videos-actions' ).hide();
 											$( '#video-stream' ).html( response.data.video_html_content );
 										} else {
 											buddyPressSelector.find( '.video-list:not(.existing-video-list)' ).html( response.data.video_html_content );
 										}
-									} else if ( 0 !== response.data.group_video_html_content.length ) {
+									} else if ( 0 !== response.data.group_video_html_content.length && ! BP_Nouveau.video.current_album ) {
 										if ( 0 === parseInt( response.data.video_group_count ) ) {
 											$( '.bb-videos-actions' ).hide();
 											$( '#video-stream' ).html( response.data.group_video_html_content );
