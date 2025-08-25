@@ -739,6 +739,16 @@ function bp_nouveau_ajax_post_update() {
 		}
 	}
 
+	$post_title = ! empty( $_POST['post_title'] ) ? sanitize_text_field( wp_unslash( $_POST['post_title'] ) ) : '';
+	$validation = bb_validate_activity_post_title( $post_title );
+	if ( ! $validation['valid'] ) {
+		wp_send_json_error(
+			array(
+				'message' => $validation['message'],
+			)
+		);
+	}
+
 	if ( ! strlen( trim( html_entity_decode( wp_strip_all_tags( $_POST['content'] ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) ) ) ) {
 
 		// check activity toolbar options if one of them is set, activity can be empty.
@@ -962,6 +972,7 @@ function bp_nouveau_ajax_post_update() {
 
 		$post_array = array(
 			'id'         => $activity_id,
+			'post_title' => $post_title,
 			'content'    => $content,
 			'privacy'    => $privacy,
 			'error_type' => 'wp_error',
@@ -998,9 +1009,10 @@ function bp_nouveau_ajax_post_update() {
 			}
 
 			$post_array = array(
-				'id'       => $activity_id,
-				'content'  => $_POST['content'],
-				'group_id' => $item_id,
+				'id'         => $activity_id,
+				'post_title' => $post_title,
+				'content'    => $_POST['content'],
+				'group_id'   => $item_id,
 			);
 
 			if ( $is_scheduled ) {

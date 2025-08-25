@@ -519,6 +519,10 @@ function bp_version_updater() {
 			bb_update_to_2_9_4();
 		}
 
+		if ( $raw_db_version < 23451 ) {
+			bb_update_to_2_10_1();
+		}
+
 		if ( $raw_db_version !== $current_db ) {
 			// @todo - Write only data manipulate migration here. ( This is not for DB structure change ).
 
@@ -3993,5 +3997,34 @@ function bb_update_to_2_9_4() {
 	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
 		// Clear groups API cache.
 		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-groups' );
+	}
+}
+
+/**
+ * Migrate for BuddyBoss [BBVERSION].
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_update_to_2_10_1() {
+	global $wpdb;
+
+	$bp_prefix = function_exists( 'bp_core_get_table_prefix' ) ? bp_core_get_table_prefix() : $wpdb->base_prefix;
+
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+	$table_exists = $wpdb->get_var( $wpdb->prepare( "SHOW TABLES LIKE %s", $bp_prefix . 'bp_activity' ) ); // phpcs:ignore
+	if ( $table_exists ) {
+		// Add 'post_title' column in 'bp_activity' table.
+		$row = $wpdb->get_results( $wpdb->prepare( "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_schema= %s AND table_name = %s AND column_name = 'post_title'", DB_NAME, $bp_prefix . 'bp_activity' ) ); // phpcs:ignore
+		if ( empty( $row ) ) {
+			$wpdb->query( "ALTER TABLE {$bp_prefix}bp_activity ADD `post_title` text DEFAULT NULL AFTER `action`" ); //phpcs:ignore
+
+			// Add key for post_title if it doesn't exist.
+			$indexes = $wpdb->get_col( $wpdb->prepare( 'SELECT index_name FROM INFORMATION_SCHEMA.STATISTICS WHERE table_schema = DATABASE() AND table_name = %s', $bp_prefix . 'bp_activity' ) ); //phpcs:ignore
+			if ( ! in_array( 'post_title', $indexes, true ) ) {
+				$wpdb->query( "ALTER TABLE {$bp_prefix}bp_activity ADD KEY `post_title` (`post_title`)" ); //phpcs:ignore
+			}
+		}
 	}
 }
