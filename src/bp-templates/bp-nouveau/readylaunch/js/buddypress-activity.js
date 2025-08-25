@@ -1811,31 +1811,56 @@ window.bp = window.bp || {};
 		},
 
 		applyMediaSettings: function ( form, settings ) {
-			// Handle media visibility based on the settings.
-			form.find( '.bb-rl-ac-reply-toolbar .bb-rl-post-media.bb-rl-media-support' ).toggle( settings.group_media || settings.profile_media ).parent( '.bb-rl-ac-reply-toolbar' ).toggleClass(
-				'bb-rl-post-media-disabled',
-				! (
-				settings.group_media || settings.profile_media
-				)
-			);
+			// Handle media visibility based on the settings - use explicit show/hide for stable behavior.
+			var $mediaSupport = form.find( '.bb-rl-ac-reply-toolbar .bb-rl-post-media.bb-rl-media-support' );
+			var $mediaParent = $mediaSupport.parent( '.bb-rl-ac-reply-toolbar' );
+			if ( settings.group_media || settings.profile_media ) {
+				$mediaSupport.show();
+				$mediaParent.removeClass( 'bb-rl-post-media-disabled' );
+			} else {
+				$mediaSupport.hide();
+				$mediaParent.addClass( 'bb-rl-post-media-disabled' );
+			}
 
-			form.find( '.bb-rl-ac-reply-toolbar .bb-rl-post-media.bb-rl-document-support' ).toggle( settings.group_document || settings.profile_document ).parent( '.bb-rl-ac-reply-toolbar' ).toggleClass(
-				'bb-rl-post-media-disabled',
-				! (
-				settings.group_document || settings.profile_document
-				)
-			);
+			var $documentSupport = form.find( '.bb-rl-ac-reply-toolbar .bb-rl-post-media.bb-rl-document-support' );
+			var $documentParent = $documentSupport.parent( '.bb-rl-ac-reply-toolbar' );
+			if ( settings.group_document || settings.profile_document ) {
+				$documentSupport.show();
+				$documentParent.removeClass( 'bb-rl-post-media-disabled' );
+			} else {
+				$documentSupport.hide();
+				$documentParent.addClass( 'bb-rl-post-media-disabled' );
+			}
 
-			form.find( '.bb-rl-ac-reply-toolbar .bb-rl-post-video.bb-rl-video-support' ).toggle( settings.group_video || settings.profile_video ).parent( '.bb-rl-ac-reply-toolbar' ).toggleClass(
-				'post-video-disabled',
-				! (
-				settings.group_video || settings.profile_video
-				)
-			);
+			var $videoSupport = form.find( '.bb-rl-ac-reply-toolbar .bb-rl-post-video.bb-rl-video-support' );
+			var $videoParent = $videoSupport.parent( '.bb-rl-ac-reply-toolbar' );
+			if ( settings.group_video || settings.profile_video ) {
+				$videoSupport.show();
+				$videoParent.removeClass( 'post-video-disabled' );
+			} else {
+				$videoSupport.hide();
+				$videoParent.addClass( 'post-video-disabled' );
+			}
 
-			form.find( '.bb-rl-ac-reply-toolbar .bb-rl-post-gif' ).toggle( settings.gif !== false ).parent( '.bb-rl-ac-reply-toolbar' ).toggleClass( 'post-gif-disabled', settings.gif === false );
+			var $gifSupport = form.find( '.bb-rl-ac-reply-toolbar .bb-rl-post-gif' );
+			var $gifParent = $gifSupport.parent( '.bb-rl-ac-reply-toolbar' );
+			if ( settings.gif !== false ) {
+				$gifSupport.show();
+				$gifParent.removeClass( 'post-gif-disabled' );
+			} else {
+				$gifSupport.hide();
+				$gifParent.addClass( 'post-gif-disabled' );
+			}
 
-			form.find( '.bb-rl-ac-reply-toolbar .bb-rl-post-emoji' ).toggle( settings.emoji !== false ).parent( '.bb-rl-ac-reply-toolbar' ).toggleClass( 'post-emoji-disabled', settings.emoji === false );
+			var $emojiSupport = form.find( '.bb-rl-ac-reply-toolbar .bb-rl-post-emoji' );
+			var $emojiParent = $emojiSupport.parent( '.bb-rl-ac-reply-toolbar' );
+			if ( settings.emoji !== false ) {
+				$emojiSupport.show();
+				$emojiParent.removeClass( 'post-emoji-disabled' );
+			} else {
+				$emojiSupport.hide();
+				$emojiParent.addClass( 'post-emoji-disabled' );
+			}
 		},
 
 		fixAtWhoActivity: function () {
@@ -4278,6 +4303,9 @@ window.bp = window.bp || {};
 						form.removeClass( 'events-initiated' );
 						var ce = $activityComments.find( '.ac-form .ac-input[contenteditable]' );
 						bp.Nouveau.Activity.listenCommentInput( ce );
+
+						// Apply media settings to respect backend configuration for attachment buttons
+						bp.Nouveau.Activity.toggleMultiMediaOptions( form, '', '.bb-rl-modal-activity-footer');
 
 						if ( ! _.isUndefined( bbRlMedia ) && ! _.isUndefined( bbRlMedia.emoji ) ) {
 							bp.Nouveau.Activity.initializeEmojioneArea( true, '#bb-rl-activity-modal ', settings.activityId );
