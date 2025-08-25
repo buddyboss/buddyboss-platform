@@ -227,7 +227,8 @@ function bp_core_install_activity_streams() {
 				KEY mptt_left (mptt_left),
 				KEY mptt_right (mptt_right),
 				KEY hide_sitewide (hide_sitewide),
-				KEY is_spam (is_spam)
+				KEY is_spam (is_spam),
+				KEY activity_type_is_spam (type,is_spam)
 			) {$charset_collate};";
 
 	$sql[] = "CREATE TABLE {$bp_prefix}bp_activity_meta (

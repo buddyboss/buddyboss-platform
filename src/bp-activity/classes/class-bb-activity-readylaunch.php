@@ -439,7 +439,7 @@ class BB_Activity_Readylaunch {
 		global $wpdb, $bp;
 
 		// phpcs:ignore
-		return (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$bp->activity->table_name} WHERE type = 'activity_comment' AND item_id = %d", $activity_id ) );
+		return (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$bp->activity->table_name} WHERE type = 'activity_comment' AND is_spam = 0 AND item_id = %d", $activity_id ) );
 	}
 
 	/**
