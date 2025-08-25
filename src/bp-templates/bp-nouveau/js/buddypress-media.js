@@ -1363,7 +1363,7 @@ window.bp = window.bp || {};
 									$( '#buddypress .bp-wrap .users-nav' ).length > 0
 								) {
 
-									if ( $( '#buddypress .bb-item-count' ).length > 0 && 'yes' !== BP_Nouveau.media.is_media_directory ) {
+									if ( $( '#buddypress .bb-item-count' ).length > 0 && 'yes' !== BP_Nouveau.media.is_media_directory && ! BP_Nouveau.media.current_album ) {
 										dir_label = BP_Nouveau.dir_labels.hasOwnProperty( 'media' ) ?
 										(
 											1 === parseInt( response.data.media_personal_count ) ?
