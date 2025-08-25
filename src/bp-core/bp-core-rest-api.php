@@ -454,3 +454,12 @@ function bb_rest_raw_content( $content ) {
 	 */
 	return apply_filters( 'bb_rest_raw_content', $content );
 }
+
+
+function bb_rest_before_rest_request( $response, $handler, $request ) {
+	$GLOBALS['bb_rest_request'] = $request;
+
+	return $response;
+}
+
+add_filter( 'rest_request_before_callbacks', 'bb_rest_before_rest_request', 10, 3 );

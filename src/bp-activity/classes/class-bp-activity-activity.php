@@ -474,6 +474,32 @@ class BP_Activity_Activity {
 		// Excluded types.
 		$excluded_types = array();
 
+		if (
+			! empty( $r['scope'] ) &&
+			'unanswered' === $r['scope']
+		) {
+			if ( bb_is_rest() ) {
+				global $bb_rest_request;
+				$r['scope'] = BP_REST_Activity_Endpoint::bp_rest_activity_default_scope(
+					'all',
+					( $bb_rest_request['user_id'] ? $bb_rest_request['user_id'] : 0 ),
+					( $bb_rest_request['group_id'] ? $bb_rest_request['group_id'] : 0 ),
+					isset( $bb_rest_request['component'] ) ? $bb_rest_request['component'] : '',
+					( $bb_rest_request['primary_id'] ? $bb_rest_request['primary_id'] : 0 )
+				);
+			} else {
+				$r['scope'] = bp_activity_default_scope();
+			}
+
+			// Ensure filter array is initialized.
+			if ( ! isset( $r['filter'] ) || ! is_array( $r['filter'] ) ) {
+				$r['filter'] = array();
+			}
+
+			// Set the flag for unanswered activities.
+			$r['filter']['unanswered_only'] = true;
+		}
+
 		// Scope takes precedence.
 		if ( ! empty( $r['scope'] ) ) {
 			$scope_query = self::get_scope_query_sql( $r['scope'], $r );
