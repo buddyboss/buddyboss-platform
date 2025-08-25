@@ -4049,6 +4049,13 @@ window.bp = window.bp || {};
 
 							} else {
 								$( '#bp-dropzone-content' ).prepend( response.data.feedback );
+								var $media_single_album = targetPopup.parents( '#bp-media-single-album' );
+								if ( $media_single_album.length ) {
+									var $media_back_button = $media_single_album.find( '#bp-media-prev.bb-uploader-steps-prev' );
+									if ( $media_back_button.length && $media_back_button.is(':visible') ) {
+										$media_back_button.trigger( 'click' );
+									}
+								}
 							}
 
 							target.removeClass( 'saving' );

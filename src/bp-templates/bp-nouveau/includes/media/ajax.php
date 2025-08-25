@@ -319,8 +319,8 @@ function bp_nouveau_ajax_media_save() {
 		wp_send_json_error( $response );
 	} elseif ( ! empty( $album_id ) && bp_is_single_album() ) {
 		// Check if the album ids have same value as the $album_id.
-		$album_ids = array_column( $medias, 'album_id' );
-		if ( ! in_array( $album_id, $album_ids ) ) {
+		$album_ids = array_map( 'intval', array_column( $medias, 'album_id' ) );
+		if ( ! in_array( $album_id, $album_ids, true ) ) {
 			$response['feedback'] = sprintf(
 				'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
 				esc_html__( 'There was a problem saving media.', 'buddyboss' )

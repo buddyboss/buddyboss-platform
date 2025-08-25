@@ -1629,7 +1629,7 @@ window.bp = window.bp || {};
 										$( '#buddypress .bp-wrap .users-nav' ).length > 0
 									) {
 
-										if ( $( '#buddypress .bb-item-count' ).length > 0 && 'yes' !== BP_Nouveau.video.is_video_directory ) {
+										if ( $( '#buddypress .bb-item-count' ).length > 0 && 'yes' !== BP_Nouveau.video.is_video_directory && ! BP_Nouveau.video.current_album ) {
 											dir_label = BP_Nouveau.dir_labels.hasOwnProperty( 'video' ) ?
 											(
 												1 === parseInt( response.data.video_personal_count ) ?

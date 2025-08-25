@@ -472,6 +472,14 @@ window.bp = window.bp || {};
 
 							} else {
 								$( '#bp-video-dropzone-content' ).prepend( response.data.feedback );
+								targetPopup.find( '.bb-album-selected-id' ).val( 0 );
+								var $media_single_album = targetPopup.parents( '#bp-media-single-album' );
+								if ( $media_single_album.length ) {
+									var $video_back_button = $media_single_album.find( '#bp-video-prev.bb-uploader-steps-prev' );
+									if ( $video_back_button.length && $video_back_button.is(':visible') ) {
+										$video_back_button.trigger( 'click' );
+									}
+								}
 							}
 
 							target.removeClass( 'saving' );

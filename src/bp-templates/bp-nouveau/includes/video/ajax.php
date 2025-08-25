@@ -417,9 +417,8 @@ function bp_nouveau_ajax_video_save() {
 		wp_send_json_error( $response );
 	} elseif ( ! empty( $album_id ) && bp_is_single_album() ) {
 		// Check if the album ids have same value as the $album_id.
-		$album_ids = array_column( $videos, 'album_id' );
-		error_log( print_r( $album_ids, true ) );
-		if ( ! in_array( $album_id, $album_ids ) ) {
+		$album_ids = array_map( 'intval', array_column( $videos, 'album_id' ) );
+		if ( ! in_array( $album_id, $album_ids, true ) ) {
 			$response['feedback'] = sprintf(
 				'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
 				esc_html__( 'There was a problem saving media.', 'buddyboss' )
@@ -454,7 +453,7 @@ function bp_nouveau_ajax_video_save() {
 		ob_end_clean();
 	}
 
-	$skip_error       = false;
+	$skip_error = false;
 
 	// Do not send the error if is album page and the current album id is not the same as the album id in the request.
 	// This is scenario when user selects the album from the dropdown and after uploading the video.
