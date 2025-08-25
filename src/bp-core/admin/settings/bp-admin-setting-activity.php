@@ -561,7 +561,7 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 									</span>
 									<div class="bb-topic-actions-wrapper">
 										<span class="bb-topic-actions">
-											<a href="#" class="bb-topic-actions_button">
+											<a href="#" class="bb-topic-actions_button" aria-label="<?php esc_attr_e( 'Actions', 'buddyboss' ); ?>">
 												<i class="bb-icon-ellipsis-h"></i>
 											</a>
 										</span>
@@ -604,7 +604,7 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 					</h2>
 				</div>
 				<div class="bb-hello-close">
-					<button type="button" class="close-modal button">
+					<button type="button" class="close-modal button" aria-label="<?php esc_attr_e( 'Close', 'buddyboss' ); ?>">
 						<i class="bb-icon-f bb-icon-times"></i>
 					</button>
 				</div>
@@ -666,7 +666,7 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 					</h2>
 				</div>
 				<div class="bb-hello-close">
-					<button type="button" class="close-modal button">
+					<button type="button" class="close-modal button" aria-label="<?php esc_attr_e( 'Close', 'buddyboss' ); ?>">
 						<i class="bb-icon-f bb-icon-times"></i>
 					</button>
 				</div>

@@ -515,6 +515,10 @@ function bp_version_updater() {
 			bb_update_to_2_9_2();
 		}
 
+		if ( $raw_db_version < 23431 ) {
+			bb_update_to_2_9_4();
+		}
+
 		if ( $raw_db_version < 23451 ) {
 			bb_update_to_2_9_5();
 		}
@@ -3980,6 +3984,19 @@ function bb_update_to_2_9_2() {
 			SET m.privacy = 'comment'
 			WHERE m.privacy = 'grouponly' AND m.attachment_id IS NOT NULL"
 		);
+	}
+}
+
+/**
+ * Migrate for BuddyBoss 2.10.0.
+ *
+ * @since BuddyBoss 2.10.0
+ */
+function bb_update_to_2_9_4() {
+	// Purge all the cache for API.
+	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
+		// Clear groups API cache.
+		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-groups' );
 	}
 }
 

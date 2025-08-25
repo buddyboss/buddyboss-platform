@@ -6379,7 +6379,7 @@ function bb_activity_comment_get_edit_data( $activity_comment_id = 0 ) {
 		return false;
 	}
 
-	$edit_data = wp_cache_get( $activity_comment_id, 'activity_edit_data' );
+	$edit_data = wp_cache_get( 'comment_' . $activity_comment_id, 'activity_edit_data' );
 	if ( false === $edit_data ) {
 		// Get activity metas.
 		$activity_comment_metas    = bb_activity_get_metadata( $activity_comment_id );
@@ -6418,6 +6418,8 @@ function bb_activity_comment_get_edit_data( $activity_comment_id = 0 ) {
 			'user_id'          => $activity_comment_user_id,
 			'nickname'         => $activity_comment_nickname,
 		);
+
+		wp_cache_set( 'comment_' . $activity_comment_id, $edit_data, 'activity_edit_data' );
 	}
 
 	/**

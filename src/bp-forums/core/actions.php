@@ -592,7 +592,7 @@ function bb_forum_add_content_popup() {
 						<div class="modal-container">
 							<header class="bb-model-header">
 								<h4><span class="target_name"><?php echo esc_html__( 'Forum Description', 'buddyboss' ); ?></span></h4>
-								<a class="bb-close-action-popup bb-model-close-button" href="#">
+								<a class="bb-close-action-popup bb-model-close-button" href="#" aria-label="<?php esc_attr_e( 'Close', 'buddyboss' ); ?>">
 									<span class="bb-icon-l bb-icon-times"></span>
 								</a>
 							</header>
