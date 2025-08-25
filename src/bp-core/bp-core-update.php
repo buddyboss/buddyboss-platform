@@ -4001,7 +4001,7 @@ function bb_update_to_2_9_5() {
 		// Add 'post_title' column in 'bp_activity' table.
 		$row = $wpdb->get_results( $wpdb->prepare( "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_schema= %s AND table_name = %s AND column_name = 'post_title'", DB_NAME, $bp_prefix . 'bp_activity' ) ); // phpcs:ignore
 		if ( empty( $row ) ) {
-			$wpdb->query( "ALTER TABLE {$bp_prefix}bp_activity ADD `post_title` varchar( 80 ) DEFAULT NULL AFTER `action`" ); //phpcs:ignore
+			$wpdb->query( "ALTER TABLE {$bp_prefix}bp_activity ADD `post_title` text DEFAULT NULL AFTER `action`" ); //phpcs:ignore
 
 			// Add key for post_title if it doesn't exist.
 			$indexes = $wpdb->get_col( $wpdb->prepare( 'SELECT index_name FROM INFORMATION_SCHEMA.STATISTICS WHERE table_schema = DATABASE() AND table_name = %s', $bp_prefix . 'bp_activity' ) ); //phpcs:ignore

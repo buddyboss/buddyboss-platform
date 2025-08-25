@@ -2291,10 +2291,11 @@ function bp_activity_post_update( $args = '' ) {
 	 */
 	$add_post_title = apply_filters( 'bb_activity_new_update_post_title', $r['post_title'] );
 
-	// Validate title length after filter to ensure it doesn't exceed maximum length.
-	if ( ! empty( $add_post_title ) ) {
-		$add_post_title = bb_activity_strip_post_title( $add_post_title );
+	$validate_post_title = bb_validate_activity_post_title( $add_post_title );
+	if ( ! $validate_post_title['valid'] ) {
+		return new WP_Error( 'bb_activity_invalid_post_title', $validate_post_title['message'] );
 	}
+	$add_post_title = bb_activity_strip_post_title( $add_post_title );
 
 	if ( ! empty( $r['id'] ) ) {
 		$activity = new BP_Activity_Activity( $r['id'] );
@@ -7785,15 +7786,13 @@ function bb_is_activity_post_title_enabled( $default_value = false ) {
 }
 
 /**
- * Activity post title length validation and maximum length retrieval.
+ * Get the maximum length for activity post titles.
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param string $post_title The post title to validate. If empty, returns maximum length.
- *
- * @return bool|int True if the post title is valid, false if invalid, or maximum length if no title provided.
+ * @return int The maximum length for activity post titles.
  */
-function bb_activity_post_title_length( $post_title = '' ) {
+function bb_activity_post_title_max_length() {
 
 	/**
 	 * Filters the maximum length for activity post titles.
@@ -7802,24 +7801,7 @@ function bb_activity_post_title_length( $post_title = '' ) {
 	 *
 	 * @param int $max_length Maximum allowed length for activity post titles.
 	 */
-	$max_length = 80;
-
-	// If no title provided, return the maximum length.
-	if ( empty( $post_title ) ) {
-		return $max_length;
-	}
-
-	$post_title = sanitize_text_field( $post_title );
-
-	// Use mb_strlen for proper Unicode character counting.
-	$title_length = function_exists( 'mb_strlen' ) ? mb_strlen( $post_title ) : strlen( $post_title );
-
-	// Check if title exceeds maximum length.
-	if ( $title_length > $max_length ) {
-		return false;
-	}
-
-	return true;
+	return (int) apply_filters( 'bb_activity_post_title_max_length', 80 );
 }
 
 /**
@@ -7833,29 +7815,14 @@ function bb_activity_post_title_length( $post_title = '' ) {
  */
 function bb_activity_strip_post_title( $post_title = '' ) {
 	if ( ! empty( $post_title ) ) {
-		$is_valid_title = bb_activity_post_title_length( $post_title );
-		if ( ! $is_valid_title ) {
-			$max_length = bb_activity_post_title_length();
+		$post_title_validation = bb_validate_activity_post_title( $post_title );
+		if ( ! $post_title_validation['valid'] ) {
+			$max_length = bb_activity_post_title_max_length();
 			$post_title = function_exists( 'mb_substr' ) ? mb_substr( $post_title, 0, $max_length ) : substr( $post_title, 0, $max_length );
 		}
 	}
 
 	return $post_title;
-}
-
-/**
- * Get the activity post title by ID.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param int $activity_id The activity ID.
- *
- * @return string The activity post title.
- */
-function bb_get_activity_post_title_by_id( $activity_id ) {
-	$activity = new BP_Activity_Activity( $activity_id );
-
-	return ! empty( $activity->id ) ? $activity->post_title : '';
 }
 
 /**
@@ -7885,7 +7852,7 @@ function bb_validate_activity_post_title( $post_title ) {
 
 	// Check length if title is not empty.
 	if ( ! empty( $post_title ) ) {
-		$max_length     = bb_activity_post_title_length();
+		$max_length     = bb_activity_post_title_max_length();
 		$current_length = function_exists( 'mb_strlen' ) ? mb_strlen( $post_title ) : strlen( $post_title );
 
 		if ( $current_length > $max_length ) {

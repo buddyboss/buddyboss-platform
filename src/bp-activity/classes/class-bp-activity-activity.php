@@ -327,10 +327,12 @@ class BP_Activity_Activity {
 			}
 		}
 
-		// Validate the post title.
-		if ( ! empty( $this->post_title ) ) {
-			$this->post_title = bb_activity_strip_post_title( $this->post_title );
+		$validate_post_title = bb_validate_activity_post_title( $this->post_title );
+		if ( ! $validate_post_title['valid'] ) {
+			$this->errors->add( 'bb_activity_invalid_post_title', $validate_post_title['message'] );
+			return $this->errors;
 		}
+		$this->post_title = bb_activity_strip_post_title( $this->post_title );
 
 		$prev_activity_status = '';
 

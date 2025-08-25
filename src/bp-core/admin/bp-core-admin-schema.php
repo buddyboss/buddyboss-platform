@@ -204,7 +204,7 @@ function bp_core_install_activity_streams() {
 				component varchar(75) NOT NULL,
 				type varchar(75) NOT NULL,
 				action text NOT NULL,
-				post_title varchar(80) DEFAULT NULL,
+				post_title text DEFAULT NULL,
 				content longtext NOT NULL,
 				primary_link text NOT NULL,
 				item_id bigint(20) NOT NULL,

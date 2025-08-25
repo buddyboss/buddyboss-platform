@@ -1829,9 +1829,11 @@ function groups_post_update( $args = '' ) {
 	 */
 	$post_title_filtered = apply_filters( 'bb_groups_activity_new_update_post_title', $post_title );
 
-	if ( ! empty( $post_title_filtered ) ) {
-		$post_title_filtered = bb_activity_strip_post_title( $post_title_filtered );
+	$validate_post_title = function_exists( 'bb_validate_activity_post_title' ) ? bb_validate_activity_post_title( $post_title_filtered ) : array( 'valid' => true );
+	if ( ! $validate_post_title['valid'] ) {
+		return new WP_Error( 'bb_activity_invalid_post_title', $validate_post_title['message'] );
 	}
+	$post_title_filtered = function_exists( 'bb_activity_strip_post_title' ) ? bb_activity_strip_post_title( $post_title_filtered ) : $post_title_filtered;
 
 	$activity_id = groups_record_activity(
 		array(
