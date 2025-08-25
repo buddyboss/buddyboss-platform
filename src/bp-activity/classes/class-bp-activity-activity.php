@@ -527,10 +527,6 @@ class BP_Activity_Activity {
 			$r['filter']['since_date_column'] = $r['order_by'];
 		}
 
-		if ( ! empty( $r['filter']['unanswered_only'] ) && ! ( false === $r['display_comments'] || 'threaded' === $r['display_comments'] ) ) {
-			$r['filter']['unanswered_only'] = false;
-		}
-
 		// Regular filtering.
 		if ( $r['filter'] && $filter_sql = self::get_filter_sql( $r['filter'] ) ) {
 			$where_conditions['filter_sql'] = $filter_sql;
