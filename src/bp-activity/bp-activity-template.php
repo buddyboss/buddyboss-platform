@@ -4606,11 +4606,11 @@ function bb_get_activity_comment_unfavorite_link( $activity_comment_id = 0 ) {
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param object|null $activity_object Optional. Activity object to check. If null, uses current activity in loop.
+ * @param null|BP_Activity_Activity $activity_object Optional. Activity object to check. If null, use current activity in loop.
  *
  * @return bool True if the activity has a title, false otherwise.
  */
-function bb_activity_has_post_title( $activity_object = null ) {
+function bb_activity_has_post_title( ?BP_Activity_Activity $activity_object = null ) {
 	$post_title = bb_activity_get_post_title( $activity_object );
 	return ! empty( $post_title );
 }
@@ -4621,9 +4621,9 @@ function bb_activity_has_post_title( $activity_object = null ) {
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param object|null $activity_object Optional. Activity object to get post title from. If null, uses current activity in loop.
+ * @param null|BP_Activity_Activity $activity_object Optional. Activity object to get post title from. If null, uses current activity in loop.
  */
-function bb_activity_post_title( $activity_object = null ) {
+function bb_activity_post_title( ?BP_Activity_Activity $activity_object = null ) {
 	echo esc_html( bb_activity_get_post_title( $activity_object ) );
 }
 
@@ -4632,13 +4632,13 @@ function bb_activity_post_title( $activity_object = null ) {
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param object|null $activity_object Optional. Activity object to get post title from. If null, uses current activity in loop.
+ * @param null|BP_Activity_Activity $activity_object Optional. Activity object to get post title from. If null, uses current activity in loop.
  *
  * @global object $activities_template {@link BP_Activity_Template}
  *
  * @return string The activity post title.
  */
-function bb_activity_get_post_title( $activity_object = null ) {
+function bb_activity_get_post_title( ?BP_Activity_Activity $activity_object = null ) {
 	global $activities_template;
 
 	if ( ! is_object( $activities_template ) ) {
