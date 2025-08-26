@@ -95,21 +95,25 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 		$draft_activity_meta_key = 'draft_user_' . bp_displayed_user_id();
 	}
 
+	$is_activity_post_title_required = bb_is_activity_post_title_enabled();
+
 	$activity_params = array(
-		'user_id'           => bp_loggedin_user_id(),
-		'object'            => 'user',
-		'backcompat'        => (bool) has_action( 'bp_activity_post_form_options' ),
-		'post_nonce'        => wp_create_nonce( 'post_update', '_wpnonce_post_update' ),
-		'post_draft_nonce'  => wp_create_nonce( 'post_draft_activity' ),
-		'excluded_hosts'    => array(),
-		'user_can_post'     => ( is_user_logged_in() && bb_user_can_create_activity() ),
-		'is_activity_edit'  => bp_is_activity_edit() ? (int) bp_current_action() : false,
-		'displayed_user_id' => bp_displayed_user_id(),
-		'errors'            => array(
+		'user_id'                         => bp_loggedin_user_id(),
+		'object'                          => 'user',
+		'backcompat'                      => (bool) has_action( 'bp_activity_post_form_options' ),
+		'post_nonce'                      => wp_create_nonce( 'post_update', '_wpnonce_post_update' ),
+		'post_draft_nonce'                => wp_create_nonce( 'post_draft_activity' ),
+		'excluded_hosts'                  => array(),
+		'user_can_post'                   => ( is_user_logged_in() && bb_user_can_create_activity() ),
+		'is_activity_edit'                => bp_is_activity_edit() ? (int) bp_current_action() : false,
+		'displayed_user_id'               => bp_displayed_user_id(),
+		'errors'                          => array(
 			'empty_post_update' => esc_html__( 'Sorry, Your update cannot be empty.', 'buddyboss' ),
 			'post_fail'         => esc_html__( 'An error occurred while saving your post.', 'buddyboss' ),
 			'media_fail'        => esc_html__( 'To change the media type, remove existing media from your post.', 'buddyboss' ),
 		),
+		'is_activity_post_title_required' => $is_activity_post_title_required,
+		'activity_post_title_maxlength'   => bb_activity_post_title_max_length(),
 	);
 
 	$user_displayname = bp_get_loggedin_user_fullname();
@@ -259,6 +263,7 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 		'commentPostError'    => esc_html__( 'There was a problem posting your comment.', 'buddyboss' ),
 		'muteNotification'    => esc_html__( 'Turn off notifications', 'buddyboss' ),
 		'unmuteNotification'  => esc_html__( 'Turn on notifications', 'buddyboss' ),
+		'whatsNewTitle'       => $is_activity_post_title_required ? esc_attr__( 'Title', 'buddyboss' ) : esc_attr__( 'Title (optional)', 'buddyboss' ),
 	);
 
 	if ( bp_get_displayed_user() && ! bp_is_my_profile() ) {

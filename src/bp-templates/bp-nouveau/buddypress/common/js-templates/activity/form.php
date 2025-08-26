@@ -40,6 +40,7 @@ $template_parts = apply_filters(
 		'parts/bp-activity-post-privacy-stage-footer',
 		'parts/bb-activity-schedule-post',
 		'parts/bb-activity-schedule-details',
+		'parts/bb-activity-post-form-title',
 	)
 );
 
