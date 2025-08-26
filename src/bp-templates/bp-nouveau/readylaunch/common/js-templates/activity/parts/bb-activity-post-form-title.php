@@ -15,5 +15,5 @@
 	       id="bb-rl-whats-new-title"
 	       maxlength="{{{data.maxlength}}}"
 	       placeholder="{{{data.placeholder}}}"
-	       {{{required}}} />
+	       {{required}} />
 </script>

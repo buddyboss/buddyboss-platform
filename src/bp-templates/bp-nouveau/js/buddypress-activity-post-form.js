@@ -6040,6 +6040,9 @@ window.bp = window.bp || {};
 				self.model.set( 'content', content, { silent: true } );
 
 				var activityPostTitle = self.$el.find( '#whats-new-title' );
+				if ( self.$el.find( '#bb-rl-whats-new-title' ).length ) {
+					activityPostTitle = self.$el.find( '#bb-rl-whats-new-title' );
+				}
 				if ( activityPostTitle.length && activityPostTitle.val() !== '' ) {
 					activityPostTitle = activityPostTitle.val();
 					var maxPostTitleLength = BP_Nouveau.activity.params.activity_post_title_maxlength;
