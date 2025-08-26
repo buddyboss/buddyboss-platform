@@ -562,57 +562,86 @@ function bbp_remove_html_tags( $content ) {
 }
 
 /**
+ * Helper function to encode content if not already encoded.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $content Content to potentially encode.
+ *
+ * @return string Encoded content.
+ */
+function bbp_encode_content_if_needed( $content ) {
+
+	// Check if the content is already encoded (contains any HTML entities).
+	if ( preg_match( '/&[a-zA-Z0-9#]+;/', $content ) ) {
+		return $content;
+	}
+	return htmlspecialchars( $content, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 );
+}
+
+/**
  * Convert <code> tags to <pre> tags when saving from backend editor.
+ * Also apply encoding to the content.
  * This ensures code snippets maintain their formatting when edited in the backend.
  *
  * @since BuddyBoss [BBVERSION]
  *
  * @param string $content Content to filter.
+ *
  * @return string Content with <code> converted to <pre> when appropriate.
  */
-function bbp_admin_convert_code_to_pre( $content ) {
+function bbp_admin_convert_code_to_pre_and_apply_encoding( $content ) {
 	// Only apply this conversion when saving from the admin area.
 	if ( ! is_admin() || wp_doing_ajax() ) {
 		return $content;
 	}
 
-	// Pattern to match standalone <code> blocks (not already wrapped in <pre>)
-	// This regex looks for <code> tags that are not immediately preceded by <pre>
-	// and not immediately followed by </pre>.
-	$pattern = '/(?<!<pre>)(<code>)(.*?)(<\/code>)(?!<\/pre>)/s';
+	// Combined pattern to match both outermost <code> and <pre> tags using recursive regex.
+	// This prevents issues with nested tags and ensures proper tag closure.
+	$combined_pattern = '/(<code\b[^>]*>(?:(?>[^<]+)|(?R)|<(?!\/code\b)[^<]*)*<\/code>)|(<pre\b[^>]*>(?:(?>[^<]+)|(?R)|<(?!\/pre\b)[^<]*)*<\/pre>)/is';
 
-	// Replace <code> with <pre> for code blocks.
+	// Handle both <code> and <pre> tags in a single pass.
 	$content = preg_replace_callback(
-		$pattern,
+		$combined_pattern,
 		function ( $matches ) {
-			// Get the content inside the code tags.
-			$code_content = $matches[2];
 
-			// If the content contains line breaks, treat it as a code block.
-			// Otherwise, keep it as inline code.
-			if ( strpos( $code_content, "\n" ) !== false || strpos( $code_content, '<br' ) !== false ) {
+			// Check if this is a <code> tag match (group 1 will be set).
+			if ( ! empty( $matches[1] ) ) {
+				// This is a <code> tag.
+				$full_match = $matches[1];
+
+				// Extract content between <code> and </code> tags.
+				$code_content = preg_replace( '/^<code\b[^>]*>(.*)<\/code>$/is', '$1', $full_match );
+
 				// Trim the content to remove leading/trailing whitespace.
 				$code_content = trim( $code_content );
 
-				// Split content by line breaks.
-				$lines = preg_split( '/\r\n|\r|\n/', $code_content );
+				// If the content contains line breaks, treat it as a pre block.
+				// Otherwise, keep it as inline code.
+				if ( strpos( $code_content, "\n" ) !== false || strpos( $code_content, '<br' ) !== false ) {
+					// When converting to <pre>, we need to encode the content to maintain proper formatting, just like regular <pre> tags.
+					$formatted_content = bbp_encode_content_if_needed( $code_content );
 
-				// Wrap each line in <p> tags with properly encoded content.
-				$wrapped_lines = array();
-				foreach ( $lines as $line ) {
-					// Encode HTML entities to prevent HTML rendering.
-					$encoded_line    = htmlspecialchars( $line, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 );
-					$wrapped_lines[] = '<p>' . $encoded_line . '</p>';
+					// Ensure the entire content is properly wrapped in <pre> tags.
+					return '<pre>' . $formatted_content . '</pre>';
+				} else {
+					$formatted_content = bbp_encode_content_if_needed( $code_content );
+					// Keep inline code.
+					return '<code>' . $formatted_content . '</code>';
 				}
+			} else {
+				// This is a <pre> tag (group 2 will be set).
+				$full_match = $matches[2];
 
-				// Join the wrapped lines and wrap in <pre> tag.
-				$formatted_content = implode( '', $wrapped_lines );
+				// Extract content between <pre> and </pre> tags.
+				$pre_content = preg_replace( '/^<pre\b[^>]*>(.*)<\/pre>$/is', '$1', $full_match );
+
+				// For <pre> tags, we always want to encode the content to prevent
+				// HTML injection and maintain proper formatting.
+				$formatted_content = bbp_encode_content_if_needed( $pre_content );
 
 				return '<pre>' . $formatted_content . '</pre>';
 			}
-
-			// Keep inline code as is.
-			return $matches[0];
 		},
 		$content
 	);

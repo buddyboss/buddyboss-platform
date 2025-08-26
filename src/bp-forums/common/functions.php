@@ -412,9 +412,9 @@ function bbp_admin_fix_code_tags( $data = array(), $postarr = array() ) {
 		return $data;
 	}
 
-	// Convert <code> tags to <pre> tags for proper code block formatting.
+	// Convert <code> tags to <pre> tags and apply proper pre block formatting.
 	if ( ! empty( $data['post_content'] ) ) {
-		$data['post_content'] = bbp_admin_convert_code_to_pre( $data['post_content'] );
+		$data['post_content'] = bbp_admin_convert_code_to_pre_and_apply_encoding( $data['post_content'] );
 	}
 
 	return $data;
