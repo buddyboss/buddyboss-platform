@@ -1170,6 +1170,12 @@ function bb_nouveau_ajax_post_draft_activity() {
 				}
 			}
 
+			// Set feature image draft meta key to avoid delete from cron job 'bb_activity_post_feature_image_delete_orphaned_attachments_hook'.
+			if ( isset( $draft_activity['data']['bb_activity_post_feature_image'] ) && ! empty( $draft_activity['data']['bb_activity_post_feature_image'] ) ) {
+				$draft_activity['data']['bb_activity_post_feature_image']['bb_activity_post_feature_image_draft'] = 1;
+				update_post_meta( $draft_activity['data']['bb_activity_post_feature_image']['id'], 'bb_activity_post_feature_image_draft', 1 );
+			}
+
 			bp_update_user_meta( bp_loggedin_user_id(), $draft_activity['data_key'], $draft_activity );
 		} else {
 			bp_delete_user_meta( bp_loggedin_user_id(), $draft_activity['data_key'] );
