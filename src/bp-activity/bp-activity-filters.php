@@ -442,6 +442,21 @@ function bp_activity_comment_privacy_update( $comment, $privacy ) {
  * @return string $content Filtered activity content.
  */
 function bp_activity_filter_kses( $content ) {
+
+	$allowed_tags = bp_get_allowedtags();
+
+	// Add h3 tag without any attributes.
+	$allowed_tags['h3'] = array(
+		'class' => array(),
+		'id'    => array(),
+	);
+
+	// Add h4 tag without any attributes.
+	$allowed_tags['h4'] = array(
+		'class' => array(),
+		'id'    => array(),
+	);
+
 	/**
 	 * Filters the allowed HTML tags for BuddyBoss Activity content.
 	 *
@@ -449,7 +464,7 @@ function bp_activity_filter_kses( $content ) {
 	 *
 	 * @param array $value Array of allowed HTML tags and attributes.
 	 */
-	$activity_allowedtags = apply_filters( 'bp_activity_allowed_tags', bp_get_allowedtags() );
+	$activity_allowedtags = apply_filters( 'bp_activity_allowed_tags', $allowed_tags );
 	return wp_kses( $content, $activity_allowedtags );
 }
 

@@ -262,6 +262,16 @@ $bb_rl_activity_class_exists = class_exists( 'BB_Activity_Readylaunch' ) ? BB_Ac
 
 		<?php endif; ?>
 
+		<?php
+		if ( bb_activity_has_post_title() ) {
+			?>
+			<div class="bb-rl-activity-title">
+				<h2><?php bb_activity_post_title(); ?></h2>
+			</div>
+			<?php
+		}
+		?>
+
 		<div class="bb-rl-activity-content <?php bp_activity_entry_css_class(); ?>">
 			<?php
 			bp_nouveau_activity_hook( 'before', 'activity_content' );

@@ -308,7 +308,7 @@ window.bp = window.bp || {};
 						hideOnClick: true
 					},
 					toolbar: {
-						buttons: [ 'bold', 'italic', 'unorderedlist', 'orderedlist', 'quote', 'anchor', 'pre' ],
+						buttons: [ 'bold', 'italic', 'unorderedlist', 'orderedlist', 'quote', 'anchor', 'pre', 'h3', 'h4' ],
 						relativeContainer: edit_activity_editor_content,
 						static: true,
 						updateOnEmptySelection: true
@@ -429,6 +429,7 @@ window.bp = window.bp || {};
 
 			self.postForm.$el.parent( '#bp-nouveau-activity-form' ).removeClass( 'bp-hide' );
 			self.postForm.$el.find( '#whats-new' ).html( activity_data.content );
+			self.postForm.$el.find( '#whats-new-title' ).val( activity_data.post_title );
 			if( activity_URL_preview != null ) {
 				self.postForm.$el.find( '#whats-new' ).data( 'activity-url-preview', activity_URL_preview );
 			}
@@ -1238,7 +1239,7 @@ window.bp = window.bp || {};
 					if ( pair.name.startsWith( 'bb-poll-question-option[' ) ) {
 						pair.name = pair.name.replace( /\[\d+\]/, '' );
 					}
-					if ( - 1 === _.indexOf( ['aw-whats-new-submit', 'whats-new-post-in', 'bb-schedule-activity-date-field', 'bb-schedule-activity-meridian', 'bb-schedule-activity-time-field', 'bb-poll-question-field', 'bb-poll-duration', 'bb-poll-question-option', 'bb-poll-allow-multiple-answer', 'bb-poll-allow-new-option'], pair.name ) ) {
+					if ( - 1 === _.indexOf( ['aw-whats-new-submit', 'whats-new-post-in', 'bb-schedule-activity-date-field', 'bb-schedule-activity-meridian', 'bb-schedule-activity-time-field', 'bb-poll-question-field', 'bb-poll-duration', 'bb-poll-question-option', 'bb-poll-allow-multiple-answer', 'bb-poll-allow-new-option', 'whats-new-title'], pair.name ) ) {
 						if ( _.isUndefined( meta[ pair.name ] ) ) {
 							meta[ pair.name ] = pair.value;
 						} else {
@@ -1257,6 +1258,11 @@ window.bp = window.bp || {};
 			content     = content.replace( /&nbsp;/g, ' ' );
 
 			self.postForm.model.set( 'content', content, {silent: true} );
+
+			var activityPostTitle = self.postForm.$el.find( '#whats-new-title' ).val();
+			if ( activityPostTitle ) {
+				self.postForm.model.set( 'post_title', activityPostTitle, {silent: true} );
+			}
 
 			// Silently add meta.
 			self.postForm.model.set( meta, {silent: true} );
@@ -1708,12 +1714,44 @@ window.bp = window.bp || {};
 			if ( content.replace( /<p>/gi, '' ).replace( /<\/p>/gi, '' ).replace( /<br>/gi, '' ) === '' ) {
 				$whatsNew[0].innerHTML = '';
 			}
-			
-			if ( $( $.parseHTML( content ) ).text().trim() !== '' || content.includes( 'class="emoji"' ) || ( ! _.isUndefined( this.postForm.model.get( 'link_success' ) ) && true === this.postForm.model.get( 'link_success' ) ) || ( ! _.isUndefined( this.postForm.model.get( 'video' ) ) && 0 !== this.postForm.model.get('video').length ) || ( ! _.isUndefined( this.postForm.model.get( 'document' ) ) && 0 !== this.postForm.model.get('document').length ) || ( ! _.isUndefined( this.postForm.model.get( 'media' ) ) && 0 !== this.postForm.model.get('media').length ) || ( ! _.isUndefined( this.postForm.model.get( 'gif_data' ) ) && ! _.isEmpty( this.postForm.model.get( 'gif_data' ) ) ) || ( ! _.isUndefined( this.postForm.model.get( 'poll' ) ) && ! _.isEmpty( this.postForm.model.get( 'poll' ) ) ) ) {
-				return true;
-			}
-			
-			return false;
+
+			// Get title from the dedicated title input field.
+			var isTitleRequired = BP_Nouveau.activity.params.is_activity_post_title_required;
+			var title           = isTitleRequired ? $.trim( $( '#whats-new-title' ).val() || '' ) : true;
+
+			var contentValidate = (
+				$( $.parseHTML( content ) ).text().trim() !== '' ||
+				content.includes( 'class="emoji"' ) ||
+				(
+					! _.isUndefined( this.postForm.model.get( 'link_success' ) ) &&
+					true === this.postForm.model.get( 'link_success' )
+				) ||
+				(
+					! _.isUndefined( this.postForm.model.get( 'video' ) ) &&
+					0 !== this.postForm.model.get( 'video' ).length
+				) ||
+				(
+					! _.isUndefined( this.postForm.model.get( 'document' ) ) &&
+					0 !== this.postForm.model.get( 'document' ).length
+				) ||
+				(
+					! _.isUndefined( this.postForm.model.get( 'media' ) ) &&
+					0 !== this.postForm.model.get( 'media' ).length
+				) ||
+				(
+					! _.isUndefined( this.postForm.model.get( 'gif_data' ) ) &&
+					! _.isEmpty( this.postForm.model.get( 'gif_data' ) )
+				) ||
+				(
+					! _.isUndefined( this.postForm.model.get( 'poll' ) ) &&
+					! _.isEmpty( this.postForm.model.get( 'poll' ) )
+				)
+			);
+
+			return !! (
+				title && contentValidate
+			);
+
 		},
 
 	};
@@ -1759,6 +1797,7 @@ window.bp = window.bp || {};
 				item_name: '',
 				object: '',
 				content: '',
+				post_title: '',
 				posting: false,
 				link_success: false,
 				link_error: false,
@@ -3398,7 +3437,7 @@ window.bp = window.bp || {};
 			initialize: function () {
 				this.on( 'ready', this.adjustContent, this );
 				this.on( 'ready', this.activateTinyMce, this );
-				this.options.activity.on( 'change:content', this.resetContent, this );
+				this.options.activity.on( 'change:content change:post_title', this.resetContent, this );
 				this.linkTimeout = null;
 			},
 
@@ -3427,6 +3466,7 @@ window.bp = window.bp || {};
 				}
 
 				this.$el.html( activity.get( 'content' ) );
+				this.$el.closest( '#whats-new-content' ).find( '#whats-new-title' ).val( activity.get( 'post_title' ) );
 			},
 
 			handlePaste: function () {
@@ -3716,7 +3756,7 @@ window.bp = window.bp || {};
 											hideOnClick: true
 										},
 										toolbar: {
-											buttons: [ 'bold', 'italic', 'unorderedlist', 'orderedlist', 'quote', 'anchor', 'pre' ],
+											buttons: [ 'bold', 'italic', 'unorderedlist', 'orderedlist', 'quote', 'anchor', 'pre', 'h3', 'h4' ],
 											relativeContainer: whatsnewcontent,
 											static: true,
 											updateOnEmptySelection: true
@@ -3727,8 +3767,8 @@ window.bp = window.bp || {};
 											cleanReplacements: [
 												[ new RegExp( /<div/gi ), '<p' ],
 												[ new RegExp( /<\/div/gi ), '</p' ],
-												[ new RegExp( /<h[1-6]/gi ), '<b' ],
-												[ new RegExp( /<\/h[1-6]/gi ), '</b' ],
+												[ new RegExp( /<h[1256]/gi ), '<b' ],
+												[ new RegExp( /<\/h[1256]/gi ), '</b' ],
 											],
 											cleanAttrs: [ 'class', 'style', 'dir', 'id' ],
 											cleanTags: [ 'meta', 'div', 'main', 'section', 'article', 'aside', 'button', 'svg', 'canvas', 'figure', 'input', 'textarea', 'select', 'label', 'form', 'table', 'thead', 'tfooter', 'colgroup', 'col', 'tr', 'td', 'th', 'dl', 'dd', 'center', 'caption', 'nav', 'img' ],
@@ -4593,7 +4633,16 @@ window.bp = window.bp || {};
 			},
 
 			initialize: function () {
-				this.$el.html( $( '<div></div>' ).prop( 'id', 'whats-new-textarea' ) );
+				// Title template.
+				var $titleTemplate = bp.template( 'bb-activity-post-form-title' ),
+				    html           = $titleTemplate( {
+					    placeholder : BP_Nouveau.activity.strings.whatsNewTitle,
+					    required    : BP_Nouveau.activity.params.is_activity_post_title_required,
+					    maxlength   : BP_Nouveau.activity.params.activity_post_title_maxlength,
+				    } );
+
+				this.$el.html( html );
+				this.$el.append( $( '<div></div>' ).prop( 'id', 'whats-new-textarea' ) );
 				this.$el.append( '<input type="hidden" name="id" id="bp-activity-id" value="0"/>' );
 				this.views.set( '#whats-new-textarea', new bp.Views.WhatsNew( { activity: this.options.activity } ) );
 			},
@@ -5519,6 +5568,7 @@ window.bp = window.bp || {};
 			events: {
 				'focus #whats-new': 'displayFull',
 				'input #whats-new': 'postValidate',
+				'input #whats-new-title': 'postValidate',
 				'reset': 'resetForm',
 				'submit': 'postUpdate',
 				'keydown': 'postUpdate',
@@ -5910,6 +5960,7 @@ window.bp = window.bp || {};
 				$( '#bp-nouveau-activity-form-placeholder' ).hide();
 
 				$( '#whats-new-content' ).find( '#bp-activity-id' ).val( '' ); // reset activity id if in edit mode.
+				$( '#whats-new-content' ).find( '#whats-new-title' ).val( '' );
 				bp.Nouveau.Activity.postForm.postForm.$el.removeClass( 'bp-activity-edit hide-schedule-button' );
 
 				if ( ! _.isUndefined( BP_Nouveau.activity.params.objects ) ) {
@@ -6017,7 +6068,7 @@ window.bp = window.bp || {};
 						if ( pair.name.startsWith( 'bb-poll-question-option[' ) ) {
 							pair.name = pair.name.replace( /\[\d+\]/, '' );
 						}
-						if ( -1 === _.indexOf( [ 'aw-whats-new-submit', 'whats-new-post-in', 'bb-schedule-activity-date-field', 'bb-schedule-activity-meridian', 'bb-schedule-activity-time-field', 'bb-poll-question-field', 'bb-poll-duration', 'bb-poll-question-option', 'bb-poll-allow-multiple-answer', 'bb-poll-allow-new-option' ], pair.name ) ) {
+						if ( -1 === _.indexOf( [ 'aw-whats-new-submit', 'whats-new-post-in', 'bb-schedule-activity-date-field', 'bb-schedule-activity-meridian', 'bb-schedule-activity-time-field', 'bb-poll-question-field', 'bb-poll-duration', 'bb-poll-question-option', 'bb-poll-allow-multiple-answer', 'bb-poll-allow-new-option', 'whats-new-title' ], pair.name ) ) {
 							if ( _.isUndefined( meta[ pair.name ] ) ) {
 								meta[ pair.name ] = pair.value;
 							} else {
@@ -6061,6 +6112,20 @@ window.bp = window.bp || {};
 				content     = content.replace( /&nbsp;/g, ' ' );
 
 				self.model.set( 'content', content, { silent: true } );
+
+				var activityPostTitle = self.$el.find( '#whats-new-title' );
+				if ( self.$el.find( '#bb-rl-whats-new-title' ).length ) {
+					activityPostTitle = self.$el.find( '#bb-rl-whats-new-title' );
+				}
+				if ( activityPostTitle.length && activityPostTitle.val() !== '' ) {
+					activityPostTitle = activityPostTitle.val();
+					var maxPostTitleLength = BP_Nouveau.activity.params.activity_post_title_maxlength;
+					// Maximum 80 characters allowed.
+					if ( activityPostTitle.length > maxPostTitleLength ) {
+						activityPostTitle = activityPostTitle.slice( 0, maxPostTitleLength );
+					}
+					self.model.set( 'post_title', activityPostTitle, { silent: true } );
+				}
 
 				// Silently add meta.
 				self.model.set( meta, { silent: true } );
@@ -6141,7 +6206,8 @@ window.bp = window.bp || {};
 						'can_create_poll_activity',
 						'bb-poll-question-option',
 						'poll',
-						'topics'
+						'topics',
+						'whats-new-title'
 					]
 				);
 
