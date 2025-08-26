@@ -2407,6 +2407,7 @@ function buddyboss_menu_order( $menu_order ) {
 	$buddyboss_theme_options_menu = array();
 	$buddyboss_theme_font_menu    = array();
 	$buddyboss_updater_menu       = array();
+	$buddyboss_license_menu       = array();
 	$buddyboss_readylaunch_menu   = array();
 	$sep_position                 = null; // Use null to detect if found
 
@@ -2431,6 +2432,13 @@ function buddyboss_menu_order( $menu_order ) {
 					unset( $submenu['buddyboss-platform'][ $key ] );
 					continue;
 				}
+
+				if ( 'bb-license-keys' === $val[2] ) {
+					$buddyboss_license_menu = $submenu['buddyboss-platform'][ $key ];
+					unset( $submenu['buddyboss-platform'][ $key ] );
+					continue;
+				}
+
 				if ( 'bb-readylaunch' === $val[2] ) {
 					$buddyboss_readylaunch_menu = $submenu['buddyboss-platform'][ $key ];
 					unset( $submenu['buddyboss-platform'][ $key ] );
@@ -2466,6 +2474,9 @@ function buddyboss_menu_order( $menu_order ) {
 			if ( ! empty( $buddyboss_updater_menu ) ) {
 				$submenu['buddyboss-platform'][ ++ $insert_pos ] = $buddyboss_updater_menu;
 			}
+			if ( ! empty( $buddyboss_license_menu ) ) {
+				$submenu['buddyboss-platform'][ ++ $insert_pos ] = $buddyboss_license_menu;
+			}
 		} else {
 			// No separator found, so insert separator just above ReadyLaunch if ReadyLaunch exists
 			$new_submenu                   = array_values( $submenu['buddyboss-platform'] );
@@ -2496,6 +2507,9 @@ function buddyboss_menu_order( $menu_order ) {
 			}
 			if ( ! empty( $buddyboss_updater_menu ) ) {
 				$submenu['buddyboss-platform'][] = $buddyboss_updater_menu;
+			}
+			if ( ! empty( $buddyboss_license_menu ) ) {
+				$submenu['buddyboss-platform'][] = $buddyboss_license_menu;
 			}
 		}
 	}
