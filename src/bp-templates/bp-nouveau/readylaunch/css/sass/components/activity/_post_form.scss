@@ -81,6 +81,10 @@
 	max-height: 100%;
 	overflow: auto;
 
+	body.bb-rl-activity-modal-open & {
+		z-index: 999999;
+	}
+
 	.bb-rl-activity-update-form-overlay {
 		position: fixed;
 		left: 0;
