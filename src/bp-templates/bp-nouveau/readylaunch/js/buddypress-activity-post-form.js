@@ -1318,6 +1318,11 @@ window.bp = window.bp || {};
 			) {
 				$whatsNewForm.find( '.bb-post-poll-button' ).removeClass( 'bp-hide' );
 			}
+
+			// Trigger custom event for reset draft.
+			$( 'body' ).trigger( 'bb_activity_reset_draft', {
+				model: self.model
+			} );
 		},
 
 		reloadWindow: function () {
@@ -3721,6 +3726,14 @@ window.bp = window.bp || {};
 
 					localStorage.setItem( bp.draft_activity.data_key, JSON.stringify( bp.draft_activity ) );
 				}
+
+				// Trigger the event to handle privacy change data.
+				$( 'body' ).trigger( 'bb_activity_privacy_changed', {
+					element: this.$el,
+					model: this.model,
+					whats_new_form: whats_new_form,
+					draft_activity: bp.draft_activity,
+				} );
 			},
 
 			backPrivacySelector: function ( e ) {
@@ -3769,6 +3782,8 @@ window.bp = window.bp || {};
 					// Update multi media options dependent on profile/group view.
 					Backbone.trigger( 'mediaprivacytoolbar' );
 				}
+
+				Backbone.trigger( 'privacySelector' );
 			}
 		}
 	);
@@ -4731,6 +4746,16 @@ window.bp = window.bp || {};
 					activityParams = _.extend( activityParams, pollParams );
 				}
 
+				// Pick parameters from bbRlActivity.params.post_feature_image.
+				if ( ! _.isUndefined( bbRlActivity.params.post_feature_image ) ) {
+					var featureImageParams = _.pick(
+						bbRlActivity.params.post_feature_image,
+						[ 'can_upload_post_feature_image' ]
+					);
+
+					activityParams = _.extend( activityParams, featureImageParams );
+				}
+
 				// Create the model with the merged parameters.
 				this.model = new bp.Models.Activity( activityParams );
 
@@ -5426,6 +5451,12 @@ window.bp = window.bp || {};
 				) {
 					data.link_description = '';
 				}
+
+				// Trigger custom event for form data.
+				$( 'body' ).trigger( 'bb_activity_form_data', {
+					model: self.model,
+					data: data
+				} );
 
 				bp.ajax.post( 'post_update', data ).done(
 					function ( response ) {

@@ -5538,6 +5538,16 @@ window.bp = window.bp || {};
 					activityParams = _.extend( activityParams, pollParams );
 				}
 
+				// Pick parameters from BP_Nouveau.activity.params.post_feature_image.
+				if ( ! _.isUndefined( BP_Nouveau.activity.params.post_feature_image ) ) {
+					var featureImageParams = _.pick(
+						BP_Nouveau.activity.params.post_feature_image,
+						[ 'can_upload_post_feature_image' ]
+					);
+
+					activityParams = _.extend( activityParams, featureImageParams );
+				}
+
 				// Create the model with the merged parameters
 				this.model = new bp.Models.Activity( activityParams );
 
