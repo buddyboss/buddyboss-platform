@@ -1297,7 +1297,6 @@ window.bp = window.bp || {};
 			localStorage.removeItem( bp.draft_activity.data_key );
 			self.postForm.$el.removeClass( 'has-draft' );
 			bp.draft_activity.post_action        = 'update';
-			bp.draft_activity.allow_delete_media = false;
 			bp.draft_activity.display_post       = '';
 
 			// Check if user can schedule in feed after discard draft.
@@ -4421,7 +4420,12 @@ window.bp = window.bp || {};
 			},
 			onClose: function () {
 				if ( bp.draft_activity.data ) {
-					bp.draft_activity.allow_delete_media = false;
+					if (
+						'undefined' === typeof bp.draft_activity.is_discard_draft_activity ||
+						 false === bp.draft_activity.is_discard_draft_activity
+					) {
+						bp.draft_activity.allow_delete_media = false;
+					}
 					bp.draft_activity.display_post       = '';
 				}
 				if ( ! _.isNull( this.activityLinkPreview ) ) {

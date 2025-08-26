@@ -5232,6 +5232,11 @@ window.bp = window.bp || {};
 				if ( ! _.isNull( this.activityVideo ) ) {
 					this.activityVideo.destroyVideo();
 				}
+
+				// Destroy dropzone.
+				$( 'body' ).trigger( 'bb_activity_attachments_destroy', {
+					'draft_activity': bp.draft_activity
+				});
 				// Reset is_discard_draft_activity flag to false.
 				bp.draft_activity.is_discard_draft_activity = false;
 			}

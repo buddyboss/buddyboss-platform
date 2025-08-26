@@ -1209,6 +1209,18 @@ function bb_nouveau_ajax_post_draft_activity() {
 				}
 			}
 
+			// Delete feature image when discard the activity.
+			if (
+				! empty( $draft_activity['data']['bb_activity_post_feature_image'] ) &&
+				isset( $draft_activity['allow_delete_post_feature_image'] ) &&
+				true === (bool) $draft_activity['allow_delete_post_feature_image']
+			) {
+				$attachment_id = isset( $draft_activity['data']['bb_activity_post_feature_image']['id'] ) ? $draft_activity['data']['bb_activity_post_feature_image']['id'] : 0;
+				if ( 0 < (int) $attachment_id ) {
+					wp_delete_attachment( $attachment_id, true );
+				}
+			}
+
 			$draft_activity['data'] = false;
 		}
 	}
