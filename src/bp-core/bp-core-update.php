@@ -4020,10 +4020,18 @@ function bb_update_to_2_10_1() {
 		if ( empty( $row ) ) {
 			$wpdb->query( "ALTER TABLE {$bp_prefix}bp_activity ADD `post_title` text DEFAULT NULL AFTER `action`" ); //phpcs:ignore
 
-			// Add key for post_title if it doesn't exist.
 			$indexes = $wpdb->get_col( $wpdb->prepare( 'SELECT index_name FROM INFORMATION_SCHEMA.STATISTICS WHERE table_schema = DATABASE() AND table_name = %s', $bp_prefix . 'bp_activity' ) ); //phpcs:ignore
 			if ( ! in_array( 'post_title', $indexes, true ) ) {
-				$wpdb->query( "ALTER TABLE {$bp_prefix}bp_activity ADD KEY `post_title` (`post_title`)" ); //phpcs:ignore
+				$wpdb->query( "ALTER TABLE {$bp_prefix}bp_activity ADD KEY `post_title` (`post_title`(191))" ); //phpcs:ignore
+			}
+			if ( ! in_array( 'bb_post_title', $indexes, true ) ) {
+				$wpdb->query( "ALTER TABLE {$bp_prefix}bp_activity ADD FULLTEXT KEY `bb_post_title` (`post_title`)" ); //phpcs:ignore
+			}
+			if ( ! in_array( 'bb_content', $indexes, true ) ) {
+				$wpdb->query( "ALTER TABLE {$bp_prefix}bp_activity ADD FULLTEXT KEY `bb_content` (`content`)" ); //phpcs:ignore
+			}
+			if ( ! in_array( 'bb_title_content', $indexes, true ) ) {
+				$wpdb->query( "ALTER TABLE {$bp_prefix}bp_activity ADD FULLTEXT KEY `bb_title_content` (`post_title`, `content`)" ); //phpcs:ignore
 			}
 		}
 	}
