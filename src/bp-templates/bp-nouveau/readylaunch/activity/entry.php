@@ -177,7 +177,7 @@ $bb_rl_activity_class_exists = class_exists( 'BB_Activity_Readylaunch' ) ? BB_Ac
 										bb_activity_topics_manager_instance()->bb_get_activity_topic_url(
 											array(
 												'activity_id' => bp_get_activity_id(),
-												'html' => true,
+												'html'        => true,
 											)
 										)
 									);
