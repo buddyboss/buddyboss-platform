@@ -902,7 +902,8 @@ window.bp = window.bp || {};
 				if ( BBTopicsManager.isActivityTopicRequired ) {
 					// Add topic tooltip.
 					this.$document.on( 'bb_display_full_form', function () {
-						if ( $( '.bb-rl-activity-update-form #whats-new-submit .bb-topic-tooltip-wrapper' ).length === 0 ) {
+						var activity_form_submit_wrapper = $( '.bb-rl-activity-update-form.modal-popup #bb-rl-activity-form-submit-wrapper' );
+						if ( $( '.bb-rl-activity-update-form #whats-new-submit .bb-topic-tooltip-wrapper' ).length === 0 && activity_form_submit_wrapper.find( '.whats-new-topic-selector ul' ).length > 0 ) {
 							$( '.bb-rl-activity-update-form.modal-popup #whats-new-submit' ).prepend( '<div class="bb-topic-tooltip-wrapper"><div class="bb-topic-tooltip">' + BBTopicsManager.topicTooltipError + '</div></div>' );
 						}
 					} );
