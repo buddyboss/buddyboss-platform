@@ -13116,6 +13116,10 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   overflow: auto;
 }
 
+body.bb-rl-activity-modal-open .bb-rl-activity-update-form.modal-popup {
+  z-index: 999999;
+}
+
 .bb-rl-activity-update-form.modal-popup .bb-rl-activity-update-form-overlay {
   position: fixed;
   left: 0;
