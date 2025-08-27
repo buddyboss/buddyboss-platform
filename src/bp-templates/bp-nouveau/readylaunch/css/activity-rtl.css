@@ -2647,7 +2647,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   margin: 0 0 0 var(--bb-rl-space-100);
 }
 
-.bb-rl-activity-list .bb-activity-more-options-wrap .bb_more_dropdown .generic-button a.edit:before {
+.bb-rl-activity-list .bb-activity-more-options-wrap .bb_more_dropdown .generic-button a.edit:before, .bb-rl-activity-list .bb-activity-more-options-wrap .bb_more_dropdown .generic-button a.edit-activity:before {
   content: "\e3b4";
 }
 

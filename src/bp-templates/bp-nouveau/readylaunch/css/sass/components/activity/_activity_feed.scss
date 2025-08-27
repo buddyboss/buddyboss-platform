@@ -465,7 +465,8 @@
 					margin: 0 var(--bb-rl-space-100) 0 0;
 				}
 
-				&.edit:before {
+				&.edit:before,
+				&.edit-activity:before {
 					content: "\e3b4";
 				}
 
