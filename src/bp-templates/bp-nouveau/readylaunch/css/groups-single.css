@@ -920,6 +920,16 @@
   margin-bottom: var(--bb-rl-space-100);
 }
 
+.bb-rl-manage-group-container form .bb-rl-group-settings .bb-rl-filter {
+  display: inline-flex;
+}
+
+.bb-rl-manage-group-container form .bb-rl-group-settings .bb-rl-filter .select2-container--open .select2-dropdown {
+  z-index: 11;
+  max-height: 250px;
+  overflow: auto;
+}
+
 .bb-rl-manage-group-container form .bp-screen-title {
   font-size: var(--bb-rl-font-size-base);
   font-weight: 500;

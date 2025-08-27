@@ -34,8 +34,6 @@ window.bp = window.bp || {};
 				// Initialize select2 filters with retry mechanism
 				this.initSelect2Filters();
 
-				this.styledSelect();
-
 				this.bbReloadWindow();
 				this.initBBNavOverflow();
 			},
@@ -204,30 +202,6 @@ window.bp = window.bp || {};
 								// Ensure dropdown alignment adapts when there's insufficient space on the right side of the screen.
 								// The '.bb-rl-dropdown-align-adaptive' class enables responsive positioning of Select2 dropdowns.
 								$this.closest( '.bb-rl-filter' ).find( '.bb-rl-select2-dropdown' ).addClass( customDropDownClass );
-							}
-						);
-					}
-				);
-			},
-
-			styledSelect: function () {
-				$( '.bb-rl-styled-select select' ).each(
-					function () {
-						var $this   = $( this ),
-						customClass = '';
-
-						// Check if parent container has specific class
-						var $parent = $this.closest( '.bb-rl-styled-select' );
-						if ( $parent.hasClass( 'bb-rl-styled-select--default' ) ) {
-								customClass += ' bb-rl-select-default';
-						}
-
-						$this.select2(
-							{
-								theme: 'bb-rl-select2',
-								containerCssClass: 'bb-rl-select2-container ' + customClass,
-								dropdownCssClass: 'bb-rl-select2-dropdown',
-								dropdownParent: $this.parent()
 							}
 						);
 					}

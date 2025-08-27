@@ -27,16 +27,18 @@ if ( bp_is_group_create() ) : ?>
 	</h2>
 <?php endif; ?>
 
-<div class="group-settings-selections bb-rl-group-settings bb-rl-styled-select bb-rl-styled-select--default">
+<div class="group-settings-selections bb-rl-group-settings">
 
 	<fieldset class="radio group-status-type">
 		<legend><?php esc_html_e( 'Group visibility', 'buddyboss' ); ?></legend>
 
-		<select id="bp-groups-status" name="group-status" autocomplete="off">
-			<option value="public" <?php echo ( 'public' === $bp_get_new_group_status || ! $bp_get_new_group_status ) ? ' selected="selected"' : ''; ?>><?php esc_html_e( 'Public', 'buddyboss' ); ?></option>
-			<option value="private" <?php echo( 'private' === $bp_get_new_group_status ? ' selected="selected"' : '' ); ?>><?php esc_html_e( 'Private', 'buddyboss' ); ?></option>
-			<option value="hidden" <?php echo( 'hidden' === $bp_get_new_group_status ? ' selected="selected"' : '' ); ?>><?php esc_html_e( 'Hidden', 'buddyboss' ); ?></option>
-		</select>
+		<div class="bb-rl-filter">
+			<select id="bp-groups-status" name="group-status" autocomplete="off">
+				<option value="public" <?php echo ( 'public' === $bp_get_new_group_status || ! $bp_get_new_group_status ) ? ' selected="selected"' : ''; ?>><?php esc_html_e( 'Public', 'buddyboss' ); ?></option>
+				<option value="private" <?php echo( 'private' === $bp_get_new_group_status ? ' selected="selected"' : '' ); ?>><?php esc_html_e( 'Private', 'buddyboss' ); ?></option>
+				<option value="hidden" <?php echo( 'hidden' === $bp_get_new_group_status ? ' selected="selected"' : '' ); ?>><?php esc_html_e( 'Hidden', 'buddyboss' ); ?></option>
+			</select>
+		</div>
 
 	</fieldset>
 
@@ -49,11 +51,13 @@ if ( bp_is_group_create() ) : ?>
 		$invite_status = bp_group_get_invite_status( bp_get_current_group_id() );
 		?>
 
-		<select id="group-invite-status" name="group-invite-status" autocomplete="off">
-			<option value="members" <?php echo ( 'members' === $invite_status ? ' selected="selected"' : '' ); ?>><?php esc_html_e( 'All group members', 'buddyboss' ); ?></option>
-			<option value="mods" <?php echo( 'mods' === $invite_status ? ' selected="selected"' : '' ); ?>><?php esc_html_e( 'Organizers and Moderators only', 'buddyboss' ); ?></option>
-			<option value="admins" <?php echo( 'admins' === $invite_status ? ' selected="selected"' : '' ); ?>><?php esc_html_e( 'Organizers only', 'buddyboss' ); ?></option>
-		</select>
+		<div class="bb-rl-filter">
+			<select id="group-invite-status" name="group-invite-status" autocomplete="off">
+				<option value="members" <?php echo ( 'members' === $invite_status ? ' selected="selected"' : '' ); ?>><?php esc_html_e( 'All group members', 'buddyboss' ); ?></option>
+				<option value="mods" <?php echo( 'mods' === $invite_status ? ' selected="selected"' : '' ); ?>><?php esc_html_e( 'Organizers and Moderators only', 'buddyboss' ); ?></option>
+				<option value="admins" <?php echo( 'admins' === $invite_status ? ' selected="selected"' : '' ); ?>><?php esc_html_e( 'Organizers only', 'buddyboss' ); ?></option>
+			</select>
+		</div>
 	</fieldset>
 
 	<?php if ( bp_is_active( 'activity' ) ) : ?>
@@ -67,11 +71,13 @@ if ( bp_is_group_create() ) : ?>
 			$activity_feed_status = bp_group_get_activity_feed_status( bp_get_current_group_id() );
 			?>
 
-			<select id="group-activity-feed-status-members" name="group-activity-feed-status" autocomplete="off">
-				<option value="members" <?php echo ( 'members' === $activity_feed_status ? ' selected="selected"' : '' ); ?>><?php esc_html_e( 'All group members', 'buddyboss' ); ?></option>
-				<option value="mods" <?php echo( 'mods' === $activity_feed_status ? ' selected="selected"' : '' ); ?>><?php esc_html_e( 'Organizers and Moderators only', 'buddyboss' ); ?></option>
-				<option value="admins" <?php echo( 'admins' === $activity_feed_status ? ' selected="selected"' : '' ); ?>><?php esc_html_e( 'Organizers only', 'buddyboss' ); ?></option>
-			</select>
+			<div class="bb-rl-filter">
+				<select id="group-activity-feed-status-members" name="group-activity-feed-status" autocomplete="off">
+					<option value="members" <?php echo ( 'members' === $activity_feed_status ? ' selected="selected"' : '' ); ?>><?php esc_html_e( 'All group members', 'buddyboss' ); ?></option>
+					<option value="mods" <?php echo( 'mods' === $activity_feed_status ? ' selected="selected"' : '' ); ?>><?php esc_html_e( 'Organizers and Moderators only', 'buddyboss' ); ?></option>
+					<option value="admins" <?php echo( 'admins' === $activity_feed_status ? ' selected="selected"' : '' ); ?>><?php esc_html_e( 'Organizers only', 'buddyboss' ); ?></option>
+				</select>
+			</div>
 		</fieldset>
 		<?php
 	endif;
@@ -87,11 +93,13 @@ if ( bp_is_group_create() ) : ?>
 			$media_status = bp_group_get_media_status( bp_get_current_group_id() );
 			?>
 
-			<select id="group-media-status-members" name="group-media-status" autocomplete="off">
-				<option value="members" <?php echo ( 'members' === $media_status ? ' selected="selected"' : '' ); ?>><?php esc_html_e( 'All group members', 'buddyboss' ); ?></option>
-				<option value="mods" <?php echo( 'mods' === $media_status ? ' selected="selected"' : '' ); ?>><?php esc_html_e( 'Organizers and Moderators only', 'buddyboss' ); ?></option>
-				<option value="admins" <?php echo( 'admins' === $media_status ? ' selected="selected"' : '' ); ?>><?php esc_html_e( 'Organizers only', 'buddyboss' ); ?></option>
-			</select>
+			<div class="bb-rl-filter">
+				<select id="group-media-status-members" name="group-media-status" autocomplete="off">
+					<option value="members" <?php echo ( 'members' === $media_status ? ' selected="selected"' : '' ); ?>><?php esc_html_e( 'All group members', 'buddyboss' ); ?></option>
+					<option value="mods" <?php echo( 'mods' === $media_status ? ' selected="selected"' : '' ); ?>><?php esc_html_e( 'Organizers and Moderators only', 'buddyboss' ); ?></option>
+					<option value="admins" <?php echo( 'admins' === $media_status ? ' selected="selected"' : '' ); ?>><?php esc_html_e( 'Organizers only', 'buddyboss' ); ?></option>
+				</select>
+			</div>
 		</fieldset>
 		<?php
 	endif;
@@ -107,11 +115,13 @@ if ( bp_is_group_create() ) : ?>
 			$album_status = bp_group_get_album_status( bp_get_current_group_id() );
 			?>
 
-			<select id="group-albums-status-members" name="group-album-status" autocomplete="off">
-				<option value="members" <?php echo ( 'members' === $album_status ? ' selected="selected"' : '' ); ?>><?php esc_html_e( 'All group members', 'buddyboss' ); ?></option>
-				<option value="mods" <?php echo( 'mods' === $album_status ? ' selected="selected"' : '' ); ?>><?php esc_html_e( 'Organizers and Moderators only', 'buddyboss' ); ?></option>
-				<option value="admins" <?php echo( 'admins' === $album_status ? ' selected="selected"' : '' ); ?>><?php esc_html_e( 'Organizers only', 'buddyboss' ); ?></option>
-			</select>
+			<div class="bb-rl-filter">
+				<select id="group-albums-status-members" name="group-album-status" autocomplete="off">
+					<option value="members" <?php echo ( 'members' === $album_status ? ' selected="selected"' : '' ); ?>><?php esc_html_e( 'All group members', 'buddyboss' ); ?></option>
+					<option value="mods" <?php echo( 'mods' === $album_status ? ' selected="selected"' : '' ); ?>><?php esc_html_e( 'Organizers and Moderators only', 'buddyboss' ); ?></option>
+					<option value="admins" <?php echo( 'admins' === $album_status ? ' selected="selected"' : '' ); ?>><?php esc_html_e( 'Organizers only', 'buddyboss' ); ?></option>
+				</select>
+			</div>
 		</fieldset>
 		<?php
 	endif;
@@ -127,11 +137,13 @@ if ( bp_is_group_create() ) : ?>
 			$document_status = bp_group_get_document_status( bp_get_current_group_id() );
 			?>
 
-			<select id="group-document-status-members" name="group-document-status" autocomplete="off">
-				<option value="members" <?php echo ( 'members' === $document_status ? ' selected="selected"' : '' ); ?>><?php esc_html_e( 'All group members', 'buddyboss' ); ?></option>
-				<option value="mods" <?php echo( 'mods' === $document_status ? ' selected="selected"' : '' ); ?>><?php esc_html_e( 'Organizers and Moderators only', 'buddyboss' ); ?></option>
-				<option value="admins" <?php echo( 'admins' === $document_status ? ' selected="selected"' : '' ); ?>><?php esc_html_e( 'Organizers only', 'buddyboss' ); ?></option>
-			</select>
+			<div class="bb-rl-filter">
+				<select id="group-document-status-members" name="group-document-status" autocomplete="off">
+					<option value="members" <?php echo ( 'members' === $document_status ? ' selected="selected"' : '' ); ?>><?php esc_html_e( 'All group members', 'buddyboss' ); ?></option>
+					<option value="mods" <?php echo( 'mods' === $document_status ? ' selected="selected"' : '' ); ?>><?php esc_html_e( 'Organizers and Moderators only', 'buddyboss' ); ?></option>
+					<option value="admins" <?php echo( 'admins' === $document_status ? ' selected="selected"' : '' ); ?>><?php esc_html_e( 'Organizers only', 'buddyboss' ); ?></option>
+				</select>
+			</div>
 		</fieldset>
 		<?php
 	endif;
@@ -147,11 +159,13 @@ if ( bp_is_group_create() ) : ?>
 			$video_status = bp_group_get_video_status( bp_get_current_group_id() );
 			?>
 
-			<select id="group-video-status-members" name="group-video-status" autocomplete="off">
-				<option value="members" <?php echo ( 'members' === $video_status ? ' selected="selected"' : '' ); ?>><?php esc_html_e( 'All group members', 'buddyboss' ); ?></option>
-				<option value="mods" <?php echo( 'mods' === $video_status ? ' selected="selected"' : '' ); ?>><?php esc_html_e( 'Organizers and Moderators only', 'buddyboss' ); ?></option>
-				<option value="admins" <?php echo( 'admins' === $video_status ? ' selected="selected"' : '' ); ?>><?php esc_html_e( 'Organizers only', 'buddyboss' ); ?></option>
-			</select>
+			<div class="bb-rl-filter">
+				<select id="group-video-status-members" name="group-video-status" autocomplete="off">
+					<option value="members" <?php echo ( 'members' === $video_status ? ' selected="selected"' : '' ); ?>><?php esc_html_e( 'All group members', 'buddyboss' ); ?></option>
+					<option value="mods" <?php echo( 'mods' === $video_status ? ' selected="selected"' : '' ); ?>><?php esc_html_e( 'Organizers and Moderators only', 'buddyboss' ); ?></option>
+					<option value="admins" <?php echo( 'admins' === $video_status ? ' selected="selected"' : '' ); ?>><?php esc_html_e( 'Organizers only', 'buddyboss' ); ?></option>
+				</select>
+			</div>
 		</fieldset>
 		<?php
 	endif;
@@ -167,11 +181,13 @@ if ( bp_is_group_create() ) : ?>
 			$message_status = bp_group_get_message_status( bp_get_current_group_id() );
 			?>
 
-			<select name="group-message-status" id="group-messages-status-members" autocomplete="off">
-				<option value="members" <?php echo ( 'members' === $message_status ? ' selected="selected"' : '' ); ?>><?php esc_html_e( 'All group members', 'buddyboss' ); ?></option>
-				<option value="mods" <?php echo( 'mods' === $message_status ? ' selected="selected"' : '' ); ?>><?php esc_html_e( 'Organizers and Moderators only', 'buddyboss' ); ?></option>
-				<option value="admins" <?php echo( 'admins' === $message_status ? ' selected="selected"' : '' ); ?>><?php esc_html_e( 'Organizers only', 'buddyboss' ); ?></option>
-			</select>
+			<div class="bb-rl-filter">
+				<select name="group-message-status" id="group-messages-status-members" autocomplete="off">
+					<option value="members" <?php echo ( 'members' === $message_status ? ' selected="selected"' : '' ); ?>><?php esc_html_e( 'All group members', 'buddyboss' ); ?></option>
+					<option value="mods" <?php echo( 'mods' === $message_status ? ' selected="selected"' : '' ); ?>><?php esc_html_e( 'Organizers and Moderators only', 'buddyboss' ); ?></option>
+					<option value="admins" <?php echo( 'admins' === $message_status ? ' selected="selected"' : '' ); ?>><?php esc_html_e( 'Organizers only', 'buddyboss' ); ?></option>
+				</select>
+			</div>
 		</fieldset>
 		<?php
 	endif;
@@ -201,10 +217,11 @@ if ( bp_is_group_create() ) : ?>
 			<legend><?php esc_html_e( 'Group Type', 'buddyboss' ); ?></legend>
 
 			<p class="group-setting-label" tabindex="0"><?php esc_html_e( 'What type of group is this? (optional)', 'buddyboss' ); ?></p>
-			<select id="bp-groups-type" name="group-types[]" autocomplete="off">
-				<option value="" <?php selected( '', '' ); ?>><?php esc_html_e( 'Select Group Type', 'buddyboss' ); ?></option>
-				<?php
-				foreach ( $group_types as $group_type ) :
+			<div class="bb-rl-filter">
+				<select id="bp-groups-type" name="group-types[]" autocomplete="off">
+					<option value="" <?php selected( '', '' ); ?>><?php esc_html_e( 'Select Group Type', 'buddyboss' ); ?></option>
+					<?php
+					foreach ( $group_types as $group_type ) :
 
 					$group_option = sprintf(
 						'<option for="%1$s" value="%2$s" %3$s>%4$s</option>',
@@ -246,9 +263,10 @@ if ( bp_is_group_create() ) : ?>
 					} else {
 						echo wp_kses_post( $group_option );
 					}
-				endforeach;
-				?>
-			</select>
+					endforeach;
+					?>
+				</select>
+			</div>
 		</fieldset>
 		<?php
 	endif;
@@ -260,18 +278,20 @@ if ( bp_is_group_create() ) : ?>
 		<fieldset class="select group-parent">
 			<legend><?php esc_html_e( 'Group Parent', 'buddyboss' ); ?></legend>
 			<p class="group-setting-label" tabindex="0"><?php esc_html_e( 'Which group should be the parent of this group? (optional)', 'buddyboss' ); ?></p>
-			<select id="bp-groups-parent" name="bp-groups-parent" autocomplete="off">
-				<option value="0" <?php selected( 0, $current_parent_group_id ); ?>><?php esc_html_e( 'Select Parent', 'buddyboss' ); ?></option>
-				<?php
-				if ( $possible_parent_groups ) {
-					foreach ( $possible_parent_groups as $possible_parent_group ) {
-						?>
-						<option value="<?php echo esc_attr( $possible_parent_group->id ); ?>" <?php selected( $current_parent_group_id, $possible_parent_group->id ); ?>><?php echo esc_html( $possible_parent_group->name ); ?></option>
-						<?php
+			<div class="bb-rl-filter">
+				<select id="bp-groups-parent" name="bp-groups-parent" autocomplete="off">
+					<option value="0" <?php selected( 0, $current_parent_group_id ); ?>><?php esc_html_e( 'Select Parent', 'buddyboss' ); ?></option>
+					<?php
+					if ( $possible_parent_groups ) {
+						foreach ( $possible_parent_groups as $possible_parent_group ) {
+							?>
+							<option value="<?php echo esc_attr( $possible_parent_group->id ); ?>" <?php selected( $current_parent_group_id, $possible_parent_group->id ); ?>><?php echo esc_html( $possible_parent_group->name ); ?></option>
+							<?php
+						}
 					}
-				}
-				?>
-			</select>
+					?>
+				</select>
+			</div>
 		</fieldset>
 	<?php endif; ?>
 

@@ -69,6 +69,16 @@
 				color: var(--bb-rl-text-secondary-color);
 				margin-bottom: var(--bb-rl-space-100);
 			}
+
+			.bb-rl-filter {
+				display: inline-flex;
+
+				.select2-container--open .select2-dropdown {
+					z-index: 11;
+					max-height: 250px;
+					overflow: auto;
+				}
+			}
 		}
 
 		.bp-screen-title {
