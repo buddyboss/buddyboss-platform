@@ -356,6 +356,11 @@
 				border-bottom: 0;
 			}
 		}
+
+		.bb_more_dropdown.open {
+			top: inherit;
+			bottom: 100%;
+		}
 	}
 
 	.bb-rl-forum-reply-list-item:hover {
