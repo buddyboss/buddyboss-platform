@@ -3219,7 +3219,8 @@ window.bp = window.bp || {};
 			if (
 				'undefined' !== typeof window.getSelection &&
 				'undefined' !== typeof document.createRange &&
-				! _.isNull( activity_comment_data )
+				! _.isNull( activity_comment_data ) &&
+				acInputElem.length > 0
 			) {
 				var range = document.createRange();
 				range.selectNodeContents( acInputElem[0] );
