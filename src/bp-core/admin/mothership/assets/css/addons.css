@@ -1,0 +1,50 @@
+/**
+ * BuddyBoss Platform Mothership Addons Styles
+ */
+
+.bb-platform-mothership-addons {
+    margin-top: 20px;
+}
+
+.bb-platform-no-addons {
+    text-align: center;
+    padding: 40px;
+    background: #fff;
+    border: 1px solid #ccd0d4;
+    border-radius: 4px;
+}
+
+.bb-platform-no-addons p {
+    color: #666;
+    font-size: 16px;
+    margin: 0;
+}
+
+/* Additional addon-specific styles */
+.addon-card-loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.addon-action:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.addon-message .notice {
+    padding: 8px 12px;
+    margin: 0;
+    border-radius: 3px;
+}
+
+.addon-message .notice-success {
+    background: #dff0d8;
+    border: 1px solid #d6e9c6;
+    color: #3c763d;
+}
+
+.addon-message .notice-error {
+    background: #f2dede;
+    border: 1px solid #ebccd1;
+    color: #a94442;
+}

@@ -60,6 +60,8 @@ add_action( 'bp_admin_init', 'bp_check_for_legacy_theme' );
 // Show notice when Profile Avatars is BuddyBoss.
 add_action( 'bp_admin_head', 'bb_discussion_page_show_notice_in_avatar_section' );
 
+add_action( 'bp_init', 'bb_mothership_loader' );
+
 // Add a new separator.
 add_action( 'bp_admin_menu', 'bp_admin_separator' );
 
@@ -537,3 +539,22 @@ function bb_upgrade_dismiss_notice() {
 }
 
 add_action( 'wp_ajax_bb_upgrade_dismiss_notice', 'bb_upgrade_dismiss_notice' );
+
+/**
+ * Initialize the Mothership loader.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return BB_Mothership_Loader
+ */
+function bb_mothership_loader() {
+	if ( ! is_admin() || ! current_user_can( 'manage_options' ) ) {
+		return;
+	}
+
+	if ( ! class_exists( 'BB_Mothership_Loader' ) ) {
+		require_once buddypress()->plugin_dir . 'bp-core/admin/mothership/class-bb-mothership-loader.php';
+	}
+
+	return BB_Mothership_Loader::init();
+}
