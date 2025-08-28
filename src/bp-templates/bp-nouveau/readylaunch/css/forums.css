@@ -1627,6 +1627,10 @@
   border-radius: var(--bb-rl-radius-md);
 }
 
+.bb-rl-forum-modal [class*="post-elements-buttons-item"].bb-rl-media-support-hide {
+  display: none;
+}
+
 .bb-rl-forum-modal .bb-rl-forum-subscription {
   font-size: 14px;
   font-weight: 500;
