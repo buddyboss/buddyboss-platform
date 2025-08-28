@@ -714,7 +714,7 @@ function bb_modify_topics_query_for_sticky( $clauses, $wp_query ) {
 
 		// Build the replacement with proper escaping.
 		$replacement = sprintf(
-			"( %s.post_parent = %d OR %s.ID IN (%s) )",
+			'( %s.post_parent = %d OR %s.ID IN (%s) )',
 			$wpdb->posts,
 			$post_parent_value,
 			$wpdb->posts,
