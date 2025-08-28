@@ -1241,8 +1241,12 @@ window.bp = window.bp || {};
 					}
 				);
 
-				// Rest the Comment Form.
-				self.resetActivityCommentForm( $form, 'hardReset' );
+				if( $form.closest( 'li.comment-item' ).length ) {
+					self.activityRootComment( event );
+				} else {
+					// Rest the Comment Form.
+					self.resetActivityCommentForm( $form, 'hardReset' );
+				}
 
 				// Stop event propagation.
 				event.preventDefault();
