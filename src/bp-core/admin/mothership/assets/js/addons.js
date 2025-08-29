@@ -1,198 +1,254 @@
 /**
- * BuddyBoss Platform Mothership Addons JavaScript
+ * BuddyBoss Addons JavaScript
  */
 
-jQuery( document ).ready(
-	function ($) {
-		'use strict';
+(function($) {
+    'use strict';
 
-		// Initialize addons functionality.
-		initAddonsInterface();
+    var BBAddonsManager = {
+        
+        /**
+         * Initialize.
+         */
+        init: function() {
+            this.bindEvents();
+        },
 
-		function initAddonsInterface() {
-			// Add any additional addons functionality here.
-			console.log( 'BuddyBoss Platform Mothership Addons initialized' );
-		}
+        /**
+         * Bind events.
+         */
+        bindEvents: function() {
+            $(document).on('click', '.bb-addon-install', this.installAddon);
+            $(document).on('click', '.bb-addon-activate', this.activateAddon);
+            $(document).on('click', '.bb-addon-deactivate', this.deactivateAddon);
+        },
 
-		// Handle addon action buttons.
-		$( document ).on(
-			'click',
-			'.addon-action',
-			function (e) {
-				e.preventDefault();
+        /**
+         * Install addon.
+         */
+        installAddon: function(e) {
+            e.preventDefault();
+            
+            var $button = $(this);
+            var $card = $button.closest('.bb-addon-card');
+            var plugin = $button.data('plugin');
+            var type = $button.data('type') || 'add-on';
+            
+            if (!plugin) {
+                return;
+            }
+            
+            // Disable button and show loading
+            $button.prop('disabled', true);
+            $card.addClass('loading');
+            $button.text(type === 'plugin' ? 'Installing Plugin...' : 'Installing Add-on...');
+            
+            $.ajax({
+                url: BBAddons.ajax_url,
+                type: 'POST',
+                data: {
+                    action: 'bb_addon_install',
+                    plugin: plugin,
+                    type: type,
+                    _ajax_nonce: BBAddons.nonce
+                },
+                success: function(response) {
+                    if (response.success) {
+                        if (response.data.activated) {
+                            // Addon was activated successfully
+                            BBAddonsManager.updateCardStatus($card, 'active', response.data.basename);
+                            BBAddonsManager.showNotice(response.data.message, 'success');
+                        } else {
+                            // Addon was installed but not activated
+                            BBAddonsManager.updateCardStatus($card, 'inactive', response.data.basename);
+                            BBAddonsManager.showNotice(response.data.message, 'success');
+                        }
+                    } else {
+                        BBAddonsManager.showNotice(response.data || BBAddons.install_failed, 'error');
+                        $button.prop('disabled', false);
+                        $button.text('Install');
+                    }
+                },
+                error: function() {
+                    BBAddonsManager.showNotice(BBAddons.install_failed, 'error');
+                    $button.prop('disabled', false);
+                    $button.text('Install');
+                },
+                complete: function() {
+                    $card.removeClass('loading');
+                }
+            });
+        },
 
-				var $button = $( this );
-				var $card   = $button.closest( '.bb-platform-addon-card' );
-				var action  = $button.data( 'action' );
+        /**
+         * Activate addon.
+         */
+        activateAddon: function(e) {
+            e.preventDefault();
+            
+            var $button = $(this);
+            var $card = $button.closest('.bb-addon-card');
+            var plugin = $button.data('plugin');
+            var type = $button.data('type') || 'add-on';
+            
+            if (!plugin) {
+                return;
+            }
+            
+            // Disable button and show loading
+            $button.prop('disabled', true);
+            $card.addClass('loading');
+            $button.text('Activating...');
+            
+            $.ajax({
+                url: BBAddons.ajax_url,
+                type: 'POST',
+                data: {
+                    action: 'bb_addon_activate',
+                    plugin: plugin,
+                    type: type,
+                    _ajax_nonce: BBAddons.nonce
+                },
+                success: function(response) {
+                    if (response.success) {
+                        BBAddonsManager.updateCardStatus($card, 'active', plugin);
+                        BBAddonsManager.showNotice(response.data, 'success');
+                    } else {
+                        BBAddonsManager.showNotice(response.data, 'error');
+                        $button.prop('disabled', false);
+                        $button.text(BBAddons.activate);
+                    }
+                },
+                error: function() {
+                    BBAddonsManager.showNotice('An error occurred while activating.', 'error');
+                    $button.prop('disabled', false);
+                    $button.text(BBAddons.activate);
+                },
+                complete: function() {
+                    $card.removeClass('loading');
+                }
+            });
+        },
 
-				// Show loading state.
-				showCardLoading( $card );
+        /**
+         * Deactivate addon.
+         */
+        deactivateAddon: function(e) {
+            e.preventDefault();
+            
+            var $button = $(this);
+            var $card = $button.closest('.bb-addon-card');
+            var plugin = $button.data('plugin');
+            var type = $button.data('type') || 'add-on';
+            
+            if (!plugin) {
+                return;
+            }
+            
+            // Disable button and show loading
+            $button.prop('disabled', true);
+            $card.addClass('loading');
+            $button.text('Deactivating...');
+            
+            $.ajax({
+                url: BBAddons.ajax_url,
+                type: 'POST',
+                data: {
+                    action: 'bb_addon_deactivate',
+                    plugin: plugin,
+                    type: type,
+                    _ajax_nonce: BBAddons.nonce
+                },
+                success: function(response) {
+                    if (response.success) {
+                        BBAddonsManager.updateCardStatus($card, 'inactive', plugin);
+                        BBAddonsManager.showNotice(response.data, 'success');
+                    } else {
+                        BBAddonsManager.showNotice(response.data, 'error');
+                        $button.prop('disabled', false);
+                        $button.text(BBAddons.deactivate);
+                    }
+                },
+                error: function() {
+                    BBAddonsManager.showNotice('An error occurred while deactivating.', 'error');
+                    $button.prop('disabled', false);
+                    $button.text(BBAddons.deactivate);
+                },
+                complete: function() {
+                    $card.removeClass('loading');
+                }
+            });
+        },
 
-				// Handle different actions.
-				switch (action) {
-					case 'install':
-						handleInstallAddon( $button, $card );
-						break;
-					case 'activate':
-						handleActivateAddon( $button, $card );
-						break;
-					case 'deactivate':
-						handleDeactivateAddon( $button, $card );
-						break;
-				}
-			}
-		);
+        /**
+         * Update card status.
+         */
+        updateCardStatus: function($card, status, plugin) {
+            var $status = $card.find('.bb-addon-status-badge');
+            var $actions = $card.find('.bb-addon-actions');
+            
+            // Update status badge
+            $status.removeClass('bb-addon-status-active bb-addon-status-inactive bb-addon-status-not-installed');
+            
+            if (status === 'active') {
+                $status.addClass('bb-addon-status-active').text(BBAddons.active);
+                
+                // Update actions
+                $actions.html(
+                    '<button class="button bb-addon-deactivate" data-plugin="' + plugin + '">' +
+                    BBAddons.deactivate +
+                    '</button>'
+                );
+                
+            } else if (status === 'inactive') {
+                $status.addClass('bb-addon-status-inactive').text(BBAddons.inactive);
+                
+                // Update actions
+                $actions.html(
+                    '<button class="button button-primary bb-addon-activate" data-plugin="' + plugin + '">' +
+                    BBAddons.activate +
+                    '</button>'
+                );
+            }
+            
+            // Update card data attribute
+            $card.attr('data-plugin', plugin);
+        },
 
-		function handleInstallAddon($button, $card) {
-			var addonSlug = $button.data( 'slug' );
-			var $message  = $card.find( '.addon-message' );
+        /**
+         * Show notice.
+         */
+        showNotice: function(message, type) {
+            var noticeClass = type === 'success' ? 'notice-success' : 'notice-error';
+            var $notice = $(
+                '<div class="notice ' + noticeClass + ' is-dismissible">' +
+                '<p>' + message + '</p>' +
+                '<button type="button" class="notice-dismiss"><span class="screen-reader-text">Dismiss this notice.</span></button>' +
+                '</div>'
+            );
+            
+            // Insert notice after page title
+            $('.wrap h1').after($notice);
+            
+            // Auto dismiss after 5 seconds
+            setTimeout(function() {
+                $notice.fadeOut(function() {
+                    $notice.remove();
+                });
+            }, 5000);
+            
+            // Handle manual dismiss
+            $notice.on('click', '.notice-dismiss', function() {
+                $notice.fadeOut(function() {
+                    $notice.remove();
+                });
+            });
+        }
+    };
 
-			$.ajax(
-				{
-					url: bbPlatformMothershipAddons.ajaxUrl,
-					type: 'POST',
-					data: {
-						action: 'bb_platform_install_addon',
-						addon_slug: addonSlug,
-						nonce: bbPlatformMothershipAddons.nonce
-					},
-					success: function (response) {
-						if (response.success) {
-							showMessage( $message, response.data.message, 'success' );
-							setTimeout(
-								function () {
-									location.reload();
-								},
-								2000
-							);
-						} else {
-							showMessage( $message, response.data, 'error' );
-						}
-					},
-					error: function () {
-						showMessage( $message, bbPlatformMothershipAddons.strings.error, 'error' );
-					},
-					complete: function () {
-						hideCardLoading( $card );
-					}
-				}
-			);
-		}
+    // Initialize when document is ready
+    $(document).ready(function() {
+        BBAddonsManager.init();
+    });
 
-		function handleActivateAddon($button, $card) {
-			var pluginFile = $button.data( 'plugin' );
-			var $message   = $card.find( '.addon-message' );
-
-			$.ajax(
-				{
-					url: bbPlatformMothershipAddons.ajaxUrl,
-					type: 'POST',
-					data: {
-						action: 'bb_platform_activate_addon',
-						plugin_file: pluginFile,
-						nonce: bbPlatformMothershipAddons.nonce
-					},
-					success: function (response) {
-						if (response.success) {
-							showMessage( $message, response.data.message, 'success' );
-							setTimeout(
-								function () {
-									location.reload();
-								},
-								2000
-							);
-						} else {
-							showMessage( $message, response.data, 'error' );
-						}
-					},
-					error: function () {
-						showMessage( $message, bbPlatformMothershipAddons.strings.error, 'error' );
-					},
-					complete: function () {
-						hideCardLoading( $card );
-					}
-				}
-			);
-		}
-
-		function handleDeactivateAddon($button, $card) {
-			var pluginFile = $button.data( 'plugin' );
-			var $message   = $card.find( '.addon-message' );
-
-			$.ajax(
-				{
-					url: bbPlatformMothershipAddons.ajaxUrl,
-					type: 'POST',
-					data: {
-						action: 'bb_platform_deactivate_addon',
-						plugin_file: pluginFile,
-						nonce: bbPlatformMothershipAddons.nonce
-					},
-					success: function (response) {
-						if (response.success) {
-							showMessage( $message, response.data.message, 'success' );
-							setTimeout(
-								function () {
-									location.reload();
-								},
-								2000
-							);
-						} else {
-							showMessage( $message, response.data, 'error' );
-						}
-					},
-					error: function () {
-						showMessage( $message, bbPlatformMothershipAddons.strings.error, 'error' );
-					},
-					complete: function () {
-						hideCardLoading( $card );
-					}
-				}
-			);
-		}
-
-		function showCardLoading($card) {
-			$card.addClass( 'addon-card-loading' );
-			$card.find( '.addon-action' ).prop( 'disabled', true );
-		}
-
-		function hideCardLoading($card) {
-			$card.removeClass( 'addon-card-loading' );
-			$card.find( '.addon-action' ).prop( 'disabled', false );
-		}
-
-		function showMessage($container, message, type) {
-			var noticeClass = type === 'success' ? 'notice-success' : 'notice-error';
-			var html        = '<div class="notice ' + noticeClass + '"><p>' + message + '</p></div>';
-
-			$container.html( html );
-
-			// Auto-hide success messages after 5 seconds.
-			if (type === 'success') {
-				setTimeout(
-					function () {
-						$container.find( '.notice' ).fadeOut();
-					},
-					5000
-				);
-			}
-		}
-
-		// Handle notice dismissal.
-		$( document ).on(
-			'click',
-			'.notice-dismiss',
-			function () {
-				var $notice = $( this ).closest( '.notice' );
-				$notice.fadeOut();
-			}
-		);
-
-		// Expose functions globally for use in templates.
-		window.BBPlatformMothershipAddons = {
-			showCardLoading: showCardLoading,
-			hideCardLoading: hideCardLoading,
-			showMessage: showMessage
-		};
-	}
-);
+})(jQuery);
