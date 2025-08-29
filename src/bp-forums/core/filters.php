@@ -706,12 +706,29 @@ function bb_modify_topics_query_for_sticky( $clauses, $wp_query ) {
 
 	$sticky_ids_csv = implode( ',', $sticky_ids );
 
-	// Get spam status ID.
-	$spam_status = bbp_get_spam_status_id();
+	// Only alter when filtering by post_parent.
+	if ( ! empty( $wp_query->query_vars['post_parent'] ) && (int) $wp_query->query_vars['post_parent'] > 0 ) {
+		// More specific and safer regex pattern.
+		$post_parent_value = (int) $wp_query->query_vars['post_parent'];
 
-	// Modify WHERE clause to include sticky topics even if they are spam.
-	if ( ! empty( $spam_status ) ) {
-		$clauses['where'] .= " OR ({$wpdb->posts}.ID IN ({$sticky_ids_csv}) AND {$wpdb->posts}.post_status = '{$spam_status}')";
+		// Match the exact post_parent condition pattern to replace it with OR logic.
+		$pattern = '/\b' . preg_quote( $wpdb->posts . '.post_parent', '/' ) . '\s*=\s*' . $post_parent_value . '\b/';
+
+		// Build the replacement with proper escaping.
+		$replacement = sprintf(
+			'( %s.post_parent = %d OR %s.ID IN (%s) )',
+			$wpdb->posts,
+			$post_parent_value,
+			$wpdb->posts,
+			$sticky_ids_csv
+		);
+
+		$clauses['where'] = preg_replace(
+			$pattern,
+			$replacement,
+			$clauses['where'],
+			1 // Only first occurrence.
+		);
 	}
 
 	// Modify ORDER BY clause to prioritize sticky topics **without changing spam order**.
@@ -734,12 +751,14 @@ function bb_modify_topics_query_for_sticky( $clauses, $wp_query ) {
 	$case_statements[] = 'ELSE 3'; // Normal posts after stickies.
 	$case_sql          = 'CASE ' . implode( ' ', $case_statements ) . ' END';
 
-	$clauses['orderby'] = "$case_sql, {$wpdb->posts}.post_date DESC";
+	$clauses['orderby'] = $case_sql;
 
 	// If meta ordering needs to be preserved, append it consistently.
 	if ( isset( $wp_query->query_vars['orderby'] ) && 'meta_value' === $wp_query->query_vars['orderby'] ) {
 		$clauses['orderby'] .= ", CAST({$wpdb->postmeta}.meta_value AS DATETIME) DESC";
 	}
+
+	$clauses['orderby'] .= ", {$wpdb->posts}.post_date DESC";
 
 	return $clauses;
 }
