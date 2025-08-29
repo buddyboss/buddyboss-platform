@@ -413,11 +413,7 @@
 .bb-rl-groups-single-wrapper > .bb-rl-secondary-header {
   top: 71px;
   position: sticky;
-  z-index: 9991;
-}
-
-.bb-rl-activity-modal-open .bb-rl-groups-single-wrapper > .bb-rl-secondary-header {
-  z-index: 999;
+  z-index: calc(var(--bb-rl-z-index-fixed) - 1);
 }
 
 .admin-bar .bb-rl-groups-single-wrapper > .bb-rl-secondary-header {
