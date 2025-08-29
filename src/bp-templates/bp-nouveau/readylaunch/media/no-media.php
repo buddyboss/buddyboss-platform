@@ -57,7 +57,7 @@ if ( function_exists( 'bp_is_single_album' ) && bp_is_single_album() ) {
 	<p class="bb-rl-media-none-description">
 		<?php
 		if ( $single_album ) {
-			esc_html_e( 'It looks like there aren\'t any albums in this album.', 'buddyboss' );
+			esc_html_e( 'It looks like there aren\'t any photos or videos in this album.', 'buddyboss' );
 		} elseif ( $album_dir ) {
 			esc_html_e( 'It looks like there aren\'t any albums in this directory.', 'buddyboss' );
 		} else {
