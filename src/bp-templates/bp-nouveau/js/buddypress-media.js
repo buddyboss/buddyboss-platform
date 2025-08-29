@@ -350,14 +350,29 @@ window.bp = window.bp || {};
 					messageThreadList.on( 'scroll', this.throttledAutoPlayGifVideos.bind( this ) );
 				}
 
+				// Add scroll event listener for activity modal body
+				var activityModalBody = $( '.bb-modal-activity-body' );
+				if ( activityModalBody.length ) {
+					activityModalBody.on( 'scroll', this.throttledAutoPlayGifVideos.bind( this ) );
+				}
+
 				// Add document-level scroll event delegation as fallback
 				$( document ).on( 'scroll', '#bp-message-thread-list', this.throttledAutoPlayGifVideos.bind( this ) );
+				$( document ).on( 'scroll', '.bb-modal-activity-body', this.throttledAutoPlayGifVideos.bind( this ) );
+
+				// Listen for activity modal opening to ensure scroll listeners are attached
+				$( document ).on( 'activityModalOpened', this.setupActivityModalGifAutoplay.bind( this ) );
 
 				// Use addEventListener directly
 				setTimeout( function() {
 					var messageThreadList = document.getElementById( 'bp-message-thread-list' );
 					if ( messageThreadList ) {
 						messageThreadList.addEventListener( 'scroll', bp.Nouveau.Media.throttledAutoPlayGifVideos.bind( bp.Nouveau.Media ), false );
+					}
+					
+					var activityModalBody = document.querySelector( '.bb-modal-activity-body' );
+					if ( activityModalBody ) {
+						activityModalBody.addEventListener( 'scroll', bp.Nouveau.Media.throttledAutoPlayGifVideos.bind( bp.Nouveau.Media ), false );
 					}
 				}, 1000 );
 
@@ -6339,6 +6354,11 @@ window.bp = window.bp || {};
 			// Find the closest scrollable container
 			var $scrollableContainer = $element.closest( '#bp-message-thread-list' );
 			
+			// Check for activity modal body
+			if ( !$scrollableContainer.length ) {
+				$scrollableContainer = $element.closest( '.bb-modal-activity-body' );
+			}
+			
 			if ( $scrollableContainer.length ) {
 				// Check if element is visible within the scrollable container
 				var containerRect = $scrollableContainer[0].getBoundingClientRect();
@@ -6381,11 +6401,19 @@ window.bp = window.bp || {};
 					var video = $( this ).find( 'video' ).get( 0 ),
 						$button = $( this ).find( '.gif-play-button' );
 
+					// Skip if video element doesn't exist
+					if ( !video ) {
+						return;
+					}
+
 					var isVisible = bp.Nouveau.Media.isElementInScrollableContainer( this );
 					
 					if ( isVisible ) {
 						// Play the video.
-						video.play();
+						video.play().catch( function( error ) {
+							// Silently handle play errors (e.g., user hasn't interacted with page yet)
+							console.debug( 'GIF autoplay failed:', error );
+						});
 						
 						// Update the button text to 'Pause'.
 						$button.hide();
@@ -6398,6 +6426,30 @@ window.bp = window.bp || {};
 					}
 				}
 			);
+		},
+
+		/**
+		 * Setup GIF autoplay for activity modal when it's opened
+		 */
+		setupActivityModalGifAutoplay: function() {
+			setTimeout( function() {
+				var activityModalBody = document.querySelector( '.bb-modal-activity-body' );
+				if ( activityModalBody ) {
+					try {
+						// Remove existing listener to avoid duplicates
+						activityModalBody.removeEventListener( 'scroll', bp.Nouveau.Media.throttledAutoPlayGifVideos.bind( bp.Nouveau.Media ) );
+						// Add scroll event listener
+						activityModalBody.addEventListener( 'scroll', bp.Nouveau.Media.throttledAutoPlayGifVideos.bind( bp.Nouveau.Media ), false );
+						
+						// Trigger initial check for GIFs in the modal
+						if ( typeof bp.Nouveau.Media.autoPlayGifVideos === 'function' ) {
+							bp.Nouveau.Media.autoPlayGifVideos();
+						}
+					} catch ( error ) {
+						console.debug( 'Error setting up activity modal GIF autoplay:', error );
+					}
+				}
+			}, 500 );
 		},
 
 		/**

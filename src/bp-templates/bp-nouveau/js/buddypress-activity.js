@@ -1813,6 +1813,11 @@ window.bp = window.bp || {};
 								tool_box_comment.find( '.ac-reply-toolbar .ac-reply-gif-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable no-click' );
 							}
 							jQuery( window ).scroll();
+							
+							// Trigger GIF autoplay check for newly added content
+							if ( typeof bp.Nouveau.Media !== 'undefined' && typeof bp.Nouveau.Media.autoPlayGifVideos === 'function' ) {
+								bp.Nouveau.Media.autoPlayGifVideos();
+							}
 
 							if ( ! form.hasClass( 'acomment-edit' ) ) {
 								// Set the new count.
@@ -4040,6 +4045,13 @@ window.bp = window.bp || {};
 			}
 
 			bp.Nouveau.Activity.toggleMultiMediaOptions( form, '', '.bb-modal-activity-footer' );
+			
+			// Trigger GIF autoplay check when modal is opened
+			if ( typeof bp.Nouveau.Media !== 'undefined' && typeof bp.Nouveau.Media.autoPlayGifVideos === 'function' ) {
+				setTimeout( function() {
+					bp.Nouveau.Media.autoPlayGifVideos();
+				}, 500 );
+			}
 		},
 
 		viewMoreComments: function ( e ) {
@@ -4136,6 +4148,11 @@ window.bp = window.bp || {};
 							setTimeout(
 								function () {
 									jQuery( window ).scroll();
+									
+									// Trigger GIF autoplay check for newly loaded comments
+									if ( typeof bp.Nouveau.Media !== 'undefined' && typeof bp.Nouveau.Media.autoPlayGifVideos === 'function' ) {
+										bp.Nouveau.Media.autoPlayGifVideos();
+									}
 								},
 								200
 							);
