@@ -10062,6 +10062,16 @@ input.bb-rl-zoom-slider::-moz-range-progress {
   text-align: center;
 }
 
+@media screen and (max-width: 544px) {
+  .bb-rl-media-none {
+    padding: var(--bb-rl-space-300) 0;
+  }
+  .bb-rl-media-none .bb-media-actions-wrap .bb-media-actions,
+  .bb-rl-media-none .bb-media-actions-wrap .bb-video-actions {
+    flex-direction: column;
+  }
+}
+
 .bb-rl-popup-on-fly-create-folder,
 .bb-rl-popup-on-fly-create-album {
   padding: var(--bb-rl-space-200) 0;
