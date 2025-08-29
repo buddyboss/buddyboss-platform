@@ -47,10 +47,10 @@ $is_disabled_invite_member_content = bp_disable_invite_member_email_content();
 			?>
 			<tr>
 				<td class="field-name">
-					<input type="text" name="invitee[<?php echo $i; ?>][]" id="invitee_<?php echo $i; ?>_title" value="<?php echo esc_attr( '' ); ?>" class="invites-input" <?php bp_form_field_attributes( 'invitee' ); ?>/>
+					<input type="text" name="invitee[<?php echo $i; ?>][]" id="invitee_<?php echo $i; ?>_title" value="<?php echo esc_attr( '' ); ?>" class="invites-input" <?php bp_form_field_attributes( 'invitee' ); ?> aria-label="<?php esc_html_e( 'Recipient Name', 'buddyboss' ); ?>"/>
 				</td>
 				<td class="field-email">
-					<input type="email" name="email[<?php echo $i; ?>][]" id="email_<?php echo $i; ?>_email" value="<?php echo esc_attr( '' ); ?>" class="invites-input" <?php bp_form_field_attributes( 'email' ); ?>/>
+					<input type="email" name="email[<?php echo $i; ?>][]" id="email_<?php echo $i; ?>_email" value="<?php echo esc_attr( '' ); ?>" class="invites-input" <?php bp_form_field_attributes( 'email' ); ?> aria-label="<?php esc_html_e( 'Recipient Email', 'buddyboss' ); ?>"/>
 				</td>
 				<?php
 				if ( true === $send_invite_member_type_allow ) {
