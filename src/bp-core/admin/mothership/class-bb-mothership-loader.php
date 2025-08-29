@@ -1,130 +1,157 @@
 <?php
-/**
- * BuddyBoss Mothership Loader
- *
- * @package BuddyBoss
- * @since 1.0.0
- */
+
+declare(strict_types=1);
 
 namespace BuddyBoss\Core\Admin\Mothership;
 
-// Exit if accessed directly.
-defined( 'ABSPATH' ) || exit;
-
-// Include required files.
-require_once __DIR__ . '/class-bb-plugin-connector.php';
-require_once __DIR__ . '/class-bb-license-page.php';
-require_once __DIR__ . '/class-bb-addons-page.php';
-require_once __DIR__ . '/manager/class-bb-license-manager.php';
-require_once __DIR__ . '/manager/class-bb-addons-manager.php';
-require_once __DIR__ . '/api/class-bb-api-request.php';
-
-use BuddyBoss\Core\Admin\Mothership\Manager\BB_License_Manager;
-use BuddyBoss\Core\Admin\Mothership\Manager\BB_Addons_Manager;
+use GroundLevel\Container\Container;
+use GroundLevel\Mothership\Service as MothershipService;
+use GroundLevel\Mothership\Manager\LicenseManager;
+use GroundLevel\Mothership\Manager\AddonsManager;
+use GroundLevel\Mothership\Credentials;
+use GroundLevel\Mothership\Api\Request;
+use GroundLevel\Mothership\AbstractPluginConnection;
 
 /**
  * Main loader class for BuddyBoss Mothership functionality.
+ *
+ * This class follows the GroundLevel framework patterns for service registration,
+ * container awareness, and hook configuration.
  */
-class BB_Mothership_Loader {
+class BB_Mothership_Loader
+{
+    /**
+     * Container for dependency injection.
+     *
+     * @var Container
+     */
+    private $container;
 
-	/**
-	 * Instance of this class.
-	 *
-	 * @var BB_Mothership_Loader
-	 */
-	private static $instance = null;
+    /**
+     * Plugin connector instance.
+     *
+     * @var \BuddyBoss\Core\Admin\Mothership\BB_Plugin_Connector
+     */
+    private $pluginConnector;
 
-	/**
-	 * Get singleton instance.
-	 *
-	 * @return BB_Mothership_Loader
-	 */
-	public static function get_instance() {
-		if ( null === self::$instance ) {
-			self::$instance = new self();
-		}
-		return self::$instance;
-	}
+    /**
+     * Constructor.
+     */
+    public function __construct()
+    {
+        $this->init();
+    }
 
-	/**
-	 * Constructor.
-	 */
-	private function __construct() {
-		$this->setup_hooks();
-	}
+    /**
+     * Initialize the mothership functionality.
+     */
+    private function init(): void
+    {
+        // Create the container.
+        $this->container = new Container();
 
-	/**
-	 * Setup hooks.
-	 */
-	private function setup_hooks() {
-		// Admin menu hooks.
-		add_action( 'admin_menu', array( $this, 'register_admin_pages' ), 99 );
-		
-		// License controller.
-		add_action( 'admin_init', array( 'BuddyBoss\Core\Admin\Mothership\Manager\BB_License_Manager', 'controller' ), 20 );
-		
-		// Addons hooks.
-		BB_Addons_Manager::load_hooks();
-		
-		// Schedule license check events.
-		BB_License_Manager::schedule_events( 'buddyboss' );
-		
-		// Handle license status changes.
-		add_action( 'buddyboss_license_status_changed', array( $this, 'handle_license_status_change' ), 10, 2 );
-		
-		// For local development - disable SSL verification if needed.
-		if ( defined( 'BUDDYBOSS_DISABLE_SSL_VERIFY' ) && BUDDYBOSS_DISABLE_SSL_VERIFY ) {
-			add_filter( 'https_ssl_verify', '__return_false' );
-		}
-	}
+        // Create the plugin connector.
+        $this->pluginConnector = new \BuddyBoss\Core\Admin\Mothership\BB_Plugin_Connector();
 
-	/**
-	 * Register admin pages.
-	 */
-	public function register_admin_pages() {
-		// Only show to users with manage_options capability.
-		if ( ! current_user_can( 'manage_options' ) ) {
-			return;
-		}
+        // Initialize the mothership service.
+        $this->initMothershipService();
 
-		// Register License page.
-		BB_License_Page::register();
-		
-		// Register Addons page.
-		BB_Addons_Page::register();
-	}
+        // Set up hooks.
+        $this->setupHooks();
+    }
 
-	/**
-	 * Handle license status changes.
-	 *
-	 * @param bool  $is_active License active status.
-	 * @param mixed $response  API response.
-	 */
-	public function handle_license_status_change( $is_active, $response ) {
-		$connector = BB_Plugin_Connector::get_instance();
-		
-		if ( ! $is_active ) {
-			// License is no longer active.
-			$connector->update_license_activation_status( false );
-			
-			// Clear cached data.
-			delete_transient( 'buddyboss_addons_cache' );
-			delete_transient( 'buddyboss_addons_update_check' );
-			
-			// Log the deactivation.
-			error_log( 'BuddyBoss license deactivated: ' . print_r( $response, true ) );
-		} else {
-			// License is active - ensure status is updated.
-			$connector->update_license_activation_status( true );
-		}
-	}
+    /**
+     * Initialize the mothership service.
+     */
+    private function initMothershipService(): void
+    {
+        // Create the mothership service.
+        $mothershipService = new MothershipService($this->container, $this->pluginConnector);
 
-	/**
-	 * Initialize the mothership functionality.
-	 *
-	 * This should be called from the main plugin file.
-	 */
-	public static function init() {
-		self::get_instance();
-	}
+        // Load the mothership service dependencies.
+        $mothershipService->load($this->container);
+
+        // Register the mothership service in the container.
+        $this->container->addService(
+            MothershipService::class,
+            function () use ($mothershipService) {
+                return $mothershipService;
+            },
+            true // Singleton
+        );
+    }
+
+    /**
+     * Setup WordPress hooks.
+     */
+    private function setupHooks(): void
+    {
+        // Register admin pages.
+        add_action('admin_menu', [$this, 'registerAdminPages'], 99);
+
+        // Register license controller.
+        add_action('admin_init', [LicenseManager::class, 'controller'], 20);
+
+        // Register addons functionality.
+        AddonsManager::loadHooks();
+
+        // Handle license status changes.
+        add_action($this->pluginConnector->pluginId . '_license_status_changed', [$this, 'handleLicenseStatusChange'], 10, 2);
+
+        // For local development - disable SSL verification if needed.
+        if (defined('BUDDYBOSS_DISABLE_SSL_VERIFY') && constant('BUDDYBOSS_DISABLE_SSL_VERIFY')) {
+            add_filter('https_ssl_verify', '__return_false');
+        }
+    }
+
+    /**
+     * Register admin pages.
+     */
+    public function registerAdminPages(): void
+    {
+        // Only show to users with manage_options capability.
+        if (!current_user_can('manage_options')) {
+            return;
+        }
+
+        // Register License page.
+        \BuddyBoss\Core\Admin\Mothership\BB_License_Page::register();
+
+        // Register Addons page.
+        \BuddyBoss\Core\Admin\Mothership\BB_Addons_Page::register();
+    }
+
+    /**
+     * Handle license status changes.
+     *
+     * @param bool  $isActive License active status.
+     * @param mixed $response API response.
+     */
+    public function handleLicenseStatusChange(bool $isActive, $response): void
+    {
+        if (!$isActive) {
+            // License is no longer active.
+            $this->pluginConnector->updateLicenseActivationStatus(false);
+
+            // Clear cached data.
+            delete_transient($this->pluginConnector->pluginId . '-mosh-products');
+            delete_transient($this->pluginConnector->pluginId . '-mosh-addons-update-check');
+
+            // Log the deactivation.
+            error_log('BuddyBoss license deactivated: ' . print_r($response, true));
+        } else {
+            // License is active - ensure status is updated.
+            $this->pluginConnector->updateLicenseActivationStatus(true);
+        }
+    }
+
+    /**
+     * Get the container.
+     *
+     * @return Container The container instance.
+     */
+    public function getContainer(): Container
+    {
+        return $this->container;
+    }
 }

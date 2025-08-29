@@ -21,11 +21,38 @@ function buddyboss_init_mothership() {
 		return;
 	}
 
-	// Include the main loader class.
-	require_once __DIR__ . '/class-bb-mothership-loader.php';
+	// Include GroundLevel framework files first.
+	require_once __DIR__ . '/ground-level/container/Container.php';
+	require_once __DIR__ . '/ground-level/container/Service.php';
+	require_once __DIR__ . '/ground-level/container/Concerns/HasStaticContainer.php';
+	require_once __DIR__ . '/ground-level/container/Contracts/StaticContainerAwareness.php';
+
+	// Include GroundLevel mothership framework files.
+	require_once __DIR__ . '/ground-level/mothership/AbstractPluginConnection.php';
+	require_once __DIR__ . '/ground-level/mothership/Service.php';
+	require_once __DIR__ . '/ground-level/mothership/Credentials.php';
+	require_once __DIR__ . '/ground-level/mothership/Api/Request.php';
+	require_once __DIR__ . '/ground-level/mothership/Api/Response.php';
+	require_once __DIR__ . '/ground-level/mothership/Api/Request/LicenseActivations.php';
+	require_once __DIR__ . '/ground-level/mothership/Api/Request/Products.php';
+	require_once __DIR__ . '/ground-level/mothership/Manager/LicenseManager.php';
+	require_once __DIR__ . '/ground-level/mothership/Manager/AddonsManager.php';
+	require_once __DIR__ . '/ground-level/mothership/Manager/AddonInstallSkin.php';
+
+	// Include BuddyBoss specific files.
+	require_once __DIR__ . '/class-bb-plugin-connector.php';
+	require_once __DIR__ . '/class-bb-license-page.php';
+	require_once __DIR__ . '/class-bb-addons-page.php';
+
+	if ( ! class_exists( 'BuddyBoss\Core\Admin\Mothership\BB_Mothership_Loader' ) ) {
+		// Include the main loader class.
+		require_once __DIR__ . '/class-bb-mothership-loader.php';
+	}
+
+
 
 	// Initialize the mothership functionality.
-	BuddyBoss\Core\Admin\Mothership\BB_Mothership_Loader::init();
+	new BuddyBoss\Core\Admin\Mothership\BB_Mothership_Loader();
 }
 
 // Hook into WordPress admin_init to initialize mothership.

@@ -1,0 +1,48 @@
+/**
+ * BuddyBoss Mothership Add-ons Styles
+ */
+
+.mosh-addons-header {
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #ddd;
+}
+
+.mosh-addons-header h3 {
+    margin: 0 0 10px 0;
+    display: inline-block;
+}
+
+.mosh-addons-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.mosh-addon-item {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 20px;
+    background: #fff;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.mosh-addon-item h3 {
+    margin: 0 0 10px 0;
+    color: #333;
+}
+
+.mosh-addon-item p {
+    margin: 0 0 15px 0;
+    color: #666;
+    line-height: 1.5;
+}
+
+.mosh-addon-item .button {
+    margin-right: 10px;
+}
+
+.mosh-addon-item .button:last-child {
+    margin-right: 0;
+}

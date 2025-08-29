@@ -1,74 +1,69 @@
 <?php
-/**
- * BuddyBoss Addons Page
- *
- * @package BuddyBoss
- * @since 1.0.0
- */
+
+declare(strict_types=1);
 
 namespace BuddyBoss\Core\Admin\Mothership;
 
-// Exit if accessed directly.
-defined( 'ABSPATH' ) || exit;
-
-// Include required files.
-require_once __DIR__ . '/manager/class-bb-addons-manager.php';
-require_once __DIR__ . '/class-bb-plugin-connector.php';
-
-use BuddyBoss\Core\Admin\Mothership\Manager\BB_Addons_Manager;
+use GroundLevel\Mothership\Manager\AddonsManager;
+use GroundLevel\Container\Concerns\HasStaticContainer;
+use GroundLevel\Container\Contracts\StaticContainerAwareness;
 
 /**
- * Addons page class.
+ * This class registers and renders an admin page that displays a list of add-ons available for the License.
  */
-class BB_Addons_Page {
+class BB_Addons_Page implements StaticContainerAwareness
+{
+    use HasStaticContainer;
 
-	/**
-	 * Page capability.
-	 */
-	const CAPABILITY = 'manage_options';
+    /**
+     * The capability required to view the page.
+     */
+    public const CAPABILITY = 'manage_options';
 
-	/**
-	 * Page slug.
-	 */
-	const SLUG = 'buddyboss-addons';
+    /**
+     * The page slug.
+     */
+    public const SLUG = 'buddyboss-addons';
 
-	/**
-	 * Get page title.
-	 *
-	 * @return string Page title.
-	 */
-	public static function get_page_title() {
-		return esc_html__( 'BuddyBoss Add-ons', 'buddyboss' );
-	}
+    /**
+     * Retrieves the page title.
+     *
+     * @return string
+     */
+    public static function pageTitle(): string
+    {
+        return esc_html__('BuddyBoss Add-ons', 'buddyboss');
+    }
 
-	/**
-	 * Register the admin page.
-	 *
-	 * @return string|false The resulting page's hook_suffix, or false if user lacks capability.
-	 */
-	public static function register() {
-		return add_submenu_page(
-			'buddyboss-platform',
-			self::get_page_title(),
-			esc_html__( 'Add-ons', 'buddyboss' ),
-			self::CAPABILITY,
-			self::SLUG,
-			array( __CLASS__, 'render' )
-		);
-	}
+    /**
+     * Registers the page.
+     *
+     * @return mixed The resulting page's hook suffix or false if the user does not have the capability set in the constant self::CAPABILITY.
+     */
+    public static function register()
+    {
+        return add_submenu_page(
+            'buddyboss-platform',
+            self::pageTitle(),
+            esc_html__('Add-ons', 'buddyboss'),
+            self::CAPABILITY,
+            self::SLUG,
+            [
+                self::class,
+                'render',
+            ],
+        );
+    }
 
-	/**
-	 * Render the page.
-	 */
-	public static function render() {
-		?>
-		<div class="wrap">
-			<h1><?php echo esc_html( self::get_page_title() ); ?></h1>
-			
-			<div class="buddyboss-addons-wrap">
-				<?php echo BB_Addons_Manager::generate_addons_html(); ?>
-			</div>
-		</div>
-		<?php
-	}
+    /**
+     * Renders the page.
+     */
+    public static function render(): void
+    {
+        echo '<div class="wrap">';
+            echo '<h2>' . self::pageTitle() . '</h2>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+            echo '<br>';
+            echo AddonsManager::generateAddonsHtml(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+        echo '</div>';
+    }
 }
