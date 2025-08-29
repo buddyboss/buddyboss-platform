@@ -356,9 +356,16 @@ window.bp = window.bp || {};
 					activityModalBody.on( 'scroll', this.throttledAutoPlayGifVideos.bind( this ) );
 				}
 
+				// Add scroll event listener for media modal activity item
+				var mediaModalActivityItem = $( '.bb-media-model-container .activity-list .activity-item' );
+				if ( mediaModalActivityItem.length ) {
+					mediaModalActivityItem.on( 'scroll', this.throttledAutoPlayGifVideos.bind( this ) );
+				}
+
 				// Add document-level scroll event delegation as fallback
 				$( document ).on( 'scroll', '#bp-message-thread-list', this.throttledAutoPlayGifVideos.bind( this ) );
 				$( document ).on( 'scroll', '.bb-modal-activity-body', this.throttledAutoPlayGifVideos.bind( this ) );
+				$( document ).on( 'scroll', '.bb-media-model-container .activity-list .activity-item', this.throttledAutoPlayGifVideos.bind( this ) );
 
 				// Listen for activity modal opening to ensure scroll listeners are attached
 				$( document ).on( 'activityModalOpened', this.setupActivityModalGifAutoplay.bind( this ) );
@@ -373,6 +380,11 @@ window.bp = window.bp || {};
 					var activityModalBody = document.querySelector( '.bb-modal-activity-body' );
 					if ( activityModalBody ) {
 						activityModalBody.addEventListener( 'scroll', bp.Nouveau.Media.throttledAutoPlayGifVideos.bind( bp.Nouveau.Media ), false );
+					}
+					
+					var mediaModalActivityItem = document.querySelector( '.bb-media-model-container .activity-list .activity-item' );
+					if ( mediaModalActivityItem ) {
+						mediaModalActivityItem.addEventListener( 'scroll', bp.Nouveau.Media.throttledAutoPlayGifVideos.bind( bp.Nouveau.Media ), false );
 					}
 				}, 1000 );
 
@@ -6359,6 +6371,11 @@ window.bp = window.bp || {};
 				$scrollableContainer = $element.closest( '.bb-modal-activity-body' );
 			}
 			
+			// Check for media modal activity item
+			if ( !$scrollableContainer.length ) {
+				$scrollableContainer = $element.closest( '.bb-media-model-container .activity-list .activity-item' );
+			}
+			
 			if ( $scrollableContainer.length ) {
 				// Check if element is visible within the scrollable container
 				var containerRect = $scrollableContainer[0].getBoundingClientRect();
@@ -6450,6 +6467,49 @@ window.bp = window.bp || {};
 					}
 				}
 			}, 500 );
+		},
+
+		/**
+		 * Setup GIF autoplay for media modal when it's opened
+		 */
+		setupMediaModalGifAutoplay: function() {
+			var self = this;
+			var retryCount = 0;
+			var maxRetries = 10;
+			var setupCompleted = false;
+			
+			function attemptSetup() {
+				if ( setupCompleted ) {
+					return;
+				}
+				
+				var mediaModalActivityItem = document.querySelector( '.bb-media-model-container .activity-list .activity-item' );
+				
+				if ( mediaModalActivityItem ) {
+					setupCompleted = true;
+					try {
+						// Remove existing listener to avoid duplicates
+						mediaModalActivityItem.removeEventListener( 'scroll', bp.Nouveau.Media.throttledAutoPlayGifVideos.bind( bp.Nouveau.Media ) );
+						// Add scroll event listener
+						mediaModalActivityItem.addEventListener( 'scroll', bp.Nouveau.Media.throttledAutoPlayGifVideos.bind( bp.Nouveau.Media ), false );
+						
+						// Trigger initial check for GIFs in the modal
+						if ( typeof bp.Nouveau.Media.autoPlayGifVideos === 'function' ) {
+							bp.Nouveau.Media.autoPlayGifVideos();
+						}
+						
+					} catch ( error ) {
+						console.debug( 'Error setting up media modal GIF autoplay:', error );
+					}
+				} else if ( retryCount < maxRetries ) {
+					// Retry after a short delay
+					retryCount++;
+					setTimeout( attemptSetup, 200 );
+				}
+			}
+			
+			// Start the setup process
+			setTimeout( attemptSetup, 100 );
 		},
 
 		/**
@@ -6867,11 +6927,23 @@ window.bp = window.bp || {};
 			if( currentVideo ) {
 				currentVideo.pause();
 			}
-			$( '.bb-media-model-wrapper.video' ).hide();
-			$( '.bb-media-model-wrapper.media' ).show();
+							$( '.bb-media-model-wrapper.video' ).hide();
+				$( '.bb-media-model-wrapper.media' ).show();
+				
+				// Setup GIF autoplay for the newly shown media modal
+				if ( typeof bp.Nouveau.Media.setupMediaModalGifAutoplay === 'function' ) {
+					bp.Nouveau.Media.setupMediaModalGifAutoplay();
+				}
 			self.is_open_media = true;
 
 			self.bodySelector.addClass( 'media-modal-open' );
+
+			// Trigger GIF autoplay check when media modal is opened
+			setTimeout( function() {
+				if ( typeof bp.Nouveau.Media !== 'undefined' && typeof bp.Nouveau.Media.autoPlayGifVideos === 'function' ) {
+					bp.Nouveau.Media.autoPlayGifVideos();
+				}
+			}, 500 );
 
 			//document.addEventListener( 'keyup', self.checkPressedKey.bind( self ) );
 		},
@@ -6982,6 +7054,14 @@ window.bp = window.bp || {};
 			self.is_open_document = true;
 
 			self.bodySelector.addClass( 'document-modal-open' );
+			
+			// Setup GIF autoplay for the newly shown document modal
+			setTimeout( function() {
+				if ( typeof bp.Nouveau.Media !== 'undefined' && typeof bp.Nouveau.Media.setupMediaModalGifAutoplay === 'function' ) {
+					bp.Nouveau.Media.setupMediaModalGifAutoplay();
+				}
+			}, 500 );
+			
 			//document.addEventListener( 'keyup', self.checkPressedKeyDocuments.bind( self ) );
 		},
 
@@ -7410,6 +7490,13 @@ window.bp = window.bp || {};
 				self.current_media = self.medias[ self.current_index ];
 				self.showMedia();
 				self.getMediasDescription();
+				
+				// Trigger GIF autoplay check when navigating to next media
+				setTimeout( function() {
+					if ( typeof bp.Nouveau.Media !== 'undefined' && typeof bp.Nouveau.Media.autoPlayGifVideos === 'function' ) {
+						bp.Nouveau.Media.autoPlayGifVideos();
+					}
+				}, 500 );
 			} else {
 				self.nextLink.hide();
 			}
@@ -7425,6 +7512,13 @@ window.bp = window.bp || {};
 				self.current_media = self.medias[ self.current_index ];
 				self.showMedia();
 				self.getMediasDescription();
+				
+				// Trigger GIF autoplay check when navigating to previous media
+				setTimeout( function() {
+					if ( typeof bp.Nouveau.Media !== 'undefined' && typeof bp.Nouveau.Media.autoPlayGifVideos === 'function' ) {
+						bp.Nouveau.Media.autoPlayGifVideos();
+					}
+				}, 500 );
 			} else {
 				self.previousLink.hide();
 			}
