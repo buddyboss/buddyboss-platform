@@ -711,7 +711,7 @@ function bb_modify_topics_query_for_sticky( $clauses, $wp_query ) {
 		// More specific and safer regex pattern.
 		$post_parent_value = (int) $wp_query->query_vars['post_parent'];
 
-		// Match the post_parent related condition that will be added with OR condition.
+		// Match the exact post_parent condition pattern to replace it with OR logic.
 		$pattern = '/\b' . preg_quote( $wpdb->posts . '.post_parent', '/' ) . '\s*=\s*' . $post_parent_value . '\b/';
 
 		// Build the replacement with proper escaping.
@@ -720,7 +720,7 @@ function bb_modify_topics_query_for_sticky( $clauses, $wp_query ) {
 			$wpdb->posts,
 			$post_parent_value,
 			$wpdb->posts,
-			$sticky_ids_csv,
+			$sticky_ids_csv
 		);
 
 		$clauses['where'] = preg_replace(
