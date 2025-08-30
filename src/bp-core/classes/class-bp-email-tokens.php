@@ -2088,15 +2088,27 @@ class BP_Email_Tokens {
 							<td>
 								<table cellspacing="0" cellpadding="0" border="0" width="100%" style="background: <?php echo esc_attr( $settings['quote_bg'] ); ?>; border: 1px solid <?php echo esc_attr( $settings['body_border_color'] ); ?>; border-radius: 4px; border-collapse: separate !important">
 									<tbody>
-									<tr>
-										<td align="center" style="padding: 0;">
-											<img src="https://www.buddyboss.com/wp-content/uploads/2022/05/Img8-8-600x521.png" 
-												 alt="Featured Image" 
-												 width="100%" 
-												 height="200" 
-												 style="width: 100%; height: 200px; object-fit: cover; object-position: center; display: block; border: 0; margin: -1px -1px -1px 0; padding: 0;" />
-										</td>
-									</tr>
+									<?php
+									if (
+										function_exists( 'bb_pro_activity_post_feature_image_instance' ) &&
+										method_exists( bb_pro_activity_post_feature_image_instance(), 'bb_get_feature_image_data' )
+									) {
+										$image_url = bb_pro_activity_post_feature_image_instance()->bb_get_feature_image_data( $activity->id );
+										if ( ! empty( $image_url ) ) {
+											?>
+											<tr>
+												<td align="center" style="padding: 0;">
+													<img src="<?php echo esc_url( $image_url['url'] ); ?>"
+													     alt="<?php echo esc_attr( $image_url['title'] ); ?>"
+													     width="100%"
+													     height="200"
+													     style="width: 100%; height: 200px; object-fit: cover; object-position: <?php echo esc_attr( $image_url['position'] ); ?>; display: block; border: 0; margin: -1px -1px -1px 0; padding: 0;" />
+												</td>
+											</tr>
+											<?php
+										}
+									}
+									?>
 									<tr>
 										<td height="15px" style="font-size: 15px; line-height: 15px;">&nbsp;</td>
 									</tr>
@@ -2360,15 +2372,27 @@ class BP_Email_Tokens {
 							<td>
 								<table cellspacing="0" cellpadding="0" border="0" width="100%" style="background: <?php echo esc_attr( $settings['quote_bg'] ); ?>; border: 1px solid <?php echo esc_attr( $settings['body_border_color'] ); ?>; border-radius: 4px; border-collapse: separate !important">
 									<tbody>
-									<tr>
-										<td align="center" style="padding: 0;">
-											<img src="https://www.buddyboss.com/wp-content/uploads/2022/05/Img8-8-600x521.png" 
-												 alt="Featured Image" 
-												 width="100%" 
-												 height="200" 
-												 style="width: 100%; height: 200px; object-fit: cover; object-position: center; display: block; border: 0; margin: -1px -1px -1px 0; padding: 0;" />
-										</td>
-									</tr>
+									<?php
+									if (
+										function_exists( 'bb_pro_activity_post_feature_image_instance' ) &&
+										method_exists( bb_pro_activity_post_feature_image_instance(), 'bb_get_feature_image_data' )
+									) {
+										$image_url = bb_pro_activity_post_feature_image_instance()->bb_get_feature_image_data( $activity->id );
+										if ( ! empty( $image_url ) ) {
+											?>
+											<tr>
+												<td align="center" style="padding: 0;">
+													<img src="<?php echo esc_url( $image_url['url'] ); ?>"
+													     alt="<?php echo esc_attr( $image_url['title'] ); ?>"
+													     width="100%"
+													     height="200"
+													     style="width: 100%; height: 200px; object-fit: cover; object-position: <?php echo esc_attr( $image_url['position'] ); ?>; display: block; border: 0; margin: -1px -1px -1px 0; padding: 0;" />
+												</td>
+											</tr>
+											<?php
+										}
+									}
+									?>
 									<tr>
 										<td height="15px" style="font-size: 15px; line-height: 15px;">&nbsp;</td>
 									</tr>
