@@ -7832,15 +7832,46 @@ function bb_activity_strip_post_title( $post_title = '' ) {
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param string $post_title The post title to validate.
+ * @param string                    $post_title      The post title to validate.
+ * @param BP_Activity_Activity|null $activity_object The activity object.
  *
  * @return array Validation result with 'valid' and 'message' keys.
  */
-function bb_validate_activity_post_title( $post_title ) {
+function bb_validate_activity_post_title( $post_title, ?BP_Activity_Activity $activity_object = null ) {
 	$result = array(
 		'valid'   => true,
 		'message' => '',
 	);
+
+	$non_valid_component = isset( $activity_object->component ) && ! in_array( $activity_object->component, array( 'groups', 'activity' ), true );
+
+	/**
+	 * Filter to prevent validation of activity post title based on activity component.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param bool   $non_valid_component Whether to skip validation of activity post title for the component.
+	 * @param object $activity_object     The activity object.
+	 */
+	$non_valid_component = apply_filters( 'bb_activity_post_title_component_skip', $non_valid_component, $activity_object );
+	if ( $non_valid_component ) {
+		return $result;
+	}
+
+	$non_valid_type = isset( $activity_object->type ) && 'activity_update' !== $activity_object->type;
+
+	/**
+	 * Filter to prevent validation of activity post title based on a activity type.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param bool   $non_valid_type  Whether to skip validation of activity post title for the type.
+	 * @param object $activity_object The activity object.
+	 */
+	$non_valid_type = apply_filters( 'bb_activity_post_title_type_skip', $non_valid_type, $activity_object );
+	if ( $non_valid_type ) {
+		return $result;
+	}
 
 	$post_title = sanitize_text_field( wp_unslash( $post_title ) );
 

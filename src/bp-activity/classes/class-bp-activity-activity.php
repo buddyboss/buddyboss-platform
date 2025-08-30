@@ -327,7 +327,7 @@ class BP_Activity_Activity {
 			}
 		}
 
-		$validate_post_title = bb_validate_activity_post_title( $this->post_title );
+		$validate_post_title = bb_validate_activity_post_title( $this->post_title, $this );
 		if ( ! $validate_post_title['valid'] ) {
 			$this->errors->add( 'bb_activity_invalid_post_title', $validate_post_title['message'] );
 			return $this->errors;
