@@ -1768,6 +1768,7 @@ function groups_post_update( $args = '' ) {
 		$args,
 		array(
 			'id'            => false,
+			'post_title'    => false,
 			'content'       => false,
 			'user_id'       => bp_loggedin_user_id(),
 			'group_id'      => 0,
@@ -1819,11 +1820,27 @@ function groups_post_update( $args = '' ) {
 	 */
 	$content_filtered = apply_filters( 'groups_activity_new_update_content', $activity_content );
 
+	/**
+	 * Filters the post title for the new group activity update.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $post_title The post title of the update.
+	 */
+	$post_title_filtered = apply_filters( 'bb_groups_activity_new_update_post_title', $post_title );
+
+	$validate_post_title = function_exists( 'bb_validate_activity_post_title' ) ? bb_validate_activity_post_title( $post_title_filtered ) : array( 'valid' => true );
+	if ( ! $validate_post_title['valid'] ) {
+		return new WP_Error( 'bb_activity_invalid_post_title', $validate_post_title['message'] );
+	}
+	$post_title_filtered = function_exists( 'bb_activity_strip_post_title' ) ? bb_activity_strip_post_title( $post_title_filtered ) : $post_title_filtered;
+
 	$activity_id = groups_record_activity(
 		array(
 			'id'            => $id,
 			'user_id'       => $user_id,
 			'action'        => $action,
+			'post_title'    => $post_title_filtered,
 			'content'       => $content_filtered,
 			'type'          => 'activity_update',
 			'item_id'       => $group_id,
