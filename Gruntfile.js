@@ -17,7 +17,11 @@ module.exports = function (grunt) {
 			'!**/*-rtl.css',
 			// '!bp-forums/**/*.css',
 			'!**/endpoints/**/*.css',
-			'!**/js/admin/readylaunch/styles/**/*.css'
+			'!**/js/admin/readylaunch/styles/**/*.css',
+			'!bp-templates/bp-nouveau/css/cropper.css',
+			'!bp-templates/bp-nouveau/css/cropper-rtl.css',
+			'!bp-templates/bp-nouveau/css/cropper.min.css',
+			'!bp-templates/bp-nouveau/css/cropper-rtl.min.css'
 		],
 
 		BP_JS = [
@@ -26,7 +30,8 @@ module.exports = function (grunt) {
 			// '!bp-forums/**/*.js',
 			'!**/vendor/**/*.js',
 			'!**/endpoints/**/*.js',
-			'!bp-templates/bp-nouveau/readylaunch/js/cropper.js'
+			'!bp-templates/bp-nouveau/js/cropper.js',
+			'!bp-templates/bp-nouveau/js/cropper.min.js'
 		],
 
 		BP_EXCLUDED_MISC = ['!js/**'],

@@ -2932,6 +2932,18 @@ function bp_get_activity_css_class() {
 		$class .= ' bb-muted';
 	}
 
+	// Check if activity has featured image.
+	if (
+		function_exists( 'bb_pro_activity_post_feature_image_instance' ) &&
+		bb_pro_activity_post_feature_image_instance() &&
+		method_exists( bb_pro_activity_post_feature_image_instance(), 'bb_get_feature_image_data' )
+	) {
+		$feature_image_data = bb_pro_activity_post_feature_image_instance()->bb_get_feature_image_data( bp_get_activity_id() );
+		if ( ! empty( $feature_image_data ) ) {
+			$class .= ' has-featured-image';
+		}
+	}
+
 	if ( 'groups' === $activities_template->activity->component ) {
 		$class .= ' group-' . $activities_template->activity->item_id;
 	}
