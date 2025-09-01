@@ -19053,6 +19053,11 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   line-height: 22px;
 }
 
+.sent-invites .bb-rl-wrap-invites table#member-invites-table td:not(.bp-pagination) [class*="bb-icons-"] {
+  font-weight: 400;
+  font-size: 18px;
+}
+
 .sent-invites .bb-rl-wrap-invites table#member-invites-table td:not(.bp-pagination) .revoked-access {
   display: inline-flex;
   align-items: center;
