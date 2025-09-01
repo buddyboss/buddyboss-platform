@@ -71,10 +71,13 @@ class LicenseManager implements StaticContainerAwareness
      */
     public static function controller(): void
     {
-        $pluginId = self::getContainer()->get(MothershipService::CONNECTION_PLUGIN_SERVICE_ID)->pluginId;
 
-        if (isset($_POST[$pluginId . '_license_button'])) {
-            if ($_POST[$pluginId . '_license_button'] === 'activate') {
+		if (isset($_POST['buddyboss_platform_license_button'])) {
+			$pluginConnector = self::getContainer()->get(MothershipService::CONNECTION_PLUGIN_SERVICE_ID);
+			$_POST['license_key'] = self::setupDynamicPluginId($_POST['license_key'], $pluginConnector);
+			$pluginId = $pluginConnector->pluginId;
+
+            if ($_POST['buddyboss_platform_license_button'] === 'activate') {
                 try {
                     self::activateLicense($_POST['license_key'], $_POST['activation_domain']);
                     printf(
@@ -87,7 +90,7 @@ class LicenseManager implements StaticContainerAwareness
                         esc_html($e->getMessage())
                     );
                 }
-            } elseif ($_POST[$pluginId . '_license_button'] === 'deactivate') {
+            } elseif ($_POST['buddyboss_platform_license_button'] === 'deactivate') {
                 try {
                     self::deactivateLicense($_POST['license_key'], $_POST['activation_domain']);
                     printf(
@@ -144,7 +147,7 @@ class LicenseManager implements StaticContainerAwareness
                     value="<?php echo esc_attr(Credentials::getActivationDomain()); ?>"
                 >
                 <?php wp_nonce_field('mothership_activate_license', '_wpnonce'); ?>
-                <input type="hidden" name="<?php echo esc_attr($pluginId); ?>_license_button" value="activate">
+                <input type="hidden" name="buddyboss_platform_license_button" value="activate">
                 <input type="submit"
                     value="<?php esc_html_e('Activate License', 'caseproof-mothership'); ?>"
                     class="button button-primary <?php echo esc_attr($pluginId); ?>-button-activate"
@@ -181,7 +184,7 @@ class LicenseManager implements StaticContainerAwareness
                     value="<?php echo esc_attr(Credentials::getActivationDomain()); ?>"
                 >
                 <?php wp_nonce_field('mothership_deactivate_license', '_wpnonce'); ?>
-                <input type="hidden" name="<?php echo esc_attr($pluginId); ?>_license_button" value="deactivate">
+                <input type="hidden" name="buddyboss_platform_license_button" value="deactivate">
                 <input type="submit" value="<?php esc_html_e('Deactivate License', 'caseproof-mothership'); ?>" class="button button-secondary <?php echo esc_attr($pluginId); ?>-button-deactivate">
             </div>
         </form>
@@ -208,13 +211,18 @@ class LicenseManager implements StaticContainerAwareness
             throw new \Exception(esc_html__('Invalid nonce', 'caseproof-mothership'));
         }
 
+		error_log( print_r( $licenseKey, true ) );
+
+		$pluginConnector = self::getContainer()->get(MothershipService::CONNECTION_PLUGIN_SERVICE_ID);
+		$licenseKey = self::setupDynamicPluginId($licenseKey, $pluginConnector);
+
         // Translators: %s is the response error message.
         $errorHtml = esc_html__('License activation failed: %s', 'caseproof-mothership');
         try {
-            $product  = self::getContainer()
-                ->get(MothershipService::CONNECTION_PLUGIN_SERVICE_ID)
-                ->pluginId;
+            $product  = $pluginConnector->pluginId;
             $response = LicenseActivations::activate($product, $licenseKey, $domain);
+			error_log( print_r( $product, true ) );
+			error_log( print_r( $response, true ) );
         } catch (\Exception $e) {
             throw new \Exception(sprintf(
                 $errorHtml,
@@ -232,12 +240,10 @@ class LicenseManager implements StaticContainerAwareness
         if ($response instanceof Response && !$response->isError()) {
             try {
                 Credentials::storeLicenseKey($licenseKey);
-                self::getContainer()
-                    ->get(MothershipService::CONNECTION_PLUGIN_SERVICE_ID)
-                    ->updateLicenseActivationStatus(true);
-                
+				$pluginConnector->updateLicenseActivationStatus(true);
+
                 // Clear add-ons cache to force refresh
-                $pluginId = self::getContainer()->get(MothershipService::CONNECTION_PLUGIN_SERVICE_ID)->pluginId;
+                $pluginId = $pluginConnector->pluginId;
                 delete_transient($pluginId . '-mosh-products');
                 delete_transient($pluginId . '-mosh-addons-update-check');
             } catch (\Exception $e) {
@@ -258,7 +264,8 @@ class LicenseManager implements StaticContainerAwareness
      */
     public static function deactivateLicense(string $licenseKey, string $domain): void
     {
-        $pluginId = self::getContainer()->get(MothershipService::CONNECTION_PLUGIN_SERVICE_ID)->pluginId;
+		$pluginConnector = self::getContainer()->get(MothershipService::CONNECTION_PLUGIN_SERVICE_ID);
+        $pluginId = $pluginConnector->pluginId;
 
         // Check if the user has the necessary capabilities.
         if (!current_user_can('manage_options')) {
@@ -273,7 +280,9 @@ class LicenseManager implements StaticContainerAwareness
         try {
             $response = LicenseActivations::deactivate($licenseKey, $domain);
             Credentials::storeLicenseKey('');
-        } catch (\Exception $e) {
+			$pluginConnector->clearDynamicPluginId();
+
+		} catch (\Exception $e) {
             throw new \Exception(sprintf(
                 '%1$s : %2$s',
                 esc_html__(
@@ -286,8 +295,18 @@ class LicenseManager implements StaticContainerAwareness
 
         // Delete the add-ons transient.
         delete_transient($pluginId . '-mosh-products');
-        self::getContainer()
-            ->get(MothershipService::CONNECTION_PLUGIN_SERVICE_ID)
-            ->updateLicenseActivationStatus(false);
+		$pluginConnector->updateLicenseActivationStatus(false);
     }
+
+	private static function setupDynamicPluginId( $licenseKey, $pluginConnector ) {
+		$keyParts = explode( ':', $licenseKey );
+		if ( count( $keyParts ) === 2 && preg_match( '/^bb-/', $keyParts[1] ) ) {
+			$plugin_id = $keyParts[1];
+			update_option( 'buddyboss_web_plugin_id', $plugin_id );
+			$pluginConnector->setDynamicPluginId( $plugin_id );
+			$licenseKey = $keyParts[0];
+		}
+
+		return $licenseKey;
+	}
 }

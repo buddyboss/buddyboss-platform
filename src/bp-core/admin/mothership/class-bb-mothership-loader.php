@@ -154,4 +154,14 @@ class BB_Mothership_Loader
     {
         return $this->container;
     }
+
+    /**
+     * Refresh the plugin connector with updated plugin ID.
+     * This should be called after the plugin ID changes.
+     */
+    public function refreshPluginConnector(): void
+    {
+        // The plugin connector will automatically use the updated plugin ID
+        // from the database option on the next request
+    }
 }

@@ -19,9 +19,50 @@ class BB_Plugin_Connector extends AbstractPluginConnection
      */
     public function __construct()
     {
-        $this->pluginId     = 'bb-lifetime-deal-10-sites';
+        $this->pluginId     = $this->getDynamicPluginId();
         $this->pluginPrefix = 'buddyboss';
 	}
+
+    /**
+     * Get the dynamic plugin ID from stored option or default.
+     *
+     * @return string The plugin ID.
+     */
+    public function getDynamicPluginId(): string
+    {
+        $storedPluginId = get_option('buddyboss_dynamic_plugin_id', '');
+        return !empty($storedPluginId) ? $storedPluginId : 'buddyboss-platform';
+    }
+
+    /**
+     * Set the dynamic plugin ID.
+     *
+     * @param string $pluginId The plugin ID to store.
+     */
+    public function setDynamicPluginId(string $pluginId): void
+    {
+        update_option('buddyboss_dynamic_plugin_id', $pluginId);
+        $this->pluginId = $pluginId;
+    }
+
+    /**
+     * Clear the dynamic plugin ID.
+     */
+    public function clearDynamicPluginId(): void
+    {
+        delete_option('buddyboss_dynamic_plugin_id');
+        $this->pluginId = 'buddyboss-platform';
+    }
+
+    /**
+     * Get the current plugin ID.
+     *
+     * @return string The current plugin ID.
+     */
+    public function getCurrentPluginId(): string
+    {
+        return $this->pluginId;
+    }
 
     /**
      * Gets the license activation status option.
@@ -30,7 +71,8 @@ class BB_Plugin_Connector extends AbstractPluginConnection
      */
     public function getLicenseActivationStatus(): bool
     {
-        return (bool) get_option('bb_lifetime_deal_10_sites_license_activation_status') ?? false;
+        $pluginId = $this->getCurrentPluginId();
+        return (bool) get_option($pluginId . '_license_activation_status') ?? false;
     }
 
     /**
@@ -40,7 +82,8 @@ class BB_Plugin_Connector extends AbstractPluginConnection
      */
     public function updateLicenseActivationStatus(bool $status): void
     {
-        update_option('bb_lifetime_deal_10_sites_license_activation_status', $status);
+        $pluginId = $this->getCurrentPluginId();
+        update_option($pluginId . '_license_activation_status', $status);
     }
 
     /**
@@ -50,7 +93,8 @@ class BB_Plugin_Connector extends AbstractPluginConnection
      */
     public function getLicenseKey(): string
     {
-        return (string)get_option('bb_lifetime_deal_10_sites_license_key') ?? '';
+        $pluginId = $this->getCurrentPluginId();
+        return (string)get_option($pluginId . '_license_key') ?? '';
     }
 
     /**
@@ -60,7 +104,8 @@ class BB_Plugin_Connector extends AbstractPluginConnection
      */
     public function updateLicenseKey(string $licenseKey): void
     {
-        update_option('bb_lifetime_deal_10_sites_license_key', $licenseKey);
+        $pluginId = $this->getCurrentPluginId();
+        update_option($pluginId . '_license_key', $licenseKey);
     }
 
     /**
@@ -81,14 +126,15 @@ class BB_Plugin_Connector extends AbstractPluginConnection
     public function getDebugInfo(): array
     {
         return [
-            'plugin_id' => $this->pluginId,
+            'plugin_id' => $this->getCurrentPluginId(),
             'plugin_prefix' => $this->pluginPrefix,
             'license_key' => $this->getLicenseKey(),
             'license_activated' => $this->getLicenseActivationStatus(),
             'domain' => $this->getDomain(),
-            'api_base_url' => defined(strtoupper($this->pluginId . '_MOTHERSHIP_API_BASE_URL')) 
-                ? constant(strtoupper($this->pluginId . '_MOTHERSHIP_API_BASE_URL'))
+            'api_base_url' => defined(strtoupper($this->getCurrentPluginId() . '_MOTHERSHIP_API_BASE_URL')) 
+                ? constant(strtoupper($this->getCurrentPluginId() . '_MOTHERSHIP_API_BASE_URL'))
                 : 'https://licenses.caseproof.com/api/v1/',
+            'dynamic_plugin_id_stored' => get_option('buddyboss_dynamic_plugin_id', ''),
         ];
     }
 }
