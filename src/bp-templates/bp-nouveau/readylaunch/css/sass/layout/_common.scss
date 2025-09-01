@@ -943,3 +943,41 @@ li.bb-rl-hideshow {
 		width: 1px;
 	}
 }
+
+/* Admin Bar Notification */
+#wpadminbar #wp-admin-bar-bp-notifications-default.ab-submenu {
+	width: 300px;
+	max-height: calc(90vh - 50px);
+	overflow: auto;
+
+	> li {
+		padding: 5px 0;
+
+		.ab-item {
+			display: flex;
+			gap: var(--bb-rl-space-200);
+			height: auto;
+
+			a {
+				height: auto;
+				padding: 0;
+				white-space: normal;
+				line-height: 1.4;
+			}
+		}
+	}
+
+	.notification-avatar {
+
+		img {
+			max-width: 36px;
+			max-height: 36px;
+			object-fit: cover;
+			margin-top: 4px;
+		}
+
+		> a > i {
+			display: none;
+		}
+	}
+}
