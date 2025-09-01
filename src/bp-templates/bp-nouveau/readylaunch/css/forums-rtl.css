@@ -2682,10 +2682,6 @@
   margin-right: 0;
 }
 
-.bb-rl-forums-pagination .bp-pagination-links span {
-  margin-bottom: var(--bb-rl-space-200);
-}
-
 .bbp-no-reply .bp-feedback {
   margin-top: var(--bb-rl-space-200);
 }
