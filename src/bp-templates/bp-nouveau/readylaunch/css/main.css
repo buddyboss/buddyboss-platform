@@ -10585,6 +10585,10 @@ input.bb-rl-zoom-slider::-moz-range-progress {
   color: var(--bb-rl-text-color);
 }
 
+.bb-rl-profile-widget .bb-rl-profile-widget-content.social .bb-rl-profile-widget-label {
+  display: none;
+}
+
 .widget_bp_profile_completion_widget .pc_detailed_progress {
   list-style: none;
   padding: 0;

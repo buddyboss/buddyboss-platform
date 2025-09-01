@@ -177,6 +177,13 @@
 		@include bb-rl-base-heading;
 		color: var(--bb-rl-text-color);
 	}
+
+	.bb-rl-profile-widget-content.social {
+
+		.bb-rl-profile-widget-label {
+			display: none;
+		}
+	}
 }
 
 .widget_bp_profile_completion_widget {
