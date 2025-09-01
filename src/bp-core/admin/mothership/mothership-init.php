@@ -22,7 +22,8 @@ function buddyboss_init_mothership() {
 	}
 
 	// The vendor autoloader should already be loaded from bp-loader.php
-	// All GroundLevel classes from vendor/caseproof are now available via autoloading
+	// Setup namespace aliases to allow using BuddyBossPlatform namespace consistently
+	require_once __DIR__ . '/autoload-aliases.php';
 
 	// Include BuddyBoss specific files.
 	require_once __DIR__ . '/class-bb-plugin-connector.php';
