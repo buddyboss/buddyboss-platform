@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace BuddyBoss\Core\Admin\Mothership;
 
-use GroundLevel\Mothership\AbstractPluginConnection;
+use BuddyBossPlatform\GroundLevel\Mothership\AbstractPluginConnection;
 
 /**
  * Plugin Connector class for BuddyBoss Platform.

@@ -4,13 +4,9 @@ declare(strict_types=1);
 
 namespace BuddyBoss\Core\Admin\Mothership;
 
-use GroundLevel\Container\Container;
-use GroundLevel\Mothership\Service as MothershipService;
-use GroundLevel\Mothership\Manager\LicenseManager;
-use GroundLevel\Mothership\Manager\AddonsManager;
-use GroundLevel\Mothership\Credentials;
-use GroundLevel\Mothership\Api\Request;
-use GroundLevel\Mothership\AbstractPluginConnection;
+use BuddyBossPlatform\GroundLevel\Container\Container;
+use BuddyBossPlatform\GroundLevel\Mothership\Service as MothershipService;
+use BuddyBossPlatform\GroundLevel\Mothership\Manager\AddonsManager;
 
 /**
  * Main loader class for BuddyBoss Mothership functionality.
@@ -89,8 +85,8 @@ class BB_Mothership_Loader
         // Register admin pages.
         add_action('admin_menu', [$this, 'registerAdminPages'], 99);
 
-        // Register license controller.
-        add_action('admin_init', [LicenseManager::class, 'controller'], 20);
+        // Register license controller using BuddyBoss custom manager.
+        add_action('admin_init', [\BuddyBoss\Core\Admin\Mothership\BB_License_Manager::class, 'controller'], 20);
 
         // Register addons functionality.
         AddonsManager::loadHooks();

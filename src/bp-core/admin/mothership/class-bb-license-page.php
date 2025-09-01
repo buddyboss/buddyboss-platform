@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace BuddyBoss\Core\Admin\Mothership;
 
-use GroundLevel\Mothership\Manager\LicenseManager;
-use GroundLevel\Container\Concerns\HasStaticContainer;
-use GroundLevel\Container\Contracts\StaticContainerAwareness;
+use BuddyBossPlatform\GroundLevel\Container\Concerns\HasStaticContainer;
+use BuddyBossPlatform\GroundLevel\Container\Contracts\StaticContainerAwareness;
 
 /**
  * This class registers and renders an admin page that displays a form for activating/deactivating the license.
@@ -60,7 +59,8 @@ class BB_License_Page implements StaticContainerAwareness
      */
     public static function render(): void
     {
-        $licenseManager = new LicenseManager();
+        // Use our custom BB_License_Manager instead of the base LicenseManager
+        $licenseManager = new BB_License_Manager();
         echo '<div class="wrap">';
             echo '<h2>' . self::pageTitle() . '</h2>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
             echo '<br>';

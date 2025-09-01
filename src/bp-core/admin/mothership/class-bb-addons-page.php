@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace BuddyBoss\Core\Admin\Mothership;
 
-use GroundLevel\Mothership\Manager\AddonsManager;
-use GroundLevel\Container\Concerns\HasStaticContainer;
-use GroundLevel\Container\Contracts\StaticContainerAwareness;
+use BuddyBossPlatform\GroundLevel\Mothership\Manager\AddonsManager;
+use BuddyBossPlatform\GroundLevel\Container\Concerns\HasStaticContainer;
+use BuddyBossPlatform\GroundLevel\Container\Contracts\StaticContainerAwareness;
 
 /**
  * This class registers and renders an admin page that displays a list of add-ons available for the License.
