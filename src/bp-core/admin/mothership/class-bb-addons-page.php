@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace BuddyBoss\Core\Admin\Mothership;
 
-use BuddyBossPlatform\GroundLevel\Mothership\Manager\AddonsManager;
 use BuddyBossPlatform\GroundLevel\Container\Concerns\HasStaticContainer;
 use BuddyBossPlatform\GroundLevel\Container\Contracts\StaticContainerAwareness;
 
@@ -63,7 +62,7 @@ class BB_Addons_Page implements StaticContainerAwareness
         echo '<div class="wrap">';
             echo '<h2>' . self::pageTitle() . '</h2>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
             echo '<br>';
-            echo AddonsManager::generateAddonsHtml(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+            echo BB_Addons_Manager::generateAddonsHtml(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
         echo '</div>';
     }
 }

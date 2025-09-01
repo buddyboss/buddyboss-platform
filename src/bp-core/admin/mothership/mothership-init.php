@@ -28,6 +28,7 @@ function buddyboss_init_mothership() {
 	// Include BuddyBoss specific files.
 	require_once __DIR__ . '/class-bb-plugin-connector.php';
 	require_once __DIR__ . '/class-bb-license-manager.php';
+	require_once __DIR__ . '/class-bb-addons-manager.php';
 	require_once __DIR__ . '/class-bb-license-page.php';
 	require_once __DIR__ . '/class-bb-addons-page.php';
 

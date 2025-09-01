@@ -44,6 +44,7 @@ function buddyboss_setup_mothership_aliases() {
 		'BuddyBossPlatform\GroundLevel\Mothership\Manager\LicenseManager' => 'GroundLevel\Mothership\Manager\LicenseManager',
 		'BuddyBossPlatform\GroundLevel\Mothership\Manager\AddonsManager' => 'GroundLevel\Mothership\Manager\AddonsManager',
 		'BuddyBossPlatform\GroundLevel\Mothership\Manager\AddonInstallSkin' => 'GroundLevel\Mothership\Manager\AddonInstallSkin',
+		'BuddyBossPlatform\GroundLevel\Mothership\ExtensionType' => 'GroundLevel\Mothership\ExtensionType',
 	);
 
 	// Create aliases from actual namespace to BuddyBossPlatform namespace.
