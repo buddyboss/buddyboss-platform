@@ -14236,6 +14236,18 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   overflow: hidden;
 }
 
+.bb-rl-modal-header-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-right: auto;
+}
+
+.bb-rl-activity-form--schedule .bb-rl-bb-model-header .bb-rl-modal-header-actions {
+  margin-right: 0;
+  order: 99;
+}
+
 @media screen and (max-width: 680px) {
   .bb-rl-activity-form.bb-rl-focus-in .bb-rl-whats-new-form-footer {
     flex-flow: column;
