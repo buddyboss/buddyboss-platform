@@ -1961,12 +1961,15 @@ body.messages .bb-rl-content-wrapper {
   width: 40px;
   height: 40px;
   border-radius: var(--bb-rl-radius-full);
-  margin: var(--bb-rl-space-100);
 }
 
 .user-item-wrp .user-avatar > a {
   position: absolute;
   inset: 0;
+}
+
+.user-item-wrp .user-avatar > a img {
+  margin: var(--bb-rl-space-100);
 }
 
 .user-item-wrp .user-name {
