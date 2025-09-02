@@ -12,37 +12,36 @@ use BuddyBossPlatform\GroundLevel\Mothership\Service as MothershipService;
  * Custom AddonsManager for BuddyBoss that extends the vendor's AddonsManager.
  * This class overrides the view loading to use our local view files.
  */
-class BB_Addons_Manager extends AddonsManager
-{
-    /**
-     * Generates and returns the HTML for the add-ons.
-     * Overrides parent method to use our local view file.
-     *
-     * @return string The HTML for the add-ons.
-     */
-    public static function generateAddonsHtml(): string
-    {
-        if (!self::getContainer()->get(MothershipService::CONNECTION_PLUGIN_SERVICE_ID)->getLicenseKey()) {
-            return '<div class="notice notice-error is-dismissible"><p>' . esc_html__('Please enter your license key to access add-ons.', 'buddyboss') . '</p></div>';
-        }
+class BB_Addons_Manager extends AddonsManager {
 
-        // Refresh the add-ons if the button is clicked.
-        if (isset($_POST['submit-button-mosh-refresh-addon'])) {
-            delete_transient(self::getContainer()->get(MothershipService::CONNECTION_PLUGIN_SERVICE_ID)->pluginId . self::CACHE_KEY_PRODUCTS);
-        }
+	/**
+	 * Generates and returns the HTML for the add-ons.
+	 * Overrides parent method to use our local view file.
+	 *
+	 * @return string The HTML for the add-ons.
+	 */
+	public static function generateAddonsHtml(): string {
+		if ( ! self::getContainer()->get( MothershipService::CONNECTION_PLUGIN_SERVICE_ID )->getLicenseKey() ) {
+			return '<div class="notice notice-error is-dismissible"><p>' . esc_html__( 'Please enter your license key to access add-ons.', 'buddyboss' ) . '</p></div>';
+		}
 
-        $addons = self::getAddons(true);
+		// Refresh the add-ons if the button is clicked.
+		if ( isset( $_POST['submit-button-mosh-refresh-addon'] ) ) {
+			delete_transient( self::getContainer()->get( MothershipService::CONNECTION_PLUGIN_SERVICE_ID )->pluginId . self::CACHE_KEY_PRODUCTS );
+		}
 
-        if ($addons instanceof Response && $addons->isError()) {
-            return sprintf('<div class=""><p>%s <b>%s</b></p></div>', esc_html__('There was an issue connecting with the API.', 'buddyboss'), $addons->error);
-        }
+		$addons = self::getAddons( true );
 
-        self::enqueueAssets();
+		if ( $addons instanceof Response && $addons->isError() ) {
+			return sprintf( '<div class=""><p>%s <b>%s</b></p></div>', esc_html__( 'There was an issue connecting with the API.', 'buddyboss' ), $addons->error );
+		}
 
-        ob_start();
-        $products = self::prepareProductsForDisplay($addons->products ?? []);
-        // Use our local view file instead of the vendor's
-        include_once __DIR__ . '/views/products.php';
-        return ob_get_clean();
-    }
+		self::enqueueAssets();
+
+		ob_start();
+		$products = self::prepareProductsForDisplay( $addons->products ?? array() );
+		// Use our local view file instead of the vendor's.
+		include_once __DIR__ . '/views/products.php';
+		return ob_get_clean();
+	}
 }

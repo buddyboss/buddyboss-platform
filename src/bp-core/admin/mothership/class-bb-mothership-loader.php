@@ -13,150 +13,142 @@ use BuddyBossPlatform\GroundLevel\Mothership\Service as MothershipService;
  * This class follows the GroundLevel framework patterns for service registration,
  * container awareness, and hook configuration.
  */
-class BB_Mothership_Loader
-{
-    /**
-     * Container for dependency injection.
-     *
-     * @var Container
-     */
-    private $container;
+class BB_Mothership_Loader {
 
-    /**
-     * Plugin connector instance.
-     *
-     * @var \BuddyBoss\Core\Admin\Mothership\BB_Plugin_Connector
-     */
-    private $pluginConnector;
+	/**
+	 * Container for dependency injection.
+	 *
+	 * @var Container
+	 */
+	private $container;
 
-    /**
-     * Constructor.
-     */
-    public function __construct()
-    {
-        $this->init();
-    }
+	/**
+	 * Plugin connector instance.
+	 *
+	 * @var \BuddyBoss\Core\Admin\Mothership\BB_Plugin_Connector
+	 */
+	private $pluginConnector;
 
-    /**
-     * Initialize the mothership functionality.
-     */
-    private function init(): void
-    {
-        // Create the container.
-        $this->container = new Container();
+	/**
+	 * Constructor.
+	 */
+	public function __construct() {
+		$this->init();
+	}
 
-        // Create the plugin connector.
-        $this->pluginConnector = new \BuddyBoss\Core\Admin\Mothership\BB_Plugin_Connector();
+	/**
+	 * Initialize the mothership functionality.
+	 */
+	private function init(): void {
+		// Create the container.
+		$this->container = new Container();
 
-        // Initialize the mothership service.
-        $this->initMothershipService();
+		// Create the plugin connector.
+		$this->pluginConnector = new \BuddyBoss\Core\Admin\Mothership\BB_Plugin_Connector();
 
-        // Set up hooks.
-        $this->setupHooks();
-    }
+		// Initialize the mothership service.
+		$this->initMothershipService();
 
-    /**
-     * Initialize the mothership service.
-     */
-    private function initMothershipService(): void
-    {
-        // Create the mothership service.
-        $mothershipService = new MothershipService($this->container, $this->pluginConnector);
+		// Set up hooks.
+		$this->setupHooks();
+	}
 
-        // Load the mothership service dependencies.
-        $mothershipService->load($this->container);
+	/**
+	 * Initialize the mothership service.
+	 */
+	private function initMothershipService(): void {
+		// Create the mothership service.
+		$mothershipService = new MothershipService( $this->container, $this->pluginConnector );
 
-        // Register the mothership service in the container.
-        $this->container->addService(
-            MothershipService::class,
-            function () use ($mothershipService) {
-                return $mothershipService;
-            },
-            true // Singleton
-        );
-    }
+		// Load the mothership service dependencies.
+		$mothershipService->load( $this->container );
 
-    /**
-     * Setup WordPress hooks.
-     */
-    private function setupHooks(): void
-    {
-        // Register admin pages.
-        add_action('admin_menu', [$this, 'registerAdminPages'], 99);
+		// Register the mothership service in the container.
+		$this->container->addService(
+			MothershipService::class,
+			function () use ( $mothershipService ) {
+				return $mothershipService;
+			},
+			true // Singleton
+		);
+	}
 
-        // Register license controller using BuddyBoss custom manager.
-        add_action('admin_init', [\BuddyBoss\Core\Admin\Mothership\BB_License_Manager::class, 'controller'], 20);
+	/**
+	 * Setup WordPress hooks.
+	 */
+	private function setupHooks(): void {
+		// Register admin pages.
+		add_action( 'admin_menu', array( $this, 'registerAdminPages' ), 99 );
 
-        // Register addons functionality using BuddyBoss custom manager.
-        BB_Addons_Manager::loadHooks();
+		// Register license controller using BuddyBoss custom manager.
+		add_action( 'admin_init', array( \BuddyBoss\Core\Admin\Mothership\BB_License_Manager::class, 'controller' ), 20 );
 
-        // Handle license status changes.
-        add_action($this->pluginConnector->pluginId . '_license_status_changed', [$this, 'handleLicenseStatusChange'], 10, 2);
+		// Register addons functionality using BuddyBoss custom manager.
+		BB_Addons_Manager::loadHooks();
 
-        // For local development - disable SSL verification if needed.
-        if (defined('BUDDYBOSS_DISABLE_SSL_VERIFY') && constant('BUDDYBOSS_DISABLE_SSL_VERIFY')) {
-            add_filter('https_ssl_verify', '__return_false');
-        }
-    }
+		// Handle license status changes.
+		add_action( $this->pluginConnector->pluginId . '_license_status_changed', array( $this, 'handleLicenseStatusChange' ), 10, 2 );
 
-    /**
-     * Register admin pages.
-     */
-    public function registerAdminPages(): void
-    {
-        // Only show to users with manage_options capability.
-        if (!current_user_can('manage_options')) {
-            return;
-        }
+		// For local development - disable SSL verification if needed.
+		if ( defined( 'BUDDYBOSS_DISABLE_SSL_VERIFY' ) && constant( 'BUDDYBOSS_DISABLE_SSL_VERIFY' ) ) {
+			add_filter( 'https_ssl_verify', '__return_false' );
+		}
+	}
 
-        // Register License page.
-        \BuddyBoss\Core\Admin\Mothership\BB_License_Page::register();
+	/**
+	 * Register admin pages.
+	 */
+	public function registerAdminPages(): void {
+		// Only show to users with manage_options capability.
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
 
-        // Register Addons page.
-        \BuddyBoss\Core\Admin\Mothership\BB_Addons_Page::register();
-    }
+		// Register License page.
+		\BuddyBoss\Core\Admin\Mothership\BB_License_Page::register();
 
-    /**
-     * Handle license status changes.
-     *
-     * @param bool  $isActive License active status.
-     * @param mixed $response API response.
-     */
-    public function handleLicenseStatusChange(bool $isActive, $response): void
-    {
-        if (!$isActive) {
-            // License is no longer active.
-            $this->pluginConnector->updateLicenseActivationStatus(false);
+		// Register Addons page.
+		\BuddyBoss\Core\Admin\Mothership\BB_Addons_Page::register();
+	}
 
-            // Clear cached data.
-            delete_transient($this->pluginConnector->pluginId . '-mosh-products');
-            delete_transient($this->pluginConnector->pluginId . '-mosh-addons-update-check');
+	/**
+	 * Handle license status changes.
+	 *
+	 * @param bool  $isActive License active status.
+	 * @param mixed $response API response.
+	 */
+	public function handleLicenseStatusChange( bool $isActive, $response ): void {
+		if ( ! $isActive ) {
+			// License is no longer active.
+			$this->pluginConnector->updateLicenseActivationStatus( false );
 
-            // Log the deactivation.
-            error_log('BuddyBoss license deactivated: ' . print_r($response, true));
-        } else {
-            // License is active - ensure status is updated.
-            $this->pluginConnector->updateLicenseActivationStatus(true);
-        }
-    }
+			// Clear cached data.
+			delete_transient( $this->pluginConnector->pluginId . '-mosh-products' );
+			delete_transient( $this->pluginConnector->pluginId . '-mosh-addons-update-check' );
 
-    /**
-     * Get the container.
-     *
-     * @return Container The container instance.
-     */
-    public function getContainer(): Container
-    {
-        return $this->container;
-    }
+			// Log the deactivation.
+			error_log( 'BuddyBoss license deactivated: ' . print_r( $response, true ) );
+		} else {
+			// License is active - ensure status is updated.
+			$this->pluginConnector->updateLicenseActivationStatus( true );
+		}
+	}
 
-    /**
-     * Refresh the plugin connector with updated plugin ID.
-     * This should be called after the plugin ID changes.
-     */
-    public function refreshPluginConnector(): void
-    {
-        // The plugin connector will automatically use the updated plugin ID
-        // from the database option on the next request
-    }
+	/**
+	 * Get the container.
+	 *
+	 * @return Container The container instance.
+	 */
+	public function getContainer(): Container {
+		return $this->container;
+	}
+
+	/**
+	 * Refresh the plugin connector with updated plugin ID.
+	 * This should be called after the plugin ID changes.
+	 */
+	public function refreshPluginConnector(): void {
+		// The plugin connector will automatically use the updated plugin ID
+		// from the database option on the next request.
+	}
 }
