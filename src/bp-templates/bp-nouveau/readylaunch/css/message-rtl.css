@@ -1218,6 +1218,12 @@ body.messages .bb-rl-content-wrapper {
   border-radius: var(--bb-rl-radius-md);
 }
 
+#bp-message-thread-list > li .bp-message-content-wrap iframe {
+  max-width: 460px;
+  border-radius: var(--bb-rl-radius-lg);
+  width: 100%;
+}
+
 #bp-message-thread-list > li .bb-activity-media-wrap {
   margin: var(--bb-rl-space-100) 0;
 }

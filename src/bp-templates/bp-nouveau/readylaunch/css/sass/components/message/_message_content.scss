@@ -431,6 +431,12 @@
 				margin-bottom: var(--bb-rl-space-200);
 				border-radius: var(--bb-rl-radius-md);
 			}
+
+			iframe {
+				max-width: 460px;
+				border-radius: var(--bb-rl-radius-lg);
+				width: 100%;
+			}
 		}
 
 		.bb-activity-media-wrap {
