@@ -10569,6 +10569,10 @@ input.bb-rl-zoom-slider::-moz-range-progress {
   font-size: 24px;
 }
 
+.bb-rl-member-social-links .bb-rl-social i.bb-icons-rl-flickr-logo:before, .bb-rl-member-social-links .bb-rl-social i.bb-icons-rl-meetup-logo:before, .bb-rl-member-social-links .bb-rl-social i.bb-icons-rl-meetup-logo:before, .bb-rl-member-social-links .bb-rl-social i.bb-icons-rl-quora-logo:before, .bb-rl-member-social-links .bb-rl-social i.bb-icons-rl-vk-logo:before {
+  content: "\e2e2";
+}
+
 .bb-rl-profile-widget .bb-rl-profile-widget-field {
   margin-bottom: var(--bb-rl-space-100);
 }
