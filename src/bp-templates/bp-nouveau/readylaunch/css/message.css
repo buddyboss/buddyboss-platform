@@ -1118,6 +1118,23 @@ body.messages .bb-rl-content-wrapper {
   display: flex;
 }
 
+#bp-message-thread-list > li .bp-single-message-wrap:has(.bb-messages-group-notices) {
+  width: 100%;
+}
+
+#bp-message-thread-list > li .bp-single-message-wrap .bb-messages-group-notices {
+  font-size: var(--bb-rl-font-size-sm);
+  color: var(--bb-rl-text-tertiary-color);
+  text-align: center;
+  display: block;
+  width: 100%;
+}
+
+#bp-message-thread-list > li .bp-single-message-wrap .bb-messages-group-notices strong {
+  display: inline-block;
+  font-weight: 500;
+}
+
 #bp-message-thread-list > li .bp-avatar-wrap {
   margin-right: var(--bb-rl-space-100);
   width: 40px;

@@ -331,6 +331,23 @@
 
 		.bp-single-message-wrap {
 			display: flex;
+
+			&:has(.bb-messages-group-notices) {
+				width: 100%;
+			}
+
+			.bb-messages-group-notices {
+				font-size: var(--bb-rl-font-size-sm);
+				color: var(--bb-rl-text-tertiary-color);
+				text-align: center;
+				display: block;
+				width: 100%;
+
+				strong {
+					display: inline-block;
+					font-weight: 500;
+				}
+			}
 		}
 
 		.bp-avatar-wrap {
