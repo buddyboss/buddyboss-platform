@@ -1174,13 +1174,27 @@ function bp_private_network_template_redirect() {
 	if ( ! $enable_private_network ) {
 		// Check for a valid JWT token in the request headers.
 		$headers = bb_get_all_headers();
+
+		// Handle case-insensitive header lookup been modified from the server.
+		// Different web servers and proxy configurations can modify HTTP header casing.
+		$preview_token = '';
+		foreach ( $headers as $key => $value ) {
+			if ( 'bb-preview-token' === strtolower( $key ) ) {
+				$preview_token = $value;
+				break;
+			}
+		}
+		
 		if (
-			! empty( $headers['bb-preview-token'] ) &&
-			bb_validate_jwt( $headers['bb-preview-token'] )
+			! empty( $preview_token ) &&
+			bb_validate_jwt( $preview_token )
 		) {
+			unset( $preview_token, $headers );
 			return; // Bypass restriction for internal sharing with a valid JWT token.
 		}
 	}
+
+	unset( $preview_token, $headers );
 
 	global $wp_query, $wp;
 
