@@ -19398,6 +19398,7 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
 .bb-rl-profile-edit-wrapper #btn_add_repeater_set .bb-icon-plus {
   margin-right: var(--bb-rl-space-100);
   line-height: 1;
+  font-weight: 700;
 }
 
 .bb-rl-profile-edit-wrapper #btn_add_repeater_set .bb-icon-plus::before {
