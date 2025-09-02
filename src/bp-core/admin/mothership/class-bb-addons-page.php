@@ -31,7 +31,7 @@ class BB_Addons_Page implements StaticContainerAwareness
      */
     public static function pageTitle(): string
     {
-        return esc_html__('BuddyBoss Add-ons', 'buddyboss');
+        return esc_html__('BuddyBoss License Add-ons', 'buddyboss');
     }
 
     /**

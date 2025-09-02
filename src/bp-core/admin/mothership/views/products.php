@@ -11,9 +11,8 @@ defined( 'ABSPATH' ) || exit;
 ?>
 
 <div id="mosh-admin-addons" class="wrap">
-	<h1>
+	<h3>
 		<form method="post" action="">
-			<?php esc_html_e( 'Available Add-ons', 'buddyboss' ); ?>
 			<input type="submit"
 				class="button button-secondary"
 				name="submit-button-mosh-refresh-addon"
@@ -24,7 +23,7 @@ defined( 'ABSPATH' ) || exit;
 				placeholder="<?php esc_attr_e( 'Search add-ons', 'buddyboss' ); ?>"
 			>
 		</form>
-	</h1>
+	</h3>
 	<?php if ( ! empty( $products ) ) : ?>
 		<div id="mosh-products-container">
 			<div class="mosh-products">
