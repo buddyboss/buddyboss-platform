@@ -1184,7 +1184,7 @@ function bp_private_network_template_redirect() {
 				break;
 			}
 		}
-		
+
 		if (
 			! empty( $preview_token ) &&
 			bb_validate_jwt( $preview_token )
