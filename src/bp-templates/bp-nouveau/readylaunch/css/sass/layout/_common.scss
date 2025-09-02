@@ -900,11 +900,19 @@ body.guillotine-dragging * {
 				border: 0;
 				border-radius: 0;
 				background-color: transparent;
+			}
 
-				&:hover {
-					background-color: var(--bb-rl-background-secondary-hover-color);
-					color: var(--bb-rl-text-color);
-				}
+			&:hover > a {
+				background-color: var(--bb-rl-background-secondary-hover-color);
+				color: var(--bb-rl-text-color);
+			}
+		}
+
+		li.menu-item-has-children {
+
+			> .sub-menu {
+				top: 0;
+				left: 100%;
 			}
 		}
 	}
