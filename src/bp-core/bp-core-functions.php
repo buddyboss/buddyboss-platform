@@ -10045,7 +10045,8 @@ function bb_filter_activity_filter_scope_keys( $filters = array() ) {
 				( 'following' === $key && ! bp_is_activity_follow_active() ) ||
 				( 'groups' === $key && ! bp_is_active( 'groups' ) ) ||
 				( 'mentions' === $key && ( ! function_exists( 'bp_activity_do_mentions' ) || ! bp_activity_do_mentions() ) ) ||
-				( 'favorites' === $key && ! bp_is_activity_like_active() )
+				( 'favorites' === $key && ! bp_is_activity_like_active() ) ||
+				( 'unanswered' === $key && ! bb_is_activity_comments_enabled() )
 			) {
 				unset( $filters[ $key ] );
 			}
