@@ -739,7 +739,7 @@ function bp_nouveau_ajax_post_update() {
 		}
 	}
 
-	$post_feature_image = ! empty( $_POST['bb_activity_post_feature_image'] ) ? $_POST['bb_activity_post_feature_image'] : array(); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash
+	$post_feature_image = ! empty( $_POST['bb_activity_post_feature_image_id'] ) ? absint( sanitize_text_field( wp_unslash( $_POST['bb_activity_post_feature_image_id'] ) ) ) : 0;
 	if (
 		! empty( $post_feature_image ) &&
 		function_exists( 'bb_pro_activity_post_feature_image_instance' )
@@ -765,9 +765,8 @@ function bp_nouveau_ajax_post_update() {
 		}
 
 		if ( method_exists( bb_pro_activity_post_feature_image_instance(), 'bb_validate_attachment_by_id' ) ) {
-			$feature_image_id = ! empty( $post_feature_image['id'] ) ? sanitize_text_field( wp_unslash( $post_feature_image['id'] ) ) : 0;
-			if ( ! empty( $feature_image_id ) ) {
-				$validate_attachment = bb_pro_activity_post_feature_image_instance()->bb_validate_attachment_by_id( $feature_image_id );
+			if ( ! empty( $post_feature_image ) ) {
+				$validate_attachment = bb_pro_activity_post_feature_image_instance()->bb_validate_attachment_by_id( $post_feature_image );
 				if ( ! empty( $validate_attachment ) && is_array( $validate_attachment ) ) {
 					wp_send_json_error( $validate_attachment );
 				}
