@@ -44,4 +44,22 @@ class BB_Addons_Manager extends AddonsManager {
 		include_once __DIR__ . '/views/products.php';
 		return ob_get_clean();
 	}
+
+	public static function checkProductBySlug( string $slug ): ?object {
+		$apiResponse = self::getAddons( \true );
+		$result      = null;
+		foreach ( $apiResponse->products ?? [] as $product ) {
+			if (
+				! empty( $product->slug ) &&
+				$product->slug === $slug &&
+				! empty( $product->status ) &&
+				'enabled' === $product->status
+			) {
+				$result = $product;
+				break;
+			}
+		}
+
+		return $result;
+	}
 }
