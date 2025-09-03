@@ -1777,7 +1777,8 @@ table.profile-settings tbody td select {
 
 .bb-rl-account-settings-section .subscription-items .subscription-item_image img {
   max-width: 32px;
-  height: auto;
+  height: 32px;
+  object-fit: cover;
   border-radius: var(--bb-rl-radius-md);
 }
 
@@ -1813,6 +1814,31 @@ table.profile-settings tbody td select {
 .bb-rl-account-settings-section .subscription-items > p {
   margin-bottom: 0;
   color: var(--bb-rl-text-tertiary-color);
+}
+
+/* Loading UI */
+.subscription-items-loader.is_loading .subscription-items_loading {
+  display: flex;
+  align-items: center;
+  padding: var(--bb-rl-space-100);
+}
+
+.subscription-items-loader.is_loading .subscription-items-image_loading {
+  height: 40px;
+  width: 40px;
+  margin-right: var(--bb-rl-space-100);
+  border-radius: var(--bb-rl-radius-md);
+}
+
+.subscription-items-loader.is_loading .subscription-items-text_loading {
+  height: 14px;
+  flex: 1;
+  max-width: 160px;
+  border-radius: 100px;
+}
+
+.subscription-pagination .page-numbers {
+  margin: 0 var(--bb-rl-space-50);
 }
 
 .bb-rl-account-settings-section .moderation_notice.is_hidden {

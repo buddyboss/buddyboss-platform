@@ -38,19 +38,19 @@ bp_nouveau_member_hook( 'before', 'settings_template' );
 					<div id="bb-accordion-section-<?php echo esc_attr( $sub_type ); ?>" role="region" aria-labelledby="bb-accordion-<?php echo esc_attr( $sub_type ); ?>" class="bb-accordion_panel">
 						<div class="subscription-items is_loading">
 							<div class="subscription-items_loading">
-								<div class="subscription-items-image_loading bb-loading-bg"></div>
+								<div class="subscription-items-image_loading bb-rl-loading-bg"></div>
 
-								<div class="subscription-items-text_loading bb-loading-bg"></div>
+								<div class="subscription-items-text_loading bb-rl-loading-bg"></div>
 							</div>
 							<div class="subscription-items_loading">
-								<div class="subscription-items-image_loading bb-loading-bg"></div>
+								<div class="subscription-items-image_loading bb-rl-loading-bg"></div>
 
-								<div class="subscription-items-text_loading bb-loading-bg"></div>
+								<div class="subscription-items-text_loading bb-rl-loading-bg"></div>
 							</div>
 							<div class="subscription-items_loading">
-								<div class="subscription-items-image_loading bb-loading-bg"></div>
+								<div class="subscription-items-image_loading bb-rl-loading-bg"></div>
 
-								<div class="subscription-items-text_loading bb-loading-bg"></div>
+								<div class="subscription-items-text_loading bb-rl-loading-bg"></div>
 							</div>
 						</div>
 					</div>
