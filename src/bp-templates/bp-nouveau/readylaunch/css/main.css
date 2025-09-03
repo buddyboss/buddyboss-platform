@@ -3811,7 +3811,7 @@ button[data-balloon] {
   cursor: not-allowed;
 }
 
-.bb-rl-button.bb-rl-button--disabled {
+.bb-rl-button.bb-rl-button--disabled, .bb-rl-button.disabled[class*="bb-rl-button"] {
   background-color: var(--bb-rl-background-tertiary-color);
   color: var(--bb-rl-text-disabled-color);
   cursor: not-allowed;
