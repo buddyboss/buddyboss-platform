@@ -22374,6 +22374,26 @@ table.profile-settings tbody td select {
   content: "\e4a6";
 }
 
+.notifications .bp-feedback {
+  background-color: var(--bb-rl-background-brand-secondary-color);
+  border-color: var(--bb-rl-border-brand-primary-color);
+}
+
+.notifications .bp-feedback > span[class*="icon"] {
+  color: var(--bb-rl-icon-primary-color);
+  line-height: 1;
+  margin-left: 10px;
+}
+
+.notifications .bp-feedback > span[class*="icon"]:before {
+  content: "\e2ce";
+  color: var(--bb-rl-icon-brand-primary-color);
+  font-weight: 500;
+  font-family: bb-icons-rl;
+  font-size: var(--bb-rl-base-line-small);
+  font-style: normal;
+}
+
 @media (max-width: 480px) {
   .notifications-header .notifications-header-actions {
     flex-wrap: wrap;
