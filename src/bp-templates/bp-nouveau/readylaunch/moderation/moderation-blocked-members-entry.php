@@ -22,20 +22,18 @@ $bp_moderation_item_type = bp_get_moderation_item_type();
 		<?php
 		$user_id = bp_moderation_get_content_owner_id( $bp_moderation_item_id, $bp_moderation_item_type );
 
-		// Add the user avatar if available.
-		if ( bp_get_user_has_avatar( $user_id ) ) {
-			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-			echo bp_core_fetch_avatar(
-				array(
-					'item_id' => $user_id,
-					'type'    => 'thumb',
-					'width'   => 30,
-					'height'  => 30,
-					/* translators: %s: user display name */
-					'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss' ), bp_core_get_user_displayname( $user_id ) ),
-				)
-			);
-		}
+		// Add the user avatar.
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo bp_core_fetch_avatar(
+			array(
+				'item_id' => $user_id,
+				'type'    => 'thumb',
+				'width'   => 30,
+				'height'  => 30,
+				/* translators: %s: user display name */
+				'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss' ), bp_core_get_user_displayname( $user_id ) ),
+			)
+		);
 
 		echo esc_html( bp_core_get_user_displayname( $user_id ) );
 		if ( true === $hide_sitewide ) {
