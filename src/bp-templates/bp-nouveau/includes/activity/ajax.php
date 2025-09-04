@@ -1171,8 +1171,30 @@ function bb_nouveau_ajax_post_draft_activity() {
 
 			// Set feature image draft meta key to avoid delete from cron job 'bb_activity_post_feature_image_delete_orphaned_attachments_hook'.
 			if ( isset( $draft_activity['data']['bb_activity_post_feature_image'] ) && ! empty( $draft_activity['data']['bb_activity_post_feature_image'] ) ) {
-				$draft_activity['data']['bb_activity_post_feature_image']['bb_activity_post_feature_image_draft'] = 1;
-				update_post_meta( $draft_activity['data']['bb_activity_post_feature_image']['id'], 'bb_activity_post_feature_image_draft', 1 );
+				$attachment_id = isset( $draft_activity['data']['bb_activity_post_feature_image']['id'] ) ? $draft_activity['data']['bb_activity_post_feature_image']['id'] : 0;
+				if ( function_exists( 'bb_pro_activity_post_feature_image_instance' ) ) {
+					$validate_attachment = bb_pro_activity_post_feature_image_instance()->bb_user_can_edit_feature_image(
+						array(
+							'attachment_id' => $attachment_id,
+							'user_id'       => ! empty( $draft_activity['data']['user_id'] ) ? $draft_activity['data']['user_id'] : bp_loggedin_user_id(),
+							'object'        => ! empty( $draft_activity['data']['object'] ) ? $draft_activity['data']['object'] : '',
+							'group_id'      => ! empty( $draft_activity['data']['item_id'] ) ? $draft_activity['data']['item_id'] : 0,
+						)
+					);
+					if (
+						! empty( $validate_attachment ) &&
+						is_array( $validate_attachment ) &&
+						! isset( $validate_attachment['can_edit'] )
+					) {
+						wp_send_json_error(
+							array(
+								'message' => $validate_attachment['message'],
+							)
+						);
+					}
+					$draft_activity['data']['bb_activity_post_feature_image']['bb_activity_post_feature_image_draft'] = 1;
+					update_post_meta( $attachment_id, 'bb_activity_post_feature_image_draft', 1 );
+				}
 			}
 
 			bp_update_user_meta( bp_loggedin_user_id(), $draft_activity['data_key'], $draft_activity );
