@@ -3856,7 +3856,6 @@ function bb_media_user_can_access( $id, $type, $attachment_id = 0 ) {
 					'album' === $type &&
 					(
 						bp_current_user_can( 'bp_moderate' ) ||
-						$is_mod ||
 						$is_admin ||
 						$media_user_id === $current_user_id
 					)
