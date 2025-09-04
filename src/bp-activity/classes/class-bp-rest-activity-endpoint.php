@@ -345,7 +345,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			$args['show_hidden'] = true;
 		}
 
-		$args['scope'] = $this->bp_rest_activity_default_scope(
+		$args['scope'] = self::bp_rest_activity_default_scope(
 			$args['scope'],
 			( $request['user_id'] ? $request['user_id'] : 0 ),
 			$args['group_id'],
@@ -1068,7 +1068,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			add_filter( 'bp_activity_at_name_do_notifications', '__return_true' );
 
 			bp_activity_at_name_send_emails( $activity );
-	
+
 			if ( bp_is_active( 'groups' ) && 'groups' === $activity->component ) {
 				$group_id = ! empty( $activity->item_id ) ? $activity->item_id : 0;
 				bb_subscription_send_subscribe_group_notifications(
@@ -3104,7 +3104,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		$params['scope'] = array(
 			'description'       => __( 'Limit result set to items with a specific scope.', 'buddyboss' ),
 			'type'              => 'string',
-			'enum'              => array( 'just-me', 'friends', 'groups', 'favorites', 'mentions', 'following' ),
+			'enum'              => array( 'just-me', 'friends', 'groups', 'favorites', 'mentions', 'following', 'unanswered' ),
 			'sanitize_callback' => 'sanitize_text_field',
 			'validate_callback' => 'rest_validate_request_arg',
 		);
@@ -3268,7 +3268,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 	 *
 	 * @return string
 	 */
-	public function bp_rest_activity_default_scope( $scope = 'all', $user_id = 0, $group_id = 0, $component = '', $primary_id = 0 ) {
+	public static function bp_rest_activity_default_scope( $scope = 'all', $user_id = 0, $group_id = 0, $component = '', $primary_id = 0 ) {
 		$new_scope = array();
 
 		if (
@@ -3433,7 +3433,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		if ( 'groups' === $activity->component ) {
 			$activity_item_id = $activity->secondary_item_id;
 		}
-		
+
 		// Generate link preview for the forums.
 		if (
 			bp_is_active( 'forums' ) &&

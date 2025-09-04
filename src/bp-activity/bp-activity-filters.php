@@ -202,6 +202,7 @@ add_action( 'bp_activity_after_delete', 'bb_clear_activity_all_comment_parent_ca
 add_action( 'bp_init', 'bb_load_activity_topics_manager' );
 
 add_action( 'bp_activity_after_save', 'bb_activity_save_topic_data', 2, 1 );
+add_filter( 'bp_activity_get_join_sql', 'bb_activity_unanswered_only_join_sql_filter', 11, 2 );
 
 /** Functions *****************************************************************/
 
@@ -4046,4 +4047,62 @@ function bb_activity_save_topic_data( $activity ) {
 			'item_id'     => $item_id,
 		)
 	);
+}
+
+/**
+ * Add LEFT JOIN for unanswered activities filter.
+ * This replaces the NOT EXISTS clause with a more performant LEFT JOIN approach.
+ *
+ * @since BuddyBoss 2.11.0
+ *
+ * @param string $join_sql   The JOIN SQL to be filtered.
+ * @param array  $r          The arguments passed to BP_Activity_Activity::get().
+ *
+ * @return string Modified JOIN SQL.
+ */
+function bb_activity_unanswered_only_join_sql_filter( $join_sql, $r ) {
+	// Only add the join when unanswered_only is enabled.
+	if ( ! empty( $r['filter']['unanswered_only'] ) ) {
+		global $bp;
+
+		// Join conditions array.
+		$join_conditions['uac.item_id'] = 'uac.item_id = a.id';
+		$join_conditions['uac.type']    = "uac.type = 'activity_comment'";
+
+		// Add spam filter conditions to the subquery.
+		if ( ! empty( $r['spam'] ) ) {
+			if ( 'ham_only' === $r['spam'] ) {
+				$join_conditions['uac.is_spam'] = 'uac.is_spam = 0';
+			} elseif ( 'spam_only' === $r['spam'] ) {
+				$join_conditions['uac.is_spam'] = 'uac.is_spam = 1';
+			} else {
+				$join_conditions['uac.is_spam'] = 'uac.is_spam = ""';
+			}
+		}
+
+		/**
+		 * Filter the join conditions for unanswered activities.
+		 *
+		 * @since BuddyBoss 2.11.0
+		 *
+		 * @param array  $join_conditions The join conditions to be filtered.
+		 * @param array  $r               The arguments passed to BP_Activity_Activity::get().
+		 */
+		$join_conditions    = apply_filters( 'bb_activity_unanswered_only_join_conditions', $join_conditions, $r );
+		$join_condition_sql = join( ' AND ', $join_conditions );
+
+		$join_sql .= " LEFT JOIN {$bp->activity->table_name} uac ON {$join_condition_sql} ";
+
+		/**
+		 * Filter the join SQL for unanswered activities.
+		 *
+		 * @since BuddyBoss 2.11.0
+		 *
+		 * @param string $join_sql The join SQL to be filtered.
+		 * @param array  $r        The arguments passed to BP_Activity_Activity::get().
+		 */
+		$join_sql = apply_filters( 'bb_activity_get_unanswered_only_join_sql', $join_sql, $r );
+	}
+
+	return $join_sql;
 }

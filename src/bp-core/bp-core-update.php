@@ -519,6 +519,10 @@ function bp_version_updater() {
 			bb_update_to_2_9_4();
 		}
 
+		if ( $raw_db_version < 23521 ) {
+			bb_update_to_2_9_50();
+		}
+
 		if ( $raw_db_version !== $current_db ) {
 			// @todo - Write only data manipulate migration here. ( This is not for DB structure change ).
 
@@ -3993,5 +3997,39 @@ function bb_update_to_2_9_4() {
 	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
 		// Clear groups API cache.
 		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-groups' );
+	}
+}
+
+/**
+ * Add index for activity table.
+ *
+ * @since BuddyBoss 2.11.0
+ *
+ * @return void
+ */
+function bb_update_to_2_9_50() {
+	global $wpdb;
+
+	$is_already_run = get_transient( 'bb_update_to_2_9_50' );
+	if ( $is_already_run ) {
+		return;
+	}
+
+	set_transient( 'bb_update_to_2_9_50', 'yes', HOUR_IN_SECONDS );
+
+	$bp_prefix      = function_exists( 'bp_core_get_table_prefix' ) ? bp_core_get_table_prefix() : $wpdb->base_prefix;
+	$activity_table = $bp_prefix . 'bp_activity';
+	$table_exists   = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $activity_table ) ); // phpcs:ignore
+
+	// Check if the activity table exists.
+	if ( $table_exists ) {
+
+		// Check if index activity_type_is_spam exists for the table.
+		$index_exists = $wpdb->get_var( $wpdb->prepare( 'SELECT index_name FROM INFORMATION_SCHEMA.STATISTICS WHERE table_schema = DATABASE() AND table_name = %s AND index_name = %s', $activity_table, 'activity_type_is_spam' ) ); //phpcs:ignore
+
+		// Add index for activity_type_is_spam if it doesn't exist.
+		if ( empty( $index_exists ) ) {
+			$wpdb->query( $wpdb->prepare( "ALTER TABLE {$activity_table} ADD KEY activity_type_is_spam (type,is_spam)" ) ); //phpcs:ignore
+		}
 	}
 }
