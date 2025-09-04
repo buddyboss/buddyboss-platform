@@ -1088,6 +1088,10 @@
 	padding: var(--bb-rl-space-200) var(--bb-rl-space-300);
 	overflow-x: hidden;
 	flex-grow: 1;
+
+	@media screen and (min-height: 540px) {
+		min-height: 230px;
+	}
 }
 
 .bb-rl-modal-activity-header {
