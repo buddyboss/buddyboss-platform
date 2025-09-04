@@ -389,10 +389,13 @@ window.bp = window.bp || {};
 			}
 
 			// Trigger custom event for edit activity loaded.
-			$( 'body' ).trigger( 'bb_activity_edit_loaded', {
-				model: self.model,
-				activity_data: activity_data,
-			} );
+			$( 'body' ).trigger( 'bb_activity_event',
+				{
+					type          : 'bb_activity_edit_loaded',
+					model         : self.model,
+					activity_data : activity_data,
+				}
+			);
 
 			// Set link image index and confirm image index.
 			self.postForm.model.set( 'link_image_index', activity_data.link_image_index_save );
@@ -1062,11 +1065,14 @@ window.bp = window.bp || {};
 			}
 
 			// Trigger custom event for draft activity loaded.
-			$( 'body' ).trigger( 'bb_activity_draft_loaded', {
-				model: this.model,
-				activity_data: activity_data,
-				draft_activity: bp.draft_activity
-			} );
+			$( 'body' ).trigger( 'bb_activity_event',
+				{
+					type           : 'bb_activity_draft_loaded',
+					model          : this.model,
+					activity_data  : activity_data,
+					draft_activity : bp.draft_activity
+				}
+			);
 
 			var is_profile_activity = this.isProfileDraftActivity( activity_data );
 
@@ -1247,12 +1253,15 @@ window.bp = window.bp || {};
 				}
 				self.postForm.model.set( 'video', video );
 			}
-			
-			$( 'body' ).trigger( 'bb_activity_draft_collect_activity', {
-				model: this.model,
-				activity_data: self.postForm.model.attributes,
-				meta: meta
-			} );
+
+			$( 'body' ).trigger( 'bb_activity_event',
+				{
+					type          : 'bb_activity_draft_collect_activity',
+					model         : this.model,
+					activity_data : self.postForm.model.attributes,
+					meta          : meta
+				}
+			);
 
 			var filtered_content = $( $.parseHTML( content ) ).text().trim();
 			if ( content.includes( 'data-emoji-char' ) && '' === filtered_content ) {
@@ -1423,12 +1432,15 @@ window.bp = window.bp || {};
 				'polls_allowed',
 				'topics',
 			];
-			
+
 			// Trigger custom event for draft activity loaded.
-			$( 'body' ).trigger( 'bb_activity_draft_data_keys', {
-				model: this.model,
-				draft_data_keys: draft_data_keys
-			} );		
+			$( 'body' ).trigger( 'bb_activity_event',
+				{
+					type            : 'bb_activity_draft_data_keys',
+					model           : this.model,
+					draft_data_keys : draft_data_keys
+				}
+			);
 
 			_.each(
 				draft_data_keys,
@@ -1581,9 +1593,12 @@ window.bp = window.bp || {};
 			}
 
 			// Trigger custom event for reset draft.
-			$( 'body' ).trigger( 'bb_activity_reset_draft', {
-				model: self.model
-			} );
+			$( 'body' ).trigger( 'bb_activity_event',
+				{
+					type  : 'bb_activity_reset_draft',
+					model : self.model
+				}
+			);
 		},
 
 		reloadWindow: function() {
@@ -4459,12 +4474,15 @@ window.bp = window.bp || {};
 				}
 
 				// Trigger the event to handle privacy change data.
-				$( 'body' ).trigger( 'bb_activity_privacy_changed', {
-					element: this.$el,
-					model: this.model,
-					whats_new_form: whats_new_form,
-					draft_activity: bp.draft_activity,
-				} );
+				$( 'body' ).trigger( 'bb_activity_event',
+					{
+						type           : 'bb_activity_privacy_changed',
+						element        : this.$el,
+						model          : this.model,
+						whats_new_form : whats_new_form,
+						draft_activity : bp.draft_activity,
+					}
+				);
 			},
 
 			backPrivacySelector: function ( e ) {
@@ -5234,9 +5252,13 @@ window.bp = window.bp || {};
 				}
 
 				// Destroy dropzone.
-				$( 'body' ).trigger( 'bb_activity_attachments_destroy', {
-					'draft_activity': bp.draft_activity
-				});
+				$( 'body' ).trigger( 'bb_activity_event',
+					{
+						type           : 'bb_activity_attachments_destroy',
+						draft_activity : bp.draft_activity
+					}
+				);
+
 				// Reset is_discard_draft_activity flag to false.
 				bp.draft_activity.is_discard_draft_activity = false;
 			}
@@ -6089,10 +6111,12 @@ window.bp = window.bp || {};
 					self.model.set( 'video', video );
 				}
 
-				// Trigger custom event for form preparation.
-				$( 'body' ).trigger( 'bb_activity_form_prep', {
-					model: self.model
-				} );
+				$( 'body' ).trigger( 'bb_activity_event',
+					{
+						type  : 'bb_activity_form_prep',
+						model : self.model
+					}
+				);
 
 				// validation for content editor.
 				if (
@@ -6204,10 +6228,13 @@ window.bp = window.bp || {};
 				}
 
 				// Trigger custom event for form data.
-				$( 'body' ).trigger( 'bb_activity_form_data', {
-					model: self.model,
-					data: data
-				} );
+				$( 'body' ).trigger( 'bb_activity_event',
+					{
+						type  : 'bb_activity_form_data',
+						model : self.model,
+						data  : data
+					}
+				);
 
 				bp.ajax.post( 'post_update', data ).done(
 					function ( response ) {
@@ -6287,11 +6314,13 @@ window.bp = window.bp || {};
 							self.model.set( 'video', videos );
 						}
 
-						// Trigger custom event for post-success handling.
-						$( 'body' ).trigger( 'bb_activity_post_success', {
-							model: self.model,
-							response: response
-						} );
+						$( 'body' ).trigger( 'bb_activity_event',
+							{
+								type     : 'bb_activity_post_success',
+								model    : self.model,
+								response : response
+							}
+						);
 
 						if ( '' === self.model.get( 'id' ) || 0 === parseInt( self.model.get( 'id' ) ) ) {
 							// Reset draft activity.
