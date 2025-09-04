@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 2.10.0\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2025-09-01 11:21:30+00:00\n"
+"POT-Creation-Date: 2025-09-04 10:07:47+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -50,7 +50,7 @@ msgstr ""
 
 #: bp-activity/actions/delete.php:60
 #: bp-templates/bp-nouveau/includes/activity/ajax.php:363
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1836
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1857
 msgid "Activity deleted successfully"
 msgstr ""
 
@@ -128,7 +128,7 @@ msgid "Activity feed of %s's saved posts."
 msgstr ""
 
 #: bp-activity/actions/post.php:60
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:799
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:798
 msgid "Please enter some content to post."
 msgstr ""
 
@@ -1213,7 +1213,7 @@ msgstr ""
 
 #: bp-activity/bp-activity-functions.php:6914
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:1774
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1485
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1506
 msgid "You turned off commenting for this post"
 msgstr ""
 
@@ -1562,34 +1562,34 @@ msgstr ""
 #: bp-core/bp-core-actions.php:1123
 #: bp-core/classes/class-bb-reaction.php:928
 #: bp-core/compatibility/class-bb-readylaunch-learndash-helper.php:2172
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1520
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1529
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1575
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1644
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1653
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1541
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1550
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1596
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1665
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1674
 msgid "Invalid request."
 msgstr ""
 
 #: bp-activity/classes/class-bb-activity-readylaunch.php:260
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1537
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1661
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1558
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1682
 msgid "Activity id cannot be empty."
 msgstr ""
 
 #: bp-activity/classes/class-bb-activity-readylaunch.php:268
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1545
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1566
 msgid "Parent comment id cannot be empty."
 msgstr ""
 
 #: bp-activity/classes/class-bb-activity-readylaunch.php:288
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1565
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1586
 msgid "Sorry, You are not allowed to view more comments."
 msgstr ""
 
 #: bp-activity/classes/class-bb-activity-readylaunch.php:321
 #: bp-activity/classes/class-bb-activity-readylaunch.php:345
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1595
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1621
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1616
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1642
 msgid "No more items to load."
 msgstr ""
 
@@ -2955,7 +2955,7 @@ msgstr ""
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:848
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:1185
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:1215
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:962
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:961
 msgid "Schedule activity settings disabled."
 msgstr ""
 
@@ -2965,8 +2965,8 @@ msgstr ""
 
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:869
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:1207
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:931
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:951
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:930
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:950
 msgid "Please set a minimum schedule time for at least 1 hour later."
 msgstr ""
 
@@ -3025,21 +3025,21 @@ msgid "Your post has been unpinned"
 msgstr ""
 
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:1607
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1418
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1439
 msgid "Your post has been pinned"
 msgstr ""
 
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:1609
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1422
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1443
 msgid "Your pinned post has been updated"
 msgstr ""
 
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:1614
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:1781
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:3557
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1378
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1444
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1705
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1399
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1465
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1726
 #: bp-templates/bp-nouveau/includes/activity/functions.php:254
 #: bp-templates/bp-nouveau/includes/activity/functions.php:255
 #: bp-templates/bp-nouveau/includes/activity/functions.php:258
@@ -3061,12 +3061,12 @@ msgid "Sorry, you are not allowed to perform this action."
 msgstr ""
 
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:1772
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1483
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1504
 msgid "You turned on commenting for this post"
 msgstr ""
 
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:1776
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1487
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1508
 msgid "You are not permitted with the requested operation"
 msgstr ""
 
@@ -3378,17 +3378,17 @@ msgid "The action is required."
 msgstr ""
 
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:3548
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1738
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1759
 msgid "Notifications for this activity have been unmuted."
 msgstr ""
 
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:3550
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1740
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1761
 msgid "Notifications for this activity have been muted."
 msgstr ""
 
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:3552
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1742
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1763
 msgid "Notifications for this activity already been muted."
 msgstr ""
 
@@ -34338,7 +34338,7 @@ msgid "Sorry, there was no activity found."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/activity/ajax.php:304
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1763
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1784
 msgid "There was a problem when deleting. Please try again."
 msgstr ""
 
@@ -34379,82 +34379,82 @@ msgstr ""
 msgid "You do not have permission to upload feature image."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:814
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:813
 msgid "The comments are closed for the activity. The activity cannot be edited."
 msgstr ""
 
 #. translators: 1: string or media and medias. 2: group text.
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:854
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:877
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:853
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:876
 msgid "You don't have access to upload %1$s%2$s."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:855
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:854
 msgid "media"
 msgid_plural "medias"
 msgstr[0] ""
 msgstr[1] ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:856
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:879
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:855
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:878
 msgid " inside group"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:878
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:877
 msgid "document"
 msgid_plural "documents"
 msgstr[0] ""
 msgstr[1] ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:940
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:939
 msgid "Please set a schedule date between next three months."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:972
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:971
 msgid "You don't have access to do a activity."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:985
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:984
 msgid "You don't have access to schedule the activity."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1031
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1030
 msgid "You don't have permission to schedule activity in particular group."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1072
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1071
 msgid "There was a problem posting your update. Please try again."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1106
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1105
 msgid "Update posted."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1106
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1105
 msgid "View activity."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1254
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1275
 msgid "There was a problem marking this activity as spam. Please try again."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1303
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1324
 msgid "This activity has been marked as spam and is no longer visible."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1416
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1437
 msgid "Your pinned post has been removed"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1420
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1441
 msgid "You are not allowed to pin or unpin this post"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1450
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1471
 msgid "There was a problem marking this operation. Close comments setting is disabled."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1809
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1830
 msgid "You don't have permission to delete scheduled activity."
 msgstr ""
 
