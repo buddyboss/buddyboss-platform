@@ -3072,7 +3072,7 @@ window.bp = window.bp || {};
 			if ( eventTarget.closest( '.bb-rl-media-move-file' ).find( '.bb-rl-location-album-list-wrap .breadcrumb .item span:last-child' ).data( 'id' ) !== 0 ) {
 				eventTarget.closest( '.bb-rl-media-move-file' ).find( '.bb-rl-location-album-list-wrap .breadcrumb .item span:last-child' ).remove();
 			}
-			eventTarget.closest( '.bb-rl-media-move-file' ).hide();
+			eventTarget.closest( '.bb-rl-media-move-file' ).hide().removeClass( 'open-popup' );
 
 		},
 
@@ -3091,6 +3091,10 @@ window.bp = window.bp || {};
 			} else {
 				eventTarget.closest( '.bb-rl-media-move-folder' ).hide().find( '.bb-rl-folder-move' ).attr( 'id', '' );
 			}
+
+			// Make sure the modal is closed.
+			$( '.bb-rl-media-move-file.open-popup' ).removeClass( 'open-popup' ).hide();
+			$( '.bb-rl-media-move-folder.open-popup' ).removeClass( 'open-popup' ).hide();
 
 			closest_parent.find( '.bb-rl-document-move.loading' ).removeClass( 'loading' );
 

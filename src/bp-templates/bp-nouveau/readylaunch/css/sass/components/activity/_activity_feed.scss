@@ -1064,6 +1064,7 @@
 			right: 35px;
 		}
 
+		&:has(.bb-rl-media-move-file.open-popup),
 		&:has(.activity-state-popup.active) {
 			backdrop-filter: none;
 		}
