@@ -76,6 +76,15 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 			'class' => 'hidden',
 		) );
 
+		/**
+		 * Fires before the activity refresh fields.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param BP_Admin_Setting_Activity $this The BP_Admin_Setting_Activity instance.
+		 */
+		do_action( 'bb_before_activity_refresh_fields', $this );
+
 		// Allow subscriptions setting.
 		$this->add_field( '_bp_enable_heartbeat_refresh', __( 'Activity auto-refresh', 'buddyboss' ), 'bp_admin_setting_callback_heartbeat', 'intval' );
 

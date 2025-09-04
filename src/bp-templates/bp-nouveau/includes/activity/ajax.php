@@ -749,6 +749,41 @@ function bp_nouveau_ajax_post_update() {
 		);
 	}
 
+	$post_feature_image = ! empty( $_POST['bb_activity_post_feature_image_id'] ) ? absint( sanitize_text_field( wp_unslash( $_POST['bb_activity_post_feature_image_id'] ) ) ) : 0;
+	if (
+		! empty( $post_feature_image ) &&
+		function_exists( 'bb_pro_activity_post_feature_image_instance' )
+	) {
+		if ( method_exists( bb_pro_activity_post_feature_image_instance(), 'bb_user_has_access_feature_image' ) ) {
+			$object  = ! empty( $_POST['object'] ) ? sanitize_text_field( wp_unslash( $_POST['object'] ) ) : '';
+			$item_id = ! empty( $_POST['item_id'] ) ? absint( $_POST['item_id'] ) : ( function_exists( 'bp_get_current_group_id' ) ? bp_get_current_group_id() : 0 );
+
+			$can_upload_feature_image = bb_pro_activity_post_feature_image_instance()->bb_user_has_access_feature_image(
+				array(
+					'user_id'  => bp_loggedin_user_id(),
+					'group_id' => $item_id,
+					'object'   => $object,
+				)
+			);
+			if ( ! $can_upload_feature_image ) {
+				wp_send_json_error(
+					array(
+						'message' => __( 'You do not have permission to upload feature image.', 'buddyboss' ),
+					)
+				);
+			}
+		}
+
+		if ( method_exists( bb_pro_activity_post_feature_image_instance(), 'bb_validate_attachment_by_id' ) ) {
+			if ( ! empty( $post_feature_image ) ) {
+				$validate_attachment = bb_pro_activity_post_feature_image_instance()->bb_validate_attachment_by_id( $post_feature_image );
+				if ( ! empty( $validate_attachment ) && is_array( $validate_attachment ) ) {
+					wp_send_json_error( $validate_attachment );
+				}
+			}
+		}
+	}
+
 	if ( ! strlen( trim( html_entity_decode( wp_strip_all_tags( $_POST['content'] ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) ) ) ) {
 
 		// check activity toolbar options if one of them is set, activity can be empty.
@@ -1146,6 +1181,34 @@ function bb_nouveau_ajax_post_draft_activity() {
 				}
 			}
 
+			// Set feature image draft meta key to avoid delete from cron job 'bb_activity_post_feature_image_delete_orphaned_attachments_hook'.
+			if ( isset( $draft_activity['data']['bb_activity_post_feature_image'] ) && ! empty( $draft_activity['data']['bb_activity_post_feature_image'] ) ) {
+				$attachment_id = isset( $draft_activity['data']['bb_activity_post_feature_image']['id'] ) ? $draft_activity['data']['bb_activity_post_feature_image']['id'] : 0;
+				if ( function_exists( 'bb_pro_activity_post_feature_image_instance' ) ) {
+					$validate_attachment = bb_pro_activity_post_feature_image_instance()->bb_user_can_edit_feature_image(
+						array(
+							'attachment_id' => $attachment_id,
+							'user_id'       => ! empty( $draft_activity['data']['user_id'] ) ? $draft_activity['data']['user_id'] : bp_loggedin_user_id(),
+							'object'        => ! empty( $draft_activity['data']['object'] ) ? $draft_activity['data']['object'] : '',
+							'group_id'      => ! empty( $draft_activity['data']['item_id'] ) ? $draft_activity['data']['item_id'] : 0,
+						)
+					);
+					if (
+						! empty( $validate_attachment ) &&
+						is_array( $validate_attachment ) &&
+						! isset( $validate_attachment['can_edit'] )
+					) {
+						wp_send_json_error(
+							array(
+								'message' => $validate_attachment['message'],
+							)
+						);
+					}
+					$draft_activity['data']['bb_activity_post_feature_image']['bb_activity_post_feature_image_draft'] = 1;
+					update_post_meta( $attachment_id, 'bb_activity_post_feature_image_draft', 1 );
+				}
+			}
+
 			bp_update_user_meta( bp_loggedin_user_id(), $draft_activity['data_key'], $draft_activity );
 		} else {
 			bp_delete_user_meta( bp_loggedin_user_id(), $draft_activity['data_key'] );
@@ -1182,6 +1245,18 @@ function bb_nouveau_ajax_post_draft_activity() {
 							wp_delete_attachment( $video['id'], true );
 						}
 					}
+				}
+			}
+
+			// Delete feature image when discard the activity.
+			if (
+				! empty( $draft_activity['data']['bb_activity_post_feature_image'] ) &&
+				isset( $draft_activity['allow_delete_post_feature_image'] ) &&
+				true === (bool) $draft_activity['allow_delete_post_feature_image']
+			) {
+				$attachment_id = isset( $draft_activity['data']['bb_activity_post_feature_image']['id'] ) ? $draft_activity['data']['bb_activity_post_feature_image']['id'] : 0;
+				if ( 0 < (int) $attachment_id ) {
+					wp_delete_attachment( $attachment_id, true );
 				}
 			}
 

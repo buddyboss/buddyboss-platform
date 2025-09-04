@@ -98,7 +98,14 @@ function bp_core_register_common_scripts() {
 
 		'giphy'                         => array(
 			'file'         => "{$url}vendor/giphy{$min}.js",
-			'dependencies' => array(),
+			'dependencies' => array( 'jquery' ),
+			'footer'       => true,
+		),
+
+		// Cropper.js for image cropping functionality
+		'bb-cropper-js'                 => array(
+			'file'         => buddypress()->plugin_url . 'bp-templates/bp-nouveau/js/cropper' . $min . '.js',
+			'dependencies' => array( 'jquery' ),
 			'footer'       => true,
 		),
 		'emojione'                      => array(
@@ -322,6 +329,9 @@ function bp_core_register_common_styles() {
 			'bp-media-videojs-css'    => array(
 				'file'         => "{$url}vendor/video-js{$min}.css",
 				'dependencies' => array(),
+			),
+			'bb-cropper-css'           => array(
+				'file'         => buddypress()->plugin_url . 'bp-templates/bp-nouveau/css/cropper' . $min . '.css',
 			),
 		)
 	);
