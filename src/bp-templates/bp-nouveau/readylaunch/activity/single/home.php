@@ -43,20 +43,20 @@ bp_nouveau_before_single_activity_content();
 			?>
 			<div class="bb-rl-activity-placeholder">
 				<div class="bb-rl-activity-placeholder_head">
-					<div class="bb-rl-activity-placeholder_avatar bb-bg-animation bb-loading-bg"></div>
+					<div class="bb-rl-activity-placeholder_avatar bb-rl-bg-animation bb-rl-loading-bg"></div>
 					<div class="bb-rl-activity-placeholder_details">
-						<div class="bb-rl-activity-placeholder_title bb-bg-animation bb-loading-bg"></div>
-						<div class="bb-rl-activity-placeholder_description bb-bg-animation bb-loading-bg"></div>
+						<div class="bb-rl-activity-placeholder_title bb-rl-bg-animation bb-rl-loading-bg"></div>
+						<div class="bb-rl-activity-placeholder_description bb-rl-bg-animation bb-rl-loading-bg"></div>
 					</div>
 				</div>
 				<div class="bb-rl-activity-placeholder_content">
-					<div class="bb-rl-activity-placeholder_title bb-bg-animation bb-loading-bg"></div>
-					<div class="bb-rl-activity-placeholder_title bb-bg-animation bb-loading-bg"></div>
+					<div class="bb-rl-activity-placeholder_title bb-rl-bg-animation bb-rl-loading-bg"></div>
+					<div class="bb-rl-activity-placeholder_title bb-rl-bg-animation bb-rl-loading-bg"></div>
 				</div>
 				<div class="bb-rl-activity-placeholder_actions">
-					<div class="bb-rl-activity-placeholder_description bb-bg-animation bb-loading-bg"></div>
-					<div class="bb-rl-activity-placeholder_description bb-bg-animation bb-loading-bg"></div>
-					<div class="bb-rl-activity-placeholder_description bb-bg-animation bb-loading-bg"></div>
+					<div class="bb-rl-activity-placeholder_description bb-rl-bg-animation bb-rl-loading-bg"></div>
+					<div class="bb-rl-activity-placeholder_description bb-rl-bg-animation bb-rl-loading-bg"></div>
+					<div class="bb-rl-activity-placeholder_description bb-rl-bg-animation bb-rl-loading-bg"></div>
 				</div>
 			</div>
 			<?php
