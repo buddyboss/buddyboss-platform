@@ -311,7 +311,7 @@ window.bp = window.bp || {};
 						error   : function () {
 							// Reset the 'loading' flag in case of error.
 							mainContainerID.data( 'loading', false );
-							mainContainerID.find( '.notification-list' ).html( '<p>' + bbReadyLaunchFront.notification_error + '</p>' );
+							mainContainerID.find( '.notification-list' ).html( '<p class="bb-rl-notification-error">' + bbReadyLaunchFront.notification_error + '</p>' );
 						},
 						complete : function () {
 							// Always reset the loading state, regardless of success or error.
