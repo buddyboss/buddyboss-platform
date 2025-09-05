@@ -43,7 +43,8 @@ if ( ! class_exists( 'Bp_Search_bbPress_Replies' ) ) :
 			$from = apply_filters( 'bp_forum_reply_search_join_sql', $from );
 
 			// Initialize forum access variables.
-			$excluded_forum_ids = array();
+			$excluded_forum_ids                  = array();
+			$enrolled_hidden_group_forum_ids_str = '';
 
 			if ( bp_is_active( 'groups' ) && ! current_user_can( 'administrator' ) ) {
 				// Get user accessible groups using shared method from parent class.
@@ -88,7 +89,6 @@ if ( ! class_exists( 'Bp_Search_bbPress_Replies' ) ) :
 				$user_hidden_group_ids = $hidden_groups['groups'];
 
 				// Get hidden group forums where the user is enrolled.
-				$enrolled_hidden_group_forum_ids = array();
 				if ( ! empty( $user_hidden_group_ids ) ) {
 					// Get forums that are associated with hidden groups where the user is enrolled.
 
@@ -113,11 +113,13 @@ if ( ! class_exists( 'Bp_Search_bbPress_Replies' ) ) :
 					$included_hidden_group_forum_ids = get_posts( $included_forum_args );
 					$included_hidden_group_forum_ids = array_map( 'intval', $included_hidden_group_forum_ids );
 
-					// Get child forum ids where parent forum are restricted.
+					$enrolled_hidden_group_forum_ids = array();
+
+					// Get child forum ids for enrolled hidden group forums.
 					if ( ! empty( $included_hidden_group_forum_ids ) && method_exists( $this, 'nested_child_forum_ids' ) ) {
-						foreach ( $enrolled_hidden_group_forum_ids as $forum_id ) {
+						foreach ( $included_hidden_group_forum_ids as $forum_id ) {
 							$single_forum_child_ids          = $this->nested_child_forum_ids( $forum_id );
-							$included_hidden_group_forum_ids = array_merge( $included_hidden_group_forum_ids, $single_forum_child_ids );
+							$enrolled_hidden_group_forum_ids = array_merge( $enrolled_hidden_group_forum_ids, $single_forum_child_ids );
 						}
 					}
 
