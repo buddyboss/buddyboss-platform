@@ -50,6 +50,9 @@ add_filter( 'plugin_locale', 'bbp_plugin_locale', 10, 2 );
 // Fix post author id for anonymous posts (set it back to 0) when the post status is changed
 add_filter( 'wp_insert_post_data', 'bbp_fix_post_author', 30, 2 );
 
+// Convert <code> to <pre> when saving from backend to preserve code formatting
+add_filter( 'wp_insert_post_data', 'bbp_admin_fix_code_tags', 25, 2 );
+
 // Force comments_status on Forums post types
 add_filter( 'comments_open', 'bbp_force_comment_status' );
 
