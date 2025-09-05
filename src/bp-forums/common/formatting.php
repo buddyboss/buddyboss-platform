@@ -619,7 +619,7 @@ function bbp_admin_convert_code_to_pre_and_apply_encoding( $content ) {
 
 				// If the content contains line breaks, treat it as a pre block.
 				// Otherwise, keep it as inline code.
-				if ( strpos( $code_content, "\n" ) !== false || strpos( $code_content, '<br' ) !== false ) {
+				if ( false !== strpos( $code_content, "\n" ) || false !== strpos( $code_content, '<br' ) ) {
 					// When converting to <pre>, we need to encode the content to maintain proper formatting, just like regular <pre> tags.
 					$formatted_content = bbp_encode_content_if_needed( $code_content );
 
