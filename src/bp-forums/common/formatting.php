@@ -576,6 +576,7 @@ function bbp_encode_content_if_needed( $content ) {
 	if ( preg_match( '/&[a-zA-Z0-9#]+;/', $content ) ) {
 		return $content;
 	}
+
 	return htmlspecialchars( $content, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 );
 }
 
@@ -636,7 +637,7 @@ function bbp_admin_convert_code_to_pre_and_apply_encoding( $content ) {
 				// Extract content between <pre> and </pre> tags.
 				$pre_content = preg_replace( '/^<pre\b[^>]*>(.*)<\/pre>$/is', '$1', $full_match );
 
-				// For <pre> tags, we always want to encode the content to prevent
+				// For <pre> tags, we always want to encode the content to prevent.
 				// HTML injection and maintain proper formatting.
 				$formatted_content = bbp_encode_content_if_needed( $pre_content );
 

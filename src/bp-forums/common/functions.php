@@ -384,8 +384,8 @@ function bbp_fix_post_author( $data = array(), $postarr = array() ) {
 }
 
 /**
- * Fix code tags when saving from the backend editor
- * Converts <code> tags to <pre> tags to preserve formatting
+ * Fix code tags when saving from the backend editor.
+ * Converts <code> tags to <pre> tags to preserve formatting.
  *
  * @since BuddyBoss [BBVERSION]
  *
