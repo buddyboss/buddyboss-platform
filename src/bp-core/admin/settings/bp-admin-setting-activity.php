@@ -70,7 +70,7 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 		// Allow Activity edit setting.
 		$this->add_field( '_bp_enable_activity_edit', __( 'Edit Activity', 'buddyboss' ), 'bp_admin_setting_callback_enable_activity_edit', 'intval' );
 
-		$this->add_field( 'bb_activity_post_title_enabled', __( 'Post Title', 'buddyboss' ), array( $this, 'bb_admin_setting_callback_enable_activity_post_title' ), 'intval' );
+		$this->add_field( 'bb_activity_post_title_enabled', __( 'Post title', 'buddyboss' ), array( $this, 'bb_admin_setting_callback_enable_activity_post_title' ), 'intval' );
 
 		$this->add_field( '_bp_activity_edit_time', __( 'Edit Activity Time Limit', 'buddyboss' ), '__return_true', 'intval', array(
 			'class' => 'hidden',
