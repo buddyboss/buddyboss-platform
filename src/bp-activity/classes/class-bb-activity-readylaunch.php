@@ -217,7 +217,7 @@ class BB_Activity_Readylaunch {
 
 		// Return your custom HTML structure.
 		return sprintf(
-			'<a href="%1$s" class="button bp-like-button bp-secondary-action %5$s" aria-pressed="false" data-reacted-id="%6$s">
+			'<a href="%1$s" class="button bp-like-button bp-secondary-action %5$s" data-pressed="false" data-reacted-id="%6$s">
 				<span class="bp-screen-reader-text">%2$s</span>
 				%3$s
 				<span class="like-count reactions_item" style="%4$s">%2$s</span>
@@ -439,7 +439,7 @@ class BB_Activity_Readylaunch {
 		global $wpdb, $bp;
 
 		// phpcs:ignore
-		return (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$bp->activity->table_name} WHERE type = 'activity_comment' AND item_id = %d", $activity_id ) );
+		return (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$bp->activity->table_name} WHERE type = 'activity_comment' AND is_spam = 0 AND item_id = %d", $activity_id ) );
 	}
 
 	/**
