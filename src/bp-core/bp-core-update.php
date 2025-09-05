@@ -520,6 +520,9 @@ function bp_version_updater() {
 		}
 		if ( $raw_db_version < 23521 ) {
 			bb_update_to_2_9_50();
+		}
+
+		if ( $raw_db_version < 23531 ) {
 			bb_update_to_2_10_1();
 		}
 
