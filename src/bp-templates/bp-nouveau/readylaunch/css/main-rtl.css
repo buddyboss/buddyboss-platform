@@ -13101,6 +13101,10 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   overflow: auto;
 }
 
+body.bb-rl-activity-modal-open .bb-rl-activity-update-form.modal-popup {
+  z-index: 999999;
+}
+
 .bb-rl-activity-update-form.modal-popup .bb-rl-activity-update-form-overlay {
   position: fixed;
   right: 0;
@@ -13282,6 +13286,10 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 .bb-rl-activity-form.bb-rl-focus-in [class*="post-elements-buttons-item"].disable {
   pointer-events: none;
   opacity: 0.4;
+}
+
+.bb-rl-activity-form.bb-rl-focus-in [class*="post-elements-buttons-item"].bb-rl-document-support-hide, .bb-rl-activity-form.bb-rl-focus-in [class*="post-elements-buttons-item"].bb-rl-video-support-hide, .bb-rl-activity-form.bb-rl-focus-in [class*="post-elements-buttons-item"].bb-rl-post-gif-hide, .bb-rl-activity-form.bb-rl-focus-in [class*="post-elements-buttons-item"].bb-rl-media-support-hide {
+  display: none;
 }
 
 .bb-rl-activity-form.bb-rl-focus-in [class*="post-elements-buttons-item"]:last-child {
