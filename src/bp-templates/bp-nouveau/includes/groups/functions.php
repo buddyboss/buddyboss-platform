@@ -517,7 +517,15 @@ function bp_nouveau_prepare_group_for_js( $item ) {
 		$args['topics']['topic_lists'] = ! empty( $topics ) ? $topics : array();
 	}
 
-	return $args;
+	/**
+	 * Filters the group data for use with javascript.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array   $args Array of group data.
+	 * @param object  $item The group object.
+	 */
+	return apply_filters( 'bp_nouveau_prepare_group_for_js', $args, $item );
 }
 
 /**
