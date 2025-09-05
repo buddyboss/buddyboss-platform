@@ -4053,7 +4053,7 @@ function bb_activity_save_topic_data( $activity ) {
  * Add LEFT JOIN for unanswered activities filter.
  * This replaces the NOT EXISTS clause with a more performant LEFT JOIN approach.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.11.0
  *
  * @param string $join_sql   The JOIN SQL to be filtered.
  * @param array  $r          The arguments passed to BP_Activity_Activity::get().
@@ -4083,7 +4083,7 @@ function bb_activity_unanswered_only_join_sql_filter( $join_sql, $r ) {
 		/**
 		 * Filter the join conditions for unanswered activities.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.11.0
 		 *
 		 * @param array  $join_conditions The join conditions to be filtered.
 		 * @param array  $r               The arguments passed to BP_Activity_Activity::get().
@@ -4096,7 +4096,7 @@ function bb_activity_unanswered_only_join_sql_filter( $join_sql, $r ) {
 		/**
 		 * Filter the join SQL for unanswered activities.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.11.0
 		 *
 		 * @param string $join_sql The join SQL to be filtered.
 		 * @param array  $r        The arguments passed to BP_Activity_Activity::get().
