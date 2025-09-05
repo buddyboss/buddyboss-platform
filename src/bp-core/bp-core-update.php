@@ -4003,7 +4003,7 @@ function bb_update_to_2_9_4() {
 /**
  * Add index for activity table.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.11.0
  *
  * @return void
  */
