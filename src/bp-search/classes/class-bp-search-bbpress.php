@@ -57,6 +57,65 @@ if ( ! class_exists( 'Bp_Search_bbPress' ) ) :
 			);
 		}
 
+		/**
+		 * Get user accessible groups with static caching to avoid code duplication.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return array Array containing user_group_ids and excluded_group_ids
+		 */
+		protected function get_user_accessible_groups() {
+			static $cache = null;
+
+			if ( null !== $cache ) {
+				return $cache;
+			}
+
+			$user_group_ids     = array();
+			$excluded_group_ids = array();
+
+			if ( bp_is_active( 'groups' ) ) {
+				$current_user_id = get_current_user_id();
+
+				// Get user's group memberships.
+				$user_groups    = bp_get_user_groups(
+					$current_user_id,
+					array(
+						'is_admin' => null,
+						'is_mod'   => null,
+					)
+				);
+				$user_group_ids = wp_list_pluck( $user_groups, 'group_id' );
+
+				// Use static cache for restricted groups to avoid multiple database queries.
+				static $restricted_groups_cache = null;
+
+				if ( null === $restricted_groups_cache ) {
+					// Get all private and hidden groups.
+					$restricted_groups       = groups_get_groups(
+						array(
+							'fields'   => 'ids',
+							'status'   => array( 'private', 'hidden' ),
+							'per_page' => - 1,
+						)
+					);
+					$restricted_groups_cache = ! empty( $restricted_groups['groups'] ) ? $restricted_groups['groups'] : array();
+				}
+
+				$restricted_group_ids = $restricted_groups_cache;
+
+				// Groups that user cannot access.
+				$excluded_group_ids = array_diff( $restricted_group_ids, $user_group_ids );
+			}
+
+			$cache = array(
+				'user_group_ids'     => $user_group_ids,
+				'excluded_group_ids' => $excluded_group_ids,
+			);
+
+			return $cache;
+		}
+
 		protected function generate_html( $template_type = '' ) {
 			$post_ids = array();
 			foreach ( $this->search_results['items'] as $item_id => $item_html ) {
@@ -98,6 +157,41 @@ if ( ! class_exists( 'Bp_Search_bbPress' ) ) :
 				}
 			}
 			wp_reset_postdata();
+		}
+
+		/**
+		 * Get all nested child forum ids.
+		 *
+		 * @since BuddyBoss 1.6.3
+		 *
+		 * @uses bbp_get_forum_post_type() Get forum post type.
+		 *
+		 * @param int $forum_id Forum ID to get nested child forum ids for.
+		 *
+		 * @return array
+		 */
+		public function nested_child_forum_ids( $forum_id ) {
+			static $bp_nested_child_forum_ids = array();
+			global $wpdb;
+
+			$cache_key = 'nested_child_forum_ids_' . bbp_get_forum_post_type() . '_' . $forum_id;
+			if ( ! isset( $bp_nested_child_forum_ids[ $cache_key ] ) ) {
+				// SQL query for getting all nested child forum id from parent forum id.
+				$sql = "SELECT ID
+				FROM  ( SELECT * FROM {$wpdb->posts} WHERE post_type = %s AND post_status IN ( 'publish', 'private', 'hidden' ) ) forum_sorted,
+					  ( SELECT @pv := %d, @pvv := %d ) initialisation
+				WHERE FIND_IN_SET( post_parent, @pvv )
+				AND   LENGTH( @pvv := CONCAT(@pv, ',', ID ) )";
+
+				// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+				$child_forum_ids = $wpdb->get_col( $wpdb->prepare( $sql, bbp_get_forum_post_type(), $forum_id, $forum_id ) );
+
+				$bp_nested_child_forum_ids[ $cache_key ] = $child_forum_ids;
+			} else {
+				$child_forum_ids = $bp_nested_child_forum_ids[ $cache_key ];
+			}
+
+			return $child_forum_ids;
 		}
 
 	}
