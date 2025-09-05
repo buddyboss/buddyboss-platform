@@ -713,10 +713,10 @@ window.bp = window.bp || {};
 
 				types.forEach(
 					function ( type ) {
-						var subtype        = 'document' === type ? 'media' : type,
+						var subtype        = type,
 						activityKeyGroup   = 'group_' + type,
 						activityKeyProfile = 'profile_' + type;
-						if ( 'groups' === context ) {
+						if ( 'group' === context ) {
 							if ( ! _.isUndefined( activity_data[ activityKeyGroup ] ) && false === activity_data[ activityKeyGroup ] ) {
 								typeSupport.find( '.bb-rl-post-' + subtype + '.bb-rl-' + type + '-support' ).removeClass( 'active' ).addClass( 'bb-rl-' + type + '-support-hide' );
 								$( '.bb-rl-edit-activity-content-wrap #bb-rl-whats-new-attachments .bb-rl-activity-' + type + '-container #bb-rl-activity-post-' + type + '-uploader .dz-default.dz-message' ).hide();
@@ -3130,16 +3130,16 @@ window.bp = window.bp || {};
 				types.forEach(
 					function ( type ) {
 						var groupType  = 'group_' + type,
-							changeType = 'document' === type ? 'media' : type;
+							changeType = type;
 						if ( 'undefined' !== typeof modelAttributes[ groupType ] && false === modelAttributes[ groupType ] ) {
 							var dropzone = bp.Nouveau.Activity.postForm.dropzone;
 
 							if ( ! dropzone || 'bb-rl-activity-post-' + type + '-uploader' === dropzone.element.id ) {
-								typeSupport.find( 'bb-rl-post-' + changeType + '.bb-rl-' + type + '-support' ).removeClass( 'active' ).addClass( 'bb-rl-' + type + '-support-hide' );
+								typeSupport.find( '.bb-rl-post-' + changeType + '.bb-rl-' + type + '-support' ).removeClass( 'active' ).addClass( 'bb-rl-' + type + '-support-hide' );
 								Backbone.trigger( 'activity_' + type + '_close' );
 							}
 						} else {
-							typeSupport.find( 'bb-rl-post-' + changeType + '.bb-rl-' + type + '-support' ).removeClass( 'bb-rl-' + type + '-support-hide' );
+							typeSupport.find( '.bb-rl-post-' + changeType + '.bb-rl-' + type + '-support' ).removeClass( 'bb-rl-' + type + '-support-hide' );
 						}
 					}
 				);
@@ -6116,7 +6116,7 @@ window.bp = window.bp || {};
 		var typeSupport          = $( '#bb-rl-whats-new-toolbar' ),
 			$postEmoji           = $( '#bb-rl-editor-toolbar .bb-rl-post-emoji' ),
 			$whatsNewAttachments = $( '#bb-rl-whats-new-attachments' ),
-			context              = model && model.get( 'object' ) ? 'group' : 'user',
+			context              = model && ! _.isUndefined( model.get( 'object' ) ) ? model.get( 'object' ) : 'user',
 			types                = ['media', 'document', 'video'];
 
 		types.forEach(

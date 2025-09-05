@@ -351,6 +351,10 @@
 			border: 0.5px solid var(--bb-rl-border-secondary-color);
 			border-radius: var(--bb-rl-radius-md);
 		}
+
+		&.bb-rl-media-support-hide {
+			display: none;
+		}
 	}
 
 	.bb-rl-forum-subscription {
