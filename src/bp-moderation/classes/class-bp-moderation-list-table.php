@@ -849,7 +849,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 	 * @return array
 	 */
 	public function bb_update_moderation_where_conditions( $where_conditions, $r ) {
-		$where_conditions['reported'] = 'ms.reported != 0 OR ms.user_report != 0 OR ms.hide_sitewide != 0';
+		$where_conditions['reported'] = '( ms.reported != 0 OR ms.user_report != 0 OR ms.hide_sitewide != 0 )';
 
 		return $where_conditions;
 	}

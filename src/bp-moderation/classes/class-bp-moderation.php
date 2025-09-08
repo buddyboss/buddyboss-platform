@@ -518,7 +518,7 @@ class BP_Moderation {
 			if ( $is_member_search ) {
 				// For member searches, join the users table and search in user fields.
 				if ( ! strpos( $join_sql, $wpdb->users ) ) {
-					$join_sql .= " LEFT JOIN {$wpdb->users} u ON ms.item_id = u.ID AND ms.item_type = '" . BP_Moderation_Members::$moderation_type . "'";
+					$join_sql .= " INNER JOIN {$wpdb->users} u ON ms.item_id = u.ID AND ms.item_type = '" . BP_Moderation_Members::$moderation_type . "'";
 				}
 				$where_conditions['search'] = $wpdb->prepare(
 					"(u.display_name LIKE %s OR u.user_login LIKE %s OR u.user_email LIKE %s)",
