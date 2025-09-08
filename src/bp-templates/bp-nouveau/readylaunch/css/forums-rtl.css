@@ -2523,6 +2523,29 @@
   border-radius: var(--bb-rl-radius-base);
 }
 
+.bb-rl-single-forum-list .bb-rl-reply-content pre {
+  font-size: var(--bb-rl-font-size-sm);
+  background-color: var(--bb-rl-background-secondary-color);
+  padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+  margin-bottom: var(--bb-rl-space-200);
+  border-radius: var(--bb-rl-radius-md);
+}
+
+.bb-rl-single-forum-list .bb-rl-reply-content blockquote {
+  font-size: var(--bb-rl-font-size-sm);
+  font-style: italic;
+  background-color: var(--bb-rl-background-secondary-color);
+  border-right: 2px solid var(--bb-rl-background-tertiary-color);
+  padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+  margin-bottom: var(--bb-rl-space-200);
+}
+
+.bb-rl-single-forum-list .bb-rl-reply-content ol,
+.bb-rl-single-forum-list .bb-rl-reply-content ul {
+  font-size: var(--bb-rl-font-size-sm);
+  padding: 0 var(--bb-rl-space-300) var(--bb-rl-space-200) 0;
+}
+
 .bb-rl-single-forum-list .bb_more_options .bbp-reply-to-link,
 .bb-rl-single-forum-list .bb_more_options .bbp-topic-reply-link {
   font-size: 0;
