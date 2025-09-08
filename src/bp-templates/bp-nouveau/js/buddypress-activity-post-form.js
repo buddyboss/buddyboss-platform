@@ -1059,20 +1059,22 @@ window.bp = window.bp || {};
 
 			bp.draft_activity.allow_delete_media = true;
 
-			// Checked the draft is available or doesn't edit activity.
-			if ( ! activity_data || $( '#whats-new-form' ).hasClass( 'bp-activity-edit' ) ) {
-				return;
-			}
-
+			var $whatsNewForm = $( '#whats-new-form' );
 			// Trigger custom event for draft activity loaded.
 			$( 'body' ).trigger( 'bb_activity_event',
 				{
 					type           : 'bb_activity_draft_loaded',
 					model          : this.model,
 					activity_data  : activity_data,
-					draft_activity : bp.draft_activity
+					draft_activity : bp.draft_activity,
+					$whatsNewForm  : $whatsNewForm
 				}
 			);
+
+			// Checked the draft is available or doesn't edit activity.
+			if ( ! activity_data || $whatsNewForm.hasClass( 'bp-activity-edit' ) ) {
+				return;
+			}
 
 			var is_profile_activity = this.isProfileDraftActivity( activity_data );
 
