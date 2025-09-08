@@ -411,7 +411,7 @@ window.bp = window.bp || {};
 			// Trigger custom event for edit activity loaded.
 			$( 'body' ).trigger( 'bb_activity_event',
 				{
-					type          : 'bb_activity_edit_loaded',
+					type          : 'bb_activity_edit_loaded_at_start',
 					model         : self.model,
 					activity_data : activity_data,
 				}
@@ -849,6 +849,15 @@ window.bp = window.bp || {};
 					Backbone.trigger( 'topic:update', activity_data.topics );
 				}
 			}
+
+			// Trigger custom event after edit activity loaded
+			$( 'body' ).trigger( 'bb_activity_event',
+				{
+					type          : 'bb_activity_edit_loaded_at_end',
+					model         : self.model,
+					activity_data : activity_data,
+				}
+			);
 		},
 
 		getCurrentDraftActivity: function () {
