@@ -78,12 +78,6 @@
 
 .bb-rl-topic-content {
 
-	p {
-
-		@include bb-rl-label-heading;
-		margin-bottom: var(--bb-rl-space-100);
-	}
-
 	.bb-activity-media-wrap {
 		margin: var(--bb-rl-space-200) 0;
 	}
@@ -282,6 +276,52 @@
 	}
 }
 
+.bb-rl-topic-content,
+.bb-rl-reply-content {
+
+	p {
+
+		@include bb-rl-label-heading;
+		margin-bottom: var(--bb-rl-space-100);
+
+		&:last-child {
+			margin-bottom: 0;
+		}
+	}
+
+	iframe {
+		border-radius: var(--bb-rl-radius-base);
+	}
+
+	code,
+	pre {
+		font-size: var(--bb-rl-font-size-sm);
+		background-color: var(--bb-rl-background-secondary-color);
+		padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+		margin-bottom: var(--bb-rl-space-200);
+		border-radius: var(--bb-rl-radius-md);
+	}
+
+	code {
+		display: inline-block;
+	}
+
+	blockquote {
+		font-size: var(--bb-rl-font-size-sm);
+		font-style: italic;
+		background-color: var(--bb-rl-background-secondary-color);
+		border-left: 2px solid var(--bb-rl-background-tertiary-color);
+		padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+		margin-bottom: var(--bb-rl-space-200);
+	}
+
+	ol,
+	ul {
+		font-size: var(--bb-rl-font-size-sm);
+		padding: 0 0 var(--bb-rl-space-200) var(--bb-rl-space-300);
+	}
+}
+
 .bb-rl-topic-reply-link-wrap {
 
 	a {
@@ -440,43 +480,6 @@
 
 	.bb-rl-reply-content {
 		padding: var(--bb-rl-space-100);
-
-		p {
-
-			@include bb-rl-label-heading;
-			margin-bottom: var(--bb-rl-space-100);
-
-			&:last-child {
-				margin-bottom: 0;
-			}
-		}
-
-		iframe {
-			border-radius: var(--bb-rl-radius-base);
-		}
-
-		pre {
-			font-size: var(--bb-rl-font-size-sm);
-			background-color: var(--bb-rl-background-secondary-color);
-			padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-			margin-bottom: var(--bb-rl-space-200);
-			border-radius: var(--bb-rl-radius-md);
-		}
-
-		blockquote {
-			font-size: var(--bb-rl-font-size-sm);
-			font-style: italic;
-			background-color: var(--bb-rl-background-secondary-color);
-			border-left: 2px solid var(--bb-rl-background-tertiary-color);
-			padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-			margin-bottom: var(--bb-rl-space-200);
-		}
-
-		ol,
-		ul {
-			font-size: var(--bb-rl-font-size-sm);
-			padding: 0 0 var(--bb-rl-space-200) var(--bb-rl-space-300);
-		}
 	}
 
 	.bb_more_options {
