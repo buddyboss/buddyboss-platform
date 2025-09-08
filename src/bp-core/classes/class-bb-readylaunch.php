@@ -3479,7 +3479,8 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			}
 
 			// Check for URL parameters that indicate password reset.
-			// Ignore the woocommerce page key query param for order confirmation.
+			// LearnDash password reset URLs should have both 'key' and 'action=rp' parameters.
+			// This prevents false positives from other plugins using 'key' parameter.
 			if ( isset( $_GET['ld-resetpw'] ) || isset( $_GET['password_reset'] ) || ( isset( $_GET['key'] ) && 'rp' === $_GET['action'] ) || isset( $_GET['login'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 				return true;
 			}
