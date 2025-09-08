@@ -5235,7 +5235,20 @@ window.bp = window.bp || {};
 					if ( true === bp.Nouveau.Media.reply_topic_allow_delete_media ) {
 						if ( dropzoneDataObj.length ) {
 							for ( var i in dropzoneDataObj ) {
-								if ( file.upload.uuid === dropzoneDataObj[ i ].uuid ) {
+								// Compare using media_edit_data.id which contains the actual media ID
+								// that matches dropzoneDataObj[i].id (media attachment ID)
+								var fileMediaId = null;
+								if( file.media_edit_data ) {
+									fileMediaId = file.media_edit_data.id;
+								} else if( file.document_edit_data ) {
+									fileMediaId = file.document_edit_data.id;
+								} else if( file.video_edit_data ) {
+									fileMediaId = file.video_edit_data.id;
+								} else {
+									fileMediaId = file.id;
+								}
+
+								if ( fileMediaId === dropzoneDataObj[ i ].id ) {
 									if ( (
 										! this.bbp_is_reply_edit && ! this.bbp_is_topic_edit && ! this.bbp_is_forum_edit
 										) && typeof dropzoneDataObj[ i ].saved !== 'undefined' && ! dropzoneDataObj[ i ].saved && 'edit' === bp.Nouveau.Media.reply_topic_display_post ) {
