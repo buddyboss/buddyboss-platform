@@ -3480,7 +3480,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 			// Check for URL parameters that indicate password reset.
 			// Ignore the woocommerce page key query param for order confirmation.
-			if ( isset( $_GET['ld-resetpw'] ) || isset( $_GET['password_reset'] ) || ( isset( $_GET['key'] ) && false === strpos( $_GET['key'], 'wc_order' ) ) || isset( $_GET['login'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			if ( isset( $_GET['ld-resetpw'] ) || isset( $_GET['password_reset'] ) || ( isset( $_GET['key'] ) && 'rp' === $_GET['action'] ) || isset( $_GET['login'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 				return true;
 			}
 
