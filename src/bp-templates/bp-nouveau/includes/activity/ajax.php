@@ -1173,8 +1173,9 @@ function bb_nouveau_ajax_post_draft_activity() {
 			if ( isset( $draft_activity['data']['bb_activity_post_feature_image'] ) && ! empty( $draft_activity['data']['bb_activity_post_feature_image'] ) ) {
 				$attachment_id = isset( $draft_activity['data']['bb_activity_post_feature_image']['id'] ) ? $draft_activity['data']['bb_activity_post_feature_image']['id'] : 0;
 				if ( function_exists( 'bb_pro_activity_post_feature_image_instance' ) ) {
-					$validate_attachment = bb_pro_activity_post_feature_image_instance()->bb_user_can_edit_feature_image(
+					$validate_attachment = bb_pro_activity_post_feature_image_instance()->bb_user_can_perform_feature_image_action(
 						array(
+							'action'        => 'edit',
 							'attachment_id' => $attachment_id,
 							'user_id'       => ! empty( $draft_activity['data']['user_id'] ) ? $draft_activity['data']['user_id'] : bp_loggedin_user_id(),
 							'object'        => ! empty( $draft_activity['data']['object'] ) ? $draft_activity['data']['object'] : '',
