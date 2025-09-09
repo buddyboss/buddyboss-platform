@@ -10093,3 +10093,14 @@ function bb_pro_group_activity_topics_version() {
 function bb_is_readylaunch_enabled() {
 	return bp_get_option( 'bb_rl_enabled', false );
 }
+
+/**
+ * Function to return the minimum pro version to show notice for post feature image.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string
+ */
+function bb_pro_post_feature_image_version() {
+	return '2.8.0'; // @todo: update when release.
+}
