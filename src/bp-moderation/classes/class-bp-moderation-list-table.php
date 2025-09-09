@@ -241,7 +241,8 @@ class BP_Moderation_List_Table extends WP_List_Table {
 	/**
 	 * Generate the table navigation above or below the table
 	 *
-	 * @since BuddyBoss 1.5.6
+	 * @since BuddyBoss [BBVERSION]
+	 *
 	 * @param string $which Position of navigation (top or bottom).
 	 */
 	protected function display_tablenav( $which ) {
@@ -274,7 +275,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 					}
 
 					// Get current filter value.
-					$selected_type = isset( $_GET['content_type'] ) ? sanitize_text_field( $_GET['content_type'] ) : '';
+					$selected_type = isset( $_GET['content_type'] ) ? sanitize_text_field( wp_unslash( $_GET['content_type'] ) ) : ''; //phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
 					if ( ! empty( $content_types ) ) {
 						?>
@@ -849,7 +850,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 	 * @return array
 	 */
 	public function bb_update_moderation_where_conditions( $where_conditions, $r ) {
-		$where_conditions['reported'] = 'ms.reported != 0 OR ms.user_report != 0 OR ms.hide_sitewide != 0';
+		$where_conditions['reported'] = '( ms.reported != 0 OR ms.user_report != 0 OR ms.hide_sitewide != 0 )';
 
 		return $where_conditions;
 	}
