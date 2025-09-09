@@ -6407,6 +6407,15 @@ window.bp = window.bp || {};
 		},
 
 		/**
+		 * Common function to safely call Media functions
+		 */
+		invokeMediaFn: function( functionName ) {
+			if ( 'undefined' !== typeof bp.Nouveau.Media && 'function' === typeof bp.Nouveau.Media[ functionName ] ) {
+				bp.Nouveau.Media[ functionName ]();
+			}
+		},
+
+		/**
 		 * When the GIF comes into your screen it should auto play
 		 */
 		autoPlayGifVideos: function () {
@@ -6467,9 +6476,7 @@ window.bp = window.bp || {};
 						mediaModalActivityItem.addEventListener( 'scroll', bp.Nouveau.Media.throttledAutoPlayGifVideos.bind( bp.Nouveau.Media ), false );
 						
 						// Trigger initial check for GIFs in the modal
-						if ( typeof bp.Nouveau.Media.autoPlayGifVideos === 'function' ) {
-							bp.Nouveau.Media.autoPlayGifVideos();
-						}
+						bp.Nouveau.Media.invokeMediaFn( 'autoPlayGifVideos' );
 						
 					} catch ( error ) {
 						console.debug( 'Error setting up media modal GIF autoplay:', error );
@@ -6904,18 +6911,14 @@ window.bp = window.bp || {};
 				$( '.bb-media-model-wrapper.media' ).show();
 				
 				// Setup GIF autoplay for the newly shown media modal
-				if ( typeof bp.Nouveau.Media.setupMediaModalGifAutoplay === 'function' ) {
-					bp.Nouveau.Media.setupMediaModalGifAutoplay();
-				}
+				bp.Nouveau.Media.invokeMediaFn( 'setupMediaModalGifAutoplay' );
 			self.is_open_media = true;
 
 			self.bodySelector.addClass( 'media-modal-open' );
 
 			// Trigger GIF autoplay check when media modal is opened
 			setTimeout( function() {
-				if ( typeof bp.Nouveau.Media !== 'undefined' && typeof bp.Nouveau.Media.autoPlayGifVideos === 'function' ) {
-					bp.Nouveau.Media.autoPlayGifVideos();
-				}
+				bp.Nouveau.Media.invokeMediaFn( 'autoPlayGifVideos' );
 			}, 500 );
 
 			//document.addEventListener( 'keyup', self.checkPressedKey.bind( self ) );
@@ -7030,9 +7033,7 @@ window.bp = window.bp || {};
 			
 			// Setup GIF autoplay for the newly shown document modal
 			setTimeout( function() {
-				if ( typeof bp.Nouveau.Media !== 'undefined' && typeof bp.Nouveau.Media.setupMediaModalGifAutoplay === 'function' ) {
-					bp.Nouveau.Media.setupMediaModalGifAutoplay();
-				}
+				bp.Nouveau.Media.invokeMediaFn( 'setupMediaModalGifAutoplay' );
 			}, 500 );
 			
 			//document.addEventListener( 'keyup', self.checkPressedKeyDocuments.bind( self ) );
@@ -7466,9 +7467,7 @@ window.bp = window.bp || {};
 				
 				// Trigger GIF autoplay check when navigating to next media
 				setTimeout( function() {
-					if ( typeof bp.Nouveau.Media !== 'undefined' && typeof bp.Nouveau.Media.autoPlayGifVideos === 'function' ) {
-						bp.Nouveau.Media.autoPlayGifVideos();
-					}
+					bp.Nouveau.Media.invokeMediaFn( 'autoPlayGifVideos' );
 				}, 500 );
 			} else {
 				self.nextLink.hide();
@@ -7488,9 +7487,7 @@ window.bp = window.bp || {};
 				
 				// Trigger GIF autoplay check when navigating to previous media
 				setTimeout( function() {
-					if ( typeof bp.Nouveau.Media !== 'undefined' && typeof bp.Nouveau.Media.autoPlayGifVideos === 'function' ) {
-						bp.Nouveau.Media.autoPlayGifVideos();
-					}
+					bp.Nouveau.Media.invokeMediaFn( 'autoPlayGifVideos' );
 				}, 500 );
 			} else {
 				self.previousLink.hide();
