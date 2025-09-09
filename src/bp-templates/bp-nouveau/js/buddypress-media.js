@@ -6340,7 +6340,10 @@ window.bp = window.bp || {};
 				$button = $( event.currentTarget ).find( '.gif-play-button' );
 			if ( video.paused == true ) {
 				// Play the video.
-				video.play();
+				video.play().catch( function( error ) {
+					// Silently handle play errors (e.g., user hasn't interacted with page yet)
+					console.debug( 'GIF play failed:', error );
+				});
 
 				// Update the button text to 'Pause'.
 				$button.hide();
