@@ -521,7 +521,7 @@ class BP_Moderation {
 					$join_sql .= " INNER JOIN {$wpdb->users} u ON ms.item_id = u.ID AND ms.item_type = '" . BP_Moderation_Members::$moderation_type . "'";
 				}
 				$where_conditions['search'] = $wpdb->prepare(
-					"(u.display_name LIKE %s OR u.user_login LIKE %s OR u.user_email LIKE %s)",
+					'(u.display_name LIKE %s OR u.user_login LIKE %s OR u.user_email LIKE %s)',
 					$search_terms_like,
 					$search_terms_like,
 					$search_terms_like
@@ -535,7 +535,7 @@ class BP_Moderation {
 
 				// Search in item ID, item type, and report content.
 				$where_conditions['search'] = $wpdb->prepare(
-					"(ms.item_id LIKE %s OR ms.item_type LIKE %s OR mr.content LIKE %s)",
+					'(ms.item_id LIKE %s OR ms.item_type LIKE %s OR mr.content LIKE %s)',
 					$search_terms_like,
 					$search_terms_like,
 					$search_terms_like
