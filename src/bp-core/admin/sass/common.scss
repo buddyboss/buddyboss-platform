@@ -5685,6 +5685,10 @@ h1.bb-advance-heading {
 	}
 }
 
+.section-bb_activity_topics .bp-hide {
+	display: none;
+}
+
 // Add topic modal
 .bb-modal-panel--activity-topic.bb-modal-panel,
 .bb-modal-panel--activity-topic-migrate.bb-modal-panel {
