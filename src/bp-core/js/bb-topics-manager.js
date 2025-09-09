@@ -1073,9 +1073,6 @@ window.bp = window.bp || {};
 					topicFilterATag.removeClass( 'selected active' );
 					$topicLink.addClass( 'selected active' );
 
-					// Store the topic ID in BP's storage.
-					bp.Nouveau.setStorage( 'bp-activity', 'topic_id', $topicLink.data( 'topic-id' ) );
-
 					// Scroll to the feed [data-bp-list="activity"].
 					var $feed = $( '[data-bp-list="activity"]' );
 					if ( $feed.length > 0 ) {
