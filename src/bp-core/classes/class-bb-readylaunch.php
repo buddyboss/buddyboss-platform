@@ -3469,7 +3469,9 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			}
 
 			// Check for URL parameters that indicate password reset.
-			if ( isset( $_GET['ld-resetpw'] ) || isset( $_GET['password_reset'] ) || isset( $_GET['key'] ) || isset( $_GET['login'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			// LearnDash password reset URLs should have both 'key' and 'action=rp' parameters.
+			// This prevents false positives from other plugins using 'key' parameter.
+			if ( isset( $_GET['ld-resetpw'] ) || isset( $_GET['password_reset'] ) || ( isset( $_GET['key'] ) && 'rp' === $_GET['action'] ) || isset( $_GET['login'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 				return true;
 			}
 
