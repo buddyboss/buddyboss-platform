@@ -243,9 +243,11 @@ function bp_core_menu_highlight_parent_page( $retval, $page ) {
 	// Duplicate some logic from Walker_Page::start_el() to highlight menu items.
 	if ( ! empty( $page_id ) ) {
 		$_bp_page = get_post( $page_id );
+
 		if ( isset( $page->ID ) && in_array( $page->ID, $_bp_page->ancestors, true ) ) {
 			$retval[] = 'current_page_ancestor';
 		}
+
 		if ( isset( $page->ID ) && $page->ID === $page_id ) {
 			// Special handling for members component: don't highlight members page when on user profile pages
 			if ( 'members' === $component && bp_is_user() ) {
@@ -253,14 +255,18 @@ function bp_core_menu_highlight_parent_page( $retval, $page ) {
 			} else {
 				$retval[] = 'current_page_item';
 			}
-		} elseif ( isset( $page->ID ) && $_bp_page && $page->ID === $_bp_page->post_parent ) {
-		// Special handling for members component: don't highlight members page when on user profile pages
-		if ( 'members' === $component && bp_is_user() ) {
-			// Don't add current classes for members page when viewing user profiles
-		} else {
-			$retval[] = 'current-menu-item';
-			$retval[] = 'current_page_parent';
-		}
+		} elseif (
+			isset( $page->ID ) &&
+			$_bp_page &&
+			$page->ID === $_bp_page->post_parent
+		) {
+			// Special handling for members component: don't highlight members page when on user profile pages
+			if ( 'members' === $component && bp_is_user() ) {
+				// Don't add current classes for members page when viewing user profiles
+			} else {
+				$retval[] = 'current-menu-item';
+				$retval[] = 'current_page_parent';
+			}
 		}
 	}
 
@@ -2283,6 +2289,27 @@ function bb_change_nav_menu_links( $atts, $item, $args, $depth ) {
 add_filter( 'nav_menu_link_attributes', 'bb_change_nav_menu_links', 10, 4 );
 
 /**
+ * Helper function to extract members page ID from BuddyPress directory page IDs.
+ *
+ * @since BuddyBoss 2.0.6
+ *
+ * @param mixed $members_page_ids The result from bp_core_get_directory_page_ids('members').
+ * @return int|false The members page ID or false if not found.
+ */
+function bb_get_members_page_id( $members_page_ids ) {
+	if ( is_array( $members_page_ids ) ) {
+		if ( isset( $members_page_ids['members'] ) ) {
+			return $members_page_ids['members'];
+		} elseif ( ! empty( $members_page_ids ) ) {
+			return reset( $members_page_ids );
+		}
+		return false;
+	}
+	
+	return $members_page_ids;
+}
+
+/**
  * Filters to update the active classes for display user URLs and current user URLs.
  *
  * @since BuddyBoss 2.0.6
@@ -2327,9 +2354,9 @@ function bb_change_nav_menu_class( $classes, $item, $args, $depth ) {
 		// Method 2: Check if this menu item points to the actual members directory page
 		elseif ( isset( $item->object_id ) && function_exists( 'bp_core_get_directory_page_ids' ) ) {
 			$members_page_ids = bp_core_get_directory_page_ids( 'members' );
-			// Handle both single ID and array of IDs
-			$members_page_id = is_array( $members_page_ids ) ? ( isset( $members_page_ids['members'] ) ? $members_page_ids['members'] : ( ! empty( $members_page_ids ) ? reset( $members_page_ids ) : false ) ) : $members_page_ids;
-			if ( $members_page_id && $item->object_id == $members_page_id ) {
+			$members_page_id = bb_get_members_page_id( $members_page_ids );
+			
+			if ( $members_page_id && $item->object_id === $members_page_id ) {
 				$is_members_directory = true;
 			}
 		}
@@ -2341,8 +2368,8 @@ function bb_change_nav_menu_class( $classes, $item, $args, $depth ) {
 				$members_page_url = bp_get_members_directory_permalink();
 			} elseif ( function_exists( 'bp_core_get_directory_page_ids' ) ) {
 				$members_page_ids = bp_core_get_directory_page_ids( 'members' );
-				// Handle both single ID and array of IDs
-				$members_page_id = is_array( $members_page_ids ) ? ( isset( $members_page_ids['members'] ) ? $members_page_ids['members'] : ( ! empty( $members_page_ids ) ? reset( $members_page_ids ) : false ) ) : $members_page_ids;
+				$members_page_id = bb_get_members_page_id( $members_page_ids );
+				
 				if ( $members_page_id ) {
 					$members_page_url = get_permalink( $members_page_id );
 				}
