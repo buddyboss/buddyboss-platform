@@ -2333,6 +2333,12 @@ function bb_change_nav_menu_class( $classes, $item, $args, $depth ) {
 		// Check if this is the members page by looking at the URL or classes
 		$menu_classes = is_array( $item->classes ) ? implode( ' ', $item->classes ) : $item->classes;
 		
+		// Cache the members page IDs to avoid multiple API calls
+		static $cached_members_page_ids = null;
+		if ( $cached_members_page_ids === null && function_exists( 'bp_core_get_directory_page_ids' ) ) {
+			$cached_members_page_ids = bp_core_get_directory_page_ids( 'members' );
+		}
+		
 		// Check if this is the members directory page
 		$is_members_directory = false;
 		
@@ -2341,9 +2347,8 @@ function bb_change_nav_menu_class( $classes, $item, $args, $depth ) {
 			$is_members_directory = true;
 		}
 		// Method 2: Check if this menu item points to the actual members directory page
-		elseif ( isset( $item->object_id ) && function_exists( 'bp_core_get_directory_page_ids' ) ) {
-			$members_page_ids = bp_core_get_directory_page_ids( 'members' );
-			$members_page_id = bb_get_members_page_id( $members_page_ids );
+		elseif ( isset( $item->object_id ) && $cached_members_page_ids !== null ) {
+			$members_page_id = bb_get_members_page_id( $cached_members_page_ids );
 			
 			if ( $members_page_id && $item->object_id === $members_page_id ) {
 				$is_members_directory = true;
@@ -2355,9 +2360,8 @@ function bb_change_nav_menu_class( $classes, $item, $args, $depth ) {
 			$members_page_url = '';
 			if ( function_exists( 'bp_get_members_directory_permalink' ) ) {
 				$members_page_url = bp_get_members_directory_permalink();
-			} elseif ( function_exists( 'bp_core_get_directory_page_ids' ) ) {
-				$members_page_ids = bp_core_get_directory_page_ids( 'members' );
-				$members_page_id = bb_get_members_page_id( $members_page_ids );
+			} elseif ( $cached_members_page_ids !== null ) {
+				$members_page_id = bb_get_members_page_id( $cached_members_page_ids );
 				
 				if ( $members_page_id ) {
 					$members_page_url = get_permalink( $members_page_id );
