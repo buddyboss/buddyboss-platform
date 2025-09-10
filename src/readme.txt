@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 6.8.1
 Requires PHP: 7.4.0
-Stable tag: 2.9.30
+Stable tag: 2.11.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,26 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 2.11.0 =
+* Enhancement: Activity - Added a new “Unanswered” option to the Activity Feed filter, allowing users to view posts without comments or replies
+* Bug: ReadyLaunch - Fixed an issue in ReadyLaunch where editing a discussion did not correctly remove previously uploaded media, causing old and new files to display together
+* Bug: ReadyLaunch - Fixed an issue in ReadyLaunch where the Edit Activity modal appeared behind the Activity modal
+* Bug: ReadyLaunch - Fixed an issue where the ReadyLaunch group sticky header overlapped the activity post form in the group feed
+
+= 2.10.0 =
+* New Feature! ReadyLaunch - Introduced a ReadyLaunch onboarding setup to guide users through initial configuration
+* Bug: Activity - Added new hooks in Activity Topics to provide extensibility support
+* Bug: Activity - Fixed an issue where replies to cached activity comments showed undefined instead of the correct user
+* Bug: Core -  Fixed accessibility issues across Platform and Theme for improved usability
+* Bug: Core - Enhanced advanced search to support flexible date formats and multiple languages for accurate member search on date fields
+* Bug: Core - Fixed PHP 8.4 warnings and removed extra database queries for better stability and performance
+* Bug: Groups - Fixed issue where the 'Send Request' button appeared for users allowed to join groups without approval
+* Bug: Media - Fixed a critical security vulnerability in the document download function to prevent unauthorized file access
+* Bug: Moderation - Fixed an issue where reported media from group feeds was still visible in group and media directories
+* Bug: Moderation - Fixed incorrect media counts in groups when moderation and content reporting settings were enabled
+* Bug: Profiles - Fixed default avatar initials showing incorrectly by using nickname instead of the selected display name format
+* Bug: Profiles - Fixed issue where the default Gender filter in profile fields did not work correctly when the option order was changed
 
 = 2.9.30 =
 * Bug: Activity - Fixed issue where the "More" label in topics was not translatable
