@@ -247,15 +247,20 @@ function bp_core_menu_highlight_parent_page( $retval, $page ) {
 			$retval[] = 'current_page_ancestor';
 		}
 		if ( isset( $page->ID ) && $page->ID === $page_id ) {
-			$retval[] = 'current_page_item';
-		} elseif ( isset( $page->ID ) && $_bp_page && $page->ID === $_bp_page->post_parent ) {
 			// Special handling for members component: don't highlight members page when on user profile pages
 			if ( 'members' === $component && bp_is_user() ) {
-				// Don't add current classes for members page when viewing user profiles
+				// Don't add current_page_item for members page when viewing user profiles
 			} else {
-				$retval[] = 'current-menu-item';
-				$retval[] = 'current_page_parent';
+				$retval[] = 'current_page_item';
 			}
+		} elseif ( isset( $page->ID ) && $_bp_page && $page->ID === $_bp_page->post_parent ) {
+		// Special handling for members component: don't highlight members page when on user profile pages
+		if ( 'members' === $component && bp_is_user() ) {
+			// Don't add current classes for members page when viewing user profiles
+		} else {
+			$retval[] = 'current-menu-item';
+			$retval[] = 'current_page_parent';
+		}
 		}
 	}
 
@@ -2312,13 +2317,39 @@ function bb_change_nav_menu_class( $classes, $item, $args, $depth ) {
 			}
 		}
 		
-		// Check if this is the members directory page (not a user profile)
+		// Check if this is the members directory page
 		$is_members_directory = false;
+		
+		// Method 1: Check for bp-members-nav class
 		if ( strpos( $menu_classes, 'bp-members-nav' ) !== false ) {
 			$is_members_directory = true;
-		} elseif ( isset( $item->url ) && strpos( $item->url, '/members/' ) !== false ) {
-			// If it's a members URL but not a specific user profile
-			if ( empty( $displayed_user_nicename ) || strpos( $item->url, '/members/' . $displayed_user_nicename ) === false ) {
+		}
+		// Method 2: Check if this menu item points to the actual members directory page
+		elseif ( isset( $item->object_id ) && function_exists( 'bp_core_get_directory_page_ids' ) ) {
+			$members_page_ids = bp_core_get_directory_page_ids( 'members' );
+			// Handle both single ID and array of IDs
+			$members_page_id = is_array( $members_page_ids ) ? ( isset( $members_page_ids['members'] ) ? $members_page_ids['members'] : ( ! empty( $members_page_ids ) ? reset( $members_page_ids ) : false ) ) : $members_page_ids;
+			if ( $members_page_id && $item->object_id == $members_page_id ) {
+				$is_members_directory = true;
+			}
+		}
+		// Method 3: Check URL structure (fallback for custom pages)
+		elseif ( isset( $item->url ) ) {
+			// Get the members page URL to compare
+			$members_page_url = '';
+			if ( function_exists( 'bp_get_members_directory_permalink' ) ) {
+				$members_page_url = bp_get_members_directory_permalink();
+			} elseif ( function_exists( 'bp_core_get_directory_page_ids' ) ) {
+				$members_page_ids = bp_core_get_directory_page_ids( 'members' );
+				// Handle both single ID and array of IDs
+				$members_page_id = is_array( $members_page_ids ) ? ( isset( $members_page_ids['members'] ) ? $members_page_ids['members'] : ( ! empty( $members_page_ids ) ? reset( $members_page_ids ) : false ) ) : $members_page_ids;
+				if ( $members_page_id ) {
+					$members_page_url = get_permalink( $members_page_id );
+				}
+			}
+			
+			// If we have a members page URL, check if this menu item matches it
+			if ( $members_page_url && untrailingslashit( $item->url ) === untrailingslashit( $members_page_url ) ) {
 				$is_members_directory = true;
 			}
 		}
