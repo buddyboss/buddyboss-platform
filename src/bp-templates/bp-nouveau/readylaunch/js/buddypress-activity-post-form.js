@@ -6131,11 +6131,11 @@ window.bp = window.bp || {};
 
 		types.forEach(
 			function ( type ) {
-				var subtype        = 'document' === type ? 'media' : type,
+				var subtype        = type,
 				activityKeyGroup   = 'group_' + type,
 				activityKeyProfile = 'profile_' + type;
-				if ( 'groups' === context ) {
-					if ( false === bbRlMedia[ activityKeyGroup ] ) {
+				if ( 'group' === context ) {
+					if ( false === ( 'video' === type ? bbRlVideo[ activityKeyGroup ] : bbRlMedia[ activityKeyGroup ] ) ) {
 						var validateDropZone = false;
 						if (
 						'undefined' === typeof options.dropzoneObj ||
@@ -6157,7 +6157,7 @@ window.bp = window.bp || {};
 						typeSupport.find( '.bb-rl-post-' + subtype + '.bb-rl-' + type + '-support' ).removeClass( 'bb-rl-' + type + '-support-hide' );
 					}
 				} else {
-					if ( false === bbRlMedia[ activityKeyProfile ] ) {
+					if ( false === ( 'video' === type ? bbRlVideo[ activityKeyProfile ] : bbRlMedia[ activityKeyProfile ] ) ) {
 						typeSupport.find( '.bb-rl-post-' + subtype + '.bb-rl-' + type + '-support' ).removeClass( 'active' ).addClass( 'bb-rl-' + type + '-support-hide' );
 						$whatsNewAttachments.find( '.dropzone.media-dropzone' ).removeClass( 'open dz-clickable' ).addClass( 'closed' );
 					} else {
