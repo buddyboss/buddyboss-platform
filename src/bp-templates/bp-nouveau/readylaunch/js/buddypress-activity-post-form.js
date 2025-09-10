@@ -5939,10 +5939,10 @@ window.bp = window.bp || {};
 
 		types.forEach(
 			function ( type ) {
-				var subtype        = 'document' === type ? 'media' : type,
+				var subtype        = type,
 				activityKeyGroup   = 'group_' + type,
 				activityKeyProfile = 'profile_' + type;
-				if ( 'groups' === context ) {
+				if ( 'group' === context ) {
 					if ( false === bbRlMedia[ activityKeyGroup ] ) {
 						var validateDropZone = false;
 						if (
