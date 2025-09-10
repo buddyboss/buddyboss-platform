@@ -2299,14 +2299,15 @@ add_filter( 'nav_menu_link_attributes', 'bb_change_nav_menu_links', 10, 4 );
 function bb_get_members_page_id( $members_page_ids ) {
 	if ( is_array( $members_page_ids ) ) {
 		if ( isset( $members_page_ids['members'] ) ) {
-			return $members_page_ids['members'];
+			return (int) $members_page_ids['members'];
 		} elseif ( ! empty( $members_page_ids ) ) {
-			return reset( $members_page_ids );
+			return (int) reset( $members_page_ids );
 		}
 		return false;
 	}
 	
-	return $members_page_ids;
+	// Ensure we return an integer or false
+	return is_numeric( $members_page_ids ) ? (int) $members_page_ids : false;
 }
 
 /**
@@ -2331,18 +2332,6 @@ function bb_change_nav_menu_class( $classes, $item, $args, $depth ) {
 	if ( in_array( 'current_page_item', $classes, true ) && function_exists( 'bp_is_user' ) && bp_is_user() ) {
 		// Check if this is the members page by looking at the URL or classes
 		$menu_classes = is_array( $item->classes ) ? implode( ' ', $item->classes ) : $item->classes;
-		
-		// Get the current displayed user's nicename safely
-		$displayed_user_nicename = '';
-		if ( function_exists( 'bp_get_displayed_user_nicename' ) ) {
-			$displayed_user_nicename = bp_get_displayed_user_nicename();
-		} elseif ( function_exists( 'bp_displayed_user_id' ) ) {
-			$user_id = bp_displayed_user_id();
-			if ( $user_id ) {
-				$user = get_userdata( $user_id );
-				$displayed_user_nicename = $user ? $user->user_nicename : '';
-			}
-		}
 		
 		// Check if this is the members directory page
 		$is_members_directory = false;
