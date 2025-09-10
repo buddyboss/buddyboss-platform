@@ -249,8 +249,13 @@ function bp_core_menu_highlight_parent_page( $retval, $page ) {
 		if ( isset( $page->ID ) && $page->ID === $page_id ) {
 			$retval[] = 'current_page_item';
 		} elseif ( isset( $page->ID ) && $_bp_page && $page->ID === $_bp_page->post_parent ) {
-			$retval[] = 'current-menu-item';
-			$retval[] = 'current_page_parent';
+			// Special handling for members component: don't highlight members page when on user profile pages
+			if ( 'members' === $component && bp_is_user() ) {
+				// Don't add current classes for members page when viewing user profiles
+			} else {
+				$retval[] = 'current-menu-item';
+				$retval[] = 'current_page_parent';
+			}
 		}
 	}
 
@@ -2287,6 +2292,39 @@ function bb_change_nav_menu_class( $classes, $item, $args, $depth ) {
 	if ( isset( $item->menu_type ) && 'buddyboss' === $item->menu_type && ! bp_is_groups_component() ) {
 		if ( bp_loggedin_user_domain() !== bp_displayed_user_domain() ) {
 			$classes = array_diff( $classes, array( 'current-menu-item', 'current_page_item' ) );
+		}
+	}
+
+	// Remove current classes from members page when on user profile pages
+	if ( in_array( 'current_page_item', $classes, true ) && function_exists( 'bp_is_user' ) && bp_is_user() ) {
+		// Check if this is the members page by looking at the URL or classes
+		$menu_classes = is_array( $item->classes ) ? implode( ' ', $item->classes ) : $item->classes;
+		
+		// Get the current displayed user's nicename safely
+		$displayed_user_nicename = '';
+		if ( function_exists( 'bp_get_displayed_user_nicename' ) ) {
+			$displayed_user_nicename = bp_get_displayed_user_nicename();
+		} elseif ( function_exists( 'bp_displayed_user_id' ) ) {
+			$user_id = bp_displayed_user_id();
+			if ( $user_id ) {
+				$user = get_userdata( $user_id );
+				$displayed_user_nicename = $user ? $user->user_nicename : '';
+			}
+		}
+		
+		// Check if this is the members directory page (not a user profile)
+		$is_members_directory = false;
+		if ( strpos( $menu_classes, 'bp-members-nav' ) !== false ) {
+			$is_members_directory = true;
+		} elseif ( isset( $item->url ) && strpos( $item->url, '/members/' ) !== false ) {
+			// If it's a members URL but not a specific user profile
+			if ( empty( $displayed_user_nicename ) || strpos( $item->url, '/members/' . $displayed_user_nicename ) === false ) {
+				$is_members_directory = true;
+			}
+		}
+		
+		if ( $is_members_directory ) {
+			$classes = array_diff( $classes, array( 'current_page_item', 'current-menu-item' ) );
 		}
 	}
 
