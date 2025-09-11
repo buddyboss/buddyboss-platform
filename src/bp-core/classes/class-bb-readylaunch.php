@@ -83,7 +83,12 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			}
 
 			$this->load_template_stack();
-			$this->load_login_registration_integration();
+			
+			// Load login registration integration if enabled in ReadyLaunch settings.
+			if ( $this->bb_rl_is_page_enabled_for_integration( 'registration' ) ) {
+				$this->load_login_registration_integration();
+			}
+			
 			$this->load_hooks();
 
 			// Added support for Forums integration.
@@ -947,7 +952,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				return $template;
 			}
 
-			if ( bp_is_register_page() ) {
+			if ( bp_is_register_page() && $this->bb_rl_is_page_enabled_for_integration( 'registration' ) ) {
 				$this->bb_rl_required_load();
 				return bp_locate_template( 'register.php' );
 			}
