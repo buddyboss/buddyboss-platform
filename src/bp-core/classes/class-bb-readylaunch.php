@@ -87,6 +87,9 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			// Load login registration integration if enabled in ReadyLaunch settings.
 			if ( $this->bb_rl_is_page_enabled_for_integration( 'registration' ) ) {
 				$this->load_login_registration_integration();
+			} else {
+				// Enqueue default login styles when readylaunch is enabled but login/registration setting is disabled
+				$this->load_default_styles_fallback();
 			}
 			
 			$this->load_hooks();
@@ -242,6 +245,17 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			add_action( 'login_form_login', array( $this, 'bb_rl_overwrite_login_email_field_label_hook' ) );
 
 			add_action( 'wp_login_errors', array( $this, 'bb_rl_wp_login_errors' ) );
+		}
+
+		/**
+		 * Load default styles fallback for login pages when readylaunch is enabled but setting is disabled.
+		 *
+		 * @since BuddyBoss 2.9.00
+		 */
+		protected function load_default_styles_fallback() {
+			// Re-enqueue default BuddyBoss theme stylesheets for login pages
+			// when readylaunch is enabled but the setting is disabled
+			add_action( 'login_enqueue_scripts', array( $this, 'bb_rl_enqueue_default_login_styles' ), 999 );
 		}
 
 		/**
@@ -4596,6 +4610,52 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			$visibility_levels['adminsonly']['label'] = __( 'Only me', 'buddyboss' );
 
 			return $visibility_levels;
+		}
+
+		/**
+		 * Enqueue default login styles when readylaunch is enabled but login/registration setting is disabled.
+		 *
+		 * @since BuddyBoss 2.9.00
+		 */
+		public function bb_rl_enqueue_default_login_styles() {
+			// Only enqueue if we're on a login page and the setting is disabled
+			if ( ! is_login() ) {
+				return;
+			}
+			
+			$registration_enabled = $this->bb_rl_is_page_enabled_for_integration( 'registration' );
+			if ( $registration_enabled ) {
+				return;
+			}
+			
+			$mincss = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
+			$rtl_css = is_rtl() ? '-rtl' : '';
+
+			// Enqueue Platform's buddypress.css
+			$bp_buddypress_url = buddypress()->plugin_url . "bp-templates/bp-nouveau/css/buddypress{$mincss}.css";
+			wp_enqueue_style( 'bp-nouveau', $bp_buddypress_url, '', bp_get_version() );
+
+			// Only enqueue BuddyBoss theme stylesheets if the theme is available
+			if ( function_exists( 'buddyboss_theme' ) ) {
+				// Enqueue BB icons stylesheets
+				$bb_icon_version = bb_icon_font_map( 'version' );
+				$bb_icon_version = ! empty( $bb_icon_version ) ? $bb_icon_version : buddyboss_theme()->version();
+				
+				$icons_map_url = get_template_directory_uri() . '/assets/css/icons-map' . $mincss . '.css';
+				$icons_url = get_template_directory_uri() . '/assets/icons/css/bb-icons' . $mincss . '.css';
+				
+				wp_enqueue_style( 'buddyboss-theme-icons-map', $icons_map_url, '', buddyboss_theme()->version() );
+				wp_enqueue_style( 'buddyboss-theme-icons', $icons_url, '', $bb_icon_version );
+
+				if ( buddyboss_is_bp_active() ) {
+					$buddypress_url = get_template_directory_uri() . '/assets/css' . $rtl_css . '/buddypress' . $mincss . '.css';
+					wp_enqueue_style( 'buddyboss-theme-buddypress', $buddypress_url, '', buddyboss_theme()->version() );
+				}
+
+				// Enqueue login stylesheet
+				$login_url = get_template_directory_uri() . '/assets/css' . $rtl_css . '/login' . $mincss . '.css';
+				wp_enqueue_style( 'buddyboss-theme-login', $login_url, '', buddyboss_theme()->version() );
+			}
 		}
 	}
 }
