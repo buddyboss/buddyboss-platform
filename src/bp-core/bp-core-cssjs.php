@@ -104,7 +104,7 @@ function bp_core_register_common_scripts() {
 
 		// Cropper.js for image cropping functionality
 		'bb-cropper-js'                 => array(
-			'file'         => buddypress()->plugin_url . 'bp-templates/bp-nouveau/js/cropper' . $min . '.js',
+			'file'         => "{$url}vendor/cropper{$min}.js",
 			'dependencies' => array( 'jquery' ),
 			'footer'       => true,
 		),
