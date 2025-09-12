@@ -327,20 +327,24 @@ class BP_Activity_Activity {
 			}
 		}
 
-		$validate_post_title = bb_validate_activity_post_title( $this->post_title, $this );
-		if ( ! $validate_post_title['valid'] ) {
-			$this->errors->add( 'bb_activity_invalid_post_title', $validate_post_title['message'] );
-			return $this->errors;
+		$prev_activity_status = ! empty( $this->id ) ? self::bb_get_activity_status( $this->id ) : '';
+		// Bypass post title validation ONLY when previous status was scheduled and current status is published.
+		$bypass_validation = (
+			! empty( $prev_activity_status ) &&
+			bb_get_activity_scheduled_status() === $prev_activity_status &&
+			bb_get_activity_published_status() === $this->status
+		);
+		if ( ! $bypass_validation ) {
+			$validate_post_title = bb_validate_activity_post_title( $this->post_title, $this );
+			if ( ! $validate_post_title['valid'] && ! $bypass_validation ) {
+				$this->errors->add( 'bb_activity_invalid_post_title', $validate_post_title['message'] );
+				return $this->errors;
+			}
+			$this->post_title = bb_activity_strip_post_title( $this->post_title );
 		}
-		$this->post_title = bb_activity_strip_post_title( $this->post_title );
-
-		$prev_activity_status = '';
 
 		// If we have an existing ID, update the activity item, otherwise insert it.
 		if ( ! empty( $this->id ) ) {
-
-			$prev_activity_status = self::bb_get_activity_status( $this->id );
-
 			$q = $wpdb->prepare( "UPDATE {$bp->activity->table_name} SET user_id = %d, component = %s, type = %s, action = %s, post_title = %s, content = %s, primary_link = %s, date_recorded = %s, date_updated = %s, item_id = %d, secondary_item_id = %d, hide_sitewide = %d, is_spam = %d, privacy = %s, status = %s WHERE id = %d", $this->user_id, $this->component, $this->type, $this->action, $this->post_title, $this->content, $this->primary_link, $this->date_recorded, $this->date_updated, $this->item_id, $this->secondary_item_id, $this->hide_sitewide, $this->is_spam, $this->privacy, $this->status, $this->id );
 		} else {
 			$q = $wpdb->prepare( "INSERT INTO {$bp->activity->table_name} ( user_id, component, type, action, post_title, content, primary_link, date_recorded, date_updated, item_id, secondary_item_id, hide_sitewide, is_spam, privacy, status ) VALUES ( %d, %s, %s, %s, %s, %s, %s, %s, %s, %d, %d, %d, %d, %s, %s )", $this->user_id, $this->component, $this->type, $this->action, $this->post_title, $this->content, $this->primary_link, $this->date_recorded, $this->date_updated, $this->item_id, $this->secondary_item_id, $this->hide_sitewide, $this->is_spam, $this->privacy, $this->status );
