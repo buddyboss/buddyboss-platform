@@ -20846,6 +20846,12 @@ table.profile-settings tbody td select {
   font-weight: 600;
 }
 
+.bb-rl-search-results-container .bb-activity-search-title h2 {
+  font-size: 16px;
+  font-weight: 500;
+  margin-bottom: var(--bb-rl-space-50);
+}
+
 .bb-rl-search-results-container li.bp-search-item span.middot,
 .bb-rl-search-results-container .bp-search-ajax-item span.middot,
 .bb-rl-search-modal li.bp-search-item span.middot,
