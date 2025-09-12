@@ -330,8 +330,8 @@ function bp_core_register_common_styles() {
 				'file'         => "{$url}vendor/video-js{$min}.css",
 				'dependencies' => array(),
 			),
-			'bb-cropper-css'           => array(
-				'file'         => buddypress()->plugin_url . 'bp-templates/bp-nouveau/css/cropper' . $min . '.css',
+			'bb-cropper-css'          => array(
+				'file'         => "{$url}vendor/cropper{$min}.css",
 			),
 		)
 	);

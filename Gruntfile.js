@@ -17,11 +17,7 @@ module.exports = function (grunt) {
 			'!**/*-rtl.css',
 			// '!bp-forums/**/*.css',
 			'!**/endpoints/**/*.css',
-			'!**/js/admin/readylaunch/styles/**/*.css',
-			'!bp-templates/bp-nouveau/css/cropper.css',
-			'!bp-templates/bp-nouveau/css/cropper-rtl.css',
-			'!bp-templates/bp-nouveau/css/cropper.min.css',
-			'!bp-templates/bp-nouveau/css/cropper-rtl.min.css'
+			'!**/js/admin/readylaunch/styles/**/*.css'
 		],
 
 		BP_JS = [
