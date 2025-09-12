@@ -1,4 +1,4 @@
-/* global bp, BP_Nouveau, _, Backbone, tinymce, bp_media_dropzone, BBTopicsManager */
+/* global bp, BP_Nouveau, _, Backbone, tinymce, bp_media_dropzone, BBTopicsManager, BBActivityPostFeatureImage */
 /* @version [BBVERSION] */
 /*jshint esversion: 6 */
 window.wp = window.wp || {};
@@ -60,9 +60,7 @@ window.bp = window.bp || {};
 			this.ActivityObjects = new bp.Collections.ActivityObjects();
 			this.buttons         = new Backbone.Collection();
 
-			if ( ! _.isUndefined( window.Dropzone ) && ! _.isUndefined( bbRlMedia ) ) {
-				this.dropzoneView();
-			}
+			this.dropzoneView();
 
 			this.postFormView();
 
@@ -174,26 +172,28 @@ window.bp = window.bp || {};
 			// set up dropzones auto discover to false so it does not automatically set dropzones.
 			window.Dropzone.autoDiscover = false;
 
-			this.dropzone_options = {
-				url                 		: bbRlAjaxUrl,
-				timeout             		: 3 * 60 * 60 * 1000,
-				dictFileTooBig      		: bbRlMedia.dictFileTooBig,
-				dictDefaultMessage  		: bbRlMedia.dropzone_media_message,
-				acceptedFiles       		: 'image/*',
-				autoProcessQueue    		: true,
-				addRemoveLinks      		: true,
-				uploadMultiple      		: false,
-				maxFiles            		: ! _.isUndefined( bbRlMedia.maxFiles ) ? bbRlMedia.maxFiles : 10,
-				maxFilesize         		: ! _.isUndefined( bbRlMedia.max_upload_size ) ? bbRlMedia.max_upload_size : 2,
-				dictMaxFilesExceeded		: bbRlMedia.media_dict_file_exceeded,
-				dictCancelUploadConfirmation: bbRlMedia.dictCancelUploadConfirmation,
-				// previewTemplate : document.getElementsByClassName( 'activity-post-media-template' )[0].innerHTML.
-				maxThumbnailFilesize: ! _.isUndefined( bbRlMedia.max_upload_size ) ? bbRlMedia.max_upload_size : 2,
-			};
+			if ( ! _.isUndefined( bbRlMedia ) ) {
+				this.dropzone_options = {
+					url                          : bbRlAjaxUrl,
+					timeout                      : 3 * 60 * 60 * 1000,
+					dictFileTooBig               : bbRlMedia.dictFileTooBig,
+					dictDefaultMessage           : bbRlMedia.dropzone_media_message,
+					acceptedFiles                : 'image/*',
+					autoProcessQueue             : true,
+					addRemoveLinks               : true,
+					uploadMultiple               : false,
+					maxFiles                     : ! _.isUndefined( bbRlMedia.maxFiles ) ? bbRlMedia.maxFiles : 10,
+					maxFilesize                  : ! _.isUndefined( bbRlMedia.max_upload_size ) ? bbRlMedia.max_upload_size : 2,
+					dictMaxFilesExceeded         : bbRlMedia.media_dict_file_exceeded,
+					dictCancelUploadConfirmation : bbRlMedia.dictCancelUploadConfirmation,
+					// previewTemplate : document.getElementsByClassName( 'activity-post-media-template' )[0].innerHTML.
+					maxThumbnailFilesize : ! _.isUndefined( bbRlMedia.max_upload_size ) ? bbRlMedia.max_upload_size : 2,
+				};
 
-			// if defined, add custom dropzone options.
-			if ( ! _.isUndefined( bbRlMedia.dropzone_options ) ) {
-				Object.assign( this.dropzone_options, bbRlMedia.dropzone_options );
+				// if defined, add custom dropzone options.
+				if ( ! _.isUndefined( bbRlMedia.dropzone_options ) ) {
+					Object.assign( this.dropzone_options, bbRlMedia.dropzone_options );
+				}
 			}
 		},
 
@@ -412,6 +412,15 @@ window.bp = window.bp || {};
 					activity_data.object = 'groups';
 				}
 			}
+
+			// Trigger custom event for edit activity loaded.
+			$( 'body' ).trigger( 'bb_activity_event',
+				{
+					type          : 'bb_activity_edit_loaded_at_start',
+					model         : self.model,
+					activity_data : activity_data,
+				}
+			);
 
 			// Set link image index and confirm image index.
 			self.postForm.model.set(
@@ -845,6 +854,15 @@ window.bp = window.bp || {};
 					Backbone.trigger( 'topic:update', activity_data.topics );
 				}
 			}
+
+			// Trigger custom event after edit activity loaded
+			$( 'body' ).trigger( 'bb_activity_event',
+				{
+					type          : 'bb_activity_edit_loaded_at_end',
+					model         : self.model,
+					activity_data : activity_data,
+				}
+			);
 		},
 
 		getCurrentDraftActivity: function () {
@@ -888,6 +906,17 @@ window.bp = window.bp || {};
 			bp.draft_activity.allow_delete_media = true;
 
 			var $whatsNewForm = $( '#bb-rl-whats-new-form' );
+			// Trigger custom event for draft activity loaded.
+			$( 'body' ).trigger( 'bb_activity_event',
+				{
+					type           : 'bb_activity_draft_loaded',
+					model          : this.model,
+					activity_data  : activity_data,
+					draft_activity : bp.draft_activity,
+					$whatsNewForm  : $whatsNewForm
+				}
+			);
+
 			// Checked the draft is available or doesn't edit activity.
 			if ( ! activity_data || $whatsNewForm.hasClass( 'bb-rl-activity-edit' ) ) {
 				return;
@@ -1009,6 +1038,21 @@ window.bp = window.bp || {};
 				}
 			);
 
+			$( 'body' ).trigger( 'bb_activity_event',
+				{
+					type          : 'bb_activity_draft_collect_activity',
+					model         : this.model,
+					activity_data : self.postForm.model.attributes,
+					meta          : meta
+				}
+			);
+
+			var noFeatureImages = (
+				'undefined' === typeof BBActivityPostFeatureImage ||
+				'function' !== typeof BBActivityPostFeatureImage.hasFeatureImages ||
+				! BBActivityPostFeatureImage.hasFeatureImages()
+			);
+
 			var filteredContent = $( $.parseHTML( content ) ).text().trim();
 			if ( content.includes( 'data-emoji-char' ) && '' === filteredContent ) {
 				filteredContent = content;
@@ -1016,7 +1060,7 @@ window.bp = window.bp || {};
 
 			// validation for content editor.
 			if ( '' === filteredContent &&
-				_.every( [self.postForm.model.get( 'media' ), self.postForm.model.get( 'document' ), self.postForm.model.get( 'video' ), self.postForm.model.get( 'gif_data' )], isUndefinedOrEmpty ) &&
+				_.every( [self.postForm.model.get( 'media' ), self.postForm.model.get( 'document' ), self.postForm.model.get( 'video' ), self.postForm.model.get( 'gif_data' ), noFeatureImages ], isUndefinedOrEmpty ) &&
 				(
 					(
 						! _.isUndefined( self.postForm.model.get( 'poll' ) ) &&
@@ -1147,6 +1191,15 @@ window.bp = window.bp || {};
 				'topics',
 			];
 
+			// Trigger custom event for draft activity loaded.
+			$( 'body' ).trigger( 'bb_activity_event',
+				{
+					type            : 'bb_activity_draft_data_keys',
+					model           : this.model,
+					draft_data_keys : draft_data_keys
+				}
+			);
+
 			_.each(
 				draft_data_keys,
 				function ( pair ) {
@@ -1276,7 +1329,6 @@ window.bp = window.bp || {};
 			localStorage.removeItem( bp.draft_activity.data_key );
 			self.postForm.$el.removeClass( 'has-draft' );
 			bp.draft_activity.post_action        = 'update';
-			bp.draft_activity.allow_delete_media = false;
 			bp.draft_activity.display_post       = '';
 
 			// Check if user can schedule in feed after discard draft.
@@ -1297,6 +1349,14 @@ window.bp = window.bp || {};
 			) {
 				$whatsNewForm.find( '.bb-post-poll-button' ).removeClass( 'bp-hide' );
 			}
+
+			// Trigger custom event for reset draft.
+			$( 'body' ).trigger( 'bb_activity_event',
+				{
+					type  : 'bb_activity_reset_draft',
+					model : self.model
+				}
+			);
 		},
 
 		reloadWindow: function () {
@@ -3733,6 +3793,17 @@ window.bp = window.bp || {};
 
 					localStorage.setItem( bp.draft_activity.data_key, JSON.stringify( bp.draft_activity ) );
 				}
+
+				// Trigger the event to handle privacy change data.
+				$( 'body' ).trigger( 'bb_activity_event',
+					{
+						type           : 'bb_activity_privacy_changed',
+						element        : this.$el,
+						model          : this.model,
+						whats_new_form : whats_new_form,
+						draft_activity : bp.draft_activity,
+					}
+				);
 			},
 
 			backPrivacySelector: function ( e ) {
@@ -3781,6 +3852,8 @@ window.bp = window.bp || {};
 					// Update multi media options dependent on profile/group view.
 					Backbone.trigger( 'mediaprivacytoolbar' );
 				}
+
+				Backbone.trigger( 'privacySelector' );
 			}
 		}
 	);
@@ -4427,7 +4500,12 @@ window.bp = window.bp || {};
 			},
 			onClose: function () {
 				if ( bp.draft_activity.data ) {
-					bp.draft_activity.allow_delete_media = false;
+					if (
+						'undefined' === typeof bp.draft_activity.is_discard_draft_activity ||
+						 false === bp.draft_activity.is_discard_draft_activity
+					) {
+						bp.draft_activity.allow_delete_media = false;
+					}
 					bp.draft_activity.display_post       = '';
 				}
 				if ( ! _.isNull( this.activityLinkPreview ) ) {
@@ -4445,6 +4523,14 @@ window.bp = window.bp || {};
 				if ( ! _.isNull( this.activityVideo ) ) {
 					this.activityVideo.destroyVideo();
 				}
+
+				// Destroy dropzone.
+				$( 'body' ).trigger( 'bb_activity_event',
+					{
+						type           : 'bb_activity_attachments_destroy',
+						draft_activity : bp.draft_activity
+					}
+				);
 			}
 		}
 	);
@@ -4667,6 +4753,11 @@ window.bp = window.bp || {};
 					}
 				}
 
+				// Add BB Activity Post Feature Image View.
+				if ( ! _.isUndefined( bp.Views.activityPostFeatureImageForm ) ) {
+					this.views.add( new bp.Views.activityPostFeatureImageForm( { model : this.model } ) );
+				}
+
 				this.views.add(
 					new bp.Views.ActivityInput(
 						{
@@ -4746,6 +4837,16 @@ window.bp = window.bp || {};
 					);
 
 					activityParams = _.extend( activityParams, pollParams );
+				}
+
+				// Pick parameters from bbRlActivity.params.post_feature_image.
+				if ( ! _.isUndefined( bbRlActivity.params.post_feature_image ) ) {
+					var featureImageParams = _.pick(
+						bbRlActivity.params.post_feature_image,
+						[ 'can_upload_post_feature_image' ]
+					);
+
+					activityParams = _.extend( activityParams, featureImageParams );
 				}
 
 				// Create the model with the merged parameters.
@@ -5339,6 +5440,14 @@ window.bp = window.bp || {};
 					self.model.set( 'video', video );
 				}
 
+				// Trigger custom event for form preparation.
+				$( 'body' ).trigger( 'bb_activity_event',
+					{
+						type  : 'bb_activity_form_prep',
+						model : self.model
+					}
+				);
+
 				// validation for content editor.
 				if (
 					$( $.parseHTML( content ) ).text().trim() === '' &&
@@ -5451,6 +5560,15 @@ window.bp = window.bp || {};
 					data.link_description = '';
 				}
 
+				// Trigger custom event for form data.
+				$( 'body' ).trigger( 'bb_activity_event',
+					{
+						type  : 'bb_activity_form_data',
+						model : self.model,
+						data  : data
+					}
+				);
+
 				bp.ajax.post( 'post_update', data ).done(
 					function ( response ) {
 
@@ -5531,6 +5649,15 @@ window.bp = window.bp || {};
 							}
 							self.model.set( 'video', videos );
 						}
+
+						// Trigger custom event for post-success handling.
+						$( 'body' ).trigger( 'bb_activity_event',
+							{
+								type     : 'bb_activity_post_success',
+								model    : self.model,
+								response : response
+							}
+						);
 
 						if ( '' === self.model.get( 'id' ) || 0 === parseInt( self.model.get( 'id' ) ) ) {
 							// Reset draft activity.

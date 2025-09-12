@@ -25,8 +25,7 @@ module.exports = function (grunt) {
 			'!**/*.min.js',
 			// '!bp-forums/**/*.js',
 			'!**/vendor/**/*.js',
-			'!**/endpoints/**/*.js',
-			'!bp-templates/bp-nouveau/readylaunch/js/cropper.js'
+			'!**/endpoints/**/*.js'
 		],
 
 		BP_EXCLUDED_MISC = ['!js/**'],

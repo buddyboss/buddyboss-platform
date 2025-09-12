@@ -76,6 +76,13 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 			'class' => 'hidden',
 		) );
 
+		$post_feature_image_pro_class      = bb_get_pro_fields_class( 'post_feature_image' );
+		$post_feature_image_notice         = bb_get_pro_label_notice( 'post_feature_image' );
+		$post_feature_image_args           = array();
+		$post_feature_image_args['class']  = esc_attr( $post_feature_image_pro_class );
+		$post_feature_image_args['notice'] = $post_feature_image_notice;
+		$this->add_field( 'bb_enable_activity_post_feature_image', __( 'Post feature image', 'buddyboss' ) . $post_feature_image_notice, array( $this, 'bb_admin_setting_callback_activity_post_feature_image' ), 'intval', $post_feature_image_args );
+
 		// Allow subscriptions setting.
 		$this->add_field( '_bp_enable_heartbeat_refresh', __( 'Activity auto-refresh', 'buddyboss' ), 'bp_admin_setting_callback_heartbeat', 'intval' );
 
@@ -766,6 +773,20 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 		<input id="bb_activity_post_title_enabled" name="bb_activity_post_title_enabled" type="checkbox" value="1" <?php checked( bb_is_activity_post_title_enabled() ); ?> />
 		<label for="bb_activity_post_title_enabled"><?php esc_html_e( 'Make post titles mandatory', 'buddyboss' ); ?></label>
 
+		<?php
+	}
+
+	/**
+	 * Allow activity post feature image.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	public function bb_admin_setting_callback_activity_post_feature_image() {
+		$val    = function_exists( 'bb_pro_activity_post_feature_image_instance' ) ? bb_pro_activity_post_feature_image_instance()->bb_is_enabled() : false;
+		$notice = bb_get_pro_label_notice( 'post_feature_image' );
+		?>
+			<input id="bb_enable_activity_post_feature_image" name="<?php echo empty( $notice ) ? 'bb_enable_activity_post_feature_image' : ''; ?>" type="checkbox" value="1" <?php echo empty( $notice ) ? checked( $val, true, false ) : ''; ?> />
+			<label for="bb_enable_activity_post_feature_image"><?php esc_html_e( 'Allow group owners and moderators to add feature image their posts', 'buddyboss' ); ?></label>
 		<?php
 	}
 }
