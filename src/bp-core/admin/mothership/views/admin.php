@@ -4,7 +4,15 @@ namespace BuddyBoss\Core\Admin\Mothership;
 ?>
 <div class="wrap buddyboss-mothership-wrap">
 
-	<h2><?php echo esc_html( BB_License_Page::pageTitle() ); ?></h2>
+	<h2>
+		<?php echo esc_html( BB_License_Page::pageTitle() ); ?>
+		<?php
+			do_action( 'bb_admin_header_pro_actions' );
+		?>
+	</h2>
+
+
+
 
 	<div class="buddyboss-mothership-block-container">
 		<div class="buddyboss-mothership-block">
