@@ -2104,6 +2104,7 @@ function bp_activity_add( $args = '' ) {
 			'id'                => false,                              // Pass an existing activity ID to update an existing entry.
 			'action'            => '',                                 // The activity action - e.g. "Jon Doe posted an update"
 			'post_title'        => '',                                 // The activity title.
+			'title_required'    => bb_is_activity_post_title_enabled(),
 			'content'           => '',                                 // Optional: The content of the activity item e.g. "BuddyPress is awesome guys!"
 			'component'         => false,                              // The name/ID of the component e.g. groups, profile, mycomponent.
 			'type'              => false,                              // The activity type e.g. activity_update, profile_updated.
@@ -2137,6 +2138,7 @@ function bp_activity_add( $args = '' ) {
 	$activity->component         = $r['component'];
 	$activity->type              = $r['type'];
 	$activity->post_title        = $r['post_title'];
+	$activity->title_required    = $r['title_required'];
 	$activity->content           = $r['content'];
 	$activity->primary_link      = $r['primary_link'];
 	$activity->item_id           = $r['item_id'];
@@ -2227,18 +2229,19 @@ function bp_activity_post_update( $args = '' ) {
 	$r = bp_parse_args(
 		$args,
 		array(
-			'id'            => false,
-			'post_title'    => false,
-			'content'       => false,
-			'user_id'       => bp_loggedin_user_id(),
-			'component'     => buddypress()->activity->id,
-			'hide_sitewide' => false,
-			'type'          => 'activity_update',
-			'privacy'       => 'public',
-			'status'        => bb_get_activity_published_status(),
-			'recorded_time' => bp_core_current_time(),
-			'updated_time'  => bp_core_current_time(),
-			'error_type'    => 'bool',
+			'id'             => false,
+			'post_title'     => false,
+			'title_required' => bb_is_activity_post_title_enabled(),
+			'content'        => false,
+			'user_id'        => bp_loggedin_user_id(),
+			'component'      => buddypress()->activity->id,
+			'hide_sitewide'  => false,
+			'type'           => 'activity_update',
+			'privacy'        => 'public',
+			'status'         => bb_get_activity_published_status(),
+			'recorded_time'  => bp_core_current_time(),
+			'updated_time'   => bp_core_current_time(),
+			'error_type'     => 'bool',
 		)
 	);
 
@@ -2291,12 +2294,6 @@ function bp_activity_post_update( $args = '' ) {
 	 */
 	$add_post_title = apply_filters( 'bb_activity_new_update_post_title', $r['post_title'] );
 
-	$validate_post_title = bb_validate_activity_post_title( $add_post_title );
-	if ( ! $validate_post_title['valid'] ) {
-		return new WP_Error( 'bb_activity_invalid_post_title', $validate_post_title['message'] );
-	}
-	$add_post_title = bb_activity_strip_post_title( $add_post_title );
-
 	if ( ! empty( $r['id'] ) ) {
 		$activity = new BP_Activity_Activity( $r['id'] );
 
@@ -2319,6 +2316,7 @@ function bp_activity_post_update( $args = '' ) {
 					'id'                => $activity->id,
 					'action'            => $activity->action,
 					'post_title'        => $add_post_title,
+					'title_required'    => $r['title_required'],
 					'content'           => $add_content,
 					'component'         => $activity->component,
 					'type'              => $activity->type,
@@ -2350,18 +2348,19 @@ function bp_activity_post_update( $args = '' ) {
 		// Now write the values.
 		$activity_id = bp_activity_add(
 			array(
-				'user_id'       => $r['user_id'],
-				'post_title'    => $add_post_title,
-				'content'       => $add_content,
-				'primary_link'  => $add_primary_link,
-				'component'     => $r['component'],
-				'type'          => $r['type'],
-				'hide_sitewide' => $r['hide_sitewide'],
-				'privacy'       => $r['privacy'],
-				'recorded_time' => $r['recorded_time'],
-				'updated_time'  => $r['updated_time'],
-				'status'        => $r['status'],
-				'error_type'    => $r['error_type'],
+				'user_id'        => $r['user_id'],
+				'post_title'     => $add_post_title,
+				'title_required' => $r['title_required'],
+				'content'        => $add_content,
+				'primary_link'   => $add_primary_link,
+				'component'      => $r['component'],
+				'type'           => $r['type'],
+				'hide_sitewide'  => $r['hide_sitewide'],
+				'privacy'        => $r['privacy'],
+				'recorded_time'  => $r['recorded_time'],
+				'updated_time'   => $r['updated_time'],
+				'status'         => $r['status'],
+				'error_type'     => $r['error_type'],
 			)
 		);
 	}
@@ -7350,7 +7349,8 @@ function bb_activity_edit_update_media_status( $media_ids ) {
 
 					$media_activity = new BP_Activity_Activity( $media->activity_id );
 					if ( ! empty( $media_activity->id ) ) {
-						$media_activity->status = bb_get_activity_published_status();
+						$media_activity->status         = bb_get_activity_published_status();
+						$media_activity->title_required = false;
 						$media_activity->save();
 					}
 				}
@@ -7401,7 +7401,8 @@ function bb_activity_edit_update_video_status( $video_ids ) {
 
 					$video_activity = new BP_Activity_Activity( $video->activity_id );
 					if ( ! empty( $video_activity->id ) ) {
-						$video_activity->status = bb_get_activity_published_status();
+						$video_activity->status         = bb_get_activity_published_status();
+						$video_activity->title_required = false;
 						$video_activity->save();
 					}
 				}
@@ -7452,7 +7453,8 @@ function bb_activity_edit_update_document_status( $document_ids ) {
 
 					$document_activity = new BP_Activity_Activity( $document->activity_id );
 					if ( ! empty( $document_activity->id ) ) {
-						$document_activity->status = bb_get_activity_published_status();
+						$document_activity->status         = bb_get_activity_published_status();
+						$document_activity->title_required = false;
 						$document_activity->save();
 					}
 				}
