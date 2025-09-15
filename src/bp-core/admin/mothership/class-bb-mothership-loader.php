@@ -84,7 +84,6 @@ class BB_Mothership_Loader {
 		$this->container->addParameter( IPNService::PREFIX, 'buddyboss' );
 		$this->container->addParameter( IPNService::MENU_SLUG, 'buddyboss-platform' );
 
-
 		$this->container->addParameter(
 			IPNService::RENDER_HOOK,
 			'bb_admin_header_actions'
