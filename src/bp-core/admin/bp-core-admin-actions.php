@@ -541,21 +541,35 @@ function bb_upgrade_dismiss_notice() {
 
 add_action( 'wp_ajax_bb_upgrade_dismiss_notice', 'bb_upgrade_dismiss_notice' );
 
+/**
+ * Render the admin header for BuddyBoss related admin pages.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
 function bb_render_admin_header() {
 	$screen = get_current_screen();
+
 	if (
-		! empty( $screen->base ) &&
 		(
-			false !== strpos( $screen->base, 'buddyboss' ) ||
-			false !== strpos( $screen->base, 'bp_' ) ||
-			false !== strpos( $screen->base, 'bb_' )
-		) &&
-		(
-			! empty( $screen->id ) &&
+			! empty( $screen->base ) &&
 			(
-				'buddyboss_page_bb-upgrade' !== $screen->id &&
-				'buddyboss_page_bb-readylaunch' !== $screen->id
+				false !== strpos( $screen->base, 'buddyboss' ) ||
+				false !== strpos( $screen->base, 'bp_' ) ||
+				false !== strpos( $screen->base, 'bb_' )
+			) &&
+			(
+				! empty( $screen->id ) &&
+				(
+					'buddyboss_page_bb-upgrade' !== $screen->id &&
+					'buddyboss_page_bb-readylaunch' !== $screen->id
+				)
 			)
+		) ||
+		(
+			! empty( $screen->post_type ) &&
+			'buddyboss_fonts' === $screen->post_type
 		)
 	) {
 		include __DIR__ . '/templates/header.php';
