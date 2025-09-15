@@ -454,11 +454,6 @@ module.exports = function (grunt) {
 					cwd: '.',
 					stdout: false
 				},
-				cli_build: {
-					command: 'CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD) && git fetch origin production && git checkout -B production origin/production && git rm -rf . 2>/dev/null || true && cp -r buddyboss-platform/* . && git add . && (git diff --cached --quiet || git commit -m "grunt release build") && git push origin production --force && git checkout $CURRENT_BRANCH',
-					cwd: '.',
-					stdout: true
-				},
 				init_build_dir_git: {
 					command: 'mkdir -p buddyboss-platform && cd buddyboss-platform && git init && git remote add origin $(git -C .. remote get-url origin) && git fetch origin production && git checkout -B production origin/production && cd ..',
 					cwd: '.',
