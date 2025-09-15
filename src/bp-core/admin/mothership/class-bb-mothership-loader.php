@@ -78,11 +78,12 @@ class BB_Mothership_Loader {
 
 	private function initIPNService(): void {
 		$plugin_id = $this->pluginConnector->getDynamicPluginId();
-		error_log( print_r( $plugin_id, true ) );
 
 		// Set IPN Service parameters.
 		$this->container->addParameter( IPNService::PRODUCT_SLUG, $plugin_id );
 		$this->container->addParameter( IPNService::PREFIX, 'buddyboss' );
+		$this->container->addParameter( IPNService::MENU_SLUG, 'buddyboss-platform' );
+
 
 		$this->container->addParameter(
 			IPNService::RENDER_HOOK,
