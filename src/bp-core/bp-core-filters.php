@@ -2408,11 +2408,12 @@ function buddyboss_menu_order( $menu_order ) {
 	$buddyboss_theme_font_menu    = array();
 	$buddyboss_updater_menu       = array();
 	$buddyboss_license_menu       = array();
+	$buddyboss_addon_menu         = array();
 	$buddyboss_readylaunch_menu   = array();
-	$sep_position                 = null; // Use null to detect if found
+	$sep_position                 = null; // Use null to detect if found.
 
-	$after_sep       = array();
-	$separator_menu  = array( '', 'manage_options', 'bp-plugin-seperator', '' );
+	$after_sep      = array();
+	$separator_menu = array( '', 'manage_options', 'bp-plugin-seperator', '' );
 
 	if ( ! empty( $submenu['buddyboss-platform'] ) ) {
 		foreach ( $submenu['buddyboss-platform'] as $key => $val ) {
@@ -2433,8 +2434,14 @@ function buddyboss_menu_order( $menu_order ) {
 					continue;
 				}
 
-				if ( 'bb-license-keys' === $val[2] ) {
+				if ( 'buddyboss-license' === $val[2] ) {
 					$buddyboss_license_menu = $submenu['buddyboss-platform'][ $key ];
+					unset( $submenu['buddyboss-platform'][ $key ] );
+					continue;
+				}
+
+				if ( 'buddyboss-addons' === $val[2] ) {
+					$buddyboss_addon_menu = $submenu['buddyboss-platform'][ $key ];
 					unset( $submenu['buddyboss-platform'][ $key ] );
 					continue;
 				}
@@ -2444,17 +2451,17 @@ function buddyboss_menu_order( $menu_order ) {
 					unset( $submenu['buddyboss-platform'][ $key ] );
 					continue;
 				}
-				if ( isset( $sep_position ) && $sep_position !== null ) {
+				if ( isset( $sep_position ) && null !== $sep_position ) {
 					$after_sep[] = $val;
 					unset( $submenu['buddyboss-platform'][ $key ] );
 				}
-				if ( 'bp-plugin-seperator' === $val[2] && $sep_position === null ) {
+				if ( 'bp-plugin-seperator' === $val[2] && null === $sep_position ) {
 					$sep_position = $key;
 				}
 			}
 		}
 
-		// If separator was found, insert after it; otherwise, insert just above ReadyLaunch
+		// If separator was found, insert after it; otherwise, insert just above ReadyLaunch.
 		if ( $sep_position !== null ) {
 			$insert_pos = $sep_position;
 			if ( ! empty( $buddyboss_readylaunch_menu ) ) {
@@ -2477,12 +2484,15 @@ function buddyboss_menu_order( $menu_order ) {
 			if ( ! empty( $buddyboss_license_menu ) ) {
 				$submenu['buddyboss-platform'][ ++ $insert_pos ] = $buddyboss_license_menu;
 			}
+			if ( ! empty( $buddyboss_addon_menu ) ) {
+				$submenu['buddyboss-platform'][ ++ $insert_pos ] = $buddyboss_addon_menu;
+			}
 		} else {
-			// No separator found, so insert separator just above ReadyLaunch if ReadyLaunch exists
+			// No separator found, so insert separator just above ReadyLaunch if ReadyLaunch exists.
 			$new_submenu                   = array_values( $submenu['buddyboss-platform'] );
-			$submenu['buddyboss-platform'] = array(); // reset
+			$submenu['buddyboss-platform'] = array(); // reset.
 
-			// Add all items except ReadyLaunch
+			// Add all items except ReadyLaunch.
 			foreach ( $new_submenu as $item ) {
 				$submenu['buddyboss-platform'][] = $item;
 			}
@@ -2510,6 +2520,9 @@ function buddyboss_menu_order( $menu_order ) {
 			}
 			if ( ! empty( $buddyboss_license_menu ) ) {
 				$submenu['buddyboss-platform'][] = $buddyboss_license_menu;
+			}
+			if ( ! empty( $buddyboss_addon_menu ) ) {
+				$submenu['buddyboss-platform'][] = $buddyboss_addon_menu;
 			}
 		}
 	}
