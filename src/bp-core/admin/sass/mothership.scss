@@ -13,28 +13,17 @@ $background-color_4: rgba(255, 255, 255, 0.8);
 $border-right-color_1: #fff;
 $border-right-color_2: #ddd;
 
-/**
- * mothership Blocks
-*/
-/**
- * mothership Content
-*/
-/* Products Table */
-/**
- * Tooltips
-*/
-/**
- * Overlay
-*/
 .buddyboss-mothership-wrap {
 	min-width: 255px;
 	max-width: 1050px;
 }
+
 .buddyboss-mothership-block-container {
 	display: flex;
 	flex-flow: wrap;
 	margin: 20px -10px 0;
 }
+
 .buddyboss-mothership-block {
 	margin: 0 10px 20px;
 	background-color: $background-color_1;
@@ -44,26 +33,32 @@ $border-right-color_2: #ddd;
 	box-sizing: border-box;
 	flex: 0 0 calc(33.33% - 20px);
 	min-width: 0;
+
 	.inside {
 		padding: 2.5em;
 	}
+
 	h2 {
 		margin: 0 0 1.5em;
 	}
+
 	.button {
 		line-height: 36px;
 		height: 38px;
 		padding: 0 20px 1px;
 	}
+
 	ul {
 		list-style-type: disc;
 		margin-left: 18px;
+
 		li {
 			line-height: 1.5;
 			margin-bottom: 2em;
 		}
 	}
 }
+
 .buddyboss-mothership-settings {
 	background: #f9f9f9;
 	border: 1px solid #ddd;
@@ -103,6 +98,7 @@ $border-right-color_2: #ddd;
 			margin-bottom: 20px;
 
 			.form-table {
+
 				th {
 					max-width: 120px;
 				}
@@ -120,6 +116,7 @@ $border-right-color_2: #ddd;
 
 		ul {
 			margin: 0;
+
 			li {
 				margin: 0 -1px 0 0;
 				padding: 0;
@@ -127,12 +124,15 @@ $border-right-color_2: #ddd;
 				background: #eee;
 				border-bottom: 1px solid #ddd;
 				border-right: 1px solid #ddd;
+
 				&:first-child {
 					border-radius: 5px 0 0 0;
 				}
+
 				&:last-child {
 					margin-bottom: 20px;
 				}
+
 				a {
 					display: block;
 					padding: 14px 20px;
@@ -141,31 +141,38 @@ $border-right-color_2: #ddd;
 					color: $color_1;
 					font-size: 14px;
 					font-weight: 600;
+
 					.dashicons {
 						margin-top: 2px;
 						margin-right: 7px;
 					}
+
 					.dashicons-warning {
 						color: $color_2;
 					}
+
 					.dashicons-yes-alt {
 						color: $color_3;
 					}
 				}
+
 				&:hover {
 					background: #e5e5e5;
 					border-right-color: $border-right-color_2;
 				}
 			}
+
 			li.active {
 				background: #fff;
 				border-right-color: $border-right-color_1;
+
 				a {
 					color: $color_4;
 				}
 			}
 		}
 	}
+
 	.tabs-panel {
 		padding: 13px;
 		background: #fff;
@@ -175,32 +182,42 @@ $border-right-color_2: #ddd;
 		-ms-flex: 1;
 		flex: 1;
 		min-width: 0;
+
 		table.widefat {
 			clear: none;
 		}
 	}
+
 	.tabs-content {
 		padding: 5px 25px;
 	}
+
 	[type="submit"] {
+
 		.dashicons {
 			line-height: inherit;
 		}
 	}
+
 	table.buddyboss-mothership-products {
 		width: 100%;
 		max-width: 600px;
+
 		tr {
+
 			td {
 				padding: 8px 12px;
 				vertical-align: middle;
 				font-size: 14px;
+
 				&:first-child {
 					width: 30%;
 				}
+
 				&:last-child {
 					width: 70%;
 				}
+
 				strong {
 					color: $color_4;
 				}
@@ -208,12 +225,14 @@ $border-right-color_2: #ddd;
 		}
 	}
 }
+
 .bb_indirect_license {
 	background: #fff6d1;
 	border: 1px solid #ffebc7;
 	padding: 20px;
 	margin: 10px 0;
 	position: relative;
+
 	.dashicons-lightbulb {
 		color: $color_5;
 		font-size: 40px;
@@ -224,11 +243,13 @@ $border-right-color_2: #ddd;
 		left: 10px;
 	}
 }
+
 .tooltip-persistent-container {
 	position: relative;
 	z-index: 2;
 	display: inline-block;
 	width: 19px;
+
 	.help-tip {
 		color: $color_6;
 		font-size: 1.1em;
@@ -239,6 +260,7 @@ $border-right-color_2: #ddd;
 		vertical-align: middle;
 		width: 16px;
 		margin-left: 1px;
+
 		&:after {
 			font-family: $font-family_1;
 			font-weight: 400;
@@ -259,6 +281,7 @@ $border-right-color_2: #ddd;
 			-webkit-font-smoothing: antialiased;
 		}
 	}
+
 	.tooltip-persistent {
 		visibility: hidden;
 		opacity: 0;
@@ -278,12 +301,14 @@ $border-right-color_2: #ddd;
 		text-align: center;
 		font-size: 14px;
 		line-height: 1.4;
+
 		a {
 			color: $color_7;
 			text-decoration: underline;
 			cursor: pointer;
 		}
 	}
+
 	&:after {
 		visibility: hidden;
 		opacity: 0;
@@ -301,16 +326,20 @@ $border-right-color_2: #ddd;
 		line-height: 0;
 	}
 }
+
 .tooltip-persistent-container.hover {
+
 	.tooltip-persistent {
 		visibility: visible;
 		opacity: 1;
 	}
+
 	&:after {
 		visibility: visible;
 		opacity: 1;
 	}
 }
+
 #bb_connector_overlay_wrapper {
 	display: none;
 	position: fixed;
@@ -320,6 +349,7 @@ $border-right-color_2: #ddd;
 	height: 100%;
 	z-index: 1001;
 	background-color: $background-color_4;
+
 	#bb_connector_overlay {
 		position: absolute;
 		top: 50%;
@@ -328,35 +358,48 @@ $border-right-color_2: #ddd;
 		margin-left: -20px;
 	}
 }
+
 body.bb_connect_overlay {
 	overflow: hidden;
 }
+
 #btn_bb_connect {
+
 	.dashicons {
 		line-height: inherit;
 	}
 }
+
 @media screen and (max-width: 750px) {
+
 	.buddyboss-mothership-block {
 		flex: 0 0 calc(100% - 20px);
 	}
 }
+
 @media screen and (max-width: 782px) {
+
 	.buddyboss-mothership-settings {
+
 		.setting-tabs-wrapper {
 			-webkit-box-flex: 0;
 			-ms-flex: 0 0 180px;
 			flex: 0 0 180px;
+
 			ul {
+
 				li {
+
 					a {
 						font-size: 13px;
 					}
 				}
 			}
 		}
+
 		table.buddyboss-mothership-products {
 			width: 100%;
+
 			input {
 				width: 100%;
 			}

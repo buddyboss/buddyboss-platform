@@ -540,3 +540,26 @@ function bb_upgrade_dismiss_notice() {
 }
 
 add_action( 'wp_ajax_bb_upgrade_dismiss_notice', 'bb_upgrade_dismiss_notice' );
+
+function bb_render_admin_header() {
+	$screen = get_current_screen();
+	if (
+		! empty( $screen->base ) &&
+		(
+			false !== strpos( $screen->base, 'buddyboss' ) ||
+			false !== strpos( $screen->base, 'bp_' ) ||
+			false !== strpos( $screen->base, 'bb_' )
+		) &&
+		(
+			! empty( $screen->id ) &&
+			(
+				'buddyboss_page_bb-upgrade' !== $screen->id &&
+				'buddyboss_page_bb-readylaunch' !== $screen->id
+			)
+		)
+	) {
+		include __DIR__ . '/templates/header.php';
+	}
+}
+
+add_action( 'in_admin_header', 'bb_render_admin_header', 999 );

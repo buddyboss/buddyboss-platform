@@ -99,7 +99,6 @@ class BB_Mothership_Loader {
 		$this->container->addService(
 			IPNService::class,
 			static function ( Container $container ): IPNService {
-				error_log( print_r( $container, true ) );
 				return new IPNService( $container );
 			},
 			true
