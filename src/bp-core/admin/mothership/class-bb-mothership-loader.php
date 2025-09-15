@@ -50,6 +50,8 @@ class BB_Mothership_Loader {
 		// Initialize the mothership service.
 		$this->initMothershipService();
 
+		$this->initIPNService();
+
 		// Set up hooks.
 		$this->setupHooks();
 	}
@@ -72,16 +74,19 @@ class BB_Mothership_Loader {
 			},
 			true // Singleton.
 		);
+	}
 
+	private function initIPNService(): void {
 		$plugin_id = $this->pluginConnector->getDynamicPluginId();
+		error_log( print_r( $plugin_id, true ) );
 
 		// Set IPN Service parameters.
 		$this->container->addParameter( IPNService::PRODUCT_SLUG, $plugin_id );
-		$this->container->addParameter( IPNService::PREFIX, $plugin_id );
+		$this->container->addParameter( IPNService::PREFIX, 'buddyboss' );
 
 		$this->container->addParameter(
 			IPNService::RENDER_HOOK,
-			'bb_admin_header_pro_actions'
+			'bb_admin_header_actions'
 		);
 		$this->container->addParameter(
 			IPNService::THEME,
@@ -94,6 +99,7 @@ class BB_Mothership_Loader {
 		$this->container->addService(
 			IPNService::class,
 			static function ( Container $container ): IPNService {
+				error_log( print_r( $container, true ) );
 				return new IPNService( $container );
 			},
 			true

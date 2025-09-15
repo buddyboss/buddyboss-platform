@@ -7,7 +7,7 @@ namespace BuddyBoss\Core\Admin\Mothership;
 	<h2>
 		<?php echo esc_html( BB_License_Page::pageTitle() ); ?>
 		<?php
-			do_action( 'bb_admin_header_pro_actions' );
+			do_action( 'bb_admin_header_actions' );
 		?>
 	</h2>
 

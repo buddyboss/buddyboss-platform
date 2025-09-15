@@ -42,7 +42,7 @@ function buddyboss_init_mothership() {
 }
 
 // Hook into WordPress admin_init to initialize mothership.
-add_action( 'init', 'buddyboss_init_mothership' );
+buddyboss_init_mothership();
 
 /**
  * For local development, you can define these constants in wp-config.php:
