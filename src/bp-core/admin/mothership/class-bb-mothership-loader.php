@@ -6,6 +6,7 @@ namespace BuddyBoss\Core\Admin\Mothership;
 
 use BuddyBossPlatform\GroundLevel\Container\Container;
 use BuddyBossPlatform\GroundLevel\Mothership\Service as MothershipService;
+use BuddyBossPlatform\GroundLevel\InProductNotifications\Service as IPNService;
 
 /**
  * Main loader class for BuddyBoss Mothership functionality.
@@ -69,7 +70,33 @@ class BB_Mothership_Loader {
 			function () use ( $mothershipService ) {
 				return $mothershipService;
 			},
-			true // Singleton
+			true // Singleton.
+		);
+
+		$plugin_id = $this->pluginConnector->getDynamicPluginId();
+
+		// Set IPN Service parameters.
+		$this->container->addParameter( IPNService::PRODUCT_SLUG, $plugin_id );
+		$this->container->addParameter( IPNService::PREFIX, $plugin_id );
+
+		$this->container->addParameter(
+			IPNService::RENDER_HOOK,
+			'bb_admin_header_pro_actions'
+		);
+		$this->container->addParameter(
+			IPNService::THEME,
+			array(
+				'primaryColor'       => '#2271b1',
+				'primaryColorDarker' => '#0a4b78',
+			)
+		);
+
+		$this->container->addService(
+			IPNService::class,
+			static function ( Container $container ): IPNService {
+				return new IPNService( $container );
+			},
+			true
 		);
 	}
 
