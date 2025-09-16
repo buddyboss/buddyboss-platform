@@ -754,31 +754,37 @@ function bp_nouveau_ajax_post_update() {
 		! empty( $post_feature_image ) &&
 		function_exists( 'bb_pro_activity_post_feature_image_instance' )
 	) {
-		if ( method_exists( bb_pro_activity_post_feature_image_instance(), 'bb_user_has_access_feature_image' ) ) {
-			$object  = ! empty( $_POST['object'] ) ? sanitize_text_field( wp_unslash( $_POST['object'] ) ) : '';
-			$item_id = ! empty( $_POST['item_id'] ) ? absint( $_POST['item_id'] ) : ( function_exists( 'bp_get_current_group_id' ) ? bp_get_current_group_id() : 0 );
+		$existing_feature_image_id = bp_activity_get_meta( $activity_id, '_bb_activity_post_feature_image', true );
+		if (
+			empty( $existing_feature_image_id ) ||
+			(int) $existing_feature_image_id !== (int) $post_feature_image
+		) {
+			if ( method_exists( bb_pro_activity_post_feature_image_instance(), 'bb_user_has_access_feature_image' ) ) {
+				$object  = ! empty( $_POST['object'] ) ? sanitize_text_field( wp_unslash( $_POST['object'] ) ) : '';
+				$item_id = ! empty( $_POST['item_id'] ) ? absint( $_POST['item_id'] ) : ( function_exists( 'bp_get_current_group_id' ) ? bp_get_current_group_id() : 0 );
 
-			$can_upload_feature_image = bb_pro_activity_post_feature_image_instance()->bb_user_has_access_feature_image(
-				array(
-					'user_id'  => bp_loggedin_user_id(),
-					'group_id' => $item_id,
-					'object'   => $object,
-				)
-			);
-			if ( ! $can_upload_feature_image ) {
-				wp_send_json_error(
+				$can_upload_feature_image = bb_pro_activity_post_feature_image_instance()->bb_user_has_access_feature_image(
 					array(
-						'message' => __( 'You do not have permission to upload feature image.', 'buddyboss' ),
+						'user_id'  => bp_loggedin_user_id(),
+						'group_id' => $item_id,
+						'object'   => $object,
 					)
 				);
+				if ( ! $can_upload_feature_image ) {
+					wp_send_json_error(
+						array(
+							'message' => __( 'You do not have permission to upload feature image.', 'buddyboss' ),
+						)
+					);
+				}
 			}
-		}
 
-		if ( method_exists( bb_pro_activity_post_feature_image_instance(), 'bb_validate_attachment_by_id' ) ) {
-			if ( ! empty( $post_feature_image ) ) {
-				$validate_attachment = bb_pro_activity_post_feature_image_instance()->bb_validate_attachment_by_id( $post_feature_image, $activity_id );
-				if ( ! empty( $validate_attachment ) && is_array( $validate_attachment ) ) {
-					wp_send_json_error( $validate_attachment );
+			if ( method_exists( bb_pro_activity_post_feature_image_instance(), 'bb_validate_attachment_by_id' ) ) {
+				if ( ! empty( $post_feature_image ) ) {
+					$validate_attachment = bb_pro_activity_post_feature_image_instance()->bb_validate_attachment_by_id( $post_feature_image, $activity_id );
+					if ( ! empty( $validate_attachment ) && is_array( $validate_attachment ) ) {
+						wp_send_json_error( $validate_attachment );
+					}
 				}
 			}
 		}
