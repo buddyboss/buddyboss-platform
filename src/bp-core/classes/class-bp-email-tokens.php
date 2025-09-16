@@ -2097,6 +2097,15 @@ class BP_Email_Tokens {
 												<tbody>
 												<tr>
 													<td width="88%" style="vertical-align: top;">
+														<?php
+														if ( function_exists( 'bb_activity_has_post_title' ) && bb_activity_has_post_title() ) {
+															?>
+															<div class="activity-title bb-email-activity-content-title">
+																<h2><?php bb_activity_post_title(); ?></h2>
+															</div>
+															<?php
+														}
+														?>
 														<div class="bb-email-activity-content" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.625 ) . 'px' ); ?>;">
 															<?php
 															if ( in_array( $activity->content, array( '&nbsp;', '&#8203;' ), true ) ) {
@@ -2360,6 +2369,15 @@ class BP_Email_Tokens {
 												<tbody>
 												<tr>
 													<td width="88%" style="vertical-align: top;">
+														<?php
+														if ( function_exists( 'bb_activity_has_post_title' ) && bb_activity_has_post_title() ) {
+															?>
+															<div class="activity-title bb-email-activity-content-title">
+																<h2><?php bb_activity_post_title(); ?></h2>
+															</div>
+															<?php
+														}
+														?>
 														<div class="bb-email-activity-content" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.625 ) . 'px' ); ?>;">
 															<?php
 															if ( in_array( $activity->content, array( '&nbsp;', '&#8203;' ), true ) ) {

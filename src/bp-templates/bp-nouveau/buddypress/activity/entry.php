@@ -213,7 +213,7 @@ $activity_popup_title = sprintf( esc_html__( '%s\'s post', 'buddyboss' ), bp_cor
 				)
 			) {
 				?>
-				<p class="activity-topic 4">
+				<p class="activity-topic">
 					<?php
 					if (
 						function_exists( 'bb_activity_topics_manager_instance' ) &&
