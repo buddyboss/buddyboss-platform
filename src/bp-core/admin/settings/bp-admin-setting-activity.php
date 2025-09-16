@@ -786,7 +786,7 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 		$notice = bb_get_pro_label_notice( 'post_feature_image' );
 		?>
 			<input id="bb_enable_activity_post_feature_image" name="<?php echo empty( $notice ) ? 'bb_enable_activity_post_feature_image' : ''; ?>" type="checkbox" value="1" <?php echo empty( $notice ) ? checked( $val, true, false ) : ''; ?> />
-			<label for="bb_enable_activity_post_feature_image"><?php esc_html_e( 'Allow group owners and moderators to add feature image their posts', 'buddyboss' ); ?></label>
+			<label for="bb_enable_activity_post_feature_image"><?php esc_html_e( 'Allow group owners and moderators to add a featured image to their posts', 'buddyboss' ); ?></label>
 		<?php
 	}
 }
