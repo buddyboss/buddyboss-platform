@@ -6129,3 +6129,16 @@ h1.bb-advance-heading {
 	}
 }
 
+@media screen and (max-width: 600px) {
+
+	#wpadminbar {
+
+		~ .bb-tab-header {
+			padding-top: 58px;
+
+			~ #wpbody {
+				padding-top: 0;
+			}
+		}
+	}
+}

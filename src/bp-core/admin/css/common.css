@@ -6077,3 +6077,12 @@ h1.bb-advance-heading {
   align-items: center;
   gap: 8px;
 }
+
+@media screen and (max-width: 600px) {
+  #wpadminbar ~ .bb-tab-header {
+    padding-top: 58px;
+  }
+  #wpadminbar ~ .bb-tab-header ~ #wpbody {
+    padding-top: 0;
+  }
+}
