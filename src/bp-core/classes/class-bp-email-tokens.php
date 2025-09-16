@@ -2098,10 +2098,10 @@ class BP_Email_Tokens {
 												<tr>
 													<td width="88%" style="vertical-align: top;">
 														<?php
-														if ( function_exists( 'bb_activity_has_post_title' ) && bb_activity_has_post_title() ) {
+														if ( ! empty( $activity->post_title ) ) {
 															?>
 															<div class="activity-title bb-email-activity-content-title">
-																<h2><?php bb_activity_post_title(); ?></h2>
+																<h2><?php echo wp_kses_post( $activity->post_title ); ?></h2>
 															</div>
 															<?php
 														}
@@ -2370,10 +2370,10 @@ class BP_Email_Tokens {
 												<tr>
 													<td width="88%" style="vertical-align: top;">
 														<?php
-														if ( function_exists( 'bb_activity_has_post_title' ) && bb_activity_has_post_title() ) {
+														if ( ! empty( $activity->post_title ) ) {
 															?>
 															<div class="activity-title bb-email-activity-content-title">
-																<h2><?php bb_activity_post_title(); ?></h2>
+																<h2><?php echo wp_kses_post( $activity->post_title ); ?></h2>
 															</div>
 															<?php
 														}
