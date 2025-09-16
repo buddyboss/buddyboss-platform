@@ -514,7 +514,8 @@ function bp_media_update_media_privacy( $album ) {
 				$activity = new BP_Activity_Activity( $activity_id );
 
 				if ( ! empty( $activity ) ) {
-					$activity->privacy = $privacy;
+					$activity->privacy        = $privacy;
+					$activity->title_required = false;
 					$activity->save();
 				}
 			}
@@ -1753,7 +1754,8 @@ function bp_media_admin_repair_media() {
 								}
 							}
 						}
-						$activity->hide_sitewide = true;
+						$activity->hide_sitewide  = true;
+						$activity->title_required = false;
 						$activity->save();
 					}
 				}

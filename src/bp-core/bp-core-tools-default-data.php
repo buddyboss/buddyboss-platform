@@ -955,8 +955,9 @@ function bp_dd_import_users_activity() {
 
 		if ( $bp_activity_id = bp_activity_post_update(
 			array(
-				'user_id' => $user,
-				'content' => $content,
+				'user_id'        => $user,
+				'content'        => $content,
+				'title_required' => false,
 			)
 		)
 		) {
@@ -1105,9 +1106,10 @@ function bp_dd_import_groups_activity() {
 
 		if ( $bp_activity_id = groups_post_update(
 			array(
-				'user_id'  => $user_id,
-				'group_id' => $group_id,
-				'content'  => $content,
+				'user_id'        => $user_id,
+				'group_id'       => $group_id,
+				'content'        => $content,
+				'title_required' => false,
 			)
 		)
 		) {

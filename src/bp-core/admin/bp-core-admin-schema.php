@@ -230,8 +230,7 @@ function bp_core_install_activity_streams() {
 				KEY mptt_right (mptt_right),
 				KEY hide_sitewide (hide_sitewide),
 				KEY is_spam (is_spam),
-				KEY activity_type_is_spam (type,is_spam)
-				KEY is_spam (is_spam),
+				KEY activity_type_is_spam (type,is_spam),
 				FULLTEXT KEY bb_post_title (post_title),
 				FULLTEXT KEY bb_content (content),
 				FULLTEXT KEY bb_title_content (post_title, content)
