@@ -19,6 +19,8 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
+define('PLATFORM_EDITION', 'developer');
+
 if ( ! defined( 'BP_SOURCE_SUBDIRECTORY' ) && file_exists( dirname( __FILE__ ) . '/vendor/autoload.php' ) ) {
 	require dirname( __FILE__ ) . '/vendor/autoload.php';
 }

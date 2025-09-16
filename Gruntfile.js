@@ -454,6 +454,17 @@ module.exports = function (grunt) {
 					cwd: '.',
 					stdout: false
 				},
+				init_build_dir_git: {
+					command: 'mkdir -p buddyboss-platform && cd buddyboss-platform && git init && git remote add origin $(git -C .. remote get-url origin) && git fetch origin production && git checkout -B production origin/production && cd ..',
+					cwd: '.',
+					stdout: true
+				},
+				commit_build_to_mothership_release: {
+					command: 'cd buddyboss-platform && git add . && git commit -m "Production build - $(date)" && git push origin production && cd ..',
+					cwd: '.',
+					stdout: true
+				},
+
 				rest_api: {
 					command: 'git clone https://github.com/buddyboss/buddyboss-platform-api.git',
 					cwd: SOURCE_DIR,
@@ -599,7 +610,10 @@ module.exports = function (grunt) {
 	grunt.registerTask('src', ['checkDependencies', 'jsvalidate', 'jshint', 'stylelint', 'sass', 'rtlcss', 'checktextdomain', /*'imagemin',*/ 'uglify', 'cssmin', 'makepot']);
 	grunt.registerTask('bp_rest', ['clean:bp_rest', 'exec:rest_api', 'copy:bp_rest_components', 'copy:bp_rest_core', 'clean:bp_rest', 'apidoc' ]);
 	grunt.registerTask('bp_performance', ['clean:bp_rest', 'exec:rest_performance', 'copy:bp_rest_performance', 'copy:bp_rest_mu', 'clean:bp_rest']);
-	grunt.registerTask('build', ['string-replace:dist', 'exec:composer', 'exec:cli', 'clean:all', 'copy:files', 'clean:composer', 'compress', 'clean:all']);
+
+	// Build task: Creates production build in BUILD_DIR, initializes git, performs build operations, then commits to production
+	grunt.registerTask('build', ['string-replace:dist', 'exec:composer', 'clean:all', 'exec:init_build_dir_git', 'copy:files', 'clean:composer', 'exec:commit_build_to_mothership_release', 'compress', 'clean:all']);
+
 	grunt.registerTask('release', ['src', 'build']);
 
 	// Testing tasks.
