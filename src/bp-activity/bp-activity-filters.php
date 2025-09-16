@@ -1723,7 +1723,8 @@ function bp_activity_media_fix_data() {
 			$activity = new BP_Activity_Activity( $activity->id );
 
 			if ( ! empty( $activity ) ) {
-				$activity->privacy = 'media';
+				$activity->privacy        = 'media';
+				$activity->title_required = false;
 				$activity->save();
 			}
 		}

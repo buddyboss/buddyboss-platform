@@ -961,8 +961,9 @@ function bp_dd_import_users_activity() {
 			)
 		)
 		) {
-			$bp_activity                = new BP_Activity_Activity( $bp_activity_id );
-			$bp_activity->date_recorded = bp_dd_get_random_date( 44 );
+			$bp_activity                 = new BP_Activity_Activity( $bp_activity_id );
+			$bp_activity->date_recorded  = bp_dd_get_random_date( 44 );
+			$bp_activity->title_required = false;
 			if ( $bp_activity->save() ) {
 				$count ++;
 			}
@@ -1113,8 +1114,9 @@ function bp_dd_import_groups_activity() {
 			)
 		)
 		) {
-			$bp_activity                = new BP_Activity_Activity( $bp_activity_id );
-			$bp_activity->date_recorded = bp_dd_get_random_date( 29 );
+			$bp_activity                 = new BP_Activity_Activity( $bp_activity_id );
+			$bp_activity->date_recorded  = bp_dd_get_random_date( 29 );
+			$bp_activity->title_required = false;
 			if ( $bp_activity->save() ) {
 				$count ++;
 			}
