@@ -2101,12 +2101,24 @@ class BP_Email_Tokens {
 														if ( ! empty( $activity->post_title ) ) {
 															?>
 															<div class="activity-title bb-email-activity-content-title">
-																<h2><?php echo wp_kses_post( $activity->post_title ); ?></h2>
+																<h2 style="color:<?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>;font-size: 18px;font-weight: 600;margin: 0 0 10px;"><?php echo wp_kses_post( $activity->post_title ); ?></h2>
 															</div>
 															<?php
 														}
 														?>
 														<div class="bb-email-activity-content" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.625 ) . 'px' ); ?>;">
+															<style>
+																.bb-email-activity-content h3,
+																.bb-email-activity-content h4 {
+																	font-size: 17px;
+																	font-weight: 500;
+																	margin: 0 0 10px;
+																	color:<?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>;
+																}
+																.bb-email-activity-content h4 {
+																	font-size: 16px;
+																}
+															</style>
 															<?php
 															if ( in_array( $activity->content, array( '&nbsp;', '&#8203;' ), true ) ) {
 																$activity->content = '';
