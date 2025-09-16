@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 2.11.0\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2025-09-05 06:34:26+00:00\n"
+"POT-Creation-Date: 2025-09-16 11:17:01+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -27,8 +27,8 @@ msgstr ""
 
 
 #. Plugin Name of the plugin
-#: bp-core/admin/bp-core-admin-functions.php:3793
-#: bp-core/admin/settings/bp-admin-setting-activity.php:231
+#: bp-core/admin/bp-core-admin-functions.php:3801
+#: bp-core/admin/settings/bp-admin-setting-activity.php:229
 #: bp-performance/bp-performance-includes.php:71
 #: bp-templates/bp-nouveau/includes/customizer.php:29
 msgid "BuddyBoss Platform"
@@ -50,7 +50,7 @@ msgstr ""
 
 #: bp-activity/actions/delete.php:60
 #: bp-templates/bp-nouveau/includes/activity/ajax.php:363
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1857
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1858
 msgid "Activity deleted successfully"
 msgstr ""
 
@@ -517,9 +517,9 @@ msgstr ""
 
 #: bp-activity/bp-activity-admin.php:847
 #: bp-activity/classes/class-bp-activity-list-table.php:671
+#: bp-core/admin/settings/bp-admin-setting-activity.php:573
+#: bp-core/admin/settings/bp-admin-setting-activity.php:574
 #: bp-core/admin/settings/bp-admin-setting-activity.php:575
-#: bp-core/admin/settings/bp-admin-setting-activity.php:576
-#: bp-core/admin/settings/bp-admin-setting-activity.php:577
 #: bp-core/compatibility/class-bb-readylaunch-learndash-helper.php:1970
 #: bp-core/compatibility/class-bb-readylaunch-memberpress-courses-helper.php:840
 #: bp-forums/common/template.php:2597
@@ -565,7 +565,7 @@ msgid "Edit"
 msgstr ""
 
 #: bp-activity/bp-activity-admin.php:860
-#: bp-core/admin/bp-core-admin-functions.php:3432
+#: bp-core/admin/bp-core-admin-functions.php:3436
 #: bp-forums/templates/default/bbpress/form-topic-tag.php:46
 #: bp-integrations/learndash/templates/readylaunch/groups/single/courses-content-display.php:759
 #: bp-templates/bp-nouveau/readylaunch/forums/form-topic-tag.php:54
@@ -685,8 +685,8 @@ msgid "Reply"
 msgstr ""
 
 #: bp-activity/bp-activity-admin.php:1156
-#: bp-core/admin/settings/bp-admin-setting-activity.php:651
-#: bp-core/admin/settings/bp-admin-setting-activity.php:707
+#: bp-core/admin/settings/bp-admin-setting-activity.php:649
+#: bp-core/admin/settings/bp-admin-setting-activity.php:705
 #: bp-core/admin/templates/moderation-deactivate-confirmation-popup.php:45
 #: bp-forums/replies/template.php:1867
 #: bp-groups/bp-groups-admin.php:255
@@ -1022,7 +1022,7 @@ msgid "Replied to a status update"
 msgstr ""
 
 #: bp-activity/bp-activity-functions.php:1636
-#: bp-core/admin/settings/bp-admin-setting-activity.php:138
+#: bp-core/admin/settings/bp-admin-setting-activity.php:136
 #: bp-moderation/classes/class-bp-moderation-activity-comment.php:115
 #: bp-search/bp-search-functions.php:389
 #: bp-search/bp-search-settings.php:987
@@ -1213,7 +1213,7 @@ msgstr ""
 
 #: bp-activity/bp-activity-functions.php:6914
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:1774
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1506
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1507
 msgid "You turned off commenting for this post"
 msgstr ""
 
@@ -1414,9 +1414,9 @@ msgid "%1$s no longer accepts arguments. See the inline documentation at %2$s fo
 msgstr ""
 
 #: bp-activity/bp-activity-template.php:3036
+#: bp-core/admin/settings/bp-admin-setting-activity.php:577
+#: bp-core/admin/settings/bp-admin-setting-activity.php:578
 #: bp-core/admin/settings/bp-admin-setting-activity.php:579
-#: bp-core/admin/settings/bp-admin-setting-activity.php:580
-#: bp-core/admin/settings/bp-admin-setting-activity.php:581
 #: bp-core/bp-core-attachments.php:936
 #: bp-forums/classes/class-bp-forums-component.php:527
 #: bp-forums/replies/template.php:2246
@@ -1542,7 +1542,7 @@ msgid "Unfollow"
 msgstr ""
 
 #: bp-activity/bp-activity-template.php:4403
-#: bp-core/admin/settings/bp-admin-setting-activity.php:111
+#: bp-core/admin/settings/bp-admin-setting-activity.php:109
 #: bp-members/bp-members-admin.php:140
 #: bp-templates/bp-nouveau/includes/customizer.php:327
 msgid "Follow"
@@ -1562,34 +1562,34 @@ msgstr ""
 #: bp-core/bp-core-actions.php:1123
 #: bp-core/classes/class-bb-reaction.php:928
 #: bp-core/compatibility/class-bb-readylaunch-learndash-helper.php:2172
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1541
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1550
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1596
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1665
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1674
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1542
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1551
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1597
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1666
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1675
 msgid "Invalid request."
 msgstr ""
 
 #: bp-activity/classes/class-bb-activity-readylaunch.php:260
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1558
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1682
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1559
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1683
 msgid "Activity id cannot be empty."
 msgstr ""
 
 #: bp-activity/classes/class-bb-activity-readylaunch.php:268
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1566
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1567
 msgid "Parent comment id cannot be empty."
 msgstr ""
 
 #: bp-activity/classes/class-bb-activity-readylaunch.php:288
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1586
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1587
 msgid "Sorry, You are not allowed to view more comments."
 msgstr ""
 
 #: bp-activity/classes/class-bb-activity-readylaunch.php:321
 #: bp-activity/classes/class-bb-activity-readylaunch.php:345
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1616
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1642
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1617
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1643
 msgid "No more items to load."
 msgstr ""
 
@@ -3025,21 +3025,21 @@ msgid "Your post has been unpinned"
 msgstr ""
 
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:1607
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1439
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1440
 msgid "Your post has been pinned"
 msgstr ""
 
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:1609
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1443
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1444
 msgid "Your pinned post has been updated"
 msgstr ""
 
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:1614
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:1781
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:3557
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1399
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1465
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1726
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1400
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1466
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1727
 #: bp-templates/bp-nouveau/includes/activity/functions.php:254
 #: bp-templates/bp-nouveau/includes/activity/functions.php:255
 #: bp-templates/bp-nouveau/includes/activity/functions.php:258
@@ -3061,12 +3061,12 @@ msgid "Sorry, you are not allowed to perform this action."
 msgstr ""
 
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:1772
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1504
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1505
 msgid "You turned on commenting for this post"
 msgstr ""
 
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:1776
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1508
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1509
 msgid "You are not permitted with the requested operation"
 msgstr ""
 
@@ -3378,17 +3378,17 @@ msgid "The action is required."
 msgstr ""
 
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:3548
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1759
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1760
 msgid "Notifications for this activity have been unmuted."
 msgstr ""
 
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:3550
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1761
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1762
 msgid "Notifications for this activity have been muted."
 msgstr ""
 
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:3552
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1763
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1764
 msgid "Notifications for this activity already been muted."
 msgstr ""
 
@@ -3878,8 +3878,8 @@ msgid "Help"
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/index.php:39
-#: bp-core/admin/settings/bp-admin-setting-activity.php:613
-#: bp-core/admin/settings/bp-admin-setting-activity.php:675
+#: bp-core/admin/settings/bp-admin-setting-activity.php:611
+#: bp-core/admin/settings/bp-admin-setting-activity.php:673
 #: bp-core/admin/templates/about-buddyboss-app.php:21
 #: bp-core/admin/templates/check-document-mime-type.php:19
 #: bp-core/admin/templates/check-video-mime-type.php:19
@@ -4679,7 +4679,7 @@ msgid "You are using an old theme and/or BuddyPress addon that relies on the old
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:685
-#: bp-core/admin/bp-core-admin-functions.php:3806
+#: bp-core/admin/bp-core-admin-functions.php:3814
 #: bp-core/admin/bp-core-admin-settings.php:1622
 #: bp-core/classes/class-bp-admin.php:348
 #: bp-core/classes/class-bp-admin.php:509
@@ -5128,14 +5128,14 @@ msgid "BuddyBoss Platform Pro 1.2.0"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:3402
-#: bp-core/admin/bp-core-admin-functions.php:3434
-#: bp-core/admin/bp-core-admin-functions.php:3441
+#: bp-core/admin/bp-core-admin-functions.php:3438
+#: bp-core/admin/bp-core-admin-functions.php:3445
 #: bp-core/admin/bp-core-admin-settings.php:3286
 msgid "to unlock"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:3433
-#: bp-core/admin/bp-core-admin-functions.php:3440
+#: bp-core/admin/bp-core-admin-functions.php:3437
+#: bp-core/admin/bp-core-admin-functions.php:3444
 #: bp-core/admin/templates/upgrade-screen.php:35
 #: bp-integrations/pusher/bb-pusher-admin-tab.php:251
 #: bp-integrations/pusher/bb-pusher-admin-tab.php:268
@@ -5144,17 +5144,17 @@ msgstr ""
 msgid "BuddyBoss Platform Pro"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:3439
+#: bp-core/admin/bp-core-admin-functions.php:3443
 msgid "Install"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:3562
+#: bp-core/admin/bp-core-admin-functions.php:3570
 msgid "Select which label colors to use for profiles using this profile type. Profile Type labels are used in places such as member directories and profile headers."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:3565
-#: bp-core/admin/bp-core-admin-functions.php:3630
-#: bp-core/admin/bp-core-admin-functions.php:3669
+#: bp-core/admin/bp-core-admin-functions.php:3573
+#: bp-core/admin/bp-core-admin-functions.php:3638
+#: bp-core/admin/bp-core-admin-functions.php:3677
 #: bp-core/admin/bp-core-admin-settings.php:737
 #: bp-core/admin/bp-core-admin-settings.php:1110
 #: bp-core/admin/bp-core-admin-settings.php:3397
@@ -5165,7 +5165,7 @@ msgstr ""
 msgid "Default"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:3566
+#: bp-core/admin/bp-core-admin-functions.php:3574
 #: bp-core/admin/bp-core-admin-settings.php:467
 #: bp-core/admin/bp-core-admin-settings.php:586
 #: bp-core/admin/bp-core-admin-settings.php:894
@@ -5177,42 +5177,42 @@ msgstr ""
 msgid "Custom"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:3572
+#: bp-core/admin/bp-core-admin-functions.php:3580
 #: bp-groups/bp-groups-admin.php:2666
 msgid "Background Color"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:3576
+#: bp-core/admin/bp-core-admin-functions.php:3584
 #: bp-groups/bp-groups-admin.php:2670
 msgid "Text Color"
 msgstr ""
 
 #. translators:
-#: bp-core/admin/bp-core-admin-functions.php:3608
+#: bp-core/admin/bp-core-admin-functions.php:3616
 msgid "Redirect this profile type. When you change the redirection settings in a profile type this will then take priority and override redirection global settings in %s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:3619
+#: bp-core/admin/bp-core-admin-functions.php:3627
 msgid "Buddyboss - Settings - General"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:3631
-#: bp-core/admin/bp-core-admin-functions.php:3670
+#: bp-core/admin/bp-core-admin-functions.php:3639
+#: bp-core/admin/bp-core-admin-functions.php:3678
 #: bp-core/admin/bp-core-admin-settings.php:2417
 #: bp-core/admin/bp-core-admin-settings.php:3398
 #: bp-core/admin/bp-core-admin-settings.php:3448
 msgid "Custom URL"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:3643
-#: bp-core/admin/bp-core-admin-functions.php:3657
+#: bp-core/admin/bp-core-admin-functions.php:3651
+#: bp-core/admin/bp-core-admin-functions.php:3665
 #: bp-core/admin/bp-core-admin-settings.php:3410
 #: bp-core/admin/bp-core-admin-settings.php:3429
 msgid "Select a page or external link to redirect your members to after they login."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:3682
-#: bp-core/admin/bp-core-admin-functions.php:3696
+#: bp-core/admin/bp-core-admin-functions.php:3690
+#: bp-core/admin/bp-core-admin-functions.php:3704
 #: bp-core/admin/bp-core-admin-settings.php:3460
 #: bp-core/admin/bp-core-admin-settings.php:3479
 msgid "Select a page or external link to redirect your members to after they logout."
@@ -5333,8 +5333,8 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-settings.php:3356
 #: bp-core/admin/bp-core-admin-settings.php:3659
 #: bp-core/admin/bp-core-admin-settings.php:3686
-#: bp-core/admin/settings/bp-admin-setting-activity.php:456
-#: bp-core/admin/settings/bp-admin-setting-activity.php:759
+#: bp-core/admin/settings/bp-admin-setting-activity.php:454
+#: bp-core/admin/settings/bp-admin-setting-activity.php:757
 #: bp-core/admin/settings/bp-admin-setting-friends.php:113
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:607
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:663
@@ -5494,13 +5494,13 @@ msgid "When enabled, members will be able to upload cover images in their profil
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:394
-#: bp-core/admin/settings/bp-admin-setting-activity.php:254
+#: bp-core/admin/settings/bp-admin-setting-activity.php:252
 msgid "WordPress"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:400
 #: bp-core/admin/bp-core-admin-settings.php:412
-#: bp-core/admin/settings/bp-admin-setting-activity.php:145
+#: bp-core/admin/settings/bp-admin-setting-activity.php:143
 #: bp-core/bb-core-subscriptions.php:600
 #: bp-forums/admin/metaboxes.php:510
 #: bp-forums/admin/replies.php:621
@@ -5622,7 +5622,7 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-settings.php:576
 #: bp-core/admin/bp-core-admin-settings.php:985
 #: bp-core/admin/bp-core-admin-settings.php:1327
-#: bp-core/admin/settings/bp-admin-setting-activity.php:359
+#: bp-core/admin/settings/bp-admin-setting-activity.php:357
 #: bp-core/bp-core-functions.php:7449
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:218
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:233
@@ -6970,167 +6970,171 @@ msgstr ""
 msgid "Edit Activity Time Limit"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:86
+#: bp-core/admin/settings/bp-admin-setting-activity.php:81
+msgid "Post feature image"
+msgstr ""
+
+#: bp-core/admin/settings/bp-admin-setting-activity.php:84
 msgid "Activity auto-refresh"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:89
+#: bp-core/admin/settings/bp-admin-setting-activity.php:87
 msgid "Close comments"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:92
+#: bp-core/admin/settings/bp-admin-setting-activity.php:90
 #: bp-templates/bp-nouveau/buddypress/activity/entry.php:44
 #: bp-templates/bp-nouveau/readylaunch/activity/entry.php:37
 msgid "Pinned Post"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:100
+#: bp-core/admin/settings/bp-admin-setting-activity.php:98
 #: bp-core/admin/templates/upgrade-screen.php:40
 msgid "Polls"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:108
+#: bp-core/admin/settings/bp-admin-setting-activity.php:106
 msgid "Schedule posts"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:114
+#: bp-core/admin/settings/bp-admin-setting-activity.php:112
 #: bp-forums/admin/settings.php:172
 msgid "Link Previews"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:117
+#: bp-core/admin/settings/bp-admin-setting-activity.php:115
 msgid "Relevant Activity"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:120
+#: bp-core/admin/settings/bp-admin-setting-activity.php:118
 msgid "Activity search"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:123
+#: bp-core/admin/settings/bp-admin-setting-activity.php:121
 msgid "Activity feed filters"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:126
+#: bp-core/admin/settings/bp-admin-setting-activity.php:124
 msgid "Profile timeline filters"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:129
+#: bp-core/admin/settings/bp-admin-setting-activity.php:127
 msgid "Activity sorting"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:143
+#: bp-core/admin/settings/bp-admin-setting-activity.php:141
 msgid "WordPress post and custom post types will inherit from your WordPress %s settings."
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:149
+#: bp-core/admin/settings/bp-admin-setting-activity.php:147
 msgid "Enable comments"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:152
+#: bp-core/admin/settings/bp-admin-setting-activity.php:150
 msgid "Comment threading"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:153
+#: bp-core/admin/settings/bp-admin-setting-activity.php:151
 msgid "Comment threading depth"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:155
+#: bp-core/admin/settings/bp-admin-setting-activity.php:153
 msgid "Comment visibility"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:156
+#: bp-core/admin/settings/bp-admin-setting-activity.php:154
 msgid "Comments loading"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:159
+#: bp-core/admin/settings/bp-admin-setting-activity.php:157
 msgid "Edit Activity comments"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:160
+#: bp-core/admin/settings/bp-admin-setting-activity.php:158
 msgid "Edit Comment Time Limit"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:167
+#: bp-core/admin/settings/bp-admin-setting-activity.php:165
 msgid "Activity Topics"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:172
+#: bp-core/admin/settings/bp-admin-setting-activity.php:170
 msgid "Enable Topics"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:176
+#: bp-core/admin/settings/bp-admin-setting-activity.php:174
 msgid "Topic Required"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:186
+#: bp-core/admin/settings/bp-admin-setting-activity.php:184
 msgid "Activity Topic"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:203
+#: bp-core/admin/settings/bp-admin-setting-activity.php:201
 msgid "Group Topics"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:222
+#: bp-core/admin/settings/bp-admin-setting-activity.php:220
 msgid "Posts in Activity Feeds"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:268
+#: bp-core/admin/settings/bp-admin-setting-activity.php:266
 msgid "Custom Post Types"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:304
+#: bp-core/admin/settings/bp-admin-setting-activity.php:302
 msgid "Allow your users to stop users commenting on their posts"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:317
+#: bp-core/admin/settings/bp-admin-setting-activity.php:315
 msgid "Allow members to comment on activity posts"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:318
+#: bp-core/admin/settings/bp-admin-setting-activity.php:316
 msgid "Comments on an individual activity post can be closed or disabled all together by site admins."
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:345
+#: bp-core/admin/settings/bp-admin-setting-activity.php:343
 msgid "Organize replies into threads %s levels deep"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:347
+#: bp-core/admin/settings/bp-admin-setting-activity.php:345
 msgid "Replies to an activity comment will be shown in separate threads, except when replying to a comment at the deepest level. This only applies to platform not app."
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:400
+#: bp-core/admin/settings/bp-admin-setting-activity.php:398
 msgid "Display a maximum %s comments per post in activity feeds"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:402
+#: bp-core/admin/settings/bp-admin-setting-activity.php:400
 msgid "Load more using the \"View more comments\" links. Higher comments counts will increase the time it takes members to scroll through activity feeds. This only applies to platform not app."
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:428
+#: bp-core/admin/settings/bp-admin-setting-activity.php:426
 msgid "Load %s additional comments on each request"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:430
+#: bp-core/admin/settings/bp-admin-setting-activity.php:428
 msgid "Increasing the number of comments retrieved in each request may negatively impact site performance."
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:471
+#: bp-core/admin/settings/bp-admin-setting-activity.php:469
 msgid "Allow group owners and moderators to schedule their posts"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:487
+#: bp-core/admin/settings/bp-admin-setting-activity.php:485
 msgid "Allow group owners and moderators to post polls"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:499
+#: bp-core/admin/settings/bp-admin-setting-activity.php:497
 msgid "Enable topics in activity feed"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:511
+#: bp-core/admin/settings/bp-admin-setting-activity.php:509
 msgid "Require users to select a topic before posting in activity feed."
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:570
+#: bp-core/admin/settings/bp-admin-setting-activity.php:568
 #: bp-groups/bp-groups-admin.php:1511
 #: bp-members/classes/class-bp-members-admin.php:1841
 #: bp-messages/classes/class-bp-messages-component.php:260
@@ -7138,33 +7142,33 @@ msgstr ""
 msgid "Actions"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:598
+#: bp-core/admin/settings/bp-admin-setting-activity.php:596
 msgid "Add New Topic"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:601
+#: bp-core/admin/settings/bp-admin-setting-activity.php:599
 msgid "You can add up to a maximum of 20 topics"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:602
+#: bp-core/admin/settings/bp-admin-setting-activity.php:600
 msgid "You have reached the maximum topic limit"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:609
+#: bp-core/admin/settings/bp-admin-setting-activity.php:607
 #: bp-core/classes/class-bb-topics-manager.php:182
 msgid "Create Topic"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:622
+#: bp-core/admin/settings/bp-admin-setting-activity.php:620
 msgid "Topic Name"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:630
+#: bp-core/admin/settings/bp-admin-setting-activity.php:628
 msgid "Who can post?"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:659
-#: bp-core/admin/settings/bp-admin-setting-activity.php:714
+#: bp-core/admin/settings/bp-admin-setting-activity.php:657
+#: bp-core/admin/settings/bp-admin-setting-activity.php:712
 #: bp-groups/bp-groups-admin.php:254
 #: bp-members/classes/class-bp-members-admin.php:2539
 #: bp-moderation/screens/block-member-form.php:76
@@ -7189,33 +7193,37 @@ msgstr ""
 msgid "Confirm"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:671
+#: bp-core/admin/settings/bp-admin-setting-activity.php:669
 #: bp-core/classes/class-bb-topics-manager.php:1561
 msgid "Deleting"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:682
+#: bp-core/admin/settings/bp-admin-setting-activity.php:680
 msgid "Would you like to move all previously tagged posts into another topic?"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:689
+#: bp-core/admin/settings/bp-admin-setting-activity.php:687
 msgid "Yes, move posts to another topic"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:693
+#: bp-core/admin/settings/bp-admin-setting-activity.php:691
 msgid "Select topic"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:700
+#: bp-core/admin/settings/bp-admin-setting-activity.php:698
 msgid "No, delete the topic"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:732
+#: bp-core/admin/settings/bp-admin-setting-activity.php:730
 msgid "Enable topics for groups."
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:733
+#: bp-core/admin/settings/bp-admin-setting-activity.php:731
 msgid "Allow group organizers to set categories for members to use in group posts."
+msgstr ""
+
+#: bp-core/admin/settings/bp-admin-setting-activity.php:772
+msgid "Allow group owners and moderators to add a featured image to their posts"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-document.php:22
@@ -34342,7 +34350,7 @@ msgid "Sorry, there was no activity found."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/activity/ajax.php:304
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1784
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1785
 msgid "There was a problem when deleting. Please try again."
 msgstr ""
 
@@ -34366,7 +34374,7 @@ msgstr ""
 msgid "No activities were found."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:701
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:702
 msgid "Please select a topic before posting."
 msgstr ""
 
@@ -34438,27 +34446,27 @@ msgstr ""
 msgid "View activity."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1275
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1276
 msgid "There was a problem marking this activity as spam. Please try again."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1324
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1325
 msgid "This activity has been marked as spam and is no longer visible."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1437
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1438
 msgid "Your pinned post has been removed"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1441
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1442
 msgid "You are not allowed to pin or unpin this post"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1471
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1472
 msgid "There was a problem marking this operation. Close comments setting is disabled."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1830
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1831
 msgid "You don't have permission to delete scheduled activity."
 msgstr ""
 
