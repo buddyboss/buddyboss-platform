@@ -2911,6 +2911,7 @@ function bp_video_move_video_to_album( $video_id = 0, $album_id = 0, $group_id =
 					$activity->hide_sitewide     = ( 'groups' === $activity->component && ( 'hidden' === $status || 'private' === $status ) ) ? 1 : $activity->hide_sitewide;
 					$activity->secondary_item_id = 0;
 					$activity->privacy           = $destination_privacy;
+					$activity->title_required    = false;
 					$activity->save();
 				}
 
@@ -2969,7 +2970,8 @@ function bp_video_move_video_to_album( $video_id = 0, $album_id = 0, $group_id =
 						bp_activity_delete( array( 'id' => $need_delete ) );
 
 						// Update parent activity privacy to destination privacy.
-						$parent_activity->privacy = $destination_privacy;
+						$parent_activity->privacy        = $destination_privacy;
+						$parent_activity->title_required = false;
 						$parent_activity->save();
 
 					} elseif ( count( $parent_activity_video_ids ) > 1 ) {
@@ -2985,6 +2987,7 @@ function bp_video_move_video_to_album( $video_id = 0, $album_id = 0, $group_id =
 							$activity->hide_sitewide     = ( 'groups' === $activity->component && ( 'hidden' === $status || 'private' === $status ) ) ? 1 : 0;
 							$activity->secondary_item_id = 0;
 							$activity->privacy           = $destination_privacy;
+							$activity->title_required    = false;
 							$activity->save();
 
 							bp_activity_update_meta( (int) $child_activity_id, 'bp_video_ids', $video_id );

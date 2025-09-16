@@ -402,6 +402,7 @@ function bp_activity_admin_load() {
 				$errors[] = $activity_id;
 				continue;
 			}
+			$activity->title_required = false;
 
 			switch ( $doaction ) {
 				case 'delete':

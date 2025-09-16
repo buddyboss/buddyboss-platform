@@ -1323,6 +1323,7 @@ function bp_nouveau_ajax_spam_activity() {
 
 	// Mark as spam.
 	bp_activity_mark_as_spam( $activity );
+	$activity->title_required = false;
 	$activity->save();
 
 	/** This action is documented in bp-activity/bp-activity-actions.php */
@@ -1374,7 +1375,8 @@ function bp_nouveau_ajax_activity_update_privacy() {
 
 	if ( bp_activity_user_can_delete( $activity ) ) {
 		remove_action( 'bp_activity_before_save', 'bp_activity_check_moderation_keys', 2 );
-		$activity->privacy       = sanitize_text_field( wp_unslash( $_POST['privacy'] ) );
+		$activity->privacy        = sanitize_text_field( wp_unslash( $_POST['privacy'] ) );
+		$activity->title_required = false;
 		$activity->save();
 
 		if ( function_exists( 'bp_activity_update_meta' ) ) {	
