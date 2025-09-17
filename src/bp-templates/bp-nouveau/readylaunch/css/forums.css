@@ -2137,13 +2137,6 @@
   margin-bottom: var(--bb-rl-space-50);
 }
 
-.bb-rl-topic-content p {
-  font-size: var(--bb-rl-font-size-sm);
-  font-weight: 400;
-  line-height: var(--bb-rl-base-line-small);
-  margin-bottom: var(--bb-rl-space-100);
-}
-
 .bb-rl-topic-content .bb-activity-media-wrap {
   margin: var(--bb-rl-space-200) 0;
 }
@@ -2343,6 +2336,58 @@
   display: none;
 }
 
+.bb-rl-topic-content p,
+.bb-rl-reply-content p {
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 400;
+  line-height: var(--bb-rl-base-line-small);
+  margin-bottom: var(--bb-rl-space-100);
+}
+
+.bb-rl-topic-content p:last-child,
+.bb-rl-reply-content p:last-child {
+  margin-bottom: 0;
+}
+
+.bb-rl-topic-content iframe,
+.bb-rl-reply-content iframe {
+  border-radius: var(--bb-rl-radius-base);
+}
+
+.bb-rl-topic-content code,
+.bb-rl-topic-content pre,
+.bb-rl-reply-content code,
+.bb-rl-reply-content pre {
+  font-size: var(--bb-rl-font-size-sm);
+  background-color: var(--bb-rl-background-secondary-color);
+  padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+  margin-bottom: var(--bb-rl-space-200);
+  border-radius: var(--bb-rl-radius-md);
+}
+
+.bb-rl-topic-content code,
+.bb-rl-reply-content code {
+  display: inline-block;
+}
+
+.bb-rl-topic-content blockquote,
+.bb-rl-reply-content blockquote {
+  font-size: var(--bb-rl-font-size-sm);
+  font-style: italic;
+  background-color: var(--bb-rl-background-secondary-color);
+  border-left: 2px solid var(--bb-rl-background-tertiary-color);
+  padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+  margin-bottom: var(--bb-rl-space-200);
+}
+
+.bb-rl-topic-content ol,
+.bb-rl-topic-content ul,
+.bb-rl-reply-content ol,
+.bb-rl-reply-content ul {
+  font-size: var(--bb-rl-font-size-sm);
+  padding: 0 0 var(--bb-rl-space-200) var(--bb-rl-space-300);
+}
+
 .bb-rl-topic-reply-link-wrap a {
   display: inline-flex;
   align-items: center;
@@ -2510,21 +2555,6 @@
 
 .bb-rl-single-forum-list .bb-rl-reply-content {
   padding: var(--bb-rl-space-100);
-}
-
-.bb-rl-single-forum-list .bb-rl-reply-content p {
-  font-size: var(--bb-rl-font-size-sm);
-  font-weight: 400;
-  line-height: var(--bb-rl-base-line-small);
-  margin-bottom: var(--bb-rl-space-100);
-}
-
-.bb-rl-single-forum-list .bb-rl-reply-content p:last-child {
-  margin-bottom: 0;
-}
-
-.bb-rl-single-forum-list .bb-rl-reply-content iframe {
-  border-radius: var(--bb-rl-radius-base);
 }
 
 .bb-rl-single-forum-list .bb_more_options .bbp-reply-to-link,
