@@ -1,0 +1,517 @@
+// BP Single Group Header Styles.
+// @version 3.0.0
+
+.groups-header {
+
+	.bp-group-type-list {
+		margin: 0;
+	}
+
+	.bp-feedback {
+		clear: both;
+	}
+
+	.action .button {
+		margin-right: 10px;
+	}
+
+	// The admin & mod list display for a group.
+	// 'moderators-lists' is used to refer to
+	// generic members with elevated access.
+	.moderators-lists {
+		margin-top: 0;
+		display: table-cell;
+
+		#group-admins {
+
+			@include dis-flex;
+			margin-bottom: $marg-med;
+			padding-right: 10px;
+			margin-right: 5px;
+		}
+
+		.moderators-title {
+
+			@include font-size(14);
+		}
+
+		.user-list {
+			margin: 0 0 $marg-xsml;
+
+			ul:after {
+				clear: both;
+				content: "";
+				display: table;
+			}
+
+			li {
+				display: inline-block;
+				float: none;
+				margin: 4px 0 0 4px;
+			}
+		}
+
+		#group-admins {
+			margin: 0 0 0 10px;
+
+			> li {
+
+				@include dis-flex;
+				margin: 0 0 0 -6px;
+				position: relative;
+				z-index: 1;
+
+				a {
+					text-decoration: none;
+				}
+
+				img {
+					border: 2px solid transparent;
+					background-color: #fff;
+					border-radius: 50%;
+					float: left;
+					image-rendering: -webkit-optimize-contrast;
+					margin: 0;
+					width: 34px;
+				}
+
+				[class*=" bb-icon-"] {
+					height: 34px;
+					width: 34px;
+					font-size: 16px;
+					color: #c3c4c8;
+					line-height: 34px;
+					border-radius: 50%;
+					background-color: #f9f9f9;
+					border: 2px solid #fff;
+
+					@include dis-flex;
+					@include flex-align(center);
+					-webkit-box-pack: center;
+					-ms-flex-pack: center;
+					justify-content: center;
+
+					&:hover {
+						background-color: #e3e3e3;
+					}
+
+				}
+
+			}
+
+		}
+
+	} // close moderators-lists
+
+	.parent-list {
+		padding: 0 1em 0 0;
+		display: table-cell;
+
+		.parent-title {
+
+			@include font-size(14);
+		}
+
+		.group-list {
+			margin: 0 0 $marg-xsml;
+
+			ul:after {
+				clear: both;
+				content: "";
+				display: table;
+			}
+
+			li {
+				display: inline-block;
+				float: none;
+				margin: 4px 0 0 4px;
+			}
+		}
+
+		img.avatar {
+
+			@include box-shadow-none();
+			float: none;
+			height: 30px;
+			margin: 0;
+			max-width: 100%;
+			width: 30px;
+		}
+	}
+
+	.desc-wrap {
+		background: $light-grey;
+		border: 1px solid $med-light-grey;
+		margin: 0 0 $marg-med;
+		padding: $pad-med;
+		text-align: center;
+
+		.group-description {
+			background: $off-white;
+			padding: $pad-med;
+			text-align: left;
+		}
+
+		.group-description p:last-child {
+			margin-bottom: 0;
+		}
+	}
+
+	.bb_more_options {
+		display: inline-block;
+	}
+
+	#item-header-avatar {
+
+		a.link-change-profile-image {
+			top: 50%;
+			margin: 0;
+			transform: translate(-50%, -50%);
+		}
+
+		&:hover .link-change-overlay {
+			position: absolute;
+			left: 3px;
+			right: 3px;
+			top: 3px;
+			bottom: 3px;
+			background-color: rgba(0, 0, 0, 0.3);
+		}
+	}
+
+	//group header centered
+	#cover-image-container.centered {
+
+		#item-header-cover-image {
+
+			@include flex-align(center);
+			-webkit-box-orient: vertical;
+			-webkit-box-direction: normal;
+			-ms-flex-flow: column;
+			flex-flow: column;
+
+			&:not(.bb-disable-cover-img) #item-header-avatar {
+				margin: -120px auto 0 auto;
+			}
+
+			&.bb-disable-cover-img #item-header-avatar {
+				margin-left: auto;
+				margin-right: auto;
+			}
+
+			#item-header-content {
+
+				@include center-vert;
+				flex-direction: column;
+				width: 100%;
+
+				.bb-bp-group-title,
+				.group-description {
+					text-align: center;
+				}
+
+				.bp-group-title-wrap .bp-group-status {
+
+					.group-visibility {
+						display: none;
+					}
+
+					.group-type {
+						display: block;
+					}
+
+				}
+
+			}
+
+			.group-item-actions {
+
+				@include dis-flex;
+				@include flex-align(center);
+				flex-direction: row;
+				width: auto;
+			}
+
+			.groups-meta.action {
+
+				@include dis-flex;
+				position: static;
+				max-width: initial;
+				width: auto;
+
+				.generic-button {
+					margin: 0;
+				}
+
+			}
+
+		}
+
+		#item-header-content > .bp-group-type {
+			display: block;
+			text-align: center;
+			width: 100%;
+			margin-top: 0;
+			margin-bottom: 0;
+
+			.group-visibility {
+				display: none;
+			}
+
+		}
+
+		.group-actions-wrap {
+
+			@include dis-flex();
+			-webkit-box-pack: justify;
+			-ms-flex-pack: justify;
+			justify-content: space-between;
+			position: relative;
+			width: 100%;
+		}
+
+	}
+
+	#cover-image-container {
+
+		&:not(.centered) #item-header-content {
+
+			> .bp-group-type {
+				display: none;
+			}
+
+			.bp-group-title-wrap .bp-group-type {
+				display: block;
+
+				.group-visibility {
+					display: none;
+				}
+
+			}
+
+		}
+
+		#item-header-content {
+
+			.group-description {
+				margin: 0 0 15px;
+
+				p {
+					margin-bottom: 0;
+				}
+
+			}
+
+			.bp-group-meta-wrap {
+				margin: 0 0 12px 0;
+
+				.bp-group-status {
+					margin: 0;
+
+					+ .last-activity:before {
+						content: "•";
+						margin: 0 4px 0 8px;
+					}
+
+				}
+
+			}
+
+			.group-actions-absolute {
+
+				@include dis-flex();
+				@include flex-align(center);
+
+				.groups-meta {
+					display: block;
+					margin-bottom: 0;
+					margin-left: $marg-xsml;
+					max-width: initial;
+					position: static;
+
+					.generic-button {
+						margin: 0;
+
+						> * {
+							min-width: auto;
+							padding: 0 16px;
+							height: 38px;
+							line-height: 38px;
+						}
+
+					}
+
+					.group-subscription {
+						padding: 0 9px;
+						line-height: 37px;
+
+						i {
+							font-size: 18px;
+						}
+
+						&.not-subscribed {
+
+							i:before {
+								content: "\e86a";
+							}
+
+							&:focus i:before,
+							&:hover i:before {
+								content: "\e86d";
+								font-weight: 300;
+							}
+
+						}
+
+						&.subscribed {
+
+							i {
+								font-weight: 300;
+							}
+
+							&:focus i:before,
+							&:hover i:before {
+								content: "\e86a";
+							}
+
+						}
+					}
+
+				}
+
+				.bb_more_options {
+					margin-left: $marg-xsml;
+					margin-bottom: 0;
+				}
+
+				.bp-group-status {
+
+					@include align-self(center);
+					margin: 0;
+
+					.group-type {
+						display: none;
+					}
+
+				}
+
+			}
+
+		}
+
+	}
+
+	@media screen and (min-width: 783px) {
+
+		#item-header-content {
+			flex: 1;
+			min-width: 0;
+		}
+
+		#item-header-cover-image {
+
+			#item-actions,
+			#item-header-content {
+				padding-top: $marg-lrg;
+				padding-bottom: $marg-lrg;
+			}
+
+		}
+
+		.group-item-actions {
+			margin-left: $marg-med;
+			text-align: right;
+			max-width: 25%;
+			display: table;
+		}
+
+		.groups-meta {
+			clear: both;
+		}
+	}
+
+	@media screen and (max-width: 782px) {
+
+		#item-header-cover-image {
+
+			#item-actions,
+			#item-header-content {
+				padding-bottom: $marg-med;
+			}
+
+			#item-actions {
+				margin-bottom: $marg-med;
+			}
+
+		}
+
+		.left #item-header-cover-image #item-actions {
+			margin-bottom: 0;
+		}
+
+		#cover-image-container {
+
+			#item-header-content {
+				flex: 0 0 100%;
+				text-align: center;
+
+				.group-actions-wrap {
+
+					@include center-vert();
+					flex-direction: column;
+					justify-content: center;
+
+					.bp-title {
+						margin-right: $marg-med;
+					}
+
+					.moderators-lists {
+						margin-bottom: 0;
+					}
+
+				}
+
+				.group-actions-absolute {
+					position: static;
+					justify-content: center;
+					margin-top: 0;
+				}
+
+			}
+
+			&.centered #item-header-content {
+
+				> .bp-group-type {
+					margin-bottom: $marg-med;
+				}
+
+				.group-actions-wrap {
+					display: block;
+
+					.group-item-actions {
+						-webkit-box-pack: center;
+						-ms-flex-pack: center;
+						justify-content: center;
+					}
+
+				}
+
+			}
+
+			&.left #item-header-content .group-actions-absolute {
+				justify-content: start;
+			}
+
+		}
+
+	}
+
+	@media screen and (max-width: 380px) {
+
+		.bb_more_options {
+			margin-bottom: $marg-sml;
+		}
+
+	}
+
+} // close groups-header

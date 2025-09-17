@@ -1,0 +1,78 @@
+.bb_recaptcha_v2_element_content {
+	margin: 25px 0 -1px 0;
+	display: inline-block;
+}
+
+#loginform {
+
+	.bb_recaptcha_v2_element_content {
+		margin: 50px 0 -1px 0;
+		display: block;
+	}
+}
+
+#loginform.shake {
+	transform: none !important;
+	animation: none !important;
+}
+
+#loginform.shake > *:not(.bb_recaptcha_v2_element_content) {
+	animation: shake 0.2s cubic-bezier(0.19, 0.49, 0.38, 0.79) both;
+	animation-iteration-count: 3;
+	transform: translateX(0);
+}
+
+.register-page {
+
+	.error {
+
+		&:has(.bb-recaptcha-register) {
+			margin-top: 25px !important;
+		}
+	}
+}
+
+.bb-login {
+
+	.v2_invisible_badge {
+
+		&.bb_recaptcha_v2_element_content {
+			margin-top: 50px;
+			margin-bottom: -1px;
+		}
+	}
+
+	&.login-action-lostpassword {
+
+		.v2_invisible_badge {
+
+			&.bb_recaptcha_v2_element_content {
+				margin-top: 20px;
+			}
+		}
+	}
+}
+
+.v2_invisible_badge {
+
+	&.bb_recaptcha_v2_element_content {
+		display: block;
+		margin-top: 20px;
+		margin-bottom: 20px;
+	}
+
+	.grecaptcha-badge {
+		display: flex;
+		justify-content: flex-end;
+		overflow: hidden;
+		width: 70px !important;
+		height: 60px;
+		box-shadow: 0 0 4px #ddd;
+		transition: linear 100ms width;
+		margin: 25px 0 -1px;
+
+		&:hover {
+			width: 256px !important;
+		}
+	}
+}

@@ -1,0 +1,33 @@
+// Groups specific Item-body content
+// @version 3.0.0
+
+// Members list doesn't generate  subnav items items
+// so we negate the rules using :not()
+.single-item.group-members {
+
+	.item-body {
+
+		.filters:not(.no-subnav) {
+			border-top: 5px solid $light-grey;
+			padding-top: $pad-med;
+		}
+	}
+}
+
+//Subgroups list doesn't show searchbar and filter dropdown
+.single-item.subgroups {
+
+	.item-body {
+
+		#subnav-filters {
+
+			.subnav-search {
+				display: none;
+			}
+
+			#dir-filters {
+				display: none;
+			}
+		}
+	}
+}

@@ -1,0 +1,717 @@
+/*! jQuery UI - v1.11.4 - 2015-11-24
+* http://jqueryui.com
+* Includes: core.css, accordion.css, menu.css
+* Copyright jQuery Foundation and other contributors; Licensed MIT */
+
+.ui-helper-hidden {
+	display: none;
+}
+
+.ui-helper-hidden-accessible {
+	border: 0;
+	clip: rect(0 0 0 0);
+	height: 1px;
+	margin: -1px;
+	overflow: hidden;
+	padding: 0;
+	position: absolute;
+	width: 1px;
+}
+
+.ui-helper-reset {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	outline: 0;
+	line-height: 1.3;
+	text-decoration: none;
+	font-size: 100%;
+	list-style: none;
+}
+
+.ui-helper-clearfix:before,
+.ui-helper-clearfix:after {
+	content: "";
+	display: table;
+	border-collapse: collapse;
+}
+
+.ui-helper-clearfix:after {
+	clear: both;
+}
+
+.ui-helper-clearfix {
+	min-height: 0;
+}
+
+.ui-helper-zfix {
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left: 0;
+	position: absolute;
+	opacity: 0;
+}
+
+.ui-front {
+	z-index: 100;
+}
+
+.ui-state-disabled {
+	cursor: default !important;
+}
+
+.ui-icon {
+	display: block;
+	text-indent: -99999px;
+	overflow: hidden;
+	background-repeat: no-repeat;
+}
+
+.ui-widget-overlay {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+}
+
+.ui-accordion .ui-accordion-header {
+	display: block;
+	cursor: pointer;
+	position: relative;
+	margin: 2px 0 0;
+	padding: 0.5em 0.5em 0.5em 0.7em;
+	min-height: 0;
+	font-size: 100%;
+}
+
+.ui-accordion .ui-accordion-icons {
+	padding-left: 2.2em;
+}
+
+.ui-accordion .ui-accordion-icons .ui-accordion-icons {
+	padding-left: 2.2em;
+}
+
+.ui-accordion .ui-accordion-header .ui-accordion-header-icon {
+	position: absolute;
+	left: 0.5em;
+	top: 50%;
+	margin-top: -8px;
+}
+
+.ui-accordion .ui-accordion-content {
+	padding: 1em 2.2em;
+	border-top: 0;
+	overflow: auto;
+}
+
+.ui-menu {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	display: block;
+	outline: none;
+}
+
+.ui-menu .ui-menu {
+	position: absolute;
+}
+
+.ui-menu .ui-menu-item {
+	position: relative;
+	margin: 0;
+	padding: 3px 1em 3px 0.4em;
+	cursor: pointer;
+	min-height: 0;
+}
+
+.ui-menu .ui-menu-divider {
+	margin: 5px 0;
+	height: 0;
+	font-size: 0;
+	line-height: 0;
+	border-width: 1px 0 0;
+}
+
+.ui-menu-icons {
+	position: relative;
+}
+
+.ui-menu-icons .ui-menu-item {
+	padding-left: 2em;
+}
+
+.ui-menu .ui-icon {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0.2em;
+	margin: auto 0;
+}
+
+.ui-menu .ui-menu-icon {
+	left: auto;
+	right: 0;
+}
+
+/* +++++++++++++++++++++++++++++++++++++++++
+AJAX SEARCH
++++++++++++++++++++++++++++++++++++++++++ */
+
+.bp-search-ajax-item {
+	margin: 0;
+
+	> a {
+		display: -webkit-box;
+		display: -ms-flexbox;
+		display: flex;
+	}
+
+	.item-avatar {
+		margin-right: 12px;
+		width: 50px;
+
+		img {
+			vertical-align: middle;
+			max-width: 48px;
+			width: 100%;
+			height: auto;
+		}
+	}
+
+	.item {
+		flex: 1;
+		min-width: 0;
+		overflow: hidden;
+		line-height: 1.3;
+		align-self: center;
+
+		.item-desc,
+		.item-tags {
+			margin-top: 5px;
+			font-size: 80%;
+			color: #a9a9a9;
+		}
+	}
+
+	.item-title {
+		font-size: 15px;
+		color: #122b46;
+		letter-spacing: -0.24px;
+		margin-bottom: 3px;
+	}
+
+	.item-meta {
+		margin-bottom: 0;
+		font-size: 12px;
+		color: #a3a5a9;
+		letter-spacing: -0.18px;
+	}
+}
+
+.bbls-pages-type,
+.bbls-posts-type,
+.bbls-cpt-sfwd-quiz-type,
+.bbls-cpt-sfwd-certificates-type {
+
+	.bp-search-ajax-item {
+		display: flex;
+
+		.item > a:not(.x) {
+			display: block;
+		}
+
+		.item > .entry-meta a .author {
+			margin-right: 5px;
+		}
+	}
+}
+
+.ui-menu .ui-menu-item a,
+.ui-menu .ui-menu-item a:hover,
+.ui-menu .ui-menu-item a:active {
+	text-decoration: none;
+}
+
+.bp-search-ac.ui-autocomplete {
+	border-radius: 0;
+	-webkit-box-shadow: 0 2px 3px 0 rgba(50, 50, 50, 0.4);
+	-moz-box-shadow: 0 2px 3px 0 rgba(50, 50, 50, 0.4);
+	box-shadow: 0 2px 3px 0 rgba(50, 50, 50, 0.4);
+	max-height: 80%;
+	min-width: 280px;
+	overflow-x: hidden;
+	overflow-y: hidden;
+	background-color: #fff;
+}
+
+.ui-widget-content {
+	border: none;
+}
+
+/* Its just an helper we don't want to show it. */
+.bp-search-ac .x {
+	display: none !important;
+}
+
+.bp-search-ac li.bbls-category {
+	font-weight: 600;
+	padding: 14px 10px 5px;
+	position: relative;
+	top: -1px;
+	box-sizing: border-box;
+}
+
+.bp-search-ac li.bbls-category a {
+	font-weight: 600;
+}
+
+.bp-search-ac li:not(.bbls-category) {
+	padding: 0 10px;
+}
+
+.bp-search-ac li:not(.bbls-category) .bp-search-ajax-item {
+	padding: 10px 0;
+}
+
+.bp-search-ac.ui-menu .ui-menu-item.bbls-view_all_type-type .bp-search-ajax-item,
+.bp-search-ac .bbls-category + li .bp-search-ajax-item {
+	padding-top: 9px;
+}
+
+.bp-search-ac .bbls-category:not(:first-child) {
+	border-top: 1px solid #e5e5e5;
+}
+
+.bp-search-ac.ui-menu .ui-menu-divider {
+	border-width: 0;
+	margin: 0;
+}
+
+.bp-search-ac.ui-menu .ui-menu-item.ui-state-focus {
+	border: none;
+	color: inherit;
+}
+
+.bp-search-ac.ui-menu .ui-menu-item {
+	list-style-image: none;
+	box-sizing: border-box;
+}
+
+.bp-search-ac.ui-menu .ui-menu-item.ui-state-focus,
+.bp-search-ac.ui-menu .ui-menu-item.ui-state-hover,
+.bp-search-ac.ui-menu .ui-menu-item:hover {
+	background: #f4f5f6;
+}
+
+.bp-search-ac.ui-menu .ui-menu-item.bbls-view_all_type-type {
+	padding: 0;
+}
+
+.bp-search-ac.ui-menu .ui-menu-item.bbls-view_all_type-type .bp-search-ajax-item {
+	padding: 0;
+	border-top: 1px solid #e5e5e5;
+	border-bottom: 0;
+	position: relative;
+	top: -1px;
+}
+
+.bp-search-ac.ui-menu .ui-menu-item .bp-search-ajax-item.noresult {
+	padding: 13px 7px 11px;
+}
+
+.bp-search-ac.ui-menu .ui-menu-item.bbls-view_all_type-type .bp-search-ajax-item a {
+	display: block;
+	padding: 9px 10px;
+	text-align: center;
+}
+
+@media screen and (max-width: 720px) {
+
+	.bp-search-ac.ui-autocomplete {
+		overflow-y: scroll;
+	}
+}
+
+/* +++++++++++++++++++++++++++++++++++++++
+SEARCH RESULTS PAGE
++++++++++++++++++++++++++++++++++++++++ */
+
+#buddypress .results-group ul.item-list {
+	border-top: none !important;
+}
+
+.search_results .results-group-title {
+	text-transform: capitalize;
+	float: left;
+	margin-bottom: 0;
+}
+
+.bp-search-page {
+
+	.results-group {
+
+		ul#activity-stream {
+			margin: 0;
+			padding: 0;
+			background: transparent;
+			border: 0;
+			box-shadow: none;
+
+			li.activity-item {
+
+				border: 0;
+				box-shadow: none;
+				margin: 0;
+
+				.activity-inner {
+					border: 0;
+					margin: 0;
+					padding: 0;
+					background: transparent;
+				}
+			}
+
+		}
+	}
+}
+
+.bp-search-page .bp-navs ul li .count {
+	margin-left: 6px;
+}
+
+.bp-search-results-wrap {
+
+	.results-group-header {
+		border-bottom: 1px solid #ccc;
+		display: flex;
+		align-items: center;
+		padding-bottom: 5px;
+
+		.view-all-link-hidden {
+			display: none;
+		}
+	}
+
+	.results-group-title {
+		flex: 1;
+		min-width: 0;
+	}
+
+	.results-group-footer {
+		text-align: center;
+	}
+
+	.view-all-link {
+		font-size: 14px;
+		color: #888;
+		line-height: 1;
+	}
+}
+
+div.search_results .item-list {
+	margin-top: 0;
+	padding-top: 0;
+}
+
+div.search_results .groups-list li .last-activity {
+	margin-top: 0;
+}
+
+.bp-search-results-wrapper .bp-search-form-wrapper {
+	float: left;
+	margin: 0 0 20px;
+}
+
+.search_results {
+	clear: both;
+}
+
+.bp-search-item {
+	margin: 0 0 20px;
+	padding: 0 0 20px;
+	border-bottom: 1px solid #eee;
+}
+
+/* Classifieds plugin */
+
+#buddypress .results-group ul.awpcp_ad_listing-list div img {
+	margin-top: 20px;
+}
+
+/* Auto Complete Menu */
+
+.bp-search-ac .loading-msg {
+	padding: 20px;
+	white-space: nowrap;
+	font-size: 12px;
+	text-align: center;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.bp-search-ac .loading-msg .bb_global_search_spinner {
+	background: url(../images/spinner.png) no-repeat center;
+	background-size: 100% 100%;
+	width: 19px;
+	height: 19px;
+	margin: 0 10px 0 0;
+}
+
+.bb_global_search_spinner {
+	margin: 20px;
+	width: 100px;
+	height: 100px;
+	background: #f00;
+	-webkit-animation-name: bb_global_srch_spin;
+	-webkit-animation-duration: 4000ms;
+	-webkit-animation-iteration-count: infinite;
+	-webkit-animation-timing-function: linear;
+	-moz-animation-name: bb_global_srch_spin;
+	-moz-animation-duration: 4000ms;
+	-moz-animation-iteration-count: infinite;
+	-moz-animation-timing-function: linear;
+	-ms-animation-name: bb_global_srch_spin;
+	-ms-animation-duration: 4000ms;
+	-ms-animation-iteration-count: infinite;
+	-ms-animation-timing-function: linear;
+	animation-name: bb_global_srch_spin;
+	animation-duration: 4000ms;
+	animation-iteration-count: infinite;
+	animation-timing-function: linear;
+}
+
+/*
+* this will be added when ajax select focus item
+**/
+
+.bp-search-ac .ui-corner-all {
+	display: none;
+}
+
+@-moz-keyframes bb_global_srch_spin {
+
+	from {
+		-moz-transform: rotate(0deg);
+	}
+
+	to {
+		-moz-transform: rotate(360deg);
+	}
+}
+
+@-webkit-keyframes bb_global_srch_spin {
+
+	from {
+		-webkit-transform: rotate(0deg);
+	}
+
+	to {
+		-webkit-transform: rotate(360deg);
+	}
+}
+
+@keyframes bb_global_srch_spin {
+
+	from {
+		transform: rotate(0deg);
+	}
+
+	to {
+		transform: rotate(360deg);
+	}
+}
+
+/** BuddyPress Send To Autocomplete Fix */
+
+.ac_results li.ui-menu-divider {
+	margin: 0;
+	padding: 0;
+}
+
+.ac_results.ui-menu .ui-menu-item.ui-state-hover,
+.ac_results.ui-menu .ui-menu-item:hover,
+.ac_results.ui-menu .ui-state-focus,
+.ac_results.ui-menu .ui-state-active {
+	margin: 0;
+	background-color: #888;
+}
+
+.ac_results.ui-menu .ui-menu-item.ui-state-hover a,
+.ac_results.ui-menu .ui-menu-item:hover a,
+.ac_results.ui-menu .ui-state-focus a,
+.ac_results.ui-menu .ui-state-active a {
+	color: #fff;
+}
+
+/** BuddyPress Nouveau Template Packs */
+
+.bp-search-results-list .bp-search-item {
+	margin: 0;
+	padding: 15px 0;
+
+	.list-wrap {
+		display: flex;
+	}
+
+	.item-avatar {
+		margin-right: 12px;
+		max-width: 50px;
+	}
+
+	.item-avatar img.avatar {
+		display: block;
+	}
+
+	.item {
+		display: block;
+		flex: 1;
+		min-width: 0;
+		align-self: center;
+	}
+
+	.item-title {
+		float: none;
+		font-size: 16px;
+		color: #122b46;
+		letter-spacing: -0.24px;
+		line-height: 1;
+		margin: 5px 0;
+		text-align: left;
+	}
+
+	p.item-meta {
+		margin-bottom: 0;
+		text-align: left;
+	}
+
+	.item-desc {
+		color: #737373;
+		font-size: 12px;
+		line-height: 1.4;
+	}
+
+	/*star rating for products*/
+	.rating-custom div.product .woocommerce-product-rating {
+		margin-bottom: 1.618em;
+	}
+
+	.rating-custom .woocommerce-product-rating .star-rating {
+		margin: 0.5em 4px 0 0;
+		float: left;
+	}
+
+	.rating-custom .woocommerce-product-rating:after,
+	.rating-custom .woocommerce-product-rating:before {
+
+		content: " ";
+		display: table;
+
+	}
+
+	.rating-custom .woocommerce-product-rating {
+		line-height: 2;
+	}
+
+	.rating-custom .star-rating {
+		float: right;
+		overflow: hidden;
+		position: relative;
+		height: 1em;
+		line-height: 1;
+		font-size: 1em;
+		width: 5.4em;
+		font-family: star;
+	}
+
+	.rating-custom .star-rating:before {
+		content: "\73\73\73\73\73";
+		color: #d3ced2;
+		float: left;
+		top: 0;
+		left: 0;
+		position: absolute;
+	}
+
+	.rating-custom .star-rating {
+		line-height: 1;
+		font-size: 1em;
+		font-family: star;
+	}
+
+	.rating-custom .star-rating span {
+		overflow: hidden;
+		float: left;
+		top: 0;
+		left: 0;
+		position: absolute;
+		padding-top: 1.5em;
+	}
+
+	.rating-custom .star-rating span:before {
+		content: "\53\53\53\53\53";
+		top: 0;
+		position: absolute;
+		left: 0;
+	}
+
+	.rating-custom .star-rating span {
+
+		overflow: hidden;
+		float: left;
+		top: 0;
+		left: 0;
+		position: absolute;
+		padding-top: 1.5em;
+
+	}
+
+	.woocommerce-review-link {
+		display: none;
+	}
+
+	.product-sale {
+		margin-top: 0.5em;
+
+		.onsale {
+			padding: 0.202em;
+			text-align: center;
+			background-color: #77a464;
+			color: #fff;
+			font-size: 80%;
+			z-index: 9;
+		}
+	}
+
+	dd.course_progress {
+		margin: 0;
+		width: 40%;
+		height: 5px;
+	}
+
+	.entry-meta {
+
+		span,
+		a {
+			color: #737373;
+			font-size: 90%;
+		}
+	}
+}
+
+.bp-search-results-wrapper.bp-search-no-results {
+	display: flex;
+	flex-flow: column-reverse;
+
+	.search_filters {
+		display: none;
+	}
+
+	.search_results {
+		margin-bottom: 20px;
+		margin-top: -10px;
+	}
+}

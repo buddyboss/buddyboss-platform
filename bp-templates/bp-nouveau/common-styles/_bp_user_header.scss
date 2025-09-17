@@ -1,0 +1,189 @@
+// BP Single User Specific Header Styles
+// @version 3.0.0
+
+.bp-user {
+
+	.users-header {
+
+		.user-nicename {
+			margin-bottom: $marg-xsml;
+		}
+	}
+
+	.member-header-actions {
+		overflow: hidden;
+
+		* > * {
+			display: block;
+		}
+
+	}
+
+	.bb-enable-cover-img .bb_more_options {
+		margin: 35px 0 0 10px;
+	}
+
+}
+
+body.buddypress.bp-user #page #primary .entry-header {
+	display: none;
+}
+
+.forum #bbpress-forums > .bb_more_options {
+	float: right;
+	margin-top: -3px;
+}
+
+#buddypress .bb_more_options,
+.bb_more_options {
+	position: relative;
+	display: inline-block;
+
+	.bb_more_options_action {
+		padding: 5px;
+		display: flex;
+		cursor: pointer;
+
+		i {
+			font-size: 21px;
+			color: #939597;
+		}
+
+	}
+
+	.bb_more_options_list {
+		position: absolute;
+		top: 30px;
+		right: 4px;
+		background: #fff;
+		box-shadow: 0 2px 7px 1px rgba(0, 0, 0, 0.05), 0 6px 32px 0 rgba(18, 43, 70, 0.01);
+		border-radius: 4px;
+		width: 178px;
+		padding: 5px 0;
+		display: none;
+		z-index: 11;
+
+		&.is_visible {
+			display: block;
+		}
+
+		> .generic-button {
+			width: 100%;
+			margin: 0 !important;
+		}
+
+		&:after {
+			content: "";
+			position: absolute;
+			width: 0;
+			height: 0;
+			top: 1px;
+			margin: 0 auto;
+			right: 8px;
+			box-sizing: border-box;
+			border: 6px solid #000;
+			border-color: #fff #fff transparent transparent;
+			-webkit-transform-origin: 0 0;
+			-ms-transform-origin: 0 0;
+			transform-origin: 0 0;
+			-webkit-transform: rotate(-45deg);
+			-ms-transform: rotate(-45deg);
+			transform: rotate(-45deg);
+			box-shadow: 2px -3px 3px 0 rgba(0, 0, 0, 0.02);
+			-webkit-transition: all linear 0.2s;
+			transition: all linear 0.2s;
+			z-index: 101;
+		}
+
+		p {
+			margin: 0;
+		}
+
+		.generic-button > button,
+		button,
+		a {
+			margin: 0;
+			display: block;
+			text-align: left;
+			opacity: 1;
+			font-size: 13px;
+			letter-spacing: -0.24px;
+			width: 100%;
+			text-transform: none;
+			font-weight: 400;
+			min-height: auto;
+			border-radius: 0;
+			padding: 10px 14px;
+			color: #7f868f !important;
+			line-height: 1.1;
+			border: 0;
+			background-color: transparent;
+			box-shadow: none !important;
+
+			&:hover {
+				background-color: #f5f5f5 !important;
+			}
+
+			&:before {
+				font-family: "bb-icons";/* stylelint-disable-line */
+				font-size: 18px;
+				display: inline-block;
+				margin-right: 10px;
+				vertical-align: middle;
+				width: 20px;
+				text-align: center;
+				line-height: 1;
+			}
+
+			&.reported-content:before,
+			&.report-content:before {
+				content: "\ee9c";
+			}
+
+			&.back-to-admin:before {
+				content: "\ef0a";
+			}
+
+			&.view-as:before {
+				content: "\ee69";
+			}
+
+			&.send-message:before {
+				content: "\ee62";
+			}
+
+			&.block-member:before {
+				content: "\ee08";
+			}
+
+			&.not_friends:before,
+			&.friendship-button:before {
+				content: "\ef60";
+			}
+
+			&.awaiting_response_friend:before {
+				content: "\ef57";
+			}
+
+			&.follow-button:before {
+				content: "\ee03";
+			}
+
+			&.is_friend:before,
+			&.pending_friend:before {
+				content: "\ef64";
+			}
+
+		}
+
+	}
+
+}
+
+@media screen and (max-width: 799px) {
+
+	.bp-user .bb-enable-cover-img .bb_more_options {
+		margin: 0;
+	}
+
+}

@@ -1,0 +1,182 @@
+// BP Directory Search elements
+// @version 3.0.0
+
+.buddypress-wrap { // the ID is required to add weight to rules
+
+	@include clearfix-element(".bp-dir-search-form, .bp-messages-search-form");
+
+	form.bp-dir-search-form,
+	form.bp-messages-search-form,
+	form.bp-invites-search-form {
+		border: 1px solid $bp-border-color;
+
+		width: 100%;
+
+		@include medium-lrg-up() {
+			width: 15em;
+		}
+
+		label {
+			margin: 0;
+		}
+
+		input[type="search"],
+		input[type="text"],
+		button[type="submit"] {
+			background: none;
+			border: 0;
+
+			@include border-radius(0);
+		}
+
+		input[type="search"],
+		input[type="text"] {
+			float: left;
+			line-height: 1.5;
+			padding: 3px 10px;
+			width: 80%;
+		}
+
+		button[type="submit"] {
+			float: right;
+			font-size: inherit;
+			font-weight: 400;
+			line-height: 1.5;
+			padding: 3px 0.7em;
+			text-align: center;
+			text-transform: none;
+			width: 20%;
+			visibility: visible !important;
+
+			span {
+
+				@include font-size(18);
+				line-height: 1.6;
+			}
+		}
+
+		button[type="submit"].bp-show {
+
+			@include show();
+		}
+
+		input[type="search"]::-webkit-search-cancel-button {
+			-webkit-appearance: searchfield-cancel-button;
+		}
+
+		input[type="search"]::-webkit-search-results-button,
+		input[type="search"]::-webkit-search-results-decoration {
+			display: none;
+		}
+
+	} // close form
+
+	// this block needs to be moved really.
+	ul.filters {
+
+		li {
+
+			form {
+
+				label {
+
+					input {
+						line-height: 1.4;
+						padding: 0.1em 0.7em;
+					}
+				}
+			}
+		}
+	}
+
+	.dir-form {
+		clear: both;
+	}
+
+} // close .buddypress-wrap
+
+// If js disabled ensure we show the submit overriding earlier rule
+// @todo the whole show/hide could be wrapped in a :not(.no-js)
+.budypress.no-js {
+
+	form.bp-dir-search-form {
+
+		button[type="submit"] {
+
+			@include show();
+		}
+	}
+}
+
+// Try and apply correct tweaks for group/user screens search
+
+.bp-user {
+
+	[data-bp-search] {
+
+		form {
+
+			input[type="search"],
+			input[type="text"] {
+				padding: 6px 10px 7px;
+			}
+
+		}
+	}
+}
+
+// BB search block for default theme
+.bb-search-block {
+
+	.bp-search-results-list {
+
+		.bp-search-item {
+
+			.item-avatar {
+				float: none;
+				width: auto;
+				margin: 0 12px 0 0;
+				max-width: inherit;
+
+				img {
+					height: auto;
+					max-width: 160px;
+					width: 100%;
+				}
+			}
+		}
+
+		.search-document-list {
+
+			.media-folder_icon a {
+				text-decoration: none;
+			}
+		}
+	}
+
+	.search_results .albums-list .media-album_thumb .item-avatar {
+
+		body.search-results & {
+			margin: 0;
+
+			a {
+				text-decoration: none;
+
+				> i {
+					background-color: #f2f4f5;
+					color: #9b9c9f;
+					display: flex;
+					font-weight: 300;
+					align-items: center;
+					justify-content: center;
+					margin-top: 0;
+					font-size: 28px;
+					border-radius: 3px;
+					height: 90px;
+					width: 90px;
+				}
+			}
+		}
+	}
+}
+

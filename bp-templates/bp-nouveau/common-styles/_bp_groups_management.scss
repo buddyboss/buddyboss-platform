@@ -1,0 +1,237 @@
+// Single Groups Management screens
+// @version 3.0.0
+
+// Groups settings screen
+.buddypress-wrap {
+
+	.group-status-type {
+
+		ul {
+			margin: 0 0 $marg-lrg $marg-lrg;
+		}
+	}
+}
+
+// ==== Members manage ====
+
+.groups-manage-members-list {
+	padding: $pad-sml 0;
+
+	dd {
+		margin: 0;
+		padding: $pad-med 0;
+	}
+
+	.section-title {
+		background: $light-grey;
+		padding-left: $pad-xsml;
+
+		&.gen-members-section {
+			background-color: transparent;
+
+			.search-wrapper {
+				margin-top: 1em;
+				width: 15em;
+				display: flex;
+				align-items: center;
+				position: relative;
+
+				input[type="search"] {
+					padding-top: 3px;
+					padding-bottom: 3px;
+					padding-right: 35px;
+					line-height: 1.5;
+					font-size: 16px;
+					-moz-appearance: none;
+
+					&::-webkit-search-clear-button,
+					&::-webkit-search-cancel-button {
+						-webkit-appearance: none;
+					}
+				}
+
+				.search-form_reset {
+					background-color: transparent;
+					border: 0;
+					padding: 0;
+					color: #767676;
+					position: absolute;
+					right: 12px;
+					opacity: 0.4;
+					font-size: 13px;
+				}
+
+				&.loading {
+					position: relative;
+
+					&:after {
+						content: "\ef30";
+						font-weight: 400;
+						font-family: "bb-icons"; /* stylelint-disable-line */
+						font-size: 20px;
+						line-height: 1;
+						position: absolute;
+						right: -30px;
+						text-align: center;
+						display: inline-block;
+						vertical-align: middle;
+						-webkit-animation: spin 2s infinite linear;
+						animation: spin 2s infinite linear;
+					}
+				}
+			}
+		}
+	}
+
+	ul {
+		list-style: none;
+		margin-bottom: 0;
+
+		li {
+			border-bottom: 1px solid $bp-border-color;
+			margin-bottom: $marg-sml;
+			padding: $pad-sml $pad-xsml $pad-xsml;
+		}
+
+		li:only-child,
+		li:last-child {
+			border-bottom: 0;
+		}
+
+		li:nth-child(even) {
+			background: $off-white;
+		}
+
+		li.banned-user {
+			background: lighten($warn, 50%);
+		}
+
+		.member-name {
+			margin-bottom: 0;
+			text-align: center;
+		}
+
+		img {
+			display: block;
+			margin: 0 auto;
+			width: 20%;
+		}
+
+		@include medium-small-up() {
+
+			.member-name {
+				text-align: left;
+			}
+
+			img {
+				display: inline;
+				width: 50px;
+			}
+		}
+
+		@include clearfix-element(".members-manage-buttons");
+
+		.members-manage-buttons {
+			margin: $marg-med 0 $marg-xsml;
+
+			a.button {
+				color: $light-text;
+				display: block;
+
+				@include font-size(13);
+			}
+
+			@include medium-small-up() {
+
+				a.button {
+					display: inline-block;
+				}
+			}
+		}
+
+		.members-manage-buttons.text-links-list {
+			margin-bottom: 0;
+
+			@include medium-small-max() {
+
+				a.button {
+					background: #fafafa;
+					border: 1px solid $bp-border-color;
+					display: block;
+					margin-bottom: $marg-sml;
+				}
+			}
+		}
+
+		.action:not(.text-links-list) {
+
+			a.button {
+
+				@include font-size(12);
+			}
+		}
+
+		@include medium-up() {
+
+			li {
+
+				.avatar,
+				.member-name {
+					float: left;
+				}
+
+				.avatar {
+					margin-right: $marg-med;
+				}
+
+				.action {
+					clear: both;
+					float: left;
+				}
+
+			}
+		} // close @media
+
+	}
+
+} //close .groups-manage-members-list
+
+#avatar-crop-actions {
+	margin-top: 15px;
+
+	a.avatar-crop-cancel {
+		color: #555;
+		margin-top: 15px;
+	}
+}
+
+// ==== Group Forum Manage====
+
+.group-forum-confirmation {
+	border-radius: 4px;
+	border: 1px solid #d2d4d6;
+	box-shadow: none;
+
+	.ui-button {
+		background: $white; /* Old browsers */
+		border-color: $bp-border-dark;
+		border-style: solid;
+		border-width: 1px;
+		color: $dark-grey;
+		cursor: pointer;
+		font-size: inherit;
+		font-weight: 400;
+		outline: none;
+		line-height: 1.3;
+		padding: $pad-xsml $pad-sml;
+		text-align: center;
+		text-decoration: none;
+		width: auto;
+	}
+
+}
+
+.ui-widget-overlay {
+	background: rgba(250, 251, 253, 0.5);
+	opacity: 1;
+}

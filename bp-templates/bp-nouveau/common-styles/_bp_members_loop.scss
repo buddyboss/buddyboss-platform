@@ -1,0 +1,318 @@
+// BP Members loop.
+// @version 3.0.0
+
+.buddypress-wrap {
+
+	.members-list,
+	.friends-mutual-list { // ul
+
+		li {
+
+			.member-name {
+				margin-bottom: $marg-sml;
+			}
+
+			.user-update {
+				border: 1px solid $light-grey;
+
+				@include border-radius(10px);
+				color: $meta-text;
+
+				font-style: italic;
+
+				@include responsive-font(16);
+				margin: $marg-med auto;
+				padding: $pad-med;
+
+				.activity-read-more {
+
+					display: block;
+
+					@include font-size(12);
+					font-style: normal;
+					margin-top: $marg-sml;
+					padding-left: 2px;
+				}
+			}
+
+			@include medium-up() {
+
+				.last-activity {
+					clear: left;
+					margin-top: -10px;
+				}
+			}
+
+			.list-wrap {
+
+				.followers-wrap,
+				.member-type {
+					font-size: 14px;
+					color: $light-text;
+					margin-bottom: 15px;
+				}
+
+				.member-type {
+					margin-bottom: 5px;
+				}
+
+				.member-name {
+					font-size: 20px;
+					margin: 0 0 10px 0;
+					padding: 0;
+
+					a {
+						text-decoration: none;
+					}
+
+				}
+
+				.last-activity {
+					color: $light-text;
+					font-size: 13px;
+					margin: 0 0 12px 0;
+				}
+
+				.item-meta .separator {
+					margin: 0 5px;
+				}
+
+			}
+
+			.item .primary-action .generic-button {
+				width: 100%;
+			}
+
+			.primary-action .generic-button,
+			.footer-button-wrap .generic-button,
+			.member-button-wrap .generic-button {
+				padding: 0 15px;
+			}
+
+			.primary-action .generic-button > *,
+			.footer-button-wrap .generic-button > *,
+			.member-button-wrap .generic-button > * {
+				display: block;
+				margin-bottom: 10px;
+			}
+
+			.item-avatar a {
+				display: inline-block;
+				position: relative;
+			}
+
+			.member-status.online {
+				position: absolute;
+				width: 12px;
+				height: 12px;
+				right: 12px;
+				top: 12px;
+			}
+
+		} // close li
+
+		&.grid li {
+
+			.only-list-view {
+				display: none;
+			}
+
+		}
+
+		&.grid.bp-list > li .item-avatar img.avatar {
+			width: 100%;
+			max-width: 126px;
+		}
+
+		&:not(.grid) {
+
+			li {
+				margin: 0;
+				padding: 0;
+
+				.member-status.online {
+					top: 4px;
+					bottom: 4px;
+				}
+
+			}
+
+			.list-wrap {
+				background: $off-white;
+				border: 1px solid $bp-border-color;
+				padding: 20px;
+				position: relative;
+			}
+
+			.list-wrap-inner .item-avatar img {
+				border-radius: 50%;
+				max-width: 70px;
+				height: auto;
+			}
+
+			.only-grid-view {
+				display: none;
+			}
+
+			.member-button-wrap.footer-button-wrap {
+				display: block;
+			}
+
+		}
+
+	} // close .members-list
+
+	// Members group specific list
+	.members-group-list {
+
+		li {
+
+			@include medium-up() {
+
+				.joined {
+					clear: left;
+					float: none;
+					margin-top: 0;
+				}
+
+				.role {
+					clear: left;
+					float: none;
+					font-size: 14px;
+					margin: 0;
+				}
+			}
+		}
+	}
+} // close .buddypress-wrap
+
+.member-status {
+	background-color: $golden;
+	border: 2px solid $white;
+	border-radius: 100%;
+	z-index: 1;
+
+	&.online {
+		position: absolute;
+		width: 15px;
+		height: 15px;
+		box-sizing: border-box;
+		right: 12px;
+		top: -5px;
+	}
+
+	&.offline {
+		opacity: 0;
+		visibility: hidden;
+	}
+
+	.bp-user-blocked > &,
+	.bp-user-suspended > &,
+	.bp-user-blocked-by > & {
+		display: none !important;
+	}
+}
+
+// More option on memeber listing
+#buddypress .members-list > li,
+#buddypress .friends-mutual-list > li {
+	min-width: 275px;
+
+	.bb_more_options.member-dropdown {
+		position: absolute;
+		right: 15px;
+		top: 5px;
+
+		.bb_more_options_action {
+			text-decoration: none;
+		}
+
+	}
+
+}
+
+// If logged out or if the loop item is
+// current user we don't display action buttons
+// so lets remove the update width making room
+// for the buttons - max out the user-update width.
+
+body:not(.logged-in) {
+
+	@include medium-small-up() {
+
+		.members-list {
+
+			.user-update {
+				width: 96%;
+			}
+		}
+	}
+}
+
+// Members Directory with profile search form.
+.members-directory-wrapper {
+	display: flex;
+	flex-flow: row wrap;
+
+	@include medium-up() {
+
+		flex-flow: row-reverse;
+
+		.bp-profile-search-widget {
+			flex: 0 0 220px;
+			min-width: 0;
+			margin-left: $marg-xlrg;
+		}
+	}
+
+	.members-directory-container {
+		flex: 1;
+		min-width: 0;
+	}
+
+	@include medium-max() {
+		flex-direction: column;
+
+		.bp-profile-search-widget {
+			flex: 0 0 100%;
+			min-width: 0;
+		}
+	}
+
+	.bp-field-wrap {
+		margin-bottom: $marg-lrg;
+	}
+
+	.bps-description {
+		font-size: 13px;
+		margin: $marg-xsml 0;
+		color: #767676;
+	}
+}
+
+.bp-profile-search-widget {
+
+	.bp-field-wrap {
+		margin-bottom: $marg-lrg;
+	}
+
+	.bps-form-title {
+		line-height: 1;
+		margin-top: 0;
+		margin-bottom: 20px;
+	}
+
+	label {
+		font-weight: 600;
+		font-size: 15px;
+	}
+
+	select {
+		width: 100%;
+	}
+
+	.bp-heading-field-wrap {
+		border-radius: 0;
+	}
+
+}

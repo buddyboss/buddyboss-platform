@@ -1,0 +1,1 @@
+"#password"===window.location.hash&&document.getElementById("pass1").focus();

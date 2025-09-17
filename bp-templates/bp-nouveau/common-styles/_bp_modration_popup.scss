@@ -1,0 +1,88 @@
+// BP User settings screens
+// @version 3.0.0
+
+// 1. Popup style
+
+
+/*__ 1. Popup style __*/
+
+#reported-content,
+#block-member,
+#content-report {
+
+	.bb-model-header {
+		position: relative;
+
+		.mfp-close {
+			top: 50%;
+			transform: translate(0, -50%);
+
+			&:hover {
+				box-shadow: none;
+			}
+
+			[class*=" bb-icon-"] {
+				font-size: 24px;
+				pointer-events: none;
+			}
+		}
+	}
+}
+
+.taxonomy-bpm_category {
+
+	.table-view-list.tags {
+
+		tbody {
+
+			tr {
+
+				td {
+
+					.inline-edit-wrapper {
+
+						.inline-edit-col {
+
+							.title {
+								width: 140px;
+							}
+
+							.input-text-wrap {
+								margin-left: 20px;
+								width: calc(100% - 160px);
+								float: left;
+							}
+
+						}
+
+					}
+
+				}
+
+			}
+
+		}
+
+	}
+
+}
+
+.buddyboss_page_bp-moderation {
+
+	.fixed {
+
+		@media screen and (max-width: 1460px) {
+
+			.column-date {
+				width: 150px;
+			}
+
+			.column-reporter {
+				width: calc(100% - 150px);
+			}
+
+		}
+
+	}
+
+}
