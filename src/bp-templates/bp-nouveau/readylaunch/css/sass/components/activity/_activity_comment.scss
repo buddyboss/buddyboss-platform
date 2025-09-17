@@ -99,12 +99,16 @@
 	}
 
 	.bb-rl-separator {
-		display: inline-flex;
+		display: none;
 		align-self: center;
 		width: 1px;
 		height: 16px;
 		background-color: var(--bb-rl-border-tertiary-color);
 		margin-bottom: 4px;
+	}
+
+	.bb-rl-ac-reply-toolbar:not(.post-emoji-disabled) [class*="bb-rl-post-"]:not([style*="display: none"]) ~ .bb-rl-separator {
+		display: inline-flex;
 	}
 
 	.ac-reply-cancel {
