@@ -903,7 +903,8 @@ window.bp = window.bp || {};
 				if ( BBTopicsManager.isActivityTopicRequired ) {
 					// Add topic tooltip.
 					this.$document.on( 'bb_display_full_form', function () {
-						if ( $( '.activity-update-form #whats-new-submit .bb-topic-tooltip-wrapper' ).length === 0 ) {
+						var activity_form_submit_wrapper = $( '.activity-update-form #activity-form-submit-wrapper' );
+						if ( $( '.activity-update-form #whats-new-submit .bb-topic-tooltip-wrapper' ).length === 0 && activity_form_submit_wrapper.find( '.whats-new-topic-selector ul' ).length > 0 ) {
 							$( '.activity-update-form.modal-popup #whats-new-submit' ).prepend( '<div class="bb-topic-tooltip-wrapper"><div class="bb-topic-tooltip">' + BBTopicsManager.topicTooltipError + '</div></div>' );
 						}
 					} );
