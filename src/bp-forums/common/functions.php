@@ -387,7 +387,7 @@ function bbp_fix_post_author( $data = array(), $postarr = array() ) {
  * Fix code tags when saving from the backend editor.
  * Converts <code> tags to <pre> tags to preserve formatting.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.12.0
  *
  * @param array $data    Post data.
  * @param array $postarr Original post array (includes post id).

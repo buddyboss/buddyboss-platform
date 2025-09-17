@@ -564,7 +564,7 @@ function bbp_remove_html_tags( $content ) {
 /**
  * Helper function to encode content if not already encoded.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.12.0
  *
  * @param string $content Content to potentially encode.
  *
@@ -585,7 +585,7 @@ function bbp_encode_content_if_needed( $content ) {
  * Also apply encoding to the content.
  * This ensures code snippets maintain their formatting when edited in the backend.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.12.0
  *
  * @param string $content Content to filter.
  *
