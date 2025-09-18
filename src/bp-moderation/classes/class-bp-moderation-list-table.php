@@ -241,7 +241,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 	/**
 	 * Generate the table navigation above or below the table
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.12.0
 	 *
 	 * @param string $which Position of navigation (top or bottom).
 	 */
