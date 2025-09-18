@@ -27,7 +27,15 @@
 		<div class="item-title">
 			<?php echo wp_kses_post( bp_get_activity_action( array( 'no_timestamp' => true ) ) ); ?>
 		</div>
-		<?php if ( bp_activity_has_content() ) : ?>
+<?php
+			if ( bb_activity_has_post_title() ) {
+				?>
+				<div class="activity-title bb-activity-search-title">
+					<h2><?php echo wp_kses_post( bb_activity_post_title() ); ?></h2>
+				</div>
+				<?php
+			}
+			?>		<?php if ( bp_activity_has_content() ) : ?>
 			<div class="item-desc">
 				<?php echo wp_kses_post( bp_search_activity_intro( 30 ) ); ?>
 			</div>

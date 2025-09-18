@@ -278,6 +278,13 @@
 
 		}
 
+		.activity-title h2 {
+			color: $black;
+			font-size: 18px;
+			font-weight: 600;
+			margin: 0 0 10px 0;
+		}
+
 		// close .activity-header
 
 		.activity-content {
@@ -473,6 +480,17 @@
 
 			p:empty {
 				min-height: 1em;
+			}
+
+			h3,
+			h4 {
+				font-size: 17px;
+				font-weight: 500;
+				margin: 0 0 15px;
+			}
+
+			h4 {
+				font-size: 16px;
 			}
 		}
 
@@ -2115,6 +2133,28 @@ ul.medium-editor-toolbar-actions {
 
 	.medium-editor-action-pre b:before {
 		content: "\ee25";
+	}
+
+	.medium-editor-action-h3 b:before {
+		content: "\eeb0";
+	}
+
+	.medium-editor-action-h3:after {
+		content: "3";
+		font-size: 12px;
+		margin: 0 0 0 -6px;
+		font-weight: 500;
+	}
+
+	.medium-editor-action-h4 b:before {
+		content: "\eeb0";
+	}
+
+	.medium-editor-action-h4:after {
+		content: "4";
+		font-size: 12px;
+		margin: 0 0 0 -6px;
+		font-weight: 500;
 	}
 
 	.medium-editor-action-close b:before {

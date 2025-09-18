@@ -532,7 +532,8 @@ function bp_document_update_document_privacy( $folder ) {
 				$activity = new BP_Activity_Activity( $activity_id );
 
 				if ( ! empty( $activity ) ) {
-					$activity->privacy = $privacy;
+					$activity->privacy        = $privacy;
+					$activity->title_required = false;
 					$activity->save();
 				}
 			}
@@ -1650,7 +1651,8 @@ function bp_document_admin_repair_document() {
 							}
 						}
 
-						$activity->hide_sitewide = true;
+						$activity->hide_sitewide  = true;
+						$activity->title_required = false;
 						$activity->save();
 					}
 				}

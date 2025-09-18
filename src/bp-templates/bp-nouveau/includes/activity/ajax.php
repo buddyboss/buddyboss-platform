@@ -739,6 +739,16 @@ function bp_nouveau_ajax_post_update() {
 		}
 	}
 
+	$post_title = ! empty( $_POST['post_title'] ) ? sanitize_text_field( wp_unslash( $_POST['post_title'] ) ) : '';
+	$validation = bb_validate_activity_post_title( $post_title );
+	if ( ! $validation['valid'] ) {
+		wp_send_json_error(
+			array(
+				'message' => $validation['message'],
+			)
+		);
+	}
+
 	$post_feature_image = ! empty( $_POST['bb_activity_post_feature_image_id'] ) ? absint( sanitize_text_field( wp_unslash( $_POST['bb_activity_post_feature_image_id'] ) ) ) : 0;
 	if (
 		! empty( $post_feature_image ) &&
@@ -1003,6 +1013,7 @@ function bp_nouveau_ajax_post_update() {
 
 		$post_array = array(
 			'id'         => $activity_id,
+			'post_title' => $post_title,
 			'content'    => $content,
 			'privacy'    => $privacy,
 			'error_type' => 'wp_error',
@@ -1039,9 +1050,10 @@ function bp_nouveau_ajax_post_update() {
 			}
 
 			$post_array = array(
-				'id'       => $activity_id,
-				'content'  => $_POST['content'],
-				'group_id' => $item_id,
+				'id'         => $activity_id,
+				'post_title' => $post_title,
+				'content'    => $_POST['content'],
+				'group_id'   => $item_id,
 			);
 
 			if ( $is_scheduled ) {
@@ -1317,6 +1329,7 @@ function bp_nouveau_ajax_spam_activity() {
 
 	// Mark as spam.
 	bp_activity_mark_as_spam( $activity );
+	$activity->title_required = false;
 	$activity->save();
 
 	/** This action is documented in bp-activity/bp-activity-actions.php */
@@ -1368,7 +1381,8 @@ function bp_nouveau_ajax_activity_update_privacy() {
 
 	if ( bp_activity_user_can_delete( $activity ) ) {
 		remove_action( 'bp_activity_before_save', 'bp_activity_check_moderation_keys', 2 );
-		$activity->privacy       = sanitize_text_field( wp_unslash( $_POST['privacy'] ) );
+		$activity->privacy        = sanitize_text_field( wp_unslash( $_POST['privacy'] ) );
+		$activity->title_required = false;
 		$activity->save();
 
 		if ( function_exists( 'bp_activity_update_meta' ) ) {	

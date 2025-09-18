@@ -442,6 +442,21 @@ function bp_activity_comment_privacy_update( $comment, $privacy ) {
  * @return string $content Filtered activity content.
  */
 function bp_activity_filter_kses( $content ) {
+
+	$allowed_tags = bp_get_allowedtags();
+
+	// Add h3 tag without any attributes.
+	$allowed_tags['h3'] = array(
+		'class' => array(),
+		'id'    => array(),
+	);
+
+	// Add h4 tag without any attributes.
+	$allowed_tags['h4'] = array(
+		'class' => array(),
+		'id'    => array(),
+	);
+
 	/**
 	 * Filters the allowed HTML tags for BuddyBoss Activity content.
 	 *
@@ -449,7 +464,7 @@ function bp_activity_filter_kses( $content ) {
 	 *
 	 * @param array $value Array of allowed HTML tags and attributes.
 	 */
-	$activity_allowedtags = apply_filters( 'bp_activity_allowed_tags', bp_get_allowedtags() );
+	$activity_allowedtags = apply_filters( 'bp_activity_allowed_tags', $allowed_tags );
 	return wp_kses( $content, $activity_allowedtags );
 }
 
@@ -1708,7 +1723,8 @@ function bp_activity_media_fix_data() {
 			$activity = new BP_Activity_Activity( $activity->id );
 
 			if ( ! empty( $activity ) ) {
-				$activity->privacy = 'media';
+				$activity->privacy        = 'media';
+				$activity->title_required = false;
 				$activity->save();
 			}
 		}
@@ -1914,10 +1930,10 @@ function bp_activity_media_add( $media ) {
 				$media->privacy  = 'comment';
 				$media->album_id = 0;
 			} else {
-
 				$args = array(
-					'hide_sitewide' => true,
-					'privacy'       => 'media',
+					'hide_sitewide'  => true,
+					'privacy'        => 'media',
+					'title_required' => false,
 				);
 
 				// Create activity only if not created previously.
@@ -1953,6 +1969,7 @@ function bp_activity_media_add( $media ) {
 						$media_activity                    = new BP_Activity_Activity( $activity_id );
 						$media_activity->secondary_item_id = $parent_activity_id;
 						$media_activity->status            = 'comment' !== $media_activity->privacy && isset( $_POST['activity_action_type'] ) && bb_get_activity_scheduled_status() === $_POST['activity_action_type'] ? $_POST['activity_action_type'] : bb_get_activity_published_status();
+						$media_activity->title_required    = false;
 						$media_activity->save();
 					}
 
@@ -2032,14 +2049,20 @@ function bp_activity_create_parent_media_activity( $media_ids ) {
 			remove_action( 'bp_groups_posted_update', 'bb_subscription_send_subscribe_group_notifications', 11, 4 );
 			$activity_id = groups_post_update(
 				array(
-					'content'  => $content,
-					'group_id' => $group_id,
+					'content'        => $content,
+					'group_id'       => $group_id,
+					'title_required' => false,
 				)
 			);
 			add_action( 'bp_groups_posted_update', 'bb_subscription_send_subscribe_group_notifications', 11, 4 );
 		} else {
 			remove_action( 'bp_activity_posted_update', 'bb_activity_send_email_to_following_post', 10, 3 );
-			$activity_id = bp_activity_post_update( array( 'content' => $content ) );
+			$activity_id = bp_activity_post_update(
+				array(
+					'content'        => $content,
+					'title_required' => false,
+				)
+			);
 			add_action( 'bp_activity_posted_update', 'bb_activity_send_email_to_following_post', 10, 3 );
 		}
 
@@ -2078,7 +2101,8 @@ function bp_activity_create_parent_media_activity( $media_ids ) {
 			$main_activity = new BP_Activity_Activity( $activity_id );
 			if ( empty( $group_id ) ) {
 				if ( ! empty( $main_activity ) ) {
-					$main_activity->privacy = $privacy;
+					$main_activity->privacy        = $privacy;
+					$main_activity->title_required = false;
 					$main_activity->save();
 				}
 			}
@@ -2090,6 +2114,7 @@ function bp_activity_create_parent_media_activity( $media_ids ) {
 						$media_activity = new BP_Activity_Activity( $media->activity_id );
 						if ( ! empty( $media_activity->id ) ) {
 							$media_activity->secondary_item_id = $main_activity->id;
+							$media_activity->title_required    = false;
 							$media_activity->save();
 						}
 					}
@@ -2135,8 +2160,9 @@ function bp_activity_edit_update_media( $media_ids ) {
 					// Create new media activity for old media because it has only parent activity to show right now.
 					$old_media = new BP_Media( $old_media_id );
 					$args      = array(
-						'hide_sitewide' => true,
-						'privacy'       => 'media',
+						'hide_sitewide'  => true,
+						'privacy'        => 'media',
+						'title_required' => false,
 					);
 
 					if ( ! empty( $old_media->group_id ) && bp_is_active( 'groups' ) ) {
@@ -2156,6 +2182,7 @@ function bp_activity_edit_update_media( $media_ids ) {
 						$media_activity                    = new BP_Activity_Activity( $activity_id );
 						$media_activity->secondary_item_id = $bp_activity_post_update_id;
 						$media_activity->status            = 'comment' !== $media_activity->privacy && isset( $_POST['activity_action_type'] ) && bb_get_activity_scheduled_status() === $_POST['activity_action_type'] ? $_POST['activity_action_type'] : bb_get_activity_published_status();
+						$media_activity->title_required    = false;
 						$media_activity->save();
 
 						// update activity meta to tell it is media activity.
@@ -2333,8 +2360,9 @@ function bp_activity_document_add( $document ) {
 			} else {
 
 				$args = array(
-					'hide_sitewide' => true,
-					'privacy'       => 'document',
+					'hide_sitewide'  => true,
+					'privacy'        => 'document',
+					'title_required' => false,
 				);
 
 				// Create activity only if not created previously.
@@ -2370,6 +2398,7 @@ function bp_activity_document_add( $document ) {
 						$document_activity                    = new BP_Activity_Activity( $activity_id );
 						$document_activity->secondary_item_id = $parent_activity_id;
 						$document_activity->status            = 'comment' !== $document_activity->privacy && isset( $_POST['activity_action_type'] ) && bb_get_activity_scheduled_status() === $_POST['activity_action_type'] ? $_POST['activity_action_type'] : bb_get_activity_published_status();
+						$document_activity->title_required    = false;
 						$document_activity->save();
 					}
 
@@ -2449,14 +2478,20 @@ function bp_activity_create_parent_document_activity( $document_ids ) {
 			remove_action( 'bp_groups_posted_update', 'bb_subscription_send_subscribe_group_notifications', 11, 4 );
 			$activity_id = groups_post_update(
 				array(
-					'content'  => $content,
-					'group_id' => $group_id,
+					'content'        => $content,
+					'group_id'       => $group_id,
+					'title_required' => false,
 				)
 			);
 			add_action( 'bp_groups_posted_update', 'bb_subscription_send_subscribe_group_notifications', 11, 4 );
 		} else {
 			remove_action( 'bp_activity_posted_update', 'bb_activity_send_email_to_following_post', 10, 3 );
-			$activity_id = bp_activity_post_update( array( 'content' => $content ) );
+			$activity_id = bp_activity_post_update(
+				array(
+					'content'        => $content,
+					'title_required' => false,
+				)
+			);
 			add_action( 'bp_activity_posted_update', 'bb_activity_send_email_to_following_post', 10, 3 );
 		}
 
@@ -2496,7 +2531,8 @@ function bp_activity_create_parent_document_activity( $document_ids ) {
 			$main_activity = new BP_Activity_Activity( $activity_id );
 			if ( empty( $group_id ) ) {
 				if ( ! empty( $main_activity ) ) {
-					$main_activity->privacy = $privacy;
+					$main_activity->privacy        = $privacy;
+					$main_activity->title_required = false;
 					$main_activity->save();
 				}
 			}
@@ -2508,6 +2544,7 @@ function bp_activity_create_parent_document_activity( $document_ids ) {
 						$document_activity = new BP_Activity_Activity( $document->activity_id );
 						if ( ! empty( $document_activity->id ) ) {
 							$document_activity->secondary_item_id = $main_activity->id;
+							$document_activity->title_required    = false;
 							$document_activity->save();
 						}
 					}
@@ -2553,8 +2590,9 @@ function bp_activity_edit_update_document( $document_ids ) {
 					// Create new document activity for old document because it has only parent activity to show right now.
 					$old_document = new BP_Document( $old_document_id );
 					$args         = array(
-						'hide_sitewide' => true,
-						'privacy'       => 'document',
+						'hide_sitewide'  => true,
+						'privacy'        => 'document',
+						'title_required' => false,
 					);
 
 					if ( ! empty( $old_document->group_id ) && bp_is_active( 'groups' ) ) {
@@ -2574,6 +2612,7 @@ function bp_activity_edit_update_document( $document_ids ) {
 						$document_activity                    = new BP_Activity_Activity( $activity_id );
 						$document_activity->secondary_item_id = $bp_activity_post_update_id;
 						$document_activity->status            = 'comment' !== $document_activity->privacy && isset( $_POST['activity_action_type'] ) && bb_get_activity_scheduled_status() === $_POST['activity_action_type'] ? $_POST['activity_action_type'] : bb_get_activity_published_status();
+						$document_activity->title_required    = false;
 						$document_activity->save();
 
 						// update activity meta to tell it is document activity.
@@ -3029,8 +3068,9 @@ function bp_activity_video_add( $video ) {
 			} else {
 
 				$args = array(
-					'hide_sitewide' => true,
-					'privacy'       => 'video',
+					'hide_sitewide'  => true,
+					'privacy'        => 'video',
+					'title_required' => false,
 				);
 
 				// Create activity only if not created previously.
@@ -3066,6 +3106,7 @@ function bp_activity_video_add( $video ) {
 						$video_activity                    = new BP_Activity_Activity( $activity_id );
 						$video_activity->secondary_item_id = $parent_activity_id;
 						$video_activity->status            = 'comment' !== $video_activity->privacy && isset( $_POST['activity_action_type'] ) && bb_get_activity_scheduled_status() === $_POST['activity_action_type'] ? $_POST['activity_action_type'] : bb_get_activity_published_status();
+						$video_activity->title_required    = false;
 						$video_activity->save();
 					}
 
@@ -3146,14 +3187,20 @@ function bp_activity_create_parent_video_activity( $video_ids ) {
 			remove_action( 'bp_groups_posted_update', 'bb_subscription_send_subscribe_group_notifications', 11, 4 );
 			$activity_id = groups_post_update(
 				array(
-					'content'  => $content,
-					'group_id' => $group_id,
+					'content'        => $content,
+					'group_id'       => $group_id,
+					'title_required' => false,
 				)
 			);
 			add_action( 'bp_groups_posted_update', 'bb_subscription_send_subscribe_group_notifications', 11, 4 );
 		} else {
 			remove_action( 'bp_activity_posted_update', 'bb_activity_send_email_to_following_post', 10, 3 );
-			$activity_id = bp_activity_post_update( array( 'content' => $content ) );
+			$activity_id = bp_activity_post_update(
+				array(
+					'content'        => $content,
+					'title_required' => false,
+				)
+			);
 			add_action( 'bp_activity_posted_update', 'bb_activity_send_email_to_following_post', 10, 3 );
 		}
 
@@ -3192,7 +3239,8 @@ function bp_activity_create_parent_video_activity( $video_ids ) {
 			$main_activity = new BP_Activity_Activity( $activity_id );
 			if ( empty( $group_id ) ) {
 				if ( ! empty( $main_activity ) ) {
-					$main_activity->privacy = $privacy;
+					$main_activity->privacy        = $privacy;
+					$main_activity->title_required = false;
 					$main_activity->save();
 				}
 			}
@@ -3204,6 +3252,7 @@ function bp_activity_create_parent_video_activity( $video_ids ) {
 						$video_activity = new BP_Activity_Activity( $video->activity_id );
 						if ( ! empty( $video_activity->id ) ) {
 							$video_activity->secondary_item_id = $main_activity->id;
+							$video_activity->title_required    = false;
 							$video_activity->save();
 						}
 					}
@@ -3250,8 +3299,9 @@ function bp_activity_edit_update_video( $video_ids ) {
 					// Create new video activity for old video because it has only parent activity to show right now.
 					$old_video = new BP_Video( $old_video_id );
 					$args      = array(
-						'hide_sitewide' => true,
-						'privacy'       => 'video',
+						'hide_sitewide'  => true,
+						'privacy'        => 'video',
+						'title_required' => false,
 					);
 
 					if ( ! empty( $old_video->group_id ) && bp_is_active( 'groups' ) ) {
@@ -3271,6 +3321,7 @@ function bp_activity_edit_update_video( $video_ids ) {
 						$video_activity                    = new BP_Activity_Activity( $activity_id );
 						$video_activity->secondary_item_id = $bp_activity_post_update_id;
 						$video_activity->status            = 'comment' !== $video_activity->privacy && isset( $_POST['activity_action_type'] ) && bb_get_activity_scheduled_status() === $_POST['activity_action_type'] ? $_POST['activity_action_type'] : bb_get_activity_published_status();
+						$video_activity->title_required    = false;
 						$video_activity->save();
 
 						// update activity meta to tell it is video activity.
