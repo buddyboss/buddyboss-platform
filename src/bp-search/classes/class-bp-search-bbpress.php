@@ -60,7 +60,7 @@ if ( ! class_exists( 'Bp_Search_bbPress' ) ) :
 		/**
 		 * Get user accessible groups with static caching to avoid code duplication.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.12.0
 		 *
 		 * @return array Array containing user_group_ids and excluded_group_ids
 		 */
