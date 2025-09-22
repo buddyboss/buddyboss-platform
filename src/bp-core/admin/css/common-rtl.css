@@ -5638,6 +5638,10 @@ h1.bb-advance-heading {
   display: block;
 }
 
+.section-bb_activity_topics .bp-hide {
+  display: none;
+}
+
 .bb-modal-panel--activity-topic.bb-modal-panel,
 .bb-modal-panel--activity-topic-migrate.bb-modal-panel {
   width: 100%;
