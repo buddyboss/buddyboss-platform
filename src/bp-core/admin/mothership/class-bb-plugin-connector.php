@@ -28,8 +28,8 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 	 * @return string The plugin ID.
 	 */
 	public function getDynamicPluginId(): string {
-		$storedPluginId = get_option( 'buddyboss_dynamic_plugin_id', '' );
-		return ! empty( $storedPluginId ) ? $storedPluginId : 'buddyboss-platform';
+		$storedPluginId = get_option( 'buddyboss_dynamic_plugin_id', PLATFORM_EDITION );
+		return ! empty( $storedPluginId ) ? $storedPluginId : PLATFORM_EDITION;
 	}
 
 	/**
@@ -47,7 +47,7 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 	 */
 	public function clearDynamicPluginId(): void {
 		delete_option( 'buddyboss_dynamic_plugin_id' );
-		$this->pluginId = 'buddyboss-platform';
+		$this->pluginId = PLATFORM_EDITION;
 	}
 
 	/**
@@ -123,7 +123,7 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 			'api_base_url'             => defined( strtoupper( $this->getCurrentPluginId() . '_MOTHERSHIP_API_BASE_URL' ) )
 				? constant( strtoupper( $this->getCurrentPluginId() . '_MOTHERSHIP_API_BASE_URL' ) )
 				: 'https://licenses.caseproof.com/api/v1/',
-			'dynamic_plugin_id_stored' => get_option( 'buddyboss_dynamic_plugin_id', '' ),
+			'dynamic_plugin_id_stored' => get_option( 'buddyboss_dynamic_plugin_id', PLATFORM_EDITION ),
 		);
 	}
 }
