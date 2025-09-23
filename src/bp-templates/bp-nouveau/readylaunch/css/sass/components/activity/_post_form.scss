@@ -277,6 +277,13 @@
 				opacity: 0.4;
 			}
 
+			&.bb-rl-document-support-hide,
+			&.bb-rl-video-support-hide,
+			&.bb-rl-post-gif-hide,
+			&.bb-rl-media-support-hide {
+				display: none;
+			}
+
 			&:last-child {
 				margin-right: 0;
 			}
