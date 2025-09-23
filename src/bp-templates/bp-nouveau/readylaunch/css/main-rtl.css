@@ -13319,6 +13319,10 @@ body.bb-rl-activity-modal-open .bb-rl-activity-update-form.modal-popup {
   opacity: 0.4;
 }
 
+.bb-rl-activity-form.bb-rl-focus-in [class*="post-elements-buttons-item"].bb-rl-document-support-hide, .bb-rl-activity-form.bb-rl-focus-in [class*="post-elements-buttons-item"].bb-rl-video-support-hide, .bb-rl-activity-form.bb-rl-focus-in [class*="post-elements-buttons-item"].bb-rl-post-gif-hide, .bb-rl-activity-form.bb-rl-focus-in [class*="post-elements-buttons-item"].bb-rl-media-support-hide {
+  display: none;
+}
+
 .bb-rl-activity-form.bb-rl-focus-in [class*="post-elements-buttons-item"]:last-child {
   margin-left: 0;
 }
@@ -14277,6 +14281,18 @@ body.bb-rl-activity-modal-open .bb-rl-activity-update-form.modal-popup {
 
 .bb-rl-activity-modal-open {
   overflow: hidden;
+}
+
+.bb-rl-modal-header-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-right: auto;
+}
+
+.bb-rl-activity-form--schedule .bb-rl-bb-model-header .bb-rl-modal-header-actions {
+  margin-right: 0;
+  order: 99;
 }
 
 @media screen and (max-width: 680px) {
@@ -18143,12 +18159,16 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
 }
 
 .bb-rl-ac-reply-footer .bb-rl-separator {
-  display: inline-flex;
+  display: none;
   align-self: center;
   width: 1px;
   height: 16px;
   background-color: var(--bb-rl-border-tertiary-color);
   margin-bottom: 4px;
+}
+
+.bb-rl-ac-reply-footer .bb-rl-ac-reply-toolbar:not(.post-emoji-disabled) [class*="bb-rl-post-"]:not([style*="display: none"]) ~ .bb-rl-separator {
+  display: inline-flex;
 }
 
 .bb-rl-ac-reply-footer .ac-reply-cancel {

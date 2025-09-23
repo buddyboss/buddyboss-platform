@@ -902,7 +902,8 @@ window.bp = window.bp || {};
 				if ( BBTopicsManager.isActivityTopicRequired ) {
 					// Add topic tooltip.
 					this.$document.on( 'bb_display_full_form', function () {
-						if ( $( '.bb-rl-activity-update-form #whats-new-submit .bb-topic-tooltip-wrapper' ).length === 0 ) {
+						var activity_form_submit_wrapper = $( '.bb-rl-activity-update-form.modal-popup #bb-rl-activity-form-submit-wrapper' );
+						if ( $( '.bb-rl-activity-update-form #whats-new-submit .bb-topic-tooltip-wrapper' ).length === 0 && activity_form_submit_wrapper.find( '.whats-new-topic-selector ul' ).length > 0 ) {
 							$( '.bb-rl-activity-update-form.modal-popup #whats-new-submit' ).prepend( '<div class="bb-topic-tooltip-wrapper"><div class="bb-topic-tooltip">' + BBTopicsManager.topicTooltipError + '</div></div>' );
 						}
 					} );
@@ -910,9 +911,7 @@ window.bp = window.bp || {};
 
 				this.$document.on( 'click', '.activity-topic-selector li a', this.topicActivityFilter.bind( this ) );
 
-				if ( undefined !== BP_Nouveau.is_send_ajax_request && '1' === BP_Nouveau.is_send_ajax_request ) {
-					this.$document.ready( this.handleUrlHashTopic.bind( this ) );
-				}
+				this.$document.ready( this.handleUrlHashTopic.bind( this ) );
 
 				this.$document.on( 'click', '.bb-topic-url', this.topicActivityFilter.bind( this ) );
 
@@ -1037,6 +1036,15 @@ window.bp = window.bp || {};
 				} );
 
 				if ( $topicLink.length ) {
+
+					// Store the topic ID in BP's storage.
+					bp.Nouveau.setStorage( 'bp-activity', 'topic_id', $topicLink.data( 'topic-id' ) );
+
+					// Do not trigger the filter when page request setting is not send ajax request.
+					if ( 'undefined' === typeof BP_Nouveau.is_send_ajax_request || '1' !== BP_Nouveau.is_send_ajax_request ) {
+						return;
+					}
+
 					// If we found a matching topic, trigger the filter.
 					$topicLink.trigger( 'click' );
 
@@ -1049,9 +1057,6 @@ window.bp = window.bp || {};
 					// Set selected/active classes.
 					topicFilterATag.removeClass( 'selected active' );
 					$topicLink.addClass( 'selected active' );
-
-					// Store the topic ID in BP's storage.
-					bp.Nouveau.setStorage( 'bp-activity', 'topic_id', $topicLink.data( 'topic-id' ) );
 
 					// Scroll to the feed [data-bp-list="activity"].
 					var $feed = $( '[data-bp-list="activity"]' );
