@@ -103,6 +103,8 @@ if ( ! class_exists( 'BP_BuddyBoss_Platform_Updater' ) ) :
 				$request_data['license'] = $this->license;
 			}
 
+			$request_data = $this->fetch_package_info( $request_data );
+
 			$request_string = $this->request_call( 'update_check', $request_data );
 			$raw_response   = wp_remote_post( $this->api_url, $request_string );
 
@@ -162,6 +164,8 @@ if ( ! class_exists( 'BP_BuddyBoss_Platform_Updater' ) ) :
 			if ( ! empty( $this->license ) ) {
 				$request_data['license'] = $this->license;
 			}
+
+			$request_data = $this->fetch_package_info( $request_data );
 
 			$request_string = $this->request_call( $action, $request_data );
 			$raw_response   = wp_remote_post( $this->api_url, $request_string );
@@ -223,6 +227,51 @@ if ( ! class_exists( 'BP_BuddyBoss_Platform_Updater' ) ) :
 			}
 
 			return $stats;
+		}
+
+		public function fetch_package_info( $request_data ) {
+			// check every valid license in db and match for product key.
+			$saved_licenses = get_option( 'bboss_updater_saved_licenses', array() );
+			if ( is_multisite() ) {
+				$saved_licenses = get_site_option( 'bboss_updater_saved_licenses', array() );
+			}
+
+			$software_ids   = array();
+
+			if ( ! empty( $saved_licenses ) ) {
+				foreach ( $saved_licenses as $license_key => $license_data ) {
+					// Only process licenses with status = 1
+					if (
+						! empty( $license_data['status'] ) &&
+						! empty( $license_data['software_product_id'] )
+					) {
+						$software_ids[ $license_data['software_product_id'] ] = array(
+							'package'      => $license_data['software_product_id'],
+							'product_keys' => $license_data['product_keys'],
+							'license_key'  => $license_data['license_key'],
+						);
+					}
+				}
+			}
+
+			$result = array();
+			if ( ! empty( $software_ids ) ) {
+				foreach ( $software_ids as $key => $value ) {
+					if ( strpos( $key, 'BB_THEME' ) !== false ) {
+						$result = $value;
+						break;
+					} elseif ( strpos( $key, 'BB_PLATFORM_PRO' ) !== false ) {
+						$result = $value;
+						break;
+					}
+				}
+			}
+
+			if ( !empty( $result ) ) {
+				$request_data = array_merge( $request_data, $result );
+			}
+
+			return $request_data;
 		}
 
 	}
