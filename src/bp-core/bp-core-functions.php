@@ -10102,5 +10102,5 @@ function bb_is_readylaunch_enabled() {
  * @return string
  */
 function bb_pro_post_feature_image_version() {
-	return '2.8.0'; // @todo: update when release.
+	return '2.9.0';
 }
