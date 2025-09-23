@@ -27,6 +27,10 @@
 
 	#bb-rl-whats-new-content {
 		flex: 1;
+
+		.bb-rl-whats-new-title {
+			display: none;
+		}
 	}
 
 	.bb-rl-activity-post-user-name,
@@ -171,6 +175,22 @@
 
 		#bb-rl-whats-new-content {
 			width: 100%;
+
+			.bb-rl-whats-new-title {
+				display: block;
+				margin: 0 var(--bb-rl-space-300);
+				padding: var(--bb-rl-space-200) 0;
+				border: 0;
+				border-top: 1px solid var(--bb-rl-border-secondary-color);
+				border-bottom: 1px solid var(--bb-rl-border-secondary-color);
+				border-radius: 0;
+				color: var(--bb-rl-text-color);
+				font-size: 18px;
+				font-weight: 600;
+				line-height: 1.5;
+				width: calc(100% - var(--bb-rl-space-600));
+				outline: none;
+			}
 		}
 
 		.bb-rl-activity-post-user-name {
@@ -887,6 +907,14 @@
 		content: "\e1bc";
 	}
 
+	.medium-editor-action-h3 b:before {
+		content: "\e6c0";
+	}
+
+	.medium-editor-action-h4 b:before {
+		content: "\e6c2";
+	}
+
 	.medium-editor-toolbar-form {
 		background-color: transparent;
 		border-radius: 0;
@@ -1277,6 +1305,21 @@
 
 .bb-rl-activity-modal-open {
 	overflow: hidden;
+}
+
+.bb-rl-modal-header-actions {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	margin-left: auto;
+}
+
+.bb-rl-activity-form--schedule .bb-rl-bb-model-header {
+
+	.bb-rl-modal-header-actions {
+		margin-left: 0;
+		order: 99;
+	}
 }
 
 @media screen and (max-width: 680px) {

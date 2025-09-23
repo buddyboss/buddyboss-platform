@@ -523,6 +523,10 @@ function bp_version_updater() {
 			bb_update_to_2_9_50();
 		}
 
+		if ( $raw_db_version < 23531 ) {
+			bb_update_to_2_10_1();
+		}
+
 		if ( $raw_db_version !== $current_db ) {
 			// @todo - Write only data manipulate migration here. ( This is not for DB structure change ).
 
@@ -4030,6 +4034,43 @@ function bb_update_to_2_9_50() {
 		// Add index for activity_type_is_spam if it doesn't exist.
 		if ( empty( $index_exists ) ) {
 			$wpdb->query( $wpdb->prepare( "ALTER TABLE {$activity_table} ADD KEY activity_type_is_spam (type,is_spam)" ) ); //phpcs:ignore
+		}
+	}
+}
+
+/**
+ * Migrate for BuddyBoss 2.13.0.
+ *
+ * @since BuddyBoss 2.13.0
+ *
+ * @return void
+ */
+function bb_update_to_2_10_1() {
+	global $wpdb;
+
+	$bp_prefix = function_exists( 'bp_core_get_table_prefix' ) ? bp_core_get_table_prefix() : $wpdb->base_prefix;
+
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+	$table_exists = $wpdb->get_var( $wpdb->prepare( "SHOW TABLES LIKE %s", $bp_prefix . 'bp_activity' ) ); // phpcs:ignore
+	if ( $table_exists ) {
+		// Add 'post_title' column in 'bp_activity' table.
+		$row = $wpdb->get_results( $wpdb->prepare( "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_schema= %s AND table_name = %s AND column_name = 'post_title'", DB_NAME, $bp_prefix . 'bp_activity' ) ); // phpcs:ignore
+		if ( empty( $row ) ) {
+			$wpdb->query( "ALTER TABLE {$bp_prefix}bp_activity ADD `post_title` text DEFAULT NULL AFTER `action`" ); //phpcs:ignore
+
+			$indexes = $wpdb->get_col( $wpdb->prepare( 'SELECT index_name FROM INFORMATION_SCHEMA.STATISTICS WHERE table_schema = DATABASE() AND table_name = %s', $bp_prefix . 'bp_activity' ) ); //phpcs:ignore
+			if ( ! in_array( 'post_title', $indexes, true ) ) {
+				$wpdb->query( "ALTER TABLE {$bp_prefix}bp_activity ADD KEY `post_title` (`post_title`(191))" ); //phpcs:ignore
+			}
+			if ( ! in_array( 'bb_post_title', $indexes, true ) ) {
+				$wpdb->query( "ALTER TABLE {$bp_prefix}bp_activity ADD FULLTEXT KEY `bb_post_title` (`post_title`)" ); //phpcs:ignore
+			}
+			if ( ! in_array( 'bb_content', $indexes, true ) ) {
+				$wpdb->query( "ALTER TABLE {$bp_prefix}bp_activity ADD FULLTEXT KEY `bb_content` (`content`)" ); //phpcs:ignore
+			}
+			if ( ! in_array( 'bb_title_content', $indexes, true ) ) {
+				$wpdb->query( "ALTER TABLE {$bp_prefix}bp_activity ADD FULLTEXT KEY `bb_title_content` (`post_title`, `content`)" ); //phpcs:ignore
+			}
 		}
 	}
 }
