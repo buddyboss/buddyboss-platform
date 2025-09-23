@@ -258,6 +258,16 @@ $activity_popup_title = sprintf( esc_html__( '%s\'s post', 'buddyboss' ), bp_cor
 
 	<?php endif; ?>
 
+	<?php
+	if ( bb_activity_has_post_title() ) {
+		?>
+		<div class="activity-title">
+			<h2><?php bb_activity_post_title(); ?></h2>
+		</div>
+		<?php
+	}
+	?>
+
 	<div class="activity-content <?php bp_activity_entry_css_class(); ?>">
 
 		<?php

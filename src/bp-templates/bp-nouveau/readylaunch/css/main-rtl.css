@@ -937,6 +937,17 @@ span.atwho-inserted {
   padding: 0 var(--bb-rl-space-300) var(--bb-rl-space-200) 0;
 }
 
+.medium-editor-element h3,
+.medium-editor-element h4 {
+  font-size: 17px;
+  font-weight: 600;
+  margin-bottom: var(--bb-rl-space-200);
+}
+
+.medium-editor-element h4 {
+  font-size: 16px;
+}
+
 .emojionearea .emojionearea-button:before {
   content: "\e436";
   font-family: bb-icons-rl;
@@ -13049,6 +13060,10 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   flex: 1;
 }
 
+[class*="bb-rl-activity-form"] #bb-rl-whats-new-content .bb-rl-whats-new-title {
+  display: none;
+}
+
 [class*="bb-rl-activity-form"] .bb-rl-activity-post-user-name,
 [class*="bb-rl-activity-form"] #bb-rl-activity-privacy-point {
   display: none;
@@ -13181,6 +13196,22 @@ body.bb-rl-activity-modal-open .bb-rl-activity-update-form.modal-popup {
 
 .bb-rl-activity-form.bb-rl-focus-in #bb-rl-whats-new-content {
   width: 100%;
+}
+
+.bb-rl-activity-form.bb-rl-focus-in #bb-rl-whats-new-content .bb-rl-whats-new-title {
+  display: block;
+  margin: 0 var(--bb-rl-space-300);
+  padding: var(--bb-rl-space-200) 0;
+  border: 0;
+  border-top: 1px solid var(--bb-rl-border-secondary-color);
+  border-bottom: 1px solid var(--bb-rl-border-secondary-color);
+  border-radius: 0;
+  color: var(--bb-rl-text-color);
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.5;
+  width: calc(100% - var(--bb-rl-space-600));
+  outline: none;
 }
 
 .bb-rl-activity-form.bb-rl-focus-in .bb-rl-activity-post-user-name {
@@ -13861,6 +13892,14 @@ body.bb-rl-activity-modal-open .bb-rl-activity-update-form.modal-popup {
 
 #bb-rl-editor-toolbar .medium-editor-action-pre b:before {
   content: "\e1bc";
+}
+
+#bb-rl-editor-toolbar .medium-editor-action-h3 b:before {
+  content: "\e6c0";
+}
+
+#bb-rl-editor-toolbar .medium-editor-action-h4 b:before {
+  content: "\e6c2";
 }
 
 #bb-rl-editor-toolbar .medium-editor-toolbar-form {
@@ -14809,6 +14848,12 @@ body.bb-rl-activity-modal-open .bb-rl-activity-update-form.modal-popup {
   right: 24px;
 }
 
+.bb-rl-activity-list .bb-rl-activity-title h2 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: var(--bb-rl-space-100);
+}
+
 .bb-rl-activity-list .bb-activity-more-options-wrap {
   position: absolute;
   left: var(--bb-rl-space-300);
@@ -15008,6 +15053,18 @@ body.bb-rl-activity-modal-open .bb-rl-activity-update-form.modal-popup {
 
 .bb-rl-activity-list .bb-rl-activity-inner p:last-child {
   margin-bottom: 0;
+}
+
+.bb-rl-activity-list .bb-rl-activity-inner h3,
+.bb-rl-activity-list .bb-rl-activity-inner h4 {
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--bb-rl-text-color);
+  margin-bottom: var(--bb-rl-space-200);
+}
+
+.bb-rl-activity-list .bb-rl-activity-inner h4 {
+  font-size: 16px;
 }
 
 .bb-rl-activity-list .bb-rl-activity-inner > ol,
@@ -20787,6 +20844,12 @@ table.profile-settings tbody td select {
   line-height: var(--bb-rl-base-line-small);
   color: var(--bb-rl-text-secondary-color);
   font-weight: 600;
+}
+
+.bb-rl-search-results-container .bb-activity-search-title h2 {
+  font-size: 16px;
+  font-weight: 500;
+  margin-bottom: var(--bb-rl-space-50);
 }
 
 .bb-rl-search-results-container li.bp-search-item span.middot,
