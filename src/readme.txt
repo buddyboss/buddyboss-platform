@@ -57,6 +57,10 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 2.13.0 =
+* New Feature! Activity - Added Featured Image above post content in activity and group posts, making feeds more visual and engaging
+* New Feature! Activity - Added support for Post Titles and H3/H4 text formatting in activity feeds, helping communities stay organized and posts easier to read
+
 = 2.12.0 =
 * Bug: Activity - Fixed issue where activity filters still applied a removed topic filter instead of working independently
 * Bug: Activity - Fixed issue where activity topic settings remained visible when the main topic setting was disabled
