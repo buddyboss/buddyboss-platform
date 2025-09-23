@@ -4583,6 +4583,14 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
   }
 }
 
+.activity-list .has-featured-image .bb-activity-more-options-wrap {
+  top: 208px;
+}
+
+.activity-list .has-featured-image .bb-pin-action {
+  top: 208px;
+}
+
 .activity-list .bb-pin-action {
   position: absolute;
   right: 20px;
@@ -22328,6 +22336,13 @@ body.login .login-popup .mfp-close:hover {
 .bb-model-close-button {
   font-size: 24px;
   color: rgba(17, 49, 80, 0.4);
+}
+
+.bb-modal-header-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
 }
 
 .bb-photos-wrap .bb-title {
