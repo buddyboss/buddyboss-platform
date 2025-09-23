@@ -5,7 +5,7 @@
  * This template can be overridden by copying it to
  * yourtheme/buddypress/common/js-templates/activity/parts/bb-activity-post-form-title.php.
  *
- * @since   BuddyBoss [BBVERSION]
+ * @since   BuddyBoss 2.13.0
  * @version 1.0.0
  */
 

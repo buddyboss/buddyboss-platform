@@ -10097,7 +10097,7 @@ function bb_is_readylaunch_enabled() {
 /**
  * Function to return the minimum pro version to show notice for post feature image.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.13.0
  *
  * @return string
  */
