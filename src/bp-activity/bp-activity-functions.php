@@ -2288,7 +2288,7 @@ function bp_activity_post_update( $args = '' ) {
 	/**
 	 * Filters the new activity post title for current activity item.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.13.0
 	 *
 	 * @param string $activity_post_title Activity post title posted by user.
 	 */
@@ -7771,7 +7771,7 @@ function bb_activity_topics_manager_instance() {
 /**
  * Check if activity post title is enabled.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.13.0
  *
  * @param bool $default_value Default value if option is not set.
  *
@@ -7782,7 +7782,7 @@ function bb_is_activity_post_title_enabled( $default_value = false ) {
 	/**
 	 * Filters whether to enable activity post title.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.13.0
 	 *
 	 * @param bool $is_enabled Whether the activity post title is enabled.
 	 */
@@ -7792,7 +7792,7 @@ function bb_is_activity_post_title_enabled( $default_value = false ) {
 /**
  * Get the maximum length for activity post titles.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.13.0
  *
  * @return int The maximum length for activity post titles.
  */
@@ -7801,7 +7801,7 @@ function bb_activity_post_title_max_length() {
 	/**
 	 * Filters the maximum length for activity post titles.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.13.0
 	 *
 	 * @param int $max_length Maximum allowed length for activity post titles.
 	 */
@@ -7811,7 +7811,7 @@ function bb_activity_post_title_max_length() {
 /**
  * Strip the activity post title if it exceeds the maximum length.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.13.0
  *
  * @param string $post_title The post title to strip.
  *
@@ -7832,7 +7832,7 @@ function bb_activity_strip_post_title( $post_title = '' ) {
 /**
  * Validation for activity post title.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.13.0
  *
  * @param string                    $post_title      The post title to validate.
  * @param BP_Activity_Activity|null $activity_object The activity object.
@@ -7850,7 +7850,7 @@ function bb_validate_activity_post_title( $post_title, ?BP_Activity_Activity $ac
 	/**
 	 * Filter to prevent validation of activity post title based on activity component.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.13.0
 	 *
 	 * @param bool   $non_valid_component Whether to skip validation of activity post title for the component.
 	 * @param object $activity_object     The activity object.
@@ -7865,7 +7865,7 @@ function bb_validate_activity_post_title( $post_title, ?BP_Activity_Activity $ac
 	/**
 	 * Filter to prevent validation of activity post title based on a activity type.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.13.0
 	 *
 	 * @param bool   $non_valid_type  Whether to skip validation of activity post title for the type.
 	 * @param object $activity_object The activity object.

@@ -4616,7 +4616,7 @@ function bb_get_activity_comment_unfavorite_link( $activity_comment_id = 0 ) {
 /**
  * Check if the Activity has a title.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.13.0
  *
  * @param null|BP_Activity_Activity $activity_object Optional. Activity object to check. If null, use current activity in loop.
  *
@@ -4631,7 +4631,7 @@ function bb_activity_has_post_title( ?BP_Activity_Activity $activity_object = nu
 /**
  * Output the activity post title.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.13.0
  *
  * @param null|BP_Activity_Activity $activity_object Optional. Activity object to get post title from. If null, uses current activity in loop.
  */
@@ -4642,7 +4642,7 @@ function bb_activity_post_title( ?BP_Activity_Activity $activity_object = null )
 /**
  * Return the activity post title.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.13.0
  *
  * @param null|BP_Activity_Activity $activity_object Optional. Activity object to get post title from. If null, uses current activity in loop.
  *

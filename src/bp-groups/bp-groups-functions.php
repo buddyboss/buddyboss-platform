@@ -1824,7 +1824,7 @@ function groups_post_update( $args = '' ) {
 	/**
 	 * Filters the post title for the new group activity update.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.13.0
 	 *
 	 * @param string $post_title The post title of the update.
 	 */

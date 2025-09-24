@@ -38,7 +38,7 @@
 		/**
 		* Fires after the activity header close button.
 		*
-		* @since BuddyBoss [BBVERSION]
+		* @since BuddyBoss 2.13.0
 		*/
 		do_action( 'bb_activity_header_after' );
 		?>

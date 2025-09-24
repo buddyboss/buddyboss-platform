@@ -520,7 +520,7 @@ function bp_nouveau_prepare_group_for_js( $item ) {
 	/**
 	 * Filters the group data for use with javascript.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.13.0
 	 *
 	 * @param array   $args Array of group data.
 	 * @param object  $item The group object.
