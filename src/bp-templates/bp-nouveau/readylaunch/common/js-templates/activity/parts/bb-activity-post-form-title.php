@@ -2,7 +2,7 @@
 /**
  * The template for displaying activity post form title field.
  *
- * @since   BuddyBoss [BBVERSION]
+ * @since   BuddyBoss 2.13.0
  * @version 1.0.0
  */
 

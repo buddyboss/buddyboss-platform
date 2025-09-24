@@ -765,7 +765,7 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 	/**
 	 * Settings for activity post title.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.13.0
 	 */
 	public function bb_admin_setting_callback_enable_activity_post_title() {
 		?>
@@ -779,7 +779,7 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 	/**
 	 * Allow activity post feature image.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.13.0
 	 */
 	public function bb_admin_setting_callback_activity_post_feature_image() {
 		$val    = function_exists( 'bb_pro_activity_post_feature_image_instance' ) ? bb_pro_activity_post_feature_image_instance()->bb_is_enabled() : false;

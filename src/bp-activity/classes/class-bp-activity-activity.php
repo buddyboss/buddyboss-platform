@@ -88,7 +88,7 @@ class BP_Activity_Activity {
 	/**
 	 * The post title of the activity item.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.13.0
 	 * @var string
 	 */
 	var $post_title;
