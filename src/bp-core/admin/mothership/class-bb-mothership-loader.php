@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace BuddyBoss\Core\Admin\Mothership;
 
 use BuddyBossPlatform\GroundLevel\Container\Container;
+use BuddyBossPlatform\GroundLevel\Mothership\Api\Request\LicenseActivations;
+use BuddyBossPlatform\GroundLevel\Mothership\Api\Response;
+use BuddyBossPlatform\GroundLevel\Mothership\Credentials;
 use BuddyBossPlatform\GroundLevel\Mothership\Service as MothershipService;
 use BuddyBossPlatform\GroundLevel\InProductNotifications\Service as IPNService;
 
@@ -109,6 +112,9 @@ class BB_Mothership_Loader {
 	 * Setup WordPress hooks.
 	 */
 	private function setupHooks(): void {
+
+		$this->migrate_legacy_license();
+
 		// Register admin pages.
 		add_action( 'admin_menu', array( $this, 'registerAdminPages' ), 99 );
 
@@ -182,5 +188,116 @@ class BB_Mothership_Loader {
 	public function refreshPluginConnector(): void {
 		// The plugin connector will automatically use the updated plugin ID
 		// from the database option on the next request.
+	}
+
+	/**
+	 * Migrate legacy license data from old storage to Mothership.
+	 *
+	 * This method checks for legacy license data stored in options
+	 * and attempts to migrate it to the new Mothership system.
+	 */
+	protected function migrate_legacy_license(): void {
+		if ( true === (bool) bp_get_option( 'bb_mothership_licenses_migrated', false ) ) {
+			return;
+		}
+
+		$legacy_licences   = get_option( 'bboss_updater_saved_licenses', array() );
+		$network_activated = false;
+		/**
+		 * This is added to give the backward compatibility
+		 */
+		if ( is_multisite() ) {
+			if ( ! function_exists( 'is_plugin_active_for_network' ) ) {
+				require_once( ABSPATH . '/wp-admin/includes/plugin.php' );
+			}
+
+			if ( is_plugin_active_for_network( buddypress()->basename ) ) {
+				$network_activated = true;
+			}
+		}
+
+		if ( $network_activated ) {
+			$legacy_licences = get_site_option( 'bboss_updater_saved_licenses', array() );
+		}
+
+		if ( empty( $legacy_licences ) ) {
+			return;
+		}
+
+		$migrated_licence = array();
+
+		if ( isset( $legacy_licences['buddyboss_theme'] ) ) {
+			$migrated_licence['buddyboss_theme'] = $legacy_licences['buddyboss_theme'];
+		}
+
+		if ( isset( $legacy_licences['bb_platform_pro'] ) ) {
+			$migrated_licence['bb_platform_pro'] = $legacy_licences['bb_platform_pro'];
+		}
+
+		if ( empty( $migrated_licence ) ) {
+			return;
+		}
+
+		$pluginConnector = self::getContainer()->get( MothershipService::CONNECTION_PLUGIN_SERVICE_ID );
+		$plugin_id       = $pluginConnector->getDynamicPluginId();
+
+		$current_status = $pluginConnector->getLicenseActivationStatus();
+
+		if ( $current_status ) {
+			return;
+		}
+
+		foreach ( $migrated_licence as $plugin_id => $license_data ) {
+			if (
+				empty( $license_data['license_key'] ) ||
+				empty( $license_data['status'] ) ||
+				empty( $license_data['software_product_id'] )
+			) {
+				continue;
+			}
+
+			$software_id = $license_data['software_product_id'];
+
+			if ( 'BB_PLATFORM_PRO_1S' === $software_id ) {
+				$plugin_id = 'bb-platform-pro-1-site';
+			} elseif ( 'BB_PLATFORM_PRO_2S' === $software_id ) {
+				$plugin_id = 'bb-platform-pro-2-sites';
+			} elseif ( 'BB_PLATFORM_PRO_5S' === $software_id ) {
+				$plugin_id = 'bb-platform-pro-5-sites';
+			} elseif ( 'BB_PLATFORM_PRO_10S' === $software_id ) {
+				$plugin_id = 'bb-platform-pro-10-sites';
+			} elseif ( 'BB_THEME_1S' === $software_id ) {
+				$plugin_id = 'bb-web';
+			} elseif ( 'BB_THEME_2S' === $software_id ) {
+				$plugin_id = 'bb-web-2-sites';
+			} elseif ( 'BB_THEME_5S' === $software_id ) {
+				$plugin_id = 'bb-web-5-sites';
+			} elseif ( 'BB_THEME_10S' === $software_id ) {
+				$plugin_id = 'bb-web-10-sites';
+			} elseif ( 'BB_THEME_20S' === $software_id ) {
+				$plugin_id = 'bb-web-20-sites';
+			}
+
+			if ( $plugin_id !== PLATFORM_EDITION ) {
+				$pluginConnector->setDynamicPluginId( $plugin_id );
+				$domain   = Credentials::getActivationDomain();
+				$response = LicenseActivations::activate( $plugin_id, $license_data['license_key'], $domain );
+				if ( $response instanceof Response && ! $response->isError() ) {
+					try {
+						Credentials::storeLicenseKey( $license_data['license_key'] );
+						$pluginConnector->updateLicenseActivationStatus( true );
+
+						// Clear add-ons cache to force refresh
+						$pluginId = $pluginConnector->pluginId;
+						delete_transient( $pluginId . '-mosh-products' );
+						delete_transient( $pluginId . '-mosh-addons-update-check' );
+						bp_update_option( 'bb_mothership_licenses_migrated', true );
+					} catch ( \Exception $e ) {
+						// Log the exception.
+						error_log( 'Error storing migrated license key: ' . $e->getMessage() );
+					}
+				}
+			}
+		}
 	}
 }
