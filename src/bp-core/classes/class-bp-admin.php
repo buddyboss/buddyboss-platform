@@ -1203,6 +1203,10 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 				return;
 			}
 			// Check the transient to see if we've just updated the plugin.
+			if ( ! get_option( '_bb_is_update' ) ) {
+				return;
+			}
+
 			global $bp;
 			include trailingslashit( $bp->plugin_dir . 'bp-core/admin' ) . 'templates/update-buddyboss.php';
 			delete_option( '_bb_is_update' );
