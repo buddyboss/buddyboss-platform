@@ -18,12 +18,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-// Ensure required variables are defined
-$user_id = isset( $user_id ) ? $user_id : get_current_user_id();
+// Ensure required variables are defined.
+$user_id   = isset( $user_id ) ? $user_id : get_current_user_id();
 $course_id = isset( $course_id ) ? $course_id : 0;
 
 /**
- * Ajax pagination
+ * Ajax pagination.
  *
  * @var [type]
  */
@@ -43,8 +43,8 @@ $attributes = learndash_get_course_step_attributes( $topic_id, $course_id, $user
 $topic_class = apply_filters(
 	'learndash-topic-row-class',
 	'ld-table-list-item-preview ld-primary-color-hover ld-topic-row ' .
-								( $topic->completed ? 'learndash-complete' : 'learndash-incomplete' )
-								. ' ' . ( $post_id == $topic_id ? 'ld-is-current-item' : '' ),
+			( $topic->completed ? 'learndash-complete' : 'learndash-incomplete' )
+			. ' ' . ( $post_id == $topic_id ? 'ld-is-current-item' : '' ),
 	$topic
 );
 
@@ -60,7 +60,7 @@ $topic_class = apply_filters(
 $topic_status = apply_filters( 'learndash-topic-status', ( $topic->completed ? 'completed' : 'not-completed' ), $topic, $course_id );
 
 $learndash_topic_class_visible_after = '';
-$learndash_topic_available_date = '';
+$learndash_topic_available_date      = '';
 if ( ! empty( $topic->ID ) && ! empty( $course_id ) && ! empty( $user_id ) ) {
 	$learndash_topic_available_date = learndash_course_step_available_date( $topic->ID, $course_id, $user_id, true );
 }

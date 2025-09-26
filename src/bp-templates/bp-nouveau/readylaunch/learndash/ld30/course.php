@@ -37,7 +37,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if ( ! isset( $course_id ) ) {
 	global $post;
-	if ( ! empty( $post ) && $post->post_type === 'sfwd-courses' ) {
+	if ( ! empty( $post ) && 'sfwd-courses' === $post->post_type ) {
 		$course_id = $post->ID;
 	} else {
 		return;
@@ -65,8 +65,8 @@ if ( LearnDash_Theme_Register::get_active_theme_instance()->supports_views( LDLM
 	$has_course_content         = $course->has_steps();
 	$lessons                    = learndash_get_course_lessons_list( $course_id );
 	$quizzes                    = $course->get_quizzes();
-	
-	// Convert Quiz model objects to arrays for compatibility
+
+	// Convert Quiz model objects to arrays for compatibility.
 	if ( ! empty( $quizzes ) ) {
 		$quizzes_array = array();
 		foreach ( $quizzes as $quiz ) {
@@ -91,18 +91,18 @@ if ( LearnDash_Theme_Register::get_active_theme_instance()->supports_views( LDLM
 				if ( function_exists( 'learndash_is_sample' ) ) {
 					$is_sample = learndash_is_sample( $quiz_post );
 				}
-				
+
 				$quizzes_array[] = array(
-					'post' => $quiz_post,
-					'status' => $quiz_status,
-					'sample' => $is_sample ? 'sample' : '',
+					'post'      => $quiz_post,
+					'status'    => $quiz_status,
+					'sample'    => $is_sample ? 'sample' : '',
 					'completed' => $quiz_completed,
 				);
 			}
 		}
 		$quizzes = $quizzes_array;
 	}
-	
+
 	$lesson_progression_enabled = learndash_lesson_progression_enabled( $course_id );
 	$has_topics                 = $course->get_topics_number() > 0;
 	$lesson_topics              = array(); // Initialize lesson_topics array
