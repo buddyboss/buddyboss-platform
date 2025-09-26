@@ -266,15 +266,24 @@ class BB_Mothership_Loader {
 				$plugin_id = 'bb-platform-pro-5-sites';
 			} elseif ( 'BB_PLATFORM_PRO_10S' === $software_id ) {
 				$plugin_id = 'bb-platform-pro-10-sites';
-			} elseif ( 'BB_THEME_1S' === $software_id ) {
+			} elseif (
+				'BB_THEME_1S' === $software_id ||
+				'BUDDYBOSS_THEME_1S' === $software_id
+			) {
 				$plugin_id = 'bb-web';
 			} elseif ( 'BB_THEME_2S' === $software_id ) {
 				$plugin_id = 'bb-web-2-sites';
-			} elseif ( 'BB_THEME_5S' === $software_id ) {
+			} elseif (
+				'BB_THEME_5S' === $software_id ||
+				'BUDDYBOSS_THEME_5S' === $software_id
+			) {
 				$plugin_id = 'bb-web-5-sites';
 			} elseif ( 'BB_THEME_10S' === $software_id ) {
 				$plugin_id = 'bb-web-10-sites';
-			} elseif ( 'BB_THEME_20S' === $software_id ) {
+			} elseif (
+				'BB_THEME_20S' === $software_id ||
+				'BUDDYBOSS_THEME_20S' === $software_id
+			) {
 				$plugin_id = 'bb-web-20-sites';
 			}
 
@@ -287,7 +296,7 @@ class BB_Mothership_Loader {
 						Credentials::storeLicenseKey( $license_data['license_key'] );
 						$pluginConnector->updateLicenseActivationStatus( true );
 
-						// Clear add-ons cache to force refresh
+						// Clear add-ons cache to force refresh.
 						$pluginId = $pluginConnector->pluginId;
 						delete_transient( $pluginId . '-mosh-products' );
 						delete_transient( $pluginId . '-mosh-addons-update-check' );
