@@ -71,22 +71,22 @@ if ( LearnDash_Theme_Register::get_active_theme_instance()->supports_views( LDLM
 		$quizzes_array = array();
 		foreach ( $quizzes as $quiz ) {
 			if ( is_object( $quiz ) && method_exists( $quiz, 'get_post' ) ) {
-				// Convert Quiz model to array format
+				// Convert Quiz model to array format.
 				$quiz_post = $quiz->get_post();
-				
-				// Get quiz status using LearnDash functions
-				$quiz_status = 'not-started';
+
+				// Get quiz status using LearnDash functions.
+				$quiz_status    = 'not-started';
 				$quiz_completed = false;
-				
+
 				if ( function_exists( 'learndash_user_quiz_attempts' ) ) {
 					$quiz_attempts = learndash_user_quiz_attempts( $quiz_post->ID, $user_id );
 					if ( ! empty( $quiz_attempts ) ) {
-						$quiz_status = 'completed';
+						$quiz_status    = 'completed';
 						$quiz_completed = true;
 					}
 				}
-				
-				// Check if quiz is sample using LearnDash function
+
+				// Check if quiz is sample using LearnDash function.
 				$is_sample = false;
 				if ( function_exists( 'learndash_is_sample' ) ) {
 					$is_sample = learndash_is_sample( $quiz_post );

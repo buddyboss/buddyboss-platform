@@ -39,13 +39,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 // Ensure LearnDash functions are available.
 global $post;
 
-// Ensure $user_id is defined
+// Ensure $user_id is defined.
 $user_id = isset( $user_id ) ? $user_id : get_current_user_id();
 
-// Ensure $course_id is defined
+// Ensure $course_id is defined.
 $course_id = isset( $course_id ) ? $course_id : 0;
 
-// Get course_id
+// Get course_id properly.
 if ( empty( $course_id ) ) {
 	$course_id = learndash_get_course_id( $post->ID );
 	if ( empty( $course_id ) ) {
@@ -53,18 +53,18 @@ if ( empty( $course_id ) ) {
 	}
 }
 
-// Initialize LearnDash variables
+// Initialize LearnDash variables.
 if ( ! isset( $lesson_progression_enabled ) ) {
 	$lesson_progression_enabled = learndash_lesson_progression_enabled();
 }
 
 if ( ! isset( $show_content ) ) {
-	// Use LearnDash's model to determine if content should be visible
+	// Use LearnDash's model to determine if content should be visible.
 	if ( class_exists( 'LearnDash\Core\Models\Topic' ) ) {
-		$model = \LearnDash\Core\Models\Topic::create_from_post( $post );
+		$model        = \LearnDash\Core\Models\Topic::create_from_post( $post );
 		$show_content = $model->is_content_visible( $user_id );
 	} else {
-		$show_content = true; // Fallback
+		$show_content = true; // Fallback.
 	}
 }
 
