@@ -8,6 +8,7 @@ window.bp = window.bp || {};
 
 		var bpNouveauLocal    = BP_Nouveau,
 			bbRlIsAs3cfActive = bpNouveauLocal.bbRlIsAs3cfActive,
+			bbRlIsOmActive    = bpNouveauLocal.bbRlIsOmActive,
 			bbRlMedia         = bpNouveauLocal.media,
 			bbRlAjaxUrl       = bpNouveauLocal.ajaxurl,
 			bbRlNonce         = bpNouveauLocal.nonces;
@@ -954,7 +955,9 @@ window.bp = window.bp || {};
 
 								// Handle thumbnails for media files.
 								if ( 'media' === fileType ) {
-									if ( 'undefined' !== typeof bbRlIsAs3cfActive && '1' === bbRlIsAs3cfActive ) {
+									var isAs3cfActive = 'undefined' !== typeof bbRlIsAs3cfActive && '1' === bbRlIsAs3cfActive;
+									var isOmActive    = 'undefined' !== typeof bbRlIsOmActive && '1' === bbRlIsOmActive;
+									if ( isAs3cfActive || isOmActive ) {
 										$( dropzoneObj.files[index].previewElement ).find( 'img' ).attr( 'src', file.thumb );
 										dropzoneObj.emit( 'thumbnail', file.thumb );
 									} else {
