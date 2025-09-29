@@ -3589,7 +3589,9 @@ window.bp = window.bp || {};
 						self.dropzone_obj.files.push( mock_file );
 						self.dropzone_obj.emit( 'addedfile', mock_file );
 
-						if ( undefined !== typeof BP_Nouveau.is_as3cf_active && '1' === BP_Nouveau.is_as3cf_active ) {
+						var is_as3cf_active = typeof BP_Nouveau.is_as3cf_active !== 'undefined' && '1' === BP_Nouveau.is_as3cf_active;
+						var is_om_active    = typeof BP_Nouveau.is_om_active !== 'undefined' && '1' === BP_Nouveau.is_om_active;
+						if ( is_as3cf_active || is_om_active ) {
 							$( self.dropzone_obj.files[i].previewElement ).find( 'img' ).attr( 'src', activity_comment_data.media[i].thumb );
 							self.dropzone_obj.emit( 'thumbnail', activity_comment_data.media[i].thumb );
 							self.dropzone_obj.emit( 'complete', mock_file );
