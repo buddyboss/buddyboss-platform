@@ -2685,11 +2685,11 @@ function bp_document_rename_file( $document_id = 0, $attachment_document_id = 0,
 	/**
 	 * Filters the force bypass rename.
 	 *
-	 * @param bool   $force_bypass  Force bypass rename.
-	 * @param int    $document_id   Document ID.
+	 * @param bool   $force_bypass           Force bypass rename.
+	 * @param int    $document_id            Document ID.
 	 * @param int    $attachment_document_id Attachment document ID.
-	 * @param string $file_abs_path File absolute path.
-	 * @param string $new_file_abs_path New file absolute path.
+	 * @param string $file_abs_path          File absolute path.
+	 * @param string $new_file_abs_path      New file absolute path.
 	 */
 	$force_bypass = apply_filters( 'bb_document_force_bypass_rename', false, $document_id, $attachment_document_id, $file_abs_path, $new_file_abs_path );
 	if ( ! $force_bypass && ! @rename( $file_abs_path, $new_file_abs_path ) ) {
