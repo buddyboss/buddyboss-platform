@@ -95,13 +95,33 @@ function bp_video_upload() {
 		$video_message_url = $attachment_url;
 	}
 
+	/**
+	 * Filter the attachment URL.
+	 *
+	 * @since BuddyBoss [BBOMVERSION]
+	 *
+	 * @param string $attachment_url Attachment URL.
+	 * @param int    $attachment_id Attachment ID.
+	 */
+	$attachment_url = apply_filters( 'bb_video_get_attachment_url', untrailingslashit( $attachment_url ), $attachment->ID );
+
+	/**
+	 * Filter the video message URL.
+	 *
+	 * @since BuddyBoss [BBOMVERSION]
+	 *
+	 * @param string $video_message_url Video message URL.
+	 * @param int    $attachment_id Attachment ID.
+	 */
+	$video_message_url = apply_filters( 'bb_video_get_video_message_url', untrailingslashit( $video_message_url ), $attachment->ID );
+
 	$result = array(
 		'id'          => (int) $attachment->ID,
 		'thumb'       => '',
-		'url'         => esc_url( untrailingslashit( $attachment_url ) ),
+		'url'         => esc_url( $attachment_url ),
 		'name'        => esc_attr( $name ),
 		'ext'         => esc_attr( $ext ),
-		'vid_msg_url' => esc_url( untrailingslashit( $video_message_url ) ),
+		'vid_msg_url' => esc_url( $video_message_url ),
 	);
 
 	return $result;
