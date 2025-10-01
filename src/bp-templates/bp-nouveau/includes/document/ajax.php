@@ -1655,16 +1655,16 @@ function bp_nouveau_ajax_document_save_privacy() {
 	// Update document privacy with nested level.
 	bp_document_update_privacy( $id, $privacy, $type );
 
-	$document = ( 'document' === $type ? bb_get_document_attachments( $id ) : '' );
-
+	$document      = ( 'document' === $type ? bb_get_document_attachments( $id ) : '' );
+	$document_data = new BP_Document( $id );
 	wp_send_json_success(
 		array(
 			'message'  => 'success',
 			'html'     => $type,
 			'document' => $document,
+			'url'      => bp_document_download_link( $document_data->attachment_id, $id ),
 		)
 	);
-
 }
 
 function bp_nouveau_ajax_document_activity_delete() {

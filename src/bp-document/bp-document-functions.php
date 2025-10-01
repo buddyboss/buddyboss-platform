@@ -1493,9 +1493,19 @@ function bp_document_upload() {
 	$extension = bp_document_extension( $attachment->ID );
 	$svg_icon  = bp_document_svg_icon( $extension, $attachment->ID );
 
+	/**
+	 * Filter the attachment URL for document.
+	 *
+	 * @since BuddyBoss [BBOMVERSION]
+	 *
+	 * @param string $attachment_url Attachment URL for document.
+	 * @param int    $attachment_id Attachment ID.
+	 */
+	$attachment_url = apply_filters( 'bb_document_get_attachment_url', untrailingslashit( $attachment_url ), $attachment->ID );
+
 	$result = array(
 		'id'                => (int) $attachment->ID,
-		'url'               => esc_url( untrailingslashit( $attachment_url ) ),
+		'url'               => esc_url( $attachment_url ),
 		'name'              => esc_attr( pathinfo( basename( $attachment_file ), PATHINFO_FILENAME ) ),
 		'full_name'         => esc_attr( basename( $attachment_file ) ),
 		'type'              => esc_attr( 'document' ),
@@ -4343,7 +4353,9 @@ function bp_document_generate_code_previews( $attachment_id ) {
 			$file_name     = basename( $absolute_path );
 			$extension_pos = strrpos( $file_name, '.' ); // find position of the last dot, so where the extension starts.
 			$thumb         = substr( $file_name, 0, $extension_pos ) . '_thumb' . substr( $file_name, $extension_pos );
-			copy( $absolute_path, $preview_folder . '/' . $thumb );
+			if ( file_exists( $absolute_path ) ) {
+				copy( $absolute_path, $preview_folder . '/' . $thumb );
+			}
 
 		}
 
