@@ -247,7 +247,7 @@ class BB_Mothership_Loader {
 			return;
 		}
 
-		foreach ( $migrated_licence as $plugin_id => $license_data ) {
+		foreach ( $migrated_licence as $plugin_key => $license_data ) {
 			if (
 				empty( $license_data['license_key'] ) ||
 				empty( $license_data['status'] ) ||
