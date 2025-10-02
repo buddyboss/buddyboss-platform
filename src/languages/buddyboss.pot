@@ -2,9 +2,9 @@
 # This file is distributed under the GPLv2 or later (license.txt).
 msgid ""
 msgstr ""
-"Project-Id-Version: BuddyBoss Platform 2.13.0\n"
+"Project-Id-Version: BuddyBoss Platform 2.13.1\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2025-09-23 14:26:01+00:00\n"
+"POT-Creation-Date: 2025-10-02 13:22:15+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -400,7 +400,7 @@ msgstr ""
 #: bp-members/classes/class-bp-members-admin.php:953
 #: bp-templates/bp-nouveau/buddypress/members/single/invites/sent-invites.php:107
 #: bp-templates/bp-nouveau/readylaunch/forums/form-forum.php:99
-#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:710
+#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:754
 #: bp-templates/bp-nouveau/readylaunch/members/single/invites/sent-invites.php:112
 msgid "Status"
 msgstr ""
@@ -624,7 +624,7 @@ msgstr ""
 #: bp-integrations/learndash/templates/readylaunch/groups/single/courses-content-display.php:759
 #: bp-templates/bp-nouveau/readylaunch/forums/form-topic-tag.php:54
 #: bp-templates/bp-nouveau/readylaunch/forums/form-topic.php:260
-#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:799
+#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:843
 #: bp-xprofile/classes/class-bp-xprofile-field.php:1325
 #: bp-xprofile/classes/class-bp-xprofile-group.php:893
 msgid "Update"
@@ -1893,7 +1893,7 @@ msgstr ""
 #: bp-activity/classes/class-bb-activity-topics-manager.php:282
 #: bp-integrations/learndash/buddypress/Reports.php:413
 #: bp-integrations/learndash/templates/readylaunch/groups/single/courses-content-display.php:840
-#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:880
+#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:924
 msgid "Topics"
 msgstr ""
 
@@ -14677,9 +14677,9 @@ msgstr ""
 #: bp-templates/bp-nouveau/readylaunch/common/js-templates/activity/parts/bp-activity-link-preview.php:51
 #: bp-templates/bp-nouveau/readylaunch/common/js-templates/members/bb-link-preview.php:49
 #: bp-templates/bp-nouveau/readylaunch/common/search/profile-search.php:273
-#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/lesson.php:89
+#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/lesson.php:178
 #: bp-templates/bp-nouveau/readylaunch/learndash/ld30/quiz.php:146
-#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/topic.php:109
+#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/topic.php:199
 msgid "of"
 msgstr ""
 
@@ -15635,7 +15635,7 @@ msgstr ""
 #: bp-integrations/learndash/templates/readylaunch/groups/single/courses-content-display.php:404
 #: bp-integrations/learndash/templates/readylaunch/groups/single/courses-loop.php:124
 #: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course-loop.php:83
-#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:444
+#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:488
 #: bp-templates/bp-nouveau/readylaunch/memberpress/courses/archive-mpcs-courses.php:178
 #: bp-templates/bp-nouveau/readylaunch/memberpress/courses/archive-mpcs-courses.php:185
 #: bp-templates/bp-nouveau/readylaunch/memberpress/courses/single-mpcs-course.php:129
@@ -25749,7 +25749,7 @@ msgstr ""
 
 #: bp-integrations/learndash/buddypress/generators/LessonsReportsGenerator.php:47
 #: bp-integrations/learndash/templates/readylaunch/groups/single/courses-content-display.php:704
-#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:744
+#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:788
 msgid "Lesson"
 msgstr ""
 
@@ -25812,7 +25812,7 @@ msgstr ""
 #: bp-integrations/learndash/templates/readylaunch/groups/single/courses-loop.php:126
 #: bp-templates/bp-nouveau/buddypress/members/single/profile/widget.php:19
 #: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course-loop.php:85
-#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:441
+#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:485
 #: bp-templates/bp-nouveau/readylaunch/learndash/ld30/quiz.php:165
 #: bp-templates/bp-nouveau/readylaunch/members/single/courses/courses.php:124
 #: bp-templates/bp-nouveau/readylaunch/members/single/profile/widget.php:24
@@ -25829,7 +25829,7 @@ msgstr ""
 
 #: bp-integrations/learndash/buddypress/Reports.php:409
 #: bp-integrations/learndash/templates/readylaunch/groups/single/courses-content-display.php:845
-#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:885
+#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:929
 #: bp-templates/bp-nouveau/readylaunch/memberpress/courses/archive-mpcs-courses.php:147
 msgid "Lessons"
 msgstr ""
@@ -26065,8 +26065,8 @@ msgstr ""
 #: bp-integrations/learndash/templates/readylaunch/groups/single/courses-loop.php:355
 #: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course-loop.php:118
 #: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course-loop.php:313
-#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:305
-#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:378
+#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:349
+#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:422
 #: bp-templates/bp-nouveau/readylaunch/memberpress/courses/single-mpcs-course.php:92
 #: bp-templates/bp-nouveau/readylaunch/members/single/courses/courses.php:161
 #: bp-templates/bp-nouveau/readylaunch/members/single/courses/courses.php:356
@@ -26080,9 +26080,9 @@ msgstr ""
 #: bp-integrations/learndash/templates/readylaunch/groups/single/courses-content-display.php:661
 #: bp-integrations/learndash/templates/readylaunch/groups/single/courses-loop.php:162
 #: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course-loop.php:120
-#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:648
-#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:685
-#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:701
+#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:692
+#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:729
+#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:745
 #: bp-templates/bp-nouveau/readylaunch/members/single/courses/courses.php:163
 msgid "Not Enrolled"
 msgstr ""
@@ -26220,13 +26220,13 @@ msgstr ""
 
 #: bp-integrations/learndash/templates/buddypress/groups/single/courses-content-display.php:163
 #: bp-integrations/learndash/templates/readylaunch/groups/single/courses-content-display.php:789
-#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:829
+#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:873
 msgid "You've earned a certificate!"
 msgstr ""
 
 #: bp-integrations/learndash/templates/buddypress/groups/single/courses-content-display.php:167
 #: bp-integrations/learndash/templates/readylaunch/groups/single/courses-content-display.php:793
-#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:833
+#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:877
 msgid "Download Certificate"
 msgstr ""
 
@@ -26287,7 +26287,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/readylaunch/groups/single/messages/public-message.php:81
 #: bp-templates/bp-nouveau/readylaunch/groups/single/messages/public-message.php:105
 #: bp-templates/bp-nouveau/readylaunch/groups/single/messages/public-message.php:128
-#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/topic.php:132
+#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/topic.php:222
 #: bp-templates/bp-nouveau/readylaunch/memberpress/courses/courses_classroom_sidebar_progress.php:31
 #: bp-templates/bp-nouveau/readylaunch/members/single/profile/widget.php:24
 msgid "Complete"
@@ -26360,32 +26360,32 @@ msgid "Oops! That page can't be found."
 msgstr ""
 
 #: bp-integrations/learndash/templates/readylaunch/groups/single/courses-content-display.php:256
-#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:259
+#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:303
 msgid "By"
 msgstr ""
 
 #: bp-integrations/learndash/templates/readylaunch/groups/single/courses-content-display.php:301
-#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:303
+#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:347
 msgid "Open Registration"
 msgstr ""
 
 #: bp-integrations/learndash/templates/readylaunch/groups/single/courses-content-display.php:312
-#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:314
+#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:358
 msgid "This course is currently closed"
 msgstr ""
 
 #: bp-integrations/learndash/templates/readylaunch/groups/single/courses-content-display.php:334
-#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:336
+#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:380
 msgid "Trial price for "
 msgstr ""
 
 #: bp-integrations/learndash/templates/readylaunch/groups/single/courses-content-display.php:348
-#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:350
+#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:394
 msgid "Full price every "
 msgstr ""
 
 #: bp-integrations/learndash/templates/readylaunch/groups/single/courses-content-display.php:353
-#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:355
+#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:399
 msgid "afterward"
 msgstr ""
 
@@ -26395,7 +26395,7 @@ msgstr ""
 #: bp-integrations/learndash/templates/readylaunch/groups/single/courses-loop.php:167
 #: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course-loop.php:110
 #: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course-loop.php:125
-#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:436
+#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:480
 #: bp-templates/bp-nouveau/readylaunch/members/single/courses/courses.php:153
 #: bp-templates/bp-nouveau/readylaunch/members/single/courses/courses.php:168
 #, php-format
@@ -26403,24 +26403,24 @@ msgid "Start %s"
 msgstr ""
 
 #: bp-integrations/learndash/templates/readylaunch/groups/single/courses-content-display.php:430
-#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:470
+#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:514
 msgid "Login to Enroll"
 msgstr ""
 
 #: bp-integrations/learndash/templates/readylaunch/groups/single/courses-content-display.php:548
-#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:588
+#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:632
 msgid "Your browser does not support HTML5 video."
 msgstr ""
 
 #: bp-integrations/learndash/templates/readylaunch/groups/single/courses-content-display.php:556
-#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:596
+#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:640
 msgid "Video format is not supported, use Youtube video or MP4 format."
 msgstr ""
 
 #: bp-integrations/learndash/templates/readylaunch/groups/single/courses-content-display.php:570
 #: bp-integrations/learndash/templates/readylaunch/groups/single/courses-loop.php:176
 #: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course-loop.php:134
-#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:610
+#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:654
 #: bp-templates/bp-nouveau/readylaunch/memberpress/courses/archive-mpcs-courses.php:49
 #: bp-templates/bp-nouveau/readylaunch/memberpress/courses/single-mpcs-course.php:158
 #: bp-templates/bp-nouveau/readylaunch/members/single/courses/courses.php:177
@@ -26429,7 +26429,7 @@ msgstr ""
 
 #. translators: placeholder: number of places remaining.
 #: bp-integrations/learndash/templates/readylaunch/groups/single/courses-content-display.php:588
-#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:628
+#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:672
 #, php-format
 msgctxt "placeholder: number of places remaining"
 msgid "(%s place remaining)"
@@ -26439,7 +26439,7 @@ msgstr[1] ""
 
 #. translators: placeholder: course.
 #: bp-integrations/learndash/templates/readylaunch/groups/single/courses-content-display.php:602
-#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:642
+#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:686
 #, php-format
 msgctxt "placeholder: course"
 msgid "This %s has ended"
@@ -26447,7 +26447,7 @@ msgstr ""
 
 #. translators: placeholder: course, course start date.
 #: bp-integrations/learndash/templates/readylaunch/groups/single/courses-content-display.php:614
-#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:654
+#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:698
 #, php-format
 msgctxt "placeholder: course, course start date"
 msgid "This %1$s starts on %2$s"
@@ -26455,20 +26455,20 @@ msgstr ""
 
 #. translators: placeholder: course, course start date.
 #: bp-integrations/learndash/templates/readylaunch/groups/single/courses-content-display.php:620
-#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:660
+#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:704
 #, php-format
 msgctxt "placeholder: course"
 msgid "It is a pre-order. Enroll in this %1$s to get access after %2$s"
 msgstr ""
 
 #: bp-integrations/learndash/templates/readylaunch/groups/single/courses-content-display.php:627
-#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:667
+#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:711
 msgid "Pre-order"
 msgstr ""
 
 #. translators: placeholder: course.
 #: bp-integrations/learndash/templates/readylaunch/groups/single/courses-content-display.php:634
-#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:674
+#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:718
 #, php-format
 msgctxt "placeholder: course"
 msgid "Enroll in this %s to get access"
@@ -26476,74 +26476,74 @@ msgstr ""
 
 #. translators: placeholder: course.
 #: bp-integrations/learndash/templates/readylaunch/groups/single/courses-content-display.php:639
-#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:679
+#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:723
 #, php-format
 msgctxt "placeholder: course"
 msgid "This %s is not available"
 msgstr ""
 
 #: bp-integrations/learndash/templates/readylaunch/groups/single/courses-content-display.php:687
-#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:727
+#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:771
 msgid "Duration"
 msgstr ""
 
 #: bp-integrations/learndash/templates/readylaunch/groups/single/courses-content-display.php:716
-#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:756
+#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:800
 msgid "Enrolled"
 msgstr ""
 
 #: bp-integrations/learndash/templates/readylaunch/groups/single/courses-content-display.php:736
-#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:776
+#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:820
 msgid "Free form"
 msgstr ""
 
 #: bp-integrations/learndash/templates/readylaunch/groups/single/courses-content-display.php:736
-#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:776
+#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:820
 msgid "Linear"
 msgstr ""
 
 #: bp-integrations/learndash/templates/readylaunch/groups/single/courses-content-display.php:742
-#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:782
+#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:826
 msgid "Progression"
 msgstr ""
 
 #. translators: placeholder: Course.
 #: bp-integrations/learndash/templates/readylaunch/groups/single/courses-content-display.php:820
-#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:860
+#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:904
 #, php-format
 msgctxt "placeholder: Course"
 msgid "%s Content"
 msgstr ""
 
 #: bp-integrations/learndash/templates/readylaunch/groups/single/courses-content-display.php:896
-#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:936
+#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:980
 msgid "Expand All Section"
 msgstr ""
 
 #: bp-integrations/learndash/templates/readylaunch/groups/single/courses-content-display.php:897
-#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:937
+#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:981
 msgid "Collapse All Sections"
 msgstr ""
 
 #: bp-integrations/learndash/templates/readylaunch/groups/single/courses-content-display.php:899
-#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:939
+#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:983
 msgid "Expand All Sections"
 msgstr ""
 
 #: bp-integrations/learndash/templates/readylaunch/groups/single/courses-content-display.php:1018
-#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:1058
+#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:1102
 msgid "Summary"
 msgstr ""
 
 #: bp-integrations/learndash/templates/readylaunch/groups/single/courses-content-display.php:1026
 #: bp-templates/bp-nouveau/readylaunch/learndash/ld30/archive-course-header.php:117
-#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:1066
+#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:1110
 #: bp-templates/bp-nouveau/readylaunch/memberpress/courses/archive-mpcs-courses.php:153
 msgid "Instructor"
 msgstr ""
 
 #: bp-integrations/learndash/templates/readylaunch/groups/single/courses-content-display.php:1064
-#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:1104
+#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:1148
 msgid "Recently enrolled"
 msgstr ""
 
@@ -26572,7 +26572,7 @@ msgstr ""
 #. translators: 1: course progress percentage, 2: percentage symbol.
 #: bp-integrations/learndash/templates/readylaunch/groups/single/courses-loop.php:264
 #: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course-loop.php:222
-#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:402
+#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:446
 #: bp-templates/bp-nouveau/readylaunch/learndash/ld30/single/parts/ld-subnav.php:119
 #: bp-templates/bp-nouveau/readylaunch/members/single/courses/courses.php:265
 #, php-format
@@ -37802,7 +37802,7 @@ msgstr ""
 msgid "Comments are closed."
 msgstr ""
 
-#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/lesson.php:323
+#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/lesson.php:437
 msgid "Lesson Topics"
 msgstr ""
 
@@ -37873,7 +37873,7 @@ msgctxt "link: Back to Course"
 msgid "Back to %s"
 msgstr ""
 
-#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/topic.php:345
+#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/topic.php:460
 msgid "Topic Quizzes"
 msgstr ""
 
