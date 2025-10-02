@@ -124,8 +124,10 @@ class BB_Mothership_Loader {
 		// Register addons functionality using BuddyBoss custom manager.
 		BB_Addons_Manager::loadHooks();
 
+		$plugin_id = $this->pluginConnector->getDynamicPluginId();
+
 		// Handle license status changes.
-		add_action( $this->pluginConnector->pluginId . '_license_status_changed', array( $this, 'handleLicenseStatusChange' ), 10, 2 );
+		add_action( $plugin_id . '_license_status_changed', array( $this, 'handleLicenseStatusChange' ), 10, 2 );
 
 		// For local development - disable SSL verification if needed.
 		if ( defined( 'BUDDYBOSS_DISABLE_SSL_VERIFY' ) && constant( 'BUDDYBOSS_DISABLE_SSL_VERIFY' ) ) {
@@ -156,13 +158,15 @@ class BB_Mothership_Loader {
 	 * @param mixed $response API response.
 	 */
 	public function handleLicenseStatusChange( bool $isActive, $response ): void {
+		$plugin_id = $this->pluginConnector->getDynamicPluginId();
+
 		if ( ! $isActive ) {
 			// License is no longer active.
 			$this->pluginConnector->updateLicenseActivationStatus( false );
 
 			// Clear cached data.
-			delete_transient( $this->pluginConnector->pluginId . '-mosh-products' );
-			delete_transient( $this->pluginConnector->pluginId . '-mosh-addons-update-check' );
+			delete_transient( $plugin_id . '-mosh-products' );
+			delete_transient( $plugin_id . '-mosh-addons-update-check' );
 
 			// Log the deactivation.
 			error_log( 'BuddyBoss license deactivated: ' . print_r( $response, true ) );
