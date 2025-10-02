@@ -913,8 +913,13 @@ function bp_video_preview_image_by_js( $video ) {
 	 * Hook after video js preview image.
 	 *
 	 * @since BuddyBoss 1.7.0
+	 * @since BuddyBoss [BBVERSION]
+	 * Introduced to pass the preview attachment ID to the hook.
+	 *
+	 * @param int $video_id Video ID.
+	 * @param int $preview_attachment_id Preview attachment ID.
 	 */
-	do_action( 'bb_after_video_preview_image_by_js' );
+	do_action( 'bb_after_video_preview_image_by_js', $video['id'], $preview_attachment_id );
 
 }
 
