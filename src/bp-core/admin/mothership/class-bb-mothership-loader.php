@@ -84,7 +84,7 @@ class BB_Mothership_Loader {
 
 		// Set IPN Service parameters.
 		$this->container->addParameter( IPNService::PRODUCT_SLUG, $plugin_id );
-		$this->container->addParameter( IPNService::PREFIX, 'buddyboss' );
+		$this->container->addParameter( IPNService::PREFIX, sanitize_title( $plugin_id ) );
 		$this->container->addParameter( IPNService::MENU_SLUG, 'buddyboss-platform' );
 
 		$this->container->addParameter(
