@@ -51,7 +51,7 @@ class BB_Addons_Manager extends AddonsManager {
 		foreach ( $apiResponse->products ?? [] as $product ) {
 			if (
 				! empty( $product->slug ) &&
-				$product->slug === $slug &&
+				strpos( $product->slug, $slug ) !== false &&
 				! empty( $product->status ) &&
 				'enabled' === $product->status
 			) {
