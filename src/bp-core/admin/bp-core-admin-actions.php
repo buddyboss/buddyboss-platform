@@ -569,7 +569,23 @@ function bb_render_admin_header() {
 		) ||
 		(
 			! empty( $screen->post_type ) &&
-			'buddyboss_fonts' === $screen->post_type
+			(
+				'buddyboss_fonts' === $screen->post_type ||
+				'bp_ps_form' === $screen->post_type ||
+				( function_exists( 'bp_groups_get_group_type_post_type' ) && bp_groups_get_group_type_post_type() === $screen->post_type ) ||
+				( function_exists( 'bp_get_member_type_post_type' ) && bp_get_member_type_post_type() === $screen->post_type ) ||
+				( function_exists( 'bp_get_invite_post_type' ) && bp_get_invite_post_type() === $screen->post_type ) ||
+				( function_exists( 'bbp_get_forum_post_type' ) && bbp_get_forum_post_type() === $screen->post_type ) ||
+				( function_exists( 'bbp_get_topic_post_type' ) && bbp_get_topic_post_type() === $screen->post_type ) ||
+				( function_exists( 'bbp_get_reply_post_type' ) && bbp_get_reply_post_type() === $screen->post_type ) ||
+				( function_exists( 'bp_get_email_post_type' ) && bp_get_email_post_type() === $screen->post_type )
+			)
+		) || (
+			! empty( $screen->taxonomy ) &&
+			(
+				( function_exists( 'bbp_get_topic_tag_tax_id' ) && bbp_get_topic_tag_tax_id() === $screen->taxonomy ) ||
+				( function_exists( 'bp_get_email_tax_type' ) && bp_get_email_tax_type() === $screen->taxonomy )
+			)
 		)
 	) {
 		include __DIR__ . '/templates/header.php';
