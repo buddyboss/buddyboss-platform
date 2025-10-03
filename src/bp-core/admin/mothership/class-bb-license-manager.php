@@ -204,35 +204,33 @@ class BB_License_Manager extends LicenseManager {
 		ob_start();
 		$pluginId     = self::getContainer()->get( MothershipService::CONNECTION_PLUGIN_SERVICE_ID )->pluginId;
 		$licenseKey   = Credentials::getLicenseKey();
-		$license_info = bb_get_license_details( $licenseKey );
-		$activation_text = sprintf(
-			__( '%1$s of %2$s sites have been activated with this license key', 'buddyboss' ),
-			$license_info['total_prod_used'],
-			$license_info['total_prod_allowed']
-		)
+		$license_info = $this->bb_get_license_details( $licenseKey );
 		?>
 		<h2><?php esc_html_e( 'Active License Information', 'buddyboss' ); ?></h2>
 
-		<div class="activated-licence">
-			<p class=""><?php esc_html_e( 'License Key: ', 'buddyboss' ); ?><?php echo esc_html( $license_info[ 'license_key' ] ); ?></p>
-			<p class=""><?php esc_html_e( 'Status: ', 'buddyboss' ); ?><?php echo esc_html( $license_info[ 'status' ] ); ?></p>
-			<p class=""><?php esc_html_e( 'Product: ', 'buddyboss' ); ?><?php echo esc_html( $license_info[ 'product' ] ); ?></p>
-			<p class=""><?php esc_html_e( 'Activations: ', 'buddyboss' ); ?><?php echo esc_html( $activation_text ); ?></p>
-		</div>
+		<?php
+		if ( ! is_wp_error( $license_info ) ) {
+			$activation_text = sprintf(
+				__( '%1$s of %2$s sites have been activated with this license key', 'buddyboss' ),
+				$license_info['total_prod_used'],
+				$license_info['total_prod_allowed']
+			);
+			?>
+			<div class="activated-licence">
+				<p class=""><?php esc_html_e( 'License Key: ', 'buddyboss' ); ?><?php echo esc_html( $license_info['license_key'] ); ?></p>
+				<p class=""><?php esc_html_e( 'Status: ', 'buddyboss' ); ?><?php echo esc_html( $license_info['status'] ); ?></p>
+				<p class=""><?php esc_html_e( 'Product: ', 'buddyboss' ); ?><?php echo esc_html( $license_info['product'] ); ?></p>
+				<p class=""><?php esc_html_e( 'Activations: ', 'buddyboss' ); ?><?php echo esc_html( $activation_text ); ?></p>
+			</div>
+		<?php } ?>
+
 		<form method="post" action="" name="<?php echo esc_attr( $pluginId ); ?>_deactivate_license_form">
 			<div class="<?php echo esc_attr( $pluginId ); ?>-license-form license-form-wrap">
 				<table class="form-table">
 					<tr>
-						<th scope="row">
-							<label for="license_key"><?php esc_html_e( 'License Key', 'buddyboss' ); ?></label>
-						</th>
-						<td>
-							<input type="text" name="license_key" id="license_key" placeholder="<?php esc_attr_e( 'Enter your license key', 'buddyboss' ); ?>" value="<?php echo esc_attr( $licenseKey ); ?>" readonly />
-							<input type="hidden" name="activation_domain" id="activation_domain" value="<?php echo esc_attr( Credentials::getActivationDomain() ); ?>" />
-						</td>
-					</tr>
-					<tr>
 						<td colspan="2" scope="row">
+							<input type="hidden" name="license_key" id="license_key" placeholder="<?php esc_attr_e( 'Enter your license key', 'buddyboss' ); ?>" value="<?php echo esc_attr( $licenseKey ); ?>" readonly />
+							<input type="hidden" name="activation_domain" id="activation_domain" value="<?php echo esc_attr( Credentials::getActivationDomain() ); ?>" />
 							<?php wp_nonce_field( 'mothership_deactivate_license', '_wpnonce' ); ?>
 							<input type="hidden" name="buddyboss_platform_license_button" value="deactivate">
 							<input type="submit" value="<?php esc_html_e( 'Deactivate License', 'buddyboss' ); ?>" class="button button-secondary <?php echo esc_attr( $pluginId ); ?>-button-deactivate" >
@@ -243,5 +241,77 @@ class BB_License_Manager extends LicenseManager {
 		</form>
 		<?php
 		return ob_get_clean();
+	}
+
+	/**
+	 * Get License + Activations details from Caseproof API
+	 *
+	 * @param string $license_key License UUID.
+	 *
+	 * @return array|WP_Error    Array of license + activation data, or WP_Error on failure.
+	 */
+	protected function bb_get_license_details( $license_key ) {
+		$pluginId     = self::getContainer()->get( MothershipService::CONNECTION_PLUGIN_SERVICE_ID )->pluginId;
+		$root_api_url = defined( strtoupper( $pluginId . '_MOTHERSHIP_API_BASE_URL' ) )
+			? constant( strtoupper( $pluginId . '_MOTHERSHIP_API_BASE_URL' ) )
+			: 'https://licenses.caseproof.com/api/v1/';
+
+		$api_url     = $root_api_url . 'licenses/' . $license_key;
+		$domain      = wp_parse_url( home_url(), PHP_URL_HOST );
+		$credentials = base64_encode( $domain . ':' . $license_key );
+		$args        = array(
+			'headers' => array(
+				'Authorization' => "Basic $credentials",
+				'Content-Type'  => 'application / json',
+				'Accept'        => 'application / json',
+			),
+		);
+
+		// First request: License details.
+		$response = wp_remote_get( $api_url, $args );
+
+		if ( is_wp_error( $response ) ) {
+			return $response; // Return error.
+		}
+
+		$body = json_decode( wp_remote_retrieve_body( $response ), true );
+
+		if (
+			empty( $body['license_key'] ) ||
+			empty( $body['product'] )
+		) {
+			return new \WP_Error( 'invalid_response', 'License key or product not found in response' );
+		}
+
+		$license_key          = $body['license_key'];
+		$product              = $body['product'];
+		$activations_meta_url = $body['_links']['activations-meta']['href'] ?? '';
+
+		// If activations-meta link missing.
+		if ( empty( $activations_meta_url ) ) {
+			return new WP_Error( 'missing_link', 'Activations - meta URL not found in license response' );
+		}
+
+		// Second request: Activations-meta.
+		$response2 = wp_remote_get( $activations_meta_url, $args );
+
+		if ( is_wp_error( $response2 ) ) {
+			return $response2;
+		}
+
+		$body2 = json_decode( wp_remote_retrieve_body( $response2 ), true );
+
+		// Return combined data.
+		return array(
+			'license_key'        => '********-****-****-****-' . esc_html( substr( $license_key, - 12 ) ),
+			'product'            => $product,
+			'status'             => $body['status'] ?? '',
+			'total_prod_allowed' => $body2['prod']['allowed'] ?? 0,
+			'total_prod_used'    => $body2['prod']['used'] ?? 0,
+			'total_prod_free'    => $body2['prod']['free'] ?? 0,
+			'total_test_allowed' => $body2['test']['allowed'] ?? 0,
+			'total_test_used'    => $body2['test']['used'] ?? 0,
+			'total_test_free'    => $body2['test']['free'] ?? 0,
+		);
 	}
 }

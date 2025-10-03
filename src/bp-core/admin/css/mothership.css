@@ -77,6 +77,10 @@
   border-radius: 3px;
 }
 
+.buddyboss-mothership-settings .setting-wrapper .activated-licence p {
+  margin: 5px 0;
+}
+
 .buddyboss-mothership-settings .setting-wrapper .license-form-wrap {
   display: flex;
   flex-direction: column;

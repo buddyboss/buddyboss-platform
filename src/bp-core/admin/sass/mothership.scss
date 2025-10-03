@@ -87,6 +87,10 @@ $border-right-color_2: #ddd;
 			color: #2c662d;
 			font-weight: 600;
 			border-radius: 3px;
+
+			p {
+				margin: 5px 0;
+			}
 		}
 
 		.license-form-wrap {
