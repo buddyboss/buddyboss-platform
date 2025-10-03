@@ -268,6 +268,8 @@ class BB_Mothership_Loader {
 				$plugin_id = 'bb-platform-pro-2-sites';
 			} elseif ( 'BB_PLATFORM_PRO_5S' === $software_id ) {
 				$plugin_id = 'bb-platform-pro-5-sites';
+			} elseif ( 'BB_PLATFORM_FREE' === $software_id ) {
+				$plugin_id = 'bb-platform-free';
 			} elseif ( 'BB_PLATFORM_PRO_10S' === $software_id ) {
 				$plugin_id = 'bb-platform-pro-10-sites';
 			} elseif (
