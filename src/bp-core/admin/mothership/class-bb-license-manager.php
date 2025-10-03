@@ -202,10 +202,23 @@ class BB_License_Manager extends LicenseManager {
 	 */
 	public function generateDisconnectForm(): string {
 		ob_start();
-		$pluginId = self::getContainer()->get( MothershipService::CONNECTION_PLUGIN_SERVICE_ID )->pluginId;
+		$pluginId     = self::getContainer()->get( MothershipService::CONNECTION_PLUGIN_SERVICE_ID )->pluginId;
+		$licenseKey   = Credentials::getLicenseKey();
+		$license_info = bb_get_license_details( $licenseKey );
+		$activation_text = sprintf(
+			__( '%1$s of %2$s sites have been activated with this license key', 'buddyboss' ),
+			$license_info['total_prod_used'],
+			$license_info['total_prod_allowed']
+		)
 		?>
-		<h2><?php esc_html_e( 'License Management', 'buddyboss' ); ?></h2>
-		<p class="activated-licence"><?php esc_html_e( 'Your license is currently active.', 'buddyboss' ); ?></p>
+		<h2><?php esc_html_e( 'Active License Information', 'buddyboss' ); ?></h2>
+
+		<div class="activated-licence">
+			<p class=""><?php esc_html_e( 'License Key: ', 'buddyboss' ); ?><?php echo esc_html( $license_info[ 'license_key' ] ); ?></p>
+			<p class=""><?php esc_html_e( 'Status: ', 'buddyboss' ); ?><?php echo esc_html( $license_info[ 'status' ] ); ?></p>
+			<p class=""><?php esc_html_e( 'Product: ', 'buddyboss' ); ?><?php echo esc_html( $license_info[ 'product' ] ); ?></p>
+			<p class=""><?php esc_html_e( 'Activations: ', 'buddyboss' ); ?><?php echo esc_html( $activation_text ); ?></p>
+		</div>
 		<form method="post" action="" name="<?php echo esc_attr( $pluginId ); ?>_deactivate_license_form">
 			<div class="<?php echo esc_attr( $pluginId ); ?>-license-form license-form-wrap">
 				<table class="form-table">
@@ -214,7 +227,7 @@ class BB_License_Manager extends LicenseManager {
 							<label for="license_key"><?php esc_html_e( 'License Key', 'buddyboss' ); ?></label>
 						</th>
 						<td>
-							<input type="text" name="license_key" id="license_key" placeholder="<?php esc_attr_e( 'Enter your license key', 'buddyboss' ); ?>" value="<?php echo esc_attr( Credentials::getLicenseKey() ); ?>" readonly />
+							<input type="text" name="license_key" id="license_key" placeholder="<?php esc_attr_e( 'Enter your license key', 'buddyboss' ); ?>" value="<?php echo esc_attr( $licenseKey ); ?>" readonly />
 							<input type="hidden" name="activation_domain" id="activation_domain" value="<?php echo esc_attr( Credentials::getActivationDomain() ); ?>" />
 						</td>
 					</tr>
