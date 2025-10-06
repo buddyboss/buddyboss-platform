@@ -9,6 +9,8 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
+return;
+
 if ( ! function_exists( 'buddyboss_theme_sudharo_tapas' ) ) {
 	/**
 	 * Theme sudho tapas.

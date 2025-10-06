@@ -1,0 +1,25 @@
+{
+    "name": "caseproof\/ground-level-in-product-notifications",
+    "description": "The GroundLevel In-Product Notifications package.",
+    "license": "GPL-3.0",
+    "authors": [
+        {
+            "name": "Team Caseproof",
+            "email": "developers@caseproof.com"
+        }
+    ],
+    "config": {
+        "sort-packages": true
+    },
+    "autoload": {
+        "psr-4": {
+            "BuddyBossPlatform\\GroundLevel\\InProductNotifications\\": ""
+        }
+    },
+    "require": {
+        "php": ">=7.4",
+        "caseproof\/ground-level-container": "^1.0.0",
+        "caseproof\/ground-level-mothership": "^1.0.0",
+        "caseproof\/ground-level-support": "^1.0.0"
+    }
+}

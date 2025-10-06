@@ -1,0 +1,14 @@
+{
+  "name": "@caseproof/ground-level-inproduct-notifications",
+  "version": "0.0.1",
+  "description": "The GroundLevel In-Product Notifications package.",
+  "author": "Team Caseproof <developers@caseproof.com>",
+  "license": "GPL-3.0",
+  "dependencies": {
+    "@caseproof/ipn-inbox": "github:caseproof/ipn-inbox#semver:^0.0.5"
+  },
+  "scripts": {
+    "build": "cp ./node_modules/@caseproof/ipn-inbox/dist/ipn-inbox.umd.js ./assets/ipn-inbox.js",
+    "postinstall": "npm run build"
+  }
+}

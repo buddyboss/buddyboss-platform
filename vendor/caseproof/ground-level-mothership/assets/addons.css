@@ -1,0 +1,248 @@
+.mosh-products,
+.mosh-products * {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.wrap .add-new-h2.mosh-products-refresh {
+    margin-left: 20px;
+}
+
+#mosh-products-search {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    box-shadow: none;
+    color: #333;
+    vertical-align: middle;
+    padding: 8px 12px;
+    margin: -4px 10px 0 0;
+    min-height: 30px;
+    line-height: 1.5;
+    width: 200px;
+    float: right;
+}
+
+#mosh-products-search:focus {
+    border-color: #bbb;
+}
+
+#mosh-admin-addons h4 {
+    font-size: 17px;
+    font-weight: 700;
+}
+
+.mosh-products {
+    margin: 30px -20px 0 -20px;
+}
+
+.mosh-product {
+    padding: 0 20px;
+    float: left;
+    width: 33.333333%;
+}
+
+.mosh-product-inner {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    margin: 0 0 40px 0;
+}
+
+.mosh-product-details {
+    padding: 30px 20px;
+}
+
+.mosh-product-details img {
+    border: 1px solid #eee;
+    width: 4rem;
+    margin-bottom: 1rem;
+}
+
+.mosh-product-details h5 {
+    margin: 0 0 10px 100px;
+    font-size: 16px;
+}
+
+.mosh-product-details p {
+    font-size: 1em;
+    text-align: center;
+}
+
+.mosh-product-actions {
+    background-color: #f7f7f7;
+    border-top: 1px solid #ddd;
+    padding: 20px;
+    position: relative;
+}
+
+.mosh-product-action {
+    float: right;
+}
+
+.mosh-product-status {
+    float: left;
+    padding-top: 8px;
+}
+
+.mosh-product-status-download .mosh-product-status-label {
+    color: #666;
+}
+
+.mosh-product .mosh-product-action button .mp-icon {
+    font-size: 13px;
+    margin-right: 8px;
+    color: #999;
+}
+
+.mosh-product-status-active .mosh-product-status-label,
+.mosh-product-status-active .mosh-product-action button .mp-icon {
+    color: #2a9b39;
+}
+
+.mosh-product-status-inactive .mosh-product-status-label,
+.mosh-product-status-inactive .mosh-product-action button .mp-icon {
+    color: #f00;
+}
+
+.mosh-product-action button {
+    background: none;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    box-shadow: none;
+    cursor: pointer;
+    font-weight: 600;
+    text-align: center;
+    padding: 8px 15px;
+    font-size: 13px;
+    line-height: 1.30769230769;
+}
+
+.mosh-product-action button:hover,
+.mosh-product-action button.mosh-loading {
+    background-color: #e9e9e9;
+}
+
+.mosh-product .mosh-product-action button .mp-icon.mp-icon-spinner {
+    color: #999;
+    margin-right: 0;
+}
+
+.mosh-product-action button .mp-icon {
+    font-size: 13px;
+    margin-right: 8px;
+    color: #999;
+}
+
+.mosh-product .mosh-product-actions .mosh-product-message {
+    background-color: #f7f7f7;
+    position: absolute;
+    text-align: center;
+    font-weight: 600;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    z-index: 99;
+    padding: 20px;
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
+    justify-content: center;
+}
+
+.mosh-product
+    .mosh-product-actions
+    .mosh-product-message.mosh-product-message-success {
+    color: #2a9b39;
+}
+
+.mosh-product
+    .mosh-product-actions
+    .mosh-product-message.mosh-product-message-error {
+    color: red;
+}
+
+.mosh-product-action-upgrade {
+    text-align: center;
+    float: none;
+}
+
+.mosh-product-action-upgrade a {
+    border-radius: 3px;
+    cursor: pointer;
+    display: inline-block;
+    margin: 0;
+    text-decoration: none;
+    text-align: center;
+    vertical-align: middle;
+    white-space: nowrap;
+    box-shadow: none;
+    background-color: #f5f5f5;
+    border: 1px solid #ccc;
+    color: #666;
+    font-size: 13px;
+    line-height: 1.30769230769;
+    font-weight: 600;
+    padding: 8px 28px;
+}
+
+@media (max-width: 1249px) {
+    .mosh-product {
+        width: 50%;
+    }
+}
+
+@media (max-width: 767px) {
+    #mosh-products-search {
+        width: 100%;
+        float: none;
+        display: block;
+        margin: 30px 0 0 0;
+    }
+    .mosh-product {
+        width: 100%;
+        margin-bottom: 20px;
+    }
+    .mosh-product-inner {
+        margin: 0;
+    }
+}
+
+.mosh-product-details img {
+    display: block;
+    margin: 0 auto 10px;
+    max-width: 100%;
+    height: auto;
+}
+
+.mosh-product-name {
+    font-size: 1.5em;
+    margin: 10px 0;
+    text-align: center;
+}
+
+.mosh-product-details p {
+    text-align: center;
+}
+
+.mosh-clearfix:before,
+.mosh-clearfix:after {
+    content: " ";
+    display: block;
+}
+
+.mosh-clearfix:after {
+    clear: both;
+}
+
+.mosh-product-info {
+    height: 130px;
+    overflow: auto;
+}

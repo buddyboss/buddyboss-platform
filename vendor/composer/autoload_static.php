@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit7494b555ff50739c6adbb1fceae8f3da
+class ComposerStaticInitfd4750ddf8c9c40c1331e6c5363bcc53
 {
     public static $files = array (
         'bb_platform_a4a119a56e50fbb293281d9a48007e0e' => __DIR__ . '/..' . '/symfony/polyfill-php80/bootstrap.php',
@@ -31,7 +31,12 @@ class ComposerStaticInit7494b555ff50739c6adbb1fceae8f3da
             'BuddyBossPlatform\\Symfony\\Component\\Filesystem\\' => 47,
             'BuddyBossPlatform\\Psr\\Log\\' => 26,
             'BuddyBossPlatform\\Psr\\Http\\Message\\' => 35,
+            'BuddyBossPlatform\\Psr\\Container\\' => 32,
             'BuddyBossPlatform\\Neutron\\' => 26,
+            'BuddyBossPlatform\\GroundLevel\\Support\\' => 38,
+            'BuddyBossPlatform\\GroundLevel\\Mothership\\' => 41,
+            'BuddyBossPlatform\\GroundLevel\\InProductNotifications\\' => 53,
+            'BuddyBossPlatform\\GroundLevel\\Container\\' => 40,
             'BuddyBossPlatform\\FFMpeg\\' => 25,
             'BuddyBossPlatform\\Evenement\\' => 28,
             'BuddyBossPlatform\\Doctrine\\Common\\Cache\\' => 40,
@@ -80,9 +85,29 @@ class ComposerStaticInit7494b555ff50739c6adbb1fceae8f3da
         array (
             0 => __DIR__ . '/..' . '/psr/http-message/src',
         ),
+        'BuddyBossPlatform\\Psr\\Container\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/container/src',
+        ),
         'BuddyBossPlatform\\Neutron\\' => 
         array (
             0 => __DIR__ . '/..' . '/neutron/temporary-filesystem/src/Neutron',
+        ),
+        'BuddyBossPlatform\\GroundLevel\\Support\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/caseproof/ground-level-support',
+        ),
+        'BuddyBossPlatform\\GroundLevel\\Mothership\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/caseproof/ground-level-mothership',
+        ),
+        'BuddyBossPlatform\\GroundLevel\\InProductNotifications\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/caseproof/ground-level-in-product-notifications',
+        ),
+        'BuddyBossPlatform\\GroundLevel\\Container\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/caseproof/ground-level-container',
         ),
         'BuddyBossPlatform\\FFMpeg\\' => 
         array (
@@ -261,11 +286,71 @@ class ComposerStaticInit7494b555ff50739c6adbb1fceae8f3da
         'BuddyBossPlatform\\FFMpeg\\Media\\MediaTypeInterface' => __DIR__ . '/..' . '/php-ffmpeg/php-ffmpeg/src/FFMpeg/Media/MediaTypeInterface.php',
         'BuddyBossPlatform\\FFMpeg\\Media\\Video' => __DIR__ . '/..' . '/php-ffmpeg/php-ffmpeg/src/FFMpeg/Media/Video.php',
         'BuddyBossPlatform\\FFMpeg\\Media\\Waveform' => __DIR__ . '/..' . '/php-ffmpeg/php-ffmpeg/src/FFMpeg/Media/Waveform.php',
+        'BuddyBossPlatform\\GroundLevel\\Container\\Concerns\\Configurable' => __DIR__ . '/..' . '/caseproof/ground-level-container/Concerns/Configurable.php',
+        'BuddyBossPlatform\\GroundLevel\\Container\\Concerns\\HasContainer' => __DIR__ . '/..' . '/caseproof/ground-level-container/Concerns/HasContainer.php',
+        'BuddyBossPlatform\\GroundLevel\\Container\\Concerns\\HasStaticContainer' => __DIR__ . '/..' . '/caseproof/ground-level-container/Concerns/HasStaticContainer.php',
+        'BuddyBossPlatform\\GroundLevel\\Container\\Container' => __DIR__ . '/..' . '/caseproof/ground-level-container/Container.php',
+        'BuddyBossPlatform\\GroundLevel\\Container\\Contracts\\ConfiguresParameters' => __DIR__ . '/..' . '/caseproof/ground-level-container/Contracts/ConfiguresParameters.php',
+        'BuddyBossPlatform\\GroundLevel\\Container\\Contracts\\ContainerAwareness' => __DIR__ . '/..' . '/caseproof/ground-level-container/Contracts/ContainerAwareness.php',
+        'BuddyBossPlatform\\GroundLevel\\Container\\Contracts\\LoadableDependency' => __DIR__ . '/..' . '/caseproof/ground-level-container/Contracts/LoadableDependency.php',
+        'BuddyBossPlatform\\GroundLevel\\Container\\Contracts\\StaticContainerAwareness' => __DIR__ . '/..' . '/caseproof/ground-level-container/Contracts/StaticContainerAwareness.php',
+        'BuddyBossPlatform\\GroundLevel\\Container\\Exception' => __DIR__ . '/..' . '/caseproof/ground-level-container/Exception.php',
+        'BuddyBossPlatform\\GroundLevel\\Container\\NotFoundException' => __DIR__ . '/..' . '/caseproof/ground-level-container/NotFoundException.php',
+        'BuddyBossPlatform\\GroundLevel\\Container\\Service' => __DIR__ . '/..' . '/caseproof/ground-level-container/Service.php',
+        'BuddyBossPlatform\\GroundLevel\\InProductNotifications\\Models\\Notification' => __DIR__ . '/..' . '/caseproof/ground-level-in-product-notifications/Models/Notification.php',
+        'BuddyBossPlatform\\GroundLevel\\InProductNotifications\\Service' => __DIR__ . '/..' . '/caseproof/ground-level-in-product-notifications/Service.php',
+        'BuddyBossPlatform\\GroundLevel\\InProductNotifications\\Services\\Ajax' => __DIR__ . '/..' . '/caseproof/ground-level-in-product-notifications/Services/Ajax.php',
+        'BuddyBossPlatform\\GroundLevel\\InProductNotifications\\Services\\Cleaner' => __DIR__ . '/..' . '/caseproof/ground-level-in-product-notifications/Services/Cleaner.php',
+        'BuddyBossPlatform\\GroundLevel\\InProductNotifications\\Services\\Retriever' => __DIR__ . '/..' . '/caseproof/ground-level-in-product-notifications/Services/Retriever.php',
+        'BuddyBossPlatform\\GroundLevel\\InProductNotifications\\Services\\ScheduledService' => __DIR__ . '/..' . '/caseproof/ground-level-in-product-notifications/Services/ScheduledService.php',
+        'BuddyBossPlatform\\GroundLevel\\InProductNotifications\\Services\\Store' => __DIR__ . '/..' . '/caseproof/ground-level-in-product-notifications/Services/Store.php',
+        'BuddyBossPlatform\\GroundLevel\\InProductNotifications\\Services\\View' => __DIR__ . '/..' . '/caseproof/ground-level-in-product-notifications/Services/View.php',
+        'BuddyBossPlatform\\GroundLevel\\Mothership\\AbstractPluginConnection' => __DIR__ . '/..' . '/caseproof/ground-level-mothership/AbstractPluginConnection.php',
+        'BuddyBossPlatform\\GroundLevel\\Mothership\\Api\\PaginatedResponse' => __DIR__ . '/..' . '/caseproof/ground-level-mothership/Api/PaginatedResponse.php',
+        'BuddyBossPlatform\\GroundLevel\\Mothership\\Api\\Request' => __DIR__ . '/..' . '/caseproof/ground-level-mothership/Api/Request.php',
+        'BuddyBossPlatform\\GroundLevel\\Mothership\\Api\\RequestFactory' => __DIR__ . '/..' . '/caseproof/ground-level-mothership/Api/RequestFactory.php',
+        'BuddyBossPlatform\\GroundLevel\\Mothership\\Api\\Request\\LicenseActivations' => __DIR__ . '/..' . '/caseproof/ground-level-mothership/Api/Request/LicenseActivations.php',
+        'BuddyBossPlatform\\GroundLevel\\Mothership\\Api\\Request\\Licenses' => __DIR__ . '/..' . '/caseproof/ground-level-mothership/Api/Request/Licenses.php',
+        'BuddyBossPlatform\\GroundLevel\\Mothership\\Api\\Request\\Products' => __DIR__ . '/..' . '/caseproof/ground-level-mothership/Api/Request/Products.php',
+        'BuddyBossPlatform\\GroundLevel\\Mothership\\Api\\Request\\UserAddons' => __DIR__ . '/..' . '/caseproof/ground-level-mothership/Api/Request/UserAddons.php',
+        'BuddyBossPlatform\\GroundLevel\\Mothership\\Api\\Request\\Users' => __DIR__ . '/..' . '/caseproof/ground-level-mothership/Api/Request/Users.php',
+        'BuddyBossPlatform\\GroundLevel\\Mothership\\Api\\Response' => __DIR__ . '/..' . '/caseproof/ground-level-mothership/Api/Response.php',
+        'BuddyBossPlatform\\GroundLevel\\Mothership\\Credentials' => __DIR__ . '/..' . '/caseproof/ground-level-mothership/Credentials.php',
+        'BuddyBossPlatform\\GroundLevel\\Mothership\\ExtensionType' => __DIR__ . '/..' . '/caseproof/ground-level-mothership/ExtensionType.php',
+        'BuddyBossPlatform\\GroundLevel\\Mothership\\Manager\\AddonInstallSkin' => __DIR__ . '/..' . '/caseproof/ground-level-mothership/Manager/AddonInstallSkin.php',
+        'BuddyBossPlatform\\GroundLevel\\Mothership\\Manager\\AddonsManager' => __DIR__ . '/..' . '/caseproof/ground-level-mothership/Manager/AddonsManager.php',
+        'BuddyBossPlatform\\GroundLevel\\Mothership\\Manager\\LicenseManager' => __DIR__ . '/..' . '/caseproof/ground-level-mothership/Manager/LicenseManager.php',
+        'BuddyBossPlatform\\GroundLevel\\Mothership\\Service' => __DIR__ . '/..' . '/caseproof/ground-level-mothership/Service.php',
+        'BuddyBossPlatform\\GroundLevel\\Support\\Casts' => __DIR__ . '/..' . '/caseproof/ground-level-support/Casts.php',
+        'BuddyBossPlatform\\GroundLevel\\Support\\Concerns\\Factory' => __DIR__ . '/..' . '/caseproof/ground-level-support/Concerns/Factory.php',
+        'BuddyBossPlatform\\GroundLevel\\Support\\Concerns\\HasAttributes' => __DIR__ . '/..' . '/caseproof/ground-level-support/Concerns/HasAttributes.php',
+        'BuddyBossPlatform\\GroundLevel\\Support\\Concerns\\HasEvents' => __DIR__ . '/..' . '/caseproof/ground-level-support/Concerns/HasEvents.php',
+        'BuddyBossPlatform\\GroundLevel\\Support\\Concerns\\HasUserRelationship' => __DIR__ . '/..' . '/caseproof/ground-level-support/Concerns/HasUserRelationship.php',
+        'BuddyBossPlatform\\GroundLevel\\Support\\Concerns\\Hookable' => __DIR__ . '/..' . '/caseproof/ground-level-support/Concerns/Hookable.php',
+        'BuddyBossPlatform\\GroundLevel\\Support\\Concerns\\Macroable' => __DIR__ . '/..' . '/caseproof/ground-level-support/Concerns/Macroable.php',
+        'BuddyBossPlatform\\GroundLevel\\Support\\Concerns\\Serializable' => __DIR__ . '/..' . '/caseproof/ground-level-support/Concerns/Serializable.php',
+        'BuddyBossPlatform\\GroundLevel\\Support\\Concerns\\WritesFiles' => __DIR__ . '/..' . '/caseproof/ground-level-support/Concerns/WritesFiles.php',
+        'BuddyBossPlatform\\GroundLevel\\Support\\Contracts\\Arrayable' => __DIR__ . '/..' . '/caseproof/ground-level-support/Contracts/Arrayable.php',
+        'BuddyBossPlatform\\GroundLevel\\Support\\Contracts\\Eventable' => __DIR__ . '/..' . '/caseproof/ground-level-support/Contracts/Eventable.php',
+        'BuddyBossPlatform\\GroundLevel\\Support\\Contracts\\Jsonable' => __DIR__ . '/..' . '/caseproof/ground-level-support/Contracts/Jsonable.php',
+        'BuddyBossPlatform\\GroundLevel\\Support\\Enum' => __DIR__ . '/..' . '/caseproof/ground-level-support/Enum.php',
+        'BuddyBossPlatform\\GroundLevel\\Support\\Exceptions\\Exception' => __DIR__ . '/..' . '/caseproof/ground-level-support/Exceptions/Exception.php',
+        'BuddyBossPlatform\\GroundLevel\\Support\\Exceptions\\ReadOnlyAttributeError' => __DIR__ . '/..' . '/caseproof/ground-level-support/Exceptions/ReadOnlyAttributeError.php',
+        'BuddyBossPlatform\\GroundLevel\\Support\\Exceptions\\TimeTravelError' => __DIR__ . '/..' . '/caseproof/ground-level-support/Exceptions/TimeTravelError.php',
+        'BuddyBossPlatform\\GroundLevel\\Support\\Models\\Hook' => __DIR__ . '/..' . '/caseproof/ground-level-support/Models/Hook.php',
+        'BuddyBossPlatform\\GroundLevel\\Support\\Models\\Model' => __DIR__ . '/..' . '/caseproof/ground-level-support/Models/Model.php',
+        'BuddyBossPlatform\\GroundLevel\\Support\\Models\\User' => __DIR__ . '/..' . '/caseproof/ground-level-support/Models/User.php',
+        'BuddyBossPlatform\\GroundLevel\\Support\\Str' => __DIR__ . '/..' . '/caseproof/ground-level-support/Str.php',
+        'BuddyBossPlatform\\GroundLevel\\Support\\Time' => __DIR__ . '/..' . '/caseproof/ground-level-support/Time.php',
+        'BuddyBossPlatform\\GroundLevel\\Support\\Util' => __DIR__ . '/..' . '/caseproof/ground-level-support/Util.php',
         'BuddyBossPlatform\\Neutron\\TemporaryFilesystem\\IOException' => __DIR__ . '/..' . '/neutron/temporary-filesystem/src/Neutron/TemporaryFilesystem/IOException.php',
         'BuddyBossPlatform\\Neutron\\TemporaryFilesystem\\Manager' => __DIR__ . '/..' . '/neutron/temporary-filesystem/src/Neutron/TemporaryFilesystem/Manager.php',
         'BuddyBossPlatform\\Neutron\\TemporaryFilesystem\\TemporaryFilesystem' => __DIR__ . '/..' . '/neutron/temporary-filesystem/src/Neutron/TemporaryFilesystem/TemporaryFilesystem.php',
         'BuddyBossPlatform\\Neutron\\TemporaryFilesystem\\TemporaryFilesystemInterface' => __DIR__ . '/..' . '/neutron/temporary-filesystem/src/Neutron/TemporaryFilesystem/TemporaryFilesystemInterface.php',
         'BuddyBossPlatform\\PhpToken' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/PhpToken.php',
+        'BuddyBossPlatform\\Psr\\Container\\ContainerExceptionInterface' => __DIR__ . '/..' . '/psr/container/src/ContainerExceptionInterface.php',
+        'BuddyBossPlatform\\Psr\\Container\\ContainerInterface' => __DIR__ . '/..' . '/psr/container/src/ContainerInterface.php',
+        'BuddyBossPlatform\\Psr\\Container\\NotFoundExceptionInterface' => __DIR__ . '/..' . '/psr/container/src/NotFoundExceptionInterface.php',
         'BuddyBossPlatform\\Psr\\Http\\Message\\MessageInterface' => __DIR__ . '/..' . '/psr/http-message/src/MessageInterface.php',
         'BuddyBossPlatform\\Psr\\Http\\Message\\RequestInterface' => __DIR__ . '/..' . '/psr/http-message/src/RequestInterface.php',
         'BuddyBossPlatform\\Psr\\Http\\Message\\ResponseInterface' => __DIR__ . '/..' . '/psr/http-message/src/ResponseInterface.php',
@@ -446,9 +531,9 @@ class ComposerStaticInit7494b555ff50739c6adbb1fceae8f3da
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit7494b555ff50739c6adbb1fceae8f3da::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit7494b555ff50739c6adbb1fceae8f3da::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit7494b555ff50739c6adbb1fceae8f3da::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitfd4750ddf8c9c40c1331e6c5363bcc53::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitfd4750ddf8c9c40c1331e6c5363bcc53::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInitfd4750ddf8c9c40c1331e6c5363bcc53::$classMap;
 
         }, null, ClassLoader::class);
     }

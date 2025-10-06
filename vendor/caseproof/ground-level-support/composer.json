@@ -1,0 +1,22 @@
+{
+    "name": "caseproof\/ground-level-support",
+    "description": "The GroundLevel Support package.",
+    "license": "GPL-3.0",
+    "authors": [
+        {
+            "name": "Team Caseproof",
+            "email": "development@caseproof.com"
+        }
+    ],
+    "config": {
+        "sort-packages": true
+    },
+    "autoload": {
+        "psr-4": {
+            "BuddyBossPlatform\\GroundLevel\\Support\\": ""
+        }
+    },
+    "require": {
+        "php": ">=7.4"
+    }
+}

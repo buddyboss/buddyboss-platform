@@ -70,6 +70,179 @@
             "install-path": "..\/alchemy\/binary-driver"
         },
         {
+            "name": "caseproof\/ground-level-container",
+            "version": "1.0.0",
+            "version_normalized": "1.0.0.0",
+            "source": {
+                "type": "git",
+                "url": "git@github.com:caseproof\/ground-level-container.git",
+                "reference": "9ae1d847eb6a3c1aa193fd301f1edfbde4a5dbd9"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https:\/\/api.github.com\/repos\/caseproof\/ground-level-container\/zipball\/9ae1d847eb6a3c1aa193fd301f1edfbde4a5dbd9",
+                "reference": "9ae1d847eb6a3c1aa193fd301f1edfbde4a5dbd9",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.4",
+                "psr\/container": "^2.0.1||^2.0.2"
+            },
+            "provide": {
+                "psr\/container-implementation": "2.0"
+            },
+            "time": "2025-07-18T22:41:43+00:00",
+            "type": "library",
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "BuddyBossPlatform\\GroundLevel\\Container\\": ""
+                }
+            },
+            "license": [
+                "GPL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "Team Caseproof",
+                    "email": "developers@caseproof.com"
+                }
+            ],
+            "description": "The GroundLevel Container package.",
+            "support": {
+                "source": "https:\/\/github.com\/caseproof\/ground-level-container\/tree\/1.0.0"
+            },
+            "install-path": "..\/caseproof\/ground-level-container"
+        },
+        {
+            "name": "caseproof\/ground-level-in-product-notifications",
+            "version": "1.0.0",
+            "version_normalized": "1.0.0.0",
+            "source": {
+                "type": "git",
+                "url": "git@github.com:caseproof\/ground-level-in-product-notifications.git",
+                "reference": "bd2ed805fb906187633e07595ad511203ca1d365"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https:\/\/api.github.com\/repos\/caseproof\/ground-level-in-product-notifications\/zipball\/bd2ed805fb906187633e07595ad511203ca1d365",
+                "reference": "bd2ed805fb906187633e07595ad511203ca1d365",
+                "shasum": ""
+            },
+            "require": {
+                "caseproof\/ground-level-container": "^1.0.0",
+                "caseproof\/ground-level-mothership": "^1.0.0",
+                "caseproof\/ground-level-support": "^1.0.0",
+                "php": ">=7.4"
+            },
+            "time": "2025-10-03T15:28:16+00:00",
+            "type": "library",
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "BuddyBossPlatform\\GroundLevel\\InProductNotifications\\": ""
+                }
+            },
+            "license": [
+                "GPL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "Team Caseproof",
+                    "email": "developers@caseproof.com"
+                }
+            ],
+            "description": "The GroundLevel In-Product Notifications package.",
+            "support": {
+                "source": "https:\/\/github.com\/caseproof\/ground-level-in-product-notifications\/tree\/1.0.0"
+            },
+            "install-path": "..\/caseproof\/ground-level-in-product-notifications"
+        },
+        {
+            "name": "caseproof\/ground-level-mothership",
+            "version": "1.0.0",
+            "version_normalized": "1.0.0.0",
+            "source": {
+                "type": "git",
+                "url": "git@github.com:caseproof\/ground-level-mothership.git",
+                "reference": "5bf013499a7311ab77bb71878ac7f8237c0de797"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https:\/\/api.github.com\/repos\/caseproof\/ground-level-mothership\/zipball\/5bf013499a7311ab77bb71878ac7f8237c0de797",
+                "reference": "5bf013499a7311ab77bb71878ac7f8237c0de797",
+                "shasum": ""
+            },
+            "require": {
+                "caseproof\/ground-level-container": "^1.0.0",
+                "caseproof\/ground-level-support": "^1.0.0",
+                "php": ">=7.4"
+            },
+            "time": "2025-10-03T15:28:16+00:00",
+            "type": "library",
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "BuddyBossPlatform\\GroundLevel\\Mothership\\": ""
+                }
+            },
+            "license": [
+                "GPL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "Team Caseproof",
+                    "email": "developers@caseproof.com"
+                }
+            ],
+            "description": "The GroundLevel Mothership package.",
+            "support": {
+                "source": "https:\/\/github.com\/caseproof\/ground-level-mothership\/tree\/1.0.0"
+            },
+            "install-path": "..\/caseproof\/ground-level-mothership"
+        },
+        {
+            "name": "caseproof\/ground-level-support",
+            "version": "1.0.0",
+            "version_normalized": "1.0.0.0",
+            "source": {
+                "type": "git",
+                "url": "git@github.com:caseproof\/ground-level-support.git",
+                "reference": "79987220fc8beb601905f3c949c246dd397346bf"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https:\/\/api.github.com\/repos\/caseproof\/ground-level-support\/zipball\/79987220fc8beb601905f3c949c246dd397346bf",
+                "reference": "79987220fc8beb601905f3c949c246dd397346bf",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.4"
+            },
+            "time": "2025-08-04T22:29:07+00:00",
+            "type": "library",
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "BuddyBossPlatform\\GroundLevel\\Support\\": ""
+                }
+            },
+            "license": [
+                "GPL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "Team Caseproof",
+                    "email": "development@caseproof.com"
+                }
+            ],
+            "description": "The GroundLevel Support package.",
+            "support": {
+                "source": "https:\/\/github.com\/caseproof\/ground-level-support\/tree\/1.0.0"
+            },
+            "install-path": "..\/caseproof\/ground-level-support"
+        },
+        {
             "name": "composer\/installers",
             "version": "v1.12.0",
             "version_normalized": "1.12.0.0",
@@ -659,6 +832,62 @@
                 "source": "https:\/\/github.com\/PHP-FFMpeg\/PHP-FFMpeg\/tree\/master"
             },
             "install-path": "..\/php-ffmpeg\/php-ffmpeg"
+        },
+        {
+            "name": "psr\/container",
+            "version": "2.0.2",
+            "version_normalized": "2.0.2.0",
+            "source": {
+                "type": "git",
+                "url": "https:\/\/github.com\/php-fig\/container.git",
+                "reference": "c71ecc56dfe541dbd90c5360474fbc405f8d5963"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https:\/\/api.github.com\/repos\/php-fig\/container\/zipball\/c71ecc56dfe541dbd90c5360474fbc405f8d5963",
+                "reference": "c71ecc56dfe541dbd90c5360474fbc405f8d5963",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.4.0"
+            },
+            "time": "2021-11-05T16:47:00+00:00",
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.0.x-dev"
+                }
+            },
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "BuddyBossPlatform\\Psr\\Container\\": "src\/"
+                }
+            },
+            "notification-url": "https:\/\/packagist.org\/downloads\/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "PHP-FIG",
+                    "homepage": "https:\/\/www.php-fig.org\/"
+                }
+            ],
+            "description": "Common Container Interface (PHP FIG PSR-11)",
+            "homepage": "https:\/\/github.com\/php-fig\/container",
+            "keywords": [
+                "PSR-11",
+                "container",
+                "container-interface",
+                "container-interop",
+                "psr"
+            ],
+            "support": {
+                "issues": "https:\/\/github.com\/php-fig\/container\/issues",
+                "source": "https:\/\/github.com\/php-fig\/container\/tree\/2.0.2"
+            },
+            "install-path": "..\/psr\/container"
         },
         {
             "name": "psr\/http-message",

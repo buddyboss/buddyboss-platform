@@ -1,0 +1,26 @@
+{
+    "name": "caseproof\/ground-level-container",
+    "description": "The GroundLevel Container package.",
+    "license": "GPL-3.0",
+    "authors": [
+        {
+            "name": "Team Caseproof",
+            "email": "developers@caseproof.com"
+        }
+    ],
+    "config": {
+        "sort-packages": true
+    },
+    "autoload": {
+        "psr-4": {
+            "BuddyBossPlatform\\GroundLevel\\Container\\": ""
+        }
+    },
+    "provide": {
+        "psr\/container-implementation": "2.0"
+    },
+    "require": {
+        "php": ">=7.4",
+        "psr\/container": "^2.0.1||^2.0.2"
+    }
+}
