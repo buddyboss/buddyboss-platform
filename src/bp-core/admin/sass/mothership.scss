@@ -420,7 +420,7 @@ body.bb_connect_overlay {
 
 	.bb-modal-close {
 		font-size: 24px;
-		font-weight: bold;
+		font-weight: 700;
 		cursor: pointer;
 		color: #666;
 
@@ -457,7 +457,7 @@ body.bb_connect_overlay {
 			background: #f0f6fc;
 			border: 1px solid #c3c4c7;
 			border-radius: 4px;
-			font-family: Consolas, Monaco, 'Courier New', monospace;
+			font-family: "Consolas, Monaco, 'Courier New', monospace";
 			font-size: 14px;
 			color: #2c3338;
 			word-break: break-all;
@@ -513,8 +513,9 @@ body.bb_connect_overlay {
 		}
 	}
 
-	// Responsive modal styles
+	// Responsive modal styles.
 	.bb-license-modal {
+
 		.bb-modal-content {
 			width: 95%;
 			margin: 10% auto;

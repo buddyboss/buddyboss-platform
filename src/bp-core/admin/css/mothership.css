@@ -390,7 +390,7 @@ body.bb_connect_overlay {
 
 .bb-license-modal .bb-modal-close {
   font-size: 24px;
-  font-weight: bold;
+  font-weight: 700;
   cursor: pointer;
   color: #666;
 }
@@ -428,11 +428,12 @@ body.bb_connect_overlay {
   background: #f0f6fc;
   border: 1px solid #c3c4c7;
   border-radius: 4px;
-  font-family: Consolas, Monaco, 'Courier New', monospace;
+  font-family: "Consolas, Monaco, 'Courier New', monospace";
   font-size: 14px;
   color: #2c3338;
   word-break: break-all;
   position: relative;
+  cursor: copy;
 }
 
 .bb-license-modal #license-response .bb-free-license-key.copied {
