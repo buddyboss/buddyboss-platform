@@ -202,7 +202,7 @@ module.exports = function (grunt) {
 				},
 				files: {
 					cwd: SOURCE_DIR,
-					src: ['**/*.php'].concat( BP_EXCLUDED_MISC ),
+					src: ['**/*.php', '!vendor/**', '!src/vendor/**'].concat( BP_EXCLUDED_MISC ),
 					expand: true
 				}
 			},
