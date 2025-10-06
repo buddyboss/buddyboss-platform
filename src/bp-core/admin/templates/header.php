@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  *
- * @since [BBVERSION]
+ * @since 2.14.0
  */
 
 defined( 'ABSPATH' ) || exit;

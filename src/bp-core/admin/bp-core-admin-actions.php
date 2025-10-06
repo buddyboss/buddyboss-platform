@@ -544,7 +544,7 @@ add_action( 'wp_ajax_bb_upgrade_dismiss_notice', 'bb_upgrade_dismiss_notice' );
 /**
  * Render the admin header for BuddyBoss related admin pages.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.14.0
  *
  * @return void
  */
