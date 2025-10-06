@@ -74,7 +74,7 @@
         },
         {
             "name": "caseproof/ground-level-container",
-            "version": "0.24.1",
+            "version": "1.0.0",
             "source": {
                 "type": "git",
                 "url": "git@github.com:caseproof/ground-level-container.git",
@@ -110,28 +110,28 @@
             ],
             "description": "The GroundLevel Container package.",
             "support": {
-                "source": "https://github.com/caseproof/ground-level-container/tree/0.24.1"
+                "source": "https://github.com/caseproof/ground-level-container/tree/1.0.0"
             },
             "time": "2025-07-18T22:41:43+00:00"
         },
         {
             "name": "caseproof/ground-level-in-product-notifications",
-            "version": "0.24.1",
+            "version": "1.0.0",
             "source": {
                 "type": "git",
                 "url": "git@github.com:caseproof/ground-level-in-product-notifications.git",
-                "reference": "660289a4899ed7f570bb67b1a85b55fd1bb2f2be"
+                "reference": "bd2ed805fb906187633e07595ad511203ca1d365"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/caseproof/ground-level-in-product-notifications/zipball/660289a4899ed7f570bb67b1a85b55fd1bb2f2be",
-                "reference": "660289a4899ed7f570bb67b1a85b55fd1bb2f2be",
+                "url": "https://api.github.com/repos/caseproof/ground-level-in-product-notifications/zipball/bd2ed805fb906187633e07595ad511203ca1d365",
+                "reference": "bd2ed805fb906187633e07595ad511203ca1d365",
                 "shasum": ""
             },
             "require": {
-                "caseproof/ground-level-container": "^0.24.1",
-                "caseproof/ground-level-mothership": "^0.24.1",
-                "caseproof/ground-level-support": "^0.24.1",
+                "caseproof/ground-level-container": "^1.0.0",
+                "caseproof/ground-level-mothership": "^1.0.0",
+                "caseproof/ground-level-support": "^1.0.0",
                 "php": ">=7.4"
             },
             "type": "library",
@@ -151,27 +151,27 @@
             ],
             "description": "The GroundLevel In-Product Notifications package.",
             "support": {
-                "source": "https://github.com/caseproof/ground-level-in-product-notifications/tree/0.24.1"
+                "source": "https://github.com/caseproof/ground-level-in-product-notifications/tree/1.0.0"
             },
-            "time": "2025-08-25T20:09:42+00:00"
+            "time": "2025-10-03T15:28:16+00:00"
         },
         {
             "name": "caseproof/ground-level-mothership",
-            "version": "0.24.1",
+            "version": "1.0.0",
             "source": {
                 "type": "git",
                 "url": "git@github.com:caseproof/ground-level-mothership.git",
-                "reference": "985aa28d4c79ac33d20f3b58d97a570ea61a5b99"
+                "reference": "5bf013499a7311ab77bb71878ac7f8237c0de797"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/caseproof/ground-level-mothership/zipball/985aa28d4c79ac33d20f3b58d97a570ea61a5b99",
-                "reference": "985aa28d4c79ac33d20f3b58d97a570ea61a5b99",
+                "url": "https://api.github.com/repos/caseproof/ground-level-mothership/zipball/5bf013499a7311ab77bb71878ac7f8237c0de797",
+                "reference": "5bf013499a7311ab77bb71878ac7f8237c0de797",
                 "shasum": ""
             },
             "require": {
-                "caseproof/ground-level-container": "^0.24.1",
-                "caseproof/ground-level-support": "^0.24.1",
+                "caseproof/ground-level-container": "^1.0.0",
+                "caseproof/ground-level-support": "^1.0.0",
                 "php": ">=7.4"
             },
             "type": "library",
@@ -191,13 +191,13 @@
             ],
             "description": "The GroundLevel Mothership package.",
             "support": {
-                "source": "https://github.com/caseproof/ground-level-mothership/tree/0.24.1"
+                "source": "https://github.com/caseproof/ground-level-mothership/tree/1.0.0"
             },
-            "time": "2025-08-25T20:09:42+00:00"
+            "time": "2025-10-03T15:28:16+00:00"
         },
         {
             "name": "caseproof/ground-level-support",
-            "version": "0.24.1",
+            "version": "1.0.0",
             "source": {
                 "type": "git",
                 "url": "git@github.com:caseproof/ground-level-support.git",
@@ -229,7 +229,7 @@
             ],
             "description": "The GroundLevel Support package.",
             "support": {
-                "source": "https://github.com/caseproof/ground-level-support/tree/0.24.1"
+                "source": "https://github.com/caseproof/ground-level-support/tree/1.0.0"
             },
             "time": "2025-08-04T22:29:07+00:00"
         },
