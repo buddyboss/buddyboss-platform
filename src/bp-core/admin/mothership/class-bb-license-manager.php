@@ -542,7 +542,7 @@ class BB_License_Manager extends LicenseManager {
 		);
 
 		// Make API request
-		$api_url = 'https://9a3lyj5d0e.execute-api.us-east-2.amazonaws.com/v1/verify/';
+		$api_url = 'https://b6zdd3mwkj.execute-api.us-east-2.amazonaws.com/v1/verify/';
 		$args    = array(
 			'method'  => 'POST',
 			'timeout' => 30,
