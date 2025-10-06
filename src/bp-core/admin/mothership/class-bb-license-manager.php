@@ -182,7 +182,7 @@ class BB_License_Manager extends LicenseManager {
 								<?php
 									printf(
 										/* translators: %s is the link to get a free license key */
-										esc_html__( 'Click %s to get your free license key for plugin updates.', 'buddyboss' ),
+										esc_html__( 'Don\'t have a license yet? Click  %s to get your free license key and receive plugin updates.', 'buddyboss' ),
 										'<a href="#" id="get-free-license-link" rel="noopener noreferrer">' . __( 'here', 'buddyboss' ) . '</a>'
 									);
 								?>
@@ -204,7 +204,7 @@ class BB_License_Manager extends LicenseManager {
 		<div id="free-license-modal" class="bb-license-modal" style="display: none;">
 			<div class="bb-modal-content">
 				<div class="bb-modal-header">
-					<h3><?php esc_html_e( 'Get Your Free License Key', 'buddyboss' ); ?></h3>
+					<h3><?php esc_html_e( 'Get Your BuddyBoss Platform License Key', 'buddyboss' ); ?></h3>
 					<span class="bb-modal-close">&times;</span>
 				</div>
 				<div class="bb-modal-body">
