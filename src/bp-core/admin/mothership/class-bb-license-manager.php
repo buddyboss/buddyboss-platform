@@ -247,11 +247,24 @@ class BB_License_Manager extends LicenseManager {
 	 * Get License + Activations details from Caseproof API
 	 *
 	 * @param string $license_key License UUID.
+	 * @param bool   $force_refresh Whether to force refresh the cache.
 	 *
 	 * @return array|WP_Error    Array of license + activation data, or WP_Error on failure.
 	 */
-	protected function bb_get_license_details( $license_key ) {
-		$pluginId     = self::getContainer()->get( MothershipService::CONNECTION_PLUGIN_SERVICE_ID )->pluginId;
+	protected function bb_get_license_details( $license_key, $force_refresh = false ) {
+		$pluginId = self::getContainer()->get( MothershipService::CONNECTION_PLUGIN_SERVICE_ID )->pluginId;
+
+		// Create cache key based on plugin ID only (not license key for security).
+		$cache_key = $pluginId . '_license_details';
+
+		// Check cache first unless force refresh is requested.
+		if ( ! $force_refresh ) {
+			$cached_data = get_transient( $cache_key );
+			if ( false !== $cached_data && ! is_wp_error( $cached_data ) ) {
+				return $cached_data;
+			}
+		}
+
 		$root_api_url = defined( strtoupper( $pluginId . '_MOTHERSHIP_API_BASE_URL' ) )
 			? constant( strtoupper( $pluginId . '_MOTHERSHIP_API_BASE_URL' ) )
 			: 'https://licenses.caseproof.com/api/v1/';
@@ -289,7 +302,7 @@ class BB_License_Manager extends LicenseManager {
 
 		// If activations-meta link missing.
 		if ( empty( $activations_meta_url ) ) {
-			return new WP_Error( 'missing_link', 'Activations - meta URL not found in license response' );
+			return new \WP_Error( 'missing_link', 'Activations - meta URL not found in license response' );
 		}
 
 		// Second request: Activations-meta.
@@ -301,8 +314,8 @@ class BB_License_Manager extends LicenseManager {
 
 		$body2 = json_decode( wp_remote_retrieve_body( $response2 ), true );
 
-		// Return combined data.
-		return array(
+		// Prepare combined data.
+		$license_data = array(
 			'license_key'        => '********-****-****-****-' . esc_html( substr( $license_key, - 12 ) ),
 			'product'            => $product,
 			'status'             => $body['status'] ?? '',
@@ -313,5 +326,10 @@ class BB_License_Manager extends LicenseManager {
 			'total_test_used'    => $body2['test']['used'] ?? 0,
 			'total_test_free'    => $body2['test']['free'] ?? 0,
 		);
+
+		// License details don't change frequently, so 1 Day is reasonable.
+		set_transient( $cache_key, $license_data, DAY_IN_SECONDS );
+
+		return $license_data;
 	}
 }

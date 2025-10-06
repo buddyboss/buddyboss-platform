@@ -77,6 +77,20 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 	public function updateLicenseActivationStatus( bool $status ): void {
 		$pluginId = $this->getCurrentPluginId();
 		update_option( $pluginId . '_license_activation_status', $status );
+
+		// Clear license details cache when activation status changes.
+		$this->clear_license_details_cache();
+	}
+
+	/**
+	 * Clear license details cache for the current plugin.
+	 *
+	 * @return void
+	 */
+	private function clear_license_details_cache(): void {
+		$pluginId  = $this->getCurrentPluginId();
+		$cache_key = $pluginId . '_license_details';
+		delete_transient( $cache_key );
 	}
 
 	/**
