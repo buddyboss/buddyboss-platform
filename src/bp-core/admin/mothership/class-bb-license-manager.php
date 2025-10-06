@@ -326,6 +326,39 @@ class BB_License_Manager extends LicenseManager {
 					}
 				});
 			});
+
+			$(document).on('click', '.bb-free-license-key', function() {
+				var $this = $(this);
+				var licenseKey = $this.text().trim();
+
+				// Create a temporary textarea to copy the text
+				var $temp = $('<textarea>');
+				$('body').append($temp);
+				$temp.val(licenseKey).select();
+
+				try {
+					// Copy to clipboard
+					document.execCommand('copy');
+
+					// Visual feedback
+					$this.addClass('copied');
+
+					// Remove the copied class after 2 seconds
+					setTimeout(function() {
+						$this.removeClass('copied');
+					}, 2000);
+
+					// Show success message
+					console.log('License key copied to clipboard');
+
+				} catch (err) {
+					console.error('Failed to copy license key: ', err);
+				}
+
+				// Remove temporary textarea
+				$temp.remove();
+			});
+
 		});
 		</script>
 		<?php
