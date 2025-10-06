@@ -384,7 +384,7 @@ class BB_License_Manager extends LicenseManager {
 			$activation_text = sprintf(
 				__( '%1$s of %2$s sites have been activated with this license key', 'buddyboss' ),
 				$license_info['total_prod_used'],
-				$license_info['total_prod_allowed']
+				999 <= (int)$license_info['total_prod_allowed'] ? 'unlimited' : $license_info['total_prod_allowed']
 			);
 			?>
 			<div class="activated-licence">
