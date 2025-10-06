@@ -268,6 +268,7 @@ class BB_License_Manager extends LicenseManager {
 			// Close modal when clicking outside
 			$(window).on('click', function(e) {
 				if (e.target.id === 'free-license-modal') {
+					$('#free-license-form').show();
 					$('#free-license-modal').hide();
 					$('#license-response').hide();
 					$('#free-license-form')[0].reset();
