@@ -124,6 +124,9 @@ class BB_Mothership_Loader {
 		// Register addons functionality using BuddyBoss custom manager.
 		BB_Addons_Manager::loadHooks();
 
+		// Register AJAX handlers.
+		add_action( 'wp_ajax_bb_get_free_license', array( 'BuddyBoss\Core\Admin\Mothership\BB_License_Manager', 'ajax_get_free_license' ) );
+
 		$plugin_id = $this->pluginConnector->getDynamicPluginId();
 
 		// Handle license status changes.

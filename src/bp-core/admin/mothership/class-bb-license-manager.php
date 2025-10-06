@@ -178,6 +178,15 @@ class BB_License_Manager extends LicenseManager {
 						<td>
 							<input type="text" name="license_key" id="license_key" placeholder="<?php esc_attr_e( 'Enter your license key', 'buddyboss' ); ?>" value="<?php echo esc_attr( Credentials::getLicenseKey() ); ?>" >
 							<input type="hidden" name="activation_domain" id="activation_domain" value="<?php echo esc_attr( Credentials::getActivationDomain() ); ?>" >
+							<p class="description">
+								<?php
+									printf(
+										/* translators: %s is the link to get a free license key */
+										esc_html__( 'Click %s to get your free license key for plugin updates.', 'buddyboss' ),
+										'<a href="#" id="get-free-license-link" rel="noopener noreferrer">' . __( 'here', 'buddyboss' ) . '</a>'
+									);
+								?>
+							</p>
 						</td>
 					</tr>
 					<tr>
@@ -190,6 +199,134 @@ class BB_License_Manager extends LicenseManager {
 				</table>
 			</div>
 		</form>
+
+		<!-- Free License Key Modal -->
+		<div id="free-license-modal" class="bb-license-modal" style="display: none;">
+			<div class="bb-modal-content">
+				<div class="bb-modal-header">
+					<h3><?php esc_html_e( 'Get Your Free License Key', 'buddyboss' ); ?></h3>
+					<span class="bb-modal-close">&times;</span>
+				</div>
+				<div class="bb-modal-body">
+					<form id="free-license-form">
+						<table class="form-table">
+							<tr>
+								<th scope="row">
+									<label for="first_name"><?php esc_html_e( 'First Name', 'buddyboss' ); ?> <span class="required">*</span></label>
+								</th>
+								<td>
+									<input type="text" name="first_name" id="first_name" required class="regular-text" />
+								</td>
+							</tr>
+							<tr>
+								<th scope="row">
+									<label for="last_name"><?php esc_html_e( 'Last Name', 'buddyboss' ); ?> <span class="required">*</span></label>
+								</th>
+								<td>
+									<input type="text" name="last_name" id="last_name" required class="regular-text" />
+								</td>
+							</tr>
+							<tr>
+								<th scope="row">
+									<label for="email"><?php esc_html_e( 'Email Address', 'buddyboss' ); ?> <span class="required">*</span></label>
+								</th>
+								<td>
+									<input type="email" name="email" id="email" required class="regular-text" />
+								</td>
+							</tr>
+						</table>
+						<div class="bb-modal-footer">
+							<button type="submit" class="button button-primary" id="submit-license-request">
+								<?php esc_html_e( 'Get License Key', 'buddyboss' ); ?>
+							</button>
+						</div>
+					</form>
+					<div id="license-response" style="display: none;">
+						<p id="license-success-message"></p>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+		<script>
+		jQuery(document).ready(function($) {
+			// Open modal
+			$('#get-free-license-link').on('click', function(e) {
+				e.preventDefault();
+				$('#free-license-modal').show();
+			});
+
+			// Close modal
+			$('.bb-modal-close').on('click', function() {
+				$('#free-license-form').show();
+				$('#free-license-modal').hide();
+				$('#license-response').hide();
+				$('#free-license-form')[0].reset();
+			});
+
+			// Close modal when clicking outside
+			$(window).on('click', function(e) {
+				if (e.target.id === 'free-license-modal') {
+					$('#free-license-modal').hide();
+					$('#license-response').hide();
+					$('#free-license-form')[0].reset();
+				}
+			});
+
+			// Handle form submission
+			$('#free-license-form').on('submit', function(e) {
+				e.preventDefault();
+
+				var $submitBtn = $('#submit-license-request');
+				var originalText = $submitBtn.text();
+
+				// Show loading state
+				$submitBtn.text('<?php esc_html_e( 'Processing...', 'buddyboss' ); ?>').prop('disabled', true);
+				$('#license-response').hide();
+
+				// Get form data
+				var formData = {
+					action: 'bb_get_free_license',
+					first_name: $('#first_name').val(),
+					last_name: $('#last_name').val(),
+					email: $('#email').val(),
+					nonce: '<?php echo wp_create_nonce( 'bb_get_free_license' ); ?>'
+				};
+
+				// Make AJAX request
+				$.ajax({
+					url: ajaxurl,
+					type: 'POST',
+					data: formData,
+					success: function(response) {
+						if (response.success) {
+							$('#license-success-message').html(response.data.message);
+							$('#license-response').show();
+							$('#free-license-form').get(0).reset();
+							$('#free-license-form').hide();
+
+							// If license key is provided, populate the license key field
+							if (response.data.license_key) {
+								$('#license_key').val(response.data.license_key);
+							}
+						} else {
+							$('#license-success-message').html('<strong><?php esc_html_e( 'Error:', 'buddyboss' ); ?></strong> ' + response.data);
+							$('#license-response').show();
+						}
+					},
+					error: function() {
+						$('#license-success-message').html('<strong><?php esc_html_e( 'Error:', 'buddyboss' ); ?></strong> <?php esc_html_e( 'An error occurred while processing your request.', 'buddyboss' ); ?>');
+						$('#license-response').show();
+					},
+					complete: function() {
+						// Reset button state
+						$submitBtn.text(originalText).prop('disabled', false);
+					}
+				});
+			});
+		});
+		</script>
 		<?php
 		return ob_get_clean();
 	}
@@ -331,5 +468,97 @@ class BB_License_Manager extends LicenseManager {
 		set_transient( $cache_key, $license_data, DAY_IN_SECONDS );
 
 		return $license_data;
+	}
+
+	/**
+	 * AJAX handler for getting free license key.
+	 *
+	 * @return void
+	 */
+	public static function ajax_get_free_license(): void {
+		// Verify nonce
+		if ( ! wp_verify_nonce( $_POST['nonce'], 'bb_get_free_license' ) ) {
+			wp_send_json_error( __( 'Invalid nonce', 'buddyboss' ) );
+		}
+
+		// Check user capabilities
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( __( 'You do not have permission to perform this action', 'buddyboss' ) );
+		}
+
+		// Get form data
+		$first_name = sanitize_text_field( $_POST['first_name'] ?? '' );
+		$last_name   = sanitize_text_field( $_POST['last_name'] ?? '' );
+		$email       = sanitize_email( $_POST['email'] ?? '' );
+
+		// Validate required fields
+		if ( empty( $first_name ) || empty( $last_name ) || empty( $email ) ) {
+			wp_send_json_error( __( 'All fields are required', 'buddyboss' ) );
+		}
+
+		if ( ! is_email( $email ) ) {
+			wp_send_json_error( __( 'Please enter a valid email address', 'buddyboss' ) );
+		}
+
+		// Prepare API request data
+		$api_data = array(
+			'email'      => $email,
+			'first_name' => $first_name,
+			'last_name'  => $last_name,
+		);
+
+		// Make API request
+		$api_url = 'https://9a3lyj5d0e.execute-api.us-east-2.amazonaws.com/v1/verify/';
+		$args    = array(
+			'method'  => 'POST',
+			'timeout' => 30,
+			'headers' => array(
+				'Content-Type' => 'application/json',
+			),
+			'body'    => wp_json_encode( $api_data ),
+		);
+
+		$response = wp_remote_request( $api_url, $args );
+
+		if ( is_wp_error( $response ) ) {
+			wp_send_json_error(
+				sprintf(
+					__( 'API request failed: %s', 'buddyboss' ),
+					$response->get_error_message()
+				)
+			);
+		}
+
+		$response_code = wp_remote_retrieve_response_code( $response );
+		$response_body = wp_remote_retrieve_body( $response );
+
+		if ( 200 !== $response_code ) {
+			wp_send_json_error(
+				sprintf(
+					__( 'API returned error code: %d', 'buddyboss' ),
+					$response_code
+				)
+			);
+		}
+
+		$data = json_decode( $response_body, true );
+
+		if ( ! $data ) {
+			wp_send_json_error( __( 'Invalid response from API', 'buddyboss' ) );
+		}
+
+		// Check if API returned success
+		if ( isset( $data['success'] ) && $data['success'] ) {
+			$message = isset( $data['message'] ) ? $data['message'] : __( 'License key generated successfully!', 'buddyboss' );
+			$license_key = isset( $data['license_key'] ) ? $data['license_key'] : '';
+
+			wp_send_json_success( array(
+				'message'     => $message,
+				'license_key' => $license_key,
+			) );
+		} else {
+			$error_message = isset( $data['message'] ) ? $data['message'] : __( 'Failed to generate license key', 'buddyboss' );
+			wp_send_json_error( $error_message );
+		}
 	}
 }
