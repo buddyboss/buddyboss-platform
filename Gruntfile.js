@@ -458,6 +458,11 @@ module.exports = function (grunt) {
 					cwd: '.',
 					stdout: true
 				},
+				empty_build_dir: {
+					command: 'cd buddyboss-platform && find . -not -path "./.git*" -not -name "." -not -name ".." -delete && cd ..',
+					cwd: '.',
+					stdout: true
+				},
 				commit_build_to_mothership_release: {
 					command: 'cd buddyboss-platform && git add . && git commit -m "Production build - $(date)" && git push origin production && cd ..',
 					cwd: '.',
@@ -611,7 +616,7 @@ module.exports = function (grunt) {
 	grunt.registerTask('bp_performance', ['clean:bp_rest', 'exec:rest_performance', 'copy:bp_rest_performance', 'copy:bp_rest_mu', 'clean:bp_rest']);
 
 	// Build task: Creates production build in BUILD_DIR, initializes git, performs build operations, then commits to production
-	grunt.registerTask('build', ['string-replace:dist', 'exec:composer', 'clean:all', 'exec:init_build_dir_git', 'copy:files', 'clean:composer', 'exec:commit_build_to_mothership_release', 'compress', 'clean:all']);
+	grunt.registerTask('build', ['string-replace:dist', 'exec:composer', 'clean:all', 'exec:init_build_dir_git', 'exec:empty_build_dir', 'copy:files', 'clean:composer', 'exec:commit_build_to_mothership_release', 'compress', 'clean:all']);
 
 	grunt.registerTask('release', ['src', 'build']);
 
