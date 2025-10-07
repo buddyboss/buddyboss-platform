@@ -2,9 +2,9 @@
 # This file is distributed under the GPLv2 or later (license.txt).
 msgid ""
 msgstr ""
-"Project-Id-Version: BuddyBoss Platform 2.13.0\n"
+"Project-Id-Version: BuddyBoss Platform 2.14.0\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2025-09-24 09:41:15+00:00\n"
+"POT-Creation-Date: 2025-10-07 05:35:34+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -44,7 +44,7 @@ msgid "The BuddyBoss Platform adds community features to WordPress. Member Profi
 msgstr ""
 
 #. Author of the plugin
-#: bp-core/admin/bb-settings/readylaunch/index.php:38
+#: bp-core/admin/bb-settings/readylaunch/index.php:40
 msgid "BuddyBoss"
 msgstr ""
 
@@ -384,7 +384,7 @@ msgstr ""
 #: bp-members/classes/class-bp-members-admin.php:953
 #: bp-templates/bp-nouveau/buddypress/members/single/invites/sent-invites.php:107
 #: bp-templates/bp-nouveau/readylaunch/forums/form-forum.php:99
-#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:710
+#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:754
 #: bp-templates/bp-nouveau/readylaunch/members/single/invites/sent-invites.php:112
 msgid "Status"
 msgstr ""
@@ -606,7 +606,7 @@ msgstr ""
 #: bp-integrations/learndash/templates/readylaunch/groups/single/courses-content-display.php:759
 #: bp-templates/bp-nouveau/readylaunch/forums/form-topic-tag.php:54
 #: bp-templates/bp-nouveau/readylaunch/forums/form-topic.php:260
-#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:799
+#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:843
 #: bp-xprofile/classes/class-bp-xprofile-field.php:1325
 #: bp-xprofile/classes/class-bp-xprofile-group.php:893
 msgid "Update"
@@ -1144,7 +1144,7 @@ msgstr ""
 
 #: bp-activity/bp-activity-functions.php:4223
 #: bp-blogs/bp-blogs-filters.php:266
-#: bp-core/bp-core-actions.php:985
+#: bp-core/bp-core-actions.php:980
 #: bp-core/classes/class-bp-email-tokens.php:2712
 msgid "View Comment"
 msgstr ""
@@ -1604,7 +1604,7 @@ msgstr ""
 #: bp-activity/classes/class-bb-activity-readylaunch.php:243
 #: bp-activity/classes/class-bb-activity-readylaunch.php:252
 #: bp-activity/classes/class-bb-activity-readylaunch.php:298
-#: bp-core/bp-core-actions.php:1123
+#: bp-core/bp-core-actions.php:1118
 #: bp-core/classes/class-bb-reaction.php:928
 #: bp-core/compatibility/class-bb-readylaunch-learndash-helper.php:2172
 #: bp-templates/bp-nouveau/includes/activity/ajax.php:1562
@@ -1830,7 +1830,7 @@ msgstr ""
 #: bp-activity/classes/class-bb-activity-topics-manager.php:282
 #: bp-integrations/learndash/buddypress/Reports.php:413
 #: bp-integrations/learndash/templates/readylaunch/groups/single/courses-content-display.php:840
-#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:880
+#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:924
 msgid "Topics"
 msgstr ""
 
@@ -2244,7 +2244,7 @@ msgstr ""
 
 #: bp-activity/classes/class-bp-activity-notification.php:215
 #: bp-blogs/bp-blogs-filters.php:254
-#: bp-core/bp-core-actions.php:973
+#: bp-core/bp-core-actions.php:968
 #: bp-members/classes/class-bp-members-mentions-notification.php:166
 #: bp-members/classes/class-bp-members-mentions-notification.php:265
 msgid "comment"
@@ -2442,13 +2442,13 @@ msgstr ""
 
 #. translators: do not remove {} brackets or translate its contents.
 #: bp-activity/classes/class-bp-activity-notification.php:591
-#: bp-core/bp-core-update.php:2306
+#: bp-core/bp-core-update.php:2295
 msgid "[{{{site.name}}}] {{poster.name}} posted {{activity.type}}."
 msgstr ""
 
 #. translators: do not remove {} brackets or translate its contents.
 #: bp-activity/classes/class-bp-activity-notification.php:593
-#: bp-core/bp-core-update.php:2308
+#: bp-core/bp-core-update.php:2297
 msgid ""
 "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> posted {{activity.type}}:\n"
 "\n"
@@ -2457,7 +2457,7 @@ msgstr ""
 
 #. translators: do not remove {} brackets or translate its contents.
 #: bp-activity/classes/class-bp-activity-notification.php:595
-#: bp-core/bp-core-update.php:2310
+#: bp-core/bp-core-update.php:2299
 msgid ""
 "{{poster.name}} posted {{activity.type}}:\n"
 "\n"
@@ -2466,7 +2466,7 @@ msgid ""
 msgstr ""
 
 #: bp-activity/classes/class-bp-activity-notification.php:596
-#: bp-core/bp-core-update.php:2341
+#: bp-core/bp-core-update.php:2330
 msgid "New activity post by someone a member is following"
 msgstr ""
 
@@ -2588,13 +2588,13 @@ msgstr ""
 
 #. translators: do not remove {} brackets or translate its contents.
 #: bp-activity/classes/class-bp-activity-notification.php:862
-#: bp-core/bp-core-update.php:2384
+#: bp-core/bp-core-update.php:2373
 msgid "[{{{site.name}}}] {{follower.name}} started following you"
 msgstr ""
 
 #. translators: do not remove {} brackets or translate its contents.
 #: bp-activity/classes/class-bp-activity-notification.php:864
-#: bp-core/bp-core-update.php:2386
+#: bp-core/bp-core-update.php:2375
 msgid ""
 "<a href=\"{{{follower.url}}}\">{{follower.name}}</a> started following you.\n"
 "\n"
@@ -2603,7 +2603,7 @@ msgstr ""
 
 #. translators: do not remove {} brackets or translate its contents.
 #: bp-activity/classes/class-bp-activity-notification.php:866
-#: bp-core/bp-core-update.php:2388
+#: bp-core/bp-core-update.php:2377
 msgid ""
 "{{follower.name}} started following you.\n"
 "\n"
@@ -2611,7 +2611,7 @@ msgid ""
 msgstr ""
 
 #: bp-activity/classes/class-bp-activity-notification.php:867
-#: bp-core/bp-core-update.php:2419
+#: bp-core/bp-core-update.php:2408
 msgid "A member receives a new follower"
 msgstr ""
 
@@ -3934,7 +3934,7 @@ msgstr ""
 msgid "Help"
 msgstr ""
 
-#: bp-core/admin/bb-settings/readylaunch/index.php:39
+#: bp-core/admin/bb-settings/readylaunch/index.php:41
 #: bp-core/admin/settings/bp-admin-setting-activity.php:614
 #: bp-core/admin/settings/bp-admin-setting-activity.php:676
 #: bp-core/admin/templates/about-buddyboss-app.php:21
@@ -3974,24 +3974,24 @@ msgstr ""
 msgid "Close"
 msgstr ""
 
-#: bp-core/admin/bb-settings/readylaunch/index.php:51
+#: bp-core/admin/bb-settings/readylaunch/index.php:53
 msgid "View Documentation"
 msgstr ""
 
-#: bp-core/admin/bb-settings/readylaunch/index.php:52
+#: bp-core/admin/bb-settings/readylaunch/index.php:54
 msgid "Browse documentation, reference material, and tutorials for BuddyBoss."
 msgstr ""
 
-#: bp-core/admin/bb-settings/readylaunch/index.php:53
+#: bp-core/admin/bb-settings/readylaunch/index.php:55
 msgid "View All Documentation"
 msgstr ""
 
-#: bp-core/admin/bb-settings/readylaunch/index.php:57
 #: bp-core/admin/bb-settings/readylaunch/index.php:59
+#: bp-core/admin/bb-settings/readylaunch/index.php:61
 msgid "Get Support"
 msgstr ""
 
-#: bp-core/admin/bb-settings/readylaunch/index.php:58
+#: bp-core/admin/bb-settings/readylaunch/index.php:60
 msgid "Submit a ticket and our world class support team will be in touch soon."
 msgstr ""
 
@@ -4462,15 +4462,15 @@ msgstr ""
 msgid "Notifications"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-actions.php:281
+#: bp-core/admin/bp-core-admin-actions.php:284
 msgid "Invalid Nickname"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-actions.php:302
+#: bp-core/admin/bp-core-admin-actions.php:305
 msgid "<strong>Error</strong>: Nickname already has been taken. Please try again."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-actions.php:314
+#: bp-core/admin/bp-core-admin-actions.php:317
 #: bp-core/admin/bp-core-admin-tools.php:1248
 #: bp-forums/admin/tools.php:1985
 #: bp-forums/functions.php:889
@@ -4513,30 +4513,30 @@ msgstr ""
 msgid "There was a problem performing this action. Please try again."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-actions.php:379
+#: bp-core/admin/bp-core-admin-actions.php:382
 #: bp-members/bp-members-functions.php:1727
 #: bp-settings/actions/general.php:208
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:1372
 msgid "This email address or domain has been blacklisted. If you think you are seeing this in error, please contact the site administrator."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-actions.php:433
+#: bp-core/admin/bp-core-admin-actions.php:436
 msgid "Settings saved successfully."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-actions.php:499
+#: bp-core/admin/bp-core-admin-actions.php:502
 msgid "Upgrade to pro and unlock more exciting community features!"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-actions.php:501
+#: bp-core/admin/bp-core-admin-actions.php:504
 msgid "Upgrade to Pro"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-actions.php:507
+#: bp-core/admin/bp-core-admin-actions.php:510
 msgid "Dismiss this notice."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-actions.php:528
+#: bp-core/admin/bp-core-admin-actions.php:531
 #: bp-core/classes/class-bb-telemetry.php:598
 #: bp-moderation/classes/class-bp-rest-moderation-endpoint.php:399
 #: bp-moderation/classes/class-bp-rest-moderation-report-endpoint.php:301
@@ -5450,6 +5450,7 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-settings.php:1977
 #: bp-core/admin/bp-core-admin-settings.php:2005
 #: bp-core/admin/bp-core-admin-settings.php:2033
+#: bp-core/admin/mothership/class-bb-license-manager.php:215
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:439
 msgid "First Name"
 msgstr ""
@@ -5458,6 +5459,7 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-settings.php:1982
 #: bp-core/admin/bp-core-admin-settings.php:2010
 #: bp-core/admin/bp-core-admin-settings.php:2047
+#: bp-core/admin/mothership/class-bb-license-manager.php:223
 msgid "Last Name"
 msgstr ""
 
@@ -6966,6 +6968,249 @@ msgstr ""
 msgid "MySql Server"
 msgstr ""
 
+#: bp-core/admin/mothership/class-bb-addons-manager.php:25
+msgid "Please enter your license key to access add-ons."
+msgstr ""
+
+#: bp-core/admin/mothership/class-bb-addons-manager.php:36
+msgid "There was an issue connecting with the API."
+msgstr ""
+
+#: bp-core/admin/mothership/class-bb-addons-page.php:33
+msgid "BuddyBoss License Add-ons"
+msgstr ""
+
+#: bp-core/admin/mothership/class-bb-addons-page.php:45
+msgid "Add-ons"
+msgstr ""
+
+#: bp-core/admin/mothership/class-bb-license-manager.php:41
+msgid "License activated successfully"
+msgstr ""
+
+#: bp-core/admin/mothership/class-bb-license-manager.php:54
+msgid "License deactivated successfully"
+msgstr ""
+
+#: bp-core/admin/mothership/class-bb-license-manager.php:78
+msgid "You do not have permission to activate a license"
+msgstr ""
+
+#: bp-core/admin/mothership/class-bb-license-manager.php:83
+#: bp-core/admin/mothership/class-bb-license-manager.php:515
+msgid "Invalid nonce"
+msgstr ""
+
+#. Translators: %s is the response error message.
+#: bp-core/admin/mothership/class-bb-license-manager.php:92
+msgid "License activation failed: %s"
+msgstr ""
+
+#: bp-core/admin/mothership/class-bb-license-manager.php:170
+#: bp-core/admin/mothership/class-bb-license-page.php:45
+msgid "License Activation"
+msgstr ""
+
+#: bp-core/admin/mothership/class-bb-license-manager.php:176
+msgid "License Key"
+msgstr ""
+
+#: bp-core/admin/mothership/class-bb-license-manager.php:179
+#: bp-core/admin/mothership/class-bb-license-manager.php:403
+msgid "Enter your license key"
+msgstr ""
+
+#. translators: %s is the link to get a free license key
+#: bp-core/admin/mothership/class-bb-license-manager.php:185
+msgid "Don't have a license yet? Click  %s to get your free license key and receive plugin updates."
+msgstr ""
+
+#: bp-core/admin/mothership/class-bb-license-manager.php:186
+msgid "here"
+msgstr ""
+
+#: bp-core/admin/mothership/class-bb-license-manager.php:196
+msgid "Activate License"
+msgstr ""
+
+#: bp-core/admin/mothership/class-bb-license-manager.php:207
+msgid "Get Your BuddyBoss Platform License Key"
+msgstr ""
+
+#: bp-core/admin/mothership/class-bb-license-manager.php:231
+#: bp-core/profile-search/bps-xprofile.php:830
+#: bp-core/profile-search/bps-xprofile.php:831
+#: bp-members/bp-members-filters.php:152
+#: bp-members/bp-members-filters.php:166
+msgid "Email Address"
+msgstr ""
+
+#: bp-core/admin/mothership/class-bb-license-manager.php:240
+msgid "Get License Key"
+msgstr ""
+
+#: bp-core/admin/mothership/class-bb-license-manager.php:286
+msgid "Processing..."
+msgstr ""
+
+#: bp-core/admin/mothership/class-bb-license-manager.php:315
+#: bp-core/admin/mothership/class-bb-license-manager.php:320
+msgid "Error:"
+msgstr ""
+
+#: bp-core/admin/mothership/class-bb-license-manager.php:320
+msgid "An error occurred while processing your request."
+msgstr ""
+
+#: bp-core/admin/mothership/class-bb-license-manager.php:380
+msgid "Active License Information"
+msgstr ""
+
+#: bp-core/admin/mothership/class-bb-license-manager.php:385
+msgid "%1$s of %2$s sites have been activated with this license key"
+msgstr ""
+
+#: bp-core/admin/mothership/class-bb-license-manager.php:391
+msgid "License Key: "
+msgstr ""
+
+#: bp-core/admin/mothership/class-bb-license-manager.php:392
+msgid "Status: "
+msgstr ""
+
+#: bp-core/admin/mothership/class-bb-license-manager.php:393
+msgid "Product: "
+msgstr ""
+
+#: bp-core/admin/mothership/class-bb-license-manager.php:394
+msgid "Activations: "
+msgstr ""
+
+#: bp-core/admin/mothership/class-bb-license-manager.php:407
+msgid "Deactivate License"
+msgstr ""
+
+#: bp-core/admin/mothership/class-bb-license-manager.php:520
+msgid "You do not have permission to perform this action"
+msgstr ""
+
+#: bp-core/admin/mothership/class-bb-license-manager.php:530
+msgid "All fields are required"
+msgstr ""
+
+#: bp-core/admin/mothership/class-bb-license-manager.php:534
+msgid "Please enter a valid email address"
+msgstr ""
+
+#: bp-core/admin/mothership/class-bb-license-manager.php:560
+msgid "API request failed: %s"
+msgstr ""
+
+#: bp-core/admin/mothership/class-bb-license-manager.php:572
+msgid "API returned error code: %d"
+msgstr ""
+
+#: bp-core/admin/mothership/class-bb-license-manager.php:581
+msgid "Invalid response from API"
+msgstr ""
+
+#: bp-core/admin/mothership/class-bb-license-manager.php:586
+msgid "License key generated successfully!"
+msgstr ""
+
+#: bp-core/admin/mothership/class-bb-license-manager.php:594
+msgid "Failed to generate license key"
+msgstr ""
+
+#: bp-core/admin/mothership/class-bb-license-page.php:33
+msgid "BuddyBoss License Activation"
+msgstr ""
+
+#: bp-core/admin/mothership/views/admin.php:12
+msgid "Manual Connect"
+msgstr ""
+
+#: bp-core/admin/mothership/views/admin.php:15
+msgid "Log into %s"
+msgstr ""
+
+#: bp-core/admin/mothership/views/admin.php:18
+msgid "Go to your %s"
+msgstr ""
+
+#: bp-core/admin/mothership/views/admin.php:21
+msgid "Go to the \"Subscriptions\" tab"
+msgstr ""
+
+#: bp-core/admin/mothership/views/admin.php:24
+msgid "Find your product's license key"
+msgstr ""
+
+#: bp-core/admin/mothership/views/admin.php:27
+msgid "Enter your license key below"
+msgstr ""
+
+#: bp-core/admin/mothership/views/admin.php:30
+msgid "Enter your BuddyBoss account email"
+msgstr ""
+
+#: bp-core/admin/mothership/views/admin.php:33
+msgid "Click \"Update License\""
+msgstr ""
+
+#: bp-core/admin/mothership/views/admin.php:41
+msgid "Benefits of a License"
+msgstr ""
+
+#: bp-core/admin/mothership/views/admin.php:44
+msgid "Stay Up to Date"
+msgstr ""
+
+#: bp-core/admin/mothership/views/admin.php:45
+msgid "Get the latest features right away"
+msgstr ""
+
+#: bp-core/admin/mothership/views/admin.php:48
+msgid "Admin Notifications"
+msgstr ""
+
+#: bp-core/admin/mothership/views/admin.php:49
+msgid "Get updates in WordPress"
+msgstr ""
+
+#: bp-core/admin/mothership/views/admin.php:52
+msgid "Professional Support"
+msgstr ""
+
+#: bp-core/admin/mothership/views/admin.php:53
+msgid "Get help with any questions"
+msgstr ""
+
+#: bp-core/admin/mothership/views/products.php:19
+msgid "Refresh Add-ons"
+msgstr ""
+
+#: bp-core/admin/mothership/views/products.php:23
+msgid "Search add-ons"
+msgstr ""
+
+#: bp-core/admin/mothership/views/products.php:36
+msgid "New version available."
+msgstr ""
+
+#: bp-core/admin/mothership/views/products.php:37
+msgid "Update now"
+msgstr ""
+
+#. Translators: %s: add-on status label.
+#: bp-core/admin/mothership/views/products.php:60
+msgid "Status: %s"
+msgstr ""
+
+#: bp-core/admin/mothership/views/products.php:82
+msgid "There were no Add-ons found for your License Key."
+msgstr ""
+
 #: bp-core/admin/settings/bb-admin-setting-performance.php:28
 msgid "Advanced"
 msgstr ""
@@ -8291,16 +8536,16 @@ msgstr[1] ""
 msgid "Migrating Group forum and discussion subscriptions data structure to the new subscription flow&hellip; %s"
 msgstr ""
 
-#: bp-core/bp-core-actions.php:1116
+#: bp-core/bp-core-actions.php:1111
 msgid "Invalid object."
 msgstr ""
 
-#: bp-core/bp-core-actions.php:1130
+#: bp-core/bp-core-actions.php:1125
 #: bp-core/compatibility/class-bb-readylaunch-learndash-helper.php:2192
 msgid "Not a valid option"
 msgstr ""
 
-#: bp-core/bp-core-actions.php:1138
+#: bp-core/bp-core-actions.php:1133
 #: bp-core/compatibility/class-bb-readylaunch-learndash-helper.php:2203
 msgid "Not a valid value"
 msgstr ""
@@ -9715,7 +9960,7 @@ msgid "Activate a new account and site"
 msgstr ""
 
 #: bp-core/bp-core-functions.php:3994
-#: bp-core/bp-core-update.php:2009
+#: bp-core/bp-core-update.php:1998
 msgid "A member is mentioned in an activity post"
 msgstr ""
 
@@ -9725,7 +9970,7 @@ msgid "You will no longer receive emails when someone mentions you in an update.
 msgstr ""
 
 #: bp-core/bp-core-functions.php:4002
-#: bp-core/bp-core-update.php:2010
+#: bp-core/bp-core-update.php:1999
 msgid "A member is mentioned in a group activity post"
 msgstr ""
 
@@ -10136,42 +10381,42 @@ msgstr ""
 msgid "Site-Wide Activity"
 msgstr ""
 
-#: bp-core/bp-core-update.php:1483
+#: bp-core/bp-core-update.php:1472
 #: bp-templates/bp-nouveau/includes/video/functions.php:312
 msgid "MP4"
 msgstr ""
 
-#: bp-core/bp-core-update.php:1491
+#: bp-core/bp-core-update.php:1480
 #: bp-templates/bp-nouveau/includes/video/functions.php:320
 msgid "WebM"
 msgstr ""
 
-#: bp-core/bp-core-update.php:1499
+#: bp-core/bp-core-update.php:1488
 #: bp-templates/bp-nouveau/includes/video/functions.php:328
 msgid "Ogg"
 msgstr ""
 
-#: bp-core/bp-core-update.php:1507
+#: bp-core/bp-core-update.php:1496
 #: bp-templates/bp-nouveau/includes/video/functions.php:336
 msgid "Quicktime"
 msgstr ""
 
-#: bp-core/bp-core-update.php:2011
+#: bp-core/bp-core-update.php:2000
 msgid "A Zoom meeting is scheduled in a group"
 msgstr ""
 
-#: bp-core/bp-core-update.php:2012
+#: bp-core/bp-core-update.php:2001
 msgid "A Zoom webinar is scheduled in a group"
 msgstr ""
 
 #. translators: do not remove {} brackets or translate its contents.
-#: bp-core/bp-core-update.php:2548
+#: bp-core/bp-core-update.php:2537
 #: bp-groups/classes/class-bp-groups-notification.php:793
 msgid "[{{{site.name}}}] {{poster.name}} posted {{activity.type}} in {{group.name}}"
 msgstr ""
 
 #. translators: do not remove {} brackets or translate its contents.
-#: bp-core/bp-core-update.php:2550
+#: bp-core/bp-core-update.php:2539
 #: bp-groups/classes/class-bp-groups-notification.php:795
 msgid ""
 "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> posted {{activity.type}} in <a href=\"{{{group.url}}}\">{{group.name}}</a>:\n"
@@ -10180,7 +10425,7 @@ msgid ""
 msgstr ""
 
 #. translators: do not remove {} brackets or translate its contents.
-#: bp-core/bp-core-update.php:2552
+#: bp-core/bp-core-update.php:2541
 #: bp-groups/classes/class-bp-groups-notification.php:797
 msgid ""
 "{{poster.name}} posted {{activity.type}} in {{group.name}}:\n"
@@ -10190,19 +10435,19 @@ msgid ""
 "View the post: {{{activity.url}}}"
 msgstr ""
 
-#: bp-core/bp-core-update.php:2556
+#: bp-core/bp-core-update.php:2545
 #: bp-groups/classes/class-bp-groups-notification.php:798
 msgid "New activity post in a group a member is subscribed to"
 msgstr ""
 
 #. translators: do not remove {} brackets or translate its contents.
-#: bp-core/bp-core-update.php:2560
+#: bp-core/bp-core-update.php:2549
 #: bp-groups/classes/class-bp-groups-notification.php:836
 msgid "[{{{site.name}}}] New discussion in {{group.name}}"
 msgstr ""
 
 #. translators: do not remove {} brackets or translate its contents.
-#: bp-core/bp-core-update.php:2562
+#: bp-core/bp-core-update.php:2551
 #: bp-groups/classes/class-bp-groups-notification.php:838
 msgid ""
 "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> created a discussion in <a href=\"{{{group.url}}}\">{{group.name}}</a>:\n"
@@ -10211,7 +10456,7 @@ msgid ""
 msgstr ""
 
 #. translators: do not remove {} brackets or translate its contents.
-#: bp-core/bp-core-update.php:2564
+#: bp-core/bp-core-update.php:2553
 #: bp-groups/classes/class-bp-groups-notification.php:840
 msgid ""
 "{{poster.name}} created a discussion {{discussion.title}} in {{group.name}}:\n"
@@ -10221,19 +10466,19 @@ msgid ""
 "Discussion Link: {{discussion.url}}"
 msgstr ""
 
-#: bp-core/bp-core-update.php:2568
+#: bp-core/bp-core-update.php:2557
 #: bp-groups/classes/class-bp-groups-notification.php:841
 msgid "New forum discussion in a group a member is subscribed to"
 msgstr ""
 
 #. translators: do not remove {} brackets or translate its contents.
-#: bp-core/bp-core-update.php:2894
+#: bp-core/bp-core-update.php:2883
 #: bp-core/classes/class-bb-post-notification.php:91
 msgid "[{{{site.name}}}] {{commenter.name}} replied to your comment"
 msgstr ""
 
 #. translators: do not remove {} brackets or translate its contents.
-#: bp-core/bp-core-update.php:2896
+#: bp-core/bp-core-update.php:2885
 #: bp-core/classes/class-bb-post-notification.php:93
 msgid ""
 "<a href=\"{{{commenter.url}}}\">{{commenter.name}}</a> replied to your comment:\n"
@@ -10242,7 +10487,7 @@ msgid ""
 msgstr ""
 
 #. translators: do not remove {} brackets or translate its contents.
-#: bp-core/bp-core-update.php:2898
+#: bp-core/bp-core-update.php:2887
 #: bp-core/classes/class-bb-post-notification.php:95
 msgid ""
 "{{commenter.name}} replied to your comment:\n"
@@ -10252,7 +10497,7 @@ msgid ""
 "View the comment: {{{comment.url}}}"
 msgstr ""
 
-#: bp-core/bp-core-update.php:2929
+#: bp-core/bp-core-update.php:2918
 #: bp-core/classes/class-bb-post-notification.php:83
 #: bp-core/classes/class-bb-post-notification.php:96
 msgid "A member receives a reply to their WordPress post comment"
@@ -12324,14 +12569,6 @@ msgstr ""
 msgid "Every %d minutes"
 msgstr ""
 
-#: bp-core/classes/class-bp-buddyboss-platform-updater.php:174
-msgid "An Unexpected HTTP Error occurred during the API request.</p> <p><a href=\"?\" onclick=\"document.location.reload(); return false;\">Try again</a>"
-msgstr ""
-
-#: bp-core/classes/class-bp-buddyboss-platform-updater.php:178
-msgid "An unknown error occurred"
-msgstr ""
-
 #: bp-core/classes/class-bp-core-bp-nav-backcompat.php:67
 #: bp-core/classes/class-bp-core-bp-nav-backcompat.php:102
 #: bp-core/classes/class-bp-core-bp-nav-backcompat.php:128
@@ -14218,13 +14455,6 @@ msgstr ""
 msgid "General Information"
 msgstr ""
 
-#: bp-core/profile-search/bps-xprofile.php:830
-#: bp-core/profile-search/bps-xprofile.php:831
-#: bp-members/bp-members-filters.php:152
-#: bp-members/bp-members-filters.php:166
-msgid "Email Address"
-msgstr ""
-
 #. translators: %1$s field name, %2$s value
 #: bp-core/profile-search/templates/members/bps-field-value.php:18
 msgid "%1$s: %2$s"
@@ -14264,9 +14494,9 @@ msgstr ""
 #: bp-templates/bp-nouveau/readylaunch/common/js-templates/activity/parts/bp-activity-link-preview.php:51
 #: bp-templates/bp-nouveau/readylaunch/common/js-templates/members/bb-link-preview.php:49
 #: bp-templates/bp-nouveau/readylaunch/common/search/profile-search.php:273
-#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/lesson.php:89
+#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/lesson.php:178
 #: bp-templates/bp-nouveau/readylaunch/learndash/ld30/quiz.php:146
-#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/topic.php:109
+#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/topic.php:199
 msgid "of"
 msgstr ""
 
@@ -15212,7 +15442,7 @@ msgstr ""
 #: bp-integrations/learndash/templates/readylaunch/groups/single/courses-content-display.php:404
 #: bp-integrations/learndash/templates/readylaunch/groups/single/courses-loop.php:124
 #: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course-loop.php:83
-#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:444
+#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:488
 #: bp-templates/bp-nouveau/readylaunch/memberpress/courses/archive-mpcs-courses.php:178
 #: bp-templates/bp-nouveau/readylaunch/memberpress/courses/archive-mpcs-courses.php:185
 #: bp-templates/bp-nouveau/readylaunch/memberpress/courses/single-mpcs-course.php:129
@@ -25033,7 +25263,7 @@ msgstr ""
 
 #: bp-integrations/learndash/buddypress/generators/LessonsReportsGenerator.php:47
 #: bp-integrations/learndash/templates/readylaunch/groups/single/courses-content-display.php:704
-#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:744
+#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:788
 msgid "Lesson"
 msgstr ""
 
@@ -25096,7 +25326,7 @@ msgstr ""
 #: bp-integrations/learndash/templates/readylaunch/groups/single/courses-loop.php:126
 #: bp-templates/bp-nouveau/buddypress/members/single/profile/widget.php:19
 #: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course-loop.php:85
-#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:441
+#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:485
 #: bp-templates/bp-nouveau/readylaunch/learndash/ld30/quiz.php:165
 #: bp-templates/bp-nouveau/readylaunch/members/single/courses/courses.php:124
 #: bp-templates/bp-nouveau/readylaunch/members/single/profile/widget.php:24
@@ -25113,7 +25343,7 @@ msgstr ""
 
 #: bp-integrations/learndash/buddypress/Reports.php:409
 #: bp-integrations/learndash/templates/readylaunch/groups/single/courses-content-display.php:845
-#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:885
+#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:929
 #: bp-templates/bp-nouveau/readylaunch/memberpress/courses/archive-mpcs-courses.php:147
 msgid "Lessons"
 msgstr ""
@@ -25347,8 +25577,8 @@ msgstr ""
 #: bp-integrations/learndash/templates/readylaunch/groups/single/courses-loop.php:355
 #: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course-loop.php:118
 #: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course-loop.php:313
-#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:305
-#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:378
+#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:349
+#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:422
 #: bp-templates/bp-nouveau/readylaunch/memberpress/courses/single-mpcs-course.php:92
 #: bp-templates/bp-nouveau/readylaunch/members/single/courses/courses.php:161
 #: bp-templates/bp-nouveau/readylaunch/members/single/courses/courses.php:356
@@ -25362,9 +25592,9 @@ msgstr ""
 #: bp-integrations/learndash/templates/readylaunch/groups/single/courses-content-display.php:661
 #: bp-integrations/learndash/templates/readylaunch/groups/single/courses-loop.php:162
 #: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course-loop.php:120
-#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:648
-#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:685
-#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:701
+#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:692
+#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:729
+#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:745
 #: bp-templates/bp-nouveau/readylaunch/members/single/courses/courses.php:163
 msgid "Not Enrolled"
 msgstr ""
@@ -25497,13 +25727,13 @@ msgstr ""
 
 #: bp-integrations/learndash/templates/buddypress/groups/single/courses-content-display.php:163
 #: bp-integrations/learndash/templates/readylaunch/groups/single/courses-content-display.php:789
-#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:829
+#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:873
 msgid "You've earned a certificate!"
 msgstr ""
 
 #: bp-integrations/learndash/templates/buddypress/groups/single/courses-content-display.php:167
 #: bp-integrations/learndash/templates/readylaunch/groups/single/courses-content-display.php:793
-#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:833
+#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:877
 msgid "Download Certificate"
 msgstr ""
 
@@ -25561,7 +25791,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/readylaunch/groups/single/messages/public-message.php:81
 #: bp-templates/bp-nouveau/readylaunch/groups/single/messages/public-message.php:105
 #: bp-templates/bp-nouveau/readylaunch/groups/single/messages/public-message.php:128
-#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/topic.php:132
+#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/topic.php:222
 #: bp-templates/bp-nouveau/readylaunch/memberpress/courses/courses_classroom_sidebar_progress.php:31
 #: bp-templates/bp-nouveau/readylaunch/members/single/profile/widget.php:24
 msgid "Complete"
@@ -25631,32 +25861,32 @@ msgid "Oops! That page can't be found."
 msgstr ""
 
 #: bp-integrations/learndash/templates/readylaunch/groups/single/courses-content-display.php:256
-#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:259
+#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:303
 msgid "By"
 msgstr ""
 
 #: bp-integrations/learndash/templates/readylaunch/groups/single/courses-content-display.php:301
-#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:303
+#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:347
 msgid "Open Registration"
 msgstr ""
 
 #: bp-integrations/learndash/templates/readylaunch/groups/single/courses-content-display.php:312
-#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:314
+#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:358
 msgid "This course is currently closed"
 msgstr ""
 
 #: bp-integrations/learndash/templates/readylaunch/groups/single/courses-content-display.php:334
-#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:336
+#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:380
 msgid "Trial price for "
 msgstr ""
 
 #: bp-integrations/learndash/templates/readylaunch/groups/single/courses-content-display.php:348
-#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:350
+#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:394
 msgid "Full price every "
 msgstr ""
 
 #: bp-integrations/learndash/templates/readylaunch/groups/single/courses-content-display.php:353
-#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:355
+#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:399
 msgid "afterward"
 msgstr ""
 
@@ -25666,31 +25896,31 @@ msgstr ""
 #: bp-integrations/learndash/templates/readylaunch/groups/single/courses-loop.php:167
 #: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course-loop.php:110
 #: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course-loop.php:125
-#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:436
+#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:480
 #: bp-templates/bp-nouveau/readylaunch/members/single/courses/courses.php:153
 #: bp-templates/bp-nouveau/readylaunch/members/single/courses/courses.php:168
 msgid "Start %s"
 msgstr ""
 
 #: bp-integrations/learndash/templates/readylaunch/groups/single/courses-content-display.php:430
-#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:470
+#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:514
 msgid "Login to Enroll"
 msgstr ""
 
 #: bp-integrations/learndash/templates/readylaunch/groups/single/courses-content-display.php:548
-#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:588
+#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:632
 msgid "Your browser does not support HTML5 video."
 msgstr ""
 
 #: bp-integrations/learndash/templates/readylaunch/groups/single/courses-content-display.php:556
-#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:596
+#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:640
 msgid "Video format is not supported, use Youtube video or MP4 format."
 msgstr ""
 
 #: bp-integrations/learndash/templates/readylaunch/groups/single/courses-content-display.php:570
 #: bp-integrations/learndash/templates/readylaunch/groups/single/courses-loop.php:176
 #: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course-loop.php:134
-#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:610
+#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:654
 #: bp-templates/bp-nouveau/readylaunch/memberpress/courses/archive-mpcs-courses.php:49
 #: bp-templates/bp-nouveau/readylaunch/memberpress/courses/single-mpcs-course.php:158
 #: bp-templates/bp-nouveau/readylaunch/members/single/courses/courses.php:177
@@ -25699,7 +25929,7 @@ msgstr ""
 
 #. translators: placeholder: number of places remaining.
 #: bp-integrations/learndash/templates/readylaunch/groups/single/courses-content-display.php:588
-#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:628
+#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:672
 msgctxt "placeholder: number of places remaining"
 msgid "(%s place remaining)"
 msgid_plural "(%s places remaining)"
@@ -25708,105 +25938,105 @@ msgstr[1] ""
 
 #. translators: placeholder: course.
 #: bp-integrations/learndash/templates/readylaunch/groups/single/courses-content-display.php:602
-#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:642
+#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:686
 msgctxt "placeholder: course"
 msgid "This %s has ended"
 msgstr ""
 
 #. translators: placeholder: course, course start date.
 #: bp-integrations/learndash/templates/readylaunch/groups/single/courses-content-display.php:614
-#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:654
+#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:698
 msgctxt "placeholder: course, course start date"
 msgid "This %1$s starts on %2$s"
 msgstr ""
 
 #. translators: placeholder: course, course start date.
 #: bp-integrations/learndash/templates/readylaunch/groups/single/courses-content-display.php:620
-#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:660
+#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:704
 msgctxt "placeholder: course"
 msgid "It is a pre-order. Enroll in this %1$s to get access after %2$s"
 msgstr ""
 
 #: bp-integrations/learndash/templates/readylaunch/groups/single/courses-content-display.php:627
-#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:667
+#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:711
 msgid "Pre-order"
 msgstr ""
 
 #. translators: placeholder: course.
 #: bp-integrations/learndash/templates/readylaunch/groups/single/courses-content-display.php:634
-#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:674
+#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:718
 msgctxt "placeholder: course"
 msgid "Enroll in this %s to get access"
 msgstr ""
 
 #. translators: placeholder: course.
 #: bp-integrations/learndash/templates/readylaunch/groups/single/courses-content-display.php:639
-#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:679
+#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:723
 msgctxt "placeholder: course"
 msgid "This %s is not available"
 msgstr ""
 
 #: bp-integrations/learndash/templates/readylaunch/groups/single/courses-content-display.php:687
-#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:727
+#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:771
 msgid "Duration"
 msgstr ""
 
 #: bp-integrations/learndash/templates/readylaunch/groups/single/courses-content-display.php:716
-#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:756
+#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:800
 msgid "Enrolled"
 msgstr ""
 
 #: bp-integrations/learndash/templates/readylaunch/groups/single/courses-content-display.php:736
-#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:776
+#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:820
 msgid "Free form"
 msgstr ""
 
 #: bp-integrations/learndash/templates/readylaunch/groups/single/courses-content-display.php:736
-#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:776
+#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:820
 msgid "Linear"
 msgstr ""
 
 #: bp-integrations/learndash/templates/readylaunch/groups/single/courses-content-display.php:742
-#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:782
+#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:826
 msgid "Progression"
 msgstr ""
 
 #. translators: placeholder: Course.
 #: bp-integrations/learndash/templates/readylaunch/groups/single/courses-content-display.php:820
-#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:860
+#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:904
 msgctxt "placeholder: Course"
 msgid "%s Content"
 msgstr ""
 
 #: bp-integrations/learndash/templates/readylaunch/groups/single/courses-content-display.php:896
-#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:936
+#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:980
 msgid "Expand All Section"
 msgstr ""
 
 #: bp-integrations/learndash/templates/readylaunch/groups/single/courses-content-display.php:897
-#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:937
+#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:981
 msgid "Collapse All Sections"
 msgstr ""
 
 #: bp-integrations/learndash/templates/readylaunch/groups/single/courses-content-display.php:899
-#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:939
+#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:983
 msgid "Expand All Sections"
 msgstr ""
 
 #: bp-integrations/learndash/templates/readylaunch/groups/single/courses-content-display.php:1018
-#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:1058
+#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:1102
 msgid "Summary"
 msgstr ""
 
 #: bp-integrations/learndash/templates/readylaunch/groups/single/courses-content-display.php:1026
 #: bp-templates/bp-nouveau/readylaunch/learndash/ld30/archive-course-header.php:117
-#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:1066
+#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:1110
 #: bp-templates/bp-nouveau/readylaunch/memberpress/courses/archive-mpcs-courses.php:153
 msgid "Instructor"
 msgstr ""
 
 #: bp-integrations/learndash/templates/readylaunch/groups/single/courses-content-display.php:1064
-#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:1104
+#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:1148
 msgid "Recently enrolled"
 msgstr ""
 
@@ -25833,7 +26063,7 @@ msgstr ""
 #. translators: 1: course progress percentage, 2: percentage symbol.
 #: bp-integrations/learndash/templates/readylaunch/groups/single/courses-loop.php:264
 #: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course-loop.php:222
-#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:402
+#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:446
 #: bp-templates/bp-nouveau/readylaunch/learndash/ld30/single/parts/ld-subnav.php:119
 #: bp-templates/bp-nouveau/readylaunch/members/single/courses/courses.php:265
 msgid "<span class=\"bb-rl-percentage-figure\">%1$s%2$s</span> Completed"
@@ -36921,7 +37151,7 @@ msgstr ""
 msgid "Comments are closed."
 msgstr ""
 
-#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/lesson.php:323
+#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/lesson.php:437
 msgid "Lesson Topics"
 msgstr ""
 
@@ -36986,7 +37216,7 @@ msgctxt "link: Back to Course"
 msgid "Back to %s"
 msgstr ""
 
-#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/topic.php:345
+#: bp-templates/bp-nouveau/readylaunch/learndash/ld30/topic.php:460
 msgid "Topic Quizzes"
 msgstr ""
 
