@@ -44,6 +44,7 @@ TABLE OF CONTENTS:
 19.0 Reactions Settings
 20.0 Upgrade
 21.0 Activity Filter & Sorting
+22.0 Header Branding & Actions
 ------------------------------------------------------------------------------*/
 
 @import "tooltips";
@@ -6099,6 +6100,49 @@ h1.bb-advance-heading {
 
 		@media screen and (max-width: 480px) {
 			margin-right: 0;
+		}
+	}
+}
+
+/*------------------------------------------------------------------------------
+ * 22.0 Header Branding & Actions
+ *----------------------------------------------------------------------------*/
+
+.bb-tab-header {
+	background-color: #fff;
+	margin-left: -20px;
+	padding: 12px 24px;
+	border-bottom: 1px solid #d9d9d9;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+
+
+	.bb-branding-header {
+		margin-right: auto;
+
+		.bb-branding-logo {
+			max-width: 130px;
+		}
+
+		.bb-header-actions {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+		}
+	}
+}
+
+@media screen and (max-width: 600px) {
+
+	#wpadminbar {
+
+		~ .bb-tab-header {
+			padding-top: 58px;
+
+			~ #wpbody {
+				padding-top: 0;
+			}
 		}
 	}
 }
