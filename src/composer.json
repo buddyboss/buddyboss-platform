@@ -23,6 +23,9 @@
         "caseproof/ground-level-mothership": "*",
     	"caseproof/ground-level-in-product-notifications": "*"
     },
+	"require-dev": {
+		"humbug/php-scoper": "^0.17.5"
+	},
 	"autoload": {
 		"classmap": [
 			"includes"
