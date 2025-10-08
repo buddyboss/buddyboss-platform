@@ -944,7 +944,9 @@ function bb_disabled_notification_actions_by_user( $user_id = 0, $type = 'web' )
 	if ( ! empty( $enabled_all_notification ) ) {
 		foreach ( $enabled_all_notification as $key => $types ) {
 			if ( isset( $types['main'] ) && 'no' === $types['main'] ) {
-				$admin_excluded_actions = array_merge( $admin_excluded_actions, $all_actions[ $key . '_' . $type ] );
+				$actions_key            = $key . '_' . $type;
+				$actions_to_merge       = isset( $all_actions[ $actions_key ] ) && is_array( $all_actions[ $actions_key ] ) ? $all_actions[ $actions_key ] : array();
+				$admin_excluded_actions = array_merge( $admin_excluded_actions, $actions_to_merge );
 			}
 			if ( isset( $types[ $type ] ) ) {
 				$settings_by_admin[ $key . '_' . $type ] = $types[ $type ];
