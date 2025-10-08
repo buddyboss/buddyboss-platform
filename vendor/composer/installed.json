@@ -496,6 +496,7 @@
                     "type": "tidelift"
                 }
             ],
+            "abandoned": true,
             "install-path": "..\/doctrine\/cache"
         },
         {
