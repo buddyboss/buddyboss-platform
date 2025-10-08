@@ -107,7 +107,7 @@ class BB_License_Manager extends LicenseManager {
 			throw new \Exception(
 				sprintf(
 					$errorHtml,
-					$response->getError()
+					$response->__get('error')
 				)
 			);
 		}
