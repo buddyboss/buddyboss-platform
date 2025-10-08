@@ -48,9 +48,6 @@ add_action( 'menu_order', 'bp_admin_menu_order' );
 add_action( 'wpmu_new_blog', 'bp_new_site', 10, 6 );
 
 // Hook on to admin_init.
-
-// Initialize BuddyBoss Mothership (License & Add-ons).
-require_once __DIR__ . '/mothership/mothership-init.php';
 add_action( 'bp_admin_init', 'bp_setup_updater', 1000 );
 add_action( 'bp_admin_init', 'bp_core_activation_notice', 1010 );
 add_action( 'bp_admin_init', 'bp_register_importers' );
