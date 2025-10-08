@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace BuddyBoss\Core\Admin\Mothership;
 
-use BuddyBossPlatform\GroundLevel\Mothership\AbstractPluginConnection;
 use BuddyBossPlatform\GroundLevel\Mothership\Manager\LicenseManager;
 use BuddyBossPlatform\GroundLevel\Mothership\Service as MothershipService;
 use BuddyBossPlatform\GroundLevel\Mothership\Credentials;

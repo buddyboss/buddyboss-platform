@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace BuddyBoss\Core\Admin\Mothership;
 
-use BuddyBossPlatform\GroundLevel\Mothership\AbstractPluginConnection;
 use BuddyBossPlatform\GroundLevel\Mothership\Manager\AddonsManager;
 use BuddyBossPlatform\GroundLevel\Mothership\Api\Response;
 use BuddyBossPlatform\GroundLevel\Mothership\Service as MothershipService;

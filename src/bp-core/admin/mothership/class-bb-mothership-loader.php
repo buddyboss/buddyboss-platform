@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace BuddyBoss\Core\Admin\Mothership;
 
 use BuddyBossPlatform\GroundLevel\Container\Container;
-use BuddyBossPlatform\GroundLevel\Mothership\AbstractPluginConnection;
 use BuddyBossPlatform\GroundLevel\Mothership\Api\Request\LicenseActivations;
 use BuddyBossPlatform\GroundLevel\Mothership\Api\Response;
 use BuddyBossPlatform\GroundLevel\Mothership\Credentials;
