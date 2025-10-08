@@ -305,7 +305,16 @@ class BB_Mothership_Loader {
 			if ( $plugin_id !== PLATFORM_EDITION ) {
 				$pluginConnector->setDynamicPluginId( $plugin_id );
 				$domain   = Credentials::getActivationDomain();
-				$response = LicenseActivations::activate( $plugin_id, $license_data['license_key'], $domain );
+
+				// Translators: %s is the response error message.
+				$errorHtml = esc_html__( 'Migrate License activation failed: %s', 'buddyboss' );
+
+				try {
+					$response = LicenseActivations::activate( $plugin_id, $license_data['license_key'], $domain );
+				} catch ( \Exception $e ) {
+					error_log( sprintf( $errorHtml, $e->getMessage() ) );
+				}
+
 				if ( $response instanceof Response && ! $response->isError() ) {
 					try {
 						Credentials::storeLicenseKey( $license_data['license_key'] );
@@ -324,6 +333,8 @@ class BB_Mothership_Loader {
 						// Log the exception.
 						error_log( 'Error storing migrated license key: ' . $e->getMessage() );
 					}
+				} else {
+					error_log( $response->__get('error') );
 				}
 			}
 		}
