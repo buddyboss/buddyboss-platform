@@ -204,14 +204,9 @@ class BB_Mothership_Loader {
 	 * and attempts to migrate it to the new Mothership system.
 	 */
 	protected function migrate_legacy_license(): void {
-		if ( true === (bool) bp_get_option( 'bb_mothership_licenses_migrated', false ) ) {
-			return;
-		}
-
-		$legacy_licences   = get_option( 'bboss_updater_saved_licenses', array() );
 		$network_activated = false;
 		/**
-		 * This is added to give the backward compatibility
+		 * This is added to give the backward compatibility.
 		 */
 		if ( is_multisite() ) {
 			if ( ! function_exists( 'is_plugin_active_for_network' ) ) {
@@ -222,6 +217,14 @@ class BB_Mothership_Loader {
 				$network_activated = true;
 			}
 		}
+
+		if ( $network_activated && true === (bool) get_site_option( 'bb_mothership_licenses_migrated', false ) ) {
+			return;
+		} elseif ( ! $network_activated && true === (bool) get_option( 'bb_mothership_licenses_migrated', false ) ) {
+			return;
+		}
+
+		$legacy_licences = get_option( 'bboss_updater_saved_licenses', array() );
 
 		if ( $network_activated ) {
 			$legacy_licences = get_site_option( 'bboss_updater_saved_licenses', array() );
@@ -309,7 +312,11 @@ class BB_Mothership_Loader {
 						$pluginId = $pluginConnector->pluginId;
 						delete_transient( $pluginId . '-mosh-products' );
 						delete_transient( $pluginId . '-mosh-addons-update-check' );
-						bp_update_option( 'bb_mothership_licenses_migrated', true );
+						if ( $network_activated ) {
+							update_site_option( 'bb_mothership_licenses_migrated', true );
+						} else {
+							update_option( 'bb_mothership_licenses_migrated', true );
+						}
 					} catch ( \Exception $e ) {
 						// Log the exception.
 						error_log( 'Error storing migrated license key: ' . $e->getMessage() );
