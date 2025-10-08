@@ -251,7 +251,8 @@ class BB_Mothership_Loader {
 			return;
 		}
 
-		$pluginConnector = self::getContainer()->get( AbstractPluginConnection::class );
+		$instance        = new self();
+		$pluginConnector = $instance->getContainer()->get( MothershipService::CONNECTION_PLUGIN_SERVICE_ID );
 		$plugin_id       = $pluginConnector->getDynamicPluginId();
 
 		$current_status = $pluginConnector->getLicenseActivationStatus();

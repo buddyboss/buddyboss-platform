@@ -25,7 +25,7 @@ class BB_License_Manager extends LicenseManager {
 	 */
 	public static function controller(): void {
 		if ( isset( $_POST['buddyboss_platform_license_button'] ) ) {
-			$pluginConnector = self::getContainer()->get( AbstractPluginConnection::class );
+			$pluginConnector = self::getContainer()->get( MothershipService::CONNECTION_PLUGIN_SERVICE_ID );
 
 			// Setup dynamic plugin ID if present in license key
 			if ( isset( $_POST['license_key'] ) ) {
@@ -84,7 +84,7 @@ class BB_License_Manager extends LicenseManager {
 			throw new \Exception( esc_html__( 'Invalid nonce', 'buddyboss' ) );
 		}
 
-		$pluginConnector = self::getContainer()->get( AbstractPluginConnection::class );
+		$pluginConnector = self::getContainer()->get( MothershipService::CONNECTION_PLUGIN_SERVICE_ID );
 
 		// Setup dynamic plugin ID if present in license key
 		$licenseKey = self::setupDynamicPluginId( $licenseKey, $pluginConnector );
@@ -166,7 +166,7 @@ class BB_License_Manager extends LicenseManager {
 	 */
 	public function generateActivationForm(): string {
 		ob_start();
-		$pluginId = self::getContainer()->get( AbstractPluginConnection::class )->pluginId;
+		$pluginId = self::getContainer()->get( MothershipService::CONNECTION_PLUGIN_SERVICE_ID )->pluginId;
 		?>
 		<h2><?php esc_html_e( 'License Activation', 'buddyboss' ); ?></h2>
 		<form method="post" action="" name="<?php echo esc_attr( $pluginId ); ?>_activate_license_form">
@@ -374,7 +374,7 @@ class BB_License_Manager extends LicenseManager {
 	 */
 	public function generateDisconnectForm(): string {
 		ob_start();
-		$pluginId     = self::getContainer()->get( AbstractPluginConnection::class )->pluginId;
+		$pluginId     = self::getContainer()->get( MothershipService::CONNECTION_PLUGIN_SERVICE_ID )->pluginId;
 		$licenseKey   = Credentials::getLicenseKey();
 		$license_info = $this->bb_get_license_details( $licenseKey );
 		?>
@@ -424,7 +424,7 @@ class BB_License_Manager extends LicenseManager {
 	 * @return array|WP_Error    Array of license + activation data, or WP_Error on failure.
 	 */
 	protected function bb_get_license_details( $license_key, $force_refresh = false ) {
-		$pluginId = self::getContainer()->get( AbstractPluginConnection::class )->pluginId;
+		$pluginId = self::getContainer()->get( MothershipService::CONNECTION_PLUGIN_SERVICE_ID )->pluginId;
 
 		// Create cache key based on plugin ID only (not license key for security).
 		$cache_key = $pluginId . '_license_details';
