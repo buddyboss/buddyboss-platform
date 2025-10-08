@@ -204,6 +204,10 @@ class BB_Mothership_Loader {
 	 * and attempts to migrate it to the new Mothership system.
 	 */
 	protected function migrate_legacy_license(): void {
+		if ( ! is_admin() ) {
+			return; // Only run migration in admin context.
+		}
+
 		$network_activated = false;
 		/**
 		 * This is added to give the backward compatibility.
