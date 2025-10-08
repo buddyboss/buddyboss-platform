@@ -40,7 +40,8 @@
 	  "dealerdirect/phpcodesniffer-composer-installer": "*",
 	  "phpcompatibility/phpcompatibility-wp": "^2.1",
 	  "squizlabs/php_codesniffer": "^3.4.0",
-	  "wp-coding-standards/wpcs": "*"
+	  "wp-coding-standards/wpcs": "*",
+	  "humbug/php-scoper": "^0.17.5"
 	},
 	"scripts": {
 		"test": "vendor/bin/phpunit",

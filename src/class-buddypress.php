@@ -514,6 +514,9 @@ class BuddyPress {
 	private function includes() {
 		spl_autoload_register( array( $this, 'autoload' ) );
 
+		// Initialize BuddyBoss Mothership (License & Add-ons).
+		require $this->plugin_dir . 'bp-core/admin/mothership/mothership-init.php';
+
 		// Load the compatibility helpers for third party plugins.
 		require $this->compatibility_dir . '/bp-incompatible-plugins-helper.php';
 

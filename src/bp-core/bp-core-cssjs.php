@@ -332,6 +332,7 @@ function bp_core_register_common_styles() {
 			),
 			'bb-cropper-css'          => array(
 				'file'         => "{$url}vendor/cropper{$min}.css",
+				'dependencies' => array(),
 			),
 		)
 	);

@@ -2,9 +2,9 @@
 # This file is distributed under the GPLv2 or later (license.txt).
 msgid ""
 msgstr ""
-"Project-Id-Version: BuddyBoss Platform 2.14.0\n"
+"Project-Id-Version: BuddyBoss Platform 2.14.1\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2025-10-06 16:26:52+00:00\n"
+"POT-Creation-Date: 2025-10-08 12:22:33+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -838,8 +838,8 @@ msgstr ""
 #: bp-groups/classes/class-bp-groups-notification.php:1267
 #: bp-groups/classes/class-bp-groups-notification.php:1468
 #: bp-messages/classes/class-bp-messages-notification.php:216
-#: bp-notifications/bp-notifications-functions.php:1371
-#: bp-notifications/bp-notifications-functions.php:1413
+#: bp-notifications/bp-notifications-functions.php:1373
+#: bp-notifications/bp-notifications-functions.php:1415
 #: bp-templates/bp-nouveau/buddypress/search/loop/post.php:60
 #: bp-templates/bp-nouveau/buddypress/search/loop/sfwd-courses-ajax.php:42
 #: bp-templates/bp-nouveau/buddypress/search/loop/sfwd-courses.php:48
@@ -2135,7 +2135,7 @@ msgid "Replies disabled"
 msgstr ""
 
 #: bp-activity/classes/class-bp-activity-list-table.php:682
-#: bp-core/bp-core-cssjs.php:367
+#: bp-core/bp-core-cssjs.php:368
 #: bp-templates/bp-nouveau/buddypress-functions.php:648
 msgid "Are you sure?"
 msgstr ""
@@ -4462,15 +4462,15 @@ msgstr ""
 msgid "Notifications"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-actions.php:284
+#: bp-core/admin/bp-core-admin-actions.php:281
 msgid "Invalid Nickname"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-actions.php:305
+#: bp-core/admin/bp-core-admin-actions.php:302
 msgid "<strong>Error</strong>: Nickname already has been taken. Please try again."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-actions.php:317
+#: bp-core/admin/bp-core-admin-actions.php:314
 #: bp-core/admin/bp-core-admin-tools.php:1248
 #: bp-forums/admin/tools.php:1985
 #: bp-forums/functions.php:889
@@ -4513,30 +4513,30 @@ msgstr ""
 msgid "There was a problem performing this action. Please try again."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-actions.php:382
+#: bp-core/admin/bp-core-admin-actions.php:379
 #: bp-members/bp-members-functions.php:1727
 #: bp-settings/actions/general.php:208
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:1372
 msgid "This email address or domain has been blacklisted. If you think you are seeing this in error, please contact the site administrator."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-actions.php:436
+#: bp-core/admin/bp-core-admin-actions.php:433
 msgid "Settings saved successfully."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-actions.php:502
+#: bp-core/admin/bp-core-admin-actions.php:499
 msgid "Upgrade to pro and unlock more exciting community features!"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-actions.php:504
+#: bp-core/admin/bp-core-admin-actions.php:501
 msgid "Upgrade to Pro"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-actions.php:510
+#: bp-core/admin/bp-core-admin-actions.php:507
 msgid "Dismiss this notice."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-actions.php:531
+#: bp-core/admin/bp-core-admin-actions.php:528
 #: bp-core/classes/class-bb-telemetry.php:597
 #: bp-moderation/classes/class-bp-rest-moderation-endpoint.php:399
 #: bp-moderation/classes/class-bp-rest-moderation-report-endpoint.php:301
@@ -8986,160 +8986,160 @@ msgid "You cannot upload more than 10 files at a time."
 msgstr ""
 
 #. Translators: %s is the relative time (eg: in a few seconds).
-#: bp-core/bp-core-cssjs.php:762
+#: bp-core/bp-core-cssjs.php:763
 msgid "in %s"
 msgstr ""
 
 #. translators: %s: the human time diff.
 #. translators: The time since the older date.
 #. translators: %s: forum freshness link
-#: bp-core/bp-core-cssjs.php:764
-#: bp-core/bp-core-cssjs.php:812
+#: bp-core/bp-core-cssjs.php:765
+#: bp-core/bp-core-cssjs.php:813
 #: bp-core/bp-core-functions.php:1259
 #: bp-core/classes/class-bb-readylaunch.php:4217
 #: bp-forums/common/functions.php:115
 msgid "%s ago"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:765
+#: bp-core/bp-core-cssjs.php:766
 #: bp-forums/common/functions.php:125
 msgid "second"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:766
+#: bp-core/bp-core-cssjs.php:767
 msgid "%d seconds"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:767
-#: bp-core/bp-core-cssjs.php:815
+#: bp-core/bp-core-cssjs.php:768
+#: bp-core/bp-core-cssjs.php:816
 #: bp-core/bp-core-functions.php:1373
 msgid "a minute"
 msgstr ""
 
 #. Translators: %d is the amount of minutes.
-#: bp-core/bp-core-cssjs.php:769
+#: bp-core/bp-core-cssjs.php:770
 msgid "%d minutes"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:770
-#: bp-core/bp-core-cssjs.php:817
+#: bp-core/bp-core-cssjs.php:771
+#: bp-core/bp-core-cssjs.php:818
 #: bp-core/bp-core-functions.php:1366
 msgid "an hour"
 msgstr ""
 
 #. Translators: %d is the amount of hours.
 #. translators: %s: The admin setting field label.
-#: bp-core/bp-core-cssjs.php:772
+#: bp-core/bp-core-cssjs.php:773
 #: bp-messages/bp-messages-functions.php:2140
 #: bp-messages/bp-messages-functions.php:2149
 #: bp-messages/bp-messages-functions.php:2158
 msgid "%d hours"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:773
-#: bp-core/bp-core-cssjs.php:819
+#: bp-core/bp-core-cssjs.php:774
+#: bp-core/bp-core-cssjs.php:820
 #: bp-core/bp-core-functions.php:1359
 msgid "a day"
 msgstr ""
 
 #. Translators: %d is the amount of days.
-#: bp-core/bp-core-cssjs.php:775
+#: bp-core/bp-core-cssjs.php:776
 msgid "%d days"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:776
-#: bp-core/bp-core-cssjs.php:821
+#: bp-core/bp-core-cssjs.php:777
+#: bp-core/bp-core-cssjs.php:822
 #: bp-core/bp-core-functions.php:1352
 msgid "a week"
 msgstr ""
 
 #. Translators: %d is the amount of weeks.
-#: bp-core/bp-core-cssjs.php:778
+#: bp-core/bp-core-cssjs.php:779
 msgid "%d weeks"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:779
-#: bp-core/bp-core-cssjs.php:823
+#: bp-core/bp-core-cssjs.php:780
+#: bp-core/bp-core-cssjs.php:824
 msgid "a month"
 msgstr ""
 
 #. Translators: %d is the amount of months.
-#: bp-core/bp-core-cssjs.php:781
+#: bp-core/bp-core-cssjs.php:782
 msgid "%d months"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:782
-#: bp-core/bp-core-cssjs.php:825
+#: bp-core/bp-core-cssjs.php:783
+#: bp-core/bp-core-cssjs.php:826
 #: bp-core/bp-core-functions.php:1325
 msgid "a year"
 msgstr ""
 
 #. Translators: %d is the amount of years.
-#: bp-core/bp-core-cssjs.php:784
+#: bp-core/bp-core-cssjs.php:785
 msgid "%d years"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:810
+#: bp-core/bp-core-cssjs.php:811
 #: bp-core/bp-core-functions.php:1240
 #: bp-forums/common/functions.php:113
 msgid "sometime"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:811
+#: bp-core/bp-core-cssjs.php:812
 #: bp-core/bp-core-functions.php:1249
 msgid "Just now"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:813
+#: bp-core/bp-core-cssjs.php:814
 msgid "a second"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:814
+#: bp-core/bp-core-cssjs.php:815
 #: bp-forums/admin/settings.php:455
 #: bp-forums/common/functions.php:125
 msgid "seconds"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:816
+#: bp-core/bp-core-cssjs.php:817
 #: bp-forums/admin/settings.php:439
 #: bp-forums/common/functions.php:124
 msgid "minutes"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:818
+#: bp-core/bp-core-cssjs.php:819
 #: bp-forums/common/functions.php:123
 msgid "hours"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:820
+#: bp-core/bp-core-cssjs.php:821
 #: bp-forums/common/functions.php:122
 msgid "days"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:822
+#: bp-core/bp-core-cssjs.php:823
 #: bp-forums/common/functions.php:121
 msgid "weeks"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:824
+#: bp-core/bp-core-cssjs.php:825
 #: bp-forums/common/functions.php:120
 msgid "months"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:826
+#: bp-core/bp-core-cssjs.php:827
 #: bp-forums/common/functions.php:119
 msgid "years"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:897
+#: bp-core/bp-core-cssjs.php:898
 msgid "Mismatch"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:898
+#: bp-core/bp-core-cssjs.php:899
 msgid "Enter valid email"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:899
+#: bp-core/bp-core-cssjs.php:900
 #: bp-members/classes/class-bp-rest-signup-endpoint.php:720
 #: bp-members/classes/class-bp-rest-signup-endpoint.php:790
 #: bp-members/screens/register.php:161
@@ -31742,7 +31742,7 @@ msgstr ""
 msgid "No new notifications"
 msgstr ""
 
-#: bp-notifications/bp-notifications-functions.php:1251
+#: bp-notifications/bp-notifications-functions.php:1253
 msgid "Notification Icon"
 msgstr ""
 
