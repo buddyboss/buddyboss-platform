@@ -57,6 +57,9 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 2.14.1 =
+* Bug: Core - Fixed a fatal error causing the Zoom integration to break
+
 = 2.14.0 =
 * New Feature! Core - Implemented a new licensing system for BuddyBoss plugins and theme
 
