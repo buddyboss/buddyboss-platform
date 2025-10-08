@@ -114,8 +114,6 @@ class BB_Mothership_Loader {
 	 */
 	private function setupHooks(): void {
 
-		$this->migrate_legacy_license();
-
 		// Register admin pages.
 		add_action( 'admin_menu', array( $this, 'registerAdminPages' ), 99 );
 
@@ -204,7 +202,7 @@ class BB_Mothership_Loader {
 	 * This method checks for legacy license data stored in options
 	 * and attempts to migrate it to the new Mothership system.
 	 */
-	protected function migrate_legacy_license(): void {
+	public static function migrate_legacy_license(): void {
 		if ( ! is_admin() ) {
 			return; // Only run migration in admin context.
 		}
