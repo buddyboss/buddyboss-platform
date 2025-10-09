@@ -9,6 +9,7 @@ use BuddyBossPlatform\GroundLevel\Mothership\Api\Request\LicenseActivations;
 use BuddyBossPlatform\GroundLevel\Mothership\Api\Response;
 use BuddyBossPlatform\GroundLevel\Mothership\Credentials;
 use BuddyBossPlatform\GroundLevel\Mothership\Service as MothershipService;
+use BuddyBossPlatform\GroundLevel\Mothership\AbstractPluginConnection;
 use BuddyBossPlatform\GroundLevel\InProductNotifications\Service as IPNService;
 
 /**
@@ -113,8 +114,6 @@ class BB_Mothership_Loader {
 	 */
 	private function setupHooks(): void {
 
-		$this->migrate_legacy_license();
-
 		// Register admin pages.
 		add_action( 'admin_menu', array( $this, 'registerAdminPages' ), 99 );
 
@@ -203,7 +202,7 @@ class BB_Mothership_Loader {
 	 * This method checks for legacy license data stored in options
 	 * and attempts to migrate it to the new Mothership system.
 	 */
-	protected function migrate_legacy_license(): void {
+	public static function migrate_legacy_license(): void {
 		if ( ! is_admin() ) {
 			return; // Only run migration in admin context.
 		}
@@ -252,7 +251,8 @@ class BB_Mothership_Loader {
 			return;
 		}
 
-		$pluginConnector = self::getContainer()->get( MothershipService::CONNECTION_PLUGIN_SERVICE_ID );
+		$instance        = new self();
+		$pluginConnector = $instance->getContainer()->get( AbstractPluginConnection::class );
 		$plugin_id       = $pluginConnector->getDynamicPluginId();
 
 		$current_status = $pluginConnector->getLicenseActivationStatus();
@@ -268,6 +268,12 @@ class BB_Mothership_Loader {
 				empty( $license_data['software_product_id'] )
 			) {
 				continue;
+			}
+
+			$current_status = $pluginConnector->getLicenseActivationStatus();
+
+			if ( $current_status ) {
+				break;
 			}
 
 			$software_id = $license_data['software_product_id'];
@@ -306,7 +312,16 @@ class BB_Mothership_Loader {
 			if ( $plugin_id !== PLATFORM_EDITION ) {
 				$pluginConnector->setDynamicPluginId( $plugin_id );
 				$domain   = Credentials::getActivationDomain();
-				$response = LicenseActivations::activate( $plugin_id, $license_data['license_key'], $domain );
+
+				// Translators: %s is the response error message.
+				$errorHtml = esc_html__( 'Migrate License activation failed: %s', 'buddyboss' );
+
+				try {
+					$response = LicenseActivations::activate( $plugin_id, $license_data['license_key'], $domain );
+				} catch ( \Exception $e ) {
+					error_log( sprintf( $errorHtml, $e->getMessage() ) );
+				}
+
 				if ( $response instanceof Response && ! $response->isError() ) {
 					try {
 						Credentials::storeLicenseKey( $license_data['license_key'] );
@@ -325,6 +340,8 @@ class BB_Mothership_Loader {
 						// Log the exception.
 						error_log( 'Error storing migrated license key: ' . $e->getMessage() );
 					}
+				} else {
+					error_log( $response->__get('error') );
 				}
 			}
 		}
