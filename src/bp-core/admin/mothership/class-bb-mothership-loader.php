@@ -269,6 +269,12 @@ class BB_Mothership_Loader {
 				continue;
 			}
 
+			$current_status = $pluginConnector->getLicenseActivationStatus();
+
+			if ( $current_status ) {
+				break;
+			}
+
 			$software_id = $license_data['software_product_id'];
 
 			if ( 'BB_PLATFORM_PRO_1S' === $software_id ) {
