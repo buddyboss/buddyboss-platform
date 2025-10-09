@@ -2,9 +2,9 @@
 # This file is distributed under the GPLv2 or later (license.txt).
 msgid ""
 msgstr ""
-"Project-Id-Version: BuddyBoss Platform 2.14.0\n"
+"Project-Id-Version: BuddyBoss Platform 2.14.2\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2025-10-07 05:29:52+00:00\n"
+"POT-Creation-Date: 2025-10-09 08:51:37+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -838,8 +838,8 @@ msgstr ""
 #: bp-groups/classes/class-bp-groups-notification.php:1267
 #: bp-groups/classes/class-bp-groups-notification.php:1468
 #: bp-messages/classes/class-bp-messages-notification.php:216
-#: bp-notifications/bp-notifications-functions.php:1371
-#: bp-notifications/bp-notifications-functions.php:1413
+#: bp-notifications/bp-notifications-functions.php:1373
+#: bp-notifications/bp-notifications-functions.php:1415
 #: bp-templates/bp-nouveau/buddypress/search/loop/post.php:60
 #: bp-templates/bp-nouveau/buddypress/search/loop/sfwd-courses-ajax.php:45
 #: bp-templates/bp-nouveau/buddypress/search/loop/sfwd-courses.php:48
@@ -2135,7 +2135,7 @@ msgid "Replies disabled"
 msgstr ""
 
 #: bp-activity/classes/class-bp-activity-list-table.php:682
-#: bp-core/bp-core-cssjs.php:367
+#: bp-core/bp-core-cssjs.php:368
 #: bp-templates/bp-nouveau/buddypress-functions.php:648
 msgid "Are you sure?"
 msgstr ""
@@ -2442,13 +2442,13 @@ msgstr ""
 
 #. translators: do not remove {} brackets or translate its contents.
 #: bp-activity/classes/class-bp-activity-notification.php:591
-#: bp-core/bp-core-update.php:2296
+#: bp-core/bp-core-update.php:2304
 msgid "[{{{site.name}}}] {{poster.name}} posted {{activity.type}}."
 msgstr ""
 
 #. translators: do not remove {} brackets or translate its contents.
 #: bp-activity/classes/class-bp-activity-notification.php:593
-#: bp-core/bp-core-update.php:2298
+#: bp-core/bp-core-update.php:2306
 msgid ""
 "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> posted {{activity.type}}:\n"
 "\n"
@@ -2457,7 +2457,7 @@ msgstr ""
 
 #. translators: do not remove {} brackets or translate its contents.
 #: bp-activity/classes/class-bp-activity-notification.php:595
-#: bp-core/bp-core-update.php:2300
+#: bp-core/bp-core-update.php:2308
 msgid ""
 "{{poster.name}} posted {{activity.type}}:\n"
 "\n"
@@ -2466,7 +2466,7 @@ msgid ""
 msgstr ""
 
 #: bp-activity/classes/class-bp-activity-notification.php:596
-#: bp-core/bp-core-update.php:2331
+#: bp-core/bp-core-update.php:2339
 msgid "New activity post by someone a member is following"
 msgstr ""
 
@@ -2588,13 +2588,13 @@ msgstr ""
 
 #. translators: do not remove {} brackets or translate its contents.
 #: bp-activity/classes/class-bp-activity-notification.php:862
-#: bp-core/bp-core-update.php:2374
+#: bp-core/bp-core-update.php:2382
 msgid "[{{{site.name}}}] {{follower.name}} started following you"
 msgstr ""
 
 #. translators: do not remove {} brackets or translate its contents.
 #: bp-activity/classes/class-bp-activity-notification.php:864
-#: bp-core/bp-core-update.php:2376
+#: bp-core/bp-core-update.php:2384
 msgid ""
 "<a href=\"{{{follower.url}}}\">{{follower.name}}</a> started following you.\n"
 "\n"
@@ -2603,7 +2603,7 @@ msgstr ""
 
 #. translators: do not remove {} brackets or translate its contents.
 #: bp-activity/classes/class-bp-activity-notification.php:866
-#: bp-core/bp-core-update.php:2378
+#: bp-core/bp-core-update.php:2386
 msgid ""
 "{{follower.name}} started following you.\n"
 "\n"
@@ -2611,7 +2611,7 @@ msgid ""
 msgstr ""
 
 #: bp-activity/classes/class-bp-activity-notification.php:867
-#: bp-core/bp-core-update.php:2409
+#: bp-core/bp-core-update.php:2417
 msgid "A member receives a new follower"
 msgstr ""
 
@@ -3753,7 +3753,7 @@ msgstr ""
 #: bp-blogs/classes/class-bp-blogs-theme-compat.php:119
 #: bp-blogs/classes/class-bp-blogs-theme-compat.php:187
 #: bp-core/bp-core-functions.php:794
-#: bp-core/bp-core-update.php:1107
+#: bp-core/bp-core-update.php:1115
 msgid "Sites"
 msgstr ""
 
@@ -4340,7 +4340,7 @@ msgstr ""
 #: bp-core/admin/settings/bp-admin-setting-groups.php:258
 #: bp-core/bp-core-functions.php:795
 #: bp-core/bp-core-template.php:561
-#: bp-core/bp-core-update.php:1109
+#: bp-core/bp-core-update.php:1117
 #: bp-core/classes/class-bb-readylaunch.php:608
 #: bp-core/classes/class-bp-email-tokens.php:457
 #: bp-forums/admin/topics.php:717
@@ -4377,7 +4377,7 @@ msgstr ""
 #: bp-core/admin/settings/bp-admin-setting-groups.php:24
 #: bp-core/bp-core-functions.php:793
 #: bp-core/bp-core-template.php:565
-#: bp-core/bp-core-update.php:1108
+#: bp-core/bp-core-update.php:1116
 #: bp-core/classes/class-bb-readylaunch.php:612
 #: bp-core/compatibility/bp-rankmath-plugin-helpers.php:41
 #: bp-core/gdpr/class-bp-group-export.php:27
@@ -4462,15 +4462,15 @@ msgstr ""
 msgid "Notifications"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-actions.php:284
+#: bp-core/admin/bp-core-admin-actions.php:281
 msgid "Invalid Nickname"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-actions.php:305
+#: bp-core/admin/bp-core-admin-actions.php:302
 msgid "<strong>Error</strong>: Nickname already has been taken. Please try again."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-actions.php:317
+#: bp-core/admin/bp-core-admin-actions.php:314
 #: bp-core/admin/bp-core-admin-tools.php:1248
 #: bp-forums/admin/tools.php:1985
 #: bp-forums/functions.php:889
@@ -4513,30 +4513,30 @@ msgstr ""
 msgid "There was a problem performing this action. Please try again."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-actions.php:382
+#: bp-core/admin/bp-core-admin-actions.php:379
 #: bp-members/bp-members-functions.php:1727
 #: bp-settings/actions/general.php:208
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:1372
 msgid "This email address or domain has been blacklisted. If you think you are seeing this in error, please contact the site administrator."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-actions.php:436
+#: bp-core/admin/bp-core-admin-actions.php:433
 msgid "Settings saved successfully."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-actions.php:502
+#: bp-core/admin/bp-core-admin-actions.php:499
 msgid "Upgrade to pro and unlock more exciting community features!"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-actions.php:504
+#: bp-core/admin/bp-core-admin-actions.php:501
 msgid "Upgrade to Pro"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-actions.php:510
+#: bp-core/admin/bp-core-admin-actions.php:507
 msgid "Dismiss this notice."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-actions.php:531
+#: bp-core/admin/bp-core-admin-actions.php:528
 #: bp-core/classes/class-bb-telemetry.php:597
 #: bp-moderation/classes/class-bp-rest-moderation-endpoint.php:399
 #: bp-moderation/classes/class-bp-rest-moderation-report-endpoint.php:301
@@ -5450,7 +5450,7 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-settings.php:1977
 #: bp-core/admin/bp-core-admin-settings.php:2005
 #: bp-core/admin/bp-core-admin-settings.php:2033
-#: bp-core/admin/mothership/class-bb-license-manager.php:215
+#: bp-core/admin/mothership/class-bb-license-manager.php:216
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:439
 msgid "First Name"
 msgstr ""
@@ -5459,7 +5459,7 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-settings.php:1982
 #: bp-core/admin/bp-core-admin-settings.php:2010
 #: bp-core/admin/bp-core-admin-settings.php:2047
-#: bp-core/admin/mothership/class-bb-license-manager.php:223
+#: bp-core/admin/mothership/class-bb-license-manager.php:224
 msgid "Last Name"
 msgstr ""
 
@@ -6968,11 +6968,11 @@ msgstr ""
 msgid "MySql Server"
 msgstr ""
 
-#: bp-core/admin/mothership/class-bb-addons-manager.php:25
+#: bp-core/admin/mothership/class-bb-addons-manager.php:26
 msgid "Please enter your license key to access add-ons."
 msgstr ""
 
-#: bp-core/admin/mothership/class-bb-addons-manager.php:36
+#: bp-core/admin/mothership/class-bb-addons-manager.php:37
 msgid "There was an issue connecting with the API."
 msgstr ""
 
@@ -6984,60 +6984,60 @@ msgstr ""
 msgid "Add-ons"
 msgstr ""
 
-#: bp-core/admin/mothership/class-bb-license-manager.php:41
+#: bp-core/admin/mothership/class-bb-license-manager.php:42
 msgid "License activated successfully"
 msgstr ""
 
-#: bp-core/admin/mothership/class-bb-license-manager.php:54
+#: bp-core/admin/mothership/class-bb-license-manager.php:55
 msgid "License deactivated successfully"
 msgstr ""
 
-#: bp-core/admin/mothership/class-bb-license-manager.php:78
+#: bp-core/admin/mothership/class-bb-license-manager.php:79
 msgid "You do not have permission to activate a license"
 msgstr ""
 
-#: bp-core/admin/mothership/class-bb-license-manager.php:83
-#: bp-core/admin/mothership/class-bb-license-manager.php:515
+#: bp-core/admin/mothership/class-bb-license-manager.php:84
+#: bp-core/admin/mothership/class-bb-license-manager.php:516
 msgid "Invalid nonce"
 msgstr ""
 
 #. Translators: %s is the response error message.
-#: bp-core/admin/mothership/class-bb-license-manager.php:92
+#: bp-core/admin/mothership/class-bb-license-manager.php:93
 msgid "License activation failed: %s"
 msgstr ""
 
-#: bp-core/admin/mothership/class-bb-license-manager.php:170
+#: bp-core/admin/mothership/class-bb-license-manager.php:171
 #: bp-core/admin/mothership/class-bb-license-page.php:45
 msgid "License Activation"
 msgstr ""
 
-#: bp-core/admin/mothership/class-bb-license-manager.php:176
+#: bp-core/admin/mothership/class-bb-license-manager.php:177
 msgid "License Key"
 msgstr ""
 
-#: bp-core/admin/mothership/class-bb-license-manager.php:179
-#: bp-core/admin/mothership/class-bb-license-manager.php:403
+#: bp-core/admin/mothership/class-bb-license-manager.php:180
+#: bp-core/admin/mothership/class-bb-license-manager.php:404
 msgid "Enter your license key"
 msgstr ""
 
 #. translators: %s is the link to get a free license key
-#: bp-core/admin/mothership/class-bb-license-manager.php:185
+#: bp-core/admin/mothership/class-bb-license-manager.php:186
 msgid "Don't have a license yet? Click  %s to get your free license key and receive plugin updates."
 msgstr ""
 
-#: bp-core/admin/mothership/class-bb-license-manager.php:186
+#: bp-core/admin/mothership/class-bb-license-manager.php:187
 msgid "here"
 msgstr ""
 
-#: bp-core/admin/mothership/class-bb-license-manager.php:196
+#: bp-core/admin/mothership/class-bb-license-manager.php:197
 msgid "Activate License"
 msgstr ""
 
-#: bp-core/admin/mothership/class-bb-license-manager.php:207
+#: bp-core/admin/mothership/class-bb-license-manager.php:208
 msgid "Get Your BuddyBoss Platform License Key"
 msgstr ""
 
-#: bp-core/admin/mothership/class-bb-license-manager.php:231
+#: bp-core/admin/mothership/class-bb-license-manager.php:232
 #: bp-core/profile-search/bps-xprofile.php:830
 #: bp-core/profile-search/bps-xprofile.php:831
 #: bp-members/bp-members-filters.php:154
@@ -7045,85 +7045,90 @@ msgstr ""
 msgid "Email Address"
 msgstr ""
 
-#: bp-core/admin/mothership/class-bb-license-manager.php:240
+#: bp-core/admin/mothership/class-bb-license-manager.php:241
 msgid "Get License Key"
 msgstr ""
 
-#: bp-core/admin/mothership/class-bb-license-manager.php:286
+#: bp-core/admin/mothership/class-bb-license-manager.php:287
 msgid "Processing..."
 msgstr ""
 
-#: bp-core/admin/mothership/class-bb-license-manager.php:315
-#: bp-core/admin/mothership/class-bb-license-manager.php:320
+#: bp-core/admin/mothership/class-bb-license-manager.php:316
+#: bp-core/admin/mothership/class-bb-license-manager.php:321
 msgid "Error:"
 msgstr ""
 
-#: bp-core/admin/mothership/class-bb-license-manager.php:320
+#: bp-core/admin/mothership/class-bb-license-manager.php:321
 msgid "An error occurred while processing your request."
 msgstr ""
 
-#: bp-core/admin/mothership/class-bb-license-manager.php:380
+#: bp-core/admin/mothership/class-bb-license-manager.php:381
 msgid "Active License Information"
 msgstr ""
 
-#: bp-core/admin/mothership/class-bb-license-manager.php:385
+#: bp-core/admin/mothership/class-bb-license-manager.php:386
 msgid "%1$s of %2$s sites have been activated with this license key"
 msgstr ""
 
-#: bp-core/admin/mothership/class-bb-license-manager.php:391
+#: bp-core/admin/mothership/class-bb-license-manager.php:392
 msgid "License Key: "
 msgstr ""
 
-#: bp-core/admin/mothership/class-bb-license-manager.php:392
+#: bp-core/admin/mothership/class-bb-license-manager.php:393
 msgid "Status: "
 msgstr ""
 
-#: bp-core/admin/mothership/class-bb-license-manager.php:393
+#: bp-core/admin/mothership/class-bb-license-manager.php:394
 msgid "Product: "
 msgstr ""
 
-#: bp-core/admin/mothership/class-bb-license-manager.php:394
+#: bp-core/admin/mothership/class-bb-license-manager.php:395
 msgid "Activations: "
 msgstr ""
 
-#: bp-core/admin/mothership/class-bb-license-manager.php:407
+#: bp-core/admin/mothership/class-bb-license-manager.php:408
 msgid "Deactivate License"
 msgstr ""
 
-#: bp-core/admin/mothership/class-bb-license-manager.php:520
+#: bp-core/admin/mothership/class-bb-license-manager.php:521
 msgid "You do not have permission to perform this action"
 msgstr ""
 
-#: bp-core/admin/mothership/class-bb-license-manager.php:530
+#: bp-core/admin/mothership/class-bb-license-manager.php:531
 msgid "All fields are required"
 msgstr ""
 
-#: bp-core/admin/mothership/class-bb-license-manager.php:534
+#: bp-core/admin/mothership/class-bb-license-manager.php:535
 msgid "Please enter a valid email address"
 msgstr ""
 
-#: bp-core/admin/mothership/class-bb-license-manager.php:560
+#: bp-core/admin/mothership/class-bb-license-manager.php:561
 msgid "API request failed: %s"
 msgstr ""
 
-#: bp-core/admin/mothership/class-bb-license-manager.php:572
+#: bp-core/admin/mothership/class-bb-license-manager.php:573
 msgid "API returned error code: %d"
 msgstr ""
 
-#: bp-core/admin/mothership/class-bb-license-manager.php:581
+#: bp-core/admin/mothership/class-bb-license-manager.php:582
 msgid "Invalid response from API"
 msgstr ""
 
-#: bp-core/admin/mothership/class-bb-license-manager.php:586
+#: bp-core/admin/mothership/class-bb-license-manager.php:587
 msgid "License key generated successfully!"
 msgstr ""
 
-#: bp-core/admin/mothership/class-bb-license-manager.php:594
+#: bp-core/admin/mothership/class-bb-license-manager.php:595
 msgid "Failed to generate license key"
 msgstr ""
 
 #: bp-core/admin/mothership/class-bb-license-page.php:33
 msgid "BuddyBoss License Activation"
+msgstr ""
+
+#. Translators: %s is the response error message.
+#: bp-core/admin/mothership/class-bb-mothership-loader.php:317
+msgid "Migrate License activation failed: %s"
 msgstr ""
 
 #: bp-core/admin/mothership/views/admin.php:12
@@ -8987,160 +8992,160 @@ msgid "You cannot upload more than 10 files at a time."
 msgstr ""
 
 #. Translators: %s is the relative time (eg: in a few seconds).
-#: bp-core/bp-core-cssjs.php:762
+#: bp-core/bp-core-cssjs.php:763
 msgid "in %s"
 msgstr ""
 
 #. translators: %s: the human time diff.
 #. translators: The time since the older date.
 #. translators: %s: forum freshness link
-#: bp-core/bp-core-cssjs.php:764
-#: bp-core/bp-core-cssjs.php:812
+#: bp-core/bp-core-cssjs.php:765
+#: bp-core/bp-core-cssjs.php:813
 #: bp-core/bp-core-functions.php:1259
 #: bp-core/classes/class-bb-readylaunch.php:4217
 #: bp-forums/common/functions.php:115
 msgid "%s ago"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:765
+#: bp-core/bp-core-cssjs.php:766
 #: bp-forums/common/functions.php:125
 msgid "second"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:766
+#: bp-core/bp-core-cssjs.php:767
 msgid "%d seconds"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:767
-#: bp-core/bp-core-cssjs.php:815
+#: bp-core/bp-core-cssjs.php:768
+#: bp-core/bp-core-cssjs.php:816
 #: bp-core/bp-core-functions.php:1373
 msgid "a minute"
 msgstr ""
 
 #. Translators: %d is the amount of minutes.
-#: bp-core/bp-core-cssjs.php:769
+#: bp-core/bp-core-cssjs.php:770
 msgid "%d minutes"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:770
-#: bp-core/bp-core-cssjs.php:817
+#: bp-core/bp-core-cssjs.php:771
+#: bp-core/bp-core-cssjs.php:818
 #: bp-core/bp-core-functions.php:1366
 msgid "an hour"
 msgstr ""
 
 #. Translators: %d is the amount of hours.
 #. translators: %s: The admin setting field label.
-#: bp-core/bp-core-cssjs.php:772
+#: bp-core/bp-core-cssjs.php:773
 #: bp-messages/bp-messages-functions.php:2145
 #: bp-messages/bp-messages-functions.php:2154
 #: bp-messages/bp-messages-functions.php:2163
 msgid "%d hours"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:773
-#: bp-core/bp-core-cssjs.php:819
+#: bp-core/bp-core-cssjs.php:774
+#: bp-core/bp-core-cssjs.php:820
 #: bp-core/bp-core-functions.php:1359
 msgid "a day"
 msgstr ""
 
 #. Translators: %d is the amount of days.
-#: bp-core/bp-core-cssjs.php:775
+#: bp-core/bp-core-cssjs.php:776
 msgid "%d days"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:776
-#: bp-core/bp-core-cssjs.php:821
+#: bp-core/bp-core-cssjs.php:777
+#: bp-core/bp-core-cssjs.php:822
 #: bp-core/bp-core-functions.php:1352
 msgid "a week"
 msgstr ""
 
 #. Translators: %d is the amount of weeks.
-#: bp-core/bp-core-cssjs.php:778
+#: bp-core/bp-core-cssjs.php:779
 msgid "%d weeks"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:779
-#: bp-core/bp-core-cssjs.php:823
+#: bp-core/bp-core-cssjs.php:780
+#: bp-core/bp-core-cssjs.php:824
 msgid "a month"
 msgstr ""
 
 #. Translators: %d is the amount of months.
-#: bp-core/bp-core-cssjs.php:781
+#: bp-core/bp-core-cssjs.php:782
 msgid "%d months"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:782
-#: bp-core/bp-core-cssjs.php:825
+#: bp-core/bp-core-cssjs.php:783
+#: bp-core/bp-core-cssjs.php:826
 #: bp-core/bp-core-functions.php:1325
 msgid "a year"
 msgstr ""
 
 #. Translators: %d is the amount of years.
-#: bp-core/bp-core-cssjs.php:784
+#: bp-core/bp-core-cssjs.php:785
 msgid "%d years"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:810
+#: bp-core/bp-core-cssjs.php:811
 #: bp-core/bp-core-functions.php:1240
 #: bp-forums/common/functions.php:113
 msgid "sometime"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:811
+#: bp-core/bp-core-cssjs.php:812
 #: bp-core/bp-core-functions.php:1249
 msgid "Just now"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:813
+#: bp-core/bp-core-cssjs.php:814
 msgid "a second"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:814
+#: bp-core/bp-core-cssjs.php:815
 #: bp-forums/admin/settings.php:455
 #: bp-forums/common/functions.php:125
 msgid "seconds"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:816
+#: bp-core/bp-core-cssjs.php:817
 #: bp-forums/admin/settings.php:439
 #: bp-forums/common/functions.php:124
 msgid "minutes"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:818
+#: bp-core/bp-core-cssjs.php:819
 #: bp-forums/common/functions.php:123
 msgid "hours"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:820
+#: bp-core/bp-core-cssjs.php:821
 #: bp-forums/common/functions.php:122
 msgid "days"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:822
+#: bp-core/bp-core-cssjs.php:823
 #: bp-forums/common/functions.php:121
 msgid "weeks"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:824
+#: bp-core/bp-core-cssjs.php:825
 #: bp-forums/common/functions.php:120
 msgid "months"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:826
+#: bp-core/bp-core-cssjs.php:827
 #: bp-forums/common/functions.php:119
 msgid "years"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:897
+#: bp-core/bp-core-cssjs.php:898
 msgid "Mismatch"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:898
+#: bp-core/bp-core-cssjs.php:899
 msgid "Enter valid email"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:899
+#: bp-core/bp-core-cssjs.php:900
 #: bp-members/classes/class-bp-rest-signup-endpoint.php:720
 #: bp-members/classes/class-bp-rest-signup-endpoint.php:790
 #: bp-members/screens/register.php:161
@@ -9960,7 +9965,7 @@ msgid "Activate a new account and site"
 msgstr ""
 
 #: bp-core/bp-core-functions.php:3994
-#: bp-core/bp-core-update.php:1999
+#: bp-core/bp-core-update.php:2007
 msgid "A member is mentioned in an activity post"
 msgstr ""
 
@@ -9970,7 +9975,7 @@ msgid "You will no longer receive emails when someone mentions you in an update.
 msgstr ""
 
 #: bp-core/bp-core-functions.php:4002
-#: bp-core/bp-core-update.php:2000
+#: bp-core/bp-core-update.php:2008
 msgid "A member is mentioned in a group activity post"
 msgstr ""
 
@@ -10377,46 +10382,46 @@ msgstr ""
 msgid "Default Forum for %s Group"
 msgstr ""
 
-#: bp-core/bp-core-update.php:1106
+#: bp-core/bp-core-update.php:1114
 msgid "Site-Wide Activity"
 msgstr ""
 
-#: bp-core/bp-core-update.php:1473
+#: bp-core/bp-core-update.php:1481
 #: bp-templates/bp-nouveau/includes/video/functions.php:312
 msgid "MP4"
 msgstr ""
 
-#: bp-core/bp-core-update.php:1481
+#: bp-core/bp-core-update.php:1489
 #: bp-templates/bp-nouveau/includes/video/functions.php:320
 msgid "WebM"
 msgstr ""
 
-#: bp-core/bp-core-update.php:1489
+#: bp-core/bp-core-update.php:1497
 #: bp-templates/bp-nouveau/includes/video/functions.php:328
 msgid "Ogg"
 msgstr ""
 
-#: bp-core/bp-core-update.php:1497
+#: bp-core/bp-core-update.php:1505
 #: bp-templates/bp-nouveau/includes/video/functions.php:336
 msgid "Quicktime"
 msgstr ""
 
-#: bp-core/bp-core-update.php:2001
+#: bp-core/bp-core-update.php:2009
 msgid "A Zoom meeting is scheduled in a group"
 msgstr ""
 
-#: bp-core/bp-core-update.php:2002
+#: bp-core/bp-core-update.php:2010
 msgid "A Zoom webinar is scheduled in a group"
 msgstr ""
 
 #. translators: do not remove {} brackets or translate its contents.
-#: bp-core/bp-core-update.php:2538
+#: bp-core/bp-core-update.php:2546
 #: bp-groups/classes/class-bp-groups-notification.php:793
 msgid "[{{{site.name}}}] {{poster.name}} posted {{activity.type}} in {{group.name}}"
 msgstr ""
 
 #. translators: do not remove {} brackets or translate its contents.
-#: bp-core/bp-core-update.php:2540
+#: bp-core/bp-core-update.php:2548
 #: bp-groups/classes/class-bp-groups-notification.php:795
 msgid ""
 "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> posted {{activity.type}} in <a href=\"{{{group.url}}}\">{{group.name}}</a>:\n"
@@ -10425,7 +10430,7 @@ msgid ""
 msgstr ""
 
 #. translators: do not remove {} brackets or translate its contents.
-#: bp-core/bp-core-update.php:2542
+#: bp-core/bp-core-update.php:2550
 #: bp-groups/classes/class-bp-groups-notification.php:797
 msgid ""
 "{{poster.name}} posted {{activity.type}} in {{group.name}}:\n"
@@ -10435,19 +10440,19 @@ msgid ""
 "View the post: {{{activity.url}}}"
 msgstr ""
 
-#: bp-core/bp-core-update.php:2546
+#: bp-core/bp-core-update.php:2554
 #: bp-groups/classes/class-bp-groups-notification.php:798
 msgid "New activity post in a group a member is subscribed to"
 msgstr ""
 
 #. translators: do not remove {} brackets or translate its contents.
-#: bp-core/bp-core-update.php:2550
+#: bp-core/bp-core-update.php:2558
 #: bp-groups/classes/class-bp-groups-notification.php:836
 msgid "[{{{site.name}}}] New discussion in {{group.name}}"
 msgstr ""
 
 #. translators: do not remove {} brackets or translate its contents.
-#: bp-core/bp-core-update.php:2552
+#: bp-core/bp-core-update.php:2560
 #: bp-groups/classes/class-bp-groups-notification.php:838
 msgid ""
 "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> created a discussion in <a href=\"{{{group.url}}}\">{{group.name}}</a>:\n"
@@ -10456,7 +10461,7 @@ msgid ""
 msgstr ""
 
 #. translators: do not remove {} brackets or translate its contents.
-#: bp-core/bp-core-update.php:2554
+#: bp-core/bp-core-update.php:2562
 #: bp-groups/classes/class-bp-groups-notification.php:840
 msgid ""
 "{{poster.name}} created a discussion {{discussion.title}} in {{group.name}}:\n"
@@ -10466,19 +10471,19 @@ msgid ""
 "Discussion Link: {{discussion.url}}"
 msgstr ""
 
-#: bp-core/bp-core-update.php:2558
+#: bp-core/bp-core-update.php:2566
 #: bp-groups/classes/class-bp-groups-notification.php:841
 msgid "New forum discussion in a group a member is subscribed to"
 msgstr ""
 
 #. translators: do not remove {} brackets or translate its contents.
-#: bp-core/bp-core-update.php:2884
+#: bp-core/bp-core-update.php:2892
 #: bp-core/classes/class-bb-post-notification.php:91
 msgid "[{{{site.name}}}] {{commenter.name}} replied to your comment"
 msgstr ""
 
 #. translators: do not remove {} brackets or translate its contents.
-#: bp-core/bp-core-update.php:2886
+#: bp-core/bp-core-update.php:2894
 #: bp-core/classes/class-bb-post-notification.php:93
 msgid ""
 "<a href=\"{{{commenter.url}}}\">{{commenter.name}}</a> replied to your comment:\n"
@@ -10487,7 +10492,7 @@ msgid ""
 msgstr ""
 
 #. translators: do not remove {} brackets or translate its contents.
-#: bp-core/bp-core-update.php:2888
+#: bp-core/bp-core-update.php:2896
 #: bp-core/classes/class-bb-post-notification.php:95
 msgid ""
 "{{commenter.name}} replied to your comment:\n"
@@ -10497,7 +10502,7 @@ msgid ""
 "View the comment: {{{comment.url}}}"
 msgstr ""
 
-#: bp-core/bp-core-update.php:2919
+#: bp-core/bp-core-update.php:2927
 #: bp-core/classes/class-bb-post-notification.php:83
 #: bp-core/classes/class-bb-post-notification.php:96
 msgid "A member receives a reply to their WordPress post comment"
@@ -31744,7 +31749,7 @@ msgstr ""
 msgid "No new notifications"
 msgstr ""
 
-#: bp-notifications/bp-notifications-functions.php:1251
+#: bp-notifications/bp-notifications-functions.php:1253
 msgid "Notification Icon"
 msgstr ""
 
