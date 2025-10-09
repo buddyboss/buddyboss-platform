@@ -9,6 +9,7 @@ use BuddyBossPlatform\GroundLevel\Mothership\Api\Request\LicenseActivations;
 use BuddyBossPlatform\GroundLevel\Mothership\Api\Response;
 use BuddyBossPlatform\GroundLevel\Mothership\Credentials;
 use BuddyBossPlatform\GroundLevel\Mothership\Service as MothershipService;
+use BuddyBossPlatform\GroundLevel\Mothership\AbstractPluginConnection;
 use BuddyBossPlatform\GroundLevel\InProductNotifications\Service as IPNService;
 
 /**
@@ -251,7 +252,7 @@ class BB_Mothership_Loader {
 		}
 
 		$instance        = new self();
-		$pluginConnector = $instance->getContainer()->get( MothershipService::CONNECTION_PLUGIN_SERVICE_ID );
+		$pluginConnector = $instance->getContainer()->get( AbstractPluginConnection::class );
 		$plugin_id       = $pluginConnector->getDynamicPluginId();
 
 		$current_status = $pluginConnector->getLicenseActivationStatus();

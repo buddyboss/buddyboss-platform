@@ -7,6 +7,7 @@ namespace BuddyBoss\Core\Admin\Mothership;
 use BuddyBossPlatform\GroundLevel\Mothership\Manager\AddonsManager;
 use BuddyBossPlatform\GroundLevel\Mothership\Api\Response;
 use BuddyBossPlatform\GroundLevel\Mothership\Service as MothershipService;
+use BuddyBossPlatform\GroundLevel\Mothership\AbstractPluginConnection;
 
 /**
  * Custom AddonsManager for BuddyBoss that extends the vendor's AddonsManager.
@@ -21,13 +22,13 @@ class BB_Addons_Manager extends AddonsManager {
 	 * @return string The HTML for the add-ons.
 	 */
 	public static function generateAddonsHtml(): string {
-		if ( ! self::getContainer()->get( MothershipService::CONNECTION_PLUGIN_SERVICE_ID )->getLicenseKey() ) {
+		if ( ! self::getContainer()->get( AbstractPluginConnection::class )->getLicenseKey() ) {
 			return '<div class="notice notice-error is-dismissible"><p>' . esc_html__( 'Please enter your license key to access add-ons.', 'buddyboss' ) . '</p></div>';
 		}
 
 		// Refresh the add-ons if the button is clicked.
 		if ( isset( $_POST['submit-button-mosh-refresh-addon'] ) ) {
-			delete_transient( self::getContainer()->get( MothershipService::CONNECTION_PLUGIN_SERVICE_ID )->pluginId . self::CACHE_KEY_PRODUCTS );
+			delete_transient( self::getContainer()->get( AbstractPluginConnection::class )->pluginId . self::CACHE_KEY_PRODUCTS );
 		}
 
 		$addons = self::getAddons( true );
