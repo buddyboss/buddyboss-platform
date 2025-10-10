@@ -113,18 +113,19 @@ class BB_Mothership_Loader {
 	 * Setup WordPress hooks.
 	 */
 	private function setupHooks(): void {
+		if ( is_admin() ) {
+			// Register admin pages.
+			add_action( 'admin_menu', array( $this, 'registerAdminPages' ), 99 );
 
-		// Register admin pages.
-		add_action( 'admin_menu', array( $this, 'registerAdminPages' ), 99 );
+			// Register license controller using BuddyBoss custom manager.
+			add_action( 'admin_init', array( \BuddyBoss\Core\Admin\Mothership\BB_License_Manager::class, 'controller' ), 20 );
 
-		// Register license controller using BuddyBoss custom manager.
-		add_action( 'admin_init', array( \BuddyBoss\Core\Admin\Mothership\BB_License_Manager::class, 'controller' ), 20 );
+			// Register addons functionality using BuddyBoss custom manager.
+			BB_Addons_Manager::loadHooks();
 
-		// Register addons functionality using BuddyBoss custom manager.
-		BB_Addons_Manager::loadHooks();
-
-		// Register AJAX handlers.
-		add_action( 'wp_ajax_bb_get_free_license', array( 'BuddyBoss\Core\Admin\Mothership\BB_License_Manager', 'ajax_get_free_license' ) );
+			// Register AJAX handlers.
+			add_action( 'wp_ajax_bb_get_free_license', array( 'BuddyBoss\Core\Admin\Mothership\BB_License_Manager', 'ajax_get_free_license' ) );
+		}
 
 		$plugin_id = $this->pluginConnector->getDynamicPluginId();
 
