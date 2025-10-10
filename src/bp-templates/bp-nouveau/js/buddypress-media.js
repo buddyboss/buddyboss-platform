@@ -7815,6 +7815,9 @@ window.bp = window.bp || {};
 						target.closest('.bb-document-privacy-wrap').find('.privacy').removeClass('loading').removeClass(older_privacy);
 						target.closest('.bb-document-privacy-wrap').find('.privacy').addClass(privacy);
 						target.closest('.bb-document-privacy-wrap').find('.bp-tooltip').attr('data-bp-tooltip', target.text());
+						if ( response.data && response.data.url ) {
+							$( document ).find( 'a.bb-open-document-theatre[data-id="' + self.current_document.id + '"]' ).attr( 'href', response.data.url );
+						}
 					},
 					error  : function () {
 						target.closest('.bb-document-privacy-wrap').find('.privacy').removeClass('loading');
