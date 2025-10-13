@@ -16,13 +16,8 @@ defined( 'ABSPATH' ) || exit;
  * Initialize BuddyBoss Mothership functionality.
  */
 function buddyboss_init_mothership() {
-	// Only load in admin area.
-	if ( ! is_admin() ) {
-		return;
-	}
-
 	// The vendor autoloader should already be loaded from bp-loader.php
-	// Setup namespace aliases to allow using BuddyBossPlatform namespace consistently
+	// Setup namespace aliases to allow using BuddyBossPlatform namespace consistently.
 	require_once __DIR__ . '/autoload-aliases.php';
 
 	// Include BuddyBoss specific files.
