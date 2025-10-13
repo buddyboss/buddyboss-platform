@@ -36,7 +36,7 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 		add_filter( 'bp_moderation_content_types', array( $this, 'add_content_types' ), 11 );
 
 		// Add report button for all comments via comment_text filter
-		add_filter( 'comment_text', array( $this, 'add_report_button' ), 999, 2 );
+		add_filter( 'comment_text', array( $this, 'add_report_button' ), 100, 2 );
 
 		// Update report button.
 		add_filter( "bp_moderation_{$this->item_type}_button", array( $this, 'update_button' ), 10, 2 );
@@ -316,13 +316,13 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 			return $comment_text;
 		}
 
-		// Check if moderation is enabled
-		if ( ! bp_is_moderation_content_reporting_enable( 0, self::$moderation_type ) ) {
+		// Check if comment ID exists
+		if ( empty( $comment->comment_ID ) ) {
 			return $comment_text;
 		}
 
-		// Check if this comment already has a report button
-		if ( strpos( $comment_text, 'bb_more_options' ) !== false ) {
+		// Check if moderation is enabled
+		if ( ! bp_is_moderation_content_reporting_enable( 0, self::$moderation_type ) ) {
 			return $comment_text;
 		}
 
@@ -345,32 +345,6 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 		}
 
 		return $comment_text;
-	}
-
-
-	/**
-	 * Get the depth of a comment in the threading hierarchy
-	 *
-	 * @since BuddyBoss 1.5.6
-	 *
-	 * @param WP_Comment $comment The comment object.
-	 *
-	 * @return int The depth of the comment.
-	 */
-	private function get_comment_depth( $comment ) {
-		$depth = 0;
-		$parent_id = $comment->comment_parent;
-
-		while ( $parent_id > 0 ) {
-			$depth++;
-			$parent_comment = get_comment( $parent_id );
-			if ( ! $parent_comment ) {
-				break;
-			}
-			$parent_id = $parent_comment->comment_parent;
-		}
-
-		return $depth;
 	}
 
 	/**
