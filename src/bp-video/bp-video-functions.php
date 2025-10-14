@@ -316,6 +316,10 @@ function bp_video_upload_handler( $file_id = 'file' ) {
 	// Add upload filters.
 	bb_video_add_upload_filters();
 
+	// Initialize variables before foreach to prevent undefined variable warnings.
+	$tmp_file_path = '';
+	$filename      = '';
+
 	// phpcs:disable WordPress.Security.NonceVerification.Missing
 	if ( ! empty( $_FILES ) ) {
 		foreach ( $_FILES as $file ) {
@@ -340,10 +344,29 @@ function bp_video_upload_handler( $file_id = 'file' ) {
 
 			if ( ! empty( $_POST['dzuuid'] ) ) {
 				$chunks_res = bb_resumable_upload( $tmp_file_path, $filename );
+
+				// Check for errors from chunk assembly.
+				if ( ! empty( $chunks_res['errors'] ) ) {
+					$error_message = implode( ', ', $chunks_res['errors'] );
+					return new WP_Error( 'chunk_upload_failed', $error_message, array( 'status' => 400 ) );
+				}
+
+				// If chunk upload is still in progress, return status.
 				if ( empty( $chunks_res['final'] ) ) {
 					return 'in_progress';
 				}
+
+				// Get the path to the assembled file.
 				$tmp_file_path = $chunks_res['path'];
+
+				// Validate that the assembled file exists and is not empty.
+				if ( ! file_exists( $tmp_file_path ) || 0 === filesize( $tmp_file_path ) ) {
+					return new WP_Error(
+						'invalid_assembled_file',
+						__( 'The assembled video file is invalid or empty.', 'buddyboss' ),
+						array( 'status' => 500 )
+					);
+				}
 			}
 		}
 	}
@@ -385,6 +408,15 @@ function bp_video_upload_handler( $file_id = 'file' ) {
 
 	// if has wp error then throw it.
 	if ( is_wp_error( $aid ) ) {
+		// Clean up assembled file on error if it was created from chunks.
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing
+		if ( ! empty( $_POST['dzuuid'] ) &&
+			isset( $tmp_file_path ) &&
+			file_exists( $tmp_file_path ) &&
+			false !== strpos( $tmp_file_path, 'bb-whole-from-chunks' ) ) {
+			wp_delete_file( $tmp_file_path );
+		}
+
 		return $aid;
 	}
 
@@ -5229,11 +5261,14 @@ function bb_create_file_from_chunks( $args ) {
 	/**
 	 * Filters the temporary directory for creating the final file.
 	 *
+	 * Use uploads directory to ensure chunks and final file are on the same filesystem
+	 * for efficient file operations (rename instead of copy).
+	 *
 	 * @since [BBVERSION]
 	 *
 	 * @param string $rel_path Temporary directory path.
 	 */
-	$rel_path = apply_filters( 'bfu_temp_dir', WP_CONTENT_DIR . '/whole_from_chunks' );
+	$rel_path = apply_filters( 'bfu_temp_dir', wp_upload_dir()['basedir'] . '/bb-whole-from-chunks' );
 	$rel_path = trailingslashit( $rel_path );
 
 	// Ensure destination directory exists.
