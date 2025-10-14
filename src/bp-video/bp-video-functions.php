@@ -4854,7 +4854,7 @@ function bb_resumable_upload( $tmp_file_path, $filename ) {
 	$errors    = array();
 	$warnings  = array();
 
-	$dir = apply_filters( 'bfu_temp_dir', WP_CONTENT_DIR . '/bb-large-upload' );
+	$dir = apply_filters( 'bfu_temp_dir', wp_upload_dir()['basedir'] . '/bb-large-upload' );
 	$dir = trailingslashit( $dir );
 
 	// phpcs:ignore WordPress.Security.NonceVerification.Missing
