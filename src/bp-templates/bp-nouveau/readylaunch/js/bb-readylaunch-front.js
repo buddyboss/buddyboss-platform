@@ -721,7 +721,11 @@ window.bp = window.bp || {};
 					dropzone.on(
 						'success',
 						function ( file, response ) {
-							if ( response.data.id ) {
+							if ( 'video' === mediaType && true === file.upload.chunked ) {
+								// convert file.xhr.response string to object.
+								response = JSON.parse( file.xhr.response );
+							}
+							if ( response.data && response.data.id ) {
 								if ( 'activity' === ActiveComponent ) {
 									// Privacy and metadata handling.
 									if ( ! bp.privacyEditable ) {

@@ -856,7 +856,7 @@ window.bp = window.bp || {};
 							response = JSON.parse( file.xhr.response );
 						}
 
-						if (response.data && response.data.id) {
+						if ( response.data && response.data.id ) {
 							file.id                  = response.id;
 							response.data.uuid       = file.upload.uuid;
 							response.data.menu_order = self.dropzone_video.length;
