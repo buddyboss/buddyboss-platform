@@ -18,7 +18,7 @@
     },
     "require": {
         "php": ">=7.4",
-        "caseproof\/ground-level-container": "^1.0.0",
-        "caseproof\/ground-level-support": "^1.0.0"
+        "caseproof\/ground-level-container": "^1.0.1",
+        "caseproof\/ground-level-support": "^1.0.1"
     }
 }

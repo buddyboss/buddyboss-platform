@@ -122,20 +122,22 @@ class AddonsManager implements StaticContainerAwareness
             $versionLatest = $product->_embedded->{'version-latest'}->number ?? '';
             $urlLatest = $product->_embedded->{'version-latest'}->url ?? '';
             $item = null;
-            if (empty($mainFile) || empty($versionLatest) || empty($urlLatest) || !isset($transient->checked[$mainFile])) {
+            // Plugins use the main file while themes use the directory name.
+            $transientKey = $extensionType->equals(ExtensionType::THEME(), \false) ? \dirname($mainFile) : $mainFile;
+            if (empty($mainFile) || empty($versionLatest) || empty($urlLatest) || !isset($transient->checked[$transientKey])) {
                 continue;
             }
             if ($extensionType->equals(ExtensionType::PLUGIN(), \false)) {
                 $item = (object) ['id' => $mainFile, 'slug' => \dirname($mainFile), 'plugin' => $mainFile, 'new_version' => $versionLatest, 'package' => $urlLatest, 'url' => '', 'tested' => '', 'requires_php' => '', 'icons' => ['2x' => $product->image, '1x' => $product->image]];
             } elseif ($extensionType->equals(ExtensionType::THEME(), \false)) {
-                $item = ['theme' => $mainFile, 'new_version' => $versionLatest, 'package' => $urlLatest, 'url' => '', 'requires' => '', 'requires_php' => '', 'icons' => ['2x' => $product->image, '1x' => $product->image]];
+                $item = ['theme' => \dirname($mainFile), 'new_version' => $versionLatest, 'package' => $urlLatest, 'url' => '', 'requires' => '', 'requires_php' => '', 'icons' => ['2x' => $product->image, '1x' => $product->image]];
             }
             if (!\is_null($item)) {
-                if (\version_compare($transient->checked[$mainFile], $versionLatest, '>=')) {
-                    $transient->no_update[$mainFile] = $item;
+                if (\version_compare($transient->checked[$transientKey], $versionLatest, '>=')) {
+                    $transient->no_update[$transientKey] = $item;
                     // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps -- WordPress data structure.
                 } else {
-                    $transient->response[$mainFile] = $item;
+                    $transient->response[$transientKey] = $item;
                 }
             }
         }
@@ -272,7 +274,7 @@ class AddonsManager implements StaticContainerAwareness
             wp_send_json_error(new \WP_Error('invalid_addon_type', esc_html__('Invalid add-on type.', 'caseproof-mothership')));
         }
         if (!$hasPermissions) {
-            wp_send_json_error(new \WP_Error('insufficient_permissions', esc_html__('Sorry, you don\'t have permission activate addons.', 'caseproof-mothership')));
+            wp_send_json_error(new \WP_Error('insufficient_permissions', esc_html__('You don not have the necessary permission to perform this action.', 'caseproof-mothership')));
         }
         $mainFile = self::$ajaxProduct->main_file ?? \false;
         // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps -- API response.
@@ -282,7 +284,7 @@ class AddonsManager implements StaticContainerAwareness
                 $activated = activate_plugin($mainFile);
                 $activated = \is_null($activated) ? \true : $activated;
             } else {
-                switch_theme($mainFile);
+                switch_theme(\dirname($mainFile));
                 $activated = \true;
             }
         }
@@ -441,9 +443,9 @@ class AddonsManager implements StaticContainerAwareness
                 // TODO: Add JS for update handling, set this using isset($pluginUpdates->response[$mainFile]).
                 $product->updateAvailable = \false;
             } else {
-                $theme = wp_get_theme($mainFile);
+                $theme = wp_get_theme(\dirname($mainFile));
                 $installed = $theme->exists();
-                $active = get_stylesheet() === $mainFile;
+                $active = get_stylesheet() === \dirname($mainFile);
                 // TODO: Add JS for update handling, set this using isset($themeUpdates->response[$mainFile]).
                 $product->updateAvailable = \false;
             }
