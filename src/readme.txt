@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 6.8.1
 Requires PHP: 7.4.0
-Stable tag: 2.11.0
+Stable tag: 2.14.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,39 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 2.14.4 =
+* Bug: Core - Fixed an issue where theme updates were not being received
+
+= 2.14.3 =
+* Bug: Core - Fixed an issue where Polls, Scheduled Posts, and Reactions were not working correctly on site
+
+= 2.14.2 =
+* Bug: Core - Fixed the license rate limit error and proper error handling
+
+= 2.14.1 =
+* Bug: Core - Fixed a fatal error causing the Zoom integration to break
+
+= 2.14.0 =
+* New Feature! Core - Implemented a new licensing system for BuddyBoss plugins and theme
+
+= 2.13.1 =
+* Bug: LearnDash - Fixed BuddyBoss Theme compatibility with LearnDash Modern UI templates to ensure lessons, topics, and courses display correctly
+
+= 2.13.0 =
+* New Feature! Activity - Added Featured Image above post content in activity and group posts, making feeds more visual and engaging
+* New Feature! Activity - Added support for Post Titles and H3/H4 text formatting in activity feeds, helping communities stay organized and posts easier to read
+
+= 2.12.0 =
+* Bug: Activity - Fixed issue where activity filters still applied a removed topic filter instead of working independently
+* Bug: Activity - Fixed issue where activity topic settings remained visible when the main topic setting was disabled
+* Bug: Activity - Removed incorrect tooltip "Please select a Topic" from the Post button when no group topics exist
+* Bug: Fixed an issue where network search displayed private forum replies to non-group members
+* Bug: Forums - Fixed an issue where code snippets in forum discussions and replies broke when added from the backend editor
+* Bug: Groups - Fixed an issue where subscribers were able to upload media in groups despite restrictions set in group settings
+* Bug: Moderation - Added search functionality to moderation admin pages
+* Bug: ReadyLaunch - Fixed UI issues with pre and code blocks in forum content when ReadyLaunch is enabled
+* Bug: WooCommerce - Fixed WooCommerce order confirmation page UI conflict between ReadyLaunch and Theme
 
 = 2.11.0 =
 * Enhancement: Activity - Added a new “Unanswered” option to the Activity Feed filter, allowing users to view posts without comments or replies

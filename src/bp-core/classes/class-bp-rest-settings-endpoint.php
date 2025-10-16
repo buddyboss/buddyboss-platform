@@ -1215,6 +1215,7 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 		if ( bp_is_active( 'activity' ) ) {
 			// Activity Settings.
 			$results['bp_enable_activity_edit']         = bp_is_activity_edit_enabled();
+			$results['bb_enable_activity_post_title']   = bb_is_activity_post_title_enabled();
 			$results['bp_activity_edit_time']           = bp_get_activity_edit_time( - 1 );
 			$results['bb_enable_activity_comment_edit'] = bb_is_activity_comment_edit_enabled();
 			$results['bb_activity_comment_edit_time']   = bb_get_activity_comment_edit_time( - 1 );

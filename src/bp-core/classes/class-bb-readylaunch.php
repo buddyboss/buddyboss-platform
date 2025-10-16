@@ -1102,8 +1102,8 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			wp_enqueue_style( 'bp-select2' );
 
 			// Enqueue Cropper.js.
-			wp_enqueue_script( 'bb-readylaunch-cropper-js' );
-			wp_enqueue_style( 'bb-readylaunch-cropper-css' );
+			wp_enqueue_script( 'bb-cropper-js' );
+			wp_enqueue_style( 'bb-cropper-css' );
 
 			wp_enqueue_style( 'bb-readylaunch-font', buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/assets/fonts/fonts.css', array(), bp_get_version() );
 			wp_enqueue_style( 'bb-readylaunch-style-main', buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/css/main{$min}.css", array(), bp_get_version() );
@@ -2396,13 +2396,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			$min = bp_core_get_minified_asset_suffix();
 			$url = buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/js/';
 
-			// Add Cropper.js to the common scripts.
-			$scripts['bb-readylaunch-cropper-js'] = array(
-				'file'         => "{$url}cropper{$min}.js",
-				'dependencies' => array( 'jquery' ),
-				'version'      => '1.6.2',
-				'footer'       => true,
-			);
+
 
 			if ( isset( $scripts['bp-avatar'] ) ) {
 				$scripts['bp-avatar']['file'] = "{$url}bb-readylaunch-avatar{$min}.js";
@@ -2432,11 +2426,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			$min = bp_core_get_minified_asset_suffix();
 			$url = buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/css/';
 
-			$styles['bb-readylaunch-cropper-css'] = array(
-				'file'         => "{$url}cropper{$min}.css",
-				'dependencies' => array(),
-				'version'      => '1.6.2',
-			);
+
 
 			return $styles;
 		}
@@ -3498,7 +3488,9 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			}
 
 			// Check for URL parameters that indicate password reset.
-			if ( isset( $_GET['ld-resetpw'] ) || isset( $_GET['password_reset'] ) || isset( $_GET['key'] ) || isset( $_GET['login'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			// LearnDash password reset URLs should have both 'key' and 'action=rp' parameters.
+			// This prevents false positives from other plugins using 'key' parameter.
+			if ( isset( $_GET['ld-resetpw'] ) || isset( $_GET['password_reset'] ) || ( isset( $_GET['key'] ) && 'rp' === $_GET['action'] ) || isset( $_GET['login'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 				return true;
 			}
 
