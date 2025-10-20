@@ -994,7 +994,9 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					do_action( 'bp_template_redirect' );
 					
 					// Force BuddyBoss to use the theme's page template instead of ReadyLaunch template
-					// This will use the theme's full page template (with head, body, etc.) and include the register partial
+					// Prefer the theme's buddypress.php so the register logo container renders
+					$theme_buddypress_template = trailingslashit( get_stylesheet_directory() ) . 'buddypress.php';
+					// Fallback to the selected page template
 					$theme_template = get_page_template();
 					
 					// Set up the page content to include the BuddyBoss register form
@@ -1022,7 +1024,10 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					$post->post_type = 'page';
 					$post->ID = 0;
 					
-					if ( $theme_template && file_exists( $theme_template ) ) {
+					// If the theme provides buddypress.php, use it to get the correct register layout (logo, wrappers, etc.)
+					if ( file_exists( $theme_buddypress_template ) ) {
+						return $theme_buddypress_template;
+					} elseif ( $theme_template && file_exists( $theme_template ) ) {
 						return $theme_template;
 					} else {
 						// Fallback to index.php if page template not found
