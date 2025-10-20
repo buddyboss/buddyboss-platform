@@ -705,6 +705,17 @@ window.bp = window.bp || {};
 						function ( file, xhr, formData ) {
 							formData.append( 'action', actionName );
 							formData.append( '_wpnonce', bbRlNonce[ nonceName ] );
+							
+							var forumId = 0;
+							if ( $('#bbp_forum_id' ).length ) {
+								forumId = $('#bbp_forum_id').val();
+							}
+							formData.append( 'bbp_forum_id', forumId );
+							var topicId = 0;
+							if ( $('#bbp_topic_id' ).length ) {
+								topicId = $('#bbp_topic_id').val();
+							}
+							formData.append('bbp_topic_id', topicId);
 
 							var toolBox = view.$el.parents( parentSelector );
 							otherButtonSelectors.forEach(
