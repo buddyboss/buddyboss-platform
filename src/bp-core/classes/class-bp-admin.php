@@ -1198,14 +1198,19 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 *
 		 * @since BuddyBoss 1.9.1
 		 */
-		public function bb_display_update_plugin_information() {
-			if ( 0 !== strpos( get_current_screen()->id, 'plugins' ) ) {
-				return;
-			}
-			// Check the transient to see if we've just updated the plugin.
-			global $bp;
-			include trailingslashit( $bp->plugin_dir . 'bp-core/admin' ) . 'templates/update-buddyboss.php';
-			delete_option( '_bb_is_update' );
+	public function bb_display_update_plugin_information() {
+		if ( 0 !== strpos( get_current_screen()->id, 'plugins' ) ) {
+			return;
 		}
+		
+		// Don't output update modal on plugins page to avoid interfering with WordPress script loading
+		// This prevents missing WordPress core JavaScript files and wp admin pages functioning properly
+		return;
+		
+		// Check the transient to see if we've just updated the plugin.
+		global $bp;
+		include trailingslashit( $bp->plugin_dir . 'bp-core/admin' ) . 'templates/update-buddyboss.php';
+		delete_option( '_bb_is_update' );
+	}
 	}
 endif; // End class_exists check.
