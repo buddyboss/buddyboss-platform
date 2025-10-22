@@ -40,8 +40,8 @@ window.bp = window.bp || {};
 			$document.on( 'click', '[id*="single-forum-description-popup"] .bb-close-action-popup', this.closeForumDescriptionPopup );
 			
 			// Initialize emoji when forum modals are opened
-			$document.on( 'bbp_after_load_topic_form', this.initializeEmojiForModal );
-			$document.on( 'bbp_after_load_reply_form', this.initializeEmojiForModal );
+			$document.on( 'bbp_after_load_topic_form', this.initialize_emoji_for_modal );
+			$document.on( 'bbp_after_load_reply_form', this.initialize_emoji_for_modal );
 
 			window.addReply = {
 				moveForm: function ( replyId, parentId, respondId, postId ) {
@@ -981,10 +981,15 @@ window.bp = window.bp || {};
 			}
 		},
 
-		initializeEmojiForModal: function() {
+		initialize_emoji_for_modal: function() {
 			// Use a small delay to ensure the modal content is fully rendered
+			// 100ms delay allows DOM elements to be fully inserted and styled before emoji initialization
 			setTimeout(function() {
-				bp.Readylaunch.Forums.forumEmoji();
+				try {
+					bp.Readylaunch.Forums.forumEmoji();
+				} catch (error) {
+					console.error('Failed to initialize emoji functionality:', error);
+				}
 			}, 100);
 		},
 
