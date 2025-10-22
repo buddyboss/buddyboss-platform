@@ -2476,6 +2476,7 @@ window.bp = window.bp || {};
 			if ( ! $.fn.emojioneArea ) {
 				return;
 			}
+			
 			$( parentSelector + '#ac-input-' + activityId ).emojioneArea(
 				{
 					standalone: true,
@@ -2511,6 +2512,18 @@ window.bp = window.bp || {};
 						picker_show: function () {
 							$( this.button[ 0 ] ).closest( '.bb-rl-post-emoji' ).addClass( 'active' );
 							$( '.bb-rl-emojionearea-theatre' ).removeClass( 'hide' ).addClass( 'show' );
+							
+							// Fix positioning for modal context - override the incorrect transform calculation
+							if (isModal) {
+								// Use setTimeout to override after the plugin sets its transform
+								setTimeout(function() {
+									$('.bb-rl-emojionearea-theatre .emojionearea-picker').css({
+										'transform': 'translate(-50%, -100%) !important',
+										'left': '50% !important',
+										'top': '0 !important'
+									});
+								}, 60); // Slightly after the plugin's 50ms timeout
+							}
 						},
 
 						picker_hide: function () {
@@ -2520,6 +2533,23 @@ window.bp = window.bp || {};
 					},
 				}
 			);
+			
+			// Manually trigger the picker show/hide for modal context since detachPicker breaks the internal handler
+			if (isModal) {
+				$(document).on('click', parentSelector + '#bb-rl-ac-reply-emoji-button-' + activityId, function(e) {
+					var $targetInput = $(parentSelector + '#ac-input-' + activityId);
+					var emojioneAreaInstance = $targetInput.data('emojioneArea');
+					
+					if (emojioneAreaInstance) {
+						// Toggle the picker
+						if ($('.bb-rl-emojionearea-theatre').hasClass('show')) {
+							emojioneAreaInstance.hidePicker();
+						} else {
+							emojioneAreaInstance.showPicker();
+						}
+					}
+				});
+			}
 		},
 
 		destroyUploader: function ( type, comment_id ) {
