@@ -2522,18 +2522,49 @@ window.bp = window.bp || {};
 				}
 			);
 			
-			// Manually trigger the picker show/hide for modal context since detachPicker breaks the internal handler
+			// Manually trigger picker show/hide for modal context
 			if (isModal) {
+				// Move the theatre container to the correct level in DOM hierarchy
+				var $theatre = $('.bb-rl-emojionearea-theatre');
+				var $screenContent = $('.bb-rl-screen-content').first(); // Use the first/outer screen-content
+				
+				if ($theatre.length && $screenContent.length) {
+					// Check if theatre is already at the correct level (direct child of screen-content)
+					if (!$theatre.parent().is($screenContent)) {
+						$theatre.detach().prependTo($screenContent); // Use prependTo to add at beginning
+					}
+				}
+				
 				$(document).on('click', parentSelector + '#bb-rl-ac-reply-emoji-button-' + activityId, function(e) {
 					var $targetInput = $(parentSelector + '#ac-input-' + activityId);
 					var emojioneAreaInstance = $targetInput.data('emojioneArea');
 					
 					if (emojioneAreaInstance) {
-						// Toggle the picker
+						// Toggle picker container
 						if ($('.bb-rl-emojionearea-theatre').hasClass('show')) {
 							emojioneAreaInstance.hidePicker();
+							$('.bb-rl-emojionearea-theatre').removeClass('show').addClass('hide');
+							$('.bb-rl-emojionearea-theatre .emojionearea-picker').addClass('hidden');
 						} else {
 							emojioneAreaInstance.showPicker();
+							$('.bb-rl-emojionearea-theatre').removeClass('hide').addClass('show');
+							// Show picker element by removing hidden class
+							$('.bb-rl-emojionearea-theatre .emojionearea-picker').removeClass('hidden');
+							
+							// Position the picker relative to click position
+							setTimeout(function() {
+								var clickX = e.pageX || e.clientX;
+								var clickY = e.pageY || e.clientY;
+								var picker = $('.bb-rl-emojionearea-theatre .emojionearea-picker');
+								
+								if (picker.length) {
+									// Position picker relative to click position
+									var leftPos = clickX + 30; // Center horizontally
+									var topPos = clickY - 390; // Position above the click
+									
+									picker.css('transform', 'translate(' + leftPos + 'px, ' + topPos + 'px) translate(-100%, -100%)');
+								}
+							}, 100); // Small delay to ensure picker is rendered
 						}
 					}
 				});
