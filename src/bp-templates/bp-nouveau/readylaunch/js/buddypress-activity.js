@@ -2512,18 +2512,6 @@ window.bp = window.bp || {};
 						picker_show: function () {
 							$( this.button[ 0 ] ).closest( '.bb-rl-post-emoji' ).addClass( 'active' );
 							$( '.bb-rl-emojionearea-theatre' ).removeClass( 'hide' ).addClass( 'show' );
-							
-							// Fix positioning for modal context - override the incorrect transform calculation
-							if (isModal) {
-								// Use setTimeout to override after the plugin sets its transform
-								setTimeout(function() {
-									$('.bb-rl-emojionearea-theatre .emojionearea-picker').css({
-										'transform': 'translate(-50%, -100%) !important',
-										'left': '50% !important',
-										'top': '0 !important'
-									});
-								}, 60); // Slightly after the plugin's 50ms timeout
-							}
 						},
 
 						picker_hide: function () {
