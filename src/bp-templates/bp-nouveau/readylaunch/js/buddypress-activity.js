@@ -2540,29 +2540,34 @@ window.bp = window.bp || {};
 					var emojioneAreaInstance = $targetInput.data('emojioneArea');
 					
 					if (emojioneAreaInstance) {
-						// Toggle picker container
-						if ($('.bb-rl-emojionearea-theatre').hasClass('show')) {
+						var $theatre = $('.bb-rl-emojionearea-theatre');
+						var $picker = $theatre.find('.emojionearea-picker');
+						
+						// Check current state
+						var isCurrentlyVisible = $theatre.hasClass('show') && !$picker.hasClass('hidden');
+						
+						if (isCurrentlyVisible) {
+							// Hide picker
 							emojioneAreaInstance.hidePicker();
-							$('.bb-rl-emojionearea-theatre').removeClass('show').addClass('hide');
-							$('.bb-rl-emojionearea-theatre .emojionearea-picker').addClass('hidden');
+							$theatre.removeClass('show').addClass('hide');
+							$picker.addClass('hidden');
 						} else {
+							// Show picker
 							emojioneAreaInstance.showPicker();
-							$('.bb-rl-emojionearea-theatre').removeClass('hide').addClass('show');
-							// Show picker element by removing hidden class
-							$('.bb-rl-emojionearea-theatre .emojionearea-picker').removeClass('hidden');
+							$theatre.removeClass('hide').addClass('show');
+							$picker.removeClass('hidden');
 							
 							// Position the picker relative to click position
 							setTimeout(function() {
 								var clickX = e.pageX || e.clientX;
 								var clickY = e.pageY || e.clientY;
-								var picker = $('.bb-rl-emojionearea-theatre .emojionearea-picker');
 								
-								if (picker.length) {
+								if ($picker.length) {
 									// Position picker relative to click position
 									var leftPos = clickX + 30; // Center horizontally
-									var topPos = clickY - 390; // Position above the click
+									var topPos = clickY - 140; // Position closer to the click
 									
-									picker.css('transform', 'translate(' + leftPos + 'px, ' + topPos + 'px) translate(-100%, -100%)');
+									$picker.css('transform', 'translate(' + leftPos + 'px, ' + topPos + 'px) translate(-100%, -100%)');
 								}
 							}, 100); // Small delay to ensure picker is rendered
 						}
@@ -3315,7 +3320,10 @@ window.bp = window.bp || {};
 			if (
 				'undefined' !== typeof window.getSelection &&
 				'undefined' !== typeof document.createRange &&
-				! _.isNull( activity_comment_data )
+				! _.isNull( activity_comment_data ) &&
+				acInputElem.length > 0 &&
+				acInputElem[0] &&
+				acInputElem[0].nodeType === Node.ELEMENT_NODE
 			) {
 				var range = document.createRange();
 				range.selectNodeContents( acInputElem[0] );
