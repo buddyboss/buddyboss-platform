@@ -875,6 +875,14 @@ window.bp = window.bp || {};
 				bp.Nouveau.Activity.cleanupEmojiEventHandlers( activityId );
 			}
 
+			// Clean up all emoji picker elements from theatre when modal closes
+			var $theatre = $('.bb-rl-emojionearea-theatre');
+			if ($theatre.length) {
+				// Remove all picker elements and reset theatre state
+				$theatre.find('.emojionearea-picker').remove();
+				$theatre.removeClass('show hide').addClass('hide');
+			}
+
 			modal.find( '#bb-rl-activity-modal' ).removeClass( 'bb-closed-comments' );
 
 			modal.closest( 'body' ).removeClass( 'acomments-modal-open' );
@@ -2567,28 +2575,35 @@ window.bp = window.bp || {};
 							$theatre.removeClass('show').addClass('hide');
 							$picker.addClass('hidden');
 						} else {
+							// Clean up existing picker elements before showing new one
+							// if there are multiple pickers to prevent accumulation
+							var existingPickers = $theatre.find('.emojionearea-picker');
+							if (existingPickers.length > 1) {
+								existingPickers.remove();
+							}
+							
 							// Show picker but keep it hidden until positioned
 							emojioneAreaInstance.showPicker();
 							$theatre.removeClass('hide').addClass('show');
-							$picker.addClass('hidden');
+							
+							// Get the picker element
+							var $currentPicker = $theatre.find('.emojionearea-picker');
+							$currentPicker.addClass('hidden');
 							
 							// Position the picker relative to click position
 							setTimeout(function() {
-								var clickX = e.pageX || e.clientX;
-								var clickY = e.pageY || e.clientY;
+								var clickX = e.clientX;
+								var clickY = e.clientY;
 								
-								if ($picker.length) {
-									// Get modal container offset to adjust positioning
-									var modalOffset = $modalContainer.offset();
-									
-									// Position picker relative to click position, adjusted for modal container
+								if ($currentPicker.length) {
+									// Position picker relative to viewport click position
 									var leftPos = clickX + 30; // Center horizontally
-									var topPos = clickY - modalOffset.top - 15; // Adjust for modal container offset
+									var topPos = clickY - 20; // Small offset above click position
 									
-									$picker.css('transform', 'translate(' + leftPos + 'px, ' + topPos + 'px) translate(-100%, -100%)');
+									$currentPicker.css('transform', 'translate(' + leftPos + 'px, ' + topPos + 'px) translate(-100%, -100%)');
 									
 									// Show picker after positioning
-									$picker.removeClass('hidden');
+									$currentPicker.removeClass('hidden');
 								}
 							}, 50); // Small delay to ensure picker is rendered
 						}
