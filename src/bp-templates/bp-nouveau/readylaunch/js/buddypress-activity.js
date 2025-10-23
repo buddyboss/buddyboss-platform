@@ -2552,10 +2552,10 @@ window.bp = window.bp || {};
 							$theatre.removeClass('show').addClass('hide');
 							$picker.addClass('hidden');
 						} else {
-							// Show picker
+							// Show picker but keep it hidden until positioned
 							emojioneAreaInstance.showPicker();
 							$theatre.removeClass('hide').addClass('show');
-							$picker.removeClass('hidden');
+							$picker.addClass('hidden');
 							
 							// Position the picker relative to click position
 							setTimeout(function() {
@@ -2568,8 +2568,11 @@ window.bp = window.bp || {};
 									var topPos = clickY - 140; // Position closer to the click
 									
 									$picker.css('transform', 'translate(' + leftPos + 'px, ' + topPos + 'px) translate(-100%, -100%)');
+									
+									// Show picker after positioning
+									$picker.removeClass('hidden');
 								}
-							}, 100); // Small delay to ensure picker is rendered
+							}, 50); // Small delay to ensure picker is rendered
 						}
 					}
 				});
