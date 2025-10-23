@@ -870,6 +870,11 @@ window.bp = window.bp || {};
 				bp.Nouveau.Activity.initializeEmojioneArea( false, '', activityId );
 			}
 
+			// Clean up emoji picker event handlers when modal closes
+			if ( activityId ) {
+				bp.Nouveau.Activity.cleanupEmojiEventHandlers( activityId );
+			}
+
 			modal.find( '#bb-rl-activity-modal' ).removeClass( 'bb-closed-comments' );
 
 			modal.closest( 'body' ).removeClass( 'acomments-modal-open' );
@@ -2535,7 +2540,17 @@ window.bp = window.bp || {};
 					}
 				}
 				
-				$(document).on('click', parentSelector + '#bb-rl-ac-reply-emoji-button-' + activityId, function(e) {
+				// Find the modal container for better event management
+				var $modalContainer = $(parentSelector).closest('.modal, .bb-modal, .bb-rl-modal, .activity-modal, .activity-theatre, .bb-rl-screen-content');
+				if (!$modalContainer.length) {
+					$modalContainer = $(parentSelector); // Fallback to parent selector
+				}
+				
+				// Create unique event namespace for this activity
+				var eventNamespace = '.bb-rl-emoji-' + activityId;
+				
+				// Bind to modal container instead of document for better cleanup
+				$modalContainer.on('click' + eventNamespace, '#bb-rl-ac-reply-emoji-button-' + activityId, function(e) {
 					var $targetInput = $(parentSelector + '#ac-input-' + activityId);
 					var emojioneAreaInstance = $targetInput.data('emojioneArea');
 					
@@ -2563,9 +2578,12 @@ window.bp = window.bp || {};
 								var clickY = e.pageY || e.clientY;
 								
 								if ($picker.length) {
-									// Position picker relative to click position
+									// Get modal container offset to adjust positioning
+									var modalOffset = $modalContainer.offset();
+									
+									// Position picker relative to click position, adjusted for modal container
 									var leftPos = clickX + 30; // Center horizontally
-									var topPos = clickY - 140; // Position closer to the click
+									var topPos = clickY - modalOffset.top - 15; // Adjust for modal container offset
 									
 									$picker.css('transform', 'translate(' + leftPos + 'px, ' + topPos + 'px) translate(-100%, -100%)');
 									
@@ -2576,7 +2594,27 @@ window.bp = window.bp || {};
 						}
 					}
 				});
+				
+				// Store the event namespace and container for cleanup
+				$modalContainer.data('emoji-event-namespace-' + activityId, eventNamespace);
 			}
+		},
+
+		cleanupEmojiEventHandlers: function(activityId) {
+			// Clean up emoji picker event handlers for a specific activity
+			// Find modal containers that might have the event handlers
+			$('.modal, .bb-modal, .bb-rl-modal, .activity-modal, .activity-theatre, .bb-rl-screen-content').each(function() {
+				var $container = $(this);
+				var eventNamespace = $container.data('emoji-event-namespace-' + activityId);
+				
+				if (eventNamespace) {
+					// Remove the event handler
+					$container.off(eventNamespace);
+					
+					// Remove the stored namespace
+					$container.removeData('emoji-event-namespace-' + activityId);
+				}
+			});
 		},
 
 		destroyUploader: function ( type, comment_id ) {
