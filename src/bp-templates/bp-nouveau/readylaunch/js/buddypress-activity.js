@@ -2589,7 +2589,10 @@ window.bp = window.bp || {};
 									var leftPos = clickX + 30; // Center horizontally
 									var topPos = clickY - 20; // Small offset above click position
 									
-									$currentPicker.css('transform', 'translate(' + leftPos + 'px, ' + topPos + 'px) translate(-100%, -100%)');
+									$currentPicker.css('transform', 
+										'translate(' + leftPos + 'px, ' + topPos + 'px) ' +
+										'translate(-100%, -100%)'
+									);
 									
 									// Show picker after positioning
 									$currentPicker.removeClass('hidden');
