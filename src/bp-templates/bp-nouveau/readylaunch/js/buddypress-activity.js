@@ -2537,17 +2537,6 @@ window.bp = window.bp || {};
 			
 			// Manually trigger picker show/hide for modal context
 			if (isModal) {
-				// Move the theatre container to the correct level in DOM hierarchy
-				var $theatre = $('.bb-rl-emojionearea-theatre');
-				var $screenContent = $('.bb-rl-screen-content').first(); // Use the first/outer screen-content
-				
-				if ($theatre.length && $screenContent.length) {
-					// Check if theatre is already at the correct level (direct child of screen-content)
-					if (!$theatre.parent().is($screenContent)) {
-						$theatre.detach().prependTo($screenContent); // Use prependTo to add at beginning
-					}
-				}
-				
 				// Find the modal container for better event management
 				var $modalContainer = $(parentSelector).closest('.modal, .bb-modal, .bb-rl-modal, .activity-modal, .activity-theatre, .bb-rl-screen-content');
 				if (!$modalContainer.length) {
