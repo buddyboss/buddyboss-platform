@@ -2501,6 +2501,13 @@ body.bb-rl-activity-modal-open .bb-rl-activity-update-form.modal-popup {
   width: 200px;
 }
 
+@media screen and (max-width: 800px) {
+  .bb-rl-activity-filters-container .bb-subnav-filters-container-main .subnav-filters-modal {
+    right: 0;
+    left: unset;
+  }
+}
+
 .bb-subnav-filters-container-main .subnav-filters-modal ul {
   list-style: none;
   padding: 0;
