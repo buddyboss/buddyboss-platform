@@ -59,6 +59,7 @@ window.bp = window.bp || {};
 				$document.on( 'click', '.action-delete', this.markNotificationDelete.bind( this ) );
 				$document.on( 'click', '.bb-rl-header-container .header-aside .user-link', this.profileNav.bind( this ) );
 				$document.on( 'click', '.bb-rl-header-search', this.searchModelToggle.bind( this ) );
+				$document.on( 'click', '.bb-rl-profile-list-item--after', this.toggleProfileListItem.bind( this ) );
 			},
 
 			profileNav: function ( e ) {
@@ -71,6 +72,21 @@ window.bp = window.bp || {};
 				e.preventDefault();
 
 				$( '#bb-rl-network-search-modal' ).removeClass( 'bp-hide' );
+			},
+
+			/**
+			 * Toggle profile list item active state
+			 */
+			toggleProfileListItem: function ( e ) {
+				e.preventDefault();
+				e.stopPropagation();
+
+				var $clickedAfter = $( e.currentTarget );
+				var $currentItem = $clickedAfter.closest( '.bb-rl-profile-list-item' );
+
+				$( '.bb-rl-profile-list-item' ).not( $currentItem ).removeClass( 'active' );
+
+				$currentItem.toggleClass( 'active' );
 			},
 
 			/**

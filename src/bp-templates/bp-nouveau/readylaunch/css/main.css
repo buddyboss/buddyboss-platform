@@ -7280,6 +7280,19 @@ body.directory .bb-readylaunch-menu.bb-rl-items-max, body.forum-archive .bb-read
   padding-top: var(--bb-rl-space-100);
 }
 
+@media screen and (max-width: 460px) {
+  .bb-rl-profile-dropdown .bb-rl-profile-lists .bb-rl-profile-list-item.active > .bb-profile-submenu-lists {
+    opacity: 1;
+    visibility: visible;
+    height: auto;
+    padding: var(--bb-rl-space-100) 0;
+  }
+}
+
+.bb-rl-profile-dropdown .bb-rl-profile-lists .bb-rl-profile-list-item.active .bb-rl-profile-list-item--after i {
+  transform: rotate(90deg);
+}
+
 .bb-rl-profile-dropdown .bb-rl-profile-lists li {
   position: relative;
 }
@@ -7300,9 +7313,23 @@ body.directory .bb-readylaunch-menu.bb-rl-items-max, body.forum-archive .bb-read
   transition: all 0.3s ease-in-out;
 }
 
-.bb-rl-profile-dropdown .bb-rl-profile-lists li:hover > .bb-profile-submenu-lists {
-  opacity: 1;
-  visibility: visible;
+@media screen and (max-width: 460px) {
+  .bb-rl-profile-dropdown .bb-rl-profile-lists li > .bb-profile-submenu-lists {
+    position: static;
+    border-radius: 0;
+    box-shadow: none;
+    border-left: 0;
+    border-right: 0;
+    height: 0;
+    padding: 0;
+  }
+}
+
+@media screen and (min-width: 460px) {
+  .bb-rl-profile-dropdown .bb-rl-profile-lists li:hover > .bb-profile-submenu-lists {
+    opacity: 1;
+    visibility: visible;
+  }
 }
 
 .bb-rl-profile-dropdown .bb-rl-profile-lists .bb-rl-profile-list-item:has(.bb-profile-submenu-lists) > a::after {
@@ -7313,6 +7340,31 @@ body.directory .bb-readylaunch-menu.bb-rl-items-max, body.forum-archive .bb-read
   color: var(--bb-rl-icon-secondary-color);
   font-style: normal;
   margin-left: auto;
+}
+
+@media screen and (max-width: 460px) {
+  .bb-rl-profile-dropdown .bb-rl-profile-lists .bb-rl-profile-list-item:has(.bb-profile-submenu-lists) > a::after {
+    display: none;
+  }
+}
+
+.bb-rl-profile-dropdown .bb-rl-profile-lists .bb-rl-profile-list-item:has(.bb-profile-submenu-lists) span.bb-rl-profile-list-item--after {
+  display: none;
+  margin-left: auto;
+}
+
+.bb-rl-profile-dropdown .bb-rl-profile-lists .bb-rl-profile-list-item:has(.bb-profile-submenu-lists) span.bb-rl-profile-list-item--after i {
+  font-size: var(--bb-rl-font-size-base);
+  color: var(--bb-rl-icon-secondary-color);
+  font-style: normal;
+}
+
+@media screen and (max-width: 460px) {
+  .bb-rl-profile-dropdown .bb-rl-profile-lists .bb-rl-profile-list-item:has(.bb-profile-submenu-lists) span.bb-rl-profile-list-item--after {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
 }
 
 body:not(.bb-rl-dark-mode) #bb-rl-profile-theme-light a {
