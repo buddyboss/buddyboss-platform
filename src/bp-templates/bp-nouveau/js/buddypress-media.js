@@ -7822,7 +7822,7 @@ window.bp = window.bp || {};
 						value   : privacy,
 						type    : 'document',
 					},
-					success: function () {
+					success: function ( response ) {
 						target.closest('.bb-document-privacy-wrap').find('.privacy').removeClass('loading').removeClass(older_privacy);
 						target.closest('.bb-document-privacy-wrap').find('.privacy').addClass(privacy);
 						target.closest('.bb-document-privacy-wrap').find('.bp-tooltip').attr('data-bp-tooltip', target.text());
