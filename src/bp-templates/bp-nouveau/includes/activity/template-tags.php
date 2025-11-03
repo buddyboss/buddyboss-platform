@@ -299,6 +299,15 @@ function bp_nouveau_activity_state() {
 		if ( bb_is_reaction_activity_posts_enabled() ) {
 			echo bb_get_activity_post_user_reactions_html( $activity_id );
 		}
+
+		/**
+		 * Fires after reactions display and before comments in activity state.
+		 *
+		 * @since BuddyBoss [version]
+		 *
+		 * @param int $activity_id The activity ID.
+		 */
+		do_action( 'bp_activity_state_after_reactions', $activity_id );
 		?>
 
 		<?php if ( bp_activity_can_comment() ) :
@@ -322,6 +331,17 @@ function bp_nouveau_activity_state() {
 				</span>
 			</a>
 		<?php endif; ?>
+
+		<?php
+		/**
+		 * Fires after comments display in activity state.
+		 *
+		 * @since BuddyBoss [version]
+		 *
+		 * @param int $activity_id The activity ID.
+		 */
+		do_action( 'bp_activity_state_after_comments', $activity_id );
+		?>
 	</div>
 	<?php
 }
