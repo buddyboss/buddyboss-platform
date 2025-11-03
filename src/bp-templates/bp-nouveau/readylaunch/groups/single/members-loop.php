@@ -29,7 +29,7 @@ $enabled_joined_date   = ! function_exists( 'bb_enabled_member_directory_element
 if ( bp_group_has_members( bp_ajax_querystring( 'group_members' ) . '&type=group_role' ) ) {
 	add_filter( 'bp_organizer_plural_label_name', 'BB_Group_Readylaunch::bb_rl_add_count_after_label', 10, 3 );
 	add_filter( 'bp_moderator_plural_label_name', 'BB_Group_Readylaunch::bb_rl_add_count_after_label', 10, 3 );
-	add_filter( 'bp_member_plural_label_name', 'BB_Group_Readylaunch::bb_rl_add_count_after_label', 10, 3 );	
+	add_filter( 'bp_member_plural_label_name', 'BB_Group_Readylaunch::bb_rl_add_count_after_label', 10, 3 );
 	?>
 
 	<ul id="members-list" class="<?php bp_nouveau_loop_classes(); ?> members-list">
@@ -186,6 +186,10 @@ if ( bp_group_has_members( bp_ajax_querystring( 'group_members' ) . '&type=group
 									}
 									?>
 								</div>
+
+								<?php
+									bp_nouveau_member_hook( '', 'members_list_meta' );
+								?>
 
 								<div class="bb-rl-item-block-assets">
 									<?php
