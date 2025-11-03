@@ -301,7 +301,7 @@ function bp_nouveau_activity_state() {
 		}
 
 		/**
-		 * Fires after reactions display and before comments in activity state.
+		 * Fires after reactions display in activity state.
 		 *
 		 * @since BuddyBoss [version]
 		 *
