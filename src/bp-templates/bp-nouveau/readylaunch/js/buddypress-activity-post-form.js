@@ -1468,6 +1468,9 @@ window.bp = window.bp || {};
 				(
 					! _.isUndefined( this.postForm.model.get( 'poll' ) ) &&
 					! _.isEmpty( this.postForm.model.get( 'poll' ) )
+				) ||
+				(
+					$( '#bb-rl-whats-new-form' ).find( '.buddyboss-shared-activity-preview' ).length > 0
 				)
 			);
 
