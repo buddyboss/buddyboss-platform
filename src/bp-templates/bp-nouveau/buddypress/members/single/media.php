@@ -69,6 +69,22 @@ if ( bp_is_user() && bb_enable_content_counts() ) {
 				bp_get_template_part( 'media/actions' );
 				?>
 			</div>
+
+			<?php
+			// Offload Media: Frontend notice container for checking offload status.
+			if ( class_exists( 'BB_OM_Frontend' ) ) {
+				BB_OM_Frontend::render_notice_container(
+					'media',
+					'offload',
+					array(
+						'auto_init'       => true,
+						'auto_start'      => true,
+						'container_class' => 'bb-om-member-media-notice',
+					)
+				);
+			}
+			?>
+
 			<div id="media-stream" class="media" data-bp-list="media" data-ajax="<?php echo esc_attr( $is_send_ajax_request ? 'true' : 'false' ); ?>">
 				<?php
 				if ( $is_send_ajax_request ) {

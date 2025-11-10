@@ -65,6 +65,22 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 				bp_nouveau_group_hook( 'before', 'document_content' );
 				bp_get_template_part( 'document/actions' );
 				?>
+
+				<?php
+				// Offload Media: Frontend notice container for checking offload status.
+				if ( class_exists( 'BB_OM_Frontend' ) ) {
+					BB_OM_Frontend::render_notice_container(
+						'document',
+						'offload',
+						array(
+							'auto_init'       => true,
+							'auto_start'      => true,
+							'container_class' => 'bb-om-group-document-notice',
+						)
+					);
+				}
+				?>
+
 				<div id="media-stream" class="media" data-bp-list="document" data-ajax="<?php echo esc_attr( $is_send_ajax_request ? 'true' : 'false' ); ?>">
 					<?php
 					if ( $is_send_ajax_request ) {

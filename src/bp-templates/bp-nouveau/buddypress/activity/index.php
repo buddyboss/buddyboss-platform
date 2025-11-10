@@ -18,6 +18,50 @@ endif;
 
 bp_nouveau_template_notices();
 
+<?php
+// Offload Media: Frontend notice container for activity uploads.
+// Shows offload status for media/video/document uploaded via activity form.
+// Note: We check for all three types since activity can contain mixed media.
+if ( class_exists( 'BB_OM_Frontend' ) && is_user_logged_in() ) {
+	// Media notice
+	BB_OM_Frontend::render_notice_container(
+		'media',
+		'offload',
+		array(
+			'auto_init'       => true,
+			'auto_start'      => true,
+			'container_class' => 'bb-om-activity-media-notice',
+		)
+	);
+
+	// Video notice
+	if ( bp_is_profile_video_support_enabled() ) {
+		BB_OM_Frontend::render_notice_container(
+			'video',
+			'offload',
+			array(
+				'auto_init'       => true,
+				'auto_start'      => true,
+				'container_class' => 'bb-om-activity-video-notice',
+			)
+		);
+	}
+
+	// Document notice
+	if ( bp_is_profile_document_support_enabled() ) {
+		BB_OM_Frontend::render_notice_container(
+			'document',
+			'offload',
+			array(
+				'auto_init'       => true,
+				'auto_start'      => true,
+				'container_class' => 'bb-om-activity-document-notice',
+			)
+		);
+	}
+}
+?>
+
 if ( bb_is_enabled_activity_topics() ) {
 	$topics = function_exists( 'bb_activity_topics_manager_instance' ) ? bb_activity_topics_manager_instance()->bb_get_activity_topics() : array();
 	if ( ! empty( $topics ) ) {
