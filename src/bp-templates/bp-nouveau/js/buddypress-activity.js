@@ -4016,9 +4016,18 @@ window.bp = window.bp || {};
 							video_element.attr('id', video_element_id);
 
 							var video_action_wrap = video_container.find('.video-action-wrap');
-							video_element.insertAfter(video_action_wrap);
+							// Handle case where .video-action-wrap doesn't exist
+							if (video_action_wrap.length > 0) {
+								video_element.insertAfter(video_action_wrap);
+							} else {
+								// If no .video-action-wrap, prepend video to container
+								video_element.prependTo(video_container);
+							}
 
-							video_container.find('.video-js').remove();
+							// Remove any previously initialized Video.js players, but not the video element itself
+							video_container.find('.video-js').not(video_element).remove();
+							// Remove vjs-initialized class if present to allow re-initialization
+							video_element.removeClass('vjs-initialized');
 
 							video_element.addClass('video-js');
 
