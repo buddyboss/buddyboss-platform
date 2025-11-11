@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * This class handles compatibility code for third party plugins used in conjunction with Platform
  *
- * @since BuddyBoss 1.7.4
+ * @since BuddyBoss 2.15.0
  */
 class BB_OM_Helpers {
 
@@ -19,12 +19,14 @@ class BB_OM_Helpers {
 	 *
 	 * @var self
 	 *
-	 * @since BuddyBoss 1.7.4
+	 * @since BuddyBoss 2.15.0
 	 */
 	private static $instance = null;
 
 	/**
 	 * BB_OM_Helpers constructor.
+	 *
+	 * @since BuddyBoss 2.15.0
 	 */
 	public function __construct() {
 
@@ -34,7 +36,7 @@ class BB_OM_Helpers {
 	/**
 	 * Get the instance of this class.
 	 *
-	 * @since BuddyBoss 1.7.4
+	 * @since BuddyBoss 2.15.0
 	 *
 	 * @return Controller|null
 	 */
@@ -50,6 +52,8 @@ class BB_OM_Helpers {
 
 	/**
 	 * Register the compatibility hooks for the plugin.
+	 *
+	 * @since BuddyBoss 2.15.0
 	 */
 	public function compatibility_init() {
 
@@ -59,7 +63,7 @@ class BB_OM_Helpers {
 	/**
 	 * Add extra parameter into localize scripts for offload media plugin.
 	 *
-	 * @since BuddyBoss 2.6.20
+	 * @since BuddyBoss 2.15.0
 	 *
 	 * @param array $params Localize scripts parameter.
 	 *

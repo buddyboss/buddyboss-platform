@@ -84,7 +84,7 @@ function bp_media_upload() {
 		/**
 		 * Filters the attachment URL.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.15.0
 		 *
 		 * @param string $attachment_url Attachment URL.
 		 * @param int    $attachment_id  Attachment ID.
@@ -94,7 +94,7 @@ function bp_media_upload() {
 		/**
 		 * Filters the attachment thumb URL.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.15.0
 		 *
 		 * @param string $attachment_thumb_url Attachment thumb URL.
 		 * @param int    $attachment_id Attachment ID.
@@ -104,7 +104,7 @@ function bp_media_upload() {
 		/**
 		 * Filters the attachment medium.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.15.0
 		 *
 		 * @param string $attachment_medium Attachment medium.
 		 * @param int    $attachment_id     Attachment ID.

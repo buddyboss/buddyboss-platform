@@ -994,7 +994,7 @@ function bp_video_preview_image_by_js( $video ) {
 	 * Hook after video js preview image.
 	 *
 	 * @since BuddyBoss 1.7.0
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.15.0
 	 * Introduced to pass the preview attachment ID to the hook.
 	 *
 	 * @param int $video_id Video ID.
@@ -4866,7 +4866,7 @@ function bb_video_get_scheduled_status() {
  * This function processes individual chunks of a resumable upload and manages
  * the temporary storage of chunks until all parts are received.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.15.0
  *
  * @param string $tmp_file_path Temporary file path of the uploaded chunk.
  * @param string $filename     Original filename of the file being uploaded.
@@ -5081,7 +5081,7 @@ function bb_resumable_upload( $tmp_file_path, $filename ) {
  * This function verifies that all chunks of a resumable upload have been
  * received and creates the final file by combining all chunks.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.15.0
  *
  * @param array $args {
  *     Array of arguments.
@@ -5228,7 +5228,7 @@ function bb_check_all_parts( $args ) {
  * This function reads all chunk files and combines them into a single
  * final file in the correct order using buffered reading to avoid memory issues.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.15.0
  *
  * @param array $args {
  *     Array of arguments.
@@ -5264,7 +5264,7 @@ function bb_create_file_from_chunks( $args ) {
 	 * Use uploads directory to ensure chunks and final file are on the same filesystem
 	 * for efficient file operations (rename instead of copy).
 	 *
-	 * @since [BBVERSION]
+	 * @since 2.15.0
 	 *
 	 * @param string $rel_path Temporary directory path.
 	 */
@@ -5415,7 +5415,7 @@ function bb_create_file_from_chunks( $args ) {
  * This function generates a unique filename by appending a number if
  * a file with the same name already exists.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.15.0
  *
  * @param array $args {
  *     Array of arguments.
@@ -5488,7 +5488,7 @@ function bb_get_next_available_filename( $args ) {
  * This function removes a directory and all files and subdirectories
  * within it recursively with improved error handling.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.15.0
  *
  * @param string $dir Directory path to remove.
  *
@@ -5540,7 +5540,7 @@ function bb_rrmdir( $dir ) {
  * This function safely removes the temporary directory containing
  * file chunks by renaming it first to avoid concurrent access issues.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.15.0
  *
  * @param string $file_chunks_folder Path to the folder containing file chunks.
  *

@@ -1664,7 +1664,7 @@ function bp_nouveau_ajax_document_save_privacy() {
 			/**
 			 * Fire action to clear request-level URL caches in GET handler.
 			 *
-			 * @since [BBOMVERSION]
+			 * @since BuddyBoss 2.15.0
 			 *
 			 * @param int $attachment_id Attachment ID.
 			 */
