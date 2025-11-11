@@ -1742,7 +1742,7 @@ function bb_video_update_video_symlink( $response, $post_data ) {
 				/**
 				 * Filters the video extension.
 				 *
-				 * @since BuddyBoss [BBVERSION]
+				 * @since BuddyBoss 2.15.0
 				 *
 				 * @param string $ext   The video extension.
 				 * @param object $video The video object.

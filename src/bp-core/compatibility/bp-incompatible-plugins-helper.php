@@ -1307,7 +1307,7 @@ function bb_readylaunch_middle_content_llms_courses( $args = array() ) {
 /**
  * Helper functions for the buddyboss offload media compatibility.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.15.0
  */
 function bb_om_compatibility_helper() {
 

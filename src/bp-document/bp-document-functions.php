@@ -1496,7 +1496,7 @@ function bp_document_upload() {
 	/**
 	 * Filter the attachment URL for document.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.15.0
 	 *
 	 * @param string $attachment_url Attachment URL for document.
 	 * @param int    $attachment_id Attachment ID.
@@ -2695,7 +2695,7 @@ function bp_document_rename_file( $document_id = 0, $attachment_document_id = 0,
 	/**
 	 * Filters the force bypass rename.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.15.0
 	 *
 	 * @param bool   $force_bypass           Force bypass rename.
 	 * @param int    $document_id            Document ID.

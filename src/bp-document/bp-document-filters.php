@@ -1988,7 +1988,7 @@ function bb_document_update_video_symlink( $response, $post_data ) {
 				/**
 				 * Filters the document extension.
 				 *
-				 * @since BuddyBoss [BBVERSION]
+				 * @since BuddyBoss 2.15.0
 				 *
 				 * @param string $ext      The document extension.
 				 * @param object $document The document object.
