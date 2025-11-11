@@ -1468,6 +1468,9 @@ window.bp = window.bp || {};
 				(
 					! _.isUndefined( this.postForm.model.get( 'poll' ) ) &&
 					! _.isEmpty( this.postForm.model.get( 'poll' ) )
+				) ||
+				(
+					$( '#bb-rl-whats-new-form' ).find( '.buddyboss-shared-activity-preview' ).length > 0
 				)
 			);
 
@@ -1974,7 +1977,11 @@ window.bp = window.bp || {};
 						dictInvalidFileType          : bbRlVideo.dictInvalidFileType,
 						dictMaxFilesExceeded         : bbRlVideo.video_dict_file_exceeded,
 						previewTemplate              : document.getElementsByClassName( 'activity-post-video-template' )[ 0 ].innerHTML,
-						dictCancelUploadConfirmation : bbRlVideo.dictCancelUploadConfirmation,
+						dictCancelUploadConfirmation: bbRlVideo.dictCancelUploadConfirmation,
+						chunking 					 : true,
+						chunkSize					 : 30*1024*1024,
+						retryChunks					 : true,
+						retryChunksLimit			 : 3,
 					}
 				);
 

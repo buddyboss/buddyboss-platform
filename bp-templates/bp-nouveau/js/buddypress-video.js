@@ -82,6 +82,10 @@ window.bp = window.bp || {};
 				dictInvalidFileType: BP_Nouveau.video.dictInvalidFileType,
 				previewTemplate: uploaderVideoTemplate,
 				dictCancelUploadConfirmation: BP_Nouveau.video.dictCancelUploadConfirmation,
+				chunking: true,
+				chunkSize: 30*1024*1024,
+				retryChunks: true,
+				retryChunksLimit: 3,
 			};
 
 			this.videoThumbnailOptions = {
@@ -807,11 +811,30 @@ window.bp = window.bp || {};
 						var circumference = radius * 2 * Math.PI;
 
 						circle.style.strokeDasharray  = circumference + ' ' + circumference;
-						var offset                    = circumference - element.upload.progress.toFixed( 0 ) / 100 * circumference;
-						if ( element.upload.progress <= 99 ) {
-							$( element.previewElement ).find( '.dz-progress-count' ).text( element.upload.progress.toFixed( 0 ) + '% ' + BP_Nouveau.video.i18n_strings.video_uploaded_text );
+
+						// Calculate overall progress for chunked uploads
+						var overallProgress;
+						if ( element.upload.chunked && element.upload.totalChunkCount ) {
+							// For chunked uploads: (completed chunks + current chunk progress) / total chunks
+							var completedChunks = 0;
+							if ( element.upload.chunks && element.upload.chunks.length > 0 ) {
+								element.upload.chunks.forEach( function( chunk ) {
+									if ( chunk.status === 'success' ) {
+										completedChunks++;
+									}
+								});
+							}
+							overallProgress = ((completedChunks + (element.upload.progress / 100)) / element.upload.totalChunkCount) * 100;
+						} else {
+							// For non-chunked uploads, use the default progress
+							overallProgress = element.upload.progress;
+						}
+
+						var offset = circumference - overallProgress.toFixed( 0 ) / 100 * circumference;
+						if ( overallProgress <= 99 ) {
+							$( element.previewElement ).find( '.dz-progress-count' ).text( overallProgress.toFixed( 0 ) + '% ' + BP_Nouveau.video.i18n_strings.video_uploaded_text );
 							circle.style.strokeDashoffset = offset;
-						} else if ( element.upload.progress === 100 ) {
+						} else if ( overallProgress === 100 ) {
 							circle.style.strokeDashoffset = circumference - 0.99 * circumference;
 							$( element.previewElement ).find( '.dz-progress-count' ).text( '99% ' + BP_Nouveau.video.i18n_strings.video_uploaded_text );
 						}
@@ -828,7 +851,12 @@ window.bp = window.bp || {};
 							$( file.previewElement ).closest( '.dz-preview' ).addClass( 'dz-complete' );
 						}
 
-						if ( response.data.id ) {
+						if ( true === file.upload.chunked ) {
+							// convert file.xhr.response string to object.
+							response = JSON.parse( file.xhr.response );
+						}
+
+						if ( response.data && response.data.id ) {
 							file.id                  = response.id;
 							response.data.uuid       = file.upload.uuid;
 							response.data.menu_order = self.dropzone_video.length;
