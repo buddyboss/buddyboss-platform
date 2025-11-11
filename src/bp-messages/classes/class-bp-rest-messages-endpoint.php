@@ -1594,7 +1594,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 
 		add_filter( 'embed_post_id', array( $this, 'bb_get_the_thread_message_id' ) );
 
-		$message_rendered = apply_filters( 'bp_get_the_thread_message_content', $message->message );
+		$message_rendered = apply_filters( 'bp_get_the_thread_message_content', $message->message, $message->id );
 		$message_rendered = preg_replace( '#(<p></p>)#', '<p><br></p>', $message_rendered );
 
 		$data = array(
@@ -1809,7 +1809,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		$excerpt = '';
 		if ( isset( $thread->last_message_content ) ) {
 			// Added fallback support from api, if first line does not wrap with paragraph tag.
-			$excerpt = apply_filters( 'bp_get_message_thread_content', $thread->last_message_content );
+			$excerpt = apply_filters( 'bp_get_message_thread_content', $thread->last_message_content, $thread->last_message_id );
 			$excerpt = wp_trim_words( wp_strip_all_tags( preg_replace( '#(<br\s*?\/?>|</(\w+)><(\w+)>)#', ' ', bp_create_excerpt( $excerpt, 75, array( 'ending' => '&hellip;' ) ) ) ) );
 		}
 
@@ -1945,7 +1945,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		// Total recipients counts.
 		$total_recipients = ( isset( $thread->total_recipients_count ) ? $thread->total_recipients_count : ( ( isset( $thread->recipients ) && count( $thread->recipients ) > 1 ) ? count( $thread->recipients ) - ( isset( $request['user_id'] ) && ! empty( $request['user_id'] ) ? 1 : 0 ) : 0 ) );
 
-		$message_rendered = apply_filters( 'bp_get_message_thread_content', $thread->last_message_content );
+		$message_rendered = apply_filters( 'bp_get_message_thread_content', $thread->last_message_content, $thread->last_message_id );
 		$message_rendered = preg_replace( '#(<p></p>)#', '<p><br></p>', $message_rendered );
 
 		$data = array(
