@@ -638,7 +638,9 @@ window.bp = window.bp || {};
 						self.dropzone.files.push( mock_file );
 						self.dropzone.emit( 'addedfile', mock_file );
 
-						if ( undefined !== typeof BP_Nouveau.is_as3cf_active && '1' === BP_Nouveau.is_as3cf_active ) {
+						var isAs3cfActive = 'undefined' !== typeof BP_Nouveau.is_as3cf_active && '1' === BP_Nouveau.is_as3cf_active;
+						var isOmActive    = 'undefined' !== typeof BP_Nouveau.is_om_active && '1' === BP_Nouveau.is_om_active;
+						if ( isAs3cfActive || isOmActive ) {
 							$( self.dropzone.files[i].previewElement ).find( 'img' ).attr( 'src', activity_data.media[i].thumb );
 							self.dropzone.emit( 'thumbnail', activity_data.media[i].thumb );
 							self.dropzone.emit( 'complete', mock_file );
@@ -2606,6 +2608,10 @@ window.bp = window.bp || {};
 					dictMaxFilesExceeded : bbRlVideo.video_dict_file_exceeded,
 					previewTemplate : document.getElementsByClassName( 'activity-post-video-template' )[0].innerHTML,
 					dictCancelUploadConfirmation: bbRlVideo.dictCancelUploadConfirmation,
+					chunking 					 : true,
+					chunkSize					 : 30*1024*1024,
+					retryChunks					 : true,
+					retryChunksLimit			 : 3,
 				};
 				bp.Nouveau.Activity.postForm.dropzone = new window.Dropzone( '#activity-post-video-uploader', this.dropzone_options );
 
@@ -2686,7 +2692,12 @@ window.bp = window.bp || {};
 							$( file.previewElement ).closest( '.dz-preview' ).addClass( 'dz-complete' );
 						}
 
-						if ( response.data.id ) {
+						if ( true === file.upload.chunked ) {
+							// convert file.xhr.response string to object.
+							response = JSON.parse( file.xhr.response );
+						}
+
+						if ( response.data && response.data.id ) {
 
 							// Set the folder_id and group_id if activity belongs to any folder and group in edit activity on new uploaded media id.
 							if ( ! bp.privacyEditable ) {
