@@ -1774,17 +1774,21 @@ window.bp = window.bp || {};
 									$( 'li#acomment-' + form_item_id ).replaceWith( the_comment );
 								}
 							} else {
-								if ( 0 === activity_comments.children( 'ul' ).length ) {
-									if ( activity_comments.hasClass( 'activity-comments' ) ) {
-										activity_comments.prepend( '<ul></ul>' );
-									} else {
-										activity_comments.append( '<ul></ul>' );
-									}
-								}
-
 								if ( isFooterForm ) {
+									// For modal footer form, ensure the modal body's .activity-comments has a <ul>
+									var modalActivityComments = form.closest( '#activity-modal' ).find( '.bb-modal-activity-body .activity-comments' );
+									if ( modalActivityComments.length > 0 && 0 === modalActivityComments.children( 'ul' ).length ) {
+										modalActivityComments.prepend( '<ul data-activity_id="' + form_activity_id + '" data-parent_comment_id="' + form_activity_id + '"></ul>' );
+									}
 									form.closest( '#activity-modal' ).find( '.bb-modal-activity-body .activity-comments, .bb-modal-activity-body .activity-comments .activity-actions' ).children( 'ul' ).append( $( the_comment ) );
 								} else {
+									if ( 0 === activity_comments.children( 'ul' ).length ) {
+										if ( activity_comments.hasClass( 'activity-comments' ) ) {
+											activity_comments.prepend( '<ul></ul>' );
+										} else {
+											activity_comments.append( '<ul></ul>' );
+										}
+									}
 									activity_comments.children( 'ul' ).append( $( the_comment ).hide().fadeIn( 200 ) );
 								}
 
@@ -4014,9 +4018,18 @@ window.bp = window.bp || {};
 							video_element.attr('id', video_element_id);
 
 							var video_action_wrap = video_container.find('.video-action-wrap');
-							video_element.insertAfter(video_action_wrap);
+							// Handle case where .video-action-wrap doesn't exist
+							if (video_action_wrap.length > 0) {
+								video_element.insertAfter(video_action_wrap);
+							} else {
+								// If no .video-action-wrap, prepend video to container
+								video_element.prependTo(video_container);
+							}
 
-							video_container.find('.video-js').remove();
+							// Remove any previously initialized Video.js players, but not the video element itself
+							video_container.find('.video-js').not(video_element).remove();
+							// Remove vjs-initialized class if present to allow re-initialization
+							video_element.removeClass('vjs-initialized');
 
 							video_element.addClass('video-js');
 
