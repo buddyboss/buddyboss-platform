@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 6.8.1
 Requires PHP: 7.4.0
-Stable tag: 2.13.0
+Stable tag: 2.14.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,24 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 2.14.4 =
+* Bug: Core - Fixed an issue where theme updates were not being received
+
+= 2.14.3 =
+* Bug: Core - Fixed an issue where Polls, Scheduled Posts, and Reactions were not working correctly on site
+
+= 2.14.2 =
+* Bug: Core - Fixed the license rate limit error and proper error handling
+
+= 2.14.1 =
+* Bug: Core - Fixed a fatal error causing the Zoom integration to break
+
+= 2.14.0 =
+* New Feature! Core - Implemented a new licensing system for BuddyBoss plugins and theme
+
+= 2.13.1 =
+* Bug: LearnDash - Fixed BuddyBoss Theme compatibility with LearnDash Modern UI templates to ensure lessons, topics, and courses display correctly
 
 = 2.13.0 =
 * New Feature! Activity - Added Featured Image above post content in activity and group posts, making feeds more visual and engaging
