@@ -1303,3 +1303,16 @@ function bb_readylaunch_middle_content_llms_courses( $args = array() ) {
 
 	return $args;
 }
+
+/**
+ * Helper functions for the buddyboss offload media compatibility.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_om_compatibility_helper() {
+
+	if ( defined( 'BB_OFFLOAD_MEDIA_VERSION' ) ) {
+		require buddypress()->compatibility_dir . '/class-bb-om-helpers.php';
+	}
+}
+add_action( 'init', 'bb_om_compatibility_helper', 10 );
