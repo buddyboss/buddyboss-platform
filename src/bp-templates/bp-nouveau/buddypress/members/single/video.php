@@ -53,21 +53,6 @@ if ( bp_is_user() && bb_enable_content_counts() && 'my-video' === $bp_current_ac
 			bp_get_template_part( 'video/actions' );
 			?>
 
-			<?php
-			// Offload Media: Frontend notice container for checking offload status.
-			if ( class_exists( 'BB_OM_Frontend' ) ) {
-				BB_OM_Frontend::render_notice_container(
-					'video',
-					'offload',
-					array(
-						'auto_init'       => true,
-						'auto_start'      => true,
-						'container_class' => 'bb-om-member-video-notice',
-					)
-				);
-			}
-			?>
-
 			<div id="video-stream" class="video" data-bp-list="video" data-ajax="<?php echo esc_attr( $is_send_ajax_request ? 'true' : 'false' ); ?>">
 				<?php
 				if ( $is_send_ajax_request ) {

@@ -77,20 +77,6 @@ if ( bb_enable_content_counts() && 'photos' === bp_current_action() ) {
 				?>
 			</div>
 
-			<?php
-			// Offload Media: Frontend notice container for checking offload status.
-			if ( class_exists( 'BB_OM_Frontend' ) ) {
-				BB_OM_Frontend::render_notice_container(
-					'media',
-					'offload',
-					array(
-						'auto_init'       => true,
-						'auto_start'      => true,
-						'container_class' => 'bb-om-group-media-notice',
-					)
-				);
-			}
-			?>
 
 			<div id="media-stream" class="media" data-bp-list="media" data-ajax="<?php echo esc_attr( $is_send_ajax_request ? 'true' : 'false' ); ?>">
 				<?php
