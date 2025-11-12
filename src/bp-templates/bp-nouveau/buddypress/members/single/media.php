@@ -69,7 +69,6 @@ if ( bp_is_user() && bb_enable_content_counts() ) {
 				bp_get_template_part( 'media/actions' );
 				?>
 			</div>
-
 			<div id="media-stream" class="media" data-bp-list="media" data-ajax="<?php echo esc_attr( $is_send_ajax_request ? 'true' : 'false' ); ?>">
 				<?php
 				if ( $is_send_ajax_request ) {

@@ -81,7 +81,6 @@
 						<?php
 					endif;
 					?>
-
 					<footer class="flex align-items-center bb-model-footer">
 						<a class="button outline" id="bp-media-add-more" style="display: none;" href="#">+ <?php esc_html_e( 'Add more photos', 'buddyboss' ); ?></a>
 						<a class="button push-right" id="bp-media-submit" style="display: none;" href="#"><?php esc_html_e( 'Done', 'buddyboss' ); ?></a>

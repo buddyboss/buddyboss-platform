@@ -65,8 +65,6 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 				bp_nouveau_group_hook( 'before', 'document_content' );
 				bp_get_template_part( 'document/actions' );
 				?>
-
-
 				<div id="media-stream" class="media" data-bp-list="document" data-ajax="<?php echo esc_attr( $is_send_ajax_request ? 'true' : 'false' ); ?>">
 					<?php
 					if ( $is_send_ajax_request ) {
