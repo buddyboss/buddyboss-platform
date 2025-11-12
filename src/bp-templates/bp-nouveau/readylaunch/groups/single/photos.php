@@ -28,7 +28,12 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 
 		// Home/Media.
 		case 'photos':
-			bp_nouveau_group_hook( 'before', 'media_content' );
+			/**
+			 * Fires before the display of the media list.
+			 *
+			 * @since BuddyBoss [BBVERSION]
+			 */
+			bp_nouveau_group_hook( 'before', 'rl_stream_media_content' );
 			?>
 			<div class="bb-rl-media-stream">
 				<?php
@@ -49,6 +54,12 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 			<?php
 			bp_nouveau_group_hook( 'after', 'media_content' );
 
+			/**
+			 * Fires after the display of the media list.
+			 *
+			 * @since BuddyBoss [BBVERSION]
+			 */
+			bp_nouveau_group_hook( 'after', 'rl_stream_media_content' );
 			break;
 		// Any other.
 		default:

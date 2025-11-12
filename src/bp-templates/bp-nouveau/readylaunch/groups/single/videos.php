@@ -30,7 +30,12 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 			$current_group_id = bp_get_current_group_id();
 			$loggedin_user_id = bp_loggedin_user_id();
 
-			bp_nouveau_group_hook( 'before', 'video_content' );
+			/**
+			 * Fires before the display of the video list.
+			 *
+			 * @since BuddyBoss [BBVERSION]
+			 */
+			bp_nouveau_group_hook( 'before', 'rl_stream_video_content' );
 			?>
 			<div class="bb-rl-media-stream">
 				<?php
@@ -50,6 +55,13 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 			</div>
 			<?php
 			bp_nouveau_group_hook( 'after', 'video_content' );
+
+			/**
+			 * Fires after the display of the video list.
+			 *
+			 * @since BuddyBoss [BBVERSION]
+			 */
+			bp_nouveau_group_hook( 'after', 'rl_stream_video_content' );
 
 			break;
 		// Any other.
