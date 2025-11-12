@@ -28,6 +28,7 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 
 		// Home/Media.
 		case 'photos':
+			bp_nouveau_group_hook( 'before', 'media_content' );
 			?>
 			<div class="bb-rl-media-stream">
 				<?php

@@ -29,6 +29,8 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 		case 'videos':
 			$current_group_id = bp_get_current_group_id();
 			$loggedin_user_id = bp_loggedin_user_id();
+
+			bp_nouveau_group_hook( 'before', 'video_content' );
 			?>
 			<div class="bb-rl-media-stream">
 				<?php

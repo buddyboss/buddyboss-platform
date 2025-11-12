@@ -36,6 +36,7 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 
 			// Home/Documents.
 			case 'documents':
+				bp_nouveau_group_hook( 'before', 'stream_document_content' );
 				?>
 				<div class="bb-rl-media-stream">
 					<?php
@@ -60,7 +61,7 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 				</div>
 				<?php
 				bp_nouveau_group_hook( 'after', 'document_content' );
-
+				bp_nouveau_group_hook( 'after', 'stream_document_content' );
 				break;
 
 			// Any other.
