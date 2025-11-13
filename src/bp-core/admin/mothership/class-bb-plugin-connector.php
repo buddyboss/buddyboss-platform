@@ -38,17 +38,23 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 	 * @param string $pluginId The plugin ID to store.
 	 */
 	public function setDynamicPluginId( string $pluginId ): void {
-		// Clear cache with old plugin ID before changing.
+		// Clear caches with old plugin ID before changing.
 		if ( class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager' ) ) {
 			\BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager::clearProductAddOnsCache();
+		}
+		if ( class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_License_Manager' ) ) {
+			\BuddyBoss\Core\Admin\Mothership\BB_License_Manager::clearLicenseDetailsCache();
 		}
 
 		update_option( 'buddyboss_dynamic_plugin_id', $pluginId );
 		$this->pluginId = $pluginId;
 
-		// Clear cache with new plugin ID after changing.
+		// Clear caches with new plugin ID after changing.
 		if ( class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager' ) ) {
 			\BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager::clearProductAddOnsCache();
+		}
+		if ( class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_License_Manager' ) ) {
+			\BuddyBoss\Core\Admin\Mothership\BB_License_Manager::clearLicenseDetailsCache();
 		}
 	}
 
@@ -56,17 +62,23 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 	 * Clear the dynamic plugin ID.
 	 */
 	public function clearDynamicPluginId(): void {
-		// Clear cache with old plugin ID before clearing.
+		// Clear caches with old plugin ID before clearing.
 		if ( class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager' ) ) {
 			\BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager::clearProductAddOnsCache();
+		}
+		if ( class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_License_Manager' ) ) {
+			\BuddyBoss\Core\Admin\Mothership\BB_License_Manager::clearLicenseDetailsCache();
 		}
 
 		delete_option( 'buddyboss_dynamic_plugin_id' );
 		$this->pluginId = PLATFORM_EDITION;
 
-		// Clear cache with default plugin ID after clearing.
+		// Clear caches with default plugin ID after clearing.
 		if ( class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager' ) ) {
 			\BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager::clearProductAddOnsCache();
+		}
+		if ( class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_License_Manager' ) ) {
+			\BuddyBoss\Core\Admin\Mothership\BB_License_Manager::clearLicenseDetailsCache();
 		}
 	}
 
@@ -99,23 +111,14 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 		update_option( $pluginId . '_license_activation_status', $status );
 
 		// Clear license details cache when activation status changes.
-		$this->clear_license_details_cache();
+		if ( class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_License_Manager' ) ) {
+			\BuddyBoss\Core\Admin\Mothership\BB_License_Manager::clearLicenseDetailsCache();
+		}
 
 		// Clear product add-ons cache when license status changes.
 		if ( class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager' ) ) {
 			\BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager::clearProductAddOnsCache();
 		}
-	}
-
-	/**
-	 * Clear license details cache for the current plugin.
-	 *
-	 * @return void
-	 */
-	private function clear_license_details_cache(): void {
-		$pluginId  = $this->getCurrentPluginId();
-		$cache_key = $pluginId . '_license_details';
-		delete_transient( $cache_key );
 	}
 
 	/**
