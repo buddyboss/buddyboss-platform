@@ -38,16 +38,36 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 	 * @param string $pluginId The plugin ID to store.
 	 */
 	public function setDynamicPluginId( string $pluginId ): void {
+		// Clear cache with old plugin ID before changing.
+		if ( class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager' ) ) {
+			\BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager::clearProductAddOnsCache();
+		}
+
 		update_option( 'buddyboss_dynamic_plugin_id', $pluginId );
 		$this->pluginId = $pluginId;
+
+		// Clear cache with new plugin ID after changing.
+		if ( class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager' ) ) {
+			\BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager::clearProductAddOnsCache();
+		}
 	}
 
 	/**
 	 * Clear the dynamic plugin ID.
 	 */
 	public function clearDynamicPluginId(): void {
+		// Clear cache with old plugin ID before clearing.
+		if ( class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager' ) ) {
+			\BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager::clearProductAddOnsCache();
+		}
+
 		delete_option( 'buddyboss_dynamic_plugin_id' );
 		$this->pluginId = PLATFORM_EDITION;
+
+		// Clear cache with default plugin ID after clearing.
+		if ( class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager' ) ) {
+			\BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager::clearProductAddOnsCache();
+		}
 	}
 
 	/**
@@ -80,6 +100,11 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 
 		// Clear license details cache when activation status changes.
 		$this->clear_license_details_cache();
+
+		// Clear product add-ons cache when license status changes.
+		if ( class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager' ) ) {
+			\BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager::clearProductAddOnsCache();
+		}
 	}
 
 	/**
