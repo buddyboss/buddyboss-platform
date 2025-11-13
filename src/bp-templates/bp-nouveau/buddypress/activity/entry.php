@@ -309,6 +309,10 @@ $activity_popup_title = sprintf( esc_html__( '%s\'s post', 'buddyboss' ), bp_cor
 			<?php
 			if ( bp_activity_get_comment_count() ) {
 				bp_activity_comments();
+			} else {
+				// Always output an empty <ul> when there are no comments to ensure proper DOM structure for comment submission
+				$activity_id = bp_get_activity_id();
+				echo '<ul data-activity_id="' . esc_attr( $activity_id ) . '" data-parent_comment_id="' . esc_attr( $activity_id ) . '"></ul>';
 			}
 
 			if ( is_user_logged_in() ) {
