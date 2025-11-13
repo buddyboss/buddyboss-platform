@@ -98,7 +98,8 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 	 */
 	public function getLicenseActivationStatus(): bool {
 		$pluginId = $this->getCurrentPluginId();
-		return (bool) get_option( $pluginId . '_license_activation_status' ) ?? false;
+		$status   = get_option( $pluginId . '_license_activation_status', false );
+		return (bool) $status;
 	}
 
 	/**
@@ -127,8 +128,9 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 	 * @return string The license key.
 	 */
 	public function getLicenseKey(): string {
-		$pluginId = $this->getCurrentPluginId();
-		return (string) get_option( $pluginId . '_license_key' ) ?? '';
+		$pluginId    = $this->getCurrentPluginId();
+		$license_key = get_option( $pluginId . '_license_key', '' );
+		return (string) $license_key;
 	}
 
 	/**
