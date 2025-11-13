@@ -160,20 +160,24 @@ window.bp = window.bp || {};
 			window.Dropzone.autoDiscover = false;
 
 			this.dropzone_video_options = {
-				url                  		 : bbRlAjaxUrl,
-				timeout              		 : 3 * 60 * 60 * 1000,
-				dictFileTooBig       		 : bbRlVideo.dictFileTooBig,
-				acceptedFiles        		 : bbRlVideo.video_type,
-				createImageThumbnails		 : false,
-				dictDefaultMessage   		 : '',
-				autoProcessQueue     		 : true,
-				addRemoveLinks       		 : true,
-				uploadMultiple       		 : false,
-				maxFiles             		 : typeof bbRlVideo.maxFiles !== 'undefined' ? bbRlVideo.maxFiles : 10,
-				maxFilesize          		 : typeof bbRlVideo.max_upload_size !== 'undefined' ? bbRlVideo.max_upload_size : 2,
-				dictInvalidFileType  		 : bbRlVideo.dictInvalidFileType,
-				dictMaxFilesExceeded 		 : bbRlVideo.video_dict_file_exceeded,
+				url                          : bbRlAjaxUrl,
+				timeout                      : 3 * 60 * 60 * 1000,
+				dictFileTooBig               : bbRlVideo.dictFileTooBig,
+				acceptedFiles                : bbRlVideo.video_type,
+				createImageThumbnails        : false,
+				dictDefaultMessage           : '',
+				autoProcessQueue             : true,
+				addRemoveLinks               : true,
+				uploadMultiple               : false,
+				maxFiles                     : typeof bbRlVideo.maxFiles !== 'undefined' ? bbRlVideo.maxFiles : 10,
+				maxFilesize                  : typeof bbRlVideo.max_upload_size !== 'undefined' ? bbRlVideo.max_upload_size : 2,
+				dictInvalidFileType          : bbRlVideo.dictInvalidFileType,
+				dictMaxFilesExceeded         : bbRlVideo.video_dict_file_exceeded,
 				dictCancelUploadConfirmation : bbRlVideo.dictCancelUploadConfirmation,
+				chunking                     : true,
+				chunkSize                    : 30 * 1024 * 1024,
+				retryChunks                  : true,
+				retryChunksLimit             : 3,
 			};
 
 		},
@@ -3119,7 +3123,12 @@ window.bp = window.bp || {};
 							$( file.previewElement ).closest( '.dz-preview' ).addClass( 'dz-complete' );
 						}
 
-						if ( response.data.id ) {
+						if ( true === file.upload.chunked ) {
+							// convert file.xhr.response string to object.
+							response = JSON.parse( file.xhr.response );
+						}
+
+						if ( response.data && response.data.id ) {
 							file.id 				 = response.data.id;
 							response.data.uuid 		 = file.upload.uuid;
 							response.data.menu_order = $( file.previewElement ).closest( '.dropzone' ).find( file.previewElement ).index() - 1;

@@ -2410,6 +2410,7 @@ function buddyboss_menu_order( $menu_order ) {
 	$buddyboss_license_menu       = array();
 	$buddyboss_addon_menu         = array();
 	$buddyboss_readylaunch_menu   = array();
+	$buddyboss_gamification_menu  = array();
 	$sep_position                 = null; // Use null to detect if found.
 
 	$after_sep      = array();
@@ -2451,6 +2452,13 @@ function buddyboss_menu_order( $menu_order ) {
 					unset( $submenu['buddyboss-platform'][ $key ] );
 					continue;
 				}
+
+				if ( 'bb-gamification-settings' === $val[2] ) {
+					$buddyboss_gamification_menu = $submenu['buddyboss-platform'][ $key ];
+					unset( $submenu['buddyboss-platform'][ $key ] );
+					continue;
+				}
+
 				if ( isset( $sep_position ) && null !== $sep_position ) {
 					$after_sep[] = $val;
 					unset( $submenu['buddyboss-platform'][ $key ] );
@@ -2466,6 +2474,9 @@ function buddyboss_menu_order( $menu_order ) {
 			$insert_pos = $sep_position;
 			if ( ! empty( $buddyboss_readylaunch_menu ) ) {
 				$submenu['buddyboss-platform'][ ++ $insert_pos ] = $buddyboss_readylaunch_menu;
+			}
+			if ( ! empty( $buddyboss_gamification_menu ) ) {
+				$submenu['buddyboss-platform'][ ++ $insert_pos ] = $buddyboss_gamification_menu;
 			}
 			if ( ! empty( $buddyboss_theme_options_menu ) ) {
 				$submenu['buddyboss-platform'][ ++ $insert_pos ] = $buddyboss_theme_options_menu;
@@ -2501,6 +2512,9 @@ function buddyboss_menu_order( $menu_order ) {
 			if ( ! empty( $buddyboss_readylaunch_menu ) ) {
 				$submenu['buddyboss-platform'][] = $separator_menu;
 				$submenu['buddyboss-platform'][] = $buddyboss_readylaunch_menu;
+			}
+			if ( ! empty( $buddyboss_gamification_menu ) ) {
+				$submenu['buddyboss-platform'][] = $buddyboss_gamification_menu;
 			}
 
 			// Now append special menus if not already present

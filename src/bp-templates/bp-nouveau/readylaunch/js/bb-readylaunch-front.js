@@ -8,6 +8,7 @@ window.bp = window.bp || {};
 
 		var bpNouveauLocal    = BP_Nouveau,
 			bbRlIsAs3cfActive = bpNouveauLocal.bbRlIsAs3cfActive,
+			bbRlIsOmActive    = bpNouveauLocal.bbRlIsOmActive,
 			bbRlMedia         = bpNouveauLocal.media,
 			bbRlAjaxUrl       = bpNouveauLocal.ajaxurl,
 			bbRlNonce         = bpNouveauLocal.nonces;
@@ -704,6 +705,17 @@ window.bp = window.bp || {};
 						function ( file, xhr, formData ) {
 							formData.append( 'action', actionName );
 							formData.append( '_wpnonce', bbRlNonce[ nonceName ] );
+							
+							var forumId = 0;
+							if ( $('#bbp_forum_id' ).length ) {
+								forumId = $('#bbp_forum_id').val();
+							}
+							formData.append( 'bbp_forum_id', forumId );
+							var topicId = 0;
+							if ( $('#bbp_topic_id' ).length ) {
+								topicId = $('#bbp_topic_id').val();
+							}
+							formData.append('bbp_topic_id', topicId);
 
 							var toolBox = view.$el.parents( parentSelector );
 							otherButtonSelectors.forEach(
@@ -720,7 +732,11 @@ window.bp = window.bp || {};
 					dropzone.on(
 						'success',
 						function ( file, response ) {
-							if ( response.data.id ) {
+							if ( 'video' === mediaType && true === file.upload.chunked ) {
+								// convert file.xhr.response string to object.
+								response = JSON.parse( file.xhr.response );
+							}
+							if ( response.data && response.data.id ) {
 								if ( 'activity' === ActiveComponent ) {
 									// Privacy and metadata handling.
 									if ( ! bp.privacyEditable ) {
@@ -954,7 +970,9 @@ window.bp = window.bp || {};
 
 								// Handle thumbnails for media files.
 								if ( 'media' === fileType ) {
-									if ( 'undefined' !== typeof bbRlIsAs3cfActive && '1' === bbRlIsAs3cfActive ) {
+									var isAs3cfActive = 'undefined' !== typeof bbRlIsAs3cfActive && '1' === bbRlIsAs3cfActive;
+									var isOmActive    = 'undefined' !== typeof bbRlIsOmActive && '1' === bbRlIsOmActive;
+									if ( isAs3cfActive || isOmActive ) {
 										$( dropzoneObj.files[index].previewElement ).find( 'img' ).attr( 'src', file.thumb );
 										dropzoneObj.emit( 'thumbnail', file.thumb );
 									} else {

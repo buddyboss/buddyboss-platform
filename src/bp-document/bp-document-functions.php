@@ -1494,9 +1494,19 @@ function bp_document_upload() {
 	$extension = bp_document_extension( $attachment->ID );
 	$svg_icon  = bp_document_svg_icon( $extension, $attachment->ID );
 
+	/**
+	 * Filter the attachment URL for document.
+	 *
+	 * @since BuddyBoss 2.15.0
+	 *
+	 * @param string $attachment_url Attachment URL for document.
+	 * @param int    $attachment_id Attachment ID.
+	 */
+	$attachment_url = apply_filters( 'bb_document_get_attachment_url', untrailingslashit( $attachment_url ), $attachment->ID );
+
 	$result = array(
 		'id'                => (int) $attachment->ID,
-		'url'               => esc_url( untrailingslashit( $attachment_url ) ),
+		'url'               => esc_url( $attachment_url ),
 		'name'              => esc_attr( pathinfo( basename( $attachment_file ), PATHINFO_FILENAME ) ),
 		'full_name'         => esc_attr( basename( $attachment_file ) ),
 		'type'              => esc_attr( 'document' ),
@@ -2683,7 +2693,19 @@ function bp_document_rename_file( $document_id = 0, $attachment_document_id = 0,
 	// Delete symlink before renaming the main file.
 	bp_document_delete_symlinks( $document_id );
 
-	if ( ! @rename( $file_abs_path, $new_file_abs_path ) ) {
+	/**
+	 * Filters the force bypass rename.
+	 *
+	 * @since BuddyBoss 2.15.0
+	 *
+	 * @param bool   $force_bypass           Force bypass rename.
+	 * @param int    $document_id            Document ID.
+	 * @param int    $attachment_document_id Attachment document ID.
+	 * @param string $file_abs_path          File absolute path.
+	 * @param string $new_file_abs_path      New file absolute path.
+	 */
+	$force_bypass = apply_filters( 'bb_document_force_bypass_rename', false, $document_id, $attachment_document_id, $file_abs_path, $new_file_abs_path );
+	if ( ! $force_bypass && ! @rename( $file_abs_path, $new_file_abs_path ) ) {
 		return __( 'File renaming error!', 'buddyboss' );
 	}
 
@@ -4334,7 +4356,9 @@ function bp_document_generate_code_previews( $attachment_id ) {
 			$file_name     = basename( $absolute_path );
 			$extension_pos = strrpos( $file_name, '.' ); // find position of the last dot, so where the extension starts.
 			$thumb         = substr( $file_name, 0, $extension_pos ) . '_thumb' . substr( $file_name, $extension_pos );
-			copy( $absolute_path, $preview_folder . '/' . $thumb );
+			if ( file_exists( $absolute_path ) ) {
+				copy( $absolute_path, $preview_folder . '/' . $thumb );
+			}
 
 		}
 

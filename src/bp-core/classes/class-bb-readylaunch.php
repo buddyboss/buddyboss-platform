@@ -819,7 +819,8 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * @return bool True if ReadyLaunch is enabled, false otherwise.
 		 */
 		public function bb_is_readylaunch_enabled_for_page() {
-			return (
+
+			$retval = (
 				bp_is_members_directory() ||
 				bp_is_video_directory() ||
 				bp_is_media_directory() ||
@@ -849,6 +850,11 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				$this->bb_rl_is_learndash_page() || // Add check for LearnDash pages.
 				$this->bb_rl_is_memberpress_courses_page() // Add check for MemberPress Courses pages.
 			);
+
+			/**
+			 * Filter to check if ReadyLaunch is enabled for the current page.
+			 */
+			return apply_filters( 'bb_is_readylaunch_enabled_for_page', $retval );
 		}
 
 		/**
@@ -2807,10 +2813,10 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		public function bb_rl_dynamic_colors() {
 			$color_light = bp_get_option( 'bb_rl_color_light', '#4946fe' );
 			$color_dark  = bp_get_option( 'bb_rl_color_dark', '#9747FF' );
-			
+
 			// Generate color shades for light mode (500 is base).
 			$light_shades = $this->bb_rl_generate_color_shades( $color_light );
-			
+
 			// Generate color shades for dark mode (500 is base).
 			$dark_shades = $this->bb_rl_generate_color_shades( $color_dark );
 			?>
@@ -2825,7 +2831,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					--bb-rl-text-brand-secondary-color: <?php echo esc_attr( $light_shades[800] ); ?>;
 					--bb-rl-icon-brand-primary-color: <?php echo esc_attr( $light_shades[800] ); ?>;
 					--bb-rl-border-brand-primary-color: <?php echo esc_attr( $light_shades[800] ); ?>;
-					
+
 					/* Keep backward compatibility. */
 					--bb-rl-primary-color: <?php echo esc_attr( $color_light ); ?>;
 				}
@@ -2843,7 +2849,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					--bb-rl-primary-700: <?php echo esc_attr( $dark_shades[700] ); ?>;
 					--bb-rl-background-brand-secondary-color: <?php echo esc_attr( $dark_shades[800] ); ?>;
 					--bb-rl-background-brand-secondary-hover-color: <?php echo esc_attr( $dark_shades[900] ); ?>;
-					
+
 					/* Keep backward compatibility. */
 					--bb-rl-primary-color: <?php echo esc_attr( $color_dark ); ?>;
 				}
