@@ -2435,15 +2435,15 @@ window.bp = window.bp || {};
 							formData.append('_wpnonce', BP_Nouveau.nonces.media);
 							
 							var forumId = 0;
-							if ( $('#bbp_forum_id' ).length ) {
-								forumId = $('#bbp_forum_id').val();
+							if ( $( '#bbp_forum_id' ).length ) {
+								forumId = $( '#bbp_forum_id' ).val();
 							}
-							formData.append('bbp_forum_id', forumId);
+							formData.append( 'bbp_forum_id', forumId );
 							var topicId = 0;
-							if ( $('#bbp_topic_id' ).length ) {
-								topicId = $('#bbp_topic_id').val();
+							if ( $( '#bbp_topic_id' ).length ) {
+								topicId = $( '#bbp_topic_id' ).val();
 							}
-							formData.append('bbp_topic_id', topicId);
+							formData.append( 'bbp_topic_id', topicId );
 
 							var tool_box = target.closest( 'form' );
 							tool_box.addClass( 'has-media' );
@@ -3193,6 +3193,17 @@ window.bp = window.bp || {};
 						function ( file, xhr, formData ) {
 							formData.append( 'action', 'document_document_upload' );
 							formData.append( '_wpnonce', BP_Nouveau.nonces.media );
+							
+							var forumId = 0;
+							if ( $( '#bbp_forum_id' ).length ) {
+								forumId = $( '#bbp_forum_id').val();
+							}
+							formData.append( 'bbp_forum_id', forumId );
+							var topicId = 0;
+							if ( $( '#bbp_topic_id' ).length ) {
+								topicId = $( '#bbp_topic_id' ).val();
+							}
+							formData.append( 'bbp_topic_id', topicId );
 
 							var tool_box = target.closest( 'form' );
 							tool_box.addClass( 'has-media' );
@@ -3483,6 +3494,17 @@ window.bp = window.bp || {};
 						function ( file, xhr, formData ) {
 							formData.append( 'action', 'video_upload' );
 							formData.append( '_wpnonce', BP_Nouveau.nonces.video );
+							
+							var forumId = 0;
+							if ( $( '#bbp_forum_id' ).length ) {
+								forumId = $( '#bbp_forum_id' ).val();
+							}
+							formData.append( 'bbp_forum_id', forumId );
+							var topicId = 0;
+							if ( $('#bbp_topic_id' ).length ) {
+								topicId = $( '#bbp_topic_id' ).val();
+							}
+							formData.append( 'bbp_topic_id', topicId );
 
 							var tool_box = target.closest( 'form' );
 							tool_box.addClass( 'has-media' );
