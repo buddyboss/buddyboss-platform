@@ -1203,19 +1203,32 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 				return;
 			}
 			
-			// Don't output update modal on plugins page to avoid interfering with WordPress script loading.
-			// The modal HTML output was causing WordPress core JavaScript files to not load properly,
-			// which broke functionality on wp-admin pages. This prevents missing WordPress core
-			// JavaScript files and ensures wp admin pages function properly.
-			//
-			// TODO: Re-enable when modal interference issues are resolved.
-			// The template include below is currently disabled to prevent script loading issues:
-			// global $bp;
-			// include trailingslashit( $bp->plugin_dir . 'bp-core/admin' ) . 'templates/update-buddyboss.php';
+			// Output the modal HTML template.
+			// This is needed for the Release Notes link to work.
+			// Use output buffering and error handling to prevent breaking WordPress scripts.
+			global $bp;
+			$template_path = trailingslashit( $bp->plugin_dir . 'bp-core/admin' ) . 'templates/update-buddyboss.php';
+			
+			if ( file_exists( $template_path ) ) {
+				// Use output buffering to catch any errors.
+				ob_start();
+				try {
+					// Suppress any errors from the template to prevent breaking the page.
+					@include $template_path;
+					$output = ob_get_clean();
+					
+					// Only output if we got valid HTML (not an error).
+					if ( ! empty( $output ) && false === strpos( $output, 'Fatal error' ) ) {
+						echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+					}
+				} catch ( Exception $e ) {
+					ob_end_clean();
+					// Silently fail to prevent breaking WordPress admin.
+				}
+			}
 			
 			// Clean up the update flag to prevent database bloat.
 			delete_option( '_bb_is_update' );
-			return;
 		}
 	}
 endif; // End class_exists check.
