@@ -95,62 +95,67 @@ abstract class BB_Base_DRM {
 
 	/**
 	 * Creates a DRM event.
+	 *
+	 * @return int|false Event ID on success, false on failure.
 	 */
 	public function create_event() {
-		$data = array(
-			'event'      => $this->event_name,
-			'created_at' => current_time( 'mysql' ),
-			'data'       => array(),
-		);
+		// Determine event entity type.
+		$evt_id_type = 'platform';
+		$evt_id      = 1;
 
-		update_option( 'bb_drm_event_' . $this->event_name, $data );
+		// Check if this is an addon event.
+		if ( strpos( $this->event_name, 'addon-' ) === 0 ) {
+			$evt_id_type = 'addon';
+		}
+
+		// Create event in database.
+		return BB_DRM_Event::record( $this->event_name, $evt_id, $evt_id_type, array() );
 	}
 
 	/**
 	 * Gets the latest DRM event.
 	 *
-	 * @return object|null The event object or null.
+	 * @return BB_DRM_Event|null The event object or null.
 	 */
 	protected function get_latest_event() {
-		$data = get_option( 'bb_drm_event_' . $this->event_name );
-
-		if ( empty( $data ) ) {
-			return null;
-		}
-
-		return (object) $data;
+		return BB_DRM_Event::latest( $this->event_name );
 	}
 
 	/**
 	 * Updates a DRM event with new data.
 	 *
-	 * @param object $event The event to update.
-	 * @param mixed  $data  The data to update the event with.
+	 * @param BB_DRM_Event $event The event to update.
+	 * @param mixed        $data  The data to update the event with.
+	 * @return int|false Event ID on success, false on failure.
 	 */
 	protected function update_event( $event, $data ) {
-		if ( ! is_object( $event ) || empty( $event->event ) ) {
-			return;
+		if ( ! $event instanceof BB_DRM_Event || $event->id <= 0 ) {
+			return false;
 		}
 
-		$event_data = (array) $event;
+		// Update event args with new data.
 		if ( is_array( $data ) || is_object( $data ) ) {
-			$event_data['data'] = $data;
+			$event->args = wp_json_encode( $data );
+		} else {
+			$event->args = $data;
 		}
 
-		update_option( 'bb_drm_event_' . $this->event_name, $event_data );
+		return $event->store();
 	}
 
 	/**
 	 * Handles a DRM event.
 	 *
-	 * @param object  $event      The event to handle.
-	 * @param integer $days       The number of days since the event.
-	 * @param string  $drm_status The DRM status.
+	 * @param BB_DRM_Event $event      The event to handle.
+	 * @param integer      $days       The number of days since the event.
+	 * @param string       $drm_status The DRM status.
 	 */
 	public function drm_event( $event, $days, $drm_status ) {
 		$this->event = $event;
 
-		$event_data    = BB_DRM_Helper::parse_event_args( wp_json_encode( $event->data ?? array() ) );
+		// Get event args (stored as JSON in database).
+		$args          = $event->get_args();
+		$event_data    = is_object( $args ) ? (array) $args : ( is_array( $args ) ? $args : array() );
 		$drm_event_key = BB_DRM_Helper::get_status_key( $drm_status );
 
 		// Just make sure we run this once.
@@ -189,7 +194,7 @@ abstract class BB_Base_DRM {
 	 * Displays admin notices related to DRM.
 	 */
 	public function admin_notices() {
-		if ( ! $this->event || ! is_object( $this->event ) ) {
+		if ( ! $this->event instanceof BB_DRM_Event ) {
 			return;
 		}
 
@@ -201,7 +206,10 @@ abstract class BB_Base_DRM {
 			$drm_info['event_name']  = $this->event_name;
 
 			$notice_user_key = BB_DRM_Helper::prepare_dismissable_notice_key( $drm_info['notice_key'] );
-			$event_data      = BB_DRM_Helper::parse_event_args( wp_json_encode( $this->event->data ?? array() ) );
+
+			// Get event args.
+			$args       = $this->event->get_args();
+			$event_data = is_object( $args ) ? (array) $args : ( is_array( $args ) ? $args : array() );
 
 			$is_dismissed = BB_DRM_Helper::is_dismissed( $event_data, $notice_user_key );
 			if ( ! $is_dismissed ) {

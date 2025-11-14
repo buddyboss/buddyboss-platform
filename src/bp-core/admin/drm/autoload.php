@@ -41,8 +41,10 @@ function bb_drm_autoloader( $class_name ) {
 // Register the autoloader.
 spl_autoload_register( 'bb_drm_autoloader' );
 
-// Explicitly require the helper and base class as they're always needed.
+// Explicitly require core classes as they're always needed.
 require_once __DIR__ . '/class-bb-drm-helper.php';
+require_once __DIR__ . '/class-bb-drm-event.php';
+require_once __DIR__ . '/class-bb-drm-installer.php';
 require_once __DIR__ . '/class-bb-base-drm.php';
 require_once __DIR__ . '/class-bb-drm-nokey.php';
 require_once __DIR__ . '/class-bb-drm-invalid.php';

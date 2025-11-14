@@ -157,12 +157,53 @@ Day 21: LOCKED status triggered
 
 ## Data Storage
 
+### Database Table: wp_bb_drm_events
+
+DRM events are stored in a dedicated database table (similar to MemberPress):
+
+**Table Structure:**
+```sql
+CREATE TABLE wp_bb_drm_events (
+  id bigint(20) NOT NULL AUTO_INCREMENT,
+  event varchar(255) NOT NULL DEFAULT '',
+  args text DEFAULT NULL,
+  evt_id bigint(20) NOT NULL DEFAULT 1,
+  evt_id_type varchar(255) NOT NULL DEFAULT 'platform',
+  created_at datetime NOT NULL,
+  PRIMARY KEY (id),
+  KEY event_event (event(191)),
+  KEY event_evt_id (evt_id),
+  KEY event_evt_id_type (evt_id_type(191)),
+  KEY event_created_at (created_at)
+);
+```
+
+**Fields:**
+- `id` - Unique event ID
+- `event` - Event name (e.g., 'no-license', 'invalid-license', 'addon-buddyboss-platform-pro')
+- `args` - JSON-encoded event data (status timestamps, custom data)
+- `evt_id` - Entity ID (1 for Platform, varies for add-ons)
+- `evt_id_type` - Entity type ('platform' or 'addon')
+- `created_at` - Event creation timestamp
+
+**Automatic Installation:**
+- Table is created/upgraded automatically on DRM initialization
+- Managed by `BB_DRM_Installer::install()`
+- Version tracked in `bb_drm_db_version` option
+
+**Migration from Options:**
+- If upgrading from option-based storage, events are automatically migrated
+- Old options are preserved (can be manually cleaned up later)
+
 ### WordPress Options
 
 - `bb_drm_no_license` (bool) - Flag for no license scenario
 - `bb_drm_invalid_license` (bool) - Flag for invalid license scenario
-- `bb_drm_event_no-license` (array) - Event data for no license
-- `bb_drm_event_invalid-license` (array) - Event data for invalid license
+- `bb_drm_db_version` (string) - Database schema version (e.g., '1.0.0')
+
+**Legacy options (for backward compatibility):**
+- `bb_drm_event_no-license` - Migrated to database table
+- `bb_drm_event_invalid-license` - Migrated to database table
 
 ### GroundLevel Store
 
@@ -322,22 +363,65 @@ if ( defined( 'BB_DRM_DEBUG' ) && BB_DRM_DEBUG ) {
    var_dump( get_option( 'bb_drm_invalid_license' ) );
    ```
 
+3. Check database events:
+   ```php
+   use BuddyBoss\Core\Admin\DRM\BB_DRM_Event;
+   $event = BB_DRM_Event::latest( 'no-license' );
+   if ( $event ) {
+       var_dump( $event->created_at );
+       var_dump( BB_DRM_Helper::days_elapsed( $event->created_at ) );
+   }
+   ```
+
 ### Issue: Timeline not matching
 
-1. Check event creation date:
+1. Check event creation date from database:
    ```php
-   $event = get_option( 'bb_drm_event_no-license' );
-   var_dump( $event['created_at'] );
-   var_dump( BB_DRM_Helper::days_elapsed( $event['created_at'] ) );
+   use BuddyBoss\Core\Admin\DRM\BB_DRM_Event;
+   $event = BB_DRM_Event::latest( 'no-license' );
+   if ( $event ) {
+       echo 'Event ID: ' . $event->id . "\n";
+       echo 'Created: ' . $event->created_at . "\n";
+       echo 'Days: ' . BB_DRM_Helper::days_elapsed( $event->created_at ) . "\n";
+   }
+   ```
+
+### Issue: Database table not created
+
+1. Check if table exists:
+   ```php
+   use BuddyBoss\Core\Admin\DRM\BB_DRM_Event;
+   var_dump( BB_DRM_Event::table_exists() ); // Should return true
+   ```
+
+2. Force reinstall (CAUTION: deletes all DRM data):
+   ```php
+   use BuddyBoss\Core\Admin\DRM\BB_DRM_Installer;
+   BB_DRM_Installer::force_reinstall();
+   ```
+
+3. Check database version:
+   ```php
+   use BuddyBoss\Core\Admin\DRM\BB_DRM_Installer;
+   var_dump( BB_DRM_Installer::get_db_version() );
+   var_dump( BB_DRM_Installer::is_db_up_to_date() );
+   ```
+
+4. Get database statistics:
+   ```php
+   use BuddyBoss\Core\Admin\DRM\BB_DRM_Installer;
+   var_dump( BB_DRM_Installer::get_stats() );
    ```
 
 ## Additional Notes
 
+- **Database Table**: Events stored in `wp_bb_drm_events` table (auto-created)
 - **Icon File**: Place `alert-icon.png` in `bp-core/admin/assets/images/`
 - **Multisite**: DRM runs per-site, not network-wide
 - **Performance**: DRM checks only run on `admin_init` with priority 20
-- **Caching**: No caching needed - uses WordPress options
-- **Security**: All user inputs sanitized, nonces verified
+- **Data Migration**: Automatic migration from option-based storage to database
+- **Table Prefix**: Uses WordPress table prefix (default: `wp_`)
+- **Security**: All user inputs sanitized, nonces verified, SQL queries use prepared statements
 - **i18n**: All strings wrapped in `__()` for translation
 
 ## Future Enhancements

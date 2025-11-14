@@ -23,6 +23,9 @@ class BB_DRM_Controller {
 	 * Initialize the DRM controller.
 	 */
 	public static function init() {
+		// Install/upgrade database tables.
+		BB_DRM_Installer::install();
+
 		$instance = new self();
 		$instance->setup_hooks();
 	}
@@ -52,7 +55,18 @@ class BB_DRM_Controller {
 		delete_option( 'bb_drm_no_license' );
 		delete_option( 'bb_drm_invalid_license' );
 
-		// Delete all DRM events.
+		// Delete all DRM events from database.
+		$no_license_event = BB_DRM_Event::latest( BB_DRM_Helper::NO_LICENSE_EVENT );
+		if ( $no_license_event ) {
+			$no_license_event->destroy();
+		}
+
+		$invalid_license_event = BB_DRM_Event::latest( BB_DRM_Helper::INVALID_LICENSE_EVENT );
+		if ( $invalid_license_event ) {
+			$invalid_license_event->destroy();
+		}
+
+		// Clean up old option-based events (for migration).
 		delete_option( 'bb_drm_event_' . BB_DRM_Helper::NO_LICENSE_EVENT );
 		delete_option( 'bb_drm_event_' . BB_DRM_Helper::INVALID_LICENSE_EVENT );
 
