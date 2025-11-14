@@ -1198,26 +1198,24 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 *
 		 * @since BuddyBoss 1.9.1
 		 */
-	public function bb_display_update_plugin_information() {
-		if ( 0 !== strpos( get_current_screen()->id, 'plugins' ) ) {
+		public function bb_display_update_plugin_information() {
+			if ( 0 !== strpos( get_current_screen()->id, 'plugins' ) ) {
+				return;
+			}
+			
+			// Don't output update modal on plugins page to avoid interfering with WordPress script loading.
+			// The modal HTML output was causing WordPress core JavaScript files to not load properly,
+			// which broke functionality on wp-admin pages. This prevents missing WordPress core
+			// JavaScript files and ensures wp admin pages function properly.
+			//
+			// TODO: Re-enable when modal interference issues are resolved.
+			// The template include below is currently disabled to prevent script loading issues:
+			// global $bp;
+			// include trailingslashit( $bp->plugin_dir . 'bp-core/admin' ) . 'templates/update-buddyboss.php';
+			
+			// Clean up the update flag to prevent database bloat.
+			delete_option( '_bb_is_update' );
 			return;
 		}
-		
-		// Don't output update modal on plugins page to avoid interfering with WordPress script loading
-		// This prevents missing WordPress core JavaScript files and wp admin pages functioning properly
-		
-		// Clean up the update flag to prevent database bloat
-		delete_option( '_bb_is_update' );
-		return;
-		
-		// TODO: Re-enable when modal interference issues are resolved
-		// The code below is currently disabled to prevent script loading issues
-		/*
-		// Check the transient to see if we've just updated the plugin.
-		global $bp;
-		include trailingslashit( $bp->plugin_dir . 'bp-core/admin' ) . 'templates/update-buddyboss.php';
-		delete_option( '_bb_is_update' );
-		*/
-	}
 	}
 endif; // End class_exists check.
