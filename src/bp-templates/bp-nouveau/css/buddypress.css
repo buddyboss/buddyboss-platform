@@ -4049,7 +4049,7 @@ input.search-query-input {
 .activity-list .activity-item .activity-content .bp-generic-meta.action .button > i,
 .activity-list .activity-item > .bp-generic-meta.action .button > i,
 .activity-list .activity-item .activity-actions > .bp-generic-meta.action .button > i {
-  font-size: 22px;
+  font-size: 24px;
   font-weight: 400;
   display: inline-block;
   vertical-align: middle;
