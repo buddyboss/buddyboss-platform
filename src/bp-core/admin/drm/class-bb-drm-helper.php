@@ -120,9 +120,28 @@ class BB_DRM_Helper {
 	/**
 	 * Check if the license is valid.
 	 *
+	 * Includes automatic development environment bypass for better developer experience.
+	 * No configuration needed - automatically detects localhost, .local, .test, etc.
+	 *
 	 * @return bool True if the license is valid, false otherwise.
 	 */
 	public static function is_valid() {
+		// CRITICAL: Automatic dev environment bypass (no configuration needed).
+		// This prevents DRM from triggering on localhost, staging, etc.
+		if ( self::is_dev_environment() ) {
+			return true;
+		}
+
+		// Check manual activation override (for special cases).
+		if ( get_option( 'bb_drm_activation_override', false ) ) {
+			return true;
+		}
+
+		// Check global DRM enable filter.
+		if ( ! apply_filters( 'bb_drm_enabled', true ) ) {
+			return true;
+		}
+
 		// Check if license key exists.
 		if ( ! self::has_key() ) {
 			return false;
@@ -133,6 +152,79 @@ class BB_DRM_Helper {
 		$is_active        = $plugin_connector->getLicenseActivationStatus();
 
 		return $is_active;
+	}
+
+	/**
+	 * Check if current environment is a development environment.
+	 *
+	 * Automatically detects:
+	 * - WordPress environment type (local, development, staging)
+	 * - Development URLs (localhost, .local, .test, .dev domains)
+	 * - Local IP addresses (127.0.0.1, 192.168.x.x, 10.x.x.x)
+	 *
+	 * @since 3.0.0
+	 * @return bool True if development environment detected.
+	 */
+	public static function is_dev_environment() {
+		// Check WordPress environment type (WordPress 5.5+).
+		if ( function_exists( 'wp_get_environment_type' ) ) {
+			$env = wp_get_environment_type();
+
+			// Bypass for non-production environments.
+			if ( in_array( $env, array( 'local', 'development', 'staging' ), true ) ) {
+				return true;
+			}
+		}
+
+		// Check if URL is a development URL.
+		return self::is_dev_url();
+	}
+
+	/**
+	 * Detect if the current site URL is a development URL.
+	 *
+	 * Checks for:
+	 * - localhost variations (localhost, 127.0.0.1, ::1)
+	 * - Development TLDs (.local, .test, .dev, .localhost, .invalid, .example)
+	 * - Local IP addresses (10.x.x.x, 172.16-31.x.x, 192.168.x.x)
+	 * - Any IP address format
+	 *
+	 * @since 3.0.0
+	 * @return bool True if development URL detected.
+	 */
+	private static function is_dev_url() {
+		$url  = get_site_url();
+		$host = parse_url( $url, PHP_URL_HOST );
+
+		if ( empty( $host ) ) {
+			return false;
+		}
+
+		// Check for localhost variations.
+		if ( in_array( $host, array( 'localhost', '127.0.0.1', '::1' ), true ) ) {
+			return true;
+		}
+
+		// Check for development TLDs.
+		$dev_tlds = array( '.local', '.test', '.dev', '.localhost', '.invalid', '.example' );
+		foreach ( $dev_tlds as $tld ) {
+			if ( substr( $host, -strlen( $tld ) ) === $tld ) {
+				return true;
+			}
+		}
+
+		// Check for local IP addresses.
+		// Matches: 10.x.x.x, 172.16-31.x.x, 192.168.x.x.
+		if ( preg_match( '/^(10|172\.(1[6-9]|2[0-9]|3[01])|192\.168)\./', $host ) ) {
+			return true;
+		}
+
+		// Check if it\'s any IP address format.
+		if ( filter_var( $host, FILTER_VALIDATE_IP ) ) {
+			return true;
+		}
+
+		return false;
 	}
 
 	/**
@@ -356,7 +448,7 @@ class BB_DRM_Helper {
 				$heading           = __( 'BuddyBoss: Did You Forget Something?', 'buddyboss' );
 				$color             = 'orange';
 				$simple_message    = __( 'Oops! It looks like your BuddyBoss license key is missing. Here\'s how to fix the problem fast and easy:', 'buddyboss' );
-				$help_message      = __( 'We're here if you need any help.', 'buddyboss' );
+				$help_message      = __( 'We\'re here if you need any help.', 'buddyboss' );
 				$label             = __( 'Alert', 'buddyboss' );
 				$activation_link   = bp_get_admin_url( 'admin.php?page=buddyboss-license' );
 				$message           = sprintf(
@@ -374,7 +466,7 @@ class BB_DRM_Helper {
 						'<a href="' . esc_url( $activation_link ) . '">',
 						'</a>'
 					),
-					__( 'That's it!', 'buddyboss' )
+					__( 'That\'s it!', 'buddyboss' )
 				);
 				break;
 
@@ -382,7 +474,7 @@ class BB_DRM_Helper {
 				$admin_notice_view = 'medium_warning';
 				$heading           = __( 'BuddyBoss: WARNING! Your Community is at Risk', 'buddyboss' );
 				$color             = 'orange';
-				$simple_message    = __( 'To continue using BuddyBoss without interruption, you need to enter your license key right away. Here's how:', 'buddyboss' );
+				$simple_message    = __( 'To continue using BuddyBoss without interruption, you need to enter your license key right away. Here\'s how:', 'buddyboss' );
 				$help_message      = __( 'Let us know if you need assistance.', 'buddyboss' );
 				$label             = __( 'Critical', 'buddyboss' );
 				$activation_link   = bp_get_admin_url( 'admin.php?page=buddyboss-license' );
@@ -401,7 +493,7 @@ class BB_DRM_Helper {
 						'<a href="' . esc_url( $activation_link ) . '">',
 						'</a>'
 					),
-					__( 'That's it!', 'buddyboss' )
+					__( 'That\'s it!', 'buddyboss' )
 				);
 				break;
 
@@ -428,7 +520,7 @@ class BB_DRM_Helper {
 						'<a href="' . esc_url( $activation_link ) . '">',
 						'</a>'
 					),
-					__( 'That's it!', 'buddyboss' )
+					__( 'That\'s it!', 'buddyboss' )
 				);
 				break;
 
@@ -470,7 +562,7 @@ class BB_DRM_Helper {
 				$admin_notice_view = 'medium_warning';
 				$heading           = __( 'BuddyBoss: WARNING! Your Community is at Risk', 'buddyboss' );
 				$color             = 'orange';
-				$simple_message    = __( 'Your BuddyBoss license key is expired, but is required to continue using BuddyBoss. Fortunately, it's easy to renew your license key. Just do the following:', 'buddyboss' );
+				$simple_message    = __( 'Your BuddyBoss license key is expired, but is required to continue using BuddyBoss. Fortunately, it\'s easy to renew your license key. Just do the following:', 'buddyboss' );
 				$help_message      = __( 'Let us know if you need assistance.', 'buddyboss' );
 				$label             = __( 'Critical', 'buddyboss' );
 				$activation_link   = bp_get_admin_url( 'admin.php?page=buddyboss-license' );
@@ -489,7 +581,7 @@ class BB_DRM_Helper {
 						'<a href="' . esc_url( $activation_link ) . '">',
 						'</a>'
 					),
-					__( 'That's it!', 'buddyboss' )
+					__( 'That\'s it!', 'buddyboss' )
 				);
 				break;
 
@@ -515,9 +607,9 @@ class BB_DRM_Helper {
 						'<a href="' . esc_url( $activation_link ) . '">',
 						'</a>'
 					),
-					__( 'That's it!', 'buddyboss' )
+					__( 'That\'s it!', 'buddyboss' )
 				);
-				$help_message      = __( 'We're here to help you get things back up and running. Let us know if you need assistance.', 'buddyboss' );
+				$help_message      = __( 'We\'re here to help you get things back up and running. Let us know if you need assistance.', 'buddyboss' );
 				break;
 
 			default:
@@ -560,11 +652,29 @@ class BB_DRM_Helper {
 	/**
 	 * Check if a notice is dismissed.
 	 *
+	 * Per-user dismissal tracking: each user can dismiss notices independently.
+	 * Dismissals are stored in event_data with format:
+	 * - dismissed_users => array( user_id => timestamp, ... )
+	 *
 	 * @param array  $event_data The event data.
 	 * @param string $notice_key The notice key.
 	 * @return bool True if dismissed, false otherwise.
 	 */
 	public static function is_dismissed( $event_data, $notice_key ) {
+		$user_id = get_current_user_id();
+
+		// Check per-user dismissal (new method).
+		if ( isset( $event_data['dismissed_users'][ $notice_key ][ $user_id ] ) ) {
+			$dismissed_time = $event_data['dismissed_users'][ $notice_key ][ $user_id ];
+			$diff           = (int) abs( time() - $dismissed_time );
+
+			// Dismissed for 24 hours.
+			if ( $diff <= ( HOUR_IN_SECONDS * 24 ) ) {
+				return true;
+			}
+		}
+
+		// Fallback to old global dismissal method (for backwards compatibility).
 		if ( isset( $event_data[ $notice_key ] ) ) {
 			$diff = (int) abs( time() - $event_data[ $notice_key ] );
 			if ( $diff <= ( HOUR_IN_SECONDS * 24 ) ) {
@@ -573,5 +683,43 @@ class BB_DRM_Helper {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Record a per-user notice dismissal.
+	 *
+	 * @param BB_DRM_Event $event      The DRM event.
+	 * @param string       $notice_key The notice key.
+	 * @return bool True on success, false on failure.
+	 */
+	public static function dismiss_notice_for_user( $event, $notice_key ) {
+		if ( ! $event instanceof BB_DRM_Event || $event->id <= 0 ) {
+			return false;
+		}
+
+		$user_id = get_current_user_id();
+		if ( ! $user_id ) {
+			return false;
+		}
+
+		// Get current event data.
+		$args       = $event->get_args();
+		$event_data = is_object( $args ) ? (array) $args : ( is_array( $args ) ? $args : array() );
+
+		// Initialize dismissed_users structure if not exists.
+		if ( ! isset( $event_data['dismissed_users'] ) ) {
+			$event_data['dismissed_users'] = array();
+		}
+
+		if ( ! isset( $event_data['dismissed_users'][ $notice_key ] ) ) {
+			$event_data['dismissed_users'][ $notice_key ] = array();
+		}
+
+		// Record dismissal for this user.
+		$event_data['dismissed_users'][ $notice_key ][ $user_id ] = time();
+
+		// Update event with new data.
+		$event->args = wp_json_encode( $event_data );
+		return (bool) $event->store();
 	}
 }

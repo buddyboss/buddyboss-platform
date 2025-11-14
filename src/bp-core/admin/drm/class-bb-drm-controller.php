@@ -26,6 +26,9 @@ class BB_DRM_Controller {
 		// Install/upgrade database tables.
 		BB_DRM_Installer::install();
 
+		// Initialize lockout system.
+		BB_DRM_Lockout::init();
+
 		$instance = new self();
 		$instance->setup_hooks();
 	}
@@ -46,6 +49,9 @@ class BB_DRM_Controller {
 
 		// AJAX handlers for notice dismissal.
 		add_action( 'wp_ajax_bb_dismiss_notice_drm', array( $this, 'drm_dismiss_notice' ) );
+
+		// Site Health integration.
+		add_filter( 'site_status_tests', array( $this, 'add_site_health_tests' ) );
 	}
 
 	/**
@@ -138,6 +144,8 @@ class BB_DRM_Controller {
 
 	/**
 	 * Handle AJAX notice dismissal.
+	 *
+	 * Implements per-user dismissal tracking so each admin can dismiss notices independently.
 	 */
 	public function drm_dismiss_notice() {
 		check_ajax_referer( 'bb_dismiss_notice', 'nonce' );
@@ -163,15 +171,32 @@ class BB_DRM_Controller {
 			wp_send_json_error( __( 'Invalid security hash.', 'buddyboss' ) );
 		}
 
-		// Find and update the event.
-		$event = null;
+		// Find the event.
+		$event      = null;
+		$event_name = null;
+
 		if ( hash( 'sha256', BB_DRM_Helper::NO_LICENSE_EVENT ) === $event_hash ) {
 			$event_name = BB_DRM_Helper::NO_LICENSE_EVENT;
 		} elseif ( hash( 'sha256', BB_DRM_Helper::INVALID_LICENSE_EVENT ) === $event_hash ) {
 			$event_name = BB_DRM_Helper::INVALID_LICENSE_EVENT;
 		}
 
-		if ( isset( $event_name ) ) {
+		if ( $event_name ) {
+			// Get event from database.
+			$event = BB_DRM_Event::latest( $event_name );
+
+			if ( $event ) {
+				// Use new per-user dismissal method.
+				$result = BB_DRM_Helper::dismiss_notice_for_user( $event, $notice_key );
+
+				if ( $result ) {
+					wp_send_json_success( array( 'message' => __( 'Notice dismissed for 24 hours.', 'buddyboss' ) ) );
+				} else {
+					wp_send_json_error( __( 'Failed to dismiss notice.', 'buddyboss' ) );
+				}
+			}
+
+			// Fallback to old option-based method for backwards compatibility.
 			$event_data = get_option( 'bb_drm_event_' . $event_name, array() );
 			if ( ! empty( $event_data ) ) {
 				$data = $event_data['data'] ?? array();
@@ -182,5 +207,283 @@ class BB_DRM_Controller {
 		}
 
 		wp_send_json_success();
+	}
+
+	/**
+	 * Add DRM tests to Site Health.
+	 *
+	 * @param array $tests Site Health tests array.
+	 * @return array Modified tests array.
+	 */
+	public function add_site_health_tests( $tests ) {
+		$tests['direct']['buddyboss_license_status'] = array(
+			'label' => __( 'BuddyBoss License Status', 'buddyboss' ),
+			'test'  => array( $this, 'site_health_license_test' ),
+		);
+
+		return $tests;
+	}
+
+	/**
+	 * Site Health test for license status.
+	 *
+	 * @return array Test result.
+	 */
+	public function site_health_license_test() {
+		// Dev environment bypass.
+		if ( BB_DRM_Helper::is_dev_environment() ) {
+			return array(
+				'label'       => __( 'License check bypassed (development environment)', 'buddyboss' ),
+				'status'      => 'good',
+				'badge'       => array(
+					'label' => __( 'BuddyBoss', 'buddyboss' ),
+					'color' => 'blue',
+				),
+				'description' => sprintf(
+					'<p>%s</p>',
+					__( 'License validation is automatically disabled on development environments.', 'buddyboss' )
+				),
+				'actions'     => '',
+				'test'        => 'buddyboss_license_status',
+			);
+		}
+
+		// Check if license is valid.
+		if ( BB_DRM_Helper::is_valid() ) {
+			return array(
+				'label'       => __( 'BuddyBoss license is active and valid', 'buddyboss' ),
+				'status'      => 'good',
+				'badge'       => array(
+					'label' => __( 'BuddyBoss', 'buddyboss' ),
+					'color' => 'blue',
+				),
+				'description' => sprintf(
+					'<p>%s</p>',
+					__( 'Your BuddyBoss license is active and valid. You have full access to all features and updates.', 'buddyboss' )
+				),
+				'actions'     => '',
+				'test'        => 'buddyboss_license_status',
+			);
+		}
+
+		// Check for DRM events.
+		$drm_no_license      = get_option( 'bb_drm_no_license', false );
+		$drm_invalid_license = get_option( 'bb_drm_invalid_license', false );
+
+		if ( $drm_no_license ) {
+			$event = BB_DRM_Event::latest( BB_DRM_Helper::NO_LICENSE_EVENT );
+			if ( $event ) {
+				$days = BB_DRM_Helper::days_elapsed( $event->created_at );
+				return $this->get_no_license_site_health_result( $days );
+			}
+		}
+
+		if ( $drm_invalid_license ) {
+			$event = BB_DRM_Event::latest( BB_DRM_Helper::INVALID_LICENSE_EVENT );
+			if ( $event ) {
+				$days = BB_DRM_Helper::days_elapsed( $event->created_at );
+				return $this->get_invalid_license_site_health_result( $days );
+			}
+		}
+
+		// No license found.
+		return array(
+			'label'       => __( 'No BuddyBoss license found', 'buddyboss' ),
+			'status'      => 'critical',
+			'badge'       => array(
+				'label' => __( 'BuddyBoss', 'buddyboss' ),
+				'color' => 'red',
+			),
+			'description' => sprintf(
+				'<p>%s</p>',
+				__( 'No license key has been activated for BuddyBoss Platform. Please activate your license to ensure continued access to updates and support.', 'buddyboss' )
+			),
+			'actions'     => sprintf(
+				'<p><a href="%s" class="button button-primary">%s</a></p>',
+				admin_url( 'admin.php?page=buddyboss-settings' ),
+				__( 'Activate License', 'buddyboss' )
+			),
+			'test'        => 'buddyboss_license_status',
+		);
+	}
+
+	/**
+	 * Get Site Health result for no license scenario.
+	 *
+	 * @param int $days Days elapsed since event.
+	 * @return array Site Health test result.
+	 */
+	private function get_no_license_site_health_result( $days ) {
+		$grace_days_left = max( 0, 30 - $days );
+
+		if ( $days >= 30 ) {
+			// Locked.
+			return array(
+				'label'       => __( 'BuddyBoss Platform is locked (no license)', 'buddyboss' ),
+				'status'      => 'critical',
+				'badge'       => array(
+					'label' => __( 'BuddyBoss', 'buddyboss' ),
+					'color' => 'red',
+				),
+				'description' => sprintf(
+					'<p>%s</p><p>%s</p>',
+					__( 'Your BuddyBoss Platform installation is currently locked due to missing license activation.', 'buddyboss' ),
+					__( 'Please activate a valid license key immediately to restore functionality.', 'buddyboss' )
+				),
+				'actions'     => sprintf(
+					'<p><a href="%s" class="button button-primary">%s</a> <a href="%s" target="_blank" class="button">%s</a></p>',
+					admin_url( 'admin.php?page=buddyboss-settings' ),
+					__( 'Activate License', 'buddyboss' ),
+					'https://www.buddyboss.com/pricing/',
+					__( 'Purchase License', 'buddyboss' )
+				),
+				'test'        => 'buddyboss_license_status',
+			);
+		} elseif ( $days >= 21 ) {
+			// Medium warning.
+			return array(
+				'label'       => sprintf(
+					/* translators: %d: days remaining */
+					__( 'BuddyBoss license warning (%d days until lockout)', 'buddyboss' ),
+					$grace_days_left
+				),
+				'status'      => 'critical',
+				'badge'       => array(
+					'label' => __( 'BuddyBoss', 'buddyboss' ),
+					'color' => 'orange',
+				),
+				'description' => sprintf(
+					'<p>%s</p>',
+					sprintf(
+						/* translators: %d: days remaining */
+						__( 'Your BuddyBoss Platform will be locked in %d days if a license is not activated.', 'buddyboss' ),
+						$grace_days_left
+					)
+				),
+				'actions'     => sprintf(
+					'<p><a href="%s" class="button button-primary">%s</a></p>',
+					admin_url( 'admin.php?page=buddyboss-settings' ),
+					__( 'Activate License', 'buddyboss' )
+				),
+				'test'        => 'buddyboss_license_status',
+			);
+		} else {
+			// Low warning.
+			return array(
+				'label'       => sprintf(
+					/* translators: %d: days remaining */
+					__( 'BuddyBoss license needed (%d days remaining)', 'buddyboss' ),
+					$grace_days_left
+				),
+				'status'      => 'recommended',
+				'badge'       => array(
+					'label' => __( 'BuddyBoss', 'buddyboss' ),
+					'color' => 'blue',
+				),
+				'description' => sprintf(
+					'<p>%s</p>',
+					sprintf(
+						/* translators: %d: days remaining */
+						__( 'Please activate your BuddyBoss license within %d days to avoid service disruption.', 'buddyboss' ),
+						$grace_days_left
+					)
+				),
+				'actions'     => sprintf(
+					'<p><a href="%s" class="button button-primary">%s</a></p>',
+					admin_url( 'admin.php?page=buddyboss-settings' ),
+					__( 'Activate License', 'buddyboss' )
+				),
+				'test'        => 'buddyboss_license_status',
+			);
+		}
+	}
+
+	/**
+	 * Get Site Health result for invalid license scenario.
+	 *
+	 * @param int $days Days elapsed since event.
+	 * @return array Site Health test result.
+	 */
+	private function get_invalid_license_site_health_result( $days ) {
+		$grace_days_left = max( 0, 21 - $days );
+
+		if ( $days >= 21 ) {
+			// Locked.
+			return array(
+				'label'       => __( 'BuddyBoss Platform is locked (invalid license)', 'buddyboss' ),
+				'status'      => 'critical',
+				'badge'       => array(
+					'label' => __( 'BuddyBoss', 'buddyboss' ),
+					'color' => 'red',
+				),
+				'description' => sprintf(
+					'<p>%s</p><p>%s</p>',
+					__( 'Your BuddyBoss Platform installation is currently locked due to an invalid or expired license.', 'buddyboss' ),
+					__( 'Please renew or update your license key immediately to restore functionality.', 'buddyboss' )
+				),
+				'actions'     => sprintf(
+					'<p><a href="%s" class="button button-primary">%s</a> <a href="%s" target="_blank" class="button">%s</a></p>',
+					admin_url( 'admin.php?page=buddyboss-settings' ),
+					__( 'Update License', 'buddyboss' ),
+					'https://www.buddyboss.com/my-account/',
+					__( 'Renew License', 'buddyboss' )
+				),
+				'test'        => 'buddyboss_license_status',
+			);
+		} elseif ( $days >= 7 ) {
+			// Medium warning.
+			return array(
+				'label'       => sprintf(
+					/* translators: %d: days remaining */
+					__( 'Invalid BuddyBoss license (%d days until lockout)', 'buddyboss' ),
+					$grace_days_left
+				),
+				'status'      => 'critical',
+				'badge'       => array(
+					'label' => __( 'BuddyBoss', 'buddyboss' ),
+					'color' => 'orange',
+				),
+				'description' => sprintf(
+					'<p>%s</p>',
+					sprintf(
+						/* translators: %d: days remaining */
+						__( 'Your BuddyBoss license is invalid or expired. Platform will be locked in %d days if not resolved.', 'buddyboss' ),
+						$grace_days_left
+					)
+				),
+				'actions'     => sprintf(
+					'<p><a href="%s" target="_blank" class="button button-primary">%s</a> <a href="%s" class="button">%s</a></p>',
+					'https://www.buddyboss.com/my-account/',
+					__( 'Renew License', 'buddyboss' ),
+					admin_url( 'admin.php?page=buddyboss-settings' ),
+					__( 'Update License Key', 'buddyboss' )
+				),
+				'test'        => 'buddyboss_license_status',
+			);
+		} else {
+			// Initial invalid state (< 7 days).
+			return array(
+				'label'       => __( 'BuddyBoss license is invalid or expired', 'buddyboss' ),
+				'status'      => 'recommended',
+				'badge'       => array(
+					'label' => __( 'BuddyBoss', 'buddyboss' ),
+					'color' => 'blue',
+				),
+				'description' => sprintf(
+					'<p>%s</p>',
+					sprintf(
+						/* translators: %d: days remaining */
+						__( 'Your license key is invalid or has expired. Please renew within %d days to avoid service disruption.', 'buddyboss' ),
+						$grace_days_left
+					)
+				),
+				'actions'     => sprintf(
+					'<p><a href="%s" target="_blank" class="button button-primary">%s</a></p>',
+					'https://www.buddyboss.com/my-account/',
+					__( 'Renew License', 'buddyboss' )
+				),
+				'test'        => 'buddyboss_license_status',
+			);
+		}
 	}
 }

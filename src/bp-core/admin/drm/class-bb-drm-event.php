@@ -508,7 +508,8 @@ class BB_DRM_Event {
 			KEY event_event (event(191)),
 			KEY event_evt_id (evt_id),
 			KEY event_evt_id_type (evt_id_type(191)),
-			KEY event_created_at (created_at)
+			KEY event_created_at (created_at),
+			KEY event_lookup (event(191), evt_id, evt_id_type(191))
 		) {$charset_collate};";
 
 		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
