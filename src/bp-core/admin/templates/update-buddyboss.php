@@ -14,11 +14,16 @@ defined( 'ABSPATH' ) || exit;
 // If you have not any release note then set $show_overview as false.
 $show_overview = false;
 
-// Get release data based on plugin version from gitHub API.
+// Get release data based on plugin version.
+// NOTE: BuddyBoss Platform is a premium plugin and is not available in WordPress.org repository.
+// The changelog is not available via plugins_api() since the plugin moved to BuddyBoss mothership servers.
+// Users are directed to the BuddyBoss website for release notes.
 $cache_key         = 'bb_changelog_' . BP_PLATFORM_VERSION;
 $bb_changelog_data = wp_cache_get( $cache_key, 'bp' );
 if ( false === $bb_changelog_data ) {
 	$bb_changelog_data = ''; // Initialize to empty string.
+	
+	// Attempt to fetch from WordPress.org (will fail for premium plugins, but kept for backward compatibility).
 	if ( ! function_exists( 'plugins_api' ) ) {
 		require_once ABSPATH . 'wp-admin/includes/plugin-install.php';
 	}
