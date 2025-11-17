@@ -122,6 +122,17 @@ abstract class BB_Base_DRM {
 	}
 
 	/**
+	 * Public method to get the latest DRM event.
+	 * Wrapper for protected get_latest_event() for external access.
+	 *
+	 * @since 3.0.0
+	 * @return BB_DRM_Event|null The event object or null.
+	 */
+	public function get_event() {
+		return $this->get_latest_event();
+	}
+
+	/**
 	 * Updates a DRM event with new data.
 	 *
 	 * @param BB_DRM_Event $event The event to update.

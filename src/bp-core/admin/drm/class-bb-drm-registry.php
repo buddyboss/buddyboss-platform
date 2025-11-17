@@ -129,7 +129,7 @@ class BB_DRM_Registry {
 		}
 
 		// Create event if needed.
-		$event = $drm->get_latest_event();
+		$event = $drm->get_event();
 		if ( ! $event ) {
 			$drm->create_event();
 		}
