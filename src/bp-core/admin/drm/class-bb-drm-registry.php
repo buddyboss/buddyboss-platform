@@ -144,8 +144,16 @@ class BB_DRM_Registry {
 	 * @param string $product_slug The product slug.
 	 */
 	private static function cleanup_addon_drm( $product_slug ) {
+		// Delete option-based event data (legacy).
 		$event_key = 'bb_drm_event_addon-' . sanitize_key( $product_slug );
 		delete_option( $event_key );
+
+		// Delete database event.
+		$event_name = 'addon-' . $product_slug;
+		$event      = BB_DRM_Event::latest( $event_name );
+		if ( $event ) {
+			$event->destroy();
+		}
 
 		// Dismiss notifications for this add-on.
 		$notifications = new BB_Notifications();

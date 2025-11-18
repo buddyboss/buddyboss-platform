@@ -72,7 +72,7 @@ class BB_Notifications {
 	/**
 	 * Dismiss event notifications by type.
 	 *
-	 * @param string $type The event type (e.g., 'bb-drm').
+	 * @param string $type The event type (e.g., 'bb-drm', 'bb-drm-addon-buddyboss-gamification').
 	 */
 	public function dismiss_events( $type ) {
 		// Get the GroundLevel container from the loader.
@@ -84,7 +84,25 @@ class BB_Notifications {
 		$persist = false;
 
 		foreach ( $store->notifications( false ) as $notification ) {
-			if ( str_starts_with( $notification->id, $type . '_event_' ) ) {
+			// Match both patterns:
+			// 1. Platform DRM: 'bb-drm_event_*'
+			// 2. Addon DRM: 'bb-drm-addon-{slug}_addon_{slug}_*'
+			// 3. Any notification starting with type prefix
+			$patterns = array(
+				$type . '_event_',   // Platform: bb-drm_event_123456
+				$type . '_addon_',   // Addon: bb-drm-addon-buddyboss-gamification_addon_*
+				$type . '_',         // Generic: bb-drm-addon-buddyboss-gamification_*
+			);
+
+			$should_delete = false;
+			foreach ( $patterns as $pattern ) {
+				if ( 0 === strpos( $notification->id, $pattern ) ) {
+					$should_delete = true;
+					break;
+				}
+			}
+
+			if ( $should_delete ) {
 				$store->delete( $notification->id );
 				$persist = true;
 			}

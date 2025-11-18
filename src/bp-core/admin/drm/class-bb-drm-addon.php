@@ -56,11 +56,9 @@ class BB_DRM_Addon extends BB_Base_DRM {
 	 * @return void
 	 */
 	public function run() {
-		// Check if license is valid for this specific add-on.
-		if ( $this->is_addon_licensed() ) {
-			// License is valid, no DRM needed.
-			return;
-		}
+		// NOTE: This method is only called when license is NOT valid.
+		// Cleanup when license becomes valid is handled by BB_DRM_Registry::cleanup_addon_drm().
+		// So we don't need to check license validity here.
 
 		// Get the event for this add-on.
 		$event = $this->get_latest_event();
