@@ -333,11 +333,67 @@ class BB_DRM_Addon extends BB_Base_DRM {
 	}
 
 	/**
+	 * Displays admin notices related to DRM for this add-on.
+	 *
+	 * Overrides parent method to use addon-specific DRM info.
+	 */
+	public function admin_notices() {
+		if ( ! $this->event instanceof BB_DRM_Event ) {
+			return;
+		}
+
+		$drm_status = BB_DRM_Helper::get_status();
+
+		if ( '' !== $drm_status ) {
+			// Use addon-specific DRM info instead of Platform info.
+			$drm_info                = $this->get_addon_drm_info( $drm_status, 'admin_notices' );
+			$drm_info['notice_key']  = BB_DRM_Helper::get_status_key( $drm_status );
+			$drm_info['event_name']  = $this->event_name;
+
+			// Add support link if not provided.
+			if ( ! isset( $drm_info['support_link'] ) ) {
+				$drm_info['support_link'] = $drm_info['activation_link'];
+			}
+
+			// Add help message if not provided.
+			if ( ! isset( $drm_info['help_message'] ) ) {
+				$drm_info['help_message'] = __( 'Activate License', 'buddyboss' );
+			}
+
+			$notice_user_key = BB_DRM_Helper::prepare_dismissable_notice_key( $drm_info['notice_key'] );
+
+			// Get event args.
+			$args       = $this->event->get_args();
+			$event_data = is_object( $args ) ? (array) $args : ( is_array( $args ) ? $args : array() );
+
+			$is_dismissed = BB_DRM_Helper::is_dismissed( $event_data, $notice_user_key );
+			if ( ! $is_dismissed ) {
+				$this->render_admin_notice( $drm_info );
+			}
+		}
+	}
+
+	/**
 	 * Check if this add-on's features should be locked.
 	 *
 	 * @return bool True if features should be locked.
 	 */
 	public function should_lock_features() {
-		return BB_DRM_Helper::is_locked() && ! $this->is_addon_licensed();
+		// First check if license is valid.
+		if ( $this->is_addon_licensed() ) {
+			return false;
+		}
+
+		// Check if there's a DRM event for this addon.
+		$event = $this->get_latest_event();
+		if ( ! $event ) {
+			return false;
+		}
+
+		// Calculate days elapsed.
+		$days = BB_DRM_Helper::days_elapsed( $event->created_at );
+
+		// Lock if grace period has expired (21+ days for addons).
+		return $days >= 21;
 	}
 }

@@ -119,27 +119,16 @@ class BB_DRM_Controller {
 
 	/**
 	 * Initialize DRM checks.
+	 *
+	 * NOTE: Platform itself does NOT run DRM checks or lock features.
+	 * Platform only provides centralized DRM infrastructure for add-on plugins.
+	 * Add-ons (Pro, Gamification, etc.) manage their own lockout via BB_DRM_Registry.
 	 */
 	public function drm_init() {
-		if ( ! is_admin() ) {
-			return;
-		}
-
-		// Check if license is valid.
-		if ( BB_DRM_Helper::is_valid() ) {
-			return;
-		}
-
-		$drm_no_license      = get_option( 'bb_drm_no_license', false );
-		$drm_invalid_license = get_option( 'bb_drm_invalid_license', false );
-
-		if ( $drm_no_license ) {
-			$drm = new BB_DRM_NoKey();
-			$drm->run();
-		} elseif ( $drm_invalid_license ) {
-			$drm = new BB_DRM_Invalid();
-			$drm->run();
-		}
+		// Platform does not lock itself out.
+		// Only add-on plugins should check and enforce DRM.
+		// All DRM functionality for add-ons is handled through BB_DRM_Registry.
+		return;
 	}
 
 	/**
@@ -266,37 +255,18 @@ class BB_DRM_Controller {
 			);
 		}
 
-		// Check for DRM events.
-		$drm_no_license      = get_option( 'bb_drm_no_license', false );
-		$drm_invalid_license = get_option( 'bb_drm_invalid_license', false );
-
-		if ( $drm_no_license ) {
-			$event = BB_DRM_Event::latest( BB_DRM_Helper::NO_LICENSE_EVENT );
-			if ( $event ) {
-				$days = BB_DRM_Helper::days_elapsed( $event->created_at );
-				return $this->get_no_license_site_health_result( $days );
-			}
-		}
-
-		if ( $drm_invalid_license ) {
-			$event = BB_DRM_Event::latest( BB_DRM_Helper::INVALID_LICENSE_EVENT );
-			if ( $event ) {
-				$days = BB_DRM_Helper::days_elapsed( $event->created_at );
-				return $this->get_invalid_license_site_health_result( $days );
-			}
-		}
-
-		// No license found.
+		// No license found - Platform still works, just show recommendation.
 		return array(
-			'label'       => __( 'No BuddyBoss license found', 'buddyboss' ),
-			'status'      => 'critical',
+			'label'       => __( 'BuddyBoss license not activated', 'buddyboss' ),
+			'status'      => 'recommended',
 			'badge'       => array(
 				'label' => __( 'BuddyBoss', 'buddyboss' ),
-				'color' => 'red',
+				'color' => 'blue',
 			),
 			'description' => sprintf(
-				'<p>%s</p>',
-				__( 'No license key has been activated for BuddyBoss Platform. Please activate your license to ensure continued access to updates and support.', 'buddyboss' )
+				'<p>%s</p><p>%s</p>',
+				__( 'No license key has been activated for BuddyBoss Platform. While Platform features will continue to work, add-on plugins require license activation.', 'buddyboss' ),
+				__( 'Activate your license to manage add-on plugins and ensure access to updates and support.', 'buddyboss' )
 			),
 			'actions'     => sprintf(
 				'<p><a href="%s" class="button button-primary">%s</a></p>',

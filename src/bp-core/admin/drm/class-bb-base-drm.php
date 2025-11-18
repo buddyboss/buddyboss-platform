@@ -235,17 +235,26 @@ abstract class BB_Base_DRM {
 	 * @param array $drm_info The DRM information.
 	 */
 	protected function render_admin_notice( $drm_info ) {
+		// Return early if no heading or message.
+		if ( empty( $drm_info['heading'] ) || empty( $drm_info['message'] ) ) {
+			return;
+		}
+
 		$notice_class = 'notice notice-error';
 		if ( BB_DRM_Helper::is_low() ) {
 			$notice_class = 'notice notice-warning';
 		}
+
+		// Default values for optional keys.
+		$support_link = isset( $drm_info['support_link'] ) ? $drm_info['support_link'] : bp_get_admin_url( 'admin.php?page=buddyboss-license' );
+		$help_message = isset( $drm_info['help_message'] ) ? $drm_info['help_message'] : __( 'Activate License', 'buddyboss' );
 		?>
-		<div class="<?php echo esc_attr( $notice_class ); ?> bb-drm-notice">
-			<h3><?php echo esc_html( $drm_info['heading'] ); ?></h3>
-			<div><?php echo wp_kses_post( $drm_info['message'] ); ?></div>
-			<p>
-				<a href="<?php echo esc_url( $drm_info['support_link'] ); ?>" target="_blank" class="button button-primary">
-					<?php echo esc_html( $drm_info['help_message'] ); ?>
+		<div class="<?php echo esc_attr( $notice_class ); ?> bb-drm-notice" style="padding: 15px; border-left-width: 4px;">
+			<h3 style="margin-top: 0;"><?php echo esc_html( $drm_info['heading'] ); ?></h3>
+			<div style="margin-bottom: 10px;"><?php echo wp_kses_post( $drm_info['message'] ); ?></div>
+			<p style="margin-bottom: 0;">
+				<a href="<?php echo esc_url( $support_link ); ?>" class="button button-primary">
+					<?php echo esc_html( $help_message ); ?>
 				</a>
 			</p>
 		</div>

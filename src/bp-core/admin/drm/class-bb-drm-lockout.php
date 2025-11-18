@@ -60,37 +60,15 @@ class BB_DRM_Lockout {
 	/**
 	 * Check if system is in locked state.
 	 *
-	 * @return bool True if locked.
+	 * NOTE: Platform itself should NEVER lock out.
+	 * Platform only provides centralized DRM infrastructure for add-ons.
+	 * Only add-on plugins should be locked when their licenses are invalid.
+	 *
+	 * @return bool Always false - Platform never locks itself.
 	 */
 	private function is_locked() {
-		// Dev environments always bypass.
-		if ( BB_DRM_Helper::is_dev_environment() ) {
-			return false;
-		}
-
-		// Check if license is valid.
-		if ( BB_DRM_Helper::is_valid() ) {
-			return false;
-		}
-
-		// Check for no license event.
-		$no_license_event = BB_DRM_Event::latest( BB_DRM_Helper::NO_LICENSE_EVENT );
-		if ( $no_license_event ) {
-			$days = BB_DRM_Helper::days_elapsed( $no_license_event->created_at );
-			if ( $days >= 30 ) {
-				return true;
-			}
-		}
-
-		// Check for invalid license event.
-		$invalid_license_event = BB_DRM_Event::latest( BB_DRM_Helper::INVALID_LICENSE_EVENT );
-		if ( $invalid_license_event ) {
-			$days = BB_DRM_Helper::days_elapsed( $invalid_license_event->created_at );
-			if ( $days >= 21 ) {
-				return true;
-			}
-		}
-
+		// Platform itself never locks out.
+		// Only add-on plugins (Pro, Gamification, etc.) should be locked.
 		return false;
 	}
 
@@ -101,6 +79,11 @@ class BB_DRM_Lockout {
 	 * where users can activate their license.
 	 */
 	public function lock_menu() {
+		// Only lock menu if system is actually locked.
+		if ( ! $this->is_locked() ) {
+			return;
+		}
+
 		global $menu, $submenu;
 
 		// Store original menu for restoration (if needed).
@@ -147,6 +130,11 @@ class BB_DRM_Lockout {
 	 * Redirects users away from locked pages to the license activation page.
 	 */
 	public function maybe_block_access() {
+		// Only block if system is actually locked.
+		if ( ! $this->is_locked() ) {
+			return;
+		}
+
 		// Get current screen.
 		global $pagenow;
 
@@ -184,6 +172,11 @@ class BB_DRM_Lockout {
 	 * Enqueue lockout screen assets.
 	 */
 	public function enqueue_lockout_assets() {
+		// Only enqueue if locked.
+		if ( ! $this->is_locked() ) {
+			return;
+		}
+
 		// Enqueue CSS.
 		wp_enqueue_style(
 			'bb-drm-lockout',
@@ -227,6 +220,11 @@ class BB_DRM_Lockout {
 	 * Displays modal overlay with blurred background and license activation form.
 	 */
 	public function render_lockout_screen() {
+		// Only render if locked.
+		if ( ! $this->is_locked() ) {
+			return;
+		}
+
 		// Determine lockout reason.
 		$reason      = 'no_license';
 		$days        = 0;
