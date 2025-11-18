@@ -5301,10 +5301,25 @@ function bb_document_get_activity_document( $activity = '', $args = array() ) {
 	);
 
 	// Update privacy for the group and comments.
-	if ( bp_is_active( 'groups' ) && bp_is_group() && bp_is_group_document_support_enabled() ) {
-		$document_args['privacy'] = array( 'grouponly' );
+	if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ) {
+		if ( bp_is_group_document_support_enabled() ) {
+			$document_args['privacy'] = array( 'grouponly' );
+			if ( 'activity_comment' === $activity->type ) {
+				$document_args['privacy'][] = 'comment';
+			}
+		} else {
+			$document_args['privacy']  = array( '0' );
+		}
+	} else {
+		// For activity feed activities, use bp_document_query_privacy
+		$document_args['privacy'] = bp_document_query_privacy( $activity->user_id, 0, $activity->component );
+
 		if ( 'activity_comment' === $activity->type ) {
 			$document_args['privacy'][] = 'comment';
+		}
+
+		if ( ! bp_is_profile_document_support_enabled() ) {
+			$document_args['user_id'] = 'null';
 		}
 	}
 
