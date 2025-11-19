@@ -2853,7 +2853,8 @@ window.bp = window.bp || {};
 			
 			// Global listener for any clicks that might trigger YouTube videos
 			// This catches clicks even in picture-in-picture windows
-			$( document ).on( 'click', function( event ) {
+			// Namespaced for potential cleanup: .video-player
+			$( document ).on( 'click.video-player', function( event ) {
 				// Check if we're in picture-in-picture mode (with feature detection)
 				if ( bp.Nouveau.Video.Player.isPictureInPictureSupported() && document.pictureInPictureElement ) {
 					// Small delay to let any play events fire first
@@ -2864,7 +2865,8 @@ window.bp = window.bp || {};
 			} );
 			
 			// Listen for any iframe load events (YouTube might reload when we change src)
-			$( document ).on( 'load', 'iframe[src*="youtube"], iframe[src*="youtu.be"]', function() {
+			// Namespaced for potential cleanup: .video-player
+			$( document ).on( 'load.video-player', 'iframe[src*="youtube"], iframe[src*="youtu.be"]', function() {
 				if ( bp.Nouveau.Video.Player.isPictureInPictureSupported() && document.pictureInPictureElement ) {
 					bp.Nouveau.Video.Player.pauseEmbeddedVideos( true );
 				}
