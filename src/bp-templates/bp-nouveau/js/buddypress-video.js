@@ -3074,11 +3074,113 @@ window.bp = window.bp || {};
 		},
 
 		/**
+		 * Pause all YouTube/Vimeo iframe embeds in activity posts
+		 * This prevents YouTube videos from playing when Video.js videos are active
+		 */
+		pauseEmbeddedVideos: function( quiet ) {
+			quiet = quiet || false;
+			
+			// Find all YouTube and Vimeo iframes in activity posts
+			var iframes = $( '.activity-list iframe, .activity-item iframe, .bb-activity-video-elem iframe' );
+			
+			iframes.each(
+				function( index ) {
+					var $iframe = $( this );
+					var src = $iframe.attr( 'src' ) || '';
+					
+					// Check if it's a YouTube or Vimeo iframe
+					if ( src.indexOf( 'youtube.com' ) !== -1 || src.indexOf( 'youtu.be' ) !== -1 || src.indexOf( 'vimeo.com' ) !== -1 ) {
+						try {
+							var newSrc = src;
+							var srcChanged = false;
+							
+							// For YouTube: Ensure enablejsapi=1 is present (required for postMessage)
+							if ( src.indexOf( 'youtube.com' ) !== -1 || src.indexOf( 'youtu.be' ) !== -1 ) {
+								if ( src.indexOf( 'enablejsapi=1' ) === -1 ) {
+									var separator = src.indexOf( '?' ) !== -1 ? '&' : '?';
+									newSrc = src + separator + 'enablejsapi=1';
+									srcChanged = true;
+								}
+								
+								// Remove autoplay parameter if present
+								if ( newSrc.indexOf( 'autoplay=1' ) !== -1 ) {
+									newSrc = newSrc.replace( /[?&]autoplay=1/, '' ).replace( /[?&]autoplay=1&/, '&' );
+									srcChanged = true;
+								}
+								
+								// Update src if changed
+								if ( srcChanged ) {
+									$iframe.attr( 'src', newSrc );
+									
+									// Wait a bit for iframe to reload, then send pause commands
+									setTimeout( function() {
+										var iframe = this;
+										if ( iframe.contentWindow ) {
+											iframe.contentWindow.postMessage( '{"event":"command","func":"pauseVideo","args":""}', '*' );
+											iframe.contentWindow.postMessage( '{"event":"command","func":"pauseVideo","args":""}', '*' );
+											
+											setTimeout( function() {
+												iframe.contentWindow.postMessage( '{"event":"command","func":"stopVideo","args":""}', '*' );
+												iframe.contentWindow.postMessage( '{"event":"command","func":"stopVideo","args":""}', '*' );
+											}, 100 );
+										}
+									}.bind( this ), 300 );
+								}
+							}
+							
+							// Try to pause via postMessage (for YouTube)
+							if ( src.indexOf( 'youtube.com' ) !== -1 || src.indexOf( 'youtu.be' ) !== -1 ) {
+								var iframe = this;
+								if ( iframe.contentWindow ) {
+									// Send multiple pause commands to be more aggressive
+									iframe.contentWindow.postMessage( '{"event":"command","func":"pauseVideo","args":""}', '*' );
+									iframe.contentWindow.postMessage( '{"event":"command","func":"pauseVideo","args":""}', '*' );
+									
+									// Also try stopVideo
+									setTimeout( function() {
+										iframe.contentWindow.postMessage( '{"event":"command","func":"stopVideo","args":""}', '*' );
+										iframe.contentWindow.postMessage( '{"event":"command","func":"stopVideo","args":""}', '*' );
+									}, 50 );
+									
+									// Send again after a short delay
+									setTimeout( function() {
+										iframe.contentWindow.postMessage( '{"event":"command","func":"pauseVideo","args":""}', '*' );
+									}, 200 );
+								}
+							}
+						} catch ( e ) {
+							// Cross-origin restrictions may prevent postMessage, which is expected
+						}
+					}
+				}
+			);
+		},
+
+		/**
 		 * [addListeners description]
 		 */
 		addListeners: function () {
 
 			$( document ).on( 'click', '.video-js', this.openPlayer.bind( this ) );
+			
+			// Global listener for any clicks that might trigger YouTube videos
+			// This catches clicks even in picture-in-picture windows
+			$( document ).on( 'click', function( event ) {
+				// Check if we're in picture-in-picture mode
+				if ( document.pictureInPictureElement ) {
+					// Small delay to let any play events fire first
+					setTimeout( function() {
+						bp.Nouveau.Video.Player.pauseEmbeddedVideos( true );
+					}, 50 );
+				}
+			} );
+			
+			// Listen for any iframe load events (YouTube might reload when we change src)
+			$( document ).on( 'load', 'iframe[src*="youtube"], iframe[src*="youtu.be"]', function() {
+				if ( document.pictureInPictureElement ) {
+					bp.Nouveau.Video.Player.pauseEmbeddedVideos( true );
+				}
+			} );
 
 		},
 
@@ -3106,6 +3208,7 @@ window.bp = window.bp || {};
                             this.on(
                                     'play',
                                 function() {
+									// Pause other Video.js players
                                     $( '.video-js' ).each(
                                         function () {
                                             if ( videoIndex !== $( this ).attr( 'id' ) ) {
@@ -3113,8 +3216,88 @@ window.bp = window.bp || {};
                                             }
                                         }
                                     );
+									
+									// Pause YouTube/Vimeo iframes
+									bp.Nouveau.Video.Player.pauseEmbeddedVideos();
                                 }
                                 );
+							
+							// Handle picture-in-picture events
+							var videoElement = this.el().querySelector( 'video' );
+							if ( videoElement ) {
+								var pipInterval = null;
+								var pipWindow = null;
+								
+								videoElement.addEventListener( 'enterpictureinpicture', function( event ) {
+									pipWindow = event.pictureInPictureWindow;
+									
+									// When entering picture-in-picture, pause all YouTube/Vimeo iframes
+									bp.Nouveau.Video.Player.pauseEmbeddedVideos();
+									
+									// Set up periodic check to pause YouTube iframes while in picture-in-picture
+									if ( pipInterval ) {
+										clearInterval( pipInterval );
+									}
+									
+									pipInterval = setInterval( function() {
+										// Check if still in picture-in-picture
+										if ( document.pictureInPictureElement === videoElement ) {
+											// Always pause YouTube iframes while in picture-in-picture, regardless of Video.js state
+											// This prevents YouTube from auto-playing when user interacts with PiP window
+											bp.Nouveau.Video.Player.pauseEmbeddedVideos( true ); // Pass true to suppress logs
+										} else {
+											clearInterval( pipInterval );
+											pipInterval = null;
+										}
+									}, 200 ); // Check every 200ms - balanced between responsiveness and performance
+									
+									// Try to add event listeners to the picture-in-picture window
+									if ( pipWindow ) {
+										try {
+											// Try multiple event types
+											var pipClickHandler = function() {
+												bp.Nouveau.Video.Player.pauseEmbeddedVideos( true );
+											};
+											
+											pipWindow.addEventListener( 'click', pipClickHandler );
+											pipWindow.addEventListener( 'mousedown', pipClickHandler );
+											pipWindow.addEventListener( 'mouseup', pipClickHandler );
+											
+											pipWindow.addEventListener( 'focus', function() {
+												bp.Nouveau.Video.Player.pauseEmbeddedVideos( true );
+											} );
+											
+											// Also try to listen on the document inside the PiP window
+											if ( pipWindow.document ) {
+												pipWindow.document.addEventListener( 'click', pipClickHandler );
+											}
+										} catch ( e ) {
+											// Cannot add event listeners to picture-in-picture window (expected in some browsers)
+										}
+									}
+								} );
+								
+								videoElement.addEventListener( 'leavepictureinpicture', function( event ) {
+									// Clear the interval when leaving picture-in-picture
+									if ( pipInterval ) {
+										clearInterval( pipInterval );
+										pipInterval = null;
+									}
+									
+									// When leaving picture-in-picture, ensure YouTube/Vimeo iframes remain paused
+									bp.Nouveau.Video.Player.pauseEmbeddedVideos();
+								} );
+								
+								// Listen for play events on the video element directly
+								videoElement.addEventListener( 'play', function( event ) {
+									bp.Nouveau.Video.Player.pauseEmbeddedVideos();
+								} );
+								
+								// Listen for playing event (fired when video actually starts playing)
+								videoElement.addEventListener( 'playing', function( event ) {
+									bp.Nouveau.Video.Player.pauseEmbeddedVideos();
+								} );
+							}
                         }
 					);
 
