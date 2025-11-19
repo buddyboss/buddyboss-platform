@@ -3196,7 +3196,7 @@ window.bp = window.bp || {};
 							
 							var forumId = 0;
 							if ( $( '#bbp_forum_id' ).length ) {
-								forumId = $( '#bbp_forum_id').val();
+								forumId = $( '#bbp_forum_id' ).val();
 							}
 							formData.append( 'bbp_forum_id', forumId );
 							var topicId = 0;
@@ -3501,7 +3501,7 @@ window.bp = window.bp || {};
 							}
 							formData.append( 'bbp_forum_id', forumId );
 							var topicId = 0;
-							if ( $('#bbp_topic_id' ).length ) {
+							if ( $( '#bbp_topic_id' ).length ) {
 								topicId = $( '#bbp_topic_id' ).val();
 							}
 							formData.append( 'bbp_topic_id', topicId );
