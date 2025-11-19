@@ -3104,7 +3104,10 @@ window.bp = window.bp || {};
 								
 								// Remove autoplay parameter if present
 								if ( newSrc.indexOf( 'autoplay=1' ) !== -1 ) {
-									newSrc = newSrc.replace( /[?&]autoplay=1/, '' ).replace( /[?&]autoplay=1&/, '&' );
+									// Use comprehensive regex to handle all cases: ?autoplay=1, &autoplay=1, at start, middle, or end
+									newSrc = newSrc.replace( /[?&]autoplay=1(&|$)/g, '$1' );
+									// Clean up any leading & that might result from removing first parameter
+									newSrc = newSrc.replace( /^([^?]*)\?&/, '$1?' );
 									srcChanged = true;
 								}
 								
