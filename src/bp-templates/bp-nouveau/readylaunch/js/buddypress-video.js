@@ -2793,16 +2793,18 @@ window.bp = window.bp || {};
 								if ( srcChanged ) {
 									$iframe.attr( 'src', newSrc );
 									
-									// Wait a bit for iframe to reload, then send pause commands
+									// Wait a bit for iframe to reload, then send pause commands with delays
 									setTimeout( function() {
 										var iframe = this;
 										if ( iframe.contentWindow ) {
-											iframe.contentWindow.postMessage( '{"event":"command","func":"pauseVideo","args":""}', '*' );
+											// Send pause command
 											iframe.contentWindow.postMessage( '{"event":"command","func":"pauseVideo","args":""}', '*' );
 											
+											// Send stopVideo after a delay
 											setTimeout( function() {
-												iframe.contentWindow.postMessage( '{"event":"command","func":"stopVideo","args":""}', '*' );
-												iframe.contentWindow.postMessage( '{"event":"command","func":"stopVideo","args":""}', '*' );
+												if ( iframe.contentWindow ) {
+													iframe.contentWindow.postMessage( '{"event":"command","func":"stopVideo","args":""}', '*' );
+												}
 											}, 100 );
 										}
 									}.bind( this ), 300 );
@@ -2813,20 +2815,22 @@ window.bp = window.bp || {};
 							if ( src.indexOf( 'youtube.com' ) !== -1 || src.indexOf( 'youtu.be' ) !== -1 ) {
 								var iframe = this;
 								if ( iframe.contentWindow ) {
-									// Send multiple pause commands to be more aggressive
-									iframe.contentWindow.postMessage( '{"event":"command","func":"pauseVideo","args":""}', '*' );
+									// Send pause command immediately
 									iframe.contentWindow.postMessage( '{"event":"command","func":"pauseVideo","args":""}', '*' );
 									
-									// Also try stopVideo
+									// Send stopVideo after a small delay
 									setTimeout( function() {
-										iframe.contentWindow.postMessage( '{"event":"command","func":"stopVideo","args":""}', '*' );
-										iframe.contentWindow.postMessage( '{"event":"command","func":"stopVideo","args":""}', '*' );
-									}, 50 );
+										if ( iframe.contentWindow ) {
+											iframe.contentWindow.postMessage( '{"event":"command","func":"stopVideo","args":""}', '*' );
+										}
+									}, 100 );
 									
-									// Send again after a short delay
+									// Send another pause after a longer delay as a safety measure
 									setTimeout( function() {
-										iframe.contentWindow.postMessage( '{"event":"command","func":"pauseVideo","args":""}', '*' );
-									}, 200 );
+										if ( iframe.contentWindow ) {
+											iframe.contentWindow.postMessage( '{"event":"command","func":"pauseVideo","args":""}', '*' );
+										}
+									}, 300 );
 								}
 							}
 						} catch ( e ) {
@@ -2924,7 +2928,8 @@ window.bp = window.bp || {};
 									// When entering picture-in-picture, pause all YouTube/Vimeo iframes
 									bp.Nouveau.Video.Player.pauseEmbeddedVideos();
 									
-									// Set up periodic check to pause YouTube iframes while in picture-in-picture
+									// Set up a longer interval as a safety net (event-driven approach is primary)
+									// This only runs if events don't catch YouTube trying to play
 									if ( pipInterval ) {
 										clearInterval( pipInterval );
 									}
@@ -2932,14 +2937,14 @@ window.bp = window.bp || {};
 									pipInterval = setInterval( function() {
 										// Check if still in picture-in-picture
 										if ( document.pictureInPictureElement === videoElement ) {
-											// Always pause YouTube iframes while in picture-in-picture, regardless of Video.js state
-											// This prevents YouTube from auto-playing when user interacts with PiP window
+											// Safety net: pause YouTube iframes periodically while in picture-in-picture
+											// This catches edge cases where events might not fire
 											bp.Nouveau.Video.Player.pauseEmbeddedVideos( true ); // Pass true to suppress logs
 										} else {
 											clearInterval( pipInterval );
 											pipInterval = null;
 										}
-									}, 200 ); // Check every 200ms - balanced between responsiveness and performance
+									}, 1000 ); // Check every 1000ms (1 second) - safety net, events handle most cases
 									
 									// Try to add event listeners to the picture-in-picture window
 									if ( pipWindow ) {
@@ -2979,13 +2984,37 @@ window.bp = window.bp || {};
 								} );
 								
 								// Listen for play events on the video element directly
+								// These are the primary event-driven handlers
 								videoElement.addEventListener( 'play', function( event ) {
-									bp.Nouveau.Video.Player.pauseEmbeddedVideos();
+									// When Video.js video plays (especially in PiP), pause YouTube
+									if ( document.pictureInPictureElement === videoElement ) {
+										bp.Nouveau.Video.Player.pauseEmbeddedVideos( true );
+									} else {
+										bp.Nouveau.Video.Player.pauseEmbeddedVideos();
+									}
 								} );
 								
 								// Listen for playing event (fired when video actually starts playing)
 								videoElement.addEventListener( 'playing', function( event ) {
-									bp.Nouveau.Video.Player.pauseEmbeddedVideos();
+									// When Video.js video is actually playing (especially in PiP), pause YouTube
+									if ( document.pictureInPictureElement === videoElement ) {
+										bp.Nouveau.Video.Player.pauseEmbeddedVideos( true );
+									} else {
+										bp.Nouveau.Video.Player.pauseEmbeddedVideos();
+									}
+								} );
+								
+								// Listen for timeupdate events while in PiP (catches when video continues playing)
+								videoElement.addEventListener( 'timeupdate', function( event ) {
+									// Only act if we're in picture-in-picture mode
+									if ( document.pictureInPictureElement === videoElement ) {
+										// Throttle: only pause YouTube every 2 seconds while playing in PiP
+										// This prevents excessive calls while still catching YouTube attempts
+										if ( ! videoElement._lastPiPPause || Date.now() - videoElement._lastPiPPause > 2000 ) {
+											bp.Nouveau.Video.Player.pauseEmbeddedVideos( true );
+											videoElement._lastPiPPause = Date.now();
+										}
+									}
 								} );
 							}
 						}
