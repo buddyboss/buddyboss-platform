@@ -3137,19 +3137,12 @@ window.bp = window.bp || {};
 									// Send pause command immediately
 									iframe.contentWindow.postMessage( '{"event":"command","func":"pauseVideo","args":""}', '*' );
 									
-									// Send stopVideo after a small delay
+									// Send stopVideo after a small delay to ensure video stops
 									setTimeout( function() {
 										if ( iframe.contentWindow ) {
 											iframe.contentWindow.postMessage( '{"event":"command","func":"stopVideo","args":""}', '*' );
 										}
 									}, 100 );
-									
-									// Send another pause after a longer delay as a safety measure
-									setTimeout( function() {
-										if ( iframe.contentWindow ) {
-											iframe.contentWindow.postMessage( '{"event":"command","func":"pauseVideo","args":""}', '*' );
-										}
-									}, 300 );
 								}
 							}
 						} catch ( e ) {
