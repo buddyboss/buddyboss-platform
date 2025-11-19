@@ -240,24 +240,134 @@ abstract class BB_Base_DRM {
 			return;
 		}
 
+		// Determine if this is a warning (dismissible) or error (not dismissible).
+		$is_locked    = BB_DRM_Helper::is_locked();
+		$is_warning   = BB_DRM_Helper::is_low() || BB_DRM_Helper::is_medium();
 		$notice_class = 'notice notice-error';
-		if ( BB_DRM_Helper::is_low() ) {
-			$notice_class = 'notice notice-warning';
+
+		if ( $is_warning ) {
+			// Warnings (LOW/MEDIUM) are dismissible.
+			$notice_class = 'notice notice-warning is-dismissible';
 		}
 
 		// Default values for optional keys.
 		$support_link = isset( $drm_info['support_link'] ) ? $drm_info['support_link'] : bp_get_admin_url( 'admin.php?page=buddyboss-license' );
 		$help_message = isset( $drm_info['help_message'] ) ? $drm_info['help_message'] : __( 'Activate License', 'buddyboss' );
+
+		// Generate unique notice ID for dismissal (only for warnings).
+		$notice_key  = $drm_info['notice_key'] ?? '';
+		$event_name  = $drm_info['event_name'] ?? '';
+		$notice_id   = 'bb-drm-notice-' . sanitize_key( $notice_key );
+
+		// Create security hash for AJAX (only for warnings).
+		$secret = $is_warning ? hash( 'sha256', $notice_key ) . '-' . hash( 'sha256', $event_name ) : '';
 		?>
-		<div class="<?php echo esc_attr( $notice_class ); ?> bb-drm-notice" style="padding: 15px; border-left-width: 4px;">
+		<div id="<?php echo esc_attr( $notice_id ); ?>"
+		     class="<?php echo esc_attr( $notice_class ); ?> bb-drm-notice"
+		     style="padding: 15px; border-left-width: 4px; position: relative;"
+		     <?php if ( $is_warning ) : ?>
+		     data-notice-key="<?php echo esc_attr( $notice_key ); ?>"
+		     data-secret="<?php echo esc_attr( $secret ); ?>"
+		     <?php endif; ?>>
 			<h3 style="margin-top: 0;"><?php echo esc_html( $drm_info['heading'] ); ?></h3>
 			<div style="margin-bottom: 10px;"><?php echo wp_kses_post( $drm_info['message'] ); ?></div>
 			<p style="margin-bottom: 0;">
 				<a href="<?php echo esc_url( $support_link ); ?>" class="button button-primary">
 					<?php echo esc_html( $help_message ); ?>
 				</a>
+				<?php if ( $is_warning ) : ?>
+				<button type="button" class="notice-dismiss bb-drm-dismiss" aria-label="<?php esc_attr_e( 'Dismiss this notice for 24 hours', 'buddyboss' ); ?>">
+					<span class="screen-reader-text"><?php esc_html_e( 'Dismiss this notice for 24 hours.', 'buddyboss' ); ?></span>
+				</button>
+				<?php endif; ?>
 			</p>
 		</div>
+		<?php
+
+		// Enqueue dismiss script only if this is a dismissible warning.
+		if ( $is_warning ) {
+			$this->enqueue_dismiss_script();
+		}
+	}
+
+	/**
+	 * Enqueue script for dismissing notices.
+	 */
+	private function enqueue_dismiss_script() {
+		static $enqueued = false;
+
+		if ( $enqueued ) {
+			return;
+		}
+
+		$enqueued = true;
+		?>
+		<script type="text/javascript">
+		jQuery(document).ready(function($) {
+			$('.bb-drm-notice').on('click', '.bb-drm-dismiss, .notice-dismiss', function(e) {
+				e.preventDefault();
+
+				var $notice = $(this).closest('.bb-drm-notice');
+				var noticeKey = $notice.data('notice-key');
+				var secret = $notice.data('secret');
+
+				if (!noticeKey || !secret) {
+					// Fallback to default WordPress notice dismiss behavior.
+					$notice.fadeOut();
+					return;
+				}
+
+				// Fade out immediately for better UX.
+				$notice.fadeOut();
+
+				// Send AJAX request to dismiss.
+				$.post(ajaxurl, {
+					action: 'bb_dismiss_notice_drm',
+					notice: noticeKey,
+					secret: secret,
+					nonce: '<?php echo wp_create_nonce( 'bb_dismiss_notice' ); ?>'
+				}, function(response) {
+					if (response.success) {
+						console.log('DRM notice dismissed for 24 hours');
+					} else {
+						console.error('Failed to dismiss DRM notice:', response.data);
+					}
+				}).fail(function() {
+					console.error('AJAX error dismissing DRM notice');
+				});
+			});
+		});
+		</script>
+		<style type="text/css">
+		.bb-drm-notice .notice-dismiss {
+			position: absolute;
+			top: 0;
+			right: 1px;
+			padding: 9px;
+			border: none;
+			background: none;
+			color: #787c82;
+			cursor: pointer;
+		}
+		.bb-drm-notice .notice-dismiss:before {
+			content: '\f153';
+			font: normal 16px/20px dashicons;
+			speak: never;
+			height: 20px;
+			width: 20px;
+			text-align: center;
+			-webkit-font-smoothing: antialiased;
+			-moz-osx-font-smoothing: grayscale;
+		}
+		.bb-drm-notice .notice-dismiss:hover,
+		.bb-drm-notice .notice-dismiss:active {
+			color: #d63638;
+		}
+		.bb-drm-notice .notice-dismiss:focus {
+			outline: 1px solid #4f94d4;
+			box-shadow: 0 0 0 1px #4f94d4;
+		}
+		</style>
 		<?php
 	}
 

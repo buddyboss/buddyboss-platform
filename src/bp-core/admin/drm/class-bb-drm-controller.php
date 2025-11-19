@@ -164,10 +164,29 @@ class BB_DRM_Controller {
 		$event      = null;
 		$event_name = null;
 
+		// Check Platform DRM events.
 		if ( hash( 'sha256', BB_DRM_Helper::NO_LICENSE_EVENT ) === $event_hash ) {
 			$event_name = BB_DRM_Helper::NO_LICENSE_EVENT;
 		} elseif ( hash( 'sha256', BB_DRM_Helper::INVALID_LICENSE_EVENT ) === $event_hash ) {
 			$event_name = BB_DRM_Helper::INVALID_LICENSE_EVENT;
+		} else {
+			// Check addon DRM events.
+			// Event names are stored as hash, so we need to search all addon events.
+			global $wpdb;
+			$table_name = BB_DRM_Event::get_table_name();
+			$events     = $wpdb->get_results(
+				$wpdb->prepare(
+					"SELECT DISTINCT event FROM {$table_name} WHERE event LIKE %s",
+					'addon-%'
+				)
+			);
+
+			foreach ( $events as $evt ) {
+				if ( hash( 'sha256', $evt->event ) === $event_hash ) {
+					$event_name = $evt->event;
+					break;
+				}
+			}
 		}
 
 		if ( $event_name ) {
