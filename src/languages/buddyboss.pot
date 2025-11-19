@@ -2,9 +2,9 @@
 # This file is distributed under the GPLv2 or later (license.txt).
 msgid ""
 msgstr ""
-"Project-Id-Version: BuddyBoss Platform 2.15.0\n"
+"Project-Id-Version: BuddyBoss Platform 2.15.1\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2025-11-13 07:16:47+00:00\n"
+"POT-Creation-Date: 2025-11-19 13:20:46+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -5450,7 +5450,7 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-settings.php:1977
 #: bp-core/admin/bp-core-admin-settings.php:2005
 #: bp-core/admin/bp-core-admin-settings.php:2033
-#: bp-core/admin/mothership/class-bb-license-manager.php:216
+#: bp-core/admin/mothership/class-bb-license-manager.php:218
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:439
 msgid "First Name"
 msgstr ""
@@ -5459,7 +5459,7 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-settings.php:1982
 #: bp-core/admin/bp-core-admin-settings.php:2010
 #: bp-core/admin/bp-core-admin-settings.php:2047
-#: bp-core/admin/mothership/class-bb-license-manager.php:224
+#: bp-core/admin/mothership/class-bb-license-manager.php:226
 msgid "Last Name"
 msgstr ""
 
@@ -6968,11 +6968,11 @@ msgstr ""
 msgid "MySql Server"
 msgstr ""
 
-#: bp-core/admin/mothership/class-bb-addons-manager.php:26
+#: bp-core/admin/mothership/class-bb-addons-manager.php:36
 msgid "Please enter your license key to access add-ons."
 msgstr ""
 
-#: bp-core/admin/mothership/class-bb-addons-manager.php:37
+#: bp-core/admin/mothership/class-bb-addons-manager.php:50
 msgid "There was an issue connecting with the API."
 msgstr ""
 
@@ -6997,7 +6997,7 @@ msgid "You do not have permission to activate a license"
 msgstr ""
 
 #: bp-core/admin/mothership/class-bb-license-manager.php:84
-#: bp-core/admin/mothership/class-bb-license-manager.php:516
+#: bp-core/admin/mothership/class-bb-license-manager.php:530
 msgid "Invalid nonce"
 msgstr ""
 
@@ -7006,38 +7006,38 @@ msgstr ""
 msgid "License activation failed: %s"
 msgstr ""
 
-#: bp-core/admin/mothership/class-bb-license-manager.php:171
+#: bp-core/admin/mothership/class-bb-license-manager.php:173
 #: bp-core/admin/mothership/class-bb-license-page.php:45
 msgid "License Activation"
 msgstr ""
 
-#: bp-core/admin/mothership/class-bb-license-manager.php:177
+#: bp-core/admin/mothership/class-bb-license-manager.php:179
 msgid "License Key"
 msgstr ""
 
-#: bp-core/admin/mothership/class-bb-license-manager.php:180
-#: bp-core/admin/mothership/class-bb-license-manager.php:404
+#: bp-core/admin/mothership/class-bb-license-manager.php:182
+#: bp-core/admin/mothership/class-bb-license-manager.php:406
 msgid "Enter your license key"
 msgstr ""
 
 #. translators: %s is the link to get a free license key
-#: bp-core/admin/mothership/class-bb-license-manager.php:186
+#: bp-core/admin/mothership/class-bb-license-manager.php:188
 msgid "Don't have a license yet? Click  %s to get your free license key and receive plugin updates."
 msgstr ""
 
-#: bp-core/admin/mothership/class-bb-license-manager.php:187
+#: bp-core/admin/mothership/class-bb-license-manager.php:189
 msgid "here"
 msgstr ""
 
-#: bp-core/admin/mothership/class-bb-license-manager.php:197
+#: bp-core/admin/mothership/class-bb-license-manager.php:199
 msgid "Activate License"
 msgstr ""
 
-#: bp-core/admin/mothership/class-bb-license-manager.php:208
+#: bp-core/admin/mothership/class-bb-license-manager.php:210
 msgid "Get Your BuddyBoss Platform License Key"
 msgstr ""
 
-#: bp-core/admin/mothership/class-bb-license-manager.php:232
+#: bp-core/admin/mothership/class-bb-license-manager.php:234
 #: bp-core/profile-search/bps-xprofile.php:830
 #: bp-core/profile-search/bps-xprofile.php:831
 #: bp-members/bp-members-filters.php:154
@@ -7045,80 +7045,80 @@ msgstr ""
 msgid "Email Address"
 msgstr ""
 
-#: bp-core/admin/mothership/class-bb-license-manager.php:241
+#: bp-core/admin/mothership/class-bb-license-manager.php:243
 msgid "Get License Key"
 msgstr ""
 
-#: bp-core/admin/mothership/class-bb-license-manager.php:287
+#: bp-core/admin/mothership/class-bb-license-manager.php:289
 msgid "Processing..."
 msgstr ""
 
-#: bp-core/admin/mothership/class-bb-license-manager.php:316
-#: bp-core/admin/mothership/class-bb-license-manager.php:321
+#: bp-core/admin/mothership/class-bb-license-manager.php:318
+#: bp-core/admin/mothership/class-bb-license-manager.php:323
 msgid "Error:"
 msgstr ""
 
-#: bp-core/admin/mothership/class-bb-license-manager.php:321
+#: bp-core/admin/mothership/class-bb-license-manager.php:323
 msgid "An error occurred while processing your request."
 msgstr ""
 
-#: bp-core/admin/mothership/class-bb-license-manager.php:381
+#: bp-core/admin/mothership/class-bb-license-manager.php:383
 msgid "Active License Information"
 msgstr ""
 
-#: bp-core/admin/mothership/class-bb-license-manager.php:386
+#: bp-core/admin/mothership/class-bb-license-manager.php:388
 msgid "%1$s of %2$s sites have been activated with this license key"
 msgstr ""
 
-#: bp-core/admin/mothership/class-bb-license-manager.php:392
+#: bp-core/admin/mothership/class-bb-license-manager.php:394
 msgid "License Key: "
 msgstr ""
 
-#: bp-core/admin/mothership/class-bb-license-manager.php:393
+#: bp-core/admin/mothership/class-bb-license-manager.php:395
 msgid "Status: "
 msgstr ""
 
-#: bp-core/admin/mothership/class-bb-license-manager.php:394
+#: bp-core/admin/mothership/class-bb-license-manager.php:396
 msgid "Product: "
 msgstr ""
 
-#: bp-core/admin/mothership/class-bb-license-manager.php:395
+#: bp-core/admin/mothership/class-bb-license-manager.php:397
 msgid "Activations: "
 msgstr ""
 
-#: bp-core/admin/mothership/class-bb-license-manager.php:408
+#: bp-core/admin/mothership/class-bb-license-manager.php:410
 msgid "Deactivate License"
 msgstr ""
 
-#: bp-core/admin/mothership/class-bb-license-manager.php:521
+#: bp-core/admin/mothership/class-bb-license-manager.php:535
 msgid "You do not have permission to perform this action"
 msgstr ""
 
-#: bp-core/admin/mothership/class-bb-license-manager.php:531
+#: bp-core/admin/mothership/class-bb-license-manager.php:545
 msgid "All fields are required"
 msgstr ""
 
-#: bp-core/admin/mothership/class-bb-license-manager.php:535
+#: bp-core/admin/mothership/class-bb-license-manager.php:549
 msgid "Please enter a valid email address"
 msgstr ""
 
-#: bp-core/admin/mothership/class-bb-license-manager.php:561
+#: bp-core/admin/mothership/class-bb-license-manager.php:575
 msgid "API request failed: %s"
 msgstr ""
 
-#: bp-core/admin/mothership/class-bb-license-manager.php:573
+#: bp-core/admin/mothership/class-bb-license-manager.php:587
 msgid "API returned error code: %d"
 msgstr ""
 
-#: bp-core/admin/mothership/class-bb-license-manager.php:582
+#: bp-core/admin/mothership/class-bb-license-manager.php:596
 msgid "Invalid response from API"
 msgstr ""
 
-#: bp-core/admin/mothership/class-bb-license-manager.php:587
+#: bp-core/admin/mothership/class-bb-license-manager.php:601
 msgid "License key generated successfully!"
 msgstr ""
 
-#: bp-core/admin/mothership/class-bb-license-manager.php:595
+#: bp-core/admin/mothership/class-bb-license-manager.php:609
 msgid "Failed to generate license key"
 msgstr ""
 
