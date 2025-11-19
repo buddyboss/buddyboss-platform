@@ -661,16 +661,42 @@ class BB_DRM_Helper {
 	 * @return bool True if dismissed, false otherwise.
 	 */
 	public static function is_dismissed( $event_data, $notice_key ) {
+		// Ensure event_data is an array (handle both array and object).
+		if ( is_object( $event_data ) ) {
+			$event_data = (array) $event_data;
+		}
+
+		// If not an array or empty, return false.
+		if ( ! is_array( $event_data ) || empty( $event_data ) ) {
+			return false;
+		}
+
 		$user_id = get_current_user_id();
 
 		// Check per-user dismissal (new method).
-		if ( isset( $event_data['dismissed_users'][ $notice_key ][ $user_id ] ) ) {
-			$dismissed_time = $event_data['dismissed_users'][ $notice_key ][ $user_id ];
-			$diff           = (int) abs( time() - $dismissed_time );
+		if ( isset( $event_data['dismissed_users'] ) ) {
+			// Ensure dismissed_users is also an array (handle nested objects).
+			$dismissed_users = $event_data['dismissed_users'];
+			if ( is_object( $dismissed_users ) ) {
+				$dismissed_users = (array) $dismissed_users;
+			}
 
-			// Dismissed for 24 hours.
-			if ( $diff <= ( HOUR_IN_SECONDS * 24 ) ) {
-				return true;
+			if ( is_array( $dismissed_users ) && isset( $dismissed_users[ $notice_key ] ) ) {
+				// Ensure the notice_key array is also an array.
+				$notice_data = $dismissed_users[ $notice_key ];
+				if ( is_object( $notice_data ) ) {
+					$notice_data = (array) $notice_data;
+				}
+
+				if ( is_array( $notice_data ) && isset( $notice_data[ $user_id ] ) ) {
+					$dismissed_time = $notice_data[ $user_id ];
+					$diff           = (int) abs( time() - $dismissed_time );
+
+					// Dismissed for 24 hours.
+					if ( $diff <= ( HOUR_IN_SECONDS * 24 ) ) {
+						return true;
+					}
+				}
 			}
 		}
 
