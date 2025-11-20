@@ -96,6 +96,13 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 				<div class="bb-rl-media-stream">
 
 				<?php
+					/**
+					 * Fires before the display of the media list.
+					 *
+					 * @since BuddyBoss [BBVERSION]
+					 */
+					bp_nouveau_media_hook( 'before_rl_directory', 'list' );
+
 					bp_get_template_part( 'media/theatre' );
 				if ( bp_is_profile_video_support_enabled() ) {
 					bp_get_template_part( 'video/theatre' );
@@ -115,6 +122,15 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 						}
 						?>
 					</div><!-- .media -->
+
+					<?php
+					/**
+					 * Fires after the display of the media list.
+					 *
+					 * @since BuddyBoss [BBVERSION]
+					 */
+					bp_nouveau_media_hook( 'after_rl_directory', 'list' );
+					?>
 				</div>
 
 				<?php
