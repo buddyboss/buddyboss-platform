@@ -33,7 +33,7 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 			/**
 			 * Fires before the display of the video list.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 2.15.2
 			 */
 			bp_nouveau_group_hook( 'before', 'rl_stream_video_content' );
 			?>
@@ -59,7 +59,7 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 			/**
 			 * Fires after the display of the video list.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 2.15.2
 			 */
 			bp_nouveau_group_hook( 'after', 'rl_stream_video_content' );
 
