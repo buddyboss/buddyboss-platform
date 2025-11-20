@@ -3100,62 +3100,55 @@ window.bp = window.bp || {};
 					// Check if it's a YouTube or Vimeo iframe
 					if ( src.indexOf( 'youtube.com' ) !== -1 || src.indexOf( 'youtu.be' ) !== -1 || src.indexOf( 'vimeo.com' ) !== -1 ) {
 						try {
-							var newSrc = src;
-							var srcChanged = false;
+							var iframe = this;
+							var isYouTube = src.indexOf( 'youtube.com' ) !== -1 || src.indexOf( 'youtu.be' ) !== -1;
+							var hasEnableJsApi = src.indexOf( 'enablejsapi=1' ) !== -1;
+							var hasAutoplay = src.indexOf( 'autoplay=1' ) !== -1;
 							
-							// For YouTube: Ensure enablejsapi=1 is present (required for postMessage)
-							if ( src.indexOf( 'youtube.com' ) !== -1 || src.indexOf( 'youtu.be' ) !== -1 ) {
-								if ( src.indexOf( 'enablejsapi=1' ) === -1 ) {
-									var separator = src.indexOf( '?' ) !== -1 ? '&' : '?';
-									newSrc = src + separator + 'enablejsapi=1';
-									srcChanged = true;
-								}
+							// For YouTube: Try postMessage first
+							if ( isYouTube && iframe.contentWindow ) {
+								// Always try postMessage first
+								iframe.contentWindow.postMessage( '{"event":"command","func":"pauseVideo","args":""}', '*' );
 								
-								// Remove autoplay parameter if present
-								if ( newSrc.indexOf( 'autoplay=1' ) !== -1 ) {
-									// Use comprehensive regex to handle all cases: ?autoplay=1, &autoplay=1, at start, middle, or end
-									newSrc = newSrc.replace( /[?&]autoplay=1(&|$)/g, '$1' );
-									// Clean up any leading & that might result from removing first parameter
-									newSrc = newSrc.replace( /^([^?]*)\?&/, '$1?' );
-									srcChanged = true;
-								}
-								
-								// Update src if changed
-								if ( srcChanged ) {
-									$iframe.attr( 'src', newSrc );
-									
-									// Wait a bit for iframe to reload, then send pause commands with delays
-									setTimeout( function() {
-										var iframe = this;
-										if ( iframe.contentWindow ) {
-											// Send pause command
-											iframe.contentWindow.postMessage( '{"event":"command","func":"pauseVideo","args":""}', '*' );
-											
-											// Send stopVideo after a delay
-											setTimeout( function() {
-												if ( iframe.contentWindow ) {
-													iframe.contentWindow.postMessage( '{"event":"command","func":"stopVideo","args":""}', '*' );
-												}
-											}, 100 );
-										}
-									}.bind( this ), 300 );
-								}
+								setTimeout( function() {
+									if ( iframe.contentWindow ) {
+										iframe.contentWindow.postMessage( '{"event":"command","func":"stopVideo","args":""}', '*' );
+									}
+								}, 100 );
 							}
 							
-							// Try to pause via postMessage (for YouTube)
-							if ( src.indexOf( 'youtube.com' ) !== -1 || src.indexOf( 'youtu.be' ) !== -1 ) {
-								var iframe = this;
-								if ( iframe.contentWindow ) {
-									// Send pause command immediately
-									iframe.contentWindow.postMessage( '{"event":"command","func":"pauseVideo","args":""}', '*' );
-									
-									// Send stopVideo after a small delay to ensure video stops
-									setTimeout( function() {
-										if ( iframe.contentWindow ) {
-											iframe.contentWindow.postMessage( '{"event":"command","func":"stopVideo","args":""}', '*' );
-										}
-									}, 100 );
+							// Only reload iframe if we need to add enablejsapi=1 (required for postMessage to work reliably)
+							// If enablejsapi is already present, we can use postMessage without reloading
+							if ( isYouTube && ! hasEnableJsApi ) {
+								var newSrc = src;
+								var separator = src.indexOf( '?' ) !== -1 ? '&' : '?';
+								newSrc = src + separator + 'enablejsapi=1';
+								
+								// While we're reloading, also remove autoplay if present
+								if ( hasAutoplay ) {
+									newSrc = newSrc.replace( /[?&]autoplay=1(&|$)/g, '$1' );
+									newSrc = newSrc.replace( /^([^?]*)\?&/, '$1?' );
 								}
+								
+								// Reload iframe with enablejsapi=1
+								$iframe.attr( 'src', newSrc );
+								
+								// Wait for iframe to reload, then send pause commands
+								setTimeout( function() {
+									if ( iframe.contentWindow ) {
+										iframe.contentWindow.postMessage( '{"event":"command","func":"pauseVideo","args":""}', '*' );
+										
+										setTimeout( function() {
+											if ( iframe.contentWindow ) {
+												iframe.contentWindow.postMessage( '{"event":"command","func":"stopVideo","args":""}', '*' );
+											}
+										}, 100 );
+									}
+								}, 300 );
+							} else if ( isYouTube && hasAutoplay && hasEnableJsApi ) {
+								// If enablejsapi is present but autoplay needs removal, try postMessage first
+								// Only reload if postMessage doesn't work.
+								// The postMessage above should handle pausing the video.
 							}
 						} catch ( e ) {
 							// Cross-origin restrictions may prevent postMessage, which is expected
