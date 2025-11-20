@@ -2,9 +2,9 @@
 # This file is distributed under the GPLv2 or later (license.txt).
 msgid ""
 msgstr ""
-"Project-Id-Version: BuddyBoss Platform 2.15.1\n"
+"Project-Id-Version: BuddyBoss Platform 2.15.2\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2025-11-13 12:27:53+00:00\n"
+"POT-Creation-Date: 2025-11-20 09:56:16+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -4537,7 +4537,7 @@ msgid "Dismiss this notice."
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-actions.php:528
-#: bp-core/classes/class-bb-telemetry.php:597
+#: bp-core/classes/class-bb-telemetry.php:606
 #: bp-moderation/classes/class-bp-rest-moderation-endpoint.php:399
 #: bp-moderation/classes/class-bp-rest-moderation-report-endpoint.php:301
 msgid "Sorry, something goes wrong please try again."
@@ -7234,7 +7234,7 @@ msgid "Telemetry"
 msgstr ""
 
 #: bp-core/admin/settings/bb-admin-setting-performance.php:105
-#: bp-core/classes/class-bb-telemetry.php:578
+#: bp-core/classes/class-bb-telemetry.php:587
 msgid "About Telemetry"
 msgstr ""
 
@@ -12138,12 +12138,12 @@ msgstr ""
 msgid "An error occurred while sending the telemetry report."
 msgstr ""
 
-#: bp-core/classes/class-bb-telemetry.php:557
+#: bp-core/classes/class-bb-telemetry.php:566
 msgid "Help us improve BuddyBoss"
 msgstr ""
 
 #. translators: %1$s and %2$s are links.
-#: bp-core/classes/class-bb-telemetry.php:565
+#: bp-core/classes/class-bb-telemetry.php:574
 msgid "We gather statistics about how our users use the product. We aggregate this information to help us improve the product and provide you with a better service. If you're happy with that you can dismiss this message, otherwise you can <a href=\"%1$s\">adjust your telemetry settings</a>. To read more about what statistics we collect and why, click below."
 msgstr ""
 
