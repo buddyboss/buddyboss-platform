@@ -276,106 +276,48 @@ class BB_DRM_Addon extends BB_Base_DRM {
 	/**
 	 * Creates an in-plugin notification for this add-on.
 	 *
+	 * NOTE: Individual addon notifications are now disabled in favor of consolidated
+	 * notifications managed by BB_DRM_Registry. This prevents showing multiple separate
+	 * notifications when multiple addons have license issues.
+	 *
+	 * @deprecated Individual addon notifications replaced by consolidated notification in BB_DRM_Registry.
 	 * @param string $drm_status The DRM status.
 	 */
 	protected function create_inplugin_notification( $drm_status ) {
-		$drm_info = $this->get_addon_drm_info( $drm_status, 'inplugin' );
-		if ( empty( $drm_info['heading'] ) ) {
-			return;
-		}
-
-		// Use WordPress built-in icons based on severity.
-		if ( BB_DRM_Helper::DRM_LOCKED === $drm_status ) {
-			// Red error icon for LOCKED state.
-			$icon_url = admin_url( 'images/no.png' );
-		} else {
-			// Yellow warning icon for LOW/MEDIUM states.
-			$icon_url = admin_url( 'images/yes.png' );
-		}
-
-		$notifications = new BB_Notifications();
-		$notifications->add(
-			array(
-				'id'      => 'addon_' . $this->product_slug . '_' . time(),
-				'title'   => $drm_info['heading'],
-				'content' => $drm_info['message'],
-				'type'    => 'bb-drm-addon-' . $this->product_slug,
-				'segment' => '',
-				'saved'   => time(),
-				'end'     => '',
-				'icon'    => $icon_url,
-				'buttons' => array(
-					'main' => array(
-						'text'   => __( 'Activate License', 'buddyboss' ),
-						'url'    => $drm_info['activation_link'],
-						'target' => '_self',
-					),
-				),
-			)
-		);
+		// Notifications are now handled by BB_DRM_Registry::update_consolidated_notification()
+		// to show a single grouped notification for all addons with license issues.
+		return;
 	}
 
 	/**
 	 * Sends an email notification for this add-on.
 	 *
+	 * NOTE: Individual addon emails are now disabled in favor of consolidated emails
+	 * managed by BB_DRM_Registry. This prevents sending multiple separate emails when
+	 * multiple addons have license issues.
+	 *
+	 * @deprecated Individual addon emails replaced by consolidated email in BB_DRM_Registry.
 	 * @param string $drm_status The DRM status.
 	 */
 	protected function send_email( $drm_status ) {
-		$drm_info = $this->get_addon_drm_info( $drm_status, 'email' );
-		if ( empty( $drm_info['heading'] ) ) {
-			return;
-		}
-
-		$subject = $drm_info['heading'];
-		$message = $this->get_email_message( $drm_info );
-
-		$headers = array(
-			sprintf( 'Content-type: text/html; charset=%s', get_bloginfo( 'charset' ) ),
-		);
-
-		$admin_email = get_option( 'admin_email' );
-		wp_mail( $admin_email, $subject, $message, $headers );
+		// Emails are now handled by BB_DRM_Registry::send_consolidated_email()
+		// to send a single grouped email for all addons with license issues.
+		return;
 	}
 
 	/**
 	 * Displays admin notices related to DRM for this add-on.
 	 *
-	 * Overrides parent method to use addon-specific DRM info.
+	 * NOTE: Individual addon notices are now disabled in favor of consolidated notices
+	 * rendered by BB_DRM_Registry. This prevents duplicate notices when multiple addons
+	 * have license issues.
+	 *
+	 * @deprecated Individual addon notices replaced by consolidated notices in BB_DRM_Registry.
 	 */
 	public function admin_notices() {
-		if ( ! $this->event instanceof BB_DRM_Event ) {
-			return;
-		}
-
-		$drm_status = BB_DRM_Helper::get_status();
-
-		if ( '' !== $drm_status ) {
-			// Use addon-specific DRM info instead of Platform info.
-			$drm_info                = $this->get_addon_drm_info( $drm_status, 'admin_notices' );
-			$drm_info['notice_key']  = BB_DRM_Helper::get_status_key( $drm_status );
-			$drm_info['event_name']  = $this->event_name;
-
-			// Add support link if not provided.
-			if ( ! isset( $drm_info['support_link'] ) ) {
-				$drm_info['support_link'] = $drm_info['activation_link'];
-			}
-
-			// Add help message if not provided.
-			if ( ! isset( $drm_info['help_message'] ) ) {
-				$drm_info['help_message'] = __( 'Activate License', 'buddyboss' );
-			}
-
-			$notice_user_key = BB_DRM_Helper::prepare_dismissable_notice_key( $drm_info['notice_key'] );
-
-			// Get event args.
-			$args       = $this->event->get_args();
-			$event_data = is_object( $args ) ? (array) $args : ( is_array( $args ) ? $args : array() );
-
-			$is_dismissed = BB_DRM_Helper::is_dismissed( $event_data, $notice_user_key );
-			if ( ! $is_dismissed ) {
-				$this->render_admin_notice( $drm_info );
-			}
-		}
+		// Notices are now handled by BB_DRM_Registry::render_consolidated_admin_notices()
+		// to prevent showing multiple separate notices when multiple addons need licenses.
+		return;
 	}
 
 	/**
