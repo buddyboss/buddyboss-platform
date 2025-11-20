@@ -502,7 +502,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 			/**
 			 * Filters the telemetry platform data.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 2.15.2
 			 *
 			 * @param array $bb_telemetry_data Telemetry platform data.
 			 *
