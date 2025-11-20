@@ -53,7 +53,7 @@ The inbox can be customized through a series of container parameters and WordPre
 | `PREFIX` | The prefix applied to various strings and IDs used by the service. | No | `grdlvl_` | 
 | `PRODUCT_SLUG` | The slug of the product as defined in the Mothership API. | Yes | N/A |
 | `RENDER_HOOK` | The name of the hook that will render the inbox. | Yes | N/A |
-| `THEME` | A theme configuration object for the inbox. [Configuration documentation](https://github.com/caseproof/ipn-inbox/blob/54a430e0225537878536192a0eece15c79bb88e7/src/contexts/ThemeContext.tsx#L7-L78) | No | N/A |
+| `THEME` | A theme configuration object for the inbox. [Configuration documentation](https://github.com/caseproof/ipn-inbox/blob/1986d7b4a939d27310d9ba214cdb64860db8ca28/src/contexts/ThemeContext.tsx#L7-L119) | No | N/A |
 | `USER_CAPABILITY` | The capability required to view the inbox. | No | `manage_options` |
 
 ### WordPress Hooks

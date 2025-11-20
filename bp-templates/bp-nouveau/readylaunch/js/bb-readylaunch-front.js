@@ -7,8 +7,8 @@ window.bp = window.bp || {};
 	function ( exports, $ ) {
 
 		var bpNouveauLocal    = BP_Nouveau,
-			bbRlIsAs3cfActive = bpNouveauLocal.bbRlIsAs3cfActive,
-			bbRlIsOmActive    = bpNouveauLocal.bbRlIsOmActive,
+			bbRlIsAs3cfActive = bpNouveauLocal.is_as3cf_active,
+			bbRlIsOmActive    = bpNouveauLocal.is_om_active,
 			bbRlMedia         = bpNouveauLocal.media,
 			bbRlAjaxUrl       = bpNouveauLocal.ajaxurl,
 			bbRlNonce         = bpNouveauLocal.nonces;
