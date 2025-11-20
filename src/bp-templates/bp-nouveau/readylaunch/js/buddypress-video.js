@@ -2933,23 +2933,28 @@ window.bp = window.bp || {};
 									// When entering picture-in-picture, pause all YouTube/Vimeo iframes
 									bp.Nouveau.Video.Player.pauseEmbeddedVideos();
 									
-									// Set up a longer interval as a safety net (event-driven approach is primary)
-									// This only runs if events don't catch YouTube trying to play
-									if ( pipInterval ) {
-										clearInterval( pipInterval );
-									}
-									
-									pipInterval = setInterval( function() {
-										// Check if still in picture-in-picture
-										if ( document.pictureInPictureElement === videoElement ) {
+								// Set up a conditional interval as a safety net (event-driven approach is primary)
+								// This only runs if events don't catch YouTube trying to play
+								// Optimized: only polls when video is playing, with longer interval
+								if ( pipInterval ) {
+									clearInterval( pipInterval );
+								}
+								
+								pipInterval = setInterval( function() {
+									// Check if still in picture-in-picture
+									if ( document.pictureInPictureElement === videoElement ) {
+										// Only poll when video is actually playing (not paused)
+										// This reduces unnecessary polling when video is paused
+										if ( ! videoElement.paused ) {
 											// Safety net: pause YouTube iframes periodically while in picture-in-picture
 											// This catches edge cases where events might not fire
 											bp.Nouveau.Video.Player.pauseEmbeddedVideos( true ); // Pass true to suppress logs
-										} else {
-											clearInterval( pipInterval );
-											pipInterval = null;
 										}
-									}, 1000 ); // Check every 1000ms (1 second) - safety net, events handle most cases
+									} else {
+										clearInterval( pipInterval );
+										pipInterval = null;
+									}
+								}, 2000 ); // Check every 2000ms (2 seconds) - safety net, events handle most cases
 									
 									// Try to add event listeners to the picture-in-picture window
 									if ( pipWindow ) {
