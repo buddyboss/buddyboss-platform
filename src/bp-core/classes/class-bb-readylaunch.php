@@ -112,6 +112,12 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				require_once buddypress()->compatibility_dir . '/class-bb-readylaunch-memberpress-courses-helper.php';
 				BB_Readylaunch_Memberpress_Courses_Helper::instance();
 			}
+
+			if ( $enabled_for_page && class_exists( 'WC4BP_Manager' ) ) {
+				// WC4BP (WooCommerce BuddyPress Integration) integration.
+				require_once buddypress()->compatibility_dir . '/class-bb-readylaunch-wc4bp-helper.php';
+				BB_Readylaunch_WC4BP_Helper::instance();
+			}
 		}
 
 		/**
