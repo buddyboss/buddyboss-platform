@@ -21591,7 +21591,7 @@ table.profile-settings tbody td select {
 .woocommerce-checkout .woocommerce .bb-wc-co .bb-order-review h3 {
   text-transform: uppercase;
   font-size: var(--bb-rl-font-size-base);
-  font-weight: bold;
+  font-weight: 600;
 }
 
 .woocommerce-checkout .bb-wc-co table.shop_table,
@@ -21606,7 +21606,7 @@ table.profile-settings tbody td select {
 .woocommerce-checkout .woocommerce .bb-wc-co table.shop_table td {
   border-bottom: 1px solid var(--bb-rl-border-secondary-color);
   border-top: 0;
-  font-weight: normal;
+  font-weight: 400;
   padding-left: 0;
 }
 
@@ -21639,7 +21639,7 @@ table.profile-settings tbody td select {
 .woocommerce-checkout .bb-wc-co table.shop_table th,
 .woocommerce-checkout .woocommerce .bb-wc-co table.shop_table th {
   text-transform: uppercase;
-  font-weight: normal;
+  font-weight: 400;
   color: var(--bb-rl-text-tertiary-color);
   font-size: var(--bb-rl-font-size-sm);
 }
@@ -21720,7 +21720,7 @@ table.profile-settings tbody td select {
 .woocommerce-checkout .bb-wc-co table.shop_table .qty strong,
 .woocommerce-checkout .woocommerce .bb-wc-co table.shop_table .qty strong {
   color: var(--bb-rl-text-color);
-  font-weight: normal;
+  font-weight: 400;
   margin-left: 5px;
 }
 
@@ -21862,7 +21862,7 @@ table.profile-settings tbody td select {
   color: var(--bb-rl-text-white-color);
   border: 1px solid var(--bb-rl-background-brand-primary-color);
   font-size: var(--bb-rl-font-size-sm);
-  font-weight: normal;
+  font-weight: 400;
   display: inline-block;
   padding-left: 2em;
   padding-right: 2em;
@@ -22110,7 +22110,7 @@ table.profile-settings tbody td select {
 
 .woocommerce-checkout .woocommerce-table--order-details td.product-total span.woocommerce-Price-amount,
 .woocommerce-checkout .woocommerce .woocommerce-table--order-details td.product-total span.woocommerce-Price-amount {
-  font-weight: bold;
+  font-weight: 600;
 }
 
 @media (max-width: 1200px) {
@@ -22141,7 +22141,7 @@ table.profile-settings tbody td select {
 .woocommerce-checkout .woocommerce-table--order-details tfoot td,
 .woocommerce-checkout .woocommerce .woocommerce-table--order-details tfoot th,
 .woocommerce-checkout .woocommerce .woocommerce-table--order-details tfoot td {
-  font-weight: normal;
+  font-weight: 400;
 }
 
 .woocommerce-checkout .woocommerce-table--order-details.order_details_items thead tr:first-child th,
@@ -22236,7 +22236,7 @@ table.profile-settings tbody td select {
   border-bottom: 0;
   padding-top: 6px;
   padding-bottom: 6px;
-  font-weight: normal;
+  font-weight: 400;
 }
 
 .woocommerce-checkout .woocommerce-table--order-details.order_details_total th,
@@ -22255,7 +22255,7 @@ table.profile-settings tbody td select {
 .woocommerce-checkout .woocommerce-table--order-details.order_details_total tfoot tr:last-child td,
 .woocommerce-checkout .woocommerce .woocommerce-table--order-details.order_details_total tfoot tr:last-child th,
 .woocommerce-checkout .woocommerce .woocommerce-table--order-details.order_details_total tfoot tr:last-child td {
-  font-weight: bold;
+  font-weight: 600;
   color: inherit;
 }
 
@@ -22337,7 +22337,7 @@ form.woocommerce-checkout input[type="checkbox"]:checked + span:before {
   content: "\e876";
   font-family: bb-icons;
   font-style: normal;
-  font-weight: normal;
+  font-weight: 400;
   speak: none;
   display: inline-block;
   text-decoration: inherit;
@@ -22383,7 +22383,7 @@ form.woocommerce-checkout input[type="checkbox"]:checked + span:before {
   content: "\e876";
   font-family: bb-icons;
   font-style: normal;
-  font-weight: normal;
+  font-weight: 400;
   speak: none;
   display: inline-block;
   text-decoration: inherit;
@@ -22430,7 +22430,7 @@ input[type="checkbox"]#wp-comment-cookies-consent:checked + label:before {
   content: "\e876";
   font-family: bb-icons;
   font-style: normal;
-  font-weight: normal;
+  font-weight: 400;
   speak: none;
   display: inline-block;
   text-decoration: inherit;
@@ -22910,7 +22910,7 @@ fieldset.wc-upe-form.wc-payment-form,
   color: var(--bb-rl-text-white-color);
   border: 1px solid var(--bb-rl-background-brand-primary-color);
   font-size: var(--bb-rl-font-size-sm);
-  font-weight: normal;
+  font-weight: 400;
   padding-left: 1em;
   padding-right: 1em;
   min-height: auto;
@@ -23053,7 +23053,7 @@ fieldset.wc-upe-form.wc-payment-form,
   border: 1px solid var(--bb-rl-background-brand-primary-color);
   border-radius: var(--bb-rl-radius-md);
   font-size: var(--bb-rl-font-size-sm);
-  font-weight: normal;
+  font-weight: 400;
   display: inline-block;
   padding-left: 2em;
   padding-right: 2em;
@@ -23138,7 +23138,7 @@ fieldset.wc-upe-form.wc-payment-form,
 }
 
 .woocommerce-cart .woocommerce table.shop_table th {
-  font-weight: normal;
+  font-weight: 400;
 }
 
 .woocommerce-cart .woocommerce table.shop_table tbody th {
@@ -23716,7 +23716,7 @@ body:not(.bb-page-loaded) .bs_widget_price_filter #max_price {
 
 .cart_totals table.shop_table tr.order-total th {
   color: var(--bb-rl-text-color);
-  font-weight: bolder;
+  font-weight: 600;
 }
 
 .cart_totals table.shop_table form.woocommerce-shipping-calculator {
@@ -23846,7 +23846,7 @@ body:not(.bb-page-loaded) .bs_widget_price_filter #max_price {
 .woocommerce-cart .woocommerce-shipping-calculator a.shipping-calculator-button:after {
   content: "\e826";
   font-family: bb-icons;
-  font-weight: normal;
+  font-weight: 400;
   speak: none;
   display: inline-block;
   color: #939597;
@@ -23900,7 +23900,7 @@ body:not(.bb-page-loaded) .bs_widget_price_filter #max_price {
 }
 
 .woocommerce ul#shipping_method label .amount {
-  font-weight: normal;
+  font-weight: 400;
 }
 
 .woocommerce-shipping-destination {
@@ -23908,7 +23908,7 @@ body:not(.bb-page-loaded) .bs_widget_price_filter #max_price {
 }
 
 .woocommerce-shipping-destination strong {
-  font-weight: normal;
+  font-weight: 400;
 }
 
 @media (max-width: 544px) {
@@ -24115,7 +24115,7 @@ body .select2-container .select2-dropdown .select2-results__option {
 }
 
 .woocommerce .wc-MyAccount-sub-heading h2 strong {
-  font-weight: normal;
+  font-weight: 400;
 }
 
 .woocommerce .wc-MyAccount-sub-heading p {
@@ -24348,7 +24348,7 @@ body .select2-container .select2-dropdown .select2-results__option {
 
 .woocommerce .woocommerce-table--order-details tfoot th,
 .woocommerce .woocommerce-table--order-details tfoot td {
-  font-weight: normal;
+  font-weight: 400;
 }
 
 .woocommerce .order_details_items thead tr:first-child th,
@@ -24385,7 +24385,7 @@ body .select2-container .select2-dropdown .select2-results__option {
 
 .woocommerce .order_details_items th.product-total span.woocommerce-Price-amount,
 .woocommerce .order_details_items td.product-total span.woocommerce-Price-amount {
-  font-weight: bold;
+  font-weight: 600;
 }
 
 @media (max-width: 544px) {
@@ -24446,7 +24446,7 @@ body .select2-container .select2-dropdown .select2-results__option {
   padding-top: 4px;
   padding-bottom: 4px;
   color: var(--bb-rl-text-tertiary-color);
-  font-weight: normal;
+  font-weight: 400;
 }
 
 .woocommerce table.order_details_total th {
@@ -24468,7 +24468,7 @@ body .select2-container .select2-dropdown .select2-results__option {
 .woocommerce table.order_details_total tfoot tr:last-child th,
 .woocommerce table.order_details_total tfoot tr:last-child td {
   color: var(--bb-rl-text-color);
-  font-weight: bold;
+  font-weight: 600;
 }
 
 @media (max-width: 992px) {
