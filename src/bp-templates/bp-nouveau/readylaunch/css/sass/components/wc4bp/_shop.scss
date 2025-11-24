@@ -1,13 +1,8 @@
-$font-size-small: 16px !default;
-$font-size-smaller: 14px !default;
 $color-lightgray: #dedfe2 !default;
 $color-white: #fff !default;
 $color-light: #eef0f3 !default;
 $color-link-hover-button: #0f74e0 !default;
-$base-line-large: 32px !default;
 $color-button-disabled-text: #c8cbcf !default;
-$color-accent: #fe6f4b !default;
-$font-size-extra-small: 12px !default;
 $font-size: 18px !default;
 $button-font-weight: 500 !default;
 $button-base-line: 1.3 !default;
@@ -17,9 +12,7 @@ $button-padding-small-tb: 6px !default;
 $button-padding-small-rl: 20px !default;
 $color-button-primary-text: #fff !default;
 $color-button-primary: #385dff !default;
-$input-border-width: 1px !default;
 $input-font-size: 15px !default;
-$z-over-content: 100 !default;
 $color-placeholder: #c3c6c9 !default;
 $color-textgray: #7f868f !default;
 
@@ -35,7 +28,7 @@ $color-textgray: #7f868f !default;
 
 .woocommerce {
     .woocommerce-result-count {
-        font-size: $font-size-smaller;
+        font-size: var(--bb-rl-font-size-sm);
         margin: 0.5em 0;
         margin-right: auto;
         color: var(--bb-rl-text-tertiary-color);
@@ -47,7 +40,7 @@ $color-textgray: #7f868f !default;
         }
 
         select {
-            font-size: $font-size-smaller;
+            font-size: var(--bb-rl-font-size-sm);
             height: 36px;
             appearance: none;
             outline: none;
@@ -90,13 +83,13 @@ $color-textgray: #7f868f !default;
         background-color: var(--bb-rl-background-color);
         border-radius: var(--bb-rl-radius-lg);
         border: 1px solid var(--bb-rl-border-secondary-color);
-        font-size: $font-size-small;
+        font-size: var(--bb-rl-font-size-base);
         margin-bottom: 1em;
 
         .button {
             @include bb-button-primary;
 
-            font-size: $font-size-smaller;
+            font-size: var(--bb-rl-font-size-sm);
             font-weight: normal;
             padding-left: 1em;
             padding-right: 1em;
@@ -119,7 +112,7 @@ $color-textgray: #7f868f !default;
         }
 
         &::before {
-            font-size: $font-size-small;
+            font-size: var(--bb-rl-font-size-base);
             text-rendering: auto;
             -webkit-font-smoothing: antialiased;
             font-family: bb-icons;
@@ -147,7 +140,7 @@ $color-textgray: #7f868f !default;
         color: inherit;
 
         &::before {
-            font-size: $font-size-small;
+            font-size: var(--bb-rl-font-size-base);
             text-rendering: auto;
             -webkit-font-smoothing: antialiased;
             font-family: bb-icons;
@@ -157,7 +150,7 @@ $color-textgray: #7f868f !default;
     }
 
     .woocommerce-breadcrumb {
-        font-size: $font-size-smaller;
+        font-size: var(--bb-rl-font-size-sm);
         color: var(--bb-rl-text-color);
 
         a {
@@ -231,7 +224,7 @@ $color-textgray: #7f868f !default;
             }
 
             label {
-                font-size: $font-size-small;
+                font-size: var(--bb-rl-font-size-base);
                 line-height: 1.1;
                 margin-bottom: 10px;
             }
@@ -241,7 +234,7 @@ $color-textgray: #7f868f !default;
             @include bb-button-primary;
 
             border-radius: var(--bb-rl-radius-md);
-            font-size: $font-size-smaller;
+            font-size: var(--bb-rl-font-size-sm);
             font-weight: normal;
             display: inline-block;
             padding-left: 2em;
@@ -390,9 +383,19 @@ body.woocommerce-cart {
 }
 
 .woocommerce {
-    table.shop_table {
+
+    .cart_totals table.shop_table {
         border: 0;
-        font-size: $font-size-smaller;
+        font-size: var(--bb-rl-font-size-sm);
+    }
+}
+
+.woocommerce {
+    table.shop_table,
+    table.shop_table.cart,
+    .cart_totals table.shop_table {
+        border: 0;
+        font-size: var(--bb-rl-font-size-sm);
 
         th,
         td {
@@ -403,7 +406,7 @@ body.woocommerce-cart {
         th {
             text-transform: uppercase;
             color: var(--bb-rl-text-tertiary-color);
-            font-size: $font-size-smaller;
+            font-size: var(--bb-rl-font-size-sm);
 
             &.product-subtotal {
                 text-align: right;
@@ -468,7 +471,7 @@ body.woocommerce-cart {
             & > button.button {
                 @include bb-button-secondary;
 
-                font-size: $font-size-smaller;
+                font-size: var(--bb-rl-font-size-sm);
                 font-weight: 500;
                 min-height: 34px;
                 padding: 6px 20px;
@@ -489,7 +492,7 @@ body.woocommerce-cart {
             input.button,
             button.button {
                 border-radius: 3px;
-                font-size: $font-size-smaller;
+                font-size: var(--bb-rl-font-size-sm);
                 font-weight: 400;
 
                 @include bb-button-secondary;
@@ -506,7 +509,7 @@ body.woocommerce-cart {
             }
 
             input.input-text {
-                font-size: $font-size-smaller;
+                font-size: var(--bb-rl-font-size-sm);
                 min-width: 150px;
             }
         }
@@ -605,7 +608,7 @@ body.woocommerce-cart {
         }
 
         p.wc_empty_cart_description {
-            font-size: $font-size-smaller;
+            font-size: var(--bb-rl-font-size-sm);
             color: #939597;
         }
 
@@ -702,7 +705,7 @@ body.woocommerce-cart {
         }
 
         a.button {
-            font-size: $font-size-smaller;
+            font-size: var(--bb-rl-font-size-sm);
             margin-bottom: 2em;
             height: 40px;
             padding: 9px 2em;
@@ -729,7 +732,7 @@ body.woocommerce-cart {
         min-width: 72px;
 
         input.qty {
-            font-size: $font-size-smaller;
+            font-size: var(--bb-rl-font-size-sm);
         }
 
         .qty-nav {
@@ -787,7 +790,7 @@ body.woocommerce-cart {
         a.button.checkout-button {
             @include bb-button-primary;
 
-            font-size: $font-size-smaller;
+            font-size: var(--bb-rl-font-size-sm);
             display: inline-block;
             height: 40px;
             padding: 9px 2em;
@@ -858,7 +861,7 @@ body:not(.bb-page-loaded) {
     position: relative;
     display: flex;
     align-items: center;
-    border: $input-border-width solid var(--bb-rl-border-secondary-color);
+    border: 1px solid var(--bb-rl-border-secondary-color);
     border-radius: var(--bb-rl-radius-md);
     padding: 0 10px;
 
@@ -951,7 +954,7 @@ body:not(.bb-page-loaded) {
             background-image: url("data:image/svg+xml;charset=utf8,%3C!-- Generated by IcoMoon.io --%3E%3Csvg version='1.1' xmlns='http://www.w3.org/2000/svg' width='22' height='22' viewBox='0 0 32 32'%3E%3Ctitle%3Esort-desc%3C/title%3E%3Cpath style='fill:%23A1ACB8;' d='M24.768 22.464v-13.216c0-0.544-0.448-0.992-1.024-0.992-0.544 0-0.992 0.448-0.992 0.992v13.216c0 0.576 0.448 1.024 0.992 1.024 0.576 0 1.024-0.448 1.024-1.024zM21.568 19.616c-0.352-0.384-0.992-0.416-1.408-0.032-0.384 0.384-0.416 1.024-0.032 1.408l2.912 3.104c0.384 0.448 1.056 0.448 1.44 0l2.912-3.104c0.384-0.384 0.352-1.024-0.032-1.408-0.416-0.384-1.056-0.352-1.408 0.032l-2.208 2.336-2.176-2.336zM16.736 12.64h-8.736c-0.544 0-0.992 0.448-0.992 0.992 0 0.576 0.448 1.024 0.992 1.024h8.736c0.544 0 0.992-0.448 0.992-1.024 0-0.544-0.448-0.992-0.992-0.992zM14.56 17.376h-6.56c-0.544 0-0.992 0.448-0.992 0.992 0 0.576 0.448 1.024 0.992 1.024h6.56c0.544 0 0.992-0.448 0.992-1.024 0-0.544-0.448-0.992-0.992-0.992zM12.352 22.368h-4.352c-0.544 0-0.992 0.448-0.992 0.992 0 0.576 0.448 1.024 0.992 1.024h4.352c0.576 0 1.024-0.448 1.024-1.024 0-0.544-0.448-0.992-1.024-0.992zM18.176 7.648h-10.176c-0.544 0-0.992 0.448-0.992 0.992 0 0.576 0.448 1.024 0.992 1.024h10.176c0.576 0 1.024-0.448 1.024-1.024 0-0.544-0.448-0.992-1.024-0.992z'%3E%3C/path%3E%3C/svg%3E");
             border: 0;
             background-color: transparent;
-            font-size: $font-size-smaller;
+            font-size: var(--bb-rl-font-size-sm);
             outline: none;
         }
 
@@ -994,14 +997,14 @@ body:not(.bb-page-loaded) {
 
                 @include transition;
 
-                z-index: $z-over-content + 1;
+                z-index: 101;
             }
 
             .select2-results {
                 ul.select2-results__options {
                     li.select2-results__option {
                         padding: 3px 12px;
-                        font-size: $font-size-smaller;
+                        font-size: var(--bb-rl-font-size-sm);
 
                         &.select2-results__option--highlighted,
                         &.select2-results__option[aria-selected="true"] {
@@ -1113,7 +1116,7 @@ body:not(.bb-page-loaded) {
 
 .woocommerce ul#shipping_method {
     label {
-        font-size: $font-size-smaller;
+        font-size: var(--bb-rl-font-size-sm);
 
         .amount {
             font-weight: normal;
@@ -1122,7 +1125,7 @@ body:not(.bb-page-loaded) {
 }
 
 .woocommerce-shipping-destination {
-    font-size: $font-size-extra-small;
+    font-size: var(--bb-rl-font-size-xs);
 
     strong {
         font-weight: normal;

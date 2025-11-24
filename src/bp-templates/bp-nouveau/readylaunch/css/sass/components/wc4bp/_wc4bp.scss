@@ -1,24 +1,8 @@
-$font-size-small: 16px !default;
-$font-size-smaller: 14px !default;
-$block-border-radius: var(--bb-rl-radius-lg) !default;
-$block-border-radius-inner: var(--bb-rl-radius-base) !default;
-$color-border: var(--bb-rl-border-secondary-color) !default;
-$color-headings: var(--bb-rl-text-color) !default;
-$color-small-text: var(--bb-rl-text-tertiary-color) !default;
-$color-text: var(--bb-rl-text-color) !default;
-$color-error: var(--bb-rl-border-danger-secondary-color) !default;
 $color-lightgray: #dedfe2 !default;
 $color-white: #fff !default;
-$color-link: var(--bb-rl-primary-color) !default;
-$color-success: var(--bb-rl-border-positive-secondary-color) !default;
 $color-light: #eef0f3 !default;
 $color-link-hover-button: #0f74e0 !default;
-$menu-active-color: var(--bb-rl-text-color);
-$base-line-large: 32px !default;
-$input-border-color: var(--bb-rl-border-secondary-color) !default;
-$input-border-radius: var(--bb-rl-radius-base) !default;
-$input-background-color: var(--bb-rl-background-color) !default;
-$checkbox-border-radius: var(--bb-rl-radius-md) !default;
+$base-line-large: var(--bb-rl-base-line-2xl) !default;
 $button-border-radius: var(--bb-rl-radius-md) !default;
 
 @mixin bb-button-primary {
@@ -37,6 +21,24 @@ $button-border-radius: var(--bb-rl-radius-md) !default;
 
         > .woocommerce {
             margin-top: var(--bb-rl-space-400);
+        }
+    }
+}
+
+.woocommerce  {
+
+    form {
+        .form-row,
+        .woocommerce-account-fields .form-row,
+        .woocommerce-address-fields .form-row {
+
+            .input-text,
+            select {
+                background-color: var(--bb-rl-background-color);
+                border: 1px solid var(--bb-rl-border-tertiary-color);
+                border-radius: var(--bb-rl-radius-base);
+                color: var(--bb-rl-text-color);
+            }
         }
     }
 }
@@ -61,7 +63,7 @@ $button-border-radius: var(--bb-rl-radius-md) !default;
 
             h3 {
                 text-transform: uppercase;
-                font-size: $font-size-small;
+                font-size: var(--bb-rl-font-size-base);
                 margin: 1rem 0;
             }
         }
@@ -81,33 +83,33 @@ $button-border-radius: var(--bb-rl-radius-md) !default;
 
         #customer_details {
             background-color: var(--bb-rl-background-color);
-            border-radius: $block-border-radius;
-            border: 1px solid $color-border;
+            border-radius: var(--bb-rl-radius-lg);
+            border: 1px solid var(--bb-rl-border-secondary-color);
             margin-bottom: 20px;
             padding: 15px 20px;
         }
 
         .bb-order-review {
             background-color: var(--bb-rl-background-color);
-            border-radius: $block-border-radius;
-            border: 1px solid $color-border;
+            border-radius: var(--bb-rl-radius-lg);
+            border: 1px solid var(--bb-rl-border-secondary-color);
             margin-bottom: 20px;
             padding: 15px 20px;
 
             h3 {
                 text-transform: uppercase;
-                font-size: $font-size-small;
+                font-size: var(--bb-rl-font-size-base);
                 font-weight: bold;
             }
         }
 
         table.shop_table {
             border: 0;
-            font-size: $font-size-smaller;
+            font-size: var(--bb-rl-font-size-sm);
 
             th,
             td {
-                border-bottom: 1px solid $color-border;
+                border-bottom: 1px solid var(--bb-rl-border-secondary-color);
                 border-top: 0;
                 font-weight: normal;
                 padding-left: 0;
@@ -127,21 +129,21 @@ $button-border-radius: var(--bb-rl-radius-md) !default;
             }
 
             td.product-total {
-                color: $color-headings;
+                color: var(--bb-rl-text-color);
                 width: 35%;
             }
 
             th {
                 text-transform: uppercase;
                 font-weight: normal;
-                color: $color-small-text;
-                font-size: $font-size-smaller;
+                color: var(--bb-rl-text-tertiary-color);
+                font-size: var(--bb-rl-font-size-sm);
             }
 
             tfoot {
                 th,
                 td {
-                    color: $color-small-text;
+                    color: var(--bb-rl-text-tertiary-color);
                     border-bottom: 0;
                     vertical-align: top;
                 }
@@ -158,7 +160,7 @@ $button-border-radius: var(--bb-rl-radius-md) !default;
 
                 .order-total th,
                 .order-total td {
-                    color: $color-headings;
+                    color: var(--bb-rl-text-color);
                     font-weight: 500;
                 }
 
@@ -184,7 +186,7 @@ $button-border-radius: var(--bb-rl-radius-md) !default;
             }
 
             .check-name {
-                color: $color-headings;
+                color: var(--bb-rl-text-color);
                 font-weight: 500;
                 line-height: 1.4;
             }
@@ -194,12 +196,12 @@ $button-border-radius: var(--bb-rl-radius-md) !default;
             }
 
             .qty {
-                color: $color-small-text;
+                color: var(--bb-rl-text-tertiary-color);
                 text-transform: uppercase;
                 font-size: 13px;
 
                 strong {
-                    color: $color-headings;
+                    color: var(--bb-rl-text-color);
                     font-weight: normal;
                     margin-left: 5px;
                 }
@@ -212,7 +214,7 @@ $button-border-radius: var(--bb-rl-radius-md) !default;
             }
 
             table.shop_table td.product-total {
-                color: $color-headings;
+                color: var(--bb-rl-text-color);
                 width: 30%;
             }
         }
@@ -258,10 +260,10 @@ $button-border-radius: var(--bb-rl-radius-md) !default;
             margin: 0 0 1.2rem;
 
             label {
-                font-size: $font-size-small;
+                font-size: var(--bb-rl-font-size-base);
                 line-height: 1.1;
                 margin-bottom: 10px;
-                color: $color-text;
+                color: var(--bb-rl-text-color);
             }
 
             .input-text,
@@ -270,15 +272,10 @@ $button-border-radius: var(--bb-rl-radius-md) !default;
                 border: 1px solid var(--bb-rl-border-tertiary-color);
                 border-radius: var(--bb-rl-radius-base);
                 color: var(--bb-rl-text-color);
-
-                &:focus {
-                    box-shadow: var(--bb-input-focus-shadow);
-                    border-color: var(--bb-input-focus-border-color);
-                }
             }
 
             .required {
-                color: $color-error;
+                color: var(--bb-rl-border-danger-secondary-color);
                 text-decoration: none;
             }
 
@@ -299,17 +296,17 @@ $button-border-radius: var(--bb-rl-radius-md) !default;
                 input.input-text,
                 select,
                 .select2-container {
-                    border-color: $color-error;
+                    border-color: var(--bb-rl-border-danger-secondary-color);
                 }
 
                 label {
-                    color: $color-error;
+                    color: var(--bb-rl-border-danger-secondary-color);
                 }
             }
         }
 
         #ship-to-different-address label {
-            font-size: $font-size-small;
+            font-size: var(--bb-rl-font-size-base);
         }
     }
 
@@ -317,14 +314,14 @@ $button-border-radius: var(--bb-rl-radius-md) !default;
         background-color: transparent;
 
         ul.payment_methods {
-            border-radius: $block-border-radius-inner;
+            border-radius: var(--bb-rl-radius-base);
             border-bottom: 0;
             border: 1px solid var(--bb-rl-border-secondary-color);
         }
 
         div.payment_box {
             font-size: 13px;
-            color: $color-text;
+            color: var(--bb-rl-text-color);
             border-radius: var(--bb-block-radius-inner);
             background-color: var(--bb-content-alternate-background-color);
 
@@ -336,7 +333,7 @@ $button-border-radius: var(--bb-rl-radius-md) !default;
         #place_order {
             @include bb-button-primary;
 
-            font-size: $font-size-smaller;
+            font-size: var(--bb-rl-font-size-sm);
             font-weight: normal;
             display: inline-block;
             padding-left: 2em;
@@ -377,7 +374,7 @@ $button-border-radius: var(--bb-rl-radius-md) !default;
                 display: inline-block;
                 width: 12px;
                 height: 12px;
-                background-color: $color-link;
+                background-color: var(--bb-rl-primary-color);
                 border-radius: 100%;
             }
         }
@@ -387,15 +384,15 @@ $button-border-radius: var(--bb-rl-radius-md) !default;
         text-align: center;
 
         & > p {
-            font-size: $font-size-small;
-            color: $color-small-text;
+            font-size: var(--bb-rl-font-size-base);
+            color: var(--bb-rl-text-tertiary-color);
         }
 
         h2.woocommerce-heading--success {
             margin-bottom: 5px;
 
             i {
-                color: $color-success;
+                color: var(--bb-rl-border-positive-secondary-color);
                 padding: 0;
                 display: inline-block;
                 font-size: 20px;
@@ -413,8 +410,8 @@ $button-border-radius: var(--bb-rl-radius-md) !default;
                 margin: 1em 0;
 
                 i {
-                    color: $color-success;
-                    border: 1px solid $color-success;
+                    color: var(--bb-rl-border-positive-secondary-color);
+                    border: 1px solid var(--bb-rl-border-positive-secondary-color);
                     border-radius: 100%;
                     padding: 0 10px;
                     display: inline-block;
@@ -437,16 +434,16 @@ $button-border-radius: var(--bb-rl-radius-md) !default;
             border-right: 0;
             text-align: left;
             display: inline-block;
-            color: $color-small-text;
+            color: var(--bb-rl-text-tertiary-color);
 
             & > span {
                 display: block;
                 font-weight: 500;
-                font-size: $font-size-smaller;
+                font-size: var(--bb-rl-font-size-sm);
                 white-space: nowrap;
                 padding: 0.6em 0 0;
                 text-transform: none;
-                color: $color-text;
+                color: var(--bb-rl-text-color);
             }
         }
     }
@@ -466,7 +463,7 @@ $button-border-radius: var(--bb-rl-radius-md) !default;
     .woocommerce-order-details-wrapper {
         background: var(--bb-content-background-color);
         border: 1px solid $color-light;
-        border-radius: $block-border-radius;
+        border-radius: var(--bb-rl-radius-lg);
         padding: 20px;
 
         section.woocommerce-order-details {
@@ -513,7 +510,7 @@ $button-border-radius: var(--bb-rl-radius-md) !default;
             address {
                 border: 0;
                 padding: 0;
-                font-size: $font-size-smaller;
+                font-size: var(--bb-rl-font-size-sm);
 
                 .woocommerce-customer-details--phone:before,
                 .woocommerce-customer-details--email:before {
@@ -522,7 +519,7 @@ $button-border-radius: var(--bb-rl-radius-md) !default;
             }
 
             .woocommerce-customer-details--subcolumn {
-                font-size: $font-size-smaller;
+                font-size: var(--bb-rl-font-size-sm);
 
                 .woocommerce-customer-details--phone:before,
                 .woocommerce-customer-details--email:before {
@@ -543,9 +540,9 @@ $button-border-radius: var(--bb-rl-radius-md) !default;
         td {
             padding-top: 8px;
             padding-bottom: 8px;
-            font-size: $font-size-smaller;
+            font-size: var(--bb-rl-font-size-sm);
             border-bottom: 0;
-            border-top: 1px solid $color-border;
+            border-top: 1px solid var(--bb-rl-border-secondary-color);
         }
 
         th.product-total,
@@ -575,7 +572,7 @@ $button-border-radius: var(--bb-rl-radius-md) !default;
         thead {
             th {
                 text-transform: uppercase;
-                font-size: $font-size-smaller;
+                font-size: var(--bb-rl-font-size-sm);
                 color: #939597;
                 font-weight: 500;
             }
@@ -605,17 +602,17 @@ $button-border-radius: var(--bb-rl-radius-md) !default;
             tbody tr:last-child {
                 th,
                 td {
-                    border-bottom: 1px solid $color-border;
+                    border-bottom: 1px solid var(--bb-rl-border-secondary-color);
                 }
             }
 
             td.product-name {
                 a {
-                    color: $menu-active-color;
+                    color: var(--bb-rl-text-color);
                     font-weight: 500;
 
                     &:hover {
-                        color: $color-link;
+                        color: var(--bb-rl-primary-color);
                     }
                 }
             }
@@ -713,7 +710,7 @@ $button-border-radius: var(--bb-rl-radius-md) !default;
             clear: both;
 
             th {
-                color: $color-text;
+                color: var(--bb-rl-text-color);
             }
         }
     }
@@ -728,8 +725,8 @@ $button-border-radius: var(--bb-rl-radius-md) !default;
         }
 
         p {
-            font-size: $font-size-smaller;
-            color: $color-small-text;
+            font-size: var(--bb-rl-font-size-sm);
+            color: var(--bb-rl-text-tertiary-color);
         }
     }
 }
@@ -807,8 +804,8 @@ form.woocommerce-checkout input[type="checkbox"] {
         }
 
         &:checked + label:before {
-            background-color: $color-link;
-            border-color: $color-link;
+            background-color: var(--bb-rl-primary-color);
+            border-color: var(--bb-rl-primary-color);
             content: "\e876";
             font-family: bb-icons;
             font-style: normal;
@@ -859,8 +856,8 @@ input[type="checkbox"]#wp-comment-cookies-consent {
     }
 
     &:checked + label:before {
-        background-color: $color-link;
-        border-color: $color-link;
+        background-color: var(--bb-rl-primary-color);
+        border-color: var(--bb-rl-primary-color);
         content: "\e876";
         font-family: bb-icons;
         font-style: normal;
@@ -882,11 +879,11 @@ input[type="checkbox"]#wp-comment-cookies-consent {
 
 .woocommerce form.checkout_coupon {
     background-color: var(--bb-rl-background-color);
-    border: 1px solid $color-border;
-    border-radius: $block-border-radius;
+    border: 1px solid var(--bb-rl-border-secondary-color);
+    border-radius: var(--bb-rl-radius-lg);
     margin-top: 0;
     margin-bottom: 1em;
-    font-size: $font-size-smaller;
+    font-size: var(--bb-rl-font-size-sm);
 
     .form-row-first {
         width: calc(100% - 150px);
@@ -927,8 +924,8 @@ input[type="checkbox"]#wp-comment-cookies-consent {
 }
 
 .woocommerce-form-coupon-toggle .woocommerce-info {
-    font-size: $font-size-smaller;
-    color: $color-text;
+    font-size: var(--bb-rl-font-size-sm);
+    color: var(--bb-rl-text-color);
     background-color: transparent !important;
     border: 0;
     padding-top: 0;
@@ -942,7 +939,7 @@ input[type="checkbox"]#wp-comment-cookies-consent {
     font-size: 20px;
     top: 0;
     left: 0;
-    color: $color-text;
+    color: var(--bb-rl-text-color);
 }
 
 @media (max-width: $xl) {
@@ -1049,10 +1046,10 @@ input[type="checkbox"]#wp-comment-cookies-consent {
         }
 
         button {
-            color: $color-small-text;
+            color: var(--bb-rl-text-tertiary-color);
 
             &:hover {
-                color: $color-headings;
+                color: var(--bb-rl-text-color);
                 background-color: transparent;
             }
         }
@@ -1088,7 +1085,7 @@ fieldset.wc-upe-form.wc-payment-form,
     .wc-block-checkout__main,
     .wc-block-checkout__sidebar .wp-block-woocommerce-checkout-order-summary-block {
         background-color: var(--bb-rl-background-color);
-        border: 1px solid $color-border;
+        border: 1px solid var(--bb-rl-border-secondary-color);
         border-radius: var(--bb-rl-radius-lg);
     }
 
@@ -1116,10 +1113,10 @@ fieldset.wc-upe-form.wc-payment-form,
         input[type="tel"],
         input[type="text"],
         input[type="url"] {
-            border-color: $input-border-color;
-            border-radius: $input-border-radius;
-            background-color: $input-background-color;
-            color: $color-text;
+            border-color: var(--bb-rl-border-secondary-color);
+            border-radius: var(--bb-rl-radius-base);
+            background-color: var(--bb-rl-background-color);
+            color: var(--bb-rl-text-color);
 
             &:focus {
                 box-shadow: var(--bb-input-focus-shadow);
@@ -1155,34 +1152,34 @@ fieldset.wc-upe-form.wc-payment-form,
 
     .wc-blocks-components-select {
         .wc-blocks-components-select__container {
-            border-color: $input-border-color;
-            border-radius: $input-border-radius;
-            background-color: $input-background-color;
+            border-color: var(--bb-rl-border-secondary-color);
+            border-radius: var(--bb-rl-radius-base);
+            background-color: var(--bb-rl-background-color);
 
             label {
                 color: var(--bb-alternate-text-color);
             }
 
             .wc-blocks-components-select__select {
-                color: $color-text;
-                border-color: $input-border-color;
+                color: var(--bb-rl-text-color);
+                border-color: var(--bb-rl-border-secondary-color);
 
                 &:focus {
-                    color: $color-text;
+                    color: var(--bb-rl-text-color);
                 }
             }
 
             svg {
-                fill: $color-text;
+                fill: var(--bb-rl-text-color);
             }
         }
     }
 
     .wc-block-components-textarea {
-        border-color: $input-border-color;
-        border-radius: $input-border-radius;
-        background-color: $input-background-color;
-        color: $color-text;
+        border-color: var(--bb-rl-border-secondary-color);
+        border-radius: var(--bb-rl-radius-base);
+        background-color: var(--bb-rl-background-color);
+        color: var(--bb-rl-text-color);
 
         &:focus,
         &:active {
@@ -1198,14 +1195,14 @@ fieldset.wc-upe-form.wc-payment-form,
     .wc-block-components-title,
     .wc-block-components-checkout-step__heading .wc-block-components-title {
         text-transform: uppercase;
-        font-size: $font-size-small;
+        font-size: var(--bb-rl-font-size-base);
         margin: 1rem 0;
     }
 
     .wc-block-components-checkbox {
         .wc-block-components-checkbox__input[type="checkbox"] {
-            border-color: $input-border-color;
-            border-radius: $checkbox-border-radius;
+            border-color: var(--bb-rl-border-secondary-color);
+            border-radius: var(--bb-rl-radius-md);
 
             &:focus,
             &:active {
@@ -1217,7 +1214,7 @@ fieldset.wc-upe-form.wc-payment-form,
     .wc-block-components-radio-control {
         .wc-block-components-radio-control__input,
         .wc-block-components-radio-control__input:checked {
-            border-color: $input-border-color;
+            border-color: var(--bb-rl-border-secondary-color);
 
             &:focus,
             &:active {
@@ -1226,7 +1223,7 @@ fieldset.wc-upe-form.wc-payment-form,
         }
 
         .wc-block-components-radio-control__input:checked:before {
-            background: $color-link;
+            background: var(--bb-rl-primary-color);
         }
     }
 
@@ -1237,15 +1234,15 @@ fieldset.wc-upe-form.wc-payment-form,
         }
 
         &::after {
-            border: 1px solid $color-border;
+            border: 1px solid var(--bb-rl-border-secondary-color);
         }
 
         &.wc-block-components-radio-control--highlight-checked--first-selected:after {
-            border-top: 1px solid $color-border;
+            border-top: 1px solid var(--bb-rl-border-secondary-color);
         }
 
         &.wc-block-components-radio-control--highlight-checked--last-selected:after {
-            border-bottom: 1px solid $color-border;
+            border-bottom: 1px solid var(--bb-rl-border-secondary-color);
         }
     }
 
@@ -1271,18 +1268,18 @@ fieldset.wc-upe-form.wc-payment-form,
 
     .wc-block-components-order-summary {
         .wc-block-components-order-summary-item__total-price {
-            color: $color-headings;
+            color: var(--bb-rl-text-color);
         }
     }
 
     .wc-block-components-totals-item__value {
-        color: $color-headings;
+        color: var(--bb-rl-text-color);
     }
 
     .wc-block-components-totals-footer-item {
         .wc-block-components-totals-item__label,
         .wc-block-components-totals-item__value {
-            color: $color-headings;
+            color: var(--bb-rl-text-color);
             font-size: 1em;
         }
     }
@@ -1290,17 +1287,17 @@ fieldset.wc-upe-form.wc-payment-form,
     .wc-block-components-validation-error,
     .wc-block-components-form .wc-block-components-text-input.has-error label,
     .wc-block-components-text-input.has-error label {
-        color: $color-error;
+        color: var(--bb-rl-border-danger-secondary-color);
     }
 
     .wp-block-button__link {
-        border-radius: $button-border-radius;
+        border-radius: var(--bb-rl-radius-md);
         background-color: var(--bb-primary-button-background-regular);
         color: var(--bb-primary-button-text-regular);
     }
 
     .wc-block-checkout-empty .wc-block-checkout-empty__title {
-        color: $color-headings;
+        color: var(--bb-rl-text-color);
     }
 }
 
