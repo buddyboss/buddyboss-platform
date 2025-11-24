@@ -125,7 +125,6 @@ class BB_DRM_Addon extends BB_Base_DRM {
 	 * @return bool True if staging server.
 	 */
 	private function is_staging_server() {
-		return false;
 		// Use Platform Pro function if available.
 		if ( function_exists( 'bb_pro_check_staging_server' ) ) {
 			return bb_pro_check_staging_server();
