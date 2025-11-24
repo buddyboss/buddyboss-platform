@@ -88,22 +88,35 @@ class BB_DRM_Addon extends BB_Base_DRM {
 	 * @return bool True if licensed, false otherwise.
 	 */
 	public function is_addon_licensed() {
+		// Cache result per request to avoid repeated IPN calls.
+		static $cache = array();
+
+		if ( isset( $cache[ $this->product_slug ] ) ) {
+			return $cache[ $this->product_slug ];
+		}
+
 		// Check if on staging server (always allow).
 		if ( $this->is_staging_server() ) {
+			$cache[ $this->product_slug ] = true;
 			return true;
 		}
 
 		// Check if Platform has valid license.
 		if ( ! BB_DRM_Helper::is_valid() ) {
+			$cache[ $this->product_slug ] = false;
 			return false;
 		}
 
 		// Check if this specific product is enabled in Mothership.
 		if ( ! class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager' ) ) {
+			$cache[ $this->product_slug ] = false;
 			return false;
 		}
 
-		return \BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager::checkProductBySlug( $this->product_slug );
+		$result = \BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager::checkProductBySlug( $this->product_slug );
+		$cache[ $this->product_slug ] = $result;
+
+		return $result;
 	}
 
 	/**
@@ -112,6 +125,7 @@ class BB_DRM_Addon extends BB_Base_DRM {
 	 * @return bool True if staging server.
 	 */
 	private function is_staging_server() {
+		return false;
 		// Use Platform Pro function if available.
 		if ( function_exists( 'bb_pro_check_staging_server' ) ) {
 			return bb_pro_check_staging_server();

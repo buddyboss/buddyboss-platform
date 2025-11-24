@@ -454,9 +454,12 @@ abstract class BB_Base_DRM {
 		}
 
 		$notifications = new BB_Notifications();
+		// Use a consistent ID based on event name and status to prevent duplicate notifications.
+		// The notification system will update existing notification if ID matches.
+		$notification_id = 'license_' . $this->event_name . '_' . BB_DRM_Helper::get_status_key( $drm_status );
 		$notifications->add(
 			array(
-				'id'      => 'event_' . time(),
+				'id'      => $notification_id,
 				'title'   => $drm_info['heading'],
 				'content' => $drm_info['message'],
 				'type'    => 'bb-drm',

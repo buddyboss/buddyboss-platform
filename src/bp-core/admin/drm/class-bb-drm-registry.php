@@ -296,6 +296,13 @@ class BB_DRM_Registry {
 	 * @return array Array of addons grouped by status: ['low' => [], 'medium' => [], 'locked' => []].
 	 */
 	public static function get_addons_by_drm_status() {
+		// Cache result per request to avoid repeated calculations.
+		static $cache = null;
+
+		if ( null !== $cache ) {
+			return $cache;
+		}
+
 		$grouped = array(
 			'low'    => array(),
 			'medium' => array(),
@@ -333,6 +340,7 @@ class BB_DRM_Registry {
 			}
 		}
 
+		$cache = $grouped;
 		return $grouped;
 	}
 
@@ -343,6 +351,11 @@ class BB_DRM_Registry {
 	 */
 	public function render_consolidated_admin_notices() {
 		if ( ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
+
+		// Early return if no addons are registered.
+		if ( empty( self::$addons ) ) {
 			return;
 		}
 
@@ -684,9 +697,11 @@ class BB_DRM_Registry {
 		}
 
 		// Create consolidated notification.
+		// Use a consistent ID instead of time() to prevent duplicate notifications on every page load.
+		// The notification system will update existing notification if ID matches.
 		$notifications->add(
 			array(
-				'id'      => 'bb_drm_consolidated_' . time(),
+				'id'      => 'bb_drm_consolidated_license_notice',
 				'title'   => $title,
 				'content' => $content,
 				'type'    => 'bb-drm-consolidated',
