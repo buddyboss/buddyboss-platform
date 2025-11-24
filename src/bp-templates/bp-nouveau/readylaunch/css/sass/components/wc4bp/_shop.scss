@@ -1,27 +1,11 @@
 $font-size-small: 16px !default;
 $font-size-smaller: 14px !default;
-$block-border-radius: var(--bb-rl-radius-lg) !default;
-$block-border-radius-inner: var(--bb-rl-radius-base) !default;
-$color-border: var(--bb-rl-border-secondary-color) !default;
-$color-headings: var(--bb-rl-text-color) !default;
-$color-small-text: var(--bb-rl-text-tertiary-color) !default;
-$color-text: var(--bb-rl-text-color) !default;
-$color-error: var(--bb-rl-border-danger-secondary-color) !default;
 $color-lightgray: #dedfe2 !default;
 $color-white: #fff !default;
-$color-link: var(--bb-rl-primary-color) !default;
-$color-success: var(--bb-rl-border-positive-secondary-color) !default;
 $color-light: #eef0f3 !default;
 $color-link-hover-button: #0f74e0 !default;
-$menu-active-color: var(--bb-rl-text-color);
 $base-line-large: 32px !default;
-$input-border-color: var(--bb-rl-border-secondary-color) !default;
-$input-border-radius: var(--bb-rl-radius-base) !default;
-$input-background-color: var(--bb-rl-background-color) !default;
-$checkbox-border-radius: var(--bb-rl-radius-md) !default;
-$button-border-radius: var(--bb-rl-radius-md) !default;
 $color-button-disabled-text: #c8cbcf !default;
-$color-warning: var(--bb-rl-text-warning-secondary-color) !default;
 $color-accent: #fe6f4b !default;
 $font-size-extra-small: 12px !default;
 $font-size: 18px !default;
@@ -33,13 +17,11 @@ $button-padding-small-tb: 6px !default;
 $button-padding-small-rl: 20px !default;
 $color-button-primary-text: #fff !default;
 $color-button-primary: #385dff !default;
-$background-body: var(--bb-rl-background-secondary-color) !default;
 $input-border-width: 1px !default;
 $input-font-size: 15px !default;
 $z-over-content: 100 !default;
 $color-placeholder: #c3c6c9 !default;
 $color-textgray: #7f868f !default;
-$menu-link-color: var(--bb-rl-text-tertiary-color);
 
 @mixin bb-button-secondary {
     background-color: var(--bb-rl-background-tertiary-color);
@@ -56,7 +38,7 @@ $menu-link-color: var(--bb-rl-text-tertiary-color);
         font-size: $font-size-smaller;
         margin: 0.5em 0;
         margin-right: auto;
-        color: $color-small-text;
+        color: var(--bb-rl-text-tertiary-color);
     }
 
     form.woocommerce-ordering {
@@ -93,7 +75,7 @@ $menu-link-color: var(--bb-rl-text-tertiary-color);
         }
 
         span {
-            color: $color-warning;
+            color: var(--bb-rl-text-warning-secondary-color);
 
             &:before {
                 letter-spacing: 5px;
@@ -106,8 +88,8 @@ $menu-link-color: var(--bb-rl-text-tertiary-color);
     .woocommerce-message {
         border-top: 0;
         background-color: var(--bb-rl-background-color);
-        border-radius: $block-border-radius;
-        border: 1px solid $color-border;
+        border-radius: var(--bb-rl-radius-lg);
+        border: 1px solid var(--bb-rl-border-secondary-color);
         font-size: $font-size-small;
         margin-bottom: 1em;
 
@@ -128,7 +110,7 @@ $menu-link-color: var(--bb-rl-text-tertiary-color);
     }
 
     .woocommerce-error {
-        background: $color-error;
+        background: var(--bb-rl-border-danger-secondary-color);
         color: $color-white;
         border: 0;
 
@@ -154,9 +136,10 @@ $menu-link-color: var(--bb-rl-text-tertiary-color);
             font-size: $font-size;
             text-rendering: auto;
             -webkit-font-smoothing: antialiased;
-            content: "\e882";
-            font-family: bb-icons;
+            content: "\e2ce";
+            font-family: bb-icons-rl;
             color: inherit;
+            line-height: 1;
         }
     }
 
@@ -175,13 +158,13 @@ $menu-link-color: var(--bb-rl-text-tertiary-color);
 
     .woocommerce-breadcrumb {
         font-size: $font-size-smaller;
-        color: $color-headings;
+        color: var(--bb-rl-text-color);
 
         a {
-            color: $color-small-text;
+            color: var(--bb-rl-text-tertiary-color);
 
             &:hover {
-                color: $color-headings;
+                color: var(--bb-rl-text-color);
             }
         }
 
@@ -214,7 +197,7 @@ $menu-link-color: var(--bb-rl-text-tertiary-color);
         font-size: $button-font-size-small;
         min-height: $button-height-small;
         padding: $button-padding-small-tb $button-padding-small-rl;
-        border-radius: $button-border-radius;
+        border-radius: var(--bb-rl-radius-md);
 
         @include transition;
     }
@@ -225,13 +208,13 @@ $menu-link-color: var(--bb-rl-text-tertiary-color);
 
     a.remove {
         font-weight: 100;
-        color: $color-small-text !important;
+        color: var(--bb-rl-text-tertiary-color) !important;
         line-height: 0.9;
         font-size: 1.8em;
 
         &:hover {
             color: $color-white !important;
-            background-color: $color-error;
+            background-color: var(--bb-rl-border-danger-secondary-color);
         }
     }
 
@@ -257,7 +240,7 @@ $menu-link-color: var(--bb-rl-text-tertiary-color);
         button.button {
             @include bb-button-primary;
 
-            border-radius: $button-border-radius;
+            border-radius: var(--bb-rl-radius-md);
             font-size: $font-size-smaller;
             font-weight: normal;
             display: inline-block;
@@ -288,7 +271,7 @@ $menu-link-color: var(--bb-rl-text-tertiary-color);
 
     button.button,
     input.button {
-        border-radius: $button-border-radius;
+        border-radius: var(--bb-rl-radius-md);
     }
 }
 
@@ -310,12 +293,12 @@ $menu-link-color: var(--bb-rl-text-tertiary-color);
             a {
                 font-size: 13px;
                 background-color: $color-white;
-                color: $color-link;
+                color: var(--bb-rl-primary-color);
 
                 &:hover,
                 &:active,
                 &:focus {
-                    background-color: $color-link;
+                    background-color: var(--bb-rl-primary-color);
                     color: $color-white;
                 }
 
@@ -353,8 +336,8 @@ $menu-link-color: var(--bb-rl-text-tertiary-color);
 
 .woocommerce-cart .woocommerce {
     background-color: var(--bb-rl-background-color);
-    border-radius: $block-border-radius;
-    border: 1px solid $color-border;
+    border-radius: var(--bb-rl-radius-lg);
+    border: 1px solid var(--bb-rl-border-secondary-color);
     margin-bottom: 20px;
     padding: 15px 20px;
 }
@@ -413,13 +396,13 @@ body.woocommerce-cart {
 
         th,
         td {
-            border-bottom: 1px solid $color-border;
+            border-bottom: 1px solid var(--bb-rl-border-secondary-color);
             border-top: 0;
         }
 
         th {
             text-transform: uppercase;
-            color: $color-small-text;
+            color: var(--bb-rl-text-tertiary-color);
             font-size: $font-size-smaller;
 
             &.product-subtotal {
@@ -430,11 +413,11 @@ body.woocommerce-cart {
         td {
             &.product-name {
                 a {
-                    color: $menu-active-color;
+                    color: var(--bb-rl-text-color);
                     font-weight: 500;
 
                     &:hover {
-                        color: $color-link;
+                        color: var(--bb-rl-primary-color);
                     }
 
                     &.wcs-switch-link {
@@ -452,7 +435,7 @@ body.woocommerce-cart {
                     display: inline-block;
 
                     input.qty {
-                        color: $color-headings;
+                        color: var(--bb-rl-text-color);
                     }
                 }
 
@@ -465,11 +448,11 @@ body.woocommerce-cart {
             }
 
             &.product-price {
-                color: $color-headings;
+                color: var(--bb-rl-text-color);
             }
 
             &.product-subtotal {
-                color: $color-headings;
+                color: var(--bb-rl-text-color);
                 text-align: right;
             }
         }
@@ -547,10 +530,10 @@ body.woocommerce-cart {
     @media (max-width: $md) {
         table.shop_table.shop_table_responsive {
             tr:nth-child(even) td {
-                background-color: $background-body;
+                background-color: var(--bb-rl-background-secondary-color);
 
                 div.quantity input.qty {
-                    background-color: $background-body;
+                    background-color: var(--bb-rl-background-secondary-color);
                 }
             }
 
@@ -562,7 +545,7 @@ body.woocommerce-cart {
 
     .bb_sku_wrapper {
         display: block;
-        color: $color-small-text;
+        color: var(--bb-rl-text-tertiary-color);
         font-size: 13px;
         line-height: 1;
     }
@@ -592,7 +575,7 @@ body.woocommerce-cart {
     table.cart td.actions .coupon .input-text {
         background-color: var(--bb-rl-background-color);
         border: 1px solid var(--bb-content-border-color);
-        border-radius: $input-border-radius;
+        border-radius: var(--bb-rl-radius-base);
         box-shadow: none;
         padding: 0 12px;
         color: var(--bb-body-text-color);
@@ -617,7 +600,7 @@ body.woocommerce-cart {
 
         p.cart-empty {
             font-size: 22px;
-            color: $color-text;
+            color: var(--bb-rl-text-color);
             margin-bottom: 5px;
         }
 
@@ -663,7 +646,7 @@ body.woocommerce-cart {
             td {
                 border-bottom: 0;
                 border-top: 0;
-                color: $color-headings;
+                color: var(--bb-rl-text-color);
             }
 
             th {
@@ -727,12 +710,12 @@ body.woocommerce-cart {
             display: inline-block;
             line-height: 1.4;
             background: transparent;
-            border: 1px solid $color-link;
-            color: $color-link;
+            border: 1px solid var(--bb-rl-primary-color);
+            color: var(--bb-rl-primary-color);
             font-weight: 500;
 
             &:hover {
-                border-color: $color-link;
+                border-color: var(--bb-rl-primary-color);
             }
         }
     }
@@ -826,7 +809,7 @@ body.woocommerce-cart {
 .woocommerce input.button.alt {
     @include bb-button-primary;
 
-    border-radius: $button-border-radius;
+    border-radius: var(--bb-rl-radius-md);
 }
 
 .woocommerce input.button.alt,
@@ -838,7 +821,7 @@ body.woocommerce-cart {
     .bb_cart_totals_ctrls {
         a.button.outline {
             background: transparent;
-            color: $color-link;
+            color: var(--bb-rl-primary-color);
         }
     }
 }
@@ -875,8 +858,8 @@ body:not(.bb-page-loaded) {
     position: relative;
     display: flex;
     align-items: center;
-    border: $input-border-width solid $input-border-color;
-    border-radius: $button-border-radius;
+    border: $input-border-width solid var(--bb-rl-border-secondary-color);
+    border-radius: var(--bb-rl-radius-md);
     padding: 0 10px;
 
     input[type="number"]::-webkit-inner-spin-button,
@@ -930,7 +913,7 @@ body:not(.bb-page-loaded) {
 
         tr.order-total {
             th {
-                color: $color-headings;
+                color: var(--bb-rl-text-color);
                 font-weight: bolder;
             }
         }
@@ -952,13 +935,13 @@ body:not(.bb-page-loaded) {
 .woocommerce-page .select2-container {
     .select2-selection--single {
         height: 40px;
-        border-color: $input-border-color;
+        border-color: var(--bb-rl-border-secondary-color);
         background-image: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAiIGhlaWdodD0iNiIgdmlld0JveD0iMCAwIDEwIDYiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+Cjx0aXRsZT5TdHJva2UgNzczPC90aXRsZT4KPGRlc2M+Q3JlYXRlZCB1c2luZyBGaWdtYTwvZGVzYz4KPGcgaWQ9IkNhbnZhcyIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTE5ODg2IDApIj4KPGcgaWQ9IlN0cm9rZSA3NzMiIG9wYWNpdHk9IjAuMjUiPgo8dXNlIHhsaW5rOmhyZWY9IiNwYXRoMF9zdHJva2UiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDE5ODg3IDEpIiBmaWxsPSIjMTIyQjQ2Ii8+CjwvZz4KPC9nPgo8ZGVmcz4KPHBhdGggaWQ9InBhdGgwX3N0cm9rZSIgZD0iTSA4LjYzNjQgMC42MzYzOTZDIDguOTg3ODcgMC4yODQ5MjQgOC45ODc4NyAtMC4yODQ5MjQgOC42MzY0IC0wLjYzNjM5NkMgOC4yODQ5MiAtMC45ODc4NjggNy43MTUwOCAtMC45ODc4NjggNy4zNjM2IC0wLjYzNjM5NkwgOC42MzY0IDAuNjM2Mzk2Wk0gNCA0TCAzLjM2MzYgNC42MzY0QyAzLjcxNTA4IDQuOTg3ODcgNC4yODQ5MiA0Ljk4Nzg3IDQuNjM2NCA0LjYzNjRMIDQgNFpNIDAuNjM2Mzk2IC0wLjYzNjM5NkMgMC4yODQ5MjQgLTAuOTg3ODY4IC0wLjI4NDkyNCAtMC45ODc4NjggLTAuNjM2Mzk2IC0wLjYzNjM5NkMgLTAuOTg3ODY4IC0wLjI4NDkyNCAtMC45ODc4NjggMC4yODQ5MjQgLTAuNjM2Mzk2IDAuNjM2Mzk2TCAwLjYzNjM5NiAtMC42MzYzOTZaTSA3LjM2MzYgLTAuNjM2Mzk2TCAzLjM2MzYgMy4zNjM2TCA0LjYzNjQgNC42MzY0TCA4LjYzNjQgMC42MzYzOTZMIDcuMzYzNiAtMC42MzYzOTZaTSA0LjYzNjQgMy4zNjM2TCAwLjYzNjM5NiAtMC42MzYzOTZMIC0wLjYzNjM5NiAwLjYzNjM5NkwgMy4zNjM2IDQuNjM2NEwgNC42MzY0IDMuMzYzNloiLz4KPC9kZWZzPgo8L3N2Zz4K");
         background-repeat: no-repeat;
         background-position: right 0.5rem center;
         padding-right: 35px;
         font-size: $input-font-size;
-        background-color: $input-background-color;
+        background-color: var(--bb-rl-background-color);
 
         .select2-selection__arrow {
             display: none;
@@ -1022,8 +1005,8 @@ body:not(.bb-page-loaded) {
 
                         &.select2-results__option--highlighted,
                         &.select2-results__option[aria-selected="true"] {
-                            background-color: $background-body;
-                            color: $color-link;
+                            background-color: var(--bb-rl-background-secondary-color);
+                            color: var(--bb-rl-primary-color);
                         }
                     }
                 }
@@ -1161,7 +1144,7 @@ body:not(.bb-page-loaded) {
 
 .site-header a.header-cart-link span.count,
 .woocommerce span.onsale {
-    background-color: $color-link;
+    background-color: var(--bb-rl-primary-color);
 }
 
 body .select2-container .select2-dropdown .select2-results__option {
