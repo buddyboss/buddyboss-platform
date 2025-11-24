@@ -22,14 +22,13 @@ if ( class_exists( 'BB_Readylaunch_WC4BP_Helper' ) ) {
  *
  * @since BuddyBoss 2.9.00
  */
-if ( ! class_exists( 'BB_Readylaunch_WC4BP_Helper' ) ) {
 
-	/**
-	 * WC4BP helper class.
-	 *
-	 * @since BuddyBoss 2.9.00
-	 */
-	class BB_Readylaunch_WC4BP_Helper {
+/**
+ * WC4BP helper class.
+ *
+ * @since BuddyBoss 2.9.00
+ */
+class BB_Readylaunch_WC4BP_Helper {
 
 		/**
 		 * The single instance of the class.
@@ -48,7 +47,7 @@ if ( ! class_exists( 'BB_Readylaunch_WC4BP_Helper' ) ) {
 		 * @static
 		 * @return BB_Readylaunch_WC4BP_Helper - Main instance.
 		 */
-		public static function instance() {
+		public static function instance(): BB_Readylaunch_WC4BP_Helper {
 			if ( is_null( self::$instance ) ) {
 				self::$instance = new self();
 			}
@@ -108,5 +107,4 @@ if ( ! class_exists( 'BB_Readylaunch_WC4BP_Helper' ) ) {
 		}
 
 	}
-}
 

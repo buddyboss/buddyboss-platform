@@ -29,8 +29,8 @@ if ( has_action( 'bp_template_title' ) ) {
 
 // Check if we're on a WC4BP shop page and load our template directly
 if ( bb_is_readylaunch_enabled() && class_exists( 'WC4BP_Manager' ) && bp_is_current_component( wc4bp_Manager::get_shop_slug() ) ) {
-	$current_action = bp_current_action();
-	if ( ! empty( $current_action ) ) {
+	$current_action = sanitize_file_name( bp_current_action() );
+	if ( ! empty( $current_action ) && preg_match( '/^[a-z][a-z0-9_-]*$/', $current_action ) ) {
 		$shop_template_name = 'shop/member/' . $current_action . '.php';
 		$plugin_dir = buddypress()->plugin_dir;
 		$plugin_dir = rtrim( $plugin_dir, '/' ) . '/';
@@ -48,7 +48,7 @@ if ( bb_is_readylaunch_enabled() && class_exists( 'WC4BP_Manager' ) && bp_is_cur
 			bp_nouveau_plugin_hook( 'content' );
 		}
 	} else {
-		// Fall back to normal hook system
+		// Fall back to normal hook system if action is invalid or empty
 		bp_nouveau_plugin_hook( 'content' );
 	}
 } else {
