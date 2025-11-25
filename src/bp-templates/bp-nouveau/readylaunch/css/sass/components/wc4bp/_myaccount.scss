@@ -420,16 +420,18 @@ $color-textgray: #7f868f !default;
 
 		.wc-MyAccount-sub-tagline {
 			font-size: var(--bb-rl-font-size-2xl);
-			margin-bottom: 25px;
+			margin-bottom: var(--bb-rl-space-200);
 		}
 
 		.wc-MyAccount-sub-icon {
-			margin-bottom: 25px;
+            margin-bottom: var(--bb-rl-space-200);
+			line-height: 1;
 
-			img {
-				max-width: 60px;
-			}
-		}
+            img {
+                max-width: 60px;
+                display: inline-flex;
+            }
+        }
 	}
 
 	@media (max-width: $lg) {

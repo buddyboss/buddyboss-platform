@@ -40,6 +40,12 @@ $button-border-radius: var(--bb-rl-radius-md) !default;
 				border-radius: var(--bb-rl-radius-base);
 				color: var(--bb-rl-text-color);
 			}
+
+			em {
+				color: var(--bb-rl-text-tertiary-color);
+				font-size: var(--bb-rl-font-size-sm);
+				font-style: normal;
+			}
 		}
 	}
 }
@@ -275,7 +281,7 @@ $button-border-radius: var(--bb-rl-radius-md) !default;
 			label {
 				font-size: var(--bb-rl-font-size-base);
 				line-height: 1.1;
-				margin-bottom: 10px;
+				margin-bottom: var(--bb-rl-space-100);
 				color: var(--bb-rl-text-color);
 			}
 
@@ -401,7 +407,7 @@ $button-border-radius: var(--bb-rl-radius-md) !default;
 	.woocommerce-order-over {
 		text-align: center;
 
-		& > p {
+		> p {
 			font-size: var(--bb-rl-font-size-base);
 			color: var(--bb-rl-text-tertiary-color);
 		}
@@ -454,7 +460,7 @@ $button-border-radius: var(--bb-rl-radius-md) !default;
 			display: inline-block;
 			color: var(--bb-rl-text-tertiary-color);
 
-			& > span {
+			> span {
 				display: block;
 				font-weight: 500;
 				font-size: var(--bb-rl-font-size-sm);
@@ -774,7 +780,7 @@ form.woocommerce-checkout input[type="checkbox"] {
 	position: absolute;
 	opacity: 0;
 
-	& + span:before {
+	+ span:before {
 		content: "";
 		margin-right: 10px;
 		display: inline-block;
@@ -881,7 +887,7 @@ input[type="checkbox"]#wp-comment-cookies-consent {
 	position: absolute;
 	opacity: 0;
 
-	& + label:before {
+	+ label:before {
 		content: "";
 		margin-right: 10px;
 		display: inline-block;
@@ -939,9 +945,9 @@ input[type="checkbox"]#wp-comment-cookies-consent {
 
 	@media (max-width: $md) {
 
-		& > p {
+		> p {
 			margin-bottom: 5px;
-			line-height: 150%;
+			line-height: 1.5;
 		}
 
 		.form-row-first {
@@ -958,9 +964,9 @@ input[type="checkbox"]#wp-comment-cookies-consent {
 			padding-right: 0;
 		}
 
-		& > p {
+		> p {
 			margin-bottom: 5px;
-			line-height: 150%;
+			line-height: 1.5;
 		}
 	}
 }
@@ -1180,7 +1186,7 @@ fieldset.wc-upe-form.wc-payment-form,
 			&:focus {
 				box-shadow: var(--bb-input-focus-shadow);
 
-				& + label {
+				+ label {
 					color: #2b2d2f;
 				}
 			}
@@ -1205,7 +1211,7 @@ fieldset.wc-upe-form.wc-payment-form,
 
 				&:focus {
 
-					& + label {
+					+ label {
 						color: var(--bb-alternate-text-color);
 					}
 				}
