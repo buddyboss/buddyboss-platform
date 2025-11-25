@@ -341,7 +341,8 @@ $color-textgray: #7f868f !default;
 }
 
 .woocommerce-cart .woocommerce,
-.bb-readylaunch-template.woocommerce-edit-address .woocommerce {
+.bb-readylaunch-template.woocommerce-edit-address .woocommerce,
+.bb-readylaunch-template.woocommerce-orders .woocommerce {
 	background-color: var(--bb-rl-background-color);
 	border-radius: var(--bb-rl-radius-lg);
 	border: 1px solid var(--bb-rl-border-secondary-color);

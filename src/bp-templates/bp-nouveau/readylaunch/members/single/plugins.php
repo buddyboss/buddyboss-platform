@@ -29,7 +29,19 @@ if ( has_action( 'bp_template_title' ) ) {
 
 // Check if we're on a WC4BP shop page and load our template directly
 if ( bb_is_readylaunch_enabled() && class_exists( 'WC4BP_Manager' ) && bp_is_current_component( wc4bp_Manager::get_shop_slug() ) ) {
+	global $bp;
 	$current_action = sanitize_file_name( bp_current_action() );
+	
+	// Special handling for orders -> view-order
+	if ( 'orders' === $current_action && ! empty( $bp->action_variables ) ) {
+		foreach ( $bp->action_variables as $var ) {
+			if ( 'view-order' === $var ) {
+				$current_action = 'view-order';
+				break;
+			}
+		}
+	}
+	
 	if ( ! empty( $current_action ) && preg_match( '/^[a-z][a-z0-9_-]*$/', $current_action ) ) {
 		$shop_template_name = 'shop/member/' . $current_action . '.php';
 		$plugin_dir = buddypress()->plugin_dir;
