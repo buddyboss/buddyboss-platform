@@ -1,5 +1,4 @@
 $color-lightgray: #dedfe2 !default;
-$color-white: #fff !default;
 $color-light: #eef0f3 !default;
 $color-link-hover-button: #0f74e0 !default;
 $color-button-disabled-text: #c8cbcf !default;
@@ -110,11 +109,11 @@ $color-textgray: #7f868f !default;
 
 	.woocommerce-error {
 		background: var(--bb-rl-border-danger-secondary-color);
-		color: $color-white;
+		color: var(--bb-rl-text-white-color);
 		border: 0;
 
 		strong {
-			color: $color-white;
+			color: var(--bb-rl-text-white-color);
 		}
 
 		&::before {
@@ -124,7 +123,7 @@ $color-textgray: #7f868f !default;
 			font-family: bb-icons;
 			content: "\ee65";
 			font-weight: 100;
-			color: $color-white;
+			color: var(--bb-rl-text-white-color);
 		}
 	}
 
@@ -208,13 +207,13 @@ $color-textgray: #7f868f !default;
 
 	a.remove {
 		font-weight: 100;
-		color: var(--bb-rl-text-tertiary-color) !important;
+		color: var(--bb-rl-text-danger-primary-color) !important;
 		line-height: 0.9;
 		font-size: 1.8em;
 
 		&:hover {
-			color: $color-white !important;
-			background-color: var(--bb-rl-border-danger-secondary-color);
+			color: var(--bb-rl-text-white-color) !important;
+			background-color: var(--bb-rl-text-danger-primary-color);
 		}
 	}
 
@@ -246,9 +245,9 @@ $color-textgray: #7f868f !default;
 			font-size: var(--bb-rl-font-size-sm);
 			font-weight: 400;
 			display: inline-block;
-			padding-left: 2em;
-			padding-right: 2em;
-			height: 40px;
+			padding-left: var(--bb-rl-space-300);
+			padding-right: var(--bb-rl-space-300);
+			height: auto;
 
 			&:hover {
 
@@ -265,7 +264,7 @@ $color-textgray: #7f868f !default;
 
 			&:disabled,
 			&:disabled[disabled] {
-				color: $color-white;
+				color: var(--bb-rl-text-white-color);
 				padding-left: 2em;
 				padding-right: 2em;
 			}
@@ -297,14 +296,14 @@ $color-textgray: #7f868f !default;
 
 			a {
 				font-size: 13px;
-				background-color: $color-white;
+				background-color: var(--bb-rl-background-color);
 				color: var(--bb-rl-primary-color);
 
 				&:hover,
 				&:active,
 				&:focus {
 					background-color: var(--bb-rl-primary-color);
-					color: $color-white;
+					color: var(--bb-rl-text-white-color);
 				}
 
 				&.next,
@@ -341,12 +340,13 @@ $color-textgray: #7f868f !default;
 	display: none;
 }
 
-.woocommerce-cart .woocommerce {
+.woocommerce-cart .woocommerce,
+.bb-readylaunch-template.woocommerce-edit-address .woocommerce {
 	background-color: var(--bb-rl-background-color);
 	border-radius: var(--bb-rl-radius-lg);
 	border: 1px solid var(--bb-rl-border-secondary-color);
-	margin-bottom: 20px;
-	padding: 15px 20px;
+	margin-bottom: var(--bb-rl-space-200);
+	padding: var(--bb-rl-space-200) var(--bb-rl-space-300);
 }
 
 .woocommerce-cart .woocommerce table.shop_table {
@@ -670,7 +670,7 @@ body.woocommerce-cart {
 
 			&:hover {
 				background-color: $color-link-hover-button;
-				color: $color-white;
+				color: var(--bb-rl-text-white-color);
 			}
 		}
 	}
@@ -1058,7 +1058,7 @@ body:not(.bb-page-loaded) {
 		.wc-order-by-dropdown.select2-dropdown--below {
 			border-radius: 4px;
 			border: 0;
-			background: $color-white;
+			background: var(--bb-rl-background-color);
 			box-shadow: 0 2px 7px 1px rgba(0, 0, 0, 5%), 0 6px 32px 0 rgba(18, 43, 70, 10%);
 			padding: 7px 0;
 			margin-top: 8px;
@@ -1073,7 +1073,7 @@ body:not(.bb-page-loaded) {
 				margin: 0 auto;
 				box-sizing: border-box;
 				border: 8px solid #000;
-				border-color: $color-white $color-white transparent transparent;
+				border-color: #fff #fff transparent transparent;
 				transform-origin: 0 0;
 				transform: rotate(-45deg);
 				box-shadow: 2px -3px 3px 0 rgba(0, 0, 0, 2%);
@@ -1165,7 +1165,7 @@ body:not(.bb-page-loaded) {
 	top: 37px;
 	left: 14px;
 	z-index: 9;
-	background-color: $color-white;
+	background-color: var(--bb-rl-background-color);
 	padding: rem-calc(20px 20px);
 	border-radius: 4px;
 	box-shadow: 0 6px 24px 0 rgba(18, 43, 70, 12%);
@@ -1180,7 +1180,7 @@ body:not(.bb-page-loaded) {
 		margin: 0 auto;
 		box-sizing: border-box;
 		border: 8px solid #000;
-		border-color: $color-white $color-white transparent transparent;
+		border-color: #fff #fff transparent transparent;
 		transform-origin: 0 0;
 		transform: rotate(-45deg);
 		box-shadow: 2px -3px 3px 0 rgba(0, 0, 0, 2%);

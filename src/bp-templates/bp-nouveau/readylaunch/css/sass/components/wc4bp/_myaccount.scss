@@ -1,30 +1,4 @@
-$color-lightgray: #dedfe2 !default;
-$color-white: #fff !default;
-$color-light: #eef0f3 !default;
-$color-link-hover-button: #0f74e0 !default;
-$color-button-disabled-text: #c8cbcf !default;
-$font-size: 18px !default;
-$button-font-weight: 500 !default;
-$button-base-line: 1.3 !default;
-$button-font-size-small: 14px !default;
-$button-height-small: 34px !default;
-$button-padding-small-tb: 6px !default;
-$button-padding-small-rl: 20px !default;
-$color-button-primary-text: #fff !default;
-$color-button-primary: #385dff !default;
-$input-font-size: 15px !default;
-$color-placeholder: #c3c6c9 !default;
-$color-textgray: #7f868f !default;
-
-@mixin bb-button-secondary {
-	background-color: var(--bb-rl-background-tertiary-color);
-	color: var(--bb-rl-text-color);
-	border: 1px solid transparent;
-}
-
-@mixin bb-button-secondary-hover {
-	background-color: var(--bb-rl-background-tertiary-hover-color);
-}
+$color-link-hover-button: hsl(211, 87%, 47%) !default;
 
 .woocommerce {
 
@@ -211,6 +185,17 @@ $color-textgray: #7f868f !default;
 				text-align: right;
 			}
 		}
+	}
+
+	.MyAccount-content--address {
+
+		.wc-MyAccount-sub-heading {
+
+			h2 + p {
+				position: relative;
+				top: -16px;
+			}
+		}	
 	}
 
 	.wc-MyAccount-sub-heading {
@@ -451,7 +436,7 @@ $color-textgray: #7f868f !default;
 
 				&:hover {
 					background-color: $color-link-hover-button;
-					color: $color-white;
+					color: var(--bb-rl-text-white-color);
 				}
 			}
 		}
@@ -523,6 +508,11 @@ $color-textgray: #7f868f !default;
 
 				&:hover {
 					color: var(--bb-rl-primary-color);
+				}
+
+				&.remove {
+					font-weight: 400;
+					color: var(--bb-rl-text-danger-primary-color);
 				}
 			}
 		}
@@ -765,7 +755,7 @@ $color-textgray: #7f868f !default;
 		}
 
 		table.woocommerce-table--order-details.shop_table_responsive.order_details_items tr:nth-child(2n) td {
-			background-color: $color-white;
+			background-color: var(--bb-rl-background-color);
 		}
 
 		table.woocommerce-table--order-details.shop_table_responsive.order_details_items tbody tr:last-child td {
