@@ -169,19 +169,20 @@ abstract class BB_Base_DRM {
 		$event_data    = is_object( $args ) ? (array) $args : ( is_array( $args ) ? $args : array() );
 		$drm_event_key = BB_DRM_Helper::get_status_key( $drm_status );
 
-		// Just make sure we run this once.
+		// Send email and mark as sent only once per status level.
 		if ( ! isset( $event_data[ $drm_event_key ] ) ) {
 			// Send email.
 			$this->send_email( $drm_status );
-
-			// Create in-plugin notification.
-			$this->create_inplugin_notification( $drm_status );
 
 			// Mark event complete.
 			$event_data[ $drm_event_key ] = current_time( 'mysql' );
 
 			$this->update_event( $event, $event_data );
 		}
+
+		// Always create/update in-plugin notification.
+		// The notification system handles duplicates via consistent IDs.
+		$this->create_inplugin_notification( $drm_status );
 
 		add_action( 'admin_notices', array( $this, 'admin_notices' ), 11 );
 

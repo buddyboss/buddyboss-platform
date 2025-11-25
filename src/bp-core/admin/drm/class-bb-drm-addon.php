@@ -74,9 +74,15 @@ class BB_DRM_Addon extends BB_Base_DRM {
 			} elseif ( $days >= 21 ) {
 				$this->set_status( BB_DRM_Helper::DRM_LOCKED );
 			}
+
+			// Always create IPN for current status, regardless of whether event was just fired.
+			// This ensures notifications are always visible for all current statuses.
+			if ( '' !== $this->drm_status ) {
+				$this->create_inplugin_notification( $this->drm_status );
+			}
 		}
 
-		// DRM status detected - fire the event.
+		// DRM status detected - fire the event for email/admin notices.
 		if ( '' !== $this->drm_status ) {
 			do_action( 'bb_drm_addon_event_' . $this->product_slug, $event, $days, $this->drm_status );
 		}
@@ -289,17 +295,56 @@ class BB_DRM_Addon extends BB_Base_DRM {
 	/**
 	 * Creates an in-plugin notification for this add-on.
 	 *
-	 * NOTE: Individual addon notifications are now disabled in favor of consolidated
-	 * notifications managed by BB_DRM_Registry. This prevents showing multiple separate
-	 * notifications when multiple addons have license issues.
+	 * Creates addon-specific notifications in addition to the consolidated notification.
+	 * Each addon gets its own notification with a unique type identifier.
 	 *
-	 * @deprecated Individual addon notifications replaced by consolidated notification in BB_DRM_Registry.
 	 * @param string $drm_status The DRM status.
 	 */
 	protected function create_inplugin_notification( $drm_status ) {
-		// Notifications are now handled by BB_DRM_Registry::update_consolidated_notification()
-		// to show a single grouped notification for all addons with license issues.
-		return;
+		$drm_info = BB_DRM_Helper::get_info( $drm_status, $this->event_name, 'inplugin' );
+		if ( empty( $drm_info['heading'] ) ) {
+			return;
+		}
+
+		// Use WordPress built-in icons based on severity.
+		if ( BB_DRM_Helper::DRM_LOCKED === $drm_status ) {
+			// Red error icon for LOCKED state.
+			$icon_url = admin_url( 'images/no.png' );
+		} else {
+			// Yellow warning icon for LOW/MEDIUM states.
+			$icon_url = admin_url( 'images/yes.png' );
+		}
+
+		$notifications = new BB_Notifications();
+		// Use addon-specific type to keep these separate from consolidated notification.
+		// Format: bb-drm-addon-{product-slug}
+		$notification_type = 'bb-drm-addon-' . $this->product_slug;
+		$notification_id   = 'license_' . $this->event_name . '_' . BB_DRM_Helper::get_status_key( $drm_status );
+
+		$notifications->add(
+			array(
+				'id'      => $notification_id,
+				'title'   => $drm_info['heading'],
+				'content' => $drm_info['message'],
+				'type'    => $notification_type,
+				'segment' => '',
+				'saved'   => time(),
+				'end'     => '',
+				'icon'    => $icon_url,
+				'buttons' => array(
+					'main' => array(
+						'text'   => __( 'Activate License', 'buddyboss' ),
+						'url'    => $drm_info['activation_link'],
+						'target' => '_self',
+					),
+					'secondary' => array(
+						'text'   => __( 'Contact Support', 'buddyboss' ),
+						'url'    => $drm_info['support_link'],
+						'target' => '_blank',
+					),
+				),
+			)
+		);
 	}
 
 	/**

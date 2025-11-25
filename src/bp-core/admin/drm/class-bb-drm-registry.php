@@ -622,102 +622,101 @@ class BB_DRM_Registry {
 
 		$grouped = self::get_addons_by_drm_status();
 
-		// First, dismiss all individual addon notifications.
+		// Initialize notifications system.
 		$notifications = new BB_Notifications();
-		foreach ( self::$addons as $product_slug => $addon_data ) {
-			$notifications->dismiss_events( 'bb-drm-addon-' . $product_slug );
-		}
 
-		// Determine the highest priority status.
-		$highest_priority = null;
-		$affected_addons  = array();
-
-		if ( ! empty( $grouped['locked'] ) ) {
-			$highest_priority = BB_DRM_Helper::DRM_LOCKED;
-			$affected_addons  = $grouped['locked'];
-		} elseif ( ! empty( $grouped['medium'] ) ) {
-			$highest_priority = BB_DRM_Helper::DRM_MEDIUM;
-			$affected_addons  = $grouped['medium'];
-		} elseif ( ! empty( $grouped['low'] ) ) {
-			$highest_priority = BB_DRM_Helper::DRM_LOW;
-			$affected_addons  = $grouped['low'];
-		}
-
-		// If no addons have issues, dismiss consolidated notification and return.
-		if ( empty( $affected_addons ) ) {
-			$notifications->dismiss_events( 'bb-drm-consolidated' );
-			return;
-		}
-
-		// Build consolidated notification.
-		$count       = count( $affected_addons );
-		$addon_names = wp_list_pluck( $affected_addons, 'plugin_name' );
-
-		// Determine icon based on severity.
-		if ( BB_DRM_Helper::DRM_LOCKED === $highest_priority ) {
-			$icon_url = admin_url( 'images/no.png' );
-		} else {
-			$icon_url = admin_url( 'images/yes.png' );
-		}
-
-		// Build title and content.
-		if ( $count === 1 ) {
-			$title   = sprintf(
-				/* translators: %s: plugin name */
-				__( '%s: License Required', 'buddyboss' ),
-				$addon_names[0]
-			);
-			$content = sprintf(
-				/* translators: %s: plugin name */
-				__( '%s requires an active license to continue working.', 'buddyboss' ),
-				$addon_names[0]
-			);
-		} else {
-			$title = sprintf(
-				/* translators: %d: number of plugins */
-				_n( '%d BuddyBoss Add-on: License Required', '%d BuddyBoss Add-ons: License Required', $count, 'buddyboss' ),
-				$count
-			);
-
-			// Build HTML list for notification.
-			$addon_list = '<ul>';
-			foreach ( $addon_names as $name ) {
-				$addon_list .= '<li>' . esc_html( $name ) . '</li>';
-			}
-			$addon_list .= '</ul>';
-
-			$content = __( 'The following add-ons require active licenses:', 'buddyboss' ) . $addon_list;
-		}
-
-		// Add urgency based on status.
-		if ( BB_DRM_Helper::DRM_LOCKED === $highest_priority ) {
-			$content .= '<p>' . __( 'Features have been disabled.', 'buddyboss' ) . '</p>';
-		} elseif ( BB_DRM_Helper::DRM_MEDIUM === $highest_priority ) {
-			$content .= '<p>' . __( 'Features will be disabled soon.', 'buddyboss' ) . '</p>';
-		}
-
-		// Create consolidated notification.
-		// Use a consistent ID instead of time() to prevent duplicate notifications on every page load.
-		// The notification system will update existing notification if ID matches.
-		$notifications->add(
-			array(
-				'id'      => 'bb_drm_consolidated_license_notice',
-				'title'   => $title,
-				'content' => $content,
-				'type'    => 'bb-drm-consolidated',
-				'segment' => '',
-				'saved'   => time(),
-				'end'     => '',
-				'icon'    => $icon_url,
-				'buttons' => array(
-					'main' => array(
-						'text'   => __( 'Activate Licenses', 'buddyboss' ),
-						'url'    => bp_get_admin_url( 'admin.php?page=buddyboss-license' ),
-						'target' => '_self',
-					),
-				),
-			)
+		// Create separate notifications for each priority level.
+		// This ensures all addon statuses are visible, not just the highest priority.
+		$priority_levels = array(
+			'locked' => BB_DRM_Helper::DRM_LOCKED,
+			'medium' => BB_DRM_Helper::DRM_MEDIUM,
+			'low'    => BB_DRM_Helper::DRM_LOW,
 		);
+
+		$has_notifications = false;
+
+		foreach ( $priority_levels as $key => $drm_status ) {
+			if ( empty( $grouped[ $key ] ) ) {
+				// Dismiss notification for this priority if no addons affected.
+				$notifications->dismiss_events( 'bb-drm-consolidated-' . $key );
+				continue;
+			}
+
+			$has_notifications = true;
+			$affected_addons   = $grouped[ $key ];
+			$count             = count( $affected_addons );
+			$addon_names       = wp_list_pluck( $affected_addons, 'plugin_name' );
+
+			// Determine icon based on severity.
+			if ( BB_DRM_Helper::DRM_LOCKED === $drm_status ) {
+				$icon_url = admin_url( 'images/no.png' );
+			} else {
+				$icon_url = admin_url( 'images/yes.png' );
+			}
+
+			// Build title and content.
+			if ( $count === 1 ) {
+				$title   = sprintf(
+					/* translators: %s: plugin name */
+					__( '%s: License Required', 'buddyboss' ),
+					$addon_names[0]
+				);
+				$content = sprintf(
+					/* translators: %s: plugin name */
+					__( '%s requires an active license to continue working.', 'buddyboss' ),
+					$addon_names[0]
+				);
+			} else {
+				$title = sprintf(
+					/* translators: %d: number of plugins */
+					_n( '%d BuddyBoss Add-on: License Required', '%d BuddyBoss Add-ons: License Required', $count, 'buddyboss' ),
+					$count
+				);
+
+				// Build HTML list for notification.
+				$addon_list = '<ul>';
+				foreach ( $addon_names as $name ) {
+					$addon_list .= '<li>' . esc_html( $name ) . '</li>';
+				}
+				$addon_list .= '</ul>';
+
+				$content = __( 'The following add-ons require active licenses:', 'buddyboss' ) . $addon_list;
+			}
+
+			// Add urgency based on status.
+			if ( BB_DRM_Helper::DRM_LOCKED === $drm_status ) {
+				$content .= '<p>' . __( 'Features have been disabled.', 'buddyboss' ) . '</p>';
+			} elseif ( BB_DRM_Helper::DRM_MEDIUM === $drm_status ) {
+				$content .= '<p>' . __( 'Features will be disabled soon.', 'buddyboss' ) . '</p>';
+			}
+
+			// Create consolidated notification for this priority level.
+			// Use priority-specific ID to allow multiple notifications.
+			$notifications->add(
+				array(
+					'id'      => 'bb_drm_consolidated_license_notice_' . $key,
+					'title'   => $title,
+					'content' => $content,
+					'type'    => 'bb-drm-consolidated',
+					'segment' => '',
+					'saved'   => time(),
+					'end'     => '',
+					'icon'    => $icon_url,
+					'buttons' => array(
+						'main' => array(
+							'text'   => __( 'Activate Licenses', 'buddyboss' ),
+							'url'    => bp_get_admin_url( 'admin.php?page=buddyboss-license' ),
+							'target' => '_self',
+						),
+					),
+				)
+			);
+		}
+
+		// If no addons have issues at all, dismiss all consolidated notifications.
+		if ( ! $has_notifications ) {
+			$notifications->dismiss_events( 'bb-drm-consolidated' );
+		}
 	}
 
 	/**
