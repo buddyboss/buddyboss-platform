@@ -285,10 +285,24 @@ $color-textgray: #7f868f !default;
 	.woocommerce,
 	.bb-rl-primary-container .woocommerce {
 
-		button.button {
+		button.button,
+		a.button {
+			font-weight: 500;
 
 			&:hover {
 				color: var(--bb-rl-text-white-color);
+			}
+		}
+
+		a.button.wc-backward {
+			color: var(--bb-rl-text-color);
+			background-color: var(--bb-rl-background-tertiary-color);
+			border: 1px solid transparent;
+			border-radius: var(--bb-rl-radius-md);
+			font-size: var(--bb-rl-font-size-sm);
+
+			&:hover {
+				background-color: var(--bb-rl-background-tertiary-hover-color);
 			}
 		}
 	}
