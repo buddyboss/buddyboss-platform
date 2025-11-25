@@ -994,7 +994,7 @@ input[type="checkbox"]#wp-comment-cookies-consent {
 	}
 }
 
-.woocommerce-form-coupon-toggle .woocommerce-info {
+.woocommerce .woocommerce-form-coupon-toggle .woocommerce-info {
 	font-size: var(--bb-rl-font-size-sm);
 	color: var(--bb-rl-text-color);
 	background-color: transparent !important;
@@ -1002,16 +1002,12 @@ input[type="checkbox"]#wp-comment-cookies-consent {
 	padding-top: 0;
 	padding-bottom: 0;
 	padding-left: 25px;
-}
-
-.woocommerce .woocommerce-form-coupon-toggle .woocommerce-info {
-	border: 0;
 
 	&::before {
 		display: inline-block;
 		content: "\e40a";
 		font-family: bb-icons-rl;
-		font-size: 20px;
+		font-size: 18px;
 		top: 1px;
 		left: 0;
 		color: var(--bb-rl-text-color);
