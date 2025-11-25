@@ -21535,7 +21535,13 @@ table.profile-settings tbody td select {
 .woocommerce form .woocommerce-account-fields .form-row .input-text,
 .woocommerce form .woocommerce-account-fields .form-row select,
 .woocommerce form .woocommerce-address-fields .form-row .input-text,
-.woocommerce form .woocommerce-address-fields .form-row select {
+.woocommerce form .woocommerce-address-fields .form-row select,
+.woocommerce.woocommerce--bb-rl form .form-row .input-text,
+.woocommerce.woocommerce--bb-rl form .form-row select,
+.woocommerce.woocommerce--bb-rl form .woocommerce-account-fields .form-row .input-text,
+.woocommerce.woocommerce--bb-rl form .woocommerce-account-fields .form-row select,
+.woocommerce.woocommerce--bb-rl form .woocommerce-address-fields .form-row .input-text,
+.woocommerce.woocommerce--bb-rl form .woocommerce-address-fields .form-row select {
   background-color: var(--bb-rl-background-color);
   border: 1px solid var(--bb-rl-border-tertiary-color);
   border-radius: var(--bb-rl-radius-base);
@@ -21544,13 +21550,17 @@ table.profile-settings tbody td select {
 
 .woocommerce form .form-row em,
 .woocommerce form .woocommerce-account-fields .form-row em,
-.woocommerce form .woocommerce-address-fields .form-row em {
+.woocommerce form .woocommerce-address-fields .form-row em,
+.woocommerce.woocommerce--bb-rl form .form-row em,
+.woocommerce.woocommerce--bb-rl form .woocommerce-account-fields .form-row em,
+.woocommerce.woocommerce--bb-rl form .woocommerce-address-fields .form-row em {
   color: var(--bb-rl-text-tertiary-color);
   font-size: var(--bb-rl-font-size-sm);
   font-style: normal;
 }
 
-.woocommerce form .woocommerce-address-fields .woocommerce-address-fields__ctrls-wrapper {
+.woocommerce form .woocommerce-address-fields .woocommerce-address-fields__ctrls-wrapper,
+.woocommerce.woocommerce--bb-rl form .woocommerce-address-fields .woocommerce-address-fields__ctrls-wrapper {
   margin-top: var(--bb-rl-space-200);
 }
 
@@ -22932,10 +22942,11 @@ fieldset.wc-upe-form.wc-payment-form,
 .woocommerce .woocommerce-message {
   border-top: 0;
   background-color: var(--bb-rl-background-color);
-  border-radius: var(--bb-rl-radius-lg);
+  border-radius: var(--bb-rl-radius-md);
   border: 1px solid var(--bb-rl-border-secondary-color);
   font-size: var(--bb-rl-font-size-base);
-  margin-bottom: 1em;
+  margin-bottom: var(--bb-rl-space-200);
+  padding: var(--bb-rl-space-200) var(--bb-rl-space-300) var(--bb-rl-space-200) var(--bb-rl-space-700);
 }
 
 .woocommerce .woocommerce-error .button,
@@ -22969,11 +22980,13 @@ fieldset.wc-upe-form.wc-payment-form,
 }
 
 .woocommerce .woocommerce-error::before {
-  font-size: var(--bb-rl-font-size-base);
+  font-size: var(--bb-rl-font-size-2xl);
   text-rendering: auto;
   -webkit-font-smoothing: antialiased;
-  font-family: bb-icons;
-  content: "\ee65";
+  font-family: bb-icons-rl;
+  content: "\e2ce";
+  left: var(--bb-rl-space-300);
+  top: var(--bb-rl-space-200);
   font-weight: 100;
   color: var(--bb-rl-text-white-color);
 }
@@ -23000,8 +23013,8 @@ fieldset.wc-upe-form.wc-payment-form,
   font-size: var(--bb-rl-font-size-base);
   text-rendering: auto;
   -webkit-font-smoothing: antialiased;
-  font-family: bb-icons;
-  content: "\e875";
+  font-family: bb-icons-rl;
+  content: "\e184";
   color: inherit;
 }
 
@@ -23966,9 +23979,9 @@ body:not(.bb-page-loaded) .bs_widget_price_filter #max_price {
   left: 14px;
   z-index: 9;
   background-color: var(--bb-rl-background-color);
-  padding: rem-calc(20px 20px);
-  border-radius: 4px;
-  box-shadow: 0 6px 24px 0 #122b46;
+  padding: var(--bb-rl-space-200) var(--bb-rl-space-300);
+  border-radius: var(--bb-rl-radius-md);
+  box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.1);
 }
 
 .shipping-calculator-form:before {
@@ -23977,14 +23990,13 @@ body:not(.bb-page-loaded) .bs_widget_price_filter #max_price {
   width: 0;
   height: 0;
   top: 0;
-  right: 50px;
+  right: 70%;
   margin: 0 auto;
   box-sizing: border-box;
   border: 8px solid #000;
   border-color: #fff #fff transparent transparent;
   transform-origin: 0 0;
   transform: rotate(-45deg);
-  box-shadow: 2px -3px 3px 0 black;
   z-index: 1002;
 }
 
@@ -24025,6 +24037,10 @@ body:not(.bb-page-loaded) .bs_widget_price_filter #max_price {
 .site-header a.header-cart-link span.count,
 .woocommerce span.onsale {
   background-color: var(--bb-rl-primary-color);
+}
+
+body .select2-container .select2-dropdown {
+  border-color: var(--bb-rl-border-secondary-color);
 }
 
 body .select2-container .select2-dropdown .select2-results__option {
@@ -24340,16 +24356,17 @@ body .select2-container .select2-dropdown .select2-results__option {
 }
 
 .woocommerce form .password-input .show-password-input:after {
-  content: "\ee69";
-  font-family: bb-icons;
-  font-size: 18px;
+  content: "\e220";
+  font-family: bb-icons-rl;
+  font-size: 16px;
   font-weight: 400;
+  color: var(--bb-rl-text-tertiary-color);
 }
 
 .woocommerce form .password-input .show-password-input.display-password:after {
-  content: "\ee6a";
-  font-family: bb-icons;
-  color: inherit;
+  content: "\e224";
+  font-family: bb-icons-rl;
+  color: var(--bb-rl-text-tertiary-color);
 }
 
 .woocommerce form .password-input .show-password-input:before {

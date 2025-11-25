@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 ?>
 
-<div class="woocommerce">
+<div class="woocommerce woocommerce--bb-rl">
 	<p>
 		<?php
 		/* translators: 1: Orders URL 2: Address URL 3: Account URL. */

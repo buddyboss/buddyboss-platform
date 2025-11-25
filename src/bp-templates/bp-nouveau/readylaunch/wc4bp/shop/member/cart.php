@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 ?>
-<div class="woocommerce">
+<div class="woocommerce woocommerce--bb-rl">
 	<?php do_action( 'wc4bp_before_cart_body' ); ?>
 
 	<?php if ( function_exists( 'wc4bp_is_subpage' ) && wc4bp_is_subpage( 'checkout' ) ) { ?>

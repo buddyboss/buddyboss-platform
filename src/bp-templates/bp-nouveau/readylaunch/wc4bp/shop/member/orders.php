@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 ?>
-<div class="woocommerce">
+<div class="woocommerce woocommerce--bb-rl">
 	<?php do_action( 'wc4bp_before_orders_body' ); ?>
 	<?php echo do_shortcode( '[orders]' ); ?>
 	<?php do_action( 'wc4bp_after_orders_body' ); ?>

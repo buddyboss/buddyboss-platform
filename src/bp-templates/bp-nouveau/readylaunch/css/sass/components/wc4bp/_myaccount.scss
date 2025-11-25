@@ -194,7 +194,7 @@
 				position: relative;
 				top: -16px;
 			}
-		}	
+		}
 	}
 
 	.wc-MyAccount-sub-heading {
@@ -338,16 +338,17 @@
 	form .password-input .show-password-input {
 
 		&:after {
-			content: "\ee69";
-			font-family: bb-icons;
-			font-size: 18px;
+			content: "\e220";
+			font-family: bb-icons-rl;
+			font-size: 16px;
 			font-weight: 400;
+			color: var(--bb-rl-text-tertiary-color);
 		}
 
 		&.display-password:after {
-			content: "\ee6a";
-			font-family: bb-icons;
-			color: inherit;
+			content: "\e224";
+			font-family: bb-icons-rl;
+			color: var(--bb-rl-text-tertiary-color);
 		}
 
 		&:before {
@@ -408,14 +409,14 @@
 		}
 
 		.wc-MyAccount-sub-icon {
-            margin-bottom: var(--bb-rl-space-200);
+			margin-bottom: var(--bb-rl-space-200);
 			line-height: 1;
 
-            img {
-                max-width: 60px;
-                display: inline-flex;
-            }
-        }
+			img {
+				max-width: 60px;
+				display: inline-flex;
+			}
+		}
 	}
 
 	@media (max-width: $lg) {

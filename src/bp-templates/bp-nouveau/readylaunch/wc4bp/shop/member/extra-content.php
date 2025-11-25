@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 ?>
 
-<div class="woocommerce">
+<div class="woocommerce woocommerce--bb-rl">
 	<?php do_action( 'wc4bp_before_extra_content_body' ); ?>
 	<div id="wc4bp-hidden-content" style="display:none;"></div>
 	<div id="extra-content-tab"></div>

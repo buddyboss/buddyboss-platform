@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 ?>
 
-<div class="woocommerce">
+<div class="woocommerce woocommerce--bb-rl">
 	<?php do_action( 'wc4bp_before_edit_account_body' ); ?>
 	<?php echo do_shortcode( '[edit-account]' ); ?>
 	<?php do_action( 'wc4bp_after_edit_account_body' ); ?>

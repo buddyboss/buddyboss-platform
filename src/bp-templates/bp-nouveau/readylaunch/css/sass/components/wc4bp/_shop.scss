@@ -84,10 +84,11 @@ $color-textgray: #7f868f !default;
 	.woocommerce-message {
 		border-top: 0;
 		background-color: var(--bb-rl-background-color);
-		border-radius: var(--bb-rl-radius-lg);
+		border-radius: var(--bb-rl-radius-md);
 		border: 1px solid var(--bb-rl-border-secondary-color);
 		font-size: var(--bb-rl-font-size-base);
-		margin-bottom: 1em;
+		margin-bottom: var(--bb-rl-space-200);
+		padding: var(--bb-rl-space-200) var(--bb-rl-space-300) var(--bb-rl-space-200) var(--bb-rl-space-700);
 
 		.button {
 
@@ -117,11 +118,13 @@ $color-textgray: #7f868f !default;
 		}
 
 		&::before {
-			font-size: var(--bb-rl-font-size-base);
+			font-size: var(--bb-rl-font-size-2xl);
 			text-rendering: auto;
 			-webkit-font-smoothing: antialiased;
-			font-family: bb-icons;
-			content: "\ee65";
+			font-family: bb-icons-rl;
+			content: "\e2ce";
+			left: var(--bb-rl-space-300);
+			top: var(--bb-rl-space-200);
 			font-weight: 100;
 			color: var(--bb-rl-text-white-color);
 		}
@@ -148,8 +151,8 @@ $color-textgray: #7f868f !default;
 			font-size: var(--bb-rl-font-size-base);
 			text-rendering: auto;
 			-webkit-font-smoothing: antialiased;
-			font-family: bb-icons;
-			content: "\e875";
+			font-family: bb-icons-rl;
+			content: "\e184";
 			color: inherit;
 		}
 	}
@@ -1182,9 +1185,9 @@ body:not(.bb-page-loaded) {
 	left: 14px;
 	z-index: 9;
 	background-color: var(--bb-rl-background-color);
-	padding: rem-calc(20px 20px);
-	border-radius: 4px;
-	box-shadow: 0 6px 24px 0 rgba(18, 43, 70, 12%);
+	padding: var(--bb-rl-space-200) var(--bb-rl-space-300);
+	border-radius: var(--bb-rl-radius-md);
+	box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.1);
 
 	&:before {
 		content: " ";
@@ -1192,14 +1195,13 @@ body:not(.bb-page-loaded) {
 		width: 0;
 		height: 0;
 		top: 0;
-		right: 50px;
+		right: 70%;
 		margin: 0 auto;
 		box-sizing: border-box;
 		border: 8px solid #000;
 		border-color: #fff #fff transparent transparent;
 		transform-origin: 0 0;
 		transform: rotate(-45deg);
-		box-shadow: 2px -3px 3px 0 rgba(0, 0, 0, 2%);
 
 		@include transition;
 
@@ -1254,8 +1256,12 @@ body:not(.bb-page-loaded) {
 	background-color: var(--bb-rl-primary-color);
 }
 
-body .select2-container .select2-dropdown .select2-results__option {
-	outline: none;
+body .select2-container .select2-dropdown {
+	border-color: var(--bb-rl-border-secondary-color);
+
+	.select2-results__option {
+		outline: none;
+	}
 }
 
 .woocommerce-product-search button {

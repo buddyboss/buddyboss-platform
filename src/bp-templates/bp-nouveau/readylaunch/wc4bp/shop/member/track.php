@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 ?>
 
-<div class="woocommerce">
+<div class="woocommerce woocommerce--bb-rl">
 	<?php do_action( 'wc4bp_before_track_body' ); ?>
 
 	<h3><?php esc_html_e( 'Track your order', 'wc4bp' ); ?></h3>

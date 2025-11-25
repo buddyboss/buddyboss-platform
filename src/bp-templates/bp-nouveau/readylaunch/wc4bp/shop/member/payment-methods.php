@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 ?>
 
-<div class="woocommerce">
+<div class="woocommerce woocommerce--bb-rl">
 	<?php do_action( 'wc4bp_before_payment_methods_body' ); ?>
 	<?php echo do_shortcode( '[payment-methods]' ); ?>
 	<?php do_action( 'wc4bp_after_payment_methods_body' ); ?>
