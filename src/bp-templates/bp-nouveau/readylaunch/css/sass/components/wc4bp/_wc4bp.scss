@@ -1,6 +1,5 @@
 $color-lightgray: #dedfe2 !default;
 $color-light: #eef0f3 !default;
-$color-link-hover-button: #0f74e0 !default;
 $base-line-large: var(--bb-rl-base-line-2xl) !default;
 $button-border-radius: var(--bb-rl-radius-md) !default;
 
@@ -528,11 +527,14 @@ $button-border-radius: var(--bb-rl-radius-md) !default;
 				text-align: right;
 
 				a.button {
-					padding: 8px 2em;
+					padding: var(--bb-rl-space-100) var(--bb-rl-space-300);
+					font-weight: 500;
+					color: var(--bb-rl-text-color);
+					border-radius: var(--bb-rl-radius-md);
 
 					&:hover {
-						background-color: $color-link-hover-button;
-						color: var(--bb-rl-background-color);
+						background-color: var(--bb-rl-background-tertiary-hover-color);
+						color: var(--bb-rl-text-color);
 					}
 				}
 			}

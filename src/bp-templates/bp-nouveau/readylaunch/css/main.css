@@ -22047,13 +22047,16 @@ table.profile-settings tbody td select {
 
 .woocommerce-checkout .woocommerce-order-details-wrapper section.woocommerce-order-details p.order-again a.button,
 .woocommerce-checkout .woocommerce .woocommerce-order-details-wrapper section.woocommerce-order-details p.order-again a.button {
-  padding: 8px 2em;
+  padding: var(--bb-rl-space-100) var(--bb-rl-space-300);
+  font-weight: 500;
+  color: var(--bb-rl-text-color);
+  border-radius: var(--bb-rl-radius-md);
 }
 
 .woocommerce-checkout .woocommerce-order-details-wrapper section.woocommerce-order-details p.order-again a.button:hover,
 .woocommerce-checkout .woocommerce .woocommerce-order-details-wrapper section.woocommerce-order-details p.order-again a.button:hover {
-  background-color: #0f74e0;
-  color: var(--bb-rl-background-color);
+  background-color: var(--bb-rl-background-tertiary-hover-color);
+  color: var(--bb-rl-text-color);
 }
 
 .woocommerce-checkout .woocommerce-order-details-wrapper section.woocommerce-customer-details,
@@ -23112,6 +23115,11 @@ fieldset.wc-upe-form.wc-payment-form,
   border-radius: var(--bb-rl-radius-md);
 }
 
+:where(body:not(.woocommerce-block-theme-has-button-styles)):where(:not(.edit-post-visual-editor)) .woocommerce button.button:hover,
+:where(body:not(.woocommerce-block-theme-has-button-styles)):where(:not(.edit-post-visual-editor)) .bb-rl-primary-container .woocommerce button.button:hover {
+  color: var(--bb-rl-text-white-color);
+}
+
 .woocommerce nav.woocommerce-pagination ul {
   border: 0;
 }
@@ -23277,7 +23285,7 @@ body.woocommerce-cart p.cart-empty + p.return-to-shop .button.wc-backward {
   border-radius: var(--bb-rl-radius-base);
   box-shadow: none;
   padding: 0 var(--bb-rl-space-200);
-  line-height: 40px;
+  line-height: 31px;
   color: var(--bb-rl-text-color);
 }
 
@@ -23310,7 +23318,8 @@ body.woocommerce-cart p.cart-empty + p.return-to-shop .button.wc-backward {
 
 .woocommerce table.shop_table,
 .woocommerce table.shop_table.cart,
-.woocommerce .cart_totals table.shop_table {
+.woocommerce .cart_totals table.shop_table,
+.woocommerce table.shop_table.order_details {
   border: 0;
   font-size: var(--bb-rl-font-size-sm);
 }
@@ -23320,14 +23329,17 @@ body.woocommerce-cart p.cart-empty + p.return-to-shop .button.wc-backward {
 .woocommerce table.shop_table.cart th,
 .woocommerce table.shop_table.cart td,
 .woocommerce .cart_totals table.shop_table th,
-.woocommerce .cart_totals table.shop_table td {
+.woocommerce .cart_totals table.shop_table td,
+.woocommerce table.shop_table.order_details th,
+.woocommerce table.shop_table.order_details td {
   border-bottom: 1px solid var(--bb-rl-border-secondary-color);
   border-top: 0;
 }
 
 .woocommerce table.shop_table th,
 .woocommerce table.shop_table.cart th,
-.woocommerce .cart_totals table.shop_table th {
+.woocommerce .cart_totals table.shop_table th,
+.woocommerce table.shop_table.order_details th {
   text-transform: uppercase;
   color: var(--bb-rl-text-tertiary-color);
   font-size: var(--bb-rl-font-size-sm);
@@ -23335,26 +23347,30 @@ body.woocommerce-cart p.cart-empty + p.return-to-shop .button.wc-backward {
 
 .woocommerce table.shop_table th.product-subtotal,
 .woocommerce table.shop_table.cart th.product-subtotal,
-.woocommerce .cart_totals table.shop_table th.product-subtotal {
+.woocommerce .cart_totals table.shop_table th.product-subtotal,
+.woocommerce table.shop_table.order_details th.product-subtotal {
   text-align: right;
 }
 
 .woocommerce table.shop_table td.product-name a,
 .woocommerce table.shop_table.cart td.product-name a,
-.woocommerce .cart_totals table.shop_table td.product-name a {
+.woocommerce .cart_totals table.shop_table td.product-name a,
+.woocommerce table.shop_table.order_details td.product-name a {
   color: var(--bb-rl-text-color);
   font-weight: 500;
 }
 
 .woocommerce table.shop_table td.product-name a:hover,
 .woocommerce table.shop_table.cart td.product-name a:hover,
-.woocommerce .cart_totals table.shop_table td.product-name a:hover {
+.woocommerce .cart_totals table.shop_table td.product-name a:hover,
+.woocommerce table.shop_table.order_details td.product-name a:hover {
   color: var(--bb-rl-primary-color);
 }
 
 .woocommerce table.shop_table td.product-name a.wcs-switch-link,
 .woocommerce table.shop_table.cart td.product-name a.wcs-switch-link,
-.woocommerce .cart_totals table.shop_table td.product-name a.wcs-switch-link {
+.woocommerce .cart_totals table.shop_table td.product-name a.wcs-switch-link,
+.woocommerce table.shop_table.order_details td.product-name a.wcs-switch-link {
   background-color: var(--bb-rl-background-brand-primary-color);
   color: var(--bb-rl-text-white-color);
   border: 1px solid var(--bb-rl-background-brand-primary-color);
@@ -23362,25 +23378,29 @@ body.woocommerce-cart p.cart-empty + p.return-to-shop .button.wc-backward {
 
 .woocommerce table.shop_table td.product-name a.wcs-switch-link:hover,
 .woocommerce table.shop_table.cart td.product-name a.wcs-switch-link:hover,
-.woocommerce .cart_totals table.shop_table td.product-name a.wcs-switch-link:hover {
+.woocommerce .cart_totals table.shop_table td.product-name a.wcs-switch-link:hover,
+.woocommerce table.shop_table.order_details td.product-name a.wcs-switch-link:hover {
   background-color: var(--bb-rl-background-brand-primary-hover-color);
 }
 
 .woocommerce table.shop_table td.product-quantity .quantity,
 .woocommerce table.shop_table.cart td.product-quantity .quantity,
-.woocommerce .cart_totals table.shop_table td.product-quantity .quantity {
+.woocommerce .cart_totals table.shop_table td.product-quantity .quantity,
+.woocommerce table.shop_table.order_details td.product-quantity .quantity {
   display: inline-block;
 }
 
 .woocommerce table.shop_table td.product-quantity .quantity input.qty,
 .woocommerce table.shop_table.cart td.product-quantity .quantity input.qty,
-.woocommerce .cart_totals table.shop_table td.product-quantity .quantity input.qty {
+.woocommerce .cart_totals table.shop_table td.product-quantity .quantity input.qty,
+.woocommerce table.shop_table.order_details td.product-quantity .quantity input.qty {
   color: var(--bb-rl-text-color);
 }
 
 .woocommerce table.shop_table td.product-quantity .quantity.quantity--readonly,
 .woocommerce table.shop_table.cart td.product-quantity .quantity.quantity--readonly,
-.woocommerce .cart_totals table.shop_table td.product-quantity .quantity.quantity--readonly {
+.woocommerce .cart_totals table.shop_table td.product-quantity .quantity.quantity--readonly,
+.woocommerce table.shop_table.order_details td.product-quantity .quantity.quantity--readonly {
   visibility: hidden;
   width: 0;
   height: 0;
@@ -23389,13 +23409,15 @@ body.woocommerce-cart p.cart-empty + p.return-to-shop .button.wc-backward {
 
 .woocommerce table.shop_table td.product-price,
 .woocommerce table.shop_table.cart td.product-price,
-.woocommerce .cart_totals table.shop_table td.product-price {
+.woocommerce .cart_totals table.shop_table td.product-price,
+.woocommerce table.shop_table.order_details td.product-price {
   color: var(--bb-rl-text-color);
 }
 
 .woocommerce table.shop_table td.product-subtotal,
 .woocommerce table.shop_table.cart td.product-subtotal,
-.woocommerce .cart_totals table.shop_table td.product-subtotal {
+.woocommerce .cart_totals table.shop_table td.product-subtotal,
+.woocommerce table.shop_table.order_details td.product-subtotal {
   color: var(--bb-rl-text-color);
   text-align: right;
 }
@@ -23403,7 +23425,8 @@ body.woocommerce-cart p.cart-empty + p.return-to-shop .button.wc-backward {
 @media (max-width: 800px) {
   .woocommerce table.shop_table td,
   .woocommerce table.shop_table.cart td,
-  .woocommerce .cart_totals table.shop_table td {
+  .woocommerce .cart_totals table.shop_table td,
+  .woocommerce table.shop_table.order_details td {
     padding-top: 12px;
     padding-bottom: 12px;
   }
@@ -23411,7 +23434,8 @@ body.woocommerce-cart p.cart-empty + p.return-to-shop .button.wc-backward {
 
 .woocommerce table.shop_table td.actions > button.button,
 .woocommerce table.shop_table.cart td.actions > button.button,
-.woocommerce .cart_totals table.shop_table td.actions > button.button {
+.woocommerce .cart_totals table.shop_table td.actions > button.button,
+.woocommerce table.shop_table.order_details td.actions > button.button {
   background-color: var(--bb-rl-background-tertiary-color);
   color: var(--bb-rl-text-color);
   border: 1px solid transparent;
@@ -23425,13 +23449,15 @@ body.woocommerce-cart p.cart-empty + p.return-to-shop .button.wc-backward {
 
 .woocommerce table.shop_table td.actions > button.button:disabled,
 .woocommerce table.shop_table.cart td.actions > button.button:disabled,
-.woocommerce .cart_totals table.shop_table td.actions > button.button:disabled {
+.woocommerce .cart_totals table.shop_table td.actions > button.button:disabled,
+.woocommerce table.shop_table.order_details td.actions > button.button:disabled {
   pointer-events: none;
 }
 
 .woocommerce table.shop_table td.actions > button.button:hover,
 .woocommerce table.shop_table.cart td.actions > button.button:hover,
-.woocommerce .cart_totals table.shop_table td.actions > button.button:hover {
+.woocommerce .cart_totals table.shop_table td.actions > button.button:hover,
+.woocommerce table.shop_table.order_details td.actions > button.button:hover {
   background-color: var(--bb-rl-background-tertiary-hover-color);
 }
 
@@ -23748,7 +23774,7 @@ body:not(.bb-page-loaded) .bs_widget_price_filter #max_price {
   min-width: 32px;
   max-width: 32px;
   height: 40px;
-  line-height: 40px;
+  line-height: 31px;
   display: block;
   padding: 0;
   margin: 0;
@@ -24179,7 +24205,7 @@ body .select2-container .select2-dropdown .select2-results__option {
   text-align: right;
 }
 
-.woocommerce .MyAccount-content--address .wc-MyAccount-sub-heading h2 + p {
+.woocommerce .MyAccount-content--address .wc-MyAccount-sub-heading h2 + p, .woocommerce.woocommerce--view-order .wc-MyAccount-sub-heading h2 + p {
   position: relative;
   top: -16px;
 }
@@ -24399,12 +24425,15 @@ body .select2-container .select2-dropdown .select2-results__option {
 }
 
 .woocommerce section.woocommerce-order-details p.order-again a.button {
-  padding: 8px 2em;
+  padding: var(--bb-rl-space-100) var(--bb-rl-space-300);
+  font-weight: 500;
+  color: var(--bb-rl-text-color);
+  border-radius: var(--bb-rl-radius-md);
 }
 
 .woocommerce section.woocommerce-order-details p.order-again a.button:hover {
-  background-color: #0f74e0;
-  color: var(--bb-rl-text-white-color);
+  background-color: var(--bb-rl-background-tertiary-hover-color);
+  color: var(--bb-rl-text-color);
 }
 
 .woocommerce .woocommerce-table--order-details {

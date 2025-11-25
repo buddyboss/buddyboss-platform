@@ -21,7 +21,7 @@ $post->post_title    = __( 'Order Details', 'wc4bp' );
 $bp_action_variables = $bp->action_variables;
 ?>
 
-<div class="woocommerce">
+<div class="woocommerce woocommerce--view-order">
 	<?php
 	if ( ! empty( $bp_action_variables ) ) {
 		if ( isset( $bp_action_variables[0] ) && ! empty( $bp_action_variables[1] ) && 'view-order' === $bp_action_variables[0] && is_numeric( $bp_action_variables[1] ) ) {

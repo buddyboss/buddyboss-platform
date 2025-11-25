@@ -1,5 +1,3 @@
-$color-link-hover-button: hsl(211, 87%, 47%) !default;
-
 .woocommerce {
 
 	.woocommerce-MyAccount-content {
@@ -187,7 +185,8 @@ $color-link-hover-button: hsl(211, 87%, 47%) !default;
 		}
 	}
 
-	.MyAccount-content--address {
+	.MyAccount-content--address,
+	&.woocommerce--view-order {
 
 		.wc-MyAccount-sub-heading {
 
@@ -432,11 +431,14 @@ $color-link-hover-button: hsl(211, 87%, 47%) !default;
 			text-align: right;
 
 			a.button {
-				padding: 8px 2em;
+				padding: var(--bb-rl-space-100) var(--bb-rl-space-300);
+				font-weight: 500;
+				color: var(--bb-rl-text-color);
+				border-radius: var(--bb-rl-radius-md);
 
 				&:hover {
-					background-color: $color-link-hover-button;
-					color: var(--bb-rl-text-white-color);
+					background-color: var(--bb-rl-background-tertiary-hover-color);
+					color: var(--bb-rl-text-color);
 				}
 			}
 		}
