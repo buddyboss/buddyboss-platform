@@ -48,12 +48,15 @@ window.bp = window.bp || {};
 				var $emailField   = $( '#bb-rl-invite-email' );
 				var emailValue    = $emailField.val().trim();
 				var emailRegex    = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+				var $subjectField = $( '#bb-rl-invite-custom-subject' );
+				var isSubjectRequired = $subjectField.length > 0;
+				var isSubjectValid = ! isSubjectRequired || '' !== $subjectField.val().trim();
 
 				if (
 					'' !== $( '#bb-rl-invite-name' ).val().trim() &&
 					'' !== emailValue &&
 					emailRegex.test( emailValue ) &&
-					'' !== $( '#bb-rl-invite-custom-subject' ).val().trim()
+					isSubjectValid
 				) {
 					$submitButton.prop( 'disabled', false );
 				} else {
