@@ -36,9 +36,19 @@ class BB_DRM_Invalid extends BB_Base_DRM {
 		if ( $event ) {
 			$days = BB_DRM_Helper::days_elapsed( $event->created_at );
 
-			if ( $days >= 7 && $days <= 20 ) {
+			// New timeline for Platform invalid/expired license:
+			// 0-7 days: No impact
+			// 7-14 days: Notification informing license key not activated
+			// 14-21 days: Yellow Warning (activate license)
+			// 21-30 days: Orange Warning (features will be disabled)
+			// 30+ days: Red Warning (backend settings blocked)
+			if ( $days >= 7 && $days < 14 ) {
+				$this->set_status( BB_DRM_Helper::DRM_LOW );
+			} elseif ( $days >= 14 && $days < 21 ) {
 				$this->set_status( BB_DRM_Helper::DRM_MEDIUM );
-			} elseif ( $days >= 21 ) {
+			} elseif ( $days >= 21 && $days < 30 ) {
+				$this->set_status( BB_DRM_Helper::DRM_HIGH );
+			} elseif ( $days >= 30 ) {
 				$this->set_status( BB_DRM_Helper::DRM_LOCKED );
 			}
 		}

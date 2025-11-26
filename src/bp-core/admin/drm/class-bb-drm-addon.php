@@ -66,12 +66,19 @@ class BB_DRM_Addon extends BB_Base_DRM {
 		if ( $event ) {
 			$days = BB_DRM_Helper::days_elapsed( $event->created_at );
 
-			// Faster timeline for paid add-ons.
-			if ( $days >= 7 && $days <= 13 ) {
+			// New timeline for paid add-ons:
+			// 0-7 days: No impact
+			// 7-14 days: Notification informing license key not activated
+			// 14-21 days: Yellow Warning (activate license)
+			// 21-30 days: Orange Warning (features will be disabled)
+			// 30+ days: Red Warning (settings blocked, features disabled)
+			if ( $days >= 7 && $days < 14 ) {
 				$this->set_status( BB_DRM_Helper::DRM_LOW );
-			} elseif ( $days >= 14 && $days <= 20 ) {
+			} elseif ( $days >= 14 && $days < 21 ) {
 				$this->set_status( BB_DRM_Helper::DRM_MEDIUM );
-			} elseif ( $days >= 21 ) {
+			} elseif ( $days >= 21 && $days < 30 ) {
+				$this->set_status( BB_DRM_Helper::DRM_HIGH );
+			} elseif ( $days >= 30 ) {
 				$this->set_status( BB_DRM_Helper::DRM_LOCKED );
 			}
 
@@ -267,6 +274,21 @@ class BB_DRM_Addon extends BB_Base_DRM {
 				$label   = __( 'Critical', 'buddyboss' );
 				break;
 
+			case BB_DRM_Helper::DRM_HIGH:
+				$heading = sprintf(
+					/* translators: %s: plugin name */
+					__( '%s: WARNING - Features Will Be Disabled', 'buddyboss' ),
+					$this->plugin_name
+				);
+				$message = sprintf(
+					/* translators: %s: plugin name */
+					__( '%s features will be disabled soon. Please activate your license key to prevent service interruption.', 'buddyboss' ),
+					$this->plugin_name
+				);
+				$color   = 'orange';
+				$label   = __( 'Critical', 'buddyboss' );
+				break;
+
 			case BB_DRM_Helper::DRM_LOCKED:
 				$heading = sprintf(
 					/* translators: %s: plugin name */
@@ -398,7 +420,7 @@ class BB_DRM_Addon extends BB_Base_DRM {
 		// Calculate days elapsed.
 		$days = BB_DRM_Helper::days_elapsed( $event->created_at );
 
-		// Lock if grace period has expired (21+ days for addons).
-		return $days >= 21;
+		// Lock if grace period has expired (30+ days for addons).
+		return $days >= 30;
 	}
 }

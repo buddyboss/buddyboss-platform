@@ -33,17 +33,22 @@ class BB_DRM_Helper {
 	const INVALID_LICENSE_EVENT = 'invalid-license';
 
 	/**
-	 * DRM status: Low (warning).
+	 * DRM status: Low (informational notification - days 7-13).
 	 */
 	const DRM_LOW = 'low';
 
 	/**
-	 * DRM status: Medium (critical warning).
+	 * DRM status: Medium (yellow warning - days 14-20).
 	 */
 	const DRM_MEDIUM = 'medium';
 
 	/**
-	 * DRM status: Locked (backend disabled).
+	 * DRM status: High (orange warning - days 21-29).
+	 */
+	const DRM_HIGH = 'high';
+
+	/**
+	 * DRM status: Locked (red warning, backend disabled - days 30+).
 	 */
 	const DRM_LOCKED = 'locked';
 
@@ -282,6 +287,16 @@ class BB_DRM_Helper {
 	}
 
 	/**
+	 * Check if the DRM status is high.
+	 *
+	 * @param string $drm_status The DRM status to check.
+	 * @return bool True if high, false otherwise.
+	 */
+	public static function is_high( $drm_status = '' ) {
+		return ( self::DRM_HIGH === self::maybe_drm_status( $drm_status ) );
+	}
+
+	/**
 	 * Check if the DRM status is low.
 	 *
 	 * @param string $drm_status The DRM status to check.
@@ -305,6 +320,9 @@ class BB_DRM_Helper {
 				break;
 			case self::DRM_MEDIUM:
 				$out = 'dm';
+				break;
+			case self::DRM_HIGH:
+				$out = 'dh';
 				break;
 			case self::DRM_LOCKED:
 				$out = 'dll';
@@ -371,6 +389,20 @@ class BB_DRM_Helper {
 						'account' => 'https://www.buddyboss.com/drmmed/ipm/account',
 						'support' => 'https://www.buddyboss.com/drmmed/ipm/support',
 						'pricing' => 'https://www.buddyboss.com/drmmed/ipm/pricing',
+					),
+				),
+				self::DRM_HIGH   => array(
+					'email'   => array(
+						'home'    => 'https://www.buddyboss.com/drmhigh/email',
+						'account' => 'https://www.buddyboss.com/drmhigh/email/acct',
+						'support' => 'https://www.buddyboss.com/drmhigh/email/support',
+						'pricing' => 'https://www.buddyboss.com/drmhigh/email/pricing',
+					),
+					'general' => array(
+						'home'    => 'https://www.buddyboss.com/drmhigh/ipm',
+						'account' => 'https://www.buddyboss.com/drmhigh/ipm/account',
+						'support' => 'https://www.buddyboss.com/drmhigh/ipm/support',
+						'pricing' => 'https://www.buddyboss.com/drmhigh/ipm/pricing',
 					),
 				),
 				self::DRM_LOCKED => array(
@@ -497,6 +529,33 @@ class BB_DRM_Helper {
 				);
 				break;
 
+			case self::DRM_HIGH:
+				$admin_notice_view = 'high_warning';
+				$heading           = __( 'BuddyBoss: URGENT! Features Will Be Disabled', 'buddyboss' );
+				$color             = 'orange';
+				$simple_message    = __( 'Your BuddyBoss features will be disabled soon without an active license key. To prevent service interruption, activate your license now:', 'buddyboss' );
+				$help_message      = __( 'Contact us immediately if you need help.', 'buddyboss' );
+				$label             = __( 'Critical', 'buddyboss' );
+				$activation_link   = bp_get_admin_url( 'admin.php?page=buddyboss-license' );
+				$message           = sprintf(
+					'<p>%s</p><ul><li>%s</li><li>%s</li><li>%s</li></ul>',
+					$simple_message,
+					sprintf(
+						/* translators: %1$s: opening anchor tag, %2$s: closing anchor tag */
+						__( 'Grab your key from your %1$sAccount Page%2$s.', 'buddyboss' ),
+						'<a href="' . esc_url( $account_link ) . '">',
+						'</a>'
+					),
+					sprintf(
+						/* translators: %1$s: opening anchor tag, %2$s: closing anchor tag */
+						__( '%1$sClick here%2$s to enter and activate it.', 'buddyboss' ),
+						'<a href="' . esc_url( $activation_link ) . '">',
+						'</a>'
+					),
+					__( 'That\'s it!', 'buddyboss' )
+				);
+				break;
+
 			case self::DRM_LOCKED:
 				$admin_notice_view = 'locked_warning';
 				$heading           = __( 'ALERT! BuddyBoss Backend is Deactivated', 'buddyboss' );
@@ -564,6 +623,33 @@ class BB_DRM_Helper {
 				$color             = 'orange';
 				$simple_message    = __( 'Your BuddyBoss license key is expired, but is required to continue using BuddyBoss. Fortunately, it\'s easy to renew your license key. Just do the following:', 'buddyboss' );
 				$help_message      = __( 'Let us know if you need assistance.', 'buddyboss' );
+				$label             = __( 'Critical', 'buddyboss' );
+				$activation_link   = bp_get_admin_url( 'admin.php?page=buddyboss-license' );
+				$message           = sprintf(
+					'<p>%s</p><ul><li>%s</li><li>%s</li><li>%s</li></ul>',
+					$simple_message,
+					sprintf(
+						/* translators: %1$s: opening anchor tag, %2$s: closing anchor tag */
+						__( 'Go to BuddyBoss.com and make your selection. %1$sPricing%2$s.', 'buddyboss' ),
+						'<a href="' . esc_url( $pricing_link ) . '">',
+						'</a>'
+					),
+					sprintf(
+						/* translators: %1$s: opening anchor tag, %2$s: closing anchor tag */
+						__( '%1$sClick here%2$s to enter and activate your new license key.', 'buddyboss' ),
+						'<a href="' . esc_url( $activation_link ) . '">',
+						'</a>'
+					),
+					__( 'That\'s it!', 'buddyboss' )
+				);
+				break;
+
+			case self::DRM_HIGH:
+				$admin_notice_view = 'high_warning';
+				$heading           = __( 'BuddyBoss: URGENT! Features Will Be Disabled', 'buddyboss' );
+				$color             = 'orange';
+				$simple_message    = __( 'Your BuddyBoss license key is expired and features will be disabled soon. Renew your license to prevent service interruption:', 'buddyboss' );
+				$help_message      = __( 'Contact us immediately if you need help.', 'buddyboss' );
 				$label             = __( 'Critical', 'buddyboss' );
 				$activation_link   = bp_get_admin_url( 'admin.php?page=buddyboss-license' );
 				$message           = sprintf(

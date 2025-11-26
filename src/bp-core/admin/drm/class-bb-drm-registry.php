@@ -629,6 +629,7 @@ class BB_DRM_Registry {
 		// This ensures all addon statuses are visible, not just the highest priority.
 		$priority_levels = array(
 			'locked' => BB_DRM_Helper::DRM_LOCKED,
+			'high'   => BB_DRM_Helper::DRM_HIGH,
 			'medium' => BB_DRM_Helper::DRM_MEDIUM,
 			'low'    => BB_DRM_Helper::DRM_LOW,
 		);
@@ -649,9 +650,11 @@ class BB_DRM_Registry {
 
 			// Determine icon based on severity.
 			if ( BB_DRM_Helper::DRM_LOCKED === $drm_status ) {
-				$icon_url = admin_url( 'images/no.png' );
+				$icon_url = admin_url( 'images/no.png' ); // Red
+			} elseif ( BB_DRM_Helper::DRM_HIGH === $drm_status ) {
+				$icon_url = admin_url( 'images/no.png' ); // Orange (using red icon for now)
 			} else {
-				$icon_url = admin_url( 'images/yes.png' );
+				$icon_url = admin_url( 'images/yes.png' ); // Yellow
 			}
 
 			// Build title and content.
@@ -686,8 +689,10 @@ class BB_DRM_Registry {
 			// Add urgency based on status.
 			if ( BB_DRM_Helper::DRM_LOCKED === $drm_status ) {
 				$content .= '<p>' . __( 'Features have been disabled.', 'buddyboss' ) . '</p>';
-			} elseif ( BB_DRM_Helper::DRM_MEDIUM === $drm_status ) {
+			} elseif ( BB_DRM_Helper::DRM_HIGH === $drm_status ) {
 				$content .= '<p>' . __( 'Features will be disabled soon.', 'buddyboss' ) . '</p>';
+			} elseif ( BB_DRM_Helper::DRM_MEDIUM === $drm_status ) {
+				$content .= '<p>' . __( 'Please activate your license.', 'buddyboss' ) . '</p>';
 			}
 
 			// Create consolidated notification for this priority level.
