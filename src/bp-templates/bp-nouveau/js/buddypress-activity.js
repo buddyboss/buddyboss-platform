@@ -376,7 +376,7 @@ window.bp = window.bp || {};
 
 			// Parse activities.
 			newest_activities = $( this.heartbeat_data.newest ).filter( '.activity-item' );
-			
+
 			// If we have a topic filter active, only show activities matching that topic.
 			if ( topicId ) {
 				newest_activities       = newest_activities.filter( function () {
@@ -1783,17 +1783,21 @@ window.bp = window.bp || {};
 									$( 'li#acomment-' + form_item_id ).replaceWith( the_comment );
 								}
 							} else {
-								if ( 0 === activity_comments.children( 'ul' ).length ) {
-									if ( activity_comments.hasClass( 'activity-comments' ) ) {
-										activity_comments.prepend( '<ul></ul>' );
-									} else {
-										activity_comments.append( '<ul></ul>' );
-									}
-								}
-
 								if ( isFooterForm ) {
+									// For modal footer form, ensure the modal body's .activity-comments has a <ul>
+									var modalActivityComments = form.closest( '#activity-modal' ).find( '.bb-modal-activity-body .activity-comments' );
+									if ( modalActivityComments.length > 0 && 0 === modalActivityComments.children( 'ul' ).length ) {
+										modalActivityComments.prepend( '<ul data-activity_id="' + form_activity_id + '" data-parent_comment_id="' + form_activity_id + '"></ul>' );
+									}
 									form.closest( '#activity-modal' ).find( '.bb-modal-activity-body .activity-comments, .bb-modal-activity-body .activity-comments .activity-actions' ).children( 'ul' ).append( $( the_comment ) );
 								} else {
+									if ( 0 === activity_comments.children( 'ul' ).length ) {
+										if ( activity_comments.hasClass( 'activity-comments' ) ) {
+											activity_comments.prepend( '<ul></ul>' );
+										} else {
+											activity_comments.append( '<ul></ul>' );
+										}
+									}
 									activity_comments.children( 'ul' ).append( $( the_comment ).hide().fadeIn( 200 ) );
 								}
 
@@ -3333,16 +3337,20 @@ window.bp = window.bp || {};
 			if ( ! _.isUndefined( BP_Nouveau.media ) ) {
 
 				var parent_activity = '',
+					parent_activity_data = '',
 					activity_data = '';
+
 
 				if ( placeholder ) {
 					target = target ? $( target ) : $( placeholder );
 					parent_activity = target.closest( '.activity-modal' ).find( '.activity-item' );
 					activity_data = target.closest( '.activity-modal' ).find( '.activity-item' ).data( 'bp-activity' );
+					parent_activity_data = parent_activity.data( 'bp-activity' );
 					form = $( placeholder );
 				} else {
 					parent_activity = target.closest( '.activity-item' );
 					activity_data = target.closest( '.activity-item' ).data( 'bp-activity' );
+					parent_activity_data = parent_activity.data( 'bp-activity' );
 				}
 
 				if ( target.closest( 'li' ).data( 'bp-activity-comment' ) ) {
@@ -3352,8 +3360,14 @@ window.bp = window.bp || {};
 				if ( target.closest( 'li' ).hasClass( 'groups' ) || parent_activity.hasClass( 'groups' ) ) {
 
 					// check media is enabled in groups or not.
-					if ( ! _.isUndefined( activity_data.group_media ) ) {
-						if ( activity_data.group_media === true ) {
+					if (
+						! _.isUndefined( activity_data.group_media ) &&
+						! _.isUndefined( parent_activity_data.group_media )
+					) {
+						if (
+							activity_data.group_media === true &&
+							parent_activity_data.group_media === true
+						) {
 							form.find( '.ac-reply-toolbar .post-media.media-support' ).show().parent( '.ac-reply-toolbar' ).removeClass( 'post-media-disabled' );
 						} else {
 							form.find( '.ac-reply-toolbar .post-media.media-support' ).hide().parent( '.ac-reply-toolbar' ).addClass( 'post-media-disabled' );
@@ -3365,8 +3379,14 @@ window.bp = window.bp || {};
 					}
 
 					// check media is enabled in groups or not.
-					if ( ! _.isUndefined( activity_data.group_document ) ) {
-						if ( activity_data.group_document === true ) {
+					if (
+						! _.isUndefined( activity_data.group_document ) &&
+						! _.isUndefined( parent_activity_data.group_document )
+					) {
+						if (
+							activity_data.group_document === true &&
+							parent_activity_data.group_document === true
+						) {
 							form.find( '.ac-reply-toolbar .post-media.document-support' ).show().parent( '.ac-reply-toolbar' ).removeClass( 'post-media-disabled' );
 						} else {
 							form.find( '.ac-reply-toolbar .post-media.document-support' ).hide().parent( '.ac-reply-toolbar' ).addClass( 'post-media-disabled' );
@@ -3378,8 +3398,14 @@ window.bp = window.bp || {};
 					}
 
 					// check video is enabled in groups or not.
-					if ( ! _.isUndefined( activity_data.group_video ) ) {
-						if ( activity_data.group_video === true ) {
+					if (
+						! _.isUndefined( activity_data.group_video ) &&
+						! _.isUndefined( parent_activity_data.group_video )
+					) {
+						if (
+							activity_data.group_video === true &&
+							parent_activity_data.group_video === true
+						) {
 							form.find( '.ac-reply-toolbar .post-video.video-support' ).show().parent( '.ac-reply-toolbar' ).removeClass( 'post-video-disabled' );
 						} else {
 							form.find( '.ac-reply-toolbar .post-video.video-support' ).hide().parent( '.ac-reply-toolbar' ).addClass( 'post-video-disabled' );
@@ -3579,7 +3605,9 @@ window.bp = window.bp || {};
 						self.dropzone_obj.files.push( mock_file );
 						self.dropzone_obj.emit( 'addedfile', mock_file );
 
-						if ( undefined !== typeof BP_Nouveau.is_as3cf_active && '1' === BP_Nouveau.is_as3cf_active ) {
+						var is_as3cf_active = typeof BP_Nouveau.is_as3cf_active !== 'undefined' && '1' === BP_Nouveau.is_as3cf_active;
+						var is_om_active    = typeof BP_Nouveau.is_om_active !== 'undefined' && '1' === BP_Nouveau.is_om_active;
+						if ( is_as3cf_active || is_om_active ) {
 							$( self.dropzone_obj.files[i].previewElement ).find( 'img' ).attr( 'src', activity_comment_data.media[i].thumb );
 							self.dropzone_obj.emit( 'thumbnail', activity_comment_data.media[i].thumb );
 							self.dropzone_obj.emit( 'complete', mock_file );
@@ -4002,9 +4030,18 @@ window.bp = window.bp || {};
 							video_element.attr('id', video_element_id);
 
 							var video_action_wrap = video_container.find('.video-action-wrap');
-							video_element.insertAfter(video_action_wrap);
+							// Handle case where .video-action-wrap doesn't exist
+							if (video_action_wrap.length > 0) {
+								video_element.insertAfter(video_action_wrap);
+							} else {
+								// If no .video-action-wrap, prepend video to container
+								video_element.prependTo(video_container);
+							}
 
-							video_container.find('.video-js').remove();
+							// Remove any previously initialized Video.js players, but not the video element itself
+							video_container.find('.video-js').not(video_element).remove();
+							// Remove vjs-initialized class if present to allow re-initialization
+							video_element.removeClass('vjs-initialized');
 
 							video_element.addClass('video-js');
 

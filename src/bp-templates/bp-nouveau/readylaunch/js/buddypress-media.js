@@ -557,6 +557,9 @@ window.bp = window.bp || {};
 								if ( response.data.document && response.data.document.video_symlink ) {
 									$document.find( 'a.bb-rl-open-document-theatre[data-id="' + itemId + '"]' ).attr( 'data-video-preview', response.data.document.video_symlink );
 								}
+								if ( response.data && response.data.url ) {
+									$document.find( 'a.bb-rl-open-document-theatre[data-id="' + itemId + '"]' ).attr( 'href', response.data.url );
+								}
 							} else {
 								target.find( 'option[value="' + target.attr( 'data-privacy' ) + '"]' ).attr( 'selected', 'selected' );
 								target.siblings( 'span' ).text( target.find( 'option[value="' + target.attr( 'data-privacy' ) + '"]' ).text() );
@@ -4746,7 +4749,6 @@ window.bp = window.bp || {};
 		 * Setup GIF autoplay for media modal when it's opened
 		 */
 		setupMediaModalGifAutoplay: function() {
-			var self = this;
 			var retryCount = 0;
 			var maxRetries = 10;
 			var setupCompleted = false;

@@ -839,6 +839,9 @@ window.bp = window.bp || {};
 								if ( response.data.document && response.data.document.video_symlink ) {
 									$( document ).find( 'a.bb-open-document-theatre[data-id="' + itemId + '"]' ).attr( 'data-video-preview', response.data.document.video_symlink );
 								}
+								if ( response.data && response.data.url ) {
+									$( document ).find( 'a.bb-open-document-theatre[data-id="' + itemId + '"]' ).attr( 'href', response.data.url );
+								}
 							} else {
 								target.find( 'option[value="' + target.attr( 'data-privacy' ) + '"]' ).attr( 'selected', 'selected' );
 								target.siblings( 'span' ).text( target.find( 'option[value="' + target.attr( 'data-privacy' ) + '"]' ).text() );
@@ -2470,7 +2473,18 @@ window.bp = window.bp || {};
 						'sending',
 						function ( file, xhr, formData ) {
 							formData.append( 'action', 'media_upload' );
-							formData.append( '_wpnonce', BP_Nouveau.nonces.media );
+							formData.append('_wpnonce', BP_Nouveau.nonces.media);
+							
+							var forumId = 0;
+							if ( $( '#bbp_forum_id' ).length ) {
+								forumId = $( '#bbp_forum_id' ).val();
+							}
+							formData.append( 'bbp_forum_id', forumId );
+							var topicId = 0;
+							if ( $( '#bbp_topic_id' ).length ) {
+								topicId = $( '#bbp_topic_id' ).val();
+							}
+							formData.append( 'bbp_topic_id', topicId );
 
 							var tool_box = target.closest( 'form' );
 							tool_box.addClass( 'has-media' );
@@ -3220,6 +3234,17 @@ window.bp = window.bp || {};
 						function ( file, xhr, formData ) {
 							formData.append( 'action', 'document_document_upload' );
 							formData.append( '_wpnonce', BP_Nouveau.nonces.media );
+							
+							var forumId = 0;
+							if ( $( '#bbp_forum_id' ).length ) {
+								forumId = $( '#bbp_forum_id' ).val();
+							}
+							formData.append( 'bbp_forum_id', forumId );
+							var topicId = 0;
+							if ( $( '#bbp_topic_id' ).length ) {
+								topicId = $( '#bbp_topic_id' ).val();
+							}
+							formData.append( 'bbp_topic_id', topicId );
 
 							var tool_box = target.closest( 'form' );
 							tool_box.addClass( 'has-media' );
@@ -3510,6 +3535,17 @@ window.bp = window.bp || {};
 						function ( file, xhr, formData ) {
 							formData.append( 'action', 'video_upload' );
 							formData.append( '_wpnonce', BP_Nouveau.nonces.video );
+							
+							var forumId = 0;
+							if ( $( '#bbp_forum_id' ).length ) {
+								forumId = $( '#bbp_forum_id' ).val();
+							}
+							formData.append( 'bbp_forum_id', forumId );
+							var topicId = 0;
+							if ( $( '#bbp_topic_id' ).length ) {
+								topicId = $( '#bbp_topic_id' ).val();
+							}
+							formData.append( 'bbp_topic_id', topicId );
 
 							var tool_box = target.closest( 'form' );
 							tool_box.addClass( 'has-media' );
@@ -6458,7 +6494,6 @@ window.bp = window.bp || {};
 		 * Setup GIF autoplay for media modal when it's opened
 		 */
 		setupMediaModalGifAutoplay: function() {
-			var self = this;
 			var retryCount = 0;
 			var maxRetries = 10;
 			var setupCompleted = false;
@@ -7989,10 +8024,13 @@ window.bp = window.bp || {};
 						value   : privacy,
 						type    : 'document',
 					},
-					success: function () {
+					success: function ( response ) {
 						target.closest('.bb-document-privacy-wrap').find('.privacy').removeClass('loading').removeClass(older_privacy);
 						target.closest('.bb-document-privacy-wrap').find('.privacy').addClass(privacy);
 						target.closest('.bb-document-privacy-wrap').find('.bp-tooltip').attr('data-bp-tooltip', target.text());
+						if ( response.data && response.data.url ) {
+							$( document ).find( 'a.bb-open-document-theatre[data-id="' + self.current_document.id + '"]' ).attr( 'href', response.data.url );
+						}
 					},
 					error  : function () {
 						target.closest('.bb-document-privacy-wrap').find('.privacy').removeClass('loading');

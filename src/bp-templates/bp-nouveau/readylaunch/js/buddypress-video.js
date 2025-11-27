@@ -81,6 +81,10 @@ window.bp = window.bp || {};
 				dictInvalidFileType: bbRlVideo.dictInvalidFileType,
 				previewTemplate: uploaderVideoTemplate,
 				dictCancelUploadConfirmation: bbRlVideo.dictCancelUploadConfirmation,
+				chunking: true,
+				chunkSize: 30*1024*1024,
+				retryChunks: true,
+				retryChunksLimit: 3,
 			};
 
 			this.videoThumbnailOptions = {
@@ -791,7 +795,12 @@ window.bp = window.bp || {};
 							$( file.previewElement ).closest( '.dz-preview' ).addClass( 'dz-complete' );
 						}
 
-						if ( response.data.id ) {
+						if ( true === file.upload.chunked ) {
+							// convert file.xhr.response string to object.
+							response = JSON.parse( file.xhr.response );
+						}
+
+						if ( response.data && response.data.id ) {
 							file.id                  = response.id;
 							response.data.uuid       = file.upload.uuid;
 							response.data.menu_order = self.dropzone_video.length;
