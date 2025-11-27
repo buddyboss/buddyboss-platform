@@ -6523,6 +6523,14 @@ window.bp = window.bp || {};
 								}).addClass( 'selected' );
 							}
 
+							// Trigger GIF autoplay check for edited activity
+							// Use setTimeout to ensure DOM is updated and video elements are rendered
+							setTimeout( function() {
+								if ( 'undefined' !== typeof bp.Nouveau.Media && 'function' === typeof bp.Nouveau.Media.autoPlayGifVideos ) {
+									bp.Nouveau.Media.autoPlayGifVideos();
+								}
+							}, 100 );
+
 							// Inject the activity into the stream only if it hasn't been done already (HeartBeat).
 						} else if ( ! $( '#activity-' + response.id ).length ) {
 
@@ -6546,6 +6554,14 @@ window.bp = window.bp || {};
 
 							// replace dummy image with original image by faking scroll event.
 							jQuery( window ).scroll();
+
+							// Trigger GIF autoplay check for newly posted activity
+							// Use setTimeout to ensure DOM is updated and video elements are rendered
+							setTimeout( function() {
+								if ( 'undefined' !== typeof bp.Nouveau.Media && 'function' === typeof bp.Nouveau.Media.autoPlayGifVideos ) {
+									bp.Nouveau.Media.autoPlayGifVideos();
+								}
+							}, 100 );
 
 							if ( link_embed ) {
 								if ( ! _.isUndefined( window.instgrm ) ) {
