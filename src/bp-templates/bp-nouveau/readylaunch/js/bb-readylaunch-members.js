@@ -12,6 +12,14 @@ window.bp = window.bp || {};
 	 */
 	bp.Readylaunch.Members = {
 		/**
+		 * Email validation regex pattern.
+		 * Standard pattern for validating email addresses.
+		 *
+		 * @type {RegExp}
+		 */
+		emailRegex: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+
+		/**
 		 * [start description]
 		 *
 		 * @return {[type]} [description]
@@ -29,14 +37,13 @@ window.bp = window.bp || {};
 				var $emailField   = $( this );
 				var $emailWrapper = $emailField.closest( '.bb-rl-form-field-wrapper' );
 				var emailValue    = $emailField.val().trim();
-				var emailRegex    = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
 
 				// Remove existing error messages.
 				$emailWrapper.find( '.bb-rl-notice' ).remove();
 				$emailField.removeClass( 'bb-rl-input-field--error' );
 
 				if ( '' !== emailValue ) {
-					if ( ! emailRegex.test( emailValue ) ) {
+					if ( ! bp.Readylaunch.Members.emailRegex.test( emailValue ) ) {
 						$emailField.addClass( 'bb-rl-input-field--error' );
 						bp.Readylaunch.Members.appendMessage( $emailWrapper, bbReadyLaunchMembersVars.invite_valid_email );
 					}
@@ -47,7 +54,6 @@ window.bp = window.bp || {};
 				var $submitButton = $( '#bb-rl-submit-invite' );
 				var $emailField   = $( '#bb-rl-invite-email' );
 				var emailValue    = $emailField.val().trim();
-				var emailRegex    = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
 				var $subjectField = $( '#bb-rl-invite-custom-subject' );
 				var isSubjectRequired = $subjectField.length > 0;
 				var isSubjectValid = ! isSubjectRequired || '' !== $subjectField.val().trim();
@@ -55,7 +61,7 @@ window.bp = window.bp || {};
 				if (
 					'' !== $( '#bb-rl-invite-name' ).val().trim() &&
 					'' !== emailValue &&
-					emailRegex.test( emailValue ) &&
+					bp.Readylaunch.Members.emailRegex.test( emailValue ) &&
 					isSubjectValid
 				) {
 					$submitButton.prop( 'disabled', false );
@@ -160,9 +166,8 @@ window.bp = window.bp || {};
 			var $emailField = $( '#bb-rl-invite-email' );
 			var $emailWrapper = $emailField.closest( '.bb-rl-form-field-wrapper' );
 			var emailValue = $emailField.val().trim();
-			var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-			if ( ! emailRegex.test( emailValue ) ) {
+			if ( ! bp.Readylaunch.Members.emailRegex.test( emailValue ) ) {
 				$emailField.addClass( 'bb-rl-input-field--error' );
 				bp.Readylaunch.Members.appendMessage( $emailWrapper, bbReadyLaunchMembersVars.invite_valid_email );
 				isValid = false;
