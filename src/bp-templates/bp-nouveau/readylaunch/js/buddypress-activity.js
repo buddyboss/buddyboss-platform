@@ -52,6 +52,15 @@ window.bp = window.bp || {};
 		},
 
 		/**
+		 * Common function to safely call Media functions
+		 */
+		invokeMediaFn: function( functionName ) {
+			if ( 'undefined' !== typeof bp.Nouveau.Media && 'function' === typeof bp.Nouveau.Media[ functionName ] ) {
+				bp.Nouveau.Media[ functionName ]();
+			}
+		},
+
+		/**
 		 * [setupGlobals description]
 		 *
 		 * @return {[type]} [description]
@@ -2336,6 +2345,11 @@ window.bp = window.bp || {};
 			}
 
 			bp.Nouveau.Activity.toggleMultiMediaOptions( form, '', '.bb-rl-modal-activity-footer' );
+			
+			// Trigger GIF autoplay check when modal is opened
+			setTimeout( function() {
+				bp.Nouveau.Activity.invokeMediaFn( 'autoPlayGifVideos' );
+			}, 500 );
 
 			if( ! modal.find( '.bb-rl-modal-activity-body' ).hasClass( 'bb-rl-modal-activity-body-scroll-event-initiated' ) ) {
 				modal.find( '.bb-rl-modal-activity-body' ).on( 'scroll', function () {
@@ -3471,6 +3485,9 @@ window.bp = window.bp || {};
 							}
 						);
 						jQuery( window ).scroll();
+						
+						// Trigger GIF autoplay check for newly added content
+						bp.Nouveau.Activity.invokeMediaFn( 'autoPlayGifVideos' );
 
 						if ( ! form.hasClass( 'acomment-edit' ) ) {
 							// Set the new count.
@@ -4278,6 +4295,9 @@ window.bp = window.bp || {};
 						// Common post-load operations
 						setTimeout( function () {
 							jQuery( window ).scroll();
+							
+							// Trigger GIF autoplay check for newly loaded comments
+							bp.Nouveau.Activity.invokeMediaFn( 'autoPlayGifVideos' );
 						}, 200 );
 
 						// Scroll to comment if needed
