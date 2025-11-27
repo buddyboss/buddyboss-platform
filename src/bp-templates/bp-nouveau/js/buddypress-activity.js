@@ -806,6 +806,14 @@ window.bp = window.bp || {};
 				3000
 			);
 
+			// Trigger GIF autoplay check when activities are loaded via AJAX
+			// Use setTimeout to ensure DOM is updated and video elements are rendered
+			setTimeout( function() {
+				if ( 'undefined' !== typeof bp.Nouveau.Media && 'function' === typeof bp.Nouveau.Media.autoPlayGifVideos ) {
+					bp.Nouveau.Media.autoPlayGifVideos();
+				}
+			}, 200 );
+
 			if (typeof window.instgrm !== 'undefined') {
 				window.instgrm.Embeds.process();
 			}

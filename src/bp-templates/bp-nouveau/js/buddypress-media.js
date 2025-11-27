@@ -385,6 +385,16 @@ window.bp = window.bp || {};
 					}
 				}, 1000 );
 
+				// Trigger initial GIF autoplay check for server-side rendered activities
+				// This handles the case when activities are loaded on page load (non-AJAX)
+				$( window ).on( 'load', function() {
+					setTimeout( function() {
+						if ( 'undefined' !== typeof bp.Nouveau.Media && 'function' === typeof bp.Nouveau.Media.autoPlayGifVideos ) {
+							bp.Nouveau.Media.autoPlayGifVideos();
+						}
+					}, 300 );
+				});
+
 				document.addEventListener( 'keydown', _.bind( this.closePickersOnEsc, this ) );
 				$( document ).on( 'click', _.bind( this.closePickersOnClick, this ) );
 			}
