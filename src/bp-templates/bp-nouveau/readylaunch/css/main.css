@@ -13222,7 +13222,7 @@ body.bb-rl-activity-modal-open .bb-rl-activity-update-form.modal-popup {
 }
 
 .bb-rl-activity-form.bb-rl-focus-in #bb-rl-activity-privacy-point {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   background-color: var(--bb-rl-background-secondary-color);
   border: 1px solid var(--bb-rl-border-secondary-color);
