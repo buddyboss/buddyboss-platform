@@ -476,110 +476,91 @@ class BB_DRM_Helper {
 
 		switch ( $drm_status ) {
 			case self::DRM_LOW:
-				$admin_notice_view = 'low_warning';
-				$heading           = __( 'BuddyBoss: Did You Forget Something?', 'buddyboss' );
-				$color             = 'orange';
-				$simple_message    = __( 'Oops! It looks like your BuddyBoss license key is missing. Here\'s how to fix the problem fast and easy:', 'buddyboss' );
-				$help_message      = __( 'We\'re here if you need any help.', 'buddyboss' );
-				$label             = __( 'Alert', 'buddyboss' );
+				// 7-13 days: Plugin Notification only (per BuddyBoss DRM Messaging.md)
+				$admin_notice_view = 'low_notification';
+				$heading           = __( 'BuddyBoss Pro/Plus: License Activation Needed', 'buddyboss' );
+				$color             = 'FFA500'; // Orange
+				$simple_message    = __( 'We couldn\'t verify an active license for your BuddyBoss Pro/Plus features. Please activate your license to continue using them.', 'buddyboss' );
+				$help_message      = __( 'Activate Your License', 'buddyboss' );
+				$label             = __( 'Notice', 'buddyboss' );
 				$activation_link   = bp_get_admin_url( 'admin.php?page=buddyboss-license' );
 				$message           = sprintf(
-					'<p>%s</p><ul><li>%s</li><li>%s</li><li>%s</li></ul>',
+					'<p>%s</p><p>%s</p>',
 					$simple_message,
 					sprintf(
-						/* translators: %1$s: opening anchor tag, %2$s: closing anchor tag */
-						__( 'Grab your key from your %1$sAccount Page%2$s.', 'buddyboss' ),
-						'<a href="' . esc_url( $account_link ) . '">',
-						'</a>'
-					),
-					sprintf(
-						/* translators: %1$s: opening anchor tag, %2$s: closing anchor tag */
-						__( '%1$sClick here%2$s to enter and activate it.', 'buddyboss' ),
-						'<a href="' . esc_url( $activation_link ) . '">',
-						'</a>'
-					),
-					__( 'That\'s it!', 'buddyboss' )
+						/* translators: %1$s: opening anchor tag for account page, %2$s: closing anchor tag, %3$s: opening anchor tag for support */
+						__( 'Need your license key? Visit %1$sYour Account Page%2$s. Having trouble? %3$sContact Support%2$s.', 'buddyboss' ),
+						'<a href="' . esc_url( $account_link ) . '" target="_blank">',
+						'</a>',
+						'<a href="' . esc_url( $support_link ) . '" target="_blank">'
+					)
 				);
 				break;
 
 			case self::DRM_MEDIUM:
+				// 14-21 days: Admin Notice (Yellow) + Plugin Notification + Site Health (per BuddyBoss DRM Messaging.md)
 				$admin_notice_view = 'medium_warning';
-				$heading           = __( 'BuddyBoss: WARNING! Your Community is at Risk', 'buddyboss' );
-				$color             = 'orange';
-				$simple_message    = __( 'To continue using BuddyBoss without interruption, you need to enter your license key right away. Here\'s how:', 'buddyboss' );
-				$help_message      = __( 'Let us know if you need assistance.', 'buddyboss' );
-				$label             = __( 'Critical', 'buddyboss' );
+				$heading           = __( 'BuddyBoss Pro/Plus: License Required', 'buddyboss' );
+				$color             = 'FFA500'; // Yellow/Orange
+				$simple_message    = __( 'An active license is required to use BuddyBoss Pro/Plus features. Without activation, these features will stop working.', 'buddyboss' );
+				$help_message      = __( 'Activate Your License', 'buddyboss' );
+				$label             = __( 'Warning', 'buddyboss' );
 				$activation_link   = bp_get_admin_url( 'admin.php?page=buddyboss-license' );
 				$message           = sprintf(
-					'<p>%s</p><ul><li>%s</li><li>%s</li><li>%s</li></ul>',
+					'<p>%s</p><p>%s</p>',
 					$simple_message,
 					sprintf(
-						/* translators: %1$s: opening anchor tag, %2$s: closing anchor tag */
-						__( 'Grab your key from your %1$sAccount Page%2$s.', 'buddyboss' ),
-						'<a href="' . esc_url( $account_link ) . '">',
-						'</a>'
-					),
-					sprintf(
-						/* translators: %1$s: opening anchor tag, %2$s: closing anchor tag */
-						__( '%1$sClick here%2$s to enter and activate it.', 'buddyboss' ),
-						'<a href="' . esc_url( $activation_link ) . '">',
-						'</a>'
-					),
-					__( 'That\'s it!', 'buddyboss' )
+						/* translators: %1$s: opening anchor tag for account page, %2$s: closing anchor tag, %3$s: opening anchor tag for support */
+						__( 'Need your license key? Visit %1$sYour Account Page%2$s. Having trouble? %3$sContact Support%2$s.', 'buddyboss' ),
+						'<a href="' . esc_url( $account_link ) . '" target="_blank">',
+						'</a>',
+						'<a href="' . esc_url( $support_link ) . '" target="_blank">'
+					)
 				);
 				break;
 
 			case self::DRM_HIGH:
+				// 21-30 days: Admin Notice (Orange) + Plugin Notification + Site Health + Email (per BuddyBoss DRM Messaging.md)
 				$admin_notice_view = 'high_warning';
-				$heading           = __( 'BuddyBoss: URGENT! Features Will Be Disabled', 'buddyboss' );
-				$color             = 'orange';
-				$simple_message    = __( 'Your BuddyBoss features will be disabled soon without an active license key. To prevent service interruption, activate your license now:', 'buddyboss' );
-				$help_message      = __( 'Contact us immediately if you need help.', 'buddyboss' );
+				$heading           = __( 'BuddyBoss Pro/Plus: Activation Required', 'buddyboss' );
+				$color             = 'FF8C00'; // Dark Orange
+				$simple_message    = __( 'Your BuddyBoss Pro/Plus features will be disabled soon. Activate your license now to avoid interruption.', 'buddyboss' );
+				$help_message      = __( 'Activate Your License', 'buddyboss' );
 				$label             = __( 'Critical', 'buddyboss' );
 				$activation_link   = bp_get_admin_url( 'admin.php?page=buddyboss-license' );
 				$message           = sprintf(
-					'<p>%s</p><ul><li>%s</li><li>%s</li><li>%s</li></ul>',
+					'<p>%s</p><p>%s</p>',
 					$simple_message,
 					sprintf(
-						/* translators: %1$s: opening anchor tag, %2$s: closing anchor tag */
-						__( 'Grab your key from your %1$sAccount Page%2$s.', 'buddyboss' ),
-						'<a href="' . esc_url( $account_link ) . '">',
-						'</a>'
-					),
-					sprintf(
-						/* translators: %1$s: opening anchor tag, %2$s: closing anchor tag */
-						__( '%1$sClick here%2$s to enter and activate it.', 'buddyboss' ),
-						'<a href="' . esc_url( $activation_link ) . '">',
-						'</a>'
-					),
-					__( 'That\'s it!', 'buddyboss' )
+						/* translators: %1$s: opening anchor tag for account page, %2$s: closing anchor tag, %3$s: opening anchor tag for support */
+						__( 'Need your license key? Visit %1$sYour Account Page%2$s. Having trouble? %3$sContact Support%2$s.', 'buddyboss' ),
+						'<a href="' . esc_url( $account_link ) . '" target="_blank">',
+						'</a>',
+						'<a href="' . esc_url( $support_link ) . '" target="_blank">'
+					)
 				);
 				break;
 
 			case self::DRM_LOCKED:
+				// 30+ days: Features Disabled (Red) + Plugin Notification + Site Health + Email (per BuddyBoss DRM Messaging.md)
 				$admin_notice_view = 'locked_warning';
-				$heading           = __( 'ALERT! BuddyBoss Backend is Deactivated', 'buddyboss' );
-				$color             = 'red';
-				$simple_message    = __( 'Because your license key is inactive, you can no longer manage BuddyBoss on the backend. Fortunately, this problem is easy to fix!', 'buddyboss' );
-				$help_message      = __( 'We\'re here to help you get things up and running. Let us know if you need assistance.', 'buddyboss' );
+				$heading           = __( 'BuddyBoss Pro/Plus: Features Disabled', 'buddyboss' );
+				$color             = 'dc3232'; // Red
+				$simple_message    = __( 'The following features have been disabled because no active license was found. Activate your license to restore them.', 'buddyboss' );
+				$help_message      = __( 'Activate Your License', 'buddyboss' );
 				$label             = __( 'Critical', 'buddyboss' );
 				$activation_link   = bp_get_admin_url( 'admin.php?page=buddyboss-license' );
 				$message           = sprintf(
-					'<p>%s</p><ul><li>%s</li><li>%s</li><li>%s</li></ul>',
+					'<p>%s</p><p>%s</p><p>%s</p>',
 					$simple_message,
+					__( 'If you no longer need these features, you can deactivate the premium add-ons in your Plugins page to continue using BuddyBoss Platform for free.', 'buddyboss' ),
 					sprintf(
-						/* translators: %1$s: opening anchor tag, %2$s: closing anchor tag */
-						__( 'Grab your key from your %1$sAccount Page%2$s.', 'buddyboss' ),
-						'<a href="' . esc_url( $account_link ) . '">',
-						'</a>'
-					),
-					sprintf(
-						/* translators: %1$s: opening anchor tag, %2$s: closing anchor tag */
-						__( '%1$sClick here%2$s to enter and activate it.', 'buddyboss' ),
-						'<a href="' . esc_url( $activation_link ) . '">',
-						'</a>'
-					),
-					__( 'That\'s it!', 'buddyboss' )
+						/* translators: %1$s: opening anchor tag for account page, %2$s: closing anchor tag, %3$s: opening anchor tag for support */
+						__( 'Need your license key? Visit %1$sYour Account Page%2$s. Having trouble? %3$sContact Support%2$s.', 'buddyboss' ),
+						'<a href="' . esc_url( $account_link ) . '" target="_blank">',
+						'</a>',
+						'<a href="' . esc_url( $support_link ) . '" target="_blank">'
+					)
 				);
 				break;
 
@@ -617,85 +598,93 @@ class BB_DRM_Helper {
 		);
 
 		switch ( $drm_status ) {
-			case self::DRM_MEDIUM:
-				$admin_notice_view = 'medium_warning';
-				$heading           = __( 'BuddyBoss: WARNING! Your Community is at Risk', 'buddyboss' );
-				$color             = 'orange';
-				$simple_message    = __( 'Your BuddyBoss license key is expired, but is required to continue using BuddyBoss. Fortunately, it\'s easy to renew your license key. Just do the following:', 'buddyboss' );
-				$help_message      = __( 'Let us know if you need assistance.', 'buddyboss' );
-				$label             = __( 'Critical', 'buddyboss' );
+			case self::DRM_LOW:
+				// 7-13 days: Plugin Notification only (per BuddyBoss DRM Messaging.md)
+				$admin_notice_view = 'low_notification';
+				$heading           = __( 'BuddyBoss Pro/Plus: License Activation Needed', 'buddyboss' );
+				$color             = 'FFA500'; // Orange
+				$simple_message    = __( 'We couldn\'t verify an active license for your BuddyBoss Pro/Plus features. Please activate your license to continue using them.', 'buddyboss' );
+				$help_message      = __( 'Activate Your License', 'buddyboss' );
+				$label             = __( 'Notice', 'buddyboss' );
 				$activation_link   = bp_get_admin_url( 'admin.php?page=buddyboss-license' );
 				$message           = sprintf(
-					'<p>%s</p><ul><li>%s</li><li>%s</li><li>%s</li></ul>',
+					'<p>%s</p><p>%s</p>',
 					$simple_message,
 					sprintf(
-						/* translators: %1$s: opening anchor tag, %2$s: closing anchor tag */
-						__( 'Go to BuddyBoss.com and make your selection. %1$sPricing%2$s.', 'buddyboss' ),
-						'<a href="' . esc_url( $pricing_link ) . '">',
-						'</a>'
-					),
+						/* translators: %1$s: opening anchor tag for account page, %2$s: closing anchor tag, %3$s: opening anchor tag for support */
+						__( 'Need your license key? Visit %1$sYour Account Page%2$s. Having trouble? %3$sContact Support%2$s.', 'buddyboss' ),
+						'<a href="' . esc_url( $account_link ) . '" target="_blank">',
+						'</a>',
+						'<a href="' . esc_url( $support_link ) . '" target="_blank">'
+					)
+				);
+				break;
+
+			case self::DRM_MEDIUM:
+				// 14-21 days: Admin Notice (Yellow) + Plugin Notification + Site Health (per BuddyBoss DRM Messaging.md)
+				$admin_notice_view = 'medium_warning';
+				$heading           = __( 'BuddyBoss Pro/Plus: License Required', 'buddyboss' );
+				$color             = 'FFA500'; // Yellow/Orange
+				$simple_message    = __( 'An active license is required to use BuddyBoss Pro/Plus features. Without activation, these features will stop working.', 'buddyboss' );
+				$help_message      = __( 'Activate Your License', 'buddyboss' );
+				$label             = __( 'Warning', 'buddyboss' );
+				$activation_link   = bp_get_admin_url( 'admin.php?page=buddyboss-license' );
+				$message           = sprintf(
+					'<p>%s</p><p>%s</p>',
+					$simple_message,
 					sprintf(
-						/* translators: %1$s: opening anchor tag, %2$s: closing anchor tag */
-						__( '%1$sClick here%2$s to enter and activate your new license key.', 'buddyboss' ),
-						'<a href="' . esc_url( $activation_link ) . '">',
-						'</a>'
-					),
-					__( 'That\'s it!', 'buddyboss' )
+						/* translators: %1$s: opening anchor tag for account page, %2$s: closing anchor tag, %3$s: opening anchor tag for support */
+						__( 'Need your license key? Visit %1$sYour Account Page%2$s. Having trouble? %3$sContact Support%2$s.', 'buddyboss' ),
+						'<a href="' . esc_url( $account_link ) . '" target="_blank">',
+						'</a>',
+						'<a href="' . esc_url( $support_link ) . '" target="_blank">'
+					)
 				);
 				break;
 
 			case self::DRM_HIGH:
+				// 21-30 days: Admin Notice (Orange) + Plugin Notification + Site Health + Email (per BuddyBoss DRM Messaging.md)
 				$admin_notice_view = 'high_warning';
-				$heading           = __( 'BuddyBoss: URGENT! Features Will Be Disabled', 'buddyboss' );
-				$color             = 'orange';
-				$simple_message    = __( 'Your BuddyBoss license key is expired and features will be disabled soon. Renew your license to prevent service interruption:', 'buddyboss' );
-				$help_message      = __( 'Contact us immediately if you need help.', 'buddyboss' );
+				$heading           = __( 'BuddyBoss Pro/Plus: Activation Required', 'buddyboss' );
+				$color             = 'FF8C00'; // Dark Orange
+				$simple_message    = __( 'Your BuddyBoss Pro/Plus features will be disabled soon. Activate your license now to avoid interruption.', 'buddyboss' );
+				$help_message      = __( 'Activate Your License', 'buddyboss' );
 				$label             = __( 'Critical', 'buddyboss' );
 				$activation_link   = bp_get_admin_url( 'admin.php?page=buddyboss-license' );
 				$message           = sprintf(
-					'<p>%s</p><ul><li>%s</li><li>%s</li><li>%s</li></ul>',
+					'<p>%s</p><p>%s</p>',
 					$simple_message,
 					sprintf(
-						/* translators: %1$s: opening anchor tag, %2$s: closing anchor tag */
-						__( 'Go to BuddyBoss.com and make your selection. %1$sPricing%2$s.', 'buddyboss' ),
-						'<a href="' . esc_url( $pricing_link ) . '">',
-						'</a>'
-					),
-					sprintf(
-						/* translators: %1$s: opening anchor tag, %2$s: closing anchor tag */
-						__( '%1$sClick here%2$s to enter and activate your new license key.', 'buddyboss' ),
-						'<a href="' . esc_url( $activation_link ) . '">',
-						'</a>'
-					),
-					__( 'That\'s it!', 'buddyboss' )
+						/* translators: %1$s: opening anchor tag for account page, %2$s: closing anchor tag, %3$s: opening anchor tag for support */
+						__( 'Need your license key? Visit %1$sYour Account Page%2$s. Having trouble? %3$sContact Support%2$s.', 'buddyboss' ),
+						'<a href="' . esc_url( $account_link ) . '" target="_blank">',
+						'</a>',
+						'<a href="' . esc_url( $support_link ) . '" target="_blank">'
+					)
 				);
 				break;
 
 			case self::DRM_LOCKED:
+				// 30+ days: Features Disabled (Red) + Plugin Notification + Site Health + Email (per BuddyBoss DRM Messaging.md)
 				$admin_notice_view = 'locked_warning';
 				$label             = __( 'Critical', 'buddyboss' );
-				$heading           = __( 'ALERT! BuddyBoss Backend is Deactivated', 'buddyboss' );
-				$color             = 'red';
-				$simple_message    = __( 'Without an active license key, BuddyBoss cannot be managed on the backend. Your frontend will remain intact, but you can\'t manage your community. Fortunately, this problem is easy to fix by doing the following:', 'buddyboss' );
+				$heading           = __( 'BuddyBoss Pro/Plus: Features Disabled', 'buddyboss' );
+				$color             = 'dc3232'; // Red
+				$simple_message    = __( 'The following features have been disabled because no active license was found. Activate your license to restore them.', 'buddyboss' );
 				$activation_link   = bp_get_admin_url( 'admin.php?page=buddyboss-license' );
 				$message           = sprintf(
-					'<p>%s</p><ul><li>%s</li><li>%s</li><li>%s</li></ul>',
+					'<p>%s</p><p>%s</p><p>%s</p>',
 					$simple_message,
+					__( 'If you no longer need these features, you can deactivate the premium add-ons in your Plugins page to continue using BuddyBoss Platform for free.', 'buddyboss' ),
 					sprintf(
-						/* translators: %1$s: opening anchor tag, %2$s: closing anchor tag */
-						__( 'Go to BuddyBoss.com and make your selection. %1$sPricing%2$s.', 'buddyboss' ),
-						'<a href="' . esc_url( $pricing_link ) . '">',
-						'</a>'
-					),
-					sprintf(
-						/* translators: %1$s: opening anchor tag, %2$s: closing anchor tag */
-						__( '%1$sClick here%2$s to enter and activate your new license key.', 'buddyboss' ),
-						'<a href="' . esc_url( $activation_link ) . '">',
-						'</a>'
-					),
-					__( 'That\'s it!', 'buddyboss' )
+						/* translators: %1$s: opening anchor tag for account page, %2$s: closing anchor tag, %3$s: opening anchor tag for support */
+						__( 'Need your license key? Visit %1$sYour Account Page%2$s. Having trouble? %3$sContact Support%2$s.', 'buddyboss' ),
+						'<a href="' . esc_url( $account_link ) . '" target="_blank">',
+						'</a>',
+						'<a href="' . esc_url( $support_link ) . '" target="_blank">'
+					)
 				);
-				$help_message      = __( 'We\'re here to help you get things back up and running. Let us know if you need assistance.', 'buddyboss' );
+				$help_message      = __( 'Activate Your License', 'buddyboss' );
 				break;
 
 			default:
@@ -715,6 +704,9 @@ class BB_DRM_Helper {
 
 	/**
 	 * Parse event arguments from a JSON string.
+	 *
+	 * NOTE: This method is kept for backward compatibility with external plugins.
+	 * It is not used internally by BuddyBoss DRM.
 	 *
 	 * @param string $args The JSON string of arguments.
 	 * @return array The parsed event arguments.

@@ -36,19 +36,19 @@ class BB_DRM_NoKey extends BB_Base_DRM {
 		if ( $event ) {
 			$days = BB_DRM_Helper::days_elapsed( $event->created_at );
 
-			// New timeline for Platform no license key:
-			// 0-7 days: No impact
-			// 7-14 days: Notification informing license key not activated
-			// 14-21 days: Yellow Warning (activate license)
-			// 21-30 days: Orange Warning (features will be disabled)
-			// 30+ days: Red Warning (backend settings blocked)
-			if ( $days >= 7 && $days < 14 ) {
+			// Timeline for Platform no license key per BuddyBoss DRM Messaging.md:
+			// 0-7 days: No messaging (grace period)
+			// 7-13 days: Plugin Notification (Inbox)
+			// 14-21 days: Plugin Notification + Admin Bar/Notice (Yellow) + Site Health
+			// 21-30 days: Plugin Notification + Admin Bar/Notice (Orange) + Site Health + Admin Email
+			// 30+ days: Features Disabled + Admin Bar/Notice (Red) + Site Health + Admin Email
+			if ( $days >= 7 && $days <= 13 ) {
 				$this->set_status( BB_DRM_Helper::DRM_LOW );
-			} elseif ( $days >= 14 && $days < 21 ) {
+			} elseif ( $days >= 14 && $days <= 21 ) {
 				$this->set_status( BB_DRM_Helper::DRM_MEDIUM );
-			} elseif ( $days >= 21 && $days < 30 ) {
+			} elseif ( $days >= 22 && $days <= 30 ) {
 				$this->set_status( BB_DRM_Helper::DRM_HIGH );
-			} elseif ( $days >= 30 ) {
+			} elseif ( $days >= 31 ) {
 				$this->set_status( BB_DRM_Helper::DRM_LOCKED );
 			}
 		}

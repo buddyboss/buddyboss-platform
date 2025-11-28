@@ -53,8 +53,9 @@ class BB_DRM_Registry {
 		// Hook consolidated admin notices.
 		add_action( 'admin_notices', array( $this, 'render_consolidated_admin_notices' ), 5 );
 
-		// Hook Site Health tests for add-ons.
-		add_filter( 'site_status_tests', array( $this, 'add_addon_site_health_tests' ) );
+		// NOTE: Site Health tests are NOT consolidated.
+		// Each addon adds its own Site Health test via their individual DRM_Handler classes.
+		// This ensures each addon shows separate status in Site Health screen.
 	}
 
 	/**
@@ -752,6 +753,11 @@ class BB_DRM_Registry {
 			$affected_addons   = $grouped['locked'];
 			$status_key        = 'drm_locked';
 			$should_send_email = $this->should_send_status_email( $grouped['locked'], $status_key );
+		} elseif ( ! empty( $grouped['high'] ) ) {
+			$highest_priority  = BB_DRM_Helper::DRM_HIGH;
+			$affected_addons   = $grouped['high'];
+			$status_key        = 'drm_high';
+			$should_send_email = $this->should_send_status_email( $grouped['high'], $status_key );
 		} elseif ( ! empty( $grouped['medium'] ) ) {
 			$highest_priority  = BB_DRM_Helper::DRM_MEDIUM;
 			$affected_addons   = $grouped['medium'];
@@ -957,95 +963,29 @@ class BB_DRM_Registry {
 	/**
 	 * Add Site Health tests for add-ons.
 	 *
+	 * DEPRECATED: Individual addons now add their own Site Health tests.
+	 * This consolidated test has been removed to show separate status for each addon.
+	 *
+	 * @deprecated 3.1.0 Each addon adds its own Site Health test via DRM_Handler.
 	 * @param array $tests Site Health tests array.
 	 * @return array Modified tests array.
 	 */
 	public function add_addon_site_health_tests( $tests ) {
-		$tests['direct']['buddyboss_addon_license_status'] = array(
-			'label' => __( 'BuddyBoss Pro/Plus License Status', 'buddyboss' ),
-			'test'  => array( $this, 'site_health_addon_license_test' ),
-		);
-
+		// No longer adds consolidated test.
+		// Each addon (Pro, Sharing, Gamification, etc.) adds its own test.
 		return $tests;
 	}
 
 	/**
 	 * Site Health test for add-on license status.
 	 *
+	 * DEPRECATED: Individual addons now show their own Site Health status.
+	 *
+	 * @deprecated 3.1.0 Each addon has its own site_health_drm_test() method.
 	 * @return array Test result.
 	 */
 	public function site_health_addon_license_test() {
-		$grouped = self::get_addons_by_drm_status();
-
-		// Check for locked status (Critical).
-		if ( ! empty( $grouped['locked'] ) ) {
-			$addon_names = wp_list_pluck( $grouped['locked'], 'plugin_name' );
-			return array(
-				'label'       => __( 'BuddyBoss Pro/Plus features have been disabled', 'buddyboss' ),
-				'status'      => 'critical',
-				'badge'       => array(
-					'label' => __( 'BuddyBoss', 'buddyboss' ),
-					'color' => 'red',
-				),
-				'description' => sprintf(
-					'<p>%s</p>',
-					__( 'BuddyBoss Pro/Plus features on your site have been disabled because no active license was found. Activate your license to restore functionality, or deactivate premium add-ons in your Plugins page to continue using BuddyBoss Platform for free.', 'buddyboss' )
-				),
-				'actions'     => sprintf(
-					'<p><a href="%s" class="button button-primary">%s</a></p>',
-					bp_get_admin_url( 'admin.php?page=buddyboss-license' ),
-					__( 'Activate License', 'buddyboss' )
-				),
-				'test'        => 'buddyboss_addon_license_status',
-			);
-		}
-
-		// Check for high status (Recommended).
-		if ( ! empty( $grouped['high'] ) ) {
-			return array(
-				'label'       => __( 'BuddyBoss Pro/Plus license requires activation', 'buddyboss' ),
-				'status'      => 'recommended',
-				'badge'       => array(
-					'label' => __( 'BuddyBoss', 'buddyboss' ),
-					'color' => 'orange',
-				),
-				'description' => sprintf(
-					'<p>%s</p>',
-					__( 'Your site is using BuddyBoss Pro/Plus features without an active license. These features will be disabled if a license is not activated soon.', 'buddyboss' )
-				),
-				'actions'     => sprintf(
-					'<p><a href="%s" class="button button-primary">%s</a></p>',
-					bp_get_admin_url( 'admin.php?page=buddyboss-license' ),
-					__( 'Activate License', 'buddyboss' )
-				),
-				'test'        => 'buddyboss_addon_license_status',
-			);
-		}
-
-		// Check for medium status (Recommended).
-		if ( ! empty( $grouped['medium'] ) ) {
-			return array(
-				'label'       => __( 'BuddyBoss Pro/Plus license is not activated', 'buddyboss' ),
-				'status'      => 'recommended',
-				'badge'       => array(
-					'label' => __( 'BuddyBoss', 'buddyboss' ),
-					'color' => 'blue',
-				),
-				'description' => sprintf(
-					'<p>%s</p>',
-					__( 'Your site is using BuddyBoss Pro/Plus features that require an active license. Activate your license to ensure continued access to these features.', 'buddyboss' )
-				),
-				'actions'     => sprintf(
-					'<p><a href="%s" class="button button-primary">%s</a></p>',
-					bp_get_admin_url( 'admin.php?page=buddyboss-license' ),
-					__( 'Activate License', 'buddyboss' )
-				),
-				'test'        => 'buddyboss_addon_license_status',
-			);
-		}
-
-		// LOW status - no Site Health test per spec
-		// All addons licensed - return good status.
+		// Deprecated - each addon shows its own status now.
 		return array(
 			'label'       => __( 'BuddyBoss Pro/Plus license is active', 'buddyboss' ),
 			'status'      => 'good',
@@ -1055,7 +995,7 @@ class BB_DRM_Registry {
 			),
 			'description' => sprintf(
 				'<p>%s</p>',
-				__( 'Your BuddyBoss Pro/Plus features are active with a valid license.', 'buddyboss' )
+				__( 'Individual addon license status is shown separately for each addon.', 'buddyboss' )
 			),
 			'actions'     => '',
 			'test'        => 'buddyboss_addon_license_status',

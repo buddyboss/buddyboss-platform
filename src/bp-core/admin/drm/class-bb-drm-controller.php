@@ -124,15 +124,39 @@ class BB_DRM_Controller {
 	/**
 	 * Initialize DRM checks.
 	 *
-	 * NOTE: Platform itself does NOT run DRM checks or lock features.
-	 * Platform only provides centralized DRM infrastructure for add-on plugins.
-	 * Add-ons (Pro, Gamification, etc.) manage their own lockout via BB_DRM_Registry.
+	 * Runs Platform DRM checks for no-license and invalid-license scenarios.
+	 * Sends emails, notifications, and admin notices based on license status.
+	 * Add-ons manage their own lockout via BB_DRM_Registry.
 	 */
 	public function drm_init() {
-		// Platform does not lock itself out.
-		// Only add-on plugins should check and enforce DRM.
-		// All DRM functionality for add-ons is handled through BB_DRM_Registry.
-		return;
+		// Check if Platform license is valid.
+		if ( BB_DRM_Helper::is_valid() ) {
+			// License is valid - no DRM checks needed.
+			return;
+		}
+
+		// License is not valid - determine which DRM check to run.
+		$has_license_key = BB_DRM_Helper::has_key();
+
+		if ( ! $has_license_key ) {
+			// No license key scenario.
+			$drm_no_license = get_option( 'bb_drm_no_license', false );
+
+			if ( $drm_no_license ) {
+				// Event already exists, run DRM checks.
+				$drm = new BB_DRM_NoKey();
+				$drm->run();
+			}
+		} else {
+			// Invalid/expired license key scenario.
+			$drm_invalid_license = get_option( 'bb_drm_invalid_license', false );
+
+			if ( $drm_invalid_license ) {
+				// Event already exists, run DRM checks.
+				$drm = new BB_DRM_Invalid();
+				$drm->run();
+			}
+		}
 	}
 
 	/**

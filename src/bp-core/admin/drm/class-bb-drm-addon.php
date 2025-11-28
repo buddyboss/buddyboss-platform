@@ -135,212 +135,12 @@ class BB_DRM_Addon extends BB_Base_DRM {
 	/**
 	 * Check if running on staging server.
 	 *
-	 * @return bool True if staging server.
+	 * Staging server detection is disabled as it's handled by BB_DRM_Helper::is_dev_environment().
+	 *
+	 * @return bool Always returns false.
 	 */
 	private function is_staging_server() {
-		// Use Platform Pro function if available.
-		if ( function_exists( 'bb_pro_check_staging_server' ) ) {
-			return bb_pro_check_staging_server();
-		}
-
-		// Otherwise use our own detection.
-		return $this->check_staging_environment();
-	}
-
-	/**
-	 * Staging environment detection.
-	 *
-	 * @return bool True if staging environment detected.
-	 */
-	private function check_staging_environment() {
-		$raw_domain = site_url();
-
-		// Reserved hosting provider domains.
-		$reserved_hosting_provider_domains = array(
-			'accessdomain',
-			'cloudwaysapps',
-			'flywheelsites',
-			'kinsta',
-			'mybluehost',
-			'myftpupload',
-			'netsolhost',
-			'pantheonsite',
-			'sg-host',
-			'wpengine',
-			'wpenginepowered',
-			'rapydapps.cloud',
-		);
-
-		// Reserved words.
-		$reserved_words = array(
-			'dev',
-			'develop',
-			'development',
-			'test',
-			'testing',
-			'stg',
-			'stage',
-			'staging',
-			'demo',
-			'sandbox',
-			'preview',
-		);
-
-		// Reserved TLDs.
-		$reserved_tlds = array(
-			'local',
-			'localhost',
-			'test',
-			'example',
-			'invalid',
-			'dev',
-		);
-
-		// Check for reserved hosting provider domains.
-		foreach ( $reserved_hosting_provider_domains as $provider_domain ) {
-			if ( stripos( $raw_domain, $provider_domain ) !== false ) {
-				return true;
-			}
-		}
-
-		// Parse the domain.
-		$parsed_url = wp_parse_url( $raw_domain );
-		$host       = isset( $parsed_url['host'] ) ? $parsed_url['host'] : '';
-
-		// Check for reserved words in domain.
-		foreach ( $reserved_words as $word ) {
-			if ( stripos( $host, $word ) !== false ) {
-				return true;
-			}
-		}
-
-		// Check for reserved TLDs.
-		$host_parts = explode( '.', $host );
-		$tld        = end( $host_parts );
-		if ( in_array( strtolower( $tld ), $reserved_tlds, true ) ) {
-			return true;
-		}
-
-		// Check for IP addresses.
-		if ( filter_var( $host, FILTER_VALIDATE_IP ) ) {
-			return true;
-		}
-
 		return false;
-	}
-
-	/**
-	 * Get DRM information specific to this add-on.
-	 *
-	 * @param string $drm_status The DRM status.
-	 * @param string $purpose    The purpose of the information.
-	 * @return array The DRM information.
-	 */
-	protected function get_addon_drm_info( $drm_status, $purpose ) {
-		$account_link = BB_DRM_Helper::get_drm_link( $drm_status, $purpose, 'account' );
-		$support_link = BB_DRM_Helper::get_drm_link( $drm_status, $purpose, 'support' );
-		$pricing_link = BB_DRM_Helper::get_drm_link( $drm_status, $purpose, 'pricing' );
-
-		$activation_link = bp_get_admin_url( 'admin.php?page=buddyboss-license' );
-
-		// Get plugin edition name (Pro or Plus)
-		$edition_name = $this->get_edition_name();
-
-		switch ( $drm_status ) {
-			case BB_DRM_Helper::DRM_LOW:
-				// 7-13 days: Plugin Notification only
-				$heading = sprintf(
-					/* translators: %s: edition name (Pro/Plus) */
-					__( 'BuddyBoss %s: License Activation Needed', 'buddyboss' ),
-					$edition_name
-				);
-				$message = sprintf(
-					/* translators: %s: edition name (Pro/Plus) */
-					__( 'We couldn\'t verify an active license for your BuddyBoss %s features. Please activate your license to continue using them.', 'buddyboss' ),
-					$edition_name
-				);
-				$color   = 'orange';
-				$label   = __( 'Notice', 'buddyboss' );
-				break;
-
-			case BB_DRM_Helper::DRM_MEDIUM:
-				// 14-21 days: Notice (Yellow)
-				$heading = sprintf(
-					/* translators: %s: edition name (Pro/Plus) */
-					__( 'BuddyBoss %s: License Required', 'buddyboss' ),
-					$edition_name
-				);
-				$message = sprintf(
-					/* translators: %s: edition name (Pro/Plus) */
-					__( 'An active license is required to use BuddyBoss %s features. Without activation, these features will stop working.', 'buddyboss' ),
-					$edition_name
-				);
-				$color   = 'FFA500'; // Yellow/Orange
-				$label   = __( 'Warning', 'buddyboss' );
-				break;
-
-			case BB_DRM_Helper::DRM_HIGH:
-				// 21-30 days: Notice (Orange)
-				$heading = sprintf(
-					/* translators: %s: edition name (Pro/Plus) */
-					__( 'BuddyBoss %s: Activation Required', 'buddyboss' ),
-					$edition_name
-				);
-				$message = sprintf(
-					/* translators: %s: edition name (Pro/Plus) */
-					__( 'Your BuddyBoss %s features will be disabled soon. Activate your license now to avoid interruption.', 'buddyboss' ),
-					$edition_name
-				);
-				$color   = 'FF8C00'; // Dark Orange
-				$label   = __( 'Critical', 'buddyboss' );
-				break;
-
-			case BB_DRM_Helper::DRM_LOCKED:
-				// 30+ days: Notice (Red)
-				$heading = sprintf(
-					/* translators: %s: edition name (Pro/Plus) */
-					__( 'BuddyBoss %s: Features Disabled', 'buddyboss' ),
-					$edition_name
-				);
-				$message = sprintf(
-					/* translators: %s: edition name (Pro/Plus) */
-					__( 'The following features have been disabled because no active license was found. Activate your license to restore them.', 'buddyboss' ),
-					$edition_name
-				);
-				$message .= '<p>' . __( 'If you no longer need these features, you can deactivate the premium add-ons in your Plugins page to continue using BuddyBoss Platform for free.', 'buddyboss' ) . '</p>';
-				$color   = 'dc3232'; // Red
-				$label   = __( 'Critical', 'buddyboss' );
-				break;
-
-			default:
-				$heading = '';
-				$message = '';
-				$color   = '';
-				$label   = '';
-		}
-
-		return compact( 'heading', 'color', 'message', 'label', 'activation_link', 'account_link', 'support_link', 'pricing_link' );
-	}
-
-	/**
-	 * Get the edition name (Pro or Plus) for this add-on.
-	 *
-	 * @return string Edition name.
-	 */
-	private function get_edition_name() {
-		// Map product slugs to edition names
-		$edition_map = array(
-			'buddyboss-platform-pro' => 'Pro',
-			'buddyboss-plus'         => 'Plus',
-		);
-
-		// Check if this product has a specific edition name
-		if ( isset( $edition_map[ $this->product_slug ] ) ) {
-			return $edition_map[ $this->product_slug ];
-		}
-
-		// Default: use plugin name or 'Pro/Plus'
-		return 'Pro/Plus';
 	}
 
 	/**
@@ -401,32 +201,23 @@ class BB_DRM_Addon extends BB_Base_DRM {
 	/**
 	 * Sends an email notification for this add-on.
 	 *
-	 * NOTE: Individual addon emails are now disabled in favor of consolidated emails
-	 * managed by BB_DRM_Registry. This prevents sending multiple separate emails when
-	 * multiple addons have license issues.
+	 * NOTE: Individual addon emails are disabled. All emails are sent via
+	 * BB_DRM_Registry::send_consolidated_email() to prevent duplicate emails.
 	 *
-	 * @deprecated Individual addon emails replaced by consolidated email in BB_DRM_Registry.
 	 * @param string $drm_status The DRM status.
 	 */
 	protected function send_email( $drm_status ) {
-		// Emails are now handled by BB_DRM_Registry::send_consolidated_email()
-		// to send a single grouped email for all addons with license issues.
-		return;
+		// No-op: Consolidated emails handled by BB_DRM_Registry.
 	}
 
 	/**
 	 * Displays admin notices related to DRM for this add-on.
 	 *
-	 * NOTE: Individual addon notices are now disabled in favor of consolidated notices
-	 * rendered by BB_DRM_Registry. This prevents duplicate notices when multiple addons
-	 * have license issues.
-	 *
-	 * @deprecated Individual addon notices replaced by consolidated notices in BB_DRM_Registry.
+	 * NOTE: Individual addon notices are disabled. All notices are rendered via
+	 * BB_DRM_Registry::render_consolidated_admin_notices() to prevent duplicate notices.
 	 */
 	public function admin_notices() {
-		// Notices are now handled by BB_DRM_Registry::render_consolidated_admin_notices()
-		// to prevent showing multiple separate notices when multiple addons need licenses.
-		return;
+		// No-op: Consolidated notices handled by BB_DRM_Registry.
 	}
 
 	/**
