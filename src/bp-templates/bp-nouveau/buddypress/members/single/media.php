@@ -26,19 +26,35 @@ if ( bp_is_user() && bb_enable_content_counts() ) {
 			}
 
 			if ( false !== $count ) {
-				printf(
-					wp_kses(
-						/* translators: %d is the count */
-						_n(
-							'<span class="bb-count">%d</span> ' . ( 'albums' === $bp_current_action ? 'Album' : 'Photo' ),
-							'<span class="bb-count">%d</span> ' . ( 'albums' === $bp_current_action ? 'Albums' : 'Photos' ),
-							$count,
-							'buddyboss'
+				if ( 'albums' === $bp_current_action ) {
+					printf(
+						wp_kses(
+							/* translators: %d is the count */
+							_n(
+								'<span class="bb-count">%d</span> Album',
+								'<span class="bb-count">%d</span> Albums',
+								$count,
+								'buddyboss'
+							),
+							array( 'span' => array( 'class' => true ) )
 						),
-						array( 'span' => array( 'class' => true ) )
-					),
-					(int) $count
-				);
+						(int) $count
+					);
+				} else {
+					printf(
+						wp_kses(
+							/* translators: %d is the count */
+							_n(
+								'<span class="bb-count">%d</span> Photo',
+								'<span class="bb-count">%d</span> Photos',
+								$count,
+								'buddyboss'
+							),
+							array( 'span' => array( 'class' => true ) )
+						),
+						(int) $count
+					);
+				}
 			}
 
 			unset( $count );
