@@ -83,7 +83,15 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			}
 
 			$this->load_template_stack();
-			$this->load_login_registration_integration();
+			
+			// Load login registration integration if enabled in ReadyLaunch settings.
+			if ( $this->bb_rl_is_page_enabled_for_integration( 'registration' ) ) {
+				$this->load_login_registration_integration();
+			} else {
+				// Enqueue default login styles when readylaunch is enabled but login/registration setting is disabled
+				$this->load_default_styles_fallback();
+			}
+			
 			$this->load_hooks();
 
 			// Added support for Forums integration.
@@ -237,6 +245,23 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			add_action( 'login_form_login', array( $this, 'bb_rl_overwrite_login_email_field_label_hook' ) );
 
 			add_action( 'wp_login_errors', array( $this, 'bb_rl_wp_login_errors' ) );
+		}
+
+		/**
+		 * Load default styles fallback for login pages when readylaunch is enabled but setting is disabled.
+		 *
+		 * @since BuddyBoss 2.9.00
+		 */
+		protected function load_default_styles_fallback() {
+			// Re-enqueue default BuddyBoss theme stylesheets for login pages
+			// when readylaunch is enabled but the setting is disabled
+			add_action( 'login_enqueue_scripts', array( $this, 'bb_rl_enqueue_default_login_styles' ), 999 );
+			
+			// Add filter to replace placeholder content with actual register content
+			add_filter( 'the_content', array( $this, 'bb_rl_replace_register_content' ), 999 );
+			
+			// Add filter to apply proper container classes for register page
+			add_filter( 'post_class', array( $this, 'bb_rl_add_register_post_classes' ), 999 );
 		}
 
 		/**
@@ -953,9 +978,72 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				return $template;
 			}
 
+			// If this is a register page but ReadyLaunch registration is disabled,
+			// bypass ReadyLaunch templates and use default BuddyBoss templates
 			if ( bp_is_register_page() ) {
-				$this->bb_rl_required_load();
-				return bp_locate_template( 'register.php' );
+				
+				if ( $this->bb_rl_is_page_enabled_for_integration( 'registration' ) ) {
+					$this->bb_rl_required_load();
+					return bp_locate_template( 'register.php' );
+				} else {
+					// Registration is disabled in ReadyLaunch, use default BuddyBoss template system
+					
+					// Remove ReadyLaunch template stack and restore default BuddyBoss template stack
+					remove_filter( 'bp_get_template_stack', array( $this, 'add_template_stack' ), PHP_INT_MAX );
+					add_filter( 'bp_get_template_stack', 'bp_add_template_stack_locations' );
+					
+					// Also restore the forum template stack
+					remove_filter( 'bbp_get_template_stack', array( $this, 'add_forum_template_stack' ), PHP_INT_MAX );
+					add_filter( 'bbp_get_template_stack', 'bbp_add_template_stack_locations' );
+					
+					// Ensure BuddyBoss template system is fully functional
+					do_action( 'bp_template_redirect' );
+					
+					// Force BuddyBoss to use the theme's page template instead of ReadyLaunch template
+					// Prefer the theme's buddypress.php so the register logo container renders
+					$theme_buddypress_template = trailingslashit( get_stylesheet_directory() ) . 'buddypress.php';
+					// Fallback to the selected page template
+					$theme_template = get_page_template();
+					
+					// Set up the page content to include the BuddyBoss register form
+					// We need to make sure the page content includes the register form
+					global $post;
+					if ( ! $post ) {
+						$post = new stdClass();
+					}
+					
+					// Get the BuddyBoss register template content directly with proper container structure
+					// Apply the same container class that the theme uses for register pages
+					ob_start();
+					echo '<div id="buddypress" class="buddypress-wrap extended-default-reg">';
+					bp_get_template_part( 'members/register' );
+					echo '</div>';
+					$register_content = ob_get_clean();
+					
+					// Store the content in a global variable to bypass WordPress content processing
+					global $bb_register_content;
+					$bb_register_content = $register_content;
+					
+					// Set a flag to indicate we're using custom content
+					$post->post_content = '<!-- BB_REGISTER_CONTENT -->';
+					$post->post_title = 'Create an Account';
+					$post->post_type = 'page';
+					$post->ID = 0;
+					
+					// If the theme provides buddypress.php, use it to get the correct register layout (logo, wrappers, etc.)
+					if ( file_exists( $theme_buddypress_template ) ) {
+						return $theme_buddypress_template;
+					} elseif ( $theme_template && file_exists( $theme_template ) ) {
+						return $theme_template;
+					} else {
+						// Fallback to index.php if page template not found
+						$index_template = get_template_directory() . '/index.php';
+						if ( file_exists( $index_template ) ) {
+							return $index_template;
+						}
+						return $template;
+					}
+				}
 			}
 
 			if ( bp_is_activation_page() ) {
@@ -4589,6 +4677,96 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			$visibility_levels['adminsonly']['label'] = __( 'Only me', 'buddyboss' );
 
 			return $visibility_levels;
+		}
+
+		/**
+		 * Enqueue default login styles when readylaunch is enabled but login/registration setting is disabled.
+		 *
+		 * @since BuddyBoss 2.9.00
+		 */
+		public function bb_rl_enqueue_default_login_styles() {
+			// Check if we're on wp-login.php (login or register page)
+			$is_wp_login_page = isset( $GLOBALS['pagenow'] ) && 'wp-login.php' === $GLOBALS['pagenow'];
+			$is_register_action = isset( $_GET['action'] ) && 'register' === $_GET['action'];
+			$is_bp_register_page = function_exists( 'bp_is_register_page' ) && bp_is_register_page();
+			
+			// Only enqueue if we're on a login/register page and the setting is disabled
+			if ( ! $is_wp_login_page && ! $is_bp_register_page ) {
+				return;
+			}
+			
+			$registration_enabled = $this->bb_rl_is_page_enabled_for_integration( 'registration' );
+			if ( $registration_enabled ) {
+				return;
+			}
+			
+			$mincss = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
+			$rtl_css = is_rtl() ? '-rtl' : '';
+
+			// Enqueue Platform's buddypress.css
+			$bp_buddypress_url = buddypress()->plugin_url . "bp-templates/bp-nouveau/css/buddypress{$mincss}.css";
+			wp_enqueue_style( 'bp-nouveau', $bp_buddypress_url, '', bp_get_version() );
+
+			// Only enqueue BuddyBoss theme stylesheets if the theme is available
+			if ( function_exists( 'buddyboss_theme' ) ) {
+				// Enqueue BB icons stylesheets
+				$bb_icon_version = bb_icon_font_map( 'version' );
+				$bb_icon_version = ! empty( $bb_icon_version ) ? $bb_icon_version : buddyboss_theme()->version();
+				
+				$icons_map_url = get_template_directory_uri() . '/assets/css/icons-map' . $mincss . '.css';
+				$icons_url = get_template_directory_uri() . '/assets/icons/css/bb-icons' . $mincss . '.css';
+				
+				wp_enqueue_style( 'buddyboss-theme-icons-map', $icons_map_url, '', buddyboss_theme()->version() );
+				wp_enqueue_style( 'buddyboss-theme-icons', $icons_url, '', $bb_icon_version );
+
+				if ( buddyboss_is_bp_active() ) {
+					$buddypress_url = get_template_directory_uri() . '/assets/css' . $rtl_css . '/buddypress' . $mincss . '.css';
+					wp_enqueue_style( 'buddyboss-theme-buddypress', $buddypress_url, '', buddyboss_theme()->version() );
+				}
+
+				// Enqueue login stylesheet
+				$login_url = get_template_directory_uri() . '/assets/css' . $rtl_css . '/login' . $mincss . '.css';
+				wp_enqueue_style( 'buddyboss-theme-login', $login_url, '', buddyboss_theme()->version() );
+			}
+		}
+		
+		/**
+		 * Replace placeholder content with actual register content
+		 *
+		 * @since BuddyBoss 2.9.00
+		 */
+		public function bb_rl_replace_register_content( $content ) {
+			// Only replace content on register page
+			if ( ! function_exists( 'bp_is_register_page' ) || ! bp_is_register_page() ) {
+				return $content;
+			}
+			
+			// Check if this is our placeholder content
+			if ( strpos( $content, '<!-- BB_REGISTER_CONTENT -->' ) !== false ) {
+				global $bb_register_content;
+				if ( ! empty( $bb_register_content ) ) {
+					return $bb_register_content;
+				}
+			}
+			
+			return $content;
+		}
+		
+		/**
+		 * Add register page post classes to primary container
+		 *
+		 * @since BuddyBoss 2.9.00
+		 */
+		public function bb_rl_add_register_post_classes( $classes ) {
+			// Only apply on register page
+			if ( ! function_exists( 'bp_is_register_page' ) || ! bp_is_register_page() ) {
+				return $classes;
+			}
+			
+			// Add the same container class that the default register page has
+			$classes[] = 'bs-bp-container-reg';
+			
+			return $classes;
 		}
 	}
 }
