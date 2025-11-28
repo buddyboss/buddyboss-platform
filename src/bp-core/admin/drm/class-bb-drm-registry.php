@@ -53,9 +53,8 @@ class BB_DRM_Registry {
 		// Hook consolidated admin notices.
 		add_action( 'admin_notices', array( $this, 'render_consolidated_admin_notices' ), 5 );
 
-		// NOTE: Site Health tests are NOT consolidated.
-		// Each addon adds its own Site Health test via their individual DRM_Handler classes.
-		// This ensures each addon shows separate status in Site Health screen.
+		// Hook consolidated Site Health test.
+		add_filter( 'site_status_tests', array( $this, 'add_addon_site_health_tests' ) );
 	}
 
 	/**
@@ -963,29 +962,283 @@ class BB_DRM_Registry {
 	/**
 	 * Add Site Health tests for add-ons.
 	 *
-	 * DEPRECATED: Individual addons now add their own Site Health tests.
-	 * This consolidated test has been removed to show separate status for each addon.
+	 * Adds consolidated Site Health tests grouped by priority level.
+	 * Shows all affected addons within each priority level (LOCKED, HIGH, MEDIUM, LOW).
 	 *
-	 * @deprecated 3.1.0 Each addon adds its own Site Health test via DRM_Handler.
+	 * @since 3.0.0
 	 * @param array $tests Site Health tests array.
 	 * @return array Modified tests array.
 	 */
 	public function add_addon_site_health_tests( $tests ) {
-		// No longer adds consolidated test.
-		// Each addon (Pro, Sharing, Gamification, etc.) adds its own test.
+		$grouped = self::get_addons_by_drm_status();
+
+		// Add test for each priority level that has affected addons.
+		// We create separate tests per priority so admins can see the severity breakdown.
+		if ( ! empty( $grouped['locked'] ) ) {
+			$tests['direct']['buddyboss_addons_locked'] = array(
+				'label' => __( 'BuddyBoss Pro/Plus License - Features Disabled', 'buddyboss' ),
+				'test'  => array( $this, 'site_health_locked_test' ),
+			);
+		}
+
+		if ( ! empty( $grouped['high'] ) ) {
+			$tests['direct']['buddyboss_addons_high'] = array(
+				'label' => __( 'BuddyBoss Pro/Plus License - Urgent Action Required', 'buddyboss' ),
+				'test'  => array( $this, 'site_health_high_test' ),
+			);
+		}
+
+		if ( ! empty( $grouped['medium'] ) ) {
+			$tests['direct']['buddyboss_addons_medium'] = array(
+				'label' => __( 'BuddyBoss Pro/Plus License - Action Required', 'buddyboss' ),
+				'test'  => array( $this, 'site_health_medium_test' ),
+			);
+		}
+
+		if ( ! empty( $grouped['low'] ) ) {
+			$tests['direct']['buddyboss_addons_low'] = array(
+				'label' => __( 'BuddyBoss Pro/Plus License - Activation Needed', 'buddyboss' ),
+				'test'  => array( $this, 'site_health_low_test' ),
+			);
+		}
+
 		return $tests;
 	}
 
 	/**
-	 * Site Health test for add-on license status.
+	 * Site Health test for LOCKED status (31+ days).
 	 *
-	 * DEPRECATED: Individual addons now show their own Site Health status.
-	 *
-	 * @deprecated 3.1.0 Each addon has its own site_health_drm_test() method.
+	 * @since 3.0.0
 	 * @return array Test result.
 	 */
-	public function site_health_addon_license_test() {
-		// Deprecated - each addon shows its own status now.
+	public function site_health_locked_test() {
+		$grouped = self::get_addons_by_drm_status();
+
+		if ( empty( $grouped['locked'] ) ) {
+			return $this->get_site_health_pass();
+		}
+
+		$addons      = $grouped['locked'];
+		$addon_names = wp_list_pluck( $addons, 'plugin_name' );
+
+		$activation_link = bp_get_admin_url( 'admin.php?page=buddyboss-license' );
+		$account_link    = 'https://www.buddyboss.com/my-account/';
+		$support_link    = 'https://www.buddyboss.com/support/';
+		$pricing_link    = 'https://www.buddyboss.com/pricing/';
+
+		$title = __( 'BuddyBoss Pro/Plus: Features Disabled', 'buddyboss' );
+
+		// Build addon list
+		$addon_list = '<p><strong>' . __( 'The following features have been disabled:', 'buddyboss' ) . '</strong></p>';
+		$addon_list .= '<ul style="margin: 10px 0; padding-left: 20px;">';
+		foreach ( $addon_names as $name ) {
+			$addon_list .= '<li>' . esc_html( $name ) . '</li>';
+		}
+		$addon_list .= '</ul>';
+
+		$message = sprintf(
+			/* translators: %1$s: Account page link, %2$s: Settings page link, %3$s: Support link */
+			__( 'Without an active license, the features listed below have been disabled. Your site frontend is unaffected, but these premium features are unavailable.<br><br>%1$s<br>This is easy to fix:<br><br>1. Get your key from your <a href="%2$s" target="_blank">Account Page</a><br>2. <a href="%3$s">Click here</a> to enter and activate it<br>3. That\'s it!<br><br>We\'re here to help. <a href="%4$s" target="_blank">Contact Support</a>', 'buddyboss' ),
+			$addon_list,
+			$account_link,
+			$activation_link,
+			$support_link
+		);
+
+		return array(
+			'label'       => $title,
+			'status'      => 'critical',
+			'badge'       => array(
+				'label' => __( 'BuddyBoss', 'buddyboss' ),
+				'color' => 'red',
+			),
+			'description' => sprintf( '<p>%s</p>', $message ),
+			'actions'     => sprintf(
+				'<p><a href="%s" class="button button-primary">%s</a></p><p><a href="%s" target="_blank" class="button">%s</a></p>',
+				esc_url( $activation_link ),
+				esc_html__( 'Activate License', 'buddyboss' ),
+				esc_url( $pricing_link ),
+				esc_html__( 'Purchase License', 'buddyboss' )
+			),
+			'test'        => 'buddyboss_addons_locked',
+		);
+	}
+
+	/**
+	 * Site Health test for HIGH status (22-30 days).
+	 *
+	 * @since 3.0.0
+	 * @return array Test result.
+	 */
+	public function site_health_high_test() {
+		$grouped = self::get_addons_by_drm_status();
+
+		if ( empty( $grouped['high'] ) ) {
+			return $this->get_site_health_pass();
+		}
+
+		$addons      = $grouped['high'];
+		$addon_names = wp_list_pluck( $addons, 'plugin_name' );
+
+		$activation_link = bp_get_admin_url( 'admin.php?page=buddyboss-license' );
+		$account_link    = 'https://www.buddyboss.com/my-account/';
+		$support_link    = 'https://www.buddyboss.com/support/';
+
+		$title = __( 'BuddyBoss Pro/Plus: Activation Required', 'buddyboss' );
+
+		// Build addon list
+		$addon_list = '<p><strong>' . __( 'The following features will be disabled soon:', 'buddyboss' ) . '</strong></p>';
+		$addon_list .= '<ul style="margin: 10px 0; padding-left: 20px;">';
+		foreach ( $addon_names as $name ) {
+			$addon_list .= '<li>' . esc_html( $name ) . '</li>';
+		}
+		$addon_list .= '</ul>';
+
+		$message = sprintf(
+			/* translators: %1$s: Addon list, %2$s: Account page link, %3$s: Settings page link, %4$s: Support link */
+			__( '%1$sActivate your license now to avoid interruption.<br><br>Need your license key? Visit %2$sYour Account Page%3$s. Having trouble? %4$sContact Support%3$s.', 'buddyboss' ),
+			$addon_list,
+			'<a href="' . esc_url( $account_link ) . '" target="_blank">',
+			'</a>',
+			'<a href="' . esc_url( $support_link ) . '" target="_blank">'
+		);
+
+		return array(
+			'label'       => $title,
+			'status'      => 'critical',
+			'badge'       => array(
+				'label' => __( 'BuddyBoss', 'buddyboss' ),
+				'color' => 'orange',
+			),
+			'description' => sprintf( '<p>%s</p>', $message ),
+			'actions'     => sprintf(
+				'<p><a href="%s" class="button button-primary">%s</a></p>',
+				esc_url( $activation_link ),
+				esc_html__( 'Activate Your License', 'buddyboss' )
+			),
+			'test'        => 'buddyboss_addons_high',
+		);
+	}
+
+	/**
+	 * Site Health test for MEDIUM status (14-21 days).
+	 *
+	 * @since 3.0.0
+	 * @return array Test result.
+	 */
+	public function site_health_medium_test() {
+		$grouped = self::get_addons_by_drm_status();
+
+		if ( empty( $grouped['medium'] ) ) {
+			return $this->get_site_health_pass();
+		}
+
+		$addons      = $grouped['medium'];
+		$addon_names = wp_list_pluck( $addons, 'plugin_name' );
+
+		$activation_link = bp_get_admin_url( 'admin.php?page=buddyboss-license' );
+		$account_link    = 'https://www.buddyboss.com/my-account/';
+		$support_link    = 'https://www.buddyboss.com/support/';
+
+		$title = __( 'BuddyBoss Pro/Plus: License Required', 'buddyboss' );
+
+		// Build addon list
+		$addon_list = '<p><strong>' . __( 'The following features require an active license:', 'buddyboss' ) . '</strong></p>';
+		$addon_list .= '<ul style="margin: 10px 0; padding-left: 20px;">';
+		foreach ( $addon_names as $name ) {
+			$addon_list .= '<li>' . esc_html( $name ) . '</li>';
+		}
+		$addon_list .= '</ul>';
+
+		$message = sprintf(
+			/* translators: %1$s: Addon list, %2$s: Account page link, %3$s: Support link */
+			__( '%1$sAn active license is required to use these features. Without activation, these features will stop working.<br><br>Need your license key? Visit %2$sYour Account Page%3$s. Having trouble? %4$sContact Support%3$s.', 'buddyboss' ),
+			$addon_list,
+			'<a href="' . esc_url( $account_link ) . '" target="_blank">',
+			'</a>',
+			'<a href="' . esc_url( $support_link ) . '" target="_blank">'
+		);
+
+		return array(
+			'label'       => $title,
+			'status'      => 'recommended',
+			'badge'       => array(
+				'label' => __( 'BuddyBoss', 'buddyboss' ),
+				'color' => 'orange',
+			),
+			'description' => sprintf( '<p>%s</p>', $message ),
+			'actions'     => sprintf(
+				'<p><a href="%s" class="button button-primary">%s</a></p>',
+				esc_url( $activation_link ),
+				esc_html__( 'Activate Your License', 'buddyboss' )
+			),
+			'test'        => 'buddyboss_addons_medium',
+		);
+	}
+
+	/**
+	 * Site Health test for LOW status (7-13 days).
+	 *
+	 * @since 3.0.0
+	 * @return array Test result.
+	 */
+	public function site_health_low_test() {
+		$grouped = self::get_addons_by_drm_status();
+
+		if ( empty( $grouped['low'] ) ) {
+			return $this->get_site_health_pass();
+		}
+
+		$addons      = $grouped['low'];
+		$addon_names = wp_list_pluck( $addons, 'plugin_name' );
+
+		$activation_link = bp_get_admin_url( 'admin.php?page=buddyboss-license' );
+		$account_link    = 'https://www.buddyboss.com/my-account/';
+		$support_link    = 'https://www.buddyboss.com/support/';
+
+		$title = __( 'BuddyBoss Pro/Plus: License Activation Needed', 'buddyboss' );
+
+		// Build addon list
+		$addon_list = '<p><strong>' . __( 'The following features require an active license:', 'buddyboss' ) . '</strong></p>';
+		$addon_list .= '<ul style="margin: 10px 0; padding-left: 20px;">';
+		foreach ( $addon_names as $name ) {
+			$addon_list .= '<li>' . esc_html( $name ) . '</li>';
+		}
+		$addon_list .= '</ul>';
+
+		$message = sprintf(
+			/* translators: %1$s: Addon list, %2$s: Account page link, %3$s: Support link */
+			__( '%1$sWe couldn\'t verify an active license for these features. Please activate your license to continue using them.<br><br>Need your license key? Visit %2$sYour Account Page%3$s. Having trouble? %4$sContact Support%3$s.', 'buddyboss' ),
+			$addon_list,
+			'<a href="' . esc_url( $account_link ) . '" target="_blank">',
+			'</a>',
+			'<a href="' . esc_url( $support_link ) . '" target="_blank">'
+		);
+
+		return array(
+			'label'       => $title,
+			'status'      => 'recommended',
+			'badge'       => array(
+				'label' => __( 'BuddyBoss', 'buddyboss' ),
+				'color' => 'orange',
+			),
+			'description' => sprintf( '<p>%s</p>', $message ),
+			'actions'     => sprintf(
+				'<p><a href="%s" class="button button-primary">%s</a></p>',
+				esc_url( $activation_link ),
+				esc_html__( 'Activate Your License', 'buddyboss' )
+			),
+			'test'        => 'buddyboss_addons_low',
+		);
+	}
+
+	/**
+	 * Get Site Health pass result.
+	 *
+	 * @since 3.0.0
+	 * @return array Site Health result.
+	 */
+	private function get_site_health_pass() {
 		return array(
 			'label'       => __( 'BuddyBoss Pro/Plus license is active', 'buddyboss' ),
 			'status'      => 'good',
@@ -995,10 +1248,9 @@ class BB_DRM_Registry {
 			),
 			'description' => sprintf(
 				'<p>%s</p>',
-				__( 'Individual addon license status is shown separately for each addon.', 'buddyboss' )
+				__( 'All BuddyBoss Pro/Plus addon licenses are valid and active.', 'buddyboss' )
 			),
-			'actions'     => '',
-			'test'        => 'buddyboss_addon_license_status',
+			'test'        => 'buddyboss_addons_license',
 		);
 	}
 }
