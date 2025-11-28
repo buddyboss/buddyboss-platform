@@ -76,9 +76,13 @@ class BB_DRM_Controller {
 		delete_option( 'bb_drm_event_' . BB_DRM_Helper::NO_LICENSE_EVENT );
 		delete_option( 'bb_drm_event_' . BB_DRM_Helper::INVALID_LICENSE_EVENT );
 
-		// Delete DRM notices.
+		// Delete all DRM-related in-plugin notifications (IPN).
 		$notifications = new BB_Notifications();
 		$notifications->dismiss_events( 'bb-drm' );
+		$notifications->dismiss_events( 'bb-drm-consolidated' );
+
+		// Also dismiss individual addon notifications.
+		$notifications->dismiss_events( 'bb-drm-addon-' );
 	}
 
 	/**

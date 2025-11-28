@@ -166,9 +166,19 @@ class BB_DRM_Registry {
 			$event->destroy();
 		}
 
-		// Dismiss notifications for this add-on.
+		// Dismiss addon-specific notifications.
 		$notifications = new BB_Notifications();
 		$notifications->dismiss_events( 'bb-drm-addon-' . $product_slug );
+
+		// Check if there are any remaining add-ons with DRM issues.
+		// If not, clear consolidated notifications as well.
+		$grouped = self::get_addons_by_drm_status();
+		$has_issues = ! empty( $grouped['low'] ) || ! empty( $grouped['medium'] ) || ! empty( $grouped['high'] ) || ! empty( $grouped['locked'] );
+
+		if ( ! $has_issues ) {
+			// No more add-ons with DRM issues - clear all consolidated notifications.
+			$notifications->dismiss_events( 'bb-drm-consolidated' );
+		}
 	}
 
 	/**
