@@ -85,6 +85,7 @@ wp_enqueue_style( 'bb-rl-login-style', buddypress()->plugin_url . 'bp-templates/
 			}
 		} );
 	</script>
+	<?php wp_footer(); ?>
 </body>
 </html>
 

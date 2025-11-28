@@ -635,6 +635,10 @@ body.bb-rl-register {
 			}
 		}
 	}
+
+	.bb_recaptcha_v2_element_content {
+		margin: 0 0 var(--bb-rl-space-200);
+	}
 }
 
 .register-section {
