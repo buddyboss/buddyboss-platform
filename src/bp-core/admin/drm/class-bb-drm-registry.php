@@ -52,6 +52,9 @@ class BB_DRM_Registry {
 		// Private constructor to enforce singleton.
 		// Hook consolidated admin notices.
 		add_action( 'admin_notices', array( $this, 'render_consolidated_admin_notices' ), 5 );
+
+		// Hook Site Health tests for add-ons.
+		add_filter( 'site_status_tests', array( $this, 'add_addon_site_health_tests' ) );
 	}
 
 	/**
@@ -306,6 +309,7 @@ class BB_DRM_Registry {
 		$grouped = array(
 			'low'    => array(),
 			'medium' => array(),
+			'high'   => array(),
 			'locked' => array(),
 		);
 
@@ -321,11 +325,14 @@ class BB_DRM_Registry {
 			$status = null;
 
 			// Determine status based on days elapsed.
+			// Match timeline from BuddyBoss DRM Messaging.md
 			if ( $days >= 7 && $days <= 13 ) {
 				$status = 'low';
-			} elseif ( $days >= 14 && $days <= 20 ) {
+			} elseif ( $days >= 14 && $days <= 21 ) {
 				$status = 'medium';
-			} elseif ( $days >= 21 ) {
+			} elseif ( $days >= 22 && $days <= 30 ) {
+				$status = 'high';
+			} elseif ( $days >= 31 ) {
 				$status = 'locked';
 			}
 
@@ -366,12 +373,17 @@ class BB_DRM_Registry {
 			$this->render_grouped_notice( $grouped['locked'], BB_DRM_Helper::DRM_LOCKED );
 		}
 
+		// Render HIGH notice.
+		if ( ! empty( $grouped['high'] ) ) {
+			$this->render_grouped_notice( $grouped['high'], BB_DRM_Helper::DRM_HIGH );
+		}
+
 		// Render MEDIUM notice.
 		if ( ! empty( $grouped['medium'] ) ) {
 			$this->render_grouped_notice( $grouped['medium'], BB_DRM_Helper::DRM_MEDIUM );
 		}
 
-		// Render LOW notice.
+		// Render LOW notice (no admin notice for LOW - only plugin notification).
 		if ( ! empty( $grouped['low'] ) ) {
 			$this->render_grouped_notice( $grouped['low'], BB_DRM_Helper::DRM_LOW );
 		}
@@ -415,94 +427,51 @@ class BB_DRM_Registry {
 			$addons
 		);
 
-		// Build HTML list for multiple addons.
-		$addon_list_html = '';
-		if ( $count > 1 ) {
-			$addon_list_html = '<ul style="margin: 10px 0; padding-left: 20px;">';
-			foreach ( $addon_names as $name ) {
-				$addon_list_html .= '<li><strong>' . $name . '</strong></li>';
-			}
-			$addon_list_html .= '</ul>';
-		}
-
 		$activation_link = bp_get_admin_url( 'admin.php?page=buddyboss-license' );
 
 		// Build heading and message based on status and count.
 		switch ( $drm_status ) {
 			case BB_DRM_Helper::DRM_LOW:
-				if ( $count === 1 ) {
-					$heading = sprintf(
-						/* translators: %s: plugin name */
-						__( '%s: License Required', 'buddyboss' ),
-						$addons[0]['plugin_name']
-					);
-					$message = sprintf(
-						/* translators: %s: plugin name */
-						__( '%s requires an active license to continue working. Please activate your license key.', 'buddyboss' ),
-						$addons[0]['plugin_name']
-					);
-				} else {
-					$heading = sprintf(
-						/* translators: %d: number of plugins */
-						_n( '%d BuddyBoss Add-on: License Required', '%d BuddyBoss Add-ons: License Required', $count, 'buddyboss' ),
-						$count
-					);
-					$message = __( 'The following add-ons require active licenses to continue working. Please activate your license keys.', 'buddyboss' ) . $addon_list_html;
-				}
-				$notice_class = 'notice notice-warning is-dismissible';
-				$color        = 'orange';
-				break;
+				// 7-13 days: No admin notice, only plugin notification
+				// Skip rendering admin notice for LOW status
+				return;
 
 			case BB_DRM_Helper::DRM_MEDIUM:
-				if ( $count === 1 ) {
-					$heading = sprintf(
-						/* translators: %s: plugin name */
-						__( '%s: URGENT - License Required', 'buddyboss' ),
-						$addons[0]['plugin_name']
-					);
-					$message = sprintf(
-						/* translators: %s: plugin name */
-						__( '%s will be disabled soon without an active license. Please activate immediately.', 'buddyboss' ),
-						$addons[0]['plugin_name']
-					);
-				} else {
-					$heading = sprintf(
-						/* translators: %d: number of plugins */
-						_n( '%d BuddyBoss Add-on: URGENT - License Required', '%d BuddyBoss Add-ons: URGENT - License Required', $count, 'buddyboss' ),
-						$count
-					);
-					$message = __( 'The following add-ons will be disabled soon without active licenses. Please activate immediately.', 'buddyboss' ) . $addon_list_html;
-				}
+				// 14-21 days: Yellow notice
+				$heading = __( 'License required for BuddyBoss Pro/Plus features.', 'buddyboss' );
+				$message = '';
 				$notice_class = 'notice notice-warning is-dismissible';
-				$color        = 'orange';
+				$color        = 'FFA500'; // Yellow/Orange
+				break;
+
+			case BB_DRM_Helper::DRM_HIGH:
+				// 21-30 days: Orange notice
+				$heading = __( 'BuddyBoss Pro/Plus features will be disabled soon.', 'buddyboss' );
+				$message = '';
+				$notice_class = 'notice notice-warning is-dismissible';
+				$color        = 'FF8C00'; // Dark Orange
 				break;
 
 			case BB_DRM_Helper::DRM_LOCKED:
-				if ( $count === 1 ) {
-					$heading = sprintf(
-						/* translators: %s: plugin name */
-						__( '%s: Features Disabled', 'buddyboss' ),
-						$addons[0]['plugin_name']
-					);
-					$message = sprintf(
-						/* translators: %s: plugin name */
-						__( '%s features have been disabled due to an inactive license. Activate your license to restore functionality.', 'buddyboss' ),
-						$addons[0]['plugin_name']
-					);
-				} else {
-					$heading = sprintf(
-						/* translators: %d: number of plugins */
-						_n( '%d BuddyBoss Add-on: Features Disabled', '%d BuddyBoss Add-ons: Features Disabled', $count, 'buddyboss' ),
-						$count
-					);
-					$message = __( 'The following add-ons have been disabled due to inactive licenses. Activate your licenses to restore functionality.', 'buddyboss' ) . $addon_list_html;
-				}
+				// 30+ days: Red notice
+				$heading = __( 'BuddyBoss Pro/Plus features have been disabled.', 'buddyboss' );
+				$message = '';
 				$notice_class = 'notice notice-error';
-				$color        = 'red';
+				$color        = 'dc3232'; // Red
 				break;
 
 			default:
 				return;
+		}
+
+		// Build add-on list to display below the heading
+		$addon_list_html = '';
+		if ( $count > 0 ) {
+			$addon_list_html = '<ul style="margin: 10px 0 0 0; padding-left: 20px; list-style: disc;">';
+			foreach ( $addon_names as $name ) {
+				$addon_list_html .= '<li>' . esc_html( $name ) . '</li>';
+			}
+			$addon_list_html .= '</ul>';
 		}
 
 		// Generate unique notice ID and secret for dismissal.
@@ -512,23 +481,29 @@ class BB_DRM_Registry {
 		?>
 		<div id="<?php echo esc_attr( $notice_id ); ?>"
 			 class="<?php echo esc_attr( $notice_class ); ?> bb-drm-notice"
-			 style="padding: 15px; border-left-width: 4px; position: relative;"
+			 style="padding: 15px; padding-right: 38px; border-left-width: 4px; position: relative;"
 			 <?php if ( $is_warning ) : ?>
 			 data-notice-key="<?php echo esc_attr( $notice_key ); ?>"
 			 data-secret="<?php echo esc_attr( $secret ); ?>"
 			 <?php endif; ?>>
-			<h3 style="margin-top: 0;"><?php echo esc_html( $heading ); ?></h3>
-			<div style="margin-bottom: 10px;"><?php echo wp_kses_post( $message ); ?></div>
-			<p style="margin-bottom: 0;">
-				<a href="<?php echo esc_url( $activation_link ); ?>" class="button button-primary">
-					<?php esc_html_e( 'Activate License', 'buddyboss' ); ?>
-				</a>
-				<?php if ( $is_warning ) : ?>
-				<button type="button" class="notice-dismiss bb-drm-dismiss" aria-label="<?php esc_attr_e( 'Dismiss this notice for 24 hours', 'buddyboss' ); ?>">
-					<span class="screen-reader-text"><?php esc_html_e( 'Dismiss this notice for 24 hours.', 'buddyboss' ); ?></span>
-				</button>
-				<?php endif; ?>
-			</p>
+			<?php if ( $is_warning ) : ?>
+			<button type="button" class="notice-dismiss bb-drm-dismiss" style="position: absolute; top: 0; right: 1px; padding: 9px; border: none; background: none; color: #787c82; cursor: pointer;" aria-label="<?php esc_attr_e( 'Dismiss this notice for 24 hours', 'buddyboss' ); ?>">
+				<span class="screen-reader-text"><?php esc_html_e( 'Dismiss this notice for 24 hours.', 'buddyboss' ); ?></span>
+			</button>
+			<?php endif; ?>
+			<div style="display: flex; align-items: flex-start; justify-content: space-between;">
+				<div style="flex: 1; padding-right: 15px;">
+					<p style="margin: 0 0 5px 0;"><strong><?php echo esc_html( $heading ); ?></strong></p>
+					<?php if ( ! empty( $addon_list_html ) ) : ?>
+						<?php echo wp_kses_post( $addon_list_html ); ?>
+					<?php endif; ?>
+				</div>
+				<div style="white-space: nowrap;">
+					<a href="<?php echo esc_url( $activation_link ); ?>" class="button button-primary">
+						<?php esc_html_e( 'Activate Your License', 'buddyboss' ); ?>
+					</a>
+				</div>
+			</div>
 		</div>
 		<?php
 
@@ -657,43 +632,61 @@ class BB_DRM_Registry {
 				$icon_url = admin_url( 'images/yes.png' ); // Yellow
 			}
 
-			// Build title and content.
-			if ( $count === 1 ) {
-				$title   = sprintf(
-					/* translators: %s: plugin name */
-					__( '%s: License Required', 'buddyboss' ),
-					$addon_names[0]
-				);
-				$content = sprintf(
-					/* translators: %s: plugin name */
-					__( '%s requires an active license to continue working.', 'buddyboss' ),
-					$addon_names[0]
-				);
+			// Build title and content based on DRM status.
+			if ( BB_DRM_Helper::DRM_LOW === $drm_status ) {
+				// 7-13 days
+				$title   = __( 'BuddyBoss Pro/Plus: License Activation Needed', 'buddyboss' );
+				$content = __( 'We couldn\'t verify an active license for your BuddyBoss Pro/Plus features. Please activate your license to continue using them.', 'buddyboss' );
+			} elseif ( BB_DRM_Helper::DRM_MEDIUM === $drm_status ) {
+				// 14-21 days
+				$title   = __( 'BuddyBoss Pro/Plus: License Required', 'buddyboss' );
+				$content = __( 'An active license is required to use BuddyBoss Pro/Plus features. Without activation, these features will stop working.', 'buddyboss' );
+			} elseif ( BB_DRM_Helper::DRM_HIGH === $drm_status ) {
+				// 21-30 days
+				$title   = __( 'BuddyBoss Pro/Plus: Activation Required', 'buddyboss' );
+				$content = __( 'Your BuddyBoss Pro/Plus features will be disabled soon. Activate your license now to avoid interruption.', 'buddyboss' );
+			} elseif ( BB_DRM_Helper::DRM_LOCKED === $drm_status ) {
+				// 30+ days
+				$title   = __( 'BuddyBoss Pro/Plus: Features Disabled', 'buddyboss' );
+				$content = __( 'The following features have been disabled because no active license was found. Activate your license to restore them.', 'buddyboss' );
+				$content .= '<p>' . __( 'If you no longer need these features, you can deactivate the premium add-ons in your Plugins page to continue using BuddyBoss Platform for free.', 'buddyboss' ) . '</p>';
 			} else {
-				$title = sprintf(
-					/* translators: %d: number of plugins */
-					_n( '%d BuddyBoss Add-on: License Required', '%d BuddyBoss Add-ons: License Required', $count, 'buddyboss' ),
-					$count
-				);
+				$title   = '';
+				$content = '';
+			}
 
+			// Add feature list for all statuses
+			if ( $count > 0 ) {
 				// Build HTML list for notification.
-				$addon_list = '<ul>';
+				$addon_list = '<p><strong>';
+				if ( BB_DRM_Helper::DRM_LOCKED === $drm_status ) {
+					$addon_list .= __( 'The following features have been disabled:', 'buddyboss' );
+				} else {
+					$addon_list .= __( 'The following features require an active license:', 'buddyboss' );
+				}
+				$addon_list .= '</strong></p><ul>';
 				foreach ( $addon_names as $name ) {
 					$addon_list .= '<li>' . esc_html( $name ) . '</li>';
 				}
 				$addon_list .= '</ul>';
 
-				$content = __( 'The following add-ons require active licenses:', 'buddyboss' ) . $addon_list;
+				$content .= $addon_list;
 			}
 
-			// Add urgency based on status.
-			if ( BB_DRM_Helper::DRM_LOCKED === $drm_status ) {
-				$content .= '<p>' . __( 'Features have been disabled.', 'buddyboss' ) . '</p>';
-			} elseif ( BB_DRM_Helper::DRM_HIGH === $drm_status ) {
-				$content .= '<p>' . __( 'Features will be disabled soon.', 'buddyboss' ) . '</p>';
-			} elseif ( BB_DRM_Helper::DRM_MEDIUM === $drm_status ) {
-				$content .= '<p>' . __( 'Please activate your license.', 'buddyboss' ) . '</p>';
-			}
+			// Add footer links to content
+			$account_link = 'https://www.buddyboss.com/my-account/';
+			$support_link = 'https://www.buddyboss.com/support/';
+
+			$content .= '<p style="margin-top: 15px; font-size: 13px;">';
+			$content .= sprintf(
+				/* translators: %1$s: opening link tag, %2$s: closing link tag */
+				__( 'Need your license key? Visit %1$sYour Account Page%2$s. Having trouble? %3$sContact Support%4$s.', 'buddyboss' ),
+				'<a href="' . esc_url( $account_link ) . '" target="_blank">',
+				'</a>',
+				'<a href="' . esc_url( $support_link ) . '" target="_blank">',
+				'</a>'
+			);
+			$content .= '</p>';
 
 			// Create consolidated notification for this priority level.
 			// Use priority-specific ID to allow multiple notifications.
@@ -709,7 +702,7 @@ class BB_DRM_Registry {
 					'icon'    => $icon_url,
 					'buttons' => array(
 						'main' => array(
-							'text'   => __( 'Activate Licenses', 'buddyboss' ),
+							'text'   => __( 'Activate Your License', 'buddyboss' ),
 							'url'    => bp_get_admin_url( 'admin.php?page=buddyboss-license' ),
 							'target' => '_self',
 						),
@@ -771,79 +764,37 @@ class BB_DRM_Registry {
 		$addon_names = wp_list_pluck( $affected_addons, 'plugin_name' );
 
 		// Build subject and message based on status.
+		// Note: LOW status (7-13 days) does not send email
 		switch ( $highest_priority ) {
 			case BB_DRM_Helper::DRM_LOW:
-				if ( $count === 1 ) {
-					$subject = sprintf(
-						/* translators: %s: plugin name */
-						__( '%s: License Required', 'buddyboss' ),
-						$addon_names[0]
-					);
-					$heading = $subject;
-					$message = sprintf(
-						/* translators: %s: plugin name */
-						__( '%s requires an active license to continue working. Please activate your license key.', 'buddyboss' ),
-						$addon_names[0]
-					);
-				} else {
-					$subject = sprintf(
-						/* translators: %d: number of plugins */
-						_n( '%d BuddyBoss Add-on: License Required', '%d BuddyBoss Add-ons: License Required', $count, 'buddyboss' ),
-						$count
-					);
-					$heading = $subject;
-					$message = __( 'The following add-ons require active licenses to continue working:', 'buddyboss' );
-				}
-				$color = 'FFA500'; // Orange
-				break;
+				// 7-13 days: No email sent
+				return;
 
 			case BB_DRM_Helper::DRM_MEDIUM:
-				if ( $count === 1 ) {
-					$subject = sprintf(
-						/* translators: %s: plugin name */
-						__( '%s: URGENT - License Required', 'buddyboss' ),
-						$addon_names[0]
-					);
-					$heading = $subject;
-					$message = sprintf(
-						/* translators: %s: plugin name */
-						__( '%s will be disabled soon without an active license. Please activate immediately.', 'buddyboss' ),
-						$addon_names[0]
-					);
-				} else {
-					$subject = sprintf(
-						/* translators: %d: number of plugins */
-						_n( '%d BuddyBoss Add-on: URGENT - License Required', '%d BuddyBoss Add-ons: URGENT - License Required', $count, 'buddyboss' ),
-						$count
-					);
-					$heading = $subject;
-					$message = __( 'The following add-ons will be disabled soon without active licenses. Please activate immediately.', 'buddyboss' );
-				}
-				$color = 'FFA500'; // Orange
+				// 14-21 days: No email according to spec
+				return;
+
+			case BB_DRM_Helper::DRM_HIGH:
+				// 21-30 days: Send email
+				$subject = __( 'Your BuddyBoss Pro/Plus license needs activation', 'buddyboss' );
+				$heading = $subject;
+				$message = sprintf(
+					/* translators: %s: site name/URL */
+					__( 'Your site %s is using BuddyBoss Pro/Plus features that require an active license.', 'buddyboss' ),
+					'<strong>' . get_bloginfo( 'name' ) . '</strong> (' . site_url() . ')'
+				);
+				$color = 'FF8C00'; // Dark Orange
 				break;
 
 			case BB_DRM_Helper::DRM_LOCKED:
-				if ( $count === 1 ) {
-					$subject = sprintf(
-						/* translators: %s: plugin name */
-						__( '%s: Features Disabled', 'buddyboss' ),
-						$addon_names[0]
-					);
-					$heading = $subject;
-					$message = sprintf(
-						/* translators: %s: plugin name */
-						__( '%s features have been disabled due to an inactive license. Activate your license to restore functionality.', 'buddyboss' ),
-						$addon_names[0]
-					);
-				} else {
-					$subject = sprintf(
-						/* translators: %d: number of plugins */
-						_n( '%d BuddyBoss Add-on: Features Disabled', '%d BuddyBoss Add-ons: Features Disabled', $count, 'buddyboss' ),
-						$count
-					);
-					$heading = $subject;
-					$message = __( 'The following add-ons have been disabled due to inactive licenses. Activate your licenses to restore functionality.', 'buddyboss' );
-				}
+				// 30+ days: Send email
+				$subject = __( 'BuddyBoss Pro/Plus features have been disabled on your site', 'buddyboss' );
+				$heading = $subject;
+				$message = sprintf(
+					/* translators: %s: site name/URL */
+					__( 'The BuddyBoss Pro/Plus features on your site %s have been disabled because no active license was found.', 'buddyboss' ),
+					'<strong>' . get_bloginfo( 'name' ) . '</strong> (' . site_url() . ')'
+				);
 				$color = 'dc3232'; // Red
 				break;
 
@@ -870,6 +821,7 @@ class BB_DRM_Registry {
 				'addon_list_html' => $addon_list_html,
 				'color'           => $color,
 				'activation_link' => $activation_link,
+				'status'          => $highest_priority,
 			)
 		);
 
@@ -922,10 +874,14 @@ class BB_DRM_Registry {
 	/**
 	 * Get consolidated email HTML template.
 	 *
-	 * @param array $data Email data (heading, message, addon_list_html, color, activation_link).
+	 * @param array $data Email data (heading, message, addon_list_html, color, activation_link, status).
 	 * @return string Email HTML.
 	 */
 	private function get_consolidated_email_html( $data ) {
+		$account_link = 'https://www.buddyboss.com/my-account/';
+		$support_link = 'https://www.buddyboss.com/support/';
+		$status       = isset( $data['status'] ) ? $data['status'] : '';
+
 		ob_start();
 		?>
 		<!DOCTYPE html>
@@ -936,28 +892,163 @@ class BB_DRM_Registry {
 		</head>
 		<body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
 			<div style="max-width: 600px; margin: 0 auto; padding: 20px;">
-				<h2 style="color: #<?php echo esc_attr( $data['color'] ); ?>;">
-					<?php echo esc_html( $data['heading'] ); ?>
-				</h2>
-				<div style="background: #f9f9f9; padding: 20px; border-radius: 5px;">
-					<p><?php echo esc_html( $data['message'] ); ?></p>
-					<?php if ( ! empty( $data['addon_list_html'] ) ) : ?>
-						<?php echo wp_kses_post( $data['addon_list_html'] ); ?>
-					<?php endif; ?>
-				</div>
-				<p style="margin-top: 20px;">
-					<a href="<?php echo esc_url( $data['activation_link'] ); ?>"
-					   style="background: #0073aa; color: #fff; padding: 10px 20px; text-decoration: none; border-radius: 3px; display: inline-block;">
-						<?php esc_html_e( 'Activate License', 'buddyboss' ); ?>
-					</a>
+				<p><?php esc_html_e( 'Hi,', 'buddyboss' ); ?></p>
+
+				<p><?php echo wp_kses_post( $data['message'] ); ?></p>
+
+				<?php if ( ! empty( $data['addon_list_html'] ) ) : ?>
+					<p><strong><?php
+						if ( BB_DRM_Helper::DRM_LOCKED === $status ) {
+							esc_html_e( 'The following features have been disabled:', 'buddyboss' );
+						} else {
+							esc_html_e( 'The following features will be disabled without an active license:', 'buddyboss' );
+						}
+					?></strong></p>
+					<?php echo wp_kses_post( $data['addon_list_html'] ); ?>
+				<?php endif; ?>
+
+				<?php if ( BB_DRM_Helper::DRM_LOCKED === $status ) : ?>
+					<p><?php esc_html_e( 'To restore these features, activate your license in your WordPress admin.', 'buddyboss' ); ?></p>
+					<p><?php esc_html_e( 'If you no longer need these features, you can deactivate the premium add-ons in your Plugins page to continue using BuddyBoss Platform for free.', 'buddyboss' ); ?></p>
+				<?php else : ?>
+					<p><?php esc_html_e( 'To keep these features working, activate your license in your WordPress admin.', 'buddyboss' ); ?></p>
+				<?php endif; ?>
+
+				<p>
+					<?php
+					printf(
+						/* translators: %1$s: opening link tag, %2$s: closing link tag */
+						esc_html__( 'Need your license key? Log in to your BuddyBoss account: %1$sYour Account Page%2$s', 'buddyboss' ),
+						'<a href="' . esc_url( $account_link ) . '" style="color: #0073aa;">',
+						'</a>'
+					);
+					?>
 				</p>
-				<p style="color: #666; font-size: 12px; margin-top: 30px;">
-					<?php esc_html_e( 'Please activate your BuddyBoss license to continue using all features.', 'buddyboss' ); ?>
+
+				<p>
+					<?php
+					printf(
+						/* translators: %1$s: opening link tag, %2$s: closing link tag */
+						esc_html__( 'Having trouble? Our support team is here to help: %1$sContact Support%2$s', 'buddyboss' ),
+						'<a href="' . esc_url( $support_link ) . '" style="color: #0073aa;">',
+						'</a>'
+					);
+					?>
 				</p>
+
+				<p style="margin-top: 30px;"><?php esc_html_e( 'Thanks,', 'buddyboss' ); ?><br><?php esc_html_e( 'BuddyBoss', 'buddyboss' ); ?></p>
 			</div>
 		</body>
 		</html>
 		<?php
 		return ob_get_clean();
+	}
+
+	/**
+	 * Add Site Health tests for add-ons.
+	 *
+	 * @param array $tests Site Health tests array.
+	 * @return array Modified tests array.
+	 */
+	public function add_addon_site_health_tests( $tests ) {
+		$tests['direct']['buddyboss_addon_license_status'] = array(
+			'label' => __( 'BuddyBoss Pro/Plus License Status', 'buddyboss' ),
+			'test'  => array( $this, 'site_health_addon_license_test' ),
+		);
+
+		return $tests;
+	}
+
+	/**
+	 * Site Health test for add-on license status.
+	 *
+	 * @return array Test result.
+	 */
+	public function site_health_addon_license_test() {
+		$grouped = self::get_addons_by_drm_status();
+
+		// Check for locked status (Critical).
+		if ( ! empty( $grouped['locked'] ) ) {
+			$addon_names = wp_list_pluck( $grouped['locked'], 'plugin_name' );
+			return array(
+				'label'       => __( 'BuddyBoss Pro/Plus features have been disabled', 'buddyboss' ),
+				'status'      => 'critical',
+				'badge'       => array(
+					'label' => __( 'BuddyBoss', 'buddyboss' ),
+					'color' => 'red',
+				),
+				'description' => sprintf(
+					'<p>%s</p>',
+					__( 'BuddyBoss Pro/Plus features on your site have been disabled because no active license was found. Activate your license to restore functionality, or deactivate premium add-ons in your Plugins page to continue using BuddyBoss Platform for free.', 'buddyboss' )
+				),
+				'actions'     => sprintf(
+					'<p><a href="%s" class="button button-primary">%s</a></p>',
+					bp_get_admin_url( 'admin.php?page=buddyboss-license' ),
+					__( 'Activate License', 'buddyboss' )
+				),
+				'test'        => 'buddyboss_addon_license_status',
+			);
+		}
+
+		// Check for high status (Recommended).
+		if ( ! empty( $grouped['high'] ) ) {
+			return array(
+				'label'       => __( 'BuddyBoss Pro/Plus license requires activation', 'buddyboss' ),
+				'status'      => 'recommended',
+				'badge'       => array(
+					'label' => __( 'BuddyBoss', 'buddyboss' ),
+					'color' => 'orange',
+				),
+				'description' => sprintf(
+					'<p>%s</p>',
+					__( 'Your site is using BuddyBoss Pro/Plus features without an active license. These features will be disabled if a license is not activated soon.', 'buddyboss' )
+				),
+				'actions'     => sprintf(
+					'<p><a href="%s" class="button button-primary">%s</a></p>',
+					bp_get_admin_url( 'admin.php?page=buddyboss-license' ),
+					__( 'Activate License', 'buddyboss' )
+				),
+				'test'        => 'buddyboss_addon_license_status',
+			);
+		}
+
+		// Check for medium status (Recommended).
+		if ( ! empty( $grouped['medium'] ) ) {
+			return array(
+				'label'       => __( 'BuddyBoss Pro/Plus license is not activated', 'buddyboss' ),
+				'status'      => 'recommended',
+				'badge'       => array(
+					'label' => __( 'BuddyBoss', 'buddyboss' ),
+					'color' => 'blue',
+				),
+				'description' => sprintf(
+					'<p>%s</p>',
+					__( 'Your site is using BuddyBoss Pro/Plus features that require an active license. Activate your license to ensure continued access to these features.', 'buddyboss' )
+				),
+				'actions'     => sprintf(
+					'<p><a href="%s" class="button button-primary">%s</a></p>',
+					bp_get_admin_url( 'admin.php?page=buddyboss-license' ),
+					__( 'Activate License', 'buddyboss' )
+				),
+				'test'        => 'buddyboss_addon_license_status',
+			);
+		}
+
+		// LOW status - no Site Health test per spec
+		// All addons licensed - return good status.
+		return array(
+			'label'       => __( 'BuddyBoss Pro/Plus license is active', 'buddyboss' ),
+			'status'      => 'good',
+			'badge'       => array(
+				'label' => __( 'BuddyBoss', 'buddyboss' ),
+				'color' => 'blue',
+			),
+			'description' => sprintf(
+				'<p>%s</p>',
+				__( 'Your BuddyBoss Pro/Plus features are active with a valid license.', 'buddyboss' )
+			),
+			'actions'     => '',
+			'test'        => 'buddyboss_addon_license_status',
+		);
 	}
 }

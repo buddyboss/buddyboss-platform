@@ -66,19 +66,19 @@ class BB_DRM_Addon extends BB_Base_DRM {
 		if ( $event ) {
 			$days = BB_DRM_Helper::days_elapsed( $event->created_at );
 
-			// New timeline for paid add-ons:
-			// 0-7 days: No impact
-			// 7-14 days: Notification informing license key not activated
-			// 14-21 days: Yellow Warning (activate license)
-			// 21-30 days: Orange Warning (features will be disabled)
-			// 30+ days: Red Warning (settings blocked, features disabled)
-			if ( $days >= 7 && $days < 14 ) {
+			// Timeline for paid add-ons per BuddyBoss DRM Messaging.md:
+			// 0-7 days: No impact (grace period)
+			// 7-13 days: LOW - Plugin notification only (inbox)
+			// 14-21 days: MEDIUM - Yellow admin notice + Site Health + Plugin notification
+			// 21-30 days: HIGH - Orange admin notice + Site Health + Plugin notification + Email
+			// 30+ days: LOCKED - Red admin notice + Site Health (Critical) + Plugin notification + Email + Features disabled
+			if ( $days >= 7 && $days <= 13 ) {
 				$this->set_status( BB_DRM_Helper::DRM_LOW );
-			} elseif ( $days >= 14 && $days < 21 ) {
+			} elseif ( $days >= 14 && $days <= 21 ) {
 				$this->set_status( BB_DRM_Helper::DRM_MEDIUM );
-			} elseif ( $days >= 21 && $days < 30 ) {
+			} elseif ( $days >= 22 && $days <= 30 ) {
 				$this->set_status( BB_DRM_Helper::DRM_HIGH );
-			} elseif ( $days >= 30 ) {
+			} elseif ( $days >= 31 ) {
 				$this->set_status( BB_DRM_Helper::DRM_LOCKED );
 			}
 
@@ -243,64 +243,72 @@ class BB_DRM_Addon extends BB_Base_DRM {
 
 		$activation_link = bp_get_admin_url( 'admin.php?page=buddyboss-license' );
 
+		// Get plugin edition name (Pro or Plus)
+		$edition_name = $this->get_edition_name();
+
 		switch ( $drm_status ) {
 			case BB_DRM_Helper::DRM_LOW:
+				// 7-13 days: Plugin Notification only
 				$heading = sprintf(
-					/* translators: %s: plugin name */
-					__( '%s: License Required', 'buddyboss' ),
-					$this->plugin_name
+					/* translators: %s: edition name (Pro/Plus) */
+					__( 'BuddyBoss %s: License Activation Needed', 'buddyboss' ),
+					$edition_name
 				);
 				$message = sprintf(
-					/* translators: %s: plugin name */
-					__( '%s requires an active license to continue working. Please activate your license key.', 'buddyboss' ),
-					$this->plugin_name
+					/* translators: %s: edition name (Pro/Plus) */
+					__( 'We couldn\'t verify an active license for your BuddyBoss %s features. Please activate your license to continue using them.', 'buddyboss' ),
+					$edition_name
 				);
 				$color   = 'orange';
-				$label   = __( 'Warning', 'buddyboss' );
+				$label   = __( 'Notice', 'buddyboss' );
 				break;
 
 			case BB_DRM_Helper::DRM_MEDIUM:
+				// 14-21 days: Notice (Yellow)
 				$heading = sprintf(
-					/* translators: %s: plugin name */
-					__( '%s: URGENT - License Required', 'buddyboss' ),
-					$this->plugin_name
+					/* translators: %s: edition name (Pro/Plus) */
+					__( 'BuddyBoss %s: License Required', 'buddyboss' ),
+					$edition_name
 				);
 				$message = sprintf(
-					/* translators: %s: plugin name */
-					__( '%s will be disabled soon without an active license. Please activate immediately.', 'buddyboss' ),
-					$this->plugin_name
+					/* translators: %s: edition name (Pro/Plus) */
+					__( 'An active license is required to use BuddyBoss %s features. Without activation, these features will stop working.', 'buddyboss' ),
+					$edition_name
 				);
-				$color   = 'orange';
-				$label   = __( 'Critical', 'buddyboss' );
+				$color   = 'FFA500'; // Yellow/Orange
+				$label   = __( 'Warning', 'buddyboss' );
 				break;
 
 			case BB_DRM_Helper::DRM_HIGH:
+				// 21-30 days: Notice (Orange)
 				$heading = sprintf(
-					/* translators: %s: plugin name */
-					__( '%s: WARNING - Features Will Be Disabled', 'buddyboss' ),
-					$this->plugin_name
+					/* translators: %s: edition name (Pro/Plus) */
+					__( 'BuddyBoss %s: Activation Required', 'buddyboss' ),
+					$edition_name
 				);
 				$message = sprintf(
-					/* translators: %s: plugin name */
-					__( '%s features will be disabled soon. Please activate your license key to prevent service interruption.', 'buddyboss' ),
-					$this->plugin_name
+					/* translators: %s: edition name (Pro/Plus) */
+					__( 'Your BuddyBoss %s features will be disabled soon. Activate your license now to avoid interruption.', 'buddyboss' ),
+					$edition_name
 				);
-				$color   = 'orange';
+				$color   = 'FF8C00'; // Dark Orange
 				$label   = __( 'Critical', 'buddyboss' );
 				break;
 
 			case BB_DRM_Helper::DRM_LOCKED:
+				// 30+ days: Notice (Red)
 				$heading = sprintf(
-					/* translators: %s: plugin name */
-					__( '%s: Features Disabled', 'buddyboss' ),
-					$this->plugin_name
+					/* translators: %s: edition name (Pro/Plus) */
+					__( 'BuddyBoss %s: Features Disabled', 'buddyboss' ),
+					$edition_name
 				);
 				$message = sprintf(
-					/* translators: %s: plugin name */
-					__( '%s features have been disabled due to an inactive license. Activate your license to restore functionality.', 'buddyboss' ),
-					$this->plugin_name
+					/* translators: %s: edition name (Pro/Plus) */
+					__( 'The following features have been disabled because no active license was found. Activate your license to restore them.', 'buddyboss' ),
+					$edition_name
 				);
-				$color   = 'red';
+				$message .= '<p>' . __( 'If you no longer need these features, you can deactivate the premium add-ons in your Plugins page to continue using BuddyBoss Platform for free.', 'buddyboss' ) . '</p>';
+				$color   = 'dc3232'; // Red
 				$label   = __( 'Critical', 'buddyboss' );
 				break;
 
@@ -312,6 +320,27 @@ class BB_DRM_Addon extends BB_Base_DRM {
 		}
 
 		return compact( 'heading', 'color', 'message', 'label', 'activation_link', 'account_link', 'support_link', 'pricing_link' );
+	}
+
+	/**
+	 * Get the edition name (Pro or Plus) for this add-on.
+	 *
+	 * @return string Edition name.
+	 */
+	private function get_edition_name() {
+		// Map product slugs to edition names
+		$edition_map = array(
+			'buddyboss-platform-pro' => 'Pro',
+			'buddyboss-plus'         => 'Plus',
+		);
+
+		// Check if this product has a specific edition name
+		if ( isset( $edition_map[ $this->product_slug ] ) ) {
+			return $edition_map[ $this->product_slug ];
+		}
+
+		// Default: use plugin name or 'Pro/Plus'
+		return 'Pro/Plus';
 	}
 
 	/**
@@ -420,7 +449,7 @@ class BB_DRM_Addon extends BB_Base_DRM {
 		// Calculate days elapsed.
 		$days = BB_DRM_Helper::days_elapsed( $event->created_at );
 
-		// Lock if grace period has expired (30+ days for addons).
-		return $days >= 30;
+		// Lock if grace period has expired (31+ days for addons per BuddyBoss DRM Messaging.md).
+		return $days >= 31;
 	}
 }
