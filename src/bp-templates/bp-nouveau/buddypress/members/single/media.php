@@ -20,7 +20,7 @@ if ( bp_is_user() && bb_enable_content_counts() ) {
 		<?php
 		if ( ! $is_send_ajax_request || ( 'albums' === $bp_current_action && ! bp_is_single_album() ) ) {
 			if ( 'my-media' === $bp_current_action ) {
-				$count = $count = bp_media_get_total_media_count();
+				$count = bp_media_get_total_media_count();
 			} elseif ( 'albums' === $bp_current_action && ! bp_is_single_album() ) {
 				$count = bb_media_get_total_album_count();
 			}
