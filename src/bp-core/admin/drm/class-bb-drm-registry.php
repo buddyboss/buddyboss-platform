@@ -126,6 +126,12 @@ class BB_DRM_Registry {
 		$addon = self::$addons[ $product_slug ];
 		$drm   = $addon['drm'];
 
+		// Check if development environment - clean up any DRM state and skip checks.
+		if ( BB_DRM_Helper::is_dev_environment() ) {
+			self::cleanup_addon_drm( $product_slug );
+			return;
+		}
+
 		// Check if license is valid.
 		if ( $drm->is_addon_licensed() ) {
 			// License valid - clean up any DRM state.
@@ -371,6 +377,11 @@ class BB_DRM_Registry {
 			return;
 		}
 
+		// Early return if development environment detected.
+		if ( BB_DRM_Helper::is_dev_environment() ) {
+			return;
+		}
+
 		// Early return if no addons are registered.
 		if ( empty( self::$addons ) ) {
 			return;
@@ -605,6 +616,11 @@ class BB_DRM_Registry {
 		}
 		$updated = true;
 
+		// Skip on development environments.
+		if ( BB_DRM_Helper::is_dev_environment() ) {
+			return;
+		}
+
 		$grouped = self::get_addons_by_drm_status();
 
 		// Initialize notifications system.
@@ -738,6 +754,11 @@ class BB_DRM_Registry {
 			return;
 		}
 		$sent = true;
+
+		// Skip on development environments.
+		if ( BB_DRM_Helper::is_dev_environment() ) {
+			return;
+		}
 
 		$grouped = self::get_addons_by_drm_status();
 
@@ -970,6 +991,11 @@ class BB_DRM_Registry {
 	 * @return array Modified tests array.
 	 */
 	public function add_addon_site_health_tests( $tests ) {
+		// Early return if development environment detected.
+		if ( BB_DRM_Helper::is_dev_environment() ) {
+			return $tests;
+		}
+
 		$grouped = self::get_addons_by_drm_status();
 
 		// Add test for each priority level that has affected addons.

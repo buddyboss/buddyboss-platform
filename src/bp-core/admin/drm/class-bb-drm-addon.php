@@ -60,6 +60,11 @@ class BB_DRM_Addon extends BB_Base_DRM {
 		// Cleanup when license becomes valid is handled by BB_DRM_Registry::cleanup_addon_drm().
 		// So we don't need to check license validity here.
 
+		// Skip DRM checks on development environments.
+		if ( BB_DRM_Helper::is_dev_environment() ) {
+			return;
+		}
+
 		// Get the event for this add-on.
 		$event = $this->get_latest_event();
 

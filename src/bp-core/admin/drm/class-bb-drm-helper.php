@@ -188,45 +188,137 @@ class BB_DRM_Helper {
 	/**
 	 * Detect if the current site URL is a development URL.
 	 *
+	 * Comprehensive staging/development detection matching bb_pro_check_staging_server().
 	 * Checks for:
 	 * - localhost variations (localhost, 127.0.0.1, ::1)
-	 * - Development TLDs (.local, .test, .dev, .localhost, .invalid, .example)
+	 * - Development TLDs (.local, .test, .dev, .localhost, .invalid, .example, .staging)
 	 * - Local IP addresses (10.x.x.x, 172.16-31.x.x, 192.168.x.x)
-	 * - Any IP address format
+	 * - Reserved testing/staging keywords in domain (dev, develop, test, staging, etc.)
+	 * - Hosting provider staging domains (Kinsta, WP Engine, Cloudways, etc.)
+	 * - Local development tool domains (DDEV, Lando, ngrok, etc.)
+	 * - Non-standard ports (anything except 80, 443)
+	 * - WordPress staging constants (WP_STAGING, etc.)
 	 *
 	 * @since 3.0.0
 	 * @return bool True if development URL detected.
 	 */
 	private static function is_dev_url() {
-		$url  = get_site_url();
-		$host = parse_url( $url, PHP_URL_HOST );
+		$url = site_url();
+		$parsed_url = wp_parse_url( $url );
+		$host = isset( $parsed_url['host'] ) ? $parsed_url['host'] : '';
 
 		if ( empty( $host ) ) {
 			return false;
 		}
 
-		// Check for localhost variations.
-		if ( in_array( $host, array( 'localhost', '127.0.0.1', '::1' ), true ) ) {
+		// Remove www prefix if present.
+		$domain = preg_replace( '/^www\./i', '', $host );
+
+		// Check if domain is localhost or an IP address.
+		if ( 'localhost' === $domain || filter_var( $domain, FILTER_VALIDATE_IP ) ) {
 			return true;
 		}
 
-		// Check for development TLDs.
-		$dev_tlds = array( '.local', '.test', '.dev', '.localhost', '.invalid', '.example' );
-		foreach ( $dev_tlds as $tld ) {
-			if ( substr( $host, -strlen( $tld ) ) === $tld ) {
-				return true;
+		// Check for port numbers (often indicates local development).
+		if ( isset( $parsed_url['port'] ) && ! in_array( $parsed_url['port'], array( 80, 443 ), true ) ) {
+			return true;
+		}
+
+		// Reserved TLDs for local development.
+		$reserved_tlds = array(
+			'local',
+			'localhost',
+			'test',
+			'example',
+			'invalid',
+			'dev',
+			'staging',
+		);
+
+		// Extract domain parts.
+		$domain_parts = explode( '.', $domain );
+		$tld          = end( $domain_parts );
+
+		// Check for reserved TLDs.
+		if ( in_array( $tld, $reserved_tlds, true ) ) {
+			return true;
+		}
+
+		// Reserved words that indicate testing/staging environments.
+		$reserved_words = array(
+			'dev',
+			'develop',
+			'development',
+			'test',
+			'testing',
+			'stg',
+			'stage',
+			'staging',
+			'demo',
+			'sandbox',
+			'preview',
+		);
+
+		// Check for reserved testing words in subdomains.
+		$subdomain_pattern = '/(\.|-)(' . implode( '|', $reserved_words ) . ')(\.|-)|(^(' . implode( '|', $reserved_words ) . ')\.)/i';
+		if ( preg_match( $subdomain_pattern, $domain ) ) {
+			return true;
+		}
+
+		// Reserved hosting provider domains that indicate staging/development.
+		$reserved_hosting_provider_domains = array(
+			'accessdomain',     // Generic hosting.
+			'cloudwaysapps',    // Cloudways.
+			'flywheelsites',    // Flywheel.
+			'kinsta',           // Kinsta.
+			'mybluehost',       // BlueHost.
+			'myftpupload',      // GoDaddy.
+			'netsolhost',       // Network Solutions.
+			'pantheonsite',     // Pantheon.
+			'sg-host',          // SiteGround.
+			'wpengine',         // WP Engine (old).
+			'wpenginepowered',  // WP Engine.
+			'rapydapps.cloud',  // Rapyd.
+		);
+
+		// Check for known hosting provider staging domains.
+		$hosting_pattern = '/\.(' . implode( '|', $reserved_hosting_provider_domains ) . ')\./i';
+		if ( preg_match( $hosting_pattern, '.' . $domain . '.' ) ) {
+			return true;
+		}
+
+		// Known local development tool domains.
+		$reserved_local_domains = array(
+			'lndo.site',        // Lando.
+			'ddev.site',        // DDEV.
+			'docksal',          // Docksal.
+			'localwp.com',      // Local by Flywheel.
+			'local.test',       // Generic local.
+			'docker.internal',  // Docker.
+			'ngrok.io',         // ngrok tunneling.
+			'localtunnel.me',   // localtunnel.
+		);
+
+		// Check for known development tool domains.
+		$dev_tools_pattern = '/(' . implode( '|', array_map( 'preg_quote', $reserved_local_domains ) ) . ')$/i';
+		if ( preg_match( $dev_tools_pattern, $domain ) ) {
+			return true;
+		}
+
+		// Check for common WordPress staging constants.
+		if ( defined( 'WP_STAGING' ) && WP_STAGING ) {
+			return true;
+		}
+
+		// Additional WordPress multisite check.
+		if ( is_multisite() ) {
+			$network_domain = parse_url( network_site_url(), PHP_URL_HOST );
+			if ( $network_domain !== $domain ) {
+				// Check if this is a staging subdomain in multisite.
+				if ( preg_match( $subdomain_pattern, $network_domain ) ) {
+					return true;
+				}
 			}
-		}
-
-		// Check for local IP addresses.
-		// Matches: 10.x.x.x, 172.16-31.x.x, 192.168.x.x.
-		if ( preg_match( '/^(10|172\.(1[6-9]|2[0-9]|3[01])|192\.168)\./', $host ) ) {
-			return true;
-		}
-
-		// Check if it\'s any IP address format.
-		if ( filter_var( $host, FILTER_VALIDATE_IP ) ) {
-			return true;
 		}
 
 		return false;
