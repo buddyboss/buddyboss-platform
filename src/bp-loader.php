@@ -33,8 +33,36 @@ if ( ! defined( 'BP_PLATFORM_API' ) ) {
 	define( 'BP_PLATFORM_API', plugin_dir_url( __FILE__ ) );
 }
 
+// Prevent WordPress from auto-loading textdomain before 'init' action
+// This fixes the WordPress 6.7.0+ notice about loading translations too early
+add_filter( 'override_load_textdomain', function( $override, $domain, $mofile ) {
+	if ( 'buddyboss' === $domain ) {
+		// Check if 'init' action has fired
+		$init_fired = did_action( 'init' );
+		
+		if ( ! $init_fired ) {
+			// Before 'init', prevent WordPress from auto-loading
+			// Our manual loader will handle it on 'init'
+			// Return true to tell WordPress we've handled it (prevented it)
+			// The textdomain will be loaded by our manual loader on 'init'
+			return true;
+		}
+		
+		// After 'init', check if textdomain is already loaded by our manual loader
+		// If not, allow WordPress to load it normally
+		if ( is_textdomain_loaded( $domain ) ) {
+			// Already loaded by our manual loader, prevent WordPress from trying again
+			return true;
+		}
+		
+		// Not loaded yet, let WordPress continue with its normal loading process
+		return false;
+	}
+	return $override;
+}, 10, 3 );
+
 // Load translation files.
-add_action( 'plugins_loaded', 'bp_core_load_buddypress_textdomain', 0 );
+add_action( 'init', 'bp_core_load_buddypress_textdomain', 0 );
 
 global $bp_incompatible_plugins;
 global $buddyboss_platform_plugin_file;

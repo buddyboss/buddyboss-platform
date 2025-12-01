@@ -500,7 +500,9 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 			add_filter( 'bb_rest_cache_pre_current_user_id', array( $this, 'bb_cookie_support' ), 1 );
 			add_filter( 'bb_rest_cache_pre_current_user_id', array( $this, 'bb_jwt_auth_support' ), 2 );
 
-			$this->bb_load_translations();
+			// Don't load translations here - it's too early (muplugins_loaded runs before init)
+			// The main loader will handle translations on the 'init' hook
+			// $this->bb_load_translations();
 
 			if ( ! isset( $_GET['bypass'] ) ) { // phpcs:ignore
 				$this->bb_prepare_presence_mu();
