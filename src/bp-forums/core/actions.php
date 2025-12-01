@@ -723,3 +723,56 @@ function bb_forums_save_link_preview_data( $post_id ) {
 
 	update_post_meta( $post_id, '_link_preview_data', $preview_data );
 }
+
+/**
+ * Send forum subscription notifications when scheduled topics are published.
+ *
+ * This function hooks into WordPress's transition_post_status to detect when
+ * a scheduled discussion (topic) transitions from 'future' to 'publish' status,
+ * and sends notifications to subscribed forum users.
+ *
+ * @since BuddyBoss [version]
+ *
+ * @param string  $new_status New post status.
+ * @param string  $old_status Old post status.
+ * @param WP_Post $post       Post object.
+ *
+ * @return void
+ */
+function bb_forums_notify_on_scheduled_topic_publish( $new_status, $old_status, $post ) {
+	// Only process topics transitioning from 'future' to 'publish'.
+	if ( 'publish' !== $new_status || 'future' !== $old_status ) {
+		return;
+	}
+
+	// Only process topic post type.
+	if ( ! function_exists( 'bbp_get_topic_post_type' ) || bbp_get_topic_post_type() !== $post->post_type ) {
+		return;
+	}
+
+	// Get forum ID.
+	$topic_id = $post->ID;
+	$forum_id = bbp_get_topic_forum_id( $topic_id );
+
+	if ( empty( $forum_id ) ) {
+		return;
+	}
+
+	// Check if notification was already sent (prevent duplicates).
+	$notification_sent = get_post_meta( $topic_id, '_bbp_scheduled_notification_sent', true );
+	if ( ! empty( $notification_sent ) ) {
+		return;
+	}
+
+	// Get topic author data.
+	$author_id      = bbp_get_topic_author_id( $topic_id );
+	$anonymous_data = false;
+
+	// Send notification to forum subscribers.
+	if ( function_exists( 'bbp_notify_forum_subscribers' ) ) {
+		bbp_notify_forum_subscribers( $topic_id, $forum_id, $anonymous_data, $author_id );
+		// Mark as sent to prevent duplicates.
+		update_post_meta( $topic_id, '_bbp_scheduled_notification_sent', true );
+	}
+}
+add_action( 'transition_post_status', 'bb_forums_notify_on_scheduled_topic_publish', 10, 3 );
