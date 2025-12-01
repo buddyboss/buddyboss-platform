@@ -2177,9 +2177,11 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 
 		$data['bb_activity_post_feature_image'] = array();
 		if ( ! empty( $activity->id ) ) {
-			$feature_image_data = bb_pro_activity_post_feature_image_instance()->bb_get_feature_image_data( $activity->id );
-			if ( ! empty( $feature_image_data ) ) {
-				$data['bb_activity_post_feature_image'] = $feature_image_data;
+			if ( function_exists( 'bb_pro_activity_post_feature_image_instance' ) ) {
+				$feature_image_data = bb_pro_activity_post_feature_image_instance()->bb_get_feature_image_data( $activity->id );
+				if ( ! empty( $feature_image_data ) ) {
+					$data['bb_activity_post_feature_image'] = $feature_image_data;
+				}
 			}
 		}
 
