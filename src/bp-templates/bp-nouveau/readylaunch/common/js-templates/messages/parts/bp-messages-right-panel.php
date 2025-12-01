@@ -147,12 +147,12 @@ defined( 'ABSPATH' ) || exit;
 				<?php esc_html_e( 'Participants', 'buddyboss' ); ?>
 			</button>
 			<#
-			var mediaComponentActive = <?php echo bp_is_active( 'media' ) ? 'true' : 'false'; ?>;
-			var videoComponentActive = <?php echo bp_is_active( 'video' ) ? 'true' : 'false'; ?>;
-			var messagesMediaEnabled = <?php echo function_exists( 'bp_is_messages_media_support_enabled' ) ? bp_is_messages_media_support_enabled() : 'false'; ?>;
-			var groupMediaEnabled    = <?php echo function_exists( 'bp_is_group_media_support_enabled' ) ? bp_is_group_media_support_enabled() : 'false'; ?>;
-			var messagesVideoEnabled = <?php echo function_exists( 'bp_is_messages_video_support_enabled' ) ? bp_is_messages_video_support_enabled() : 'false'; ?>;
-			var groupVideoEnabled    = <?php echo function_exists( 'bp_is_group_video_support_enabled' ) ? bp_is_group_video_support_enabled() : 'false'; ?>;
+			var mediaComponentActive = <?php echo wp_json_encode( bp_is_active( 'media' ) ); ?>;
+			var videoComponentActive = <?php echo wp_json_encode( bp_is_active( 'video' ) ); ?>;
+			var messagesMediaEnabled = <?php echo wp_json_encode( function_exists( 'bp_is_messages_media_support_enabled' ) && bp_is_messages_media_support_enabled() ); ?>;
+			var groupMediaEnabled    = <?php echo wp_json_encode( function_exists( 'bp_is_group_media_support_enabled' ) && bp_is_group_media_support_enabled() ); ?>;
+			var messagesVideoEnabled = <?php echo wp_json_encode( function_exists( 'bp_is_messages_video_support_enabled' ) && bp_is_messages_video_support_enabled() ); ?>;
+			var groupVideoEnabled    = <?php echo wp_json_encode( function_exists( 'bp_is_group_video_support_enabled' ) && bp_is_group_video_support_enabled() ); ?>;
 
 			var mediaActive         = mediaComponentActive && ( messagesMediaEnabled || groupMediaEnabled );
 			var videoActive         = videoComponentActive && ( messagesVideoEnabled || groupVideoEnabled );
@@ -179,19 +179,21 @@ defined( 'ABSPATH' ) || exit;
 				<?php esc_html_e( 'Media', 'buddyboss' ); ?>
 				</button>
 			<# }
-			var filesActive = <?php echo ( bp_is_active( 'media' ) && bp_is_messages_media_support_enabled() ) ? 'true' : 'false'; ?>;
-			var groupDocumentActive = <?php echo ( bp_is_active( 'media' ) && bp_is_group_document_support_enabled() ) ? 'true' : 'false'; ?>;
-			var messagesDocumentActive = <?php echo ( bp_is_active( 'media' ) && bp_is_messages_document_support_enabled() ) ? 'true' : 'false'; ?>;
+			var filesActive            = <?php echo wp_json_encode( bp_is_active( 'media' ) && function_exists( 'bp_is_messages_media_support_enabled' ) && bp_is_messages_media_support_enabled() ); ?>;
+			var groupDocumentActive    = <?php echo wp_json_encode( bp_is_active( 'media' ) && function_exists( 'bp_is_group_document_support_enabled' ) && bp_is_group_document_support_enabled() ); ?>;
+			var messagesDocumentActive = <?php echo wp_json_encode( bp_is_active( 'media' ) && function_exists( 'bp_is_messages_document_support_enabled' ) && bp_is_messages_document_support_enabled() ); ?>;
 			if ( 
 				filesActive &&
 				(
-					groupDocumentActive &&
-					data.group_id &&
-					'group' === data.message_from 
-				) || 
-				(
-					messagesDocumentActive &&
-					'group' !== data.message_from
+					(
+						groupDocumentActive &&
+						data.group_id &&
+						'group' === data.message_from 
+					) ||
+					(
+						messagesDocumentActive &&
+						'group' !== data.message_from
+					)
 				)
 			) { #>
 				<button class="bb-rl-tab-item" data-tab="files">
