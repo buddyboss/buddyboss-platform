@@ -26,9 +26,6 @@ class BB_DRM_Controller {
 		// Install/upgrade database tables.
 		BB_DRM_Installer::install();
 
-		// Initialize lockout system.
-		BB_DRM_Lockout::init();
-
 		$instance = new self();
 		$instance->setup_hooks();
 	}
