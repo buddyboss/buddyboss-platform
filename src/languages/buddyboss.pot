@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 2.15.1\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2025-11-13 12:27:53+00:00\n"
+"POT-Creation-Date: 2025-12-01 12:21:49+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -45,6 +45,14 @@ msgstr ""
 
 #. Author of the plugin
 #: bp-core/admin/bb-settings/readylaunch/index.php:40
+#: bp-core/admin/drm/class-bb-drm-controller.php:298
+#: bp-core/admin/drm/class-bb-drm-controller.php:316
+#: bp-core/admin/drm/class-bb-drm-controller.php:333
+#: bp-core/admin/drm/class-bb-drm-registry.php:975
+#: bp-core/admin/drm/class-bb-drm-registry.php:1082
+#: bp-core/admin/drm/class-bb-drm-registry.php:1140
+#: bp-core/admin/drm/class-bb-drm-registry.php:1196
+#: bp-core/admin/drm/class-bb-drm-registry.php:1220
 msgid "BuddyBoss"
 msgstr ""
 
@@ -6968,6 +6976,343 @@ msgstr ""
 msgid "MySql Server"
 msgstr ""
 
+#: bp-core/admin/drm/class-bb-base-drm.php:256
+#: bp-core/admin/drm/class-bb-drm-addon.php:192
+#: bp-core/admin/drm/class-bb-drm-controller.php:344
+#: bp-core/admin/drm/class-bb-drm-registry.php:1089
+#: bp-core/admin/mothership/class-bb-license-manager.php:199
+msgid "Activate License"
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-base-drm.php:280
+#: bp-core/admin/drm/class-bb-drm-registry.php:511
+msgid "Dismiss this notice for 24 hours"
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-base-drm.php:281
+#: bp-core/admin/drm/class-bb-drm-registry.php:512
+msgid "Dismiss this notice for 24 hours."
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-base-drm.php:473
+msgid "Contact Us"
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-drm-addon.php:197
+msgid "Contact Support"
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-drm-controller.php:194
+#: bp-forums/classes/class-bp-rest-reply-actions-endpoint.php:586
+#: bp-forums/classes/class-bp-rest-topics-actions-endpoint.php:1276
+#: bp-forums/classes/class-bp-rest-topics-actions-endpoint.php:1310
+#: bp-forums/classes/class-bp-rest-topics-actions-endpoint.php:1354
+#: bp-forums/classes/class-bp-rest-topics-actions-endpoint.php:1390
+#: bp-forums/classes/class-bp-rest-topics-actions-endpoint.php:1425
+#: bp-forums/classes/class-bp-rest-topics-actions-endpoint.php:1458
+#: bp-forums/templates/default/bbpress-functions.php:791
+#: bp-forums/templates/default/bbpress-functions.php:859
+#: bp-forums/templates/default/bbpress-functions.php:927
+msgid "You do not have permission to do this."
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-drm-controller.php:198
+msgid "Invalid notice key."
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-drm-controller.php:211
+msgid "Invalid security hash."
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-drm-controller.php:252
+msgid "Notice dismissed for 24 hours."
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-drm-controller.php:254
+msgid "Failed to dismiss notice."
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-drm-controller.php:279
+msgid "BuddyBoss License Status"
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-drm-controller.php:295
+msgid "License check bypassed (development environment)"
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-drm-controller.php:303
+msgid "License validation is automatically disabled on development environments."
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-drm-controller.php:313
+msgid "BuddyBoss license is active and valid"
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-drm-controller.php:321
+msgid "Your BuddyBoss license is active and valid. You have full access to all features and updates."
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-drm-controller.php:330
+msgid "BuddyBoss license not activated"
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-drm-controller.php:338
+msgid "No license key has been activated for BuddyBoss Platform. While Platform features will continue to work, add-on plugins require license activation."
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-drm-controller.php:339
+msgid "Activate your license to manage add-on plugins and ensure access to updates and support."
+msgstr ""
+
+#. translators: %s: site URL
+#: bp-core/admin/drm/class-bb-drm-helper.php:566
+msgid "This is an automated message from %s."
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-drm-helper.php:574
+#: bp-core/admin/drm/class-bb-drm-helper.php:697
+#: bp-core/admin/drm/class-bb-drm-registry.php:664
+msgid "BuddyBoss Pro/Plus: License Activation Needed"
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-drm-helper.php:576
+#: bp-core/admin/drm/class-bb-drm-helper.php:699
+#: bp-core/admin/drm/class-bb-drm-registry.php:665
+msgid "We couldn't verify an active license for your BuddyBoss Pro/Plus features. Please activate your license to continue using them."
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-drm-helper.php:577
+#: bp-core/admin/drm/class-bb-drm-helper.php:599
+#: bp-core/admin/drm/class-bb-drm-helper.php:621
+#: bp-core/admin/drm/class-bb-drm-helper.php:643
+#: bp-core/admin/drm/class-bb-drm-helper.php:700
+#: bp-core/admin/drm/class-bb-drm-helper.php:722
+#: bp-core/admin/drm/class-bb-drm-helper.php:744
+#: bp-core/admin/drm/class-bb-drm-helper.php:780
+#: bp-core/admin/drm/class-bb-drm-registry.php:524
+#: bp-core/admin/drm/class-bb-drm-registry.php:731
+#: bp-core/admin/drm/class-bb-drm-registry.php:1147
+#: bp-core/admin/drm/class-bb-drm-registry.php:1203
+msgid "Activate Your License"
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-drm-helper.php:578
+#: bp-core/admin/drm/class-bb-drm-helper.php:701
+#: bp-core/admin/templates/moderation-deactivate-confirmation-popup.php:35
+msgid "Notice"
+msgstr ""
+
+#. translators: %1$s: opening anchor tag for account page, %2$s: closing anchor tag, %3$s: opening anchor tag for support
+#: bp-core/admin/drm/class-bb-drm-helper.php:585
+#: bp-core/admin/drm/class-bb-drm-helper.php:607
+#: bp-core/admin/drm/class-bb-drm-helper.php:629
+#: bp-core/admin/drm/class-bb-drm-helper.php:652
+#: bp-core/admin/drm/class-bb-drm-helper.php:708
+#: bp-core/admin/drm/class-bb-drm-helper.php:730
+#: bp-core/admin/drm/class-bb-drm-helper.php:752
+#: bp-core/admin/drm/class-bb-drm-helper.php:774
+msgid "Need your license key? Visit %1$sYour Account Page%2$s. Having trouble? %3$sContact Support%2$s."
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-drm-helper.php:596
+#: bp-core/admin/drm/class-bb-drm-helper.php:719
+#: bp-core/admin/drm/class-bb-drm-registry.php:668
+#: bp-core/admin/drm/class-bb-drm-registry.php:1173
+msgid "BuddyBoss Pro/Plus: License Required"
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-drm-helper.php:598
+#: bp-core/admin/drm/class-bb-drm-helper.php:721
+#: bp-core/admin/drm/class-bb-drm-registry.php:669
+msgid "An active license is required to use BuddyBoss Pro/Plus features. Without activation, these features will stop working."
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-drm-helper.php:600
+#: bp-core/admin/drm/class-bb-drm-helper.php:723
+msgid "Warning"
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-drm-helper.php:618
+#: bp-core/admin/drm/class-bb-drm-helper.php:741
+#: bp-core/admin/drm/class-bb-drm-registry.php:672
+#: bp-core/admin/drm/class-bb-drm-registry.php:1117
+msgid "BuddyBoss Pro/Plus: Activation Required"
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-drm-helper.php:620
+#: bp-core/admin/drm/class-bb-drm-helper.php:743
+#: bp-core/admin/drm/class-bb-drm-registry.php:673
+msgid "Your BuddyBoss Pro/Plus features will be disabled soon. Activate your license now to avoid interruption."
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-drm-helper.php:622
+#: bp-core/admin/drm/class-bb-drm-helper.php:644
+#: bp-core/admin/drm/class-bb-drm-helper.php:745
+#: bp-core/admin/drm/class-bb-drm-helper.php:763
+msgid "Critical"
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-drm-helper.php:640
+#: bp-core/admin/drm/class-bb-drm-helper.php:764
+#: bp-core/admin/drm/class-bb-drm-registry.php:676
+#: bp-core/admin/drm/class-bb-drm-registry.php:1059
+msgid "BuddyBoss Pro/Plus: Features Disabled"
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-drm-helper.php:642
+#: bp-core/admin/drm/class-bb-drm-helper.php:766
+#: bp-core/admin/drm/class-bb-drm-registry.php:677
+msgid "The following features have been disabled because no active license was found. Activate your license to restore them."
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-drm-helper.php:649
+#: bp-core/admin/drm/class-bb-drm-helper.php:771
+#: bp-core/admin/drm/class-bb-drm-registry.php:678
+#: bp-core/admin/drm/class-bb-drm-registry.php:948
+msgid "If you no longer need these features, you can deactivate the premium add-ons in your Plugins page to continue using BuddyBoss Platform for free."
+msgstr ""
+
+#. translators: %1$s: home URL, %2$s: home URL
+#: bp-core/admin/drm/class-bb-drm-helper.php:688
+msgid "This is an automated message from %1$s. If you continue getting these messages, please try deactivating and then re-activating your license key on %2$s."
+msgstr ""
+
+#. translators: %1$s: plugin name, %2$s: license page URL
+#: bp-core/admin/drm/class-bb-drm-registry.php:263
+msgid "%1$s features are currently disabled. Please <a href=\"%2$s\">activate your license</a> to restore functionality."
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-drm-registry.php:304
+msgid "License Required"
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-drm-registry.php:462
+msgid "License required for BuddyBoss Pro/Plus features."
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-drm-registry.php:470
+msgid "BuddyBoss Pro/Plus features will be disabled soon."
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-drm-registry.php:478
+msgid "BuddyBoss Pro/Plus features have been disabled."
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-drm-registry.php:689
+#: bp-core/admin/drm/class-bb-drm-registry.php:938
+#: bp-core/admin/drm/class-bb-drm-registry.php:1062
+msgid "The following features have been disabled:"
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-drm-registry.php:691
+#: bp-core/admin/drm/class-bb-drm-registry.php:1176
+msgid "The following features require an active license:"
+msgstr ""
+
+#. translators: %1$s: opening link tag, %2$s: closing link tag
+#: bp-core/admin/drm/class-bb-drm-registry.php:709
+msgid "Need your license key? Visit %1$sYour Account Page%2$s. Having trouble? %3$sContact Support%4$s."
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-drm-registry.php:815
+msgid "Your BuddyBoss Pro/Plus license needs activation"
+msgstr ""
+
+#. translators: %s: site name/URL
+#: bp-core/admin/drm/class-bb-drm-registry.php:819
+msgid "Your site %s is using BuddyBoss Pro/Plus features that require an active license."
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-drm-registry.php:827
+msgid "BuddyBoss Pro/Plus features have been disabled on your site"
+msgstr ""
+
+#. translators: %s: site name/URL
+#: bp-core/admin/drm/class-bb-drm-registry.php:831
+msgid "The BuddyBoss Pro/Plus features on your site %s have been disabled because no active license was found."
+msgstr ""
+
+#. translators: Do not translate OLD_EMAIL, NEW_EMAIL, SITENAME, SITEURL: those are placeholders.
+#: bp-core/admin/drm/class-bb-drm-registry.php:931
+#: bp-core/bp-core-wp-emails.php:1495
+#: bp-core/bp-core-wp-emails.php:1544
+msgid "Hi,"
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-drm-registry.php:940
+msgid "The following features will be disabled without an active license:"
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-drm-registry.php:947
+msgid "To restore these features, activate your license in your WordPress admin."
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-drm-registry.php:950
+msgid "To keep these features working, activate your license in your WordPress admin."
+msgstr ""
+
+#. translators: %1$s: opening link tag, %2$s: closing link tag
+#: bp-core/admin/drm/class-bb-drm-registry.php:957
+msgid "Need your license key? Log in to your BuddyBoss account: %1$sYour Account Page%2$s"
+msgstr ""
+
+#. translators: %1$s: opening link tag, %2$s: closing link tag
+#: bp-core/admin/drm/class-bb-drm-registry.php:968
+msgid "Having trouble? Our support team is here to help: %1$sContact Support%2$s"
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-drm-registry.php:975
+msgid "Thanks,"
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-drm-registry.php:1013
+msgid "BuddyBoss Pro/Plus License - Features Disabled"
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-drm-registry.php:1020
+msgid "BuddyBoss Pro/Plus License - Urgent Action Required"
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-drm-registry.php:1027
+msgid "BuddyBoss Pro/Plus License - Action Required"
+msgstr ""
+
+#. translators: %1$s: Account page link, %2$s: Settings page link, %3$s: Support link
+#: bp-core/admin/drm/class-bb-drm-registry.php:1071
+msgid "Without an active license, the features listed below have been disabled. Your site frontend is unaffected, but these premium features are unavailable.<br><br>%1$s<br>This is easy to fix:<br><br>1. Get your key from your <a href=\"%2$s\" target=\"_blank\">Account Page</a><br>2. <a href=\"%3$s\">Click here</a> to enter and activate it<br>3. That's it!<br><br>We're here to help. <a href=\"%4$s\" target=\"_blank\">Contact Support</a>"
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-drm-registry.php:1091
+msgid "Purchase License"
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-drm-registry.php:1120
+msgid "The following features will be disabled soon:"
+msgstr ""
+
+#. translators: %1$s: Addon list, %2$s: Account page link, %3$s: Settings page link, %4$s: Support link
+#: bp-core/admin/drm/class-bb-drm-registry.php:1129
+msgid "%1$sActivate your license now to avoid interruption.<br><br>Need your license key? Visit %2$sYour Account Page%3$s. Having trouble? %4$sContact Support%3$s."
+msgstr ""
+
+#. translators: %1$s: Addon list, %2$s: Account page link, %3$s: Support link
+#: bp-core/admin/drm/class-bb-drm-registry.php:1185
+msgid "%1$sAn active license is required to use these features. Without activation, these features will stop working.<br><br>Need your license key? Visit %2$sYour Account Page%3$s. Having trouble? %4$sContact Support%3$s."
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-drm-registry.php:1217
+msgid "BuddyBoss Pro/Plus license is active"
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-drm-registry.php:1225
+msgid "All BuddyBoss Pro/Plus addon licenses are valid and active."
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-notifications.php:65
+#: bp-notifications/bp-notifications-functions.php:1253
+msgid "Notification Icon"
+msgstr ""
+
 #: bp-core/admin/mothership/class-bb-addons-manager.php:36
 msgid "Please enter your license key to access add-ons."
 msgstr ""
@@ -7027,10 +7372,6 @@ msgstr ""
 
 #: bp-core/admin/mothership/class-bb-license-manager.php:189
 msgid "here"
-msgstr ""
-
-#: bp-core/admin/mothership/class-bb-license-manager.php:199
-msgid "Activate License"
 msgstr ""
 
 #: bp-core/admin/mothership/class-bb-license-manager.php:210
@@ -7127,7 +7468,7 @@ msgid "BuddyBoss License Activation"
 msgstr ""
 
 #. Translators: %s is the response error message.
-#: bp-core/admin/mothership/class-bb-mothership-loader.php:318
+#: bp-core/admin/mothership/class-bb-mothership-loader.php:337
 msgid "Migrate License activation failed: %s"
 msgstr ""
 
@@ -8219,10 +8560,6 @@ msgstr ""
 
 #: bp-core/admin/templates/moderation-activate-alert-popup.php:49
 msgid "To unsuspend members who are not creating spam anymore in your network, activate the <a href=\"%s\" >Moderation</a> component."
-msgstr ""
-
-#: bp-core/admin/templates/moderation-deactivate-confirmation-popup.php:35
-msgid "Notice"
 msgstr ""
 
 #: bp-core/admin/templates/moderation-deactivate-confirmation-popup.php:50
@@ -10859,12 +11196,6 @@ msgstr ""
 #: bp-core/bp-core-wp-emails.php:1499
 #: bp-core/bp-core-wp-emails.php:1548
 msgid "Regards, <br /> All at ###SITENAME### <br /> ###SITEURL###"
-msgstr ""
-
-#. translators: Do not translate OLD_EMAIL, NEW_EMAIL, SITENAME, SITEURL: those are placeholders.
-#: bp-core/bp-core-wp-emails.php:1495
-#: bp-core/bp-core-wp-emails.php:1544
-msgid "Hi,"
 msgstr ""
 
 #: bp-core/bp-core-wp-emails.php:1496
@@ -18014,19 +18345,6 @@ msgstr ""
 
 #: bp-forums/classes/class-bp-rest-reply-actions-endpoint.php:421
 msgid "You do not have permission to create new topics. The reply could not be converted into a topic."
-msgstr ""
-
-#: bp-forums/classes/class-bp-rest-reply-actions-endpoint.php:586
-#: bp-forums/classes/class-bp-rest-topics-actions-endpoint.php:1276
-#: bp-forums/classes/class-bp-rest-topics-actions-endpoint.php:1310
-#: bp-forums/classes/class-bp-rest-topics-actions-endpoint.php:1354
-#: bp-forums/classes/class-bp-rest-topics-actions-endpoint.php:1390
-#: bp-forums/classes/class-bp-rest-topics-actions-endpoint.php:1425
-#: bp-forums/classes/class-bp-rest-topics-actions-endpoint.php:1458
-#: bp-forums/templates/default/bbpress-functions.php:791
-#: bp-forums/templates/default/bbpress-functions.php:859
-#: bp-forums/templates/default/bbpress-functions.php:927
-msgid "You do not have permission to do this."
 msgstr ""
 
 #: bp-forums/classes/class-bp-rest-reply-endpoint.php:509
@@ -31745,10 +32063,6 @@ msgstr ""
 
 #: bp-notifications/bp-notifications-adminbar.php:90
 msgid "No new notifications"
-msgstr ""
-
-#: bp-notifications/bp-notifications-functions.php:1253
-msgid "Notification Icon"
 msgstr ""
 
 #: bp-notifications/bp-notifications-settings.php:26

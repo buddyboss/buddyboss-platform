@@ -488,7 +488,7 @@ class BB_DRM_Registry {
 		// Build add-on list to display below the heading
 		$addon_list_html = '';
 		if ( $count > 0 ) {
-			$addon_list_html = '<ul style="margin: 10px 0 0 0; padding-left: 20px; list-style: disc;">';
+			$addon_list_html = '<ul>';
 			foreach ( $addon_names as $name ) {
 				$addon_list_html .= '<li>' . esc_html( $name ) . '</li>';
 			}
