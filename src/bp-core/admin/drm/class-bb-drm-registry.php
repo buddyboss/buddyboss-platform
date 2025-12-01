@@ -819,7 +819,7 @@ class BB_DRM_Registry {
 
 		// Build HTML list for multiple addons.
 		$addon_list_html = '';
-		if ( $count > 1 ) {
+		if ( $count > 0 ) {
 			$addon_list_html = '<ul style="margin: 10px 0; padding-left: 20px;">';
 			foreach ( $addon_names as $name ) {
 				$addon_list_html .= '<li><strong>' . esc_html( $name ) . '</strong></li>';
