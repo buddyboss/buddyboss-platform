@@ -646,19 +646,19 @@ class BB_DRM_Registry {
 			if ( BB_DRM_Helper::DRM_LOW === $drm_status ) {
 				// 7-13 days
 				$title   = __( 'BuddyBoss Pro/Plus: License Activation Needed', 'buddyboss' );
-				$content = __( 'We couldn\'t verify an active license for your BuddyBoss Pro/Plus features. Please activate your license to continue using them.', 'buddyboss' );
+				$content = '<p>' . __( 'We couldn\'t verify an active license for your BuddyBoss Pro/Plus features. Please activate your license to continue using them.', 'buddyboss' ) . '</p>';
 			} elseif ( BB_DRM_Helper::DRM_MEDIUM === $drm_status ) {
 				// 14-21 days
 				$title   = __( 'BuddyBoss Pro/Plus: License Required', 'buddyboss' );
-				$content = __( 'An active license is required to use BuddyBoss Pro/Plus features. Without activation, these features will stop working.', 'buddyboss' );
+				$content = '<p>' . __( 'An active license is required to use BuddyBoss Pro/Plus features. Without activation, these features will stop working.', 'buddyboss' ) . '</p>';
 			} elseif ( BB_DRM_Helper::DRM_HIGH === $drm_status ) {
 				// 21-30 days
 				$title   = __( 'BuddyBoss Pro/Plus: Activation Required', 'buddyboss' );
-				$content = __( 'Your BuddyBoss Pro/Plus features will be disabled soon. Activate your license now to avoid interruption.', 'buddyboss' );
+				$content = '<p>' . __( 'Your BuddyBoss Pro/Plus features will be disabled soon. Activate your license now to avoid interruption.', 'buddyboss' ) . '</p>';
 			} elseif ( BB_DRM_Helper::DRM_LOCKED === $drm_status ) {
 				// 30+ days
 				$title   = __( 'BuddyBoss Pro/Plus: Features Disabled', 'buddyboss' );
-				$content = __( 'The following features have been disabled because no active license was found. Activate your license to restore them.', 'buddyboss' );
+				$content = '<p>' . __( 'The following features have been disabled because no active license was found. Activate your license to restore them.', 'buddyboss' ) . '</p>';
 				$content .= '<p>' . __( 'If you no longer need these features, you can deactivate the premium add-ons in your Plugins page to continue using BuddyBoss Platform for free.', 'buddyboss' ) . '</p>';
 			} else {
 				$title   = '';
