@@ -776,3 +776,59 @@ function bb_forums_notify_on_scheduled_topic_publish( $new_status, $old_status, 
 	}
 }
 add_action( 'transition_post_status', 'bb_forums_notify_on_scheduled_topic_publish', 10, 3 );
+
+/**
+ * Send topic subscription notifications when scheduled replies are published.
+ *
+ * This function hooks into WordPress's transition_post_status to detect when
+ * a scheduled reply transitions from 'future' to 'publish' status,
+ * and sends notifications to subscribed topic users.
+ *
+ * @since BuddyBoss [version]
+ *
+ * @param string  $new_status New post status.
+ * @param string  $old_status Old post status.
+ * @param WP_Post $post       Post object.
+ *
+ * @return void
+ */
+function bb_forums_notify_on_scheduled_reply_publish( $new_status, $old_status, $post ) {
+	// Only process replies transitioning from 'future' to 'publish'.
+	if ( 'publish' !== $new_status || 'future' !== $old_status ) {
+		return;
+	}
+
+	// Only process reply post type.
+	if ( ! function_exists( 'bbp_get_reply_post_type' ) || bbp_get_reply_post_type() !== $post->post_type ) {
+		return;
+	}
+
+	// Get topic ID.
+	$reply_id = $post->ID;
+	$topic_id = bbp_get_reply_topic_id( $reply_id );
+
+	if ( empty( $topic_id ) ) {
+		return;
+	}
+
+	// Get forum ID.
+	$forum_id = bbp_get_topic_forum_id( $topic_id );
+
+	// Check if notification was already sent (prevent duplicates).
+	$notification_sent = get_post_meta( $reply_id, '_bbp_scheduled_notification_sent', true );
+	if ( ! empty( $notification_sent ) ) {
+		return;
+	}
+
+	// Get reply author data.
+	$author_id      = bbp_get_reply_author_id( $reply_id );
+	$anonymous_data = false;
+
+	// Send notification to topic subscribers.
+	if ( function_exists( 'bbp_notify_topic_subscribers' ) ) {
+		bbp_notify_topic_subscribers( $reply_id, $topic_id, $forum_id, $anonymous_data, $author_id );
+		// Mark as sent to prevent duplicates.
+		update_post_meta( $reply_id, '_bbp_scheduled_notification_sent', true );
+	}
+}
+add_action( 'transition_post_status', 'bb_forums_notify_on_scheduled_reply_publish', 10, 3 );
