@@ -43,7 +43,8 @@ class BB_DRM_Controller {
 		}
 
 		try {
-			$loader = new \BuddyBoss\Core\Admin\Mothership\BB_Mothership_Loader();
+			// Use singleton instance to avoid duplicate hook registration.
+			$loader = \BuddyBoss\Core\Admin\Mothership\BB_Mothership_Loader::instance();
 			$plugin_connector = $loader->getContainer()->get( \BuddyBossPlatform\GroundLevel\Mothership\AbstractPluginConnection::class );
 			return $plugin_connector->pluginId;
 		} catch ( \Exception $e ) {

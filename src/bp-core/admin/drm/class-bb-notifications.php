@@ -119,13 +119,8 @@ class BB_Notifications {
 	 * @return BB_Mothership_Loader
 	 */
 	private function get_mothership_loader() {
-		static $loader = null;
-
-		if ( null === $loader ) {
-			$loader = new BB_Mothership_Loader();
-		}
-
-		return $loader;
+		// Use singleton instance to avoid duplicate hook registration.
+		return BB_Mothership_Loader::instance();
 	}
 
 	/**

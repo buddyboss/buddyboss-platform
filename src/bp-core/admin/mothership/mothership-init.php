@@ -32,8 +32,8 @@ function buddyboss_init_mothership() {
 		require_once __DIR__ . '/class-bb-mothership-loader.php';
 	}
 
-	// Initialize the mothership functionality.
-	new BuddyBoss\Core\Admin\Mothership\BB_Mothership_Loader();
+	// Initialize the mothership functionality (singleton pattern prevents duplicate hooks).
+	BuddyBoss\Core\Admin\Mothership\BB_Mothership_Loader::instance();
 
 	// Initialize DRM (Digital Rights Management) functionality.
 	buddyboss_init_drm();
