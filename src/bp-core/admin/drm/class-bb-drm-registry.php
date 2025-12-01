@@ -973,7 +973,15 @@ class BB_DRM_Registry {
 		$grouped = self::get_addons_by_drm_status();
 
 		// Add test for each priority level that has affected addons.
-		// We create separate tests per priority so admins can see the severity breakdown.
+		// NOTE: LOW status (7-13 days) does NOT show Site Health test.
+		// Site Health only shows for MEDIUM (14-21 days), HIGH (22-30 days), and LOCKED (31+ days).
+		// Timeline per BuddyBoss DRM Messaging.md:
+		// - 0-7 days: Grace period (no messaging)
+		// - 7-13 days: Plugin Notification only (no Site Health)
+		// - 14-21 days: Plugin Notification + Admin Notice + Site Health
+		// - 22-30 days: Plugin Notification + Admin Notice + Site Health + Email
+		// - 31+ days: Plugin Notification + Admin Notice + Site Health + Email + Features Disabled
+
 		if ( ! empty( $grouped['locked'] ) ) {
 			$tests['direct']['buddyboss_addons_locked'] = array(
 				'label' => __( 'BuddyBoss Pro/Plus License - Features Disabled', 'buddyboss' ),
@@ -995,12 +1003,8 @@ class BB_DRM_Registry {
 			);
 		}
 
-		if ( ! empty( $grouped['low'] ) ) {
-			$tests['direct']['buddyboss_addons_low'] = array(
-				'label' => __( 'BuddyBoss Pro/Plus License - Activation Needed', 'buddyboss' ),
-				'test'  => array( $this, 'site_health_low_test' ),
-			);
-		}
+		// LOW status (7-13 days) does NOT register Site Health test.
+		// Only plugin notification is shown during this period.
 
 		return $tests;
 	}
@@ -1179,57 +1183,22 @@ class BB_DRM_Registry {
 	/**
 	 * Site Health test for LOW status (7-13 days).
 	 *
+	 * DEPRECATED: LOW status no longer shows Site Health test.
+	 * Per BuddyBoss DRM Messaging.md, Site Health only appears from day 14 onwards.
+	 *
+	 * Timeline:
+	 * - 0-7 days: Grace period (no messaging)
+	 * - 7-13 days: Plugin Notification only (no Site Health, no admin notice)
+	 * - 14+ days: Plugin Notification + Admin Notice + Site Health
+	 *
+	 * @deprecated 3.0.0 LOW status does not show Site Health test.
 	 * @since 3.0.0
 	 * @return array Test result.
 	 */
 	public function site_health_low_test() {
-		$grouped = self::get_addons_by_drm_status();
-
-		if ( empty( $grouped['low'] ) ) {
-			return $this->get_site_health_pass();
-		}
-
-		$addons      = $grouped['low'];
-		$addon_names = wp_list_pluck( $addons, 'plugin_name' );
-
-		$activation_link = bp_get_admin_url( 'admin.php?page=buddyboss-license' );
-		$account_link    = 'https://www.buddyboss.com/my-account/';
-		$support_link    = 'https://www.buddyboss.com/support/';
-
-		$title = __( 'BuddyBoss Pro/Plus: License Activation Needed', 'buddyboss' );
-
-		// Build addon list
-		$addon_list = '<p><strong>' . __( 'The following features require an active license:', 'buddyboss' ) . '</strong></p>';
-		$addon_list .= '<ul style="margin: 10px 0; padding-left: 20px;">';
-		foreach ( $addon_names as $name ) {
-			$addon_list .= '<li>' . esc_html( $name ) . '</li>';
-		}
-		$addon_list .= '</ul>';
-
-		$message = sprintf(
-			/* translators: %1$s: Addon list, %2$s: Account page link, %3$s: Support link */
-			__( '%1$sWe couldn\'t verify an active license for these features. Please activate your license to continue using them.<br><br>Need your license key? Visit %2$sYour Account Page%3$s. Having trouble? %4$sContact Support%3$s.', 'buddyboss' ),
-			$addon_list,
-			'<a href="' . esc_url( $account_link ) . '" target="_blank">',
-			'</a>',
-			'<a href="' . esc_url( $support_link ) . '" target="_blank">'
-		);
-
-		return array(
-			'label'       => $title,
-			'status'      => 'recommended',
-			'badge'       => array(
-				'label' => __( 'BuddyBoss', 'buddyboss' ),
-				'color' => 'orange',
-			),
-			'description' => sprintf( '<p>%s</p>', $message ),
-			'actions'     => sprintf(
-				'<p><a href="%s" class="button button-primary">%s</a></p>',
-				esc_url( $activation_link ),
-				esc_html__( 'Activate Your License', 'buddyboss' )
-			),
-			'test'        => 'buddyboss_addons_low',
-		);
+		// Method kept for backward compatibility but should not be called.
+		// LOW status is not registered in add_addon_site_health_tests().
+		return $this->get_site_health_pass();
 	}
 
 	/**
