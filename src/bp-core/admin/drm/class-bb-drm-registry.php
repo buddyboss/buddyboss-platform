@@ -1207,27 +1207,6 @@ class BB_DRM_Registry {
 	}
 
 	/**
-	 * Site Health test for LOW status (7-13 days).
-	 *
-	 * DEPRECATED: LOW status no longer shows Site Health test.
-	 * Per BuddyBoss DRM Messaging.md, Site Health only appears from day 14 onwards.
-	 *
-	 * Timeline:
-	 * - 0-7 days: Grace period (no messaging)
-	 * - 7-13 days: Plugin Notification only (no Site Health, no admin notice)
-	 * - 14+ days: Plugin Notification + Admin Notice + Site Health
-	 *
-	 * @deprecated 3.0.0 LOW status does not show Site Health test.
-	 * @since 3.0.0
-	 * @return array Test result.
-	 */
-	public function site_health_low_test() {
-		// Method kept for backward compatibility but should not be called.
-		// LOW status is not registered in add_addon_site_health_tests().
-		return $this->get_site_health_pass();
-	}
-
-	/**
 	 * Get Site Health pass result.
 	 *
 	 * @since 3.0.0
