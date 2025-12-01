@@ -59,14 +59,14 @@ class BB_DRM_Controller {
 	 * Setup WordPress hooks.
 	 */
 	private function setup_hooks() {
-		// License activation/deactivation hooks.
+		// License status change hook from Mothership.
 		// Get dynamic plugin ID from Mothership connection.
 		$plugin_id = $this->get_plugin_id();
 
-		add_action( $plugin_id . '_license_activated', array( $this, 'drm_license_activated' ) );
-		add_action( $plugin_id . '_license_deactivated', array( $this, 'drm_license_deactivated' ) );
-		add_action( $plugin_id . '_license_expired', array( $this, 'drm_license_invalid_expired' ) );
-		add_action( $plugin_id . '_license_invalidated', array( $this, 'drm_license_invalid_expired' ) );
+		// Listen to vendor's license_status_changed hook.
+		// This hook is fired by LicenseManager::checkLicenseStatus() every 12 hours via cron.
+		// It provides both activation (valid=true) and deactivation/expiration (valid=false) events.
+		add_action( $plugin_id . '_license_status_changed', array( $this, 'drm_license_status_changed' ), 10, 2 );
 
 		// Run DRM checks on admin_init.
 		add_action( 'admin_init', array( $this, 'drm_init' ), 20 );
@@ -79,9 +79,27 @@ class BB_DRM_Controller {
 	}
 
 	/**
-	 * Handle license activation.
+	 * Handle license status changes from Mothership.
+	 * This is the primary hook fired by the vendor's LicenseManager.
+	 *
+	 * @param bool   $is_valid Whether the license is valid.
+	 * @param object $status   The response object from Mothership API.
 	 */
-	public function drm_license_activated() {
+	public function drm_license_status_changed( $is_valid, $status ) {
+		if ( $is_valid ) {
+			// License is valid - clean up DRM state.
+			$this->drm_license_activated();
+		} else {
+			// License is invalid/expired - initialize DRM.
+			$this->drm_license_invalid_expired();
+		}
+	}
+
+	/**
+	 * Handle license activation/cleanup.
+	 * Called internally by drm_license_status_changed() when license becomes valid.
+	 */
+	private function drm_license_activated() {
 		delete_option( 'bb_drm_no_license' );
 		delete_option( 'bb_drm_invalid_license' );
 
@@ -111,8 +129,9 @@ class BB_DRM_Controller {
 
 	/**
 	 * Handle license deactivation.
+	 * Called when user manually deactivates license (not used by status_changed hook).
 	 */
-	public function drm_license_deactivated() {
+	private function drm_license_deactivated() {
 		$drm_no_license = get_option( 'bb_drm_no_license', false );
 
 		if ( ! $drm_no_license ) {
@@ -129,8 +148,9 @@ class BB_DRM_Controller {
 
 	/**
 	 * Handle license expiration/invalidation.
+	 * Called internally by drm_license_status_changed() when license becomes invalid.
 	 */
-	public function drm_license_invalid_expired() {
+	private function drm_license_invalid_expired() {
 		$drm_invalid_license = get_option( 'bb_drm_invalid_license', false );
 
 		if ( ! $drm_invalid_license ) {
