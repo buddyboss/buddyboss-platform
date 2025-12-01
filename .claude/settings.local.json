@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(php -l:*)",
+      "Bash(for file in class-bb-drm-helper.php class-bb-drm-event.php class-bb-drm-installer.php class-bb-base-drm.php class-bb-drm-nokey.php class-bb-drm-invalid.php class-bb-drm-addon.php class-bb-drm-registry.php class-bb-drm-lockout.php class-bb-drm-controller.php class-bb-notifications.php)",
+      "Bash(do echo \"Checking $file...\")",
+      "Bash(exit 1)",
+      "Bash(done)",
+      "Bash(git show:*)",
+      "Bash(for file in /Users/varni/ddev/bbplatform/wp-content/plugins/buddyboss-sharing/buddyboss-sharing.php /Users/varni/ddev/bbplatform/wp-content/plugins/buddyboss-sharing/includes/Admin/Activity_Settings.php /Users/varni/ddev/bbplatform/wp-content/plugins/buddyboss-sharing/includes/Core/License_Manager.php)",
+      "Bash(find:*)",
+      "Bash(git log:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
