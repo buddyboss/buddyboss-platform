@@ -34,11 +34,35 @@ class BB_DRM_Controller {
 	}
 
 	/**
+	 * Get the dynamic plugin ID from Mothership connection.
+	 *
+	 * @return string The plugin ID.
+	 */
+	private function get_plugin_id() {
+		// Check if Mothership loader is available.
+		if ( ! class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_Mothership_Loader' ) ) {
+			// Fallback to PLATFORM_EDITION constant or default.
+			return defined( 'PLATFORM_EDITION' ) ? PLATFORM_EDITION : 'buddyboss-platform';
+		}
+
+		try {
+			$loader = new \BuddyBoss\Core\Admin\Mothership\BB_Mothership_Loader();
+			$plugin_connector = $loader->getContainer()->get( \BuddyBossPlatform\GroundLevel\Mothership\AbstractPluginConnection::class );
+			return $plugin_connector->pluginId;
+		} catch ( \Exception $e ) {
+			// Fallback to PLATFORM_EDITION constant or default if container access fails.
+			return defined( 'PLATFORM_EDITION' ) ? PLATFORM_EDITION : 'buddyboss-platform';
+		}
+	}
+
+	/**
 	 * Setup WordPress hooks.
 	 */
 	private function setup_hooks() {
 		// License activation/deactivation hooks.
-		$plugin_id = defined( 'PLATFORM_EDITION' ) ? PLATFORM_EDITION : 'buddyboss-platform';
+		// Get dynamic plugin ID from Mothership connection.
+		$plugin_id = $this->get_plugin_id();
+
 		add_action( $plugin_id . '_license_activated', array( $this, 'drm_license_activated' ) );
 		add_action( $plugin_id . '_license_deactivated', array( $this, 'drm_license_deactivated' ) );
 		add_action( $plugin_id . '_license_expired', array( $this, 'drm_license_invalid_expired' ) );
