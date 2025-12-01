@@ -3671,21 +3671,26 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					);
 		}
 
-		/**
-		 * Enqueue styles and scripts for ReadyLaunch Forums.
-		 *
-		 * @since BuddyBoss 2.9.00
-		 */
-		public function bb_readylaunch_forums_enqueue_styles() {
-			if (
-				! $this->bb_is_readylaunch_forums() &&
-				! (
-					bp_is_active( 'forums' ) &&
-					bbp_is_single_user()
-				)
-			) {
-				return;
-			}
+	/**
+	 * Enqueue styles and scripts for ReadyLaunch Forums.
+	 *
+	 * @since BuddyBoss 2.9.00
+	 */
+	public function bb_readylaunch_forums_enqueue_styles() {
+		if (
+			! $this->bb_is_readylaunch_forums() &&
+			! (
+				bp_is_active( 'forums' ) &&
+				bbp_is_single_user()
+			) &&
+			! (
+				bp_is_active( 'forums' ) &&
+				bp_is_active( 'activity' ) &&
+				bp_is_activity_component()
+			)
+		) {
+			return;
+		}
 
 			$min = bp_core_get_minified_asset_suffix();
 

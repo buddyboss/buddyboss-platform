@@ -487,9 +487,6 @@ window.bp = window.bp || {};
 				// Add Click event to show / hide text formatting Toolbar for reply form.
 				jQuery( document ).on( 'click', '.bbp-reply-form #whats-new-toolbar .bb-rl-show-toolbar', function ( e ) {
 					e.preventDefault();
-					if( jQuery( this ).closest( '.bbpress-forums-activity.bb-quick-reply-form-wrap' ).length > 0) {
-						return;
-					}
 					var key = jQuery( e.currentTarget ).closest( '.bbp-reply-form' ).find( '.bbp_editor_reply_content' ).data( 'key' );
 					var medium_editor = jQuery( e.currentTarget ).closest( '.bbp-form' ).find( '.medium-editor-toolbar' );
 					jQuery( e.currentTarget ).find( '.bb-rl-toolbar-button' ).toggleClass( 'active' );
@@ -1384,10 +1381,10 @@ window.bp = window.bp || {};
 							$('.bb-quick-reply-form-wrap').remove();
 						}
 
-						$( 'body' ).addClass( 'bb-modal-overlay-open' ).append( appendthis );
+						$( 'body' ).addClass( 'bb-rl-modal-overlay-open' ).append( appendthis );
 						$( '.bb-modal-overlay' ).fadeTo( 0, 1 );
-						var $bbpress_forums_element = curObj.closest( '.bb-grid .content-area' );
-						var loading_modal = '<div id="bbpress-forums" class="bbpress-forums-activity bb-quick-reply-form-wrap"><div class="bbp-reply-form bb-modal bb-modal-box"><form id="new-post" name="new-post" method="post" action=""><fieldset class="bbp-form"><legend>'+window.bbpReplyAjaxJS.reply_to_text+' <span id="bbp-reply-exerpt"> '+reply_exerpt+'...</span><a href="#" id="bbp-close-btn" class="js-modal-close"><i class="bb-icon-close"></i></a></legend><div><div class="bbp-the-content-wrapper"><div class="bbp-the-content bbp_editor_reply_content medium-editor-element" contenteditable="true" data-placeholder="'+window.bbpReplyAjaxJS.type_reply_here_text+'"></div></div></fieldset></form></div></div>';
+						var $bbpress_forums_element = curObj.closest( '.bb-rl-screen-content' );
+						var loading_modal = '<div id="bbpress-forums" class="bbpress-forums-activity bb-quick-reply-form-wrap bb-quick-reply-form-wrap--loader"><div id="new-reply-0" class="bbp-reply-form bb-rl-forum-modal bb-rl-forum-modal-visible bb-modal bb-modal-box"><form id="new-post" class="bb-rl-forum-form" name="new-post" method="post" action=""><fieldset class="bbp-form"><div class="bb-rl-forum-modal-header"><h3>'+window.bbpReplyAjaxJS.reply_to_text+' <span id="bbp-reply-exerpt"> '+reply_exerpt+'...</span></h3><button type="button" class="bb-rl-forum-modal-close"><span class="screen-reader-text">Close Modal</span><span class="bb-icons-rl-x"></span></button></div><div class="bb-rl-forum-modal-content"><div class="bb-rl-forum-reply-loader"><span class="bb-rl-loader"></span></div></div></fieldset></form><div class="bb-rl-forum-modal-overlay"></div></div></div>';
 						$bbpress_forums_element.append(loading_modal);
 						$bbpress_forums_element.find( '.bb-quick-reply-form-wrap' ).show( 0 ).find( '.bbp-reply-form' ).addClass( 'bb-modal bb-modal-box' ).show( 0 );
 						$bbpress_forums_element.find( '.bb-quick-reply-form-wrap .bbp-the-content-wrapper' ).addClass( 'loading' ).show( 0 );
@@ -1403,7 +1400,13 @@ window.bp = window.bp || {};
 							ajaxurl,
 							data,
 							function (response) {
+								$bbpress_forums_element.find( '.bb-quick-reply-form-wrap--loader' ).remove();
 								$bbpress_forums_element.append(response);
+								var $quick_reply_modal = $bbpress_forums_element.find( '.bb-quick-reply-form-wrap .bb-rl-forum-modal' );
+								$quick_reply_modal.addClass( 'bb-rl-forum-modal-visible' );
+								$quick_reply_modal.find( '.bb-rl-reply-header' ).hide();
+								$quick_reply_modal.find( '.bb-rl-forum-modal-header h3' ).html( window.bbpReplyAjaxJS.reply_to_text+' <span id="bbp-reply-exerpt"> '+reply_exerpt+'...</span>' );
+
 								if ( $bbpress_forums_element.find('div.bb-quick-reply-form-wrap').length ) {
 									var $quick_reply_wrap = $bbpress_forums_element.find('div.bb-quick-reply-form-wrap[data-component="activity"');
 									$quick_reply_wrap.show();
@@ -1416,8 +1419,8 @@ window.bp = window.bp || {};
 										$quick_reply_wrap.find('.bbp-reply-form').find( '#bbp-reply-exerpt' ).text( reply_exerpt + '...' );
 										$quick_reply_wrap.find('.bbp-reply-form').find( '#bbp_topic_id' ).val( topic_id );
 
-										bp.Readylaunch.Forums.addSelect2( $quick_reply_wrap );
-										bp.Readylaunch.Forums.addEditor( $quick_reply_wrap );
+										bp.Readylaunch.Forums.forumSelect2( $quick_reply_wrap );
+										bp.Readylaunch.Forums.initMediumEditor( $quick_reply_wrap );
 
 										if ( typeof bp !== 'undefined' &&
 											typeof bp.Nouveau !== 'undefined' &&

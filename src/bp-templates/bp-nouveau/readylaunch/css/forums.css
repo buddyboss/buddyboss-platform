@@ -1799,6 +1799,19 @@
   background-color: var(--bb-rl-background-color);
 }
 
+.bb-rl-forum-modal .bb-rl-forum-reply-loader {
+  padding: var(--bb-rl-space-200) 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100px;
+}
+
+.bb-rl-forum-modal .bb-rl-forum-form.submitting .bbp-form #bbp_reply_submit {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
 .bb-rl-forum-tags {
   border-top: 1px solid var(--bb-rl-border-secondary-color);
   padding: var(--bb-rl-space-200) 0;
