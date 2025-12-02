@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 2.15.3\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2025-11-27 13:33:31+00:00\n"
+"POT-Creation-Date: 2025-12-01 09:16:13+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -465,7 +465,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/media/single-album.php:45
 #: bp-templates/bp-nouveau/buddypress/video/create-album.php:29
 #: bp-templates/bp-nouveau/buddypress/video/single-album.php:40
-#: bp-templates/bp-nouveau/includes/activity/functions.php:266
+#: bp-templates/bp-nouveau/includes/activity/functions.php:267
 #: bp-templates/bp-nouveau/readylaunch/document/create-child-folder.php:37
 #: bp-templates/bp-nouveau/readylaunch/document/create-folder.php:29
 #: bp-templates/bp-nouveau/readylaunch/document/document-create-folder.php:18
@@ -487,7 +487,7 @@ msgid "Edit activity title"
 msgstr ""
 
 #: bp-activity/bp-activity-admin.php:768
-#: bp-templates/bp-nouveau/includes/activity/functions.php:266
+#: bp-templates/bp-nouveau/includes/activity/functions.php:267
 msgid "Title (optional)"
 msgstr ""
 
@@ -539,7 +539,6 @@ msgid "Spam"
 msgstr ""
 
 #. Translators: Publish box date format, see http://php.net/date.
-#. translators: Publish box date format, see http://php.net/date
 #: bp-activity/bp-activity-admin.php:863
 #: bp-forums/admin/forums.php:665
 #: bp-forums/admin/replies.php:954
@@ -755,7 +754,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/video/single-album.php:43
 #: bp-templates/bp-nouveau/buddypress/video/video-create-album.php:27
 #: bp-templates/bp-nouveau/buddypress/video/video-move.php:29
-#: bp-templates/bp-nouveau/includes/activity/functions.php:249
+#: bp-templates/bp-nouveau/includes/activity/functions.php:250
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1538
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1591
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1644
@@ -1409,7 +1408,7 @@ msgstr[1] ""
 #: bp-messages/bp-messages-template.php:732
 #: bp-messages/classes/class-bp-messages-component.php:399
 #: bp-notifications/classes/class-bp-notifications-component.php:277
-#: bp-templates/bp-nouveau/includes/activity/functions.php:136
+#: bp-templates/bp-nouveau/includes/activity/functions.php:137
 #: bp-templates/bp-nouveau/readylaunch/moderation/moderation-blocked-members-entry.php:34
 #: bp-xprofile/classes/class-bp-xprofile-component.php:449
 msgid "Profile photo of %s"
@@ -3092,9 +3091,9 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/activity/ajax.php:1420
 #: bp-templates/bp-nouveau/includes/activity/ajax.php:1486
 #: bp-templates/bp-nouveau/includes/activity/ajax.php:1747
-#: bp-templates/bp-nouveau/includes/activity/functions.php:258
 #: bp-templates/bp-nouveau/includes/activity/functions.php:259
-#: bp-templates/bp-nouveau/includes/activity/functions.php:262
+#: bp-templates/bp-nouveau/includes/activity/functions.php:260
+#: bp-templates/bp-nouveau/includes/activity/functions.php:263
 msgid "There was a problem marking this operation. Please try again."
 msgstr ""
 
@@ -11503,7 +11502,7 @@ msgstr ""
 #: bp-moderation/classes/class-bp-moderation-activity.php:556
 #: bp-moderation/classes/class-bp-moderation-activity.php:570
 #: bp-templates/bp-nouveau/buddypress/activity/activity-modal.php:76
-#: bp-templates/bp-nouveau/includes/activity/functions.php:247
+#: bp-templates/bp-nouveau/includes/activity/functions.php:248
 #: bp-templates/bp-nouveau/includes/functions.php:1602
 #: bp-templates/bp-nouveau/readylaunch/forums/form-reply.php:225
 #: bp-templates/bp-nouveau/readylaunch/forums/form-topic.php:262
@@ -15908,7 +15907,6 @@ msgstr ""
 msgid "Forum updated."
 msgstr ""
 
-#. translators: %s: date and time of the revision
 #: bp-forums/admin/forums.php:648
 msgid "Forum restored to revision from %s"
 msgstr ""
@@ -16330,7 +16328,6 @@ msgstr ""
 msgid "Reply updated."
 msgstr ""
 
-#. translators: %s: date and time of the revision
 #: bp-forums/admin/replies.php:937
 msgid "Reply restored to revision from %s"
 msgstr ""
@@ -17356,7 +17353,6 @@ msgstr ""
 msgid "Discussion updated."
 msgstr ""
 
-#. translators: %s: date and time of the revision
 #: bp-forums/admin/topics.php:1070
 msgid "Discussion restored to revision from %s"
 msgstr ""
@@ -19496,7 +19492,7 @@ msgstr ""
 #: bp-forums/functions.php:1042
 #: bp-forums/templates/default/bbpress/form-reply.php:186
 #: bp-forums/templates/default/bbpress/form-topic.php:242
-#: bp-templates/bp-nouveau/includes/activity/functions.php:253
+#: bp-templates/bp-nouveau/includes/activity/functions.php:254
 #: bp-templates/bp-nouveau/readylaunch/forums/form-reply.php:223
 #: bp-templates/bp-nouveau/readylaunch/forums/form-topic.php:255
 msgid "Discard Draft"
@@ -23098,7 +23094,7 @@ msgid "No Group Profile Photo"
 msgstr ""
 
 #: bp-groups/classes/class-bp-groups-list-table.php:253
-#: bp-templates/bp-nouveau/includes/activity/functions.php:205
+#: bp-templates/bp-nouveau/includes/activity/functions.php:206
 msgid "No groups found."
 msgstr ""
 
@@ -28670,7 +28666,7 @@ msgid "A member is mentioned in a group"
 msgstr ""
 
 #: bp-members/classes/class-bp-members-mentions-notification.php:131
-#: bp-templates/bp-nouveau/includes/activity/functions.php:562
+#: bp-templates/bp-nouveau/includes/activity/functions.php:563
 msgid "New mentions"
 msgstr ""
 
@@ -32684,13 +32680,13 @@ msgid "Select Topic"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-activity-edit-postin.php:16
-#: bp-templates/bp-nouveau/includes/activity/functions.php:200
+#: bp-templates/bp-nouveau/includes/activity/functions.php:201
 #: bp-templates/bp-nouveau/readylaunch/common/js-templates/activity/parts/bp-activity-edit-postin.php:19
 msgid "Post in: Group"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-activity-edit-postin.php:19
-#: bp-templates/bp-nouveau/includes/activity/functions.php:191
+#: bp-templates/bp-nouveau/includes/activity/functions.php:192
 #: bp-templates/bp-nouveau/readylaunch/common/js-templates/activity/parts/bp-activity-edit-postin.php:22
 msgid "Post in: Profile"
 msgstr ""
@@ -34768,109 +34764,113 @@ msgstr ""
 msgid "To change the media type, remove existing media from your post."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/functions.php:201
+#: bp-templates/bp-nouveau/includes/activity/functions.php:117
+msgid "Please enter a title"
+msgstr ""
+
+#: bp-templates/bp-nouveau/includes/activity/functions.php:202
 msgid "Search groups"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/functions.php:203
+#: bp-templates/bp-nouveau/includes/activity/functions.php:204
 msgid "Loading groups..."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/functions.php:204
+#: bp-templates/bp-nouveau/includes/activity/functions.php:205
 msgid "Finding groups..."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/functions.php:244
+#: bp-templates/bp-nouveau/includes/activity/functions.php:245
 msgid "Share what's on your mind, %s..."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/functions.php:245
+#: bp-templates/bp-nouveau/includes/activity/functions.php:246
 msgid "Post what's new"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/functions.php:246
+#: bp-templates/bp-nouveau/includes/activity/functions.php:247
 msgid "Post in"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/functions.php:248
+#: bp-templates/bp-nouveau/includes/activity/functions.php:249
 msgid "Update Post"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/functions.php:250
+#: bp-templates/bp-nouveau/includes/activity/functions.php:251
 msgid "%d Comment"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/functions.php:251
+#: bp-templates/bp-nouveau/includes/activity/functions.php:252
 msgid "%d Comments"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/functions.php:252
+#: bp-templates/bp-nouveau/includes/activity/functions.php:253
 #: bp-core/admin/bb-settings/rl-onboarding/build/rl-onboarding.js:1
 msgid "Loading..."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/functions.php:254
+#: bp-templates/bp-nouveau/includes/activity/functions.php:255
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:2027
 msgid "Pin to Feed"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/functions.php:255
+#: bp-templates/bp-nouveau/includes/activity/functions.php:256
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:2037
 msgid "Unpin from Feed"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/functions.php:256
+#: bp-templates/bp-nouveau/includes/activity/functions.php:257
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:2027
 msgid "Pin to Group"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/functions.php:257
+#: bp-templates/bp-nouveau/includes/activity/functions.php:258
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:2037
 msgid "Unpin from Group"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/functions.php:260
+#: bp-templates/bp-nouveau/includes/activity/functions.php:261
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1942
 msgid "Turn off commenting"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/functions.php:261
+#: bp-templates/bp-nouveau/includes/activity/functions.php:262
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1959
 msgid "Turn on commenting"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/functions.php:263
+#: bp-templates/bp-nouveau/includes/activity/functions.php:264
 msgid "There was a problem posting your comment."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/functions.php:264
+#: bp-templates/bp-nouveau/includes/activity/functions.php:265
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:2169
 msgid "Turn off notifications"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/functions.php:265
+#: bp-templates/bp-nouveau/includes/activity/functions.php:266
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:2173
 msgid "Turn on notifications"
 msgstr ""
 
 #. translators: %s = user name
-#: bp-templates/bp-nouveau/includes/activity/functions.php:271
+#: bp-templates/bp-nouveau/includes/activity/functions.php:272
 msgid "Write something to %s..."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/functions.php:275
+#: bp-templates/bp-nouveau/includes/activity/functions.php:276
 msgid "Share something with the group..."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/functions.php:321
+#: bp-templates/bp-nouveau/includes/activity/functions.php:322
 msgid "All Updates"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/functions.php:567
+#: bp-templates/bp-nouveau/includes/activity/functions.php:568
 msgid "New update replies"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/functions.php:572
+#: bp-templates/bp-nouveau/includes/activity/functions.php:573
 msgid "New update comment replies"
 msgstr ""
 
