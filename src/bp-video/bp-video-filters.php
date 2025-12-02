@@ -1582,6 +1582,35 @@ function bp_video_get_edit_activity_data( $activity ) {
 					}
 				}
 
+				/**
+				 * Get the proper video URL that respects symlink settings and Safari/iOS compatibility.
+				 *
+				 * IMPORTANT: This fix addresses Safari/iOS video playback issues in activity feed.
+				 *
+				 * Previously, wp_get_attachment_url() was used which always returns direct file URLs,
+				 * bypassing the symlink logic. This caused issues because:
+				 * 1. When symlinks are disabled, videos should use the PHP streaming endpoint (bb-video-preview/)
+				 *    which properly handles HTTP 206 Partial Content responses required by Safari.
+				 * 2. When symlinks are enabled, videos use symlink URLs which require Nginx to handle
+				 *    range requests correctly (Accept-Ranges header and 206 responses).
+				 *
+				 * Using bb_video_get_symlink() ensures:
+				 * - If symlinks disabled OR iOS detected: Returns PHP streaming endpoint URL
+				 *   (bb-video-preview/) which uses BP_Media_Stream class that properly handles 206 responses
+				 * - If symlinks enabled AND not iOS: Returns symlink URL (direct file access via Nginx)
+				 *
+				 * This fix ensures Safari and iOS browsers receive proper 206 responses for video streaming,
+				 * resolving the intermittent playback issues when symlinks are disabled.
+				 *
+				 * @since BuddyBoss 2.9.21
+				 */
+				$video_url = bb_video_get_symlink( $video );
+
+				// Fallback to attachment URL if symlink function returns empty.
+				if ( empty( $video_url ) ) {
+					$video_url = wp_get_attachment_url( $video->attachment_id );
+				}
+
 				$activity['video'][] = array(
 					'id'          => $video_id,
 					'vid_id'      => $video->attachment_id,
@@ -1591,7 +1620,7 @@ function bp_video_get_edit_activity_data( $activity ) {
 					'album_id'    => $video->album_id,
 					'activity_id' => $video->activity_id,
 					'type'        => 'video',
-					'url'         => wp_get_attachment_url( $video->attachment_id ),
+					'url'         => $video_url,
 					'size'        => ( file_exists( get_attached_file( ( $video->attachment_id ) ) ) ) ? filesize( get_attached_file( ( $video->attachment_id ) ) ) : 0,
 					'saved'       => true,
 					'menu_order'  => $video->menu_order,
