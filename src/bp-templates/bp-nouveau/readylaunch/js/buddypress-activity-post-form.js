@@ -4948,7 +4948,9 @@ window.bp = window.bp || {};
 						// Post title is required and empty - show title tooltip, hide topic tooltip.
 						$( 'body' ).addClass( 'bb-rl-ac-title-required' );
 						if ( $submitWrapper.find( '.bb-title-tooltip-wrapper' ).length === 0 ) {
-							$submitWrapper.prepend( '<div class="bb-title-tooltip-wrapper"><div class="bb-title-tooltip">' + titleTooltipError + '</div></div>' );
+							var $titleTooltipWrapper = $( '<div class="bb-title-tooltip-wrapper"><div class="bb-title-tooltip"></div></div>' );
+							$titleTooltipWrapper.find( '.bb-title-tooltip' ).text( titleTooltipError );
+							$submitWrapper.prepend( $titleTooltipWrapper );
 						}
 						// Hide topic tooltip if title is missing (priority).
 						$submitWrapper.find( '.bb-topic-tooltip-wrapper' ).remove();
@@ -5068,7 +5070,9 @@ window.bp = window.bp || {};
 						var $submitWrapper = $( '.bb-rl-activity-update-form.modal-popup #whats-new-submit' );
 						var titleTooltipError = ! _.isUndefined( BP_Nouveau.activity.params.post_title_tooltip_error ) ? BP_Nouveau.activity.params.post_title_tooltip_error : 'Please enter a title for your activity.';
 						if ( $submitWrapper.length > 0 && $submitWrapper.find( '.bb-title-tooltip-wrapper' ).length === 0 ) {
-							$submitWrapper.prepend( '<div class="bb-title-tooltip-wrapper"><div class="bb-title-tooltip">' + titleTooltipError + '</div></div>' );
+							var $titleTooltipWrapper = $( '<div class="bb-title-tooltip-wrapper"><div class="bb-title-tooltip"></div></div>' );
+							$titleTooltipWrapper.find( '.bb-title-tooltip' ).text( titleTooltipError );
+							$submitWrapper.prepend( $titleTooltipWrapper );
 						}
 					} );
 				}
