@@ -177,20 +177,58 @@ class BB_DRM_Event {
 			// Create new event.
 			$data['created_at'] = current_time( 'mysql' );
 
-			$wpdb->insert(
+			// Suppress errors to handle duplicate key gracefully.
+			$wpdb->suppress_errors( true );
+
+			$result = $wpdb->insert(
 				$table_name,
 				$data,
 				array( '%s', '%s', '%d', '%s', '%s' )
 			);
 
-			$this->id         = $wpdb->insert_id;
-			$this->created_at = $data['created_at'];
+			$wpdb->suppress_errors( false );
 
-			do_action( 'bb_drm_event_create', $this );
-			do_action( 'bb_drm_event', $this );
-			do_action( "bb_drm_event_{$this->event}", $this );
+			// If insert failed due to duplicate key, try to get existing event.
+			if ( false === $result && ! empty( $wpdb->last_error ) && strpos( $wpdb->last_error, 'Duplicate entry' ) !== false ) {
+				// Duplicate key error - fetch the existing event.
+				$existing_event = self::get_one_by_event_and_evt_id_and_evt_id_type(
+					$this->event,
+					$this->evt_id,
+					$this->evt_id_type
+				);
 
-			return $this->id;
+				if ( $existing_event ) {
+					$this->id         = $existing_event->id;
+					$this->created_at = $existing_event->created_at;
+
+					// Update the existing event with new args.
+					$wpdb->update(
+						$table_name,
+						array( 'args' => $this->args ),
+						array( 'id' => $this->id ),
+						array( '%s' ),
+						array( '%d' )
+					);
+
+					do_action( 'bb_drm_event_update', $this );
+					return $this->id;
+				}
+			}
+
+			// Normal insert succeeded.
+			if ( $result ) {
+				$this->id         = $wpdb->insert_id;
+				$this->created_at = $data['created_at'];
+
+				do_action( 'bb_drm_event_create', $this );
+				do_action( 'bb_drm_event', $this );
+				do_action( "bb_drm_event_{$this->event}", $this );
+
+				return $this->id;
+			}
+
+			// Insert failed for other reason.
+			return false;
 		}
 	}
 
@@ -505,11 +543,11 @@ class BB_DRM_Event {
 			evt_id_type varchar(255) NOT NULL DEFAULT 'platform',
 			created_at datetime NOT NULL,
 			PRIMARY KEY (id),
+			UNIQUE KEY unique_event (event(191), evt_id, evt_id_type(191)),
 			KEY event_event (event(191)),
 			KEY event_evt_id (evt_id),
 			KEY event_evt_id_type (evt_id_type(191)),
-			KEY event_created_at (created_at),
-			KEY event_lookup (event(191), evt_id, evt_id_type(191))
+			KEY event_created_at (created_at)
 		) {$charset_collate};";
 
 		require_once ABSPATH . 'wp-admin/includes/upgrade.php';

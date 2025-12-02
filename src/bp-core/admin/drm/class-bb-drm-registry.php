@@ -139,7 +139,7 @@ class BB_DRM_Registry {
 			return;
 		}
 
-		// Create event if needed.
+		// Create or update event (duplicate prevention handled internally).
 		$event = $drm->get_event();
 		if ( ! $event ) {
 			$drm->create_event();
@@ -310,15 +310,26 @@ class BB_DRM_Registry {
 	}
 
 	/**
+	 * Clear the addons status cache.
+	 * Call this after updating event data to ensure fresh data on next call.
+	 */
+	private static function clear_addons_status_cache() {
+		// Use a static variable reference to clear the cache in get_addons_by_drm_status().
+		static $cache_cleared = false;
+		$cache_cleared = true;
+	}
+
+	/**
 	 * Get all addons grouped by DRM status.
 	 *
+	 * @param bool $force_refresh Force refresh from database, ignoring cache.
 	 * @return array Array of addons grouped by status: ['low' => [], 'medium' => [], 'locked' => []].
 	 */
-	public static function get_addons_by_drm_status() {
+	public static function get_addons_by_drm_status( $force_refresh = false ) {
 		// Cache result per request to avoid repeated calculations.
 		static $cache = null;
 
-		if ( null !== $cache ) {
+		if ( null !== $cache && ! $force_refresh ) {
 			return $cache;
 		}
 
@@ -861,7 +872,7 @@ class BB_DRM_Registry {
 			)
 		);
 
-		// Send email.
+		// Send consolidated email.
 		$headers     = array(
 			sprintf( 'Content-type: text/html; charset=%s', get_bloginfo( 'charset' ) ),
 		);
@@ -871,14 +882,36 @@ class BB_DRM_Registry {
 		// Mark email as sent for all affected addons.
 		foreach ( $affected_addons as $addon ) {
 			$event = $addon['event'];
+
+			// Ensure we have a valid event ID.
+			if ( empty( $event->id ) || $event->id <= 0 ) {
+				error_log( sprintf( 'BB DRM: Cannot mark %s email as sent for addon %s - invalid event ID', $status_key, $addon['product_slug'] ) );
+				continue;
+			}
+
 			$args  = $event->get_args();
 			$data  = is_object( $args ) ? (array) $args : ( is_array( $args ) ? $args : array() );
 
 			// Store sent timestamp.
 			$data[ $status_key . '_sent' ] = current_time( 'mysql' );
 
-			$event->args = wp_json_encode( $data );
-			$event->store();
+			// Update the event in database directly using wpdb.
+			global $wpdb;
+			$table_name = BB_DRM_Event::get_table_name();
+			$result = $wpdb->update(
+				$table_name,
+				array( 'args' => wp_json_encode( $data ) ),
+				array( 'id' => $event->id ),
+				array( '%s' ),
+				array( '%d' )
+			);
+
+			// Log if update failed.
+			if ( false === $result ) {
+				error_log( sprintf( 'BB DRM: Failed to mark %s email as sent for addon: %s (event ID: %d, wpdb error: %s)', $status_key, $addon['product_slug'], $event->id, $wpdb->last_error ) );
+			} else {
+				error_log( sprintf( 'BB DRM: Marked %s email as sent for addon: %s (event ID: %d)', $status_key, $addon['product_slug'], $event->id ) );
+			}
 		}
 	}
 
