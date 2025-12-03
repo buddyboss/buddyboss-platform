@@ -69,9 +69,19 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 
 		// Allow Activity edit setting.
 		$this->add_field( '_bp_enable_activity_edit', __( 'Edit Activity', 'buddyboss' ), 'bp_admin_setting_callback_enable_activity_edit', 'intval' );
+
+		$this->add_field( 'bb_activity_post_title_enabled', __( 'Post title', 'buddyboss' ), array( $this, 'bb_admin_setting_callback_enable_activity_post_title' ), 'intval' );
+
 		$this->add_field( '_bp_activity_edit_time', __( 'Edit Activity Time Limit', 'buddyboss' ), '__return_true', 'intval', array(
 			'class' => 'hidden',
 		) );
+
+		$post_feature_image_pro_class      = bb_get_pro_fields_class( 'post_feature_image' );
+		$post_feature_image_notice         = bb_get_pro_label_notice( 'post_feature_image' );
+		$post_feature_image_args           = array();
+		$post_feature_image_args['class']  = esc_attr( $post_feature_image_pro_class );
+		$post_feature_image_args['notice'] = $post_feature_image_notice;
+		$this->add_field( 'bb_enable_activity_post_feature_image', __( 'Post feature image', 'buddyboss' ) . $post_feature_image_notice, array( $this, 'bb_admin_setting_callback_activity_post_feature_image' ), 'intval', $post_feature_image_args );
 
 		// Allow subscriptions setting.
 		$this->add_field( '_bp_enable_heartbeat_refresh', __( 'Activity auto-refresh', 'buddyboss' ), 'bp_admin_setting_callback_heartbeat', 'intval' );
@@ -558,7 +568,7 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 									</span>
 									<div class="bb-topic-actions-wrapper">
 										<span class="bb-topic-actions">
-											<a href="#" class="bb-topic-actions_button">
+											<a href="#" class="bb-topic-actions_button" aria-label="<?php esc_attr_e( 'Actions', 'buddyboss' ); ?>">
 												<i class="bb-icon-ellipsis-h"></i>
 											</a>
 										</span>
@@ -601,7 +611,7 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 					</h2>
 				</div>
 				<div class="bb-hello-close">
-					<button type="button" class="close-modal button">
+					<button type="button" class="close-modal button" aria-label="<?php esc_attr_e( 'Close', 'buddyboss' ); ?>">
 						<i class="bb-icon-f bb-icon-times"></i>
 					</button>
 				</div>
@@ -663,7 +673,7 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 					</h2>
 				</div>
 				<div class="bb-hello-close">
-					<button type="button" class="close-modal button">
+					<button type="button" class="close-modal button" aria-label="<?php esc_attr_e( 'Close', 'buddyboss' ); ?>">
 						<i class="bb-icon-f bb-icon-times"></i>
 					</button>
 				</div>
@@ -749,6 +759,34 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 			?>
 		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
 		</p>
+		<?php
+	}
+
+	/**
+	 * Settings for activity post title.
+	 *
+	 * @since BuddyBoss 2.13.0
+	 */
+	public function bb_admin_setting_callback_enable_activity_post_title() {
+		?>
+
+		<input id="bb_activity_post_title_enabled" name="bb_activity_post_title_enabled" type="checkbox" value="1" <?php checked( bb_is_activity_post_title_enabled() ); ?> />
+		<label for="bb_activity_post_title_enabled"><?php esc_html_e( 'Make post titles mandatory', 'buddyboss' ); ?></label>
+
+		<?php
+	}
+
+	/**
+	 * Allow activity post feature image.
+	 *
+	 * @since BuddyBoss 2.13.0
+	 */
+	public function bb_admin_setting_callback_activity_post_feature_image() {
+		$val    = function_exists( 'bb_pro_activity_post_feature_image_instance' ) ? bb_pro_activity_post_feature_image_instance()->bb_is_enabled() : false;
+		$notice = bb_get_pro_label_notice( 'post_feature_image' );
+		?>
+			<input id="bb_enable_activity_post_feature_image" name="<?php echo empty( $notice ) ? 'bb_enable_activity_post_feature_image' : ''; ?>" type="checkbox" value="1" <?php echo empty( $notice ) ? checked( $val, true, false ) : ''; ?> />
+			<label for="bb_enable_activity_post_feature_image"><?php esc_html_e( 'Allow group owners and moderators to add a featured image to their posts', 'buddyboss' ); ?></label>
 		<?php
 	}
 }

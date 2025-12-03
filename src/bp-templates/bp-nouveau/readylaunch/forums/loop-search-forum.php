@@ -30,7 +30,7 @@ defined( 'ABSPATH' ) || exit;
 			<?php
 				$forum_id = bbp_get_forum_id();
 				// get discussion count.
-				$discussion_count = bbp_get_forum_topic_count( $forum_id );
+				$discussion_count = bbp_get_forum_topic_count( $forum_id, false );
 				// get forum visibility/privacy status.
 				$forum_visibility   = bbp_get_forum_visibility( $forum_id );
 				$forum_visibilities = bbp_get_forum_visibilities( $forum_id );

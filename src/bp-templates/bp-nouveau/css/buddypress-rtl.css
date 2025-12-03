@@ -1894,6 +1894,28 @@ a.layout-grid-view {
   color: #939597;
 }
 
+.bp-nouveau-activity-form-placeholder- .whats-new-title,
+.activity-update-form .whats-new-title {
+  display: none;
+  color: #333;
+  font-size: 18px;
+  line-height: 1.3;
+  font-weight: 600;
+  padding: 0 0 12px 0;
+  margin: 0 25px 12px;
+  border: 0;
+  border-bottom: 1px solid #eee;
+  border-radius: 0;
+  outline: none;
+  width: calc(100% - 50px);
+}
+
+.bp-nouveau-activity-form-placeholder- input[type="text"].whats-new-title:focus,
+.activity-update-form input[type="text"].whats-new-title:focus {
+  box-shadow: none;
+  border-color: #eee;
+}
+
 .bp-nouveau-activity-form-placeholder- #whats-new-submit #aw-whats-new-reset,
 .activity-update-form #whats-new-submit #aw-whats-new-reset {
   display: none;
@@ -1908,6 +1930,11 @@ a.layout-grid-view {
 .bp-nouveau-activity-form-placeholder- .activity-form.focus-in .bb-model-header,
 .activity-update-form .activity-form.focus-in .bb-model-header {
   padding: 15px 25px;
+}
+
+.bp-nouveau-activity-form-placeholder- .activity-form.focus-in .whats-new-title,
+.activity-update-form .activity-form.focus-in .whats-new-title {
+  display: block;
 }
 
 .bp-nouveau-activity-form-placeholder- .activity-form.focus-in #whats-new,
@@ -2637,6 +2664,19 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
   height: auto;
 }
 
+.activity-update-form .medium-editor-toolbar .medium-editor-action-more > ul .medium-editor-action-h3,
+.activity-update-form .medium-editor-toolbar .medium-editor-action-more > ul .medium-editor-action-h4 {
+  position: relative;
+}
+
+.activity-update-form .medium-editor-toolbar .medium-editor-action-more > ul .medium-editor-action-h3:after,
+.activity-update-form .medium-editor-toolbar .medium-editor-action-more > ul .medium-editor-action-h4:after {
+  position: absolute;
+  left: 3px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
 .activity-update-form .medium-editor-toolbar .medium-editor-action-more.active > ul {
   display: flex;
 }
@@ -2713,6 +2753,17 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
 
 .activity-update-form .activity-attached-gif-container .gif-image-container img {
   max-width: 100%;
+}
+
+.activity-update-form #whats-new h3,
+.activity-update-form #whats-new h4 {
+  font-size: 17px;
+  font-weight: 500;
+  margin: 0 0 15px;
+}
+
+.activity-update-form #whats-new h4 {
+  font-size: 16px;
 }
 
 .bbpress #bbpress-forums #whats-new-toolbar.media-off .medium-editor-toolbar,
@@ -3878,6 +3929,13 @@ input.search-query-input {
   display: none;
 }
 
+.activity-list .activity-item .activity-title h2 {
+  color: #333;
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 10px 0;
+}
+
 .activity-list .activity-item .activity-content .activity-header,
 .activity-list .activity-item .activity-content .comment-header {
   color: #767676;
@@ -3991,7 +4049,7 @@ input.search-query-input {
 .activity-list .activity-item .activity-content .bp-generic-meta.action .button > i,
 .activity-list .activity-item > .bp-generic-meta.action .button > i,
 .activity-list .activity-item .activity-actions > .bp-generic-meta.action .button > i {
-  font-size: 22px;
+  font-size: 24px;
   font-weight: 400;
   display: inline-block;
   vertical-align: middle;
@@ -4072,6 +4130,17 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
 
 .activity-list .activity-item .activity-inner p:empty {
   min-height: 1em;
+}
+
+.activity-list .activity-item .activity-inner h3,
+.activity-list .activity-item .activity-inner h4 {
+  font-size: 17px;
+  font-weight: 500;
+  margin: 0 0 15px;
+}
+
+.activity-list .activity-item .activity-inner h4 {
+  font-size: 16px;
 }
 
 .activity-list .activity-item .activity-read-more {
@@ -4581,6 +4650,14 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
     -ms-transform: translate(90%, 0);
     transform: translate(90%, 0);
   }
+}
+
+.activity-list .has-featured-image .bb-activity-more-options-wrap {
+  top: 208px;
+}
+
+.activity-list .has-featured-image .bb-pin-action {
+  top: 208px;
 }
 
 .activity-list .bb-pin-action {
@@ -5577,6 +5654,28 @@ ul.medium-editor-toolbar-actions .medium-editor-action-anchor b:before {
 
 ul.medium-editor-toolbar-actions .medium-editor-action-pre b:before {
   content: "\ee25";
+}
+
+ul.medium-editor-toolbar-actions .medium-editor-action-h3 b:before {
+  content: "\eeb0";
+}
+
+ul.medium-editor-toolbar-actions .medium-editor-action-h3:after {
+  content: "3";
+  font-size: 12px;
+  margin: 0 -6px 0 0;
+  font-weight: 500;
+}
+
+ul.medium-editor-toolbar-actions .medium-editor-action-h4 b:before {
+  content: "\eeb0";
+}
+
+ul.medium-editor-toolbar-actions .medium-editor-action-h4:after {
+  content: "4";
+  font-size: 12px;
+  margin: 0 -6px 0 0;
+  font-weight: 500;
 }
 
 ul.medium-editor-toolbar-actions .medium-editor-action-close b:before {
@@ -14290,11 +14389,6 @@ html[dir="rtl"] .pc_detailed_progress li span.completed_staus {
   font-size: 18px;
 }
 
-.bp-message-content-wrap blockquote.wp-embedded-content + p iframe.wp-embedded-content {
-  min-height: 0;
-  height: 0;
-}
-
 div.bp-navs#subsubnav.bp-messages-filters .user-messages-bulk-actions {
   margin-left: 15px;
   max-width: 42.5%;
@@ -22333,6 +22427,13 @@ body.login .login-popup .mfp-close:hover {
 .bb-model-close-button {
   font-size: 24px;
   color: rgba(17, 49, 80, 0.4);
+}
+
+.bb-modal-header-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-right: auto;
 }
 
 .bb-photos-wrap .bb-title {

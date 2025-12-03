@@ -433,6 +433,7 @@ function bp_document_get_specific( $args = '' ) {
 			'meta_query'       => false,
 			'privacy'          => false,      // privacy to filter.
 			'moderation_query' => true,
+			'count_total'      => false,
 			'status'           => bb_document_get_published_status(), // Filter by document status. published, scheduled.
 		),
 		'document_get_specific'
@@ -451,6 +452,7 @@ function bp_document_get_specific( $args = '' ) {
 		'meta_query'       => $r['meta_query'],
 		'moderation_query' => $r['moderation_query'],
 		'status'           => $r['status'],
+		'count_total'      => $r['count_total'],
 	);
 
 	/**
@@ -1491,9 +1493,19 @@ function bp_document_upload() {
 	$extension = bp_document_extension( $attachment->ID );
 	$svg_icon  = bp_document_svg_icon( $extension, $attachment->ID );
 
+	/**
+	 * Filter the attachment URL for document.
+	 *
+	 * @since BuddyBoss 2.15.0
+	 *
+	 * @param string $attachment_url Attachment URL for document.
+	 * @param int    $attachment_id Attachment ID.
+	 */
+	$attachment_url = apply_filters( 'bb_document_get_attachment_url', untrailingslashit( $attachment_url ), $attachment->ID );
+
 	$result = array(
 		'id'                => (int) $attachment->ID,
-		'url'               => esc_url( untrailingslashit( $attachment_url ) ),
+		'url'               => esc_url( $attachment_url ),
 		'name'              => esc_attr( pathinfo( basename( $attachment_file ), PATHINFO_FILENAME ) ),
 		'full_name'         => esc_attr( basename( $attachment_file ) ),
 		'type'              => esc_attr( 'document' ),
@@ -2368,6 +2380,7 @@ function bp_document_move_document_to_folder( $document_id = 0, $folder_id = 0, 
 					$activity->hide_sitewide     = ( 'groups' === $activity->component && ( 'hidden' === $status || 'private' === $status ) ) ? 1 : 0;
 					$activity->secondary_item_id = 0;
 					$activity->privacy           = $destination_privacy;
+					$activity->title_required    = false;
 					$activity->save();
 				}
 
@@ -2424,7 +2437,8 @@ function bp_document_move_document_to_folder( $document_id = 0, $folder_id = 0, 
 						bp_activity_delete( array( 'id' => $need_delete ) );
 
 						// Update parent activity privacy to destination privacy.
-						$parent_activity->privacy = $destination_privacy;
+						$parent_activity->privacy        = $destination_privacy;
+						$parent_activity->title_required = false;
 						$parent_activity->save();
 
 					} elseif ( count( $parent_activity_document_ids ) > 1 ) {
@@ -2440,6 +2454,7 @@ function bp_document_move_document_to_folder( $document_id = 0, $folder_id = 0, 
 							$activity->hide_sitewide     = ( 'groups' === $activity->component && ( 'hidden' === $status || 'private' === $status ) ) ? 1 : 0;
 							$activity->secondary_item_id = 0;
 							$activity->privacy           = $destination_privacy;
+							$activity->title_required    = false;
 							$activity->save();
 
 							bp_activity_update_meta( (int) $child_activity_id, 'bp_document_ids', $document_id );
@@ -2677,7 +2692,19 @@ function bp_document_rename_file( $document_id = 0, $attachment_document_id = 0,
 	// Delete symlink before renaming the main file.
 	bp_document_delete_symlinks( $document_id );
 
-	if ( ! @rename( $file_abs_path, $new_file_abs_path ) ) {
+	/**
+	 * Filters the force bypass rename.
+	 *
+	 * @since BuddyBoss 2.15.0
+	 *
+	 * @param bool   $force_bypass           Force bypass rename.
+	 * @param int    $document_id            Document ID.
+	 * @param int    $attachment_document_id Attachment document ID.
+	 * @param string $file_abs_path          File absolute path.
+	 * @param string $new_file_abs_path      New file absolute path.
+	 */
+	$force_bypass = apply_filters( 'bb_document_force_bypass_rename', false, $document_id, $attachment_document_id, $file_abs_path, $new_file_abs_path );
+	if ( ! $force_bypass && ! @rename( $file_abs_path, $new_file_abs_path ) ) {
 		return __( 'File renaming error!', 'buddyboss' );
 	}
 
@@ -2925,7 +2952,8 @@ function bp_document_move_folder_to_folder( $folder_id, $destination_folder_id, 
 				if ( ! empty( $activity_id ) && bp_is_active( 'activity' ) ) {
 					$activity = new BP_Activity_Activity( (int) $activity_id );
 					if ( bp_activity_user_can_delete( $activity ) ) {
-						$activity->privacy = $destination_privacy;
+						$activity->privacy        = $destination_privacy;
+						$activity->title_required = false;
 						$activity->save();
 					}
 				}
@@ -2960,7 +2988,8 @@ function bp_document_move_folder_to_folder( $folder_id, $destination_folder_id, 
 					if ( ! empty( $activity_id ) && bp_is_active( 'activity' ) ) {
 						$activity = new BP_Activity_Activity( (int) $activity_id );
 						if ( bp_activity_user_can_delete( $activity ) ) {
-							$activity->privacy = $destination_privacy;
+							$activity->privacy        = $destination_privacy;
+							$activity->title_required = false;
 							$activity->save();
 						}
 					}
@@ -3033,7 +3062,8 @@ function bp_document_update_privacy( $document_id = 0, $privacy = '', $type = 'f
 							if ( ! empty( $activity_id ) && bp_is_active( 'activity' ) ) {
 								$activity = new BP_Activity_Activity( (int) $activity_id );
 								if ( bp_activity_user_can_delete( $activity ) ) {
-									$activity->privacy = $privacy;
+									$activity->privacy        = $privacy;
+									$activity->title_required = false;
 									$activity->save();
 								}
 							}
@@ -3058,7 +3088,8 @@ function bp_document_update_privacy( $document_id = 0, $privacy = '', $type = 'f
 					if ( ! empty( $activity_id ) && bp_is_active( 'activity' ) ) {
 						$activity = new BP_Activity_Activity( (int) $activity_id );
 						if ( bp_activity_user_can_delete( $activity ) ) {
-							$activity->privacy = $privacy;
+							$activity->privacy        = $privacy;
+							$activity->title_required = false;
 							$activity->save();
 						}
 					}
@@ -3086,7 +3117,8 @@ function bp_document_update_privacy( $document_id = 0, $privacy = '', $type = 'f
 			if ( bp_is_active( 'activity' ) && ! empty( $activity_id ) ) {
 				$activity = new BP_Activity_Activity( (int) $activity_id );
 				if ( bp_activity_user_can_delete( $activity ) ) {
-					$activity->privacy = $privacy;
+					$activity->privacy        = $privacy;
+					$activity->title_required = false;
 					$activity->save();
 				}
 			}
@@ -4323,7 +4355,9 @@ function bp_document_generate_code_previews( $attachment_id ) {
 			$file_name     = basename( $absolute_path );
 			$extension_pos = strrpos( $file_name, '.' ); // find position of the last dot, so where the extension starts.
 			$thumb         = substr( $file_name, 0, $extension_pos ) . '_thumb' . substr( $file_name, $extension_pos );
-			copy( $absolute_path, $preview_folder . '/' . $thumb );
+			if ( file_exists( $absolute_path ) ) {
+				copy( $absolute_path, $preview_folder . '/' . $thumb );
+			}
 
 		}
 

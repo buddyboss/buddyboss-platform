@@ -299,6 +299,15 @@ function bp_nouveau_activity_state() {
 		if ( bb_is_reaction_activity_posts_enabled() ) {
 			echo bb_get_activity_post_user_reactions_html( $activity_id );
 		}
+
+		/**
+		 * Fires after reactions display in activity state.
+		 *
+		 * @since BuddyBoss [version]
+		 *
+		 * @param int $activity_id The activity ID.
+		 */
+		do_action( 'bp_activity_state_after_reactions', $activity_id );
 		?>
 
 		<?php if ( bp_activity_can_comment() ) :
@@ -322,6 +331,17 @@ function bp_nouveau_activity_state() {
 				</span>
 			</a>
 		<?php endif; ?>
+
+		<?php
+		/**
+		 * Fires after comments display in activity state.
+		 *
+		 * @since BuddyBoss [version]
+		 *
+		 * @param int $activity_id The activity ID.
+		 */
+		do_action( 'bp_activity_state_after_comments', $activity_id );
+		?>
 	</div>
 	<?php
 }
@@ -512,7 +532,7 @@ function bp_nouveau_get_activity_entry_buttons( $args ) {
 
 		$fav_args = array(
 			'link_class'        => 'button fav bp-secondary-action bp-like-button',
-			'aria-pressed' => 'false',
+			'data-pressed' => 'false',
 			'link_attr'    => bp_get_activity_favorite_link(),
 			'link_text'    => sprintf(
 				'<span class="bp-screen-reader-text">%1$s</span><span class="like-count">%1$s</span>',
@@ -542,7 +562,7 @@ function bp_nouveau_get_activity_entry_buttons( $args ) {
 				$link_classes  = empty( $reaction_type ) ? ' has-like has-reaction' : ' has-emotion has-reaction';
 
 				$fav_args['link_class']   = str_replace( 'fav', 'unfav', $fav_args['link_class'] ) . $link_classes;
-				$fav_args['aria-pressed'] = true;
+				$fav_args['data-pressed'] = true;
 				$fav_args['link_attr']    = bp_get_activity_unfavorite_link();
 				$fav_args['link_text']    = sprintf(
 					'<span class="bp-screen-reader-text">%1$s</span>
@@ -567,7 +587,7 @@ function bp_nouveau_get_activity_entry_buttons( $args ) {
 			'button_attr'       => array(
 				$key              => $fav_args['link_attr'],
 				'class'           => $fav_args['link_class'],
-				'aria-pressed'    => $fav_args['aria-pressed'],
+				'data-pressed'    => $fav_args['data-pressed'],
 				'data-reacted-id' => $reacted_id,
 			),
 		);
@@ -963,7 +983,7 @@ function bp_nouveau_get_activity_comment_buttons( $args ) {
 
 		$fav_args = array(
 			'class'           => 'button fav reaction bp-secondary-action bp-like-button',
-			'aria-pressed'    => 'false',
+			'data-pressed'    => 'false',
 			$key              => bb_get_activity_comment_favorite_link(),
 			'link_text'       => sprintf(
 				'<span class="bp-screen-reader-text">%1$s</span><span class="like-count">%1$s</span>',
@@ -987,7 +1007,7 @@ function bp_nouveau_get_activity_comment_buttons( $args ) {
 				$prepared_icon = bb_activity_get_reaction_button( $reaction_data['id'], true );
 
 				$fav_args['class']           = str_replace( 'fav', 'unfav', $fav_args['class'] ) . ' ' . $link_classes;
-				$fav_args['aria-pressed']    = true;
+				$fav_args['data-pressed']    = true;
 				$fav_args[ $key ]            = bb_get_activity_comment_unfavorite_link();
 				$fav_args['link_text']       = sprintf(
 					'<span class="bp-screen-reader-text">%1$s</span>

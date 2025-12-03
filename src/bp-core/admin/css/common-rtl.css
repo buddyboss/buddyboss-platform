@@ -45,6 +45,7 @@ TABLE OF CONTENTS:
 19.0 Reactions Settings
 20.0 Upgrade
 21.0 Activity Filter & Sorting
+22.0 Header Branding & Actions
 ------------------------------------------------------------------------------*/
 :root {
   --bb-plt-color-black: #000;
@@ -5624,8 +5625,21 @@ h1.bb-advance-heading {
   background-color: #f0f0f1;
 }
 
+.bb-activity-topics-wrapper .bb-topic-actions-wrapper .bb-topic-more-dropdown .bp-screen-reader-text {
+  clip: rect(1px, 1px, 1px, 1px);
+  height: 1px;
+  overflow: hidden;
+  position: absolute;
+  width: 1px;
+  word-wrap: normal;
+}
+
 .bb-activity-topics-wrapper .bb-topic-actions-wrapper.active .bb-topic-more-dropdown {
   display: block;
+}
+
+.section-bb_activity_topics .bp-hide {
+  display: none;
 }
 
 .bb-modal-panel--activity-topic.bb-modal-panel,
@@ -6038,5 +6052,41 @@ h1.bb-advance-heading {
   #bb-hello-container.bb-modal-panel .button-primary,
   #bb-hello-topic-migrate-container.bb-modal-panel .button-primary {
     margin-left: 0;
+  }
+}
+
+/*------------------------------------------------------------------------------
+ * 22.0 Header Branding & Actions
+ *----------------------------------------------------------------------------*/
+.bb-tab-header {
+  background-color: #fff;
+  margin-right: -20px;
+  padding: 12px 24px;
+  border-bottom: 1px solid #d9d9d9;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.bb-tab-header .bb-branding-header {
+  margin-left: auto;
+}
+
+.bb-tab-header .bb-branding-header .bb-branding-logo {
+  max-width: 130px;
+}
+
+.bb-tab-header .bb-branding-header .bb-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+@media screen and (max-width: 600px) {
+  #wpadminbar ~ .bb-tab-header {
+    padding-top: 58px;
+  }
+  #wpadminbar ~ .bb-tab-header ~ #wpbody {
+    padding-top: 0;
   }
 }

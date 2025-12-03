@@ -125,6 +125,8 @@ if ( ! bp_is_user_messages() && ! bp_is_user_settings() && ! bp_is_user_notifica
 					?>
 				</div><!-- .bb-user-content-wrap -->
 
+				<?php bp_nouveau_member_hook( '', 'header_profile_meta' ); ?>
+
 				<div class="bb-rl-member-header-actions-wrap">
 					<?php
 						$args = array(
@@ -234,7 +236,7 @@ endif;
 							<span class="bb-icon-l bb-icon-times"></span>
 						</a>
 					</header>
-					<div class="bb-remove-connection-content bb-action-popup-content">
+					<div class="bb-remove-connection-content bb-action-popup-content bb-rl-modal-content">
 						<p>
 							<?php
 							printf(
@@ -246,8 +248,8 @@ endif;
 						</p>
 					</div>
 					<footer class="bb-model-footer flex align-items-center">
-						<a class="bb-close-remove-connection bb-close-action-popup" href="#"><?php echo esc_html__( 'Cancel', 'buddyboss' ); ?></a>
-						<a class="button push-right bb-confirm-remove-connection" href="#"><?php echo esc_html__( 'Confirm', 'buddyboss' ); ?></a>
+						<a class="bb-close-remove-connection bb-close-action-popup bb-rl-button bb-rl-button--secondaryFill bb-rl-button--small" href="#"><?php echo esc_html__( 'Cancel', 'buddyboss' ); ?></a>
+						<a class="button push-right bb-confirm-remove-connection bb-rl-button bb-rl-button--brandFill bb-rl-button--small" href="#"><?php echo esc_html__( 'Confirm', 'buddyboss' ); ?></a>
 					</footer>
 				</div>
 			</div>

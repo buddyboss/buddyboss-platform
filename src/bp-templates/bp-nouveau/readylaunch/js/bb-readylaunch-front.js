@@ -7,7 +7,8 @@ window.bp = window.bp || {};
 	function ( exports, $ ) {
 
 		var bpNouveauLocal    = BP_Nouveau,
-			bbRlIsAs3cfActive = bpNouveauLocal.bbRlIsAs3cfActive,
+			bbRlIsAs3cfActive = bpNouveauLocal.is_as3cf_active,
+			bbRlIsOmActive    = bpNouveauLocal.is_om_active,
 			bbRlMedia         = bpNouveauLocal.media,
 			bbRlAjaxUrl       = bpNouveauLocal.ajaxurl,
 			bbRlNonce         = bpNouveauLocal.nonces;
@@ -46,7 +47,7 @@ window.bp = window.bp || {};
 			addListeners : function () {
 				var $document = $( document );
 				$( '.bb-nouveau-list' ).on( 'scroll', this.bbScrollHeaderDropDown.bind( this ) );
-				$document.on( 'click', '.notification-link, .notification-header-tab-action, .bb-rl-load-more a', this.bbHandleLoadMore.bind( this ) );
+				$document.on( 'click', '.notification-link, .notification-header-tab-action, .bb-rl-header-container .bb-rl-load-more a', this.bbHandleLoadMore.bind( this ) );
 				$document.on( 'heartbeat-send', this.bbHeartbeatSend.bind( this ) );
 				$document.on( 'heartbeat-tick', this.bbHeartbeatTick.bind( this ) );
 				$document.on( 'click', '.bb-rl-option-wrap__action', this.openMoreOption.bind( this ) );
@@ -704,6 +705,17 @@ window.bp = window.bp || {};
 						function ( file, xhr, formData ) {
 							formData.append( 'action', actionName );
 							formData.append( '_wpnonce', bbRlNonce[ nonceName ] );
+							
+							var forumId = 0;
+							if ( $('#bbp_forum_id' ).length ) {
+								forumId = $('#bbp_forum_id').val();
+							}
+							formData.append( 'bbp_forum_id', forumId );
+							var topicId = 0;
+							if ( $('#bbp_topic_id' ).length ) {
+								topicId = $('#bbp_topic_id').val();
+							}
+							formData.append('bbp_topic_id', topicId);
 
 							var toolBox = view.$el.parents( parentSelector );
 							otherButtonSelectors.forEach(
@@ -720,7 +732,11 @@ window.bp = window.bp || {};
 					dropzone.on(
 						'success',
 						function ( file, response ) {
-							if ( response.data.id ) {
+							if ( 'video' === mediaType && true === file.upload.chunked ) {
+								// convert file.xhr.response string to object.
+								response = JSON.parse( file.xhr.response );
+							}
+							if ( response.data && response.data.id ) {
 								if ( 'activity' === ActiveComponent ) {
 									// Privacy and metadata handling.
 									if ( ! bp.privacyEditable ) {
@@ -778,11 +794,13 @@ window.bp = window.bp || {};
 								var errorMessage = response && response.data && response.data.feedback || bbRlMedia.connection_lost_error;
 								$( file.previewElement ).find( '.dz-error-message span' ).text( errorMessage );
 							} else {
+								var bbRlErrorMessage = bbRlMedia.invalid_media_type + '. ' + ( response || '' );
+								if ( config.errorMessage ) {
+									bbRlErrorMessage = config.errorMessage;
+								}
 								Backbone.trigger(
 									'onError',
-									'<div>' + bbRlMedia.invalid_media_type + '. ' + (
-												response || ''
-											) + '<div>'
+									'<div>' + bbRlErrorMessage + '<div>'
 								);
 								dropzone.removeFile( file );
 								view.$el.closest( parentSelector ).removeClass( 'media-uploading' );
@@ -952,7 +970,9 @@ window.bp = window.bp || {};
 
 								// Handle thumbnails for media files.
 								if ( 'media' === fileType ) {
-									if ( 'undefined' !== typeof bbRlIsAs3cfActive && '1' === bbRlIsAs3cfActive ) {
+									var isAs3cfActive = 'undefined' !== typeof bbRlIsAs3cfActive && '1' === bbRlIsAs3cfActive;
+									var isOmActive    = 'undefined' !== typeof bbRlIsOmActive && '1' === bbRlIsOmActive;
+									if ( isAs3cfActive || isOmActive ) {
 										$( dropzoneObj.files[index].previewElement ).find( 'img' ).attr( 'src', file.thumb );
 										dropzoneObj.emit( 'thumbnail', file.thumb );
 									} else {

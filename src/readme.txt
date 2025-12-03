@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 6.8.1
 Requires PHP: 7.4.0
-Stable tag: 2.9.20
+Stable tag: 2.15.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,82 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 2.15.3 =
+* Bug: Giphy - Fixed GIFs not auto-playing on page load in messages and activity feeds
+* Bug: WPML - Fixed an issue where hover cards failed to load data when WPML was active due to home URLs ending with a trailing slash
+
+= 2.15.2 =
+* Enhancement: Core - Implemented a notice for media privacy change handling
+
+= 2.15.1 =
+* Enhancement: Core - Improved reliability of license status checks by optimizing API requests to prevent delays experience
+
+= 2.15.0 =
+* New Feature! - Added support for the new Gamification, Offload Media, and Sharing features, enabling seamless integration and enhanced functionality across the BuddyBoss Platform
+
+= 2.14.4 =
+* Bug: Core - Fixed an issue where theme updates were not being received
+
+= 2.14.3 =
+* Bug: Core - Fixed an issue where Polls, Scheduled Posts, and Reactions were not working correctly on site
+
+= 2.14.2 =
+* Bug: Core - Fixed the license rate limit error and proper error handling
+
+= 2.14.1 =
+* Bug: Core - Fixed a fatal error causing the Zoom integration to break
+
+= 2.14.0 =
+* New Feature! Core - Implemented a new licensing system for BuddyBoss plugins and theme
+
+= 2.13.1 =
+* Bug: LearnDash - Fixed BuddyBoss Theme compatibility with LearnDash Modern UI templates to ensure lessons, topics, and courses display correctly
+
+= 2.13.0 =
+* New Feature! Activity - Added Featured Image above post content in activity and group posts, making feeds more visual and engaging
+* New Feature! Activity - Added support for Post Titles and H3/H4 text formatting in activity feeds, helping communities stay organized and posts easier to read
+
+= 2.12.0 =
+* Bug: Activity - Fixed issue where activity filters still applied a removed topic filter instead of working independently
+* Bug: Activity - Fixed issue where activity topic settings remained visible when the main topic setting was disabled
+* Bug: Activity - Removed incorrect tooltip "Please select a Topic" from the Post button when no group topics exist
+* Bug: Fixed an issue where network search displayed private forum replies to non-group members
+* Bug: Forums - Fixed an issue where code snippets in forum discussions and replies broke when added from the backend editor
+* Bug: Groups - Fixed an issue where subscribers were able to upload media in groups despite restrictions set in group settings
+* Bug: Moderation - Added search functionality to moderation admin pages
+* Bug: ReadyLaunch - Fixed UI issues with pre and code blocks in forum content when ReadyLaunch is enabled
+* Bug: WooCommerce - Fixed WooCommerce order confirmation page UI conflict between ReadyLaunch and Theme
+
+= 2.11.0 =
+* Enhancement: Activity - Added a new “Unanswered” option to the Activity Feed filter, allowing users to view posts without comments or replies
+* Bug: ReadyLaunch - Fixed an issue in ReadyLaunch where editing a discussion did not correctly remove previously uploaded media, causing old and new files to display together
+* Bug: ReadyLaunch - Fixed an issue in ReadyLaunch where the Edit Activity modal appeared behind the Activity modal
+* Bug: ReadyLaunch - Fixed an issue where the ReadyLaunch group sticky header overlapped the activity post form in the group feed
+
+= 2.10.0 =
+* New Feature! ReadyLaunch - Introduced a ReadyLaunch onboarding setup to guide users through initial configuration
+* Bug: Activity - Added new hooks in Activity Topics to provide extensibility support
+* Bug: Activity - Fixed an issue where replies to cached activity comments showed undefined instead of the correct user
+* Bug: Core -  Fixed accessibility issues across Platform and Theme for improved usability
+* Bug: Core - Enhanced advanced search to support flexible date formats and multiple languages for accurate member search on date fields
+* Bug: Core - Fixed PHP 8.4 warnings and removed extra database queries for better stability and performance
+* Bug: Groups - Fixed issue where the 'Send Request' button appeared for users allowed to join groups without approval
+* Bug: Media - Fixed a critical security vulnerability in the document download function to prevent unauthorized file access
+* Bug: Moderation - Fixed an issue where reported media from group feeds was still visible in group and media directories
+* Bug: Moderation - Fixed incorrect media counts in groups when moderation and content reporting settings were enabled
+* Bug: Profiles - Fixed default avatar initials showing incorrectly by using nickname instead of the selected display name format
+* Bug: Profiles - Fixed issue where the default Gender filter in profile fields did not work correctly when the option order was changed
+
+= 2.9.30 =
+* Bug: Activity - Fixed issue where the "More" label in topics was not translatable
+* Bug: Core - Fixed broken cross (X) icon UI in tag selectors across multiple screens, ensuring proper display even with the Modern Events Calendar plugin active
+* Bug: Core - Fixed critical accessibility issues, including missing labels and empty anchor tags
+* Bug: Forums - Fixed an issue where lead discussion content was missing on single discussion pages, ensuring compatibility with WP 6.8+ query changes.
+* Bug: Forums - Fixed issue where discussions couldn't be posted with only a title and media when GIFs were disabled in forum settings
+* Bug: Groups - Improved album creation UX to prevent partial photo uploads when "Create Album" is clicked before all images finish uploading.
+* Bug: Messages - Added support for URL embed preview in messaging
+* Bug: ReadyLaunch - Fixed minor UI and functional issues
 
 = 2.9.20 =
 * Bug: Activity - Fixed an issue where the schedule post dropdown menu was not fully visible, causing options to overflow or become inaccessible

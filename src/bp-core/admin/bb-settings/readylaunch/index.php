@@ -26,9 +26,11 @@ function bb_readylaunch_settings_page_html() {
 				<img alt="" class="bb-branding-logo" src="<?php echo esc_url( buddypress()->plugin_url . 'bp-core/images/admin/BBLogo.png' ); ?>" />
 			</div>
 			<div class="bb-rl-header-actions">
-				<button class="bb-rl-header-actions-button" data-help-cat-id="5811">
+				<button class="bb-rl-header-actions-button" data-help-cat-id="5811" aria-label="<?php esc_attr_e( 'Help', 'buddyboss' ); ?>">
 					<i class="bb-icons-rl-book-open"></i>
 				</button>
+
+				<?php do_action( 'bb_admin_header_actions' ); ?>
 			</div>
 		</div>
 		<div class="bb-rl-field-wrap" id="bb-rl-field-wrap"></div>
@@ -36,7 +38,7 @@ function bb_readylaunch_settings_page_html() {
 	<div id="bb-rl-help-overlay" class="bb-rl-help-overlay" style="display: none;">
 		<div class="bb-rl-help-overlay-header">
 			<img alt="<?php echo esc_attr__( 'BuddyBoss', 'buddyboss' ); ?>" class="bb-branding-logo" src="<?php echo esc_url( buddypress()->plugin_url . 'bp-core/images/admin/BBLogo.png' ); ?>" />
-			<button id="bb-rl-help-overlay-close" class="bb-rl-help-overlay-close">
+			<button id="bb-rl-help-overlay-close" class="bb-rl-help-overlay-close" aria-label="<?php esc_attr_e( 'Close', 'buddyboss' ); ?>">
 				<i class="bb-icons-rl-x-circle"></i>
 			</button>
 		</div>

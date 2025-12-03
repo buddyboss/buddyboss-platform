@@ -452,6 +452,13 @@ function bp_do_activation_redirect() {
 		}
 		update_user_option( bp_loggedin_user_id(), 'metaboxhidden_nav-menus', $get_existing_option ); // update the user metaboxes.
 	}
+
+	/**
+	 * Fires before the BuddyBoss activation redirect.
+	 *
+	 * @since BuddyBoss 2.10.0
+	 */
+	do_action( 'bb_do_activation_redirect', $query_args );
 }
 
 /**
@@ -3417,6 +3424,10 @@ function bb_get_pro_label_notice( $type = 'default' ) {
 			(
 				'group_activity_topics' === $type &&
 				version_compare( bb_platform_pro()->version, bb_pro_group_activity_topics_version(), '<' )
+			) ||
+			(
+				'post_feature_image' === $type &&
+				version_compare( bb_platform_pro()->version, bb_pro_post_feature_image_version(), '<' )
 			)
 		)
 	) {
@@ -3489,6 +3500,10 @@ function bb_get_pro_fields_class( $type = 'default' ) {
 			(
 				'group_activity_topics' === $type &&
 				version_compare( bb_platform_pro()->version, bb_pro_group_activity_topics_version(), '<' )
+			) ||
+			(
+				'post_feature_image' === $type &&
+				version_compare( bb_platform_pro()->version, bb_pro_post_feature_image_version(), '<' )
 			)
 		)
 	) {

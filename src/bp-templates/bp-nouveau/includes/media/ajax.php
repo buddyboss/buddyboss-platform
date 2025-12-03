@@ -1040,7 +1040,8 @@ function bp_nouveau_ajax_media_update_privacy() {
 		if ( ! empty( $activity_id ) ) {
 			$activity = new BP_Activity_Activity( $activity_id );
 			if ( ! empty( $activity->id ) ) {
-				$activity->privacy = $privacy;
+				$activity->privacy        = $privacy;
+				$activity->title_required = false;
 				$activity->save();
 			}
 		}
@@ -1404,6 +1405,7 @@ function bp_nouveau_ajax_media_get_media_description() {
 		'bp_nouveau_media_description_response_data',
 		array(
 			'description' => $media_description,
+			'type'        => 'media',
 			'activity_id' => isset( $media->activity_id ) ? $media->activity_id : 0,
 		)
 	);
