@@ -80,11 +80,27 @@ function xprofile_screen_edit_profile() {
 			$field = new BP_XProfile_Field( $field_id );
 			if ( 'membertypes' === $field->type ) {
 
-				$enabled = get_post_meta( $_POST[ 'field_' . $field_id ], '_bp_member_type_enable_profile_field', true );
-				if ( '' === $enabled || '0' === $enabled ) {
-					$errors        = true;
-					$validations[] = __( 'Invalid option selected. Please try again', 'buddyboss' );
-					continue;
+				$submitted_profile_type_post_id = $_POST[ 'field_' . $field_id ];
+				
+				// Get the user's current profile type to check if they're trying to keep the same one
+				$current_member_type = bp_get_member_type( bp_displayed_user_id() );
+				$current_profile_type_post_id = 0;
+				if ( ! empty( $current_member_type ) ) {
+					$current_profile_type_post_id = bp_member_type_post_by_type( $current_member_type );
+				}
+				
+				// Check if user is trying to keep their current profile type
+				$is_keeping_current_type = ( ! empty( $current_profile_type_post_id ) && (int) $current_profile_type_post_id === (int) $submitted_profile_type_post_id );
+				
+				// Only validate self-selection if user is trying to CHANGE to a different profile type
+				if ( ! $is_keeping_current_type ) {
+					$enabled = get_post_meta( $submitted_profile_type_post_id, '_bp_member_type_enable_profile_field', true );
+					
+					if ( '' === $enabled || '0' === $enabled ) {
+						$errors        = true;
+						$validations[] = __( 'Invalid option selected. Please try again', 'buddyboss' );
+						continue;
+					}
 				}
 
 				$member_type_name = bp_get_member_type_key( $_POST[ 'field_' . $field_id ] );
