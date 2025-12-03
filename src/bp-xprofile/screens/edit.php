@@ -80,19 +80,19 @@ function xprofile_screen_edit_profile() {
 			$field = new BP_XProfile_Field( $field_id );
 			if ( 'membertypes' === $field->type ) {
 
-				$submitted_profile_type_post_id = $_POST[ 'field_' . $field_id ];
+				$submitted_profile_type_post_id = (int) $_POST[ 'field_' . $field_id ];
 				
 				// Get the user's current profile type to check if they're trying to keep the same one
 				$current_member_type = bp_get_member_type( bp_displayed_user_id() );
-				$current_profile_type_post_id = 0;
-				if ( ! empty( $current_member_type ) ) {
-					$current_profile_type_post_id = bp_member_type_post_by_type( $current_member_type );
-				}
+				$current_profile_type_post_id = ! empty( $current_member_type )
+					? bp_member_type_post_by_type( $current_member_type )
+					: 0;
 				
 				// Check if user is trying to keep their current profile type
+				// This allows users to save their profile without changing type even when self-selection is disabled
 				$is_keeping_current_type = ( ! empty( $current_profile_type_post_id ) && (int) $current_profile_type_post_id === (int) $submitted_profile_type_post_id );
-				
-				// Only validate self-selection if user is trying to CHANGE to a different profile type
+
+				// Only validate self-selection restrictions if user is trying to CHANGE to a different profile type
 				if ( ! $is_keeping_current_type ) {
 					$enabled = get_post_meta( $submitted_profile_type_post_id, '_bp_member_type_enable_profile_field', true );
 					
