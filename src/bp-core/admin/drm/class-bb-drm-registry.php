@@ -823,24 +823,24 @@ class BB_DRM_Registry {
 
 			case BB_DRM_Helper::DRM_HIGH:
 				// 21-30 days: Send email
-				$subject = __( 'Your BuddyBoss Pro/Plus license needs activation', 'buddyboss' );
+				$subject = __( 'Your BuddyBoss license needs activation', 'buddyboss' );
 				$heading = $subject;
 				$message = sprintf(
 					/* translators: %s: site name/URL */
-					__( 'Your site %s is using BuddyBoss Pro/Plus features that require an active license.', 'buddyboss' ),
-					'<strong>' . get_bloginfo( 'name' ) . '</strong> (' . site_url() . ')'
+					__( 'Your site %s is using BuddyBoss features that require an active license.', 'buddyboss' ),
+					get_bloginfo( 'name' ) . ' (' . site_url() . ')'
 				);
 				$color = 'FF8C00'; // Dark Orange
 				break;
 
 			case BB_DRM_Helper::DRM_LOCKED:
 				// 30+ days: Send email
-				$subject = __( 'BuddyBoss Pro/Plus features have been disabled on your site', 'buddyboss' );
+				$subject = __( 'Your BuddyBoss features have now been disabled on your site', 'buddyboss' );
 				$heading = $subject;
 				$message = sprintf(
 					/* translators: %s: site name/URL */
-					__( 'The BuddyBoss Pro/Plus features on your site %s have been disabled because no active license was found.', 'buddyboss' ),
-					'<strong>' . get_bloginfo( 'name' ) . '</strong> (' . site_url() . ')'
+					__( 'The BuddyBoss features on your site %s have been disabled because no active license was found.', 'buddyboss' ),
+					get_bloginfo( 'name' ) . ' (' . site_url() . ')'
 				);
 				$color = 'dc3232'; // Red
 				break;
@@ -942,6 +942,8 @@ class BB_DRM_Registry {
 
 	/**
 	 * Get consolidated email HTML template.
+	 *
+	 * Follows the exact messaging from BuddyBoss DRM Messaging specification.
 	 *
 	 * @param array $data Email data (heading, message, addon_list_html, color, activation_link, status).
 	 * @return string Email HTML.
