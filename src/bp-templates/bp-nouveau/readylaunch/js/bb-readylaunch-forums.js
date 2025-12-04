@@ -922,8 +922,32 @@ window.bp = window.bp || {};
 			if ( typeof BP_Nouveau !== 'undefined' && typeof BP_Nouveau.media !== 'undefined' && typeof BP_Nouveau.media.emoji !== 'undefined' ) {
 				if ( jQuery( '.bbp-the-content' ).length && typeof jQuery.prototype.emojioneArea !== 'undefined' ) {
 					jQuery( '.bbp-the-content' ).each( function ( i, element ) {
-						var elem_id = jQuery( element ).attr( 'id' );
-						var key = jQuery( element ).data( 'key' );
+						var $element = jQuery( element );
+						var elem_id = $element.attr( 'id' );
+						var key = $element.data( 'key' );
+						
+						// Check if emojioneArea is already initialized on this element
+						if ( $element.data( 'emojioneArea' ) || ( element.emojioneArea !== undefined ) ) {
+							// Clean up the existing instance
+							var emojiContainer = $element.closest( 'form' ).find( '#whats-new-toolbar > .bb-rl-post-emoji' );
+							
+							// Remove the emojioneArea instance
+							if ( element.emojioneArea ) {
+								try {
+									element.emojioneArea.hidePicker();
+								} catch ( e ) {
+									// Ignore errors if picker is already hidden
+								}
+								delete element.emojioneArea;
+							}
+							
+							// Clean up the container
+							emojiContainer.empty();
+							
+							// Remove data attribute
+							$element.removeData( 'emojioneArea' );
+						}
+						
 						jQuery( '#' + elem_id ).emojioneArea(
 							{
 								standalone: true,
