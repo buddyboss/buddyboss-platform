@@ -88,9 +88,12 @@ function xprofile_screen_edit_profile() {
 					? bp_member_type_post_by_type( $current_member_type )
 					: 0;
 
-				// Check if user is trying to keep their current profile type
-				// This allows users to save their profile without changing type even when self-selection is disabled
-				$is_keeping_current_type = ( ! empty( $current_profile_type_post_id ) && (int) $current_profile_type_post_id === (int) $submitted_profile_type_post_id );
+				// Check if user is trying to keep their current profile type.
+				// This allows users to save their profile without changing type even when self-selection is disabled.
+				$is_keeping_current_type = (
+					! empty( $current_profile_type_post_id ) &&
+					(int) $current_profile_type_post_id === (int) $submitted_profile_type_post_id
+				);
 
 				// Only validate self-selection restrictions if user is trying to CHANGE to a different profile type
 				if ( ! $is_keeping_current_type ) {
