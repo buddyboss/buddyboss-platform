@@ -462,6 +462,7 @@ class BB_DRM_Registry {
 		$activation_link = bp_get_admin_url( 'admin.php?page=buddyboss-license' );
 
 		// Build heading and message based on status and count.
+		// Headings match BuddyBoss DRM Messaging.pdf specification.
 		switch ( $drm_status ) {
 			case BB_DRM_Helper::DRM_LOW:
 				// 7-13 days: No admin notice, only plugin notification
@@ -470,7 +471,7 @@ class BB_DRM_Registry {
 
 			case BB_DRM_Helper::DRM_MEDIUM:
 				// 14-21 days: Yellow notice
-				$heading = __( 'License required for BuddyBoss Pro/Plus features.', 'buddyboss' );
+				$heading = __( 'License required for BuddyBoss features.', 'buddyboss' );
 				$message = '';
 				$notice_class = 'notice notice-warning is-dismissible';
 				$color        = 'FFA500'; // Yellow/Orange
@@ -478,7 +479,7 @@ class BB_DRM_Registry {
 
 			case BB_DRM_Helper::DRM_HIGH:
 				// 21-30 days: Orange notice
-				$heading = __( 'BuddyBoss Pro/Plus features will be disabled soon.', 'buddyboss' );
+				$heading = __( 'BuddyBoss features will be disabled soon.', 'buddyboss' );
 				$message = '';
 				$notice_class = 'notice notice-warning is-dismissible';
 				$color        = 'FF8C00'; // Dark Orange
@@ -486,7 +487,7 @@ class BB_DRM_Registry {
 
 			case BB_DRM_Helper::DRM_LOCKED:
 				// 30+ days: Red notice
-				$heading = __( 'BuddyBoss Pro/Plus features have been disabled.', 'buddyboss' );
+				$heading = __( 'BuddyBoss features have been disabled.', 'buddyboss' );
 				$message = '';
 				$notice_class = 'notice notice-error';
 				$color        = 'dc3232'; // Red
@@ -670,23 +671,23 @@ class BB_DRM_Registry {
 			}
 
 			// Build title and content based on DRM status.
+			// Titles and messages match BuddyBoss DRM Messaging.pdf specification.
 			if ( BB_DRM_Helper::DRM_LOW === $drm_status ) {
 				// 7-13 days
-				$title   = __( 'BuddyBoss Pro/Plus: License Activation Needed', 'buddyboss' );
-				$content = '<p>' . __( 'We couldn\'t verify an active license for your BuddyBoss Pro/Plus features. Please activate your license to continue using them.', 'buddyboss' ) . '</p>';
+				$title   = __( 'License Activation Needed', 'buddyboss' );
+				$content = '<p>' . __( 'We couldn\'t verify an active license for your BuddyBoss features. Please activate your license to continue using them.', 'buddyboss' ) . '</p>';
 			} elseif ( BB_DRM_Helper::DRM_MEDIUM === $drm_status ) {
 				// 14-21 days
-				$title   = __( 'BuddyBoss Pro/Plus: License Required', 'buddyboss' );
-				$content = '<p>' . __( 'An active license is required to use BuddyBoss Pro/Plus features. Without activation, these features will stop working.', 'buddyboss' ) . '</p>';
+				$title   = __( 'License Required', 'buddyboss' );
+				$content = '<p>' . __( 'An active license is required to use BuddyBoss features. Without activation, these features will stop working.', 'buddyboss' ) . '</p>';
 			} elseif ( BB_DRM_Helper::DRM_HIGH === $drm_status ) {
 				// 21-30 days
-				$title   = __( 'BuddyBoss Pro/Plus: Activation Required', 'buddyboss' );
-				$content = '<p>' . __( 'Your BuddyBoss Pro/Plus features will be disabled soon. Activate your license now to avoid interruption.', 'buddyboss' ) . '</p>';
+				$title   = __( 'License Activation Required', 'buddyboss' );
+				$content = '<p>' . __( 'Your BuddyBoss features will be disabled soon. Activate your license now to avoid interruption.', 'buddyboss' ) . '</p>';
 			} elseif ( BB_DRM_Helper::DRM_LOCKED === $drm_status ) {
 				// 30+ days
-				$title   = __( 'BuddyBoss Pro/Plus: Features Disabled', 'buddyboss' );
+				$title   = __( 'BuddyBoss Features Disabled', 'buddyboss' );
 				$content = '<p>' . __( 'The following features have been disabled because no active license was found. Activate your license to restore them.', 'buddyboss' ) . '</p>';
-				$content .= '<p>' . __( 'If you no longer need these features, you can deactivate the premium add-ons in your Plugins page to continue using BuddyBoss Platform for free.', 'buddyboss' ) . '</p>';
 			} else {
 				$title   = '';
 				$content = '';
@@ -695,9 +696,12 @@ class BB_DRM_Registry {
 			// Add feature list for all statuses
 			if ( $count > 0 ) {
 				// Build HTML list for notification.
+				// Feature list heading varies by status per BuddyBoss DRM Messaging.pdf.
 				$addon_list = '<p><strong>';
 				if ( BB_DRM_Helper::DRM_LOCKED === $drm_status ) {
 					$addon_list .= __( 'The following features have been disabled:', 'buddyboss' );
+				} elseif ( BB_DRM_Helper::DRM_HIGH === $drm_status ) {
+					$addon_list .= __( 'The following features will be disabled without an active license:', 'buddyboss' );
 				} else {
 					$addon_list .= __( 'The following features require an active license:', 'buddyboss' );
 				}
@@ -708,6 +712,12 @@ class BB_DRM_Registry {
 				$addon_list .= '</ul>';
 
 				$content .= $addon_list;
+			}
+
+			// Add deactivation option for LOCKED status (comes after feature list and button).
+			// Per PDF spec, this appears after [Activate Your License] button.
+			if ( BB_DRM_Helper::DRM_LOCKED === $drm_status ) {
+				$content .= '<p>' . __( 'If you no longer need these features, you can deactivate the premium add-ons in your Plugins page to continue using BuddyBoss Platform for free.', 'buddyboss' ) . '</p>';
 			}
 
 			// Add footer links to content
@@ -1091,24 +1101,10 @@ class BB_DRM_Registry {
 		$support_link    = 'https://www.buddyboss.com/support/';
 		$pricing_link    = 'https://www.buddyboss.com/pricing/';
 
-		$title = __( 'BuddyBoss Pro/Plus: Features Disabled', 'buddyboss' );
+		// Title and message match BuddyBoss DRM Messaging.pdf specification.
+		$title = __( 'Your BuddyBoss features have now been disabled', 'buddyboss' );
 
-		// Build addon list
-		$addon_list = '<p><strong>' . __( 'The following features have been disabled:', 'buddyboss' ) . '</strong></p>';
-		$addon_list .= '<ul style="margin: 10px 0; padding-left: 20px;">';
-		foreach ( $addon_names as $name ) {
-			$addon_list .= '<li>' . esc_html( $name ) . '</li>';
-		}
-		$addon_list .= '</ul>';
-
-		$message = sprintf(
-			/* translators: %1$s: Account page link, %2$s: Settings page link, %3$s: Support link */
-			__( 'Without an active license, the features listed below have been disabled. Your site frontend is unaffected, but these premium features are unavailable.<br><br>%1$s<br>This is easy to fix:<br><br>1. Get your key from your <a href="%2$s" target="_blank">Account Page</a><br>2. <a href="%3$s">Click here</a> to enter and activate it<br>3. That\'s it!<br><br>We\'re here to help. <a href="%4$s" target="_blank">Contact Support</a>', 'buddyboss' ),
-			$addon_list,
-			$account_link,
-			$activation_link,
-			$support_link
-		);
+		$message = __( 'BuddyBoss features on your site have been disabled because no active license was found. Activate your license to restore functionality, or deactivate premium add-ons in your Plugins page to continue using BuddyBoss Platform for free.', 'buddyboss' );
 
 		return array(
 			'label'       => $title,
@@ -1149,24 +1145,10 @@ class BB_DRM_Registry {
 		$account_link    = 'https://www.buddyboss.com/my-account/';
 		$support_link    = 'https://www.buddyboss.com/support/';
 
-		$title = __( 'BuddyBoss Pro/Plus: Activation Required', 'buddyboss' );
+		// Title and message match BuddyBoss DRM Messaging.pdf specification.
+		$title = __( 'Your BuddyBoss license requires activation', 'buddyboss' );
 
-		// Build addon list
-		$addon_list = '<p><strong>' . __( 'The following features will be disabled soon:', 'buddyboss' ) . '</strong></p>';
-		$addon_list .= '<ul style="margin: 10px 0; padding-left: 20px;">';
-		foreach ( $addon_names as $name ) {
-			$addon_list .= '<li>' . esc_html( $name ) . '</li>';
-		}
-		$addon_list .= '</ul>';
-
-		$message = sprintf(
-			/* translators: %1$s: Addon list, %2$s: Account page link, %3$s: Settings page link, %4$s: Support link */
-			__( '%1$sActivate your license now to avoid interruption.<br><br>Need your license key? Visit %2$sYour Account Page%3$s. Having trouble? %4$sContact Support%3$s.', 'buddyboss' ),
-			$addon_list,
-			'<a href="' . esc_url( $account_link ) . '" target="_blank">',
-			'</a>',
-			'<a href="' . esc_url( $support_link ) . '" target="_blank">'
-		);
+		$message = __( 'Your site is using BuddyBoss features without an active license. These features will be disabled if a license is not activated soon.', 'buddyboss' );
 
 		return array(
 			'label'       => $title,
@@ -1205,24 +1187,10 @@ class BB_DRM_Registry {
 		$account_link    = 'https://www.buddyboss.com/my-account/';
 		$support_link    = 'https://www.buddyboss.com/support/';
 
-		$title = __( 'BuddyBoss Pro/Plus: License Required', 'buddyboss' );
+		// Title and message match BuddyBoss DRM Messaging.pdf specification.
+		$title = __( 'Your BuddyBoss license is not activated', 'buddyboss' );
 
-		// Build addon list
-		$addon_list = '<p><strong>' . __( 'The following features require an active license:', 'buddyboss' ) . '</strong></p>';
-		$addon_list .= '<ul style="margin: 10px 0; padding-left: 20px;">';
-		foreach ( $addon_names as $name ) {
-			$addon_list .= '<li>' . esc_html( $name ) . '</li>';
-		}
-		$addon_list .= '</ul>';
-
-		$message = sprintf(
-			/* translators: %1$s: Addon list, %2$s: Account page link, %3$s: Support link */
-			__( '%1$sAn active license is required to use these features. Without activation, these features will stop working.<br><br>Need your license key? Visit %2$sYour Account Page%3$s. Having trouble? %4$sContact Support%3$s.', 'buddyboss' ),
-			$addon_list,
-			'<a href="' . esc_url( $account_link ) . '" target="_blank">',
-			'</a>',
-			'<a href="' . esc_url( $support_link ) . '" target="_blank">'
-		);
+		$message = __( 'Your site is using BuddyBoss features that require an active license. Activate your license to ensure continued access to these features.', 'buddyboss' );
 
 		return array(
 			'label'       => $title,
