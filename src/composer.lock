@@ -74,7 +74,7 @@
         },
         {
             "name": "caseproof/ground-level-container",
-            "version": "1.0.1",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
                 "url": "git@github.com:caseproof/ground-level-container.git",
@@ -110,28 +110,28 @@
             ],
             "description": "The GroundLevel Container package.",
             "support": {
-                "source": "https://github.com/caseproof/ground-level-container/tree/1.0.1"
+                "source": "https://github.com/caseproof/ground-level-container/tree/1.1.0"
             },
             "time": "2025-07-18T22:41:43+00:00"
         },
         {
             "name": "caseproof/ground-level-in-product-notifications",
-            "version": "1.0.1",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
                 "url": "git@github.com:caseproof/ground-level-in-product-notifications.git",
-                "reference": "d2bc2caa833563f42d244154dd6ba080afbdb299"
+                "reference": "9395de13b329afbfc2575495a888c317a2fcce66"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/caseproof/ground-level-in-product-notifications/zipball/d2bc2caa833563f42d244154dd6ba080afbdb299",
-                "reference": "d2bc2caa833563f42d244154dd6ba080afbdb299",
+                "url": "https://api.github.com/repos/caseproof/ground-level-in-product-notifications/zipball/9395de13b329afbfc2575495a888c317a2fcce66",
+                "reference": "9395de13b329afbfc2575495a888c317a2fcce66",
                 "shasum": ""
             },
             "require": {
-                "caseproof/ground-level-container": "^1.0.1",
-                "caseproof/ground-level-mothership": "^1.0.1",
-                "caseproof/ground-level-support": "^1.0.1",
+                "caseproof/ground-level-container": "^1.1.0",
+                "caseproof/ground-level-mothership": "^1.1.0",
+                "caseproof/ground-level-support": "^1.1.0",
                 "php": ">=7.4"
             },
             "type": "library",
@@ -151,27 +151,27 @@
             ],
             "description": "The GroundLevel In-Product Notifications package.",
             "support": {
-                "source": "https://github.com/caseproof/ground-level-in-product-notifications/tree/1.0.1"
+                "source": "https://github.com/caseproof/ground-level-in-product-notifications/tree/1.1.0"
             },
-            "time": "2025-10-13T20:05:57+00:00"
+            "time": "2025-11-17T15:41:49+00:00"
         },
         {
             "name": "caseproof/ground-level-mothership",
-            "version": "1.0.1",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
                 "url": "git@github.com:caseproof/ground-level-mothership.git",
-                "reference": "e39848223a323260e8c9466a9a9a0f26e18eefbe"
+                "reference": "db7c65092c914dda605d8c55a2c99819575de6b3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/caseproof/ground-level-mothership/zipball/e39848223a323260e8c9466a9a9a0f26e18eefbe",
-                "reference": "e39848223a323260e8c9466a9a9a0f26e18eefbe",
+                "url": "https://api.github.com/repos/caseproof/ground-level-mothership/zipball/db7c65092c914dda605d8c55a2c99819575de6b3",
+                "reference": "db7c65092c914dda605d8c55a2c99819575de6b3",
                 "shasum": ""
             },
             "require": {
-                "caseproof/ground-level-container": "^1.0.1",
-                "caseproof/ground-level-support": "^1.0.1",
+                "caseproof/ground-level-container": "^1.1.0",
+                "caseproof/ground-level-support": "^1.1.0",
                 "php": ">=7.4"
             },
             "type": "library",
@@ -191,13 +191,13 @@
             ],
             "description": "The GroundLevel Mothership package.",
             "support": {
-                "source": "https://github.com/caseproof/ground-level-mothership/tree/1.0.1"
+                "source": "https://github.com/caseproof/ground-level-mothership/tree/1.1.0"
             },
-            "time": "2025-10-13T20:05:57+00:00"
+            "time": "2025-11-17T15:41:49+00:00"
         },
         {
             "name": "caseproof/ground-level-support",
-            "version": "1.0.1",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
                 "url": "git@github.com:caseproof/ground-level-support.git",
@@ -228,9 +228,6 @@
                 }
             ],
             "description": "The GroundLevel Support package.",
-            "support": {
-                "source": "https://github.com/caseproof/ground-level-support/tree/1.0.1"
-            },
             "time": "2025-08-04T22:29:07+00:00"
         },
         {
@@ -2578,28 +2575,28 @@
         },
         {
             "name": "webmozart/assert",
-            "version": "1.11.0",
+            "version": "1.12.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webmozarts/assert.git",
-                "reference": "11cb2199493b2f8a3b53e7f19068fc6aac760991"
+                "reference": "9be6926d8b485f55b9229203f962b51ed377ba68"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webmozarts/assert/zipball/11cb2199493b2f8a3b53e7f19068fc6aac760991",
-                "reference": "11cb2199493b2f8a3b53e7f19068fc6aac760991",
+                "url": "https://api.github.com/repos/webmozarts/assert/zipball/9be6926d8b485f55b9229203f962b51ed377ba68",
+                "reference": "9be6926d8b485f55b9229203f962b51ed377ba68",
                 "shasum": ""
             },
             "require": {
                 "ext-ctype": "*",
+                "ext-date": "*",
+                "ext-filter": "*",
                 "php": "^7.2 || ^8.0"
             },
-            "conflict": {
-                "phpstan/phpstan": "<0.12.20",
-                "vimeo/psalm": "<4.6.1 || 4.6.2"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^8.5.13"
+            "suggest": {
+                "ext-intl": "",
+                "ext-simplexml": "",
+                "ext-spl": ""
             },
             "type": "library",
             "extra": {
@@ -2630,9 +2627,9 @@
             ],
             "support": {
                 "issues": "https://github.com/webmozarts/assert/issues",
-                "source": "https://github.com/webmozarts/assert/tree/1.11.0"
+                "source": "https://github.com/webmozarts/assert/tree/1.12.1"
             },
-            "time": "2022-06-03T18:03:27+00:00"
+            "time": "2025-10-29T15:56:20+00:00"
         }
     ],
     "aliases": [],
