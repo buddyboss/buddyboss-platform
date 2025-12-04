@@ -28,19 +28,35 @@ if ( bb_enable_content_counts() ) {
 				}
 
 				if ( false !== $count ) {
-					printf(
-						wp_kses(
-							/* translators: %d is the count */
-							_n(
-								'<span class="bb-count">%d</span> ' . ( 'invites' === $bp_current_action ? 'Invite' : 'Group' ),
-								'<span class="bb-count">%d</span> ' . ( 'invites' === $bp_current_action ? 'Invites' : 'Groups' ),
-								$count,
-								'buddyboss'
+					if ( 'invites' === $bp_current_action ) {
+						printf(
+							wp_kses(
+								/* translators: %d is the count */
+								_n(
+									'<span class="bb-count">%d</span> Invite',
+									'<span class="bb-count">%d</span> Invites',
+									$count,
+									'buddyboss'
+								),
+								array( 'span' => array( 'class' => true ) )
 							),
-							array( 'span' => array( 'class' => true ) )
-						),
-						(int) $count
-					);
+							(int) $count
+						);
+					} else {
+						printf(
+							wp_kses(
+								/* translators: %d is the count */
+								_n(
+									'<span class="bb-count">%d</span> Group',
+									'<span class="bb-count">%d</span> Groups',
+									$count,
+									'buddyboss'
+								),
+								array( 'span' => array( 'class' => true ) )
+							),
+							(int) $count
+						);
+					}
 				}
 
 				unset( $count );
