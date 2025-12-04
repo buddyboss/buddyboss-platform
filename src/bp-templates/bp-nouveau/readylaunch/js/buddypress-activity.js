@@ -2534,7 +2534,7 @@ window.bp = window.bp || {};
 					},
 				}
 			);
-			
+
 			// Manually trigger picker show/hide for modal context
 			if (isModal) {
 				// Find the modal container for better event management
@@ -2542,7 +2542,7 @@ window.bp = window.bp || {};
 				if (!$modalContainer.length) {
 					$modalContainer = $(parentSelector); // Fallback to parent selector
 				}
-				
+
 				// Create unique event namespace for this activity
 				var eventNamespace = '.bb-rl-emoji-' + activityId;
 				
