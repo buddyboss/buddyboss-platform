@@ -162,13 +162,11 @@ class BB_DRM_Addon extends BB_Base_DRM {
 			return;
 		}
 
-		// Use WordPress built-in icons based on severity.
-		if ( BB_DRM_Helper::DRM_LOCKED === $drm_status ) {
-			// Red error icon for LOCKED state.
-			$icon_url = admin_url( 'images/no.png' );
+		// Determine icon based on severity.
+		if ( BB_DRM_Helper::DRM_LOCKED === $drm_status || BB_DRM_Helper::DRM_HIGH === $drm_status ) {
+			$icon_url = buddypress()->plugin_url . 'bp-core/images/dh-icon.png'; // Red.
 		} else {
-			// Yellow warning icon for LOW/MEDIUM states.
-			$icon_url = admin_url( 'images/yes.png' );
+			$icon_url = buddypress()->plugin_url . 'bp-core/images/dl-icon.png'; // Yellow.
 		}
 
 		$notifications = new BB_Notifications();

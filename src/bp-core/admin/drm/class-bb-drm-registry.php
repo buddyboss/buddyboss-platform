@@ -662,12 +662,10 @@ class BB_DRM_Registry {
 			$addon_names       = wp_list_pluck( $affected_addons, 'plugin_name' );
 
 			// Determine icon based on severity.
-			if ( BB_DRM_Helper::DRM_LOCKED === $drm_status ) {
-				$icon_url = admin_url( 'images/no.png' ); // Red
-			} elseif ( BB_DRM_Helper::DRM_HIGH === $drm_status ) {
-				$icon_url = admin_url( 'images/no.png' ); // Orange (using red icon for now)
+			if ( BB_DRM_Helper::DRM_LOCKED === $drm_status || BB_DRM_Helper::DRM_HIGH === $drm_status ) {
+				$icon_url = buddypress()->plugin_url . 'bp-core/images/dh-icon.png'; // Red.
 			} else {
-				$icon_url = admin_url( 'images/yes.png' ); // Yellow
+				$icon_url = buddypress()->plugin_url . 'bp-core/images/dl-icon.png'; // Yellow.
 			}
 
 			// Build title and content based on DRM status.
