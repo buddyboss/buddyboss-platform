@@ -1985,9 +1985,19 @@ function bb_document_update_video_symlink( $response, $post_data ) {
 					$ext  = pathinfo( basename( $path ), PATHINFO_EXTENSION );
 				}
 
+				/**
+				 * Filters the document extension.
+				 *
+				 * @since BuddyBoss 2.15.0
+				 *
+				 * @param string $ext      The document extension.
+				 * @param object $document The document object.
+				 */
+				$ext = apply_filters( 'bb_video_extension', 'video/' . $ext, $document );
+
 				if ( ! empty( $filetype ) && strstr( $filetype['type'], 'video/' ) ) {
 					$response['video_symlink']     = bb_document_video_get_symlink( (int) current( $document_ids ) );
-					$response['video_extension']   = 'video/' . $ext;
+					$response['video_extension']   = $ext;
 					$response['extension']         = $ext;
 					$response['video_id']          = (int) current( $document_ids );
 					$response['video_link_update'] = true;
