@@ -670,7 +670,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 					'plural'   => esc_html__( 'Followers', 'buddyboss' ),
 				),
 			),
-			'rest_url'                   => home_url( 'wp-json/buddyboss/v1' ),
+			'rest_url'                   => untrailingslashit( home_url( 'wp-json/buddyboss/v1' ) ),
 			'rest_nonce'                 => wp_create_nonce( 'wp_rest' ),
 			'member_label'               => __( 'member', 'buddyboss' ),
 			'members_label'              => __( 'members', 'buddyboss' ),

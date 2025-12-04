@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 6.8.1
 Requires PHP: 7.4.0
-Stable tag: 2.14.3
+Stable tag: 2.15.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,22 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 2.15.3 =
+* Bug: Giphy - Fixed GIFs not auto-playing on page load in messages and activity feeds
+* Bug: WPML - Fixed an issue where hover cards failed to load data when WPML was active due to home URLs ending with a trailing slash
+
+= 2.15.2 =
+* Enhancement: Core - Implemented a notice for media privacy change handling
+
+= 2.15.1 =
+* Enhancement: Core - Improved reliability of license status checks by optimizing API requests to prevent delays experience
+
+= 2.15.0 =
+* New Feature! - Added support for the new Gamification, Offload Media, and Sharing features, enabling seamless integration and enhanced functionality across the BuddyBoss Platform
+
+= 2.14.4 =
+* Bug: Core - Fixed an issue where theme updates were not being received
 
 = 2.14.3 =
 * Bug: Core - Fixed an issue where Polls, Scheduled Posts, and Reactions were not working correctly on site

@@ -15,6 +15,16 @@ use BuddyBossPlatform\GroundLevel\Mothership\AbstractPluginConnection;
  */
 class BB_Addons_Manager extends AddonsManager {
 
+	public static function loadHooks(): void {
+		parent::loadHooks();
+
+		$cache_products_key = self::getContainer()->get( AbstractPluginConnection::class )->pluginId . self::CACHE_KEY_PRODUCTS;
+		$cache_update_key   = self::getContainer()->get( AbstractPluginConnection::class )->pluginId . self::CACHE_KEY_UPDATE_CHECK;
+
+		add_filter( 'pre_set_transient_' . $cache_update_key, [ self::class, 'pre_set_addon_update_transient' ], 10, 1 );
+		add_action( 'delete_transient_' . $cache_products_key, [ self::class, 'clearProductAddOnsCache' ] );
+	}
+
 	/**
 	 * Generates and returns the HTML for the add-ons.
 	 * Overrides parent method to use our local view file.
@@ -29,6 +39,9 @@ class BB_Addons_Manager extends AddonsManager {
 		// Refresh the add-ons if the button is clicked.
 		if ( isset( $_POST['submit-button-mosh-refresh-addon'] ) ) {
 			delete_transient( self::getContainer()->get( AbstractPluginConnection::class )->pluginId . self::CACHE_KEY_PRODUCTS );
+
+			// Clear product add-ons cache when products are manually refreshed.
+			self::clearProductAddOnsCache();
 		}
 
 		$addons = self::getAddons( true );
@@ -46,9 +59,25 @@ class BB_Addons_Manager extends AddonsManager {
 		return ob_get_clean();
 	}
 
+	/**
+	 * Check if a product exists and is enabled by slug.
+	 * Implements transient caching to reduce API calls.
+	 *
+	 * @param string $slug Product slug to check.
+	 * @return object|null Product object if found and enabled, null otherwise.
+	 */
 	public static function checkProductBySlug( string $slug ): ?object {
-		$apiResponse = self::getAddons( \true );
-		$result      = null;
+		$plugin_id = self::getContainer()->get( AbstractPluginConnection::class )->pluginId;
+		$cache_key = $plugin_id . '_add_ons';
+
+		$apiResponse = get_transient( $cache_key );
+
+		if ( empty( $apiResponse ) ) {
+			$apiResponse = self::getAddons( \true );
+			set_transient( $cache_key, $apiResponse, 12 * HOUR_IN_SECONDS );
+		}
+
+		$result = null;
 		foreach ( $apiResponse->products ?? [] as $product ) {
 			if (
 				! empty( $product->slug ) &&
@@ -62,5 +91,31 @@ class BB_Addons_Manager extends AddonsManager {
 		}
 
 		return $result;
+	}
+
+	/**
+	 * Clear all product add-ons caches.
+	 * Called when license status changes or products are refreshed.
+	 */
+	public static function clearProductAddOnsCache(): void {
+		$plugin_id = self::getContainer()->get( AbstractPluginConnection::class )->pluginId;
+		$cache_key = $plugin_id . '_add_ons';
+		delete_transient( $cache_key );
+	}
+
+	/**
+	 * Clear cache for the addons while invalid:
+	 * self::getContainer()->get(AbstractPluginConnection::class)->pluginId . self::CACHE_KEY_UPDATE_CHECK
+	 *
+	 * @param mixed $value New value of transient.
+	 *
+	 * @return mixed
+	 */
+	public static function pre_set_addon_update_transient( $value ) {
+		if ( null === $value ) {
+			self::clearProductAddOnsCache();
+		}
+
+		return $value;
 	}
 }

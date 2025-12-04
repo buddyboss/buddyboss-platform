@@ -41,6 +41,15 @@ window.bp = window.bp || {};
 		},
 
 		/**
+		 * Common function to safely call Media functions
+		 */
+		invokeMediaFn: function( functionName ) {
+			if ( 'undefined' !== typeof bp.Nouveau.Media && 'function' === typeof bp.Nouveau.Media[ functionName ] ) {
+				bp.Nouveau.Media[ functionName ]();
+			}
+		},
+
+		/**
 		 * [setupGlobals description]
 		 *
 		 * @return {[type]} [description]
@@ -796,6 +805,14 @@ window.bp = window.bp || {};
 				},
 				3000
 			);
+
+			// Trigger GIF autoplay check when activities are loaded via AJAX
+			// Use setTimeout to ensure DOM is updated and video elements are rendered
+			setTimeout( function() {
+				if ( 'undefined' !== typeof bp.Nouveau.Media && 'function' === typeof bp.Nouveau.Media.autoPlayGifVideos ) {
+					bp.Nouveau.Media.autoPlayGifVideos();
+				}
+			}, 200 );
 
 			if (typeof window.instgrm !== 'undefined') {
 				window.instgrm.Embeds.process();
@@ -1774,17 +1791,21 @@ window.bp = window.bp || {};
 									$( 'li#acomment-' + form_item_id ).replaceWith( the_comment );
 								}
 							} else {
-								if ( 0 === activity_comments.children( 'ul' ).length ) {
-									if ( activity_comments.hasClass( 'activity-comments' ) ) {
-										activity_comments.prepend( '<ul></ul>' );
-									} else {
-										activity_comments.append( '<ul></ul>' );
-									}
-								}
-
 								if ( isFooterForm ) {
+									// For modal footer form, ensure the modal body's .activity-comments has a <ul>
+									var modalActivityComments = form.closest( '#activity-modal' ).find( '.bb-modal-activity-body .activity-comments' );
+									if ( modalActivityComments.length > 0 && 0 === modalActivityComments.children( 'ul' ).length ) {
+										modalActivityComments.prepend( '<ul data-activity_id="' + form_activity_id + '" data-parent_comment_id="' + form_activity_id + '"></ul>' );
+									}
 									form.closest( '#activity-modal' ).find( '.bb-modal-activity-body .activity-comments, .bb-modal-activity-body .activity-comments .activity-actions' ).children( 'ul' ).append( $( the_comment ) );
 								} else {
+									if ( 0 === activity_comments.children( 'ul' ).length ) {
+										if ( activity_comments.hasClass( 'activity-comments' ) ) {
+											activity_comments.prepend( '<ul></ul>' );
+										} else {
+											activity_comments.append( '<ul></ul>' );
+										}
+									}
 									activity_comments.children( 'ul' ).append( $( the_comment ).hide().fadeIn( 200 ) );
 								}
 
@@ -1813,6 +1834,9 @@ window.bp = window.bp || {};
 								tool_box_comment.find( '.ac-reply-toolbar .ac-reply-gif-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable no-click' );
 							}
 							jQuery( window ).scroll();
+							
+							// Trigger GIF autoplay check for newly added content
+							bp.Nouveau.Activity.invokeMediaFn( 'autoPlayGifVideos' );
 
 							if ( ! form.hasClass( 'acomment-edit' ) ) {
 								// Set the new count.
@@ -3589,7 +3613,9 @@ window.bp = window.bp || {};
 						self.dropzone_obj.files.push( mock_file );
 						self.dropzone_obj.emit( 'addedfile', mock_file );
 
-						if ( undefined !== typeof BP_Nouveau.is_as3cf_active && '1' === BP_Nouveau.is_as3cf_active ) {
+						var is_as3cf_active = typeof BP_Nouveau.is_as3cf_active !== 'undefined' && '1' === BP_Nouveau.is_as3cf_active;
+						var is_om_active    = typeof BP_Nouveau.is_om_active !== 'undefined' && '1' === BP_Nouveau.is_om_active;
+						if ( is_as3cf_active || is_om_active ) {
 							$( self.dropzone_obj.files[i].previewElement ).find( 'img' ).attr( 'src', activity_comment_data.media[i].thumb );
 							self.dropzone_obj.emit( 'thumbnail', activity_comment_data.media[i].thumb );
 							self.dropzone_obj.emit( 'complete', mock_file );
@@ -4012,9 +4038,18 @@ window.bp = window.bp || {};
 							video_element.attr('id', video_element_id);
 
 							var video_action_wrap = video_container.find('.video-action-wrap');
-							video_element.insertAfter(video_action_wrap);
+							// Handle case where .video-action-wrap doesn't exist
+							if (video_action_wrap.length > 0) {
+								video_element.insertAfter(video_action_wrap);
+							} else {
+								// If no .video-action-wrap, prepend video to container
+								video_element.prependTo(video_container);
+							}
 
-							video_container.find('.video-js').remove();
+							// Remove any previously initialized Video.js players, but not the video element itself
+							video_container.find('.video-js').not(video_element).remove();
+							// Remove vjs-initialized class if present to allow re-initialization
+							video_element.removeClass('vjs-initialized');
 
 							video_element.addClass('video-js');
 
@@ -4062,6 +4097,11 @@ window.bp = window.bp || {};
 			}
 
 			bp.Nouveau.Activity.toggleMultiMediaOptions( form, '', '.bb-modal-activity-footer' );
+			
+			// Trigger GIF autoplay check when modal is opened
+			setTimeout( function() {
+				bp.Nouveau.Activity.invokeMediaFn( 'autoPlayGifVideos' );
+			}, 500 );
 		},
 
 		viewMoreComments: function ( e ) {
@@ -4158,6 +4198,9 @@ window.bp = window.bp || {};
 							setTimeout(
 								function () {
 									jQuery( window ).scroll();
+									
+									// Trigger GIF autoplay check for newly loaded comments
+									bp.Nouveau.Activity.invokeMediaFn( 'autoPlayGifVideos' );
 								},
 								200
 							);
