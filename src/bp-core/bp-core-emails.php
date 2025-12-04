@@ -40,7 +40,22 @@ function bp_email_core_wp_get_template( $content = '', $user = false ) {
 
 	set_query_var( 'email_content', $content );
 	set_query_var( 'email_user', $user );
-	bp_get_template_part( 'assets/emails/wp/email-template' );
+
+	// Try to locate the template using BP template system.
+	$template = bp_locate_template( 'assets/emails/wp/email-template.php' );
+
+	// Fallback: If template not found (e.g., on wp-login.php where template stack may be empty),
+	// directly load from the BuddyBoss plugin's template directory.
+	if ( empty( $template ) ) {
+		$template = buddypress()->themes_dir . '/bp-nouveau/buddypress/assets/emails/wp/email-template.php';
+		if ( ! file_exists( $template ) ) {
+			$template = '';
+		}
+	}
+
+	if ( ! empty( $template ) ) {
+		include $template;
+	}
 
 	// Remove 'bp_replace_the_content' filter to prevent infinite loops.
 	add_filter( 'the_content', 'bp_replace_the_content' );
