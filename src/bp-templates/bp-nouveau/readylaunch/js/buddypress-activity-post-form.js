@@ -1,4 +1,4 @@
-/* global bp, BP_Nouveau, _, Backbone, tinymce, bp_media_dropzone, BBTopicsManager */
+/* global bp, BP_Nouveau, _, Backbone, tinymce, bp_media_dropzone, BBTopicsManager, BBActivityPostFeatureImage */
 /* @version [BBVERSION] */
 /*jshint esversion: 6 */
 window.wp = window.wp || {};
@@ -60,9 +60,7 @@ window.bp = window.bp || {};
 			this.ActivityObjects = new bp.Collections.ActivityObjects();
 			this.buttons         = new Backbone.Collection();
 
-			if ( ! _.isUndefined( window.Dropzone ) && ! _.isUndefined( bbRlMedia ) ) {
-				this.dropzoneView();
-			}
+			this.dropzoneView();
 
 			this.postFormView();
 
@@ -174,26 +172,28 @@ window.bp = window.bp || {};
 			// set up dropzones auto discover to false so it does not automatically set dropzones.
 			window.Dropzone.autoDiscover = false;
 
-			this.dropzone_options = {
-				url                 		: bbRlAjaxUrl,
-				timeout             		: 3 * 60 * 60 * 1000,
-				dictFileTooBig      		: bbRlMedia.dictFileTooBig,
-				dictDefaultMessage  		: bbRlMedia.dropzone_media_message,
-				acceptedFiles       		: 'image/*',
-				autoProcessQueue    		: true,
-				addRemoveLinks      		: true,
-				uploadMultiple      		: false,
-				maxFiles            		: ! _.isUndefined( bbRlMedia.maxFiles ) ? bbRlMedia.maxFiles : 10,
-				maxFilesize         		: ! _.isUndefined( bbRlMedia.max_upload_size ) ? bbRlMedia.max_upload_size : 2,
-				dictMaxFilesExceeded		: bbRlMedia.media_dict_file_exceeded,
-				dictCancelUploadConfirmation: bbRlMedia.dictCancelUploadConfirmation,
-				// previewTemplate : document.getElementsByClassName( 'activity-post-media-template' )[0].innerHTML.
-				maxThumbnailFilesize: ! _.isUndefined( bbRlMedia.max_upload_size ) ? bbRlMedia.max_upload_size : 2,
-			};
+			if ( ! _.isUndefined( bbRlMedia ) ) {
+				this.dropzone_options = {
+					url                          : bbRlAjaxUrl,
+					timeout                      : 3 * 60 * 60 * 1000,
+					dictFileTooBig               : bbRlMedia.dictFileTooBig,
+					dictDefaultMessage           : bbRlMedia.dropzone_media_message,
+					acceptedFiles                : 'image/*',
+					autoProcessQueue             : true,
+					addRemoveLinks               : true,
+					uploadMultiple               : false,
+					maxFiles                     : ! _.isUndefined( bbRlMedia.maxFiles ) ? bbRlMedia.maxFiles : 10,
+					maxFilesize                  : ! _.isUndefined( bbRlMedia.max_upload_size ) ? bbRlMedia.max_upload_size : 2,
+					dictMaxFilesExceeded         : bbRlMedia.media_dict_file_exceeded,
+					dictCancelUploadConfirmation : bbRlMedia.dictCancelUploadConfirmation,
+					// previewTemplate : document.getElementsByClassName( 'activity-post-media-template' )[0].innerHTML.
+					maxThumbnailFilesize : ! _.isUndefined( bbRlMedia.max_upload_size ) ? bbRlMedia.max_upload_size : 2,
+				};
 
-			// if defined, add custom dropzone options.
-			if ( ! _.isUndefined( bbRlMedia.dropzone_options ) ) {
-				Object.assign( this.dropzone_options, bbRlMedia.dropzone_options );
+				// if defined, add custom dropzone options.
+				if ( ! _.isUndefined( bbRlMedia.dropzone_options ) ) {
+					Object.assign( this.dropzone_options, bbRlMedia.dropzone_options );
+				}
 			}
 		},
 
@@ -265,7 +265,7 @@ window.bp = window.bp || {};
 						hideOnClick: true
 					},
 					toolbar: {
-						buttons: [ 'bold', 'italic', 'unorderedlist', 'orderedlist', 'quote', 'anchor', 'pre' ],
+						buttons: [ 'bold', 'italic', 'unorderedlist', 'orderedlist', 'quote', 'anchor', 'pre', 'h3', 'h4' ],
 						relativeContainer: edit_activity_editor_content,
 						static: true,
 						updateOnEmptySelection: true
@@ -379,7 +379,12 @@ window.bp = window.bp || {};
 			var self = this;
 
 			self.postForm.$el.parent( '#bb-rl-activity-form' ).removeClass( 'bp-hide' );
-			self.postForm.$el.find( '#bb-rl-whats-new' ).html( activity_data.content );
+			// Delay content application to ensure emojioneArea should not override the content.
+			setTimeout( function() {
+				self.postForm.$el.find( '#bb-rl-whats-new' ).html( activity_data.content );
+			}, 0 );
+
+			self.postForm.$el.find( '#bb-rl-whats-new-title' ).val( activity_data.post_title );
 			if ( activity_URL_preview != null ) {
 				self.postForm.$el.find( '#bb-rl-whats-new' ).data( 'activity-url-preview', activity_URL_preview );
 			}
@@ -407,6 +412,15 @@ window.bp = window.bp || {};
 					activity_data.object = 'groups';
 				}
 			}
+
+			// Trigger custom event for edit activity loaded.
+			$( 'body' ).trigger( 'bb_activity_event',
+				{
+					type          : 'bb_activity_edit_loaded_at_start',
+					model         : self.model,
+					activity_data : activity_data,
+				}
+			);
 
 			// Set link image index and confirm image index.
 			self.postForm.model.set(
@@ -699,10 +713,10 @@ window.bp = window.bp || {};
 
 				types.forEach(
 					function ( type ) {
-						var subtype        = 'document' === type ? 'media' : type,
+						var subtype        = type,
 						activityKeyGroup   = 'group_' + type,
 						activityKeyProfile = 'profile_' + type;
-						if ( 'groups' === context ) {
+						if ( 'group' === context ) {
 							if ( ! _.isUndefined( activity_data[ activityKeyGroup ] ) && false === activity_data[ activityKeyGroup ] ) {
 								typeSupport.find( '.bb-rl-post-' + subtype + '.bb-rl-' + type + '-support' ).removeClass( 'active' ).addClass( 'bb-rl-' + type + '-support-hide' );
 								$( '.bb-rl-edit-activity-content-wrap #bb-rl-whats-new-attachments .bb-rl-activity-' + type + '-container #bb-rl-activity-post-' + type + '-uploader .dz-default.dz-message' ).hide();
@@ -840,6 +854,15 @@ window.bp = window.bp || {};
 					Backbone.trigger( 'topic:update', activity_data.topics );
 				}
 			}
+
+			// Trigger custom event after edit activity loaded
+			$( 'body' ).trigger( 'bb_activity_event',
+				{
+					type          : 'bb_activity_edit_loaded_at_end',
+					model         : self.model,
+					activity_data : activity_data,
+				}
+			);
 		},
 
 		getCurrentDraftActivity: function () {
@@ -883,6 +906,17 @@ window.bp = window.bp || {};
 			bp.draft_activity.allow_delete_media = true;
 
 			var $whatsNewForm = $( '#bb-rl-whats-new-form' );
+			// Trigger custom event for draft activity loaded.
+			$( 'body' ).trigger( 'bb_activity_event',
+				{
+					type           : 'bb_activity_draft_loaded',
+					model          : this.model,
+					activity_data  : activity_data,
+					draft_activity : bp.draft_activity,
+					$whatsNewForm  : $whatsNewForm
+				}
+			);
+
 			// Checked the draft is available or doesn't edit activity.
 			if ( ! activity_data || $whatsNewForm.hasClass( 'bb-rl-activity-edit' ) ) {
 				return;
@@ -950,7 +984,7 @@ window.bp = window.bp || {};
 					if ( pair.name.startsWith( 'bb-poll-question-option[' ) ) {
 						pair.name = pair.name.replace( /\[\d+\]/, '' );
 					}
-					if ( - 1 === _.indexOf( ['aw-whats-new-submit', 'whats-new-post-in', 'bb-schedule-activity-date-field', 'bb-schedule-activity-meridian', 'bb-schedule-activity-time-field', 'bb-poll-question-field', 'bb-poll-duration', 'bb-poll-question-option', 'bb-poll-allow-multiple-answer', 'bb-poll-allow-new-option'], pair.name ) ) {
+					if ( - 1 === _.indexOf( ['aw-whats-new-submit', 'whats-new-post-in', 'bb-schedule-activity-date-field', 'bb-schedule-activity-meridian', 'bb-schedule-activity-time-field', 'bb-poll-question-field', 'bb-poll-duration', 'bb-poll-question-option', 'bb-poll-allow-multiple-answer', 'bb-poll-allow-new-option', 'bb-rl-whats-new-title'], pair.name ) ) {
 						if ( _.isUndefined( meta[ pair.name ] ) ) {
 							meta[ pair.name ] = pair.value;
 						} else {
@@ -969,6 +1003,11 @@ window.bp = window.bp || {};
 			content     = content.replace( /&nbsp;/g, ' ' );
 
 			self.postForm.model.set( 'content', content, {silent: true} );
+
+			var activityPostTitle = self.postForm.$el.find( '#bb-rl-whats-new-title' ).val();
+			if ( activityPostTitle ) {
+				self.postForm.model.set( 'post_title', activityPostTitle, {silent: true} );
+			}
 
 			// Silently add meta.
 			self.postForm.model.set( meta, {silent: true} );
@@ -999,6 +1038,21 @@ window.bp = window.bp || {};
 				}
 			);
 
+			$( 'body' ).trigger( 'bb_activity_event',
+				{
+					type          : 'bb_activity_draft_collect_activity',
+					model         : this.model,
+					activity_data : self.postForm.model.attributes,
+					meta          : meta
+				}
+			);
+
+			var noFeatureImages = (
+				'undefined' === typeof BBActivityPostFeatureImage ||
+				'function' !== typeof BBActivityPostFeatureImage.hasFeatureImages ||
+				! BBActivityPostFeatureImage.hasFeatureImages()
+			);
+
 			var filteredContent = $( $.parseHTML( content ) ).text().trim();
 			if ( content.includes( 'data-emoji-char' ) && '' === filteredContent ) {
 				filteredContent = content;
@@ -1006,7 +1060,7 @@ window.bp = window.bp || {};
 
 			// validation for content editor.
 			if ( '' === filteredContent &&
-				_.every( [self.postForm.model.get( 'media' ), self.postForm.model.get( 'document' ), self.postForm.model.get( 'video' ), self.postForm.model.get( 'gif_data' )], isUndefinedOrEmpty ) &&
+				_.every( [self.postForm.model.get( 'media' ), self.postForm.model.get( 'document' ), self.postForm.model.get( 'video' ), self.postForm.model.get( 'gif_data' ), noFeatureImages ], isUndefinedOrEmpty ) &&
 				(
 					(
 						! _.isUndefined( self.postForm.model.get( 'poll' ) ) &&
@@ -1137,6 +1191,15 @@ window.bp = window.bp || {};
 				'topics',
 			];
 
+			// Trigger custom event for draft activity loaded.
+			$( 'body' ).trigger( 'bb_activity_event',
+				{
+					type            : 'bb_activity_draft_data_keys',
+					model           : this.model,
+					draft_data_keys : draft_data_keys
+				}
+			);
+
 			_.each(
 				draft_data_keys,
 				function ( pair ) {
@@ -1266,7 +1329,6 @@ window.bp = window.bp || {};
 			localStorage.removeItem( bp.draft_activity.data_key );
 			self.postForm.$el.removeClass( 'has-draft' );
 			bp.draft_activity.post_action        = 'update';
-			bp.draft_activity.allow_delete_media = false;
 			bp.draft_activity.display_post       = '';
 
 			// Check if user can schedule in feed after discard draft.
@@ -1287,6 +1349,14 @@ window.bp = window.bp || {};
 			) {
 				$whatsNewForm.find( '.bb-post-poll-button' ).removeClass( 'bp-hide' );
 			}
+
+			// Trigger custom event for reset draft.
+			$( 'body' ).trigger( 'bb_activity_event',
+				{
+					type  : 'bb_activity_reset_draft',
+					model : self.model
+				}
+			);
 		},
 
 		reloadWindow: function () {
@@ -1367,12 +1437,46 @@ window.bp = window.bp || {};
 			if ( content.replace( /<p>/gi, '' ).replace( /<\/p>/gi, '' ).replace( /<br>/gi, '' ) === '' ) {
 				$whatsNew[0].innerHTML = '';
 			}
-			
-			if ( $( $.parseHTML( content ) ).text().trim() !== '' || content.includes( 'class="emoji"' ) || ( ! _.isUndefined( this.postForm.model.get( 'link_success' ) ) && true === this.postForm.model.get( 'link_success' ) ) || ( ! _.isUndefined( this.postForm.model.get( 'video' ) ) && 0 !== this.postForm.model.get('video').length ) || ( ! _.isUndefined( this.postForm.model.get( 'document' ) ) && 0 !== this.postForm.model.get('document').length ) || ( ! _.isUndefined( this.postForm.model.get( 'media' ) ) && 0 !== this.postForm.model.get('media').length ) || ( ! _.isUndefined( this.postForm.model.get( 'gif_data' ) ) && ! _.isEmpty( this.postForm.model.get( 'gif_data' ) ) ) || ( ! _.isUndefined( this.postForm.model.get( 'poll' ) ) && ! _.isEmpty( this.postForm.model.get( 'poll' ) ) ) ) {
-				return true;
-			}
-			
-			return false;
+
+			// Get title from the dedicated title input field.
+			var isTitleRequired = BP_Nouveau.activity.params.is_activity_post_title_required;
+			var title           = isTitleRequired ? $.trim( $( '#bb-rl-whats-new-title' ).val() || '' ) : true;
+
+			var contentValidate = (
+				$( $.parseHTML( content ) ).text().trim() !== '' ||
+				content.includes( 'class="emoji"' ) ||
+				(
+					! _.isUndefined( this.postForm.model.get( 'link_success' ) ) &&
+					true === this.postForm.model.get( 'link_success' )
+				) ||
+				(
+					! _.isUndefined( this.postForm.model.get( 'video' ) ) &&
+					0 !== this.postForm.model.get( 'video' ).length
+				) ||
+				(
+					! _.isUndefined( this.postForm.model.get( 'document' ) ) &&
+					0 !== this.postForm.model.get( 'document' ).length
+				) ||
+				(
+					! _.isUndefined( this.postForm.model.get( 'media' ) ) &&
+					0 !== this.postForm.model.get( 'media' ).length
+				) ||
+				(
+					! _.isUndefined( this.postForm.model.get( 'gif_data' ) ) &&
+					! _.isEmpty( this.postForm.model.get( 'gif_data' ) )
+				) ||
+				(
+					! _.isUndefined( this.postForm.model.get( 'poll' ) ) &&
+					! _.isEmpty( this.postForm.model.get( 'poll' ) )
+				) ||
+				(
+					$( '#bb-rl-whats-new-form' ).find( '.buddyboss-shared-activity-preview' ).length > 0
+				)
+			);
+
+			return !! (
+				title && contentValidate
+			);
 		},
 
 	};
@@ -1418,6 +1522,7 @@ window.bp = window.bp || {};
 				item_name: '',
 				object: '',
 				content: '',
+				post_title: '',
 				posting: false,
 				link_success: false,
 				link_error: false,
@@ -1872,7 +1977,11 @@ window.bp = window.bp || {};
 						dictInvalidFileType          : bbRlVideo.dictInvalidFileType,
 						dictMaxFilesExceeded         : bbRlVideo.video_dict_file_exceeded,
 						previewTemplate              : document.getElementsByClassName( 'activity-post-video-template' )[ 0 ].innerHTML,
-						dictCancelUploadConfirmation : bbRlVideo.dictCancelUploadConfirmation,
+						dictCancelUploadConfirmation: bbRlVideo.dictCancelUploadConfirmation,
+						chunking 					 : true,
+						chunkSize					 : 30*1024*1024,
+						retryChunks					 : true,
+						retryChunksLimit			 : 3,
 					}
 				);
 
@@ -2524,7 +2633,7 @@ window.bp = window.bp || {};
 			initialize: function () {
 				this.on( 'ready', this.adjustContent, this );
 				this.on( 'ready', this.activateTinyMce, this );
-				this.options.activity.on( 'change:content', this.resetContent, this );
+				this.options.activity.on( 'change:content change:post_title', this.resetContent, this );
 				this.linkTimeout = null;
 			},
 
@@ -2553,6 +2662,7 @@ window.bp = window.bp || {};
 				}
 
 				this.$el.html( activity.get( 'content' ) );
+				this.$el.closest( '#bb-rl-whats-new-content' ).find( '#bb-rl-whats-new-title' ).val( activity.get( 'title' ) );
 			},
 
 			handlePaste: function () {
@@ -2844,7 +2954,7 @@ window.bp = window.bp || {};
 											hideOnClick: true
 										},
 										toolbar: {
-											buttons: [ 'bold', 'italic', 'unorderedlist', 'orderedlist', 'quote', 'anchor', 'pre' ],
+											buttons: [ 'bold', 'italic', 'unorderedlist', 'orderedlist', 'quote', 'anchor', 'pre', 'h3', 'h4' ],
 											relativeContainer: whatsnewcontent,
 											static: true,
 											updateOnEmptySelection: true
@@ -2855,8 +2965,8 @@ window.bp = window.bp || {};
 											cleanReplacements: [
 												[ new RegExp( /<div/gi ), '<p' ],
 												[ new RegExp( /<\/div/gi ), '</p' ],
-												[ new RegExp( /<h[1-6]/gi ), '<b' ],
-												[ new RegExp( /<\/h[1-6]/gi ), '</b' ],
+												[ new RegExp( /<h[1256]/gi ), '<b' ],
+												[ new RegExp( /<\/h[1256]/gi ), '</b' ],
 											],
 											cleanAttrs: [ 'class', 'style', 'dir', 'id' ],
 											cleanTags: [ 'meta', 'div', 'main', 'section', 'article', 'aside', 'button', 'svg', 'canvas', 'figure', 'input', 'textarea', 'select', 'label', 'form', 'table', 'thead', 'tfooter', 'colgroup', 'col', 'tr', 'td', 'th', 'dl', 'dd', 'center', 'caption', 'nav', 'img' ],
@@ -3037,16 +3147,16 @@ window.bp = window.bp || {};
 				types.forEach(
 					function ( type ) {
 						var groupType  = 'group_' + type,
-							changeType = 'document' === type ? 'media' : type;
+							changeType = type;
 						if ( 'undefined' !== typeof modelAttributes[ groupType ] && false === modelAttributes[ groupType ] ) {
 							var dropzone = bp.Nouveau.Activity.postForm.dropzone;
 
 							if ( ! dropzone || 'bb-rl-activity-post-' + type + '-uploader' === dropzone.element.id ) {
-								typeSupport.find( 'bb-rl-post-' + changeType + '.bb-rl-' + type + '-support' ).removeClass( 'active' ).addClass( 'bb-rl-' + type + '-support-hide' );
+								typeSupport.find( '.bb-rl-post-' + changeType + '.bb-rl-' + type + '-support' ).removeClass( 'active' ).addClass( 'bb-rl-' + type + '-support-hide' );
 								Backbone.trigger( 'activity_' + type + '_close' );
 							}
 						} else {
-							typeSupport.find( 'bb-rl-post-' + changeType + '.bb-rl-' + type + '-support' ).removeClass( 'bb-rl-' + type + '-support-hide' );
+							typeSupport.find( '.bb-rl-post-' + changeType + '.bb-rl-' + type + '-support' ).removeClass( 'bb-rl-' + type + '-support-hide' );
 						}
 					}
 				);
@@ -3690,6 +3800,17 @@ window.bp = window.bp || {};
 
 					localStorage.setItem( bp.draft_activity.data_key, JSON.stringify( bp.draft_activity ) );
 				}
+
+				// Trigger the event to handle privacy change data.
+				$( 'body' ).trigger( 'bb_activity_event',
+					{
+						type           : 'bb_activity_privacy_changed',
+						element        : this.$el,
+						model          : this.model,
+						whats_new_form : whats_new_form,
+						draft_activity : bp.draft_activity,
+					}
+				);
 			},
 
 			backPrivacySelector: function ( e ) {
@@ -3738,6 +3859,8 @@ window.bp = window.bp || {};
 					// Update multi media options dependent on profile/group view.
 					Backbone.trigger( 'mediaprivacytoolbar' );
 				}
+
+				Backbone.trigger( 'privacySelector' );
 			}
 		}
 	);
@@ -3791,7 +3914,16 @@ window.bp = window.bp || {};
 			},
 
 			initialize: function () {
-				this.$el.html( $( '<div></div>' ).prop( 'id', 'bb-rl-whats-new-textarea' ) );
+				// Title template.
+				var $titleTemplate = bp.template( 'bb-activity-post-form-title' ),
+				    html           = $titleTemplate( {
+					    placeholder : BP_Nouveau.activity.strings.whatsNewTitle,
+					    required    : BP_Nouveau.activity.params.is_activity_post_title_required,
+					    maxlength   : BP_Nouveau.activity.params.activity_post_title_maxlength,
+				    } );
+
+				this.$el.html( html );
+				this.$el.append( $( '<div></div>' ).prop( 'id', 'bb-rl-whats-new-textarea' ) );
 				this.$el.append( '<input type="hidden" name="id" id="bb-rl-activity-id" value="0"/>' );
 				this.views.set( '#bb-rl-whats-new-textarea', new bp.Views.WhatsNew( { activity: this.options.activity } ) );
 			},
@@ -4375,7 +4507,12 @@ window.bp = window.bp || {};
 			},
 			onClose: function () {
 				if ( bp.draft_activity.data ) {
-					bp.draft_activity.allow_delete_media = false;
+					if (
+						'undefined' === typeof bp.draft_activity.is_discard_draft_activity ||
+						 false === bp.draft_activity.is_discard_draft_activity
+					) {
+						bp.draft_activity.allow_delete_media = false;
+					}
 					bp.draft_activity.display_post       = '';
 				}
 				if ( ! _.isNull( this.activityLinkPreview ) ) {
@@ -4393,6 +4530,14 @@ window.bp = window.bp || {};
 				if ( ! _.isNull( this.activityVideo ) ) {
 					this.activityVideo.destroyVideo();
 				}
+
+				// Destroy dropzone.
+				$( 'body' ).trigger( 'bb_activity_event',
+					{
+						type           : 'bb_activity_attachments_destroy',
+						draft_activity : bp.draft_activity
+					}
+				);
 			}
 		}
 	);
@@ -4615,6 +4760,11 @@ window.bp = window.bp || {};
 					}
 				}
 
+				// Add BB Activity Post Feature Image View.
+				if ( ! _.isUndefined( bp.Views.activityPostFeatureImageForm ) ) {
+					this.views.add( new bp.Views.activityPostFeatureImageForm( { model : this.model } ) );
+				}
+
 				this.views.add(
 					new bp.Views.ActivityInput(
 						{
@@ -4661,6 +4811,7 @@ window.bp = window.bp || {};
 			events: {
 				'focus #bb-rl-whats-new': 'displayFull',
 				'input #bb-rl-whats-new': 'postValidate',
+				'input #bb-rl-whats-new-title': 'postValidate',
 				'reset': 'resetForm',
 				'submit': 'postUpdate',
 				'keydown': 'postUpdate',
@@ -4693,6 +4844,16 @@ window.bp = window.bp || {};
 					);
 
 					activityParams = _.extend( activityParams, pollParams );
+				}
+
+				// Pick parameters from bbRlActivity.params.post_feature_image.
+				if ( ! _.isUndefined( bbRlActivity.params.post_feature_image ) ) {
+					var featureImageParams = _.pick(
+						bbRlActivity.params.post_feature_image,
+						[ 'can_upload_post_feature_image' ]
+					);
+
+					activityParams = _.extend( activityParams, featureImageParams );
 				}
 
 				// Create the model with the merged parameters.
@@ -5199,7 +5360,7 @@ window.bp = window.bp || {};
 						if ( pair.name.startsWith( 'bb-poll-question-option[' ) ) {
 							pair.name = pair.name.replace( /\[\d+\]/, '' );
 						}
-						if ( -1 === _.indexOf( [ 'aw-whats-new-submit', 'whats-new-post-in', 'bb-schedule-activity-date-field', 'bb-schedule-activity-meridian', 'bb-schedule-activity-time-field', 'bb-poll-question-field', 'bb-poll-duration', 'bb-poll-question-option', 'bb-poll-allow-multiple-answer', 'bb-poll-allow-new-option' ], pair.name ) ) {
+						if ( -1 === _.indexOf( [ 'aw-whats-new-submit', 'whats-new-post-in', 'bb-schedule-activity-date-field', 'bb-schedule-activity-meridian', 'bb-schedule-activity-time-field', 'bb-poll-question-field', 'bb-poll-duration', 'bb-poll-question-option', 'bb-poll-allow-multiple-answer', 'bb-poll-allow-new-option', 'bb-rl-whats-new-title' ], pair.name ) ) {
 							if ( _.isUndefined( meta[ pair.name ] ) ) {
 								meta[ pair.name ] = pair.value;
 							} else {
@@ -5244,6 +5405,17 @@ window.bp = window.bp || {};
 
 				self.model.set( 'content', content, { silent: true } );
 
+				var postTitle = self.$el.find( '#bb-rl-whats-new-title' );
+				if ( postTitle.length && postTitle.val() !== '' ) {
+					postTitle = postTitle.val();
+					var maxPostTitleLength = BP_Nouveau.activity.params.activity_post_title_maxlength;
+					// Maximum 80 characters allowed.
+					if ( postTitle.length > maxPostTitleLength ) {
+						postTitle = postTitle.slice( 0, maxPostTitleLength );
+					}
+					self.model.set( 'post_title', postTitle, { silent: true } );
+				}
+
 				// Silently add meta.
 				self.model.set( meta, { silent: true } );
 
@@ -5274,6 +5446,14 @@ window.bp = window.bp || {};
 					}
 					self.model.set( 'video', video );
 				}
+
+				// Trigger custom event for form preparation.
+				$( 'body' ).trigger( 'bb_activity_event',
+					{
+						type  : 'bb_activity_form_prep',
+						model : self.model
+					}
+				);
 
 				// validation for content editor.
 				if (
@@ -5330,7 +5510,8 @@ window.bp = window.bp || {};
 						'can_create_poll_activity',
 						'bb-poll-question-option',
 						'poll',
-						'topics'
+						'topics',
+						'bb-rl-whats-new-title'
 					]
 				);
 
@@ -5385,6 +5566,15 @@ window.bp = window.bp || {};
 				) {
 					data.link_description = '';
 				}
+
+				// Trigger custom event for form data.
+				$( 'body' ).trigger( 'bb_activity_event',
+					{
+						type  : 'bb_activity_form_data',
+						model : self.model,
+						data  : data
+					}
+				);
 
 				bp.ajax.post( 'post_update', data ).done(
 					function ( response ) {
@@ -5466,6 +5656,15 @@ window.bp = window.bp || {};
 							}
 							self.model.set( 'video', videos );
 						}
+
+						// Trigger custom event for post-success handling.
+						$( 'body' ).trigger( 'bb_activity_event',
+							{
+								type     : 'bb_activity_post_success',
+								model    : self.model,
+								response : response
+							}
+						);
 
 						if ( '' === self.model.get( 'id' ) || 0 === parseInt( self.model.get( 'id' ) ) ) {
 							// Reset draft activity.
@@ -5567,6 +5766,14 @@ window.bp = window.bp || {};
 								).addClass( 'selected' );
 							}
 
+							// Trigger GIF autoplay check for edited activity
+							// Use setTimeout to ensure DOM is updated and video elements are rendered
+							setTimeout( function() {
+								if ( 'undefined' !== typeof bp.Nouveau.Media && 'function' === typeof bp.Nouveau.Media.autoPlayGifVideos ) {
+									bp.Nouveau.Media.autoPlayGifVideos();
+								}
+							}, 100 );
+
 							// Inject the activity into the stream only if it hasn't been done already (HeartBeat).
 						} else if ( ! activityElemSel.length ) {
 
@@ -5590,6 +5797,14 @@ window.bp = window.bp || {};
 
 							// replace dummy image with original image by faking scroll event.
 							jQuery( window ).scroll();
+
+							// Trigger GIF autoplay check for newly posted activity
+							// Use setTimeout to ensure DOM is updated and video elements are rendered
+							setTimeout( function() {
+								if ( 'undefined' !== typeof bp.Nouveau.Media && 'function' === typeof bp.Nouveau.Media.autoPlayGifVideos ) {
+									bp.Nouveau.Media.autoPlayGifVideos();
+								}
+							}, 100 );
 
 							if ( link_embed ) {
 								if ( ! _.isUndefined( window.instgrm ) ) {
@@ -5934,16 +6149,16 @@ window.bp = window.bp || {};
 		var typeSupport          = $( '#bb-rl-whats-new-toolbar' ),
 			$postEmoji           = $( '#bb-rl-editor-toolbar .bb-rl-post-emoji' ),
 			$whatsNewAttachments = $( '#bb-rl-whats-new-attachments' ),
-			context              = model && model.get( 'object' ) ? 'group' : 'user',
+			context              = model && ! _.isUndefined( model.get( 'object' ) ) ? model.get( 'object' ) : 'user',
 			types                = ['media', 'document', 'video'];
 
 		types.forEach(
 			function ( type ) {
-				var subtype        = 'document' === type ? 'media' : type,
+				var subtype        = type,
 				activityKeyGroup   = 'group_' + type,
 				activityKeyProfile = 'profile_' + type;
-				if ( 'groups' === context ) {
-					if ( false === bbRlMedia[ activityKeyGroup ] ) {
+				if ( 'group' === context ) {
+					if ( false === ( 'video' === type ? bbRlVideo[ activityKeyGroup ] : bbRlMedia[ activityKeyGroup ] ) ) {
 						var validateDropZone = false;
 						if (
 						'undefined' === typeof options.dropzoneObj ||
@@ -5965,7 +6180,7 @@ window.bp = window.bp || {};
 						typeSupport.find( '.bb-rl-post-' + subtype + '.bb-rl-' + type + '-support' ).removeClass( 'bb-rl-' + type + '-support-hide' );
 					}
 				} else {
-					if ( false === bbRlMedia[ activityKeyProfile ] ) {
+					if ( false === ( 'video' === type ? bbRlVideo[ activityKeyProfile ] : bbRlMedia[ activityKeyProfile ] ) ) {
 						typeSupport.find( '.bb-rl-post-' + subtype + '.bb-rl-' + type + '-support' ).removeClass( 'active' ).addClass( 'bb-rl-' + type + '-support-hide' );
 						$whatsNewAttachments.find( '.dropzone.media-dropzone' ).removeClass( 'open dz-clickable' ).addClass( 'closed' );
 					} else {

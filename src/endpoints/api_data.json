@@ -245,6 +245,13 @@
             "group": "Parameter",
             "type": "String",
             "optional": false,
+            "field": "post_title",
+            "description": "<p>The post title of the activity.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
             "field": "content",
             "description": "<p>Allowed HTML content for the activity.</p>"
           },
@@ -872,6 +879,13 @@
             "optional": true,
             "field": "type",
             "description": "<p>The activity type of the activity.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": true,
+            "field": "post_title",
+            "description": "<p>The post title of the activity.</p>"
           },
           {
             "group": "Parameter",

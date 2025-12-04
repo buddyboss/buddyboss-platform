@@ -37,6 +37,10 @@ function bp_video_upload() {
 
 	$attachment = bp_video_upload_handler();
 
+	if ( 'in_progress' === $attachment ) {
+		return 'in_progress';
+	}
+
 	/**
 	 * Hook after video upload.
 	 *
@@ -95,13 +99,33 @@ function bp_video_upload() {
 		$video_message_url = $attachment_url;
 	}
 
+	/**
+	 * Filter the attachment URL.
+	 *
+	 * @since BuddyBoss [BBOMVERSION]
+	 *
+	 * @param string $attachment_url Attachment URL.
+	 * @param int    $attachment_id Attachment ID.
+	 */
+	$attachment_url = apply_filters( 'bb_video_get_attachment_url', untrailingslashit( $attachment_url ), $attachment->ID );
+
+	/**
+	 * Filter the video message URL.
+	 *
+	 * @since BuddyBoss [BBOMVERSION]
+	 *
+	 * @param string $video_message_url Video message URL.
+	 * @param int    $attachment_id Attachment ID.
+	 */
+	$video_message_url = apply_filters( 'bb_video_get_video_message_url', untrailingslashit( $video_message_url ), $attachment->ID );
+
 	$result = array(
 		'id'          => (int) $attachment->ID,
 		'thumb'       => '',
-		'url'         => esc_url( untrailingslashit( $attachment_url ) ),
+		'url'         => esc_url( $attachment_url ),
 		'name'        => esc_attr( $name ),
 		'ext'         => esc_attr( $ext ),
-		'vid_msg_url' => esc_url( untrailingslashit( $video_message_url ) ),
+		'vid_msg_url' => esc_url( $video_message_url ),
 	);
 
 	return $result;
@@ -292,11 +316,79 @@ function bp_video_upload_handler( $file_id = 'file' ) {
 	// Add upload filters.
 	bb_video_add_upload_filters();
 
+	// Initialize variables before foreach to prevent undefined variable warnings.
+	$tmp_file_path = '';
+	$filename      = '';
+
+	// phpcs:disable WordPress.Security.NonceVerification.Missing
+	if ( ! empty( $_FILES ) ) {
+		foreach ( $_FILES as $file ) {
+			if ( 0 !== $file['error'] ) {
+				$errors[] = array(
+					'text'  => 'File error',
+					'error' => $file['error'],
+					'name'  => $file['name'],
+				);
+				continue;
+			}
+			if ( empty( $file['tmp_name'] ) ) {
+				$errors[] = array(
+					'text' => 'Tmp file not found',
+					'name' => $file['name'],
+				);
+				continue;
+			}
+
+			$tmp_file_path = $file['tmp_name'];
+			$filename      = ( isset( $file['filename'] ) ) ? $file['filename'] : $file['name'];
+
+			if ( ! empty( $_POST['dzuuid'] ) ) {
+				$chunks_res = bb_resumable_upload( $tmp_file_path, $filename );
+
+				// Check for errors from chunk assembly.
+				if ( ! empty( $chunks_res['errors'] ) ) {
+					$error_message = implode( ', ', $chunks_res['errors'] );
+					return new WP_Error( 'chunk_upload_failed', $error_message, array( 'status' => 400 ) );
+				}
+
+				// If chunk upload is still in progress, return status.
+				if ( empty( $chunks_res['final'] ) ) {
+					return 'in_progress';
+				}
+
+				// Get the path to the assembled file.
+				$tmp_file_path = $chunks_res['path'];
+
+				// Validate that the assembled file exists and is not empty.
+				if ( ! file_exists( $tmp_file_path ) || 0 === filesize( $tmp_file_path ) ) {
+					return new WP_Error(
+						'invalid_assembled_file',
+						__( 'The assembled video file is invalid or empty.', 'buddyboss' ),
+						array( 'status' => 500 )
+					);
+				}
+			}
+		}
+	}
+
+	$_FILES['async-upload']['tmp_name'] = $tmp_file_path;
+	$_FILES['async-upload']['name']     = $filename;
+	if ( ! isset( $_FILES['async-upload']['tmp_name'] ) || ! isset( $_FILES['async-upload']['name'] ) ) {
+		return new WP_Error( 'error_uploading', __( 'Invalid file upload.', 'buddyboss' ), array( 'status' => 400 ) );
+	}
+	$tmp_name                       = sanitize_text_field( wp_unslash( $_FILES['async-upload']['tmp_name'] ) );
+	$_FILES['async-upload']['size'] = filesize( $tmp_name );
+	$name                           = sanitize_text_field( wp_unslash( $_FILES['async-upload']['name'] ) );
+	$wp_filetype                    = wp_check_filetype_and_ext( $tmp_name, $name );
+	$_FILES['async-upload']['type'] = $wp_filetype['type'];
+	// phpcs:enable WordPress.Security.NonceVerification.Missing
+
 	$aid = media_handle_upload(
-		$file_id,
+		'async-upload',
 		0,
 		array(),
 		array(
+			'action'               => 'wp_handle_sideload',
 			'test_form'            => false,
 			'upload_error_strings' => array(
 				false,
@@ -316,6 +408,15 @@ function bp_video_upload_handler( $file_id = 'file' ) {
 
 	// if has wp error then throw it.
 	if ( is_wp_error( $aid ) ) {
+		// Clean up assembled file on error if it was created from chunks.
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing
+		if ( ! empty( $_POST['dzuuid'] ) &&
+			isset( $tmp_file_path ) &&
+			file_exists( $tmp_file_path ) &&
+			false !== strpos( $tmp_file_path, 'bb-whole-from-chunks' ) ) {
+			wp_delete_file( $tmp_file_path );
+		}
+
 		return $aid;
 	}
 
@@ -893,8 +994,13 @@ function bp_video_preview_image_by_js( $video ) {
 	 * Hook after video js preview image.
 	 *
 	 * @since BuddyBoss 1.7.0
+	 * @since BuddyBoss 2.15.0
+	 * Introduced to pass the preview attachment ID to the hook.
+	 *
+	 * @param int $video_id Video ID.
+	 * @param int $preview_attachment_id Preview attachment ID.
 	 */
-	do_action( 'bb_after_video_preview_image_by_js' );
+	do_action( 'bb_after_video_preview_image_by_js', $video['id'], $preview_attachment_id );
 
 }
 
@@ -2911,6 +3017,7 @@ function bp_video_move_video_to_album( $video_id = 0, $album_id = 0, $group_id =
 					$activity->hide_sitewide     = ( 'groups' === $activity->component && ( 'hidden' === $status || 'private' === $status ) ) ? 1 : $activity->hide_sitewide;
 					$activity->secondary_item_id = 0;
 					$activity->privacy           = $destination_privacy;
+					$activity->title_required    = false;
 					$activity->save();
 				}
 
@@ -2969,7 +3076,8 @@ function bp_video_move_video_to_album( $video_id = 0, $album_id = 0, $group_id =
 						bp_activity_delete( array( 'id' => $need_delete ) );
 
 						// Update parent activity privacy to destination privacy.
-						$parent_activity->privacy = $destination_privacy;
+						$parent_activity->privacy        = $destination_privacy;
+						$parent_activity->title_required = false;
 						$parent_activity->save();
 
 					} elseif ( count( $parent_activity_video_ids ) > 1 ) {
@@ -2985,6 +3093,7 @@ function bp_video_move_video_to_album( $video_id = 0, $album_id = 0, $group_id =
 							$activity->hide_sitewide     = ( 'groups' === $activity->component && ( 'hidden' === $status || 'private' === $status ) ) ? 1 : 0;
 							$activity->secondary_item_id = 0;
 							$activity->privacy           = $destination_privacy;
+							$activity->title_required    = false;
 							$activity->save();
 
 							bp_activity_update_meta( (int) $child_activity_id, 'bp_video_ids', $video_id );
@@ -4749,4 +4858,707 @@ function bb_video_get_published_status() {
  */
 function bb_video_get_scheduled_status() {
 	return buddypress()->video->scheduled_status;
+}
+
+/**
+ * Handle resumable file upload by processing chunks.
+ *
+ * This function processes individual chunks of a resumable upload and manages
+ * the temporary storage of chunks until all parts are received.
+ *
+ * @since BuddyBoss 2.15.0
+ *
+ * @param string $tmp_file_path Temporary file path of the uploaded chunk.
+ * @param string $filename     Original filename of the file being uploaded.
+ *
+ * @return array {
+ *     Array containing upload status and results.
+ *
+ *     @type bool   $final     Whether all chunks have been received.
+ *     @type string $path      Final file path (only if upload is complete).
+ *     @type array  $successes Array of success messages.
+ *     @type array  $errors    Array of error messages.
+ *     @type array  $warnings  Array of warning messages.
+ * }
+ */
+function bb_resumable_upload( $tmp_file_path, $filename ) {
+	$successes = array();
+	$errors    = array();
+	$warnings  = array();
+
+	$dir = apply_filters( 'bfu_temp_dir', wp_upload_dir()['basedir'] . '/bb-large-upload' );
+	$dir = trailingslashit( $dir );
+
+	// phpcs:ignore WordPress.Security.NonceVerification.Missing
+	$identifier = isset( $_POST['dzuuid'] ) ? trim( sanitize_text_field( wp_unslash( $_POST['dzuuid'] ) ) ) : '';
+
+	// Security: Validate identifier format to prevent path traversal.
+	if ( empty( $identifier ) || ! preg_match( '/^[a-zA-Z0-9\-]+$/', $identifier ) ) {
+		$errors[] = __( 'Invalid upload identifier', 'buddyboss' );
+
+		return array(
+			'final'     => false,
+			'successes' => $successes,
+			'errors'    => $errors,
+			'warnings'  => $warnings,
+		);
+	}
+
+	$file_chunks_folder = $dir . $identifier;
+
+	// Create directory with secure permissions.
+	if ( ! is_dir( $file_chunks_folder ) ) {
+		if ( ! wp_mkdir_p( $file_chunks_folder ) ) {
+			$errors[] = __( 'Failed to create upload directory', 'buddyboss' );
+
+			return array(
+				'final'     => false,
+				'successes' => $successes,
+				'errors'    => $errors,
+				'warnings'  => $warnings,
+			);
+		}
+		chmod( $file_chunks_folder, 0755 );
+	}
+
+	// Remove problematic symbols from filename.
+	$filename  = str_replace( array( ' ', '(', ')' ), '_', $filename );
+	$info      = pathinfo( $filename );
+	$extension = isset( $info['extension'] ) ? '.' . strtolower( $info['extension'] ) : '';
+	$filename  = sanitize_file_name( $info['filename'] );
+
+	// Validate file extension against allowed types.
+	$allowed_extensions = apply_filters( 'bfu_allowed_extensions', array(
+		'mp4',
+		'mov',
+		'avi',
+		'wmv',
+		'flv',
+		'mkv',
+		'webm',
+	) );
+	$ext_without_dot    = ltrim( $extension, '.' );
+	if ( ! empty( $extension ) && ! in_array( $ext_without_dot, $allowed_extensions, true ) ) {
+		$errors[] = sprintf(
+		/* translators: %s: file extension */
+			__( 'File type %s is not allowed', 'buddyboss' ),
+			$extension
+		);
+
+		return array(
+			'final'     => false,
+			'successes' => $successes,
+			'errors'    => $errors,
+			'warnings'  => $warnings,
+		);
+	}
+
+	// phpcs:disable WordPress.Security.NonceVerification.Missing
+	$total_size   = isset( $_POST['dztotalfilesize'] ) ? sanitize_text_field( wp_unslash( $_POST['dztotalfilesize'] ) ) : '0';
+	$total_chunks = isset( $_POST['dztotalchunkcount'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['dztotalchunkcount'] ) ) : 0;
+	$chunk_index  = isset( $_POST['dzchunkindex'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['dzchunkindex'] ) ) : 0;
+	$chunk_size   = isset( $_POST['dzchunksize'] ) ? sanitize_text_field( wp_unslash( $_POST['dzchunksize'] ) ) : '0';
+	$start_byte   = isset( $_POST['dzchunkbyteoffset'] ) ? sanitize_text_field( wp_unslash( $_POST['dzchunkbyteoffset'] ) ) : '0';
+	// phpcs:enable WordPress.Security.NonceVerification.Missing
+
+	// Validate chunk parameters.
+	if ( $total_chunks <= 0 || $chunk_index < 0 || $chunk_index >= $total_chunks ) {
+		$errors[] = __( 'Invalid chunk parameters', 'buddyboss' );
+
+		return array(
+			'final'     => false,
+			'successes' => $successes,
+			'errors'    => $errors,
+			'warnings'  => $warnings,
+		);
+	}
+
+	// Validate file size limits (using string comparison for large files).
+	$max_upload_size = apply_filters( 'bfu_max_upload_size', wp_max_upload_size() );
+	if ( (float) $total_size > $max_upload_size ) {
+		$errors[] = sprintf(
+		/* translators: %s: file size */
+			__( 'File size exceeds maximum allowed size of %s', 'buddyboss' ),
+			size_format( $max_upload_size )
+		);
+
+		return array(
+			'final'     => false,
+			'successes' => $successes,
+			'errors'    => $errors,
+			'warnings'  => $warnings,
+		);
+	}
+
+	// Validate chunk file size.
+	$uploaded_chunk_size = file_exists( $tmp_file_path ) ? filesize( $tmp_file_path ) : 0;
+	if ( $uploaded_chunk_size <= 0 ) {
+		$errors[] = __( 'Uploaded chunk is empty', 'buddyboss' );
+
+		return array(
+			'final'     => false,
+			'successes' => $successes,
+			'errors'    => $errors,
+			'warnings'  => $warnings,
+		);
+	}
+
+	// Security: Validate total accumulated size doesn't exceed declared size.
+	$current_total  = 0;
+	$existing_parts = glob( $file_chunks_folder . '/' . $filename . '.part*' );
+	if ( is_array( $existing_parts ) ) {
+		foreach ( $existing_parts as $part ) {
+			$current_total += filesize( $part );
+		}
+	}
+
+	$tolerance_margin = (float) $chunk_size * 0.1; // 10% tolerance.
+	if ( $current_total + $uploaded_chunk_size > (float) $total_size + $tolerance_margin ) {
+		$errors[] = __( 'Total uploaded size exceeds declared file size', 'buddyboss' );
+
+		return array(
+			'final'     => false,
+			'successes' => $successes,
+			'errors'    => $errors,
+			'warnings'  => $warnings,
+		);
+	}
+
+	$chunk_file = $file_chunks_folder . '/' . $filename . '.part' . $chunk_index;
+
+	// Move uploaded chunk to destination.
+	if ( ! move_uploaded_file( $tmp_file_path, $chunk_file ) ) {
+		$errors[] = sprintf(
+		/* translators: %d: chunk index */
+			__( 'Failed to save chunk %d', 'buddyboss' ),
+			$chunk_index,
+		);
+
+		return array(
+			'final'     => false,
+			'successes' => $successes,
+			'errors'    => $errors,
+			'warnings'  => $warnings,
+		);
+	}
+
+	// Set secure file permissions.
+	chmod( $chunk_file, 0644 );
+
+	$check_args = array(
+		'file_chunks_folder' => $file_chunks_folder,
+		'filename'           => $filename,
+		'extension'          => $extension,
+		'total_size'         => $total_size,
+		'total_chunks'       => $total_chunks,
+		'successes'          => &$successes,
+		'errors'             => &$errors,
+		'warnings'           => &$warnings,
+	);
+	$new_path   = bb_check_all_parts( $check_args );
+
+	if ( 0 === count( $errors ) && ! empty( $new_path ) ) {
+		return array(
+			'final'     => true,
+			'path'      => $new_path,
+			'successes' => $successes,
+			'errors'    => $errors,
+			'warnings'  => $warnings,
+		);
+	}
+
+	return array(
+		'final'     => false,
+		'successes' => $successes,
+		'errors'    => $errors,
+		'warnings'  => $warnings,
+	);
+}
+
+/**
+ * Check if all file chunks have been uploaded and create final file.
+ *
+ * This function verifies that all chunks of a resumable upload have been
+ * received and creates the final file by combining all chunks.
+ *
+ * @since BuddyBoss 2.15.0
+ *
+ * @param array $args {
+ *     Array of arguments.
+ *
+ *     @type string $file_chunks_folder Path to the folder containing file chunks.
+ *     @type string $filename          Base filename without extension.
+ *     @type string $extension         File extension with leading dot.
+ *     @type string $total_size        Expected total file size in bytes (string for large files).
+ *     @type int    $total_chunks      Total number of chunks expected.
+ *     @type array  $successes        Array of success messages (passed by reference).
+ *     @type array  $errors           Array of error messages (passed by reference).
+ *     @type array  $warnings         Array of warning messages (passed by reference).
+ * }
+ *
+ * @throws Exception If file cannot be created.
+ *
+ * @return string|false Final file path if successful, false otherwise.
+ */
+function bb_check_all_parts( $args ) {
+	// Extract variables from array.
+	$file_chunks_folder = $args['file_chunks_folder'];
+	$filename           = $args['filename'];
+	$extension          = $args['extension'];
+	$total_size         = $args['total_size'];
+	$total_chunks       = $args['total_chunks'];
+	$successes          = &$args['successes'];
+	$errors             = &$args['errors'];
+	$warnings           = &$args['warnings'];
+	// Use file locking to prevent race conditions during chunk verification.
+	$lock_file = $file_chunks_folder . '/.lock';
+	$lock_fp   = fopen( $lock_file, 'c+' );
+
+	if ( false === $lock_fp ) {
+		$errors[] = __( 'Failed to create lock file', 'buddyboss' );
+
+		return false;
+	}
+
+	// Acquire exclusive lock.
+	if ( ! flock( $lock_fp, LOCK_EX ) ) {
+		fclose( $lock_fp );
+		$errors[] = __( 'Failed to acquire lock', 'buddyboss' );
+
+		return false;
+	}
+
+	// Count all the parts of this file.
+	$parts = glob( $file_chunks_folder . '/' . $filename . '.part*' );
+
+	if ( ! is_array( $parts ) ) {
+		$parts = array();
+	}
+
+	// Remove lock file from parts array if present.
+	$parts = array_filter(
+		$parts,
+		function ( $part ) {
+			return false === strpos( $part, '.lock' );
+		}
+	);
+
+	$parts_count = count( $parts );
+	$successes[] = sprintf(
+	/* translators: %1$d: parts count, %2$d: total chunks */
+		__( '%1$d of %2$d parts received', 'buddyboss' ),
+		$parts_count,
+		$total_chunks
+	);
+
+	// Check if all the parts are present.
+	if ( $parts_count !== $total_chunks ) {
+		flock( $lock_fp, LOCK_UN );
+		fclose( $lock_fp );
+
+		return false;
+	}
+
+	// Verify all expected parts exist (no missing indices).
+	for ( $i = 0; $i < $total_chunks; $i ++ ) {
+		$expected_part = $file_chunks_folder . '/' . $filename . '.part' . $i;
+		if ( ! file_exists( $expected_part ) ) {
+			flock( $lock_fp, LOCK_UN );
+			fclose( $lock_fp );
+			$errors[] = sprintf(
+			/* translators: %d: chunk index */
+				__( 'Missing chunk %d', 'buddyboss' ),
+				$i
+			);
+
+			return false;
+		}
+	}
+
+	// Verify total size matches.
+	$loaded_size = 0;
+	foreach ( $parts as $file ) {
+		$loaded_size += filesize( $file );
+	}
+
+	// Allow small tolerance for size differences (1%).
+	$tolerance = (float) $total_size * 0.01;
+	if ( abs( $loaded_size - (float) $total_size ) > $tolerance ) {
+		flock( $lock_fp, LOCK_UN );
+		fclose( $lock_fp );
+		$errors[] = sprintf(
+		/* translators: %1$s: expected size, %2$s: got size */
+			__( 'File size mismatch. Expected: %1$s, Got: %2$s', 'buddyboss' ),
+			size_format( $total_size ),
+			size_format( $loaded_size )
+		);
+
+		return false;
+	}
+
+	// Create final file from chunks.
+	$args     = array(
+		'file_chunks_folder' => $file_chunks_folder,
+		'file_name'          => $filename,
+		'extension'          => $extension,
+		'total_size'         => $total_size,
+		'total_chunks'       => $total_chunks,
+		'successes'          => &$successes,
+		'errors'             => &$errors,
+		'warnings'           => &$warnings,
+	);
+	$new_path = bb_create_file_from_chunks( $args );
+
+	// Release lock and close lock file.
+	flock( $lock_fp, LOCK_UN );
+	fclose( $lock_fp );
+
+	if ( ! empty( $new_path ) && 0 === count( $errors ) ) {
+		bb_clean_up( $file_chunks_folder );
+
+		return $new_path;
+	}
+
+	return false;
+}
+
+/**
+ * Create final file by combining all uploaded chunks.
+ *
+ * This function reads all chunk files and combines them into a single
+ * final file in the correct order using buffered reading to avoid memory issues.
+ *
+ * @since BuddyBoss 2.15.0
+ *
+ * @param array $args {
+ *     Array of arguments.
+ *
+ *     @type string $file_chunks_folder Path to the folder containing file chunks.
+ *     @type string $file_name         Base filename without extension.
+ *     @type string $extension         File extension with leading dot.
+ *     @type string $total_size        Expected total file size in bytes (string for large files).
+ *     @type int    $total_chunks      Total number of chunks to combine.
+ *     @type array  $successes        Array of success messages (passed by reference).
+ *     @type array  $errors           Array of error messages (passed by reference).
+ *     @type array  $warnings         Array of warning messages (passed by reference).
+ * }
+ *
+ * @throws Exception If file cannot be created.
+ *
+ * @return string|false Final file path if successful, false otherwise.
+ */
+function bb_create_file_from_chunks( $args ) {
+	// Extract variables from array.
+	$file_chunks_folder = $args['file_chunks_folder'];
+	$file_name          = $args['file_name'];
+	$extension          = $args['extension'];
+	$total_size         = $args['total_size'];
+	$total_chunks       = $args['total_chunks'];
+	$successes          = &$args['successes'];
+	$errors             = &$args['errors'];
+	$warnings           = &$args['warnings'];
+
+	/**
+	 * Filters the temporary directory for creating the final file.
+	 *
+	 * Use uploads directory to ensure chunks and final file are on the same filesystem
+	 * for efficient file operations (rename instead of copy).
+	 *
+	 * @since 2.15.0
+	 *
+	 * @param string $rel_path Temporary directory path.
+	 */
+	$rel_path = apply_filters( 'bfu_temp_dir', wp_upload_dir()['basedir'] . '/bb-whole-from-chunks' );
+	$rel_path = trailingslashit( $rel_path );
+
+	// Ensure destination directory exists.
+	if ( ! is_dir( $rel_path ) ) {
+		if ( ! wp_mkdir_p( $rel_path ) ) {
+			$errors[] = __( 'Cannot create destination directory', 'buddyboss' );
+
+			return false;
+		}
+		chmod( $rel_path, 0755 );
+	}
+
+	$filename_args = array(
+		'rel_path'       => $rel_path,
+		'orig_file_name' => $file_name,
+		'extension'      => $extension,
+		'errors'         => &$errors,
+	);
+	$save_name     = bb_get_next_available_filename( $filename_args );
+
+	if ( ! $save_name ) {
+		return false;
+	}
+
+	$final_file_path = $rel_path . $save_name . $extension;
+	$fp              = fopen( $final_file_path, 'wb' );
+
+	if ( false === $fp ) {
+		$errors[] = __( 'Cannot create the destination file', 'buddyboss' );
+
+		return false;
+	}
+
+	// Use try-finally pattern for resource cleanup (PHP 5.5+).
+	$success = false;
+
+	try {
+		// Combine chunks using buffered reading to avoid memory exhaustion.
+		for ( $i = 0; $i < $total_chunks; $i ++ ) {
+			$chunk_path = $file_chunks_folder . '/' . $file_name . '.part' . $i;
+
+			if ( ! file_exists( $chunk_path ) ) {
+				$errors[] = sprintf(
+				/* translators: %d: chunk index */
+					__( 'Chunk %d not found', 'buddyboss' ),
+					$i
+				);
+				throw new Exception( 'Missing chunk' );
+			}
+
+			$chunk_fp = fopen( $chunk_path, 'rb' );
+
+			if ( false === $chunk_fp ) {
+				$errors[] = sprintf(
+				/* translators: %d: chunk index */
+					__( 'Failed to open chunk %d', 'buddyboss' ),
+					$i
+				);
+				throw new Exception( 'Cannot open chunk' );
+			}
+
+			// Stream chunk data in 8KB buffers to minimize memory usage.
+			while ( ! feof( $chunk_fp ) ) {
+				$buffer = fread( $chunk_fp, 8192 );
+
+				if ( false === $buffer ) {
+					fclose( $chunk_fp );
+					$errors[] = sprintf(
+					/* translators: %d: chunk index */
+						__( 'Failed to read chunk %d', 'buddyboss' ),
+						$i
+					);
+					throw new Exception( 'Read error' );
+				}
+
+				$written = fwrite( $fp, $buffer );
+
+				if ( false === $written ) {
+					fclose( $chunk_fp );
+					$errors[] = sprintf(
+					/* translators: %d: chunk index */
+						__( 'Failed to write data from chunk %d', 'buddyboss' ),
+						$i
+					);
+					throw new Exception( 'Write error' );
+				}
+			}
+
+			fclose( $chunk_fp );
+		}
+
+		$success = true;
+
+	} catch ( Exception $e ) { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedCatch
+		// Error already added to $errors array.
+	} finally {
+		// Always close the main file handle.
+		if ( is_resource( $fp ) ) {
+			fclose( $fp );
+		}
+	}
+
+	// Clean up partial file on failure.
+	if ( ! $success ) {
+		if ( file_exists( $final_file_path ) ) {
+			unlink( $final_file_path );
+		}
+
+		return false;
+	}
+
+	// Verify final file size.
+	clearstatcache( true, $final_file_path );
+	$final_size = filesize( $final_file_path );
+	$tolerance  = (float) $total_size * 0.01;
+
+	if ( abs( $final_size - (float) $total_size ) > $tolerance ) {
+		unlink( $final_file_path );
+		$errors[] = sprintf(
+		/* translators: %1$s: expected size, %2$s: got size */
+			__( 'Final file size mismatch. Expected: %1$s, Got: %2$s', 'buddyboss' ),
+			size_format( $total_size ),
+			size_format( $final_size )
+		);
+
+		return false;
+	}
+
+	// Set secure file permissions.
+	chmod( $final_file_path, 0644 );
+
+	$successes[] = sprintf(
+	/* translators: %s: file name */
+		__( 'File successfully created: %s', 'buddyboss' ),
+		basename( $final_file_path )
+	);
+
+	return $final_file_path;
+}
+
+/**
+ * Get next available filename to avoid conflicts.
+ *
+ * This function generates a unique filename by appending a number if
+ * a file with the same name already exists.
+ *
+ * @since BuddyBoss 2.15.0
+ *
+ * @param array $args {
+ *     Array of arguments.
+ *
+ *     @type string $rel_path        Directory path where file will be saved.
+ *     @type string $orig_file_name Original filename without extension.
+ *     @type string $extension      File extension with leading dot.
+ *     @type array  $errors         Array of error messages (passed by reference).
+ * }
+ *
+ * @return string|false Unique filename without extension, or false on error.
+ */
+function bb_get_next_available_filename( $args ) {
+	// Extract variables from array.
+	$rel_path       = $args['rel_path'];
+	$orig_file_name = $args['orig_file_name'];
+	$extension      = $args['extension'];
+	$errors         = &$args['errors'];
+	// Sanitize filename.
+	$orig_file_name = sanitize_file_name( $orig_file_name );
+
+	if ( empty( $orig_file_name ) ) {
+		$errors[] = __( 'Invalid filename', 'buddyboss' );
+
+		return false;
+	}
+
+	$full_path = $rel_path . $orig_file_name . $extension;
+
+	// If file doesn't exist, use original name.
+	if ( ! file_exists( $full_path ) ) {
+		return $orig_file_name;
+	}
+
+	// Find next available filename with reasonable limit.
+	$max_attempts = 1000; // Reduced from 10000 for better performance.
+	$i            = 0;
+
+	while ( $i < $max_attempts ) {
+		++$i;
+		$new_name = $orig_file_name . '_' . $i;
+		$new_path = $rel_path . $new_name . $extension;
+
+		if ( ! file_exists( $new_path ) ) {
+			return $new_name;
+		}
+	}
+
+	// If we couldn't find available name after max attempts, use timestamp.
+	$timestamp_name = $orig_file_name . '_' . time() . '_' . wp_rand( 1000, 9999 );
+	$timestamp_path = $rel_path . $timestamp_name . $extension;
+
+	if ( ! file_exists( $timestamp_path ) ) {
+		return $timestamp_name;
+	}
+
+	$errors[] = sprintf(
+	/* translators: %1$s: file name, %2$s: file extension */
+		__( 'Cannot create unique name for saving file %1$s%2$s', 'buddyboss' ),
+		$orig_file_name,
+		$extension
+	);
+
+	return false;
+}
+
+/**
+ * Recursively remove directory and all its contents.
+ *
+ * This function removes a directory and all files and subdirectories
+ * within it recursively with improved error handling.
+ *
+ * @since BuddyBoss 2.15.0
+ *
+ * @param string $dir Directory path to remove.
+ *
+ * @return bool True on success, false on failure.
+ */
+function bb_rrmdir( $dir ) {
+	if ( ! is_dir( $dir ) ) {
+		return false;
+	}
+
+	// Validate path to prevent accidental deletion of system directories.
+	$wp_content_dir = wp_normalize_path( WP_CONTENT_DIR );
+	$normalized_dir = wp_normalize_path( $dir );
+
+	if ( false === strpos( $normalized_dir, $wp_content_dir ) ) {
+		// Prevent deletion outside WP_CONTENT_DIR.
+		return false;
+	}
+
+	$objects = scandir( $dir );
+
+	if ( false === $objects ) {
+		return false;
+	}
+
+	foreach ( $objects as $object ) {
+		if ( '.' === $object || '..' === $object ) {
+			continue;
+		}
+
+		$path = $dir . '/' . $object;
+
+		if ( is_dir( $path ) ) {
+			// Recursively delete subdirectory.
+			if ( ! bb_rrmdir( $path ) ) {
+				return false;
+			}
+		} elseif ( ! unlink( $path ) ) {
+			return false;
+		}
+	}
+
+	return rmdir( $dir );
+}
+
+/**
+ * Clean up temporary chunk files and directories.
+ *
+ * This function safely removes the temporary directory containing
+ * file chunks by renaming it first to avoid concurrent access issues.
+ *
+ * @since BuddyBoss 2.15.0
+ *
+ * @param string $file_chunks_folder Path to the folder containing file chunks.
+ *
+ * @return bool True on success, false on failure.
+ */
+function bb_clean_up( $file_chunks_folder ) {
+	if ( ! is_dir( $file_chunks_folder ) ) {
+		return false;
+	}
+
+	// Generate unique temporary name to avoid conflicts.
+	$temp_name = $file_chunks_folder . '_UNUSED_' . time() . '_' . wp_rand( 1000, 9999 );
+
+	// Rename the temporary directory to avoid access from other concurrent chunks uploads.
+	if ( rename( $file_chunks_folder, $temp_name ) ) {
+		return bb_rrmdir( $temp_name );
+	}
+
+	// If rename failed, try direct deletion (less safe but better than leaving files).
+	return bb_rrmdir( $file_chunks_folder );
 }
