@@ -1312,6 +1312,12 @@
 	align-items: center;
 	gap: 8px;
 	margin-left: auto;
+
+	@media screen and (max-width: 580px) {
+		position: absolute;
+		top: var(--bb-rl-space-200);
+		right: var(--bb-rl-space-200);
+	}
 }
 
 .bb-rl-activity-form--schedule .bb-rl-bb-model-header {

@@ -14346,6 +14346,14 @@ body.bb-rl-activity-modal-open .bb-rl-activity-update-form.modal-popup {
   margin-right: auto;
 }
 
+@media screen and (max-width: 580px) {
+  .bb-rl-modal-header-actions {
+    position: absolute;
+    top: var(--bb-rl-space-200);
+    left: var(--bb-rl-space-200);
+  }
+}
+
 .bb-rl-activity-form--schedule .bb-rl-bb-model-header .bb-rl-modal-header-actions {
   margin-right: 0;
   order: 99;
