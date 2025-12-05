@@ -999,7 +999,7 @@ window.bp = window.bp || {};
 			}
 
 			if ( activity_data && activity_data.topics ) {
-				if ( '' === bp.draft_activity.display_post ) {
+				if ( '' === bp.draft_activity.display_post || 'edit' === bp.draft_activity.display_post ) {
 					if ( 'scheduled' !== activity_data.status ) {
 						self.postForm.model.set( 'topics', activity_data.topics );
 						bp.draft_activity.data.topics = activity_data.topics;
