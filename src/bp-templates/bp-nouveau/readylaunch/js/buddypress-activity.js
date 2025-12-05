@@ -2580,7 +2580,7 @@ window.bp = window.bp || {};
 							$currentPicker.addClass( 'hidden' );
 							
 							// Position the picker relative to click position
-							setTimeout(function() {
+							setTimeout( function() {
 								var clickX = e.clientX;
 								var clickY = e.clientY;
 								
