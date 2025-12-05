@@ -876,11 +876,11 @@ window.bp = window.bp || {};
 			}
 
 			// Clean up all emoji picker elements from theatre when modal closes
-			var $theatre = $('.bb-rl-emojionearea-theatre');
-			if ($theatre.length) {
+			var $theatre = $( '.bb-rl-emojionearea-theatre' );
+			if ( $theatre.length ) {
 				// Remove all picker elements and reset theatre state
-				$theatre.find('.emojionearea-picker').remove();
-				$theatre.removeClass('show hide').addClass('hide');
+				$theatre.find( '.emojionearea-picker' ).remove();
+				$theatre.removeClass( 'show hide' ).addClass( 'hide' );
 			}
 
 			modal.find( '#bb-rl-activity-modal' ).removeClass( 'bb-closed-comments' );
@@ -2536,92 +2536,92 @@ window.bp = window.bp || {};
 			);
 
 			// Manually trigger picker show/hide for modal context
-			if (isModal) {
+			if ( isModal ) {
 				// Find the modal container for better event management
-				var $modalContainer = $(parentSelector).closest('.modal, .bb-modal, .bb-rl-modal, .activity-modal, .activity-theatre, .bb-rl-screen-content');
-				if (!$modalContainer.length) {
-					$modalContainer = $(parentSelector); // Fallback to parent selector
+				var $modalContainer = $( parentSelector ).closest( '.modal, .bb-modal, .bb-rl-modal, .activity-modal, .activity-theatre, .bb-rl-screen-content' );
+				if ( !$modalContainer.length ) {
+					$modalContainer = $( parentSelector ); // Fallback to parent selector
 				}
 
 				// Create unique event namespace for this activity
 				var eventNamespace = '.bb-rl-emoji-' + activityId;
 				
 				// Bind to modal container instead of document for better cleanup
-				$modalContainer.on('click' + eventNamespace, '#bb-rl-ac-reply-emoji-button-' + activityId, function(e) {
-					var $targetInput = $(parentSelector + '#ac-input-' + activityId);
-					var emojioneAreaInstance = $targetInput.data('emojioneArea');
+				$modalContainer.on( 'click' + eventNamespace, '#bb-rl-ac-reply-emoji-button-' + activityId, function( e ) {
+					var $targetInput = $( parentSelector + '#ac-input-' + activityId );
+					var emojioneAreaInstance = $targetInput.data( 'emojioneArea' );
 					
-					if (emojioneAreaInstance) {
-						var $theatre = $('.bb-rl-emojionearea-theatre');
-						var $picker = $theatre.find('.emojionearea-picker');
+					if ( emojioneAreaInstance ) {
+						var $theatre = $( '.bb-rl-emojionearea-theatre' );
+						var $picker = $theatre.find( '.emojionearea-picker' );
 						
 						// Check current state
-						var isCurrentlyVisible = $theatre.hasClass('show') && !$picker.hasClass('hidden');
+						var isCurrentlyVisible = $theatre.hasClass( 'show' ) && !$picker.hasClass( 'hidden' );
 						
-						if (isCurrentlyVisible) {
+						if ( isCurrentlyVisible ) {
 							// Hide picker
 							emojioneAreaInstance.hidePicker();
-							$theatre.removeClass('show').addClass('hide');
-							$picker.addClass('hidden');
+							$theatre.removeClass( 'show' ).addClass( 'hide' );
+							$picker.addClass( 'hidden' );
 						} else {
 							// Clean up existing picker elements before showing new one
 							// if there are multiple pickers to prevent accumulation
-							var existingPickers = $theatre.find('.emojionearea-picker');
-							if (existingPickers.length > 1) {
+							var existingPickers = $theatre.find( '.emojionearea-picker' );
+							if ( existingPickers.length > 1 ) {
 								existingPickers.remove();
 							}
 							
 							// Show picker but keep it hidden until positioned
 							emojioneAreaInstance.showPicker();
-							$theatre.removeClass('hide').addClass('show');
+							$theatre.removeClass( 'hide' ).addClass( 'show' );
 							
 							// Get the picker element
-							var $currentPicker = $theatre.find('.emojionearea-picker');
-							$currentPicker.addClass('hidden');
+							var $currentPicker = $theatre.find( '.emojionearea-picker' );
+							$currentPicker.addClass( 'hidden' );
 							
 							// Position the picker relative to click position
 							setTimeout(function() {
 								var clickX = e.clientX;
 								var clickY = e.clientY;
 								
-								if ($currentPicker.length) {
+								if ( $currentPicker.length ) {
 									// Position picker relative to viewport click position
 									var leftPos = clickX + 30; // Center horizontally
 									var topPos = clickY - 20; // Small offset above click position
 									
-									$currentPicker.css('transform', 
+									$currentPicker.css( 'transform', 
 										'translate(' + leftPos + 'px, ' + topPos + 'px) ' +
 										'translate(-100%, -100%)'
 									);
 									
 									// Show picker after positioning
-									$currentPicker.removeClass('hidden');
+									$currentPicker.removeClass( 'hidden' );
 								}
-							}, 50); // Small delay to ensure picker is rendered
+							}, 50 ); // Small delay to ensure picker is rendered
 						}
 					}
-				});
+				} );
 				
 				// Store the event namespace and container for cleanup
-				$modalContainer.data('emoji-event-namespace-' + activityId, eventNamespace);
+				$modalContainer.data( 'emoji-event-namespace-' + activityId, eventNamespace );
 			}
 		},
 
-		cleanupEmojiEventHandlers: function(activityId) {
+		cleanupEmojiEventHandlers: function( activityId ) {
 			// Clean up emoji picker event handlers for a specific activity
 			// Find modal containers that might have the event handlers
-			$('.modal, .bb-modal, .bb-rl-modal, .activity-modal, .activity-theatre, .bb-rl-screen-content').each(function() {
-				var $container = $(this);
-				var eventNamespace = $container.data('emoji-event-namespace-' + activityId);
+			$( '.modal, .bb-modal, .bb-rl-modal, .activity-modal, .activity-theatre, .bb-rl-screen-content' ).each( function() {
+				var $container = $( this );
+				var eventNamespace = $container.data( 'emoji-event-namespace-' + activityId );
 				
-				if (eventNamespace) {
+				if ( eventNamespace ) {
 					// Remove the event handler
-					$container.off(eventNamespace);
+					$container.off( eventNamespace );
 					
 					// Remove the stored namespace
-					$container.removeData('emoji-event-namespace-' + activityId);
+					$container.removeData( 'emoji-event-namespace-' + activityId );
 				}
-			});
+			} );
 		},
 
 		destroyUploader: function ( type, comment_id ) {
