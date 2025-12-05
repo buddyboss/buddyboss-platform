@@ -3093,7 +3093,7 @@ window.bp = window.bp || {};
 			var iframes = $( selector );
 			
 			iframes.each(
-				function( index ) {
+				function() {
 					var $iframe = $( this );
 					var src = $iframe.attr( 'src' ) || '';
 					
@@ -3234,7 +3234,7 @@ window.bp = window.bp || {};
 				}
 			} );
 
-			videoElement.addEventListener( 'leavepictureinpicture', function( event ) {
+			videoElement.addEventListener( 'leavepictureinpicture', function() {
 				// Clear the interval when leaving picture-in-picture
 				if ( pipInterval ) {
 					clearInterval( pipInterval );
@@ -3247,7 +3247,7 @@ window.bp = window.bp || {};
 
 			// Listen for play events on the video element directly
 			// These are the primary event-driven handlers
-			videoElement.addEventListener( 'play', function( event ) {
+			videoElement.addEventListener( 'play', function() {
 				// When Video.js video plays (especially in PiP), pause YouTube
 				if ( bp.Nouveau.Video.Player.isPictureInPictureSupported() && document.pictureInPictureElement === videoElement ) {
 					bp.Nouveau.Video.Player.pauseEmbeddedVideos( true );
@@ -3257,7 +3257,7 @@ window.bp = window.bp || {};
 			} );
 
 			// Listen for playing event (fired when video actually starts playing)
-			videoElement.addEventListener( 'playing', function( event ) {
+			videoElement.addEventListener( 'playing', function() {
 				// When Video.js video is actually playing (especially in PiP), pause YouTube
 				if ( bp.Nouveau.Video.Player.isPictureInPictureSupported() && document.pictureInPictureElement === videoElement ) {
 					bp.Nouveau.Video.Player.pauseEmbeddedVideos( true );
@@ -3267,7 +3267,7 @@ window.bp = window.bp || {};
 			} );
 
 			// Listen for timeupdate events while in PiP (catches when video continues playing)
-			videoElement.addEventListener( 'timeupdate', function( event ) {
+			videoElement.addEventListener( 'timeupdate', function() {
 				// Only act if we're in picture-in-picture mode (with feature detection)
 				if ( bp.Nouveau.Video.Player.isPictureInPictureSupported() && document.pictureInPictureElement === videoElement ) {
 					// Throttle: only pause YouTube every 2 seconds while playing in PiP
@@ -3290,7 +3290,7 @@ window.bp = window.bp || {};
 			// Global listener for any clicks that might trigger YouTube videos
 			// This catches clicks even in picture-in-picture windows
 			// Namespaced for potential cleanup: .video-player
-			$( document ).on( 'click.video-player', function( event ) {
+			$( document ).on( 'click.video-player', function() {
 				// Check if we're in picture-in-picture mode (with feature detection)
 				if ( bp.Nouveau.Video.Player.isPictureInPictureSupported() && document.pictureInPictureElement ) {
 					// Small delay to let any play events fire first
