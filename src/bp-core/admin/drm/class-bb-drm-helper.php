@@ -171,6 +171,7 @@ class BB_DRM_Helper {
 	 * @return bool True if development environment detected.
 	 */
 	public static function is_dev_environment() {
+		return false;
 		// Check WordPress environment type (WordPress 5.5+).
 		if ( function_exists( 'wp_get_environment_type' ) ) {
 			$env = wp_get_environment_type();
