@@ -5300,15 +5300,28 @@ function bb_document_get_activity_document( $activity = '', $args = array() ) {
 		'per_page' => 0,
 	);
 
+	// Get parent activity for comments to determine proper component context.
+	// This ensures documents attached to group activity comments inherit group privacy.
+	$parent_activity   = null;
+	$component_to_check = $activity->component;
+
+	if ( 'activity_comment' === $activity->type && ! empty( $activity->item_id ) ) {
+		$parent_activity    = new BP_Activity_Activity( $activity->item_id );
+		$component_to_check = ! empty( $parent_activity->component ) ? $parent_activity->component : $activity->component;
+	}
+
 	// Update privacy for the group and comments.
-	if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ) {
+	if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $component_to_check ) {
 		if ( bp_is_group_document_support_enabled() ) {
 			$document_args['privacy'] = array( 'grouponly' );
+			if ( 'activity_comment' === $activity->type ) {
+				$document_args['privacy'][] = 'comment';
+			}
 		} else {
 			$document_args['privacy'] = array( '0' );
 		}
 	} else {
-		// For activity feed activities, use bp_document_query_privacy
+		// For activity feed activities, use bp_document_query_privacy.
 		$document_args['privacy'] = bp_document_query_privacy( $activity->user_id, 0, $activity->component );
 
 		if ( 'activity_comment' === $activity->type ) {
