@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 2.15.3\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2025-12-04 09:50:08+00:00\n"
+"POT-Creation-Date: 2025-12-08 17:09:06+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -9036,7 +9036,7 @@ msgstr ""
 #: bp-core/bp-core-avatars.php:355
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:939
 #: bp-templates/bp-nouveau/buddypress/members/single/profile/change-avatar.php:17
-#: bp-templates/bp-nouveau/readylaunch/header/profile-dropdown.php:121
+#: bp-templates/bp-nouveau/readylaunch/header/profile-dropdown.php:123
 #: bp-templates/bp-nouveau/readylaunch/members/single/parts/edit-subnav.php:41
 #: bp-templates/bp-nouveau/readylaunch/members/single/profile/change-avatar.php:23
 #: bp-xprofile/bp-xprofile-functions.php:2242
@@ -9897,7 +9897,7 @@ msgstr ""
 #: bp-settings/classes/class-bp-settings-component.php:315
 #: bp-templates/bp-nouveau/buddypress/members/single/settings/delete-account.php:14
 #: bp-templates/bp-nouveau/includes/functions.php:1550
-#: bp-templates/bp-nouveau/readylaunch/header/profile-dropdown.php:188
+#: bp-templates/bp-nouveau/readylaunch/header/profile-dropdown.php:191
 #: bp-templates/bp-nouveau/readylaunch/members/single/settings/delete-account.php:19
 msgid "Delete Account"
 msgstr ""
@@ -27291,7 +27291,7 @@ msgstr ""
 
 #: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:344
 #: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:773
-#: bp-templates/bp-nouveau/readylaunch/header/profile-dropdown.php:240
+#: bp-templates/bp-nouveau/readylaunch/header/profile-dropdown.php:243
 msgid "Theme"
 msgstr ""
 
@@ -27413,12 +27413,12 @@ msgid "Enter the IP addresses that you want to skip from captcha submission. Ent
 msgstr ""
 
 #: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:780
-#: bp-templates/bp-nouveau/readylaunch/header/profile-dropdown.php:246
+#: bp-templates/bp-nouveau/readylaunch/header/profile-dropdown.php:250
 msgid "Light"
 msgstr ""
 
 #: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:784
-#: bp-templates/bp-nouveau/readylaunch/header/profile-dropdown.php:251
+#: bp-templates/bp-nouveau/readylaunch/header/profile-dropdown.php:255
 msgid "Dark"
 msgstr ""
 
@@ -29080,7 +29080,7 @@ msgid "Your changes have not been saved. Please fill in all required fields, and
 msgstr ""
 
 #: bp-members/classes/class-bp-members-admin.php:537
-#: bp-xprofile/screens/edit.php:244
+#: bp-xprofile/screens/edit.php:263
 msgid "There was a problem updating some of your profile information. Please try again."
 msgstr ""
 
@@ -38082,17 +38082,17 @@ msgstr ""
 msgid "View profile"
 msgstr ""
 
-#: bp-templates/bp-nouveau/readylaunch/header/profile-dropdown.php:105
+#: bp-templates/bp-nouveau/readylaunch/header/profile-dropdown.php:106
 #: bp-templates/bp-nouveau/readylaunch/members/single/profile/change-avatar.php:21
 #: bp-templates/bp-nouveau/readylaunch/members/single/profile/edit.php:30
 msgid "Edit profile"
 msgstr ""
 
-#: bp-templates/bp-nouveau/readylaunch/header/profile-dropdown.php:160
+#: bp-templates/bp-nouveau/readylaunch/header/profile-dropdown.php:162
 msgid "Account settings"
 msgstr ""
 
-#: bp-templates/bp-nouveau/readylaunch/header/profile-dropdown.php:263
+#: bp-templates/bp-nouveau/readylaunch/header/profile-dropdown.php:267
 msgid "Log out"
 msgstr ""
 
@@ -39111,7 +39111,7 @@ msgstr ""
 #: bp-xprofile/bp-xprofile-filters.php:1208
 #: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:554
 #: bp-xprofile/screens/edit.php:78
-#: bp-xprofile/screens/edit.php:228
+#: bp-xprofile/screens/edit.php:247
 #, php-format
 msgid "%s is required and not allowed to be empty."
 msgstr ""
@@ -39764,12 +39764,12 @@ msgid "Fields array with field_id, group_id, type, value and visibility_level to
 msgstr ""
 
 #: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:516
-#: bp-xprofile/screens/edit.php:111
+#: bp-xprofile/screens/edit.php:130
 msgid "Changing this profile type would remove your Administrator role and lock you out of the WordPress admin."
 msgstr ""
 
 #: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:530
-#: bp-xprofile/screens/edit.php:129
+#: bp-xprofile/screens/edit.php:148
 msgid "Changing this profile type would remove your Editor role and lock you out of the WordPress admin."
 msgstr ""
 
@@ -40164,15 +40164,15 @@ msgstr ""
 msgid "Member \"%s\" marked suspended. All BuddyBoss data associated with the member has been disabled."
 msgstr ""
 
-#: bp-xprofile/screens/edit.php:87
+#: bp-xprofile/screens/edit.php:105
 msgid "Invalid option selected. Please try again"
 msgstr ""
 
-#: bp-xprofile/screens/edit.php:226
+#: bp-xprofile/screens/edit.php:245
 msgid "Please fill in all required fields, and save your changes again."
 msgstr ""
 
-#: bp-xprofile/screens/edit.php:246
+#: bp-xprofile/screens/edit.php:265
 msgid "Changes saved."
 msgstr ""
 
