@@ -677,8 +677,6 @@ function bp_nouveau_get_activity_entry_buttons( $args ) {
 		}
 	}
 
-	unset( $buttons['activity_favorite'] );
-
 	/**
 	 * Filter to add your buttons, use the position argument to choose where to insert it.
 	 *
