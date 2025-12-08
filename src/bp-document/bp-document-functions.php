@@ -5306,8 +5306,10 @@ function bb_document_get_activity_document( $activity = '', $args = array() ) {
 	$is_group_context = false;
 
 	if ( 'activity_comment' === $activity->type && ! empty( $activity->item_id ) ) {
-		$parent_activity  = new BP_Activity_Activity( $activity->item_id );
-		$is_group_context = bp_is_active( 'groups' ) && 'groups' === $parent_activity->component;
+		$parent_activity = new BP_Activity_Activity( $activity->item_id );
+		if ( bp_is_active( 'groups' ) && ! empty( $parent_activity->component ) ) {
+			$is_group_context = 'groups' === $parent_activity->component;
+		}
 	} else {
 		$is_group_context = bp_is_active( 'groups' ) && 'groups' === $activity->component;
 	}
