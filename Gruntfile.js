@@ -491,7 +491,7 @@ module.exports = function (grunt) {
 				},
 				// WP-CLI makepot with header fixing
 				makepot_wp: {
-					command: 'wp i18n make-pot src/ src/languages/buddyboss.pot --domain=buddyboss --ignore-domain --exclude="node_modules/*, vendor/*, src/vendor/*, js/*"',
+					command: 'wp i18n make-pot src/ src/languages/buddyboss.pot --domain=buddyboss --ignore-domain --skip-audit --exclude="node_modules/*, vendor/*, src/vendor/*, js/*"',
 					cwd: '.',
 					stdout: true
 				},
