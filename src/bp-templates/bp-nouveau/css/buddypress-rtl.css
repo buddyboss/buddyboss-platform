@@ -3053,6 +3053,16 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
   position: relative;
 }
 
+.ac-title-required #whats-new-submit:hover:not(:has(#aw-whats-new-reset:hover)) .bb-title-tooltip-wrapper {
+  opacity: 1;
+  cursor: default;
+}
+
+.ac-topic-required #whats-new-submit:hover:not(:has(#aw-whats-new-reset:hover)) .bb-topic-tooltip-wrapper {
+  opacity: 1;
+  cursor: default;
+}
+
 #whats-new-submit input {
   font-size: 14px;
   line-height: 1;
@@ -3629,7 +3639,8 @@ input.search-query-input {
   display: none;
 }
 
-/* Topic tooltip */
+/* Post title and Topic tooltip */
+.bb-title-tooltip-wrapper,
 .bb-topic-tooltip-wrapper {
   position: absolute;
   z-index: 99999;
@@ -3641,11 +3652,15 @@ input.search-query-input {
   transform: translateX(50%);
 }
 
+.bb-title-tooltip-wrapper.active,
 .bb-topic-tooltip-wrapper.active {
   opacity: 1;
   pointer-events: auto;
 }
 
+.bb-title-tooltip-wrapper .bb-title-tooltip,
+.bb-title-tooltip-wrapper .bb-topic-tooltip,
+.bb-topic-tooltip-wrapper .bb-title-tooltip,
 .bb-topic-tooltip-wrapper .bb-topic-tooltip {
   background: #1e2132;
   color: #fff;
@@ -3658,6 +3673,7 @@ input.search-query-input {
   position: relative;
 }
 
+.bb-title-tooltip-wrapper:after,
 .bb-topic-tooltip-wrapper:after {
   content: "";
   position: absolute;
@@ -3670,6 +3686,10 @@ input.search-query-input {
   width: 0;
   height: 0;
   display: block;
+}
+
+.bb-title-tooltip-wrapper {
+  z-index: 100000;
 }
 
 /**
