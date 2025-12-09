@@ -371,11 +371,22 @@
 			gap: var(--bb-rl-space-100);
 			position: relative;
 
-			&:hover:not(:has(#bb-rl-aw-whats-new-reset:hover)) .bb-topic-tooltip-wrapper {
+			&:hover:not(:has(#bb-rl-aw-whats-new-reset:hover)) {
 
-				.bb-rl-ac-topic-required & {
-					opacity: 1;
-					cursor: default;
+				.bb-title-tooltip-wrapper {
+
+					.bb-rl-ac-title-required & {
+						opacity: 1;
+						cursor: default;
+					}
+				}
+
+				.bb-topic-tooltip-wrapper {
+
+					.bb-rl-ac-topic-required & {
+						opacity: 1;
+						cursor: default;
+					}
 				}
 			}
 		}
@@ -1266,6 +1277,7 @@
 	}
 }
 
+.bb-title-tooltip-wrapper,
 .bb-topic-tooltip-wrapper {
 	position: absolute;
 	z-index: 99999;
@@ -1280,6 +1292,7 @@
 		pointer-events: auto;
 	}
 
+	.bb-title-tooltip,
 	.bb-topic-tooltip {
 		background: var(--bb-rl-background-black-color);
 		color: var(--bb-rl-text-white-color);
@@ -1305,6 +1318,11 @@
 		height: 0;
 		display: block;
 	}
+}
+
+// Priority: Post title tooltip should appear above topic tooltip
+.bb-title-tooltip-wrapper {
+	z-index: 100000;
 }
 
 .bb-rl-activity-modal-open {
