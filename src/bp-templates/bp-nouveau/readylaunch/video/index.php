@@ -92,6 +92,14 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 
 			<div class="screen-content bb-rl-video-directory-content">
 				<div class="bb-rl-media-stream">
+					<?php
+					/**
+					 * Fires before the display of the video list.
+					 *
+					 * @since BuddyBoss 2.15.2
+					 */
+					bp_nouveau_video_hook( 'before_rl_directory', 'list' );
+					?>
 					<div id="video-stream" class="video dir-list bb-rl-video" data-bp-list="video" data-ajax="<?php echo esc_attr( $is_send_ajax_request ? 'true' : 'false' ); ?>">
 						<?php
 						if ( $is_send_ajax_request ) {
@@ -103,6 +111,14 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 						}
 						?>
 					</div><!-- .video -->
+					<?php
+					/**
+					 * Fires after the display of the video list.
+					 *
+					 * @since BuddyBoss 2.15.2
+					 */
+					bp_nouveau_video_hook( 'after_rl_directory', 'list' );
+					?>
 				</div>
 
 				<?php
