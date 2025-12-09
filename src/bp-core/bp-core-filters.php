@@ -2757,8 +2757,7 @@ function bb_redirection_allowed_third_party_domains( $hosts ) {
  * @return bool
  */
 function bb_oembed_discover_support_callback( $retval, $url ) {
-	// Make the dubb video embed discoverable.
-	if ( ! empty( $url ) && ( false !== strpos( $url, '//dubb.com/' ) || false !== strpos( $url, '://dubb.com/' ) ) ) {
+	if ( ! empty( $url ) && false !== strpos( $url, 'dubb.com' ) ) {
 		$retval = true;
 	}
 
