@@ -2747,7 +2747,7 @@ function bb_redirection_allowed_third_party_domains( $hosts ) {
 }
 
 /**
- * Make the video embed discoverable.
+ * Make video embeds discoverable.
  *
  * @since BuddyBoss [BBVERSION]
  *
