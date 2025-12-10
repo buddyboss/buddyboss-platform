@@ -6,7 +6,7 @@
  * Manages hooks, license activation/deactivation events, and DRM checks.
  *
  * @package BuddyBoss\Core\Admin\DRM
- * @since 3.0.0
+ * @since BuddyBoss [BBVERSION]
  */
 
 namespace BuddyBoss\Core\Admin\DRM;
@@ -21,6 +21,8 @@ class BB_DRM_Controller {
 
 	/**
 	 * Initialize the DRM controller.
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 */
 	public static function init() {
 		// Install/upgrade database tables.
@@ -33,6 +35,8 @@ class BB_DRM_Controller {
 	/**
 	 * Get the dynamic plugin ID from Mothership connection.
 	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
 	 * @return string The plugin ID.
 	 */
 	private function get_plugin_id() {
@@ -43,8 +47,8 @@ class BB_DRM_Controller {
 		}
 
 		try {
-			// Use singleton instance to avoid duplicate hook registration.
-			$loader = \BuddyBoss\Core\Admin\Mothership\BB_Mothership_Loader::instance();
+			// Use a singleton instance to avoid duplicate hook registration.
+			$loader           = \BuddyBoss\Core\Admin\Mothership\BB_Mothership_Loader::instance();
 			$plugin_connector = $loader->getContainer()->get( \BuddyBossPlatform\GroundLevel\Mothership\AbstractPluginConnection::class );
 			return $plugin_connector->pluginId;
 		} catch ( \Exception $e ) {
@@ -55,6 +59,8 @@ class BB_DRM_Controller {
 
 	/**
 	 * Setup WordPress hooks.
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 */
 	private function setup_hooks() {
 		// License status change hook from Mothership.
@@ -80,6 +86,8 @@ class BB_DRM_Controller {
 	 * Handle license status changes from Mothership.
 	 * This is the primary hook fired by the vendor's LicenseManager.
 	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
 	 * @param bool   $is_valid Whether the license is valid.
 	 * @param object $status   The response object from Mothership API.
 	 */
@@ -96,6 +104,8 @@ class BB_DRM_Controller {
 	/**
 	 * Handle license activation/cleanup.
 	 * Called internally by drm_license_status_changed() when license becomes valid.
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 */
 	private function drm_license_activated() {
 		delete_option( 'bb_drm_no_license' );
@@ -128,6 +138,8 @@ class BB_DRM_Controller {
 	/**
 	 * Handle license expiration/invalidation.
 	 * Called internally by drm_license_status_changed() when license becomes invalid.
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 */
 	private function drm_license_invalid_expired() {
 		$drm_invalid_license = get_option( 'bb_drm_invalid_license', false );
@@ -150,6 +162,8 @@ class BB_DRM_Controller {
 	 * Runs Platform DRM checks for no-license and invalid-license scenarios.
 	 * Sends emails, notifications, and admin notices based on license status.
 	 * Add-ons manage their own lockout via BB_DRM_Registry.
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 */
 	public function drm_init() {
 		// Check if Platform license is valid.
@@ -186,6 +200,8 @@ class BB_DRM_Controller {
 	 * Handle AJAX notice dismissal.
 	 *
 	 * Implements per-user dismissal tracking so each admin can dismiss notices independently.
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 */
 	public function drm_dismiss_notice() {
 		check_ajax_referer( 'bb_dismiss_notice', 'nonce' );
@@ -198,8 +214,8 @@ class BB_DRM_Controller {
 			wp_send_json_error( __( 'Invalid notice key.', 'buddyboss' ) );
 		}
 
-		$notice    = sanitize_key( $_POST['notice'] );
-		$secret    = isset( $_POST['secret'] ) ? sanitize_key( $_POST['secret'] ) : '';
+		$notice     = sanitize_key( $_POST['notice'] );
+		$secret     = isset( $_POST['secret'] ) ? sanitize_key( $_POST['secret'] ) : '';
 		$notice_key = BB_DRM_Helper::prepare_dismissable_notice_key( $notice );
 
 		// Verify secret hash.
@@ -207,7 +223,7 @@ class BB_DRM_Controller {
 		$notice_hash  = $secret_parts[0] ?? '';
 		$event_hash   = $secret_parts[1] ?? '';
 
-		if ( $notice_hash !== hash( 'sha256', $notice ) ) {
+		if ( hash( 'sha256', $notice ) !== $notice_hash ) {
 			wp_send_json_error( __( 'Invalid security hash.', 'buddyboss' ) );
 		}
 
@@ -258,9 +274,9 @@ class BB_DRM_Controller {
 			// Fallback to old option-based method for backwards compatibility.
 			$event_data = get_option( 'bb_drm_event_' . $event_name, array() );
 			if ( ! empty( $event_data ) ) {
-				$data = $event_data['data'] ?? array();
+				$data                = $event_data['data'] ?? array();
 				$data[ $notice_key ] = time();
-				$event_data['data'] = $data;
+				$event_data['data']  = $data;
 				update_option( 'bb_drm_event_' . $event_name, $event_data );
 			}
 		}
@@ -270,6 +286,8 @@ class BB_DRM_Controller {
 
 	/**
 	 * Add DRM tests to Site Health.
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param array $tests Site Health tests array.
 	 * @return array Modified tests array.
@@ -285,6 +303,8 @@ class BB_DRM_Controller {
 
 	/**
 	 * Site Health test for license status.
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @return array Test result.
 	 */
@@ -346,5 +366,4 @@ class BB_DRM_Controller {
 			'test'        => 'buddyboss_license_status',
 		);
 	}
-
 }

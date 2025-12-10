@@ -6,7 +6,7 @@
  * Manages license validation, status checks, and DRM messaging.
  *
  * @package BuddyBoss\Core\Admin\DRM
- * @since 3.0.0
+ * @since BuddyBoss [BBVERSION]
  */
 
 namespace BuddyBoss\Core\Admin\DRM;
@@ -80,6 +80,8 @@ class BB_DRM_Helper {
 	/**
 	 * Set the DRM status.
 	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
 	 * @param string $status The DRM status to set.
 	 */
 	public static function set_status( $status ) {
@@ -89,6 +91,8 @@ class BB_DRM_Helper {
 	/**
 	 * Get the current DRM status.
 	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
 	 * @return string The current DRM status.
 	 */
 	public static function get_status() {
@@ -97,6 +101,8 @@ class BB_DRM_Helper {
 
 	/**
 	 * Check if a license key exists.
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @return bool True if a license key exists, false otherwise.
 	 */
@@ -111,6 +117,8 @@ class BB_DRM_Helper {
 
 	/**
 	 * Get the license key.
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @return string The license key.
 	 */
@@ -127,6 +135,8 @@ class BB_DRM_Helper {
 	 *
 	 * Includes automatic development environment bypass for better developer experience.
 	 * No configuration needed - automatically detects localhost, .local, .test, etc.
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @return bool True if the license is valid, false otherwise.
 	 */
@@ -167,7 +177,8 @@ class BB_DRM_Helper {
 	 * - Development URLs (localhost, .local, .test, .dev domains)
 	 * - Local IP addresses (127.0.0.1, 192.168.x.x, 10.x.x.x)
 	 *
-	 * @since 3.0.0
+	 * @since BuddyBoss [BBVERSION]
+	 *
 	 * @return bool True if development environment detected.
 	 */
 	public static function is_dev_environment() {
@@ -199,13 +210,14 @@ class BB_DRM_Helper {
 	 * - Non-standard ports (anything except 80, 443)
 	 * - WordPress staging constants (WP_STAGING, etc.)
 	 *
-	 * @since 3.0.0
+	 * @since BuddyBoss [BBVERSION]
+	 *
 	 * @return bool True if development URL detected.
 	 */
 	private static function is_dev_url() {
-		$url = site_url();
+		$url        = site_url();
 		$parsed_url = wp_parse_url( $url );
-		$host = isset( $parsed_url['host'] ) ? $parsed_url['host'] : '';
+		$host       = isset( $parsed_url['host'] ) ? $parsed_url['host'] : '';
 
 		if ( empty( $host ) ) {
 			return false;
@@ -327,6 +339,8 @@ class BB_DRM_Helper {
 	/**
 	 * Calculate the number of days elapsed since a given date.
 	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
 	 * @param string $created_at The date to calculate from.
 	 * @return int The number of days elapsed.
 	 */
@@ -347,6 +361,8 @@ class BB_DRM_Helper {
 	/**
 	 * Determine the DRM status, using a default if not provided.
 	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
 	 * @param string $drm_status The DRM status to check.
 	 * @return string The determined DRM status.
 	 */
@@ -361,6 +377,8 @@ class BB_DRM_Helper {
 	/**
 	 * Check if the DRM status is locked.
 	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
 	 * @param string $drm_status The DRM status to check.
 	 * @return bool True if locked, false otherwise.
 	 */
@@ -370,6 +388,8 @@ class BB_DRM_Helper {
 
 	/**
 	 * Check if the DRM status is medium.
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param string $drm_status The DRM status to check.
 	 * @return bool True if medium, false otherwise.
@@ -381,6 +401,8 @@ class BB_DRM_Helper {
 	/**
 	 * Check if the DRM status is high.
 	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
 	 * @param string $drm_status The DRM status to check.
 	 * @return bool True if high, false otherwise.
 	 */
@@ -391,6 +413,8 @@ class BB_DRM_Helper {
 	/**
 	 * Check if the DRM status is low.
 	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
 	 * @param string $drm_status The DRM status to check.
 	 * @return bool True if low, false otherwise.
 	 */
@@ -400,6 +424,8 @@ class BB_DRM_Helper {
 
 	/**
 	 * Get the status key for a given DRM status.
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param string $drm_status The DRM status.
 	 * @return string The status key.
@@ -427,6 +453,8 @@ class BB_DRM_Helper {
 	/**
 	 * Get DRM information based on status, event, and purpose.
 	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
 	 * @param string $drm_status The DRM status.
 	 * @param string $event_name The event name.
 	 * @param string $purpose    The purpose of the information.
@@ -450,10 +478,12 @@ class BB_DRM_Helper {
 	/**
 	 * Get DRM links.
 	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
 	 * @return array The DRM links.
 	 */
 	protected static function get_drm_links() {
-		if ( self::$drm_links === null ) {
+		if ( null === self::$drm_links ) {
 			self::$drm_links = array(
 				self::DRM_LOW    => array(
 					'email'   => array(
@@ -520,6 +550,8 @@ class BB_DRM_Helper {
 	/**
 	 * Get a specific DRM link.
 	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
 	 * @param string $drm_status The DRM status.
 	 * @param string $purpose    The purpose of the link.
 	 * @param string $type       The type of link.
@@ -550,7 +582,9 @@ class BB_DRM_Helper {
 	}
 
 	/**
-	 * Get DRM information for no license event.
+	 * Get DRM information for a no-license event.
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param string $drm_status The DRM status.
 	 * @param string $purpose    The purpose of the information.
@@ -571,7 +605,7 @@ class BB_DRM_Helper {
 				// 7-13 days: Plugin Notification only (per BuddyBoss DRM Messaging.md)
 				$admin_notice_view = 'low_notification';
 				$heading           = __( 'License Activation Needed', 'buddyboss' );
-				$color             = 'FFA500'; // Orange
+				$color             = 'FFA500'; // Orange.
 				$simple_message    = __( 'We couldn\'t verify an active license for your BuddyBoss features. Please activate your license to continue using them.', 'buddyboss' );
 				$help_message      = __( 'Activate Your License', 'buddyboss' );
 				$label             = __( 'Notice', 'buddyboss' );
@@ -593,7 +627,7 @@ class BB_DRM_Helper {
 				// 14-21 days: Admin Notice (Yellow) + Plugin Notification + Site Health (per BuddyBoss DRM Messaging.md)
 				$admin_notice_view = 'medium_warning';
 				$heading           = __( 'License Required', 'buddyboss' );
-				$color             = 'FFA500'; // Yellow/Orange
+				$color             = 'FFA500'; // Yellow/Orange.
 				$simple_message    = __( 'An active license is required to use BuddyBoss features. Without activation, these features will stop working.', 'buddyboss' );
 				$help_message      = __( 'Activate Your License', 'buddyboss' );
 				$label             = __( 'Warning', 'buddyboss' );
@@ -615,7 +649,7 @@ class BB_DRM_Helper {
 				// 21-30 days: Admin Notice (Orange) + Plugin Notification + Site Health + Email (per BuddyBoss DRM Messaging.md)
 				$admin_notice_view = 'high_warning';
 				$heading           = __( 'License Activation Required', 'buddyboss' );
-				$color             = 'FF8C00'; // Dark Orange
+				$color             = 'FF8C00'; // Dark Orange.
 				$simple_message    = __( 'Your BuddyBoss features will be disabled soon. Activate your license now to avoid interruption.', 'buddyboss' );
 				$help_message      = __( 'Activate Your License', 'buddyboss' );
 				$label             = __( 'Critical', 'buddyboss' );
@@ -637,7 +671,7 @@ class BB_DRM_Helper {
 				// 30+ days: Features Disabled (Red) + Plugin Notification + Site Health + Email (per BuddyBoss DRM Messaging.md)
 				$admin_notice_view = 'locked_warning';
 				$heading           = __( 'BuddyBoss Features Disabled', 'buddyboss' );
-				$color             = 'dc3232'; // Red
+				$color             = 'dc3232'; // Red.
 				$simple_message    = __( ' The following features have been disabled because no active license was found. Activate your license to restore them.', 'buddyboss' );
 				$help_message      = __( 'Activate Your License', 'buddyboss' );
 				$label             = __( 'Critical', 'buddyboss' );
@@ -672,7 +706,9 @@ class BB_DRM_Helper {
 	}
 
 	/**
-	 * Get DRM information for invalid license event.
+	 * Get DRM information for an invalid license event.
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param string $drm_status The DRM status.
 	 * @param string $purpose    The purpose of the information.
@@ -694,7 +730,7 @@ class BB_DRM_Helper {
 				// 7-13 days: Plugin Notification only (per BuddyBoss DRM Messaging.md)
 				$admin_notice_view = 'low_notification';
 				$heading           = __( 'BuddyBoss Pro/Plus: License Activation Needed', 'buddyboss' );
-				$color             = 'FFA500'; // Orange
+				$color             = 'FFA500'; // Orange.
 				$simple_message    = __( 'We couldn\'t verify an active license for your BuddyBoss Pro/Plus features. Please activate your license to continue using them.', 'buddyboss' );
 				$help_message      = __( 'Activate Your License', 'buddyboss' );
 				$label             = __( 'Notice', 'buddyboss' );
@@ -716,7 +752,7 @@ class BB_DRM_Helper {
 				// 14-21 days: Admin Notice (Yellow) + Plugin Notification + Site Health (per BuddyBoss DRM Messaging.md)
 				$admin_notice_view = 'medium_warning';
 				$heading           = __( 'BuddyBoss Pro/Plus: License Required', 'buddyboss' );
-				$color             = 'FFA500'; // Yellow/Orange
+				$color             = 'FFA500'; // Yellow/Orange.
 				$simple_message    = __( 'An active license is required to use BuddyBoss Pro/Plus features. Without activation, these features will stop working.', 'buddyboss' );
 				$help_message      = __( 'Activate Your License', 'buddyboss' );
 				$label             = __( 'Warning', 'buddyboss' );
@@ -738,7 +774,7 @@ class BB_DRM_Helper {
 				// 21-30 days: Admin Notice (Orange) + Plugin Notification + Site Health + Email (per BuddyBoss DRM Messaging.md)
 				$admin_notice_view = 'high_warning';
 				$heading           = __( 'BuddyBoss Pro/Plus: Activation Required', 'buddyboss' );
-				$color             = 'FF8C00'; // Dark Orange
+				$color             = 'FF8C00'; // Dark Orange.
 				$simple_message    = __( 'Your BuddyBoss Pro/Plus features will be disabled soon. Activate your license now to avoid interruption.', 'buddyboss' );
 				$help_message      = __( 'Activate Your License', 'buddyboss' );
 				$label             = __( 'Critical', 'buddyboss' );
@@ -761,7 +797,7 @@ class BB_DRM_Helper {
 				$admin_notice_view = 'locked_warning';
 				$label             = __( 'Critical', 'buddyboss' );
 				$heading           = __( 'BuddyBoss Pro/Plus: Features Disabled', 'buddyboss' );
-				$color             = 'dc3232'; // Red
+				$color             = 'dc3232'; // Red.
 				$simple_message    = __( 'The following features have been disabled because no active license was found. Activate your license to restore them.', 'buddyboss' );
 				$activation_link   = bp_get_admin_url( 'admin.php?page=buddyboss-license' );
 				$message           = sprintf(
@@ -776,7 +812,7 @@ class BB_DRM_Helper {
 						'<a href="' . esc_url( $support_link ) . '" target="_blank">'
 					)
 				);
-				$help_message      = __( 'Activate Your License', 'buddyboss' );
+				$help_message = __( 'Activate Your License', 'buddyboss' );
 				break;
 
 			default:
@@ -800,6 +836,8 @@ class BB_DRM_Helper {
 	 * NOTE: This method is kept for backward compatibility with external plugins.
 	 * It is not used internally by BuddyBoss DRM.
 	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
 	 * @param string $args The JSON string of arguments.
 	 * @return array The parsed event arguments.
 	 */
@@ -809,7 +847,9 @@ class BB_DRM_Helper {
 	}
 
 	/**
-	 * Prepare a dismissable notice key.
+	 * Prepare a dismissible notice key.
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param string $notice The notice identifier.
 	 * @return string The dismissable notice key.
@@ -825,6 +865,8 @@ class BB_DRM_Helper {
 	 * Per-user dismissal tracking: each user can dismiss notices independently.
 	 * Dismissals are stored in event_data with format:
 	 * - dismissed_users => array( user_id => timestamp, ... )
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param array  $event_data The event data.
 	 * @param string $notice_key The notice key.
@@ -883,6 +925,8 @@ class BB_DRM_Helper {
 
 	/**
 	 * Record a per-user notice dismissal.
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param BB_DRM_Event $event      The DRM event.
 	 * @param string       $notice_key The notice key.

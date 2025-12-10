@@ -5,7 +5,7 @@
  * Handles DRM checks when no license key is present.
  *
  * @package BuddyBoss\Core\Admin\DRM
- * @since 3.0.0
+ * @since BuddyBoss [BBVERSION]
  */
 
 namespace BuddyBoss\Core\Admin\DRM;
@@ -20,6 +20,8 @@ class BB_DRM_NoKey extends BB_Base_DRM {
 
 	/**
 	 * Constructor for the BB_DRM_NoKey class.
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 */
 	public function __construct() {
 		parent::__construct();
@@ -29,6 +31,8 @@ class BB_DRM_NoKey extends BB_Base_DRM {
 
 	/**
 	 * Runs the DRM no-key check functionality.
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 */
 	public function run() {
 		$event = $this->get_latest_event();
@@ -41,7 +45,7 @@ class BB_DRM_NoKey extends BB_Base_DRM {
 			// 7-13 days: Plugin Notification (Inbox)
 			// 14-21 days: Plugin Notification + Admin Bar/Notice (Yellow) + Site Health
 			// 21-30 days: Plugin Notification + Admin Bar/Notice (Orange) + Site Health + Admin Email
-			// 30+ days: Features Disabled + Admin Bar/Notice (Red) + Site Health + Admin Email
+			// 30+ days: Features Disabled + Admin Bar/Notice (Red) + Site Health + Admin Email.
 			if ( $days >= 7 && $days <= 13 ) {
 				$this->set_status( BB_DRM_Helper::DRM_LOW );
 			} elseif ( $days >= 14 && $days <= 21 ) {

@@ -6,7 +6,7 @@
  * This class can be instantiated by any BuddyBoss add-on plugin to enforce license requirements.
  *
  * @package BuddyBoss\Core\Admin\DRM
- * @since 3.0.0
+ * @since BuddyBoss [BBVERSION]
  */
 
 namespace BuddyBoss\Core\Admin\DRM;
@@ -36,12 +36,14 @@ class BB_DRM_Addon extends BB_Base_DRM {
 	/**
 	 * Constructor for the BB_DRM_Addon class.
 	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
 	 * @param string $product_slug The Mothership product slug.
 	 * @param string $plugin_name  The plugin display name.
 	 */
 	public function __construct( $product_slug, $plugin_name = '' ) {
 		$this->product_slug = $product_slug;
-		$this->plugin_name  = $plugin_name ?: $product_slug;
+		$this->plugin_name  = $plugin_name ? $plugin_name : $product_slug;
 		$this->event_name   = 'addon-' . sanitize_key( $product_slug );
 
 		parent::__construct();
@@ -52,6 +54,8 @@ class BB_DRM_Addon extends BB_Base_DRM {
 
 	/**
 	 * Runs the DRM check for this add-on.
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @return void
 	 */
@@ -76,7 +80,7 @@ class BB_DRM_Addon extends BB_Base_DRM {
 			// 7-13 days: LOW - Plugin notification only (inbox)
 			// 14-21 days: MEDIUM - Yellow admin notice + Site Health + Plugin notification
 			// 21-30 days: HIGH - Orange admin notice + Site Health + Plugin notification + Email
-			// 30+ days: LOCKED - Red admin notice + Site Health (Critical) + Plugin notification + Email + Features disabled
+			// 30+ days: LOCKED - Red admin notice + Site Health (Critical) + Plugin notification + Email + Features disabled.
 			if ( $days >= 7 && $days <= 13 ) {
 				$this->set_status( BB_DRM_Helper::DRM_LOW );
 			} elseif ( $days >= 14 && $days <= 21 ) {
@@ -102,6 +106,8 @@ class BB_DRM_Addon extends BB_Base_DRM {
 
 	/**
 	 * Check if this specific add-on has a valid license.
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @return bool True if licensed, false otherwise.
 	 */
@@ -131,7 +137,7 @@ class BB_DRM_Addon extends BB_Base_DRM {
 			return false;
 		}
 
-		$result = \BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager::checkProductBySlug( $this->product_slug );
+		$result                       = \BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager::checkProductBySlug( $this->product_slug );
 		$cache[ $this->product_slug ] = $result;
 
 		return $result;
@@ -139,8 +145,9 @@ class BB_DRM_Addon extends BB_Base_DRM {
 
 	/**
 	 * Check if running on staging server.
-	 *
 	 * Staging server detection is disabled as it's handled by BB_DRM_Helper::is_dev_environment().
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @return bool Always returns false.
 	 */
@@ -150,9 +157,10 @@ class BB_DRM_Addon extends BB_Base_DRM {
 
 	/**
 	 * Creates an in-plugin notification for this add-on.
-	 *
 	 * Creates addon-specific notifications in addition to the consolidated notification.
 	 * Each addon gets its own notification with a unique type identifier.
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param string $drm_status The DRM status.
 	 */
@@ -171,7 +179,7 @@ class BB_DRM_Addon extends BB_Base_DRM {
 
 		$notifications = new BB_Notifications();
 		// Use addon-specific type to keep these separate from consolidated notification.
-		// Format: bb-drm-addon-{product-slug}
+		// Format: bb-drm-addon-{product-slug}.
 		$notification_type = 'bb-drm-addon-' . $this->product_slug;
 		$notification_id   = 'license_' . $this->event_name . '_' . BB_DRM_Helper::get_status_key( $drm_status );
 
@@ -186,7 +194,7 @@ class BB_DRM_Addon extends BB_Base_DRM {
 				'end'     => '',
 				'icon'    => $icon_url,
 				'buttons' => array(
-					'main' => array(
+					'main'      => array(
 						'text'   => __( 'Activate Your License', 'buddyboss' ),
 						'url'    => $drm_info['activation_link'],
 						'target' => '_self',
@@ -203,9 +211,10 @@ class BB_DRM_Addon extends BB_Base_DRM {
 
 	/**
 	 * Sends an email notification for this add-on.
-	 *
 	 * NOTE: Individual addon emails are disabled. All emails are sent via
 	 * BB_DRM_Registry::send_consolidated_email() to prevent duplicate emails.
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param string $drm_status The DRM status.
 	 */
@@ -218,6 +227,8 @@ class BB_DRM_Addon extends BB_Base_DRM {
 	 *
 	 * NOTE: Individual addon notices are disabled. All notices are rendered via
 	 * BB_DRM_Registry::render_consolidated_admin_notices() to prevent duplicate notices.
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 */
 	public function admin_notices() {
 		// No-op: Consolidated notices handled by BB_DRM_Registry.
@@ -226,10 +237,12 @@ class BB_DRM_Addon extends BB_Base_DRM {
 	/**
 	 * Check if this add-on's features should be locked.
 	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
 	 * @return bool True if features should be locked.
 	 */
 	public function should_lock_features() {
-		// First check if license is valid.
+		// First check if the license is valid.
 		if ( $this->is_addon_licensed() ) {
 			return false;
 		}

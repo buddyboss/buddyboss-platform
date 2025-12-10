@@ -5,7 +5,7 @@
  * Autoload DRM-related classes.
  *
  * @package BuddyBoss\Core\Admin\DRM
- * @since 3.0.0
+ * @since [BBVERSION]
  */
 
 // Exit if accessed directly.
@@ -13,6 +13,8 @@ defined( 'ABSPATH' ) || exit;
 
 /**
  * Autoloader for DRM classes.
+ *
+ * @since BuddyBoss [BBVERSION]
  *
  * @param string $class_name The class name to load.
  */
@@ -26,7 +28,7 @@ function bb_drm_autoloader( $class_name ) {
 	$class_name = str_replace( 'BuddyBoss\\Core\\Admin\\DRM\\', '', $class_name );
 
 	// Convert class name to file name.
-	// E.g., BB_DRM_Helper -> class-bb-drm-helper.php
+	// E.g., BB_DRM_Helper -> class-bb-drm-helper.php.
 	$class_file = 'class-' . strtolower( str_replace( '_', '-', $class_name ) ) . '.php';
 
 	// Build full path.

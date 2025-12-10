@@ -6,7 +6,7 @@
  * Add-ons register themselves here to participate in the DRM system.
  *
  * @package BuddyBoss\Core\Admin\DRM
- * @since 3.0.0
+ * @since BuddyBoss [BBVERSION]
  */
 
 namespace BuddyBoss\Core\Admin\DRM;
@@ -36,6 +36,8 @@ class BB_DRM_Registry {
 	/**
 	 * Get the singleton instance.
 	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
 	 * @return BB_DRM_Registry
 	 */
 	public static function instance() {
@@ -47,6 +49,8 @@ class BB_DRM_Registry {
 
 	/**
 	 * Constructor.
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 */
 	private function __construct() {
 		// Private constructor to enforce singleton.
@@ -60,7 +64,7 @@ class BB_DRM_Registry {
 	/**
 	 * Register an add-on for DRM management.
 	 *
-	 * Add-on plugins should call this during their initialization.
+	 * Add-on plugins should call this during their initialisation.
 	 *
 	 * Example usage from Platform Pro:
 	 * ```php
@@ -73,6 +77,8 @@ class BB_DRM_Registry {
 	 *     )
 	 * );
 	 * ```
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param string $product_slug The Mothership product slug.
 	 * @param string $plugin_name  The plugin display name.
@@ -104,7 +110,7 @@ class BB_DRM_Registry {
 		// Hook into admin_init to run DRM checks.
 		add_action(
 			'admin_init',
-			function() use ( $drm_addon, $product_slug ) {
+			function () use ( $drm_addon, $product_slug ) {
 				self::run_addon_drm_check( $product_slug );
 			},
 			25
@@ -115,6 +121,8 @@ class BB_DRM_Registry {
 
 	/**
 	 * Run DRM check for a specific add-on.
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param string $product_slug The product slug.
 	 */
@@ -156,7 +164,9 @@ class BB_DRM_Registry {
 	}
 
 	/**
-	 * Cleanup DRM state for an add-on when license becomes valid.
+	 * Cleanup DRM state for an add-on when the license becomes valid.
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param string $product_slug The product slug.
 	 */
@@ -178,7 +188,7 @@ class BB_DRM_Registry {
 
 		// Check if there are any remaining add-ons with DRM issues.
 		// If not, clear consolidated notifications as well.
-		$grouped = self::get_addons_by_drm_status();
+		$grouped    = self::get_addons_by_drm_status();
 		$has_issues = ! empty( $grouped['low'] ) || ! empty( $grouped['medium'] ) || ! empty( $grouped['high'] ) || ! empty( $grouped['locked'] );
 
 		if ( ! $has_issues ) {
@@ -190,6 +200,8 @@ class BB_DRM_Registry {
 	/**
 	 * Get all registered add-ons.
 	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
 	 * @return array Array of registered add-ons.
 	 */
 	public static function get_registered_addons() {
@@ -198,6 +210,8 @@ class BB_DRM_Registry {
 
 	/**
 	 * Check if a specific add-on is registered.
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param string $product_slug The product slug.
 	 * @return bool True if registered.
@@ -208,6 +222,8 @@ class BB_DRM_Registry {
 
 	/**
 	 * Get DRM instance for a specific add-on.
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param string $product_slug The product slug.
 	 * @return BB_DRM_Addon|null The DRM instance or null.
@@ -232,6 +248,8 @@ class BB_DRM_Registry {
 	 * }
 	 * ```
 	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
 	 * @param string $product_slug The product slug.
 	 * @return bool True if features should be locked.
 	 */
@@ -247,6 +265,8 @@ class BB_DRM_Registry {
 
 	/**
 	 * Get lockout message for display.
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param string $product_slug The product slug.
 	 * @return string The lockout message.
@@ -268,8 +288,9 @@ class BB_DRM_Registry {
 
 	/**
 	 * Helper function to display a lockout notice.
-	 *
 	 * Add-ons can use this to show a consistent lockout message.
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param string $product_slug The product slug.
 	 * @param string $context      The context (admin_notice, inline, modal).
@@ -312,15 +333,19 @@ class BB_DRM_Registry {
 	/**
 	 * Clear the addons status cache.
 	 * Call this after updating event data to ensure fresh data on next call.
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 */
 	private static function clear_addons_status_cache() {
 		// Use a static variable reference to clear the cache in get_addons_by_drm_status().
 		static $cache_cleared = false;
-		$cache_cleared = true;
+		$cache_cleared        = true;
 	}
 
 	/**
 	 * Get all addons grouped by DRM status.
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param bool $force_refresh Force refresh from database, ignoring cache.
 	 * @return array Array of addons grouped by status: ['low' => [], 'medium' => [], 'locked' => []].
@@ -381,6 +406,8 @@ class BB_DRM_Registry {
 	/**
 	 * Render consolidated admin notices for all addons.
 	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
 	 * This replaces individual addon notices with a single grouped notice.
 	 */
 	public function render_consolidated_admin_notices() {
@@ -424,6 +451,8 @@ class BB_DRM_Registry {
 	/**
 	 * Render a single grouped notice for addons of the same status.
 	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
 	 * @param array  $addons     Array of addon data.
 	 * @param string $drm_status The DRM status (low, medium, locked).
 	 */
@@ -437,8 +466,8 @@ class BB_DRM_Registry {
 		$is_warning = ( BB_DRM_Helper::DRM_LOW === $drm_status || BB_DRM_Helper::DRM_MEDIUM === $drm_status );
 
 		// For dismissal, we'll use the first addon's event data.
-		$first_addon    = $addons[0];
-		$event          = $first_addon['event'];
+		$first_addon     = $addons[0];
+		$event           = $first_addon['event'];
 		$notice_user_key = BB_DRM_Helper::prepare_dismissable_notice_key( $notice_key );
 
 		// Get event args for dismissal check.
@@ -453,7 +482,7 @@ class BB_DRM_Registry {
 		// Prepare notice data.
 		$count       = count( $addons );
 		$addon_names = array_map(
-			function( $addon ) {
+			function ( $addon ) {
 				return esc_html( $addon['plugin_name'] );
 			},
 			$addons
@@ -471,24 +500,24 @@ class BB_DRM_Registry {
 
 			case BB_DRM_Helper::DRM_MEDIUM:
 				// 14-21 days: Yellow notice
-				$heading = __( 'License required for BuddyBoss features.', 'buddyboss' );
-				$message = '';
+				$heading      = __( 'License required for BuddyBoss features.', 'buddyboss' );
+				$message      = '';
 				$notice_class = 'notice notice-warning is-dismissible';
 				$color        = 'FFA500'; // Yellow/Orange
 				break;
 
 			case BB_DRM_Helper::DRM_HIGH:
 				// 21-30 days: Orange notice
-				$heading = __( 'BuddyBoss features will be disabled soon.', 'buddyboss' );
-				$message = '';
+				$heading      = __( 'BuddyBoss features will be disabled soon.', 'buddyboss' );
+				$message      = '';
 				$notice_class = 'notice notice-warning is-dismissible';
 				$color        = 'FF8C00'; // Dark Orange
 				break;
 
 			case BB_DRM_Helper::DRM_LOCKED:
 				// 30+ days: Red notice
-				$heading = __( 'BuddyBoss features have been disabled.', 'buddyboss' );
-				$message = '';
+				$heading      = __( 'BuddyBoss features have been disabled.', 'buddyboss' );
+				$message      = '';
 				$notice_class = 'notice notice-error';
 				$color        = 'dc3232'; // Red
 				break;
@@ -513,12 +542,12 @@ class BB_DRM_Registry {
 
 		?>
 		<div id="<?php echo esc_attr( $notice_id ); ?>"
-			 class="<?php echo esc_attr( $notice_class ); ?> bb-drm-notice"
-			 style="padding: 15px; padding-right: 38px; border-left-width: 4px; position: relative;"
-			 <?php if ( $is_warning ) : ?>
-			 data-notice-key="<?php echo esc_attr( $notice_key ); ?>"
-			 data-secret="<?php echo esc_attr( $secret ); ?>"
-			 <?php endif; ?>>
+			class="<?php echo esc_attr( $notice_class ); ?> bb-drm-notice"
+			style="padding: 15px; padding-right: 38px; border-left-width: 4px; position: relative;"
+			<?php if ( $is_warning ) : ?>
+			data-notice-key="<?php echo esc_attr( $notice_key ); ?>"
+			data-secret="<?php echo esc_attr( $secret ); ?>"
+			<?php endif; ?>>
 			<?php if ( $is_warning ) : ?>
 			<button type="button" class="notice-dismiss bb-drm-dismiss" style="position: absolute; top: 0; right: 1px; padding: 9px; border: none; background: none; color: #787c82; cursor: pointer;" aria-label="<?php esc_attr_e( 'Dismiss this notice for 24 hours', 'buddyboss' ); ?>">
 				<span class="screen-reader-text"><?php esc_html_e( 'Dismiss this notice for 24 hours.', 'buddyboss' ); ?></span>
@@ -548,6 +577,8 @@ class BB_DRM_Registry {
 
 	/**
 	 * Enqueue dismiss script for consolidated notices.
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 */
 	private function enqueue_dismiss_script() {
 		static $enqueued = false;
@@ -620,6 +651,8 @@ class BB_DRM_Registry {
 	 *
 	 * Creates a single notification listing all addons with license issues
 	 * instead of separate notifications for each addon.
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 */
 	public function update_consolidated_notification() {
 		static $updated = false;
@@ -763,9 +796,11 @@ class BB_DRM_Registry {
 	}
 
 	/**
-	 * Send consolidated email for all addons with license issues.
+	 * Send a consolidated email for all addons with license issues.
 	 *
 	 * Sends a single email listing all affected addons instead of separate emails.
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 */
 	public function send_consolidated_email() {
 		static $sent = false;
@@ -819,7 +854,7 @@ class BB_DRM_Registry {
 		$addon_names = wp_list_pluck( $affected_addons, 'plugin_name' );
 
 		// Build subject and message based on status.
-		// Note: LOW status (7-13 days) does not send email
+		// Note: LOW status (7-13 days) does not send email.
 		switch ( $highest_priority ) {
 			case BB_DRM_Helper::DRM_LOW:
 				// 7-13 days: No email sent
@@ -838,7 +873,7 @@ class BB_DRM_Registry {
 					__( 'Your site %s is using BuddyBoss features that require an active license.', 'buddyboss' ),
 					get_bloginfo( 'name' ) . ' (' . site_url() . ')'
 				);
-				$color = 'FF8C00'; // Dark Orange
+				$color = 'FF8C00'; // Dark Orange.
 				break;
 
 			case BB_DRM_Helper::DRM_LOCKED:
@@ -850,7 +885,7 @@ class BB_DRM_Registry {
 					__( 'The BuddyBoss features on your site %s have been disabled because no active license was found.', 'buddyboss' ),
 					get_bloginfo( 'name' ) . ' (' . site_url() . ')'
 				);
-				$color = 'dc3232'; // Red
+				$color = 'dc3232'; // Red.
 				break;
 
 			default:
@@ -897,16 +932,16 @@ class BB_DRM_Registry {
 				continue;
 			}
 
-			$args  = $event->get_args();
-			$data  = is_object( $args ) ? (array) $args : ( is_array( $args ) ? $args : array() );
+			$args = $event->get_args();
+			$data = is_object( $args ) ? (array) $args : ( is_array( $args ) ? $args : array() );
 
 			// Store sent timestamp.
 			$data[ $status_key . '_sent' ] = current_time( 'mysql' );
 
-			// Update the event in database directly using wpdb.
+			// Update the event in the database directly using wpdb.
 			global $wpdb;
 			$table_name = BB_DRM_Event::get_table_name();
-			$result = $wpdb->update(
+			$result     = $wpdb->update(
 				$table_name,
 				array( 'args' => wp_json_encode( $data ) ),
 				array( 'id' => $event->id ),
@@ -924,7 +959,9 @@ class BB_DRM_Registry {
 	}
 
 	/**
-	 * Check if email should be sent for this status.
+	 * Check if the email should be sent for this status.
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param array  $addons     Array of addon data.
 	 * @param string $status_key Status key (drm_low, drm_medium, drm_locked).
@@ -953,6 +990,8 @@ class BB_DRM_Registry {
 	 *
 	 * Follows the exact messaging from BuddyBoss DRM Messaging specification.
 	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
 	 * @param array $data Email data (heading, message, addon_list_html, color, activation_link, status).
 	 * @return string Email HTML.
 	 */
@@ -976,13 +1015,15 @@ class BB_DRM_Registry {
 				<p><?php echo wp_kses_post( $data['message'] ); ?></p>
 
 				<?php if ( ! empty( $data['addon_list_html'] ) ) : ?>
-					<p><strong><?php
-						if ( BB_DRM_Helper::DRM_LOCKED === $status ) {
-							esc_html_e( 'The following features have been disabled:', 'buddyboss' );
-						} else {
-							esc_html_e( 'The following features will be disabled without an active license:', 'buddyboss' );
-						}
-					?></strong></p>
+					<p><strong>
+					<?php
+					if ( BB_DRM_Helper::DRM_LOCKED === $status ) {
+						esc_html_e( 'The following features have been disabled:', 'buddyboss' );
+					} else {
+						esc_html_e( 'The following features will be disabled without an active license:', 'buddyboss' );
+					}
+					?>
+					</strong></p>
 					<?php echo wp_kses_post( $data['addon_list_html'] ); ?>
 				<?php endif; ?>
 
@@ -1029,7 +1070,8 @@ class BB_DRM_Registry {
 	 * Adds consolidated Site Health tests grouped by priority level.
 	 * Shows all affected addons within each priority level (LOCKED, HIGH, MEDIUM, LOW).
 	 *
-	 * @since 3.0.0
+	 * @since BuddyBoss [BBVERSION]
+	 *
 	 * @param array $tests Site Health tests array.
 	 * @return array Modified tests array.
 	 */
@@ -1049,7 +1091,7 @@ class BB_DRM_Registry {
 		// - 7-13 days: Plugin Notification only (no Site Health)
 		// - 14-21 days: Plugin Notification + Admin Notice + Site Health
 		// - 22-30 days: Plugin Notification + Admin Notice + Site Health + Email
-		// - 31+ days: Plugin Notification + Admin Notice + Site Health + Email + Features Disabled
+		// - 31+ days: Plugin Notification + Admin Notice + Site Health + Email + Features Disabled.
 
 		if ( ! empty( $grouped['locked'] ) ) {
 			$tests['direct']['buddyboss_addons_locked'] = array(
@@ -1081,7 +1123,8 @@ class BB_DRM_Registry {
 	/**
 	 * Site Health test for LOCKED status (31+ days).
 	 *
-	 * @since 3.0.0
+	 * @since BuddyBoss [BBVERSION]
+	 *
 	 * @return array Test result.
 	 */
 	public function site_health_locked_test() {
@@ -1126,7 +1169,8 @@ class BB_DRM_Registry {
 	/**
 	 * Site Health test for HIGH status (22-30 days).
 	 *
-	 * @since 3.0.0
+	 * @since BuddyBoss [BBVERSION]
+	 *
 	 * @return array Test result.
 	 */
 	public function site_health_high_test() {
@@ -1168,7 +1212,8 @@ class BB_DRM_Registry {
 	/**
 	 * Site Health test for MEDIUM status (14-21 days).
 	 *
-	 * @since 3.0.0
+	 * @since BuddyBoss [BBVERSION]
+	 *
 	 * @return array Test result.
 	 */
 	public function site_health_medium_test() {
@@ -1210,7 +1255,8 @@ class BB_DRM_Registry {
 	/**
 	 * Get Site Health pass result.
 	 *
-	 * @since 3.0.0
+	 * @since BuddyBoss [BBVERSION]
+	 *
 	 * @return array Site Health result.
 	 */
 	private function get_site_health_pass() {

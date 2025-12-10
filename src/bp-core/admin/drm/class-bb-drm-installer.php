@@ -5,7 +5,7 @@
  * Handles database table creation and upgrades for the DRM system.
  *
  * @package BuddyBoss\Core\Admin\DRM
- * @since 3.0.0
+ * @since BuddyBoss [BBVERSION]
  */
 
 namespace BuddyBoss\Core\Admin\DRM;
@@ -31,6 +31,8 @@ class BB_DRM_Installer {
 	/**
 	 * Install or upgrade database tables.
 	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
 	 * @return void
 	 */
 	public static function install() {
@@ -51,6 +53,8 @@ class BB_DRM_Installer {
 	/**
 	 * Create database tables.
 	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
 	 * @return void
 	 */
 	private static function create_tables() {
@@ -61,9 +65,10 @@ class BB_DRM_Installer {
 	}
 
 	/**
-	 * Migrate existing DRM events from wp_options to database table.
-	 *
+	 * Migrate existing DRM events from wp_options to the database table.
 	 * This ensures backward compatibility if DRM was already running with options.
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @return void
 	 */
@@ -114,11 +119,11 @@ class BB_DRM_Installer {
 
 			if ( ! $existing_event ) {
 				// Create event in database.
-				$new_event                = new BB_DRM_Event();
-				$new_event->event         = $event_name;
-				$new_event->evt_id        = $evt_id;
-				$new_event->evt_id_type   = $evt_id_type;
-				$new_event->created_at    = isset( $event_data->created_at ) ? $event_data->created_at : current_time( 'mysql' );
+				$new_event              = new BB_DRM_Event();
+				$new_event->event       = $event_name;
+				$new_event->evt_id      = $evt_id;
+				$new_event->evt_id_type = $evt_id_type;
+				$new_event->created_at  = isset( $event_data->created_at ) ? $event_data->created_at : current_time( 'mysql' );
 
 				// Store any additional data as JSON args.
 				$args = array();
@@ -134,9 +139,6 @@ class BB_DRM_Installer {
 
 				$new_event->store();
 			}
-
-			// Clean up the old option (comment this out if you want to keep options as backup).
-			// delete_option( $option->option_name );
 		}
 
 		do_action( 'bb_drm_migration_completed', count( $drm_options ) );
@@ -145,6 +147,8 @@ class BB_DRM_Installer {
 	/**
 	 * Uninstall database tables and options.
 	 * USE WITH CAUTION - This will delete all DRM data!
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @return void
 	 */
@@ -168,6 +172,8 @@ class BB_DRM_Installer {
 	/**
 	 * Get the current database version.
 	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
 	 * @return string Database version.
 	 */
 	public static function get_db_version() {
@@ -176,6 +182,8 @@ class BB_DRM_Installer {
 
 	/**
 	 * Check if database is up to date.
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @return bool True if up to date.
 	 */
@@ -186,6 +194,8 @@ class BB_DRM_Installer {
 
 	/**
 	 * Force reinstall of tables (useful for development/testing).
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @return void
 	 */
@@ -203,6 +213,8 @@ class BB_DRM_Installer {
 	/**
 	 * Get database statistics.
 	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
 	 * @return array Statistics about DRM events.
 	 */
 	public static function get_stats() {
@@ -218,6 +230,8 @@ class BB_DRM_Installer {
 	/**
 	 * Get count of platform events.
 	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
 	 * @return int Event count.
 	 */
 	private static function get_platform_event_count() {
@@ -231,6 +245,8 @@ class BB_DRM_Installer {
 
 	/**
 	 * Get count of addon events.
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @return int Event count.
 	 */

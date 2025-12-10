@@ -6,7 +6,7 @@
  * Similar to MeprEvent, but for BuddyBoss DRM system.
  *
  * @package BuddyBoss\Core\Admin\DRM
- * @since 3.0.0
+ * @since BuddyBoss [BBVERSION]
  */
 
 namespace BuddyBoss\Core\Admin\DRM;
@@ -78,6 +78,8 @@ class BB_DRM_Event {
 	/**
 	 * Constructor.
 	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
 	 * @param mixed $obj Event ID or object with properties to initialize.
 	 */
 	public function __construct( $obj = null ) {
@@ -92,6 +94,8 @@ class BB_DRM_Event {
 
 	/**
 	 * Initialize event properties from an object or array.
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param object|array $data Event data.
 	 */
@@ -108,6 +112,8 @@ class BB_DRM_Event {
 
 	/**
 	 * Load event from database by ID.
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param int $id Event ID.
 	 * @return bool True if loaded successfully.
@@ -134,6 +140,8 @@ class BB_DRM_Event {
 	/**
 	 * Get the database table name.
 	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
 	 * @return string Table name with prefix.
 	 */
 	public static function get_table_name() {
@@ -143,6 +151,8 @@ class BB_DRM_Event {
 
 	/**
 	 * Store event in database.
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @return int|false Event ID on success, false on failure.
 	 */
@@ -235,6 +245,8 @@ class BB_DRM_Event {
 	/**
 	 * Delete event from database.
 	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
 	 * @return bool True on success, false on failure.
 	 */
 	public function destroy() {
@@ -260,6 +272,8 @@ class BB_DRM_Event {
 	/**
 	 * Get a single event by ID.
 	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
 	 * @param int $id Event ID.
 	 * @return BB_DRM_Event|null Event object or null if not found.
 	 */
@@ -283,6 +297,8 @@ class BB_DRM_Event {
 
 	/**
 	 * Get a single event by event name, evt_id, and evt_id_type.
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param string $event       Event name.
 	 * @param int    $evt_id      Event entity ID.
@@ -312,6 +328,8 @@ class BB_DRM_Event {
 	/**
 	 * Get the latest event for a given event name.
 	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
 	 * @param string $event Event name.
 	 * @return BB_DRM_Event|null Latest event or null if not found.
 	 */
@@ -335,6 +353,8 @@ class BB_DRM_Event {
 
 	/**
 	 * Get the latest event by event name within a specific time period.
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param string $event        Event name.
 	 * @param int    $elapsed_days Number of days to look back.
@@ -366,6 +386,8 @@ class BB_DRM_Event {
 	/**
 	 * Get all events.
 	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
 	 * @param string $order_by Order by clause (e.g., 'id DESC').
 	 * @param int    $limit    Number of results to return.
 	 * @return array Array of BB_DRM_Event objects.
@@ -396,6 +418,8 @@ class BB_DRM_Event {
 
 	/**
 	 * Get all events by event name.
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param string $event    Event name.
 	 * @param string $order_by Order by clause.
@@ -432,6 +456,8 @@ class BB_DRM_Event {
 	/**
 	 * Get event count.
 	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
 	 * @return int Total number of events.
 	 */
 	public static function get_count() {
@@ -443,6 +469,8 @@ class BB_DRM_Event {
 
 	/**
 	 * Get event count by event name.
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param string $event Event name.
 	 * @return int Number of events.
@@ -462,6 +490,8 @@ class BB_DRM_Event {
 	/**
 	 * Record a DRM event.
 	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
 	 * @param string $event       Event name.
 	 * @param int    $evt_id      Event entity ID.
 	 * @param string $evt_id_type Event entity type ('platform' or 'addon').
@@ -469,11 +499,11 @@ class BB_DRM_Event {
 	 * @return int|false Event ID on success, false on failure.
 	 */
 	public static function record( $event, $evt_id = 1, $evt_id_type = 'platform', $args = '' ) {
-		$e                = new self();
-		$e->event         = $event;
-		$e->evt_id        = $evt_id;
-		$e->evt_id_type   = $evt_id_type;
-		$e->args          = $args;
+		$e              = new self();
+		$e->event       = $event;
+		$e->evt_id      = $evt_id;
+		$e->evt_id_type = $evt_id_type;
+		$e->args        = $args;
 
 		// Convert arrays/objects to JSON.
 		if ( is_array( $args ) || is_object( $args ) ) {
@@ -486,6 +516,8 @@ class BB_DRM_Event {
 	/**
 	 * Get event arguments as object/array.
 	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
 	 * @return mixed Decoded arguments or null.
 	 */
 	public function get_args() {
@@ -497,8 +529,9 @@ class BB_DRM_Event {
 
 	/**
 	 * Check if this event is unique (only one should exist per event/evt_id/evt_id_type).
-	 *
 	 * DRM events are unique - we reuse the same event record.
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @return bool Always true for DRM events.
 	 */
@@ -508,6 +541,8 @@ class BB_DRM_Event {
 
 	/**
 	 * Reuse existing event ID if this is a unique event.
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 */
 	private function use_existing_if_unique() {
 		if ( $this->is_unique() && $this->id <= 0 ) {
@@ -526,6 +561,8 @@ class BB_DRM_Event {
 
 	/**
 	 * Create database table for DRM events.
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @return bool True on success, false on failure.
 	 */
@@ -560,6 +597,8 @@ class BB_DRM_Event {
 	/**
 	 * Check if database table exists.
 	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
 	 * @return bool True if table exists.
 	 */
 	public static function table_exists() {
@@ -572,6 +611,8 @@ class BB_DRM_Event {
 	/**
 	 * Drop the database table.
 	 * USE WITH CAUTION - This will delete all DRM event data!
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @return bool True on success, false on failure.
 	 */

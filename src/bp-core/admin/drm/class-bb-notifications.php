@@ -5,7 +5,7 @@
  * Wrapper class for managing in-plugin notifications via GroundLevel.
  *
  * @package BuddyBoss\Core\Admin\DRM
- * @since 3.0.0
+ * @since BuddyBoss [BBVERSION]
  */
 
 namespace BuddyBoss\Core\Admin\DRM;
@@ -26,6 +26,8 @@ class BB_Notifications {
 	 *
 	 * This is NOT for feed notifications. Event notifications are for
 	 * alerting the user to something internally (e.g., DRM issues).
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param array $notification Notification data.
 	 */
@@ -72,6 +74,8 @@ class BB_Notifications {
 	/**
 	 * Dismiss event notifications by type.
 	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
 	 * @param string $type The event type (e.g., 'bb-drm', 'bb-drm-addon-buddyboss-gamification').
 	 */
 	public function dismiss_events( $type ) {
@@ -79,7 +83,11 @@ class BB_Notifications {
 		$loader    = $this->get_mothership_loader();
 		$container = $loader->getContainer();
 
-		/** @var \BuddyBossPlatform\GroundLevel\InProductNotifications\Services\Store $store */
+		/**
+		 * Get the GroundLevel notification store.
+		 *
+		 * @var \BuddyBossPlatform\GroundLevel\InProductNotifications\Services\Store $store
+		 */
 		$store   = $container->get( Store::class )->fetch();
 		$persist = false;
 
@@ -87,11 +95,11 @@ class BB_Notifications {
 			// Match both patterns:
 			// 1. Platform DRM: 'bb-drm_event_*'
 			// 2. Addon DRM: 'bb-drm-addon-{slug}_addon_{slug}_*'
-			// 3. Any notification starting with type prefix
+			// 3. Any notification starting with type prefix.
 			$patterns = array(
-				$type . '_event_',   // Platform: bb-drm_event_123456
-				$type . '_addon_',   // Addon: bb-drm-addon-buddyboss-gamification_addon_*
-				$type . '_',         // Generic: bb-drm-addon-buddyboss-gamification_*
+				$type . '_event_',   // Platform: bb-drm_event_123456.
+				$type . '_addon_',   // Addon: bb-drm-addon-buddyboss-gamification_addon_*.
+				$type . '_',         // Generic: bb-drm-addon-buddyboss-gamification_*.
 			);
 
 			$should_delete = false;
@@ -116,15 +124,19 @@ class BB_Notifications {
 	/**
 	 * Get the Mothership Loader instance.
 	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
 	 * @return BB_Mothership_Loader
 	 */
 	private function get_mothership_loader() {
-		// Use singleton instance to avoid duplicate hook registration.
+		// Use a singleton instance to avoid duplicate hook registration.
 		return BB_Mothership_Loader::instance();
 	}
 
 	/**
-	 * Check if user has access to notifications.
+	 * Check if the user has access to notifications.
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @return bool
 	 */
