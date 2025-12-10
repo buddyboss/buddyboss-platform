@@ -341,7 +341,7 @@ class BB_DRM_Controller {
 			'actions'     => sprintf(
 				'<p><a href="%s" class="button button-primary">%s</a></p>',
 				admin_url( 'admin.php?page=buddyboss-settings' ),
-				__( 'Activate License', 'buddyboss' )
+				__( 'Activate Your License', 'buddyboss' )
 			),
 			'test'        => 'buddyboss_license_status',
 		);

@@ -1115,7 +1115,7 @@ class BB_DRM_Registry {
 			'actions'     => sprintf(
 				'<p><a href="%s" class="button button-primary">%s</a></p><p><a href="%s" target="_blank" class="button">%s</a></p>',
 				esc_url( $activation_link ),
-				esc_html__( 'Activate License', 'buddyboss' ),
+				esc_html__( 'Activate Your License', 'buddyboss' ),
 				esc_url( $pricing_link ),
 				esc_html__( 'Purchase License', 'buddyboss' )
 			),

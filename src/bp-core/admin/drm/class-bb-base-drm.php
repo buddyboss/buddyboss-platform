@@ -253,7 +253,7 @@ abstract class BB_Base_DRM {
 
 		// Default values for optional keys.
 		$support_link = isset( $drm_info['support_link'] ) ? $drm_info['support_link'] : bp_get_admin_url( 'admin.php?page=buddyboss-license' );
-		$help_message = isset( $drm_info['help_message'] ) ? $drm_info['help_message'] : __( 'Activate License', 'buddyboss' );
+		$help_message = isset( $drm_info['help_message'] ) ? $drm_info['help_message'] : __( 'Activate Your License', 'buddyboss' );
 
 		// Generate unique notice ID for dismissal (only for warnings).
 		$notice_key  = $drm_info['notice_key'] ?? '';
