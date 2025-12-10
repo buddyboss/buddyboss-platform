@@ -1918,10 +1918,6 @@
   display: none;
 }
 
-.bb-rl-forum-form .bp-feedback.error:has(> p:empty) {
-  display: none;
-}
-
 .bb-rl-forum-form .bb-rl-forum-fieldset {
   margin-bottom: var(--bb-rl-space-200);
 }
