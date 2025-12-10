@@ -89,10 +89,18 @@ $video_url = 'https://www.youtube.com/embed/ThTdHOYwNxU';
 			<span class="bb-version"><?php echo esc_html__( 'BuddyBoss Platform v', 'buddyboss' ) . esc_html( BP_PLATFORM_VERSION ); ?></span>
 		</div>
 		<ul class="bb-hello-tabs">
-			<?php if ( true === $show_overview ) { ?>
-				<li><a href="#bb-release-overview" class="bb-hello-tabs_anchor is_active" data-action="bb-release-overview"><?php esc_html_e( 'Overview', 'buddyboss' ); ?></a></li>
-				<?php if ( isset( $bb_changelog_data ) && ! empty( $bb_changelog_data ) ) { ?>
-					<li><a href="#bb-release-changelog" class="bb-hello-tabs_anchor" data-action="bb-release-changelog"><?php esc_html_e( 'Changelog', 'buddyboss' ); ?></a></li>
+			<?php
+			if ( true === $show_overview ) {
+				?>
+				<li>
+					<a href="#bb-release-overview" class="bb-hello-tabs_anchor is_active" data-action="bb-release-overview"><?php esc_html_e( 'Overview', 'buddyboss' ); ?></a>
+				</li>
+				<?php
+				if ( isset( $bb_changelog_data ) && ! empty( $bb_changelog_data ) ) {
+					?>
+					<li>
+						<a href="#bb-release-changelog" class="bb-hello-tabs_anchor" data-action="bb-release-changelog"><?php esc_html_e( 'Changelog', 'buddyboss' ); ?></a>
+					</li>
 					<?php
 				}
 			}
