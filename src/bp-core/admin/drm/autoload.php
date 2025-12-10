@@ -5,7 +5,7 @@
  * Autoload DRM-related classes.
  *
  * @package BuddyBoss\Core\Admin\DRM
- * @since [BBVERSION]
+ * @since BuddyBoss [BBVERSION]
  */
 
 // Exit if accessed directly.
