@@ -399,6 +399,29 @@ if ( ! class_exists( 'BBP_Topics_Admin' ) ) :
 			do_action( 'bbp_topic_attributes_metabox_save', $topic_id, $forum_id );
 			do_action( 'bbp_author_metabox_save', $topic_id, $anonymous_data );
 
+			// Send notifications for new topics created in admin.
+			// Only send if it's a new topic (not an edit), topic is published, and forum is set.
+			if ( ! $is_edit && ! empty( $forum_id ) && function_exists( 'bbp_is_topic_published' ) && bbp_is_topic_published( $topic_id ) ) {
+				// Check if notification was already sent (prevent duplicates).
+				$notification_sent = get_post_meta( $topic_id, '_bbp_admin_notification_sent', true );
+				if ( empty( $notification_sent ) ) {
+					// Additional check: verify this is a new topic by checking if post was created recently.
+					$post_date     = get_post_field( 'post_date', $topic_id );
+					$post_modified = get_post_field( 'post_modified', $topic_id );
+					// If post_date and post_modified are the same (or very close), it's likely a new post.
+					$time_diff = abs( strtotime( $post_modified ) - strtotime( $post_date ) );
+					// Consider it new if created within the last 2 minutes (allows for processing time).
+					if ( $time_diff < 120 ) {
+						// Send notification to forum subscribers.
+						if ( function_exists( 'bbp_notify_forum_subscribers' ) ) {
+							bbp_notify_forum_subscribers( $topic_id, $forum_id, $anonymous_data, $author_id );
+							// Mark as sent to prevent duplicates.
+							update_post_meta( $topic_id, '_bbp_admin_notification_sent', true );
+						}
+					}
+				}
+			}
+
 			return $topic_id;
 		}
 
