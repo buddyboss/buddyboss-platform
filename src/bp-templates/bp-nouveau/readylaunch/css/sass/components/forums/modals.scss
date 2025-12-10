@@ -663,6 +663,10 @@
 		p > br {
 			display: none;
 		}
+
+		&.error:has(> p:empty) {
+			display: none;
+		}
 	}
 
 	.bb-rl-forum-fieldset {
