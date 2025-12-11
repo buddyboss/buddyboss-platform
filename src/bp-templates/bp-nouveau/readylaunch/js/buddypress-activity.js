@@ -52,6 +52,15 @@ window.bp = window.bp || {};
 		},
 
 		/**
+		 * Common function to safely call Media functions
+		 */
+		invokeMediaFn: function( functionName ) {
+			if ( 'undefined' !== typeof bp.Nouveau.Media && 'function' === typeof bp.Nouveau.Media[ functionName ] ) {
+				bp.Nouveau.Media[ functionName ]();
+			}
+		},
+
+		/**
 		 * [setupGlobals description]
 		 *
 		 * @return {[type]} [description]
@@ -941,6 +950,14 @@ window.bp = window.bp || {};
 				},
 				3000
 			);
+
+			// Trigger GIF autoplay check when activities are loaded via AJAX
+			// Use setTimeout to ensure DOM is updated and video elements are rendered
+			setTimeout( function() {
+				if ( 'undefined' !== typeof bp.Nouveau.Media && 'function' === typeof bp.Nouveau.Media.autoPlayGifVideos ) {
+					bp.Nouveau.Media.autoPlayGifVideos();
+				}
+			}, 200 );
 
 			if ( 'undefined' !== typeof window.instgrm ) {
 				window.instgrm.Embeds.process();
@@ -2280,8 +2297,17 @@ window.bp = window.bp || {};
 							videoElement.attr( 'id', videoElementId );
 
 							var videoActionWrap = videoContainer.find( '.bb-rl-more_dropdown-wrap' );
-							videoElement.insertAfter( videoActionWrap );
-							videoContainer.find( '.video-js' ).remove();
+							// Handle case where .bb-rl-more_dropdown-wrap doesn't exist
+							if ( videoActionWrap.length > 0 ) {
+								videoElement.insertAfter( videoActionWrap );
+							} else {
+								// If no .bb-rl-more_dropdown-wrap, prepend video to container
+								videoElement.prependTo( videoContainer );
+							}
+							// Remove any previously initialized Video.js players, but not the video element itself
+							videoContainer.find( '.video-js' ).not( videoElement ).remove();
+							// Remove vjs-initialized class if present to allow re-initialization
+							videoElement.removeClass( 'vjs-initialized' );
 							videoElement.addClass( 'video-js' );
 
 							videojs(
@@ -2327,6 +2353,11 @@ window.bp = window.bp || {};
 			}
 
 			bp.Nouveau.Activity.toggleMultiMediaOptions( form, '', '.bb-rl-modal-activity-footer' );
+			
+			// Trigger GIF autoplay check when modal is opened
+			setTimeout( function() {
+				bp.Nouveau.Activity.invokeMediaFn( 'autoPlayGifVideos' );
+			}, 500 );
 
 			if( ! modal.find( '.bb-rl-modal-activity-body' ).hasClass( 'bb-rl-modal-activity-body-scroll-event-initiated' ) ) {
 				modal.find( '.bb-rl-modal-activity-body' ).on( 'scroll', function () {
@@ -3462,6 +3493,9 @@ window.bp = window.bp || {};
 							}
 						);
 						jQuery( window ).scroll();
+						
+						// Trigger GIF autoplay check for newly added content
+						bp.Nouveau.Activity.invokeMediaFn( 'autoPlayGifVideos' );
 
 						if ( ! form.hasClass( 'acomment-edit' ) ) {
 							// Set the new count.
@@ -4269,6 +4303,9 @@ window.bp = window.bp || {};
 						// Common post-load operations
 						setTimeout( function () {
 							jQuery( window ).scroll();
+							
+							// Trigger GIF autoplay check for newly loaded comments
+							bp.Nouveau.Activity.invokeMediaFn( 'autoPlayGifVideos' );
 						}, 200 );
 
 						// Scroll to comment if needed

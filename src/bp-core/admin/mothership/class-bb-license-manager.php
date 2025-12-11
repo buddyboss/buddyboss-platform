@@ -118,7 +118,9 @@ class BB_License_Manager extends LicenseManager {
 				Credentials::storeLicenseKey( $licenseKey );
 				$pluginConnector->updateLicenseActivationStatus( true );
 
-				// Clear add-ons cache to force refresh
+				// Clear all caches to force refresh.
+				// Note: updateLicenseActivationStatus already clears license details and add-ons cache,
+				// but we explicitly clear product transients here for consistency.
 				$pluginId = $pluginConnector->pluginId;
 				delete_transient( $pluginId . '-mosh-products' );
 				delete_transient( $pluginId . '-mosh-addons-update-check' );
@@ -416,6 +418,18 @@ class BB_License_Manager extends LicenseManager {
 	}
 
 	/**
+	 * Clear license details cache.
+	 * Called when license status changes or plugin ID changes.
+	 *
+	 * @return void
+	 */
+	public static function clearLicenseDetailsCache(): void {
+		$plugin_id = self::getContainer()->get( AbstractPluginConnection::class )->pluginId;
+		$cache_key = $plugin_id . '_license_details';
+		delete_transient( $cache_key );
+	}
+
+	/**
 	 * Get License + Activations details from Caseproof API
 	 *
 	 * @param string $license_key License UUID.
@@ -500,7 +514,7 @@ class BB_License_Manager extends LicenseManager {
 		);
 
 		// License details don't change frequently, so 1 Day is reasonable.
-		set_transient( $cache_key, $license_data, DAY_IN_SECONDS );
+		set_transient( $cache_key, $license_data, 12 * HOUR_IN_SECONDS );
 
 		return $license_data;
 	}
