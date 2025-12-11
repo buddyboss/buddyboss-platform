@@ -273,7 +273,7 @@ window.bp = window.bp || {};
 			}
 
 			// Wrap Activity Topics
-			bp.Nouveau.wrapNavigation( '.activity-topic-selector ul', 120 );
+			bp.Nouveau.wrapNavigation( '.activity-topic-selector ul', 120, true );
 		},
 
 		openActivityFilter: function ( e ) {
