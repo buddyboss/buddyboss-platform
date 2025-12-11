@@ -67,6 +67,11 @@ class BB_Addons_Manager extends AddonsManager {
 	 * @return object|null Product object if found and enabled, null otherwise.
 	 */
 	public static function checkProductBySlug( string $slug ): ?object {
+		// Check if the license is activated before making API calls.
+		if ( ! self::getContainer()->get( AbstractPluginConnection::class )->getLicenseActivationStatus() ) {
+			return null;
+		}
+
 		$plugin_id = self::getContainer()->get( AbstractPluginConnection::class )->pluginId;
 		$cache_key = $plugin_id . '_add_ons';
 
