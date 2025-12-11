@@ -1133,6 +1133,43 @@ body[class*="mpcs-course"] .bb-rl-mbprlms-pagination ul li.active a {
   margin-top: var(--bb-rl-space-400);
 }
 
+.mpcs-lesson-locked .mpcs-lesson-locked-buttons a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  font-weight: 500;
+  text-align: center;
+  cursor: pointer;
+  border-radius: var(--bb-rl-radius-md);
+  padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  text-decoration: none;
+  background-color: var(--bb-rl-background-brand-primary-color);
+  color: var(--bb-rl-text-white-color);
+  border: 1px solid var(--bb-rl-background-brand-primary-color);
+  padding: 6px var(--bb-rl-space-200);
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 400;
+}
+
+.mpcs-lesson-locked .mpcs-lesson-locked-buttons a:hover {
+  background-color: var(--bb-rl-background-brand-primary-hover-color);
+}
+
+.mpcs-lesson-locked .mpcs-lesson-locked-buttons a:focus-within {
+  outline: 2px solid var(--bb-rl-border-brand-primary-color);
+}
+
+.mpcs-lesson-locked .mpcs-lesson-locked-buttons a:disabled {
+  background-color: var(--bb-rl-background-brand-disabled-color);
+  cursor: not-allowed;
+}
+
+.mpcs-lesson-locked .mpcs-lesson-locked-buttons a:hover {
+  background-color: var(--bb-rl-background-brand-primary-hover-color);
+}
+
 .bb-rl-course-overview .course-progress h1 {
   display: none;
 }
@@ -1711,6 +1748,16 @@ body[class*="mpcs-course"] .bb-rl-mbprlms-pagination ul li.active a {
 .bb-rl-left-panel--memprlms .mpcs-sidebar-content .mpcs-section .mpcs-lessons .mpcs-lesson-row-link .mpcs-lesson-progress {
   padding: 0;
   line-height: 1;
+}
+
+.bb-rl-course-content-inner .mpcs-section .mpcs-lessons .mpcs-lesson-locked-tooltip,
+.bb-rl-left-panel--memprlms .mpcs-sidebar-content .mpcs-section .mpcs-lessons .mpcs-lesson-locked-tooltip {
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 400;
+  line-height: var(--bb-rl-base-line-small);
+  padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
+  color: var(--bb-rl-text-tertiary-color);
+  display: flex;
 }
 
 .bb-rl-course-content-inner .mpcs-lesson-progress .mpcs-circle-regular,
