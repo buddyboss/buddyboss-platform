@@ -32,6 +32,11 @@ class BB_Addons_Manager extends AddonsManager {
 	 * @return string The HTML for the add-ons.
 	 */
 	public static function generateAddonsHtml(): string {
+		// Check if license is activated before making API calls.
+		if ( ! self::getContainer()->get( AbstractPluginConnection::class )->getLicenseActivationStatus() ) {
+			return '<div class="notice notice-warning is-dismissible"><p>' . esc_html__( 'Please activate your license to access add-ons.', 'buddyboss' ) . '</p></div>';
+		}
+
 		if ( ! self::getContainer()->get( AbstractPluginConnection::class )->getLicenseKey() ) {
 			return '<div class="notice notice-error is-dismissible"><p>' . esc_html__( 'Please enter your license key to access add-ons.', 'buddyboss' ) . '</p></div>';
 		}
