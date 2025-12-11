@@ -20356,6 +20356,14 @@ table.profile-settings tbody td select {
   display: flex;
 }
 
+.bb-rl-account-settings-section > .bp-feedback.info.bp-messages > .bp-icon {
+  display: none;
+}
+
+.bb-rl-account-settings-section > .bp-feedback.info.bp-messages > p {
+  font-weight: 500;
+}
+
 .bb-rl-account-settings-section #account-group-invites-form .submit {
   margin-top: var(--bb-rl-space-300);
 }
