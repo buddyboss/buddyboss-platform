@@ -3572,17 +3572,39 @@ window.bp = window.bp || {};
 
 				// Handle new activities loaded via AJAX.
 				$( document ).on( 'bp_ajax_request', function() {
-					setTimeout( function() {
-						self.setupExistingVideos();
-					}, 500 );
+					self.scanForNewVideos();
 				});
 
 				// Handle heartbeat prepend (new activities).
 				$( document ).on( 'bp_heartbeat_prepend', function() {
-					setTimeout( function() {
-						self.setupExistingVideos();
-					}, 500 );
+					self.scanForNewVideos();
 				});
+			},
+
+			/**
+			 * Scan for new video iframes with smart polling.
+			 * Checks every 100ms until new unmanaged iframes are found, max 3 seconds.
+			 */
+			scanForNewVideos: function() {
+				var self = this;
+				var maxTime = 3000;
+				var interval = 100;
+				var elapsed = 0;
+
+				var checkInterval = setInterval( function() {
+					var newIframes = $( 'iframe[src*="youtube.com"], iframe[src*="vimeo.com"], iframe[data-src*="youtube.com"], iframe[data-src*="vimeo.com"]' ).not( '[data-bb-video-managed]' );
+
+					if ( newIframes.length > 0 ) {
+						self.setupExistingVideos();
+						clearInterval( checkInterval );
+						return;
+					}
+
+					elapsed += interval;
+					if ( elapsed >= maxTime ) {
+						clearInterval( checkInterval );
+					}
+				}, interval );
 			},
 
 			/**
@@ -3606,11 +3628,11 @@ window.bp = window.bp || {};
 				var src = iframe.src || $iframe.data( 'src' ) || '';
 
 				// Skip if already initialized.
-				if ( $iframe.data( 'bb-video-managed' ) ) {
+				if ( $iframe.attr( 'data-bb-video-managed' ) ) {
 					return;
 				}
 
-				$iframe.data( 'bb-video-managed', true );
+				$iframe.attr( 'data-bb-video-managed', 'true' );
 
 				var needsReload = false;
 				var newSrc = src;
@@ -3646,10 +3668,7 @@ window.bp = window.bp || {};
 
 					// If iframe is already loaded, send listening command now.
 					if ( iframe.src && iframe.contentWindow ) {
-						// Small delay to ensure player is ready.
-						setTimeout( function() {
-							self.sendYouTubeListening( iframe );
-						}, 1000 );
+						self.sendYouTubeListening( iframe );
 					}
 				}
 
@@ -3672,9 +3691,18 @@ window.bp = window.bp || {};
 			 * Send YouTube listening command to start receiving events
 			 *
 			 * @param {HTMLIFrameElement} iframe The YouTube iframe
+			 * @param {number} attempts Number of retry attempts (internal use)
 			 */
-			sendYouTubeListening: function( iframe ) {
+			sendYouTubeListening: function( iframe, attempts ) {
+				var self = this;
+				var maxAttempts = 10;
+				attempts = attempts || 0;
+
 				try {
+					if ( ! iframe.contentWindow ) {
+						throw new Error( 'contentWindow not ready' );
+					}
+
 					iframe.contentWindow.postMessage( JSON.stringify({
 						event: 'listening',
 						id: 1,
@@ -3688,7 +3716,12 @@ window.bp = window.bp || {};
 						args: [ 'onStateChange' ]
 					}), '*' );
 				} catch ( e ) {
-					// Silently ignore errors.
+					// Retry if contentWindow not ready yet.
+					if ( attempts < maxAttempts ) {
+						setTimeout( function() {
+							self.sendYouTubeListening( iframe, attempts + 1 );
+						}, 100 );
+					}
 				}
 			},
 
