@@ -201,7 +201,7 @@
 		}
 
 		#bb-rl-activity-privacy-point {
-			display: flex;
+			display: inline-flex;
 			align-items: center;
 			background-color: var(--bb-rl-background-secondary-color);
 			border: 1px solid var(--bb-rl-border-secondary-color);
@@ -715,8 +715,12 @@
 			font-family: bb-icons-rl;
 			font-size: var(--bb-rl-font-size-base);
 			position: absolute;
-			top: var(--bb-rl-space-100);
+			top: 12px;
 			right: var(--bb-rl-space-200);
+		}
+
+		.bb-rl-privacy-label i {
+			display: none;
 		}
 	}
 

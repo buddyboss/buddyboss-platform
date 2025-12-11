@@ -849,6 +849,10 @@ a.layout-grid-view {
   margin: 0;
 }
 
+.buddypress-wrap.learndash-pager-course_info_quizzes .bp-pagination .bp-pagination-links {
+  float: none;
+}
+
 /**
 *-------------------------------------------------------------------------------
 * @section 3.0 - BP Lists / Loops Generic

@@ -463,6 +463,14 @@
 		}
 	}
 
+	.mpcs-section .mpcs-lessons .mpcs-lesson-locked-tooltip {
+
+		@include bb-rl-label-heading;
+		padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
+		color: var(--bb-rl-text-tertiary-color);
+		display: flex;
+	}
+
 	.mpcs-lesson-progress {
 
 		.mpcs-circle-regular {
