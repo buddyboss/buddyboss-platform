@@ -21,6 +21,13 @@ use BuddyBossPlatform\GroundLevel\InProductNotifications\Service as IPNService;
 class BB_Mothership_Loader {
 
 	/**
+	 * Singleton instance.
+	 *
+	 * @var BB_Mothership_Loader|null
+	 */
+	private static $instance = null;
+
+	/**
 	 * Container for dependency injection.
 	 *
 	 * @var Container
@@ -35,9 +42,21 @@ class BB_Mothership_Loader {
 	private $pluginConnector;
 
 	/**
-	 * Constructor.
+	 * Get singleton instance.
+	 *
+	 * @return BB_Mothership_Loader
 	 */
-	public function __construct() {
+	public static function instance(): BB_Mothership_Loader {
+		if ( null === self::$instance ) {
+			self::$instance = new self();
+		}
+		return self::$instance;
+	}
+
+	/**
+	 * Constructor (private to enforce singleton).
+	 */
+	private function __construct() {
 		$this->init();
 	}
 
