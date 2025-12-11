@@ -16,6 +16,10 @@
   --bb-rl-background-brand-secondary-color: #dde4ff;
   --bb-rl-background-brand-secondary-hover-color: #c2cdff;
   --bb-rl-background-brand-disabled-color: #767eff;
+  --bb-rl-background-info-primary-color: #4946fe;
+  --bb-rl-background-info-primary-hover-color: #4937f4;
+  --bb-rl-background-info-secondary-color: #dde4ff;
+  --bb-rl-background-info-secondary-hover-color: #c2cdff;
   --bb-rl-background-positive-primary-color: #14ae5c;
   --bb-rl-background-positive-primary-hover-color: #009951;
   --bb-rl-background-positive-secondary-color: #ebffee;
@@ -3270,7 +3274,7 @@ button[data-balloon] {
 }
 
 .bb-rl-notice--info {
-  background-color: var(--bb-rl-background-brand-secondary-color);
+  background-color: var(--bb-rl-background-info-secondary-color);
   border-color: var(--bb-rl-border-brand-primary-color);
 }
 
@@ -3327,7 +3331,7 @@ button[data-balloon] {
 }
 
 .bb-rl-notice--alt.bb-rl-notice--info {
-  background-color: var(--bb-rl-background-brand-secondary-color);
+  background-color: var(--bb-rl-background-info-secondary-color);
   border-color: var(--bb-rl-border-brand-secondary-color);
 }
 
@@ -3376,7 +3380,7 @@ button[data-balloon] {
 }
 
 .bb-rl-notice--plain.bb-rl-notice--info {
-  background-color: var(--bb-rl-background-brand-secondary-color);
+  background-color: var(--bb-rl-background-info-secondary-color);
   border-color: var(--bb-rl-border-brand-secondary-color);
 }
 
@@ -3434,7 +3438,7 @@ button[data-balloon] {
 }
 
 .bb-readylaunch-template .bp-feedback.info {
-  background-color: var(--bb-rl-background-brand-secondary-color);
+  background-color: var(--bb-rl-background-info-secondary-color);
   border-color: var(--bb-rl-border-brand-primary-color);
 }
 
@@ -3511,7 +3515,7 @@ button[data-balloon] {
 }
 
 .bb-readylaunch-template .bp-feedback--alt.info {
-  background-color: var(--bb-rl-background-brand-secondary-color);
+  background-color: var(--bb-rl-background-info-secondary-color);
   border-color: var(--bb-rl-border-brand-secondary-color);
 }
 
@@ -3558,7 +3562,7 @@ button[data-balloon] {
 }
 
 .bb-readylaunch-template .bp-feedback--plain.info {
-  background-color: var(--bb-rl-background-brand-secondary-color);
+  background-color: var(--bb-rl-background-info-secondary-color);
   border-color: var(--bb-rl-border-brand-secondary-color);
 }
 
@@ -12306,6 +12310,10 @@ input.bb-rl-zoom-slider::-moz-range-progress {
   --bb-rl-background-brand-secondary-color: #dde4ff;
   --bb-rl-background-brand-secondary-hover-color: #c2cdff;
   --bb-rl-background-brand-disabled-color: #767eff;
+  --bb-rl-background-info-primary-color: #4946fe;
+  --bb-rl-background-info-primary-hover-color: #4937f4;
+  --bb-rl-background-info-secondary-color: #dde4ff;
+  --bb-rl-background-info-secondary-hover-color: #c2cdff;
   --bb-rl-background-positive-primary-color: #14ae5c;
   --bb-rl-background-positive-primary-hover-color: #009951;
   --bb-rl-background-positive-secondary-color: #ebffee;
@@ -20343,7 +20351,7 @@ table.profile-settings tbody td select {
   font-size: var(--bb-rl-font-size-sm);
   font-weight: 500;
   line-height: var(--bb-rl-base-line-small);
-  background-color: var(--bb-rl-background-brand-secondary-color);
+  background-color: var(--bb-rl-background-info-secondary-color);
   border-color: var(--bb-rl-border-brand-secondary-color);
   display: flex;
 }
@@ -20543,6 +20551,10 @@ table.profile-settings tbody td select {
   --bb-rl-background-brand-secondary-color: #dde4ff;
   --bb-rl-background-brand-secondary-hover-color: #c2cdff;
   --bb-rl-background-brand-disabled-color: #767eff;
+  --bb-rl-background-info-primary-color: #4946fe;
+  --bb-rl-background-info-primary-hover-color: #4937f4;
+  --bb-rl-background-info-secondary-color: #dde4ff;
+  --bb-rl-background-info-secondary-hover-color: #c2cdff;
   --bb-rl-background-positive-primary-color: #14ae5c;
   --bb-rl-background-positive-primary-hover-color: #009951;
   --bb-rl-background-positive-secondary-color: #ebffee;

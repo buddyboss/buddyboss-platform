@@ -268,7 +268,7 @@
 }
 
 @mixin bb-rl-notice--info {
-	background-color: var(--bb-rl-background-brand-secondary-color);
+	background-color: var(--bb-rl-background-info-secondary-color);
 	border-color: var(--bb-rl-border-brand-primary-color);
 
 	> [class*="bb-icons"] {
@@ -325,7 +325,7 @@
 }
 
 @mixin bb-rl-notice--alt-info {
-	background-color: var(--bb-rl-background-brand-secondary-color);
+	background-color: var(--bb-rl-background-info-secondary-color);
 	border-color: var(--bb-rl-border-brand-secondary-color);
 
 	> [class*="bb-icons"] {
@@ -373,7 +373,7 @@
 }
 
 @mixin bb-rl-notice--plain-info {
-	background-color: var(--bb-rl-background-brand-secondary-color);
+	background-color: var(--bb-rl-background-info-secondary-color);
 	border-color: var(--bb-rl-border-brand-secondary-color);
 }
 

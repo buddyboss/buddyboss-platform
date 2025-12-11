@@ -107,7 +107,7 @@
 		}
 
 		&.info {
-			background-color: var(--bb-rl-background-brand-secondary-color);
+			background-color: var(--bb-rl-background-info-secondary-color);
 			border-color: var(--bb-rl-border-brand-primary-color);
 
 			> [class*="bb-icons"] {
@@ -183,7 +183,7 @@
 			font-weight: 400;
 
 			&.info {
-				background-color: var(--bb-rl-background-brand-secondary-color);
+				background-color: var(--bb-rl-background-info-secondary-color);
 				border-color: var(--bb-rl-border-brand-secondary-color);
 
 				> [class*="bb-icons"] {
@@ -229,7 +229,7 @@
 			@include bb-rl-label-heading-bolder;
 
 			&.info {
-				background-color: var(--bb-rl-background-brand-secondary-color);
+				background-color: var(--bb-rl-background-info-secondary-color);
 				border-color: var(--bb-rl-border-brand-secondary-color);
 			}
 
