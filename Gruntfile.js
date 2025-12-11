@@ -431,6 +431,19 @@ module.exports = function (grunt) {
 					expand: true,
 					ext: '.min.css',
 					src: BP_CSS
+				},
+				rtl: {
+					cwd: SOURCE_DIR,
+					dest: SOURCE_DIR,
+					extDot: 'last',
+					expand: true,
+					ext: '.min.css',
+					src: [
+						'**/*-rtl.css',
+						'!**/*.min.css',
+						'!**/vendor/**/*.css',
+						'!**/endpoints/**/*.css'
+					]
 				}
 			},
 			phpunit: {
@@ -448,6 +461,16 @@ module.exports = function (grunt) {
 				}
 			},
 			exec: {
+				build_blocks: {
+					command: 'npm run build:block:core',
+					cwd: '.',
+					stdout: true
+				},
+				build_admin: {
+					command: 'npm run build:admin',
+					cwd: '.',
+					stdout: true
+				},
 				cli: {
 					command: 'git add . && git commit -am "grunt release build"',
 					cwd: '.',
@@ -611,7 +634,8 @@ module.exports = function (grunt) {
 	grunt.registerTask('makepot', ['exec:makepot_wp', 'exec:fix_wp_cli_headers']);
 
 	grunt.registerTask('pre-commit', ['checkDependencies', 'jsvalidate', 'jshint', 'stylelint']);
-	grunt.registerTask('src', ['checkDependencies', 'jsvalidate', 'jshint', 'stylelint', 'sass', 'rtlcss', 'checktextdomain', /*'imagemin',*/ 'uglify', 'cssmin', 'makepot']);
+	grunt.registerTask('webpack', ['exec:build_blocks', 'exec:build_admin']);
+	grunt.registerTask('src', ['checkDependencies', 'jsvalidate', 'jshint', 'stylelint', 'webpack', 'sass', 'rtlcss', 'checktextdomain', /*'imagemin',*/ 'uglify', 'cssmin:minify', 'cssmin:rtl', 'makepot']);
 	grunt.registerTask('bp_rest', ['clean:bp_rest', 'exec:rest_api', 'copy:bp_rest_components', 'copy:bp_rest_core', 'clean:bp_rest', 'apidoc' ]);
 	grunt.registerTask('bp_performance', ['clean:bp_rest', 'exec:rest_performance', 'copy:bp_rest_performance', 'copy:bp_rest_mu', 'clean:bp_rest']);
 

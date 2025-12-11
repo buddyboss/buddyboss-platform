@@ -114,6 +114,7 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 		),
 		'is_activity_post_title_required' => $is_activity_post_title_required,
 		'activity_post_title_maxlength'   => bb_activity_post_title_max_length(),
+		'post_title_tooltip_error'        => esc_html__( 'Please enter a title', 'buddyboss' ),
 	);
 
 	$user_displayname = bp_get_loggedin_user_fullname();
