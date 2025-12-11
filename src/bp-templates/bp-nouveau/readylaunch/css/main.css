@@ -13443,6 +13443,11 @@ body.bb-rl-activity-modal-open .bb-rl-activity-update-form.modal-popup {
   position: relative;
 }
 
+.bb-rl-ac-title-required .bb-rl-activity-form.bb-rl-focus-in #whats-new-submit:hover:not(:has(#bb-rl-aw-whats-new-reset:hover)) .bb-title-tooltip-wrapper {
+  opacity: 1;
+  cursor: default;
+}
+
 .bb-rl-ac-topic-required .bb-rl-activity-form.bb-rl-focus-in #whats-new-submit:hover:not(:has(#bb-rl-aw-whats-new-reset:hover)) .bb-topic-tooltip-wrapper {
   opacity: 1;
   cursor: default;
@@ -14298,6 +14303,7 @@ body.bb-rl-activity-modal-open .bb-rl-activity-update-form.modal-popup {
   display: block;
 }
 
+.bb-title-tooltip-wrapper,
 .bb-topic-tooltip-wrapper {
   position: absolute;
   z-index: 99999;
@@ -14308,11 +14314,15 @@ body.bb-rl-activity-modal-open .bb-rl-activity-update-form.modal-popup {
   right: 0;
 }
 
+.bb-title-tooltip-wrapper.active,
 .bb-topic-tooltip-wrapper.active {
   opacity: 1;
   pointer-events: auto;
 }
 
+.bb-title-tooltip-wrapper .bb-title-tooltip,
+.bb-title-tooltip-wrapper .bb-topic-tooltip,
+.bb-topic-tooltip-wrapper .bb-title-tooltip,
 .bb-topic-tooltip-wrapper .bb-topic-tooltip {
   background: var(--bb-rl-background-black-color);
   color: var(--bb-rl-text-white-color);
@@ -14325,6 +14335,7 @@ body.bb-rl-activity-modal-open .bb-rl-activity-update-form.modal-popup {
   position: relative;
 }
 
+.bb-title-tooltip-wrapper:after,
 .bb-topic-tooltip-wrapper:after {
   content: "";
   position: absolute;
@@ -14337,6 +14348,10 @@ body.bb-rl-activity-modal-open .bb-rl-activity-update-form.modal-popup {
   width: 0;
   height: 0;
   display: block;
+}
+
+.bb-title-tooltip-wrapper {
+  z-index: 100000;
 }
 
 .bb-rl-activity-modal-open {
