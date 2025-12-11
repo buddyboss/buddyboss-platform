@@ -2059,6 +2059,14 @@ body.bb-rl-activity-modal-open .bb-rl-activity-update-form.modal-popup {
   margin-left: auto;
 }
 
+@media screen and (max-width: 580px) {
+  .bb-rl-modal-header-actions {
+    position: absolute;
+    top: var(--bb-rl-space-200);
+    right: var(--bb-rl-space-200);
+  }
+}
+
 .bb-rl-activity-form--schedule .bb-rl-bb-model-header .bb-rl-modal-header-actions {
   margin-left: 0;
   order: 99;
@@ -2503,6 +2511,13 @@ body.bb-rl-activity-modal-open .bb-rl-activity-update-form.modal-popup {
   box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.12);
   padding: var(--bb-rl-space-100) 0;
   width: 200px;
+}
+
+@media screen and (max-width: 800px) {
+  .bb-rl-activity-filters-container .bb-subnav-filters-container-main .subnav-filters-modal {
+    left: 0;
+    right: unset;
+  }
 }
 
 .bb-subnav-filters-container-main .subnav-filters-modal ul {
