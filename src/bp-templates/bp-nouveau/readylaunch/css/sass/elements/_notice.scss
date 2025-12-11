@@ -108,10 +108,10 @@
 
 		&.info {
 			background-color: var(--bb-rl-background-info-secondary-color);
-			border-color: var(--bb-rl-border-brand-primary-color);
+			border-color: var(--bb-rl-border-info-primary-color);
 
 			> [class*="bb-icons"] {
-				color: var(--bb-rl-icon-primary-color);
+				color: var(--bb-rl-icon-info-primary-color);
 
 				&:before {
 					content: "\e4e2";
@@ -120,7 +120,7 @@
 
 			.bp-icon::before {
 				content: "\e2ce";
-				color: var(--bb-rl-icon-brand-primary-color);
+				color: var(--bb-rl-icon-info-primary-color);
 			}
 		}
 
@@ -184,10 +184,10 @@
 
 			&.info {
 				background-color: var(--bb-rl-background-info-secondary-color);
-				border-color: var(--bb-rl-border-brand-secondary-color);
+				border-color: var(--bb-rl-border-info-primary-color);
 
 				> [class*="bb-icons"] {
-					color: var(--bb-rl-border-brand-secondary-color);
+					color: var(--bb-rl-icon-info-primary-color);
 				}
 			}
 
@@ -230,7 +230,7 @@
 
 			&.info {
 				background-color: var(--bb-rl-background-info-secondary-color);
-				border-color: var(--bb-rl-border-brand-secondary-color);
+				border-color: var(--bb-rl-border-info-secondary-color);
 			}
 
 			&.success {
