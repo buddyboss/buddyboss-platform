@@ -5,7 +5,7 @@
  * Autoload DRM-related classes.
  *
  * @package BuddyBoss\Core\Admin\DRM
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.16.0
  */
 
 // Exit if accessed directly.
@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Autoloader for DRM classes.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.16.0
  *
  * @param string $class_name The class name to load.
  */

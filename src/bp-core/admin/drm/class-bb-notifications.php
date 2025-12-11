@@ -5,7 +5,7 @@
  * Wrapper class for managing in-plugin notifications via GroundLevel.
  *
  * @package BuddyBoss\Core\Admin\DRM
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.16.0
  */
 
 namespace BuddyBoss\Core\Admin\DRM;
@@ -27,7 +27,7 @@ class BB_Notifications {
 	 * This is NOT for feed notifications. Event notifications are for
 	 * alerting the user to something internally (e.g., DRM issues).
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.16.0
 	 *
 	 * @param array $notification Notification data.
 	 */
@@ -74,7 +74,7 @@ class BB_Notifications {
 	/**
 	 * Dismiss event notifications by type.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.16.0
 	 *
 	 * @param string $type The event type (e.g., 'bb-drm', 'bb-drm-addon-buddyboss-gamification').
 	 */
@@ -124,7 +124,7 @@ class BB_Notifications {
 	/**
 	 * Get the Mothership Loader instance.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.16.0
 	 *
 	 * @return BB_Mothership_Loader
 	 */
@@ -136,7 +136,7 @@ class BB_Notifications {
 	/**
 	 * Check if the user has access to notifications.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.16.0
 	 *
 	 * @return bool
 	 */

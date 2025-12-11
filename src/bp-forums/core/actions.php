@@ -731,7 +731,7 @@ function bb_forums_save_link_preview_data( $post_id ) {
  * a scheduled discussion (topic) transitions from 'future' to 'publish' status,
  * and sends notifications to subscribed forum users.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.16.0
  *
  * @param string  $new_status New post status.
  * @param string  $old_status Old post status.
@@ -784,7 +784,7 @@ add_action( 'transition_post_status', 'bb_forums_notify_on_scheduled_topic_publi
  * a scheduled reply transitions from 'future' to 'publish' status,
  * and sends notifications to subscribed topic users.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.16.0
  *
  * @param string  $new_status New post status.
  * @param string  $old_status Old post status.

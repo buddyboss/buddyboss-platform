@@ -6,7 +6,7 @@
  * Manages license validation, status checks, and DRM messaging.
  *
  * @package BuddyBoss\Core\Admin\DRM
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.16.0
  */
 
 namespace BuddyBoss\Core\Admin\DRM;
@@ -80,7 +80,7 @@ class BB_DRM_Helper {
 	/**
 	 * Set the DRM status.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.16.0
 	 *
 	 * @param string $status The DRM status to set.
 	 */
@@ -91,7 +91,7 @@ class BB_DRM_Helper {
 	/**
 	 * Get the current DRM status.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.16.0
 	 *
 	 * @return string The current DRM status.
 	 */
@@ -102,7 +102,7 @@ class BB_DRM_Helper {
 	/**
 	 * Check if a license key exists.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.16.0
 	 *
 	 * @return bool True if a license key exists, false otherwise.
 	 */
@@ -118,7 +118,7 @@ class BB_DRM_Helper {
 	/**
 	 * Get the license key.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.16.0
 	 *
 	 * @return string The license key.
 	 */
@@ -136,7 +136,7 @@ class BB_DRM_Helper {
 	 * Includes automatic development environment bypass for better developer experience.
 	 * No configuration needed - automatically detects localhost, .local, .test, etc.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.16.0
 	 *
 	 * @return bool True if the license is valid, false otherwise.
 	 */
@@ -177,7 +177,7 @@ class BB_DRM_Helper {
 	 * - Development URLs (localhost, .local, .test, .dev domains)
 	 * - Local IP addresses (127.0.0.1, 192.168.x.x, 10.x.x.x)
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.16.0
 	 *
 	 * @return bool True if development environment detected.
 	 */
@@ -210,7 +210,7 @@ class BB_DRM_Helper {
 	 * - Non-standard ports (anything except 80, 443)
 	 * - WordPress staging constants (WP_STAGING, etc.)
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.16.0
 	 *
 	 * @return bool True if development URL detected.
 	 */
@@ -339,7 +339,7 @@ class BB_DRM_Helper {
 	/**
 	 * Calculate the number of days elapsed since a given date.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.16.0
 	 *
 	 * @param string $created_at The date to calculate from.
 	 * @return int The number of days elapsed.
@@ -361,7 +361,7 @@ class BB_DRM_Helper {
 	/**
 	 * Determine the DRM status, using a default if not provided.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.16.0
 	 *
 	 * @param string $drm_status The DRM status to check.
 	 * @return string The determined DRM status.
@@ -377,7 +377,7 @@ class BB_DRM_Helper {
 	/**
 	 * Check if the DRM status is locked.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.16.0
 	 *
 	 * @param string $drm_status The DRM status to check.
 	 * @return bool True if locked, false otherwise.
@@ -389,7 +389,7 @@ class BB_DRM_Helper {
 	/**
 	 * Check if the DRM status is medium.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.16.0
 	 *
 	 * @param string $drm_status The DRM status to check.
 	 * @return bool True if medium, false otherwise.
@@ -401,7 +401,7 @@ class BB_DRM_Helper {
 	/**
 	 * Check if the DRM status is high.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.16.0
 	 *
 	 * @param string $drm_status The DRM status to check.
 	 * @return bool True if high, false otherwise.
@@ -413,7 +413,7 @@ class BB_DRM_Helper {
 	/**
 	 * Check if the DRM status is low.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.16.0
 	 *
 	 * @param string $drm_status The DRM status to check.
 	 * @return bool True if low, false otherwise.
@@ -425,7 +425,7 @@ class BB_DRM_Helper {
 	/**
 	 * Get the status key for a given DRM status.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.16.0
 	 *
 	 * @param string $drm_status The DRM status.
 	 * @return string The status key.
@@ -453,7 +453,7 @@ class BB_DRM_Helper {
 	/**
 	 * Get DRM information based on status, event, and purpose.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.16.0
 	 *
 	 * @param string $drm_status The DRM status.
 	 * @param string $event_name The event name.
@@ -478,7 +478,7 @@ class BB_DRM_Helper {
 	/**
 	 * Get DRM links.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.16.0
 	 *
 	 * @return array The DRM links.
 	 */
@@ -550,7 +550,7 @@ class BB_DRM_Helper {
 	/**
 	 * Get a specific DRM link.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.16.0
 	 *
 	 * @param string $drm_status The DRM status.
 	 * @param string $purpose    The purpose of the link.
@@ -584,7 +584,7 @@ class BB_DRM_Helper {
 	/**
 	 * Get DRM information for a no-license event.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.16.0
 	 *
 	 * @param string $drm_status The DRM status.
 	 * @param string $purpose    The purpose of the information.
@@ -708,7 +708,7 @@ class BB_DRM_Helper {
 	/**
 	 * Get DRM information for an invalid license event.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.16.0
 	 *
 	 * @param string $drm_status The DRM status.
 	 * @param string $purpose    The purpose of the information.
@@ -836,7 +836,7 @@ class BB_DRM_Helper {
 	 * NOTE: This method is kept for backward compatibility with external plugins.
 	 * It is not used internally by BuddyBoss DRM.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.16.0
 	 *
 	 * @param string $args The JSON string of arguments.
 	 * @return array The parsed event arguments.
@@ -849,7 +849,7 @@ class BB_DRM_Helper {
 	/**
 	 * Prepare a dismissible notice key.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.16.0
 	 *
 	 * @param string $notice The notice identifier.
 	 * @return string The dismissable notice key.
@@ -866,7 +866,7 @@ class BB_DRM_Helper {
 	 * Dismissals are stored in event_data with format:
 	 * - dismissed_users => array( user_id => timestamp, ... )
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.16.0
 	 *
 	 * @param array  $event_data The event data.
 	 * @param string $notice_key The notice key.
@@ -926,7 +926,7 @@ class BB_DRM_Helper {
 	/**
 	 * Record a per-user notice dismissal.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.16.0
 	 *
 	 * @param BB_DRM_Event $event      The DRM event.
 	 * @param string       $notice_key The notice key.

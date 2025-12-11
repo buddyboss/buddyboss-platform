@@ -5,7 +5,7 @@
  * Handles DRM checks when license is invalid or expired.
  *
  * @package BuddyBoss\Core\Admin\DRM
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.16.0
  */
 
 namespace BuddyBoss\Core\Admin\DRM;
@@ -21,7 +21,7 @@ class BB_DRM_Invalid extends BB_Base_DRM {
 	/**
 	 * Constructor for the BB_DRM_Invalid class.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.16.0
 	 */
 	public function __construct() {
 		parent::__construct();
@@ -32,7 +32,7 @@ class BB_DRM_Invalid extends BB_Base_DRM {
 	/**
 	 * Runs the DRM invalid check functionality.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.16.0
 	 */
 	public function run() {
 		$event = $this->get_latest_event();

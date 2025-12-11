@@ -6,7 +6,7 @@
  * Manages hooks, license activation/deactivation events, and DRM checks.
  *
  * @package BuddyBoss\Core\Admin\DRM
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.16.0
  */
 
 namespace BuddyBoss\Core\Admin\DRM;
@@ -22,7 +22,7 @@ class BB_DRM_Controller {
 	/**
 	 * Initialize the DRM controller.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.16.0
 	 */
 	public static function init() {
 		// Install/upgrade database tables.
@@ -35,7 +35,7 @@ class BB_DRM_Controller {
 	/**
 	 * Get the dynamic plugin ID from Mothership connection.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.16.0
 	 *
 	 * @return string The plugin ID.
 	 */
@@ -60,7 +60,7 @@ class BB_DRM_Controller {
 	/**
 	 * Setup WordPress hooks.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.16.0
 	 */
 	private function setup_hooks() {
 		// License status change hook from Mothership.
@@ -86,7 +86,7 @@ class BB_DRM_Controller {
 	 * Handle license status changes from Mothership.
 	 * This is the primary hook fired by the vendor's LicenseManager.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.16.0
 	 *
 	 * @param bool   $is_valid Whether the license is valid.
 	 * @param object $status   The response object from Mothership API.
@@ -105,7 +105,7 @@ class BB_DRM_Controller {
 	 * Handle license activation/cleanup.
 	 * Called internally by drm_license_status_changed() when license becomes valid.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.16.0
 	 */
 	private function drm_license_activated() {
 		delete_option( 'bb_drm_no_license' );
@@ -139,7 +139,7 @@ class BB_DRM_Controller {
 	 * Handle license expiration/invalidation.
 	 * Called internally by drm_license_status_changed() when license becomes invalid.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.16.0
 	 */
 	private function drm_license_invalid_expired() {
 		$drm_invalid_license = get_option( 'bb_drm_invalid_license', false );
@@ -163,7 +163,7 @@ class BB_DRM_Controller {
 	 * Sends emails, notifications, and admin notices based on license status.
 	 * Add-ons manage their own lockout via BB_DRM_Registry.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.16.0
 	 */
 	public function drm_init() {
 		// Check if Platform license is valid.
@@ -201,7 +201,7 @@ class BB_DRM_Controller {
 	 *
 	 * Implements per-user dismissal tracking so each admin can dismiss notices independently.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.16.0
 	 */
 	public function drm_dismiss_notice() {
 		check_ajax_referer( 'bb_dismiss_notice', 'nonce' );
@@ -287,7 +287,7 @@ class BB_DRM_Controller {
 	/**
 	 * Add DRM tests to Site Health.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.16.0
 	 *
 	 * @param array $tests Site Health tests array.
 	 * @return array Modified tests array.
@@ -304,7 +304,7 @@ class BB_DRM_Controller {
 	/**
 	 * Site Health test for license status.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.16.0
 	 *
 	 * @return array Test result.
 	 */

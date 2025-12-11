@@ -5,7 +5,7 @@
  * Handles database table creation and upgrades for the DRM system.
  *
  * @package BuddyBoss\Core\Admin\DRM
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.16.0
  */
 
 namespace BuddyBoss\Core\Admin\DRM;
@@ -31,7 +31,7 @@ class BB_DRM_Installer {
 	/**
 	 * Install or upgrade database tables.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.16.0
 	 *
 	 * @return void
 	 */
@@ -53,7 +53,7 @@ class BB_DRM_Installer {
 	/**
 	 * Create database tables.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.16.0
 	 *
 	 * @return void
 	 */
@@ -68,7 +68,7 @@ class BB_DRM_Installer {
 	 * Migrate existing DRM events from wp_options to the database table.
 	 * This ensures backward compatibility if DRM was already running with options.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.16.0
 	 *
 	 * @return void
 	 */
@@ -148,7 +148,7 @@ class BB_DRM_Installer {
 	 * Uninstall database tables and options.
 	 * USE WITH CAUTION - This will delete all DRM data!
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.16.0
 	 *
 	 * @return void
 	 */
@@ -172,7 +172,7 @@ class BB_DRM_Installer {
 	/**
 	 * Get the current database version.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.16.0
 	 *
 	 * @return string Database version.
 	 */
@@ -183,7 +183,7 @@ class BB_DRM_Installer {
 	/**
 	 * Check if database is up to date.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.16.0
 	 *
 	 * @return bool True if up to date.
 	 */
@@ -195,7 +195,7 @@ class BB_DRM_Installer {
 	/**
 	 * Force reinstall of tables (useful for development/testing).
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.16.0
 	 *
 	 * @return void
 	 */
@@ -213,7 +213,7 @@ class BB_DRM_Installer {
 	/**
 	 * Get database statistics.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.16.0
 	 *
 	 * @return array Statistics about DRM events.
 	 */
@@ -230,7 +230,7 @@ class BB_DRM_Installer {
 	/**
 	 * Get count of platform events.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.16.0
 	 *
 	 * @return int Event count.
 	 */
@@ -246,7 +246,7 @@ class BB_DRM_Installer {
 	/**
 	 * Get count of addon events.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.16.0
 	 *
 	 * @return int Event count.
 	 */

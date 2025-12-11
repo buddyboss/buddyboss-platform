@@ -6,7 +6,7 @@
  * This class can be instantiated by any BuddyBoss add-on plugin to enforce license requirements.
  *
  * @package BuddyBoss\Core\Admin\DRM
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.16.0
  */
 
 namespace BuddyBoss\Core\Admin\DRM;
@@ -36,7 +36,7 @@ class BB_DRM_Addon extends BB_Base_DRM {
 	/**
 	 * Constructor for the BB_DRM_Addon class.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.16.0
 	 *
 	 * @param string $product_slug The Mothership product slug.
 	 * @param string $plugin_name  The plugin display name.
@@ -55,7 +55,7 @@ class BB_DRM_Addon extends BB_Base_DRM {
 	/**
 	 * Runs the DRM check for this add-on.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.16.0
 	 *
 	 * @return void
 	 */
@@ -107,7 +107,7 @@ class BB_DRM_Addon extends BB_Base_DRM {
 	/**
 	 * Check if this specific add-on has a valid license.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.16.0
 	 *
 	 * @return bool True if licensed, false otherwise.
 	 */
@@ -161,7 +161,7 @@ class BB_DRM_Addon extends BB_Base_DRM {
 	 * Check if running on staging server.
 	 * Staging server detection is disabled as it's handled by BB_DRM_Helper::is_dev_environment().
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.16.0
 	 *
 	 * @return bool Always returns false.
 	 */
@@ -174,7 +174,7 @@ class BB_DRM_Addon extends BB_Base_DRM {
 	 * Creates addon-specific notifications in addition to the consolidated notification.
 	 * Each addon gets its own notification with a unique type identifier.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.16.0
 	 *
 	 * @param string $drm_status The DRM status.
 	 */
@@ -228,7 +228,7 @@ class BB_DRM_Addon extends BB_Base_DRM {
 	 * NOTE: Individual addon emails are disabled. All emails are sent via
 	 * BB_DRM_Registry::send_consolidated_email() to prevent duplicate emails.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.16.0
 	 *
 	 * @param string $drm_status The DRM status.
 	 */
@@ -242,7 +242,7 @@ class BB_DRM_Addon extends BB_Base_DRM {
 	 * NOTE: Individual addon notices are disabled. All notices are rendered via
 	 * BB_DRM_Registry::render_consolidated_admin_notices() to prevent duplicate notices.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.16.0
 	 */
 	public function admin_notices() {
 		// No-op: Consolidated notices handled by BB_DRM_Registry.
@@ -251,7 +251,7 @@ class BB_DRM_Addon extends BB_Base_DRM {
 	/**
 	 * Check if this add-on's features should be locked.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.16.0
 	 *
 	 * @return bool True if features should be locked.
 	 */

@@ -6,7 +6,7 @@
  * Add-ons register themselves here to participate in the DRM system.
  *
  * @package BuddyBoss\Core\Admin\DRM
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.16.0
  */
 
 namespace BuddyBoss\Core\Admin\DRM;
@@ -36,7 +36,7 @@ class BB_DRM_Registry {
 	/**
 	 * Get the singleton instance.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.16.0
 	 *
 	 * @return BB_DRM_Registry
 	 */
@@ -50,7 +50,7 @@ class BB_DRM_Registry {
 	/**
 	 * Constructor.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.16.0
 	 */
 	private function __construct() {
 		// Private constructor to enforce singleton.
@@ -78,7 +78,7 @@ class BB_DRM_Registry {
 	 * );
 	 * ```
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.16.0
 	 *
 	 * @param string $product_slug The Mothership product slug.
 	 * @param string $plugin_name  The plugin display name.
@@ -122,7 +122,7 @@ class BB_DRM_Registry {
 	/**
 	 * Run DRM check for a specific add-on.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.16.0
 	 *
 	 * @param string $product_slug The product slug.
 	 */
@@ -166,7 +166,7 @@ class BB_DRM_Registry {
 	/**
 	 * Cleanup DRM state for an add-on when the license becomes valid.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.16.0
 	 *
 	 * @param string $product_slug The product slug.
 	 */
@@ -200,7 +200,7 @@ class BB_DRM_Registry {
 	/**
 	 * Get all registered add-ons.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.16.0
 	 *
 	 * @return array Array of registered add-ons.
 	 */
@@ -211,7 +211,7 @@ class BB_DRM_Registry {
 	/**
 	 * Check if a specific add-on is registered.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.16.0
 	 *
 	 * @param string $product_slug The product slug.
 	 * @return bool True if registered.
@@ -223,7 +223,7 @@ class BB_DRM_Registry {
 	/**
 	 * Get DRM instance for a specific add-on.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.16.0
 	 *
 	 * @param string $product_slug The product slug.
 	 * @return BB_DRM_Addon|null The DRM instance or null.
@@ -248,7 +248,7 @@ class BB_DRM_Registry {
 	 * }
 	 * ```
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.16.0
 	 *
 	 * @param string $product_slug The product slug.
 	 * @return bool True if features should be locked.
@@ -266,7 +266,7 @@ class BB_DRM_Registry {
 	/**
 	 * Get lockout message for display.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.16.0
 	 *
 	 * @param string $product_slug The product slug.
 	 * @return string The lockout message.
@@ -290,7 +290,7 @@ class BB_DRM_Registry {
 	 * Helper function to display a lockout notice.
 	 * Add-ons can use this to show a consistent lockout message.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.16.0
 	 *
 	 * @param string $product_slug The product slug.
 	 * @param string $context      The context (admin_notice, inline, modal).
@@ -334,7 +334,7 @@ class BB_DRM_Registry {
 	 * Clear the addons status cache.
 	 * Call this after updating event data to ensure fresh data on next call.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.16.0
 	 */
 	private static function clear_addons_status_cache() {
 		// Use a static variable reference to clear the cache in get_addons_by_drm_status().
@@ -345,7 +345,7 @@ class BB_DRM_Registry {
 	/**
 	 * Get all addons grouped by DRM status.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.16.0
 	 *
 	 * @param bool $force_refresh Force refresh from database, ignoring cache.
 	 * @return array Array of addons grouped by status: ['low' => [], 'medium' => [], 'locked' => []].
@@ -406,7 +406,7 @@ class BB_DRM_Registry {
 	/**
 	 * Render consolidated admin notices for all addons.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.16.0
 	 *
 	 * This replaces individual addon notices with a single grouped notice.
 	 */
@@ -451,7 +451,7 @@ class BB_DRM_Registry {
 	/**
 	 * Render a single grouped notice for addons of the same status.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.16.0
 	 *
 	 * @param array  $addons     Array of addon data.
 	 * @param string $drm_status The DRM status (low, medium, locked).
@@ -578,7 +578,7 @@ class BB_DRM_Registry {
 	/**
 	 * Enqueue dismiss script for consolidated notices.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.16.0
 	 */
 	private function enqueue_dismiss_script() {
 		static $enqueued = false;
@@ -652,7 +652,7 @@ class BB_DRM_Registry {
 	 * Creates a single notification listing all addons with license issues
 	 * instead of separate notifications for each addon.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.16.0
 	 */
 	public function update_consolidated_notification() {
 		static $updated = false;
@@ -800,7 +800,7 @@ class BB_DRM_Registry {
 	 *
 	 * Sends a single email listing all affected addons instead of separate emails.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.16.0
 	 */
 	public function send_consolidated_email() {
 		static $sent = false;
@@ -961,7 +961,7 @@ class BB_DRM_Registry {
 	/**
 	 * Check if the email should be sent for this status.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.16.0
 	 *
 	 * @param array  $addons     Array of addon data.
 	 * @param string $status_key Status key (drm_low, drm_medium, drm_locked).
@@ -990,7 +990,7 @@ class BB_DRM_Registry {
 	 *
 	 * Follows the exact messaging from BuddyBoss DRM Messaging specification.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.16.0
 	 *
 	 * @param array $data Email data (heading, message, addon_list_html, color, activation_link, status).
 	 * @return string Email HTML.
@@ -1070,7 +1070,7 @@ class BB_DRM_Registry {
 	 * Adds consolidated Site Health tests grouped by priority level.
 	 * Shows all affected addons within each priority level (LOCKED, HIGH, MEDIUM, LOW).
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.16.0
 	 *
 	 * @param array $tests Site Health tests array.
 	 * @return array Modified tests array.
@@ -1123,7 +1123,7 @@ class BB_DRM_Registry {
 	/**
 	 * Site Health test for LOCKED status (31+ days).
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.16.0
 	 *
 	 * @return array Test result.
 	 */
@@ -1169,7 +1169,7 @@ class BB_DRM_Registry {
 	/**
 	 * Site Health test for HIGH status (22-30 days).
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.16.0
 	 *
 	 * @return array Test result.
 	 */
@@ -1212,7 +1212,7 @@ class BB_DRM_Registry {
 	/**
 	 * Site Health test for MEDIUM status (14-21 days).
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.16.0
 	 *
 	 * @return array Test result.
 	 */
@@ -1255,7 +1255,7 @@ class BB_DRM_Registry {
 	/**
 	 * Get Site Health pass result.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.16.0
 	 *
 	 * @return array Site Health result.
 	 */

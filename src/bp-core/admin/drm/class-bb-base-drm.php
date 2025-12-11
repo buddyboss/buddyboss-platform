@@ -6,7 +6,7 @@
  * Handles notification generation, email sending, and admin notices.
  *
  * @package BuddyBoss\Core\Admin\DRM
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.16.0
  */
 
 namespace BuddyBoss\Core\Admin\DRM;
@@ -43,7 +43,7 @@ abstract class BB_Base_DRM {
 	/**
 	 * Constructor for the BB_Base_DRM class.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.16.0
 	 */
 	public function __construct() {
 		$this->init();
@@ -52,7 +52,7 @@ abstract class BB_Base_DRM {
 	/**
 	 * Initializes the DRM status.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.16.0
 	 */
 	protected function init() {
 		$this->drm_status = '';
@@ -61,7 +61,7 @@ abstract class BB_Base_DRM {
 	/**
 	 * Checks if the DRM status is locked.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.16.0
 	 *
 	 * @return bool True if locked, false otherwise.
 	 */
@@ -72,7 +72,7 @@ abstract class BB_Base_DRM {
 	/**
 	 * Checks if the DRM status is medium.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.16.0
 	 *
 	 * @return bool True if medium, false otherwise.
 	 */
@@ -83,7 +83,7 @@ abstract class BB_Base_DRM {
 	/**
 	 * Checks if the DRM status is low.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.16.0
 	 *
 	 * @return bool True if low, false otherwise.
 	 */
@@ -94,7 +94,7 @@ abstract class BB_Base_DRM {
 	/**
 	 * Sets the DRM status.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.16.0
 	 *
 	 * @param string $status The DRM status to set.
 	 */
@@ -108,7 +108,7 @@ abstract class BB_Base_DRM {
 	/**
 	 * Creates a DRM event.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.16.0
 	 *
 	 * @return int|false Event ID on success, false on failure.
 	 */
@@ -129,7 +129,7 @@ abstract class BB_Base_DRM {
 	/**
 	 * Gets the latest DRM event.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.16.0
 	 *
 	 * @return BB_DRM_Event|null The event object or null.
 	 */
@@ -141,7 +141,7 @@ abstract class BB_Base_DRM {
 	 * Public method to get the latest DRM event.
 	 * Wrapper for protected get_latest_event() for external access.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.16.0
 	 *
 	 * @return BB_DRM_Event|null The event object or null.
 	 */
@@ -152,7 +152,7 @@ abstract class BB_Base_DRM {
 	/**
 	 * Updates a DRM event with new data.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.16.0
 	 *
 	 * @param BB_DRM_Event $event The event to update.
 	 * @param mixed        $data  The data to update the event with.
@@ -176,7 +176,7 @@ abstract class BB_Base_DRM {
 	/**
 	 * Handles a DRM event.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.16.0
 	 *
 	 * @param BB_DRM_Event $event      The event to handle.
 	 * @param integer      $days       The number of days since the event.
@@ -215,7 +215,7 @@ abstract class BB_Base_DRM {
 	/**
 	 * Adds custom classes to the admin body tag.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.16.0
 	 *
 	 * @param string $classes The current classes.
 	 * @return string The modified classes.
@@ -228,7 +228,7 @@ abstract class BB_Base_DRM {
 	/**
 	 * Displays admin notices related to DRM.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.16.0
 	 */
 	public function admin_notices() {
 		if ( ! $this->event instanceof BB_DRM_Event ) {
@@ -258,7 +258,7 @@ abstract class BB_Base_DRM {
 	/**
 	 * Renders an admin notice.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.16.0
 	 *
 	 * @param array $drm_info The DRM information.
 	 */
@@ -321,7 +321,7 @@ abstract class BB_Base_DRM {
 	/**
 	 * Enqueue script for dismissing notices.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.16.0
 	 */
 	private function enqueue_dismiss_script() {
 		static $enqueued = false;
@@ -404,7 +404,7 @@ abstract class BB_Base_DRM {
 	/**
 	 * Sends an email notification based on DRM status.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.16.0
 	 *
 	 * @param string $drm_status The DRM status.
 	 */
@@ -429,7 +429,7 @@ abstract class BB_Base_DRM {
 	/**
 	 * Gets the email message HTML.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.16.0
 	 *
 	 * @param array $drm_info The DRM information.
 	 * @return string The email message HTML.
@@ -470,7 +470,7 @@ abstract class BB_Base_DRM {
 	/**
 	 * Creates an in-plugin notification based on DRM status.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.16.0
 	 *
 	 * @param string $drm_status The DRM status.
 	 */
@@ -515,7 +515,7 @@ abstract class BB_Base_DRM {
 	/**
 	 * Creates a DRM event if none exists within the last 30 days.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.16.0
 	 */
 	public function maybe_create_event() {
 		// Check if event exists within the last 30 days.
@@ -536,7 +536,7 @@ abstract class BB_Base_DRM {
 	/**
 	 * Abstract method to run the DRM process.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.16.0
 	 */
 	abstract public function run();
 }
