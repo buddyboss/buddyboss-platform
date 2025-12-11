@@ -131,6 +131,20 @@ class BB_DRM_Addon extends BB_Base_DRM {
 			return false;
 		}
 
+		// Check if license is activated before calling checkProductBySlug.
+		if ( ! class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_Plugin_Connector' ) ) {
+			$cache[ $this->product_slug ] = false;
+			return false;
+		}
+
+		$connector      = new \BuddyBoss\Core\Admin\Mothership\BB_Plugin_Connector();
+		$license_status = $connector->getLicenseActivationStatus();
+
+		if ( empty( $license_status ) ) {
+			$cache[ $this->product_slug ] = false;
+			return false;
+		}
+
 		// Check if this specific product is enabled in Mothership.
 		if ( ! class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager' ) ) {
 			$cache[ $this->product_slug ] = false;
