@@ -987,7 +987,7 @@ body.bb-rl-activity-modal-open .bb-rl-activity-update-form.modal-popup {
 }
 
 .bb-rl-activity-form.bb-rl-focus-in #bb-rl-activity-privacy-point {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   background-color: var(--bb-rl-background-secondary-color);
   border: 1px solid var(--bb-rl-border-secondary-color);
@@ -1466,8 +1466,12 @@ body.bb-rl-activity-modal-open .bb-rl-activity-update-form.modal-popup {
   font-family: bb-icons-rl;
   font-size: var(--bb-rl-font-size-base);
   position: absolute;
-  top: var(--bb-rl-space-100);
+  top: 12px;
   right: var(--bb-rl-space-200);
+}
+
+.bb-rl-activity-form label.bb-rl-activity-privacy__label-group .bb-rl-privacy-label i {
+  display: none;
 }
 
 .bb-rl-activity-form #bb-rl-whats-new-post-in-box {
@@ -2055,6 +2059,14 @@ body.bb-rl-activity-modal-open .bb-rl-activity-update-form.modal-popup {
   margin-left: auto;
 }
 
+@media screen and (max-width: 580px) {
+  .bb-rl-modal-header-actions {
+    position: absolute;
+    top: var(--bb-rl-space-200);
+    right: var(--bb-rl-space-200);
+  }
+}
+
 .bb-rl-activity-form--schedule .bb-rl-bb-model-header .bb-rl-modal-header-actions {
   margin-left: 0;
   order: 99;
@@ -2499,6 +2511,13 @@ body.bb-rl-activity-modal-open .bb-rl-activity-update-form.modal-popup {
   box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.12);
   padding: var(--bb-rl-space-100) 0;
   width: 200px;
+}
+
+@media screen and (max-width: 800px) {
+  .bb-rl-activity-filters-container .bb-subnav-filters-container-main .subnav-filters-modal {
+    left: 0;
+    right: unset;
+  }
 }
 
 .bb-subnav-filters-container-main .subnav-filters-modal ul {
@@ -5954,7 +5973,7 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   text-align: center;
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
-  transition: background-color 0.2s ease, bordfont / size / smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   opacity: 0.7;
   pointer-events: none;

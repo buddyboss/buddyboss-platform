@@ -41,6 +41,15 @@ window.bp = window.bp || {};
 		},
 
 		/**
+		 * Common function to safely call Media functions
+		 */
+		invokeMediaFn: function( functionName ) {
+			if ( 'undefined' !== typeof bp.Nouveau.Media && 'function' === typeof bp.Nouveau.Media[ functionName ] ) {
+				bp.Nouveau.Media[ functionName ]();
+			}
+		},
+
+		/**
 		 * [setupGlobals description]
 		 *
 		 * @return {[type]} [description]
@@ -237,7 +246,7 @@ window.bp = window.bp || {};
 			}
 
 			// Wrap Activity Topics
-			bp.Nouveau.wrapNavigation( '.activity-topic-selector ul', 120 );
+			bp.Nouveau.wrapNavigation( '.activity-topic-selector ul', 120, true );
 		},
 
 		/**
@@ -796,6 +805,14 @@ window.bp = window.bp || {};
 				},
 				3000
 			);
+
+			// Trigger GIF autoplay check when activities are loaded via AJAX
+			// Use setTimeout to ensure DOM is updated and video elements are rendered
+			setTimeout( function() {
+				if ( 'undefined' !== typeof bp.Nouveau.Media && 'function' === typeof bp.Nouveau.Media.autoPlayGifVideos ) {
+					bp.Nouveau.Media.autoPlayGifVideos();
+				}
+			}, 200 );
 
 			if (typeof window.instgrm !== 'undefined') {
 				window.instgrm.Embeds.process();
@@ -1817,6 +1834,9 @@ window.bp = window.bp || {};
 								tool_box_comment.find( '.ac-reply-toolbar .ac-reply-gif-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable no-click' );
 							}
 							jQuery( window ).scroll();
+							
+							// Trigger GIF autoplay check for newly added content
+							bp.Nouveau.Activity.invokeMediaFn( 'autoPlayGifVideos' );
 
 							if ( ! form.hasClass( 'acomment-edit' ) ) {
 								// Set the new count.
@@ -4077,6 +4097,11 @@ window.bp = window.bp || {};
 			}
 
 			bp.Nouveau.Activity.toggleMultiMediaOptions( form, '', '.bb-modal-activity-footer' );
+			
+			// Trigger GIF autoplay check when modal is opened
+			setTimeout( function() {
+				bp.Nouveau.Activity.invokeMediaFn( 'autoPlayGifVideos' );
+			}, 500 );
 		},
 
 		viewMoreComments: function ( e ) {
@@ -4173,6 +4198,9 @@ window.bp = window.bp || {};
 							setTimeout(
 								function () {
 									jQuery( window ).scroll();
+									
+									// Trigger GIF autoplay check for newly loaded comments
+									bp.Nouveau.Activity.invokeMediaFn( 'autoPlayGifVideos' );
 								},
 								200
 							);

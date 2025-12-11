@@ -499,7 +499,16 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 
 			unset( $bp_prefix, $query, $results, $bb_platform_db_options );
 
-			return $bb_telemetry_data;
+			/**
+			 * Filters the telemetry platform data.
+			 *
+			 * @since BuddyBoss 2.15.2
+			 *
+			 * @param array $bb_telemetry_data Telemetry platform data.
+			 *
+			 * @return array Telemetry platform data.
+			 */
+			return apply_filters( 'bb_telemetry_platform_data', $bb_telemetry_data );
 		}
 
 		/**
