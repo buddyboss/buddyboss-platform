@@ -268,11 +268,11 @@
 }
 
 @mixin bb-rl-notice--info {
-	background-color: var(--bb-rl-background-brand-secondary-color);
-	border-color: var(--bb-rl-border-brand-primary-color);
+	background-color: var(--bb-rl-background-info-secondary-color);
+	border-color: var(--bb-rl-border-info-primary-color);
 
 	> [class*="bb-icons"] {
-		color: var(--bb-rl-icon-primary-color);
+		color: var(--bb-rl-icon-info-primary-color);
 
 		&:before {
 			content: "\e4e2";
@@ -325,11 +325,11 @@
 }
 
 @mixin bb-rl-notice--alt-info {
-	background-color: var(--bb-rl-background-brand-secondary-color);
-	border-color: var(--bb-rl-border-brand-secondary-color);
+	background-color: var(--bb-rl-background-info-secondary-color);
+	border-color: var(--bb-rl-border-info-primary-color);
 
 	> [class*="bb-icons"] {
-		color: var(--bb-rl-border-brand-secondary-color);
+		color: var(--bb-rl-icon-info-primary-color);
 	}
 }
 
@@ -373,8 +373,8 @@
 }
 
 @mixin bb-rl-notice--plain-info {
-	background-color: var(--bb-rl-background-brand-secondary-color);
-	border-color: var(--bb-rl-border-brand-secondary-color);
+	background-color: var(--bb-rl-background-info-secondary-color);
+	border-color: var(--bb-rl-border-info-secondary-color);
 }
 
 @mixin bb-rl-notice--plain-success {

@@ -560,6 +560,17 @@
 		@include bb-rl-notice--plain;
 		@include bb-rl-notice--plain-info;
 		display: flex;
+
+		&.bp-messages {
+
+			> .bp-icon {
+				display: none;
+			}
+
+			> p {
+				font-weight: 500;
+			}
+		}
 	}
 
 	#account-group-invites-form {
