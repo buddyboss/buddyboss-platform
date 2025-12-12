@@ -2,9 +2,9 @@
 # This file is distributed under the GPLv2 or later (license.txt).
 msgid ""
 msgstr ""
-"Project-Id-Version: BuddyBoss Platform 2.15.3\n"
+"Project-Id-Version: BuddyBoss Platform 2.16.0\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2025-12-09 03:48:18+00:00\n"
+"POT-Creation-Date: 2025-12-12 05:15:57+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -27,7 +27,7 @@ msgstr ""
 
 
 #. Plugin Name of the plugin
-#: bp-core/admin/bp-core-admin-functions.php:3801
+#: bp-core/admin/bp-core-admin-functions.php:3803
 #: bp-core/admin/settings/bp-admin-setting-activity.php:232
 #: bp-performance/bp-performance-includes.php:71
 #: bp-templates/bp-nouveau/includes/customizer.php:29
@@ -45,6 +45,14 @@ msgstr ""
 
 #. Author of the plugin
 #: bp-core/admin/bb-settings/readylaunch/index.php:40
+#: bp-core/admin/drm/class-bb-drm-controller.php:318
+#: bp-core/admin/drm/class-bb-drm-controller.php:336
+#: bp-core/admin/drm/class-bb-drm-controller.php:353
+#: bp-core/admin/drm/class-bb-drm-registry.php:1059
+#: bp-core/admin/drm/class-bb-drm-registry.php:1154
+#: bp-core/admin/drm/class-bb-drm-registry.php:1199
+#: bp-core/admin/drm/class-bb-drm-registry.php:1242
+#: bp-core/admin/drm/class-bb-drm-registry.php:1267
 msgid "BuddyBoss"
 msgstr ""
 
@@ -458,7 +466,7 @@ msgstr ""
 
 #: bp-activity/bp-activity-admin.php:760
 #: bp-activity/bp-activity-admin.php:768
-#: bp-forums/admin/replies.php:619
+#: bp-forums/admin/replies.php:642
 #: bp-templates/bp-nouveau/buddypress/document/create-child-folder.php:32
 #: bp-templates/bp-nouveau/buddypress/document/create-folder.php:24
 #: bp-templates/bp-nouveau/buddypress/media/create-album.php:24
@@ -530,8 +538,8 @@ msgstr ""
 #: bp-activity/classes/class-bp-akismet.php:211
 #: bp-activity/classes/class-bp-akismet.php:242
 #: bp-core/admin/bp-core-admin-functions.php:1550
-#: bp-forums/admin/replies.php:803
-#: bp-forums/admin/topics.php:937
+#: bp-forums/admin/replies.php:826
+#: bp-forums/admin/topics.php:960
 #: bp-forums/classes/class-bbpress.php:574
 #: bp-forums/replies/template.php:2368
 #: bp-forums/topics/template.php:3255
@@ -539,10 +547,11 @@ msgid "Spam"
 msgstr ""
 
 #. Translators: Publish box date format, see http://php.net/date.
+#. translators: Publish box date format, see http://php.net/date
 #: bp-activity/bp-activity-admin.php:863
 #: bp-forums/admin/forums.php:665
-#: bp-forums/admin/replies.php:954
-#: bp-forums/admin/topics.php:1087
+#: bp-forums/admin/replies.php:977
+#: bp-forums/admin/topics.php:1110
 msgid "M j, Y @ G:i"
 msgstr ""
 
@@ -1533,8 +1542,8 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-pages.php:392
 #: bp-core/deprecated/buddyboss/1.0.php:75
 #: bp-document/bp-document-filters.php:288
-#: bp-forums/admin/replies.php:780
-#: bp-forums/admin/topics.php:865
+#: bp-forums/admin/replies.php:803
+#: bp-forums/admin/topics.php:888
 #: bp-groups/classes/class-bp-groups-list-table.php:600
 #: bp-invites/bp-invites-admin.php:277
 #: bp-members/classes/class-bp-members-component.php:385
@@ -1569,7 +1578,7 @@ msgstr ""
 
 #: bp-activity/bp-activity-template.php:4379
 #: bp-activity/bp-activity-template.php:4388
-#: bp-core/bp-core-options.php:2878
+#: bp-core/bp-core-options.php:2876
 #: bp-core/classes/class-bb-core-follow-my-network-widget.php:141
 #: bp-members/bp-members-admin.php:61
 #: bp-templates/bp-nouveau/includes/members/functions.php:56
@@ -2032,16 +2041,16 @@ msgstr ""
 
 #: bp-activity/classes/class-bp-activity-list-table.php:382
 #: bp-activity/classes/class-bp-activity-list-table.php:682
-#: bp-forums/admin/replies.php:818
-#: bp-forums/admin/topics.php:951
+#: bp-forums/admin/replies.php:841
+#: bp-forums/admin/topics.php:974
 #: bp-groups/bp-groups-admin.php:1088
 msgid "Delete Permanently"
 msgstr ""
 
 #: bp-activity/classes/class-bp-activity-list-table.php:415
 #: bp-core/compatibility/class-bb-readylaunch-memberpress-courses-helper.php:502
-#: bp-forums/admin/replies.php:622
-#: bp-forums/admin/topics.php:718
+#: bp-forums/admin/replies.php:645
+#: bp-forums/admin/topics.php:741
 #: bp-forums/templates/default/bbpress/loop-replies.php:17
 #: bp-forums/templates/default/bbpress/loop-replies.php:62
 #: bp-forums/templates/default/bbpress/loop-search.php:17
@@ -3943,7 +3952,7 @@ msgstr ""
 #: bp-core/admin/templates/moderation-deactivate-confirmation-popup.php:30
 #: bp-core/admin/templates/update-buddyboss.php:83
 #: bp-core/classes/class-bp-admin-tab.php:198
-#: bp-forums/admin/topics.php:885
+#: bp-forums/admin/topics.php:908
 #: bp-forums/core/actions.php:595
 #: bp-forums/topics/template.php:3031
 #: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:560
@@ -4342,7 +4351,7 @@ msgstr ""
 #: bp-core/bp-core-update.php:1116
 #: bp-core/classes/class-bb-readylaunch.php:608
 #: bp-core/classes/class-bp-email-tokens.php:458
-#: bp-forums/admin/topics.php:717
+#: bp-forums/admin/topics.php:740
 #: bp-groups/bp-groups-admin.php:1449
 #: bp-groups/bp-groups-admin.php:2106
 #: bp-groups/bp-groups-functions.php:4374
@@ -4735,7 +4744,7 @@ msgid "You are using an old theme and/or BuddyPress addon that relies on the old
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:685
-#: bp-core/admin/bp-core-admin-functions.php:3814
+#: bp-core/admin/bp-core-admin-functions.php:3816
 #: bp-core/admin/bp-core-admin-settings.php:1622
 #: bp-core/classes/class-bp-admin.php:348
 #: bp-core/classes/class-bp-admin.php:509
@@ -5204,13 +5213,13 @@ msgstr ""
 msgid "Install"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:3570
+#: bp-core/admin/bp-core-admin-functions.php:3572
 msgid "Select which label colors to use for profiles using this profile type. Profile Type labels are used in places such as member directories and profile headers."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:3573
-#: bp-core/admin/bp-core-admin-functions.php:3638
-#: bp-core/admin/bp-core-admin-functions.php:3677
+#: bp-core/admin/bp-core-admin-functions.php:3575
+#: bp-core/admin/bp-core-admin-functions.php:3640
+#: bp-core/admin/bp-core-admin-functions.php:3679
 #: bp-core/admin/bp-core-admin-settings.php:737
 #: bp-core/admin/bp-core-admin-settings.php:1110
 #: bp-core/admin/bp-core-admin-settings.php:3397
@@ -5221,7 +5230,7 @@ msgstr ""
 msgid "Default"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:3574
+#: bp-core/admin/bp-core-admin-functions.php:3576
 #: bp-core/admin/bp-core-admin-settings.php:467
 #: bp-core/admin/bp-core-admin-settings.php:586
 #: bp-core/admin/bp-core-admin-settings.php:894
@@ -5233,42 +5242,42 @@ msgstr ""
 msgid "Custom"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:3580
+#: bp-core/admin/bp-core-admin-functions.php:3582
 #: bp-groups/bp-groups-admin.php:2666
 msgid "Background Color"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:3584
+#: bp-core/admin/bp-core-admin-functions.php:3586
 #: bp-groups/bp-groups-admin.php:2670
 msgid "Text Color"
 msgstr ""
 
 #. translators:
-#: bp-core/admin/bp-core-admin-functions.php:3616
+#: bp-core/admin/bp-core-admin-functions.php:3618
 msgid "Redirect this profile type. When you change the redirection settings in a profile type this will then take priority and override redirection global settings in %s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:3627
+#: bp-core/admin/bp-core-admin-functions.php:3629
 msgid "Buddyboss - Settings - General"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:3639
-#: bp-core/admin/bp-core-admin-functions.php:3678
+#: bp-core/admin/bp-core-admin-functions.php:3641
+#: bp-core/admin/bp-core-admin-functions.php:3680
 #: bp-core/admin/bp-core-admin-settings.php:2417
 #: bp-core/admin/bp-core-admin-settings.php:3398
 #: bp-core/admin/bp-core-admin-settings.php:3448
 msgid "Custom URL"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:3651
-#: bp-core/admin/bp-core-admin-functions.php:3665
+#: bp-core/admin/bp-core-admin-functions.php:3653
+#: bp-core/admin/bp-core-admin-functions.php:3667
 #: bp-core/admin/bp-core-admin-settings.php:3410
 #: bp-core/admin/bp-core-admin-settings.php:3429
 msgid "Select a page or external link to redirect your members to after they login."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:3690
-#: bp-core/admin/bp-core-admin-functions.php:3704
+#: bp-core/admin/bp-core-admin-functions.php:3692
+#: bp-core/admin/bp-core-admin-functions.php:3706
 #: bp-core/admin/bp-core-admin-settings.php:3460
 #: bp-core/admin/bp-core-admin-settings.php:3479
 msgid "Select a page or external link to redirect your members to after they logout."
@@ -5561,7 +5570,7 @@ msgstr ""
 #: bp-core/admin/settings/bp-admin-setting-activity.php:146
 #: bp-core/bb-core-subscriptions.php:600
 #: bp-forums/admin/metaboxes.php:510
-#: bp-forums/admin/replies.php:621
+#: bp-forums/admin/replies.php:644
 #: bp-forums/admin/settings.php:312
 #: bp-forums/classes/class-bp-forums-notification.php:128
 #: bp-forums/templates/default/bbpress/content-single-topic-lead.php:21
@@ -6424,7 +6433,7 @@ msgstr ""
 #: bp-forums/admin/settings.php:262
 #: bp-forums/admin/settings.php:283
 #: bp-forums/admin/tools.php:1797
-#: bp-forums/admin/topics.php:714
+#: bp-forums/admin/topics.php:737
 #: bp-forums/classes/class-bp-forums-component.php:218
 #: bp-forums/classes/class-bp-forums-notification.php:129
 #: bp-forums/forums/template.php:2927
@@ -6453,7 +6462,7 @@ msgstr ""
 #: bp-forums/admin/settings.php:270
 #: bp-forums/admin/settings.php:291
 #: bp-forums/admin/tools.php:1798
-#: bp-forums/admin/topics.php:716
+#: bp-forums/admin/topics.php:739
 #: bp-forums/classes/class-bp-forums-component.php:229
 #: bp-forums/core/theme-compat.php:668
 #: bp-forums/forums/template.php:2996
@@ -6967,11 +6976,370 @@ msgstr ""
 msgid "MySql Server"
 msgstr ""
 
-#: bp-core/admin/mothership/class-bb-addons-manager.php:36
+#: bp-core/admin/drm/class-bb-base-drm.php:283
+#: bp-core/admin/drm/class-bb-drm-addon.php:212
+#: bp-core/admin/drm/class-bb-drm-controller.php:364
+#: bp-core/admin/drm/class-bb-drm-helper.php:610
+#: bp-core/admin/drm/class-bb-drm-helper.php:632
+#: bp-core/admin/drm/class-bb-drm-helper.php:654
+#: bp-core/admin/drm/class-bb-drm-helper.php:676
+#: bp-core/admin/drm/class-bb-drm-helper.php:735
+#: bp-core/admin/drm/class-bb-drm-helper.php:757
+#: bp-core/admin/drm/class-bb-drm-helper.php:779
+#: bp-core/admin/drm/class-bb-drm-helper.php:815
+#: bp-core/admin/drm/class-bb-drm-registry.php:565
+#: bp-core/admin/drm/class-bb-drm-registry.php:783
+#: bp-core/admin/drm/class-bb-drm-registry.php:1161
+#: bp-core/admin/drm/class-bb-drm-registry.php:1206
+#: bp-core/admin/drm/class-bb-drm-registry.php:1249
+msgid "Activate Your License"
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-base-drm.php:307
+#: bp-core/admin/drm/class-bb-drm-registry.php:552
+msgid "Dismiss this notice for 24 hours"
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-base-drm.php:308
+#: bp-core/admin/drm/class-bb-drm-registry.php:553
+msgid "Dismiss this notice for 24 hours."
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-base-drm.php:506
+msgid "Contact Us"
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-drm-addon.php:217
+msgid "Contact Support"
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-drm-controller.php:210
+#: bp-forums/classes/class-bp-rest-reply-actions-endpoint.php:586
+#: bp-forums/classes/class-bp-rest-topics-actions-endpoint.php:1276
+#: bp-forums/classes/class-bp-rest-topics-actions-endpoint.php:1310
+#: bp-forums/classes/class-bp-rest-topics-actions-endpoint.php:1354
+#: bp-forums/classes/class-bp-rest-topics-actions-endpoint.php:1390
+#: bp-forums/classes/class-bp-rest-topics-actions-endpoint.php:1425
+#: bp-forums/classes/class-bp-rest-topics-actions-endpoint.php:1458
+#: bp-forums/templates/default/bbpress-functions.php:793
+#: bp-forums/templates/default/bbpress-functions.php:861
+#: bp-forums/templates/default/bbpress-functions.php:929
+msgid "You do not have permission to do this."
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-drm-controller.php:214
+msgid "Invalid notice key."
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-drm-controller.php:227
+msgid "Invalid security hash."
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-drm-controller.php:268
+msgid "Notice dismissed for 24 hours."
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-drm-controller.php:270
+msgid "Failed to dismiss notice."
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-drm-controller.php:297
+msgid "BuddyBoss License Status"
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-drm-controller.php:315
+msgid "License check bypassed (development environment)"
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-drm-controller.php:323
+msgid "License validation is automatically disabled on development environments."
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-drm-controller.php:333
+msgid "BuddyBoss license is active and valid"
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-drm-controller.php:341
+msgid "Your BuddyBoss license is active and valid. You have full access to all features and updates."
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-drm-controller.php:350
+msgid "BuddyBoss license not activated"
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-drm-controller.php:358
+msgid "No license key has been activated for BuddyBoss Platform. While Platform features will continue to work, add-on plugins require license activation."
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-drm-controller.php:359
+msgid "Activate your license to manage add-on plugins and ensure access to updates and support."
+msgstr ""
+
+#. translators: %s: site URL
+#: bp-core/admin/drm/class-bb-drm-helper.php:599
+msgid "This is an automated message from %s."
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-drm-helper.php:607
+#: bp-core/admin/drm/class-bb-drm-registry.php:708
+msgid "License Activation Needed"
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-drm-helper.php:609
+#: bp-core/admin/drm/class-bb-drm-registry.php:709
+msgid "We couldn't verify an active license for your BuddyBoss features. Please activate your license to continue using them."
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-drm-helper.php:611
+#: bp-core/admin/drm/class-bb-drm-helper.php:736
+#: bp-core/admin/templates/moderation-deactivate-confirmation-popup.php:35
+msgid "Notice"
+msgstr ""
+
+#. translators: %1$s: opening anchor tag for account page, %2$s: closing anchor tag, %3$s: opening anchor tag for support
+#: bp-core/admin/drm/class-bb-drm-helper.php:618
+#: bp-core/admin/drm/class-bb-drm-helper.php:640
+#: bp-core/admin/drm/class-bb-drm-helper.php:662
+#: bp-core/admin/drm/class-bb-drm-helper.php:685
+#: bp-core/admin/drm/class-bb-drm-helper.php:743
+#: bp-core/admin/drm/class-bb-drm-helper.php:765
+#: bp-core/admin/drm/class-bb-drm-helper.php:787
+#: bp-core/admin/drm/class-bb-drm-helper.php:809
+msgid "Need your license key? Visit %1$sYour Account Page%2$s. Having trouble? %3$sContact Support%2$s."
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-drm-helper.php:629
+#: bp-core/admin/drm/class-bb-drm-registry.php:325
+#: bp-core/admin/drm/class-bb-drm-registry.php:712
+msgid "License Required"
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-drm-helper.php:631
+#: bp-core/admin/drm/class-bb-drm-registry.php:713
+msgid "An active license is required to use BuddyBoss features. Without activation, these features will stop working."
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-drm-helper.php:633
+#: bp-core/admin/drm/class-bb-drm-helper.php:758
+msgid "Warning"
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-drm-helper.php:651
+#: bp-core/admin/drm/class-bb-drm-registry.php:716
+msgid "License Activation Required"
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-drm-helper.php:653
+#: bp-core/admin/drm/class-bb-drm-registry.php:717
+msgid "Your BuddyBoss features will be disabled soon. Activate your license now to avoid interruption."
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-drm-helper.php:655
+#: bp-core/admin/drm/class-bb-drm-helper.php:677
+#: bp-core/admin/drm/class-bb-drm-helper.php:780
+#: bp-core/admin/drm/class-bb-drm-helper.php:798
+msgid "Critical"
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-drm-helper.php:673
+#: bp-core/admin/drm/class-bb-drm-registry.php:720
+msgid "BuddyBoss Features Disabled"
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-drm-helper.php:675
+msgid " The following features have been disabled because no active license was found. Activate your license to restore them."
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-drm-helper.php:682
+#: bp-core/admin/drm/class-bb-drm-helper.php:806
+#: bp-core/admin/drm/class-bb-drm-registry.php:751
+#: bp-core/admin/drm/class-bb-drm-registry.php:1032
+msgid "If you no longer need these features, you can deactivate the premium add-ons in your Plugins page to continue using BuddyBoss Platform for free."
+msgstr ""
+
+#. translators: %1$s: home URL, %2$s: home URL
+#: bp-core/admin/drm/class-bb-drm-helper.php:723
+msgid "This is an automated message from %1$s. If you continue getting these messages, please try deactivating and then re-activating your license key on %2$s."
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-drm-helper.php:732
+msgid "BuddyBoss Pro/Plus: License Activation Needed"
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-drm-helper.php:734
+msgid "We couldn't verify an active license for your BuddyBoss Pro/Plus features. Please activate your license to continue using them."
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-drm-helper.php:754
+msgid "BuddyBoss Pro/Plus: License Required"
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-drm-helper.php:756
+msgid "An active license is required to use BuddyBoss Pro/Plus features. Without activation, these features will stop working."
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-drm-helper.php:776
+msgid "BuddyBoss Pro/Plus: Activation Required"
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-drm-helper.php:778
+msgid "Your BuddyBoss Pro/Plus features will be disabled soon. Activate your license now to avoid interruption."
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-drm-helper.php:799
+msgid "BuddyBoss Pro/Plus: Features Disabled"
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-drm-helper.php:801
+#: bp-core/admin/drm/class-bb-drm-registry.php:721
+msgid "The following features have been disabled because no active license was found. Activate your license to restore them."
+msgstr ""
+
+#. translators: %1$s: plugin name, %2$s: license page URL
+#: bp-core/admin/drm/class-bb-drm-registry.php:283
+msgid "%1$s features are currently disabled. Please <a href=\"%2$s\">activate your license</a> to restore functionality."
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-drm-registry.php:503
+msgid "License required for BuddyBoss features."
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-drm-registry.php:511
+msgid "BuddyBoss features will be disabled soon."
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-drm-registry.php:519
+msgid "BuddyBoss features have been disabled."
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-drm-registry.php:733
+#: bp-core/admin/drm/class-bb-drm-registry.php:1021
+msgid "The following features have been disabled:"
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-drm-registry.php:735
+#: bp-core/admin/drm/class-bb-drm-registry.php:1023
+msgid "The following features will be disabled without an active license:"
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-drm-registry.php:737
+msgid "The following features require an active license:"
+msgstr ""
+
+#. translators: %1$s: opening link tag, %2$s: closing link tag
+#: bp-core/admin/drm/class-bb-drm-registry.php:761
+msgid "Need your license key? Visit %1$sYour Account Page%2$s. Having trouble? %3$sContact Support%4$s."
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-drm-registry.php:869
+msgid "Your BuddyBoss license needs activation"
+msgstr ""
+
+#. translators: %s: site name/URL
+#: bp-core/admin/drm/class-bb-drm-registry.php:873
+msgid "Your site %s is using BuddyBoss features that require an active license."
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-drm-registry.php:881
+msgid "Your BuddyBoss features have now been disabled on your site"
+msgstr ""
+
+#. translators: %s: site name/URL
+#: bp-core/admin/drm/class-bb-drm-registry.php:885
+msgid "The BuddyBoss features on your site %s have been disabled because no active license was found."
+msgstr ""
+
+#. translators: Do not translate OLD_EMAIL, NEW_EMAIL, SITENAME, SITEURL: those are placeholders.
+#: bp-core/admin/drm/class-bb-drm-registry.php:1013
+#: bp-core/bp-core-wp-emails.php:1495
+#: bp-core/bp-core-wp-emails.php:1544
+msgid "Hi,"
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-drm-registry.php:1031
+msgid "To restore these features, activate your license in your WordPress admin."
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-drm-registry.php:1034
+msgid "To keep these features working, activate your license in your WordPress admin."
+msgstr ""
+
+#. translators: %1$s: opening link tag, %2$s: closing link tag
+#: bp-core/admin/drm/class-bb-drm-registry.php:1041
+msgid "Need your license key? Log in to your BuddyBoss account: %1$sYour Account Page%2$s"
+msgstr ""
+
+#. translators: %1$s: opening link tag, %2$s: closing link tag
+#: bp-core/admin/drm/class-bb-drm-registry.php:1052
+msgid "Having trouble? Our support team is here to help: %1$sContact Support%2$s"
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-drm-registry.php:1059
+msgid "Thanks,"
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-drm-registry.php:1098
+msgid "BuddyBoss Pro/Plus License - Features Disabled"
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-drm-registry.php:1105
+msgid "BuddyBoss Pro/Plus License - Urgent Action Required"
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-drm-registry.php:1112
+msgid "BuddyBoss Pro/Plus License - Action Required"
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-drm-registry.php:1146
+msgid "Your BuddyBoss features have now been disabled"
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-drm-registry.php:1148
+msgid "BuddyBoss features on your site have been disabled because no active license was found. Activate your license to restore functionality, or deactivate premium add-ons in your Plugins page to continue using BuddyBoss Platform for free."
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-drm-registry.php:1163
+msgid "Purchase License"
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-drm-registry.php:1191
+msgid "Your BuddyBoss license requires activation"
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-drm-registry.php:1193
+msgid "Your site is using BuddyBoss features without an active license. These features will be disabled if a license is not activated soon."
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-drm-registry.php:1234
+msgid "Your BuddyBoss license is not activated"
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-drm-registry.php:1236
+msgid "Your site is using BuddyBoss features that require an active license. Activate your license to ensure continued access to these features."
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-drm-registry.php:1264
+msgid "BuddyBoss Pro/Plus license is active"
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-drm-registry.php:1272
+msgid "All BuddyBoss Pro/Plus addon licenses are valid and active."
+msgstr ""
+
+#: bp-core/admin/drm/class-bb-notifications.php:67
+#: bp-notifications/bp-notifications-functions.php:1253
+msgid "Notification Icon"
+msgstr ""
+
+#: bp-core/admin/mothership/class-bb-addons-manager.php:37
+msgid "Please activate your license to access add-ons."
+msgstr ""
+
+#: bp-core/admin/mothership/class-bb-addons-manager.php:41
 msgid "Please enter your license key to access add-ons."
 msgstr ""
 
-#: bp-core/admin/mothership/class-bb-addons-manager.php:50
+#: bp-core/admin/mothership/class-bb-addons-manager.php:55
 msgid "There was an issue connecting with the API."
 msgstr ""
 
@@ -7126,7 +7494,7 @@ msgid "BuddyBoss License Activation"
 msgstr ""
 
 #. Translators: %s is the response error message.
-#: bp-core/admin/mothership/class-bb-mothership-loader.php:318
+#: bp-core/admin/mothership/class-bb-mothership-loader.php:337
 msgid "Migrate License activation failed: %s"
 msgstr ""
 
@@ -8220,10 +8588,6 @@ msgstr ""
 msgid "To unsuspend members who are not creating spam anymore in your network, activate the <a href=\"%s\" >Moderation</a> component."
 msgstr ""
 
-#: bp-core/admin/templates/moderation-deactivate-confirmation-popup.php:35
-msgid "Notice"
-msgstr ""
-
 #: bp-core/admin/templates/moderation-deactivate-confirmation-popup.php:50
 msgid "Yes I understand, Deactivate"
 msgstr ""
@@ -8497,9 +8861,9 @@ msgstr ""
 #: bp-forums/admin/forums.php:497
 #: bp-forums/admin/metaboxes.php:421
 #: bp-forums/admin/metaboxes.php:482
-#: bp-forums/admin/replies.php:620
+#: bp-forums/admin/replies.php:643
 #: bp-forums/admin/settings.php:304
-#: bp-forums/admin/topics.php:715
+#: bp-forums/admin/topics.php:738
 #: bp-forums/classes/class-bp-forums-notification.php:188
 #: bp-forums/forums/functions.php:1759
 #: bp-forums/forums/template.php:51
@@ -10190,63 +10554,63 @@ msgstr ""
 msgid "Activity comments"
 msgstr ""
 
-#: bp-core/bp-core-options.php:2813
+#: bp-core/bp-core-options.php:2811
 msgid "All updates"
 msgstr ""
 
-#: bp-core/bp-core-options.php:2814
+#: bp-core/bp-core-options.php:2812
 msgid "Created by me"
 msgstr ""
 
-#: bp-core/bp-core-options.php:2815
+#: bp-core/bp-core-options.php:2813
 msgid "I've reacted to"
 msgstr ""
 
-#: bp-core/bp-core-options.php:2816
+#: bp-core/bp-core-options.php:2814
 msgid "From my groups"
 msgstr ""
 
-#: bp-core/bp-core-options.php:2817
+#: bp-core/bp-core-options.php:2815
 msgid "From my connections"
 msgstr ""
 
-#: bp-core/bp-core-options.php:2818
+#: bp-core/bp-core-options.php:2816
 msgid "I'm mentioned in"
 msgstr ""
 
-#: bp-core/bp-core-options.php:2819
+#: bp-core/bp-core-options.php:2817
 msgid "I'm following"
 msgstr ""
 
-#: bp-core/bp-core-options.php:2820
+#: bp-core/bp-core-options.php:2818
 msgid "Unanswered"
 msgstr ""
 
-#: bp-core/bp-core-options.php:2873
+#: bp-core/bp-core-options.php:2871
 msgid "Personal posts"
 msgstr ""
 
-#: bp-core/bp-core-options.php:2874
+#: bp-core/bp-core-options.php:2872
 msgid "Reacted to"
 msgstr ""
 
-#: bp-core/bp-core-options.php:2875
+#: bp-core/bp-core-options.php:2873
 msgid "From groups"
 msgstr ""
 
-#: bp-core/bp-core-options.php:2876
+#: bp-core/bp-core-options.php:2874
 msgid "From connections"
 msgstr ""
 
-#: bp-core/bp-core-options.php:2877
+#: bp-core/bp-core-options.php:2875
 msgid "Mentioned in"
 msgstr ""
 
-#: bp-core/bp-core-options.php:2929
+#: bp-core/bp-core-options.php:2927
 msgid "New posts"
 msgstr ""
 
-#: bp-core/bp-core-options.php:2930
+#: bp-core/bp-core-options.php:2928
 msgid "Recent activity"
 msgstr ""
 
@@ -10859,12 +11223,6 @@ msgstr ""
 #: bp-core/bp-core-wp-emails.php:1499
 #: bp-core/bp-core-wp-emails.php:1548
 msgid "Regards, <br /> All at ###SITENAME### <br /> ###SITEURL###"
-msgstr ""
-
-#. translators: Do not translate OLD_EMAIL, NEW_EMAIL, SITENAME, SITEURL: those are placeholders.
-#: bp-core/bp-core-wp-emails.php:1495
-#: bp-core/bp-core-wp-emails.php:1544
-msgid "Hi,"
 msgstr ""
 
 #: bp-core/bp-core-wp-emails.php:1496
@@ -15871,14 +16229,14 @@ msgid "Creator"
 msgstr ""
 
 #: bp-forums/admin/forums.php:501
-#: bp-forums/admin/replies.php:623
-#: bp-forums/admin/topics.php:719
+#: bp-forums/admin/replies.php:646
+#: bp-forums/admin/topics.php:742
 #: bp-messages/classes/class-bp-messages-notices-list-table.php:85
 msgid "Created"
 msgstr ""
 
 #: bp-forums/admin/forums.php:502
-#: bp-forums/admin/topics.php:720
+#: bp-forums/admin/topics.php:743
 #: bp-forums/templates/default/bbpress/loop-forums.php:21
 #: bp-forums/templates/default/bbpress/loop-topics.php:20
 msgid "Last Post"
@@ -15894,14 +16252,14 @@ msgid "Forum updated. <a href=\"%s\">View forum</a>"
 msgstr ""
 
 #: bp-forums/admin/forums.php:637
-#: bp-forums/admin/replies.php:926
-#: bp-forums/admin/topics.php:1059
+#: bp-forums/admin/replies.php:949
+#: bp-forums/admin/topics.php:1082
 msgid "Custom field updated."
 msgstr ""
 
 #: bp-forums/admin/forums.php:640
-#: bp-forums/admin/replies.php:929
-#: bp-forums/admin/topics.php:1062
+#: bp-forums/admin/replies.php:952
+#: bp-forums/admin/topics.php:1085
 msgid "Custom field deleted."
 msgstr ""
 
@@ -15909,6 +16267,7 @@ msgstr ""
 msgid "Forum updated."
 msgstr ""
 
+#. translators: %s: date and time of the revision
 #: bp-forums/admin/forums.php:648
 msgid "Forum restored to revision from %s"
 msgstr ""
@@ -16212,145 +16571,146 @@ msgstr ""
 msgid "<strong>Reply To</strong> determines the threading of the reply."
 msgstr ""
 
-#: bp-forums/admin/replies.php:376
-#: bp-forums/admin/topics.php:432
+#: bp-forums/admin/replies.php:399
+#: bp-forums/admin/topics.php:455
 #: bp-forums/templates/default/bbpress/form-anonymous.php:16
 #: bp-templates/bp-nouveau/readylaunch/forums/form-anonymous.php:20
 msgid "Author Information"
 msgstr ""
 
-#: bp-forums/admin/replies.php:502
+#: bp-forums/admin/replies.php:525
 msgid "The reply was not found!"
 msgstr ""
 
-#: bp-forums/admin/replies.php:506
-#: bp-forums/admin/topics.php:562
+#: bp-forums/admin/replies.php:529
+#: bp-forums/admin/topics.php:585
 msgid "You do not have the permission to do that!"
 msgstr ""
 
-#: bp-forums/admin/replies.php:580
+#: bp-forums/admin/replies.php:603
 msgid "There was a problem marking the reply \"%1$s\" as spam."
 msgstr ""
 
-#: bp-forums/admin/replies.php:580
+#: bp-forums/admin/replies.php:603
 msgid "Reply \"%1$s\" successfully marked as spam."
 msgstr ""
 
-#: bp-forums/admin/replies.php:584
+#: bp-forums/admin/replies.php:607
 msgid "There was a problem unmarking the reply \"%1$s\" as spam."
 msgstr ""
 
-#: bp-forums/admin/replies.php:584
+#: bp-forums/admin/replies.php:607
 msgid "Reply \"%1$s\" successfully unmarked as spam."
 msgstr ""
 
-#: bp-forums/admin/replies.php:676
-#: bp-forums/admin/replies.php:684
+#: bp-forums/admin/replies.php:699
+#: bp-forums/admin/replies.php:707
 msgid "No Discussion"
 msgstr ""
 
-#: bp-forums/admin/replies.php:701
-#: bp-forums/admin/replies.php:716
-#: bp-forums/admin/topics.php:770
+#: bp-forums/admin/replies.php:724
+#: bp-forums/admin/replies.php:739
+#: bp-forums/admin/topics.php:793
 msgid "No Forum"
 msgstr ""
 
-#: bp-forums/admin/replies.php:707
+#: bp-forums/admin/replies.php:730
 msgid "(Mismatch)"
 msgstr ""
 
-#: bp-forums/admin/replies.php:780
-#: bp-forums/admin/topics.php:865
+#: bp-forums/admin/replies.php:803
+#: bp-forums/admin/topics.php:888
 msgid "View \"%s\""
 msgstr ""
 
-#: bp-forums/admin/replies.php:801
+#: bp-forums/admin/replies.php:824
 msgid "Mark the reply as not spam"
 msgstr ""
 
-#: bp-forums/admin/replies.php:801
-#: bp-forums/admin/topics.php:935
+#: bp-forums/admin/replies.php:824
+#: bp-forums/admin/topics.php:958
 msgid "Not spam"
 msgstr ""
 
-#: bp-forums/admin/replies.php:803
+#: bp-forums/admin/replies.php:826
 msgid "Mark this reply as spam"
 msgstr ""
 
-#: bp-forums/admin/replies.php:812
-#: bp-forums/admin/topics.php:945
+#: bp-forums/admin/replies.php:835
+#: bp-forums/admin/topics.php:968
 #: bp-forums/replies/template.php:2273
 #: bp-forums/topics/template.php:2937
 msgid "Restore this item from the Trash"
 msgstr ""
 
-#: bp-forums/admin/replies.php:812
-#: bp-forums/admin/topics.php:945
+#: bp-forums/admin/replies.php:835
+#: bp-forums/admin/topics.php:968
 #: bp-forums/replies/template.php:2245
 #: bp-forums/topics/template.php:2909
 msgid "Restore"
 msgstr ""
 
-#: bp-forums/admin/replies.php:814
-#: bp-forums/admin/topics.php:947
+#: bp-forums/admin/replies.php:837
+#: bp-forums/admin/topics.php:970
 #: bp-forums/replies/template.php:2286
 #: bp-forums/topics/template.php:2950
 msgid "Move this item to the Trash"
 msgstr ""
 
-#: bp-forums/admin/replies.php:814
-#: bp-forums/admin/topics.php:947
+#: bp-forums/admin/replies.php:837
+#: bp-forums/admin/topics.php:970
 #: bp-forums/replies/template.php:2244
 #: bp-forums/topics/template.php:2908
 msgid "Trash"
 msgstr ""
 
-#: bp-forums/admin/replies.php:818
-#: bp-forums/admin/topics.php:951
+#: bp-forums/admin/replies.php:841
+#: bp-forums/admin/topics.php:974
 #: bp-forums/replies/template.php:2301
 #: bp-forums/topics/template.php:2965
 msgid "Delete this item permanently"
 msgstr ""
 
-#: bp-forums/admin/replies.php:846
-#: bp-forums/admin/topics.php:979
+#: bp-forums/admin/replies.php:869
+#: bp-forums/admin/topics.php:1002
 msgid "Empty Spam"
 msgstr ""
 
-#: bp-forums/admin/replies.php:857
-#: bp-forums/admin/topics.php:990
+#: bp-forums/admin/replies.php:880
+#: bp-forums/admin/topics.php:1013
 msgid "In all forums"
 msgstr ""
 
-#: bp-forums/admin/replies.php:923
+#: bp-forums/admin/replies.php:946
 msgid "Reply updated. <a href=\"%s\">View topic</a>"
 msgstr ""
 
-#: bp-forums/admin/replies.php:932
+#: bp-forums/admin/replies.php:955
 msgid "Reply updated."
 msgstr ""
 
-#: bp-forums/admin/replies.php:937
+#. translators: %s: date and time of the revision
+#: bp-forums/admin/replies.php:960
 msgid "Reply restored to revision from %s"
 msgstr ""
 
-#: bp-forums/admin/replies.php:941
+#: bp-forums/admin/replies.php:964
 msgid "Reply created. <a href=\"%s\">View topic</a>"
 msgstr ""
 
-#: bp-forums/admin/replies.php:944
+#: bp-forums/admin/replies.php:967
 msgid "Reply saved."
 msgstr ""
 
-#: bp-forums/admin/replies.php:947
+#: bp-forums/admin/replies.php:970
 msgid "Reply submitted. <a target=\"_blank\" href=\"%s\">Preview topic</a>"
 msgstr ""
 
-#: bp-forums/admin/replies.php:951
+#: bp-forums/admin/replies.php:974
 msgid "Reply scheduled for: <strong>%1$s</strong>. <a target=\"_blank\" href=\"%2$s\">Preview topic</a>"
 msgstr ""
 
-#: bp-forums/admin/replies.php:961
+#: bp-forums/admin/replies.php:984
 msgid "Reply draft updated. <a target=\"_blank\" href=\"%s\">Preview topic</a>"
 msgstr ""
 
@@ -17226,156 +17586,157 @@ msgstr ""
 msgid "<strong>Discussion Type</strong> dropdown indicates the sticky status of the discussion. Selecting the super sticky option would stick the discussion to the front of your forums, i.e. the discussion index, sticky option would stick the discussion to its respective forum. Selecting normal would not stick the discussion anywhere."
 msgstr ""
 
-#: bp-forums/admin/topics.php:558
+#: bp-forums/admin/topics.php:581
 msgid "The discussion was not found!"
 msgstr ""
 
-#: bp-forums/admin/topics.php:655
+#: bp-forums/admin/topics.php:678
 msgid "There was a problem opening the discussion \"%1$s\"."
 msgstr ""
 
-#: bp-forums/admin/topics.php:655
+#: bp-forums/admin/topics.php:678
 msgid "Discussion \"%1$s\" successfully opened."
 msgstr ""
 
-#: bp-forums/admin/topics.php:659
+#: bp-forums/admin/topics.php:682
 msgid "There was a problem closing the discussion \"%1$s\"."
 msgstr ""
 
-#: bp-forums/admin/topics.php:659
+#: bp-forums/admin/topics.php:682
 msgid "Discussion \"%1$s\" successfully closed."
 msgstr ""
 
-#: bp-forums/admin/topics.php:663
+#: bp-forums/admin/topics.php:686
 msgid "There was a problem sticking the discussion \"%1$s\" to front."
 msgstr ""
 
-#: bp-forums/admin/topics.php:663
+#: bp-forums/admin/topics.php:686
 msgid "Discussion \"%1$s\" successfully sticked to front."
 msgstr ""
 
-#: bp-forums/admin/topics.php:667
+#: bp-forums/admin/topics.php:690
 msgid "There was a problem sticking the discussion \"%1$s\"."
 msgstr ""
 
-#: bp-forums/admin/topics.php:667
+#: bp-forums/admin/topics.php:690
 msgid "Discussion \"%1$s\" successfully sticked."
 msgstr ""
 
-#: bp-forums/admin/topics.php:671
+#: bp-forums/admin/topics.php:694
 msgid "There was a problem unsticking the discussion \"%1$s\"."
 msgstr ""
 
-#: bp-forums/admin/topics.php:671
+#: bp-forums/admin/topics.php:694
 msgid "Discussion \"%1$s\" successfully unsticked."
 msgstr ""
 
-#: bp-forums/admin/topics.php:675
+#: bp-forums/admin/topics.php:698
 msgid "There was a problem marking the discussion \"%1$s\" as spam."
 msgstr ""
 
-#: bp-forums/admin/topics.php:675
+#: bp-forums/admin/topics.php:698
 msgid "Discussion \"%1$s\" successfully marked as spam."
 msgstr ""
 
-#: bp-forums/admin/topics.php:679
+#: bp-forums/admin/topics.php:702
 msgid "There was a problem unmarking the discussion \"%1$s\" as spam."
 msgstr ""
 
-#: bp-forums/admin/topics.php:679
+#: bp-forums/admin/topics.php:702
 msgid "Discussion \"%1$s\" successfully unmarked as spam."
 msgstr ""
 
-#: bp-forums/admin/topics.php:777
+#: bp-forums/admin/topics.php:800
 #: bp-forums/groups.php:361
 #: bp-forums/templates/default/bbpress/form-topic.php:128
 #: bp-templates/bp-nouveau/readylaunch/forums/form-topic.php:153
 msgid "(No Forum)"
 msgstr ""
 
-#: bp-forums/admin/topics.php:813
+#: bp-forums/admin/topics.php:836
 #: bp-forums/topics/template.php:2296
 msgid "No Replies"
 msgstr ""
 
-#: bp-forums/admin/topics.php:885
+#: bp-forums/admin/topics.php:908
 msgid "Close this discussion"
 msgstr ""
 
-#: bp-forums/admin/topics.php:887
+#: bp-forums/admin/topics.php:910
 msgid "Open this discussion"
 msgstr ""
 
-#: bp-forums/admin/topics.php:887
+#: bp-forums/admin/topics.php:910
 #: bp-forums/forums/functions.php:1739
 #: bp-forums/topics/template.php:3032
 msgid "Open"
 msgstr ""
 
-#: bp-forums/admin/topics.php:906
+#: bp-forums/admin/topics.php:929
 msgid "Unstick this discussion"
 msgstr ""
 
-#: bp-forums/admin/topics.php:906
+#: bp-forums/admin/topics.php:929
 #: bp-forums/topics/template.php:3104
 msgid "Unstick"
 msgstr ""
 
-#: bp-forums/admin/topics.php:919
+#: bp-forums/admin/topics.php:942
 msgid "Stick this discussion to its forum"
 msgstr ""
 
-#: bp-forums/admin/topics.php:919
+#: bp-forums/admin/topics.php:942
 #: bp-forums/topics/template.php:3103
 msgid "Stick"
 msgstr ""
 
-#: bp-forums/admin/topics.php:919
+#: bp-forums/admin/topics.php:942
 msgid "Stick this discussion to front"
 msgstr ""
 
-#: bp-forums/admin/topics.php:919
+#: bp-forums/admin/topics.php:942
 #: bp-forums/topics/template.php:3105
 msgid "(to front)"
 msgstr ""
 
-#: bp-forums/admin/topics.php:935
+#: bp-forums/admin/topics.php:958
 msgid "Mark the discussion as not spam"
 msgstr ""
 
-#: bp-forums/admin/topics.php:937
+#: bp-forums/admin/topics.php:960
 msgid "Mark this discussion as spam"
 msgstr ""
 
-#: bp-forums/admin/topics.php:1056
+#: bp-forums/admin/topics.php:1079
 msgid "Discussion updated. <a href=\"%s\">View discussion</a>"
 msgstr ""
 
-#: bp-forums/admin/topics.php:1065
+#: bp-forums/admin/topics.php:1088
 msgid "Discussion updated."
 msgstr ""
 
-#: bp-forums/admin/topics.php:1070
+#. translators: %s: date and time of the revision
+#: bp-forums/admin/topics.php:1093
 msgid "Discussion restored to revision from %s"
 msgstr ""
 
-#: bp-forums/admin/topics.php:1074
+#: bp-forums/admin/topics.php:1097
 msgid "Discussion created. <a href=\"%s\">View discussion</a>"
 msgstr ""
 
-#: bp-forums/admin/topics.php:1077
+#: bp-forums/admin/topics.php:1100
 msgid "Discussion saved."
 msgstr ""
 
-#: bp-forums/admin/topics.php:1080
+#: bp-forums/admin/topics.php:1103
 msgid "Discussion submitted. <a target=\"_blank\" href=\"%s\">Preview discussion</a>"
 msgstr ""
 
-#: bp-forums/admin/topics.php:1084
+#: bp-forums/admin/topics.php:1107
 msgid "Discussion scheduled for: <strong>%1$s</strong>. <a target=\"_blank\" href=\"%2$s\">Preview discussion</a>"
 msgstr ""
 
-#: bp-forums/admin/topics.php:1094
+#: bp-forums/admin/topics.php:1117
 msgid "Discussion draft updated. <a target=\"_blank\" href=\"%s\">Preview discussion</a>"
 msgstr ""
 
@@ -18012,19 +18373,6 @@ msgstr ""
 
 #: bp-forums/classes/class-bp-rest-reply-actions-endpoint.php:421
 msgid "You do not have permission to create new topics. The reply could not be converted into a topic."
-msgstr ""
-
-#: bp-forums/classes/class-bp-rest-reply-actions-endpoint.php:586
-#: bp-forums/classes/class-bp-rest-topics-actions-endpoint.php:1276
-#: bp-forums/classes/class-bp-rest-topics-actions-endpoint.php:1310
-#: bp-forums/classes/class-bp-rest-topics-actions-endpoint.php:1354
-#: bp-forums/classes/class-bp-rest-topics-actions-endpoint.php:1390
-#: bp-forums/classes/class-bp-rest-topics-actions-endpoint.php:1425
-#: bp-forums/classes/class-bp-rest-topics-actions-endpoint.php:1458
-#: bp-forums/templates/default/bbpress-functions.php:793
-#: bp-forums/templates/default/bbpress-functions.php:861
-#: bp-forums/templates/default/bbpress-functions.php:929
-msgid "You do not have permission to do this."
 msgstr ""
 
 #: bp-forums/classes/class-bp-rest-reply-endpoint.php:509
@@ -31743,10 +32091,6 @@ msgstr ""
 
 #: bp-notifications/bp-notifications-adminbar.php:90
 msgid "No new notifications"
-msgstr ""
-
-#: bp-notifications/bp-notifications-functions.php:1253
-msgid "Notification Icon"
 msgstr ""
 
 #: bp-notifications/bp-notifications-settings.php:26
