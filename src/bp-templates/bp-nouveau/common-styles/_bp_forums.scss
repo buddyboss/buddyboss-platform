@@ -3,6 +3,9 @@
  * @package BuddyBoss
  */
 
+@use "./_bp-variables" as *;
+@use "./_bp-mixins" as *;
+
 /* =Forums Style
 -------------------------------------------------------------- */
 .bbp-forums,

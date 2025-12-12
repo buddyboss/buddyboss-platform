@@ -1,3 +1,6 @@
+@use "./_bp-variables" as *;
+@use "./_bp-mixins" as *;
+
 .bb-activity-media-wrap {
 	display: -webkit-box;
 	display: -webkit-flex;

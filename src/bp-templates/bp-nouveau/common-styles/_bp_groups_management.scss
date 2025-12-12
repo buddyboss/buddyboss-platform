@@ -1,6 +1,10 @@
 // Single Groups Management screens
 // @version 3.0.0
 
+@use "sass:color";
+@use "./_bp-variables" as *;
+@use "./_bp-mixins" as *;
+
 // Groups settings screen
 .buddypress-wrap {
 
@@ -103,7 +107,7 @@
 		}
 
 		li.banned-user {
-			background: lighten($warn, 50%);
+			background: color.adjust($warn, $lightness: 50%);
 		}
 
 		.member-name {
