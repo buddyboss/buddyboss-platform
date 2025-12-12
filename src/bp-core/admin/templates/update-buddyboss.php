@@ -43,11 +43,10 @@ if ( false === $bb_changelog_data ) {
 						$version = $version_match[1];
 						// Reset the version content when a new version is detected.
 						$version_content = '';
-					} else {
+
 						// Convert markdown-style list items to HTML.
-						if ( preg_match( '/^\*\s*(.+)$/', $line, $item_match ) ) {
-							$version_content .= '<li>' . esc_html( $item_match[1] ) . '</li>';
-						}
+					} else if ( preg_match( '/^\*\s*(.+)$/', $line, $item_match ) ) {
+						$version_content .= '<li>' . esc_html( $item_match[1] ) . '</li>';
 					}
 
 					if ( ! empty( $version ) && ! empty( $version_content ) ) {
