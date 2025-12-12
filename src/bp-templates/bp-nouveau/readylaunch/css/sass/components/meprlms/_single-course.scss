@@ -54,6 +54,7 @@
 		.course-progress {
 			display: flex;
 			flex-direction: column;
+			background-color: transparent;
 
 			.progress-bar {
 				order: 2;
@@ -573,7 +574,7 @@
 		.progress-bar {
 			height: var(--bb-rl-space-100);
 			border-radius: var(--bb-rl-radius-full);
-			background: var(--bb-rl-background-brand-secondary-color);
+			background: var(--bb-rl-border-secondary-color);
 
 			.user-progress {
 				background: var(--bb-rl-background-brand-primary-color);

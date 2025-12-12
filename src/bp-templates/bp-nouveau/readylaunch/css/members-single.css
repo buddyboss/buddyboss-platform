@@ -125,6 +125,7 @@
   --bb-rl-background-brand-secondary-color: #3325ae;
   --bb-rl-background-brand-secondary-hover-color: #2e2689;
   --bb-rl-background-brand-disabled-color: #767eff;
+  --bb-rl-background-info-secondary-color: #3325ae;
   --bb-rl-background-positive-primary-color: #008043;
   --bb-rl-background-positive-primary-hover-color: #02542d;
   --bb-rl-background-positive-secondary-color: #02542d;
@@ -145,6 +146,7 @@
   --bb-rl-border-quaternary-color: #f3f3f3;
   --bb-rl-border-brand-primary-color: #c2cdff;
   --bb-rl-border-brand-secondary-color: var(--bb-rl-primary-color);
+  --bb-rl-border-info-primary-color: #c2cdff;
   --bb-rl-border-positive-primary-color: #cff7d3;
   --bb-rl-border-positive-secondary-color: #14ae5c;
   --bb-rl-border-warning-primary-color: #fff1c2;
@@ -172,6 +174,7 @@
   --bb-rl-icon-brand-primary-color: #c2cdff;
   --bb-rl-icon-brand-secondary-color: var(--bb-rl-primary-color);
   --bb-rl-icon-brand-disabled-color: #767eff;
+  --bb-rl-icon-info-primary-color: #dde4ff;
   --bb-rl-icon-positive-primary-color: #cff7d3;
   --bb-rl-icon-positive-secondary-color: #14ae5c;
   --bb-rl-icon-warning-primary-color: #fff1c2;
