@@ -1,3 +1,5 @@
+@use "hint-variables" as *;
+@use "hint-mixins" as *;
 /**
  * source: hint-always.scss
  *
@@ -18,41 +20,41 @@
 
 	&.#{$hintPrefix}top {
 
-		@include hint-mixins.set-margin("translateY", -1, -50%);
+		@include set-margin("translateY", -1, -50%);
 
 		&-left {
 
-			@include hint-mixins.set-margin("translateY", -1, -100%);
+			@include set-margin("translateY", -1, -100%);
 		}
 
 		&-right {
 
-			@include hint-mixins.set-margin("translateY", -1, 0);
+			@include set-margin("translateY", -1, 0);
 		}
 	}
 
 	&.#{$hintPrefix}bottom {
 
-		@include hint-mixins.set-margin("translateY", 1, -50%);
+		@include set-margin("translateY", 1, -50%);
 
 		&-left {
 
-			@include hint-mixins.set-margin("translateY", 1, -100%);
+			@include set-margin("translateY", 1, -100%);
 		}
 
 		&-right {
 
-			@include hint-mixins.set-margin("translateY", 1, 0);
+			@include set-margin("translateY", 1, 0);
 		}
 	}
 
 	&.#{$hintPrefix}left {
 
-		@include hint-mixins.set-margin("translateX", -1);
+		@include set-margin("translateX", -1);
 	}
 
 	&.#{$hintPrefix}right {
 
-		@include hint-mixins.set-margin("translateX", 1);
+		@include set-margin("translateX", 1);
 	}
 }

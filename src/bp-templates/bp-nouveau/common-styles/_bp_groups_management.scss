@@ -1,8 +1,9 @@
 // Single Groups Management screens
 // @version 3.0.0
 
-@use "./_bp-variables" as variables;
-@use "./_bp-mixins" as mixins;
+@use "sass:color";
+@use "./_bp-variables" as *;
+@use "./_bp-mixins" as *;
 
 // Groups settings screen
 .buddypress-wrap {
@@ -10,7 +11,7 @@
 	.group-status-type {
 
 		ul {
-			margin: 0 0 variables.$marg-lrg variables.$marg-lrg;
+			margin: 0 0 $marg-lrg $marg-lrg;
 		}
 	}
 }
@@ -18,16 +19,16 @@
 // ==== Members manage ====
 
 .groups-manage-members-list {
-	padding: variables.$pad-sml 0;
+	padding: $pad-sml 0;
 
 	dd {
 		margin: 0;
-		padding: variables.$pad-med 0;
+		padding: $pad-med 0;
 	}
 
 	.section-title {
-		background: variables.$light-grey;
-		padding-left: variables.$pad-xsml;
+		background: $light-grey;
+		padding-left: $pad-xsml;
 
 		&.gen-members-section {
 			background-color: transparent;
@@ -91,9 +92,9 @@
 		margin-bottom: 0;
 
 		li {
-			border-bottom: 1px solid variables.$bp-border-color;
-			margin-bottom: variables.$marg-sml;
-			padding: variables.$pad-sml variables.$pad-xsml variables.$pad-xsml;
+			border-bottom: 1px solid $bp-border-color;
+			margin-bottom: $marg-sml;
+			padding: $pad-sml $pad-xsml $pad-xsml;
 		}
 
 		li:only-child,
@@ -102,11 +103,11 @@
 		}
 
 		li:nth-child(even) {
-			background: variables.$off-white;
+			background: $off-white;
 		}
 
 		li.banned-user {
-			background: lighten(variables.$warn, 50%);
+			background: color.adjust($warn, $lightness: 50%);
 		}
 
 		.member-name {
@@ -120,7 +121,7 @@
 			width: 20%;
 		}
 
-		@include mixins.medium-small-up() {
+		@include medium-small-up() {
 
 			.member-name {
 				text-align: left;
@@ -132,19 +133,19 @@
 			}
 		}
 
-		@include mixins.clearfix-element(".members-manage-buttons");
+		@include clearfix-element(".members-manage-buttons");
 
 		.members-manage-buttons {
-			margin: variables.$marg-med 0 variables.$marg-xsml;
+			margin: $marg-med 0 $marg-xsml;
 
 			a.button {
-				color: variables.$light-text;
+				color: $light-text;
 				display: block;
 
-				@include mixins.font-size(13);
+				@include font-size(13);
 			}
 
-			@include mixins.medium-small-up() {
+			@include medium-small-up() {
 
 				a.button {
 					display: inline-block;
@@ -155,13 +156,13 @@
 		.members-manage-buttons.text-links-list {
 			margin-bottom: 0;
 
-			@include mixins.medium-small-max() {
+			@include medium-small-max() {
 
 				a.button {
 					background: #fafafa;
-					border: 1px solid variables.$bp-border-color;
+					border: 1px solid $bp-border-color;
 					display: block;
-					margin-bottom: variables.$marg-sml;
+					margin-bottom: $marg-sml;
 				}
 			}
 		}
@@ -170,11 +171,11 @@
 
 			a.button {
 
-				@include mixins.font-size(12);
+				@include font-size(12);
 			}
 		}
 
-		@include mixins.medium-up() {
+		@include medium-up() {
 
 			li {
 
@@ -184,7 +185,7 @@
 				}
 
 				.avatar {
-					margin-right: variables.$marg-med;
+					margin-right: $marg-med;
 				}
 
 				.action {
@@ -216,17 +217,17 @@
 	box-shadow: none;
 
 	.ui-button {
-		background: variables.$white; /* Old browsers */
-		border-color: variables.$bp-border-dark;
+		background: $white; /* Old browsers */
+		border-color: $bp-border-dark;
 		border-style: solid;
 		border-width: 1px;
-		color: variables.$dark-grey;
+		color: $dark-grey;
 		cursor: pointer;
 		font-size: inherit;
 		font-weight: 400;
 		outline: none;
 		line-height: 1.3;
-		padding: variables.$pad-xsml variables.$pad-sml;
+		padding: $pad-xsml $pad-sml;
 		text-align: center;
 		text-decoration: none;
 		width: auto;

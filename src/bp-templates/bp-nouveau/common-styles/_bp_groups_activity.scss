@@ -1,8 +1,8 @@
 // Groups single screen - Activity
 // @version 3.0.0
 
-@use "./_bp-variables" as variables;
-@use "./_bp-mixins" as mixins;
+@use "./_bp-variables" as *;
+@use "./_bp-mixins" as *;
 
 .buddypress.groups {
 

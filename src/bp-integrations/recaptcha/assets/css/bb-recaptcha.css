@@ -27,7 +27,6 @@
   margin-top: 50px;
   margin-bottom: -1px;
 }
-
 .bb-login.login-action-lostpassword .v2_invisible_badge.bb_recaptcha_v2_element_content {
   margin-top: 20px;
 }
@@ -37,7 +36,6 @@
   margin-top: 20px;
   margin-bottom: 20px;
 }
-
 .v2_invisible_badge .grecaptcha-badge {
   display: flex;
   justify-content: flex-end;
@@ -48,7 +46,6 @@
   transition: linear 100ms width;
   margin: 25px 0 -1px;
 }
-
 .v2_invisible_badge .grecaptcha-badge:hover {
   width: 256px !important;
 }

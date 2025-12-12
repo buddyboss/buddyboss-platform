@@ -4,13 +4,13 @@
 // The sheet also adds layout properties such as border-box
 // @version 3.0.0
 
-@use "./_bp-variables" as variables;
-@use "./_bp-mixins" as mixins;
+@use "./_bp-variables" as *;
+@use "./_bp-mixins" as *;
 
 #item-body,
 .single-screen-navs {
 
-	@include mixins.box-model();
+	@include box-model();
 }
 
 
@@ -25,7 +25,7 @@
 	> li,
 	> li .generic-button a {
 
-		@include mixins.box-model( border-box );
+		@include box-model( border-box );
 	}
 
 	> li {
@@ -34,8 +34,8 @@
 		padding-top: 0;
 
 		.list-wrap {
-			background: variables.$off-white;
-			border: 1px solid variables.$bp-border-color;
+			background: $off-white;
+			border: 1px solid $bp-border-color;
 			padding-bottom: 15px;
 			position: relative;
 			overflow: hidden;
@@ -43,12 +43,12 @@
 			height: 100%;
 
 			.list-title {
-				padding: variables.$pad-sml variables.$pad-sml 0;
+				padding: $pad-sml $pad-sml 0;
 			}
 
 			.update {
-				color: variables.$meta-text;
-				padding: variables.$pad-sml variables.$pad-lrg;
+				color: $meta-text;
+				padding: $pad-sml $pad-lrg;
 			}
 		}
 
@@ -67,7 +67,7 @@
 	// to prevent breaking grid layout through uneven heights
 	// one column or single column mobile can have varying heights
 
-	@include mixins.small-up() {
+	@include small-up() {
 
 		&.members-list {
 
@@ -94,7 +94,7 @@
 			.list-wrap {
 
 				.group-desc {
-					margin: variables.$marg-med auto 0;
+					margin: $marg-med auto 0;
 					min-height: 5em;
 					overflow: hidden;
 				}
@@ -126,7 +126,7 @@
 
 /* Build the two column class small up */
 
-@include mixins.small-up() {
+@include small-up() {
 
 	// Set the column  or item numbers to span horizontally
 	.grid {
@@ -150,7 +150,7 @@
 	.grid.bp-list {
 		display: flex;
 		flex-flow: row wrap;
-		padding-top: variables.$pad-med;
+		padding-top: $pad-med;
 		margin-left: -5px;
 		margin-right: -5px;
 		width: auto;
@@ -161,14 +161,14 @@
 			max-width: 100%;
 			min-width: 0;
 			padding: 0 5px;
-			margin-bottom: variables.$marg-sml;
+			margin-bottom: $marg-sml;
 
-			@include mixins.medium-small-up() {
+			@include medium-small-up() {
 				flex: 0 0 50%;
 				max-width: 50%;
 			}
 
-			@include mixins.large-up() {
+			@include large-up() {
 				flex: 0 0 33.33%;
 				max-width: 33.33%;
 			}
@@ -199,7 +199,7 @@
 
 			.item {
 
-				@include mixins.responsive-font( 22 );
+				@include responsive-font( 22 );
 				left: 0;
 				margin: 0 auto;
 				text-align: center;
@@ -212,7 +212,7 @@
 				}
 
 				.item-block {
-					margin-bottom: variables.$marg-sml;
+					margin-bottom: $marg-sml;
 				}
 
 				.last-activity {
@@ -306,7 +306,7 @@
 	}
 }
 
-@include mixins.medium-up() {
+@include medium-up() {
 
 	.bp-single-vert-nav { // described for the #buddypress element
 
@@ -325,17 +325,17 @@
 		}
 
 		.subnav {
-			background: variables.$light-grey;
+			background: $light-grey;
 			width: auto;
 
 			li {
 
-				@include mixins.font-size(16);
-				margin: 0 0 variables.$marg-sml;
+				@include font-size(16);
+				margin: 0 0 $marg-sml;
 
 				a {
-					border-right: 1px solid variables.$bp-border-dark;
-					padding: 0 variables.$pad-sml;
+					border-right: 1px solid $bp-border-dark;
+					padding: 0 $pad-sml;
 				}
 
 				a:focus,
@@ -348,7 +348,7 @@
 
 				a {
 					background: none;
-					color: variables.$black;
+					color: $black;
 				}
 			}
 
@@ -363,7 +363,7 @@
 	}
 
 	.bb-single-main-nav--vertical {
-		border-right: 1px solid variables.$med-light-grey;
+		border-right: 1px solid $med-light-grey;
 		border-bottom: 0;
 		float: left;
 		width: 25%;
@@ -378,13 +378,13 @@
 			margin-right: 0;
 
 			&.selected a {
-				background: variables.$grey;
-				color: variables.$black;
+				background: $grey;
+				color: $black;
 			}
 
 			&:focus,
 			&:hover {
-				background: variables.$grey;
+				background: $grey;
 			}
 
 			span {
@@ -394,7 +394,7 @@
 			}
 
 			&:hover span {
-				border-color: variables.$light-grey;
+				border-color: $light-grey;
 			}
 		} // li
 	}
@@ -421,13 +421,13 @@
 						border: 1px solid #eee;
 
 						a {
-							background: variables.$dark-grey;
-							color: variables.$white;
+							background: $dark-grey;
+							color: $white;
 
 							span {
-								background: variables.$light-grey;
-								border-color: variables.$grey;
-								color: variables.$highlight;
+								background: $light-grey;
+								border-color: $grey;
+								color: $highlight;
 							}
 						}
 					} // close .selected
@@ -437,11 +437,11 @@
 
 					a:hover,
 					a:focus {
-						background: variables.$grey;
-						color: variables.$black;
+						background: $grey;
+						color: $black;
 
 						span {
-							border: 1px solid variables.$dark-grey;
+							border: 1px solid $dark-grey;
 						}
 					}
 				}
@@ -450,10 +450,10 @@
 		} // close .dir-navs
 
 		.screen-content {
-			border-left: 1px solid variables.$med-light-grey;
+			border-left: 1px solid $med-light-grey;
 			margin-left: 20%;
 			overflow: hidden;
-			padding: 0 0 variables.$pad-lrg variables.$pad-med;
+			padding: 0 0 $pad-lrg $pad-med;
 
 			.subnav-filters {
 				margin-top: 0;

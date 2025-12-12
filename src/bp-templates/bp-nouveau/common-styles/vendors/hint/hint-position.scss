@@ -1,3 +1,5 @@
+@use "hint-variables" as *;
+@use "hint-mixins" as *;
 /**
  * source: hint-position.scss
  *
@@ -39,7 +41,7 @@
 
 	&:after {
 
-		@include hint-mixins.vendor("transform", translateX($translateX));
+		@include vendor("transform", translateX($translateX));
 	}
 
 	&:after {
@@ -52,7 +54,7 @@
 
 	&:hover {
 
-		@include hint-mixins.set-margin("translateY", $transitionDirection, $translateX);
+		@include set-margin("translateY", $transitionDirection, $translateX);
 	}
 }
 
@@ -80,14 +82,14 @@
 
 	&:hover {
 
-		@include hint-mixins.set-margin("translateX", $transitionDirection);
+		@include set-margin("translateX", $transitionDirection);
 	}
 }
 
 /**
  * set default color for tooltip arrows
  */
-@include hint-mixins.arrow-border-color($hintDefaultColor);
+@include arrow-border-color($hintDefaultColor);
 
 /**
  * top tooltip

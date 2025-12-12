@@ -1,3 +1,5 @@
+@use "hint-variables" as *;
+@use "hint-mixins" as *;
 /**
  * source: hint-effects.scss
  *
@@ -15,7 +17,7 @@
 	&:before,
 	&:after {
 
-		@include hint-mixins.vendor("transition-duration", 0ms);
+		@include vendor("transition-duration", 0ms);
 	}
 }
 

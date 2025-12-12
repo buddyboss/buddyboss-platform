@@ -1,8 +1,8 @@
 // BP General CLasses: screen reader, clearfix etc.
 // @version 3.0.0
 
-@use "./_bp-variables" as variables;
-@use "./_bp-mixins" as mixins;
+@use "./_bp-variables" as *;
+@use "./_bp-mixins" as *;
 
 .bp-screen-reader-text {
 	// See also _bp_mixins for mixin to add properties on block
@@ -31,7 +31,7 @@
 // using flexbox this is a progressive enhancement,
 // it won't work in all browsers, older browser will simply
 // fall back to non centered or to using older techniques.
-// N.B. A mixin exists '@include mixins.center-vert()' for rulesets
+// N.B. A mixin exists '@include center-vert()' for rulesets
 // to use to add the properties below.
 .center-vert {
 	display: -ms-flexbox;
@@ -45,10 +45,10 @@
 
 .bp-hide {
 
-	@include mixins.hide();
+	@include hide();
 }
 
 .bp-show {
 
-	@include mixins.show();
+	@include show();
 }

@@ -1,13 +1,13 @@
 // BP Single Screens Item Header General Styles.
 // @version 3.0.0
 
-@use "./_bp-variables" as variables;
-@use "./_bp-mixins" as mixins;
+@use "./_bp-variables" as *;
+@use "./_bp-mixins" as *;
 
-@include mixins.clearfix-element(".single-headers");
+@include clearfix-element(".single-headers");
 
 .single-headers {
-	margin-bottom: variables.$marg-med;
+	margin-bottom: $marg-med;
 
 	// Breakpoint element positioning
 
@@ -31,14 +31,14 @@
 
 	.group-status {
 
-		@include mixins.font-size(14);
-		padding-right: variables.$pad-med;
+		@include font-size(14);
+		padding-right: $pad-med;
 	}
 
 	.activity {
 		display: inline-block;
 
-		@include mixins.font-size(14);
+		@include font-size(14);
 		padding: 0;
 	}
 
@@ -58,10 +58,10 @@
 	// @mention user name
 	h2 {
 		line-height: 1.2;
-		margin: 0 0 variables.$marg-xsml;
+		margin: 0 0 $marg-xsml;
 
 		a {
-			color: variables.$light-text;
+			color: $light-text;
 			text-decoration: none;
 		}
 
@@ -74,7 +74,7 @@
 
 			span {
 				background: #a1dcfa;
-				color: variables.$white;
+				color: $white;
 				cursor: pointer;
 				font-size: 80%;
 				font-weight: 700;
@@ -103,9 +103,9 @@
 	.item-meta {
 		color: inherit;
 
-		@include mixins.font-size(14);
-		margin: variables.$marg-med 0 variables.$marg-xsml;
-		padding-bottom: variables.$pad-sml;
+		@include font-size(14);
+		margin: $marg-med 0 $marg-xsml;
+		padding-bottom: $pad-sml;
 
 		&.last-activity {
 			margin-bottom: 0;
@@ -157,7 +157,7 @@
 		text-align: center;
 	}
 
-	@include mixins.medium-up() {
+	@include medium-up() {
 
 		div.generic-button,
 		a.button,
@@ -177,7 +177,7 @@ body.no-js  .single-item-header .js-self-profile-button {
 }
 
 #create-group-form #header-cover-image {
-	margin-bottom: variables.$marg-med;
+	margin-bottom: $marg-med;
 }
 
 .group-create #create-group-form #header-cover-image {
@@ -187,7 +187,7 @@ body.no-js  .single-item-header .js-self-profile-button {
 @media screen and (min-width: 783px) {
 
 	#item-header-avatar {
-		padding-right: variables.$pad-med;
+		padding-right: $pad-med;
 	}
 }
 

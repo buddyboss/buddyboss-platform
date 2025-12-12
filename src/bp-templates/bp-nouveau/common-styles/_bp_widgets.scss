@@ -1,44 +1,44 @@
 // BP Widgets
 // @version 3.0.0
 
-@use "./_bp-variables" as variables;
-@use "./_bp-mixins" as mixins;
+@use "./_bp-variables" as *;
+@use "./_bp-mixins" as *;
 
 .buddypress.widget {
 
 	.item-options {
 
-		@include mixins.font-size(14);
+		@include font-size(14);
 	}
 
 	ul.item-list {
 
-		@include mixins.flex-box-dir($flex-dir: column);
+		@include flex-box-dir($flex-dir: column);
 
-		@include mixins.medium-small-up() {
+		@include medium-small-up() {
 
-			@include mixins.flex-box-dir($flex-dir: row, $flex-wrap: wrap);
+			@include flex-box-dir($flex-dir: row, $flex-wrap: wrap);
 		}
 
 		list-style: none;
-		margin: variables.$marg-sml -2%;
+		margin: $marg-sml -2%;
 		overflow: hidden;
 
 		li {
-			border: 1px solid variables.$bp-border-color;
+			border: 1px solid $bp-border-color;
 
-			@include mixins.flex-align();
-			@include mixins.box-item-size($grow: 1, $basis: 46%);
+			@include flex-align();
+			@include box-item-size($grow: 1, $basis: 46%);
 
-			@include mixins.large-up() {
+			@include large-up() {
 
-				@include mixins.box-item-size($grow: 0, $basis: 20%);
+				@include box-item-size($grow: 0, $basis: 20%);
 			}
 
 			margin: 2%;
 
 			.item-avatar {
-				padding: variables.$pad-sml;
+				padding: $pad-sml;
 				text-align: center;
 
 				.avatar {
@@ -47,12 +47,12 @@
 			}
 
 			.item {
-				padding: 0 variables.$pad-sml variables.$pad-sml;
+				padding: 0 $pad-sml $pad-sml;
 
 
 				.item-meta {
 
-					@include mixins.font-size(12);
+					@include font-size(12);
 					overflow-wrap: break-word;
 				}
 			}
@@ -75,7 +75,7 @@
 
 	.avatar-block {
 
-		@include mixins.flex-box-dir($flex-dir: row, $flex-wrap: wrap);
+		@include flex-box-dir($flex-dir: row, $flex-wrap: wrap);
 
 		img {
 			margin-bottom: 1em;
@@ -135,10 +135,10 @@
 
 			li {
 
-				@include mixins.box-item-size($grow: 0, $basis: 46%);
+				@include box-item-size($grow: 0, $basis: 46%);
 				margin: 2% 2% 10px;
 
-				@include mixins.large-up {
+				@include large-up {
 
 					.avatar {
 						width: 100%;
@@ -147,16 +147,16 @@
 			}
 		}
 
-		@include mixins.large-up() {
+		@include large-up() {
 
 			ul.item-list {
-				margin: variables.$marg-sml -2%;
+				margin: $marg-sml -2%;
 				width: 100%;
 
 				li {
 
-					@include mixins.box-item-size($grow: 0, $basis: auto);
-					margin: variables.$marg-sml 2% 1%;
+					@include box-item-size($grow: 0, $basis: auto);
+					margin: $marg-sml 2% 1%;
 					width: 46%;
 				}
 			}

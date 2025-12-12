@@ -1,15 +1,15 @@
 // BP Single User Specific Header Styles
 // @version 3.0.0
 
-@use "./_bp-variables" as variables;
-@use "./_bp-mixins" as mixins;
+@use "./_bp-variables" as *;
+@use "./_bp-mixins" as *;
 
 .bp-user {
 
 	.users-header {
 
 		.user-nicename {
-			margin-bottom: variables.$marg-xsml;
+			margin-bottom: $marg-xsml;
 		}
 	}
 

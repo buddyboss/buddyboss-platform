@@ -16,8 +16,8 @@
  *
  */
 
-@use "hint-variables";
-@use "hint-mixins";
+@use "hint-variables" as *;
+@use "hint-mixins" as *;
 @use "hint-core";
 @use "hint-position";
 @use "hint-sizes";

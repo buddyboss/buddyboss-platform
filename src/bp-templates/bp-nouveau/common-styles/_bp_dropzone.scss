@@ -1,5 +1,5 @@
-@use "./_bp-variables" as variables;
-@use "./_bp-mixins" as mixins;
+@use "./_bp-variables" as *;
+@use "./_bp-mixins" as *;
 
 .dropzone,
 .dropzone * {
@@ -655,7 +655,7 @@
 			transform-origin: 50% 50%;
 
 			circle {
-				stroke: variables.$blue;
+				stroke: $blue;
 				transition: all ease 0.3s;
 			}
 
@@ -677,7 +677,7 @@
 		background-color: rgba(0, 0, 0, 0.05);
 
 		[class*=" bb-icon-"] {
-			color: variables.$light-text;
+			color: $light-text;
 		}
 	}
 
@@ -805,7 +805,7 @@
 		padding-right: 25px;
 
 		p {
-			color: variables.$light-text;
+			color: $light-text;
 			font-size: 13px;
 			line-height: 1.5;
 			margin: 0 !important;
@@ -817,7 +817,7 @@
 		}
 
 		.dz-progress-bar-full {
-			background-color: variables.$light-grey;
+			background-color: $light-grey;
 			border-radius: 100px;
 			height: 8px;
 			width: 100%;
@@ -826,7 +826,7 @@
 		}
 
 		.dz-progress {
-			background-color: variables.$blue;
+			background-color: $blue;
 			display: block;
 			height: 100%;
 			width: 100%;
@@ -834,9 +834,9 @@
 
 		.dz-remove-all {
 
-			@include mixins.center-vert();
+			@include center-vert();
 			justify-content: center;
-			background-color: variables.$light-grey;
+			background-color: $light-grey;
 			border-radius: 50%;
 			cursor: pointer;
 			height: 20px;
@@ -846,7 +846,7 @@
 			right: 0;
 
 			&:before {
-				color: variables.$light-text;
+				color: $light-text;
 				font-size: 18px;
 			}
 		}

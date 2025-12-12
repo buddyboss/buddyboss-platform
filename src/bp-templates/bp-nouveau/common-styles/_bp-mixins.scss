@@ -3,7 +3,10 @@
 //
 // @version 3.0.0
 
-@use "./_bp-variables" as variables;
+@use "sass:color";
+@use "sass:math";
+@use "sass:string";
+@use "./_bp-variables" as *;
 
 // This file provides some basic mixins for BP elements
 // such as box sizing, radius, calc etc
@@ -22,7 +25,7 @@
 // layout sizes & must take care to work with existing layout sizes.
 
 @mixin font-size($font-size: 16) {
-	$rem-font-value: ($font-size / 10);
+	$rem-font-value: math.div($font-size, 10);
 	font-size: ($font-size * 1px);
 	//	font-size: $rem-font-value + rem;
 }
@@ -39,7 +42,7 @@
 
 	$the-sizes: $res-size;
 
-	$small: round(($the-sizes / 1.2));
+	$small: round(math.div($the-sizes, 1.2));
 	$larger: $the-sizes;
 
 	$the-sizes: (
@@ -270,11 +273,11 @@
 	display: -ms-flex;
 	display: -o-flex;
 	display: flex;
-	-webkit-flex-flow: unquote($flex-dir) unquote($flex-wrap);
-	-moz-flex-flow: unquote($flex-dir) unquote($flex-wrap);
-	-ms-flex-flow: unquote($flex-dir) unquote($flex-wrap);
-	-o-flex-flow: unquote($flex-dir) unquote($flex-wrap);
-	flex-flow: unquote($flex-dir) unquote($flex-wrap);
+	-webkit-flex-flow: string.unquote($flex-dir) string.unquote($flex-wrap);
+	-moz-flex-flow: string.unquote($flex-dir) string.unquote($flex-wrap);
+	-ms-flex-flow: string.unquote($flex-dir) string.unquote($flex-wrap);
+	-o-flex-flow: string.unquote($flex-dir) string.unquote($flex-wrap);
+	flex-flow: string.unquote($flex-dir) string.unquote($flex-wrap);
 }
 
 // align child items
@@ -394,18 +397,18 @@
 
 		li.selected {
 			background: none;
-			border: 1px solid variables.$med-light-grey;
+			border: 1px solid $med-light-grey;
 			border-right-color: #fff;
 
 			a {
 				background: none;
-				color: variables.$black;
+				color: $black;
 				font-weight: 600;
 
 				span {
-					background: variables.$dark-grey;
-					border: 1px solid variables.$med-light-grey;
-					color: variables.$white;
+					background: $dark-grey;
+					border: 1px solid $med-light-grey;
+					color: $white;
 				}
 			}
 		}
@@ -425,7 +428,7 @@
 		// if a param was passed through
 		$text-color: $text-color;
 	} @else {
-		$text-color: darken($background, 50%);
+		$text-color: color.adjust($background, $lightness: -50%);
 	}
 
 	background: $background;
@@ -435,7 +438,7 @@
 		@if $border {
 			border: $border;
 		} @else {
-			border: 1px solid darken($background, 10%);
+			border: 1px solid color.adjust($background, $lightness: -10%);
 		}
 	}
 
@@ -449,7 +452,7 @@
 	@if $background {
 		$background: $background;
 	} @else {
-		$background: variables.$background-bad;
+		$background: $background-bad;
 	}
 
 	background-color: $background;
@@ -457,7 +460,7 @@
 	@if $border {
 		$border: $border;
 	} @else {
-		$border: variables.$border-bad;
+		$border: $border-bad;
 	}
 
 	border-color: $border;
@@ -470,7 +473,7 @@
 	@if $background {
 		$background: $background;
 	} @else {
-		$background: variables.$background-short;
+		$background: $background-short;
 	}
 
 	background-color: $background;
@@ -478,7 +481,7 @@
 	@if $border {
 		$border: $border;
 	} @else {
-		$border: variables.$border-short;
+		$border: $border-short;
 	}
 
 	border-color: $border;
@@ -491,7 +494,7 @@
 	@if $background {
 		$background: $background;
 	} @else {
-		$background: variables.$background-good;
+		$background: $background-good;
 	}
 
 	background-color: $background;
@@ -499,7 +502,7 @@
 	@if $border {
 		$border: $border;
 	} @else {
-		$border: variables.$border-good;
+		$border: $border-good;
 	}
 
 	border-color: $border;

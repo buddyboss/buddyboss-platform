@@ -1,12 +1,13 @@
 // BP Activity Entries - activity loop
 // @version 3.0.0
 
-@use "./_bp-variables" as variables;
-@use "./_bp-mixins" as mixins;
+@use "sass:color";
+@use "./_bp-variables" as *;
+@use "./_bp-mixins" as *;
 
 .activity-list {
 
-	padding: variables.$pad-sml;
+	padding: $pad-sml;
 
 	.activity-item:before,
 	.activity-item:after {
@@ -20,10 +21,10 @@
 
 	.activity-item { // li element - (entries)
 		list-style: none;
-		padding: variables.$pad-med;
+		padding: $pad-med;
 
 		&.has-comments {
-			padding-bottom: variables.$pad-med;
+			padding-bottom: $pad-med;
 		}
 
 		&.bb-closed-comments {
@@ -96,7 +97,7 @@
 
 				h2 {
 
-					@include mixins.font-size(20);
+					@include font-size(20);
 					margin: 0;
 				}
 
@@ -107,13 +108,13 @@
 					outline: none;
 
 					&:focus-visible {
-						outline: 1px solid variables.$blue;
+						outline: 1px solid $blue;
 					}
 				}
 			}
 		}
 
-		@include mixins.medium-up() {
+		@include medium-up() {
 
 			div.item-avatar { // 'div' for weight
 				margin: 0 2% 0 0;
@@ -128,7 +129,7 @@
 
 		&.mini {
 
-			@include mixins.font-size(13);
+			@include font-size(13);
 			position: relative;
 
 			.activity-avatar {
@@ -142,10 +143,10 @@
 				}
 			}
 
-			@include mixins.medium-up() {
+			@include medium-up() {
 
 				.activity-avatar {
-					margin-left: variables.$marg-med;
+					margin-left: $marg-med;
 					text-align: left;
 					width: 15%;
 
@@ -167,9 +168,9 @@
 		&.new_forum_topic {
 
 			.activity-inner {
-				border-left: 2px solid variables.$light-grey;
-				margin-left: variables.$marg-sml;
-				padding-left: variables.$pad-med;
+				border-left: 2px solid $light-grey;
+				margin-left: $marg-sml;
+				padding-left: $pad-med;
 			}
 		}
 
@@ -185,9 +186,9 @@
 		}
 
 		.activity-inreplyto {
-			color: variables.$light-text;
+			color: $light-text;
 
-			@include mixins.font-size(13);
+			@include font-size(13);
 
 			> p {
 				display: inline;
@@ -218,18 +219,18 @@
 
 			.avatar {
 				display: inline-block;
-				margin: 0 variables.$marg-xsml;
+				margin: 0 $marg-xsml;
 				vertical-align: bottom;
 			}
 
 			.time-since {
 
-				@include mixins.font-size(14);
-				color: variables.$light-text;
+				@include font-size(14);
+				color: $light-text;
 				text-decoration: none;
 
 				&:hover {
-					color: variables.$light-text;
+					color: $light-text;
 					cursor: pointer;
 					text-decoration: underline;
 				}
@@ -249,14 +250,14 @@
 				content: "\f344";
 				visibility: visible;
 
-				@include mixins.medium-lrg-up() {
+				@include medium-lrg-up() {
 					font-size: 15px;
 				}
 			}
 
 			.activity-time-since:before {
 				content: "\00b7 ";
-				color: variables.$light-text;
+				color: $light-text;
 				display: inline-block;
 				margin-right: 3px;
 				vertical-align: middle;
@@ -294,8 +295,8 @@
 
 			.activity-header,
 			.comment-header {
-				color: variables.$light-text;
-				margin-bottom: variables.$marg-sml;
+				color: $light-text;
+				margin-bottom: $marg-sml;
 			}
 
 			p {
@@ -304,7 +305,7 @@
 
 			.activity-state {
 
-				@include mixins.center-vert();
+				@include center-vert();
 				justify-content: space-between;
 				font-size: 14px;
 				clear: both;
@@ -347,7 +348,7 @@
 
 			.reactions_item {
 				display: flex;
-				background-color: variables.$white;
+				background-color: $white;
 				border-radius: 50%;
 				padding: 2px;
 				position: relative;
@@ -366,7 +367,7 @@
 				}
 
 				> i {
-					color: variables.$blue;
+					color: $blue;
 					font-size: 18px;
 					font-weight: 200;
 					line-height: 1;
@@ -434,7 +435,7 @@
 				> .like-count {
 
 					#buddypress & {
-						color: variables.$black;
+						color: $black;
 						line-height: 20px;
 						display: inline-block;
 						vertical-align: middle;
@@ -525,7 +526,7 @@
 		> .bp-generic-meta.groups-meta {
 			display: flex;
 			justify-content: space-around;
-			border-top: 1px solid variables.$light-grey;
+			border-top: 1px solid $light-grey;
 			padding: 5px 0;
 			position: relative;
 
@@ -540,10 +541,10 @@
 				> a {
 					width: 100%;
 					justify-content: center;
-					border-radius: variables.$block-radius-inner;
+					border-radius: $block-radius-inner;
 
 					&:hover {
-						background-color: variables.$light-grey;
+						background-color: $light-grey;
 					}
 				}
 			}
@@ -577,7 +578,7 @@
 				}
 
 				.comment-count {
-					color: variables.$black;
+					color: $black;
 				}
 			}
 
@@ -649,7 +650,7 @@
 		&.has-comments .activity-actions > .bp-generic-meta.action,
 		&.has-comments .activity-content > .bp-generic-meta.groups-meta,
 		&.has-comments > .bp-generic-meta.groups-meta {
-			border-bottom: 1px solid variables.$light-grey;
+			border-bottom: 1px solid $light-grey;
 			margin-bottom: 10px;
 		}
 
@@ -849,7 +850,7 @@
 						box-sizing: border-box;
 
 						&:hover {
-							color: variables.$blue;
+							color: $blue;
 							background-color: #f5f5f5;
 						}
 
@@ -1026,16 +1027,16 @@
 			}
 
 			.bb-activity-more-options-action {
-				border-radius: variables.$block-radius-inner;
+				border-radius: $block-radius-inner;
 
 				i {
 					font-size: 16px;
-					color: variables.$black;
+					color: $black;
 					opacity: 0.4;
 				}
 
 				&:hover {
-					background-color: variables.$light-grey;
+					background-color: $light-grey;
 
 					i {
 						opacity: 1;
@@ -1047,7 +1048,7 @@
 				z-index: 119;
 
 				.bb-activity-more-options-action {
-					background-color: variables.$light-grey;
+					background-color: $light-grey;
 
 					i {
 						opacity: 1;
@@ -1084,8 +1085,8 @@
 			left: 50%;
 			top: 50%;
 			transform: translate(-50%, -50%);
-			background-color: variables.$white;
-			border: 1px solid variables.$bp-border-color;
+			background-color: $white;
+			border: 1px solid $bp-border-color;
 			border-radius: 10px;
 			padding: 25px;
 			width: 100%;
@@ -1134,7 +1135,7 @@
 							display: flex;
 							align-items: center;
 							justify-content: center;
-							color: variables.$meta-text-dark;
+							color: $meta-text-dark;
 							font-size: 14px;
 							font-weight: 500;
 							line-height: 1.5;
@@ -1159,14 +1160,14 @@
 							}
 
 							> span {
-								color: variables.$light-text;
+								color: $light-text;
 								font-size: 14px;
 								font-weight: 500;
 								line-height: 1.5;
 							}
 
 							&.active {
-								border-bottom-color: variables.$text-link-hover;
+								border-bottom-color: $text-link-hover;
 							}
 						}
 					}
@@ -1210,7 +1211,7 @@
 
 						.activity-state_user__reaction {
 							display: flex;
-							background-color: variables.$white;
+							background-color: $white;
 							border-radius: 50%;
 							padding: 2px;
 							position: absolute;
@@ -1236,7 +1237,7 @@
 					}
 
 					.activity-state_user__name {
-						color: variables.$meta-text-dark;
+						color: $meta-text-dark;
 						font-size: 18px;
 						font-weight: 600;
 						line-height: 1.33;
@@ -1246,14 +1247,14 @@
 						max-width: calc(100% - 155px);
 
 						a {
-							color: variables.$meta-text-dark;
+							color: $meta-text-dark;
 							font-size: 16px;
 							font-weight: 600;
 						}
 					}
 
 					.activity-state_user__role {
-						color: variables.$white;
+						color: $white;
 						font-size: 11px;
 						font-weight: 600;
 						background-color: #595895;
@@ -1290,8 +1291,8 @@
 			align-items: center;
 			gap: 8px;
 			padding: 6px 8px;
-			background-color: variables.$white;
-			border: 1px solid variables.$bp-border-color;
+			background-color: $white;
+			border: 1px solid $bp-border-color;
 			border-radius: 34px;
 			box-shadow: 0 2px 4px -2px rgba(0, 0, 0, 13%);
 			transition: all ease 0.2s;
@@ -1553,7 +1554,7 @@
 	}
 
 	.activity-modal {
-		background: variables.$white;
+		background: $white;
 		border: 1px solid #b7b7b7;
 		display: flex;
 		flex-direction: column;
@@ -1613,7 +1614,7 @@
 	left: 0;
 	height: 60px;
 	min-height: 60px;
-	border-bottom: 1px solid variables.$bp-border-color;
+	border-bottom: 1px solid $bp-border-color;
 	padding: 0 25px;
 
 	h2 {
@@ -1634,12 +1635,12 @@
 
 	/*flex-grow: 1;*/
 	max-height: 252px;
-	border-top: 1px solid variables.$bp-border-color;
+	border-top: 1px solid $bp-border-color;
 }
 
 .bb-modal-activity-footer {
 
-	/*border-top: 1px solid variables.$bp-border-color;
+	/*border-top: 1px solid $bp-border-color;
 	padding: 10px 15px;
 	flex-grow: 1;
 	min-height: 106px;*/
@@ -1720,7 +1721,7 @@
 	}
 
 	.ac-submit-wrap {
-		background-color: variables.$blue;
+		background-color: $blue;
 		border-radius: 50%;
 		height: 30px;
 		width: 30px;
@@ -1750,7 +1751,7 @@
 			position: absolute;
 			inset: 0;
 			opacity: 0;
-			background-color: variables.$blue;
+			background-color: $blue;
 		}
 	}
 
@@ -2024,7 +2025,7 @@
 
 // close .activity-list
 
-@include mixins.medium-up() {
+@include medium-up() {
 
 	.activity-list.bp-list {
 		padding: 30px;
@@ -2046,7 +2047,7 @@
 			}
 
 			.activity-header {
-				margin: 0 variables.$marg-med 0 0;
+				margin: 0 $marg-med 0 0;
 				width: auto;
 			}
 
@@ -2065,30 +2066,30 @@
 
 	.load-more,
 	.load-newest {
-		background: variables.$off-white;
-		border: 1px solid variables.$bp-border-color;
+		background: $off-white;
+		border: 1px solid $bp-border-color;
 		font-size: 110%;
-		margin: variables.$marg-med 0;
+		margin: $marg-med 0;
 		padding: 0;
 		text-align: center;
 
 		a {
-			color: variables.$dark-grey;
+			color: $dark-grey;
 			display: block;
-			padding: variables.$pad-sml 0;
+			padding: $pad-sml 0;
 
 			&:focus,
 			&:hover {
-				background: variables.$white;
-				color: variables.$black;
+				background: $white;
+				color: $black;
 			}
 		}
 
 		&:focus,
 		&:hover {
-			border-color: darken(variables.$bp-border-color, 5%);
+			border-color: color.adjust($bp-border-color, $lightness: -5%);
 
-			@include mixins.box-shadow(0 0 6px 0 variables.$light-grey);
+			@include box-shadow(0 0 6px 0 $light-grey);
 		}
 	}
 }
@@ -2752,7 +2753,7 @@ ul.medium-editor-toolbar-actions {
 		z-index: 11;
 	}
 
-	@include mixins.medium-small-max() {
+	@include medium-small-max() {
 		color: rgba(0, 0, 0, 1);
 	}
 }
@@ -3166,7 +3167,7 @@ span.dashicons.dashicons-admin-file:before {
 
 						&:hover {
 							background-color: #f5f5f5;
-							color: variables.$blue;
+							color: $blue;
 						}
 
 						&:before {
@@ -3458,7 +3459,7 @@ span.dashicons.dashicons-admin-file:before {
 
 						&:hover {
 							background-color: #f5f5f5;
-							color: variables.$blue;
+							color: $blue;
 						}
 
 						&:before {
@@ -3616,11 +3617,11 @@ span.dashicons.dashicons-admin-file:before {
 // Loading animation
 
 .bb-activity-placeholder {
-	background: variables.$white;
+	background: $white;
 	border: 1px solid #b7b7b7;
 	padding: 20px 15px;
-	border-radius: variables.$block-radius-inner;
-	margin-bottom: variables.$marg-lrg;
+	border-radius: $block-radius-inner;
+	margin-bottom: $marg-lrg;
 
 	.bb-activity-placeholder_avatar {
 		height: 48px;
@@ -3953,7 +3954,7 @@ span.dashicons.dashicons-admin-file:before {
 
 							&:hover {
 								background-color: #f5f5f5;
-								color: variables.$blue;
+								color: $blue;
 							}
 
 							&:before {
@@ -4037,7 +4038,7 @@ span.dashicons.dashicons-admin-file:before {
 
 			.document-expand-anchor {
 
-				@include mixins.center-vert();
+				@include center-vert();
 				position: absolute;
 				top: 50%;
 				transform: translate(-50%, -50%);
@@ -4185,7 +4186,7 @@ span.dashicons.dashicons-admin-file:before {
 
 		.document-preview-wrap {
 
-			@include mixins.center-horizontal-vert();
+			@include center-horizontal-vert();
 			background-color: rgba(0, 0, 0, 0.05);
 			border-radius: 4px 4px 0 0;
 			height: 200px;

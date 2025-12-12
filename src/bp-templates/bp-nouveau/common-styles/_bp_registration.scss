@@ -2,34 +2,34 @@
 // Styles the registration index.php form and elements.
 // @version 3.0.0
 
-@use "./_bp-variables" as variables;
-@use "./_bp-mixins" as mixins;
+@use "./_bp-variables" as *;
+@use "./_bp-mixins" as *;
 
 .register-page {
 
 	.register-section {
 
-		@include mixins.box-model();
+		@include box-model();
 	}
 
 	.signup-form {
-		margin-top: variables.$marg-lrg;
+		margin-top: $marg-lrg;
 
 		.default-profile {
 
 			input {
-				margin-bottom: variables.$marg-lrg;
+				margin-bottom: $marg-lrg;
 			}
 		}
 
 		label,
 		legend {
-			margin: variables.$marg-sml 0 0;
+			margin: $marg-sml 0 0;
 		}
 
 		// profile extra element wrapper
 		.editfield {
-			margin: variables.$marg-med 0;
+			margin: $marg-med 0;
 
 			fieldset {
 				border: 0;
@@ -42,10 +42,10 @@
 			}
 
 			.field-visibility-settings {
-				padding: variables.$pad-sml 0;
+				padding: $pad-sml 0;
 
 				fieldset {
-					margin: variables.$marg-sml 0;
+					margin: $marg-sml 0;
 				}
 			}
 		} // editfield
@@ -55,12 +55,12 @@
 		}
 
 		#signup-avatar img {
-			margin: 0 variables.$marg-med variables.$marg-sml 0;
+			margin: 0 $marg-med $marg-sml 0;
 		}
 
 		.password-entry,
 		.password-entry-confirm {
-			border: 1px solid variables.$bp-border-color;
+			border: 1px solid $bp-border-color;
 		}
 
 		.blog-details {
@@ -80,7 +80,7 @@
 
 // Flex layout containers for registration sections
 
-@include mixins.medium-up() {
+@include medium-up() {
 
 	.buddypress-wrap {
 
@@ -94,13 +94,13 @@
 				.default-profile {
 					flex: 1 100%;
 					min-width: 0;
-					//padding-right: variables.$pad-lrg;
+					//padding-right: $pad-lrg;
 				}
 
 				.blog-details {
 					flex: 1 100%;
 					min-width: 0;
-					//padding-left: variables.$pad-lrg;
+					//padding-left: $pad-lrg;
 				}
 			}
 
@@ -115,7 +115,7 @@
 // have we got profiles fields to factor in,
 // if so we'll adjust the child item elements.
 
-@include mixins.medium-up() {
+@include medium-up() {
 
 	.buddypress-wrap.extended-default-reg {
 
@@ -124,13 +124,13 @@
 			.default-profile {
 				flex: 1 100%;
 				min-width: 0;
-				//padding-right: variables.$pad-med;
+				//padding-right: $pad-med;
 			}
 
 			.extended-profile {
 				flex: 1 100%;
 				min-width: 0;
-				//padding-left: variables.$pad-med;
+				//padding-left: $pad-med;
 			}
 
 			.blog-details {
@@ -151,7 +151,7 @@ body.register {
 	#page #primary .entry-header,
 	.buddypress-wrap {
 
-		@include mixins.medium-lrg-up() {
+		@include medium-lrg-up() {
 			max-width: 460px;
 			margin-left: auto;
 			margin-right: auto;
@@ -182,7 +182,7 @@ body.register {
 #buddypress #signup-form {
 
 	input.error {
-		border-color: variables.$warn;
+		border-color: $warn;
 		border-width: 2px;
 	}
 

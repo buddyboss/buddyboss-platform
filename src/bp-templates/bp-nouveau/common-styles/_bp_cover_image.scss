@@ -3,8 +3,8 @@
 // the image container overlay.
 // @version 3.0.0
 
-@use "./_bp-variables" as variables;
-@use "./_bp-mixins" as mixins;
+@use "./_bp-variables" as *;
+@use "./_bp-mixins" as *;
 
 /*
 * Default required cover photo rules
@@ -171,7 +171,7 @@
 
 		.group-item-actions {
 
-			@include mixins.center-vert();
+			@include center-vert();
 			-webkit-box-orient: horizontal;
 			-webkit-box-direction: normal;
 			-ms-flex-direction: row;
@@ -181,7 +181,7 @@
 			text-align: left;
 
 			.bp-title {
-				margin: 0 variables.$marg-xsml 0 0;
+				margin: 0 $marg-xsml 0 0;
 			}
 
 			.moderators-lists .user-list,

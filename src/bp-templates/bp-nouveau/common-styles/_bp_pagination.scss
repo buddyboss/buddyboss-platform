@@ -1,8 +1,8 @@
 // BP pagination  - generic styling for all screens
 // @version 3.0.0
 
-@use "./_bp-variables" as variables;
-@use "./_bp-mixins" as mixins;
+@use "./_bp-variables" as *;
+@use "./_bp-mixins" as *;
 
 .buddypress-wrap {
 
@@ -10,11 +10,11 @@
 
 		background: transparent;
 		border: 0;
-		color: variables.$light-text;
+		color: $light-text;
 		float: left;
 		font-size: small;
 		margin: 0;
-		padding: variables.$pad-sml 0;
+		padding: $pad-sml 0;
 		position: relative;
 		width: 100%;
 
@@ -24,7 +24,7 @@
 
 		.bp-pagination-links {
 			float: right;
-			margin-right: variables.$marg-sml;
+			margin-right: $marg-sml;
 
 			span,
 			a {

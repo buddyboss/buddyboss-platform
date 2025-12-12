@@ -1,8 +1,8 @@
 // BP primary & secondary navigation - directory and single screens
 // @version 3.0.0
 
-@use "./_bp-variables" as variables;
-@use "./_bp-mixins" as mixins;
+@use "./_bp-variables" as *;
+@use "./_bp-mixins" as *;
 
 // all devices & generic styles sitewide
 .bp-navs {
@@ -36,13 +36,13 @@
 			}
 
 			.count {
-				background: variables.$light-grey;
-				border: 1px solid variables.$bp-border-dark;
+				background: $light-grey;
+				border: 1px solid $bp-border-dark;
 				border-radius: 50%;
-				color: variables.$meta-text-dark;
+				color: $meta-text-dark;
 				display: inline;
 
-				@include mixins.font-size(12);
+				@include font-size(12);
 				margin-left: 2px;
 				padding-top: 2px;
 				padding-bottom: 2px;
@@ -59,7 +59,7 @@
 		li.current {
 
 			a {
-				color: variables.$black;
+				color: $black;
 				opacity: 1;
 			}
 		}
@@ -74,7 +74,7 @@
 			li {
 
 				a {
-					border: 1px solid variables.$bp-border-dark;
+					border: 1px solid $bp-border-dark;
 					display: inline-block;
 				}
 			}
@@ -84,7 +84,7 @@
 } // close .bp-navs
 
 .main-navs.dir-navs {
-	margin-bottom: variables.$marg-lrg;
+	margin-bottom: $marg-lrg;
 }
 
 // Primary, default current/selected states
@@ -99,7 +99,7 @@
 			a {
 
 				.count {
-					background-color: variables.$grey;
+					background-color: $grey;
 				}
 			}
 		}
@@ -109,13 +109,13 @@
 
 			a:focus,
 			a:hover {
-				background: variables.$grey;
-				color: variables.$black;
+				background: $grey;
+				color: $black;
 			}
 		}
 	}
 
-	@include mixins.medium-up() {
+	@include medium-up() {
 
 		.main-navs:not(.dir-navs) {
 
@@ -123,8 +123,8 @@
 			li.current {
 
 				a {
-					background: variables.$white;
-					color: variables.$black;
+					background: $white;
+					color: $black;
 					font-weight: 600;
 				}
 			}
@@ -136,8 +136,8 @@
 			li.current {
 
 				a {
-					background: variables.$dark-grey;
-					color: variables.$off-white;
+					background: $dark-grey;
+					color: $off-white;
 					text-decoration: none;
 				}
 			}
@@ -150,7 +150,7 @@
 				border-top: 1px solid $bp-border-color;
 				margin-bottom: 20px;
 
-				@include mixins.box-shadow( 0 2px 12px 0 variables.$off-white);
+				@include box-shadow( 0 2px 12px 0 $off-white);
 			}
 		}
 	} // close @media
@@ -164,8 +164,8 @@
 		a,
 		a:focus,
 		a:hover {
-			background: variables.$dark-grey;
-			color: variables.$off-white;
+			background: $dark-grey;
+			color: $off-white;
 		}
 	}
 
@@ -173,8 +173,8 @@
 	li.current {
 
 		a {
-			background: variables.$white;
-			color: variables.$black;
+			background: $white;
+			color: $black;
 			font-weight: 600;
 		}
 	}
@@ -184,12 +184,12 @@
 // the parent elements if vertical nav not selected
 .buddypress-wrap:not(.bp-single-vert-nav) {
 
-	@include mixins.medium-max {
+	@include medium-max {
 
 		.bp-navs {
 
 			li {
-				background: variables.$light-grey;
+				background: $light-grey;
 			}
 		}
 	}
@@ -199,7 +199,7 @@
 		> ul > li {
 
 			> a {
-				padding: variables.$pad-sml calc(0.5em + 2px);
+				padding: $pad-sml calc(0.5em + 2px);
 			}
 		}
 	}
@@ -229,7 +229,7 @@
 
 .bp-subnavs {
 
-	margin: variables.$marg-sml 0;
+	margin: $marg-sml 0;
 	overflow: hidden;
 
 	ul {
@@ -243,7 +243,7 @@
 				:focus,
 				:hover {
 					background: none;
-					color: variables.$black;
+					color: $black;
 				}
 			}
 
@@ -254,15 +254,15 @@
 // Single screens object navs
 // Adjusts visual styling for small screens only
 
-@include mixins.medium-max {
+@include medium-max {
 
 	.buddypress-wrap {
 
 		.single-screen-navs {
-			border: 1px solid variables.$bp-border-color;
+			border: 1px solid $bp-border-color;
 
 			li {
-				border-bottom: 1px solid variables.$bp-border-color;
+				border-bottom: 1px solid $bp-border-color;
 
 				&:last-child {
 					border-bottom: none;
@@ -277,7 +277,7 @@
 
 			a {
 
-				@include mixins.font-size(14);
+				@include font-size(14);
 			}
 
 			&.selected,
@@ -286,8 +286,8 @@
 				a,
 				a:focus,
 				a:hover {
-					background: variables.$dark-grey;
-					color: variables.$white;
+					background: $dark-grey;
+					color: $white;
 				}
 			}
 		}
@@ -305,7 +305,7 @@
 			a {
 
 				.count {
-					background-color: variables.$white;
+					background-color: $white;
 				}
 			}
 		} // close li
@@ -317,9 +317,9 @@
 			a {
 
 				.count {
-					background-color: variables.$highlight;
+					background-color: $highlight;
 					border: 0;
-					color: variables.$off-white;
+					color: $off-white;
 				}
 			}
 		}
@@ -329,9 +329,9 @@
 			a:hover {
 
 				.count {
-					background-color: variables.$highlight;
+					background-color: $highlight;
 					border: 0;
-					color: variables.$white;
+					color: $white;
 				}
 			}
 		}
@@ -353,15 +353,15 @@
 		ul {
 
 			li:not(.current) {
-				color: variables.$light-text;
+				color: $light-text;
 
 				a {
-					color: variables.$light-text;
+					color: $light-text;
 
 					&:focus,
 					&:hover {
 						background: none;
-						color: variables.$black;
+						color: $black;
 					}
 				}
 
@@ -369,7 +369,7 @@
 
 					&:focus,
 					&:hover {
-						color: variables.$light-text;
+						color: $light-text;
 					}
 				}
 			}
@@ -388,7 +388,7 @@
 
 	// position our nav elements at larger screen widths
 
-	@include mixins.medium-up() {
+	@include medium-up() {
 
 		.bp-navs {
 
@@ -443,7 +443,7 @@
 
 // Directory screens vertical nav rules
 
-@include mixins.medium-up() {
+@include medium-up() {
 
 	// the top level class activating vert layout
 	.bp-dir-vert-nav {

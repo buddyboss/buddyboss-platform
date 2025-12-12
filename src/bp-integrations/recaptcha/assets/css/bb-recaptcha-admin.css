@@ -3,82 +3,67 @@
   user-select: none;
   opacity: 0.3;
 }
-
 .bb-recaptcha-settings #bb_recaptcha_versions .bb-recaptcha-status {
   margin-left: 15px;
 }
-
 .bb-recaptcha-settings #bb_recaptcha_versions .notes-hidden-header > th {
   display: none;
 }
-
 .bb-recaptcha-settings #bb_recaptcha_versions .notes-hidden-header > th + td {
   padding-left: 0;
   padding-right: 0;
 }
-
 .bb-recaptcha-settings #bb_recaptcha_versions .hidden-header > th {
   opacity: 0;
   visibility: hidden;
   padding: 0;
   margin: 0;
 }
-
 .bb-recaptcha-settings #bb_recaptcha_versions .hidden-header:not(.field-button) > td {
   padding: 0;
   margin: 0;
 }
-
 .bb-recaptcha-settings #bb_recaptcha_versions .hidden-header .show-full-width {
   margin-left: -210px;
   word-break: break-word;
 }
-
 @media (max-width: 782px) {
   .bb-recaptcha-settings #bb_recaptcha_versions .hidden-header .show-full-width {
     margin-left: 0;
   }
 }
-
 .bb-recaptcha-settings #bb_recaptcha_versions .hidden-header .bb-success-section {
   margin-left: 0;
   margin-bottom: 15px;
 }
-
 .bb-recaptcha-settings #bb_recaptcha_versions .hidden-header .bb-error-section {
   margin-left: 0;
   margin-bottom: 25px;
 }
-
 .bb-recaptcha-settings #bb_recaptcha_versions .hidden-header .bb-recaptcha-prompt {
   display: inline-block;
   margin-bottom: 10px;
   line-height: 1.5;
 }
-
-.bb-recaptcha-settings #bb_recaptcha_versions input[type="text"],
-.bb-recaptcha-settings #bb_recaptcha_versions input[type="email"],
+.bb-recaptcha-settings #bb_recaptcha_versions input[type=text],
+.bb-recaptcha-settings #bb_recaptcha_versions input[type=email],
 .bb-recaptcha-settings #bb_recaptcha_versions select,
-.bb-recaptcha-settings #bb_recaptcha_versions input[type="password"] {
+.bb-recaptcha-settings #bb_recaptcha_versions input[type=password] {
   min-width: 50%;
 }
-
 .bb-recaptcha-settings #bb_recaptcha_versions select {
   max-width: none;
 }
-
 .bb-recaptcha-settings #bb_recaptcha_versions .password-toggle {
   position: relative;
   display: inline-block;
   width: 50%;
 }
-
 @media (max-width: 782px) {
   .bb-recaptcha-settings #bb_recaptcha_versions .password-toggle {
     width: 100%;
   }
 }
-
 .bb-recaptcha-settings #bb_recaptcha_versions .password-toggle .bb-hide-pw {
   position: absolute;
   right: 0;
@@ -90,34 +75,27 @@
   background: none;
   box-shadow: none;
 }
-
 .bb-recaptcha-settings #bb_recaptcha_versions .password-toggle .bb-hide-pw .bb-icon {
   font-size: 16px;
   line-height: 1;
 }
-
-.bb-recaptcha-settings #bb_recaptcha_versions .password-toggle input[type="text"],
-.bb-recaptcha-settings #bb_recaptcha_versions .password-toggle input[type="password"] {
+.bb-recaptcha-settings #bb_recaptcha_versions .password-toggle input[type=text],
+.bb-recaptcha-settings #bb_recaptcha_versions .password-toggle input[type=password] {
   padding-right: 30px;
   width: 100%;
 }
-
-.bb-recaptcha-settings #bb_recaptcha_versions .password-toggle input[type="text"] + .bb-hide-pw .bb-icon::before {
+.bb-recaptcha-settings #bb_recaptcha_versions .password-toggle input[type=text] + .bb-hide-pw .bb-icon::before {
   content: "\ee6a";
 }
-
-.bb-recaptcha-settings #bb_recaptcha_versions .checkbox-wrap input[type="checkbox"] {
+.bb-recaptcha-settings #bb_recaptcha_versions .checkbox-wrap input[type=checkbox] {
   margin-top: 0;
 }
-
 .bb-recaptcha-settings #bb_recaptcha_versions .checkbox-wrap + .checkbox-wrap {
   margin-top: 15px;
 }
-
 .bb-recaptcha-settings #bb_recaptcha_versions .bb-bottom-notice {
   text-align: center;
 }
-
 .bb-recaptcha-settings #bb_recaptcha_versions .bp-hello-recaptcha .bp-hello-title h2 {
   color: #1d2327;
   font-size: 1.5em;
@@ -126,7 +104,6 @@
   border-bottom: none;
   font-weight: 600;
 }
-
 .bb-recaptcha-settings #bb_recaptcha_versions .bp-hello-recaptcha .bp-hello-content {
   height: auto;
   padding: 0 23px;
@@ -136,7 +113,6 @@
   display: flex;
   align-items: center;
 }
-
 .bb-recaptcha-settings #bb_recaptcha_versions .bp-hello-recaptcha .bb-popup-buttons {
   position: absolute;
   bottom: 0;
@@ -147,46 +123,38 @@
   border-top: 1px solid var(--bp-hello-color-secondary);
   background-color: #f0f0f1;
 }
-
 @media screen and (orientation: landscape) and (max-height: 480px) {
   .bb-recaptcha-settings #bb_recaptcha_versions .bp-hello-recaptcha .bp-hello-content {
     min-height: 110px;
   }
 }
-
 .bb-recaptcha-settings #bb_recaptcha_versions .bp-hello-recaptcha .bp-hello-recaptcha-content-container {
   padding: 15px 0;
   margin: 0 auto;
   text-align: center;
 }
-
 .bb-recaptcha-settings #bb_recaptcha_versions .bp-hello-recaptcha .bp-hello-recaptcha-content-container .verifying_token {
   display: inline-block;
 }
-
 .bb-recaptcha-settings #bb_recaptcha_versions .bp-hello-recaptcha .bp-hello-recaptcha-content-container .grecaptcha-badge {
   position: static !important;
   margin: 0 auto;
 }
-
 .bb-recaptcha-settings #bb_recaptcha_versions #bp-hello-container.bp-hello-recaptcha {
   top: 50%;
   bottom: initial;
   transform: translateY(-50%);
   margin-top: 32px;
 }
-
 .bb-recaptcha-settings #bb_recaptcha_versions #bp-hello-container.bp-hello-recaptcha .button-primary {
   color: #fff;
   margin-right: 10px;
 }
-
 @media screen and (max-width: 480px) {
   .bb-recaptcha-settings #bb_recaptcha_versions #bp-hello-container.bp-hello-recaptcha .button-primary {
     margin-right: 0;
   }
 }
-
 .bb-recaptcha-settings .bb-success-section {
   padding: 10px;
   margin-left: -210px;
@@ -196,35 +164,29 @@
   border: 1px solid #68de7c;
   border-radius: 4px;
 }
-
 .bb-recaptcha-settings .bp-hello-recaptcha .bp-hello-recaptcha-content-container .recaptcha-status-icon {
   max-width: 56px;
   margin-bottom: 16px;
 }
-
 .bb-recaptcha-settings .bp-hello-recaptcha .bp-hello-recaptcha-content-container > p {
   font-weight: 600;
   color: #50575e;
   line-height: 1;
 }
-
 .bb-recaptcha-settings .bp-hello-recaptcha .bp-hello-recaptcha-content-container .verified_token,
 .bb-recaptcha-settings .bp-hello-recaptcha .bp-hello-recaptcha-content-container .verifying_token {
   font-weight: 600;
 }
-
 .bb-recaptcha-settings .bp-hello-recaptcha .bp-hello-recaptcha-content-container .verified_token p,
 .bb-recaptcha-settings .bp-hello-recaptcha .bp-hello-recaptcha-content-container .verifying_token p {
   margin-top: 0;
   color: #50575e;
   line-height: 1;
 }
-
 .bb-recaptcha-settings .bp-hello-recaptcha .bp-hello-recaptcha-content-container .verifying_token p {
   display: flex;
   align-items: center;
 }
-
 .bb-recaptcha-settings .bp-hello-recaptcha .bp-hello-recaptcha-content-container .verifying_token.loading p::after {
   content: "";
   display: inline-block;
@@ -241,20 +203,16 @@
   vertical-align: middle;
   animation: spin 2s infinite linear;
 }
-
 .bb-recaptcha-settings .bp-hello-recaptcha#bp-hello-container .verified_token p,
 .bb-recaptcha-settings .bp-hello-recaptcha#bp-hello-container .verifying_token p {
   font-size: 16px;
 }
-
 .bb-recaptcha-settings .bp-hello-recaptcha#bp-hello-container .bp-hello-recaptcha-content-container > p {
   font-size: 16px;
 }
-
 .bb-recaptcha-settings #bb_recaptcha_design .bb-grid-style-outer {
   display: flex;
 }
-
 .bb-recaptcha-settings #bb_recaptcha_design .bb-grid-style-outer .bb-badge-position,
 .bb-recaptcha-settings #bb_recaptcha_design .bb-grid-style-outer .bb-size,
 .bb-recaptcha-settings #bb_recaptcha_design .bb-grid-style-outer .bb-theme {
@@ -264,15 +222,13 @@
   text-align: center;
   width: 184px;
 }
-
-.bb-recaptcha-settings #bb_recaptcha_design .bb-grid-style-outer .bb-badge-position input[type="radio"],
-.bb-recaptcha-settings #bb_recaptcha_design .bb-grid-style-outer .bb-size input[type="radio"],
-.bb-recaptcha-settings #bb_recaptcha_design .bb-grid-style-outer .bb-theme input[type="radio"] {
+.bb-recaptcha-settings #bb_recaptcha_design .bb-grid-style-outer .bb-badge-position input[type=radio],
+.bb-recaptcha-settings #bb_recaptcha_design .bb-grid-style-outer .bb-size input[type=radio],
+.bb-recaptcha-settings #bb_recaptcha_design .bb-grid-style-outer .bb-theme input[type=radio] {
   height: 0;
   opacity: 0;
   visibility: hidden;
 }
-
 .bb-recaptcha-settings #bb_recaptcha_design .bb-grid-style-outer .bb-badge-position .option,
 .bb-recaptcha-settings #bb_recaptcha_design .bb-grid-style-outer .bb-size .option,
 .bb-recaptcha-settings #bb_recaptcha_design .bb-grid-style-outer .bb-theme .option {
@@ -281,7 +237,6 @@
   flex-direction: column;
   position: relative;
 }
-
 .bb-recaptcha-settings #bb_recaptcha_design .bb-grid-style-outer .bb-badge-position .option:before,
 .bb-recaptcha-settings #bb_recaptcha_design .bb-grid-style-outer .bb-size .option:before,
 .bb-recaptcha-settings #bb_recaptcha_design .bb-grid-style-outer .bb-theme .option:before {
@@ -296,7 +251,6 @@
   transition: all 0.3s ease;
   width: 100%;
 }
-
 .bb-recaptcha-settings #bb_recaptcha_design .bb-grid-style-outer .bb-badge-position .option:after,
 .bb-recaptcha-settings #bb_recaptcha_design .bb-grid-style-outer .bb-size .option:after,
 .bb-recaptcha-settings #bb_recaptcha_design .bb-grid-style-outer .bb-theme .option:after {
@@ -310,61 +264,51 @@
   top: 6px;
   image-rendering: -webkit-optimize-contrast;
 }
-
 .bb-recaptcha-settings #bb_recaptcha_design .bb-grid-style-outer .bb-badge-position .option.opt-light:after,
 .bb-recaptcha-settings #bb_recaptcha_design .bb-grid-style-outer .bb-size .option.opt-light:after,
 .bb-recaptcha-settings #bb_recaptcha_design .bb-grid-style-outer .bb-theme .option.opt-light:after {
   background: url(../images/reCAPTCHA-light.png) no-repeat center;
 }
-
 .bb-recaptcha-settings #bb_recaptcha_design .bb-grid-style-outer .bb-badge-position .option.opt-dark:after,
 .bb-recaptcha-settings #bb_recaptcha_design .bb-grid-style-outer .bb-size .option.opt-dark:after,
 .bb-recaptcha-settings #bb_recaptcha_design .bb-grid-style-outer .bb-theme .option.opt-dark:after {
   background: url(../images/reCAPTCHA-dark.png) no-repeat center;
 }
-
 .bb-recaptcha-settings #bb_recaptcha_design .bb-grid-style-outer .bb-badge-position .option.opt-normal.opt-size-light:after,
 .bb-recaptcha-settings #bb_recaptcha_design .bb-grid-style-outer .bb-size .option.opt-normal.opt-size-light:after,
 .bb-recaptcha-settings #bb_recaptcha_design .bb-grid-style-outer .bb-theme .option.opt-normal.opt-size-light:after {
   background: url(../images/reCAPTCHA-light.png) no-repeat center;
 }
-
 .bb-recaptcha-settings #bb_recaptcha_design .bb-grid-style-outer .bb-badge-position .option.opt-normal.opt-size-dark:after,
 .bb-recaptcha-settings #bb_recaptcha_design .bb-grid-style-outer .bb-size .option.opt-normal.opt-size-dark:after,
 .bb-recaptcha-settings #bb_recaptcha_design .bb-grid-style-outer .bb-theme .option.opt-normal.opt-size-dark:after {
   background: url(../images/reCAPTCHA-dark.png) no-repeat center;
 }
-
 .bb-recaptcha-settings #bb_recaptcha_design .bb-grid-style-outer .bb-badge-position .option.opt-compact.opt-size-light:after,
 .bb-recaptcha-settings #bb_recaptcha_design .bb-grid-style-outer .bb-size .option.opt-compact.opt-size-light:after,
 .bb-recaptcha-settings #bb_recaptcha_design .bb-grid-style-outer .bb-theme .option.opt-compact.opt-size-light:after {
   background: url(../images/reCAPTCHA-light-compact.png) no-repeat center;
 }
-
 .bb-recaptcha-settings #bb_recaptcha_design .bb-grid-style-outer .bb-badge-position .option.opt-compact.opt-size-dark:after,
 .bb-recaptcha-settings #bb_recaptcha_design .bb-grid-style-outer .bb-size .option.opt-compact.opt-size-dark:after,
 .bb-recaptcha-settings #bb_recaptcha_design .bb-grid-style-outer .bb-theme .option.opt-compact.opt-size-dark:after {
   background: url(../images/reCAPTCHA-dark-compact.png) no-repeat center;
 }
-
 .bb-recaptcha-settings #bb_recaptcha_design .bb-grid-style-outer .bb-badge-position .option.opt-bottom-right:after,
 .bb-recaptcha-settings #bb_recaptcha_design .bb-grid-style-outer .bb-size .option.opt-bottom-right:after,
 .bb-recaptcha-settings #bb_recaptcha_design .bb-grid-style-outer .bb-theme .option.opt-bottom-right:after {
   background: url(../images/reCAPTCHA-bottom-right.png) no-repeat center;
 }
-
 .bb-recaptcha-settings #bb_recaptcha_design .bb-grid-style-outer .bb-badge-position .option.opt-bottom-left:after,
 .bb-recaptcha-settings #bb_recaptcha_design .bb-grid-style-outer .bb-size .option.opt-bottom-left:after,
 .bb-recaptcha-settings #bb_recaptcha_design .bb-grid-style-outer .bb-theme .option.opt-bottom-left:after {
   background: url(../images/reCAPTCHA-bottom-left.png) no-repeat center;
 }
-
 .bb-recaptcha-settings #bb_recaptcha_design .bb-grid-style-outer .bb-badge-position .option.opt-inline:after,
 .bb-recaptcha-settings #bb_recaptcha_design .bb-grid-style-outer .bb-size .option.opt-inline:after,
 .bb-recaptcha-settings #bb_recaptcha_design .bb-grid-style-outer .bb-theme .option.opt-inline:after {
   background: url(../images/reCAPTCHA-inline.png) no-repeat center;
 }
-
 .bb-recaptcha-settings #bb_recaptcha_design .bb-grid-style-outer .bb-badge-position .option span,
 .bb-recaptcha-settings #bb_recaptcha_design .bb-grid-style-outer .bb-size .option span,
 .bb-recaptcha-settings #bb_recaptcha_design .bb-grid-style-outer .bb-theme .option span {
@@ -372,39 +316,32 @@
   font-size: 14px;
   line-height: 2;
 }
-
-.bb-recaptcha-settings #bb_recaptcha_design .bb-grid-style-outer .bb-badge-position input[type="radio"]:checked:not(:disabled) + .option:before,
-.bb-recaptcha-settings #bb_recaptcha_design .bb-grid-style-outer .bb-size input[type="radio"]:checked:not(:disabled) + .option:before,
-.bb-recaptcha-settings #bb_recaptcha_design .bb-grid-style-outer .bb-theme input[type="radio"]:checked:not(:disabled) + .option:before {
+.bb-recaptcha-settings #bb_recaptcha_design .bb-grid-style-outer .bb-badge-position input[type=radio]:checked:not(:disabled) + .option:before,
+.bb-recaptcha-settings #bb_recaptcha_design .bb-grid-style-outer .bb-size input[type=radio]:checked:not(:disabled) + .option:before,
+.bb-recaptcha-settings #bb_recaptcha_design .bb-grid-style-outer .bb-theme input[type=radio]:checked:not(:disabled) + .option:before {
   border-color: #2370b1;
 }
-
-.bb-recaptcha-settings #bb_recaptcha_design .bb-grid-style-outer .bb-badge-position input[type="radio"]:disabled + .option:before,
-.bb-recaptcha-settings #bb_recaptcha_design .bb-grid-style-outer .bb-size input[type="radio"]:disabled + .option:before,
-.bb-recaptcha-settings #bb_recaptcha_design .bb-grid-style-outer .bb-theme input[type="radio"]:disabled + .option:before {
+.bb-recaptcha-settings #bb_recaptcha_design .bb-grid-style-outer .bb-badge-position input[type=radio]:disabled + .option:before,
+.bb-recaptcha-settings #bb_recaptcha_design .bb-grid-style-outer .bb-size input[type=radio]:disabled + .option:before,
+.bb-recaptcha-settings #bb_recaptcha_design .bb-grid-style-outer .bb-theme input[type=radio]:disabled + .option:before {
   border-color: #dcdcde;
 }
-
 .bb-recaptcha-settings #bb_recaptcha_design .bb-grid-style-outer .bb-size .option:before {
   height: 96px;
 }
-
 .bb-recaptcha-settings #bb_recaptcha_design .bb-grid-style-outer .bb-badge-position {
   width: 120px;
 }
-
 .bb-recaptcha-settings #bb_recaptcha_design .bb-grid-style-outer .bb-badge-position .option:before {
   height: 120px;
   background-color: #f0f0f1;
 }
-
 .bb-recaptcha-settings #bb_recaptcha_settings .bb_login_require .copy-toggle {
   width: 60%;
   margin-top: 10px;
   display: flex;
   align-items: center;
 }
-
 .bb-recaptcha-settings #bb_recaptcha_settings .bb_login_require .copy-toggle .copy-toggle-text {
   margin-right: 5px;
   text-wrap: nowrap;
@@ -412,23 +349,19 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
-
 .bb-recaptcha-settings #bb_recaptcha_settings .bb_login_require .copy-toggle.bb-url-not-allowed {
   color: #f00;
 }
-
 .bb-recaptcha-settings #bb_recaptcha_settings .bb_login_require .copy-toggle.bb-url-not-allowed .copy-toggle-text {
   color: #f00;
 }
-
 .bb-recaptcha-settings #bb_recaptcha_settings .bb_login_require .copy-toggle .bb-recaptcha-copy-button {
   font-size: 12px;
   color: #999;
   position: relative;
   cursor: pointer;
 }
-
-.bb-recaptcha-settings #bb_recaptcha_settings .bb_login_require .copy-toggle .bb-recaptcha-copy-button[data-balloon][data-balloon-pos="up"]:after {
+.bb-recaptcha-settings #bb_recaptcha_settings .bb_login_require .copy-toggle .bb-recaptcha-copy-button[data-balloon][data-balloon-pos=up]:after {
   pointer-events: none;
   opacity: 0;
   transition: all 0.18s ease-out 0.18s;
@@ -452,10 +385,8 @@
   transform-origin: top;
   position: absolute;
 }
-
-.bb-recaptcha-settings #bb_recaptcha_settings .bb_login_require .copy-toggle .bb-recaptcha-copy-button[data-balloon][data-balloon-pos="up"]:before {
-  background: no-repeat url("data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http://www.w3.org/2000/svg%22%20width%3D%2236px%22%20height%3D%2212px%22%3E%3Cpath%20fill%3D%22var(--bb-tooltip-background)%22%20transform%3D%22rotate(0)%22%20d%3D%22M2.658,0.000%20C-13.615,0.000%2050.938,0.000%2034.662,0.000%20C28.662,0.000%2023.035,12.002%2018.660,12.002%20C14.285,12.002%208.594,0.000%202.658,0.000%20Z%22/%3E%3C/svg%3E");
-  /* stylelint-disable-line */
+.bb-recaptcha-settings #bb_recaptcha_settings .bb_login_require .copy-toggle .bb-recaptcha-copy-button[data-balloon][data-balloon-pos=up]:before {
+  background: no-repeat url("data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http://www.w3.org/2000/svg%22%20width%3D%2236px%22%20height%3D%2212px%22%3E%3Cpath%20fill%3D%22var(--bb-tooltip-background)%22%20transform%3D%22rotate(0)%22%20d%3D%22M2.658,0.000%20C-13.615,0.000%2050.938,0.000%2034.662,0.000%20C28.662,0.000%2023.035,12.002%2018.660,12.002%20C14.285,12.002%208.594,0.000%202.658,0.000%20Z%22/%3E%3C/svg%3E"); /* stylelint-disable-line */
   background-size: 100% auto;
   width: 18px;
   height: 6px;
@@ -471,23 +402,19 @@
   transform-origin: top;
   position: absolute;
 }
-
-.bb-recaptcha-settings #bb_recaptcha_settings .bb_login_require .copy-toggle .bb-recaptcha-copy-button:hover:after, .bb-recaptcha-settings #bb_recaptcha_settings .bb_login_require .copy-toggle .bb-recaptcha-copy-button[data-balloon][data-balloon-pos="up"]:hover:after {
+.bb-recaptcha-settings #bb_recaptcha_settings .bb_login_require .copy-toggle .bb-recaptcha-copy-button:hover:after, .bb-recaptcha-settings #bb_recaptcha_settings .bb_login_require .copy-toggle .bb-recaptcha-copy-button[data-balloon][data-balloon-pos=up]:hover:after {
   pointer-events: auto;
   opacity: 1;
   transform: translate(-50%, 0);
 }
-
-.bb-recaptcha-settings #bb_recaptcha_settings .bb_login_require .copy-toggle .bb-recaptcha-copy-button:hover:before, .bb-recaptcha-settings #bb_recaptcha_settings .bb_login_require .copy-toggle .bb-recaptcha-copy-button[data-balloon][data-balloon-pos="up"]:hover:before {
+.bb-recaptcha-settings #bb_recaptcha_settings .bb_login_require .copy-toggle .bb-recaptcha-copy-button:hover:before, .bb-recaptcha-settings #bb_recaptcha_settings .bb_login_require .copy-toggle .bb-recaptcha-copy-button[data-balloon][data-balloon-pos=up]:hover:before {
   pointer-events: auto;
   opacity: 1;
   transform: translate(-50%, 0);
 }
-
 .bb-recaptcha-settings #bb_recaptcha_settings .bb_login_require .copy-toggle .bb-recaptcha-copy-button i {
   font-size: 20px;
 }
-
 .bb-recaptcha-settings #bb_recaptcha_settings .bb_login_require .copy-toggle.bp-hide {
   display: none !important;
 }
@@ -498,7 +425,6 @@
   display: inline-flex;
   align-items: center;
 }
-
 .bb-success-section.bb-recaptcha-errors span::before, .bb-success-section.bb-recaptcha-success span::before,
 .bb-error-section.bb-recaptcha-errors span::before,
 .bb-error-section.bb-recaptcha-success span::before {
@@ -529,7 +455,6 @@
   color: #d63638;
   border-color: #ffabaf;
 }
-
 .bb-error-section.bb-recaptcha-errors span::before {
   content: "\ee65";
 }
@@ -539,11 +464,10 @@
   border-color: #dcdcde;
 }
 
-.section-bb_recaptcha_versions .recaptcha-version-fields input[type="radio"] {
+.section-bb_recaptcha_versions .recaptcha-version-fields input[type=radio] {
   margin-left: 16px;
 }
-
-.section-bb_recaptcha_versions .recaptcha-version-fields input[type="radio"]:first-of-type {
+.section-bb_recaptcha_versions .recaptcha-version-fields input[type=radio]:first-of-type {
   margin-left: 0;
 }
 
@@ -558,7 +482,6 @@
   padding: 0;
   margin: 0;
 }
-
 .bp-hello-recaptcha .recaptcha-verify-icon {
   max-width: 80px;
   margin-bottom: 1rem;

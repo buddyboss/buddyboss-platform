@@ -1,8 +1,8 @@
 // BP Blogs loop.
 // @version 3.0.0
 
-@use "./_bp-variables" as variables;
-@use "./_bp-mixins" as mixins;
+@use "./_bp-variables" as *;
+@use "./_bp-mixins" as *;
 
 .buddypress-wrap {
 
@@ -10,7 +10,7 @@
 
 		li {
 
-			@include mixins.medium-up() {
+			@include medium-up() {
 
 				.item-block {
 					// float: none;
@@ -32,7 +32,7 @@
 // We need to just adjust the loop item elements a little
 // to cope with the decreased width.
 
-@include mixins.medium-up() {
+@include medium-up() {
 
 	.buddypress-wrap {
 

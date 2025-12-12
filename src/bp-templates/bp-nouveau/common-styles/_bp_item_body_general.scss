@@ -1,8 +1,8 @@
 // BP Single Screens Item Body General Styles.
 // @version 3.0.0
 
-@use "./_bp-variables" as variables;
-@use "./_bp-mixins" as mixins;
+@use "./_bp-variables" as *;
+@use "./_bp-mixins" as *;
 
 .buddypress-wrap {
 
@@ -10,11 +10,11 @@
 
 		.screen-heading {
 
-			@include mixins.font-size(20);
+			@include font-size(20);
 		}
 
 		.button-tabs {
-			margin: variables.$marg-xlrg 0 variables.$marg-med;
+			margin: $marg-xlrg 0 $marg-med;
 		}
 
 		.group-create-buttons {
@@ -36,7 +36,7 @@
 	.bp-list:not(.grid) {
 
 		.item-entry {
-			padding-left: variables.$pad-sml;
+			padding-left: $pad-sml;
 		}
 	}
 }

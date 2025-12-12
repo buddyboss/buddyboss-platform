@@ -1,3 +1,6 @@
+@use "sass:color";
+@use "hint-variables" as *;
+@use "hint-mixins" as *;
 /**
  * source: hint-color-types.scss
  *
@@ -13,15 +16,15 @@
 
 
 // mixin to generate different color style tooltips
-@mixin hint-type($color) {
+@mixin type($color) {
 
 	&:after {
 		background-color: $color;
-		text-shadow: 0 -1px 0 darken($color, $hintTextShadowDarkenAmount);
+		text-shadow: 0 -1px 0 color.adjust($color, $lightness: -25%);
 	}
 
 	// generate arrow color style
-	@include hint-mixins.arrow-border-color($color);
+	@include arrow-border-color($color);
 }
 
 /**
@@ -29,7 +32,7 @@
  */
 .#{$hintPrefix}error {
 
-	@include hint-type($hintErrorColor);
+	@include type($hintErrorColor);
 }
 
 /**
@@ -37,7 +40,7 @@
  */
 .#{$hintPrefix}warning {
 
-	@include hint-type($hintWarningColor);
+	@include type($hintWarningColor);
 }
 
 /**
@@ -45,7 +48,7 @@
  */
 .#{$hintPrefix}info {
 
-	@include hint-type($hintInfoColor);
+	@include type($hintInfoColor);
 }
 
 /**
@@ -53,5 +56,5 @@
  */
 .#{$hintPrefix}success {
 
-	@include hint-type($hintSuccessColor);
+	@include type($hintSuccessColor);
 }

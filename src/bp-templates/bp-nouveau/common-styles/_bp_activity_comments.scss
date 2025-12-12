@@ -1,8 +1,8 @@
 // BP activity comment entries in response to activity loop entries
 // @version 3.0.0
 
-@use "./_bp-variables" as variables;
-@use "./_bp-mixins" as mixins;
+@use "./_bp-variables" as *;
+@use "./_bp-mixins" as *;
 
 .buddypress-wrap,
 .bb-media-model-wrapper {
@@ -21,7 +21,7 @@
 
 			li {
 				border-bottom: 0;
-				padding: variables.$pad-med 0 0;
+				padding: $pad-med 0 0;
 
 				&:not(.detached-comment-item) {
 					margin-left: 0;
@@ -111,10 +111,10 @@
 			display: flex;
 
 			.acomment-content_block {
-				background-color: variables.$light-grey;
-				padding: variables.$marg-sml variables.$marg-med;
-				border-radius: variables.$block-radius-inner;
-				margin-bottom: variables.$marg-xsml;
+				background-color: $light-grey;
+				padding: $marg-sml $marg-med;
+				border-radius: $block-radius-inner;
+				margin-bottom: $marg-xsml;
 				min-width: 170px;
 				position: relative;
 			}
@@ -133,11 +133,11 @@
 		.acomment-meta,
 		.acomment-content p {
 
-			@include mixins.font-size(14);
+			@include font-size(14);
 		}
 
 		.acomment-meta {
-			color: variables.$dark-grey;
+			color: $dark-grey;
 			padding-left: 2%;
 		}
 
@@ -169,12 +169,12 @@
 
 		.acomment-options {
 			float: left;
-			margin: variables.$marg-sml 0 variables.$marg-sml variables.$marg-lrg;
+			margin: $marg-sml 0 $marg-sml $marg-lrg;
 
 			a {
-				color: variables.$light-text;
+				color: $light-text;
 
-				@include mixins.font-size(14);
+				@include font-size(14);
 
 				&:focus,
 				&:hover {
@@ -309,7 +309,7 @@
 			// if button element in use
 			button {
 
-				@include mixins.font-size(14);
+				@include font-size(14);
 				font-weight: 400;
 				text-transform: none;
 			}
@@ -357,9 +357,9 @@
 
 			button {
 
-				@include mixins.font-size(14);
+				@include font-size(14);
 				text-decoration: underline;
-				padding-left: variables.$pad-sml;
+				padding-left: $pad-sml;
 
 				span {
 					text-decoration: none;
@@ -369,7 +369,7 @@
 				&:focus {
 
 					span {
-						color: variables.$blue;
+						color: $blue;
 					}
 				}
 			}
@@ -413,7 +413,7 @@
 		.comment-reactions {
 
 			.activity-state-reactions {
-				background-color: variables.$white;
+				background-color: $white;
 				position: absolute;
 				bottom: -10px;
 				right: 0;
@@ -562,7 +562,7 @@
 		}
 
 		.activity-time-since {
-			color: variables.$light-text;
+			color: $light-text;
 			margin-left: 5px;
 		}
 	}
@@ -604,7 +604,7 @@ body.activity-permalink {
 		width: auto;
 
 		> ul {
-			padding: 0 variables.$pad-sml 0 variables.$pad-med;
+			padding: 0 $pad-sml 0 $pad-med;
 		}
 
 	}

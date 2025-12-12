@@ -3,8 +3,8 @@
 // N.B. See _bp_navigation for additional rules and properties.
 // @version 3.0.0.
 
-@use "./_bp-variables" as variables;
-@use "./_bp-mixins" as mixins;
+@use "./_bp-variables" as *;
+@use "./_bp-mixins" as *;
 
 .buddypress-wrap {
 
@@ -20,12 +20,12 @@
 
 	// User account filters .subnav-filters
 
-	@include mixins.clearfix-element(".subnav-filters");
+	@include clearfix-element(".subnav-filters");
 
 	.subnav-filters {
 		background: none;
 		list-style: none;
-		margin: variables.$marg-med 0;
+		margin: $marg-med 0;
 		padding: 0;
 
 		div {
@@ -46,7 +46,7 @@
 			.messages-search {
 				margin-bottom: 1em;
 
-				@include mixins.medium-up {
+				@include medium-up {
 
 					margin-bottom: 0;
 				}
@@ -59,7 +59,7 @@
 			select,
 			input[type="search"] {
 
-				@include mixins.font-size(16);
+				@include font-size(16);
 			}
 
 			button.nouveau-search-submit {
@@ -73,11 +73,11 @@
 		}
 
 		.component-filters {
-			margin-top: variables.$marg-sml;
+			margin-top: $marg-sml;
 		}
 
 		.feed {
-			margin-right: variables.$marg-med;
+			margin-right: $marg-med;
 		}
 
 		.last.filter {
@@ -90,7 +90,7 @@
 
 		.user-messages-bulk-actions {
 
-			@include mixins.clearfix-element(".bulk-actions-wrap");
+			@include clearfix-element(".bulk-actions-wrap");
 
 			.bulk-actions-wrap {
 
@@ -109,7 +109,7 @@
 
 			.select-wrap:focus,
 			.select-wrap:hover {
-				outline: 1px solid variables.$med-light-grey;
+				outline: 1px solid $med-light-grey;
 			}
 
 			.bulk-actions {
@@ -153,7 +153,7 @@
 
 		//position for wider screens
 
-		@include mixins.medium-small-up() {
+		@include medium-small-up() {
 
 			li {
 				margin-bottom: 0;
@@ -226,14 +226,14 @@
 		}
 	}
 
-	@include mixins.medium-small-max() {
+	@include medium-small-max() {
 
 		.subnav-filters .grid-filters {
 			margin-top: 10px;
 		}
 	}
 
-	@include mixins.medium-small-up() {
+	@include medium-small-up() {
 
 		.subnav-filters .grid-filters {
 			float: right;

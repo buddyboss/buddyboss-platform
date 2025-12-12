@@ -1,5 +1,5 @@
-@use "./_bp-variables" as variables;
-@use "./_bp-mixins" as mixins;
+@use "./_bp-variables" as *;
+@use "./_bp-mixins" as *;
 
 .bb-activity-video-elem {
 
@@ -1316,7 +1316,7 @@ div.video-js {
 		}
 
 		.bb-custom-check[name="bb-video-thumbnail-select"]:checked ~ .video-thumbnail-custom {
-			border-color: variables.$blue;
+			border-color: $blue;
 			overflow: hidden;
 
 			img {
@@ -1360,7 +1360,7 @@ div.video-js {
 		}
 
 		.bb-custom-check:checked ~ .bb-field-wrap .dropzone .dz-preview .dz-image {
-			border-color: variables.$blue;
+			border-color: $blue;
 
 			img {
 				border-radius: 0;
@@ -1480,7 +1480,7 @@ div.video-js {
 				display: flex;
 
 				.bb-custom-check:checked ~ a {
-					border-color: variables.$blue;
+					border-color: $blue;
 
 					img {
 						border-radius: 0;

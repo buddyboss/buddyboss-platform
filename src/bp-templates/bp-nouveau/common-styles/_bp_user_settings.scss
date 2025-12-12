@@ -1,8 +1,8 @@
 // BP User settings screens
 // @version 3.0.0
 
-@use "./_bp-variables" as variables;
-@use "./_bp-mixins" as mixins;
+@use "./_bp-variables" as *;
+@use "./_bp-mixins" as *;
 
 // 1. Settings Global
 // 1. General (email/password change)
@@ -144,17 +144,17 @@
 	}
 
 	thead {
-		background-color: variables.$buttons-background;
+		background-color: $buttons-background;
 
 		.title {
 			padding-left: 20px;
-			border-left: 1px solid variables.$primary-grey;
+			border-left: 1px solid $primary-grey;
 			font-weight: 400;
 			width: 100%;
 		}
 
 		.app {
-			border-right: 1px solid variables.$primary-grey;
+			border-right: 1px solid $primary-grey;
 			padding-right: 20px;
 		}
 
@@ -168,8 +168,8 @@
 		min-width: 95px;
 		padding: 10px;
 		vertical-align: middle;
-		border-top: 1px solid variables.$primary-grey;
-		border-bottom: 1px solid variables.$primary-grey;
+		border-top: 1px solid $primary-grey;
+		border-bottom: 1px solid $primary-grey;
 	}
 
 	.disabled * {
@@ -197,7 +197,7 @@
 		}
 
 		td {
-			border-bottom: 1px solid variables.$primary-grey;
+			border-bottom: 1px solid $primary-grey;
 			vertical-align: middle;
 			padding: 10px;
 
@@ -373,7 +373,7 @@
 				padding: 0 0 5px 0;
 
 				&:focus-visible {
-					outline: 1px solid variables.$blue;
+					outline: 1px solid $blue;
 				}
 
 			}
@@ -383,7 +383,7 @@
 			}
 
 			&.selected a {
-				border-bottom-color: variables.$blue;
+				border-bottom-color: $blue;
 			}
 
 		}
@@ -395,7 +395,7 @@
 /*__ Notification Subscription __*/
 
 .bb-accordion {
-	border: 1px solid variables.$bp-border-color;
+	border: 1px solid $bp-border-color;
 	border-radius: 4px;
 	margin-bottom: 25px;
 
@@ -406,12 +406,12 @@
 	}
 
 	.bb-accordion_panel {
-		border-top: 1px solid variables.$bp-border-color;
+		border-top: 1px solid $bp-border-color;
 	}
 
 	.bb-accordion_title {
 
-		@include mixins.font-size(18);
+		@include font-size(18);
 		font-weight: 600;
 		padding-right: 42px;
 		margin: 0;
@@ -433,8 +433,8 @@
 
 		.buddypress .buddypress-wrap & {
 
-			@include mixins.center-horizontal-vert();
-			color: variables.$light-text;
+			@include center-horizontal-vert();
+			color: $light-text;
 			position: absolute;
 			top: 10px;
 			right: 25px;
@@ -450,7 +450,7 @@
 			}
 
 			&:focus-visible {
-				outline: 1px solid variables.$blue;
+				outline: 1px solid $blue;
 			}
 
 		}
@@ -462,7 +462,7 @@
 		border-radius: 0;
 
 		&.is_closed {
-			border-bottom: 1px solid variables.$bp-border-color;
+			border-bottom: 1px solid $bp-border-color;
 
 			.bb-accordion_head {
 				border-bottom: 0;
@@ -498,7 +498,7 @@
 
 		&:focus-within,
 		&:hover {
-			background-color: variables.$light-grey;
+			background-color: $light-grey;
 		}
 	}
 
@@ -542,7 +542,7 @@
 
 		.subscription-item_title {
 
-			@include mixins.font-size(14);
+			@include font-size(14);
 			display: block;
 			font-weight: 500;
 			line-height: 1.5;
@@ -558,9 +558,9 @@
 
 		.subscription-item_meta {
 
-			@include mixins.font-size(13);
+			@include font-size(13);
 			line-height: 1.5;
-			color: variables.$light-text;
+			color: $light-text;
 			display: block;
 			white-space: nowrap;
 			max-width: 100%;
@@ -577,8 +577,8 @@
 
 		.buddypress .buddypress-wrap & {
 
-			@include mixins.center-horizontal-vert();
-			color: variables.$light-text;
+			@include center-horizontal-vert();
+			color: $light-text;
 			background-color: transparent;
 			padding: 0;
 			border: 0;
@@ -598,10 +598,10 @@
 
 			&:focus,
 			&:hover {
-				background-color: variables.$white;
+				background-color: $white;
 
 				i {
-					color: variables.$black;
+					color: $black;
 				}
 			}
 
@@ -620,7 +620,7 @@
 
 	> p {
 
-		@include mixins.font-size(14);
+		@include font-size(14);
 		margin: 0;
 		padding: 5px 10px;
 	}
@@ -686,7 +686,7 @@
 			.bb-icon {
 				font-size: 16px;
 				line-height: 1;
-				color: variables.$dark-grey;
+				color: $dark-grey;
 				font-weight: 400;
 			}
 		}

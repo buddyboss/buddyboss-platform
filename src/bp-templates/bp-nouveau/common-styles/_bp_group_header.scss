@@ -1,8 +1,8 @@
 // BP Single Group Header Styles.
 // @version 3.0.0
 
-@use "./_bp-variables" as variables;
-@use "./_bp-mixins" as mixins;
+@use "./_bp-variables" as *;
+@use "./_bp-mixins" as *;
 
 .groups-header {
 
@@ -27,19 +27,19 @@
 
 		#group-admins {
 
-			@include mixins.dis-flex;
-			margin-bottom: variables.$marg-med;
+			@include dis-flex;
+			margin-bottom: $marg-med;
 			padding-right: 10px;
 			margin-right: 5px;
 		}
 
 		.moderators-title {
 
-			@include mixins.font-size(14);
+			@include font-size(14);
 		}
 
 		.user-list {
-			margin: 0 0 variables.$marg-xsml;
+			margin: 0 0 $marg-xsml;
 
 			ul:after {
 				clear: both;
@@ -59,7 +59,7 @@
 
 			> li {
 
-				@include mixins.dis-flex;
+				@include dis-flex;
 				margin: 0 0 0 -6px;
 				position: relative;
 				z-index: 1;
@@ -88,8 +88,8 @@
 					background-color: #f9f9f9;
 					border: 2px solid #fff;
 
-					@include mixins.dis-flex;
-					@include mixins.flex-align(center);
+					@include dis-flex;
+					@include flex-align(center);
 					-webkit-box-pack: center;
 					-ms-flex-pack: center;
 					justify-content: center;
@@ -112,11 +112,11 @@
 
 		.parent-title {
 
-			@include mixins.font-size(14);
+			@include font-size(14);
 		}
 
 		.group-list {
-			margin: 0 0 variables.$marg-xsml;
+			margin: 0 0 $marg-xsml;
 
 			ul:after {
 				clear: both;
@@ -133,7 +133,7 @@
 
 		img.avatar {
 
-			@include mixins.box-shadow-none();
+			@include box-shadow-none();
 			float: none;
 			height: 30px;
 			margin: 0;
@@ -143,15 +143,15 @@
 	}
 
 	.desc-wrap {
-		background: variables.$light-grey;
-		border: 1px solid variables.$med-light-grey;
-		margin: 0 0 variables.$marg-med;
-		padding: variables.$pad-med;
+		background: $light-grey;
+		border: 1px solid $med-light-grey;
+		margin: 0 0 $marg-med;
+		padding: $pad-med;
 		text-align: center;
 
 		.group-description {
-			background: variables.$off-white;
-			padding: variables.$pad-med;
+			background: $off-white;
+			padding: $pad-med;
 			text-align: left;
 		}
 
@@ -187,7 +187,7 @@
 
 		#item-header-cover-image {
 
-			@include mixins.flex-align(center);
+			@include flex-align(center);
 			-webkit-box-orient: vertical;
 			-webkit-box-direction: normal;
 			-ms-flex-flow: column;
@@ -204,7 +204,7 @@
 
 			#item-header-content {
 
-				@include mixins.center-vert;
+				@include center-vert;
 				flex-direction: column;
 				width: 100%;
 
@@ -229,15 +229,15 @@
 
 			.group-item-actions {
 
-				@include mixins.dis-flex;
-				@include mixins.flex-align(center);
+				@include dis-flex;
+				@include flex-align(center);
 				flex-direction: row;
 				width: auto;
 			}
 
 			.groups-meta.action {
 
-				@include mixins.dis-flex;
+				@include dis-flex;
 				position: static;
 				max-width: initial;
 				width: auto;
@@ -265,7 +265,7 @@
 
 		.group-actions-wrap {
 
-			@include mixins.dis-flex();
+			@include dis-flex();
 			-webkit-box-pack: justify;
 			-ms-flex-pack: justify;
 			justify-content: space-between;
@@ -322,13 +322,13 @@
 
 			.group-actions-absolute {
 
-				@include mixins.dis-flex();
-				@include mixins.flex-align(center);
+				@include dis-flex();
+				@include flex-align(center);
 
 				.groups-meta {
 					display: block;
 					margin-bottom: 0;
-					margin-left: variables.$marg-xsml;
+					margin-left: $marg-xsml;
 					max-width: initial;
 					position: static;
 
@@ -383,13 +383,13 @@
 				}
 
 				.bb_more_options {
-					margin-left: variables.$marg-xsml;
+					margin-left: $marg-xsml;
 					margin-bottom: 0;
 				}
 
 				.bp-group-status {
 
-					@include mixins.align-self(center);
+					@include align-self(center);
 					margin: 0;
 
 					.group-type {
@@ -415,14 +415,14 @@
 
 			#item-actions,
 			#item-header-content {
-				padding-top: variables.$marg-lrg;
-				padding-bottom: variables.$marg-lrg;
+				padding-top: $marg-lrg;
+				padding-bottom: $marg-lrg;
 			}
 
 		}
 
 		.group-item-actions {
-			margin-left: variables.$marg-med;
+			margin-left: $marg-med;
 			text-align: right;
 			max-width: 25%;
 			display: table;
@@ -439,11 +439,11 @@
 
 			#item-actions,
 			#item-header-content {
-				padding-bottom: variables.$marg-med;
+				padding-bottom: $marg-med;
 			}
 
 			#item-actions {
-				margin-bottom: variables.$marg-med;
+				margin-bottom: $marg-med;
 			}
 
 		}
@@ -460,12 +460,12 @@
 
 				.group-actions-wrap {
 
-					@include mixins.center-vert();
+					@include center-vert();
 					flex-direction: column;
 					justify-content: center;
 
 					.bp-title {
-						margin-right: variables.$marg-med;
+						margin-right: $marg-med;
 					}
 
 					.moderators-lists {
@@ -485,7 +485,7 @@
 			&.centered #item-header-content {
 
 				> .bp-group-type {
-					margin-bottom: variables.$marg-med;
+					margin-bottom: $marg-med;
 				}
 
 				.group-actions-wrap {
@@ -512,7 +512,7 @@
 	@media screen and (max-width: 380px) {
 
 		.bb_more_options {
-			margin-bottom: variables.$marg-sml;
+			margin-bottom: $marg-sml;
 		}
 
 	}

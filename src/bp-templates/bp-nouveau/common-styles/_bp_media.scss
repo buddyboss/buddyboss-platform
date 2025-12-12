@@ -1,5 +1,5 @@
-@use "./_bp-variables" as variables;
-@use "./_bp-mixins" as mixins;
+@use "./_bp-variables" as *;
+@use "./_bp-mixins" as *;
 
 .bb-activity-media-wrap {
 	display: -webkit-box;
@@ -863,7 +863,7 @@ a.bb-close-model {
 
 				&:focus {
 
-					@include mixins.box-shadow(0 0 6px variables.$med-light-grey);
+					@include box-shadow(0 0 6px $med-light-grey);
 				}
 			}
 
@@ -921,7 +921,7 @@ a.bb-close-model {
 
 				&:focus {
 
-					@include mixins.box-shadow(0 0 6px variables.$med-light-grey);
+					@include box-shadow(0 0 6px $med-light-grey);
 				}
 			}
 
@@ -1033,7 +1033,7 @@ a.bb-close-model {
 	padding: 12px 0;
 
 	a {
-		color: variables.$dark-grey;
+		color: $dark-grey;
 		opacity: 0.4;
 		display: flex;
 		align-items: center;
@@ -1062,7 +1062,7 @@ a.bb-close-model {
 		color: inherit;
 
 		&:hover {
-			color: variables.$highlight;
+			color: $highlight;
 		}
 	}
 }
@@ -3023,7 +3023,7 @@ div.dropzone .dz-preview {
 				a.download-button {
 					display: block;
 					line-height: 1;
-					color: variables.$text-link-hover;
+					color: $text-link-hover;
 				}
 
 			}
@@ -3302,7 +3302,7 @@ div.dropzone .dz-preview {
 				color: #939597;
 
 				&:hover {
-					color: variables.$text-link-hover;
+					color: $text-link-hover;
 				}
 			}
 		}
@@ -3401,7 +3401,7 @@ div.dropzone .dz-preview {
 
 						&:hover {
 							background-color: #f5f5f5;
-							color: variables.$blue;
+							color: $blue;
 						}
 
 						&:before {
@@ -3929,7 +3929,7 @@ body.search-results.bb-template-v2 .search_results {
 					color: #4d5c6d;
 
 					&:hover {
-						color: variables.$text-link-hover;
+						color: $text-link-hover;
 					}
 				}
 			}
@@ -4116,7 +4116,7 @@ body.search-results.bb-template-v2 .search_results {
 
 	.search-form_reset {
 		font-size: 13px;
-		color: variables.$light-text;
+		color: $light-text;
 		background-color: transparent;
 		border: 0;
 		padding: 0;
@@ -4505,7 +4505,7 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 
 							&:hover {
 								background-color: #f5f5f5;
-								color: variables.$blue;
+								color: $blue;
 							}
 
 							i:before {
@@ -5745,7 +5745,7 @@ body.buddyboss-theme {
 
 		.mfp-close {
 
-			@include mixins.box-shadow-none;
+			@include box-shadow-none;
 			right: 20px;
 			left: inherit;
 		}

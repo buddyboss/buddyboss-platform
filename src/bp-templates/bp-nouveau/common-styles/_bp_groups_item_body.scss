@@ -1,8 +1,8 @@
 // Groups specific Item-body content
 // @version 3.0.0
 
-@use "./_bp-variables" as variables;
-@use "./_bp-mixins" as mixins;
+@use "./_bp-variables" as *;
+@use "./_bp-mixins" as *;
 
 // Members list doesn't generate  subnav items items
 // so we negate the rules using :not()
@@ -11,8 +11,8 @@
 	.item-body {
 
 		.filters:not(.no-subnav) {
-			border-top: 5px solid variables.$light-grey;
-			padding-top: variables.$pad-med;
+			border-top: 5px solid $light-grey;
+			padding-top: $pad-med;
 		}
 	}
 }

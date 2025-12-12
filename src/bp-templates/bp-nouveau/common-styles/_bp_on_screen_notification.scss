@@ -1,8 +1,8 @@
 // BP On-screen Notifications
 // @version 1.0.0
 
-@use "./_bp-variables" as variables;
-@use "./_bp-mixins" as mixins;
+@use "./_bp-variables" as *;
+@use "./_bp-mixins" as *;
 
 // 1. Global Styling
 
@@ -68,7 +68,7 @@
 						top: 0;
 						height: 100%;
 						width: 5px;
-						background: variables.$blue;
+						background: $blue;
 						position: absolute;
 						border-radius: 5px 0 0 5px;
 					}

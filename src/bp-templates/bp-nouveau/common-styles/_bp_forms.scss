@@ -1,8 +1,9 @@
 // BP Forms Elements Global Styles
 // @version 3.0.0
 
-@use "./_bp-variables" as variables;
-@use "./_bp-mixins" as mixins;
+@use "sass:color";
+@use "./_bp-variables" as *;
+@use "./_bp-mixins" as *;
 
 // Some essential classes used for forms elements:
 // labels - sizing especially for standalone controls
@@ -17,7 +18,7 @@
 	#whats-new-post-in-box { // has no form element and can't hold rules below.
 
 		select {
-			border: 1px solid variables.$form-border-color;
+			border: 1px solid $form-border-color;
 		}
 	}
 
@@ -47,7 +48,7 @@
 
 		&:focus {
 
-			@include mixins.box-shadow(0 0 8px variables.$light-grey);
+			@include box-shadow(0 0 8px $light-grey);
 		}
 	}
 
@@ -89,12 +90,12 @@
 		[data-bp-search] input[type="text"],
 		.groups-members-search input[type="search"],
 		.groups-members-search input[type="text"] {
-			background: variables.$off-white;
-			border: 1px solid variables.$form-border-color;
+			background: $off-white;
+			border: 1px solid $form-border-color;
 			border-radius: 0;
 			font: inherit;
 			font-size: 100%;
-			padding: variables.$pad-sml;
+			padding: $pad-sml;
 		}
 
 		// Manage browser pseudo class validation states & static 'invalid' class
@@ -111,7 +112,7 @@
 				outline: 0;
 
 				&:focus {
-					border-color: variables.$form-border-color;
+					border-color: $form-border-color;
 					border-width: 1px;
 				}
 			}
@@ -120,7 +121,7 @@
 			// This needs to be stated after the  pseudo :valid
 			// as technically the input has a valid value.
 			&.invalid[required] {
-				border-color: variables.$warn;
+				border-color: $warn;
 			}
 		}
 
@@ -131,7 +132,7 @@
 
 		input[type="radio"],
 		input[type="checkbox"] {
-			margin-right: variables.$marg-xsml;
+			margin-right: $marg-xsml;
 			width: auto;
 		}
 
@@ -148,14 +149,14 @@
 		}
 
 		input[type="password"] {
-			margin-bottom: variables.$marg-xsml;
+			margin-bottom: $marg-xsml;
 		}
 
 		input:focus,
 		textarea:focus,
 		select:focus {
-			background: variables.$off-white;
-			color: variables.$bp-text;
+			background: $off-white;
+			color: $bp-text;
 			outline: 0;
 		}
 
@@ -163,7 +164,7 @@
 		span.label {
 			display: block;
 			font-weight: 600;
-			margin: variables.$marg-med 0 variables.$marg-xsml;
+			margin: $marg-med 0 $marg-xsml;
 			width: auto;
 		}
 
@@ -173,13 +174,13 @@
 
 		a.clear-value {
 			display: block;
-			margin-top: variables.$marg-xsml;
+			margin-top: $marg-xsml;
 			outline: none;
 		}
 
 		.submit {
 			clear: both;
-			padding: variables.$marg-med 0 0;
+			padding: $marg-med 0 0;
 		}
 
 		p.submit {
@@ -187,7 +188,7 @@
 		}
 
 		div.submit input {
-			margin-right: variables.$marg-med;
+			margin-right: $marg-med;
 		}
 
 		p label,
@@ -197,8 +198,8 @@
 		}
 
 		p.description {
-			color: variables.$form-text;
-			margin: variables.$marg-xsml 0;
+			color: $form-text;
+			margin: $marg-xsml 0;
 		}
 
 		.editfield p.description {
@@ -207,10 +208,10 @@
 
 		div.checkbox label:nth-child(n+2),
 		div.radio div label {
-			color: variables.$form-text;
+			color: $form-text;
 			font-size: 100%;
 			font-weight: 400;
-			margin: variables.$marg-xsml 0 0;
+			margin: $marg-xsml 0 0;
 		}
 
 		&#send-reply {
@@ -223,7 +224,7 @@
 		&#sidebar-login-form {
 
 			label {
-				margin-top: variables.$marg-xsml;
+				margin-top: $marg-xsml;
 			}
 
 			input[type="text"],
@@ -236,11 +237,11 @@
 		&.profile-edit {
 
 			input:focus {
-				background: variables.$white;
+				background: $white;
 			}
 		}
 
-		@include mixins.medium-up() {
+		@include medium-up() {
 
 			// The Group invites form lists (not required if Ajax templates in use)
 			.left-menu {
@@ -282,7 +283,7 @@
 
 		button.visibility-toggle-link {
 
-			@include mixins.font-size(12);
+			@include font-size(12);
 			margin: 5px;
 		}
 
@@ -336,7 +337,7 @@ body.no-js {
 .buddypress-wrap {
 
 	.select-wrap {
-		border: 1px solid variables.$bp-border-color;
+		border: 1px solid $bp-border-color;
 
 		label {
 			display: inline;
@@ -354,7 +355,7 @@ body.no-js {
 			border: 0;
 			cursor: pointer;
 			//margin-right: -25px;
-			padding: 5px 25px 5px variables.$marg-sml;
+			padding: 5px 25px 5px $marg-sml;
 			position: relative;
 			z-index: 1;
 			width: 100%;
@@ -375,7 +376,7 @@ body.no-js {
 			z-index: 0;
 
 			&:before {
-				color: variables.$primary-grey;
+				color: $primary-grey;
 				content: "\25BC";
 			}
 		}
@@ -384,7 +385,7 @@ body.no-js {
 		&:hover {
 
 			.select-arrow:before {
-				color: darken(variables.$primary-grey, 15%);
+				color: color.adjust($primary-grey, $lightness: -15%);
 			}
 		}
 	} // close .select-wrap
@@ -395,7 +396,7 @@ body.no-js {
 			position: relative;
 		}
 
-		@include mixins.medium-small-up() {
+		@include medium-small-up() {
 
 			.select-wrap {
 				margin-right: 12px;
@@ -409,7 +410,7 @@ body.no-js {
 
 		&:focus,
 		&:hover {
-			border: 1px solid darken(variables.$bp-border-color, 10%);
+			border: 1px solid color.adjust($bp-border-color, $lightness: -10%);
 			box-shadow: inset 0 0 3px #eee;
 		}
 	}
@@ -417,7 +418,7 @@ body.no-js {
 	// Manage select wrap for notification actions, wide screens
 	// ensures a shrink wrap width.
 
-	@include mixins.medium-small-up() {
+	@include medium-small-up() {
 
 		.notifications-options-nav {
 
@@ -443,7 +444,7 @@ ul.bbp-stats {
 		margin-bottom: 20px;
 		flex: 0 0 50%;
 
-		@include mixins.medium-up() {
+		@include medium-up() {
 			flex: 0 0 50%;
 		}
 	}

@@ -1,8 +1,8 @@
 // BP default/generic Table styles.
 // @version 3.0.0
 
-@use "./_bp-variables" as variables;
-@use "./_bp-mixins" as mixins;
+@use "./_bp-variables" as *;
+@use "./_bp-mixins" as *;
 
 .buddypress-wrap {
 
@@ -22,14 +22,14 @@
 
 			tr {
 				background: none;
-				border-bottom: 2px solid variables.$bp-border-dark;
+				border-bottom: 2px solid $bp-border-dark;
 			}
 		}
 
 		tbody {
 
 			tr {
-				background: variables.$off-white;
+				background: $off-white;
 			}
 		}
 
@@ -44,7 +44,7 @@
 
 			th,
 			td {
-				padding: variables.$pad-sml;
+				padding: $pad-sml;
 				vertical-align: middle;
 			}
 		}
@@ -58,7 +58,7 @@
 		tr {
 
 			td.label {
-				border-right: 1px solid variables.$light-grey;
+				border-right: 1px solid $light-grey;
 				font-weight: 600;
 				width: 25%;
 			}
@@ -72,7 +72,7 @@
 		tr.alt {
 
 			td {
-				background: variables.$off-white;
+				background: $off-white;
 			}
 		}
 	}
@@ -81,7 +81,7 @@
 	table.profile-fields {
 
 		.data {
-			padding: variables.$pad-sml variables.$pad-med;
+			padding: $pad-sml $pad-med;
 		}
 
 		.repeater-separator {
@@ -100,7 +100,7 @@
 		// when some text lines wrap
 
 		td {
-			padding: variables.$pad-med variables.$pad-sml;
+			padding: $pad-med $pad-sml;
 		}
 
 		.bulk-select-all,
@@ -146,7 +146,7 @@
 	}
 
 	table.notification-settings {
-		margin-bottom: variables.$marg-med;
+		margin-bottom: $marg-med;
 		text-align: left;
 	}
 
@@ -184,9 +184,9 @@
 			}
 
 			p.thread-excerpt {
-				color: variables.$form-text;
+				color: $form-text;
 
-				@include mixins.font-size(12);
+				@include font-size(12);
 				margin-top: 3px;
 			}
 		}

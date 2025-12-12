@@ -2,6 +2,8 @@
 //
 // Declares some variables used within the library.
 
+@use "sass:color";
+
 // Prefix for all classes. By default, BEM naming convention is used
 $hintPrefix: "hint--" !default;
 
