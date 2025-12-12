@@ -46,6 +46,7 @@ TABLE OF CONTENTS:
 20.0 Upgrade
 21.0 Activity Filter & Sorting
 22.0 Header Branding & Actions
+23.0 DRM Admin Notices
 ------------------------------------------------------------------------------*/
 :root {
   --bb-plt-color-black: #000;
@@ -6088,5 +6089,110 @@ h1.bb-advance-heading {
   }
   #wpadminbar ~ .bb-tab-header ~ #wpbody {
     padding-top: 0;
+  }
+}
+
+/*------------------------------------------------------------------------------
+23.0 - DRM Admin Notices
+------------------------------------------------------------------------------*/
+/**
+ * DRM Notice List Styling
+ * Ensures disc bullet points render properly in DRM admin notices
+ */
+.bb-drm-notice ul {
+  margin: 10px 0 0 0 !important;
+  padding-left: 20px !important;
+  list-style: disc !important;
+  list-style-position: outside !important;
+}
+
+.bb-drm-notice ul li {
+  list-style: disc !important;
+  list-style-position: outside !important;
+  margin-left: 0 !important;
+  padding-left: 0 !important;
+}
+
+.bb-drm-notice ol {
+  margin: 10px 0 0 0 !important;
+  padding-left: 20px !important;
+  list-style: decimal !important;
+  list-style-position: outside !important;
+}
+
+.bb-drm-notice ol li {
+  list-style: decimal !important;
+  list-style-position: outside !important;
+  margin-left: 0 !important;
+  padding-left: 0 !important;
+}
+
+.bb-drm-notice ul ul,
+.bb-drm-notice ul ol,
+.bb-drm-notice ol ul,
+.bb-drm-notice ol ol {
+  margin-top: 5px !important;
+  margin-bottom: 5px !important;
+}
+
+/**
+ * DRM Notice Border Colors
+ * Color-coded borders for different DRM status levels
+ */
+#bb-drm-consolidated-notice-dh {
+  border-left-color: #ffa500 !important;
+}
+
+#bb-drm-consolidated-notice-dl {
+  border-left-color: #dc3232 !important;
+}
+
+/**
+ * DRM Notice Responsive Styles
+ * Ensures proper display on mobile devices
+ */
+@media screen and (max-width: 782px) {
+  .bb-drm-notice {
+    padding: 12px !important;
+    padding-right: 35px !important;
+  }
+  .bb-drm-notice > div[style*="display: flex"] {
+    display: block !important;
+  }
+  .bb-drm-notice > div[style*="display: flex"] > div {
+    padding-right: 0 !important;
+    margin-bottom: 10px;
+  }
+  .bb-drm-notice > div[style*="display: flex"] > div:last-child {
+    margin-bottom: 0;
+    white-space: normal !important;
+  }
+  .bb-drm-notice > div[style*="display: flex"] .button {
+    display: block;
+    width: 100%;
+    text-align: center;
+  }
+  .bb-drm-notice .notice-dismiss,
+  .bb-drm-notice .bb-drm-dismiss {
+    padding: 5px !important;
+  }
+  .bb-drm-notice ul,
+  .bb-drm-notice ol {
+    margin-top: 8px !important;
+    padding-left: 18px !important;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .bb-drm-notice {
+    padding: 10px !important;
+    padding-right: 32px !important;
+  }
+  .bb-drm-notice p {
+    font-size: 14px;
+  }
+  .bb-drm-notice .button {
+    padding: 8px 12px;
+    font-size: 13px;
   }
 }

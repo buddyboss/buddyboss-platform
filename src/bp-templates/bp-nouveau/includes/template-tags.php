@@ -2485,7 +2485,7 @@ function bp_nouveau_signup_form( $section = 'account_details' ) {
 		/**
 		 * Filters the class of the signup field.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.16.0
 		 *
 		 * @param array $signup_class_arr The class of the signup field.
 		 * @param array $attributes       The attributes of the signup field.
