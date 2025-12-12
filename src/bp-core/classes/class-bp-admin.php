@@ -1202,9 +1202,32 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			if ( 0 !== strpos( get_current_screen()->id, 'plugins' ) ) {
 				return;
 			}
-			// Check the transient to see if we've just updated the plugin.
+			
+			// Output the modal HTML template.
+			// This is needed for the Release Notes link to work.
+			// Use output buffering and error handling to prevent breaking WordPress scripts.
 			global $bp;
-			include trailingslashit( $bp->plugin_dir . 'bp-core/admin' ) . 'templates/update-buddyboss.php';
+			$template_path = trailingslashit( $bp->plugin_dir . 'bp-core/admin' ) . 'templates/update-buddyboss.php';
+			
+			if ( file_exists( $template_path ) ) {
+				// Use output buffering to catch any errors.
+				ob_start();
+				try {
+					// Suppress any errors from the template to prevent breaking the page.
+					@include $template_path;
+					$output = ob_get_clean();
+					
+					// Only output if we got valid HTML (not an error).
+					if ( ! empty( $output ) && false === strpos( $output, 'Fatal error' ) ) {
+						echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+					}
+				} catch ( Exception $e ) {
+					ob_end_clean();
+					// Silently fail to prevent breaking WordPress admin.
+				}
+			}
+			
+			// Clean up the update flag to prevent database bloat.
 			delete_option( '_bb_is_update' );
 		}
 	}
