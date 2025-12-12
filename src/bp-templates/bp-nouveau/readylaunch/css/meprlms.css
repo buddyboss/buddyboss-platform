@@ -715,6 +715,7 @@
   height: var(--bb-rl-space-100);
   border-radius: var(--bb-rl-radius-full);
   background: var(--bb-rl-background-brand-secondary-color);
+  width: 100%;
 }
 
 .bb-rl-courses-grid.grid .bb-rl-course-card.bb-rl-course-card--mbprlms .bb-rl-course-footer .mpcs-progress-wrap .mpcs-progress-bar .mpcs-progress-bar-inner,
@@ -1872,7 +1873,7 @@ body[class*="mpcs-course"] .bb-rl-mbprlms-pagination ul li.active a {
 .mpcs-classroom.bb-readylaunch-template .mpcs-sidebar-wrapper .progress-bar {
   height: var(--bb-rl-space-100);
   border-radius: var(--bb-rl-radius-full);
-  background: var(--bb-rl-border-secondary-color);
+  background: var(--bb-rl-background-brand-secondary-color);
 }
 
 .bb-readylaunch-template .mpcs-sidebar-wrapper .progress-bar .user-progress,
