@@ -112,7 +112,7 @@ class BP_Latest_Activities extends WP_Widget {
 
 		if ( bp_loggedin_user_id() ) {
 
-			$scope[] = 'just-me';				
+			$scope[] = 'just-me';
 
 			if ( bp_activity_do_mentions() ) {
 				$scope[] = 'mentions';
@@ -132,18 +132,23 @@ class BP_Latest_Activities extends WP_Widget {
 
 			if ( bp_is_active( 'forums' ) ) {
 				$scope[] = 'forums';
-			}			
+			}
 		}
-	
+
 		if ( bp_loggedin_user_id() && ! empty( $instance['relevant'] ) ) {
 			$key = array_search( 'public', $scope, true );
 			if ( is_array( $scope ) && false !== $key ) {
-				unset( $scope[ $key ] );				
+				unset( $scope[ $key ] );
 			}
 		}
 
 		$scope = implode( ',', $scope );
-		
+
+		// Do not add the scope if comments are selected in the filter
+		if ( is_array( $type ) && 1 === count( $type ) && 'new_blog_comment' === current( $type ) ) {
+			$scope = '';
+		}
+
 		/**
 		 * Globalize the activity widget arguments.
 		 * @see bp_nouveau_activity_widget_query() to override
@@ -158,7 +163,20 @@ class BP_Latest_Activities extends WP_Widget {
 			'secondary_id' => 0,
 		);
 
+		if ( is_array( $type ) && in_array( 'new_blog_comment', $type, true ) ) {
+			$bp_nouveau->activity->widget_args['display_comments'] = 'stream';
+		}
+
+		if ( bp_is_active( 'blogs' ) && function_exists( 'bb_filter_activity_get_filter_sql' ) ) {
+			$flag_activity_get_filter_sql = true;
+			add_filter( 'bb_activity_activity_get_filter_sql', 'bb_filter_activity_get_filter_sql', 10, 2 );
+		}
+
 		bp_get_template_part( 'activity/widget' );
+
+		if ( ! empty( $flag_activity_get_filter_sql ) ) {
+			remove_filter( 'bb_activity_activity_get_filter_sql', 'bb_filter_activity_get_filter_sql', 10, 2 );
+		}
 
 		// Reset the globals
 		$GLOBALS['activities_template']    = $reset_activities_template;

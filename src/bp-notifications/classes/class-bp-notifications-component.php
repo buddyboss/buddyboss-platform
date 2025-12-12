@@ -223,23 +223,8 @@ class BP_Notifications_Component extends BP_Component {
 			// Setup the logged in user variables.
 			$notifications_link = trailingslashit( bp_loggedin_user_domain() . bp_get_notifications_slug() );
 
-			// Pending notification requests.
-			$count = bp_notifications_get_unread_notification_count( bp_loggedin_user_id() );
-			if ( ! empty( $count ) ) {
-				$title = sprintf(
-					/* translators: %s: Unread notification count for the current user */
-					__( 'Notifications %s', 'buddyboss' ),
-					'<span class="count">' . bp_core_number_format( $count ) . '</span>'
-				);
-				$unread = sprintf(
-					/* translators: %s: Unread notification count for the current user */
-					__( 'Unread %s', 'buddyboss' ),
-					'<span class="count">' . bp_core_number_format( $count ) . '</span>'
-				);
-			} else {
-				$title  = __( 'Notifications', 'buddyboss' );
-				$unread = __( 'Unread', 'buddyboss' );
-			}
+			$title  = __( 'Notifications', 'buddyboss' );
+			$unread = __( 'Unread', 'buddyboss' );
 
 			// Add the "My Account" sub menus.
 			$wp_admin_nav[] = array(
@@ -312,6 +297,7 @@ class BP_Notifications_Component extends BP_Component {
 				'bp_notifications',
 				'notification_meta',
 				'bp_notifications_unread_count',
+				'bp_notifications_read_count',
 				'bp_notifications_grouped_notifications',
 			)
 		);
@@ -329,4 +315,16 @@ class BP_Notifications_Component extends BP_Component {
 	public function rest_api_init( $controllers = array() ) {
 		parent::rest_api_init( array( 'BP_REST_Notifications_Endpoint' ) );
 	}
+
+	/**
+	 * Register the Notifications Blocks.
+	 *
+	 * @since BuddyBoss 2.9.00
+	 *
+	 * @param array $blocks Optional. See BP_Component::blocks_init() for description.
+	 */
+	public function blocks_init( $blocks = array() ) {
+		parent::blocks_init( array() );
+	}
+
 }

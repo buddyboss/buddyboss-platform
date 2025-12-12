@@ -207,9 +207,10 @@ class BP_Moderation {
 
 		$bp        = buddypress();
 		$cache_key = 'bb_check_moderation_' . $item_type . '_' . $item_id . '_' . $user_report;
-		$result    = wp_cache_get( $cache_key, 'bp_moderation' );
+		$found     = null;
+		$result    = wp_cache_get( $cache_key, 'bp_moderation', false, $found );
 
-		if ( false === $result || true === $force_check ) {
+		if ( ( false === $result && null == $found ) || true === $force_check ) {
 			if ( true === $user_report ) {
 				$result = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->moderation->table_name} ms WHERE ms.item_id = %d AND ms.item_type = %s AND ms.user_report = 1", $item_id, BP_Moderation_Members::$moderation_type ) ); // phpcs:ignore
 			} else {
@@ -371,6 +372,7 @@ class BP_Moderation {
 				'update_meta_cache' => true,            // Whether or not to update meta cache.
 				'count_total'       => false,           // Whether or not to use count_total.
 				'hidden'            => false,           // Get the moderation item base on it's hide status.
+				'search_terms'      => false,           // Search terms to filter by.
 			)
 		);
 
@@ -504,6 +506,41 @@ class BP_Moderation {
 
 		if ( ! empty( $date_query_sql ) ) {
 			$where_conditions['date'] = $date_query_sql;
+		}
+
+		// Handle search terms.
+		if ( ! empty( $r['search_terms'] ) ) {
+			$search_terms_like = '%' . bp_esc_like( $r['search_terms'] ) . '%';
+
+			// Check if we're searching for members.
+			$is_member_search = ! empty( $r['in_types'] ) && in_array( BP_Moderation_Members::$moderation_type, $r['in_types'], true );
+
+			if ( $is_member_search ) {
+				// For member searches, join the users table and search in user fields.
+				if ( ! strpos( $join_sql, $wpdb->users ) ) {
+					$join_sql .= " INNER JOIN {$wpdb->users} u ON ms.item_id = u.ID AND ms.item_type = '" . BP_Moderation_Members::$moderation_type . "'";
+				}
+				$where_conditions['search'] = $wpdb->prepare(
+					'(u.display_name LIKE %s OR u.user_login LIKE %s OR u.user_email LIKE %s)',
+					$search_terms_like,
+					$search_terms_like,
+					$search_terms_like
+				);
+			} else {
+				// For content searches, search in report content and item IDs.
+				// Join reports table if not already joined to search in content.
+				if ( ! strpos( $join_sql, "{$bp->moderation->table_name_reports} mr" ) ) {
+					$join_sql .= " LEFT JOIN {$bp->moderation->table_name_reports} mr ON ms.id = mr.moderation_id";
+				}
+
+				// Search in item ID, item type, and report content.
+				$where_conditions['search'] = $wpdb->prepare(
+					'(ms.item_id LIKE %s OR ms.item_type LIKE %s OR mr.content LIKE %s)',
+					$search_terms_like,
+					$search_terms_like,
+					$search_terms_like
+				);
+			}
 		}
 
 		/**

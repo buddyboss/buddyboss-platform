@@ -901,6 +901,10 @@
 
 	}
 
+	a.bp-user-avatar {
+		display: inline-block;
+	}
+
 	img.avatar {
 		float: left;
 		margin: 0 variables.$marg-sml 0 0;
@@ -912,17 +916,6 @@
 
 		a:before {
 			font-size: 18px;
-		}
-	}
-}
-
-.bp-message-content-wrap {
-
-	blockquote.wp-embedded-content {
-
-		+ p iframe.wp-embedded-content {
-			min-height: 0;
-			height: 0;
 		}
 	}
 }

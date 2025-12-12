@@ -339,7 +339,12 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 				),
 				'group'                        => array(
 					'restrict_invites_confirm_message' => esc_html__( 'By enabling this option members that are already part of sub-groups and not the parent groups will automatically be removed from all sub-groups.', 'buddyboss' ),
-				)
+				),
+				'forum_validation'             => array(
+					'escaped_html_tags' => esc_js( __( 'Your content contains escaped HTML tags. Please fix them before submitting.', 'buddyboss' ) ),
+					'malformed_ul_li'   => esc_js( __( 'Content has malformed <ul> or <li> tags. Please fix them before submitting.', 'buddyboss' ) ),
+				),
+				'components'                   => array_map( 'intval', bp_get_option( 'bp-active-components' ) ),
 			);
 
 			// Localize only post_type is member type and group type.
@@ -353,6 +358,23 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 					$localize_arg['color']            = buddyboss_theme_get_option( 'label_text_color' );
 				}
 			}
+
+			if ( function_exists( 'bb_is_enabled_activity_topics' ) && bb_is_enabled_activity_topics() ) {
+				$localize_arg['delete_topic_confirm'] = esc_html__( 'Are you sure you want to delete this topic?', 'buddyboss' );
+				$localize_arg['topics_limit']         = bb_topics_manager_instance()->bb_topics_limit();
+			}
+
+			if ( function_exists( 'bb_is_readylaunch_enabled' ) && bb_is_readylaunch_enabled() && class_exists( 'BB_Readylaunch' ) ) {
+				$readylaunch                          = new BB_Readylaunch();
+				$localize_arg['register_integration'] = bp_enable_site_registration() && ! bp_allow_custom_registration();
+				$localize_arg['courses_integration']  = $readylaunch->bb_is_sidebar_enabled_for_courses();
+			}
+
+			$localize_arg = apply_filters(
+				'bb_admin_localize_script',
+				$localize_arg,
+				$screen_id,
+			);
 
 			wp_localize_script(
 				'bp-admin',
@@ -446,7 +468,14 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 							true
 						)
 					) {
-						$value = isset( $_POST[ $setting_name ] ) ? wp_kses_post( wp_unslash( $_POST[ $setting_name ] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
+						$value = '';
+						if ( isset( $_POST[ $setting_name ] ) ) {
+							if ( 'bp-enable-private-network-public-content' === $setting_name ) {
+								$value = wp_kses_post( wp_unslash( $_POST[ $setting_name ] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
+							} else {
+								$value = sanitize_textarea_field( wp_unslash( $_POST[ $setting_name ] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
+							}
+						}
 					} elseif (
 						in_array(
 							$setting_name,

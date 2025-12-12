@@ -341,8 +341,59 @@ window.bp = window.bp || {};
 
 			// Gifs autoplay.
 			if ( !_.isUndefined( BP_Nouveau.media.gif_api_key ) ) {
-				window.addEventListener( 'scroll', this.autoPlayGifVideos, false );
-				window.addEventListener( 'resize', this.autoPlayGifVideos, false );
+				window.addEventListener( 'scroll', this.throttledAutoPlayGifVideos.bind( this ), false );
+				window.addEventListener( 'resize', this.throttledAutoPlayGifVideos.bind( this ), false );
+
+				// Add scroll event listener for message thread container
+				var messageThreadList = $( '#bp-message-thread-list' );
+				if ( messageThreadList.length ) {
+					messageThreadList.on( 'scroll', this.throttledAutoPlayGifVideos.bind( this ) );
+				}
+
+				// Add scroll event listener for activity modal body
+				var activityModalBody = $( '.bb-modal-activity-body' );
+				if ( activityModalBody.length ) {
+					activityModalBody.on( 'scroll', this.throttledAutoPlayGifVideos.bind( this ) );
+				}
+
+				// Add scroll event listener for media modal activity item
+				var mediaModalActivityItem = $( '.bb-media-model-container .activity-list .activity-item' );
+				if ( mediaModalActivityItem.length ) {
+					mediaModalActivityItem.on( 'scroll', this.throttledAutoPlayGifVideos.bind( this ) );
+				}
+
+				// Add document-level scroll event delegation as fallback
+				$( document ).on( 'scroll', '#bp-message-thread-list', this.throttledAutoPlayGifVideos.bind( this ) );
+				$( document ).on( 'scroll', '.bb-modal-activity-body', this.throttledAutoPlayGifVideos.bind( this ) );
+				$( document ).on( 'scroll', '.bb-media-model-container .activity-list .activity-item', this.throttledAutoPlayGifVideos.bind( this ) );
+
+				// Use addEventListener directly
+				setTimeout( function() {
+					var messageThreadList = document.getElementById( 'bp-message-thread-list' );
+					if ( messageThreadList ) {
+						messageThreadList.addEventListener( 'scroll', bp.Nouveau.Media.throttledAutoPlayGifVideos.bind( bp.Nouveau.Media ), false );
+					}
+					
+					var activityModalBody = document.querySelector( '.bb-modal-activity-body' );
+					if ( activityModalBody ) {
+						activityModalBody.addEventListener( 'scroll', bp.Nouveau.Media.throttledAutoPlayGifVideos.bind( bp.Nouveau.Media ), false );
+					}
+					
+					var mediaModalActivityItem = document.querySelector( '.bb-media-model-container .activity-list .activity-item' );
+					if ( mediaModalActivityItem ) {
+						mediaModalActivityItem.addEventListener( 'scroll', bp.Nouveau.Media.throttledAutoPlayGifVideos.bind( bp.Nouveau.Media ), false );
+					}
+				}, 1000 );
+
+				// Trigger initial GIF autoplay check for server-side rendered activities
+				// This handles the case when activities are loaded on page load (non-AJAX)
+				$( window ).on( 'load', function() {
+					setTimeout( function() {
+						if ( 'undefined' !== typeof bp.Nouveau.Media && 'function' === typeof bp.Nouveau.Media.autoPlayGifVideos ) {
+							bp.Nouveau.Media.autoPlayGifVideos();
+						}
+					}, 300 );
+				});
 
 				document.addEventListener( 'keydown', _.bind( this.closePickersOnEsc, this ) );
 				$( document ).on( 'click', _.bind( this.closePickersOnClick, this ) );
@@ -798,6 +849,9 @@ window.bp = window.bp || {};
 								if ( response.data.document && response.data.document.video_symlink ) {
 									$( document ).find( 'a.bb-open-document-theatre[data-id="' + itemId + '"]' ).attr( 'data-video-preview', response.data.document.video_symlink );
 								}
+								if ( response.data && response.data.url ) {
+									$( document ).find( 'a.bb-open-document-theatre[data-id="' + itemId + '"]' ).attr( 'href', response.data.url );
+								}
 							} else {
 								target.find( 'option[value="' + target.attr( 'data-privacy' ) + '"]' ).attr( 'selected', 'selected' );
 								target.siblings( 'span' ).text( target.find( 'option[value="' + target.attr( 'data-privacy' ) + '"]' ).text() );
@@ -1246,6 +1300,7 @@ window.bp = window.bp || {};
 					data: data,
 					success: function ( response ) {
 						self.current_page = 1;
+						var dir_label;
 						if ( fromWhere && fromWhere.length && 'activity' === fromWhere ) {
 							if ( response.success ) {
 								$.each( media, function ( index, value ) {
@@ -1289,12 +1344,40 @@ window.bp = window.bp || {};
 										$( document ).find( 'li#media-all' ).trigger( 'click' );
 									}
 								} else {
-									if ( response.data.media_personal_count ) {
-										$( '#buddypress' ).find( '.bp-wrap .users-nav ul li#media-personal-li a span.count' ).text( response.data.media_personal_count );
+									if (
+										'undefined' !== typeof response.data &&
+										'undefined' !== typeof response.data.media_personal_count &&
+										$( '#buddypress .bp-wrap .users-nav' ).length > 0 
+									) {
+										if ( $( '#buddypress .bb-item-count' ).length > 0 && 'yes' !== BP_Nouveau.media.is_media_directory ) {
+											dir_label = BP_Nouveau.dir_labels.hasOwnProperty( 'media' ) ?
+											(
+												1 === parseInt( response.data.media_personal_count ) ?
+												BP_Nouveau.dir_labels.media.singular : BP_Nouveau.dir_labels.media.plural
+											)
+											: '';
+											$( '#buddypress .bb-item-count' ).html( '<span class="bb-count">' + response.data.media_personal_count + '</span> ' + dir_label );
+										} else {
+											$( '#buddypress' ).find( '.bp-wrap .users-nav ul li#media-personal-li a span.count' ).text( response.data.media_personal_count );
+										}
 									}
 
-									if ( response.data.media_group_count ) {
-										$( '#buddypress' ).find( '.bp-wrap .groups-nav ul li#photos-groups-li a span.count' ).text( response.data.media_group_count );
+									if (
+										'undefined' !== typeof response.data &&
+										'undefined' !== typeof response.data.media_group_count &&
+										$( '#buddypress .bp-wrap .groups-nav' ).length > 0
+									) {
+										if ( $( '#buddypress .bb-item-count' ).length > 0 && 'yes' !== BP_Nouveau.media.is_media_directory ) {
+											dir_label = BP_Nouveau.dir_labels.hasOwnProperty( 'media' ) ?
+											(
+												1 === parseInt( response.data.media_group_count ) ?
+												BP_Nouveau.dir_labels.media.singular : BP_Nouveau.dir_labels.media.plural
+											)
+											: '';
+											$( '#buddypress .bb-item-count' ).html( '<span class="bb-count">' + response.data.media_group_count + '</span> ' + dir_label );
+										} else {
+											$( '#buddypress' ).find( '.bp-wrap .groups-nav ul li#photos-groups-li a span.count' ).text( response.data.media_group_count );
+										}
 									}
 
 									if ( 0 !== response.data.media_html_content.length ) {
@@ -1330,16 +1413,40 @@ window.bp = window.bp || {};
 							if ( response.success ) {
 								if (
 									'undefined' !== typeof response.data &&
-									'undefined' !== typeof response.data.media_personal_count
+									'undefined' !== typeof response.data.media_personal_count &&
+									$( '#buddypress .bp-wrap .users-nav' ).length > 0
 								) {
-									$( '#buddypress' ).find( '.bp-wrap .users-nav ul li#media-personal-li a span.count' ).text( response.data.media_personal_count );
+
+									if ( $( '#buddypress .bb-item-count' ).length > 0 && 'yes' !== BP_Nouveau.media.is_media_directory ) {
+										dir_label = BP_Nouveau.dir_labels.hasOwnProperty( 'media' ) ?
+										(
+											1 === parseInt( response.data.media_personal_count ) ?
+											BP_Nouveau.dir_labels.media.singular : BP_Nouveau.dir_labels.media.plural
+										)
+										: '';
+										$( '#buddypress .bb-item-count' ).html( '<span class="bb-count">' + response.data.media_personal_count + '</span> ' + dir_label );
+									} else {
+										$( '#buddypress' ).find( '.bp-wrap .users-nav ul li#media-personal-li a span.count' ).text( response.data.media_personal_count );
+									}
 								}
 
 								if (
 									'undefined' !== typeof response.data &&
-									'undefined' !== typeof response.data.media_group_count
+									'undefined' !== typeof response.data.media_group_count &&
+									$( '#buddypress .bp-wrap .groups-nav' ).length > 0
 								) {
-									$( '#buddypress' ).find( '.bp-wrap .groups-nav ul li#photos-groups-li a span.count' ).text( response.data.media_group_count );
+
+									if ( $( '#buddypress .bb-item-count' ).length > 0 && 'yes' !== BP_Nouveau.media.is_media_directory ) {
+										dir_label = BP_Nouveau.dir_labels.hasOwnProperty( 'media' ) ?
+										(
+											1 === parseInt( response.data.media_group_count ) ?
+											BP_Nouveau.dir_labels.media.singular : BP_Nouveau.dir_labels.media.plural
+										)
+										: '';
+										$( '#buddypress .bb-item-count' ).html( '<span class="bb-count">' + response.data.media_group_count + '</span> ' + dir_label );
+									} else {
+										$( '#buddypress' ).find( '.bp-wrap .groups-nav ul li#photos-groups-li a span.count' ).text( response.data.media_group_count );
+									}
 								}
 								var $media_list = buddyPressSelector.find( '.media-list:not(.existing-media-list)' );
 								$media_list.find( '.bb-media-check-wrap [name="bb-media-select"]:checked' ).each(
@@ -2376,7 +2483,18 @@ window.bp = window.bp || {};
 						'sending',
 						function ( file, xhr, formData ) {
 							formData.append( 'action', 'media_upload' );
-							formData.append( '_wpnonce', BP_Nouveau.nonces.media );
+							formData.append('_wpnonce', BP_Nouveau.nonces.media);
+							
+							var forumId = 0;
+							if ( $( '#bbp_forum_id' ).length ) {
+								forumId = $( '#bbp_forum_id' ).val();
+							}
+							formData.append( 'bbp_forum_id', forumId );
+							var topicId = 0;
+							if ( $( '#bbp_topic_id' ).length ) {
+								topicId = $( '#bbp_topic_id' ).val();
+							}
+							formData.append( 'bbp_topic_id', topicId );
 
 							var tool_box = target.closest( 'form' );
 							tool_box.addClass( 'has-media' );
@@ -3126,6 +3244,17 @@ window.bp = window.bp || {};
 						function ( file, xhr, formData ) {
 							formData.append( 'action', 'document_document_upload' );
 							formData.append( '_wpnonce', BP_Nouveau.nonces.media );
+							
+							var forumId = 0;
+							if ( $( '#bbp_forum_id' ).length ) {
+								forumId = $( '#bbp_forum_id' ).val();
+							}
+							formData.append( 'bbp_forum_id', forumId );
+							var topicId = 0;
+							if ( $( '#bbp_topic_id' ).length ) {
+								topicId = $( '#bbp_topic_id' ).val();
+							}
+							formData.append( 'bbp_topic_id', topicId );
 
 							var tool_box = target.closest( 'form' );
 							tool_box.addClass( 'has-media' );
@@ -3416,6 +3545,17 @@ window.bp = window.bp || {};
 						function ( file, xhr, formData ) {
 							formData.append( 'action', 'video_upload' );
 							formData.append( '_wpnonce', BP_Nouveau.nonces.video );
+							
+							var forumId = 0;
+							if ( $( '#bbp_forum_id' ).length ) {
+								forumId = $( '#bbp_forum_id' ).val();
+							}
+							formData.append( 'bbp_forum_id', forumId );
+							var topicId = 0;
+							if ( $( '#bbp_topic_id' ).length ) {
+								topicId = $( '#bbp_topic_id' ).val();
+							}
+							formData.append( 'bbp_topic_id', topicId );
 
 							var tool_box = target.closest( 'form' );
 							tool_box.addClass( 'has-media' );
@@ -3515,15 +3655,22 @@ window.bp = window.bp || {};
 							}
 
 							if ( response.data.id ) {
-								file.id = response.id;
-								response.data.uuid = file.upload.uuid;
-								response.data.menu_order = $( file.previewElement ).closest( '.dropzone' ).find( file.previewElement ).index() - 1;
+								file.id                = response.id;
+								response.data.uuid     = file.upload.uuid;
 								response.data.album_id = self.album_id;
 								response.data.group_id = self.group_id;
-								response.data.js_preview  = $( file.previewElement ).find( '.dz-video-thumbnail img' ).attr( 'src' );
-								response.data.saved = false;
-								self.dropzone_media[ dropzone_obj_key ].push( response.data );
-								self.addVideoIdsToForumsForm( dropzone_container );
+
+								var thumbnailCheck = setInterval( function () {
+									if ( $( file.previewElement ).closest( '.dz-preview' ).hasClass( 'dz-has-no-thumbnail' ) || $( file.previewElement ).closest( '.dz-preview' ).hasClass( 'dz-has-thumbnail' ) ) {
+										response.data.js_preview = $( file.previewElement ).find( '.dz-video-thumbnail img' ).attr( 'src' );
+										response.data.menu_order = $( file.previewElement ).closest( '.dropzone' ).find( file.previewElement ).index() - 1;
+										response.data.saved      = false;
+										self.dropzone_media[ dropzone_obj_key ].push( response.data );
+										self.addVideoIdsToForumsForm( dropzone_container );
+										clearInterval( thumbnailCheck );
+									}
+								});
+								
 							} else {
 								var node, _i, _len, _ref, _results;
 								var message = response.data.feedback;
@@ -3587,13 +3734,15 @@ window.bp = window.bp || {};
 						}
 					);
 
-					// Enable submit button when all videos are uploaded
+					// Enable submit button when all videos are uploaded.
 					self.dropzone_obj[ dropzone_obj_key ].on(
 						'complete',
 						function() {
 							if ( this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0 && this.files.length > 0 ) {
 								var formElement = target.closest( 'form' );
-								formElement.removeClass( 'media-uploading' );
+								if ( ! formElement.hasClass( 'draft-video-uploading' ) ) {
+									formElement.removeClass( 'media-uploading' );
+								}
 							}
 						}
 					);
@@ -3911,6 +4060,7 @@ window.bp = window.bp || {};
 					'queuecomplete',
 					function () {
 						$( '#bp-media-uploader-modal-title' ).text( BP_Nouveau.media.i18n_strings.upload );
+						$( '.bb-field-steps-1 #bp-media-photo-next, #bp-media-submit, #bp-media-create-album-submit' ).show();
 					}
 				);
 
@@ -3918,6 +4068,7 @@ window.bp = window.bp || {};
 					'processing',
 					function () {
 						$( '#bp-media-uploader-modal-title' ).text( BP_Nouveau.media.i18n_strings.uploading + '...' );
+						$( '.bb-field-steps-1 #bp-media-photo-next, #bp-media-submit, #bp-media-create-album-submit' ).hide();
 					}
 				);
 
@@ -3939,7 +4090,6 @@ window.bp = window.bp || {};
 							this.removeFile( file );
 						}
 
-						$( '.bb-field-steps-1 #bp-media-photo-next, #bp-media-submit' ).show();
 						$( '.modal-container' ).addClass( 'modal-container--alert' );
 						$( '.bb-field-steps-1' ).addClass( 'controls-added' );
 						$( '#bp-media-add-more' ).show();
@@ -4183,6 +4333,7 @@ window.bp = window.bp || {};
 					'queuecomplete',
 					function () {
 						$( '#bp-media-uploader-modal-title' ).text( BP_Nouveau.media.i18n_strings.upload );
+						$( '.bb-field-steps-1 #bp-media-document-next, #bp-media-document-submit' ).show();
 					}
 				);
 
@@ -4190,6 +4341,7 @@ window.bp = window.bp || {};
 					'processing',
 					function () {
 						$( '#bp-media-uploader-modal-title' ).text( BP_Nouveau.media.i18n_strings.uploading + '...' );
+						$( '.bb-field-steps-1 #bp-media-document-next, #bp-media-document-submit' ).hide();
 					}
 				);
 
@@ -4226,7 +4378,7 @@ window.bp = window.bp || {};
 							return _results;
 						}
 
-						$( '.bb-field-steps-1 #bp-media-document-next, #bp-media-document-submit' ).show();
+						// $( '.bb-field-steps-1 #bp-media-document-next, #bp-media-document-submit' ).show();
 						$( '.modal-container' ).addClass( 'modal-container--alert' );
 						$( '.bb-field-steps-1' ).addClass( 'controls-added' );
 						$( '#bp-media-uploader-modal-title' ).text( BP_Nouveau.media.i18n_strings.uploading + '...' );
@@ -5219,12 +5371,26 @@ window.bp = window.bp || {};
 								}
 
 								// Prepend the activity.
-								bp.Nouveau.inject( '#media-stream ul.media-list', response.data.media, 'prepend' );
-
+								if (
+									'undefined' === typeof BP_Nouveau.media.is_media_directory ||
+									'yes' !== BP_Nouveau.media.is_media_directory ||
+									'groups' !== $( '#buddypress .bp-navs.dir-navs > ul > li.selected' ).data( 'bp-scope' )
+								) {
+									bp.Nouveau.inject( '#media-stream ul.media-list', response.data.media, 'prepend' );
+								}
+								var dir_label;
 								if ( response.data.media_personal_count ) {
-									if ( $( '#buddypress' ).find( '.bp-wrap .users-nav ul li#media-personal-li a span.count' ).length ) {
+									if ( $( '#buddypress .bb-item-count' ).length > 0 && 'yes' !== BP_Nouveau.media.is_media_directory ) {
+										dir_label = BP_Nouveau.dir_labels.hasOwnProperty( 'media' ) ?
+										(
+											1 === parseInt( response.data.media_personal_count ) ?
+											BP_Nouveau.dir_labels.media.singular : BP_Nouveau.dir_labels.media.plural
+										)
+										: '';
+										$( '#buddypress .bb-item-count' ).html( '<span class="bb-count">' + response.data.media_personal_count + '</span> ' + dir_label );
+									} else if ( $( '#buddypress' ).find( '.bp-wrap .users-nav ul li#media-personal-li a span.count' ).length ) {
 										$( '#buddypress' ).find( '.bp-wrap .users-nav ul li#media-personal-li a span.count' ).text( response.data.media_personal_count );
-									} else {
+									} else if ( '1' === BP_Nouveau.bb_enable_content_counts ) {
 										var mediaPersonalSpanTag = document.createElement( 'span' );
 										mediaPersonalSpanTag.setAttribute( 'class', 'count' );
 										var mediaPersonalSpanTagTextNode = document.createTextNode( response.data.media_personal_count );
@@ -5234,9 +5400,17 @@ window.bp = window.bp || {};
 								}
 
 								if ( response.data.media_group_count ) {
-									if ( $( '#buddypress' ).find( '.bp-wrap .groups-nav ul li#photos-groups-li a span.count' ).length ) {
+									if ( $( '#buddypress .bb-item-count' ).length > 0 && 'yes' !== BP_Nouveau.media.is_media_directory ) {
+										dir_label = BP_Nouveau.dir_labels.hasOwnProperty( 'media' ) ?
+										(
+											1 === parseInt( response.data.media_group_count ) ?
+											BP_Nouveau.dir_labels.media.singular : BP_Nouveau.dir_labels.media.plural
+										)
+										: '';
+										$( '#buddypress .bb-item-count' ).html( '<span class="bb-count">' + response.data.media_group_count + '</span> ' + dir_label );
+									} else if ( $( '#buddypress' ).find( '.bp-wrap .groups-nav ul li#photos-groups-li a span.count' ).length ) {
 										$( '#buddypress' ).find( '.bp-wrap .groups-nav ul li#photos-groups-li a span.count' ).text( response.data.media_group_count );
-									} else {
+									} else if ( '1' === BP_Nouveau.bb_enable_content_counts ) {
 										var photoGroupSpanTag = document.createElement( 'span' );
 										photoGroupSpanTag.setAttribute( 'class', 'count' );
 										var photoGroupSpanTagTextNode = document.createTextNode( response.data.media_group_count );
@@ -5246,9 +5420,29 @@ window.bp = window.bp || {};
 								}
 
 								if ( 'yes' === BP_Nouveau.media.is_media_directory ) {
-									$( '#buddypress' ).find( '.media-type-navs ul.media-nav li#media-all a span.count' ).text( response.data.media_all_count );
-									$( '#buddypress' ).find( '.media-type-navs ul.media-nav li#media-personal a span.count' ).text( response.data.media_personal_count );
-									$( '#buddypress' ).find( '.media-type-navs ul.media-nav li#media-groups a span.count' ).text( response.data.media_group_count );
+
+									if ( $( '#buddypress .bb-item-count' ).length > 0 ) {
+										var dir_scope = $( '#buddypress .bp-navs.dir-navs > ul > li.selected' ).data( 'bp-scope' );
+										var dir_count = 0;
+										if ( 'all' === dir_scope ) {
+											dir_count = response.data.media_all_count;
+										} else if ( 'personal' === dir_scope ) {
+											dir_count = response.data.media_personal_count;
+										} else if ( 'groups' === dir_scope ) {
+											dir_count = response.data.media_group_count;
+										}
+
+										dir_label = BP_Nouveau.dir_labels.hasOwnProperty( 'media' ) ?
+										(
+											1 === dir_count ? BP_Nouveau.dir_labels.media.singular : BP_Nouveau.dir_labels.media.plural
+										)
+										: '';
+										$( '#buddypress .bb-item-count' ).html( '<span class="bb-count">' + dir_count + '</span> ' + dir_label );
+									} else {
+										$( '#buddypress' ).find( '.media-type-navs ul.media-nav li#media-all a span.count' ).text( response.data.media_all_count );
+										$( '#buddypress' ).find( '.media-type-navs ul.media-nav li#media-personal a span.count' ).text( response.data.media_personal_count );
+										$( '#buddypress' ).find( '.media-type-navs ul.media-nav li#media-groups a span.count' ).text( response.data.media_group_count );
+									}
 								}
 
 								for ( var i = 0; i < self.dropzone_media.length; i++ ) {
@@ -6192,7 +6386,10 @@ window.bp = window.bp || {};
 				$button = $( event.currentTarget ).find( '.gif-play-button' );
 			if ( video.paused == true ) {
 				// Play the video.
-				video.play();
+				video.play().catch( function( error ) {
+					// Silently handle play errors (e.g., user hasn't interacted with page yet)
+					console.debug( 'GIF play failed:', error );
+				});
 
 				// Update the button text to 'Pause'.
 				$button.hide();
@@ -6206,6 +6403,68 @@ window.bp = window.bp || {};
 		},
 
 		/**
+		 * Check if element is visible within its scrollable container
+		 */
+		isElementInScrollableContainer: function( element ) {
+			var $element = $( element );
+			var elementRect = element.getBoundingClientRect();
+			
+			// Find the closest scrollable container
+			var $scrollableContainer = $element.closest( '#bp-message-thread-list' );
+			
+			// Check for activity modal body
+			if ( !$scrollableContainer.length ) {
+				$scrollableContainer = $element.closest( '.bb-modal-activity-body' );
+			}
+			
+			// Check for media modal activity item
+			if ( !$scrollableContainer.length ) {
+				$scrollableContainer = $element.closest( '.bb-media-model-container .activity-list .activity-item' );
+			}
+			
+			if ( $scrollableContainer.length ) {
+				// Check if element is visible within the scrollable container
+				var containerRect = $scrollableContainer[0].getBoundingClientRect();
+				
+				// Element is visible if it overlaps with the container bounds (allows partial visibility)
+				var isVisible = (
+					elementRect.bottom > containerRect.top &&
+					elementRect.top < containerRect.bottom &&
+					elementRect.right > containerRect.left &&
+					elementRect.left < containerRect.right
+				);
+				
+				return isVisible;
+			} else {
+				// Fallback to regular viewport check
+				return $element.is( ':in-viewport' );
+			}
+		},
+
+		/**
+		 * Throttle function to limit how often autoPlayGifVideos runs
+		 */
+		throttledAutoPlayGifVideos: function() {
+			if ( this.throttleTimer ) {
+				return;
+			}
+			
+			this.throttleTimer = setTimeout( function() {
+				bp.Nouveau.Media.throttleTimer = null;
+				bp.Nouveau.Media.autoPlayGifVideos();
+			}, 100 ); // Throttle to max 10 times per second
+		},
+
+		/**
+		 * Common function to safely call Media functions
+		 */
+		invokeMediaFn: function( functionName ) {
+			if ( 'undefined' !== typeof bp.Nouveau.Media && 'function' === typeof bp.Nouveau.Media[ functionName ] ) {
+				bp.Nouveau.Media[ functionName ]();
+			}
+		},
+
+		/**
 		 * When the GIF comes into your screen it should auto play
 		 */
 		autoPlayGifVideos: function () {
@@ -6214,21 +6473,71 @@ window.bp = window.bp || {};
 					var video = $( this ).find( 'video' ).get( 0 ),
 						$button = $( this ).find( '.gif-play-button' );
 
-					if ( $( this ).is( ':in-viewport' ) ) {
-						// Play the video.
-						video.play();
+					// Skip if video element doesn't exist
+					if ( !video ) {
+						return;
+					}
 
+					var isVisible = bp.Nouveau.Media.isElementInScrollableContainer( this );
+					
+					if ( isVisible ) {
+						// Play the video.
+						video.play().catch( function( error ) {
+							// Silently handle play errors (e.g., user hasn't interacted with page yet)
+							console.debug( 'GIF autoplay failed:', error );
+						});
+						
 						// Update the button text to 'Pause'.
 						$button.hide();
 					} else {
 						// Pause the video
 						video.pause();
-
+						
 						// Update the button text to 'Play'.
 						$button.show();
 					}
 				}
 			);
+		},
+
+		/**
+		 * Setup GIF autoplay for media modal when it's opened
+		 */
+		setupMediaModalGifAutoplay: function() {
+			var retryCount = 0;
+			var maxRetries = 10;
+			var setupCompleted = false;
+			
+			function attemptSetup() {
+				if ( setupCompleted ) {
+					return;
+				}
+				
+				var mediaModalActivityItem = document.querySelector( '.bb-media-model-container .activity-list .activity-item' );
+				
+				if ( mediaModalActivityItem ) {
+					setupCompleted = true;
+					try {
+						// Remove existing listener to avoid duplicates
+						mediaModalActivityItem.removeEventListener( 'scroll', bp.Nouveau.Media.throttledAutoPlayGifVideos.bind( bp.Nouveau.Media ) );
+						// Add scroll event listener
+						mediaModalActivityItem.addEventListener( 'scroll', bp.Nouveau.Media.throttledAutoPlayGifVideos.bind( bp.Nouveau.Media ), false );
+						
+						// Trigger initial check for GIFs in the modal
+						bp.Nouveau.Media.invokeMediaFn( 'autoPlayGifVideos' );
+						
+					} catch ( error ) {
+						console.debug( 'Error setting up media modal GIF autoplay:', error );
+					}
+				} else if ( retryCount < maxRetries ) {
+					// Retry after a short delay
+					retryCount++;
+					setTimeout( attemptSetup, 200 );
+				}
+			}
+			
+			// Start the setup process
+			setTimeout( attemptSetup, 100 );
 		},
 
 		/**
@@ -6468,13 +6777,22 @@ window.bp = window.bp || {};
 			if ( $( '.single-screen-navs.groups-nav' ).find( 'ul li#albums-groups-li' ).length < 1 ) {
 				return;
 			}
-
-			var nav = $( '.single-screen-navs.groups-nav' ).find( 'ul li#albums-groups-li' );
-
-			if ( $( nav ).find( 'span.count' ).length > 0 ) {
-				$( nav ).find( 'span.count' ).text( count );
+			if ( $( '#buddypress .bb-item-count' ).length > 0 && 'yes' !== BP_Nouveau.media.is_media_directory ) {
+				var dir_label = BP_Nouveau.dir_labels.hasOwnProperty( 'album' ) ?
+				(
+					1 === parseInt( count ) ?
+					BP_Nouveau.dir_labels.album.singular : BP_Nouveau.dir_labels.album.plural
+				)
+				: '';
+				$( '#buddypress .bb-item-count' ).html( '<span class="bb-count">' + count + '</span> ' + dir_label );
 			} else {
-				$( nav ).find( 'a#albums' ).append( '<span class="count">' + count + '</span>' );
+				var nav = $( '.single-screen-navs.groups-nav' ).find( 'ul li#albums-groups-li' );
+
+				if ( $( nav ).find( 'span.count' ).length > 0 ) {
+					$( nav ).find( 'span.count' ).text( count );
+				} else {
+					$( nav ).find( 'a#albums' ).append( '<span class="count">' + count + '</span>' );
+				}
 			}
 		},
 	};
@@ -6505,6 +6823,7 @@ window.bp = window.bp || {};
 		 * @return {[type]} [description]
 		 */
 		setupGlobals: function () {
+			this.bodySelector = $( 'body' );
 
 			this.medias = [];
 			this.documents = [];
@@ -6636,9 +6955,19 @@ window.bp = window.bp || {};
 			if( currentVideo ) {
 				currentVideo.pause();
 			}
-			$( '.bb-media-model-wrapper.video' ).hide();
-			$( '.bb-media-model-wrapper.media' ).show();
+							$( '.bb-media-model-wrapper.video' ).hide();
+				$( '.bb-media-model-wrapper.media' ).show();
+				
+				// Setup GIF autoplay for the newly shown media modal
+				bp.Nouveau.Media.invokeMediaFn( 'setupMediaModalGifAutoplay' );
 			self.is_open_media = true;
+
+			self.bodySelector.addClass( 'media-modal-open' );
+
+			// Trigger GIF autoplay check when media modal is opened
+			setTimeout( function() {
+				bp.Nouveau.Media.invokeMediaFn( 'autoPlayGifVideos' );
+			}, 500 );
 
 			//document.addEventListener( 'keyup', self.checkPressedKey.bind( self ) );
 		},
@@ -6691,6 +7020,9 @@ window.bp = window.bp || {};
 						if ( response.success ) {
 							$( '.bb-media-info-section:visible .activity-list' ).removeClass( 'loading' ).html( response.data.description );
 							$( '.bb-media-info-section:visible' ).show();
+
+							bp.Nouveau.Media.Theatre.syncPinPostIconToTheatre();
+
 							$( window ).scroll();
 							setTimeout(
 								function () { // Waiting to load dummy image
@@ -6744,6 +7076,14 @@ window.bp = window.bp || {};
 			}
 			$( '.bb-media-model-wrapper.video' ).hide();
 			self.is_open_document = true;
+
+			self.bodySelector.addClass( 'document-modal-open' );
+			
+			// Setup GIF autoplay for the newly shown document modal
+			setTimeout( function() {
+				bp.Nouveau.Media.invokeMediaFn( 'setupMediaModalGifAutoplay' );
+			}, 500 );
+			
 			//document.addEventListener( 'keyup', self.checkPressedKeyDocuments.bind( self ) );
 		},
 
@@ -6877,10 +7217,14 @@ window.bp = window.bp || {};
 			$('.bb-media-model-wrapper').hide();
 			self.is_open_media = false;
 
+			self.syncPinPostActivityOnCloseTheatre( target );
+
 			self.resetRemoveActivityCommentsData();
 
 			self.current_media = false;
 			self.getParentActivityHtml( target );
+
+			self.bodySelector.removeClass( 'media-modal-open' );
 		},
 
 		closeDocumentTheatre: function ( event ) {
@@ -6896,6 +7240,8 @@ window.bp = window.bp || {};
 
 			self.current_document = false;
 			self.getParentActivityHtml( $( event.currentTarget ) );
+
+			self.bodySelector.removeClass( 'document-modal-open' );
 		},
 
 		setMedias: function ( target ) {
@@ -7079,8 +7425,16 @@ window.bp = window.bp || {};
 				document_elements.find( '.bb-document-section .document-preview' ).html( '' );
 				document_elements.find( '.bb-document-section .document-preview' ).html( '<h3>' + target_text + '</h3><div class="document-text"><textarea class="document-text-file-data-hidden"></textarea></div>' );
 				document_elements.find( '.bb-document-section .document-preview .document-text' ).attr( 'data-extension', extension );
-				document_elements.find( '.bb-document-section .document-preview .document-text textarea' ).html( mirror_text_display );
 
+				var $textarea = document_elements.find( '.bb-document-section .document-preview .document-text textarea' );
+    
+				// Special handling for HTML files.
+				if ( 'html' === extension || 'htm' === extension ) {
+					$textarea.val(mirror_text_display);
+				} else {
+					// Default behavior for other file types.
+					$textarea.html(mirror_text_display);
+				}
 				setTimeout( function () {
 					bp.Nouveau.Media.documentCodeMirror();
 				}, 1000 );
@@ -7158,6 +7512,11 @@ window.bp = window.bp || {};
 				self.current_media = self.medias[ self.current_index ];
 				self.showMedia();
 				self.getMediasDescription();
+				
+				// Trigger GIF autoplay check when navigating to next media
+				setTimeout( function() {
+					bp.Nouveau.Media.invokeMediaFn( 'autoPlayGifVideos' );
+				}, 500 );
 			} else {
 				self.nextLink.hide();
 			}
@@ -7173,6 +7532,11 @@ window.bp = window.bp || {};
 				self.current_media = self.medias[ self.current_index ];
 				self.showMedia();
 				self.getMediasDescription();
+				
+				// Trigger GIF autoplay check when navigating to previous media
+				setTimeout( function() {
+					bp.Nouveau.Media.invokeMediaFn( 'autoPlayGifVideos' );
+				}, 500 );
 			} else {
 				self.previousLink.hide();
 			}
@@ -7389,6 +7753,9 @@ window.bp = window.bp || {};
 						if ( response.success ) {
 							$( '.bb-media-info-section:visible .activity-list' ).removeClass( 'loading' ).html( response.data.description );
 							$( '.bb-media-info-section:visible' ).show();
+
+							bp.Nouveau.Media.Theatre.syncPinPostIconToTheatre();
+
 							$( window ).scroll();
 							setTimeout(
 								function () { // Waiting to load dummy image
@@ -7667,10 +8034,13 @@ window.bp = window.bp || {};
 						value   : privacy,
 						type    : 'document',
 					},
-					success: function () {
+					success: function ( response ) {
 						target.closest('.bb-document-privacy-wrap').find('.privacy').removeClass('loading').removeClass(older_privacy);
 						target.closest('.bb-document-privacy-wrap').find('.privacy').addClass(privacy);
 						target.closest('.bb-document-privacy-wrap').find('.bp-tooltip').attr('data-bp-tooltip', target.text());
+						if ( response.data && response.data.url ) {
+							$( document ).find( 'a.bb-open-document-theatre[data-id="' + self.current_document.id + '"]' ).attr( 'href', response.data.url );
+						}
 					},
 					error  : function () {
 						target.closest('.bb-document-privacy-wrap').find('.privacy').removeClass('loading');
@@ -7698,6 +8068,43 @@ window.bp = window.bp || {};
 				form_acomment_edit.empty();
 			}
 
+		},
+
+		syncPinPostActivityOnCloseTheatre: function( target ) {
+			var parentActivityId         = $( '#hidden_parent_id' ).length > 0 ? parseInt( $( '#hidden_parent_id' ).val() ) : 0;
+			var parentActivityIdForModel = target.closest( '.bb-media-model-wrapper' ).find( '#bb-media-model-container .activity-list li.activity-item' ).data( 'bp-activity-id' );
+			if (
+				parentActivityId > 0 &&
+				'undefined' !== typeof parentActivityIdForModel &&
+				parentActivityId === parseInt( parentActivityIdForModel ) &&
+				target.hasClass( 'bb-close-media-theatre' ) &&
+				'undefined' !== typeof bp.Nouveau.Activity.activityPinHasUpdates &&
+				bp.Nouveau.Activity.activityPinHasUpdates
+			) {
+				var $pageActivityListItem = $( '#activity-stream li.activity-item[data-bp-activity-id=' + parentActivityId + ']' );
+				$pageActivityListItem.addClass( 'activity-sync' );
+				// Refresh on pin post update from media theatre.
+				bp.Nouveau.Activity.heartbeat_data.last_recorded = 0;
+				bp.Nouveau.refreshActivities();
+			}
+		},
+
+		syncPinPostIconToTheatre: function() {
+			var activityListModelSelector = '.bb-media-info-section:visible';
+			var $activityListModel        = $( activityListModelSelector + ' .activity-list' );
+
+			// Show pinned icon if already exits on main activity.
+			var parentActivityId = $( '#hidden_parent_id' ).length > 0 ? parseInt( $( '#hidden_parent_id' ).val() ) : 0;
+			if ( parentActivityId > 0 ) {
+				var $mainActivity = $( 'body .buddypress-wrap:not(.bb-internal-model)' ).find( '#activity-stream > .activity-list' ).children( '#activity-' + parentActivityId );
+				if ( $mainActivity.length > 0 && $mainActivity.hasClass( 'bb-pinned' ) && $mainActivity.find( '.button.unpin-activity' ).length > 0 ) {
+					var $parentActivityForModel  = $activityListModel.children( 'li.activity-item' );
+					var parentActivityIdForModel = ( 'undefined' !== typeof $parentActivityForModel ) ? parseInt( $parentActivityForModel.data( 'bp-activity-id' ) ) : 0;
+					if ( parentActivityId === parentActivityIdForModel ) {
+						$parentActivityForModel.addClass( 'bb-pinned' );
+					}
+				}
+			}
 		},
 	};
 

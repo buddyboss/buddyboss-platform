@@ -25,7 +25,7 @@
 							<i class="user-status-icon bb-icon-f bb-icon-lock"></i>
 						<# } #>
 					<# } else { #>
-						<a href="{{data.sender_link}}" class="bp-user-avatar">
+						<a href="{{data.sender_link}}" class="bp-user-avatar" data-bb-hp-profile="{{data.sender_id}}" aria-label="{{{data.sender_name}}}">
 							<img class="avatar" src="{{{data.sender_avatar}}}" alt="" />
 							<# if ( data.is_user_blocked_by ) { #>
 								<i class="user-status-icon bb-icon-f bb-icon-lock"></i>
@@ -56,7 +56,7 @@
 					<# if ( data.is_deleted || ! data.sender_link ) { #>
 						<strong class="bp-user-deleted">{{{data.sender_name}}}</strong>
 					<# } else { #>
-						<a href="{{data.sender_link}}" class="bp-user-link">
+						<a href="{{data.sender_link}}" class="bp-user-link" data-bb-hp-profile="{{data.sender_id}}">
 							<strong>{{{data.sender_name}}}</strong>
 						</a>
 					<# } #>
@@ -166,7 +166,7 @@
 							<div class="bb-activity-media-elem document-activity " data-id="">
 								<# if ( data.document[i].id ) { #>
 									<div class="document-description-wrap">
-										<a href="{{data.document[i].url}}" class="entry-img" data-id="{{data.document[i].id}}" data-activity-id="{{data.document[i].id}}">
+										<a href="{{data.document[i].url}}" class="entry-img" data-id="{{data.document[i].id}}" data-activity-id="{{data.document[i].id}}" aria-label="{{data.document[i].title}}">
 											<i class="{{data.document[i].svg_icon}}" ></i>
 										</a>
 										<a href="{{data.document[i].url}}"
@@ -225,7 +225,7 @@
 								<video preload="auto" playsinline poster="{{data.gif.preview_url}}" loop muted>
 									<source src="{{data.gif.video_url}}" type="video/mp4">
 								</video>
-								<a href="#" class="gif-play-button">
+								<a href="#" class="gif-play-button" aria-label="<?php esc_attr_e( 'Play GIF', 'buddyboss' ); ?>">
 									<span class="bb-icon-bl bb-icon-play"></span>
 								</a>
 								<span class="gif-icon"></span>

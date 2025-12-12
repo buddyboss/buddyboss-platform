@@ -1,0 +1,181 @@
+@mixin font-style($size, $weight: normal, $line-height: normal) {
+	font-size: $size;
+	font-weight: $weight;
+	line-height: $line-height;
+}
+
+@mixin bb-rl-heading-bolder {
+
+	@include font-style(18px, 600, 28px);
+}
+
+@mixin bb-rl-heading {
+
+	@include font-style(18px, 500, 26px);
+}
+
+@mixin bb-rl-text {
+
+	@include font-style(13px, 400, 18px);
+}
+
+@mixin bb-rl-text-medium {
+
+	@include font-style(14px, 500, 18px);
+}
+
+@mixin bb-rl-text-bolder {
+
+	@include font-style(13px, 500, 18px);
+}
+
+// Flexbox mixins
+@mixin flex-center {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+@mixin flex-between {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+@mixin flex-column {
+	display: flex;
+	flex-direction: column;
+}
+
+// Card styling
+@mixin card-style {
+	background-color: $bb-rl-background-base-color;
+	border-radius: $bb-rl-radius-xl;
+	box-shadow: $card-box-shadow;
+}
+
+// Button styling
+@mixin bb-rl-button {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 1rem;
+	text-align: center;
+	cursor: pointer;
+	border-radius: $bb-rl-radius-md;
+	padding: $bb-rl-space-100 $bb-rl-space-200;
+	transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+	text-decoration: none;
+	box-shadow: none;
+	outline: none;
+}
+
+@mixin bb-rl-button--small {
+	font-size: 0.8125rem;
+}
+
+@mixin bb-rl-button--primary {
+	background-color: $bb-rl-background-brand-primary-color;
+	color: $bb-rl-text-inverse-color;
+	border: 1px solid $bb-rl-border-brand-primary-color;
+
+	&:hover {
+		background-color: $bb-rl-background-brand-primary-hover-color;
+		color: $bb-rl-text-inverse-color;
+	}
+
+	&:focus-within {
+		background-color: $bb-rl-background-brand-primary-color;
+		outline: 2px solid $bb-rl-border-quinary-color;
+	}
+
+	&:disabled {
+		background-color: $bb-rl-background-brand-secondary-color;
+		cursor: not-allowed;
+	}
+}
+
+@mixin bb-rl-button--secondary {
+	background-color: $bb-rl-background-secondary-color;
+	color: $bb-rl-text-primary-color;
+	border: 1px solid transparent;
+
+	&:hover {
+		background-color: $bb-rl-background-secondary-color-hover;
+		color: $bb-rl-text-primary-color;
+	}
+
+	&:focus {
+		outline: 2px solid $bb-rl-border-quinary-color;
+		background-color: $bb-rl-background-secondary-color-hover;
+	}
+
+	&:disabled {
+		background-color: $bb-rl-background-secondary-color;
+		color: $bb-rl-text-disabled-color;
+		cursor: not-allowed;
+	}
+}
+
+@mixin bb-rl-button--brand-outline {
+	background-color: transparent;
+	color: $bb-rl-text-primary-color;
+	border: 1px solid $bb-rl-border-brand-primary-color;
+
+	&:hover {
+		background-color: transparent;
+		color: $bb-rl-text-primary-color;
+		border-color: $bb-rl-border-brand-primary-color;
+	}
+
+	&:focus {
+		outline: 2px solid $bb-rl-border-brand-primary-color;
+		background-color: transparent;
+	}
+
+	&:disabled {
+		border: 1px solid $bb-rl-border-brand-tertiary-color;
+		background-color: transparent;
+		color: $bb-rl-text-disabled-color;
+		cursor: not-allowed;
+	}
+}
+
+@mixin bb-rl-button--outline {
+	background-color: transparent;
+	color: $bb-rl-text-primary-color;
+	border: 1px solid $bb-rl-border-tertiary-color;
+
+	&:hover {
+		background-color: $bb-rl-background-primary-color;
+		color: $bb-rl-text-primary-color;
+	}
+
+	&:focus {
+		outline: 2px solid $bb-rl-border-quinary-color;
+		background-color: $bb-rl-background-primary-color;
+	}
+
+	&:disabled {
+		border: 1px solid $bb-rl-border-tertiary-color;
+		background-color: transparent;
+		color: $bb-rl-text-disabled-color;
+		cursor: not-allowed;
+	}
+}
+
+// Responsive mixins
+@mixin responsive($breakpoint) {
+
+	@if $breakpoint == tablet {
+
+		@media (max-width: 782px) {
+			@content;
+		}
+	} @else if $breakpoint == mobile {
+
+		@media (max-width: 600px) {
+			@content;
+		}
+	}
+}

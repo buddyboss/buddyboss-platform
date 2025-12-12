@@ -1323,21 +1323,28 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 			$data['bp_videos']    = null;
 		}
 
+		$old_can_delete       = $data['can_delete'];
+
 		$data['can_edit']     = false;
 		$data['can_delete']   = false;
 		$data['can_favorite'] = false;
 		$data['can_comment']  = false;
 
-		if (
-			! $is_hidden &&
-			bb_is_group_activity_comment( $activity ) ||
-			(
-				'activity_comment' !== $activity->type &&
-				'groups' === $activity->component
-			)
-		) {
-			$data['can_favorite'] = true;
-			$data['can_comment']  = true;
+		if ( ! $is_hidden ) {
+			if ( $is_user_suspended ) {
+				$data['can_delete'] = $old_can_delete;
+			}
+
+			if (
+				bb_is_group_activity_comment( $activity ) ||
+				(
+					'activity_comment' !== $activity->type &&
+					'groups' === $activity->component
+				)
+			) {
+				$data['can_favorite'] = true;
+				$data['can_comment']  = true;
+			}
 		}
 
 		$data['content'] = array(
@@ -2760,7 +2767,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 		if ( ! empty( $content ) ) {
 			$data['message'] = array(
 				'raw'      => wp_strip_all_tags( $content ),
-				'rendered' => apply_filters( 'bp_get_the_thread_message_content', wpautop( $content ) ),
+				'rendered' => apply_filters( 'bp_get_the_thread_message_content', wpautop( $content ), $message->id ),
 			);
 		}
 
@@ -2819,7 +2826,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 					$data['message']['raw'] = $content;
 				}
 				if ( isset( $data['message']['rendered'] ) ) {
-					$data['message']['rendered'] = apply_filters( 'bp_get_the_thread_message_content', wpautop( $content ) );
+					$data['message']['rendered'] = apply_filters( 'bp_get_the_thread_message_content', wpautop( $content ), $data['message_id'] );
 				}
 			}
 

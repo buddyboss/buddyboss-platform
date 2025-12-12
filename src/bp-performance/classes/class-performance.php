@@ -7,21 +7,6 @@
 
 namespace BuddyBoss\Performance;
 
-use BuddyBoss\Performance\Integration\BB_Activity;
-use BuddyBoss\Performance\Integration\BB_Documents;
-use BuddyBoss\Performance\Integration\BB_Forums;
-use BuddyBoss\Performance\Integration\BB_Friends;
-use BuddyBoss\Performance\Integration\BB_Groups;
-use BuddyBoss\Performance\Integration\BB_Media_Albums;
-use BuddyBoss\Performance\Integration\BB_Media_Photos;
-use BuddyBoss\Performance\Integration\BB_Members;
-use BuddyBoss\Performance\Integration\BB_Messages;
-use BuddyBoss\Performance\Integration\BB_Notifications;
-use BuddyBoss\Performance\Integration\BB_Replies;
-use BuddyBoss\Performance\Integration\BB_Topics;
-use BuddyBoss\Performance\Integration\BB_Videos;
-use BuddyBoss\Performance\Integration\BB_Subscriptions;
-
 if ( ! class_exists( 'BuddyBoss\Performance\Performance' ) ) {
 
 	/**
@@ -77,21 +62,19 @@ if ( ! class_exists( 'BuddyBoss\Performance\Performance' ) ) {
 		 * Start the performance operations 🚀.
 		 */
 		public function start() {
-
 			add_action( 'set_current_user', array( $this, 'is_set_current_user' ), 1 );
 
 			if ( ! $this->has_started ) {
-
 				$this->has_started = true;
 
 				// Make Cache API Available.
-				require_once dirname( __FILE__ ) . '/class-cache.php';
-				require_once dirname( __FILE__ ) . '/integrations/class-integration-abstract.php';
-				require_once dirname( __FILE__ ) . '/class-option-clear-cache.php';
-				require_once dirname( __FILE__ ) . '/class-helper.php';
-				require_once dirname( __FILE__ ) . '/class-route-helper.php';
-				require_once dirname( __FILE__ ) . '/class-pre-user-provider.php';
-				require_once dirname( __FILE__ ) . '/class-settings.php';
+				require_once __DIR__ . '/class-cache.php';
+				require_once __DIR__ . '/integrations/class-integration-abstract.php';
+				require_once __DIR__ . '/class-option-clear-cache.php';
+				require_once __DIR__ . '/class-helper.php';
+				require_once __DIR__ . '/class-route-helper.php';
+				require_once __DIR__ . '/class-pre-user-provider.php';
+				require_once __DIR__ . '/class-settings.php';
 
 				Route_Helper::instance();
 				Helper::instance();
@@ -99,113 +82,10 @@ if ( ! class_exists( 'BuddyBoss\Performance\Performance' ) ) {
 				Pre_User_Provider::instance();
 				Settings::instance();
 
-				// All Integrations.
-
-				// Load platform or buddyPress related cache integration.
-				if (
-					self::mu_is_plugin_active( 'buddyboss-platform/bp-loader.php' ) ||
-					self::mu_is_plugin_active( 'buddypress/bp-loader.php' )
-				) {
-
-					$group_integration = dirname( __FILE__ ) . '/integrations/class-bb-groups.php';
-					if ( self::mu_is_component_active( 'groups' ) && file_exists( $group_integration ) ) {
-						require_once $group_integration;
-						BB_Groups::instance();
-					}
-
-					$members_integration = dirname( __FILE__ ) . '/integrations/class-bb-members.php';
-					if ( self::mu_is_component_active( 'members' ) && file_exists( $members_integration ) ) {
-						require_once $members_integration;
-						BB_Members::instance();
-					}
-
-					$activity_integration = dirname( __FILE__ ) . '/integrations/class-bb-activity.php';
-					if ( self::mu_is_component_active( 'activity' ) && file_exists( $activity_integration ) ) {
-						require_once $activity_integration;
-						BB_Activity::instance();
-					}
-
-					$friends_integration = dirname( __FILE__ ) . '/integrations/class-bb-friends.php';
-					if ( self::mu_is_component_active( 'friends' ) && file_exists( $friends_integration ) ) {
-						require_once $friends_integration;
-						BB_Friends::instance();
-					}
-
-					$notifications_integration = dirname( __FILE__ ) . '/integrations/class-bb-notifications.php';
-					if ( self::mu_is_component_active( 'notifications' ) && file_exists( $notifications_integration ) ) {
-						require_once $notifications_integration;
-						BB_Notifications::instance();
-					}
-
-					$messages_integration = dirname( __FILE__ ) . '/integrations/class-bb-messages.php';
-					if ( self::mu_is_component_active( 'messages' ) && file_exists( $messages_integration ) ) {
-						require_once $messages_integration;
-						BB_Messages::instance();
-					}
-
-					$media_photos_integration = dirname( __FILE__ ) . '/integrations/class-bb-media-photos.php';
-					if ( self::mu_is_component_active( 'media' ) && file_exists( $media_photos_integration ) ) {
-						require_once $media_photos_integration;
-						BB_Media_Photos::instance();
-					}
-
-					$media_albums_integration = dirname( __FILE__ ) . '/integrations/class-bb-media-albums.php';
-					if ( self::mu_is_component_active( 'media' ) && file_exists( $media_albums_integration ) ) {
-						require_once $media_albums_integration;
-						BB_Media_Albums::instance();
-					}
-
-					$documents_integration = dirname( __FILE__ ) . '/integrations/class-bb-documents.php';
-					if ( self::mu_is_component_active( 'document' ) && file_exists( $documents_integration ) ) {
-						require_once $documents_integration;
-						BB_Documents::instance();
-					}
-
-					$videos_integration = dirname( __FILE__ ) . '/integrations/class-bb-videos.php';
-					if ( self::mu_is_component_active( 'video' ) && file_exists( $videos_integration ) ) {
-						require_once $videos_integration;
-						BB_Videos::instance();
-					}
-
-					$subscriptions_integration = dirname( __FILE__ ) . '/integrations/class-bb-subscriptions.php';
-					if ( file_exists( $subscriptions_integration ) ) {
-						require_once $subscriptions_integration;
-						BB_Subscriptions::instance();
-					}
-				}
-
-				// Load platform or bbPress related cache integration.
-				if (
-					(
-						self::mu_is_plugin_active( 'buddyboss-platform/bp-loader.php' ) &&
-						self::mu_is_component_active( 'forums' )
-					) ||
-					self::mu_is_plugin_active( 'bbpress/bbpress.php' )
-				) {
-
-					$forum_integration = dirname( __FILE__ ) . '/integrations/class-bb-forums.php';
-					$topic_integration = dirname( __FILE__ ) . '/integrations/class-bb-topics.php';
-					$reply_integration = dirname( __FILE__ ) . '/integrations/class-bb-replies.php';
-
-					if ( file_exists( $forum_integration ) ) {
-						require_once $forum_integration;
-						BB_Forums::instance();
-					}
-					if ( file_exists( $topic_integration ) ) {
-						require_once $topic_integration;
-						BB_Topics::instance();
-					}
-					if ( file_exists( $reply_integration ) ) {
-						require_once $reply_integration;
-						BB_Replies::instance();
-					}
-				}
-
 				/**
-				 * Loads when rest cache is loaded.
+				 * Loads when the rest cache is loaded.
 				 */
 				do_action( 'rest_cache_loaded' );
-
 			}
 		}
 
@@ -214,6 +94,7 @@ if ( ! class_exists( 'BuddyBoss\Performance\Performance' ) ) {
 		 */
 		public function is_set_current_user() {
 			global $bb_is_current_user_available;
+
 			$bb_is_current_user_available = true;
 		}
 
@@ -222,6 +103,7 @@ if ( ! class_exists( 'BuddyBoss\Performance\Performance' ) ) {
 		 */
 		public function is_current_user_available() {
 			global $bb_is_current_user_available;
+
 			if ( isset( $bb_is_current_user_available ) ) {
 				return $bb_is_current_user_available;
 			}
@@ -296,7 +178,11 @@ if ( ! class_exists( 'BuddyBoss\Performance\Performance' ) ) {
 					PRIMARY KEY  (id),
 					KEY cache_name (cache_name(191)),
 					KEY cache_group (cache_group(191)),
-					KEY cache_expire (cache_expire)
+					KEY cache_expire (cache_expire),
+					KEY user_group (user_id, cache_group(191)),
+					KEY blog_id (blog_id),
+					KEY expiry_group (cache_expire, cache_group(191)),
+					KEY user_blog_id (user_id, blog_id)
 				) $charset_collate;";
 			} else {
 				$sql = "CREATE TABLE {$wpdb->prefix}bb_performance_cache (
@@ -310,7 +196,11 @@ if ( ! class_exists( 'BuddyBoss\Performance\Performance' ) ) {
 					PRIMARY KEY  (id),
 					KEY cache_name (cache_name),
 					KEY cache_group (cache_group),
-					KEY cache_expire (cache_expire)
+					KEY cache_expire (cache_expire),
+					KEY user_group (user_id, cache_group),
+					KEY blog_id (blog_id),
+					KEY expiry_group (cache_expire, cache_group),
+					KEY user_blog_id (user_id, blog_id)
 				) $charset_collate;";
 			}
 
@@ -346,7 +236,6 @@ if ( ! class_exists( 'BuddyBoss\Performance\Performance' ) ) {
 		 */
 		public function validate() {
 			if ( ! $this->has_validated ) {
-
 				$this->has_validated = true;
 
 				add_action( 'admin_init', array( $this, 'bp_mu_setup_and_load_plugin_file' ) );
@@ -357,7 +246,6 @@ if ( ! class_exists( 'BuddyBoss\Performance\Performance' ) ) {
 		 * Setup the mu plugin file and shows sitewide notice..
 		 */
 		public function bp_mu_setup_and_load_plugin_file() {
-
 			// If mu-plugin directory not exists then create automatically.
 			if ( ! is_dir( WPMU_PLUGIN_DIR ) ) {
 				mkdir( WPMU_PLUGIN_DIR, 0755 );
@@ -366,12 +254,14 @@ if ( ! class_exists( 'BuddyBoss\Performance\Performance' ) ) {
 			$mu_plugins             = get_mu_plugins();
 			$bp_mu_plugin_file_path = '';
 			$file_location          = self::$file_location;
+
 			if ( strpos( $file_location, 'Performance' ) !== false ) {
 				$file_location          = str_replace( 'Performance', '', $file_location );
 				$bp_mu_plugin_file_path = $file_location . 'MuPlugin/buddyboss-api-caching-mu.php';
 			} elseif ( strpos( $file_location, 'bp-performance' ) !== false ) {
 				$bp_platform_mu_path     = WP_PLUGIN_DIR . '/buddyboss-platform/bp-performance/mu-plugins/buddyboss-api-caching-mu.php';
 				$bp_platform_dev_mu_path = WP_PLUGIN_DIR . '/buddyboss-platform/src/bp-performance/mu-plugins/buddyboss-api-caching-mu.php';
+
 				if ( file_exists( $bp_platform_mu_path ) ) {
 					$bp_mu_plugin_file_path = $bp_platform_mu_path;
 				} elseif ( file_exists( $bp_platform_dev_mu_path ) ) {
@@ -383,21 +273,18 @@ if ( ! class_exists( 'BuddyBoss\Performance\Performance' ) ) {
 				require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-base.php';
 				require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-direct.php';
 			}
+
 			$wp_files_system = new \WP_Filesystem_Direct( array() );
 
 			if ( ! file_exists( WPMU_PLUGIN_DIR . '/buddyboss-api-caching-mu.php' ) ) {
-
 				// Try to automatically install MU plugin.
 				if ( wp_is_writable( WPMU_PLUGIN_DIR ) && ! empty( $bp_mu_plugin_file_path ) ) {
-
 					// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
 					@$wp_files_system->copy( $bp_mu_plugin_file_path, WPMU_PLUGIN_DIR . '/buddyboss-api-caching-mu.php' );
 				}
 			} elseif ( ! empty( $mu_plugins ) && array_key_exists( 'buddyboss-api-caching-mu.php', $mu_plugins ) && version_compare( $mu_plugins['buddyboss-api-caching-mu.php']['Version'], '1.0.1', '<' ) ) {
-
 				// Try to automatically install MU plugin.
 				if ( wp_is_writable( WPMU_PLUGIN_DIR ) && ! empty( $bp_mu_plugin_file_path ) ) {
-
 					// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
 					@$wp_files_system->copy( $bp_mu_plugin_file_path, WPMU_PLUGIN_DIR . '/buddyboss-api-caching-mu.php', true );
 				}
@@ -435,9 +322,8 @@ if ( ! class_exists( 'BuddyBoss\Performance\Performance' ) ) {
 		 */
 		public function add_sitewide_notice() {
 			$bp_performance_download_nonce = wp_create_nonce( 'bp_performance_mu_download' );
-
-			$file_location = self::$file_location;
-			$download_path = admin_url( 'admin.php?page=bp-settings&download_mu_file=' . $bp_performance_download_nonce );
+			$file_location                 = self::$file_location;
+			$download_path                 = admin_url( 'admin.php?page=bp-settings&download_mu_file=' . $bp_performance_download_nonce );
 
 			if ( strpos( $file_location, 'buddyboss-app' ) !== false ) {
 				$download_path = admin_url( 'admin.php?page=bbapp-settings&setting=cache_support&download_mu_file=' . $bp_performance_download_nonce );
@@ -462,9 +348,8 @@ if ( ! class_exists( 'BuddyBoss\Performance\Performance' ) ) {
 		 */
 		public function update_sitewide_notice() {
 			$bp_performance_download_nonce = wp_create_nonce( 'bp_performance_mu_download' );
-
-			$file_location = self::$file_location;
-			$download_path = admin_url( 'admin.php?page=bp-settings&download_mu_file=' . $bp_performance_download_nonce );
+			$file_location                 = self::$file_location;
+			$download_path                 = admin_url( 'admin.php?page=bp-settings&download_mu_file=' . $bp_performance_download_nonce );
 
 			if ( strpos( $file_location, 'buddyboss-app' ) !== false ) {
 				$download_path = admin_url( 'admin.php?page=bbapp-settings&setting=cache_support&download_mu_file=' . $bp_performance_download_nonce );

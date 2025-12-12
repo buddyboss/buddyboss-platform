@@ -33,10 +33,45 @@ function bp_nouveau_ajax_querystring( $query_string, $object ) {
 		return '';
 	}
 
+	$default_scope = bp_is_user_activity() ? 'just-me' : 'all';
+	if (
+		'activity' === $object &&
+		(
+			bp_is_activity_directory() ||
+			bp_is_user_activity()
+		)
+	) {
+
+		$activity_filters = bp_is_user_activity() ? bb_get_enabled_activity_timeline_filter_options() : bb_get_enabled_activity_filter_options();
+		$activity_filters = bb_filter_activity_filter_scope_keys( $activity_filters );
+		if ( ! empty( $activity_filters ) ) {
+			foreach ( $activity_filters as $key => $is_enabled ) {
+
+				// Skip filters based on conditions.
+				if (
+					empty( $is_enabled ) ||
+					(
+						bp_is_activity_directory() &&
+						'all' !== $key &&
+						! is_user_logged_in()
+					)
+				) {
+					continue;
+				}
+
+				// First item as default.
+				$default_scope = $key;
+				break;
+			}
+
+			unset( $activity_filters );
+		}
+	}
+
 	// Default query
 	$post_query = array(
 		'filter'       => '',
-		'scope'        => 'all',
+		'scope'        => $default_scope,
 		'page'         => 1,
 		'search_terms' => '',
 		'extras'       => '',
@@ -89,7 +124,7 @@ function bp_nouveau_ajax_querystring( $query_string, $object ) {
 	}
 
 	// Activity feed scope only on activity directory.
-	if ( 'all' !== $post_query['scope'] && ! bp_displayed_user_id() && ! bp_is_single_item() ) {
+	if ( 'all' !== $post_query['scope'] && ! bp_is_single_item() ) {
 		$qs[] = 'scope=' . $post_query['scope'];
 	}
 
@@ -123,6 +158,32 @@ function bp_nouveau_ajax_querystring( $query_string, $object ) {
 	$object_search_text = bp_get_search_default_text( $object );
 	if ( ! empty( $post_query['search_terms'] ) && $object_search_text != $post_query['search_terms'] && 'false' != $post_query['search_terms'] && 'undefined' != $post_query['search_terms'] ) {
 		$qs[] = 'search_terms=' . urlencode( $_POST['search_terms'] );
+	}
+
+	if (
+		'activity' === $object &&
+		(
+			bp_is_activity_directory() ||
+			bp_is_user_activity() ||
+			bp_is_group_activity()
+		)
+	) {
+		if ( ! empty( $post_query['order_by'] ) ) {
+			$order_by = $post_query['order_by'];
+		} else {
+			// Default order.
+			$avail_sorting_options = bb_get_enabled_activity_sorting_options();
+			arsort( $avail_sorting_options );
+			if ( ! empty( $avail_sorting_options ) && in_array( 1, $avail_sorting_options, true ) ) {
+				$order_by = key( $avail_sorting_options );
+			} else {
+				if ( empty( $avail_sorting_options ) || ! in_array( 1, $avail_sorting_options, true ) ) {
+					$order_by = 'date_recorded';
+				}
+			}
+		}
+		$qs[] = 'order_by=' . $order_by;
+
 	}
 
 	// Specific to messages
@@ -1039,7 +1100,7 @@ function bp_nouveau_get_user_feedback( $feedback_id = '' ) {
 				'type'    => 'loading',
 				'message' => __( 'Loading photos from the album. Please wait.', 'buddyboss' ),
 			),
-			'album-media-video-loading'               => array(
+			'album-media-video-loading'         => array(
 				'type'    => 'loading',
 				'message' => __( 'Loading photos and videos from the album. Please wait.', 'buddyboss' ),
 			),
@@ -1066,6 +1127,10 @@ function bp_nouveau_get_user_feedback( $feedback_id = '' ) {
 			'moderation-requests-none'          => array(
 				'type'    => 'info',
 				'message' => __( 'No blocked members found.', 'buddyboss' ),
+			),
+			'group-request-join-member-type'    => array(
+				'type'    => 'info',
+				'message' => __( 'Click the <strong>"Join Group"</strong> button to access the group.', 'buddyboss' ),
 			),
 		)
 	);

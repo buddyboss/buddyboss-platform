@@ -317,14 +317,14 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 				return false;
 			}
 
-			// Check if the server name matches any whitelisted domain
+			// Check if the server name matches any whitelisted domain.
 			foreach ( $whitelist_domain as $domain ) {
 				if ( false !== strpos( $server_name, $domain ) ) {
-					return false; // Exclude allowlisted domains
+					return false; // Exclude allowlisted domains.
 				}
 			}
 
-			return true; // Allow telemetry data to be sent for non-allowlisted domains
+			return true; // Allow telemetry data to be sent for non-allowlisted domains.
 		}
 
 		/**
@@ -339,6 +339,15 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 		public function bb_telemetry_platform_data( $bb_telemetry_data ) {
 			global $wpdb;
 			$bb_telemetry_data = ! empty( $bb_telemetry_data ) ? $bb_telemetry_data : array();
+
+			// Include and collect report metrics.
+			$report_metrics_file = __DIR__ . '/class-bb-report-metrics.php';
+			if ( file_exists( $report_metrics_file ) ) {
+				require_once $report_metrics_file;
+				if ( class_exists( 'BB_Report_Metrics' ) ) {
+					$bb_telemetry_data['bb_report_metrics'] = BB_Report_Metrics::collect();
+				}
+			}
 
 			// Filterable list of BuddyBoss Platform options to fetch from the database.
 			$bb_platform_db_options = apply_filters(
@@ -365,8 +374,6 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 					'bp-member-type-enable-disable',
 					'bp-member-type-display-on-profile',
 					'bp-disable-avatar-uploads',
-					'bp-disable-cover-image-uploads',
-					'bp-disable-group-avatar-uploads',
 					'bp-disable-group-cover-image-uploads',
 					'bp-disable-group-type-creation',
 					'bp-disable-account-deletion',
@@ -427,12 +434,46 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 					'bp_document_allowed_size',
 					'bp_media_allowed_size',
 					'_bb_enable_activity_post_polls',
+					'bb-enable-content-counts',
+					'bp-profile-avatar-type',
+					'bp-default-profile-avatar-type',
+					'bp-enable-profile-gravatar',
+					'bp-disable-cover-image-uploads',
+					'bp-default-profile-cover-type',
+					'bp-disable-group-avatar-uploads',
+					'bp-default-group-avatar-type',
+					'bp-disable-group-cover-image-uploads',
+					'bp-default-group-cover-type',
+					'bb_activity_filter_options',
+					'bb_activity_timeline_filter_options',
+					'bb_activity_sorting_options',
+					'bb_enable_activity_search',
+					'bb_enable_activity_topics',
+					'bb_activity_topic_required',
 				)
 			);
 
 			// Added those options that are not available in the option table.
 			$bb_telemetry_data['bb_platform_version'] = BP_PLATFORM_VERSION;
 			$bb_telemetry_data['active_integrations'] = $this->bb_active_integrations();
+
+			if (
+				function_exists( 'bb_topics_manager_instance' ) &&
+				function_exists( 'bb_is_enabled_activity_topics' ) &&
+				bb_is_enabled_activity_topics()
+			) {
+				$global_activity_topics_count = bb_topics_manager_instance()->bb_get_topics(
+					array(
+						'item_type'   => 'activity',
+						'item_id'     => 0,
+						'count_total' => true,
+						'per_page'    => 1,
+					)
+				);
+				if ( isset( $global_activity_topics_count['total'] ) ) {
+					$bb_telemetry_data['bb_topic_count'] = $global_activity_topics_count['total'];
+				}
+			}
 
 			// Pass active or inactive components.
 			$components          = bp_core_get_components();
@@ -458,7 +499,16 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 
 			unset( $bp_prefix, $query, $results, $bb_platform_db_options );
 
-			return $bb_telemetry_data;
+			/**
+			 * Filters the telemetry platform data.
+			 *
+			 * @since BuddyBoss 2.15.2
+			 *
+			 * @param array $bb_telemetry_data Telemetry platform data.
+			 *
+			 * @return array Telemetry platform data.
+			 */
+			return apply_filters( 'bb_telemetry_platform_data', $bb_telemetry_data );
 		}
 
 		/**

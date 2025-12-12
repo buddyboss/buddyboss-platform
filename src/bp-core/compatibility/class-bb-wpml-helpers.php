@@ -69,11 +69,25 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 			// Forum/Topic.
 			add_filter( 'bbp_after_has_topics_parse_args', array( $this, 'bb_wpml_member_profile_topic_reply' ) );
 			add_filter( 'bbp_after_has_replies_parse_args', array( $this, 'bb_wpml_member_profile_topic_reply' ) );
-			
+
 			// Fix incorrect search results for Global Search for translated/non-translated posts.
 			add_filter( 'Bp_Search_Posts_sql', array( $this, 'bb_wpml_search_posts_sql' ), 10, 2 );
+			add_filter( 'BP_Search_CPT_sql', array( $this, 'bb_wpml_search_posts_sql' ), 10, 2 );
 
 			add_action( 'bb_get_the_profile_field_options_select_html', array( $this, 'bb_wpml_profile_field_options_order' ), 10, 2 );
+
+			add_filter( 'bp_groups_get_where_conditions', array( $this, 'bb_wpml_groups_dir_search_where_conditions' ), 10, 2 );
+			add_filter( 'Bp_Search_Groups_sql', array( $this, 'bb_wpml_groups_search_global_sql' ), 10, 2 );
+
+			// Prevent activity creation for WPML translated posts.
+			add_filter( 'bp_init', array( $this, 'bb_prevent_translated_post_activities' ) );
+
+			// Handle WPML language change for block editor.
+			add_action( 'pre_post_update', array( $this, 'bb_capture_original_language' ), 10, 2 );
+			add_action( 'post_updated', array( $this, 'bb_handle_wpml_language_change' ), 10, 3 );
+
+			// Handle WPML language switch action from wpml(eg classic editor meta box).
+			add_action( 'wp_ajax_wpml_switch_post_language', array( $this, 'bb_handle_wpml_switch_post_language' ), 9 );
 		}
 
 		/**
@@ -265,9 +279,10 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 				defined( 'ICL_LANGUAGE_CODE' ) &&
 				$sitepress->is_translated_post_type( $args['post_type'] )
 			) {
-			        global $wpdb;
+				global $wpdb;
+
 				$sql_query .= " AND EXISTS (
-						SELECT 1 
+						SELECT 1
 						FROM {$wpdb->prefix}icl_translations t
 						WHERE t.element_type = CONCAT('post_', %s)
 						AND t.language_code = %s
@@ -313,9 +328,12 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 				}
 
 				// Sort the array by the 'text' element.
-				usort( $options, function ( $a, $b ) {
-					return strcmp( $a['text'], $b['text'] );
-				} );
+				usort(
+					$options,
+					function ( $a, $b ) {
+						return strcmp( $a['text'], $b['text'] );
+					}
+				);
 
 				if ( 'desc' === $order_by ) {
 					$first   = array_shift( $options );
@@ -335,6 +353,301 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 			return $html;
 		}
 
+		/**
+		 * Retrieves the translated group name from WPML.
+		 *
+		 * @since BuddyBoss 2.8.10
+		 *
+		 * @param string $search_term The original search term.
+		 *
+		 * @return string|false The translated group name if found, otherwise false.
+		 */
+		public static function bb_get_wpml_translated_group_name( $search_term ) {
+			if ( ! class_exists( 'Sitepress' ) || empty( $search_term ) ) {
+				return false;
+			}
+
+			global $wpdb;
+
+			return $wpdb->get_var(
+				$wpdb->prepare(
+					"SELECT s.value
+		                 FROM {$wpdb->prefix}icl_string_translations st
+		                 JOIN {$wpdb->prefix}icl_strings s ON st.string_id = s.id
+		                 WHERE s.context = %s
+		                 AND st.value LIKE %s
+		                 AND st.language = %s",
+					'Buddypress Multilingual',
+					'%' . $wpdb->esc_like( $search_term ) . '%',
+					ICL_LANGUAGE_CODE
+				)
+			);
+		}
+
+		/**
+		 * Modifies the WHERE conditions in BuddyPress group search to
+		 * include translated names.
+		 *
+		 * @param array $where The existing WHERE conditions.
+		 * @param array $r     The search query arguments.
+		 *
+		 * @return array Modified WHERE conditions.
+		 */
+		public function bb_wpml_groups_dir_search_where_conditions( $where, $r ) {
+			if ( isset( $r['search_terms'] ) && $r['search_terms'] ) {
+				$translated_name = self::bb_get_wpml_translated_group_name( $r['search_terms'] );
+
+				if ( ! empty( $translated_name ) ) {
+					$where['search'] = str_replace( $r['search_terms'], $translated_name, $where['search'] );
+				}
+			}
+
+			return $where;
+		}
+
+		/**
+		 * Modifies the SQL query for searching BuddyPress groups by replacing
+		 * the search term with its translated version.
+		 *
+		 * @param string $sql_query The original SQL query.
+		 * @param array  $args      The search query arguments.
+		 *
+		 * @return string Modified SQL query.
+		 */
+		public function bb_wpml_groups_search_global_sql( $sql_query, $args ) {
+			if ( isset( $args['search_term'] ) && $args['search_term'] ) {
+				$translated_name = self::bb_get_wpml_translated_group_name( $args['search_term'] );
+
+				if ( ! empty( $translated_name ) ) {
+					$sql_query = str_replace( $args['search_term'], $translated_name, $sql_query );
+				}
+			}
+
+			return $sql_query;
+		}
+
+		/**
+		 * Prevents activity creation for WPML translated posts.
+		 *
+		 * @since BuddyBoss 2.8.80
+		 */
+		public function bb_prevent_translated_post_activities() {
+			if ( ! bp_is_active( 'activity' ) ) {
+				return;
+			}
+
+			// Store POST data early.
+			if ( ! empty( $_POST['data']['icl_post_language'] ) && ! empty( $_POST['data']['wp-refresh-post-lock']['post_id'] ) ) { //phpcs:ignore
+				set_transient( 'bb_wpml_posted_icl_post_language_' . intval( wp_unslash( $_POST['data']['wp-refresh-post-lock']['post_id'] ) ), sanitize_text_field( wp_unslash( $_POST['data']['icl_post_language'] ) ), 10 ); //phpcs:ignore
+			}
+
+			// Get all post types.
+			$post_types = get_post_types( array( 'public' => true ), 'names' );
+			if ( ! empty( $post_types ) ) {
+				foreach ( $post_types as $post_type ) {
+					add_filter( "bp_activity_{$post_type}_pre_publish", array( $this, 'bb_check_if_wpml_translation' ), 10, 4 );
+				}
+			}
+		}
+
+		/**
+		 * Check if the post is a WPML translation and prevent activity creation if it is.
+		 *
+		 * @since BuddyBoss 2.8.80
+		 *
+		 * @param bool $return  Whether the post should be published to activity.
+		 * @param int  $blog_id ID of the current site.
+		 * @param int  $post_id ID of the current post being published.
+		 * @param int  $user_id ID of the current user or post author.
+		 *
+		 * @return bool False if it's a translation, otherwise the original value.
+		 */
+		public function bb_check_if_wpml_translation( $return, $blog_id, $post_id, $user_id ) {
+			global $wpdb, $sitepress;
+			$post_id = (int) $post_id;
+
+			// Continue only if WPML is active and we have the necessary components.
+			if ( ! defined( 'ICL_SITEPRESS_VERSION' ) || ! $sitepress || empty( $post_id ) ) {
+				return $return;
+			}
+
+			$default_lang = apply_filters( 'wpml_default_language', null );
+			if ( empty( $default_lang ) ) {
+				return $return;
+			}
+
+			// Get current language - if it's not the default language, we don't want to create an activity.
+			$current_language = apply_filters( 'wpml_current_language', null );
+
+			// Get the language from the transient if it exists for admin screens.
+			if ( get_transient( 'bb_wpml_posted_icl_post_language_' . $post_id ) ) {
+				$current_language = get_transient( 'bb_wpml_posted_icl_post_language_' . $post_id );
+				delete_transient( 'bb_wpml_posted_icl_post_language_' . $post_id );
+			}
+
+			if ( ! empty( $current_language ) && $current_language !== $default_lang ) {
+				return false;
+			}
+
+			// Not identified as a translation.
+			return $return;
+		}
+
+		/**
+		 * Capture the original old language of a post before update.
+		 *
+		 * @since BuddyBoss 2.8.80
+		 *
+		 * @param int   $post_id Post ID.
+		 * @param array $data    Array of unslashed post data.
+		 */
+		public function bb_capture_original_language( $post_id, $data ) {
+			if (
+				empty( $_POST['icl_post_language'] ) || // phpcs:ignore
+				( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) ||
+				wp_is_post_revision( $post_id ) ||
+				! defined( 'ICL_SITEPRESS_VERSION' )
+			) {
+				return;
+			}
+
+			// Get original language.
+			$language_info = apply_filters( 'wpml_post_language_details', null, $post_id );
+			if ( ! empty( $language_info['language_code'] ) ) {
+				// Store the original language temporarily for later comparison.
+				set_transient( 'bb_wpml_original_old_db_language_' . $post_id, $language_info['language_code'], 5 * MINUTE_IN_SECONDS );
+			}
+		}
+
+		/**
+		 * Process WPML language change after post has been updated.
+		 *
+		 * @since BuddyBoss 2.8.80
+		 *
+		 * @param int     $post_id      Post ID.
+		 * @param WP_Post $post_after   Post object following the update.
+		 * @param WP_Post $post_before  Post object before the update.
+		 */
+		public function bb_handle_wpml_language_change( $post_id, $post_after, $post_before ) {
+			if (
+				empty( $_POST['icl_post_language'] ) || // phpcs:ignore.
+				( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) ||
+				wp_is_post_revision( $post_id ) ||
+				! defined( 'ICL_SITEPRESS_VERSION' )
+			) {
+				return;
+			}
+
+			$default_lang = apply_filters( 'wpml_default_language', null );
+			if ( empty( $default_lang ) ) {
+				return;
+			}
+
+			// Get original old db language from our transient.
+			$old_language = get_transient( 'bb_wpml_original_old_db_language_' . $post_id );
+			if ( ! empty( $_POST['icl_post_language'] ) ) { //phpcs:ignore
+				$current_language = sanitize_text_field( wp_unslash( $_POST['icl_post_language'] ) ); //phpcs:ignore
+			}
+
+			// Delete activities only when changing from default language to non-default language.
+			if (
+				! empty( $old_language ) &&
+				! empty( $current_language ) &&
+				$old_language === $default_lang &&
+				$current_language !== $default_lang
+			) {
+				// Get the post type tracking args.
+				$activity_post_object = bp_activity_get_post_type_tracking_args( get_post_type( $post_id ) );
+				if ( ! empty( $activity_post_object->action_id ) ) {
+					// Delete the activity.
+					bp_activity_delete(
+						array(
+							'component'         => $activity_post_object->component_id,
+							'item_id'           => get_current_blog_id(),
+							'secondary_item_id' => $post_id,
+							'type'              => $activity_post_object->action_id,
+						)
+					);
+				}
+			}
+
+			// Clean up transients.
+			delete_transient( 'bb_wpml_original_old_db_language_' . $post_id );
+			delete_transient( 'bb_wpml_posted_icl_post_language_' . $post_id );
+		}
+
+
+		/**
+		 * Ajax handler for switching the language of a post in WPML
+		 *
+		 * @since BuddyBoss 2.8.80
+		 */
+		public function bb_handle_wpml_switch_post_language() {
+			if ( ! defined( 'ICL_SITEPRESS_VERSION' ) || ! class_exists( 'WPML_Post_Edit_Ajax' ) ) {
+				return;
+			}
+
+			$default_lang = apply_filters( 'wpml_default_language', null );
+			if ( empty( $default_lang ) ) {
+				return;
+			}
+
+			if (
+				empty( $_POST['nonce'] ) ||
+				empty( $_POST['wpml_from'] ) ||
+				empty( $_POST['wpml_to'] ) ||
+				empty( $_POST['wpml_post_id'] )
+			) {
+				return;
+			}
+
+			$nonce = sanitize_text_field( wp_unslash( $_POST['nonce'] ) );
+			if ( ! wp_verify_nonce( $nonce, WPML_Post_Edit_Ajax::AJAX_ACTION_SWITCH_POST_LANGUAGE ) ) {
+				wp_send_json_error();
+			}
+
+			$from_lang = sanitize_text_field( wp_unslash( $_POST['wpml_from'] ) );
+			$to_lang   = sanitize_text_field( wp_unslash( $_POST['wpml_to'] ) );
+			$post_id   = intval( $_POST['wpml_post_id'] );
+
+			if ( ! empty( $post_id ) ) {
+				if ( ! empty( $to_lang ) && ! empty( $from_lang ) ) {
+					$post_type = get_post_type( $post_id );
+					if ( $from_lang === $default_lang && $to_lang !== $default_lang ) {
+						// Get the post type tracking args.
+						$activity_post_object = bp_activity_get_post_type_tracking_args( get_post_type( $post_id ) );
+						if ( ! empty( $activity_post_object->action_id ) ) {
+							// Delete the activity.
+							bp_activity_delete(
+								array(
+									'component'         => $activity_post_object->component_id,
+									'item_id'           => get_current_blog_id(),
+									'secondary_item_id' => $post_id,
+									'type'              => $activity_post_object->action_id,
+								)
+							);
+						}
+					} elseif ( $default_lang === $to_lang ) {
+						if ( 'publish' === get_post_status( $post_id ) ) {
+
+							if ( has_filter( "bp_activity_{$post_type}_pre_publish", array( $this, 'bb_check_if_wpml_translation' ) ) ) {
+								remove_filter( "bp_activity_{$post_type}_pre_publish", array( $this, 'bb_check_if_wpml_translation' ), 10, 4 );
+							}
+
+							bp_activity_post_type_publish( $post_id, get_post( $post_id ) );
+
+							if ( has_filter( "bp_activity_{$post_type}_pre_publish", array( $this, 'bb_check_if_wpml_translation' ) ) ) {
+								add_filter( "bp_activity_{$post_type}_pre_publish", array( $this, 'bb_check_if_wpml_translation' ), 10, 4 );
+							}
+						}
+					}
+				}
+
+				// Clean up transients.
+				delete_transient( 'bb_wpml_original_old_db_language_' . $post_id );
+				delete_transient( 'bb_wpml_posted_icl_post_language_' . $post_id );
+			}
+		}
 	}
 
 	BB_WPML_Helpers::instance();

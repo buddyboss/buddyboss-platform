@@ -5,7 +5,7 @@
  * Description: The BuddyBoss Platform adds community features to WordPress. Member Profiles, Activity Feeds, Direct Messaging, Notifications, and more!
  * Author:      BuddyBoss
  * Author URI:  https://buddyboss.com/
- * Version:     2.7.91
+ * Version:     2.16.0
  * Text Domain: buddyboss
  * Domain Path: /languages/
  * License:     GPLv2 or later (license.txt)
@@ -19,12 +19,14 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
+define('PLATFORM_EDITION', 'developer');
+
 if ( ! defined( 'BP_SOURCE_SUBDIRECTORY' ) && file_exists( dirname( __FILE__ ) . '/vendor/autoload.php' ) ) {
 	require dirname( __FILE__ ) . '/vendor/autoload.php';
 }
 
 if ( ! defined( 'BP_PLATFORM_VERSION' ) ) {
-	define( 'BP_PLATFORM_VERSION', '2.7.91' );
+	define( 'BP_PLATFORM_VERSION', '2.16.0' );
 }
 
 if ( ! defined( 'BP_PLATFORM_API' ) ) {
@@ -454,61 +456,61 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 	add_action( 'network_admin_notices', 'bp_duplicate_notice' );
 }
 
-/**
- * Load the buddyboss translation file for current language.
- *
- * @since BuddyPress 1.0.2
- * @since BuddyBoss 2.7.90 Moved function from bp-core-functions.php and made logic updates.
- *
- * @see load_textdomain() for a description of return values.
- *
- * @return bool True on success, false on failure.
- */
-function bp_core_load_buddypress_textdomain() {
-	$domain = 'buddyboss';
-	if ( ! is_textdomain_loaded( $domain ) ) {
-
-		$mofile_custom   = sprintf( '%s-%s.mo', $domain, get_locale() );
-		$plugin_dir_path = defined( 'BP_PLUGIN_DIR' ) ? BP_PLUGIN_DIR : plugin_dir_path( __FILE__ );
-		$plugin_dir      = $plugin_dir_path;
-		if ( defined( 'BP_SOURCE_SUBDIRECTORY' ) && ! empty( constant( 'BP_SOURCE_SUBDIRECTORY' ) ) ) {
-			$plugin_dir = $plugin_dir . 'src';
-		}
-
-		/**
-		 * Filters the locations to load language files from.
-		 *
-		 * @since BuddyBoss 2.7.90
-		 *
-		 * @param array $value Array of directories to check for language files in.
-		 */
-		$locations = apply_filters(
-			'buddyboss_locale_locations',
-			array(
-				trailingslashit( WP_LANG_DIR . '/' . $domain ),
-				trailingslashit( WP_LANG_DIR ),
-				trailingslashit( WP_LANG_DIR . '/plugins' ),
-				trailingslashit( $plugin_dir . '/languages' ),
-			)
-		);
-
-		unload_textdomain( $domain );
-
-		// Try to load the translations from locations.
-		foreach ( $locations as $location ) {
-			if ( load_textdomain( $domain, $location . $mofile_custom ) ) {
-				return true;
+if ( ! function_exists( 'bp_core_load_buddypress_textdomain' ) ) {
+	/**
+	 * Load the buddyboss translation file for current language.
+	 *
+	 * @since BuddyPress 1.0.2
+	 * @since BuddyBoss 2.7.90 Moved function from bp-core-functions.php and made logic updates.
+	 *
+	 * @return bool True on success, false on failure.
+	 * @see   load_textdomain() for a description of return values.
+	 */
+	function bp_core_load_buddypress_textdomain() {
+		$domain = 'buddyboss';
+		if ( ! is_textdomain_loaded( $domain ) ) {
+			$mofile_custom   = sprintf( '%s-%s.mo', $domain, get_locale() );
+			$plugin_dir_path = defined( 'BP_PLUGIN_DIR' ) ? BP_PLUGIN_DIR : plugin_dir_path( __FILE__ );
+			$plugin_dir      = $plugin_dir_path;
+			if ( defined( 'BP_SOURCE_SUBDIRECTORY' ) && ! empty( constant( 'BP_SOURCE_SUBDIRECTORY' ) ) ) {
+				$plugin_dir = $plugin_dir . 'src';
 			}
+
+			/**
+			 * Filters the locations to load language files from.
+			 *
+			 * @since BuddyBoss 2.7.90
+			 *
+			 * @param array $value Array of directories to check for language files in.
+			 */
+			$locations = apply_filters(
+				'buddyboss_locale_locations',
+				array(
+					trailingslashit( WP_LANG_DIR . '/' . $domain ),
+					trailingslashit( WP_LANG_DIR ),
+					trailingslashit( WP_LANG_DIR . '/plugins' ),
+					trailingslashit( $plugin_dir . '/languages' ),
+				)
+			);
+
+			unload_textdomain( $domain );
+
+			// Try to load the translations from locations.
+			foreach ( $locations as $location ) {
+				if ( load_textdomain( $domain, $location . $mofile_custom ) ) {
+					return true;
+				}
+			}
+
+			$plugin_folder       = plugin_basename( $plugin_dir_path );
+			$buddyboss_lang_path = $plugin_folder . '/languages';
+			if ( defined( 'BP_SOURCE_SUBDIRECTORY' ) && ! empty( constant( 'BP_SOURCE_SUBDIRECTORY' ) ) ) {
+				$buddyboss_lang_path = $plugin_folder . '/src/languages';
+			}
+
+			return load_plugin_textdomain( $domain, false, $buddyboss_lang_path );
 		}
 
-		$plugin_folder       = plugin_basename( $plugin_dir_path );
-		$buddyboss_lang_path = $plugin_folder . '/languages';
-		if ( defined( 'BP_SOURCE_SUBDIRECTORY' ) && ! empty( constant( 'BP_SOURCE_SUBDIRECTORY' ) ) ) {
-			$buddyboss_lang_path = $plugin_folder . '/src/languages';
-		}
-
-		return load_plugin_textdomain( $domain, false, $buddyboss_lang_path );
+		return false;
 	}
-
-	return false;
 }

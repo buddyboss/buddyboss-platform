@@ -882,6 +882,32 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 			if ( ! empty( $label_color_data ) ) {
 				$group_type_data['label_colors'] = $label_color_data;
 			}
+
+			// Add member_type_join data for the group type.
+			if ( ! empty( $group_type ) ) {
+				$group_type_id = function_exists( 'bp_group_get_group_type_id' ) ? bp_group_get_group_type_id( $group_type ) : 0;
+				if ( ! empty( $group_type_id ) ) {
+					$member_types              = bp_get_member_types( array(), 'names' );
+					$get_selected_member_types = get_post_meta( $group_type_id, '_bp_group_type_enabled_member_type_join', true );
+					$get_selected_member_types = ( ! empty( $get_selected_member_types ) ) ? $get_selected_member_types : array();
+					$member_types_join         = array();
+
+					if ( ! empty( $member_types ) ) {
+						foreach ( $member_types as $member_type ) {
+							$is_selected = in_array( $member_type, $get_selected_member_types, true );
+							// Only add member types that have "selected": true.
+							if ( $is_selected ) {
+								$member_types_join[] = array(
+									'name'     => $member_type,
+									'selected' => true,
+								);
+							}
+						}
+					}
+					$group_type_data['member_type_join'] = $member_types_join;
+				}
+			}
+
 			$data['group_type'] = $group_type_data;
 		}
 
@@ -1545,6 +1571,49 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 					'description' => __( 'Whether the group type details will pass.', 'buddyboss' ),
 					'type'        => 'array',
 					'readonly'    => true,
+					'properties'  => array(
+						'group_type_label' => array(
+							'description' => __( 'The label of the group type.', 'buddyboss' ),
+							'type'        => 'string',
+							'context'     => array( 'embed', 'view', 'edit' ),
+							'readonly'    => true,
+						),
+						'types'            => array(
+							'description' => __( 'The types of the group.', 'buddyboss' ),
+							'type'        => 'array',
+							'context'     => array( 'embed', 'view', 'edit' ),
+							'readonly'    => true,
+						),
+						'label_colors'     => array(
+							'description' => __( 'Label\'s text and background colors for group types.', 'buddyboss' ),
+							'type'        => 'object',
+							'context'     => array( 'embed', 'view', 'edit' ),
+							'readonly'    => true,
+						),
+						'member_type_join' => array(
+							'description' => __( 'Member types that are allowed to join this group type.', 'buddyboss' ),
+							'type'        => 'array',
+							'context'     => array( 'embed', 'view', 'edit' ),
+							'readonly'    => true,
+							'items'       => array(
+								'type'       => 'object',
+								'properties' => array(
+									'name'     => array(
+										'description' => __( 'The name of the member type.', 'buddyboss' ),
+										'type'        => 'string',
+										'context'     => array( 'embed', 'view', 'edit' ),
+										'readonly'    => true,
+									),
+									'selected' => array(
+										'description' => __( 'Whether this member type is selected for joining.', 'buddyboss' ),
+										'type'        => 'boolean',
+										'context'     => array( 'embed', 'view', 'edit' ),
+										'readonly'    => true,
+									),
+								),
+							),
+						),
+					),
 				),
 				'can_schedule'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
@@ -1802,7 +1871,7 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 	 *
 	 * @return bool
 	 */
-	protected function bp_rest_user_can_join( $item ) {
+	public function bp_rest_user_can_join( $item ) {
 		$user_id = get_current_user_id();
 		if ( empty( $user_id ) ) {
 			return false;

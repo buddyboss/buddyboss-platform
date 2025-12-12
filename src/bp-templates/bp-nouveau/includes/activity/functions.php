@@ -95,21 +95,26 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 		$draft_activity_meta_key = 'draft_user_' . bp_displayed_user_id();
 	}
 
+	$is_activity_post_title_required = bb_is_activity_post_title_enabled();
+
 	$activity_params = array(
-		'user_id'           => bp_loggedin_user_id(),
-		'object'            => 'user',
-		'backcompat'        => (bool) has_action( 'bp_activity_post_form_options' ),
-		'post_nonce'        => wp_create_nonce( 'post_update', '_wpnonce_post_update' ),
-		'post_draft_nonce'  => wp_create_nonce( 'post_draft_activity' ),
-		'excluded_hosts'    => array(),
-		'user_can_post'     => ( is_user_logged_in() && bb_user_can_create_activity() ),
-		'is_activity_edit'  => bp_is_activity_edit() ? (int) bp_current_action() : false,
-		'displayed_user_id' => bp_displayed_user_id(),
-		'errors'            => array(
+		'user_id'                         => bp_loggedin_user_id(),
+		'object'                          => 'user',
+		'backcompat'                      => (bool) has_action( 'bp_activity_post_form_options' ),
+		'post_nonce'                      => wp_create_nonce( 'post_update', '_wpnonce_post_update' ),
+		'post_draft_nonce'                => wp_create_nonce( 'post_draft_activity' ),
+		'excluded_hosts'                  => array(),
+		'user_can_post'                   => ( is_user_logged_in() && bb_user_can_create_activity() ),
+		'is_activity_edit'                => bp_is_activity_edit() ? (int) bp_current_action() : false,
+		'displayed_user_id'               => bp_displayed_user_id(),
+		'errors'                          => array(
 			'empty_post_update' => esc_html__( 'Sorry, Your update cannot be empty.', 'buddyboss' ),
 			'post_fail'         => esc_html__( 'An error occurred while saving your post.', 'buddyboss' ),
 			'media_fail'        => esc_html__( 'To change the media type, remove existing media from your post.', 'buddyboss' ),
 		),
+		'is_activity_post_title_required' => $is_activity_post_title_required,
+		'activity_post_title_maxlength'   => bb_activity_post_title_max_length(),
+		'post_title_tooltip_error'        => esc_html__( 'Please enter a title', 'buddyboss' ),
 	);
 
 	$user_displayname = bp_get_loggedin_user_fullname();
@@ -259,6 +264,7 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 		'commentPostError'    => esc_html__( 'There was a problem posting your comment.', 'buddyboss' ),
 		'muteNotification'    => esc_html__( 'Turn off notifications', 'buddyboss' ),
 		'unmuteNotification'  => esc_html__( 'Turn on notifications', 'buddyboss' ),
+		'whatsNewTitle'       => $is_activity_post_title_required ? esc_attr__( 'Title', 'buddyboss' ) : esc_attr__( 'Title (optional)', 'buddyboss' ),
 	);
 
 	if ( bp_get_displayed_user() && ! bp_is_my_profile() ) {
@@ -333,77 +339,6 @@ function bp_nouveau_get_activity_directory_nav_items() {
 				array( 'bp_before_activity_type_tab_favorites', 'activity', 26 ),
 			)
 		);
-
-		if ( bp_is_activity_tabs_active() ) {
-
-			// If the user has favorite create a nav item
-			if ( bp_is_activity_like_active() && bp_get_total_favorite_count_for_user( bp_loggedin_user_id() ) ) {
-				$nav_items['favorites'] = array(
-					'component' => 'activity',
-					'slug'      => 'favorites', // slug is used because BP_Core_Nav requires it, but it's the scope
-					'li_class'  => array(),
-					'link'      => bp_loggedin_user_domain() . bp_get_activity_slug() . '/favorites/',
-					'text'      => bb_is_reaction_emotions_enabled() ? esc_html__( 'Reactions', 'buddyboss' ) : esc_html__( 'Likes', 'buddyboss' ),
-					'count'     => false,
-					'position'  => 10,
-				);
-			}
-
-			// The friends component is active and user has friends
-			if ( bp_is_active( 'friends' ) && bp_get_total_friend_count( bp_loggedin_user_id() ) ) {
-				$nav_items['friends'] = array(
-					'component' => 'activity',
-					'slug'      => 'friends', // slug is used because BP_Core_Nav requires it, but it's the scope
-					'li_class'  => array( 'dynamic' ),
-					'link'      => bp_loggedin_user_domain() . bp_get_activity_slug() . '/' . bp_get_friends_slug() . '/',
-					'text'      => __( 'Connections', 'buddyboss' ),
-					'count'     => false,
-					'position'  => 15,
-				);
-			}
-
-			// The groups component is active and user has groups
-			if ( bp_is_active( 'groups' ) && bp_get_total_group_count_for_user( bp_loggedin_user_id() ) ) {
-				$nav_items['groups'] = array(
-					'component' => 'activity',
-					'slug'      => 'groups', // slug is used because BP_Core_Nav requires it, but it's the scope
-					'li_class'  => array( 'dynamic' ),
-					'link'      => bp_loggedin_user_domain() . bp_get_activity_slug() . '/' . bp_get_groups_slug() . '/',
-					'text'      => __( 'Groups', 'buddyboss' ),
-					'count'     => false,
-					'position'  => 25,
-				);
-			}
-
-			// Mentions are allowed
-			if ( bp_activity_do_mentions() ) {
-				$deprecated_hooks[] = array( 'bp_before_activity_type_tab_mentions', 'activity', 36 );
-
-				$nav_items['mentions'] = array(
-					'component' => 'activity',
-					'slug'      => 'mentions', // slug is used because BP_Core_Nav requires it, but it's the scope
-					'li_class'  => array( 'dynamic' ),
-					'link'      => bp_loggedin_user_domain() . bp_get_activity_slug() . '/mentions/',
-					'text'      => __( 'Mentions', 'buddyboss' ),
-					'count'     => false,
-					'position'  => 45,
-				);
-			}
-
-			// Following tab
-			if ( bp_is_activity_follow_active() ) {
-
-				$nav_items['following'] = array(
-					'component' => 'activity',
-					'slug'      => 'following', // slug is used because BP_Core_Nav requires it, but it's the scope
-					'li_class'  => array( 'dynamic' ),
-					'link'      => bp_loggedin_user_domain() . bp_get_activity_slug() . '/following/',
-					'text'      => __( 'Following', 'buddyboss' ),
-					'count'     => false,
-					'position'  => 55,
-				);
-			}
-		}
 	}
 
 	// Check for deprecated hooks.

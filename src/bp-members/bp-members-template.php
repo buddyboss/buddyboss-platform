@@ -949,8 +949,8 @@ function bp_get_member_name() {
 		$full_name = $members_template->member->fullname;
 	} else {
 		$last_name_field_id = bp_xprofile_lastname_field_id();
-		if ( in_array( $last_name_field_id, $list_fields ) ) {
-			$last_name = $members_template->member->fullname;
+		if ( in_array( $last_name_field_id, $list_fields ) && ! empty( xprofile_get_field_data( $last_name_field_id, $members_template->member->ID ) ) ) {
+			$last_name = xprofile_get_field_data( $last_name_field_id, $members_template->member->ID );
 			$full_name = str_replace( ' ' . $last_name, '', $members_template->member->fullname );
 		} else {
 			$full_name = $members_template->member->fullname;
@@ -2688,7 +2688,7 @@ function bp_get_add_switch_button( $user_id, $button_args = array() ) {
 	if ( ! $user_id ) {
 		return false;
 	}
-    
+
 	// If user is pending then view as button should not show to admin.
 	if ( ! bp_is_user_active( $user_id ) ) {
 		return false;

@@ -42,56 +42,97 @@ if ( ! class_exists( 'Bp_Search_bbPress_Replies' ) ) :
 			 */
 			$from = apply_filters( 'bp_forum_reply_search_join_sql', $from );
 
-			$group_memberships = '';
-			if ( bp_is_active( 'groups' ) ) {
-				$group_memberships = bp_get_user_groups(
-					get_current_user_id(),
-					array(
-						'is_admin' => null,
-						'is_mod'   => null,
-					)
-				);
+			// Initialize forum access variables.
+			$excluded_forum_ids                  = array();
+			$enrolled_hidden_group_forum_ids_str = '';
 
-				$group_memberships = wp_list_pluck( $group_memberships, 'group_id' );
+			if ( bp_is_active( 'groups' ) && ! current_user_can( 'administrator' ) ) {
+				// Get user accessible groups using shared method from parent class.
+				$groups_data        = $this->get_user_accessible_groups();
+				$excluded_group_ids = $groups_data['excluded_group_ids'];
 
-				$public_groups = groups_get_groups(
-					array(
-						'fields'   => 'ids',
-						'status'   => 'public',
-						'per_page' => - 1,
-					)
-				);
+				// Get forums from excluded groups.
+				if ( ! empty( $excluded_group_ids ) ) {
+					$excluded_forum_args = array(
+						'fields'      => 'ids',
+						'post_status' => array( 'publish', 'private', 'hidden' ),
+						'post_type'   => bbp_get_forum_post_type(),
+						'numberposts' => -1,
+						'meta_query'  => array(
+							'relation' => 'OR',
+						),
+					);
 
-				if ( ! empty( $public_groups ) && ! empty( $public_groups['groups'] ) ) {
-					$public_groups = $public_groups['groups'];
-				} else {
-					$public_groups = array();
+					// Add meta queries for each excluded group.
+					foreach ( $excluded_group_ids as $group_id ) {
+						$excluded_forum_args['meta_query'][] = array(
+							'key'     => '_bbp_group_ids',
+							'value'   => maybe_serialize( array( $group_id ) ),
+							'compare' => '=',
+						);
+					}
+
+					$excluded_forum_ids = get_posts( $excluded_forum_args );
 				}
 
-				$group_memberships = array_merge( $public_groups, $group_memberships );
-				$group_memberships = array_unique( $group_memberships );
-			}
-
-			$group_query = '';
-			if ( ! empty( $group_memberships ) ) {
-				$in = array_map(
-					function ( $group_id ) {
-						return ',\'' . maybe_serialize( array( $group_id ) ) . '\'';
-					},
-					$group_memberships
+				// Get hidden groups.
+				$hidden_groups = groups_get_groups(
+					array(
+						'fields'      => 'ids',
+						'status'      => array( 'hidden' ),
+						'show_hidden' => true,
+						'user_id'     => get_current_user_id(),
+						'per_page'    => - 1,
+					)
 				);
 
-				$in = implode( '', $in );
+				$user_hidden_group_ids = $hidden_groups['groups'];
 
-				$group_query = ' pm.meta_value IN ( SELECT post_id FROM ' . $wpdb->postmeta . ' INNER JOIN '. $wpdb->posts .' ON ID = post_id WHERE ( meta_key = \'_bbp_group_ids\' AND meta_value IN(' . trim( $in, ',' ) . ')  OR  meta_key != \'_bbp_group_ids\' ) AND post_type = \'forum\' ) AND ';
+				// Get hidden group forums where the user is enrolled.
+				if ( ! empty( $user_hidden_group_ids ) ) {
+					// Get forums that are associated with hidden groups where the user is enrolled.
+
+					$included_forum_args = array(
+						'fields'      => 'ids',
+						'post_status' => array( 'hidden' ),
+						'post_type'   => bbp_get_forum_post_type(),
+						'numberposts' => -1,
+						'meta_query'  => array(
+							'relation' => 'OR',
+						),
+					);
+
+					foreach ( $user_hidden_group_ids as $group_id ) {
+						$included_forum_args['meta_query'][] = array(
+							'key'     => '_bbp_group_ids',
+							'value'   => maybe_serialize( array( $group_id ) ),
+							'compare' => '=',
+						);
+					}
+
+					$included_hidden_group_forum_ids = get_posts( $included_forum_args );
+					$included_hidden_group_forum_ids = array_map( 'intval', $included_hidden_group_forum_ids );
+
+					$enrolled_hidden_group_forum_ids = array();
+
+					// Get child forum ids for enrolled hidden group forums.
+					if ( ! empty( $included_hidden_group_forum_ids ) && method_exists( $this, 'nested_child_forum_ids' ) ) {
+						foreach ( $included_hidden_group_forum_ids as $forum_id ) {
+							$single_forum_child_ids          = $this->nested_child_forum_ids( $forum_id );
+							$enrolled_hidden_group_forum_ids = array_merge( $enrolled_hidden_group_forum_ids, $single_forum_child_ids );
+						}
+					}
+
+					$enrolled_hidden_group_forum_ids_str = implode( ',', array_unique( array_merge( $enrolled_hidden_group_forum_ids, $included_hidden_group_forum_ids ) ) );
+				}
 			}
 
 			if ( current_user_can( 'read_hidden_forums' ) ) {
-				$post_status = array( "'publish'", "'private'", "'hidden'" );
+				$post_status = array( 'publish', 'private', 'hidden' );
 			} elseif ( current_user_can( 'read_private_forums' ) ) {
-				$post_status = array( "'publish'", "'private'" );
+				$post_status = array( 'publish', 'private' );
 			} else {
-				$post_status = array( "'publish'" );
+				$post_status = array( 'publish' );
 			}
 
 			$where   = array();
@@ -109,9 +150,44 @@ if ( ! class_exists( 'Bp_Search_bbPress_Replies' ) ) :
 
 			$where[] = "post_type = '{$this->type}'";
 
-			$where[] = '(' . $group_query . '
-			pm.meta_value IN ( SELECT ID FROM ' . $wpdb->posts . ' WHERE post_type = \'forum\' AND post_status IN (' . join( ',', $post_status ) . ') )
-			)';
+			// Build the forum restriction clause.
+			if ( ! empty( $excluded_forum_ids ) ) {
+
+				// Exclude replies from restricted forums.
+				$excluded_forum_ids = array_map( 'intval', $excluded_forum_ids );
+
+				$excluded_child_forum_ids = array();
+
+				// Get child forum ids where parent forum are restricted.
+				if ( method_exists( $this, 'nested_child_forum_ids' ) ) {
+					foreach ( $excluded_forum_ids as $forum_id ) {
+						$single_forum_child_ids   = $this->nested_child_forum_ids( $forum_id );
+						$excluded_child_forum_ids = array_merge( $excluded_child_forum_ids, $single_forum_child_ids );
+					}
+				}
+
+				$excluded_forum_ids = array_unique( array_merge( $excluded_forum_ids, $excluded_child_forum_ids ) );
+
+				// Remove enrolled hidden group forums from exclusion list since user should have access to them.
+				if ( ! empty( $included_hidden_group_forum_ids ) ) {
+					$excluded_forum_ids = array_diff( $excluded_forum_ids, $included_hidden_group_forum_ids );
+				}
+
+				$excluded_forum_ids_str = implode( ',', $excluded_forum_ids );
+
+				$where[] = "pm.meta_value NOT IN ( $excluded_forum_ids_str )";
+			}
+
+			// Only show replies from forums with allowed post status.
+			$post_status_str = "'" . implode( "','", $post_status ) . "'";
+
+			$post_status_where = "post_status IN ( $post_status_str )";
+
+			if ( ! empty( $enrolled_hidden_group_forum_ids_str ) ) {
+				$post_status_where .= " OR ID IN ( $enrolled_hidden_group_forum_ids_str )";
+			}
+
+			$where[] = "pm.meta_value IN ( SELECT ID FROM {$wpdb->posts} WHERE post_type = 'forum' AND ( $post_status_where ) )";
 
 			/**
 			 * Filters the MySQL WHERE conditions for the forum's reply Search query.
@@ -144,15 +220,15 @@ if ( ! class_exists( 'Bp_Search_bbPress_Replies' ) ) :
 		 * @return object Bp_Search_Forums
 		 */
 		public static function instance() {
-			// Store the instance locally to avoid private static replication
+			// Store the instance locally to avoid private static replication.
 			static $instance = null;
 
-			// Only run these methods if they haven't been run previously
+			// Only run these methods if they haven't been run previously.
 			if ( null === $instance ) {
 				$instance = new Bp_Search_bbPress_Replies();
 			}
 
-			// Always return the instance
+			// Always return the instance.
 			return $instance;
 		}
 
@@ -166,7 +242,7 @@ if ( ! class_exists( 'Bp_Search_bbPress_Replies' ) ) :
 		}
 	}
 
-	// End class Bp_Search_Posts
+	// End class Bp_Search_bbPress_Replies.
 
 endif;
 

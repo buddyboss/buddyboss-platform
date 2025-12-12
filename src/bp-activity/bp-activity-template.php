@@ -218,6 +218,12 @@ function bp_has_activities( $args = '' ) {
 			: ( isset( $_REQUEST['scope'] ) ? $_REQUEST['scope'] : 'all' )
 		);
 
+	if ( bp_is_user_activity() || bp_is_activity_directory() ) {
+
+		// Scope from the heartbeat passed from the filter dropdown.
+		$scope = ! empty( $args['scope'] ) ? $args['scope'] : $scope;
+	}
+
 	$scope = bp_activity_default_scope( $scope );
 
 	// Group filtering.
@@ -335,7 +341,25 @@ function bp_has_activities( $args = '' ) {
 		$r['filter'] = array(
 			'object' => $_GET['afilter'],
 		);
-	} elseif ( ! empty( $r['user_id'] ) || ! empty( $r['object'] ) || ! empty( $r['action'] ) || ! empty( $r['primary_id'] ) || ! empty( $r['secondary_id'] ) || ! empty( $r['offset'] ) || ! empty( $r['since'] ) ) {
+	} elseif (
+		(
+			'just-me' === $scope &&
+			bp_is_activity_directory()
+		) ||
+		(
+			! empty( $r['user_id'] ) ||
+			! empty( $r['object'] ) ||
+			! empty( $r['action'] ) ||
+			! empty( $r['primary_id'] ) ||
+			! empty( $r['secondary_id'] ) ||
+			! empty( $r['offset'] ) ||
+			! empty( $r['since'] )
+		)
+	) {
+		if ( 'just-me' === $scope && bp_is_activity_directory() ) {
+			$r['user_id'] = bp_loggedin_user_id();
+		}
+
 		$r['filter'] = array(
 			'user_id'      => $r['user_id'],
 			'object'       => $r['object'],
@@ -775,6 +799,15 @@ function bp_activity_date_recorded() {
 }
 
 /**
+ * Output the date the activity was updated.
+ *
+ * @since BuddyBoss 2.8.20
+ */
+function bb_activity_date_updated() {
+	echo bb_get_activity_date_updated();
+}
+
+/**
  * Return the date the activity was recorded.
  *
  * @since BuddyPress 1.2.0
@@ -794,6 +827,28 @@ function bp_get_activity_date_recorded() {
 	 * @param int $date_recorded The activity's date.
 	 */
 	return apply_filters( 'bp_get_activity_date_recorded', $activities_template->activity->date_recorded );
+}
+
+/**
+ * Return the date the activity was updated.
+ *
+ * @since BuddyBoss 2.8.20
+ *
+ * @global object $activities_template {@link BP_Activity_Template}
+ *
+ * @return string The date the activity was updated.
+ */
+function bb_get_activity_date_updated() {
+	global $activities_template;
+
+	/**
+	 * Filters the date the activity was updated.
+	 *
+	 * @since BuddyBoss 2.8.20
+	 *
+	 * @param int $date_updated The activity's date.
+	 */
+	return apply_filters( 'bb_get_activity_date_updated', $activities_template->activity->date_updated );
 }
 
 /**
@@ -1178,6 +1233,8 @@ function bp_get_activity_secondary_avatar( $args = '' ) {
 	);
 	extract( $r, EXTR_SKIP );
 
+	$attribute = '';
+
 	// Set item_id and object (default to user).
 	switch ( $activities_template->activity->component ) {
 		case 'groups':
@@ -1195,6 +1252,10 @@ function bp_get_activity_secondary_avatar( $args = '' ) {
 				$group = groups_get_group( $item_id );
 				$link  = bp_get_group_permalink( $group );
 				$name  = $group->name;
+			}
+
+			if ( ! empty( $group->id ) ) {
+				$attribute = 'data-bb-hp-group="' . esc_attr( $group->id ) . '"';
 			}
 
 			if ( empty( $alt ) ) {
@@ -1225,12 +1286,20 @@ function bp_get_activity_secondary_avatar( $args = '' ) {
 				$alt = sprintf( __( 'Profile photo of %s', 'buddyboss' ), bp_core_get_user_displayname( $activities_template->activity->secondary_item_id ) );
 			}
 
+			if ( ! empty( $item_id ) ) {
+				$attribute = 'data-bb-hp-profile="' . esc_attr( $item_id ) . '"';
+			}
+
 			break;
 		default:
 			$object  = 'user';
 			$item_id = $activities_template->activity->user_id;
 			$email   = $activities_template->activity->user_email;
 			$link    = bp_core_get_userlink( $item_id, false, true );
+
+			if ( ! empty( $item_id ) ) {
+				$attribute = 'data-bb-hp-profile="' . esc_attr( $item_id ) . '"';
+			}
 
 			if ( empty( $alt ) ) {
 				$alt = sprintf( __( 'Profile photo of %s', 'buddyboss' ), $activities_template->activity->display_name );
@@ -1302,9 +1371,10 @@ function bp_get_activity_secondary_avatar( $args = '' ) {
 		$avatar = apply_filters( 'bp_get_activity_secondary_avatar', $avatar );
 
 		return sprintf(
-			'<a href="%s" class="%s">%s</a>',
+			'<a href="%s" class="%s" %s>%s</a>',
 			$link,
 			$link_class,
+			$attribute,
 			$avatar
 		);
 	}
@@ -2860,6 +2930,18 @@ function bp_get_activity_css_class() {
 
 	if ( bb_user_has_mute_notification( bp_get_activity_id(), bp_loggedin_user_id() ) ) {
 		$class .= ' bb-muted';
+	}
+
+	// Check if activity has featured image.
+	if (
+		function_exists( 'bb_pro_activity_post_feature_image_instance' ) &&
+		bb_pro_activity_post_feature_image_instance() &&
+		method_exists( bb_pro_activity_post_feature_image_instance(), 'bb_get_feature_image_data' )
+	) {
+		$feature_image_data = bb_pro_activity_post_feature_image_instance()->bb_get_feature_image_data( bp_get_activity_id() );
+		if ( ! empty( $feature_image_data ) ) {
+			$class .= ' has-featured-image';
+		}
 	}
 
 	if ( 'groups' === $activities_template->activity->component ) {
@@ -4529,4 +4611,72 @@ function bb_get_activity_comment_unfavorite_link( $activity_comment_id = 0 ) {
 	 * @param string $value Constructed link for unfavoriting the activity comment.
 	 */
 	return apply_filters( 'bb_get_activity_comment_unfavorite_link', wp_nonce_url( home_url( bp_get_activity_root_slug() . '/unfavorite/' . $activity_comment_id . '/' ), 'unmark_favorite' ) );
+}
+
+/**
+ * Check if the Activity has a title.
+ *
+ * @since BuddyBoss 2.13.0
+ *
+ * @param null|BP_Activity_Activity $activity_object Optional. Activity object to check. If null, use current activity in loop.
+ *
+ * @return bool True if the activity has a title, false otherwise.
+ */
+function bb_activity_has_post_title( ?BP_Activity_Activity $activity_object = null ) {
+	$post_title = bb_activity_get_post_title( $activity_object );
+	return ! empty( $post_title );
+}
+
+
+/**
+ * Output the activity post title.
+ *
+ * @since BuddyBoss 2.13.0
+ *
+ * @param null|BP_Activity_Activity $activity_object Optional. Activity object to get post title from. If null, uses current activity in loop.
+ */
+function bb_activity_post_title( ?BP_Activity_Activity $activity_object = null ) {
+	echo esc_html( bb_activity_get_post_title( $activity_object ) );
+}
+
+/**
+ * Return the activity post title.
+ *
+ * @since BuddyBoss 2.13.0
+ *
+ * @param null|BP_Activity_Activity $activity_object Optional. Activity object to get post title from. If null, uses current activity in loop.
+ *
+ * @global object $activities_template {@link BP_Activity_Template}
+ *
+ * @return string The activity post title.
+ */
+function bb_activity_get_post_title( ?BP_Activity_Activity $activity_object = null ) {
+	global $activities_template;
+
+	if ( ! is_object( $activities_template ) ) {
+		$activities_template = new stdClass();
+	}
+
+	if ( ! isset( $activities_template->activity ) ) {
+		$activities_template->activity = $activity_object;
+	}
+
+	$activity_post_title = '';
+	if ( ! empty( $activities_template->activity ) && isset( $activities_template->activity->post_title ) ) {
+		$activity_post_title = $activities_template->activity->post_title;
+	}
+
+	$activity_post_title = apply_filters_ref_array(
+		'bb_activity_get_post_title',
+		array(
+			$activity_post_title,
+			&$activities_template->activity,
+		)
+	);
+
+	if ( ! empty( $activity_post_title ) ) {
+		$activity_post_title = bb_activity_strip_post_title( $activity_post_title );
+	}
+
+	return $activity_post_title;
 }

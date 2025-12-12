@@ -35,9 +35,15 @@ if ( ! function_exists( 'bp_email_learndash_quiz_email' ) ) {
 	 */
 	function bp_email_learndash_quiz_email( $email_params ) {
 
-		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); // add this to support html in email
+		if ( empty( $email_params['email'] ) ) {
+			return $email_params;
+		}
 
-		$email_params['msg'] = bp_email_core_wp_get_template( $email_params['msg'], get_user_by( 'email', $email_params['email'] ) );
+		$email = is_array( $email_params['email'] ) ? reset( $email_params['email'] ) : $email_params['email'];
+
+		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); // add this to support html in email.
+
+		$email_params['msg'] = bp_email_core_wp_get_template( $email_params['msg'], get_user_by( 'email', $email ) );
 
 		return $email_params;
 	}

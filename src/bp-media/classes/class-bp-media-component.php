@@ -261,20 +261,7 @@ class BP_Media_Component extends BP_Component {
 
 			$slug       = bp_get_media_slug();
 			$media_link = trailingslashit( $user_domain . $slug );
-
-			// Only grab count if we're on a user page and current user has access.
-			if ( bp_is_user() ) {
-				$count     = bp_media_get_total_media_count( bp_displayed_user_id() );
-				$class     = ( 0 === $count ) ? 'no-count' : 'count';
-				$nav_name  = __( 'Photos', 'buddyboss' );
-				$nav_name .= sprintf(
-					' <span class="%s">%s</span>',
-					esc_attr( $class ),
-					$count
-				);
-			} else {
-				$nav_name = __( 'Photos', 'buddyboss' );
-			}
+			$nav_name   = __( 'Photos', 'buddyboss' );
 
 			// Add 'Photos' to the main navigation.
 			$main_nav = array(
@@ -425,5 +412,16 @@ class BP_Media_Component extends BP_Component {
 				'BP_REST_Media_Details_Endpoint',
 			)
 		);
+	}
+
+	/**
+	 * Register the Media Blocks.
+	 *
+	 * @since BuddyBoss 2.9.00
+	 *
+	 * @param array $blocks Optional. See BP_Component::blocks_init() for description.
+	 */
+	public function blocks_init( $blocks = array() ) {
+		parent::blocks_init( array() );
 	}
 }

@@ -2,6 +2,7 @@
 
 require_once dirname( __FILE__ ) . '/factory.php';
 
+#[\AllowDynamicProperties]
 class BP_UnitTestCase extends WP_UnitTestCase {
 
 	protected $temp_has_bp_moderate = array();
@@ -30,7 +31,7 @@ class BP_UnitTestCase extends WP_UnitTestCase {
 	 *
 	 * @since BuddyPress 3.0.0
 	 */
-	public static function setUpBeforeClass() {
+	public static function setUpBeforeClass(): void {
 		global $wpdb;
 
 		// Fake WP mail globals, to avoid errors
@@ -48,7 +49,7 @@ class BP_UnitTestCase extends WP_UnitTestCase {
 		self::commit_transaction();
 	}
 
-	public function setUp() {
+	public function setUp(): void {
 		parent::setUp();
 
 		/*
@@ -74,7 +75,7 @@ class BP_UnitTestCase extends WP_UnitTestCase {
 		$this->reset_bp_activity_post_types_globals();
 	}
 
-	public function tearDown() {
+	public function tearDown(): void {
 		global $wpdb;
 
 		remove_action( 'bp_blogs_recorded_existing_blogs', array( $this, 'set_autocommit_flag' ) );
@@ -178,7 +179,7 @@ class BP_UnitTestCase extends WP_UnitTestCase {
 		buddypress()->activity->track = array();
 	}
 
-	function assertPreConditions() {
+	function assertPreConditions() : void {
 		parent::assertPreConditions();
 
 		// Reinit some of the globals that might have been cleared by BP_UnitTestCase::clean_up_global_scope().

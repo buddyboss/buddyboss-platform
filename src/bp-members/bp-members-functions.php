@@ -486,7 +486,7 @@ function bp_core_get_userlink( $user_id, $no_anchor = false, $just_link = false 
 	 * @param string $value   Link text based on passed parameters.
 	 * @param int    $user_id ID of the user to check.
 	 */
-	return apply_filters( 'bp_core_get_userlink', '<a href="' . $url . '">' . $display_name . '</a>', $user_id );
+	return apply_filters( 'bp_core_get_userlink', '<a href="' . $url . '" data-bb-hp-profile="' . esc_attr( $user_id ) . '">' . $display_name . '</a>', $user_id );
 }
 
 /**
@@ -706,9 +706,20 @@ function bp_member_object_template_results_members_all_scope( $querystring, $obj
 
 	$querystring = bp_parse_args( $querystring );
 
-	if ( bp_is_active( 'activity' ) && bp_is_activity_follow_active() && isset( $querystring['scope'] ) && 'following' === $querystring['scope'] ) {
+	if (
+		bp_is_active( 'activity' ) &&
+		bp_is_activity_follow_active() &&
+		isset( $querystring['scope'] ) &&
+		(
+			'following' === $querystring['scope'] ||
+			'followers' === $querystring['scope']
+		)
+
+	) {
 		$counts = bp_total_follow_counts();
-		if ( ! empty( $counts['following'] ) ) {
+		if ( 'following' === $querystring['scope'] && ! empty( $counts['following'] ) ) {
+			unset( $querystring['include'] );
+		} elseif ( 'followers' === $querystring['scope'] && ! empty( $counts['followers'] ) ) {
 			unset( $querystring['include'] );
 		}
 	}
@@ -1861,6 +1872,8 @@ function bp_core_signup_user( $user_login, $user_password, $user_email, $usermet
 	// We need to cast $user_id to pass to the filters.
 	$user_id = false;
 
+	$activation_key = '';
+
 	// Multisite installs have their own install procedure.
 	if ( is_multisite() ) {
 		wpmu_signup_user( $user_login, $user_email, $usermeta );
@@ -1902,22 +1915,6 @@ function bp_core_signup_user( $user_login, $user_password, $user_email, $usermet
 		);
 
 		BP_Signup::add( $args );
-
-		/**
-		 * Filters if BuddyPress should send an activation key for a new signup.
-		 *
-		 * @since BuddyPress 1.2.3
-		 *
-		 * @param bool   $value          Whether or not to send the activation key.
-		 * @param int    $user_id        User ID to send activation key to.
-		 * @param string $user_email     User email to send activation key to.
-		 * @param string $activation_key Activation key to be sent.
-		 * @param array  $usermeta       Miscellaneous metadata about the user (blog-specific
-		 *                               signup data, xprofile data, etc).
-		 */
-		if ( apply_filters( 'bp_core_signup_send_activation_key', true, $user_id, $user_email, $activation_key, $usermeta ) ) {
-			bp_core_signup_send_validation_email( $user_id, $user_email, $activation_key, $user_login );
-		}
 	}
 
 	$bp->signup->username = $user_login;
@@ -1935,6 +1932,25 @@ function bp_core_signup_user( $user_login, $user_password, $user_email, $usermet
 	 *                                       signup data, xprofile data, etc).
 	 */
 	do_action( 'bp_core_signup_user', $user_id, $user_login, $user_password, $user_email, $usermeta );
+
+	/**
+	 * Filters if BuddyPress should send an activation key for a new signup.
+	 *
+	 * @since BuddyPress 1.2.3
+	 *
+	 * @param bool   $value          Whether or not to send the activation key.
+	 * @param int    $user_id        User ID to send activation key to.
+	 * @param string $user_email     User email to send activation key to.
+	 * @param string $activation_key Activation key to be sent.
+	 * @param array  $usermeta       Miscellaneous metadata about the user (blog-specific
+	 *                               signup data, xprofile data, etc).
+	 */
+	if (
+		! empty( $activation_key ) &&
+		apply_filters( 'bp_core_signup_send_activation_key', true, $user_id, $user_email, $activation_key, $usermeta )
+	) {
+		bp_core_signup_send_validation_email( $user_id, $user_email, $activation_key, $user_login );
+	}
 
 	return $user_id;
 }
@@ -2882,7 +2898,7 @@ function bp_remove_member_type( $user_id, $member_type ) {
 
 	// No need to continue if the member doesn't have the type.
 	$existing_types = bp_get_member_type( $user_id, false );
-	if ( ! in_array( $member_type, $existing_types, true ) ) {
+	if ( empty( $existing_types ) || ! in_array( $member_type, (array) $existing_types, true ) ) {
 		return false;
 	}
 
@@ -4580,7 +4596,7 @@ add_action( 'user_register', 'bp_assign_default_member_type_to_activate_user_on_
 function bp_allow_user_to_send_invites() {
 
 	// if user not logged in and component not active then return false.
-	if ( ! bp_is_active( 'invites' ) && ! is_user_logged_in() ) {
+	if ( ! bp_is_active( 'invites' ) || ! is_user_logged_in() ) {
 		return false;
 	}
 

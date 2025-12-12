@@ -312,13 +312,6 @@ function bbp_has_topics( $args = '' ) {
 		$bbp->topic_query->max_num_pages = $r['max_num_pages'];
 	}
 
-	/** Stickies */
-
-	// Put sticky posts at the top of the posts array.
-	if ( ! empty( $r['show_stickies'] ) && $r['paged'] <= 1 ) {
-		bbp_add_sticky_topics( $bbp->topic_query, $r );
-	}
-
 	// If no limit to posts per page, set it to the current post_count.
 	if ( -1 === $r['posts_per_page'] ) {
 		$r['posts_per_page'] = $bbp->topic_query->post_count;
@@ -719,7 +712,7 @@ function bbp_topic_title( $topic_id = 0 ) {
  */
 function bbp_get_topic_title( $topic_id = 0 ) {
 	$topic_id = bbp_get_topic_id( $topic_id );
-	$title    = ( ! empty( $topic_id ) ) ? get_the_title( $topic_id ) : '';
+	$title    = ( ! empty( $topic_id ) ) ? esc_html( get_the_title( $topic_id ) ) : '';
 
 	return apply_filters( 'bbp_get_topic_title', $title, $topic_id );
 }
@@ -1705,7 +1698,7 @@ function bbp_get_topic_author_link( $args = '' ) {
 
 		// Only wrap in link if profile exists
 		if ( empty( $anonymous ) && bbp_user_has_profile( bbp_get_topic_author_id( $topic_id ) ) ) {
-			$author_link = sprintf( '<a href="%1$s"%2$s%3$s>%4$s</a>', esc_url( $author_url ), $link_title, ' class="bbp-author-link"', $author_link );
+			$author_link = sprintf( '<a href="%1$s"%2$s%3$s%5$s>%4$s</a>', esc_url( $author_url ), $link_title, ' class="bbp-author-link"', $author_link, ' data-bb-hp-profile="' . bbp_get_topic_author_id( $topic_id ) . '"' );
 		}
 
 		// Role is not linked
@@ -4152,7 +4145,7 @@ function bbp_get_form_topic_title() {
 		$topic_title = '';
 	}
 
-	return apply_filters( 'bbp_get_form_topic_title', esc_attr( $topic_title ) );
+	return apply_filters( 'bbp_get_form_topic_title', esc_html( $topic_title ) );
 }
 
 /**

@@ -834,7 +834,7 @@ function xprofile_filter_get_user_display_name( $full_name, $user_id, $current_u
 		if ( ! empty( $list_fields ) ) {
 			$last_name_field_id = bp_xprofile_lastname_field_id();
 
-			if ( in_array( $last_name_field_id, $list_fields ) ) {
+			if ( in_array( $last_name_field_id, $list_fields ) && ! empty( xprofile_get_field_data( $last_name_field_id, $user_id ) ) ) {
 				$last_name = xprofile_get_field_data( $last_name_field_id, $user_id );
 				$full_name = str_replace( ' ' . $last_name, '', $full_name );
 			}
@@ -1173,13 +1173,9 @@ function bp_xprofile_validate_social_networks_value( $retval, $field_id, $value,
 	}
 
 	foreach ( $value as $k => $v ) {
-		if ( ! empty( $validation ) && ! empty( $validation[ $k ] ) ) {
-			continue;
-		}
-
-		if ( '' === $v || filter_var( $v, FILTER_VALIDATE_URL ) ) {
-
-		} else {
+		$v = trim( $v );
+		// Skip validation for empty fields unless required.
+		if ( ! empty( $v ) && ! wp_http_validate_url( $v ) ) {
 			$key = bp_social_network_search_key( $k, $providers );
 			$validation[ $k ] = sprintf( __( 'Please enter valid %s profile url.', 'buddyboss' ), $providers[ $key ]->name );
 		}

@@ -62,6 +62,11 @@ function bp_core_install( $active_components = false ) {
 		BB_BG_Process_Log::instance()->create_table();
 	}
 
+	// Install activity topics manager table.
+	if ( function_exists( 'bb_topics_manager_instance' ) ) {
+		bb_topics_manager_instance()->create_tables();
+	}
+
 	// Notifications.
 	if ( ! empty( $active_components['notifications'] ) ) {
 		bp_core_install_notifications();
@@ -199,11 +204,13 @@ function bp_core_install_activity_streams() {
 				component varchar(75) NOT NULL,
 				type varchar(75) NOT NULL,
 				action text NOT NULL,
+				post_title text DEFAULT NULL,
 				content longtext NOT NULL,
 				primary_link text NOT NULL,
 				item_id bigint(20) NOT NULL,
 				secondary_item_id bigint(20) DEFAULT NULL,
 				date_recorded datetime NOT NULL,
+				date_updated datetime NOT NULL,
 				hide_sitewide bool DEFAULT 0,
 				mptt_left int(11) NOT NULL DEFAULT 0,
 				mptt_right int(11) NOT NULL DEFAULT 0,
@@ -212,15 +219,21 @@ function bp_core_install_activity_streams() {
 				status varchar(20) NOT NULL DEFAULT 'published',
 				PRIMARY KEY  (id),
 				KEY date_recorded (date_recorded),
+				KEY date_updated (date_updated),
 				KEY user_id (user_id),
 				KEY item_id (item_id),
 				KEY secondary_item_id (secondary_item_id),
 				KEY component (component),
 				KEY type (type),
+				KEY post_title (post_title(191)),
 				KEY mptt_left (mptt_left),
 				KEY mptt_right (mptt_right),
 				KEY hide_sitewide (hide_sitewide),
-				KEY is_spam (is_spam)
+				KEY is_spam (is_spam),
+				KEY activity_type_is_spam (type,is_spam),
+				FULLTEXT KEY bb_post_title (post_title),
+				FULLTEXT KEY bb_content (content),
+				FULLTEXT KEY bb_title_content (post_title, content)
 			) {$charset_collate};";
 
 	$sql[] = "CREATE TABLE {$bp_prefix}bp_activity_meta (

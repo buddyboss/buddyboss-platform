@@ -158,12 +158,14 @@ function bp_video_activity_comment_entry( $comment_id ) {
 		'order_by' => 'menu_order',
 		'sort'     => 'ASC',
 		'user_id'  => false,
+		'privacy'  => array(),
 		'per_page' => 0,
 	);
 
 	if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ) {
 		if ( bp_is_group_video_support_enabled() ) {
-			$args['privacy'] = array( 'comment' );
+			$args['privacy'][] = 'comment';
+			$args['privacy'][] = 'grouponly';
 			if ( ! bp_is_group_albums_support_enabled() ) {
 				$args['album_id'] = 'existing-video';
 			}
@@ -181,7 +183,7 @@ function bp_video_activity_comment_entry( $comment_id ) {
 		}
 	}
 
-	$args['privacy'] = array( 'comment' );
+	$args['privacy'][] = 'comment';
 	if ( ! isset( $args['album_id'] ) ) {
 		$args['album_id'] = 'existing-video';
 	}
@@ -193,6 +195,8 @@ function bp_video_activity_comment_entry( $comment_id ) {
 	) {
 		$args['privacy'][] = 'forums';
 	}
+
+	$args['privacy'] = array_unique( $args['privacy'] );
 
 	if ( ! empty( $video_ids ) && bp_has_video( $args ) ) {
 		$max_length = bb_video_get_activity_comment_max_thumb_length();
@@ -454,7 +458,8 @@ function bp_video_update_video_privacy( $album ) {
 				$activity = new BP_Activity_Activity( $activity_id );
 
 				if ( ! empty( $activity ) ) {
-					$activity->privacy = $privacy;
+					$activity->privacy        = $privacy;
+					$activity->title_required = false;
 					$activity->save();
 				}
 			}
@@ -503,7 +508,7 @@ function bp_video_forums_new_post_video_save( $post_id ) {
 		$video_ids = array();
 		foreach ( $videos as $video ) {
 
-			$title             = ! empty( $video['name'] ) ? $video['name'] : '';
+			$title             = ! empty( $video['name'] ) ? sanitize_text_field( wp_unslash( $video['name'] ) ) : '';
 			$attachment_id     = ! empty( $video['id'] ) ? $video['id'] : 0;
 			$attached_video_id = ! empty( $video['video_id'] ) ? $video['video_id'] : 0;
 			$album_id          = ! empty( $video['album_id'] ) ? $video['album_id'] : 0;
@@ -969,7 +974,8 @@ function bp_video_admin_repair_video() {
 								}
 							}
 						}
-						$activity->hide_sitewide = true;
+						$activity->hide_sitewide  = true;
+						$activity->title_required = false;
 						$activity->save();
 					}
 				}
@@ -1733,9 +1739,19 @@ function bb_video_update_video_symlink( $response, $post_data ) {
 					$ext  = pathinfo( basename( $path ), PATHINFO_EXTENSION );
 				}
 
+				/**
+				 * Filters the video extension.
+				 *
+				 * @since BuddyBoss 2.15.0
+				 *
+				 * @param string $ext   The video extension.
+				 * @param object $video The video object.
+				 */
+				$ext = apply_filters( 'bb_video_extension', 'video/' . $ext, $video );
+
 				$symlink                       = bb_video_get_symlink( (int) current( $video_ids ) );
 				$response['video_symlink']     = $symlink;
-				$response['video_extension']   = 'video/' . $ext;
+				$response['video_extension']   = $ext;
 				$response['video_id']          = (int) current( $video_ids );
 				$response['video_link_update'] = true;
 				$response['video_js_id']       = 'video-' . (int) current( $video_ids ) . '_html5_api';

@@ -947,7 +947,7 @@ function bp_xprofile_update_display_name( $user_id ) {
 	wp_update_user(
 		array(
 			'ID'           => $user_id,
-			'display_name' => bp_core_get_user_displayname( $user_id ),
+			'display_name' => bp_core_get_user_displayname( $user_id, $user_id ), // Passing the same $user_id as the current user_id.
 		)
 	);
 }
@@ -1809,7 +1809,7 @@ function bp_get_user_social_networks_urls( $user_id = null ) {
 											<h4>
 												<span class="target_name">' . esc_attr( $social_networks_text ) . '</span>
 											</h4>
-											<a class="bb-close-action-popup bb-model-close-button" href="#"><span class="bb-icon-l bb-icon-times"></span></a>
+											<a class="bb-close-action-popup bb-model-close-button" href="#" aria-label="' . esc_attr__( 'Close', 'buddyboss' ) . '"><span class="bb-icon-l bb-icon-times"></span></a>
 										</header>
 										<div class="bb-action-popup-content">';
 										foreach ( $original_option_values as $key => $original_option_value ) {

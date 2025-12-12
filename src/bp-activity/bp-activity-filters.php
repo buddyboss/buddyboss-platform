@@ -193,6 +193,17 @@ add_action( 'bp_before_member_activity_content', 'bb_emojionearea_add_popup_temp
 
 add_filter( 'bp_ajax_querystring', 'bb_activity_directory_set_pagination', 20, 2 );
 
+// Clear activity parent cache when activity is deleted or saved.
+add_action( 'bp_activity_after_delete', 'bb_clear_activity_parent_cache' );
+add_action( 'bp_activity_after_save', 'bb_clear_activity_parent_cache' );
+add_action( 'bp_activity_after_delete', 'bb_clear_activity_comment_parent_cache' );
+add_action( 'bp_activity_after_save', 'bb_clear_activity_comment_parent_cache' );
+add_action( 'bp_activity_after_delete', 'bb_clear_activity_all_comment_parent_caches' );
+add_action( 'bp_init', 'bb_load_activity_topics_manager' );
+
+add_action( 'bp_activity_after_save', 'bb_activity_save_topic_data', 2, 1 );
+add_filter( 'bp_activity_get_join_sql', 'bb_activity_unanswered_only_join_sql_filter', 11, 2 );
+
 /** Functions *****************************************************************/
 
 /**
@@ -329,8 +340,8 @@ function bp_activity_save_link_data( $activity ) {
 		return;
 	}
 
-	$link_title       = ! empty( $_POST['link_title'] ) ? filter_var( $_POST['link_title'] ) : '';
-	$link_description = ! empty( $_POST['link_description'] ) ? filter_var( $_POST['link_description'] ) : '';
+	$link_title       = ! empty( $_POST['link_title'] ) ? sanitize_text_field( wp_unslash( $_POST['link_title'] ) ) : '';
+	$link_description = ! empty( $_POST['link_description'] ) ? sanitize_text_field( wp_unslash( $_POST['link_description'] ) ) : '';
 	$link_image       = ! empty( $_POST['link_image'] ) ? filter_var( $_POST['link_image'], FILTER_VALIDATE_URL ) : '';
 
 	// Check if link embed was used.
@@ -358,12 +369,14 @@ function bp_activity_save_link_data( $activity ) {
 	$preview_data['link_image_index_save'] = isset( $_POST['link_image_index_save'] ) ? filter_var( $_POST['link_image_index_save'] ) : '';
 
 	if ( ! empty( $link_title ) ) {
+		$link_title            = wp_kses_post( $link_title );
 		$preview_data['title'] = $link_title;
 		// Add post title in activity meta. will help to search link preview's title in feed.
 		bp_activity_update_meta( $activity->id, 'post_title', $link_title );
 	}
 
 	if ( ! empty( $link_description ) ) {
+		$link_description            = wp_kses_post( $link_description );
 		$preview_data['description'] = $link_description;
 	}
 
@@ -429,6 +442,21 @@ function bp_activity_comment_privacy_update( $comment, $privacy ) {
  * @return string $content Filtered activity content.
  */
 function bp_activity_filter_kses( $content ) {
+
+	$allowed_tags = bp_get_allowedtags();
+
+	// Add h3 tag without any attributes.
+	$allowed_tags['h3'] = array(
+		'class' => array(),
+		'id'    => array(),
+	);
+
+	// Add h4 tag without any attributes.
+	$allowed_tags['h4'] = array(
+		'class' => array(),
+		'id'    => array(),
+	);
+
 	/**
 	 * Filters the allowed HTML tags for BuddyBoss Activity content.
 	 *
@@ -436,7 +464,7 @@ function bp_activity_filter_kses( $content ) {
 	 *
 	 * @param array $value Array of allowed HTML tags and attributes.
 	 */
-	$activity_allowedtags = apply_filters( 'bp_activity_allowed_tags', bp_get_allowedtags() );
+	$activity_allowedtags = apply_filters( 'bp_activity_allowed_tags', $allowed_tags );
 	return wp_kses( $content, $activity_allowedtags );
 }
 
@@ -474,7 +502,7 @@ function bp_activity_at_name_filter( $content, $activity_id = 0 ) {
 		if ( ! empty( $content_matches[1] ) ) {
 			foreach ( $content_matches[1] as $replacement ) {
 				$unique_index                  = '#BPAN' . $replace_count . '#';
-				$replacements[ $unique_index ] = $replacement;
+				$replacements[ $unique_index ] = str_replace( "\xef\xbb\xbf", '', $replacement );
 				$content                       = str_replace( $replacement, $unique_index, $content );
 				$replace_count++;
 			}
@@ -483,7 +511,7 @@ function bp_activity_at_name_filter( $content, $activity_id = 0 ) {
 
 	// Linkify the mentions with the username.
 	foreach ( (array) $usernames as $user_id => $username ) {
-		$replacement = "<a class='bp-suggestions-mention' href='{{mention_user_id_" . $user_id . "}}' rel='nofollow'>@$username</a>";
+		$replacement = "<a class='bp-suggestions-mention' data-bb-hp-profile='" . esc_attr( $user_id ) . "' href='{{mention_user_id_" . $user_id . "}}' rel='nofollow'>@$username</a>";
 		if ( false === strpos( $content, $replacement ) ) {
 			// Pattern for cases with existing <a>@mention</a> or @mention.
 			$pattern = '/(?<=[^A-Za-z0-9\_\/\.\-\*\+\=\%\$\#\?]|^)@' . preg_quote( $username, '/' ) . '(?!\/)|<a[^>]*>@' . preg_quote( $username, '/' ) . '<\/a>/';
@@ -530,7 +558,7 @@ function bp_activity_at_name_filter_updates( $activity ) {
 	if ( ! empty( $usernames ) ) {
 		// Replace @mention text with userlinks.
 		foreach ( (array) $usernames as $user_id => $username ) {
-			$replacement = "<a class='bp-suggestions-mention' href='{{mention_user_id_" . $user_id . "}}' rel='nofollow'>@$username</a>";
+			$replacement = "<a class='bp-suggestions-mention' data-bb-hp-profile='" . esc_attr( $user_id ) . "' href='{{mention_user_id_" . $user_id . "}}' rel='nofollow'>@$username</a>";
 			if ( false === strpos( $activity->content, $replacement ) ) {
 				// Pattern for cases with existing <a>@mention</a> or @mention.
 				$pattern           = '/(?<=[^A-Za-z0-9\_\/\.\-\*\+\=\%\$\#\?]|^)@' . preg_quote( $username, '/' ) . '(?!\/)|<a[^>]*>@' . preg_quote( $username, '/' ) . '<\/a>/';
@@ -928,6 +956,11 @@ function bp_activity_heartbeat_last_recorded( $response = array(), $data = array
 
 	if ( ! empty( $data['bp_activity_last_recorded_search_terms'] ) && empty( $activity_latest_args['search_terms'] ) ) {
 		$activity_latest_args['search_terms'] = addslashes( $data['bp_activity_last_recorded_search_terms'] );
+	}
+
+	// Add topic id to fetch activity by topic.
+	if ( ! empty( $data['bp_heartbeat']['topic_id'] ) && empty( $activity_latest_args['topic_id'] ) ) {
+		$activity_latest_args['topic_id'] = $data['bp_heartbeat']['topic_id'];
 	}
 
 	$newest_activities      = array();
@@ -1505,8 +1538,8 @@ add_filter( 'bp_activity_set_mentions_scope_args', 'bp_activity_filter_mentions_
  *
  * @since BuddyBoss 1.0.0
  *
- * @param array|string $qs The querystring for the BP loop.
- * @param str          $object The current object for the querystring.
+ * @param array|string $qs     The querystring for the BP loop.
+ * @param string       $object The current object for the querystring.
  *
  * @return array|string Modified querystring
  */
@@ -1690,7 +1723,8 @@ function bp_activity_media_fix_data() {
 			$activity = new BP_Activity_Activity( $activity->id );
 
 			if ( ! empty( $activity ) ) {
-				$activity->privacy = 'media';
+				$activity->privacy        = 'media';
+				$activity->title_required = false;
 				$activity->save();
 			}
 		}
@@ -1896,10 +1930,10 @@ function bp_activity_media_add( $media ) {
 				$media->privacy  = 'comment';
 				$media->album_id = 0;
 			} else {
-
 				$args = array(
-					'hide_sitewide' => true,
-					'privacy'       => 'media',
+					'hide_sitewide'  => true,
+					'privacy'        => 'media',
+					'title_required' => false,
 				);
 
 				// Create activity only if not created previously.
@@ -1935,6 +1969,7 @@ function bp_activity_media_add( $media ) {
 						$media_activity                    = new BP_Activity_Activity( $activity_id );
 						$media_activity->secondary_item_id = $parent_activity_id;
 						$media_activity->status            = 'comment' !== $media_activity->privacy && isset( $_POST['activity_action_type'] ) && bb_get_activity_scheduled_status() === $_POST['activity_action_type'] ? $_POST['activity_action_type'] : bb_get_activity_published_status();
+						$media_activity->title_required    = false;
 						$media_activity->save();
 					}
 
@@ -2014,14 +2049,20 @@ function bp_activity_create_parent_media_activity( $media_ids ) {
 			remove_action( 'bp_groups_posted_update', 'bb_subscription_send_subscribe_group_notifications', 11, 4 );
 			$activity_id = groups_post_update(
 				array(
-					'content'  => $content,
-					'group_id' => $group_id,
+					'content'        => $content,
+					'group_id'       => $group_id,
+					'title_required' => false,
 				)
 			);
 			add_action( 'bp_groups_posted_update', 'bb_subscription_send_subscribe_group_notifications', 11, 4 );
 		} else {
 			remove_action( 'bp_activity_posted_update', 'bb_activity_send_email_to_following_post', 10, 3 );
-			$activity_id = bp_activity_post_update( array( 'content' => $content ) );
+			$activity_id = bp_activity_post_update(
+				array(
+					'content'        => $content,
+					'title_required' => false,
+				)
+			);
 			add_action( 'bp_activity_posted_update', 'bb_activity_send_email_to_following_post', 10, 3 );
 		}
 
@@ -2060,7 +2101,8 @@ function bp_activity_create_parent_media_activity( $media_ids ) {
 			$main_activity = new BP_Activity_Activity( $activity_id );
 			if ( empty( $group_id ) ) {
 				if ( ! empty( $main_activity ) ) {
-					$main_activity->privacy = $privacy;
+					$main_activity->privacy        = $privacy;
+					$main_activity->title_required = false;
 					$main_activity->save();
 				}
 			}
@@ -2072,6 +2114,7 @@ function bp_activity_create_parent_media_activity( $media_ids ) {
 						$media_activity = new BP_Activity_Activity( $media->activity_id );
 						if ( ! empty( $media_activity->id ) ) {
 							$media_activity->secondary_item_id = $main_activity->id;
+							$media_activity->title_required    = false;
 							$media_activity->save();
 						}
 					}
@@ -2117,8 +2160,9 @@ function bp_activity_edit_update_media( $media_ids ) {
 					// Create new media activity for old media because it has only parent activity to show right now.
 					$old_media = new BP_Media( $old_media_id );
 					$args      = array(
-						'hide_sitewide' => true,
-						'privacy'       => 'media',
+						'hide_sitewide'  => true,
+						'privacy'        => 'media',
+						'title_required' => false,
 					);
 
 					if ( ! empty( $old_media->group_id ) && bp_is_active( 'groups' ) ) {
@@ -2138,6 +2182,7 @@ function bp_activity_edit_update_media( $media_ids ) {
 						$media_activity                    = new BP_Activity_Activity( $activity_id );
 						$media_activity->secondary_item_id = $bp_activity_post_update_id;
 						$media_activity->status            = 'comment' !== $media_activity->privacy && isset( $_POST['activity_action_type'] ) && bb_get_activity_scheduled_status() === $_POST['activity_action_type'] ? $_POST['activity_action_type'] : bb_get_activity_published_status();
+						$media_activity->title_required    = false;
 						$media_activity->save();
 
 						// update activity meta to tell it is media activity.
@@ -2315,8 +2360,9 @@ function bp_activity_document_add( $document ) {
 			} else {
 
 				$args = array(
-					'hide_sitewide' => true,
-					'privacy'       => 'document',
+					'hide_sitewide'  => true,
+					'privacy'        => 'document',
+					'title_required' => false,
 				);
 
 				// Create activity only if not created previously.
@@ -2352,6 +2398,7 @@ function bp_activity_document_add( $document ) {
 						$document_activity                    = new BP_Activity_Activity( $activity_id );
 						$document_activity->secondary_item_id = $parent_activity_id;
 						$document_activity->status            = 'comment' !== $document_activity->privacy && isset( $_POST['activity_action_type'] ) && bb_get_activity_scheduled_status() === $_POST['activity_action_type'] ? $_POST['activity_action_type'] : bb_get_activity_published_status();
+						$document_activity->title_required    = false;
 						$document_activity->save();
 					}
 
@@ -2431,14 +2478,20 @@ function bp_activity_create_parent_document_activity( $document_ids ) {
 			remove_action( 'bp_groups_posted_update', 'bb_subscription_send_subscribe_group_notifications', 11, 4 );
 			$activity_id = groups_post_update(
 				array(
-					'content'  => $content,
-					'group_id' => $group_id,
+					'content'        => $content,
+					'group_id'       => $group_id,
+					'title_required' => false,
 				)
 			);
 			add_action( 'bp_groups_posted_update', 'bb_subscription_send_subscribe_group_notifications', 11, 4 );
 		} else {
 			remove_action( 'bp_activity_posted_update', 'bb_activity_send_email_to_following_post', 10, 3 );
-			$activity_id = bp_activity_post_update( array( 'content' => $content ) );
+			$activity_id = bp_activity_post_update(
+				array(
+					'content'        => $content,
+					'title_required' => false,
+				)
+			);
 			add_action( 'bp_activity_posted_update', 'bb_activity_send_email_to_following_post', 10, 3 );
 		}
 
@@ -2478,7 +2531,8 @@ function bp_activity_create_parent_document_activity( $document_ids ) {
 			$main_activity = new BP_Activity_Activity( $activity_id );
 			if ( empty( $group_id ) ) {
 				if ( ! empty( $main_activity ) ) {
-					$main_activity->privacy = $privacy;
+					$main_activity->privacy        = $privacy;
+					$main_activity->title_required = false;
 					$main_activity->save();
 				}
 			}
@@ -2490,6 +2544,7 @@ function bp_activity_create_parent_document_activity( $document_ids ) {
 						$document_activity = new BP_Activity_Activity( $document->activity_id );
 						if ( ! empty( $document_activity->id ) ) {
 							$document_activity->secondary_item_id = $main_activity->id;
+							$document_activity->title_required    = false;
 							$document_activity->save();
 						}
 					}
@@ -2535,8 +2590,9 @@ function bp_activity_edit_update_document( $document_ids ) {
 					// Create new document activity for old document because it has only parent activity to show right now.
 					$old_document = new BP_Document( $old_document_id );
 					$args         = array(
-						'hide_sitewide' => true,
-						'privacy'       => 'document',
+						'hide_sitewide'  => true,
+						'privacy'        => 'document',
+						'title_required' => false,
 					);
 
 					if ( ! empty( $old_document->group_id ) && bp_is_active( 'groups' ) ) {
@@ -2556,6 +2612,7 @@ function bp_activity_edit_update_document( $document_ids ) {
 						$document_activity                    = new BP_Activity_Activity( $activity_id );
 						$document_activity->secondary_item_id = $bp_activity_post_update_id;
 						$document_activity->status            = 'comment' !== $document_activity->privacy && isset( $_POST['activity_action_type'] ) && bb_get_activity_scheduled_status() === $_POST['activity_action_type'] ? $_POST['activity_action_type'] : bb_get_activity_published_status();
+						$document_activity->title_required    = false;
 						$document_activity->save();
 
 						// update activity meta to tell it is document activity.
@@ -3011,8 +3068,9 @@ function bp_activity_video_add( $video ) {
 			} else {
 
 				$args = array(
-					'hide_sitewide' => true,
-					'privacy'       => 'video',
+					'hide_sitewide'  => true,
+					'privacy'        => 'video',
+					'title_required' => false,
 				);
 
 				// Create activity only if not created previously.
@@ -3048,6 +3106,7 @@ function bp_activity_video_add( $video ) {
 						$video_activity                    = new BP_Activity_Activity( $activity_id );
 						$video_activity->secondary_item_id = $parent_activity_id;
 						$video_activity->status            = 'comment' !== $video_activity->privacy && isset( $_POST['activity_action_type'] ) && bb_get_activity_scheduled_status() === $_POST['activity_action_type'] ? $_POST['activity_action_type'] : bb_get_activity_published_status();
+						$video_activity->title_required    = false;
 						$video_activity->save();
 					}
 
@@ -3128,14 +3187,20 @@ function bp_activity_create_parent_video_activity( $video_ids ) {
 			remove_action( 'bp_groups_posted_update', 'bb_subscription_send_subscribe_group_notifications', 11, 4 );
 			$activity_id = groups_post_update(
 				array(
-					'content'  => $content,
-					'group_id' => $group_id,
+					'content'        => $content,
+					'group_id'       => $group_id,
+					'title_required' => false,
 				)
 			);
 			add_action( 'bp_groups_posted_update', 'bb_subscription_send_subscribe_group_notifications', 11, 4 );
 		} else {
 			remove_action( 'bp_activity_posted_update', 'bb_activity_send_email_to_following_post', 10, 3 );
-			$activity_id = bp_activity_post_update( array( 'content' => $content ) );
+			$activity_id = bp_activity_post_update(
+				array(
+					'content'        => $content,
+					'title_required' => false,
+				)
+			);
 			add_action( 'bp_activity_posted_update', 'bb_activity_send_email_to_following_post', 10, 3 );
 		}
 
@@ -3174,7 +3239,8 @@ function bp_activity_create_parent_video_activity( $video_ids ) {
 			$main_activity = new BP_Activity_Activity( $activity_id );
 			if ( empty( $group_id ) ) {
 				if ( ! empty( $main_activity ) ) {
-					$main_activity->privacy = $privacy;
+					$main_activity->privacy        = $privacy;
+					$main_activity->title_required = false;
 					$main_activity->save();
 				}
 			}
@@ -3186,6 +3252,7 @@ function bp_activity_create_parent_video_activity( $video_ids ) {
 						$video_activity = new BP_Activity_Activity( $video->activity_id );
 						if ( ! empty( $video_activity->id ) ) {
 							$video_activity->secondary_item_id = $main_activity->id;
+							$video_activity->title_required    = false;
 							$video_activity->save();
 						}
 					}
@@ -3232,8 +3299,9 @@ function bp_activity_edit_update_video( $video_ids ) {
 					// Create new video activity for old video because it has only parent activity to show right now.
 					$old_video = new BP_Video( $old_video_id );
 					$args      = array(
-						'hide_sitewide' => true,
-						'privacy'       => 'video',
+						'hide_sitewide'  => true,
+						'privacy'        => 'video',
+						'title_required' => false,
 					);
 
 					if ( ! empty( $old_video->group_id ) && bp_is_active( 'groups' ) ) {
@@ -3253,6 +3321,7 @@ function bp_activity_edit_update_video( $video_ids ) {
 						$video_activity                    = new BP_Activity_Activity( $activity_id );
 						$video_activity->secondary_item_id = $bp_activity_post_update_id;
 						$video_activity->status            = 'comment' !== $video_activity->privacy && isset( $_POST['activity_action_type'] ) && bb_get_activity_scheduled_status() === $_POST['activity_action_type'] ? $_POST['activity_action_type'] : bb_get_activity_published_status();
+						$video_activity->title_required    = false;
 						$video_activity->save();
 
 						// update activity meta to tell it is video activity.
@@ -3594,7 +3663,6 @@ add_action( 'bp_start_following', 'bb_send_email_to_follower' );
  * @param int    $activity_id ID of the activity item being updated.
  */
 function bb_activity_at_name_send_emails( $content, $user_id, $activity_id ) {
-	add_filter( 'bp_activity_at_name_do_notifications', '__return_true' );
 	$activity = new BP_Activity_Activity( $activity_id );
 	bp_activity_at_name_send_emails( $activity );
 }
@@ -3610,7 +3678,6 @@ function bb_activity_at_name_send_emails( $content, $user_id, $activity_id ) {
  * @param bool   $activity_id Whether or not the activity recording succeeded.
  */
 function bb_group_activity_at_name_send_emails( $content, $user_id, $group_id, $activity_id ) {
-	add_filter( 'bp_activity_at_name_do_notifications', '__return_true' );
 	$activity = new BP_Activity_Activity( $activity_id );
 	bp_activity_at_name_send_emails( $activity );
 }
@@ -3794,4 +3861,299 @@ function bb_activity_directory_set_pagination( $querystring, $object ) {
 	$querystring['per_page'] = bb_get_load_activity_per_request();
 
 	return http_build_query( $querystring );
+}
+
+/**
+ * Filter the members loop on a followers page.
+ *
+ * @since BuddyBoss 2.8.20
+ *
+ * @param array|string $qs     The querystring for the BP loop.
+ * @param string       $object The current object for the querystring.
+ *
+ * @return array|string Modified querystring
+ */
+function bb_add_member_followers_scope_filter( $qs, $object ) {
+	// not on the members object? stop now!
+	if ( 'members' !== $object ) {
+		return $qs;
+	}
+
+	// members directory
+	if ( ! bp_is_user() && bp_is_members_directory() ) {
+		$qs_args = bp_parse_args( $qs );
+		// check if members scope is followers before manipulating.
+		if ( isset( $qs_args['scope'] ) && 'followers' === $qs_args['scope'] ) {
+			$qs .= '&include=' . bp_get_follower_ids(
+				array(
+					'user_id' => bp_loggedin_user_id(),
+				)
+			);
+		}
+	}
+
+	return $qs;
+}
+add_filter( 'bp_ajax_querystring', 'bb_add_member_followers_scope_filter', 20, 2 );
+
+/**
+ * Clear activity parent cache for one or more activities.
+ *
+ * @since BuddyBoss 2.8.20
+ *
+ * @param BP_Activity_Activity|array $activities Activity object or array of objects.
+ *
+ * @return void
+ */
+function bb_clear_activity_parent_cache( $activities ) {
+
+	// Early bail if no activities provided.
+	if ( empty( $activities ) ) {
+		return;
+	}
+
+	// Get activity IDs based on input type.
+	$activity_ids = array();
+	if ( is_object( $activities ) && $activities instanceof BP_Activity_Activity ) {
+		$activity_ids = array( $activities->id );
+	} elseif ( is_array( $activities ) ) {
+		$activity_ids = wp_parse_id_list( wp_list_pluck( $activities, 'id' ) );
+	}
+
+	// Clear cache for each activity ID.
+	if ( ! empty( $activity_ids ) ) {
+		foreach ( $activity_ids as $activity_id ) {
+			wp_cache_delete( 'bb_activity_parent_' . $activity_id, 'bb_activity_parents' );
+		}
+	}
+}
+
+/**
+ * Clear activity comment parent cache.
+ *
+ * @since BuddyBoss 2.8.20
+ *
+ * @param BP_Activity_Activity|array $activities Activity object or array of objects.
+ *
+ * @return void
+ */
+function bb_clear_activity_comment_parent_cache( $activities ) {
+	global $wpdb, $bp;
+
+	// Early bail if no activities provided.
+	if ( empty( $activities ) ) {
+		return;
+	}
+
+	// Get activity IDs based on input type.
+	$activity_ids = array();
+	if ( is_object( $activities ) && $activities instanceof BP_Activity_Activity ) {
+		$activity_ids = array( $activities->id );
+	} elseif ( is_array( $activities ) ) {
+		$activity_ids = wp_parse_id_list( wp_list_pluck( $activities, 'id' ) );
+	}
+
+	// Clear cache for each activity ID.
+	if ( ! empty( $activity_ids ) ) {
+		foreach ( $activity_ids as $activity_id ) {
+			$main_activity_id = $wpdb->get_var(
+				$wpdb->prepare(
+					"SELECT item_id FROM {$bp->activity->table_name} WHERE id = %d",
+					$activity_id
+				)
+			);
+			if ( $main_activity_id ) {
+				wp_cache_delete(
+					'bb_activity_comment_parent_' . $activity_id . '_' . $main_activity_id,
+					'bb_activity_comment_parents'
+				);
+			}
+		}
+	}
+}
+
+/**
+ * Clear all activity comment parent caches for a main activity.
+ *
+ * @since BuddyBoss 2.8.20
+ *
+ * @param array $activities Array of activities.
+ *
+ * @return void
+ */
+function bb_clear_activity_all_comment_parent_caches( $activities ) {
+	global $wpdb, $bp;
+
+	// Early bail if no activities provided.
+	if ( empty( $activities ) ) {
+		return;
+	}
+
+	$activity_ids = wp_parse_id_list( wp_list_pluck( $activities, 'id' ) );
+
+	// Clear cache for each activity ID.
+	if ( ! empty( $activity_ids ) ) {
+		foreach ( $activity_ids as $activity_id ) {
+			$comment_ids = $wpdb->get_col(
+				$wpdb->prepare(
+					"SELECT id FROM {$bp->activity->table_name}
+					WHERE item_id = %d AND type = 'activity_comment'",
+					$activity_id
+				)
+			);
+
+			if ( ! empty( $comment_ids )) {
+
+				// Clear cache for each comment.
+				foreach ( $comment_ids as $comment_id ) {
+					wp_cache_delete(
+						'bb_activity_comment_parent_' . $comment_id . '_' . $activity_id,
+						'bb_activity_comment_parents'
+					);
+				}
+			}
+		}
+	}
+}
+
+/**
+ * Initialize the Activity Topics Manager.
+ * This ensures we only load the manager when needed.
+ *
+ * @since BuddyBoss 2.8.80
+ *
+ * @return void True if the activity topics manager is loaded, false otherwise.
+ */
+function bb_load_activity_topics_manager() {
+	// Only load if activity topics are enabled.
+	if ( ! bb_is_enabled_activity_topics() ) {
+		return;
+	}
+
+	bb_activity_topics_manager_instance();
+}
+
+/**
+ * Save topic data for the activity.
+ *
+ * @since BuddyBoss 2.8.80
+ *
+ * @param object $activity The activity object.
+ *
+ * @return void
+ */
+function bb_activity_save_topic_data( $activity ) {
+
+	if ( ! bb_is_enabled_activity_topics() ) {
+		return;
+	}
+
+	if ( ! isset( $_POST['topic_id'] ) ) {
+		return;
+	}
+
+	$skip_component = ! in_array( $activity->component, array( 'groups', 'activity' ), true );
+
+	/**
+	 * Filter to skip saving topic data based on activity component.
+	 *
+	 * @since BuddyBoss 2.10.0
+	 *
+	 * @param bool   $skip_component Whether to skip saving topic data for the component.
+	 * @param object $activity       The activity object.
+	 */
+	$skip_component = apply_filters( 'bb_activity_save_topic_data_component_skip', $skip_component, $activity );
+	if ( $skip_component ) {
+		return;
+	}
+
+	$skip_type = isset( $activity->type ) ? 'activity_update' !== $activity->type : true;
+
+	/**
+	 * Filter to skip saving topic data based on a activity type.
+	 *
+	 * @since BuddyBoss 2.10.0
+	 *
+	 * @param bool   $skip_type Whether to skip saving topic data for the type.
+	 * @param object $activity  The activity object.
+	 */
+	$skip_type = apply_filters( 'bb_activity_save_topic_data_type_skip', $skip_type, $activity );
+	if ( $skip_type ) {
+		return;
+	}
+
+	$topic_id = intval( $_POST['topic_id'] );
+	if ( bb_is_activity_topic_required() && empty( $topic_id ) ) {
+		return;
+	}
+
+	$item_id = isset( $_POST['group_id'] ) ? intval( $_POST['group_id'] ) : 0;
+
+	// Add/update the activity topic relationship.
+	bb_activity_topics_manager_instance()->bb_add_activity_topic_relationship(
+		array(
+			'topic_id'    => $topic_id,
+			'activity_id' => $activity->id,
+			'component'   => $activity->component,
+			'item_id'     => $item_id,
+		)
+	);
+}
+
+/**
+ * Add LEFT JOIN for unanswered activities filter.
+ * This replaces the NOT EXISTS clause with a more performant LEFT JOIN approach.
+ *
+ * @since BuddyBoss 2.11.0
+ *
+ * @param string $join_sql   The JOIN SQL to be filtered.
+ * @param array  $r          The arguments passed to BP_Activity_Activity::get().
+ *
+ * @return string Modified JOIN SQL.
+ */
+function bb_activity_unanswered_only_join_sql_filter( $join_sql, $r ) {
+	// Only add the join when unanswered_only is enabled.
+	if ( ! empty( $r['filter']['unanswered_only'] ) ) {
+		global $bp;
+
+		// Join conditions array.
+		$join_conditions['uac.item_id'] = 'uac.item_id = a.id';
+		$join_conditions['uac.type']    = "uac.type = 'activity_comment'";
+
+		// Add spam filter conditions to the subquery.
+		if ( ! empty( $r['spam'] ) ) {
+			if ( 'ham_only' === $r['spam'] ) {
+				$join_conditions['uac.is_spam'] = 'uac.is_spam = 0';
+			} elseif ( 'spam_only' === $r['spam'] ) {
+				$join_conditions['uac.is_spam'] = 'uac.is_spam = 1';
+			} else {
+				$join_conditions['uac.is_spam'] = 'uac.is_spam = ""';
+			}
+		}
+
+		/**
+		 * Filter the join conditions for unanswered activities.
+		 *
+		 * @since BuddyBoss 2.11.0
+		 *
+		 * @param array  $join_conditions The join conditions to be filtered.
+		 * @param array  $r               The arguments passed to BP_Activity_Activity::get().
+		 */
+		$join_conditions    = apply_filters( 'bb_activity_unanswered_only_join_conditions', $join_conditions, $r );
+		$join_condition_sql = join( ' AND ', $join_conditions );
+
+		$join_sql .= " LEFT JOIN {$bp->activity->table_name} uac ON {$join_condition_sql} ";
+
+		/**
+		 * Filter the join SQL for unanswered activities.
+		 *
+		 * @since BuddyBoss 2.11.0
+		 *
+		 * @param string $join_sql The join SQL to be filtered.
+		 * @param array  $r        The arguments passed to BP_Activity_Activity::get().
+		 */
+		$join_sql = apply_filters( 'bb_activity_get_unanswered_only_join_sql', $join_sql, $r );
+	}
+
+	return $join_sql;
 }

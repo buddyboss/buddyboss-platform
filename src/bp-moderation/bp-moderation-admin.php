@@ -27,7 +27,10 @@ if ( is_admin() && ! empty( $_REQUEST['page'] ) && 'bp-moderation' === $_REQUEST
  * @param string $hook page name.
  */
 function bp_moderation_admin_scripts( $hook ) {
-	if ( 'buddyboss_page_bp-moderation' === $hook ) {
+	if (
+		isset( $_GET[ 'page' ] ) &&
+		'bp-moderation' === $_GET[ 'page' ]
+	) {
 		wp_enqueue_script(
 			'bp-moderation',
 			buddypress()->plugin_url . 'bp-core/admin/js/moderation-page.js',
@@ -448,6 +451,8 @@ function bp_moderation_admin_index() {
 	$current_tab = bb_filter_input_string( INPUT_GET, 'tab' );
 	$current_tab = ( ! bp_is_moderation_member_blocking_enable() ) ? 'reported-content' : $current_tab;
 
+	$current_moderation_status = bb_filter_input_string( INPUT_GET, 'moderation_status' );	
+
 	// Prepare the group items for display.
 	$bp_moderation_list_table->prepare_items();
 	?>
@@ -472,6 +477,13 @@ function bp_moderation_admin_index() {
 		</div>
 		<?php $bp_moderation_list_table->views(); ?>
 		<form id="bp-moseration-form" action="" method="get">
+			<?php
+			if ( 'reported-content' !== $current_tab ) {
+				// Show search box for flagged members.
+				$bp_moderation_list_table->search_box( __( 'Search Members', 'buddyboss' ), 'bp-moderation' );
+			}
+			?>
+			<input type="hidden" name="moderation_status" value="<?php echo esc_attr( $current_moderation_status ); ?>"/>
 			<input type="hidden" name="tab" value="<?php echo esc_attr( $current_tab ); ?>"/>
 			<input type="hidden" name="page" value="<?php echo esc_attr( $plugin_page ); ?>"/>
 			<?php $bp_moderation_list_table->display(); ?>

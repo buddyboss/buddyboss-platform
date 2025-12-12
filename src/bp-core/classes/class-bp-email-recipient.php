@@ -116,7 +116,7 @@ class BP_Email_Recipient {
 				$sender_ids = array_column( $tokens['message'], 'sender_id' );
 				$sender_id  = $sender_ids[0];
 			} else {
-				$sender_id = 0;
+				$sender_id = $this->user_object->ID;
 			}
 			$wp_name = wp_specialchars_decode( bp_core_get_user_displayname( $this->user_object->ID, $sender_id ), ENT_QUOTES );
 
@@ -133,6 +133,16 @@ class BP_Email_Recipient {
 		// Custom name override.
 		if ( $name ) {
 			$this->name = $name;
+		}
+
+		if ( ! $this->avatar ) {
+			$this->avatar = bp_core_fetch_avatar(
+				array(
+					'object'  => 'user',
+					'item_id' => $this->user_object ? $this->user_object->ID : '',
+					'html'    => false,
+				)
+			);
 		}
 
 		/**

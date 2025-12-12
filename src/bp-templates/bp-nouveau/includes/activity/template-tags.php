@@ -126,14 +126,11 @@ function bp_nouveau_before_activity_post_form() {
 }
 
 /**
- * Load JS Templates for the Activity Post Form
+ * Fires actions after the Activity Post Form
  *
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_after_activity_post_form() {
-	if ( bp_nouveau_current_user_can( 'publish_activity' ) ) {
-		bp_get_template_part( 'common/js-templates/activity/form' );
-	}
 
 	/**
 	 * Fires after the activity post form.
@@ -235,6 +232,15 @@ function bp_nouveau_activity_timestamp() {
 }
 
 /**
+ * Output the Activity updated timestamp into the bp-updated-timestamp attribute.
+ *
+ * @since BuddyBoss 2.8.20
+ */
+function bb_nouveau_activity_updated_timestamp() {
+	echo esc_attr( bb_nouveau_get_activity_updated_timestamp() );
+}
+
+/**
  * Get the Activity timestamp.
  *
  * @since BuddyPress 3.0.0
@@ -250,6 +256,24 @@ function bp_nouveau_get_activity_timestamp() {
 	 * @param integer $value The Activity timestamp.
 	 */
 	return apply_filters( 'bp_nouveau_get_activity_timestamp', strtotime( bp_get_activity_date_recorded() ) );
+}
+
+/**
+ * Get the Activity updated timestamp.
+ *
+ * @since BuddyBoss 2.8.20
+ *
+ * @return integer The Activity updated timestamp.
+ */
+function bb_nouveau_get_activity_updated_timestamp() {
+	/**
+	 * Filter here to edit the activity updated timestamp.
+	 *
+	 * @since BuddyBoss 2.8.20
+	 *
+	 * @param integer $value The Activity updated timestamp.
+	 */
+	return apply_filters( 'bb_nouveau_get_activity_updated_timestamp', strtotime( bb_get_activity_date_updated() ) );
 }
 
 /**
@@ -275,6 +299,15 @@ function bp_nouveau_activity_state() {
 		if ( bb_is_reaction_activity_posts_enabled() ) {
 			echo bb_get_activity_post_user_reactions_html( $activity_id );
 		}
+
+		/**
+		 * Fires after reactions display in activity state.
+		 *
+		 * @since BuddyBoss 2.16.0
+		 *
+		 * @param int $activity_id The activity ID.
+		 */
+		do_action( 'bp_activity_state_after_reactions', $activity_id );
 		?>
 
 		<?php if ( bp_activity_can_comment() ) :
@@ -298,6 +331,17 @@ function bp_nouveau_activity_state() {
 				</span>
 			</a>
 		<?php endif; ?>
+
+		<?php
+		/**
+		 * Fires after comments display in activity state.
+		 *
+		 * @since BuddyBoss 2.16.0
+		 *
+		 * @param int $activity_id The activity ID.
+		 */
+		do_action( 'bp_activity_state_after_comments', $activity_id );
+		?>
 	</div>
 	<?php
 }
@@ -488,7 +532,7 @@ function bp_nouveau_get_activity_entry_buttons( $args ) {
 
 		$fav_args = array(
 			'link_class'        => 'button fav bp-secondary-action bp-like-button',
-			'aria-pressed' => 'false',
+			'data-pressed' => 'false',
 			'link_attr'    => bp_get_activity_favorite_link(),
 			'link_text'    => sprintf(
 				'<span class="bp-screen-reader-text">%1$s</span><span class="like-count">%1$s</span>',
@@ -518,7 +562,7 @@ function bp_nouveau_get_activity_entry_buttons( $args ) {
 				$link_classes  = empty( $reaction_type ) ? ' has-like has-reaction' : ' has-emotion has-reaction';
 
 				$fav_args['link_class']   = str_replace( 'fav', 'unfav', $fav_args['link_class'] ) . $link_classes;
-				$fav_args['aria-pressed'] = true;
+				$fav_args['data-pressed'] = true;
 				$fav_args['link_attr']    = bp_get_activity_unfavorite_link();
 				$fav_args['link_text']    = sprintf(
 					'<span class="bp-screen-reader-text">%1$s</span>
@@ -543,7 +587,7 @@ function bp_nouveau_get_activity_entry_buttons( $args ) {
 			'button_attr'       => array(
 				$key              => $fav_args['link_attr'],
 				'class'           => $fav_args['link_class'],
-				'aria-pressed'    => $fav_args['aria-pressed'],
+				'data-pressed'    => $fav_args['data-pressed'],
 				'data-reacted-id' => $reacted_id,
 			),
 		);
@@ -823,10 +867,11 @@ function bp_nouveau_get_activity_comment_action() {
 		'bp_nouveau_get_activity_comment_action',
 		sprintf(
 			/* translators: 1: User profile link, 2: Username, 3: Edited text */
-			__( '<a class="author-name" href="%1$s">%2$s</a>%3$s', 'buddyboss' ),
+			__( '<a class="author-name" href="%1$s" %4$s>%2$s</a>%3$s', 'buddyboss' ),
 			esc_url( bp_get_activity_comment_user_link() ),
 			esc_html( bp_get_activity_comment_name() ),
-			bb_nouveau_activity_comment_is_edited()
+			bb_nouveau_activity_comment_is_edited(),
+			'data-bb-hp-profile="' . esc_attr( bp_get_activity_comment_user_id() ) . '"',
 		)
 	);
 }
@@ -938,7 +983,7 @@ function bp_nouveau_get_activity_comment_buttons( $args ) {
 
 		$fav_args = array(
 			'class'           => 'button fav reaction bp-secondary-action bp-like-button',
-			'aria-pressed'    => 'false',
+			'data-pressed'    => 'false',
 			$key              => bb_get_activity_comment_favorite_link(),
 			'link_text'       => sprintf(
 				'<span class="bp-screen-reader-text">%1$s</span><span class="like-count">%1$s</span>',
@@ -962,7 +1007,7 @@ function bp_nouveau_get_activity_comment_buttons( $args ) {
 				$prepared_icon = bb_activity_get_reaction_button( $reaction_data['id'], true );
 
 				$fav_args['class']           = str_replace( 'fav', 'unfav', $fav_args['class'] ) . ' ' . $link_classes;
-				$fav_args['aria-pressed']    = true;
+				$fav_args['data-pressed']    = true;
 				$fav_args[ $key ]            = bb_get_activity_comment_unfavorite_link();
 				$fav_args['link_text']       = sprintf(
 					'<span class="bp-screen-reader-text">%1$s</span>
@@ -2463,7 +2508,6 @@ function bb_nouveau_edit_activity_comment_data() {
 function bb_nouveau_get_edit_activity_comment_data() {
 	return htmlentities( wp_json_encode( bb_activity_comment_get_edit_data( bp_get_activity_comment_id() ) ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 );
 }
-
 
 /**
  * Get edited activity comment log.

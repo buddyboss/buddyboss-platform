@@ -566,18 +566,7 @@ class BP_Groups_Component extends BP_Component {
 			$user_domain = false;
 		}
 
-		// Only grab count if we're on a user page.
-		if ( bp_is_user() ) {
-			$class     = ( 0 === groups_total_groups_for_user( bp_displayed_user_id() ) ) ? 'no-count' : 'count';
-			$nav_name  = __( 'Groups', 'buddyboss' );
-			$nav_name .= sprintf(
-				' <span class="%s">%s</span>',
-				esc_attr( $class ),
-				bp_get_total_group_count_for_user()
-			);
-		} else {
-			$nav_name = __( 'Groups', 'buddyboss' );
-		}
+		$nav_name = __( 'Groups', 'buddyboss' );
 
 		$slug = bp_get_groups_slug();
 
@@ -643,9 +632,8 @@ class BP_Groups_Component extends BP_Component {
 
 			$group_link = bp_get_group_permalink( $this->current_group );
 
-			// Add the "Members" subnav item, as this will always be present.
 			$sub_nav[] = array(
-				'name'            => sprintf( apply_filters( 'group_single_members_label', __( 'Members', 'buddyboss' ) ) . __( ' %s', 'buddyboss' ), '<span>' . number_format( $this->current_group->total_member_count ) . '</span>' ),
+				'name'            => apply_filters( 'group_single_members_label', __( 'Members', 'buddyboss' ) ),
 				'slug'            => 'members',
 				'parent_url'      => $group_link,
 				'parent_slug'     => $this->current_group->slug,
@@ -1198,5 +1186,16 @@ class BP_Groups_Component extends BP_Component {
 		}
 
 		parent::rest_api_init( $controllers );
+	}
+
+	/**
+	 * Register the Groups Blocks.
+	 *
+	 * @since BuddyBoss 2.9.00
+	 *
+	 * @param array $blocks Optional. See BP_Component::blocks_init() for description.
+	 */
+	public function blocks_init( $blocks = array() ) {
+		parent::blocks_init( array() );
 	}
 }
