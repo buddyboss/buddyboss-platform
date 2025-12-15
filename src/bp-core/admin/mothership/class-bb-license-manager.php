@@ -1367,7 +1367,9 @@ class BB_License_Manager extends LicenseManager {
 
 		// Validate data size to prevent cache bloat (limit to 2KB).
 		$serialized = maybe_serialize( $value );
-		if ( strlen( $serialized ) > 2048 ) {
+		// Cast to string for PHP 8+ compatibility (maybe_serialize can return scalars).
+		$serialized_string = is_string( $serialized ) ? $serialized : (string) $serialized;
+		if ( strlen( $serialized_string ) > 2048 ) {
 			bb_error_log( 'Rate limit data exceeds maximum size (2KB)', true );
 			return false;
 		}
