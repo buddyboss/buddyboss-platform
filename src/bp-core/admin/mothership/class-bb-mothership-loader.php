@@ -345,7 +345,7 @@ class BB_Mothership_Loader {
 				if ( is_multisite() && function_exists( 'is_plugin_active_for_network' ) ) {
 					$network_activated = is_plugin_active_for_network( buddypress()->basename );
 				}
-				$rateLimitData = $network_activated ? get_site_transient( 'buddyboss_license_rate_limit' ) : get_transient( 'buddyboss_license_rate_limit' );
+				$rateLimitData = $network_activated ? get_site_transient( 'bb_license_rate_limit' ) : get_transient( 'bb_license_rate_limit' );
 				if ( $rateLimitData && is_array( $rateLimitData ) ) {
 					$resetTime   = isset( $rateLimitData['reset'] ) ? (int) $rateLimitData['reset'] : 0;
 					$currentTime = time();
