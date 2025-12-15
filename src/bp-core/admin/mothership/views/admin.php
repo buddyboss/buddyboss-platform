@@ -71,7 +71,7 @@ namespace BuddyBoss\Core\Admin\Mothership;
 	<!-- Reset License Settings Section -->
 	<div class="buddyboss-mothership-reset-section" style="margin-top: 20px; padding: 20px; background: #fff; border: 1px solid #ccd0d4;">
 		<h3><?php esc_html_e( 'Troubleshooting', 'buddyboss' ); ?></h3>
-		<p><?php esc_html_e( 'If you\'re experiencing activation issues (such as "The selected product is invalid" errors), you can reset all license settings and try again.', 'buddyboss' ); ?></p>
+		<p><?php esc_html_e( 'If you\'re experiencing activation issues, you can reset all license settings and try again.', 'buddyboss' ); ?></p>
 		<p><strong><?php esc_html_e( 'Warning:', 'buddyboss' ); ?></strong> <?php esc_html_e( 'This will clear all license data including activation status. You will need to re-activate your license after resetting.', 'buddyboss' ); ?></p>
 		<button type="button" id="bb-reset-license-btn" class="button button-secondary">
 			<?php esc_html_e( 'Reset License Settings', 'buddyboss' ); ?>
