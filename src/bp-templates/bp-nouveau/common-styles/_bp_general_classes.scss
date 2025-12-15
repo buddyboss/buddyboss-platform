@@ -1,9 +1,6 @@
 // BP General CLasses: screen reader, clearfix etc.
 // @version 3.0.0
 
-@use "./_bp-variables" as *;
-@use "./_bp-mixins" as *;
-
 .bp-screen-reader-text {
 	// See also _bp_mixins for mixin to add properties on block
 	border: 0;

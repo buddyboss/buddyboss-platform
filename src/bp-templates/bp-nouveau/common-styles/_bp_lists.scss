@@ -1,9 +1,6 @@
 // BP Lists Global Styles.
 // @version 3.0.0
 
-@use "./_bp-variables" as *;
-@use "./_bp-mixins" as *;
-
 // @todo decide whether using .buddypress quasi namespace parent
 // is useful, causing issue with specificity on other
 // lists if they do not use it.

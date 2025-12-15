@@ -1,10 +1,6 @@
 // BP Forms Elements Global Styles
 // @version 3.0.0
 
-@use "sass:color";
-@use "./_bp-variables" as *;
-@use "./_bp-mixins" as *;
-
 // Some essential classes used for forms elements:
 // labels - sizing especially for standalone controls
 // 'bp-label-text'
@@ -385,7 +381,7 @@ body.no-js {
 		&:hover {
 
 			.select-arrow:before {
-				color: color.adjust($primary-grey, $lightness: -15%);
+				color: darken($primary-grey, 15%);
 			}
 		}
 	} // close .select-wrap
@@ -410,7 +406,7 @@ body.no-js {
 
 		&:focus,
 		&:hover {
-			border: 1px solid color.adjust($bp-border-color, $lightness: -10%);
+			border: 1px solid darken($bp-border-color, 10%);
 			box-shadow: inset 0 0 3px #eee;
 		}
 	}

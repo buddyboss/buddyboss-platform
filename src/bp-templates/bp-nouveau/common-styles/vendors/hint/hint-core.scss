@@ -10,9 +10,6 @@
  * 	1) hint
  */
 
-@use "hint-variables" as *;
-@use "hint-mixins" as *;
-
 [class*="#{$hintPrefix}"] {
 	position: relative;
 	display: inline-block;

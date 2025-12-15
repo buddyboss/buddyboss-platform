@@ -1,9 +1,6 @@
 // BP Directory Search elements
 // @version 3.0.0
 
-@use "./_bp-variables" as *;
-@use "./_bp-mixins" as *;
-
 .buddypress-wrap { // the ID is required to add weight to rules
 
 	@include clearfix-element(".bp-dir-search-form, .bp-messages-search-form");

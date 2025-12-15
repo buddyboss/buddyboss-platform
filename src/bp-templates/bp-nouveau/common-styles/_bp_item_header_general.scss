@@ -1,9 +1,6 @@
 // BP Single Screens Item Header General Styles.
 // @version 3.0.0
 
-@use "./_bp-variables" as *;
-@use "./_bp-mixins" as *;
-
 @include clearfix-element(".single-headers");
 
 .single-headers {

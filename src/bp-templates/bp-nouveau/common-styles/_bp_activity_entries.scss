@@ -1,10 +1,6 @@
 // BP Activity Entries - activity loop
 // @version 3.0.0
 
-@use "sass:color";
-@use "./_bp-variables" as *;
-@use "./_bp-mixins" as *;
-
 .activity-list {
 
 	padding: $pad-sml;
@@ -2087,7 +2083,7 @@
 
 		&:focus,
 		&:hover {
-			border-color: color.adjust($bp-border-color, $lightness: -5%);
+			border-color: darken($bp-border-color, 5%);
 
 			@include box-shadow(0 0 6px 0 $light-grey);
 		}

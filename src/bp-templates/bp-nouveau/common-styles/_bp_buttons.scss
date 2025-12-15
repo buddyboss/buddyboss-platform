@@ -1,10 +1,6 @@
 // BP Buttons, Submits, Icons and general clicky things styling.
 // @version 3.0.0
 
-@use "sass:color";
-@use "./_bp-variables" as *;
-@use "./_bp-mixins" as *;
-
 // Buttons by default are styled as simple boxes but we may
 // change that by adding a parent class ( on any close parent to
 // the element ) .text-link-list
@@ -65,7 +61,7 @@
 		.comment-reply-link:focus,
 		.comment-reply-link:hover {
 			background: $buttons-background;
-			border-color: color.adjust($bp-border-dark, $lightness: -20%);
+			border-color: darken($bp-border-dark, 20%);
 			color: $black;
 			outline: none;
 			text-decoration: none;

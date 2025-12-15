@@ -1,6 +1,3 @@
-@use "sass:color";
-@use "hint-variables" as *;
-@use "hint-mixins" as *;
 /**
  * source: hint-theme.scss
  *
@@ -14,7 +11,7 @@
 	 * tooltip body
 	 */
 	&:after {
-		text-shadow: 0 -1px 0 color.adjust($hintDefaultColor, $lightness: -25%);
+		text-shadow: 0 -1px 0 darken($hintDefaultColor, $hintTextShadowDarkenAmount);
 		box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.3);
 	}
 }

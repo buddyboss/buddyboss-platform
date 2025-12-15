@@ -1,10 +1,7 @@
 // BuddyPress Tooltips
 // @version 3.0.0
 
-@use "./_bp-variables" as *;
-@use "./_bp-mixins" as *;
-
-@use "vendors/hint/hint";
+@import "vendors/hint/hint";
 
 //
 // Mixins

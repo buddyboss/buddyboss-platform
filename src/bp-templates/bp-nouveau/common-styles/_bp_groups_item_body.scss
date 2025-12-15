@@ -1,9 +1,6 @@
 // Groups specific Item-body content
 // @version 3.0.0
 
-@use "./_bp-variables" as *;
-@use "./_bp-mixins" as *;
-
 // Members list doesn't generate  subnav items items
 // so we negate the rules using :not()
 .single-item.group-members {

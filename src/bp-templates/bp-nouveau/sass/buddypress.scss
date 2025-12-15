@@ -12,8 +12,8 @@
 
 // Import our partials mixins & variables files
 
-@use "../common-styles/_bp-variables" as variables;
-@use "../common-styles/_bp-mixins" as mixins;
+@import "../common-styles/_bp-variables";
+@import "../common-styles/_bp-mixins";
 
 
 // Sectional structuring allows us to locate elements
@@ -84,7 +84,7 @@ Hello, this is the BuddyPress Nouveau stylesheet.
 
 // Import our generic elements & typography styles
 
-@use "../common-styles/_bp_generic_and_typography";
+@import "../common-styles/_bp_generic_and_typography";
 
 /**
 *-------------------------------------------------------------------------------
@@ -103,11 +103,11 @@ Hello, this is the BuddyPress Nouveau stylesheet.
 
 // Import our generic navigation styles
 
-@use "../common-styles/_bp_navigation";
+@import "../common-styles/_bp_navigation";
 
 // Import our Filter styles
 
-@use "../common-styles/_bp_filters";
+@import "../common-styles/_bp_filters";
 
 /**
 *----------------------------------------------------------
@@ -117,7 +117,7 @@ Hello, this is the BuddyPress Nouveau stylesheet.
 
 // Import our generic pagination styles
 
-@use "../common-styles/_bp_pagination";
+@import "../common-styles/_bp_pagination";
 
 /**
 *-------------------------------------------------------------------------------
@@ -127,7 +127,7 @@ Hello, this is the BuddyPress Nouveau stylesheet.
 
 // Import our generic list styles
 
-@use "../common-styles/_bp_lists";
+@import "../common-styles/_bp_lists";
 
 /**
 *----------------------------------------------------------
@@ -141,7 +141,7 @@ Hello, this is the BuddyPress Nouveau stylesheet.
 *-----------------------------------------------------
 */
 
-@use "../common-styles/_bp_update_form";
+@import "../common-styles/_bp_update_form";
 
 /**
 *-----------------------------------------------------
@@ -149,7 +149,7 @@ Hello, this is the BuddyPress Nouveau stylesheet.
 *-----------------------------------------------------
 */
 
-@use "../common-styles/_bp_activity_entries";
+@import "../common-styles/_bp_activity_entries";
 
 /**
 *-----------------------------------------------------
@@ -157,8 +157,8 @@ Hello, this is the BuddyPress Nouveau stylesheet.
 *-----------------------------------------------------
 */
 
-@use "../common-styles/_bp_activity_comments";
-@use "../common-styles/_bp_comment_form";
+@import "../common-styles/_bp_activity_comments";
+@import "../common-styles/_bp_comment_form";
 
 /**
 *----------------------------------------------------------
@@ -168,7 +168,7 @@ Hello, this is the BuddyPress Nouveau stylesheet.
 
 // Blogs loop
 
-@use "../common-styles/_bp_blogs_loop";
+@import "../common-styles/_bp_blogs_loop";
 
 /**
 *----------------------------------------------------------
@@ -178,7 +178,7 @@ Hello, this is the BuddyPress Nouveau stylesheet.
 
 // Groups loop
 
-@use "../common-styles/_bp_groups_loop";
+@import "../common-styles/_bp_groups_loop";
 
 
 /**
@@ -189,7 +189,7 @@ Hello, this is the BuddyPress Nouveau stylesheet.
 
 // Members loop
 
-@use "../common-styles/_bp_members_loop";
+@import "../common-styles/_bp_members_loop";
 
 /**
 *-------------------------------------------------------------------------------
@@ -199,7 +199,7 @@ Hello, this is the BuddyPress Nouveau stylesheet.
 
 // Registration index screen (directory)
 
-@use "../common-styles/_bp_registration.scss";
+@import "../common-styles/_bp_registration.scss";
 
 /**
 *----------------------------------------------------------
@@ -209,7 +209,7 @@ Hello, this is the BuddyPress Nouveau stylesheet.
 
 // Registration index screen (directory)
 
-@use "../common-styles/_bp_groups_create.scss";
+@import "../common-styles/_bp_groups_create.scss";
 
 /**
 *-------------------------------------------------------------------------------
@@ -225,11 +225,11 @@ Hello, this is the BuddyPress Nouveau stylesheet.
 
 // Import general global styles for single screen headers
 
-@use "../common-styles/_bp_item_header_general";
+@import "../common-styles/_bp_item_header_general";
 
 // Import Cover Photo container defaults
 
-@use "../common-styles/_bp_cover_image";
+@import "../common-styles/_bp_cover_image";
 
 /**
 *-----------------------------------------------------
@@ -241,7 +241,7 @@ Hello, this is the BuddyPress Nouveau stylesheet.
 
 // Single Group specific header rules
 
-@use "../common-styles/_bp_group_header";
+@import "../common-styles/_bp_group_header";
 
 /**
 *-----------------------------------------------------
@@ -253,7 +253,7 @@ Hello, this is the BuddyPress Nouveau stylesheet.
 
 // Single User specific header rules
 
-@use "../common-styles/_bp_user_header";
+@import "../common-styles/_bp_user_header";
 
 /**
 *-----------------------------------------------------------
@@ -263,7 +263,7 @@ Hello, this is the BuddyPress Nouveau stylesheet.
 
 // Import general global styles for single screen item-body
 
-@use "../common-styles/_bp_item_body_general";
+@import "../common-styles/_bp_item_body_general";
 
 /**
 *----------------------------------------------------
@@ -275,7 +275,7 @@ Hello, this is the BuddyPress Nouveau stylesheet.
 
 // Import general global styles for single screen item-body
 
-@use "../common-styles/_bp_groups_item_body";
+@import "../common-styles/_bp_groups_item_body";
 
 /**
 *-----------------------------------------
@@ -285,7 +285,7 @@ Hello, this is the BuddyPress Nouveau stylesheet.
 
 // Import general global styles for single screen item-body
 
-@use "../common-styles/_bp_groups_management";
+@import "../common-styles/_bp_groups_management";
 
 /**
 *-----------------------------------------
@@ -301,7 +301,7 @@ Hello, this is the BuddyPress Nouveau stylesheet.
 
 // Import Group Invites screens
 
-@use "../common-styles/_bp_groups_invites";
+@import "../common-styles/_bp_groups_invites";
 
 /*
 *-----------------------------------------
@@ -309,7 +309,7 @@ Hello, this is the BuddyPress Nouveau stylesheet.
 *-----------------------------------------
 */
 
-@use "../common-styles/_bp_groups_activity";
+@import "../common-styles/_bp_groups_activity";
 
 /**
 *-----------------------------------------------------
@@ -333,7 +333,7 @@ Hello, this is the BuddyPress Nouveau stylesheet.
 
 // Import User Profile
 
-@use "../common-styles/_bp_user_profile";
+@import "../common-styles/_bp_user_profile";
 
 /**
 *-------------------------------------------
@@ -348,7 +348,7 @@ Hello, this is the BuddyPress Nouveau stylesheet.
 */
 
 // Import Messages module
-@use "../common-styles/_bp_messages";
+@import "../common-styles/_bp_messages";
 
 /**
 *------------------------------------------
@@ -358,7 +358,7 @@ Hello, this is the BuddyPress Nouveau stylesheet.
 
 // Import settings screens
 
-@use "../common-styles/_bp_user_settings";
+@import "../common-styles/_bp_user_settings";
 
 /**
 *-------------------------------------------------------------------------------
@@ -368,7 +368,7 @@ Hello, this is the BuddyPress Nouveau stylesheet.
 
 // Import general forms rules
 
-@use "../common-styles/_bp_forms";
+@import "../common-styles/_bp_forms";
 
 
 /**
@@ -381,7 +381,7 @@ Hello, this is the BuddyPress Nouveau stylesheet.
 
 // Import our generic list styles
 
-@use "../common-styles/_bp_search";
+@import "../common-styles/_bp_search";
 
 /**
 *-------------------------------------------------------------------------------
@@ -391,7 +391,7 @@ Hello, this is the BuddyPress Nouveau stylesheet.
 
 // Import Table defaults rules
 
-@use "../common-styles/_bp_tables";
+@import "../common-styles/_bp_tables";
 
 /**
 *-------------------------------------------------------------------------------
@@ -400,27 +400,27 @@ Hello, this is the BuddyPress Nouveau stylesheet.
 */
 // Import General useful classes: clearfix, screen-reader etc
 
-@use "../common-styles/_bp_general_classes";
+@import "../common-styles/_bp_general_classes";
 
 // Import Buttons styles
 
-@use "../common-styles/_bp_buttons";
+@import "../common-styles/_bp_buttons";
 
 // Import Messages/info dialogues
 
-@use "../common-styles/_bp_info_messages";
+@import "../common-styles/_bp_info_messages";
 
 // Import BP Widget styles
 
-@use "../common-styles/_bp_widgets";
+@import "../common-styles/_bp_widgets";
 
 // Import BP Animations & Transitions - fluffy effects :)
 
-@use "../common-styles/_bp_animations";
+@import "../common-styles/_bp_animations";
 
 // Import BP Tooltips
 
-@use "../common-styles/_bp_tooltips";
+@import "../common-styles/_bp_tooltips";
 
 /**
 *-------------------------------------------------------------------------------
@@ -429,7 +429,7 @@ Hello, this is the BuddyPress Nouveau stylesheet.
 */
 // Import Layout classes
 
-@use "../common-styles/_bp_layouts";
+@import "../common-styles/_bp_layouts";
 
 /**
 *-------------------------------------------------------------------------------
@@ -438,7 +438,7 @@ Hello, this is the BuddyPress Nouveau stylesheet.
 */
 // Import forums styles
 
-@use "../common-styles/_bp_forums";
+@import "../common-styles/_bp_forums";
 
 /**
 *-------------------------------------------------------------------------------
@@ -447,7 +447,7 @@ Hello, this is the BuddyPress Nouveau stylesheet.
 */
 // Import global search styles
 
-@use "../common-styles/_bp_global_search";
+@import "../common-styles/_bp_global_search";
 
 /**
 *-------------------------------------------------------------------------------
@@ -456,7 +456,7 @@ Hello, this is the BuddyPress Nouveau stylesheet.
 */
 // Import global magnific popup styles
 
-@use "../common-styles/_bp_magnific";
+@import "../common-styles/_bp_magnific";
 
 /**
 *-------------------------------------------------------------------------------
@@ -466,7 +466,7 @@ Hello, this is the BuddyPress Nouveau stylesheet.
 
 // Login and Lost Password index screen (directory)
 
-@use "../common-styles/_bp_login.scss";
+@import "../common-styles/_bp_login.scss";
 
 /**
 *-------------------------------------------------------------------------------
@@ -475,11 +475,11 @@ Hello, this is the BuddyPress Nouveau stylesheet.
 */
 // Import global media styles
 
-@use "../common-styles/_bp_media";
-@use "../common-styles/_codemirror";
+@import "../common-styles/_bp_media";
+@import "../common-styles/_codemirror";
 
 // Import Video style
-@use "../common-styles/_bp_video";
+@import "../common-styles/_bp_video";
 
 /**
 *-------------------------------------------------------------------------------
@@ -488,7 +488,7 @@ Hello, this is the BuddyPress Nouveau stylesheet.
 */
 // Import global dropzone styles
 
-@use "../common-styles/_bp_dropzone";
+@import "../common-styles/_bp_dropzone";
 
 /*
 *-----------------------------------------
@@ -498,7 +498,7 @@ Hello, this is the BuddyPress Nouveau stylesheet.
 
 // Import Group Messages screens
 
-@use "../common-styles/_bp_groups_messages";
+@import "../common-styles/_bp_groups_messages";
 
 /*
 *-----------------------------------------
@@ -508,7 +508,7 @@ Hello, this is the BuddyPress Nouveau stylesheet.
 
 // Import Group Messages screens
 
-@use "../common-styles/_bp_on_screen_notification";
+@import "../common-styles/_bp_on_screen_notification";
 
 
 /*
@@ -519,7 +519,7 @@ Hello, this is the BuddyPress Nouveau stylesheet.
 
 // Import Moderation Popup
 
-@use "../common-styles/_bp_modration_popup";
+@import "../common-styles/_bp_modration_popup";
 
 
 /*
@@ -530,7 +530,7 @@ Hello, this is the BuddyPress Nouveau stylesheet.
 
 // Import Notification dropdown
 
-@use "../common-styles/_bp_admin_notification_dropdown";
+@import "../common-styles/_bp_admin_notification_dropdown";
 
 /*
 *-----------------------------------------
@@ -540,7 +540,7 @@ Hello, this is the BuddyPress Nouveau stylesheet.
 
 // Import Toast Messages
 
-@use "../common-styles/_bp_toast_messages";
+@import "../common-styles/_bp_toast_messages";
 
 
 /*
@@ -551,7 +551,7 @@ Hello, this is the BuddyPress Nouveau stylesheet.
 
 // Import Emojione Area custom Override
 
-@use "../common-styles/_bp_emojione_area";
+@import "../common-styles/_bp_emojione_area";
 
 
 /*
@@ -562,4 +562,4 @@ Hello, this is the BuddyPress Nouveau stylesheet.
 
 // Import Link Preview
 
-@use "../common-styles/_link_preview";
+@import "../common-styles/_link_preview";

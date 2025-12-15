@@ -1,8 +1,6 @@
-// hint-scss
+// hint-mixins.scss
 //
-// Place to store common 
-
-@use "hint-variables" as *;
+// Place to store common mixins.
 
 // Vendor prefixer mixin.
 @mixin vendor($property, $value) {

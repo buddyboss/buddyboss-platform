@@ -1,9 +1,5 @@
 // Sitewide template error & info messages constructs.
 // @version 3.0.0.
-
-@use "./_bp-variables" as *;
-@use "./_bp-mixins" as *;
-
 .warn {
 	color: $warn;
 }
