@@ -179,52 +179,40 @@
 .bb-rl-members .bp-list.grid .item-entry .list-wrap {
   padding: var(--bb-rl-space-300) var(--bb-rl-space-200);
 }
-
 .bb-rl-members .bp-list.grid .item-entry .item {
   margin-bottom: 18px;
 }
-
 .bb-rl-members .bp-list.grid .item-entry .bb-rl-member-buttons-wrap {
   margin-top: auto;
 }
-
 .bb-rl-members .bp-list.grid .item-entry .list-wrap-inner {
   flex-direction: column;
 }
-
 .bb-rl-members .bp-list.grid .item-entry .item {
   text-align: center;
 }
-
 .bb-rl-members .bp-list.grid .item-entry .bp-member-type {
   margin-bottom: var(--bb-rl-space-100);
 }
-
 .bb-rl-members .bp-list.grid .item-entry .item-avatar {
   margin-bottom: var(--bb-rl-space-200);
 }
-
 .bb-rl-members .bp-list:not(.grid) .item-entry .list-wrap {
   padding: var(--bb-rl-space-400) var(--bb-rl-space-300);
 }
-
 .bb-rl-members .bp-list:not(.grid) .item-entry .bb-rl-member-buttons-wrap {
   margin-left: auto;
 }
-
 .bb-rl-members .bp-list:not(.grid) .item-entry .bb-rl-item-actions {
   flex-direction: row-reverse;
   gap: var(--bb-rl-space-200);
 }
-
 .bb-rl-members .bp-list:not(.grid) .item-entry .item-avatar {
   margin-right: var(--bb-rl-space-200);
 }
-
 .bb-rl-members .bp-list:not(.grid) .list-wrap-inner {
   align-items: center;
 }
-
 @media screen and (max-width: 768px) {
   .bb-rl-members .bp-list:not(.grid) .list-wrap-inner {
     flex-flow: wrap;
@@ -234,7 +222,6 @@
     flex: 0 0 calc(100% - 130px);
   }
 }
-
 @media screen and (max-width: 544px) {
   .bb-rl-members .bp-list:not(.grid) .list-wrap-inner {
     gap: var(--bb-rl-space-100);
@@ -243,25 +230,21 @@
     margin-left: 0;
   }
 }
-
 .bb-rl-members .bp-list:not(.grid) .bb-rl-item-block-heading {
   display: flex;
   align-items: center;
   gap: var(--bb-rl-space-100);
   margin-bottom: var(--bb-rl-space-50);
 }
-
 .bb-rl-members .bp-list:not(.grid) .bb-rl-item-block-assets {
   display: flex;
   flex-flow: wrap;
   align-items: center;
 }
-
 .bb-rl-members .bp-list:not(.grid) .bb-rl-last-activity {
   width: 100%;
   margin-top: 2px;
 }
-
 .bb-rl-members .item-entry .list-wrap {
   position: relative;
   height: 100%;
@@ -269,46 +252,37 @@
   background-color: var(--bb-rl-background-color);
   border: 1px solid var(--bb-rl-border-secondary-color);
 }
-
 .bb-rl-members .item-entry .list-wrap .list-wrap-inner {
   display: flex;
   height: 100%;
 }
-
 .bb-rl-members .item-entry .item-avatar {
   display: flex;
   justify-content: center;
 }
-
 .bb-rl-members .item-entry .item-avatar .gamipress-buddypress-user-details {
   display: none;
 }
-
 .bb-rl-members .item-entry .avatar {
   max-width: 104px;
   height: auto;
   border-radius: 50%;
 }
-
 .bb-rl-members .item-entry .bb-rl-item-meta-asset {
   font-size: var(--bb-rl-font-size-sm);
   line-height: var(--bb-rl-base-line-small);
   color: var(--bb-rl-text-tertiary-color);
 }
-
 .bb-rl-members .item-entry .bb-rl-item-meta-asset .separator {
   margin: 0 6px;
   color: var(--bb-rl-background-tertiary-color);
 }
-
 .bb-rl-members .item-entry .bb-rl-item-meta-asset .followers-wrap strong {
   font-weight: 400;
 }
-
 .bb-rl-members .item-list.grid .only-list-view {
   display: none;
 }
-
 .bb-rl-members .item-list:not(.grid) .only-grid-view {
   display: none;
 }
@@ -333,7 +307,6 @@
   gap: var(--bb-rl-space-200);
   padding-bottom: var(--bb-rl-space-400);
 }
-
 @media screen and (max-width: 800px) {
   .bb-rl-members-directory-container {
     flex-direction: column;
@@ -343,17 +316,14 @@
     width: 100%;
   }
 }
-
 .bb-rl-members-directory-container .bb-rl-members-directory-content {
   flex: 1;
 }
-
 .bb-rl-members-directory-container .bb-rl-members-directory-content .friendship-requests-screen {
   font-size: 14px;
   font-weight: 600;
   line-height: 22px;
 }
-
 .bb-rl-members-directory-container [data-balloon]:after {
   z-index: 1031;
 }
@@ -373,7 +343,6 @@
 .bb-rl-member-header-actions .generic-button a.friendship-button i {
   margin-right: var(--bb-rl-space-50);
 }
-
 .bb-rl-primary-actions button.send-message i::before, .bb-rl-primary-actions button.bb-rl-send-message-disabled i::before, .bb-rl-primary-actions button.follow-button i::before, .bb-rl-primary-actions button.friendship-button i::before,
 .bb-rl-primary-actions .generic-button a.send-message i::before,
 .bb-rl-primary-actions .generic-button a.bb-rl-send-message-disabled i::before,
@@ -393,7 +362,6 @@
   font-size: 16px;
   font-style: normal;
 }
-
 .bb-rl-primary-actions button.edit-profile i,
 .bb-rl-primary-actions .generic-button a.edit-profile i,
 .bb-rl-member-header-actions button.edit-profile i,
@@ -401,9 +369,7 @@
   margin-right: var(--bb-rl-space-50);
   font-size: 16px;
 }
-
-.bb-rl-primary-actions button.send-message i::before,
-.bb-rl-primary-actions button.bb-rl-send-message-disabled i::before,
+.bb-rl-primary-actions button.send-message i::before, .bb-rl-primary-actions button.bb-rl-send-message-disabled i::before,
 .bb-rl-primary-actions .generic-button a.send-message i::before,
 .bb-rl-primary-actions .generic-button a.bb-rl-send-message-disabled i::before,
 .bb-rl-member-header-actions button.send-message i::before,
@@ -412,42 +378,36 @@
 .bb-rl-member-header-actions .generic-button a.bb-rl-send-message-disabled i::before {
   content: "\e16e";
 }
-
 .bb-rl-primary-actions button.follow-button.not_following i::before,
 .bb-rl-primary-actions .generic-button a.follow-button.not_following i::before,
 .bb-rl-member-header-actions button.follow-button.not_following i::before,
 .bb-rl-member-header-actions .generic-button a.follow-button.not_following i::before {
   content: "\e3d4";
 }
-
 .bb-rl-primary-actions button.follow-button.following i::before,
 .bb-rl-primary-actions .generic-button a.follow-button.following i::before,
 .bb-rl-member-header-actions button.follow-button.following i::before,
 .bb-rl-member-header-actions .generic-button a.follow-button.following i::before {
   content: "\e182";
 }
-
 .bb-rl-primary-actions button.friendship-button.not_friends i::before,
 .bb-rl-primary-actions .generic-button a.friendship-button.not_friends i::before,
 .bb-rl-member-header-actions button.friendship-button.not_friends i::before,
 .bb-rl-member-header-actions .generic-button a.friendship-button.not_friends i::before {
   content: "\e3d4";
 }
-
 .bb-rl-primary-actions button.friendship-button.pending_friend i::before,
 .bb-rl-primary-actions .generic-button a.friendship-button.pending_friend i::before,
 .bb-rl-member-header-actions button.friendship-button.pending_friend i::before,
 .bb-rl-member-header-actions .generic-button a.friendship-button.pending_friend i::before {
   content: "\eafa";
 }
-
 .bb-rl-primary-actions button.friendship-button.pending_friend.loading i,
 .bb-rl-primary-actions .generic-button a.friendship-button.pending_friend.loading i,
 .bb-rl-member-header-actions button.friendship-button.pending_friend.loading i,
 .bb-rl-member-header-actions .generic-button a.friendship-button.pending_friend.loading i {
   height: 16px;
 }
-
 .bb-rl-primary-actions button.friendship-button.pending_friend.loading i::before,
 .bb-rl-primary-actions .generic-button a.friendship-button.pending_friend.loading i::before,
 .bb-rl-member-header-actions button.friendship-button.pending_friend.loading i::before,
@@ -465,14 +425,12 @@
   border-width: 2px;
   margin-right: var(--bb-rl-space-50);
 }
-
 .bb-rl-primary-actions button.friendship-button.awaiting_response_friend i::before,
 .bb-rl-primary-actions .generic-button a.friendship-button.awaiting_response_friend i::before,
 .bb-rl-member-header-actions button.friendship-button.awaiting_response_friend i::before,
 .bb-rl-member-header-actions .generic-button a.friendship-button.awaiting_response_friend i::before {
   content: "\edec";
 }
-
 .bb-rl-primary-actions button.friendship-button.is_friend i::before,
 .bb-rl-primary-actions .generic-button a.friendship-button.is_friend i::before,
 .bb-rl-member-header-actions button.friendship-button.is_friend i::before,
@@ -489,7 +447,6 @@
 .bb-rl-primary-actions {
   margin-left: auto;
 }
-
 .bb-rl-primary-actions button,
 .bb-rl-primary-actions .generic-button a {
   display: inline-flex;
@@ -506,28 +463,27 @@
   background-color: var(--bb-rl-background-tertiary-color);
   color: var(--bb-rl-text-color);
   border: 1px solid transparent;
-  font-size: var(--bb-rl-font-size-sm);
-  padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
-  white-space: nowrap;
 }
-
 .bb-rl-primary-actions button:hover,
 .bb-rl-primary-actions .generic-button a:hover {
   background-color: var(--bb-rl-background-tertiary-hover-color);
 }
-
 .bb-rl-primary-actions button:focus,
 .bb-rl-primary-actions .generic-button a:focus {
   outline: 2px solid var(--bb-rl-border-quinery-color);
 }
-
 .bb-rl-primary-actions button:disabled,
 .bb-rl-primary-actions .generic-button a:disabled {
   background-color: var(--bb-rl-background-tertiary-color);
   color: var(--bb-rl-text-disabled-color);
   cursor: not-allowed;
 }
-
+.bb-rl-primary-actions button,
+.bb-rl-primary-actions .generic-button a {
+  font-size: var(--bb-rl-font-size-sm);
+  padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
+  white-space: nowrap;
+}
 .bb-rl-primary-actions button.send-message i::before, .bb-rl-primary-actions button.bb-rl-send-message-disabled i::before, .bb-rl-primary-actions button.follow-button i::before, .bb-rl-primary-actions button.friendship-button i::before,
 .bb-rl-primary-actions .generic-button a.send-message i::before,
 .bb-rl-primary-actions .generic-button a.bb-rl-send-message-disabled i::before,
@@ -535,7 +491,6 @@
 .bb-rl-primary-actions .generic-button a.friendship-button i::before {
   color: var(--bb-rl-icon-secondary-color);
 }
-
 .bb-rl-primary-actions button.following, .bb-rl-primary-actions button.is_friend, .bb-rl-primary-actions button.pending_friend, .bb-rl-primary-actions button.awaiting_response_friend,
 .bb-rl-primary-actions .generic-button a.following,
 .bb-rl-primary-actions .generic-button a.is_friend,
@@ -545,7 +500,6 @@
   color: var(--bb-rl-text-color);
   border: 1px solid var(--bb-rl-border-tertiary-color);
 }
-
 .bb-rl-primary-actions button.following:hover, .bb-rl-primary-actions button.is_friend:hover, .bb-rl-primary-actions button.pending_friend:hover, .bb-rl-primary-actions button.awaiting_response_friend:hover,
 .bb-rl-primary-actions .generic-button a.following:hover,
 .bb-rl-primary-actions .generic-button a.is_friend:hover,
@@ -553,7 +507,6 @@
 .bb-rl-primary-actions .generic-button a.awaiting_response_friend:hover {
   background-color: var(--bb-rl-background-secondary-color);
 }
-
 .bb-rl-primary-actions button.following:focus, .bb-rl-primary-actions button.is_friend:focus, .bb-rl-primary-actions button.pending_friend:focus, .bb-rl-primary-actions button.awaiting_response_friend:focus,
 .bb-rl-primary-actions .generic-button a.following:focus,
 .bb-rl-primary-actions .generic-button a.is_friend:focus,
@@ -561,7 +514,6 @@
 .bb-rl-primary-actions .generic-button a.awaiting_response_friend:focus {
   outline: 2px solid var(--bb-rl-border-quinery-color);
 }
-
 .bb-rl-primary-actions button.following:disabled, .bb-rl-primary-actions button.is_friend:disabled, .bb-rl-primary-actions button.pending_friend:disabled, .bb-rl-primary-actions button.awaiting_response_friend:disabled,
 .bb-rl-primary-actions .generic-button a.following:disabled,
 .bb-rl-primary-actions .generic-button a.is_friend:disabled,
@@ -571,14 +523,12 @@
   color: var(--bb-rl-text-disabled-color);
   cursor: not-allowed;
 }
-
 .bb-rl-primary-actions button.bb-rl-send-message-disabled,
 .bb-rl-primary-actions .generic-button a.bb-rl-send-message-disabled {
   pointer-events: none;
   color: var(--bb-rl-text-disabled-color);
   border-color: var(--bb-rl-border-tertiary-color);
 }
-
 .bb-rl-primary-actions button.bb-rl-send-message-disabled i::before,
 .bb-rl-primary-actions .generic-button a.bb-rl-send-message-disabled i::before {
   color: var(--bb-rl-text-disabled-color);
@@ -587,14 +537,12 @@
 .bb-rl-secondary-actions {
   flex: 1;
 }
-
 .bb-rl-secondary-actions .button-wrap {
   display: flex;
   align-items: center;
   gap: var(--bb-rl-space-100);
   width: 100%;
 }
-
 .bb-rl-secondary-actions .send-message,
 .bb-rl-secondary-actions .bb-rl-send-message-disabled,
 .bb-rl-secondary-actions a.friendship-button,
@@ -613,7 +561,6 @@
   padding: 0;
   border-radius: var(--bb-rl-radius-md);
 }
-
 .bb-rl-secondary-actions .send-message i::before,
 .bb-rl-secondary-actions .bb-rl-send-message-disabled i::before,
 .bb-rl-secondary-actions a.friendship-button i::before,
@@ -623,7 +570,6 @@
   font-size: 20px;
   color: var(--bb-rl-icon-secondary-color);
 }
-
 .bb-rl-secondary-actions .send-message:hover,
 .bb-rl-secondary-actions .bb-rl-send-message-disabled:hover,
 .bb-rl-secondary-actions a.friendship-button:hover,
@@ -647,50 +593,41 @@
   font-family: bb-icons-rl;
   font-style: normal;
 }
-
 .bb-rl-secondary-actions .bb-rl-send-message-disabled,
 .bb-rl-card-action .bb-rl-send-message-disabled {
   pointer-events: none;
 }
-
 .bb-rl-secondary-actions .bb-rl-send-message-disabled i::before,
 .bb-rl-card-action .bb-rl-send-message-disabled i::before {
   color: var(--bb-rl-icon-disabled-color);
 }
-
 .bb-rl-secondary-actions .send-message i::before,
 .bb-rl-secondary-actions .bb-rl-send-message-disabled i::before,
 .bb-rl-card-action .send-message i::before,
 .bb-rl-card-action .bb-rl-send-message-disabled i::before {
   content: "\e16e";
 }
-
 .bb-rl-secondary-actions .friendship-button.not_friends i::before,
 .bb-rl-card-action .friendship-button.not_friends i::before {
   content: "\e4d0";
 }
-
 .bb-rl-secondary-actions .friendship-button.is_friend i::before,
 .bb-rl-card-action .friendship-button.is_friend i::before {
   content: "\e4d0";
   font-weight: 500;
 }
-
 .bb-rl-secondary-actions .friendship-button.pending_friend i::before,
 .bb-rl-card-action .friendship-button.pending_friend i::before {
   content: "\eafa";
 }
-
 .bb-rl-secondary-actions .friendship-button.awaiting_response_friend i::before,
 .bb-rl-card-action .friendship-button.awaiting_response_friend i::before {
   content: "\edec";
 }
-
 .bb-rl-secondary-actions .follow-button.not_following i::before,
 .bb-rl-card-action .follow-button.not_following i::before {
   content: "\e324";
 }
-
 .bb-rl-secondary-actions .follow-button.following i::before,
 .bb-rl-card-action .follow-button.following i::before {
   content: "\e324";
@@ -705,7 +642,6 @@
 .bb-rl-invite-form textarea {
   width: 100%;
 }
-
 .bb-rl-invite-form textarea {
   resize: vertical;
 }
@@ -713,12 +649,10 @@
 .bb-rl-block-member-content > p {
   margin-bottom: var(--bb-rl-space-100);
 }
-
 .bb-rl-block-member-content > div,
 .bb-rl-block-member-content > ul {
   color: var(--bb-rl-text-secondary-color);
 }
-
 .bb-rl-block-member-content > ul {
   padding-left: var(--bb-rl-space-300);
   margin-bottom: var(--bb-rl-space-200);
@@ -738,7 +672,6 @@
   margin-left: var(--bb-rl-space-200);
   position: relative;
 }
-
 .bb-rl-advance-profile-search .bb-rl-advance-profile-search-toggle {
   display: inline-block;
   border: 1px solid var(--bb-rl-border-secondary-color);
@@ -749,12 +682,10 @@
   color: var(--bb-rl-text-secondary-color);
   white-space: nowrap;
 }
-
 .bb-rl-advance-profile-search .bb-rl-advance-profile-search-toggle:hover {
   background-color: var(--bb-rl-background-secondary-hover-color);
   color: var(--bb-rl-text-color);
 }
-
 .bb-rl-advance-profile-search .bb-rl-advance-profile-search-toggle:after {
   content: "\e136";
   font-family: bb-icons-rl;
@@ -763,7 +694,6 @@
   margin-left: var(--bb-rl-space-100);
   font-weight: 400;
 }
-
 .bb-rl-advance-profile-search #bp-profile-search-form-outer {
   position: absolute;
   top: 120%;
@@ -776,22 +706,18 @@
   box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.12);
   display: none;
 }
-
 .bb-rl-advance-profile-search #bp-profile-search-form-outer .bb-rl-profile-filter-headline {
   padding: var(--bb-rl-space-100) var(--bb-rl-space-300);
   border-bottom: 1px solid var(--bb-rl-border-secondary-color);
 }
-
 .bb-rl-advance-profile-search #bp-profile-search-form-outer .bb-rl-profile-filter-body {
   padding: var(--bb-rl-space-200) var(--bb-rl-space-300);
 }
-
 @media screen and (max-width: 800px) {
   .bb-rl-advance-profile-search #bp-profile-search-form-outer {
     left: -100%;
   }
 }
-
 .bb-rl-advance-profile-search.active #bp-profile-search-form-outer {
   display: block;
 }
@@ -802,12 +728,10 @@
   line-height: 22px;
   padding: var(--bb-rl-space-50) 0;
 }
-
 .bb-rl-profile-filter-headline .clear-from-wrap {
   display: inline-flex;
   align-items: center;
 }
-
 .bb-rl-profile-filter-headline .clear-from-wrap a {
   font-size: var(--bb-rl-font-size-sm);
   font-weight: 500;
@@ -817,7 +741,6 @@
   align-items: center;
   gap: var(--bb-rl-space-50);
 }
-
 .bb-rl-profile-filter-headline .clear-from-wrap a i {
   font-size: var(--bb-rl-font-size-base);
 }
@@ -830,7 +753,6 @@
   gap: var(--bb-rl-space-100);
   border-top: 1px solid var(--bb-rl-border-secondary-color);
 }
-
 .bb-rl-advance-profile-search .bps-form .submit-wrapper input.submit {
   display: inline-flex;
   align-items: center;
@@ -846,28 +768,25 @@
   background-color: var(--bb-rl-background-brand-primary-color);
   color: var(--bb-rl-text-white-color);
   border: 1px solid var(--bb-rl-background-brand-primary-color);
-  padding: 6px var(--bb-rl-space-200);
-  font-size: var(--bb-rl-font-size-sm);
-  font-weight: 400;
 }
-
 .bb-rl-advance-profile-search .bps-form .submit-wrapper input.submit:hover {
   background-color: var(--bb-rl-background-brand-primary-hover-color);
 }
-
 .bb-rl-advance-profile-search .bps-form .submit-wrapper input.submit:focus-within {
   outline: 2px solid var(--bb-rl-border-brand-primary-color);
 }
-
 .bb-rl-advance-profile-search .bps-form .submit-wrapper input.submit:disabled {
   background-color: var(--bb-rl-background-brand-disabled-color);
   cursor: not-allowed;
 }
-
+.bb-rl-advance-profile-search .bps-form .submit-wrapper input.submit {
+  padding: 6px var(--bb-rl-space-200);
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 400;
+}
 .bb-rl-advance-profile-search .bp-field-wrap {
   margin-bottom: var(--bb-rl-space-200);
 }
-
 .bb-rl-advance-profile-search .bp-field-wrap label {
   font-size: var(--bb-rl-font-size-sm);
   font-weight: 500;
@@ -876,27 +795,23 @@
   margin-bottom: var(--bb-rl-space-100);
   display: block;
 }
-
-.bb-rl-advance-profile-search .bp-field-wrap input[type="text"],
-.bb-rl-advance-profile-search .bp-field-wrap input[type="number"],
-.bb-rl-advance-profile-search .bp-field-wrap input[type="email"],
-.bb-rl-advance-profile-search .bp-field-wrap input[type="tel"],
-.bb-rl-advance-profile-search .bp-field-wrap input[type="url"],
-.bb-rl-advance-profile-search .bp-field-wrap input[type="search"],
+.bb-rl-advance-profile-search .bp-field-wrap input[type=text],
+.bb-rl-advance-profile-search .bp-field-wrap input[type=number],
+.bb-rl-advance-profile-search .bp-field-wrap input[type=email],
+.bb-rl-advance-profile-search .bp-field-wrap input[type=tel],
+.bb-rl-advance-profile-search .bp-field-wrap input[type=url],
+.bb-rl-advance-profile-search .bp-field-wrap input[type=search],
 .bb-rl-advance-profile-search .bp-field-wrap select {
   width: 100%;
 }
-
-.bb-rl-advance-profile-search .bp-field-wrap input[type="search"] + .bps-description {
+.bb-rl-advance-profile-search .bp-field-wrap input[type=search] + .bps-description {
   margin-top: var(--bb-rl-space-100);
 }
-
 .bb-rl-advance-profile-search .bp-heading-field-wrap > strong {
   font-size: 14px;
   font-weight: 500;
   line-height: 22px;
 }
-
 .bb-rl-advance-profile-search .bps-description {
   font-size: var(--bb-rl-font-size-sm);
   font-weight: 400;
