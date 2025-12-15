@@ -109,14 +109,20 @@ namespace BuddyBoss\Core\Admin\Mothership;
 				},
 				success: function(response) {
 					if (response.success) {
-						$message.html('<div class="notice notice-success inline"><p>' + response.data.message + '</p></div>');
+						// Create message safely to prevent XSS
+						var $successMsg = $('<div class="notice notice-success inline"><p></p></div>');
+						$successMsg.find('p').text(response.data.message);
+						$message.html($successMsg);
 
 						// Reload the page after 2 seconds to show the clean state
 						setTimeout(function() {
 							window.location.reload();
 						}, 2000);
 					} else {
-						$message.html('<div class="notice notice-error inline"><p><strong><?php esc_html_e( 'Error:', 'buddyboss' ); ?></strong> ' + response.data + '</p></div>');
+						// Create error message safely to prevent XSS
+						var $errorMsg = $('<div class="notice notice-error inline"><p><strong><?php esc_html_e( 'Error:', 'buddyboss' ); ?></strong> <span></span></p></div>');
+						$errorMsg.find('span').text(response.data);
+						$message.html($errorMsg);
 					}
 				},
 				error: function() {
