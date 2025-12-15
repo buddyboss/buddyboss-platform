@@ -216,7 +216,7 @@ class BB_Mothership_Loader {
 	 * This should be called after the plugin ID changes.
 	 */
 	public function refreshPluginConnector(): void {
-		// The plugin connector will automatically use the updated plugin ID
+		// The plugin connector will automatically use the updated plugin ID.
 		// from the database option on the next request.
 	}
 
@@ -337,6 +337,28 @@ class BB_Mothership_Loader {
 				$pluginConnector->setDynamicPluginId( $plugin_id );
 				$domain   = Credentials::getActivationDomain();
 
+				// Check if we're being rate limited before attempting migration activation.
+				// Use multisite-aware transient retrieval.
+				$network_activated = false;
+				if ( is_multisite() && function_exists( 'is_plugin_active_for_network' ) ) {
+					$network_activated = is_plugin_active_for_network( buddypress()->basename );
+				}
+				$rateLimitData = $network_activated ? get_site_transient( 'buddyboss_license_rate_limit' ) : get_transient( 'buddyboss_license_rate_limit' );
+				if ( $rateLimitData && is_array( $rateLimitData ) ) {
+					$resetTime = isset( $rateLimitData['reset'] ) ? (int) $rateLimitData['reset'] : 0;
+					$currentTime = time();
+
+					if ( $resetTime > 0 && $currentTime < $resetTime ) {
+						$waitMinutes = ceil( ( $resetTime - $currentTime ) / 60 );
+						bb_error_log( sprintf(
+							'BuddyBoss: Skipping migration activation - rate limited for %d more minutes (reset: %s)',
+							$waitMinutes,
+							date( 'Y-m-d H:i:s', $resetTime )
+						), true );
+						continue; // Skip this license migration
+					}
+				}
+
 				// Translators: %s is the response error message.
 				$errorHtml = esc_html__( 'Migrate License activation failed: %s', 'buddyboss' );
 
@@ -344,7 +366,7 @@ class BB_Mothership_Loader {
 					$response = LicenseActivations::activate( $plugin_id, $license_data['license_key'], $domain );
 				} catch ( \Exception $e ) {
 					bb_error_log( sprintf( $errorHtml, $e->getMessage() ), true );
-					// Clear the dynamic plugin ID on exception to prevent orphaned state
+					// Clear the dynamic plugin ID on exception to prevent orphaned state.
 					$pluginConnector->clearDynamicPluginId();
 					continue;
 				}
@@ -368,19 +390,19 @@ class BB_Mothership_Loader {
 						bb_error_log( 'Error storing migrated license key: ' . $e->getMessage(), true );
 					}
 				} else {
-					// Migration failed - clear the dynamic plugin ID to prevent orphaned state
+					// Migration failed - clear the dynamic plugin ID to prevent orphaned state.
 					$errorCode = $response->__get( 'errorCode' );
 					$errorMessage = $response->__get( 'error' );
 
 					bb_error_log( sprintf( 'BuddyBoss License Migration Failed (Code: %d): %s', $errorCode, $errorMessage ), true );
 
-					// If it's a 422 product mismatch, definitely clear the dynamic plugin ID
+					// If it's a 422 product mismatch, definitely clear the dynamic plugin ID.
 					if ( 422 === $errorCode ) {
 						$pluginConnector->clearDynamicPluginId();
 						bb_error_log( 'BuddyBoss: Cleared dynamic plugin ID due to 422 product mismatch during migration', true );
 					} elseif ( 429 !== $errorCode ) {
-						// For errors other than rate limiting, also clear the dynamic plugin ID
-						// (Rate limit might be temporary, so we keep the plugin ID for retry)
+						// For errors other than rate limiting, also clear the dynamic plugin ID.
+						// (Rate limit might be temporary, so we keep the plugin ID for retry).
 						$pluginConnector->clearDynamicPluginId();
 					}
 				}
