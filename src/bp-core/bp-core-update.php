@@ -534,6 +534,10 @@ function bp_version_updater() {
 			\BuddyBoss\Core\Admin\Mothership\BB_Mothership_Loader::migrate_legacy_license();
 		}
 
+		if ( $raw_db_version < 23551 ) {
+			bb_update_to_2_16_1();
+		}
+
 		if ( $raw_db_version !== $current_db ) {
 			// @todo - Write only data manipulate migration here. ( This is not for DB structure change ).
 
@@ -4068,5 +4072,20 @@ function bb_update_to_2_10_1() {
 				$wpdb->query( "ALTER TABLE {$bp_prefix}bp_activity ADD FULLTEXT KEY `bb_title_content` (`post_title`, `content`)" ); //phpcs:ignore
 			}
 		}
+	}
+}
+
+/**
+ * Migrate for BuddyBoss [BBVERSION].
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_update_to_2_16_1() {
+	// Purge all the cache for API.
+	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
+		// Clear activity API cache.
+		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp_activity' );
 	}
 }
