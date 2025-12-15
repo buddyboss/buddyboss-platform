@@ -2746,3 +2746,22 @@ function bb_redirection_allowed_third_party_domains( $hosts ) {
 	return $hosts;
 }
 
+/**
+ * Make video embeds discoverable.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param bool   $retval Return value to enable discover support or not.
+ * @param string $url    URL to parse for embed.
+ *
+ * @return bool
+ */
+function bb_oembed_discover_support_callback( $retval, $url ) {
+	if ( ! empty( $url ) && false !== strpos( $url, 'dubb.com' ) ) {
+		$retval = true;
+	}
+
+	return $retval;
+}
+
+add_filter( 'bb_oembed_discover_support', 'bb_oembed_discover_support_callback', 10, 2 );
