@@ -70,6 +70,9 @@ class BB_Mothership_Loader {
 		// Create the plugin connector.
 		$this->pluginConnector = new \BuddyBoss\Core\Admin\Mothership\BB_Plugin_Connector();
 
+		// Initialize the license manager to capture API headers.
+		BB_License_Manager::init();
+
 		// Initialize the mothership service.
 		$this->initMothershipService();
 
@@ -144,6 +147,7 @@ class BB_Mothership_Loader {
 
 			// Register AJAX handlers.
 			add_action( 'wp_ajax_bb_get_free_license', array( 'BuddyBoss\Core\Admin\Mothership\BB_License_Manager', 'ajax_get_free_license' ) );
+			add_action( 'wp_ajax_bb_reset_license_settings', array( 'BuddyBoss\Core\Admin\Mothership\BB_License_Manager', 'ajax_reset_license_settings' ) );
 		}
 
 		$plugin_id = $this->pluginConnector->getDynamicPluginId();
@@ -191,7 +195,7 @@ class BB_Mothership_Loader {
 			delete_transient( $plugin_id . '-mosh-addons-update-check' );
 
 			// Log the deactivation.
-			error_log( 'BuddyBoss license deactivated: ' . print_r( $response, true ) );
+			bb_error_log( 'BuddyBoss license deactivated: ' . print_r( $response, true ), true );
 		} else {
 			// License is active - ensure status is updated.
 			$this->pluginConnector->updateLicenseActivationStatus( true );
@@ -339,7 +343,10 @@ class BB_Mothership_Loader {
 				try {
 					$response = LicenseActivations::activate( $plugin_id, $license_data['license_key'], $domain );
 				} catch ( \Exception $e ) {
-					error_log( sprintf( $errorHtml, $e->getMessage() ) );
+					bb_error_log( sprintf( $errorHtml, $e->getMessage() ), true );
+					// Clear the dynamic plugin ID on exception to prevent orphaned state
+					$pluginConnector->clearDynamicPluginId();
+					continue;
 				}
 
 				if ( $response instanceof Response && ! $response->isError() ) {
@@ -358,10 +365,24 @@ class BB_Mothership_Loader {
 						}
 					} catch ( \Exception $e ) {
 						// Log the exception.
-						error_log( 'Error storing migrated license key: ' . $e->getMessage() );
+						bb_error_log( 'Error storing migrated license key: ' . $e->getMessage(), true );
 					}
 				} else {
-					error_log( $response->__get('error') );
+					// Migration failed - clear the dynamic plugin ID to prevent orphaned state
+					$errorCode = $response->__get( 'errorCode' );
+					$errorMessage = $response->__get( 'error' );
+
+					bb_error_log( sprintf( 'BuddyBoss License Migration Failed (Code: %d): %s', $errorCode, $errorMessage ), true );
+
+					// If it's a 422 product mismatch, definitely clear the dynamic plugin ID
+					if ( 422 === $errorCode ) {
+						$pluginConnector->clearDynamicPluginId();
+						bb_error_log( 'BuddyBoss: Cleared dynamic plugin ID due to 422 product mismatch during migration', true );
+					} elseif ( 429 !== $errorCode ) {
+						// For errors other than rate limiting, also clear the dynamic plugin ID
+						// (Rate limit might be temporary, so we keep the plugin ID for retry)
+						$pluginConnector->clearDynamicPluginId();
+					}
 				}
 			}
 		}

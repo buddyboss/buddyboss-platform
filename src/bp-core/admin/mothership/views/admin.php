@@ -68,4 +68,67 @@ namespace BuddyBoss\Core\Admin\Mothership;
 		?>
 	</div><!-- .buddyboss-mothership-settings -->
 
+	<!-- Reset License Settings Section -->
+	<div class="buddyboss-mothership-reset-section" style="margin-top: 20px; padding: 20px; background: #fff; border: 1px solid #ccd0d4;">
+		<h3><?php esc_html_e( 'Troubleshooting', 'buddyboss' ); ?></h3>
+		<p><?php esc_html_e( 'If you\'re experiencing activation issues (such as "The selected product is invalid" errors), you can reset all license settings and try again.', 'buddyboss' ); ?></p>
+		<p><strong><?php esc_html_e( 'Warning:', 'buddyboss' ); ?></strong> <?php esc_html_e( 'This will clear all license data including activation status. You will need to re-activate your license after resetting.', 'buddyboss' ); ?></p>
+		<button type="button" id="bb-reset-license-btn" class="button button-secondary">
+			<?php esc_html_e( 'Reset License Settings', 'buddyboss' ); ?>
+		</button>
+		<span id="bb-reset-license-spinner" class="spinner" style="float: none; margin: 0 10px;"></span>
+		<div id="bb-reset-license-message" style="margin-top: 10px;"></div>
+	</div>
+
+	<script>
+	jQuery(document).ready(function($) {
+		$('#bb-reset-license-btn').on('click', function(e) {
+			e.preventDefault();
+
+			// Confirm action
+			if (!confirm('<?php echo esc_js( __( 'Are you sure you want to reset all license settings? This will deactivate your license and clear all stored data.', 'buddyboss' ) ); ?>')) {
+				return;
+			}
+
+			var $btn = $(this);
+			var $spinner = $('#bb-reset-license-spinner');
+			var $message = $('#bb-reset-license-message');
+
+			// Show loading state
+			$btn.prop('disabled', true);
+			$spinner.addClass('is-active');
+			$message.html('');
+
+			// Make AJAX request
+			$.ajax({
+				url: ajaxurl,
+				type: 'POST',
+				data: {
+					action: 'bb_reset_license_settings',
+					nonce: '<?php echo wp_create_nonce( 'bb_reset_license_settings' ); ?>'
+				},
+				success: function(response) {
+					if (response.success) {
+						$message.html('<div class="notice notice-success inline"><p>' + response.data.message + '</p></div>');
+
+						// Reload the page after 2 seconds to show the clean state
+						setTimeout(function() {
+							window.location.reload();
+						}, 2000);
+					} else {
+						$message.html('<div class="notice notice-error inline"><p><strong><?php esc_html_e( 'Error:', 'buddyboss' ); ?></strong> ' + response.data + '</p></div>');
+					}
+				},
+				error: function() {
+					$message.html('<div class="notice notice-error inline"><p><strong><?php esc_html_e( 'Error:', 'buddyboss' ); ?></strong> <?php esc_html_e( 'An error occurred while resetting license settings.', 'buddyboss' ); ?></p></div>');
+				},
+				complete: function() {
+					$btn.prop('disabled', false);
+					$spinner.removeClass('is-active');
+				}
+			});
+		});
+	});
+	</script>
+
 </div>

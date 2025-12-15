@@ -18,6 +18,121 @@ use BuddyBossPlatform\GroundLevel\Mothership\AbstractPluginConnection;
 class BB_License_Manager extends LicenseManager {
 
 	/**
+	 * Initialize hooks to capture API response headers.
+	 * Should be called early in the WordPress lifecycle.
+	 *
+	 * @return void
+	 */
+	public static function init(): void {
+		// Hook into HTTP API to capture rate limit headers from Caseproof API responses.
+		add_filter( 'http_response', array( __CLASS__, 'capture_api_headers' ), 10, 3 );
+	}
+
+	/**
+	 * Capture rate limit headers from Caseproof API responses.
+	 * This filter runs for ALL HTTP requests made through wp_remote_* functions.
+	 *
+	 * @param array  $response HTTP response.
+	 * @param array  $args     HTTP request arguments.
+	 * @param string $url      The request URL.
+	 *
+	 * @return array Unmodified response (we only read headers).
+	 */
+	public static function capture_api_headers( $response, $args, $url ) {
+		// Only process responses from the Caseproof license API
+		if ( false === strpos( $url, 'licenses.caseproof.com' ) ) {
+			return $response;
+		}
+
+		// Skip if response is an error
+		if ( is_wp_error( $response ) ) {
+			return $response;
+		}
+
+		// Extract headers
+		$headers = wp_remote_retrieve_headers( $response );
+		$statusCode = wp_remote_retrieve_response_code( $response );
+
+		if ( empty( $headers ) ) {
+			return $response;
+		}
+
+		// Convert headers to array format (WP_HTTP_Requests_Response may return object)
+		if ( is_object( $headers ) && method_exists( $headers, 'getAll' ) ) {
+			$headers = $headers->getAll();
+		} elseif ( is_object( $headers ) ) {
+			$headers = (array) $headers;
+		}
+
+
+		// Make headers case-insensitive for easier access
+		$headers = array_change_key_case( $headers, CASE_LOWER );
+
+		// Extract all rate limit headers
+		$limit          = isset( $headers['x-ratelimit-limit'] ) ? (int) $headers['x-ratelimit-limit'] : null;
+		$remaining      = isset( $headers['x-ratelimit-remaining'] ) ? (int) $headers['x-ratelimit-remaining'] : null;
+		$resetTimestamp = isset( $headers['x-ratelimit-reset'] ) ? (int) $headers['x-ratelimit-reset'] : null;
+		$retryAfter     = isset( $headers['retry-after'] ) ? (int) $headers['retry-after'] : null;
+
+		// Check if we have any rate limit headers
+		$hasRateLimitData = ( null !== $limit || null !== $remaining || null !== $resetTimestamp || null !== $retryAfter );
+
+		if ( $hasRateLimitData ) {
+			// Log rate limit info only on 429 errors
+			if ( 429 === $statusCode ) {
+				$resetInfo = '';
+				if ( null !== $resetTimestamp ) {
+					$resetInfo = sprintf( ' - Reset: %s', date( 'Y-m-d H:i:s', $resetTimestamp ) );
+				} elseif ( null !== $retryAfter ) {
+					$resetInfo = sprintf( ' - Reset in %d seconds', $retryAfter );
+				}
+
+				bb_error_log( sprintf(
+					'Rate limit exceeded (remaining: %s)%s',
+					$remaining !== null ? $remaining : 'N/A',
+					$resetInfo
+				), true );
+			}
+
+			// Determine the best reset time to use
+			$finalResetTime = null;
+			$source = 'unknown';
+
+			// Priority: X-RateLimit-Reset > Retry-After calculation
+			if ( null !== $resetTimestamp ) {
+				$finalResetTime = $resetTimestamp;
+				$source = 'x_ratelimit_reset';
+			} elseif ( null !== $retryAfter ) {
+				$finalResetTime = time() + $retryAfter;
+				$source = 'retry_after_header';
+			}
+
+			// Build rate limit data
+			$rateLimitData = array(
+				'limit'     => $limit,
+				'remaining' => $remaining !== null ? $remaining : ( 429 === $statusCode ? 0 : null ),
+				'reset'     => $finalResetTime,
+				'source'    => $source,
+				'timestamp' => time(),
+			);
+
+			// Calculate expiration for transient
+			$expiration = HOUR_IN_SECONDS;
+			if ( $finalResetTime ) {
+				$timeUntilReset = max( 0, $finalResetTime - time() );
+				$expiration = $timeUntilReset + 60; // Add 60 second buffer
+			}
+
+			set_transient( 'buddyboss_license_rate_limit', $rateLimitData, $expiration );
+
+			// Rate limit data stored successfully
+
+		}
+
+		return $response;
+	}
+
+	/**
 	 * The controller for handling the license activation/deactivation post requests.
 	 * Overrides the parent controller to add dynamic plugin ID support.
 	 *
@@ -84,18 +199,48 @@ class BB_License_Manager extends LicenseManager {
 			throw new \Exception( esc_html__( 'Invalid nonce', 'buddyboss' ) );
 		}
 
+		// Validate inputs
+		if ( empty( $licenseKey ) ) {
+			throw new \Exception( esc_html__( 'License key is required', 'buddyboss' ) );
+		}
+
+		if ( empty( $domain ) ) {
+			throw new \Exception( esc_html__( 'Activation domain is required', 'buddyboss' ) );
+		}
+
+		// Check if we're being rate limited (proactive check)
+		$rateLimitCheck = self::checkRateLimit();
+		if ( is_wp_error( $rateLimitCheck ) ) {
+			throw new \Exception( $rateLimitCheck->get_error_message() );
+		}
+
 		$pluginConnector = self::getContainer()->get( AbstractPluginConnection::class );
 
 		// Setup dynamic plugin ID if present in license key
 		$licenseKey = self::setupDynamicPluginId( $licenseKey, $pluginConnector );
+
+		// Validate product matches license before activation
+		$validationError = self::validateProductBeforeActivation( $licenseKey, $pluginConnector->pluginId );
+		if ( is_wp_error( $validationError ) ) {
+			throw new \Exception( $validationError->get_error_message() );
+		}
 
 		// Translators: %s is the response error message.
 		$errorHtml = esc_html__( 'License activation failed: %s', 'buddyboss' );
 
 		try {
 			$product  = $pluginConnector->pluginId;
+
+			// Log activation attempt for debugging
+			bb_error_log( sprintf(
+				'BuddyBoss: Attempting license activation - Product: %s, Domain: %s',
+				$product,
+				$domain
+			), true );
+
 			$response = LicenseActivations::activate( $product, $licenseKey, $domain );
 		} catch ( \Exception $e ) {
+			bb_error_log( sprintf( 'License activation failed: %s', $e->getMessage() ), true );
 			throw new \Exception(
 				sprintf(
 					$errorHtml,
@@ -105,10 +250,86 @@ class BB_License_Manager extends LicenseManager {
 		}
 
 		if ( $response instanceof Response && $response->isError() ) {
+			$errorCode = $response->__get( 'errorCode' );
+			$errorMessage = $response->__get( 'error' );
+			$errors = $response->__get( 'errors' );
+
+			// Track failed activation for exponential backoff
+			self::trackFailedActivation();
+
+			// Log the error details
+			bb_error_log( sprintf(
+				'BuddyBoss: License activation failed - Code: %d, Message: %s, Product: %s',
+				$errorCode,
+				$errorMessage,
+				$pluginConnector->pluginId
+			), true );
+
+			// Handle 422 - Product validation failed
+			if ( 422 === $errorCode ) {
+				// Check if it's a product mismatch error
+				if ( is_array( $errors ) && isset( $errors['product'] ) ) {
+					// Clear the orphaned dynamic plugin ID
+					$pluginConnector->clearDynamicPluginId();
+					bb_error_log( 'Cleared orphaned plugin ID (422)', true );
+
+					throw new \Exception(
+						esc_html__( 'License activation failed: The stored product ID did not match your license. Please try activating again with your license key.', 'buddyboss' )
+					);
+				}
+			}
+
+			// Handle 429 - Rate limit exceeded with exponential backoff
+			if ( 429 === $errorCode ) {
+				// Check if HTTP filter captured rate limit headers from this 429 response
+				$rateLimitData = get_transient( 'buddyboss_license_rate_limit' );
+
+				// Use actual reset time from captured headers if available, otherwise use exponential backoff
+				if ( $rateLimitData && isset( $rateLimitData['reset'] ) && $rateLimitData['reset'] > 0 ) {
+					$resetTime = $rateLimitData['reset'];
+					$backoffTime = max( 0, $resetTime - time() );
+					$waitMinutes = ceil( $backoffTime / 60 );
+					$source = isset( $rateLimitData['source'] ) ? $rateLimitData['source'] : 'unknown';
+
+					bb_error_log( 'Using API reset time', true );
+				} else {
+					$backoffTime = self::getBackoffWaitTime();
+					$resetTime = time() + $backoffTime;
+					$waitMinutes = ceil( $backoffTime / 60 );
+
+					bb_error_log( 'Using calculated backoff time', true );
+				}
+
+				bb_error_log( sprintf(
+					'Wait %d minutes (reset: %s)',
+					$waitMinutes,
+					date( 'Y-m-d H:i:s', $resetTime )
+				), true );
+
+				// Update rate limit to ensure we wait the backoff time
+				$rateLimitData = array(
+					'limit'     => isset( $actualRateLimitInfo['limit'] ) ? $actualRateLimitInfo['limit'] : 10,
+					'remaining' => isset( $actualRateLimitInfo['remaining'] ) ? $actualRateLimitInfo['remaining'] : 0,
+					'reset'     => $resetTime,
+					'timestamp' => time(),
+					'source'    => $actualRateLimitInfo ? 'api_headers' : 'calculated_backoff',
+				);
+				set_transient( 'buddyboss_license_rate_limit', $rateLimitData, HOUR_IN_SECONDS );
+
+								throw new \Exception(
+					sprintf(
+						/* translators: %d is the number of minutes to wait */
+						esc_html__( 'License activation failed: Too many activation requests. Please wait approximately %d minute(s) before trying again.', 'buddyboss' ),
+						max( 1, $waitMinutes )
+					)
+				);
+			}
+
+			// Generic error handling
 			throw new \Exception(
 				sprintf(
 					$errorHtml,
-					$response->__get('error')
+					$errorMessage
 				)
 			);
 		}
@@ -124,10 +345,191 @@ class BB_License_Manager extends LicenseManager {
 				$pluginId = $pluginConnector->pluginId;
 				delete_transient( $pluginId . '-mosh-products' );
 				delete_transient( $pluginId . '-mosh-addons-update-check' );
+
+				// Reset failed attempts counter on successful activation
+				self::resetFailedAttempts();
+
+				// Log successful activation
+				bb_error_log( sprintf(
+					'BuddyBoss: License activated successfully - Product: %s, Domain: %s',
+					$pluginId,
+					$domain
+				), true );
 			} catch ( \Exception $e ) {
+				bb_error_log( sprintf( 'Error storing license: %s', $e->getMessage() ), true );
 				throw new \Exception( $e->getMessage() );
 			}
 		}
+	}
+
+	/**
+	 * Validate that the product ID matches the license before activation.
+	 * Prevents activation failures due to product mismatch.
+	 *
+	 * @param string $licenseKey The license key to validate.
+	 * @param string $productId  The product ID we're attempting to activate.
+	 *
+	 * @return true|WP_Error True if validation passes, WP_Error if fails.
+	 */
+	private static function validateProductBeforeActivation( string $licenseKey, string $productId ) {
+		// Skip validation if license key is empty (will be caught by input validation)
+		if ( empty( $licenseKey ) ) {
+			return true;
+		}
+
+		// Skip validation if we have any recent failed attempts (likely rate limited)
+		// This preserves API calls for the actual activation attempt
+		$failedAttempts = get_transient( 'buddyboss_license_failed_attempts' );
+		if ( $failedAttempts && (int) $failedAttempts > 0 ) {
+			bb_error_log( sprintf(
+				'BuddyBoss: Skipping pre-activation validation - %d recent failed attempts, preserving API calls',
+				$failedAttempts
+			) );
+			return true;
+		}
+
+		// Also skip if we're currently rate limited (don't waste an API call)
+		$rateLimitData = get_transient( 'buddyboss_license_rate_limit' );
+		if ( $rateLimitData && is_array( $rateLimitData ) ) {
+			$remaining = isset( $rateLimitData['remaining'] ) ? (int) $rateLimitData['remaining'] : 10;
+			if ( $remaining <= 1 ) {
+				// Too close to rate limit - skip validation to preserve API call for activation
+				bb_error_log( sprintf(
+					'Skipping pre-validation - only %d requests remaining',
+					$remaining
+				) );
+				return true;
+			}
+		}
+
+		// Pre-validation started
+
+		try {
+			// Fetch license details from API
+			$response = \BuddyBossPlatform\GroundLevel\Mothership\Api\Request\Licenses::get( $licenseKey );
+
+			if ( $response instanceof Response && $response->isError() ) {
+				$errorCode = $response->__get( 'errorCode' );
+
+				// If validation gets a 429, we're rate limited - store this info and block activation
+				if ( 429 === $errorCode ) {
+					bb_error_log( 'Validation encountered rate limit - blocking activation', true );
+
+					// Track this as a failed attempt
+					self::trackFailedActivation();
+
+					// Check if HTTP filter already captured the ACTUAL reset time from API headers
+					$rateLimitData = get_transient( 'buddyboss_license_rate_limit' );
+
+					// Use actual reset time from captured headers if available, otherwise use exponential backoff
+					if ( $rateLimitData && isset( $rateLimitData['reset'] ) && $rateLimitData['reset'] > 0 ) {
+						$resetTime = $rateLimitData['reset'];
+						$backoffTime = max( 0, $resetTime - time() );
+						$source = isset( $rateLimitData['source'] ) ? $rateLimitData['source'] : 'unknown';
+
+						bb_error_log( 'Using API reset time', true );
+					} else {
+						$backoffTime = self::getBackoffWaitTime();
+						$resetTime = time() + $backoffTime;
+
+						bb_error_log( 'Using calculated backoff time', true );
+					}
+
+					$waitMinutes = (int) ceil( $backoffTime / 60 );
+
+					bb_error_log( sprintf(
+						'Rate limit detected during validation - wait time: %d seconds (%d minutes)',
+						$backoffTime,
+						$waitMinutes
+					), true );
+
+					bb_error_log( sprintf(
+						'Reset time: %s (Unix: %d)',
+						date( 'Y-m-d H:i:s', $resetTime ),
+						$resetTime
+					), true );
+
+					// Store/update rate limit data (don't overwrite if we have actual API data)
+					if ( ! $rateLimitData || ! isset( $rateLimitData['reset'] ) ) {
+						set_transient(
+							'buddyboss_license_rate_limit',
+							array(
+								'remaining' => 0,
+								'reset'     => $resetTime,
+								'source'    => 'validation_calculated',
+							),
+							$backoffTime + 60 // Add 60 seconds buffer
+						);
+					}
+
+					return new \WP_Error(
+						'rate_limit',
+						sprintf(
+							/* translators: %d is the number of minutes to wait */
+							esc_html__( 'Too many activation requests. Please wait approximately %d minute(s) before trying again.', 'buddyboss' ),
+							max( 1, $waitMinutes )
+						)
+					);
+				}
+
+				// Don't block activation on other validation errors - let the activation endpoint handle it
+				bb_error_log( sprintf(
+					'BuddyBoss: Pre-activation validation failed to fetch license (non-blocking): %s',
+					$response->__get( 'error' )
+				) );
+				return true;
+			}
+
+			if ( $response instanceof Response && ! $response->isError() ) {
+				$licenseData = $response->toArray();
+
+				// Check if product field exists
+				if ( isset( $licenseData['product'] ) ) {
+					$actualProduct = $licenseData['product'];
+
+					bb_error_log( sprintf(
+						'BuddyBoss: License product validation - Expected: %s, Actual: %s',
+						$productId,
+						$actualProduct
+					) );
+
+					// If product doesn't match, this is likely an orphaned plugin ID
+					if ( $actualProduct !== $productId ) {
+						bb_error_log( sprintf(
+							'BuddyBoss: Product mismatch detected before activation - clearing orphaned plugin ID'
+						), true );
+
+						// Get plugin connector to clear the orphaned ID
+						$pluginConnector = self::getContainer()->get( AbstractPluginConnection::class );
+						$pluginConnector->clearDynamicPluginId();
+
+						return new \WP_Error(
+							'product_mismatch',
+							sprintf(
+								/* translators: 1: Expected product, 2: Actual product from license */
+								esc_html__( 'Product validation failed: Your license is for "%2$s" but the system was configured for "%1$s". The configuration has been reset. Please try activating again.', 'buddyboss' ),
+								$productId,
+								$actualProduct
+							)
+						);
+					}
+
+					// Product matches - validation passed
+					// Product validation passed
+					return true;
+				}
+			}
+		} catch ( \Exception $e ) {
+			// Don't block activation on validation errors - let the activation endpoint handle it
+			bb_error_log( sprintf(
+				'BuddyBoss: Pre-activation validation exception (non-blocking): %s',
+				$e->getMessage()
+			) );
+			return true;
+		}
+
+		// If we couldn't validate, allow activation to proceed
+		return true;
 	}
 
 	/**
@@ -609,5 +1011,220 @@ class BB_License_Manager extends LicenseManager {
 			$error_message = isset( $data['message'] ) ? $data['message'] : __( 'Failed to generate license key', 'buddyboss' );
 			wp_send_json_error( $error_message );
 		}
+	}
+
+	/**
+	 * AJAX handler for resetting license settings.
+	 * Clears all license-related data including orphaned dynamic plugin ID.
+	 *
+	 * @return void
+	 */
+	public static function ajax_reset_license_settings(): void {
+		// Verify nonce
+		if ( ! wp_verify_nonce( $_POST['nonce'], 'bb_reset_license_settings' ) ) {
+			wp_send_json_error( __( 'Invalid nonce', 'buddyboss' ) );
+		}
+
+		// Check user capabilities
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( __( 'You do not have permission to perform this action', 'buddyboss' ) );
+		}
+
+		try {
+			$pluginConnector = self::getContainer()->get( AbstractPluginConnection::class );
+
+			// Get current plugin ID before clearing
+			$current_plugin_id = $pluginConnector->getCurrentPluginId();
+
+			// Clear dynamic plugin ID
+			$pluginConnector->clearDynamicPluginId();
+
+			// Clear license key
+			$pluginConnector->updateLicenseKey( '' );
+
+			// Clear license activation status
+			$pluginConnector->updateLicenseActivationStatus( false );
+
+			// Clear migration flag
+			delete_option( 'bb_mothership_licenses_migrated' );
+			delete_site_option( 'bb_mothership_licenses_migrated' );
+
+			// Clear all license-related transients
+			delete_transient( $current_plugin_id . '-mosh-products' );
+			delete_transient( $current_plugin_id . '-mosh-addons-update-check' );
+			delete_transient( $current_plugin_id . '_license_details' );
+
+			// Also clear transients for the default plugin ID
+			delete_transient( PLATFORM_EDITION . '-mosh-products' );
+			delete_transient( PLATFORM_EDITION . '-mosh-addons-update-check' );
+			delete_transient( PLATFORM_EDITION . '_license_details' );
+
+			// Clear rate limit and backoff data
+			delete_transient( 'buddyboss_license_rate_limit' );
+			delete_transient( 'buddyboss_license_failed_attempts' );
+
+			// Log the reset action
+			bb_error_log( 'License settings reset by user', true );
+
+			wp_send_json_success( array(
+				'message' => __( 'License settings have been reset successfully. You can now activate your license with the correct license key.', 'buddyboss' ),
+			) );
+		} catch ( \Exception $e ) {
+			bb_error_log( sprintf( 'Error resetting license: %s', $e->getMessage() ), true );
+			wp_send_json_error(
+				sprintf(
+					__( 'Failed to reset license settings: %s', 'buddyboss' ),
+					$e->getMessage()
+				)
+			);
+		}
+	}
+
+	/**
+	 * Check if we're currently being rate limited.
+	 * Looks at stored rate limit data from previous requests.
+	 *
+	 * @return true|WP_Error True if OK to proceed, WP_Error if rate limited
+	 */
+	private static function checkRateLimit() {
+		$rateLimitData = get_transient( 'buddyboss_license_rate_limit' );
+
+		if ( ! $rateLimitData || ! is_array( $rateLimitData ) ) {
+			return true; // No rate limit data, proceed
+		}
+
+		$remaining = isset( $rateLimitData['remaining'] ) ? (int) $rateLimitData['remaining'] : 10;
+		$resetTime = isset( $rateLimitData['reset'] ) ? (int) $rateLimitData['reset'] : 0;
+		$currentTime = time();
+		$source = isset( $rateLimitData['source'] ) ? $rateLimitData['source'] : 'unknown';
+
+		bb_error_log( sprintf(
+			'BuddyBoss: Checking rate limit - Source: %s, Remaining: %d, Reset at: %s (Unix: %d), Current: %s (Unix: %d)',
+			$source,
+			$remaining,
+			date( 'Y-m-d H:i:s', $resetTime ),
+			$resetTime,
+			date( 'Y-m-d H:i:s', $currentTime ),
+			$currentTime
+		) );
+
+		// If reset time has passed, clear the rate limit AND reset failed attempts
+		if ( $resetTime > 0 && $currentTime >= $resetTime ) {
+			delete_transient( 'buddyboss_license_rate_limit' );
+			delete_transient( 'buddyboss_license_failed_attempts' ); // Reset backoff counter
+			bb_error_log( sprintf(
+				'BuddyBoss: Rate limit window EXPIRED - Reset time %s has passed. Cleared rate limit and failed attempts counter.',
+				date( 'Y-m-d H:i:s', $resetTime )
+			), true );
+			return true;
+		}
+
+		// Check if we have requests remaining
+		if ( $remaining <= 0 ) {
+			$waitTime = max( 0, $resetTime - $currentTime );
+			$waitMinutes = max( 1, ceil( $waitTime / 60 ) );
+
+			bb_error_log( sprintf(
+				'Rate limit exceeded - Wait %d minutes (reset: %s)',
+				$waitMinutes,
+				date( 'Y-m-d H:i:s', $resetTime )
+			), true );
+
+			return new \WP_Error(
+				'rate_limit_exceeded',
+				sprintf(
+					/* translators: %d is the number of minutes to wait */
+					esc_html__( 'Rate limit exceeded. Please wait approximately %d minute(s) before trying again.', 'buddyboss' ),
+					$waitMinutes
+				)
+			);
+		}
+
+		return true;
+	}
+
+
+	/**
+	 * Store rate limit information from API response.
+	 * This allows us to proactively check limits before making requests.
+	 *
+	 * @param array  $headers Response headers from the API.
+	 * @param string $source  Source identifier (e.g., 'api_headers', 'validation_429').
+	 *
+	 * @return void
+	 */
+	private static function storeRateLimitInfo( $headers, $source = 'api_headers' ): void {
+		if ( ! is_array( $headers ) ) {
+			return;
+		}
+
+		// Extract rate limit headers (case-insensitive)
+		$headers = array_change_key_case( $headers, CASE_LOWER );
+
+		$limit = isset( $headers['x-ratelimit-limit'] ) ? (int) $headers['x-ratelimit-limit'] : null;
+		$remaining = isset( $headers['x-ratelimit-remaining'] ) ? (int) $headers['x-ratelimit-remaining'] : null;
+		$reset = isset( $headers['x-ratelimit-reset'] ) ? (int) $headers['x-ratelimit-reset'] : null;
+
+		if ( null !== $remaining ) {
+			$rateLimitData = array(
+				'limit'     => $limit,
+				'remaining' => $remaining,
+				'reset'     => $reset,
+				'source'    => $source,
+				'timestamp' => time(),
+			);
+
+			// Store for up to 1 hour (rate limits typically reset within an hour)
+			set_transient( 'buddyboss_license_rate_limit', $rateLimitData, HOUR_IN_SECONDS );
+
+			// Rate limit info stored
+		}
+	}
+
+	/**
+	 * Track failed activation attempt for exponential backoff.
+	 *
+	 * @return void
+	 */
+	private static function trackFailedActivation(): void {
+		$attempts = get_transient( 'buddyboss_license_failed_attempts' );
+		$attempts = $attempts ? (int) $attempts : 0;
+		$attempts++;
+
+		// Store for 1 hour.
+		set_transient( 'buddyboss_license_failed_attempts', $attempts, HOUR_IN_SECONDS );
+
+		// Failed attempt tracked: attempt #$attempts
+	}
+
+	/**
+	 * Get suggested wait time based on exponential backoff.
+	 *
+	 * @return int Seconds to wait before retry
+	 */
+	private static function getBackoffWaitTime(): int {
+		$attempts = get_transient( 'buddyboss_license_failed_attempts' );
+		$attempts = $attempts ? (int) $attempts : 0;
+
+		if ( $attempts === 0 ) {
+			return 0;
+		}
+
+		// Exponential backoff: 2^attempts * base (30 seconds)
+		// Attempt 1: 30s, Attempt 2: 60s, Attempt 3: 120s, Attempt 4: 240s, etc.
+		// Max 15 minutes
+		$baseSeconds = 30;
+		$waitTime = min( pow( 2, $attempts - 1 ) * $baseSeconds, 900 );
+
+		return (int) $waitTime;
+	}
+
+	/**
+	 * Reset failed activation attempts counter.
+	 *
+	 * @return void
+	 */
+	private static function resetFailedAttempts(): void {
+		delete_transient( 'buddyboss_license_failed_attempts' );
 	}
 }
