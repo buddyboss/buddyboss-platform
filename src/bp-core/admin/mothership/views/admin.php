@@ -105,7 +105,7 @@ namespace BuddyBoss\Core\Admin\Mothership;
 				type: 'POST',
 				data: {
 					action: 'bb_reset_license_settings',
-					nonce: '<?php echo wp_create_nonce( 'bb_reset_license_settings' ); ?>'
+					nonce: '<?php echo esc_js( wp_create_nonce( 'bb_reset_license_settings' ) ); ?>'
 				},
 				success: function(response) {
 					if (response.success) {

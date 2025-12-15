@@ -102,6 +102,9 @@ class BB_Mothership_Loader {
 		);
 	}
 
+	/**
+	 * Initialize the In-Product Notifications service.
+	 */
 	private function initIPNService(): void {
 		$plugin_id = $this->pluginConnector->getDynamicPluginId();
 
@@ -216,8 +219,7 @@ class BB_Mothership_Loader {
 	 * This should be called after the plugin ID changes.
 	 */
 	public function refreshPluginConnector(): void {
-		// The plugin connector will automatically use the updated plugin ID.
-		// from the database option on the next request.
+		// The plugin connector will automatically use the updated plugin ID from the database option on the next request.
 	}
 
 	/**
@@ -237,7 +239,7 @@ class BB_Mothership_Loader {
 		 */
 		if ( is_multisite() ) {
 			if ( ! function_exists( 'is_plugin_active_for_network' ) ) {
-				require_once( ABSPATH . '/wp-admin/includes/plugin.php' );
+				require_once ABSPATH . '/wp-admin/includes/plugin.php';
 			}
 
 			if ( is_plugin_active_for_network( buddypress()->basename ) ) {
@@ -333,9 +335,9 @@ class BB_Mothership_Loader {
 				$plugin_id = 'bb-web-20-sites';
 			}
 
-			if ( $plugin_id !== PLATFORM_EDITION ) {
+			if ( PLATFORM_EDITION !== $plugin_id ) {
 				$pluginConnector->setDynamicPluginId( $plugin_id );
-				$domain   = Credentials::getActivationDomain();
+				$domain = Credentials::getActivationDomain();
 
 				// Check if we're being rate limited before attempting migration activation.
 				// Use multisite-aware transient retrieval.
@@ -345,17 +347,20 @@ class BB_Mothership_Loader {
 				}
 				$rateLimitData = $network_activated ? get_site_transient( 'buddyboss_license_rate_limit' ) : get_transient( 'buddyboss_license_rate_limit' );
 				if ( $rateLimitData && is_array( $rateLimitData ) ) {
-					$resetTime = isset( $rateLimitData['reset'] ) ? (int) $rateLimitData['reset'] : 0;
+					$resetTime   = isset( $rateLimitData['reset'] ) ? (int) $rateLimitData['reset'] : 0;
 					$currentTime = time();
 
 					if ( $resetTime > 0 && $currentTime < $resetTime ) {
 						$waitMinutes = ceil( ( $resetTime - $currentTime ) / 60 );
-						bb_error_log( sprintf(
-							'BuddyBoss: Skipping migration activation - rate limited for %d more minutes (reset: %s)',
-							$waitMinutes,
-							date( 'Y-m-d H:i:s', $resetTime )
-						), true );
-						continue; // Skip this license migration
+						bb_error_log(
+							sprintf(
+								'BuddyBoss: Skipping migration activation - rate limited for %d more minutes (reset: %s)',
+								$waitMinutes,
+								date( 'Y-m-d H:i:s', $resetTime )
+							),
+							true
+						);
+						continue; // Skip this license migration.
 					}
 				}
 
@@ -391,7 +396,7 @@ class BB_Mothership_Loader {
 					}
 				} else {
 					// Migration failed - clear the dynamic plugin ID to prevent orphaned state.
-					$errorCode = $response->__get( 'errorCode' );
+					$errorCode    = $response->__get( 'errorCode' );
 					$errorMessage = $response->__get( 'error' );
 
 					bb_error_log( sprintf( 'BuddyBoss License Migration Failed (Code: %d): %s', $errorCode, $errorMessage ), true );

@@ -25,7 +25,10 @@ class BB_License_Manager extends LicenseManager {
 	 */
 	public static function init(): void {
 		// Hook into HTTP API to capture rate limit headers from Caseproof API responses.
-		add_filter( 'http_response', array( __CLASS__, 'capture_api_headers' ), 10, 3 );
+		// Only register in admin context or during AJAX to prevent overhead on frontend requests.
+		if ( is_admin() || wp_doing_ajax() ) {
+			add_filter( 'http_response', array( __CLASS__, 'capture_api_headers' ), 10, 3 );
+		}
 	}
 
 	/**
@@ -50,46 +53,59 @@ class BB_License_Manager extends LicenseManager {
 		}
 
 		// Check for Cloudflare errors using multiple detection signals.
-		$body = wp_remote_retrieve_body( $response );
-		$statusCode = wp_remote_retrieve_response_code( $response );
+		$body        = wp_remote_retrieve_body( $response );
+		$status_code = wp_remote_retrieve_response_code( $response );
 
 		if ( ! empty( $body ) ) {
-			$bodyLower = strtolower( $body );
+			$body_lower = strtolower( $body );
 
 			// Signal 1: HTTP status code 429 or 503.
-			$isRateLimitStatus = in_array( $statusCode, array( 429, 503 ), true );
+			$is_rate_limit_status = in_array( $status_code, array( 429, 503 ), true );
 
 			// Signal 2: Cloudflare error codes (case-insensitive).
-			$hasCloudflareError = (
-				strpos( $bodyLower, 'error 1015' ) !== false ||
-				strpos( $bodyLower, 'error 1014' ) !== false ||
-				strpos( $bodyLower, 'error 1020' ) !== false
+			$has_cloudflare_error = (
+				false !== strpos( $body_lower, 'error 1015' ) ||
+				false !== strpos( $body_lower, 'error 1014' ) ||
+				false !== strpos( $body_lower, 'error 1020' )
 			);
 
 			// Signal 3: Rate limit keywords (case-insensitive).
-			$hasRateLimitText = (
-				strpos( $bodyLower, 'rate limit' ) !== false ||
-				strpos( $bodyLower, 'too many requests' ) !== false
+			$has_rate_limit_text = (
+				false !== strpos( $body_lower, 'rate limit' ) ||
+				false !== strpos( $body_lower, 'too many requests' )
 			);
 
 			// Signal 4: Cloudflare branding.
-			$isCloudflare = strpos( $bodyLower, 'cloudflare' ) !== false;
+			$is_cloudflare = false !== strpos( $body_lower, 'cloudflare' );
 
 			// Detect Cloudflare rate limit with multiple signal validation.
-			if ( $hasCloudflareError || ( $isRateLimitStatus && $isCloudflare ) || ( $hasRateLimitText && $isCloudflare ) ) {
-				// Cloudflare rate limit detected - store extended block (60 minutes).
-				bb_error_log( 'BuddyBoss: Cloudflare rate limit detected - blocking for 60 minutes', true );
+			$cloudflare_detected = (
+				$has_cloudflare_error ||
+				( $is_rate_limit_status && $is_cloudflare ) ||
+				( $has_rate_limit_text && $is_cloudflare )
+			);
 
-				$resetTime = time() + 3600; // 60 minutes
-				$rateLimitData = array(
+			if ( $cloudflare_detected ) {
+				// Cloudflare rate limit detected - store extended block (60 minutes).
+				bb_error_log(
+					'BuddyBoss: Cloudflare rate limit detected - blocking for 60 minutes',
+					true
+				);
+
+				$reset_time      = time() + 3600; // 60 minutes.
+				$rate_limit_data = array(
 					'limit'     => null,
 					'remaining' => 0,
-					'reset'     => $resetTime,
+					'reset'     => $reset_time,
 					'source'    => 'cloudflare_detected',
 					'timestamp' => time(),
 				);
 
-				self::set_rate_limit_transient( 'buddyboss_license_rate_limit', $rateLimitData, 3660 ); // 61 minutes
+				self::set_rate_limit_transient(
+					'buddyboss_license_rate_limit',
+					$rate_limit_data,
+					3660 // 61 minutes.
+				);
 
 				return $response;
 			}
@@ -113,61 +129,76 @@ class BB_License_Manager extends LicenseManager {
 		$headers = array_change_key_case( $headers, CASE_LOWER );
 
 		// Extract all rate limit headers.
-		$limit          = isset( $headers['x-ratelimit-limit'] ) ? (int) $headers['x-ratelimit-limit'] : null;
-		$remaining      = isset( $headers['x-ratelimit-remaining'] ) ? (int) $headers['x-ratelimit-remaining'] : null;
-		$resetTimestamp = isset( $headers['x-ratelimit-reset'] ) ? (int) $headers['x-ratelimit-reset'] : null;
-		$retryAfter     = isset( $headers['retry-after'] ) ? (int) $headers['retry-after'] : null;
+		$limit           = isset( $headers['x-ratelimit-limit'] ) ? (int) $headers['x-ratelimit-limit'] : null;
+		$remaining       = isset( $headers['x-ratelimit-remaining'] ) ? (int) $headers['x-ratelimit-remaining'] : null;
+		$reset_timestamp = isset( $headers['x-ratelimit-reset'] ) ? (int) $headers['x-ratelimit-reset'] : null;
+		$retry_after     = isset( $headers['retry-after'] ) ? (int) $headers['retry-after'] : null;
 
 		// Check if we have any rate limit headers.
-		$hasRateLimitData = ( null !== $limit || null !== $remaining || null !== $resetTimestamp || null !== $retryAfter );
+		$has_rate_limit_data = (
+			null !== $limit ||
+			null !== $remaining ||
+			null !== $reset_timestamp ||
+			null !== $retry_after
+		);
 
-		if ( $hasRateLimitData ) {
+		if ( $has_rate_limit_data ) {
 			// Log rate limit info only on 429 errors.
-			if ( 429 === $statusCode ) {
-				$resetInfo = '';
-				if ( null !== $resetTimestamp ) {
-					$resetInfo = sprintf( ' - Reset: %s', date( 'Y-m-d H:i:s', $resetTimestamp ) );
-				} elseif ( null !== $retryAfter ) {
-					$resetInfo = sprintf( ' - Reset in %d seconds', $retryAfter );
+			if ( 429 === $status_code ) {
+				$reset_info = '';
+				if ( null !== $reset_timestamp ) {
+					$reset_info = sprintf(
+						' - Reset: %s',
+						date( 'Y-m-d H:i:s', $reset_timestamp )
+					);
+				} elseif ( null !== $retry_after ) {
+					$reset_info = sprintf( ' - Reset in %d seconds', $retry_after );
 				}
 
-				bb_error_log( sprintf(
-					'Rate limit exceeded (remaining: %s)%s',
-					$remaining !== null ? $remaining : 'N/A',
-					$resetInfo
-				), true );
+				bb_error_log(
+					sprintf(
+						'Rate limit exceeded (remaining: %s)%s',
+						null !== $remaining ? $remaining : 'N/A',
+						$reset_info
+					),
+					true
+				);
 			}
 
 			// Determine the best reset time to use.
-			$finalResetTime = null;
-			$source = 'unknown';
+			$final_reset_time = null;
+			$source           = 'unknown';
 
 			// Priority: X-RateLimit-Reset > Retry-After calculation.
-			if ( null !== $resetTimestamp ) {
-				$finalResetTime = $resetTimestamp;
-				$source = 'x_ratelimit_reset';
-			} elseif ( null !== $retryAfter ) {
-				$finalResetTime = time() + $retryAfter;
-				$source = 'retry_after_header';
+			if ( null !== $reset_timestamp ) {
+				$final_reset_time = $reset_timestamp;
+				$source           = 'x_ratelimit_reset';
+			} elseif ( null !== $retry_after ) {
+				$final_reset_time = time() + $retry_after;
+				$source           = 'retry_after_header';
 			}
 
 			// Build rate limit data.
-			$rateLimitData = array(
+			$rate_limit_data = array(
 				'limit'     => $limit,
-				'remaining' => $remaining !== null ? $remaining : ( 429 === $statusCode ? 0 : null ),
-				'reset'     => $finalResetTime,
+				'remaining' => null !== $remaining ? $remaining : ( 429 === $status_code ? 0 : null ),
+				'reset'     => $final_reset_time,
 				'source'    => $source,
 				'timestamp' => time(),
 			);
 
 			// Calculate expiration for transient.
 			$expiration = HOUR_IN_SECONDS;
-			if ( $finalResetTime ) {
-				$timeUntilReset = max( 0, $finalResetTime - time() );
-				$expiration = $timeUntilReset + 60; // Add 60 second buffer
+			if ( $final_reset_time ) {
+				$time_until_reset = max( 0, $final_reset_time - time() );
+				$expiration       = $time_until_reset + 60; // Add 60 second buffer.
 			}
 
-			self::set_rate_limit_transient( 'buddyboss_license_rate_limit', $rateLimitData, $expiration );
+			self::set_rate_limit_transient(
+				'buddyboss_license_rate_limit',
+				$rate_limit_data,
+				$expiration
+			);
 
 			// Rate limit data stored successfully.
 		}
@@ -252,9 +283,9 @@ class BB_License_Manager extends LicenseManager {
 		}
 
 		// Check if we're being rate limited (proactive check).
-		$rateLimitCheck = self::checkRateLimit();
-		if ( is_wp_error( $rateLimitCheck ) ) {
-			throw new \Exception( $rateLimitCheck->get_error_message() );
+		$rate_limit_check = self::checkRateLimit();
+		if ( is_wp_error( $rate_limit_check ) ) {
+			throw new \Exception( $rate_limit_check->get_error_message() );
 		}
 
 		$pluginConnector = self::getContainer()->get( AbstractPluginConnection::class );
@@ -263,23 +294,28 @@ class BB_License_Manager extends LicenseManager {
 		$licenseKey = self::setupDynamicPluginId( $licenseKey, $pluginConnector );
 
 		// Validate product matches license before activation.
-		$validationError = self::validateProductBeforeActivation( $licenseKey, $pluginConnector->pluginId );
-		if ( is_wp_error( $validationError ) ) {
-			throw new \Exception( $validationError->get_error_message() );
+		$validation_error = self::validateProductBeforeActivation( $licenseKey, $pluginConnector->pluginId );
+		if ( is_wp_error( $validation_error ) ) {
+			$pluginConnector->clearDynamicPluginId();
+
+			throw new \Exception( $validation_error->get_error_message() );
 		}
 
 		// Translators: %s is the response error message.
 		$errorHtml = esc_html__( 'License activation failed: %s', 'buddyboss' );
 
 		try {
-			$product  = $pluginConnector->pluginId;
+			$product = $pluginConnector->pluginId;
 
 			// Log activation attempt for debugging.
-			bb_error_log( sprintf(
-				'BuddyBoss: Attempting license activation - Product: %s, Domain: %s',
-				$product,
-				$domain
-			), true );
+			bb_error_log(
+				sprintf(
+					'BuddyBoss: Attempting license activation - Product: %s, Domain: %s',
+					$product,
+					$domain
+				),
+				true
+			);
 
 			$response = LicenseActivations::activate( $product, $licenseKey, $domain );
 		} catch ( \Exception $e ) {
@@ -293,20 +329,23 @@ class BB_License_Manager extends LicenseManager {
 		}
 
 		if ( $response instanceof Response && $response->isError() ) {
-			$errorCode = $response->__get( 'errorCode' );
+			$errorCode    = $response->__get( 'errorCode' );
 			$errorMessage = $response->__get( 'error' );
-			$errors = $response->__get( 'errors' );
+			$errors       = $response->__get( 'errors' );
 
 			// Track failed activation for exponential backoff.
 			self::trackFailedActivation();
 
 			// Log the error details.
-			bb_error_log( sprintf(
-				'BuddyBoss: License activation failed - Code: %d, Message: %s, Product: %s',
-				$errorCode,
-				$errorMessage,
-				$pluginConnector->pluginId
-			), true );
+			bb_error_log(
+				sprintf(
+					'BuddyBoss: License activation failed - Code: %d, Message: %s, Product: %s',
+					$errorCode,
+					$errorMessage,
+					$pluginConnector->pluginId
+				),
+				true
+			);
 
 			// Handle 422 - Product validation failed.
 			if ( 422 === $errorCode ) {
@@ -329,25 +368,28 @@ class BB_License_Manager extends LicenseManager {
 
 				// Use actual reset time from captured headers if available, otherwise use exponential backoff.
 				if ( $rateLimitData && isset( $rateLimitData['reset'] ) && $rateLimitData['reset'] > 0 ) {
-					$resetTime = $rateLimitData['reset'];
+					$resetTime   = $rateLimitData['reset'];
 					$backoffTime = max( 0, $resetTime - time() );
 					$waitMinutes = ceil( $backoffTime / 60 );
-					$source = isset( $rateLimitData['source'] ) ? $rateLimitData['source'] : 'unknown';
+					$source      = isset( $rateLimitData['source'] ) ? $rateLimitData['source'] : 'unknown';
 
 					bb_error_log( 'Using API reset time', true );
 				} else {
 					$backoffTime = self::getBackoffWaitTime();
-					$resetTime = time() + $backoffTime;
+					$resetTime   = time() + $backoffTime;
 					$waitMinutes = ceil( $backoffTime / 60 );
 
 					bb_error_log( 'Using calculated backoff time', true );
 				}
 
-				bb_error_log( sprintf(
-					'Wait %d minutes (reset: %s)',
-					$waitMinutes,
-					date( 'Y-m-d H:i:s', $resetTime )
-				), true );
+				bb_error_log(
+					sprintf(
+						'Wait %d minutes (reset: %s)',
+						$waitMinutes,
+						date( 'Y-m-d H:i:s', $resetTime )
+					),
+					true
+				);
 
 				// Update rate limit to ensure we wait the backoff time.
 				$rateLimitData = array(
@@ -359,9 +401,9 @@ class BB_License_Manager extends LicenseManager {
 				);
 				self::set_rate_limit_transient( 'buddyboss_license_rate_limit', $rateLimitData, HOUR_IN_SECONDS );
 
-								throw new \Exception(
+				throw new \Exception(
 					sprintf(
-						/* translators: %d is the number of minutes to wait */
+					/* translators: %d is the number of minutes to wait */
 						esc_html__( 'License activation failed: Too many activation requests. Please wait approximately %d minute(s) before trying again.', 'buddyboss' ),
 						max( 1, $waitMinutes )
 					)
@@ -393,11 +435,14 @@ class BB_License_Manager extends LicenseManager {
 				self::resetFailedAttempts();
 
 				// Log successful activation.
-				bb_error_log( sprintf(
-					'BuddyBoss: License activated successfully - Product: %s, Domain: %s',
-					$pluginId,
-					$domain
-				), true );
+				bb_error_log(
+					sprintf(
+						'BuddyBoss: License activated successfully - Product: %s, Domain: %s',
+						$pluginId,
+						$domain
+					),
+					true
+				);
 			} catch ( \Exception $e ) {
 				bb_error_log( sprintf( 'Error storing license: %s', $e->getMessage() ), true );
 				throw new \Exception( $e->getMessage() );
@@ -424,27 +469,32 @@ class BB_License_Manager extends LicenseManager {
 		// This preserves API calls for the actual activation attempt.
 		$failedAttempts = self::get_rate_limit_transient( 'buddyboss_license_failed_attempts' );
 		if ( $failedAttempts && (int) $failedAttempts > 0 ) {
-			bb_error_log( sprintf(
-				'BuddyBoss: Skipping pre-activation validation - %d recent failed attempts, preserving API calls',
-				$failedAttempts
-			) );
+			bb_error_log(
+				sprintf(
+					'BuddyBoss: Skipping pre-activation validation - %d recent failed attempts, preserving API calls',
+					$failedAttempts
+				)
+			);
 			return true;
 		}
 
 		// Also skip if we're currently rate limited (don't waste an API call).
 		$rateLimitData = self::get_rate_limit_transient( 'buddyboss_license_rate_limit' );
 		if ( $rateLimitData && is_array( $rateLimitData ) ) {
-			$resetTime = isset( $rateLimitData['reset'] ) ? (int) $rateLimitData['reset'] : 0;
+			$resetTime   = isset( $rateLimitData['reset'] ) ? (int) $rateLimitData['reset'] : 0;
 			$currentTime = time();
 
 			// Check if we're currently in a rate limit block (reset time is in the future).
 			if ( $resetTime > 0 && $currentTime < $resetTime ) {
 				$waitMinutes = ceil( max( 0, $resetTime - $currentTime ) / 60 );
-				bb_error_log( sprintf(
-					'Skipping pre-validation - rate limited until %s (%d minutes)',
-					date( 'Y-m-d H:i:s', $resetTime ),
-					$waitMinutes
-				), true );
+				bb_error_log(
+					sprintf(
+						'Skipping pre-validation - rate limited until %s (%d minutes)',
+						date( 'Y-m-d H:i:s', $resetTime ),
+						$waitMinutes
+					),
+					true
+				);
 				return true;
 			}
 
@@ -452,10 +502,12 @@ class BB_License_Manager extends LicenseManager {
 			$remaining = isset( $rateLimitData['remaining'] ) ? (int) $rateLimitData['remaining'] : null;
 			if ( $remaining !== null && $remaining <= 1 ) {
 				// Too close to rate limit - skip validation to preserve API call for activation.
-				bb_error_log( sprintf(
-					'Skipping pre-validation - only %d requests remaining',
-					$remaining
-				) );
+				bb_error_log(
+					sprintf(
+						'Skipping pre-validation - only %d requests remaining',
+						$remaining
+					)
+				);
 				return true;
 			}
 		}
@@ -480,31 +532,37 @@ class BB_License_Manager extends LicenseManager {
 
 					// Use actual reset time from captured headers if available, otherwise use exponential backoff.
 					if ( $rateLimitData && isset( $rateLimitData['reset'] ) && $rateLimitData['reset'] > 0 ) {
-						$resetTime = $rateLimitData['reset'];
+						$resetTime   = $rateLimitData['reset'];
 						$backoffTime = max( 0, $resetTime - time() );
-						$source = isset( $rateLimitData['source'] ) ? $rateLimitData['source'] : 'unknown';
+						$source      = isset( $rateLimitData['source'] ) ? $rateLimitData['source'] : 'unknown';
 
 						bb_error_log( 'Using API reset time', true );
 					} else {
 						$backoffTime = self::getBackoffWaitTime();
-						$resetTime = time() + $backoffTime;
+						$resetTime   = time() + $backoffTime;
 
 						bb_error_log( 'Using calculated backoff time', true );
 					}
 
 					$waitMinutes = (int) ceil( $backoffTime / 60 );
 
-					bb_error_log( sprintf(
-						'Rate limit detected during validation - wait time: %d seconds (%d minutes)',
-						$backoffTime,
-						$waitMinutes
-					), true );
+					bb_error_log(
+						sprintf(
+							'Rate limit detected during validation - wait time: %d seconds (%d minutes)',
+							$backoffTime,
+							$waitMinutes
+						),
+						true
+					);
 
-					bb_error_log( sprintf(
-						'Reset time: %s (Unix: %d)',
-						date( 'Y-m-d H:i:s', $resetTime ),
-						$resetTime
-					), true );
+					bb_error_log(
+						sprintf(
+							'Reset time: %s (Unix: %d)',
+							date( 'Y-m-d H:i:s', $resetTime ),
+							$resetTime
+						),
+						true
+					);
 
 					// Store/update rate limit data (don't overwrite if we have actual API data).
 					if ( ! $rateLimitData || ! isset( $rateLimitData['reset'] ) ) {
@@ -515,7 +573,7 @@ class BB_License_Manager extends LicenseManager {
 								'reset'     => $resetTime,
 								'source'    => 'validation_calculated',
 							),
-							$backoffTime + 60 // Add 60 seconds buffer
+							$backoffTime + 60 // Add 60 seconds buffer.
 						);
 					}
 
@@ -530,10 +588,12 @@ class BB_License_Manager extends LicenseManager {
 				}
 
 				// Don't block activation on other validation errors - let the activation endpoint handle it.
-				bb_error_log( sprintf(
-					'BuddyBoss: Pre-activation validation failed to fetch license (non-blocking): %s',
-					$response->__get( 'error' )
-				) );
+				bb_error_log(
+					sprintf(
+						'BuddyBoss: Pre-activation validation failed to fetch license (non-blocking): %s',
+						$response->__get( 'error' )
+					)
+				);
 				return true;
 			}
 
@@ -544,17 +604,22 @@ class BB_License_Manager extends LicenseManager {
 				if ( isset( $licenseData['product'] ) ) {
 					$actualProduct = $licenseData['product'];
 
-					bb_error_log( sprintf(
-						'BuddyBoss: License product validation - Expected: %s, Actual: %s',
-						$productId,
-						$actualProduct
-					) );
+					bb_error_log(
+						sprintf(
+							'BuddyBoss: License product validation - Expected: %s, Actual: %s',
+							$productId,
+							$actualProduct
+						)
+					);
 
 					// If product doesn't match, this is likely an orphaned plugin ID.
 					if ( $actualProduct !== $productId ) {
-						bb_error_log( sprintf(
-							'BuddyBoss: Product mismatch detected before activation - clearing orphaned plugin ID'
-						), true );
+						bb_error_log(
+							sprintf(
+								'BuddyBoss: Product mismatch detected before activation - clearing orphaned plugin ID'
+							),
+							true
+						);
 
 						// Get plugin connector to clear the orphaned ID.
 						$pluginConnector = self::getContainer()->get( AbstractPluginConnection::class );
@@ -578,10 +643,12 @@ class BB_License_Manager extends LicenseManager {
 			}
 		} catch ( \Exception $e ) {
 			// Don't block activation on validation errors - let the activation endpoint handle it.
-			bb_error_log( sprintf(
-				'BuddyBoss: Pre-activation validation exception (non-blocking): %s',
-				$e->getMessage()
-			) );
+			bb_error_log(
+				sprintf(
+					'BuddyBoss: Pre-activation validation exception (non-blocking): %s',
+					$e->getMessage()
+				)
+			);
 			return true;
 		}
 
@@ -605,6 +672,11 @@ class BB_License_Manager extends LicenseManager {
 		// Check if license key contains plugin ID in format KEY:PLUGIN_ID.
 		if ( count( $keyParts ) === 2 && preg_match( '/^bb-/', $keyParts[1] ) ) {
 			$pluginId = $keyParts[1];
+
+			// Validate plugin ID format for security - only lowercase letters, numbers, and hyphens.
+			if ( ! preg_match( '/^[a-z0-9\-]+$/', $pluginId ) ) {
+				throw new \Exception( esc_html__( 'Invalid plugin ID format in license key', 'buddyboss' ) );
+			}
 
 			// Store the web plugin ID.
 			update_option( 'buddyboss_web_plugin_id', $pluginId );
@@ -843,9 +915,10 @@ class BB_License_Manager extends LicenseManager {
 		<?php
 		if ( ! is_wp_error( $license_info ) ) {
 			$activation_text = sprintf(
+				/* translators: 1: Number of sites activated, 2: Total sites allowed */
 				__( '%1$s of %2$s sites have been activated with this license key', 'buddyboss' ),
 				$license_info['total_prod_used'],
-				999 <= (int)$license_info['total_prod_allowed'] ? 'unlimited' : $license_info['total_prod_allowed']
+				999 <= (int) $license_info['total_prod_allowed'] ? 'unlimited' : $license_info['total_prod_allowed']
 			);
 			?>
 			<div class="activated-licence">
@@ -995,8 +1068,8 @@ class BB_License_Manager extends LicenseManager {
 
 		// Get form data.
 		$first_name = sanitize_text_field( $_POST['first_name'] ?? '' );
-		$last_name   = sanitize_text_field( $_POST['last_name'] ?? '' );
-		$email       = sanitize_email( $_POST['email'] ?? '' );
+		$last_name  = sanitize_text_field( $_POST['last_name'] ?? '' );
+		$email      = sanitize_email( $_POST['email'] ?? '' );
 
 		// Validate required fields.
 		if ( empty( $first_name ) || empty( $last_name ) || empty( $email ) ) {
@@ -1030,6 +1103,7 @@ class BB_License_Manager extends LicenseManager {
 		if ( is_wp_error( $response ) ) {
 			wp_send_json_error(
 				sprintf(
+					/* translators: %s is the error message */
 					__( 'API request failed: %s', 'buddyboss' ),
 					$response->get_error_message()
 				)
@@ -1042,6 +1116,7 @@ class BB_License_Manager extends LicenseManager {
 		if ( 200 !== $response_code ) {
 			wp_send_json_error(
 				sprintf(
+					/* translators: %d is the HTTP status code */
 					__( 'API returned error code: %d', 'buddyboss' ),
 					$response_code
 				)
@@ -1056,13 +1131,15 @@ class BB_License_Manager extends LicenseManager {
 
 		// Check if API returned success.
 		if ( isset( $data['success'] ) && $data['success'] ) {
-			$message = isset( $data['message'] ) ? $data['message'] : __( 'License key generated successfully!', 'buddyboss' );
+			$message     = isset( $data['message'] ) ? $data['message'] : __( 'License key generated successfully!', 'buddyboss' );
 			$license_key = isset( $data['license_key'] ) ? $data['license_key'] : '';
 
-			wp_send_json_success( array(
-				'message'     => $message,
-				'license_key' => $license_key,
-			) );
+			wp_send_json_success(
+				array(
+					'message'     => $message,
+					'license_key' => $license_key,
+				)
+			);
 		} else {
 			$error_message = isset( $data['message'] ) ? $data['message'] : __( 'Failed to generate license key', 'buddyboss' );
 			wp_send_json_error( $error_message );
@@ -1122,13 +1199,16 @@ class BB_License_Manager extends LicenseManager {
 			// Log the reset action.
 			bb_error_log( 'License settings reset by user', true );
 
-			wp_send_json_success( array(
-				'message' => __( 'License settings have been reset successfully. You can now activate your license with the correct license key.', 'buddyboss' ),
-			) );
+			wp_send_json_success(
+				array(
+					'message' => __( 'License settings have been reset successfully. You can now activate your license with the correct license key.', 'buddyboss' ),
+				)
+			);
 		} catch ( \Exception $e ) {
 			bb_error_log( sprintf( 'Error resetting license: %s', $e->getMessage() ), true );
 			wp_send_json_error(
 				sprintf(
+					/* translators: %s is the error message */
 					__( 'Failed to reset license settings: %s', 'buddyboss' ),
 					$e->getMessage()
 				)
@@ -1146,45 +1226,53 @@ class BB_License_Manager extends LicenseManager {
 		$rateLimitData = self::get_rate_limit_transient( 'buddyboss_license_rate_limit' );
 
 		if ( ! $rateLimitData || ! is_array( $rateLimitData ) ) {
-			return true; // No rate limit data, proceed
+			return true; // No rate limit data, proceed.
 		}
 
-		$remaining = isset( $rateLimitData['remaining'] ) ? (int) $rateLimitData['remaining'] : null;
-		$resetTime = isset( $rateLimitData['reset'] ) ? (int) $rateLimitData['reset'] : 0;
+		$remaining   = isset( $rateLimitData['remaining'] ) ? (int) $rateLimitData['remaining'] : null;
+		$resetTime   = isset( $rateLimitData['reset'] ) ? (int) $rateLimitData['reset'] : 0;
 		$currentTime = time();
-		$source = isset( $rateLimitData['source'] ) ? $rateLimitData['source'] : 'unknown';
+		$source      = isset( $rateLimitData['source'] ) ? $rateLimitData['source'] : 'unknown';
 
-		bb_error_log( sprintf(
-			'BuddyBoss: Checking rate limit - Source: %s, Remaining: %d, Reset at: %s (Unix: %d), Current: %s (Unix: %d)',
-			$source,
-			$remaining,
-			date( 'Y-m-d H:i:s', $resetTime ),
-			$resetTime,
-			date( 'Y-m-d H:i:s', $currentTime ),
-			$currentTime
-		) );
+		bb_error_log(
+			sprintf(
+				'BuddyBoss: Checking rate limit - Source: %s, Remaining: %d, Reset at: %s (Unix: %d), Current: %s (Unix: %d)',
+				$source,
+				$remaining,
+				date( 'Y-m-d H:i:s', $resetTime ),
+				$resetTime,
+				date( 'Y-m-d H:i:s', $currentTime ),
+				$currentTime
+			)
+		);
 
 		// If reset time has passed, clear the rate limit AND reset failed attempts.
 		if ( $resetTime > 0 && $currentTime >= $resetTime ) {
 			self::delete_rate_limit_transient( 'buddyboss_license_rate_limit' );
-			self::delete_rate_limit_transient( 'buddyboss_license_failed_attempts' ); // Reset backoff counter
-			bb_error_log( sprintf(
-				'BuddyBoss: Rate limit window EXPIRED - Reset time %s has passed. Cleared rate limit and failed attempts counter.',
-				date( 'Y-m-d H:i:s', $resetTime )
-			), true );
+			self::delete_rate_limit_transient( 'buddyboss_license_failed_attempts' ); // Reset backoff counter.
+			bb_error_log(
+				sprintf(
+					'BuddyBoss: Rate limit window EXPIRED - Reset time %s has passed. Cleared rate limit and failed attempts counter.',
+					date( 'Y-m-d H:i:s', $resetTime )
+				),
+				true
+			);
 			return true;
 		}
 
 		// Check if we're currently blocked (either by remaining count OR reset time in future).
 		if ( ( $remaining !== null && $remaining <= 0 ) || ( $resetTime > 0 && $currentTime < $resetTime ) ) {
-			$waitTime = max( 0, $resetTime - $currentTime );
+			$waitTime    = max( 0, $resetTime - $currentTime );
 			$waitMinutes = max( 1, ceil( $waitTime / 60 ) );
 
-			bb_error_log( sprintf(
-				'Rate limit exceeded - Wait %d minutes (reset: %s)',
-				$waitMinutes,
-				date( 'Y-m-d H:i:s', $resetTime )
-			), true );
+			bb_error_log(
+				sprintf(
+					'Rate limit exceeded - Wait %d minutes (reset: %s)',
+					$waitMinutes,
+					date( 'Y-m-d H:i:s', $resetTime )
+				),
+				true
+			);
 
 			return new \WP_Error(
 				'rate_limit_exceeded',
@@ -1216,9 +1304,9 @@ class BB_License_Manager extends LicenseManager {
 		// Extract rate limit headers (case-insensitive).
 		$headers = array_change_key_case( $headers, CASE_LOWER );
 
-		$limit = isset( $headers['x-ratelimit-limit'] ) ? (int) $headers['x-ratelimit-limit'] : null;
+		$limit     = isset( $headers['x-ratelimit-limit'] ) ? (int) $headers['x-ratelimit-limit'] : null;
 		$remaining = isset( $headers['x-ratelimit-remaining'] ) ? (int) $headers['x-ratelimit-remaining'] : null;
-		$reset = isset( $headers['x-ratelimit-reset'] ) ? (int) $headers['x-ratelimit-reset'] : null;
+		$reset     = isset( $headers['x-ratelimit-reset'] ) ? (int) $headers['x-ratelimit-reset'] : null;
 
 		if ( null !== $remaining ) {
 			$rateLimitData = array(
@@ -1270,8 +1358,8 @@ class BB_License_Manager extends LicenseManager {
 	 * Set rate limit transient (multisite-aware).
 	 *
 	 * @param string $key Transient key.
-	 * @param mixed $value Transient value.
-	 * @param int $expiration Expiration time in seconds.
+	 * @param mixed  $value Transient value.
+	 * @param int    $expiration Expiration time in seconds.
 	 * @return bool True on success, false on failure.
 	 */
 	private static function set_rate_limit_transient( string $key, $value, int $expiration ) {
@@ -1302,7 +1390,7 @@ class BB_License_Manager extends LicenseManager {
 	private static function trackFailedActivation(): void {
 		$attempts = self::get_rate_limit_transient( 'buddyboss_license_failed_attempts' );
 		$attempts = $attempts ? (int) $attempts : 0;
-		$attempts++;
+		++$attempts;
 
 		// Store for 1 hour.
 		self::set_rate_limit_transient( 'buddyboss_license_failed_attempts', $attempts, HOUR_IN_SECONDS );
@@ -1327,7 +1415,7 @@ class BB_License_Manager extends LicenseManager {
 		// Attempt 1: 30s, Attempt 2: 60s, Attempt 3: 120s, Attempt 4: 240s, etc.
 		// Max 15 minutes.
 		$baseSeconds = 30;
-		$waitTime = min( pow( 2, $attempts - 1 ) * $baseSeconds, 900 );
+		$waitTime    = min( pow( 2, $attempts - 1 ) * $baseSeconds, 900 );
 
 		return (int) $waitTime;
 	}
