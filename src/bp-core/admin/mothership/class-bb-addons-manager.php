@@ -52,7 +52,9 @@ class BB_Addons_Manager extends AddonsManager {
 		$addons = self::getAddons( true );
 
 		if ( $addons instanceof Response && $addons->isError() ) {
-			return sprintf( '<div class=""><p>%s <b>%s</b></p></div>', esc_html__( 'There was an issue connecting with the API.', 'buddyboss' ), $addons->error );
+			// Ensure error is a string for display.
+			$error_message = is_string( $addons->error ) ? $addons->error : (string) $addons->error;
+			return sprintf( '<div class=""><p>%s <b>%s</b></p></div>', esc_html__( 'There was an issue connecting with the API.', 'buddyboss' ), $error_message );
 		}
 
 		self::enqueueAssets();

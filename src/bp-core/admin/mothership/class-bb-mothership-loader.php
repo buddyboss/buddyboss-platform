@@ -277,7 +277,15 @@ class BB_Mothership_Loader {
 
 		$current_status = $pluginConnector->getLicenseActivationStatus();
 
+		// Skip migration if license is already active.
 		if ( $current_status ) {
+			// Mark as migrated to prevent future attempts.
+			if ( $network_activated ) {
+				update_site_option( 'bb_mothership_licenses_migrated', true );
+			} else {
+				update_option( 'bb_mothership_licenses_migrated', true );
+			}
+			error_log( 'BuddyBoss License Migration: Skipping - license already active' );
 			return;
 		}
 
@@ -330,6 +338,36 @@ class BB_Mothership_Loader {
 			}
 
 			if ( $plugin_id !== PLATFORM_EDITION ) {
+				// Validate plugin ID matches installation type.
+				$is_web_id = false !== strpos( $plugin_id, 'bb-web' );
+				$is_platform_id = false !== strpos( $plugin_id, 'bb-platform' );
+
+				// Skip if trying to set web plugin ID on platform-only installation.
+				if ( $is_web_id && ! defined( 'BB_THEME_VERSION' ) ) {
+					error_log( sprintf(
+						'BuddyBoss License Migration: Skipping web license %s - theme not installed',
+						$plugin_id
+					) );
+					continue;
+				}
+
+				// Skip if trying to set paid plugin ID on developer edition.
+				if ( $is_platform_id && PLATFORM_EDITION === 'developer' && $plugin_id !== 'bb-platform-free' ) {
+					error_log( sprintf(
+						'BuddyBoss License Migration: Skipping paid license %s - developer edition',
+						$plugin_id
+					) );
+					continue;
+				}
+
+				// Log migration attempt.
+				error_log( sprintf(
+					'BuddyBoss License Migration: Attempting migration from %s to %s for key %s',
+					$software_id,
+					$plugin_id,
+					substr( $license_data['license_key'], 0, 8 ) . '...'
+				) );
+
 				$pluginConnector->setDynamicPluginId( $plugin_id );
 				$domain   = Credentials::getActivationDomain();
 
@@ -361,7 +399,10 @@ class BB_Mothership_Loader {
 						error_log( 'Error storing migrated license key: ' . $e->getMessage() );
 					}
 				} else {
-					error_log( $response->__get('error') );
+					// Ensure error is a string for logging.
+					$error = $response->__get( 'error' );
+					$error_message = is_string( $error ) ? $error : (string) $error;
+					error_log( 'BuddyBoss License Migration: Activation failed - ' . $error_message );
 				}
 			}
 		}
