@@ -111,6 +111,8 @@ module.exports = function (grunt) {
 					implementation: sass,
 					//indentType: 'tab',
 					//indentWidth: '1'
+					// TODO: Remove silenceDeprecations once SCSS files are updated to Dart Sass syntax
+					silenceDeprecations: ['import', 'global-builtin', 'color-functions', 'slash-div', 'legacy-js-api', 'if-function'],
 				},
 				nouveau: {
 					cwd: SOURCE_DIR,
