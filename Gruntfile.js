@@ -586,20 +586,28 @@ module.exports = function (grunt) {
 						}]
 					}
 				},
-				'icon-translate': {
-					files: [{
-						src: SOURCE_DIR + 'bp-templates/bp-nouveau/icons/font-map.php',
-						expand: true,
-					}],
-					options: {
-						replacements: [
-							{
-								pattern: /return/g,
-								replacement: '$bb_icons_data ='
-							}
-						]
-					}
+			'icon-translate': {
+				files: [{
+					src: SOURCE_DIR + 'bp-templates/bp-nouveau/icons/font-map.php',
+					expand: true,
+				}],
+				options: {
+					replacements: [
+						{
+							pattern: /"(label)"(\s+=>\s+("[^"]+\b"))/g,
+							replacement: '"name" => _x( $3, "BuddyBoss Icon", "buddyboss" )'
+						},
+						{
+							pattern: /return/g,
+							replacement: '$bb_icons_data ='
+						},
+						{
+							pattern: /"(css)"(\s+=>\s+"([^"]+\b)")/g,
+							replacement: '"id" => "bb-icon-$3"'
+						}
+					]
 				}
+			}
 			}
 		}
 	);
