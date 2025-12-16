@@ -57,6 +57,9 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 2.16.1 =
+* Bug: Core - Enhanced the license activation system with improved rate limiting and stability fixes to strengthen security
+
 = 2.16.0 =
 * Enhancement: Core – Improved the licensing service to reduce interruptions and increase the grace period when a license is not initially detected
 * Bug: Activity - Added a tooltip on the Post button to indicate when a post title is required
