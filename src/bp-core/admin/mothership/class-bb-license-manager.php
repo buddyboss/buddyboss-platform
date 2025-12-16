@@ -1,4 +1,13 @@
 <?php
+/**
+ * BuddyBoss Platform - License Manager
+ *
+ * Extends the GroundLevel LicenseManager to add dynamic plugin ID functionality
+ * and advanced rate limiting with exponential backoff.
+ *
+ * @package BuddyBoss\Core\Admin\Mothership
+ * @since   BuddyBoss 2.14.0
+ */
 
 declare(strict_types=1);
 
@@ -18,22 +27,94 @@ use BuddyBossPlatform\GroundLevel\Mothership\AbstractPluginConnection;
 class BB_License_Manager extends LicenseManager {
 
 	/**
+	 * Flag to control when the HTTP filter is active.
+	 * Only set to true during actual license operations to minimize performance impact.
+	 *
+	 * @var bool
+	 */
+	private static $capture_headers_enabled = false;
+
+	/**
+	 * Enable HTTP header capture for the next license operation.
+	 * Call this before making license API calls.
+	 *
+	 * @return void
+	 */
+	private static function enableHeaderCapture(): void {
+		if ( ! self::$capture_headers_enabled ) {
+			self::$capture_headers_enabled = true;
+			add_filter( 'http_response', array( __CLASS__, 'capture_api_headers' ), 10, 3 );
+		}
+	}
+
+	/**
+	 * Disable HTTP header capture after license operation completes.
+	 * Call this after making license API calls.
+	 *
+	 * @return void
+	 */
+	private static function disableHeaderCapture(): void {
+		if ( self::$capture_headers_enabled ) {
+			self::$capture_headers_enabled = false;
+			remove_filter( 'http_response', array( __CLASS__, 'capture_api_headers' ), 10 );
+		}
+	}
+
+	/**
+	 * Get the API base URL for license operations.
+	 * Environment-aware with multiple fallback options.
+	 *
+	 * @param string $pluginId The plugin ID for product-specific constants.
+	 *
+	 * @return string The API base URL.
+	 */
+	private static function getApiBaseUrl( string $pluginId = '' ): string {
+		// Priority 1: Product-specific constant (e.g., BB_PLATFORM_MOTHERSHIP_API_BASE_URL).
+		if ( ! empty( $pluginId ) ) {
+			$constant_name = strtoupper( str_replace( '-', '_', $pluginId ) . '_MOTHERSHIP_API_BASE_URL' );
+			if ( defined( $constant_name ) ) {
+				return constant( $constant_name );
+			}
+		}
+
+		// Priority 2: Generic BuddyBoss constant.
+		if ( defined( 'BUDDYBOSS_MOTHERSHIP_API_BASE_URL' ) ) {
+			return BUDDYBOSS_MOTHERSHIP_API_BASE_URL;
+		}
+
+		// Priority 3: Environment variable (useful for Docker/containerized environments).
+		$env_api_url = getenv( 'BUDDYBOSS_API_URL' );
+		if ( false !== $env_api_url && ! empty( $env_api_url ) ) {
+			return trailingslashit( $env_api_url );
+		}
+
+		// Priority 4: WordPress option (for runtime configuration).
+		$option_api_url = get_option( 'buddyboss_api_base_url' );
+		if ( ! empty( $option_api_url ) ) {
+			return trailingslashit( $option_api_url );
+		}
+
+		// Priority 5: Filter (allows plugins/themes to override).
+		$default_url  = 'https://licenses.caseproof.com/api/v1/';
+		$filtered_url = apply_filters( 'buddyboss_mothership_api_base_url', $default_url, $pluginId );
+
+		return $filtered_url;
+	}
+
+	/**
 	 * Initialize hooks to capture API response headers.
 	 * Should be called early in the WordPress lifecycle.
 	 *
 	 * @return void
 	 */
 	public static function init(): void {
-		// Hook into HTTP API to capture rate limit headers from Caseproof API responses.
-		// Only register in admin context or during AJAX to prevent overhead on frontend requests.
-		if ( is_admin() || wp_doing_ajax() ) {
-			add_filter( 'http_response', array( __CLASS__, 'capture_api_headers' ), 10, 3 );
-		}
+		// Hook is now registered dynamically during license operations only.
+		// This init method kept for backward compatibility but doesn't register global hooks.
 	}
 
 	/**
 	 * Capture rate limit headers from Caseproof API responses.
-	 * This filter runs for ALL HTTP requests made through wp_remote_* functions.
+	 * Only runs when explicitly enabled during license operations.
 	 *
 	 * @param array  $response HTTP response.
 	 * @param array  $args     HTTP request arguments.
@@ -176,6 +257,11 @@ class BB_License_Manager extends LicenseManager {
 			} elseif ( null !== $retry_after ) {
 				$final_reset_time = time() + $retry_after;
 				$source           = 'retry_after_header';
+			} elseif ( 429 === $status_code ) {
+				// For 429 errors without reset time, use default 1 hour window.
+				$final_reset_time = time() + HOUR_IN_SECONDS;
+				$source           = 'default_429_window';
+				bb_error_log( 'BuddyBoss: 429 error without reset time - using 1 hour default', true );
 			}
 
 			// Build rate limit data.
@@ -213,19 +299,23 @@ class BB_License_Manager extends LicenseManager {
 	 * @return void
 	 */
 	public static function controller(): void {
+		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce is verified in activateLicense() and deactivateLicense() methods
 		if ( isset( $_POST['buddyboss_platform_license_button'] ) ) {
-			$pluginConnector = self::getContainer()->get( AbstractPluginConnection::class );
+			$plugin_connector = self::getContainer()->get( AbstractPluginConnection::class );
 
 			// Setup dynamic plugin ID if present in license key.
 			if ( isset( $_POST['license_key'] ) ) {
-				$_POST['license_key'] = self::setupDynamicPluginId( $_POST['license_key'], $pluginConnector );
+				$license_key          = sanitize_text_field( wp_unslash( $_POST['license_key'] ) );
+				$_POST['license_key'] = self::setupDynamicPluginId( $license_key, $plugin_connector );
 			}
 
-			$pluginId = $pluginConnector->pluginId;
+			$plugin_id = $plugin_connector->pluginId;
 
-			if ( $_POST['buddyboss_platform_license_button'] === 'activate' ) {
+			if ( 'activate' === $_POST['buddyboss_platform_license_button'] ) {
 				try {
-					self::activateLicense( $_POST['license_key'], $_POST['activation_domain'] );
+					$license_key       = isset( $_POST['license_key'] ) ? sanitize_text_field( wp_unslash( $_POST['license_key'] ) ) : '';
+					$activation_domain = isset( $_POST['activation_domain'] ) ? sanitize_text_field( wp_unslash( $_POST['activation_domain'] ) ) : '';
+					self::activateLicense( $license_key, $activation_domain );
 					printf(
 						'<div class="notice notice-success"><p>%s</p></div>',
 						esc_html__( 'License activated successfully', 'buddyboss' )
@@ -236,9 +326,11 @@ class BB_License_Manager extends LicenseManager {
 						esc_html( $e->getMessage() )
 					);
 				}
-			} elseif ( $_POST['buddyboss_platform_license_button'] === 'deactivate' ) {
+			} elseif ( 'deactivate' === $_POST['buddyboss_platform_license_button'] ) {
 				try {
-					self::deactivateLicense( $_POST['license_key'], $_POST['activation_domain'] );
+					$license_key       = isset( $_POST['license_key'] ) ? sanitize_text_field( wp_unslash( $_POST['license_key'] ) ) : '';
+					$activation_domain = isset( $_POST['activation_domain'] ) ? sanitize_text_field( wp_unslash( $_POST['activation_domain'] ) ) : '';
+					self::deactivateLicense( $license_key, $activation_domain );
 					printf(
 						'<div class="notice notice-success"><p>%s</p></div>',
 						esc_html__( 'License deactivated successfully', 'buddyboss' )
@@ -251,6 +343,7 @@ class BB_License_Manager extends LicenseManager {
 				}
 			}
 		}
+		// phpcs:enable WordPress.Security.NonceVerification.Missing
 	}
 
 	/**
@@ -263,17 +356,58 @@ class BB_License_Manager extends LicenseManager {
 	 * @return void
 	 */
 	public static function activateLicense( string $licenseKey, string $domain ): void {
-		// Check if the user has the necessary capabilities.
+		self::validateActivationPermissions();
+		self::validateActivationInputs( $licenseKey, $domain );
+
+		$pluginConnector = self::getContainer()->get( AbstractPluginConnection::class );
+		$licenseKey      = self::setupDynamicPluginId( $licenseKey, $pluginConnector );
+
+		$validation_error = self::validateProductBeforeActivation( $licenseKey, $pluginConnector->pluginId );
+		if ( is_wp_error( $validation_error ) ) {
+			$pluginConnector->clearDynamicPluginId();
+			// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- WP_Error::get_error_message() returns sanitized text
+			throw new \Exception( $validation_error->get_error_message() );
+		}
+
+		$response = self::performLicenseActivationApiCall( $pluginConnector->pluginId, $licenseKey, $domain );
+
+		if ( $response instanceof Response && $response->isError() ) {
+			self::handleActivationError( $response, $pluginConnector );
+		}
+
+		if ( $response instanceof Response && ! $response->isError() ) {
+			self::processSuccessfulActivation( $licenseKey, $pluginConnector, $domain );
+		}
+
+		self::disableHeaderCapture();
+	}
+
+	/**
+	 * Validate user permissions for license activation.
+	 *
+	 * @throws \Exception If validation fails.
+	 * @return void
+	 */
+	private static function validateActivationPermissions(): void {
 		if ( ! current_user_can( 'manage_options' ) ) {
 			throw new \Exception( esc_html__( 'You do not have permission to activate a license', 'buddyboss' ) );
 		}
 
-		// Check nonce.
-		if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], 'mothership_activate_license' ) ) {
+		if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) ), 'mothership_activate_license' ) ) {
 			throw new \Exception( esc_html__( 'Invalid nonce', 'buddyboss' ) );
 		}
+	}
 
-		// Validate inputs.
+	/**
+	 * Validate activation inputs and check rate limits.
+	 *
+	 * @param string $licenseKey The license key.
+	 * @param string $domain     The activation domain.
+	 *
+	 * @throws \Exception If validation fails.
+	 * @return void
+	 */
+	private static function validateActivationInputs( string $licenseKey, string $domain ): void {
 		if ( empty( $licenseKey ) ) {
 			throw new \Exception( esc_html__( 'License key is required', 'buddyboss' ) );
 		}
@@ -282,32 +416,27 @@ class BB_License_Manager extends LicenseManager {
 			throw new \Exception( esc_html__( 'Activation domain is required', 'buddyboss' ) );
 		}
 
-		// Check if we're being rate limited (proactive check).
 		$rate_limit_check = self::checkRateLimit();
 		if ( is_wp_error( $rate_limit_check ) ) {
+			// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- WP_Error::get_error_message() returns sanitized text
 			throw new \Exception( $rate_limit_check->get_error_message() );
 		}
+	}
 
-		$pluginConnector = self::getContainer()->get( AbstractPluginConnection::class );
-
-		// Setup dynamic plugin ID if present in license key.
-		$licenseKey = self::setupDynamicPluginId( $licenseKey, $pluginConnector );
-
-		// Validate product matches license before activation.
-		$validation_error = self::validateProductBeforeActivation( $licenseKey, $pluginConnector->pluginId );
-		if ( is_wp_error( $validation_error ) ) {
-			$pluginConnector->clearDynamicPluginId();
-
-			throw new \Exception( $validation_error->get_error_message() );
-		}
-
-		// Translators: %s is the response error message.
-		$errorHtml = esc_html__( 'License activation failed: %s', 'buddyboss' );
+	/**
+	 * Perform the license activation API call.
+	 *
+	 * @param string $product    The product ID.
+	 * @param string $licenseKey The license key.
+	 * @param string $domain     The activation domain.
+	 *
+	 * @throws \Exception If API call fails.
+	 * @return Response The API response.
+	 */
+	private static function performLicenseActivationApiCall( string $product, string $licenseKey, string $domain ): Response {
+		self::enableHeaderCapture();
 
 		try {
-			$product = $pluginConnector->pluginId;
-
-			// Log activation attempt for debugging.
 			bb_error_log(
 				sprintf(
 					'BuddyBoss: Attempting license activation - Product: %s, Domain: %s',
@@ -317,135 +446,162 @@ class BB_License_Manager extends LicenseManager {
 				true
 			);
 
-			$response = LicenseActivations::activate( $product, $licenseKey, $domain );
+			return LicenseActivations::activate( $product, $licenseKey, $domain );
 		} catch ( \Exception $e ) {
+			self::disableHeaderCapture();
 			bb_error_log( sprintf( 'License activation API exception: %s', $e->getMessage() ), true );
-			// Don't expose internal API errors to users - show generic message.
 			throw new \Exception(
 				esc_html__( 'License activation failed. Please check your license key and try again. If the problem persists, contact support.', 'buddyboss' )
 			);
 		}
+	}
 
-		if ( $response instanceof Response && $response->isError() ) {
-			$errorCode    = $response->__get( 'errorCode' );
-			$errorMessage = $response->__get( 'error' );
-			$errors       = $response->__get( 'errors' );
+	/**
+	 * Handle activation errors based on error code.
+	 *
+	 * @param Response                 $response        The API response.
+	 * @param AbstractPluginConnection $pluginConnector The plugin connector.
+	 *
+	 * @throws \Exception Always throws exception with appropriate message.
+	 * @return void
+	 */
+	private static function handleActivationError( Response $response, $pluginConnector ): void {
+		self::disableHeaderCapture();
 
-			// Track failed activation for exponential backoff.
-			self::trackFailedActivation();
+		$errorCode    = $response->__get( 'errorCode' );
+		$errorMessage = $response->__get( 'error' );
+		$errors       = $response->__get( 'errors' );
 
-			// Log the error details.
+		self::trackFailedActivation();
+
+		bb_error_log(
+			sprintf(
+				'BuddyBoss: License activation failed - Code: %d, Message: %s, Product: %s',
+				$errorCode,
+				$errorMessage,
+				$pluginConnector->pluginId
+			),
+			true
+		);
+
+		if ( 422 === $errorCode ) {
+			self::handleActivationError422( $errors, $pluginConnector );
+		}
+
+		if ( 429 === $errorCode ) {
+			self::handleActivationError429();
+		}
+
+		throw new \Exception(
+			sprintf(
+				/* translators: %s is the error message from API */
+				esc_html__( 'License activation failed: %s', 'buddyboss' ),
+				esc_html( $errorMessage )
+			)
+		);
+	}
+
+	/**
+	 * Handle 422 product mismatch errors.
+	 *
+	 * @param array|null               $errors          The error details.
+	 * @param AbstractPluginConnection $pluginConnector The plugin connector.
+	 *
+	 * @throws \Exception If product mismatch detected.
+	 * @return void
+	 */
+	private static function handleActivationError422( $errors, $pluginConnector ): void {
+		if ( is_array( $errors ) && isset( $errors['product'] ) ) {
+			$pluginConnector->clearDynamicPluginId();
+			bb_error_log( 'Cleared orphaned plugin ID (422)', true );
+
+			throw new \Exception(
+				esc_html__( 'License activation failed: The stored product ID did not match your license. Please try activating again with your license key.', 'buddyboss' )
+			);
+		}
+	}
+
+	/**
+	 * Handle 429 rate limit errors with exponential backoff.
+	 *
+	 * @throws \Exception Always throws exception with wait time message.
+	 * @return void
+	 */
+	private static function handleActivationError429(): void {
+		$rateLimitData = self::get_rate_limit_transient( 'rate_limit' );
+
+		if ( $rateLimitData && isset( $rateLimitData['reset'] ) && $rateLimitData['reset'] > 0 ) {
+			$resetTime   = $rateLimitData['reset'];
+			$backoffTime = max( 0, $resetTime - time() );
+			$waitMinutes = ceil( $backoffTime / 60 );
+			bb_error_log( 'Using API reset time', true );
+		} else {
+			$backoffTime = self::getBackoffWaitTime();
+			$resetTime   = time() + $backoffTime;
+			$waitMinutes = ceil( $backoffTime / 60 );
+			bb_error_log( 'Using calculated backoff time', true );
+		}
+
+		bb_error_log(
+			sprintf(
+				'Wait %d minutes (reset: %s)',
+				$waitMinutes,
+				date( 'Y-m-d H:i:s', $resetTime )
+			),
+			true
+		);
+
+		$rateLimitData = array(
+			'limit'     => 10,
+			'remaining' => 0,
+			'reset'     => $resetTime,
+			'timestamp' => time(),
+			'source'    => 'calculated_backoff',
+		);
+		self::set_rate_limit_transient( 'rate_limit', $rateLimitData, HOUR_IN_SECONDS );
+
+		throw new \Exception(
+			sprintf(
+				/* translators: %d is the number of minutes to wait */
+				esc_html__( 'License activation failed: Too many activation requests. Please wait approximately %d minute(s) before trying again.', 'buddyboss' ),
+				max( 1, $waitMinutes ) // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- max() returns integer
+			)
+		);
+	}
+
+	/**
+	 * Process successful license activation.
+	 *
+	 * @param string                   $licenseKey      The license key.
+	 * @param AbstractPluginConnection $pluginConnector The plugin connector.
+	 * @param string                   $domain          The activation domain.
+	 *
+	 * @throws \Exception If storing credentials fails.
+	 * @return void
+	 */
+	private static function processSuccessfulActivation( string $licenseKey, $pluginConnector, string $domain ): void {
+		try {
+			Credentials::storeLicenseKey( $licenseKey );
+			$pluginConnector->updateLicenseActivationStatus( true );
+
+			$pluginId = $pluginConnector->pluginId;
+			delete_transient( $pluginId . '-mosh-products' );
+			delete_transient( $pluginId . '-mosh-addons-update-check' );
+
+			self::resetFailedAttempts();
+
 			bb_error_log(
 				sprintf(
-					'BuddyBoss: License activation failed - Code: %d, Message: %s, Product: %s',
-					$errorCode,
-					$errorMessage,
-					$pluginConnector->pluginId
+					'BuddyBoss: License activated successfully - Product: %s, Domain: %s',
+					$pluginId,
+					$domain
 				),
 				true
 			);
-
-			// Handle 422 - Product validation failed.
-			if ( 422 === $errorCode ) {
-				// Check if it's a product mismatch error.
-				if ( is_array( $errors ) && isset( $errors['product'] ) ) {
-					// Clear the orphaned dynamic plugin ID.
-					$pluginConnector->clearDynamicPluginId();
-					bb_error_log( 'Cleared orphaned plugin ID (422)', true );
-
-					throw new \Exception(
-						esc_html__( 'License activation failed: The stored product ID did not match your license. Please try activating again with your license key.', 'buddyboss' )
-					);
-				}
-			}
-
-			// Handle 429 - Rate limit exceeded with exponential backoff.
-			if ( 429 === $errorCode ) {
-				// Check if HTTP filter captured rate limit headers from this 429 response.
-				$rateLimitData = self::get_rate_limit_transient( 'rate_limit' );
-
-				// Use actual reset time from captured headers if available, otherwise use exponential backoff.
-				if ( $rateLimitData && isset( $rateLimitData['reset'] ) && $rateLimitData['reset'] > 0 ) {
-					$resetTime   = $rateLimitData['reset'];
-					$backoffTime = max( 0, $resetTime - time() );
-					$waitMinutes = ceil( $backoffTime / 60 );
-					$source      = isset( $rateLimitData['source'] ) ? $rateLimitData['source'] : 'unknown';
-
-					bb_error_log( 'Using API reset time', true );
-				} else {
-					$backoffTime = self::getBackoffWaitTime();
-					$resetTime   = time() + $backoffTime;
-					$waitMinutes = ceil( $backoffTime / 60 );
-
-					bb_error_log( 'Using calculated backoff time', true );
-				}
-
-				bb_error_log(
-					sprintf(
-						'Wait %d minutes (reset: %s)',
-						$waitMinutes,
-						date( 'Y-m-d H:i:s', $resetTime )
-					),
-					true
-				);
-
-				// Update rate limit to ensure we wait the backoff time.
-				$rateLimitData = array(
-					'limit'     => isset( $actualRateLimitInfo['limit'] ) ? $actualRateLimitInfo['limit'] : 10,
-					'remaining' => isset( $actualRateLimitInfo['remaining'] ) ? $actualRateLimitInfo['remaining'] : 0,
-					'reset'     => $resetTime,
-					'timestamp' => time(),
-					'source'    => $actualRateLimitInfo ? 'api_headers' : 'calculated_backoff',
-				);
-				self::set_rate_limit_transient( 'rate_limit', $rateLimitData, HOUR_IN_SECONDS );
-
-				throw new \Exception(
-					sprintf(
-					/* translators: %d is the number of minutes to wait */
-						esc_html__( 'License activation failed: Too many activation requests. Please wait approximately %d minute(s) before trying again.', 'buddyboss' ),
-						max( 1, $waitMinutes )
-					)
-				);
-			}
-
-			// Generic error handling.
-			throw new \Exception(
-				sprintf(
-					$errorHtml,
-					$errorMessage
-				)
-			);
-		}
-
-		if ( $response instanceof Response && ! $response->isError() ) {
-			try {
-				Credentials::storeLicenseKey( $licenseKey );
-				$pluginConnector->updateLicenseActivationStatus( true );
-
-				// Clear all caches to force refresh.
-				// Note: updateLicenseActivationStatus already clears license details and add-ons cache,.
-				// but we explicitly clear product transients here for consistency.
-				$pluginId = $pluginConnector->pluginId;
-				delete_transient( $pluginId . '-mosh-products' );
-				delete_transient( $pluginId . '-mosh-addons-update-check' );
-
-				// Reset failed attempts counter on successful activation.
-				self::resetFailedAttempts();
-
-				// Log successful activation.
-				bb_error_log(
-					sprintf(
-						'BuddyBoss: License activated successfully - Product: %s, Domain: %s',
-						$pluginId,
-						$domain
-					),
-					true
-				);
-			} catch ( \Exception $e ) {
-				bb_error_log( sprintf( 'Error storing license credentials: %s', $e->getMessage() ), true );
-				// Don't expose internal storage errors to users.
-				throw new \Exception( esc_html__( 'License activation succeeded but failed to save. Please try again.', 'buddyboss' ) );
-			}
+		} catch ( \Exception $e ) {
+			self::disableHeaderCapture();
+			bb_error_log( sprintf( 'Error storing license credentials: %s', $e->getMessage() ), true );
+			throw new \Exception( esc_html__( 'License activation succeeded but failed to save. Please try again.', 'buddyboss' ) );
 		}
 	}
 
@@ -499,7 +655,7 @@ class BB_License_Manager extends LicenseManager {
 
 			// Also check remaining count if available.
 			$remaining = isset( $rateLimitData['remaining'] ) ? (int) $rateLimitData['remaining'] : null;
-			if ( $remaining !== null && $remaining <= 1 ) {
+			if ( null !== $remaining && $remaining <= 1 ) {
 				// Too close to rate limit - skip validation to preserve API call for activation.
 				bb_error_log(
 					sprintf(
@@ -663,6 +819,7 @@ class BB_License_Manager extends LicenseManager {
 	 * @param string $licenseKey     The license key that may contain plugin ID.
 	 * @param object $pluginConnector The plugin connector instance.
 	 *
+	 * @throws \Exception If plugin ID format is invalid.
 	 * @return string The cleaned license key without plugin ID.
 	 */
 	private static function setupDynamicPluginId( string $licenseKey, $pluginConnector ): string {
@@ -672,9 +829,30 @@ class BB_License_Manager extends LicenseManager {
 		if ( count( $keyParts ) === 2 && preg_match( '/^bb-/', $keyParts[1] ) ) {
 			$pluginId = $keyParts[1];
 
-			// Validate plugin ID format for security - only lowercase letters, numbers, and hyphens.
-			if ( ! preg_match( '/^[a-z0-9\-]+$/', $pluginId ) ) {
+			// Validate plugin ID format for security.
+			// Requirements: 3-50 chars, lowercase letters/numbers/hyphens, must start with letter,
+			// no consecutive hyphens, must be buddyboss-related product.
+			if ( strlen( $pluginId ) < 3 || strlen( $pluginId ) > 50 ) {
+				throw new \Exception( esc_html__( 'Invalid plugin ID length in license key', 'buddyboss' ) );
+			}
+
+			// Must start with letter, contain only lowercase letters, numbers, single hyphens.
+			if ( ! preg_match( '/^[a-z][a-z0-9]*(-[a-z0-9]+)*$/', $pluginId ) ) {
 				throw new \Exception( esc_html__( 'Invalid plugin ID format in license key', 'buddyboss' ) );
+			}
+
+			// Whitelist: Must be a known BuddyBoss product ID pattern.
+			$allowed_prefixes = array( 'bb-platform', 'bb-web', 'buddyboss' );
+			$is_valid_prefix  = false;
+			foreach ( $allowed_prefixes as $prefix ) {
+				if ( strpos( $pluginId, $prefix ) === 0 ) {
+					$is_valid_prefix = true;
+					break;
+				}
+			}
+
+			if ( ! $is_valid_prefix ) {
+				throw new \Exception( esc_html__( 'Invalid product identifier in license key', 'buddyboss' ) );
 			}
 
 			// Store the web plugin ID.
@@ -716,7 +894,7 @@ class BB_License_Manager extends LicenseManager {
 									printf(
 										/* translators: %s is the link to get a free license key */
 										esc_html__( 'Don\'t have a license yet? Click  %s to get your free license key and receive plugin updates.', 'buddyboss' ),
-										'<a href="#" id="get-free-license-link" rel="noopener noreferrer">' . __( 'here', 'buddyboss' ) . '</a>'
+										'<a href="#" id="get-free-license-link" rel="noopener noreferrer">' . esc_html__( 'here', 'buddyboss' ) . '</a>'
 									);
 								?>
 							</p>
@@ -733,6 +911,20 @@ class BB_License_Manager extends LicenseManager {
 			</div>
 		</form>
 
+		<?php
+		echo $this->renderFreeLicenseModal(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Method returns safe HTML
+		echo $this->renderFreeLicenseJavaScript(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Method returns safe JavaScript
+		return ob_get_clean();
+	}
+
+	/**
+	 * Render the free license modal HTML.
+	 *
+	 * @return string The modal HTML.
+	 */
+	private function renderFreeLicenseModal(): string {
+		ob_start();
+		?>
 		<!-- Free License Key Modal -->
 		<div id="free-license-modal" class="bb-license-modal" style="display: none;">
 			<div class="bb-modal-content">
@@ -780,7 +972,18 @@ class BB_License_Manager extends LicenseManager {
 				</div>
 			</div>
 		</div>
+		<?php
+		return ob_get_clean();
+	}
 
+	/**
+	 * Render the JavaScript for the free license modal.
+	 *
+	 * @return string The JavaScript code.
+	 */
+	private function renderFreeLicenseJavaScript(): string {
+		ob_start();
+		?>
 		<script>
 		jQuery(document).ready(function($) {
 			// Open modal.
@@ -824,7 +1027,7 @@ class BB_License_Manager extends LicenseManager {
 					first_name: $('#first_name').val(),
 					last_name: $('#last_name').val(),
 					email: $('#email').val(),
-					nonce: '<?php echo wp_create_nonce( 'bb_get_free_license' ); ?>'
+					nonce: '<?php echo esc_js( wp_create_nonce( 'bb_get_free_license' ) ); ?>'
 				};
 
 				// Make AJAX request.
@@ -981,9 +1184,7 @@ class BB_License_Manager extends LicenseManager {
 			}
 		}
 
-		$root_api_url = defined( strtoupper( $pluginId . '_MOTHERSHIP_API_BASE_URL' ) )
-			? constant( strtoupper( $pluginId . '_MOTHERSHIP_API_BASE_URL' ) )
-			: 'https://licenses.caseproof.com/api/v1/';
+		$root_api_url = self::getApiBaseUrl( $pluginId );
 
 		$api_url     = $root_api_url . 'licenses/' . $license_key;
 		$domain      = wp_parse_url( home_url(), PHP_URL_HOST );
@@ -1056,7 +1257,7 @@ class BB_License_Manager extends LicenseManager {
 	 */
 	public static function ajax_get_free_license(): void {
 		// Verify nonce - check existence first to prevent PHP warnings.
-		if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'bb_get_free_license' ) ) {
+		if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'bb_get_free_license' ) ) {
 			wp_send_json_error( __( 'Invalid nonce', 'buddyboss' ) );
 		}
 
@@ -1066,9 +1267,9 @@ class BB_License_Manager extends LicenseManager {
 		}
 
 		// Get form data.
-		$first_name = sanitize_text_field( $_POST['first_name'] ?? '' );
-		$last_name  = sanitize_text_field( $_POST['last_name'] ?? '' );
-		$email      = sanitize_email( $_POST['email'] ?? '' );
+		$first_name = isset( $_POST['first_name'] ) ? sanitize_text_field( wp_unslash( $_POST['first_name'] ) ) : '';
+		$last_name  = isset( $_POST['last_name'] ) ? sanitize_text_field( wp_unslash( $_POST['last_name'] ) ) : '';
+		$email      = isset( $_POST['email'] ) ? sanitize_email( wp_unslash( $_POST['email'] ) ) : '';
 
 		// Validate required fields.
 		if ( empty( $first_name ) || empty( $last_name ) || empty( $email ) ) {
@@ -1153,7 +1354,7 @@ class BB_License_Manager extends LicenseManager {
 	 */
 	public static function ajax_reset_license_settings(): void {
 		// Verify nonce - check existence first to prevent PHP warnings.
-		if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'bb_reset_license_settings' ) ) {
+		if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'bb_reset_license_settings' ) ) {
 			wp_send_json_error( __( 'Invalid nonce', 'buddyboss' ) );
 		}
 
@@ -1171,6 +1372,9 @@ class BB_License_Manager extends LicenseManager {
 			// Clear dynamic plugin ID.
 			$pluginConnector->clearDynamicPluginId();
 
+			// Clear web plugin ID (set when using KEY:PLUGIN_ID format).
+			delete_option( 'buddyboss_web_plugin_id' );
+
 			// Clear license key.
 			$pluginConnector->updateLicenseKey( '' );
 
@@ -1181,22 +1385,43 @@ class BB_License_Manager extends LicenseManager {
 			delete_option( 'bb_mothership_licenses_migrated' );
 			delete_site_option( 'bb_mothership_licenses_migrated' );
 
-			// Clear all license-related transients.
-			delete_transient( $current_plugin_id . '-mosh-products' );
-			delete_transient( $current_plugin_id . '-mosh-addons-update-check' );
-			delete_transient( $current_plugin_id . '_license_details' );
+			// List all possible plugin IDs that might have stored data.
+			$all_plugin_ids = array(
+				$current_plugin_id,
+				PLATFORM_EDITION,
+				'bb-platform-pro-1-site',
+				'bb-platform-pro-2-sites',
+				'bb-platform-pro-5-sites',
+				'bb-platform-pro-10-sites',
+				'bb-platform-free',
+				'bb-web',
+				'bb-web-2-sites',
+				'bb-web-5-sites',
+				'bb-web-10-sites',
+				'bb-web-20-sites',
+			);
 
-			// Also clear transients for the default plugin ID.
-			delete_transient( PLATFORM_EDITION . '-mosh-products' );
-			delete_transient( PLATFORM_EDITION . '-mosh-addons-update-check' );
-			delete_transient( PLATFORM_EDITION . '_license_details' );
+			// Clear all license-related data for all possible plugin IDs.
+			foreach ( $all_plugin_ids as $plugin_id ) {
+				// Clear license keys and activation status.
+				delete_option( $plugin_id . '_license_key' );
+				delete_option( $plugin_id . '_license_activation_status' );
+
+				// Clear transients (both regular and site-wide for multisite).
+				delete_transient( $plugin_id . '-mosh-products' );
+				delete_transient( $plugin_id . '-mosh-addons-update-check' );
+				delete_transient( $plugin_id . '_license_details' );
+				delete_site_transient( $plugin_id . '-mosh-products' );
+				delete_site_transient( $plugin_id . '-mosh-addons-update-check' );
+				delete_site_transient( $plugin_id . '_license_details' );
+			}
 
 			// Clear rate limit and backoff data.
 			self::delete_rate_limit_transient( 'rate_limit' );
 			self::delete_rate_limit_transient( 'failed_attempts' );
 
 			// Log the reset action.
-			bb_error_log( 'License settings reset by user', true );
+			bb_error_log( 'License settings reset by user - all mothership data cleared', true );
 
 			wp_send_json_success(
 				array(
@@ -1230,6 +1455,20 @@ class BB_License_Manager extends LicenseManager {
 		$currentTime = time();
 		$source      = isset( $rateLimitData['source'] ) ? $rateLimitData['source'] : 'unknown';
 
+		// Check for invalid reset time (0 or very old timestamp).
+		// Unix epoch (0) or timestamps more than 1 year old indicate corrupted data.
+		if ( $resetTime <= 0 || $resetTime < ( $currentTime - YEAR_IN_SECONDS ) ) {
+			bb_error_log(
+				sprintf(
+					'BuddyBoss: Invalid rate limit data detected (reset: %d) - clearing corrupted data',
+					$resetTime
+				),
+				true
+			);
+			self::delete_rate_limit_transient( 'rate_limit' );
+			return true; // Clear invalid data and proceed.
+		}
+
 		bb_error_log(
 			sprintf(
 				'BuddyBoss: Checking rate limit - Source: %s, Remaining: %d, Reset at: %s (Unix: %d), Current: %s (Unix: %d)',
@@ -1243,7 +1482,7 @@ class BB_License_Manager extends LicenseManager {
 		);
 
 		// If reset time has passed, clear the rate limit AND reset failed attempts.
-		if ( $resetTime > 0 && $currentTime >= $resetTime ) {
+		if ( $currentTime >= $resetTime ) {
 			self::delete_rate_limit_transient( 'rate_limit' );
 			self::delete_rate_limit_transient( 'failed_attempts' ); // Reset backoff counter.
 			bb_error_log(
@@ -1256,8 +1495,9 @@ class BB_License_Manager extends LicenseManager {
 			return true;
 		}
 
-		// Check if we're currently blocked (either by remaining count OR reset time in future).
-		if ( ( $remaining !== null && $remaining <= 0 ) || ( $resetTime > 0 && $currentTime < $resetTime ) ) {
+		// Check if we're currently blocked by remaining count.
+		// Note: We already know currentTime < resetTime (otherwise we would have returned above).
+		if ( null !== $remaining && $remaining <= 0 ) {
 			$waitTime    = max( 0, $resetTime - $currentTime );
 			$waitMinutes = max( 1, ceil( $waitTime / 60 ) );
 
@@ -1421,7 +1661,7 @@ class BB_License_Manager extends LicenseManager {
 		$attempts = self::get_rate_limit_transient( 'failed_attempts' );
 		$attempts = $attempts ? (int) $attempts : 0;
 
-		if ( $attempts === 0 ) {
+		if ( 0 === $attempts ) {
 			return 0;
 		}
 

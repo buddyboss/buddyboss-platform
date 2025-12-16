@@ -1,4 +1,11 @@
 <?php
+/**
+ * BuddyBoss Platform - Mothership License Admin View
+ *
+ * @package BuddyBoss\Core\Admin\Mothership
+ * @since   BuddyBoss 2.14.0
+ */
+
 namespace BuddyBoss\Core\Admin\Mothership;
 
 ?>
@@ -12,10 +19,16 @@ namespace BuddyBoss\Core\Admin\Mothership;
 				<h2><?php esc_html_e( 'Manual Connect', 'buddyboss' ); ?></h2>
 				<p>
 					<li>
-						<?php printf( __( 'Log into %s', 'buddyboss' ), '<a href="https://my.buddyboss.com/wp-admin">BuddyBoss.com</a>' ); ?>
+						<?php
+						/* translators: %s: Link to BuddyBoss.com */
+						printf( esc_html__( 'Log into %s', 'buddyboss' ), '<a href="https://my.buddyboss.com/wp-admin">BuddyBoss.com</a>' );
+						?>
 					</li>
 					<li>
-						<?php printf( __( 'Go to your %s', 'buddyboss' ), '<a href="https://my.buddyboss.com/my-account/">Account</a>' ); ?>
+						<?php
+						/* translators: %s: Link to account page */
+						printf( esc_html__( 'Go to your %s', 'buddyboss' ), '<a href="https://my.buddyboss.com/my-account/">Account</a>' );
+						?>
 					</li>
 					<li>
 						<?php esc_html_e( 'Go to the "Subscriptions" tab', 'buddyboss' ); ?>
@@ -61,9 +74,9 @@ namespace BuddyBoss\Core\Admin\Mothership;
 	<div class='buddyboss-mothership-settings clearfix'>
 		<?php
 			// Use our custom BB_License_Manager instead of the base LicenseManager.
-			$licenseManager = new BB_License_Manager();
+			$license_manager = new BB_License_Manager();
 			echo '<div class="setting-wrapper">';
-			echo $licenseManager->generateLicenseActivationForm(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo $license_manager->generateLicenseActivationForm(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			echo '</div>';
 		?>
 	</div><!-- .buddyboss-mothership-settings -->

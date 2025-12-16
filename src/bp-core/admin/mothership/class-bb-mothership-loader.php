@@ -1,4 +1,13 @@
 <?php
+/**
+ * BuddyBoss Platform - Mothership Loader
+ *
+ * Main loader class for BuddyBoss Mothership functionality.
+ * Handles initialization of licensing and In-Product Notifications services.
+ *
+ * @package BuddyBoss\Core\Admin\Mothership
+ * @since   BuddyBoss 2.14.0
+ */
 
 declare(strict_types=1);
 
@@ -197,8 +206,15 @@ class BB_Mothership_Loader {
 			delete_transient( $plugin_id . '-mosh-products' );
 			delete_transient( $plugin_id . '-mosh-addons-update-check' );
 
-			// Log the deactivation.
-			bb_error_log( 'BuddyBoss license deactivated: ' . print_r( $response, true ), true );
+			// Log the deactivation (sanitized - no sensitive data).
+			$log_message = 'BuddyBoss license deactivated';
+			if ( is_object( $response ) && method_exists( $response, '__get' ) ) {
+				$error_code = $response->__get( 'errorCode' );
+				if ( $error_code ) {
+					$log_message .= sprintf( ' - Error code: %d', $error_code );
+				}
+			}
+			bb_error_log( $log_message, true );
 		} else {
 			// License is active - ensure status is updated.
 			$this->pluginConnector->updateLicenseActivationStatus( true );
@@ -303,65 +319,15 @@ class BB_Mothership_Loader {
 			}
 
 			$software_id = $license_data['software_product_id'];
-
-			if ( 'BB_PLATFORM_PRO_1S' === $software_id ) {
-				$plugin_id = 'bb-platform-pro-1-site';
-			} elseif ( 'BB_PLATFORM_PRO_2S' === $software_id ) {
-				$plugin_id = 'bb-platform-pro-2-sites';
-			} elseif ( 'BB_PLATFORM_PRO_5S' === $software_id ) {
-				$plugin_id = 'bb-platform-pro-5-sites';
-			} elseif ( 'BB_PLATFORM_FREE' === $software_id ) {
-				$plugin_id = 'bb-platform-free';
-			} elseif ( 'BB_PLATFORM_PRO_10S' === $software_id ) {
-				$plugin_id = 'bb-platform-pro-10-sites';
-			} elseif (
-				'BB_THEME_1S' === $software_id ||
-				'BUDDYBOSS_THEME_1S' === $software_id
-			) {
-				$plugin_id = 'bb-web';
-			} elseif ( 'BB_THEME_2S' === $software_id ) {
-				$plugin_id = 'bb-web-2-sites';
-			} elseif (
-				'BB_THEME_5S' === $software_id ||
-				'BUDDYBOSS_THEME_5S' === $software_id
-			) {
-				$plugin_id = 'bb-web-5-sites';
-			} elseif ( 'BB_THEME_10S' === $software_id ) {
-				$plugin_id = 'bb-web-10-sites';
-			} elseif (
-				'BB_THEME_20S' === $software_id ||
-				'BUDDYBOSS_THEME_20S' === $software_id
-			) {
-				$plugin_id = 'bb-web-20-sites';
-			}
+			$plugin_id   = self::mapSoftwareIdToPluginId( $software_id );
 
 			if ( PLATFORM_EDITION !== $plugin_id ) {
 				$pluginConnector->setDynamicPluginId( $plugin_id );
 				$domain = Credentials::getActivationDomain();
 
 				// Check if we're being rate limited before attempting migration activation.
-				// Use multisite-aware transient retrieval.
-				$network_activated = false;
-				if ( is_multisite() && function_exists( 'is_plugin_active_for_network' ) ) {
-					$network_activated = is_plugin_active_for_network( buddypress()->basename );
-				}
-				$rateLimitData = $network_activated ? get_site_transient( 'bb_license_rate_limit' ) : get_transient( 'bb_license_rate_limit' );
-				if ( $rateLimitData && is_array( $rateLimitData ) ) {
-					$resetTime   = isset( $rateLimitData['reset'] ) ? (int) $rateLimitData['reset'] : 0;
-					$currentTime = time();
-
-					if ( $resetTime > 0 && $currentTime < $resetTime ) {
-						$waitMinutes = ceil( ( $resetTime - $currentTime ) / 60 );
-						bb_error_log(
-							sprintf(
-								'BuddyBoss: Skipping migration activation - rate limited for %d more minutes (reset: %s)',
-								$waitMinutes,
-								date( 'Y-m-d H:i:s', $resetTime )
-							),
-							true
-						);
-						continue; // Skip this license migration.
-					}
+				if ( self::isRateLimitedForMigration( $network_activated ) ) {
+					continue; // Skip this license migration.
 				}
 
 				// Translators: %s is the response error message.
@@ -413,5 +379,65 @@ class BB_Mothership_Loader {
 				}
 			}
 		}
+	}
+
+	/**
+	 * Check if migration is currently rate limited.
+	 *
+	 * @param bool $network_activated Whether the plugin is network activated.
+	 *
+	 * @return bool True if rate limited, false otherwise.
+	 */
+	private static function isRateLimitedForMigration( bool $network_activated ): bool {
+		$rateLimitData = $network_activated ? get_site_transient( 'bb_license_rate_limit' ) : get_transient( 'bb_license_rate_limit' );
+
+		if ( ! $rateLimitData || ! is_array( $rateLimitData ) ) {
+			return false;
+		}
+
+		$resetTime   = isset( $rateLimitData['reset'] ) ? (int) $rateLimitData['reset'] : 0;
+		$currentTime = time();
+
+		if ( $resetTime > 0 && $currentTime < $resetTime ) {
+			$waitMinutes = ceil( ( $resetTime - $currentTime ) / 60 );
+			bb_error_log(
+				sprintf(
+					'BuddyBoss: Skipping migration activation - rate limited for %d more minutes (reset: %s)',
+					$waitMinutes,
+					date( 'Y-m-d H:i:s', $resetTime )
+				),
+				true
+			);
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Map legacy software product ID to new plugin ID.
+	 *
+	 * @param string $software_id The legacy software product ID.
+	 *
+	 * @return string The mapped plugin ID.
+	 */
+	private static function mapSoftwareIdToPluginId( string $software_id ): string {
+		$mapping = array(
+			'BB_PLATFORM_PRO_1S'  => 'bb-platform-pro-1-site',
+			'BB_PLATFORM_PRO_2S'  => 'bb-platform-pro-2-sites',
+			'BB_PLATFORM_PRO_5S'  => 'bb-platform-pro-5-sites',
+			'BB_PLATFORM_FREE'    => 'bb-platform-free',
+			'BB_PLATFORM_PRO_10S' => 'bb-platform-pro-10-sites',
+			'BB_THEME_1S'         => 'bb-web',
+			'BUDDYBOSS_THEME_1S'  => 'bb-web',
+			'BB_THEME_2S'         => 'bb-web-2-sites',
+			'BB_THEME_5S'         => 'bb-web-5-sites',
+			'BUDDYBOSS_THEME_5S'  => 'bb-web-5-sites',
+			'BB_THEME_10S'        => 'bb-web-10-sites',
+			'BB_THEME_20S'        => 'bb-web-20-sites',
+			'BUDDYBOSS_THEME_20S' => 'bb-web-20-sites',
+		);
+
+		return isset( $mapping[ $software_id ] ) ? $mapping[ $software_id ] : PLATFORM_EDITION;
 	}
 }
