@@ -1524,43 +1524,6 @@ class BB_License_Manager extends LicenseManager {
 	}
 
 	/**
-	 * Store rate limit information from API response.
-	 * This allows us to proactively check limits before making requests.
-	 *
-	 * @param array  $headers Response headers from the API.
-	 * @param string $source  Source identifier (e.g., 'api_headers', 'validation_429').
-	 *
-	 * @return void
-	 */
-	private static function store_rate_limit_info( $headers, $source = 'api_headers' ): void {
-		if ( ! is_array( $headers ) ) {
-			return;
-		}
-
-		// Extract rate limit headers (case-insensitive).
-		$headers = array_change_key_case( $headers, CASE_LOWER );
-
-		$limit     = isset( $headers['x-ratelimit-limit'] ) ? (int) $headers['x-ratelimit-limit'] : null;
-		$remaining = isset( $headers['x-ratelimit-remaining'] ) ? (int) $headers['x-ratelimit-remaining'] : null;
-		$reset     = isset( $headers['x-ratelimit-reset'] ) ? (int) $headers['x-ratelimit-reset'] : null;
-
-		if ( null !== $remaining ) {
-			$rate_limit_data = array(
-				'limit'     => $limit,
-				'remaining' => $remaining,
-				'reset'     => $reset,
-				'source'    => $source,
-				'timestamp' => time(),
-			);
-
-			// Store for up to 1 hour (rate limits typically reset within an hour).
-			self::set_rate_limit_transient( 'rate_limit', $rate_limit_data, HOUR_IN_SECONDS );
-
-			// Rate limit info stored.
-		}
-	}
-
-	/**
 	 * Check if plugin is network activated (multisite).
 	 *
 	 * @return bool True if network activated, false otherwise.
