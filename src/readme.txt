@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 6.8.1
 Requires PHP: 7.4.0
-Stable tag: 2.16.0
+Stable tag: 2.16.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,9 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 2.16.1 =
+* Bug: Core - Enhanced the license activation system with improved rate limiting and stability fixes to strengthen security
 
 = 2.16.0 =
 * Enhancement: Core – Improved the licensing service to reduce interruptions and increase the grace period when a license is not initially detected
