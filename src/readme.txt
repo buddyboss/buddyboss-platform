@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 6.8.1
 Requires PHP: 7.4.0
-Stable tag: 2.15.3
+Stable tag: 2.16.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,25 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 2.16.1 =
+* Bug: Core - Enhanced the license activation system with improved rate limiting and stability fixes to strengthen security
+
+= 2.16.0 =
+* Enhancement: Core – Improved the licensing service to reduce interruptions and increase the grace period when a license is not initially detected
+* Bug: Activity - Added a tooltip on the Post button to indicate when a post title is required
+* Bug: Activity - Fixed an issue where the topics section appeared clunky during initial page load
+* Bug: Core - Corrected a malformed CSS transition property to restore proper hover and transition effects across the platform
+* Bug: Forums - Fixed an issue where email notifications were not sent for discussions created or scheduled from the backend
+* Bug: Groups - Fixed an issue where the Group List View automatically refreshed and redirected to the group feed instead of displaying sub-groups
+* Bug: LearnDash - Fixed an issue where pagination disappeared for LearnDash quiz listings with more than 20 items when Platform was active
+* Bug: MemberPress - Fixed a PHP fatal error when accessing locked MemberPress lessons/quizzes and improved the UI styling for the lessons list on course pages
+* Bug: Messages - Fixed a playback conflict where YouTube videos would auto-play when a Video.js clip was played in picture-in-picture mode, ensuring only the active Video.js video plays
+* Bug: Profiles - Fixed an issue where profile details fields became non-editable on the frontend when a “no self-select” profile type field was assigned to a user
+* Bug: ReadyLaunch - Fixed a layout issue causing the activity privacy dropdown to appear oversized when ReadyLaunch was enabled
+* Bug: ReadyLaunch - Fixed an issue where emoji reactions were not appearing in forums when ReadyLaunch was enabled with another theme
+* Bug: ReadyLaunch - Improved mobile responsiveness in ReadyLaunch by fixing submenu overflow, activity sorting dropdown issues, and restoring emoji picker functionality
+* Bug: Translation - Fixed an issue where certain text strings across the platform were not translatable
 
 = 2.15.3 =
 * Bug: Giphy - Fixed GIFs not auto-playing on page load in messages and activity feeds
