@@ -2932,6 +2932,18 @@ function bp_get_activity_css_class() {
 		$class .= ' bb-muted';
 	}
 
+	// Check if activity has featured image.
+	if (
+		function_exists( 'bb_pro_activity_post_feature_image_instance' ) &&
+		bb_pro_activity_post_feature_image_instance() &&
+		method_exists( bb_pro_activity_post_feature_image_instance(), 'bb_get_feature_image_data' )
+	) {
+		$feature_image_data = bb_pro_activity_post_feature_image_instance()->bb_get_feature_image_data( bp_get_activity_id() );
+		if ( ! empty( $feature_image_data ) ) {
+			$class .= ' has-featured-image';
+		}
+	}
+
 	if ( 'groups' === $activities_template->activity->component ) {
 		$class .= ' group-' . $activities_template->activity->item_id;
 	}
@@ -4599,4 +4611,72 @@ function bb_get_activity_comment_unfavorite_link( $activity_comment_id = 0 ) {
 	 * @param string $value Constructed link for unfavoriting the activity comment.
 	 */
 	return apply_filters( 'bb_get_activity_comment_unfavorite_link', wp_nonce_url( home_url( bp_get_activity_root_slug() . '/unfavorite/' . $activity_comment_id . '/' ), 'unmark_favorite' ) );
+}
+
+/**
+ * Check if the Activity has a title.
+ *
+ * @since BuddyBoss 2.13.0
+ *
+ * @param null|BP_Activity_Activity $activity_object Optional. Activity object to check. If null, use current activity in loop.
+ *
+ * @return bool True if the activity has a title, false otherwise.
+ */
+function bb_activity_has_post_title( ?BP_Activity_Activity $activity_object = null ) {
+	$post_title = bb_activity_get_post_title( $activity_object );
+	return ! empty( $post_title );
+}
+
+
+/**
+ * Output the activity post title.
+ *
+ * @since BuddyBoss 2.13.0
+ *
+ * @param null|BP_Activity_Activity $activity_object Optional. Activity object to get post title from. If null, uses current activity in loop.
+ */
+function bb_activity_post_title( ?BP_Activity_Activity $activity_object = null ) {
+	echo esc_html( bb_activity_get_post_title( $activity_object ) );
+}
+
+/**
+ * Return the activity post title.
+ *
+ * @since BuddyBoss 2.13.0
+ *
+ * @param null|BP_Activity_Activity $activity_object Optional. Activity object to get post title from. If null, uses current activity in loop.
+ *
+ * @global object $activities_template {@link BP_Activity_Template}
+ *
+ * @return string The activity post title.
+ */
+function bb_activity_get_post_title( ?BP_Activity_Activity $activity_object = null ) {
+	global $activities_template;
+
+	if ( ! is_object( $activities_template ) ) {
+		$activities_template = new stdClass();
+	}
+
+	if ( ! isset( $activities_template->activity ) ) {
+		$activities_template->activity = $activity_object;
+	}
+
+	$activity_post_title = '';
+	if ( ! empty( $activities_template->activity ) && isset( $activities_template->activity->post_title ) ) {
+		$activity_post_title = $activities_template->activity->post_title;
+	}
+
+	$activity_post_title = apply_filters_ref_array(
+		'bb_activity_get_post_title',
+		array(
+			$activity_post_title,
+			&$activities_template->activity,
+		)
+	);
+
+	if ( ! empty( $activity_post_title ) ) {
+		$activity_post_title = bb_activity_strip_post_title( $activity_post_title );
+	}
+
+	return $activity_post_title;
 }

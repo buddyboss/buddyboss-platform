@@ -7,7 +7,8 @@ window.bp = window.bp || {};
 	function ( exports, $ ) {
 
 		var bpNouveauLocal    = BP_Nouveau,
-			bbRlIsAs3cfActive = bpNouveauLocal.bbRlIsAs3cfActive,
+			bbRlIsAs3cfActive = bpNouveauLocal.is_as3cf_active,
+			bbRlIsOmActive    = bpNouveauLocal.is_om_active,
 			bbRlMedia         = bpNouveauLocal.media,
 			bbRlAjaxUrl       = bpNouveauLocal.ajaxurl,
 			bbRlNonce         = bpNouveauLocal.nonces;
@@ -59,6 +60,7 @@ window.bp = window.bp || {};
 				$document.on( 'click', '.action-delete', this.markNotificationDelete.bind( this ) );
 				$document.on( 'click', '.bb-rl-header-container .header-aside .user-link', this.profileNav.bind( this ) );
 				$document.on( 'click', '.bb-rl-header-search', this.searchModelToggle.bind( this ) );
+				$document.on( 'click', '.bb-rl-profile-list-item--after', this.toggleProfileListItem.bind( this ) );
 			},
 
 			profileNav: function ( e ) {
@@ -71,6 +73,21 @@ window.bp = window.bp || {};
 				e.preventDefault();
 
 				$( '#bb-rl-network-search-modal' ).removeClass( 'bp-hide' );
+			},
+
+			/**
+			 * Toggle profile list item active state
+			 */
+			toggleProfileListItem: function ( e ) {
+				e.preventDefault();
+				e.stopPropagation();
+
+				var $clickedAfter = $( e.currentTarget );
+				var $currentItem = $clickedAfter.closest( '.bb-rl-profile-list-item' );
+
+				$( '.bb-rl-profile-list-item' ).not( $currentItem ).removeClass( 'active' );
+
+				$currentItem.toggleClass( 'active' );
 			},
 
 			/**
@@ -704,6 +721,17 @@ window.bp = window.bp || {};
 						function ( file, xhr, formData ) {
 							formData.append( 'action', actionName );
 							formData.append( '_wpnonce', bbRlNonce[ nonceName ] );
+							
+							var forumId = 0;
+							if ( $('#bbp_forum_id' ).length ) {
+								forumId = $('#bbp_forum_id').val();
+							}
+							formData.append( 'bbp_forum_id', forumId );
+							var topicId = 0;
+							if ( $('#bbp_topic_id' ).length ) {
+								topicId = $('#bbp_topic_id').val();
+							}
+							formData.append('bbp_topic_id', topicId);
 
 							var toolBox = view.$el.parents( parentSelector );
 							otherButtonSelectors.forEach(
@@ -720,7 +748,11 @@ window.bp = window.bp || {};
 					dropzone.on(
 						'success',
 						function ( file, response ) {
-							if ( response.data.id ) {
+							if ( 'video' === mediaType && true === file.upload.chunked ) {
+								// convert file.xhr.response string to object.
+								response = JSON.parse( file.xhr.response );
+							}
+							if ( response.data && response.data.id ) {
 								if ( 'activity' === ActiveComponent ) {
 									// Privacy and metadata handling.
 									if ( ! bp.privacyEditable ) {
@@ -954,7 +986,9 @@ window.bp = window.bp || {};
 
 								// Handle thumbnails for media files.
 								if ( 'media' === fileType ) {
-									if ( 'undefined' !== typeof bbRlIsAs3cfActive && '1' === bbRlIsAs3cfActive ) {
+									var isAs3cfActive = 'undefined' !== typeof bbRlIsAs3cfActive && '1' === bbRlIsAs3cfActive;
+									var isOmActive    = 'undefined' !== typeof bbRlIsOmActive && '1' === bbRlIsOmActive;
+									if ( isAs3cfActive || isOmActive ) {
 										$( dropzoneObj.files[index].previewElement ).find( 'img' ).attr( 'src', file.thumb );
 										dropzoneObj.emit( 'thumbnail', file.thumb );
 									} else {

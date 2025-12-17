@@ -713,6 +713,14 @@ class BP_Email_Tokens {
 												<?php
 												if ( ! empty( $activity ) ) {
 
+													if ( ! empty( $activity->post_title ) ) {
+														?>
+														<div class="activity-title bb-email-activity-content-title">
+															<h2 style="color:<?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>;font-size: 18px;font-weight: 600;margin: 0 0 10px;"><?php echo wp_kses_post( $activity->post_title ); ?></h2>
+														</div>
+														<?php
+													}
+
 													$object_id = $activity->id;
 
 													if ( in_array( $activity->content, array( '&nbsp;', '&#8203;' ), true ) ) {
@@ -736,8 +744,29 @@ class BP_Email_Tokens {
 														remove_filter( 'bp_get_activity_content_body', array( $bp->embed, 'run_shortcode' ), 7, 2 );
 													}
 
+													// Get the processed content.
+													$processed_content = apply_filters_ref_array( 'bp_get_activity_content_body', array( $activity->content, &$activity ) );
+													
+													// Apply inline styles to h3 and h4 elements for email compatibility.
+													$h3_style = 'font-size: 17px; font-weight: 500; margin: 0 0 10px; color: ' . esc_attr( $settings['body_secondary_text_color'] ) . ';';
+													$h4_style = 'font-size: 16px; font-weight: 500; margin: 0 0 10px; color: ' . esc_attr( $settings['body_secondary_text_color'] ) . ';';
+													
+													// Add inline styles to h3 elements.
+													$processed_content = preg_replace(
+														'/<h3(?:\s+[^>]*)?>/i',
+														'<h3 style="' . $h3_style . '"$1>',
+														$processed_content
+													);
+													
+													// Add inline styles to h4 elements.
+													$processed_content = preg_replace(
+														'/<h4(?:\s+[^>]*)?>/i',
+														'<h4 style="' . $h4_style . '"$1>',
+														$processed_content
+													);
+
 													// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-													echo apply_filters_ref_array( 'bp_get_activity_content_body', array( $activity->content, &$activity ) );
+													echo $processed_content;
 
 													if ( $removed_autoembed_filter ) {
 														add_filter( 'bp_get_activity_content_body', array( $bp->embed, 'autoembed' ), 8, 2 );
@@ -881,7 +910,30 @@ class BP_Email_Tokens {
 														if ( in_array( $activity_comment->content, array( '&nbsp;', '&#8203;' ) ) ) {
 															$activity_comment->content = '';
 														}
-														echo apply_filters_ref_array( 'bp_get_activity_content_body', array( $activity_comment->content, &$activity_comment ) );
+														
+														// Get the processed content.
+														$processed_content = apply_filters_ref_array( 'bp_get_activity_content_body', array( $activity_comment->content, &$activity_comment ) );
+														
+														// Apply inline styles to h3 and h4 elements for email compatibility.
+														$h3_style = 'font-size: 17px; font-weight: 500; margin: 0 0 10px; color: ' . esc_attr( $settings['body_secondary_text_color'] ) . ';';
+														$h4_style = 'font-size: 16px; font-weight: 500; margin: 0 0 10px; color: ' . esc_attr( $settings['body_secondary_text_color'] ) . ';';
+														
+														// Add inline styles to h3 elements.
+														$processed_content = preg_replace(
+															'/<h3(?:\s+[^>]*)?>/i',
+															'<h3 style="' . $h3_style . '"$1>',
+															$processed_content
+														);
+														
+														// Add inline styles to h4 elements.
+														$processed_content = preg_replace(
+															'/<h4(?:\s+[^>]*)?>/i',
+															'<h4 style="' . $h4_style . '"$1>',
+															$processed_content
+														);
+
+														// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+														echo $processed_content;
 
 														echo $this->get_email_media( $activity_comment->id, $tokens, 'activity_reply' );
 
@@ -2088,6 +2140,27 @@ class BP_Email_Tokens {
 							<td>
 								<table cellspacing="0" cellpadding="0" border="0" width="100%" style="background: <?php echo esc_attr( $settings['quote_bg'] ); ?>; border: 1px solid <?php echo esc_attr( $settings['body_border_color'] ); ?>; border-radius: 4px; border-collapse: separate !important">
 									<tbody>
+									<?php
+									if (
+										function_exists( 'bb_pro_activity_post_feature_image_instance' ) &&
+										method_exists( bb_pro_activity_post_feature_image_instance(), 'bb_get_feature_image_data' )
+									) {
+										$image_url = bb_pro_activity_post_feature_image_instance()->bb_get_feature_image_data( $activity->id );
+										if ( ! empty( $image_url ) ) {
+											?>
+											<tr>
+												<td align="center" style="padding: 0;">
+													<img src="<?php echo esc_url( $image_url['url'] ); ?>"
+													     alt="<?php echo esc_attr( $image_url['title'] ); ?>"
+													     width="100%"
+													     height="200"
+													     style="width: 100%; height: 200px; object-fit: cover; object-position: <?php echo esc_attr( $image_url['position'] ); ?>; display: block; border: 0; margin: -1px -1px -1px 0; padding: 0;" />
+												</td>
+											</tr>
+											<?php
+										}
+									}
+									?>
 									<tr>
 										<td height="15px" style="font-size: 15px; line-height: 15px;">&nbsp;</td>
 									</tr>
@@ -2097,6 +2170,15 @@ class BP_Email_Tokens {
 												<tbody>
 												<tr>
 													<td width="88%" style="vertical-align: top;">
+														<?php
+														if ( ! empty( $activity->post_title ) ) {
+															?>
+															<div class="activity-title bb-email-activity-content-title">
+																<h2 style="color:<?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>;font-size: 18px;font-weight: 600;margin: 0 0 10px;"><?php echo wp_kses_post( $activity->post_title ); ?></h2>
+															</div>
+															<?php
+														}
+														?>
 														<div class="bb-email-activity-content" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.625 ) . 'px' ); ?>;">
 															<?php
 															if ( in_array( $activity->content, array( '&nbsp;', '&#8203;' ), true ) ) {
@@ -2120,8 +2202,29 @@ class BP_Email_Tokens {
 																remove_filter( 'bp_get_activity_content_body', array( $bp->embed, 'run_shortcode' ), 7, 2 );
 															}
 
+															// Get the processed content
+															$processed_content = apply_filters_ref_array( 'bp_get_activity_content_body', array( $activity->content, &$activity ) );
+															
+															// Apply inline styles to h3 and h4 elements for email compatibility
+															$h3_style = 'font-size: 17px; font-weight: 500; margin: 0 0 10px; color: ' . esc_attr( $settings['body_secondary_text_color'] ) . ';';
+															$h4_style = 'font-size: 16px; font-weight: 500; margin: 0 0 10px; color: ' . esc_attr( $settings['body_secondary_text_color'] ) . ';';
+															
+															// Add inline styles to h3 elements
+															$processed_content = preg_replace(
+																'/<h3(?:\s+[^>]*)?>/i',
+																'<h3 style="' . $h3_style . '"$1>',
+																$processed_content
+															);
+															
+															// Add inline styles to h4 elements
+															$processed_content = preg_replace(
+																'/<h4(?:\s+[^>]*)?>/i',
+																'<h4 style="' . $h4_style . '"$1>',
+																$processed_content
+															);
+
 															// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-															echo apply_filters_ref_array( 'bp_get_activity_content_body', array( $activity->content, &$activity ) );
+															echo $processed_content;
 
 															if ( $removed_autoembed_filter ) {
 																add_filter( 'bp_get_activity_content_body', array( $bp->embed, 'autoembed' ), 8, 2 );
@@ -2351,6 +2454,27 @@ class BP_Email_Tokens {
 							<td>
 								<table cellspacing="0" cellpadding="0" border="0" width="100%" style="background: <?php echo esc_attr( $settings['quote_bg'] ); ?>; border: 1px solid <?php echo esc_attr( $settings['body_border_color'] ); ?>; border-radius: 4px; border-collapse: separate !important">
 									<tbody>
+									<?php
+									if (
+										function_exists( 'bb_pro_activity_post_feature_image_instance' ) &&
+										method_exists( bb_pro_activity_post_feature_image_instance(), 'bb_get_feature_image_data' )
+									) {
+										$image_url = bb_pro_activity_post_feature_image_instance()->bb_get_feature_image_data( $activity->id );
+										if ( ! empty( $image_url ) ) {
+											?>
+											<tr>
+												<td align="center" style="padding: 0;">
+													<img src="<?php echo esc_url( $image_url['url'] ); ?>"
+													     alt="<?php echo esc_attr( $image_url['title'] ); ?>"
+													     width="100%"
+													     height="200"
+													     style="width: 100%; height: 200px; object-fit: cover; object-position: <?php echo esc_attr( $image_url['position'] ); ?>; display: block; border: 0; margin: -1px -1px -1px 0; padding: 0;" />
+												</td>
+											</tr>
+											<?php
+										}
+									}
+									?>
 									<tr>
 										<td height="15px" style="font-size: 15px; line-height: 15px;">&nbsp;</td>
 									</tr>
@@ -2360,6 +2484,15 @@ class BP_Email_Tokens {
 												<tbody>
 												<tr>
 													<td width="88%" style="vertical-align: top;">
+														<?php
+														if ( ! empty( $activity->post_title ) ) {
+															?>
+															<div class="activity-title bb-email-activity-content-title">
+																<h2><?php echo wp_kses_post( $activity->post_title ); ?></h2>
+															</div>
+															<?php
+														}
+														?>
 														<div class="bb-email-activity-content" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.625 ) . 'px' ); ?>;">
 															<?php
 															if ( in_array( $activity->content, array( '&nbsp;', '&#8203;' ), true ) ) {
@@ -2383,8 +2516,29 @@ class BP_Email_Tokens {
 																remove_filter( 'bp_get_activity_content_body', array( $bp->embed, 'run_shortcode' ), 7, 2 );
 															}
 
+															// Get the processed content.
+															$processed_content = apply_filters_ref_array( 'bp_get_activity_content_body', array( $activity->content, &$activity ) );
+															
+															// Apply inline styles to h3 and h4 elements for email compatibility
+															$h3_style = 'font-size: 17px; font-weight: 500; margin: 0 0 10px; color: ' . esc_attr( $settings['body_secondary_text_color'] ) . ';';
+															$h4_style = 'font-size: 16px; font-weight: 500; margin: 0 0 10px; color: ' . esc_attr( $settings['body_secondary_text_color'] ) . ';';
+															
+															// Add inline styles to h3 elements
+															$processed_content = preg_replace(
+																'/<h3(?:\s+[^>]*)?>/i',
+																'<h3 style="' . $h3_style . '"$1>',
+																$processed_content
+															);
+															
+															// Add inline styles to h4 elements
+															$processed_content = preg_replace(
+																'/<h4(?:\s+[^>]*)?>/i',
+																'<h4 style="' . $h4_style . '"$1>',
+																$processed_content
+															);
+
 															// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-															echo apply_filters_ref_array( 'bp_get_activity_content_body', array( $activity->content, &$activity ) );
+															echo $processed_content;
 
 															if ( $removed_autoembed_filter ) {
 																add_filter( 'bp_get_activity_content_body', array( $bp->embed, 'autoembed' ), 8, 2 );
