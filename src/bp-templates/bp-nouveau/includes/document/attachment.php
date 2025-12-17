@@ -9,7 +9,7 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-global $bp;
+global $bp, $wpdb;
 
 if ( empty( get_query_var( 'document-attachment-id' ) ) ) {
 	echo '// Silence is golden.';
@@ -28,6 +28,12 @@ if ( isset( $explode_arr ) && ! empty( $explode_arr ) && isset( $explode_arr[1] 
 	if ( $document ) {
 		echo '// Silence is golden.';
 		exit();
+	} else {
+		$is_bb_document_upload = (bool) get_post_meta( $attachment_id, 'bp_document_upload', true );
+		if ( ! $is_bb_document_upload ) {
+			echo '// Silence is golden.';
+			exit();
+		}
 	}
 
 	$output_file_src = bb_core_scaled_attachment_path( $attachment_id );

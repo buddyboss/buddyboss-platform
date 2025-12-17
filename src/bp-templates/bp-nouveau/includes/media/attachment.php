@@ -45,6 +45,14 @@ if ( isset( $explode_arr ) && ! empty( $explode_arr ) && isset( $explode_arr[1] 
 		exit();
 	}
 
+	if ( ! $media ) {
+		$is_bb_media_upload = (bool) get_post_meta( $attachment_id, 'bp_media_upload', true );
+		if ( ! $is_bb_media_upload ) {
+			echo '// Silence is golden.';
+			exit();
+		}
+	}
+
 	if ( wp_attachment_is_image( $attachment_id ) ) {
 
 		$attached_file_info = pathinfo( get_attached_file( $attachment_id ) );
