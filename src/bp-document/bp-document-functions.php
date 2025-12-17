@@ -4362,7 +4362,10 @@ function bp_document_generate_code_previews( $attachment_id ) {
 
 		}
 
-		$files      = scandir( $preview_folder );
+		$files = scandir( $preview_folder );
+		if ( empty( $files ) ) {
+			return false;
+		}
 		$first_file = $preview_folder . '/' . $files[2];
 		bp_document_chmod_r( $preview_folder );
 
