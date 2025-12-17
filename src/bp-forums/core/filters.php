@@ -709,10 +709,18 @@ function bb_modify_topics_query_for_sticky( $clauses, $wp_query ) {
 
 	$sticky_ids_csv = implode( ',', $sticky_ids );
 
-	// Get spam status ID.
-	$spam_status = bbp_get_spam_status_id();
+	// Get valid topic statuses (public and closed topics should be visible).
+	$publish_status = bbp_get_public_status_id();
+	$closed_status  = bbp_get_closed_status_id();
+	$spam_status    = bbp_get_spam_status_id();
 
-	// Modify WHERE clause to include sticky topics even if they are spam.
+	// Handle super sticky topics that should appear across all forums
+	if ( ! empty( $super_stickies ) ) {
+		$super_stickies_csv = implode( ',', array_map( 'absint', $super_stickies ) );
+		$clauses['where'] .= " OR ({$wpdb->posts}.ID IN ({$super_stickies_csv}) AND {$wpdb->posts}.post_status IN ('{$publish_status}', '{$closed_status}'))";
+	}
+
+	// Include sticky topics even if they are spam
 	if ( ! empty( $spam_status ) ) {
 		$clauses['where'] .= " OR ({$wpdb->posts}.ID IN ({$sticky_ids_csv}) AND {$wpdb->posts}.post_status = '{$spam_status}')";
 	}
