@@ -192,7 +192,6 @@ class BB_Topics_Manager {
 		);
 
 		// Add the JS templates for topics.
-		bp_get_template_part( 'common/js-templates/bb-topic-delete' );
 		bp_get_template_part( 'common/js-templates/bb-topic-lists' );
 	}
 
@@ -729,9 +728,10 @@ class BB_Topics_Manager {
 								'topic_id'  => $previous_topic_id,
 								'item_id'   => $item_id,
 								'component' => $item_type,
+								'fields'    => 'activity_id',
 							)
 						);
-						if ( $get_previous_activity_relationship ) {
+						if ( ! empty( $get_previous_activity_relationship ) ) {
 							bb_activity_topics_manager_instance()->bb_update_activity_topic_relationship(
 								array(
 									'topic_id'    => $new_topic_id,
@@ -1598,8 +1598,10 @@ class BB_Topics_Manager {
 		$r = bp_parse_args(
 			$args,
 			array(
-				'topic_id' => 0,
-				'fields'   => 'id',
+				'topic_id'  => 0,
+				'fields'    => 'id',
+				'item_id'   => 0,
+				'item_type' => 'activity',
 			),
 			'bb_delete_topic'
 		);
@@ -1615,13 +1617,11 @@ class BB_Topics_Manager {
 
 		// Delete the topic relationship.
 		$get_topic_args = array(
-			'topic_id' => $topic_id,
-			'fields'   => $r['fields'],
+			'topic_id'  => $topic_id,
+			'fields'    => $r['fields'],
+			'item_id'   => $r['item_id'],
+			'item_type' => $r['item_type'],
 		);
-		if ( 'groups' === $r['item_type'] ) {
-			$get_topic_args['item_id']   = $r['item_id'];
-			$get_topic_args['item_type'] = $r['item_type'];
-		}
 
 		$get_all_topic_relationships = $this->bb_get_topics( $get_topic_args );
 
@@ -1925,18 +1925,29 @@ class BB_Topics_Manager {
 			);
 		}
 
+		$migrated_activity_ids = bb_activity_topics_manager_instance()->bb_get_activity_topic_relationship(
+			array(
+				'topic_id'  => $new_topic_id,
+				'item_id'   => $item_id,
+				'component' => $item_type,
+				'fields'    => 'activity_id',
+			)
+		);
+
 		/**
 		 * Fires after a topic is migrated.
 		 *
 		 * @since BuddyBoss 2.8.80
+		 * @since BuddyBoss 2.8.90 Added $migrated_activity_ids parameter.
 		 *
-		 * @param array  $get_topic    The new topic.
-		 * @param int    $topic_id     The ID of the old topic.
-		 * @param int    $new_topic_id The ID of the new topic.
-		 * @param int    $item_id      The ID of the item.
-		 * @param string $item_type    The type of item.
+		 * @param array  $get_topic             The new topic.
+		 * @param int    $topic_id              The ID of the old topic.
+		 * @param int    $new_topic_id          The ID of the new topic.
+		 * @param int    $item_id               The ID of the item.
+		 * @param string $item_type             The type of item.
+		 * @param array  $migrated_activity_ids The IDs of the activities.
 		 */
-		do_action( 'bb_after_migrate_topic', $get_topic, $topic_id, $new_topic_id, $item_id, $item_type );
+		do_action( 'bb_after_migrate_topic', $get_topic, $topic_id, $new_topic_id, $item_id, $item_type, $migrated_activity_ids );
 
 		return $get_topic;
 	}

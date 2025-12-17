@@ -452,6 +452,13 @@ function bp_do_activation_redirect() {
 		}
 		update_user_option( bp_loggedin_user_id(), 'metaboxhidden_nav-menus', $get_existing_option ); // update the user metaboxes.
 	}
+
+	/**
+	 * Fires before the BuddyBoss activation redirect.
+	 *
+	 * @since BuddyBoss 2.10.0
+	 */
+	do_action( 'bb_do_activation_redirect', $query_args );
 }
 
 /**
@@ -698,7 +705,6 @@ function bp_core_get_admin_tabs( $active_tab = '' ) {
 			'name'  => __( 'Credits', 'buddyboss' ),
 			'class' => 'bp-credits',
 		),
-
 	);
 
 	/**
@@ -3206,37 +3212,18 @@ add_action( 'save_post', 'bp_change_forum_slug_quickedit_save_page', 10, 2 );
  *
  * @since BuddyBoss 1.3.5
  *
- * @param array          $categories Array of block categories.
- * @param string|WP_Post $post       Post being loaded.
+ * @param array               $categories          Array of block categories.
+ * @param string|WP_Post|null $editor_name_or_post Post being loaded.
  */
-function bp_block_category( $categories = array(), $post = null ) {
+function bp_block_category( $categories = array(), $editor_name_or_post = null ) {
+	if ( $editor_name_or_post instanceof WP_Post ) {
+		$post_types = array( 'post', 'page' );
 
-	if ( class_exists( 'WP_Block_Editor_Context' ) && $post instanceof WP_Block_Editor_Context && ! empty( $post->post ) ) {
-		$post = $post->post;
-	}
-
-	if ( ! ( $post instanceof WP_Post ) ) {
-		return $categories;
-	}
-
-	/**
-	 * Filter here to add/remove the supported post types for the BuddyPress blocks category.
-	 *
-	 * @since 5.0.0
-	 *
-	 * @param array $value The list of supported post types. Defaults to WordPress built-in ones.
-	 */
-	$post_types = apply_filters( 'bp_block_category_post_types', array( 'post', 'page' ) );
-
-	if ( ! $post_types ) {
-		return $categories;
-	}
-
-	// Get the post type of the current item.
-	$post_type = get_post_type( $post );
-
-	if ( ! in_array( $post_type, $post_types, true ) ) {
-		return $categories;
+		/*
+		 * As blocks are always loaded even if the category is not available, there's no more interest
+		 * in disabling the BuddyBoss category.
+		 */
+		apply_filters_deprecated( 'bp_block_category_post_types', array( $post_types ), '2.9.00' );
 	}
 
 	return array_merge(
@@ -3258,9 +3245,9 @@ function bp_block_category( $categories = array(), $post = null ) {
  */
 function bb_block_init_category_filter() {
 	if ( function_exists( 'get_default_block_categories' ) ) {
-		add_filter( 'block_categories_all', 'bp_block_category', 30, 2 );
+		add_filter( 'block_categories_all', 'bp_block_category', 1, 2 );
 	} else {
-		add_filter( 'block_categories', 'bp_block_category', 30, 2 );
+		add_filter( 'block_categories', 'bp_block_category', 1, 2 );
 	}
 }
 
@@ -3437,6 +3424,10 @@ function bb_get_pro_label_notice( $type = 'default' ) {
 			(
 				'group_activity_topics' === $type &&
 				version_compare( bb_platform_pro()->version, bb_pro_group_activity_topics_version(), '<' )
+			) ||
+			(
+				'post_feature_image' === $type &&
+				version_compare( bb_platform_pro()->version, bb_pro_post_feature_image_version(), '<' )
 			)
 		)
 	) {
@@ -3446,7 +3437,7 @@ function bb_get_pro_label_notice( $type = 'default' ) {
 			esc_html__( 'BuddyBoss Platform Pro', 'buddyboss' ),
 			esc_html__( 'to unlock', 'buddyboss' )
 		);
-	} elseif ( ! function_exists( 'bb_platform_pro' ) || ! bbp_pro_is_license_valid() ) {
+	} elseif ( ! function_exists( 'bb_platform_pro' ) || ( function_exists( 'bb_pro_should_lock_features' ) ? bb_pro_should_lock_features() : ! bbp_pro_is_license_valid() ) ) {
 		$bb_pro_notice = sprintf(
 			'<br/><span class="bb-head-notice"> %1$s <a target="_blank" href="https://www.buddyboss.com/platform/">%2$s</a> %3$s</span>',
 			esc_html__( 'Install', 'buddyboss' ),
@@ -3478,7 +3469,9 @@ function bb_get_pro_fields_class( $type = 'default' ) {
 	}
 
 	$pro_class = 'bb-pro-inactive';
-	if ( function_exists( 'bbp_pro_is_license_valid' ) && bbp_pro_is_license_valid() ) {
+	if ( function_exists( 'bb_pro_should_lock_features' ) && ! bb_pro_should_lock_features() ) {
+		$pro_class = 'bb-pro-active';
+	} elseif ( ! function_exists( 'bb_pro_should_lock_features' ) && function_exists( 'bbp_pro_is_license_valid' ) && bbp_pro_is_license_valid() ) {
 		$pro_class = 'bb-pro-active';
 	}
 
@@ -3509,6 +3502,10 @@ function bb_get_pro_fields_class( $type = 'default' ) {
 			(
 				'group_activity_topics' === $type &&
 				version_compare( bb_platform_pro()->version, bb_pro_group_activity_topics_version(), '<' )
+			) ||
+			(
+				'post_feature_image' === $type &&
+				version_compare( bb_platform_pro()->version, bb_pro_post_feature_image_version(), '<' )
 			)
 		)
 	) {

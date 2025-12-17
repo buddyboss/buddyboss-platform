@@ -8,5 +8,8 @@
 	"no-duplicate-selectors": null,
 	"font-family-no-missing-generic-family-keyword": null,
 	"selector-combinator-space-after": null
-  }
+  },
+	"ignoreFiles": [
+		"src/js/**/*.scss"
+	]
 }

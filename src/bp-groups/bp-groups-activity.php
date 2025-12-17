@@ -107,7 +107,7 @@ function bp_groups_format_activity_action_created_group( $action, $activity ) {
 	$user_link = bp_core_get_userlink( $activity->user_id );
 
 	$group      = groups_get_group( $activity->item_id );
-	$group_link = '<a href="' . esc_url( bp_get_group_permalink( $group ) ) . '">' . esc_html( $group->name ) . '</a>';
+	$group_link = '<a href="' . esc_url( bp_get_group_permalink( $group ) ) . '" data-bb-hp-group="' . esc_attr( $group->id ) . '">' . esc_html( $group->name ) . '</a>';
 
 	$action = sprintf( __( '%1$s created the group %2$s', 'buddyboss' ), $user_link, $group_link );
 
@@ -485,6 +485,8 @@ function groups_record_activity( $args = '' ) {
 			$args = array(
 				'id'                => $activity->id,
 				'action'            => ! empty( $args['action'] ) ? $args['action'] : $activity->action,
+				'post_title'        => ! empty( $args['post_title'] ) ? $args['post_title'] : $activity->post_title,
+				'title_required'    => ! empty( $args['title_required'] ) ? $args['title_required'] : $activity->title_required,
 				'content'           => ! empty( $args['content'] ) ? $args['content'] : '',
 				'component'         => $activity->component,
 				'type'              => $activity->type,
@@ -518,6 +520,8 @@ function groups_record_activity( $args = '' ) {
 			'id'                => false,
 			'user_id'           => bp_loggedin_user_id(),
 			'action'            => '',
+			'post_title'        => '',
+			'title_required'    => function_exists( 'bb_is_activity_post_title_enabled' ) ? bb_is_activity_post_title_enabled() : false,
 			'content'           => '',
 			'primary_link'      => '',
 			'component'         => buddypress()->groups->id,

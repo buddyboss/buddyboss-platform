@@ -69,7 +69,7 @@ if ( ! bp_is_user_messages() && ! bp_is_user_settings() && ! bp_is_user_notifica
 
 				if ( $bp_is_my_profile && ! bp_disable_avatar_uploads() ) {
 					?>
-					<a href="<?php bp_members_component_link( 'profile', 'change-avatar' ); ?>" class="link-change-profile-image bp-tooltip" data-balloon-pos="down" data-balloon="<?php esc_attr_e( 'Change Profile Photo', 'buddyboss' ); ?>">
+					<a href="<?php bp_members_component_link( 'profile', 'change-avatar' ); ?>" class="link-change-profile-image bp-tooltip" data-balloon-pos="down" data-balloon="<?php esc_attr_e( 'Change Profile Photo', 'buddyboss' ); ?>" aria-label="<?php esc_attr_e( 'Change Profile Photo', 'buddyboss' ); ?>">
 						<i class="bb-icon-rf bb-icon-camera"></i>
 					</a>
 					<span class="link-change-overlay"></span>
@@ -134,6 +134,8 @@ if ( ! bp_is_user_messages() && ! bp_is_user_settings() && ! bp_is_user_notifica
 								</div>
 								<?php
 							endif;
+
+							bp_nouveau_member_hook( '', 'header_profile_meta' );
 
 							if ( function_exists( 'bp_is_activity_follow_active' ) && $is_activity_enabled && bp_is_activity_follow_active() && ( $is_enabled_followers || $is_enabled_following ) ) {
 								?>

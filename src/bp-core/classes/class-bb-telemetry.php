@@ -317,14 +317,14 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 				return false;
 			}
 
-			// Check if the server name matches any whitelisted domain
+			// Check if the server name matches any whitelisted domain.
 			foreach ( $whitelist_domain as $domain ) {
 				if ( false !== strpos( $server_name, $domain ) ) {
-					return false; // Exclude allowlisted domains
+					return false; // Exclude allowlisted domains.
 				}
 			}
 
-			return true; // Allow telemetry data to be sent for non-allowlisted domains
+			return true; // Allow telemetry data to be sent for non-allowlisted domains.
 		}
 
 		/**
@@ -339,6 +339,15 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 		public function bb_telemetry_platform_data( $bb_telemetry_data ) {
 			global $wpdb;
 			$bb_telemetry_data = ! empty( $bb_telemetry_data ) ? $bb_telemetry_data : array();
+
+			// Include and collect report metrics.
+			$report_metrics_file = __DIR__ . '/class-bb-report-metrics.php';
+			if ( file_exists( $report_metrics_file ) ) {
+				require_once $report_metrics_file;
+				if ( class_exists( 'BB_Report_Metrics' ) ) {
+					$bb_telemetry_data['bb_report_metrics'] = BB_Report_Metrics::collect();
+				}
+			}
 
 			// Filterable list of BuddyBoss Platform options to fetch from the database.
 			$bb_platform_db_options = apply_filters(
@@ -490,7 +499,16 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 
 			unset( $bp_prefix, $query, $results, $bb_platform_db_options );
 
-			return $bb_telemetry_data;
+			/**
+			 * Filters the telemetry platform data.
+			 *
+			 * @since BuddyBoss 2.15.2
+			 *
+			 * @param array $bb_telemetry_data Telemetry platform data.
+			 *
+			 * @return array Telemetry platform data.
+			 */
+			return apply_filters( 'bb_telemetry_platform_data', $bb_telemetry_data );
 		}
 
 		/**

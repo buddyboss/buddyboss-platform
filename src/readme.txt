@@ -2,8 +2,8 @@
 Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 6.8.1
-Requires PHP: 5.6.20
-Stable tag: 2.8.80
+Requires PHP: 7.4.0
+Stable tag: 2.16.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,126 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 2.16.1 =
+* Bug: Core - Enhanced the license activation system with improved rate limiting and stability fixes to strengthen security
+
+= 2.16.0 =
+* Enhancement: Core – Improved the licensing service to reduce interruptions and increase the grace period when a license is not initially detected
+* Bug: Activity - Added a tooltip on the Post button to indicate when a post title is required
+* Bug: Activity - Fixed an issue where the topics section appeared clunky during initial page load
+* Bug: Core - Corrected a malformed CSS transition property to restore proper hover and transition effects across the platform
+* Bug: Forums - Fixed an issue where email notifications were not sent for discussions created or scheduled from the backend
+* Bug: Groups - Fixed an issue where the Group List View automatically refreshed and redirected to the group feed instead of displaying sub-groups
+* Bug: LearnDash - Fixed an issue where pagination disappeared for LearnDash quiz listings with more than 20 items when Platform was active
+* Bug: MemberPress - Fixed a PHP fatal error when accessing locked MemberPress lessons/quizzes and improved the UI styling for the lessons list on course pages
+* Bug: Messages - Fixed a playback conflict where YouTube videos would auto-play when a Video.js clip was played in picture-in-picture mode, ensuring only the active Video.js video plays
+* Bug: Profiles - Fixed an issue where profile details fields became non-editable on the frontend when a “no self-select” profile type field was assigned to a user
+* Bug: ReadyLaunch - Fixed a layout issue causing the activity privacy dropdown to appear oversized when ReadyLaunch was enabled
+* Bug: ReadyLaunch - Fixed an issue where emoji reactions were not appearing in forums when ReadyLaunch was enabled with another theme
+* Bug: ReadyLaunch - Improved mobile responsiveness in ReadyLaunch by fixing submenu overflow, activity sorting dropdown issues, and restoring emoji picker functionality
+* Bug: Translation - Fixed an issue where certain text strings across the platform were not translatable
+
+= 2.15.3 =
+* Bug: Giphy - Fixed GIFs not auto-playing on page load in messages and activity feeds
+* Bug: WPML - Fixed an issue where hover cards failed to load data when WPML was active due to home URLs ending with a trailing slash
+
+= 2.15.2 =
+* Enhancement: Core - Implemented a notice for media privacy change handling
+
+= 2.15.1 =
+* Enhancement: Core - Improved reliability of license status checks by optimizing API requests to prevent delays experience
+
+= 2.15.0 =
+* New Feature! - Added support for the new Gamification, Offload Media, and Sharing features, enabling seamless integration and enhanced functionality across the BuddyBoss Platform
+
+= 2.14.4 =
+* Bug: Core - Fixed an issue where theme updates were not being received
+
+= 2.14.3 =
+* Bug: Core - Fixed an issue where Polls, Scheduled Posts, and Reactions were not working correctly on site
+
+= 2.14.2 =
+* Bug: Core - Fixed the license rate limit error and proper error handling
+
+= 2.14.1 =
+* Bug: Core - Fixed a fatal error causing the Zoom integration to break
+
+= 2.14.0 =
+* New Feature! Core - Implemented a new licensing system for BuddyBoss plugins and theme
+
+= 2.13.1 =
+* Bug: LearnDash - Fixed BuddyBoss Theme compatibility with LearnDash Modern UI templates to ensure lessons, topics, and courses display correctly
+
+= 2.13.0 =
+* New Feature! Activity - Added Featured Image above post content in activity and group posts, making feeds more visual and engaging
+* New Feature! Activity - Added support for Post Titles and H3/H4 text formatting in activity feeds, helping communities stay organized and posts easier to read
+
+= 2.12.0 =
+* Bug: Activity - Fixed issue where activity filters still applied a removed topic filter instead of working independently
+* Bug: Activity - Fixed issue where activity topic settings remained visible when the main topic setting was disabled
+* Bug: Activity - Removed incorrect tooltip "Please select a Topic" from the Post button when no group topics exist
+* Bug: Fixed an issue where network search displayed private forum replies to non-group members
+* Bug: Forums - Fixed an issue where code snippets in forum discussions and replies broke when added from the backend editor
+* Bug: Groups - Fixed an issue where subscribers were able to upload media in groups despite restrictions set in group settings
+* Bug: Moderation - Added search functionality to moderation admin pages
+* Bug: ReadyLaunch - Fixed UI issues with pre and code blocks in forum content when ReadyLaunch is enabled
+* Bug: WooCommerce - Fixed WooCommerce order confirmation page UI conflict between ReadyLaunch and Theme
+
+= 2.11.0 =
+* Enhancement: Activity - Added a new “Unanswered” option to the Activity Feed filter, allowing users to view posts without comments or replies
+* Bug: ReadyLaunch - Fixed an issue in ReadyLaunch where editing a discussion did not correctly remove previously uploaded media, causing old and new files to display together
+* Bug: ReadyLaunch - Fixed an issue in ReadyLaunch where the Edit Activity modal appeared behind the Activity modal
+* Bug: ReadyLaunch - Fixed an issue where the ReadyLaunch group sticky header overlapped the activity post form in the group feed
+
+= 2.10.0 =
+* New Feature! ReadyLaunch - Introduced a ReadyLaunch onboarding setup to guide users through initial configuration
+* Bug: Activity - Added new hooks in Activity Topics to provide extensibility support
+* Bug: Activity - Fixed an issue where replies to cached activity comments showed undefined instead of the correct user
+* Bug: Core -  Fixed accessibility issues across Platform and Theme for improved usability
+* Bug: Core - Enhanced advanced search to support flexible date formats and multiple languages for accurate member search on date fields
+* Bug: Core - Fixed PHP 8.4 warnings and removed extra database queries for better stability and performance
+* Bug: Groups - Fixed issue where the 'Send Request' button appeared for users allowed to join groups without approval
+* Bug: Media - Fixed a critical security vulnerability in the document download function to prevent unauthorized file access
+* Bug: Moderation - Fixed an issue where reported media from group feeds was still visible in group and media directories
+* Bug: Moderation - Fixed incorrect media counts in groups when moderation and content reporting settings were enabled
+* Bug: Profiles - Fixed default avatar initials showing incorrectly by using nickname instead of the selected display name format
+* Bug: Profiles - Fixed issue where the default Gender filter in profile fields did not work correctly when the option order was changed
+
+= 2.9.30 =
+* Bug: Activity - Fixed issue where the "More" label in topics was not translatable
+* Bug: Core - Fixed broken cross (X) icon UI in tag selectors across multiple screens, ensuring proper display even with the Modern Events Calendar plugin active
+* Bug: Core - Fixed critical accessibility issues, including missing labels and empty anchor tags
+* Bug: Forums - Fixed an issue where lead discussion content was missing on single discussion pages, ensuring compatibility with WP 6.8+ query changes.
+* Bug: Forums - Fixed issue where discussions couldn't be posted with only a title and media when GIFs were disabled in forum settings
+* Bug: Groups - Improved album creation UX to prevent partial photo uploads when "Create Album" is clicked before all images finish uploading.
+* Bug: Messages - Added support for URL embed preview in messaging
+* Bug: ReadyLaunch - Fixed minor UI and functional issues
+
+= 2.9.20 =
+* Bug: Activity - Fixed an issue where the schedule post dropdown menu was not fully visible, causing options to overflow or become inaccessible
+* Bug: Forums - Fixed a 404 error when using a custom slug on forum discussion edit links with the BuddyBoss theme
+* Bug: Groups - Fixed an issue where only one video was visible after editing a comment with multiple videos in the Group Media section
+* Bug: Groups - Fixed misalignment of the Zoom integration field style in group settings when vertical group navigation is enabled in the latest BuddyBoss theme
+
+= 2.9.11 =
+* Enhancement: Improved code structure for better performance and maintainability
+
+= 2.9.10 =
+* Bug: Forums - Fixed issue where image uploads were blocked when using Forum shortcode on a page with document uploads disabled
+* Bug: Forums - Fixed search results displaying password entry forms instead of a proper message for password-protected posts
+* Bug: Header - Fixed issue where the top row of member cards was partially hidden under the sticky header after pagination in the Members directory
+* Bug: Messages - Fixed pagination issue in group messages where banned members caused incorrect member listing
+* Bug: ReadyLaunch - Fixed minor design and functional bugs in ReadyLaunch
+
+= 2.9.00 =
+* New Feature! ReadyLaunch - launch your community with our new built in page template
+* Bug: Forums - Fixed an issue where forum reply and topic media were not being deleted upon deletion
+
+= 2.8.90 =
+* Bug: Groups - Fixed an issue where deleting activity topics removed them from group-level topics
+* Bug: Groups - Fixed an issue where uploading default cover images slowed down sites with many group subscriptions
+* Bug: Notifications - Fixed an issue where user hover info was not displaying in notifications after sending a connection request
 
 = 2.8.80 =
 * New Feature! – Added Activity Topics for categorizing and filtering posts in activity feeds and groups

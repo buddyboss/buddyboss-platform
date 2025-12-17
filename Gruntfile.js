@@ -16,7 +16,8 @@ module.exports = function (grunt) {
 		BP_EXCLUDED_CSS = [
 			'!**/*-rtl.css',
 			// '!bp-forums/**/*.css',
-			'!**/endpoints/**/*.css'
+			'!**/endpoints/**/*.css',
+			'!**/js/admin/readylaunch/styles/**/*.css'
 		],
 
 		BP_JS = [
@@ -24,10 +25,10 @@ module.exports = function (grunt) {
 			'!**/*.min.js',
 			// '!bp-forums/**/*.js',
 			'!**/vendor/**/*.js',
-			'!**/endpoints/**/*.js',
+			'!**/endpoints/**/*.js'
 		],
 
-		BP_EXCLUDED_MISC = [],
+		BP_EXCLUDED_MISC = ['!js/**'],
 
 		// SASS generated "Twenty*"" CSS files.
 		BP_SCSS_CSS_FILES = [
@@ -120,6 +121,15 @@ module.exports = function (grunt) {
 					src: ['bp-templates/bp-nouveau/sass/buddypress.scss'],
 					dest: SOURCE_DIR + 'bp-templates/bp-nouveau/css/'
 				},
+				ready_launch: {
+					cwd: SOURCE_DIR,
+					extDot: 'last',
+					expand: true,
+					ext: '.css',
+					flatten: true,
+					src: ['bp-templates/bp-nouveau/readylaunch//css/sass/*.scss'],
+					dest: SOURCE_DIR + 'bp-templates/bp-nouveau/readylaunch/css'
+				},
 				admin: {
 					cwd: SOURCE_DIR,
 					extDot: 'last',
@@ -192,11 +202,11 @@ module.exports = function (grunt) {
 				},
 				files: {
 					cwd: SOURCE_DIR,
-					src: ['**/*.php'].concat( BP_EXCLUDED_MISC ),
+					src: ['**/*.php', '!vendor/**', '!src/vendor/**'].concat( BP_EXCLUDED_MISC ),
 					expand: true
 				}
 			},
-			makepot: {
+			makepot_grunt: {
 				src: {
 					options: {
 						cwd: SOURCE_DIR,
@@ -239,7 +249,7 @@ module.exports = function (grunt) {
 						dest: BUILD_DIR,
 						dot: true,
 						expand: true,
-						src: ['**', '!**/.{svn,git}/**'].concat( BP_EXCLUDED_MISC )
+						src: ['**', '!**/.{svn,git}/**', '!**/readylaunch/css/sass/**'].concat( BP_EXCLUDED_MISC )
 					},
 					{
 						dest: BUILD_DIR,
@@ -358,12 +368,16 @@ module.exports = function (grunt) {
 					ext: '.min.js',
 					src: BP_JS.concat(
 						[
-						'!**/vendor/*.js',
-						'!**/lib/*.js',
-						'!**/*.min.js',
-						'!**/node_modules/**/*.js',
-						'!**/endpoints/**/*.js',
-						'!**/js/lib/Chart.js',
+							'!**/vendor/*.js',
+							'!**/lib/*.js',
+							'!**/*.min.js',
+							'!**/node_modules/**/*.js',
+							'!**/endpoints/**/*.js',
+							'!**/js/lib/Chart.js',
+							'!**/js/blocks/**/*.js',
+							'!**/bp-core/admin/bb-settings/**/*.js',
+							'!**/bp-core/blocks/**/*.js',
+							'!**/js/admin/**/*.js',
 						]
 					)
 				}
@@ -381,12 +395,17 @@ module.exports = function (grunt) {
 						BP_EXCLUDED_MISC,
 						BP_SCSS_CSS_FILES,
 						[
-						'!**/*.min.css',
-						'!**/admin/**/*.css',
-						'!**/emojionearea-edited.css',
-						'!**/pusher/**/*.css',
-						'!**/recaptcha/**/*.css',
-						'!**/endpoints/**/*.css'
+							'!**/*.min.css',
+							'!**/admin/**/*.css',
+							'!**/emojionearea-edited.css',
+							'!**/pusher/**/*.css',
+							'!**/recaptcha/**/*.css',
+							'!**/endpoints/**/*.css',
+							'!**/readylaunch/**/*.css',
+							'!**/js/blocks/**/*.css',
+							'!**/js/admin/**/*.css',
+							'!**/bp-core/admin/bb-settings/**/*.css',
+							'!**/bp-core/blocks/**/*.css'
 						]
 					)
 				},
@@ -412,6 +431,19 @@ module.exports = function (grunt) {
 					expand: true,
 					ext: '.min.css',
 					src: BP_CSS
+				},
+				rtl: {
+					cwd: SOURCE_DIR,
+					dest: SOURCE_DIR,
+					extDot: 'last',
+					expand: true,
+					ext: '.min.css',
+					src: [
+						'**/*-rtl.css',
+						'!**/*.min.css',
+						'!**/vendor/**/*.css',
+						'!**/endpoints/**/*.css'
+					]
 				}
 			},
 			phpunit: {
@@ -429,11 +461,37 @@ module.exports = function (grunt) {
 				}
 			},
 			exec: {
+				build_blocks: {
+					command: 'npm run build:block:core',
+					cwd: '.',
+					stdout: true
+				},
+				build_admin: {
+					command: 'npm run build:admin',
+					cwd: '.',
+					stdout: true
+				},
 				cli: {
 					command: 'git add . && git commit -am "grunt release build"',
 					cwd: '.',
 					stdout: false
 				},
+				init_build_dir_git: {
+					command: 'mkdir -p buddyboss-platform && cd buddyboss-platform && git init && git remote add origin $(git -C .. remote get-url origin) && git fetch origin production && git checkout -B production origin/production && cd ..',
+					cwd: '.',
+					stdout: true
+				},
+				empty_build_dir: {
+					command: 'cd buddyboss-platform && find . -not -path "./.git*" -not -name "." -not -name ".." -delete && cd ..',
+					cwd: '.',
+					stdout: true
+				},
+				commit_build_to_mothership_release: {
+					command: 'cd buddyboss-platform && git add . && git commit -m "Production build - $(date)" && git push origin production && cd ..',
+					cwd: '.',
+					stdout: true
+				},
+
 				rest_api: {
 					command: 'git clone https://github.com/buddyboss/buddyboss-platform-api.git',
 					cwd: SOURCE_DIR,
@@ -453,6 +511,18 @@ module.exports = function (grunt) {
 					command: 'composer update; composer scoper;',
 					cwd: SOURCE_DIR,
 					stdout: false
+				},
+				// WP-CLI makepot with header fixing
+				makepot_wp: {
+					command: 'wp i18n make-pot src/ src/languages/buddyboss.pot --domain=buddyboss --ignore-domain --exclude="node_modules/*, vendor/*, src/vendor/*, js/*"',
+					cwd: '.',
+					stdout: true
+				},
+				// Fix POT file headers to match grunt-wp-i18n format
+				fix_wp_cli_headers: {
+					command: 'node bin/fix-wp-cli-headers.js',
+					cwd: '.',
+					stdout: true
 				}
 			},
 			jsvalidate: {
@@ -464,13 +534,17 @@ module.exports = function (grunt) {
 				src: {
 					files: {
 						src: [
-						SOURCE_DIR + '/**/*.js',
-						'!**/emojione-edited.js',
-						'!**/emojionearea-edited.js',
-						'!**/vendor/**/*.js',
-						'!**/node_modules/**/*.js',
-						'!**/endpoints/**/*.js',
-						'!**/js/lib/Chart.js',
+							SOURCE_DIR + '/**/*.js',
+							'!**/*.min.js',
+							'!**/emojione-edited.js',
+							'!**/emojionearea-edited.js',
+							'!**/vendor/**/*.js',
+							'!**/node_modules/**/*.js',
+							'!**/endpoints/**/*.js',
+							'!**/js/lib/Chart.js',
+							'!' + SOURCE_DIR + 'js/**/*.js',
+							'!' + SOURCE_DIR + 'bp-core/admin/bb-settings/**/*.js',
+							'!' + SOURCE_DIR + 'bp-core/blocks/**/*.js'
 						].concat( BP_EXCLUDED_MISC )
 					}
 				}
@@ -555,11 +629,19 @@ module.exports = function (grunt) {
 			'cssmin'
 		]
 	);
+
+	// WP-CLI makepot task with grunt-wp-i18n compatible headers
+	grunt.registerTask('makepot', ['exec:makepot_wp', 'exec:fix_wp_cli_headers']);
+
 	grunt.registerTask('pre-commit', ['checkDependencies', 'jsvalidate', 'jshint', 'stylelint']);
-	grunt.registerTask('src', ['checkDependencies', 'jsvalidate', 'jshint', 'stylelint', 'sass', 'rtlcss', 'checktextdomain', /*'imagemin',*/ 'uglify', 'cssmin', 'makepot:src']);
+	grunt.registerTask('webpack', ['exec:build_blocks', 'exec:build_admin']);
+	grunt.registerTask('src', ['checkDependencies', 'jsvalidate', 'jshint', 'stylelint', 'webpack', 'sass', 'rtlcss', 'checktextdomain', /*'imagemin',*/ 'uglify', 'cssmin:minify', 'cssmin:rtl', 'makepot']);
 	grunt.registerTask('bp_rest', ['clean:bp_rest', 'exec:rest_api', 'copy:bp_rest_components', 'copy:bp_rest_core', 'clean:bp_rest', 'apidoc' ]);
 	grunt.registerTask('bp_performance', ['clean:bp_rest', 'exec:rest_performance', 'copy:bp_rest_performance', 'copy:bp_rest_mu', 'clean:bp_rest']);
-	grunt.registerTask('build', ['string-replace:dist', 'exec:composer', 'exec:cli', 'clean:all', 'copy:files', 'clean:composer', 'compress', 'clean:all']);
+
+	// Build task: Creates production build in BUILD_DIR, initializes git, performs build operations, then commits to production
+	grunt.registerTask('build', ['string-replace:dist', 'exec:composer', 'clean:all', 'exec:init_build_dir_git', 'exec:empty_build_dir', 'copy:files', 'clean:composer', 'exec:commit_build_to_mothership_release', 'compress', 'clean:all']);
+
 	grunt.registerTask('release', ['src', 'build']);
 
 	// Testing tasks.

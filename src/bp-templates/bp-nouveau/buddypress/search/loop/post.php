@@ -15,7 +15,7 @@ $result         = bp_search_is_post_restricted( $search_post_id, get_current_use
 <li class="bp-search-item bp-search-item_post <?php echo esc_attr( $result['post_class'] ); ?>">
 	<div class="list-wrap">
 		<div class="item-avatar">
-			<a href="<?php the_permalink(); ?>">
+			<a href="<?php the_permalink(); ?>" aria-label="<?php echo esc_attr( get_the_title() ); ?>">
 				<?php
 				if ( $result['has_thumb'] ) {
 					?>

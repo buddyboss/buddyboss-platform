@@ -999,6 +999,54 @@ function bp_core_get_component_search_query_arg( $component = null ) {
 	return apply_filters( 'bp_core_get_component_search_query_arg', $query_arg, $component );
 }
 
+/**
+ * Get a list of all active component objects.
+ *
+ * @since BuddyBoss 2.9.00
+ *
+ * @param array $args {
+ *     Optional. An array of key => value arguments to match against the component objects.
+ *     Default empty array.
+ *
+ *     @type string $name          Translatable name for the component.
+ *     @type string $id            Unique ID for the component.
+ *     @type string $slug          Unique slug for the component, for use in query strings and URLs.
+ *     @type bool   $has_directory True if the component has a top-level directory. False otherwise.
+ *     @type string $root_slug     Slug used by the component's directory page.
+ * }
+ * @param string $output   Optional. The type of output to return. Accepts 'ids'
+ *                         or 'objects'. Default 'ids'.
+ * @param string $operator Optional. The logical operation to perform. 'or' means only one
+ *                         element from the array needs to match; 'and' means all elements
+ *                         must match. Accepts 'or' or 'and'. Default 'and'.
+ * @return array A list of component ids or objects.
+ */
+function bb_core_get_active_components( $args = array(), $output = 'ids', $operator = 'and' ) {
+	$bp = buddypress();
+
+	$active_components = array_keys( $bp->active_components );
+
+	$xprofile_id = array_search( 'xprofile', $active_components, true );
+	if ( false !== $xprofile_id ) {
+		$active_components[ $xprofile_id ] = 'profile';
+	}
+
+	$components = array();
+	foreach ( $active_components as $id ) {
+		if ( isset( $bp->{$id} ) && $bp->{$id} instanceof BP_Component ) {
+			$components[ $id ] = $bp->{$id};
+		}
+	}
+
+	$components = wp_filter_object_list( $components, $args, $operator );
+
+	if ( 'ids' === $output ) {
+		$components = wp_list_pluck( $components, 'id' );
+	}
+
+	return $components;
+}
+
 /** URI ***********************************************************************/
 
 /**
@@ -7700,7 +7748,7 @@ function bb_core_get_encoded_image( $attachment_id, $size = 'full' ) {
  *
  * @since BuddyBoss 2.0.0
  *
- * @param $id Id of the section.
+ * @param string $id Id of the section.
  *
  * @return string Return icon name.
  */
@@ -9344,7 +9392,7 @@ function bb_get_predefined_palette() {
 	/**
 	 * Filters the color palette should have a minimum of 12 color codes and a maximum of 21.
 	 *
-	 * @since BuddyBoss [BBVSERION]
+	 * @since BuddyBoss 2.16.0
 	 *
 	 * @param array $palette Array of color palette.
 	 */
@@ -9518,7 +9566,7 @@ function bb_generate_default_avatar( $args ) {
 	/**
 	 * Set font family full path to render text on image.
 	 *
-	 * @since BuddyBoss [BBVSERION]
+	 * @since BuddyBoss 2.16.0
 	 *
 	 * @param string $font_family Full path of font family. It should be a TTF file.
 	 */
@@ -9534,7 +9582,7 @@ function bb_generate_default_avatar( $args ) {
 	/**
 	 * Set font color to render text on image.
 	 *
-	 * @since BuddyBoss [BBVSERION]
+	 * @since BuddyBoss 2.16.0
 	 *
 	 * @param string $png_text_color The color of the font to display on image.
 	 */
@@ -9546,7 +9594,7 @@ function bb_generate_default_avatar( $args ) {
 	/**
 	 * Set font size to render text on image.
 	 *
-	 * @since BuddyBoss [BBVSERION]
+	 * @since BuddyBoss 2.16.0
 	 *
 	 * @param int $font_size The font size of the text to display on image.
 	 */
@@ -9997,7 +10045,8 @@ function bb_filter_activity_filter_scope_keys( $filters = array() ) {
 				( 'following' === $key && ! bp_is_activity_follow_active() ) ||
 				( 'groups' === $key && ! bp_is_active( 'groups' ) ) ||
 				( 'mentions' === $key && ( ! function_exists( 'bp_activity_do_mentions' ) || ! bp_activity_do_mentions() ) ) ||
-				( 'favorites' === $key && ! bp_is_activity_like_active() )
+				( 'favorites' === $key && ! bp_is_activity_like_active() ) ||
+				( 'unanswered' === $key && ! bb_is_activity_comments_enabled() )
 			) {
 				unset( $filters[ $key ] );
 			}
@@ -10033,3 +10082,25 @@ function bb_pro_group_activity_topics_version() {
 	return '2.7.40';
 }
 
+
+/**
+ * Function to check if ReadyLaunch is enabled.
+ *
+ * @since BuddyBoss 2.9.00
+ *
+ * @return bool True if ReadyLaunch is enabled, false otherwise.
+ */
+function bb_is_readylaunch_enabled() {
+	return bp_get_option( 'bb_rl_enabled', false );
+}
+
+/**
+ * Function to return the minimum pro version to show notice for post feature image.
+ *
+ * @since BuddyBoss 2.13.0
+ *
+ * @return string
+ */
+function bb_pro_post_feature_image_version() {
+	return '2.9.0';
+}

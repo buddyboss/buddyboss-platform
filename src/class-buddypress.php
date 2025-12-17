@@ -330,7 +330,7 @@ class BuddyPress {
 
 		/** Versions */
 		$this->version    = defined( 'BP_PLATFORM_VERSION' ) ? BP_PLATFORM_VERSION : ( defined( 'BP_VERSION' ) ? BP_VERSION : '1.0.0' );
-		$this->db_version = 23321;
+		$this->db_version = 23541;
 
 		/** Loading */
 
@@ -514,6 +514,9 @@ class BuddyPress {
 	private function includes() {
 		spl_autoload_register( array( $this, 'autoload' ) );
 
+		// Initialize BuddyBoss Mothership (License & Add-ons).
+		require $this->plugin_dir . 'bp-core/admin/mothership/mothership-init.php';
+
 		// Load the compatibility helpers for third party plugins.
 		require $this->compatibility_dir . '/bp-incompatible-plugins-helper.php';
 
@@ -560,6 +563,7 @@ class BuddyPress {
 		require $this->plugin_dir . 'bp-core/bp-core-notification.php';
 		require $this->plugin_dir . 'bp-core/bp-core-invitation.php';
 		require $this->plugin_dir . 'bp-core/bb-core-subscriptions.php';
+		require $this->plugin_dir . 'bp-core/bb-core-blocks.php';
 
 		// Maybe load deprecated buddypress functionality (this double negative is proof positive!).
 		if ( ! bp_get_option( '_bp_ignore_deprecated_code', ! $this->load_deprecated ) ) {
@@ -601,6 +605,10 @@ class BuddyPress {
 
 		if ( defined( 'WP_CLI' ) && file_exists( $this->plugin_dir . 'cli/wp-cli-bp.php' ) ) {
 			require $this->plugin_dir . 'cli/wp-cli-bp.php';
+		}
+
+		if ( bb_is_readylaunch_enabled() ) {
+			require $this->plugin_dir . 'bp-core/bb-core-readylaunch.php';
 		}
 	}
 
@@ -652,6 +660,7 @@ class BuddyPress {
 			'BP_Attachment_Cover_Image'                    => 'core',
 			'BP_Attachment'                                => 'core',
 			'BP_Button'                                    => 'core',
+			'BB_Block'                                     => 'core',
 			'BP_Component'                                 => 'core',
 			'BP_Integration'                               => 'core',
 			'BP_Customizer_Control_Range'                  => 'core',
@@ -694,13 +703,13 @@ class BuddyPress {
 			'BP_Core_Follow_Follower_Widget'               => 'core',
 			'BP_Group_Extension'                           => 'groups',
 			'BP_Group_Member_Query'                        => 'groups',
+			'BB_Group_Readylaunch'                        => 'groups',
 			'BP_Core_Members_Template'                     => 'members',
 			'BP_Core_Members_Widget'                       => 'members',
 			'BP_Core_Recently_Active_Widget'               => 'members',
 			'BP_Core_Whos_Online_Widget'                   => 'members',
 			'BP_Registration_Theme_Compat'                 => 'members',
 			'BP_Signup'                                    => 'members',
-			'BP_BuddyBoss_Platform_Updater'                => 'core',
 			'BP_Core_Suspend'                              => 'suspend',
 			'BP_Suspend_Abstract'                          => 'suspend',
 			'BP_Suspend_Member'                            => 'suspend',
@@ -723,6 +732,8 @@ class BuddyPress {
 			'BB_Telemetry'                                 => 'core',
 			'BB_Topics_Manager'                            => 'core',
 			'BB_Activity_Topics_Manager'                   => 'activity',
+			'BB_Readylaunch'                               => 'core',
+			'BB_Activity_Readylaunch'                      => 'activity',
 
 			// BuddyBoss Platform Rest API classes.
 			'BP_REST_Components_Endpoint'                  => 'core',

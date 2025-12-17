@@ -511,6 +511,30 @@ function bp_version_updater() {
 			bb_update_to_2_8_20();
 		}
 
+		if ( $raw_db_version < 23421 ) {
+			bb_update_to_2_9_2();
+		}
+
+		if ( $raw_db_version < 23431 ) {
+			bb_update_to_2_9_4();
+		}
+
+		if ( $raw_db_version < 23521 ) {
+			bb_update_to_2_9_50();
+		}
+
+		if ( $raw_db_version < 23531 ) {
+			bb_update_to_2_10_1();
+		}
+
+		if (
+			$raw_db_version < 23541 &&
+			class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_Mothership_Loader' ) &&
+			method_exists( '\BuddyBoss\Core\Admin\Mothership\BB_Mothership_Loader', 'migrate_legacy_license' )
+		) {
+			\BuddyBoss\Core\Admin\Mothership\BB_Mothership_Loader::migrate_legacy_license();
+		}
+
 		if ( $raw_db_version !== $current_db ) {
 			// @todo - Write only data manipulate migration here. ( This is not for DB structure change ).
 
@@ -1235,17 +1259,6 @@ function bp_add_activation_redirect() {
 
 	// Add the transient to redirect.
 	set_transient( '_bp_activation_redirect', true, 30 );
-}
-
-/**
- * Platform plugin updater
- *
- * @since BuddyBoss 1.0.0
- */
-function bp_platform_plugin_updater() {
-	if ( ! class_exists( 'BB_Platform_Pro' ) && class_exists( 'BP_BuddyBoss_Platform_Updater' ) ) {
-		new BP_BuddyBoss_Platform_Updater( 'https://update.buddyboss.com/plugin', basename( BP_PLUGIN_DIR ) . '/bp-loader.php', 847 );
-	}
 }
 
 /** Signups *******************************************************************/
@@ -3918,4 +3931,143 @@ function bb_update_to_2_8_20() {
 		)
 	);
 	bp_update_option( 'bb_enable_activity_search', true );
+}
+
+/**
+ * Migrate for BuddyBoss 2.9.20.
+ *
+ * @since BuddyBoss 2.9.20
+ *
+ * @return void
+ */
+function bb_update_to_2_9_2() {
+	global $wpdb;
+
+	$postmeta_table = $wpdb->prefix . 'postmeta';
+	$activity_table = $wpdb->base_prefix . 'bp_activity';
+
+	$updates = array(
+		array(
+			'table'    => $wpdb->base_prefix . 'bp_media',
+			'key_name' => 'bp_media_activity_id',
+		),
+		array(
+			'table'    => $wpdb->base_prefix . 'bp_document',
+			'key_name' => 'bp_document_activity_id',
+		),
+		array(
+			'table'    => $wpdb->base_prefix . 'bp_media',
+			'key_name' => 'bp_video_activity_id',
+		),
+	);
+
+	// Check activity table exists.
+	if ( ! $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $activity_table ) ) ) {
+		return;
+	}
+
+	// Filter to only existing tables.
+	$updates = array();
+	foreach ( $updates as $update ) {
+		if ( $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $update['table'] ) ) ) {
+			$updates[] = $update;
+		}
+	}
+
+	foreach ( $updates as $update ) {
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$wpdb->query(
+			"UPDATE {$update['table']} m
+			INNER JOIN {$postmeta_table} pm
+				ON m.attachment_id = pm.post_id AND pm.meta_key = '{$update['key_name']}'
+			INNER JOIN {$activity_table} a
+				ON pm.meta_value = a.id AND a.type = 'activity_comment'
+			SET m.privacy = 'comment'
+			WHERE m.privacy = 'grouponly' AND m.attachment_id IS NOT NULL"
+		);
+	}
+}
+
+/**
+ * Migrate for BuddyBoss 2.10.0.
+ *
+ * @since BuddyBoss 2.10.0
+ */
+function bb_update_to_2_9_4() {
+	// Purge all the cache for API.
+	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
+		// Clear groups API cache.
+		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-groups' );
+	}
+}
+
+/**
+ * Add index for activity table.
+ *
+ * @since BuddyBoss 2.11.0
+ *
+ * @return void
+ */
+function bb_update_to_2_9_50() {
+	global $wpdb;
+
+	$is_already_run = get_transient( 'bb_update_to_2_9_50' );
+	if ( $is_already_run ) {
+		return;
+	}
+
+	set_transient( 'bb_update_to_2_9_50', 'yes', HOUR_IN_SECONDS );
+
+	$bp_prefix      = function_exists( 'bp_core_get_table_prefix' ) ? bp_core_get_table_prefix() : $wpdb->base_prefix;
+	$activity_table = $bp_prefix . 'bp_activity';
+	$table_exists   = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $activity_table ) ); // phpcs:ignore
+
+	// Check if the activity table exists.
+	if ( $table_exists ) {
+
+		// Check if index activity_type_is_spam exists for the table.
+		$index_exists = $wpdb->get_var( $wpdb->prepare( 'SELECT index_name FROM INFORMATION_SCHEMA.STATISTICS WHERE table_schema = DATABASE() AND table_name = %s AND index_name = %s', $activity_table, 'activity_type_is_spam' ) ); //phpcs:ignore
+
+		// Add index for activity_type_is_spam if it doesn't exist.
+		if ( empty( $index_exists ) ) {
+			$wpdb->query( $wpdb->prepare( "ALTER TABLE {$activity_table} ADD KEY activity_type_is_spam (type,is_spam)" ) ); //phpcs:ignore
+		}
+	}
+}
+
+/**
+ * Migrate for BuddyBoss 2.13.0.
+ *
+ * @since BuddyBoss 2.13.0
+ *
+ * @return void
+ */
+function bb_update_to_2_10_1() {
+	global $wpdb;
+
+	$bp_prefix = function_exists( 'bp_core_get_table_prefix' ) ? bp_core_get_table_prefix() : $wpdb->base_prefix;
+
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+	$table_exists = $wpdb->get_var( $wpdb->prepare( "SHOW TABLES LIKE %s", $bp_prefix . 'bp_activity' ) ); // phpcs:ignore
+	if ( $table_exists ) {
+		// Add 'post_title' column in 'bp_activity' table.
+		$row = $wpdb->get_results( $wpdb->prepare( "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_schema= %s AND table_name = %s AND column_name = 'post_title'", DB_NAME, $bp_prefix . 'bp_activity' ) ); // phpcs:ignore
+		if ( empty( $row ) ) {
+			$wpdb->query( "ALTER TABLE {$bp_prefix}bp_activity ADD `post_title` text DEFAULT NULL AFTER `action`" ); //phpcs:ignore
+
+			$indexes = $wpdb->get_col( $wpdb->prepare( 'SELECT index_name FROM INFORMATION_SCHEMA.STATISTICS WHERE table_schema = DATABASE() AND table_name = %s', $bp_prefix . 'bp_activity' ) ); //phpcs:ignore
+			if ( ! in_array( 'post_title', $indexes, true ) ) {
+				$wpdb->query( "ALTER TABLE {$bp_prefix}bp_activity ADD KEY `post_title` (`post_title`(191))" ); //phpcs:ignore
+			}
+			if ( ! in_array( 'bb_post_title', $indexes, true ) ) {
+				$wpdb->query( "ALTER TABLE {$bp_prefix}bp_activity ADD FULLTEXT KEY `bb_post_title` (`post_title`)" ); //phpcs:ignore
+			}
+			if ( ! in_array( 'bb_content', $indexes, true ) ) {
+				$wpdb->query( "ALTER TABLE {$bp_prefix}bp_activity ADD FULLTEXT KEY `bb_content` (`content`)" ); //phpcs:ignore
+			}
+			if ( ! in_array( 'bb_title_content', $indexes, true ) ) {
+				$wpdb->query( "ALTER TABLE {$bp_prefix}bp_activity ADD FULLTEXT KEY `bb_title_content` (`post_title`, `content`)" ); //phpcs:ignore
+			}
+		}
+	}
 }

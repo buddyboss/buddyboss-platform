@@ -79,10 +79,37 @@ function bp_media_upload() {
 		$attachment_message_url = $attachment_thumb_url;
 	} else {
 		// Generate document attachment preview link.
-		$attachment_id          = base64_encode( 'forbidden_' . $attachment->ID );
-		$attachment_url         = home_url( '/' ) . 'bb-attachment-media-preview/' . $attachment_id;
-		$attachment_thumb_url   = home_url( '/' ) . 'bb-attachment-media-preview/' . $attachment_id . '/thumbnail';
-		$attachment_medium      = home_url( '/' ) . 'bb-attachment-media-preview/' . $attachment_id . '/bb-media-activity-image';
+		$attachment_id = base64_encode( 'forbidden_' . $attachment->ID );
+
+		/**
+		 * Filters the attachment URL.
+		 *
+		 * @since BuddyBoss 2.15.0
+		 *
+		 * @param string $attachment_url Attachment URL.
+		 * @param int    $attachment_id  Attachment ID.
+		 */
+		$attachment_url = apply_filters( 'bb_media_attachment_url', home_url( '/' ) . 'bb-attachment-media-preview/' . $attachment_id, $attachment_id, 'bb-media-photos-popup-image' );
+
+		/**
+		 * Filters the attachment thumb URL.
+		 *
+		 * @since BuddyBoss 2.15.0
+		 *
+		 * @param string $attachment_thumb_url Attachment thumb URL.
+		 * @param int    $attachment_id Attachment ID.
+		 */
+		$attachment_thumb_url = apply_filters( 'bb_media_attachment_thumb_url', home_url( '/' ) . 'bb-attachment-media-preview/' . $attachment_id . '/thumbnail', $attachment_id, 'thumbnail' );
+
+		/**
+		 * Filters the attachment medium.
+		 *
+		 * @since BuddyBoss 2.15.0
+		 *
+		 * @param string $attachment_medium Attachment medium.
+		 * @param int    $attachment_id     Attachment ID.
+		 */
+		$attachment_medium      = apply_filters( 'bb_media_attachment_medium', home_url( '/' ) . 'bb-attachment-media-preview/' . $attachment_id . '/bb-media-activity-image', $attachment_id, 'bb-media-activity-image' );
 		$attachment_message_url = ( isset( $_POST ) && isset( $_POST['thread_id'] ) ? home_url( '/' ) . 'bb-attachment-media-preview/' . $attachment_id . '/bb-media-activity-image/' . base64_encode( 'thread_' . $_POST['thread_id'] ) : '' );
 	}
 
@@ -421,6 +448,7 @@ function bp_media_get_specific( $args = '' ) {
 			'album_id'         => false,      // Album ID.
 			'user_id'          => false,      // User ID.
 			'moderation_query' => true,
+			'count_total'      => false,
 			'status'           => bb_media_get_published_status(),
 		),
 		'media_get_specific'
@@ -438,6 +466,7 @@ function bp_media_get_specific( $args = '' ) {
 		'user_id'          => $r['user_id'],
 		'moderation_query' => $r['moderation_query'],
 		'status'           => $r['status'],
+		'count_total'      => $r['count_total'],
 	);
 
 	/**
@@ -524,6 +553,12 @@ function bp_media_add( $args = '' ) {
 		$media->privacy = $r['privacy'];
 	} elseif ( ! empty( $media->group_id ) ) {
 		$media->privacy = 'grouponly';
+		if ( ! empty( $media->activity_id ) ) {
+			$activity = new BP_Activity_Activity( $media->activity_id );
+			if ( ! empty( $activity ) && 'activity_comment' === $activity->type ) {
+				$media->privacy = $r['privacy'];
+			}
+		}
 	} elseif ( ! empty( $media->album_id ) ) {
 		$album = new BP_Media_Album( $media->album_id );
 		if ( ! empty( $album ) ) {
@@ -1651,12 +1686,13 @@ function bp_media_import_buddyboss_media_tables() {
 				if ( bp_is_active( 'activity' ) ) {
 
 					$activity_args = array(
-						'user_id'       => $user_id,
-						'recorded_time' => $date_created,
-						'hide_sitewide' => true,
-						'privacy'       => 'media',
-						'type'          => 'activity_update',
-						'component'     => buddypress()->activity->id,
+						'user_id'        => $user_id,
+						'recorded_time'  => $date_created,
+						'hide_sitewide'  => true,
+						'privacy'        => 'media',
+						'type'           => 'activity_update',
+						'component'      => buddypress()->activity->id,
+						'title_required' => false,
 					);
 
 					if ( ! empty( $activity_id ) ) {
@@ -2811,7 +2847,7 @@ function bp_media_album_recursive_li_list( $array, $first = false ) {
 	}
 
 	foreach ( $array as $item ) {
-		$output .= '<li data-id="' . esc_attr( $item['id'] ) . '" data-privacy="' . esc_attr( $item['privacy'] ) . '"><span id="' . esc_attr( $item['id'] ) . '" data-id="' . esc_attr( $item['id'] ) . '">' . stripslashes( $item['title'] ) . '</span>' . bp_media_album_recursive_li_list( $item['children'], true ) . '</li>';
+		$output .= '<li data-id="' . esc_attr( $item['id'] ) . '" data-privacy="' . esc_attr( $item['privacy'] ) . '"><span id="' . esc_attr( $item['id'] ) . '" data-id="' . esc_attr( $item['id'] ) . '">' . esc_html( stripslashes( $item['title'] ) ) . '</span>' . bp_media_album_recursive_li_list( $item['children'], true ) . '</li>';
 	}
 	$output .= '</ul>';
 
@@ -2909,6 +2945,7 @@ function bp_media_move_media_to_album( $media_id = 0, $album_id = 0, $group_id =
 					$activity->hide_sitewide     = ( 'groups' === $activity->component && ( 'hidden' === $status || 'private' === $status ) ) ? 1 : 0;
 					$activity->secondary_item_id = 0;
 					$activity->privacy           = $destination_privacy;
+					$activity->title_required    = false;
 					$activity->save();
 				}
 
@@ -2968,7 +3005,8 @@ function bp_media_move_media_to_album( $media_id = 0, $album_id = 0, $group_id =
 						bp_activity_delete( array( 'id' => $need_delete ) );
 
 						// Update parent activity privacy to destination privacy.
-						$parent_activity->privacy = $destination_privacy;
+						$parent_activity->privacy        = $destination_privacy;
+						$parent_activity->title_required = false;
 						$parent_activity->save();
 
 					} elseif ( count( $parent_activity_media_ids ) > 1 ) {
@@ -2984,6 +3022,7 @@ function bp_media_move_media_to_album( $media_id = 0, $album_id = 0, $group_id =
 							$activity->hide_sitewide     = ( 'groups' === $activity->component && ( 'hidden' === $status || 'private' === $status ) ) ? 1 : 0;
 							$activity->secondary_item_id = 0;
 							$activity->privacy           = $destination_privacy;
+							$activity->title_required    = false;
 							$activity->save();
 
 							bp_activity_update_meta( (int) $child_activity_id, 'bp_media_ids', $media_id );

@@ -944,7 +944,9 @@ function bb_disabled_notification_actions_by_user( $user_id = 0, $type = 'web' )
 	if ( ! empty( $enabled_all_notification ) ) {
 		foreach ( $enabled_all_notification as $key => $types ) {
 			if ( isset( $types['main'] ) && 'no' === $types['main'] ) {
-				$admin_excluded_actions = array_merge( $admin_excluded_actions, $all_actions[ $key . '_' . $type ] );
+				$actions_key            = $key . '_' . $type;
+				$actions_to_merge       = isset( $all_actions[ $actions_key ] ) && is_array( $all_actions[ $actions_key ] ) ? $all_actions[ $actions_key ] : array();
+				$admin_excluded_actions = array_merge( $admin_excluded_actions, $actions_to_merge );
 			}
 			if ( isset( $types[ $type ] ) ) {
 				$settings_by_admin[ $key . '_' . $type ] = $types[ $type ];
@@ -1114,8 +1116,16 @@ function bb_notification_avatar() {
 
 			$moderation_class = isset( $user ) && function_exists( 'bp_moderation_is_user_suspended' ) && bp_moderation_is_user_suspended( $user->ID ) ? 'bp-user-suspended' : '';
 			$moderation_class = isset( $user ) && function_exists( 'bp_moderation_is_user_blocked' ) && bp_moderation_is_user_blocked( $user->ID ) ? $moderation_class . ' bp-user-blocked' : $moderation_class;
+			$data_hp          = '';
+			if ( ! empty( $item_id ) ) {
+				if ( 'user' === $object ) {
+					$data_hp = 'data-bb-hp-profile="' . esc_attr( $item_id ) . '"';
+				} elseif ( 'group' === $object ) {
+					$data_hp = 'data-bb-hp-group="' . esc_attr( $item_id ) . '"';
+				}
+			}
 			?>
-			<a href="<?php echo ! empty( $link ) ? esc_url( $link ) : ''; ?>" class="<?php echo esc_attr( $moderation_class ); ?>" data-bb-hp-profile="<?php echo esc_attr( $notification->secondary_item_id ); ?>">
+			<a href="<?php echo ! empty( $link ) ? esc_url( $link ) : ''; ?>" class="<?php echo esc_attr( $moderation_class ); ?>" <?php echo $data_hp; ?>>
 				<?php
 				echo bp_core_fetch_avatar(
 					array(

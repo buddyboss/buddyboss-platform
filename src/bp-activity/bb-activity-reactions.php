@@ -272,18 +272,33 @@ function bb_get_activity_post_reaction_button_html( $item_id, $item_type = 'acti
 		$reaction_link = ( 'activity' === $item_type ) ? bp_get_activity_favorite_link( $item_id ) : bb_get_activity_comment_favorite_link( $item_id );
 	}
 
-	return sprintf(
-		'<a href="%1$s" class="button bp-like-button bp-secondary-action %5$s" aria-pressed="false" data-reacted-id="%6$s">
+	$button_args = array(
+		'reaction_link'         => $reaction_link,
+		'icon_text'             => ! empty( $prepared_icon['icon_text'] ) ? $prepared_icon['icon_text'] : esc_html__( 'Like', 'buddyboss' ),
+		'icon_html'             => $item_type === 'activity' ? $prepared_icon['icon_html'] : '',
+		'text_color'            => ! empty( $reaction_data['text_color'] ) ? esc_attr( 'color:' . $reaction_data['text_color'] ) : '',
+		'reaction_button_class' => $reaction_button_class,
+		'reaction_id'           => $reaction_id,
+		'item_id'               => $item_id,
+		'item_type'             => $item_type,
+		'has_reacted'           => $has_reacted,
+	);
+
+	return apply_filters( 'bb_get_activity_reaction_button_html',
+		sprintf(
+			'<a href="%1$s" class="button bp-like-button bp-secondary-action %5$s" data-pressed="false" data-reacted-id="%6$s">
 			<span class="bp-screen-reader-text">%2$s</span>
 			%3$s
 			<span class="like-count reactions_item" style="%4$s">%2$s</span>
 		</a>',
-		$reaction_link,
-		! empty( $prepared_icon['icon_text'] ) ? $prepared_icon['icon_text'] : esc_html__( 'Like', 'buddyboss' ),
-		$item_type === 'activity' ? $prepared_icon['icon_html'] : '',
-		! empty( $reaction_data['text_color'] ) ? esc_attr( 'color:' . $reaction_data['text_color'] ) : '',
-		$reaction_button_class,
-		$reaction_id,
+			$button_args['reaction_link'],
+			$button_args['icon_text'],
+			$button_args['icon_html'],
+			$button_args['text_color'],
+			$button_args['reaction_button_class'],
+			$button_args['reaction_id']
+		),
+		$button_args
 	);
 }
 
@@ -345,7 +360,19 @@ function bb_get_activity_post_user_reactions_html( $activity_id, $item_type = 'a
 			</div>';
 	}
 
-	return apply_filters( 'bb_get_activity_post_user_reactions_html', $output );
+	/**
+	 * Filters the user reactions list for activity post.
+	 *
+	 * @since BuddyBoss 2.5.20
+	 * @since BuddyBoss 2.9.00
+	 * Added new params as $activity_id, $item_type, $is_popup.
+	 *
+	 * @param string $output      The user reactions list for activity post.
+	 * @param int    $activity_id The ID of the activity.
+	 * @param string $item_type   The type of the item.
+	 * @param bool   $is_popup    Whether the popup is enabled.
+	 */
+	return apply_filters( 'bb_get_activity_post_user_reactions_html', $output, $activity_id, $item_type, $is_popup );
 }
 
 /**
@@ -402,6 +429,7 @@ function bb_activity_get_reacted_users_data( $args ) {
 
 			$user_reactions[] = array(
 				'id'          => $reaction->id,
+				'user_id'     => $reaction->user_id,
 				'name'        => bp_core_get_user_displayname( $reaction->user_id ),
 				'member_type' => array(
 					'label' => $member_type ?? $type,

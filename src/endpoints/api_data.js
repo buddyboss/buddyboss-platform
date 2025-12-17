@@ -245,6 +245,13 @@ define({ "api": [
             "group": "Parameter",
             "type": "String",
             "optional": false,
+            "field": "post_title",
+            "description": "<p>The post title of the activity.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
             "field": "content",
             "description": "<p>Allowed HTML content for the activity.</p>"
           },
@@ -872,6 +879,13 @@ define({ "api": [
             "optional": true,
             "field": "type",
             "description": "<p>The activity type of the activity.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": true,
+            "field": "post_title",
+            "description": "<p>The post title of the activity.</p>"
           },
           {
             "group": "Parameter",
@@ -9756,6 +9770,17 @@ define({ "api": [
     "name": "GetBBSettings",
     "group": "Settings",
     "description": "<p>Retrieve settings</p>",
+    "version": "1.0.0",
+    "filename": "src/bp-core/classes/class-bp-rest-settings-endpoint.php",
+    "groupTitle": "Settings"
+  },
+  {
+    "type": "POST",
+    "url": "/wp-json/buddyboss/v1/settings",
+    "title": "Save Settings",
+    "name": "SaveBBSettings",
+    "group": "Settings",
+    "description": "<p>Save settings</p>",
     "version": "1.0.0",
     "filename": "src/bp-core/classes/class-bp-rest-settings-endpoint.php",
     "groupTitle": "Settings"

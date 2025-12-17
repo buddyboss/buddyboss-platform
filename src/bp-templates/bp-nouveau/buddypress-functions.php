@@ -670,7 +670,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 					'plural'   => esc_html__( 'Followers', 'buddyboss' ),
 				),
 			),
-			'rest_url'                   => home_url( 'wp-json/buddyboss/v1' ),
+			'rest_url'                   => untrailingslashit( home_url( 'wp-json/buddyboss/v1' ) ),
 			'rest_nonce'                 => wp_create_nonce( 'wp_rest' ),
 			'member_label'               => __( 'member', 'buddyboss' ),
 			'members_label'              => __( 'members', 'buddyboss' ),
@@ -739,6 +739,9 @@ class BP_Nouveau extends BP_Theme_Compat {
 
 		// Add localize variable for more menu items.
 		$params['more_menu_items'] = esc_html__( 'Menu Items', 'buddyboss' );
+
+		// Add localize variable for more menu text.
+		$params['more_menu_text'] = esc_html__( 'More', 'buddyboss' );
 
 		// Add localize variable for more items.
 		$params['more_items'] = esc_html__( 'More', 'buddyboss' );
