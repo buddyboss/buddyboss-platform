@@ -16189,7 +16189,21 @@ ul.bbp-stats .bbp-count {
   clear: both;
 }
 
-.budypress.no-js form.bp-dir-search-form button[type="submit"] {
+.members-search .bp-dir-search-form .search-form_submit,
+.groups-search .bp-dir-search-form .search-form_submit {
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+}
+
+.buddypress-wrap .members-search .bp-dir-search-form input[type="search"], .buddypress-wrap
+.groups-search .bp-dir-search-form input[type="search"] {
+  padding-right: 35px;
+  width: 100%;
+}
+
+.buddypress.no-js form.bp-dir-search-form button[type="submit"] {
   height: auto;
   right: 0;
   overflow: visible;
