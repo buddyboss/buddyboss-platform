@@ -341,6 +341,29 @@ if ( ! class_exists( 'BBP_Replies_Admin' ) ) :
 			do_action( 'bbp_reply_attributes_metabox_save', $reply_id, $topic_id, $forum_id, $reply_to );
 			do_action( 'bbp_author_metabox_save', $reply_id, $anonymous_data );
 
+			// Send notifications for new replies created in admin.
+			// Only send if it's a new reply (not an edit), reply is published, and topic is set.
+			if ( ! $is_edit && ! empty( $topic_id ) && function_exists( 'bbp_is_reply_published' ) && bbp_is_reply_published( $reply_id ) ) {
+				// Check if notification was already sent (prevent duplicates).
+				$notification_sent = get_post_meta( $reply_id, '_bbp_admin_notification_sent', true );
+				if ( empty( $notification_sent ) ) {
+					// Additional check: verify this is a new reply by checking if post was created recently.
+					$post_date     = get_post_field( 'post_date', $reply_id );
+					$post_modified = get_post_field( 'post_modified', $reply_id );
+					// If post_date and post_modified are the same (or very close), it's likely a new post.
+					$time_diff = abs( strtotime( $post_modified ) - strtotime( $post_date ) );
+					// Consider it new if created within the last 2 minutes (allows for processing time).
+					if ( $time_diff < 120 ) {
+						// Send notification to topic subscribers.
+						if ( function_exists( 'bbp_notify_topic_subscribers' ) ) {
+							bbp_notify_topic_subscribers( $reply_id, $topic_id, $forum_id, $anonymous_data, $author_id );
+							// Mark as sent to prevent duplicates.
+							update_post_meta( $reply_id, '_bbp_admin_notification_sent', true );
+						}
+					}
+				}
+			}
+
 			return $reply_id;
 		}
 
