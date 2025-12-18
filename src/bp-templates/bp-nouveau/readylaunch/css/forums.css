@@ -1634,7 +1634,7 @@
 .bb-rl-forum-modal .bb-rl-forum-subscription {
   font-size: 14px;
   font-weight: 500;
-  margin-right: var(--bb-rl-space-300);
+  margin: 0 var(--bb-rl-space-300) 0 0;
   line-height: 1;
 }
 
