@@ -9,8 +9,6 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-global $bp, $wpdb;
-
 if ( empty( get_query_var( 'document-attachment-id' ) ) ) {
 	echo '// Silence is golden.';
 	exit();
@@ -20,6 +18,7 @@ $encode_id   = base64_decode( get_query_var( 'document-attachment-id' ) );
 $explode_arr = explode( 'forbidden_', $encode_id );
 
 if ( isset( $explode_arr ) && ! empty( $explode_arr ) && isset( $explode_arr[1] ) && (int) $explode_arr[1] > 0 ) {
+	global $bp, $wpdb;
 
 	$attachment_id  = (int) $explode_arr[1];
 
