@@ -10,7 +10,7 @@
   --bb-rl-background-tertiary-hover-color: #cececf;
   --bb-rl-background-black-color: #0c0c0d;
   --bb-rl-background-disabled-color: #dbdbdb;
-  --bb-rl-background-brand-primary-color: #4946fe;
+  --bb-rl-background-brand-primary-color: var(--bb-rl-primary-color);
   --bb-rl-background-brand-primary-hover-color: #4937f4;
   --bb-rl-background-brand-secondary-color: #dde4ff;
   --bb-rl-background-brand-secondary-hover-color: #c2cdff;
@@ -34,7 +34,7 @@
   --bb-rl-border-quinery-color: #6d6d6e;
   --bb-rl-border-quaternary-color: #9e9e9e;
   --bb-rl-border-brand-primary-color: #3325ae;
-  --bb-rl-border-brand-secondary-color: #4946fe;
+  --bb-rl-border-brand-secondary-color: var(--bb-rl-primary-color);
   --bb-rl-border-positive-primary-color: #02542d;
   --bb-rl-border-positive-secondary-color: #14ae5c;
   --bb-rl-border-warning-primary-color: #682d03;
@@ -46,7 +46,7 @@
   --bb-rl-text-secondary-color: #555556;
   --bb-rl-text-tertiary-color: #858586;
   --bb-rl-text-disabled-color: #9e9e9e;
-  --bb-rl-text-brand-primary-color: #4946fe;
+  --bb-rl-text-brand-primary-color: var(--bb-rl-primary-color);
   --bb-rl-text-brand-secondary-color: #3325ae;
   --bb-rl-text-positive-primary-color: #02542d;
   --bb-rl-text-positive-secondary-color: #14ae5c;
@@ -60,7 +60,8 @@
   --bb-rl-icon-tertiary-color: #9e9e9e;
   --bb-rl-icon-disabled-color: #cececf;
   --bb-rl-icon-brand-primary-color: #3325ae;
-  --bb-rl-icon-brand-secondary-color: #4946fe;
+  --bb-rl-icon-brand-secondary-color: var(--bb-rl-primary-color);
+  --bb-rl-icon-brand-disabled-color: #767eff;
   --bb-rl-icon-positive-primary-color: #02542d;
   --bb-rl-icon-positive-secondary-color: #14ae5c;
   --bb-rl-icon-warning-primary-color: #682d03;
@@ -103,6 +104,7 @@
 
 /* Dark Mode Variables */
 .bb-rl-dark-mode {
+  --bb-rl-primary-color: #4946fe;
   --bb-rl-background-color: #242425;
   --bb-rl-background-hover-color: #555556;
   --bb-rl-background-secondary-color: #2f2f2f;
@@ -111,7 +113,7 @@
   --bb-rl-background-tertiary-hover-color: #555556;
   --bb-rl-background-black-color: #0c0c0d;
   --bb-rl-background-disabled-color: #dbdbdb;
-  --bb-rl-background-brand-primary-color: #4946fe;
+  --bb-rl-background-brand-primary-color: var(--bb-rl-primary-color);
   --bb-rl-background-brand-primary-hover-color: #4937f4;
   --bb-rl-background-brand-secondary-color: #3325ae;
   --bb-rl-background-brand-secondary-hover-color: #2e2689;
@@ -135,7 +137,7 @@
   --bb-rl-border-quinery-color: #f6f6f6;
   --bb-rl-border-quaternary-color: #f3f3f3;
   --bb-rl-border-brand-primary-color: #c2cdff;
-  --bb-rl-border-brand-secondary-color: #4946fe;
+  --bb-rl-border-brand-secondary-color: var(--bb-rl-primary-color);
   --bb-rl-border-positive-primary-color: #cff7d3;
   --bb-rl-border-positive-secondary-color: #14ae5c;
   --bb-rl-border-warning-primary-color: #fff1c2;
@@ -147,7 +149,7 @@
   --bb-rl-text-secondary-color: #cececf;
   --bb-rl-text-tertiary-color: #b6b6b6;
   --bb-rl-text-disabled-color: #e7e7e7;
-  --bb-rl-text-brand-primary-color: #4946fe;
+  --bb-rl-text-brand-primary-color: var(--bb-rl-primary-color);
   --bb-rl-text-brand-secondary-color: #c2cdff;
   --bb-rl-text-positive-primary-color: #cff7d3;
   --bb-rl-text-positive-secondary-color: #14ae5c;
@@ -161,7 +163,8 @@
   --bb-rl-icon-tertiary-color: #9e9e9e;
   --bb-rl-icon-disabled-color: #858586;
   --bb-rl-icon-brand-primary-color: #c2cdff;
-  --bb-rl-icon-brand-secondary-color: #4946fe;
+  --bb-rl-icon-brand-secondary-color: var(--bb-rl-primary-color);
+  --bb-rl-icon-brand-disabled-color: #767eff;
   --bb-rl-icon-positive-primary-color: #cff7d3;
   --bb-rl-icon-positive-secondary-color: #14ae5c;
   --bb-rl-icon-warning-primary-color: #fff1c2;
@@ -328,7 +331,7 @@
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   padding: 4px var(--bb-rl-space-200);
   font-size: 0.875rem;
@@ -506,7 +509,7 @@
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   background-color: var(--bb-rl-background-brand-primary-color);
   color: var(--bb-rl-text-white-color);
@@ -562,7 +565,7 @@
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   background-color: transparent;
   color: var(--bb-rl-text-color);
@@ -723,7 +726,7 @@
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   background-color: transparent;
   color: var(--bb-rl-text-color);
@@ -792,7 +795,7 @@
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   background-color: var(--bb-rl-background-brand-primary-color);
   color: var(--bb-rl-text-white-color);
@@ -858,7 +861,7 @@
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   background-color: var(--bb-rl-background-tertiary-color);
   color: var(--bb-rl-text-color);
@@ -890,6 +893,11 @@
 
 .bb-rl-profile-header + .bp-wrap .item-body > .bb-rl-profile-subnav {
   margin: var(--bb-rl-space-300) 0 0;
+}
+
+.bb-rl-profile-header + .bp-wrap .item-body > .bb-rl-profile-subnav + .bb-item-count,
+.bb-rl-profile-header + .bp-wrap .item-body > .bb-rl-profile-subnav + h2 + .bb-item-count {
+  display: none;
 }
 
 .bb-rl-profile-subnav ul.subnav {
@@ -956,6 +964,10 @@
   margin-bottom: var(--bb-rl-space-50);
 }
 
+.bb-rl-profile-edit-wrapper .editfield {
+  margin-bottom: var(--bb-rl-space-100);
+}
+
 .bb-rl-profile-edit-wrapper #profile-group-edit-submit {
   display: inline-flex;
   align-items: center;
@@ -966,7 +978,7 @@
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   background-color: var(--bb-rl-background-brand-primary-color);
   color: var(--bb-rl-text-white-color);
@@ -1006,7 +1018,7 @@
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   background-color: var(--bb-rl-background-tertiary-color);
   color: var(--bb-rl-text-color);
@@ -1111,6 +1123,27 @@
   margin-bottom: var(--bb-rl-space-400);
 }
 
+.bb-rl-container .buddypress-wrap:has(.edit.bb-rl-profile-panel) #item-header {
+  padding-left: var(--bb-rl-space-600);
+  padding-right: var(--bb-rl-space-600);
+}
+
+@media screen and (max-width: 992px) {
+  .bb-rl-container .buddypress-wrap:has(.edit.bb-rl-profile-panel) #item-header {
+    padding-left: var(--bb-rl-space-200);
+    padding-right: var(--bb-rl-space-200);
+  }
+}
+
+.bb-rl-container .buddypress-wrap:has(.edit.bb-rl-profile-panel) #item-header:has(.bp-feedback) {
+  padding-top: var(--bb-rl-space-300);
+}
+
+.bb-rl-container .buddypress-wrap:has(.edit.bb-rl-profile-panel) #item-header:has(.bp-feedback) .bp-feedback {
+  max-width: 720px;
+  margin: 0 auto;
+}
+
 .bb-rl-account-settings-section {
   background: var(--bb-rl-background-color);
   border-radius: var(--bb-rl-radius-lg);
@@ -1175,7 +1208,7 @@
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   background-color: var(--bb-rl-background-brand-primary-color);
   color: var(--bb-rl-text-white-color);
@@ -1398,6 +1431,59 @@ table.profile-settings tbody td select {
   margin-bottom: var(--bb-rl-space-100);
 }
 
+.bb-rl-account-settings-section .onesignal-user-preference {
+  border: 1px solid var(--bb-rl-border-secondary-color);
+  border-radius: var(--bb-rl-radius-base);
+}
+
+.bb-rl-account-settings-section .onesignal-user-preference .web-notification-toggle .web-notification-icon-text .web-browser-text .web-notification-text {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 22px;
+  color: var(--bb-rl-text-color);
+}
+
+.bb-rl-account-settings-section .onesignal-user-preference .web-notification-toggle .web-notification-icon-text .web-browser-text .web-notification-icon.chrome {
+  background-image: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bb-rl-account-settings-section .onesignal-user-preference .web-notification-toggle .web-notification-icon-text .web-browser-text .web-notification-icon.chrome::before {
+  content: "\e976";
+  font-family: bb-icons-rl;
+  font-size: 18px;
+  color: var(--bb-rl-icon-primary-color);
+  line-height: 1;
+}
+
+.bb-rl-account-settings-section .onesignal-user-preference .web-notification-toggle .web-notification-icon-text p {
+  font-size: var(--bb-rl-font-size-xs);
+  font-weight: 500;
+  line-height: var(--bb-rl-base-line-xs);
+  font-weight: 400;
+  color: var(--bb-rl-text-secondary-color);
+  padding-left: 26px;
+}
+
+.bb-rl-account-settings-section .onesignal-user-preference .web-notification-field .slider {
+  background-color: var(--bb-rl-background-color);
+  border-color: var(--bb-rl-background-brand-primary-color);
+}
+
+.bb-rl-account-settings-section .onesignal-user-preference .web-notification-field .slider:before {
+  background-color: var(--bb-rl-background-brand-primary-color);
+}
+
+.bb-rl-account-settings-section .onesignal-user-preference .web-notification-field input:checked + .slider {
+  background-color: var(--bb-rl-background-brand-primary-color);
+}
+
+.bb-rl-account-settings-section .onesignal-user-preference .web-notification-field input:checked + .slider:before {
+  background-color: var(--bb-rl-background-color);
+}
+
 @media screen and (min-width: 800px) {
   .bb-rl-account-settings-section .main-notification-settings .bb-mobile-setting {
     display: none;
@@ -1450,6 +1536,162 @@ table.profile-settings tbody td select {
     justify-content: space-between;
     gap: var(--bb-rl-space-100);
   }
+}
+
+.bb-readylaunch-template .mfp-bg {
+  background-color: rgba(0, 0, 0, 0.5);
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1042;
+  overflow: hidden;
+  position: fixed;
+}
+
+.bb-readylaunch-template .mfp-wrap {
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 999999;
+  position: fixed;
+  outline: 0 !important;
+  -webkit-backface-visibility: hidden;
+}
+
+.bb-readylaunch-template .mfp-container {
+  text-align: center;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  padding: 0 8px;
+  box-sizing: border-box;
+}
+
+.bb-readylaunch-template .mfp-container:before {
+  content: "";
+  display: inline-block;
+  height: 100%;
+  vertical-align: middle;
+}
+
+.bb-readylaunch-template .bb-onesignal-popup,
+.bb-readylaunch-template .bb-onesignal-popup-close {
+  position: relative;
+  max-height: 90vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  max-width: 615px;
+  vertical-align: middle;
+  width: 90%;
+  margin: 0 auto;
+  padding: var(--bb-rl-space-200) var(--bb-rl-space-300);
+  background-color: var(--bb-rl-background-color);
+  border-radius: var(--bb-rl-radius-lg);
+  border: 1px solid var(--bb-rl-border-secondary-color);
+  box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.1);
+}
+
+.bb-readylaunch-template .bb-onesignal-popup > p,
+.bb-readylaunch-template .bb-onesignal-popup-close > p {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 22px;
+  color: var(--bb-rl-text-color);
+}
+
+.bb-readylaunch-template .bb-onesignal-popup .bb-onesignal-popup-content ul li:before,
+.bb-readylaunch-template .bb-onesignal-popup-close .bb-onesignal-popup-content ul li:before {
+  background-color: var(--bb-rl-background-tertiary-color);
+  color: var(--bb-rl-text-secondary-color);
+  top: 0;
+  font-size: var(--bb-rl-font-size-sm);
+}
+
+.bb-readylaunch-template .bb-onesignal-popup .bb-onesignal-popup-header,
+.bb-readylaunch-template .bb-onesignal-popup-close .bb-onesignal-popup-header {
+  font-size: var(--bb-rl-font-size-base);
+  font-weight: 600;
+  line-height: var(--bb-rl-base-line);
+  background-color: transparent;
+  margin: calc(var(--bb-rl-space-200) * -1) calc(var(--bb-rl-space-300) * -1) var(--bb-rl-space-200);
+  padding: var(--bb-rl-space-200) var(--bb-rl-space-300);
+  border-radius: 0;
+  border-bottom: 1px solid var(--bb-rl-border-secondary-color);
+  box-shadow: none;
+  color: var(--bb-rl-text-color);
+}
+
+.bb-readylaunch-template .mfp-content {
+  position: relative;
+  display: inline-block;
+  vertical-align: middle;
+  margin: 0 auto;
+  text-align: left;
+  z-index: 1045;
+}
+
+.bb-readylaunch-template .mfp-ajax-holder .mfp-content,
+.bb-readylaunch-template .mfp-inline-holder .mfp-content {
+  width: 100%;
+}
+
+.bb-readylaunch-template .bb-onesignal-popup-close .mfp-close {
+  width: 24px;
+  height: 24px;
+  line-height: 24px;
+  position: absolute;
+  right: var(--bb-rl-space-300);
+  top: var(--bb-rl-space-200);
+  text-decoration: none;
+  text-align: center;
+  padding: 0;
+  border: 0;
+  color: var(--bb-rl-icon-color) !important;
+  font-style: normal;
+  background-color: transparent;
+  box-shadow: none;
+  opacity: 1;
+  cursor: pointer;
+  font-size: 0;
+}
+
+.bb-readylaunch-template .bb-onesignal-popup-close .mfp-close::before {
+  content: "\e4f6";
+  font-family: bb-icons-rl;
+  font-size: 24px;
+  color: var(--bb-rl-icon-color);
+}
+
+.bb-readylaunch-template .bb-onesignal-popup-close .bb-onesignal-popup-content ul {
+  margin: var(--bb-rl-space-200) 0 0;
+}
+
+.bb-readylaunch-template .bb-onesignal-popup-close .bb-onesignal-popup-content ul li {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 22px;
+  color: var(--bb-rl-text-secondary-color);
+  display: flex;
+  align-items: center;
+  gap: var(--bb-rl-space-100);
+}
+
+.bb-readylaunch-template .bb-onesignal-popup-close .bb-onesignal-popup-content ul li img {
+  opacity: 0.4;
+  max-height: 14px;
+}
+
+.bb-readylaunch-template .mfp-s-ready .mfp-preloader {
+  display: none;
+}
+
+.bb-readylaunch-template.bb-rl-dark-mode .bb-onesignal-popup-close .bb-onesignal-popup-content ul li img {
+  filter: brightness(0) invert(1);
+  opacity: 0.6;
 }
 
 .bb-rl-account-settings-section .subscription-views .bb-accordion_head {
@@ -1651,7 +1893,7 @@ table.profile-settings tbody td select {
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   background-color: var(--bb-rl-background-tertiary-color);
   color: var(--bb-rl-text-color);
@@ -1721,7 +1963,7 @@ table.profile-settings tbody td select {
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   background-color: var(--bb-rl-background-tertiary-color);
   color: var(--bb-rl-text-color);
@@ -1770,6 +2012,11 @@ table.profile-settings tbody td select {
   border-radius: var(--bb-rl-radius-base);
   padding: var(--bb-rl-space-100) 0;
   z-index: 10;
+}
+
+.last-editfield .bb-rl-field-visibility-block .field-visibility-settings {
+  top: initial;
+  bottom: calc(100% + var(--bb-rl-space-100));
 }
 
 .bb-rl-field-visibility-block .field-visibility-settings fieldset {

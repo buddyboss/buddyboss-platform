@@ -160,20 +160,24 @@ window.bp = window.bp || {};
 			window.Dropzone.autoDiscover = false;
 
 			this.dropzone_video_options = {
-				url                  		 : bbRlAjaxUrl,
-				timeout              		 : 3 * 60 * 60 * 1000,
-				dictFileTooBig       		 : bbRlVideo.dictFileTooBig,
-				acceptedFiles        		 : bbRlVideo.video_type,
-				createImageThumbnails		 : false,
-				dictDefaultMessage   		 : '',
-				autoProcessQueue     		 : true,
-				addRemoveLinks       		 : true,
-				uploadMultiple       		 : false,
-				maxFiles             		 : typeof bbRlVideo.maxFiles !== 'undefined' ? bbRlVideo.maxFiles : 10,
-				maxFilesize          		 : typeof bbRlVideo.max_upload_size !== 'undefined' ? bbRlVideo.max_upload_size : 2,
-				dictInvalidFileType  		 : bbRlVideo.dictInvalidFileType,
-				dictMaxFilesExceeded 		 : bbRlVideo.video_dict_file_exceeded,
+				url                          : bbRlAjaxUrl,
+				timeout                      : 3 * 60 * 60 * 1000,
+				dictFileTooBig               : bbRlVideo.dictFileTooBig,
+				acceptedFiles                : bbRlVideo.video_type,
+				createImageThumbnails        : false,
+				dictDefaultMessage           : '',
+				autoProcessQueue             : true,
+				addRemoveLinks               : true,
+				uploadMultiple               : false,
+				maxFiles                     : typeof bbRlVideo.maxFiles !== 'undefined' ? bbRlVideo.maxFiles : 10,
+				maxFilesize                  : typeof bbRlVideo.max_upload_size !== 'undefined' ? bbRlVideo.max_upload_size : 2,
+				dictInvalidFileType          : bbRlVideo.dictInvalidFileType,
+				dictMaxFilesExceeded         : bbRlVideo.video_dict_file_exceeded,
 				dictCancelUploadConfirmation : bbRlVideo.dictCancelUploadConfirmation,
+				chunking                     : true,
+				chunkSize                    : 30 * 1024 * 1024,
+				retryChunks                  : true,
+				retryChunksLimit             : 3,
 			};
 
 		},
@@ -257,17 +261,18 @@ window.bp = window.bp || {};
 		},
 
 		triggerLoadMore: function () {
+			var load_more_rl = jQuery( this ).closest( '.modal-container' ).find( '#load_more_rl' );
 
 			if (
-				0 === jQuery( this ).find( '#load_more_rl' ).length ||
-				jQuery( this ).find( '#load_more_rl' ).hasClass( 'loading' ) ||
-				jQuery( this ).find( '#load_more_rl' ).hasClass( 'hidden' )
+				0 === load_more_rl.length ||
+				load_more_rl.hasClass( 'loading' ) ||
+				load_more_rl.hasClass( 'hidden' )
 			) {
 				return;
 			}
 
-			if ( jQuery( this ).offset().top + jQuery( this ).innerHeight() > jQuery( this ).find( '#load_more_rl' ).offset().top ) {
-				jQuery( this ).find( '#load_more_rl' ).trigger( 'click' );
+			if ( jQuery( this ).offset().top + jQuery( this ).innerHeight() > load_more_rl.offset().top ) {
+				load_more_rl.trigger( 'click' );
 			}
 
 		},
@@ -676,7 +681,7 @@ window.bp = window.bp || {};
 							if ( membersListElem.length > 0 ) {
 								membersListElem.html( response.data.content ).addClass( 'is_not_empty' );
 								if ( ! $( '#message-members-list' ).hasClass( 'event-triggered' ) ) {
-									var modalContainerElem = $( '#message-members-list .modal-container' );
+									var modalContainerElem = $( '#message-members-list .bb-report-type-wrp' );
 									modalContainerElem.on( 'scroll', bp.Nouveau.Messages.triggerLoadMore );
 									modalContainerElem.addClass( 'event-triggered' );
 								}
@@ -996,7 +1001,7 @@ window.bp = window.bp || {};
 							if ( moderatedUserList.length ) {
 								moderatedUserList.html( response.data.content ).addClass( 'is_not_empty' );
 								if ( ! $( '#mass-user-block-list' ).hasClass( 'event-triggered' ) ) {
-									var modalContainer = $( '#mass-user-block-list .modal-container' );
+									var modalContainer = $( '#mass-user-block-list .bb-report-type-wrp' );
 									modalContainer.on( 'scroll', bp.Nouveau.Messages.triggerLoadMore );
 									modalContainer.addClass( 'event-triggered' );
 								}
@@ -3118,7 +3123,12 @@ window.bp = window.bp || {};
 							$( file.previewElement ).closest( '.dz-preview' ).addClass( 'dz-complete' );
 						}
 
-						if ( response.data.id ) {
+						if ( true === file.upload.chunked ) {
+							// convert file.xhr.response string to object.
+							response = JSON.parse( file.xhr.response );
+						}
+
+						if ( response.data && response.data.id ) {
 							file.id 				 = response.data.id;
 							response.data.uuid 		 = file.upload.uuid;
 							response.data.menu_order = $( file.previewElement ).closest( '.dropzone' ).find( file.previewElement ).index() - 1;
@@ -4064,10 +4074,20 @@ window.bp = window.bp || {};
 				$input.on('select2:open', function() {
 					// Add class to dropdown
 					$('.select2-dropdown').addClass('bb-select-dropdown bb-compose-input');
+					
+					// Add aria-label to search field for accessibility.
+					setTimeout(function () {
+						$( '.select2-search__field' ).attr( 'aria-label', BP_Nouveau.messages.i18n.search_recipients );
+					}, 0);
 				});
 
 				// Add class to container immediately after initialization
 				$input.next('.select2-container').addClass('bb-select-container');
+				
+				// Add aria-label to search field after initialization (for initial load).
+				setTimeout( function () {
+					$( '.select2-search__field' ).attr( 'aria-label', BP_Nouveau.messages.i18n.search_recipients );
+				}, 100 );
 
 				// Add element into the Arrdata array.
 				$input.on(
@@ -5636,6 +5656,14 @@ window.bp = window.bp || {};
 
 				// replace dummy image with original image by faking scroll event to call bp.Nouveau.lazyLoad.
 				jQuery( window ).scroll();
+
+				// Trigger GIF autoplay check when messages are loaded
+				// Use setTimeout to ensure DOM is updated and video elements are rendered
+				setTimeout( function() {
+					if ( 'undefined' !== typeof bp.Nouveau.Media && 'function' === typeof bp.Nouveau.Media.autoPlayGifVideos ) {
+						bp.Nouveau.Media.autoPlayGifVideos();
+					}
+				}, 100 );
 			},
 
 			messages_scrolled: function( event ) {
@@ -5827,6 +5855,14 @@ window.bp = window.bp || {};
 				} else {
 					this.$el.removeClass( 'focus-in--scroll' );
 				}
+
+				// Trigger GIF autoplay check for newly added message
+				// Use setTimeout to ensure DOM is updated and video elements are rendered
+				setTimeout( function() {
+					if ( 'undefined' !== typeof bp.Nouveau.Media && 'function' === typeof bp.Nouveau.Media.autoPlayGifVideos ) {
+						bp.Nouveau.Media.autoPlayGifVideos();
+					}
+				}, 100 );
 			},
 
 			replyError: function( response ) {

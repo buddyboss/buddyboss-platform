@@ -2475,7 +2475,7 @@ function bp_nouveau_signup_form( $section = 'account_details' ) {
 		/**
 		 * Filters the class of the signup field.
 		 *
-		 * @since BuddyBoss [BVERSION]
+		 * @since BuddyBoss 2.16.0
 		 *
 		 * @param array $signup_class_arr The class of the signup field.
 		 * @param array $attributes       The attributes of the signup field.
@@ -2601,7 +2601,7 @@ function bp_nouveau_signup_form( $section = 'account_details' ) {
 
 				if ( ( 'signup_password' === $name ) || ( 'signup_password_confirm' === $name ) ) {
 					echo '<div class="bb-password-wrap">';
-					echo '<a href="#" class="bb-toggle-password" tabindex="-1"><i class="bb-icon-l bb-icon-eye"></i></a>';
+					echo '<a href="#" class="bb-toggle-password" tabindex="-1" aria-label="' . esc_attr__( 'Toggle password visibility', 'buddyboss' ) . '"><i class="bb-icon-l bb-icon-eye"></i></a>';
 				}
 
 				print( $field_output );  // Constructed safely above.

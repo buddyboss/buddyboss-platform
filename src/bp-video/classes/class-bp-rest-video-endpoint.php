@@ -1754,7 +1754,8 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 				bp_activity_update_meta( $activity_id, 'bp_video_ids', $created_video_ids_joined );
 
 				if ( empty( $group_id ) ) {
-					$main_activity->privacy = $video_privacy;
+					$main_activity->privacy        = $video_privacy;
+					$main_activity->title_required = false;
 					$main_activity->save();
 				}
 			}

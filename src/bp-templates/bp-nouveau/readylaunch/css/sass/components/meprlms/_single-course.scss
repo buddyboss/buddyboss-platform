@@ -96,6 +96,25 @@
 
 .bb-rl-memprlms-course {
 
+	#mpcs-main #bookmark.course-curriculum {
+		margin: 0;
+		background-color: transparent;
+		border-radius: 0;
+	}
+
+	#mpcs-main #bookmark.course-curriculum a {
+
+		@include bb-rl-button;
+		@include bb-rl-button--brand-fill;
+		@include bb-rl-button--small;
+		margin-right: var(--bb-rl-space-100);
+
+		i {
+			font-size: var(--bb-rl-font-size-sm);
+			line-height: 1;
+		}
+	}
+
 	.course-curriculum:has(a) {
 		border: 0;
 		border-radius: 0;
@@ -271,6 +290,22 @@
 	}
 }
 
+.mpcs-course-with-accordion .bb-rl-course-content-inner {
+
+	#mpcs-main .mpcs-section-title {
+		padding: 0;
+		background-color: transparent;
+	}
+
+	#mpcs-main .mpcs-section-header:after {
+		display: none;
+	}
+
+	#mpcs-main .mpcs-section.last_section {
+		margin-bottom: var(--bb-rl-space-300);
+	}
+}
+
 .bb-rl-course-content-inner,
 .bb-rl-left-panel--memprlms .mpcs-sidebar-content {
 
@@ -318,6 +353,7 @@
 	.mpcs-section.mpcs-section-lessons .mpcs-section-title {
 		margin: 0;
 		padding: 0;
+		background-color: transparent;
 	}
 
 	.mpcs-section.mpcs-section-lessons .mpcs-section-title .mpcs-section-title-text {
@@ -335,6 +371,10 @@
 
 	.mpcs-section .mpcs-lessons {
 		padding: var(--bb-rl-space-100) 0;
+
+		.mpcs-lesson:hover {
+			background-color: transparent;
+		}
 	}
 
 	.mpcs-section .mpcs-lessons > .mpcs-lesson {
@@ -423,6 +463,14 @@
 		}
 	}
 
+	.mpcs-section .mpcs-lessons .mpcs-lesson-locked-tooltip {
+
+		@include bb-rl-label-heading;
+		padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
+		color: var(--bb-rl-text-tertiary-color);
+		display: flex;
+	}
+
 	.mpcs-lesson-progress {
 
 		.mpcs-circle-regular {
@@ -509,6 +557,12 @@
 	.bb-rl-course-description {
 		order: 99;
 	}
+
+	&#mpcs-main {
+		background-color: transparent;
+		padding: 0;
+		min-height: auto;
+	}
 }
 
 .bb-readylaunch-template,
@@ -537,7 +591,6 @@
 			align-items: center;
 			gap: var(--bb-rl-space-50);
 			margin: 0 0 var(--bb-rl-space-100);
-			text-transform: lowercase;
 
 			> span {
 
@@ -545,6 +598,18 @@
 				color: var(--bb-rl-text-color);
 			}
 		}
+	}
+}
+
+.mpcs-course-with-accordion .bb-rl-course-content {
+
+	#mpcs-main .mpcs-section.mpcs-resource-section:last-of-type {
+		margin-bottom: var(--bb-rl-space-200);
+	}
+
+	.mpcs-resource-section:not(:last-of-type),
+	#mpcs-main .mpcs-resource-section:not(:last-of-type) {
+		margin-bottom: var(--bb-rl-space-200);
 	}
 }
 
@@ -663,6 +728,10 @@
 
 				&:hover {
 					background-color: transparent;
+				}
+
+				&:focus {
+					box-shadow: none;
 				}
 
 				+ .mpcs-lesson-row-link {

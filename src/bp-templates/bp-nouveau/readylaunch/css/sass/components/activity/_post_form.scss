@@ -27,6 +27,10 @@
 
 	#bb-rl-whats-new-content {
 		flex: 1;
+
+		.bb-rl-whats-new-title {
+			display: none;
+		}
 	}
 
 	.bb-rl-activity-post-user-name,
@@ -81,6 +85,10 @@
 	max-height: 100%;
 	overflow: auto;
 
+	body.bb-rl-activity-modal-open & {
+		z-index: 999999;
+	}
+
 	.bb-rl-activity-update-form-overlay {
 		position: fixed;
 		left: 0;
@@ -94,6 +102,14 @@
 		max-width: 90%;
 		margin: auto;
 		box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.1);
+	}
+}
+
+#bb-rl-whats-new-form:not(.bb-rl-activity-edit--privacy-idle) #bb-rl-activity-privacy-point[data-bp-tooltip][data-bp-tooltip-pos="up"] {
+
+	&:after,
+	&:before {
+		display: none;
 	}
 }
 
@@ -159,6 +175,22 @@
 
 		#bb-rl-whats-new-content {
 			width: 100%;
+
+			.bb-rl-whats-new-title {
+				display: block;
+				margin: 0 var(--bb-rl-space-300);
+				padding: var(--bb-rl-space-200) 0;
+				border: 0;
+				border-top: 1px solid var(--bb-rl-border-secondary-color);
+				border-bottom: 1px solid var(--bb-rl-border-secondary-color);
+				border-radius: 0;
+				color: var(--bb-rl-text-color);
+				font-size: 18px;
+				font-weight: 600;
+				line-height: 1.5;
+				width: calc(100% - var(--bb-rl-space-600));
+				outline: none;
+			}
 		}
 
 		.bb-rl-activity-post-user-name {
@@ -169,7 +201,7 @@
 		}
 
 		#bb-rl-activity-privacy-point {
-			display: flex;
+			display: inline-flex;
 			align-items: center;
 			background-color: var(--bb-rl-background-secondary-color);
 			border: 1px solid var(--bb-rl-border-secondary-color);
@@ -265,6 +297,13 @@
 				opacity: 0.4;
 			}
 
+			&.bb-rl-document-support-hide,
+			&.bb-rl-video-support-hide,
+			&.bb-rl-post-gif-hide,
+			&.bb-rl-media-support-hide {
+				display: none;
+			}
+
 			&:last-child {
 				margin-right: 0;
 			}
@@ -331,6 +370,25 @@
 			flex-flow: row-reverse;
 			gap: var(--bb-rl-space-100);
 			position: relative;
+
+			&:hover:not(:has(#bb-rl-aw-whats-new-reset:hover)) {
+
+				.bb-title-tooltip-wrapper {
+
+					.bb-rl-ac-title-required & {
+						opacity: 1;
+						cursor: default;
+					}
+				}
+
+				.bb-topic-tooltip-wrapper {
+
+					.bb-rl-ac-topic-required & {
+						opacity: 1;
+						cursor: default;
+					}
+				}
+			}
 		}
 
 		.bb-rl-button {
@@ -657,8 +715,12 @@
 			font-family: bb-icons-rl;
 			font-size: var(--bb-rl-font-size-base);
 			position: absolute;
-			top: var(--bb-rl-space-100);
+			top: 12px;
 			right: var(--bb-rl-space-200);
+		}
+
+		.bb-rl-privacy-label i {
+			display: none;
 		}
 	}
 
@@ -858,6 +920,14 @@
 
 	.medium-editor-action-pre b:before {
 		content: "\e1bc";
+	}
+
+	.medium-editor-action-h3 b:before {
+		content: "\e6c0";
+	}
+
+	.medium-editor-action-h4 b:before {
+		content: "\e6c2";
 	}
 
 	.medium-editor-toolbar-form {
@@ -1207,6 +1277,7 @@
 	}
 }
 
+.bb-title-tooltip-wrapper,
 .bb-topic-tooltip-wrapper {
 	position: absolute;
 	z-index: 99999;
@@ -1221,6 +1292,7 @@
 		pointer-events: auto;
 	}
 
+	.bb-title-tooltip,
 	.bb-topic-tooltip {
 		background: var(--bb-rl-background-black-color);
 		color: var(--bb-rl-text-white-color);
@@ -1248,8 +1320,34 @@
 	}
 }
 
+// Priority: Post title tooltip should appear above topic tooltip
+.bb-title-tooltip-wrapper {
+	z-index: 100000;
+}
+
 .bb-rl-activity-modal-open {
 	overflow: hidden;
+}
+
+.bb-rl-modal-header-actions {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	margin-left: auto;
+
+	@media screen and (max-width: 580px) {
+		position: absolute;
+		top: var(--bb-rl-space-200);
+		right: var(--bb-rl-space-200);
+	}
+}
+
+.bb-rl-activity-form--schedule .bb-rl-bb-model-header {
+
+	.bb-rl-modal-header-actions {
+		margin-left: 0;
+		order: 99;
+	}
 }
 
 @media screen and (max-width: 680px) {

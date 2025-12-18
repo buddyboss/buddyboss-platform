@@ -896,14 +896,14 @@ window.bp = window.bp || {};
 		addFrontendListeners : function () {
 			if ( BBTopicsManager.isEnabledActivityTopic ) {
 				if ( this.isActivityTopicRequired ) {
-					this.$document.on( 'mouseenter focus', '#whats-new-submit', this.showTopicTooltip.bind( this ) );
-					this.$document.on( 'mouseleave blur', '#whats-new-submit', this.hideTopicTooltip.bind( this ) );
+					$( 'body' ).addClass( 'bb-rl-ac-topic-required' );
 				}
 
 				if ( BBTopicsManager.isActivityTopicRequired ) {
 					// Add topic tooltip.
 					this.$document.on( 'bb_display_full_form', function () {
-						if ( $( '.bb-rl-activity-update-form #whats-new-submit .bb-topic-tooltip-wrapper' ).length === 0 ) {
+						var activity_form_submit_wrapper = $( '.bb-rl-activity-update-form.modal-popup #bb-rl-activity-form-submit-wrapper' );
+						if ( $( '.bb-rl-activity-update-form #whats-new-submit .bb-topic-tooltip-wrapper' ).length === 0 && activity_form_submit_wrapper.find( '.whats-new-topic-selector ul' ).length > 0 ) {
 							$( '.bb-rl-activity-update-form.modal-popup #whats-new-submit' ).prepend( '<div class="bb-topic-tooltip-wrapper"><div class="bb-topic-tooltip">' + BBTopicsManager.topicTooltipError + '</div></div>' );
 						}
 					} );
@@ -911,9 +911,7 @@ window.bp = window.bp || {};
 
 				this.$document.on( 'click', '.activity-topic-selector li a', this.topicActivityFilter.bind( this ) );
 
-				if ( undefined !== BP_Nouveau.is_send_ajax_request && '1' === BP_Nouveau.is_send_ajax_request ) {
-					this.$document.ready( this.handleUrlHashTopic.bind( this ) );
-				}
+				this.$document.ready( this.handleUrlHashTopic.bind( this ) );
 
 				this.$document.on( 'click', '.bb-topic-url', this.topicActivityFilter.bind( this ) );
 
@@ -921,20 +919,6 @@ window.bp = window.bp || {};
 				$( window ).on( 'hashchange', this.handleBrowserNavigation.bind( this ) );
 				$( window ).on( 'popstate', this.handleBrowserNavigation.bind( this ) );
 			}
-		},
-
-		showTopicTooltip : function ( event ) {
-			var $wrapper = $( event.currentTarget ),
-				$postBtn = $wrapper.closest( '#whats-new-submit' );
-
-			if ( $postBtn.closest( '.bb-rl-focus-in--empty' ).length > 0 ) {
-				$postBtn.find( '.bb-topic-tooltip-wrapper' ).addClass( 'active' ).show();
-			}
-
-		},
-
-		hideTopicTooltip : function () {
-			$( '.bb-topic-tooltip-wrapper' ).removeClass( 'active' ).hide();
 		},
 
 		topicActivityFilter : function ( event ) {
@@ -1052,6 +1036,15 @@ window.bp = window.bp || {};
 				} );
 
 				if ( $topicLink.length ) {
+
+					// Store the topic ID in BP's storage.
+					bp.Nouveau.setStorage( 'bp-activity', 'topic_id', $topicLink.data( 'topic-id' ) );
+
+					// Do not trigger the filter when page request setting is not send ajax request.
+					if ( 'undefined' === typeof BP_Nouveau.is_send_ajax_request || '1' !== BP_Nouveau.is_send_ajax_request ) {
+						return;
+					}
+
 					// If we found a matching topic, trigger the filter.
 					$topicLink.trigger( 'click' );
 
@@ -1064,9 +1057,6 @@ window.bp = window.bp || {};
 					// Set selected/active classes.
 					topicFilterATag.removeClass( 'selected active' );
 					$topicLink.addClass( 'selected active' );
-
-					// Store the topic ID in BP's storage.
-					bp.Nouveau.setStorage( 'bp-activity', 'topic_id', $topicLink.data( 'topic-id' ) );
 
 					// Scroll to the feed [data-bp-list="activity"].
 					var $feed = $( '[data-bp-list="activity"]' );
@@ -1177,6 +1167,22 @@ window.bp = window.bp || {};
 			if ( $selector && $selector[0] === $( '#whats-new-form' )[0] ) {
 				$selector = $( '#bb-rl-whats-new-form' );
 			}
+
+			var topic_id = '';
+			if (
+				! _.isUndefined( data.topics ) &&
+				! _.isUndefined( data.topics.topic_id ) &&
+				0 !== parseInt( data.topics.topic_id )
+			) {
+				topic_id = data.topics.topic_id;
+			} else {
+				var topicSelector = $( '#buddypress .whats-new-topic-selector .bb-rl-topic-selector-list li' );
+				if ( topicSelector.length ) {
+					var topicId   = topicSelector.find( 'a.selected' ).data( 'topic-id' ) || 0;
+					topic_id = topicId;
+				}
+			}
+
 			// End of the old what's new form for poll and schedule post.
 
 			// Need to check if the poll is enabled and the poll_id is set.
@@ -1196,24 +1202,24 @@ window.bp = window.bp || {};
 				// If the post is not empty and the topic is selected, remove the empty class and the tooltip.
 				if (
 					$validContent &&
-					! _.isUndefined( data.topics.topic_id ) &&
-					0 !== parseInt( data.topics.topic_id )
+					! _.isUndefined( topic_id ) &&
+					0 !== parseInt( topic_id )
 				) {
 					$selector.removeClass( $class );
 					$( '#whats-new-submit' ).find( '.bb-topic-tooltip-wrapper' ).remove();
 				} else if (
 					$validContent &&
 					(
-						_.isUndefined( data.topics.topic_id ) ||
-						0 === parseInt( data.topics.topic_id )
+						_.isUndefined( topic_id ) ||
+						0 === parseInt( topic_id )
 					)
 				) {
 					$selector.addClass( $class );
 					$( document ).trigger( 'bb_display_full_form' ); // Trigger the display full form event to show the tooltip.
 				} else if (
 					! $validContent &&
-					! _.isUndefined( data.topics.topic_id ) &&
-					0 !== parseInt( data.topics.topic_id )
+					! _.isUndefined( topic_id ) &&
+					0 !== parseInt( topic_id )
 				) {
 					// If the post is empty and the topic is selected, add the empty class and the tooltip.
 					$selector.addClass( $class );
@@ -1221,8 +1227,8 @@ window.bp = window.bp || {};
 				} else if (
 					! $validContent &&
 					(
-						_.isUndefined( data.topics.topic_id ) ||
-						0 === parseInt( data.topics.topic_id )
+						_.isUndefined( topic_id ) ||
+						0 === parseInt( topic_id )
 					)
 				) {
 					// If the post is empty and the topic is not selected, add the empty class and the tooltip.

@@ -144,6 +144,9 @@ if ( bp_group_has_members( bp_ajax_querystring( 'group_members' ) . '&type=group
 								?>
 							</div>
 							<?php
+								bp_nouveau_member_hook( '', 'members_list_meta' );
+							?>
+							<?php
 							if ( ! $is_blocked ) {
 								?>
 								<div class="flex align-items-center follow-container justify-center">
@@ -178,7 +181,7 @@ if ( bp_group_has_members( bp_ajax_querystring( 'group_members' ) . '&type=group
 
 					<div class="bp-members-list-hook">
 						<?php if ( $member_loop_has_content ) { ?>
-							<a class="more-action-button" href="#"><i class="bb-icon-menu-dots-h"></i></a>
+							<a class="more-action-button" href="#" aria-label="<?php esc_attr_e( 'More options', 'buddyboss' ); ?>"><i class="bb-icon-menu-dots-h"></i></a>
 						<?php } ?>
 						<div class="bp-members-list-hook-inner">
 							<?php bp_nouveau_member_hook( '', 'members_list_item' ); ?>
@@ -187,8 +190,9 @@ if ( bp_group_has_members( bp_ajax_querystring( 'group_members' ) . '&type=group
 
 					<?php if ( ! empty( $member_switch_button ) ) { ?>
 						<div class="bb_more_options member-dropdown">
-							<a href="#" class="bb_more_options_action">
+							<a href="#" class="bb_more_options_action" aria-label="<?php esc_attr_e( 'More options', 'buddyboss' ); ?>">
 								<i class="bb-icon-menu-dots-h"></i>
+								<span class="bp-screen-reader-text"><?php esc_html_e( 'More options', 'buddyboss' ); ?></span>
 							</a>
 							<div class="bb_more_options_list bb_more_dropdown">
 								<?php bp_get_template_part( 'common/more-options-view' ); ?>

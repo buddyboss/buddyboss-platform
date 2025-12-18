@@ -1767,14 +1767,16 @@ function groups_post_update( $args = '' ) {
 	$r = bp_parse_args(
 		$args,
 		array(
-			'id'            => false,
-			'content'       => false,
-			'user_id'       => bp_loggedin_user_id(),
-			'group_id'      => 0,
-			'privacy'       => 'public',
-			'error_type'    => 'bool',
-			'status'        => bb_get_activity_published_status(),
-			'recorded_time' => bp_core_current_time(),
+			'id'             => false,
+			'post_title'     => false,
+			'title_required' => function_exists( 'bb_is_activity_post_title_enabled' ) ? bb_is_activity_post_title_enabled() : false,
+			'content'        => false,
+			'user_id'        => bp_loggedin_user_id(),
+			'group_id'       => 0,
+			'privacy'        => 'public',
+			'error_type'     => 'bool',
+			'status'         => bb_get_activity_published_status(),
+			'recorded_time'  => bp_core_current_time(),
 		),
 		'groups_post_update'
 	);
@@ -1819,19 +1821,29 @@ function groups_post_update( $args = '' ) {
 	 */
 	$content_filtered = apply_filters( 'groups_activity_new_update_content', $activity_content );
 
+	/**
+	 * Filters the post title for the new group activity update.
+	 *
+	 * @since BuddyBoss 2.13.0
+	 *
+	 * @param string $post_title The post title of the update.
+	 */
+	$post_title_filtered = apply_filters( 'bb_groups_activity_new_update_post_title', $post_title );
+
 	$activity_id = groups_record_activity(
 		array(
-			'id'            => $id,
-			'user_id'       => $user_id,
-			'action'        => $action,
-			'content'       => $content_filtered,
-			'type'          => 'activity_update',
-			'item_id'       => $group_id,
-			'privacy'       => $privacy,
-			'error_type'    => $error_type,
-			'status'        => $status,
-			'recorded_time' => $recorded_time,
-
+			'id'             => $id,
+			'user_id'        => $user_id,
+			'action'         => $action,
+			'post_title'     => $post_title_filtered,
+			'title_required' => $r['title_required'],
+			'content'        => $content_filtered,
+			'type'           => 'activity_update',
+			'item_id'        => $group_id,
+			'privacy'        => $privacy,
+			'error_type'     => $error_type,
+			'status'         => $status,
+			'recorded_time'  => $recorded_time,
 		)
 	);
 
@@ -4832,7 +4844,7 @@ function bb_groups_loop_members( $group_id = 0, $role = array( 'member', 'mod', 
 			printf( wp_kses_post( _nx( '%s member', '%s members', $member_count, 'group member count', 'buddyboss' ) ), esc_html( number_format_i18n( $member_count ) ) );
 			?>
 			">
-				<a href="<?php echo esc_url( bp_get_group_permalink() . 'members' ); ?>">
+				<a href="<?php echo esc_url( bp_get_group_permalink() . 'members' ); ?>" aria-label="<?php esc_attr_e( 'More members', 'buddyboss' ); ?>">
 					<span class="bb-icon-f bb-icon-ellipsis-h"></span>
 				</a>
 			</span>
@@ -5139,6 +5151,7 @@ function bb_get_group_subscription_button( $args, $html = true ) {
 			'add_pre_post_text'    => false,
 			'href'                 => $url,
 			'data-bp-btn-action'   => $action,
+			'aria-label'           => $button_text,
 		),
 	);
 
@@ -5156,7 +5169,7 @@ function bb_get_group_subscription_button( $args, $html = true ) {
 
 	if ( ! empty( $html ) ) {
 		$button = sprintf(
-			'<a href="%s" id="%s" class="%s" data-bp-content-id="%s" data-bp-content-type="%s" data-bp-nonce="%s" data-bp-btn-action="%s">%s</a>',
+			'<a href="%s" id="%s" class="%s" data-bp-content-id="%s" data-bp-content-type="%s" data-bp-nonce="%s" data-bp-btn-action="%s" aria-label="%s">%s</a>',
 			esc_url( $button['link_href'] ),
 			esc_attr( $button['id'] ),
 			esc_attr( $button['link_class'] ),
@@ -5164,6 +5177,7 @@ function bb_get_group_subscription_button( $args, $html = true ) {
 			'group',
 			esc_url( $button['link_href'] ),
 			esc_attr( $action ),
+			esc_attr( $button['aria-label'] ),
 			wp_kses_post( $button['link_text'] )
 		);
 	}

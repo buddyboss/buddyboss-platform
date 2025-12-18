@@ -38,6 +38,10 @@ window.bp = window.bp || {};
 			$document.on( 'click', '.bb-rl-forum-modal-close, .bb-rl-forum-modal-overlay', this.closeForumModal );
 			$document.on( 'click', '.bb-rl-forum-modal-overlay', this.closeForumModalOverlay );
 			$document.on( 'click', '[id*="single-forum-description-popup"] .bb-close-action-popup', this.closeForumDescriptionPopup );
+			
+			// Initialize emoji when forum modals are opened
+			$document.on( 'bbp_after_load_topic_form', this.initialize_emoji_for_modal );
+			$document.on( 'bbp_after_load_reply_form', this.initialize_emoji_for_modal );
 
 			window.addReply = {
 				moveForm: function ( replyId, parentId, respondId, postId ) {
@@ -918,15 +922,39 @@ window.bp = window.bp || {};
 			if ( typeof BP_Nouveau !== 'undefined' && typeof BP_Nouveau.media !== 'undefined' && typeof BP_Nouveau.media.emoji !== 'undefined' ) {
 				if ( jQuery( '.bbp-the-content' ).length && typeof jQuery.prototype.emojioneArea !== 'undefined' ) {
 					jQuery( '.bbp-the-content' ).each( function ( i, element ) {
-						var elem_id = jQuery( element ).attr( 'id' );
-						var key = jQuery( element ).data( 'key' );
+						var $element = jQuery( element );
+						var elem_id = $element.attr( 'id' );
+						var key = $element.data( 'key' );
+						
+						// Check if emojioneArea is already initialized on this element
+						if ( $element.data( 'emojioneArea' ) || ( element.emojioneArea !== undefined ) ) {
+							// Clean up the existing instance
+							var emojiContainer = $element.closest( 'form' ).find( '#whats-new-toolbar > .bb-rl-post-emoji' );
+							
+							// Remove the emojioneArea instance
+							if ( element.emojioneArea ) {
+								try {
+									element.emojioneArea.hidePicker();
+								} catch ( e ) {
+									// Ignore errors if picker is already hidden
+								}
+								delete element.emojioneArea;
+							}
+							
+							// Clean up the container
+							emojiContainer.empty();
+							
+							// Remove data attribute
+							$element.removeData( 'emojioneArea' );
+						}
+						
 						jQuery( '#' + elem_id ).emojioneArea(
 							{
 								standalone: true,
 								hideSource: false,
 								container: jQuery( '#' + elem_id ).closest( 'form' ).find( '#whats-new-toolbar > .bb-rl-post-emoji' ),
 								autocomplete: false,
-								pickerPosition: 'bottom',
+								pickerPosition: 'top',
 								hidePickerOnBlur: true,
 								useInternalCDN: false,
 								events: {
@@ -975,6 +1003,18 @@ window.bp = window.bp || {};
 					} );
 				}
 			}
+		},
+
+		initialize_emoji_for_modal: function() {
+			// Use a small delay to ensure the modal content is fully rendered
+			// 100ms delay allows DOM elements to be fully inserted and styled before emoji initialization
+			setTimeout(function() {
+				try {
+					bp.Readylaunch.Forums.forumEmoji();
+				} catch (error) {
+					console.error('Failed to initialize emoji functionality:', error);
+				}
+			}, 100);
 		},
 
 		bbp_reply_ajax_call: function( action, nonce, form_data, form ) {
@@ -1262,25 +1302,31 @@ window.bp = window.bp || {};
 						if ( typeof window.bb_rl_forums_medium_reply_editor !== 'undefined' && typeof window.bb_rl_forums_medium_reply_editor[editor_key] !== 'undefined' ) {
 							editor = window.bb_rl_forums_medium_reply_editor[editor_key];
 						}
+
+						// Check if GIF support is enabled (GIF button exists and is not disabled)
+						var gif_support_enabled = $( this ).find( '#bb-rl-forums-gif-button' ).length > 0 && ! $( this ).find( '#bb-rl-forums-gif-button' ).parents( '.bb-rl-post-elements-buttons-item' ).hasClass( 'disable' );
+
 						if (
 						(
 						$( this ).find( '#bbp_media' ).length > 0 &&
 						$( this ).find( '#bbp_document' ).length > 0 &&
 						$( this ).find( '#bbp_video' ).length > 0 &&
+						gif_support_enabled &&
 						$( this ).find( '#bbp_media_gif' ).length > 0 &&
-						$( this ).find( '#bbp_media' ).val() == '' &&
-						$( this ).find( '#bbp_document' ).val() == '' &&
-						$( this ).find( '#bbp_video' ).val() == '' &&
+						( $( this ).find( '#bbp_media' ).val() == '' || $( this ).find( '#bbp_media' ).val() == '[]' ) &&
+						( $( this ).find( '#bbp_document' ).val() == '' || $( this ).find( '#bbp_document' ).val() == '[]' ) &&
+						( $( this ).find( '#bbp_video' ).val() == '' || $( this ).find( '#bbp_video' ).val() == '[]' ) &&
 						$( this ).find( '#bbp_media_gif' ).val() == ''
 						) || (
 						$( this ).find( '#bbp_media' ).length > 0 &&
 						$( this ).find( '#bbp_document' ).length > 0 &&
 						$( this ).find( '#bbp_video' ).length > 0 &&
-						$( this ).find( '#bbp_media_gif' ).length <= 0 &&
-						$( this ).find( '#bbp_media' ).val() == '' &&
-						$( this ).find( '#bbp_video' ).val() == '' &&
-						$( this ).find( '#bbp_document' ).val() == ''
+						! gif_support_enabled &&
+						( $( this ).find( '#bbp_media' ).val() == '' || $( this ).find( '#bbp_media' ).val() == '[]' ) &&
+						( $( this ).find( '#bbp_video' ).val() == '' || $( this ).find( '#bbp_video' ).val() == '[]' ) &&
+						( $( this ).find( '#bbp_document' ).val() == '' || $( this ).find( '#bbp_document' ).val() == '[]' )
 						) || (
+						gif_support_enabled &&
 						$( this ).find( '#bbp_media_gif' ).length > 0 &&
 						$( this ).find( '#bbp_media' ).length <= 0 &&
 						$( this ).find( '#bbp_document' ).length <= 0 &&
@@ -1296,14 +1342,19 @@ window.bp = window.bp || {};
 								media_valid = true;
 							}
 						}
-						if ( editor &&
-							(
-								$( $.parseHTML( $( this ).find( '#bbp_reply_content' ).val() ) ).text().trim() === ''
-							) &&
-							media_valid == false
-						) {
-							$( this ).find( '.bbp-the-content' ).addClass( 'error' );
-							valid = false;
+						
+						if ( editor ) {
+							// Check raw editor content instead of processed content
+							var editor_content = editor.getContent();
+							var editor_text = $( $.parseHTML( editor_content ) ).text().trim();
+							var has_mentions = editor_content.indexOf( 'atwho-inserted' ) >= 0 || editor_content.indexOf( 'bp-suggestions-mention' ) >= 0;
+
+							if ( ( editor_text === '' && !has_mentions ) && media_valid == false ) {
+								$( this ).find( '.bbp-the-content' ).addClass( 'error' );
+								valid = false;
+							} else {
+								$( this ).find( '.bbp-the-content' ).removeClass( 'error' );
+							}
 						} else if (
 							(
 								!editor &&
@@ -1319,7 +1370,14 @@ window.bp = window.bp || {};
 							}
 							$( this ).find( '#bbp_reply_content' ).removeClass( 'error' );
 						}
+
 						if ( valid ) {
+							// Use raw editor content instead of processed content to preserve mentions
+							if ( editor ) {
+								var raw_content = editor.getContent();
+								$( this ).find( '#bbp_reply_content' ).val( raw_content );
+							}
+							
 							bp.Readylaunch.Forums.bbp_reply_ajax_call( 'reply', window.bbpReplyAjaxJS.reply_nonce, $( this ).serializeArray(), $( this ) );
 						} else {
 							$( this ).removeClass( 'submitting' );

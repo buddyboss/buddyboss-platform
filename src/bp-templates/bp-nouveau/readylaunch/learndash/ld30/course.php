@@ -36,7 +36,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 if ( ! isset( $course_id ) ) {
-	return;
+	global $post;
+	if ( ! empty( $post ) && 'sfwd-courses' === $post->post_type ) {
+		$course_id = $post->ID;
+	} else {
+		return;
+	}
 }
 
 $bb_rl_ld_helper = class_exists( 'BB_Readylaunch_Learndash_Helper' ) ? BB_Readylaunch_Learndash_Helper::instance() : null;
@@ -60,8 +65,47 @@ if ( LearnDash_Theme_Register::get_active_theme_instance()->supports_views( LDLM
 	$has_course_content         = $course->has_steps();
 	$lessons                    = learndash_get_course_lessons_list( $course_id );
 	$quizzes                    = $course->get_quizzes();
+
+	// Convert Quiz model objects to arrays for compatibility.
+	if ( ! empty( $quizzes ) ) {
+		$quizzes_array = array();
+		foreach ( $quizzes as $quiz ) {
+			if ( is_object( $quiz ) && method_exists( $quiz, 'get_post' ) ) {
+				// Convert Quiz model to array format.
+				$quiz_post = $quiz->get_post();
+
+				// Get quiz status using LearnDash functions.
+				$quiz_status    = 'not-started';
+				$quiz_completed = false;
+
+				if ( function_exists( 'learndash_user_quiz_attempts' ) ) {
+					$quiz_attempts = learndash_user_quiz_attempts( $quiz_post->ID, $user_id );
+					if ( ! empty( $quiz_attempts ) ) {
+						$quiz_status    = 'completed';
+						$quiz_completed = true;
+					}
+				}
+
+				// Check if quiz is sample using LearnDash function.
+				$is_sample = false;
+				if ( function_exists( 'learndash_is_sample' ) ) {
+					$is_sample = learndash_is_sample( $quiz_post );
+				}
+
+				$quizzes_array[] = array(
+					'post'      => $quiz_post,
+					'status'    => $quiz_status,
+					'sample'    => $is_sample ? 'sample' : '',
+					'completed' => $quiz_completed,
+				);
+			}
+		}
+		$quizzes = $quizzes_array;
+	}
+
 	$lesson_progression_enabled = learndash_lesson_progression_enabled( $course_id );
 	$has_topics                 = $course->get_topics_number() > 0;
+	$lesson_topics              = array(); // Initialize lesson_topics array
 
 	if ( ! empty( $lessons ) ) {
 		foreach ( $lessons as $lesson ) {
@@ -1154,4 +1198,15 @@ $course_video_duration = get_post_meta( $course_id, '_buddyboss_lms_course_video
 			</div>
 		</aside>
 	<?php endif; ?>
+	<?php
+	// Load login modal for non-logged in users.
+	if ( ! is_user_logged_in() ) {
+		global $login_model_load_once;
+		$login_model_load_once      = false;
+		$learndash_login_model_html = learndash_get_template_part( 'modules/login-modal.php', array(), false );
+		if ( false !== $learndash_login_model_html ) {
+			echo '<div class="learndash-wrapper learndash-wrapper-login-modal ld-modal-closed">' . $learndash_login_model_html . '</div>';
+		}
+	}
+	?>
 </div>

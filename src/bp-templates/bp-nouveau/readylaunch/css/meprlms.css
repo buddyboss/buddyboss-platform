@@ -10,7 +10,7 @@
   --bb-rl-background-tertiary-hover-color: #cececf;
   --bb-rl-background-black-color: #0c0c0d;
   --bb-rl-background-disabled-color: #dbdbdb;
-  --bb-rl-background-brand-primary-color: #4946fe;
+  --bb-rl-background-brand-primary-color: var(--bb-rl-primary-color);
   --bb-rl-background-brand-primary-hover-color: #4937f4;
   --bb-rl-background-brand-secondary-color: #dde4ff;
   --bb-rl-background-brand-secondary-hover-color: #c2cdff;
@@ -34,7 +34,7 @@
   --bb-rl-border-quinery-color: #6d6d6e;
   --bb-rl-border-quaternary-color: #9e9e9e;
   --bb-rl-border-brand-primary-color: #3325ae;
-  --bb-rl-border-brand-secondary-color: #4946fe;
+  --bb-rl-border-brand-secondary-color: var(--bb-rl-primary-color);
   --bb-rl-border-positive-primary-color: #02542d;
   --bb-rl-border-positive-secondary-color: #14ae5c;
   --bb-rl-border-warning-primary-color: #682d03;
@@ -46,7 +46,7 @@
   --bb-rl-text-secondary-color: #555556;
   --bb-rl-text-tertiary-color: #858586;
   --bb-rl-text-disabled-color: #9e9e9e;
-  --bb-rl-text-brand-primary-color: #4946fe;
+  --bb-rl-text-brand-primary-color: var(--bb-rl-primary-color);
   --bb-rl-text-brand-secondary-color: #3325ae;
   --bb-rl-text-positive-primary-color: #02542d;
   --bb-rl-text-positive-secondary-color: #14ae5c;
@@ -60,7 +60,8 @@
   --bb-rl-icon-tertiary-color: #9e9e9e;
   --bb-rl-icon-disabled-color: #cececf;
   --bb-rl-icon-brand-primary-color: #3325ae;
-  --bb-rl-icon-brand-secondary-color: #4946fe;
+  --bb-rl-icon-brand-secondary-color: var(--bb-rl-primary-color);
+  --bb-rl-icon-brand-disabled-color: #767eff;
   --bb-rl-icon-positive-primary-color: #02542d;
   --bb-rl-icon-positive-secondary-color: #14ae5c;
   --bb-rl-icon-warning-primary-color: #682d03;
@@ -103,6 +104,7 @@
 
 /* Dark Mode Variables */
 .bb-rl-dark-mode {
+  --bb-rl-primary-color: #4946fe;
   --bb-rl-background-color: #242425;
   --bb-rl-background-hover-color: #555556;
   --bb-rl-background-secondary-color: #2f2f2f;
@@ -111,7 +113,7 @@
   --bb-rl-background-tertiary-hover-color: #555556;
   --bb-rl-background-black-color: #0c0c0d;
   --bb-rl-background-disabled-color: #dbdbdb;
-  --bb-rl-background-brand-primary-color: #4946fe;
+  --bb-rl-background-brand-primary-color: var(--bb-rl-primary-color);
   --bb-rl-background-brand-primary-hover-color: #4937f4;
   --bb-rl-background-brand-secondary-color: #3325ae;
   --bb-rl-background-brand-secondary-hover-color: #2e2689;
@@ -135,7 +137,7 @@
   --bb-rl-border-quinery-color: #f6f6f6;
   --bb-rl-border-quaternary-color: #f3f3f3;
   --bb-rl-border-brand-primary-color: #c2cdff;
-  --bb-rl-border-brand-secondary-color: #4946fe;
+  --bb-rl-border-brand-secondary-color: var(--bb-rl-primary-color);
   --bb-rl-border-positive-primary-color: #cff7d3;
   --bb-rl-border-positive-secondary-color: #14ae5c;
   --bb-rl-border-warning-primary-color: #fff1c2;
@@ -147,7 +149,7 @@
   --bb-rl-text-secondary-color: #cececf;
   --bb-rl-text-tertiary-color: #b6b6b6;
   --bb-rl-text-disabled-color: #e7e7e7;
-  --bb-rl-text-brand-primary-color: #4946fe;
+  --bb-rl-text-brand-primary-color: var(--bb-rl-primary-color);
   --bb-rl-text-brand-secondary-color: #c2cdff;
   --bb-rl-text-positive-primary-color: #cff7d3;
   --bb-rl-text-positive-secondary-color: #14ae5c;
@@ -161,7 +163,8 @@
   --bb-rl-icon-tertiary-color: #9e9e9e;
   --bb-rl-icon-disabled-color: #858586;
   --bb-rl-icon-brand-primary-color: #c2cdff;
-  --bb-rl-icon-brand-secondary-color: #4946fe;
+  --bb-rl-icon-brand-secondary-color: var(--bb-rl-primary-color);
+  --bb-rl-icon-brand-disabled-color: #767eff;
   --bb-rl-icon-positive-primary-color: #cff7d3;
   --bb-rl-icon-positive-secondary-color: #14ae5c;
   --bb-rl-icon-warning-primary-color: #fff1c2;
@@ -214,7 +217,10 @@
 .bb-rl-lms-inner-block .mpcs-main-content .mpcs-breadcrumbs span.mpcs-breadcrumb {
   display: inline-flex;
   align-items: center;
-  gap: var(--bb-rl-space-50);
+}
+
+.bb-rl-lms-inner-block .mpcs-main-content .mpcs-breadcrumbs span.mpcs-breadcrumb a {
+  color: var(--bb-rl-text-secondary-color);
 }
 
 .bb-rl-lms-inner-block .mpcs-main-content .mpcs-breadcrumbs span.mpcs-breadcrumb:not(:last-child)::after {
@@ -239,6 +245,22 @@
   padding: var(--bb-rl-space-100);
 }
 
+.mpcs-classroom .bb-rl-left-panel--memprlms .mpcs-sidebar-wrapper .mpcs-sidebar-back-to-course a {
+  display: inline-flex;
+  padding: 6px var(--bb-rl-space-200);
+  gap: var(--bb-rl-space-50);
+}
+
+.bb-rl-widget-sidebar-menu .mpcs-sidebar-grades,
+.mpcs-classroom .bb-rl-widget-sidebar-menu .mpcs-sidebar-grades,
+.bb-rl-left-panel--memprlms .mpcs-sidebar-grades,
+.mpcs-classroom .bb-rl-left-panel--memprlms .mpcs-sidebar-wrapper .mpcs-sidebar-grades {
+  padding: 0;
+  border: 0;
+  background-color: transparent;
+  border-radius: 0;
+}
+
 .bb-rl-widget-sidebar-menu a,
 .bb-rl-widget-sidebar-menu .mpcs-grades-menu,
 .bb-rl-widget-sidebar-menu .mepr-resources,
@@ -247,7 +269,10 @@
 .mpcs-classroom .bb-rl-widget-sidebar-menu .mepr-resources,
 .bb-rl-left-panel--memprlms a,
 .bb-rl-left-panel--memprlms .mpcs-grades-menu,
-.bb-rl-left-panel--memprlms .mepr-resources {
+.bb-rl-left-panel--memprlms .mepr-resources,
+.mpcs-classroom .bb-rl-left-panel--memprlms .mpcs-sidebar-wrapper a,
+.mpcs-classroom .bb-rl-left-panel--memprlms .mpcs-sidebar-wrapper .mpcs-grades-menu,
+.mpcs-classroom .bb-rl-left-panel--memprlms .mpcs-sidebar-wrapper .mepr-resources {
   display: flex;
   align-items: center;
   gap: var(--bb-rl-space-100);
@@ -265,8 +290,26 @@
 .mpcs-classroom .bb-rl-widget-sidebar-menu .mepr-resources:hover,
 .bb-rl-left-panel--memprlms a:hover,
 .bb-rl-left-panel--memprlms .mpcs-grades-menu:hover,
-.bb-rl-left-panel--memprlms .mepr-resources:hover {
+.bb-rl-left-panel--memprlms .mepr-resources:hover,
+.mpcs-classroom .bb-rl-left-panel--memprlms .mpcs-sidebar-wrapper a:hover,
+.mpcs-classroom .bb-rl-left-panel--memprlms .mpcs-sidebar-wrapper .mpcs-grades-menu:hover,
+.mpcs-classroom .bb-rl-left-panel--memprlms .mpcs-sidebar-wrapper .mepr-resources:hover {
   background-color: var(--bb-rl-background-secondary-hover-color);
+}
+
+.bb-rl-widget-sidebar-menu a:focus,
+.bb-rl-widget-sidebar-menu .mpcs-grades-menu:focus,
+.bb-rl-widget-sidebar-menu .mepr-resources:focus,
+.mpcs-classroom .bb-rl-widget-sidebar-menu a:focus,
+.mpcs-classroom .bb-rl-widget-sidebar-menu .mpcs-grades-menu:focus,
+.mpcs-classroom .bb-rl-widget-sidebar-menu .mepr-resources:focus,
+.bb-rl-left-panel--memprlms a:focus,
+.bb-rl-left-panel--memprlms .mpcs-grades-menu:focus,
+.bb-rl-left-panel--memprlms .mepr-resources:focus,
+.mpcs-classroom .bb-rl-left-panel--memprlms .mpcs-sidebar-wrapper a:focus,
+.mpcs-classroom .bb-rl-left-panel--memprlms .mpcs-sidebar-wrapper .mpcs-grades-menu:focus,
+.mpcs-classroom .bb-rl-left-panel--memprlms .mpcs-sidebar-wrapper .mepr-resources:focus {
+  box-shadow: none;
 }
 
 .bb-rl-widget-sidebar-menu a .tile-icon,
@@ -277,7 +320,10 @@
 .mpcs-classroom .bb-rl-widget-sidebar-menu .mepr-resources .tile-icon,
 .bb-rl-left-panel--memprlms a .tile-icon,
 .bb-rl-left-panel--memprlms .mpcs-grades-menu .tile-icon,
-.bb-rl-left-panel--memprlms .mepr-resources .tile-icon {
+.bb-rl-left-panel--memprlms .mepr-resources .tile-icon,
+.mpcs-classroom .bb-rl-left-panel--memprlms .mpcs-sidebar-wrapper a .tile-icon,
+.mpcs-classroom .bb-rl-left-panel--memprlms .mpcs-sidebar-wrapper .mpcs-grades-menu .tile-icon,
+.mpcs-classroom .bb-rl-left-panel--memprlms .mpcs-sidebar-wrapper .mepr-resources .tile-icon {
   line-height: 1;
   max-width: 20px;
 }
@@ -290,7 +336,10 @@
 .mpcs-classroom .bb-rl-widget-sidebar-menu .mepr-resources .tile-icon i,
 .bb-rl-left-panel--memprlms a .tile-icon i,
 .bb-rl-left-panel--memprlms .mpcs-grades-menu .tile-icon i,
-.bb-rl-left-panel--memprlms .mepr-resources .tile-icon i {
+.bb-rl-left-panel--memprlms .mepr-resources .tile-icon i,
+.mpcs-classroom .bb-rl-left-panel--memprlms .mpcs-sidebar-wrapper a .tile-icon i,
+.mpcs-classroom .bb-rl-left-panel--memprlms .mpcs-sidebar-wrapper .mpcs-grades-menu .tile-icon i,
+.mpcs-classroom .bb-rl-left-panel--memprlms .mpcs-sidebar-wrapper .mepr-resources .tile-icon i {
   font-size: 20px;
   color: var(--bb-rl-icon-secondary-color);
   font-style: normal;
@@ -304,8 +353,26 @@
 .mpcs-classroom .bb-rl-widget-sidebar-menu .mepr-resources .tile-icon i:before,
 .bb-rl-left-panel--memprlms a .tile-icon i:before,
 .bb-rl-left-panel--memprlms .mpcs-grades-menu .tile-icon i:before,
-.bb-rl-left-panel--memprlms .mepr-resources .tile-icon i:before {
+.bb-rl-left-panel--memprlms .mepr-resources .tile-icon i:before,
+.mpcs-classroom .bb-rl-left-panel--memprlms .mpcs-sidebar-wrapper a .tile-icon i:before,
+.mpcs-classroom .bb-rl-left-panel--memprlms .mpcs-sidebar-wrapper .mpcs-grades-menu .tile-icon i:before,
+.mpcs-classroom .bb-rl-left-panel--memprlms .mpcs-sidebar-wrapper .mepr-resources .tile-icon i:before {
   margin: 0;
+}
+
+.bb-rl-widget-sidebar-menu a .tile-content:not(:first-child),
+.bb-rl-widget-sidebar-menu .mpcs-grades-menu .tile-content:not(:first-child),
+.bb-rl-widget-sidebar-menu .mepr-resources .tile-content:not(:first-child),
+.mpcs-classroom .bb-rl-widget-sidebar-menu a .tile-content:not(:first-child),
+.mpcs-classroom .bb-rl-widget-sidebar-menu .mpcs-grades-menu .tile-content:not(:first-child),
+.mpcs-classroom .bb-rl-widget-sidebar-menu .mepr-resources .tile-content:not(:first-child),
+.bb-rl-left-panel--memprlms a .tile-content:not(:first-child),
+.bb-rl-left-panel--memprlms .mpcs-grades-menu .tile-content:not(:first-child),
+.bb-rl-left-panel--memprlms .mepr-resources .tile-content:not(:first-child),
+.mpcs-classroom .bb-rl-left-panel--memprlms .mpcs-sidebar-wrapper a .tile-content:not(:first-child),
+.mpcs-classroom .bb-rl-left-panel--memprlms .mpcs-sidebar-wrapper .mpcs-grades-menu .tile-content:not(:first-child),
+.mpcs-classroom .bb-rl-left-panel--memprlms .mpcs-sidebar-wrapper .mepr-resources .tile-content:not(:first-child) {
+  padding-left: 0;
 }
 
 .bb-rl-widget-sidebar-menu a .tile-title,
@@ -316,11 +383,15 @@
 .mpcs-classroom .bb-rl-widget-sidebar-menu .mepr-resources .tile-title,
 .bb-rl-left-panel--memprlms a .tile-title,
 .bb-rl-left-panel--memprlms .mpcs-grades-menu .tile-title,
-.bb-rl-left-panel--memprlms .mepr-resources .tile-title {
+.bb-rl-left-panel--memprlms .mepr-resources .tile-title,
+.mpcs-classroom .bb-rl-left-panel--memprlms .mpcs-sidebar-wrapper a .tile-title,
+.mpcs-classroom .bb-rl-left-panel--memprlms .mpcs-sidebar-wrapper .mpcs-grades-menu .tile-title,
+.mpcs-classroom .bb-rl-left-panel--memprlms .mpcs-sidebar-wrapper .mepr-resources .tile-title {
   font-size: 14px;
   font-weight: 500;
   line-height: 22px;
   color: var(--bb-rl-text-secondary-color);
+  margin: 0;
 }
 
 .bb-rl-widget-sidebar-menu .mepr-gradebook .tile-icon i:before,
@@ -328,7 +399,9 @@
 .mpcs-classroom .bb-rl-widget-sidebar-menu .mepr-gradebook .tile-icon i:before,
 .mpcs-classroom .bb-rl-widget-sidebar-menu .mpcs-grades-menu .tile-icon i:before,
 .bb-rl-left-panel--memprlms .mepr-gradebook .tile-icon i:before,
-.bb-rl-left-panel--memprlms .mpcs-grades-menu .tile-icon i:before {
+.bb-rl-left-panel--memprlms .mpcs-grades-menu .tile-icon i:before,
+.mpcs-classroom .bb-rl-left-panel--memprlms .mpcs-sidebar-wrapper .mepr-gradebook .tile-icon i:before,
+.mpcs-classroom .bb-rl-left-panel--memprlms .mpcs-sidebar-wrapper .mpcs-grades-menu .tile-icon i:before {
   content: "\e154";
   font-weight: 400;
   font-family: bb-icons-rl;
@@ -337,7 +410,8 @@
 
 .bb-rl-widget-sidebar-menu .mepr-resources .tile-icon i:before,
 .mpcs-classroom .bb-rl-widget-sidebar-menu .mepr-resources .tile-icon i:before,
-.bb-rl-left-panel--memprlms .mepr-resources .tile-icon i:before {
+.bb-rl-left-panel--memprlms .mepr-resources .tile-icon i:before,
+.mpcs-classroom .bb-rl-left-panel--memprlms .mpcs-sidebar-wrapper .mepr-resources .tile-icon i:before {
   content: "\e3dc";
   font-weight: 400;
   font-family: bb-icons-rl;
@@ -394,10 +468,22 @@
   border-color: var(--bb-rl-border-quinery-color);
 }
 
+.bb-rl-lms-tab-menu .bb-rl-lms-tab:focus,
+.bb-rl-lms-tab-menu .tile:focus,
+.bb-rl-lms-tab-menu .mepr-gradebook:focus {
+  box-shadow: none;
+}
+
 .bb-rl-lms-tab-menu .bb-rl-lms-tab .tile-icon,
 .bb-rl-lms-tab-menu .tile .tile-icon,
 .bb-rl-lms-tab-menu .mepr-gradebook .tile-icon {
   display: none;
+}
+
+.bb-rl-lms-tab-menu .bb-rl-lms-tab .tile-content:not(:first-child),
+.bb-rl-lms-tab-menu .tile .tile-content:not(:first-child),
+.bb-rl-lms-tab-menu .mepr-gradebook .tile-content:not(:first-child) {
+  padding-left: 0;
 }
 
 .bb-rl-lms-tab-menu .bb-rl-lms-tab .tile-title,
@@ -416,6 +502,12 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+}
+
+.bb-rl-lms-tab-menu .bb-rl-lms-tab p,
+.bb-rl-lms-tab-menu .tile p,
+.bb-rl-lms-tab-menu .mepr-gradebook p {
+  margin: 0;
 }
 
 .bb-rl-lms-tab-menu .mpcs-share:before {
@@ -464,7 +556,7 @@
   font-size: var(--bb-rl-font-size-sm);
   font-weight: 400;
   line-height: var(--bb-rl-base-line-small);
-  color: var(--bb-rl-text-secondary-color);
+  color: var(--bb-rl-text-secondary-color) !important;
   display: flex;
   align-items: center;
   background-color: var(--bb-rl-background-secondary-color);
@@ -477,6 +569,7 @@
 
 .post-type-archive-mpcs-course.bb-readylaunch-template .bb-rl-meprlms-course-filters .dropdown a.dropdown-toggle i {
   font-weight: 500;
+  color: var(--bb-rl-icon-primary-color) !important;
 }
 
 .post-type-archive-mpcs-course.bb-readylaunch-template .bb-rl-meprlms-course-filters .dropdown a.dropdown-toggle span {
@@ -583,7 +676,8 @@
   margin-right: var(--bb-rl-space-50);
 }
 
-.post-type-archive-mpcs-course.bb-readylaunch-template .bb-rl-meprlms-course-filters .input-group .form-input {
+.post-type-archive-mpcs-course.bb-readylaunch-template .bb-rl-meprlms-course-filters .input-group .form-input,
+.post-type-archive-mpcs-course.bb-readylaunch-template .bb-rl-meprlms-course-filters .input-group input[type="text"].form-input {
   display: block;
   color: var(--bb-rl-text-secondary-color) !important;
   background-color: transparent;
@@ -799,7 +893,7 @@ body[class*="mpcs-course"] .bb-rl-mbprlms-pagination ul li.active a {
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   background-color: var(--bb-rl-background-tertiary-color);
   color: var(--bb-rl-text-color);
@@ -943,6 +1037,18 @@ body[class*="mpcs-course"] .bb-rl-mbprlms-pagination ul li.active a {
   color: var(--bb-rl-text-secondary-color);
 }
 
+.bb-rl-container-inner.bb-rl-meprlms-no-courses {
+  padding-top: var(--bb-rl-space-400);
+  padding-bottom: var(--bb-rl-space-400);
+}
+
+.bb-rl-container-inner.bb-rl-meprlms-no-courses > p {
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 400;
+  line-height: var(--bb-rl-base-line-small);
+  color: var(--bb-rl-text-secondary-color);
+}
+
 .bb-rl-lms-inner-block #mpcs-lesson-navigation #next_lesson_link:not(#mpcs-classroom-previous-lesson-link),
 .bb-rl-lms-inner-block #mpcs-lesson-navigation #next_lesson_link {
   display: inline-flex;
@@ -954,7 +1060,7 @@ body[class*="mpcs-course"] .bb-rl-mbprlms-pagination ul li.active a {
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   background-color: var(--bb-rl-background-brand-primary-color);
   color: var(--bb-rl-text-white-color);
@@ -990,7 +1096,7 @@ body[class*="mpcs-course"] .bb-rl-mbprlms-pagination ul li.active a {
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   background-color: var(--bb-rl-background-tertiary-color);
   color: var(--bb-rl-text-color);
@@ -1027,6 +1133,43 @@ body[class*="mpcs-course"] .bb-rl-mbprlms-pagination ul li.active a {
   margin-top: var(--bb-rl-space-400);
 }
 
+.mpcs-lesson-locked .mpcs-lesson-locked-buttons a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  font-weight: 500;
+  text-align: center;
+  cursor: pointer;
+  border-radius: var(--bb-rl-radius-md);
+  padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  text-decoration: none;
+  background-color: var(--bb-rl-background-brand-primary-color);
+  color: var(--bb-rl-text-white-color);
+  border: 1px solid var(--bb-rl-background-brand-primary-color);
+  padding: 6px var(--bb-rl-space-200);
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 400;
+}
+
+.mpcs-lesson-locked .mpcs-lesson-locked-buttons a:hover {
+  background-color: var(--bb-rl-background-brand-primary-hover-color);
+}
+
+.mpcs-lesson-locked .mpcs-lesson-locked-buttons a:focus-within {
+  outline: 2px solid var(--bb-rl-border-brand-primary-color);
+}
+
+.mpcs-lesson-locked .mpcs-lesson-locked-buttons a:disabled {
+  background-color: var(--bb-rl-background-brand-disabled-color);
+  cursor: not-allowed;
+}
+
+.mpcs-lesson-locked .mpcs-lesson-locked-buttons a:hover {
+  background-color: var(--bb-rl-background-brand-primary-hover-color);
+}
+
 .bb-rl-course-overview .course-progress h1 {
   display: none;
 }
@@ -1058,7 +1201,7 @@ body[class*="mpcs-course"] .bb-rl-mbprlms-pagination ul li.active a {
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   background-color: var(--bb-rl-background-brand-primary-color);
   color: var(--bb-rl-text-white-color);
@@ -1136,6 +1279,51 @@ body[class*="mpcs-course"] .bb-rl-mbprlms-pagination ul li.active a {
   margin: 0;
 }
 
+.bb-rl-memprlms-course #mpcs-main #bookmark.course-curriculum {
+  margin: 0;
+  background-color: transparent;
+  border-radius: 0;
+}
+
+.bb-rl-memprlms-course #mpcs-main #bookmark.course-curriculum a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  font-weight: 500;
+  text-align: center;
+  cursor: pointer;
+  border-radius: var(--bb-rl-radius-md);
+  padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  text-decoration: none;
+  background-color: var(--bb-rl-background-brand-primary-color);
+  color: var(--bb-rl-text-white-color);
+  border: 1px solid var(--bb-rl-background-brand-primary-color);
+  padding: 6px var(--bb-rl-space-200);
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 400;
+  margin-right: var(--bb-rl-space-100);
+}
+
+.bb-rl-memprlms-course #mpcs-main #bookmark.course-curriculum a:hover {
+  background-color: var(--bb-rl-background-brand-primary-hover-color);
+}
+
+.bb-rl-memprlms-course #mpcs-main #bookmark.course-curriculum a:focus-within {
+  outline: 2px solid var(--bb-rl-border-brand-primary-color);
+}
+
+.bb-rl-memprlms-course #mpcs-main #bookmark.course-curriculum a:disabled {
+  background-color: var(--bb-rl-background-brand-disabled-color);
+  cursor: not-allowed;
+}
+
+.bb-rl-memprlms-course #mpcs-main #bookmark.course-curriculum a i {
+  font-size: var(--bb-rl-font-size-sm);
+  line-height: 1;
+}
+
 .bb-rl-memprlms-course .course-curriculum:has(a) {
   border: 0;
   border-radius: 0;
@@ -1153,7 +1341,7 @@ body[class*="mpcs-course"] .bb-rl-mbprlms-pagination ul li.active a {
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   background-color: var(--bb-rl-background-brand-primary-color);
   color: var(--bb-rl-text-white-color);
@@ -1373,6 +1561,19 @@ body[class*="mpcs-course"] .bb-rl-mbprlms-pagination ul li.active a {
   border: 1px solid var(--bb-rl-border-secondary-color);
 }
 
+.mpcs-course-with-accordion .bb-rl-course-content-inner #mpcs-main .mpcs-section-title {
+  padding: 0;
+  background-color: transparent;
+}
+
+.mpcs-course-with-accordion .bb-rl-course-content-inner #mpcs-main .mpcs-section-header:after {
+  display: none;
+}
+
+.mpcs-course-with-accordion .bb-rl-course-content-inner #mpcs-main .mpcs-section.last_section {
+  margin-bottom: var(--bb-rl-space-300);
+}
+
 .bb-rl-course-content-inner .mpcs-section.mpcs-section-lessons,
 .bb-rl-left-panel--memprlms .mpcs-sidebar-content .mpcs-section.mpcs-section-lessons {
   border-color: var(--bb-rl-border-secondary-color);
@@ -1427,6 +1628,7 @@ body[class*="mpcs-course"] .bb-rl-mbprlms-pagination ul li.active a {
 .bb-rl-left-panel--memprlms .mpcs-sidebar-content .mpcs-section.mpcs-section-lessons .mpcs-section-title {
   margin: 0;
   padding: 0;
+  background-color: transparent;
 }
 
 .bb-rl-course-content-inner .mpcs-section.mpcs-section-lessons .mpcs-section-title .mpcs-section-title-text,
@@ -1447,6 +1649,11 @@ body[class*="mpcs-course"] .bb-rl-mbprlms-pagination ul li.active a {
 .bb-rl-course-content-inner .mpcs-section .mpcs-lessons,
 .bb-rl-left-panel--memprlms .mpcs-sidebar-content .mpcs-section .mpcs-lessons {
   padding: var(--bb-rl-space-100) 0;
+}
+
+.bb-rl-course-content-inner .mpcs-section .mpcs-lessons .mpcs-lesson:hover,
+.bb-rl-left-panel--memprlms .mpcs-sidebar-content .mpcs-section .mpcs-lessons .mpcs-lesson:hover {
+  background-color: transparent;
 }
 
 .bb-rl-course-content-inner .mpcs-section .mpcs-lessons > .mpcs-lesson,
@@ -1543,6 +1750,16 @@ body[class*="mpcs-course"] .bb-rl-mbprlms-pagination ul li.active a {
   line-height: 1;
 }
 
+.bb-rl-course-content-inner .mpcs-section .mpcs-lessons .mpcs-lesson-locked-tooltip,
+.bb-rl-left-panel--memprlms .mpcs-sidebar-content .mpcs-section .mpcs-lessons .mpcs-lesson-locked-tooltip {
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 400;
+  line-height: var(--bb-rl-base-line-small);
+  padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
+  color: var(--bb-rl-text-tertiary-color);
+  display: flex;
+}
+
 .bb-rl-course-content-inner .mpcs-lesson-progress .mpcs-circle-regular,
 .bb-rl-left-panel--memprlms .mpcs-sidebar-content .mpcs-lesson-progress .mpcs-circle-regular {
   font-size: 16px;
@@ -1634,6 +1851,12 @@ body[class*="mpcs-course"] .bb-rl-mbprlms-pagination ul li.active a {
   order: 99;
 }
 
+.bb-rl-course-content-module#mpcs-main {
+  background-color: transparent;
+  padding: 0;
+  min-height: auto;
+}
+
 .bb-readylaunch-template .mpcs-sidebar-wrapper .progress-bar,
 .mpcs-classroom.bb-readylaunch-template .mpcs-sidebar-wrapper .progress-bar {
   height: var(--bb-rl-space-100);
@@ -1659,7 +1882,6 @@ body[class*="mpcs-course"] .bb-rl-mbprlms-pagination ul li.active a {
   align-items: center;
   gap: var(--bb-rl-space-50);
   margin: 0 0 var(--bb-rl-space-100);
-  text-transform: lowercase;
 }
 
 .bb-readylaunch-template .mpcs-sidebar-wrapper .progress-text > span,
@@ -1668,6 +1890,15 @@ body[class*="mpcs-course"] .bb-rl-mbprlms-pagination ul li.active a {
   font-weight: 600;
   line-height: var(--bb-rl-base-line);
   color: var(--bb-rl-text-color);
+}
+
+.mpcs-course-with-accordion .bb-rl-course-content #mpcs-main .mpcs-section.mpcs-resource-section:last-of-type {
+  margin-bottom: var(--bb-rl-space-200);
+}
+
+.mpcs-course-with-accordion .bb-rl-course-content .mpcs-resource-section:not(:last-of-type),
+.mpcs-course-with-accordion .bb-rl-course-content #mpcs-main .mpcs-resource-section:not(:last-of-type) {
+  margin-bottom: var(--bb-rl-space-200);
 }
 
 .bb-rl-course-content .mpcs-section.mpcs-resource-section {
@@ -1789,6 +2020,10 @@ body[class*="mpcs-course"] .bb-rl-mbprlms-pagination ul li.active a {
   background-color: transparent;
 }
 
+.bb-rl-course-content .mpcs-section.mpcs-resource-section table.mp-table .mpcs-lesson-row-link:focus {
+  box-shadow: none;
+}
+
 .bb-rl-course-content .mpcs-section.mpcs-resource-section table.mp-table .mpcs-lesson-row-link + .mpcs-lesson-row-link {
   margin-left: var(--bb-rl-space-200);
 }
@@ -1843,7 +2078,7 @@ body[class*="mpcs-course"] .bb-rl-mbprlms-pagination ul li.active a {
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   background-color: var(--bb-rl-background-brand-primary-color);
   color: var(--bb-rl-text-white-color);
@@ -1930,7 +2165,7 @@ body[class*="mpcs-course"] .bb-rl-mbprlms-pagination ul li.active a {
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   background-color: var(--bb-rl-background-brand-primary-color);
   color: var(--bb-rl-text-white-color);
@@ -1971,7 +2206,7 @@ body[class*="mpcs-course"] .bb-rl-mbprlms-pagination ul li.active a {
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   background-color: var(--bb-rl-background-brand-primary-color);
   color: var(--bb-rl-text-white-color);
@@ -2004,7 +2239,7 @@ body[class*="mpcs-course"] .bb-rl-mbprlms-pagination ul li.active a {
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   background-color: var(--bb-rl-background-tertiary-color);
   color: var(--bb-rl-text-color);
@@ -2155,7 +2390,7 @@ body[class*="mpcs-course"] .bb-rl-mbprlms-pagination ul li.active a {
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   background-color: var(--bb-rl-background-brand-primary-color);
   color: var(--bb-rl-text-white-color);
@@ -2340,6 +2575,128 @@ body[class*="mpcs-course"] .bb-rl-mbprlms-pagination ul li.active a {
   line-height: 22px;
   color: var(--bb-rl-text-color);
   padding-left: var(--bb-rl-space-50);
+}
+
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-true-false .mpcs-quiz-question-options .mpcs-quiz-question-option label:has(.mpcs-radio-checked)::before, .bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-true-false .mpcs-quiz-question-options .mpcs-quiz-question-option label:has(.mpcs-radio-checked)::after,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-true-false .mpcs-quiz-question-options .mpcs-quiz-question-option label:has(.mpcs-radio-unchecked)::before,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-true-false .mpcs-quiz-question-options .mpcs-quiz-question-option label:has(.mpcs-radio-unchecked)::after,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-true-false .mpcs-quiz-question-options .mpcs-quiz-question-option label:has(.mpcs-checkbox-unchecked)::before,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-true-false .mpcs-quiz-question-options .mpcs-quiz-question-option label:has(.mpcs-checkbox-unchecked)::after,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-true-false .mpcs-quiz-question-options .mpcs-quiz-question-option label:has(.mpcs-checkbox-checked)::before,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-true-false .mpcs-quiz-question-options .mpcs-quiz-question-option label:has(.mpcs-checkbox-checked)::after,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-choice .mpcs-quiz-question-options .mpcs-quiz-question-option label:has(.mpcs-radio-checked)::before,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-choice .mpcs-quiz-question-options .mpcs-quiz-question-option label:has(.mpcs-radio-checked)::after,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-choice .mpcs-quiz-question-options .mpcs-quiz-question-option label:has(.mpcs-radio-unchecked)::before,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-choice .mpcs-quiz-question-options .mpcs-quiz-question-option label:has(.mpcs-radio-unchecked)::after,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-choice .mpcs-quiz-question-options .mpcs-quiz-question-option label:has(.mpcs-checkbox-unchecked)::before,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-choice .mpcs-quiz-question-options .mpcs-quiz-question-option label:has(.mpcs-checkbox-unchecked)::after,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-choice .mpcs-quiz-question-options .mpcs-quiz-question-option label:has(.mpcs-checkbox-checked)::before,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-choice .mpcs-quiz-question-options .mpcs-quiz-question-option label:has(.mpcs-checkbox-checked)::after,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-answer .mpcs-quiz-question-options .mpcs-quiz-question-option label:has(.mpcs-radio-checked)::before,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-answer .mpcs-quiz-question-options .mpcs-quiz-question-option label:has(.mpcs-radio-checked)::after,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-answer .mpcs-quiz-question-options .mpcs-quiz-question-option label:has(.mpcs-radio-unchecked)::before,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-answer .mpcs-quiz-question-options .mpcs-quiz-question-option label:has(.mpcs-radio-unchecked)::after,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-answer .mpcs-quiz-question-options .mpcs-quiz-question-option label:has(.mpcs-checkbox-unchecked)::before,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-answer .mpcs-quiz-question-options .mpcs-quiz-question-option label:has(.mpcs-checkbox-unchecked)::after,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-answer .mpcs-quiz-question-options .mpcs-quiz-question-option label:has(.mpcs-checkbox-checked)::before,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-answer .mpcs-quiz-question-options .mpcs-quiz-question-option label:has(.mpcs-checkbox-checked)::after {
+  display: none;
+}
+
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-true-false .mpcs-quiz-question-options .mpcs-quiz-question-option .mpcs-radio-checked,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-true-false .mpcs-quiz-question-options .mpcs-quiz-question-option .mpcs-radio-unchecked,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-true-false .mpcs-quiz-question-options .mpcs-quiz-question-option .mpcs-checkbox-unchecked,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-true-false .mpcs-quiz-question-options .mpcs-quiz-question-option .mpcs-checkbox-checked,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-choice .mpcs-quiz-question-options .mpcs-quiz-question-option .mpcs-radio-checked,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-choice .mpcs-quiz-question-options .mpcs-quiz-question-option .mpcs-radio-unchecked,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-choice .mpcs-quiz-question-options .mpcs-quiz-question-option .mpcs-checkbox-unchecked,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-choice .mpcs-quiz-question-options .mpcs-quiz-question-option .mpcs-checkbox-checked,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-answer .mpcs-quiz-question-options .mpcs-quiz-question-option .mpcs-radio-checked,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-answer .mpcs-quiz-question-options .mpcs-quiz-question-option .mpcs-radio-unchecked,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-answer .mpcs-quiz-question-options .mpcs-quiz-question-option .mpcs-checkbox-unchecked,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-answer .mpcs-quiz-question-options .mpcs-quiz-question-option .mpcs-checkbox-checked {
+  margin-right: var(--bb-rl-space-50);
+}
+
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-true-false .mpcs-quiz-question-options .mpcs-quiz-question-option input + label i.mpcs-radio-unchecked::before,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-choice .mpcs-quiz-question-options .mpcs-quiz-question-option input + label i.mpcs-radio-unchecked::before,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-answer .mpcs-quiz-question-options .mpcs-quiz-question-option input + label i.mpcs-radio-unchecked::before {
+  content: "";
+  display: inline-flex;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 1px solid var(--bb-rl-border-quaternary-color);
+  background-color: var(--bb-rl-background-color);
+  vertical-align: middle;
+}
+
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-true-false .mpcs-quiz-question-options .mpcs-quiz-question-option input + label i.mpcs-radio-checked::before,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-choice .mpcs-quiz-question-options .mpcs-quiz-question-option input + label i.mpcs-radio-checked::before,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-answer .mpcs-quiz-question-options .mpcs-quiz-question-option input + label i.mpcs-radio-checked::before {
+  content: "";
+  display: inline-flex;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 4px solid var(--bb-rl-background-brand-primary-color);
+  background-color: var(--bb-rl-background-color);
+  vertical-align: middle;
+}
+
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-true-false .mpcs-quiz-question-options .mpcs-quiz-question-option .mpcs-checkbox-unchecked::before,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-choice .mpcs-quiz-question-options .mpcs-quiz-question-option .mpcs-checkbox-unchecked::before,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-answer .mpcs-quiz-question-options .mpcs-quiz-question-option .mpcs-checkbox-unchecked::before {
+  content: "";
+  display: inline-flex;
+  width: 16px;
+  height: 16px;
+  border: 1px solid var(--bb-rl-border-quaternary-color);
+  border-radius: var(--bb-rl-radius-sm);
+  background-color: var(--bb-rl-background-color);
+  vertical-align: middle;
+}
+
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-true-false .mpcs-quiz-question-options .mpcs-quiz-question-option input:checked + label .mpcs-checkbox-checked,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-choice .mpcs-quiz-question-options .mpcs-quiz-question-option input:checked + label .mpcs-checkbox-checked,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-answer .mpcs-quiz-question-options .mpcs-quiz-question-option input:checked + label .mpcs-checkbox-checked {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  background-color: var(--bb-rl-background-brand-primary-color);
+  border-radius: var(--bb-rl-radius-sm);
+}
+
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-true-false .mpcs-quiz-question-options .mpcs-quiz-question-option input:checked + label .mpcs-checkbox-checked::before,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-choice .mpcs-quiz-question-options .mpcs-quiz-question-option input:checked + label .mpcs-checkbox-checked::before,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-answer .mpcs-quiz-question-options .mpcs-quiz-question-option input:checked + label .mpcs-checkbox-checked::before {
+  content: "\e182";
+  display: inline-flex;
+  font-weight: 400;
+  font-family: bb-icons-rl;
+  font-size: 11px;
+  color: var(--bb-rl-text-white-color);
+  font-style: normal;
+  line-height: 1;
+  position: relative;
+  top: -1px;
+}
+
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-true-false .mpcs-quiz-question-options .mpcs-quiz-question-option input:checked + label i.mpcs-radio-checked,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-true-false .mpcs-quiz-question-options .mpcs-quiz-question-option input:checked + label i.mpcs-checkbox-checked,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-true-false .mpcs-quiz-question-options .mpcs-quiz-question-option input:checked + label i.mpcs-radio-checked,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-true-false .mpcs-quiz-question-options .mpcs-quiz-question-option input:checked + label i.mpcs-checkbox-checked,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-choice .mpcs-quiz-question-options .mpcs-quiz-question-option input:checked + label i.mpcs-radio-checked,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-choice .mpcs-quiz-question-options .mpcs-quiz-question-option input:checked + label i.mpcs-checkbox-checked,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-choice .mpcs-quiz-question-options .mpcs-quiz-question-option input:checked + label i.mpcs-radio-checked,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-choice .mpcs-quiz-question-options .mpcs-quiz-question-option input:checked + label i.mpcs-checkbox-checked,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-answer .mpcs-quiz-question-options .mpcs-quiz-question-option input:checked + label i.mpcs-radio-checked,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-answer .mpcs-quiz-question-options .mpcs-quiz-question-option input:checked + label i.mpcs-checkbox-checked,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-answer .mpcs-quiz-question-options .mpcs-quiz-question-option input:checked + label i.mpcs-radio-checked,
+.bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-multiple-answer .mpcs-quiz-question-options .mpcs-quiz-question-option input:checked + label i.mpcs-checkbox-checked {
+  color: var(--bb-rl-background-brand-primary-color);
 }
 
 .bb-rl-lms-inner-block .mpcs-quiz-question.mpcs-quiz-question-fill-blank .mpcs-fill-blank-field {
@@ -2559,6 +2916,7 @@ body[class*="mpcs-course"] .bb-rl-mbprlms-pagination ul li.active a {
 .bb-rl-left-panel--memprlms #mpcs-sidebar-header .course-progress {
   display: flex;
   flex-direction: column;
+  margin-left: 0;
 }
 
 .bb-rl-left-panel--memprlms #mpcs-sidebar-header .course-progress h1 {
@@ -2621,4 +2979,13 @@ body[class*="mpcs-course"] .bb-rl-mbprlms-pagination ul li.active a {
 
 .bb-rl-left-panel--memprlms .mpcs-sidebar-back-to-course a i {
   font-size: 16px;
+}
+
+.bb-rl-left-panel--memprlms .mpcs-sidebar-back-to-course a.tile {
+  background-color: var(--bb-rl-background-tertiary-color);
+  color: var(--bb-rl-text-color);
+}
+
+.bb-rl-left-panel--memprlms .mpcs-sidebar-back-to-course a.tile:hover {
+  background-color: var(--bb-rl-background-tertiary-hover-color);
 }

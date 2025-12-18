@@ -87,7 +87,7 @@ if ( function_exists( 'bbp_is_forum_group_forum' ) && bbp_is_forum_group_forum( 
 			if ( ! $empty ) {
 				?>
 				<div class="bb_more_options forum-dropdown bb-rl-context-wrap">
-					<a href="#" class="bb-rl-context-btn bb_more_options_action bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'More Options', 'buddyboss' ); ?>">
+					<a href="#" class="bb-rl-context-btn bb_more_options_action bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'More Options', 'buddyboss' ); ?>" aria-label="<?php esc_attr_e( 'More Options', 'buddyboss' ); ?>">
 						<i class="bb-icons-rl-dots-three"></i>
 					</a>
 					<div class="bb_more_options_list bb_more_dropdown bb-rl-context-dropdown">
@@ -117,16 +117,17 @@ if ( function_exists( 'bbp_is_forum_group_forum' ) && bbp_is_forum_group_forum( 
 		<div class="bb-rl-topic-author-details">
 			<div class="bb-rl-topic-author-name">
 			<?php
+				$bbp_topic_id = bbp_get_topic_id();
 				bbp_author_link(
 					array(
-						'post_id' => bbp_get_topic_id(),
+						'post_id' => $bbp_topic_id,
 						'type'    => 'name',
 					)
 				);
 				?>
 			</div>
 			<div class="bb-rl-topic-time">
-				<?php bbp_topic_freshness_link(); ?>
+				<?php bbp_topic_post_date( $bbp_topic_id ); ?>
 			</div>
 		</div>
 	</div>

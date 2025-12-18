@@ -452,6 +452,13 @@ function bp_do_activation_redirect() {
 		}
 		update_user_option( bp_loggedin_user_id(), 'metaboxhidden_nav-menus', $get_existing_option ); // update the user metaboxes.
 	}
+
+	/**
+	 * Fires before the BuddyBoss activation redirect.
+	 *
+	 * @since BuddyBoss 2.10.0
+	 */
+	do_action( 'bb_do_activation_redirect', $query_args );
 }
 
 /**
@@ -3417,6 +3424,10 @@ function bb_get_pro_label_notice( $type = 'default' ) {
 			(
 				'group_activity_topics' === $type &&
 				version_compare( bb_platform_pro()->version, bb_pro_group_activity_topics_version(), '<' )
+			) ||
+			(
+				'post_feature_image' === $type &&
+				version_compare( bb_platform_pro()->version, bb_pro_post_feature_image_version(), '<' )
 			)
 		)
 	) {
@@ -3426,7 +3437,7 @@ function bb_get_pro_label_notice( $type = 'default' ) {
 			esc_html__( 'BuddyBoss Platform Pro', 'buddyboss' ),
 			esc_html__( 'to unlock', 'buddyboss' )
 		);
-	} elseif ( ! function_exists( 'bb_platform_pro' ) || ! bbp_pro_is_license_valid() ) {
+	} elseif ( ! function_exists( 'bb_platform_pro' ) || ( function_exists( 'bb_pro_should_lock_features' ) ? bb_pro_should_lock_features() : ! bbp_pro_is_license_valid() ) ) {
 		$bb_pro_notice = sprintf(
 			'<br/><span class="bb-head-notice"> %1$s <a target="_blank" href="https://www.buddyboss.com/platform/">%2$s</a> %3$s</span>',
 			esc_html__( 'Install', 'buddyboss' ),
@@ -3458,7 +3469,9 @@ function bb_get_pro_fields_class( $type = 'default' ) {
 	}
 
 	$pro_class = 'bb-pro-inactive';
-	if ( function_exists( 'bbp_pro_is_license_valid' ) && bbp_pro_is_license_valid() ) {
+	if ( function_exists( 'bb_pro_should_lock_features' ) && ! bb_pro_should_lock_features() ) {
+		$pro_class = 'bb-pro-active';
+	} elseif ( ! function_exists( 'bb_pro_should_lock_features' ) && function_exists( 'bbp_pro_is_license_valid' ) && bbp_pro_is_license_valid() ) {
 		$pro_class = 'bb-pro-active';
 	}
 
@@ -3489,6 +3502,10 @@ function bb_get_pro_fields_class( $type = 'default' ) {
 			(
 				'group_activity_topics' === $type &&
 				version_compare( bb_platform_pro()->version, bb_pro_group_activity_topics_version(), '<' )
+			) ||
+			(
+				'post_feature_image' === $type &&
+				version_compare( bb_platform_pro()->version, bb_pro_post_feature_image_version(), '<' )
 			)
 		)
 	) {
