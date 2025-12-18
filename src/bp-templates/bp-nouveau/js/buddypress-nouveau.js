@@ -102,6 +102,9 @@ window.bp = window.bp || {};
 				}
 			);
 
+			// Initialize Video Embed Manager for YouTube/Vimeo playback control.
+			this.VideoEmbedManager.init();
+
 			// Initialize cache
 			this.cacheProfileCard = {};
 			this.cacheGroupCard = {};
@@ -3519,6 +3522,406 @@ window.bp = window.bp || {};
 				}
 			}
 		},
+
+		/**
+		 * Video Embed Manager
+		 *
+		 * Manages YouTube and Vimeo video embeds in activity feed.
+		 * Automatically pauses other videos when a new one starts playing
+		 * to prevent overlapping audio and improve user experience.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 */
+		VideoEmbedManager: {
+
+			/**
+			 * Flag to track if manager is initialized
+			 */
+			initialized: false,
+
+			/**
+			 * Initialize the Video Embed Manager
+			 */
+			init: function() {
+				// Prevent multiple initializations.
+				if ( this.initialized ) {
+					return;
+				}
+
+				this.initialized = true;
+				this.bindEvents();
+				this.setupExistingVideos();
+			},
+
+			/**
+			 * Bind event listeners
+			 */
+			bindEvents: function() {
+				var self = this;
+
+				// Listen for postMessage from YouTube/Vimeo iframes.
+				window.addEventListener( 'message', function( event ) {
+					self.handleVideoMessage( event );
+				});
+
+				// Handle lazy loaded iframes.
+				$( document ).on( 'bp_nouveau_lazy_load', function( e, data ) {
+					if ( data.element && data.element.tagName === 'IFRAME' ) {
+						self.setupVideoIframe( data.element );
+					}
+				});
+
+				// Handle new activities loaded via AJAX.
+				$( document ).on( 'bp_ajax_request', function() {
+					self.scanForNewVideos();
+				});
+
+				// Handle heartbeat prepend (new activities).
+				$( document ).on( 'bp_heartbeat_prepend', function() {
+					self.scanForNewVideos();
+				});
+			},
+
+			/**
+			 * Scan for new video iframes with smart polling.
+			 * Checks every 100ms until new unmanaged iframes are found, max 3 seconds.
+			 */
+			scanForNewVideos: function() {
+				var self = this;
+				var maxTime = 3000;
+				var interval = 100;
+				var elapsed = 0;
+
+				var checkInterval = setInterval( function() {
+					var newIframes = $( 'iframe[src*="youtube.com"], iframe[src*="vimeo.com"], iframe[data-src*="youtube.com"], iframe[data-src*="vimeo.com"]' ).not( '[data-bb-video-managed]' );
+
+					if ( newIframes.length > 0 ) {
+						self.setupExistingVideos();
+						clearInterval( checkInterval );
+						return;
+					}
+
+					elapsed += interval;
+					if ( elapsed >= maxTime ) {
+						clearInterval( checkInterval );
+					}
+				}, interval );
+			},
+
+			/**
+			 * Setup existing video iframes on page
+			 */
+			setupExistingVideos: function() {
+				var self = this;
+				$( 'iframe[src*="youtube.com"], iframe[src*="vimeo.com"], iframe[data-src*="youtube.com"], iframe[data-src*="vimeo.com"]' ).each( function() {
+					self.setupVideoIframe( this );
+				});
+			},
+
+			/**
+			 * Setup individual video iframe for API communication
+			 *
+			 * @param {HTMLIFrameElement} iframe The iframe element to setup
+			 */
+			setupVideoIframe: function( iframe ) {
+				var self = this;
+				var $iframe = $( iframe );
+				var src = iframe.src || $iframe.data( 'src' ) || '';
+
+				// Skip if already initialized.
+				if ( $iframe.attr( 'data-bb-video-managed' ) ) {
+					return;
+				}
+
+				$iframe.attr( 'data-bb-video-managed', 'true' );
+
+				var needsReload = false;
+				var newSrc = src;
+
+				// For YouTube, ensure enablejsapi and origin are added for API control.
+				if ( src.indexOf( 'youtube.com' ) !== -1 ) {
+					// Add enablejsapi if missing.
+					if ( src.indexOf( 'enablejsapi' ) === -1 ) {
+						var separator = newSrc.indexOf( '?' ) !== -1 ? '&' : '?';
+						newSrc = newSrc + separator + 'enablejsapi=1';
+						needsReload = true;
+					}
+
+					// Add origin parameter for postMessage security.
+					if ( src.indexOf( 'origin=' ) === -1 ) {
+						var originSeparator = newSrc.indexOf( '?' ) !== -1 ? '&' : '?';
+						newSrc = newSrc + originSeparator + 'origin=' + encodeURIComponent( window.location.origin );
+						needsReload = true;
+					}
+
+					if ( needsReload ) {
+						if ( iframe.src ) {
+							iframe.src = newSrc;
+						} else {
+							$iframe.attr( 'data-src', newSrc );
+						}
+					}
+
+					// Listen for iframe load to send listening command.
+					$iframe.on( 'load', function() {
+						self.sendYouTubeListening( this );
+					});
+
+					// If iframe is already loaded, send listening command now.
+					if ( iframe.src && iframe.contentWindow ) {
+						self.sendYouTubeListening( iframe );
+					}
+				}
+
+				// For Vimeo, add api parameter if needed.
+				if ( src.indexOf( 'vimeo.com' ) !== -1 ) {
+					if ( src.indexOf( 'api=1' ) === -1 ) {
+						var vimeoSeparator = src.indexOf( '?' ) !== -1 ? '&' : '?';
+						var newVimeoSrc = src + vimeoSeparator + 'api=1';
+
+						if ( iframe.src ) {
+							iframe.src = newVimeoSrc;
+						} else {
+							$iframe.attr( 'data-src', newVimeoSrc );
+						}
+					}
+				}
+			},
+
+			/**
+			 * Send YouTube listening command to start receiving events
+			 *
+			 * @param {HTMLIFrameElement} iframe The YouTube iframe
+			 * @param {number} attempts Number of retry attempts (internal use)
+			 */
+			sendYouTubeListening: function( iframe, attempts ) {
+				var self = this;
+				var maxAttempts = 10;
+				attempts = attempts || 0;
+
+				try {
+					if ( ! iframe.contentWindow ) {
+						throw new Error( 'contentWindow not ready' );
+					}
+
+					iframe.contentWindow.postMessage( JSON.stringify({
+						event: 'listening',
+						id: 1,
+						channel: 'widget'
+					}), '*' );
+
+					// Also try the command format.
+					iframe.contentWindow.postMessage( JSON.stringify({
+						event: 'command',
+						func: 'addEventListener',
+						args: [ 'onStateChange' ]
+					}), '*' );
+				} catch ( e ) {
+					// Retry if contentWindow not ready yet.
+					if ( attempts < maxAttempts ) {
+						setTimeout( function() {
+							self.sendYouTubeListening( iframe, attempts + 1 );
+						}, 100 );
+					}
+				}
+			},
+
+			/**
+			 * Handle postMessage from video iframes
+			 *
+			 * @param {MessageEvent} event The message event
+			 */
+			handleVideoMessage: function( event ) {
+				var data;
+				var origin = event.origin || '';
+
+				// Only process messages from YouTube or Vimeo.
+				if ( origin.indexOf( 'youtube.com' ) === -1 && 
+					 origin.indexOf( 'vimeo.com' ) === -1 ) {
+					return;
+				}
+
+				try {
+					if ( typeof event.data === 'string' ) {
+						data = JSON.parse( event.data );
+					} else {
+						data = event.data;
+					}
+				} catch ( e ) {
+					// Not a JSON message, ignore.
+					return;
+				}
+
+				if ( ! data ) {
+					return;
+				}
+
+				// Handle YouTube state changes - multiple formats.
+				// State 1 = playing.
+				if ( data.event === 'onStateChange' ) {
+					if ( data.info === 1 ) {
+						this.onVideoPlay( event.source );
+					}
+					return;
+				}
+
+				// Handle YouTube infoDelivery with playerState.
+				if ( data.event === 'infoDelivery' && data.info ) {
+					if ( typeof data.info.playerState !== 'undefined' && data.info.playerState === 1 ) {
+						this.onVideoPlay( event.source );
+					}
+					return;
+				}
+
+				// Handle YouTube initialDelivery.
+				if ( data.event === 'initialDelivery' && data.info ) {
+					if ( data.info.playerState === 1 ) {
+						this.onVideoPlay( event.source );
+					}
+					return;
+				}
+
+				// Handle Vimeo play event.
+				if ( data.event === 'play' ) {
+					this.onVideoPlay( event.source );
+					return;
+				}
+
+				// Handle Vimeo playProgress (backup for play detection).
+				if ( data.method === 'playProgress' || data.event === 'playProgress' ) {
+					// Only trigger on first progress event.
+					if ( ! this.vimeoPlaying || this.vimeoPlaying !== event.source ) {
+						this.vimeoPlaying = event.source;
+						this.onVideoPlay( event.source );
+					}
+					return;
+				}
+
+				// Handle Vimeo ready event - subscribe to play events.
+				if ( data.event === 'ready' ) {
+					this.subscribeToVimeoEvents( event.source );
+					return;
+				}
+			},
+
+			/**
+			 * Subscribe to Vimeo player events
+			 *
+			 * @param {Window} source The iframe's contentWindow
+			 */
+			subscribeToVimeoEvents: function( source ) {
+				try {
+					// Subscribe to play event.
+					source.postMessage( JSON.stringify({
+						method: 'addEventListener',
+						value: 'play'
+					}), '*' );
+
+					// Also subscribe to playProgress as backup.
+					source.postMessage( JSON.stringify({
+						method: 'addEventListener',
+						value: 'playProgress'
+					}), '*' );
+				} catch ( e ) {
+					// Silently ignore errors.
+				}
+			},
+
+			/**
+			 * Track Vimeo playing state to avoid duplicate triggers
+			 */
+			vimeoPlaying: null,
+
+			/**
+			 * Called when a video starts playing
+			 *
+			 * @param {Window} source The contentWindow of the playing video
+			 */
+			onVideoPlay: function( source ) {
+				var self = this;
+				var playingIframe = null;
+
+				// Find the iframe that sent this message.
+				$( 'iframe' ).each( function() {
+					try {
+						if ( this.contentWindow === source ) {
+							playingIframe = this;
+							return false; // Break the loop.
+						}
+					} catch ( e ) {
+						// Cross-origin error, skip.
+					}
+				});
+
+				if ( playingIframe ) {
+					// Pause all other videos except the one that just started.
+					self.pauseAllExcept( playingIframe );
+				}
+			},
+
+			/**
+			 * Pause all videos except the specified one
+			 *
+			 * @param {HTMLIFrameElement} exceptIframe The iframe to exclude from pausing
+			 */
+			pauseAllExcept: function( exceptIframe ) {
+				var self = this;
+
+				// Pause YouTube and Vimeo iframes.
+				$( 'iframe[src*="youtube.com"], iframe[src*="vimeo.com"]' ).each( function() {
+					if ( this !== exceptIframe ) {
+						self.pauseVideo( this );
+					}
+				});
+
+				// Also pause VideoJS players if they exist.
+				if ( typeof bp !== 'undefined' &&
+					 typeof bp.Nouveau !== 'undefined' &&
+					 typeof bp.Nouveau.Video !== 'undefined' &&
+					 typeof bp.Nouveau.Video.Player !== 'undefined' &&
+					 typeof bp.Nouveau.Video.Player.player !== 'undefined' ) {
+
+					var players = bp.Nouveau.Video.Player.player;
+					for ( var playerId in players ) {
+						if ( players.hasOwnProperty( playerId ) && players[ playerId ] ) {
+							try {
+								players[ playerId ].pause();
+							} catch ( e ) {
+								// Player might not be ready, ignore.
+							}
+						}
+					}
+				}
+			},
+
+			/**
+			 * Pause a specific video iframe
+			 *
+			 * @param {HTMLIFrameElement} iframe The iframe to pause
+			 */
+			pauseVideo: function( iframe ) {
+				try {
+					var src = iframe.src || '';
+
+					if ( src.indexOf( 'youtube.com' ) !== -1 ) {
+						// Pause YouTube video.
+						iframe.contentWindow.postMessage( JSON.stringify({
+							event: 'command',
+							func: 'pauseVideo',
+							args: []
+						}), '*' );
+					} else if ( src.indexOf( 'vimeo.com' ) !== -1 ) {
+						// Pause Vimeo video.
+						iframe.contentWindow.postMessage( JSON.stringify({
+							method: 'pause'
+						}), '*' );
+					}
+				} catch ( e ) {
+					// Silently ignore errors.
+				}
+			}
+		},
+
 		/**
 		 *  Cover photo Cropper
 		 */
