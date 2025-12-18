@@ -190,6 +190,10 @@ window.bp = window.bp || {};
 							activityElem = $( '.bb-activity-video-elem a.bb-rl-video-cover-wrap[data-id="' + videoId + '"]' ),
 							videoThumb   = $( '.bb-video-thumb a.bb-rl-video-cover-wrap[data-id="' + videoId + '"]' );
 
+						if(!videoThumb.length) {
+							videoThumb = $( '.bb-video-thumb a.bb-video-cover-wrap[data-id="' + videoId + '"]' );
+						}
+
 						if ( videoThumb.find( 'img' ).length ) {
 							videoThumb.find( 'img' ).attr( 'src', thumbnailSrc );
 						}
