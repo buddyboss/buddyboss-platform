@@ -175,7 +175,11 @@ $enabled_joined_date   = ! function_exists( 'bb_enabled_member_directory_element
 									}
 									?>
 								</div>
-								
+
+								<?php
+									bp_nouveau_member_hook( '', 'members_list_meta' );
+								?>
+
 								<div class="bb-rl-item-block-assets">
 									<?php
 									if ( ( $enabled_last_active && $member_last_activity ) || ( $enabled_joined_date && $member_joined_date ) ) :

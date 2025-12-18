@@ -819,7 +819,8 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * @return bool True if ReadyLaunch is enabled, false otherwise.
 		 */
 		public function bb_is_readylaunch_enabled_for_page() {
-			return (
+
+			$retval = (
 				bp_is_members_directory() ||
 				bp_is_video_directory() ||
 				bp_is_media_directory() ||
@@ -849,6 +850,11 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				$this->bb_rl_is_learndash_page() || // Add check for LearnDash pages.
 				$this->bb_rl_is_memberpress_courses_page() // Add check for MemberPress Courses pages.
 			);
+
+			/**
+			 * Filter to check if ReadyLaunch is enabled for the current page.
+			 */
+			return apply_filters( 'bb_is_readylaunch_enabled_for_page', $retval );
 		}
 
 		/**
@@ -1083,8 +1089,8 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			wp_enqueue_style( 'bp-select2' );
 
 			// Enqueue Cropper.js.
-			wp_enqueue_script( 'bb-readylaunch-cropper-js' );
-			wp_enqueue_style( 'bb-readylaunch-cropper-css' );
+			wp_enqueue_script( 'bb-cropper-js' );
+			wp_enqueue_style( 'bb-cropper-css' );
 
 			wp_enqueue_style( 'bb-readylaunch-font', buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/assets/fonts/fonts.css', array(), bp_get_version() );
 			wp_enqueue_style( 'bb-readylaunch-style-main', buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/css/main{$min}.css", array(), bp_get_version() );
@@ -2377,13 +2383,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			$min = bp_core_get_minified_asset_suffix();
 			$url = buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/js/';
 
-			// Add Cropper.js to the common scripts.
-			$scripts['bb-readylaunch-cropper-js'] = array(
-				'file'         => "{$url}cropper{$min}.js",
-				'dependencies' => array( 'jquery' ),
-				'version'      => '1.6.2',
-				'footer'       => true,
-			);
+
 
 			if ( isset( $scripts['bp-avatar'] ) ) {
 				$scripts['bp-avatar']['file'] = "{$url}bb-readylaunch-avatar{$min}.js";
@@ -2413,11 +2413,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			$min = bp_core_get_minified_asset_suffix();
 			$url = buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/css/';
 
-			$styles['bb-readylaunch-cropper-css'] = array(
-				'file'         => "{$url}cropper{$min}.css",
-				'dependencies' => array(),
-				'version'      => '1.6.2',
-			);
+
 
 			return $styles;
 		}
@@ -2817,10 +2813,10 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		public function bb_rl_dynamic_colors() {
 			$color_light = bp_get_option( 'bb_rl_color_light', '#4946fe' );
 			$color_dark  = bp_get_option( 'bb_rl_color_dark', '#9747FF' );
-			
+
 			// Generate color shades for light mode (500 is base).
 			$light_shades = $this->bb_rl_generate_color_shades( $color_light );
-			
+
 			// Generate color shades for dark mode (500 is base).
 			$dark_shades = $this->bb_rl_generate_color_shades( $color_dark );
 			?>
@@ -2835,7 +2831,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					--bb-rl-text-brand-secondary-color: <?php echo esc_attr( $light_shades[800] ); ?>;
 					--bb-rl-icon-brand-primary-color: <?php echo esc_attr( $light_shades[800] ); ?>;
 					--bb-rl-border-brand-primary-color: <?php echo esc_attr( $light_shades[800] ); ?>;
-					
+
 					/* Keep backward compatibility. */
 					--bb-rl-primary-color: <?php echo esc_attr( $color_light ); ?>;
 				}
@@ -2853,7 +2849,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					--bb-rl-primary-700: <?php echo esc_attr( $dark_shades[700] ); ?>;
 					--bb-rl-background-brand-secondary-color: <?php echo esc_attr( $dark_shades[800] ); ?>;
 					--bb-rl-background-brand-secondary-hover-color: <?php echo esc_attr( $dark_shades[900] ); ?>;
-					
+
 					/* Keep backward compatibility. */
 					--bb-rl-primary-color: <?php echo esc_attr( $color_dark ); ?>;
 				}
@@ -3479,7 +3475,9 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			}
 
 			// Check for URL parameters that indicate password reset.
-			if ( isset( $_GET['ld-resetpw'] ) || isset( $_GET['password_reset'] ) || isset( $_GET['key'] ) || isset( $_GET['login'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			// LearnDash password reset URLs should have both 'key' and 'action=rp' parameters.
+			// This prevents false positives from other plugins using 'key' parameter.
+			if ( isset( $_GET['ld-resetpw'] ) || isset( $_GET['password_reset'] ) || ( isset( $_GET['key'] ) && 'rp' === $_GET['action'] ) || isset( $_GET['login'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 				return true;
 			}
 

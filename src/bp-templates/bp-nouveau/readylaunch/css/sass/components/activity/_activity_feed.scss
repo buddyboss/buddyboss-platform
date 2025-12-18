@@ -262,6 +262,14 @@
 		padding: var(--bb-rl-space-100) 0;
 		width: 200px;
 
+		.bb-rl-activity-filters-container & {
+
+			@media screen and (max-width: $md) {
+				left: 0;
+				right: unset;
+			}
+		}
+
 		ul {
 			list-style: none;
 			padding: 0;
@@ -384,6 +392,12 @@
 				left: 24px;
 			}
 		}
+	}
+
+	.bb-rl-activity-title h2 {
+		font-size: 18px;
+		font-weight: 600;
+		margin-bottom: var(--bb-rl-space-100);
 	}
 
 	.bb-activity-more-options-wrap {
@@ -591,6 +605,18 @@
 			&:last-child {
 				margin-bottom: 0;
 			}
+		}
+
+		h3,
+		h4 {
+			font-size: 17px;
+			font-weight: 600;
+			color: var(--bb-rl-text-color);
+			margin-bottom: var(--bb-rl-space-200);
+		}
+
+		h4 {
+			font-size: 16px;
 		}
 
 		> ol,
