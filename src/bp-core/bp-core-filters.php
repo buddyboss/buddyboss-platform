@@ -248,25 +248,22 @@ function bp_core_menu_highlight_parent_page( $retval, $page ) {
 			$retval[] = 'current_page_ancestor';
 		}
 
-		if ( isset( $page->ID ) && $page->ID === $page_id ) {
-			// Special handling for members component: don't highlight members page when on user profile pages
-			if ( 'members' === $component && bp_is_user() ) {
-				// Don't add current_page_item for members page when viewing user profiles
-			} else {
-				$retval[] = 'current_page_item';
-			}
+		if (
+			isset( $page->ID ) &&
+			$page->ID === $page_id &&
+			( 'members' !== $component || ! bp_is_user() )
+		) {
+			// Special handling for members component: don't highlight members page when on user profile pages.
+			$retval[] = 'current_page_item';
 		} elseif (
 			isset( $page->ID ) &&
 			$_bp_page &&
-			$page->ID === $_bp_page->post_parent
+			$page->ID === $_bp_page->post_parent &&
+			( 'members' !== $component || ! bp_is_user() )
 		) {
 			// Special handling for members component: don't highlight members page when on user profile pages
-			if ( 'members' === $component && bp_is_user() ) {
-				// Don't add current classes for members page when viewing user profiles
-			} else {
-				$retval[] = 'current-menu-item';
-				$retval[] = 'current_page_parent';
-			}
+			$retval[] = 'current-menu-item';
+			$retval[] = 'current_page_parent';
 		}
 	}
 
@@ -2305,7 +2302,7 @@ function bb_get_members_page_id( $members_page_ids ) {
 		}
 		return false;
 	}
-	
+
 	// Ensure we return an integer or false
 	return is_numeric( $members_page_ids ) ? (int) $members_page_ids : false;
 }
