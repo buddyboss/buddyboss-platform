@@ -4877,6 +4877,7 @@ body.bb-readylaunch-template .select2-container--rl.select2-container--open:has(
 .bb-readylaunch-template input[type="checkbox"]:not(.bb-custom-check) + label {
   cursor: pointer;
   display: inline-flex;
+  align-items: center;
   position: relative;
   padding: 0;
   line-height: 1;
@@ -4923,7 +4924,7 @@ body.bb-readylaunch-template .select2-container--rl.select2-container--open:has(
   content: "\e182";
   position: absolute;
   right: 2px;
-  top: 2px;
+  top: 1px;
   font-family: bb-icons-rl;
   font-weight: 700;
   color: var(--bb-rl-text-white-color);
