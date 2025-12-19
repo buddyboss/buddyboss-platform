@@ -807,7 +807,9 @@ window.bp = window.bp || {};
 									$( 'body.bp-user' ).hasClass( 'single' ) ||
 									$( 'body.directory' ).hasClass( 'media' ) ||
 									$( 'body.directory' ).hasClass( 'video' )
-								) && ( 'media' === data.object || 'video' === data.object )
+								) &&
+								( 'media' === data.object || 'video' === data.object ) &&
+								! BP_Nouveau.media.current_album
 							) {
 								$( self.objectNavParent + ' .bb-item-count' ).html( '<span class="bb-count">' + response.data.scopes[ data.scope ] + '</span> ' + dir_label );
 							}
