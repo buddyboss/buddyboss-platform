@@ -770,7 +770,7 @@ window.bp = window.bp || {};
 						media.push( $( this ).val() );
 					}
 				);
-				if ( $media_list.parent().parent().hasClass( 'album-single-view' ) ) {
+				if ( $media_list.parents( '.album-single-view' ).length > 0 ) {
 					$media_list.find( '.bb-video-check-wrap [name="bb-video-select"]:checked' ).each(
 						function () {
 							$( this ).closest( '.bb-item-thumb' ).addClass( 'loading deleting' );
@@ -1034,6 +1034,7 @@ window.bp = window.bp || {};
 			$( '#bp-media-uploader-modal-title' ).text( bbRlMedia.i18n_strings.upload );
 			$( '#bp-media-uploader-modal-status-text' ).text( '' );
 			$( '#bp-media-post-content' ).val( '' );
+			$( '#bp-dropzone-content .bp-feedback' ).remove();
 			this.dropzone_obj.element ? this.dropzone_obj.destroy() : '';
 			this.dropzone_media = [];
 
@@ -2391,7 +2392,9 @@ window.bp = window.bp || {};
 						if ( $( e.currentTarget ).closest( '.bb-rl-field-wrap' ).find( '.bb-model-footer .bb-rl-media-move' ).hasClass( 'is-disabled' ) ) {
 							return; // return if parent album is same.
 						}
-						$( e.currentTarget ).closest( '.bb-rl-field-wrap' ).find( '.bb-rl-album-selected-id' ).val( $( e.currentTarget ).data( 'id' ) );
+						( $( e.currentTarget ).closest( '.bb-rl-field-wrap' ).length ? $( e.currentTarget ).closest( '.bb-rl-field-wrap' ) : $( e.currentTarget ).closest( '.bb-field-wrap' ) )
+							.find( '.bb-rl-album-selected-id' )
+							.val( $( e.currentTarget ).data( 'id' ) );
 
 						var mediaPrivacy = $( e.currentTarget ).closest( '#bp-media-uploader' ).find( '#bb-media-privacy' );
 
@@ -4100,6 +4103,13 @@ window.bp = window.bp || {};
 
 							} else {
 								$( '#bp-dropzone-content' ).prepend( response.data.feedback );
+								var $media_single_album = targetPopup.parents( '#bp-media-single-album' );
+								if ( $media_single_album.length ) {
+									var $media_back_button = $media_single_album.find( '#bp-media-prev.bb-uploader-steps-prev' );
+									if ( $media_back_button.length && $media_back_button.is(':visible') ) {
+										$media_back_button.trigger( 'click' );
+									}
+								}
 							}
 
 							target.removeClass( 'saving' );
