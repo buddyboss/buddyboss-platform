@@ -737,11 +737,11 @@ function bb_modify_topics_query_for_sticky( $clauses, $wp_query ) {
 	$case_statements[] = 'ELSE 3'; // Normal posts after stickies.
 	$case_sql          = 'CASE ' . implode( ' ', $case_statements ) . ' END';
 
-	$clauses['orderby'] = "$case_sql, {$wpdb->posts}.post_date DESC";
-
-	// If meta ordering needs to be preserved, append it consistently.
+	// Preserve the original meta_value ordering by _bbp_last_active_time for consistent behavior.
 	if ( isset( $wp_query->query_vars['orderby'] ) && 'meta_value' === $wp_query->query_vars['orderby'] ) {
-		$clauses['orderby'] .= ", CAST({$wpdb->postmeta}.meta_value AS DATETIME) DESC";
+		$clauses['orderby'] = "$case_sql, CAST({$wpdb->postmeta}.meta_value AS DATETIME) DESC";
+	} else {
+		$clauses['orderby'] = "$case_sql, {$wpdb->posts}.post_date DESC";
 	}
 
 	return $clauses;
