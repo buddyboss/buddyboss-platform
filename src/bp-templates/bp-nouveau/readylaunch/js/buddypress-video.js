@@ -431,7 +431,15 @@ window.bp = window.bp || {};
 								var $buddypress = $( '#buddypress' );
 								if ( response.data.video_personal_count ) {
 									var spanCountTag = $buddypress.find( '.bp-wrap .users-nav ul li#video-personal-li a span.count' );
-									if ( spanCountTag.length ) {
+									if ( $( '#buddypress .bb-item-count' ).length > 0 && 'yes' !== BP_Nouveau.video.is_video_directory ) {
+										dir_label = BP_Nouveau.dir_labels.hasOwnProperty( 'video' ) ?
+										(
+											1 === parseInt( response.data.video_personal_count ) ?
+											BP_Nouveau.dir_labels.video.singular : BP_Nouveau.dir_labels.video.plural
+										)
+										: '';
+										$( '#buddypress .bb-item-count' ).html( '<span class="bb-count">' + response.data.video_personal_count + '</span> ' + dir_label );
+									} else if ( spanCountTag.length ) {
 										spanCountTag.text( response.data.video_personal_count );
 									} else {
 										var videoPersonalSpanTag = document.createElement( 'span' );
