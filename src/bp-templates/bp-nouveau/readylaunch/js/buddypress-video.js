@@ -1563,11 +1563,32 @@ window.bp = window.bp || {};
 									if ( response.data.video_personal_count ) {
 										buddyPressSelector.find( '.bp-wrap .users-nav ul li#video-personal-li a span.count' ).text( response.data.video_personal_count );
 									}
+
 									if (
 										'undefined' !== typeof response.data &&
-										'undefined' !== typeof response.data.video_group_count
+										'undefined' !== typeof response.data.video_personal_count &&
+										$( '#buddypress .bp-wrap .users-nav' ).length > 0
 									) {
-										if ( $( '#buddypress .bb-item-count' ).length > 0 && 'yes' !== BP_Nouveau.video.is_video_directory ) {
+
+										if ( $( '#buddypress .bb-item-count' ).length > 0 && 'yes' !== bbRlVideo.is_video_directory && ! bbRlVideo.current_album ) {
+											dir_label = BP_Nouveau.dir_labels.hasOwnProperty( 'video' ) ?
+											(
+												1 === parseInt( response.data.video_personal_count ) ?
+												BP_Nouveau.dir_labels.video.singular : BP_Nouveau.dir_labels.video.plural
+											)
+											: '';
+											$( '#buddypress .bb-item-count' ).html( '<span class="bb-count">' + response.data.video_personal_count + '</span> ' + dir_label );
+										} else {
+											$( '#buddypress' ).find( '.bp-wrap .users-nav ul li#video-personal-li a span.count' ).text( response.data.video_personal_count );
+										}
+									}
+
+									if (
+										'undefined' !== typeof response.data &&
+										'undefined' !== typeof response.data.video_group_count &&
+										$( '#buddypress .groups-nav' ).length > 0
+									) {
+										if ( $( '#buddypress .bb-item-count' ).length > 0 && 'yes' !== bbRlVideo.is_video_directory ) {
 											dir_label = BP_Nouveau.dir_labels.hasOwnProperty( 'video' ) ?
 											(
 												1 === parseInt( response.data.video_group_count ) ?
@@ -1576,17 +1597,18 @@ window.bp = window.bp || {};
 											: '';
 											$( '#buddypress .bb-item-count' ).html( '<span class="bb-count">' + response.data.video_group_count + '</span> ' + dir_label );
 										} else {
-											$( '#buddypress' ).find( '.bp-wrap .groups-nav ul li#videos-groups-li a span.count' ).text( response.data.video_group_count );
+											$( '#buddypress' ).find( '.groups-nav ul li#videos-groups-li a span.count' ).text( response.data.video_group_count );
 										}
 									}
-									if ( 0 !== response.data.video_html_content.length ) {
+
+									if ( 0 !== response.data.video_html_content.length && ! bbRlVideo.current_album ) {
 										if ( 0 === parseInt( response.data.video_personal_count ) ) {
 											$( '.bb-videos-actions' ).hide();
 											$( '#video-stream' ).html( response.data.video_html_content );
 										} else {
 											buddyPressSelector.find( '.video-list:not(.existing-video-list)' ).html( response.data.video_html_content );
 										}
-									} else if ( 0 !== response.data.group_video_html_content.length ) {
+									} else if ( 0 !== response.data.group_video_html_content.length && ! bbRlVideo.current_album ) {
 										if ( 0 === parseInt( response.data.video_group_count ) ) {
 											$( '.bb-videos-actions' ).hide();
 											$( '#video-stream' ).html( response.data.group_video_html_content );
@@ -1634,14 +1656,14 @@ window.bp = window.bp || {};
 									buddyPressSelector.find( '.bp-wrap .groups-nav ul li#videos-groups-li a span.count' ).text( response.data.video_group_count );
 								}
 								// inject video.
-								if ( 0 !== response.data.video_html_content.length ) {
+								if ( 0 !== response.data.video_html_content.length && ! bbRlVideo.current_album ) {
 									if ( 0 === parseInt( response.data.video_personal_count ) ) {
 										$( '.bb-videos-actions' ).hide();
 										$( '#video-stream' ).html( response.data.video_html_content );
 									} else {
 										buddyPressSelector.find( '.video-list:not(.existing-video-list)' ).html( response.data.video_html_content );
 									}
-								} else if ( 0 !== response.data.group_video_html_content.length ) {
+								} else if ( 0 !== response.data.group_video_html_content.length && ! bbRlVideo.current_album ) {
 									if ( 0 === parseInt( response.data.video_group_count ) ) {
 										$( '.bb-videos-actions' ).hide();
 										$( '#video-stream' ).html( response.data.group_video_html_content );
