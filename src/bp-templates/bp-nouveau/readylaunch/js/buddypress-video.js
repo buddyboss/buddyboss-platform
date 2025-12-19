@@ -1655,13 +1655,34 @@ window.bp = window.bp || {};
 									'undefined' !== typeof response.data &&
 									'undefined' !== typeof response.data.video_personal_count
 								) {
-									buddyPressSelector.find( '.bp-wrap .users-nav ul li#video-personal-li a span.count' ).text( response.data.video_personal_count );
+									if ( $( '#buddypress .bb-item-count' ).length > 0 && 'yes' !== bbRlVideo.is_video_directory ) {
+										dir_label = BP_Nouveau.dir_labels.hasOwnProperty( 'video' ) ?
+										(
+											1 === parseInt( response.data.video_personal_count ) ?
+											BP_Nouveau.dir_labels.video.singular : BP_Nouveau.dir_labels.video.plural
+										)
+										: '';
+										$( '#buddypress .bb-item-count' ).html( '<span class="bb-count">' + response.data.video_personal_count + '</span> ' + dir_label );
+									} else {
+										buddyPressSelector.find( '.bp-wrap .users-nav ul li#video-personal-li a span.count' ).text( response.data.video_personal_count );
+									}
 								}
 								if (
 									'undefined' !== typeof response.data &&
-									'undefined' !== typeof response.data.video_group_count
+									'undefined' !== typeof response.data.video_group_count &&
+									$( '#buddypress .groups-nav' ).length > 0
 								) {
-									buddyPressSelector.find( '.bp-wrap .groups-nav ul li#videos-groups-li a span.count' ).text( response.data.video_group_count );
+									if ( $( '#buddypress .bb-item-count' ).length > 0 && 'yes' !== bbRlVideo.is_video_directory ) {
+										dir_label = BP_Nouveau.dir_labels.hasOwnProperty( 'video' ) ?
+										(
+											1 === parseInt( response.data.video_group_count ) ?
+											BP_Nouveau.dir_labels.video.singular : BP_Nouveau.dir_labels.video.plural
+										)
+										: '';
+										$( '#buddypress .bb-item-count' ).html( '<span class="bb-count">' + response.data.video_group_count + '</span> ' + dir_label );
+									} else {
+										buddyPressSelector.find( '.groups-nav ul li#videos-groups-li a span.count' ).text( response.data.video_group_count );
+									}
 								}
 								// inject video.
 								if ( 0 !== response.data.video_html_content.length && ! bbRlVideo.current_album ) {
