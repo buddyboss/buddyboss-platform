@@ -1537,6 +1537,25 @@
 	flex-flow: row-reverse;
 	position: relative;
 
+	&:hover:not(:has(#aw-whats-new-reset:hover)) {
+
+		.bb-title-tooltip-wrapper {
+
+			.ac-title-required & {
+				opacity: 1;
+				cursor: default;
+			}
+		}
+
+		.bb-topic-tooltip-wrapper {
+
+			.ac-topic-required & {
+				opacity: 1;
+				cursor: default;
+			}
+		}
+	}
+
 	input {
 
 		@include font-size(14);
@@ -2138,7 +2157,8 @@ input.search-query-input {
 	display: none;
 }
 
-/* Topic tooltip */
+/* Post title and Topic tooltip */
+.bb-title-tooltip-wrapper,
 .bb-topic-tooltip-wrapper {
 	position: absolute;
 	z-index: 99999;
@@ -2154,6 +2174,7 @@ input.search-query-input {
 		pointer-events: auto;
 	}
 
+	.bb-title-tooltip,
 	.bb-topic-tooltip {
 		background: #1e2132;
 		color: #fff;
@@ -2179,4 +2200,8 @@ input.search-query-input {
 		height: 0;
 		display: block;
 	}
+}
+
+.bb-title-tooltip-wrapper {
+	z-index: 100000;
 }
