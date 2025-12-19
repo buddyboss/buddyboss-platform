@@ -227,6 +227,12 @@ function bp_nouveau_ajax_video_upload() {
 	// Upload file.
 	$result = bp_video_upload();
 
+	if ( 'in_progress' === $result ) {
+		$response['feedback']    = __( 'Video is being processed. Please wait.', 'buddyboss' );
+		$response['in_progress'] = true;
+		wp_send_json_success( $response );
+	}
+
 	if ( is_wp_error( $result ) ) {
 		$response['feedback'] = $result->get_error_message();
 		wp_send_json_error( $response, $result->get_error_code() );

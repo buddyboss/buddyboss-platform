@@ -26,7 +26,18 @@ defined( 'ABSPATH' ) || exit;
 			<# } #>
 		<span>
 	</h3>
-	<a class="bb-rl-model-close-button" href="#">
-		<span class="bb-icons-rl-x"></span>
-	</a>
+	<span class="bb-rl-modal-header-actions">
+		<a class="bb-rl-model-close-button" href="#">
+			<span class="bb-icons-rl-x"></span>
+
+			<?php
+			/**
+			* Fires after the activity header close button.
+			*
+			* @since BuddyBoss 2.13.0
+			*/
+			do_action( 'bb_activity_header_after' );
+			?>
+		</a>
+	</span>
 </script>

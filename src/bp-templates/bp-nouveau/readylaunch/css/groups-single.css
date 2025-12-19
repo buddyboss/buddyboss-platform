@@ -352,7 +352,7 @@
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   background-color: var(--bb-rl-background-brand-primary-color);
   color: var(--bb-rl-text-white-color);
@@ -413,7 +413,7 @@
 .bb-rl-groups-single-wrapper > .bb-rl-secondary-header {
   top: 71px;
   position: sticky;
-  z-index: 9999;
+  z-index: calc(var(--bb-rl-z-index-fixed) - 1);
 }
 
 .admin-bar .bb-rl-groups-single-wrapper > .bb-rl-secondary-header {
@@ -474,7 +474,7 @@
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   background-color: var(--bb-rl-background-brand-primary-color);
   color: var(--bb-rl-text-white-color);
@@ -727,7 +727,7 @@
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
   font-size: 0.875rem;
@@ -957,7 +957,7 @@
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   background-color: var(--bb-rl-background-brand-primary-color);
   color: var(--bb-rl-text-white-color);
@@ -1037,7 +1037,7 @@
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   background-color: var(--bb-rl-background-danger-primary-color);
   color: var(--bb-rl-text-white-color);
@@ -1309,7 +1309,7 @@
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   background-color: var(--bb-rl-background-brand-primary-color);
   color: var(--bb-rl-text-white-color);
@@ -1341,7 +1341,7 @@
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   background-color: transparent;
   color: var(--bb-rl-text-color);
@@ -1499,7 +1499,7 @@
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   background-color: var(--bb-rl-background-brand-primary-color);
   color: var(--bb-rl-text-white-color);
@@ -1750,7 +1750,7 @@
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   background-color: var(--bb-rl-background-brand-primary-color);
   color: var(--bb-rl-text-white-color);
@@ -1950,7 +1950,7 @@
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   background-color: transparent;
   color: var(--bb-rl-text-color);
@@ -2003,7 +2003,7 @@
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   background-color: var(--bb-rl-background-tertiary-color);
   color: var(--bb-rl-text-color);
@@ -2330,7 +2330,7 @@
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   background-color: var(--bb-rl-background-brand-primary-color);
   color: var(--bb-rl-text-white-color);
@@ -2363,7 +2363,7 @@
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   background-color: var(--bb-rl-background-tertiary-color);
   color: var(--bb-rl-text-color);
@@ -2941,7 +2941,7 @@ body.bb-readylaunch-template.groups.group-invites span.select2-dropdown.select2-
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   background-color: var(--bb-rl-background-brand-primary-color);
   color: var(--bb-rl-text-white-color);
@@ -2976,7 +2976,7 @@ body.bb-readylaunch-template.groups.group-invites span.select2-dropdown.select2-
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   background-color: transparent;
   color: var(--bb-rl-text-color);
@@ -4001,7 +4001,7 @@ div#bp-group-message-content {
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   background-color: var(--bb-rl-background-tertiary-color);
   color: var(--bb-rl-text-color);
@@ -4040,7 +4040,7 @@ div#bp-group-message-content {
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   background-color: transparent;
   color: var(--bb-rl-text-color);
@@ -4080,7 +4080,7 @@ div#bp-group-message-content {
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   background-color: var(--bb-rl-background-brand-primary-color);
   color: var(--bb-rl-text-white-color);
@@ -4127,7 +4127,7 @@ div#bp-group-message-content {
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   background-color: var(--bb-rl-background-tertiary-color);
   color: var(--bb-rl-text-color);
@@ -4161,7 +4161,7 @@ div#bp-group-message-content {
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   background-color: transparent;
   color: var(--bb-rl-text-color);
@@ -4335,7 +4335,7 @@ div#bp-group-message-content {
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   background-color: var(--bb-rl-background-tertiary-color);
   color: var(--bb-rl-text-color);
@@ -4387,7 +4387,7 @@ div#bp-group-message-content {
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   background-color: var(--bb-rl-background-brand-primary-color);
   color: var(--bb-rl-text-white-color);
@@ -4596,7 +4596,7 @@ div#bp-group-message-content {
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   background-color: var(--bb-rl-background-brand-primary-color);
   color: var(--bb-rl-text-white-color);
@@ -4666,7 +4666,7 @@ div#bp-group-message-content {
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   background-color: var(--bb-rl-background-tertiary-color);
   color: var(--bb-rl-text-color);
@@ -4847,7 +4847,7 @@ body.ld-in-focus-mode .learndash-wrapper {
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   background-color: var(--bb-rl-background-tertiary-color);
   color: var(--bb-rl-text-color);
@@ -4915,7 +4915,7 @@ body.bb-readylaunch-template:has(.learndash-wrapper-login-modal.ld-modal-open) {
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   background-color: var(--bb-rl-background-tertiary-color);
   color: var(--bb-rl-text-color);
@@ -5212,7 +5212,7 @@ body.bb-readylaunch-template:has(.learndash-wrapper-login-modal.ld-modal-open) {
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   background-color: var(--bb-rl-background-brand-primary-color);
   color: var(--bb-rl-text-white-color);
@@ -5296,7 +5296,7 @@ body.bb-readylaunch-template:has(.learndash-wrapper-login-modal.ld-modal-open) {
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   background-color: var(--bb-rl-background-tertiary-color);
   color: var(--bb-rl-text-color);
@@ -5516,7 +5516,7 @@ body.bb-readylaunch-template:has(.learndash-wrapper-login-modal.ld-modal-open) {
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   background-color: var(--bb-rl-background-brand-primary-color);
   color: var(--bb-rl-text-white-color);
@@ -6007,7 +6007,7 @@ body.bb-readylaunch-template:has(.learndash-wrapper-login-modal.ld-modal-open) {
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   background-color: var(--bb-rl-background-brand-primary-color);
   color: var(--bb-rl-text-white-color);
@@ -6059,7 +6059,7 @@ body.bb-readylaunch-template:has(.learndash-wrapper-login-modal.ld-modal-open) {
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   padding: 6px var(--bb-rl-space-200);
   font-size: var(--bb-rl-font-size-sm);
@@ -6080,7 +6080,7 @@ body.bb-readylaunch-template:has(.learndash-wrapper-login-modal.ld-modal-open) {
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   background-color: var(--bb-rl-background-brand-primary-color);
   color: var(--bb-rl-text-white-color);
@@ -6126,7 +6126,7 @@ body.bb-readylaunch-template:has(.learndash-wrapper-login-modal.ld-modal-open) {
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   background-color: var(--bb-rl-background-brand-primary-color);
   color: var(--bb-rl-text-white-color);
@@ -6709,7 +6709,7 @@ body.bb-readylaunch-template:has(.learndash-wrapper-login-modal.ld-modal-open) {
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   background-color: var(--bb-rl-background-brand-primary-color);
   color: var(--bb-rl-text-white-color);
@@ -6859,7 +6859,7 @@ body.bb-readylaunch-template:has(.learndash-wrapper-login-modal.ld-modal-open) {
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   background-color: var(--bb-rl-background-brand-primary-color);
   color: var(--bb-rl-text-white-color);
@@ -7180,7 +7180,7 @@ body.bb-readylaunch-template:has(.learndash-wrapper-login-modal.ld-modal-open) {
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   background-color: var(--bb-rl-background-brand-primary-color);
   color: var(--bb-rl-text-white-color);
@@ -7242,7 +7242,7 @@ body.bb-readylaunch-template:has(.learndash-wrapper-login-modal.ld-modal-open) {
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   background-color: var(--bb-rl-background-tertiary-color);
   color: var(--bb-rl-text-color);
@@ -7706,7 +7706,7 @@ body.bb-readylaunch-template:has(.learndash-wrapper-login-modal.ld-modal-open) {
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   background-color: var(--bb-rl-background-tertiary-color);
   color: var(--bb-rl-text-color);
@@ -7746,7 +7746,7 @@ body.bb-readylaunch-template:has(.learndash-wrapper-login-modal.ld-modal-open) {
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   background-color: var(--bb-rl-background-brand-primary-color);
   color: var(--bb-rl-text-white-color);
@@ -7837,7 +7837,7 @@ body.bb-readylaunch-template:has(.learndash-wrapper-login-modal.ld-modal-open) {
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   background-color: var(--bb-rl-background-tertiary-color);
   color: var(--bb-rl-text-color);
@@ -7877,7 +7877,7 @@ body.bb-readylaunch-template:has(.learndash-wrapper-login-modal.ld-modal-open) {
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   background-color: transparent;
   color: var(--bb-rl-text-color);
@@ -8212,7 +8212,7 @@ body.bb-readylaunch-template:has(.learndash-wrapper-login-modal.ld-modal-open) {
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   background-color: transparent;
   color: var(--bb-rl-text-brand-primary-color);
@@ -8246,7 +8246,7 @@ body.bb-readylaunch-template:has(.learndash-wrapper-login-modal.ld-modal-open) {
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   background-color: var(--bb-rl-background-brand-primary-color);
   color: var(--bb-rl-text-white-color);
@@ -8359,7 +8359,7 @@ body.bb-readylaunch-template:has(.learndash-wrapper-login-modal.ld-modal-open) {
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   background-color: var(--bb-rl-background-brand-primary-color);
   color: var(--bb-rl-text-white-color);
@@ -8468,7 +8468,7 @@ body.bb-readylaunch-template:has(.learndash-wrapper-login-modal.ld-modal-open) {
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   background-color: transparent;
   color: var(--bb-rl-text-color);
@@ -8594,7 +8594,7 @@ body.bb-readylaunch-template:has(.learndash-wrapper-login-modal.ld-modal-open) {
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   background-color: var(--bb-rl-background-brand-primary-color);
   color: var(--bb-rl-text-white-color);

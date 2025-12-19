@@ -1127,7 +1127,8 @@ function bp_nouveau_ajax_media_update_privacy() {
 		if ( ! empty( $activity_id ) ) {
 			$activity = new BP_Activity_Activity( $activity_id );
 			if ( ! empty( $activity->id ) ) {
-				$activity->privacy = $privacy;
+				$activity->privacy        = $privacy;
+				$activity->title_required = false;
 				$activity->save();
 			}
 		}

@@ -52,6 +52,15 @@ window.bp = window.bp || {};
 		},
 
 		/**
+		 * Common function to safely call Media functions
+		 */
+		invokeMediaFn: function( functionName ) {
+			if ( 'undefined' !== typeof bp.Nouveau.Media && 'function' === typeof bp.Nouveau.Media[ functionName ] ) {
+				bp.Nouveau.Media[ functionName ]();
+			}
+		},
+
+		/**
 		 * [setupGlobals description]
 		 *
 		 * @return {[type]} [description]
@@ -224,7 +233,7 @@ window.bp = window.bp || {};
 
 			$document.on(
 				'click',
-				'#bb-rl-activity-stream .activity-state-comments > .comments-count, #bb-rl-activity-stream .activity-meta > .generic-button .acomment-reply',
+				'#bb-rl-activity-stream .activity-state-comments > .comments-count, #bb-rl-activity-stream .groups-meta > .generic-button .acomment-reply, #bb-rl-activity-stream .activity-meta > .generic-button .acomment-reply',
 				function ( e ) {
 					e.preventDefault();
 					var liElem     = $( this ).closest( '.activity-item' );
@@ -264,7 +273,7 @@ window.bp = window.bp || {};
 			}
 
 			// Wrap Activity Topics
-			bp.Nouveau.wrapNavigation( '.activity-topic-selector ul', 120 );
+			bp.Nouveau.wrapNavigation( '.activity-topic-selector ul', 120, true );
 		},
 
 		openActivityFilter: function ( e ) {
@@ -870,6 +879,19 @@ window.bp = window.bp || {};
 				bp.Nouveau.Activity.initializeEmojioneArea( false, '', activityId );
 			}
 
+			// Clean up emoji picker event handlers when modal closes
+			if ( activityId ) {
+				bp.Nouveau.Activity.cleanupEmojiEventHandlers( activityId );
+			}
+
+			// Clean up all emoji picker elements from theatre when modal closes
+			var $theatre = $( '.bb-rl-emojionearea-theatre' );
+			if ( $theatre.length ) {
+				// Remove all picker elements and reset theatre state
+				$theatre.find( '.emojionearea-picker' ).remove();
+				$theatre.removeClass( 'show hide' ).addClass( 'hide' );
+			}
+
 			modal.find( '#bb-rl-activity-modal' ).removeClass( 'bb-closed-comments' );
 
 			modal.closest( 'body' ).removeClass( 'acomments-modal-open' );
@@ -941,6 +963,14 @@ window.bp = window.bp || {};
 				},
 				3000
 			);
+
+			// Trigger GIF autoplay check when activities are loaded via AJAX
+			// Use setTimeout to ensure DOM is updated and video elements are rendered
+			setTimeout( function() {
+				if ( 'undefined' !== typeof bp.Nouveau.Media && 'function' === typeof bp.Nouveau.Media.autoPlayGifVideos ) {
+					bp.Nouveau.Media.autoPlayGifVideos();
+				}
+			}, 200 );
 
 			if ( 'undefined' !== typeof window.instgrm ) {
 				window.instgrm.Embeds.process();
@@ -1241,8 +1271,12 @@ window.bp = window.bp || {};
 					}
 				);
 
-				// Rest the Comment Form.
-				self.resetActivityCommentForm( $form, 'hardReset' );
+				if( $form.closest( 'li.comment-item' ).length ) {
+					self.activityRootComment( event );
+				} else {
+					// Rest the Comment Form.
+					self.resetActivityCommentForm( $form, 'hardReset' );
+				}
 
 				// Stop event propagation.
 				event.preventDefault();
@@ -1739,16 +1773,18 @@ window.bp = window.bp || {};
 		toggleMultiMediaOptions: function ( form, target, placeholder ) {
 			if ( ! _.isUndefined( bbRlMedia ) ) {
 
-				var parent_activity, activity_data;
+				var parent_activity, activity_data, parent_activity_data;
 
 				if ( placeholder ) {
 					target          = target ? $( target ) : $( placeholder );
 					parent_activity = target.closest( '.bb-rl-activity-modal' ).find( '.activity-item' );
 					activity_data   = target.closest( '.bb-rl-activity-modal' ).find( '.activity-item' ).data( 'bp-activity' );
+					parent_activity_data   = parent_activity.data( 'bp-activity' );
 					form            = $( placeholder );
 				} else {
 					parent_activity = target.closest( '.activity-item' );
-					activity_data   = target.closest( '.activity-item' ).data( 'bp-activity' );
+					activity_data = target.closest( '.activity-item' ).data( 'bp-activity' );
+					parent_activity_data = parent_activity.data( 'bp-activity' );
 				}
 
 				var targetLi = target.closest( 'li' ).data( 'bp-activity-comment' );
@@ -1765,14 +1801,30 @@ window.bp = window.bp || {};
 					return fallbackValue;
 				};
 
+				var mediaGroupSettings = function ( mediaType, fallbackValue ) {
+					if (
+						activity_data &&
+						! _.isUndefined( activity_data[mediaType] ) &&
+						parent_activity_data &&
+						! _.isUndefined( parent_activity_data[mediaType] )
+					) {
+						return activity_data[mediaType] && parent_activity_data[mediaType];
+					} else if ( false === bbRlMedia[mediaType] ) {
+						return bbRlMedia[mediaType];
+					}
+					return fallbackValue;
+				};
+
+
+
 				if (
 					target.closest( 'li' ).hasClass( 'groups' ) ||
 					parent_activity.hasClass( 'groups' )
 				) {
 					var groupMediaSettings = {
-						group_media   : mediaSettings( 'group_media', false ),
-						group_document: mediaSettings( 'group_document', false ),
-						group_video   : mediaSettings( 'group_video', false ),
+						group_media   : mediaGroupSettings( 'group_media', false ),
+						group_document: mediaGroupSettings( 'group_document', false ),
+						group_video   : mediaGroupSettings( 'group_video', false ),
 						gif           : bbRlMedia.gif.groups,
 						emoji         : bbRlMedia.emoji.groups
 					};
@@ -1793,31 +1845,56 @@ window.bp = window.bp || {};
 		},
 
 		applyMediaSettings: function ( form, settings ) {
-			// Handle media visibility based on the settings.
-			form.find( '.bb-rl-ac-reply-toolbar .bb-rl-post-media.bb-rl-media-support' ).toggle( settings.group_media || settings.profile_media ).parent( '.bb-rl-ac-reply-toolbar' ).toggleClass(
-				'bb-rl-post-media-disabled',
-				! (
-				settings.group_media || settings.profile_media
-				)
-			);
+			// Handle media visibility based on the settings - use explicit show/hide for stable behavior.
+			var $mediaSupport = form.find( '.bb-rl-ac-reply-toolbar .bb-rl-post-media.bb-rl-media-support' );
+			var $mediaParent = $mediaSupport.parent( '.bb-rl-ac-reply-toolbar' );
+			if ( settings.group_media || settings.profile_media ) {
+				$mediaSupport.show();
+				$mediaParent.removeClass( 'bb-rl-post-media-disabled' );
+			} else {
+				$mediaSupport.hide();
+				$mediaParent.addClass( 'bb-rl-post-media-disabled' );
+			}
 
-			form.find( '.bb-rl-ac-reply-toolbar .bb-rl-post-media.bb-rl-document-support' ).toggle( settings.group_document || settings.profile_document ).parent( '.bb-rl-ac-reply-toolbar' ).toggleClass(
-				'bb-rl-post-media-disabled',
-				! (
-				settings.group_document || settings.profile_document
-				)
-			);
+			var $documentSupport = form.find( '.bb-rl-ac-reply-toolbar .bb-rl-post-media.bb-rl-document-support' );
+			var $documentParent = $documentSupport.parent( '.bb-rl-ac-reply-toolbar' );
+			if ( settings.group_document || settings.profile_document ) {
+				$documentSupport.show();
+				$documentParent.removeClass( 'bb-rl-post-media-disabled' );
+			} else {
+				$documentSupport.hide();
+				$documentParent.addClass( 'bb-rl-post-media-disabled' );
+			}
 
-			form.find( '.bb-rl-ac-reply-toolbar .bb-rl-post-video.bb-rl-video-support' ).toggle( settings.group_video || settings.profile_video ).parent( '.bb-rl-ac-reply-toolbar' ).toggleClass(
-				'post-video-disabled',
-				! (
-				settings.group_video || settings.profile_video
-				)
-			);
+			var $videoSupport = form.find( '.bb-rl-ac-reply-toolbar .bb-rl-post-video.bb-rl-video-support' );
+			var $videoParent = $videoSupport.parent( '.bb-rl-ac-reply-toolbar' );
+			if ( settings.group_video || settings.profile_video ) {
+				$videoSupport.show();
+				$videoParent.removeClass( 'post-video-disabled' );
+			} else {
+				$videoSupport.hide();
+				$videoParent.addClass( 'post-video-disabled' );
+			}
 
-			form.find( '.bb-rl-ac-reply-toolbar .bb-rl-post-gif' ).toggle( settings.gif !== false ).parent( '.bb-rl-ac-reply-toolbar' ).toggleClass( 'post-gif-disabled', settings.gif === false );
+			var $gifSupport = form.find( '.bb-rl-ac-reply-toolbar .bb-rl-post-gif' );
+			var $gifParent = $gifSupport.parent( '.bb-rl-ac-reply-toolbar' );
+			if ( settings.gif !== false ) {
+				$gifSupport.show();
+				$gifParent.removeClass( 'post-gif-disabled' );
+			} else {
+				$gifSupport.hide();
+				$gifParent.addClass( 'post-gif-disabled' );
+			}
 
-			form.find( '.bb-rl-ac-reply-toolbar .bb-rl-post-emoji' ).toggle( settings.emoji !== false ).parent( '.bb-rl-ac-reply-toolbar' ).toggleClass( 'post-emoji-disabled', settings.emoji === false );
+			var $emojiSupport = form.find( '.bb-rl-ac-reply-toolbar .bb-rl-post-emoji' );
+			var $emojiParent = $emojiSupport.parent( '.bb-rl-ac-reply-toolbar' );
+			if ( settings.emoji !== false ) {
+				$emojiSupport.show();
+				$emojiParent.removeClass( 'post-emoji-disabled' );
+			} else {
+				$emojiSupport.hide();
+				$emojiParent.addClass( 'post-emoji-disabled' );
+			}
 		},
 
 		fixAtWhoActivity: function () {
@@ -2233,8 +2310,17 @@ window.bp = window.bp || {};
 							videoElement.attr( 'id', videoElementId );
 
 							var videoActionWrap = videoContainer.find( '.bb-rl-more_dropdown-wrap' );
-							videoElement.insertAfter( videoActionWrap );
-							videoContainer.find( '.video-js' ).remove();
+							// Handle case where .bb-rl-more_dropdown-wrap doesn't exist
+							if ( videoActionWrap.length > 0 ) {
+								videoElement.insertAfter( videoActionWrap );
+							} else {
+								// If no .bb-rl-more_dropdown-wrap, prepend video to container
+								videoElement.prependTo( videoContainer );
+							}
+							// Remove any previously initialized Video.js players, but not the video element itself
+							videoContainer.find( '.video-js' ).not( videoElement ).remove();
+							// Remove vjs-initialized class if present to allow re-initialization
+							videoElement.removeClass( 'vjs-initialized' );
 							videoElement.addClass( 'video-js' );
 
 							videojs(
@@ -2280,6 +2366,11 @@ window.bp = window.bp || {};
 			}
 
 			bp.Nouveau.Activity.toggleMultiMediaOptions( form, '', '.bb-rl-modal-activity-footer' );
+			
+			// Trigger GIF autoplay check when modal is opened
+			setTimeout( function() {
+				bp.Nouveau.Activity.invokeMediaFn( 'autoPlayGifVideos' );
+			}, 500 );
 
 			if( ! modal.find( '.bb-rl-modal-activity-body' ).hasClass( 'bb-rl-modal-activity-body-scroll-event-initiated' ) ) {
 				modal.find( '.bb-rl-modal-activity-body' ).on( 'scroll', function () {
@@ -2429,6 +2520,7 @@ window.bp = window.bp || {};
 			if ( ! $.fn.emojioneArea ) {
 				return;
 			}
+			
 			$( parentSelector + '#ac-input-' + activityId ).emojioneArea(
 				{
 					standalone: true,
@@ -2473,6 +2565,94 @@ window.bp = window.bp || {};
 					},
 				}
 			);
+
+			// Manually trigger picker show/hide for modal context
+			if ( isModal ) {
+				// Find the modal container for better event management
+				var $modalContainer = $( parentSelector ).closest( '.modal, .bb-modal, .bb-rl-modal, .activity-modal, .activity-theatre, .bb-rl-screen-content' );
+				if ( !$modalContainer.length ) {
+					$modalContainer = $( parentSelector ); // Fallback to parent selector
+				}
+
+				// Create unique event namespace for this activity
+				var eventNamespace = '.bb-rl-emoji-' + activityId;
+				
+				// Bind to modal container instead of document for better cleanup
+				$modalContainer.on( 'click' + eventNamespace, '#bb-rl-ac-reply-emoji-button-' + activityId, function( e ) {
+					var $targetInput = $( parentSelector + '#ac-input-' + activityId );
+					var emojioneAreaInstance = $targetInput.data( 'emojioneArea' );
+					
+					if ( emojioneAreaInstance ) {
+						var $theatre = $( '.bb-rl-emojionearea-theatre' );
+						var $picker = $theatre.find( '.emojionearea-picker' );
+						
+						// Check current state
+						var isCurrentlyVisible = $theatre.hasClass( 'show' ) && !$picker.hasClass( 'hidden' );
+						
+						if ( isCurrentlyVisible ) {
+							// Hide picker
+							emojioneAreaInstance.hidePicker();
+							$theatre.removeClass( 'show' ).addClass( 'hide' );
+							$picker.addClass( 'hidden' );
+						} else {
+							// Clean up existing picker elements before showing new one
+							// if there are multiple pickers to prevent accumulation
+							var existingPickers = $theatre.find( '.emojionearea-picker' );
+							if ( existingPickers.length > 1 ) {
+								existingPickers.remove();
+							}
+							
+							// Show picker but keep it hidden until positioned
+							emojioneAreaInstance.showPicker();
+							$theatre.removeClass( 'hide' ).addClass( 'show' );
+							
+							// Get the picker element
+							var $currentPicker = $theatre.find( '.emojionearea-picker' );
+							$currentPicker.addClass( 'hidden' );
+							
+							// Position the picker relative to click position
+							setTimeout( function() {
+								var clickX = e.clientX;
+								var clickY = e.clientY;
+								
+								if ( $currentPicker.length ) {
+									// Position picker relative to viewport click position
+									var leftPos = clickX + 30; // Center horizontally
+									var topPos = clickY - 20; // Small offset above click position
+									
+									$currentPicker.css( 'transform', 
+										'translate(' + leftPos + 'px, ' + topPos + 'px) ' +
+										'translate(-100%, -100%)'
+									);
+									
+									// Show picker after positioning
+									$currentPicker.removeClass( 'hidden' );
+								}
+							}, 50 ); // Small delay to ensure picker is rendered
+						}
+					}
+				} );
+				
+				// Store the event namespace and container for cleanup
+				$modalContainer.data( 'emoji-event-namespace-' + activityId, eventNamespace );
+			}
+		},
+
+		cleanupEmojiEventHandlers: function( activityId ) {
+			// Clean up emoji picker event handlers for a specific activity
+			// Find modal containers that might have the event handlers
+			$( '.modal, .bb-modal, .bb-rl-modal, .activity-modal, .activity-theatre, .bb-rl-screen-content' ).each( function() {
+				var $container = $( this );
+				var eventNamespace = $container.data( 'emoji-event-namespace-' + activityId );
+				
+				if ( eventNamespace ) {
+					// Remove the event handler
+					$container.off( eventNamespace );
+					
+					// Remove the stored namespace
+					$container.removeData( 'emoji-event-namespace-' + activityId );
+				}
+			} );
 		},
 
 		destroyUploader: function ( type, comment_id ) {
@@ -3219,7 +3399,10 @@ window.bp = window.bp || {};
 			if (
 				'undefined' !== typeof window.getSelection &&
 				'undefined' !== typeof document.createRange &&
-				! _.isNull( activity_comment_data )
+				! _.isNull( activity_comment_data ) &&
+				acInputElem.length > 0 &&
+				acInputElem[0] &&
+				acInputElem[0].nodeType === Node.ELEMENT_NODE
 			) {
 				var range = document.createRange();
 				range.selectNodeContents( acInputElem[0] );
@@ -3415,6 +3598,9 @@ window.bp = window.bp || {};
 							}
 						);
 						jQuery( window ).scroll();
+						
+						// Trigger GIF autoplay check for newly added content
+						bp.Nouveau.Activity.invokeMediaFn( 'autoPlayGifVideos' );
 
 						if ( ! form.hasClass( 'acomment-edit' ) ) {
 							// Set the new count.
@@ -4222,6 +4408,9 @@ window.bp = window.bp || {};
 						// Common post-load operations
 						setTimeout( function () {
 							jQuery( window ).scroll();
+							
+							// Trigger GIF autoplay check for newly loaded comments
+							bp.Nouveau.Activity.invokeMediaFn( 'autoPlayGifVideos' );
 						}, 200 );
 
 						// Scroll to comment if needed
@@ -4260,6 +4449,9 @@ window.bp = window.bp || {};
 						form.removeClass( 'events-initiated' );
 						var ce = $activityComments.find( '.ac-form .ac-input[contenteditable]' );
 						bp.Nouveau.Activity.listenCommentInput( ce );
+
+						// Apply media settings to respect backend configuration for attachment buttons
+						bp.Nouveau.Activity.toggleMultiMediaOptions( form, '', '.bb-rl-modal-activity-footer');
 
 						if ( ! _.isUndefined( bbRlMedia ) && ! _.isUndefined( bbRlMedia.emoji ) ) {
 							bp.Nouveau.Activity.initializeEmojioneArea( true, '#bb-rl-activity-modal ', settings.activityId );

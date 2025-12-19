@@ -696,7 +696,7 @@ h6 {
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   background-color: var(--bb-rl-background-tertiary-color);
   color: var(--bb-rl-text-color);
@@ -736,7 +736,7 @@ h6 {
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   background-color: var(--bb-rl-background-brand-primary-color);
   color: var(--bb-rl-text-white-color);
@@ -937,6 +937,17 @@ span.atwho-inserted {
   padding: 0 0 var(--bb-rl-space-200) var(--bb-rl-space-300);
 }
 
+.medium-editor-element h3,
+.medium-editor-element h4 {
+  font-size: 17px;
+  font-weight: 600;
+  margin-bottom: var(--bb-rl-space-200);
+}
+
+.medium-editor-element h4 {
+  font-size: 16px;
+}
+
 .emojionearea .emojionearea-button:before {
   content: "\e436";
   font-family: bb-icons-rl;
@@ -1064,20 +1075,24 @@ span.atwho-inserted {
   transform: translateY(-50%);
 }
 
-.emojionearea-standalone.emojionearea .emojionearea-picker {
+.emojionearea-standalone.emojionearea .emojionearea-picker,
+.bb-rl-emojionearea-theatre.emojionearea .emojionearea-picker {
   border-radius: var(--bb-rl-radius-lg);
   box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.12);
 }
 
-.emojionearea-standalone.emojionearea .emojionearea-picker .emojionearea-wrapper:after {
+.emojionearea-standalone.emojionearea .emojionearea-picker .emojionearea-wrapper:after,
+.bb-rl-emojionearea-theatre.emojionearea .emojionearea-picker .emojionearea-wrapper:after {
   display: none;
 }
 
-.emojionearea-standalone.emojionearea .emojionearea-picker.emojionearea-filters-position-top .emojionearea-filters .emojionearea-filter:first-of-type {
+.emojionearea-standalone.emojionearea .emojionearea-picker.emojionearea-filters-position-top .emojionearea-filters .emojionearea-filter:first-of-type,
+.bb-rl-emojionearea-theatre.emojionearea .emojionearea-picker.emojionearea-filters-position-top .emojionearea-filters .emojionearea-filter:first-of-type {
   border-top-left-radius: var(--bb-rl-radius-lg);
 }
 
-.emojionearea-standalone.emojionearea .emojionearea-picker.emojionearea-filters-position-top .emojionearea-filters {
+.emojionearea-standalone.emojionearea .emojionearea-picker.emojionearea-filters-position-top .emojionearea-filters,
+.bb-rl-emojionearea-theatre.emojionearea .emojionearea-picker.emojionearea-filters-position-top .emojionearea-filters {
   border-top-right-radius: var(--bb-rl-radius-lg);
   border-top-left-radius: var(--bb-rl-radius-lg);
 }
@@ -2358,7 +2373,7 @@ div.vjs-menu li.vjs-selected .vjs-menu-item-text, div.vjs-menu li:hover .vjs-men
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   background-color: var(--bb-rl-background-brand-primary-color);
   color: var(--bb-rl-text-white-color);
@@ -2471,7 +2486,7 @@ div.vjs-menu li.vjs-selected .vjs-menu-item-text, div.vjs-menu li:hover .vjs-men
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   background-color: var(--bb-rl-background-tertiary-color);
   color: var(--bb-rl-text-color);
@@ -3666,7 +3681,7 @@ button[data-balloon] {
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
 }
 
@@ -3953,7 +3968,7 @@ button[data-balloon] {
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   border-radius: var(--bb-rl-radius-md);
 }
@@ -5327,7 +5342,7 @@ body.bb-readylaunch-template .select2-container--rl.select2-container--open:has(
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   background-color: transparent;
   color: var(--bb-rl-text-color);
@@ -5393,7 +5408,7 @@ body.bb-readylaunch-template .select2-container--rl.select2-container--open:has(
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   padding: 4px var(--bb-rl-space-200);
   font-size: 0.875rem;
@@ -5568,7 +5583,7 @@ body.bb-readylaunch-template .select2-container--rl.select2-container--open:has(
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
   font-size: 0.875rem;
@@ -7265,6 +7280,19 @@ body.directory .bb-readylaunch-menu.bb-rl-items-max, body.forum-archive .bb-read
   padding-top: var(--bb-rl-space-100);
 }
 
+@media screen and (max-width: 460px) {
+  .bb-rl-profile-dropdown .bb-rl-profile-lists .bb-rl-profile-list-item.active > .bb-profile-submenu-lists {
+    opacity: 1;
+    visibility: visible;
+    height: auto;
+    padding: var(--bb-rl-space-100) 0;
+  }
+}
+
+.bb-rl-profile-dropdown .bb-rl-profile-lists .bb-rl-profile-list-item.active .bb-rl-profile-list-item--after i {
+  transform: rotate(90deg);
+}
+
 .bb-rl-profile-dropdown .bb-rl-profile-lists li {
   position: relative;
 }
@@ -7285,9 +7313,23 @@ body.directory .bb-readylaunch-menu.bb-rl-items-max, body.forum-archive .bb-read
   transition: all 0.3s ease-in-out;
 }
 
-.bb-rl-profile-dropdown .bb-rl-profile-lists li:hover > .bb-profile-submenu-lists {
-  opacity: 1;
-  visibility: visible;
+@media screen and (max-width: 460px) {
+  .bb-rl-profile-dropdown .bb-rl-profile-lists li > .bb-profile-submenu-lists {
+    position: static;
+    border-radius: 0;
+    box-shadow: none;
+    border-left: 0;
+    border-right: 0;
+    height: 0;
+    padding: 0;
+  }
+}
+
+@media screen and (min-width: 460px) {
+  .bb-rl-profile-dropdown .bb-rl-profile-lists li:hover > .bb-profile-submenu-lists {
+    opacity: 1;
+    visibility: visible;
+  }
 }
 
 .bb-rl-profile-dropdown .bb-rl-profile-lists .bb-rl-profile-list-item:has(.bb-profile-submenu-lists) > a::after {
@@ -7298,6 +7340,31 @@ body.directory .bb-readylaunch-menu.bb-rl-items-max, body.forum-archive .bb-read
   color: var(--bb-rl-icon-secondary-color);
   font-style: normal;
   margin-left: auto;
+}
+
+@media screen and (max-width: 460px) {
+  .bb-rl-profile-dropdown .bb-rl-profile-lists .bb-rl-profile-list-item:has(.bb-profile-submenu-lists) > a::after {
+    display: none;
+  }
+}
+
+.bb-rl-profile-dropdown .bb-rl-profile-lists .bb-rl-profile-list-item:has(.bb-profile-submenu-lists) span.bb-rl-profile-list-item--after {
+  display: none;
+  margin-left: auto;
+}
+
+.bb-rl-profile-dropdown .bb-rl-profile-lists .bb-rl-profile-list-item:has(.bb-profile-submenu-lists) span.bb-rl-profile-list-item--after i {
+  font-size: var(--bb-rl-font-size-base);
+  color: var(--bb-rl-icon-secondary-color);
+  font-style: normal;
+}
+
+@media screen and (max-width: 460px) {
+  .bb-rl-profile-dropdown .bb-rl-profile-lists .bb-rl-profile-list-item:has(.bb-profile-submenu-lists) span.bb-rl-profile-list-item--after {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
 }
 
 body:not(.bb-rl-dark-mode) #bb-rl-profile-theme-light a {
@@ -8839,7 +8906,7 @@ li.bb-rl-hideshow {
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   background-color: var(--bb-rl-background-brand-primary-color);
   color: var(--bb-rl-text-white-color);
@@ -8871,7 +8938,7 @@ li.bb-rl-hideshow {
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   background-color: var(--bb-rl-background-tertiary-color);
   color: var(--bb-rl-text-color);
@@ -9558,7 +9625,7 @@ input.bb-rl-zoom-slider::-moz-range-progress {
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   background-color: var(--bb-rl-background-tertiary-color);
   color: var(--bb-rl-text-color);
@@ -11476,7 +11543,7 @@ input.bb-rl-zoom-slider::-moz-range-progress {
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   background-color: var(--bb-rl-background-tertiary-color);
   color: var(--bb-rl-text-color);
@@ -11816,7 +11883,7 @@ input.bb-rl-zoom-slider::-moz-range-progress {
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   background-color: var(--bb-rl-background-brand-primary-color);
   color: var(--bb-rl-text-white-color);
@@ -12042,7 +12109,7 @@ input.bb-rl-zoom-slider::-moz-range-progress {
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   background-color: var(--bb-rl-background-tertiary-color);
   color: var(--bb-rl-text-color);
@@ -13049,6 +13116,10 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   flex: 1;
 }
 
+[class*="bb-rl-activity-form"] #bb-rl-whats-new-content .bb-rl-whats-new-title {
+  display: none;
+}
+
 [class*="bb-rl-activity-form"] .bb-rl-activity-post-user-name,
 [class*="bb-rl-activity-form"] #bb-rl-activity-privacy-point {
   display: none;
@@ -13099,6 +13170,10 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   justify-content: center;
   max-height: 100%;
   overflow: auto;
+}
+
+body.bb-rl-activity-modal-open .bb-rl-activity-update-form.modal-popup {
+  z-index: 999999;
 }
 
 .bb-rl-activity-update-form.modal-popup .bb-rl-activity-update-form-overlay {
@@ -13179,6 +13254,22 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   width: 100%;
 }
 
+.bb-rl-activity-form.bb-rl-focus-in #bb-rl-whats-new-content .bb-rl-whats-new-title {
+  display: block;
+  margin: 0 var(--bb-rl-space-300);
+  padding: var(--bb-rl-space-200) 0;
+  border: 0;
+  border-top: 1px solid var(--bb-rl-border-secondary-color);
+  border-bottom: 1px solid var(--bb-rl-border-secondary-color);
+  border-radius: 0;
+  color: var(--bb-rl-text-color);
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.5;
+  width: calc(100% - var(--bb-rl-space-600));
+  outline: none;
+}
+
 .bb-rl-activity-form.bb-rl-focus-in .bb-rl-activity-post-user-name {
   color: var(--bb-rl-text-color);
   font-size: 15px;
@@ -13187,7 +13278,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 }
 
 .bb-rl-activity-form.bb-rl-focus-in #bb-rl-activity-privacy-point {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   background-color: var(--bb-rl-background-secondary-color);
   border: 1px solid var(--bb-rl-border-secondary-color);
@@ -13284,6 +13375,10 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   opacity: 0.4;
 }
 
+.bb-rl-activity-form.bb-rl-focus-in [class*="post-elements-buttons-item"].bb-rl-document-support-hide, .bb-rl-activity-form.bb-rl-focus-in [class*="post-elements-buttons-item"].bb-rl-video-support-hide, .bb-rl-activity-form.bb-rl-focus-in [class*="post-elements-buttons-item"].bb-rl-post-gif-hide, .bb-rl-activity-form.bb-rl-focus-in [class*="post-elements-buttons-item"].bb-rl-media-support-hide {
+  display: none;
+}
+
 .bb-rl-activity-form.bb-rl-focus-in [class*="post-elements-buttons-item"]:last-child {
   margin-right: 0;
 }
@@ -13346,6 +13441,11 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   flex-flow: row-reverse;
   gap: var(--bb-rl-space-100);
   position: relative;
+}
+
+.bb-rl-ac-title-required .bb-rl-activity-form.bb-rl-focus-in #whats-new-submit:hover:not(:has(#bb-rl-aw-whats-new-reset:hover)) .bb-title-tooltip-wrapper {
+  opacity: 1;
+  cursor: default;
 }
 
 .bb-rl-ac-topic-required .bb-rl-activity-form.bb-rl-focus-in #whats-new-submit:hover:not(:has(#bb-rl-aw-whats-new-reset:hover)) .bb-topic-tooltip-wrapper {
@@ -13662,8 +13762,12 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   font-family: bb-icons-rl;
   font-size: var(--bb-rl-font-size-base);
   position: absolute;
-  top: var(--bb-rl-space-100);
+  top: 12px;
   right: var(--bb-rl-space-200);
+}
+
+.bb-rl-activity-form label.bb-rl-activity-privacy__label-group .bb-rl-privacy-label i {
+  display: none;
 }
 
 .bb-rl-activity-form #bb-rl-whats-new-post-in-box {
@@ -13853,6 +13957,14 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 
 #bb-rl-editor-toolbar .medium-editor-action-pre b:before {
   content: "\e1bc";
+}
+
+#bb-rl-editor-toolbar .medium-editor-action-h3 b:before {
+  content: "\e6c0";
+}
+
+#bb-rl-editor-toolbar .medium-editor-action-h4 b:before {
+  content: "\e6c2";
 }
 
 #bb-rl-editor-toolbar .medium-editor-toolbar-form {
@@ -14191,6 +14303,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   display: block;
 }
 
+.bb-title-tooltip-wrapper,
 .bb-topic-tooltip-wrapper {
   position: absolute;
   z-index: 99999;
@@ -14201,11 +14314,15 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   right: 0;
 }
 
+.bb-title-tooltip-wrapper.active,
 .bb-topic-tooltip-wrapper.active {
   opacity: 1;
   pointer-events: auto;
 }
 
+.bb-title-tooltip-wrapper .bb-title-tooltip,
+.bb-title-tooltip-wrapper .bb-topic-tooltip,
+.bb-topic-tooltip-wrapper .bb-title-tooltip,
 .bb-topic-tooltip-wrapper .bb-topic-tooltip {
   background: var(--bb-rl-background-black-color);
   color: var(--bb-rl-text-white-color);
@@ -14218,6 +14335,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   position: relative;
 }
 
+.bb-title-tooltip-wrapper:after,
 .bb-topic-tooltip-wrapper:after {
   content: "";
   position: absolute;
@@ -14232,8 +14350,32 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   display: block;
 }
 
+.bb-title-tooltip-wrapper {
+  z-index: 100000;
+}
+
 .bb-rl-activity-modal-open {
   overflow: hidden;
+}
+
+.bb-rl-modal-header-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+}
+
+@media screen and (max-width: 580px) {
+  .bb-rl-modal-header-actions {
+    position: absolute;
+    top: var(--bb-rl-space-200);
+    right: var(--bb-rl-space-200);
+  }
+}
+
+.bb-rl-activity-form--schedule .bb-rl-bb-model-header .bb-rl-modal-header-actions {
+  margin-left: 0;
+  order: 99;
 }
 
 @media screen and (max-width: 680px) {
@@ -14677,6 +14819,13 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   width: 200px;
 }
 
+@media screen and (max-width: 800px) {
+  .bb-rl-activity-filters-container .bb-subnav-filters-container-main .subnav-filters-modal {
+    left: 0;
+    right: unset;
+  }
+}
+
 .bb-subnav-filters-container-main .subnav-filters-modal ul {
   list-style: none;
   padding: 0;
@@ -14787,6 +14936,12 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   position: absolute;
   top: 16px;
   left: 24px;
+}
+
+.bb-rl-activity-list .bb-rl-activity-title h2 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: var(--bb-rl-space-100);
 }
 
 .bb-rl-activity-list .bb-activity-more-options-wrap {
@@ -14988,6 +15143,18 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 
 .bb-rl-activity-list .bb-rl-activity-inner p:last-child {
   margin-bottom: 0;
+}
+
+.bb-rl-activity-list .bb-rl-activity-inner h3,
+.bb-rl-activity-list .bb-rl-activity-inner h4 {
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--bb-rl-text-color);
+  margin-bottom: var(--bb-rl-space-200);
+}
+
+.bb-rl-activity-list .bb-rl-activity-inner h4 {
+  font-size: 16px;
 }
 
 .bb-rl-activity-list .bb-rl-activity-inner > ol,
@@ -18082,12 +18249,16 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
 }
 
 .bb-rl-ac-reply-footer .bb-rl-separator {
-  display: inline-flex;
+  display: none;
   align-self: center;
   width: 1px;
   height: 16px;
   background-color: var(--bb-rl-border-tertiary-color);
   margin-bottom: 4px;
+}
+
+.bb-rl-ac-reply-footer .bb-rl-ac-reply-toolbar:not(.post-emoji-disabled) [class*="bb-rl-post-"]:not([style*="display: none"]) ~ .bb-rl-separator {
+  display: inline-flex;
 }
 
 .bb-rl-ac-reply-footer .ac-reply-cancel {
@@ -18108,7 +18279,7 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   text-align: center;
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
-  transition: background-color 0.2s ease, bordfont / size / smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   opacity: 0.7;
   pointer-events: none;
@@ -18633,7 +18804,7 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   padding: 4px var(--bb-rl-space-200);
   font-size: 0.875rem;
@@ -18811,7 +18982,7 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   background-color: var(--bb-rl-background-brand-primary-color);
   color: var(--bb-rl-text-white-color);
@@ -18867,7 +19038,7 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   background-color: transparent;
   color: var(--bb-rl-text-color);
@@ -19028,7 +19199,7 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   background-color: transparent;
   color: var(--bb-rl-text-color);
@@ -19097,7 +19268,7 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   background-color: var(--bb-rl-background-brand-primary-color);
   color: var(--bb-rl-text-white-color);
@@ -19163,7 +19334,7 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   background-color: var(--bb-rl-background-tertiary-color);
   color: var(--bb-rl-text-color);
@@ -19280,7 +19451,7 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   background-color: var(--bb-rl-background-brand-primary-color);
   color: var(--bb-rl-text-white-color);
@@ -19320,7 +19491,7 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   background-color: var(--bb-rl-background-tertiary-color);
   color: var(--bb-rl-text-color);
@@ -19510,7 +19681,7 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   background-color: var(--bb-rl-background-brand-primary-color);
   color: var(--bb-rl-text-white-color);
@@ -20195,7 +20366,7 @@ table.profile-settings tbody td select {
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   background-color: var(--bb-rl-background-tertiary-color);
   color: var(--bb-rl-text-color);
@@ -20265,7 +20436,7 @@ table.profile-settings tbody td select {
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   background-color: var(--bb-rl-background-tertiary-color);
   color: var(--bb-rl-text-color);
@@ -20604,7 +20775,7 @@ table.profile-settings tbody td select {
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   background-color: var(--bb-rl-background-tertiary-color);
   color: var(--bb-rl-text-color);
@@ -20763,6 +20934,12 @@ table.profile-settings tbody td select {
   line-height: var(--bb-rl-base-line-small);
   color: var(--bb-rl-text-secondary-color);
   font-weight: 600;
+}
+
+.bb-rl-search-results-container .bb-activity-search-title h2 {
+  font-size: 16px;
+  font-weight: 500;
+  margin-bottom: var(--bb-rl-space-50);
 }
 
 .bb-rl-search-results-container li.bp-search-item span.middot,
@@ -21328,7 +21505,7 @@ table.profile-settings tbody td select {
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   background-color: transparent;
   color: var(--bb-rl-text-brand-primary-color);
@@ -21766,7 +21943,7 @@ table.profile-settings tbody td select {
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   background-color: var(--bb-rl-background-brand-primary-color);
   color: var(--bb-rl-text-white-color);
@@ -21850,7 +22027,7 @@ table.profile-settings tbody td select {
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   background-color: var(--bb-rl-background-tertiary-color);
   color: var(--bb-rl-text-color);
