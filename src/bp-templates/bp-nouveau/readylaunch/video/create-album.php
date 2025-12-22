@@ -34,7 +34,7 @@ $bp_is_group = bp_is_group();
 					<footer class="bb-model-footer">
 						<?php if ( ! $bp_is_group ) : ?>
 							<div class="bb-dropdown-wrap">
-								<select id="bb-rl-album-privacy">
+								<select id="bb-album-privacy">
 									<?php
 									foreach ( bp_video_get_visibility_levels() as $k => $option ) {
 										?>
