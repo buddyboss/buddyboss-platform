@@ -7088,6 +7088,8 @@ function bb_get_activity_comment_loading( $default = 10 ) {
  * This function traverses up the comment tree to determine the depth level
  * of a given comment relative to its root activity.
  *
+ * Uses optimized single-column queries instead of loading full activity objects.
+ *
  * @since BuddyBoss [BBVERSION]
  *
  * @param int $comment_id  The ID of the comment to check.
@@ -7096,23 +7098,39 @@ function bb_get_activity_comment_loading( $default = 10 ) {
  * @return int The depth of the comment (1 = first level, 2 = second level, etc.).
  */
 function bb_get_activity_comment_depth_by_id( $comment_id, $activity_id ) {
-	$depth     = 1;
-	$parent_id = $comment_id;
+	global $wpdb;
+
+	$bp             = buddypress();
+	$depth          = 1;
+	$current_id     = (int) $comment_id;
+	$max_iterations = 50; // Prevent infinite loops in case of data corruption.
+	$iterations     = 0;
 
 	// Traverse up the tree until we reach the root activity.
-	while ( $parent_id != $activity_id ) {
-		$comment = new BP_Activity_Activity( $parent_id );
+	while ( $current_id != $activity_id && $iterations < $max_iterations ) {
+		$iterations++;
 
-		if ( empty( $comment->id ) || 'activity_comment' !== $comment->type ) {
+		// Use a lightweight query to get only the secondary_item_id.
+		$parent_id = $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT secondary_item_id FROM {$bp->activity->table_name} WHERE id = %d AND type = 'activity_comment'",
+				$current_id
+			)
+		);
+
+		// Break if no parent found or we've hit a circular reference.
+		if ( ! $parent_id || $parent_id == $current_id ) {
 			break;
 		}
 
-		$parent_id = (int) $comment->secondary_item_id;
+		$parent_id = (int) $parent_id;
 
 		// If we haven't reached the root yet, increment depth.
 		if ( $parent_id != $activity_id ) {
 			$depth++;
 		}
+
+		$current_id = $parent_id;
 	}
 
 	return $depth;
@@ -7124,6 +7142,8 @@ function bb_get_activity_comment_depth_by_id( $comment_id, $activity_id ) {
  * This function traverses up the comment tree to find an ancestor
  * at the specified depth level.
  *
+ * Uses optimized single-column queries instead of loading full activity objects.
+ *
  * @since BuddyBoss [BBVERSION]
  *
  * @param int $comment_id   The ID of the starting comment.
@@ -7133,20 +7153,35 @@ function bb_get_activity_comment_depth_by_id( $comment_id, $activity_id ) {
  * @return int The ID of the ancestor at the target depth, or the activity_id if not found.
  */
 function bb_get_activity_comment_ancestor_at_depth( $comment_id, $activity_id, $target_depth ) {
+	global $wpdb;
+
+	$bp             = buddypress();
+	$max_iterations = 50; // Prevent infinite loops in case of data corruption.
+	$iterations     = 0;
+
 	// Build the ancestor chain from the comment up to the root.
-	$ancestors = array();
-	$parent_id = $comment_id;
+	$ancestors  = array();
+	$current_id = (int) $comment_id;
 
-	while ( $parent_id != $activity_id ) {
-		$comment = new BP_Activity_Activity( $parent_id );
+	while ( $current_id != $activity_id && $iterations < $max_iterations ) {
+		$iterations++;
 
-		if ( empty( $comment->id ) || 'activity_comment' !== $comment->type ) {
+		// Use a lightweight query to get only the secondary_item_id.
+		$parent_id = $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT secondary_item_id FROM {$bp->activity->table_name} WHERE id = %d AND type = 'activity_comment'",
+				$current_id
+			)
+		);
+
+		// Break if no parent found or we've hit a circular reference.
+		if ( ! $parent_id || $parent_id == $current_id ) {
 			break;
 		}
 
 		// Add to the beginning of the array (so index 0 is depth 1).
-		array_unshift( $ancestors, $parent_id );
-		$parent_id = (int) $comment->secondary_item_id;
+		array_unshift( $ancestors, $current_id );
+		$current_id = (int) $parent_id;
 	}
 
 	// Return the ancestor at the target depth (1-indexed).
@@ -7179,6 +7214,8 @@ function bb_get_activity_comment_ancestor_at_depth( $comment_id, $activity_id, $
  * @return array Modified arguments with adjusted parent_id if necessary.
  */
 function bb_adjust_activity_comment_threading_parent( $args ) {
+	global $wpdb;
+
 	// Skip if threading is disabled.
 	if ( ! bb_is_activity_comment_threading_enabled() ) {
 		return $args;
@@ -7189,13 +7226,19 @@ function bb_adjust_activity_comment_threading_parent( $args ) {
 		return $args;
 	}
 
+	$bp        = buddypress();
 	$max_depth = bb_get_activity_comment_threading_depth();
 
-	// Get the parent comment to check its depth.
-	$parent_comment = new BP_Activity_Activity( $args['parent_id'] );
+	// Use a lightweight query to check if parent is an activity comment.
+	$parent_type = $wpdb->get_var(
+		$wpdb->prepare(
+			"SELECT type FROM {$bp->activity->table_name} WHERE id = %d",
+			$args['parent_id']
+		)
+	);
 
 	// Skip if parent is not a comment.
-	if ( empty( $parent_comment->id ) || 'activity_comment' !== $parent_comment->type ) {
+	if ( 'activity_comment' !== $parent_type ) {
 		return $args;
 	}
 
