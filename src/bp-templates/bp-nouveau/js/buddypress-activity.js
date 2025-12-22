@@ -1760,8 +1760,24 @@ window.bp = window.bp || {};
 							var isElementorWidget = target.closest( '.elementor-activity-item' ).length > 0;
 							var isCommentElementorWidgetForm = form.prev().hasClass( 'activity-actions' );
 							var activity_comments;
+							var actualParentId = response.data.parent_id ? parseInt( response.data.parent_id, 10 ) : null;
+							var wasParentRedirected = actualParentId && actualParentId !== parseInt( item_id, 10 );
 
-							if (isElementorWidget && isCommentElementorWidgetForm) {
+							// If the parent was redirected (due to max depth), find the correct parent element.
+							if ( wasParentRedirected ) {
+								var $searchContext = isInsideModal ? $( '#activity-modal' ) : $( document );
+								// Find the actual parent comment element or activity comments container.
+								if ( actualParentId === parseInt( activity_id, 10 ) ) {
+									// Parent is the root activity, insert in main activity-comments.
+									activity_comments = $searchContext.find( '[data-bp-activity-id="' + activity_id + '"] .activity-comments' );
+									if ( ! activity_comments.length && isInsideModal ) {
+										activity_comments = $searchContext.find( '.activity-comments' );
+									}
+								} else {
+									// Parent is another comment.
+									activity_comments = $searchContext.find( '[data-bp-activity-comment-id="' + actualParentId + '"]' );
+								}
+							} else if (isElementorWidget && isCommentElementorWidgetForm) {
 								activity_comments = form.parent().find( '.activity-actions' );
 							} else {
 								activity_comments = form.parent();
