@@ -7100,6 +7100,14 @@ function bb_get_activity_comment_loading( $default = 10 ) {
 function bb_get_activity_comment_depth_by_id( $comment_id, $activity_id ) {
 	global $wpdb;
 
+	// Try to get from cache first.
+	$cache_key = 'bb_comment_depth_' . $comment_id . '_' . $activity_id;
+	$depth     = wp_cache_get( $cache_key, 'bp_activity_comments' );
+
+	if ( false !== $depth ) {
+		return (int) $depth;
+	}
+
 	$bp             = buddypress();
 	$depth          = 1;
 	$current_id     = (int) $comment_id;
@@ -7133,6 +7141,9 @@ function bb_get_activity_comment_depth_by_id( $comment_id, $activity_id ) {
 		$current_id = $parent_id;
 	}
 
+	// Cache the calculated depth.
+	wp_cache_set( $cache_key, $depth, 'bp_activity_comments' );
+
 	return $depth;
 }
 
@@ -7154,6 +7165,14 @@ function bb_get_activity_comment_depth_by_id( $comment_id, $activity_id ) {
  */
 function bb_get_activity_comment_ancestor_at_depth( $comment_id, $activity_id, $target_depth ) {
 	global $wpdb;
+
+	// Try to get from cache first.
+	$cache_key = 'bb_comment_ancestor_' . $comment_id . '_' . $activity_id . '_' . $target_depth;
+	$ancestor  = wp_cache_get( $cache_key, 'bp_activity_comments' );
+
+	if ( false !== $ancestor ) {
+		return (int) $ancestor;
+	}
 
 	$bp             = buddypress();
 	$max_iterations = 50; // Prevent infinite loops in case of data corruption.
@@ -7184,20 +7203,21 @@ function bb_get_activity_comment_ancestor_at_depth( $comment_id, $activity_id, $
 		$current_id = (int) $parent_id;
 	}
 
-	// Return the ancestor at the target depth (1-indexed).
+	// Determine the result.
 	$target_index = $target_depth - 1;
+	$result       = $activity_id; // Default to activity ID.
 
 	if ( isset( $ancestors[ $target_index ] ) ) {
-		return $ancestors[ $target_index ];
+		$result = $ancestors[ $target_index ];
+	} elseif ( $target_depth > 0 && ! empty( $ancestors ) ) {
+		// Return the deepest available ancestor.
+		$result = end( $ancestors );
 	}
 
-	// If target depth is 0 or less, return the activity ID.
-	if ( $target_depth <= 0 ) {
-		return $activity_id;
-	}
+	// Cache the result.
+	wp_cache_set( $cache_key, $result, 'bp_activity_comments' );
 
-	// Return the deepest available ancestor or the comment itself.
-	return ! empty( $ancestors ) ? end( $ancestors ) : $activity_id;
+	return $result;
 }
 
 /**
