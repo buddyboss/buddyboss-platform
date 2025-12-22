@@ -240,7 +240,7 @@ window.bp = window.bp || {};
 			bpNouveau.on( 'click', '#bp-cancel-edit-album-title', this.cancelEditAlbumTitle.bind( this ) );
 			bpNouveau.on( 'click', '#bp-save-album-title', this.saveAlbum.bind( this ) );
 			$document.on( 'click', '#bp-save-folder-title', this.saveFolder.bind( this ) );
-			bpNouveau.on( 'change', '#bp-media-single-album select#bb-album-privacy', this.saveAlbum.bind( this ) );
+			bpNouveau.on( 'change', '#bp-media-single-album select#bb-rl-album-privacy', this.saveAlbum.bind( this ) );
 			bpNouveau.on( 'change', '#media-stream select#bb-rl-folder-privacy', this.savePrivacy.bind( this ) );
 			bpNouveau.on( 'click', '#bb-delete-album', this.deleteAlbum.bind( this ) );
 			$document.on( 'click', '#bb-delete-folder', this.deleteFolder.bind( this ) );
@@ -6090,7 +6090,7 @@ window.bp = window.bp || {};
 				nonce = BP_Nouveau.nonces.media,
 				privacy;
 			if ( isAlbum ) {
-				privacy = $( '#bb-album-privacy' );
+				privacy = $( '#bb-rl-album-privacy' );
 				if ( 'video' === folderOrAlbum ) {
 					nonce = BP_Nouveau.nonces.video;
 				}
@@ -6174,7 +6174,7 @@ window.bp = window.bp || {};
 							if ( isAlbum ) {
 								if ( self.album_id ) {
 									$( '#bp-single-album-title .title-wrap' ).text( title.val() );
-									$( '#bb-album-privacy' ).val( privacy.val() );
+									$( '#bb-rl-album-privacy' ).val( privacy.val() );
 									self.cancelEditAlbumTitle( event );
 									$modal.find( '#bp-media-edit-album-close' ).trigger( 'click' );
 								} else {
