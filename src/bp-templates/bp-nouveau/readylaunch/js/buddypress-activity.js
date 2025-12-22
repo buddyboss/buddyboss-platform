@@ -3268,14 +3268,41 @@ window.bp = window.bp || {};
 					$activity_comments.find( '.bb-rl-acomment-display, .comment-item' ).removeClass( 'bb-rl-display-focus bb-rl-comment-item-focus' );
 					// It's a comment we're replying to.
 				} else {
+					var $targetComment;
+					var $searchContext = isInsideModal ? $activityModal : ( isInsideMediaTheatre ? $internalModel : $( document ) );
+
+					// Check if comment threading is enabled and if the clicked comment is at max depth.
+					var threadingSettings = BP_Nouveau.activity && BP_Nouveau.activity.params && BP_Nouveau.activity.params.comment_threading;
+					if ( threadingSettings && threadingSettings.enabled ) {
+						var maxDepth = parseInt( threadingSettings.max_depth, 10 );
+						var $clickedComment = $searchContext.find( '[data-bp-activity-comment-id="' + itemId + '"]' );
+						var commentDepth = $clickedComment.parents( '.bb-rl-activity-comments > ul li.comment-item' ).length + 1;
+
+						// If at max depth, find the actual parent and position form after the last sibling.
+						if ( commentDepth >= maxDepth ) {
+							var $parentComment = $clickedComment.parent().closest( 'li.comment-item' );
+							if ( $parentComment.length ) {
+								// Find the last direct child comment of the parent.
+								var $siblings = $parentComment.children( 'ul' ).children( 'li.comment-item' );
+								if ( $siblings.length ) {
+									$targetComment = $siblings.last();
+								} else {
+									$targetComment = $clickedComment;
+								}
+							} else {
+								$targetComment = $clickedComment;
+							}
+						} else {
+							$targetComment = $clickedComment;
+						}
+					} else {
+						$targetComment = $searchContext.find( '[data-bp-activity-comment-id="' + itemId + '"]' );
+					}
+
 					if ( isInsideModal ) {
 						$modalFooter.removeClass( 'active' );
-						$activityModal.find( '[data-bp-activity-comment-id="' + itemId + '"]' ).append( form );
-					} else if ( isInsideMediaTheatre ) {
-						$internalModel.find( '[data-bp-activity-comment-id="' + itemId + '"]' ).append( form );
-					} else {
-						$( '[data-bp-activity-comment-id="' + itemId + '"]' ).append( form );
 					}
+					$targetComment.append( form );
 				}
 			}
 
