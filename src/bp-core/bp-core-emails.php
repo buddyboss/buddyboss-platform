@@ -41,23 +41,32 @@ function bp_email_core_wp_get_template( $content = '', $user = false ) {
 	set_query_var( 'email_content', $content );
 	set_query_var( 'email_user', $user );
 
-	// Try to locate the template using BP template system.
-	$template = bp_locate_template( 'assets/emails/wp/email-template.php' );
+	// Try to locate the email template using the standard template stack.
+	// This respects theme overrides and ReadyLaunch customizations if they exist.
+	$located = bp_locate_template( array( 'assets/emails/wp/email-template.php' ), false, false );
 
-	// Fallback: If template not found (e.g., on wp-login.php where template stack may be empty),
-	// directly load from the BuddyBoss plugin's template directory.
-	if ( empty( $template ) ) {
-		$template = buddypress()->themes_dir . '/bp-nouveau/buddypress/assets/emails/wp/email-template.php';
-		if ( ! file_exists( $template ) ) {
-			$template = '';
+	/*
+		If template is not found via template stack (e.g., ReadyLaunch is enabled but
+		readylaunch folder doesn't have the email template, or called from wp-login.php
+		where template stack may be unavailable), fall back to the default plugin template.
+	*/
+	if ( empty( $located ) ) {
+		// Build path to the default email template in the plugin directory.
+		// This path is theme-independent and always available.
+		$default_template = trailingslashit( buddypress()->themes_dir ) . 'bp-nouveau/buddypress/assets/emails/wp/email-template.php';
+
+		// Verify the default template exists before using it.
+		if ( file_exists( $default_template ) ) {
+			$located = $default_template;
 		}
 	}
 
-	if ( ! empty( $template ) ) {
-		include $template;
+	// Load the template if we found a valid path.
+	if ( ! empty( $located ) && file_exists( $located ) ) {
+		load_template( $located, false );
 	}
 
-	// Remove 'bp_replace_the_content' filter to prevent infinite loops.
+	// Restore 'bp_replace_the_content' filter.
 	add_filter( 'the_content', 'bp_replace_the_content' );
 
 	// Get the output buffer contents.
