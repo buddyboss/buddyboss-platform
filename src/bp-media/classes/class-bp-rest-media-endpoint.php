@@ -2051,7 +2051,8 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 				bp_activity_update_meta( $activity_id, 'bp_media_ids', $created_media_ids_joined );
 
 				if ( empty( $group_id ) ) {
-					$main_activity->privacy = $media_privacy;
+					$main_activity->privacy        = $media_privacy;
+					$main_activity->title_required = false;
 					$main_activity->save();
 				}
 			}

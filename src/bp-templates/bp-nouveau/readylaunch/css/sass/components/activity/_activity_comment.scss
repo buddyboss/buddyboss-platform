@@ -99,12 +99,16 @@
 	}
 
 	.bb-rl-separator {
-		display: inline-flex;
+		display: none;
 		align-self: center;
 		width: 1px;
 		height: 16px;
 		background-color: var(--bb-rl-border-tertiary-color);
 		margin-bottom: 4px;
+	}
+
+	.bb-rl-ac-reply-toolbar:not(.post-emoji-disabled) [class*="bb-rl-post-"]:not([style*="display: none"]) ~ .bb-rl-separator {
+		display: inline-flex;
 	}
 
 	.ac-reply-cancel {
@@ -125,7 +129,7 @@
 		text-align: center;
 		cursor: pointer;
 		border-radius: var(--bb-rl-radius-md);
-		transition: background-color 0.2s ease, bordfont / size / smer-color 0.2s ease, color 0.2s ease;
+		transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
 		text-decoration: none;
 		opacity: 0.7;
 		pointer-events: none;

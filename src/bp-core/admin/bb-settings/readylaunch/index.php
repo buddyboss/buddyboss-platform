@@ -29,6 +29,8 @@ function bb_readylaunch_settings_page_html() {
 				<button class="bb-rl-header-actions-button" data-help-cat-id="5811" aria-label="<?php esc_attr_e( 'Help', 'buddyboss' ); ?>">
 					<i class="bb-icons-rl-book-open"></i>
 				</button>
+
+				<?php do_action( 'bb_admin_header_actions' ); ?>
 			</div>
 		</div>
 		<div class="bb-rl-field-wrap" id="bb-rl-field-wrap"></div>
