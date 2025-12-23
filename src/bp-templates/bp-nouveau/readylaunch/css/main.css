@@ -18384,11 +18384,8 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
 .activity-item.has-comments .bb-rl-activity-comments.bb-rl-threaded-level-2 > ul .has-child-comments > .bb-rl-acomment-display:before {
   content: "";
   width: 2px;
-  height: calc(100% - 50px);
   background-color: var(--bb-rl-border-tertiary-color);
   position: absolute;
-  left: 24px;
-  top: 65px;
   left: -32px;
   top: 15px;
   height: calc(100% - 20px);
