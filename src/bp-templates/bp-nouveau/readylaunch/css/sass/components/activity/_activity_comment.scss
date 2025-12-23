@@ -225,6 +225,7 @@
 								background-color: var(--bb-rl-border-tertiary-color);
 								position: absolute;
 								left: -32px;
+								top: 5px;
 								display: inline-block;
 							}
 						}
@@ -260,8 +261,18 @@
 							left: 24px;
 							top: 65px;
 							left: -32px;
-							top: 12px;
+							top: 15px;
 							height: calc(100% - 20px);
+						}
+					}
+
+					> .has-child-comments:first-of-type {
+						> .bb-rl-acomment-display {
+							&:before {
+								height: calc(100% - 50px);
+								left: 24px;
+								top: 65px;
+							}
 						}
 					}
 
@@ -290,6 +301,16 @@
 							position: absolute;
 							left: 24px;
 							top: 65px;
+						}
+					}
+
+					.bb-threaded-level-max {
+
+						.bb-rl-comment-item-focus .bb-rl-display-focus {
+
+							&::before {
+								display: none;
+							}
 						}
 					}
 				}
