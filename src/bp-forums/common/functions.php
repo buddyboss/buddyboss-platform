@@ -384,6 +384,43 @@ function bbp_fix_post_author( $data = array(), $postarr = array() ) {
 }
 
 /**
+ * Fix code tags when saving from the backend editor.
+ * Converts <code> tags to <pre> tags to preserve formatting.
+ *
+ * @since BuddyBoss 2.12.0
+ *
+ * @param array $data    Post data.
+ * @param array $postarr Original post array (includes post id).
+ *
+ * @return array Data
+ */
+function bbp_admin_fix_code_tags( $data = array(), $postarr = array() ) {
+
+	// Only process when saving from admin area.
+	if ( ! is_admin() || wp_doing_ajax() ) {
+		return $data;
+	}
+
+	// Only process forum post types.
+	$forum_post_types = array(
+		bbp_get_forum_post_type(),
+		bbp_get_topic_post_type(),
+		bbp_get_reply_post_type(),
+	);
+
+	if ( ! in_array( $data['post_type'], $forum_post_types, true ) ) {
+		return $data;
+	}
+
+	// Convert <code> tags to <pre> tags and apply proper pre block formatting.
+	if ( ! empty( $data['post_content'] ) ) {
+		$data['post_content'] = bbp_admin_convert_code_to_pre_and_apply_encoding( $data['post_content'] );
+	}
+
+	return $data;
+}
+
+/**
  * Check the date against the _bbp_edit_lock setting.
  *
  * @since bbPress (r3133)

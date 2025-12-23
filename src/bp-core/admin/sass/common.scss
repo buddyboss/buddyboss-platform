@@ -44,6 +44,8 @@ TABLE OF CONTENTS:
 19.0 Reactions Settings
 20.0 Upgrade
 21.0 Activity Filter & Sorting
+22.0 Header Branding & Actions
+23.0 DRM Admin Notices
 ------------------------------------------------------------------------------*/
 
 @import "tooltips";
@@ -5685,6 +5687,10 @@ h1.bb-advance-heading {
 	}
 }
 
+.section-bb_activity_topics .bp-hide {
+	display: none;
+}
+
 // Add topic modal
 .bb-modal-panel--activity-topic.bb-modal-panel,
 .bb-modal-panel--activity-topic-migrate.bb-modal-panel {
@@ -6095,6 +6101,176 @@ h1.bb-advance-heading {
 
 		@media screen and (max-width: 480px) {
 			margin-right: 0;
+		}
+	}
+}
+
+/*------------------------------------------------------------------------------
+ * 22.0 Header Branding & Actions
+ *----------------------------------------------------------------------------*/
+
+.bb-tab-header {
+	background-color: #fff;
+	margin-left: -20px;
+	padding: 12px 24px;
+	border-bottom: 1px solid #d9d9d9;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+
+
+	.bb-branding-header {
+		margin-right: auto;
+
+		.bb-branding-logo {
+			max-width: 130px;
+		}
+
+		.bb-header-actions {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+		}
+	}
+}
+
+@media screen and (max-width: 600px) {
+
+	#wpadminbar {
+
+		~ .bb-tab-header {
+			padding-top: 58px;
+
+			~ #wpbody {
+				padding-top: 0;
+			}
+		}
+	}
+}
+
+/*------------------------------------------------------------------------------
+23.0 - DRM Admin Notices
+------------------------------------------------------------------------------*/
+
+/**
+ * DRM Notice List Styling
+ * Ensures disc bullet points render properly in DRM admin notices
+ */
+.bb-drm-notice {
+
+	ul {
+		margin: 10px 0 0 0 !important;
+		padding-left: 20px !important;
+		list-style: disc !important;
+		list-style-position: outside !important;
+
+		li {
+			list-style: disc !important;
+			list-style-position: outside !important;
+			margin-left: 0 !important;
+			padding-left: 0 !important;
+		}
+	}
+
+	ol {
+		margin: 10px 0 0 0 !important;
+		padding-left: 20px !important;
+		list-style: decimal !important;
+		list-style-position: outside !important;
+
+		li {
+			list-style: decimal !important;
+			list-style-position: outside !important;
+			margin-left: 0 !important;
+			padding-left: 0 !important;
+		}
+	}
+
+	// Nested lists
+	ul ul,
+	ul ol,
+	ol ul,
+	ol ol {
+		margin-top: 5px !important;
+		margin-bottom: 5px !important;
+	}
+}
+
+/**
+ * DRM Notice Border Colors
+ * Color-coded borders for different DRM status levels
+ */
+
+// HIGH status (21-30 days): Orange
+#bb-drm-consolidated-notice-dh {
+	border-left-color: #ffa500 !important;
+}
+
+// LOCKED status (30+ days): Red
+#bb-drm-consolidated-notice-dl {
+	border-left-color: #dc3232 !important;
+}
+
+/**
+ * DRM Notice Responsive Styles
+ * Ensures proper display on mobile devices
+ */
+@media screen and (max-width: 782px) {
+
+	.bb-drm-notice {
+		padding: 12px !important;
+		padding-right: 35px !important;
+
+		// Stack content vertically on mobile
+		> div[style*="display: flex"] {
+			display: block !important;
+
+			> div {
+				padding-right: 0 !important;
+				margin-bottom: 10px;
+
+				&:last-child {
+					margin-bottom: 0;
+					white-space: normal !important;
+				}
+			}
+
+			// Make buttons full-width on mobile
+			.button {
+				display: block;
+				width: 100%;
+				text-align: center;
+			}
+		}
+
+		// Adjust dismiss button
+		.notice-dismiss,
+		.bb-drm-dismiss {
+			padding: 5px !important;
+		}
+
+		// Adjust list spacing
+		ul,
+		ol {
+			margin-top: 8px !important;
+			padding-left: 18px !important;
+		}
+	}
+}
+
+@media screen and (max-width: 600px) {
+
+	.bb-drm-notice {
+		padding: 10px !important;
+		padding-right: 32px !important;
+
+		p {
+			font-size: 14px;
+		}
+
+		.button {
+			padding: 8px 12px;
+			font-size: 13px;
 		}
 	}
 }

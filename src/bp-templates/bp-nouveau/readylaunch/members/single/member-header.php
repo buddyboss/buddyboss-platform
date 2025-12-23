@@ -125,6 +125,8 @@ if ( ! bp_is_user_messages() && ! bp_is_user_settings() && ! bp_is_user_notifica
 					?>
 				</div><!-- .bb-user-content-wrap -->
 
+				<?php bp_nouveau_member_hook( '', 'header_profile_meta' ); ?>
+
 				<div class="bb-rl-member-header-actions-wrap">
 					<?php
 						$args = array(
