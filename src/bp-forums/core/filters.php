@@ -747,25 +747,25 @@ function bb_modify_topics_query_for_sticky( $clauses, $wp_query ) {
 		$posts_table = preg_quote( $wpdb->posts, '/' );
 
 		/**
-		 * Regex patterns to match SQL query structures:
+		 * Single regex with alternation to match both SQL query structures:
 		 *
-		 * 'full'   - ((post_type = 'topic' AND (status...)))
-		 * 'status' - post_type = 'topic' AND ((status...))
+		 * Group 1: ((post_type = 'topic' AND (status...)))  - captures status conditions
+		 * Group 2: post_type = 'topic' AND ((status...))    - captures status conditions
 		 */
-		$patterns = array(
-			'full'   => '/\(\(' . $posts_table . '\.post_type\s*=\s*\'topic\'\s+AND\s+\((.+?)\)\)\)/s',
-			'status' => '/' . $posts_table . '\.post_type\s*=\s*\'topic\'\s+AND\s+\(\((.+?)\)\)/s',
-		);
+		$pattern = '/(?:\(\(' . $posts_table . '\.post_type\s*=\s*\'topic\'\s+AND\s+\((.+?)\)\)\)|' .
+			$posts_table . '\.post_type\s*=\s*\'topic\'\s+AND\s+\(\((.+?)\)\))/s';
 
-		foreach ( $patterns as $type => $pattern ) {
-			if ( preg_match( $pattern, $clauses['where'], $matches ) && ! empty( $matches[1] ) ) {
-				$existing_conditions = $matches[1];
+		if ( preg_match( $pattern, $clauses['where'], $matches ) ) {
+			// Determine which pattern matched: group 1 (full) or group 2 (status).
+			$is_full_pattern     = ! empty( $matches[1] );
+			$existing_conditions = $is_full_pattern ? $matches[1] : $matches[2];
 
-				// Skip if spam status already exists in the conditions.
-				if ( false !== strpos( $existing_conditions, "post_status = '{$spam_status}'" ) ||
-				     false !== strpos( $existing_conditions, "post_status='{$spam_status}'" ) ) {
-					break;
-				}
+			// Check if spam status already exists in the conditions.
+			$has_spam_with_space    = false !== strpos( $existing_conditions, "post_status = '{$spam_status}'" );
+			$has_spam_without_space = false !== strpos( $existing_conditions, "post_status='{$spam_status}'" );
+
+			// Skip if spam status already exists.
+			if ( ! $has_spam_with_space && ! $has_spam_without_space ) {
 
 				// Prepend spam condition for sticky IDs only.
 				$spam_condition = sprintf(
@@ -778,13 +778,22 @@ function bb_modify_topics_query_for_sticky( $clauses, $wp_query ) {
 
 				$updated_conditions = $spam_condition . ' OR ' . $existing_conditions;
 
-				// Build replacement based on pattern type.
-				$replacement = ( 'full' === $type )
-					? sprintf( '((%s.post_type = \'topic\' AND (%s)))', $wpdb->posts, $updated_conditions )
-					: sprintf( '%s.post_type = \'topic\' AND ((%s))', $wpdb->posts, $updated_conditions );
+				// Build replacement based on which pattern matched.
+				if ( $is_full_pattern ) {
+					$replacement = sprintf(
+						'((%s.post_type = \'topic\' AND (%s)))',
+						$wpdb->posts,
+						$updated_conditions
+					);
+				} else {
+					$replacement = sprintf(
+						'%s.post_type = \'topic\' AND ((%s))',
+						$wpdb->posts,
+						$updated_conditions
+					);
+				}
 
 				$clauses['where'] = preg_replace( $pattern, $replacement, $clauses['where'], 1 );
-				break;
 			}
 		}
 	}
