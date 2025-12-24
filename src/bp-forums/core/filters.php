@@ -734,6 +734,56 @@ function bb_modify_topics_query_for_sticky( $clauses, $wp_query ) {
 		);
 	}
 
+	/**
+	 * Allow sticky topics to be shown even if they have spam status.
+	 * Adds spam status condition ONLY for sticky topic IDs to maintain proper ordering.
+	 */
+
+	// Get spam status ID.
+	$spam_status = bbp_get_spam_status_id();
+
+	// Modify WHERE clause to include sticky topics even if they are spam.
+	if ( ! empty( $spam_status ) && ! empty( $sticky_ids ) ) {
+		$posts_table = preg_quote( $wpdb->posts, '/' );
+
+		// Try two patterns: with double parens around entire block or just status conditions.
+		$patterns = array(
+			'full'   => '/\(\(' . $posts_table . '\.post_type\s*=\s*\'topic\'\s+AND\s+\((.+?)\)\)\)/s',
+			'status' => '/' . $posts_table . '\.post_type\s*=\s*\'topic\'\s+AND\s+\(\((.+?)\)\)/s',
+		);
+
+		foreach ( $patterns as $type => $pattern ) {
+			if ( preg_match( $pattern, $clauses['where'], $matches ) && ! empty( $matches[1] ) ) {
+				$existing_conditions = $matches[1];
+
+				// Skip if spam status already exists in the conditions.
+				if ( false !== strpos( $existing_conditions, "post_status = '{$spam_status}'" ) ||
+				     false !== strpos( $existing_conditions, "post_status='{$spam_status}'" ) ) {
+					break;
+				}
+
+				// Prepend spam condition for sticky IDs only.
+				$spam_condition = sprintf(
+					'(%s.post_status = \'%s\' AND %s.ID IN (%s))',
+					$wpdb->posts,
+					$spam_status,
+					$wpdb->posts,
+					$sticky_ids_csv
+				);
+
+				$updated_conditions = $spam_condition . ' OR ' . $existing_conditions;
+
+				// Build replacement based on pattern type.
+				$replacement = ( 'full' === $type )
+					? sprintf( '((%s.post_type = \'topic\' AND (%s)))', $wpdb->posts, $updated_conditions )
+					: sprintf( '%s.post_type = \'topic\' AND ((%s))', $wpdb->posts, $updated_conditions );
+
+				$clauses['where'] = preg_replace( $pattern, $replacement, $clauses['where'], 1 );
+				break;
+			}
+		}
+	}
+
 	// Modify ORDER BY clause to prioritize sticky topics **without changing spam order**.
 	$case_statements = array();
 
@@ -763,5 +813,6 @@ function bb_modify_topics_query_for_sticky( $clauses, $wp_query ) {
 
 	$clauses['orderby'] .= ", {$wpdb->posts}.post_date DESC";
 
+	error_log(print_r($clauses, true ));
 	return $clauses;
 }
