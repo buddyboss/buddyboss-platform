@@ -746,7 +746,12 @@ function bb_modify_topics_query_for_sticky( $clauses, $wp_query ) {
 	if ( ! empty( $spam_status ) && ! empty( $sticky_ids ) ) {
 		$posts_table = preg_quote( $wpdb->posts, '/' );
 
-		// Try two patterns: with double parens around entire block or just status conditions.
+		/**
+		 * Regex patterns to match SQL query structures:
+		 *
+		 * 'full'   - ((post_type = 'topic' AND (status...)))
+		 * 'status' - post_type = 'topic' AND ((status...))
+		 */
 		$patterns = array(
 			'full'   => '/\(\(' . $posts_table . '\.post_type\s*=\s*\'topic\'\s+AND\s+\((.+?)\)\)\)/s',
 			'status' => '/' . $posts_table . '\.post_type\s*=\s*\'topic\'\s+AND\s+\(\((.+?)\)\)/s',
