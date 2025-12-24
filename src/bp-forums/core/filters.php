@@ -813,6 +813,5 @@ function bb_modify_topics_query_for_sticky( $clauses, $wp_query ) {
 
 	$clauses['orderby'] .= ", {$wpdb->posts}.post_date DESC";
 
-	error_log(print_r($clauses, true ));
 	return $clauses;
 }
