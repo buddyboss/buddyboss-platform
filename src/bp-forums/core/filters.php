@@ -734,71 +734,34 @@ function bb_modify_topics_query_for_sticky( $clauses, $wp_query ) {
 		);
 	}
 
-	/**
-	 * Allow sticky topics to be shown even if they have spam status.
-	 * Adds spam status condition ONLY for sticky topic IDs to maintain proper ordering.
-	 */
-
-	// Get spam status ID.
+	// Add spam status for sticky topics if not already present.
 	$spam_status = bbp_get_spam_status_id();
-
-	// Modify WHERE clause to include sticky topics even if they are spam.
-	if ( ! empty( $spam_status ) && ! empty( $sticky_ids ) ) {
-		$posts_table = preg_quote( $wpdb->posts, '/' );
-
+	if ( ! empty( $spam_status ) ) {
 		/**
-		 * Single regex with alternation to match both SQL query structures:
-		 *
-		 * Group 1: ((post_type = 'topic' AND (status...)))  - captures status conditions
-		 * Group 2: post_type = 'topic' AND ((status...))    - captures status conditions
+		 * Capture topic section to check if spam already exists.
+		 * The \(+ matches one or more opening parentheses to handle both scenarios:
+		 * - Scenario 1: wp_posts.post_type = 'topic' AND (wp_posts.post_status = 'publish'...)
+		 * - Scenario 2: wp_posts.post_type = 'topic' AND ((wp_posts.post_status = 'publish'...)
 		 */
-		$pattern = '/(?:\(\(' . $posts_table . '\.post_type\s*=\s*\'topic\'\s+AND\s+\((.+?)\)\)\)|' .
-			$posts_table . '\.post_type\s*=\s*\'topic\'\s+AND\s+\(\((.+?)\)\))/s';
+		$check_pattern = '/' . preg_quote( $wpdb->posts, '/' ) . '\.post_type = \'topic\' AND \(+[^)]+\)+/';
 
-		if ( preg_match( $pattern, $clauses['where'], $matches ) ) {
-			// Determine which pattern matched: group 1 (full) or group 2 (status).
-			$is_full_pattern     = ! empty( $matches[1] );
-			$existing_conditions = $is_full_pattern ? $matches[1] : $matches[2];
-
-			// Check if spam status already exists in the conditions.
-			$has_spam_with_space    = false !== strpos( $existing_conditions, "post_status = '{$spam_status}'" );
-			$has_spam_without_space = false !== strpos( $existing_conditions, "post_status='{$spam_status}'" );
-
-			// Skip if spam status already exists.
-			if ( ! $has_spam_with_space && ! $has_spam_without_space ) {
-
-				// Prepend spam condition for sticky IDs only.
-				$spam_condition = sprintf(
-					'(%s.post_status = \'%s\' AND %s.ID IN (%s))',
-					$wpdb->posts,
-					$spam_status,
-					$wpdb->posts,
-					$sticky_ids_csv
-				);
-
-				$updated_conditions = $spam_condition . ' OR ' . $existing_conditions;
-
-				// Build replacement based on which pattern matched.
-				if ( $is_full_pattern ) {
-					$replacement = sprintf(
-						'((%s.post_type = \'topic\' AND (%s)))',
-						$wpdb->posts,
-						$updated_conditions
-					);
-				} else {
-					$replacement = sprintf(
-						'%s.post_type = \'topic\' AND ((%s))',
-						$wpdb->posts,
-						$updated_conditions
-					);
-				}
+		if ( preg_match( $check_pattern, $clauses['where'], $topic_match ) ) {
+			// Check if spam status is already in the topic status conditions.
+			if ( false === strpos( $topic_match[0], "post_status = '{$spam_status}'" ) ) {
+				/**
+				 * Pattern for replacement - matches up to first publish status.
+				 * The \(+ captures one or more opening parentheses to handle multiple scenarios.
+				 */
+				$pattern     = '/(' . preg_quote( $wpdb->posts, '/' ) . '\.post_type = \'topic\' AND \(+)(' . preg_quote( $wpdb->posts, '/' ) . '\.post_status = \'publish\')/';
+				$spam_check  = $wpdb->posts . '.post_status = \'' . $spam_status . '\' AND ' . $wpdb->posts . '.ID IN (' . $sticky_ids_csv . ')';
+				$replacement = '$1(' . $spam_check . ') OR $2';
 
 				$clauses['where'] = preg_replace( $pattern, $replacement, $clauses['where'], 1 );
 			}
 		}
 	}
 
-	// Modify ORDER BY clause to prioritize sticky topics **without changing spam order**.
+	// Modify ORDER BY clause to prioritize sticky topics.
 	$case_statements = array();
 
 	if ( ! empty( $super_stickies ) ) {
