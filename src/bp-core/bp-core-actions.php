@@ -1268,4 +1268,5 @@ function bb_load_readylaunch() {
 	}
 }
 
-add_action( 'bp_loaded', 'bb_load_readylaunch', 99 );
+// Changed from 'bp_loaded' to 'bp_init' to prevent translation loading before 'init' hook.
+add_action( 'bp_init', 'bb_load_readylaunch', 1 );
