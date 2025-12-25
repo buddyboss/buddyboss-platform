@@ -303,7 +303,7 @@ function bp_nouveau_activity_state() {
 		/**
 		 * Fires after reactions display in activity state.
 		 *
-		 * @since BuddyBoss [version]
+		 * @since BuddyBoss 2.16.0
 		 *
 		 * @param int $activity_id The activity ID.
 		 */
@@ -336,7 +336,7 @@ function bp_nouveau_activity_state() {
 		/**
 		 * Fires after comments display in activity state.
 		 *
-		 * @since BuddyBoss [version]
+		 * @since BuddyBoss 2.16.0
 		 *
 		 * @param int $activity_id The activity ID.
 		 */
