@@ -49,6 +49,17 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 	 * @since BuddyBoss 2.10.0
 	 */
 	private function __construct() {
+		// Delay configuration building until init to ensure text domain is loaded.
+		add_action( 'init', array( $this, 'build_config' ), 5 );
+	}
+
+	/**
+	 * Build configuration array with ReadyLaunch-specific settings.
+	 * Called on init hook to ensure text domain is loaded.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	public function build_config() {
 		// Build configuration array with ReadyLaunch-specific settings.
 		$config = array(
 			'admin_page'            => 'bp-components',
