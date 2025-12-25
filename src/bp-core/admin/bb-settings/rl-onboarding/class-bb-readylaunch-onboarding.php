@@ -30,6 +30,14 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 	private static $instance = null;
 
 	/**
+	 * Flag to prevent multiple configuration builds.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 * @var   bool
+	 */
+	private $config_built = false;
+
+	/**
 	 * Ensures only one instance of BB_ReadyLaunch_Onboarding is loaded or can be loaded.
 	 *
 	 * @since  BuddyBoss 2.10.0
@@ -50,7 +58,7 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 	 */
 	private function __construct() {
 		// Delay configuration building until init to ensure text domain is loaded.
-		add_action( 'init', array( $this, 'build_config' ), 5 );
+		add_action( 'bp_init', array( $this, 'build_config' ), 5 );
 	}
 
 	/**
@@ -60,6 +68,13 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 	 * @since BuddyBoss [BBVERSION]
 	 */
 	public function build_config() {
+
+		// Prevent multiple initialization.
+		if ( $this->config_built ) {
+			return;
+		}
+		$this->config_built = true;
+
 		// Build configuration array with ReadyLaunch-specific settings.
 		$config = array(
 			'admin_page'            => 'bp-components',
