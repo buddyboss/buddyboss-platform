@@ -416,41 +416,39 @@ function bb_validate_restricted_email_on_profile_update( $user_id ) {
  * @since BuddyBoss 2.4.40
  */
 function bb_core_settings_saved_notice() {
-	if (
-		isset( $_GET['page'] ) &&
-		(
-			'bp-settings' === $_GET['page'] ||
-			'bp-pages' === $_GET['page'] ||
-			'bp-integrations' === $_GET['page']
-		) &&
-		(
-			isset( $_GET['updated'] ) ||
-			isset( $_GET['edited'] ) ||
-			isset( $_GET['added'] )
-		)
-	) {
 
-		$setting_message = __( 'Settings saved successfully.', 'buddyboss' );
-		$setting_updated = isset( $_GET['updated'] ) ? sanitize_text_field( wp_unslash( $_GET['updated'] ) ) : '';
+    // Only handle notices on BuddyBoss pages.
+    if ( ! isset( $_GET['page'] ) ) {
+        return;
+    }
 
-		if ( 'emotion_deleted' === $setting_updated ) {
-			$setting_message = get_transient( $_GET['updated'] );
-			delete_transient( $_GET['updated'] );
-		} elseif ( 'no_message' === $setting_updated ) {
-			$setting_message = '';
-		}
+    if ( ! in_array( $_GET['page'], array( 'bp-settings', 'bp-pages', 'bp-integrations' ), true ) ) {
+        return;
+    }
 
-		if ( ! empty( $setting_message ) ) {
-			add_settings_error(
-				'general',
-				'settings_updated',
-				$setting_message,
-				'updated'
-			);
-		}
-	}
+    // Check if settings were updated.
+    if ( isset( $_GET['updated'] ) || isset( $_GET['edited'] ) || isset( $_GET['added'] ) ) {
+        $setting_message = __( 'Settings saved successfully.', 'buddyboss' );
+        $setting_updated = isset( $_GET['updated'] ) ? sanitize_text_field( wp_unslash( $_GET['updated'] ) ) : '';
 
-	settings_errors();
+        if ( 'emotion_deleted' === $setting_updated ) {
+            $setting_message = get_transient( $_GET['updated'] );
+            delete_transient( $_GET['updated'] );
+        } elseif ( 'no_message' === $setting_updated ) {
+            $setting_message = '';
+        }
+
+        if ( ! empty( $setting_message ) ) {
+            add_settings_error(
+                'general',
+                'settings_updated',
+                $setting_message,
+                'updated'
+            );
+        }
+    }
+
+    settings_errors( '' );
 }
 
 add_action( 'bp_admin_notices', 'bb_core_settings_saved_notice', 1010 );
