@@ -422,7 +422,9 @@ function bb_core_settings_saved_notice() {
         return;
     }
 
-    if ( ! in_array( $_GET['page'], array( 'bp-settings', 'bp-pages', 'bp-integrations' ), true ) ) {
+    $page = sanitize_key( wp_unslash( $_GET['page'] ) );
+
+    if ( ! in_array( $page, array( 'bp-settings', 'bp-pages', 'bp-integrations' ), true ) ) {
         return;
     }
 
@@ -430,10 +432,11 @@ function bb_core_settings_saved_notice() {
     if ( isset( $_GET['updated'] ) || isset( $_GET['edited'] ) || isset( $_GET['added'] ) ) {
         $setting_message = __( 'Settings saved successfully.', 'buddyboss' );
         $setting_updated = isset( $_GET['updated'] ) ? sanitize_text_field( wp_unslash( $_GET['updated'] ) ) : '';
+        $updated_transient_key = isset( $_GET['updated'] ) ? sanitize_key( wp_unslash( $_GET['updated'] ) ) : '';
 
-        if ( 'emotion_deleted' === $setting_updated ) {
-            $setting_message = get_transient( $_GET['updated'] );
-            delete_transient( $_GET['updated'] );
+        if ( 'emotion_deleted' === $setting_updated && ! empty( $updated_transient_key ) ) {
+            $setting_message = get_transient( $updated_transient_key );
+            delete_transient( $updated_transient_key );
         } elseif ( 'no_message' === $setting_updated ) {
             $setting_message = '';
         }
@@ -446,9 +449,9 @@ function bb_core_settings_saved_notice() {
                 'updated'
             );
         }
-    }
 
-    settings_errors( '' );
+        settings_errors( '' );
+    }
 }
 
 add_action( 'bp_admin_notices', 'bb_core_settings_saved_notice', 1010 );
