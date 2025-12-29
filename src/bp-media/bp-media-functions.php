@@ -3883,6 +3883,7 @@ function bb_media_user_can_access( $id, $type, $attachment_id = 0 ) {
 					$can_delete   = true;
 				}
 
+				// Handle edit permission for album seperately.
 				if (
 					'album' === $type &&
 					(
