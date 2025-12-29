@@ -90,7 +90,7 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 			add_action( 'wp_ajax_wpml_switch_post_language', array( $this, 'bb_handle_wpml_switch_post_language' ), 9 );
 
 			// Activity Topics translation support.
-			add_filter( 'bb_get_topic_object', array( $this, 'bb_wpml_translate_activity_topic' ), 10, 2 );
+			add_filter( 'bb_get_topics', array( $this, 'bb_wpml_translate_activity_topics' ), 10, 2 );
 		}
 
 		/**
@@ -653,32 +653,46 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 		}
 
 		/**
-		 * Translate activity topic name using WPML.
+		 * Translate activity topics names using WPML.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
-		 * @param object $topic The topic object.
-		 * @param array  $args  The arguments used to get the topics.
+		 * @param array $retval The topics data array containing 'topics' key.
+		 * @param array $args   The arguments used to get the topics.
 		 *
-		 * @return object Modified topic object with translated name.
+		 * @return array Modified topics data with translated names.
 		 */
-		public function bb_wpml_translate_activity_topic( $topic, $args ) {
-			if ( ! class_exists( 'Sitepress' ) || empty( $topic->topic_id ) || empty( $topic->name ) ) {
-				return $topic;
+		public function bb_wpml_translate_activity_topics( $retval, $args ) {
+			if ( ! class_exists( 'Sitepress' ) || empty( $retval['topics'] ) ) {
+				return $retval;
 			}
 
-			$translated_name = apply_filters(
-				'wpml_translate_single_string',
-				$topic->name,
-				'Buddypress Multilingual',
-				'Activity topic #' . $topic->topic_id . ' name'
-			);
+			foreach ( $retval['topics'] as &$topic ) {
+				// Handle both array and object formats.
+				$topic_id   = is_array( $topic ) ? ( $topic['topic_id'] ?? '' ) : ( $topic->topic_id ?? '' );
+				$topic_name = is_array( $topic ) ? ( $topic['name'] ?? '' ) : ( $topic->name ?? '' );
 
-			if ( ! empty( $translated_name ) && $translated_name !== $topic->name ) {
-				$topic->name = $translated_name;
+				if ( empty( $topic_id ) || empty( $topic_name ) ) {
+					continue;
+				}
+
+				$translated_name = apply_filters(
+					'wpml_translate_single_string',
+					$topic_name,
+					'Buddypress Multilingual',
+					'Activity topic #' . $topic_id . ' name'
+				);
+
+				if ( ! empty( $translated_name ) && $translated_name !== $topic_name ) {
+					if ( is_array( $topic ) ) {
+						$topic['name'] = $translated_name;
+					} else {
+						$topic->name = $translated_name;
+					}
+				}
 			}
 
-			return $topic;
+			return $retval;
 		}
 
 	}
