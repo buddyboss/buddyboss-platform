@@ -5654,12 +5654,22 @@ window.bp = window.bp || {};
 										if ( 'media' === actionType ) {
 											currentFolderAlbum = bbRlMedia.current_album;
 											responseContent    = response.data.media_content;
+											currentType        = bbRlMedia.current_type;
+											bbrlAlbumId        = bbRlMedia.album_id;
 										} else if ( 'video' === actionType ) {
 											currentFolderAlbum = bbRlVideo.current_album;
 											responseContent    = response.data.video_content;
+											currentType        = bbRlVideo.current_type;
+											bbrlAlbumId        = bbRlMedia.album_id;
 										}
 									}
-									if ( parseInt( currentFolderAlbum ) > 0 ) {
+									if (
+										parseInt( currentFolderAlbum ) > 0 ||
+										(
+											'group' === currentType &&
+											parseInt( bbrlAlbumId ) > 0
+										)
+									) {
 										$( '#' + updateActionType + '-stream ul.' + nameDocumentAsMedia + '-list li[data-id="' + itemId + '"]' ).remove();
 										if ( 'video' === actionType ) {
 											$( '#media-stream ul.media-list li[data-id="' + itemId + '"]' ).remove();
