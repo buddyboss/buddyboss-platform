@@ -663,7 +663,7 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 		 * @return object Modified topic object with translated name.
 		 */
 		public function bb_wpml_translate_activity_topic( $topic, $args ) {
-			if ( ! class_exists( 'SitePress' ) || empty( $topic->topic_id ) || empty( $topic->name ) ) {
+			if ( ! class_exists( 'Sitepress' ) || empty( $topic->topic_id ) || empty( $topic->name ) ) {
 				return $topic;
 			}
 
