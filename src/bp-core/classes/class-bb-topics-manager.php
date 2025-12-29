@@ -1416,6 +1416,11 @@ class BB_Topics_Manager {
 						 */
 						$topic = apply_filters( 'bb_get_topic_object', $topic, $r );
 
+						// Validate that $topic is still an object after filtering.
+						if ( ! is_object( $topic ) ) {
+							continue;
+						}
+
 						$filtered_topic = array();
 						foreach ( $fields as $field ) {
 							if ( isset( $topic->$field ) ) {
