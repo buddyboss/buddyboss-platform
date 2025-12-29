@@ -1455,7 +1455,15 @@ class BB_Topics_Manager {
 
 		unset( $r, $select_sql, $from_sql, $where_conditions, $where_sql, $pagination, $topic_sql, $cached, $topic_ids, $uncached_ids, $uncached_ids_sql, $queried_data, $topic_data );
 
-		return $retval;
+		/**
+		 * Filters the topic's data before returning.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array $retval The topic's data.
+		 * @param array $args   The arguments used to get the topics.
+		 */
+		return apply_filters( 'bb_get_topics', $retval, $args );
 	}
 
 	/**
