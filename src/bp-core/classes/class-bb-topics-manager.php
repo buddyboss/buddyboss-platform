@@ -1406,21 +1406,6 @@ class BB_Topics_Manager {
 
 					$filtered_data = array();
 					foreach ( $topic_data as $topic ) {
-						/**
-						 * Filters the topic object before extracting fields.
-						 *
-						 * @since BuddyBoss [BBVERSION]
-						 *
-						 * @param object $topic The topic object.
-						 * @param array  $r     The arguments used to get the topics.
-						 */
-						$topic = apply_filters( 'bb_get_topic_object', $topic, $r );
-
-						// Validate that $topic is still an object after filtering.
-						if ( ! is_object( $topic ) ) {
-							continue;
-						}
-
 						$filtered_topic = array();
 						foreach ( $fields as $field ) {
 							if ( isset( $topic->$field ) ) {
