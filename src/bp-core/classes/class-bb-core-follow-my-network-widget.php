@@ -55,6 +55,15 @@ class BB_Core_Follow_My_Network_Widget extends WP_Widget {
 			return;
 		}
 
+		// Parse widget settings with defaults.
+		$settings = wp_parse_args(
+			$instance,
+			array(
+				'max_users'      => 10,
+				'member_default' => 'followers',
+			)
+		);
+
 		$id     = bp_displayed_user_id();
 		$filter = false;
 
