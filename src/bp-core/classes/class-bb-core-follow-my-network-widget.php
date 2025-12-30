@@ -56,7 +56,7 @@ class BB_Core_Follow_My_Network_Widget extends WP_Widget {
 		}
 
 		// Parse widget settings with defaults.
-		$settings = wp_parse_args(
+		$settings = bp_parse_args(
 			$instance,
 			array(
 				'max_users'      => 10,
