@@ -13,10 +13,11 @@ function my_network_click_handler() {
 		function() {
 			var link          = this;
 			var currentWidget = jQuery( link ).parents( widget );
+			var targetList    = jQuery( currentWidget ).find( widgetMemberList );
 
 			jQuery( currentWidget ).find( widgetTabLinks ).removeClass( 'selected' );
 			jQuery( this ).addClass( 'loading selected' );
-			jQuery( widgetMemberList ).addClass( 'loading' );
+			jQuery( targetList ).addClass( 'loading' );
 
 			var seeAllLink = jQuery( this ).data( 'see-all-link' );
 			if ( '' !== seeAllLink ) {
@@ -28,14 +29,13 @@ function my_network_click_handler() {
 				{
 					action       : 'widget_follow_my_network',
 					'cookie'     : encodeURIComponent( document.cookie ),
-					'_wpnonce'   : jQuery( 'input#_wpnonce-follow-my-network' ).val(),
-					'max-members': jQuery( 'input#bb_rl_my_network_widget_max' ).val(),
+					'_wpnonce'   : jQuery( currentWidget ).find( 'input#_wpnonce-follow-my-network' ).val(),
+					'max-members': jQuery( currentWidget ).find( 'input#bb_rl_my_network_widget_max' ).val(),
 					'filter'     : jQuery( this ).attr( 'id' )
 				},
 				function( response ) {
 					jQuery( link ).removeClass( 'loading' );
-					jQuery( widgetMemberList ).removeClass( 'loading' );
-					var targetList = jQuery( currentWidget ).find( widgetMemberList );
+					jQuery( targetList ).removeClass( 'loading' );
 					if ( 'undefined' !== typeof response.success && response.success === 1 ) {
 						jQuery( targetList ).fadeOut(
 							200,
