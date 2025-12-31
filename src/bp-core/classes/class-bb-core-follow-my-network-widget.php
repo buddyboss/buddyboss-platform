@@ -87,7 +87,7 @@ class BB_Core_Follow_My_Network_Widget extends WP_Widget {
 			)
 		) : array();
 
-		$see_all_query_string = '?bb-rl-scope=follower';
+		$see_all_query_string = '?bb-rl-scope=followers';
 
 		$instance['title'] = (
 			bp_loggedin_user_id() === bp_displayed_user_id()
