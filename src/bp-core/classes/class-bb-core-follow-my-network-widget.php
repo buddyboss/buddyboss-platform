@@ -82,6 +82,7 @@ class BB_Core_Follow_My_Network_Widget extends WP_Widget {
 		$ids = 0 !== $follower_count ? bp_get_followers(
 			array(
 				'user_id'  => $id,
+				'page'     => 1,
 				'per_page' => 10,
 			)
 		) : array();
@@ -277,6 +278,7 @@ class BB_Core_Follow_My_Network_Widget extends WP_Widget {
 			$ids = bp_get_following(
 				array(
 					'user_id'  => $id,
+					'page'     => 1,
 					'per_page' => $max_members,
 				)
 			);
@@ -284,6 +286,7 @@ class BB_Core_Follow_My_Network_Widget extends WP_Widget {
 			$ids = bp_get_followers(
 				array(
 					'user_id'  => $id,
+					'page'     => 1,
 					'per_page' => $max_members,
 				)
 			);

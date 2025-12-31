@@ -20,7 +20,7 @@ function my_network_click_handler() {
 
 			var seeAllLink = jQuery( this ).data( 'see-all-link' );
 			if ( '' !== seeAllLink ) {
-				jQuery( currentWidget ).find( '.bb-rl-see-all' ).attr( 'href', seeAllLink );
+				jQuery( currentWidget ).find( '.bb-rl-see-all a' ).attr( 'href', seeAllLink );
 			}
 
 			jQuery.post(
@@ -41,7 +41,6 @@ function my_network_click_handler() {
 							200,
 							function () {
 								jQuery( targetList ).html( response.data );
-								jQuery( link ).find( '.bb-rl-widget-tab-count' ).html( response.count );
 								jQuery( targetList ).fadeIn( 200 );
 							}
 						);
