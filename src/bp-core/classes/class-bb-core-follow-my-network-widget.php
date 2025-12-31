@@ -65,6 +65,15 @@ class BB_Core_Follow_My_Network_Widget extends WP_Widget {
 			return;
 		}
 
+		// Parse widget settings with defaults.
+		$settings = bp_parse_args(
+			$instance,
+			array(
+				'max_users'      => self::DEFAULT_MAX_USERS,
+				'member_default' => 'followers',
+			)
+		);
+
 		$id     = bp_displayed_user_id();
 		$filter = false;
 
@@ -140,7 +149,7 @@ class BB_Core_Follow_My_Network_Widget extends WP_Widget {
 				</div>
 			</h2>
 			<div class="bb-rl-members-item-options">
-				<a href="javascript:void(0);" id="bb-rl-my-network-followers" data-see-all-link="<?php echo esc_url( $members_dir_url . '?bb-rl-scope=follower' ); ?>" <?php echo ( empty( $settings['member_default'] ) || 'followers' === $settings['member_default'] ) ? 'class="selected"' : ''; ?>>
+				<a href="javascript:void(0);" id="bb-rl-my-network-followers" data-see-all-link="<?php echo esc_url( $members_dir_url . '?bb-rl-scope=followers' ); ?>" <?php echo ( empty( $settings['member_default'] ) || 'followers' === $settings['member_default'] ) ? 'class="selected"' : ''; ?>>
 					<?php
 					esc_html_e( 'Followers', 'buddyboss' );
 					if ( $follower_count > 0 ) {
