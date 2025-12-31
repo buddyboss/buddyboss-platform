@@ -1104,6 +1104,16 @@ function bp_nouveau_ajax_media_description_save() {
 		$media = new BP_Media( $media_id );
 
 		if ( ! empty( $media->id ) ) {
+			// Check if the current user has permission to edit this media.
+			if ( ! bp_media_user_can_edit( $media ) ) {
+				$response['feedback'] = sprintf(
+					'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+					esc_html__( 'You do not have permission to update this media.', 'buddyboss' )
+				);
+
+				wp_send_json_error( $response );
+			}
+
 			$media->description = $description;
 			$media->save();
 
@@ -1117,6 +1127,16 @@ function bp_nouveau_ajax_media_description_save() {
 		$video = new BP_Video( $video_id );
 
 		if ( ! empty( $video->id ) ) {
+			// Check if the current user has permission to edit this video.
+			if ( ! bp_video_user_can_edit( $video ) ) {
+				$response['feedback'] = sprintf(
+					'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+					esc_html__( 'You do not have permission to update this video.', 'buddyboss' )
+				);
+
+				wp_send_json_error( $response );
+			}
+
 			$video->description = $description;
 			$video->save();
 
@@ -1130,6 +1150,16 @@ function bp_nouveau_ajax_media_description_save() {
 		$document = new BP_Document( $document_id );
 
 		if ( ! empty( $document->id ) ) {
+			// Check if the current user has permission to edit this document.
+			if ( ! bp_document_user_can_edit( $document ) ) {
+				$response['feedback'] = sprintf(
+					'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+					esc_html__( 'You do not have permission to update this document.', 'buddyboss' )
+				);
+
+				wp_send_json_error( $response );
+			}
+
 			$document->description = $description;
 			$document->save();
 
