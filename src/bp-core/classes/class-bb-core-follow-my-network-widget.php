@@ -106,8 +106,10 @@ class BB_Core_Follow_My_Network_Widget extends WP_Widget {
 			)
 		) : array();
 
-		// Ensure $ids is an array.
-		$ids = is_array( $ids ) ? $ids : array();
+		// Ensure $ids is a valid array (handle WP_Error or unexpected return types).
+		if ( is_wp_error( $ids ) || ! is_array( $ids ) ) {
+			$ids = array();
+		}
 
 		$see_all_query_string = '?bb-rl-scope=followers';
 
@@ -314,8 +316,10 @@ class BB_Core_Follow_My_Network_Widget extends WP_Widget {
 			);
 		}
 
-		// Ensure $ids is an array.
-		$ids = is_array( $ids ) ? $ids : array();
+		// Ensure $ids is a valid array (handle WP_Error or unexpected return types).
+		if ( is_wp_error( $ids ) || ! is_array( $ids ) ) {
+			$ids = array();
+		}
 
 		$result = array(
 			'success' => 0,
