@@ -233,22 +233,34 @@ function bp_core_menu_highlight_parent_page( $retval, $page ) {
 			break;
 		}
 
-		// Members component requires an explicit check due to overlapping components.
+		// Skip members component when on user profile pages to prevent highlighting members directory.
 		if ( bp_is_user() && 'members' === $component ) {
-			$page_id = (int) $bp_page->id;
-			break;
+			continue;
 		}
 	}
 
 	// Duplicate some logic from Walker_Page::start_el() to highlight menu items.
 	if ( ! empty( $page_id ) ) {
 		$_bp_page = get_post( $page_id );
+
 		if ( isset( $page->ID ) && in_array( $page->ID, $_bp_page->ancestors, true ) ) {
 			$retval[] = 'current_page_ancestor';
 		}
-		if ( isset( $page->ID ) && $page->ID === $page_id ) {
+
+		if (
+			isset( $page->ID ) &&
+			$page->ID === $page_id &&
+			( 'members' !== $component || ! bp_is_user() )
+		) {
+			// Special handling for members component: don't highlight members page when on user profile pages.
 			$retval[] = 'current_page_item';
-		} elseif ( isset( $page->ID ) && $_bp_page && $page->ID === $_bp_page->post_parent ) {
+		} elseif (
+			isset( $page->ID ) &&
+			$_bp_page &&
+			$page->ID === $_bp_page->post_parent &&
+			( 'members' !== $component || ! bp_is_user() )
+		) {
+			// Special handling for members component: don't highlight members page when on user profile pages
 			$retval[] = 'current-menu-item';
 			$retval[] = 'current_page_parent';
 		}
@@ -2290,6 +2302,39 @@ function bb_change_nav_menu_class( $classes, $item, $args, $depth ) {
 		}
 	}
 
+	// Remove current classes from members page when on user profile pages.
+	if ( in_array( 'current_page_item', $classes, true ) && function_exists( 'bp_is_user' ) && bp_is_user() ) {
+		$is_members_directory = false;
+
+		// Method 1: Check for bp-members-nav class.
+		if ( isset( $item->classes ) ) {
+			$menu_classes = is_array( $item->classes ) ? implode( ' ', $item->classes ) : $item->classes;
+			if ( strpos( $menu_classes, 'bp-members-nav' ) !== false ) {
+				$is_members_directory = true;
+			}
+		}
+
+		// Method 2: Check if this menu item points to the actual members directory page.
+		if ( ! $is_members_directory && isset( $item->object_id ) && function_exists( 'bp_core_get_directory_page_id' ) ) {
+			$members_page_id = bp_core_get_directory_page_id( 'members' );
+			if ( $members_page_id && $item->object_id === $members_page_id ) {
+				$is_members_directory = true;
+			}
+		}
+
+		// Method 3: Check URL structure (fallback for custom pages).
+		if ( ! $is_members_directory && isset( $item->url ) && function_exists( 'bp_get_members_directory_permalink' ) ) {
+			$members_page_url = bp_get_members_directory_permalink();
+			if ( $members_page_url && untrailingslashit( $item->url ) === untrailingslashit( $members_page_url ) ) {
+				$is_members_directory = true;
+			}
+		}
+
+		if ( $is_members_directory ) {
+			$classes = array_diff( $classes, array( 'current_page_item', 'current-menu-item' ) );
+		}
+	}
+
 	return $classes;
 }
 add_filter( 'nav_menu_css_class', 'bb_change_nav_menu_class', 10, 4 );
@@ -2745,3 +2790,23 @@ function bb_redirection_allowed_third_party_domains( $hosts ) {
 
 	return $hosts;
 }
+
+/**
+ * Make video embeds discoverable.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param bool   $retval Return value to enable discover support or not.
+ * @param string $url    URL to parse for embed.
+ *
+ * @return bool
+ */
+function bb_oembed_discover_support_callback( $retval, $url ) {
+	if ( ! empty( $url ) && false !== strpos( $url, 'dubb.com' ) ) {
+		$retval = true;
+	}
+
+	return $retval;
+}
+
+add_filter( 'bb_oembed_discover_support', 'bb_oembed_discover_support_callback', 10, 2 );

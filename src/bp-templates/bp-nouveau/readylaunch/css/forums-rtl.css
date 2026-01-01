@@ -1634,7 +1634,8 @@
 .bb-rl-forum-modal .bb-rl-forum-subscription {
   font-size: 14px;
   font-weight: 500;
-  margin-left: var(--bb-rl-space-300);
+  margin: 0 0 0 var(--bb-rl-space-300);
+  line-height: 1;
 }
 
 .bb-rl-forum-modal .bb_discard_topic_reply_draft {
@@ -2398,7 +2399,7 @@
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   padding: 6px var(--bb-rl-space-200);
   font-size: var(--bb-rl-font-size-sm);
