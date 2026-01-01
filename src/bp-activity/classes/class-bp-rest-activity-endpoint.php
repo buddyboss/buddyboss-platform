@@ -2132,7 +2132,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			'user_id'           => $activity->user_id,
 			'name'              => bp_core_get_user_displayname( $activity->user_id ),
 			'component'         => $activity->component,
-			'post_title'        => ! empty( $activity->post_title ) ? esc_html( $activity->post_title ) : '',
+			'post_title'        => ! empty( $activity->post_title ) ? html_entity_decode( esc_html( $activity->post_title ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) : '',
 			'content'           => array(
 				'raw'      => bb_rest_raw_content( $activity->content ),
 				'rendered' => $this->render_item( $activity ),
