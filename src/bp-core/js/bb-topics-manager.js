@@ -234,20 +234,25 @@ window.bp = window.bp || {};
 
 							var topicId   = $( event.currentTarget ).data( 'topic-id' );
 							var topicName = $( event.currentTarget ).text().trim();
+							var topicsData;
 
 							if ( '' === topicId ) {
-								this.model.set('topics', {
+								topicsData = {
 									topic_id: 0,
 									topic_name: '', // This will trigger the template to show "Select Topic"
 									topic_lists: this.model.get('topics').topic_lists
-								});
+								};
+								this.model.set( 'topics', topicsData, { silent: true } );
+								this.model.trigger( 'change:topics', this.model, topicsData );
 								topicName = this.$el.find( '.bb-topic-selector-button' ).data( 'select-topic-text' );
 							} else {
-								this.model.set('topics', {
+								topicsData = {
 									topic_id: topicId,
 									topic_name: topicName,
 									topic_lists: this.model.get('topics').topic_lists
-								});
+								};
+								this.model.set( 'topics', topicsData, { silent: true } );
+								this.model.trigger( 'change:topics', this.model, topicsData );
 							}
 
 							this.$el.find( '.bb-topic-selector-button' ).text( topicName );

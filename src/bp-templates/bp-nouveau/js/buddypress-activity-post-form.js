@@ -980,6 +980,13 @@ window.bp = window.bp || {};
 				self.postForm.$el.removeClass( 'focus-in--empty loading' );
 			}
 
+			// Validate Post title after draft/activity is loaded.
+			if ( self.postForm && typeof self.postForm.postValidate === 'function' ) {
+				setTimeout( function() {
+					self.postForm.postValidate();
+				}, 100 );
+			}
+
 			if (
 				! _.isUndefined( BP_Nouveau.activity.params.topics ) &&
 				BP_Nouveau.activity.params.topics.topic_lists.length > 0 &&
@@ -5754,14 +5761,43 @@ window.bp = window.bp || {};
 					this.$el.addClass( 'focus-in--empty' );
 				}
 
-				// Validate topic content.
+				// Validate Post title first (priority over Topic).
+				var isTitleRequired   = BP_Nouveau.activity.params.is_activity_post_title_required;
+				var postTitle         = isTitleRequired ? $.trim( $( '#whats-new-title' ).val() || '' ) : '';
+				var $submitWrapper    = $( '#whats-new-submit' );
+				var titleTooltipError = ! _.isUndefined( BP_Nouveau.activity.params.post_title_tooltip_error ) ? BP_Nouveau.activity.params.post_title_tooltip_error : 'Please enter a title for your activity.';
+
+				if ( isTitleRequired ) {
+					if ( '' === postTitle ) {
+						// Post title is required and empty - show title tooltip, hide topic tooltip.
+						$( 'body' ).addClass( 'ac-title-required' );
+						if ( $submitWrapper.find( '.bb-title-tooltip-wrapper' ).length === 0 ) {
+							var $titleTooltipWrapper = $( '<div class="bb-title-tooltip-wrapper"><div class="bb-title-tooltip"></div></div>' );
+							$titleTooltipWrapper.find( '.bb-title-tooltip' ).text( titleTooltipError );
+							$submitWrapper.prepend( $titleTooltipWrapper );
+						}
+						// Hide topic tooltip if title is missing (priority).
+						$submitWrapper.find( '.bb-topic-tooltip-wrapper' ).remove();
+					} else {
+						// Post title is filled - remove title tooltip and class.
+						$( 'body' ).removeClass( 'ac-title-required' );
+						$submitWrapper.find( '.bb-title-tooltip-wrapper' ).remove();
+					}
+				} else {
+					// Post title is not required - remove title tooltip and class.
+					$( 'body' ).removeClass( 'ac-title-required' );
+					$submitWrapper.find( '.bb-title-tooltip-wrapper' ).remove();
+				}
+
+				// Validate topic content (only if title is not required or title is filled).
 				if (
 					! _.isUndefined( BP_Nouveau.activity.params.topics ) &&
 					! _.isUndefined( BP_Nouveau.activity.params.topics.bb_is_enabled_activity_topics ) &&
 					BP_Nouveau.activity.params.topics.bb_is_enabled_activity_topics &&
 					! _.isUndefined( BP_Nouveau.activity.params.topics.bb_is_activity_topic_required ) &&
 					BP_Nouveau.activity.params.topics.bb_is_activity_topic_required &&
-					! _.isUndefined( BBTopicsManager )
+					! _.isUndefined( BBTopicsManager ) &&
+					( ! isTitleRequired || '' !== postTitle )
 				) {
 					BBTopicsManager.bbTopicValidateContent( {
 						self         : this,
@@ -5850,6 +5886,20 @@ window.bp = window.bp || {};
 				this.views.add( bp.Nouveau.Activity.postForm.activityAttachments );
 				bp.Nouveau.Activity.postForm.activityToolbar = new bp.Views.ActivityToolbar( { model: this.model } );
 				this.views.add( bp.Nouveau.Activity.postForm.activityToolbar );
+
+				// Initialize Post title tooltip if title is required.
+				var isTitleRequired = BP_Nouveau.activity.params.is_activity_post_title_required;
+				if ( isTitleRequired ) {
+					$( document ).on( 'bb_display_full_form', function () {
+						var $submitWrapper    = $( '.activity-update-form.modal-popup #whats-new-submit' );
+						var titleTooltipError = ! _.isUndefined( BP_Nouveau.activity.params.post_title_tooltip_error ) ? BP_Nouveau.activity.params.post_title_tooltip_error : 'Please enter a title for your activity.';
+						if ( $submitWrapper.length > 0 && $submitWrapper.find( '.bb-title-tooltip-wrapper' ).length === 0 ) {
+							var $titleTooltipWrapper = $( '<div class="bb-title-tooltip-wrapper"><div class="bb-title-tooltip"></div></div>' );
+							$titleTooltipWrapper.find( '.bb-title-tooltip' ).text( titleTooltipError );
+							$submitWrapper.prepend( $titleTooltipWrapper );
+						}
+					} );
+				}
 
 				this.views.add( new bp.Views.FormSubmitWrapper( { model: this.model } ) );
 
@@ -6002,6 +6052,10 @@ window.bp = window.bp || {};
 				);
 
 				$( '#whats-new-form' ).removeClass( 'focus-in focus-in--privacy focus-in--group focus-in--scroll has-draft' ).parent().removeClass( 'modal-popup' ).closest( 'body' ).removeClass( 'activity-modal-open' ); // remove class when reset.
+
+				// Remove Post title tooltip on reset.
+				$( 'body' ).removeClass( 'ac-title-required' );
+				$( '#whats-new-submit' ).find( '.bb-title-tooltip-wrapper' ).remove();
 
 				//Hide placeholder form
 				$( '#bp-nouveau-activity-form-placeholder' ).hide();
