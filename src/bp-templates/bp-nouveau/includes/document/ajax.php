@@ -550,9 +550,13 @@ function bp_nouveau_ajax_document_delete_attachment() {
 	$response = array(
 		'feedback' => sprintf(
 			'<div class="bp-feedback bp-messages error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-			esc_html__( 'There was a problem displaying the content. Please try again.', 'buddyboss' )
+			esc_html__( 'There was a problem deleting the content. Please try again.', 'buddyboss' )
 		),
 	);
+
+	if ( ! is_user_logged_in() ) {
+		wp_send_json_error( $response );
+	}
 
 	// Nonce check!
 	$nonce = bb_filter_input_string( INPUT_POST, '_wpnonce' );
@@ -569,8 +573,20 @@ function bp_nouveau_ajax_document_delete_attachment() {
 		wp_send_json_error( $response );
 	}
 
-	// delete attachment with its meta.
 	$post_id = filter_input( INPUT_POST, 'id', FILTER_VALIDATE_INT );
+
+	// Check if the attachment is from the same loggedin user then only allow to delete else send error feedback.
+	$attachment_author_id = get_post_field( 'post_author', $post_id );
+	if ( empty( $attachment_author_id ) || (int) $attachment_author_id !== bp_loggedin_user_id() ) {
+		$response['feedback'] = sprintf(
+			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+			esc_html__( 'You do not have permission to delete this attachment.', 'buddyboss' )
+		);
+
+		wp_send_json_error( $response );
+	}
+
+	// delete attachment with its meta.
 	$deleted = wp_delete_attachment( $post_id, true );
 
 	if ( ! $deleted ) {
