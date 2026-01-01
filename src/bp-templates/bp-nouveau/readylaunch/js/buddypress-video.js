@@ -630,7 +630,7 @@ window.bp = window.bp || {};
 					function ( e ) {
 						e.preventDefault();
 						var eventCurrentTarget        = $( e.currentTarget ),
-							eventCurrentTargetClosest = eventCurrentTarget.closest( '.bb-rl-field-wrap' ),
+							eventCurrentTargetClosest = eventCurrentTarget.closest( '.bb-field-wrap' ),
 							$itemSpanLastChild        = $( this ).closest( '.bb-rl-location-album-list-wrap' ).find( '.breadcrumb .item span:last-child' );
 						if ( $( this ).parent().hasClass( 'is_active' ) ) {
 							return;
@@ -670,8 +670,8 @@ window.bp = window.bp || {};
 							return;
 						}
 						var eventCurrentTarget = $( e.currentTarget ),
-							fieldWrapElem      = eventCurrentTarget.closest( '.bb-rl-field-wrap' ),
-							spanLastChild      = (
+							fieldWrapElem      = eventCurrentTarget.closest( '.bb-field-wrap' ),
+							spanLastChild      = $(
 								this
 							).closest( '.bb-rl-location-album-list-wrap' ).find( '.breadcrumb .item span:last-child' );
 						fieldWrapElem.find( '.bb-rl-album-selected-id' ).val( 0 );
