@@ -240,7 +240,7 @@ window.bp = window.bp || {};
 			bpNouveau.on( 'click', '#bp-cancel-edit-album-title', this.cancelEditAlbumTitle.bind( this ) );
 			bpNouveau.on( 'click', '#bp-save-album-title', this.saveAlbum.bind( this ) );
 			$document.on( 'click', '#bp-save-folder-title', this.saveFolder.bind( this ) );
-			bpNouveau.on( 'change', '#bp-media-single-album select#bb-rl-album-privacy', this.saveAlbum.bind( this ) );
+			bpNouveau.on( 'change', '#bp-media-single-album select#bb-album-privacy', this.saveAlbum.bind( this ) );
 			bpNouveau.on( 'change', '#media-stream select#bb-rl-folder-privacy', this.savePrivacy.bind( this ) );
 			bpNouveau.on( 'click', '#bb-delete-album', this.deleteAlbum.bind( this ) );
 			$document.on( 'click', '#bb-delete-folder', this.deleteFolder.bind( this ) );
@@ -487,7 +487,7 @@ window.bp = window.bp || {};
 				if ( current_privacy === 'grouponly' ) {
 					$editAlbumModal.find( '#bb-album-privacy' ).addClass( 'bp-hide' );
 				} else {
-					$editAlbumModal.find( '#bb-album-privacy' ).val( current_privacy ).change().removeClass( 'bp-hide' );
+					$editAlbumModal.find( '#bb-album-privacy' ).val( current_privacy ).removeClass( 'bp-hide' );
 				}
 			} else if ( $editAlbumModal.find( '#bb-album-privacy' ).length > 0 ) {
 				$editAlbumModal.find( '#bb-album-privacy' ).addClass( 'bp-hide' );
@@ -2391,7 +2391,7 @@ window.bp = window.bp || {};
 						if ( $( e.currentTarget ).closest( '.bb-rl-field-wrap' ).find( '.bb-model-footer .bb-rl-media-move' ).hasClass( 'is-disabled' ) ) {
 							return; // return if parent album is same.
 						}
-						$( e.currentTarget ).closest( '.bb-rl-field-wrap' ).find( '.bb-rl-album-selected-id' ).val( $( e.currentTarget ).data( 'id' ) );
+						$( e.currentTarget ).closest( '.bb-field-wrap' ).find( '.bb-rl-album-selected-id' ).val( $( e.currentTarget ).data( 'id' ) );
 
 						var mediaPrivacy = $( e.currentTarget ).closest( '#bp-media-uploader' ).find( '#bb-media-privacy' );
 
@@ -2954,6 +2954,7 @@ window.bp = window.bp || {};
 
 							$( currentTarget ).find( '.bb-rl-location-album-list-wrap .location-album-list' ).remove();
 							$( currentTarget ).find( '.bb-rl-location-album-list-wrap' ).append( response.data.html );
+							$( currentTarget ).find( '.bb-rl-model-footer .bb-rl-media-move' ).removeClass( 'loading' );
 							$( currentTarget ).find( 'ul.location-album-list span#' + parentsOpen ).trigger( 'click' );
 						}
 					}
@@ -5786,8 +5787,8 @@ window.bp = window.bp || {};
 				privacy = 'grouponly';
 				groupId = this.moveToIdPopup;
 			} else {
-				privacy         = eventCurrentTarget.closest( '.bb-rl-modal-container' ).find( '.bb-rl-popup-on-fly-create-' + folderOrAlbum + ' #bb-rl-' + folderOrAlbum + '-privacy' ).val();
-				privacySelector = eventCurrentTarget.closest( '.bb-rl-modal-container' ).find( '.bb-rl-popup-on-fly-create-' + folderOrAlbum + ' #bb-rl-' + folderOrAlbum + '-privacy' );
+				privacySelector = eventCurrentTarget.closest( '.modal-container, .bb-rl-modal-container' ).find( '.bb-rl-popup-on-fly-create-' + folderOrAlbum + ' select[id*="-' + folderOrAlbum + '-privacy"]' );
+				privacy         = privacySelector.val();
 			}
 
 			if ( '' === title ) {
@@ -6089,8 +6090,14 @@ window.bp = window.bp || {};
 				title         = isChildFolder ? $( '#bp-media-create-child-folder #bb-album-child-title' ) : $( '#bb-album-title' ),
 				nonce = BP_Nouveau.nonces.media,
 				privacy;
+
+			// For readuylaunch skip auto save on change of the privacy for edit album.
+			if ( 'change' === event.type && target.parents( '.bb-rl-modal-edit-album.open-popup' ).length > 0 ) {
+				return;
+			}
+
 			if ( isAlbum ) {
-				privacy = $( '#bb-rl-album-privacy' );
+				privacy = $( target ).parent().find( 'select[id*="album-privacy"]' );
 				if ( 'video' === folderOrAlbum ) {
 					nonce = BP_Nouveau.nonces.video;
 				}
@@ -6174,7 +6181,7 @@ window.bp = window.bp || {};
 							if ( isAlbum ) {
 								if ( self.album_id ) {
 									$( '#bp-single-album-title .title-wrap' ).text( title.val() );
-									$( '#bb-rl-album-privacy' ).val( privacy.val() );
+									$( '#bb-album-privacy' ).val( privacy.val() );
 									self.cancelEditAlbumTitle( event );
 									$modal.find( '#bp-media-edit-album-close' ).trigger( 'click' );
 								} else {
