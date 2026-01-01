@@ -695,7 +695,7 @@ h6 {
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   background-color: var(--bb-rl-background-tertiary-color);
   color: var(--bb-rl-text-color);
@@ -735,7 +735,7 @@ h6 {
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   background-color: var(--bb-rl-background-brand-primary-color);
   color: var(--bb-rl-text-white-color);
@@ -1074,20 +1074,24 @@ span.atwho-inserted {
   transform: translateY(-50%);
 }
 
-.emojionearea-standalone.emojionearea .emojionearea-picker {
+.emojionearea-standalone.emojionearea .emojionearea-picker,
+.bb-rl-emojionearea-theatre.emojionearea .emojionearea-picker {
   border-radius: var(--bb-rl-radius-lg);
   box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.12);
 }
 
-.emojionearea-standalone.emojionearea .emojionearea-picker .emojionearea-wrapper:after {
+.emojionearea-standalone.emojionearea .emojionearea-picker .emojionearea-wrapper:after,
+.bb-rl-emojionearea-theatre.emojionearea .emojionearea-picker .emojionearea-wrapper:after {
   display: none;
 }
 
-.emojionearea-standalone.emojionearea .emojionearea-picker.emojionearea-filters-position-top .emojionearea-filters .emojionearea-filter:first-of-type {
+.emojionearea-standalone.emojionearea .emojionearea-picker.emojionearea-filters-position-top .emojionearea-filters .emojionearea-filter:first-of-type,
+.bb-rl-emojionearea-theatre.emojionearea .emojionearea-picker.emojionearea-filters-position-top .emojionearea-filters .emojionearea-filter:first-of-type {
   border-top-left-radius: var(--bb-rl-radius-lg);
 }
 
-.emojionearea-standalone.emojionearea .emojionearea-picker.emojionearea-filters-position-top .emojionearea-filters {
+.emojionearea-standalone.emojionearea .emojionearea-picker.emojionearea-filters-position-top .emojionearea-filters,
+.bb-rl-emojionearea-theatre.emojionearea .emojionearea-picker.emojionearea-filters-position-top .emojionearea-filters {
   border-top-right-radius: var(--bb-rl-radius-lg);
   border-top-left-radius: var(--bb-rl-radius-lg);
 }
@@ -2368,7 +2372,7 @@ div.vjs-menu li.vjs-selected .vjs-menu-item-text, div.vjs-menu li:hover .vjs-men
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   background-color: var(--bb-rl-background-brand-primary-color);
   color: var(--bb-rl-text-white-color);
@@ -2481,7 +2485,7 @@ div.vjs-menu li.vjs-selected .vjs-menu-item-text, div.vjs-menu li:hover .vjs-men
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   background-color: var(--bb-rl-background-tertiary-color);
   color: var(--bb-rl-text-color);
@@ -2571,7 +2575,7 @@ div.vjs-menu li.vjs-selected .vjs-menu-item-text, div.vjs-menu li:hover .vjs-men
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
 }
 
@@ -3072,7 +3076,7 @@ body.bb-rl-register {
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   background-color: var(--bb-rl-background-brand-primary-color);
   color: var(--bb-rl-text-white-color);
@@ -3208,6 +3212,10 @@ body.bb-rl-register {
   border-radius: var(--bb-rl-radius-full);
 }
 
+.register-page-main .bb_recaptcha_v2_element_content {
+  margin: 0 0 var(--bb-rl-space-200);
+}
+
 .register-section .bb-signup-field {
   margin-bottom: var(--bb-rl-space-200);
 }
@@ -3282,7 +3290,7 @@ body.bb-rl-register {
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   padding: 6px var(--bb-rl-space-200);
   font-size: var(--bb-rl-font-size-sm);
@@ -3617,7 +3625,7 @@ html:has(.memberpressproduct-template-default.single.registration) {
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   background-color: var(--bb-rl-background-brand-primary-color);
   color: var(--bb-rl-text-white-color);
