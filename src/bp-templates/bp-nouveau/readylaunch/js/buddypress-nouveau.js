@@ -2016,7 +2016,10 @@ window.bp = window.bp || {};
 			event.preventDefault();
 
 			if ( target.hasClass( 'bp-toggle-action-button' ) ) {
-				target.html( target.data( 'title' ) );
+				// Don't replace icon with text for subscription buttons.
+				if ( ! target.hasClass( 'group-subscription' ) ) {
+					target.html( target.data( 'title' ) );
+				}
 				target.removeClass( 'bp-toggle-action-button' );
 				target.addClass( 'bp-toggle-action-button-clicked' );
 			}

@@ -80,7 +80,10 @@ class BB_Group_Readylaunch {
 	 * @return array Modified button arguments.
 	 */
 	public function bb_rl_update_group_subscription_button( $button ) {
-		$button['link_text']                           = str_replace( '<i class="bb-icon-l bb-icon-bell"></i>', '<i class="bb-icons-rl-bell"></i>', $button['link_text'] );
+		$is_subscribed = isset( $button['link_class'] ) && strpos( $button['link_class'], 'not-subscribed' ) === false && strpos( $button['link_class'], 'subscribed' ) !== false;
+		$icon_class    = $is_subscribed ? 'bb-icons-rl-bell-slash' : 'bb-icons-rl-bell';
+
+		$button['link_text']                           = str_replace( '<i class="bb-icon-l bb-icon-bell"></i>', '<i class="' . $icon_class . '"></i>', $button['link_text'] );
 		$button['button_attr']['data-title']           = $button['data-balloon'];
 		$button['button_attr']['data-title-displayed'] = str_replace( '<i class="bb-icon-l bb-icon-bell"></i>', $button['button_attr']['data-title'], $button['button_attr']['data-title-displayed'] );
 		$button['data-balloon-pos']                    = 'left';
