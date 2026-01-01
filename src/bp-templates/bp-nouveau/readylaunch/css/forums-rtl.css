@@ -1634,7 +1634,8 @@
 .bb-rl-forum-modal .bb-rl-forum-subscription {
   font-size: 14px;
   font-weight: 500;
-  margin-left: var(--bb-rl-space-300);
+  margin: 0 0 0 var(--bb-rl-space-300);
+  line-height: 1;
 }
 
 .bb-rl-forum-modal .bb_discard_topic_reply_draft {
