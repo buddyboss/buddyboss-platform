@@ -2794,7 +2794,7 @@ function bb_redirection_allowed_third_party_domains( $hosts ) {
 /**
  * Make video embeds discoverable.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.17.0
  *
  * @param bool   $retval Return value to enable discover support or not.
  * @param string $url    URL to parse for embed.

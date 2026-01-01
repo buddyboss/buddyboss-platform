@@ -5648,7 +5648,7 @@ window.bp = window.bp || {};
 								$( document ).find( selector ).trigger( 'click' );
 							} else {
 								if ( 'document_folder' !== actionType ) {
-									var currentFolderAlbum, responseContent;
+									var currentFolderAlbum, responseContent, currentType, bbrlAlbumId;
 									if ( 'folder' === folderOrAlbum ) {
 										currentFolderAlbum = bbRlMedia.current_folder;
 										responseContent    = response.data.document_content;
