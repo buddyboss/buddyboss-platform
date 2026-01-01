@@ -201,6 +201,11 @@
 			@include bb-rl-base-heading-xl;
 			color: var(--bb-rl-text-color);
 			margin-right: var(--bb-rl-space-100);
+			font-weight: 500;
+
+			&.selected {
+				font-weight: 600;
+			}
 		}
 	}
 
@@ -456,6 +461,17 @@
 
 				@include bb-rl-base-heading;
 				color: var(--bb-rl-text-color);
+			}
+		}
+
+		.bp-existing-media-wrap {
+			padding: var(--bb-rl-space-200) var(--bb-rl-space-200) 0;
+			overflow-y: auto;
+			overflow-x: hidden;
+			max-height: calc(100vh - 150px);
+
+			.load-more .button {
+				margin-right: 0;
 			}
 		}
 	}
