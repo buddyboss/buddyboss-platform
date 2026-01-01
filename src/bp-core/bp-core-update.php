@@ -4076,9 +4076,9 @@ function bb_update_to_2_10_1() {
 }
 
 /**
- * Migrate for BuddyBoss [BBVERSION].
+ * Migrate for BuddyBoss 2.17.0.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.17.0
  *
  * @return void
  */
