@@ -237,6 +237,9 @@
                 }
             ],
             "description": "The GroundLevel Support package.",
+            "support": {
+                "source": "https:\/\/github.com\/caseproof\/ground-level-support\/tree\/1.1.0"
+            },
             "install-path": "..\/caseproof\/ground-level-support"
         },
         {
