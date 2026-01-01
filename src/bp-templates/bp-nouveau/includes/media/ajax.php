@@ -934,9 +934,13 @@ function bp_nouveau_ajax_media_delete_attachment() {
 	$response = array(
 		'feedback' => sprintf(
 			'<div class="bp-feedback bp-messages error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-			esc_html__( 'There was a problem displaying the content. Please try again.', 'buddyboss' )
+			esc_html__( 'There was a problem deleting the content. Please try again.', 'buddyboss' )
 		),
 	);
+
+	if ( ! is_user_logged_in() ) {
+		wp_send_json_error( $response );
+	}
 
 	// Use default nonce.
 	$nonce = bb_filter_input_string( INPUT_POST, '_wpnonce' );
