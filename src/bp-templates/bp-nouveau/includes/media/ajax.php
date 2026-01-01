@@ -964,9 +964,7 @@ function bp_nouveau_ajax_media_delete_attachment() {
 
 	// Check if the attachment is from the same loggedin user then only allow to delete else send error feedback.
 	$attachment_author_id = get_post_field( 'post_author', $id );
-	$current_user_id      = bp_loggedin_user_id();
-
-	if ( empty( $attachment_author_id ) || (int) $attachment_author_id !== (int) $current_user_id ) {
+	if ( empty( $attachment_author_id ) || (int) $attachment_author_id !== bp_loggedin_user_id() ) {
 		$response['feedback'] = sprintf(
 			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
 			esc_html__( 'You do not have permission to delete this attachment.', 'buddyboss' )
