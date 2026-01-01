@@ -3436,6 +3436,24 @@ div#bp-group-message-content {
   }
 }
 
+.group-messages .bb-rl-group-details .item-body > .bp-feedback {
+  background-color: var(--bb-rl-background-brand-secondary-color);
+  border-color: var(--bb-rl-border-brand-primary-color);
+}
+
+.group-messages .bb-rl-group-details .item-body > .bp-feedback .bp-icon {
+  margin-left: var(--bb-rl-space-100);
+}
+
+.group-messages .bb-rl-group-details .item-body > .bp-feedback .bp-icon:before {
+  content: "\e2ce";
+  color: var(--bb-rl-icon-brand-primary-color);
+  font-weight: 500;
+  font-family: bb-icons-rl;
+  font-size: var(--bb-rl-base-line-small);
+  font-style: normal;
+}
+
 .bb-groups-messages-right-bottom {
   border: 1px solid var(--bb-rl-border-tertiary-color);
   border-radius: var(--bb-rl-radius-lg);
