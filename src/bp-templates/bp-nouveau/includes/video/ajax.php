@@ -801,7 +801,7 @@ function bp_nouveau_ajax_video_move_to_album() {
 		if ( ! $video ) {
 			$response['feedback'] = sprintf(
 				'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-				esc_html__( 'There was a problem when trying to move the media.', 'buddyboss' )
+				esc_html__( 'There was a problem when trying to move the video.', 'buddyboss' )
 			);
 
 			wp_send_json_error( $response );
