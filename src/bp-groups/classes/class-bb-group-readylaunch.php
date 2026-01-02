@@ -81,7 +81,7 @@ class BB_Group_Readylaunch {
 	 */
 	public function bb_rl_update_group_subscription_button( $button ) {
 		$link_class    = ! empty( $button['link_class'] ) ? $button['link_class'] : '';
-		$is_subscribed = $link_class && false === strpos( $link_class, 'not-subscribed' );
+		$is_subscribed = false !== strpos( $link_class, 'subscribed' ) && false === strpos( $link_class, 'not-subscribed' );
 		$icon_class    = $is_subscribed ? 'bb-icons-rl-bell-slash' : 'bb-icons-rl-bell';
 
 		$button['link_text']                           = str_replace( '<i class="bb-icon-l bb-icon-bell"></i>', '<i class="' . $icon_class . '"></i>', $button['link_text'] );
