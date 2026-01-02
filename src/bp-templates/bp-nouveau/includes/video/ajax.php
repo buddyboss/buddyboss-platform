@@ -371,13 +371,70 @@ function bp_nouveau_ajax_video_save() {
 		wp_send_json_error( $response );
 	}
 
-	$group_id = filter_input( INPUT_POST, 'group_id', FILTER_SANITIZE_NUMBER_INT );
+	$group_id = (int) filter_input( INPUT_POST, 'group_id', FILTER_SANITIZE_NUMBER_INT );
 
 	if (
 		( ( bp_is_my_profile() || bp_is_user_media() ) && empty( bb_user_can_create_video() ) ) ||
-		( bp_is_active( 'groups' ) && ! empty( $group_id ) && ! groups_can_user_manage_video( bp_loggedin_user_id(), $group_id ) )
+		( bp_is_active( 'groups' ) && ! empty( $group_id ) && ( ! groups_can_user_manage_video( bp_loggedin_user_id(), $group_id ) || ! bp_is_group_video_support_enabled() ) )
 	) {
 		wp_send_json_error( $response );
+	}
+
+	$album_id         = (int) filter_input( INPUT_POST, 'album_id', FILTER_VALIDATE_INT );
+	$current_album_id = bp_is_single_album() ? (int) bp_action_variable( 0 ) : false;
+
+	// Security check like when changing the html with album id.
+	if ( ! empty( $album_id ) && bp_is_single_album() && $current_album_id !== $album_id ) {
+		$response['feedback'] = sprintf(
+			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+			esc_html__( 'There was a problem saving media.', 'buddyboss' )
+		);
+
+		$album = new BP_Video_Album( $album_id );
+
+		// If the album is not found, throw an error.
+		if ( empty( $album ) ) {
+			wp_send_json_error( $response );
+		}
+
+		$album_privacy  = $album->privacy;
+		$album_group_id = (int) $album->group_id;
+		$album_error    = false;
+
+		// If user on my profile or user media then throw error if the album is a group album or vice versa or if the group id is not the same as the album group id.
+		if ( 'grouponly' === $album_privacy && ( bp_is_my_profile() || bp_is_user_media() ) ) {
+			$album_error = true;
+		} elseif ( 'public' === $album_privacy && bp_is_active( 'groups' ) && bp_is_group_albums() ) {
+			$album_error = true;
+		} elseif (
+			bp_is_active( 'groups' ) &&
+			! empty( $group_id ) &&
+			bp_is_group_albums() &&
+			(
+				bp_get_current_group_id() !== $album_group_id ||
+				$album_group_id !== $group_id
+			)
+		) {
+			$album_error = true;
+		}
+
+		if ( $album_error ) {
+			wp_send_json_error( $response );
+		}
+
+		// If the album is a group album, check if the user has permission to add media to the album.
+		// If the album is not a group album, check if the user has permission to add media to the album.
+		if ( empty( $group_id ) ) {
+			$album_access = bb_media_user_can_access( $album_id, 'album' );
+			$can_add      = true === (bool) $album_access['can_add'];
+			if ( ! $can_add ) {
+				$response['feedback'] = sprintf(
+					'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+					esc_html__( 'You do not have permission to add media to this album.', 'buddyboss' )
+				);
+				wp_send_json_error( $response );
+			}
+		}
 	}
 
 	$videos = filter_input( INPUT_POST, 'videos', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
@@ -389,6 +446,16 @@ function bp_nouveau_ajax_video_save() {
 		);
 
 		wp_send_json_error( $response );
+	} elseif ( ! empty( $album_id ) && bp_is_single_album() ) {
+		// Check if the album ids have same value as the $album_id.
+		$album_ids = array_map( 'intval', array_column( $videos, 'album_id' ) );
+		if ( ! in_array( $album_id, $album_ids, true ) ) {
+			$response['feedback'] = sprintf(
+				'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+				esc_html__( 'There was a problem saving media.', 'buddyboss' )
+			);
+			wp_send_json_error( $response );
+		}
 	}
 
 	$privacy = bb_filter_input_string( INPUT_POST, 'privacy' );
@@ -417,7 +484,28 @@ function bp_nouveau_ajax_video_save() {
 		ob_end_clean();
 	}
 
-	if ( empty( $video ) ) {
+	$skip_error = false;
+
+	// Do not send the error if is album page and the current album id is not the same as the album id in the request.
+	// This is scenario when user selects the album from the dropdown and after uploading the video.
+	if ( bp_is_single_album() && $current_album_id !== $album_id && empty( $video ) && ! empty( $video_ids ) && ! empty( $album_id ) ) {
+		$tmp_args = array(
+			'include'  => implode( ',', $video_ids ),
+			'per_page' => 0,
+			'album_id' => $album_id,
+		);
+
+		if ( ! empty( $group_id ) ) {
+			$tmp_args['group_id'] = $group_id;
+		}
+
+		$has_video_in_album = bp_has_video( $tmp_args );
+		if ( $has_video_in_album ) {
+			$skip_error = true;
+		}
+	}
+
+	if ( empty( $video ) && ! $skip_error ) {
 		$response['feedback'] = sprintf(
 			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
 			esc_html__( 'There was a problem saving video.', 'buddyboss' )
