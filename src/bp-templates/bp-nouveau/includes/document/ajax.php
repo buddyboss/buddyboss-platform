@@ -575,9 +575,19 @@ function bp_nouveau_ajax_document_delete_attachment() {
 
 	$post_id = filter_input( INPUT_POST, 'id', FILTER_VALIDATE_INT );
 
-	// Check if the attachment is from the same loggedin user then only allow to delete else send error feedback.
-	$attachment_author_id = get_post_field( 'post_author', $post_id );
-	if ( empty( $attachment_author_id ) || (int) $attachment_author_id !== bp_loggedin_user_id() ) {
+	// Check if attachment exists.
+	$attachment = get_post( $post_id );
+	if ( empty( $attachment ) ) {
+		$response['feedback'] = sprintf(
+			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+			esc_html__( 'Please provide valid attachment id to delete.', 'buddyboss' )
+		);
+
+		wp_send_json_error( $response );
+	}
+
+	// Check if user has permission to delete this attachment.
+	if ( ! ( bp_current_user_can( 'bp_moderate' ) || (int) $attachment->post_author === bp_loggedin_user_id() ) ) {
 		$response['feedback'] = sprintf(
 			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
 			esc_html__( 'You do not have permission to delete this attachment.', 'buddyboss' )
