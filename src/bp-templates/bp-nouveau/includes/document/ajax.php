@@ -584,16 +584,16 @@ function bp_nouveau_ajax_document_delete_attachment() {
 		);
 
 		wp_send_json_error( $response );
-	} else {
-		// Check if user has permission to delete this attachment.
-		if ( ! ( bp_current_user_can( 'bp_moderate' ) || (int) $attachment->post_author === bp_loggedin_user_id() ) ) {
-			$response['feedback'] = sprintf(
-				'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-				esc_html__( 'You do not have permission to delete this attachment.', 'buddyboss' )
-			);
+	}
 
-			wp_send_json_error( $response );
-		}
+	// Check if user has permission to delete this attachment.
+	if ( ! ( bp_current_user_can( 'bp_moderate' ) || (int) $attachment->post_author === bp_loggedin_user_id() ) ) {
+		$response['feedback'] = sprintf(
+			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+			esc_html__( 'You do not have permission to delete this attachment.', 'buddyboss' )
+		);
+
+		wp_send_json_error( $response );
 	}
 
 	// delete attachment with its meta.
