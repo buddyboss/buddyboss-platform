@@ -285,9 +285,13 @@ function bp_nouveau_ajax_video_thumbnail_delete_attachment() {
 	$response = array(
 		'feedback' => sprintf(
 			'<div class="bp-feedback bp-messages error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-			esc_html__( 'There was a problem displaying the content. Please try again.', 'buddyboss' )
+			esc_html__( 'There was a problem deleting the content. Please try again.', 'buddyboss' )
 		),
 	);
+
+	if ( ! is_user_logged_in() ) {
+		wp_send_json_error( $response );
+	}
 
 	// Use default nonce.
 	$nonce = bb_filter_input_string( INPUT_POST, '_wpnonce' );
@@ -304,6 +308,27 @@ function bp_nouveau_ajax_video_thumbnail_delete_attachment() {
 		$response['feedback'] = sprintf(
 			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
 			esc_html__( 'Please provide attachment id to delete.', 'buddyboss' )
+		);
+
+		wp_send_json_error( $response );
+	}
+
+	// Check if attachment exists.
+	$attachment = get_post( $id );
+	if ( empty( $attachment ) ) {
+		$response['feedback'] = sprintf(
+			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+			esc_html__( 'Please provide valid attachment id to delete.', 'buddyboss' )
+		);
+
+		wp_send_json_error( $response );
+	}
+
+	// Check if user has permission to delete this attachment.
+	if ( ! ( bp_current_user_can( 'bp_moderate' ) || (int) $attachment->post_author === bp_loggedin_user_id() ) ) {
+		$response['feedback'] = sprintf(
+			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+			esc_html__( 'You do not have permission to delete this attachment.', 'buddyboss' )
 		);
 
 		wp_send_json_error( $response );
@@ -1123,9 +1148,13 @@ function bp_nouveau_ajax_video_delete_attachment() {
 	$response = array(
 		'feedback' => sprintf(
 			'<div class="bp-feedback bp-messages error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-			esc_html__( 'There was a problem displaying the content. Please try again.', 'buddyboss' )
+			esc_html__( 'There was a problem deleting the content. Please try again.', 'buddyboss' )
 		),
 	);
+
+	if ( ! is_user_logged_in() ) {
+		wp_send_json_error( $response );
+	}
 
 	// Use default nonce.
 	$nonce = bb_filter_input_string( INPUT_POST, '_wpnonce' );
@@ -1142,6 +1171,27 @@ function bp_nouveau_ajax_video_delete_attachment() {
 		$response['feedback'] = sprintf(
 			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
 			esc_html__( 'Please provide attachment id to delete.', 'buddyboss' )
+		);
+
+		wp_send_json_error( $response );
+	}
+
+	// Check if attachment exists.
+	$attachment = get_post( $id );
+	if ( empty( $attachment ) ) {
+		$response['feedback'] = sprintf(
+			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+			esc_html__( 'Please provide valid attachment id to delete.', 'buddyboss' )
+		);
+
+		wp_send_json_error( $response );
+	}
+
+	// Check if user has permission to delete this attachment.
+	if ( ! ( bp_current_user_can( 'bp_moderate' ) || (int) $attachment->post_author === bp_loggedin_user_id() ) ) {
+		$response['feedback'] = sprintf(
+			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+			esc_html__( 'You do not have permission to delete this attachment.', 'buddyboss' )
 		);
 
 		wp_send_json_error( $response );
