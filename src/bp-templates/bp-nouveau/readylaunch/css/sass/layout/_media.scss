@@ -565,6 +565,18 @@
 		color: var(--bb-rl-text-secondary-color);
 		text-align: center;
 	}
+
+	@media screen and (max-width: $sm) {
+		padding: var(--bb-rl-space-300) 0;
+
+		.bb-media-actions-wrap {
+
+			.bb-media-actions,
+			.bb-video-actions {
+				flex-direction: column;
+			}
+		}
+	}
 }
 
 .bb-rl-popup-on-fly-create-folder,
