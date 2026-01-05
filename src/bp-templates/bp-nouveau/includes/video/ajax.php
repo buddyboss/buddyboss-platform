@@ -1212,7 +1212,7 @@ function bp_nouveau_ajax_video_update_privacy() {
 
 	$video = new BP_Video( $video_id );
 
-	// Check if the current user has permission to edit this video.
+	// Check if the current user has permission to update this video's privacy.
 	if ( ! bp_video_user_can_edit( $video ) ) {
 		$response['feedback'] = sprintf(
 			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
@@ -1282,7 +1282,7 @@ function bp_nouveau_ajax_video_description_save() {
 		$video = new BP_Video( $video_id );
 
 		if ( ! empty( $video->id ) ) {
-			// Check if the current user has permission to edit this video.
+			// Check if the current user has permission to update this video's description.
 			if ( ! bp_video_user_can_edit( $video ) ) {
 				$response['feedback'] = sprintf(
 					'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
@@ -1780,7 +1780,7 @@ function bp_nouveau_ajax_video_thumbnail_save() {
 	$video_id                  = filter_input( INPUT_POST, 'video_id', FILTER_SANITIZE_NUMBER_INT );
 	$pre_selected_id           = filter_input( INPUT_POST, 'video_default_id', FILTER_SANITIZE_NUMBER_INT );
 
-	// Check if the current user has permission to edit this video.
+	// Check if the current user has permission to update this video's thumbnail.
 	if ( ! empty( $video_id ) ) {
 		$video = new BP_Video( $video_id );
 
@@ -1867,7 +1867,7 @@ function bp_nouveau_ajax_video_thumbnail_delete() {
 	$attachment_id       = filter_input( INPUT_POST, 'attachment_id', FILTER_SANITIZE_NUMBER_INT );
 	$video_attachment_id = filter_input( INPUT_POST, 'video_attachment_id', FILTER_SANITIZE_NUMBER_INT );
 
-	// Check if the current user has permission to edit this video.
+	// Check if the current user has permission to delete this video's thumbnail.
 	if ( ! empty( $video_id ) ) {
 		$video = new BP_Video( $video_id );
 
