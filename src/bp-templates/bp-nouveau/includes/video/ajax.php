@@ -1653,7 +1653,11 @@ function bp_nouveau_ajax_video_move() {
 		}
 	}
 
-	$video    = bp_video_move_video_to_album( $video_id, $album_id, $group_id );
+	$video = bp_video_move_video_to_album( $video_id, $album_id, $group_id );
+
+	// Flush the cache.
+	wp_cache_flush();
+
 	$response = bp_video_get_activity_video( $activity_id );
 
 	if ( $video > 0 ) {

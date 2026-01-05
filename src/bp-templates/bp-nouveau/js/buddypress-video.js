@@ -2273,7 +2273,13 @@ window.bp = window.bp || {};
 									$( document ).find( 'li#video-all' ).trigger( 'click' );
 								}
 							} else {
-								if ( parseInt( BP_Nouveau.video.current_album ) > 0 ) {
+								if (
+									parseInt( BP_Nouveau.video.current_album ) > 0 ||
+									(
+										'group' === BP_Nouveau.video.current_type &&
+										parseInt( BP_Nouveau.video.album_id ) > 0
+									)
+								) {
 									$( '#video-stream ul.video-list li[data-id="' + video_id + '"]' ).remove();
 									$( '#media-stream ul.media-list li[data-id="' + video_id + '"]' ).remove();
 								} else if ( $( '#activity-stream ul.activity-list li .activity-content .activity-inner .bb-activity-video-wrap div[data-id="' + video_id + '"]' ).length && ! $( '#activity-stream ul.activity-list li .activity-content .activity-inner .bb-activity-video-wrap div[data-id="' + video_id + '"]' ).parents().hasClass( 'bb-video-length-1' ) ) {
