@@ -262,6 +262,14 @@
 		padding: var(--bb-rl-space-100) 0;
 		width: 200px;
 
+		.bb-rl-activity-filters-container & {
+
+			@media screen and (max-width: $md) {
+				left: 0;
+				right: unset;
+			}
+		}
+
 		ul {
 			list-style: none;
 			padding: 0;
