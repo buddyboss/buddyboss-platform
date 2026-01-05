@@ -1128,7 +1128,7 @@ function bp_nouveau_ajax_video_update_privacy() {
 	if ( ! bp_video_user_can_edit( $video ) ) {
 		$response['feedback'] = sprintf(
 			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-			esc_html__( 'You do not have permission to update this video.', 'buddyboss' )
+			esc_html__( 'You do not have permission to update this video\'s privacy.', 'buddyboss' )
 		);
 
 		wp_send_json_error( $response );
@@ -1198,7 +1198,7 @@ function bp_nouveau_ajax_video_description_save() {
 			if ( ! bp_video_user_can_edit( $video ) ) {
 				$response['feedback'] = sprintf(
 					'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-					esc_html__( 'You do not have permission to update this video.', 'buddyboss' )
+					esc_html__( 'You do not have permission to update this video\'s description.', 'buddyboss' )
 				);
 
 				wp_send_json_error( $response );
@@ -1699,7 +1699,7 @@ function bp_nouveau_ajax_video_thumbnail_save() {
 		if ( ! empty( $video->id ) && ! bp_video_user_can_edit( $video ) ) {
 			$response['feedback'] = sprintf(
 				'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-				esc_html__( 'You do not have permission to update this video.', 'buddyboss' )
+				esc_html__( 'You do not have permission to update this video thumbnail.', 'buddyboss' )
 			);
 
 			wp_send_json_error( $response );
@@ -1783,10 +1783,10 @@ function bp_nouveau_ajax_video_thumbnail_delete() {
 	if ( ! empty( $video_id ) ) {
 		$video = new BP_Video( $video_id );
 
-		if ( ! empty( $video->id ) && ! bp_video_user_can_edit( $video ) ) {
+		if ( ! empty( $video->id ) && ! bp_video_user_can_delete( $video ) ) {
 			$response['feedback'] = sprintf(
 				'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-				esc_html__( 'You do not have permission to update this video.', 'buddyboss' )
+				esc_html__( 'You do not have permission to delete this video thumbnail.', 'buddyboss' )
 			);
 
 			wp_send_json_error( $response );
