@@ -792,22 +792,13 @@ function bp_nouveau_ajax_video_move_to_album() {
 
 	$group_id = filter_input( INPUT_POST, 'group_id', FILTER_VALIDATE_INT );
 
-	$album_privacy = 'public';
-	$album         = new BP_Video_Album( $album_id );
-	if ( ! empty( $album ) ) {
-		$album_privacy = $album->privacy;
-	}
-
 	// save video.
 	$video_ids = array();
 	foreach ( $videos as $video_id ) {
 
-		$video_obj           = new BP_Video( $video_id );
-		$video_obj->album_id = $album_id;
-		$video_obj->group_id = ! empty( $group_id ) ? $group_id : false;
-		$video_obj->privacy  = $video_obj->group_id ? 'grouponly' : $album_privacy;
+		$video = bp_video_move_video_to_album( $video_id, $album_id, $group_id );
 
-		if ( ! $video_obj->save() ) {
+		if ( ! $video ) {
 			$response['feedback'] = sprintf(
 				'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
 				esc_html__( 'There was a problem when trying to move the video.', 'buddyboss' )
@@ -818,6 +809,9 @@ function bp_nouveau_ajax_video_move_to_album() {
 
 		$video_ids[] = $video_id;
 	}
+
+	// Flush the cache.
+	wp_cache_flush();
 
 	$video_html = '';
 	if ( ! empty( $video_ids ) ) {
