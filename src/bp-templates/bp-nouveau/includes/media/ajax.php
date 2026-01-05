@@ -1206,48 +1206,73 @@ function bp_nouveau_ajax_media_description_save() {
 		wp_send_json_error( $response );
 	}
 
+	// Check permissions before any updates.
+	$media_id    = get_post_meta( $attachment_id, 'bp_media_id', true );
+	$video_id    = get_post_meta( $attachment_id, 'bp_video_id', true );
+	$document_id = get_post_meta( $attachment_id, 'bp_document_id', true );
+
+	if ( ! empty( $media_id ) ) {
+		$media = new BP_Media( $media_id );
+
+		if ( ! empty( $media->id ) && ! bp_media_user_can_edit( $media ) ) {
+			$response['feedback'] = sprintf(
+				'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+				esc_html__( 'You do not have permission to update this media\'s description.', 'buddyboss' )
+			);
+
+			wp_send_json_error( $response );
+		}
+	} elseif ( ! empty( $video_id ) ) {
+		$video = new BP_Video( $video_id );
+
+		if ( ! empty( $video->id ) && ! bp_video_user_can_edit( $video ) ) {
+			$response['feedback'] = sprintf(
+				'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+				esc_html__( 'You do not have permission to update this video\'s description.', 'buddyboss' )
+			);
+
+			wp_send_json_error( $response );
+		}
+	} elseif ( ! empty( $document_id ) ) {
+		$document = new BP_Document( $document_id );
+
+		if ( ! empty( $document->id ) && ! bp_document_user_can_edit( $document ) ) {
+			$response['feedback'] = sprintf(
+				'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+				esc_html__( 'You do not have permission to update this document\'s description.', 'buddyboss' )
+			);
+
+			wp_send_json_error( $response );
+		}
+	}
+
 	// Added backward compatibility.
 	$media_post['ID']           = $attachment_id;
 	$media_post['post_content'] = $description;
 	wp_update_post( $media_post );
 
-	$media_id = get_post_meta( $attachment_id, 'bp_media_id', true );
-	if ( ! empty( $media_id ) ) {
-		$media = new BP_Media( $media_id );
+	if ( ! empty( $media_id ) && ! empty( $media->id ) ) {
+		$media->description = $description;
+		$media->save();
 
-		if ( ! empty( $media->id ) ) {
-			$media->description = $description;
-			$media->save();
-
-			$response['description'] = $description;
-			wp_send_json_success( $response );
-		}
+		$response['description'] = $description;
+		wp_send_json_success( $response );
 	}
 
-	$video_id = get_post_meta( $attachment_id, 'bp_video_id', true );
-	if ( ! empty( $video_id ) ) {
-		$video = new BP_Video( $video_id );
+	if ( ! empty( $video_id ) && ! empty( $video->id ) ) {
+		$video->description = $description;
+		$video->save();
 
-		if ( ! empty( $video->id ) ) {
-			$video->description = $description;
-			$video->save();
-
-			$response['description'] = $description;
-			wp_send_json_success( $response );
-		}
+		$response['description'] = $description;
+		wp_send_json_success( $response );
 	}
 
-	$document_id = get_post_meta( $attachment_id, 'bp_document_id', true );
-	if ( ! empty( $document_id ) ) {
-		$document = new BP_Document( $document_id );
+	if ( ! empty( $document_id ) && ! empty( $document->id ) ) {
+		$document->description = $description;
+		$document->save();
 
-		if ( ! empty( $document->id ) ) {
-			$document->description = $description;
-			$document->save();
-
-			$response['description'] = $description;
-			wp_send_json_success( $response );
-		}
+		$response['description'] = $description;
+		wp_send_json_success( $response );
 	}
 
 	wp_send_json_error( $response );
