@@ -1787,7 +1787,7 @@ function bp_nouveau_ajax_video_thumbnail_save() {
 		if ( ! empty( $video->id ) && ! bp_video_user_can_edit( $video ) ) {
 			$response['feedback'] = sprintf(
 				'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-				esc_html__( 'You do not have permission to update this video thumbnail.', 'buddyboss' )
+				esc_html__( 'You do not have permission to update this video\'s thumbnail.', 'buddyboss' )
 			);
 
 			wp_send_json_error( $response );
@@ -1874,7 +1874,7 @@ function bp_nouveau_ajax_video_thumbnail_delete() {
 		if ( ! empty( $video->id ) && ! bp_video_user_can_delete( $video ) ) {
 			$response['feedback'] = sprintf(
 				'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-				esc_html__( 'You do not have permission to delete this video thumbnail.', 'buddyboss' )
+				esc_html__( 'You do not have permission to delete this video\'s thumbnail.', 'buddyboss' )
 			);
 
 			wp_send_json_error( $response );
