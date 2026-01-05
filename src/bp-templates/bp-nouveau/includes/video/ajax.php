@@ -1691,6 +1691,21 @@ function bp_nouveau_ajax_video_thumbnail_save() {
 	$video_attachment_id       = filter_input( INPUT_POST, 'video_attachment_id', FILTER_SANITIZE_NUMBER_INT );
 	$video_id                  = filter_input( INPUT_POST, 'video_id', FILTER_SANITIZE_NUMBER_INT );
 	$pre_selected_id           = filter_input( INPUT_POST, 'video_default_id', FILTER_SANITIZE_NUMBER_INT );
+
+	// Check if the current user has permission to edit this video.
+	if ( ! empty( $video_id ) ) {
+		$video = new BP_Video( $video_id );
+
+		if ( ! empty( $video->id ) && ! bp_video_user_can_edit( $video ) ) {
+			$response['feedback'] = sprintf(
+				'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+				esc_html__( 'You do not have permission to update this video.', 'buddyboss' )
+			);
+
+			wp_send_json_error( $response );
+		}
+	}
+
 	$auto_generated_thumbnails = bb_video_get_auto_generated_preview_ids( $video_attachment_id );
 	$old_thumbnail_id          = get_post_meta( $video_attachment_id, 'bp_video_preview_thumbnail_id', true );
 
