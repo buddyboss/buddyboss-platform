@@ -5689,8 +5689,8 @@ window.bp = window.bp || {};
 							}
 							if ( 'document_folder' !== actionType ) {
 								target.closest( '.bb-rl-' + nameDocumentAsMedia + '-move-file' ).find( '.bb-rl-ac-' + updateActionType + '-close-button' ).trigger( 'click' );
-								if ( 'media' === actionType ) {
-									$( document ).find( 'a.bb-rl-open-' + nameDocumentAsMedia + '-theatre[data-id="' + itemId + '"]' ).data( 'album-id', destinationId );
+								if ( 'media' === actionType || 'video' === actionType ) {
+									$( document ).find( 'a[class*="open-' + nameDocumentAsMedia + '-theatre"][data-id="' + itemId + '"]' ).data( 'album-id', destinationId );
 								}
 							}
 						} else {

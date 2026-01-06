@@ -1833,8 +1833,9 @@ window.bp = window.bp || {};
 			var video_move_popup,
 			eventCurrentTarget = $( event.currentTarget ),
 			$document          = $( document ),
-			video_id           = eventCurrentTarget.closest( '.bb-rl-more_dropdown-wrap' ).siblings( 'a, div.video-js' ).data( 'id' ),
-			video_parent_id    = eventCurrentTarget.closest( '.bb-rl-more_dropdown-wrap' ).siblings( 'a, div.video-js' ).data( 'album-id' );
+			$wrapper           = eventCurrentTarget.closest( '.bb-rl-more_dropdown-wrap' ),
+			video_id           = $wrapper.siblings( 'a' ).data( 'id' ) || $wrapper.siblings( 'div.video-js' ).data( 'id' ),
+			video_parent_id    = $wrapper.siblings( 'a' ).data( 'album-id' ) || $wrapper.siblings( 'div.video-js' ).data( 'album-id' );
 
 			this.moveToIdPopup   = eventCurrentTarget.attr( 'id' );
 			this.moveToTypePopup = eventCurrentTarget.attr( 'data-type' );
