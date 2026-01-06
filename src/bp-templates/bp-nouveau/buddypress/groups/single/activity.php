@@ -50,9 +50,24 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 	<div class='<?php echo esc_attr( $hide_class ); ?> bb-subnav-filters-container-main'>
 		<span class="bb-subnav-filters-label"><?php echo esc_html_e( 'Show by', 'buddyboss' ); ?></span>
 		<div class="bb-subnav-filters-container bb-subnav-filters-filtering">
-			<?php $sorting_labels = bb_get_activity_sorting_options_labels(); ?>
+			<?php
+			$sorting_labels            = bb_get_activity_sorting_options_labels();
+			$sorting_labels_by_context = bb_get_activity_sorting_options_labels_by_context();
+			?>
 			<button class="subnav-filters-opener" aria-expanded="false" aria-controls="bb-subnav-filter-by">
-				<span class="selected"><?php echo strtolower( esc_html( $sorting_labels[ $default_selected ] ) ); ?></span>
+				<span class="selected">
+					<?php
+					// Use by context labels which have separate translations for proper grammar.
+					$default_sorting_label = '';
+					if ( isset( $sorting_labels_by_context[ $default_selected ] ) ) {
+						$default_sorting_label = $sorting_labels_by_context[ $default_selected ];
+					} elseif ( isset( $sorting_labels[ $default_selected ] ) ) {
+						$default_sorting_label = $sorting_labels[ $default_selected ];
+					}
+					echo esc_html( $default_sorting_label );
+					unset( $default_sorting_label );
+					?>
+				</span>
 				<i class="bb-icon-l bb-icon-angle-down"></i>
 			</button>
 
