@@ -139,9 +139,12 @@ if ( bp_is_activity_directory() || bp_is_user_activity() ) {
 				<span class="selected">
 					<?php
 					// Use show context labels which have separate translations for proper grammar.
-					$default_filter_label = isset( $filters_labels_show_context[ $default_selected ] )
-						? $filters_labels_show_context[ $default_selected ]
-						: $filters_labels[ $default_selected ];
+					$default_filter_label = '';
+					if ( isset( $filters_labels_show_context[ $default_selected ] ) ) {
+						$default_filter_label = $filters_labels_show_context[ $default_selected ];
+					} elseif ( isset( $filters_labels[ $default_selected ] ) ) {
+						$default_filter_label = $filters_labels[ $default_selected ];
+					}
 					echo esc_html( $default_filter_label );
 					unset( $default_filter_label );
 					?>
@@ -183,9 +186,12 @@ if ( bp_is_activity_directory() || bp_is_user_activity() ) {
 				<span class="selected">
 					<?php
 					// Use by context labels which have separate translations for proper grammar.
-					$default_sorting_label = isset( $sorting_labels_by_context[ $default_selected ] )
-						? $sorting_labels_by_context[ $default_selected ]
-						: $sorting_labels[ $default_selected ];
+					$default_sorting_label = '';
+					if ( isset( $sorting_labels_by_context[ $default_selected ] ) ) {
+						$default_sorting_label = $sorting_labels_by_context[ $default_selected ];
+					} elseif ( isset( $sorting_labels[ $default_selected ] ) ) {
+						$default_sorting_label = $sorting_labels[ $default_selected ];
+					}
 					echo esc_html( $default_sorting_label );
 					unset( $default_sorting_label );
 					?>
