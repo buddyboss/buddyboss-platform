@@ -42,8 +42,6 @@ class BB_Core_Connections_Widget extends WP_Widget {
 			return;
 		}
 
-		echo wp_kses_post( $args['before_widget'] );
-
 		$user_id = get_current_user_id();
 		$max     = 10;
 
@@ -51,8 +49,14 @@ class BB_Core_Connections_Widget extends WP_Widget {
 			? friends_get_friend_user_ids( $user_id )
 			: array();
 
-		$friends = array_slice( $friends, 0, $max );
+		// No connections found, don't display the widget.
+		if ( empty( $friends ) ) {
+			return;
+		}
 
+		echo wp_kses_post( $args['before_widget'] );
+
+		$friends = array_slice( $friends, 0, $max );
 		?>
 		<div class="widget-header">
 			<h2 class="widget-title"><?php esc_html_e( 'Connections', 'buddyboss' ); ?></h2>
