@@ -2830,7 +2830,7 @@ function bb_get_activity_filter_options_labels() {
  * These labels are used when displayed after "Show" prefix and may require
  * different capitalization or grammar in some languages (e.g., German).
  *
- * @since BuddyBoss [NEXT_VERSION]
+ * @since BuddyBoss [BBVERSION]
  *
  * @return array Array of all activity filters option labels for show context.
  */
@@ -2924,7 +2924,7 @@ function bb_get_activity_timeline_filter_options_labels() {
  * These labels are used when displayed after "Show" prefix and may require
  * different capitalization or grammar in some languages (e.g., German).
  *
- * @since BuddyBoss [NEXT_VERSION]
+ * @since BuddyBoss [BBVERSION]
  *
  * @return array Array of all activity timeline filters option labels for show context.
  */
@@ -3004,7 +3004,7 @@ function bb_get_activity_sorting_options_labels() {
  * These labels are used when displayed after "by" prefix and may require
  * different capitalization or grammar in some languages (e.g., German).
  *
- * @since BuddyBoss [NEXT_VERSION]
+ * @since BuddyBoss [BBVERSION]
  *
  * @return array Array of all activity sorting options labels for by context.
  */
