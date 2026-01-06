@@ -15,6 +15,16 @@ defined( 'ABSPATH' ) || exit;
  * @subpackage Widgets
  */
 class BB_Core_Follow_My_Network_Widget extends WP_Widget {
+
+	/**
+	 * Default maximum number of users to display in the widget.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @var int
+	 */
+	const DEFAULT_MAX_USERS = 10;
+
 	/**
 	 * Constructor.
 	 */
@@ -55,6 +65,15 @@ class BB_Core_Follow_My_Network_Widget extends WP_Widget {
 			return;
 		}
 
+		// Parse widget settings with defaults.
+		$settings = bp_parse_args(
+			$instance,
+			array(
+				'max_users'      => self::DEFAULT_MAX_USERS,
+				'member_default' => 'followers',
+			)
+		);
+
 		$id     = bp_displayed_user_id();
 		$filter = false;
 
@@ -82,11 +101,17 @@ class BB_Core_Follow_My_Network_Widget extends WP_Widget {
 		$ids = 0 !== $follower_count ? bp_get_followers(
 			array(
 				'user_id'  => $id,
-				'per_page' => 10,
+				'page'     => 1,
+				'per_page' => self::DEFAULT_MAX_USERS,
 			)
 		) : array();
 
-		$see_all_query_string = '?bb-rl-scope=follower';
+		// Ensure $ids is a valid array (handle WP_Error or unexpected return types).
+		if ( is_wp_error( $ids ) || ! is_array( $ids ) ) {
+			$ids = array();
+		}
+
+		$see_all_query_string = '?bb-rl-scope=followers';
 
 		$instance['title'] = (
 			bp_loggedin_user_id() === bp_displayed_user_id()
@@ -126,7 +151,7 @@ class BB_Core_Follow_My_Network_Widget extends WP_Widget {
 				</div>
 			</h2>
 			<div class="bb-rl-members-item-options">
-				<a href="javascript:void(0);" id="bb-rl-my-network-followers" data-see-all-link="<?php echo esc_url( $members_dir_url . '?bb-rl-scope=follower' ); ?>" <?php echo ( empty( $settings['member_default'] ) || 'followers' === $settings['member_default'] ) ? 'class="selected"' : ''; ?>>
+				<a href="javascript:void(0);" id="bb-rl-my-network-followers" data-see-all-link="<?php echo esc_url( $members_dir_url . '?bb-rl-scope=followers' ); ?>" <?php echo ( empty( $settings['member_default'] ) || 'followers' === $settings['member_default'] ) ? 'class="selected"' : ''; ?>>
 					<?php
 					esc_html_e( 'Followers', 'buddyboss' );
 					if ( $follower_count > 0 ) {
@@ -244,7 +269,7 @@ class BB_Core_Follow_My_Network_Widget extends WP_Widget {
 
 		// Set up some variables to check.
 		$filter      = ! empty( $_POST['filter'] ) ? sanitize_text_field( wp_unslash( $_POST['filter'] ) ) : 'recently-active-members';
-		$max_members = ! empty( $_POST['max-members'] ) ? absint( $_POST['max-members'] ) : 10;
+		$max_members = ! empty( $_POST['max-members'] ) ? absint( $_POST['max-members'] ) : self::DEFAULT_MAX_USERS;
 
 		// Determine the type of member query to perform.
 		switch ( $filter ) {
@@ -277,6 +302,7 @@ class BB_Core_Follow_My_Network_Widget extends WP_Widget {
 			$ids = bp_get_following(
 				array(
 					'user_id'  => $id,
+					'page'     => 1,
 					'per_page' => $max_members,
 				)
 			);
@@ -284,17 +310,24 @@ class BB_Core_Follow_My_Network_Widget extends WP_Widget {
 			$ids = bp_get_followers(
 				array(
 					'user_id'  => $id,
+					'page'     => 1,
 					'per_page' => $max_members,
 				)
 			);
+		}
+
+		// Ensure $ids is a valid array (handle WP_Error or unexpected return types).
+		if ( is_wp_error( $ids ) || ! is_array( $ids ) ) {
+			$ids = array();
 		}
 
 		$result = array(
 			'success' => 0,
 			'data'    => esc_html__( 'There were no members found, please try another filter.', 'buddyboss' ),
 		);
+
 		// No data.
-		if ( $ids ) {
+		if ( ! empty( $ids ) ) {
 
 			$content = '';
 			ob_start();
