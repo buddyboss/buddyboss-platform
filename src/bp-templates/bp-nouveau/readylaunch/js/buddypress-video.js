@@ -1831,19 +1831,20 @@ window.bp = window.bp || {};
 			event.preventDefault();
 
 			var video_move_popup,
-			eventCurrentTarget = $( event.currentTarget ),
-			$document          = $( document ),
-		
-			video_id           = eventCurrentTarget.closest( '.video-action-wrap' ).siblings( 'a, div.video-js' ).data( 'id' ),
-			video_parent_id    = eventCurrentTarget.closest( '.video-action-wrap' ).siblings( 'a, div.video-js' ).data( 'album-id' );
+			    eventCurrentTarget = $( event.currentTarget ),
+			    $document          = $( document ),
+			    $videoActWrapper   = eventCurrentTarget.closest( '.video-action-wrap' ),
+			    $rlDDMenuWrapper   = eventCurrentTarget.closest( '.bb-rl-more_dropdown-wrap' ),
+			    video_id,
+			    video_parent_id;
 
-			// handle other cases like move media from activity feed.
-			if ( 'undefined' === typeof video_id ) {
-				video_id = eventCurrentTarget.closest( '.bb-rl-more_dropdown-wrap' ).siblings( 'a' ).data( 'id' );
-			}
-
-			if ( 'undefined' === typeof video_parent_id ) {
-				video_parent_id = eventCurrentTarget.closest( '.bb-rl-more_dropdown-wrap' ).siblings( 'a' ).data( 'album-id' );
+			// Determine the target element.
+			if ( $videoActWrapper.length ) {
+				video_id        = $videoActWrapper.siblings( 'a, div.video-js' ).data( 'id' );
+				video_parent_id = $videoActWrapper.siblings( 'a, div.video-js' ).data( 'album-id' );
+			} else if ( $rlDDMenuWrapper.length ) {
+				video_id        = $rlDDMenuWrapper.siblings( 'a' ).data( 'id' );
+				video_parent_id = $rlDDMenuWrapper.siblings( 'a' ).data( 'album-id' );
 			}
 
 			this.moveToIdPopup   = eventCurrentTarget.attr( 'id' );
