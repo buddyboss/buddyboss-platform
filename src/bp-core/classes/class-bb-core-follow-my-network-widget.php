@@ -174,6 +174,12 @@ class BB_Core_Follow_My_Network_Widget extends WP_Widget {
 				</div>
 				<?php
 			}
+		} else {
+			?>
+			<div class="bb-rl-widget-empty-state">
+				<p><?php esc_html_e( 'There were no members found, please try another filter.', 'buddyboss' ); ?></p>
+			</div>
+			<?php
 		}
 		?>
 		</div>
@@ -291,8 +297,9 @@ class BB_Core_Follow_My_Network_Widget extends WP_Widget {
 
 		$result = array(
 			'success' => 0,
-			'data'    => esc_html__( 'There were no members found, please try another filter.', 'buddyboss' ),
+			'data'    => '<div class="bb-rl-widget-empty-state"><p>' . esc_html__( 'There were no members found, please try another filter.', 'buddyboss' ) . '</p></div>',
 		);
+
 		// No data.
 		if ( $ids ) {
 
