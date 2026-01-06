@@ -634,7 +634,8 @@ window.bp = window.bp || {};
 
 			var selected_order = $( this.objectNavParent + ' #bb-subnav-filter-by [data-bp-order="' + data.order_by + '"].selected' );
 			if( selected_order.length ) {
-				$( '.bb-subnav-filters-container .subnav-filters-opener[aria-controls="bb-subnav-filter-by"] .selected' ).text( selected_order.text() );
+				// Apply lowercase for sorting labels in "by [label]" context.
+				$( '.bb-subnav-filters-container .subnav-filters-opener[aria-controls="bb-subnav-filter-by"] .selected' ).text( selected_order.text().toLowerCase() );
 			}
 
 			// Add loader at custom place for few search types

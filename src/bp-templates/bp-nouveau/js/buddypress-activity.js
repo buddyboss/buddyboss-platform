@@ -4422,7 +4422,19 @@ window.bp = window.bp || {};
 			var $parent = $this.closest( '.bb-subnav-filters-container' );
 			$this.parent().addClass( 'selected' ).siblings().removeClass( 'selected' );
 			$parent.removeClass( 'active' ).find( '.subnav-filters-opener' ).attr( 'aria-expanded', 'false' );
-			$parent.find( '.subnav-filters-opener .selected' ).text( $this.text() );
+
+			// Apply appropriate case transformation based on filter type.
+			var labelText = $this.text();
+			if ( $this.closest( '#bb-subnav-filter-show' ).length ) {
+				// "Show" filter: lowercase unless starts with "I've" or "I'm".
+				if ( ! labelText.startsWith( 'I\'ve' ) && ! labelText.startsWith( 'I\'m' ) ) {
+					labelText = labelText.toLowerCase();
+				}
+			} else if ( $this.closest( '#bb-subnav-filter-by' ).length ) {
+				// "by" filter: always lowercase.
+				labelText = labelText.toLowerCase();
+			}
+			$parent.find( '.subnav-filters-opener .selected' ).text( labelText );
 
 			// Reset the pagination for the scope.
 			bp.Nouveau.Activity.current_page = 1;
