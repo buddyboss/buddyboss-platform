@@ -99,11 +99,11 @@ if ( bp_is_activity_directory() || bp_is_user_activity() ) {
 		if ( bp_is_user_activity() ) {
 			$activity_filters            = bb_get_enabled_activity_timeline_filter_options();
 			$filters_labels              = bb_get_activity_timeline_filter_options_labels();
-			$filters_labels_show_context = bb_get_activity_timeline_filter_options_labels_show_context();
+			$filters_labels_show_context = bb_rl_get_activity_timeline_filter_options_labels_show_context();
 		} else {
 			$activity_filters            = bb_get_enabled_activity_filter_options();
 			$filters_labels              = bb_get_activity_filter_options_labels();
-			$filters_labels_show_context = bb_get_activity_filter_options_labels_show_context();
+			$filters_labels_show_context = bb_rl_get_activity_filter_options_labels_show_context();
 		}
 
 		// Allow valid options only.
@@ -179,7 +179,7 @@ if ( bp_is_activity_directory() || bp_is_user_activity() ) {
 			<div class="bb-subnav-filters-container bb-subnav-filters-filtering">
 				<?php
 				$sorting_labels            = bb_get_activity_sorting_options_labels();
-				$sorting_labels_by_context = bb_get_activity_sorting_options_labels_by_context();
+				$sorting_labels_by_context = bb_rl_get_activity_sorting_options_labels_by_context();
 				?>
 				<button class="subnav-filters-opener" aria-expanded="false" aria-controls="bb-subnav-filter-by">
 					<span class="selected">

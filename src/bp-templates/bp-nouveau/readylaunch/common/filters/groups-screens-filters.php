@@ -32,7 +32,7 @@ if ( ! empty( $avail_sorting_options ) && in_array( 1, $avail_sorting_options, t
 	<div class="bb-subnav-filters-container bb-subnav-filters-filtering">
 		<?php
 		$sorting_labels            = bb_get_activity_sorting_options_labels();
-		$sorting_labels_by_context = bb_get_activity_sorting_options_labels_by_context();
+		$sorting_labels_by_context = bb_rl_get_activity_sorting_options_labels_by_context();
 		?>
 		<button class="subnav-filters-opener" aria-expanded="false" aria-controls="bb-subnav-filter-by">
 			<span class="selected">
