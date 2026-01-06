@@ -84,11 +84,13 @@ if ( bp_is_activity_directory() || bp_is_user_activity() ) {
 
 	// Timeline filters.
 	if ( bp_is_user_activity() ) {
-		$activity_filters = bb_get_enabled_activity_timeline_filter_options();
-		$filters_labels   = bb_get_activity_timeline_filter_options_labels();
+		$activity_filters            = bb_get_enabled_activity_timeline_filter_options();
+		$filters_labels              = bb_get_activity_timeline_filter_options_labels();
+		$filters_labels_show_context = bb_get_activity_timeline_filter_options_labels_show_context();
 	} else {
-		$activity_filters = bb_get_enabled_activity_filter_options();
-		$filters_labels   = bb_get_activity_filter_options_labels();
+		$activity_filters            = bb_get_enabled_activity_filter_options();
+		$filters_labels              = bb_get_activity_filter_options_labels();
+		$filters_labels_show_context = bb_get_activity_filter_options_labels_show_context();
 	}
 
 	// Allow valid options only.
@@ -136,10 +138,10 @@ if ( bp_is_activity_directory() || bp_is_user_activity() ) {
 			<button class="subnav-filters-opener" aria-expanded="false" aria-controls="bb-subnav-filter-show">
 				<span class="selected">
 					<?php
-					$default_filter_label = $filters_labels[ $default_selected ];
-					if ( ! preg_match( '/^(I\'ve|I\'m)/i', $default_filter_label ) ) {
-						$default_filter_label = strtolower( $default_filter_label );
-					}
+					// Use show context labels which have separate translations for proper grammar.
+					$default_filter_label = isset( $filters_labels_show_context[ $default_selected ] )
+						? $filters_labels_show_context[ $default_selected ]
+						: $filters_labels[ $default_selected ];
 					echo esc_html( $default_filter_label );
 					unset( $default_filter_label );
 					?>
@@ -173,9 +175,21 @@ if ( bp_is_activity_directory() || bp_is_user_activity() ) {
 	<div class='<?php echo esc_attr( $hide_class ); ?> bb-subnav-filters-container-main'>
 		<span class="bb-subnav-filters-label"><?php echo esc_html_e( 'by', 'buddyboss' ); ?></span>
 		<div class="bb-subnav-filters-container bb-subnav-filters-filtering">
-			<?php $sorting_labels = bb_get_activity_sorting_options_labels(); ?>
+			<?php
+			$sorting_labels            = bb_get_activity_sorting_options_labels();
+			$sorting_labels_by_context = bb_get_activity_sorting_options_labels_by_context();
+			?>
 			<button class="subnav-filters-opener" aria-expanded="false" aria-controls="bb-subnav-filter-by">
-				<span class="selected"><?php echo esc_html( strtolower( $sorting_labels[ $default_selected ] ) ); ?></span>
+				<span class="selected">
+					<?php
+					// Use by context labels which have separate translations for proper grammar.
+					$default_sorting_label = isset( $sorting_labels_by_context[ $default_selected ] )
+						? $sorting_labels_by_context[ $default_selected ]
+						: $sorting_labels[ $default_selected ];
+					echo esc_html( $default_sorting_label );
+					unset( $default_sorting_label );
+					?>
+				</span>
 				<i class="bb-icon-l bb-icon-angle-down"></i>
 			</button>
 

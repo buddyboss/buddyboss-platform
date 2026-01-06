@@ -2825,6 +2825,42 @@ function bb_get_activity_filter_options_labels() {
 }
 
 /**
+ * Get all activity filters option labels for "Show [label]" context.
+ *
+ * These labels are used when displayed after "Show" prefix and may require
+ * different capitalization or grammar in some languages (e.g., German).
+ *
+ * @since BuddyBoss [NEXT_VERSION]
+ *
+ * @return array Array of all activity filters option labels for show context.
+ */
+function bb_get_activity_filter_options_labels_show_context() {
+	$filters = array(
+		/* translators: This is used in the context "Show [all updates]" - adjust capitalization/grammar as needed for your language */
+		'all'        => __( 'all updates', 'buddyboss' ),
+		/* translators: This is used in the context "Show [created by me]" - adjust capitalization/grammar as needed for your language */
+		'just-me'    => __( 'created by me', 'buddyboss' ),
+		/* translators: This is used in the context "Show [I've reacted to]" - adjust capitalization/grammar as needed for your language */
+		'favorites'  => __( "I've reacted to", 'buddyboss' ),
+		/* translators: This is used in the context "Show [from my groups]" - adjust capitalization/grammar as needed for your language */
+		'groups'     => __( 'from my groups', 'buddyboss' ),
+		/* translators: This is used in the context "Show [from my connections]" - adjust capitalization/grammar as needed for your language */
+		'friends'    => __( 'from my connections', 'buddyboss' ),
+		/* translators: This is used in the context "Show [I'm mentioned in]" - adjust capitalization/grammar as needed for your language */
+		'mentions'   => __( "I'm mentioned in", 'buddyboss' ),
+		/* translators: This is used in the context "Show [I'm following]" - adjust capitalization/grammar as needed for your language */
+		'following'  => __( "I'm following", 'buddyboss' ),
+		/* translators: This is used in the context "Show [unanswered]" - adjust capitalization/grammar as needed for your language */
+		'unanswered' => __( 'unanswered', 'buddyboss' ),
+	);
+
+	// Common function to get only allowed ones.
+	$filters = bb_filter_activity_filter_scope_keys( $filters );
+
+	return (array) apply_filters( 'bb_get_activity_filter_options_labels_show_context', $filters );
+}
+
+/**
  * Get enabled activity filters options.
  *
  * @since BuddyBoss 2.8.20
@@ -2883,6 +2919,38 @@ function bb_get_activity_timeline_filter_options_labels() {
 }
 
 /**
+ * Get all activity timeline filters option labels for "Show [label]" context.
+ *
+ * These labels are used when displayed after "Show" prefix and may require
+ * different capitalization or grammar in some languages (e.g., German).
+ *
+ * @since BuddyBoss [NEXT_VERSION]
+ *
+ * @return array Array of all activity timeline filters option labels for show context.
+ */
+function bb_get_activity_timeline_filter_options_labels_show_context() {
+	$filters = array(
+		/* translators: This is used in the context "Show [personal posts]" - adjust capitalization/grammar as needed for your language */
+		'just-me'   => __( 'personal posts', 'buddyboss' ),
+		/* translators: This is used in the context "Show [reacted to]" - adjust capitalization/grammar as needed for your language */
+		'favorites' => __( 'reacted to', 'buddyboss' ),
+		/* translators: This is used in the context "Show [from groups]" - adjust capitalization/grammar as needed for your language */
+		'groups'    => __( 'from groups', 'buddyboss' ),
+		/* translators: This is used in the context "Show [from connections]" - adjust capitalization/grammar as needed for your language */
+		'friends'   => __( 'from connections', 'buddyboss' ),
+		/* translators: This is used in the context "Show [mentioned in]" - adjust capitalization/grammar as needed for your language */
+		'mentions'  => __( 'mentioned in', 'buddyboss' ),
+		/* translators: This is used in the context "Show [following]" - adjust capitalization/grammar as needed for your language */
+		'following' => __( 'following', 'buddyboss' ),
+	);
+
+	// Common function to get only allowed ones.
+	$filters = bb_filter_activity_filter_scope_keys( $filters );
+
+	return (array) apply_filters( 'bb_get_activity_timeline_filter_options_labels_show_context', $filters );
+}
+
+/**
  * Get enabled activity timeline filters options.
  *
  * @since BuddyBoss 2.8.20
@@ -2928,6 +2996,26 @@ function bb_get_activity_sorting_options_labels() {
 		'date_updated'  => __( 'Recent activity', 'buddyboss' ),
 	);
 	return (array) apply_filters( 'bb_get_activity_sorting_options_labels', $sorting_options );
+}
+
+/**
+ * Get all activity sorting options labels for "by [label]" context.
+ *
+ * These labels are used when displayed after "by" prefix and may require
+ * different capitalization or grammar in some languages (e.g., German).
+ *
+ * @since BuddyBoss [NEXT_VERSION]
+ *
+ * @return array Array of all activity sorting options labels for by context.
+ */
+function bb_get_activity_sorting_options_labels_by_context() {
+	$sorting_options = array(
+		/* translators: This is used in the context "by [new posts]" - adjust capitalization/grammar as needed for your language */
+		'date_recorded' => __( 'new posts', 'buddyboss' ),
+		/* translators: This is used in the context "by [recent activity]" - adjust capitalization/grammar as needed for your language */
+		'date_updated'  => __( 'recent activity', 'buddyboss' ),
+	);
+	return (array) apply_filters( 'bb_get_activity_sorting_options_labels_by_context', $sorting_options );
 }
 
 /**
