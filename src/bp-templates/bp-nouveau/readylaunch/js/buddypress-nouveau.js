@@ -960,6 +960,13 @@ window.bp = window.bp || {};
 						if ( self.querystring ) {
 							scope  = self.querystring['bb-rl-scope'] ? self.querystring['bb-rl-scope'] : scope;
 							filter = self.querystring['bb-rl-order-by'] ? self.querystring['bb-rl-order-by'] : filter;
+
+							// Remove bb-rl-scope from URL after it's been processed.
+							if ( self.querystring['bb-rl-scope'] ) {
+								var url = new URL( window.location.href );
+								url.searchParams.delete( 'bb-rl-scope' );
+								window.history.replaceState( {}, '', url.toString() );
+							}
 						}
 					}
 
