@@ -3599,6 +3599,18 @@ window.bp = window.bp || {};
 			$createFolder.addClass( 'open-popup' );
 			$document.find( '.open-popup #bb-rl-media-create-album-popup #bb-album-title' ).show();
 			$document.find( '.open-popup #bb-rl-media-create-album-popup #bb-album-title' ).removeClass( 'error' );
+
+			// Reinitialize select2 for folder privacy select if not already initialized.
+			if ( typeof $.fn.select2 !== 'undefined' ) {
+				var $privacySelect = $createFolder.find( '.bb-rl-filter select' );
+				if ( $privacySelect.length && ! $privacySelect.hasClass( 'select2-hidden-accessible' ) ) {
+					$privacySelect.select2( {
+						theme: 'rl',
+						dropdownParent: $privacySelect.parent()
+					} );
+					$privacySelect.next( '.select2-container' ).find( '.select2-selection' ).addClass( 'bb-rl-select2-container' );
+				}
+			}
 		},
 
 		openCreateFolderChildModal: function ( event ) {
@@ -5760,6 +5772,18 @@ window.bp = window.bp || {};
 			$folderLocation.find( '.bb-rl-modal-header' ).append( '<p>' + popupTitle + '</p>' );
 			$( '.bb-rl-modal-container #bb-rl-folder-privacy' ).addClass( 'new-folder-create-privacy' );
 			$document.find( '.open-popup .error' ).hide();
+
+			// Reinitialize select2 for folder privacy select if not already initialized.
+			if ( typeof $.fn.select2 !== 'undefined' ) {
+				var $privacySelect = $( '.bb-rl-popup-on-fly-create-' + folderORAlbum + ' .bb-rl-filter select' );
+				if ( $privacySelect.length && ! $privacySelect.hasClass( 'select2-hidden-accessible' ) ) {
+					$privacySelect.select2( {
+						theme: 'rl',
+						dropdownParent: $privacySelect.parent()
+					} );
+					$privacySelect.next( '.select2-container' ).find( '.select2-selection' ).addClass( 'bb-rl-select2-container' );
+				}
+			}
 		},
 
 		closeCreateFolderAlbumInPopup : function ( event, actionType ) {
