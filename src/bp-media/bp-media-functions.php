@@ -2857,9 +2857,11 @@ function bp_media_album_recursive_li_list( $array, $first = false ) {
 		 * @param string $title    The album title.
 		 * @param int    $album_id The album ID.
 		 */
-		$album_title = apply_filters( 'bb_media_album_tree_item_title', esc_html( stripslashes( $item['title'] ) ), $album_id );
+		$album_title = apply_filters( 'bb_media_album_tree_item_title', $item['title'], $album_id );
 
-		$output .= '<li data-id="' . esc_attr( $item['id'] ) . '" data-privacy="' . esc_attr( $item['privacy'] ) . '"><span id="' . esc_attr( $item['id'] ) . '" data-id="' . esc_attr( $item['id'] ) . '">' . $album_title . '</span>' . bp_media_album_recursive_li_list( $item['children'], true ) . '</li>';
+		if ( ! empty( $album_title ) ) {
+			$output .= '<li data-id="' . esc_attr( $item['id'] ) . '" data-privacy="' . esc_attr( $item['privacy'] ) . '"><span id="' . esc_attr( $item['id'] ) . '" data-id="' . esc_attr( $item['id'] ) . '">' . esc_html( stripslashes( $album_title ) ) . '</span>' . bp_media_album_recursive_li_list( $item['children'], true ) . '</li>';
+		}
 	}
 	$output .= '</ul>';
 

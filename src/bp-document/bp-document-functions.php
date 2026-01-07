@@ -2227,9 +2227,11 @@ function bp_document_folder_recursive_li_list( $array, $first = false ) {
 		 * @param string $title     The folder title.
 		 * @param int    $folder_id The folder ID.
 		 */
-		$folder_title = apply_filters( 'bb_document_folder_tree_item_title', stripslashes( $item['title'] ), $folder_id );
+		$folder_title = apply_filters( 'bb_document_folder_tree_item_title', $item['title'], $folder_id );
 
-		$output .= '<li data-id="' . esc_attr( $item['id'] ) . '" data-privacy="' . esc_attr( $item['privacy'] ) . '"><span id="' . esc_attr( $item['id'] ) . '" data-id="' . esc_attr( $item['id'] ) . '">' . $folder_title . '</span>' . bp_document_folder_recursive_li_list( $item['children'], true ) . '</li>';
+		if ( ! empty( $folder_title ) ) {
+			$output .= '<li data-id="' . esc_attr( $item['id'] ) . '" data-privacy="' . esc_attr( $item['privacy'] ) . '"><span id="' . esc_attr( $item['id'] ) . '" data-id="' . esc_attr( $item['id'] ) . '">' . esc_html( stripslashes( $folder_title ) ) . '</span>' . bp_document_folder_recursive_li_list( $item['children'], true ) . '</li>';
+		}
 	}
 	$output .= '</ul>';
 
@@ -2294,7 +2296,11 @@ function bp_document_folder_bradcrumb( $folder_id ) {
 			 */
 			$element = apply_filters( 'bb_document_folder_breadcrumb_element', $element );
 
-			$link     = '';
+			// Skip if an element is empty or missing required data.
+			if ( empty( $element ) || ! isset( $element['id'], $element['group_id'], $element['title'] ) ) {
+				continue;
+			}
+
 			$group_id = (int) $element['group_id'];
 			if ( 0 === $group_id ) {
 				$link = bp_displayed_user_domain() . bp_get_document_slug() . '/folders/' . $element['id'];
@@ -2302,7 +2308,7 @@ function bp_document_folder_bradcrumb( $folder_id ) {
 				$group = groups_get_group( array( 'group_id' => $group_id ) );
 				$link  = bp_get_group_permalink( $group ) . bp_get_document_slug() . '/folders/' . $element['id'];
 			}
-			$html .= '<li> <a href=" ' . $link . ' ">' . stripslashes( $element['title'] ) . '</a></li>';
+			$html .= '<li> <a href=" ' . $link . ' ">' . esc_html( stripslashes( $element['title'] ) ) . '</a></li>';
 		}
 		$html .= '</ul>';
 	}
