@@ -2000,6 +2000,22 @@ window.bp = window.bp || {};
 				$( '.bb-videos-actions' ).show();
 			}
 		},
+
+		removeVideoAndThumbnailAttachment: function ( id, action, nonce ) {
+			var data = {
+				'action'   : action + '_delete_attachment',
+				'_wpnonce' : nonce,
+				'id'       : id
+			};
+
+			$.ajax(
+				{
+					type : 'POST',
+					url  : bbRlAjaxUrl,
+					data : data
+				}
+			);
+		},
 	};
 
 	// Launch BP Nouveau Video.
@@ -3221,22 +3237,6 @@ window.bp = window.bp || {};
 				}
 			);
 
-		},
-
-		removeVideoAndThumbnailAttachment: function ( id, action, nonce ) {
-			var data = {
-				'action'   : action + '_delete_attachment',
-				'_wpnonce' : nonce,
-				'id'       : id
-			};
-
-			$.ajax(
-				{
-					type : 'POST',
-					url  : bbRlAjaxUrl,
-					data : data
-				}
-			);
 		},
 	};
 
