@@ -43,7 +43,7 @@ if ( bp_has_video_albums( array( 'include' => $album_id ) ) ) {
 						<?php
 						if ( ( $bp_is_my_profile || $bp_is_user_video ) && ! $bp_is_group ) :
 							?>
-							<div class="bb-rl-field-wrap bb-rl-privacy-field-wrap-hide-show">
+							<div class="bb-rl-field-wrap bb-rl-privacy-field-wrap-hide-show bb-rl-filter">
 								<select id="bb-album-privacy">
 									<?php
 									foreach ( bp_video_get_visibility_levels() as $k => $option ) {

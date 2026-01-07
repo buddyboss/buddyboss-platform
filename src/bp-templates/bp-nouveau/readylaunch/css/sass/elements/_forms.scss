@@ -304,6 +304,14 @@ body.bb-readylaunch-template {
 	.select2-container--rl.select2-container--open:has(.bb-rl-dropdown-align-adaptive) {
 		width: 100% !important;
 	}
+
+	.bb-model-footer {
+
+		.select2-container .bb-rl-select2-dropdown {
+			top: unset;
+			left: -8px;
+		}
+	}
 }
 
 .select2-container--bb-rl-select2 {
