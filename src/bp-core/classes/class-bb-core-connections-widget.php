@@ -50,7 +50,8 @@ class BB_Core_Connections_Widget extends WP_Widget {
 			? friends_get_friend_user_ids( $user_id )
 			: array();
 
-		// No connections found, don't display the widget.
+		// Current: "No connections found, don't display the widget."
+		// Suggested: "Early return if user has no connections to prevent empty widget display"
 		if ( empty( $friends ) ) {
 			return;
 		}
