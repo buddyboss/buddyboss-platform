@@ -117,7 +117,7 @@ defined( 'ABSPATH' ) || exit;
 
 							<div class="bp-feedback error">
 								<span class="bp-icon" aria-hidden="true"></span>
-								<p><?php wp_kses_post( __( '<strong>WARNING:</strong> This process cannot be undone.', 'buddyboss' ) ); ?></p>
+								<p><?php echo wp_kses_post( __( '<strong>WARNING:</strong> This process cannot be undone.', 'buddyboss' ) ); ?></p>
 							</div>
 
 						</div>

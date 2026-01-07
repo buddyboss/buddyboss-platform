@@ -228,6 +228,9 @@
                 }
             ],
             "description": "The GroundLevel Support package.",
+            "support": {
+                "source": "https://github.com/caseproof/ground-level-support/tree/1.1.0"
+            },
             "time": "2025-08-04T22:29:07+00:00"
         },
         {
