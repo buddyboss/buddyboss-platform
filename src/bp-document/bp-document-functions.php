@@ -2217,7 +2217,19 @@ function bp_document_folder_recursive_li_list( $array, $first = false ) {
 	}
 
 	foreach ( $array as $item ) {
-		$output .= '<li data-id="' . esc_attr( $item['id'] ) . '" data-privacy="' . esc_attr( $item['privacy'] ) . '"><span id="' . esc_attr( $item['id'] ) . '" data-id="' . esc_attr( $item['id'] ) . '">' . stripslashes( $item['title'] ) . '</span>' . bp_document_folder_recursive_li_list( $item['children'], true ) . '</li>';
+		$folder_id = isset( $item['id'] ) ? (int) $item['id'] : 0;
+
+		/**
+		 * Filters the folder title in the folder tree list (move popup).
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $title     The folder title.
+		 * @param int    $folder_id The folder ID.
+		 */
+		$folder_title = apply_filters( 'bb_document_folder_tree_item_title', stripslashes( $item['title'] ), $folder_id );
+
+		$output .= '<li data-id="' . esc_attr( $item['id'] ) . '" data-privacy="' . esc_attr( $item['privacy'] ) . '"><span id="' . esc_attr( $item['id'] ) . '" data-id="' . esc_attr( $item['id'] ) . '">' . $folder_title . '</span>' . bp_document_folder_recursive_li_list( $item['children'], true ) . '</li>';
 	}
 	$output .= '</ul>';
 
@@ -2272,6 +2284,16 @@ function bp_document_folder_bradcrumb( $folder_id ) {
 			$data  = array_slice( $data, - 3 );
 		}
 		foreach ( $data as $element ) {
+
+			/**
+			 * Filters the breadcrumb element data before rendering.
+			 *
+			 * @since BuddyBoss [BBVERSION]
+			 *
+			 * @param array $element The breadcrumb element containing folder data.
+			 */
+			$element = apply_filters( 'bb_document_folder_breadcrumb_element', $element );
+
 			$link     = '';
 			$group_id = (int) $element['group_id'];
 			if ( 0 === $group_id ) {
