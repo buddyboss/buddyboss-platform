@@ -1399,7 +1399,7 @@ class BB_Topics_Manager {
 				}
 			}
 
-			$topic_data = self::prefetch_object_data( $topic_data );
+			$topic_data = self::bb_topics_prefetch_object_data( $topic_data );
 
 			if ( 'all' !== $r['fields'] ) {
 				if ( false !== strpos( $r['fields'], ',' ) ) {
@@ -2434,7 +2434,7 @@ class BB_Topics_Manager {
 	 *
 	 * @return array Array of topics.
 	 */
-	protected static function prefetch_object_data( $topics ) {
+	protected static function bb_topics_prefetch_object_data( $topics ) {
 
 		/**
 		 * Filters inside prefetch_object_data method to aid in
