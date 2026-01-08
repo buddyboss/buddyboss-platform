@@ -35,7 +35,7 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 		// Register moderation data.
 		add_filter( 'bp_moderation_content_types', array( $this, 'add_content_types' ), 11 );
 
-		// Add report button for all comments via comment_text filter
+		// Add report button for all comments via comment_text filter.
 		add_filter( 'comment_text', array( $this, 'add_report_button' ), 100, 2 );
 
 		// Update report button.
@@ -316,17 +316,17 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 			return $comment_text;
 		}
 
-		// Check if comment ID exists
+		// Check if comment ID exists.
 		if ( empty( $comment->comment_ID ) ) {
 			return $comment_text;
 		}
 
-		// Check if moderation is enabled
+		// Check if moderation is enabled.
 		if ( ! bp_is_moderation_content_reporting_enable( 0, self::$moderation_type ) ) {
 			return $comment_text;
 		}
 
-		// Add report button to all comments
+		// Add report button to all comments.
 		$comment_report_link = bp_moderation_get_report_button(
 			array(
 				'id'                => 'comment_report',
