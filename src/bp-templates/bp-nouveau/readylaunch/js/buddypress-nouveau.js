@@ -663,13 +663,16 @@ window.bp = window.bp || {};
 			var selected_scope = $( this.objectNavParent + ' #bb-subnav-filter-show [data-bp-scope="' + data.scope + '"].selected' );
 			if( selected_scope.length ) {
 				var option_label = $( '.bb-subnav-filters-container .subnav-filters-opener[aria-controls="bb-subnav-filter-show"] .selected' );
-				// ReadyLaunch uses Title Case - keep the original text without lowercase conversion.
-				option_label.text( selected_scope.text() );
+				// Use data-filter-label attribute for proper context-aware label (translatable).
+				var filterLabel = selected_scope.data( 'filter-label' );
+				option_label.text( filterLabel ? filterLabel : selected_scope.text() );
 			}
 
 			var selected_order = $( this.objectNavParent + ' #bb-subnav-filter-by [data-bp-order="' + data.order_by + '"].selected' );
 			if( selected_order.length ) {
-				$( '.bb-subnav-filters-container .subnav-filters-opener[aria-controls="bb-subnav-filter-by"] .selected' ).text( selected_order.text() );
+				// Use data-filter-label attribute for proper context-aware label (translatable).
+				var orderLabel = selected_order.data( 'filter-label' );
+				$( '.bb-subnav-filters-container .subnav-filters-opener[aria-controls="bb-subnav-filter-by"] .selected' ).text( orderLabel ? orderLabel : selected_order.text() );
 			}
 
 			// Add loader at custom place for few search types.
