@@ -600,6 +600,12 @@ window.bp = window.bp || {};
 
 				var videoUploader = $( '#bp-video-uploader' );
 				videoUploader.show();
+
+				// Reinitialize select2 for privacy select if not already initialized.
+				if ( bp.Readylaunch && bp.Readylaunch.initSelect2Scoped ) {
+					bp.Readylaunch.initSelect2Scoped( videoUploader );
+				}
+
 				if ( videoUploader.find( '.bb-field-steps.bb-field-steps-2' ).length ) {
 					currentTarget       = '#bp-video-uploader.bp-video-uploader';
 					var albumSelectedId = $( currentTarget ).find( '.bb-rl-album-selected-id' ).val();
@@ -1294,6 +1300,11 @@ window.bp = window.bp || {};
 
 			if ( typeof window.Dropzone !== 'undefined' && $( 'div#video-album-uploader' ).length ) {
 				$( '#bp-video-uploader' ).show();
+
+				// Reinitialize select2 for privacy select if not already initialized.
+				if ( bp.Readylaunch && bp.Readylaunch.initSelect2Scoped ) {
+					bp.Readylaunch.initSelect2Scoped( $( '#bp-video-uploader' ) );
+				}
 
 				self.video_dropzone_obj = new Dropzone( 'div#video-album-uploader', self.videoOptions );
 

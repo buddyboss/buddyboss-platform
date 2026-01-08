@@ -2341,6 +2341,11 @@ window.bp = window.bp || {};
 
 				mediaUploader.addClass( 'open-popup' ).show();
 
+				// Reinitialize select2 for privacy select if not already initialized.
+				if ( bp.Readylaunch && bp.Readylaunch.initSelect2Scoped ) {
+					bp.Readylaunch.initSelect2Scoped( mediaUploader );
+				}
+
 				if ( $( event.currentTarget ).closest( '#bp-media-single-album' ).length ) {
 					$( '#bb-media-privacy' ).hide();
 				}
@@ -2617,6 +2622,11 @@ window.bp = window.bp || {};
 				$document.removeClass( 'open-popup' );
 				mediaUploader.show();
 				mediaUploader.addClass( 'open-popup' );
+
+				// Reinitialize select2 for privacy select if not already initialized.
+				if ( bp.Readylaunch && bp.Readylaunch.initSelect2Scoped ) {
+					bp.Readylaunch.initSelect2Scoped( mediaUploader );
+				}
 
 				if ( $( '#bp-media-uploader.bp-media-document-uploader' ).find( '.bb-field-steps.bb-field-steps-2' ).length ) {
 					currentTarget = '#bp-media-uploader.bp-media-document-uploader';
@@ -3601,15 +3611,8 @@ window.bp = window.bp || {};
 			$document.find( '.open-popup #bb-rl-media-create-album-popup #bb-album-title' ).removeClass( 'error' );
 
 			// Reinitialize select2 for folder privacy select if not already initialized.
-			if ( typeof $.fn.select2 !== 'undefined' ) {
-				var $privacySelect = $createFolder.find( '.bb-rl-filter select' );
-				if ( $privacySelect.length && ! $privacySelect.hasClass( 'select2-hidden-accessible' ) ) {
-					$privacySelect.select2( {
-						theme: 'rl',
-						dropdownParent: $privacySelect.parent()
-					} );
-					$privacySelect.next( '.select2-container' ).find( '.select2-selection' ).addClass( 'bb-rl-select2-container' );
-				}
+			if ( bp.Readylaunch && bp.Readylaunch.initSelect2Scoped ) {
+				bp.Readylaunch.initSelect2Scoped( $createFolder );
 			}
 		},
 
@@ -5774,15 +5777,8 @@ window.bp = window.bp || {};
 			$document.find( '.open-popup .error' ).hide();
 
 			// Reinitialize select2 for folder privacy select if not already initialized.
-			if ( typeof $.fn.select2 !== 'undefined' ) {
-				var $privacySelect = $( '.bb-rl-popup-on-fly-create-' + folderORAlbum + ' .bb-rl-filter select' );
-				if ( $privacySelect.length && ! $privacySelect.hasClass( 'select2-hidden-accessible' ) ) {
-					$privacySelect.select2( {
-						theme: 'rl',
-						dropdownParent: $privacySelect.parent()
-					} );
-					$privacySelect.next( '.select2-container' ).find( '.select2-selection' ).addClass( 'bb-rl-select2-container' );
-				}
+			if ( bp.Readylaunch && bp.Readylaunch.initSelect2Scoped ) {
+				bp.Readylaunch.initSelect2Scoped( $( '.bb-rl-popup-on-fly-create-' + folderORAlbum ) );
 			}
 		},
 

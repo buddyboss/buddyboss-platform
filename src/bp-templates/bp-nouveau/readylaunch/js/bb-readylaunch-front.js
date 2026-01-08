@@ -227,6 +227,71 @@ window.bp = window.bp || {};
 				);
 			},
 
+			/**
+			 * Initialize select2 for .bb-rl-filter select elements within a container.
+			 * This is a utility function that can be called when modals or popups are opened
+			 * to ensure select2 is properly initialized on dynamically visible elements.
+			 *
+			 * @param {jQuery|string} $container - jQuery object or selector for the container element
+			 */
+			initSelect2Scoped: function ( $container ) {
+				if ( typeof $ === 'undefined' ) {
+					$ = jQuery;
+				}
+
+				if ( typeof $container === 'string' ) {
+					$container = $( $container );
+				}
+
+				if ( typeof $.fn.select2 === 'undefined' || ! $container.length ) {
+					return;
+				}
+
+				$container.find( '.bb-rl-filter select' ).each( function () {
+					var $selectEl = $( this );
+
+					// Skip if already initialized.
+					if ( $selectEl.hasClass( 'select2-hidden-accessible' ) ) {
+						return;
+					}
+
+					var customClass = '';
+
+					if ( $selectEl.data( 'bb-caret' ) ) {
+						customClass += ' bb-rl-caret-icon ';
+					}
+					if ( $selectEl.data( 'bb-icon' ) ) {
+						customClass += ' bb-rl-has-icon ';
+						customClass += ' ' + $selectEl.data( 'bb-icon' ) + ' ';
+					}
+					if ( $selectEl.data( 'bb-border' ) === 'rounded' ) {
+						customClass += ' bb-rl-rounded-border ';
+					}
+					if ( $selectEl.data( 'dropdown-align' ) ) {
+						customClass += ' bb-rl-align-adaptive ';
+					}
+
+					$selectEl.select2( {
+						theme: 'rl',
+						dropdownParent: $selectEl.parent()
+					} );
+
+					$selectEl.next( '.select2-container' ).find( '.select2-selection' ).addClass( 'bb-rl-select2-container' + customClass );
+
+					$selectEl.on( 'select2:open', function () {
+						var $this = $( this ),
+							customDropDownClass = '';
+
+						if ( $this.data( 'dropdown-align' ) ) {
+							customDropDownClass += ' bb-rl-dropdown-align-adaptive ';
+						}
+
+						$( '.select2-dropdown' ).addClass( 'bb-rl-select2-dropdown' );
+						$this.closest( '.bb-rl-filter' ).find( '.bb-rl-select2-dropdown' ).addClass( customDropDownClass );
+					} );
+				} );
+			},
+
 			styledSelect: function () {
 				$( '.bb-rl-styled-select select' ).each(
 					function () {
