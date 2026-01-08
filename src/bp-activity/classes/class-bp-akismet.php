@@ -637,12 +637,14 @@ class BP_Akismet {
 	function history_metabox( $item ) {
 		$history = self::get_activity_history( $item->id );
 
-		if ( empty( $history ) ) {
+		if ( empty( $history ) || ! is_array( $history ) ) {
 			return;
+		} else {
+			$history = reset( $history );
 		}
 
 		echo '<div class="akismet-history"><div>';
-		printf( __( '%1$s - %2$s', 'buddyboss' ), '<span>' . bp_core_time_since( $history[2] ) . '</span>', esc_html( $history[1] ) );
+		printf( __( '%1$s - %2$s', 'buddyboss' ), '<span>' . bp_core_time_since( $history['time'] ) . '</span>', esc_html( $history['message'] ) );
 		echo '</div></div>';
 	}
 
@@ -677,8 +679,13 @@ class BP_Akismet {
 	 */
 	public function get_activity_history( $activity_id = 0 ) {
 		$history = bp_activity_get_meta( $activity_id, '_bp_akismet_history' );
-		if ( $history === false ) {
+		if ( empty( $history ) ) {
 			$history = array();
+		}
+
+		if ( ! empty( $history ) && isset( $history['event'] ) ) {
+			// This is a single event, wrap it in an array.
+			$history = array( $history );
 		}
 
 		// Sort it by the time recorded.
