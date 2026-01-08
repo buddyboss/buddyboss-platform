@@ -648,7 +648,6 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 				delete_transient( 'bb_wpml_posted_icl_post_language_' . $post_id );
 			}
 		}
-
 	}
 
 	BB_WPML_Helpers::instance();
