@@ -79,10 +79,37 @@ function bp_media_upload() {
 		$attachment_message_url = $attachment_thumb_url;
 	} else {
 		// Generate document attachment preview link.
-		$attachment_id          = base64_encode( 'forbidden_' . $attachment->ID );
-		$attachment_url         = home_url( '/' ) . 'bb-attachment-media-preview/' . $attachment_id;
-		$attachment_thumb_url   = home_url( '/' ) . 'bb-attachment-media-preview/' . $attachment_id . '/thumbnail';
-		$attachment_medium      = home_url( '/' ) . 'bb-attachment-media-preview/' . $attachment_id . '/bb-media-activity-image';
+		$attachment_id = base64_encode( 'forbidden_' . $attachment->ID );
+
+		/**
+		 * Filters the attachment URL.
+		 *
+		 * @since BuddyBoss 2.15.0
+		 *
+		 * @param string $attachment_url Attachment URL.
+		 * @param int    $attachment_id  Attachment ID.
+		 */
+		$attachment_url = apply_filters( 'bb_media_attachment_url', home_url( '/' ) . 'bb-attachment-media-preview/' . $attachment_id, $attachment_id, 'bb-media-photos-popup-image' );
+
+		/**
+		 * Filters the attachment thumb URL.
+		 *
+		 * @since BuddyBoss 2.15.0
+		 *
+		 * @param string $attachment_thumb_url Attachment thumb URL.
+		 * @param int    $attachment_id Attachment ID.
+		 */
+		$attachment_thumb_url = apply_filters( 'bb_media_attachment_thumb_url', home_url( '/' ) . 'bb-attachment-media-preview/' . $attachment_id . '/thumbnail', $attachment_id, 'thumbnail' );
+
+		/**
+		 * Filters the attachment medium.
+		 *
+		 * @since BuddyBoss 2.15.0
+		 *
+		 * @param string $attachment_medium Attachment medium.
+		 * @param int    $attachment_id     Attachment ID.
+		 */
+		$attachment_medium      = apply_filters( 'bb_media_attachment_medium', home_url( '/' ) . 'bb-attachment-media-preview/' . $attachment_id . '/bb-media-activity-image', $attachment_id, 'bb-media-activity-image' );
 		$attachment_message_url = ( isset( $_POST ) && isset( $_POST['thread_id'] ) ? home_url( '/' ) . 'bb-attachment-media-preview/' . $attachment_id . '/bb-media-activity-image/' . base64_encode( 'thread_' . $_POST['thread_id'] ) : '' );
 	}
 

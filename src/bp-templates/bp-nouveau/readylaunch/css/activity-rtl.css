@@ -15,6 +15,10 @@
   --bb-rl-background-brand-secondary-color: #dde4ff;
   --bb-rl-background-brand-secondary-hover-color: #c2cdff;
   --bb-rl-background-brand-disabled-color: #767eff;
+  --bb-rl-background-info-primary-color: #4946fe;
+  --bb-rl-background-info-primary-hover-color: #4937f4;
+  --bb-rl-background-info-secondary-color: #dde4ff;
+  --bb-rl-background-info-secondary-hover-color: #c2cdff;
   --bb-rl-background-positive-primary-color: #14ae5c;
   --bb-rl-background-positive-primary-hover-color: #009951;
   --bb-rl-background-positive-secondary-color: #ebffee;
@@ -35,6 +39,8 @@
   --bb-rl-border-quaternary-color: #9e9e9e;
   --bb-rl-border-brand-primary-color: #3325ae;
   --bb-rl-border-brand-secondary-color: var(--bb-rl-primary-color);
+  --bb-rl-border-info-primary-color: #3325ae;
+  --bb-rl-border-info-secondary-color: #4946fe;
   --bb-rl-border-positive-primary-color: #02542d;
   --bb-rl-border-positive-secondary-color: #14ae5c;
   --bb-rl-border-warning-primary-color: #682d03;
@@ -62,6 +68,7 @@
   --bb-rl-icon-brand-primary-color: #3325ae;
   --bb-rl-icon-brand-secondary-color: var(--bb-rl-primary-color);
   --bb-rl-icon-brand-disabled-color: #767eff;
+  --bb-rl-icon-info-primary-color: #3325ae;
   --bb-rl-icon-positive-primary-color: #02542d;
   --bb-rl-icon-positive-secondary-color: #14ae5c;
   --bb-rl-icon-warning-primary-color: #682d03;
@@ -118,6 +125,7 @@
   --bb-rl-background-brand-secondary-color: #3325ae;
   --bb-rl-background-brand-secondary-hover-color: #2e2689;
   --bb-rl-background-brand-disabled-color: #767eff;
+  --bb-rl-background-info-secondary-color: #3325ae;
   --bb-rl-background-positive-primary-color: #008043;
   --bb-rl-background-positive-primary-hover-color: #02542d;
   --bb-rl-background-positive-secondary-color: #02542d;
@@ -138,6 +146,7 @@
   --bb-rl-border-quaternary-color: #f3f3f3;
   --bb-rl-border-brand-primary-color: #c2cdff;
   --bb-rl-border-brand-secondary-color: var(--bb-rl-primary-color);
+  --bb-rl-border-info-primary-color: #c2cdff;
   --bb-rl-border-positive-primary-color: #cff7d3;
   --bb-rl-border-positive-secondary-color: #14ae5c;
   --bb-rl-border-warning-primary-color: #fff1c2;
@@ -165,6 +174,7 @@
   --bb-rl-icon-brand-primary-color: #c2cdff;
   --bb-rl-icon-brand-secondary-color: var(--bb-rl-primary-color);
   --bb-rl-icon-brand-disabled-color: #767eff;
+  --bb-rl-icon-info-primary-color: #dde4ff;
   --bb-rl-icon-positive-primary-color: #cff7d3;
   --bb-rl-icon-positive-secondary-color: #14ae5c;
   --bb-rl-icon-warning-primary-color: #fff1c2;
@@ -987,7 +997,7 @@ body.bb-rl-activity-modal-open .bb-rl-activity-update-form.modal-popup {
 }
 
 .bb-rl-activity-form.bb-rl-focus-in #bb-rl-activity-privacy-point {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   background-color: var(--bb-rl-background-secondary-color);
   border: 1px solid var(--bb-rl-border-secondary-color);
@@ -1150,6 +1160,11 @@ body.bb-rl-activity-modal-open .bb-rl-activity-update-form.modal-popup {
   flex-flow: row-reverse;
   gap: var(--bb-rl-space-100);
   position: relative;
+}
+
+.bb-rl-ac-title-required .bb-rl-activity-form.bb-rl-focus-in #whats-new-submit:hover:not(:has(#bb-rl-aw-whats-new-reset:hover)) .bb-title-tooltip-wrapper {
+  opacity: 1;
+  cursor: default;
 }
 
 .bb-rl-ac-topic-required .bb-rl-activity-form.bb-rl-focus-in #whats-new-submit:hover:not(:has(#bb-rl-aw-whats-new-reset:hover)) .bb-topic-tooltip-wrapper {
@@ -1466,8 +1481,12 @@ body.bb-rl-activity-modal-open .bb-rl-activity-update-form.modal-popup {
   font-family: bb-icons-rl;
   font-size: var(--bb-rl-font-size-base);
   position: absolute;
-  top: var(--bb-rl-space-100);
+  top: 12px;
   left: var(--bb-rl-space-200);
+}
+
+.bb-rl-activity-form label.bb-rl-activity-privacy__label-group .bb-rl-privacy-label i {
+  display: none;
 }
 
 .bb-rl-activity-form #bb-rl-whats-new-post-in-box {
@@ -2003,6 +2022,7 @@ body.bb-rl-activity-modal-open .bb-rl-activity-update-form.modal-popup {
   display: block;
 }
 
+.bb-title-tooltip-wrapper,
 .bb-topic-tooltip-wrapper {
   position: absolute;
   z-index: 99999;
@@ -2013,11 +2033,15 @@ body.bb-rl-activity-modal-open .bb-rl-activity-update-form.modal-popup {
   left: 0;
 }
 
+.bb-title-tooltip-wrapper.active,
 .bb-topic-tooltip-wrapper.active {
   opacity: 1;
   pointer-events: auto;
 }
 
+.bb-title-tooltip-wrapper .bb-title-tooltip,
+.bb-title-tooltip-wrapper .bb-topic-tooltip,
+.bb-topic-tooltip-wrapper .bb-title-tooltip,
 .bb-topic-tooltip-wrapper .bb-topic-tooltip {
   background: var(--bb-rl-background-black-color);
   color: var(--bb-rl-text-white-color);
@@ -2030,6 +2054,7 @@ body.bb-rl-activity-modal-open .bb-rl-activity-update-form.modal-popup {
   position: relative;
 }
 
+.bb-title-tooltip-wrapper:after,
 .bb-topic-tooltip-wrapper:after {
   content: "";
   position: absolute;
@@ -2044,6 +2069,10 @@ body.bb-rl-activity-modal-open .bb-rl-activity-update-form.modal-popup {
   display: block;
 }
 
+.bb-title-tooltip-wrapper {
+  z-index: 100000;
+}
+
 .bb-rl-activity-modal-open {
   overflow: hidden;
 }
@@ -2053,6 +2082,14 @@ body.bb-rl-activity-modal-open .bb-rl-activity-update-form.modal-popup {
   align-items: center;
   gap: 8px;
   margin-right: auto;
+}
+
+@media screen and (max-width: 580px) {
+  .bb-rl-modal-header-actions {
+    position: absolute;
+    top: var(--bb-rl-space-200);
+    left: var(--bb-rl-space-200);
+  }
 }
 
 .bb-rl-activity-form--schedule .bb-rl-bb-model-header .bb-rl-modal-header-actions {
@@ -2499,6 +2536,13 @@ body.bb-rl-activity-modal-open .bb-rl-activity-update-form.modal-popup {
   box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.12);
   padding: var(--bb-rl-space-100) 0;
   width: 200px;
+}
+
+@media screen and (max-width: 800px) {
+  .bb-rl-activity-filters-container .bb-subnav-filters-container-main .subnav-filters-modal {
+    right: 0;
+    left: unset;
+  }
 }
 
 .bb-subnav-filters-container-main .subnav-filters-modal ul {
@@ -5954,7 +5998,7 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   text-align: center;
   cursor: pointer;
   border-radius: var(--bb-rl-radius-md);
-  transition: background-color 0.2s ease, bordfont / size / smer-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
   opacity: 0.7;
   pointer-events: none;
