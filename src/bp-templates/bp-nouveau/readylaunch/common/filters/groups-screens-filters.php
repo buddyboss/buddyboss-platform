@@ -30,24 +30,9 @@ if ( ! empty( $avail_sorting_options ) && in_array( 1, $avail_sorting_options, t
 <div class='<?php echo esc_attr( $hide_class ); ?> bb-subnav-filters-container-main'>
 	<span class="bb-subnav-filters-label"><?php echo esc_html_e( 'by', 'buddyboss' ); ?></span>
 	<div class="bb-subnav-filters-container bb-subnav-filters-filtering">
-		<?php
-		$sorting_labels            = bb_get_activity_sorting_options_labels();
-		$sorting_labels_by_context = bb_rl_get_activity_sorting_options_labels_by_context();
-		?>
+		<?php $sorting_labels = bb_get_activity_sorting_options_labels(); ?>
 		<button class="subnav-filters-opener" aria-expanded="false" aria-controls="bb-subnav-filter-by">
-			<span class="selected">
-				<?php
-				// Use by context labels which have separate translations for proper grammar.
-				$default_sorting_label = '';
-				if ( isset( $sorting_labels_by_context[ $default_selected ] ) ) {
-					$default_sorting_label = $sorting_labels_by_context[ $default_selected ];
-				} elseif ( isset( $sorting_labels[ $default_selected ] ) ) {
-					$default_sorting_label = $sorting_labels[ $default_selected ];
-				}
-				echo esc_html( $default_sorting_label );
-				unset( $default_sorting_label );
-				?>
-			</span>
+			<span class="selected"><?php echo esc_html( strtolower( $sorting_labels[ $default_selected ] ) ); ?></span>
 			<i class="bb-icons-rl-caret-down"></i>
 		</button>
 
