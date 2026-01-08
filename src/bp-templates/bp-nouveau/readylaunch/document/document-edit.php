@@ -38,7 +38,7 @@ $document_id = bp_get_document_id();
 							?>
 							<div class="bb-rl-field-wrap bb-rl-privacy-field-wrap-hide-show">
 								<label for="bb-rl-folder-privacy" class="bb-label"><?php esc_html_e( 'Privacy', 'buddyboss' ); ?></label>
-								<div class="bb-rl-dropdown-wrap">
+								<div class="bb-rl-dropdown-wrap bb-rl-filter">
 									<select id="bb-rl-folder-privacy-select" class="bb-rl-dropdown bb-rl-folder-privacy-select">
 										<?php
 										foreach ( bp_document_get_visibility_levels() as $key => $privacy ) :
