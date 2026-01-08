@@ -8500,6 +8500,11 @@ body.admin-bar .bb-rl-left-panel {
   justify-content: flex-end;
 }
 
+.bb-rl-groups .bb-rl-skeleton-footer,
+.bb-rl-members .bb-rl-skeleton-footer {
+  flex: auto;
+}
+
 .bb-rl-skeleton-footer .bb-rl-skeleton-data-bit {
   height: var(--bb-rl-space-300);
 }
