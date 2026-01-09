@@ -2150,12 +2150,11 @@ function bp_document_user_document_folder_tree_view_li_html( $user_id = 0, $grou
 	}
 
 	if ( 'group' === $type && ! $group_id ) {
-		$group_id               = $id;
-		$documents_folder_query = $wpdb->prepare( "SELECT * FROM {$document_folder_table} WHERE group_id = %d ORDER BY id DESC", $group_id );
-	} elseif ( 'group' === $type && $group_id ) {
-		$documents_folder_query = $wpdb->prepare( "SELECT * FROM {$document_folder_table} WHERE group_id = %d ORDER BY id DESC", $group_id );
-	} elseif ( $group_id > 0 ) {
-		// If group_id is provided but type is not 'group', still query by group_id only to get all group folders
+		$group_id = $id;
+	}
+
+	if ( $group_id > 0 ) {
+		// Query by group_id only to get all group folders.
 		$documents_folder_query = $wpdb->prepare( "SELECT * FROM {$document_folder_table} WHERE group_id = %d ORDER BY id DESC", $group_id );
 	} else {
 		$documents_folder_query = $wpdb->prepare( "SELECT * FROM {$document_folder_table} WHERE user_id = %d AND group_id = %d ORDER BY id DESC", $user_id, $group_id );

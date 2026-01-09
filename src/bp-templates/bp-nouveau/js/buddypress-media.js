@@ -5076,23 +5076,23 @@ window.bp = window.bp || {};
 							}
 
 							//Disable move button if current folder is already a parent
-							// setTimeout( function () {
+							setTimeout( function () {
 
-							// 	var fileID = 0, currentParentId =  $( targetPopup ).closest( '.bb-activity-media-wrap' ).find( '.bb-activity-media-elem.document-activity' ).attr( 'data-parent-id', folder_id );
-							// 	if ( $( targetPopup ).find( '.breadcrumbs-append-ul-li .item > span:last-child' ).hasClass( 'hidden' ) ) {
-							// 		fileID = $( targetPopup ).find( '.breadcrumbs-append-ul-li .item > span:last-child' ).prev().attr( 'id' );
-							// 	} else {
-							// 		fileID = $( targetPopup ).find( '.breadcrumbs-append-ul-li .item > span:last-child' ).attr( 'id' );
-							// 	}
-							// 	if ( currentParentId === fileID && ( $( targetPopup ).hasClass( 'bp-media-move-file' ) || $( targetPopup ).hasClass( 'bp-media-move-folder' ) ) ) {
-							// 		$( targetPopup ).find( '.bp-document-move' ).addClass( 'is-disabled' );
-							// 		$( targetPopup ).find( '.bp-folder-move' ).addClass( 'is-disabled' );
-							// 	} else {
-							// 		$( targetPopup ).find( '.bp-document-move' ).removeClass( 'is-disabled' );
-							// 		$( targetPopup ).find( '.bp-folder-move' ).removeClass( 'is-disabled' );
-							// 	}
+								var fileID = 0, currentParentId =  $( targetPopup ).closest( '.bb-activity-media-wrap' ).find( '.bb-activity-media-elem.document-activity' ).attr( 'data-parent-id' );
+								if ( $( targetPopup ).find( '.breadcrumbs-append-ul-li .item > span:last-child' ).hasClass( 'hidden' ) ) {
+									fileID = $( targetPopup ).find( '.breadcrumbs-append-ul-li .item > span:last-child' ).prev().attr( 'id' );
+								} else {
+									fileID = $( targetPopup ).find( '.breadcrumbs-append-ul-li .item > span:last-child' ).attr( 'id' );
+								}
+								if ( currentParentId === fileID && ( $( targetPopup ).hasClass( 'bp-media-move-file' ) || $( targetPopup ).hasClass( 'bp-media-move-folder' ) ) ) {
+									$( targetPopup ).find( '.bp-document-move' ).addClass( 'is-disabled' );
+									$( targetPopup ).find( '.bp-folder-move' ).addClass( 'is-disabled' );
+								} else {
+									$( targetPopup ).find( '.bp-document-move' ).removeClass( 'is-disabled' );
+									$( targetPopup ).find( '.bp-folder-move' ).removeClass( 'is-disabled' );
+								}
 
-							// }, 100 );
+							}, 100 );
 
 						}
 					);
@@ -5140,7 +5140,7 @@ window.bp = window.bp || {};
 							$( event.currentTarget ).nextAll().remove();
 
 							if (
-								$( targetPopup ).find( '.breadcrumbs-append-ul-li .item > span[data-id]' ).last().attr( 'data-id' ) &&
+								currentTargetParent === $( targetPopup ).find( '.breadcrumbs-append-ul-li .item > span[data-id]' ).last().attr( 'data-id' ) &&
 								( $( targetPopup ).hasClass( 'bp-media-move-file' ) || $( targetPopup ).hasClass( 'bp-media-move-folder' ) )
 							) {
 								$( targetPopup ).find( '.bp-document-move' ).addClass( 'is-disabled' );
