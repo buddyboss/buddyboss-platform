@@ -131,24 +131,16 @@ window.bp = window.bp || {};
 
 			initSelect2Filters: function () {
 				var self = this;
-				var maxRetries = 3;
+				var maxRetries = 10;
 				var retryCount = 0;
+				var retryDelay = 200;
 
 				function tryInitSelect2() {
-					// Check if document is ready
-					if ( document.readyState !== 'complete' ) {
-						if ( retryCount < maxRetries ) {
-							retryCount++;
-							setTimeout( tryInitSelect2, 500 );
-						}
-						return;
-					}
-
 					// Check if select2 library is available
 					if ( typeof $.fn.select2 === 'undefined' ) {
 						if ( retryCount < maxRetries ) {
 							retryCount++;
-							setTimeout( tryInitSelect2, 500 );
+							setTimeout( tryInitSelect2, retryDelay );
 						}
 						return;
 					}
@@ -158,7 +150,7 @@ window.bp = window.bp || {};
 					if ( $selects.length === 0 ) {
 						if ( retryCount < maxRetries ) {
 							retryCount++;
-							setTimeout( tryInitSelect2, 500 );
+							setTimeout( tryInitSelect2, retryDelay );
 						}
 						return;
 					}
@@ -167,9 +159,17 @@ window.bp = window.bp || {};
 					self.gridListFilter();
 				}
 
-				// Start the initialization process
+				// Start the initialization process when document is ready.
 				$( document ).ready( function () {
 					tryInitSelect2();
+				} );
+
+				// Reinitialize select2 after AJAX requests complete (for dynamically loaded content).
+				$( document ).ajaxComplete( function () {
+					// Use a small delay to ensure DOM is updated.
+					setTimeout( function () {
+						self.initSelect2Scoped( $( document ) );
+					}, 100 );
 				} );
 			},
 
