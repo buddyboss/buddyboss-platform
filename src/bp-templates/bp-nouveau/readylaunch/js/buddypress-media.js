@@ -2426,11 +2426,11 @@ window.bp = window.bp || {};
 
 						if ( Number( $( e.currentTarget ).data( 'id' ) ) !== 0 ) {
 							mediaPrivacy.find( 'option' ).removeAttr( 'selected' );
-							mediaPrivacy.val( $( e.currentTarget ).parent().data( 'privacy' ) );
+							mediaPrivacy.val( $( e.currentTarget ).parent().data( 'privacy' ) ).trigger( 'change' );
 							mediaPrivacy.prop( 'disabled', true );
 						} else {
 							mediaPrivacy.find( 'option' ).removeAttr( 'selected' );
-							mediaPrivacy.val( 'public' );
+							mediaPrivacy.val( 'public' ).trigger( 'change' );
 							mediaPrivacy.prop( 'disabled', false );
 						}
 					}
@@ -2461,11 +2461,11 @@ window.bp = window.bp || {};
 						var selectedAlbumPrivacy = $( e.currentTarget ).closest( '#bp-media-uploader' ).find( '.location-album-list li.is_active' ).data( 'privacy' );
 						if ( Number( $( e.currentTarget ).closest( '.bb-rl-field-wrap' ).find( '.bb-rl-album-selected-id' ).val() ) !== 0 ) {
 							mediaPrivacy.find( 'option' ).removeAttr( 'selected' );
-							mediaPrivacy.val( selectedAlbumPrivacy === undefined ? 'public' : selectedAlbumPrivacy );
+							mediaPrivacy.val( selectedAlbumPrivacy === undefined ? 'public' : selectedAlbumPrivacy ).trigger( 'change' );
 							mediaPrivacy.prop( 'disabled', true );
 						} else {
 							mediaPrivacy.find( 'option' ).removeAttr( 'selected' );
-							mediaPrivacy.val( 'public' );
+							mediaPrivacy.val( 'public' ).trigger( 'change' );
 							mediaPrivacy.prop( 'disabled', false );
 						}
 
