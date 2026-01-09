@@ -5898,6 +5898,26 @@ body.bb-readylaunch-template .bb-model-footer .select2-container .bb-rl-select2-
   margin-left: var(--bb-rl-space-50);
 }
 
+.bb-rl-modal-wrapper .bb-rl-footer-alt {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--bb-rl-space-100);
+}
+
+.bb-rl-modal-wrapper .bb-rl-footer-alt .bb-rl-privacy-field-wrap-hide-show {
+  display: inline-flex;
+  margin: 0;
+}
+
+.bb-rl-modal-wrapper .bb-rl-footer-alt .bb-rl-privacy-field-wrap-hide-show .bb-label {
+  display: none;
+}
+
+.bb-rl-modal-wrapper .bb-rl-footer-alt .db-modal-buttons {
+  display: inline-flex;
+}
+
 .bb-rl-container-inner .bp-pagination,
 .bb-rl-content-wrapper .bp-pagination {
   display: flex;

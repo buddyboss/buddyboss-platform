@@ -5776,9 +5776,15 @@ window.bp = window.bp || {};
 			$( '.bb-rl-modal-container #bb-rl-folder-privacy' ).addClass( 'new-folder-create-privacy' );
 			$document.find( '.open-popup .error' ).hide();
 
-			// Reinitialize select2 for folder privacy select if not already initialized.
+			// Reinitialize select2 for privacy select after a small delay to ensure element is visible.
 			if ( bp.Readylaunch && bp.Readylaunch.initSelect2Scoped ) {
-				bp.Readylaunch.initSelect2Scoped( $( '.bb-rl-popup-on-fly-create-' + folderORAlbum ) );
+				setTimeout( function () {
+					// Target the visible on-fly create popup wrapper within the open popup.
+					var $targetContainer = $openPopup.find( '.bb-rl-create-popup-' + folderORAlbum + '-wrap' );
+					if ( $targetContainer.length && $targetContainer.is( ':visible' ) ) {
+						bp.Readylaunch.initSelect2Scoped( $targetContainer );
+					}
+				}, 150 );
 			}
 		},
 
