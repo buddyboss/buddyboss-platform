@@ -181,6 +181,11 @@
 		display: inline-flex;
 		align-items: center;
 
+		&[aria-disabled="true"] {
+			opacity: 0.7;
+			cursor: default;
+		}
+
 		&.select2-selection--single {
 			display: inline-flex;
 			height: auto;

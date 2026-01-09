@@ -4139,6 +4139,12 @@ button[data-balloon] {
   align-items: center;
 }
 
+.select2-container--rl .bb-rl-select2-container[aria-disabled="true"],
+.select2-container--rl .select2-selection.bb-rl-select2-container[aria-disabled="true"] {
+  opacity: 0.7;
+  cursor: default;
+}
+
 .select2-container--rl .bb-rl-select2-container.select2-selection--single,
 .select2-container--rl .select2-selection.bb-rl-select2-container.select2-selection--single {
   display: inline-flex;
