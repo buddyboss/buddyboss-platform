@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 2.17.0\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2026-01-08 13:26:30+00:00\n"
+"POT-Creation-Date: 2026-01-09 09:19:36+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1363,6 +1363,92 @@ msgstr ""
 msgid "Title must be less than %1$d characters. You used %2$d characters."
 msgstr ""
 
+#. translators: This is used in the context "Show [all updates]" - adjust capitalization/grammar as needed for your language
+#: bp-activity/bp-activity-functions.php:7920
+msgid "all updates"
+msgstr ""
+
+#. translators: This is used in the context "Show [created by me]" - adjust capitalization/grammar as needed for your language
+#: bp-activity/bp-activity-functions.php:7922
+msgid "created by me"
+msgstr ""
+
+#. translators: This is used in the context "Show [I've reacted to]" - adjust capitalization/grammar as needed for your language
+#: bp-activity/bp-activity-functions.php:7924
+#: bp-core/bp-core-options.php:2813
+msgid "I've reacted to"
+msgstr ""
+
+#. translators: This is used in the context "Show [from my groups]" - adjust capitalization/grammar as needed for your language
+#: bp-activity/bp-activity-functions.php:7926
+msgid "from my groups"
+msgstr ""
+
+#. translators: This is used in the context "Show [from my connections]" - adjust capitalization/grammar as needed for your language
+#: bp-activity/bp-activity-functions.php:7928
+msgid "from my connections"
+msgstr ""
+
+#. translators: This is used in the context "Show [I'm mentioned in]" - adjust capitalization/grammar as needed for your language
+#: bp-activity/bp-activity-functions.php:7930
+#: bp-core/bp-core-options.php:2816
+msgid "I'm mentioned in"
+msgstr ""
+
+#. translators: This is used in the context "Show [I'm following]" - adjust capitalization/grammar as needed for your language
+#: bp-activity/bp-activity-functions.php:7932
+#: bp-core/bp-core-options.php:2817
+msgid "I'm following"
+msgstr ""
+
+#. translators: This is used in the context "Show [unanswered]" - adjust capitalization/grammar as needed for your language
+#: bp-activity/bp-activity-functions.php:7934
+msgid "unanswered"
+msgstr ""
+
+#. translators: This is used in the context "Show [personal posts]" - adjust capitalization/grammar as needed for your language
+#: bp-activity/bp-activity-functions.php:7956
+msgid "personal posts"
+msgstr ""
+
+#. translators: This is used in the context "Show [reacted to]" - adjust capitalization/grammar as needed for your language
+#: bp-activity/bp-activity-functions.php:7958
+msgid "reacted to"
+msgstr ""
+
+#. translators: This is used in the context "Show [from groups]" - adjust capitalization/grammar as needed for your language
+#: bp-activity/bp-activity-functions.php:7960
+msgid "from groups"
+msgstr ""
+
+#. translators: This is used in the context "Show [from connections]" - adjust capitalization/grammar as needed for your language
+#: bp-activity/bp-activity-functions.php:7962
+msgid "from connections"
+msgstr ""
+
+#. translators: This is used in the context "Show [mentioned in]" - adjust capitalization/grammar as needed for your language
+#: bp-activity/bp-activity-functions.php:7964
+msgid "mentioned in"
+msgstr ""
+
+#. translators: This is used in the context "Show [following]" - adjust capitalization/grammar as needed for your language
+#: bp-activity/bp-activity-functions.php:7966
+#: bp-members/bp-members-template.php:2883
+#: bp-members/bp-members-template.php:2889
+#: bp-members/bp-members-template.php:2896
+msgid "following"
+msgstr ""
+
+#. translators: This is used in the context "by [new posts]" - adjust capitalization/grammar as needed for your language
+#: bp-activity/bp-activity-functions.php:7988
+msgid "new posts"
+msgstr ""
+
+#. translators: This is used in the context "by [recent activity]" - adjust capitalization/grammar as needed for your language
+#: bp-activity/bp-activity-functions.php:7990
+msgid "recent activity"
+msgstr ""
+
 #: bp-activity/bp-activity-notifications.php:40
 #, php-format
 msgid "@%s Mentions"
@@ -1630,8 +1716,8 @@ msgstr ""
 #. translators: ReadyLaunch - This is used in the context "Show [Following]" with Title Case capitalization
 #: bp-activity/bp-activity-template.php:4379
 #: bp-activity/bp-activity-template.php:4388
-#: bp-core/bp-core-options.php:2912
-#: bp-core/bp-core-options.php:3078
+#: bp-activity/classes/class-bb-activity-readylaunch.php:1047
+#: bp-core/bp-core-options.php:2876
 #: bp-core/classes/class-bb-core-follow-my-network-widget.php:141
 #: bp-members/bp-members-admin.php:61
 #: bp-templates/bp-nouveau/includes/members/functions.php:56
@@ -1879,6 +1965,84 @@ msgstr ""
 
 #: bp-activity/classes/class-bb-activity-readylaunch.php:977
 msgid "Comments are closed for this post"
+msgstr ""
+
+#. translators: ReadyLaunch - This is used in the context "Show [All Updates]" with Title Case capitalization
+#: bp-activity/classes/class-bb-activity-readylaunch.php:1002
+#: bp-templates/bp-nouveau/includes/activity/functions.php:322
+msgid "All Updates"
+msgstr ""
+
+#. translators: ReadyLaunch - This is used in the context "Show [Created By Me]" with Title Case capitalization
+#: bp-activity/classes/class-bb-activity-readylaunch.php:1004
+msgid "Created By Me"
+msgstr ""
+
+#. translators: ReadyLaunch - This is used in the context "Show [I've Reacted To]" with Title Case capitalization
+#: bp-activity/classes/class-bb-activity-readylaunch.php:1006
+msgid "I've Reacted To"
+msgstr ""
+
+#. translators: ReadyLaunch - This is used in the context "Show [From My Groups]" with Title Case capitalization
+#: bp-activity/classes/class-bb-activity-readylaunch.php:1008
+msgid "From My Groups"
+msgstr ""
+
+#. translators: ReadyLaunch - This is used in the context "Show [From My Connections]" with Title Case capitalization
+#: bp-activity/classes/class-bb-activity-readylaunch.php:1010
+msgid "From My Connections"
+msgstr ""
+
+#. translators: ReadyLaunch - This is used in the context "Show [I'm Mentioned In]" with Title Case capitalization
+#: bp-activity/classes/class-bb-activity-readylaunch.php:1012
+msgid "I'm Mentioned In"
+msgstr ""
+
+#. translators: ReadyLaunch - This is used in the context "Show [I'm Following]" with Title Case capitalization
+#: bp-activity/classes/class-bb-activity-readylaunch.php:1014
+#: bp-core/classes/class-bp-core-follow-following-widget.php:77
+msgid "I'm Following"
+msgstr ""
+
+#. translators: ReadyLaunch - This is used in the context "Show [Unanswered]" with Title Case capitalization
+#: bp-activity/classes/class-bb-activity-readylaunch.php:1016
+#: bp-core/bp-core-options.php:2818
+msgid "Unanswered"
+msgstr ""
+
+#. translators: ReadyLaunch - This is used in the context "Show [Personal Posts]" with Title Case capitalization
+#: bp-activity/classes/class-bb-activity-readylaunch.php:1037
+msgid "Personal Posts"
+msgstr ""
+
+#. translators: ReadyLaunch - This is used in the context "Show [Reacted To]" with Title Case capitalization
+#: bp-activity/classes/class-bb-activity-readylaunch.php:1039
+msgid "Reacted To"
+msgstr ""
+
+#. translators: ReadyLaunch - This is used in the context "Show [From Groups]" with Title Case capitalization
+#: bp-activity/classes/class-bb-activity-readylaunch.php:1041
+msgid "From Groups"
+msgstr ""
+
+#. translators: ReadyLaunch - This is used in the context "Show [From Connections]" with Title Case capitalization
+#: bp-activity/classes/class-bb-activity-readylaunch.php:1043
+msgid "From Connections"
+msgstr ""
+
+#. translators: ReadyLaunch - This is used in the context "Show [Mentioned In]" with Title Case capitalization
+#: bp-activity/classes/class-bb-activity-readylaunch.php:1045
+msgid "Mentioned In"
+msgstr ""
+
+#. translators: ReadyLaunch - This is used in the context "by [New Posts]" with Title Case capitalization
+#: bp-activity/classes/class-bb-activity-readylaunch.php:1068
+msgid "New Posts"
+msgstr ""
+
+#. translators: ReadyLaunch - This is used in the context "by [Recent Activity]" with Title Case capitalization
+#: bp-activity/classes/class-bb-activity-readylaunch.php:1070
+msgid "Recent Activity"
 msgstr ""
 
 #: bp-activity/classes/class-bb-activity-topics-manager.php:136
@@ -10945,12 +11109,6 @@ msgstr ""
 msgid "Created by me"
 msgstr ""
 
-#. translators: This is used in the context "Show [I've reacted to]" - adjust capitalization/grammar as needed for your language
-#: bp-core/bp-core-options.php:2813
-#: bp-core/bp-core-options.php:2844
-msgid "I've reacted to"
-msgstr ""
-
 #: bp-core/bp-core-options.php:2814
 msgid "From my groups"
 msgstr ""
@@ -10959,190 +11117,32 @@ msgstr ""
 msgid "From my connections"
 msgstr ""
 
-#. translators: This is used in the context "Show [I'm mentioned in]" - adjust capitalization/grammar as needed for your language
-#: bp-core/bp-core-options.php:2816
-#: bp-core/bp-core-options.php:2850
-msgid "I'm mentioned in"
-msgstr ""
-
-#. translators: This is used in the context "Show [I'm following]" - adjust capitalization/grammar as needed for your language
-#: bp-core/bp-core-options.php:2817
-#: bp-core/bp-core-options.php:2852
-msgid "I'm following"
-msgstr ""
-
-#. translators: ReadyLaunch - This is used in the context "Show [Unanswered]" with Title Case capitalization
-#: bp-core/bp-core-options.php:2818
-#: bp-core/bp-core-options.php:3047
-msgid "Unanswered"
-msgstr ""
-
-#. translators: This is used in the context "Show [all updates]" - adjust capitalization/grammar as needed for your language
-#: bp-core/bp-core-options.php:2840
-msgid "all updates"
-msgstr ""
-
-#. translators: This is used in the context "Show [created by me]" - adjust capitalization/grammar as needed for your language
-#: bp-core/bp-core-options.php:2842
-msgid "created by me"
-msgstr ""
-
-#. translators: This is used in the context "Show [from my groups]" - adjust capitalization/grammar as needed for your language
-#: bp-core/bp-core-options.php:2846
-msgid "from my groups"
-msgstr ""
-
-#. translators: This is used in the context "Show [from my connections]" - adjust capitalization/grammar as needed for your language
-#: bp-core/bp-core-options.php:2848
-msgid "from my connections"
-msgstr ""
-
-#. translators: This is used in the context "Show [unanswered]" - adjust capitalization/grammar as needed for your language
-#: bp-core/bp-core-options.php:2854
-msgid "unanswered"
-msgstr ""
-
-#: bp-core/bp-core-options.php:2907
+#: bp-core/bp-core-options.php:2871
 msgid "Personal posts"
 msgstr ""
 
-#: bp-core/bp-core-options.php:2908
+#: bp-core/bp-core-options.php:2872
 msgid "Reacted to"
 msgstr ""
 
-#: bp-core/bp-core-options.php:2909
+#: bp-core/bp-core-options.php:2873
 msgid "From groups"
 msgstr ""
 
-#: bp-core/bp-core-options.php:2910
+#: bp-core/bp-core-options.php:2874
 msgid "From connections"
 msgstr ""
 
-#: bp-core/bp-core-options.php:2911
+#: bp-core/bp-core-options.php:2875
 msgid "Mentioned in"
 msgstr ""
 
-#. translators: This is used in the context "Show [personal posts]" - adjust capitalization/grammar as needed for your language
-#: bp-core/bp-core-options.php:2934
-msgid "personal posts"
-msgstr ""
-
-#. translators: This is used in the context "Show [reacted to]" - adjust capitalization/grammar as needed for your language
-#: bp-core/bp-core-options.php:2936
-msgid "reacted to"
-msgstr ""
-
-#. translators: This is used in the context "Show [from groups]" - adjust capitalization/grammar as needed for your language
-#: bp-core/bp-core-options.php:2938
-msgid "from groups"
-msgstr ""
-
-#. translators: This is used in the context "Show [from connections]" - adjust capitalization/grammar as needed for your language
-#: bp-core/bp-core-options.php:2940
-msgid "from connections"
-msgstr ""
-
-#. translators: This is used in the context "Show [mentioned in]" - adjust capitalization/grammar as needed for your language
-#: bp-core/bp-core-options.php:2942
-msgid "mentioned in"
-msgstr ""
-
-#. translators: This is used in the context "Show [following]" - adjust capitalization/grammar as needed for your language
-#: bp-core/bp-core-options.php:2944
-#: bp-members/bp-members-template.php:2883
-#: bp-members/bp-members-template.php:2889
-#: bp-members/bp-members-template.php:2896
-msgid "following"
-msgstr ""
-
-#: bp-core/bp-core-options.php:2995
+#: bp-core/bp-core-options.php:2927
 msgid "New posts"
 msgstr ""
 
-#: bp-core/bp-core-options.php:2996
+#: bp-core/bp-core-options.php:2928
 msgid "Recent activity"
-msgstr ""
-
-#. translators: This is used in the context "by [new posts]" - adjust capitalization/grammar as needed for your language
-#: bp-core/bp-core-options.php:3014
-msgid "new posts"
-msgstr ""
-
-#. translators: This is used in the context "by [recent activity]" - adjust capitalization/grammar as needed for your language
-#: bp-core/bp-core-options.php:3016
-msgid "recent activity"
-msgstr ""
-
-#. translators: ReadyLaunch - This is used in the context "Show [All Updates]" with Title Case capitalization
-#: bp-core/bp-core-options.php:3033
-#: bp-templates/bp-nouveau/includes/activity/functions.php:322
-msgid "All Updates"
-msgstr ""
-
-#. translators: ReadyLaunch - This is used in the context "Show [Created By Me]" with Title Case capitalization
-#: bp-core/bp-core-options.php:3035
-msgid "Created By Me"
-msgstr ""
-
-#. translators: ReadyLaunch - This is used in the context "Show [I've Reacted To]" with Title Case capitalization
-#: bp-core/bp-core-options.php:3037
-msgid "I've Reacted To"
-msgstr ""
-
-#. translators: ReadyLaunch - This is used in the context "Show [From My Groups]" with Title Case capitalization
-#: bp-core/bp-core-options.php:3039
-msgid "From My Groups"
-msgstr ""
-
-#. translators: ReadyLaunch - This is used in the context "Show [From My Connections]" with Title Case capitalization
-#: bp-core/bp-core-options.php:3041
-msgid "From My Connections"
-msgstr ""
-
-#. translators: ReadyLaunch - This is used in the context "Show [I'm Mentioned In]" with Title Case capitalization
-#: bp-core/bp-core-options.php:3043
-msgid "I'm Mentioned In"
-msgstr ""
-
-#. translators: ReadyLaunch - This is used in the context "Show [I'm Following]" with Title Case capitalization
-#: bp-core/bp-core-options.php:3045
-#: bp-core/classes/class-bp-core-follow-following-widget.php:77
-msgid "I'm Following"
-msgstr ""
-
-#. translators: ReadyLaunch - This is used in the context "Show [Personal Posts]" with Title Case capitalization
-#: bp-core/bp-core-options.php:3068
-msgid "Personal Posts"
-msgstr ""
-
-#. translators: ReadyLaunch - This is used in the context "Show [Reacted To]" with Title Case capitalization
-#: bp-core/bp-core-options.php:3070
-msgid "Reacted To"
-msgstr ""
-
-#. translators: ReadyLaunch - This is used in the context "Show [From Groups]" with Title Case capitalization
-#: bp-core/bp-core-options.php:3072
-msgid "From Groups"
-msgstr ""
-
-#. translators: ReadyLaunch - This is used in the context "Show [From Connections]" with Title Case capitalization
-#: bp-core/bp-core-options.php:3074
-msgid "From Connections"
-msgstr ""
-
-#. translators: ReadyLaunch - This is used in the context "Show [Mentioned In]" with Title Case capitalization
-#: bp-core/bp-core-options.php:3076
-msgid "Mentioned In"
-msgstr ""
-
-#. translators: ReadyLaunch - This is used in the context "by [New Posts]" with Title Case capitalization
-#: bp-core/bp-core-options.php:3099
-msgid "New Posts"
-msgstr ""
-
-#. translators: ReadyLaunch - This is used in the context "by [Recent Activity]" with Title Case capitalization
-#: bp-core/bp-core-options.php:3101
-msgid "Recent Activity"
 msgstr ""
 
 #: bp-core/bp-core-rest-api.php:89
