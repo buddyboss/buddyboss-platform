@@ -987,3 +987,4 @@ class BB_Activity_Readylaunch {
 		return $custom_notice;
 	}
 }
+
