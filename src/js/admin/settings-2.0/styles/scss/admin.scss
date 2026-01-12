@@ -1,0 +1,1221 @@
+/**
+ * BuddyBoss Admin Settings 2.0 - Main Styles
+ * Based on ReadyLaunch design system
+ *
+ * @package BuddyBoss\Core\Administration
+ * @since BuddyBoss 3.0.0
+ */
+
+// Variables (matching ReadyLaunch)
+$bb-primary-color: #ef5d33;
+$bb-secondary-color: #135e96;
+$bb-border-color: #d9d9d9;
+$bb-background-color: #f6f6f6;
+$bb-sidebar-bg: #f0f0f0;
+$bb-text-color: #000;
+$bb-text-secondary: #666;
+$bb-text-muted: #2f2f2f;
+$bb-spacing: 20px;
+$bb-border-radius: 16px;
+$bb-border-radius-sm: 8px;
+$bb-border-radius-xs: 6px;
+
+// Reset for component
+.bb-rl-settings *,
+.bb-rl-settings *::before,
+.bb-rl-settings *::after {
+	box-sizing: border-box;
+}
+
+// Main App Container
+.bb-admin-app {
+	background: #fff;
+	min-height: calc(100vh - 32px);
+}
+
+// Loading States
+.bb-admin-loading {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	min-height: 400px;
+}
+
+// Error Boundary
+.bb-admin-error-boundary {
+	padding: $bb-spacing;
+	text-align: center;
+
+	&__content {
+		max-width: 600px;
+		margin: 0 auto;
+	}
+
+	&__details {
+		margin-top: $bb-spacing;
+		text-align: left;
+		background: $bb-background-color;
+		padding: $bb-spacing;
+		border-radius: $bb-border-radius-xs;
+
+		pre {
+			overflow-x: auto;
+			font-size: 12px;
+		}
+	}
+}
+
+// Header (matching ReadyLaunch .bb-rl-tab-header)
+.bb-admin-header {
+	background-color: #fff;
+	margin: 0 -20px;
+	padding: 12px 24px;
+	border-bottom: 1px solid $bb-border-color;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	position: sticky;
+	top: 32px;
+	z-index: 100;
+
+	&__container {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		width: 100%;
+	}
+
+	&__left {
+		margin-right: auto;
+	}
+
+	&__logo {
+		display: flex;
+		align-items: center;
+
+		&-img {
+			max-width: 130px;
+			height: auto;
+		}
+	}
+
+	&__center {
+		flex: 1 1 auto;
+		max-width: 600px;
+		margin: 0 40px;
+		position: relative;
+	}
+
+	&__search {
+		position: relative;
+
+		&-input {
+			width: 100%;
+		}
+
+		&-spinner {
+			position: absolute;
+			right: 10px;
+			top: 50%;
+			transform: translateY(-50%);
+		}
+
+		&-results {
+			position: absolute;
+			top: 100%;
+			left: 0;
+			right: 0;
+			background: #fff;
+			border: 1px solid $bb-border-color;
+			border-radius: $bb-border-radius-sm;
+			box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+			max-height: 400px;
+			overflow-y: auto;
+			z-index: 1000;
+			margin-top: 5px;
+		}
+
+		&-result {
+			display: flex;
+			align-items: center;
+			padding: 12px 15px;
+			border-bottom: 1px solid $bb-background-color;
+			cursor: pointer;
+			width: 100%;
+			text-align: left;
+			background: none;
+			border-left: none;
+			border-right: none;
+			border-top: none;
+
+			&:hover {
+				background: $bb-background-color;
+			}
+
+			&:last-child {
+				border-bottom: none;
+			}
+
+			&--no-results {
+				cursor: default;
+				color: #999;
+			}
+
+			&-icon {
+				margin-right: 12px;
+				font-size: 20px;
+			}
+
+			&-content {
+				flex: 1;
+			}
+
+			&-label {
+				font-weight: 600;
+				margin-bottom: 4px;
+			}
+
+			&-breadcrumb {
+				font-size: 12px;
+				color: $bb-text-secondary;
+			}
+		}
+	}
+
+	&__right {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+	}
+
+	&__icon-button {
+		background-color: transparent;
+		border: none;
+		color: #4d4d4d;
+		font-size: 24px;
+		cursor: pointer;
+		position: relative;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 36px;
+		height: 36px;
+
+		.dashicons {
+			font-size: 24px;
+		}
+	}
+}
+
+// Dashboard
+.bb-admin-dashboard {
+	padding: $bb-spacing;
+	max-width: 1600px;
+	margin: 0 auto;
+
+	&__container {
+		display: grid;
+		grid-template-columns: 2fr 1fr;
+		gap: $bb-spacing;
+	}
+
+	&__left,
+	&__right {
+		display: flex;
+		flex-direction: column;
+		gap: $bb-spacing;
+	}
+
+	&__welcome {
+		&-video {
+			margin-bottom: $bb-spacing;
+		}
+
+		&-quick-actions {
+			display: flex;
+			gap: 10px;
+		}
+	}
+
+	&__analytics {
+		&-grid {
+			display: grid;
+			grid-template-columns: repeat(3, 1fr);
+			gap: $bb-spacing;
+		}
+
+		&-item {
+			text-align: center;
+		}
+
+		&-label {
+			font-size: 14px;
+			color: $bb-text-secondary;
+			margin-bottom: 8px;
+		}
+
+		&-value {
+			font-size: 32px;
+			font-weight: 600;
+			color: $bb-primary-color;
+		}
+	}
+}
+
+// Settings Grid (Features List)
+.bb-admin-settings {
+	padding: 0;
+	max-width: 1600px;
+	margin: 0 auto;
+
+	&__container {
+		padding: 0 24px 24px;
+	}
+
+	&__filters {
+		display: flex;
+		gap: 24px;
+		margin-bottom: 24px;
+		align-items: center;
+		justify-content: space-between;
+		padding: 0 0 24px 0;
+		border-bottom: 1px solid #e5e5e5;
+		min-height: 56px;
+	}
+
+	&__filter-tabs {
+		display: flex;
+		gap: 8px;
+		align-items: center;
+	}
+
+	&__filter-tab {
+		background: transparent;
+		border: 0.5px solid #ccc;
+		border-radius: 999px;
+		padding: 7px 16px;
+		font-size: 13px;
+		line-height: 18px;
+		font-weight: 500;
+		color: $bb-text-secondary;
+		cursor: pointer;
+		transition: all 0.2s ease;
+		white-space: nowrap;
+
+		&:hover {
+			background: $bb-sidebar-bg;
+		}
+
+		&--active {
+			background: $bb-sidebar-bg;
+			border-color: #999;
+			border-width: 1px;
+			color: $bb-text-color;
+		}
+	}
+
+	&__filter-right {
+		display: flex;
+		align-items: center;
+		gap: 24px;
+	}
+
+	&__filter-select {
+		background: $bb-background-color;
+		border: 0.5px solid #ccc;
+		border-radius: $bb-border-radius-xs;
+		padding: 7px 8px;
+		min-width: 120px;
+		font-size: 13px;
+		line-height: 18px;
+		color: $bb-text-color;
+		cursor: pointer;
+		appearance: none;
+		background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M4 6L8 10L12 6' stroke='%23666' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+		background-repeat: no-repeat;
+		background-position: right 8px center;
+		padding-right: 32px;
+
+		&:hover {
+			background-color: $bb-sidebar-bg;
+		}
+
+		&:focus {
+			outline: none;
+			border-color: #2271b1;
+			box-shadow: 0 0 0 1px #2271b1;
+		}
+	}
+
+	&__grid {
+		display: flex;
+		flex-direction: column;
+		gap: 40px;
+	}
+
+	&__category {
+		&-divider {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			margin-bottom: 16px;
+		}
+
+		&-title {
+			font-size: 13px;
+			font-weight: 500;
+			text-transform: uppercase;
+			letter-spacing: 0.5px;
+			color: $bb-text-color;
+			margin: 0;
+			white-space: nowrap;
+		}
+
+		&-line {
+			flex: 1;
+			height: 1px;
+			background: #ccc;
+			margin-left: 8px;
+		}
+	}
+
+	&__features-grid {
+		display: grid;
+		grid-template-columns: repeat(4, 328px);
+		gap: 16px;
+		justify-content: start;
+
+		@media (max-width: 1400px) {
+			grid-template-columns: repeat(3, 328px);
+		}
+
+		@media (max-width: 1100px) {
+			grid-template-columns: repeat(2, 328px);
+		}
+
+		@media (max-width: 700px) {
+			grid-template-columns: 1fr;
+		}
+	}
+
+	&__feature-card {
+		background: #fff;
+		border: 0.5px solid #ccc;
+		border-radius: 12px;
+		padding: 16px;
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		min-height: 208px;
+		transition: box-shadow 0.2s ease;
+
+		&:hover {
+			box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+		}
+
+		&--active {
+			border-color: #00a32a;
+		}
+
+		&--inactive {
+			border-color: #ccc;
+			opacity: 0.8;
+		}
+	}
+
+	&__feature-body {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+		flex: 1;
+	}
+
+	&__feature-top {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+	}
+
+	&__feature-name {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+		flex: 1;
+	}
+
+	&__feature-icon-frame {
+		width: 28px;
+		height: 28px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex-shrink: 0;
+
+		.dashicons {
+			font-size: 28px;
+			width: 28px;
+			height: 28px;
+			line-height: 28px;
+			color: $bb-primary-color;
+		}
+	}
+
+	&__feature-icon-img {
+		width: 28px;
+		height: 28px;
+		object-fit: contain;
+	}
+
+	&__feature-title {
+		margin: 0;
+		font-size: 16px;
+		font-weight: 500;
+		line-height: 22px;
+		color: $bb-text-color;
+	}
+
+	&__feature-description {
+		margin: 0;
+		color: $bb-text-secondary;
+		font-size: 13px;
+		line-height: 18px;
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
+	&__feature-bottom {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		margin-top: auto;
+		padding-top: 8px;
+	}
+
+	&__feature-left {
+		flex: 1;
+		min-width: 0;
+	}
+
+	&__feature-settings-btn {
+		display: inline-flex;
+		align-items: center;
+		gap: 4px;
+		background: $bb-sidebar-bg;
+		border: 0.5px solid $bb-border-color;
+		border-radius: $bb-border-radius-sm;
+		padding: 6px 16px;
+		min-height: 32px;
+		font-size: 14px;
+		line-height: 20px;
+		color: $bb-text-color;
+		font-weight: 400;
+		cursor: pointer;
+		transition: background 0.2s ease;
+		text-decoration: none;
+		box-shadow: none;
+
+		.dashicons {
+			font-size: 16px;
+			width: 16px;
+			height: 16px;
+			line-height: 16px;
+			color: $bb-text-color;
+			margin: 0;
+		}
+
+		&:hover {
+			background: #e0e0e0;
+			box-shadow: none;
+		}
+
+		&:focus {
+			box-shadow: 0 0 0 1px #2271b1;
+		}
+	}
+
+	&__feature-right {
+		flex-shrink: 0;
+		margin-left: 16px;
+	}
+
+	&__empty {
+		text-align: center;
+		padding: $bb-spacing * 2;
+		color: $bb-text-secondary;
+	}
+}
+
+// Feature Settings Container (matching Figma exactly)
+.bb-admin-feature-settings {
+	// Main container with sidebar + content
+	&__container {
+		display: flex;
+		min-height: calc(100vh - 88px);
+		margin: 0 -20px;
+	}
+
+	// Left Sidebar (248px, #f0f0f0 background)
+	&__sidebar {
+		width: 248px;
+		min-width: 248px;
+		background-color: $bb-sidebar-bg;
+		border-right: 0.5px solid $bb-border-color;
+		padding: 16px;
+		flex-shrink: 0;
+	}
+
+	// Right Main Content Area (#f6f6f6 background)
+	&__main {
+		flex: 1;
+		min-width: 0;
+		background-color: $bb-background-color;
+		padding: 24px 32px;
+	}
+
+	// Content wrapper (centered, max 984px)
+	&__content-wrap {
+		max-width: 984px;
+		margin: 0 auto;
+	}
+
+	// Content area for sections
+	&__content {
+		// Container for section cards
+	}
+
+	// Section Card (white background, rounded corners, shadow)
+	&__section {
+		background-color: #fff;
+		border-radius: $bb-border-radius;
+		box-shadow: 0 1.5px 1px 0 rgba(0, 0, 0, 0.16);
+		margin-bottom: 24px;
+		overflow: hidden;
+	}
+
+	// Section Header (64px min-height, bottom border)
+	&__section-header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		min-height: 64px;
+		padding: 0 24px;
+		border-bottom: 1px solid $bb-border-color;
+		background-color: #fff;
+
+		// Help icon button on right
+		.help-icon {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			padding: 4px;
+			cursor: pointer;
+			background: transparent;
+			border: none;
+			
+			.dashicons {
+				font-size: 24px;
+				width: 24px;
+				height: 24px;
+				line-height: 24px;
+				color: $bb-text-secondary;
+			}
+		}
+	}
+
+	// Section Title
+	&__section-title {
+		font-size: 18px;
+		font-weight: 500;
+		line-height: 26px;
+		margin: 0;
+		color: $bb-text-color;
+	}
+
+	// Section Body (contains form fields)
+	&__section-body {
+		padding: 32px 24px 0;
+	}
+
+	// Save Actions at bottom
+	&__actions {
+		display: flex;
+		gap: 10px;
+		padding: 24px;
+	}
+
+	// Empty state
+	&__no-section {
+		padding: 40px;
+		text-align: center;
+		color: $bb-text-secondary;
+		background: #fff;
+		border-radius: $bb-border-radius;
+		box-shadow: 0 1.5px 1px 0 rgba(0, 0, 0, 0.16);
+	}
+}
+
+// Side Navigation (matching Figma navMenu exactly)
+.bb-admin-side-nav {
+	display: flex;
+	flex-direction: column;
+	gap: 24px;
+
+	// Back button at top of sidebar
+	&__back-btn {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 4px;
+		width: 100%;
+		padding: 6px 16px;
+		font-size: 14px;
+		font-weight: 400;
+		line-height: 20px;
+		color: $bb-text-color;
+		background-color: transparent;
+		border: 1px solid #ccc;
+		border-radius: $bb-border-radius-sm;
+		cursor: pointer;
+		transition: background-color 0.2s ease;
+		text-decoration: none;
+
+		.dashicons {
+			font-size: 16px;
+			width: 16px;
+			height: 16px;
+			line-height: 16px;
+		}
+
+		&:hover {
+			background-color: #fff;
+		}
+	}
+
+	// Navigation list
+	&__list {
+		margin: 0;
+		padding: 0;
+		list-style: none;
+		display: flex;
+		flex-direction: column;
+		gap: 0;
+	}
+
+	&__item {
+		margin: 0;
+	}
+
+	// Menu item link
+	&__link {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		width: 100%;
+		padding: 10px 16px;
+		font-size: 13px;
+		font-weight: 500;
+		line-height: 18px;
+		color: $bb-text-secondary;
+		background: transparent;
+		border: 0.5px solid transparent;
+		border-radius: $bb-border-radius-sm;
+		cursor: pointer;
+		transition: all 0.2s ease;
+		text-align: left;
+		text-decoration: none;
+
+		&:hover {
+			background-color: #fff;
+		}
+
+		// Active state - white background with border
+		&--active {
+			color: $bb-text-color;
+			background-color: #fff;
+			border-color: $bb-border-color;
+
+			.bb-admin-side-nav__icon .dashicons {
+				color: $bb-text-color;
+			}
+		}
+	}
+
+	// Icon container
+	&__icon {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 20px;
+		height: 20px;
+		flex-shrink: 0;
+
+		.dashicons {
+			font-size: 20px;
+			width: 20px;
+			height: 20px;
+			line-height: 20px;
+			color: $bb-text-secondary;
+		}
+	}
+
+	&__icon-img {
+		width: 20px;
+		height: 20px;
+		object-fit: contain;
+	}
+
+	&__text {
+		flex: 1;
+	}
+}
+
+// Settings Form Field (matching Figma settingsSection exactly)
+.bb-admin-settings-form {
+	// Each field row
+	&__field {
+		display: flex;
+		gap: 56px;
+		padding: 0 0 24px 0;
+		margin-bottom: 0;
+		border-bottom: 0.5px solid $bb-border-color;
+		align-items: flex-start;
+
+		&:last-child {
+			border-bottom: none;
+			padding-bottom: 24px;
+		}
+
+		// Add top padding for spacing between rows
+		& + & {
+			padding-top: 24px;
+		}
+
+		@media screen and (max-width: 992px) {
+			flex-direction: column;
+			gap: 16px;
+		}
+	}
+
+	// Left column - Label (248px fixed width)
+	&__field-label {
+		width: 248px;
+		flex-shrink: 0;
+		padding-top: 2px; // Align with toggle center
+
+		label {
+			font-size: 14px;
+			font-weight: 500;
+			line-height: 20px;
+			display: block;
+			margin: 0;
+			color: $bb-text-color;
+			max-width: 224px;
+		}
+
+		@media screen and (max-width: 992px) {
+			width: 100%;
+			padding-top: 0;
+		}
+	}
+
+	// Right column - Control and description
+	&__field-content {
+		flex: 1;
+		min-width: 0;
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+
+		@media screen and (max-width: 992px) {
+			width: 100%;
+		}
+
+		// Text inputs
+		input[type='email'],
+		input[type='number'],
+		input[type='text'],
+		input[type='url'] {
+			width: 100%;
+			max-width: 300px;
+		}
+
+		// Inline toggle label
+		label {
+			font-size: 14px;
+			font-weight: 400;
+			line-height: 20px;
+			color: $bb-text-color;
+		}
+	}
+
+	// Input wrapper for prefix/suffix text
+	&__field-input-wrapper {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+
+		// Number inputs with suffix should be smaller
+		input[type='number'] {
+			width: 80px;
+			max-width: 80px;
+		}
+	}
+
+	// Prefix text before input
+	&__field-prefix {
+		font-size: 14px;
+		font-weight: 400;
+		line-height: 20px;
+		color: $bb-text-secondary;
+		white-space: nowrap;
+	}
+
+	// Suffix text after input (e.g., "Minutes", "Levels")
+	&__field-suffix {
+		font-size: 14px;
+		font-weight: 400;
+		line-height: 20px;
+		color: $bb-text-secondary;
+		white-space: nowrap;
+	}
+
+	// Child fields container (nested under parent)
+	&__child-fields {
+		margin-top: 16px;
+		padding-left: 0;
+		
+		.bb-admin-settings-form__field {
+			padding-left: 38px; // Indent for nesting
+			border-bottom: none;
+			padding-bottom: 16px;
+			margin-bottom: 0;
+
+			&:last-child {
+				padding-bottom: 0;
+			}
+
+			// Adjust label width for nested fields
+			.bb-admin-settings-form__field-label {
+				width: 210px; // Slightly narrower due to indent
+			}
+		}
+	}
+
+	// Nested field modifier
+	&__field--nested {
+		// Already handled by child-fields container
+	}
+
+	// Child field modifier
+	&__field--child {
+		// Additional styling if needed for child fields
+	}
+
+	// Description text below control
+	&__field-description {
+		margin: 0;
+		padding: 3px 0;
+		color: $bb-text-secondary;
+		font-size: 13px;
+		line-height: 18px;
+		max-width: 632px;
+	}
+}
+
+// Checkbox List Field Type
+.bb-admin-settings-field__checkbox-list {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+
+	// WordPress checkbox control
+	.components-checkbox-control {
+		margin-bottom: 0;
+
+		.components-base-control__field {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			margin-bottom: 0;
+		}
+
+		// Checkbox input
+		.components-checkbox-control__input[type='checkbox'] {
+			width: 16px;
+			height: 16px;
+			border: 1px solid $bb-border-color;
+			border-radius: 4px;
+			margin: 0;
+
+			&:checked {
+				background-color: $bb-primary-color;
+				border-color: $bb-primary-color;
+			}
+
+			&:focus {
+				outline: 2px solid $bb-primary-color;
+				outline-offset: 2px;
+			}
+		}
+
+		// Checkbox label
+		.components-checkbox-control__label {
+			font-size: 14px;
+			font-weight: 400;
+			line-height: 20px;
+			color: $bb-text-color;
+		}
+	}
+}
+
+// Toggle Control Styling (matching Figma switch size=small: 30x18px)
+.bb-admin-feature-settings,
+.bb-admin-settings-form,
+.bb-admin-settings {
+	// WordPress toggle control wrapper
+	.components-toggle-control {
+		margin-bottom: 0;
+
+		.components-base-control__field {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			margin-bottom: 0;
+		}
+
+		// Inline label next to toggle
+		.components-toggle-control__label {
+			font-size: 14px;
+			font-weight: 400;
+			line-height: 20px;
+			color: $bb-text-color;
+			order: 1; // Put label after toggle
+		}
+	}
+
+	// Toggle switch itself (30x18px)
+	.components-form-toggle {
+		width: 30px;
+		height: 18px;
+		min-width: 30px;
+		flex-shrink: 0;
+
+		// Track (background)
+		.components-form-toggle__track {
+			width: 30px;
+			height: 18px;
+			border-radius: 99px;
+			background-color: #b2b2b2;
+			border: none;
+		}
+
+		// Thumb (circle)
+		.components-form-toggle__thumb {
+			width: 12px;
+			height: 12px;
+			background-color: #fff;
+			box-shadow: none;
+			top: 3px;
+			left: 3px;
+			transition: left 0.15s ease, right 0.15s ease;
+		}
+
+		// Checked/Active state
+		&.is-checked {
+			.components-form-toggle__track {
+				background-color: #fff;
+				border: 1px solid $bb-primary-color;
+			}
+
+			.components-form-toggle__thumb {
+				background-color: $bb-primary-color;
+				left: 0;
+				right: 0;
+			}
+		}
+	}
+}
+
+// Input Styling (matching ReadyLaunch)
+.bb-admin-feature-settings,
+.bb-admin-settings-form {
+	input[type='text'],
+	input[type='email'],
+	input[type='password'],
+	input[type='tel'],
+	input[type='url'],
+	input[type='search'],
+	input[type='number'],
+	input[type='date'],
+	input[type='datetime-local'],
+	input[type='month'],
+	input[type='week'],
+	input[type='time'],
+	textarea {
+		font-size: 13px;
+		font-weight: 500;
+		line-height: 18px;
+		background-color: $bb-background-color;
+		border: 1px solid $bb-border-color;
+		display: inline-block;
+		font-family: inherit;
+		font-style: inherit;
+		outline: none;
+		vertical-align: middle;
+		border-radius: $bb-border-radius-xs;
+		padding: 7px 8px;
+		color: $bb-text-secondary;
+	}
+
+	select {
+		appearance: none;
+		background-image: url("data:image/svg+xml,%3Csvg width='12' height='7' viewBox='0 0 12 7' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11.3535 1.35378L6.35354 6.35378C6.3071 6.40027 6.25196 6.43715 6.19126 6.46231C6.13056 6.48748 6.0655 6.50043 5.99979 6.50043C5.93408 6.50043 5.86902 6.48748 5.80832 6.46231C5.74762 6.43715 5.69248 6.40027 5.64604 6.35378L0.64604 1.35378C0.552219 1.25996 0.499512 1.13272 0.499512 1.00003C0.499512 0.867352 0.552219 0.740104 0.64604 0.646284C0.73986 0.552463 0.867108 0.499756 0.99979 0.499756C1.13247 0.499756 1.25972 0.552463 1.35354 0.646284L5.99979 5.29316L10.646 0.646284C10.6925 0.599829 10.7476 0.562978 10.8083 0.537837C10.869 0.512696 10.9341 0.499756 10.9998 0.499756C11.0655 0.499756 11.1305 0.512696 11.1912 0.537837C11.2519 0.562978 11.3071 0.599829 11.3535 0.646284C11.4 0.692739 11.4368 0.747889 11.462 0.808586C11.4871 0.869282 11.5001 0.934336 11.5001 1.00003C11.5001 1.06573 11.4871 1.13079 11.462 1.19148C11.4368 1.25218 11.4 1.30733 11.3535 1.35378Z' fill='%236D6D6E'/%3E%3C/svg%3E");
+		background-size: 11px 6px;
+		background-repeat: no-repeat;
+		background-position: right 0.8rem center;
+		background-color: $bb-background-color;
+		padding: 7px 24px 7px 8px;
+		border: 1px solid $bb-border-color;
+		display: inline-block;
+		font-family: inherit;
+		font-style: inherit;
+		outline: none;
+		vertical-align: middle;
+		border-radius: $bb-border-radius-xs;
+		color: $bb-text-secondary;
+		font-size: 13px;
+		font-weight: 500;
+		line-height: 18px;
+	}
+}
+
+// Button Styling (matching ReadyLaunch .bb-rl-button)
+.bb-rl-button,
+.bb-admin-feature-settings .components-button.is-primary {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 1rem;
+	text-align: center;
+	cursor: pointer;
+	border-radius: $bb-border-radius-xs;
+	padding: 8px 16px;
+	transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+	text-decoration: none;
+	box-shadow: none;
+	outline: none;
+	background-color: $bb-primary-color;
+	color: #fff;
+	border: 1px solid $bb-primary-color;
+
+	&:hover {
+		background-color: #d7542e;
+		color: #fff;
+	}
+
+	&:focus {
+		background-color: $bb-primary-color;
+		outline: 2px solid $bb-text-muted;
+	}
+
+	&:disabled {
+		background-color: #fcdfd6;
+		cursor: not-allowed;
+	}
+}
+
+.bb-admin-feature-settings .components-button.is-secondary {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 1rem;
+	text-align: center;
+	cursor: pointer;
+	border-radius: $bb-border-radius-xs;
+	padding: 8px 16px;
+	transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+	text-decoration: none;
+	box-shadow: none;
+	outline: none;
+	background-color: $bb-sidebar-bg;
+	color: $bb-text-color;
+	border: 1px solid transparent;
+
+	&:hover {
+		background-color: $bb-border-color;
+		color: $bb-text-color;
+	}
+
+	&:focus {
+		outline: 2px solid $bb-text-muted;
+		background-color: $bb-border-color;
+	}
+
+	&:disabled {
+		background-color: $bb-sidebar-bg;
+		color: #b2b2b2;
+		cursor: not-allowed;
+	}
+}
+
+// Notice Styling
+.bb-admin-feature-settings {
+	.components-notice {
+		margin: 16px 0;
+
+		&.is-success {
+			border-left-color: #009951;
+			background-color: #ebffee;
+		}
+	}
+}
+
+// Settings Field (legacy)
+.bb-admin-settings-field {
+	&__label {
+		display: block;
+		font-weight: 600;
+		margin-bottom: 8px;
+	}
+
+	&__description {
+		font-size: 13px;
+		color: $bb-text-secondary;
+		margin: 8px 0;
+	}
+
+	&__unsupported {
+		color: #dba617;
+		font-style: italic;
+	}
+}
+
+// Responsive
+@media (max-width: 782px) {
+	.bb-admin-dashboard__container {
+		grid-template-columns: 1fr;
+	}
+
+	.bb-admin-feature-settings__container {
+		flex-direction: column;
+	}
+
+	.bb-admin-feature-settings__sidebar {
+		width: 100%;
+		border-right: none;
+		border-bottom: 1px solid #e5e5e5;
+	}
+
+	.bb-admin-header__container {
+		flex-wrap: wrap;
+	}
+
+	.bb-admin-header__center {
+		order: 3;
+		width: 100%;
+		margin: 10px 0 0 0;
+	}
+}

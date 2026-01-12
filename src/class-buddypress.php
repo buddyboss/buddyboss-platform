@@ -734,6 +734,16 @@ class BuddyPress {
 			'BB_Activity_Topics_Manager'                   => 'activity',
 			'BB_Readylaunch'                               => 'core',
 			'BB_Activity_Readylaunch'                      => 'activity',
+			'BB_Feature_Registry'                          => 'core',
+			'BB_Icon_Registry'                              => 'core',
+			'BB_Settings_History'                           => 'core',
+			'BB_REST_Response'                              => 'core',
+			'BB_REST_Features_Controller'                  => 'core',
+			'BB_REST_Settings_Search_Controller'            => 'core',
+			'BB_REST_Dashboard_Controller'                 => 'core',
+			'BB_REST_Activity_Controller'                   => 'core',
+			'BB_REST_Groups_Controller'                    => 'core',
+			'BB_Feature_Autoloader'                        => 'core',
 
 			// BuddyBoss Platform Rest API classes.
 			'BP_REST_Components_Endpoint'                  => 'core',

@@ -1,0 +1,142 @@
+<?php
+/**
+ * BuddyBoss Admin Settings 2.0 - Admin Page Callback
+ *
+ * Renders the React app mount point for the new admin interface.
+ *
+ * @package BuddyBoss\Core\Administration
+ * @since BuddyBoss 3.0.0
+ */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * Render the Admin Settings 2.0 page.
+ *
+ * @since BuddyBoss 3.0.0
+ */
+function bb_admin_settings_2_0_page() {
+	// Check if feature flag is enabled (for gradual rollout).
+	$use_new_admin = defined( 'BB_USE_NEW_ADMIN' ) && BB_USE_NEW_ADMIN;
+	if ( ! $use_new_admin ) {
+		// Fallback to old admin if feature flag is off.
+		if ( function_exists( 'bp_core_admin_components_settings' ) ) {
+			bp_core_admin_components_settings();
+			return;
+		}
+		return;
+	}
+
+	// Get build directory.
+	$build_dir = buddypress()->plugin_dir . 'bp-core/admin/bb-settings/settings-2.0/build';
+	$build_url = buddypress()->plugin_url . 'bp-core/admin/bb-settings/settings-2.0/build';
+
+	// Load asset file.
+	$asset_file = $build_dir . '/index.asset.php';
+	if ( ! file_exists( $asset_file ) ) {
+		?>
+		<div class="wrap">
+			<div class="notice notice-error">
+				<p>
+					<?php
+					esc_html_e(
+						'BuddyBoss Admin Settings 2.0 assets not found. Please run: npm run build:admin:settings-2.0',
+						'buddyboss'
+					);
+					?>
+				</p>
+			</div>
+		</div>
+		<?php
+		return;
+	}
+
+	$asset = require $asset_file;
+
+	// Enqueue scripts and styles.
+	wp_enqueue_script(
+		'bb-admin-settings-2-0',
+		$build_url . '/index.js',
+		$asset['dependencies'],
+		$asset['version'],
+		true
+	);
+
+	// Check if CSS file exists (try multiple possible locations).
+	$css_paths = array(
+		$build_dir . '/styles/admin.css',
+		$build_dir . '/admin.css',
+	);
+	
+	$css_enqueued = false;
+	foreach ( $css_paths as $css_file ) {
+		if ( file_exists( $css_file ) ) {
+			$css_url = str_replace( buddypress()->plugin_dir, buddypress()->plugin_url, $css_file );
+			wp_enqueue_style(
+				'bb-admin-settings-2-0',
+				$css_url,
+				array(),
+				$asset['version']
+			);
+			$css_enqueued = true;
+			break;
+		}
+	}
+
+	// Debug: Check if features are registered.
+	$registry = bb_feature_registry();
+	$all_features = $registry->get_features( array( 'status' => 'all' ) );
+	$feature_count = count( $all_features );
+	
+	// Localize script with admin data.
+	wp_localize_script(
+		'bb-admin-settings-2-0',
+		'bbAdminData',
+		array(
+			'apiUrl'     => rest_url( bp_rest_namespace() . '/' . bp_rest_version() . '/' ),
+			'nonce'      => wp_create_nonce( 'wp_rest' ),
+			'logoUrl'    => buddypress()->plugin_url . 'bp-core/images/admin/BBLogo.png',
+			'currentUser' => array(
+				'id'   => get_current_user_id(),
+				'name' => wp_get_current_user()->display_name,
+			),
+			'debug'       => array(
+				'featureCount' => $feature_count,
+				'featureIds'    => array_keys( $all_features ),
+			),
+		)
+	);
+
+	// Render mount point.
+	?>
+	<div class="wrap bb-admin-settings-2-0-wrap">
+		<div id="bb-admin-app"></div>
+	</div>
+	<?php
+}
+
+/**
+ * Register admin menu pages for Settings 2.0.
+ *
+ * @since BuddyBoss 3.0.0
+ */
+function bb_admin_settings_2_0_register_menu() {
+	// Check if feature flag is enabled.
+	$use_new_admin = defined( 'BB_USE_NEW_ADMIN' ) && BB_USE_NEW_ADMIN;
+	if ( ! $use_new_admin ) {
+		return; // Don't register new menus if feature flag is off.
+	}
+
+	// Add "Settings 2" as a separate submenu item under BuddyBoss.
+	// This keeps the old bp-components intact for comparison.
+	add_submenu_page(
+		'buddyboss-platform',
+		__( 'Settings 2', 'buddyboss' ),
+		__( 'Settings 2', 'buddyboss' ),
+		'manage_options',
+		'bb-settings',
+		'bb_admin_settings_2_0_page'
+	);
+}
+add_action( 'admin_menu', 'bb_admin_settings_2_0_register_menu', 999 ); // Late priority.
