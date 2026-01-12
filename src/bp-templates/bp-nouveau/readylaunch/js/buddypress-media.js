@@ -5867,7 +5867,7 @@ window.bp = window.bp || {};
 
 									targetPopup.find( '.bb-rl-location-' + folderOrAlbum + '-list-wrap ' + listClass ).remove();
 									targetPopup.find( '.bb-rl-location-' + folderOrAlbum + '-list-wrap' ).append( response.data.tree_view );
-									var targetPopupID = 'document' === actionType ? '#' + $( targetPopup ).attr( 'id' ) : targetPopup,
+									var targetPopupID = 'document' === actionType ? $( targetPopup ).attr( 'id' ) + '.open-popup' : targetPopup,
 									responseDataID    = 'document' === actionType ? response.data.folder_id : response.data.album_id;
 									if ( bp.Nouveau.Media.folderLocationUI ) {
 										bp.Nouveau.Media.folderLocationUI( targetPopupID, responseDataID );
