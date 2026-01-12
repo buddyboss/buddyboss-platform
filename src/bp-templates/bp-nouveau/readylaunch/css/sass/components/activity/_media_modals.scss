@@ -21,7 +21,7 @@
 	}
 
 	.bb-rl-field-wrap {
-		padding: var(--bb-rl-space-200) var(--bb-rl-space-300);
+		padding: var(--bb-rl-space-200) var(--bb-rl-space-300) 0;
 	}
 
 	.bb-rl-model-footer {
@@ -98,6 +98,17 @@
 			.bb-rl-field-wrap {
 				padding: 0;
 				margin-bottom: var(--bb-rl-space-200);
+			}
+
+			.bb-rl-footer-alt {
+
+				.bb-rl-field-wrap {
+					margin-bottom: 0;
+				}
+
+				.db-modal-buttons {
+					margin-top: 0;
+				}
 			}
 
 			.bb-rl-dropdown-wrap {

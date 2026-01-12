@@ -5918,6 +5918,7 @@ body.bb-readylaunch-template .bb-rl-footer-alt .select2-container .bb-rl-select2
 
 .bb-rl-modal-wrapper .bb-rl-footer-alt .db-modal-buttons {
   display: inline-flex;
+  gap: var(--bb-rl-space-100);
 }
 
 .bb-rl-container-inner .bp-pagination,
@@ -10229,11 +10230,6 @@ input.bb-rl-zoom-slider::-moz-range-progress {
 .bb-rl-popup-on-fly-create-folder .db-modal-buttons,
 .bb-rl-popup-on-fly-create-album .db-modal-buttons {
   text-align: right;
-}
-
-.bb-rl-popup-on-fly-create-folder .db-modal-buttons a + a,
-.bb-rl-popup-on-fly-create-album .db-modal-buttons a + a {
-  margin-left: var(--bb-rl-space-100);
 }
 
 .bb-rl-media-stream .bb-albums-list {
@@ -17167,7 +17163,7 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
 }
 
 .bb-rl-modal-move-file .bb-rl-field-wrap {
-  padding: var(--bb-rl-space-200) var(--bb-rl-space-300);
+  padding: var(--bb-rl-space-200) var(--bb-rl-space-300) 0;
 }
 
 .bb-rl-modal-move-file .bb-rl-model-footer {
@@ -17241,6 +17237,16 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
 .bb-rl-modal-move-file .bbm-model-wrap .bb-rl-create-popup-album-wrap .bb-rl-field-wrap {
   padding: 0;
   margin-bottom: var(--bb-rl-space-200);
+}
+
+.bb-rl-modal-move-file .bbm-model-wrap .bb-rl-create-popup-folder-wrap .bb-rl-footer-alt .bb-rl-field-wrap,
+.bb-rl-modal-move-file .bbm-model-wrap .bb-rl-create-popup-album-wrap .bb-rl-footer-alt .bb-rl-field-wrap {
+  margin-bottom: 0;
+}
+
+.bb-rl-modal-move-file .bbm-model-wrap .bb-rl-create-popup-folder-wrap .bb-rl-footer-alt .db-modal-buttons,
+.bb-rl-modal-move-file .bbm-model-wrap .bb-rl-create-popup-album-wrap .bb-rl-footer-alt .db-modal-buttons {
+  margin-top: 0;
 }
 
 .bb-rl-modal-move-file .bbm-model-wrap .bb-rl-create-popup-folder-wrap .bb-rl-dropdown-wrap,

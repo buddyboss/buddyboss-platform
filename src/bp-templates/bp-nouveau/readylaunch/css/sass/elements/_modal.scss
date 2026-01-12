@@ -788,6 +788,7 @@
 
 		.db-modal-buttons {
 			display: inline-flex;
+			gap: var(--bb-rl-space-100);
 		}
 	}
 }
