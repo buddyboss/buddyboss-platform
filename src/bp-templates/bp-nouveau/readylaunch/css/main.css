@@ -4256,7 +4256,9 @@ body.bb-readylaunch-template .select2-container--rl.select2-container--open:has(
 }
 
 body:not(.logged-in) .bb-model-footer .select2-container .bb-rl-select2-dropdown,
-body.bb-readylaunch-template .bb-model-footer .select2-container .bb-rl-select2-dropdown {
+body:not(.logged-in) .bb-rl-footer-alt .select2-container .bb-rl-select2-dropdown,
+body.bb-readylaunch-template .bb-model-footer .select2-container .bb-rl-select2-dropdown,
+body.bb-readylaunch-template .bb-rl-footer-alt .select2-container .bb-rl-select2-dropdown {
   top: unset;
   left: -8px;
 }

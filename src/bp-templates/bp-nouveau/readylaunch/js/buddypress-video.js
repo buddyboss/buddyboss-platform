@@ -1813,7 +1813,20 @@ window.bp = window.bp || {};
 			event.preventDefault();
 
 			this.openAlbumUploader( event );
-			$( '#bp-video-create-album' ).show();
+			var $createAlbum = $( '#bp-video-create-album' );
+			$createAlbum.show();
+
+			// Reinitialize select2 for album privacy select after delay to ensure DOM is ready.
+			// Using 250ms to run after any ajaxComplete handlers (which have 100ms delay).
+			if ( bp.Readylaunch && bp.Readylaunch.initSelect2Scoped ) {
+				setTimeout( function () {
+					// Only initialize if not already initialized.
+					var $select = $createAlbum.find( '.bb-rl-filter select' );
+					if ( $select.length && ! $select.hasClass( 'select2-hidden-accessible' ) ) {
+						bp.Readylaunch.initSelect2Scoped( $createAlbum );
+					}
+				}, 250 );
+			}
 		},
 
 		closeCreateVideoAlbumModal: function ( event ) {
