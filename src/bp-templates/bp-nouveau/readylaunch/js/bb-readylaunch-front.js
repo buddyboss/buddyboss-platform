@@ -255,6 +255,11 @@ window.bp = window.bp || {};
 						return;
 					}
 
+					// Skip elements inside hidden containers (they should be initialized when shown).
+					if ( ! $selectEl.is( ':visible' ) ) {
+						return;
+					}
+
 					var customClass = '';
 
 					if ( $selectEl.data( 'bb-caret' ) ) {
