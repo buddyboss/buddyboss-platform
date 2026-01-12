@@ -2877,6 +2877,17 @@ function bb_get_activity_filter_options_labels( $context = 'default' ) {
 	// Common function to get only allowed ones.
 	$labels = bb_filter_activity_filter_scope_keys( $labels );
 
+	/**
+	 * Filters the activity filter options labels.
+	 *
+	 * @since BuddyBoss 2.8.20
+	 * @since BuddyBoss [BBVERSION] Added $context parameter.
+	 *
+	 * @param array  $labels  Array of activity filter labels. Keys are scope names (e.g., 'all', 'just-me', 'favorites').
+	 *                        Values are the translated label strings for the requested context.
+	 * @param string $context The context for labels. 'default' for dropdown labels,
+	 *                        'show_context' for labels shown after "Show:" text.
+	 */
 	return (array) apply_filters( 'bb_get_activity_filter_options_labels', $labels, $context );
 }
 
@@ -2981,6 +2992,17 @@ function bb_get_activity_timeline_filter_options_labels( $context = 'default' ) 
 	// Common function to get only allowed ones.
 	$labels = bb_filter_activity_filter_scope_keys( $labels );
 
+	/**
+	 * Filters the activity timeline filter options labels.
+	 *
+	 * @since BuddyBoss 2.8.20
+	 * @since BuddyBoss [BBVERSION] Added $context parameter.
+	 *
+	 * @param array  $labels  Array of activity timeline filter labels. Keys are scope names (e.g., 'just-me', 'favorites', 'groups').
+	 *                        Values are the translated label strings for the requested context.
+	 * @param string $context The context for labels. 'default' for dropdown labels,
+	 *                        'show_context' for labels shown after "Show:" text.
+	 */
 	return (array) apply_filters( 'bb_get_activity_timeline_filter_options_labels', $labels, $context );
 }
 
@@ -3056,6 +3078,17 @@ function bb_get_activity_sorting_options_labels( $context = 'default' ) {
 		$sorting_options
 	);
 
+	/**
+	 * Filters the activity sorting options labels.
+	 *
+	 * @since BuddyBoss 2.8.20
+	 * @since BuddyBoss [BBVERSION] Added $context parameter.
+	 *
+	 * @param array  $labels  Array of activity sorting labels. Keys are sorting keys (e.g., 'date_recorded', 'date_updated').
+	 *                        Values are the translated label strings for the requested context.
+	 * @param string $context The context for labels. 'default' for dropdown labels,
+	 *                        'by_context' for labels shown after "by" text.
+	 */
 	return (array) apply_filters( 'bb_get_activity_sorting_options_labels', $labels, $context );
 }
 
