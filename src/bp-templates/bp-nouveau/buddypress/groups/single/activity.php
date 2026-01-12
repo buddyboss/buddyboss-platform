@@ -50,7 +50,7 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 	$sorting_labels_by_context = bb_get_activity_sorting_options_labels( 'by_context' );
 
 	// Get the default by context label.
-	$default_by_context_label = isset( $sorting_labels_by_context[ $default_selected ] ) ? $sorting_labels_by_context[ $default_selected ] : $sorting_labels[ $default_selected ];
+	$default_by_context_label = isset( $sorting_labels_by_context[ $default_selected ] ) ? $sorting_labels_by_context[ $default_selected ] : ( isset( $sorting_labels[ $default_selected ] ) ? $sorting_labels[ $default_selected ] : '' );
 	?>
 	<i class="bb-icon-f bb-icon-loader animate-spin"></i>
 	<div class='<?php echo esc_attr( $hide_class ); ?> bb-subnav-filters-container-main'>

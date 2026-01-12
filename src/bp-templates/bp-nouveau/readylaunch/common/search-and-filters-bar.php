@@ -95,15 +95,13 @@ if ( bp_is_activity_directory() || bp_is_user_activity() ) {
 	<div class="activity-head-bar">
 		<?php
 
-		// Timeline filters.
+		// Timeline filters - ReadyLaunch uses Title Case (default labels) for both dropdown and button.
 		if ( bp_is_user_activity() ) {
-			$activity_filters            = bb_get_enabled_activity_timeline_filter_options();
-			$filters_labels              = bb_get_activity_timeline_filter_options_labels();
-			$filters_labels_show_context = bb_get_activity_timeline_filter_options_labels(); // ReadyLaunch uses Title Case (default).
+			$activity_filters = bb_get_enabled_activity_timeline_filter_options();
+			$filters_labels   = bb_get_activity_timeline_filter_options_labels();
 		} else {
-			$activity_filters            = bb_get_enabled_activity_filter_options();
-			$filters_labels              = bb_get_activity_filter_options_labels();
-			$filters_labels_show_context = bb_get_activity_filter_options_labels(); // ReadyLaunch uses Title Case (default).
+			$activity_filters = bb_get_enabled_activity_filter_options();
+			$filters_labels   = bb_get_activity_filter_options_labels();
 		}
 
 		// Allow valid options only.
@@ -111,9 +109,6 @@ if ( bp_is_activity_directory() || bp_is_user_activity() ) {
 
 		arsort( $activity_filters );
 		$default_selected = key( $activity_filters );
-
-		// Get the default show context label.
-		$default_show_context_label = isset( $filters_labels_show_context[ $default_selected ] ) ? $filters_labels_show_context[ $default_selected ] : $filters_labels[ $default_selected ];
 		?>
 		<i class="bb-rl-loader"></i>
 		<div class="bb-subnav-filters-container-main">
@@ -121,7 +116,7 @@ if ( bp_is_activity_directory() || bp_is_user_activity() ) {
 			<div class="bb-subnav-filters-container bb-subnav-filters-filtering">
 
 				<button class="subnav-filters-opener" aria-expanded="false" aria-controls="bb-subnav-filter-show">
-					<span class="selected"><?php echo esc_html( $default_show_context_label ); ?></span>
+					<span class="selected"><?php echo isset( $filters_labels[ $default_selected ] ) ? esc_html( $filters_labels[ $default_selected ] ) : ''; ?></span>
 					<i class="bb-icons-rl-caret-down"></i>
 				</button>
 				<div id="bb-subnav-filter-show" class="subnav-filters-modal">
@@ -139,10 +134,8 @@ if ( bp_is_activity_directory() || bp_is_user_activity() ) {
 									continue;
 								}
 
-								// Get the show context label, fallback to regular label if not defined.
-								$show_context_label = isset( $filters_labels_show_context[ $key ] ) ? $filters_labels_show_context[ $key ] : $filters_labels[ $key ];
 								?>
-									<li class="<?php echo ( $key === $default_selected ) ? 'selected' : ''; ?>" role="option" data-bp-scope="<?php echo esc_attr( $key ); ?>" data-bp-object="activity" data-filter-label="<?php echo esc_attr( $show_context_label ); ?>"><a href="#"><?php echo esc_html( $filters_labels[ $key ] ); ?></a></li>
+									<li class="<?php echo ( $key === $default_selected ) ? 'selected' : ''; ?>" role="option" data-bp-scope="<?php echo esc_attr( $key ); ?>" data-bp-object="activity" data-filter-label="<?php echo esc_attr( $filters_labels[ $key ] ); ?>"><a href="#"><?php echo esc_html( $filters_labels[ $key ] ); ?></a></li>
 									<?php
 							}
 
@@ -155,7 +148,6 @@ if ( bp_is_activity_directory() || bp_is_user_activity() ) {
 		</div>
 
 		<?php
-		unset( $filters_labels_show_context, $default_show_context_label );
 		$avail_sorting_options = bb_get_enabled_activity_sorting_options();
 		arsort( $avail_sorting_options );
 		$default_selected = key( $avail_sorting_options );
@@ -168,17 +160,14 @@ if ( bp_is_activity_directory() || bp_is_user_activity() ) {
 			}
 		}
 
-		$sorting_labels            = bb_get_activity_sorting_options_labels();
-		$sorting_labels_by_context = bb_get_activity_sorting_options_labels(); // ReadyLaunch uses Title Case (default).
-
-		// Get the default by context label.
-		$default_by_context_label = isset( $sorting_labels_by_context[ $default_selected ] ) ? $sorting_labels_by_context[ $default_selected ] : $sorting_labels[ $default_selected ];
+		// ReadyLaunch uses Title Case (default labels) for sorting.
+		$sorting_labels = bb_get_activity_sorting_options_labels();
 		?>
 		<div class='<?php echo esc_attr( $hide_class ); ?> bb-subnav-filters-container-main'>
 			<span class="bb-subnav-filters-label"><?php echo esc_html_e( 'by', 'buddyboss' ); ?></span>
 			<div class="bb-subnav-filters-container bb-subnav-filters-filtering">
 				<button class="subnav-filters-opener" aria-expanded="false" aria-controls="bb-subnav-filter-by">
-					<span class="selected"><?php echo esc_html( $default_by_context_label ); ?></span>
+					<span class="selected"><?php echo isset( $sorting_labels[ $default_selected ] ) ? esc_html( $sorting_labels[ $default_selected ] ) : ''; ?></span>
 					<i class="bb-icons-rl-caret-down"></i>
 				</button>
 
@@ -190,10 +179,8 @@ if ( bp_is_activity_directory() || bp_is_user_activity() ) {
 								if ( empty( $is_enabled ) || empty( $sorting_labels[ $key ] ) ) {
 									continue;
 								}
-								// Get the by context label, fallback to regular label if not defined.
-								$by_context_label = isset( $sorting_labels_by_context[ $key ] ) ? $sorting_labels_by_context[ $key ] : $sorting_labels[ $key ];
 								?>
-								<li class="<?php echo ( $key === $default_selected ) ? 'selected' : ''; ?>" role="option" data-bp-order="activity" data-bp-orderby="<?php echo esc_attr( $key ); ?>" data-filter-label="<?php echo esc_attr( $by_context_label ); ?>"><a href="#"><?php echo esc_html( $sorting_labels[ $key ] ); ?></a></li>
+								<li class="<?php echo ( $key === $default_selected ) ? 'selected' : ''; ?>" role="option" data-bp-order="activity" data-bp-orderby="<?php echo esc_attr( $key ); ?>" data-filter-label="<?php echo esc_attr( $sorting_labels[ $key ] ); ?>"><a href="#"><?php echo esc_html( $sorting_labels[ $key ] ); ?></a></li>
 								<?php
 							}
 						}

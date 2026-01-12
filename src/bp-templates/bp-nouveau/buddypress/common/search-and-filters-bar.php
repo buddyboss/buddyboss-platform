@@ -133,7 +133,7 @@ if ( bp_is_activity_directory() || bp_is_user_activity() ) {
 	}
 
 	// Get the default show context label.
-	$default_show_context_label = isset( $filters_labels_show_context[ $default_selected ] ) ? $filters_labels_show_context[ $default_selected ] : $filters_labels[ $default_selected ];
+	$default_show_context_label = isset( $filters_labels_show_context[ $default_selected ] ) ? $filters_labels_show_context[ $default_selected ] : ( isset( $filters_labels[ $default_selected ] ) ? $filters_labels[ $default_selected ] : '' );
 	?>
 	<i class="bb-icon-f bb-icon-loader animate-spin"></i>
 	<div class="bb-subnav-filters-container-main">
@@ -172,7 +172,7 @@ if ( bp_is_activity_directory() || bp_is_user_activity() ) {
 	$sorting_labels_by_context = bb_get_activity_sorting_options_labels( 'by_context' );
 
 	// Get the default by context label.
-	$default_by_context_label = isset( $sorting_labels_by_context[ $default_selected ] ) ? $sorting_labels_by_context[ $default_selected ] : $sorting_labels[ $default_selected ];
+	$default_by_context_label = isset( $sorting_labels_by_context[ $default_selected ] ) ? $sorting_labels_by_context[ $default_selected ] : ( isset( $sorting_labels[ $default_selected ] ) ? $sorting_labels[ $default_selected ] : '' );
 	?>
 	<div class='<?php echo esc_attr( $hide_class ); ?> bb-subnav-filters-container-main'>
 		<span class="bb-subnav-filters-label"><?php echo esc_html_e( 'by', 'buddyboss' ); ?></span>
