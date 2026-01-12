@@ -99,11 +99,11 @@ if ( bp_is_activity_directory() || bp_is_user_activity() ) {
 		if ( bp_is_user_activity() ) {
 			$activity_filters            = bb_get_enabled_activity_timeline_filter_options();
 			$filters_labels              = bb_get_activity_timeline_filter_options_labels();
-			$filters_labels_show_context = bb_rl_get_activity_timeline_filter_options_labels_show_context();
+			$filters_labels_show_context = bb_get_activity_timeline_filter_options_labels(); // ReadyLaunch uses Title Case (default).
 		} else {
 			$activity_filters            = bb_get_enabled_activity_filter_options();
 			$filters_labels              = bb_get_activity_filter_options_labels();
-			$filters_labels_show_context = bb_rl_get_activity_filter_options_labels_show_context();
+			$filters_labels_show_context = bb_get_activity_filter_options_labels(); // ReadyLaunch uses Title Case (default).
 		}
 
 		// Allow valid options only.
@@ -169,7 +169,7 @@ if ( bp_is_activity_directory() || bp_is_user_activity() ) {
 		}
 
 		$sorting_labels            = bb_get_activity_sorting_options_labels();
-		$sorting_labels_by_context = bb_rl_get_activity_sorting_options_labels_by_context();
+		$sorting_labels_by_context = bb_get_activity_sorting_options_labels(); // ReadyLaunch uses Title Case (default).
 
 		// Get the default by context label.
 		$default_by_context_label = isset( $sorting_labels_by_context[ $default_selected ] ) ? $sorting_labels_by_context[ $default_selected ] : $sorting_labels[ $default_selected ];

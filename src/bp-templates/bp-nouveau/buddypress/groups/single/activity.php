@@ -47,7 +47,7 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 	}
 
 	$sorting_labels            = bb_get_activity_sorting_options_labels();
-	$sorting_labels_by_context = bb_get_activity_sorting_options_labels_by_context();
+	$sorting_labels_by_context = bb_get_activity_sorting_options_labels( 'by_context' );
 
 	// Get the default by context label.
 	$default_by_context_label = isset( $sorting_labels_by_context[ $default_selected ] ) ? $sorting_labels_by_context[ $default_selected ] : $sorting_labels[ $default_selected ];

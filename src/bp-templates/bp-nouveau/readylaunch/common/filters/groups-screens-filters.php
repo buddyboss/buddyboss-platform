@@ -27,7 +27,7 @@ if ( ! empty( $avail_sorting_options ) && in_array( 1, $avail_sorting_options, t
 }
 
 $sorting_labels            = bb_get_activity_sorting_options_labels();
-$sorting_labels_by_context = bb_rl_get_activity_sorting_options_labels_by_context();
+$sorting_labels_by_context = bb_get_activity_sorting_options_labels(); // ReadyLaunch uses Title Case (default).
 
 // Get the default by context label.
 $default_by_context_label = isset( $sorting_labels_by_context[ $default_selected ] ) ? $sorting_labels_by_context[ $default_selected ] : $sorting_labels[ $default_selected ];
