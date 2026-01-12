@@ -14827,7 +14827,6 @@ body.bb-rl-activity-modal-open .bb-rl-activity-update-form.modal-popup {
   padding: 6px 8px;
   border-radius: var(--bb-rl-radius-full);
   cursor: pointer;
-  text-transform: capitalize;
 }
 
 .bb-subnav-filters-container-main .subnav-filters-opener:before {
