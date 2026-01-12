@@ -17,17 +17,6 @@ defined( 'ABSPATH' ) || exit;
  * @since BuddyBoss 3.0.0
  */
 function bb_admin_settings_2_0_page() {
-	// Check if feature flag is enabled (for gradual rollout).
-	$use_new_admin = defined( 'BB_USE_NEW_ADMIN' ) && BB_USE_NEW_ADMIN;
-	if ( ! $use_new_admin ) {
-		// Fallback to old admin if feature flag is off.
-		if ( function_exists( 'bp_core_admin_components_settings' ) ) {
-			bp_core_admin_components_settings();
-			return;
-		}
-		return;
-	}
-
 	// Get build directory.
 	$build_dir = buddypress()->plugin_dir . 'bp-core/admin/bb-settings/settings-2.0/build';
 	$build_url = buddypress()->plugin_url . 'bp-core/admin/bb-settings/settings-2.0/build';
@@ -122,12 +111,6 @@ function bb_admin_settings_2_0_page() {
  * @since BuddyBoss 3.0.0
  */
 function bb_admin_settings_2_0_register_menu() {
-	// Check if feature flag is enabled.
-	$use_new_admin = defined( 'BB_USE_NEW_ADMIN' ) && BB_USE_NEW_ADMIN;
-	if ( ! $use_new_admin ) {
-		return; // Don't register new menus if feature flag is off.
-	}
-
 	// Add "Settings 2" as a separate submenu item under BuddyBoss.
 	// This keeps the old bp-components intact for comparison.
 	add_submenu_page(
