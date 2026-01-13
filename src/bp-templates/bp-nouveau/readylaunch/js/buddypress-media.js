@@ -3754,14 +3754,14 @@ window.bp = window.bp || {};
 							setTimeout(
 								function () {
 
-									var fileID;
+									var fileID = 0, currentParentId = $( targetPopup ).closest( '.bb-activity-media-wrap' ).find( '.bb-rl-activity-media-elem.bb-rl-document-activity' ).attr( 'data-parent-id' );
 
 									if ( $( targetPopup ).find( '.bb-rl-breadcrumbs-append-ul-li .item > span:last-child' ).hasClass( 'hidden' ) ) {
 											fileID = $( targetPopup ).find( '.bb-rl-breadcrumbs-append-ul-li .item > span:last-child' ).prev().attr( 'id' );
 									} else {
 										fileID = $( targetPopup ).find( '.bb-rl-breadcrumbs-append-ul-li .item > span:last-child' ).attr( 'id' );
 									}
-									if ( currentTargetParent === fileID && ( $( targetPopup ).hasClass( 'bb-rl-media-move-file' ) || $( targetPopup ).hasClass( 'bb-rl-media-move-folder' ) ) ) {
+									if ( currentParentId === fileID && ( $( targetPopup ).hasClass( 'bb-rl-media-move-file' ) || $( targetPopup ).hasClass( 'bb-rl-media-move-folder' ) ) ) {
 										$( targetPopup ).find( '.bb-rl-document-move' ).addClass( 'is-disabled' );
 										$( targetPopup ).find( '.bb-rl-folder-move' ).addClass( 'is-disabled' );
 									} else {
@@ -3931,14 +3931,14 @@ window.bp = window.bp || {};
 				setTimeout(
 					function () {
 
-						var fileID;
+						var fileID, currentParentId = $( targetPopup ).closest( '.bb-activity-media-wrap' ).find( '.bb-rl-activity-media-elem.bb-rl-document-activity' ).attr( 'data-parent-id' );
 
 						if ( $( targetPopup ).find( '.bb-rl-breadcrumbs-append-ul-li .item > span:last-child' ).hasClass( 'hidden' ) ) {
 								fileID = $( targetPopup ).find( '.bb-rl-breadcrumbs-append-ul-li .item > span:last-child' ).prev().attr( 'id' );
 						} else {
 							fileID = $( targetPopup ).find( '.bb-rl-breadcrumbs-append-ul-li .item > span:last-child' ).attr( 'id' );
 						}
-						if ( currentTargetParent === fileID && ( $( targetPopup ).hasClass( 'bb-rl-media-move-file' ) || $( targetPopup ).hasClass( 'bb-rl-media-move-folder' ) ) ) {
+						if ( currentParentId === fileID && ( $( targetPopup ).hasClass( 'bb-rl-media-move-file' ) || $( targetPopup ).hasClass( 'bb-rl-media-move-folder' ) ) ) {
 							$( targetPopup ).find( '.bb-rl-document-move' ).addClass( 'is-disabled' );
 							$( targetPopup ).find( '.bb-rl-folder-move' ).addClass( 'is-disabled' );
 						} else {
@@ -5707,6 +5707,11 @@ window.bp = window.bp || {};
 									$( document ).find( 'a[class*="open-' + nameDocumentAsMedia + '-theatre"][data-id="' + itemId + '"]' ).data( 'album-id', destinationId );
 								}
 							}
+							
+							if ( 'document' === actionType || 'document_folder' === actionType ) {
+								target.closest( '.bb-activity-media-wrap' ).find( '.bb-rl-activity-media-elem.bb-rl-document-activity' ).attr( 'data-parent-id', destinationId );
+							}
+
 						} else {
 							if ( 'document_folder' === actionType ) {
 								$( document ).find( '.open-popup .error' ).show();
@@ -5876,7 +5881,7 @@ window.bp = window.bp || {};
 
 									targetPopup.find( '.bb-rl-location-' + folderOrAlbum + '-list-wrap ' + listClass ).remove();
 									targetPopup.find( '.bb-rl-location-' + folderOrAlbum + '-list-wrap' ).append( response.data.tree_view );
-									var targetPopupID = 'document' === actionType ? '#' + $( targetPopup ).attr( 'id' ) : targetPopup,
+									var targetPopupID = 'document' === actionType ? $( targetPopup ).attr( 'id' ) + '.open-popup' : targetPopup,
 									responseDataID    = 'document' === actionType ? response.data.folder_id : response.data.album_id;
 									if ( bp.Nouveau.Media.folderLocationUI ) {
 										bp.Nouveau.Media.folderLocationUI( targetPopupID, responseDataID );

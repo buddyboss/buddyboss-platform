@@ -533,7 +533,7 @@ window.bp = window.bp || {};
 								targetPopup.find( '.location-folder-list-wrap .location-folder-list' ).remove();
 								targetPopup.find( '.location-folder-list-wrap' ).append( response.data.tree_view );
 
-								var targetPopupID = '#' + $( targetPopup ).attr( 'id' );
+								var targetPopupID = $( targetPopup ).attr( 'id' ) + '.open-popup';
 
 								if ( bp.Nouveau.Media.folderLocationUI ) {
 									bp.Nouveau.Media.folderLocationUI( targetPopupID, response.data.folder_id );
