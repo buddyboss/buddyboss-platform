@@ -31,7 +31,7 @@
 		if ( bb_activity_has_post_title() ) {
 			?>
 			<div class="activity-title bb-activity-search-title">
-				<h2><?php echo wp_kses_post( bb_activity_post_title() ); ?></h2>
+				<h2><a href="<?php echo esc_url( bp_get_activity_thread_permalink() ); ?>"><?php echo wp_kses_post( bb_activity_post_title() ); ?></a></h2>
 			</div>
 			<?php
 		}
