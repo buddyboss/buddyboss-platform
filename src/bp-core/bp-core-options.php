@@ -2686,9 +2686,7 @@ function bb_get_reaction_mode( $default = 'likes' ) {
 
 	$mode = bp_get_option( 'bb_reaction_mode', $default );
 	if (
-		! class_exists( 'BB_Reactions' ) ||
-		! function_exists( 'bbp_pro_is_license_valid' ) ||
-		! bbp_pro_is_license_valid()
+		! class_exists( 'BB_Reactions' )
 	) {
 		$mode = 'likes';
 	}
@@ -2810,13 +2808,14 @@ function bb_enable_content_counts( $default = false ) {
  */
 function bb_get_activity_filter_options_labels() {
 	$filters = array(
-		'all'       => __( 'All updates', 'buddyboss' ),
-		'just-me'   => __( 'Created by me', 'buddyboss' ),
-		'favorites' => __( "I've reacted to", 'buddyboss' ),
-		'groups'    => __( 'From my groups', 'buddyboss' ),
-		'friends'   => __( 'From my connections', 'buddyboss' ),
-		'mentions'  => __( "I'm mentioned in", 'buddyboss' ),
-		'following' => __( "I'm following", 'buddyboss' ),
+		'all'        => __( 'All updates', 'buddyboss' ),
+		'just-me'    => __( 'Created by me', 'buddyboss' ),
+		'favorites'  => __( "I've reacted to", 'buddyboss' ),
+		'groups'     => __( 'From my groups', 'buddyboss' ),
+		'friends'    => __( 'From my connections', 'buddyboss' ),
+		'mentions'   => __( "I'm mentioned in", 'buddyboss' ),
+		'following'  => __( "I'm following", 'buddyboss' ),
+		'unanswered' => __( 'Unanswered', 'buddyboss' ),
 	);
 
 	// Common function to get only allowed ones.
@@ -2838,13 +2837,14 @@ function bb_get_enabled_activity_filter_options( $args = array() ) {
 
 	// Set default options if not provided.
 	$default = array(
-		'all'       => 1,
-		'just-me'   => 1,
-		'favorites' => 1,
-		'groups'    => 1,
-		'friends'   => 1,
-		'mentions'  => 1,
-		'following' => 1,
+		'all'        => 1,
+		'just-me'    => 1,
+		'favorites'  => 1,
+		'groups'     => 1,
+		'friends'    => 1,
+		'mentions'   => 1,
+		'following'  => 1,
+		'unanswered' => 1,
 	);
 
 	$args    = array_intersect_key( $args, $default );

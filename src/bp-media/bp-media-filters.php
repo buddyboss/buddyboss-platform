@@ -514,7 +514,8 @@ function bp_media_update_media_privacy( $album ) {
 				$activity = new BP_Activity_Activity( $activity_id );
 
 				if ( ! empty( $activity ) ) {
-					$activity->privacy = $privacy;
+					$activity->privacy        = $privacy;
+					$activity->title_required = false;
 					$activity->save();
 				}
 			}
@@ -778,7 +779,7 @@ function bp_media_forums_embed_gif( $content, $id ) {
 				<video preload="auto" playsinline poster="<?php echo $preview_url; ?>" loop muted>
 					<source src="<?php echo $video_url; ?>" type="video/mp4">
 				</video>
-				<a href="#" class="gif-play-button">
+				<a href="#" class="gif-play-button" aria-label="<?php esc_attr_e( 'Play GIF', 'buddyboss' ); ?>">
 					<span class="bb-icon-bl bb-icon-play"></span>
 				</a>
 				<span class="gif-icon"></span>
@@ -1144,7 +1145,7 @@ function bp_media_activity_embed_gif_content( $activity_id ) {
 				<video preload="auto" playsinline poster="<?php echo $preview_url; ?>" loop muted>
 					<source src="<?php echo $video_url; ?>" type="video/mp4">
 				</video>
-				<a href="#" class="gif-play-button">
+				<a href="#" class="gif-play-button" aria-label="<?php esc_attr_e( 'Play GIF', 'buddyboss' ); ?>">
 					<span class="bb-icon-bl bb-icon-play"></span>
 				</a>
 				<span class="gif-icon"></span>
@@ -1749,7 +1750,8 @@ function bp_media_admin_repair_media() {
 								}
 							}
 						}
-						$activity->hide_sitewide = true;
+						$activity->hide_sitewide  = true;
+						$activity->title_required = false;
 						$activity->save();
 					}
 				}

@@ -416,41 +416,42 @@ function bb_validate_restricted_email_on_profile_update( $user_id ) {
  * @since BuddyBoss 2.4.40
  */
 function bb_core_settings_saved_notice() {
-	if (
-		isset( $_GET['page'] ) &&
-		(
-			'bp-settings' === $_GET['page'] ||
-			'bp-pages' === $_GET['page'] ||
-			'bp-integrations' === $_GET['page']
-		) &&
-		(
-			isset( $_GET['updated'] ) ||
-			isset( $_GET['edited'] ) ||
-			isset( $_GET['added'] )
-		)
-	) {
 
-		$setting_message = __( 'Settings saved successfully.', 'buddyboss' );
-		$setting_updated = isset( $_GET['updated'] ) ? sanitize_text_field( wp_unslash( $_GET['updated'] ) ) : '';
+    // Only handle notices on BuddyBoss pages.
+    if ( ! isset( $_GET['page'] ) ) {
+        return;
+    }
 
-		if ( 'emotion_deleted' === $setting_updated ) {
-			$setting_message = get_transient( $_GET['updated'] );
-			delete_transient( $_GET['updated'] );
-		} elseif ( 'no_message' === $setting_updated ) {
-			$setting_message = '';
-		}
+    $page = sanitize_key( wp_unslash( $_GET['page'] ) );
 
-		if ( ! empty( $setting_message ) ) {
-			add_settings_error(
-				'general',
-				'settings_updated',
-				$setting_message,
-				'updated'
-			);
-		}
-	}
+    if ( ! in_array( $page, array( 'bp-settings', 'bp-pages', 'bp-integrations' ), true ) ) {
+        return;
+    }
 
-	settings_errors();
+    // Check if settings were updated.
+    if ( isset( $_GET['updated'] ) || isset( $_GET['edited'] ) || isset( $_GET['added'] ) ) {
+        $setting_message = __( 'Settings saved successfully.', 'buddyboss' );
+        $setting_updated = isset( $_GET['updated'] ) ? sanitize_text_field( wp_unslash( $_GET['updated'] ) ) : '';
+        $updated_transient_key = isset( $_GET['updated'] ) ? sanitize_key( wp_unslash( $_GET['updated'] ) ) : '';
+
+        if ( 'emotion_deleted' === $setting_updated && ! empty( $updated_transient_key ) ) {
+            $setting_message = get_transient( $updated_transient_key );
+            delete_transient( $updated_transient_key );
+        } elseif ( 'no_message' === $setting_updated ) {
+            $setting_message = '';
+        }
+
+        if ( ! empty( $setting_message ) ) {
+            add_settings_error(
+                'general',
+                'settings_updated',
+                $setting_message,
+                'updated'
+            );
+        }
+
+        settings_errors( '' );
+    }
 }
 
 add_action( 'bp_admin_notices', 'bb_core_settings_saved_notice', 1010 );
@@ -537,3 +538,56 @@ function bb_upgrade_dismiss_notice() {
 }
 
 add_action( 'wp_ajax_bb_upgrade_dismiss_notice', 'bb_upgrade_dismiss_notice' );
+
+/**
+ * Render the admin header for BuddyBoss related admin pages.
+ *
+ * @since BuddyBoss 2.14.0
+ *
+ * @return void
+ */
+function bb_render_admin_header() {
+	$screen = get_current_screen();
+
+	if (
+		(
+			! empty( $screen->base ) &&
+			(
+				false !== strpos( $screen->base, 'buddyboss' ) ||
+				false !== strpos( $screen->base, 'bp_' ) ||
+				false !== strpos( $screen->base, 'bb_' )
+			) &&
+			(
+				! empty( $screen->id ) &&
+				(
+					'buddyboss_page_bb-upgrade' !== $screen->id &&
+					'buddyboss_page_bb-readylaunch' !== $screen->id
+				)
+			)
+		) ||
+		(
+			! empty( $screen->post_type ) &&
+			(
+				'buddyboss_fonts' === $screen->post_type ||
+				'bp_ps_form' === $screen->post_type ||
+				( function_exists( 'bp_groups_get_group_type_post_type' ) && bp_groups_get_group_type_post_type() === $screen->post_type ) ||
+				( function_exists( 'bp_get_member_type_post_type' ) && bp_get_member_type_post_type() === $screen->post_type ) ||
+				( function_exists( 'bp_get_invite_post_type' ) && bp_get_invite_post_type() === $screen->post_type ) ||
+				( function_exists( 'bbp_get_forum_post_type' ) && bbp_get_forum_post_type() === $screen->post_type ) ||
+				( function_exists( 'bbp_get_topic_post_type' ) && bbp_get_topic_post_type() === $screen->post_type ) ||
+				( function_exists( 'bbp_get_reply_post_type' ) && bbp_get_reply_post_type() === $screen->post_type ) ||
+				( function_exists( 'bp_get_email_post_type' ) && bp_get_email_post_type() === $screen->post_type )
+			)
+		) || (
+			! empty( $screen->taxonomy ) &&
+			(
+				( function_exists( 'bbp_get_topic_tag_tax_id' ) && bbp_get_topic_tag_tax_id() === $screen->taxonomy ) ||
+				( function_exists( 'bp_get_email_tax_type' ) && bp_get_email_tax_type() === $screen->taxonomy )
+			)
+		)
+	) {
+		include __DIR__ . '/templates/header.php';
+	}
+}
+
+add_action( 'in_admin_header', 'bb_render_admin_header', 999 );

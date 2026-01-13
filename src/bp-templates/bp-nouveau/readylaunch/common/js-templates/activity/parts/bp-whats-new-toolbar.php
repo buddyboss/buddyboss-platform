@@ -21,7 +21,7 @@
 	if ( bp_is_active( 'media' ) && ( ( bp_is_activity_directory() && ( bp_is_profile_media_support_enabled() || bp_is_group_media_support_enabled() ) ) || ( bp_is_user_activity() && bp_is_profile_media_support_enabled() ) || ( bp_is_group_activity() && bp_is_group_media_support_enabled() ) ) ) :
 		?>
 		<div class="bb-rl-post-elements-buttons-item bb-rl-post-media bb-rl-media-support">
-			<a href="#" id="bb-rl-activity-media-button" class="bb-rl-toolbar-button bp-tooltip" data-bp-tooltip-pos="up-left" data-bp-tooltip="<?php esc_attr_e( 'Attach photo', 'buddyboss' ); ?>">
+			<a href="#" id="bb-rl-activity-media-button" class="bb-rl-toolbar-button bp-tooltip" data-bp-tooltip-pos="up-left" data-bp-tooltip="<?php esc_attr_e( 'Attach photo', 'buddyboss' ); ?>" aria-label="<?php esc_attr_e( 'Attach photo', 'buddyboss' ); ?>">
 				<i class="bb-icons-rl-camera"></i>
 			</a>
 		</div>
@@ -31,7 +31,7 @@
 	if ( bp_is_active( 'media' ) && ! empty( $video_extensions ) && ( ( bp_is_activity_directory() && ( bp_is_profile_video_support_enabled() || bp_is_group_video_support_enabled() ) ) || ( bp_is_user_activity() && bp_is_profile_video_support_enabled() ) || ( bp_is_group_activity() && bp_is_group_video_support_enabled() ) ) ) :
 		?>
 		<div class="bb-rl-post-elements-buttons-item bb-rl-post-video bb-rl-video-support">
-			<a href="#" id="bb-rl-activity-video-button" class="bb-rl-toolbar-button bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Attach video', 'buddyboss' ); ?>">
+			<a href="#" id="bb-rl-activity-video-button" class="bb-rl-toolbar-button bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Attach video', 'buddyboss' ); ?>" aria-label="<?php esc_attr_e( 'Attach video', 'buddyboss' ); ?>">
 				<i class="bb-icons-rl-video-camera"></i>
 			</a>
 		</div>
@@ -40,8 +40,8 @@
 	$extensions = ( function_exists( 'bp_document_get_allowed_extension' ) ) ? bp_document_get_allowed_extension() : '';
 	if ( bp_is_active( 'media' ) && ! empty( $extensions ) && ( ( bp_is_activity_directory() && ( bp_is_profile_document_support_enabled() || bp_is_group_document_support_enabled() ) ) || ( bp_is_user_activity() && bp_is_profile_document_support_enabled() ) || ( bp_is_group_activity() && bp_is_group_document_support_enabled() ) ) ) :
 		?>
-		<div class="bb-rl-post-elements-buttons-item bb-rl-post-media bb-rl-document-support">
-			<a href="#" id="bb-rl-activity-document-button" class="bb-rl-toolbar-button bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Attach document', 'buddyboss' ); ?>">
+		<div class="bb-rl-post-elements-buttons-item bb-rl-post-document bb-rl-document-support">
+			<a href="#" id="bb-rl-activity-document-button" class="bb-rl-toolbar-button bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Attach document', 'buddyboss' ); ?>" aria-label="<?php esc_attr_e( 'Attach document', 'buddyboss' ); ?>">
 				<i class="bb-icons-rl-paperclip-horizontal"></i>
 			</a>
 		</div>
@@ -50,7 +50,7 @@
 	<?php if ( bp_is_active( 'media' ) && ( ( bp_is_activity_directory() && ( bp_is_profiles_gif_support_enabled() || bp_is_groups_gif_support_enabled() ) ) || ( bp_is_user_activity() && bp_is_profiles_gif_support_enabled() ) || ( bp_is_group_activity() && bp_is_groups_gif_support_enabled() ) ) ) : ?>
 		<div class="bb-rl-post-elements-buttons-item bb-rl-post-gif">
 			<div class="bb-rl-gif-media-search">
-				<a href="#" id="bb-rl-activity-gif-button" class="bb-rl-toolbar-button bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Choose a GIF', 'buddyboss' ); ?>"><i class="bb-icons-rl-gif"></i></a>
+				<a href="#" id="bb-rl-activity-gif-button" class="bb-rl-toolbar-button bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Choose a GIF', 'buddyboss' ); ?>" aria-label="<?php esc_attr_e( 'Choose a GIF', 'buddyboss' ); ?>"><i class="bb-icons-rl-gif"></i></a>
 				<div class="bb-rl-gif-media-search-dropdown"></div>
 			</div>
 		</div>

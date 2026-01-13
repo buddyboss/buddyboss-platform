@@ -2051,7 +2051,8 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 				bp_activity_update_meta( $activity_id, 'bp_media_ids', $created_media_ids_joined );
 
 				if ( empty( $group_id ) ) {
-					$main_activity->privacy = $media_privacy;
+					$main_activity->privacy        = $media_privacy;
+					$main_activity->title_required = false;
 					$main_activity->save();
 				}
 			}
@@ -2593,10 +2594,17 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 		}
 
 		if (
-			function_exists( 'bb_user_has_access_upload_gif' ) &&
-			! bb_user_has_access_upload_gif( $group_id, bp_loggedin_user_id(), 0, 0, 'profile' )
+			(
+				empty( $group_id ) &&
+				! bp_is_profiles_gif_support_enabled()
+			) ||
+			(
+				bp_is_active( 'groups' ) &&
+				! empty( $group_id ) &&
+				! bp_is_groups_gif_support_enabled()
+			)
 		) {
-			return;
+			return false;
 		}
 
 		$activity_metas = bb_activity_get_metadata( $activity_id );

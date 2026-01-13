@@ -233,22 +233,34 @@ function bp_core_menu_highlight_parent_page( $retval, $page ) {
 			break;
 		}
 
-		// Members component requires an explicit check due to overlapping components.
+		// Skip members component when on user profile pages to prevent highlighting members directory.
 		if ( bp_is_user() && 'members' === $component ) {
-			$page_id = (int) $bp_page->id;
-			break;
+			continue;
 		}
 	}
 
 	// Duplicate some logic from Walker_Page::start_el() to highlight menu items.
 	if ( ! empty( $page_id ) ) {
 		$_bp_page = get_post( $page_id );
+
 		if ( isset( $page->ID ) && in_array( $page->ID, $_bp_page->ancestors, true ) ) {
 			$retval[] = 'current_page_ancestor';
 		}
-		if ( isset( $page->ID ) && $page->ID === $page_id ) {
+
+		if (
+			isset( $page->ID ) &&
+			$page->ID === $page_id &&
+			( 'members' !== $component || ! bp_is_user() )
+		) {
+			// Special handling for members component: don't highlight members page when on user profile pages.
 			$retval[] = 'current_page_item';
-		} elseif ( isset( $page->ID ) && $_bp_page && $page->ID === $_bp_page->post_parent ) {
+		} elseif (
+			isset( $page->ID ) &&
+			$_bp_page &&
+			$page->ID === $_bp_page->post_parent &&
+			( 'members' !== $component || ! bp_is_user() )
+		) {
+			// Special handling for members component: don't highlight members page when on user profile pages
 			$retval[] = 'current-menu-item';
 			$retval[] = 'current_page_parent';
 		}
@@ -2290,6 +2302,39 @@ function bb_change_nav_menu_class( $classes, $item, $args, $depth ) {
 		}
 	}
 
+	// Remove current classes from members page when on user profile pages.
+	if ( in_array( 'current_page_item', $classes, true ) && function_exists( 'bp_is_user' ) && bp_is_user() ) {
+		$is_members_directory = false;
+
+		// Method 1: Check for bp-members-nav class.
+		if ( isset( $item->classes ) ) {
+			$menu_classes = is_array( $item->classes ) ? implode( ' ', $item->classes ) : $item->classes;
+			if ( strpos( $menu_classes, 'bp-members-nav' ) !== false ) {
+				$is_members_directory = true;
+			}
+		}
+
+		// Method 2: Check if this menu item points to the actual members directory page.
+		if ( ! $is_members_directory && isset( $item->object_id ) && function_exists( 'bp_core_get_directory_page_id' ) ) {
+			$members_page_id = bp_core_get_directory_page_id( 'members' );
+			if ( $members_page_id && $item->object_id === $members_page_id ) {
+				$is_members_directory = true;
+			}
+		}
+
+		// Method 3: Check URL structure (fallback for custom pages).
+		if ( ! $is_members_directory && isset( $item->url ) && function_exists( 'bp_get_members_directory_permalink' ) ) {
+			$members_page_url = bp_get_members_directory_permalink();
+			if ( $members_page_url && untrailingslashit( $item->url ) === untrailingslashit( $members_page_url ) ) {
+				$is_members_directory = true;
+			}
+		}
+
+		if ( $is_members_directory ) {
+			$classes = array_diff( $classes, array( 'current_page_item', 'current-menu-item' ) );
+		}
+	}
+
 	return $classes;
 }
 add_filter( 'nav_menu_css_class', 'bb_change_nav_menu_class', 10, 4 );
@@ -2407,11 +2452,14 @@ function buddyboss_menu_order( $menu_order ) {
 	$buddyboss_theme_options_menu = array();
 	$buddyboss_theme_font_menu    = array();
 	$buddyboss_updater_menu       = array();
+	$buddyboss_license_menu       = array();
+	$buddyboss_addon_menu         = array();
 	$buddyboss_readylaunch_menu   = array();
-	$sep_position                 = null; // Use null to detect if found
+	$buddyboss_gamification_menu  = array();
+	$sep_position                 = null; // Use null to detect if found.
 
-	$after_sep       = array();
-	$separator_menu  = array( '', 'manage_options', 'bp-plugin-seperator', '' );
+	$after_sep      = array();
+	$separator_menu = array( '', 'manage_options', 'bp-plugin-seperator', '' );
 
 	if ( ! empty( $submenu['buddyboss-platform'] ) ) {
 		foreach ( $submenu['buddyboss-platform'] as $key => $val ) {
@@ -2431,26 +2479,49 @@ function buddyboss_menu_order( $menu_order ) {
 					unset( $submenu['buddyboss-platform'][ $key ] );
 					continue;
 				}
+
+				if ( 'buddyboss-license' === $val[2] ) {
+					$buddyboss_license_menu = $submenu['buddyboss-platform'][ $key ];
+					unset( $submenu['buddyboss-platform'][ $key ] );
+					continue;
+				}
+
+				if ( 'buddyboss-addons' === $val[2] ) {
+					$buddyboss_addon_menu = $submenu['buddyboss-platform'][ $key ];
+					unset( $submenu['buddyboss-platform'][ $key ] );
+					continue;
+				}
+
 				if ( 'bb-readylaunch' === $val[2] ) {
 					$buddyboss_readylaunch_menu = $submenu['buddyboss-platform'][ $key ];
 					unset( $submenu['buddyboss-platform'][ $key ] );
 					continue;
 				}
-				if ( isset( $sep_position ) && $sep_position !== null ) {
+
+				if ( 'bb-gamification-settings' === $val[2] ) {
+					$buddyboss_gamification_menu = $submenu['buddyboss-platform'][ $key ];
+					unset( $submenu['buddyboss-platform'][ $key ] );
+					continue;
+				}
+
+				if ( isset( $sep_position ) && null !== $sep_position ) {
 					$after_sep[] = $val;
 					unset( $submenu['buddyboss-platform'][ $key ] );
 				}
-				if ( 'bp-plugin-seperator' === $val[2] && $sep_position === null ) {
+				if ( 'bp-plugin-seperator' === $val[2] && null === $sep_position ) {
 					$sep_position = $key;
 				}
 			}
 		}
 
-		// If separator was found, insert after it; otherwise, insert just above ReadyLaunch
+		// If separator was found, insert after it; otherwise, insert just above ReadyLaunch.
 		if ( $sep_position !== null ) {
 			$insert_pos = $sep_position;
 			if ( ! empty( $buddyboss_readylaunch_menu ) ) {
 				$submenu['buddyboss-platform'][ ++ $insert_pos ] = $buddyboss_readylaunch_menu;
+			}
+			if ( ! empty( $buddyboss_gamification_menu ) ) {
+				$submenu['buddyboss-platform'][ ++ $insert_pos ] = $buddyboss_gamification_menu;
 			}
 			if ( ! empty( $buddyboss_theme_options_menu ) ) {
 				$submenu['buddyboss-platform'][ ++ $insert_pos ] = $buddyboss_theme_options_menu;
@@ -2466,12 +2537,18 @@ function buddyboss_menu_order( $menu_order ) {
 			if ( ! empty( $buddyboss_updater_menu ) ) {
 				$submenu['buddyboss-platform'][ ++ $insert_pos ] = $buddyboss_updater_menu;
 			}
+			if ( ! empty( $buddyboss_license_menu ) ) {
+				$submenu['buddyboss-platform'][ ++ $insert_pos ] = $buddyboss_license_menu;
+			}
+			if ( ! empty( $buddyboss_addon_menu ) ) {
+				$submenu['buddyboss-platform'][ ++ $insert_pos ] = $buddyboss_addon_menu;
+			}
 		} else {
-			// No separator found, so insert separator just above ReadyLaunch if ReadyLaunch exists
+			// No separator found, so insert separator just above ReadyLaunch if ReadyLaunch exists.
 			$new_submenu                   = array_values( $submenu['buddyboss-platform'] );
-			$submenu['buddyboss-platform'] = array(); // reset
+			$submenu['buddyboss-platform'] = array(); // reset.
 
-			// Add all items except ReadyLaunch
+			// Add all items except ReadyLaunch.
 			foreach ( $new_submenu as $item ) {
 				$submenu['buddyboss-platform'][] = $item;
 			}
@@ -2480,6 +2557,9 @@ function buddyboss_menu_order( $menu_order ) {
 			if ( ! empty( $buddyboss_readylaunch_menu ) ) {
 				$submenu['buddyboss-platform'][] = $separator_menu;
 				$submenu['buddyboss-platform'][] = $buddyboss_readylaunch_menu;
+			}
+			if ( ! empty( $buddyboss_gamification_menu ) ) {
+				$submenu['buddyboss-platform'][] = $buddyboss_gamification_menu;
 			}
 
 			// Now append special menus if not already present
@@ -2496,6 +2576,12 @@ function buddyboss_menu_order( $menu_order ) {
 			}
 			if ( ! empty( $buddyboss_updater_menu ) ) {
 				$submenu['buddyboss-platform'][] = $buddyboss_updater_menu;
+			}
+			if ( ! empty( $buddyboss_license_menu ) ) {
+				$submenu['buddyboss-platform'][] = $buddyboss_license_menu;
+			}
+			if ( ! empty( $buddyboss_addon_menu ) ) {
+				$submenu['buddyboss-platform'][] = $buddyboss_addon_menu;
 			}
 		}
 	}
@@ -2704,3 +2790,23 @@ function bb_redirection_allowed_third_party_domains( $hosts ) {
 
 	return $hosts;
 }
+
+/**
+ * Make video embeds discoverable.
+ *
+ * @since BuddyBoss 2.17.0
+ *
+ * @param bool   $retval Return value to enable discover support or not.
+ * @param string $url    URL to parse for embed.
+ *
+ * @return bool
+ */
+function bb_oembed_discover_support_callback( $retval, $url ) {
+	if ( ! empty( $url ) && false !== strpos( $url, 'dubb.com' ) ) {
+		$retval = true;
+	}
+
+	return $retval;
+}
+
+add_filter( 'bb_oembed_discover_support', 'bb_oembed_discover_support_callback', 10, 2 );

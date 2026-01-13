@@ -330,7 +330,7 @@ class BuddyPress {
 
 		/** Versions */
 		$this->version    = defined( 'BP_PLATFORM_VERSION' ) ? BP_PLATFORM_VERSION : ( defined( 'BP_VERSION' ) ? BP_VERSION : '1.0.0' );
-		$this->db_version = 23421;
+		$this->db_version = 23551;
 
 		/** Loading */
 
@@ -513,6 +513,9 @@ class BuddyPress {
 	 */
 	private function includes() {
 		spl_autoload_register( array( $this, 'autoload' ) );
+
+		// Initialize BuddyBoss Mothership (License & Add-ons).
+		require $this->plugin_dir . 'bp-core/admin/mothership/mothership-init.php';
 
 		// Load the compatibility helpers for third party plugins.
 		require $this->compatibility_dir . '/bp-incompatible-plugins-helper.php';
@@ -707,7 +710,6 @@ class BuddyPress {
 			'BP_Core_Whos_Online_Widget'                   => 'members',
 			'BP_Registration_Theme_Compat'                 => 'members',
 			'BP_Signup'                                    => 'members',
-			'BP_BuddyBoss_Platform_Updater'                => 'core',
 			'BP_Core_Suspend'                              => 'suspend',
 			'BP_Suspend_Abstract'                          => 'suspend',
 			'BP_Suspend_Member'                            => 'suspend',

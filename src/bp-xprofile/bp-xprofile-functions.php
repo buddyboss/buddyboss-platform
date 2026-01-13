@@ -1809,7 +1809,7 @@ function bp_get_user_social_networks_urls( $user_id = null ) {
 											<h4>
 												<span class="target_name">' . esc_attr( $social_networks_text ) . '</span>
 											</h4>
-											<a class="bb-close-action-popup bb-model-close-button" href="#"><span class="bb-icon-l bb-icon-times"></span></a>
+											<a class="bb-close-action-popup bb-model-close-button" href="#" aria-label="' . esc_attr__( 'Close', 'buddyboss' ) . '"><span class="bb-icon-l bb-icon-times"></span></a>
 										</header>
 										<div class="bb-action-popup-content">';
 										foreach ( $original_option_values as $key => $original_option_value ) {
@@ -2383,7 +2383,12 @@ function bp_xprofile_get_user_progress_formatted( $user_progress_arr ) {
 	$profile_slug         = bp_get_profile_slug();
 
 	// Calculate Total Progress percentage.
-	$profile_completion_percentage = round( ( $user_progress_arr['completed_fields'] * 100 ) / $user_progress_arr['total_fields'] );
+	// Default to 0% when there are no total fields to prevent division by zero errors.
+	// This can occur when no profile groups or photo types are selected in widget settings.
+	$profile_completion_percentage = 0;
+	if ( isset( $user_progress_arr['total_fields'] ) && $user_progress_arr['total_fields'] > 0 ) {
+		$profile_completion_percentage = round( ( $user_progress_arr['completed_fields'] * 100 ) / $user_progress_arr['total_fields'] );
+	}
 	$user_prgress_formatted        = array(
 		'completion_percentage' => $profile_completion_percentage,
 	);
