@@ -533,7 +533,7 @@ window.bp = window.bp || {};
 								targetPopup.find( '.location-folder-list-wrap .location-folder-list' ).remove();
 								targetPopup.find( '.location-folder-list-wrap' ).append( response.data.tree_view );
 
-								var targetPopupID = $( targetPopup ).attr( 'id' ) + '.open-popup';
+								var targetPopupID = '#' + $( targetPopup ).attr( 'id' ) + '.open-popup';
 
 								if ( bp.Nouveau.Media.folderLocationUI ) {
 									bp.Nouveau.Media.folderLocationUI( targetPopupID, response.data.folder_id );
@@ -5245,7 +5245,7 @@ window.bp = window.bp || {};
 					} else {
 						fileID = $( targetPopup ).find( '.breadcrumbs-append-ul-li .item > span:last-child' ).attr( 'id' );
 					}
-					if ( currentTargetParent === fileID && ( $( targetPopup ).hasClass( 'bp-media-move-file' ) || $( targetPopup ).hasClass( 'bp-media-move-folder' ) ) ) {
+					if ( currentTargetParent === parseInt( fileID ) && ( $( targetPopup ).hasClass( 'bp-media-move-file' ) || $( targetPopup ).hasClass( 'bp-media-move-folder' ) ) ) {
 						$( targetPopup ).find( '.bp-document-move' ).addClass( 'is-disabled' );
 						$( targetPopup ).find( '.bp-folder-move' ).addClass( 'is-disabled' );
 					} else {
