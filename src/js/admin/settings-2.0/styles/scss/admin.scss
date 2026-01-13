@@ -1452,6 +1452,16 @@ $bb-border-radius-xs: 6px;
 		height: 40px;
 		border-radius: 50%;
 		object-fit: cover;
+		flex-shrink: 0;
+
+		&--placeholder {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			background-color: $bb-background-color;
+			color: $bb-text-muted;
+			font-size: 20px;
+		}
 	}
 
 	&__username {

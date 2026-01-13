@@ -107,32 +107,45 @@ class BB_REST_Activity_Controller extends WP_REST_Controller {
 	 * @return WP_REST_Response|WP_Error
 	 */
 	public function get_items( $request ) {
+		$per_page = isset( $request['per_page'] ) ? (int) $request['per_page'] : 20;
+		$page     = isset( $request['page'] ) ? (int) $request['page'] : 1;
+
 		$args = array(
-			'per_page'    => isset( $request['per_page'] ) ? (int) $request['per_page'] : 20,
-			'page'        => isset( $request['page'] ) ? (int) $request['page'] : 1,
-			'search_terms' => isset( $request['search'] ) ? sanitize_text_field( $request['search'] ) : '',
-			'sort'        => isset( $request['orderby'] ) ? sanitize_text_field( $request['orderby'] ) : 'date',
-			'order'       => isset( $request['order'] ) ? strtoupper( sanitize_text_field( $request['order'] ) ) : 'DESC',
+			'per_page'     => $per_page,
+			'page'         => $page,
+			'sort'         => isset( $request['order'] ) ? strtoupper( sanitize_text_field( $request['order'] ) ) : 'DESC',
+			'count_total'  => true,
+			'show_hidden'  => true, // Show all activities including hidden ones for admin
+			'spam'         => 'all', // Show spam and non-spam for admin
+			'display_comments' => false,
 		);
 
-		// Filter by type if provided.
-		if ( isset( $request['type'] ) ) {
-			$args['filter']['action'] = sanitize_text_field( $request['type'] );
+		// Search terms
+		if ( ! empty( $request['search'] ) ) {
+			$args['search_terms'] = sanitize_text_field( $request['search'] );
+		}
+
+		// Filter by type/action if provided.
+		if ( ! empty( $request['type'] ) ) {
+			$args['filter'] = array(
+				'action' => sanitize_text_field( $request['type'] ),
+			);
 		}
 
 		// Filter by user if provided.
-		if ( isset( $request['user_id'] ) ) {
+		if ( ! empty( $request['user_id'] ) ) {
+			if ( ! isset( $args['filter'] ) ) {
+				$args['filter'] = array();
+			}
 			$args['filter']['user_id'] = (int) $request['user_id'];
 		}
 
 		// Filter by component if provided.
-		if ( isset( $request['component'] ) ) {
+		if ( ! empty( $request['component'] ) ) {
+			if ( ! isset( $args['filter'] ) ) {
+				$args['filter'] = array();
+			}
 			$args['filter']['object'] = sanitize_text_field( $request['component'] );
-		}
-
-		// Filter by status (spam, hidden, etc.).
-		if ( isset( $request['status'] ) ) {
-			$args['filter']['status'] = sanitize_text_field( $request['status'] );
 		}
 
 		// Apply filters.
@@ -148,11 +161,14 @@ class BB_REST_Activity_Controller extends WP_REST_Controller {
 			}
 		}
 
+		// Get total count
+		$total = isset( $activities['total'] ) ? (int) $activities['total'] : count( $formatted_activities );
+
 		return BB_REST_Response::paginated(
 			$formatted_activities,
-			(int) $activities['total'],
-			$args['page'],
-			$args['per_page']
+			$total,
+			$page,
+			$per_page
 		);
 	}
 
@@ -306,29 +322,89 @@ class BB_REST_Activity_Controller extends WP_REST_Controller {
 	 * @return array
 	 */
 	public function prepare_item_for_response( $activity, $request ) {
-		$data = array(
-			'id'           => $activity->id,
-			'user_id'      => $activity->user_id,
-			'user_name'    => bp_core_get_user_displayname( $activity->user_id ),
-			'user_avatar'  => bp_core_fetch_avatar(
+		// Get user data
+		$user_id   = (int) $activity->user_id;
+		$user_data = get_userdata( $user_id );
+		
+		// Get user display name - try multiple methods
+		$user_name = '';
+		if ( $user_data ) {
+			$user_name = $user_data->display_name;
+		}
+		if ( empty( $user_name ) && function_exists( 'bp_core_get_user_displayname' ) ) {
+			$user_name = bp_core_get_user_displayname( $user_id );
+		}
+		if ( empty( $user_name ) && $user_data ) {
+			$user_name = $user_data->user_login;
+		}
+
+		// Get user avatar - try multiple methods
+		$user_avatar = '';
+		if ( function_exists( 'bp_core_fetch_avatar' ) ) {
+			$user_avatar = bp_core_fetch_avatar(
 				array(
-					'item_id' => $activity->user_id,
+					'item_id' => $user_id,
+					'object'  => 'user',
 					'type'    => 'thumb',
 					'html'    => false,
 				)
-			),
+			);
+		}
+		// Fallback to Gravatar
+		if ( empty( $user_avatar ) && $user_data ) {
+			$user_avatar = get_avatar_url( $user_data->user_email, array( 'size' => 50 ) );
+		}
+
+		// Parse the action text (strip HTML and extract the action description)
+		$action_text = '';
+		if ( ! empty( $activity->action ) ) {
+			// Strip HTML and get plain text action
+			$action_text = wp_strip_all_tags( $activity->action );
+			// Remove the user name from the beginning if present
+			if ( ! empty( $user_name ) && strpos( $action_text, $user_name ) === 0 ) {
+				$action_text = trim( substr( $action_text, strlen( $user_name ) ) );
+			}
+		}
+
+		// Get group name if this is a group activity
+		$group_name = '';
+		if ( 'groups' === $activity->component && ! empty( $activity->item_id ) && function_exists( 'groups_get_group' ) ) {
+			$group = groups_get_group( $activity->item_id );
+			if ( ! empty( $group->name ) ) {
+				$group_name = $group->name;
+			}
+		}
+
+		// Format date
+		$date_formatted = '';
+		if ( ! empty( $activity->date_recorded ) ) {
+			if ( function_exists( 'bp_core_time_since' ) ) {
+				$date_formatted = bp_core_time_since( $activity->date_recorded );
+			} else {
+				$date_formatted = date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), strtotime( $activity->date_recorded ) );
+			}
+		}
+
+		$data = array(
+			'id'           => (int) $activity->id,
+			'user_id'      => $user_id,
+			'user_name'    => $user_name,
+			'user_avatar'  => $user_avatar,
+			'user_link'    => function_exists( 'bp_core_get_user_domain' ) ? bp_core_get_user_domain( $user_id ) : get_author_posts_url( $user_id ),
 			'content'      => $activity->content,
 			'component'    => $activity->component,
 			'type'         => $activity->type,
 			'action'       => $activity->action,
-			'item_id'      => $activity->item_id,
-			'secondary_item_id' => $activity->secondary_item_id,
+			'action_text'  => $action_text,
+			'group_name'   => $group_name,
+			'item_id'      => (int) $activity->item_id,
+			'secondary_item_id' => (int) $activity->secondary_item_id,
 			'date_recorded' => $activity->date_recorded,
-			'date_recorded_formatted' => bp_core_time_since( $activity->date_recorded ),
+			'date_recorded_formatted' => $date_formatted,
 			'is_spam'      => (bool) $activity->is_spam,
 			'is_hidden'    => (bool) $activity->hide_sitewide,
-			'comment_count' => (int) $activity->comment_count,
-			'permalink'    => bp_activity_get_permalink( $activity->id ),
+			'comment_count' => isset( $activity->comment_count ) ? (int) $activity->comment_count : 0,
+			'permalink'    => function_exists( 'bp_activity_get_permalink' ) ? bp_activity_get_permalink( $activity->id ) : '',
 		);
 
 		// Apply filters.
@@ -371,13 +447,13 @@ class BB_REST_Activity_Controller extends WP_REST_Controller {
 				'description'       => __( 'Order by field.', 'buddyboss' ),
 				'type'              => 'string',
 				'default'           => 'date',
-				'enum'              => array( 'date', 'id', 'user_id' ),
+				'sanitize_callback' => 'sanitize_text_field',
 			),
 			'order'    => array(
 				'description'       => __( 'Order direction.', 'buddyboss' ),
 				'type'              => 'string',
-				'default'           => 'DESC',
-				'enum'              => array( 'ASC', 'DESC' ),
+				'default'           => 'desc',
+				'enum'              => array( 'asc', 'desc', 'ASC', 'DESC' ),
 			),
 			'type'     => array(
 				'description'       => __( 'Filter by activity type.', 'buddyboss' ),

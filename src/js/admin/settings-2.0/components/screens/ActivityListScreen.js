@@ -73,8 +73,7 @@ export default function ActivityListScreen({ onNavigate }) {
 		const params = new URLSearchParams({
 			page: page.toString(),
 			per_page: perPage.toString(),
-			orderby: 'date',
-			order: 'DESC',
+			order: 'desc',
 		});
 
 		if (search) {
@@ -86,11 +85,17 @@ export default function ActivityListScreen({ onNavigate }) {
 
 		apiFetch({ path: `/buddyboss/v1/activity?${params.toString()}` })
 			.then((response) => {
-				setActivities(response.data || []);
-				setTotal(response.pagination?.total || 0);
+				console.log('Activity API Response:', response);
+				// Handle both wrapped response {success, data, pagination} and direct array response
+				const activities = response.data || response || [];
+				const totalCount = response.pagination?.total || response.total || 0;
+				console.log('Parsed activities:', activities, 'Total:', totalCount);
+				setActivities(Array.isArray(activities) ? activities : []);
+				setTotal(totalCount);
 				setIsLoading(false);
 			})
-			.catch(() => {
+			.catch((error) => {
+				console.error('Activity API Error:', error);
 				setActivities([]);
 				setIsLoading(false);
 			});
@@ -192,7 +197,7 @@ export default function ActivityListScreen({ onNavigate }) {
 					<div className="bb-admin-activity-list">
 						{/* Section Title */}
 						<div className="bb-admin-activity-list__section-title">
-							<h2>{__('All Activities', 'buddyboss')}</h2>
+							<h2>{__('Activities', 'buddyboss')}</h2>
 						</div>
 
 						{/* Feature Card */}
@@ -292,82 +297,98 @@ export default function ActivityListScreen({ onNavigate }) {
 										{__('No activities found.', 'buddyboss')}
 									</div>
 								) : (
-									activities.map((activity) => (
-										<div key={activity.id} className="bb-admin-activity-list__row">
-											<div className="bb-admin-activity-list__row-wrap">
-												{/* Author Column */}
-												<div className="bb-admin-activity-list__col bb-admin-activity-list__col--author">
-													<CheckboxControl
-														checked={selectedIds.includes(activity.id)}
-														onChange={(checked) => handleSelectItem(activity.id, checked)}
-														__nextHasNoMarginBottom
-													/>
-													<div className="bb-admin-activity-list__user">
-														<img
-															src={activity.user_avatar || ''}
-															alt=""
-															className="bb-admin-activity-list__avatar"
+									activities.map((activity) => {
+										// Get activity ID (handle both formats)
+										const activityId = activity.id || activity.ID;
+										const userName = activity.user_name || activity.display_name || __('Unknown', 'buddyboss');
+										const userAvatar = activity.user_avatar || activity.avatar_url || '';
+										const userLink = activity.user_link || activity.permalink || '#';
+										const actionText = activity.action_text || activity.type?.replace(/_/g, ' ') || '';
+										const dateFormatted = activity.date_recorded_formatted || activity.date || activity.date_recorded || '';
+										
+										return (
+											<div key={activityId} className="bb-admin-activity-list__row">
+												<div className="bb-admin-activity-list__row-wrap">
+													{/* Author Column */}
+													<div className="bb-admin-activity-list__col bb-admin-activity-list__col--author">
+														<CheckboxControl
+															checked={selectedIds.includes(activityId)}
+															onChange={(checked) => handleSelectItem(activityId, checked)}
+															__nextHasNoMarginBottom
 														/>
-														<a href="#" className="bb-admin-activity-list__username">
-															{activity.user_name || __('Unknown', 'buddyboss')}
-														</a>
-													</div>
-												</div>
-
-												{/* Activity Column */}
-												<div className="bb-admin-activity-list__col bb-admin-activity-list__col--activity">
-													<div className="bb-admin-activity-list__action-text">
-														<span className="bb-admin-activity-list__action-user">
-															{activity.user_name}
-														</span>
-														<span className="bb-admin-activity-list__action-desc">
-															{activity.action_text || activity.type?.replace('_', ' ')}
-														</span>
-													</div>
-													{activity.group_name && (
-														<div className="bb-admin-activity-list__activity-link">
-															<a href="#">{activity.group_name}</a>
+														<div className="bb-admin-activity-list__user">
+															{userAvatar ? (
+																<img
+																	src={userAvatar}
+																	alt={userName}
+																	className="bb-admin-activity-list__avatar"
+																/>
+															) : (
+																<span className="bb-admin-activity-list__avatar bb-admin-activity-list__avatar--placeholder dashicons dashicons-admin-users"></span>
+															)}
+															<a href={userLink} className="bb-admin-activity-list__username" target="_blank" rel="noopener noreferrer">
+																{userName}
+															</a>
 														</div>
-													)}
-													{activity.content && (
-														<div
-															className="bb-admin-activity-list__activity-content"
-															dangerouslySetInnerHTML={{ __html: activity.content }}
-														/>
-													)}
-												</div>
+													</div>
 
-												{/* Submitted Column */}
-												<div className="bb-admin-activity-list__col bb-admin-activity-list__col--submitted">
-													<span className="dashicons dashicons-clock"></span>
-													<span>{activity.date_recorded_formatted || activity.date_recorded}</span>
-												</div>
-
-												{/* Actions Menu */}
-												<div className="bb-admin-activity-list__actions" ref={openMenuId === activity.id ? menuRef : null}>
-													<button
-														className="bb-admin-activity-list__ellipsis-btn"
-														onClick={() => setOpenMenuId(openMenuId === activity.id ? null : activity.id)}
-													>
-														<span className="dashicons dashicons-ellipsis"></span>
-													</button>
-													{openMenuId === activity.id && (
-														<div className="bb-admin-activity-list__menu">
-															<button onClick={() => handleEdit(activity.id)}>
-																{__('Edit', 'buddyboss')}
-															</button>
-															<button onClick={() => handleDelete(activity.id)}>
-																{__('Delete', 'buddyboss')}
-															</button>
-															<button onClick={() => setOpenMenuId(null)}>
-																{__('Mark as Spam', 'buddyboss')}
-															</button>
+													{/* Activity Column */}
+													<div className="bb-admin-activity-list__col bb-admin-activity-list__col--activity">
+														<div className="bb-admin-activity-list__action-text">
+															<span className="bb-admin-activity-list__action-user">
+																{userName}
+															</span>
+															<span className="bb-admin-activity-list__action-desc">
+																{actionText}
+															</span>
 														</div>
-													)}
+														{activity.group_name && (
+															<div className="bb-admin-activity-list__activity-link">
+																<a href={activity.permalink || '#'} target="_blank" rel="noopener noreferrer">
+																	{activity.group_name}
+																</a>
+															</div>
+														)}
+														{activity.content && (
+															<div
+																className="bb-admin-activity-list__activity-content"
+																dangerouslySetInnerHTML={{ __html: activity.content }}
+															/>
+														)}
+													</div>
+
+													{/* Submitted Column */}
+													<div className="bb-admin-activity-list__col bb-admin-activity-list__col--submitted">
+														<span className="dashicons dashicons-clock"></span>
+														<span>{dateFormatted}</span>
+													</div>
+
+													{/* Actions Menu */}
+													<div className="bb-admin-activity-list__actions" ref={openMenuId === activityId ? menuRef : null}>
+														<button
+															className="bb-admin-activity-list__ellipsis-btn"
+															onClick={() => setOpenMenuId(openMenuId === activityId ? null : activityId)}
+														>
+															<span className="dashicons dashicons-ellipsis"></span>
+														</button>
+														{openMenuId === activityId && (
+															<div className="bb-admin-activity-list__menu">
+																<button onClick={() => handleEdit(activityId)}>
+																	{__('Edit', 'buddyboss')}
+																</button>
+																<button onClick={() => handleDelete(activityId)}>
+																	{__('Delete', 'buddyboss')}
+																</button>
+																<button onClick={() => setOpenMenuId(null)}>
+																	{__('Mark as Spam', 'buddyboss')}
+																</button>
+															</div>
+														)}
+													</div>
 												</div>
 											</div>
-										</div>
-									))
+										);
+									})
 								)}
 							</div>
 						</div>
