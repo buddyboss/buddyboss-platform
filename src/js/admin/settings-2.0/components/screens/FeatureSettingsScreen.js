@@ -26,6 +26,7 @@ import { SettingsForm } from '../SettingsForm';
 export function FeatureSettingsScreen({ featureId, sectionId, onNavigate }) {
 	const [feature, setFeature] = useState(null);
 	const [sidePanels, setSidePanels] = useState([]);
+	const [navItems, setNavItems] = useState([]);
 	const [settings, setSettings] = useState({});
 	const [isLoading, setIsLoading] = useState(true);
 	const [isSaving, setIsSaving] = useState(false);
@@ -41,6 +42,7 @@ export function FeatureSettingsScreen({ featureId, sectionId, onNavigate }) {
 				setFeature(response.data);
 				const loadedPanels = response.data.side_panels || [];
 				setSidePanels(loadedPanels);
+				setNavItems(response.data.navigation || []);
 				setSettings(response.data.settings || {});
 				setIsLoading(false);
 				
@@ -131,11 +133,14 @@ export function FeatureSettingsScreen({ featureId, sectionId, onNavigate }) {
 			});
 	};
 
-	const handlePanelChange = (newPanelId) => {
-		// Update active panel state
-		setActivePanelId(newPanelId);
-		// Update URL without page reload
-		onNavigate(`/settings/${featureId}/${newPanelId}`);
+	const handlePanelChange = (route) => {
+		// Route from SideNavigation is already in full format: /settings/featureId/panelId
+		// Extract the panel ID from the route
+		const parts = route.split('/').filter(Boolean);
+		const newPanelId = parts[2]; // /settings/featureId/panelId
+		if (newPanelId) {
+			setActivePanelId(newPanelId);
+		}
 	};
 
 	const handleBack = () => {
@@ -170,8 +175,9 @@ export function FeatureSettingsScreen({ featureId, sectionId, onNavigate }) {
 					<SideNavigation
 						featureId={featureId}
 						sidePanels={sidePanels}
+						navItems={navItems}
 						currentPanel={activePanelId}
-						onNavigate={handlePanelChange}
+						onNavigate={onNavigate}
 						onBack={handleBack}
 					/>
 				</aside>

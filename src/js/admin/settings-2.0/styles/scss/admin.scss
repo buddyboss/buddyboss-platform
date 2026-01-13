@@ -770,6 +770,28 @@ $bb-border-radius-xs: 6px;
 	&__text {
 		flex: 1;
 	}
+
+	// Divider between side panels and nav items
+	&__divider {
+		height: 1px;
+		background-color: $bb-border-color;
+		margin: 8px 0;
+	}
+
+	// Nav items list (e.g., "All Activities")
+	&__list--nav-items {
+		.bb-admin-side-nav__link--nav-item {
+			color: $bb-text-muted;
+
+			.dashicons {
+				color: $bb-text-muted;
+			}
+
+			&:hover {
+				background-color: #e5e5e5;
+			}
+		}
+	}
 }
 
 // Settings Form Field (matching Figma settingsSection exactly)
@@ -1190,6 +1212,413 @@ $bb-border-radius-xs: 6px;
 	&__unsupported {
 		color: #dba617;
 		font-style: italic;
+	}
+}
+
+// =============================================================================
+// ACTIVITY LIST SCREEN (Figma: allActivities)
+// =============================================================================
+.bb-admin-activity-list {
+	max-width: 1112px;
+	margin: 0;
+	padding: 24px 32px;
+
+	// Section Title
+	&__section-title {
+		margin-bottom: 24px;
+
+		h2 {
+			font-size: 24px;
+			font-weight: 500;
+			line-height: 32px;
+			color: $bb-text-color;
+			margin: 0;
+		}
+	}
+
+	// Feature Card
+	&__card {
+		background-color: #fff;
+		border-radius: $bb-border-radius;
+		box-shadow: 0 1.5px 1px 0 rgba(0, 0, 0, 0.16);
+		overflow: hidden;
+	}
+
+	// Action Bar
+	&__action-bar {
+		padding: 0 24px;
+		border-bottom: 0.5px solid $bb-border-color;
+	}
+
+	&__action-bar-wrap {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: 16px 0;
+	}
+
+	&__action-left {
+		display: flex;
+		align-items: center;
+		gap: 24px;
+	}
+
+	&__filter {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+	}
+
+	&__select {
+		appearance: none;
+		background-color: $bb-background-color;
+		background-image: url("data:image/svg+xml,%3Csvg width='12' height='7' viewBox='0 0 12 7' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11.3535 1.35378L6.35354 6.35378C6.3071 6.40027 6.25196 6.43715 6.19126 6.46231C6.13056 6.48748 6.0655 6.50043 5.99979 6.50043C5.93408 6.50043 5.86902 6.48748 5.80832 6.46231C5.74762 6.43715 5.69248 6.40027 5.64604 6.35378L0.64604 1.35378C0.552219 1.25996 0.499512 1.13272 0.499512 1.00003C0.499512 0.867352 0.552219 0.740104 0.64604 0.646284C0.73986 0.552463 0.867108 0.499756 0.99979 0.499756C1.13247 0.499756 1.25972 0.552463 1.35354 0.646284L5.99979 5.29316L10.646 0.646284C10.6925 0.599829 10.7476 0.562978 10.8083 0.537837C10.869 0.512696 10.9341 0.499756 10.9998 0.499756C11.0655 0.499756 11.1305 0.512696 11.1912 0.537837C11.2519 0.562978 11.3071 0.599829 11.3535 0.646284C11.4 0.692739 11.4368 0.747889 11.462 0.808586C11.4871 0.869282 11.5001 0.934336 11.5001 1.00003C11.5001 1.06573 11.4871 1.13079 11.462 1.19148C11.4368 1.25218 11.4 1.30733 11.3535 1.35378Z' fill='%23666'/%3E%3C/svg%3E");
+		background-size: 11px 6px;
+		background-repeat: no-repeat;
+		background-position: right 8px center;
+		border: 0.5px solid $bb-border-color;
+		border-radius: 6px;
+		padding: 7px 28px 7px 8px;
+		font-size: 13px;
+		font-weight: 400;
+		line-height: 18px;
+		color: $bb-text-muted;
+		cursor: pointer;
+		min-width: 120px;
+
+		&--count {
+			width: 136px;
+		}
+
+		&--actions {
+			width: 224px;
+		}
+	}
+
+	&__apply-btn {
+		background: transparent;
+		border: 1px solid #f7ae99;
+		border-radius: 8px;
+		padding: 6px 16px;
+		font-size: 14px;
+		font-weight: 400;
+		line-height: 20px;
+		color: #f9bead;
+		cursor: pointer;
+		transition: all 0.2s ease;
+
+		&:hover:not(:disabled) {
+			background: #fef2ef;
+			border-color: $bb-primary-color;
+			color: $bb-primary-color;
+		}
+
+		&:disabled {
+			cursor: not-allowed;
+		}
+	}
+
+	&__action-right {
+		display: flex;
+		align-items: center;
+		gap: 13px;
+	}
+
+	&__search-wrap {
+		position: relative;
+		width: 224px;
+	}
+
+	&__search-input {
+		width: 100%;
+		background-color: $bb-background-color;
+		border: 0.5px solid $bb-border-color;
+		border-radius: 6px;
+		padding: 7px 32px 7px 8px;
+		font-size: 13px;
+		font-weight: 400;
+		line-height: 18px;
+		color: $bb-text-muted;
+
+		&::placeholder {
+			color: $bb-text-muted;
+		}
+	}
+
+	&__search-icon {
+		position: absolute;
+		right: 8px;
+		top: 50%;
+		transform: translateY(-50%);
+		color: $bb-text-muted;
+		font-size: 16px;
+		width: 20px;
+		height: 20px;
+	}
+
+	// Table Header
+	&__table-header {
+		padding: 0 24px;
+		border-bottom: 0.5px solid $bb-border-color;
+	}
+
+	&__table-header-wrap {
+		display: flex;
+		align-items: center;
+		gap: 32px;
+		padding: 8px 0;
+	}
+
+	// Table Body
+	&__table-body {
+		padding: 0 24px;
+	}
+
+	&__loading,
+	&__empty {
+		padding: 48px;
+		text-align: center;
+		color: $bb-text-muted;
+	}
+
+	// Table Row
+	&__row {
+		border-bottom: 0.5px solid #e5e5e5;
+
+		&:last-child {
+			border-bottom: none;
+		}
+	}
+
+	&__row-wrap {
+		display: flex;
+		align-items: center;
+		gap: 32px;
+		padding: 16px 0;
+		position: relative;
+	}
+
+	// Table Columns
+	&__col {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+
+		&--author {
+			width: 264px;
+			min-width: 264px;
+
+			.components-checkbox-control {
+				margin-bottom: 0;
+			}
+
+			.components-checkbox-control__input-container {
+				margin-right: 0;
+			}
+		}
+
+		&--activity {
+			flex: 1;
+			min-width: 520px;
+			flex-direction: column;
+			align-items: flex-start;
+			gap: 4px;
+		}
+
+		&--submitted {
+			width: 136px;
+			min-width: 136px;
+			color: $bb-text-muted;
+			font-size: 13px;
+
+			.dashicons {
+				font-size: 16px;
+				width: 16px;
+				height: 16px;
+				margin-right: 4px;
+			}
+		}
+	}
+
+	// User cell
+	&__user {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+	}
+
+	&__avatar {
+		width: 40px;
+		height: 40px;
+		border-radius: 50%;
+		object-fit: cover;
+	}
+
+	&__username {
+		font-size: 14px;
+		font-weight: 400;
+		line-height: 20px;
+		color: #2c6bff;
+		text-decoration: none;
+
+		&:hover {
+			text-decoration: underline;
+		}
+	}
+
+	// Activity cell
+	&__action-text {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 4px;
+		font-size: 13px;
+		line-height: 18px;
+	}
+
+	&__action-user {
+		font-weight: 500;
+		color: $bb-text-secondary;
+	}
+
+	&__action-desc {
+		font-weight: 400;
+		color: $bb-text-muted;
+	}
+
+	&__activity-link {
+		font-size: 13px;
+		line-height: 18px;
+
+		a {
+			color: #2c6bff;
+			text-decoration: none;
+
+			&:hover {
+				text-decoration: underline;
+			}
+		}
+	}
+
+	&__activity-content {
+		font-size: 13px;
+		line-height: 18px;
+		color: $bb-text-muted;
+		max-width: 520px;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+	}
+
+	// Actions menu
+	&__actions {
+		position: absolute;
+		right: 0;
+		top: 50%;
+		transform: translateY(-50%);
+	}
+
+	&__ellipsis-btn {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 32px;
+		height: 32px;
+		background: transparent;
+		border: none;
+		border-radius: 4px;
+		cursor: pointer;
+		color: $bb-text-secondary;
+
+		&:hover {
+			background: $bb-background-color;
+		}
+
+		.dashicons {
+			font-size: 24px;
+			width: 24px;
+			height: 24px;
+		}
+	}
+
+	&__menu {
+		position: absolute;
+		right: 0;
+		top: 100%;
+		background: #fff;
+		border: 1px solid $bb-border-color;
+		border-radius: 8px;
+		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+		z-index: 100;
+		min-width: 140px;
+		overflow: hidden;
+
+		button {
+			display: block;
+			width: 100%;
+			padding: 10px 16px;
+			border: none;
+			background: transparent;
+			font-size: 14px;
+			font-weight: 400;
+			text-align: left;
+			color: $bb-text-color;
+			cursor: pointer;
+
+			&:hover {
+				background: $bb-background-color;
+			}
+		}
+	}
+
+	// Pagination
+	&__pagination {
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		gap: 16px;
+		padding: 24px;
+	}
+
+	&__pagination-info {
+		font-size: 14px;
+		color: $bb-text-muted;
+	}
+
+	&__pagination-buttons {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+	}
+
+	&__pagination-btn {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 32px;
+		height: 32px;
+		background: transparent;
+		border: 1px solid $bb-border-color;
+		border-radius: 6px;
+		cursor: pointer;
+		color: $bb-text-secondary;
+
+		&:hover:not(:disabled) {
+			background: $bb-background-color;
+			border-color: $bb-text-muted;
+		}
+
+		&:disabled {
+			opacity: 0.5;
+			cursor: not-allowed;
+		}
+
+		.dashicons {
+			font-size: 16px;
+			width: 16px;
+			height: 16px;
+		}
 	}
 }
 

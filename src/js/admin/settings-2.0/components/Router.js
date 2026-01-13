@@ -76,8 +76,18 @@ export function Router({ currentRoute, onNavigate }) {
 			if (routeParts[1] === 'all') {
 				return (
 					<Suspense fallback={<LoadingSpinner />}>
-						<ActivityListScreen />
+						<ActivityListScreen onNavigate={onNavigate} />
 					</Suspense>
+				);
+			}
+			// Edit activity route
+			if (routeParts[1] && routeParts[2] === 'edit') {
+				const activityId = routeParts[1];
+				return (
+					<div className="bb-admin-activity-edit">
+						<h1>{__('Edit Activity', 'buddyboss')}</h1>
+						<p>{__('Activity edit screen - ID:', 'buddyboss')} {activityId}</p>
+					</div>
 				);
 			}
 			return <LoadingSpinner />;
