@@ -21207,6 +21207,10 @@ AJAX SEARCH
   text-decoration: none;
 }
 
+.bp-search-ac > li > .bb-search-item-anchor {
+  margin: 0;
+}
+
 .bp-search-ac > li:not(.bbls-view_all_type-type) .item p {
   margin-bottom: 0;
 }
