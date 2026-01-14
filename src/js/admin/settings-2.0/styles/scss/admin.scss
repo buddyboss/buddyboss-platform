@@ -101,21 +101,65 @@ $bb-border-radius-xs: 6px;
 
 	&__center {
 		flex: 1 1 auto;
-		max-width: 600px;
+		display: flex;
+		justify-content: center;
 		margin: 0 40px;
 		position: relative;
 	}
 
 	&__search {
 		position: relative;
+		width: 500px;
+		max-width: 100%;
+
+		&-wrapper {
+			position: relative;
+			width: 100%;
+		}
 
 		&-input {
 			width: 100%;
+			height: 32px;
+			background-color: #fff;
+			border: 1px solid #e5e5e5;
+			border-radius: 6px;
+			padding: 0 36px 0 8px;
+			font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, sans-serif;
+			font-size: 13px;
+			line-height: 32px;
+			color: #000;
+			outline: none;
+
+			&::placeholder {
+				color: #999;
+				font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, sans-serif;
+				font-size: 13px;
+			}
+
+			&:focus {
+				outline: none;
+				border-color: #d9d9d9;
+			}
+		}
+
+		&-icon {
+			position: absolute;
+			right: 8px;
+			top: 50%;
+			transform: translateY(-50%);
+			font-size: 20px;
+			color: #666;
+			width: 20px;
+			height: 20px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			pointer-events: none;
 		}
 
 		&-spinner {
 			position: absolute;
-			right: 10px;
+			right: 35px;
 			top: 50%;
 			transform: translateY(-50%);
 		}
@@ -185,19 +229,50 @@ $bb-border-radius-xs: 6px;
 	&__right {
 		display: flex;
 		align-items: center;
-		gap: 8px;
+		gap: 0;
 	}
 
 	&__icon-button {
 		background-color: transparent;
 		border: none;
-		color: #4d4d4d;
-		font-size: 24px;
+		color: #2f2f2f;
 		cursor: pointer;
 		position: relative;
 		display: flex;
 		align-items: center;
 		justify-content: center;
+		padding: 8px;
+		border-radius: 6px;
+		text-decoration: none;
+
+		i[class*="bb-icon-"] {
+			font-size: 24px;
+		}
+
+		&:hover {
+			background-color: rgba(0, 0, 0, 0.05);
+		}
+
+		&--notifications {
+			position: relative;
+		}
+	}
+
+	&__notification-badge {
+		position: absolute;
+		top: 5px;
+		right: 5px;
+		background-color: #ff0000;
+		color: white;
+		font-size: 9px;
+		line-height: 8px;
+		padding: 2px 4px;
+		border-radius: 16px;
+		min-width: 12px;
+		text-align: center;
+		font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, sans-serif;
+		font-weight: 400;
+		letter-spacing: -0.045px;
 		width: 36px;
 		height: 36px;
 

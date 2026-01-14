@@ -7,7 +7,6 @@
 
 import { useState, useEffect, useRef } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
-import { TextControl, Button } from '@wordpress/components';
 import apiFetch from '@wordpress/api-fetch';
 
 /**
@@ -100,12 +99,16 @@ export function Header({ onNavigate }) {
 				<div className="bb-admin-header__center">
 					{/* Global Settings Search */}
 					<div className="bb-admin-header__search" ref={searchRef}>
-						<TextControl
-							value={searchQuery}
-							onChange={setSearchQuery}
-							placeholder={__('Search for settings...', 'buddyboss')}
-							className="bb-admin-header__search-input"
-						/>
+						<div className="bb-admin-header__search-wrapper">
+							<input
+								type="text"
+								value={searchQuery}
+								onChange={(e) => setSearchQuery(e.target.value)}
+								placeholder={__('Search for settings...', 'buddyboss')}
+								className="bb-admin-header__search-input"
+							/>
+							<i className="bb-icon-search bb-admin-header__search-icon"></i>
+						</div>
 						{isSearching && (
 							<span className="bb-admin-header__search-spinner">
 								<span className="spinner is-active"></span>
@@ -121,7 +124,7 @@ export function Header({ onNavigate }) {
 									>
 										<div className="bb-admin-header__search-result-icon">
 											{result.feature_icon && (
-												<span className={`dashicons ${result.feature_icon.slug || 'dashicons-admin-generic'}`}></span>
+												<i className={result.feature_icon.slug || 'bb-icon-settings'}></i>
 											)}
 										</div>
 										<div className="bb-admin-header__search-result-content">
@@ -149,10 +152,11 @@ export function Header({ onNavigate }) {
 				<div className="bb-admin-header__right">
 					{/* Notifications Icon */}
 					<button
-						className="bb-admin-header__icon-button"
+						className="bb-admin-header__icon-button bb-admin-header__icon-button--notifications"
 						aria-label={__('Notifications', 'buddyboss')}
 					>
-						<span className="dashicons dashicons-bell"></span>
+						<i className="bb-icon-bell"></i>
+						<span className="bb-admin-header__notification-badge">2</span>
 					</button>
 
 					{/* Documentation/Help Icon */}
@@ -163,7 +167,7 @@ export function Header({ onNavigate }) {
 						className="bb-admin-header__icon-button"
 						aria-label={__('Documentation', 'buddyboss')}
 					>
-						<span className="dashicons dashicons-sos"></span>
+						<i className="bb-icon-book-open"></i>
 					</a>
 				</div>
 			</div>
