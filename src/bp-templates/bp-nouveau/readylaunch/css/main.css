@@ -9635,6 +9635,7 @@ input.bb-rl-zoom-slider::-moz-range-progress {
 .bb-rl-media-stream .media-list .load-more,
 .bb-rl-media-stream .video-list .load-more,
 .bb-rl-media-stream .document-list .load-more {
+  grid-column: 1 / -1;
   display: flex;
   align-items: center;
   justify-content: flex-start;
