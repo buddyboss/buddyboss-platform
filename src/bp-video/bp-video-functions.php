@@ -4274,6 +4274,9 @@ function bb_video_get_attachments_symlinks( $video_attachment_id, $video_id = 0 
 		);
 	}
 
+	// Include ffmpeg thumbnail generation status.
+	$attachment_urls['ffmpeg_generated'] = get_post_meta( $video_attachment_id, 'bb_ffmpeg_preview_generated', true );
+
 	return $attachment_urls;
 }
 

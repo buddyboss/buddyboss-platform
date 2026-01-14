@@ -1186,11 +1186,14 @@ window.bp = window.bp || {};
 						if ( default_images_html != '' ) {
 							$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-auto-generated ul.video-thumb-list' ).removeClass( 'loading' );
 							$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-auto-generated ul.video-thumb-list' ).html( default_images_html );
-							$( '.bp-video-thumbnail-uploader' ).removeClass( 'generating_thumb' );
-							if ( videoAttachments.default_images.length < 2 && BP_Nouveau.video.is_ffpmeg_installed ) {
+							$( '.bp-video-thumbnail-uploader' ).removeClass( 'generating_thumb ffmpeg_failed' );
+							// Only show spinners if ffmpeg hasn't already completed/failed generation.
+							if ( videoAttachments.default_images.length < 2 && BP_Nouveau.video.is_ffpmeg_installed && 'no' !== videoAttachments.ffmpeg_generated ) {
 								$( '.bp-video-thumbnail-uploader' ).addClass( 'generating_thumb' );
 								$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-auto-generated ul.video-thumb-list' ).append( '<li class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3 thumb_loader"><div class="video-thumb-block"><i class="bb-icon-spinner bb-icon-l animate-spin"></i><span>' + BP_Nouveau.video.generating_thumb + '</span></div></li>' );
 								$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-auto-generated ul.video-thumb-list' ).append( '<li class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3 thumb_loader"><div class="video-thumb-block"><i class="bb-icon-spinner bb-icon-l animate-spin"></i><span>' + BP_Nouveau.video.generating_thumb + '</span></div></li>' );
+							} else if ( 'no' === videoAttachments.ffmpeg_generated ) {
+								$( '.bp-video-thumbnail-uploader' ).addClass( 'ffmpeg_failed' );
 							}
 						}
 					} else {
@@ -1225,7 +1228,14 @@ window.bp = window.bp || {};
 					'video_id': videoId,
 				};
 
-				if ( BP_Nouveau.video.is_ffpmeg_installed && ( ( typeof videoAttachments.default_images === 'undefined' ) || videoAttachments.default_images.length < 2 ) ) {
+				// Only trigger AJAX polling if ffmpeg is installed, we have fewer than 2 thumbnails,
+				// AND ffmpeg hasn't already completed/failed generation.
+				var shouldPollForThumbnails = BP_Nouveau.video.is_ffpmeg_installed &&
+					( ( typeof videoAttachments.default_images === 'undefined' ) || videoAttachments.default_images.length < 2 ) &&
+					'no' !== videoAttachments.ffmpeg_generated &&
+					'yes' !== videoAttachments.ffmpeg_generated;
+
+				if ( shouldPollForThumbnails ) {
 					if ( this.thumbnail_xhr ) {
 						this.thumbnail_xhr.abort();
 					}
@@ -1270,17 +1280,25 @@ window.bp = window.bp || {};
 								ulSelector.html( response.data.default_images );
 							}
 
+							// When ffmpeg_generated is 'no', stop polling and clean up UI.
+							// Do NOT clear the list - we want to keep any existing thumbnails from default_images.
 							if ( response.data.ffmpeg_generated && 'no' === response.data.ffmpeg_generated ) {
-								ulSelector.html( '' );
-							}
-
-							if ( $( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-auto-generated ul.video-thumb-list li' ).length < 2 ) {
+								// Stop the polling interval - no more thumbnails will be generated.
+								clearTimeout( bp.Nouveau.Video.thumbnail_interval );
+								// Remove any loading spinners since generation is complete/failed.
+								ulSelector.find( 'li.thumb_loader' ).remove();
+								// Update UI state - remove generating class.
+								$( '.bp-video-thumbnail-uploader' ).removeClass( 'generating_thumb' );
+								// If we have no thumbnails at all, mark as no_generated_thumb.
+								if ( ulSelector.find( 'li' ).length === 0 ) {
+									$( '.bp-video-thumbnail-uploader' ).addClass( 'no_generated_thumb' );
+								}
+							} else if ( $( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-auto-generated ul.video-thumb-list li' ).length < 2 ) {
 								$( '.bp-video-thumbnail-uploader' ).addClass( 'generating_thumb' ).removeClass( 'no_generated_thumb' );
 								if ( $( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-auto-generated ul.video-thumb-list li.thumb_loader' ).length === 0 ) {
 									$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-auto-generated ul.video-thumb-list' ).append( '<li class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3 thumb_loader"><div class="video-thumb-block"><i class="bb-icon-l bb-icon-spinner animate-spin"></i><span>' + BP_Nouveau.video.generating_thumb + '</span></div></li>' );
 									$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-auto-generated ul.video-thumb-list' ).append( '<li class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3 thumb_loader"><div class="video-thumb-block"><i class="bb-icon-l bb-icon-spinner animate-spin"></i><span>' + BP_Nouveau.video.generating_thumb + '</span></div></li>' );
 								}
-
 							} else if ( $( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-auto-generated ul.video-thumb-list li.thumb_loader' ).length === 0 ) {
 								$( '.bp-video-thumbnail-uploader' ).removeClass( 'generating_thumb no_generated_thumb' );
 							}

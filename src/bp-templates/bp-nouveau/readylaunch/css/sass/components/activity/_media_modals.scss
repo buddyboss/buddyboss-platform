@@ -590,7 +590,8 @@
 		z-index: 999991;
 	}
 
-	&.no_ffmpeg {
+	&.no_ffmpeg,
+	&.ffmpeg_failed {
 
 		.bb-rl-video-thumbnail-content {
 

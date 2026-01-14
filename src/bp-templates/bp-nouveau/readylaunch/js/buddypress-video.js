@@ -1137,11 +1137,14 @@ window.bp = window.bp || {};
 						if ( default_images_html !== '' ) {
 							$( uploaderSelector + ' .bb-rl-video-thumbnail-auto-generated ul.bb-rl-video-thumb-list' ).removeClass( 'loading' );
 							$( uploaderSelector + ' .bb-rl-video-thumbnail-auto-generated ul.bb-rl-video-thumb-list' ).html( default_images_html );
-							$videoThumbnailUploadeEle.removeClass( 'generating_thumb' );
-							if ( videoAttachments.default_images.length < 2 && bbRlVideo.is_ffpmeg_installed ) {
+							$videoThumbnailUploadeEle.removeClass( 'generating_thumb ffmpeg_failed' );
+							// Only show spinners if ffmpeg hasn't already completed/failed generation.
+							if ( videoAttachments.default_images.length < 2 && bbRlVideo.is_ffpmeg_installed && 'no' !== videoAttachments.ffmpeg_generated ) {
 								$videoThumbnailUploadeEle.addClass( 'generating_thumb' );
 								$( uploaderSelector + ' .bb-rl-video-thumbnail-auto-generated ul.bb-rl-video-thumb-list' ).append( '<li class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3 bb_rl_thumb_loader"><div class="bb-rl-video-thumb-block"><i class="bb-icon-spinner bb-icon-l animate-spin"></i><span>' + bbRlVideo.generating_thumb + '</span></div></li>' );
 								$( uploaderSelector + ' .bb-rl-video-thumbnail-auto-generated ul.bb-rl-video-thumb-list' ).append( '<li class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3 bb_rl_thumb_loader"><div class="bb-rl-video-thumb-block"><i class="bb-icon-spinner bb-icon-l animate-spin"></i><span>' + bbRlVideo.generating_thumb + '</span></div></li>' );
+							} else if ( 'no' === videoAttachments.ffmpeg_generated ) {
+								$videoThumbnailUploadeEle.addClass( 'ffmpeg_failed' );
 							}
 						}
 					} else {
@@ -1177,11 +1180,14 @@ window.bp = window.bp || {};
 					'video_id'      : videoId,
 				};
 
-				if ( bbRlVideo.is_ffpmeg_installed && (
-					(
-						typeof videoAttachments.default_images === 'undefined'
-					) || videoAttachments.default_images.length < 2
-				) ) {
+				// Only trigger AJAX polling if ffmpeg is installed, we have fewer than 2 thumbnails,
+				// AND ffmpeg hasn't already completed/failed generation.
+				var shouldPollForThumbnails = bbRlVideo.is_ffpmeg_installed &&
+					( ( typeof videoAttachments.default_images === 'undefined' ) || videoAttachments.default_images.length < 2 ) &&
+					'no' !== videoAttachments.ffmpeg_generated &&
+					'yes' !== videoAttachments.ffmpeg_generated;
+
+				if ( shouldPollForThumbnails ) {
 					if ( this.thumbnail_xhr ) {
 						this.thumbnail_xhr.abort();
 					}
@@ -1224,20 +1230,31 @@ window.bp = window.bp || {};
 								ulSelector.html( response.data.default_images );
 							}
 
+							// When ffmpeg_generated is 'no', stop polling and clean up UI.
+							// Do NOT clear the list - we want to keep any existing thumbnails from default_images.
 							if ( response.data.ffmpeg_generated && 'no' === response.data.ffmpeg_generated ) {
-								ulSelector.html( '' );
-							}
-
-							var $thumbItems  = ulSelector.find( 'li' );
-							var $loaderItems = ulSelector.find( 'li.bb_rl_thumb_loader' );
-							if ( $thumbItems.find( 'li' ).length < 2 ) {
-								$thumbnailUploader.addClass( 'generating_thumb' ).removeClass( 'no_generated_thumb' );
-								if ( $loaderItems.length === 0 ) {
-									ulSelector.append( '<li class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3 bb_rl_thumb_loader"><div class="bb-rl-video-thumb-block"><i class="bb-icon-l bb-icon-spinner animate-spin"></i><span>' + bbRlVideo.generating_thumb + '</span></div></li>' );
-									ulSelector.append( '<li class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3 bb_rl_thumb_loader"><div class="bb-rl-video-thumb-block"><i class="bb-icon-l bb-icon-spinner animate-spin"></i><span>' + bbRlVideo.generating_thumb + '</span></div></li>' );
+								// Stop the polling interval - no more thumbnails will be generated.
+								clearTimeout( bp.Nouveau.Video.thumbnail_interval );
+								// Remove any loading spinners since generation is complete/failed.
+								ulSelector.find( 'li.bb_rl_thumb_loader' ).remove();
+								// Update UI state - remove generating class.
+								$thumbnailUploader.removeClass( 'generating_thumb' );
+								// If we have no thumbnails at all, mark as no_generated_thumb.
+								if ( ulSelector.find( 'li' ).length === 0 ) {
+									$thumbnailUploader.addClass( 'no_generated_thumb' );
 								}
-							} else if ( $loaderItems.length === 0 ) {
-								$thumbnailUploader.removeClass( 'generating_thumb no_generated_thumb' );
+							} else {
+								var $thumbItems  = ulSelector.find( 'li' );
+								var $loaderItems = ulSelector.find( 'li.bb_rl_thumb_loader' );
+								if ( $thumbItems.length < 2 ) {
+									$thumbnailUploader.addClass( 'generating_thumb' ).removeClass( 'no_generated_thumb' );
+									if ( $loaderItems.length === 0 ) {
+										ulSelector.append( '<li class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3 bb_rl_thumb_loader"><div class="bb-rl-video-thumb-block"><i class="bb-icon-l bb-icon-spinner animate-spin"></i><span>' + bbRlVideo.generating_thumb + '</span></div></li>' );
+										ulSelector.append( '<li class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3 bb_rl_thumb_loader"><div class="bb-rl-video-thumb-block"><i class="bb-icon-l bb-icon-spinner animate-spin"></i><span>' + bbRlVideo.generating_thumb + '</span></div></li>' );
+									}
+								} else if ( $loaderItems.length === 0 ) {
+									$thumbnailUploader.removeClass( 'generating_thumb no_generated_thumb' );
+								}
 							}
 						} else {
 							// If found any error from the response then stop ajax request.
