@@ -513,7 +513,7 @@ $bb-border-radius-xs: 6px;
 		color: $bb-text-color;
 		font-weight: 400;
 		cursor: pointer;
-		transition: background 0.2s ease;
+		transition: background 0.2s ease, opacity 0.2s ease;
 		text-decoration: none;
 		box-shadow: none;
 
@@ -533,6 +533,22 @@ $bb-border-radius-xs: 6px;
 
 		&:focus {
 			box-shadow: 0 0 0 1px #2271b1;
+		}
+
+		&--disabled,
+		&:disabled {
+			opacity: 0.5;
+			cursor: not-allowed;
+			pointer-events: none;
+			background: $bb-sidebar-bg;
+
+			.dashicons {
+				color: $bb-text-muted;
+			}
+
+			&:hover {
+				background: $bb-sidebar-bg;
+			}
 		}
 	}
 

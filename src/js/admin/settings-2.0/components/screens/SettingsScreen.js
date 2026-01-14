@@ -298,8 +298,9 @@ export function SettingsScreen({ onNavigate }) {
 											<div className="bb-admin-settings__feature-left">
 												<Button
 													variant="secondary"
-													className="bb-admin-settings__feature-settings-btn"
+													className={`bb-admin-settings__feature-settings-btn ${feature.status !== 'active' ? 'bb-admin-settings__feature-settings-btn--disabled' : ''}`}
 													onClick={() => onNavigate(feature.settings_route)}
+													disabled={feature.status !== 'active'}
 												>
 													<span className="dashicons dashicons-admin-settings"></span>
 													{__('Settings', 'buddyboss')}
