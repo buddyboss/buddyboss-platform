@@ -9691,6 +9691,12 @@ input.bb-rl-zoom-slider::-moz-range-progress {
   font-size: 16px;
 }
 
+.bb-rl-media-stream .media-list .pager,
+.bb-rl-media-stream .video-list .pager,
+.bb-rl-media-stream .document-list .pager {
+  grid-column: 1 / -1;
+}
+
 .bb-rl-media-stream .bb-item-thumb {
   position: relative;
   z-index: 1;
