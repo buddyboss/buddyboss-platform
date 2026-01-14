@@ -203,7 +203,7 @@ export function SettingsForm({ fields, values, onChange }) {
 				);
 
 			case 'image_radio':
-				// Visual radio cards (like Default Group Cover Image)
+				// Visual radio cards (like Default Group Cover Image or Avatar)
 				return (
 					<div className="bb-admin-settings-field__image-radio">
 						{(field.options || []).map((option) => (
@@ -215,6 +215,7 @@ export function SettingsForm({ fields, values, onChange }) {
 								disabled={disabled}
 							>
 								<div className="bb-admin-settings-field__image-radio-preview">
+									{/* Cover Image Icons */}
 									{option.image === 'cover-buddyboss' && (
 										<div className="bb-admin-settings-field__image-radio-icon bb-admin-settings-field__image-radio-icon--buddyboss">
 											<span className="dashicons dashicons-format-image"></span>
@@ -226,6 +227,22 @@ export function SettingsForm({ fields, values, onChange }) {
 										</div>
 									)}
 									{option.image === 'cover-custom' && (
+										<div className="bb-admin-settings-field__image-radio-icon bb-admin-settings-field__image-radio-icon--custom">
+											<span className="dashicons dashicons-admin-generic"></span>
+										</div>
+									)}
+									{/* Avatar Icons */}
+									{option.image === 'avatar-buddyboss' && (
+										<div className="bb-admin-settings-field__image-radio-icon bb-admin-settings-field__image-radio-icon--avatar-group">
+											<span className="dashicons dashicons-groups"></span>
+										</div>
+									)}
+									{option.image === 'avatar-name' && (
+										<div className="bb-admin-settings-field__image-radio-icon bb-admin-settings-field__image-radio-icon--avatar-name">
+											<span className="bb-admin-settings-field__avatar-initials">BB</span>
+										</div>
+									)}
+									{option.image === 'avatar-custom' && (
 										<div className="bb-admin-settings-field__image-radio-icon bb-admin-settings-field__image-radio-icon--custom">
 											<span className="dashicons dashicons-admin-generic"></span>
 										</div>

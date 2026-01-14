@@ -1200,6 +1200,29 @@ $bb-border-radius-xs: 6px;
 	&--custom .dashicons {
 		color: $bb-primary-color;
 	}
+
+	// Avatar-specific icons
+	&--avatar-group .dashicons {
+		color: #999;
+	}
+
+	&--avatar-name {
+		.bb-admin-settings-field__avatar-initials {
+			font-family: 'Inter', sans-serif;
+			font-size: 36px;
+			font-weight: 600;
+			letter-spacing: 1.44px;
+			color: #999;
+		}
+	}
+}
+
+.bb-admin-settings-field__avatar-initials {
+	font-family: 'Inter', sans-serif;
+	font-size: 36px;
+	font-weight: 600;
+	letter-spacing: 1.44px;
+	color: #999;
 }
 
 .bb-admin-settings-field__image-radio-label {

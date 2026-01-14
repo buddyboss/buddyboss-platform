@@ -269,7 +269,8 @@ function bb_admin_settings_2_0_register_groups_feature() {
 		)
 	);
 
-	// Field: Group Avatars
+	// Field: Group Avatars toggle
+	// Note: Option name is "disable" but UI shows "enable", so we invert the value
 	bb_register_feature_field(
 		'groups',
 		'group_images',
@@ -277,15 +278,17 @@ function bb_admin_settings_2_0_register_groups_feature() {
 		array(
 			'name'              => 'bp-disable-group-avatar-uploads',
 			'label'             => __( 'Group Avatars', 'buddyboss' ),
+			'toggle_label'      => __( 'Enable avatars for groups', 'buddyboss' ),
 			'type'              => 'toggle',
-			'description'       => __( 'Allow group organizers to upload custom avatars.', 'buddyboss' ),
-			'default'           => bp_get_option( 'bp-disable-group-avatar-uploads', 0 ),
-			'sanitize_callback' => 'intval',
+			'description'       => __( 'When enabled, group organizers will be able to upload avatars in the group\'s settings.', 'buddyboss' ),
+			'default'           => bp_get_option( 'bp-disable-group-avatar-uploads', false ),
+			'sanitize_callback' => 'wp_validate_boolean',
+			'invert_value'      => true, // Toggle ON = save false (not disabled), Toggle OFF = save true (disabled)
 			'order'             => 10,
 		)
 	);
 
-	// Field: Default Group Avatar
+	// Field: Default Group Avatar (visual radio cards)
 	bb_register_feature_field(
 		'groups',
 		'group_images',
@@ -293,21 +296,24 @@ function bb_admin_settings_2_0_register_groups_feature() {
 		array(
 			'name'              => 'bp-default-group-avatar-type',
 			'label'             => __( 'Default Group Avatar', 'buddyboss' ),
-			'type'              => 'select',
-			'description'       => __( 'Select the default avatar style for groups.', 'buddyboss' ),
+			'type'              => 'image_radio',
+			'description'       => '',
 			'default'           => bp_get_option( 'bp-default-group-avatar-type', 'buddyboss' ),
 			'options'           => array(
 				array(
 					'label' => __( 'BuddyBoss', 'buddyboss' ),
 					'value' => 'buddyboss',
-				),
-				array(
-					'label' => __( 'Custom', 'buddyboss' ),
-					'value' => 'custom',
+					'image' => 'avatar-buddyboss',
 				),
 				array(
 					'label' => __( 'Group Name', 'buddyboss' ),
 					'value' => 'group-name',
+					'image' => 'avatar-name',
+				),
+				array(
+					'label' => __( 'Custom', 'buddyboss' ),
+					'value' => 'custom',
+					'image' => 'avatar-custom',
 				),
 			),
 			'sanitize_callback' => 'sanitize_text_field',
