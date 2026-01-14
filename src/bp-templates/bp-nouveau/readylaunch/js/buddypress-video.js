@@ -46,10 +46,11 @@ window.bp = window.bp || {};
 		 * @return {[type]} [description]
 		 */
 		setupGlobals: function () {
-			var bodySelector              = $( 'body' );
-			this.thumbnail_xhr            = null;
-			this.thumbnail_interval       = null;
-			this.thumbnail_max_interval   = 6;
+			var bodySelector                = $( 'body' );
+			this.thumbnail_xhr              = null;
+			this.thumbnail_interval         = null;
+			this.thumbnail_max_interval     = 6;
+			this.thumbnail_cleanup_complete = false;
 			this.current_page             = 1;
 			this.video_dropzone_obj       = null;
 			this.video_thumb_dropzone_obj = [];
@@ -910,6 +911,9 @@ window.bp = window.bp || {};
 			var uploader = popupSelector.find( '.bb-rl-video-thumbnail-uploader' );
 			uploader.addClass( 'opened-edit-thumbnail' ).show().removeClass( 'no_generated_thumb' );
 
+			// Reset cleanup flag for new modal session.
+			this.thumbnail_cleanup_complete = false;
+
 			$document.on(
 				'click',
 				'.bb-rl-video-thumbnail-uploader.opened-edit-thumbnail .bb-rl-video-thumbnail-auto-generated .bb-action-check-wrap',
@@ -1232,7 +1236,9 @@ window.bp = window.bp || {};
 
 							// When ffmpeg_generated is 'no', stop polling and clean up UI.
 							// Do NOT clear the list - we want to keep any existing thumbnails from default_images.
-							if ( response.data.ffmpeg_generated && 'no' === response.data.ffmpeg_generated ) {
+							// Use flag to prevent multiple cleanup executions from overlapping AJAX requests.
+							if ( response.data.ffmpeg_generated && 'no' === response.data.ffmpeg_generated && ! bp.Nouveau.Video.thumbnail_cleanup_complete ) {
+								bp.Nouveau.Video.thumbnail_cleanup_complete = true;
 								// Stop the polling interval - no more thumbnails will be generated.
 								clearTimeout( bp.Nouveau.Video.thumbnail_interval );
 								// Remove any loading spinners since generation is complete/failed.
