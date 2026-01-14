@@ -187,6 +187,31 @@ window.bp = window.bp || {};
 		},
 
 		/**
+		 * Refresh directory filter for select2 dropdowns.
+		 *
+		 * @param {string} componentType The component type (document, media, video).
+		 * @param {string} scope         The scope (personal, all, groups, etc.).
+		 */
+		refreshDirectoryFilter: function( componentType, scope ) {
+			var selectElement, targetOption, optionValue;
+
+			// Find the select element.
+			selectElement = $( document ).find( '#bb-rl-' + componentType + '-scope-options' );
+			if ( ! selectElement.length ) {
+				return;
+			}
+
+			// Find the option with matching data-bp-scope attribute.
+			targetOption = selectElement.find( 'option[data-bp-scope="' + scope + '"]' );
+			if ( targetOption.length ) {
+				// Get the option's value (which is its text content since no value attribute is set).
+				optionValue = targetOption.text().trim();
+				// Set the select value and trigger change.
+				selectElement.val( optionValue ).trigger( 'change' );
+			}
+		},
+
+		/**
 		 * [addListeners description]
 		 */
 		addListeners: function () {
@@ -3684,7 +3709,7 @@ window.bp = window.bp || {};
 
 							$this.parents( 'li' ).each(
 								function ( n, li ) {
-									var $a = $( li ).children( 'span' ).clone();
+									var $a = $( li ).children( 'span' ).clone().show();
 									$bc.prepend( '', $a );
 								}
 							);
@@ -3837,14 +3862,14 @@ window.bp = window.bp || {};
 
 							$this.parents( 'li' ).each(
 								function ( n, li ) {
-									var $a = $( li ).children( 'span' ).clone();
+									var $a = $( li ).children( 'span' ).clone().show();
 									$bc.prepend( '', $a );
 								}
 							);
 							$( targetPopup ).find( '.bb-rl-breadcrumbs-append-ul-li .breadcrumb' ).html( $bc.prepend( '<span data-id="0">' + bbRlMedia.target_text + '</span>' ) );
 
 							if ( $( targetPopup ).find( '.bb-rl-breadcrumbs-append-ul-li .breadcrumb .item > span[data-id="' + currentLiID + '"]' ).length === 0 ) {
-								$( targetPopup ).find( '.bb-rl-breadcrumbs-append-ul-li .breadcrumb .item' ).append( $( targetPopup ).find( '.location-folder-list li[data-id="' + currentLiID + '"]' ).children( 'span' ).clone() );
+								$( targetPopup ).find( '.bb-rl-breadcrumbs-append-ul-li .breadcrumb .item' ).append( $( targetPopup ).find( '.location-folder-list li[data-id="' + currentLiID + '"]' ).children( 'span' ).clone().show() );
 							}
 
 							if ( ! $( targetPopup ).find( '.bb-rl-breadcrumbs-append-ul-li .breadcrumb .item span.hidden' ).length ) {
@@ -3955,7 +3980,7 @@ window.bp = window.bp || {};
 
 				$this.parents( 'li' ).each(
 					function ( n, li ) {
-						var $a = $( li ).children( 'span' ).clone();
+						var $a = $( li ).children( 'span' ).clone().show();
 						$bc.prepend( '', $a );
 					}
 				);
@@ -5648,8 +5673,13 @@ window.bp = window.bp || {};
 								} else {
 									selector = 'li#' + updateActionType + '-all';
 								}
-								$( document ).find( selector ).trigger( 'click' );
-								$( document ).find( selector ).trigger( 'click' );
+
+								if ( $( document ).find( selector ).length > 0 ) {
+									$( document ).find( selector ).trigger( 'click' );
+								} else {
+									// Refresh the directory filter with select2 options.
+									bp.Nouveau.Media.refreshDirectoryFilter( updateActionType, scope );
+								}
 							} else {
 								if ( 'document_folder' !== actionType ) {
 									var currentFolderAlbum, responseContent, currentType, bbrlAlbumId;
@@ -5710,6 +5740,10 @@ window.bp = window.bp || {};
 							
 							if ( 'document' === actionType || 'document_folder' === actionType ) {
 								target.closest( '.bb-activity-media-wrap' ).find( '.bb-rl-activity-media-elem.bb-rl-document-activity' ).attr( 'data-parent-id', destinationId );
+								var $mediaFolderItem = target.closest( '#media-folder-document-data-table' ).find( '.media-folder_items[data-id="' + itemId + '"]' );
+								if ( $mediaFolderItem.length > 0 ) {
+									$mediaFolderItem.attr( 'data-parent-id', destinationId );
+								}
 							}
 
 						} else {
@@ -5881,7 +5915,7 @@ window.bp = window.bp || {};
 
 									targetPopup.find( '.bb-rl-location-' + folderOrAlbum + '-list-wrap ' + listClass ).remove();
 									targetPopup.find( '.bb-rl-location-' + folderOrAlbum + '-list-wrap' ).append( response.data.tree_view );
-									var targetPopupID = 'document' === actionType ? $( targetPopup ).attr( 'id' ) + '.open-popup' : targetPopup,
+									var targetPopupID = 'document' === actionType ? '#' + $( targetPopup ).attr( 'id' ) + '.open-popup' : targetPopup,
 									responseDataID    = 'document' === actionType ? response.data.folder_id : response.data.album_id;
 									if ( bp.Nouveau.Media.folderLocationUI ) {
 										bp.Nouveau.Media.folderLocationUI( targetPopupID, responseDataID );
