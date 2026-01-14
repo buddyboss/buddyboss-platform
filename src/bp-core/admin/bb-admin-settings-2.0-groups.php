@@ -49,6 +49,21 @@ function bb_sanitize_array( $input ) {
 }
 
 /**
+ * Sanitize dimensions input (width/height).
+ *
+ * @since BuddyBoss 3.0.0
+ *
+ * @param mixed $input Input to sanitize.
+ * @return array Sanitized dimensions.
+ */
+function bb_sanitize_dimensions( $input ) {
+	if ( ! is_array( $input ) ) {
+		return array();
+	}
+	return array_map( 'intval', $input );
+}
+
+/**
  * Register Groups feature in Feature Registry.
  *
  * @since BuddyBoss 3.0.0
@@ -65,7 +80,7 @@ function bb_admin_settings_2_0_register_groups_feature() {
 			'icon'               => 'dashicons-groups',
 			'category'           => 'community',
 			'license_tier'       => 'free',
-			'is_active_callback' => function() {
+			'is_active_callback' => function () {
 				return bp_is_active( 'groups' );
 			},
 			'settings_route'     => '/settings/groups',
@@ -242,13 +257,13 @@ function bb_admin_settings_2_0_register_groups_feature() {
 		)
 	);
 
-	// Section: Group Images
+	// Section: Group Avatar
 	bb_register_feature_section(
 		'groups',
 		'group_images',
-		'main',
+		'group_avatar',
 		array(
-			'title'       => __( 'Group Images', 'buddyboss' ),
+			'title'       => __( 'Group Avatar', 'buddyboss' ),
 			'description' => '',
 			'order'       => 10,
 		)
@@ -258,7 +273,7 @@ function bb_admin_settings_2_0_register_groups_feature() {
 	bb_register_feature_field(
 		'groups',
 		'group_images',
-		'main',
+		'group_avatar',
 		array(
 			'name'              => 'bp-disable-group-avatar-uploads',
 			'label'             => __( 'Group Avatars', 'buddyboss' ),
@@ -274,7 +289,7 @@ function bb_admin_settings_2_0_register_groups_feature() {
 	bb_register_feature_field(
 		'groups',
 		'group_images',
-		'main',
+		'group_avatar',
 		array(
 			'name'              => 'bp-default-group-avatar-type',
 			'label'             => __( 'Default Group Avatar', 'buddyboss' ),
@@ -282,51 +297,138 @@ function bb_admin_settings_2_0_register_groups_feature() {
 			'description'       => __( 'Select the default avatar style for groups.', 'buddyboss' ),
 			'default'           => bp_get_option( 'bp-default-group-avatar-type', 'buddyboss' ),
 			'options'           => array(
-				array( 'label' => __( 'BuddyBoss', 'buddyboss' ), 'value' => 'buddyboss' ),
-				array( 'label' => __( 'Custom', 'buddyboss' ), 'value' => 'custom' ),
-				array( 'label' => __( 'Group Name', 'buddyboss' ), 'value' => 'group-name' ),
+				array(
+					'label' => __( 'BuddyBoss', 'buddyboss' ),
+					'value' => 'buddyboss',
+				),
+				array(
+					'label' => __( 'Custom', 'buddyboss' ),
+					'value' => 'custom',
+				),
+				array(
+					'label' => __( 'Group Name', 'buddyboss' ),
+					'value' => 'group-name',
+				),
 			),
 			'sanitize_callback' => 'sanitize_text_field',
 			'order'             => 20,
 		)
 	);
 
-	// Field: Group Cover Images (conditional)
-	if ( bp_is_active( 'groups', 'cover_image' ) ) {
-		bb_register_feature_field(
-			'groups',
-			'group_images',
-			'main',
-			array(
-				'name'              => 'bp-disable-group-cover-image-uploads',
-				'label'             => __( 'Group Cover Images', 'buddyboss' ),
-				'type'              => 'toggle',
-				'description'       => __( 'Allow group organizers to upload cover images.', 'buddyboss' ),
-				'default'           => bp_get_option( 'bp-disable-group-cover-image-uploads', 0 ),
-				'sanitize_callback' => 'intval',
-				'order'             => 30,
-			)
-		);
+	// -------------------------------------------------------------------------
+	// Section: Group Cover Image
+	// -------------------------------------------------------------------------
+	bb_register_feature_section(
+		'groups',
+		'group_images',
+		'group_cover_image',
+		array(
+			'title'       => __( 'Group Cover Image', 'buddyboss' ),
+			'description' => '',
+			'order'       => 20,
+		)
+	);
 
-		bb_register_feature_field(
-			'groups',
-			'group_images',
-			'main',
-			array(
-				'name'              => 'bp-default-group-cover-type',
-				'label'             => __( 'Default Group Cover Image', 'buddyboss' ),
-				'type'              => 'select',
-				'description'       => __( 'Select the default cover image style for groups.', 'buddyboss' ),
-				'default'           => bp_get_option( 'bp-default-group-cover-type', 'buddyboss' ),
-				'options'           => array(
-					array( 'label' => __( 'BuddyBoss', 'buddyboss' ), 'value' => 'buddyboss' ),
-					array( 'label' => __( 'Custom', 'buddyboss' ), 'value' => 'custom' ),
+	// Field: Group Cover Image toggle
+	// Note: Option name is "disable" but UI shows "enable", so we invert the value
+	bb_register_feature_field(
+		'groups',
+		'group_images',
+		'group_cover_image',
+		array(
+			'name'              => 'bp-disable-group-cover-image-uploads',
+			'label'             => __( 'Group Cover Image', 'buddyboss' ),
+			'toggle_label'      => __( 'Enable cover images for groups', 'buddyboss' ),
+			'type'              => 'toggle',
+			'description'       => __( 'When enabled, group organizers will be able to upload cover images in the group\'s settings.', 'buddyboss' ),
+			'default'           => bp_get_option( 'bp-disable-group-cover-image-uploads', false ),
+			'sanitize_callback' => 'wp_validate_boolean',
+			'invert_value'      => true, // Toggle ON = save false (not disabled), Toggle OFF = save true (disabled)
+			'order'             => 10,
+		)
+	);
+
+	// Field: Default Group Cover Image (visual radio cards)
+	bb_register_feature_field(
+		'groups',
+		'group_images',
+		'group_cover_image',
+		array(
+			'name'              => 'bp-default-group-cover-type',
+			'label'             => __( 'Default Group Cover Image', 'buddyboss' ),
+			'type'              => 'image_radio',
+			'description'       => '',
+			'default'           => bp_get_option( 'bp-default-group-cover-type', 'buddyboss' ),
+			'options'           => array(
+				array(
+					'label' => __( 'BuddyBoss', 'buddyboss' ),
+					'value' => 'buddyboss',
+					'image' => 'cover-buddyboss',
 				),
-				'sanitize_callback' => 'sanitize_text_field',
-				'order'             => 40,
-			)
-		);
-	}
+				array(
+					'label' => __( 'None', 'buddyboss' ),
+					'value' => 'none',
+					'image' => 'cover-none',
+				),
+				array(
+					'label' => __( 'Custom', 'buddyboss' ),
+					'value' => 'custom',
+					'image' => 'cover-custom',
+				),
+			),
+			'sanitize_callback' => 'sanitize_text_field',
+			'order'             => 20,
+		)
+	);
+
+	// Field: Cover Image Sizes (Width and Height stacked)
+	bb_register_feature_field(
+		'groups',
+		'group_images',
+		'group_cover_image',
+		array(
+			'name'              => 'bb-pro-cover-group-dimensions',
+			'label'             => __( 'Cover Image Sizes', 'buddyboss' ),
+			'type'              => 'child_render',
+			'description'       => __( 'Changing the size of your cover images will reposition those already uploaded by members.', 'buddyboss' ),
+			'fields'            => array(
+				array(
+					'name'    => 'bb-pro-cover-group-width',
+					'label'   => __( 'Width', 'buddyboss' ),
+					'type'    => 'select',
+					'default' => bp_get_option( 'bb-pro-cover-group-width', 'default' ),
+					'options' => array(
+						array(
+							'label' => __( 'Default', 'buddyboss' ),
+							'value' => 'default',
+						),
+						array(
+							'label' => __( 'Full Width', 'buddyboss' ),
+							'value' => 'full',
+						),
+					),
+				),
+				array(
+					'name'    => 'bb-pro-cover-group-height',
+					'label'   => __( 'Height', 'buddyboss' ),
+					'type'    => 'select',
+					'default' => bp_get_option( 'bb-pro-cover-group-height', 'small' ),
+					'options' => array(
+						array(
+							'label' => __( 'Small', 'buddyboss' ),
+							'value' => 'small',
+						),
+						array(
+							'label' => __( 'Large', 'buddyboss' ),
+							'value' => 'large',
+						),
+					),
+				),
+			),
+			'sanitize_callback' => 'sanitize_text_field',
+			'order'             => 30,
+		)
+	);
 
 	// =========================================================================
 	// SIDE PANEL: GROUP HEADERS

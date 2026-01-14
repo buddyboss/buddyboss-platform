@@ -30,27 +30,52 @@ export function SettingsForm({ fields, values, onChange }) {
 	 * Check if a field should be visible based on its conditional logic
 	 */
 	const isFieldVisible = (field) => {
-		// If no parent_field, always show
-		if (!field.parent_field) {
-			return true;
+		// If field has a "conditional" property, check it
+		if (field.conditional) {
+			const condValue = values[field.conditional.field];
+			// Only show if conditional field matches the expected value
+			return condValue === field.conditional.value || condValue == field.conditional.value;
 		}
 		
-		// Check parent field value
+		// For parent_field (nesting), always show the field but it may be disabled
+		// Fields with parent_field are rendered as children of their parent
+		return true;
+	};
+
+	/**
+	 * Check if a field should be disabled based on its parent toggle
+	 */
+	const isFieldDisabled = (field) => {
+		if (!field.parent_field) {
+			return false;
+		}
+		
 		const parentValue = values[field.parent_field];
+		
+		// Find parent field to check if it's inverted
+		const parentField = fields.find(f => f.name === field.parent_field);
+		const isParentInverted = parentField?.invert_value === true;
 		
 		// If parent_value is specified, check for exact match
 		if (field.parent_value !== undefined) {
-			return parentValue === field.parent_value || parentValue == field.parent_value;
+			return !(parentValue === field.parent_value || parentValue == field.parent_value);
 		}
 		
-		// Default: show if parent is truthy (for toggles)
-		return !!parentValue;
+		// For inverted parent: enabled when parent actual value is falsy (display is truthy)
+		// For normal parent: enabled when parent value is truthy
+		if (isParentInverted) {
+			// Parent is inverted: child is enabled when parent's actual value is falsy
+			return !!parentValue;
+		}
+		
+		// Default: disabled if parent is falsy (for toggles)
+		return !parentValue;
 	};
 
 	/**
 	 * Render the field input control
 	 */
-	const renderFieldControl = (field) => {
+	const renderFieldControl = (field, disabled = false) => {
 		const value = values[field.name] !== undefined ? values[field.name] : field.default;
 
 		switch (field.type) {
@@ -58,13 +83,21 @@ export function SettingsForm({ fields, values, onChange }) {
 			case 'checkbox':
 				// Figma: Toggle with toggle_label displayed next to the switch
 				const toggleLabel = field.toggle_label || field.inline_label || '';
+				// Handle inverted values (e.g., "disable" options shown as "enable" toggles)
+				const isInverted = field.invert_value === true;
+				const displayValue = isInverted ? !value : !!value;
 				return (
 					<div className="bb-admin-settings-form__toggle-wrapper">
 						<ToggleControl
 							key={field.name}
 							label={toggleLabel}
-							checked={!!value}
-							onChange={(checked) => onChange(field.name, checked ? 1 : 0)}
+							checked={displayValue}
+							onChange={(checked) => {
+								// If inverted, save the opposite of what's displayed
+								const saveValue = isInverted ? !checked : checked;
+								onChange(field.name, saveValue ? 1 : 0);
+							}}
+							disabled={disabled}
 							__nextHasNoMarginBottom
 						/>
 					</div>
@@ -105,6 +138,7 @@ export function SettingsForm({ fields, values, onChange }) {
 						value={value || ''}
 						onChange={(newValue) => onChange(field.name, newValue)}
 						type={field.type === 'email' ? 'email' : field.type === 'url' ? 'url' : 'text'}
+						disabled={disabled}
 						__nextHasNoMarginBottom
 					/>
 				);
@@ -128,6 +162,7 @@ export function SettingsForm({ fields, values, onChange }) {
 						value={value || ''}
 						options={field.options || []}
 						onChange={(newValue) => onChange(field.name, newValue)}
+						disabled={disabled}
 						__nextHasNoMarginBottom
 					/>
 				);
@@ -167,6 +202,133 @@ export function SettingsForm({ fields, values, onChange }) {
 					/>
 				);
 
+			case 'image_radio':
+				// Visual radio cards (like Default Group Cover Image)
+				return (
+					<div className="bb-admin-settings-field__image-radio">
+						{(field.options || []).map((option) => (
+							<button
+								key={option.value}
+								type="button"
+								className={`bb-admin-settings-field__image-radio-option ${value === option.value ? 'bb-admin-settings-field__image-radio-option--selected' : ''}`}
+								onClick={() => onChange(field.name, option.value)}
+								disabled={disabled}
+							>
+								<div className="bb-admin-settings-field__image-radio-preview">
+									{option.image === 'cover-buddyboss' && (
+										<div className="bb-admin-settings-field__image-radio-icon bb-admin-settings-field__image-radio-icon--buddyboss">
+											<span className="dashicons dashicons-format-image"></span>
+										</div>
+									)}
+									{option.image === 'cover-none' && (
+										<div className="bb-admin-settings-field__image-radio-icon bb-admin-settings-field__image-radio-icon--none">
+											<span className="dashicons dashicons-no-alt"></span>
+										</div>
+									)}
+									{option.image === 'cover-custom' && (
+										<div className="bb-admin-settings-field__image-radio-icon bb-admin-settings-field__image-radio-icon--custom">
+											<span className="dashicons dashicons-admin-generic"></span>
+										</div>
+									)}
+								</div>
+								<span className="bb-admin-settings-field__image-radio-label">{option.label}</span>
+							</button>
+						))}
+					</div>
+				);
+
+			case 'dimensions':
+				// Dimensions field (Width x Height in one row)
+				const subFields = field.fields || [];
+				return (
+					<div className="bb-admin-settings-field__dimensions">
+						{subFields.map((subField, index) => {
+							const subValue = values[subField.name] !== undefined ? values[subField.name] : subField.default;
+							return (
+								<div key={subField.name} className="bb-admin-settings-field__dimension-item">
+									<label className="bb-admin-settings-field__dimension-label">{subField.label}</label>
+									<div className="bb-admin-settings-field__dimension-input-wrap">
+										<input
+											type="number"
+											value={subValue || ''}
+											onChange={(e) => onChange(subField.name, e.target.value)}
+											min={subField.min}
+											max={subField.max}
+											className="bb-admin-settings-field__dimension-input"
+										/>
+										{subField.suffix && (
+											<span className="bb-admin-settings-field__dimension-suffix">{subField.suffix}</span>
+										)}
+									</div>
+									{index < subFields.length - 1 && (
+										<span className="bb-admin-settings-field__dimension-separator">×</span>
+									)}
+								</div>
+							);
+						})}
+					</div>
+				);
+
+			case 'child_render':
+				// Child render field - renders child fields inline (e.g., Width select + Height select)
+				const childFields = field.fields || [];
+				return (
+					<div className="bb-admin-settings-field__child-render">
+						{childFields.map((childField) => {
+							const childValue = values[childField.name] !== undefined ? values[childField.name] : childField.default;
+							
+							// Render based on child field type
+							const renderChildControl = () => {
+								switch (childField.type) {
+									case 'select':
+										return (
+											<SelectControl
+												value={childValue || ''}
+												options={childField.options || []}
+												onChange={(newValue) => onChange(childField.name, newValue)}
+												__nextHasNoMarginBottom
+											/>
+										);
+									case 'number':
+										return (
+											<div className="bb-admin-settings-field__child-number-wrap">
+												<input
+													type="number"
+													value={childValue || ''}
+													onChange={(e) => onChange(childField.name, e.target.value)}
+													min={childField.min}
+													max={childField.max}
+													className="bb-admin-settings-field__child-number-input"
+												/>
+												{childField.suffix && (
+													<span className="bb-admin-settings-field__child-suffix">{childField.suffix}</span>
+												)}
+											</div>
+										);
+									case 'text':
+									default:
+										return (
+											<TextControl
+												value={childValue || ''}
+												onChange={(newValue) => onChange(childField.name, newValue)}
+												__nextHasNoMarginBottom
+											/>
+										);
+								}
+							};
+
+							return (
+								<div key={childField.name} className="bb-admin-settings-field__child-item">
+									<label className="bb-admin-settings-field__child-label">{childField.label}</label>
+									<div className="bb-admin-settings-field__child-control">
+										{renderChildControl()}
+									</div>
+								</div>
+							);
+						})}
+					</div>
+				);
+
 			default:
 				return (
 					<p className="bb-admin-settings-field__unsupported">
@@ -177,22 +339,56 @@ export function SettingsForm({ fields, values, onChange }) {
 	};
 
 	/**
-	 * Render a single field row with optional prefix/suffix text
+	 * Render a child field inline (without full row layout)
 	 */
-	const renderField = (field, isChild = false) => {
-		// Check visibility
+	const renderChildField = (field, parentDisabled = false) => {
+		// Check visibility (for conditional fields)
 		if (!isFieldVisible(field)) {
 			return null;
 		}
 
+		const disabled = parentDisabled || isFieldDisabled(field);
+
+		return (
+			<div key={field.name} className={`bb-admin-settings-form__child-field ${disabled ? 'bb-admin-settings-form__child-field--disabled' : ''}`}>
+				{field.label && (
+					<label className="bb-admin-settings-form__child-field-label">{field.label}</label>
+				)}
+				<div className="bb-admin-settings-form__child-field-control">
+					{renderFieldControl(field, disabled)}
+				</div>
+				{field.description && (
+					<p className="bb-admin-settings-form__child-field-description">{field.description}</p>
+				)}
+			</div>
+		);
+	};
+
+	/**
+	 * Render a single field row with optional prefix/suffix text
+	 */
+	const renderField = (field, isChild = false) => {
+		// Check visibility (for conditional fields)
+		if (!isFieldVisible(field)) {
+			return null;
+		}
+
+		// Check if field should be disabled (parent toggle is OFF)
+		const disabled = isFieldDisabled(field);
+
 		// Get child fields that depend on this field
 		const childFields = fields.filter(f => f.parent_field === field.name);
+		
+		// Check if this is a toggle with children (special layout)
+		const isToggleWithChildren = (field.type === 'toggle' || field.type === 'checkbox') && childFields.length > 0;
 
 		// Build field class names
 		const fieldClasses = [
 			'bb-admin-settings-form__field',
 			isChild ? 'bb-admin-settings-form__field--child' : '',
 			field.parent_field ? 'bb-admin-settings-form__field--nested' : '',
+			disabled ? 'bb-admin-settings-form__field--disabled' : '',
+			isToggleWithChildren ? 'bb-admin-settings-form__field--has-children' : '',
 		].filter(Boolean).join(' ');
 
 		return (
@@ -206,7 +402,7 @@ export function SettingsForm({ fields, values, onChange }) {
 						{field.prefix && (
 							<span className="bb-admin-settings-form__field-prefix">{field.prefix}</span>
 						)}
-						{renderFieldControl(field)}
+						{renderFieldControl(field, disabled)}
 						{field.suffix && (
 							<span className="bb-admin-settings-form__field-suffix">{field.suffix}</span>
 						)}
@@ -223,7 +419,7 @@ export function SettingsForm({ fields, values, onChange }) {
 					{/* Render child fields inline/nested */}
 					{childFields.length > 0 && (
 						<div className="bb-admin-settings-form__child-fields">
-							{childFields.map(childField => renderField(childField, true))}
+							{childFields.map(childField => renderChildField(childField, disabled))}
 						</div>
 					)}
 				</div>

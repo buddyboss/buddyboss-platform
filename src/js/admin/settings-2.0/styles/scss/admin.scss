@@ -865,15 +865,20 @@ $bb-border-radius-xs: 6px;
 		min-width: 0;
 	}
 
-	// Toggle wrapper for toggle + label
+	// Toggle wrapper for toggle + inline label (horizontal layout)
 	&__toggle-wrapper {
-		display: flex;
-		align-items: center;
-		gap: 8px;
-		min-width: 0;
 		display: flex;
 		flex-direction: column;
 		gap: 8px;
+		min-width: 0;
+
+		// Toggle and its inline label should be horizontal
+		.components-toggle-control {
+			display: flex;
+			flex-direction: row;
+			align-items: center;
+			gap: 8px;
+		}
 
 		@media screen and (max-width: 992px) {
 			width: 100%;
@@ -928,36 +933,76 @@ $bb-border-radius-xs: 6px;
 		white-space: nowrap;
 	}
 
-	// Child fields container (nested under parent)
+	// Child fields container (nested under parent toggle)
 	&__child-fields {
 		margin-top: 16px;
-		padding-left: 0;
-		
-		.bb-admin-settings-form__field {
-			padding-left: 38px; // Indent for nesting
-			border-bottom: none;
-			padding-bottom: 16px;
-			margin-bottom: 0;
+		display: flex;
+		flex-direction: column;
+		gap: 16px;
+	}
 
-			&:last-child {
-				padding-bottom: 0;
-			}
+	// Individual child field (inline layout - no full row)
+	&__child-field {
+		display: flex;
+		flex-direction: column;
+		gap: 6px;
 
-			// Adjust label width for nested fields
-			.bb-admin-settings-form__field-label {
-				width: 210px; // Slightly narrower due to indent
-			}
+		&--disabled {
+			opacity: 0.5;
+			pointer-events: none;
+		}
+	}
+
+	&__child-field-label {
+		font-size: 13px;
+		font-weight: 500;
+		line-height: 18px;
+		color: $bb-text-color;
+	}
+
+	&__child-field-control {
+		.components-select-control__input {
+			min-width: 200px;
+		}
+	}
+
+	&__child-field-description {
+		margin: 0;
+		font-size: 12px;
+		line-height: 16px;
+		color: $bb-text-secondary;
+	}
+
+	// Field with children modifier (toggle + nested fields)
+	&__field--has-children {
+		.bb-admin-settings-form__field-content {
+			display: flex;
+			flex-direction: column;
 		}
 	}
 
 	// Nested field modifier
 	&__field--nested {
-		// Already handled by child-fields container
+		// Not used anymore - using child-field instead
 	}
 
-	// Child field modifier
+	// Child field modifier (legacy)
 	&__field--child {
-		// Additional styling if needed for child fields
+		// Not used anymore - using child-field instead
+	}
+
+	// Disabled field modifier (when parent toggle is OFF)
+	&__field--disabled {
+		opacity: 0.5;
+		pointer-events: none;
+		
+		.components-toggle-control,
+		.components-text-control__input,
+		.components-select-control__input,
+		input,
+		select {
+			cursor: not-allowed;
+		}
 	}
 
 	// Description text below control
@@ -968,7 +1013,201 @@ $bb-border-radius-xs: 6px;
 		font-size: 13px;
 		line-height: 18px;
 		max-width: 632px;
+
+		a {
+			color: $bb-primary-color;
+			text-decoration: none;
+
+			&:hover {
+				text-decoration: underline;
+			}
+		}
 	}
+}
+
+// Dimensions Field Type (Width x Height)
+.bb-admin-settings-field__dimensions {
+	display: flex;
+	align-items: center;
+	gap: 16px;
+	flex-wrap: wrap;
+}
+
+.bb-admin-settings-field__dimension-item {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.bb-admin-settings-field__dimension-label {
+	font-size: 14px;
+	font-weight: 400;
+	line-height: 20px;
+	color: $bb-text-color;
+}
+
+.bb-admin-settings-field__dimension-input-wrap {
+	display: flex;
+	align-items: center;
+	gap: 4px;
+}
+
+.bb-admin-settings-field__dimension-input {
+	width: 80px !important;
+	max-width: 80px !important;
+	padding: 7px 8px !important;
+	font-size: 13px !important;
+	border: 1px solid $bb-border-color !important;
+	border-radius: $bb-border-radius-xs !important;
+	background-color: $bb-background-color !important;
+}
+
+.bb-admin-settings-field__dimension-suffix {
+	font-size: 14px;
+	font-weight: 400;
+	line-height: 20px;
+	color: $bb-text-secondary;
+}
+
+.bb-admin-settings-field__dimension-separator {
+	font-size: 16px;
+	font-weight: 400;
+	color: $bb-text-muted;
+	margin: 0 4px;
+}
+
+// Child Render Field Type (stacked child fields - Width/Height)
+.bb-admin-settings-field__child-render {
+	display: flex;
+	flex-direction: column;
+	gap: 24px;
+}
+
+.bb-admin-settings-field__child-item {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	width: 272px;
+}
+
+.bb-admin-settings-field__child-label {
+	font-size: 13px;
+	font-weight: 500;
+	line-height: 18px;
+	color: #2f2f2f;
+	padding: 3px 0;
+}
+
+.bb-admin-settings-field__child-control {
+	.components-select-control__input {
+		width: 100%;
+		min-width: 120px;
+		padding: 7px 8px;
+		font-size: 13px;
+		line-height: 18px;
+		border: 0.5px solid #ccc;
+		border-radius: 6px;
+		background-color: #f6f6f6;
+		color: $bb-text-color;
+	}
+}
+
+.bb-admin-settings-field__child-number-wrap {
+	display: flex;
+	align-items: center;
+	gap: 4px;
+}
+
+.bb-admin-settings-field__child-number-input {
+	width: 80px !important;
+	max-width: 80px !important;
+	padding: 7px 8px !important;
+	font-size: 13px !important;
+	border: 1px solid $bb-border-color !important;
+	border-radius: $bb-border-radius-xs !important;
+	background-color: $bb-background-color !important;
+}
+
+.bb-admin-settings-field__child-suffix {
+	font-size: 14px;
+	font-weight: 400;
+	line-height: 20px;
+	color: $bb-text-secondary;
+}
+
+// Image Radio Field Type (visual preview cards like Default Cover Image)
+.bb-admin-settings-field__image-radio {
+	display: flex;
+	gap: 16px;
+	flex-wrap: wrap;
+}
+
+.bb-admin-settings-field__image-radio-option {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	align-items: flex-start;
+	padding: 0;
+	background: none;
+	border: none;
+	cursor: pointer;
+
+	&--selected {
+		.bb-admin-settings-field__image-radio-preview {
+			border-color: $bb-primary-color;
+			border-width: 1px;
+		}
+	}
+
+	&:disabled {
+		opacity: 0.5;
+		cursor: not-allowed;
+	}
+}
+
+.bb-admin-settings-field__image-radio-preview {
+	width: 112px;
+	height: 112px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background-color: #f6f6f6;
+	border: 0.5px solid #d9d9d9;
+	border-radius: 12px;
+	overflow: hidden;
+}
+
+.bb-admin-settings-field__image-radio-icon {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+	.dashicons {
+		font-size: 48px;
+		width: 48px;
+		height: 48px;
+		color: #666;
+	}
+
+	&--buddyboss .dashicons {
+		color: #999;
+	}
+
+	&--none .dashicons {
+		color: #666;
+	}
+
+	&--custom .dashicons {
+		color: $bb-primary-color;
+	}
+}
+
+.bb-admin-settings-field__image-radio-label {
+	font-size: 14px;
+	font-weight: 400;
+	line-height: 20px;
+	color: $bb-text-color;
+	padding-left: 4px;
 }
 
 // Checkbox List Field Type

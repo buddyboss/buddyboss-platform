@@ -461,6 +461,31 @@ class BB_REST_Features_Controller extends WP_REST_Controller {
 		$field_map = array();
 		foreach ( $all_fields as $field ) {
 			$field_map[ $field['name'] ] = $field;
+
+			// Also add sub-fields for dimensions/child_render type.
+			if ( isset( $field['fields'] ) && is_array( $field['fields'] ) ) {
+				foreach ( $field['fields'] as $sub_field ) {
+					$sub_field_type = $sub_field['type'] ?? 'text';
+					$sanitize_callback = 'sanitize_text_field';
+					
+					// Set appropriate sanitize callback based on type.
+					if ( 'number' === $sub_field_type ) {
+						$sanitize_callback = 'intval';
+					}
+					
+					$sub_field_entry = array(
+						'name'              => $sub_field['name'],
+						'label'             => $sub_field['label'] ?? '',
+						'type'              => $sub_field_type,
+						'default'           => $sub_field['default'] ?? '',
+						'sanitize_callback' => $sanitize_callback,
+						'options'           => $sub_field['options'] ?? array(),
+						'min'               => $sub_field['min'] ?? null,
+						'max'               => $sub_field['max'] ?? null,
+					);
+					$field_map[ $sub_field['name'] ] = $sub_field_entry;
+				}
+			}
 		}
 
 		foreach ( $settings as $field_name => $value ) {
@@ -499,7 +524,7 @@ class BB_REST_Features_Controller extends WP_REST_Controller {
 
 			// Log change to history (if history class exists).
 			if ( class_exists( 'BB_Settings_History' ) ) {
-				$history = new BB_Settings_History();
+				$history = BB_Settings_History::instance();
 				$history->log_change( $feature_id, $field_name, $old_value, $value );
 			}
 		}
@@ -625,7 +650,7 @@ class BB_REST_Features_Controller extends WP_REST_Controller {
 		$formatted = array();
 
 		foreach ( $fields as $field_name => $field ) {
-			$formatted[] = array(
+			$field_data = array(
 				'name'         => $field['name'],
 				'label'        => $field['label'],
 				'type'         => $field['type'] ?? 'text',
@@ -650,7 +675,31 @@ class BB_REST_Features_Controller extends WP_REST_Controller {
 				// Min/max for number fields
 				'min'          => $field['min'] ?? null,
 				'max'          => $field['max'] ?? null,
+				// Invert value for "disable" toggles shown as "enable"
+				'invert_value' => $field['invert_value'] ?? false,
 			);
+
+			// Add sub-fields for dimensions/child_render type
+			if ( isset( $field['fields'] ) && is_array( $field['fields'] ) ) {
+				$sub_fields = array();
+				foreach ( $field['fields'] as $sub_field ) {
+					$sub_field_value = isset( $values[ $sub_field['name'] ] ) ? $values[ $sub_field['name'] ] : ( $sub_field['default'] ?? '' );
+					$sub_fields[] = array(
+						'name'    => $sub_field['name'],
+						'label'   => $sub_field['label'] ?? '',
+						'type'    => $sub_field['type'] ?? 'text',
+						'default' => $sub_field['default'] ?? '',
+						'value'   => $sub_field_value,
+						'options' => $sub_field['options'] ?? array(),
+						'suffix'  => $sub_field['suffix'] ?? null,
+						'min'     => $sub_field['min'] ?? null,
+						'max'     => $sub_field['max'] ?? null,
+					);
+				}
+				$field_data['fields'] = $sub_fields;
+			}
+
+			$formatted[] = $field_data;
 		}
 
 		// Sort by order.
