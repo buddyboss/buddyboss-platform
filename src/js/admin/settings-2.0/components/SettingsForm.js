@@ -247,9 +247,60 @@ export function SettingsForm({ fields, values, onChange }) {
 											<span className="dashicons dashicons-admin-generic"></span>
 										</div>
 									)}
+									{/* Header Style Previews */}
+									{option.image === 'header-left-group' && (
+										<div className="bb-admin-settings-field__header-preview bb-admin-settings-field__header-preview--left">
+											<div className="bb-admin-settings-field__header-preview-cover"></div>
+											<div className="bb-admin-settings-field__header-preview-content">
+												<div className="bb-admin-settings-field__header-preview-avatar">
+													<span className="dashicons dashicons-groups"></span>
+												</div>
+												<div className="bb-admin-settings-field__header-preview-lines">
+													<div className="bb-admin-settings-field__header-preview-line bb-admin-settings-field__header-preview-line--short"></div>
+													<div className="bb-admin-settings-field__header-preview-line bb-admin-settings-field__header-preview-line--long"></div>
+												</div>
+											</div>
+										</div>
+									)}
+									{option.image === 'header-centered-group' && (
+										<div className="bb-admin-settings-field__header-preview bb-admin-settings-field__header-preview--centered">
+											<div className="bb-admin-settings-field__header-preview-cover"></div>
+											<div className="bb-admin-settings-field__header-preview-content">
+												<div className="bb-admin-settings-field__header-preview-avatar">
+													<span className="dashicons dashicons-groups"></span>
+												</div>
+												<div className="bb-admin-settings-field__header-preview-lines">
+													<div className="bb-admin-settings-field__header-preview-line bb-admin-settings-field__header-preview-line--short"></div>
+													<div className="bb-admin-settings-field__header-preview-line bb-admin-settings-field__header-preview-line--long"></div>
+												</div>
+											</div>
+										</div>
+									)}
 								</div>
 								<span className="bb-admin-settings-field__image-radio-label">{option.label}</span>
 							</button>
+						))}
+					</div>
+				);
+
+			case 'toggle_list':
+				// Multiple stacked toggle switches (like Group Header Elements)
+				const listValue = typeof value === 'object' ? value : {};
+				return (
+					<div className="bb-admin-settings-field__toggle-list">
+						{(field.options || []).map((option) => (
+							<div key={option.value} className="bb-admin-settings-field__toggle-list-item">
+								<ToggleControl
+									label={option.label}
+									checked={!!listValue[option.value]}
+									onChange={(checked) => {
+										const newValue = { ...listValue, [option.value]: checked ? 1 : 0 };
+										onChange(field.name, newValue);
+									}}
+									disabled={disabled}
+									__nextHasNoMarginBottom
+								/>
+							</div>
 						))}
 					</div>
 				);

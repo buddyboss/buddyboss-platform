@@ -34,6 +34,27 @@ function bb_get_wp_roles_options() {
 }
 
 /**
+ * Sanitize toggle list field value.
+ *
+ * @since BuddyBoss 3.0.0
+ *
+ * @param mixed $value The value to sanitize.
+ * @return array Sanitized array of toggle values.
+ */
+function bb_sanitize_toggle_list( $value ) {
+	if ( ! is_array( $value ) ) {
+		return array();
+	}
+
+	$sanitized = array();
+	foreach ( $value as $key => $val ) {
+		$sanitized[ sanitize_key( $key ) ] = absint( $val );
+	}
+
+	return $sanitized;
+}
+
+/**
  * Sanitize array input.
  *
  * @since BuddyBoss 3.0.0
@@ -460,8 +481,83 @@ function bb_admin_settings_2_0_register_groups_feature() {
 		'main',
 		array(
 			'title'       => __( 'Group Headers', 'buddyboss' ),
-			'description' => __( 'Configure the group header display options.', 'buddyboss' ),
+			'description' => '',
 			'order'       => 10,
+		)
+	);
+
+	// Field: Header Style (visual radio cards)
+	// Note: Uses 'bb-group-header-style' to match existing option name
+	bb_register_feature_field(
+		'groups',
+		'group_headers',
+		'main',
+		array(
+			'name'              => 'bb-group-header-style',
+			'label'             => __( 'Header Style', 'buddyboss' ),
+			'type'              => 'image_radio',
+			'description'       => __( 'Select the style of your group header. Group avatars and cover images will only be displayed if they are enabled. This setting does not apply to the App style.', 'buddyboss' ),
+			'default'           => bp_get_option( 'bb-group-header-style', 'centered' ),
+			'options'           => array(
+				array(
+					'label' => __( 'Left', 'buddyboss' ),
+					'value' => 'left',
+					'image' => 'header-left-group',
+				),
+				array(
+					'label' => __( 'Centered', 'buddyboss' ),
+					'value' => 'centered',
+					'image' => 'header-centered-group',
+				),
+			),
+			'sanitize_callback' => 'sanitize_text_field',
+			'order'             => 10,
+		)
+	);
+
+	// Field: Elements (multiple toggles - each stored as separate option)
+	// Note: Each toggle is stored as individual option like 'bb-group-headers-element-group-type'
+	bb_register_feature_field(
+		'groups',
+		'group_headers',
+		'main',
+		array(
+			'name'              => 'bb-group-headers-elements',
+			'label'             => __( 'Elements', 'buddyboss' ),
+			'type'              => 'toggle_list',
+			'description'       => __( 'Select which elements to show in your group headers.', 'buddyboss' ),
+			'option_prefix'     => 'bb-group-headers-element-', // Each option stored separately with this prefix
+			'default'           => array(
+				'group-type'        => bp_get_option( 'bb-group-headers-element-group-type', 'group-type' ) === 'group-type' ? 1 : 0,
+				'group-activity'    => bp_get_option( 'bb-group-headers-element-group-activity', 'group-activity' ) === 'group-activity' ? 1 : 0,
+				'group-description' => bp_get_option( 'bb-group-headers-element-group-description', '' ) === 'group-description' ? 1 : 0,
+				'group-organizers'  => bp_get_option( 'bb-group-headers-element-group-organizers', '' ) === 'group-organizers' ? 1 : 0,
+				'group-privacy'     => bp_get_option( 'bb-group-headers-element-group-privacy', 'group-privacy' ) === 'group-privacy' ? 1 : 0,
+			),
+			'options'           => array(
+				array(
+					'label' => __( 'Group Type', 'buddyboss' ),
+					'value' => 'group-type',
+				),
+				array(
+					'label' => __( 'Last Activity', 'buddyboss' ),
+					'value' => 'group-activity',
+				),
+				array(
+					'label' => __( 'Group Description', 'buddyboss' ),
+					'value' => 'group-description',
+				),
+				array(
+					'label' => __( 'Group Organizers', 'buddyboss' ),
+					'value' => 'group-organizers',
+				),
+				array(
+					'label' => __( 'Group Privacy', 'buddyboss' ),
+					'value' => 'group-privacy',
+				),
+			),
+			'sanitize_callback' => 'bb_sanitize_toggle_list',
+			'order'             => 20,
 		)
 	);
 

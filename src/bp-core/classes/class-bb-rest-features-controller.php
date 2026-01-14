@@ -501,6 +501,26 @@ class BB_REST_Features_Controller extends WP_REST_Controller {
 
 			$field = $field_map[ $field_name ];
 
+			// Handle toggle_list fields with option_prefix (each toggle saved to separate option)
+			if ( 'toggle_list' === ( $field['type'] ?? '' ) && ! empty( $field['option_prefix'] ) && is_array( $value ) ) {
+				$option_prefix = $field['option_prefix'];
+				foreach ( $value as $toggle_key => $toggle_value ) {
+					$option_name = $option_prefix . $toggle_key;
+					$old_value   = get_option( $option_name, '' );
+					// Store the key value if enabled (1), empty string if disabled (0)
+					$new_value   = $toggle_value ? $toggle_key : '';
+					update_option( $option_name, $new_value );
+					$updated_fields[ $option_name ] = $new_value;
+
+					// Log change to history.
+					if ( class_exists( 'BB_Settings_History' ) && $old_value !== $new_value ) {
+						$history = BB_Settings_History::instance();
+						$history->log_change( $feature_id, $option_name, $old_value, $new_value );
+					}
+				}
+				continue;
+			}
+
 			// Sanitize.
 			if ( isset( $field['sanitize_callback'] ) && is_callable( $field['sanitize_callback'] ) ) {
 				$value = call_user_func( $field['sanitize_callback'], $value );
@@ -650,33 +670,52 @@ class BB_REST_Features_Controller extends WP_REST_Controller {
 		$formatted = array();
 
 		foreach ( $fields as $field_name => $field ) {
+			// Handle toggle_list with option_prefix (each option stored as separate option)
+			$field_value = isset( $values[ $field['name'] ] ) ? $values[ $field['name'] ] : ( $field['default'] ?? '' );
+
+			if ( 'toggle_list' === ( $field['type'] ?? '' ) && ! empty( $field['option_prefix'] ) ) {
+				// Read each option as a separate WordPress option
+				$option_prefix = $field['option_prefix'];
+				$toggle_values = array();
+				foreach ( $field['options'] ?? array() as $option ) {
+					$option_key   = $option['value'];
+					$option_name  = $option_prefix . $option_key;
+					$stored_value = get_option( $option_name, '' );
+					// Check if the stored value matches the option key (means enabled)
+					$toggle_values[ $option_key ] = ( $stored_value === $option_key ) ? 1 : 0;
+				}
+				$field_value = $toggle_values;
+			}
+
 			$field_data = array(
-				'name'         => $field['name'],
-				'label'        => $field['label'],
-				'type'         => $field['type'] ?? 'text',
-				'description'  => $field['description'] ?? '',
-				'default'      => $field['default'] ?? '',
-				'options'      => $field['options'] ?? array(),
-				'conditional'  => $field['conditional'] ?? null,
-				'pro_only'     => $field['pro_only'] ?? false,
-				'license_tier' => $field['license_tier'] ?? 'free',
-				'order'        => $field['order'] ?? 100,
-				'value'        => isset( $values[ $field['name'] ] ) ? $values[ $field['name'] ] : ( $field['default'] ?? '' ),
+				'name'          => $field['name'],
+				'label'         => $field['label'],
+				'type'          => $field['type'] ?? 'text',
+				'description'   => $field['description'] ?? '',
+				'default'       => $field['default'] ?? '',
+				'options'       => $field['options'] ?? array(),
+				'conditional'   => $field['conditional'] ?? null,
+				'pro_only'      => $field['pro_only'] ?? false,
+				'license_tier'  => $field['license_tier'] ?? 'free',
+				'order'         => $field['order'] ?? 100,
+				'value'         => $field_value,
+				// Option prefix for toggle_list fields
+				'option_prefix' => $field['option_prefix'] ?? null,
 				// Nested field support
-				'parent_field' => $field['parent_field'] ?? null,
-				'parent_value' => $field['parent_value'] ?? null,
+				'parent_field'  => $field['parent_field'] ?? null,
+				'parent_value'  => $field['parent_value'] ?? null,
 				// Prefix/suffix text support
-				'prefix'       => $field['prefix'] ?? null,
-				'suffix'       => $field['suffix'] ?? null,
+				'prefix'        => $field['prefix'] ?? null,
+				'suffix'        => $field['suffix'] ?? null,
 				// Toggle label (displayed next to toggle switch)
-				'toggle_label' => $field['toggle_label'] ?? null,
+				'toggle_label'  => $field['toggle_label'] ?? null,
 				// Inline label for toggles (alias for toggle_label)
-				'inline_label' => $field['inline_label'] ?? $field['toggle_label'] ?? null,
+				'inline_label'  => $field['inline_label'] ?? $field['toggle_label'] ?? null,
 				// Min/max for number fields
-				'min'          => $field['min'] ?? null,
-				'max'          => $field['max'] ?? null,
+				'min'           => $field['min'] ?? null,
+				'max'           => $field['max'] ?? null,
 				// Invert value for "disable" toggles shown as "enable"
-				'invert_value' => $field['invert_value'] ?? false,
+				'invert_value'  => $field['invert_value'] ?? false,
 			);
 
 			// Add sub-fields for dimensions/child_render type

@@ -633,6 +633,8 @@ class BB_Feature_Registry {
 			'pro_only'          => false,
 			'license_tier'      => 'free',
 			'order'             => 100,
+			// For toggle_list fields, prefix for individual options (e.g., 'bb-group-headers-element-').
+			'option_prefix'     => null,
 		);
 
 		$args = wp_parse_args( $args, $defaults );
