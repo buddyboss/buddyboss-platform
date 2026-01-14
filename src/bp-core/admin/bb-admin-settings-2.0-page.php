@@ -43,6 +43,9 @@ function bb_admin_settings_2_0_page() {
 
 	$asset = require $asset_file;
 
+	// Enqueue WordPress components style explicitly (needed for ToggleControl, Button, etc.)
+	wp_enqueue_style( 'wp-components' );
+
 	// Enqueue scripts and styles.
 	wp_enqueue_script(
 		'bb-admin-settings-2-0',
@@ -65,7 +68,7 @@ function bb_admin_settings_2_0_page() {
 			wp_enqueue_style(
 				'bb-admin-settings-2-0',
 				$css_url,
-				array(),
+				array( 'wp-components' ), // Add wp-components as dependency
 				$asset['version']
 			);
 			$css_enqueued = true;

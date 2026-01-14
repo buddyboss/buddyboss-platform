@@ -13,6 +13,42 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
+ * Get WordPress roles as options array for checkbox/select fields.
+ *
+ * @since BuddyBoss 3.0.0
+ *
+ * @return array Array of role options with 'label' and 'value' keys.
+ */
+function bb_get_wp_roles_options() {
+	$roles   = wp_roles();
+	$options = array();
+
+	foreach ( $roles->roles as $role_slug => $role_data ) {
+		$options[] = array(
+			'label' => $role_data['name'],
+			'value' => $role_slug,
+		);
+	}
+
+	return $options;
+}
+
+/**
+ * Sanitize array input.
+ *
+ * @since BuddyBoss 3.0.0
+ *
+ * @param mixed $input Input to sanitize.
+ * @return array Sanitized array.
+ */
+function bb_sanitize_array( $input ) {
+	if ( ! is_array( $input ) ) {
+		return array();
+	}
+	return array_map( 'sanitize_text_field', $input );
+}
+
+/**
  * Register Groups feature in Feature Registry.
  *
  * @since BuddyBoss 3.0.0
@@ -55,11 +91,13 @@ function bb_admin_settings_2_0_register_groups_feature() {
 		)
 	);
 
+	// -------------------------------------------------------------------------
 	// Section: Group Settings
+	// -------------------------------------------------------------------------
 	bb_register_feature_section(
 		'groups',
 		'group_settings',
-		'main',
+		'group_settings_main',
 		array(
 			'title'       => __( 'Group Settings', 'buddyboss' ),
 			'description' => '',
@@ -71,53 +109,121 @@ function bb_admin_settings_2_0_register_groups_feature() {
 	bb_register_feature_field(
 		'groups',
 		'group_settings',
-		'main',
+		'group_settings_main',
 		array(
 			'name'              => 'bp_restrict_group_creation',
 			'label'             => __( 'Group Creation', 'buddyboss' ),
+			'toggle_label'      => __( 'Enable social group creation by all members', 'buddyboss' ),
 			'type'              => 'toggle',
-			'description'       => __( 'Restrict group creation to administrators only.', 'buddyboss' ),
+			'description'       => sprintf(
+				/* translators: %s: Access Controls link */
+				__( 'Administrators can always create groups, regardless of this setting. You can configure who can create groups in %s.', 'buddyboss' ),
+				'<a href="#/settings/groups/access_controls">' . __( 'Access Controls', 'buddyboss' ) . '</a>'
+			),
 			'default'           => bp_get_option( 'bp_restrict_group_creation', 0 ),
 			'sanitize_callback' => 'intval',
 			'order'             => 10,
 		)
 	);
 
-	// Field: Group Messages (conditional)
-	if ( bp_is_active( 'groups' ) && bp_is_active( 'messages' ) ) {
-		bb_register_feature_field(
-			'groups',
-			'group_settings',
-			'main',
-			array(
-				'name'              => 'bp-disable-group-messages',
-				'label'             => __( 'Group Messages', 'buddyboss' ),
-				'type'              => 'toggle',
-				'description'       => __( 'Allow group members to send messages to all group members.', 'buddyboss' ),
-				'default'           => bp_get_option( 'bp-disable-group-messages', 0 ),
-				'sanitize_callback' => 'intval',
-				'order'             => 20,
-			)
-		);
-	}
+	// Field: Subscriptions
+	bb_register_feature_field(
+		'groups',
+		'group_settings',
+		'group_settings_main',
+		array(
+			'name'              => 'bb_enable_group_subscriptions',
+			'label'             => __( 'Subscriptions', 'buddyboss' ),
+			'toggle_label'      => __( 'Allow members to subscribe to groups', 'buddyboss' ),
+			'type'              => 'toggle',
+			'description'       => __( 'When a member is subscribed to a group, they can receive notifications of new activity posts and discussions created in the group.', 'buddyboss' ),
+			'default'           => bp_get_option( 'bb_enable_group_subscriptions', 0 ),
+			'sanitize_callback' => 'intval',
+			'order'             => 20,
+		)
+	);
 
-	// Field: Subscriptions (conditional)
-	if ( bp_is_active( 'notifications' ) && ( bp_is_active( 'activity' ) || bp_is_active( 'forums' ) ) ) {
-		bb_register_feature_field(
-			'groups',
-			'group_settings',
-			'main',
-			array(
-				'name'              => 'bb_enable_group_subscriptions',
-				'label'             => __( 'Subscriptions', 'buddyboss' ),
-				'type'              => 'toggle',
-				'description'       => __( 'Allow members to subscribe to group updates.', 'buddyboss' ),
-				'default'           => bp_get_option( 'bb_enable_group_subscriptions', 0 ),
-				'sanitize_callback' => 'intval',
-				'order'             => 30,
-			)
-		);
-	}
+	// Field: Group Messages
+	bb_register_feature_field(
+		'groups',
+		'group_settings',
+		'group_settings_main',
+		array(
+			'name'              => 'bp-disable-group-messages',
+			'label'             => __( 'Group Messages', 'buddyboss' ),
+			'toggle_label'      => __( 'Allow for sending group messages to group members', 'buddyboss' ),
+			'type'              => 'toggle',
+			'description'       => '',
+			'default'           => bp_get_option( 'bp-disable-group-messages', 0 ),
+			'sanitize_callback' => 'intval',
+			'order'             => 30,
+		)
+	);
+
+	// -------------------------------------------------------------------------
+	// Section: Subgroups
+	// -------------------------------------------------------------------------
+	bb_register_feature_section(
+		'groups',
+		'group_settings',
+		'subgroups',
+		array(
+			'title'       => __( 'Subgroups', 'buddyboss' ),
+			'description' => '',
+			'order'       => 20,
+		)
+	);
+
+	// Field: Hierarchies
+	bb_register_feature_field(
+		'groups',
+		'group_settings',
+		'subgroups',
+		array(
+			'name'              => 'bp-enable-group-hierarchies',
+			'label'             => __( 'Hierarchies', 'buddyboss' ),
+			'toggle_label'      => __( 'Allow groups to have subgroups', 'buddyboss' ),
+			'type'              => 'toggle',
+			'description'       => '',
+			'default'           => bp_get_option( 'bp-enable-group-hierarchies', 0 ),
+			'sanitize_callback' => 'intval',
+			'order'             => 10,
+		)
+	);
+
+	// Field: Hide Subgroups
+	bb_register_feature_field(
+		'groups',
+		'group_settings',
+		'subgroups',
+		array(
+			'name'              => 'bp-enable-group-hide-subgroups',
+			'label'             => __( 'Hide Subgroups', 'buddyboss' ),
+			'toggle_label'      => __( 'Hide subgroups from Groups Directory & Group Type Shortcode', 'buddyboss' ),
+			'type'              => 'toggle',
+			'description'       => '',
+			'default'           => bp_get_option( 'bp-enable-group-hide-subgroups', 0 ),
+			'sanitize_callback' => 'intval',
+			'order'             => 20,
+		)
+	);
+
+	// Field: Restrict Invitations
+	bb_register_feature_field(
+		'groups',
+		'group_settings',
+		'subgroups',
+		array(
+			'name'              => 'bp-enable-group-restrict-invites',
+			'label'             => __( 'Restrict Invitations', 'buddyboss' ),
+			'toggle_label'      => __( 'Restrict subgroup invites to members of the parent group', 'buddyboss' ),
+			'type'              => 'toggle',
+			'description'       => __( 'Members must first be a member of the parent group prior to being invited to a subgroup', 'buddyboss' ),
+			'default'           => bp_get_option( 'bp-enable-group-restrict-invites', 0 ),
+			'sanitize_callback' => 'intval',
+			'order'             => 30,
+		)
+	);
 
 	// =========================================================================
 	// SIDE PANEL: GROUP IMAGES
@@ -252,13 +358,13 @@ function bb_admin_settings_2_0_register_groups_feature() {
 	);
 
 	// =========================================================================
-	// SIDE PANEL: GROUP DIRECTORIES
+	// SIDE PANEL: GROUP DIRECTORY
 	// =========================================================================
 	bb_register_side_panel(
 		'groups',
-		'group_directories',
+		'group_directory',
 		array(
-			'title'    => __( 'Group Directories', 'buddyboss' ),
+			'title'    => __( 'Group Directory', 'buddyboss' ),
 			'icon'     => array(
 				'type' => 'dashicon',
 				'slug' => 'dashicons-list-view',
@@ -268,92 +374,61 @@ function bb_admin_settings_2_0_register_groups_feature() {
 		)
 	);
 
-	// Section: Group Directories
+	// Section: Group Directory
 	bb_register_feature_section(
 		'groups',
-		'group_directories',
+		'group_directory',
 		'main',
 		array(
-			'title'       => __( 'Group Directories', 'buddyboss' ),
+			'title'       => __( 'Group Directory', 'buddyboss' ),
 			'description' => __( 'Configure group directory display settings.', 'buddyboss' ),
 			'order'       => 10,
 		)
 	);
 
 	// =========================================================================
-	// SIDE PANEL: GROUP HIERARCHIES
+	// SIDE PANEL: ACCESS CONTROLS
 	// =========================================================================
 	bb_register_side_panel(
 		'groups',
-		'group_hierarchies',
+		'access_controls',
 		array(
-			'title'    => __( 'Group Hierarchies', 'buddyboss' ),
+			'title'    => __( 'Access Controls', 'buddyboss' ),
 			'icon'     => array(
 				'type' => 'dashicon',
-				'slug' => 'dashicons-networking',
+				'slug' => 'dashicons-lock',
 			),
-			'help_url' => 'https://www.buddyboss.com/resources/docs/components/groups/group-hierarchies/',
+			'help_url' => 'https://www.buddyboss.com/resources/docs/components/groups/access-controls/',
 			'order'    => 50,
 		)
 	);
 
-	// Section: Group Hierarchies
+	// Section: Access Controls
 	bb_register_feature_section(
 		'groups',
-		'group_hierarchies',
+		'access_controls',
 		'main',
 		array(
-			'title'       => __( 'Group Hierarchies', 'buddyboss' ),
-			'description' => '',
+			'title'       => __( 'Access Controls', 'buddyboss' ),
+			'description' => __( 'Configure who can create and manage groups.', 'buddyboss' ),
 			'order'       => 10,
 		)
 	);
 
-	// Field: Enable Hierarchies
+	// Field: Group Creation Roles
 	bb_register_feature_field(
 		'groups',
-		'group_hierarchies',
+		'access_controls',
 		'main',
 		array(
-			'name'              => 'bp-enable-group-hierarchies',
-			'label'             => __( 'Hierarchies', 'buddyboss' ),
-			'type'              => 'toggle',
-			'description'       => __( 'Allow groups to have parent-child relationships.', 'buddyboss' ),
-			'default'           => bp_get_option( 'bp-enable-group-hierarchies', 0 ),
-			'sanitize_callback' => 'intval',
+			'name'              => 'bp_group_creation_roles',
+			'label'             => __( 'Group Creation', 'buddyboss' ),
+			'type'              => 'checkbox_list',
+			'description'       => __( 'Select which roles can create groups.', 'buddyboss' ),
+			'default'           => bp_get_option( 'bp_group_creation_roles', array() ),
+			'options'           => bb_get_wp_roles_options(),
+			'sanitize_callback' => 'bb_sanitize_array',
 			'order'             => 10,
-		)
-	);
-
-	// Field: Hide Subgroups
-	bb_register_feature_field(
-		'groups',
-		'group_hierarchies',
-		'main',
-		array(
-			'name'              => 'bp-enable-group-hide-subgroups',
-			'label'             => __( 'Hide Subgroups', 'buddyboss' ),
-			'type'              => 'toggle',
-			'description'       => __( 'Hide subgroups from the main group directory.', 'buddyboss' ),
-			'default'           => bp_get_option( 'bp-enable-group-hide-subgroups', 0 ),
-			'sanitize_callback' => 'intval',
-			'order'             => 20,
-		)
-	);
-
-	// Field: Restrict Invitations
-	bb_register_feature_field(
-		'groups',
-		'group_hierarchies',
-		'main',
-		array(
-			'name'              => 'bp-enable-group-restrict-invites',
-			'label'             => __( 'Restrict Invitations', 'buddyboss' ),
-			'type'              => 'toggle',
-			'description'       => __( 'Restrict invitations to subgroups to parent group members only.', 'buddyboss' ),
-			'default'           => bp_get_option( 'bp-enable-group-restrict-invites', 0 ),
-			'sanitize_callback' => 'intval',
-			'order'             => 30,
 		)
 	);
 

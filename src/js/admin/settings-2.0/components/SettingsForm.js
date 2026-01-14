@@ -56,15 +56,18 @@ export function SettingsForm({ fields, values, onChange }) {
 		switch (field.type) {
 			case 'toggle':
 			case 'checkbox':
-				// Figma: Toggle with inline label on the right
+				// Figma: Toggle with toggle_label displayed next to the switch
+				const toggleLabel = field.toggle_label || field.inline_label || '';
 				return (
-					<ToggleControl
-						key={field.name}
-						label={field.inline_label || ''} // Support inline label like "Allow members to edit..."
-						checked={!!value}
-						onChange={(checked) => onChange(field.name, checked ? 1 : 0)}
-						__nextHasNoMarginBottom
-					/>
+					<div className="bb-admin-settings-form__toggle-wrapper">
+						<ToggleControl
+							key={field.name}
+							label={toggleLabel}
+							checked={!!value}
+							onChange={(checked) => onChange(field.name, checked ? 1 : 0)}
+							__nextHasNoMarginBottom
+						/>
+					</div>
 				);
 
 			case 'checkbox_list':
@@ -211,7 +214,10 @@ export function SettingsForm({ fields, values, onChange }) {
 					
 					{/* Description */}
 					{field.description && (
-						<p className="bb-admin-settings-form__field-description">{field.description}</p>
+						<p 
+							className="bb-admin-settings-form__field-description"
+							dangerouslySetInnerHTML={{ __html: field.description }}
+						/>
 					)}
 					
 					{/* Render child fields inline/nested */}

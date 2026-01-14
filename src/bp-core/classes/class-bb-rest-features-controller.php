@@ -643,8 +643,10 @@ class BB_REST_Features_Controller extends WP_REST_Controller {
 				// Prefix/suffix text support
 				'prefix'       => $field['prefix'] ?? null,
 				'suffix'       => $field['suffix'] ?? null,
-				// Inline label for toggles
-				'inline_label' => $field['inline_label'] ?? null,
+				// Toggle label (displayed next to toggle switch)
+				'toggle_label' => $field['toggle_label'] ?? null,
+				// Inline label for toggles (alias for toggle_label)
+				'inline_label' => $field['inline_label'] ?? $field['toggle_label'] ?? null,
 				// Min/max for number fields
 				'min'          => $field['min'] ?? null,
 				'max'          => $field['max'] ?? null,
