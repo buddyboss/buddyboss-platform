@@ -620,8 +620,152 @@ function bb_admin_settings_2_0_register_groups_feature() {
 		'main',
 		array(
 			'title'       => __( 'Group Directory', 'buddyboss' ),
-			'description' => __( 'Configure group directory display settings.', 'buddyboss' ),
+			'description' => '',
 			'order'       => 10,
+		)
+	);
+
+	// Field: Enabled View(s)
+	bb_register_feature_field(
+		'groups',
+		'group_directory',
+		'main',
+		array(
+			'name'              => 'bp-group-layout-format',
+			'label'             => __( 'Enabled View(s)', 'buddyboss' ),
+			'type'              => 'select',
+			'description'       => __( 'Display group directories in Grid View, List View, or allow toggling between both views.', 'buddyboss' ),
+			'default'           => bp_get_option( 'bp-group-layout-format', 'list_grid' ),
+			'options'           => array(
+				array(
+					'label' => __( 'Grid and List', 'buddyboss' ),
+					'value' => 'list_grid',
+				),
+				array(
+					'label' => __( 'Grid', 'buddyboss' ),
+					'value' => 'grid',
+				),
+				array(
+					'label' => __( 'List', 'buddyboss' ),
+					'value' => 'list',
+				),
+			),
+			'sanitize_callback' => 'sanitize_text_field',
+			'order'             => 10,
+		)
+	);
+
+	// Field: Default View
+	bb_register_feature_field(
+		'groups',
+		'group_directory',
+		'main',
+		array(
+			'name'              => 'bp-group-layout-default-format',
+			'label'             => __( 'Default View', 'buddyboss' ),
+			'type'              => 'radio',
+			'description'       => '',
+			'default'           => bp_get_option( 'bp-group-layout-default-format', 'grid' ),
+			'options'           => array(
+				array(
+					'label' => __( 'Grid', 'buddyboss' ),
+					'value' => 'grid',
+				),
+				array(
+					'label' => __( 'List', 'buddyboss' ),
+					'value' => 'list',
+				),
+			),
+			'sanitize_callback' => 'sanitize_text_field',
+			'order'             => 20,
+		)
+	);
+
+	// Field: Grid Style (PRO) - Visual preview cards
+	// Note: Uses 'bb-pro-group-directory-layout-grid-style' to match PRO option name
+	bb_register_feature_field(
+		'groups',
+		'group_directory',
+		'main',
+		array(
+			'name'              => 'bb-pro-group-directory-layout-grid-style',
+			'label'             => __( 'Grid Style', 'buddyboss' ),
+			'type'              => 'image_radio',
+			'description'       => __( 'Select the grid layout style. Group avatars and cover images appear only if enabled.', 'buddyboss' ),
+			'default'           => bp_get_option( 'bb-pro-group-directory-layout-grid-style', 'left' ),
+			'options'           => array(
+				array(
+					'label' => __( 'Left', 'buddyboss' ),
+					'value' => 'left',
+					'image' => 'header-left-group', // Uses PreviewIcons component in React
+				),
+				array(
+					'label' => __( 'Centered', 'buddyboss' ),
+					'value' => 'centered', // Must match old option value 'centered' (not 'center')
+					'image' => 'header-centered-group', // Uses PreviewIcons component in React
+				),
+			),
+			'sanitize_callback' => 'sanitize_text_field',
+			'order'             => 30,
+			'pro_only'          => true,
+			'license_tier'      => 'pro',
+		)
+	);
+
+	// Field: Elements (PRO) - Toggle list for directory elements
+	// Note: Uses 'bb-pro-group-directory-layout-elements' to match PRO option name
+	// Elements: cover-images, avatars, group-privacy, group-type, last-activity, members, group-descriptions, join-buttons
+	$default_directory_elements = array( 'cover-images', 'avatars', 'group-privacy', 'group-type', 'last-activity', 'members', 'group-descriptions', 'join-buttons' );
+	$stored_directory_elements  = bp_get_option( 'bb-pro-group-directory-layout-elements', $default_directory_elements );
+	$stored_directory_elements  = is_array( $stored_directory_elements ) ? $stored_directory_elements : $default_directory_elements;
+
+	bb_register_feature_field(
+		'groups',
+		'group_directory',
+		'main',
+		array(
+			'name'              => 'bb-pro-group-directory-layout-elements',
+			'label'             => __( 'Elements', 'buddyboss' ),
+			'type'              => 'toggle_list_array',
+			'description'       => __( 'Select which elements show in your group directories. Cover images will only display in grid view and group descriptions will only display in list view.', 'buddyboss' ),
+			'default'           => array(
+				'cover-images'       => in_array( 'cover-images', $stored_directory_elements, true ) ? 1 : 0,
+				'avatars'            => in_array( 'avatars', $stored_directory_elements, true ) ? 1 : 0,
+				'group-privacy'      => in_array( 'group-privacy', $stored_directory_elements, true ) ? 1 : 0,
+				'group-type'         => in_array( 'group-type', $stored_directory_elements, true ) ? 1 : 0,
+				'last-activity'      => in_array( 'last-activity', $stored_directory_elements, true ) ? 1 : 0,
+				'join-buttons'       => in_array( 'join-buttons', $stored_directory_elements, true ) ? 1 : 0,
+			),
+			'options'           => array(
+				array(
+					'label' => __( 'Cover Images', 'buddyboss' ),
+					'value' => 'cover-images',
+				),
+				array(
+					'label' => __( 'Avatars', 'buddyboss' ),
+					'value' => 'avatars',
+				),
+				array(
+					'label' => __( 'Group Privacy', 'buddyboss' ),
+					'value' => 'group-privacy',
+				),
+				array(
+					'label' => __( 'Group Type', 'buddyboss' ),
+					'value' => 'group-type',
+				),
+				array(
+					'label' => __( 'Last Activity', 'buddyboss' ),
+					'value' => 'last-activity',
+				),
+				array(
+					'label' => __( 'Join Buttons', 'buddyboss' ),
+					'value' => 'join-buttons',
+				),
+			),
+			'sanitize_callback' => 'bb_sanitize_toggle_list_array',
+			'order'             => 40,
+			'pro_only'          => true,
+			'license_tier'      => 'pro',
 		)
 	);
 
