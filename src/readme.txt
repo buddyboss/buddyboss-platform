@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 6.8.1
 Requires PHP: 7.4.0
-Stable tag: 2.16.0
+Stable tag: 2.17.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,42 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 2.17.0 =
+* Bug: Activity - Fixed an issue where apostrophes  in activity post titles were displayed incorrectly in the BuddyBoss App for activities posted from the web
+* Bug: Activity - Fixed an issue where embed link previews were unnecessarily refreshed when changing the activity topic
+* Bug: Activity - Fixed an issue where GIF posts were not visible to non-logged-in users across Activity Feed
+* Bug: Activity - Fixed an issue where links on activity pages could not be opened in a new window on iPhone devices
+* Bug: Activity - Fixed an issue where multiple videos could play at the same time in the news feed; starting a new video now automatically pauses the previous one
+* Bug: Activity - Fixed an issue where users were unable to edit group-related posts from the news feed
+* Bug: Core - Fixed a security vulnerability that allowed unauthorized access to protected or paid media files via document preview URLs
+* Bug: Core - Fixed an issue where both Profile and Members menus were incorrectly highlighted at the same time when viewing the logged-in user’s profile
+* Bug: Core - Fixed an issue where link previews were not displaying correctly for private communities, ensuring previews now work properly across all pages
+* Bug: Core - Fixed an issue where the “Select All” checkbox on the WordPress Plugins page did not work when BuddyBoss Platform was active
+* Bug: Core - Fixed an issue where the “Settings Saved” admin notice appeared twice on non-BuddyBoss settings pages
+* Bug: Email - Fixed an issue where password reset emails were not sent when ReadyLaunch was enabled
+* Bug: Forums - Fixed a visual alignment issue with the “Notify me of new replies” checkbox in forum discussion modals
+* Bug: Forums - Fixed an issue where forum topic order was incorrect when sticky or super-sticky discussions were enabled
+* Bug: Forums - Fixed an issue where Super Sticky forum discussions were not working properly
+* Bug: Groups - Fixed an issue where group organizers were unable to reply to sub-forum topics when the parent forum was associated with a hidden group
+* Bug: Groups - Improved Group Filters styling to fix layout and UI issues when using default WordPress themes like Twenty Twenty-One
+* Bug: Media - Fixed an issue where Dubb video links did not generate previews in activity posts
+* Bug: Media - Fixed issues with album, including adding items via the Select Album option and deleting newly added media without page reload
+* Bug: Messages - Improved the notice UI on the Send Message screen for groups with zero members to match consistent styling across the platform
+* Bug: Profiles - Fixed an issue where Advanced Profile Search returned incorrect results when the Date Range field was present but not selected
+* Bug: ReadyLaunch - Fixed album UI and messaging issues in ReadyLaunch, ensuring correct display on Profile and Group album pages
+* Bug: ReadyLaunch - Fixed an issue where Google reCAPTCHA did not appear on the Registration, Login, and Forgot Password pages when ReadyLaunch was enabled
+* Bug: ReadyLaunch - Fixed an issue where ReadyLaunch message and notification menus were visible to non-logged-in users
+* Bug: ReadyLaunch - Fixed an issue where the discussion reply form displayed an empty warning message
+* Bug: ReadyLaunch - Fixed an issue where updated video thumbnails in group and member video tabs did not reflect immediately in ReadyLaunch and required a page reload
+* Bug: ReadyLaunch - Fixed an issue where users were unable to create or edit albums in ReadyLaunch
+* Bug: ReadyLaunch - Fixed notice styling issues to align with the ReadyLaunch design system, including improved colors, spacing, and dark theme consistency
+* Bug: ReadyLaunch - Fixed UI issues on the Group Pending Invitations page in ReadyLaunch, ensuring the loader and pagination display correctly
+* Bug: Social Login - Fixed an issue where Google SSO registration failed with Japanese nicknames by adding proper validation and handling during username generation
+* Bug: Widget - Fixed an issue where the Profile Cover Photo option appeared in the Profile Completion widget even when cover photo upload was disabled
+
+= 2.16.1 =
+* Bug: Core - Enhanced the license activation system with improved rate limiting and stability fixes to strengthen security
 
 = 2.16.0 =
 * Enhancement: Core – Improved the licensing service to reduce interruptions and increase the grace period when a license is not initially detected

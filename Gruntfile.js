@@ -519,7 +519,11 @@ module.exports = function (grunt) {
 				makepot_wp: {
 					command: 'wp i18n make-pot src/ src/languages/buddyboss.pot --domain=buddyboss --ignore-domain --exclude="node_modules/*, vendor/*, src/vendor/*, js/*"',
 					cwd: '.',
-					stdout: true
+					stdout: true,
+					options: {
+						maxBuffer: 1024 * 1024 * 10,
+						timeout: 60000 // 60 seconds
+					}
 				},
 				// Fix POT file headers to match grunt-wp-i18n format
 				fix_wp_cli_headers: {
