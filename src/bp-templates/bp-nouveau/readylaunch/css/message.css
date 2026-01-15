@@ -1176,6 +1176,26 @@ body.messages .bb-rl-content-wrapper {
   margin-bottom: 0;
 }
 
+#bp-message-thread-list > li .bp-message-content-wrap p.deleted-message {
+  display: inline-block;
+  font-size: 13px;
+  font-weight: 400;
+  padding: var(--bb-rl-space-50) var(--bb-rl-space-100);
+  color: var(--bb-rl-text-secondary-color);
+  border-radius: 4px;
+  background-color: var(--bb-rl-background-secondary-color);
+}
+
+#bp-message-thread-list > li .bp-message-content-wrap p.deleted-message:before {
+  content: "\e3de";
+  font-family: bb-icons-rl;
+  color: var(--bb-rl-icon-secondary-color);
+  font-size: 14px;
+  font-weight: 700;
+  margin-right: var(--bb-rl-space-50);
+  vertical-align: middle;
+}
+
 #bp-message-thread-list > li .bp-message-content-wrap img.emoji,
 #bp-message-thread-list > li .bp-message-content-wrap img.emojioneemoji {
   margin: 1px 3px;
