@@ -113,6 +113,30 @@ window.bp = window.bp || {};
 		},
 
 		/**
+		 * Check if ffmpeg thumbnail generation is still in progress.
+		 * Returns true only if ffmpeg_generated has a value that is not 'no', 'yes', or empty.
+		 *
+		 * @param {Object} videoAttachments The video attachments object.
+		 * @return {boolean} True if generation is pending, false otherwise.
+		 */
+		isFFmpegGenerationPending: function ( videoAttachments ) {
+			return videoAttachments.ffmpeg_generated &&
+				'no' !== videoAttachments.ffmpeg_generated &&
+				'yes' !== videoAttachments.ffmpeg_generated;
+		},
+
+		/**
+		 * Check if the video has fewer than 2 auto-generated thumbnails.
+		 *
+		 * @param {Object} videoAttachments The video attachments object.
+		 * @return {boolean} True if thumbnails are insufficient, false otherwise.
+		 */
+		hasInsufficientThumbnails: function ( videoAttachments ) {
+			return typeof videoAttachments.default_images === 'undefined' ||
+				videoAttachments.default_images.length < 2;
+		},
+
+		/**
 		 * [addListeners description]
 		 */
 		addListeners: function () {
@@ -1142,9 +1166,8 @@ window.bp = window.bp || {};
 							$( uploaderSelector + ' .bb-rl-video-thumbnail-auto-generated ul.bb-rl-video-thumb-list' ).removeClass( 'loading' );
 							$( uploaderSelector + ' .bb-rl-video-thumbnail-auto-generated ul.bb-rl-video-thumb-list' ).html( default_images_html );
 							$videoThumbnailUploadeEle.removeClass( 'generating_thumb ffmpeg_failed' );
-							// Only show spinners if ffmpeg is actively generating (not empty, not 'no', not 'yes').
-							var ffmpegStillGenerating = videoAttachments.ffmpeg_generated && 'no' !== videoAttachments.ffmpeg_generated && 'yes' !== videoAttachments.ffmpeg_generated;
-							if ( videoAttachments.default_images.length < 2 && bbRlVideo.is_ffmpeg_installed && ffmpegStillGenerating ) {
+							// Only show spinners if ffmpeg is actively generating.
+							if ( bp.Nouveau.Video.hasInsufficientThumbnails( videoAttachments ) && bbRlVideo.is_ffmpeg_installed && bp.Nouveau.Video.isFFmpegGenerationPending( videoAttachments ) ) {
 								$videoThumbnailUploadeEle.addClass( 'generating_thumb' );
 								$( uploaderSelector + ' .bb-rl-video-thumbnail-auto-generated ul.bb-rl-video-thumb-list' ).append( '<li class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3 bb_rl_thumb_loader"><div class="bb-rl-video-thumb-block"><i class="bb-icon-spinner bb-icon-l animate-spin"></i><span>' + bbRlVideo.generating_thumb + '</span></div></li>' );
 								$( uploaderSelector + ' .bb-rl-video-thumbnail-auto-generated ul.bb-rl-video-thumb-list' ).append( '<li class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3 bb_rl_thumb_loader"><div class="bb-rl-video-thumb-block"><i class="bb-icon-spinner bb-icon-l animate-spin"></i><span>' + bbRlVideo.generating_thumb + '</span></div></li>' );
@@ -1187,10 +1210,9 @@ window.bp = window.bp || {};
 
 				// Only trigger AJAX polling if ffmpeg is installed, we have fewer than 2 thumbnails,
 				// AND ffmpeg is actively generating (not empty, not 'no', not 'yes').
-				var ffmpegStillGeneratingForPolling = videoAttachments.ffmpeg_generated && 'no' !== videoAttachments.ffmpeg_generated && 'yes' !== videoAttachments.ffmpeg_generated;
 				var shouldPollForThumbnails = bbRlVideo.is_ffmpeg_installed &&
-					( ( typeof videoAttachments.default_images === 'undefined' ) || videoAttachments.default_images.length < 2 ) &&
-					ffmpegStillGeneratingForPolling;
+					bp.Nouveau.Video.hasInsufficientThumbnails( videoAttachments ) &&
+					bp.Nouveau.Video.isFFmpegGenerationPending( videoAttachments );
 
 				if ( shouldPollForThumbnails ) {
 					if ( this.thumbnail_xhr ) {
