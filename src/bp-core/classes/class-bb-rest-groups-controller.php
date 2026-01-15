@@ -132,16 +132,21 @@ class BB_REST_Groups_Controller extends WP_REST_Controller {
 	 */
 	public function get_items( $request ) {
 		$args = array(
-			'per_page'    => isset( $request['per_page'] ) ? (int) $request['per_page'] : 20,
-			'page'        => isset( $request['page'] ) ? (int) $request['page'] : 1,
-			'search_terms' => isset( $request['search'] ) ? sanitize_text_field( $request['search'] ) : '',
-			'orderby'     => isset( $request['orderby'] ) ? sanitize_text_field( $request['orderby'] ) : 'date_created',
-			'order'       => isset( $request['order'] ) ? strtoupper( sanitize_text_field( $request['order'] ) ) : 'DESC',
+			'per_page'         => isset( $request['per_page'] ) ? (int) $request['per_page'] : 20,
+			'page'             => isset( $request['page'] ) ? (int) $request['page'] : 1,
+			'search_terms'     => isset( $request['search'] ) ? sanitize_text_field( $request['search'] ) : '',
+			'orderby'          => isset( $request['orderby'] ) ? sanitize_text_field( $request['orderby'] ) : 'date_created',
+			'order'            => isset( $request['order'] ) ? strtoupper( sanitize_text_field( $request['order'] ) ) : 'DESC',
+			'show_hidden'      => true, // Show hidden groups for admin.
+			'populate_extras'  => true, // Populate extra data like member count.
 		);
 
 		// Filter by status if provided.
-		if ( isset( $request['status'] ) ) {
-			$args['status'] = sanitize_text_field( $request['status'] );
+		if ( ! empty( $request['status'] ) ) {
+			$args['status'] = array( sanitize_text_field( $request['status'] ) );
+		} else {
+			// Show all statuses for admin.
+			$args['status'] = array( 'public', 'private', 'hidden' );
 		}
 
 		// Filter by type if provided.
@@ -548,16 +553,27 @@ class BB_REST_Groups_Controller extends WP_REST_Controller {
 	 * @return array
 	 */
 	public function prepare_item_for_response( $group, $request ) {
+		// Get member count - it may be in different properties depending on how groups_get_groups() was called.
+		$member_count = 0;
+		if ( isset( $group->total_member_count ) ) {
+			$member_count = (int) $group->total_member_count;
+		} elseif ( function_exists( 'groups_get_total_member_count' ) ) {
+			$member_count = (int) groups_get_total_member_count( $group->id );
+		}
+
+		// Get last activity.
+		$last_activity = ! empty( $group->last_activity ) ? $group->last_activity : $group->date_created;
+
 		$data = array(
-			'id'            => $group->id,
-			'name'          => $group->name,
-			'slug'          => $group->slug,
-			'description'   => $group->description,
-			'status'        => $group->status,
-			'type'          => bp_groups_get_group_type( $group->id, false ),
-			'parent_id'     => isset( $group->parent_id ) ? (int) $group->parent_id : 0,
-			'member_count'  => (int) $group->total_member_count,
-			'avatar'        => bp_core_fetch_avatar(
+			'id'                     => $group->id,
+			'name'                   => $group->name,
+			'slug'                   => $group->slug,
+			'description'            => $group->description,
+			'status'                 => $group->status,
+			'type'                   => bp_groups_get_group_type( $group->id, false ),
+			'parent_id'              => isset( $group->parent_id ) ? (int) $group->parent_id : 0,
+			'member_count'           => $member_count,
+			'avatar'                 => bp_core_fetch_avatar(
 				array(
 					'item_id' => $group->id,
 					'object'  => 'group',
@@ -565,17 +581,18 @@ class BB_REST_Groups_Controller extends WP_REST_Controller {
 					'html'    => false,
 				)
 			),
-			'cover_image'   => bp_attachments_get_attachment(
+			'cover_image'            => bp_attachments_get_attachment(
 				array(
 					'item_id'    => $group->id,
 					'object_dir' => 'groups',
 					'type'       => 'cover-image',
 				)
 			),
-			'date_created'  => $group->date_created,
+			'date_created'           => $group->date_created,
 			'date_created_formatted' => bp_core_time_since( $group->date_created ),
-			'last_activity' => $group->last_activity,
-			'permalink'     => bp_get_group_permalink( $group ),
+			'last_activity'          => $last_activity,
+			'last_activity_formatted' => bp_core_time_since( $last_activity ),
+			'permalink'              => bp_get_group_permalink( $group ),
 		);
 
 		// Apply filters.

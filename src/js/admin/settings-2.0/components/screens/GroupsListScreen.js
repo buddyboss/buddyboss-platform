@@ -157,6 +157,7 @@ export default function GroupsListScreen({ onNavigate }) {
 			per_page: perPage.toString(),
 			orderby: orderBy,
 			order: 'desc',
+			show_hidden: 'true', // Show hidden groups for admin
 		});
 
 		if (search) {
@@ -166,13 +167,27 @@ export default function GroupsListScreen({ onNavigate }) {
 			params.append('status', statusFilter);
 		}
 
-		apiFetch({ path: `/buddyboss/v1/groups?${params.toString()}` })
+		// Use parse: false to access response headers for pagination
+		apiFetch({ 
+			path: `/buddyboss/v1/groups?${params.toString()}`,
+			parse: false 
+		})
 			.then((response) => {
-				setGroups(response.data || []);
-				setTotal(response.pagination?.total || 0);
+				// Get total from response headers
+				const totalItems = parseInt(response.headers.get('X-WP-Total') || '0', 10);
+				setTotal(totalItems);
+				
+				// Parse JSON body
+				return response.json();
+			})
+			.then((data) => {
+				// BuddyPress API returns groups as direct array
+				console.log('Groups data:', data);
+				setGroups(Array.isArray(data) ? data : []);
 				setIsLoading(false);
 			})
-			.catch(() => {
+			.catch((error) => {
+				console.error('Error loading groups:', error);
 				setIsLoading(false);
 			});
 	};
@@ -241,10 +256,33 @@ export default function GroupsListScreen({ onNavigate }) {
 	};
 
 	const formatDate = (dateString) => {
-		if (!dateString) return '';
+		if (!dateString) return __('No activity', 'buddyboss');
+		
+		// Handle ISO date format from API
 		const date = new Date(dateString);
-		const options = { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit', hour12: false };
-		return date.toLocaleDateString('en-US', options).replace(',', ',');
+		if (isNaN(date.getTime())) {
+			return dateString; // Return as-is if can't parse
+		}
+		
+		// Calculate relative time
+		const now = new Date();
+		const diff = now - date;
+		const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+		const hours = Math.floor(diff / (1000 * 60 * 60));
+		const minutes = Math.floor(diff / (1000 * 60));
+		
+		if (minutes < 1) {
+			return __('Just now', 'buddyboss');
+		} else if (minutes < 60) {
+			return minutes + ' ' + __('min ago', 'buddyboss');
+		} else if (hours < 24) {
+			return hours + ' ' + (hours === 1 ? __('hour ago', 'buddyboss') : __('hours ago', 'buddyboss'));
+		} else if (days < 30) {
+			return days + ' ' + (days === 1 ? __('day ago', 'buddyboss') : __('days ago', 'buddyboss'));
+		} else {
+			const options = { day: '2-digit', month: 'short', year: 'numeric' };
+			return date.toLocaleDateString('en-US', options);
+		}
 	};
 
 	const getPrivacyLabel = (status) => {
@@ -257,15 +295,44 @@ export default function GroupsListScreen({ onNavigate }) {
 	};
 
 	const getGroupType = (group) => {
-		// Check if group has type info
+		// Check existing API format (group_type.group_type_label)
+		if (group.group_type?.group_type_label) {
+			return group.group_type.group_type_label;
+		}
+		// Check types array from existing API
+		if (group.types && Array.isArray(group.types) && group.types.length > 0) {
+			// Return the first type name
+			return group.types[0];
+		}
+		// Check type_name for our custom API
 		if (group.type_name) {
 			return group.type_name;
 		}
-		if (group.group_type && groupTypes.length > 0) {
-			const type = groupTypes.find((t) => t.id === group.group_type || t.slug === group.group_type);
-			if (type) return type.name;
-		}
 		return '';
+	};
+	
+	const getGroupAvatar = (group) => {
+		// Existing API format: avatar_urls.thumb
+		if (group.avatar_urls?.thumb) {
+			return group.avatar_urls.thumb;
+		}
+		// Our custom API format
+		if (group.avatar) {
+			return group.avatar;
+		}
+		return null;
+	};
+	
+	const getMemberCount = (group) => {
+		// Existing API format
+		if (typeof group.total_member_count !== 'undefined') {
+			return group.total_member_count;
+		}
+		// Our custom API format
+		if (typeof group.member_count !== 'undefined') {
+			return group.member_count;
+		}
+		return 0;
 	};
 
 	const handleSideNavigation = (route) => {
@@ -429,9 +496,9 @@ export default function GroupsListScreen({ onNavigate }) {
 												checked={selectedGroups.includes(group.id)}
 												onChange={(checked) => handleSelectGroup(group.id, checked)}
 											/>
-											{group.avatar ? (
+											{getGroupAvatar(group) ? (
 												<img
-													src={group.avatar}
+													src={getGroupAvatar(group)}
 													alt=""
 													className="bb-admin-groups-list__avatar"
 												/>
@@ -459,7 +526,7 @@ export default function GroupsListScreen({ onNavigate }) {
 										<div className="bb-admin-groups-list__col bb-admin-groups-list__col--members">
 											<MembersIcon />
 											<a href={`#/groups/${group.id}/members`} className="bb-admin-groups-list__members-link">
-												{group.member_count || 0}
+												{getMemberCount(group)}
 											</a>
 										</div>
 
