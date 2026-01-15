@@ -302,7 +302,7 @@ export function SettingsScreen({ onNavigate }) {
 													onClick={() => onNavigate(feature.settings_route)}
 													disabled={feature.status !== 'active'}
 												>
-													<span className="dashicons dashicons-admin-generic"></span>
+													<i className="bb-icon-settings"></i>
 													{__('Settings', 'buddyboss')}
 												</Button>
 											</div>

@@ -592,13 +592,16 @@ $bb-border-radius-xs: 6px;
 		text-decoration: none !important;
 		box-shadow: none !important;
 
-		.dashicons {
+		i[class*="bb-icon-"] {
 			font-size: 16px;
 			width: 16px;
 			height: 16px;
 			line-height: 16px;
 			color: $bb-text-color;
 			margin: 0;
+			display: flex;
+			align-items: center;
+			justify-content: center;
 		}
 
 		&:hover {
@@ -620,7 +623,7 @@ $bb-border-radius-xs: 6px;
 			pointer-events: none;
 			background: $bb-sidebar-bg !important;
 
-			.dashicons {
+			i[class*="bb-icon-"] {
 				color: $bb-text-muted;
 			}
 
