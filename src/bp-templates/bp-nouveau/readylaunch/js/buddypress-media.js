@@ -3332,8 +3332,9 @@ window.bp = window.bp || {};
 
 			var $modal = $( event.target ).closest( '#bb-rl-media-edit-file' );
 
-			// Reset modal data.
-			$modal.find( '#bb-document-title' ).val( '' );
+			// Reset modal data and clear errors.
+			$modal.find( '#bb-document-title' ).val( '' ).removeClass( 'error' );
+			$modal.find( '.error-box' ).hide();
 			$modal.attr('data-activity-id', '');
     		$modal.attr('data-id', '');
 			$modal.attr('data-attachment-id', '');
@@ -3380,29 +3381,39 @@ window.bp = window.bp || {};
 				attachment_document_id    = $mediaItem.find( '.media-folder_name > i.media-document-attachment-id' ).attr( 'data-item-id' ),
 				documentType              = $mediaItem.find( '.media-folder_name > i.media-document-type' ).attr( 'data-item-id' ),
 				document_name_val         = document_edit.val().trim(),
-				document_privacy = ( $modal.find( '#bb-rl-folder-privacy-select' ).length > 0 ) ? $modal.find( '#bb-rl-folder-privacy-select' ).val() : '',
+				document_privacy          = ( $modal.find( '#bb-rl-folder-privacy-select' ).length > 0 ) ? $modal.find( '#bb-rl-folder-privacy-select' ).val() : '',
 				pattern                   = '';
 
-			if ( $mediaItem.length ) {
+			if ( 'folder' !== documentType ) {
 				pattern = /[?\[\]=<>:;,'"&$#*()|~`!{}%+ \/]+/g; // regex to find not supported characters. ?[]/=<>:;,'"&$#*()|~`!{}%+ {space}.
-			} else if ( eventTarget.closest( '.ac-folder-list' ).length ) {
+			} else {
 				pattern = /[\\/?%*:|"<>]+/g; // regex to find not supported characters - \ / ? % * : | " < >
 			}
 
 			var matches     = pattern.exec( document_name_val ),
-				matchStatus = Boolean( matches );
+				matchStatus = Boolean( matches ),
+				$errorBox   = $modal.find( '.error-box' );
 
 			if ( ! matchStatus ) { // If any not supported character found add error class.
 				document_edit.removeClass( 'error' );
+				$errorBox.hide();
 			} else {
 				document_edit.addClass( 'error' );
+				// Show appropriate error message based on document type.
+				if ( 'folder' === documentType ) {
+					$errorBox.text( $errorBox.data( 'folder-error' ) || $errorBox.text() ).show();
+				} else {
+					$errorBox.text( $errorBox.data( 'document-error' ) || $errorBox.text() ).show();
+				}
 			}
 
-			if ( $mediaItem.length ) {
+			if ( 'folder' !== documentType && $mediaItem.length ) {
 				if ( document_name_val.indexOf( '\\\\' ) !== -1 || matchStatus ) { // Also check if filename has "\\".
 					document_edit.addClass( 'error' );
+					$errorBox.text( $errorBox.data( 'document-error' ) || $errorBox.text() ).show();
 				} else {
 					document_edit.removeClass( 'error' );
+					$errorBox.hide();
 				}
 			}
 
