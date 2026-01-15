@@ -15,6 +15,7 @@ import { FeatureSettingsScreen } from './screens/FeatureSettingsScreen';
 const ActivityListScreen = lazy(() => import('./screens/ActivityListScreen'));
 const GroupsListScreen = lazy(() => import('./screens/GroupsListScreen'));
 const GroupEditScreen = lazy(() => import('./screens/GroupEditScreen'));
+const GroupTypeScreen = lazy(() => import('./screens/GroupTypeScreen'));
 
 /**
  * Loading Spinner Component
@@ -117,10 +118,9 @@ export function Router({ currentRoute, onNavigate }) {
 			}
 			if (routeParts[1] === 'types') {
 				return (
-					<div className="bb-admin-group-types">
-						<h1>{__('Group Types', 'buddyboss')}</h1>
-						<p>{__('Group Types management - to be implemented', 'buddyboss')}</p>
-					</div>
+					<Suspense fallback={<LoadingSpinner />}>
+						<GroupTypeScreen onNavigate={onNavigate} />
+					</Suspense>
 				);
 			}
 			if (routeParts[1] === 'navigation') {

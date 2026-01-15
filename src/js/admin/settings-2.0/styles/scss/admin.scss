@@ -2680,3 +2680,294 @@ $bb-border-radius-xs: 6px;
 		margin: 10px 0 0 0;
 	}
 }
+
+// Group Types Screen
+.bb-admin-group-types {
+	max-width: 1112px;
+	margin: 0;
+	padding: 24px 32px;
+
+	&__header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		margin-bottom: 24px;
+
+		h2 {
+			font-size: 24px;
+			font-weight: 500;
+			line-height: 32px;
+			color: #000;
+			margin: 0;
+		}
+	}
+
+	&__help-btn {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 24px;
+		height: 24px;
+		background: transparent;
+		border: none;
+		cursor: pointer;
+		color: #666;
+
+		i {
+			font-size: 24px;
+		}
+
+		&:hover {
+			color: #000;
+		}
+	}
+
+	&__card {
+		background-color: #fff;
+		border-radius: 16px;
+		box-shadow: 0 1.5px 1px 0 rgba(0, 0, 0, 0.16);
+		overflow: hidden;
+	}
+
+	&__settings {
+		border-bottom: 0.5px solid #d9d9d9;
+	}
+
+	&__setting-item {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: 24px;
+		border-bottom: 0.5px solid #d9d9d9;
+
+		&:last-child {
+			border-bottom: none;
+		}
+
+		h3 {
+			font-size: 16px;
+			font-weight: 500;
+			line-height: 22px;
+			color: #000;
+			margin: 0 0 4px 0;
+		}
+
+		p {
+			font-size: 13px;
+			font-weight: 400;
+			line-height: 18px;
+			color: #666;
+			margin: 0;
+		}
+	}
+
+	&__setting-content {
+		flex: 1;
+		min-width: 0;
+		margin-right: 24px;
+	}
+
+	&__setting-toggle {
+		flex-shrink: 0;
+	}
+
+	&__list-section {
+		padding: 24px;
+	}
+
+	&__list-header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		margin-bottom: 16px;
+
+		h3 {
+			font-size: 18px;
+			font-weight: 500;
+			line-height: 26px;
+			color: #000;
+			margin: 0;
+		}
+	}
+
+	&__add-btn {
+		display: inline-flex;
+		align-items: center;
+		gap: 4px;
+		background: #ef5d33;
+		border: none;
+		border-radius: 8px;
+		padding: 8px 16px;
+		font-size: 14px;
+		font-weight: 400;
+		line-height: 20px;
+		color: #fff;
+		cursor: pointer;
+		transition: background 0.2s ease;
+
+		span {
+			font-size: 16px;
+			font-weight: 400;
+		}
+
+		&:hover {
+			background: #d7542e;
+		}
+	}
+
+	&__loading,
+	&__empty {
+		padding: 48px;
+		text-align: center;
+		color: #2f2f2f;
+	}
+
+	&__list {
+		display: flex;
+		flex-direction: column;
+		gap: 0;
+	}
+
+	&__item {
+		display: flex;
+		align-items: center;
+		gap: 16px;
+		padding: 16px;
+		border-bottom: 0.5px solid #e5e5e5;
+		position: relative;
+
+		&:last-child {
+			border-bottom: none;
+		}
+
+		&:hover {
+			background: #f6f6f6;
+		}
+	}
+
+	&__item-icon {
+		flex-shrink: 0;
+		width: 16px;
+		height: 16px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		color: #666;
+	}
+
+	&__item-name {
+		flex: 1;
+		min-width: 0;
+		font-size: 14px;
+		font-weight: 500;
+		line-height: 20px;
+		color: #000;
+	}
+
+	&__item-slug {
+		flex: 1;
+		min-width: 0;
+		font-size: 13px;
+		font-weight: 400;
+		line-height: 18px;
+		color: #666;
+	}
+
+	&__item-groups {
+		display: flex;
+		align-items: center;
+		gap: 4px;
+		flex-shrink: 0;
+
+		svg {
+			width: 16px;
+			height: 16px;
+		}
+	}
+
+	&__item-link {
+		font-size: 13px;
+		font-weight: 400;
+		line-height: 18px;
+		color: #2c6bff;
+		text-decoration: none;
+
+		&:hover {
+			text-decoration: underline;
+		}
+	}
+
+	&__item-privacy {
+		display: flex;
+		align-items: center;
+		gap: 4px;
+		flex-shrink: 0;
+		font-size: 13px;
+		font-weight: 400;
+		line-height: 18px;
+		color: #666;
+
+		svg {
+			width: 12px;
+			height: 12px;
+		}
+	}
+
+	&__item-actions {
+		position: relative;
+		flex-shrink: 0;
+	}
+
+	&__ellipsis-btn {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 32px;
+		height: 32px;
+		background: transparent;
+		border: none;
+		border-radius: 4px;
+		cursor: pointer;
+		color: #666;
+
+		&:hover {
+			background: #f0f0f0;
+		}
+
+		svg {
+			width: 24px;
+			height: 24px;
+		}
+	}
+
+	&__menu {
+		position: absolute;
+		right: 0;
+		top: 100%;
+		background: #fff;
+		border: 1px solid #d9d9d9;
+		border-radius: 8px;
+		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+		z-index: 100;
+		min-width: 140px;
+		overflow: hidden;
+		margin-top: 4px;
+
+		button {
+			display: block;
+			width: 100%;
+			padding: 10px 16px;
+			border: none;
+			background: transparent;
+			font-size: 14px;
+			font-weight: 400;
+			text-align: left;
+			color: #000;
+			cursor: pointer;
+
+			&:hover {
+				background: #f6f6f6;
+			}
+		}
+	}
+}
