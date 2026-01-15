@@ -575,22 +575,22 @@ $bb-border-radius-xs: 6px;
 	}
 
 	&__feature-settings-btn {
-		display: inline-flex;
-		align-items: center;
-		gap: 4px;
-		background: $bb-sidebar-bg;
-		border: 0.5px solid $bb-border-color;
-		border-radius: $bb-border-radius-sm;
-		padding: 6px 16px;
-		min-height: 32px;
-		font-size: 14px;
-		line-height: 20px;
-		color: $bb-text-color;
-		font-weight: 400;
+		display: inline-flex !important;
+		align-items: center !important;
+		gap: 4px !important;
+		background: $bb-sidebar-bg !important;
+		border: 0.5px solid $bb-border-color !important;
+		border-radius: $bb-border-radius-sm !important;
+		padding: 6px 16px !important;
+		min-height: 32px !important;
+		font-size: 14px !important;
+		line-height: 20px !important;
+		color: $bb-text-color !important;
+		font-weight: 400 !important;
 		cursor: pointer;
 		transition: background 0.2s ease, opacity 0.2s ease;
-		text-decoration: none;
-		box-shadow: none;
+		text-decoration: none !important;
+		box-shadow: none !important;
 
 		.dashicons {
 			font-size: 16px;
@@ -602,20 +602,23 @@ $bb-border-radius-xs: 6px;
 		}
 
 		&:hover {
-			background: #e0e0e0;
-			box-shadow: none;
+			background: #e0e0e0 !important;
+			border: 0.5px solid $bb-border-color !important;
+			box-shadow: none !important;
 		}
 
 		&:focus {
-			box-shadow: 0 0 0 1px #2271b1;
+			background: $bb-sidebar-bg !important;
+			border: 0.5px solid $bb-border-color !important;
+			box-shadow: 0 0 0 1px #2271b1 !important;
 		}
 
 		&--disabled,
 		&:disabled {
-			opacity: 0.5;
-			cursor: not-allowed;
+			opacity: 0.5 !important;
+			cursor: not-allowed !important;
 			pointer-events: none;
-			background: $bb-sidebar-bg;
+			background: $bb-sidebar-bg !important;
 
 			.dashicons {
 				color: $bb-text-muted;
@@ -636,6 +639,22 @@ $bb-border-radius-xs: 6px;
 		text-align: center;
 		padding: $bb-spacing * 2;
 		color: $bb-text-secondary;
+	}
+}
+
+// Override WordPress component button styles specifically for settings button
+.bb-admin-settings .components-button.bb-admin-settings__feature-settings-btn {
+	background: $bb-sidebar-bg !important;
+	border: 0.5px solid $bb-border-color !important;
+
+	&:hover {
+		background: #e0e0e0 !important;
+		border: 0.5px solid $bb-border-color !important;
+	}
+
+	&:focus {
+		background: $bb-sidebar-bg !important;
+		border: 0.5px solid $bb-border-color !important;
 	}
 }
 
