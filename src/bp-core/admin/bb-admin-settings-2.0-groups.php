@@ -55,6 +55,32 @@ function bb_sanitize_toggle_list( $value ) {
 }
 
 /**
+ * Sanitize toggle list array field value.
+ *
+ * Converts a toggle list (key => 0/1) to an array of enabled values.
+ * This is used when the option stores an array of enabled item keys.
+ *
+ * @since BuddyBoss 3.0.0
+ *
+ * @param mixed $value The value to sanitize.
+ * @return array Array of enabled values.
+ */
+function bb_sanitize_toggle_list_array( $value ) {
+	if ( ! is_array( $value ) ) {
+		return array();
+	}
+
+	$enabled = array();
+	foreach ( $value as $key => $val ) {
+		if ( ! empty( $val ) ) {
+			$enabled[] = sanitize_key( $key );
+		}
+	}
+
+	return $enabled;
+}
+
+/**
  * Sanitize array input.
  *
  * @since BuddyBoss 3.0.0
@@ -487,17 +513,17 @@ function bb_admin_settings_2_0_register_groups_feature() {
 	);
 
 	// Field: Header Style (visual radio cards)
-	// Note: Uses 'bb-group-header-style' to match existing option name
+	// Note: Uses 'bb-pro-group-single-page-header-style' to match PRO option name
 	bb_register_feature_field(
 		'groups',
 		'group_headers',
 		'main',
 		array(
-			'name'              => 'bb-group-header-style',
+			'name'              => 'bb-pro-group-single-page-header-style',
 			'label'             => __( 'Header Style', 'buddyboss' ),
 			'type'              => 'image_radio',
 			'description'       => __( 'Select the style of your group header. Group avatars and cover images will only be displayed if they are enabled. This setting does not apply to the App style.', 'buddyboss' ),
-			'default'           => bp_get_option( 'bb-group-header-style', 'centered' ),
+			'default'           => bp_get_option( 'bb-pro-group-single-page-header-style', 'left' ),
 			'options'           => array(
 				array(
 					'label' => __( 'Left', 'buddyboss' ),
@@ -512,28 +538,35 @@ function bb_admin_settings_2_0_register_groups_feature() {
 			),
 			'sanitize_callback' => 'sanitize_text_field',
 			'order'             => 10,
+			'pro_only'          => true,
+			'license_tier'      => 'pro',
 		)
 	);
 
-	// Field: Elements (multiple toggles - each stored as separate option)
-	// Note: Each toggle is stored as individual option like 'bb-group-headers-element-group-type'
+	// Field: Elements (stored as array of enabled elements)
+	// Note: Uses 'bb-pro-group-single-page-headers-elements' to match PRO option name
+	// Default: all enabled - array( 'group-type', 'group-activity', 'group-description', 'group-organizers', 'group-privacy' )
+	$default_elements      = array( 'group-type', 'group-activity', 'group-description', 'group-organizers', 'group-privacy' );
+	$enabled_elements      = bp_get_option( 'bb-pro-group-single-page-headers-elements', $default_elements );
+	$enabled_elements      = is_array( $enabled_elements ) ? $enabled_elements : $default_elements;
+	$elements_toggle_value = array(
+		'group-type'        => in_array( 'group-type', $enabled_elements, true ) ? 1 : 0,
+		'group-activity'    => in_array( 'group-activity', $enabled_elements, true ) ? 1 : 0,
+		'group-description' => in_array( 'group-description', $enabled_elements, true ) ? 1 : 0,
+		'group-organizers'  => in_array( 'group-organizers', $enabled_elements, true ) ? 1 : 0,
+		'group-privacy'     => in_array( 'group-privacy', $enabled_elements, true ) ? 1 : 0,
+	);
+
 	bb_register_feature_field(
 		'groups',
 		'group_headers',
 		'main',
 		array(
-			'name'              => 'bb-group-headers-elements',
+			'name'              => 'bb-pro-group-single-page-headers-elements',
 			'label'             => __( 'Elements', 'buddyboss' ),
-			'type'              => 'toggle_list',
+			'type'              => 'toggle_list_array', // Stored as array of enabled values
 			'description'       => __( 'Select which elements to show in your group headers.', 'buddyboss' ),
-			'option_prefix'     => 'bb-group-headers-element-', // Each option stored separately with this prefix
-			'default'           => array(
-				'group-type'        => bp_get_option( 'bb-group-headers-element-group-type', 'group-type' ) === 'group-type' ? 1 : 0,
-				'group-activity'    => bp_get_option( 'bb-group-headers-element-group-activity', 'group-activity' ) === 'group-activity' ? 1 : 0,
-				'group-description' => bp_get_option( 'bb-group-headers-element-group-description', '' ) === 'group-description' ? 1 : 0,
-				'group-organizers'  => bp_get_option( 'bb-group-headers-element-group-organizers', '' ) === 'group-organizers' ? 1 : 0,
-				'group-privacy'     => bp_get_option( 'bb-group-headers-element-group-privacy', 'group-privacy' ) === 'group-privacy' ? 1 : 0,
-			),
+			'default'           => $elements_toggle_value,
 			'options'           => array(
 				array(
 					'label' => __( 'Group Type', 'buddyboss' ),
@@ -556,8 +589,10 @@ function bb_admin_settings_2_0_register_groups_feature() {
 					'value' => 'group-privacy',
 				),
 			),
-			'sanitize_callback' => 'bb_sanitize_toggle_list',
+			'sanitize_callback' => 'bb_sanitize_toggle_list_array',
 			'order'             => 20,
+			'pro_only'          => true,
+			'license_tier'      => 'pro',
 		)
 	);
 

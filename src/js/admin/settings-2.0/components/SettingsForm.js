@@ -25,7 +25,7 @@ import { __ } from '@wordpress/i18n';
  * @returns {JSX.Element} Settings form component
  */
 export function SettingsForm({ fields, values, onChange }) {
-	
+
 	/**
 	 * Check if a field should be visible based on its conditional logic
 	 */
@@ -36,7 +36,7 @@ export function SettingsForm({ fields, values, onChange }) {
 			// Only show if conditional field matches the expected value
 			return condValue === field.conditional.value || condValue == field.conditional.value;
 		}
-		
+
 		// For parent_field (nesting), always show the field but it may be disabled
 		// Fields with parent_field are rendered as children of their parent
 		return true;
@@ -49,25 +49,25 @@ export function SettingsForm({ fields, values, onChange }) {
 		if (!field.parent_field) {
 			return false;
 		}
-		
+
 		const parentValue = values[field.parent_field];
-		
+
 		// Find parent field to check if it's inverted
 		const parentField = fields.find(f => f.name === field.parent_field);
 		const isParentInverted = parentField?.invert_value === true;
-		
+
 		// If parent_value is specified, check for exact match
 		if (field.parent_value !== undefined) {
 			return !(parentValue === field.parent_value || parentValue == field.parent_value);
 		}
-		
+
 		// For inverted parent: enabled when parent actual value is falsy (display is truthy)
 		// For normal parent: enabled when parent value is truthy
 		if (isParentInverted) {
 			// Parent is inverted: child is enabled when parent's actual value is falsy
 			return !!parentValue;
 		}
-		
+
 		// Default: disabled if parent is falsy (for toggles)
 		return !parentValue;
 	};
@@ -284,7 +284,10 @@ export function SettingsForm({ fields, values, onChange }) {
 				);
 
 			case 'toggle_list':
+			case 'toggle_list_array':
 				// Multiple stacked toggle switches (like Group Header Elements)
+				// toggle_list: each option stored as separate WP option
+				// toggle_list_array: stored as single array of enabled values
 				const listValue = typeof value === 'object' ? value : {};
 				return (
 					<div className="bb-admin-settings-field__toggle-list">
@@ -344,7 +347,7 @@ export function SettingsForm({ fields, values, onChange }) {
 					<div className="bb-admin-settings-field__child-render">
 						{childFields.map((childField) => {
 							const childValue = values[childField.name] !== undefined ? values[childField.name] : childField.default;
-							
+
 							// Render based on child field type
 							const renderChildControl = () => {
 								switch (childField.type) {
@@ -446,7 +449,7 @@ export function SettingsForm({ fields, values, onChange }) {
 
 		// Get child fields that depend on this field
 		const childFields = fields.filter(f => f.parent_field === field.name);
-		
+
 		// Check if this is a toggle with children (special layout)
 		const isToggleWithChildren = (field.type === 'toggle' || field.type === 'checkbox') && childFields.length > 0;
 
@@ -475,15 +478,15 @@ export function SettingsForm({ fields, values, onChange }) {
 							<span className="bb-admin-settings-form__field-suffix">{field.suffix}</span>
 						)}
 					</div>
-					
+
 					{/* Description */}
 					{field.description && (
-						<p 
+						<p
 							className="bb-admin-settings-form__field-description"
 							dangerouslySetInnerHTML={{ __html: field.description }}
 						/>
 					)}
-					
+
 					{/* Render child fields inline/nested */}
 					{childFields.length > 0 && (
 						<div className="bb-admin-settings-form__child-fields">

@@ -404,6 +404,18 @@ class BB_REST_Features_Controller extends WP_REST_Controller {
 			return ( $a['order'] ?? 100 ) - ( $b['order'] ?? 100 );
 		} );
 
+		// Update settings with processed values from formatted fields.
+		// This ensures React gets the correct values (e.g., toggle_list_array converted to object).
+		foreach ( $formatted_side_panels as $panel ) {
+			foreach ( $panel['sections'] ?? array() as $section ) {
+				foreach ( $section['fields'] ?? array() as $field ) {
+					if ( isset( $field['name'] ) && isset( $field['value'] ) ) {
+						$settings[ $field['name'] ] = $field['value'];
+					}
+				}
+			}
+		}
+
 		// Get navigation items (links to non-settings screens like "All Activity").
 		$nav_items = $registry->get_nav_items( $feature_id );
 
@@ -467,12 +479,12 @@ class BB_REST_Features_Controller extends WP_REST_Controller {
 				foreach ( $field['fields'] as $sub_field ) {
 					$sub_field_type = $sub_field['type'] ?? 'text';
 					$sanitize_callback = 'sanitize_text_field';
-					
+
 					// Set appropriate sanitize callback based on type.
 					if ( 'number' === $sub_field_type ) {
 						$sanitize_callback = 'intval';
 					}
-					
+
 					$sub_field_entry = array(
 						'name'              => $sub_field['name'],
 						'label'             => $sub_field['label'] ?? '',
@@ -517,6 +529,27 @@ class BB_REST_Features_Controller extends WP_REST_Controller {
 						$history = BB_Settings_History::instance();
 						$history->log_change( $feature_id, $option_name, $old_value, $new_value );
 					}
+				}
+				continue;
+			}
+
+			// Handle toggle_list_array fields (stored as array of enabled values)
+			if ( 'toggle_list_array' === ( $field['type'] ?? '' ) && is_array( $value ) ) {
+				$old_value = get_option( $field_name, array() );
+				// Convert toggle values (key => 0/1) to array of enabled keys
+				$enabled_values = array();
+				foreach ( $value as $toggle_key => $toggle_value ) {
+					if ( ! empty( $toggle_value ) ) {
+						$enabled_values[] = $toggle_key;
+					}
+				}
+				update_option( $field_name, $enabled_values );
+				$updated_fields[ $field_name ] = $enabled_values;
+
+				// Log change to history.
+				if ( class_exists( 'BB_Settings_History' ) && $old_value !== $enabled_values ) {
+					$history = BB_Settings_History::instance();
+					$history->log_change( $feature_id, $field_name, $old_value, $enabled_values );
 				}
 				continue;
 			}
@@ -683,6 +716,34 @@ class BB_REST_Features_Controller extends WP_REST_Controller {
 					$stored_value = get_option( $option_name, '' );
 					// Check if the stored value matches the option key (means enabled)
 					$toggle_values[ $option_key ] = ( $stored_value === $option_key ) ? 1 : 0;
+				}
+				$field_value = $toggle_values;
+			}
+
+			// Handle toggle_list_array (stored as array of enabled values)
+			if ( isset( $field['type'] ) && 'toggle_list_array' === $field['type'] ) {
+				// Build default array from options (all enabled by default)
+				$default_array = array();
+				foreach ( $field['options'] ?? array() as $option ) {
+					$default_array[] = $option['value'];
+				}
+
+				// Get stored value with proper default (use get_option for reliability)
+				$stored_array = get_option( $field['name'], $default_array );
+
+				// Handle edge cases: empty string, false, or non-array values
+				if ( empty( $stored_array ) || ! is_array( $stored_array ) ) {
+					$stored_array = $default_array;
+				}
+
+				// Convert indexed array to lookup map for faster checking
+				$enabled_map = array_flip( $stored_array );
+
+				$toggle_values = array();
+				foreach ( $field['options'] ?? array() as $option ) {
+					$option_key = $option['value'];
+					// Check if the key exists in the enabled map
+					$toggle_values[ $option_key ] = isset( $enabled_map[ $option_key ] ) ? 1 : 0;
 				}
 				$field_value = $toggle_values;
 			}
