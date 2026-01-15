@@ -1718,11 +1718,17 @@ function bp_nouveau_ajax_video_get_edit_thumbnail_data() {
 		}
 	}
 
+	// Only expose ffmpeg status if user has edit permission for the video.
+	$ffmpeg_generated = '';
+	if ( $video_id && bp_video_user_can_edit( $video_id ) ) {
+		$ffmpeg_generated = get_post_meta( $attachment_id, 'bb_ffmpeg_preview_generated', true );
+	}
+
 	wp_send_json_success(
 		array(
 			'default_images'   => $default_images,
 			'dropzone_edit'    => $dropzone_arr,
-			'ffmpeg_generated' => get_post_meta( $attachment_id, 'bb_ffmpeg_preview_generated', true ),
+			'ffmpeg_generated' => $ffmpeg_generated,
 		)
 	);
 }
