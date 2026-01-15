@@ -1142,12 +1142,13 @@ window.bp = window.bp || {};
 							$( uploaderSelector + ' .bb-rl-video-thumbnail-auto-generated ul.bb-rl-video-thumb-list' ).removeClass( 'loading' );
 							$( uploaderSelector + ' .bb-rl-video-thumbnail-auto-generated ul.bb-rl-video-thumb-list' ).html( default_images_html );
 							$videoThumbnailUploadeEle.removeClass( 'generating_thumb ffmpeg_failed' );
-							// Only show spinners if ffmpeg hasn't already completed/failed generation.
-							if ( videoAttachments.default_images.length < 2 && bbRlVideo.is_ffpmeg_installed && 'no' !== videoAttachments.ffmpeg_generated ) {
+							// Only show spinners if ffmpeg is actively generating (not empty, not 'no', not 'yes').
+							var ffmpegStillGenerating = videoAttachments.ffmpeg_generated && 'no' !== videoAttachments.ffmpeg_generated && 'yes' !== videoAttachments.ffmpeg_generated;
+							if ( videoAttachments.default_images.length < 2 && bbRlVideo.is_ffpmeg_installed && ffmpegStillGenerating ) {
 								$videoThumbnailUploadeEle.addClass( 'generating_thumb' );
 								$( uploaderSelector + ' .bb-rl-video-thumbnail-auto-generated ul.bb-rl-video-thumb-list' ).append( '<li class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3 bb_rl_thumb_loader"><div class="bb-rl-video-thumb-block"><i class="bb-icon-spinner bb-icon-l animate-spin"></i><span>' + bbRlVideo.generating_thumb + '</span></div></li>' );
 								$( uploaderSelector + ' .bb-rl-video-thumbnail-auto-generated ul.bb-rl-video-thumb-list' ).append( '<li class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3 bb_rl_thumb_loader"><div class="bb-rl-video-thumb-block"><i class="bb-icon-spinner bb-icon-l animate-spin"></i><span>' + bbRlVideo.generating_thumb + '</span></div></li>' );
-							} else if ( 'no' === videoAttachments.ffmpeg_generated ) {
+							} else if ( 'no' === videoAttachments.ffmpeg_generated || '' === videoAttachments.ffmpeg_generated ) {
 								$videoThumbnailUploadeEle.addClass( 'ffmpeg_failed' );
 							}
 						}
@@ -1185,11 +1186,11 @@ window.bp = window.bp || {};
 				};
 
 				// Only trigger AJAX polling if ffmpeg is installed, we have fewer than 2 thumbnails,
-				// AND ffmpeg hasn't already completed/failed generation.
+				// AND ffmpeg is actively generating (not empty, not 'no', not 'yes').
+				var ffmpegStillGeneratingForPolling = videoAttachments.ffmpeg_generated && 'no' !== videoAttachments.ffmpeg_generated && 'yes' !== videoAttachments.ffmpeg_generated;
 				var shouldPollForThumbnails = bbRlVideo.is_ffpmeg_installed &&
 					( ( typeof videoAttachments.default_images === 'undefined' ) || videoAttachments.default_images.length < 2 ) &&
-					'no' !== videoAttachments.ffmpeg_generated &&
-					'yes' !== videoAttachments.ffmpeg_generated;
+					ffmpegStillGeneratingForPolling;
 
 				if ( shouldPollForThumbnails ) {
 					if ( this.thumbnail_xhr ) {
@@ -1234,10 +1235,12 @@ window.bp = window.bp || {};
 								ulSelector.html( response.data.default_images );
 							}
 
-							// When ffmpeg_generated is 'no', stop polling and clean up UI.
+							// When ffmpeg_generated is 'no', 'yes', or empty, stop polling and clean up UI.
 							// Do NOT clear the list - we want to keep any existing thumbnails from default_images.
 							// Use flag to prevent multiple cleanup executions from overlapping AJAX requests.
-							if ( response.data.ffmpeg_generated && 'no' === response.data.ffmpeg_generated && ! bp.Nouveau.Video.thumbnail_cleanup_complete ) {
+							var ffmpegDone = 'no' === response.data.ffmpeg_generated || 'yes' === response.data.ffmpeg_generated || '' === response.data.ffmpeg_generated;
+							
+							if ( ffmpegDone && ! bp.Nouveau.Video.thumbnail_cleanup_complete ) {
 								bp.Nouveau.Video.thumbnail_cleanup_complete = true;
 								// Stop the polling interval - no more thumbnails will be generated.
 								clearTimeout( bp.Nouveau.Video.thumbnail_interval );
@@ -1249,7 +1252,7 @@ window.bp = window.bp || {};
 								if ( ulSelector.find( 'li' ).length === 0 ) {
 									$thumbnailUploader.addClass( 'no_generated_thumb' );
 								}
-							} else {
+							} else if ( ! ffmpegDone ) {
 								var $thumbItems  = ulSelector.find( 'li' );
 								var $loaderItems = ulSelector.find( 'li.bb_rl_thumb_loader' );
 								if ( $thumbItems.length < 2 ) {
