@@ -1196,7 +1196,7 @@ window.bp = window.bp || {};
 							var ffmpegStillGenerating = videoAttachments.ffmpeg_generated && 'no' !== videoAttachments.ffmpeg_generated && 'yes' !== videoAttachments.ffmpeg_generated;
 
 							// Only show spinners if ffmpeg is actively generating.
-							if ( videoAttachments.default_images.length < 2 && BP_Nouveau.video.is_ffpmeg_installed && ffmpegStillGenerating ) {
+							if ( videoAttachments.default_images.length < 2 && BP_Nouveau.video.is_ffmpeg_installed && ffmpegStillGenerating ) {
 								$( '.bp-video-thumbnail-uploader' ).addClass( 'generating_thumb' );
 								$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-auto-generated ul.video-thumb-list' ).append( '<li class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3 thumb_loader"><div class="video-thumb-block"><i class="bb-icon-spinner bb-icon-l animate-spin"></i><span>' + BP_Nouveau.video.generating_thumb + '</span></div></li>' );
 								$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-auto-generated ul.video-thumb-list' ).append( '<li class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3 thumb_loader"><div class="video-thumb-block"><i class="bb-icon-spinner bb-icon-l animate-spin"></i><span>' + BP_Nouveau.video.generating_thumb + '</span></div></li>' );
@@ -1239,7 +1239,7 @@ window.bp = window.bp || {};
 				// Only trigger AJAX polling if ffmpeg is installed, we have fewer than 2 thumbnails,
 				// AND ffmpeg is actively generating (not empty, not 'no', not 'yes').
 				var ffmpegStillGenerating = videoAttachments.ffmpeg_generated && 'no' !== videoAttachments.ffmpeg_generated && 'yes' !== videoAttachments.ffmpeg_generated;
-				var shouldPollForThumbnails = BP_Nouveau.video.is_ffpmeg_installed &&
+				var shouldPollForThumbnails = BP_Nouveau.video.is_ffmpeg_installed &&
 					( ( typeof videoAttachments.default_images === 'undefined' ) || videoAttachments.default_images.length < 2 ) &&
 					ffmpegStillGenerating;
 
