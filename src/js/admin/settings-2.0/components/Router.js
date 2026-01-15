@@ -96,7 +96,7 @@ export function Router({ currentRoute, onNavigate }) {
 			if (routeParts[1] === 'all') {
 				return (
 					<Suspense fallback={<LoadingSpinner />}>
-						<GroupsListScreen />
+						<GroupsListScreen onNavigate={onNavigate} />
 					</Suspense>
 				);
 			}

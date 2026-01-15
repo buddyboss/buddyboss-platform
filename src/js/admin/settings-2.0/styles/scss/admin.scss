@@ -2107,6 +2107,531 @@ $bb-border-radius-xs: 6px;
 	}
 }
 
+// =============================================================================
+// GROUPS LIST SCREEN (Figma: allGroups)
+// Based on: https://www.figma.com/design/XS2Hf0smlEnhWfoKyks7ku/Backend-Settings-2.0?node-id=2611-123285
+// =============================================================================
+.bb-admin-groups-list {
+	max-width: 1112px;
+	margin: 0;
+	padding: 0;
+
+	// Feature Card (main white container)
+	&__card {
+		background-color: #fff;
+		border: 0.5px solid #e5e5e5;
+		border-radius: $bb-border-radius;
+		box-shadow: 0 1.5px 1px 0 rgba(0, 0, 0, 0.16);
+		overflow: hidden;
+	}
+
+	// Section Header (Groups title + Create button)
+	&__section-header {
+		padding: 0 24px;
+		border-bottom: 1px solid $bb-border-color;
+	}
+
+	&__section-header-content {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: 16px 0;
+	}
+
+	&__section-title {
+		font-size: 18px;
+		font-weight: 500;
+		line-height: 26px;
+		color: $bb-text-color;
+		margin: 0;
+	}
+
+	// Create New Group Button (orange)
+	&__create-btn {
+		display: inline-flex;
+		align-items: center;
+		gap: 4px;
+		background-color: $bb-primary-color;
+		color: #fff;
+		border: none;
+		border-radius: $bb-border-radius-sm;
+		padding: 6px 16px;
+		font-size: 14px;
+		font-weight: 400;
+		line-height: 20px;
+		cursor: pointer;
+		transition: background-color 0.2s ease;
+
+		&:hover {
+			background-color: #d7542e;
+		}
+
+		svg {
+			width: 16px;
+			height: 16px;
+		}
+	}
+
+	// Action Bar
+	&__action-bar {
+		padding: 0 24px;
+	}
+
+	&__action-wrap {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: 16px 0;
+		border-bottom: 0.5px solid $bb-border-color;
+	}
+
+	&__action-left {
+		display: flex;
+		align-items: center;
+		gap: 24px;
+	}
+
+	&__filter-group {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+	}
+
+	// Select wrapper with chevron
+	&__select-wrap {
+		position: relative;
+		display: inline-flex;
+		align-items: center;
+
+		svg {
+			position: absolute;
+			right: 8px;
+			top: 50%;
+			transform: translateY(-50%);
+			pointer-events: none;
+		}
+	}
+
+	&__select {
+		appearance: none;
+		background-color: $bb-background-color;
+		border: 0.5px solid $bb-border-color;
+		border-radius: 6px;
+		padding: 7px 32px 7px 8px;
+		font-size: 13px;
+		font-weight: 400;
+		line-height: 18px;
+		color: $bb-text-color;
+		cursor: pointer;
+		min-width: 120px;
+
+		&:focus {
+			outline: none;
+			border-color: #2271b1;
+		}
+	}
+
+	// Apply Button (disabled style - outline orange)
+	&__apply-btn {
+		background: transparent;
+		border: 1px solid #f7ae99;
+		border-radius: 8px;
+		padding: 6px 16px;
+		font-size: 14px;
+		font-weight: 400;
+		line-height: 20px;
+		color: #f9bead;
+		cursor: pointer;
+		transition: all 0.2s ease;
+
+		&:hover:not(.bb-admin-groups-list__apply-btn--disabled):not(:disabled) {
+			background: #fef2ef;
+			border-color: $bb-primary-color;
+			color: $bb-primary-color;
+		}
+
+		&--disabled,
+		&:disabled {
+			cursor: not-allowed;
+			opacity: 0.7;
+		}
+	}
+
+	&__action-right {
+		display: flex;
+		align-items: center;
+		gap: 13px;
+	}
+
+	// Search Input
+	&__search-wrap {
+		position: relative;
+		width: 224px;
+
+		svg {
+			position: absolute;
+			right: 8px;
+			top: 50%;
+			transform: translateY(-50%);
+			pointer-events: none;
+		}
+	}
+
+	&__search-input {
+		width: 100%;
+		background-color: $bb-background-color;
+		border: 0.5px solid $bb-border-color;
+		border-radius: 6px;
+		padding: 7px 36px 7px 8px;
+		font-size: 13px;
+		font-weight: 400;
+		line-height: 18px;
+		color: $bb-text-color;
+
+		&::placeholder {
+			color: $bb-text-secondary;
+		}
+
+		&:focus {
+			outline: none;
+			border-color: #2271b1;
+		}
+	}
+
+	// Table Header
+	&__table-header {
+		padding: 0 24px;
+	}
+
+	&__table-header-wrap {
+		display: flex;
+		align-items: center;
+		gap: 32px;
+		padding: 8px 0;
+		border-bottom: 0.5px solid $bb-border-color;
+
+		// Column text styling for header
+		font-size: 13px;
+		font-weight: 400;
+		line-height: 18px;
+		color: $bb-text-secondary;
+	}
+
+	// Table Body
+	&__table-body {
+		padding: 16px 24px;
+	}
+
+	&__loading,
+	&__empty {
+		padding: 48px;
+		text-align: center;
+		color: $bb-text-secondary;
+	}
+
+	// Table Row
+	&__row {
+		border-bottom: 0.5px solid #e5e5e5;
+
+		&:last-child {
+			border-bottom: none;
+		}
+	}
+
+	&__row-wrap {
+		display: flex;
+		align-items: center;
+		gap: 32px;
+		padding: 16px 0;
+		position: relative;
+	}
+
+	// Table Columns
+	&__col {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+
+		// Name column (264px) - checkbox + avatar + name
+		&--name {
+			width: 264px;
+			min-width: 264px;
+
+			.components-checkbox-control {
+				margin-bottom: 0;
+			}
+
+			.components-checkbox-control__input-container {
+				margin-right: 0;
+			}
+
+			span {
+				font-size: 14px;
+				font-weight: 400;
+				line-height: 20px;
+				color: $bb-text-color;
+			}
+		}
+
+		// Privacy column (104px)
+		&--privacy {
+			width: 104px;
+			min-width: 104px;
+		}
+
+		// Members column (136px)
+		&--members {
+			width: 136px;
+			min-width: 136px;
+
+			svg {
+				flex-shrink: 0;
+			}
+		}
+
+		// Group Type column (176px)
+		&--type {
+			width: 176px;
+			min-width: 176px;
+		}
+
+		// Last Active column (136px)
+		&--activity {
+			width: 136px;
+			min-width: 136px;
+
+			svg {
+				flex-shrink: 0;
+			}
+		}
+
+		// Actions column
+		&--actions {
+			position: absolute;
+			right: 0;
+			top: 50%;
+			transform: translateY(-50%);
+		}
+	}
+
+	// Group Avatar
+	&__avatar {
+		width: 40px;
+		height: 40px;
+		border-radius: 50%;
+		border: 0.5px solid $bb-border-color;
+		object-fit: cover;
+		flex-shrink: 0;
+	}
+
+	// Default Group Icon (when no avatar)
+	&__default-avatar {
+		width: 40px;
+		height: 40px;
+		border-radius: 50%;
+		background-color: $bb-background-color;
+		border: 0.5px solid $bb-border-color;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex-shrink: 0;
+
+		svg {
+			width: 24px;
+			height: 24px;
+		}
+	}
+
+	// Group Name Link
+	&__name-link {
+		font-size: 14px;
+		font-weight: 400;
+		line-height: 20px;
+		color: #2c6bff;
+		text-decoration: none;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		max-width: 184px;
+
+		&:hover {
+			text-decoration: underline;
+		}
+	}
+
+	// Privacy Badge (pill style with icon)
+	&__privacy-badge {
+		display: inline-flex;
+		align-items: center;
+		gap: 4px;
+		background-color: $bb-sidebar-bg;
+		border: 0.5px solid #ccc;
+		border-radius: 999px;
+		padding: 0 4px;
+		font-size: 11px;
+		font-weight: 400;
+		line-height: 16px;
+		color: $bb-text-color;
+
+		svg {
+			flex-shrink: 0;
+		}
+
+		&--public svg {
+			color: $bb-text-color;
+		}
+
+		&--private svg {
+			color: $bb-text-color;
+		}
+
+		&--hidden svg {
+			color: $bb-text-color;
+		}
+	}
+
+	// Members Link
+	&__members-link {
+		font-size: 13px;
+		font-weight: 400;
+		line-height: 18px;
+		color: #2c6bff;
+		text-decoration: none;
+
+		&:hover {
+			text-decoration: underline;
+		}
+	}
+
+	// Group Type Badge (pill style)
+	&__type-badge {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		background-color: $bb-sidebar-bg;
+		border: 0.5px solid #ccc;
+		border-radius: 999px;
+		padding: 4px 8px;
+		font-size: 11px;
+		font-weight: 500;
+		line-height: 16px;
+		color: $bb-text-color;
+	}
+
+	// Activity Text
+	&__activity-text {
+		font-size: 13px;
+		font-weight: 400;
+		line-height: 18px;
+		color: $bb-text-secondary;
+	}
+
+	// Action Button (ellipsis)
+	&__action-btn {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 32px;
+		height: 32px;
+		background: transparent;
+		border: none;
+		border-radius: 4px;
+		cursor: pointer;
+		color: $bb-text-secondary;
+
+		&:hover {
+			background: $bb-background-color;
+		}
+	}
+
+	// Action Menu Dropdown
+	&__action-menu {
+		position: absolute;
+		right: 0;
+		top: 100%;
+		background: #fff;
+		border: 1px solid $bb-border-color;
+		border-radius: 8px;
+		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+		z-index: 100;
+		min-width: 140px;
+		overflow: hidden;
+
+		button {
+			display: block;
+			width: 100%;
+			padding: 10px 16px;
+			border: none;
+			background: transparent;
+			font-size: 14px;
+			font-weight: 400;
+			text-align: left;
+			color: $bb-text-color;
+			cursor: pointer;
+
+			&:hover {
+				background: $bb-background-color;
+			}
+		}
+
+		&-delete {
+			color: #dc3545 !important;
+
+			&:hover {
+				background: #fef2f2 !important;
+			}
+		}
+	}
+
+	// Pagination
+	&__pagination {
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		gap: 16px;
+		padding: 24px 0;
+	}
+
+	&__pagination-info {
+		font-size: 14px;
+		font-weight: 400;
+		line-height: 20px;
+		color: $bb-text-secondary;
+	}
+
+	&__pagination-buttons {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+	}
+
+	&__pagination-btn {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		background: transparent;
+		border: 1px solid $bb-border-color;
+		border-radius: 6px;
+		padding: 6px 16px;
+		font-size: 14px;
+		font-weight: 400;
+		line-height: 20px;
+		color: $bb-text-color;
+		cursor: pointer;
+		transition: all 0.2s ease;
+
+		&:hover:not(:disabled) {
+			background: $bb-background-color;
+			border-color: $bb-text-secondary;
+		}
+
+		&:disabled {
+			opacity: 0.5;
+			cursor: not-allowed;
+		}
+	}
+}
+
 // Responsive
 @media (max-width: 782px) {
 	.bb-admin-dashboard__container {

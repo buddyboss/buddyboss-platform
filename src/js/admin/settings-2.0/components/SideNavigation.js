@@ -83,8 +83,11 @@ export function SideNavigation({ featureId, sidePanels, navItems, currentPanel, 
 						{navItems.map((item) => (
 							<li key={item.id} className="bb-admin-side-nav__item">
 								<button
-									className="bb-admin-side-nav__link bb-admin-side-nav__link--nav-item"
+									className={`bb-admin-side-nav__link bb-admin-side-nav__link--nav-item ${
+										currentPanel === item.id ? 'bb-admin-side-nav__link--active' : ''
+									}`}
 									onClick={() => handleNavItemClick(item.route)}
+									aria-current={currentPanel === item.id ? 'page' : undefined}
 								>
 									{item.icon && (
 										<span className="bb-admin-side-nav__icon">
