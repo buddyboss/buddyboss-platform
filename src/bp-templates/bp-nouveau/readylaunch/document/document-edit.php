@@ -29,8 +29,11 @@ $document_id = bp_get_document_id();
 						<div class="bb-field-wrap">
 							<label for="bb-document-title" class="bb-label"><?php esc_html_e( 'Title', 'buddyboss' ); ?></label>
 							<input id="bb-document-title" value="" type="text" placeholder="<?php esc_html_e( 'Enter Document Title', 'buddyboss' ); ?>" />
-							<small class="error-box"><?php esc_html_e( 'Following special characters are not supported: \ / ? % * : | " < >', 'buddyboss' ); ?></small>
-						</div>
+							<small class="error-box"
+						       data-document-error="<?php esc_attr_e( 'Following special characters are not supported: ? [ ] / \\\\ = < > : ; , \' " & $ # * ( ) | ~ ` ! { } % + {space}', 'buddyboss' ); ?>"
+						       data-folder-error="<?php esc_attr_e( 'Following special characters are not supported: \\ / ? % * : | " < >', 'buddyboss' ); ?>"
+						       style="display: none;"></small>
+							</div>
 					</div>
 					<footer class="bb-model-footer">
 						<?php

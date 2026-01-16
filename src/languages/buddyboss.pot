@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 2.17.0\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2026-01-13 06:11:32+00:00\n"
+"POT-Creation-Date: 2026-01-16 05:14:57+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -803,7 +803,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/readylaunch/document/activity-document-move.php:29
 #: bp-templates/bp-nouveau/readylaunch/document/create-folder.php:39
 #: bp-templates/bp-nouveau/readylaunch/document/document-create-folder.php:28
-#: bp-templates/bp-nouveau/readylaunch/document/document-edit.php:61
+#: bp-templates/bp-nouveau/readylaunch/document/document-edit.php:64
 #: bp-templates/bp-nouveau/readylaunch/document/document-entry.php:153
 #: bp-templates/bp-nouveau/readylaunch/groups/groups-loop.php:157
 #: bp-templates/bp-nouveau/readylaunch/groups/groups-loop.php:183
@@ -8308,7 +8308,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/document/document-privacy.php:22
 #: bp-templates/bp-nouveau/buddypress/media/media-privacy.php:22
 #: bp-templates/bp-nouveau/buddypress/video/video-privacy.php:22
-#: bp-templates/bp-nouveau/readylaunch/document/document-edit.php:40
+#: bp-templates/bp-nouveau/readylaunch/document/document-edit.php:43
 #: bp-templates/bp-nouveau/readylaunch/document/document-privacy.php:20
 #: bp-templates/bp-nouveau/readylaunch/groups/single/admin/group-settings.php:26
 #: bp-templates/bp-nouveau/readylaunch/media/media-privacy.php:26
@@ -23212,7 +23212,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/functions.php:1591
 #: bp-templates/bp-nouveau/includes/functions.php:1603
 #: bp-templates/bp-nouveau/readylaunch/assets/_attachments/avatars/camera.php:28
-#: bp-templates/bp-nouveau/readylaunch/document/document-edit.php:62
+#: bp-templates/bp-nouveau/readylaunch/document/document-edit.php:65
 #: bp-templates/bp-nouveau/readylaunch/document/document-entry.php:155
 #: bp-templates/bp-nouveau/readylaunch/document/edit-child-folder.php:50
 #: bp-templates/bp-nouveau/readylaunch/media/edit-album.php:61
@@ -34848,7 +34848,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/readylaunch/document/create-child-folder.php:39
 #: bp-templates/bp-nouveau/readylaunch/document/create-folder.php:31
 #: bp-templates/bp-nouveau/readylaunch/document/document-create-folder.php:20
-#: bp-templates/bp-nouveau/readylaunch/document/document-edit.php:32
+#: bp-templates/bp-nouveau/readylaunch/document/document-edit.php:34
 #: bp-templates/bp-nouveau/readylaunch/document/edit-child-folder.php:38
 #: bp-templates/bp-nouveau/readylaunch/media/edit-album.php:39
 msgid "Following special characters are not supported: \\ / ? % * : | \" < >"
@@ -36004,7 +36004,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/search/loop/folder.php:35
 #: bp-templates/bp-nouveau/buddypress/search/loop/photos-ajax.php:50
 #: bp-templates/bp-nouveau/buddypress/search/loop/photos.php:56
-#: bp-templates/bp-nouveau/buddypress/search/loop/topic-ajax.php:45
+#: bp-templates/bp-nouveau/buddypress/search/loop/topic-ajax.php:46
 #: bp-templates/bp-nouveau/buddypress/search/loop/topic.php:45
 #: bp-templates/bp-nouveau/buddypress/search/loop/videos-ajax.php:50
 #: bp-templates/bp-nouveau/buddypress/search/loop/videos.php:56
@@ -36025,7 +36025,7 @@ msgid "By "
 msgstr ""
 
 #. translators: total topics
-#: bp-templates/bp-nouveau/buddypress/search/loop/forum-ajax.php:45
+#: bp-templates/bp-nouveau/buddypress/search/loop/forum-ajax.php:44
 #: bp-templates/bp-nouveau/buddypress/search/loop/forum.php:47
 #: bp-templates/bp-nouveau/buddypress/search/loop/sfwd-lessons-ajax.php:63
 #: bp-templates/bp-nouveau/buddypress/search/loop/sfwd-lessons.php:60
@@ -36040,9 +36040,9 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. translators: total replies
-#: bp-templates/bp-nouveau/buddypress/search/loop/forum-ajax.php:55
+#: bp-templates/bp-nouveau/buddypress/search/loop/forum-ajax.php:54
 #: bp-templates/bp-nouveau/buddypress/search/loop/forum.php:57
-#: bp-templates/bp-nouveau/buddypress/search/loop/topic-ajax.php:48
+#: bp-templates/bp-nouveau/buddypress/search/loop/topic-ajax.php:49
 #: bp-templates/bp-nouveau/buddypress/search/loop/topic.php:48
 #: bp-templates/bp-nouveau/readylaunch/search/loop/forum-ajax.php:59
 #: bp-templates/bp-nouveau/readylaunch/search/loop/forum.php:61
@@ -36054,7 +36054,7 @@ msgid_plural "%d replies"
 msgstr[0] ""
 msgstr[1] ""
 
-#: bp-templates/bp-nouveau/buddypress/search/loop/forum-ajax.php:67
+#: bp-templates/bp-nouveau/buddypress/search/loop/forum-ajax.php:66
 #: bp-templates/bp-nouveau/buddypress/search/loop/forum.php:70
 #: bp-templates/bp-nouveau/buddypress/search/loop/group-ajax.php:39
 #: bp-templates/bp-nouveau/buddypress/search/loop/group.php:31
@@ -36087,7 +36087,7 @@ msgstr ""
 msgid "and you."
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/search/loop/reply-ajax.php:37
+#: bp-templates/bp-nouveau/buddypress/search/loop/reply-ajax.php:38
 #: bp-templates/bp-nouveau/buddypress/search/loop/reply.php:53
 #: bp-templates/bp-nouveau/readylaunch/search/loop/reply-ajax.php:40
 #: bp-templates/bp-nouveau/readylaunch/search/loop/reply.php:57
@@ -36114,7 +36114,7 @@ msgid_plural "%d quizzes"
 msgstr[0] ""
 msgstr[1] ""
 
-#: bp-templates/bp-nouveau/buddypress/search/loop/topic-ajax.php:53
+#: bp-templates/bp-nouveau/buddypress/search/loop/topic-ajax.php:54
 #: bp-templates/bp-nouveau/buddypress/search/loop/topic.php:53
 #: bp-templates/bp-nouveau/readylaunch/search/loop/topic-ajax.php:53
 #: bp-templates/bp-nouveau/readylaunch/search/loop/topic.php:57
@@ -38502,6 +38502,10 @@ msgstr ""
 
 #: bp-templates/bp-nouveau/readylaunch/document/document-edit.php:31
 msgid "Enter Document Title"
+msgstr ""
+
+#: bp-templates/bp-nouveau/readylaunch/document/document-edit.php:33
+msgid "Following special characters are not supported: ? [ ] / \\\\ = < > : ; , ' \" & $ # * ( ) | ~ ` ! { } % + {space}"
 msgstr ""
 
 #: bp-templates/bp-nouveau/readylaunch/document/document-header.php:34
