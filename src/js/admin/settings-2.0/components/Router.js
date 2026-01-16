@@ -16,6 +16,7 @@ const ActivityListScreen = lazy(() => import('./screens/ActivityListScreen'));
 const GroupsListScreen = lazy(() => import('./screens/GroupsListScreen'));
 const GroupEditScreen = lazy(() => import('./screens/GroupEditScreen'));
 const GroupTypeScreen = lazy(() => import('./screens/GroupTypeScreen'));
+const GroupNavigationScreen = lazy(() => import('./screens/GroupNavigationScreen'));
 
 /**
  * Loading Spinner Component
@@ -125,10 +126,9 @@ export function Router({ currentRoute, onNavigate }) {
 			}
 			if (routeParts[1] === 'navigation') {
 				return (
-					<div className="bb-admin-group-navigation">
-						<h1>{__('Group Navigation', 'buddyboss')}</h1>
-						<p>{__('Group Navigation designer - to be implemented', 'buddyboss')}</p>
-					</div>
+					<Suspense fallback={<LoadingSpinner />}>
+						<GroupNavigationScreen onNavigate={onNavigate} />
+					</Suspense>
 				);
 			}
 			return <LoadingSpinner />;

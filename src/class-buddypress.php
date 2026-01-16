@@ -743,6 +743,7 @@ class BuddyPress {
 			'BB_REST_Dashboard_Controller'                 => 'core',
 			'BB_REST_Activity_Controller'                   => 'core',
 			'BB_REST_Groups_Controller'                    => 'core',
+			'BB_REST_Appearance_Controller'                => 'core',
 			'BB_Feature_Autoloader'                        => 'core',
 
 			// BuddyBoss Platform Rest API classes.

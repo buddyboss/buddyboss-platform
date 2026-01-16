@@ -3054,3 +3054,236 @@ $bb-border-radius-xs: 6px;
 		}
 	}
 }
+
+// Group Navigation Screen
+// Design: https://www.figma.com/design/XS2Hf0smlEnhWfoKyks7ku/Backend-Settings-2.0?node-id=2611-123338
+.bb-admin-group-navigation {
+	max-width: 984px;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 24px;
+
+	// Loading state
+	&__loading {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		padding: 64px;
+	}
+
+	// Card styling
+	&__card {
+		background-color: #fff;
+		border: 0.5px solid #e5e5e5;
+		border-radius: 16px;
+		box-shadow: 0 1.5px 1px 0 rgba(0, 0, 0, 0.16);
+		overflow: hidden;
+	}
+
+	// Card header
+	&__card-header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: 16px 24px;
+		border-bottom: 1px solid #d9d9d9;
+
+		h2 {
+			font-size: 18px;
+			font-weight: 500;
+			line-height: 26px;
+			color: #000;
+			margin: 0;
+		}
+	}
+
+	&__help-btn {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 32px;
+		height: 32px;
+		padding: 4px;
+		background: transparent;
+		border: none;
+		cursor: pointer;
+		color: #666;
+
+		svg {
+			width: 24px;
+			height: 24px;
+		}
+
+		&:hover {
+			color: #000;
+		}
+	}
+
+	// Settings section
+	&__settings {
+		padding: 32px 24px 8px;
+	}
+
+	&__setting-row {
+		display: flex;
+		gap: 56px;
+		align-items: flex-start;
+		padding-bottom: 24px;
+		border-bottom: 0.5px solid #d9d9d9;
+
+		&--last {
+			border-bottom: none;
+			padding-top: 24px;
+		}
+	}
+
+	&__setting-label {
+		width: 248px;
+		flex-shrink: 0;
+		padding: 8px 0;
+
+		span {
+			font-size: 14px;
+			font-weight: 500;
+			line-height: 20px;
+			color: #000;
+		}
+	}
+
+	&__setting-control {
+		flex: 1;
+		min-width: 0;
+	}
+
+	&__toggle-wrap {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		margin-bottom: 0;
+
+		.components-form-toggle {
+			margin: 0;
+		}
+	}
+
+	&__toggle-label {
+		font-size: 14px;
+		font-weight: 400;
+		line-height: 20px;
+		color: #000;
+	}
+
+	&__select-wrap {
+		width: 272px;
+		margin-bottom: 8px;
+
+		.components-select-control__input {
+			background: #f6f6f6;
+			border: 0.5px solid #ccc;
+			border-radius: 6px;
+			min-height: 36px;
+			padding: 7px 8px;
+			font-size: 13px;
+			line-height: 18px;
+			color: #000;
+		}
+	}
+
+	&__setting-desc {
+		font-size: 13px;
+		font-weight: 400;
+		line-height: 18px;
+		color: #666;
+		margin: 0;
+		padding: 3px 0;
+		max-width: 632px;
+	}
+
+	// Navigation list
+	&__list {
+		padding: 32px 24px 8px;
+		display: flex;
+		flex-direction: column;
+		gap: 16px;
+	}
+
+	&__item {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 32px;
+		min-height: 48px;
+		padding-bottom: 16px;
+		border-bottom: 0.5px solid #d9d9d9;
+		cursor: grab;
+		transition: opacity 0.2s ease;
+
+		&:last-child {
+			border-bottom: none;
+		}
+
+		&--dragging {
+			opacity: 0.5;
+		}
+	}
+
+	&__item-left {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		flex: 1;
+	}
+
+	&__drag-handle {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 24px;
+		height: 24px;
+		color: #666;
+		cursor: grab;
+
+		svg {
+			width: 24px;
+			height: 24px;
+		}
+	}
+
+	&__item-info {
+		display: flex;
+		align-items: center;
+		gap: 16px;
+	}
+
+	&__item-name {
+		font-size: 14px;
+		font-weight: 500;
+		line-height: 20px;
+		color: #000;
+		min-width: 264px;
+	}
+
+	&__item-badge {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		padding: 4px 8px;
+		background: #f0f0f0;
+		border: 0.5px solid #ccc;
+		border-radius: 999px;
+		font-size: 11px;
+		font-weight: 500;
+		line-height: 16px;
+		color: #000;
+	}
+
+	&__item-right {
+		flex-shrink: 0;
+
+		.components-form-toggle {
+			margin: 0;
+		}
+	}
+}
