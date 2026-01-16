@@ -1199,9 +1199,13 @@ window.bp = window.bp || {};
 		},
 
 		loadMoreGifResponse: function ( response ) {
-			var self          = this, i = 0,
-				$gifContainer = $( 'div.forums-attached-gif-container[data-key="' + self.gif_container_key + '"]' ),
-				$standalonePopup = $( '.bb-rl-gif-media-search-dropdown-standalone.open' );
+			var self             = this, i = 0,
+				$gifContainer    = $( 'div.forums-attached-gif-container[data-key="' + self.gif_container_key + '"]' ),
+				$standalonePopup = $( '.bb-rl-gif-media-search-dropdown-standalone.open' ),
+				$resultsList     = $standalonePopup.length > 0
+					? $standalonePopup.find( '.gif-search-results-list' )
+					: $gifContainer.closest( 'form' ).find( '.gif-search-results-list' );
+
 			$gifContainer.removeClass( 'loading' );
 			if ( typeof response.data !== 'undefined' && response.data.length ) {
 				var li_html = '', responseDataLength = response.data.length;
@@ -1220,12 +1224,7 @@ window.bp = window.bp || {};
 					self.gif_data[ self.gif_container_key ].data.push( response.data[ i ] );
 				}
 
-				// Append to the correct dropdown (standalone or inline).
-				if ( $standalonePopup.length > 0 ) {
-					$standalonePopup.find( '.gif-search-results-list' ).append( li_html );
-				} else {
-					$gifContainer.closest( 'form' ).find( '.gif-search-results-list' ).append( li_html );
-				}
+				$resultsList.append( li_html );
 			}
 
 			if ( typeof response.pagination !== 'undefined' && typeof response.pagination.total_count !== 'undefined' ) {
@@ -1265,8 +1264,19 @@ window.bp = window.bp || {};
 			var self   = this, i = 0, target = $( e.currentTarget ),
 				$standalonePopup = target.closest( '.bb-rl-gif-media-search-dropdown-standalone' ),
 				isStandalone     = $standalonePopup.length > 0,
-				$targetForm      = isStandalone ? $standalonePopup.data( 'target-form' ) : target.closest( 'form' ),
-				gif_container    = $targetForm ? $targetForm.find( '.forums-attached-gif-container' ) : target.closest( 'form' ).find( '.forums-attached-gif-container' );
+				$targetForm, gif_container;
+
+			if ( isStandalone ) {
+				$targetForm = $standalonePopup.data( 'target-form' );
+				if ( ! $targetForm || ! $targetForm.length ) {
+					e.preventDefault();
+					return;
+				}
+			} else {
+				$targetForm = target.closest( 'form' );
+			}
+
+			gif_container = $targetForm.find( '.forums-attached-gif-container' );
 			e.preventDefault();
 
 			// Close the appropriate dropdown.
