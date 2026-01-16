@@ -260,6 +260,10 @@ window.bp = window.bp || {};
 			$document.on( 'click', '.bbpress-forums-activity #whats-new-toolbar .found-media-item', this.selectGif.bind( this ) );
 			$document.find( 'form #whats-new-toolbar, .forum form #whats-new-toolbar' ).on( 'click', '.found-media-item', this.selectGif.bind( this ) );
 			$document.find( 'form #whats-new-toolbar .gif-search-results, .forum form #whats-new-toolbar .gif-search-results' ).scroll( this.loadMoreGif.bind( this ) );
+			// Standalone GIF picker for forum modals.
+			$document.on( 'click', '.bb-rl-gif-media-search-dropdown-standalone .found-media-item', this.selectGif.bind( this ) );
+			$document.on( 'keydown', '.bb-rl-gif-media-search-dropdown-standalone .search-query-input', this.searchGif.bind( this ) );
+			$document.on( 'scroll', '.bb-rl-gif-media-search-dropdown-standalone .gif-search-results', this.loadMoreGif.bind( this ) );
 			if ( ! groupMessagesButtonSelector.length ) {
 				$document.find( 'form #whats-new-toolbar, .forum form #whats-new-toolbar' ).on( 'click', '.found-media-item', this.selectGif.bind( this ) );
 			}
@@ -1102,7 +1106,10 @@ window.bp = window.bp || {};
 		loadMoreGif: function ( e ) {
 			var el = e.target, self = this;
 
-			var $forums_gif_container = $( e.target ).closest( 'form' ).find( '.forums-attached-gif-container' );
+			var $standalonePopup      = $( e.target ).closest( '.bb-rl-gif-media-search-dropdown-standalone' ),
+				isStandalone          = $standalonePopup.length > 0,
+				$targetForm           = isStandalone ? $standalonePopup.data( 'target-form' ) : $( e.target ).closest( 'form' ),
+				$forums_gif_container = $targetForm ? $targetForm.find( '.forums-attached-gif-container' ) : $( e.target ).closest( 'form' ).find( '.forums-attached-gif-container' );
 			var gif_container_key     = $forums_gif_container.data( 'key' );
 			self.gif_container_key    = gif_container_key;
 
@@ -1190,7 +1197,8 @@ window.bp = window.bp || {};
 
 		loadMoreGifResponse: function ( response ) {
 			var self          = this, i = 0,
-				$gifContainer = $( 'div.forums-attached-gif-container[data-key="' + self.gif_container_key + '"]' );
+				$gifContainer = $( 'div.forums-attached-gif-container[data-key="' + self.gif_container_key + '"]' ),
+				$standalonePopup = $( '.bb-rl-gif-media-search-dropdown-standalone.open' );
 			$gifContainer.removeClass( 'loading' );
 			if ( typeof response.data !== 'undefined' && response.data.length ) {
 				var li_html = '', responseDataLength = response.data.length;
@@ -1209,7 +1217,12 @@ window.bp = window.bp || {};
 					self.gif_data[ self.gif_container_key ].data.push( response.data[ i ] );
 				}
 
-				$gifContainer.closest( 'form' ).find( '.gif-search-results-list' ).append( li_html );
+				// Append to the correct dropdown (standalone or inline).
+				if ( $standalonePopup.length > 0 ) {
+					$standalonePopup.find( '.gif-search-results-list' ).append( li_html );
+				} else {
+					$gifContainer.closest( 'form' ).find( '.gif-search-results-list' ).append( li_html );
+				}
 			}
 
 			if ( typeof response.pagination !== 'undefined' && typeof response.pagination.total_count !== 'undefined' ) {
@@ -1246,32 +1259,41 @@ window.bp = window.bp || {};
 		},
 
 		selectGif: function ( e ) {
-			var self          = this, i = 0, target = $( e.currentTarget ),
-				gif_container = target.closest( 'form' ).find( '.forums-attached-gif-container' );
+			var self   = this, i = 0, target = $( e.currentTarget ),
+				$standalonePopup = target.closest( '.bb-rl-gif-media-search-dropdown-standalone' ),
+				isStandalone     = $standalonePopup.length > 0,
+				$targetForm      = isStandalone ? $standalonePopup.data( 'target-form' ) : target.closest( 'form' ),
+				gif_container    = $targetForm ? $targetForm.find( '.forums-attached-gif-container' ) : target.closest( 'form' ).find( '.forums-attached-gif-container' );
 			e.preventDefault();
 
-			gif_container.closest( 'form' ).find( '.bb-rl-gif-media-search-dropdown' ).removeClass( 'open' );
+			// Close the appropriate dropdown.
+			if ( isStandalone ) {
+				$standalonePopup.removeClass( 'open' );
+			} else {
+				gif_container.closest( 'form' ).find( '.bb-rl-gif-media-search-dropdown' ).removeClass( 'open' );
+			}
+
 			var gif_container_key = gif_container.data( 'key' );
 			if ( typeof self.gif_data[ gif_container_key ] !== 'undefined' && typeof self.gif_data[ gif_container_key ].data !== 'undefined' && self.gif_data[ gif_container_key ].data.length ) {
 				var gifDataLength = self.gif_data[ gif_container_key ].data.length;
 				for ( i = 0; i < gifDataLength; i++ ) {
 					if ( self.gif_data[ gif_container_key ].data[ i ].id === e.currentTarget.dataset.id ) {
 
-						target.closest( 'form' ).find( '#whats-new-attachments .forums-attached-gif-container' )[ 0 ].style.backgroundImage = 'url(' + self.gif_data[ gif_container_key ].data[ i ].images.fixed_width.url + ')';
-						target.closest( 'form' ).find( '#whats-new-attachments .forums-attached-gif-container' )[ 0 ].style.backgroundSize  = 'contain';
-						target.closest( 'form' ).find( '#whats-new-attachments .forums-attached-gif-container' )[ 0 ].style.height          = self.gif_data[ gif_container_key ].data[ i ].images.original.height + 'px';
-						target.closest( 'form' ).find( '#whats-new-attachments .forums-attached-gif-container' )[ 0 ].style.width           = self.gif_data[ gif_container_key ].data[ i ].images.original.width + 'px';
+						$targetForm.find( '#whats-new-attachments .forums-attached-gif-container' )[ 0 ].style.backgroundImage = 'url(' + self.gif_data[ gif_container_key ].data[ i ].images.fixed_width.url + ')';
+						$targetForm.find( '#whats-new-attachments .forums-attached-gif-container' )[ 0 ].style.backgroundSize  = 'contain';
+						$targetForm.find( '#whats-new-attachments .forums-attached-gif-container' )[ 0 ].style.height          = self.gif_data[ gif_container_key ].data[ i ].images.original.height + 'px';
+						$targetForm.find( '#whats-new-attachments .forums-attached-gif-container' )[ 0 ].style.width           = self.gif_data[ gif_container_key ].data[ i ].images.original.width + 'px';
 
-						target.closest( 'form' ).find( '#whats-new-attachments .forums-attached-gif-container' ).find( '.gif-image-container img' ).attr( 'src', self.gif_data[ gif_container_key ].data[ i ].images.original.url );
-						target.closest( 'form' ).find( '#whats-new-attachments .forums-attached-gif-container' ).removeClass( 'closed' );
-						if ( target.closest( 'form' ).find( '#bbp_media_gif' ).length ) {
-							target.closest( 'form' ).find( '#bbp_media_gif' ).val( JSON.stringify( self.gif_data[ gif_container_key ].data[ i ] ) );
+						$targetForm.find( '#whats-new-attachments .forums-attached-gif-container' ).find( '.gif-image-container img' ).attr( 'src', self.gif_data[ gif_container_key ].data[ i ].images.original.url );
+						$targetForm.find( '#whats-new-attachments .forums-attached-gif-container' ).removeClass( 'closed' );
+						if ( $targetForm.find( '#bbp_media_gif' ).length ) {
+							$targetForm.find( '#bbp_media_gif' ).val( JSON.stringify( self.gif_data[ gif_container_key ].data[ i ] ) );
 						}
 						break;
 					}
 				}
 
-				var tool_box = target.closest( 'form' );
+				var tool_box = $targetForm;
 				tool_box.addClass( 'has-gif' );
 				bp.Nouveau.Media.disableButtonsInToolBox(
 					tool_box,
@@ -1487,11 +1509,15 @@ window.bp = window.bp || {};
 		searchGifRequest: function ( e ) {
 			var self = this, i = 0;
 
-			var $forums_gif_container = $( e.target ).closest( 'form' ).find( '.forums-attached-gif-container' );
+			var $standalonePopup      = $( e.target ).closest( '.bb-rl-gif-media-search-dropdown-standalone' ),
+				isStandalone          = $standalonePopup.length > 0,
+				$targetForm           = isStandalone ? $standalonePopup.data( 'target-form' ) : $( e.target ).closest( 'form' ),
+				$forums_gif_container = $targetForm ? $targetForm.find( '.forums-attached-gif-container' ) : $( e.target ).closest( 'form' ).find( '.forums-attached-gif-container' ),
+				$pickerContainer      = isStandalone ? $standalonePopup : $( e.target ).closest( 'form' );
 			$forums_gif_container.addClass( 'loading' );
 			var gif_container_key = $forums_gif_container.data( 'key' );
-			$( e.target ).closest( 'form' ).find( '.gif-no-results' ).removeClass( 'show' );
-			$( e.target ).closest( 'form' ).find( '.gif-no-connection' ).removeClass( 'show' );
+			$pickerContainer.find( '.gif-no-results' ).removeClass( 'show' );
+			$pickerContainer.find( '.gif-no-connection' ).removeClass( 'show' );
 
 			self.clearGifRequests( gif_container_key );
 
@@ -1507,10 +1533,10 @@ window.bp = window.bp || {};
 				},
 				function ( response ) {
 					if ( undefined !== response.data.length && 0 === response.data.length ) {
-						$( e.target ).closest( 'form' ).find( '.gif-no-results' ).addClass( 'show' );
+						$pickerContainer.find( '.gif-no-results' ).addClass( 'show' );
 					}
 					if ( undefined !== response.meta.status && 200 !== response.meta.status ) {
-						$( e.target ).closest( 'form' ).find( '.gif-no-connection' ).addClass( 'show' );
+						$pickerContainer.find( '.gif-no-connection' ).addClass( 'show' );
 					}
 					if ( typeof response.data !== 'undefined' && response.data.length ) {
 						var li_html            = '',
@@ -1539,7 +1565,7 @@ window.bp = window.bp || {};
 					$forums_gif_container.removeClass( 'loading' );
 				},
 				function () {
-					$( e.target ).closest( 'form' ).find( '.gif-no-connection' ).addClass( 'show' );
+					$pickerContainer.find( '.gif-no-connection' ).addClass( 'show' );
 				}
 			);
 
@@ -1556,7 +1582,9 @@ window.bp = window.bp || {};
 					self.gif_data[ gif_container_key ].requests[ i ].abort();
 				}
 
+				// Clear results from both inline and standalone popups.
 				$( '[data-key="' + gif_container_key + '"]' ).closest( 'form' ).find( '.gif-search-results-list li' ).remove();
+				$( '.bb-rl-gif-media-search-dropdown-standalone .gif-search-results-list li' ).remove();
 
 				self.gif_data[ gif_container_key ].requests = [];
 				self.gif_data[ gif_container_key ].data     = [];
@@ -1566,8 +1594,33 @@ window.bp = window.bp || {};
 
 		toggleGifSelector: function ( event ) {
 			var self                = this, target = $( event.currentTarget ),
-				gif_search_dropdown = target.closest( 'form' ).find( '.bb-rl-gif-media-search-dropdown' ), i = 0;
+				isInsideForumModal  = target.closest( '.bb-rl-forum-modal' ).length > 0,
+				gif_search_dropdown = isInsideForumModal ? $( '.bb-rl-gif-media-search-dropdown-standalone' ) : target.closest( 'form' ).find( '.bb-rl-gif-media-search-dropdown' ), i = 0;
 			event.preventDefault();
+
+			// Populate the standalone popup with HTML structure if it's empty (for forums).
+			if ( isInsideForumModal && gif_search_dropdown.is( ':empty' ) ) {
+				var gifPickerHtml = '<div class="bb-rl-forums-attached-gif-container">' +
+					'<div class="gif-search-content">' +
+					'<div class="gif-search-query">' +
+					'<input type="search" placeholder="' + ( bbRlMedia.gif_search_placeholder || 'Search GIPHY...' ) + '" class="search-query-input" />' +
+					'<span class="search-icon"></span>' +
+					'</div>' +
+					'<div class="gif-search-results" id="gif-search-results">' +
+					'<ul class="gif-search-results-list"></ul>' +
+					'<div class="gif-alert gif-no-results">' +
+					'<i class="bb-icon-l bb-icon-image-slash"></i>' +
+					'<p>' + ( bbRlMedia.gif_no_results || 'No results found' ) + '</p>' +
+					'</div>' +
+					'<div class="gif-alert gif-no-connection">' +
+					'<i class="bb-icons-rl bb-icon-cloud-slash"></i>' +
+					'<p>' + ( bbRlMedia.gif_no_connection || 'Could not connect to GIPHY' ) + '</p>' +
+					'</div>' +
+					'</div>' +
+					'</div>' +
+					'</div>';
+				gif_search_dropdown.html( gifPickerHtml );
+			}
 
 			if ( typeof window.Giphy !== 'undefined' && typeof bbRlMedia.gif_api_key !== 'undefined' ) {
 				self.giphy = new window.Giphy( bbRlMedia.gif_api_key );
@@ -1613,7 +1666,8 @@ window.bp = window.bp || {};
 								self.gif_data[ gif_container_key ].data.push( response.data[ i ] );
 							}
 
-							target.closest( 'form' ).find( '.gif-search-results-list' ).append( li_html );
+							// Append to the correct dropdown (standalone or inline).
+							gif_search_dropdown.find( '.gif-search-results-list' ).append( li_html );
 						}
 
 						if ( typeof response.pagination !== 'undefined' && typeof response.pagination.total_count !== 'undefined' ) {
@@ -1629,6 +1683,21 @@ window.bp = window.bp || {};
 			}
 
 			gif_search_dropdown.toggleClass( 'open' );
+
+			// Position the standalone popup near the button when inside forum modal.
+			if ( isInsideForumModal && gif_search_dropdown.hasClass( 'open' ) ) {
+				var scrollTop        = $( window ).scrollTop(),
+					offset           = target.offset(),
+					topPosition      = Math.round( offset.top ),
+					leftPosition     = Math.round( offset.left ),
+					pickerLeftPosition = leftPosition + gif_search_dropdown.width() - 70,
+					transformValue   = 'translate(' + pickerLeftPosition + 'px, ' + ( topPosition - scrollTop - 5 ) + 'px) translate(-100%, -100%)';
+
+				gif_search_dropdown.css( 'transform', transformValue );
+
+				// Store reference to the form for GIF selection.
+				gif_search_dropdown.data( 'target-form', target.closest( 'form' ) );
+			}
 
 			var gif_box = target.parents( 'form' ).find( '#whats-new-attachments .forums-attached-gif-container img' );
 			if ( gif_box.length > 0 && gif_box.attr( 'src' ) !== '' ) {
@@ -1664,7 +1733,7 @@ window.bp = window.bp || {};
 				if ( ! _.isUndefined( bbRlMedia ) && ! _.isUndefined( bbRlMedia.gif_api_key ) ) {
 					target.find( 'form' ).find( '.bb-rl-gif-media-search-dropdown' ).removeClass( 'open' );
 					if ( $( '.bb-rl-gif-media-search-dropdown-standalone.open' ).length > 0 ) {
-						target.find( '.bb-rl-gif-media-search-dropdown-standalone' ).removeClass( 'open' );
+						$( '.bb-rl-gif-media-search-dropdown-standalone' ).removeClass( 'open' );
 					}
 					target.find( '#bbpress-forums form' ).each(
 						function () {
@@ -1711,12 +1780,12 @@ window.bp = window.bp || {};
 
 			if ( ! _.isUndefined( bbRlMedia ) && ! _.isUndefined( bbRlMedia.gif_api_key ) &&
 				! $targetEl.closest( '.bb-rl-post-gif' ).length ) {
-				if ( $targetEl.closest( '.bb-rl-gif-media-search-dropdown' ).length ) {
+				if ( $targetEl.closest( '.bb-rl-gif-media-search-dropdown' ).length || $targetEl.closest( '.bb-rl-gif-media-search-dropdown-standalone' ).length ) {
 					return;
 				}
 				target.find( 'form' ).find( '.bb-rl-gif-media-search-dropdown' ).removeClass( 'open' );
 				if ( $( '.bb-rl-gif-media-search-dropdown-standalone.open' ).length > 0 ) {
-					target.find( '.bb-rl-gif-media-search-dropdown-standalone' ).removeClass( 'open' );
+					$( '.bb-rl-gif-media-search-dropdown-standalone' ).removeClass( 'open' );
 				}
 				target.find( '#bbpress-forums form' ).each(
 					function () {
