@@ -340,8 +340,10 @@ class BB_REST_Activity_Controller extends WP_REST_Controller {
 
 		// Get user avatar - try multiple methods
 		$user_avatar = '';
+		
+		// Method 1: Use bp_core_fetch_avatar with html=false to get URL
 		if ( function_exists( 'bp_core_fetch_avatar' ) ) {
-			$user_avatar = bp_core_fetch_avatar(
+			$avatar_result = bp_core_fetch_avatar(
 				array(
 					'item_id' => $user_id,
 					'object'  => 'user',
@@ -349,9 +351,28 @@ class BB_REST_Activity_Controller extends WP_REST_Controller {
 					'html'    => false,
 				)
 			);
+			
+			// Check if it returned a URL (string starting with http)
+			if ( ! empty( $avatar_result ) && is_string( $avatar_result ) ) {
+				if ( strpos( $avatar_result, 'http' ) === 0 ) {
+					$user_avatar = $avatar_result;
+				} elseif ( strpos( $avatar_result, '<img' ) !== false ) {
+					// If it returned HTML despite html=false, extract the src
+					preg_match( '/src=["\']([^"\']+)["\']/', $avatar_result, $matches );
+					if ( ! empty( $matches[1] ) ) {
+						$user_avatar = $matches[1];
+					}
+				}
+			}
 		}
-		// Fallback to Gravatar
-		if ( empty( $user_avatar ) && $user_data ) {
+		
+		// Method 2: Fallback to get_avatar_url
+		if ( empty( $user_avatar ) ) {
+			$user_avatar = get_avatar_url( $user_id, array( 'size' => 50 ) );
+		}
+		
+		// Method 3: Fallback using user email
+		if ( empty( $user_avatar ) && $user_data && ! empty( $user_data->user_email ) ) {
 			$user_avatar = get_avatar_url( $user_data->user_email, array( 'size' => 50 ) );
 		}
 
