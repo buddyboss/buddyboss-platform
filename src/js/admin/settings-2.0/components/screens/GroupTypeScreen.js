@@ -15,6 +15,7 @@ import { __ } from '@wordpress/i18n';
 import { Spinner, ToggleControl } from '@wordpress/components';
 import apiFetch from '@wordpress/api-fetch';
 import { SideNavigation } from '../SideNavigation';
+import GroupTypeModal from '../modals/GroupTypeModal';
 
 /**
  * Tag icon component for group types
@@ -89,6 +90,40 @@ function GlobeIcon() {
 }
 
 /**
+ * View icon component for dropdown menu (Eye)
+ */
+function ViewIcon() {
+	return (
+		<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+			<path d="M10 6.25C7.65 6.25 5.5 7.5 3.75 10C5.5 12.5 7.65 13.75 10 13.75C12.35 13.75 14.5 12.5 16.25 10C14.5 7.5 12.35 6.25 10 6.25Z" stroke="#666" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+			<circle cx="10" cy="10" r="2.5" stroke="#666" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+		</svg>
+	);
+}
+
+/**
+ * Edit icon component for dropdown menu (Pencil)
+ */
+function EditIcon() {
+	return (
+		<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+			<path d="M14.1667 2.5C14.3856 2.28113 14.6454 2.10752 14.9314 1.98906C15.2173 1.87061 15.5238 1.80963 15.8333 1.80963C16.1429 1.80963 16.4493 1.87061 16.7353 1.98906C17.0212 2.10752 17.281 2.28113 17.5 2.5C17.7189 2.71887 17.8925 2.97871 18.0109 3.26468C18.1294 3.55064 18.1904 3.85706 18.1904 4.16667C18.1904 4.47627 18.1294 4.78269 18.0109 5.06866C17.8925 5.35462 17.7189 5.61446 17.5 5.83333L6.25 17.0833L1.66667 18.3333L2.91667 13.75L14.1667 2.5Z" stroke="#666" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+		</svg>
+	);
+}
+
+/**
+ * Delete icon component for dropdown menu (Trash)
+ */
+function DeleteIcon() {
+	return (
+		<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+			<path d="M2.5 5H4.16667M4.16667 5H17.5M4.16667 5V16.6667C4.16667 17.1087 4.34226 17.5326 4.65482 17.8452C4.96738 18.1577 5.39131 18.3333 5.83333 18.3333H14.1667C14.6087 18.3333 15.0326 18.1577 15.3452 17.8452C15.6577 17.5326 15.8333 17.1087 15.8333 16.6667V5H4.16667ZM6.66667 5V3.33333C6.66667 2.89131 6.84226 2.46738 7.15482 2.15482C7.46738 1.84226 7.89131 1.66667 8.33333 1.66667H11.6667C12.1087 1.66667 12.5326 1.84226 12.8452 2.15482C13.1577 2.46738 13.3333 2.89131 13.3333 3.33333V5" stroke="#666" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+		</svg>
+	);
+}
+
+/**
  * Group Type Settings Screen Component
  *
  * @param {Object} props Component props
@@ -102,6 +137,8 @@ export default function GroupTypeScreen({ onNavigate }) {
 	const [autoMembershipApproval, setAutoMembershipApproval] = useState(true);
 	const [openMenuId, setOpenMenuId] = useState(null);
 	const [settingsLoading, setSettingsLoading] = useState(true);
+	const [isModalOpen, setIsModalOpen] = useState(false);
+	const [editingGroupType, setEditingGroupType] = useState(null);
 	const menuRef = useRef(null);
 
 	// Feature data for sidebar
@@ -160,7 +197,6 @@ export default function GroupTypeScreen({ onNavigate }) {
 
 		apiFetch({ path: `/buddyboss/v1/groups/types` })
 			.then((response) => {
-				console.log('Group Types API Response:', response);
 				const types = response.data || response || [];
 				setGroupTypes(Array.isArray(types) ? types : []);
 				setIsLoading(false);
@@ -242,13 +278,36 @@ export default function GroupTypeScreen({ onNavigate }) {
 		});
 	};
 
+	const handleView = (typeId) => {
+		setOpenMenuId(null);
+		// Find the group type data
+		const groupType = groupTypes.find(type => (type.name || type.id || type.ID) === typeId);
+		setEditingGroupType(groupType);
+		setIsModalOpen(true);
+		// TODO: Add view-only mode to modal
+	};
+
 	const handleEdit = (typeId) => {
 		setOpenMenuId(null);
-		onNavigate(`/settings/groups/types/${typeId}/edit`);
+		// Find the group type data
+		const groupType = groupTypes.find(type => (type.name || type.id || type.ID) === typeId);
+		setEditingGroupType(groupType);
+		setIsModalOpen(true);
 	};
 
 	const handleAddNewType = () => {
-		onNavigate('/settings/groups/types/new');
+		setEditingGroupType(null);
+		setIsModalOpen(true);
+	};
+
+	const handleModalClose = () => {
+		setIsModalOpen(false);
+		setEditingGroupType(null);
+	};
+
+	const handleModalSave = (savedGroupType) => {
+		// Reload group types after save
+		loadGroupTypes();
 	};
 
 	return (
@@ -356,8 +415,8 @@ export default function GroupTypeScreen({ onNavigate }) {
 							) : (
 								<div className="bb-admin-group-types__list">
 									{groupTypes.map((type) => {
-										const typeId = type.id || type.ID;
-										const typeName = type.name || type.post_title || '';
+										const typeId = type.name || type.id || type.ID;
+										const typeName = type.labels?.name || type.name || type.post_title || '';
 										const typeLabel = type.labels?.singular_name || type.slug || type.post_name || typeName;
 										const groupCount = type.groups_count || type.count || 0;
 										const privacy = type.privacy || 'public';
@@ -397,17 +456,44 @@ export default function GroupTypeScreen({ onNavigate }) {
 												<div className="bb-admin-group-types__col bb-admin-group-types__col--actions" ref={openMenuId === typeId ? menuRef : null}>
 													<button
 														className="bb-admin-group-types__ellipsis-btn"
-														onClick={() => setOpenMenuId(openMenuId === typeId ? null : typeId)}
+														onClick={(e) => {
+															e.stopPropagation();
+															setOpenMenuId(openMenuId === typeId ? null : typeId);
+														}}
 													>
 														<EllipsisIcon />
 													</button>
 													{openMenuId === typeId && (
 														<div className="bb-admin-group-types__menu">
-															<button onClick={() => handleEdit(typeId)}>
-																{__('Edit', 'buddyboss')}
+															<button
+																onClick={(e) => {
+																	e.stopPropagation();
+																	handleView(typeId);
+																}}
+																className="bb-admin-group-types__menu-item"
+															>
+																<ViewIcon />
+																<span>{__('View', 'buddyboss')}</span>
 															</button>
-															<button onClick={() => handleDelete(typeId)} className="bb-admin-group-types__menu-delete">
-																{__('Delete', 'buddyboss')}
+															<button
+																onClick={(e) => {
+																	e.stopPropagation();
+																	handleEdit(typeId);
+																}}
+																className="bb-admin-group-types__menu-item"
+															>
+																<EditIcon />
+																<span>{__('Edit', 'buddyboss')}</span>
+															</button>
+															<button
+																onClick={(e) => {
+																	e.stopPropagation();
+																	handleDelete(typeId);
+																}}
+																className="bb-admin-group-types__menu-item bb-admin-group-types__menu-delete"
+															>
+																<DeleteIcon />
+																<span>{__('Delete', 'buddyboss')}</span>
 															</button>
 														</div>
 													)}
@@ -421,6 +507,14 @@ export default function GroupTypeScreen({ onNavigate }) {
 					</div>
 				</main>
 			</div>
+
+			{/* Group Type Modal */}
+			<GroupTypeModal
+				isOpen={isModalOpen}
+				onClose={handleModalClose}
+				onSave={handleModalSave}
+				groupType={editingGroupType}
+			/>
 		</div>
 	);
 }
