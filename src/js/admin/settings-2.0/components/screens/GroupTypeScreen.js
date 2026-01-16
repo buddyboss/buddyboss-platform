@@ -2,7 +2,9 @@
  * BuddyBoss Admin Settings 2.0 - Group Type Settings Screen
  *
  * Displays group type settings with toggles and group types list.
- * Design based on Figma: https://www.figma.com/design/XS2Hf0smlEnhWfoKyks7ku/Backend-Settings-2.0?node-id=2611-123217
+ * Design based on Figma:
+ * - Settings: https://www.figma.com/design/XS2Hf0smlEnhWfoKyks7ku/Backend-Settings-2.0?node-id=2611-123236
+ * - List: https://www.figma.com/design/XS2Hf0smlEnhWfoKyks7ku/Backend-Settings-2.0?node-id=2611-123265
  *
  * @package BuddyBoss\Core\Administration
  * @since BuddyBoss 3.0.0
@@ -19,9 +21,9 @@ import { SideNavigation } from '../SideNavigation';
  */
 function TagIcon() {
 	return (
-		<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-			<path d="M2.66663 7.99996L7.33329 13.3333L13.3333 7.33329V2.66663H8.66663L2.66663 7.99996Z" stroke="#666" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
-			<circle cx="10.6666" cy="5.33329" r="0.666667" fill="#666"/>
+		<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+			<path d="M3.33329 10L9.16663 16.6667L16.6666 9.16667V3.33333H10.8333L3.33329 10Z" stroke="#666" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+			<circle cx="13.3333" cy="6.66667" r="0.833333" fill="#666"/>
 		</svg>
 	);
 }
@@ -39,41 +41,49 @@ function GroupsIcon() {
 }
 
 /**
- * Ellipsis icon component
+ * Horizontal Ellipsis icon component
  */
 function EllipsisIcon() {
 	return (
 		<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-			<circle cx="12" cy="6" r="1.5" fill="#2f2f2f"/>
+			<circle cx="6" cy="12" r="1.5" fill="#2f2f2f"/>
 			<circle cx="12" cy="12" r="1.5" fill="#2f2f2f"/>
-			<circle cx="12" cy="18" r="1.5" fill="#2f2f2f"/>
+			<circle cx="18" cy="12" r="1.5" fill="#2f2f2f"/>
 		</svg>
 	);
 }
 
 /**
- * Privacy badge icon component
+ * Plus icon component
  */
-function PrivacyIcon({ status }) {
-	if (status === 'public') {
-		return (
-			<svg width="12" height="12" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-				<path d="M8 1.33337C4.32 1.33337 1.33337 4.32004 1.33337 8.00004C1.33337 11.68 4.32 14.6667 8 14.6667C11.68 14.6667 14.6667 11.68 14.6667 8.00004C14.6667 4.32004 11.68 1.33337 8 1.33337ZM8 13.3334C5.05337 13.3334 2.66671 10.9467 2.66671 8.00004C2.66671 5.05337 5.05337 2.66671 8 2.66671C10.9467 2.66671 13.3334 5.05337 13.3334 8.00004C13.3334 10.9467 10.9467 13.3334 8 13.3334Z" fill="currentColor"/>
-			</svg>
-		);
-	}
-	if (status === 'private') {
-		return (
-			<svg width="12" height="12" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-				<path d="M12.6667 5.33337H11.3334V4.00004C11.3334 2.16004 9.84004 0.666707 8.00004 0.666707C6.16004 0.666707 4.66671 2.16004 4.66671 4.00004V5.33337H3.33337C2.60004 5.33337 2.00004 5.93337 2.00004 6.66671V13.3334C2.00004 14.0667 2.60004 14.6667 3.33337 14.6667H12.6667C13.4 14.6667 14 14.0667 14 13.3334V6.66671C14 5.93337 13.4 5.33337 12.6667 5.33337ZM8.00004 11.3334C7.26671 11.3334 6.66671 10.7334 6.66671 10C6.66671 9.26671 7.26671 8.66671 8.00004 8.66671C8.73337 8.66671 9.33337 9.26671 9.33337 10C9.33337 10.7334 8.73337 11.3334 8.00004 11.3334ZM10.0667 5.33337H5.93337V4.00004C5.93337 2.86004 6.86004 1.93337 8.00004 1.93337C9.14004 1.93337 10.0667 2.86004 10.0667 4.00004V5.33337Z" fill="currentColor"/>
-			</svg>
-		);
-	}
-	// Hidden
+function PlusIcon() {
 	return (
-		<svg width="12" height="12" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-			<path d="M8 3.33337C4.66667 3.33337 1.82 5.34004 0.666672 8.00004C1.82 10.66 4.66667 12.6667 8 12.6667C11.3333 12.6667 14.18 10.66 15.3333 8.00004C14.18 5.34004 11.3333 3.33337 8 3.33337ZM8 11C6.34667 11 5 9.65337 5 8.00004C5 6.34671 6.34667 5.00004 8 5.00004C9.65333 5.00004 11 6.34671 11 8.00004C11 9.65337 9.65333 11 8 11ZM8 6.33337C7.08 6.33337 6.33333 7.08004 6.33333 8.00004C6.33333 8.92004 7.08 9.66671 8 9.66671C8.92 9.66671 9.66667 8.92004 9.66667 8.00004C9.66667 7.08004 8.92 6.33337 8 6.33337Z" fill="currentColor"/>
-			<line x1="2" y1="14" x2="14" y2="2" stroke="currentColor" strokeWidth="1.5"/>
+		<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+			<path d="M8 3.33337V12.6667M3.33337 8.00004H12.6667" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+		</svg>
+	);
+}
+
+/**
+ * Help icon component
+ */
+function HelpIcon() {
+	return (
+		<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+			<path d="M12 2.25C6.62 2.25 2.25 6.62 2.25 12C2.25 17.38 6.62 21.75 12 21.75C17.38 21.75 21.75 17.38 21.75 12C21.75 6.62 17.38 2.25 12 2.25ZM12 20.25C7.45 20.25 3.75 16.55 3.75 12C3.75 7.45 7.45 3.75 12 3.75C16.55 3.75 20.25 7.45 20.25 12C20.25 16.55 16.55 20.25 12 20.25Z" fill="#666"/>
+			<path d="M12 17.25C12.4142 17.25 12.75 16.9142 12.75 16.5C12.75 16.0858 12.4142 15.75 12 15.75C11.5858 15.75 11.25 16.0858 11.25 16.5C11.25 16.9142 11.5858 17.25 12 17.25Z" fill="#666"/>
+			<path d="M12 6.75C10.21 6.75 8.75 8.21 8.75 10C8.75 10.41 9.09 10.75 9.5 10.75C9.91 10.75 10.25 10.41 10.25 10C10.25 9.04 11.04 8.25 12 8.25C12.96 8.25 13.75 9.04 13.75 10C13.75 10.96 12.96 11.75 12 11.75C11.59 11.75 11.25 12.09 11.25 12.5V14C11.25 14.41 11.59 14.75 12 14.75C12.41 14.75 12.75 14.41 12.75 14V13.17C14.14 12.82 15.25 11.53 15.25 10C15.25 8.21 13.79 6.75 12 6.75Z" fill="#666"/>
+		</svg>
+	);
+}
+
+/**
+ * Privacy badge icon component (Globe for public)
+ */
+function GlobeIcon() {
+	return (
+		<svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+			<path d="M6 1C3.24 1 1 3.24 1 6C1 8.76 3.24 11 6 11C8.76 11 11 8.76 11 6C11 3.24 8.76 1 6 1ZM9.94 5.5H8.06C7.97 4.32 7.63 3.22 7.09 2.31C8.48 2.82 9.59 4.02 9.94 5.5ZM6 9.94C5.31 9.18 4.81 8.26 4.56 7.25H7.44C7.19 8.26 6.69 9.18 6 9.94ZM4.42 6.5C4.39 6.17 4.37 5.84 4.37 5.5C4.37 5.16 4.39 4.83 4.42 4.5H7.58C7.61 4.83 7.63 5.16 7.63 5.5C7.63 5.84 7.61 6.17 7.58 6.5H4.42ZM2.06 5.5C2.41 4.02 3.52 2.82 4.91 2.31C4.37 3.22 4.03 4.32 3.94 5.5H2.06ZM3.94 6.5H2.06C2.41 7.98 3.52 9.18 4.91 9.69C4.37 8.78 4.03 7.68 3.94 6.5ZM7.09 9.69C7.63 8.78 7.97 7.68 8.06 6.5H9.94C9.59 7.98 8.48 9.18 7.09 9.69Z" fill="currentColor"/>
 		</svg>
 	);
 }
@@ -237,6 +247,10 @@ export default function GroupTypeScreen({ onNavigate }) {
 		onNavigate(`/settings/groups/types/${typeId}/edit`);
 	};
 
+	const handleAddNewType = () => {
+		onNavigate('/settings/groups/types/new');
+	};
+
 	return (
 		<div className="bb-admin-feature-settings">
 			<div className="bb-admin-feature-settings__container">
@@ -261,121 +275,148 @@ export default function GroupTypeScreen({ onNavigate }) {
 				{/* Main Content */}
 				<main className="bb-admin-feature-settings__main">
 					<div className="bb-admin-group-types">
-						{/* Section Title */}
-						<div className="bb-admin-group-types__header">
-							<h2>{__('Group Type Settings', 'buddyboss')}</h2>
-							<button className="bb-admin-group-types__help-btn" aria-label={__('Help', 'buddyboss')}>
-								<i className="bb-icon-l-question"></i>
-							</button>
-						</div>
-
-						{/* Settings Card */}
+						{/* Card 1: Group Type Settings */}
 						<div className="bb-admin-group-types__card">
-							{/* Toggle Settings */}
+							<div className="bb-admin-group-types__card-header">
+								<h2>{__('Group Type Settings', 'buddyboss')}</h2>
+								<button className="bb-admin-group-types__help-btn" aria-label={__('Help', 'buddyboss')}>
+									<HelpIcon />
+								</button>
+							</div>
+
 							<div className="bb-admin-group-types__settings">
-								<div className="bb-admin-group-types__setting-item">
-									<div className="bb-admin-group-types__setting-content">
-										<h3>{__('Group Types', 'buddyboss')}</h3>
-										<p>{__('When enabled, group types allow you to better organize groups.', 'buddyboss')}</p>
+								{/* Group Types Toggle */}
+								<div className="bb-admin-group-types__setting-row">
+									<div className="bb-admin-group-types__setting-label">
+										<span>{__('Group Types', 'buddyboss')}</span>
 									</div>
-									<div className="bb-admin-group-types__setting-toggle">
-										<ToggleControl
-											checked={enableGroupTypes}
-											onChange={handleEnableGroupTypesChange}
-											disabled={settingsLoading}
-											__nextHasNoMarginBottom
-										/>
+									<div className="bb-admin-group-types__setting-control">
+										<div className="bb-admin-group-types__toggle-wrap">
+											<ToggleControl
+												checked={enableGroupTypes}
+												onChange={handleEnableGroupTypesChange}
+												disabled={settingsLoading}
+												__nextHasNoMarginBottom
+											/>
+											<span className="bb-admin-group-types__toggle-label">
+												{__('Enable group types', 'buddyboss')}
+											</span>
+										</div>
+										<p className="bb-admin-group-types__setting-desc">
+											{__('When enabled,', 'buddyboss')}{' '}
+											<span className="bb-admin-group-types__setting-link">{__('group types', 'buddyboss')}</span>
+											{' '}{__('allow you to better organize groups.', 'buddyboss')}
+										</p>
 									</div>
 								</div>
 
-								<div className="bb-admin-group-types__setting-item">
-									<div className="bb-admin-group-types__setting-content">
-										<h3>{__('Auto Membership Approval', 'buddyboss')}</h3>
-										<p>{__('When a member requests to join a group their membership is automatically accepted.', 'buddyboss')}</p>
+								{/* Auto Membership Approval Toggle */}
+								<div className="bb-admin-group-types__setting-row bb-admin-group-types__setting-row--last">
+									<div className="bb-admin-group-types__setting-label">
+										<span>{__('Auto Membership Approval', 'buddyboss')}</span>
 									</div>
-									<div className="bb-admin-group-types__setting-toggle">
-										<ToggleControl
-											checked={autoMembershipApproval}
-											onChange={handleAutoMembershipApprovalChange}
-											disabled={settingsLoading}
-											__nextHasNoMarginBottom
-										/>
+									<div className="bb-admin-group-types__setting-control">
+										<div className="bb-admin-group-types__toggle-wrap">
+											<ToggleControl
+												checked={autoMembershipApproval}
+												onChange={handleAutoMembershipApprovalChange}
+												disabled={settingsLoading}
+												__nextHasNoMarginBottom
+											/>
+											<span className="bb-admin-group-types__toggle-label">
+												{__('Allow selected profile types to automatically join groups', 'buddyboss')}
+											</span>
+										</div>
+										<p className="bb-admin-group-types__setting-desc">
+											{__('When a member requests to join a group their membership is automatically accepted.', 'buddyboss')}
+										</p>
 									</div>
 								</div>
 							</div>
+						</div>
 
-							{/* Group Types List */}
-							<div className="bb-admin-group-types__list-section">
-								<div className="bb-admin-group-types__list-header">
-									<h3>{__('Group Types', 'buddyboss')}</h3>
-									<button className="bb-admin-group-types__add-btn">
-										<span>+</span>
-										{__('Add New Group Type', 'buddyboss')}
-									</button>
+						{/* Card 2: Group Types List */}
+						<div className="bb-admin-group-types__card bb-admin-group-types__card--list">
+							<div className="bb-admin-group-types__list-header">
+								<h2>{__('Group Types', 'buddyboss')}</h2>
+								<button className="bb-admin-group-types__add-btn" onClick={handleAddNewType}>
+									<PlusIcon />
+									{__('Add New Group Type', 'buddyboss')}
+								</button>
+							</div>
+
+							{isLoading ? (
+								<div className="bb-admin-group-types__loading">
+									<Spinner />
 								</div>
+							) : groupTypes.length === 0 ? (
+								<div className="bb-admin-group-types__empty">
+									{__('No group types found.', 'buddyboss')}
+								</div>
+							) : (
+								<div className="bb-admin-group-types__list">
+									{groupTypes.map((type) => {
+										const typeId = type.id || type.ID;
+										const typeName = type.name || type.post_title || '';
+										const typeLabel = type.labels?.singular_name || type.slug || type.post_name || typeName;
+										const groupCount = type.groups_count || type.count || 0;
+										const privacy = type.privacy || 'public';
 
-								{isLoading ? (
-									<div className="bb-admin-group-types__loading">
-										<Spinner />
-									</div>
-								) : groupTypes.length === 0 ? (
-									<div className="bb-admin-group-types__empty">
-										{__('No group types found.', 'buddyboss')}
-									</div>
-								) : (
-									<div className="bb-admin-group-types__list">
-										{groupTypes.map((type) => {
-											const typeId = type.id || type.ID;
-											const typeName = type.name || type.post_title || '';
-											const typeSlug = type.slug || type.post_name || '';
-											const groupCount = type.groups_count || type.count || 0;
-											const privacy = type.privacy || 'public';
-
-											return (
-												<div key={typeId} className="bb-admin-group-types__item">
+										return (
+											<div key={typeId} className="bb-admin-group-types__item">
+												{/* Name Column */}
+												<div className="bb-admin-group-types__col bb-admin-group-types__col--name">
 													<div className="bb-admin-group-types__item-icon">
 														<TagIcon />
 													</div>
-													<div className="bb-admin-group-types__item-name">
-														{typeName}
-													</div>
-													<div className="bb-admin-group-types__item-slug">
-														{typeSlug}
-													</div>
-													<div className="bb-admin-group-types__item-groups">
-														<GroupsIcon />
-														<a href={`#/groups?type=${typeSlug}`} className="bb-admin-group-types__item-link">
-															{groupCount} {groupCount === 1 ? __('group', 'buddyboss') : __('groups', 'buddyboss')}
-														</a>
-													</div>
-													<div className="bb-admin-group-types__item-privacy">
-														<PrivacyIcon status={privacy} />
-														<span>{privacy === 'public' ? __('Public', 'buddyboss') : privacy === 'private' ? __('Private', 'buddyboss') : __('Hidden', 'buddyboss')}</span>
-													</div>
-													<div className="bb-admin-group-types__item-actions" ref={openMenuId === typeId ? menuRef : null}>
-														<button
-															className="bb-admin-group-types__ellipsis-btn"
-															onClick={() => setOpenMenuId(openMenuId === typeId ? null : typeId)}
-														>
-															<EllipsisIcon />
-														</button>
-														{openMenuId === typeId && (
-															<div className="bb-admin-group-types__menu">
-																<button onClick={() => handleEdit(typeId)}>
-																	{__('Edit', 'buddyboss')}
-																</button>
-																<button onClick={() => handleDelete(typeId)}>
-																	{__('Delete', 'buddyboss')}
-																</button>
-															</div>
-														)}
-													</div>
+													<span className="bb-admin-group-types__item-name">{typeName}</span>
 												</div>
-											);
-										})}
-									</div>
-								)}
-							</div>
+
+												{/* Label Column */}
+												<div className="bb-admin-group-types__col bb-admin-group-types__col--label">
+													<span className="bb-admin-group-types__badge">{typeLabel}</span>
+												</div>
+
+												{/* Groups Column */}
+												<div className="bb-admin-group-types__col bb-admin-group-types__col--groups">
+													<GroupsIcon />
+													<a href={`#/groups/all?type=${typeId}`} className="bb-admin-group-types__groups-link">
+														{groupCount} {groupCount === 1 ? __('group', 'buddyboss') : __('groups', 'buddyboss')}
+													</a>
+												</div>
+
+												{/* Visibility Column */}
+												<div className="bb-admin-group-types__col bb-admin-group-types__col--visibility">
+													<span className="bb-admin-group-types__visibility-badge">
+														<GlobeIcon />
+														<span>{privacy === 'public' ? __('Public', 'buddyboss') : privacy === 'private' ? __('Private', 'buddyboss') : __('Hidden', 'buddyboss')}</span>
+													</span>
+												</div>
+
+												{/* Actions Column */}
+												<div className="bb-admin-group-types__col bb-admin-group-types__col--actions" ref={openMenuId === typeId ? menuRef : null}>
+													<button
+														className="bb-admin-group-types__ellipsis-btn"
+														onClick={() => setOpenMenuId(openMenuId === typeId ? null : typeId)}
+													>
+														<EllipsisIcon />
+													</button>
+													{openMenuId === typeId && (
+														<div className="bb-admin-group-types__menu">
+															<button onClick={() => handleEdit(typeId)}>
+																{__('Edit', 'buddyboss')}
+															</button>
+															<button onClick={() => handleDelete(typeId)} className="bb-admin-group-types__menu-delete">
+																{__('Delete', 'buddyboss')}
+															</button>
+														</div>
+													)}
+												</div>
+											</div>
+										);
+									})}
+								</div>
+							)}
 						</div>
 					</div>
 				</main>
