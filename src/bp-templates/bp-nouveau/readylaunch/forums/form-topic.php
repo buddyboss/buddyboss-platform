@@ -49,7 +49,7 @@ defined( 'ABSPATH' ) || exit;
 
 						<?php do_action( 'bbp_theme_before_topic_form_type' ); ?>
 
-						<div class="bb-rl-forum-modal-type">
+						<div class="bb-rl-forum-modal-type bb-rl-filter bb-rl-filter-rounded">
 
 							<label for="bbp_stick_topic" class="screen-reader-text"><?php esc_html_e( 'Type:', 'buddyboss' ); ?></label>
 
