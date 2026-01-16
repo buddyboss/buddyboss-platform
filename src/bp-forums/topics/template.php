@@ -3655,7 +3655,8 @@ function bbp_get_form_topic_type_dropdown( $args = '' ) {
 		unset( $topic_sticky_types['super'] );
 	}
 	?>
-		<select name="<?php echo esc_attr( $r['select_id'] ); ?>" id="<?php echo esc_attr( $r['select_id'] ); ?>_select"<?php echo $tab; ?>>
+		<?php // The data-bb-caret and data-bb-border attributes are used only for the ReadyLaunch version and have no effect in main templates. ?>
+		<select name="<?php echo esc_attr( $r['select_id'] ); ?>" id="<?php echo esc_attr( $r['select_id'] ); ?>_select"<?php echo $tab; ?> data-bb-caret="caret-arrow" data-bb-border="rounded">
 			<?php foreach ( $topic_sticky_types as $key => $label ) : ?>
 				<option value="<?php echo esc_attr( $key ); ?>"<?php selected( $key, $r['selected'] ); ?>>
 					<span><?php _e( 'Type: ', 'buddyboss' ); ?></span>

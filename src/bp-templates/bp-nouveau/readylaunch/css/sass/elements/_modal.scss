@@ -770,4 +770,25 @@
 			}
 		}
 	}
+
+	.bb-rl-footer-alt {
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		gap: var(--bb-rl-space-100);
+
+		.bb-rl-privacy-field-wrap-hide-show {
+			display: inline-flex;
+			margin: 0;
+
+			.bb-label {
+				display: none;
+			}
+		}
+
+		.db-modal-buttons {
+			display: inline-flex;
+			gap: var(--bb-rl-space-100);
+		}
+	}
 }

@@ -181,6 +181,11 @@
 		display: inline-flex;
 		align-items: center;
 
+		&[aria-disabled="true"] {
+			opacity: 0.7;
+			cursor: default;
+		}
+
 		&.select2-selection--single {
 			display: inline-flex;
 			height: auto;
@@ -303,6 +308,15 @@ body.bb-readylaunch-template {
 
 	.select2-container--rl.select2-container--open:has(.bb-rl-dropdown-align-adaptive) {
 		width: 100% !important;
+	}
+
+	.bb-model-footer,
+	.bb-rl-footer-alt {
+
+		.select2-container .bb-rl-select2-dropdown {
+			top: unset;
+			left: -8px;
+		}
 	}
 }
 

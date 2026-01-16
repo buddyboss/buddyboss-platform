@@ -600,6 +600,12 @@ window.bp = window.bp || {};
 
 				var videoUploader = $( '#bp-video-uploader' );
 				videoUploader.show();
+
+				// Reinitialize select2 for privacy select if not already initialized.
+				if ( bp.Readylaunch && bp.Readylaunch.initSelect2Scoped ) {
+					bp.Readylaunch.initSelect2Scoped( videoUploader );
+				}
+
 				if ( videoUploader.find( '.bb-field-steps.bb-field-steps-2' ).length ) {
 					currentTarget       = '#bp-video-uploader.bp-video-uploader';
 					var albumSelectedId = $( currentTarget ).find( '.bb-rl-album-selected-id' ).val();
@@ -675,11 +681,11 @@ window.bp = window.bp || {};
 						var mediaPrivacy = eventCurrentTarget.closest( '#bp-video-uploader' ).find( '#bb-video-privacy' );
 						if ( Number( eventCurrentTarget.data( 'id' ) ) !== 0 ) {
 							mediaPrivacy.find( 'option' ).removeAttr( 'selected' );
-							mediaPrivacy.val( eventCurrentTarget.parent().data( 'privacy' ) );
+							mediaPrivacy.val( eventCurrentTarget.parent().data( 'privacy' ) ).trigger( 'change' );
 							mediaPrivacy.prop( 'disabled', true );
 						} else {
 							mediaPrivacy.find( 'option' ).removeAttr( 'selected' );
-							mediaPrivacy.val( 'public' );
+							mediaPrivacy.val( 'public' ).trigger( 'change' );
 							mediaPrivacy.prop( 'disabled', false );
 						}
 					}
@@ -711,11 +717,11 @@ window.bp = window.bp || {};
 						var selectedAlbumPrivacy = eventCurrentTarget.closest( '#bp-video-uploader' ).find( '.location-album-list li.is_active' ).data( 'privacy' );
 						if ( Number( fieldWrapElem.find( '.bb-rl-album-selected-id' ).val() ) !== 0 ) {
 							mediaPrivacy.find( 'option' ).removeAttr( 'selected' );
-							mediaPrivacy.val( selectedAlbumPrivacy === undefined ? 'public' : selectedAlbumPrivacy );
+							mediaPrivacy.val( selectedAlbumPrivacy === undefined ? 'public' : selectedAlbumPrivacy ).trigger( 'change' );
 							mediaPrivacy.prop( 'disabled', true );
 						} else {
 							mediaPrivacy.find( 'option' ).removeAttr( 'selected' );
-							mediaPrivacy.val( 'public' );
+							mediaPrivacy.val( 'public' ).trigger( 'change' );
 							mediaPrivacy.prop( 'disabled', false );
 						}
 					}
@@ -1295,6 +1301,11 @@ window.bp = window.bp || {};
 			if ( typeof window.Dropzone !== 'undefined' && $( 'div#video-album-uploader' ).length ) {
 				$( '#bp-video-uploader' ).show();
 
+				// Reinitialize select2 for privacy select if not already initialized.
+				if ( bp.Readylaunch && bp.Readylaunch.initSelect2Scoped ) {
+					bp.Readylaunch.initSelect2Scoped( $( '#bp-video-uploader' ) );
+				}
+
 				self.video_dropzone_obj = new Dropzone( 'div#video-album-uploader', self.videoOptions );
 
 				self.video_dropzone_obj.on(
@@ -1802,7 +1813,20 @@ window.bp = window.bp || {};
 			event.preventDefault();
 
 			this.openAlbumUploader( event );
-			$( '#bp-video-create-album' ).show();
+			var $createAlbum = $( '#bp-video-create-album' );
+			$createAlbum.show();
+
+			// Reinitialize select2 for album privacy select after delay to ensure DOM is ready.
+			// Using 250ms to run after any ajaxComplete handlers (which have 100ms delay).
+			if ( bp.Readylaunch && bp.Readylaunch.initSelect2Scoped ) {
+				setTimeout( function () {
+					// Only initialize if not already initialized.
+					var $select = $createAlbum.find( '.bb-rl-filter select' );
+					if ( $select.length && ! $select.hasClass( 'select2-hidden-accessible' ) ) {
+						bp.Readylaunch.initSelect2Scoped( $createAlbum );
+					}
+				}, 250 );
+			}
 		},
 
 		closeCreateVideoAlbumModal: function ( event ) {
