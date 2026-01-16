@@ -261,9 +261,12 @@ window.bp = window.bp || {};
 			$document.find( 'form #whats-new-toolbar, .forum form #whats-new-toolbar' ).on( 'click', '.found-media-item', this.selectGif.bind( this ) );
 			$document.find( 'form #whats-new-toolbar .gif-search-results, .forum form #whats-new-toolbar .gif-search-results' ).scroll( this.loadMoreGif.bind( this ) );
 			// Standalone GIF picker for forum modals.
-			$document.on( 'click', '.bb-rl-gif-media-search-dropdown-standalone .found-media-item', this.selectGif.bind( this ) );
-			$document.on( 'keydown', '.bb-rl-gif-media-search-dropdown-standalone .search-query-input', this.searchGif.bind( this ) );
-			$document.on( 'scroll', '.bb-rl-gif-media-search-dropdown-standalone .gif-search-results', this.loadMoreGif.bind( this ) );
+			var $standaloneGifPicker = $( '.bb-rl-gif-media-search-dropdown-standalone' );
+			if ( $standaloneGifPicker.length ) {
+				$standaloneGifPicker.on( 'click', '.found-media-item', this.selectGif.bind( this ) );
+				$standaloneGifPicker.on( 'keydown', '.search-query-input', this.searchGif.bind( this ) );
+				$standaloneGifPicker.on( 'scroll', '.gif-search-results', this.loadMoreGif.bind( this ) );
+			}
 			if ( ! groupMessagesButtonSelector.length ) {
 				$document.find( 'form #whats-new-toolbar, .forum form #whats-new-toolbar' ).on( 'click', '.found-media-item', this.selectGif.bind( this ) );
 			}
