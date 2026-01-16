@@ -1594,7 +1594,8 @@ window.bp = window.bp || {};
 
 		toggleGifSelector: function ( event ) {
 			var self                = this, target = $( event.currentTarget ),
-				isInsideForumModal  = target.closest( '.bb-rl-forum-modal' ).length > 0,
+				$forumModal         = target.closest( '.bb-rl-forum-modal' ),
+				isInsideForumModal  = $forumModal.length > 0 && ! $forumModal.hasClass( 'bb-rl-forum-modal--static' ),
 				gif_search_dropdown = isInsideForumModal ? $( '.bb-rl-gif-media-search-dropdown-standalone' ) : target.closest( 'form' ).find( '.bb-rl-gif-media-search-dropdown' ), i = 0;
 			event.preventDefault();
 
