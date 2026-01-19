@@ -49,6 +49,18 @@ class BB_REST_Activity_Controller extends WP_REST_Controller {
 
 		register_rest_route(
 			$this->namespace,
+			'/' . $this->rest_base . '/types',
+			array(
+				array(
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => array( $this, 'get_types' ),
+					'permission_callback' => array( $this, 'get_items_permissions_check' ),
+				),
+			)
+		);
+
+		register_rest_route(
+			$this->namespace,
 			'/' . $this->rest_base . '/(?P<id>[\d]+)',
 			array(
 				array(
@@ -76,6 +88,45 @@ class BB_REST_Activity_Controller extends WP_REST_Controller {
 				),
 			)
 		);
+	}
+
+	/**
+	 * Get activity types.
+	 *
+	 * @since BuddyBoss 3.0.0
+	 *
+	 * @param WP_REST_Request $request Request object.
+	 * @return WP_REST_Response
+	 */
+	public function get_types( $request ) {
+		$types = array();
+
+		// Get all registered activity actions.
+		if ( function_exists( 'bp_activity_get_actions' ) ) {
+			$actions = bp_activity_get_actions();
+			
+			foreach ( $actions as $component => $component_actions ) {
+				foreach ( $component_actions as $action_key => $action_data ) {
+					$types[] = array(
+						'key'       => $action_key,
+						'label'     => $action_data['value'],
+						'component' => $component,
+					);
+				}
+			}
+		}
+
+		// Remove mis-named activity type from before BP 1.6.
+		$types = array_filter( $types, function( $type ) {
+			return $type['key'] !== 'friends_register_activity_action';
+		} );
+
+		// Sort by label.
+		usort( $types, function( $a, $b ) {
+			return strcasecmp( $a['label'], $b['label'] );
+		} );
+
+		return BB_REST_Response::success( array_values( $types ) );
 	}
 
 	/**
@@ -110,14 +161,28 @@ class BB_REST_Activity_Controller extends WP_REST_Controller {
 		$per_page = isset( $request['per_page'] ) ? (int) $request['per_page'] : 20;
 		$page     = isset( $request['page'] ) ? (int) $request['page'] : 1;
 
+		// Determine spam filter - match old implementation behavior
+		$spam = 'ham_only'; // Default to non-spam activities
+		if ( ! empty( $request['spam'] ) ) {
+			$spam_param = sanitize_text_field( $request['spam'] );
+			if ( 'spam' === $spam_param || 'spam_only' === $spam_param ) {
+				$spam = 'spam_only';
+			} elseif ( 'all' === $spam_param ) {
+				$spam = 'all';
+			}
+		}
+
 		$args = array(
-			'per_page'     => $per_page,
-			'page'         => $page,
-			'sort'         => isset( $request['order'] ) ? strtoupper( sanitize_text_field( $request['order'] ) ) : 'DESC',
-			'count_total'  => true,
-			'show_hidden'  => true, // Show all activities including hidden ones for admin
-			'spam'         => 'all', // Show spam and non-spam for admin
-			'display_comments' => false,
+			'per_page'         => $per_page,
+			'page'             => $page,
+			'sort'             => isset( $request['order'] ) ? strtoupper( sanitize_text_field( $request['order'] ) ) : 'DESC',
+			'count_total'      => 'count_query', // Match old implementation
+			'show_hidden'      => true, // Show all activities including hidden ones for admin
+			'spam'             => $spam,
+			'display_comments' => 'stream', // Match old implementation - include activity comments
+			'status'           => false, // Show all statuses (published, scheduled, draft) for admin
+			'privacy'          => false, // Show all privacy levels for admin
+			'scope'            => false, // No scope restriction for admin
 		);
 
 		// Search terms
@@ -247,9 +312,47 @@ class BB_REST_Activity_Controller extends WP_REST_Controller {
 			return BB_REST_Response::not_found( __( 'Activity not found.', 'buddyboss' ) );
 		}
 
+		// Update activity action if provided.
+		if ( isset( $request['action'] ) ) {
+			$activity->action = wp_kses_post( $request['action'] );
+		}
+
+		// Update activity title if provided.
+		if ( isset( $request['title'] ) ) {
+			// Title is stored in post_title property
+			if ( property_exists( $activity, 'post_title' ) ) {
+				$activity->post_title = sanitize_text_field( $request['title'] );
+			}
+		}
+
 		// Update activity content if provided.
 		if ( isset( $request['content'] ) ) {
 			$activity->content = wp_kses_post( $request['content'] );
+		}
+
+		// Update primary link if provided.
+		if ( isset( $request['primary_link'] ) ) {
+			$activity->primary_link = esc_url_raw( $request['primary_link'] );
+		}
+
+		// Update activity type if provided.
+		if ( isset( $request['type'] ) ) {
+			$activity->type = sanitize_text_field( $request['type'] );
+		}
+
+		// Update user ID if provided.
+		if ( isset( $request['user_id'] ) ) {
+			$activity->user_id = absint( $request['user_id'] );
+		}
+
+		// Update item ID if provided.
+		if ( isset( $request['item_id'] ) ) {
+			$activity->item_id = absint( $request['item_id'] );
+		}
+
+		// Update secondary item ID if provided.
+		if ( isset( $request['secondary_item_id'] ) ) {
+			$activity->secondary_item_id = absint( $request['secondary_item_id'] );
 		}
 
 		// Update activity status if provided.
@@ -407,25 +510,27 @@ class BB_REST_Activity_Controller extends WP_REST_Controller {
 		}
 
 		$data = array(
-			'id'           => (int) $activity->id,
-			'user_id'      => $user_id,
-			'user_name'    => $user_name,
-			'user_avatar'  => $user_avatar,
-			'user_link'    => function_exists( 'bp_core_get_user_domain' ) ? bp_core_get_user_domain( $user_id ) : get_author_posts_url( $user_id ),
-			'content'      => $activity->content,
-			'component'    => $activity->component,
-			'type'         => $activity->type,
-			'action'       => $activity->action,
-			'action_text'  => $action_text,
-			'group_name'   => $group_name,
-			'item_id'      => (int) $activity->item_id,
-			'secondary_item_id' => (int) $activity->secondary_item_id,
-			'date_recorded' => $activity->date_recorded,
+			'id'                      => (int) $activity->id,
+			'user_id'                 => $user_id,
+			'user_name'               => $user_name,
+			'user_avatar'             => $user_avatar,
+			'user_link'               => function_exists( 'bp_core_get_user_domain' ) ? bp_core_get_user_domain( $user_id ) : get_author_posts_url( $user_id ),
+			'title'                   => isset( $activity->post_title ) ? $activity->post_title : '',
+			'content'                 => $activity->content,
+			'primary_link'            => isset( $activity->primary_link ) ? $activity->primary_link : '',
+			'component'               => $activity->component,
+			'type'                    => $activity->type,
+			'action'                  => $activity->action,
+			'action_text'             => $action_text,
+			'group_name'              => $group_name,
+			'item_id'                 => (int) $activity->item_id,
+			'secondary_item_id'       => (int) $activity->secondary_item_id,
+			'date_recorded'           => $activity->date_recorded,
 			'date_recorded_formatted' => $date_formatted,
-			'is_spam'      => (bool) $activity->is_spam,
-			'is_hidden'    => (bool) $activity->hide_sitewide,
-			'comment_count' => isset( $activity->comment_count ) ? (int) $activity->comment_count : 0,
-			'permalink'    => function_exists( 'bp_activity_get_permalink' ) ? bp_activity_get_permalink( $activity->id ) : '',
+			'is_spam'                 => (bool) $activity->is_spam,
+			'hide_sitewide'           => (bool) $activity->hide_sitewide,
+			'comment_count'           => isset( $activity->comment_count ) ? (int) $activity->comment_count : 0,
+			'permalink'               => function_exists( 'bp_activity_get_permalink' ) ? bp_activity_get_permalink( $activity->id ) : '',
 		);
 
 		// Apply filters.

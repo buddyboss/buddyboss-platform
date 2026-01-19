@@ -46,6 +46,9 @@ function bb_admin_settings_2_0_page() {
 	// Enqueue WordPress components style explicitly (needed for ToggleControl, Button, etc.)
 	wp_enqueue_style( 'wp-components' );
 
+	// Enqueue WordPress editor for TinyMCE support in Activity Edit modal.
+	wp_enqueue_editor();
+
 	// Enqueue scripts and styles.
 	wp_enqueue_script(
 		'bb-admin-settings-2-0',

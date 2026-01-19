@@ -8,11 +8,131 @@
  * @since BuddyBoss 3.0.0
  */
 
-import { useState, useEffect, useRef } from '@wordpress/element';
+import { useState, useEffect, useRef, useCallback } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
-import { Spinner } from '@wordpress/components';
+import { Spinner, TextControl, TextareaControl, SelectControl, ToggleControl, Button } from '@wordpress/components';
 import apiFetch from '@wordpress/api-fetch';
 import { SideNavigation } from '../SideNavigation';
+
+// Close icon for modal
+const CloseIcon = () => (
+	<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+		<path d="M18 6L6 18M6 6L18 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+	</svg>
+);
+
+// Helper function to decode HTML entities
+const decodeHtmlEntities = (html) => {
+	if (!html) return '';
+	const textarea = document.createElement('textarea');
+	textarea.innerHTML = html;
+	return textarea.value;
+};
+
+// Rich Text Editor Component using WordPress TinyMCE
+const RichTextEditor = ({ id, value, onChange, placeholder }) => {
+	const containerRef = useRef(null);
+	const editorId = `bb-rich-editor-${id}`;
+	const isInitialized = useRef(false);
+	const [mode, setMode] = useState('visual'); // 'visual' or 'text'
+
+	useEffect(() => {
+		// Wait for wp.editor and tinymce to be available
+		if (typeof wp !== 'undefined' && wp.editor && typeof window.tinymce !== 'undefined' && !isInitialized.current) {
+			// Small delay to ensure DOM is ready
+			setTimeout(() => {
+				// Remove any existing editor instance
+				wp.editor.remove(editorId);
+				
+				// Initialize the editor
+				wp.editor.initialize(editorId, {
+					tinymce: {
+						wpautop: true,
+						plugins: 'charmap colorpicker hr lists paste tabfocus textcolor wordpress wpautoresize wplink wptextpattern',
+						toolbar1: 'formatselect bold italic bullist numlist blockquote alignleft aligncenter alignright link',
+						toolbar2: '',
+						height: 200,
+						setup: (editor) => {
+							editor.on('change keyup paste', () => {
+								const content = editor.getContent();
+								onChange(content);
+							});
+							editor.on('blur', () => {
+								const content = editor.getContent();
+								onChange(content);
+							});
+						}
+					},
+					quicktags: {
+						buttons: 'strong,em,link,block,del,ins,ul,ol,li,code,close'
+					},
+					mediaButtons: false,
+				});
+				
+				isInitialized.current = true;
+			}, 100);
+		}
+
+		return () => {
+			if (typeof wp !== 'undefined' && wp.editor && isInitialized.current) {
+				wp.editor.remove(editorId);
+				isInitialized.current = false;
+			}
+		};
+	}, [editorId]);
+
+	// Update editor content when value changes externally
+	useEffect(() => {
+		if (isInitialized.current && typeof window.tinymce !== 'undefined') {
+			const editor = window.tinymce.get(editorId);
+			if (editor && editor.getContent() !== value) {
+				editor.setContent(value || '');
+			}
+		}
+	}, [value, editorId]);
+
+	// Handle mode switch
+	const switchToVisual = () => {
+		if (typeof window.tinymce !== 'undefined' && typeof window.switchEditors !== 'undefined') {
+			window.switchEditors.go(editorId, 'tmce');
+			setMode('visual');
+		}
+	};
+
+	const switchToText = () => {
+		if (typeof window.tinymce !== 'undefined' && typeof window.switchEditors !== 'undefined') {
+			window.switchEditors.go(editorId, 'html');
+			setMode('text');
+		}
+	};
+
+	return (
+		<div className="bb-admin-rich-editor" ref={containerRef}>
+			<div className="bb-admin-rich-editor__tabs">
+				<button 
+					type="button"
+					className={`bb-admin-rich-editor__tab ${mode === 'visual' ? 'active' : ''}`}
+					onClick={switchToVisual}
+				>
+					{__('Visual', 'buddyboss')}
+				</button>
+				<button 
+					type="button"
+					className={`bb-admin-rich-editor__tab ${mode === 'text' ? 'active' : ''}`}
+					onClick={switchToText}
+				>
+					{__('Text', 'buddyboss')}
+				</button>
+			</div>
+			<textarea
+				id={editorId}
+				defaultValue={value}
+				placeholder={placeholder}
+				className="bb-admin-rich-editor__textarea"
+			/>
+		</div>
+	);
+};
 
 // SVG Icons matching Figma design
 const ClockIcon = () => (
@@ -89,6 +209,47 @@ export default function ActivityListScreen({ onNavigate }) {
 	const [navItems, setNavItems] = useState([]);
 	const [sidebarLoading, setSidebarLoading] = useState(true);
 
+	// Edit modal state
+	const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+	const [editingActivity, setEditingActivity] = useState(null);
+	const [editFormData, setEditFormData] = useState({
+		action: '',
+		title: '',
+		topic: '',
+		content: '',
+		primary_link: '',
+		type: '',
+		user_id: '',
+		item_id: '',
+		secondary_item_id: '',
+		is_spam: false,
+	});
+	const [isSaving, setIsSaving] = useState(false);
+	const [activityTypes, setActivityTypes] = useState([]);
+
+	// Load activity types on mount
+	useEffect(() => {
+		apiFetch({ path: `/buddyboss/v1/activity/types` })
+			.then((response) => {
+				const types = response.data || response || [];
+				setActivityTypes(Array.isArray(types) ? types : []);
+			})
+			.catch(() => {
+				// Fallback to common types if API fails
+				setActivityTypes([
+					{ key: 'activity_update', label: 'Updates' },
+					{ key: 'activity_comment', label: 'Activity Comments' },
+					{ key: 'new_member', label: 'New Members' },
+					{ key: 'friendship_created', label: 'Friendships' },
+					{ key: 'created_group', label: 'Groups Created' },
+					{ key: 'joined_group', label: 'Group Memberships' },
+					{ key: 'group_details_updated', label: 'Group Details Updated' },
+					{ key: 'bbp_topic_create', label: 'New Forum Topics' },
+					{ key: 'bbp_reply_create', label: 'Forum Replies' },
+				]);
+			});
+	}, []);
+
 	// Load sidebar data
 	useEffect(() => {
 		apiFetch({ path: `/buddyboss/v1/features/activity/settings` })
@@ -124,6 +285,8 @@ export default function ActivityListScreen({ onNavigate }) {
 			page: page.toString(),
 			per_page: perPage.toString(),
 			order: 'desc',
+			admin_view: '1', // Enable admin view to show all activities including hidden and comments
+			display_comments: 'stream', // Include activity comments in stream
 		});
 
 		if (search) {
@@ -224,7 +387,80 @@ export default function ActivityListScreen({ onNavigate }) {
 
 	const handleEdit = (activityId) => {
 		setOpenMenuId(null);
-		onNavigate(`/activity/${activityId}/edit`);
+		const activity = activities.find(a => a.id === activityId);
+		if (activity) {
+			setEditingActivity(activity);
+			
+			// Extract content - handle both string and object formats
+			let content = '';
+			if (typeof activity.content === 'string') {
+				content = activity.content;
+			} else if (activity.content?.rendered) {
+				content = activity.content.rendered;
+			} else if (activity.content_stripped) {
+				content = activity.content_stripped;
+			}
+			// Decode HTML entities in content
+			content = decodeHtmlEntities(content);
+			
+			// Extract action text and decode HTML entities
+			// BuddyPress API returns action HTML in 'title' field, raw action in 'action' field
+			let actionText = decodeHtmlEntities(activity.title || activity.action || '');
+			
+			// Decode title HTML entities
+			let titleText = decodeHtmlEntities(activity.post_title || '');
+			
+			setEditFormData({
+				action: actionText,
+				title: titleText,
+				topic: activity.topic || '',
+				content: content,
+				primary_link: activity.permalink || activity.primary_link || '',
+				type: activity.type || 'activity_update',
+				user_id: activity.user_id?.toString() || '',
+				item_id: activity.item_id?.toString() || '0',
+				secondary_item_id: activity.secondary_item_id?.toString() || '0',
+				is_spam: activity.is_spam || false,
+			});
+			setIsEditModalOpen(true);
+		}
+	};
+
+	const handleEditSave = () => {
+		if (!editingActivity) return;
+		
+		setIsSaving(true);
+		apiFetch({
+			path: `/buddyboss/v1/activity/${editingActivity.id}`,
+			method: 'PUT',
+			data: {
+				action: editFormData.action,
+				title: editFormData.title,
+				content: editFormData.content,
+				primary_link: editFormData.primary_link,
+				type: editFormData.type,
+				user_id: parseInt(editFormData.user_id) || editingActivity.user_id,
+				item_id: parseInt(editFormData.item_id) || 0,
+				secondary_item_id: parseInt(editFormData.secondary_item_id) || 0,
+				is_spam: editFormData.is_spam,
+			},
+		})
+			.then(() => {
+				setIsEditModalOpen(false);
+				setEditingActivity(null);
+				loadActivities();
+			})
+			.catch((error) => {
+				console.error('Error updating activity:', error);
+			})
+			.finally(() => {
+				setIsSaving(false);
+			});
+	};
+
+	const handleEditClose = () => {
+		setIsEditModalOpen(false);
+		setEditingActivity(null);
 	};
 
 	const handleMarkSpam = (activityId) => {
@@ -548,6 +784,185 @@ export default function ActivityListScreen({ onNavigate }) {
 					</div>
 				</main>
 			</div>
+
+			{/* Edit Activity Modal */}
+			{isEditModalOpen && editingActivity && (
+				<div className="bb-admin-modal-overlay" onClick={handleEditClose}>
+					<div className="bb-admin-activity-modal bb-admin-activity-modal--wide" onClick={(e) => e.stopPropagation()}>
+						<div className="bb-admin-activity-modal__header">
+							<h2>{__('Edit Activity', 'buddyboss')} (ID #{editingActivity.id})</h2>
+							<button 
+								className="bb-admin-activity-modal__close"
+								onClick={handleEditClose}
+							>
+								<CloseIcon />
+							</button>
+						</div>
+						<div className="bb-admin-activity-modal__body">
+							{/* Action Field */}
+							<div className="bb-admin-activity-modal__section">
+								<label className="bb-admin-activity-modal__section-label">
+									{__('Action', 'buddyboss')}
+								</label>
+								<RichTextEditor
+									id={`activity-action-${editingActivity?.id || 'new'}`}
+									value={editFormData.action}
+									onChange={(action) => setEditFormData({ ...editFormData, action })}
+									placeholder={__('Activity action text...', 'buddyboss')}
+								/>
+								<p className="bb-admin-activity-modal__description">
+									{__('The activity action. e.g. "User posted an update"', 'buddyboss')}
+								</p>
+							</div>
+
+							{/* Title Field */}
+							<div className="bb-admin-activity-modal__section">
+								<label className="bb-admin-activity-modal__section-label">
+									{__('Title', 'buddyboss')}
+								</label>
+								<TextControl
+									value={editFormData.title}
+									onChange={(title) => setEditFormData({ ...editFormData, title })}
+									placeholder={__('Title (optional)', 'buddyboss')}
+								/>
+							</div>
+
+							{/* Topic Field */}
+							<div className="bb-admin-activity-modal__section">
+								<label className="bb-admin-activity-modal__section-label">
+									{__('Topic', 'buddyboss')}
+								</label>
+								<TextControl
+									value={editFormData.topic}
+									onChange={(topic) => setEditFormData({ ...editFormData, topic })}
+									placeholder={__('Topic (optional)', 'buddyboss')}
+								/>
+							</div>
+
+							{/* Content Field */}
+							<div className="bb-admin-activity-modal__section">
+								<label className="bb-admin-activity-modal__section-label">
+									{__('Content', 'buddyboss')}
+								</label>
+								<RichTextEditor
+									id={`activity-content-${editingActivity?.id || 'new'}`}
+									value={editFormData.content}
+									onChange={(content) => setEditFormData({ ...editFormData, content })}
+									placeholder={__('Activity content...', 'buddyboss')}
+								/>
+							</div>
+
+							{/* Status (Spam Toggle) */}
+							<div className="bb-admin-activity-modal__section">
+								<label className="bb-admin-activity-modal__section-label">
+									{__('Status', 'buddyboss')}
+								</label>
+								<div className="bb-admin-activity-modal__toggle-row">
+									<ToggleControl
+										label={__('Mark as Spam', 'buddyboss')}
+										checked={editFormData.is_spam}
+										onChange={(value) => setEditFormData({ ...editFormData, is_spam: value })}
+									/>
+								</div>
+							</div>
+
+							{/* Link Field */}
+							<div className="bb-admin-activity-modal__section">
+								<label className="bb-admin-activity-modal__section-label">
+									{__('Link', 'buddyboss')}
+								</label>
+								<TextControl
+									value={editFormData.primary_link}
+									onChange={(value) => setEditFormData({ ...editFormData, primary_link: value })}
+									placeholder={__('https://...', 'buddyboss')}
+								/>
+								<p className="bb-admin-activity-modal__description">
+									{__('Add a custom link for this activity item.', 'buddyboss')}
+								</p>
+							</div>
+
+							{/* Type Field */}
+							<div className="bb-admin-activity-modal__section">
+								<label className="bb-admin-activity-modal__section-label">
+									{__('Type', 'buddyboss')}
+								</label>
+								<SelectControl
+									value={editFormData.type}
+									onChange={(value) => setEditFormData({ ...editFormData, type: value })}
+									options={[
+										{ value: '', label: __('Select Type', 'buddyboss') },
+										...activityTypes.map(type => ({
+											value: type.key || type.value,
+											label: type.label || type.name || type.key,
+										}))
+									]}
+								/>
+							</div>
+
+							{/* Author ID Field */}
+							<div className="bb-admin-activity-modal__section">
+								<label className="bb-admin-activity-modal__section-label">
+									{__('Author ID', 'buddyboss')}
+								</label>
+								<TextControl
+									type="number"
+									value={editFormData.user_id}
+									onChange={(value) => setEditFormData({ ...editFormData, user_id: value })}
+									min="1"
+								/>
+								<p className="bb-admin-activity-modal__description">
+									{__('The user ID of the activity author.', 'buddyboss')}
+								</p>
+							</div>
+
+							{/* Primary/Secondary Item IDs */}
+							<div className="bb-admin-activity-modal__section bb-admin-activity-modal__section--last">
+								<label className="bb-admin-activity-modal__section-label">
+									{__('Primary Item / Secondary Item', 'buddyboss')}
+								</label>
+								<div className="bb-admin-activity-modal__row">
+									<div className="bb-admin-activity-modal__field-half">
+										<label className="bb-admin-activity-modal__sub-label">{__('Primary Item ID', 'buddyboss')}</label>
+										<TextControl
+											type="number"
+											value={editFormData.item_id}
+											onChange={(value) => setEditFormData({ ...editFormData, item_id: value })}
+											min="0"
+										/>
+									</div>
+									<div className="bb-admin-activity-modal__field-half">
+										<label className="bb-admin-activity-modal__sub-label">{__('Secondary Item ID', 'buddyboss')}</label>
+										<TextControl
+											type="number"
+											value={editFormData.secondary_item_id}
+											onChange={(value) => setEditFormData({ ...editFormData, secondary_item_id: value })}
+											min="0"
+										/>
+									</div>
+								</div>
+								<p className="bb-admin-activity-modal__description">
+									{__('These identify the object that created this activity. For example, the fields could reference a pair of site and comment IDs.', 'buddyboss')}
+								</p>
+							</div>
+						</div>
+						<div className="bb-admin-activity-modal__footer">
+							<Button 
+								isSecondary 
+								onClick={handleEditClose}
+							>
+								{__('Cancel', 'buddyboss')}
+							</Button>
+							<Button 
+								isPrimary 
+								onClick={handleEditSave}
+								disabled={isSaving}
+							>
+								{isSaving ? <Spinner /> : __('Update', 'buddyboss')}
+							</Button>
+						</div>
+					</div>
+				</div>
+			)}
 		</div>
 	);
 }

@@ -134,3 +134,38 @@ function bb_admin_settings_2_0_activate() {
 // Note: Activation hook should be registered in bp-loader.php or main plugin file.
 // This will be called via 'bb_plugin_activated' action or similar.
 add_action( 'bb_settings_history_init', array( 'BB_Settings_History', 'maybe_create_table' ) );
+
+/**
+ * Modify activity REST API query args for admin view.
+ *
+ * When the 'admin_view' parameter is passed, this filter ensures all activities
+ * are returned (including hidden, all statuses, all privacy levels, and comments).
+ *
+ * @since BuddyBoss 3.0.0
+ *
+ * @param array           $args    Query arguments.
+ * @param WP_REST_Request $request Request object.
+ * @return array Modified query arguments.
+ */
+function bb_admin_settings_2_0_activity_query_args( $args, $request ) {
+	// Check if this is an admin view request.
+	if ( ! empty( $request->get_param( 'admin_view' ) ) && current_user_can( 'manage_options' ) ) {
+		// Show all activities including hidden ones.
+		$args['show_hidden'] = true;
+
+		// Include activity comments in the stream (like old admin implementation).
+		$args['display_comments'] = 'stream';
+
+		// Show all statuses (published, scheduled, draft).
+		$args['status'] = false;
+
+		// Show all privacy levels.
+		$args['privacy'] = false;
+
+		// No scope restriction.
+		$args['scope'] = false;
+	}
+
+	return $args;
+}
+add_filter( 'bp_rest_activity_get_items_query_args', 'bb_admin_settings_2_0_activity_query_args', 10, 2 );
