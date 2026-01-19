@@ -627,8 +627,21 @@ function bp_nouveau_ajax_document_document_save() {
 
 	$group_id = (int) filter_input( INPUT_POST, 'group_id', FILTER_SANITIZE_NUMBER_INT );
 	if (
-		( ( bp_is_my_profile() || bp_is_user_document() ) && empty( bb_user_can_create_document() ) ) ||
-		( bp_is_active( 'groups' ) && ! empty( $group_id ) && ( ! groups_can_user_manage_document( bp_loggedin_user_id(), $group_id ) || ! bp_is_group_document_support_enabled() ) )
+		(
+			(
+				bp_is_my_profile() ||
+				bp_is_user_document()
+			) &&
+			empty( bb_user_can_create_document() )
+		) ||
+		(
+			bp_is_active( 'groups' ) &&
+			! empty( $group_id ) &&
+			(
+				! groups_can_user_manage_document( bp_loggedin_user_id(), $group_id ) ||
+				! bp_is_group_document_support_enabled()
+			)
+		)
 	) {
 		$response['feedback'] = sprintf(
 			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
