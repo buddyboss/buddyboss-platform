@@ -1615,7 +1615,7 @@ window.bp = window.bp || {};
 				gif_search_dropdown = isInsideForumModal ? $( '.bb-rl-gif-media-search-dropdown-standalone' ) : target.closest( 'form' ).find( '.bb-rl-gif-media-search-dropdown' ), i = 0;
 			event.preventDefault();
 
-			// Populate the standalone popup with HTML structure if it's empty (for forums).
+			// Populate the standalone popup with HTML structure if it's empty.
 			if ( isInsideForumModal && gif_search_dropdown.is( ':empty' ) ) {
 				var gifPickerHtml = '<div class="bb-rl-forums-attached-gif-container">' +
 					'<div class="gif-search-content">' +

@@ -181,6 +181,10 @@ function bp_nouveau_media_localize_scripts( $params = array() ) {
 	);
 	$params['media']['gif_api_key'] = bp_media_get_gif_api_key();
 
+	$params['media']['gif_search_placeholder'] = __( 'Search GIPHY...', 'buddyboss' );
+	$params['media']['gif_no_results']         = __( 'No results found', 'buddyboss' );
+	$params['media']['gif_no_connection']      = __( 'Could not connect to GIPHY', 'buddyboss' );
+
 	$params['media']['i18n_strings'] = array(
 		'select'               => __( 'Select', 'buddyboss' ),
 		'unselect'             => __( 'Unselect', 'buddyboss' ),
