@@ -1117,7 +1117,9 @@ window.bp = window.bp || {};
 			var gif_container_key     = $forums_gif_container.data( 'key' );
 			self.gif_container_key    = gif_container_key;
 
-			if ( el.scrollTop + el.offsetHeight >= el.scrollHeight && ! $forums_gif_container.hasClass( 'loading' ) ) {
+			// Use a small threshold (5px) to handle subpixel rendering and browser rounding issues.
+			var scrollThreshold = 5;
+			if ( el.scrollTop + el.offsetHeight + scrollThreshold >= el.scrollHeight && ! $forums_gif_container.hasClass( 'loading' ) ) {
 				if ( self.gif_data[ gif_container_key ].total_count > 0 && self.gif_data[ gif_container_key ].offset <= self.gif_data[ gif_container_key ].total_count ) {
 					var params = {
 						offset: self.gif_data[ gif_container_key ].offset,
