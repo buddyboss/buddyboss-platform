@@ -103,9 +103,10 @@ export function Router({ currentRoute, onNavigate }) {
 				);
 			}
 			if (routeParts[1] === 'create') {
+				// Redirect to /groups/all but open the create modal
 				return (
 					<Suspense fallback={<LoadingSpinner />}>
-						<GroupEditScreen mode="create" />
+						<GroupsListScreen onNavigate={onNavigate} openCreateModal={true} />
 					</Suspense>
 				);
 			}

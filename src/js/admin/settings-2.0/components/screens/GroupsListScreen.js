@@ -13,6 +13,7 @@ import { __ } from '@wordpress/i18n';
 import { Spinner, CheckboxControl } from '@wordpress/components';
 import apiFetch from '@wordpress/api-fetch';
 import { SideNavigation } from '../SideNavigation';
+import GroupModal from '../modals/GroupModal';
 
 /**
  * Privacy badge icon component
@@ -109,9 +110,10 @@ function SearchIcon() {
  *
  * @param {Object} props - Component props
  * @param {Function} props.onNavigate - Navigation callback
+ * @param {boolean} props.openCreateModal - Whether to open create modal on mount
  * @returns {JSX.Element} Groups list screen
  */
-export default function GroupsListScreen({ onNavigate }) {
+export default function GroupsListScreen({ onNavigate, openCreateModal = false }) {
 	const [groups, setGroups] = useState([]);
 	const [groupTypes, setGroupTypes] = useState([]);
 	const [isLoading, setIsLoading] = useState(true);
@@ -124,7 +126,9 @@ export default function GroupsListScreen({ onNavigate }) {
 	const [statusFilter, setStatusFilter] = useState('');
 	const [orderBy, setOrderBy] = useState('last_activity');
 	const [actionMenuOpen, setActionMenuOpen] = useState(null);
-	
+	const [isModalOpen, setIsModalOpen] = useState(false);
+	const [editingGroup, setEditingGroup] = useState(null);
+
 	// Sidebar data
 	const [sidePanels, setSidePanels] = useState([]);
 	const [navItems, setNavItems] = useState([]);
@@ -134,6 +138,18 @@ export default function GroupsListScreen({ onNavigate }) {
 		loadGroupTypes();
 		loadSidebarData();
 	}, [page, search, statusFilter, orderBy]);
+
+	// Handle openCreateModal prop
+	useEffect(() => {
+		if (openCreateModal) {
+			setIsModalOpen(true);
+			setEditingGroup(null);
+			// Update URL to /groups/all
+			if (window.location.hash !== '#/groups/all') {
+				window.location.hash = '#/groups/all';
+			}
+		}
+	}, [openCreateModal]);
 
 	const loadSidebarData = () => {
 		apiFetch({ path: '/buddyboss/v1/features/groups/settings' })
@@ -353,6 +369,21 @@ export default function GroupsListScreen({ onNavigate }) {
 		}
 	};
 
+	const handleAddNewGroup = () => {
+		setEditingGroup(null);
+		setIsModalOpen(true);
+	};
+
+	const handleModalClose = () => {
+		setIsModalOpen(false);
+		setEditingGroup(null);
+	};
+
+	const handleModalSave = (savedGroup) => {
+		// Reload groups list
+		loadGroups();
+	};
+
 	return (
 		<div className="bb-admin-feature-settings">
 			<div className="bb-admin-feature-settings__container">
@@ -379,9 +410,7 @@ export default function GroupsListScreen({ onNavigate }) {
 								<h2 className="bb-admin-groups-list__section-title">{__('Groups', 'buddyboss')}</h2>
 								<button
 									className="bb-admin-groups-list__create-btn"
-									onClick={() => {
-										window.location.hash = '#/groups/create';
-									}}
+									onClick={handleAddNewGroup}
 								>
 									<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
 										<path d="M8 3.33337V12.6667M3.33337 8.00004H12.6667" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
@@ -611,6 +640,14 @@ export default function GroupsListScreen({ onNavigate }) {
 				</div>
 				</main>
 			</div>
+
+			{/* Group Modal */}
+			<GroupModal
+				isOpen={isModalOpen}
+				onClose={handleModalClose}
+				onSave={handleModalSave}
+				group={editingGroup}
+			/>
 		</div>
 	);
 }
