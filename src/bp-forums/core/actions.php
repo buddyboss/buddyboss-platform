@@ -619,18 +619,13 @@ function bb_forum_add_content_popup() {
  * @since BuddyBoss [BBVERSION]
  */
 function bb_forums_gifpicker_add_popup_template() {
-	// Only load on forum pages and when media component is active.
-	if ( ! bp_is_active( 'media' ) ) {
-		return;
-	}
-
-	// Check if we're on a forums page.
-	if ( ! function_exists( 'is_bbpress' ) || ! is_bbpress() ) {
-		return;
-	}
-
-	// Check if GIF uploads are enabled.
-	if ( ! bp_is_active( 'media' ) || ! bp_is_forums_gif_support_enabled() ) {
+	// Only load on forum pages when media component is active and GIF support is enabled.
+	if (
+		! bp_is_active( 'media' ) ||
+		! function_exists( 'is_bbpress' ) ||
+		! is_bbpress() ||
+		! bp_is_forums_gif_support_enabled()
+	) {
 		return;
 	}
 
