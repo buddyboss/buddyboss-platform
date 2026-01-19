@@ -265,7 +265,8 @@ window.bp = window.bp || {};
 			if ( $standaloneGifPicker.length ) {
 				$standaloneGifPicker.on( 'click', '.found-media-item', this.selectGif.bind( this ) );
 				$standaloneGifPicker.on( 'keydown', '.search-query-input', this.searchGif.bind( this ) );
-				$standaloneGifPicker.on( 'scroll', '.gif-search-results', this.loadMoreGif.bind( this ) );
+				// Note: scroll event is bound directly in toggleGifSelector after popup content is created,
+				// because scroll events don't bubble and can't use event delegation.
 			}
 			if ( ! groupMessagesButtonSelector.length ) {
 				$document.find( 'form #whats-new-toolbar, .forum form #whats-new-toolbar' ).on( 'click', '.found-media-item', this.selectGif.bind( this ) );
@@ -1634,6 +1635,9 @@ window.bp = window.bp || {};
 					'</div>' +
 					'</div>';
 				gif_search_dropdown.html( gifPickerHtml );
+
+				// Bind scroll event directly to the results element for lazy loading.
+				gif_search_dropdown.find( '.gif-search-results' ).on( 'scroll', self.loadMoreGif.bind( self ) );
 			}
 
 			if ( typeof window.Giphy !== 'undefined' && typeof bbRlMedia.gif_api_key !== 'undefined' ) {
