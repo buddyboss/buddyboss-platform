@@ -3833,6 +3833,11 @@ $bb-border-radius-xs: 6px;
 			min-height: 100px;
 		}
 
+		// Override WordPress components label text-transform
+		.components-base-control__label {
+			text-transform: none !important;
+		}
+
 		// Number input specific styling
 		input[type="number"] {
 			-moz-appearance: textfield;
@@ -4191,4 +4196,9 @@ $bb-border-radius-xs: 6px;
 			margin: 0;
 		}
 	}
+}
+
+// Global override for WordPress components label text-transform
+.bb-admin-group-type-modal__section .components-base-control__label {
+	text-transform: none !important;
 }
