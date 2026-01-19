@@ -1626,11 +1626,11 @@ window.bp = window.bp || {};
 					'<div class="gif-search-results" id="gif-search-results">' +
 					'<ul class="gif-search-results-list"></ul>' +
 					'<div class="gif-alert gif-no-results">' +
-					'<i class="bb-icon-l bb-icon-image-slash"></i>' +
+					'<i class="bb-icons-rl-image-broken"></i>' +
 					'<p>' + ( bbRlMedia.gif_no_results || 'No results found' ) + '</p>' +
 					'</div>' +
 					'<div class="gif-alert gif-no-connection">' +
-					'<i class="bb-icons-rl bb-icon-cloud-slash"></i>' +
+					'<i class="bb-icons-rl-cloud-slash"></i>' +
 					'<p>' + ( bbRlMedia.gif_no_connection || 'Could not connect to GIPHY' ) + '</p>' +
 					'</div>' +
 					'</div>' +
