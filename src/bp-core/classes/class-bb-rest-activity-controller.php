@@ -25,7 +25,8 @@ class BB_REST_Activity_Controller extends WP_REST_Controller {
 	 */
 	public function __construct() {
 		$this->namespace = bp_rest_namespace() . '/' . bp_rest_version();
-		$this->rest_base  = 'activity';
+		// Use 'admin-activity' to avoid conflict with the default BP_REST_Activity_Endpoint at 'activity'.
+		$this->rest_base  = 'admin-activity';
 	}
 
 	/**
@@ -54,6 +55,18 @@ class BB_REST_Activity_Controller extends WP_REST_Controller {
 				array(
 					'methods'             => WP_REST_Server::READABLE,
 					'callback'            => array( $this, 'get_types' ),
+					'permission_callback' => array( $this, 'get_items_permissions_check' ),
+				),
+			)
+		);
+
+		register_rest_route(
+			$this->namespace,
+			'/' . $this->rest_base . '/topics',
+			array(
+				array(
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => array( $this, 'get_topics' ),
 					'permission_callback' => array( $this, 'get_items_permissions_check' ),
 				),
 			)
@@ -127,6 +140,37 @@ class BB_REST_Activity_Controller extends WP_REST_Controller {
 		} );
 
 		return BB_REST_Response::success( array_values( $types ) );
+	}
+
+	/**
+	 * Get activity topics.
+	 *
+	 * @since BuddyBoss 3.0.0
+	 *
+	 * @param WP_REST_Request $request Request object.
+	 * @return WP_REST_Response
+	 */
+	public function get_topics( $request ) {
+		$topics = array();
+
+		// Check if activity topics manager exists.
+		if ( function_exists( 'bb_activity_topics_manager_instance' ) ) {
+			$topics_manager = bb_activity_topics_manager_instance();
+			if ( method_exists( $topics_manager, 'bb_get_activity_topics' ) ) {
+				$raw_topics = $topics_manager->bb_get_activity_topics();
+				if ( ! empty( $raw_topics ) && is_array( $raw_topics ) ) {
+					foreach ( $raw_topics as $topic ) {
+						$topics[] = array(
+							'id'    => isset( $topic['topic_id'] ) ? (int) $topic['topic_id'] : 0,
+							'name'  => isset( $topic['name'] ) ? $topic['name'] : '',
+							'slug'  => isset( $topic['slug'] ) ? $topic['slug'] : '',
+						);
+					}
+				}
+			}
+		}
+
+		return BB_REST_Response::success( $topics );
 	}
 
 	/**
@@ -299,6 +343,8 @@ class BB_REST_Activity_Controller extends WP_REST_Controller {
 	/**
 	 * Update activity.
 	 *
+	 * Matches the old admin implementation at /wp-admin/admin.php?page=bp-activity&action=edit
+	 *
 	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param WP_REST_Request $request Request object.
@@ -306,69 +352,136 @@ class BB_REST_Activity_Controller extends WP_REST_Controller {
 	 */
 	public function update_item( $request ) {
 		$activity_id = (int) $request['id'];
-		$activity    = new BP_Activity_Activity( $activity_id );
+		
+		// Load activity as BP_Activity_Activity object (has save() method).
+		$activity = new BP_Activity_Activity( $activity_id );
 
 		if ( empty( $activity->id ) ) {
 			return BB_REST_Response::not_found( __( 'Activity not found.', 'buddyboss' ) );
 		}
 
-		// Update activity action if provided.
-		if ( isset( $request['action'] ) ) {
-			$activity->action = wp_kses_post( $request['action'] );
+		// Store previous spam status.
+		$prev_spam_status = $activity->is_spam;
+
+		// Update activity action if provided (like bp-activities-action in old admin).
+		// Use 'activity_action' parameter name to avoid conflict with WordPress 'action' parameter.
+		if ( isset( $request['activity_action'] ) ) {
+			$activity->action = $request['activity_action'];
 		}
 
-		// Update activity title if provided.
+		// Update activity title if provided (like bb-activities-title in old admin).
 		if ( isset( $request['title'] ) ) {
-			// Title is stored in post_title property
-			if ( property_exists( $activity, 'post_title' ) ) {
-				$activity->post_title = sanitize_text_field( $request['title'] );
+			$activity->post_title = sanitize_text_field( $request['title'] );
+		}
+
+		// Update activity content if provided (like bp-activities-content in old admin).
+		if ( isset( $request['content'] ) ) {
+			$activity->content = $request['content'];
+		}
+
+		// Update primary link if provided (like bp-activities-link in old admin).
+		if ( isset( $request['primary_link'] ) && ! empty( $request['primary_link'] ) ) {
+			$activity->primary_link = $request['primary_link'];
+		}
+
+		// Update user ID if provided (like bp-activities-userid in old admin).
+		if ( isset( $request['user_id'] ) && ! empty( $request['user_id'] ) ) {
+			$activity->user_id = (int) $request['user_id'];
+		}
+
+		// Update item ID if provided (like bp-activities-primaryid in old admin).
+		if ( isset( $request['item_id'] ) ) {
+			$activity->item_id = (int) $request['item_id'];
+		}
+		// Also check primary_item_id for BuddyPress REST API compatibility.
+		if ( isset( $request['primary_item_id'] ) ) {
+			$activity->item_id = (int) $request['primary_item_id'];
+		}
+
+		// Update secondary item ID if provided (like bp-activities-secondaryid in old admin).
+		if ( isset( $request['secondary_item_id'] ) ) {
+			$activity->secondary_item_id = (int) $request['secondary_item_id'];
+		}
+
+		// Update activity type if provided (like bp-activities-type in old admin).
+		if ( isset( $request['type'] ) && ! empty( $request['type'] ) ) {
+			// Check that the new type is a registered activity type if function exists.
+			if ( function_exists( 'bp_activity_admin_get_activity_actions' ) ) {
+				$actions = bp_activity_admin_get_activity_actions();
+				if ( in_array( $request['type'], $actions, true ) ) {
+					$activity->type = $request['type'];
+				} else {
+					// Allow setting type even if not in admin actions list.
+					$activity->type = sanitize_text_field( $request['type'] );
+				}
+			} else {
+				// Function not available, just sanitize and set.
+				$activity->type = sanitize_text_field( $request['type'] );
 			}
 		}
 
-		// Update activity content if provided.
-		if ( isset( $request['content'] ) ) {
-			$activity->content = wp_kses_post( $request['content'] );
-		}
-
-		// Update primary link if provided.
-		if ( isset( $request['primary_link'] ) ) {
-			$activity->primary_link = esc_url_raw( $request['primary_link'] );
-		}
-
-		// Update activity type if provided.
-		if ( isset( $request['type'] ) ) {
-			$activity->type = sanitize_text_field( $request['type'] );
-		}
-
-		// Update user ID if provided.
-		if ( isset( $request['user_id'] ) ) {
-			$activity->user_id = absint( $request['user_id'] );
-		}
-
-		// Update item ID if provided.
-		if ( isset( $request['item_id'] ) ) {
-			$activity->item_id = absint( $request['item_id'] );
-		}
-
-		// Update secondary item ID if provided.
-		if ( isset( $request['secondary_item_id'] ) ) {
-			$activity->secondary_item_id = absint( $request['secondary_item_id'] );
-		}
-
-		// Update activity status if provided.
+		// Update activity spam status if provided (like activity_status in old admin).
 		if ( isset( $request['is_spam'] ) ) {
-			$activity->is_spam = (bool) $request['is_spam'];
+			$new_spam_status = (bool) $request['is_spam'];
+			
+			if ( $new_spam_status && ! $prev_spam_status ) {
+				// Mark as spam.
+				bp_activity_mark_as_spam( $activity );
+			} elseif ( ! $new_spam_status && $prev_spam_status ) {
+				// Mark as ham (not spam).
+				bp_activity_mark_as_ham( $activity );
+			}
 		}
 
-		// Apply filters before saving.
-		$activity = apply_filters( 'buddyboss_rest_activity_update_item', $activity, $request );
+		/**
+		 * Fires before an activity item is updated via REST API.
+		 *
+		 * @since BuddyBoss 3.0.0
+		 *
+		 * @param BP_Activity_Activity $activity Activity object.
+		 * @param WP_REST_Request      $request  Request object.
+		 */
+		do_action( 'bb_rest_activity_before_update', $activity, $request );
 
-		// Save activity.
-		if ( ! $activity->save() ) {
+		// Save activity using BP_Activity_Activity::save() method.
+		$result = $activity->save();
+
+		if ( ! $result ) {
 			return BB_REST_Response::error( __( 'Failed to update activity.', 'buddyboss' ) );
 		}
 
-		return BB_REST_Response::success( $this->prepare_item_for_response( $activity, $request ) );
+		// Update activity topic if provided.
+		if ( isset( $request['topic_id'] ) ) {
+			$topic_id = (int) $request['topic_id'];
+			if ( function_exists( 'bb_activity_topics_manager_instance' ) ) {
+				$topics_manager = bb_activity_topics_manager_instance();
+				if ( method_exists( $topics_manager, 'bb_add_activity_topic_relationship' ) ) {
+					// Method expects an array of arguments.
+					$topics_manager->bb_add_activity_topic_relationship(
+						array(
+							'activity_id' => $activity_id,
+							'topic_id'    => $topic_id,
+							'component'   => 'activity',
+						)
+					);
+				}
+			}
+		}
+
+		/**
+		 * Fires after an activity item is updated via REST API.
+		 *
+		 * @since BuddyBoss 3.0.0
+		 *
+		 * @param BP_Activity_Activity $activity Activity object.
+		 * @param WP_REST_Request      $request  Request object.
+		 */
+		do_action( 'bb_rest_activity_after_update', $activity, $request );
+
+		// Reload activity to get updated data.
+		$updated_activity = new BP_Activity_Activity( $activity_id );
+
+		return BB_REST_Response::success( $this->prepare_item_for_response( $updated_activity, $request ) );
 	}
 
 	/**
@@ -509,6 +622,19 @@ class BB_REST_Activity_Controller extends WP_REST_Controller {
 			}
 		}
 
+		// Get activity topic ID if topics manager exists.
+		$topic_id = 0;
+		if ( function_exists( 'bb_activity_topics_manager_instance' ) ) {
+			$topics_manager = bb_activity_topics_manager_instance();
+			if ( method_exists( $topics_manager, 'bb_get_activity_topic' ) ) {
+				// bb_get_activity_topic returns topic ID when 'id' is passed as return_type.
+				$topic_result = $topics_manager->bb_get_activity_topic( (int) $activity->id, 'id' );
+				if ( ! empty( $topic_result ) ) {
+					$topic_id = (int) $topic_result;
+				}
+			}
+		}
+
 		$data = array(
 			'id'                      => (int) $activity->id,
 			'user_id'                 => $user_id,
@@ -531,6 +657,7 @@ class BB_REST_Activity_Controller extends WP_REST_Controller {
 			'hide_sitewide'           => (bool) $activity->hide_sitewide,
 			'comment_count'           => isset( $activity->comment_count ) ? (int) $activity->comment_count : 0,
 			'permalink'               => function_exists( 'bp_activity_get_permalink' ) ? bp_activity_get_permalink( $activity->id ) : '',
+			'topic_id'                => $topic_id,
 		);
 
 		// Apply filters.

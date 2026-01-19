@@ -226,10 +226,12 @@ export default function ActivityListScreen({ onNavigate }) {
 	});
 	const [isSaving, setIsSaving] = useState(false);
 	const [activityTypes, setActivityTypes] = useState([]);
+	const [activityTopics, setActivityTopics] = useState([]);
 
-	// Load activity types on mount
+	// Load activity types and topics on mount
 	useEffect(() => {
-		apiFetch({ path: `/buddyboss/v1/activity/types` })
+		// Load activity types
+		apiFetch({ path: `/buddyboss/v1/admin-activity/types` })
 			.then((response) => {
 				const types = response.data || response || [];
 				setActivityTypes(Array.isArray(types) ? types : []);
@@ -247,6 +249,16 @@ export default function ActivityListScreen({ onNavigate }) {
 					{ key: 'bbp_topic_create', label: 'New Forum Topics' },
 					{ key: 'bbp_reply_create', label: 'Forum Replies' },
 				]);
+			});
+
+		// Load activity topics
+		apiFetch({ path: `/buddyboss/v1/admin-activity/topics` })
+			.then((response) => {
+				const topics = response.data || response || [];
+				setActivityTopics(Array.isArray(topics) ? topics : []);
+			})
+			.catch(() => {
+				setActivityTopics([]);
 			});
 	}, []);
 
@@ -301,7 +313,7 @@ export default function ActivityListScreen({ onNavigate }) {
 
 		// Use parse: false to access response headers for pagination
 		apiFetch({ 
-			path: `/buddyboss/v1/activity?${params.toString()}`,
+			path: `/buddyboss/v1/admin-activity?${params.toString()}`,
 			parse: false 
 		})
 			.then((response) => {
@@ -357,7 +369,7 @@ export default function ActivityListScreen({ onNavigate }) {
 			Promise.all(
 				selectedIds.map((id) =>
 					apiFetch({
-						path: `/buddyboss/v1/activity/${id}`,
+						path: `/buddyboss/v1/admin-activity/${id}`,
 						method: 'DELETE',
 						headers: { 'X-WP-Nonce': bbAdminData?.nonce || '' },
 					})
@@ -376,7 +388,7 @@ export default function ActivityListScreen({ onNavigate }) {
 		}
 
 		apiFetch({
-			path: `/buddyboss/v1/activity/${activityId}`,
+			path: `/buddyboss/v1/admin-activity/${activityId}`,
 			method: 'DELETE',
 			headers: { 'X-WP-Nonce': bbAdminData?.nonce || '' },
 		}).then(() => {
@@ -403,17 +415,16 @@ export default function ActivityListScreen({ onNavigate }) {
 			// Decode HTML entities in content
 			content = decodeHtmlEntities(content);
 			
-			// Extract action text and decode HTML entities
-			// BuddyPress API returns action HTML in 'title' field, raw action in 'action' field
-			let actionText = decodeHtmlEntities(activity.title || activity.action || '');
+			// Extract action text - action HTML is in 'action' field
+			let actionText = decodeHtmlEntities(activity.action || '');
 			
-			// Decode title HTML entities
-			let titleText = decodeHtmlEntities(activity.post_title || '');
+			// Extract title - post_title is returned as 'title' in our API response
+			let titleText = decodeHtmlEntities(activity.title || '');
 			
 			setEditFormData({
 				action: actionText,
 				title: titleText,
-				topic: activity.topic || '',
+				topic: activity.topic_id?.toString() || '',
 				content: content,
 				primary_link: activity.permalink || activity.primary_link || '',
 				type: activity.type || 'activity_update',
@@ -430,28 +441,42 @@ export default function ActivityListScreen({ onNavigate }) {
 		if (!editingActivity) return;
 		
 		setIsSaving(true);
+		
+		// Build update data matching PHP REST API expectations
+		const updateData = {
+			// Core activity fields (matching old admin field names)
+			// Use 'activity_action' to avoid conflict with WordPress 'action' parameter
+			activity_action: editFormData.action,
+			title: editFormData.title,
+			content: editFormData.content,
+			primary_link: editFormData.primary_link,
+			type: editFormData.type,
+			user_id: parseInt(editFormData.user_id) || editingActivity.user_id,
+			item_id: parseInt(editFormData.item_id) || 0,
+			secondary_item_id: parseInt(editFormData.secondary_item_id) || 0,
+			is_spam: editFormData.is_spam,
+			topic_id: editFormData.topic ? parseInt(editFormData.topic) : 0,
+		};
+
+		console.log('Updating activity:', editingActivity.id, updateData);
+
 		apiFetch({
-			path: `/buddyboss/v1/activity/${editingActivity.id}`,
+			path: `/buddyboss/v1/admin-activity/${editingActivity.id}`,
 			method: 'PUT',
-			data: {
-				action: editFormData.action,
-				title: editFormData.title,
-				content: editFormData.content,
-				primary_link: editFormData.primary_link,
-				type: editFormData.type,
-				user_id: parseInt(editFormData.user_id) || editingActivity.user_id,
-				item_id: parseInt(editFormData.item_id) || 0,
-				secondary_item_id: parseInt(editFormData.secondary_item_id) || 0,
-				is_spam: editFormData.is_spam,
-			},
+			data: updateData,
 		})
-			.then(() => {
+			.then((response) => {
+				console.log('Activity updated successfully:', response);
 				setIsEditModalOpen(false);
 				setEditingActivity(null);
 				loadActivities();
 			})
 			.catch((error) => {
-				console.error('Error updating activity:', error);
+				console.error('Error updating activity (PUT):', error);
+				
+				// Show detailed error
+				const errorMessage = error.message || error.data?.message || __('Failed to update activity.', 'buddyboss');
+				alert(errorMessage);
 			})
 			.finally(() => {
 				setIsSaving(false);
@@ -628,19 +653,23 @@ export default function ActivityListScreen({ onNavigate }) {
 										const userAvatar = activity.user_avatar?.thumb || activity.user_avatar?.full || (typeof activity.user_avatar === 'string' ? activity.user_avatar : '') || '';
 										const userLink = activity.link || activity.user_link || activity.permalink || '#';
 										
-										// Parse the title to get action text (strip HTML tags for display)
+										// Parse the action to get action text (strip HTML tags for display)
+										// The 'action' field contains the action HTML (e.g., "John posted an update")
 										let actionText = '';
-										if (activity.title) {
-											// Strip HTML tags from title to get plain text action
+										if (activity.action) {
+											// Strip HTML tags from action to get plain text
 											const tempDiv = document.createElement('div');
-											tempDiv.innerHTML = activity.title;
+											tempDiv.innerHTML = activity.action;
 											actionText = tempDiv.textContent || tempDiv.innerText || '';
 											// Remove the username from the beginning if present
 											if (actionText.startsWith(userName)) {
 												actionText = actionText.substring(userName.length).trim();
 											}
+										} else if (activity.action_text) {
+											actionText = activity.action_text;
 										} else {
-											actionText = activity.action_text || activity.type?.replace(/_/g, ' ') || '';
+											// Fallback to formatted type
+											actionText = activity.type?.replace(/_/g, ' ') || '';
 										}
 										
 										const dateFormatted = formatDate(activity.date || activity.date_recorded);
@@ -832,10 +861,16 @@ export default function ActivityListScreen({ onNavigate }) {
 								<label className="bb-admin-activity-modal__section-label">
 									{__('Topic', 'buddyboss')}
 								</label>
-								<TextControl
+								<SelectControl
 									value={editFormData.topic}
 									onChange={(topic) => setEditFormData({ ...editFormData, topic })}
-									placeholder={__('Topic (optional)', 'buddyboss')}
+									options={[
+										{ value: '', label: __('— No Topic —', 'buddyboss') },
+										...activityTopics.map(topic => ({
+											value: topic.id?.toString() || '',
+											label: topic.name || topic.slug || '',
+										}))
+									]}
 								/>
 							</div>
 
