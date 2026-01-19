@@ -2218,7 +2218,21 @@ function bp_document_folder_recursive_li_list( $array, $first = false ) {
 	}
 
 	foreach ( $array as $item ) {
-		$output .= '<li data-id="' . esc_attr( $item['id'] ) . '" data-privacy="' . esc_attr( $item['privacy'] ) . '"><span id="' . esc_attr( $item['id'] ) . '" data-id="' . esc_attr( $item['id'] ) . '">' . stripslashes( $item['title'] ) . '</span>' . bp_document_folder_recursive_li_list( $item['children'], true ) . '</li>';
+		$folder_id = isset( $item['id'] ) ? (int) $item['id'] : 0;
+
+		/**
+		 * Filters the folder title in the folder tree list (move popup).
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $title     The folder title.
+		 * @param int    $folder_id The folder ID.
+		 */
+		$folder_title = apply_filters( 'bb_document_folder_tree_item_title', $item['title'], $folder_id );
+
+		if ( ! empty( $folder_title ) ) {
+			$output .= '<li data-id="' . esc_attr( $item['id'] ) . '" data-privacy="' . esc_attr( $item['privacy'] ) . '"><span id="' . esc_attr( $item['id'] ) . '" data-id="' . esc_attr( $item['id'] ) . '">' . esc_html( stripslashes( $folder_title ) ) . '</span>' . bp_document_folder_recursive_li_list( $item['children'], true ) . '</li>';
+		}
 	}
 	$output .= '</ul>';
 
@@ -2273,7 +2287,21 @@ function bp_document_folder_bradcrumb( $folder_id ) {
 			$data  = array_slice( $data, - 3 );
 		}
 		foreach ( $data as $element ) {
-			$link     = '';
+
+			/**
+			 * Filters the breadcrumb element data before rendering.
+			 *
+			 * @since BuddyBoss [BBVERSION]
+			 *
+			 * @param array $element The breadcrumb element containing folder data.
+			 */
+			$element = apply_filters( 'bb_document_folder_breadcrumb_element', $element );
+
+			// Skip if an element is empty or missing required data.
+			if ( empty( $element ) || ! isset( $element['id'], $element['group_id'], $element['title'] ) ) {
+				continue;
+			}
+
 			$group_id = (int) $element['group_id'];
 			if ( 0 === $group_id ) {
 				$link = bp_displayed_user_domain() . bp_get_document_slug() . '/folders/' . $element['id'];
@@ -2281,7 +2309,7 @@ function bp_document_folder_bradcrumb( $folder_id ) {
 				$group = groups_get_group( array( 'group_id' => $group_id ) );
 				$link  = bp_get_group_permalink( $group ) . bp_get_document_slug() . '/folders/' . $element['id'];
 			}
-			$html .= '<li> <a href=" ' . $link . ' ">' . stripslashes( $element['title'] ) . '</a></li>';
+			$html .= '<li> <a href=" ' . $link . ' ">' . esc_html( stripslashes( $element['title'] ) ) . '</a></li>';
 		}
 		$html .= '</ul>';
 	}
