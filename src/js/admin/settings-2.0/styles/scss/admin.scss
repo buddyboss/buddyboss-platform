@@ -3630,6 +3630,25 @@ $bb-border-radius-xs: 6px;
 		padding: 3px 0;
 	}
 
+	&__subsection {
+		margin-top: 16px;
+		padding-left: 16px;
+		border-left: 2px solid #f0f0f0;
+
+		&:first-of-type {
+			margin-top: 8px;
+		}
+	}
+
+	&__subsection-label {
+		font-size: 12px;
+		font-weight: 600;
+		line-height: 18px;
+		color: #666;
+		padding: 3px 0;
+		margin-bottom: 8px;
+	}
+
 	&__checkboxes {
 		display: flex;
 		flex-direction: column;

@@ -39,6 +39,12 @@ export default function GroupTypeModal({ isOpen, onClose, onSave, groupType = nu
 		name: '',
 		singular_label: '',
 		plural_label: '',
+		organizer_plural_label: '',
+		organizer_singular_label: '',
+		moderator_plural_label: '',
+		moderator_singular_label: '',
+		member_plural_label: '',
+		member_singular_label: '',
 		show_in_directory: false,
 		hide_from_directory: false,
 		restrict_invites_by_type: false,
@@ -71,6 +77,12 @@ export default function GroupTypeModal({ isOpen, onClose, onSave, groupType = nu
 				name: groupType.name || '',
 				singular_label: groupType.singular_label || '',
 				plural_label: groupType.plural_label || '',
+				organizer_plural_label: groupType.organizer_plural_label || '',
+				organizer_singular_label: groupType.organizer_singular_label || '',
+				moderator_plural_label: groupType.moderator_plural_label || '',
+				moderator_singular_label: groupType.moderator_singular_label || '',
+				member_plural_label: groupType.member_plural_label || '',
+				member_singular_label: groupType.member_singular_label || '',
 				show_in_directory: groupType.show_in_directory || false,
 				hide_from_directory: groupType.hide_from_directory || false,
 				restrict_invites_by_type: groupType.restrict_invites_by_type || false,
@@ -85,6 +97,12 @@ export default function GroupTypeModal({ isOpen, onClose, onSave, groupType = nu
 				name: '',
 				singular_label: '',
 				plural_label: '',
+				organizer_plural_label: '',
+				organizer_singular_label: '',
+				moderator_plural_label: '',
+				moderator_singular_label: '',
+				member_plural_label: '',
+				member_singular_label: '',
 				show_in_directory: false,
 				hide_from_directory: false,
 				restrict_invites_by_type: false,
@@ -182,6 +200,73 @@ export default function GroupTypeModal({ isOpen, onClose, onSave, groupType = nu
 							value={formData.plural_label}
 							onChange={(value) => handleInputChange('plural_label', value)}
 						/>
+					</div>
+
+					{/* Group Roles */}
+					<div className="bb-admin-group-type-modal__section">
+						<div className="bb-admin-group-type-modal__section-label">
+							{__('Group Roles', 'buddyboss')}
+						</div>
+						<p className="bb-admin-group-type-modal__description">
+							{__('Rename the group member roles for groups of this type (optional).', 'buddyboss')}
+						</p>
+
+						{/* Organizers */}
+						<div className="bb-admin-group-type-modal__subsection">
+							<div className="bb-admin-group-type-modal__subsection-label">
+								{__('Organizers', 'buddyboss')}
+							</div>
+							<TextControl
+								label={__('Plural Label', 'buddyboss')}
+								placeholder={__('e.g. Organizers', 'buddyboss')}
+								value={formData.organizer_plural_label}
+								onChange={(value) => handleInputChange('organizer_plural_label', value)}
+							/>
+							<TextControl
+								label={__('Singular Label', 'buddyboss')}
+								placeholder={__('e.g. Organizer', 'buddyboss')}
+								value={formData.organizer_singular_label}
+								onChange={(value) => handleInputChange('organizer_singular_label', value)}
+							/>
+						</div>
+
+						{/* Moderators */}
+						<div className="bb-admin-group-type-modal__subsection">
+							<div className="bb-admin-group-type-modal__subsection-label">
+								{__('Moderators', 'buddyboss')}
+							</div>
+							<TextControl
+								label={__('Plural Label', 'buddyboss')}
+								placeholder={__('e.g. Moderators', 'buddyboss')}
+								value={formData.moderator_plural_label}
+								onChange={(value) => handleInputChange('moderator_plural_label', value)}
+							/>
+							<TextControl
+								label={__('Singular Label', 'buddyboss')}
+								placeholder={__('e.g. Moderator', 'buddyboss')}
+								value={formData.moderator_singular_label}
+								onChange={(value) => handleInputChange('moderator_singular_label', value)}
+							/>
+						</div>
+
+						{/* Members */}
+						<div className="bb-admin-group-type-modal__subsection">
+							<div className="bb-admin-group-type-modal__subsection-label">
+								{__('Members', 'buddyboss')}
+							</div>
+							<TextControl
+								label={__('Plural Label', 'buddyboss')}
+								placeholder={__('e.g. Members', 'buddyboss')}
+								value={formData.member_plural_label}
+								onChange={(value) => handleInputChange('member_plural_label', value)}
+							/>
+							<TextControl
+								label={__('Singular Label', 'buddyboss')}
+								placeholder={__('e.g. Member', 'buddyboss')}
+								value={formData.member_singular_label}
+								onChange={(value) => handleInputChange('member_singular_label', value)}
+							/>
+						</div>
 					</div>
 
 					{/* Groups Directory Permissions */}
