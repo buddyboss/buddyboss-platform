@@ -1548,10 +1548,10 @@ window.bp = window.bp || {};
 					limit: self.gif_data[ gif_container_key ].limit
 				},
 				function ( response ) {
-					if ( undefined !== response.data.length && 0 === response.data.length ) {
+					if ( typeof response.data !== 'undefined' && 0 === response.data.length ) {
 						$pickerContainer.find( '.gif-no-results' ).addClass( 'show' );
 					}
-					if ( undefined !== response.meta.status && 200 !== response.meta.status ) {
+					if ( typeof response.meta !== 'undefined' && 200 !== response.meta.status ) {
 						$pickerContainer.find( '.gif-no-connection' ).addClass( 'show' );
 					}
 					if ( typeof response.data !== 'undefined' && response.data.length ) {
