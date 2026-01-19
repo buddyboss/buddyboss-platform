@@ -1205,9 +1205,9 @@ window.bp = window.bp || {};
 			var self             = this, i = 0,
 				$gifContainer    = $( 'div.forums-attached-gif-container[data-key="' + self.gif_container_key + '"]' ),
 				$standalonePopup = $( '.bb-rl-gif-media-search-dropdown-standalone.open' ),
-				$resultsList     = $standalonePopup.length > 0
-					? $standalonePopup.find( '.gif-search-results-list' )
-					: $gifContainer.closest( 'form' ).find( '.gif-search-results-list' );
+				$resultsList     = $standalonePopup.length > 0 ?
+					$standalonePopup.find( '.gif-search-results-list' ) :
+					$gifContainer.closest( 'form' ).find( '.gif-search-results-list' );
 
 			$gifContainer.removeClass( 'loading' );
 			if ( typeof response.data !== 'undefined' && response.data.length ) {
