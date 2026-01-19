@@ -387,14 +387,19 @@ export default function ActivityListScreen({ onNavigate }) {
 			return;
 		}
 
+		setOpenMenuId(null);
+
 		apiFetch({
 			path: `/buddyboss/v1/admin-activity/${activityId}`,
 			method: 'DELETE',
-			headers: { 'X-WP-Nonce': bbAdminData?.nonce || '' },
-		}).then(() => {
-			setOpenMenuId(null);
-			loadActivities();
-		});
+		})
+			.then(() => {
+				loadActivities();
+			})
+			.catch((error) => {
+				console.error('Error deleting activity:', error);
+				alert(error.message || __('Failed to delete activity.', 'buddyboss'));
+			});
 	};
 
 	const handleEdit = (activityId) => {
@@ -489,8 +494,32 @@ export default function ActivityListScreen({ onNavigate }) {
 	};
 
 	const handleMarkSpam = (activityId) => {
+		const activity = activities.find(a => a.id === activityId);
+		const isCurrentlySpam = activity?.is_spam || false;
+		const confirmMessage = isCurrentlySpam
+			? __('Are you sure you want to mark this activity as not spam?', 'buddyboss')
+			: __('Are you sure you want to mark this activity as spam?', 'buddyboss');
+
+		if (!confirm(confirmMessage)) {
+			return;
+		}
+
 		setOpenMenuId(null);
-		// Implement mark as spam functionality
+
+		apiFetch({
+			path: `/buddyboss/v1/admin-activity/${activityId}`,
+			method: 'PUT',
+			data: {
+				is_spam: !isCurrentlySpam,
+			},
+		})
+			.then(() => {
+				loadActivities();
+			})
+			.catch((error) => {
+				console.error('Error marking activity as spam:', error);
+				alert(error.message || __('Failed to update activity spam status.', 'buddyboss'));
+			});
 	};
 
 	const handleBack = () => {
@@ -773,7 +802,7 @@ export default function ActivityListScreen({ onNavigate }) {
 																	{__('Delete', 'buddyboss')}
 																</button>
 																<button onClick={() => handleMarkSpam(activityId)}>
-																	{__('Mark as Spam', 'buddyboss')}
+																	{isSpam ? __('Not Spam', 'buddyboss') : __('Mark as Spam', 'buddyboss')}
 																</button>
 															</div>
 														)}
