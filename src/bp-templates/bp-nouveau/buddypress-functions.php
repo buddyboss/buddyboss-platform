@@ -743,9 +743,6 @@ class BP_Nouveau extends BP_Theme_Compat {
 		// Add localize variable for more menu text.
 		$params['more_menu_text'] = esc_html__( 'More', 'buddyboss' );
 
-		// Add localize variable for more items.
-		$params['more_items'] = esc_html__( 'More', 'buddyboss' );
-
 		/**
 		 * Filters core JavaScript strings for internationalization before AJAX usage.
 		 *
