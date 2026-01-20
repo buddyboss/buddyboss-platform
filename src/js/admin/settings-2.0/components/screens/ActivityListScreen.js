@@ -13,6 +13,7 @@ import { __ } from '@wordpress/i18n';
 import { Spinner, TextControl, TextareaControl, SelectControl, ToggleControl, Button } from '@wordpress/components';
 import apiFetch from '@wordpress/api-fetch';
 import { SideNavigation } from '../SideNavigation';
+import { getCachedFeatureData, setCachedFeatureData, getCachedSidebarData } from '../../utils/featureCache';
 
 // Close icon for modal
 const CloseIcon = () => (
@@ -262,12 +263,29 @@ export default function ActivityListScreen({ onNavigate }) {
 			});
 	}, []);
 
-	// Load sidebar data
+	// Load sidebar data - use cache if available
 	useEffect(() => {
+		const featureId = 'activity';
+		
+		// Check cache first
+		const cachedSidebar = getCachedSidebarData(featureId);
+		if (cachedSidebar) {
+			setSidePanels(cachedSidebar.sidePanels);
+			setNavItems(cachedSidebar.navItems);
+			setSidebarLoading(false);
+			return;
+		}
+		
+		// No cache, fetch from server
 		apiFetch({ path: `/buddyboss/v1/features/activity/settings` })
 			.then((response) => {
-				setSidePanels(response.data?.side_panels || []);
-				setNavItems(response.data?.navigation || []);
+				const data = response.data || response;
+				setSidePanels(data.side_panels || []);
+				setNavItems(data.navigation || []);
+				
+				// Cache the response for future use
+				setCachedFeatureData(featureId, data);
+				
 				setSidebarLoading(false);
 			})
 			.catch(() => {

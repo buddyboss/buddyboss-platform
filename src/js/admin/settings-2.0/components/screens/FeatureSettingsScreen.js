@@ -13,6 +13,7 @@ import { Button, Spinner, Notice } from '@wordpress/components';
 import apiFetch from '@wordpress/api-fetch';
 import { SideNavigation } from '../SideNavigation';
 import { SettingsForm } from '../SettingsForm';
+import { getCachedFeatureData, setCachedFeatureData, invalidateFeatureCache } from '../../utils/featureCache';
 
 /**
  * AJAX request helper.
@@ -60,11 +61,40 @@ export function FeatureSettingsScreen({ featureId, sectionId, onNavigate }) {
 	const [activePanelId, setActivePanelId] = useState(sectionId || null);
 
 	// Load feature settings via AJAX - only when featureId changes
+	// Uses caching to prevent re-fetching on navigation within the same feature
 	useEffect(() => {
+		// Check if we have cached data for this feature
+		const cachedData = getCachedFeatureData(featureId);
+		
+		if (cachedData) {
+			// Use cached data
+			setFeature(cachedData);
+			const loadedPanels = cachedData.side_panels || [];
+			setSidePanels(loadedPanels);
+			setNavItems(cachedData.navigation || []);
+			const loadedSettings = cachedData.settings || {};
+			setSettings(loadedSettings);
+			setOriginalSettings(JSON.parse(JSON.stringify(loadedSettings)));
+			
+			// Set active panel
+			if (sectionId && loadedPanels.some(p => p.id === sectionId)) {
+				setActivePanelId(sectionId);
+			} else {
+				const defaultPanel = loadedPanels.find(p => p.is_default) || loadedPanels[0];
+				setActivePanelId(defaultPanel ? defaultPanel.id : null);
+			}
+			setIsLoading(false);
+			return;
+		}
+		
+		// No cache, fetch from server
 		setIsLoading(true);
 		ajaxFetch('bb_admin_get_feature_settings', { feature_id: featureId })
 			.then((response) => {
 				if (response.success && response.data) {
+					// Cache the response data
+					setCachedFeatureData(featureId, response.data);
+					
 					setFeature(response.data);
 					const loadedPanels = response.data.side_panels || [];
 					setSidePanels(loadedPanels);
@@ -163,6 +193,15 @@ export function FeatureSettingsScreen({ featureId, sectionId, onNavigate }) {
 					setOriginalSettings(JSON.parse(JSON.stringify(settings)));
 					setIsDirty(false);
 					setSaveSuccess(true);
+
+					// Update the cache with new settings
+					const cachedData = getCachedFeatureData(featureId);
+					if (cachedData) {
+						setCachedFeatureData(featureId, {
+							...cachedData,
+							settings: JSON.parse(JSON.stringify(settings)),
+						});
+					}
 
 					// Clear success message after 3 seconds
 					setTimeout(() => {

@@ -14,6 +14,7 @@ import { Spinner, CheckboxControl } from '@wordpress/components';
 import apiFetch from '@wordpress/api-fetch';
 import { SideNavigation } from '../SideNavigation';
 import GroupModal from '../modals/GroupModal';
+import { getCachedFeatureData, setCachedFeatureData, getCachedSidebarData } from '../../utils/featureCache';
 
 /**
  * Privacy badge icon component
@@ -133,10 +134,15 @@ export default function GroupsListScreen({ onNavigate, openCreateModal = false }
 	const [sidePanels, setSidePanels] = useState([]);
 	const [navItems, setNavItems] = useState([]);
 
+	// Load sidebar data only once on mount
+	useEffect(() => {
+		loadSidebarData();
+	}, []);
+
+	// Load groups when filters change
 	useEffect(() => {
 		loadGroups();
 		loadGroupTypes();
-		loadSidebarData();
 	}, [page, search, statusFilter, orderBy]);
 
 	// Handle openCreateModal prop
@@ -152,6 +158,17 @@ export default function GroupsListScreen({ onNavigate, openCreateModal = false }
 	}, [openCreateModal]);
 
 	const loadSidebarData = () => {
+		const featureId = 'groups';
+		
+		// Check cache first
+		const cachedSidebar = getCachedSidebarData(featureId);
+		if (cachedSidebar) {
+			setSidePanels(cachedSidebar.sidePanels);
+			setNavItems(cachedSidebar.navItems);
+			return;
+		}
+		
+		// No cache, fetch from server
 		apiFetch({ path: '/buddyboss/v1/features/groups/settings' })
 			.then((response) => {
 				// Response is wrapped in BB_REST_Response::success() which adds a 'data' property
@@ -159,6 +176,9 @@ export default function GroupsListScreen({ onNavigate, openCreateModal = false }
 				console.log('Groups sidebar data:', data);
 				setSidePanels(data.side_panels || []);
 				setNavItems(data.navigation || []);
+				
+				// Cache the response for future use
+				setCachedFeatureData(featureId, data);
 			})
 			.catch((error) => {
 				console.error('Error loading sidebar data:', error);
