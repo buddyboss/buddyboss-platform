@@ -327,6 +327,8 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			}
 
 			add_filter( 'bp_nouveau_get_submit_button', array( $this, 'bb_rl_modify_bp_nouveau_get_submit_button' ) );
+
+			add_action( 'wp_ajax_bb_rl_document_rename_and_privacyupdate', array( $this, 'bb_rl_document_rename_and_privacyupdate' ) );
 		}
 
 		/**
@@ -4589,6 +4591,151 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			$visibility_levels['adminsonly']['label'] = __( 'Only me', 'buddyboss' );
 
 			return $visibility_levels;
+		}
+
+		/**
+		 * Handle document/folder rename and privacy update in a single AJAX request.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 */
+		public function bb_rl_document_rename_and_privacyupdate() {
+			$response = array(
+				'feedback' => esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss' ),
+			);
+
+			// Bail if not a POST action.
+			if ( ! bp_is_post_request() ) {
+				wp_send_json_error( $response );
+			}
+
+			if ( ! is_user_logged_in() ) {
+				$response['feedback'] = esc_html__( 'Please login to perform this action.', 'buddyboss' );
+				wp_send_json_error( $response );
+			}
+
+			// Nonce check.
+			$nonce = bb_filter_input_string( INPUT_POST, '_wpnonce' );
+			if ( empty( $nonce ) || ! wp_verify_nonce( $nonce, 'bp_nouveau_media' ) ) {
+				wp_send_json_error( $response );
+			}
+
+			$document_id            = filter_input( INPUT_POST, 'document_id', FILTER_VALIDATE_INT );
+			$attachment_document_id = filter_input( INPUT_POST, 'attachment_document_id', FILTER_VALIDATE_INT );
+			$type                   = bb_filter_input_string( INPUT_POST, 'document_type' );
+			$name                   = bb_filter_input_string( INPUT_POST, 'name' );
+			$privacy                = bb_filter_input_string( INPUT_POST, 'privacy' );
+			$update_name            = filter_input( INPUT_POST, 'update_name', FILTER_VALIDATE_BOOLEAN );
+			$update_privacy         = filter_input( INPUT_POST, 'update_privacy', FILTER_VALIDATE_BOOLEAN );
+
+			if ( empty( $document_id ) || empty( $type ) ) {
+				wp_send_json_error( $response );
+			}
+
+			$result = array(
+				'document_id' => $document_id,
+				'type'        => $type,
+			);
+
+			// Handle document type.
+			if ( 'document' === $type ) {
+				// Check permission.
+				if ( ! bp_document_user_can_edit( $document_id ) ) {
+					$response['feedback'] = esc_html__( "You don't have permission to edit this document.", 'buddyboss' );
+					wp_send_json_error( $response );
+				}
+
+				// Update name if requested.
+				if ( $update_name && ! empty( $name ) ) {
+					$renamed = bp_document_rename_file( $document_id, $attachment_document_id, $name );
+					if ( isset( $renamed['document_id'] ) && $renamed['document_id'] > 0 ) {
+						$result['name']    = $name;
+						$result['renamed'] = true;
+					} else {
+						$response['feedback'] = ! empty( $renamed ) ? $renamed : esc_html__( 'Failed to rename document.', 'buddyboss' );
+						wp_send_json_error( $response );
+					}
+				}
+
+				// Update privacy if requested.
+				if ( $update_privacy && ! empty( $privacy ) ) {
+					if ( ! array_key_exists( $privacy, bp_document_get_visibility_levels() ) ) {
+						$response['feedback'] = esc_html__( 'Invalid privacy status.', 'buddyboss' );
+						wp_send_json_error( $response );
+					}
+					bp_document_update_privacy( $document_id, $privacy, 'document' );
+					$result['privacy']         = $privacy;
+					$result['privacy_label']   = bp_document_get_visibility_levels()[ $privacy ] ?? '';
+					$result['privacy_updated'] = true;
+				}
+
+				// Only generate document HTML if name was updated (needed for updated file links).
+				// When only privacy changes, skip HTML generation for better performance.
+				if ( $update_name ) {
+					ob_start();
+					if (
+						bp_has_document(
+							array(
+								'include'  => $document_id,
+								'per_page' => 0,
+							)
+						)
+					) {
+						while ( bp_document() ) {
+							bp_the_document();
+							bp_get_template_part( 'document/document-entry' );
+						}
+					}
+					$result['document'] = ob_get_clean();
+				} else {
+					// For privacy-only updates, return URL like standard theme.
+					$document_data = new BP_Document( $document_id );
+					if ( ! empty( $document_data->attachment_id ) ) {
+						$result['url'] = bp_document_download_link( $document_data->attachment_id, $document_id );
+					}
+				}
+			} else {
+				// Handle folder type.
+				// Check permission.
+				if ( ! bp_folder_user_can_edit( $document_id ) ) {
+					$response['feedback'] = esc_html__( "You don't have permission to edit this folder.", 'buddyboss' );
+					wp_send_json_error( $response );
+				}
+
+				// Update name if requested.
+				if ( $update_name && ! empty( $name ) ) {
+					if ( strpbrk( $name, '\\/?%*:|"<>' ) !== false ) {
+						$response['feedback'] = esc_html__( 'Invalid folder name', 'buddyboss' );
+						wp_send_json_error( $response );
+					}
+					$renamed = bp_document_rename_folder( $document_id, $name );
+					if ( $renamed > 0 ) {
+						$result['name']    = $name;
+						$result['renamed'] = true;
+					} else {
+						$response['feedback'] = esc_html__( 'Failed to rename folder.', 'buddyboss' );
+						wp_send_json_error( $response );
+					}
+				}
+
+				// Update privacy if requested.
+				if ( $update_privacy && ! empty( $privacy ) ) {
+					if ( ! array_key_exists( $privacy, bp_document_get_visibility_levels() ) ) {
+						$response['feedback'] = esc_html__( 'Invalid privacy status.', 'buddyboss' );
+						wp_send_json_error( $response );
+					}
+					bp_document_update_privacy( $document_id, $privacy, 'folder' );
+					$result['privacy']         = $privacy;
+					$result['privacy_label']   = bp_document_get_visibility_levels()[ $privacy ] ?? '';
+					$result['privacy_updated'] = true;
+				}
+			}
+
+			wp_send_json_success(
+				array(
+					'message'  => 'success',
+					'response' => $result,
+				)
+			);
 		}
 	}
 }
