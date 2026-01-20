@@ -53,6 +53,10 @@ class BB_Admin_Settings_Ajax {
 		// Platform settings (generic option getter/setter).
 		add_action( 'wp_ajax_bb_admin_get_platform_settings', array( $this, 'get_platform_settings' ) );
 		add_action( 'wp_ajax_bb_admin_save_platform_setting', array( $this, 'save_platform_setting' ) );
+
+		// Appearance settings.
+		add_action( 'wp_ajax_bb_admin_get_appearance_settings', array( $this, 'get_appearance_settings' ) );
+		add_action( 'wp_ajax_bb_admin_save_appearance_settings', array( $this, 'save_appearance_settings' ) );
 	}
 
 	/**
@@ -957,6 +961,77 @@ class BB_Admin_Settings_Ajax {
 					'name'  => $option_name,
 					'value' => $option_value,
 				),
+			)
+		);
+	}
+
+	/**
+	 * Get appearance settings.
+	 *
+	 * Returns the bp_nouveau_appearance option.
+	 *
+	 * @since BuddyBoss 3.0.0
+	 */
+	public function get_appearance_settings() {
+		$this->verify_request();
+
+		$appearance = bp_get_option( 'bp_nouveau_appearance', array() );
+
+		wp_send_json_success( array( 'data' => $appearance ) );
+	}
+
+	/**
+	 * Save appearance settings.
+	 *
+	 * Saves settings to the bp_nouveau_appearance option.
+	 *
+	 * @since BuddyBoss 3.0.0
+	 */
+	public function save_appearance_settings() {
+		$this->verify_request();
+
+		// Get current appearance settings.
+		$appearance = bp_get_option( 'bp_nouveau_appearance', array() );
+
+		// Whitelist of allowed keys.
+		$allowed_keys = array(
+			'group_nav_display',
+			'group_default_tab',
+			'group_nav_order',
+			'group_nav_hide',
+		);
+
+		// Update only the provided settings.
+		foreach ( $allowed_keys as $key ) {
+			if ( isset( $_POST[ $key ] ) ) {
+				$value = wp_unslash( $_POST[ $key ] );
+
+				// Handle arrays (like group_nav_order and group_nav_hide).
+				if ( is_string( $value ) && strpos( $value, ',' ) !== false ) {
+					$value = array_map( 'sanitize_text_field', explode( ',', $value ) );
+				} elseif ( is_array( $value ) ) {
+					$value = array_map( 'sanitize_text_field', $value );
+				} else {
+					// Handle boolean values.
+					if ( 'true' === $value || '1' === $value ) {
+						$value = true;
+					} elseif ( 'false' === $value || '0' === $value ) {
+						$value = false;
+					} else {
+						$value = sanitize_text_field( $value );
+					}
+				}
+
+				$appearance[ $key ] = $value;
+			}
+		}
+
+		bp_update_option( 'bp_nouveau_appearance', $appearance );
+
+		wp_send_json_success(
+			array(
+				'message' => __( 'Appearance settings saved successfully.', 'buddyboss' ),
+				'data'    => $appearance,
 			)
 		);
 	}

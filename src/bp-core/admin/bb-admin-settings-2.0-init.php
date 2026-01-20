@@ -34,9 +34,6 @@ function bb_admin_settings_2_0_init() {
 	if ( ! class_exists( 'BB_REST_Dashboard_Controller' ) ) {
 		require_once buddypress()->plugin_dir . 'bp-core/classes/class-bb-rest-dashboard-controller.php';
 	}
-	if ( ! class_exists( 'BB_REST_Appearance_Controller' ) ) {
-		require_once buddypress()->plugin_dir . 'bp-core/classes/class-bb-rest-appearance-controller.php';
-	}
 	if ( ! class_exists( 'BB_Feature_Autoloader' ) ) {
 		require_once buddypress()->plugin_dir . 'bp-core/classes/class-bb-feature-autoloader.php';
 	}
@@ -90,7 +87,7 @@ add_action( 'bp_loaded', 'bb_admin_settings_2_0_init', 4 ); // Before feature re
 /**
  * Register REST API controllers.
  *
- * Note: Features, Settings Search, Activity, and Groups controllers have been migrated to AJAX.
+ * Note: Most controllers have been migrated to AJAX for better security and performance.
  * See class-bb-admin-settings-ajax.php, class-bb-admin-activity-ajax.php, and class-bb-admin-groups-ajax.php
  *
  * @since BuddyBoss 3.0.0
@@ -99,10 +96,6 @@ function bb_admin_settings_2_0_rest_api_init() {
 	// Register Dashboard Controller.
 	$dashboard_controller = new BB_REST_Dashboard_Controller();
 	$dashboard_controller->register_routes();
-
-	// Register Appearance Controller.
-	$appearance_controller = new BB_REST_Appearance_Controller();
-	$appearance_controller->register_routes();
 }
 add_action( 'bp_rest_api_init', 'bb_admin_settings_2_0_rest_api_init', 10 );
 // Fallback: Also register on rest_api_init in case bp_rest_api_init doesn't fire.

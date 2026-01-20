@@ -105,6 +105,25 @@ export function savePlatformSetting(optionName, optionValue) {
 	});
 }
 
+/**
+ * Get appearance settings (bp_nouveau_appearance option)
+ *
+ * @return {Promise} Promise resolving to appearance settings
+ */
+export function getAppearanceSettings() {
+	return ajaxFetch('bb_admin_get_appearance_settings');
+}
+
+/**
+ * Save appearance settings
+ *
+ * @param {Object} settings - Settings object to save
+ * @return {Promise} Promise resolving to response
+ */
+export function saveAppearanceSettings(settings) {
+	return ajaxFetch('bb_admin_save_appearance_settings', settings);
+}
+
 /*
 |--------------------------------------------------------------------------
 | Activity AJAX Functions

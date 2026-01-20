@@ -13,9 +13,8 @@
 import { useState, useEffect, useCallback } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { Spinner, ToggleControl, SelectControl } from '@wordpress/components';
-import apiFetch from '@wordpress/api-fetch';
 import { SideNavigation } from '../SideNavigation';
-import { ajaxFetch } from '../../utils/ajax';
+import { ajaxFetch, getAppearanceSettings, saveAppearanceSettings } from '../../utils/ajax';
 import { getCachedFeatureData, setCachedFeatureData, getCachedSidebarData } from '../../utils/featureCache';
 
 /**
@@ -120,9 +119,9 @@ export default function GroupNavigationScreen({ onNavigate }) {
 	const loadSettings = async () => {
 		setIsLoading(true);
 		try {
-			// Fetch the bp_nouveau_appearance option via the appearance endpoint
-			const response = await apiFetch({ path: `/buddyboss/v1/settings/appearance` });
-			const appearanceSettings = response.data || {};
+			// Fetch the bp_nouveau_appearance option via AJAX
+			const response = await getAppearanceSettings();
+			const appearanceSettings = (response.success && response.data?.data) ? response.data.data : {};
 
 			// Set vertical navigation
 			setVerticalNav(!!appearanceSettings.group_nav_display);
@@ -255,11 +254,7 @@ export default function GroupNavigationScreen({ onNavigate }) {
 	const saveSettings = async (settingsToSave) => {
 		setIsSaving(true);
 		try {
-			await apiFetch({
-				path: `/buddyboss/v1/settings/appearance`,
-				method: 'POST',
-				data: settingsToSave,
-			});
+			await saveAppearanceSettings(settingsToSave);
 		} catch (error) {
 			console.error('Failed to save group navigation settings:', error);
 		} finally {
