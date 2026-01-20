@@ -11,6 +11,29 @@ import { Button, Spinner, ToggleControl } from '@wordpress/components';
 import apiFetch from '@wordpress/api-fetch';
 
 /**
+ * AJAX request helper for features.
+ *
+ * @param {string} action AJAX action name.
+ * @param {Object} data   Additional data.
+ * @returns {Promise} Promise resolving to response data.
+ */
+const ajaxFetch = (action, data = {}) => {
+	const formData = new FormData();
+	formData.append('action', action);
+	formData.append('nonce', window.bbAdminData?.ajaxNonce || '');
+	
+	Object.keys(data).forEach((key) => {
+		formData.append(key, data[key]);
+	});
+	
+	return fetch(window.bbAdminData?.ajaxUrl || '/wp-admin/admin-ajax.php', {
+		method: 'POST',
+		credentials: 'same-origin',
+		body: formData,
+	}).then((response) => response.json());
+};
+
+/**
  * Settings Screen Component
  *
  * @param {Object} props Component props
@@ -25,58 +48,24 @@ export function SettingsScreen({ onNavigate }) {
 	const [selectedCategory, setSelectedCategory] = useState(''); // 'community', 'add-ons', 'integrations'
 	const [searchQuery, setSearchQuery] = useState('');
 
-	// Debug: Log when component mounts
 	useEffect(() => {
-		console.log('SettingsScreen component mounted');
-		console.log('bbAdminData available:', typeof bbAdminData !== 'undefined');
-		if (typeof bbAdminData !== 'undefined') {
-			console.log('bbAdminData:', bbAdminData);
-		}
-	}, []);
-
-	useEffect(() => {
-		// Load features
-		// apiFetch expects a path relative to /wp-json/, not a full URL
-		const featuresPath = '/buddyboss/v1/features';
-		
-		console.log('Loading features from:', featuresPath);
-		console.log('bbAdminData:', bbAdminData);
-		
-		apiFetch({ path: featuresPath })
+		// Load features via AJAX
+		ajaxFetch('bb_admin_get_features')
 			.then((response) => {
-				console.log('Features API response:', response);
-				console.log('Response type:', typeof response);
-				console.log('Response keys:', Object.keys(response || {}));
+				console.log('Features AJAX response:', response);
 				
-				// Handle paginated response structure: { success: true, data: [...], pagination: {...} }
-				let features = [];
-				if (response && response.success && Array.isArray(response.data)) {
-					features = response.data;
-				} else if (Array.isArray(response)) {
-					features = response;
-				} else if (response && Array.isArray(response.data)) {
-					features = response.data;
+				if (response.success && Array.isArray(response.data)) {
+					setFeatures(response.data);
+					setFilteredFeatures(response.data);
+				} else {
+					console.warn('No features returned from AJAX.');
+					setFeatures([]);
+					setFilteredFeatures([]);
 				}
-				
-				console.log('Parsed features array:', features);
-				console.log('Features count:', features.length);
-				
-				if (features.length === 0) {
-					console.warn('No features returned from API. Check if features are registered.');
-				}
-				
-				setFeatures(features);
-				setFilteredFeatures(features);
 				setIsLoading(false);
 			})
 			.catch((error) => {
 				console.error('Failed to load features:', error);
-				console.error('Error details:', {
-					message: error.message,
-					code: error.code,
-					data: error.data
-				});
-				// Set empty array on error so UI can show empty state
 				setFeatures([]);
 				setFilteredFeatures([]);
 				setIsLoading(false);
@@ -135,25 +124,24 @@ export function SettingsScreen({ onNavigate }) {
 	}, {});
 
 	const handleFeatureToggle = (featureId, checked) => {
-		const endpoint = checked ? 'activate' : 'deactivate';
-		const nonce = bbAdminData?.nonce || '';
+		const action = checked ? 'bb_admin_activate_feature' : 'bb_admin_deactivate_feature';
 
-		apiFetch({
-			path: `/buddyboss/v1/features/${featureId}/${endpoint}`,
-			method: 'POST',
-			headers: {
-				'X-WP-Nonce': nonce,
-			},
-		})
+		ajaxFetch(action, { feature_id: featureId })
 			.then((response) => {
-				// Update feature status in state
-				setFeatures((prevFeatures) =>
-					prevFeatures.map((feature) =>
-						feature.id === featureId
-							? { ...feature, status: checked ? 'active' : 'inactive' }
-							: feature
-					)
-				);
+				if (response.success) {
+					// Update feature status from response data (matches REST API format)
+					const updatedFeature = response.data?.data;
+					setFeatures((prevFeatures) =>
+						prevFeatures.map((feature) =>
+							feature.id === featureId
+								? { ...feature, ...updatedFeature }
+								: feature
+						)
+					);
+				} else {
+					console.error('Failed to toggle feature:', response.data?.message);
+					alert(response.data?.message || __('Failed to toggle feature.', 'buddyboss'));
+				}
 			})
 			.catch((error) => {
 				console.error('Failed to toggle feature:', error);

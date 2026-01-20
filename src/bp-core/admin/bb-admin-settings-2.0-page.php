@@ -89,16 +89,18 @@ function bb_admin_settings_2_0_page() {
 		'bb-admin-settings-2-0',
 		'bbAdminData',
 		array(
-			'apiUrl'     => rest_url( bp_rest_namespace() . '/' . bp_rest_version() . '/' ),
-			'nonce'      => wp_create_nonce( 'wp_rest' ),
-			'logoUrl'    => buddypress()->plugin_url . 'bp-core/images/admin/BBLogo.png',
+			'apiUrl'      => rest_url( bp_rest_namespace() . '/' . bp_rest_version() . '/' ),
+			'nonce'       => wp_create_nonce( 'wp_rest' ),
+			'ajaxUrl'     => admin_url( 'admin-ajax.php' ),
+			'ajaxNonce'   => wp_create_nonce( 'bb_admin_settings_2_0' ),
+			'logoUrl'     => buddypress()->plugin_url . 'bp-core/images/admin/BBLogo.png',
 			'currentUser' => array(
 				'id'   => get_current_user_id(),
 				'name' => wp_get_current_user()->display_name,
 			),
 			'debug'       => array(
 				'featureCount' => $feature_count,
-				'featureIds'    => array_keys( $all_features ),
+				'featureIds'   => array_keys( $all_features ),
 			),
 		)
 	);

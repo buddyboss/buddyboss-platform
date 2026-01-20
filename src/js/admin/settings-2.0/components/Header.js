@@ -7,7 +7,29 @@
 
 import { useState, useEffect, useRef } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
-import apiFetch from '@wordpress/api-fetch';
+
+/**
+ * AJAX request helper.
+ *
+ * @param {string} action AJAX action name.
+ * @param {Object} data   Additional data.
+ * @returns {Promise} Promise resolving to response data.
+ */
+const ajaxFetch = (action, data = {}) => {
+	const formData = new FormData();
+	formData.append('action', action);
+	formData.append('nonce', window.bbAdminData?.ajaxNonce || '');
+	
+	Object.keys(data).forEach((key) => {
+		formData.append(key, data[key]);
+	});
+	
+	return fetch(window.bbAdminData?.ajaxUrl || '/wp-admin/admin-ajax.php', {
+		method: 'POST',
+		credentials: 'same-origin',
+		body: formData,
+	}).then((response) => response.json());
+};
 
 /**
  * Header Component
@@ -38,12 +60,15 @@ export function Header({ onNavigate }) {
 
 		setIsSearching(true);
 		searchTimeoutRef.current = setTimeout(() => {
-			apiFetch({
-				path: `/buddyboss/v1/settings/search?query=${encodeURIComponent(searchQuery)}`,
-			})
+			ajaxFetch('bb_admin_search_settings', { query: searchQuery })
 				.then((response) => {
-					setSearchResults(response.data?.results || []);
-					setShowSearchResults(true);
+					if (response.success) {
+						setSearchResults(response.data?.results || []);
+						setShowSearchResults(true);
+					} else {
+						setSearchResults([]);
+						setShowSearchResults(false);
+					}
 					setIsSearching(false);
 				})
 				.catch(() => {
