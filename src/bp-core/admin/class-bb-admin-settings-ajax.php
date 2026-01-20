@@ -49,6 +49,10 @@ class BB_Admin_Settings_Ajax {
 
 		// Search.
 		add_action( 'wp_ajax_bb_admin_search_settings', array( $this, 'search_settings' ) );
+
+		// Platform settings (generic option getter/setter).
+		add_action( 'wp_ajax_bb_admin_get_platform_settings', array( $this, 'get_platform_settings' ) );
+		add_action( 'wp_ajax_bb_admin_save_platform_setting', array( $this, 'save_platform_setting' ) );
 	}
 
 	/**
@@ -864,6 +868,97 @@ class BB_Admin_Settings_Ajax {
 		}
 
 		return $index;
+	}
+
+	/**
+	 * Get platform settings.
+	 *
+	 * Returns specified platform settings (WordPress options).
+	 *
+	 * @since BuddyBoss 3.0.0
+	 */
+	public function get_platform_settings() {
+		$this->verify_request();
+
+		// Get the option names to retrieve - handle both array and comma-separated string.
+		$options_raw = isset( $_POST['options'] ) ? wp_unslash( $_POST['options'] ) : '';
+
+		if ( is_array( $options_raw ) ) {
+			$option_names = array_map( 'sanitize_text_field', $options_raw );
+		} elseif ( is_string( $options_raw ) && ! empty( $options_raw ) ) {
+			// Handle comma-separated string.
+			$option_names = array_map( 'trim', explode( ',', $options_raw ) );
+			$option_names = array_map( 'sanitize_text_field', $option_names );
+		} else {
+			$option_names = array();
+		}
+
+		if ( empty( $option_names ) ) {
+			wp_send_json_error( array( 'message' => __( 'No options specified.', 'buddyboss' ) ), 400 );
+		}
+
+		// Whitelist of allowed options.
+		$allowed_options = array(
+			'bp-disable-group-type-creation',
+			'bp-enable-group-auto-join',
+		);
+
+		$settings = array();
+		foreach ( $option_names as $option_name ) {
+			// Only allow whitelisted options.
+			if ( in_array( $option_name, $allowed_options, true ) ) {
+				$settings[ $option_name ] = bp_get_option( $option_name, false );
+			}
+		}
+
+		wp_send_json_success( array( 'platform' => $settings ) );
+	}
+
+	/**
+	 * Save a platform setting.
+	 *
+	 * Saves a single platform setting (WordPress option).
+	 *
+	 * @since BuddyBoss 3.0.0
+	 */
+	public function save_platform_setting() {
+		$this->verify_request();
+
+		$option_name  = isset( $_POST['option_name'] ) ? sanitize_text_field( wp_unslash( $_POST['option_name'] ) ) : '';
+		$option_value = isset( $_POST['option_value'] ) ? sanitize_text_field( wp_unslash( $_POST['option_value'] ) ) : '';
+
+		if ( empty( $option_name ) ) {
+			wp_send_json_error( array( 'message' => __( 'Option name is required.', 'buddyboss' ) ), 400 );
+		}
+
+		// Whitelist of allowed options.
+		$allowed_options = array(
+			'bp-disable-group-type-creation',
+			'bp-enable-group-auto-join',
+		);
+
+		if ( ! in_array( $option_name, $allowed_options, true ) ) {
+			wp_send_json_error( array( 'message' => __( 'Option not allowed.', 'buddyboss' ) ), 403 );
+		}
+
+		// Convert string 'true'/'false' to boolean for saving.
+		if ( 'true' === $option_value || '1' === $option_value ) {
+			$option_value = true;
+		} elseif ( 'false' === $option_value || '0' === $option_value || '' === $option_value ) {
+			$option_value = false;
+		}
+
+		bp_update_option( $option_name, $option_value );
+
+		wp_send_json_success(
+			array(
+				'message' => __( 'Setting saved successfully.', 'buddyboss' ),
+				'option'  => array(
+					'name'  => $option_name,
+					'value' => $option_value,
+				),
+			)
+		);
 	}
 }
 

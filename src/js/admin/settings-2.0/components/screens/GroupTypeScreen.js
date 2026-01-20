@@ -13,10 +13,9 @@
 import { useState, useEffect, useRef } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { Spinner, ToggleControl } from '@wordpress/components';
-import apiFetch from '@wordpress/api-fetch';
 import { SideNavigation } from '../SideNavigation';
 import GroupTypeModal from '../modals/GroupTypeModal';
-import { ajaxFetch } from '../../utils/ajax';
+import { ajaxFetch, getGroupTypes, deleteGroupType, getPlatformSettings, savePlatformSetting } from '../../utils/ajax';
 import { getCachedFeatureData, setCachedFeatureData, getCachedSidebarData } from '../../utils/featureCache';
 
 /**
@@ -179,15 +178,25 @@ export default function GroupTypeScreen({ onNavigate }) {
 			});
 	}, []);
 
-	// Load settings from WordPress options
+	// Helper to convert various truthy values to boolean
+	const toBool = (value) => {
+		if (value === true || value === 1 || value === '1' || value === 'true') {
+			return true;
+		}
+		return false;
+	};
+
+	// Load settings from WordPress options via AJAX
 	useEffect(() => {
 		setSettingsLoading(true);
-		apiFetch({ path: `/buddyboss/v1/settings` })
+		getPlatformSettings(['bp-disable-group-type-creation', 'bp-enable-group-auto-join'])
 			.then((response) => {
-				const platformSettings = response.platform || {};
-				// Note: Despite the misleading name, bp-disable-group-type-creation = true means ENABLED
-				setEnableGroupTypes(!!platformSettings['bp-disable-group-type-creation']);
-				setAutoMembershipApproval(!!platformSettings['bp-enable-group-auto-join']);
+				if (response.success && response.data) {
+					const platformSettings = response.data.platform || {};
+					// Note: Despite the misleading name, bp-disable-group-type-creation = true means ENABLED in BuddyBoss
+					setEnableGroupTypes(toBool(platformSettings['bp-disable-group-type-creation']));
+					setAutoMembershipApproval(toBool(platformSettings['bp-enable-group-auto-join']));
+				}
 				setSettingsLoading(false);
 			})
 			.catch((error) => {
@@ -215,10 +224,14 @@ export default function GroupTypeScreen({ onNavigate }) {
 	const loadGroupTypes = () => {
 		setIsLoading(true);
 
-		apiFetch({ path: `/buddyboss/v1/groups/types` })
+		getGroupTypes()
 			.then((response) => {
-				const types = response.data || response || [];
-				setGroupTypes(Array.isArray(types) ? types : []);
+				if (response.success && response.data) {
+					const types = response.data || [];
+					setGroupTypes(Array.isArray(types) ? types : []);
+				} else {
+					setGroupTypes([]);
+				}
 				setIsLoading(false);
 			})
 			.catch((error) => {
@@ -231,21 +244,16 @@ export default function GroupTypeScreen({ onNavigate }) {
 	const handleEnableGroupTypesChange = (checked) => {
 		setEnableGroupTypes(checked);
 
-		// Save to WordPress options
-		// Note: Despite the misleading name, bp-disable-group-type-creation = true means ENABLED
-		const nonce = bbAdminData?.nonce || '';
-		apiFetch({
-			path: `/buddyboss/v1/settings`,
-			method: 'POST',
-			headers: {
-				'X-WP-Nonce': nonce,
-			},
-			data: {
-				'bp-disable-group-type-creation': checked,
-			},
-		})
+		// Save to WordPress options via AJAX
+		// Note: Despite the misleading name, bp-disable-group-type-creation = true means ENABLED in BuddyBoss
+		savePlatformSetting('bp-disable-group-type-creation', checked)
 			.then((response) => {
-				console.log('Group Types setting saved:', response);
+				if (response.success) {
+					console.log('Group Types setting saved:', response);
+				} else {
+					console.error('Failed to save Group Types setting:', response);
+					setEnableGroupTypes(!checked);
+				}
 			})
 			.catch((error) => {
 				console.error('Failed to save Group Types setting:', error);
@@ -257,20 +265,15 @@ export default function GroupTypeScreen({ onNavigate }) {
 	const handleAutoMembershipApprovalChange = (checked) => {
 		setAutoMembershipApproval(checked);
 
-		// Save to WordPress options
-		const nonce = bbAdminData?.nonce || '';
-		apiFetch({
-			path: `/buddyboss/v1/settings`,
-			method: 'POST',
-			headers: {
-				'X-WP-Nonce': nonce,
-			},
-			data: {
-				'bp-enable-group-auto-join': checked,
-			},
-		})
+		// Save to WordPress options via AJAX
+		savePlatformSetting('bp-enable-group-auto-join', checked)
 			.then((response) => {
-				console.log('Auto Membership Approval setting saved:', response);
+				if (response.success) {
+					console.log('Auto Membership Approval setting saved:', response);
+				} else {
+					console.error('Failed to save Auto Membership Approval setting:', response);
+					setAutoMembershipApproval(!checked);
+				}
 			})
 			.catch((error) => {
 				console.error('Failed to save Auto Membership Approval setting:', error);
@@ -288,13 +291,11 @@ export default function GroupTypeScreen({ onNavigate }) {
 			return;
 		}
 
-		apiFetch({
-			path: `/buddyboss/v1/groups/types/${typeId}`,
-			method: 'DELETE',
-			headers: { 'X-WP-Nonce': bbAdminData?.nonce || '' },
-		}).then(() => {
-			setOpenMenuId(null);
-			loadGroupTypes();
+		deleteGroupType(typeId).then((response) => {
+			if (response.success) {
+				setOpenMenuId(null);
+				loadGroupTypes();
+			}
 		});
 	};
 

@@ -11,7 +11,7 @@
 import { useState, useEffect } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { TextControl, TextareaControl, SelectControl, Button } from '@wordpress/components';
-import apiFetch from '@wordpress/api-fetch';
+import { getGroupTypes, createGroup, updateGroup } from '../../utils/ajax';
 
 /**
  * Close icon component
@@ -51,16 +51,18 @@ export default function GroupModal({ isOpen, onClose, onSave, group = null }) {
 	useEffect(() => {
 		if (isOpen) {
 			// Get site URL from bbAdminData or construct it
-			const url = bbAdminData?.siteUrl || window.location.origin;
+			const url = window.bbAdminData?.siteUrl || window.location.origin;
 			setSiteUrl(url);
 
-			apiFetch({ path: '/buddyboss/v1/groups/types' })
+			getGroupTypes()
 				.then((response) => {
-					const types = response || [];
-					setGroupTypes(types.map((type) => ({
-						value: type.id || type.name,
-						label: type.labels?.singular_name || type.name,
-					})));
+					if (response.success && response.data) {
+						const types = response.data || [];
+						setGroupTypes(types.map((type) => ({
+							value: type.id || type.name,
+							label: type.label || type.name,
+						})));
+					}
 				})
 				.catch((error) => {
 					console.error('Failed to load group types:', error);
@@ -111,24 +113,19 @@ export default function GroupModal({ isOpen, onClose, onSave, group = null }) {
 	const handleSave = () => {
 		setIsSaving(true);
 
-		const nonce = bbAdminData?.nonce || '';
-		const endpoint = group
-			? `/buddyboss/v1/groups/${group.id}`
-			: `/buddyboss/v1/groups`;
-		const method = group ? 'PUT' : 'POST';
+		const savePromise = group
+			? updateGroup(group.id, formData)
+			: createGroup(formData);
 
-		apiFetch({
-			path: endpoint,
-			method: method,
-			headers: {
-				'X-WP-Nonce': nonce,
-			},
-			data: formData,
-		})
+		savePromise
 			.then((response) => {
 				setIsSaving(false);
-				onSave(response);
-				onClose();
+				if (response.success && response.data) {
+					onSave(response.data);
+					onClose();
+				} else {
+					console.error('Failed to save group:', response);
+				}
 			})
 			.catch((error) => {
 				console.error('Failed to save group:', error);

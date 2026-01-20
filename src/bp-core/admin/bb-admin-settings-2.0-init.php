@@ -34,9 +34,6 @@ function bb_admin_settings_2_0_init() {
 	if ( ! class_exists( 'BB_REST_Dashboard_Controller' ) ) {
 		require_once buddypress()->plugin_dir . 'bp-core/classes/class-bb-rest-dashboard-controller.php';
 	}
-	if ( ! class_exists( 'BB_REST_Groups_Controller' ) ) {
-		require_once buddypress()->plugin_dir . 'bp-core/classes/class-bb-rest-groups-controller.php';
-	}
 	if ( ! class_exists( 'BB_REST_Appearance_Controller' ) ) {
 		require_once buddypress()->plugin_dir . 'bp-core/classes/class-bb-rest-appearance-controller.php';
 	}
@@ -70,6 +67,9 @@ function bb_admin_settings_2_0_init() {
 	if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/class-bb-admin-activity-ajax.php' ) ) {
 		require_once buddypress()->plugin_dir . 'bp-core/admin/class-bb-admin-activity-ajax.php';
 	}
+	if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/class-bb-admin-groups-ajax.php' ) ) {
+		require_once buddypress()->plugin_dir . 'bp-core/admin/class-bb-admin-groups-ajax.php';
+	}
 
 	// Load feature registrations.
 	if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-2.0-activity.php' ) ) {
@@ -90,8 +90,8 @@ add_action( 'bp_loaded', 'bb_admin_settings_2_0_init', 4 ); // Before feature re
 /**
  * Register REST API controllers.
  *
- * Note: Features, Settings Search, and Activity controllers have been migrated to AJAX.
- * See class-bb-admin-settings-ajax.php and class-bb-admin-activity-ajax.php
+ * Note: Features, Settings Search, Activity, and Groups controllers have been migrated to AJAX.
+ * See class-bb-admin-settings-ajax.php, class-bb-admin-activity-ajax.php, and class-bb-admin-groups-ajax.php
  *
  * @since BuddyBoss 3.0.0
  */
@@ -99,10 +99,6 @@ function bb_admin_settings_2_0_rest_api_init() {
 	// Register Dashboard Controller.
 	$dashboard_controller = new BB_REST_Dashboard_Controller();
 	$dashboard_controller->register_routes();
-
-	// Register Groups Controller.
-	$groups_controller = new BB_REST_Groups_Controller();
-	$groups_controller->register_routes();
 
 	// Register Appearance Controller.
 	$appearance_controller = new BB_REST_Appearance_Controller();

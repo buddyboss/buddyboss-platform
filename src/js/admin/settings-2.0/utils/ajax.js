@@ -81,6 +81,30 @@ export function getFeatureSettings(featureId) {
 	return ajaxFetch('bb_admin_get_feature_settings', { feature_id: featureId });
 }
 
+/**
+ * Get platform settings (WordPress options)
+ *
+ * @param {Array} options - Array of option names to retrieve
+ * @return {Promise} Promise resolving to settings object
+ */
+export function getPlatformSettings(options) {
+	return ajaxFetch('bb_admin_get_platform_settings', { options });
+}
+
+/**
+ * Save a platform setting (WordPress option)
+ *
+ * @param {string} optionName  - Option name
+ * @param {*}      optionValue - Option value
+ * @return {Promise} Promise resolving to response
+ */
+export function savePlatformSetting(optionName, optionValue) {
+	return ajaxFetch('bb_admin_save_platform_setting', { 
+		option_name: optionName, 
+		option_value: optionValue 
+	});
+}
+
 /*
 |--------------------------------------------------------------------------
 | Activity AJAX Functions
@@ -155,4 +179,101 @@ export function deleteActivity(activityId) {
  */
 export function spamActivity(activityId, isSpam = true) {
 	return ajaxFetch('bb_admin_spam_activity', { activity_id: activityId, is_spam: isSpam ? '1' : '0' });
+}
+
+/*
+|--------------------------------------------------------------------------
+| Groups AJAX Functions
+|--------------------------------------------------------------------------
+*/
+
+/**
+ * Get groups list
+ *
+ * @param {Object} params - Query parameters
+ * @return {Promise} Promise resolving to groups data
+ */
+export function getGroups(params = {}) {
+	return ajaxFetch('bb_admin_get_groups', params);
+}
+
+/**
+ * Get single group
+ *
+ * @param {number} groupId - Group ID
+ * @return {Promise} Promise resolving to group data
+ */
+export function getGroup(groupId) {
+	return ajaxFetch('bb_admin_get_group', { group_id: groupId });
+}
+
+/**
+ * Create a new group
+ *
+ * @param {Object} data - Group data
+ * @return {Promise} Promise resolving to created group
+ */
+export function createGroup(data) {
+	return ajaxFetch('bb_admin_create_group', data);
+}
+
+/**
+ * Update a group
+ *
+ * @param {number} groupId - Group ID
+ * @param {Object} data    - Group data to update
+ * @return {Promise} Promise resolving to updated group
+ */
+export function updateGroup(groupId, data) {
+	return ajaxFetch('bb_admin_update_group', { group_id: groupId, ...data });
+}
+
+/**
+ * Delete a group
+ *
+ * @param {number} groupId - Group ID
+ * @return {Promise} Promise resolving to response
+ */
+export function deleteGroup(groupId) {
+	return ajaxFetch('bb_admin_delete_group', { group_id: groupId });
+}
+
+/**
+ * Get group types
+ *
+ * @return {Promise} Promise resolving to group types array
+ */
+export function getGroupTypes() {
+	return ajaxFetch('bb_admin_get_group_types');
+}
+
+/**
+ * Create a group type
+ *
+ * @param {Object} data - Group type data
+ * @return {Promise} Promise resolving to created group type
+ */
+export function createGroupType(data) {
+	return ajaxFetch('bb_admin_create_group_type', data);
+}
+
+/**
+ * Update a group type
+ *
+ * @param {number} typeId - Group type ID
+ * @param {Object} data   - Group type data to update
+ * @return {Promise} Promise resolving to updated group type
+ */
+export function updateGroupType(typeId, data) {
+	return ajaxFetch('bb_admin_update_group_type', { type_id: typeId, ...data });
+}
+
+/**
+ * Delete a group type
+ *
+ * @param {number} typeId - Group type ID
+ * @return {Promise} Promise resolving to response
+ */
+export function deleteGroupType(typeId) {
+	return ajaxFetch('bb_admin_delete_group_type', { type_id: typeId });
 }

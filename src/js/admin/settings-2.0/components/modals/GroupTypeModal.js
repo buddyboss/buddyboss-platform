@@ -11,7 +11,7 @@
 import { useState, useEffect } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { TextControl, SelectControl, CheckboxControl, Button } from '@wordpress/components';
-import apiFetch from '@wordpress/api-fetch';
+import { createGroupType, updateGroupType } from '../../utils/ajax';
 
 /**
  * Close icon component
@@ -137,24 +137,19 @@ export default function GroupTypeModal({ isOpen, onClose, onSave, groupType = nu
 	const handleSave = () => {
 		setIsSaving(true);
 
-		const nonce = bbAdminData?.nonce || '';
-		const endpoint = groupType
-			? `/buddyboss/v1/groups/types/${groupType.id}`
-			: `/buddyboss/v1/groups/types`;
-		const method = groupType ? 'PUT' : 'POST';
+		const savePromise = groupType
+			? updateGroupType(groupType.id, formData)
+			: createGroupType(formData);
 
-		apiFetch({
-			path: endpoint,
-			method: method,
-			headers: {
-				'X-WP-Nonce': nonce,
-			},
-			data: formData,
-		})
+		savePromise
 			.then((response) => {
 				setIsSaving(false);
-				onSave(response);
-				onClose();
+				if (response.success && response.data) {
+					onSave(response.data);
+					onClose();
+				} else {
+					console.error('Failed to save group type:', response);
+				}
 			})
 			.catch((error) => {
 				console.error('Failed to save group type:', error);

@@ -8,7 +8,7 @@
 import { useState, useEffect } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { Button, Card, CardBody, CardHeader, Spinner, TextControl, TextareaControl, SelectControl, RadioControl, Notice } from '@wordpress/components';
-import apiFetch from '@wordpress/api-fetch';
+import { getGroup, createGroup, updateGroup } from '../../utils/ajax';
 
 /**
  * Group Edit Screen Component
@@ -40,17 +40,19 @@ export default function GroupEditScreen({ mode, groupId }) {
 
 	const loadGroup = () => {
 		setIsLoading(true);
-		apiFetch({ path: `/buddyboss/v1/groups/${groupId}` })
+		getGroup(groupId)
 			.then((response) => {
-				const groupData = response.data;
-				setGroup(groupData);
-				setFormData({
-					name: groupData.name || '',
-					description: groupData.description || '',
-					status: groupData.status || 'public',
-					group_type: groupData.type || '',
-					parent_id: groupData.parent_id || 0,
-				});
+				if (response.success && response.data) {
+					const groupData = response.data;
+					setGroup(groupData);
+					setFormData({
+						name: groupData.name || '',
+						description: groupData.description || '',
+						status: groupData.status || 'public',
+						group_type: groupData.group_type || '',
+						parent_id: groupData.parent_id || 0,
+					});
+				}
 				setIsLoading(false);
 			})
 			.catch(() => {
@@ -63,34 +65,31 @@ export default function GroupEditScreen({ mode, groupId }) {
 		setSaveError(null);
 		setSaveSuccess(false);
 
-		const nonce = bbAdminData?.nonce || '';
-		const method = mode === 'create' ? 'POST' : 'PUT';
-		const path = mode === 'create' ? '/buddyboss/v1/groups' : `/buddyboss/v1/groups/${groupId}`;
+		const savePromise = mode === 'create'
+			? createGroup(formData)
+			: updateGroup(groupId, formData);
 
-		apiFetch({
-			path: path,
-			method: method,
-			headers: {
-				'X-WP-Nonce': nonce,
-				'Content-Type': 'application/json',
-			},
-			data: formData,
-		})
+		savePromise
 			.then((response) => {
 				setIsSaving(false);
-				setSaveSuccess(true);
 
-				if (mode === 'create') {
-					// Redirect to edit screen
-					window.location.hash = `#/groups/${response.data.id}/edit`;
+				if (response.success && response.data) {
+					setSaveSuccess(true);
+
+					if (mode === 'create') {
+						// Redirect to edit screen
+						window.location.hash = `#/groups/${response.data.id}/edit`;
+					} else {
+						// Reload group data
+						loadGroup();
+					}
+
+					setTimeout(() => {
+						setSaveSuccess(false);
+					}, 3000);
 				} else {
-					// Reload group data
-					loadGroup();
+					setSaveError(__('Failed to save group.', 'buddyboss'));
 				}
-
-				setTimeout(() => {
-					setSaveSuccess(false);
-				}, 3000);
 			})
 			.catch((error) => {
 				setSaveError(error.message || __('Failed to save group.', 'buddyboss'));

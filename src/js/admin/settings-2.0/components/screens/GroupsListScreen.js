@@ -11,11 +11,10 @@
 import { useState, useEffect } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { Spinner, CheckboxControl } from '@wordpress/components';
-import apiFetch from '@wordpress/api-fetch';
 import { SideNavigation } from '../SideNavigation';
 import GroupModal from '../modals/GroupModal';
 import { getCachedFeatureData, setCachedFeatureData, getCachedSidebarData } from '../../utils/featureCache';
-import { ajaxFetch } from '../../utils/ajax';
+import { ajaxFetch, getGroups, getGroupTypes, deleteGroup } from '../../utils/ajax';
 
 /**
  * Privacy badge icon component
@@ -190,38 +189,28 @@ export default function GroupsListScreen({ onNavigate, openCreateModal = false }
 	const loadGroups = () => {
 		setIsLoading(true);
 
-		const params = new URLSearchParams({
+		const params = {
 			page: page.toString(),
 			per_page: perPage.toString(),
 			orderby: orderBy,
 			order: 'desc',
-			show_hidden: 'true', // Show hidden groups for admin
-		});
+			show_hidden: 'true',
+		};
 
 		if (search) {
-			params.append('search', search);
+			params.search = search;
 		}
 		if (statusFilter) {
-			params.append('status', statusFilter);
+			params.status = statusFilter;
 		}
 
-		// Use parse: false to access response headers for pagination
-		apiFetch({ 
-			path: `/buddyboss/v1/groups?${params.toString()}`,
-			parse: false 
-		})
+		getGroups(params)
 			.then((response) => {
-				// Get total from response headers
-				const totalItems = parseInt(response.headers.get('X-WP-Total') || '0', 10);
-				setTotal(totalItems);
-				
-				// Parse JSON body
-				return response.json();
-			})
-			.then((data) => {
-				// BuddyPress API returns groups as direct array
-				console.log('Groups data:', data);
-				setGroups(Array.isArray(data) ? data : []);
+				if (response.success && response.data) {
+					const data = response.data;
+					setGroups(data.groups || []);
+					setTotal(data.total || 0);
+				}
 				setIsLoading(false);
 			})
 			.catch((error) => {
@@ -231,9 +220,11 @@ export default function GroupsListScreen({ onNavigate, openCreateModal = false }
 	};
 
 	const loadGroupTypes = () => {
-		apiFetch({ path: '/buddyboss/v1/groups/types' })
+		getGroupTypes()
 			.then((response) => {
-				setGroupTypes(response.data || []);
+				if (response.success && response.data) {
+					setGroupTypes(response.data || []);
+				}
 			})
 			.catch(() => {});
 	};
@@ -261,14 +252,9 @@ export default function GroupsListScreen({ onNavigate, openCreateModal = false }
 			if (!confirm(__('Are you sure you want to delete the selected groups?', 'buddyboss'))) {
 				return;
 			}
-			// Handle bulk delete
+			// Handle bulk delete using AJAX
 			Promise.all(
-				selectedGroups.map((groupId) =>
-					apiFetch({
-						path: `/buddyboss/v1/groups/${groupId}`,
-						method: 'DELETE',
-					})
-				)
+				selectedGroups.map((groupId) => deleteGroup(groupId))
 			).then(() => {
 				setSelectedGroups([]);
 				loadGroups();
@@ -281,10 +267,7 @@ export default function GroupsListScreen({ onNavigate, openCreateModal = false }
 			return;
 		}
 
-		apiFetch({
-			path: `/buddyboss/v1/groups/${groupId}`,
-			method: 'DELETE',
-		})
+		deleteGroup(groupId)
 			.then(() => {
 				loadGroups();
 			})
