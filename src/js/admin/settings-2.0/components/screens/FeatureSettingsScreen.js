@@ -15,6 +15,29 @@ import { SideNavigation } from '../SideNavigation';
 import { SettingsForm } from '../SettingsForm';
 
 /**
+ * AJAX request helper.
+ *
+ * @param {string} action AJAX action name.
+ * @param {Object} data   Additional data.
+ * @returns {Promise} Promise resolving to response data.
+ */
+const ajaxFetch = (action, data = {}) => {
+	const formData = new FormData();
+	formData.append('action', action);
+	formData.append('nonce', window.bbAdminData?.ajaxNonce || '');
+	
+	Object.keys(data).forEach((key) => {
+		formData.append(key, data[key]);
+	});
+	
+	return fetch(window.bbAdminData?.ajaxUrl || '/wp-admin/admin-ajax.php', {
+		method: 'POST',
+		credentials: 'same-origin',
+		body: formData,
+	}).then((response) => response.json());
+};
+
+/**
  * Feature Settings Screen Component
  *
  * @param {Object} props Component props
@@ -28,6 +51,7 @@ export function FeatureSettingsScreen({ featureId, sectionId, onNavigate }) {
 	const [sidePanels, setSidePanels] = useState([]);
 	const [navItems, setNavItems] = useState([]);
 	const [settings, setSettings] = useState({});
+	const [originalSettings, setOriginalSettings] = useState({}); // Track original values
 	const [isLoading, setIsLoading] = useState(true);
 	const [isSaving, setIsSaving] = useState(false);
 	const [isDirty, setIsDirty] = useState(false);
@@ -35,31 +59,36 @@ export function FeatureSettingsScreen({ featureId, sectionId, onNavigate }) {
 	const [saveSuccess, setSaveSuccess] = useState(false);
 	const [activePanelId, setActivePanelId] = useState(sectionId || null);
 
+	// Load feature settings via AJAX - only when featureId changes
 	useEffect(() => {
-		// Load feature settings
-		apiFetch({ path: `/buddyboss/v1/features/${featureId}/settings` })
+		setIsLoading(true);
+		ajaxFetch('bb_admin_get_feature_settings', { feature_id: featureId })
 			.then((response) => {
-				setFeature(response.data);
-				const loadedPanels = response.data.side_panels || [];
-				setSidePanels(loadedPanels);
-				setNavItems(response.data.navigation || []);
-				setSettings(response.data.settings || {});
-				setIsLoading(false);
-				
-				// Set active panel: use sectionId from props, or first panel with is_default, or first panel
-				if (sectionId && loadedPanels.some(p => p.id === sectionId)) {
-					setActivePanelId(sectionId);
-				} else {
-					const defaultPanel = loadedPanels.find(p => p.is_default) || loadedPanels[0];
-					setActivePanelId(defaultPanel ? defaultPanel.id : null);
+				if (response.success && response.data) {
+					setFeature(response.data);
+					const loadedPanels = response.data.side_panels || [];
+					setSidePanels(loadedPanels);
+					setNavItems(response.data.navigation || []);
+					const loadedSettings = response.data.settings || {};
+					setSettings(loadedSettings);
+					setOriginalSettings(JSON.parse(JSON.stringify(loadedSettings))); // Deep copy
+					
+					// Set active panel: use sectionId from props, or first panel with is_default, or first panel
+					if (sectionId && loadedPanels.some(p => p.id === sectionId)) {
+						setActivePanelId(sectionId);
+					} else {
+						const defaultPanel = loadedPanels.find(p => p.is_default) || loadedPanels[0];
+						setActivePanelId(defaultPanel ? defaultPanel.id : null);
+					}
 				}
+				setIsLoading(false);
 			})
 			.catch(() => {
 				setIsLoading(false);
 			});
-	}, [featureId, sectionId]);
+	}, [featureId]); // Only reload data when featureId changes, not on tab change
 
-	// Sync active panel when sectionId prop changes (from URL)
+	// Sync active panel when sectionId prop changes (from URL) - no AJAX call needed
 	useEffect(() => {
 		if (sectionId && sidePanels.some(p => p.id === sectionId)) {
 			setActivePanelId(sectionId);
@@ -90,31 +119,59 @@ export function FeatureSettingsScreen({ featureId, sectionId, onNavigate }) {
 		setSaveSuccess(false);
 	};
 
+	// Get only changed settings (compare with original)
+	const getChangedSettings = () => {
+		const changed = {};
+		Object.keys(settings).forEach((key) => {
+			const currentValue = settings[key];
+			const originalValue = originalSettings[key];
+			
+			// Handle object comparison (for toggle_list fields)
+			if (typeof currentValue === 'object' && currentValue !== null) {
+				if (JSON.stringify(currentValue) !== JSON.stringify(originalValue)) {
+					changed[key] = currentValue;
+				}
+			} else if (currentValue !== originalValue) {
+				changed[key] = currentValue;
+			}
+		});
+		return changed;
+	};
+
 	const handleSave = () => {
 		setIsSaving(true);
 		setSaveError(null);
 		setSaveSuccess(false);
 
-		const nonce = bbAdminData.nonce;
+		// Only send changed values
+		const changedSettings = getChangedSettings();
+		
+		if (Object.keys(changedSettings).length === 0) {
+			setIsSaving(false);
+			setSaveSuccess(true);
+			setTimeout(() => setSaveSuccess(false), 3000);
+			return;
+		}
 
-		apiFetch({
-			path: `/buddyboss/v1/features/${featureId}/settings`,
-			method: 'POST',
-			headers: {
-				'X-WP-Nonce': nonce,
-				'Content-Type': 'application/json',
-			},
-			data: settings,
+		ajaxFetch('bb_admin_save_feature_settings', {
+			feature_id: featureId,
+			settings: JSON.stringify(changedSettings),
 		})
 			.then((response) => {
-				setIsDirty(false);
-				setSaveSuccess(true);
-				setIsSaving(false);
+				if (response.success) {
+					// Update original settings with new values
+					setOriginalSettings(JSON.parse(JSON.stringify(settings)));
+					setIsDirty(false);
+					setSaveSuccess(true);
 
-				// Clear success message after 3 seconds
-				setTimeout(() => {
-					setSaveSuccess(false);
-				}, 3000);
+					// Clear success message after 3 seconds
+					setTimeout(() => {
+						setSaveSuccess(false);
+					}, 3000);
+				} else {
+					setSaveError(response.data?.message || __('Failed to save settings.', 'buddyboss'));
+				}
+				setIsSaving(false);
 			})
 			.catch((error) => {
 				setSaveError(error.message || __('Failed to save settings.', 'buddyboss'));
@@ -123,14 +180,11 @@ export function FeatureSettingsScreen({ featureId, sectionId, onNavigate }) {
 	};
 
 	const handleDiscard = () => {
-		// Reload settings from server
-		apiFetch({ path: `/buddyboss/v1/features/${featureId}/settings` })
-			.then((response) => {
-				setSettings(response.data.settings || {});
-				setIsDirty(false);
-				setSaveError(null);
-				setSaveSuccess(false);
-			});
+		// Reset to original settings (no AJAX needed)
+		setSettings(JSON.parse(JSON.stringify(originalSettings)));
+		setIsDirty(false);
+		setSaveError(null);
+		setSaveSuccess(false);
 	};
 
 	const handlePanelChange = (route) => {

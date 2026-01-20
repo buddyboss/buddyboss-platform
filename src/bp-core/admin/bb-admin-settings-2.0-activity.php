@@ -29,7 +29,7 @@ function bb_admin_settings_2_0_register_activity_feature() {
 			'icon'               => 'dashicons-update',
 			'category'           => 'community',
 			'license_tier'       => 'free',
-			'is_active_callback' => function() {
+			'is_active_callback' => function () {
 				return bp_is_active( 'activity' );
 			},
 			'settings_route'     => '/settings/activity',
@@ -265,6 +265,7 @@ function bb_admin_settings_2_0_register_activity_feature() {
 	);
 
 	// Field: Activity Feed Filters
+	// Note: Keys must match bb_get_activity_filter_options_labels() in bp-core-options.php
 	bb_register_feature_field(
 		'activity',
 		'activity_settings',
@@ -274,17 +275,40 @@ function bb_admin_settings_2_0_register_activity_feature() {
 			'label'             => __( 'Activity Feed Filters', 'buddyboss' ),
 			'type'              => 'checkbox_list',
 			'description'       => __( 'Select which filters to display on the activity feed.', 'buddyboss' ),
-			'default'           => bp_get_option( 'bb_activity_filter_options', array() ),
+			'default'           => bb_get_enabled_activity_filter_options(),
 			'options'           => array(
-				array( 'label' => __( 'All Updates', 'buddyboss' ), 'value' => 'all_updates' ),
-				array( 'label' => __( 'Posts', 'buddyboss' ), 'value' => 'posts' ),
-				array( 'label' => __( 'Personal', 'buddyboss' ), 'value' => 'personal' ),
-				array( 'label' => __( 'Connections', 'buddyboss' ), 'value' => 'connections' ),
-				array( 'label' => __( 'Groups', 'buddyboss' ), 'value' => 'groups' ),
-				array( 'label' => __( 'New Members', 'buddyboss' ), 'value' => 'new_members' ),
-				array( 'label' => __( 'Friendships', 'buddyboss' ), 'value' => 'friendships' ),
-				array( 'label' => __( 'Group Memberships', 'buddyboss' ), 'value' => 'group_memberships' ),
-				array( 'label' => __( 'Follower', 'buddyboss' ), 'value' => 'follower' ),
+				array(
+					'label' => __( 'All updates', 'buddyboss' ),
+					'value' => 'all',
+				),
+				array(
+					'label' => __( 'Created by me', 'buddyboss' ),
+					'value' => 'just-me',
+				),
+				array(
+					'label' => __( "I've reacted to", 'buddyboss' ),
+					'value' => 'favorites',
+				),
+				array(
+					'label' => __( 'From my groups', 'buddyboss' ),
+					'value' => 'groups',
+				),
+				array(
+					'label' => __( 'From my connections', 'buddyboss' ),
+					'value' => 'friends',
+				),
+				array(
+					'label' => __( "I'm mentioned in", 'buddyboss' ),
+					'value' => 'mentions',
+				),
+				array(
+					'label' => __( "I'm following", 'buddyboss' ),
+					'value' => 'following',
+				),
+				array(
+					'label' => __( 'Unanswered', 'buddyboss' ),
+					'value' => 'unanswered',
+				),
 			),
 			'sanitize_callback' => 'bb_sanitize_checkbox_list',
 			'order'             => 20,
@@ -292,6 +316,7 @@ function bb_admin_settings_2_0_register_activity_feature() {
 	);
 
 	// Field: Profile Timeline Filters
+	// Note: Stored as associative array { "key": "1", "key2": "0" }
 	bb_register_feature_field(
 		'activity',
 		'activity_settings',
@@ -301,21 +326,46 @@ function bb_admin_settings_2_0_register_activity_feature() {
 			'label'             => __( 'Profile Timeline Filters', 'buddyboss' ),
 			'type'              => 'checkbox_list',
 			'description'       => __( 'Select which filters to display on member profile timelines.', 'buddyboss' ),
-			'default'           => bp_get_option( 'bb_activity_timeline_filter_options', array() ),
+			'default'           => array(
+				'just-me'   => 1,
+				'favorites' => 1,
+				'groups'    => 1,
+				'friends'   => 1,
+				'mentions'  => 1,
+				'following' => 1,
+			),
 			'options'           => array(
-				array( 'label' => __( 'All Updates', 'buddyboss' ), 'value' => 'all_updates' ),
-				array( 'label' => __( 'Posts', 'buddyboss' ), 'value' => 'posts' ),
-				array( 'label' => __( 'Personal', 'buddyboss' ), 'value' => 'personal' ),
-				array( 'label' => __( 'Connections', 'buddyboss' ), 'value' => 'connections' ),
-				array( 'label' => __( 'Group Memberships', 'buddyboss' ), 'value' => 'group_memberships' ),
-				array( 'label' => __( 'Follower', 'buddyboss' ), 'value' => 'follower' ),
+				array(
+					'label' => __( 'Personal posts', 'buddyboss' ),
+					'value' => 'just-me',
+				),
+				array(
+					'label' => __( 'Reacted to', 'buddyboss' ),
+					'value' => 'favorites',
+				),
+				array(
+					'label' => __( 'From groups', 'buddyboss' ),
+					'value' => 'groups',
+				),
+				array(
+					'label' => __( 'From connections', 'buddyboss' ),
+					'value' => 'friends',
+				),
+				array(
+					'label' => __( 'Mentioned in', 'buddyboss' ),
+					'value' => 'mentions',
+				),
+				array(
+					'label' => __( 'Following', 'buddyboss' ),
+					'value' => 'following',
+				),
 			),
 			'sanitize_callback' => 'bb_sanitize_checkbox_list',
 			'order'             => 30,
 		)
 	);
 
-	// Field: Activity Sorting
+	// Field: Activity Sorting.
 	bb_register_feature_field(
 		'activity',
 		'activity_settings',
@@ -325,10 +375,16 @@ function bb_admin_settings_2_0_register_activity_feature() {
 			'label'             => __( 'Activity Sorting', 'buddyboss' ),
 			'type'              => 'checkbox_list',
 			'description'       => __( 'Select which sorting options to display on the activity feed.', 'buddyboss' ),
-			'default'           => bp_get_option( 'bb_activity_sorting_options', array() ),
+			'default'           => bb_get_enabled_activity_sorting_options(),
 			'options'           => array(
-				array( 'label' => __( 'Newest', 'buddyboss' ), 'value' => 'newest' ),
-				array( 'label' => __( 'Popular', 'buddyboss' ), 'value' => 'popular' ),
+				array(
+					'label' => __( 'Newest', 'buddyboss' ),
+					'value' => 'date_recorded',
+				),
+				array(
+					'label' => __( 'Popular', 'buddyboss' ),
+					'value' => 'date_updated',
+				),
 			),
 			'sanitize_callback' => 'bb_sanitize_checkbox_list',
 			'order'             => 40,
@@ -481,9 +537,18 @@ function bb_admin_settings_2_0_register_activity_feature() {
 			'description'       => __( 'Select which comments are loaded when the page loads.', 'buddyboss' ),
 			'default'           => bp_get_option( '_bb_activity_comment_loading', 'all' ),
 			'options'           => array(
-				array( 'label' => __( 'All comments', 'buddyboss' ), 'value' => 'all' ),
-				array( 'label' => __( 'Latest comments', 'buddyboss' ), 'value' => 'latest' ),
-				array( 'label' => __( 'Oldest comments', 'buddyboss' ), 'value' => 'oldest' ),
+				array(
+					'label' => __( 'All comments', 'buddyboss' ),
+					'value' => 'all',
+				),
+				array(
+					'label' => __( 'Latest comments', 'buddyboss' ),
+					'value' => 'latest',
+				),
+				array(
+					'label' => __( 'Oldest comments', 'buddyboss' ),
+					'value' => 'oldest',
+				),
 			),
 			'sanitize_callback' => 'sanitize_text_field',
 			'order'             => 70,
@@ -576,10 +641,22 @@ function bb_admin_settings_2_0_register_activity_feature() {
 			'description'       => __( 'Default visibility for activity posts.', 'buddyboss' ),
 			'default'           => bp_get_option( '_bp_activity_visibility', 'public' ),
 			'options'           => array(
-				array( 'label' => __( 'Public', 'buddyboss' ), 'value' => 'public' ),
-				array( 'label' => __( 'Logged-in Members', 'buddyboss' ), 'value' => 'loggedin' ),
-				array( 'label' => __( 'My Connections', 'buddyboss' ), 'value' => 'friends' ),
-				array( 'label' => __( 'Only Me', 'buddyboss' ), 'value' => 'onlyme' ),
+				array(
+					'label' => __( 'Public', 'buddyboss' ),
+					'value' => 'public',
+				),
+				array(
+					'label' => __( 'Logged-in Members', 'buddyboss' ),
+					'value' => 'loggedin',
+				),
+				array(
+					'label' => __( 'My Connections', 'buddyboss' ),
+					'value' => 'friends',
+				),
+				array(
+					'label' => __( 'Only Me', 'buddyboss' ),
+					'value' => 'onlyme',
+				),
 			),
 			'sanitize_callback' => 'sanitize_text_field',
 			'order'             => 10,
@@ -688,9 +765,18 @@ function bb_admin_settings_2_0_register_activity_feature() {
 			'description'       => __( 'Select who can post activity updates.', 'buddyboss' ),
 			'default'           => bp_get_option( '_bb_activity_post_access', 'all' ),
 			'options'           => array(
-				array( 'label' => __( 'All Members', 'buddyboss' ), 'value' => 'all' ),
-				array( 'label' => __( 'Administrators Only', 'buddyboss' ), 'value' => 'admins' ),
-				array( 'label' => __( 'Specific Roles', 'buddyboss' ), 'value' => 'roles' ),
+				array(
+					'label' => __( 'All Members', 'buddyboss' ),
+					'value' => 'all',
+				),
+				array(
+					'label' => __( 'Administrators Only', 'buddyboss' ),
+					'value' => 'admins',
+				),
+				array(
+					'label' => __( 'Specific Roles', 'buddyboss' ),
+					'value' => 'roles',
+				),
 			),
 			'sanitize_callback' => 'sanitize_text_field',
 			'order'             => 10,
@@ -709,9 +795,18 @@ function bb_admin_settings_2_0_register_activity_feature() {
 			'description'       => __( 'Select who can comment on activity posts.', 'buddyboss' ),
 			'default'           => bp_get_option( '_bb_activity_comment_access', 'all' ),
 			'options'           => array(
-				array( 'label' => __( 'All Members', 'buddyboss' ), 'value' => 'all' ),
-				array( 'label' => __( 'Connections Only', 'buddyboss' ), 'value' => 'friends' ),
-				array( 'label' => __( 'Administrators Only', 'buddyboss' ), 'value' => 'admins' ),
+				array(
+					'label' => __( 'All Members', 'buddyboss' ),
+					'value' => 'all',
+				),
+				array(
+					'label' => __( 'Connections Only', 'buddyboss' ),
+					'value' => 'friends',
+				),
+				array(
+					'label' => __( 'Administrators Only', 'buddyboss' ),
+					'value' => 'admins',
+				),
 			),
 			'sanitize_callback' => 'sanitize_text_field',
 			'order'             => 20,

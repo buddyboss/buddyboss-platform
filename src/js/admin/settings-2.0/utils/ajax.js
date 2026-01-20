@@ -70,3 +70,13 @@ export function deactivateFeature(featureId) {
 export function searchSettings(query) {
 	return ajaxFetch('bb_admin_search_settings', { query });
 }
+
+/**
+ * Get feature settings
+ *
+ * @param {string} featureId - Feature ID
+ * @return {Promise} Promise resolving to feature settings
+ */
+export function getFeatureSettings(featureId) {
+	return ajaxFetch('bb_admin_get_feature_settings', { feature_id: featureId });
+}

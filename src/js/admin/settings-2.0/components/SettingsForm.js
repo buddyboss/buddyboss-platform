@@ -105,22 +105,33 @@ export function SettingsForm({ fields, values, onChange }) {
 
 			case 'checkbox_list':
 				// Checkbox list for multiple selections (e.g., Activity Feed Filters)
-				const selectedValues = Array.isArray(value) ? value : [];
+				// Value can be either:
+				// - An object like {"just-me": 1, "favorites": 0, ...} (from AJAX)
+				// - An array like ["just-me", "favorites", ...] (legacy)
+				const isObjectValue = value && typeof value === 'object' && !Array.isArray(value);
+				const checkboxValue = isObjectValue ? value : {};
+				
+				// Helper to check if option is selected
+				const isOptionChecked = (optionKey) => {
+					if (isObjectValue) {
+						// Object format: check if value is truthy (1, "1", true)
+						return !!checkboxValue[optionKey] && checkboxValue[optionKey] !== '0' && checkboxValue[optionKey] !== 0;
+					}
+					// Array format
+					return Array.isArray(value) && value.includes(optionKey);
+				};
+				
 				return (
 					<div key={field.name} className="bb-admin-settings-field__checkbox-list">
 						{(field.options || []).map((option) => (
 							<CheckboxControl
 								key={option.value}
 								label={option.label}
-								checked={selectedValues.includes(option.value)}
+								checked={isOptionChecked(option.value)}
 								onChange={(checked) => {
-									let newValues;
-									if (checked) {
-										newValues = [...selectedValues, option.value];
-									} else {
-										newValues = selectedValues.filter((v) => v !== option.value);
-									}
-									onChange(field.name, newValues);
+									// Always save as object format for consistency
+									const newValue = { ...checkboxValue, [option.value]: checked ? 1 : 0 };
+									onChange(field.name, newValue);
 								}}
 								__nextHasNoMarginBottom
 							/>
