@@ -3853,6 +3853,70 @@ $bb-border-radius-xs: 6px;
 			}
 		}
 	}
+
+	// Tabs
+	&__tabs {
+		display: flex;
+		gap: 0;
+		padding: 0 24px;
+		border-bottom: 1px solid #d9d9d9;
+	}
+
+	&__tab {
+		padding: 12px 16px;
+		background: transparent;
+		border: none;
+		font-size: 13px;
+		font-weight: 400;
+		line-height: 18px;
+		color: #666;
+		cursor: pointer;
+		border-bottom: 2px solid transparent;
+		transition: all 0.2s;
+		white-space: nowrap;
+
+		&:hover:not(:disabled) {
+			color: #2f2f2f;
+		}
+
+		&--active {
+			color: #ef5d33;
+			font-weight: 500;
+			border-bottom-color: #ef5d33;
+		}
+
+		&:disabled {
+			opacity: 0.5;
+			cursor: not-allowed;
+		}
+	}
+
+	// Permalink preview
+	&__permalink-preview {
+		margin-top: 4px;
+		padding: 3px 0;
+		font-size: 13px;
+		line-height: 18px;
+		color: #666;
+		font-family: 'Inter', sans-serif;
+	}
+
+	// Tab content
+	&__tab-content {
+		padding: 24px 0;
+
+		p {
+			margin: 0;
+			color: #666;
+			font-size: 13px;
+			line-height: 18px;
+		}
+	}
+
+	// Wider modal for edit view with tabs
+	&--edit {
+		max-width: 680px;
+	}
 }
 
 // ==================================================

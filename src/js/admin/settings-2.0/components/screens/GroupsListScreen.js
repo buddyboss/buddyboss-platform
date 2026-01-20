@@ -374,6 +374,11 @@ export default function GroupsListScreen({ onNavigate, openCreateModal = false }
 		setIsModalOpen(true);
 	};
 
+	const handleEditGroup = (group) => {
+		setEditingGroup(group);
+		setIsModalOpen(true);
+	};
+
 	const handleModalClose = () => {
 		setIsModalOpen(false);
 		setEditingGroup(null);
@@ -588,7 +593,7 @@ export default function GroupsListScreen({ onNavigate, openCreateModal = false }
 												<div className="bb-admin-groups-list__action-menu">
 													<button
 														onClick={() => {
-															window.location.hash = `#/groups/${group.id}/edit`;
+															handleEditGroup(group);
 															setActionMenuOpen(null);
 														}}
 													>

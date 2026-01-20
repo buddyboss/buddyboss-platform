@@ -2,6 +2,7 @@
  * BuddyBoss Admin Settings 2.0 - Group Modal
  *
  * Modal for creating/editing groups.
+ * Design based on Figma: https://www.figma.com/design/XS2Hf0smlEnhWfoKyks7ku/Backend-Settings-2.0?node-id=4337-81302
  *
  * @package BuddyBoss\Core\Administration
  * @since BuddyBoss 3.0.0
@@ -36,16 +37,23 @@ function CloseIcon() {
 export default function GroupModal({ isOpen, onClose, onSave, group = null }) {
 	const [formData, setFormData] = useState({
 		name: '',
+		slug: '',
 		description: '',
 		status: 'public',
 		group_type: '',
 	});
 	const [isSaving, setIsSaving] = useState(false);
 	const [groupTypes, setGroupTypes] = useState([]);
+	const [activeTab, setActiveTab] = useState('details');
+	const [siteUrl, setSiteUrl] = useState('');
 
-	// Load group types
+	// Load group types and site URL
 	useEffect(() => {
 		if (isOpen) {
+			// Get site URL from bbAdminData or construct it
+			const url = bbAdminData?.siteUrl || window.location.origin;
+			setSiteUrl(url);
+
 			apiFetch({ path: '/buddyboss/v1/groups/types' })
 				.then((response) => {
 					const types = response || [];
@@ -65,6 +73,7 @@ export default function GroupModal({ isOpen, onClose, onSave, group = null }) {
 		if (group) {
 			setFormData({
 				name: group.name || '',
+				slug: group.slug || '',
 				description: group.description || '',
 				status: group.status || 'public',
 				group_type: group.type || '',
@@ -73,12 +82,24 @@ export default function GroupModal({ isOpen, onClose, onSave, group = null }) {
 			// Reset form for new group
 			setFormData({
 				name: '',
+				slug: '',
 				description: '',
 				status: 'public',
 				group_type: '',
 			});
 		}
 	}, [group, isOpen]);
+
+	// Auto-generate slug from name for new groups
+	useEffect(() => {
+		if (!group && formData.name && !formData.slug) {
+			const slug = formData.name
+				.toLowerCase()
+				.replace(/[^a-z0-9]+/g, '-')
+				.replace(/^-+|-+$/g, '');
+			setFormData((prev) => ({ ...prev, slug }));
+		}
+	}, [formData.name, formData.slug, group]);
 
 	const handleInputChange = (field, value) => {
 		setFormData((prev) => ({
@@ -119,9 +140,19 @@ export default function GroupModal({ isOpen, onClose, onSave, group = null }) {
 		return null;
 	}
 
+	const tabs = [
+		{ id: 'details', label: __('Details', 'buddyboss') },
+		{ id: 'members', label: __('Members', 'buddyboss') },
+		{ id: 'permissions', label: __('Permissions', 'buddyboss') },
+		{ id: 'integrations', label: __('Integrations', 'buddyboss') },
+		{ id: 'topics', label: __('Topics', 'buddyboss') },
+	];
+
+	const permalinkUrl = `${siteUrl}/groups/${formData.slug || 'group-name'}/`;
+
 	return (
 		<div className="bb-admin-modal-overlay" onClick={onClose}>
-			<div className="bb-admin-group-modal" onClick={(e) => e.stopPropagation()}>
+			<div className="bb-admin-group-modal bb-admin-group-modal--edit" onClick={(e) => e.stopPropagation()}>
 				{/* Modal Header */}
 				<div className="bb-admin-group-modal__header">
 					<h2>{group ? __('Edit Group', 'buddyboss') : __('Create New Group', 'buddyboss')}</h2>
@@ -130,55 +161,108 @@ export default function GroupModal({ isOpen, onClose, onSave, group = null }) {
 					</button>
 				</div>
 
+				{/* Tabs */}
+				<div className="bb-admin-group-modal__tabs">
+					{tabs.map((tab) => (
+						<button
+							key={tab.id}
+							className={`bb-admin-group-modal__tab ${activeTab === tab.id ? 'bb-admin-group-modal__tab--active' : ''}`}
+							onClick={() => setActiveTab(tab.id)}
+							disabled={tab.id !== 'details'}
+						>
+							{tab.label}
+						</button>
+					))}
+				</div>
+
 				{/* Modal Body */}
 				<div className="bb-admin-group-modal__body">
-					{/* Name */}
-					<div className="bb-admin-group-modal__section">
-						<TextControl
-							label={__('Group Name', 'buddyboss')}
-							value={formData.name}
-							onChange={(value) => handleInputChange('name', value)}
-							placeholder={__('Enter group name', 'buddyboss')}
-						/>
-					</div>
+					{activeTab === 'details' && (
+						<>
+							{/* Name */}
+							<div className="bb-admin-group-modal__section">
+								<TextControl
+									label={__('Name', 'buddyboss')}
+									value={formData.name}
+									onChange={(value) => handleInputChange('name', value)}
+									placeholder={__('Enter group name', 'buddyboss')}
+								/>
+							</div>
 
-					{/* Description */}
-					<div className="bb-admin-group-modal__section">
-						<TextareaControl
-							label={__('Description', 'buddyboss')}
-							value={formData.description}
-							onChange={(value) => handleInputChange('description', value)}
-							placeholder={__('Enter group description', 'buddyboss')}
-							rows={4}
-						/>
-					</div>
+							{/* Permalink */}
+							<div className="bb-admin-group-modal__section">
+								<TextControl
+									label={__('Permalink', 'buddyboss')}
+									value={formData.slug}
+									onChange={(value) => handleInputChange('slug', value)}
+									placeholder={__('group-slug', 'buddyboss')}
+								/>
+								<div className="bb-admin-group-modal__permalink-preview">
+									{permalinkUrl}
+								</div>
+							</div>
 
-					{/* Status */}
-					<div className="bb-admin-group-modal__section">
-						<SelectControl
-							label={__('Privacy', 'buddyboss')}
-							value={formData.status}
-							options={[
-								{ label: __('Public', 'buddyboss'), value: 'public' },
-								{ label: __('Private', 'buddyboss'), value: 'private' },
-								{ label: __('Hidden', 'buddyboss'), value: 'hidden' },
-							]}
-							onChange={(value) => handleInputChange('status', value)}
-						/>
-					</div>
+							{/* Description */}
+							<div className="bb-admin-group-modal__section">
+								<TextareaControl
+									label={__('Description (Optional)', 'buddyboss')}
+									value={formData.description}
+									onChange={(value) => handleInputChange('description', value)}
+									placeholder={__('Enter group description...', 'buddyboss')}
+									rows={4}
+								/>
+							</div>
 
-					{/* Group Type */}
-					{groupTypes.length > 0 && (
-						<div className="bb-admin-group-modal__section bb-admin-group-modal__section--last">
-							<SelectControl
-								label={__('Group Type', 'buddyboss')}
-								value={formData.group_type}
-								options={[
-									{ label: __('None', 'buddyboss'), value: '' },
-									...groupTypes,
-								]}
-								onChange={(value) => handleInputChange('group_type', value)}
-							/>
+							{/* Group Privacy */}
+							<div className="bb-admin-group-modal__section">
+								<SelectControl
+									label={__('Group Privacy', 'buddyboss')}
+									value={formData.status}
+									options={[
+										{ label: __('Public', 'buddyboss'), value: 'public' },
+										{ label: __('Private', 'buddyboss'), value: 'private' },
+										{ label: __('Hidden', 'buddyboss'), value: 'hidden' },
+									]}
+									onChange={(value) => handleInputChange('status', value)}
+								/>
+							</div>
+
+							{/* Group Type */}
+							<div className="bb-admin-group-modal__section bb-admin-group-modal__section--last">
+								<SelectControl
+									label={__('Group Type (Optional)', 'buddyboss')}
+									value={formData.group_type}
+									options={[
+										{ label: __('Select Group Type', 'buddyboss'), value: '' },
+										...groupTypes,
+									]}
+									onChange={(value) => handleInputChange('group_type', value)}
+								/>
+							</div>
+						</>
+					)}
+
+					{activeTab === 'members' && (
+						<div className="bb-admin-group-modal__tab-content">
+							<p>{__('Members tab content coming soon...', 'buddyboss')}</p>
+						</div>
+					)}
+
+					{activeTab === 'permissions' && (
+						<div className="bb-admin-group-modal__tab-content">
+							<p>{__('Permissions tab content coming soon...', 'buddyboss')}</p>
+						</div>
+					)}
+
+					{activeTab === 'integrations' && (
+						<div className="bb-admin-group-modal__tab-content">
+							<p>{__('Integrations tab content coming soon...', 'buddyboss')}</p>
+						</div>
+					)}
+
+					{activeTab === 'topics' && (
+						<div className="bb-admin-group-modal__tab-content">
+							<p>{__('Topics tab content coming soon...', 'buddyboss')}</p>
 						</div>
 					)}
 				</div>
