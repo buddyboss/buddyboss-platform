@@ -14,6 +14,7 @@ import { Spinner, TextControl, TextareaControl, SelectControl, ToggleControl, Bu
 import apiFetch from '@wordpress/api-fetch';
 import { SideNavigation } from '../SideNavigation';
 import { getCachedFeatureData, setCachedFeatureData, getCachedSidebarData } from '../../utils/featureCache';
+import { getActivityTypes, getActivityTopics, getActivities, getActivity, updateActivity, deleteActivity, spamActivity, ajaxFetch } from '../../utils/ajax';
 
 // Close icon for modal
 const CloseIcon = () => (
@@ -229,16 +230,30 @@ export default function ActivityListScreen({ onNavigate }) {
 	const [activityTypes, setActivityTypes] = useState([]);
 	const [activityTopics, setActivityTopics] = useState([]);
 
-	// Load activity types and topics on mount
+	// Load activity types and topics on mount using AJAX
 	useEffect(() => {
-		// Load activity types
-		apiFetch({ path: `/buddyboss/v1/admin-activity/types` })
+		// Load activity types via AJAX
+		getActivityTypes()
 			.then((response) => {
-				const types = response.data || response || [];
-				setActivityTypes(Array.isArray(types) ? types : []);
+				if (response.success && response.data) {
+					setActivityTypes(Array.isArray(response.data) ? response.data : []);
+				} else {
+					// Fallback to common types if AJAX fails
+					setActivityTypes([
+						{ key: 'activity_update', label: 'Updates' },
+						{ key: 'activity_comment', label: 'Activity Comments' },
+						{ key: 'new_member', label: 'New Members' },
+						{ key: 'friendship_created', label: 'Friendships' },
+						{ key: 'created_group', label: 'Groups Created' },
+						{ key: 'joined_group', label: 'Group Memberships' },
+						{ key: 'group_details_updated', label: 'Group Details Updated' },
+						{ key: 'bbp_topic_create', label: 'New Forum Topics' },
+						{ key: 'bbp_reply_create', label: 'Forum Replies' },
+					]);
+				}
 			})
 			.catch(() => {
-				// Fallback to common types if API fails
+				// Fallback to common types if AJAX fails
 				setActivityTypes([
 					{ key: 'activity_update', label: 'Updates' },
 					{ key: 'activity_comment', label: 'Activity Comments' },
@@ -252,18 +267,21 @@ export default function ActivityListScreen({ onNavigate }) {
 				]);
 			});
 
-		// Load activity topics
-		apiFetch({ path: `/buddyboss/v1/admin-activity/topics` })
+		// Load activity topics via AJAX
+		getActivityTopics()
 			.then((response) => {
-				const topics = response.data || response || [];
-				setActivityTopics(Array.isArray(topics) ? topics : []);
+				if (response.success && response.data) {
+					setActivityTopics(Array.isArray(response.data) ? response.data : []);
+				} else {
+					setActivityTopics([]);
+				}
 			})
 			.catch(() => {
 				setActivityTopics([]);
 			});
 	}, []);
 
-	// Load sidebar data - use cache if available
+	// Load sidebar data - use cache if available, otherwise use AJAX
 	useEffect(() => {
 		const featureId = 'activity';
 		
@@ -276,16 +294,17 @@ export default function ActivityListScreen({ onNavigate }) {
 			return;
 		}
 		
-		// No cache, fetch from server
-		apiFetch({ path: `/buddyboss/v1/features/activity/settings` })
+		// No cache, fetch from server via AJAX
+		ajaxFetch('bb_admin_get_feature_settings', { feature_id: featureId })
 			.then((response) => {
-				const data = response.data || response;
-				setSidePanels(data.side_panels || []);
-				setNavItems(data.navigation || []);
-				
-				// Cache the response for future use
-				setCachedFeatureData(featureId, data);
-				
+				if (response.success && response.data) {
+					const data = response.data;
+					setSidePanels(data.side_panels || []);
+					setNavItems(data.navigation || []);
+					
+					// Cache the response for future use
+					setCachedFeatureData(featureId, data);
+				}
 				setSidebarLoading(false);
 			})
 			.catch(() => {
@@ -311,47 +330,39 @@ export default function ActivityListScreen({ onNavigate }) {
 	const loadActivities = () => {
 		setIsLoading(true);
 
-		const params = new URLSearchParams({
+		const params = {
 			page: page.toString(),
 			per_page: perPage.toString(),
 			order: 'desc',
-			admin_view: '1', // Enable admin view to show all activities including hidden and comments
-			display_comments: 'stream', // Include activity comments in stream
-		});
+		};
 
 		if (search) {
-			params.append('search', search);
+			params.search = search;
 		}
 		if (actionType) {
-			params.append('type', actionType);
+			params.type = actionType;
 		}
 		if (statusFilter) {
-			params.append('spam', statusFilter);
+			params.spam = statusFilter;
 		}
 
-		// Use parse: false to access response headers for pagination
-		apiFetch({ 
-			path: `/buddyboss/v1/admin-activity?${params.toString()}`,
-			parse: false 
-		})
+		// Use AJAX instead of REST API
+		getActivities(params)
 			.then((response) => {
-				// Get total from response headers
-				const totalItems = parseInt(response.headers.get('X-WP-Total') || '0', 10);
-				setTotal(totalItems);
-				
-				// Parse JSON body
-				return response.json();
-			})
-			.then((data) => {
-				console.log('Activity API Response:', data);
-				// Handle both array response and wrapped response
-				const activities = Array.isArray(data) ? data : (data.data || data || []);
-				console.log('Parsed activities:', activities, 'Total:', total);
-				setActivities(Array.isArray(activities) ? activities : []);
+				console.log('Activity AJAX Response:', response);
+				if (response.success && response.data) {
+					const activities = response.data.activities || [];
+					const totalItems = response.data.total || 0;
+					setActivities(Array.isArray(activities) ? activities : []);
+					setTotal(totalItems);
+				} else {
+					setActivities([]);
+					setTotal(0);
+				}
 				setIsLoading(false);
 			})
 			.catch((error) => {
-				console.error('Activity API Error:', error);
+				console.error('Activity AJAX Error:', error);
 				setActivities([]);
 				setTotal(0);
 				setIsLoading(false);
@@ -384,17 +395,16 @@ export default function ActivityListScreen({ onNavigate }) {
 				return;
 			}
 
+			// Use AJAX for bulk delete
 			Promise.all(
-				selectedIds.map((id) =>
-					apiFetch({
-						path: `/buddyboss/v1/admin-activity/${id}`,
-						method: 'DELETE',
-						headers: { 'X-WP-Nonce': bbAdminData?.nonce || '' },
-					})
-				)
+				selectedIds.map((id) => deleteActivity(id))
 			).then(() => {
 				setSelectedIds([]);
 				setBulkAction('');
+				loadActivities();
+			}).catch((error) => {
+				console.error('Bulk delete error:', error);
+				alert(__('Some activities may not have been deleted.', 'buddyboss'));
 				loadActivities();
 			});
 		}
@@ -407,12 +417,14 @@ export default function ActivityListScreen({ onNavigate }) {
 
 		setOpenMenuId(null);
 
-		apiFetch({
-			path: `/buddyboss/v1/admin-activity/${activityId}`,
-			method: 'DELETE',
-		})
-			.then(() => {
-				loadActivities();
+		// Use AJAX instead of REST API
+		deleteActivity(activityId)
+			.then((response) => {
+				if (response.success) {
+					loadActivities();
+				} else {
+					alert(response.data?.message || __('Failed to delete activity.', 'buddyboss'));
+				}
 			})
 			.catch((error) => {
 				console.error('Error deleting activity:', error);
@@ -465,7 +477,7 @@ export default function ActivityListScreen({ onNavigate }) {
 		
 		setIsSaving(true);
 		
-		// Build update data matching PHP REST API expectations
+		// Build update data matching PHP AJAX handler expectations
 		const updateData = {
 			// Core activity fields (matching old admin field names)
 			// Use 'activity_action' to avoid conflict with WordPress 'action' parameter
@@ -477,28 +489,28 @@ export default function ActivityListScreen({ onNavigate }) {
 			user_id: parseInt(editFormData.user_id) || editingActivity.user_id,
 			item_id: parseInt(editFormData.item_id) || 0,
 			secondary_item_id: parseInt(editFormData.secondary_item_id) || 0,
-			is_spam: editFormData.is_spam,
+			is_spam: editFormData.is_spam ? '1' : '0',
 			topic_id: editFormData.topic ? parseInt(editFormData.topic) : 0,
 		};
 
-		console.log('Updating activity:', editingActivity.id, updateData);
+		console.log('Updating activity via AJAX:', editingActivity.id, updateData);
 
-		apiFetch({
-			path: `/buddyboss/v1/admin-activity/${editingActivity.id}`,
-			method: 'PUT',
-			data: updateData,
-		})
+		// Use AJAX instead of REST API
+		updateActivity(editingActivity.id, updateData)
 			.then((response) => {
-				console.log('Activity updated successfully:', response);
-				setIsEditModalOpen(false);
-				setEditingActivity(null);
-				loadActivities();
+				console.log('Activity AJAX update response:', response);
+				if (response.success) {
+					setIsEditModalOpen(false);
+					setEditingActivity(null);
+					loadActivities();
+				} else {
+					const errorMessage = response.data?.message || __('Failed to update activity.', 'buddyboss');
+					alert(errorMessage);
+				}
 			})
 			.catch((error) => {
-				console.error('Error updating activity (PUT):', error);
-				
-				// Show detailed error
-				const errorMessage = error.message || error.data?.message || __('Failed to update activity.', 'buddyboss');
+				console.error('Error updating activity via AJAX:', error);
+				const errorMessage = error.message || __('Failed to update activity.', 'buddyboss');
 				alert(errorMessage);
 			})
 			.finally(() => {
@@ -524,15 +536,14 @@ export default function ActivityListScreen({ onNavigate }) {
 
 		setOpenMenuId(null);
 
-		apiFetch({
-			path: `/buddyboss/v1/admin-activity/${activityId}`,
-			method: 'PUT',
-			data: {
-				is_spam: !isCurrentlySpam,
-			},
-		})
-			.then(() => {
-				loadActivities();
+		// Use AJAX instead of REST API
+		spamActivity(activityId, !isCurrentlySpam)
+			.then((response) => {
+				if (response.success) {
+					loadActivities();
+				} else {
+					alert(response.data?.message || __('Failed to update activity spam status.', 'buddyboss'));
+				}
 			})
 			.catch((error) => {
 				console.error('Error marking activity as spam:', error);

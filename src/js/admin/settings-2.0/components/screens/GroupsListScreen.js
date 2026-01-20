@@ -15,6 +15,7 @@ import apiFetch from '@wordpress/api-fetch';
 import { SideNavigation } from '../SideNavigation';
 import GroupModal from '../modals/GroupModal';
 import { getCachedFeatureData, setCachedFeatureData, getCachedSidebarData } from '../../utils/featureCache';
+import { ajaxFetch } from '../../utils/ajax';
 
 /**
  * Privacy badge icon component
@@ -168,17 +169,18 @@ export default function GroupsListScreen({ onNavigate, openCreateModal = false }
 			return;
 		}
 		
-		// No cache, fetch from server
-		apiFetch({ path: '/buddyboss/v1/features/groups/settings' })
+		// No cache, fetch from server via AJAX
+		ajaxFetch('bb_admin_get_feature_settings', { feature_id: featureId })
 			.then((response) => {
-				// Response is wrapped in BB_REST_Response::success() which adds a 'data' property
-				const data = response.data || response;
-				console.log('Groups sidebar data:', data);
-				setSidePanels(data.side_panels || []);
-				setNavItems(data.navigation || []);
-				
-				// Cache the response for future use
-				setCachedFeatureData(featureId, data);
+				if (response.success && response.data) {
+					const data = response.data;
+					console.log('Groups sidebar data:', data);
+					setSidePanels(data.side_panels || []);
+					setNavItems(data.navigation || []);
+					
+					// Cache the response for future use
+					setCachedFeatureData(featureId, data);
+				}
 			})
 			.catch((error) => {
 				console.error('Error loading sidebar data:', error);

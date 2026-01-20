@@ -72,9 +72,12 @@ function bb_admin_settings_2_0_init() {
 		require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-2.0-page.php';
 	}
 
-	// Load AJAX handler.
+	// Load AJAX handlers.
 	if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/class-bb-admin-settings-ajax.php' ) ) {
 		require_once buddypress()->plugin_dir . 'bp-core/admin/class-bb-admin-settings-ajax.php';
+	}
+	if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/class-bb-admin-activity-ajax.php' ) ) {
+		require_once buddypress()->plugin_dir . 'bp-core/admin/class-bb-admin-activity-ajax.php';
 	}
 
 	// Load feature registrations.

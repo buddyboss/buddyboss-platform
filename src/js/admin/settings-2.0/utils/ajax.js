@@ -80,3 +80,79 @@ export function searchSettings(query) {
 export function getFeatureSettings(featureId) {
 	return ajaxFetch('bb_admin_get_feature_settings', { feature_id: featureId });
 }
+
+/*
+|--------------------------------------------------------------------------
+| Activity AJAX Functions
+|--------------------------------------------------------------------------
+*/
+
+/**
+ * Get activity types
+ *
+ * @return {Promise} Promise resolving to activity types array
+ */
+export function getActivityTypes() {
+	return ajaxFetch('bb_admin_get_activity_types');
+}
+
+/**
+ * Get activity topics
+ *
+ * @return {Promise} Promise resolving to activity topics array
+ */
+export function getActivityTopics() {
+	return ajaxFetch('bb_admin_get_activity_topics');
+}
+
+/**
+ * Get activities list
+ *
+ * @param {Object} params - Query parameters
+ * @return {Promise} Promise resolving to activities data
+ */
+export function getActivities(params = {}) {
+	return ajaxFetch('bb_admin_get_activities', params);
+}
+
+/**
+ * Get single activity
+ *
+ * @param {number} activityId - Activity ID
+ * @return {Promise} Promise resolving to activity data
+ */
+export function getActivity(activityId) {
+	return ajaxFetch('bb_admin_get_activity', { activity_id: activityId });
+}
+
+/**
+ * Update activity
+ *
+ * @param {number} activityId - Activity ID
+ * @param {Object} data       - Activity data to update
+ * @return {Promise} Promise resolving to updated activity
+ */
+export function updateActivity(activityId, data) {
+	return ajaxFetch('bb_admin_update_activity', { activity_id: activityId, ...data });
+}
+
+/**
+ * Delete activity
+ *
+ * @param {number} activityId - Activity ID
+ * @return {Promise} Promise resolving to response
+ */
+export function deleteActivity(activityId) {
+	return ajaxFetch('bb_admin_delete_activity', { activity_id: activityId });
+}
+
+/**
+ * Mark activity as spam/ham
+ *
+ * @param {number}  activityId - Activity ID
+ * @param {boolean} isSpam     - Whether to mark as spam (true) or ham (false)
+ * @return {Promise} Promise resolving to response
+ */
+export function spamActivity(activityId, isSpam = true) {
+	return ajaxFetch('bb_admin_spam_activity', { activity_id: activityId, is_spam: isSpam ? '1' : '0' });
+}

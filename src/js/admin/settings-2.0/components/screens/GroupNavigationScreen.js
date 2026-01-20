@@ -15,6 +15,8 @@ import { __ } from '@wordpress/i18n';
 import { Spinner, ToggleControl, SelectControl } from '@wordpress/components';
 import apiFetch from '@wordpress/api-fetch';
 import { SideNavigation } from '../SideNavigation';
+import { ajaxFetch } from '../../utils/ajax';
+import { getCachedFeatureData, setCachedFeatureData, getCachedSidebarData } from '../../utils/featureCache';
 
 /**
  * Drag handle icon component
@@ -79,12 +81,30 @@ export default function GroupNavigationScreen({ onNavigate }) {
 	const [navMenuItems, setNavMenuItems] = useState([]);
 	const [sidebarLoading, setSidebarLoading] = useState(true);
 
-	// Load sidebar data
+	// Load sidebar data - use cache if available
 	useEffect(() => {
-		apiFetch({ path: `/buddyboss/v1/features/groups/settings` })
+		const featureId = 'groups';
+		
+		// Check cache first
+		const cachedSidebar = getCachedSidebarData(featureId);
+		if (cachedSidebar) {
+			setSidePanels(cachedSidebar.sidePanels);
+			setNavMenuItems(cachedSidebar.navItems);
+			setSidebarLoading(false);
+			return;
+		}
+		
+		// No cache, fetch from server via AJAX
+		ajaxFetch('bb_admin_get_feature_settings', { feature_id: featureId })
 			.then((response) => {
-				setSidePanels(response.data?.side_panels || []);
-				setNavMenuItems(response.data?.navigation || []);
+				if (response.success && response.data) {
+					const data = response.data;
+					setSidePanels(data.side_panels || []);
+					setNavMenuItems(data.navigation || []);
+					
+					// Cache the response for future use
+					setCachedFeatureData(featureId, data);
+				}
 				setSidebarLoading(false);
 			})
 			.catch(() => {
