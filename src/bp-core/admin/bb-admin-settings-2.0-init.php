@@ -31,17 +31,8 @@ function bb_admin_settings_2_0_init() {
 	if ( ! class_exists( 'BB_REST_Response' ) ) {
 		require_once buddypress()->plugin_dir . 'bp-core/classes/class-bb-rest-response.php';
 	}
-	if ( ! class_exists( 'BB_REST_Features_Controller' ) ) {
-		require_once buddypress()->plugin_dir . 'bp-core/classes/class-bb-rest-features-controller.php';
-	}
-	if ( ! class_exists( 'BB_REST_Settings_Search_Controller' ) ) {
-		require_once buddypress()->plugin_dir . 'bp-core/classes/class-bb-rest-settings-search-controller.php';
-	}
 	if ( ! class_exists( 'BB_REST_Dashboard_Controller' ) ) {
 		require_once buddypress()->plugin_dir . 'bp-core/classes/class-bb-rest-dashboard-controller.php';
-	}
-	if ( ! class_exists( 'BB_REST_Activity_Controller' ) ) {
-		require_once buddypress()->plugin_dir . 'bp-core/classes/class-bb-rest-activity-controller.php';
 	}
 	if ( ! class_exists( 'BB_REST_Groups_Controller' ) ) {
 		require_once buddypress()->plugin_dir . 'bp-core/classes/class-bb-rest-groups-controller.php';
@@ -99,24 +90,15 @@ add_action( 'bp_loaded', 'bb_admin_settings_2_0_init', 4 ); // Before feature re
 /**
  * Register REST API controllers.
  *
+ * Note: Features, Settings Search, and Activity controllers have been migrated to AJAX.
+ * See class-bb-admin-settings-ajax.php and class-bb-admin-activity-ajax.php
+ *
  * @since BuddyBoss 3.0.0
  */
 function bb_admin_settings_2_0_rest_api_init() {
-	// Register Features Controller.
-	$features_controller = new BB_REST_Features_Controller();
-	$features_controller->register_routes();
-
-	// Register Settings Search Controller.
-	$settings_search_controller = new BB_REST_Settings_Search_Controller();
-	$settings_search_controller->register_routes();
-
 	// Register Dashboard Controller.
 	$dashboard_controller = new BB_REST_Dashboard_Controller();
 	$dashboard_controller->register_routes();
-
-	// Register Activity Controller.
-	$activity_controller = new BB_REST_Activity_Controller();
-	$activity_controller->register_routes();
 
 	// Register Groups Controller.
 	$groups_controller = new BB_REST_Groups_Controller();
@@ -143,37 +125,3 @@ function bb_admin_settings_2_0_activate() {
 // This will be called via 'bb_plugin_activated' action or similar.
 add_action( 'bb_settings_history_init', array( 'BB_Settings_History', 'maybe_create_table' ) );
 
-/**
- * Modify activity REST API query args for admin view.
- *
- * When the 'admin_view' parameter is passed, this filter ensures all activities
- * are returned (including hidden, all statuses, all privacy levels, and comments).
- *
- * @since BuddyBoss 3.0.0
- *
- * @param array           $args    Query arguments.
- * @param WP_REST_Request $request Request object.
- * @return array Modified query arguments.
- */
-function bb_admin_settings_2_0_activity_query_args( $args, $request ) {
-	// Check if this is an admin view request.
-	if ( ! empty( $request->get_param( 'admin_view' ) ) && current_user_can( 'manage_options' ) ) {
-		// Show all activities including hidden ones.
-		$args['show_hidden'] = true;
-
-		// Include activity comments in the stream (like old admin implementation).
-		$args['display_comments'] = 'stream';
-
-		// Show all statuses (published, scheduled, draft).
-		$args['status'] = false;
-
-		// Show all privacy levels.
-		$args['privacy'] = false;
-
-		// No scope restriction.
-		$args['scope'] = false;
-	}
-
-	return $args;
-}
-add_filter( 'bp_rest_activity_get_items_query_args', 'bb_admin_settings_2_0_activity_query_args', 10, 2 );
