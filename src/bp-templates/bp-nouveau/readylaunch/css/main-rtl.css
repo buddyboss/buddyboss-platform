@@ -8871,6 +8871,49 @@ li.bb-rl-hideshow {
   width: 1px;
 }
 
+/* Notifications Admin bar */
+#wpadminbar #wp-admin-bar-bp-notifications-default.ab-submenu {
+  width: 370px;
+  max-height: calc(90vh - 50px);
+  overflow: auto;
+}
+
+#wpadminbar #wp-admin-bar-bp-notifications-default.ab-submenu > li {
+  padding: 5px 0;
+}
+
+#wpadminbar #wp-admin-bar-bp-notifications-default.ab-submenu > li .ab-item {
+  display: flex;
+  gap: var(--bb-rl-space-200);
+  height: auto;
+}
+
+#wpadminbar #wp-admin-bar-bp-notifications-default.ab-submenu > li .ab-item a {
+  height: auto;
+  padding: 0;
+  white-space: normal;
+  line-height: 1.4;
+}
+
+#wpadminbar #wp-admin-bar-bp-notifications-default.ab-submenu > li#wp-admin-bar-notification-view-all {
+  text-align: center;
+}
+
+#wpadminbar #wp-admin-bar-bp-notifications-default.ab-submenu > li#wp-admin-bar-notification-view-all .ab-item {
+  justify-content: center;
+}
+
+#wpadminbar #wp-admin-bar-bp-notifications-default.ab-submenu .notification-avatar img {
+  max-width: 36px;
+  max-height: 36px;
+  object-fit: cover;
+  margin-top: 4px;
+}
+
+#wpadminbar #wp-admin-bar-bp-notifications-default.ab-submenu .notification-avatar > a > i {
+  display: none;
+}
+
 .bb-rl-crop-container {
   position: fixed;
   z-index: 999991;
