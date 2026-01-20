@@ -3387,10 +3387,11 @@ window.bp = window.bp || {};
 				privacy_changed           = ( document_privacy !== '' && document_privacy !== original_privacy ),
 				pattern                   = '';
 
-			if ( $mediaItem.length ) {
-				pattern = /[?\[\]=<>:;,'"&$#*()|~`!{}%+ \/]+/g; // regex to find not supported characters. ?[]/=<>:;,'"&$#*()|~`!{}%+ {space}.
-			} else if ( eventTarget.closest( '.ac-folder-list' ).length ) {
-				pattern = /[\\/?%*:|"<>]+/g; // regex to find not supported characters - \ / ? % * : | " < >
+			// Use documentType to determine validation pattern.
+			if ( 'folder' === documentType ) {
+				pattern = /[\\/?%*:|"<>]+/g; // Folder: \ / ? % * : | " < >
+			} else {
+				pattern = /[?\[\]=<>:;,'"&$#*()|~`!{}%+ \/]+/g; // Document: ?[]/=<>:;,'"&$#*()|~`!{}%+ {space}
 			}
 
 			var matches     = pattern.exec( document_name_val ),
@@ -3402,8 +3403,9 @@ window.bp = window.bp || {};
 				document_edit.addClass( 'error' );
 			}
 
-			if ( $mediaItem.length ) {
-				if ( document_name_val.indexOf( '\\\\' ) !== -1 || matchStatus ) { // Also check if filename has "\\".
+			// For documents, also check for backslash.
+			if ( 'document' === documentType ) {
+				if ( document_name_val.indexOf( '\\\\' ) !== -1 || matchStatus ) {
 					document_edit.addClass( 'error' );
 				} else {
 					document_edit.removeClass( 'error' );
