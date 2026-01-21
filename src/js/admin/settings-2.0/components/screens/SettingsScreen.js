@@ -9,7 +9,6 @@ import { useState, useEffect } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { Button, Spinner, ToggleControl } from '@wordpress/components';
 import apiFetch from '@wordpress/api-fetch';
-import { invalidateFeatureCache } from '../../utils/featureCache';
 
 /**
  * AJAX request helper for features.
@@ -139,9 +138,6 @@ export function SettingsScreen({ onNavigate }) {
 								: feature
 						)
 					);
-
-					// Invalidate cache for this feature so fresh data is fetched when accessing settings
-					invalidateFeatureCache(featureId);
 				} else {
 					console.error('Failed to toggle feature:', response.data?.message);
 					alert(response.data?.message || __('Failed to toggle feature.', 'buddyboss'));
