@@ -3381,10 +3381,10 @@ window.bp = window.bp || {};
 				documentType              = $mediaItem.find( '.media-folder_name > i.media-document-type' ).attr( 'data-item-id' ),
 				document_name_val         = document_edit.val().trim(),
 				document_privacy          = ( $modal.find( '#bb-rl-folder-privacy-select' ).length > 0 ) ? $modal.find( '#bb-rl-folder-privacy-select' ).val() : '',
-				original_name             = document_name.text().trim(),
-				original_privacy          = $mediaItem.find( '.bb_more_options .ac-document-edit' ).attr( 'data-privacy' ) || '',
-				name_changed              = ( document_name_val !== original_name ),
-				privacy_changed           = ( document_privacy !== '' && document_privacy !== original_privacy ),
+				originalName              = document_name.text().trim(),
+				originalPrivacy           = $mediaItem.find( '.bb_more_options .ac-document-edit' ).attr( 'data-privacy' ) || '',
+				nameChanged               = ( document_name_val !== originalName ),
+				privacyChanged            = ( document_privacy !== '' && document_privacy !== originalPrivacy ),
 				pattern                   = '';
 
 			// Use documentType to determine validation pattern.
@@ -3417,7 +3417,7 @@ window.bp = window.bp || {};
 			}
 
 			// If nothing changed, just close the modal.
-			if ( ! name_changed && ! privacy_changed ) {
+			if ( ! nameChanged && ! privacyChanged ) {
 				$modal.find( '#bp-media-edit-document-close' ).trigger( 'click' );
 				event.preventDefault();
 				return;
@@ -3437,26 +3437,26 @@ window.bp = window.bp || {};
 						document_type: documentType,
 						name: document_name_val,
 						privacy: document_privacy,
-						update_name: name_changed,
-						update_privacy: privacy_changed,
+						update_name: nameChanged,
+						update_privacy: privacyChanged,
 						_wpnonce: bbRlNonce.media
 					},
 					success: function ( response ) {
 						if ( response.success ) {
 							// If name was updated, document HTML is returned - use it to update.
-							if ( name_changed && 'undefined' !== typeof response.data.response.document && 0 < $( response.data.response.document ).length ) {
+							if ( nameChanged && 'undefined' !== typeof response.data.response.document && 0 < $( response.data.response.document ).length ) {
 								$mediaItem.html( $( response.data.response.document ).html() );
 							} else {
 								// Privacy-only update or no HTML returned - update fields manually.
 
 								// Update name if changed.
-								if ( name_changed && response.data.response.name ) {
+								if ( nameChanged && response.data.response.name ) {
 									document_name_update_data.attr( 'data-document-title', response.data.response.name + '.' + document_name_update_data.data( 'extension' ) );
 									document_name.html( response.data.response.name );
 								}
 
 								// Update privacy label if changed.
-								if ( privacy_changed && 'undefined' !== typeof response.data.response.privacy_label ) {
+								if ( privacyChanged && 'undefined' !== typeof response.data.response.privacy_label ) {
 									var $privacyLabel = $mediaItem.find( '.media-folder_details__bottom .bb-rl-privacy-label' );
 									if ( $privacyLabel.length > 0 ) {
 										$privacyLabel.html( response.data.response.privacy_label );
@@ -3464,7 +3464,7 @@ window.bp = window.bp || {};
 								}
 
 								// Update privacy data attribute if changed.
-								if ( privacy_changed && 'undefined' !== typeof response.data.response.privacy ) {
+								if ( privacyChanged && 'undefined' !== typeof response.data.response.privacy ) {
 									var $editBtn = $mediaItem.find( '.bb_more_options .ac-document-edit' );
 									if ( $editBtn.length > 0 ) {
 										$editBtn.attr( 'data-privacy', response.data.response.privacy );
