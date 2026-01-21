@@ -3380,13 +3380,18 @@ window.bp = window.bp || {};
 				attachment_document_id    = $mediaItem.find( '.media-folder_name > i.media-document-attachment-id' ).attr( 'data-item-id' ),
 				documentType              = $mediaItem.find( '.media-folder_name > i.media-document-type' ).attr( 'data-item-id' ),
 				document_name_val         = document_edit.val().trim(),
-				document_privacy = ( $modal.find( '#bb-rl-folder-privacy-select' ).length > 0 ) ? $modal.find( '#bb-rl-folder-privacy-select' ).val() : '',
+				document_privacy          = ( $modal.find( '#bb-rl-folder-privacy-select' ).length > 0 ) ? $modal.find( '#bb-rl-folder-privacy-select' ).val() : '',
+				originalName              = document_name.text().trim(),
+				originalPrivacy           = $mediaItem.find( '.bb_more_options .ac-document-edit' ).attr( 'data-privacy' ) || '',
+				nameChanged               = ( document_name_val !== originalName ),
+				privacyChanged            = ( document_privacy !== '' && document_privacy !== originalPrivacy ),
 				pattern                   = '';
 
-			if ( $mediaItem.length ) {
-				pattern = /[?\[\]=<>:;,'"&$#*()|~`!{}%+ \/]+/g; // regex to find not supported characters. ?[]/=<>:;,'"&$#*()|~`!{}%+ {space}.
-			} else if ( eventTarget.closest( '.ac-folder-list' ).length ) {
-				pattern = /[\\/?%*:|"<>]+/g; // regex to find not supported characters - \ / ? % * : | " < >
+			// Use documentType to determine validation pattern.
+			if ( 'folder' === documentType ) {
+				pattern = /[\\/?%*:|"<>]+/g; // Folder: \ / ? % * : | " < >
+			} else {
+				pattern = /[?\[\]=<>:;,'"&$#*()|~`!{}%+ \/]+/g; // Document: ?[]/=<>:;,'"&$#*()|~`!{}%+ {space}
 			}
 
 			var matches     = pattern.exec( document_name_val ),
@@ -3398,8 +3403,9 @@ window.bp = window.bp || {};
 				document_edit.addClass( 'error' );
 			}
 
-			if ( $mediaItem.length ) {
-				if ( document_name_val.indexOf( '\\\\' ) !== -1 || matchStatus ) { // Also check if filename has "\\".
+			// For documents, also check for backslash.
+			if ( 'document' === documentType ) {
+				if ( document_name_val.indexOf( '\\\\' ) !== -1 || matchStatus ) {
 					document_edit.addClass( 'error' );
 				} else {
 					document_edit.removeClass( 'error' );
@@ -3410,48 +3416,70 @@ window.bp = window.bp || {};
 				return; // prevent user to add not supported characters.
 			}
 
+			// If nothing changed, just close the modal.
+			if ( ! nameChanged && ! privacyChanged ) {
+				$modal.find( '#bp-media-edit-document-close' ).trigger( 'click' );
+				event.preventDefault();
+				return;
+			}
+
 			eventTarget.addClass( 'saving' );
 
-			// Make ajax call to save new file name here.
-			// use variable 'document_name_val' as a new name while making an ajax call.
+			// Single AJAX call to handle name and/or privacy update.
 			$.ajax(
 				{
 					url: bbRlAjaxUrl,
 					type: 'post',
 					data: {
-						action: 'document_update_file_name',
+						action: 'bb_rl_document_rename_and_privacy_update',
 						document_id: document_id,
 						attachment_document_id: attachment_document_id,
 						document_type: documentType,
-						document_privacy: document_privacy,
 						name: document_name_val,
+						privacy: document_privacy,
+						update_name: nameChanged,
+						update_privacy: privacyChanged,
 						_wpnonce: bbRlNonce.media
 					},
 					success: function ( response ) {
 						if ( response.success ) {
-							if ( 'undefined' !== typeof response.data.document && 0 < $( response.data.document ).length ) {
-								$mediaItem.html( $( response.data.document ).html() );
-								eventTarget.removeClass( 'saving' );
+							// If name was updated, document HTML is returned - use it to update.
+							if ( nameChanged && 'undefined' !== typeof response.data.response.document && 0 < $( response.data.response.document ).length ) {
+								$mediaItem.html( $( response.data.response.document ).html() );
 							} else {
-								document_name_update_data.attr( 'data-document-title', response.data.response.title + '.' + document_name_update_data.data( 'extension' ) );
-								document_name.html( response.data.response.title );
+								// Privacy-only update or no HTML returned - update fields manually.
 
-								if (
-									'undefined' !== typeof response.data.response.privacy_label &&
-									$mediaItem.find( '.media-folder_details__bottom .bb-rl-privacy-label' ).length > 0
-								) {
-									$mediaItem.find( '.media-folder_details__bottom .bb-rl-privacy-label' ).html( response.data.response.privacy_label );
+								// Update name if changed.
+								if ( nameChanged && response.data.response.name ) {
+									document_name_update_data.attr( 'data-document-title', response.data.response.name + '.' + document_name_update_data.data( 'extension' ) );
+									document_name.html( response.data.response.name );
 								}
 
-								if (
-									'undefined' !== typeof response.data.response.privacy &&
-									$mediaItem.find( '.bb_more_options .ac-document-edit' ).length > 0
-								) {
-									$mediaItem.find( '.bb_more_options .ac-document-edit' ).attr( 'data-privacy', response.data.response.privacy );
+								// Update privacy label if changed.
+								if ( privacyChanged && 'undefined' !== typeof response.data.response.privacy_label ) {
+									var $privacyLabel = $mediaItem.find( '.media-folder_details__bottom .bb-rl-privacy-label' );
+									if ( $privacyLabel.length > 0 ) {
+										$privacyLabel.html( response.data.response.privacy_label );
+									}
 								}
 
-								eventTarget.removeClass( 'saving' );
+								// Update privacy data attribute if changed.
+								if ( privacyChanged && 'undefined' !== typeof response.data.response.privacy ) {
+									var $editBtn = $mediaItem.find( '.bb_more_options .ac-document-edit' );
+									if ( $editBtn.length > 0 ) {
+										$editBtn.attr( 'data-privacy', response.data.response.privacy );
+									}
+								}
+
+								// Update document URL if returned (for privacy-only updates).
+								if ( 'undefined' !== typeof response.data.response.url ) {
+									var $docLink = $mediaItem.find( 'a.bb-rl-open-document-theatre' );
+									if ( $docLink.length > 0 ) {
+										$docLink.attr( 'href', response.data.response.url );
+									}
+								}
 							}
+							eventTarget.removeClass( 'saving' );
 						} else {
 							eventTarget.removeClass( 'saving' );
 							/* jshint ignore:start */
@@ -3459,7 +3487,7 @@ window.bp = window.bp || {};
 							/* jshint ignore:end */
 						}
 
-						// Trigger the close modal function
+						// Trigger the close modal function.
 						$modal.find( '#bp-media-edit-document-close' ).trigger( 'click' );
 					},
 				}
