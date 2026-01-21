@@ -43,10 +43,16 @@
 
 						var bp_help_cards = '';
 						$.each( docs, function ( index, value ) {
+							// Use excerpt if available, otherwise generate one from content.
+							var card_excerpt = value.excerpt && value.excerpt.rendered ? value.excerpt.rendered : '';
+							if ( ! card_excerpt ) {
+								card_excerpt = bp_help_generate_excerpt( value.content.rendered );
+							}
+
 							bp_help_cards += '<div class="bp-help-card bp-help-menu-wrap">\n' +
 								'\t\t\t<div class="inside">';
 							bp_help_cards += '<h2><a href="' + BP_HELP.bb_help_url + '&article=' + value.id + '">' + value.title.rendered + '</a></h2>';
-							bp_help_cards += value.content.rendered;
+							bp_help_cards += card_excerpt;
 							bp_help_cards += '</div>\n' +
 								'\t\t</div>';
 						} );
@@ -86,9 +92,9 @@
 							$.each( doc.hierarchy, function ( index, value ) {
 
 								var card_excerpt = value.post_excerpt;
-								// If excerpt empty then show post content
+								// If excerpt empty then generate one from post content
 								if ( !( card_excerpt ) ) {
-									card_excerpt = value.post_content;
+									card_excerpt = bp_help_generate_excerpt( value.post_content );
 								}
 
 								bp_help_cards += '<div class="bp-help-card bp-help-menu-wrap">\n' +
@@ -190,6 +196,45 @@
 					return false;
 				}
 				return article_id;
+			}
+
+			/**
+			 * Generate an excerpt from HTML content by stripping tags and truncating.
+			 *
+			 * @param {string} content - The HTML content to generate excerpt from.
+			 * @param {number} maxLength - Maximum character length (default: 150).
+			 * @return {string} The generated excerpt wrapped in a paragraph tag.
+			 */
+			function bp_help_generate_excerpt( content, maxLength ) {
+				if ( ! content ) {
+					return '';
+				}
+
+				maxLength = maxLength || 150;
+
+				// Use DOMParser for safer HTML parsing.
+				var parser = new DOMParser();
+				var doc = parser.parseFromString( content, 'text/html' );
+				var textContent = doc.body.textContent || '';
+
+				// Remove YouTube URLs.
+				textContent = textContent.replace( /https?:\/\/(www\.)?(youtube\.com|youtu\.be)\/[^\s]+/gi, '' );
+
+				// Trim whitespace and normalize spaces.
+				textContent = textContent.replace( /\s+/g, ' ' ).trim();
+
+				// Truncate to maxLength and add ellipsis if needed.
+				if ( textContent.length > maxLength ) {
+					// Find the last space within maxLength to avoid cutting words.
+					var truncated = textContent.substring( 0, maxLength );
+					var lastSpace = truncated.lastIndexOf( ' ' );
+					if ( lastSpace > maxLength * 0.8 ) {
+						truncated = truncated.substring( 0, lastSpace );
+					}
+					textContent = truncated + '...';
+				}
+
+				return '<p>' + textContent + '</p>';
 			}
 
 			function bp_help_js_render_hierarchy_dom( doc ) {
