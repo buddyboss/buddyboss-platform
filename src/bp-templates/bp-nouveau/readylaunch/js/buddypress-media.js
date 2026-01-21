@@ -3431,7 +3431,7 @@ window.bp = window.bp || {};
 					url: bbRlAjaxUrl,
 					type: 'post',
 					data: {
-						action: 'bb_rl_document_rename_and_privacyupdate',
+						action: 'bb_rl_document_rename_and_privacy_update',
 						document_id: document_id,
 						attachment_document_id: attachment_document_id,
 						document_type: documentType,

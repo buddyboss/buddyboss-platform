@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 2.17.0\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2026-01-20 07:21:36+00:00\n"
+"POT-Creation-Date: 2026-01-21 05:09:49+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -12080,39 +12080,31 @@ msgstr ""
 msgid "Save Changes"
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:4612
+#: bp-core/classes/class-bb-readylaunch.php:4617
 msgid "Please login to perform this action."
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:4643
+#: bp-core/classes/class-bb-readylaunch.php:4648
 msgid "You don't have permission to edit this document."
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:4654
+#: bp-core/classes/class-bb-readylaunch.php:4659
 msgid "Failed to rename document."
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:4662
-#: bp-core/classes/class-bb-readylaunch.php:4723
+#: bp-core/classes/class-bb-readylaunch.php:4667
+#: bp-core/classes/class-bb-readylaunch.php:4724
 #: bp-templates/bp-nouveau/includes/document/ajax.php:1651
 #: bp-templates/bp-nouveau/includes/media/ajax.php:802
 #: bp-templates/bp-nouveau/includes/video/ajax.php:880
 msgid "Invalid privacy status."
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:4700
+#: bp-core/classes/class-bb-readylaunch.php:4705
 msgid "You don't have permission to edit this folder."
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:4707
-#: bp-templates/bp-nouveau/includes/document/ajax.php:716
-#: bp-templates/bp-nouveau/includes/document/ajax.php:830
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1138
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1228
-msgid "Invalid folder name"
-msgstr ""
-
-#: bp-core/classes/class-bb-readylaunch.php:4715
+#: bp-core/classes/class-bb-readylaunch.php:4716
 msgid "Failed to rename folder."
 msgstr ""
 
@@ -35560,6 +35552,13 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/document/ajax.php:820
 #: bp-templates/bp-nouveau/includes/document/ajax.php:1219
 msgid "Please enter title of folder."
+msgstr ""
+
+#: bp-templates/bp-nouveau/includes/document/ajax.php:716
+#: bp-templates/bp-nouveau/includes/document/ajax.php:830
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1138
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1228
+msgid "Invalid folder name"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/document/ajax.php:761

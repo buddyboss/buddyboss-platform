@@ -328,7 +328,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 			add_filter( 'bp_nouveau_get_submit_button', array( $this, 'bb_rl_modify_bp_nouveau_get_submit_button' ) );
 
-			add_action( 'wp_ajax_bb_rl_document_rename_and_privacyupdate', array( $this, 'bb_rl_document_rename_and_privacyupdate' ) );
+			add_action( 'wp_ajax_bb_rl_document_rename_and_privacy_update', array( $this, 'bb_rl_document_rename_and_privacy_update' ) );
 		}
 
 		/**
@@ -4598,13 +4598,18 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 */
-		public function bb_rl_document_rename_and_privacyupdate() {
+		public function bb_rl_document_rename_and_privacy_update() {
 			$response = array(
 				'feedback' => esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss' ),
 			);
 
 			// Bail if not a POST action.
 			if ( ! bp_is_post_request() ) {
+				wp_send_json_error( $response );
+			}
+
+			// Check if document component is active.
+			if ( ! bp_is_active( 'document' ) ) {
 				wp_send_json_error( $response );
 			}
 
@@ -4669,7 +4674,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				}
 
 				// Only generate document HTML if name was updated (needed for updated file links).
-				// When only privacy changes, skip HTML generation for better performance.
+				// When only privacy changes, skip HTML generation for better performance and return URL same as core ajax method.
 				if ( $update_name ) {
 					ob_start();
 					if (
@@ -4687,7 +4692,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					}
 					$result['document'] = ob_get_clean();
 				} else {
-					// For privacy-only updates, return URL like standard theme.
+					// For privacy only updates, return URL same as core ajax method.
 					$document_data = new BP_Document( $document_id );
 					if ( ! empty( $document_data->attachment_id ) ) {
 						$result['url'] = bp_document_download_link( $document_data->attachment_id, $document_id );
