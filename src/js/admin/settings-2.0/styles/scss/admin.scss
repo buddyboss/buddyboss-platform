@@ -4403,6 +4403,51 @@ $bb-border-radius-xs: 6px;
 	}
 }
 
+// Feature disabled notice
+.bb-admin-feature-disabled-notice {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	padding: 48px 24px;
+	text-align: center;
+	max-width: 600px;
+	margin: 0 auto;
+
+	.dashicons {
+		font-size: 48px;
+		width: 48px;
+		height: 48px;
+		color: #f0b849;
+		margin-bottom: 16px;
+	}
+
+	h2 {
+		margin: 0 0 12px 0;
+		font-size: 24px;
+		font-weight: 500;
+		line-height: 32px;
+		color: #2f2f2f;
+	}
+
+	p {
+		margin: 0 0 12px 0;
+		font-size: 14px;
+		line-height: 20px;
+		color: #666;
+
+		&:last-child {
+			margin-bottom: 0;
+		}
+	}
+
+	.bb-admin-feature-disabled-redirect {
+		font-style: italic;
+		color: #999;
+		margin-top: 24px;
+	}
+}
+
 // Global override for WordPress components label text-transform
 .bb-admin-group-type-modal__section .components-base-control__label,
 .bb-admin-group-modal__section .components-base-control__label,

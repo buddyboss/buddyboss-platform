@@ -323,6 +323,7 @@ class BB_Admin_Settings_Ajax {
 				'feature_id'  => $feature_id,
 				'label'       => $feature['label'],
 				'description' => $feature['description'] ?? '',
+				'status'      => $registry->is_feature_active( $feature_id ) ? 'active' : 'inactive',
 				'side_panels' => $formatted_side_panels,
 				'navigation'  => array_values( $nav_items ),
 				'settings'    => $settings,

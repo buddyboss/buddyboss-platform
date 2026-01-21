@@ -59,6 +59,7 @@ export function FeatureSettingsScreen({ featureId, sectionId, onNavigate }) {
 	const [saveError, setSaveError] = useState(null);
 	const [saveSuccess, setSaveSuccess] = useState(false);
 	const [activePanelId, setActivePanelId] = useState(sectionId || null);
+	const [isFeatureDisabled, setIsFeatureDisabled] = useState(false);
 
 	// Load feature settings via AJAX - only when featureId changes
 	// Uses caching to prevent re-fetching on navigation within the same feature
@@ -69,13 +70,25 @@ export function FeatureSettingsScreen({ featureId, sectionId, onNavigate }) {
 		if (cachedData) {
 			// Use cached data
 			setFeature(cachedData);
+
+			// Check if feature is disabled
+			if (cachedData.status !== 'active') {
+				setIsFeatureDisabled(true);
+				setIsLoading(false);
+				// Redirect to settings after a brief delay
+				setTimeout(() => {
+					onNavigate('/settings');
+				}, 2000);
+				return;
+			}
+
 			const loadedPanels = cachedData.side_panels || [];
 			setSidePanels(loadedPanels);
 			setNavItems(cachedData.navigation || []);
 			const loadedSettings = cachedData.settings || {};
 			setSettings(loadedSettings);
 			setOriginalSettings(JSON.parse(JSON.stringify(loadedSettings)));
-			
+
 			// Set active panel
 			if (sectionId && loadedPanels.some(p => p.id === sectionId)) {
 				setActivePanelId(sectionId);
@@ -94,15 +107,27 @@ export function FeatureSettingsScreen({ featureId, sectionId, onNavigate }) {
 				if (response.success && response.data) {
 					// Cache the response data
 					setCachedFeatureData(featureId, response.data);
-					
+
 					setFeature(response.data);
+
+					// Check if feature is disabled
+					if (response.data.status !== 'active') {
+						setIsFeatureDisabled(true);
+						setIsLoading(false);
+						// Redirect to settings after a brief delay
+						setTimeout(() => {
+							onNavigate('/settings');
+						}, 2000);
+						return;
+					}
+
 					const loadedPanels = response.data.side_panels || [];
 					setSidePanels(loadedPanels);
 					setNavItems(response.data.navigation || []);
 					const loadedSettings = response.data.settings || {};
 					setSettings(loadedSettings);
 					setOriginalSettings(JSON.parse(JSON.stringify(loadedSettings))); // Deep copy
-					
+
 					// Set active panel: use sectionId from props, or first panel with is_default, or first panel
 					if (sectionId && loadedPanels.some(p => p.id === sectionId)) {
 						setActivePanelId(sectionId);
@@ -244,6 +269,19 @@ export function FeatureSettingsScreen({ featureId, sectionId, onNavigate }) {
 		return (
 			<div className="bb-admin-feature-settings bb-admin-loading">
 				<Spinner />
+			</div>
+		);
+	}
+
+	if (isFeatureDisabled) {
+		return (
+			<div className="bb-admin-feature-settings bb-admin-not-found">
+				<div className="bb-admin-feature-disabled-notice">
+					<span className="dashicons dashicons-warning"></span>
+					<h2>{__('Feature Disabled', 'buddyboss')}</h2>
+					<p>{__('This feature is currently disabled. Please enable it from the settings page to access its configuration.', 'buddyboss')}</p>
+					<p className="bb-admin-feature-disabled-redirect">{__('Redirecting to settings...', 'buddyboss')}</p>
+				</div>
 			</div>
 		);
 	}
