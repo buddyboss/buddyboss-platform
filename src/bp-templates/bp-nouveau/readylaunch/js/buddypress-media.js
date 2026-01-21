@@ -3473,7 +3473,7 @@ window.bp = window.bp || {};
 
 								// Update document URL if returned (for privacy-only updates).
 								if ( 'undefined' !== typeof response.data.response.url ) {
-									var $docLink = $( document ).find( 'a.bb-rl-open-document-theatre[data-id="' + document_id + '"]' );
+									var $docLink = $mediaItem.find( 'a.bb-rl-open-document-theatre' );
 									if ( $docLink.length > 0 ) {
 										$docLink.attr( 'href', response.data.response.url );
 									}
