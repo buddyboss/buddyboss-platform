@@ -4703,10 +4703,6 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 				// Update name if requested.
 				if ( $update_name && ! empty( $name ) ) {
-					if ( strpbrk( $name, '\\/?%*:|"<>' ) !== false ) {
-						$response['feedback'] = esc_html__( 'Invalid folder name', 'buddyboss' );
-						wp_send_json_error( $response );
-					}
 					$renamed = bp_document_rename_folder( $document_id, $name );
 					if ( $renamed > 0 ) {
 						$result['name']    = $name;
