@@ -85,6 +85,22 @@ class BB_Admin_Settings_Ajax {
 	}
 
 	/**
+	 * Check if a feature is enabled.
+	 *
+	 * @since BuddyBoss 3.0.0
+	 *
+	 * @param string $feature_id Feature ID.
+	 *
+	 * @return bool
+	 */
+	private function is_feature_enabled( $feature_id ) {
+		// Get active components directly from option.
+		$active_components = bp_get_option( 'bp-active-components', array() );
+
+		return isset( $active_components[ $feature_id ] ) && ! empty( $active_components[ $feature_id ] );
+	}
+
+	/**
 	 * Get features.
 	 *
 	 * @since BuddyBoss 3.0.0
@@ -245,6 +261,21 @@ class BB_Admin_Settings_Ajax {
 			wp_send_json_error( array( 'message' => __( 'Feature not found.', 'buddyboss' ) ) );
 		}
 
+		// Check if feature is enabled.
+		if ( ! $this->is_feature_enabled( $feature_id ) ) {
+			wp_send_json_error(
+				array(
+					'message' => sprintf(
+						/* translators: %s: Feature label */
+						__( 'The "%s" feature is currently disabled. Please enable it first to view settings.', 'buddyboss' ),
+						$feature['label'] ?? $feature_id
+					),
+					'code'    => 'feature_disabled',
+				),
+				403
+			);
+		}
+
 		// Get all fields for current values.
 		$all_fields = $registry->get_all_fields( $feature_id );
 
@@ -359,6 +390,21 @@ class BB_Admin_Settings_Ajax {
 		$feature = $registry->get_feature( $feature_id );
 		if ( ! $feature ) {
 			wp_send_json_error( array( 'message' => __( 'Feature not found.', 'buddyboss' ) ) );
+		}
+
+		// Check if feature is enabled.
+		if ( ! $this->is_feature_enabled( $feature_id ) ) {
+			wp_send_json_error(
+				array(
+					'message' => sprintf(
+						/* translators: %s: Feature label */
+						__( 'Cannot save settings. The "%s" feature is currently disabled. Please enable it first.', 'buddyboss' ),
+						$feature['label'] ?? $feature_id
+					),
+					'code'    => 'feature_disabled',
+				),
+				403
+			);
 		}
 
 		// Get all fields for this feature to validate.

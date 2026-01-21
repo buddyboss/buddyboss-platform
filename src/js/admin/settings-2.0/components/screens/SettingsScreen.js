@@ -8,7 +8,7 @@
 import { useState, useEffect } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { Button, Spinner, ToggleControl } from '@wordpress/components';
-import apiFetch from '@wordpress/api-fetch';
+import { updateFeatureInCache } from '../Router';
 
 /**
  * AJAX request helper for features.
@@ -131,6 +131,8 @@ export function SettingsScreen({ onNavigate }) {
 				if (response.success) {
 					// Update feature status from response data (matches REST API format)
 					const updatedFeature = response.data?.data;
+					
+					// Update local state
 					setFeatures((prevFeatures) =>
 						prevFeatures.map((feature) =>
 							feature.id === featureId
@@ -138,6 +140,9 @@ export function SettingsScreen({ onNavigate }) {
 								: feature
 						)
 					);
+					
+					// Update the Router's features cache so feature check is accurate
+					updateFeatureInCache(featureId, updatedFeature);
 				} else {
 					console.error('Failed to toggle feature:', response.data?.message);
 					alert(response.data?.message || __('Failed to toggle feature.', 'buddyboss'));
