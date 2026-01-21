@@ -2696,6 +2696,21 @@ h2.has_tutorial_btn .bbapp-tutorial-btn .bb-button_filled:hover {
   border-color: #2370b1;
 }
 
+/* Utility class for hiding elements */
+.bp-hide {
+  display: none;
+}
+
+/* Avatar crop modal spacing */
+#avatar-crop-actions {
+  margin-top: 15px;
+}
+
+#avatar-crop-actions a.avatar-crop-cancel {
+  color: #555;
+  margin-top: 15px;
+}
+
 /*------------------------------------------------------------------------------
  * 11.0 Notices UI
  *----------------------------------------------------------------------------*/

@@ -2520,6 +2520,21 @@ h2.has_tutorial_btn {
 	}
 }
 
+/* Utility class for hiding elements */
+.bp-hide {
+	display: none;
+}
+
+/* Avatar crop modal spacing */
+#avatar-crop-actions {
+	margin-top: 15px;
+
+	a.avatar-crop-cancel {
+		color: #555;
+		margin-top: 15px;
+	}
+}
+
 /*------------------------------------------------------------------------------
  * 11.0 Notices UI
  *----------------------------------------------------------------------------*/
