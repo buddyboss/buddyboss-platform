@@ -212,12 +212,13 @@
 
 				maxLength = maxLength || 150;
 
-				// Create a temporary element to strip HTML tags.
-				var tempDiv = document.createElement( 'div' );
-				tempDiv.innerHTML = content;
+				// Use DOMParser for safer HTML parsing.
+				var parser = new DOMParser();
+				var doc = parser.parseFromString( content, 'text/html' );
+				var textContent = doc.body.textContent || '';
 
-				// Get text content (strips all HTML).
-				var textContent = tempDiv.textContent || tempDiv.innerText || '';
+				// Remove YouTube URLs.
+				textContent = textContent.replace( /https?:\/\/(www\.)?(youtube\.com|youtu\.be)\/[^\s]+/gi, '' );
 
 				// Trim whitespace and normalize spaces.
 				textContent = textContent.replace( /\s+/g, ' ' ).trim();
