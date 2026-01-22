@@ -69,6 +69,10 @@ function bb_admin_settings_2_0_init() {
 	}
 
 	// Load feature registrations.
+	if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-2.0-features.php' ) ) {
+		require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-2.0-features.php';
+	}
+
 	if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-2.0-activity.php' ) ) {
 		require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-2.0-activity.php';
 	}

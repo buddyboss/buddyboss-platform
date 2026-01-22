@@ -533,6 +533,18 @@ $bb-border-radius-xs: 6px;
 			line-height: 28px;
 			color: $bb-primary-color;
 		}
+
+		// BuddyBoss ReadyLaunch font icons
+		.bb-icons-rl {
+			font-size: 28px;
+			width: 28px;
+			height: 28px;
+			line-height: 28px;
+			color: $bb-primary-color;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
 	}
 
 	&__feature-icon-img {
@@ -850,7 +862,8 @@ $bb-border-radius-xs: 6px;
 			background-color: #fff;
 			border-color: $bb-border-color;
 
-			.bb-admin-side-nav__icon .dashicons {
+			.bb-admin-side-nav__icon .dashicons,
+			.bb-admin-side-nav__icon .bb-icons-rl {
 				color: $bb-text-color;
 			}
 		}
@@ -871,6 +884,18 @@ $bb-border-radius-xs: 6px;
 			height: 20px;
 			line-height: 20px;
 			color: $bb-text-secondary;
+		}
+
+		// BuddyBoss ReadyLaunch font icons
+		.bb-icons-rl {
+			font-size: 20px;
+			width: 20px;
+			height: 20px;
+			line-height: 20px;
+			color: $bb-text-secondary;
+			display: flex;
+			align-items: center;
+			justify-content: center;
 		}
 	}
 

@@ -124,7 +124,10 @@ function bb_admin_settings_2_0_register_groups_feature() {
 		array(
 			'label'              => __( 'Groups', 'buddyboss' ),
 			'description'        => __( 'Allow members to create and join social groups.', 'buddyboss' ),
-			'icon'               => 'dashicons-groups',
+			'icon'               => array(
+				'type'  => 'font',
+				'class' => 'bb-icons-rl bb-icons-rl-users-three',
+			),
 			'category'           => 'community',
 			'license_tier'       => 'free',
 			'is_active_callback' => function () {
@@ -824,7 +827,10 @@ function bb_admin_settings_2_0_register_groups_feature() {
 			'id'    => 'all_groups',
 			'label' => __( 'All Groups', 'buddyboss' ),
 			'route' => '/groups/all',
-			'icon'  => 'dashicons-list-view',
+			'icon'  => array(
+				'type'  => 'font',
+				'class' => 'bb-icons-rl bb-icons-rl-grid-four',
+			),
 			'order' => 100,
 		)
 	);
@@ -835,7 +841,10 @@ function bb_admin_settings_2_0_register_groups_feature() {
 			'id'    => 'group_types',
 			'label' => __( 'Group Types', 'buddyboss' ),
 			'route' => '/groups/types',
-			'icon'  => 'dashicons-tag',
+			'icon'  => array(
+				'type'  => 'font',
+				'class' => 'bb-icons-rl bb-icons-rl-tag',
+			),
 			'order' => 110,
 		)
 	);
@@ -846,7 +855,10 @@ function bb_admin_settings_2_0_register_groups_feature() {
 			'id'    => 'group_navigation',
 			'label' => __( 'Group Navigation', 'buddyboss' ),
 			'route' => '/groups/navigation',
-			'icon'  => 'dashicons-menu',
+			'icon'  => array(
+				'type'  => 'font',
+				'class' => 'bb-icons-rl bb-icons-rl-list',
+			),
 			'order' => 120,
 		)
 	);

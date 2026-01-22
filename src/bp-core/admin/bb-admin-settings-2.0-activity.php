@@ -26,7 +26,10 @@ function bb_admin_settings_2_0_register_activity_feature() {
 		array(
 			'label'              => __( 'Activity', 'buddyboss' ),
 			'description'        => __( 'Allow members to post updates and track activity across your network.', 'buddyboss' ),
-			'icon'               => 'dashicons-update',
+			'icon'               => array(
+				'type'  => 'font',
+				'class' => 'bb-icons-rl bb-icons-rl-pulse',
+			),
 			'category'           => 'community',
 			'license_tier'       => 'free',
 			'is_active_callback' => function () {
@@ -822,7 +825,10 @@ function bb_admin_settings_2_0_register_activity_feature() {
 			'id'    => 'all_activity',
 			'label' => __( 'All Activities', 'buddyboss' ),
 			'route' => '/activity/all',
-			'icon'  => 'dashicons-list-view',
+			'icon'  => array(
+				'type'  => 'font',
+				'class' => 'bb-icons-rl bb-icons-rl-list',
+			),
 			'order' => 100,
 		)
 	);

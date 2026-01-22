@@ -64,6 +64,9 @@ export function SideNavigation({ featureId, sidePanels, navItems, currentPanel, 
 									{panel.icon.type === 'dashicon' && (
 										<span className={`dashicons ${panel.icon.slug || 'dashicons-admin-generic'}`}></span>
 									)}
+									{panel.icon.type === 'font' && panel.icon.class && (
+										<span className={panel.icon.class}></span>
+									)}
 									{(panel.icon.type === 'svg' || panel.icon.type === 'image') && panel.icon.url && (
 										<img src={panel.icon.url} alt={panel.title} className="bb-admin-side-nav__icon-img" />
 									)}
@@ -91,7 +94,18 @@ export function SideNavigation({ featureId, sidePanels, navItems, currentPanel, 
 								>
 									{item.icon && (
 										<span className="bb-admin-side-nav__icon">
-											<span className={`dashicons ${item.icon || 'dashicons-list-view'}`}></span>
+											{typeof item.icon === 'string' && (
+												<span className={`dashicons ${item.icon || 'dashicons-list-view'}`}></span>
+											)}
+											{typeof item.icon === 'object' && item.icon.type === 'dashicon' && (
+												<span className={`dashicons ${item.icon.slug || 'dashicons-list-view'}`}></span>
+											)}
+											{typeof item.icon === 'object' && item.icon.type === 'font' && item.icon.class && (
+												<span className={item.icon.class}></span>
+											)}
+											{typeof item.icon === 'object' && (item.icon.type === 'svg' || item.icon.type === 'image') && item.icon.url && (
+												<img src={item.icon.url} alt={item.label} className="bb-admin-side-nav__icon-img" />
+											)}
 										</span>
 									)}
 									<span className="bb-admin-side-nav__text">{item.label}</span>

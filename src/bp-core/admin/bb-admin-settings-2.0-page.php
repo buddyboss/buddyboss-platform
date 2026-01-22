@@ -46,6 +46,22 @@ function bb_admin_settings_2_0_page() {
 	// Enqueue WordPress components style explicitly (needed for ToggleControl, Button, etc.)
 	wp_enqueue_style( 'wp-components' );
 
+	// Enqueue BuddyBoss icons CSS.
+	$min             = bp_core_get_minified_asset_suffix();
+	$bb_icon_version = function_exists( 'bb_icon_font_map_data' ) ? bb_icon_font_map_data( 'version' ) : bp_get_version();
+	wp_enqueue_style(
+		'bb-icons',
+		buddypress()->plugin_url . "bp-templates/bp-nouveau/icons/css/bb-icons{$min}.css",
+		array(),
+		$bb_icon_version
+	);
+	wp_enqueue_style(
+		'bb-icons-rl-css',
+		buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/icons/css/bb-icons-rl{$min}.css",
+		array(),
+		$bb_icon_version
+	);
+
 	// Enqueue WordPress editor for TinyMCE support in Activity Edit modal.
 	wp_enqueue_editor();
 

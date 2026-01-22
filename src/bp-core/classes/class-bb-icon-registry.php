@@ -314,6 +314,10 @@ class BB_Icon_Registry {
 	 * @return bool True if registered, false otherwise.
 	 */
 	public function is_registered( $icon_id ) {
+		// Only strings can be valid icon IDs.
+		if ( ! is_string( $icon_id ) ) {
+			return false;
+		}
 		return isset( $this->icons[ $icon_id ] );
 	}
 
@@ -324,10 +328,20 @@ class BB_Icon_Registry {
 	 *
 	 * @since BuddyBoss 3.0.0
 	 *
-	 * @param string $icon_id Icon ID or Dashicon slug.
+	 * @param string|array $icon_id Icon ID, Dashicon slug, or pre-formatted icon array.
 	 * @return array|null Icon data formatted for REST API or null if not found.
 	 */
 	public function get_icon_for_rest( $icon_id ) {
+		// If icon is already an array with type, return it directly.
+		if ( is_array( $icon_id ) && isset( $icon_id['type'] ) ) {
+			return $icon_id;
+		}
+
+		// Ensure icon_id is a string for further checks.
+		if ( ! is_string( $icon_id ) ) {
+			return null;
+		}
+
 		// Check if it's a registered icon.
 		if ( $this->is_registered( $icon_id ) ) {
 			$icon = $this->get_icon( $icon_id );
