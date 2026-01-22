@@ -13,9 +13,9 @@ use BuddyBossPlatform\GroundLevel\Container\Service as BaseService;
  *
  * The License Key and Domain method is the default and is used to authenticate the plugin.
  *
- * @property-read string $pluginId     The ID of the plugin using this component.
- * @property-read string $pluginPrefix The prefix of the plugin using this component.
- * @property-read string $productId    The ID of the product using this component.
+ * @property string $pluginId     The ID of the plugin using this component.
+ * @property string $pluginPrefix The prefix of the plugin using this component.
+ * @property string $productId    The ID of the product using this component.
  */
 abstract class AbstractPluginConnection extends BaseService
 {
@@ -32,7 +32,7 @@ abstract class AbstractPluginConnection extends BaseService
      *
      * @var string
      */
-    protected string $pluginPrefix = '';
+    protected string $pluginPrefix;
     /**
      * Used to connect to the Mothership API.
      *

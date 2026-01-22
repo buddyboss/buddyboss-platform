@@ -199,6 +199,7 @@ return array(
     'BuddyBossPlatform\\GroundLevel\\Mothership\\Manager\\AddonsManager' => $vendorDir . '/caseproof/ground-level-mothership/Manager/AddonsManager.php',
     'BuddyBossPlatform\\GroundLevel\\Mothership\\Manager\\LicenseManager' => $vendorDir . '/caseproof/ground-level-mothership/Manager/LicenseManager.php',
     'BuddyBossPlatform\\GroundLevel\\Mothership\\Service' => $vendorDir . '/caseproof/ground-level-mothership/Service.php',
+    'BuddyBossPlatform\\GroundLevel\\Mothership\\Util' => $vendorDir . '/caseproof/ground-level-mothership/Util.php',
     'BuddyBossPlatform\\GroundLevel\\Support\\Casts' => $vendorDir . '/caseproof/ground-level-support/Casts.php',
     'BuddyBossPlatform\\GroundLevel\\Support\\Concerns\\Factory' => $vendorDir . '/caseproof/ground-level-support/Concerns/Factory.php',
     'BuddyBossPlatform\\GroundLevel\\Support\\Concerns\\HasAttributes' => $vendorDir . '/caseproof/ground-level-support/Concerns/HasAttributes.php',

@@ -18,12 +18,13 @@ composer require caseproof/ground-level-mothership
 
 1. Create a new class that extends `GroundLevel\Mothership\AbstractPluginConnection`.
     - a. Setup the `$this->pluginId`. This will be the Plugin ID/Slug that is used to identify the plugin.
-    - b. Setup the `$this->productId`. This is the Product ID/Slug that will be used to connect to the Mothership API.
-    - c. Setup the `getLicenseActivationStatus()` method. This will be the method that returns the license activation status.
-    - d. Setup the `updateLicenseActivationStatus()` method. This will be the method that updates the license status.
-    - e. Setup the `getLicenseKey()` method. This will be the license key that is used to connect to the reseller portal.
-    - f. Setup the `updateLicenseKey()` method. This will be the method that updates the license key.
-    - g. Setup the `getDomain()` method. This will be the domain that is used to connect to the reseller portal.
+    - b. Setup the `$this->pluginPrefix`. This will be used to prefix the constants.
+    - c. Setup the `$this->productId`. This is the Product ID/Slug that will be used to connect to the Mothership API.
+    - d. Setup the `getLicenseActivationStatus()` method. This will be the method that returns the license activation status.
+    - e. Setup the `updateLicenseActivationStatus()` method. This will be the method that updates the license status.
+    - f. Setup the `getLicenseKey()` method. This will be the license key that is used to connect to the reseller portal.
+    - g. Setup the `updateLicenseKey()` method. This will be the method that updates the license key.
+    - h. Setup the `getDomain()` method. This will be the domain that is used to connect to the reseller portal.
 
 ```php
 <?php
@@ -37,8 +38,9 @@ class TestPluginConnection extends AbstractPluginConnection
 
     public function __construct()
     {
-        $this->pluginId  = 'memberpress';
-        $this->productId = 'memberpress-pro';
+        $this->pluginId     = 'memberpress';
+        $this->pluginPrefix = 'MEPR';
+        $this->productId    = 'memberpress-pro';
     }
 
     public function getLicenseActivationStatus(): bool
@@ -264,8 +266,9 @@ class TestPluginConnection extends AbstractPluginConnection
 
     public function __construct()
     {
-        $this->pluginId  = 'memberpress';
-        $this->productId = 'memberpress-pro';
+        $this->pluginId     = 'memberpress';
+        $this->pluginPrefix = 'MEPR';
+        $this->productId    = 'memberpress-pro';
 
         parent::__construct();
     }

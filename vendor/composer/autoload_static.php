@@ -321,6 +321,7 @@ class ComposerStaticInit4190a0c06701f537550910556f38e99d
         'BuddyBossPlatform\\GroundLevel\\Mothership\\Manager\\AddonsManager' => __DIR__ . '/..' . '/caseproof/ground-level-mothership/Manager/AddonsManager.php',
         'BuddyBossPlatform\\GroundLevel\\Mothership\\Manager\\LicenseManager' => __DIR__ . '/..' . '/caseproof/ground-level-mothership/Manager/LicenseManager.php',
         'BuddyBossPlatform\\GroundLevel\\Mothership\\Service' => __DIR__ . '/..' . '/caseproof/ground-level-mothership/Service.php',
+        'BuddyBossPlatform\\GroundLevel\\Mothership\\Util' => __DIR__ . '/..' . '/caseproof/ground-level-mothership/Util.php',
         'BuddyBossPlatform\\GroundLevel\\Support\\Casts' => __DIR__ . '/..' . '/caseproof/ground-level-support/Casts.php',
         'BuddyBossPlatform\\GroundLevel\\Support\\Concerns\\Factory' => __DIR__ . '/..' . '/caseproof/ground-level-support/Concerns/Factory.php',
         'BuddyBossPlatform\\GroundLevel\\Support\\Concerns\\HasAttributes' => __DIR__ . '/..' . '/caseproof/ground-level-support/Concerns/HasAttributes.php',

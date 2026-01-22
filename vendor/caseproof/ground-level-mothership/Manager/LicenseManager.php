@@ -31,9 +31,9 @@ class LicenseManager implements StaticContainerAwareness
         }
     }
     /**
-     * The checkLicenseStatus function checks the license status and triggers the license status changed action.
+     * Checks the license activation status and triggers the {$pluginId}_license_status_changed action.
      *
-     * @return boolean false if the license status is false or license key and activation domain are empty, otherwise true.
+     * @return boolean false if the license activation is disabled, or true otherwise.
      */
     public static function checkLicenseStatus() : bool
     {
@@ -46,15 +46,15 @@ class LicenseManager implements StaticContainerAwareness
         if (empty($licenseKey) || empty($activationDomain)) {
             return \false;
         }
-        $status = LicenseActivations::retrieveLicenseActivation($licenseKey, $activationDomain);
+        $activation = LicenseActivations::retrieveLicenseActivation($licenseKey, $activationDomain);
         $pluginId = self::getContainer()->get(AbstractPluginConnection::class)->pluginId;
-        if ($status instanceof Response && $status->isError()) {
-            if ($status->errorCode === 401) {
-                do_action($pluginId . '_license_status_changed', \false, $status);
-                return \false;
-            }
+        // The license server returns 401 when the license is not activated for the domain,
+        // 403 if the license has expired, and 404 when the license key or the domain is invalid.
+        if ($activation->isError() && \in_array($activation->errorCode, [401, 403, 404], \true)) {
+            do_action($pluginId . '_license_status_changed', \false, $activation);
+            return \false;
         }
-        do_action($pluginId . '_license_status_changed', \true, $status);
+        do_action($pluginId . '_license_status_changed', \true, $activation);
         return \true;
     }
     /**
