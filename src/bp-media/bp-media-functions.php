@@ -2847,7 +2847,21 @@ function bp_media_album_recursive_li_list( $array, $first = false ) {
 	}
 
 	foreach ( $array as $item ) {
-		$output .= '<li data-id="' . esc_attr( $item['id'] ) . '" data-privacy="' . esc_attr( $item['privacy'] ) . '"><span id="' . esc_attr( $item['id'] ) . '" data-id="' . esc_attr( $item['id'] ) . '">' . esc_html( stripslashes( $item['title'] ) ) . '</span>' . bp_media_album_recursive_li_list( $item['children'], true ) . '</li>';
+		$album_id = isset( $item['id'] ) ? (int) $item['id'] : 0;
+
+		/**
+		 * Filters the album title in the album tree list (move popup).
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $title    The album title.
+		 * @param int    $album_id The album ID.
+		 */
+		$album_title = apply_filters( 'bb_media_album_tree_item_title', $item['title'], $album_id );
+
+		if ( ! empty( $album_title ) ) {
+			$output .= '<li data-id="' . esc_attr( $item['id'] ) . '" data-privacy="' . esc_attr( $item['privacy'] ) . '"><span id="' . esc_attr( $item['id'] ) . '" data-id="' . esc_attr( $item['id'] ) . '">' . esc_html( stripslashes( $album_title ) ) . '</span>' . bp_media_album_recursive_li_list( $item['children'], true ) . '</li>';
+		}
 	}
 	$output .= '</ul>';
 
