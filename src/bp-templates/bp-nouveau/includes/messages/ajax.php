@@ -1677,7 +1677,7 @@ function bp_nouveau_ajax_dsearch_recipients() {
 
 	$results = bp_core_get_suggestions(
 		array(
-			'term'            => sanitize_text_field( $_GET['term'] ),
+			'term'            => sanitize_text_field( wp_unslash( $_GET['term'] ) ),
 			'type'            => 'members',
 			'only_friends'    => false,
 			'count_total'     => 'count_query',
