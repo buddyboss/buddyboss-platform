@@ -851,6 +851,24 @@ window.bp = window.bp || {};
 							if ( 'activity' === ActiveComponent ) {
 								if ( bp.draft_activity.allow_delete_media ) {
 									// Remove logic for media items.
+									if ( view[ modelKey ] && view[ modelKey ].length ) {
+										for ( var i in view[ modelKey ] ) {
+											if ( file.id === view[ modelKey ][i].id ) {
+												if ( ! _.isUndefined( view[ modelKey ][i].saved ) && ! view[ modelKey ][i].saved ) {
+													bp.Nouveau.Media.removeAttachment( file.id );
+												}
+											} else if ( file[ mediaType + '_edit_data' ] ) {
+												// Removed medias after draft is restored.
+												var attachment_id = file[ mediaType + '_edit_data' ].id;
+												if ( attachment_id === view[ modelKey ][i].id ) {
+													if ( ! _.isUndefined( view[ modelKey ][i].saved ) && ! view[ modelKey ][i].saved ) {
+														bp.Nouveau.Media.removeAttachment( attachment_id );
+													}
+												}
+											}
+										}
+									}
+
 									view[ modelKey ] = view[ modelKey ].filter(
 										function ( mediaItem ) {
 											return file.id !== mediaItem.id &&
