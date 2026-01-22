@@ -1525,7 +1525,7 @@ function bp_get_album_title() {
 	 * Filters the album title being displayed.
 	 *
 	 * @since BuddyBoss 1.0.0
-	 * @since BuddyBoss [BBVERSION] Added $album_id parameter.
+	 * @since BuddyBoss 2.18.0 Added $album_id parameter.
 	 *
 	 * @param string $title    The media album title.
 	 * @param int    $album_id The media album ID.
