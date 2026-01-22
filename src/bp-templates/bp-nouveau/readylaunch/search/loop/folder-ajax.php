@@ -49,14 +49,14 @@ $document_folder_privacy = bp_get_document_folder_privacy();
 								?>
 								<span class="middot">&middot;</span>
 								<span>
-									<?php echo $document_folder_privacy; ?>
+									<?php echo esc_html( $document_folder_privacy ); ?>
 								</span>
 								<?php
 							} else {
 								?>
 								<span class="middot">&middot;</span>
 								<span id="privacy-<?php echo esc_attr( bp_get_folder_folder_id() ); ?>">
-									<?php echo $document_folder_privacy; ?>
+									<?php echo esc_html( $document_folder_privacy ); ?>
 								</span>
 								<?php
 							}
@@ -64,7 +64,7 @@ $document_folder_privacy = bp_get_document_folder_privacy();
 							?>
 							<span class="middot">&middot;</span>
 							<span>
-								<?php echo $document_folder_privacy; ?>
+								<?php echo esc_html( $document_folder_privacy ); ?>
 							</span>
 							<?php
 						}
