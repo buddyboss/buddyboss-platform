@@ -5200,7 +5200,7 @@ window.bp = window.bp || {};
 						$( file.previewElement ).closest( '.dz-preview' ).addClass( 'dz-complete' );
 					}
 					if ( response.data.id ) {
-						file.id                  = response.id;
+						file.id                  = response.data.id;
 						response.data.uuid       = file.upload.uuid;
 						response.data.menu_order = $( file.previewElement ).closest( '.dropzone' ).find( file.previewElement ).index() - 1;
 						response.data.group_id   = self.group_id;
