@@ -287,12 +287,34 @@ window.bp = window.bp || {};
 
 			// Document move option.
 			var activityListSelector = '#buddypress .bb-rl-activity-list';
+			var activityDataSelector = '#buddypress [data-bp-list="activity"]';
 			var modalListSelector = '#bb-rl-media-model-container .bb-rl-activity-list';
 			var mediaStreamSelector = '#media-stream';
-			$document.on( 'click', activityListSelector + ' .ac-document-move, ' + activityListSelector + ' .ac-folder-move, ' + modalListSelector + ' .ac-document-move, ' + modalListSelector + ' .ac-folder-move, ' + mediaStreamSelector + ' .ac-document-move, ' + mediaStreamSelector + ' .ac-folder-move', this.openDocumentMove.bind( this ) );
-			$document.on( 'click', activityListSelector + ' .ac-media-move, ' + modalListSelector + ' .ac-media-move, ' + mediaStreamSelector + ' .ac-media-move, .group-media ' + mediaStreamSelector + ' .ac-media-move', this.openMediaMove.bind( this ) );
-			$document.on( 'click', activityListSelector + ' .bb-rl-ac-document-close-button, ' + activityListSelector + ' .bb-rl-ac-folder-close-button, ' + modalListSelector + ' .bb-rl-ac-document-close-button, ' + modalListSelector + ' .bb-rl-ac-folder-close-button, ' + mediaStreamSelector + ' .bb-rl-ac-document-close-button, ' + mediaStreamSelector + ' .bb-rl-ac-folder-close-button', this.closeDocumentMove.bind( this ) );
-			$document.on( 'click', activityListSelector + ' .bb-rl-ac-media-close-button, ' + modalListSelector + ' .bb-rl-ac-media-close-button, ' + mediaStreamSelector + ' .bb-rl-ac-media-close-button', this.closeMediaMove.bind( this ) );
+			$document.on( 'click',
+				activityListSelector + ' .ac-document-move, ' + activityDataSelector + ' .ac-document-move, ' +
+				activityListSelector + ' .ac-folder-move, ' + activityDataSelector + ' .ac-folder-move, ' +
+				modalListSelector + ' .ac-document-move, ' + modalListSelector + ' .ac-folder-move, ' +
+				mediaStreamSelector + ' .ac-document-move, ' + mediaStreamSelector + ' .ac-folder-move',
+				this.openDocumentMove.bind( this )
+			);
+			$document.on( 'click',
+				activityListSelector + ' .ac-media-move, ' + activityDataSelector + ' .ac-media-move, ' +
+				modalListSelector + ' .ac-media-move, ' + mediaStreamSelector + ' .ac-media-move, ' +
+				'.group-media ' + mediaStreamSelector + ' .ac-media-move',
+				this.openMediaMove.bind( this )
+			);
+			$document.on( 'click',
+				activityListSelector + ' .bb-rl-ac-document-close-button, ' + activityDataSelector + ' .bb-rl-ac-document-close-button, ' +
+				activityListSelector + ' .bb-rl-ac-folder-close-button, ' + activityDataSelector + ' .bb-rl-ac-folder-close-button, ' +
+				modalListSelector + ' .bb-rl-ac-document-close-button, ' + modalListSelector + ' .bb-rl-ac-folder-close-button, ' +
+				mediaStreamSelector + ' .bb-rl-ac-document-close-button, ' + mediaStreamSelector + ' .bb-rl-ac-folder-close-button',
+				this.closeDocumentMove.bind( this )
+			);
+			$document.on( 'click',
+				activityListSelector + ' .bb-rl-ac-media-close-button, ' + activityDataSelector + ' .bb-rl-ac-media-close-button, ' +
+				modalListSelector + ' .bb-rl-ac-media-close-button, ' + mediaStreamSelector + ' .bb-rl-ac-media-close-button',
+				this.closeMediaMove.bind( this )
+			);
 			var mediaStream = $( '#bb-rl-media-model-container .bb-rl-activity-list, #media-stream' );
 			mediaStream.on( 'click', '.ac-document-rename', this.renameDocument.bind( this ) );
 			mediaStream.on( 'click', '.ac-document-edit', this.editDocument.bind( this ) );
