@@ -1349,7 +1349,10 @@ window.bp = window.bp || {};
 							var editor_text = $( $.parseHTML( editor_content ) ).text().trim();
 							var has_mentions = editor_content.indexOf( 'atwho-inserted' ) >= 0 || editor_content.indexOf( 'bp-suggestions-mention' ) >= 0;
 
-							if ( ( editor_text === '' && !has_mentions ) && media_valid == false ) {
+							// Check for emoji images in the content
+							var has_emoji = editor_content.indexOf( 'emojioneemoji' ) >= 0;
+
+							if ( ( editor_text === '' && !has_mentions && !has_emoji ) && media_valid == false ) {
 								$( this ).find( '.bbp-the-content' ).addClass( 'error' );
 								valid = false;
 							} else {
@@ -1375,7 +1378,26 @@ window.bp = window.bp || {};
 							// Use raw editor content instead of processed content to preserve mentions
 							if ( editor ) {
 								var raw_content = editor.getContent();
-								$( this ).find( '#bbp_reply_content' ).val( raw_content );
+								
+								// Convert emoji images to unicode characters before sending
+								var dummy_element = document.createElement( 'div' );
+								dummy_element.innerHTML = raw_content;
+								
+								// Transform .emoji class images to emojioneemoji format
+								$( dummy_element ).find( 'img.emoji' ).each( function( index, Obj ) {
+									$( Obj ).addClass( 'emojioneemoji' );
+									var emojis = $( Obj ).attr( 'alt' );
+									$( Obj ).attr( 'data-emoji-char', emojis );
+									$( Obj ).removeClass( 'emoji' );
+								});
+								
+								// Transform emoji images into emoji unicode characters
+								$( dummy_element ).find( 'img.emojioneemoji' ).replaceWith( function() {
+									return this.dataset.emojiChar;
+								});
+								
+								var processed_content = $( dummy_element ).html();
+								$( this ).find( '#bbp_reply_content' ).val( processed_content );
 							}
 							
 							bp.Readylaunch.Forums.bbp_reply_ajax_call( 'reply', window.bbpReplyAjaxJS.reply_nonce, $( this ).serializeArray(), $( this ) );
