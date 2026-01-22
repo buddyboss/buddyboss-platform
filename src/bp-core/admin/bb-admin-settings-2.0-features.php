@@ -75,6 +75,12 @@ function bb_admin_settings_2_0_register_all_features() {
 			'is_active_callback' => function () {
 				return bp_is_active( 'settings' );
 			},
+			'php_loader'         => function () {
+				$file = buddypress()->plugin_dir . 'bp-settings/bp-settings-loader.php';
+				if ( file_exists( $file ) ) {
+					require_once $file;
+				}
+			},
 			'settings_route'     => '/settings/settings',
 			'order'              => 20,
 		)
@@ -94,6 +100,12 @@ function bb_admin_settings_2_0_register_all_features() {
 			'license_tier'       => 'free',
 			'is_active_callback' => function () {
 				return bp_is_active( 'moderation' );
+			},
+			'php_loader'         => function () {
+				$file = buddypress()->plugin_dir . 'bp-moderation/bp-moderation-loader.php';
+				if ( file_exists( $file ) ) {
+					require_once $file;
+				}
 			},
 			'settings_route'     => '/settings/moderation',
 			'order'              => 25,
@@ -115,6 +127,12 @@ function bb_admin_settings_2_0_register_all_features() {
 			'is_active_callback' => function () {
 				return bp_is_active( 'search' );
 			},
+			'php_loader'         => function () {
+				$file = buddypress()->plugin_dir . 'bp-search/bp-search-loader.php';
+				if ( file_exists( $file ) ) {
+					require_once $file;
+				}
+			},
 			'settings_route'     => '/settings/search',
 			'order'              => 30,
 		)
@@ -134,6 +152,12 @@ function bb_admin_settings_2_0_register_all_features() {
 			'license_tier'       => 'free',
 			'is_active_callback' => function () {
 				return bp_is_active( 'members' );
+			},
+			'php_loader'         => function () {
+				$file = buddypress()->plugin_dir . 'bp-members/bp-members-loader.php';
+				if ( file_exists( $file ) ) {
+					require_once $file;
+				}
 			},
 			'settings_route'     => '/settings/members',
 			'order'              => 35,
@@ -156,6 +180,12 @@ function bb_admin_settings_2_0_register_all_features() {
 			'license_tier'       => 'free',
 			'is_active_callback' => function () {
 				return bp_is_active( 'forums' );
+			},
+			'php_loader'         => function () {
+				$file = buddypress()->plugin_dir . 'bp-forums/bp-forums-loader.php';
+				if ( file_exists( $file ) ) {
+					require_once $file;
+				}
 			},
 			'settings_route'     => '/settings/forums',
 			'order'              => 45,
@@ -199,6 +229,12 @@ function bb_admin_settings_2_0_register_all_features() {
 			'is_active_callback' => function () {
 				return bp_is_active( 'media' );
 			},
+			'php_loader'         => function () {
+				$file = buddypress()->plugin_dir . 'bp-media/bp-media-loader.php';
+				if ( file_exists( $file ) ) {
+					require_once $file;
+				}
+			},
 			'settings_route'     => '/settings/media',
 			'order'              => 60,
 		)
@@ -218,6 +254,12 @@ function bb_admin_settings_2_0_register_all_features() {
 			'license_tier'       => 'free',
 			'is_active_callback' => function () {
 				return bp_is_active( 'messages' );
+			},
+			'php_loader'         => function () {
+				$file = buddypress()->plugin_dir . 'bp-messages/bp-messages-loader.php';
+				if ( file_exists( $file ) ) {
+					require_once $file;
+				}
 			},
 			'settings_route'     => '/settings/messages',
 			'order'              => 65,
@@ -239,6 +281,12 @@ function bb_admin_settings_2_0_register_all_features() {
 			'is_active_callback' => function () {
 				return bp_is_active( 'notifications' );
 			},
+			'php_loader'         => function () {
+				$file = buddypress()->plugin_dir . 'bp-notifications/bp-notifications-loader.php';
+				if ( file_exists( $file ) ) {
+					require_once $file;
+				}
+			},
 			'settings_route'     => '/settings/notifications',
 			'order'              => 70,
 		)
@@ -259,6 +307,12 @@ function bb_admin_settings_2_0_register_all_features() {
 			'is_active_callback' => function () {
 				return bp_is_active( 'invites' );
 			},
+			'php_loader'         => function () {
+				$file = buddypress()->plugin_dir . 'bp-invites/bp-invites-loader.php';
+				if ( file_exists( $file ) ) {
+					require_once $file;
+				}
+			},
 			'settings_route'     => '/settings/invites',
 			'order'              => 75,
 		)
@@ -278,6 +332,12 @@ function bb_admin_settings_2_0_register_all_features() {
 			'license_tier'       => 'free',
 			'is_active_callback' => function () {
 				return bp_is_active( 'friends' );
+			},
+			'php_loader'         => function () {
+				$file = buddypress()->plugin_dir . 'bp-friends/bp-friends-loader.php';
+				if ( file_exists( $file ) ) {
+					require_once $file;
+				}
 			},
 			'settings_route'     => '/settings/friends',
 			'order'              => 80,

@@ -35,6 +35,12 @@ function bb_admin_settings_2_0_register_activity_feature() {
 			'is_active_callback' => function () {
 				return bp_is_active( 'activity' );
 			},
+			'php_loader'         => function () {
+				$file = buddypress()->plugin_dir . 'bp-activity/bp-activity-loader.php';
+				if ( file_exists( $file ) ) {
+					require_once $file;
+				}
+			},
 			'settings_route'     => '/settings/activity',
 			'order'              => 40,
 		)

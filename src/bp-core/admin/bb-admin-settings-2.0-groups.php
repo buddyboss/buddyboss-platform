@@ -133,6 +133,12 @@ function bb_admin_settings_2_0_register_groups_feature() {
 			'is_active_callback' => function () {
 				return bp_is_active( 'groups' );
 			},
+			'php_loader'         => function () {
+				$file = buddypress()->plugin_dir . 'bp-groups/bp-groups-loader.php';
+				if ( file_exists( $file ) ) {
+					require_once $file;
+				}
+			},
 			'settings_route'     => '/settings/groups',
 			'order'              => 20,
 		)

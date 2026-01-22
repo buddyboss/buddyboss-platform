@@ -37,9 +37,22 @@ function bb_admin_settings_2_0_init() {
 	if ( ! class_exists( 'BB_Feature_Autoloader' ) ) {
 		require_once buddypress()->plugin_dir . 'bp-core/classes/class-bb-feature-autoloader.php';
 	}
+	if ( ! class_exists( 'BB_Feature_Loader' ) ) {
+		require_once buddypress()->plugin_dir . 'bp-core/classes/class-bb-feature-loader.php';
+	}
+	if ( ! class_exists( 'BB_Component_Bridge' ) ) {
+		require_once buddypress()->plugin_dir . 'bp-core/classes/class-bb-component-bridge.php';
+	}
+
+	// Initialize Component Bridge early (hooks into bp_optional_components filter).
+	// This must happen before Feature Registry so it can capture legacy components.
+	bb_component_bridge();
 
 	// Initialize Feature Registry (singleton, hooks into bp_loaded).
 	bb_feature_registry();
+
+	// Initialize Feature Loader (hooks into bb_after_register_features).
+	bb_feature_loader();
 
 	// Initialize Icon Registry (singleton, hooks into bp_loaded).
 	bb_icon_registry();
