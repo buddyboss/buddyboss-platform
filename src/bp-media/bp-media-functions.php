@@ -4178,6 +4178,8 @@ function bb_check_valid_giphy_api_key( $api_key = '', $message = false ) {
 		}
 	} elseif ( is_wp_error( $output ) ) {
 		$cache[ $api_key ] = $output;
+	} else {
+		return false;
 	}
 	if ( true === $message ) {
 		return $cache[ $api_key ];
