@@ -1204,7 +1204,18 @@ function bp_nouveau_ajax_video_update_privacy() {
 		wp_send_json_error( $response );
 	}
 
-	$video          = new BP_Video( $video_id );
+	$video = new BP_Video( $video_id );
+
+	// Check if the current user has permission to update this video's privacy.
+	if ( ! bp_video_user_can_edit( $video ) ) {
+		$response['feedback'] = sprintf(
+			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+			esc_html__( 'You do not have permission to update this video\'s privacy.', 'buddyboss' )
+		);
+
+		wp_send_json_error( $response );
+	}
+
 	$video->privacy = $privacy;
 	$video->save();
 
@@ -1265,6 +1276,16 @@ function bp_nouveau_ajax_video_description_save() {
 		$video = new BP_Video( $video_id );
 
 		if ( ! empty( $video->id ) ) {
+			// Check if the current user has permission to update this video's description.
+			if ( ! bp_video_user_can_edit( $video ) ) {
+				$response['feedback'] = sprintf(
+					'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+					esc_html__( 'You do not have permission to update this video\'s description.', 'buddyboss' )
+				);
+
+				wp_send_json_error( $response );
+			}
+
 			$video->description = $description;
 			$video->save();
 
@@ -1756,6 +1777,21 @@ function bp_nouveau_ajax_video_thumbnail_save() {
 	$video_attachment_id       = filter_input( INPUT_POST, 'video_attachment_id', FILTER_SANITIZE_NUMBER_INT );
 	$video_id                  = filter_input( INPUT_POST, 'video_id', FILTER_SANITIZE_NUMBER_INT );
 	$pre_selected_id           = filter_input( INPUT_POST, 'video_default_id', FILTER_SANITIZE_NUMBER_INT );
+
+	// Check if the current user has permission to update this video's thumbnail.
+	if ( ! empty( $video_id ) ) {
+		$video = new BP_Video( $video_id );
+
+		if ( ! empty( $video->id ) && ! bp_video_user_can_edit( $video ) ) {
+			$response['feedback'] = sprintf(
+				'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+				esc_html__( 'You do not have permission to update this video\'s thumbnail.', 'buddyboss' )
+			);
+
+			wp_send_json_error( $response );
+		}
+	}
+
 	$auto_generated_thumbnails = bb_video_get_auto_generated_preview_ids( $video_attachment_id );
 	$old_thumbnail_id          = get_post_meta( $video_attachment_id, 'bp_video_preview_thumbnail_id', true );
 
@@ -1828,6 +1864,20 @@ function bp_nouveau_ajax_video_thumbnail_delete() {
 	$video_id            = filter_input( INPUT_POST, 'video_id', FILTER_SANITIZE_NUMBER_INT );
 	$attachment_id       = filter_input( INPUT_POST, 'attachment_id', FILTER_SANITIZE_NUMBER_INT );
 	$video_attachment_id = filter_input( INPUT_POST, 'video_attachment_id', FILTER_SANITIZE_NUMBER_INT );
+
+	// Check if the current user has permission to delete this video's thumbnail.
+	if ( ! empty( $video_id ) ) {
+		$video = new BP_Video( $video_id );
+
+		if ( ! empty( $video->id ) && ! bp_video_user_can_delete( $video ) ) {
+			$response['feedback'] = sprintf(
+				'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+				esc_html__( 'You do not have permission to delete this video\'s thumbnail.', 'buddyboss' )
+			);
+
+			wp_send_json_error( $response );
+		}
+	}
 
 	if ( ! empty( $attachment_id ) && ! empty( $video_attachment_id ) ) {
 		$auto_generated_thumbnails = get_post_meta( $attachment_id, 'video_preview_thumbnails', true );
