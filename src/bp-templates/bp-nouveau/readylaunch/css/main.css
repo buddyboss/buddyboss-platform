@@ -8834,10 +8834,16 @@ body.guillotine-dragging * {
   background-color: transparent;
 }
 
-#object-nav .bb-rl-sub-menu li a:hover,
-.bb-rl-header .bb-readylaunch-menu .bb-rl-sub-menu li a:hover {
+#object-nav .bb-rl-sub-menu li:hover > a,
+.bb-rl-header .bb-readylaunch-menu .bb-rl-sub-menu li:hover > a {
   background-color: var(--bb-rl-background-secondary-hover-color);
   color: var(--bb-rl-text-color);
+}
+
+#object-nav .bb-rl-sub-menu li.menu-item-has-children > .sub-menu,
+.bb-rl-header .bb-readylaunch-menu .bb-rl-sub-menu li.menu-item-has-children > .sub-menu {
+  top: 0;
+  left: 100%;
 }
 
 li.bb-rl-hideshow {
