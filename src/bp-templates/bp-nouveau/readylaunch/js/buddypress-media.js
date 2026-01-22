@@ -5649,7 +5649,7 @@ window.bp = window.bp || {};
 								$( document ).find( selector ).trigger( 'click' );
 							} else {
 								if ( 'document_folder' !== actionType ) {
-									var currentFolderAlbum, responseContent;
+									var currentFolderAlbum, responseContent, currentType, bbrlAlbumId;
 									if ( 'folder' === folderOrAlbum ) {
 										currentFolderAlbum = bbRlMedia.current_folder;
 										responseContent    = response.data.document_content;
@@ -5657,12 +5657,22 @@ window.bp = window.bp || {};
 										if ( 'media' === actionType ) {
 											currentFolderAlbum = bbRlMedia.current_album;
 											responseContent    = response.data.media_content;
+											currentType        = bbRlMedia.current_type;
+											bbrlAlbumId        = bbRlMedia.album_id;
 										} else if ( 'video' === actionType ) {
 											currentFolderAlbum = bbRlVideo.current_album;
 											responseContent    = response.data.video_content;
+											currentType        = bbRlVideo.current_type;
+											bbrlAlbumId        = bbRlMedia.album_id;
 										}
 									}
-									if ( parseInt( currentFolderAlbum ) > 0 ) {
+									if (
+										parseInt( currentFolderAlbum ) > 0 ||
+										(
+											'group' === currentType &&
+											parseInt( bbrlAlbumId ) > 0
+										)
+									) {
 										$( '#' + updateActionType + '-stream ul.' + nameDocumentAsMedia + '-list li[data-id="' + itemId + '"]' ).remove();
 										if ( 'video' === actionType ) {
 											$( '#media-stream ul.media-list li[data-id="' + itemId + '"]' ).remove();
