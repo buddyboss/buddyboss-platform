@@ -4166,7 +4166,7 @@ function bb_check_valid_giphy_api_key( $api_key = '', $message = false ) {
 		return false;
 	}
 
-	$output = wp_remote_get( 'http://api.giphy.com/v1/gifs/trending?api_key=' . $api_key . '&limit=1' );
+	$output = wp_remote_get( 'https://api.giphy.com/v1/gifs/trending?api_key=' . $api_key . '&limit=1' );
 	if ( $output && ! is_wp_error( $output ) ) {
 		$cache[ $api_key ] = $output;
 		if ( $use_caching ) {
