@@ -4166,8 +4166,8 @@ function bb_check_valid_giphy_api_key( $api_key = '', $message = false ) {
 		return false;
 	}
 
-	$output = wp_remote_get( 'http://api.giphy.com/v1/gifs/trending?api_key=' . $api_key . '&limit=1' );
-	if ( $output ) {
+	$output = wp_remote_get( 'https://api.giphy.com/v1/gifs/trending?api_key=' . $api_key . '&limit=1' );
+	if ( $output && ! is_wp_error( $output ) ) {
 		$cache[ $api_key ] = $output;
 		if ( $use_caching ) {
 			$cache_expiry = MONTH_IN_SECONDS;
@@ -4176,6 +4176,10 @@ function bb_check_valid_giphy_api_key( $api_key = '', $message = false ) {
 			}
 			set_transient( $cache_key, array( $api_key => $output ), $cache_expiry );
 		}
+	} elseif ( is_wp_error( $output ) ) {
+		$cache[ $api_key ] = $output;
+	} else {
+		return false;
 	}
 	if ( true === $message ) {
 		return $cache[ $api_key ];
