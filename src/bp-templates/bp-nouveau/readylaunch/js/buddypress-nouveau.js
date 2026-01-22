@@ -663,17 +663,16 @@ window.bp = window.bp || {};
 			var selected_scope = $( this.objectNavParent + ' #bb-subnav-filter-show [data-bp-scope="' + data.scope + '"].selected' );
 			if( selected_scope.length ) {
 				var option_label = $( '.bb-subnav-filters-container .subnav-filters-opener[aria-controls="bb-subnav-filter-show"] .selected' );
-				// Check if options starts with "I've" and "I'm" then leave it as is, otherwise lowercase the first letter
-				if( selected_scope.text().startsWith( 'I\'ve' ) || selected_scope.text().startsWith( 'I\'m' ) ) {
-					option_label.text( selected_scope.text() );
-				} else {
-					option_label.text( selected_scope.text().toLowerCase() );
-				}
+				// Use data-filter-label attribute for proper context-aware label (translatable).
+				var filterLabel = selected_scope.data( 'filter-label' );
+				option_label.text( filterLabel ? filterLabel : selected_scope.text() );
 			}
 
 			var selected_order = $( this.objectNavParent + ' #bb-subnav-filter-by [data-bp-order="' + data.order_by + '"].selected' );
 			if( selected_order.length ) {
-				$( '.bb-subnav-filters-container .subnav-filters-opener[aria-controls="bb-subnav-filter-by"] .selected' ).text( selected_order.text() );
+				// Use data-filter-label attribute for proper context-aware label (translatable).
+				var orderLabel = selected_order.data( 'filter-label' );
+				$( '.bb-subnav-filters-container .subnav-filters-opener[aria-controls="bb-subnav-filter-by"] .selected' ).text( orderLabel ? orderLabel : selected_order.text() );
 			}
 
 			// Add loader at custom place for few search types.
@@ -5396,7 +5395,7 @@ window.bp = window.bp || {};
 					} );
 	
 					self.append( '<li class="hideshow menu-item-has-children" data-no-dynamic-translation>' +
-					  '<a class="more-action-button" href="#">more <i class="bb-icon-l bb-icon-angle-down"></i></a>' +
+					  '<a class="more-action-button" href="#">' + BP_Nouveau.more_menu_text + ' <i class="bb-icon-l bb-icon-angle-down"></i></a>' +
 					  '<ul class="sub-menu bb_nav_more_dropdown" data-no-dynamic-translation>' + menuhtml + '</ul>' +
 					  '<div class="bb_more_dropdown_overlay"></div></li>' );
 	
