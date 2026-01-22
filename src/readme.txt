@@ -57,6 +57,25 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 2.18.0 =
+* Enhancement: Translations - Added new hooks to extend BuddyPress Multilingual 1.8.3 compatibility with BuddyBoss Platform components
+* Bug: Activity - Fixed a fatal error where the Activity Feed block caused pages to load empty when Platform Pro was not installed
+* Bug: Activity - Fixed an issue where newsfeed filter labels were incorrectly lowercased
+* Bug: Blog - Resolved an issue where the Report action was missing on comments at the maximum threading depth
+* Bug: Core - Fixed a critical security issue that allowed unauthorized users to delete media attachments belonging to other users
+* Bug: Core - Fixed issues where uploaded document size showed as 0 when Remove Local Media was enabled and videos were not immediately playable after upload
+* Bug: Core - Improved Share Posts experience with UI enhancements & post preview support
+* Bug: Core - Resolved PHP notice related to early translation loading
+* Bug: Core - Resolved security vulnerabilities that allowed unauthorized users to modify video and media privacy and descriptions
+* Bug: Media - Fixed a security issue by adding proper permission checks to prevent unauthorized video moves between albums
+* Bug: Media - Fixed incorrect album video counts and visibility when moving videos with Redis cache enabled
+* Bug: Messages - Resolved a server-specific issue causing the Messages right sidebar not to load when the Media component was active
+* Bug: ReadyLaunch - Fixed an issue where the Move button for photos and videos did not work from the activity feed in ReadyLaunch
+* Bug: ReadyLaunch - Fixed ReadyLaunch My Network to display only the 10 most recent users and corrected the ‘See All’ link behavior
+* Bug: ReadyLaunch - Resolved ReadyLaunch issue where removed media remained attached after being removed from the dropzone
+* Bug: Translations - Fixed an issue where the ‘More’ button in the Activity Topic filter was not translatable using Loco Translate
+* Bug: Translations - Fixed an issue where Topics were not translated when using WPML
+
 = 2.17.0 =
 * Bug: Activity - Fixed an issue where apostrophes  in activity post titles were displayed incorrectly in the BuddyBoss App for activities posted from the web
 * Bug: Activity - Fixed an issue where embed link previews were unnecessarily refreshed when changing the activity topic
