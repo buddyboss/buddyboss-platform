@@ -2803,7 +2803,7 @@ function bb_enable_content_counts( $default = false ) {
  * Get all activity filters option labels.
  *
  * @since BuddyBoss 2.8.20
- * @since BuddyBoss [BBVERSION] Added $context parameter for language-specific capitalization.
+ * @since BuddyBoss 2.18.0 Added $context parameter for language-specific capitalization.
  *
  * @param string $context The context for labels. Accepts 'default' for dropdown labels,
  *                        'show_context' for "Show: {label}" context (lowercase for proper grammar in some languages).
@@ -2881,7 +2881,7 @@ function bb_get_activity_filter_options_labels( $context = 'default' ) {
 	 * Filters the activity filter options labels.
 	 *
 	 * @since BuddyBoss 2.8.20
-	 * @since BuddyBoss [BBVERSION] Added $context parameter.
+	 * @since BuddyBoss 2.18.0 Added $context parameter.
 	 *
 	 * @param array  $labels  Array of activity filter labels. Keys are scope names (e.g., 'all', 'just-me', 'favorites').
 	 *                        Values are the translated label strings for the requested context.
@@ -2930,7 +2930,7 @@ function bb_get_enabled_activity_filter_options( $args = array() ) {
  * Get all activity timeline filters option labels.
  *
  * @since BuddyBoss 2.8.20
- * @since BuddyBoss [BBVERSION] Added $context parameter for language-specific capitalization.
+ * @since BuddyBoss 2.18.0 Added $context parameter for language-specific capitalization.
  *
  * @param string $context The context for labels. Accepts 'default' for dropdown labels,
  *                        'show_context' for "Show: {label}" context (lowercase for proper grammar in some languages).
@@ -2996,7 +2996,7 @@ function bb_get_activity_timeline_filter_options_labels( $context = 'default' ) 
 	 * Filters the activity timeline filter options labels.
 	 *
 	 * @since BuddyBoss 2.8.20
-	 * @since BuddyBoss [BBVERSION] Added $context parameter.
+	 * @since BuddyBoss 2.18.0 Added $context parameter.
 	 *
 	 * @param array  $labels  Array of activity timeline filter labels. Keys are scope names (e.g., 'just-me', 'favorites', 'groups').
 	 *                        Values are the translated label strings for the requested context.
@@ -3043,7 +3043,7 @@ function bb_get_enabled_activity_timeline_filter_options( $args = array() ) {
  * Get all activity sorting options labels.
  *
  * @since BuddyBoss 2.8.20
- * @since BuddyBoss [BBVERSION] Added $context parameter for language-specific capitalization.
+ * @since BuddyBoss 2.18.0 Added $context parameter for language-specific capitalization.
  *
  * @param string $context The context for labels. Accepts 'default' for dropdown labels,
  *                        'by_context' for "by {label}" context (lowercase for proper grammar in some languages).
@@ -3082,7 +3082,7 @@ function bb_get_activity_sorting_options_labels( $context = 'default' ) {
 	 * Filters the activity sorting options labels.
 	 *
 	 * @since BuddyBoss 2.8.20
-	 * @since BuddyBoss [BBVERSION] Added $context parameter.
+	 * @since BuddyBoss 2.18.0 Added $context parameter.
 	 *
 	 * @param array  $labels  Array of activity sorting labels. Keys are sorting keys (e.g., 'date_recorded', 'date_updated').
 	 *                        Values are the translated label strings for the requested context.
