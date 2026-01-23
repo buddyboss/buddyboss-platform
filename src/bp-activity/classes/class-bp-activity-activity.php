@@ -1874,6 +1874,16 @@ class BP_Activity_Activity {
 						// Condition to handle other random order of ID if any.
 						$comparison_eq_op = ( 'DESC' === strtoupper( $args['comment_order_by'] ) ) ? '>=' : '<=';
 
+						// Handle timestamp conversion - check if already a Unix timestamp.
+						$last_timestamp = $args['last_comment_timestamp'];
+						if ( is_numeric( $last_timestamp ) ) {
+							// Already a Unix timestamp, use directly.
+							$last_timestamp_formatted = date_i18n( 'Y-m-d H:i:s', (int) $last_timestamp );
+						} else {
+							// Date string, convert to timestamp first.
+							$last_timestamp_formatted = date_i18n( 'Y-m-d H:i:s', strtotime( $last_timestamp ) );
+						}
+
 						$sql['where'] .= $wpdb->prepare(
 							" AND (
 								a.id {$comparison_op} %d
@@ -1884,7 +1894,7 @@ class BP_Activity_Activity {
 							) ",
 							$args['last_comment_id'],
 							$args['last_comment_id'],
-							date_i18n( 'Y-m-d H:i:s', strtotime( $args['last_comment_timestamp'] ) )
+							$last_timestamp_formatted
 						);
 					}
 
