@@ -1399,6 +1399,8 @@ class BB_Topics_Manager {
 				}
 			}
 
+			$topic_data = self::bb_topics_prefetch_object_data( $topic_data );
+
 			if ( 'all' !== $r['fields'] ) {
 				if ( false !== strpos( $r['fields'], ',' ) ) {
 					$fields = explode( ',', $r['fields'] );
@@ -1458,7 +1460,7 @@ class BB_Topics_Manager {
 		/**
 		 * Filters the topic's data before returning.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.18.0
 		 *
 		 * @param array $retval The topic's data.
 		 * @param array $args   The arguments used to get the topics.
@@ -2421,5 +2423,27 @@ class BB_Topics_Manager {
 		);
 
 		return $this->wpdb->get_var( $query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Query is prepared above.
+	}
+
+	/**
+	 * Pre-fetch and filter data for topics.
+	 *
+	 * @since BuddyBoss 2.18.0
+	 *
+	 * @param array $topics Array of topics.
+	 *
+	 * @return array Array of topics.
+	 */
+	protected static function bb_topics_prefetch_object_data( $topics ) {
+
+		/**
+		 * Filters inside prefetch_object_data method to aid in
+		 * pre-fetching and filtering object data associated with topics.
+		 *
+		 * @since BuddyBoss 2.18.0
+		 *
+		 * @param array $topics Array of topics.
+		 */
+		return apply_filters( 'bb_topics_prefetch_object_data', $topics );
 	}
 }

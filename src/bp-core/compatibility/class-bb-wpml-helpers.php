@@ -88,9 +88,6 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 
 			// Handle WPML language switch action from wpml(eg classic editor meta box).
 			add_action( 'wp_ajax_wpml_switch_post_language', array( $this, 'bb_handle_wpml_switch_post_language' ), 9 );
-
-			// Activity Topics translation support.
-			add_filter( 'bb_get_topics', array( $this, 'bb_wpml_translate_activity_topics' ), 10, 2 );
 		}
 
 		/**
@@ -651,50 +648,6 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 				delete_transient( 'bb_wpml_posted_icl_post_language_' . $post_id );
 			}
 		}
-
-		/**
-		 * Translate activity topics names using WPML.
-		 *
-		 * @since BuddyBoss [BBVERSION]
-		 *
-		 * @param array $retval The topics data array containing 'topics' key.
-		 * @param array $args   The arguments used to get the topics.
-		 *
-		 * @return array Modified topics data with translated names.
-		 */
-		public function bb_wpml_translate_activity_topics( $retval, $args ) {
-			if ( ! class_exists( 'Sitepress' ) || empty( $retval['topics'] ) ) {
-				return $retval;
-			}
-
-			foreach ( $retval['topics'] as &$topic ) {
-				// Handle both array and object formats.
-				$topic_id   = is_array( $topic ) ? ( $topic['topic_id'] ?? '' ) : ( $topic->topic_id ?? '' );
-				$topic_name = is_array( $topic ) ? ( $topic['name'] ?? '' ) : ( $topic->name ?? '' );
-
-				if ( empty( $topic_id ) || empty( $topic_name ) ) {
-					continue;
-				}
-
-				$translated_name = apply_filters(
-					'wpml_translate_single_string',
-					$topic_name,
-					'Buddypress Multilingual',
-					'Activity topic #' . $topic_id . ' name'
-				);
-
-				if ( ! empty( $translated_name ) && $translated_name !== $topic_name ) {
-					if ( is_array( $topic ) ) {
-						$topic['name'] = $translated_name;
-					} else {
-						$topic->name = $translated_name;
-					}
-				}
-			}
-
-			return $retval;
-		}
-
 	}
 
 	BB_WPML_Helpers::instance();
