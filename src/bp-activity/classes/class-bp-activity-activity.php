@@ -1874,14 +1874,22 @@ class BP_Activity_Activity {
 						// Condition to handle other random order of ID if any.
 						$comparison_eq_op = ( 'DESC' === strtoupper( $args['comment_order_by'] ) ) ? '>=' : '<=';
 
-						// Handle timestamp conversion - check if already a Unix timestamp.
+						// Handle timestamp conversion with proper validation.
 						$last_timestamp = $args['last_comment_timestamp'];
 						if ( is_numeric( $last_timestamp ) ) {
-							// Already a Unix timestamp, use directly.
-							$last_timestamp_formatted = date_i18n( 'Y-m-d H:i:s', (int) $last_timestamp );
+							// Validate Unix timestamp is positive and not impossibly far in future.
+							$timestamp = (int) $last_timestamp;
+							if ( $timestamp <= 0 ) {
+								$timestamp = time(); // Fallback to current time for invalid timestamps.
+							}
+							$last_timestamp_formatted = date_i18n( 'Y-m-d H:i:s', $timestamp );
 						} else {
-							// Date string, convert to timestamp first.
-							$last_timestamp_formatted = date_i18n( 'Y-m-d H:i:s', strtotime( $last_timestamp ) );
+							// Sanitize and validate date string.
+							$timestamp = strtotime( sanitize_text_field( $last_timestamp ) );
+							if ( false === $timestamp || $timestamp <= 0 ) {
+								$timestamp = time(); // Fallback for invalid date strings.
+							}
+							$last_timestamp_formatted = date_i18n( 'Y-m-d H:i:s', $timestamp );
 						}
 
 						$sql['where'] .= $wpdb->prepare(
