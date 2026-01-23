@@ -1801,7 +1801,27 @@ class BP_Activity_Activity {
 				$sql['select'] = 'SELECT a.id';
 				$sql['from']   = "FROM {$bp->activity->table_name} a";
 				if ( true === $exclude_childrens ) {
-					$sql['where'] = "WHERE a.type = 'activity_comment' {$spam_sql} AND a.secondary_item_id = $activity_id";
+					// When filtering spam (ham_only), also includes orphaned comments.
+					// Orphaned comments are replies to spam comments - they should appear at root level.
+					if ( 'ham_only' === $spam ) {
+						// Get spam comment IDs for this activity to find orphaned comments.
+						$spam_comment_ids = $wpdb->get_col(
+							$wpdb->prepare(
+								"SELECT id FROM {$bp->activity->table_name} WHERE type = 'activity_comment' AND item_id = %d AND is_spam = 1",
+								$activity_id
+							)
+						);
+
+						if ( ! empty( $spam_comment_ids ) ) {
+							$spam_ids_list = implode( ',', array_map( 'intval', $spam_comment_ids ) );
+							// Include direct replies OR orphaned comments (replies to spam).
+							$sql['where'] = "WHERE a.type = 'activity_comment' {$spam_sql} AND a.item_id = {$activity_id} AND (a.secondary_item_id = {$activity_id} OR a.secondary_item_id IN ({$spam_ids_list}))";
+						} else {
+							$sql['where'] = "WHERE a.type = 'activity_comment' {$spam_sql} AND a.secondary_item_id = {$activity_id}";
+						}
+					} else {
+						$sql['where'] = "WHERE a.type = 'activity_comment' {$spam_sql} AND a.secondary_item_id = $activity_id";
+					}
 				} else {
 					$sql['where'] = "WHERE a.type = 'activity_comment' {$spam_sql} AND a.item_id = $top_level_parent_id and a.mptt_left > $left AND a.mptt_left < $right";
 				}
@@ -2405,9 +2425,28 @@ class BP_Activity_Activity {
 		}
 
 		// Select conditions.
+		// When filtering spam (ham_only), also count orphaned comments in top_level_count.
+		// Orphaned comments are replies to spam comments - they should be counted as root level.
+		$top_level_case = 'a.secondary_item_id = ' . $comment_id;
+
+		if ( ! empty( $args['spam'] ) && 'ham_only' === $args['spam'] ) {
+			// Get spam comment IDs for this activity to include orphaned comments in count.
+			$spam_comment_ids = $wpdb->get_col(
+				$wpdb->prepare(
+					"SELECT id FROM {$bp->activity->table_name} WHERE type = 'activity_comment' AND item_id = %d AND is_spam = 1",
+					$comment_id
+				)
+			);
+
+			if ( ! empty( $spam_comment_ids ) ) {
+				$spam_ids_list  = implode( ',', array_map( 'intval', $spam_comment_ids ) );
+				$top_level_case = "(a.secondary_item_id = {$comment_id} OR a.secondary_item_id IN ({$spam_ids_list}))";
+			}
+		}
+
 		$select_sql = 'SELECT
 			COUNT(*) AS all_child_count,
-			SUM( CASE WHEN a.secondary_item_id = ' . $comment_id . ' THEN 1 ELSE 0 END ) AS top_level_count';
+			SUM( CASE WHEN ' . $top_level_case . ' THEN 1 ELSE 0 END ) AS top_level_count';
 
 		$from_sql = ' FROM ' . $bp->activity->table_name . ' a';
 
