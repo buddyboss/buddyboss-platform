@@ -19,7 +19,7 @@ class BB_Core_Follow_My_Network_Widget extends WP_Widget {
 	/**
 	 * Default maximum number of users to display in the widget.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.18.0
 	 *
 	 * @var int
 	 */
