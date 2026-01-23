@@ -1805,12 +1805,7 @@ class BP_Activity_Activity {
 					// Orphaned comments are replies to spam comments - they should appear at root level.
 					if ( 'ham_only' === $spam ) {
 						// Get spam comment IDs for this activity to find orphaned comments.
-						$spam_comment_ids = $wpdb->get_col(
-							$wpdb->prepare(
-								"SELECT id FROM {$bp->activity->table_name} WHERE type = 'activity_comment' AND item_id = %d AND is_spam = 1",
-								$activity_id
-							)
-						);
+						$spam_comment_ids = self::get_spam_comment_ids( $activity_id );
 
 						if ( ! empty( $spam_comment_ids ) ) {
 							$spam_ids_list = implode( ',', array_map( 'intval', $spam_comment_ids ) );
@@ -2387,6 +2382,38 @@ class BP_Activity_Activity {
 	}
 
 	/**
+	 * Get spam comment IDs for an activity.
+	 *
+	 * Used to identify orphaned comments (non-spam replies to spam comments)
+	 * that should appear at root level when their parent is marked as spam.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int $activity_id The activity ID to get spam comment IDs for.
+	 *
+	 * @return array Array of spam comment IDs.
+	 */
+	private static function get_spam_comment_ids( $activity_id ) {
+		static $cache = array();
+
+		$activity_id = (int) $activity_id;
+
+		if ( ! isset( $cache[ $activity_id ] ) ) {
+			global $wpdb;
+			$bp = buddypress();
+
+			$cache[ $activity_id ] = $wpdb->get_col(
+				$wpdb->prepare(
+					"SELECT id FROM {$bp->activity->table_name} WHERE type = 'activity_comment' AND item_id = %d AND is_spam = 1",
+					$activity_id
+				)
+			);
+		}
+
+		return $cache[ $activity_id ];
+	}
+
+	/**
 	 * Get all activity children comments count and top level comment count based on id.
 	 *
 	 * @since BuddyBoss 2.5.80
@@ -2449,12 +2476,7 @@ class BP_Activity_Activity {
 
 		if ( ! empty( $args['spam'] ) && 'ham_only' === $args['spam'] ) {
 			// Get spam comment IDs for this activity to include orphaned comments in count.
-			$spam_comment_ids = $wpdb->get_col(
-				$wpdb->prepare(
-					"SELECT id FROM {$bp->activity->table_name} WHERE type = 'activity_comment' AND item_id = %d AND is_spam = 1",
-					$comment_id
-				)
-			);
+			$spam_comment_ids = self::get_spam_comment_ids( $comment_id );
 
 			if ( ! empty( $spam_comment_ids ) ) {
 				$spam_ids_list  = implode( ',', array_map( 'intval', $spam_comment_ids ) );
