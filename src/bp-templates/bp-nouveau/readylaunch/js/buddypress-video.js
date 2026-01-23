@@ -132,7 +132,7 @@ window.bp = window.bp || {};
 			$document.on( 'click', '.bb-rl-ac-video-move', this.openVideoMove.bind( this ) );
 			$document.on( 'change', '.bb-video-check-wrap [name="bb-video-select"]', this.addSelectedClassToWrapper.bind( this ) );
 			$document.on( 'click', '#bb-select-deselect-all-video', this.toggleSelectAllVideo.bind( this ) );
-			$document.on( 'click', '.video-action_list .bb-rl-video-file-delete, #bb-delete-video', this.deleteVideo.bind( this ) );
+			$document.on( 'click', '.video-action_list .bb-rl-video-file-delete, .bb_rl_more_dropdown .bb-rl-video-file-delete, #bb-delete-video', this.deleteVideo.bind( this ) );
 			$document.on( 'click', '.bb-rl-video-thumbnail-uploader.opened-edit-thumbnail .bb-rl-video-thumbnail-custom .bb-rl-close-thumbnail-custom', this.deleteVideoThumb.bind( this ) );
 
 			if ( undefined !== BP_Nouveau.is_send_ajax_request && '1' === BP_Nouveau.is_send_ajax_request ) {
