@@ -1452,6 +1452,7 @@ window.bp = window.bp || {};
 			var contentValidate = (
 				$( $.parseHTML( content ) ).text().trim() !== '' ||
 				content.includes( 'class="emoji"' ) ||
+				content.indexOf( 'emojioneemoji' ) >= 0 ||
 				(
 					! _.isUndefined( this.postForm.model.get( 'link_success' ) ) &&
 					true === this.postForm.model.get( 'link_success' )
@@ -5446,7 +5447,7 @@ window.bp = window.bp || {};
 				);
 
 				// Transform emoji image into emoji unicode.
-				$whatsNew.find( 'img.bb-rl-emojioneemoji' ).replaceWith(
+				$whatsNew.find( 'img.emojioneemoji, img.bb-rl-emojioneemoji' ).replaceWith(
 					function () {
 						return this.dataset.emojiChar;
 					}
