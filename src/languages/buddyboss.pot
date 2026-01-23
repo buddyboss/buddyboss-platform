@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 2.18.0\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2026-01-23 12:43:33+00:00\n"
+"POT-Creation-Date: 2026-01-23 12:48:34+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -4631,9 +4631,9 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/document/ajax.php:1222
 #: bp-templates/bp-nouveau/includes/document/ajax.php:1309
 #: bp-templates/bp-nouveau/includes/document/ajax.php:1449
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1611
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1648
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1734
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1603
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1640
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1726
 #: bp-templates/bp-nouveau/includes/follow/ajax.php:52
 #: bp-templates/bp-nouveau/includes/friends/ajax.php:70
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:118
@@ -36629,27 +36629,23 @@ msgstr ""
 msgid "Couldn’t move item because it's parent folder. "
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1602
-msgid "Please login to view folders."
-msgstr ""
-
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1627
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1619
 msgid " Documents"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1658
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1650
 msgid "Please login to edit a privacy."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1679
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1671
 msgid "You don't have permission to update this folder privacy."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1687
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1679
 msgid "You don't have permission to update this document privacy."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1694
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1686
 #: bp-templates/bp-nouveau/includes/media/ajax.php:802
 #: bp-templates/bp-nouveau/includes/video/ajax.php:899
 msgid "Invalid privacy status."

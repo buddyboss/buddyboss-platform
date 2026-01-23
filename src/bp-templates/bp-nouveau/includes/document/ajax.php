@@ -82,7 +82,7 @@ add_action(
 			array(
 				'document_get_folder_view' => array(
 					'function' => 'bp_nouveau_ajax_document_get_folder_view',
-					'nopriv'   => true,
+					'nopriv'   => false,
 				),
 			),
 			array(
@@ -1595,14 +1595,6 @@ function bp_nouveau_ajax_document_folder_move() {
 }
 
 function bp_nouveau_ajax_document_get_folder_view() {
-
-	// Require user to be logged in.
-	if ( ! is_user_logged_in() ) {
-		$response = array(
-			'feedback' => esc_html__( 'Please login to view folders.', 'buddyboss' ),
-		);
-		wp_send_json_error( $response );
-	}
 
 	// Nonce verification.
 	$nonce = bb_filter_input_string( INPUT_GET, '_wpnonce' );
