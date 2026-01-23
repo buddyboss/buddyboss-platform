@@ -3,7 +3,8 @@
  * BuddyBoss Feature Loader
  *
  * Handles conditional PHP loading based on feature status.
- * Executes php_loader callbacks from registered features only when active.
+ * This class is responsible for loading feature-specific PHP files
+ * only when the corresponding feature is active.
  *
  * @package BuddyBoss\Core\Administration
  * @since BuddyBoss 3.0.0
@@ -28,7 +29,31 @@ class BB_Feature_Loader {
 	private static $instance = null;
 
 	/**
-	 * Tracks which features have been loaded.
+	 * Registered PHP loaders by feature.
+	 *
+	 * @since BuddyBoss 3.0.0
+	 * @var array
+	 */
+	private $php_loaders = array();
+
+	/**
+	 * Registered admin loaders by feature.
+	 *
+	 * @since BuddyBoss 3.0.0
+	 * @var array
+	 */
+	private $admin_loaders = array();
+
+	/**
+	 * Registered REST API loaders by feature.
+	 *
+	 * @since BuddyBoss 3.0.0
+	 * @var array
+	 */
+	private $rest_loaders = array();
+
+	/**
+	 * Features that have been loaded.
 	 *
 	 * @since BuddyBoss 3.0.0
 	 * @var array
@@ -36,9 +61,15 @@ class BB_Feature_Loader {
 	private $loaded_features = array();
 
 	/**
-	 * Deferred loaders for lazy loading.
+	 * Features that have had their admin code loaded.
 	 *
-	 * Structure: $deferred_loaders[ $hook ][] = array( 'feature_id' => $id, 'callback' => $callback )
+	 * @since BuddyBoss 3.0.0
+	 * @var array
+	 */
+	private $loaded_admin_features = array();
+
+	/**
+	 * Deferred loaders to execute on specific hooks.
 	 *
 	 * @since BuddyBoss 3.0.0
 	 * @var array
@@ -64,55 +95,123 @@ class BB_Feature_Loader {
 	 * @since BuddyBoss 3.0.0
 	 */
 	private function __construct() {
-		// Hook into feature registration completion to load active features.
-		add_action( 'bb_after_register_features', array( $this, 'load_active_features' ), 10 );
-
-		// Track components loaded via the legacy system.
-		add_action( 'bb_component_loaded_legacy', array( $this, 'track_legacy_loaded_component' ), 10, 2 );
+		$this->setup_hooks();
 	}
 
 	/**
-	 * Track a component loaded via the legacy system.
+	 * Set up hooks.
 	 *
-	 * This prevents the Feature Loader from double-loading components
-	 * that were already loaded by BP_Core::load_components().
+	 * @since BuddyBoss 3.0.0
+	 */
+	private function setup_hooks() {
+		// Load features after they are registered.
+		add_action( 'bb_after_register_features', array( $this, 'load_active_features' ), 10 );
+
+		// Load admin-specific code.
+		add_action( 'bp_admin_init', array( $this, 'load_admin_features' ), 5 );
+
+		// Load REST API endpoints.
+		add_action( 'bp_rest_api_init', array( $this, 'load_rest_features' ), 5 );
+
+		// Process deferred loaders.
+		add_action( 'bp_init', array( $this, 'process_deferred_loaders' ), 1 );
+	}
+
+	/**
+	 * Register a PHP loader for a feature.
 	 *
 	 * @since BuddyBoss 3.0.0
 	 *
-	 * @param string $component Component ID.
-	 * @param string $type      Component type: 'optional' or 'required'.
+	 * @param string   $feature_id The feature ID.
+	 * @param callable $loader     The loader callback.
+	 * @param array    $args       Optional. Additional arguments. {
+	 *     @type string $hook     Hook to defer loading to (default: immediate).
+	 *     @type int    $priority Priority for deferred hook (default: 10).
+	 * }
+	 * @return bool True on success.
 	 */
-	public function track_legacy_loaded_component( $component, $type ) {
-		// Mark the feature as loaded (component ID = feature ID for bridged components).
-		$this->loaded_features[ $component ] = true;
+	public function register_php_loader( $feature_id, $loader, $args = array() ) {
+		if ( ! is_callable( $loader ) ) {
+			return false;
+		}
+
+		$args = wp_parse_args(
+			$args,
+			array(
+				'hook'     => '',
+				'priority' => 10,
+			)
+		);
+
+		if ( ! empty( $args['hook'] ) ) {
+			// Store for deferred loading.
+			if ( ! isset( $this->deferred_loaders[ $args['hook'] ] ) ) {
+				$this->deferred_loaders[ $args['hook'] ] = array();
+			}
+			$this->deferred_loaders[ $args['hook'] ][] = array(
+				'feature_id' => $feature_id,
+				'loader'     => $loader,
+				'priority'   => $args['priority'],
+			);
+		} else {
+			$this->php_loaders[ $feature_id ] = $loader;
+		}
+
+		return true;
 	}
 
 	/**
-	 * Load all active features that have php_loader callbacks.
+	 * Register an admin loader for a feature.
+	 *
+	 * @since BuddyBoss 3.0.0
+	 *
+	 * @param string   $feature_id The feature ID.
+	 * @param callable $loader     The loader callback.
+	 * @return bool True on success.
+	 */
+	public function register_admin_loader( $feature_id, $loader ) {
+		if ( ! is_callable( $loader ) ) {
+			return false;
+		}
+
+		$this->admin_loaders[ $feature_id ] = $loader;
+		return true;
+	}
+
+	/**
+	 * Register a REST API loader for a feature.
+	 *
+	 * @since BuddyBoss 3.0.0
+	 *
+	 * @param string   $feature_id The feature ID.
+	 * @param callable $loader     The loader callback.
+	 * @return bool True on success.
+	 */
+	public function register_rest_loader( $feature_id, $loader ) {
+		if ( ! is_callable( $loader ) ) {
+			return false;
+		}
+
+		$this->rest_loaders[ $feature_id ] = $loader;
+		return true;
+	}
+
+	/**
+	 * Load all active features.
 	 *
 	 * @since BuddyBoss 3.0.0
 	 */
 	public function load_active_features() {
 		$registry = bb_feature_registry();
-		$features = $registry->get_features( array( 'status' => 'all' ) );
 
-		foreach ( $features as $feature_id => $feature ) {
-			// Skip if already loaded.
-			if ( isset( $this->loaded_features[ $feature_id ] ) ) {
+		foreach ( $this->php_loaders as $feature_id => $loader ) {
+			if ( $this->is_feature_loaded( $feature_id ) ) {
 				continue;
 			}
 
-			// Skip if no php_loader defined.
-			if ( empty( $feature['php_loader'] ) ) {
-				continue;
+			if ( $registry->is_feature_active( $feature_id ) ) {
+				$this->load_feature( $feature_id, $loader );
 			}
-
-			// Only load if feature is active.
-			if ( ! $registry->is_feature_active( $feature_id ) ) {
-				continue;
-			}
-
-			$this->load_feature( $feature_id, $feature['php_loader'] );
 		}
 
 		/**
@@ -122,127 +221,150 @@ class BB_Feature_Loader {
 		 *
 		 * @param array $loaded_features Array of loaded feature IDs.
 		 */
-		do_action( 'bb_features_loaded', array_keys( $this->loaded_features ) );
+		do_action( 'bb_features_loaded', $this->loaded_features );
 	}
 
 	/**
-	 * Load a single feature.
+	 * Load admin-specific code for active features.
+	 *
+	 * @since BuddyBoss 3.0.0
+	 */
+	public function load_admin_features() {
+		if ( ! is_admin() ) {
+			return;
+		}
+
+		$registry = bb_feature_registry();
+
+		foreach ( $this->admin_loaders as $feature_id => $loader ) {
+			if ( $this->is_admin_feature_loaded( $feature_id ) ) {
+				continue;
+			}
+
+			if ( $registry->is_feature_active( $feature_id ) ) {
+				$this->load_admin_feature( $feature_id, $loader );
+			}
+		}
+
+		/**
+		 * Fires after all admin features have been loaded.
+		 *
+		 * @since BuddyBoss 3.0.0
+		 *
+		 * @param array $loaded_admin_features Array of loaded admin feature IDs.
+		 */
+		do_action( 'bb_admin_features_loaded', $this->loaded_admin_features );
+	}
+
+	/**
+	 * Load REST API endpoints for active features.
+	 *
+	 * @since BuddyBoss 3.0.0
+	 */
+	public function load_rest_features() {
+		$registry = bb_feature_registry();
+
+		foreach ( $this->rest_loaders as $feature_id => $loader ) {
+			if ( $registry->is_feature_active( $feature_id ) ) {
+				call_user_func( $loader );
+			}
+		}
+
+		/**
+		 * Fires after all REST features have been loaded.
+		 *
+		 * @since BuddyBoss 3.0.0
+		 */
+		do_action( 'bb_rest_features_loaded' );
+	}
+
+	/**
+	 * Process deferred loaders.
+	 *
+	 * @since BuddyBoss 3.0.0
+	 */
+	public function process_deferred_loaders() {
+		$registry = bb_feature_registry();
+
+		foreach ( $this->deferred_loaders as $hook => $loaders ) {
+			add_action(
+				$hook,
+				function () use ( $loaders, $registry ) {
+					foreach ( $loaders as $loader_data ) {
+						if ( $registry->is_feature_active( $loader_data['feature_id'] ) ) {
+							call_user_func( $loader_data['loader'] );
+						}
+					}
+				},
+				5 // Load early on the deferred hook.
+			);
+		}
+	}
+
+	/**
+	 * Load a specific feature.
 	 *
 	 * @since BuddyBoss 3.0.0
 	 *
-	 * @param string   $feature_id Feature ID.
-	 * @param callable $loader     Loader callback.
-	 * @return bool True if loaded, false otherwise.
+	 * @param string   $feature_id The feature ID.
+	 * @param callable $loader     The loader callback.
 	 */
-	public function load_feature( $feature_id, $loader ) {
-		// Prevent double loading.
-		if ( isset( $this->loaded_features[ $feature_id ] ) ) {
-			return false;
-		}
-
-		// Validate loader is callable.
-		if ( ! is_callable( $loader ) ) {
-			_doing_it_wrong(
-				__METHOD__,
-				sprintf(
-					/* translators: %s: feature ID */
-					__( 'Feature "%s" has an invalid php_loader callback.', 'buddyboss' ),
-					$feature_id
-				),
-				'3.0.0'
-			);
-			return false;
-		}
-
+	private function load_feature( $feature_id, $loader ) {
 		/**
 		 * Fires before a feature is loaded.
 		 *
 		 * @since BuddyBoss 3.0.0
 		 *
-		 * @param string $feature_id Feature ID.
+		 * @param string $feature_id The feature ID.
 		 */
 		do_action( 'bb_before_load_feature', $feature_id );
 
-		// Execute the loader.
 		call_user_func( $loader );
 
-		// Mark as loaded.
-		$this->loaded_features[ $feature_id ] = true;
+		$this->loaded_features[] = $feature_id;
 
 		/**
 		 * Fires after a feature is loaded.
 		 *
 		 * @since BuddyBoss 3.0.0
 		 *
-		 * @param string $feature_id Feature ID.
+		 * @param string $feature_id The feature ID.
 		 */
 		do_action( 'bb_after_load_feature', $feature_id );
-		do_action( "bb_feature_{$feature_id}_loaded", $feature_id );
-
-		return true;
+		do_action( "bb_after_load_feature_{$feature_id}" );
 	}
 
 	/**
-	 * Register a deferred loader for lazy loading on a specific hook.
+	 * Load admin code for a specific feature.
 	 *
 	 * @since BuddyBoss 3.0.0
 	 *
-	 * @param string   $feature_id Feature ID.
-	 * @param string   $hook       WordPress hook to defer loading to.
-	 * @param callable $loader     Loader callback.
-	 * @param int      $priority   Hook priority (default: 10).
+	 * @param string   $feature_id The feature ID.
+	 * @param callable $loader     The loader callback.
 	 */
-	public function defer_load( $feature_id, $hook, $loader, $priority = 10 ) {
-		// Store the deferred loader.
-		if ( ! isset( $this->deferred_loaders[ $hook ] ) ) {
-			$this->deferred_loaders[ $hook ] = array();
-		}
+	private function load_admin_feature( $feature_id, $loader ) {
+		/**
+		 * Fires before admin feature code is loaded.
+		 *
+		 * @since BuddyBoss 3.0.0
+		 *
+		 * @param string $feature_id The feature ID.
+		 */
+		do_action( 'bb_before_load_admin_feature', $feature_id );
 
-		$this->deferred_loaders[ $hook ][] = array(
-			'feature_id' => $feature_id,
-			'callback'   => $loader,
-			'priority'   => $priority,
-		);
+		call_user_func( $loader );
 
-		// Register the hook handler if not already registered.
-		if ( 1 === count( $this->deferred_loaders[ $hook ] ) ) {
-			add_action( $hook, array( $this, 'execute_deferred_loaders' ), $priority );
-		}
-	}
+		$this->loaded_admin_features[] = $feature_id;
 
-	/**
-	 * Execute deferred loaders for the current hook.
-	 *
-	 * @since BuddyBoss 3.0.0
-	 */
-	public function execute_deferred_loaders() {
-		$hook = current_filter();
-
-		if ( empty( $this->deferred_loaders[ $hook ] ) ) {
-			return;
-		}
-
-		$registry = bb_feature_registry();
-
-		foreach ( $this->deferred_loaders[ $hook ] as $deferred ) {
-			$feature_id = $deferred['feature_id'];
-			$loader     = $deferred['callback'];
-
-			// Skip if already loaded.
-			if ( isset( $this->loaded_features[ $feature_id ] ) ) {
-				continue;
-			}
-
-			// Only load if feature is still active.
-			if ( ! $registry->is_feature_active( $feature_id ) ) {
-				continue;
-			}
-
-			$this->load_feature( $feature_id, $loader );
-		}
-
-		// Clear the deferred loaders for this hook.
-		unset( $this->deferred_loaders[ $hook ] );
+		/**
+		 * Fires after admin feature code is loaded.
+		 *
+		 * @since BuddyBoss 3.0.0
+		 *
+		 * @param string $feature_id The feature ID.
+		 */
+		do_action( 'bb_after_load_admin_feature', $feature_id );
+		do_action( "bb_after_load_admin_feature_{$feature_id}" );
 	}
 
 	/**
@@ -250,11 +372,23 @@ class BB_Feature_Loader {
 	 *
 	 * @since BuddyBoss 3.0.0
 	 *
-	 * @param string $feature_id Feature ID.
-	 * @return bool True if loaded, false otherwise.
+	 * @param string $feature_id The feature ID.
+	 * @return bool True if loaded.
 	 */
 	public function is_feature_loaded( $feature_id ) {
-		return isset( $this->loaded_features[ $feature_id ] );
+		return in_array( $feature_id, $this->loaded_features, true );
+	}
+
+	/**
+	 * Check if admin code for a feature has been loaded.
+	 *
+	 * @since BuddyBoss 3.0.0
+	 *
+	 * @param string $feature_id The feature ID.
+	 * @return bool True if loaded.
+	 */
+	public function is_admin_feature_loaded( $feature_id ) {
+		return in_array( $feature_id, $this->loaded_admin_features, true );
 	}
 
 	/**
@@ -265,50 +399,53 @@ class BB_Feature_Loader {
 	 * @return array Array of loaded feature IDs.
 	 */
 	public function get_loaded_features() {
-		return array_keys( $this->loaded_features );
+		return $this->loaded_features;
 	}
 
 	/**
-	 * Manually trigger loading of a feature if it hasn't been loaded yet.
+	 * Manually load a feature immediately.
 	 *
-	 * Useful for on-demand loading when a feature is needed.
+	 * Useful for forcing a feature to load outside the normal loading cycle.
 	 *
 	 * @since BuddyBoss 3.0.0
 	 *
-	 * @param string $feature_id Feature ID to load.
-	 * @return bool True if loaded (or already loaded), false if feature not found or inactive.
+	 * @param string $feature_id The feature ID.
+	 * @return bool True if loaded, false if already loaded or no loader exists.
 	 */
-	public function maybe_load_feature( $feature_id ) {
-		// Already loaded.
-		if ( isset( $this->loaded_features[ $feature_id ] ) ) {
-			return true;
-		}
-
-		$registry = bb_feature_registry();
-		$feature  = $registry->get_feature( $feature_id );
-
-		// Feature not registered.
-		if ( null === $feature ) {
+	public function force_load_feature( $feature_id ) {
+		if ( $this->is_feature_loaded( $feature_id ) ) {
 			return false;
 		}
 
-		// Feature not active.
-		if ( ! $registry->is_feature_active( $feature_id ) ) {
+		if ( ! isset( $this->php_loaders[ $feature_id ] ) ) {
 			return false;
 		}
 
-		// No loader defined.
-		if ( empty( $feature['php_loader'] ) ) {
-			return false;
-		}
+		$this->load_feature( $feature_id, $this->php_loaders[ $feature_id ] );
+		return true;
+	}
 
-		return $this->load_feature( $feature_id, $feature['php_loader'] );
+	/**
+	 * Get registered loaders for debugging.
+	 *
+	 * @since BuddyBoss 3.0.0
+	 *
+	 * @return array {
+	 *     @type array $php_loaders   Registered PHP loaders.
+	 *     @type array $admin_loaders Registered admin loaders.
+	 *     @type array $rest_loaders  Registered REST loaders.
+	 *     @type array $deferred      Deferred loaders.
+	 * }
+	 */
+	public function get_registered_loaders() {
+		return array(
+			'php_loaders'   => array_keys( $this->php_loaders ),
+			'admin_loaders' => array_keys( $this->admin_loaders ),
+			'rest_loaders'  => array_keys( $this->rest_loaders ),
+			'deferred'      => array_keys( $this->deferred_loaders ),
+		);
 	}
 }
-
-// =============================================================================
-// HELPER FUNCTIONS
-// =============================================================================
 
 /**
  * Get the Feature Loader instance.
@@ -319,28 +456,4 @@ class BB_Feature_Loader {
  */
 function bb_feature_loader() {
 	return BB_Feature_Loader::instance();
-}
-
-/**
- * Check if a feature has been loaded.
- *
- * @since BuddyBoss 3.0.0
- *
- * @param string $feature_id Feature ID.
- * @return bool True if loaded, false otherwise.
- */
-function bb_is_feature_loaded( $feature_id ) {
-	return bb_feature_loader()->is_feature_loaded( $feature_id );
-}
-
-/**
- * Manually trigger loading of a feature.
- *
- * @since BuddyBoss 3.0.0
- *
- * @param string $feature_id Feature ID to load.
- * @return bool True if loaded, false otherwise.
- */
-function bb_maybe_load_feature( $feature_id ) {
-	return bb_feature_loader()->maybe_load_feature( $feature_id );
 }

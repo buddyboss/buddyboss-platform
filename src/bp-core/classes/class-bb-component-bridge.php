@@ -2,9 +2,13 @@
 /**
  * BuddyBoss Component Bridge
  *
- * Provides backward compatibility between the legacy BP_Component system
- * and the new Feature Registry system. Auto-converts legacy components
- * to features and keeps activation states synchronized.
+ * Provides backward compatibility by automatically converting legacy
+ * BuddyPress/BuddyBoss components to the new feature-based system.
+ *
+ * This bridge ensures that:
+ * - Third-party plugins using bp_optional_components filter still work
+ * - Existing BP_Component classes are recognized as features
+ * - Component activation state syncs with feature activation state
  *
  * @package BuddyBoss\Core\Administration
  * @since BuddyBoss 3.0.0
@@ -29,22 +33,61 @@ class BB_Component_Bridge {
 	private static $instance = null;
 
 	/**
-	 * Component to feature mapping.
-	 *
-	 * Maps legacy component IDs to feature IDs (usually the same).
+	 * Mapping of component IDs to feature IDs.
 	 *
 	 * @since BuddyBoss 3.0.0
 	 * @var array
 	 */
-	private $component_feature_map = array();
+	private $component_to_feature_map = array();
 
 	/**
-	 * Components that have been bridged.
+	 * Mapping of feature IDs to component IDs.
 	 *
 	 * @since BuddyBoss 3.0.0
 	 * @var array
 	 */
-	private $bridged_components = array();
+	private $feature_to_component_map = array();
+
+	/**
+	 * Components registered via filters (third-party).
+	 *
+	 * @since BuddyBoss 3.0.0
+	 * @var array
+	 */
+	private $external_components = array();
+
+	/**
+	 * Core BuddyBoss components (built-in).
+	 *
+	 * @since BuddyBoss 3.0.0
+	 * @var array
+	 */
+	private $core_components = array(
+		'activity',
+		'blogs',
+		'document',
+		'forums',
+		'friends',
+		'groups',
+		'invites',
+		'media',
+		'members',
+		'messages',
+		'moderation',
+		'notifications',
+		'search',
+		'settings',
+		'video',
+		'xprofile',
+	);
+
+	/**
+	 * Whether the bridge has been initialized.
+	 *
+	 * @since BuddyBoss 3.0.0
+	 * @var bool
+	 */
+	private $initialized = false;
 
 	/**
 	 * Get singleton instance.
@@ -69,21 +112,113 @@ class BB_Component_Bridge {
 	}
 
 	/**
-	 * Setup hooks for bridging.
+	 * Set up hooks.
 	 *
 	 * @since BuddyBoss 3.0.0
 	 */
 	private function setup_hooks() {
-		// Listen to component filters to capture legacy components.
+		// Hook into component filters to capture third-party registrations.
 		add_filter( 'bp_optional_components', array( $this, 'capture_optional_components' ), 999 );
 		add_filter( 'bp_required_components', array( $this, 'capture_required_components' ), 999 );
 
-		// Auto-register legacy components as features after features are registered.
-		add_action( 'bb_after_register_features', array( $this, 'bridge_legacy_components' ), 5 );
+		// Sync feature activation with component activation.
+		add_filter( 'bp_active_components', array( $this, 'sync_active_components' ), 999 );
 
-		// Sync feature activation to bp-active-components.
-		add_action( 'bb_feature_activated', array( $this, 'sync_feature_to_component' ), 10, 1 );
-		add_action( 'bb_feature_deactivated', array( $this, 'sync_feature_to_component' ), 10, 1 );
+		// Register external components as features after core features are registered.
+		add_action( 'bb_after_register_features', array( $this, 'register_external_components_as_features' ), 100 );
+
+		// When a feature is activated/deactivated, sync to components.
+		add_action( 'bb_feature_activated', array( $this, 'on_feature_activated' ), 10, 1 );
+		add_action( 'bb_feature_deactivated', array( $this, 'on_feature_deactivated' ), 10, 1 );
+	}
+
+	/**
+	 * Initialize the bridge.
+	 *
+	 * Sets up the component-to-feature mappings.
+	 *
+	 * @since BuddyBoss 3.0.0
+	 */
+	public function init() {
+		if ( $this->initialized ) {
+			return;
+		}
+
+		// Build default mappings for core components.
+		$this->build_core_mappings();
+
+		$this->initialized = true;
+
+		/**
+		 * Fires after the component bridge is initialized.
+		 *
+		 * @since BuddyBoss 3.0.0
+		 *
+		 * @param BB_Component_Bridge $bridge The bridge instance.
+		 */
+		do_action( 'bb_component_bridge_initialized', $this );
+	}
+
+	/**
+	 * Build mappings for core components.
+	 *
+	 * @since BuddyBoss 3.0.0
+	 */
+	private function build_core_mappings() {
+		// Default 1:1 mappings for core components.
+		foreach ( $this->core_components as $component ) {
+			$this->register_mapping( $component, $component );
+		}
+
+		// Special mappings where component != feature.
+		$special_mappings = array(
+			'xprofile' => 'members', // xprofile is part of members feature.
+		);
+
+		foreach ( $special_mappings as $component => $feature ) {
+			$this->component_to_feature_map[ $component ] = $feature;
+		}
+	}
+
+	/**
+	 * Register a component-to-feature mapping.
+	 *
+	 * @since BuddyBoss 3.0.0
+	 *
+	 * @param string $component_id The component ID.
+	 * @param string $feature_id   The feature ID.
+	 */
+	public function register_mapping( $component_id, $feature_id ) {
+		$this->component_to_feature_map[ $component_id ] = $feature_id;
+		$this->feature_to_component_map[ $feature_id ]   = $component_id;
+	}
+
+	/**
+	 * Get the feature ID for a component.
+	 *
+	 * @since BuddyBoss 3.0.0
+	 *
+	 * @param string $component_id The component ID.
+	 * @return string|null The feature ID or null if not mapped.
+	 */
+	public function get_feature_for_component( $component_id ) {
+		return isset( $this->component_to_feature_map[ $component_id ] )
+			? $this->component_to_feature_map[ $component_id ]
+			: null;
+	}
+
+	/**
+	 * Get the component ID for a feature.
+	 *
+	 * @since BuddyBoss 3.0.0
+	 *
+	 * @param string $feature_id The feature ID.
+	 * @return string|null The component ID or null if not mapped.
+	 */
+	public function get_component_for_feature( $feature_id ) {
+		return isset( $this->feature_to_component_map[ $feature_id ] )
+			? $this->feature_to_component_map[ $feature_id ]
+			: null;
 	}
 
 	/**
@@ -92,15 +227,20 @@ class BB_Component_Bridge {
 	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param array $components Array of optional component IDs.
-	 * @return array
+	 * @return array Modified array of component IDs.
 	 */
 	public function capture_optional_components( $components ) {
+		// Find components that are not in our core list (third-party).
 		foreach ( $components as $component ) {
-			$this->component_feature_map[ $component ] = array(
-				'type'       => 'optional',
-				'feature_id' => $component, // Default: same as component ID.
-			);
+			if ( ! in_array( $component, $this->core_components, true ) ) {
+				$this->external_components[ $component ] = array(
+					'type'     => 'optional',
+					'title'    => ucfirst( str_replace( array( '-', '_' ), ' ', $component ) ),
+					'default'  => false,
+				);
+			}
 		}
+
 		return $components;
 	}
 
@@ -110,239 +250,257 @@ class BB_Component_Bridge {
 	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param array $components Array of required component IDs.
-	 * @return array
+	 * @return array Modified array of component IDs.
 	 */
 	public function capture_required_components( $components ) {
+		// Find components that are not in our core list (third-party).
 		foreach ( $components as $component ) {
-			$this->component_feature_map[ $component ] = array(
-				'type'       => 'required',
-				'feature_id' => $component, // Default: same as component ID.
-			);
+			if ( ! in_array( $component, $this->core_components, true ) ) {
+				$this->external_components[ $component ] = array(
+					'type'     => 'required',
+					'title'    => ucfirst( str_replace( array( '-', '_' ), ' ', $component ) ),
+					'default'  => true,
+				);
+			}
 		}
+
 		return $components;
 	}
 
 	/**
-	 * Bridge legacy components that aren't registered as features.
-	 *
-	 * Auto-registers features for any component that doesn't already have
-	 * a feature registration.
+	 * Sync active components with feature status.
 	 *
 	 * @since BuddyBoss 3.0.0
+	 *
+	 * @param array $active_components Array of active component IDs.
+	 * @return array Modified array of active component IDs.
 	 */
-	public function bridge_legacy_components() {
+	public function sync_active_components( $active_components ) {
+		// Ensure the bridge is initialized.
+		$this->init();
+
+		// Get registry if available.
+		if ( ! function_exists( 'bb_feature_registry' ) ) {
+			return $active_components;
+		}
+
 		$registry = bb_feature_registry();
 
-		foreach ( $this->component_feature_map as $component_id => $config ) {
-			$feature_id = $config['feature_id'];
-
-			// Skip if feature already registered (has native registration).
-			$existing_feature = $registry->get_feature( $feature_id );
-			if ( null !== $existing_feature ) {
-				// Track the mapping even for existing features.
-				$this->bridged_components[ $component_id ] = $feature_id;
+		// For each feature that maps to a component, check feature status.
+		foreach ( $this->feature_to_component_map as $feature_id => $component_id ) {
+			// Skip if feature not registered.
+			if ( ! $registry->is_feature_registered( $feature_id ) ) {
 				continue;
 			}
 
-			// Auto-register a feature for this legacy component.
-			$this->auto_register_component_feature( $component_id, $config );
+			$is_active = $registry->is_feature_active( $feature_id );
+
+			if ( $is_active && ! isset( $active_components[ $component_id ] ) ) {
+				$active_components[ $component_id ] = '1';
+			} elseif ( ! $is_active && isset( $active_components[ $component_id ] ) ) {
+				unset( $active_components[ $component_id ] );
+			}
 		}
 
-		/**
-		 * Fires after legacy components have been bridged.
-		 *
-		 * @since BuddyBoss 3.0.0
-		 *
-		 * @param array $bridged_components Array of bridged component IDs.
-		 */
-		do_action( 'bb_components_bridged', $this->bridged_components );
+		return $active_components;
 	}
 
 	/**
-	 * Auto-register a feature for a legacy component.
+	 * Register external (third-party) components as features.
 	 *
 	 * @since BuddyBoss 3.0.0
-	 *
-	 * @param string $component_id Component ID.
-	 * @param array  $config       Component configuration.
 	 */
-	private function auto_register_component_feature( $component_id, $config ) {
-		$bp         = buddypress();
-		$feature_id = $config['feature_id'];
-		$is_required = 'required' === $config['type'];
-
-		// Generate label from component ID.
-		$label = ucwords( str_replace( array( '-', '_' ), ' ', $component_id ) );
-
-		// Build php_loader callback.
-		$loader_file = $bp->plugin_dir . 'bp-' . $component_id . '/bp-' . $component_id . '-loader.php';
-		$php_loader  = null;
-
-		if ( file_exists( $loader_file ) ) {
-			$php_loader = function() use ( $loader_file ) {
-				require_once $loader_file;
-			};
-		}
-
-		// Register the feature.
-		$result = bb_register_feature(
-			$feature_id,
-			array(
-				'label'              => $label,
-				'description'        => sprintf(
-					/* translators: %s: component name */
-					__( '%s component (auto-bridged from legacy system).', 'buddyboss' ),
-					$label
-				),
-				'category'           => 'community',
-				'license_tier'       => 'free',
-				'is_active_callback' => function() use ( $component_id ) {
-					return bp_is_active( $component_id );
-				},
-				'php_loader'         => $php_loader,
-				'settings_route'     => '/settings/' . $feature_id,
-				'order'              => 200, // Lower priority than native features.
-				'_bridged'           => true, // Mark as bridged for debugging.
-				'_component_id'      => $component_id,
-				'_is_required'       => $is_required,
-			)
-		);
-
-		if ( true === $result || ! is_wp_error( $result ) ) {
-			$this->bridged_components[ $component_id ] = $feature_id;
-		}
-	}
-
-	/**
-	 * Sync feature activation state to bp-active-components option.
-	 *
-	 * Ensures the legacy option stays in sync when features are
-	 * activated/deactivated through the new system.
-	 *
-	 * @since BuddyBoss 3.0.0
-	 *
-	 * @param string $feature_id Feature ID that was activated/deactivated.
-	 */
-	public function sync_feature_to_component( $feature_id ) {
-		// Find the component ID for this feature.
-		$component_id = $this->get_component_for_feature( $feature_id );
-
-		if ( ! $component_id ) {
-			// Feature doesn't map to a component.
+	public function register_external_components_as_features() {
+		if ( empty( $this->external_components ) ) {
 			return;
 		}
 
-		// The feature registry already updates bp-active-components in its
-		// activate_feature() and deactivate_feature() methods.
-		// This hook is here for any additional sync logic needed.
+		$registry = bb_feature_registry();
+
+		foreach ( $this->external_components as $component_id => $component_data ) {
+			// Skip if already registered as a feature.
+			if ( $registry->is_feature_registered( $component_id ) ) {
+				continue;
+			}
+
+			// Determine if component is active.
+			$active_components = bp_get_option( 'bp-active-components', array() );
+			$is_active         = isset( $active_components[ $component_id ] );
+
+			// Register as a feature.
+			$result = $registry->register_feature(
+				$component_id,
+				array(
+					'label'              => $component_data['title'],
+					'description'        => sprintf(
+						/* translators: %s: component name */
+						__( '%s component (registered via legacy filter).', 'buddyboss' ),
+						$component_data['title']
+					),
+					'icon'               => array(
+						'type' => 'dashicon',
+						'slug' => 'dashicons-admin-plugins',
+					),
+					'category'           => 'integrations',
+					'license_tier'       => 'free',
+					'is_active_callback' => function () use ( $component_id ) {
+						return bp_is_active( $component_id );
+					},
+					'order'              => 500, // Place after core features.
+					'_legacy_component'  => true, // Mark as legacy.
+				)
+			);
+
+			if ( ! is_wp_error( $result ) ) {
+				// Register the mapping.
+				$this->register_mapping( $component_id, $component_id );
+			}
+		}
 
 		/**
-		 * Fires after feature-component sync.
+		 * Fires after external components are registered as features.
 		 *
 		 * @since BuddyBoss 3.0.0
 		 *
-		 * @param string $feature_id   Feature ID.
-		 * @param string $component_id Component ID.
+		 * @param array $external_components The external components that were registered.
 		 */
-		do_action( 'bb_feature_component_synced', $feature_id, $component_id );
+		do_action( 'bb_external_components_registered', $this->external_components );
 	}
 
 	/**
-	 * Get the component ID for a feature.
+	 * Handle feature activation - sync to component.
 	 *
 	 * @since BuddyBoss 3.0.0
 	 *
-	 * @param string $feature_id Feature ID.
-	 * @return string|null Component ID or null if not found.
+	 * @param string $feature_id The feature ID that was activated.
 	 */
-	public function get_component_for_feature( $feature_id ) {
-		// Check direct mapping.
-		if ( isset( $this->component_feature_map[ $feature_id ] ) ) {
-			return $feature_id;
+	public function on_feature_activated( $feature_id ) {
+		$component_id = $this->get_component_for_feature( $feature_id );
+
+		if ( ! $component_id ) {
+			return;
 		}
 
-		// Check reverse mapping in bridged components.
-		$component_id = array_search( $feature_id, $this->bridged_components, true );
-		return $component_id ? $component_id : null;
+		// Get current active components.
+		$active_components = bp_get_option( 'bp-active-components', array() );
+
+		// Add the component if not already active.
+		if ( ! isset( $active_components[ $component_id ] ) ) {
+			$active_components[ $component_id ] = '1';
+			bp_update_option( 'bp-active-components', $active_components );
+
+			/**
+			 * Fires after a component is activated via feature activation.
+			 *
+			 * @since BuddyBoss 3.0.0
+			 *
+			 * @param string $component_id The component ID.
+			 * @param string $feature_id   The feature ID.
+			 */
+			do_action( 'bb_component_activated_via_feature', $component_id, $feature_id );
+		}
 	}
 
 	/**
-	 * Get the feature ID for a component.
+	 * Handle feature deactivation - sync to component.
 	 *
 	 * @since BuddyBoss 3.0.0
 	 *
-	 * @param string $component_id Component ID.
-	 * @return string|null Feature ID or null if not found.
+	 * @param string $feature_id The feature ID that was deactivated.
 	 */
-	public function get_feature_for_component( $component_id ) {
-		if ( isset( $this->bridged_components[ $component_id ] ) ) {
-			return $this->bridged_components[ $component_id ];
+	public function on_feature_deactivated( $feature_id ) {
+		$component_id = $this->get_component_for_feature( $feature_id );
+
+		if ( ! $component_id ) {
+			return;
 		}
 
-		if ( isset( $this->component_feature_map[ $component_id ] ) ) {
-			return $this->component_feature_map[ $component_id ]['feature_id'];
+		// Get current active components.
+		$active_components = bp_get_option( 'bp-active-components', array() );
+
+		// Remove the component if active.
+		if ( isset( $active_components[ $component_id ] ) ) {
+			unset( $active_components[ $component_id ] );
+			bp_update_option( 'bp-active-components', $active_components );
+
+			/**
+			 * Fires after a component is deactivated via feature deactivation.
+			 *
+			 * @since BuddyBoss 3.0.0
+			 *
+			 * @param string $component_id The component ID.
+			 * @param string $feature_id   The feature ID.
+			 */
+			do_action( 'bb_component_deactivated_via_feature', $component_id, $feature_id );
 		}
-
-		return null;
 	}
 
 	/**
-	 * Check if a component has been bridged.
+	 * Check if a component has a corresponding feature.
 	 *
 	 * @since BuddyBoss 3.0.0
 	 *
-	 * @param string $component_id Component ID.
-	 * @return bool True if bridged, false otherwise.
+	 * @param string $component_id The component ID.
+	 * @return bool True if component has a feature mapping.
 	 */
-	public function is_component_bridged( $component_id ) {
-		return isset( $this->bridged_components[ $component_id ] );
+	public function has_feature_mapping( $component_id ) {
+		return isset( $this->component_to_feature_map[ $component_id ] );
 	}
 
 	/**
-	 * Get all bridged components.
+	 * Check if a component is a core BuddyBoss component.
 	 *
 	 * @since BuddyBoss 3.0.0
 	 *
-	 * @return array Array of component_id => feature_id mappings.
+	 * @param string $component_id The component ID.
+	 * @return bool True if it's a core component.
 	 */
-	public function get_bridged_components() {
-		return $this->bridged_components;
+	public function is_core_component( $component_id ) {
+		return in_array( $component_id, $this->core_components, true );
 	}
 
 	/**
-	 * Get the component-feature map.
+	 * Check if a component is an external (third-party) component.
 	 *
 	 * @since BuddyBoss 3.0.0
 	 *
-	 * @return array Component to feature mapping.
+	 * @param string $component_id The component ID.
+	 * @return bool True if it's an external component.
 	 */
-	public function get_component_feature_map() {
-		return $this->component_feature_map;
+	public function is_external_component( $component_id ) {
+		return isset( $this->external_components[ $component_id ] );
 	}
 
 	/**
-	 * Manually map a component to a feature.
-	 *
-	 * Useful for third-party plugins that want explicit control.
+	 * Get all external components.
 	 *
 	 * @since BuddyBoss 3.0.0
 	 *
-	 * @param string $component_id Component ID.
-	 * @param string $feature_id   Feature ID.
-	 * @param string $type         Component type: 'optional' or 'required'.
+	 * @return array Array of external components.
 	 */
-	public function map_component_to_feature( $component_id, $feature_id, $type = 'optional' ) {
-		$this->component_feature_map[ $component_id ] = array(
-			'type'       => $type,
-			'feature_id' => $feature_id,
+	public function get_external_components() {
+		return $this->external_components;
+	}
+
+	/**
+	 * Get all mappings for debugging.
+	 *
+	 * @since BuddyBoss 3.0.0
+	 *
+	 * @return array {
+	 *     @type array $component_to_feature Component to feature mappings.
+	 *     @type array $feature_to_component Feature to component mappings.
+	 *     @type array $external_components  External components.
+	 * }
+	 */
+	public function get_mappings() {
+		return array(
+			'component_to_feature' => $this->component_to_feature_map,
+			'feature_to_component' => $this->feature_to_component_map,
+			'external_components'  => $this->external_components,
 		);
-		$this->bridged_components[ $component_id ] = $feature_id;
 	}
 }
-
-// =============================================================================
-// HELPER FUNCTIONS
-// =============================================================================
 
 /**
  * Get the Component Bridge instance.
@@ -353,28 +511,4 @@ class BB_Component_Bridge {
  */
 function bb_component_bridge() {
 	return BB_Component_Bridge::instance();
-}
-
-/**
- * Get the feature ID for a component.
- *
- * @since BuddyBoss 3.0.0
- *
- * @param string $component_id Component ID.
- * @return string|null Feature ID or null if not found.
- */
-function bb_get_feature_for_component( $component_id ) {
-	return bb_component_bridge()->get_feature_for_component( $component_id );
-}
-
-/**
- * Get the component ID for a feature.
- *
- * @since BuddyBoss 3.0.0
- *
- * @param string $feature_id Feature ID.
- * @return string|null Component ID or null if not found.
- */
-function bb_get_component_for_feature( $feature_id ) {
-	return bb_component_bridge()->get_component_for_feature( $feature_id );
 }

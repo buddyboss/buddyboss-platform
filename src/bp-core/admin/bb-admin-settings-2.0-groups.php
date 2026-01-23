@@ -122,8 +122,8 @@ function bb_admin_settings_2_0_register_groups_feature() {
 	bb_register_feature(
 		'groups',
 		array(
-			'label'              => __( 'Groups', 'buddyboss' ),
-			'description'        => __( 'Allow members to create and join social groups.', 'buddyboss' ),
+			'label'              => __( 'Social Groups', 'buddyboss' ),
+			'description'        => __( 'Allow members to form public, private, or hidden social groups, each with its own activity feed and member list.', 'buddyboss' ),
 			'icon'               => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-users-three',

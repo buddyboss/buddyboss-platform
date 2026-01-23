@@ -194,7 +194,7 @@ function bb_admin_settings_2_0_register_all_features() {
 
 	// Note: Social Groups feature is registered in bb-admin-settings-2.0-groups.php (order: 50)
 
-	// 10. Like & Reactions
+	// 10. Like & Reactions (standalone feature - uses bb-active-features option).
 	bb_register_feature(
 		'reactions',
 		array(
@@ -206,15 +206,13 @@ function bb_admin_settings_2_0_register_all_features() {
 			),
 			'category'           => 'community',
 			'license_tier'       => 'free',
-			'is_active_callback' => function () {
-				return function_exists( 'bp_is_reactions_active' ) && bp_is_reactions_active();
-			},
+			'standalone'         => true, // Uses bb-active-features option, not bp-active-components.
 			'settings_route'     => '/settings/reactions',
 			'order'              => 55,
 		)
 	);
 
-	// 11. Media Uploading
+	// 11. Media Uploading (combines media, document, and video components).
 	bb_register_feature(
 		'media',
 		array(
@@ -226,15 +224,8 @@ function bb_admin_settings_2_0_register_all_features() {
 			),
 			'category'           => 'community',
 			'license_tier'       => 'free',
-			'is_active_callback' => function () {
-				return bp_is_active( 'media' );
-			},
-			'php_loader'         => function () {
-				$file = buddypress()->plugin_dir . 'bp-media/bp-media-loader.php';
-				if ( file_exists( $file ) ) {
-					require_once $file;
-				}
-			},
+			// This feature controls multiple components.
+			'components'         => array( 'media', 'document', 'video' ),
 			'settings_route'     => '/settings/media',
 			'order'              => 60,
 		)
@@ -445,6 +436,7 @@ function bb_admin_settings_2_0_register_all_features() {
 	// =============================================================================
 
 	// 1. reCAPTCHA
+	// Integration managed by BB_Integration_Bridge.
 	bb_register_feature(
 		'recaptcha',
 		array(
@@ -456,8 +448,12 @@ function bb_admin_settings_2_0_register_all_features() {
 			),
 			'category'           => 'integrations',
 			'license_tier'       => 'free',
+			'integration_id'     => 'recaptcha',
 			'is_available_callback' => '__return_true',
 			'is_active_callback' => function () {
+				if ( function_exists( 'bb_integration_bridge' ) ) {
+					return bb_integration_bridge()->is_integration_feature_enabled( 'recaptcha' );
+				}
 				return bp_get_option( 'bb_recaptcha_enabled', false );
 			},
 			'settings_route'     => '/settings/recaptcha',
@@ -489,6 +485,7 @@ function bb_admin_settings_2_0_register_all_features() {
 	);
 
 	// 3. LearnDash
+	// Integration managed by BB_Integration_Bridge - code loading controlled via bp_integrations filter.
 	bb_register_feature(
 		'learndash',
 		array(
@@ -500,11 +497,21 @@ function bb_admin_settings_2_0_register_all_features() {
 			),
 			'category'           => 'integrations',
 			'license_tier'       => 'free',
+			'integration_id'     => 'learndash', // Maps to BP_Integration ID.
 			'is_available_callback' => function () {
+				// Check if LearnDash plugin is installed and active.
 				return defined( 'LEARNDASH_VERSION' );
 			},
 			'is_active_callback' => function () {
-				return defined( 'LEARNDASH_VERSION' ) && bp_get_option( 'bb_learndash_enabled', false );
+				// LearnDash must be installed AND the integration must be enabled.
+				if ( ! defined( 'LEARNDASH_VERSION' ) ) {
+					return false;
+				}
+				// Check Integration Bridge for enable/disable status.
+				if ( function_exists( 'bb_integration_bridge' ) ) {
+					return bb_integration_bridge()->is_integration_feature_enabled( 'learndash' );
+				}
+				return true; // Default to enabled for backward compatibility.
 			},
 			'settings_route'     => '/settings/learndash',
 			'order'              => 210,
@@ -600,6 +607,7 @@ function bb_admin_settings_2_0_register_all_features() {
 	);
 
 	// 8. Pusher
+	// Integration managed by BB_Integration_Bridge.
 	bb_register_feature(
 		'pusher',
 		array(
@@ -611,8 +619,12 @@ function bb_admin_settings_2_0_register_all_features() {
 			),
 			'category'           => 'integrations',
 			'license_tier'       => 'free',
+			'integration_id'     => 'pusher',
 			'is_available_callback' => '__return_true',
 			'is_active_callback' => function () {
+				if ( function_exists( 'bb_integration_bridge' ) ) {
+					return bb_integration_bridge()->is_integration_feature_enabled( 'pusher' );
+				}
 				return bp_get_option( 'bb_pusher_enabled', false );
 			},
 			'settings_route'     => '/settings/pusher',

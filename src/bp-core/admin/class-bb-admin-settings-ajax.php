@@ -94,10 +94,22 @@ class BB_Admin_Settings_Ajax {
 	 * @return bool
 	 */
 	private function is_feature_enabled( $feature_id ) {
-		// Get active components directly from option.
+		// Primary storage: bb-active-features (single source of truth).
+		$active_features = bp_get_option( 'bb-active-features', array() );
+
+		if ( isset( $active_features[ $feature_id ] ) ) {
+			return ! empty( $active_features[ $feature_id ] );
+		}
+
+		// Migration fallback: check legacy bp-active-components.
 		$active_components = bp_get_option( 'bp-active-components', array() );
 
-		return isset( $active_components[ $feature_id ] ) && ! empty( $active_components[ $feature_id ] );
+		if ( isset( $active_components[ $feature_id ] ) ) {
+			return ! empty( $active_components[ $feature_id ] );
+		}
+
+		// Not set in either - default to inactive.
+		return false;
 	}
 
 	/**
@@ -115,12 +127,33 @@ class BB_Admin_Settings_Ajax {
 			$icon_registry = bb_icon_registry();
 			$registered    = $registry->get_features( array( 'status' => 'all' ) );
 
-			// Get active components directly from option (bypasses bp_is_active() cache).
+			// Get active features directly (bypasses bp_is_active() cache).
+			// Primary storage: bb-active-features (single source of truth).
+			$active_features   = bp_get_option( 'bb-active-features', array() );
+			// Fallback for migration: bp-active-components (legacy).
 			$active_components = bp_get_option( 'bp-active-components', array() );
 
 			foreach ( $registered as $feature_id => $feature ) {
-				// Check active status from option directly to avoid bp_is_active() cache issues.
-				$is_active = isset( $active_components[ $feature_id ] ) && ! empty( $active_components[ $feature_id ] );
+				// Determine active status.
+				// Priority: 1) bb-active-features, 2) bp-active-components (migration fallback).
+				if ( isset( $active_features[ $feature_id ] ) ) {
+					$is_active = ! empty( $active_features[ $feature_id ] );
+				} elseif ( isset( $active_components[ $feature_id ] ) ) {
+					// Migration fallback: use legacy component status.
+					$is_active = ! empty( $active_components[ $feature_id ] );
+				} else {
+					// Not set in either - default to inactive.
+					$is_active = false;
+				}
+
+				// For integrations, also check if the required plugin is available.
+				$is_integration = ! empty( $feature['integration_id'] ) || 'integrations' === ( $feature['category'] ?? '' );
+				if ( $is_integration ) {
+					$is_available = $registry->is_feature_available( $feature_id );
+					if ( ! $is_available ) {
+						$is_active = false;
+					}
+				}
 
 				$formatted = array(
 					'id'             => $feature_id,

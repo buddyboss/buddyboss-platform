@@ -85,6 +85,14 @@ class BB_Feature_Registry {
 	private $dependency_graph = array();
 
 	/**
+	 * Whether loaders have been registered with Feature Loader.
+	 *
+	 * @since BuddyBoss 3.0.0
+	 * @var bool
+	 */
+	private $loaders_registered = false;
+
+	/**
 	 * Get singleton instance.
 	 *
 	 * @since BuddyBoss 3.0.0
@@ -153,6 +161,9 @@ class BB_Feature_Registry {
 	 *     @type callable $is_active_callback    Callback to check if feature is active (returns bool).
 	 *     @type string   $settings_route        React route for settings page (e.g., '/settings/activity').
 	 *     @type callable $php_loader            Callback to load PHP code only if feature is active.
+	 *     @type callable $admin_loader          Callback to load admin-specific code only if feature is active.
+	 *     @type callable $rest_loader           Callback to load REST API code only if feature is active.
+	 *     @type string   $component             Legacy component ID this feature maps to (for backward compatibility).
 	 *     @type array    $depends_on            Array of feature IDs this feature depends on.
 	 *     @type int      $order                 Display order (default: 100).
 	 * }
@@ -215,6 +226,12 @@ class BB_Feature_Registry {
 			'is_active_callback'    => null,
 			'settings_route'        => '/settings/' . $feature_id,
 			'php_loader'            => null,
+			'admin_loader'          => null,
+			'rest_loader'           => null,
+			'component'             => null, // Legacy component mapping (single component).
+			'components'            => array(), // Multiple components controlled by this feature.
+			'integration_id'        => null, // Integration ID (for integration features).
+			'standalone'            => false, // Whether this is a standalone feature.
 			'depends_on'            => array(),
 			'order'                 => 100,
 		);
@@ -262,6 +279,9 @@ class BB_Feature_Registry {
 			$this->nav_items[ $feature_id ] = array();
 		}
 
+		// Register loaders with Feature Loader if available.
+		$this->register_feature_loaders( $feature_id, $args );
+
 		/**
 		 * Fired after a feature is registered.
 		 *
@@ -273,6 +293,38 @@ class BB_Feature_Registry {
 		do_action( 'bb_feature_registered', $feature_id, $args );
 
 		return true;
+	}
+
+	/**
+	 * Register feature loaders with the Feature Loader.
+	 *
+	 * @since BuddyBoss 3.0.0
+	 *
+	 * @param string $feature_id Feature ID.
+	 * @param array  $args       Feature arguments.
+	 */
+	private function register_feature_loaders( $feature_id, $args ) {
+		// Check if BB_Feature_Loader is available.
+		if ( ! function_exists( 'bb_feature_loader' ) ) {
+			return;
+		}
+
+		$loader = bb_feature_loader();
+
+		// Register PHP loader.
+		if ( ! empty( $args['php_loader'] ) && is_callable( $args['php_loader'] ) ) {
+			$loader->register_php_loader( $feature_id, $args['php_loader'] );
+		}
+
+		// Register admin loader.
+		if ( ! empty( $args['admin_loader'] ) && is_callable( $args['admin_loader'] ) ) {
+			$loader->register_admin_loader( $feature_id, $args['admin_loader'] );
+		}
+
+		// Register REST loader.
+		if ( ! empty( $args['rest_loader'] ) && is_callable( $args['rest_loader'] ) ) {
+			$loader->register_rest_loader( $feature_id, $args['rest_loader'] );
+		}
 	}
 
 	/**
@@ -972,6 +1024,18 @@ class BB_Feature_Registry {
 	// =========================================================================
 
 	/**
+	 * Check if a feature is registered.
+	 *
+	 * @since BuddyBoss 3.0.0
+	 *
+	 * @param string $feature_id Feature ID.
+	 * @return bool True if registered, false otherwise.
+	 */
+	public function is_feature_registered( $feature_id ) {
+		return isset( $this->features[ $feature_id ] );
+	}
+
+	/**
 	 * Check if a feature is active.
 	 *
 	 * @since BuddyBoss 3.0.0
@@ -986,14 +1050,28 @@ class BB_Feature_Registry {
 
 		$feature = $this->features[ $feature_id ];
 
-		// Use callback if provided.
+		// Use callback if provided (for special cases like add-ons with their own activation logic).
 		if ( ! is_null( $feature['is_active_callback'] ) ) {
 			return (bool) call_user_func( $feature['is_active_callback'] );
 		}
 
-		// Default: check if feature is enabled via BuddyBoss active components.
+		// Primary storage: bb-active-features option (single source of truth).
+		$active_features = bp_get_option( 'bb-active-features', array() );
+
+		// If feature state exists in bb-active-features, use it.
+		if ( isset( $active_features[ $feature_id ] ) ) {
+			return ! empty( $active_features[ $feature_id ] );
+		}
+
+		// Migration fallback: If not in bb-active-features, check legacy bp-active-components.
+		// This provides backward compatibility during migration.
 		$active_components = bp_get_option( 'bp-active-components', array() );
-		return isset( $active_components[ $feature_id ] ) && ! empty( $active_components[ $feature_id ] );
+		if ( isset( $active_components[ $feature_id ] ) ) {
+			return ! empty( $active_components[ $feature_id ] );
+		}
+
+		// Default: feature is inactive.
+		return false;
 	}
 
 	/**
@@ -1058,9 +1136,26 @@ class BB_Feature_Registry {
 			}
 		}
 
-		// Update active components.
+		// Primary storage: bb-active-features option (single source of truth).
+		$active_features = bp_get_option( 'bb-active-features', array() );
+		$active_features[ $feature_id ] = 1;
+		bp_update_option( 'bb-active-features', $active_features );
+
+		// Sync to bp-active-components for backward compatibility.
+		// This ensures legacy code using bp_is_active() continues to work.
 		$active_components = bp_get_option( 'bp-active-components', array() );
-		$active_components[ $feature_id ] = 1;
+
+		// Check if this feature controls multiple components.
+		if ( ! empty( $feature['components'] ) && is_array( $feature['components'] ) ) {
+			// Enable all controlled components.
+			foreach ( $feature['components'] as $component_id ) {
+				$active_components[ $component_id ] = 1;
+			}
+		} else {
+			// Single component (feature_id = component_id).
+			$active_components[ $feature_id ] = 1;
+		}
+
 		bp_update_option( 'bp-active-components', $active_components );
 
 		// Clear caches.
@@ -1098,6 +1193,8 @@ class BB_Feature_Registry {
 			);
 		}
 
+		$feature = $this->features[ $feature_id ];
+
 		// Check if other features depend on this one.
 		foreach ( $this->features as $fid => $f ) {
 			if ( ! empty( $f['depends_on'] ) && in_array( $feature_id, $f['depends_on'], true ) ) {
@@ -1115,9 +1212,26 @@ class BB_Feature_Registry {
 			}
 		}
 
-		// Update active components.
+		// Primary storage: bb-active-features option (single source of truth).
+		$active_features = bp_get_option( 'bb-active-features', array() );
+		$active_features[ $feature_id ] = 0;
+		bp_update_option( 'bb-active-features', $active_features );
+
+		// Sync to bp-active-components for backward compatibility.
+		// This ensures legacy code using bp_is_active() continues to work.
 		$active_components = bp_get_option( 'bp-active-components', array() );
-		unset( $active_components[ $feature_id ] );
+
+		// Check if this feature controls multiple components.
+		if ( ! empty( $feature['components'] ) && is_array( $feature['components'] ) ) {
+			// Disable all controlled components.
+			foreach ( $feature['components'] as $component_id ) {
+				unset( $active_components[ $component_id ] );
+			}
+		} else {
+			// Single component (feature_id = component_id).
+			unset( $active_components[ $feature_id ] );
+		}
+
 		bp_update_option( 'bp-active-components', $active_components );
 
 		// Clear caches.

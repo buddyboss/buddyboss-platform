@@ -24,8 +24,8 @@ function bb_admin_settings_2_0_register_activity_feature() {
 	bb_register_feature(
 		'activity',
 		array(
-			'label'              => __( 'Activity', 'buddyboss' ),
-			'description'        => __( 'Allow members to post updates and track activity across your network.', 'buddyboss' ),
+			'label'              => __( 'Activity Feeds', 'buddyboss' ),
+			'description'        => __( 'Provide global, personal, and group activity feeds that support threaded commenting, direct posting, @mentions, and email notifications.', 'buddyboss' ),
 			'icon'               => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-pulse',
