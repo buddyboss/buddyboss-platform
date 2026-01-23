@@ -2225,7 +2225,7 @@ function bp_document_folder_recursive_li_list( $array, $first = false ) {
 		/**
 		 * Filters the folder title in the folder tree list (move popup).
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.18.0
 		 *
 		 * @param string $title     The folder title.
 		 * @param int    $folder_id The folder ID.
@@ -2293,7 +2293,7 @@ function bp_document_folder_bradcrumb( $folder_id ) {
 			/**
 			 * Filters the breadcrumb element data before rendering.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 2.18.0
 			 *
 			 * @param array $element The breadcrumb element containing folder data.
 			 */

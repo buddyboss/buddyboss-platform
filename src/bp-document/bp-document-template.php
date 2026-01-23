@@ -1669,7 +1669,7 @@ function bp_get_folder_title() {
 	 * Filters the folder title being displayed.
 	 *
 	 * @since BuddyBoss 1.4.0
-	 * @since BuddyBoss [BBVERSION] Added $folder_id parameter.
+	 * @since BuddyBoss 2.18.0 Added $folder_id parameter.
 	 *
 	 * @param string $title     The document folder title.
 	 * @param int    $folder_id The document folder ID.
@@ -1701,7 +1701,7 @@ function bp_get_folder_folder_title() {
 	 * Filters the folder title being displayed.
 	 *
 	 * @since BuddyBoss 1.4.0
-	 * @since BuddyBoss [BBVERSION] Added $folder_id parameter.
+	 * @since BuddyBoss 2.18.0 Added $folder_id parameter.
 	 *
 	 * @param string $title     The document folder title.
 	 * @param int    $folder_id The document folder ID.

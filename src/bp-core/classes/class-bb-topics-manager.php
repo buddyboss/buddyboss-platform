@@ -1460,7 +1460,7 @@ class BB_Topics_Manager {
 		/**
 		 * Filters the topic's data before returning.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.18.0
 		 *
 		 * @param array $retval The topic's data.
 		 * @param array $args   The arguments used to get the topics.
@@ -2428,7 +2428,7 @@ class BB_Topics_Manager {
 	/**
 	 * Pre-fetch and filter data for topics.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.18.0
 	 *
 	 * @param array $topics Array of topics.
 	 *
@@ -2440,7 +2440,7 @@ class BB_Topics_Manager {
 		 * Filters inside prefetch_object_data method to aid in
 		 * pre-fetching and filtering object data associated with topics.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.18.0
 		 *
 		 * @param array $topics Array of topics.
 		 */

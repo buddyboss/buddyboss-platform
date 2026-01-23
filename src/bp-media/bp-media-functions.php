@@ -2852,7 +2852,7 @@ function bp_media_album_recursive_li_list( $array, $first = false ) {
 		/**
 		 * Filters the album title in the album tree list (move popup).
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.18.0
 		 *
 		 * @param string $title    The album title.
 		 * @param int    $album_id The album ID.

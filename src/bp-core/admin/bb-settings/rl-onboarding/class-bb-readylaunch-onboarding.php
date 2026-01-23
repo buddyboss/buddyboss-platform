@@ -32,7 +32,7 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 	/**
 	 * Flag to prevent multiple configuration builds.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.18.0
 	 * @var   bool
 	 */
 	private $config_built = false;
@@ -65,7 +65,7 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 	 * Build configuration array with ReadyLaunch-specific settings.
 	 * Called on init hook to ensure text domain is loaded.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.18.0
 	 */
 	public function build_config() {
 
