@@ -307,6 +307,16 @@ function bp_helper_plugins_loaded_callback() {
 	if ( class_exists( 'LifterLMS' ) ) {
 		add_filter( 'bb_readylaunch_left_sidebar_middle_content', 'bb_readylaunch_middle_content_llms_courses', 20, 1 );
 	}
+
+	/**
+	 * Include plugin when plugin is activated.
+	 * Handles URL conflict between LearnDash topics and BuddyBoss Forums topics archive.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	if ( class_exists( 'SFWD_LMS' ) && bp_is_active( 'forums' ) ) {
+		require_once buddypress()->compatibility_dir . '/class-bb-learndash-forums-slug-conflict.php';
+	}
 }
 
 add_action( 'init', 'bp_helper_plugins_loaded_callback', 0 );
