@@ -2132,7 +2132,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			'user_id'           => $activity->user_id,
 			'name'              => bp_core_get_user_displayname( $activity->user_id ),
 			'component'         => $activity->component,
-			'post_title'        => ! empty( $activity->post_title ) ? esc_html( $activity->post_title ) : '',
+			'post_title'        => ! empty( $activity->post_title ) ? html_entity_decode( esc_html( $activity->post_title ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) : '',
 			'content'           => array(
 				'raw'      => bb_rest_raw_content( $activity->content ),
 				'rendered' => $this->render_item( $activity ),
@@ -2177,9 +2177,11 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 
 		$data['bb_activity_post_feature_image'] = array();
 		if ( ! empty( $activity->id ) ) {
-			$feature_image_data = bb_pro_activity_post_feature_image_instance()->bb_get_feature_image_data( $activity->id );
-			if ( ! empty( $feature_image_data ) ) {
-				$data['bb_activity_post_feature_image'] = $feature_image_data;
+			if ( function_exists( 'bb_pro_activity_post_feature_image_instance' ) ) {
+				$feature_image_data = bb_pro_activity_post_feature_image_instance()->bb_get_feature_image_data( $activity->id );
+				if ( ! empty( $feature_image_data ) ) {
+					$data['bb_activity_post_feature_image'] = $feature_image_data;
+				}
 			}
 		}
 

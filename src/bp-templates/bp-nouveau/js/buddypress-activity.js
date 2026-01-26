@@ -211,7 +211,7 @@ window.bp = window.bp || {};
 			// Activity search filter
 			$( document ).on( 'click', '.bb-subnav-filters-container .subnav-filters-opener', this.openActivityFilter.bind( this ) );
 			$( document ).on( 'click', this.closeActivityFilter.bind( this ) );
-			$( document ).on( 'click', '.bb-subnav-filters-container .subnav-filters-modal a', this.filterActivity.bind( this ) );
+			$( document ).on( 'click', '.bb-subnav-filters-container .subnav-filters-modal a:not(.layout-view)', this.filterActivity.bind( this ) );
 
 			$( '.bb-activity-model-wrapper, .bb-media-model-wrapper' ).on( 'click', '.acomments-view-more', this.viewMoreComments.bind( this ) );
 			$( document ).on( 'click', '#activity-stream .activity-comments .view-more-comments, #activity-stream .activity-state-comments > .comments-count', function ( e ) {
@@ -246,7 +246,7 @@ window.bp = window.bp || {};
 			}
 
 			// Wrap Activity Topics
-			bp.Nouveau.wrapNavigation( '.activity-topic-selector ul', 120 );
+			bp.Nouveau.wrapNavigation( '.activity-topic-selector ul', 120, true );
 		},
 
 		/**
@@ -4422,7 +4422,9 @@ window.bp = window.bp || {};
 			var $parent = $this.closest( '.bb-subnav-filters-container' );
 			$this.parent().addClass( 'selected' ).siblings().removeClass( 'selected' );
 			$parent.removeClass( 'active' ).find( '.subnav-filters-opener' ).attr( 'aria-expanded', 'false' );
-			$parent.find( '.subnav-filters-opener .selected' ).text( $this.text() );
+			// Use data-filter-label attribute for proper context-aware label (translatable).
+			var filterLabel = $this.parent().data( 'filter-label' );
+			$parent.find( '.subnav-filters-opener .selected' ).text( filterLabel ? filterLabel : $this.text() );
 
 			// Reset the pagination for the scope.
 			bp.Nouveau.Activity.current_page = 1;

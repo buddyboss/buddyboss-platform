@@ -97,9 +97,19 @@ if ( count( $available_widgets ) || ! empty( $static_sidebar_widget ) ) {
 						$profile_groups                   = $steps_options['profile_groups'];
 						$args['profile_groups_enabled'][] = $single_group_details->id;
 					}
-					$args['profile_photos_enabled'] = array( 'profile_photo', 'cover_photo' );
-					$args['profile_hide_widget']    = true;
-					$args['title']                  = esc_html__( 'Complete your profile', 'buddyboss' );
+					
+					// Build profile photos array based on what's enabled
+					// Note: In ReadyLaunch, cover photo functionality is removed, so we only include profile photo
+					$args['profile_photos_enabled'] = array();
+					$is_profile_photo_disabled       = $steps_options['is_profile_photo_disabled'];
+					
+					if ( ! $is_profile_photo_disabled ) {
+						$args['profile_photos_enabled'][] = 'profile_photo';
+					}
+					// Cover photo is excluded in ReadyLaunch as the functionality is removed
+					
+					$args['profile_hide_widget'] = true;
+					$args['title']               = esc_html__( 'Complete your profile', 'buddyboss' );
 				} elseif ( 'BB_Core_Follow_My_Network_Widget' === $widget ) {
 					$widget::enqueue_scripts();
 				}

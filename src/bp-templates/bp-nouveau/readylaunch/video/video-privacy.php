@@ -23,9 +23,9 @@ if ( bp_is_user_video() || bp_is_user_albums() ) {
 }
 ?>
 	<div class="bb-rl-field-wrap bb-rl-privacy-field-wrap-hide-show">
-		<label for="bb-rl-album-privacy" class="bb-label"><?php esc_html_e( 'Privacy', 'buddyboss' ); ?></label>
+		<label for="bb-album-privacy" class="bb-label"><?php esc_html_e( 'Privacy', 'buddyboss' ); ?></label>
 		<div class="bb-rl-dropdown-wrap">
-			<select id="bb-rl-album-privacy">
+			<select id="bb-album-privacy">
 				<?php
 				foreach ( bp_video_get_visibility_levels() as $key => $privacy ) :
 					if ( 'grouponly' === $key ) {
