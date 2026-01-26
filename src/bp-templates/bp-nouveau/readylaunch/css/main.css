@@ -9650,6 +9650,7 @@ input.bb-rl-zoom-slider::-moz-range-progress {
 .bb-rl-media-stream .media-list .load-more,
 .bb-rl-media-stream .video-list .load-more,
 .bb-rl-media-stream .document-list .load-more {
+  grid-column: 1 / -1;
   display: flex;
   align-items: center;
   justify-content: flex-start;
@@ -9703,6 +9704,12 @@ input.bb-rl-zoom-slider::-moz-range-progress {
 .bb-rl-media-stream .document-list .load-more .button [class*="bb-icons-rl-"] {
   margin-left: 6px;
   font-size: 16px;
+}
+
+.bb-rl-media-stream .media-list .pager,
+.bb-rl-media-stream .video-list .pager,
+.bb-rl-media-stream .document-list .pager {
+  grid-column: 1 / -1;
 }
 
 .bb-rl-media-stream .bb-item-thumb {

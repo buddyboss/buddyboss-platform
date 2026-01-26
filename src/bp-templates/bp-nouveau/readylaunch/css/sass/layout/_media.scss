@@ -48,6 +48,7 @@
 	.document-list {
 
 		.load-more {
+			grid-column: 1 / -1;
 			display: flex;
 			align-items: center;
 			justify-content: flex-start;
@@ -68,6 +69,10 @@
 
 			}
 
+		}
+
+		.pager {
+			grid-column: 1 / -1;
 		}
 	}
 
