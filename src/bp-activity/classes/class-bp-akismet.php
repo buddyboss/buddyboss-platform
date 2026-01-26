@@ -637,12 +637,21 @@ class BP_Akismet {
 	function history_metabox( $item ) {
 		$history = self::get_activity_history( $item->id );
 
-		if ( empty( $history ) ) {
+		if ( empty( $history ) || ! is_array( $history ) ) {
+			return;
+		}
+
+		$history = reset( $history );
+
+		if (
+			! is_array( $history ) ||
+			! isset( $history['time'], $history['message'] )
+		) {
 			return;
 		}
 
 		echo '<div class="akismet-history"><div>';
-		printf( __( '%1$s - %2$s', 'buddyboss' ), '<span>' . bp_core_time_since( $history[2] ) . '</span>', esc_html( $history[1] ) );
+		printf( __( '%1$s - %2$s', 'buddyboss' ), '<span>' . bp_core_time_since( $history['time'] ) . '</span>', esc_html( $history['message'] ) );
 		echo '</div></div>';
 	}
 
@@ -677,12 +686,21 @@ class BP_Akismet {
 	 */
 	public function get_activity_history( $activity_id = 0 ) {
 		$history = bp_activity_get_meta( $activity_id, '_bp_akismet_history' );
-		if ( $history === false ) {
-			$history = array();
+
+		// Ensure history is an array.
+		if ( empty( $history ) || ! is_array( $history ) ) {
+			return array();
+		}
+
+		// This is a single event, wrap it in an array.
+		if ( isset( $history['event'] ) ) {			
+			$history = array( $history );
 		}
 
 		// Sort it by the time recorded.
-		usort( $history, 'akismet_cmp_time' );
+		if ( function_exists( 'akismet_cmp_time' ) ) {
+			usort( $history, 'akismet_cmp_time' );
+		}
 
 		return $history;
 	}
