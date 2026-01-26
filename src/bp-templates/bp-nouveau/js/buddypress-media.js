@@ -4576,39 +4576,81 @@ window.bp = window.bp || {};
 		openDocumentMove: function ( event ) {
 			event.preventDefault();
 
-			var currentTarget;
+			var currentTarget,
+				$currentTarget,
+				eventTarget = $( event.currentTarget );
 			/* jshint ignore:start */
-			var currentTargetName = $( event.currentTarget ).closest( '.bb-activity-media-elem' ).find( '.document-title' ).text();
+			var currentTargetName = eventTarget.closest( '.bb-activity-media-elem' ).find( '.document-title' ).text();
 			/* jshint ignore:end */
-			this.moveToIdPopup = $( event.currentTarget ).attr( 'id' );
-			this.moveToTypePopup = $( event.currentTarget ).attr( 'data-type' );
-			var action = $( event.currentTarget ).attr( 'data-action' );
+			this.moveToIdPopup = eventTarget.attr( 'id' );
+			this.moveToTypePopup = eventTarget.attr( 'data-type' );
+			var action = eventTarget.attr( 'data-action' );
 
-			// For Activity Feed.
-			if ( $( event.currentTarget ).closest( '.conflict-activity-ul-li-comment' ).closest( 'li.comment-item' ).length ) {
-				currentTarget = '#' + $( event.currentTarget ).closest( '.conflict-activity-ul-li-comment' ).closest( 'li' ).attr( 'id' ) + '.comment-item .bp-media-move-file';
-			} else {
-				currentTarget = '#' + $( event.currentTarget ).closest( 'li.activity-item' ).attr( 'id' ) + ' > .activity-content .bp-media-move-file';
+			// Hide all other open document move modals first to prevent duplicates
+			$( '.bp-media-move-file.open-popup, .bp-media-move-folder.open-popup' ).hide().removeClass( 'open-popup' );
+
+			// Find the modal within the closest context to avoid duplicates when activity modal is open
+			// First, determine the closest container (activity modal or main page)
+			var $contextContainer = eventTarget.closest( '#activity-modal' );
+			if ( $contextContainer.length === 0 ) {
+				$contextContainer = $( 'body' );
 			}
 
-			$( currentTarget ).find( '.bp-document-move' ).attr( 'id', $( event.currentTarget ).closest( '.document-activity' ).attr( 'data-id' ) );
-			this.currentTargetParent = $( event.currentTarget ).closest( '.bb-activity-media-elem' ).attr( 'data-parent-id' );
-
-			// Change if this is not from Activity Page.
-			if ( $( event.currentTarget ).closest( '.media-folder_items' ).length > 0 ) {
-				/* jshint ignore:start */
-				currentTargetName = $( event.currentTarget ).closest( '.media-folder_items' ).find( '.media-folder_name' ).text();
-				this.currentTargetParent = $( event.currentTarget ).closest( '.media-folder_items' ).attr( 'data-parent-id' );
-				/* jshint ignore:end */
-				if ( $( event.currentTarget ).hasClass( 'ac-document-move' ) ) { // Check if target is file or folder.
-					currentTarget = '.bp-media-move-file';
-					$( currentTarget ).find( '.bp-document-move' ).attr( 'id', $( event.currentTarget ).closest( '.media-folder_items' ).attr( 'data-id' ) );
-				} else {
-					currentTarget = '.bp-media-move-folder';
-					$( currentTarget ).find( '.bp-folder-move' ).attr( 'id', $( event.currentTarget ).closest( '.media-folder_items' ).attr( 'data-id' ) );
-
+			// For Activity Feed - find modal within the same context
+			if ( eventTarget.closest( '.conflict-activity-ul-li-comment' ).closest( 'li.comment-item' ).length ) {
+				var $commentItem = eventTarget.closest( 'li.comment-item' );
+				// Find modal within the comment item, but only in our context container
+				$currentTarget = $contextContainer.find( '#' + $commentItem.attr( 'id' ) + '.comment-item .bp-media-move-file' ).first();
+			} else {
+				var $activityItem = eventTarget.closest( 'li.activity-item' );
+				if ( $activityItem.length > 0 ) {
+					// Find modal within the activity item, but only in our context container
+					$currentTarget = $contextContainer.find( '#' + $activityItem.attr( 'id' ) + ' > .activity-content .bp-media-move-file' ).first();
 				}
 			}
+
+			// Fallback: if we still didn't find it, use the original selector but scoped to context
+			if ( !$currentTarget || $currentTarget.length === 0 ) {
+				if ( eventTarget.closest( '.conflict-activity-ul-li-comment' ).closest( 'li.comment-item' ).length ) {
+					var commentId = eventTarget.closest( 'li.comment-item' ).attr( 'id' );
+					$currentTarget = $contextContainer.find( '#' + commentId + '.comment-item .bp-media-move-file' ).first();
+				} else {
+					var activityId = eventTarget.closest( 'li.activity-item' ).attr( 'id' );
+					if ( activityId ) {
+						$currentTarget = $contextContainer.find( '#' + activityId + ' > .activity-content .bp-media-move-file' ).first();
+					}
+				}
+			}
+
+			$currentTarget.find( '.bp-document-move' ).attr( 'id', eventTarget.closest( '.document-activity' ).attr( 'data-id' ) );
+			this.currentTargetParent = eventTarget.closest( '.bb-activity-media-elem' ).attr( 'data-parent-id' );
+
+			// Change if this is not from Activity Page.
+			if ( eventTarget.closest( '.media-folder_items' ).length > 0 ) {
+				/* jshint ignore:start */
+				currentTargetName = eventTarget.closest( '.media-folder_items' ).find( '.media-folder_name' ).text();
+				this.currentTargetParent = eventTarget.closest( '.media-folder_items' ).attr( 'data-parent-id' );
+				/* jshint ignore:end */
+				if ( eventTarget.hasClass( 'ac-document-move' ) ) { // Check if target is file or folder.
+					$currentTarget = $contextContainer.find( '.bp-media-move-file' ).first();
+					if ( $currentTarget.length > 0 ) {
+						$currentTarget.find( '.bp-document-move' ).attr( 'id', eventTarget.closest( '.media-folder_items' ).attr( 'data-id' ) );
+					}
+				} else {
+					$currentTarget = $contextContainer.find( '.bp-media-move-folder' ).first();
+					if ( $currentTarget.length > 0 ) {
+						$currentTarget.find( '.bp-folder-move' ).attr( 'id', eventTarget.closest( '.media-folder_items' ).attr( 'data-id' ) );
+					}
+				}
+			}
+
+			if ( !$currentTarget || $currentTarget.length === 0 ) {
+				// Last resort: find any modal in the context, but this should rarely happen
+				$currentTarget = $contextContainer.find( '.bp-media-move-file' ).first();
+			}
+
+			// Convert to selector string for compatibility with existing code
+			currentTarget = $currentTarget.length > 0 ? ( $currentTarget.attr( 'id' ) ? '#' + $currentTarget.attr( 'id' ) : '.bp-media-move-file' ) : '.bp-media-move-file';
 
 			$( currentTarget ).find( '.location-folder-list-wrap .location-folder-list' ).remove();
 			$( currentTarget ).find( '.location-folder-list-wrap' ).append( '<ul class="location-folder-list is-loading"><li><i class="bb-icon-l bb-icon-spinner animate-spin"></i></li></ul>' );
@@ -4691,12 +4733,18 @@ window.bp = window.bp || {};
 		 */
 		closeDocumentMove: function ( event ) {
 			event.preventDefault();
-			var closest_parent = jQuery( event.currentTarget ).closest( '.has-folderlocationUI' );
-			if ( $( event.currentTarget ).hasClass( 'ac-document-close-button' ) ) {
-				$( event.currentTarget ).closest( '.bp-media-move-file' ).hide().find( '.bp-document-move' ).attr( 'id', '' );
-
+			var eventTarget = $( event.currentTarget ),
+				closest_parent = jQuery( event.currentTarget ).closest( '.has-folderlocationUI' );
+			var $modalToClose;
+			
+			if ( eventTarget.hasClass( 'ac-document-close-button' ) ) {
+				$modalToClose = eventTarget.closest( '.bp-media-move-file' );
+				// Close all visible document move modals to prevent duplicate modals issue
+				$( '.bp-media-move-file.open-popup' ).hide().removeClass( 'open-popup' ).find( '.bp-document-move' ).attr( 'id', '' );
 			} else {
-				$( event.currentTarget ).closest( '.bp-media-move-folder' ).hide().find( '.bp-folder-move' ).attr( 'id', '' );
+				$modalToClose = eventTarget.closest( '.bp-media-move-folder' );
+				// Close all visible folder move modals to prevent duplicate modals issue
+				$( '.bp-media-move-folder.open-popup' ).hide().removeClass( 'open-popup' ).find( '.bp-folder-move' ).attr( 'id', '' );
 			}
 
 			closest_parent.find( '.bp-document-move.loading' ).removeClass( 'loading' );
