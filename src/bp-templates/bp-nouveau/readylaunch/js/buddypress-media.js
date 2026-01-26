@@ -2661,6 +2661,7 @@ window.bp = window.bp || {};
 									action: 'document_get_folder_view',
 									id: this.moveToIdPopup,
 									type: this.moveToTypePopup,
+									_wpnonce: bbRlNonce.media,
 								}, success: function ( response ) {
 									$document.find( '.bp-media-document-uploader .bb-rl-location-folder-list-wrap h4 span.bb-rl-where-to-move-profile-or-group-document' ).html( response.data.first_span_text );
 									if ( '' === response.data.html ) {
@@ -3137,6 +3138,7 @@ window.bp = window.bp || {};
 							action: 'document_get_folder_view',
 							id: this.moveToIdPopup,
 							type: this.moveToTypePopup,
+							_wpnonce: bbRlNonce.media,
 						}, success: function ( response ) {
 							$document.find( '.bb-rl-location-folder-list-wrap h4 span.bb-rl-where-to-move-profile-or-group-document' ).html( response.data.first_span_text );
 							if ( '' === response.data.html ) {
@@ -3668,6 +3670,7 @@ window.bp = window.bp || {};
 						action: 'document_get_folder_view',
 						id: id,
 						type: type,
+						_wpnonce: bbRlNonce.media,
 					}, success: function ( response ) {
 						$document.find( '.bb-rl-location-folder-list-wrap h4 span.bb-rl-where-to-move-profile-or-group-document' ).html( response.data.first_span_text );
 						$( '.bb-rl-location-folder-list-wrap .location-folder-list' ).remove();

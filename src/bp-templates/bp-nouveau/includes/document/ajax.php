@@ -82,7 +82,7 @@ add_action(
 			array(
 				'document_get_folder_view' => array(
 					'function' => 'bp_nouveau_ajax_document_get_folder_view',
-					'nopriv'   => true,
+					'nopriv'   => false,
 				),
 			),
 			array(
@@ -1618,6 +1618,15 @@ function bp_nouveau_ajax_document_folder_move() {
 }
 
 function bp_nouveau_ajax_document_get_folder_view() {
+
+	// Nonce verification.
+	$nonce = bb_filter_input_string( INPUT_GET, '_wpnonce' );
+	if ( empty( $nonce ) || ! wp_verify_nonce( $nonce, 'bp_nouveau_media' ) ) {
+		$response = array(
+			'feedback' => esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss' ),
+		);
+		wp_send_json_error( $response );
+	}
 
 	$type = bb_filter_input_string( INPUT_GET, 'type' );
 	$id   = filter_input( INPUT_GET, 'id', FILTER_VALIDATE_INT );
