@@ -367,6 +367,18 @@
 	}
 }
 
+// Show last 3 threads options list at the top
+#buddypress .bb-rl-messages-container .bb-rl-thread-item:nth-child(3) {
+
+	~ .bb-rl-thread-item:nth-last-child(2) .message_action__list,
+	~ .bb-rl-thread-item:nth-last-child(3) .message_action__list,
+	~ .bb-rl-thread-item:last-child .message_action__list {
+		top: initial;
+		bottom: 30px;
+		right: -8px;
+	}
+}
+
 #bb-rl-messages-thread-list-nav {
 	padding: var(--bb-rl-space-200);
 
