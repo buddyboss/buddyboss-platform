@@ -3052,19 +3052,49 @@ window.bp = window.bp || {};
 			event.preventDefault();
 			var $document        = $( document ),
 				currentTarget,
+				$currentTarget,
 				eventTarget      = $( event.currentTarget );
 			this.moveToIdPopup   = eventTarget.attr( 'id' );
 			this.moveToTypePopup = eventTarget.attr( 'data-type' );
 			var action           = eventTarget.attr( 'data-action' );
 
-			// For Activity Feed.
-			if ( eventTarget.closest( '.bb-rl-conflict-activity-ul-li-comment' ).closest( 'li.comment-item' ).length ) {
-				currentTarget = '#' + eventTarget.closest( '.bb-rl-conflict-activity-ul-li-comment' ).closest( 'li' ).attr( 'id' ) + '.comment-item .bb-rl-media-move-file';
-			} else {
-				currentTarget = '#' + eventTarget.closest( 'li.activity-item' ).attr( 'id' ) + ' > .bb-rl-activity-content .bb-rl-media-move-file';
+			// Hide all other open document move modals first to prevent duplicates
+			$( '.bb-rl-media-move-file.open-popup, .bb-rl-media-move-folder.open-popup' ).hide().removeClass( 'open-popup' );
+
+			// Find the modal within the closest context to avoid duplicates when activity modal is open
+			// First, determine the closest container (activity modal or main page)
+			var $contextContainer = eventTarget.closest( '#bb-rl-activity-modal' );
+			if ( $contextContainer.length === 0 ) {
+				$contextContainer = $( 'body' );
 			}
 
-			$( currentTarget ).find( '.bb-rl-document-move' ).attr( 'id', eventTarget.closest( '.bb-rl-document-activity' ).attr( 'data-id' ) );
+			// For Activity Feed - find modal within the same context
+			if ( eventTarget.closest( '.bb-rl-conflict-activity-ul-li-comment' ).closest( 'li.comment-item' ).length ) {
+				var $commentItem = eventTarget.closest( 'li.comment-item' );
+				// Find modal within the comment item, but only in our context container
+				$currentTarget = $contextContainer.find( '#' + $commentItem.attr( 'id' ) + '.comment-item .bb-rl-media-move-file' ).first();
+			} else {
+				var $activityItem = eventTarget.closest( 'li.activity-item' );
+				if ( $activityItem.length > 0 ) {
+					// Find modal within the activity item, but only in our context container
+					$currentTarget = $contextContainer.find( '#' + $activityItem.attr( 'id' ) + ' > .bb-rl-activity-content .bb-rl-media-move-file' ).first();
+				}
+			}
+
+			// Fallback: if we still didn't find it, use the original selector but scoped to context
+			if ( !$currentTarget || $currentTarget.length === 0 ) {
+				if ( eventTarget.closest( '.bb-rl-conflict-activity-ul-li-comment' ).closest( 'li.comment-item' ).length ) {
+					var commentId = eventTarget.closest( 'li.comment-item' ).attr( 'id' );
+					$currentTarget = $contextContainer.find( '#' + commentId + '.comment-item .bb-rl-media-move-file' ).first();
+				} else {
+					var activityId = eventTarget.closest( 'li.activity-item' ).attr( 'id' );
+					if ( activityId ) {
+						$currentTarget = $contextContainer.find( '#' + activityId + ' > .bb-rl-activity-content .bb-rl-media-move-file' ).first();
+					}
+				}
+			}
+
+			$currentTarget.find( '.bb-rl-document-move' ).attr( 'id', eventTarget.closest( '.bb-rl-document-activity' ).attr( 'data-id' ) );
 			this.currentTargetParent = eventTarget.closest( '.bb-rl-activity-media-elem' ).attr( 'data-parent-id' );
 
 			// Change if this is not from Activity Page.
@@ -3073,28 +3103,37 @@ window.bp = window.bp || {};
 				this.currentTargetParent = eventTarget.closest( '.media-folder_items' ).attr( 'data-parent-id' );
 				/* jshint ignore:end */
 				if ( eventTarget.hasClass( 'ac-document-move' ) ) { // Check if target is file or folder.
-					currentTarget = '.bb-rl-media-move-file';
-					$( currentTarget ).find( '.bb-rl-document-move' ).attr( 'id', eventTarget.closest( '.media-folder_items' ).attr( 'data-id' ) );
+					// Scope to the closest context to avoid finding modals in both page and activity modal
+					$currentTarget = $contextContainer.find( '.bb-rl-media-move-file' ).first();
+					if ( $currentTarget.length > 0 ) {
+						$currentTarget.find( '.bb-rl-document-move' ).attr( 'id', eventTarget.closest( '.media-folder_items' ).attr( 'data-id' ) );
+					}
 				} else {
-					currentTarget = '.bb-rl-media-move-folder';
-					$( currentTarget ).find( '.bb-rl-folder-move' ).attr( 'id', eventTarget.closest( '.media-folder_items' ).attr( 'data-id' ) );
-
+					$currentTarget = $contextContainer.find( '.bb-rl-media-move-folder' ).first();
+					if ( $currentTarget.length > 0 ) {
+						$currentTarget.find( '.bb-rl-folder-move' ).attr( 'id', eventTarget.closest( '.media-folder_items' ).attr( 'data-id' ) );
+					}
 				}
 			}
 
-			$( currentTarget ).find( '.bb-rl-location-folder-list-wrap .location-folder-list' ).remove();
-			$( currentTarget ).find( '.bb-rl-location-folder-list-wrap' ).append( '<ul class="location-folder-list is-loading"><li><i class="bb-icon-l bb-icon-spinner animate-spin"></i></li></ul>' );
-			if ( 'document' === action ) {
-				$( currentTarget ).find( '.bb-rl-modal-header h4 .target_name' ).text( bbRlMedia.move_to_file );
-			} else {
-				$( currentTarget ).find( '.bb-rl-modal-header h4 .target_name' ).text( bbRlMedia.move_to_folder );
+			if ( !$currentTarget || $currentTarget.length === 0 ) {
+				// Last resort: find any modal in the context, but this should rarely happen
+				$currentTarget = $contextContainer.find( '.bb-rl-media-move-file' ).first();
 			}
-			$( currentTarget ).show();
-			$( currentTarget ).addClass( 'open-popup' );
+
+			$currentTarget.find( '.bb-rl-location-folder-list-wrap .location-folder-list' ).remove();
+			$currentTarget.find( '.bb-rl-location-folder-list-wrap' ).append( '<ul class="location-folder-list is-loading"><li><i class="bb-icon-l bb-icon-spinner animate-spin"></i></li></ul>' );
+			if ( 'document' === action ) {
+				$currentTarget.find( '.bb-rl-modal-header h4 .target_name' ).text( bbRlMedia.move_to_file );
+			} else {
+				$currentTarget.find( '.bb-rl-modal-header h4 .target_name' ).text( bbRlMedia.move_to_folder );
+			}
+			$currentTarget.show();
+			$currentTarget.addClass( 'open-popup' );
 
 			if ( 'group' === this.moveToTypePopup ) {
 				$document.find( '.bb-rl-location-folder-list-wrap h4' ).show();
-				$( currentTarget ).addClass( 'move-folder-popup-group' );
+				$currentTarget.addClass( 'move-folder-popup-group' );
 			} else {
 				$document.find( '.bb-rl-location-folder-list-wrap h4' ).hide();
 				$( '.move-folder-popup-group' ).removeClass( 'move-folder-popup-group' );
@@ -3102,6 +3141,7 @@ window.bp = window.bp || {};
 
 			var parentsOpen = this.currentTargetParent;
 			var getFrom     = this.moveToTypePopup;
+			var self        = this;
 
 			if ( '' !== this.moveToIdPopup ) {
 				$.ajax(
@@ -3115,24 +3155,40 @@ window.bp = window.bp || {};
 						}, success: function ( response ) {
 							$document.find( '.bb-rl-location-folder-list-wrap h4 span.bb-rl-where-to-move-profile-or-group-document' ).html( response.data.first_span_text );
 							if ( '' === response.data.html ) {
-								$document.find( '.open-popup .bb-rl-location-folder-list-wrap' ).hide();
-								$document.find( '.open-popup .bb-rl-location-folder-list-wrap-main span.bb-rl-no-folder-exists' ).show();
+								$currentTarget.find( '.bb-rl-location-folder-list-wrap' ).hide();
+								$currentTarget.find( '.bb-rl-location-folder-list-wrap-main span.bb-rl-no-folder-exists' ).show();
 							} else {
-								$document.find( '.open-popup .bb-rl-location-folder-list-wrap-main span.bb-rl-no-folder-exists' ).hide();
-								$document.find( '.open-popup .bb-rl-location-folder-list-wrap' ).show();
+								$currentTarget.find( '.bb-rl-location-folder-list-wrap-main span.bb-rl-no-folder-exists' ).hide();
+								$currentTarget.find( '.bb-rl-location-folder-list-wrap' ).show();
 							}
 							if ( 'group' === getFrom ) {
-								$document.find( '.bb-rl-popup-on-fly-create-folder .bb-rl-privacy-field-wrap-hide-show' ).hide();
-								$document.find( '.open-popup .bb-rl-folder-create-from' ).val( 'group' );
+								$currentTarget.find( '.bb-rl-popup-on-fly-create-folder .bb-rl-privacy-field-wrap-hide-show' ).hide();
+								$currentTarget.find( '.bb-rl-folder-create-from' ).val( 'group' );
 							} else {
-								$document.find( '.bb-rl-popup-on-fly-create-folder .bb-rl-privacy-field-wrap-hide-show' ).show();
-								$document.find( '.open-popup .bb-rl-folder-create-from' ).val( 'profile' );
+								$currentTarget.find( '.bb-rl-popup-on-fly-create-folder .bb-rl-privacy-field-wrap-hide-show' ).show();
+								$currentTarget.find( '.bb-rl-folder-create-from' ).val( 'profile' );
 							}
-							$( currentTarget ).find( '.bb-rl-location-folder-list-wrap .location-folder-list' ).remove();
-							$( currentTarget ).find( '.bb-rl-location-folder-list-wrap' ).append( response.data.html );
+							$currentTarget.find( '.bb-rl-location-folder-list-wrap .location-folder-list' ).remove();
+							$currentTarget.find( '.bb-rl-location-folder-list-wrap' ).append( response.data.html );
 							if ( bp.Nouveau.Media.folderLocationUI ) {
-								bp.Nouveau.Media.folderLocationUI( currentTarget, parentsOpen );
-								$( currentTarget ).find( 'ul.location-folder-list span#' + parentsOpen ).trigger( 'click' );
+								// Convert jQuery object to selector string for folderLocationUI
+								// folderLocationUI expects a string selector because it does string concatenation
+								var targetSelector = $currentTarget.attr( 'id' );
+								if ( targetSelector ) {
+									targetSelector = '#' + targetSelector;
+								} else {
+									// Fallback: use class selector if no ID
+									var className = $currentTarget.attr( 'class' );
+									if ( className ) {
+										targetSelector = '.' + className.split( ' ' )[0];
+									} else {
+										// Last resort: use a unique selector based on the element
+										// This should rarely happen as the modal should have an ID
+										targetSelector = '.bb-rl-media-move-file';
+									}
+								}
+								bp.Nouveau.Media.folderLocationUI( targetSelector, parentsOpen );
+								$currentTarget.find( 'ul.location-folder-list span#' + parentsOpen ).trigger( 'click' );
 							}
 						}
 					}
@@ -3166,10 +3222,16 @@ window.bp = window.bp || {};
 			event.preventDefault();
 			var eventTarget    = $( event.currentTarget ),
 				closest_parent = jQuery( event.currentTarget ).closest( '.bb-rl-has-folderlocationUI' );
+			var $modalToClose;
+			
 			if ( eventTarget.hasClass( 'bb-rl-ac-document-close-button' ) ) {
-				eventTarget.closest( '.bb-rl-media-move-file' ).hide().find( '.bb-rl-document-move' ).attr( 'id', '' );
+				$modalToClose = eventTarget.closest( '.bb-rl-media-move-file' );
+				// Close all visible document move modals to prevent duplicate modals issue
+				$( '.bb-rl-media-move-file.open-popup' ).hide().removeClass( 'open-popup' ).find( '.bb-rl-document-move' ).attr( 'id', '' );
 			} else {
-				eventTarget.closest( '.bb-rl-media-move-folder' ).hide().find( '.bb-rl-folder-move' ).attr( 'id', '' );
+				$modalToClose = eventTarget.closest( '.bb-rl-media-move-folder' );
+				// Close all visible folder move modals to prevent duplicate modals issue
+				$( '.bb-rl-media-move-folder.open-popup' ).hide().removeClass( 'open-popup' ).find( '.bb-rl-folder-move' ).attr( 'id', '' );
 			}
 
 			closest_parent.find( '.bb-rl-document-move.loading' ).removeClass( 'loading' );
