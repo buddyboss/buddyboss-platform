@@ -45,14 +45,19 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 			$avail_sorting_options = array( 'date_recorded' => 1 );
 		}
 	}
+
+	$sorting_labels            = bb_get_activity_sorting_options_labels();
+	$sorting_labels_by_context = bb_get_activity_sorting_options_labels( 'by_context' );
+
+	// Get the default by context label.
+	$default_by_context_label = isset( $sorting_labels_by_context[ $default_selected ] ) ? $sorting_labels_by_context[ $default_selected ] : ( isset( $sorting_labels[ $default_selected ] ) ? $sorting_labels[ $default_selected ] : '' );
 	?>
 	<i class="bb-icon-f bb-icon-loader animate-spin"></i>
 	<div class='<?php echo esc_attr( $hide_class ); ?> bb-subnav-filters-container-main'>
 		<span class="bb-subnav-filters-label"><?php echo esc_html_e( 'Show by', 'buddyboss' ); ?></span>
 		<div class="bb-subnav-filters-container bb-subnav-filters-filtering">
-			<?php $sorting_labels = bb_get_activity_sorting_options_labels(); ?>
 			<button class="subnav-filters-opener" aria-expanded="false" aria-controls="bb-subnav-filter-by">
-				<span class="selected"><?php echo strtolower( esc_html( $sorting_labels[ $default_selected ] ) ); ?></span>
+				<span class="selected"><?php echo esc_html( $default_by_context_label ); ?></span>
 				<i class="bb-icon-l bb-icon-angle-down"></i>
 			</button>
 
@@ -64,8 +69,10 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 							if ( empty( $is_enabled ) || empty( $sorting_labels[ $key ] ) ) {
 								continue;
 							}
+							// Get the by context label, fallback to regular label if not defined.
+							$by_context_label = isset( $sorting_labels_by_context[ $key ] ) ? $sorting_labels_by_context[ $key ] : $sorting_labels[ $key ];
 							?>
-							<li class="<?php echo ( $key === $default_selected ) ? 'selected' : ''; ?>" role="option" data-bp-order="activity" data-bp-orderby="<?php echo esc_attr( $key ); ?>"><a href="#"><?php echo esc_html( $sorting_labels[ $key ] ); ?></a></li>
+							<li class="<?php echo ( $key === $default_selected ) ? 'selected' : ''; ?>" role="option" data-bp-order="activity" data-bp-orderby="<?php echo esc_attr( $key ); ?>" data-filter-label="<?php echo esc_attr( $by_context_label ); ?>"><a href="#"><?php echo esc_html( $sorting_labels[ $key ] ); ?></a></li>
 							<?php
 						}
 					}
