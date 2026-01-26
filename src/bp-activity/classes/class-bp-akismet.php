@@ -639,8 +639,15 @@ class BP_Akismet {
 
 		if ( empty( $history ) || ! is_array( $history ) ) {
 			return;
-		} else {
-			$history = reset( $history );
+		}
+
+		$history = reset( $history );
+
+		if (
+			! is_array( $history ) ||
+			! isset( $history['time'], $history['message'] )
+		) {
+			return;
 		}
 
 		echo '<div class="akismet-history"><div>';
@@ -679,17 +686,21 @@ class BP_Akismet {
 	 */
 	public function get_activity_history( $activity_id = 0 ) {
 		$history = bp_activity_get_meta( $activity_id, '_bp_akismet_history' );
-		if ( empty( $history ) ) {
-			$history = array();
+
+		// Ensure history is an array.
+		if ( empty( $history ) || ! is_array( $history ) ) {
+			return array();
 		}
 
-		if ( ! empty( $history ) && isset( $history['event'] ) ) {
-			// This is a single event, wrap it in an array.
+		// This is a single event, wrap it in an array.
+		if ( isset( $history['event'] ) ) {			
 			$history = array( $history );
 		}
 
 		// Sort it by the time recorded.
-		usort( $history, 'akismet_cmp_time' );
+		if ( function_exists( 'akismet_cmp_time' ) ) {
+			usort( $history, 'akismet_cmp_time' );
+		}
 
 		return $history;
 	}
