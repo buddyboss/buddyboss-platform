@@ -4249,6 +4249,16 @@ body.bb-readylaunch-template .select2-container--rl.select2-container--open:has(
   width: 100% !important;
 }
 
+@media (min-width: 1000px) {
+  body:not(.logged-in) .bb-rl-network-search-filter .bb-rl-dropdown-align-adaptive,
+  body:not(.logged-in) .bb-rl-network-search-filter .select2-container .bb-rl-select2-dropdown.bb-rl-dropdown-align-adaptive,
+  body.bb-readylaunch-template .bb-rl-network-search-filter .bb-rl-dropdown-align-adaptive,
+  body.bb-readylaunch-template .bb-rl-network-search-filter .select2-container .bb-rl-select2-dropdown.bb-rl-dropdown-align-adaptive {
+    left: 0;
+    right: unset;
+  }
+}
+
 .select2-container--bb-rl-select2 .bb-rl-select2-container {
   border: 1px solid var(--bb-rl-border-secondary-color);
   border-radius: var(--bb-rl-radius-base);
