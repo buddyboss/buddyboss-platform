@@ -220,6 +220,11 @@ class BP_Core extends BP_Component {
 	 * Load integrations files
 	 *
 	 * @since BuddyBoss 1.0.0
+	 *
+	 * @deprecated Integrations now loaded via feature auto-discovery system.
+	 *             Integrations moved to src/features/integrations/ and loaded via
+	 *             BB_Feature_Autoloader::discover_features() in bb-admin-settings-2.0-init.php
+	 *             This method kept for backward compatibility with third-party code.
 	 */
 	private function load_integrations() {
 		$bp = buddypress();
@@ -242,6 +247,8 @@ class BP_Core extends BP_Component {
 			)
 		);
 
+		// Legacy integration loading - integrations migrated to src/features/integrations/
+		// and loaded via auto-discovery system. This code kept for backward compatibility.
 		$integration_dir = $bp->plugin_dir . '/bp-integrations/';
 
 		foreach ( $bp->available_integrations as $integration ) {

@@ -1456,3 +1456,27 @@ function bb_register_feature_field( $feature_id, $side_panel_id, $section_id, $a
 function bb_register_feature_nav_item( $feature_id, $args = array() ) {
 	return bb_feature_registry()->register_nav_item( $feature_id, $args );
 }
+
+/**
+ * Register an integration feature.
+ *
+ * Helper function to register a feature as an integration.
+ * Automatically sets the category to 'integrations'.
+ *
+ * @since BuddyBoss 3.0.0
+ *
+ * @param string $feature_id Feature ID (integration slug).
+ * @param array  $args       Feature arguments (same as bb_register_feature).
+ * @return bool|WP_Error True on success, WP_Error on failure.
+ */
+function bb_register_integration( $feature_id, $args = array() ) {
+	// Force category to 'integrations'.
+	$args['category'] = 'integrations';
+
+	// Set integration_id if not already set.
+	if ( empty( $args['integration_id'] ) ) {
+		$args['integration_id'] = $feature_id;
+	}
+
+	return bb_feature_registry()->register_feature( $feature_id, $args );
+}

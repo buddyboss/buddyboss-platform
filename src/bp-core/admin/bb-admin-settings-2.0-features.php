@@ -195,6 +195,9 @@ function bb_admin_settings_2_0_register_all_features() {
 	// Note: Social Groups feature is registered in bb-admin-settings-2.0-groups.php (order: 50)
 
 	// 10. Like & Reactions (standalone feature - uses bb-active-features option).
+	// NOTE: Now auto-discovered from src/features/community/reactions/feature-config.php
+	// Removed duplicate registration to prevent conflicts with auto-discovery system.
+	/*
 	bb_register_feature(
 		'reactions',
 		array(
@@ -211,6 +214,7 @@ function bb_admin_settings_2_0_register_all_features() {
 			'order'              => 55,
 		)
 	);
+	*/
 
 	// 11. Media Uploading (combines media, document, and video components).
 	bb_register_feature(
@@ -436,7 +440,9 @@ function bb_admin_settings_2_0_register_all_features() {
 	// =============================================================================
 
 	// 1. reCAPTCHA
-	// Integration managed by BB_Integration_Bridge.
+	// NOTE: Now auto-discovered from src/features/integrations/recaptcha/feature-config.php
+	// Removed duplicate registration to prevent conflicts with auto-discovery system.
+	/*
 	bb_register_feature(
 		'recaptcha',
 		array(
@@ -460,6 +466,7 @@ function bb_admin_settings_2_0_register_all_features() {
 			'order'              => 200,
 		)
 	);
+	*/
 
 	// 2. Lifter LMS
 	bb_register_feature(
@@ -473,19 +480,20 @@ function bb_admin_settings_2_0_register_all_features() {
 			),
 			'category'           => 'integrations',
 			'license_tier'       => 'free',
+			'integration_id'     => 'lifter-lms', // Maps to BP_Integration ID.
 			'is_available_callback' => function () {
 				return class_exists( 'LifterLMS' );
 			},
-			'is_active_callback' => function () {
-				return class_exists( 'LifterLMS' ) && bp_get_option( 'bb_lifter_lms_enabled', false );
-			},
+			// No is_active_callback - uses unified bb-active-features storage.
 			'settings_route'     => '/settings/lifter-lms',
 			'order'              => 205,
 		)
 	);
 
 	// 3. LearnDash
-	// Integration managed by BB_Integration_Bridge - code loading controlled via bp_integrations filter.
+	// NOTE: Now auto-discovered from src/features/integrations/learndash/feature-config.php
+	// Removed duplicate registration to prevent conflicts with auto-discovery system.
+	/*
 	bb_register_feature(
 		'learndash',
 		array(
@@ -517,6 +525,7 @@ function bb_admin_settings_2_0_register_all_features() {
 			'order'              => 210,
 		)
 	);
+	*/
 
 	// 4. Tutor LMS
 	bb_register_feature(
@@ -530,12 +539,11 @@ function bb_admin_settings_2_0_register_all_features() {
 			),
 			'category'           => 'integrations',
 			'license_tier'       => 'free',
+			'integration_id'     => 'tutor-lms', // Maps to BP_Integration ID.
 			'is_available_callback' => function () {
 				return defined( 'TUTOR_VERSION' );
 			},
-			'is_active_callback' => function () {
-				return defined( 'TUTOR_VERSION' ) && bp_get_option( 'bb_tutor_lms_enabled', false );
-			},
+			// No is_active_callback - uses unified bb-active-features storage.
 			'settings_route'     => '/settings/tutor-lms',
 			'order'              => 215,
 		)
@@ -553,18 +561,20 @@ function bb_admin_settings_2_0_register_all_features() {
 			),
 			'category'           => 'integrations',
 			'license_tier'       => 'free',
+			'integration_id'     => 'memberpress', // Maps to BP_Integration ID.
 			'is_available_callback' => function () {
 				return defined( 'MEPR_VERSION' );
 			},
-			'is_active_callback' => function () {
-				return defined( 'MEPR_VERSION' ) && bp_get_option( 'bb_memberpress_enabled', false );
-			},
+			// No is_active_callback - uses unified bb-active-features storage.
 			'settings_route'     => '/settings/memberpress',
 			'order'              => 220,
 		)
 	);
 
-	// 6. BuddyPress
+	// 6. BuddyPress Compatibility
+	// NOTE: Now auto-discovered from src/features/integrations/compatibility/feature-config.php
+	// Removed duplicate registration to prevent conflicts with auto-discovery system.
+	/*
 	bb_register_feature(
 		'buddypress',
 		array(
@@ -584,8 +594,9 @@ function bb_admin_settings_2_0_register_all_features() {
 			'order'              => 225,
 		)
 	);
+	*/
 
-	// 7. Zoom
+	// 7. Zoom (Note: Zoom is actually a BuddyPress component, not a BP_Integration)
 	bb_register_feature(
 		'zoom',
 		array(
@@ -597,17 +608,17 @@ function bb_admin_settings_2_0_register_all_features() {
 			),
 			'category'           => 'integrations',
 			'license_tier'       => 'free',
-			'is_available_callback' => '__return_true',
-			'is_active_callback' => function () {
-				return bp_is_active( 'zoom' );
-			},
+			// Zoom is a component (bp-zoom) so it uses bp-active-components.
+			// No is_active_callback needed - unified system handles it.
 			'settings_route'     => '/settings/zoom',
 			'order'              => 230,
 		)
 	);
 
 	// 8. Pusher
-	// Integration managed by BB_Integration_Bridge.
+	// NOTE: Now auto-discovered from src/features/integrations/pusher/feature-config.php
+	// Removed duplicate registration to prevent conflicts with auto-discovery system.
+	/*
 	bb_register_feature(
 		'pusher',
 		array(
@@ -631,6 +642,7 @@ function bb_admin_settings_2_0_register_all_features() {
 			'order'              => 235,
 		)
 	);
+	*/
 
 	// 9. OneSignal
 	bb_register_feature(
@@ -644,10 +656,8 @@ function bb_admin_settings_2_0_register_all_features() {
 			),
 			'category'           => 'integrations',
 			'license_tier'       => 'free',
-			'is_available_callback' => '__return_true',
-			'is_active_callback' => function () {
-				return bp_get_option( 'bb_onesignal_enabled', false );
-			},
+			'integration_id'     => 'onesignal', // Maps to BP_Integration ID.
+			// No is_active_callback - uses unified bb-active-features storage.
 			'settings_route'     => '/settings/onesignal',
 			'order'              => 240,
 		)

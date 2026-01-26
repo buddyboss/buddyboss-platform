@@ -1,8 +1,9 @@
 <?php
 /**
- * BuddyBoss Compatibility Integration Loader.
+ * Compatibility integration helper functions
  *
- * @since BuddyBoss 1.1.5
+ * @package BuddyBoss\Features\Integrations\Compatibility
+ * @since BuddyBoss 3.0.0
  */
 
 // Exit if accessed directly.
@@ -50,14 +51,3 @@ function bp_core_compatibility_do_settings_sections( $page ) {
 		}
 	}
 }
-
-/**
- * Set up the bp compatibility integration.
- *
- * @since BuddyBoss 1.1.5
- */
-function bp_register_compatibility_integration() {
-	require_once dirname( __FILE__ ) . '/bp-compatibility-integration.php';
-	buddypress()->integrations['compatibility'] = new BP_Compatibility_Integration();
-}
-add_action( 'bp_setup_integrations', 'bp_register_compatibility_integration' );

@@ -1515,6 +1515,349 @@ $bb-border-radius-xs: 6px;
 	}
 }
 
+// =============================================================================
+// NOTICE FIELD TYPE
+// Based on Figma warning/info notice bar
+// =============================================================================
+.bb-admin-settings-notice {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding: 4px 8px;
+	min-height: 32px;
+	border-radius: $bb-border-radius-sm;
+	border: 0.5px solid $bb-border-color;
+	background-color: $bb-background-color;
+	width: 100%;
+
+	&--warning {
+		background-color: #fffbeb;
+		border-color: #e5a000;
+
+		.bb-admin-settings-notice__icon {
+			color: #df7d05;
+		}
+	}
+
+	&--info {
+		background-color: #f0f7ff;
+		border-color: #2c6bff;
+
+		.bb-admin-settings-notice__icon {
+			color: #2c6bff;
+		}
+	}
+
+	&--error {
+		background-color: #fff5f5;
+		border-color: #dc3545;
+
+		.bb-admin-settings-notice__icon {
+			color: #dc3545;
+		}
+	}
+
+	&__icon {
+		font-size: 20px;
+		line-height: 1;
+		flex-shrink: 0;
+	}
+
+	&__text {
+		flex: 1;
+		font-size: 13px;
+		line-height: 18px;
+		color: $bb-text-color;
+
+		a {
+			color: #2c6bff;
+			text-decoration: none;
+
+			&:hover {
+				text-decoration: underline;
+			}
+		}
+	}
+
+	&__button {
+		padding: 3px 8px;
+		font-size: 13px;
+		line-height: 18px;
+		color: $bb-text-color;
+		background: none;
+		border: none;
+		border-radius: 4px;
+		cursor: pointer;
+		white-space: nowrap;
+		text-decoration: none;
+
+		&:hover {
+			background-color: rgba(0, 0, 0, 0.05);
+		}
+	}
+
+	&__close {
+		font-size: 16px;
+		color: $bb-text-secondary;
+		cursor: pointer;
+		padding: 4px;
+
+		&:hover {
+			color: $bb-text-color;
+		}
+	}
+}
+
+// =============================================================================
+// REACTION MODE FIELD TYPE
+// Based on Figma design for Like/Emotions radio with cards grid
+// =============================================================================
+.bb-admin-reactions-mode {
+	display: flex;
+	flex-direction: column;
+	gap: 24px;
+
+	&__radios {
+		display: flex;
+		align-items: center;
+		gap: 24px;
+	}
+
+	&__radio {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		cursor: pointer;
+
+		&-input {
+			position: absolute;
+			opacity: 0;
+			pointer-events: none;
+		}
+
+		&-circle {
+			width: 18px;
+			height: 18px;
+			border: 1px solid $bb-primary-color;
+			border-radius: 50%;
+			position: relative;
+
+			&::after {
+				content: '';
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				transform: translate(-50%, -50%);
+				width: 10px;
+				height: 10px;
+				border-radius: 50%;
+				background-color: $bb-primary-color;
+				opacity: 0;
+				transition: opacity 0.15s ease;
+			}
+		}
+
+		&--selected &-circle::after {
+			opacity: 1;
+		}
+
+		&-label {
+			font-size: 14px;
+			font-weight: 400;
+			line-height: 20px;
+			color: $bb-text-color;
+		}
+	}
+
+	&__description {
+		margin: 0;
+		padding: 3px 0;
+		font-size: 13px;
+		line-height: 18px;
+		color: $bb-text-secondary;
+		max-width: 640px;
+	}
+
+	// Emotion cards grid
+	&__cards {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px;
+		max-width: 656px;
+	}
+
+	&__card {
+		width: 96px;
+		height: 96px;
+		border: 0.5px solid $bb-border-color;
+		border-radius: $bb-border-radius-sm;
+		overflow: hidden;
+		display: flex;
+		flex-direction: column;
+		background-color: #fff;
+
+		&--add {
+			background-color: $bb-background-color;
+			justify-content: center;
+			align-items: center;
+			cursor: pointer;
+			border: 0.5px solid $bb-border-color;
+
+			.dashicons {
+				font-size: 32px;
+				color: $bb-text-secondary;
+			}
+
+		&:hover {
+			background-color: #ededed; // Slightly darker than $bb-background-color (#f6f6f6)
+		}
+		}
+	}
+
+	&__card-icon {
+		flex: 1;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background-color: $bb-background-color;
+		font-size: 32px;
+	}
+
+	&__card-footer {
+		display: flex;
+		align-items: center;
+		padding: 4px 4px 4px 8px;
+		min-height: 32px;
+		background-color: #fff;
+		border-top: 0.5px solid $bb-border-color;
+		gap: 4px;
+	}
+
+	&__card-name {
+		flex: 1;
+		font-size: 13px;
+		line-height: 18px;
+		color: $bb-text-color;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
+	&__card-menu {
+		padding: 4px;
+		background: none;
+		border: none;
+		cursor: pointer;
+		color: $bb-text-muted;
+
+		.dashicons {
+			font-size: 16px;
+		}
+
+		&:hover {
+			color: $bb-text-color;
+		}
+	}
+}
+
+// =============================================================================
+// REACTION BUTTON FIELD TYPE
+// Based on Figma design for reaction button card preview
+// =============================================================================
+.bb-admin-reaction-button {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+
+	&__preview {
+		width: 96px;
+	}
+
+	&__card {
+		width: 96px;
+		height: 96px;
+		border: 0.5px solid $bb-border-color;
+		border-radius: $bb-border-radius-sm;
+		overflow: hidden;
+		display: flex;
+		flex-direction: column;
+		background-color: #fff;
+	}
+
+	&__card-icon {
+		flex: 1;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background-color: $bb-background-color;
+
+		[class^="bb-icons-rl"] {
+			font-size: 32px;
+			color: $bb-text-secondary;
+		}
+
+		.dashicons {
+			font-size: 32px;
+			color: $bb-text-secondary;
+		}
+	}
+
+	&__card-footer {
+		display: flex;
+		align-items: center;
+		padding: 4px 4px 4px 8px;
+		min-height: 32px;
+		background-color: #fff;
+		border-top: 0.5px solid $bb-border-color;
+		gap: 4px;
+	}
+
+	&__card-name {
+		flex: 1;
+		font-size: 13px;
+		line-height: 18px;
+		color: $bb-text-color;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
+	&__card-menu {
+		padding: 4px;
+		background: none;
+		border: none;
+		cursor: pointer;
+		color: $bb-text-muted;
+
+		.dashicons {
+			font-size: 16px;
+		}
+
+		&:hover {
+			color: $bb-text-color;
+		}
+	}
+
+	&__description {
+		margin: 0;
+		padding: 3px 0 3px 16px;
+		font-size: 13px;
+		line-height: 18px;
+		color: $bb-text-secondary;
+		max-width: 640px;
+		width: 240px;
+
+		a {
+			color: #2c6bff;
+			text-decoration: none;
+
+			&:hover {
+				text-decoration: underline;
+			}
+		}
+	}
+}
+
 // Toggle Control Styling (matching Figma switch size=small: 30x18px)
 .bb-admin-feature-settings,
 .bb-admin-settings-form,

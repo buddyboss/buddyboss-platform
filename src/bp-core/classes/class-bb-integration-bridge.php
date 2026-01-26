@@ -154,25 +154,37 @@ class BB_Integration_Bridge {
 	/**
 	 * Check if an integration feature is enabled.
 	 *
+	 * Uses the unified bb-active-features storage (single source of truth).
+	 *
 	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param string $feature_id The feature ID.
 	 * @return bool
 	 */
 	public function is_integration_feature_enabled( $feature_id ) {
-		// Check the stored option for this integration feature.
-		$active_integrations = bp_get_option( 'bb-active-integrations', array() );
+		// Primary storage: bb-active-features (unified with all features).
+		$active_features = bp_get_option( 'bb-active-features', array() );
 
-		// If not set, default to enabled (for backward compatibility).
-		if ( ! isset( $active_integrations[ $feature_id ] ) ) {
-			return true;
+		// If set in bb-active-features, use that value.
+		if ( isset( $active_features[ $feature_id ] ) ) {
+			return (bool) $active_features[ $feature_id ];
 		}
 
-		return (bool) $active_integrations[ $feature_id ];
+		// Migration fallback: check legacy bp-active-components.
+		$active_components = bp_get_option( 'bp-active-components', array() );
+		if ( isset( $active_components[ $feature_id ] ) ) {
+			return (bool) $active_components[ $feature_id ];
+		}
+
+		// Default to enabled for backward compatibility (existing integrations).
+		return true;
 	}
 
 	/**
 	 * Enable an integration feature.
+	 *
+	 * Note: This is typically called via bb_feature_activated action.
+	 * Direct calls should go through BB_Feature_Registry::activate_feature().
 	 *
 	 * @since BuddyBoss 3.0.0
 	 *
@@ -180,13 +192,22 @@ class BB_Integration_Bridge {
 	 * @return bool
 	 */
 	public function enable_integration( $feature_id ) {
-		$active_integrations = bp_get_option( 'bb-active-integrations', array() );
-		$active_integrations[ $feature_id ] = 1;
-		return bp_update_option( 'bb-active-integrations', $active_integrations );
+		// Update unified storage.
+		$active_features = bp_get_option( 'bb-active-features', array() );
+		$active_features[ $feature_id ] = 1;
+		bp_update_option( 'bb-active-features', $active_features );
+
+		// Sync to legacy storage for backward compatibility.
+		$active_components = bp_get_option( 'bp-active-components', array() );
+		$active_components[ $feature_id ] = 1;
+		return bp_update_option( 'bp-active-components', $active_components );
 	}
 
 	/**
 	 * Disable an integration feature.
+	 *
+	 * Note: This is typically called via bb_feature_deactivated action.
+	 * Direct calls should go through BB_Feature_Registry::deactivate_feature().
 	 *
 	 * @since BuddyBoss 3.0.0
 	 *
@@ -194,9 +215,15 @@ class BB_Integration_Bridge {
 	 * @return bool
 	 */
 	public function disable_integration( $feature_id ) {
-		$active_integrations = bp_get_option( 'bb-active-integrations', array() );
-		$active_integrations[ $feature_id ] = 0;
-		return bp_update_option( 'bb-active-integrations', $active_integrations );
+		// Update unified storage.
+		$active_features = bp_get_option( 'bb-active-features', array() );
+		$active_features[ $feature_id ] = 0;
+		bp_update_option( 'bb-active-features', $active_features );
+
+		// Sync to legacy storage for backward compatibility.
+		$active_components = bp_get_option( 'bp-active-components', array() );
+		unset( $active_components[ $feature_id ] );
+		return bp_update_option( 'bp-active-components', $active_components );
 	}
 
 	/**

@@ -91,7 +91,7 @@ class BP_Compatibility_Integration extends BP_Integration {
 	 */
 	public function setup_admin_integration_tab() {
 
-		require_once trailingslashit( $this->path ) . 'bp-admin-compatibility-tab.php';
+		require_once trailingslashit( $this->path ) . 'admin/settings.php';
 
 		new BP_Compatibility_Admin_Integration_Tab(
 			"bp-{$this->id}",

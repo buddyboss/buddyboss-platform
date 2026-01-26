@@ -145,6 +145,68 @@ class BB_Feature_Autoloader {
 		 */
 		return apply_filters( 'bb_feature_class_map', self::$feature_class_map );
 	}
+
+	/**
+	 * Discover and load features from the features directory.
+	 *
+	 * Scans features/integrations/ and features/community/ directories
+	 * for feature-config.php files and loads them.
+	 *
+	 * @since BuddyBoss 3.0.0
+	 *
+	 * @return void
+	 */
+	public static function discover_features() {
+		$base_dir = buddypress()->plugin_dir . 'features/';
+
+		// Feature categories to scan
+		$categories = array(
+			'integrations',
+			'community',
+		);
+
+		foreach ( $categories as $category ) {
+			$category_dir = $base_dir . $category . '/';
+
+			// Check if category directory exists
+			if ( ! is_dir( $category_dir ) ) {
+				continue;
+			}
+
+			// Get all subdirectories (each is a feature)
+			$features = glob( $category_dir . '*', GLOB_ONLYDIR );
+
+			if ( empty( $features ) ) {
+				continue;
+			}
+
+			foreach ( $features as $feature_dir ) {
+				$config_file = $feature_dir . '/feature-config.php';
+
+				// Load feature config if it exists
+				if ( file_exists( $config_file ) ) {
+					require_once $config_file;
+
+					/**
+					 * Fires after a feature config is loaded.
+					 *
+					 * @since BuddyBoss 3.0.0
+					 *
+					 * @param string $feature_dir Feature directory path.
+					 * @param string $config_file Feature config file path.
+					 */
+					do_action( 'bb_feature_config_loaded', $feature_dir, $config_file );
+				}
+			}
+		}
+
+		/**
+		 * Fires after all features have been discovered and loaded.
+		 *
+		 * @since BuddyBoss 3.0.0
+		 */
+		do_action( 'bb_features_discovered' );
+	}
 }
 
 /**

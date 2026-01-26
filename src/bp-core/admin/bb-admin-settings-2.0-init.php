@@ -56,9 +56,14 @@ function bb_admin_settings_2_0_init() {
 	bb_integration_bridge();
 
 	// Register managed integrations (these can be enabled/disabled via feature cards).
+	// The integration_id maps to the BP_Integration->id property.
 	bb_integration_bridge()->register_managed_integration( 'learndash', 'learndash' );
 	bb_integration_bridge()->register_managed_integration( 'pusher', 'pusher' );
 	bb_integration_bridge()->register_managed_integration( 'recaptcha', 'recaptcha' );
+	bb_integration_bridge()->register_managed_integration( 'lifter-lms', 'lifter-lms' );
+	bb_integration_bridge()->register_managed_integration( 'tutor-lms', 'tutor-lms' );
+	bb_integration_bridge()->register_managed_integration( 'memberpress', 'memberpress' );
+	bb_integration_bridge()->register_managed_integration( 'onesignal', 'onesignal' );
 
 	// Initialize Feature Registry (singleton, hooks into bp_loaded).
 	bb_feature_registry();
@@ -114,6 +119,11 @@ function bb_admin_settings_2_0_init() {
 	// Register feature autoloader for code compartmentalization.
 	if ( class_exists( 'BB_Feature_Autoloader' ) ) {
 		BB_Feature_Autoloader::register();
+	}
+
+	// Discover and load features from features/ directory
+	if ( class_exists( 'BB_Feature_Autoloader' ) ) {
+		BB_Feature_Autoloader::discover_features();
 	}
 }
 add_action( 'bp_loaded', 'bb_admin_settings_2_0_init', 4 ); // Before feature registration (priority 5).

@@ -178,16 +178,117 @@ export function SettingsForm({ fields, values, onChange }) {
 					/>
 				);
 
-			case 'radio':
-				return (
-					<RadioControl
-						key={field.name}
-						label=""
-						selected={value || ''}
-						options={field.options || []}
-						onChange={(newValue) => onChange(field.name, newValue)}
+		case 'radio':
+			return (
+				<RadioControl
+					key={field.name}
+					label=""
+					selected={value || ''}
+					options={field.options || []}
+					onChange={(newValue) => onChange(field.name, newValue)}
+				/>
+			);
+
+		case 'notice':
+			// Notice/alert field type
+			const noticeTypeClass = field.notice_type ? `bb-admin-settings-notice--${field.notice_type}` : '';
+			return (
+				<div className={`bb-admin-settings-notice ${noticeTypeClass}`}>
+					{field.notice_type === 'warning' && (
+						<span className="bb-admin-settings-notice__icon dashicons dashicons-warning"></span>
+					)}
+					{field.notice_type === 'info' && (
+						<span className="bb-admin-settings-notice__icon dashicons dashicons-info"></span>
+					)}
+					<span 
+						className="bb-admin-settings-notice__text"
+						dangerouslySetInnerHTML={{ __html: field.description }}
 					/>
-				);
+					{field.button_text && field.button_url && (
+						<a href={field.button_url} className="bb-admin-settings-notice__button">
+							{field.button_text}
+						</a>
+					)}
+				</div>
+			);
+
+		case 'reaction_mode':
+			// Custom Reaction Mode field with inline radios + emotion cards grid
+			return (
+				<div className="bb-admin-reactions-mode">
+					<div className="bb-admin-reactions-mode__radios">
+						{(field.options || []).map((option) => (
+							<label 
+								key={option.value} 
+								className={`bb-admin-reactions-mode__radio ${value === option.value ? 'bb-admin-reactions-mode__radio--selected' : ''}`}
+							>
+								<input
+									type="radio"
+									name={field.name}
+									value={option.value}
+									checked={value === option.value}
+									onChange={() => onChange(field.name, option.value)}
+									className="bb-admin-reactions-mode__radio-input"
+								/>
+								<span className="bb-admin-reactions-mode__radio-circle"></span>
+								<span className="bb-admin-reactions-mode__radio-label">{option.label}</span>
+							</label>
+						))}
+					</div>
+					{field.mode_description && (
+						<p className="bb-admin-reactions-mode__description">{field.mode_description}</p>
+					)}
+					{/* Emotion cards grid - shown when 'emotions' is selected */}
+					{value === 'emotions' && field.emotion_cards && (
+						<div className="bb-admin-reactions-mode__cards">
+							{field.emotion_cards.map((card) => (
+								<div key={card.id} className="bb-admin-reactions-mode__card">
+									<div className="bb-admin-reactions-mode__card-icon">
+										{card.icon}
+									</div>
+									<div className="bb-admin-reactions-mode__card-footer">
+										<span className="bb-admin-reactions-mode__card-name">{card.name}</span>
+										<button type="button" className="bb-admin-reactions-mode__card-menu">
+											<span className="dashicons dashicons-ellipsis"></span>
+										</button>
+									</div>
+								</div>
+							))}
+							<button type="button" className="bb-admin-reactions-mode__card bb-admin-reactions-mode__card--add">
+								<span className="dashicons dashicons-plus"></span>
+							</button>
+						</div>
+					)}
+				</div>
+			);
+
+		case 'reaction_button':
+			// Custom Reaction Button preview card
+			const buttonIcon = field.icon || 'thumbs-up';
+			const buttonText = field.text || 'Like';
+			return (
+				<div className="bb-admin-reaction-button">
+					<div className="bb-admin-reaction-button__preview">
+						<div className="bb-admin-reaction-button__card">
+							<div className="bb-admin-reaction-button__card-icon">
+								<span className={`bb-icons-rl bb-icons-rl-${buttonIcon}`}></span>
+							</div>
+							<div className="bb-admin-reaction-button__card-footer">
+								<span className="bb-admin-reaction-button__card-name">{buttonText}</span>
+								<button type="button" className="bb-admin-reaction-button__card-menu">
+									<span className="dashicons dashicons-ellipsis"></span>
+								</button>
+							</div>
+						</div>
+					</div>
+					{field.description && (
+						<p 
+							className="bb-admin-reaction-button__description"
+							dangerouslySetInnerHTML={{ __html: field.description }}
+						/>
+					)}
+				</div>
+			);
 
 			case 'number':
 				return (

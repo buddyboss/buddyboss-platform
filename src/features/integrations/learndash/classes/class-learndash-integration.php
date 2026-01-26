@@ -33,7 +33,7 @@ class BP_Learndash_Integration extends BP_Integration {
 	 * @since BuddyBoss 1.0.0
 	 */
 	public function setup_admin_integration_tab() {
-		require_once trailingslashit( $this->path ) . 'bp-admin-learndash-tab.php';
+		require_once trailingslashit( $this->path ) . 'admin/settings.php';
 
 		new BP_Learndash_Admin_Integration_Tab(
 			"bp-{$this->id}",
@@ -52,14 +52,21 @@ class BP_Learndash_Integration extends BP_Integration {
 	 * @since BuddyBoss 1.0.0
 	 */
 	public function includes( $includes = array() ) {
-		parent::includes(
-			array(
-				'functions',
-				'filters',
-				'groups-sync/loader.php',
-				'core/Core.php',
-			)
-		);
+		// Load includes
+		if ( file_exists( $this->path . 'includes/functions.php' ) ) {
+			require_once $this->path . 'includes/functions.php';
+		}
+		if ( file_exists( $this->path . 'includes/filters.php' ) ) {
+			require_once $this->path . 'includes/filters.php';
+		}
+
+		// Load original structure files
+		if ( file_exists( $this->path . 'groups-sync/loader.php' ) ) {
+			require_once $this->path . 'groups-sync/loader.php';
+		}
+		if ( file_exists( $this->path . 'core/Core.php' ) ) {
+			require_once $this->path . 'core/Core.php';
+		}
 	}
 
 	/**
