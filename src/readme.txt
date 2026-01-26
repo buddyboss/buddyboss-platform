@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 6.8.1
 Requires PHP: 7.4.0
-Stable tag: 2.15.3
+Stable tag: 2.18.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,77 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 2.18.0 =
+* Enhancement: Translations - Added new hooks to extend BuddyPress Multilingual 1.8.3 compatibility with BuddyBoss Platform components
+* Bug: Activity - Fixed a fatal error where the Activity Feed block caused pages to load empty when Platform Pro was not installed
+* Bug: Activity - Fixed an issue where newsfeed filter labels were incorrectly lowercased
+* Bug: Blog - Resolved an issue where the Report action was missing on comments at the maximum threading depth
+* Bug: Core - Fixed a critical security issue that allowed unauthorized users to delete media attachments belonging to other users
+* Bug: Core - Fixed issues where uploaded document size showed as 0 when Remove Local Media was enabled and videos were not immediately playable after upload
+* Bug: Core - Improved Share Posts experience with UI enhancements & post preview support
+* Bug: Core - Resolved PHP notice related to early translation loading
+* Bug: Core - Resolved security vulnerabilities that allowed unauthorized users to modify video and media privacy and descriptions
+* Bug: Media - Fixed a security issue by adding proper permission checks to prevent unauthorized video moves between albums
+* Bug: Media - Fixed incorrect album video counts and visibility when moving videos with Redis cache enabled
+* Bug: Messages - Resolved a server-specific issue causing the Messages right sidebar not to load when the Media component was active
+* Bug: ReadyLaunch - Fixed an issue where the Move button for photos and videos did not work from the activity feed in ReadyLaunch
+* Bug: ReadyLaunch - Fixed ReadyLaunch My Network to display only the 10 most recent users and corrected the ‘See All’ link behavior
+* Bug: ReadyLaunch - Resolved ReadyLaunch issue where removed media remained attached after being removed from the dropzone
+* Bug: Translations - Fixed an issue where the ‘More’ button in the Activity Topic filter was not translatable using Loco Translate
+* Bug: Translations - Fixed an issue where Topics were not translated when using WPML
+
+= 2.17.0 =
+* Bug: Activity - Fixed an issue where apostrophes  in activity post titles were displayed incorrectly in the BuddyBoss App for activities posted from the web
+* Bug: Activity - Fixed an issue where embed link previews were unnecessarily refreshed when changing the activity topic
+* Bug: Activity - Fixed an issue where GIF posts were not visible to non-logged-in users across Activity Feed
+* Bug: Activity - Fixed an issue where links on activity pages could not be opened in a new window on iPhone devices
+* Bug: Activity - Fixed an issue where multiple videos could play at the same time in the news feed; starting a new video now automatically pauses the previous one
+* Bug: Activity - Fixed an issue where users were unable to edit group-related posts from the news feed
+* Bug: Core - Fixed a security vulnerability that allowed unauthorized access to protected or paid media files via document preview URLs
+* Bug: Core - Fixed an issue where both Profile and Members menus were incorrectly highlighted at the same time when viewing the logged-in user’s profile
+* Bug: Core - Fixed an issue where link previews were not displaying correctly for private communities, ensuring previews now work properly across all pages
+* Bug: Core - Fixed an issue where the “Select All” checkbox on the WordPress Plugins page did not work when BuddyBoss Platform was active
+* Bug: Core - Fixed an issue where the “Settings Saved” admin notice appeared twice on non-BuddyBoss settings pages
+* Bug: Email - Fixed an issue where password reset emails were not sent when ReadyLaunch was enabled
+* Bug: Forums - Fixed a visual alignment issue with the “Notify me of new replies” checkbox in forum discussion modals
+* Bug: Forums - Fixed an issue where forum topic order was incorrect when sticky or super-sticky discussions were enabled
+* Bug: Forums - Fixed an issue where Super Sticky forum discussions were not working properly
+* Bug: Groups - Fixed an issue where group organizers were unable to reply to sub-forum topics when the parent forum was associated with a hidden group
+* Bug: Groups - Improved Group Filters styling to fix layout and UI issues when using default WordPress themes like Twenty Twenty-One
+* Bug: Media - Fixed an issue where Dubb video links did not generate previews in activity posts
+* Bug: Media - Fixed issues with album, including adding items via the Select Album option and deleting newly added media without page reload
+* Bug: Messages - Improved the notice UI on the Send Message screen for groups with zero members to match consistent styling across the platform
+* Bug: Profiles - Fixed an issue where Advanced Profile Search returned incorrect results when the Date Range field was present but not selected
+* Bug: ReadyLaunch - Fixed album UI and messaging issues in ReadyLaunch, ensuring correct display on Profile and Group album pages
+* Bug: ReadyLaunch - Fixed an issue where Google reCAPTCHA did not appear on the Registration, Login, and Forgot Password pages when ReadyLaunch was enabled
+* Bug: ReadyLaunch - Fixed an issue where ReadyLaunch message and notification menus were visible to non-logged-in users
+* Bug: ReadyLaunch - Fixed an issue where the discussion reply form displayed an empty warning message
+* Bug: ReadyLaunch - Fixed an issue where updated video thumbnails in group and member video tabs did not reflect immediately in ReadyLaunch and required a page reload
+* Bug: ReadyLaunch - Fixed an issue where users were unable to create or edit albums in ReadyLaunch
+* Bug: ReadyLaunch - Fixed notice styling issues to align with the ReadyLaunch design system, including improved colors, spacing, and dark theme consistency
+* Bug: ReadyLaunch - Fixed UI issues on the Group Pending Invitations page in ReadyLaunch, ensuring the loader and pagination display correctly
+* Bug: Social Login - Fixed an issue where Google SSO registration failed with Japanese nicknames by adding proper validation and handling during username generation
+* Bug: Widget - Fixed an issue where the Profile Cover Photo option appeared in the Profile Completion widget even when cover photo upload was disabled
+
+= 2.16.1 =
+* Bug: Core - Enhanced the license activation system with improved rate limiting and stability fixes to strengthen security
+
+= 2.16.0 =
+* Enhancement: Core – Improved the licensing service to reduce interruptions and increase the grace period when a license is not initially detected
+* Bug: Activity - Added a tooltip on the Post button to indicate when a post title is required
+* Bug: Activity - Fixed an issue where the topics section appeared clunky during initial page load
+* Bug: Core - Corrected a malformed CSS transition property to restore proper hover and transition effects across the platform
+* Bug: Forums - Fixed an issue where email notifications were not sent for discussions created or scheduled from the backend
+* Bug: Groups - Fixed an issue where the Group List View automatically refreshed and redirected to the group feed instead of displaying sub-groups
+* Bug: LearnDash - Fixed an issue where pagination disappeared for LearnDash quiz listings with more than 20 items when Platform was active
+* Bug: MemberPress - Fixed a PHP fatal error when accessing locked MemberPress lessons/quizzes and improved the UI styling for the lessons list on course pages
+* Bug: Messages - Fixed a playback conflict where YouTube videos would auto-play when a Video.js clip was played in picture-in-picture mode, ensuring only the active Video.js video plays
+* Bug: Profiles - Fixed an issue where profile details fields became non-editable on the frontend when a “no self-select” profile type field was assigned to a user
+* Bug: ReadyLaunch - Fixed a layout issue causing the activity privacy dropdown to appear oversized when ReadyLaunch was enabled
+* Bug: ReadyLaunch - Fixed an issue where emoji reactions were not appearing in forums when ReadyLaunch was enabled with another theme
+* Bug: ReadyLaunch - Improved mobile responsiveness in ReadyLaunch by fixing submenu overflow, activity sorting dropdown issues, and restoring emoji picker functionality
+* Bug: Translation - Fixed an issue where certain text strings across the platform were not translatable
 
 = 2.15.3 =
 * Bug: Giphy - Fixed GIFs not auto-playing on page load in messages and activity feeds

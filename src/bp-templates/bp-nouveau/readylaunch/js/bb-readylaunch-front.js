@@ -60,6 +60,7 @@ window.bp = window.bp || {};
 				$document.on( 'click', '.action-delete', this.markNotificationDelete.bind( this ) );
 				$document.on( 'click', '.bb-rl-header-container .header-aside .user-link', this.profileNav.bind( this ) );
 				$document.on( 'click', '.bb-rl-header-search', this.searchModelToggle.bind( this ) );
+				$document.on( 'click', '.bb-rl-profile-list-item--after', this.toggleProfileListItem.bind( this ) );
 			},
 
 			profileNav: function ( e ) {
@@ -72,6 +73,21 @@ window.bp = window.bp || {};
 				e.preventDefault();
 
 				$( '#bb-rl-network-search-modal' ).removeClass( 'bp-hide' );
+			},
+
+			/**
+			 * Toggle profile list item active state
+			 */
+			toggleProfileListItem: function ( e ) {
+				e.preventDefault();
+				e.stopPropagation();
+
+				var $clickedAfter = $( e.currentTarget );
+				var $currentItem = $clickedAfter.closest( '.bb-rl-profile-list-item' );
+
+				$( '.bb-rl-profile-list-item' ).not( $currentItem ).removeClass( 'active' );
+
+				$currentItem.toggleClass( 'active' );
 			},
 
 			/**
@@ -835,6 +851,24 @@ window.bp = window.bp || {};
 							if ( 'activity' === ActiveComponent ) {
 								if ( bp.draft_activity.allow_delete_media ) {
 									// Remove logic for media items.
+									if ( view[ modelKey ] && view[ modelKey ].length ) {
+										for ( var i in view[ modelKey ] ) {
+											if ( file.id === view[ modelKey ][i].id ) {
+												if ( ! _.isUndefined( view[ modelKey ][i].saved ) && ! view[ modelKey ][i].saved ) {
+													bp.Nouveau.Media.removeAttachment( file.id );
+												}
+											} else if ( file[ mediaType + '_edit_data' ] ) {
+												// Removed medias after draft is restored.
+												var attachment_id = file[ mediaType + '_edit_data' ].id;
+												if ( attachment_id === view[ modelKey ][i].id ) {
+													if ( ! _.isUndefined( view[ modelKey ][i].saved ) && ! view[ modelKey ][i].saved ) {
+														bp.Nouveau.Media.removeAttachment( attachment_id );
+													}
+												}
+											}
+										}
+									}
+
 									view[ modelKey ] = view[ modelKey ].filter(
 										function ( mediaItem ) {
 											return file.id !== mediaItem.id &&
