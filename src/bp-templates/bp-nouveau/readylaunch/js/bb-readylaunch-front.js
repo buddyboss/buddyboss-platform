@@ -235,15 +235,15 @@ window.bp = window.bp || {};
 			 * @param {jQuery|string} $container - jQuery object or selector for the container element
 			 */
 			initSelect2Scoped: function ( $container ) {
-				if ( typeof $ === 'undefined' ) {
+				if ( 'undefined' === typeof $ ) {
 					$ = jQuery;
 				}
 
-				if ( typeof $container === 'string' ) {
+				if ( 'string' === typeof $container ) {
 					$container = $( $container );
 				}
 
-				if ( typeof $.fn.select2 === 'undefined' || ! $container.length ) {
+				if ( 'undefined' === typeof $.fn.select2 || ! $container.length ) {
 					return;
 				}
 
