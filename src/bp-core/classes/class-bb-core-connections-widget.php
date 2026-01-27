@@ -42,14 +42,16 @@ class BB_Core_Connections_Widget extends WP_Widget {
 			return;
 		}
 
-		$user_id = get_current_user_id();
+		// Use displayed user if on profile, otherwise logged-in user.
+		$user_id = bp_displayed_user_id() ? bp_displayed_user_id() : bp_loggedin_user_id();
 		$max     = 10;
 
 		$friends = function_exists( 'friends_get_friend_user_ids' )
 			? friends_get_friend_user_ids( $user_id )
 			: array();
 
-		// No connections found, don't display the widget.
+		// Current: "No connections found, don't display the widget."
+		// Suggested: "Early return if user has no connections to prevent empty widget display"
 		if ( empty( $friends ) ) {
 			return;
 		}
@@ -57,10 +59,13 @@ class BB_Core_Connections_Widget extends WP_Widget {
 		echo wp_kses_post( $args['before_widget'] );
 
 		$friends = array_slice( $friends, 0, $max );
+
+		// Build "See all" link for the displayed user.
+		$see_all_url = bp_core_get_user_domain( $user_id ) . bp_get_friends_slug() . '/';
 		?>
 		<div class="widget-header">
 			<h2 class="widget-title"><?php esc_html_e( 'Connections', 'buddyboss' ); ?></h2>
-			<a href="<?php echo esc_url( bp_loggedin_user_domain() . bp_get_friends_slug() . '/' ); ?>" class="widget-link">
+			<a href="<?php echo esc_url( $see_all_url ); ?>" class="widget-link">
 				<?php esc_html_e( 'See all', 'buddyboss' ); ?>
 			</a>
 		</div>
