@@ -3018,14 +3018,22 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				bp_update_option( 'bb_rl_activity_sidebars', $activity_sidebars );
 			}
 
+			$saved_activity_sidebars = bp_get_option( 'bb_rl_activity_sidebars', $activity_sidebars );
+
+			// If saved data is a simple array (numeric keys), convert to boolean map.
+			if ( is_array( $saved_activity_sidebars ) && ! empty( $saved_activity_sidebars ) && isset( $saved_activity_sidebars[0] ) ) {
+				$converted = array();
+				foreach ( array_keys( $activity_sidebars ) as $key ) {
+					$converted[ $key ] = in_array( $key, $saved_activity_sidebars, true );
+				}
+				$saved_activity_sidebars = $converted;
+			}
+
 			$settings['bb_rl_activity_sidebars'] = array_map(
 				function ( $value ) {
 					return (bool) $value;
 				},
-				bp_get_option(
-					'bb_rl_activity_sidebars',
-					$activity_sidebars
-				)
+				wp_parse_args( $saved_activity_sidebars, $activity_sidebars )
 			);
 
 			$member_sidebar = array( 'complete_profile' => true );
@@ -3042,10 +3050,18 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				bp_update_option( 'bb_rl_member_profile_sidebars', $member_sidebar );
 			}
 
-			$member_sidebar = wp_parse_args(
-				bp_get_option( 'bb_rl_member_profile_sidebars', $member_sidebar ),
-				$member_sidebar
-			);
+			$saved_option = bp_get_option( 'bb_rl_member_profile_sidebars', $member_sidebar );
+
+			// If saved data is a simple array (numeric keys), convert to a boolean map.
+			if ( is_array( $saved_option ) && ! empty( $saved_option ) && isset( $saved_option[0] ) ) {
+				$converted = array();
+				foreach ( array_keys( $member_sidebar ) as $key ) {
+					$converted[ $key ] = in_array( $key, $saved_option, true );
+				}
+				$saved_option = $converted;
+			}
+
+			$member_sidebar = wp_parse_args( $saved_option, $member_sidebar );
 
 			$settings['bb_rl_member_profile_sidebars'] = array_map(
 				function ( $value ) {
@@ -3063,14 +3079,22 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				bp_update_option( 'bb_rl_groups_sidebars', $group_sidebars );
 			}
 
+			$saved_group_sidebars = bp_get_option( 'bb_rl_groups_sidebars', $group_sidebars );
+
+			// If saved data is a simple array (numeric keys), convert to boolean map.
+			if ( is_array( $saved_group_sidebars ) && ! empty( $saved_group_sidebars ) && isset( $saved_group_sidebars[0] ) ) {
+				$converted = array();
+				foreach ( array_keys( $group_sidebars ) as $key ) {
+					$converted[ $key ] = in_array( $key, $saved_group_sidebars, true );
+				}
+				$saved_group_sidebars = $converted;
+			}
+
 			$settings['bb_rl_groups_sidebars'] = array_map(
 				function ( $value ) {
 					return (bool) $value;
 				},
-				bp_get_option(
-					'bb_rl_groups_sidebars',
-					$group_sidebars
-				)
+				wp_parse_args( $saved_group_sidebars, $group_sidebars )
 			);
 
 			// Menu Settings.
