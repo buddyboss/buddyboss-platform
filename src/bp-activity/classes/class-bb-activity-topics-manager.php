@@ -906,7 +906,13 @@ class BB_Activity_Topics_Manager {
 			}
 		}
 
-		$cache_key   = 'bb_activity_topics_' . md5( maybe_serialize( $r ) );
+		$cache_key = 'bb_activity_topics_' . md5( maybe_serialize( $r ) );
+
+		// Include current language in a cache key for WPML compatibility.
+		if ( class_exists( 'SitePress' ) ) {
+			$cache_key .= '_' . apply_filters( 'wpml_current_language', '' );
+		}
+
 		$topic_cache = wp_cache_get( $cache_key, $this->activity_topics_cache_key );
 		if ( false !== $topic_cache ) {
 			return $topic_cache;

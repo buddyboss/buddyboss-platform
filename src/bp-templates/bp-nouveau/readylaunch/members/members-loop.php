@@ -36,7 +36,33 @@ $enabled_joined_date   = ! function_exists( 'bb_enabled_member_directory_element
 	</div>
 <?php endif; ?>
 
-<?php if ( bp_has_members( bp_ajax_querystring( 'members' ) ) ) : ?>
+<?php
+// Build query string with URL scope parameter support (for page requests = 1).
+$members_query_string = bp_ajax_querystring( 'members' );
+
+// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+if ( ! empty( $_GET['bb-rl-scope'] ) ) {
+	$query_args        = bp_parse_args( $members_query_string );
+	// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+	$url_scope         = sanitize_text_field( wp_unslash( $_GET['bb-rl-scope'] ) );
+	$logged_in_user_id = bp_loggedin_user_id();
+
+	// Set scope and get user IDs for followers/following.
+	$query_args['scope'] = $url_scope;
+
+	if ( 'following' === $url_scope && function_exists( 'bp_get_following_ids' ) ) {
+		$query_args['include'] = bp_get_following_ids( array( 'user_id' => $logged_in_user_id ) );
+		unset( $query_args['user_id'] );
+	} elseif ( 'followers' === $url_scope && function_exists( 'bp_get_follower_ids' ) ) {
+		$query_args['include'] = bp_get_follower_ids( array( 'user_id' => $logged_in_user_id ) );
+		unset( $query_args['user_id'] );
+	}
+
+	$members_query_string = http_build_query( $query_args );
+}
+?>
+
+<?php if ( bp_has_members( $members_query_string ) ) : ?>
 
 	<ul id="members-list" class="<?php bp_nouveau_loop_classes(); ?>">
 
