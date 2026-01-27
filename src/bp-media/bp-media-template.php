@@ -1519,14 +1519,18 @@ function bp_album_title() {
 function bp_get_album_title() {
 	global $media_album_template;
 
+	$album_id = isset( $media_album_template->album->id ) ? (int) $media_album_template->album->id : 0;
+
 	/**
 	 * Filters the album title being displayed.
 	 *
 	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss 2.18.0 Added $album_id parameter.
 	 *
-	 * @param int $id The media album title.
+	 * @param string $title    The media album title.
+	 * @param int    $album_id The media album ID.
 	 */
-	return apply_filters( 'bp_get_album_title', $media_album_template->album->title );
+	return apply_filters( 'bp_get_album_title', $media_album_template->album->title, $album_id );
 }
 
 /**
