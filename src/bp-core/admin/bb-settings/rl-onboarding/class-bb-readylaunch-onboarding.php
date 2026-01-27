@@ -908,9 +908,7 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 			$component_map[] = 'groups';
 		}
 
-		if (
-			! empty( $final_settings['bb_rl_member_profile_sidebars'] )
-		) {
+		if ( ! empty( $final_settings['bb_rl_member_profile_sidebars'] ) ) {
 			if ( in_array( 'my_network', $final_settings['bb_rl_member_profile_sidebars'], true ) ) {
 				$component_map[] = 'activity';
 			}
