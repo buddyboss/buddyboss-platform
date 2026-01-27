@@ -1620,7 +1620,7 @@ function bb_nouveau_ajax_activity_load_more_comments() {
 	}
 	$comments = BP_Activity_Activity::append_comments(
 		array( $parent_commment ),
-		'',
+		'ham_only', // Filter spam comments - include orphaned comments (replies to spam).
 		true,
 		array(
 			'limit'                  => bb_get_activity_comment_loading(),
