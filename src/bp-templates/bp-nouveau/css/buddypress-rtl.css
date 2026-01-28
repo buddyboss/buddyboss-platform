@@ -30146,30 +30146,31 @@ div.video-js .vjs-poster > img {
   z-index: 999991;
 }
 
-.bp-video-thumbnail-uploader.no_ffmpeg .video-thumbnail-content .bp-video-thumbnail-auto-generated {
+.bp-video-thumbnail-uploader.no_ffmpeg .video-thumbnail-content .bp-video-thumbnail-auto-generated, .bp-video-thumbnail-uploader.ffmpeg_failed .video-thumbnail-content .bp-video-thumbnail-auto-generated {
   width: 33.3333%;
   display: inline-block;
 }
 
-.bp-video-thumbnail-uploader.no_ffmpeg .video-thumbnail-content .bp-video-thumbnail-auto-generated .video-thumb-list li {
+.bp-video-thumbnail-uploader.no_ffmpeg .video-thumbnail-content .bp-video-thumbnail-auto-generated .video-thumb-list li, .bp-video-thumbnail-uploader.ffmpeg_failed .video-thumbnail-content .bp-video-thumbnail-auto-generated .video-thumb-list li {
   width: 100%;
   flex: 0 0 100%;
   max-width: 100%;
   height: 100%;
 }
 
-.bp-video-thumbnail-uploader.no_ffmpeg .video-thumbnail-content .bb-dropzone-wrap {
+.bp-video-thumbnail-uploader.no_ffmpeg .video-thumbnail-content .bb-dropzone-wrap, .bp-video-thumbnail-uploader.ffmpeg_failed .video-thumbnail-content .bb-dropzone-wrap {
   width: 33.333334%;
   display: inline-block;
   vertical-align: text-bottom;
 }
 
-.bp-video-thumbnail-uploader.no_ffmpeg .video-thumbnail-content .bb-dropzone-wrap .bb-field-wrap .dropzone {
+.bp-video-thumbnail-uploader.no_ffmpeg .video-thumbnail-content .bb-dropzone-wrap .bb-field-wrap .dropzone, .bp-video-thumbnail-uploader.ffmpeg_failed .video-thumbnail-content .bb-dropzone-wrap .bb-field-wrap .dropzone {
   height: 155px;
 }
 
 .bp-video-thumbnail-uploader.no_ffmpeg .video-thumbnail-content .bb-dropzone-wrap .bb-field-wrap .dropzone .dz-default,
-.bp-video-thumbnail-uploader.no_ffmpeg .video-thumbnail-content .bb-dropzone-wrap .bb-field-wrap .dropzone .dz-preview .dz-image {
+.bp-video-thumbnail-uploader.no_ffmpeg .video-thumbnail-content .bb-dropzone-wrap .bb-field-wrap .dropzone .dz-preview .dz-image, .bp-video-thumbnail-uploader.ffmpeg_failed .video-thumbnail-content .bb-dropzone-wrap .bb-field-wrap .dropzone .dz-default,
+.bp-video-thumbnail-uploader.ffmpeg_failed .video-thumbnail-content .bb-dropzone-wrap .bb-field-wrap .dropzone .dz-preview .dz-image {
   height: 155px;
 }
 
