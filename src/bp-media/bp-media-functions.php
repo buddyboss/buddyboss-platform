@@ -3100,7 +3100,7 @@ function bp_media_get_activity_media( $activity_id ) {
 		}
 
 		$activity = new BP_Activity_Activity( $activity_id );
-		if ( empty( $activity ) ) {
+		if ( empty( $activity ) || empty( $activity->id ) ) {
 			return;
 		}
 
