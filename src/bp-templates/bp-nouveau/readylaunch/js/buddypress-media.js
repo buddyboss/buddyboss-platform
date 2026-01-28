@@ -833,11 +833,11 @@ window.bp = window.bp || {};
 
 
 								if ( true === response.data.delete_activity ) {
-									$( 'body #buddypress .bb-rl-activity-list li#activity-' + activityId ).remove();
+									$( 'body #buddypress .bb-rl-activity-list li#bb-rl-activity-' + activityId ).remove();
 									$( 'body .bb-rl-activity-media-elem.bb-rl-media-activity.' + id ).remove();
-									$( 'body .bb-rl-activity-comments li#acomment-' + activityId ).remove();
+									$( 'body .bb-rl-activity-comments li#bb-rl-acomment-' + activityId ).remove();
 								} else {
-									$( 'body #buddypress .bb-rl-activity-list li#activity-' + activityId ).replaceWith( response.data.activity_content );
+									$( 'body #buddypress .bb-rl-activity-list li#bb-rl-activity-' + activityId ).replaceWith( response.data.activity_content );
 								}
 							}
 						} else if ( fromWhere && fromWhere.length && 'media' === fromWhere ) {
