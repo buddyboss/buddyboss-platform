@@ -666,14 +666,14 @@ window.bp = window.bp || {};
 						data    : data,
 						success : function ( response ) {
 							if ( response.success ) {
-								$( 'body #buddypress .bb-rl-activity-list li#activity-' + activityId + ' .bb-rl-document-activity .bb-rl-activity-inner .bb-activity-media-wrap .bb-rl-document-activity.' + id ).remove();
+								$( 'body #buddypress .bb-rl-activity-list li#bb-rl-activity-' + activityId + ' .document-activity .bb-rl-activity-inner .bb-activity-media-wrap .bb-rl-document-activity.' + id ).remove();
 								$( 'body #buddypress .bb-rl-activity-list .bb-rl-activity-comments .bb-rl-document-activity.' + id ).remove();
 								if ( true === response.data.delete_activity ) {
-									$( 'body #buddypress .bb-rl-activity-list li#activity-' + activityId ).remove();
+									$( 'body #buddypress .bb-rl-activity-list li#bb-rl-activity-' + activityId ).remove();
 									$( 'body .bb-rl-activity-media-elem.bb-rl-document-activity.' + id ).remove();
-									$( 'body .bb-rl-activity-comments li#acomment-' + activityId ).remove();
+									$( 'body .bb-rl-activity-comments li#bb-rl-acomment-' + activityId ).remove();
 								} else {
-									$( 'body #buddypress .bb-rl-activity-list li#activity-' + activityId ).replaceWith( response.data.activity_content );
+									$( 'body #buddypress .bb-rl-activity-list li#bb-rl-activity-' + activityId ).replaceWith( response.data.activity_content );
 								}
 							}
 						}
