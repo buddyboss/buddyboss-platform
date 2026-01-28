@@ -461,6 +461,10 @@ module.exports = function (grunt) {
 				}
 			},
 			exec: {
+				options: {
+					maxBuffer: 1024 * 1024 * 10, // 10MB buffer (global default)
+					timeout: 600000 // 10 minutes (global default for all exec tasks)
+				},
 				build_blocks: {
 					command: 'npm run build:block:core',
 					cwd: '.',
@@ -516,11 +520,7 @@ module.exports = function (grunt) {
 				makepot_wp: {
 					command: 'wp i18n make-pot src/ src/languages/buddyboss.pot --domain=buddyboss --ignore-domain --exclude="node_modules/*, vendor/*, src/vendor/*, js/*"',
 					cwd: '.',
-					stdout: true,
-					options: {
-						maxBuffer: 1024 * 1024 * 10,
-						timeout: 60000 // 60 seconds
-					}
+					stdout: true
 				},
 				// Fix POT file headers to match grunt-wp-i18n format
 				fix_wp_cli_headers: {
