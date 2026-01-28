@@ -1,7 +1,7 @@
 /* jshint node:true */
 /* global module */
 module.exports = function (grunt) {
-	var sass       = require( 'node-sass' ),
+	var sass       = require( 'sass' ),
 		SOURCE_DIR = 'src/',
 		BUILD_DIR  = 'buddyboss-platform/',
 
@@ -111,6 +111,8 @@ module.exports = function (grunt) {
 					implementation: sass,
 					//indentType: 'tab',
 					//indentWidth: '1'
+					// TODO: Remove silenceDeprecations once SCSS files are updated to Dart Sass syntax
+					silenceDeprecations: ['import', 'global-builtin', 'color-functions', 'slash-div', 'legacy-js-api', 'if-function'],
 				},
 				nouveau: {
 					cwd: SOURCE_DIR,
@@ -516,6 +518,7 @@ module.exports = function (grunt) {
 					cwd: SOURCE_DIR,
 					stdout: false
 				},
+				convert_json_to_php: 'npm run convert-json-to-php',
 				// WP-CLI makepot with header fixing
 				makepot_wp: {
 					command: 'wp i18n make-pot src/ src/languages/buddyboss.pot --domain=buddyboss --ignore-domain --exclude="node_modules/*, vendor/*, src/vendor/*, js/*"',
@@ -574,17 +577,6 @@ module.exports = function (grunt) {
 					},
 				}
 			},
-			json2php: {
-				convert: {
-					expand: true,
-					cwd: SOURCE_DIR + 'bp-templates/bp-nouveau/icons/',
-					dest: SOURCE_DIR + 'bp-templates/bp-nouveau/icons/',
-					ext: '.php',
-					src: [
-						'font-map.json'
-					]
-				}
-			},
 			'string-replace': {
 				dist: {
 					files: [{
@@ -598,20 +590,28 @@ module.exports = function (grunt) {
 						}]
 					}
 				},
-				'icon-translate': {
-					files: [{
-						src: SOURCE_DIR + 'bp-templates/bp-nouveau/icons/font-map.php',
-						expand: true,
-					}],
-					options: {
-						replacements: [
-							{
-								pattern: /return/g,
-								replacement: '$bb_icons_data ='
-							}
-						]
-					}
+			'icon-translate': {
+				files: [{
+					src: SOURCE_DIR + 'bp-templates/bp-nouveau/icons/font-map.php',
+					expand: true,
+				}],
+				options: {
+					replacements: [
+						{
+							pattern: /"(label)"(\s+=>\s+("[^"]+\b"))/g,
+							replacement: '"name" => _x( $3, "BuddyBoss Icon", "buddyboss" )'
+						},
+						{
+							pattern: /return/g,
+							replacement: '$bb_icons_data ='
+						},
+						{
+							pattern: /"(css)"(\s+=>\s+"([^"]+\b)")/g,
+							replacement: '"id" => "bb-icon-$3"'
+						}
+					]
 				}
+			}
 			}
 		}
 	);
@@ -627,7 +627,7 @@ module.exports = function (grunt) {
 			'exec:fetch_bb_icons',
 			'copy:bb_icons',
 			'clean:bb_icons',
-			'json2php',
+			'exec:convert_json_to_php',
 			'string-replace:icon-translate',
 			'rtlcss',
 			'cssmin'
