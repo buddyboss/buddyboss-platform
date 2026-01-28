@@ -125,14 +125,14 @@ window.bp = window.bp || {};
 			$document.on( 'click', '#bp-video-uploader-close', this.closeUploader.bind( this ) );
 			$document.on( 'click', '#bp-video-submit', this.submitVideo.bind( this ) );
 			$document.on( 'click', '.bp-video-uploader .modal-container .bb-field-uploader-actions', this.uploadVideoNavigate.bind( this ) );
-			$document.on( 'click', '.bb-rl-more_dropdown-wrap .bb_rl_more_dropdown__action, .bb-rl-activity-video-elem .bb-rl-more_dropdown-wrap .video-action_list li a, .bb-rl-media-model-container .bb-rl-activity-list .bb-rl-more_dropdown-wrap > a, .bb-rl-media-model-container .bb-rl-activity-list .bb-rl-more_dropdown-wrap .video-action_list li a', this.videoActivityActionButton.bind( this ) );
+			$document.on( 'click', '.bb-rl-activity-video-elem .bb-rl-more_dropdown-wrap .bb_rl_more_dropdown__action, .bb-rl-activity-video-elem .bb-rl-more_dropdown-wrap .video-action_list li a, .bb-rl-media-model-container .bb-rl-activity-list .bb-rl-activity-video-elem .bb-rl-more_dropdown-wrap > a, .bb-rl-media-model-container .bb-rl-activity-list .bb-rl-more_dropdown-wrap .video-action_list li a', this.videoActivityActionButton.bind( this ) );
 			$document.on( 'click', '.activity .bb-rl-video-move-activity, #media-stream .bb-rl-video-move-activity, #video-stream .bb-rl-video-move-activity', this.moveVideoIntoAlbum.bind( this ) );
 			$document.on( 'click', '.bb-rl-video-open-create-popup-album', this.createAlbumInPopup.bind( this ) );
 			$document.on( 'click', '.bb-rl-ac-video-close-button', this.closeVideoMove.bind( this ) );
 			$document.on( 'click', '.bb-rl-ac-video-move', this.openVideoMove.bind( this ) );
 			$document.on( 'change', '.bb-video-check-wrap [name="bb-video-select"]', this.addSelectedClassToWrapper.bind( this ) );
 			$document.on( 'click', '#bb-select-deselect-all-video', this.toggleSelectAllVideo.bind( this ) );
-			$document.on( 'click', '.video-action_list .bb-rl-video-file-delete, #bb-delete-video', this.deleteVideo.bind( this ) );
+			$document.on( 'click', '.video-action_list .bb-rl-video-file-delete, .bb_rl_more_dropdown .bb-rl-video-file-delete, #bb-delete-video', this.deleteVideo.bind( this ) );
 			$document.on( 'click', '.bb-rl-video-thumbnail-uploader.opened-edit-thumbnail .bb-rl-video-thumbnail-custom .bb-rl-close-thumbnail-custom', this.deleteVideoThumb.bind( this ) );
 
 			if ( undefined !== BP_Nouveau.is_send_ajax_request && '1' === BP_Nouveau.is_send_ajax_request ) {
@@ -288,7 +288,7 @@ window.bp = window.bp || {};
 			}
 
 			if ( target.closest( '.bb-rl-media-model-container' ).length ) {
-				target.closest( '.bb-rl-more_dropdown-wrap' ).toggleClass( 'is-visible' ).find( '.bb_rl_more_dropdown' ).toggleClass( 'open' );
+				target.closest( '.video-action-wrap' ).toggleClass( 'is-visible' ).find( '.bb_rl_more_dropdown' ).toggleClass( 'open' );
 			}
 
 			if ( event.currentTarget.tagName.toLowerCase() === 'a' && (
@@ -1530,7 +1530,7 @@ window.bp = window.bp || {};
 								if ( true === response.data.delete_activity ) {
 									$( 'body #buddypress .bb-rl-activity-list li#activity-' + activityId ).remove();
 									$( 'body .bb-activity-video-elem.video-activity.' + id ).remove();
-									$( 'body .activity-comments li#acomment-' + activityId ).remove();
+									$( 'body .bb-rl-activity-comments li#bb-rl-acomment-' + activityId ).remove();
 
 									if ( rootParentActivity && $( '.bb-rl-activity-list' ).length ) {
 										var liCount = $( '.bb-rl-activity-list li#activity-' + rootParentActivity + ' .activity-comments > ul > li' ).length;
