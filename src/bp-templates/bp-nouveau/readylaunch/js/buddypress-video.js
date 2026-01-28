@@ -1522,11 +1522,6 @@ window.bp = window.bp || {};
 									}
 								);
 
-								var length = $( '#activity-stream ul.bb-rl-activity-list li[data-bp-activity-id="' + activityId + '"] .activity-content .activity-inner .bb-activity-video-elem' ).length;
-								if ( length === 0 ) {
-									$( '#activity-stream ul.bb-rl-activity-list li[data-bp-activity-id="' + activityId + '"]' ).remove();
-								}
-
 								if ( true === response.data.delete_activity ) {
 									$( 'body #buddypress .bb-rl-activity-list li#activity-' + activityId ).remove();
 									$( 'body .bb-activity-video-elem.video-activity.' + id ).remove();
