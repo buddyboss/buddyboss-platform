@@ -11,6 +11,15 @@
 		<testsuite>
 			<directory suffix=".php">tests/phpunit/testcases/</directory>
 		</testsuite>
+		<testsuite name="features">
+			<directory suffix=".php">tests/phpunit/testcases/core/features</directory>
+		</testsuite>
+		<testsuite name="admin">
+			<directory suffix=".php">tests/phpunit/testcases/admin</directory>
+		</testsuite>
+		<testsuite name="integration">
+			<file>tests/phpunit/testcases/core/features/test-feature-lifecycle.php</file>
+		</testsuite>
 		<testsuite name="learndash">
 			<directory suffix=".php">tests/phpunit/testcases/integrations/learndash</directory>
 		</testsuite>

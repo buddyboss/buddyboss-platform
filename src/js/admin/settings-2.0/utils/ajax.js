@@ -22,7 +22,13 @@ export function ajaxFetch(action, data = {}) {
 
 	// Append additional data
 	Object.keys(data).forEach((key) => {
-		formData.append(key, data[key]);
+		const value = data[key];
+		// Convert objects/arrays to JSON strings for FormData
+		if (typeof value === 'object' && value !== null) {
+			formData.append(key, JSON.stringify(value));
+		} else {
+			formData.append(key, value);
+		}
 	});
 
 	return fetch(ajaxUrl, {
@@ -79,6 +85,17 @@ export function searchSettings(query) {
  */
 export function getFeatureSettings(featureId) {
 	return ajaxFetch('bb_admin_get_feature_settings', { feature_id: featureId });
+}
+
+/**
+ * Save feature settings
+ *
+ * @param {string} featureId - Feature ID
+ * @param {Object} settings  - Settings object to save
+ * @return {Promise} Promise resolving to response
+ */
+export function saveFeatureSettings(featureId, settings) {
+	return ajaxFetch('bb_admin_save_feature_settings', { feature_id: featureId, settings });
 }
 
 /**

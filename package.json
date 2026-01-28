@@ -1,6 +1,9 @@
 {
 	"description": "BuddyBoss adds community features to WordPress. Member Profiles, Activity Streams, Direct Messaging, Notifications, and more!",
 	"devDependencies": {
+		"@testing-library/jest-dom": "^5.17.0",
+		"@testing-library/react": "^12.1.5",
+		"@testing-library/user-event": "^14.6.1",
 		"@wordpress/api-fetch": "^5.2.6",
 		"@wordpress/babel-preset-default": "^7.32.0",
 		"@wordpress/browserslist-config": "^5.31.0",
@@ -66,7 +69,10 @@
 		"watch:admin:rl-onboarding": "concurrently \"npm run watch:admin:rl-onboarding:scss\" \"BUILD_TARGET=rl-onboarding wp-scripts start --webpack-src-dir=src/js/admin/rl-onboarding --config src/js/admin/webpack.config.js\"",
 		"watch:admin:rl-onboarding:scss": "sass --watch src/js/admin/rl-onboarding/styles/onboarding.scss:src/bp-core/admin/bb-settings/rl-onboarding/build/onboarding.css",
 		"watch:admin:settings-2.0": "concurrently \"npm run watch:admin:settings-2.0:scss\" \"BUILD_TARGET=settings-2.0 wp-scripts start --webpack-src-dir=src/js/admin/settings-2.0 --config src/js/admin/webpack.config.js\"",
-		"watch:admin:settings-2.0:scss": "sass --watch src/js/admin/settings-2.0/styles/scss/admin.scss:src/bp-core/admin/bb-settings/settings-2.0/build/styles/admin.css"
+		"watch:admin:settings-2.0:scss": "sass --watch src/js/admin/settings-2.0/styles/scss/admin.scss:src/bp-core/admin/bb-settings/settings-2.0/build/styles/admin.css",
+		"test": "wp-scripts test-unit-js --config jest.config.js",
+		"test:watch": "wp-scripts test-unit-js --config jest.config.js --watch",
+		"test:coverage": "wp-scripts test-unit-js --config jest.config.js --coverage"
 	},
 	"engines": {
 		"node": ">=14.15.0"
