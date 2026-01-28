@@ -120,6 +120,13 @@
 	}
 }
 
+#bb-rl-media-create-album-popup {
+
+	> .bb-rl-field-wrap {
+		padding: var(--bb-rl-space-200) var(--bb-rl-space-300);
+	}
+}
+
 .bb-rl-location-album-list-wrap {
 	padding-top: var(--bb-rl-space-100);
 
@@ -452,7 +459,7 @@
 					border-color: var(--bb-rl-primary-color);
 
 					img {
-						border-radius: var(--bb-rl-radius-md);
+						border-radius: 0;
 					}
 
 				}
