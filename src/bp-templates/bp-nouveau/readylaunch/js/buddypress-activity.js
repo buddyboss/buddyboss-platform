@@ -61,6 +61,16 @@ window.bp = window.bp || {};
 		},
 
 		/**
+		 * Check if a given element is inside the activity modal or a media model container.
+		 *
+		 * @param {jQuery} target - Element to check (e.g. event target or button).
+		 * @return {boolean} True if inside activity modal or media/document/video theatre container.
+		 */
+		isInsideModalOrContainer: function( target ) {
+			return target.closest( '#bb-rl-activity-modal, #bb-rl-media-model-container, .bb-rl-media-model-container' ).length > 0;
+		},
+
+		/**
 		 * [setupGlobals description]
 		 *
 		 * @return {[type]} [description]
@@ -1149,7 +1159,7 @@ window.bp = window.bp || {};
 			    $body         = $( 'body' );
 
 			// Check if target is inside #bb-rl-activity-modal or media theater.
-			var isInsideModal        = target.closest( '#bb-rl-activity-modal' ).length > 0 || target.closest( '#bb-rl-media-model-container' ).length > 0 || target.closest( '.bb-rl-media-model-container' ).length > 0;
+			var isInsideModal        = this.isInsideModalOrContainer( target );
 			var isInsideMediaTheatre = target.closest( '.bb-rl-internal-model' ).length > 0;
 
 			if ( isInsideModal ) {
@@ -3858,7 +3868,7 @@ window.bp = window.bp || {};
 						);
 
 						// Check if inside modal or media theatre.
-						var isInsideModalOrTheatre = target.closest( '#bb-rl-activity-modal' ).length > 0 || target.closest( '#bb-rl-media-model-container' ).length > 0 || target.closest( '.bb-rl-media-model-container' ).length > 0;
+						var isInsideModalOrTheatre = bp.Nouveau.Activity.isInsideModalOrContainer( target );
 
 						if ( isInsideModal || isInsideModalOrTheatre ) {
 							if ( 'undefined' !== typeof bp.Nouveau.Activity.activityHasUpdates ) {
