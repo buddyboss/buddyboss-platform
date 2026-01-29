@@ -3099,7 +3099,12 @@ function bp_media_get_activity_media( $activity_id ) {
 			return;
 		}
 
-		$media_content = bb_media_get_activity_media( $activity_id, array( 'user_id' => false ) );
+		$activity = new BP_Activity_Activity( $activity_id );
+		if ( empty( $activity ) || empty( $activity->id ) ) {
+			return;
+		}
+
+		$media_content = bb_media_get_activity_media( $activity, array( 'user_id' => false ) );
 		if ( empty( $media_content ) ) {
 			return;
 		}
