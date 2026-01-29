@@ -4490,6 +4490,9 @@ window.bp = window.bp || {};
 		syncPinPostActivityOnCloseTheatre: function( target ) {
 			var parentActivityId         = $( '#hidden_parent_id' ).length > 0 ? parseInt( $( '#hidden_parent_id' ).val() ) : 0;
 			var $wrapper                 = target.closest( '.bb-rl-media-model-wrapper' );
+			if ( ! $wrapper.length ) {
+				return;
+			}
 			var $activityItemInModal     = $wrapper.find( '.bb-media-info-section .bb-rl-activity-list li.activity-item' ).first();
 			if ( ! $activityItemInModal.length ) {
 				$activityItemInModal = $wrapper.find( '.bb-rl-activity-list li.activity-item' ).first();
