@@ -3870,7 +3870,7 @@ window.bp = window.bp || {};
 						// Check if inside modal or media theatre.
 						var isInsideModalOrTheatre = bp.Nouveau.Activity.isInsideModalOrContainer( target );
 
-						if ( isInsideModal || isInsideModalOrTheatre ) {
+						if ( isInsideModalOrTheatre ) {
 							if ( 'undefined' !== typeof bp.Nouveau.Activity.activityHasUpdates ) {
 								bp.Nouveau.Activity.activityHasUpdates = true;
 							}
