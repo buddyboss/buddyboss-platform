@@ -5,6 +5,12 @@ require_once( dirname( __FILE__ ) . '/define-constants.php' );
 $multisite = (int) ( defined( 'WP_TESTS_MULTISITE') && WP_TESTS_MULTISITE );
 system( WP_PHP_BINARY . ' ' . escapeshellarg( dirname( __FILE__ ) . '/install.php' ) . ' ' . escapeshellarg( WP_TESTS_CONFIG_PATH ) . ' ' . escapeshellarg( WP_TESTS_DIR ) . ' ' . $multisite );
 
+// Load Composer autoloader before loading BuddyBoss Platform
+$autoload_file = dirname( __FILE__ ) . '/../../../vendor/autoload.php';
+if ( file_exists( $autoload_file ) ) {
+	require $autoload_file;
+}
+
 // Bootstrap BP
 require dirname( __FILE__ ) . '/../../../src/bp-loader.php';
 
