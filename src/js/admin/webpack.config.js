@@ -71,12 +71,35 @@ const rlOnboardingConfig = {
     },
 };
 
+// Settings 2.0 configuration
+const settings20Config = {
+    ...defaultConfig,
+    name: 'settings-2.0',
+    entry: {
+        'index': path.resolve(__dirname, 'settings-2.0/index.js'),
+    },
+    output: {
+        path: path.resolve(__dirname, '../../bp-core/admin/bb-settings/settings-2.0/build'),
+        filename: '[name].js',
+        clean: false, // Prevent cleaning other build directories
+    },
+    module: {
+        ...defaultConfig.module,
+        rules: [
+            ...rules,
+            scssRule,
+        ],
+    },
+};
+
 // Export configuration based on build target
 if (buildTarget === 'readylaunch') {
     module.exports = readylaunchConfig;
 } else if (buildTarget === 'rl-onboarding') {
     module.exports = rlOnboardingConfig;
+} else if (buildTarget === 'settings-2.0') {
+    module.exports = settings20Config;
 } else {
-    // Default: export both configurations for combined builds
-    module.exports = [readylaunchConfig, rlOnboardingConfig];
+    // Default: export all configurations for combined builds
+    module.exports = [readylaunchConfig, rlOnboardingConfig, settings20Config];
 } 

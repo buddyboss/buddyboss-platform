@@ -1,0 +1,1 @@
+(()=>{"use strict";const e=window.React,t=window.wp.element,n=document.getElementById("bb-admin-settings-2-0");n&&(0,t.render)((0,e.createElement)((function(){return(0,e.createElement)("div",{className:"bb-admin-feature-lists-wrapper"},(0,e.createElement)("h1",null,"Feature Lists"))}),null),n)})();
