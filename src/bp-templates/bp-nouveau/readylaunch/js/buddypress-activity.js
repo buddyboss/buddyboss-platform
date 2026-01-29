@@ -3834,9 +3834,7 @@ window.bp = window.bp || {};
 									}
 								);
 
-								if ( update_pinned_icon ) {
-									activityItem.addClass( 'bb-pinned' );
-								}
+								activityItem.addClass( 'bb-pinned' );
 
 								target.addClass( 'unpin-activity' ).removeClass( 'pin-activity' );
 
@@ -4479,6 +4477,33 @@ window.bp = window.bp || {};
 					settings.commentsActivityItem.removeClass( 'active' );
 				}
 			} );
+		},
+
+		/**
+		 * Sync pinned state from page-level activity to the currently open media/video modal.
+		 * Call when modal content has finished loading so the modal shows the correct pin icon and class.
+		 */
+		syncPinIconToModal: function() {
+			var parentActivityId = $( '#hidden_parent_id' ).length > 0 ? parseInt( $( '#hidden_parent_id' ).val() ) : 0;
+			if ( parentActivityId <= 0 ) {
+				return;
+			}
+			var $pageActivityListItem = $( '#bb-rl-activity-stream li.activity-item[data-bp-activity-id="' + parentActivityId + '"]' );
+			if ( ! $pageActivityListItem.length || ! $pageActivityListItem.hasClass( 'bb-pinned' ) ) {
+				return;
+			}
+			var $activityItemInModal = $( '.bb-media-info-section:visible .bb-rl-activity-list li.activity-item' ).first();
+			if ( ! $activityItemInModal.length ) {
+				$activityItemInModal = $( '#bb-rl-media-model-container .bb-rl-activity-list li.activity-item, .bb-rl-media-model-container .bb-rl-activity-list li.activity-item' ).first();
+			}
+			if ( ! $activityItemInModal.length ) {
+				return;
+			}
+			var modalActivityId = parseInt( $activityItemInModal.data( 'bp-activity-id' ), 10 );
+			if ( modalActivityId !== parentActivityId ) {
+				return;
+			}
+			$activityItemInModal.addClass( 'bb-pinned' );
 		},
 
 		/**

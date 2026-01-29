@@ -7308,6 +7308,9 @@ window.bp = window.bp || {};
 						}
 						$infoSection.show();
 
+						if ( 'undefined' !== typeof bp.Nouveau.Activity && bp.Nouveau.Activity.syncPinIconToModal ) {
+							bp.Nouveau.Activity.syncPinIconToModal();
+						}
 						$infoSection.find( '.bb-activity-more-options-action' ).attr( 'data-balloon-pos', 'left' );
 
 						self.updateTheaterHeaderTitle(
@@ -7442,6 +7445,9 @@ window.bp = window.bp || {};
 							}
 							$( '.bb-media-info-section:visible' ).show();
 
+							if ( 'undefined' !== typeof bp.Nouveau.Activity && bp.Nouveau.Activity.syncPinIconToModal ) {
+								bp.Nouveau.Activity.syncPinIconToModal();
+							}
 							self.updateTheaterHeaderTitle(
 								{
 									wrapper : $( '.bb-rl-media-model-wrapper' ),
