@@ -180,7 +180,7 @@ export function Header({ onNavigate }) {
 						className="bb-admin-header__icon-button bb-admin-header__icon-button--notifications"
 						aria-label={__('Notifications', 'buddyboss')}
 					>
-						<i className="bb-icon-bell"></i>
+						<i className="bb-icons-rl-bell"></i>
 						<span className="bb-admin-header__notification-badge">2</span>
 					</button>
 
@@ -192,7 +192,7 @@ export function Header({ onNavigate }) {
 						className="bb-admin-header__icon-button"
 						aria-label={__('Documentation', 'buddyboss')}
 					>
-						<i className="bb-icon-book-open"></i>
+						<i className="bb-icons-rl-graduation-cap"></i>
 					</a>
 				</div>
 			</div>
