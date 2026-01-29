@@ -61,6 +61,16 @@ window.bp = window.bp || {};
 		},
 
 		/**
+		 * Check if a given element is inside the activity modal or a media model container.
+		 *
+		 * @param {jQuery} target - Element to check (e.g. event target or button).
+		 * @return {boolean} True if inside activity modal or media/document/video theatre container.
+		 */
+		isInsideModalOrContainer: function( target ) {
+			return target.closest( '#bb-rl-activity-modal, #bb-rl-media-model-container, .bb-rl-media-model-container' ).length > 0;
+		},
+
+		/**
 		 * [setupGlobals description]
 		 *
 		 * @return {[type]} [description]
@@ -181,7 +191,6 @@ window.bp = window.bp || {};
 			$bpElem.find( activityParentSelectors ).on( 'click', '.activity-privacy>li:not(.bb-edit-privacy)', bp.Nouveau, this.activityPrivacyChange.bind( this ) );
 			$bpElem.find( activityParentSelectors ).on( 'click', 'span.privacy', bp.Nouveau, this.togglePrivacyDropdown.bind( this ) );
 
-			$( '#bb-rl-media-model-container .bb-rl-activity-list' ).on( 'click', '.activity-item', bp.Nouveau, this.activityActions.bind( this ) );
 			$( '.bb-rl-activity-model-wrapper' ).on( 'click', '.bb-rl-ac-form-placeholder', bp.Nouveau, this.activityRootComment.bind( this ) );
 			$document.keydown( this.commentFormAction );
 			$document.click( this.togglePopupDropdown );
@@ -1149,7 +1158,7 @@ window.bp = window.bp || {};
 			    $body         = $( 'body' );
 
 			// Check if target is inside #bb-rl-activity-modal or media theater.
-			var isInsideModal        = target.closest( '#bb-rl-activity-modal' ).length > 0;
+			var isInsideModal        = this.isInsideModalOrContainer( target );
 			var isInsideMediaTheatre = target.closest( '.bb-rl-internal-model' ).length > 0;
 
 			if ( isInsideModal ) {
@@ -3825,9 +3834,7 @@ window.bp = window.bp || {};
 									}
 								);
 
-								if ( update_pinned_icon ) {
-									activityItem.addClass( 'bb-pinned' );
-								}
+								activityItem.addClass( 'bb-pinned' );
 
 								target.addClass( 'unpin-activity' ).removeClass( 'pin-activity' );
 
@@ -3857,7 +3864,10 @@ window.bp = window.bp || {};
 							]
 						);
 
-						if ( isInsideModal ) {
+						// Check if inside modal or media theatre.
+						var isInsideModalOrTheatre = bp.Nouveau.Activity.isInsideModalOrContainer( target );
+
+						if ( isInsideModalOrTheatre ) {
 							if ( 'undefined' !== typeof bp.Nouveau.Activity.activityHasUpdates ) {
 								bp.Nouveau.Activity.activityHasUpdates = true;
 							}
@@ -4467,6 +4477,64 @@ window.bp = window.bp || {};
 					settings.commentsActivityItem.removeClass( 'active' );
 				}
 			} );
+		},
+
+		/**
+		 * Sync pinned state from page-level activity to the currently open media/video modal.
+		 * Call when modal content has finished loading so the modal shows the correct pin icon and class.
+		 */
+		syncPinIconToModal: function() {
+			var parentActivityId = $( '#hidden_parent_id' ).length > 0 ? parseInt( $( '#hidden_parent_id' ).val() ) : 0;
+			if ( parentActivityId <= 0 ) {
+				return;
+			}
+			var $pageActivityListItem = $( '#bb-rl-activity-stream li.activity-item[data-bp-activity-id="' + parentActivityId + '"]' );
+			if ( ! $pageActivityListItem.length || ! $pageActivityListItem.hasClass( 'bb-pinned' ) ) {
+				return;
+			}
+			var $activityItemInModal = $( '.bb-media-info-section:visible .bb-rl-activity-list li.activity-item' ).first();
+			if ( ! $activityItemInModal.length ) {
+				$activityItemInModal = $( '#bb-rl-media-model-container .bb-rl-activity-list li.activity-item, .bb-rl-media-model-container .bb-rl-activity-list li.activity-item' ).first();
+			}
+			if ( ! $activityItemInModal.length ) {
+				return;
+			}
+			var modalActivityId = parseInt( $activityItemInModal.data( 'bp-activity-id' ), 10 );
+			if ( modalActivityId !== parentActivityId ) {
+				return;
+			}
+			$activityItemInModal.addClass( 'bb-pinned' );
+		},
+
+		/**
+		 * Sync pin/unpin state when closing media modal theatre.
+		 *
+		 * @param {jQuery} target - The close button element that triggered the modal close.
+		 */
+		syncPinPostActivityOnCloseTheatre: function( target ) {
+			var parentActivityId         = $( '#hidden_parent_id' ).length > 0 ? parseInt( $( '#hidden_parent_id' ).val() ) : 0;
+			var $wrapper                 = target.closest( '.bb-rl-media-model-wrapper' );
+			if ( ! $wrapper.length ) {
+				return;
+			}
+			var $activityItemInModal     = $wrapper.find( '.bb-media-info-section .bb-rl-activity-list li.activity-item' ).first();
+			if ( ! $activityItemInModal.length ) {
+				$activityItemInModal = $wrapper.find( '.bb-rl-activity-list li.activity-item' ).first();
+			}
+			var parentActivityIdForModel = $activityItemInModal.length ? parseInt( $activityItemInModal.data( 'bp-activity-id' ), 10 ) : undefined;
+			var isSameActivity           = parentActivityId > 0 && ( parentActivityIdForModel === undefined || parentActivityId === parentActivityIdForModel );
+
+			if ( 
+				isSameActivity &&
+				target.hasClass( 'bb-rl-close-media-theatre' ) &&
+				'undefined' !== typeof bp.Nouveau.Activity.activityPinHasUpdates &&
+				bp.Nouveau.Activity.activityPinHasUpdates 
+			) {
+				var $pageActivityListItem = $( '#bb-rl-activity-stream li.activity-item[data-bp-activity-id=' + parentActivityId + ']' );
+				$pageActivityListItem.addClass( 'activity-sync' );
+				bp.Nouveau.Activity.heartbeat_data.last_recorded = 0;
+				bp.Nouveau.refreshActivities();
+			}
 		},
 	};
 
