@@ -1149,7 +1149,7 @@ window.bp = window.bp || {};
 			    $body         = $( 'body' );
 
 			// Check if target is inside #bb-rl-activity-modal or media theater.
-			var isInsideModal        = target.closest( '#bb-rl-activity-modal' ).length > 0;
+			var isInsideModal        = target.closest( '#bb-rl-activity-modal' ).length > 0 || target.closest( '#bb-rl-media-model-container' ).length > 0 || target.closest( '.bb-rl-media-model-container' ).length > 0;
 			var isInsideMediaTheatre = target.closest( '.bb-rl-internal-model' ).length > 0;
 
 			if ( isInsideModal ) {
@@ -3857,7 +3857,10 @@ window.bp = window.bp || {};
 							]
 						);
 
-						if ( isInsideModal ) {
+						// Check if inside modal or media theatre.
+						var isInsideModalOrTheatre = target.closest( '#bb-rl-activity-modal' ).length > 0 || target.closest( '#bb-rl-media-model-container' ).length > 0 || target.closest( '.bb-rl-media-model-container' ).length > 0;
+
+						if ( isInsideModal || isInsideModalOrTheatre ) {
 							if ( 'undefined' !== typeof bp.Nouveau.Activity.activityHasUpdates ) {
 								bp.Nouveau.Activity.activityHasUpdates = true;
 							}

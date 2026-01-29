@@ -2154,6 +2154,8 @@ window.bp = window.bp || {};
 			modelWrapper.find( 'figure' ).removeClass( 'has-no-thumbnail' );
 
 			self.current_video = false;
+
+			self.syncPinPostActivityOnCloseTheatre( target );
 		},
 
 		getVideosDescription: function () {
@@ -3248,6 +3250,29 @@ window.bp = window.bp || {};
 				}
 			);
 
+		},
+
+		syncPinPostActivityOnCloseTheatre: function( target ) {
+			var parentActivityId         = $( '#hidden_parent_id' ).length > 0 ? parseInt( $( '#hidden_parent_id' ).val() ) : 0;
+			var $wrapper                 = target.closest( '.bb-rl-media-model-wrapper' );
+			var $activityItemInModal     = $wrapper.find( '.bb-media-info-section .bb-rl-activity-list li.activity-item' ).first();
+			if ( ! $activityItemInModal.length ) {
+				$activityItemInModal = $wrapper.find( '.bb-rl-activity-list li.activity-item' ).first();
+			}
+			var parentActivityIdForModel = $activityItemInModal.length ? parseInt( $activityItemInModal.data( 'bp-activity-id' ), 10 ) : undefined;
+			var isSameActivity            = parentActivityId > 0 && ( parentActivityIdForModel === undefined || parentActivityId === parentActivityIdForModel );
+
+			if ( 
+				isSameActivity &&
+				target.hasClass( 'bb-rl-close-media-theatre' ) &&
+				'undefined' !== typeof bp.Nouveau.Activity.activityPinHasUpdates &&
+				bp.Nouveau.Activity.activityPinHasUpdates 
+			) {
+				var $pageActivityListItem = $( '#bb-rl-activity-stream li.activity-item[data-bp-activity-id=' + parentActivityId + ']' );
+				$pageActivityListItem.addClass( 'activity-sync' );
+				bp.Nouveau.Activity.heartbeat_data.last_recorded = 0;
+				bp.Nouveau.refreshActivities();
+			}
 		},
 	};
 
