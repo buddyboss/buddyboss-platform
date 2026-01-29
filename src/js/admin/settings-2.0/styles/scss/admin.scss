@@ -13,12 +13,12 @@ $bb-border-color: #d9d9d9;
 $bb-background-color: #f6f6f6;
 $bb-sidebar-bg: #f0f0f0;
 $bb-text-color: #000;
-$bb-text-secondary: #666;
+$bb-text-tertiary: #666;
 $bb-text-muted: #2f2f2f;
 $bb-spacing: 20px;
 $bb-border-radius: 16px;
 $bb-border-radius-sm: 8px;
-$bb-border-radius-xs: 6px;
+$bb-border-radius-md: 6px;
 
 // Reset for component
 .bb-rl-settings *,
@@ -56,7 +56,7 @@ $bb-border-radius-xs: 6px;
 		text-align: left;
 		background: $bb-background-color;
 		padding: $bb-spacing;
-		border-radius: $bb-border-radius-xs;
+		border-radius: $bb-border-radius-md;
 
 		pre {
 			overflow-x: auto;
@@ -93,6 +93,10 @@ $bb-border-radius-xs: 6px;
 		display: flex;
 		align-items: center;
 
+		a {
+			display: flex;
+		}
+
 		&-img {
 			max-width: 130px;
 			height: auto;
@@ -117,17 +121,18 @@ $bb-border-radius-xs: 6px;
 			width: 100%;
 		}
 
-		&-input {
+		input.bb-admin-header__search-input {
 			width: 100%;
 			height: 32px;
-			background-color: #fff;
+			background-color: $bb-background-color;
 			border: 1px solid #e5e5e5;
-			border-radius: 6px;
+			border-radius: $bb-border-radius-md;
 			padding: 0 36px 0 8px;
 			font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, sans-serif;
 			font-size: 13px;
 			line-height: 32px;
-			color: #000;
+			font-weight: 400;
+			color: $bb-text-tertiary;
 			outline: none;
 
 			&::placeholder {
@@ -148,7 +153,7 @@ $bb-border-radius-xs: 6px;
 			top: 50%;
 			transform: translateY(-50%);
 			font-size: 20px;
-			color: #666;
+			color: #6a6a6a;
 			width: 20px;
 			height: 20px;
 			display: flex;
@@ -221,7 +226,7 @@ $bb-border-radius-xs: 6px;
 
 			&-breadcrumb {
 				font-size: 12px;
-				color: $bb-text-secondary;
+				color: $bb-text-tertiary;
 			}
 		}
 	}
@@ -325,7 +330,7 @@ $bb-border-radius-xs: 6px;
 
 		&-label {
 			font-size: 14px;
-			color: $bb-text-secondary;
+			color: $bb-text-tertiary;
 			margin-bottom: 8px;
 		}
 
@@ -372,7 +377,7 @@ $bb-border-radius-xs: 6px;
 		font-size: 13px;
 		line-height: 18px;
 		font-weight: 500;
-		color: $bb-text-secondary;
+		color: $bb-text-tertiary;
 		cursor: pointer;
 		transition: all 0.2s ease;
 		white-space: nowrap;
@@ -398,7 +403,7 @@ $bb-border-radius-xs: 6px;
 	&__filter-select {
 		background: $bb-background-color;
 		border: 0.5px solid #ccc;
-		border-radius: $bb-border-radius-xs;
+		border-radius: $bb-border-radius-md;
 		padding: 7px 8px;
 		min-width: 120px;
 		font-size: 13px;
@@ -563,7 +568,7 @@ $bb-border-radius-xs: 6px;
 
 	&__feature-description {
 		margin: 0;
-		color: $bb-text-secondary;
+		color: $bb-text-tertiary;
 		font-size: 13px;
 		line-height: 18px;
 		display: -webkit-box;
@@ -653,7 +658,7 @@ $bb-border-radius-xs: 6px;
 	&__empty {
 		text-align: center;
 		padding: $bb-spacing * 2;
-		color: $bb-text-secondary;
+		color: $bb-text-tertiary;
 	}
 }
 
@@ -745,7 +750,7 @@ $bb-border-radius-xs: 6px;
 				width: 24px;
 				height: 24px;
 				line-height: 24px;
-				color: $bb-text-secondary;
+				color: $bb-text-tertiary;
 			}
 		}
 	}
@@ -775,7 +780,7 @@ $bb-border-radius-xs: 6px;
 	&__no-section {
 		padding: 40px;
 		text-align: center;
-		color: $bb-text-secondary;
+		color: $bb-text-tertiary;
 		background: #fff;
 		border-radius: $bb-border-radius;
 		box-shadow: 0 1.5px 1px 0 rgba(0, 0, 0, 0.16);
@@ -843,7 +848,7 @@ $bb-border-radius-xs: 6px;
 		font-size: 13px;
 		font-weight: 500;
 		line-height: 18px;
-		color: $bb-text-secondary;
+		color: $bb-text-tertiary;
 		background: transparent;
 		border: 0.5px solid transparent;
 		border-radius: $bb-border-radius-sm;
@@ -883,7 +888,7 @@ $bb-border-radius-xs: 6px;
 			width: 20px;
 			height: 20px;
 			line-height: 20px;
-			color: $bb-text-secondary;
+			color: $bb-text-tertiary;
 		}
 
 		// BuddyBoss ReadyLaunch font icons
@@ -892,7 +897,7 @@ $bb-border-radius-xs: 6px;
 			width: 20px;
 			height: 20px;
 			line-height: 20px;
-			color: $bb-text-secondary;
+			color: $bb-text-tertiary;
 			display: flex;
 			align-items: center;
 			justify-content: center;
@@ -1042,7 +1047,7 @@ $bb-border-radius-xs: 6px;
 		font-size: 14px;
 		font-weight: 400;
 		line-height: 20px;
-		color: $bb-text-secondary;
+		color: $bb-text-tertiary;
 		white-space: nowrap;
 	}
 
@@ -1051,7 +1056,7 @@ $bb-border-radius-xs: 6px;
 		font-size: 14px;
 		font-weight: 400;
 		line-height: 20px;
-		color: $bb-text-secondary;
+		color: $bb-text-tertiary;
 		white-space: nowrap;
 	}
 
@@ -1092,7 +1097,7 @@ $bb-border-radius-xs: 6px;
 		margin: 0;
 		font-size: 12px;
 		line-height: 16px;
-		color: $bb-text-secondary;
+		color: $bb-text-tertiary;
 	}
 
 	// Field with children modifier (toggle + nested fields)
@@ -1131,7 +1136,7 @@ $bb-border-radius-xs: 6px;
 	&__field-description {
 		margin: 0;
 		padding: 3px 0;
-		color: $bb-text-secondary;
+		color: $bb-text-tertiary;
 		font-size: 13px;
 		line-height: 18px;
 		max-width: 632px;
@@ -1180,7 +1185,7 @@ $bb-border-radius-xs: 6px;
 	padding: 7px 8px !important;
 	font-size: 13px !important;
 	border: 1px solid $bb-border-color !important;
-	border-radius: $bb-border-radius-xs !important;
+	border-radius: $bb-border-radius-md !important;
 	background-color: $bb-background-color !important;
 }
 
@@ -1188,7 +1193,7 @@ $bb-border-radius-xs: 6px;
 	font-size: 14px;
 	font-weight: 400;
 	line-height: 20px;
-	color: $bb-text-secondary;
+	color: $bb-text-tertiary;
 }
 
 .bb-admin-settings-field__dimension-separator {
@@ -1246,7 +1251,7 @@ $bb-border-radius-xs: 6px;
 	padding: 7px 8px !important;
 	font-size: 13px !important;
 	border: 1px solid $bb-border-color !important;
-	border-radius: $bb-border-radius-xs !important;
+	border-radius: $bb-border-radius-md !important;
 	background-color: $bb-background-color !important;
 }
 
@@ -1254,7 +1259,7 @@ $bb-border-radius-xs: 6px;
 	font-size: 14px;
 	font-weight: 400;
 	line-height: 20px;
-	color: $bb-text-secondary;
+	color: $bb-text-tertiary;
 }
 
 // Image Radio Field Type (visual preview cards like Default Cover Image)
@@ -1609,9 +1614,9 @@ $bb-border-radius-xs: 6px;
 		font-style: inherit;
 		outline: none;
 		vertical-align: middle;
-		border-radius: $bb-border-radius-xs;
+		border-radius: $bb-border-radius-md;
 		padding: 7px 8px;
-		color: $bb-text-secondary;
+		color: $bb-text-tertiary;
 	}
 
 	select {
@@ -1628,8 +1633,8 @@ $bb-border-radius-xs: 6px;
 		font-style: inherit;
 		outline: none;
 		vertical-align: middle;
-		border-radius: $bb-border-radius-xs;
-		color: $bb-text-secondary;
+		border-radius: $bb-border-radius-md;
+		color: $bb-text-tertiary;
 		font-size: 13px;
 		font-weight: 500;
 		line-height: 18px;
@@ -1645,7 +1650,7 @@ $bb-border-radius-xs: 6px;
 	font-size: 1rem;
 	text-align: center;
 	cursor: pointer;
-	border-radius: $bb-border-radius-xs;
+	border-radius: $bb-border-radius-md;
 	padding: 8px 16px;
 	transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
 	text-decoration: none;
@@ -1678,7 +1683,7 @@ $bb-border-radius-xs: 6px;
 	font-size: 1rem;
 	text-align: center;
 	cursor: pointer;
-	border-radius: $bb-border-radius-xs;
+	border-radius: $bb-border-radius-md;
 	padding: 8px 16px;
 	transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
 	text-decoration: none;
@@ -1727,7 +1732,7 @@ $bb-border-radius-xs: 6px;
 
 	&__description {
 		font-size: 13px;
-		color: $bb-text-secondary;
+		color: $bb-text-tertiary;
 		margin: 8px 0;
 	}
 
@@ -2116,7 +2121,7 @@ $bb-border-radius-xs: 6px;
 		font-size: 13px;
 		font-weight: 500;
 		line-height: 18px;
-		color: $bb-text-secondary;
+		color: $bb-text-tertiary;
 	}
 
 	&__action-desc {
@@ -2272,7 +2277,7 @@ $bb-border-radius-xs: 6px;
 
 		&:hover:not(:disabled) {
 			background: $bb-background-color;
-			border-color: $bb-text-secondary;
+			border-color: $bb-text-tertiary;
 		}
 
 		&:disabled {
@@ -2470,7 +2475,7 @@ $bb-border-radius-xs: 6px;
 		color: $bb-text-color;
 
 		&::placeholder {
-			color: $bb-text-secondary;
+			color: $bb-text-tertiary;
 		}
 
 		&:focus {
@@ -2495,7 +2500,7 @@ $bb-border-radius-xs: 6px;
 		font-size: 13px;
 		font-weight: 400;
 		line-height: 18px;
-		color: $bb-text-secondary;
+		color: $bb-text-tertiary;
 	}
 
 	// Table Body
@@ -2507,7 +2512,7 @@ $bb-border-radius-xs: 6px;
 	&__empty {
 		padding: 48px;
 		text-align: center;
-		color: $bb-text-secondary;
+		color: $bb-text-tertiary;
 	}
 
 	// Table Row
@@ -2704,7 +2709,7 @@ $bb-border-radius-xs: 6px;
 		font-size: 13px;
 		font-weight: 400;
 		line-height: 18px;
-		color: $bb-text-secondary;
+		color: $bb-text-tertiary;
 	}
 
 	// Action Button (ellipsis)
@@ -2718,7 +2723,7 @@ $bb-border-radius-xs: 6px;
 		border: none;
 		border-radius: 4px;
 		cursor: pointer;
-		color: $bb-text-secondary;
+		color: $bb-text-tertiary;
 
 		&:hover {
 			background: $bb-background-color;
@@ -2777,7 +2782,7 @@ $bb-border-radius-xs: 6px;
 		font-size: 14px;
 		font-weight: 400;
 		line-height: 20px;
-		color: $bb-text-secondary;
+		color: $bb-text-tertiary;
 	}
 
 	&__pagination-buttons {
@@ -2803,7 +2808,7 @@ $bb-border-radius-xs: 6px;
 
 		&:hover:not(:disabled) {
 			background: $bb-background-color;
-			border-color: $bb-text-secondary;
+			border-color: $bb-text-tertiary;
 		}
 
 		&:disabled {
