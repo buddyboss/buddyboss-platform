@@ -6,6 +6,11 @@
  */
 
  @import 'utils/variables';	
+ @import 'utils/elements';
+
+.buddyboss_page_bb-settings {
+	background-color: $bb-background-color;
+}
 
  /* Header */
  .bb-admin-header {
@@ -228,3 +233,5 @@
 	}
 }
 
+/* Feature Listing */
+@import 'screens/feature_listing';

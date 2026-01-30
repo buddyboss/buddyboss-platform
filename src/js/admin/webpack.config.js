@@ -81,7 +81,9 @@ const settings20Config = {
     output: {
         path: path.resolve(__dirname, '../../bp-core/admin/bb-settings/settings-2.0/build'),
         filename: '[name].js',
-        clean: false, // Prevent cleaning other build directories
+        clean: {
+            keep: /styles/, // Keep the styles directory (SCSS output)
+        },
     },
     module: {
         ...defaultConfig.module,

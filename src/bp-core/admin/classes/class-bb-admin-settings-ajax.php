@@ -77,6 +77,7 @@ class BB_Admin_Settings_Ajax {
 					'license_tier'   => $feature['license_tier'] ?? 'free',
 					'status'         => 'active',
 					'settings_route' => $feature['settings_route'] ?? '/settings/' . $feature_id,
+					'icon'           => $feature['icon'] ?? ''
 				);
 
 				$features[] = $formatted;
