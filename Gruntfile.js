@@ -461,6 +461,10 @@ module.exports = function (grunt) {
 				}
 			},
 			exec: {
+				options: {
+					maxBuffer: 1024 * 1024 * 10, // 10MB buffer (global default)
+					timeout: 600000 // 10 minutes (global default for all exec tasks)
+				},
 				build_blocks: {
 					command: 'npm run build:block:core',
 					cwd: '.',
