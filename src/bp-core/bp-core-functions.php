@@ -10104,3 +10104,78 @@ function bb_is_readylaunch_enabled() {
 function bb_pro_post_feature_image_version() {
 	return '2.9.0';
 }
+
+/**
+ * Get the Feature Loader instance.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return BB_Feature_Loader
+ */
+function bb_feature_loader() {
+	return BB_Feature_Loader::instance();
+}
+
+/**
+ * Get the Feature Registry instance.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return BB_Feature_Registry
+ */
+function bb_feature_registry() {
+	return BB_Feature_Registry::instance();
+}
+
+/**
+ * Register a feature.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $feature_id Feature ID.
+ * @param array  $args       Feature arguments.
+ * @return bool|WP_Error True on success, WP_Error on failure.
+ */
+function bb_register_feature( $feature_id, $args = array() ) {
+	return bb_feature_registry()->bb_register_feature( $feature_id, $args );
+}
+
+/**
+ * Add action only if feature is active.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string   $feature_id Feature ID to check.
+ * @param string   $tag        Action hook tag.
+ * @param callable $function   Function to call.
+ * @param int      $priority   Priority.
+ * @param int      $accepted_args Number of arguments.
+ * @return bool True if action added, false if feature inactive.
+ */
+function bb_add_action_if_active( $feature_id, $tag, $function, $priority = 10, $accepted_args = 1 ) {
+	if ( ! bp_is_active( $feature_id ) ) {
+		return false;
+	}
+
+	return add_action( $tag, $function, $priority, $accepted_args );
+}
+
+/**
+ * Add filter only if feature is active.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string   $feature_id Feature ID to check.
+ * @param string   $tag        Filter hook tag.
+ * @param callable $function   Function to call.
+ * @param int      $priority   Priority.
+ * @param int      $accepted_args Number of arguments.
+ * @return bool True if filter added, false if feature inactive.
+ */
+function bb_add_filter_if_active( $feature_id, $tag, $function, $priority = 10, $accepted_args = 1 ) {
+	if ( ! bp_is_active( $feature_id ) ) {
+		return false;
+	}
+
+	return add_filter( $tag, $function, $priority, $accepted_args );
+}

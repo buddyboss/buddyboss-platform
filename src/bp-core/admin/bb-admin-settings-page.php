@@ -111,8 +111,8 @@ function bb_admin_settings_page() {
 		}
 	}
 
-	$registry      = array(); //bb_feature_registry();
-	$all_features  = array(); // $registry->get_features( array( 'status' => 'all' ) );
+	$registry      = bb_feature_registry();
+	$all_features  = $registry->bb_get_features( array( 'status' => 'all' ) );
 	$feature_count = count( $all_features );
 
 	// Localize script with admin data.
@@ -123,7 +123,7 @@ function bb_admin_settings_page() {
 			'apiUrl'      => rest_url( bp_rest_namespace() . '/' . bp_rest_version() . '/' ),
 			'nonce'       => wp_create_nonce( 'wp_rest' ),
 			'ajaxUrl'     => admin_url( 'admin-ajax.php' ),
-			'ajaxNonce'   => wp_create_nonce( 'bb_admin_settings_2_0' ),
+			'ajaxNonce'   => wp_create_nonce( 'bb_admin_settings' ),
 			'logoUrl'     => buddypress()->plugin_url . 'bp-core/images/admin/BBLogo.png',
 			'currentUser' => array(
 				'id'   => get_current_user_id(),
