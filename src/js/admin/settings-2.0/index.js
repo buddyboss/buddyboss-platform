@@ -6,10 +6,10 @@
  */
 
 import { render } from '@wordpress/element';
-import FeatureLists from './featureLists';
+import { App } from './App';
 
 // Initialize the React app.
 const container = document.getElementById( 'bb-admin-settings-2-0' );
 if (container) {
-	render( <FeatureLists />, container );
+	render( <App />, container );
 }
