@@ -75,9 +75,9 @@ bb_register_feature(
 // 	5
 // );
 
-// // Load Settings 2.0 configuration (side panels, sections, fields).
-// // This must be loaded here (not in loader.php) so settings are registered
-// // even when the feature is inactive (needed to show the settings page).
-// if ( file_exists( __DIR__ . '/admin/bb-admin-settings-2.0-reactions.php' ) ) {
-// 	require_once __DIR__ . '/admin/bb-admin-settings-2.0-reactions.php';
-// }
+// Load Settings 2.0 configuration (side panels, sections, fields).
+// This must be loaded here (not in loader.php) so settings are registered
+// even when the feature is inactive (needed to show the settings page).
+if ( file_exists( __DIR__ . '/admin/settings.php' ) ) {
+	require_once __DIR__ . '/admin/settings.php';
+}

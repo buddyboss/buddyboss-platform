@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Initialize the Reactions feature UI components.
  *
- * Note: Core reaction functions are loaded in feature-config.php to ensure
+ * Note: Core reaction functions are loaded in bb-feature-config.php to ensure
  * they're always available when activity is active (required by BP_Activity_Template).
  * This function only loads additional UI components when the feature toggle is on.
  *
@@ -26,7 +26,7 @@ function bb_reactions_feature_init() {
 		return;
 	}
 
-	// Core files are already loaded in feature-config.php.
+	// Core files are already loaded in bb-feature-config.php.
 	// No additional loading needed here for now.
 	// In the future, feature-specific UI components can be loaded here.
 
@@ -43,17 +43,8 @@ add_action( 'bp_loaded', 'bb_reactions_feature_init', 5 );
  * @since BuddyBoss [BBVERSION]
  */
 function bb_reactions_register_admin_settings() {
-	// Configuration is loaded directly in feature-config.php
-	// to ensure settings are available even when feature is inactive.
-
-	// Only load legacy settings tab if Settings 2.0 is NOT active.
-	$is_settings_2_0_active = function_exists( 'bb_feature_registry' );
-
-	if ( ! $is_settings_2_0_active ) {
-		// Load legacy admin settings class for backward compatibility.
-		require_once __DIR__ . '/admin/settings.php';
-
-		// Register the legacy settings tab.
-		new BB_Admin_Setting_Reactions( 'bp-reactions' );
-	}
+	// Settings 2.0 configuration (side panels, sections, fields) is loaded
+	// in bb-feature-config.php to ensure settings are registered even when
+	// the feature is inactive (needed to show the settings page).
+	// No additional admin settings loading needed here.
 }

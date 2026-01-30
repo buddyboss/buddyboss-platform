@@ -132,15 +132,15 @@ class BB_Feature_Autoloader {
 	/**
 	 * Discover and load features from the features directory.
 	 *
-	 * Scans features/integrations/ and features/community/ directories
-	 * for feature-config.php files and loads them.
+	 * Scans bb-features/integrations/ and bb-features/community/ directories
+	 * for bb-feature-config.php files and loads them.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @return void
 	 */
 	public static function bb_discover_features() {
-		$base_dir = buddypress()->plugin_dir . 'features/';
+		$base_dir = buddypress()->plugin_dir . 'bb-features/';
 
 		// Feature categories to scan.
 		$categories = array(
@@ -164,7 +164,7 @@ class BB_Feature_Autoloader {
 			}
 
 			foreach ( $features as $feature_dir ) {
-				$config_file = $feature_dir . '/feature-config.php';
+				$config_file = $feature_dir . '/bb-feature-config.php';
 
 				// Load feature config if it exists.
 				if ( file_exists( $config_file ) ) {

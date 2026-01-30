@@ -10141,6 +10141,67 @@ function bb_register_feature( $feature_id, $args = array() ) {
 }
 
 /**
+ * Register a side panel for a feature.
+ *
+ * Side panels appear in the left sidebar navigation when viewing feature settings.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $feature_id    Feature ID.
+ * @param string $side_panel_id Side panel ID.
+ * @param array  $args          Side panel arguments.
+ * @return bool|WP_Error True on success, WP_Error on failure.
+ */
+function bb_register_side_panel( $feature_id, $side_panel_id, $args = array() ) {
+	return bb_feature_registry()->bb_register_side_panel( $feature_id, $side_panel_id, $args );
+}
+
+/**
+ * Register a feature section.
+ *
+ * Sections are the white boxes/cards that contain fields.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $feature_id    Feature ID.
+ * @param string $side_panel_id Side panel ID.
+ * @param string $section_id    Section ID.
+ * @param array  $args          Section arguments.
+ * @return bool|WP_Error True on success, WP_Error on failure.
+ */
+function bb_register_feature_section( $feature_id, $side_panel_id, $section_id, $args = array() ) {
+	return bb_feature_registry()->bb_register_section( $feature_id, $side_panel_id, $section_id, $args );
+}
+
+/**
+ * Register a feature field.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $feature_id    Feature ID.
+ * @param string $side_panel_id Side panel ID.
+ * @param string $section_id    Section ID.
+ * @param array  $args          Field arguments.
+ * @return bool|WP_Error True on success, WP_Error on failure.
+ */
+function bb_register_feature_field( $feature_id, $side_panel_id, $section_id, $args = array() ) {
+	return bb_feature_registry()->bb_register_field( $feature_id, $side_panel_id, $section_id, $args );
+}
+
+/**
+ * Register a feature navigation item.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $feature_id Feature ID.
+ * @param array  $args       Navigation item arguments.
+ * @return bool|WP_Error True on success, WP_Error on failure.
+ */
+function bb_register_feature_nav_item( $feature_id, $args = array() ) {
+	return bb_feature_registry()->bb_register_nav_item( $feature_id, $args );
+}
+
+/**
  * Add action only if feature is active.
  *
  * @since BuddyBoss [BBVERSION]
