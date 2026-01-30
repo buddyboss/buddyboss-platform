@@ -1495,14 +1495,41 @@ window.bp = window.bp || {};
 
 						// It's a comment we're replying to.
 					} else {
+						var $targetComment;
+						var $searchContext = isInsideModal ? $( '#activity-modal' ) : ( isInsideMediaTheatre ? $( '.bb-internal-model' ) : $( document ) );
+
+						// Check if comment threading is enabled and if the clicked comment is at max depth.
+						var threadingSettings = BP_Nouveau.activity && BP_Nouveau.activity.params && BP_Nouveau.activity.params.comment_threading;
+						if ( threadingSettings && threadingSettings.enabled ) {
+							var maxDepth = parseInt( threadingSettings.max_depth, 10 );
+							var $clickedComment = $searchContext.find( '[data-bp-activity-comment-id="' + item_id + '"]' );
+							var commentDepth = $clickedComment.parents( '.activity-comments > ul li.comment-item' ).length + 1;
+
+							// If at max depth, find the actual parent and position form after the last sibling.
+							if ( commentDepth >= maxDepth ) {
+								var $parentComment = $clickedComment.parent().closest( 'li.comment-item' );
+								if ( $parentComment.length ) {
+									// Find the last direct child comment of the parent.
+									var $siblings = $parentComment.children( 'ul' ).children( 'li.comment-item' );
+									if ( $siblings.length ) {
+										$targetComment = $siblings.last();
+									} else {
+										$targetComment = $clickedComment;
+									}
+								} else {
+									$targetComment = $clickedComment;
+								}
+							} else {
+								$targetComment = $clickedComment;
+							}
+						} else {
+							$targetComment = $searchContext.find( '[data-bp-activity-comment-id="' + item_id + '"]' );
+						}
+
 						if ( isInsideModal ) {
 							$( '.bb-modal-activity-footer' ).removeClass( 'active' );
-							$( '#activity-modal' ).find( '[data-bp-activity-comment-id="' + item_id + '"]' ).append( form );
-						} else if ( isInsideMediaTheatre ) {
-							$( '.bb-internal-model' ).find( '[data-bp-activity-comment-id="' + item_id + '"]' ).append( form );
-						} else {
-							$( '[data-bp-activity-comment-id="' + item_id + '"]' ).append( form );
 						}
+						$targetComment.append( form );
 					}
 				}
 
@@ -1760,8 +1787,24 @@ window.bp = window.bp || {};
 							var isElementorWidget = target.closest( '.elementor-activity-item' ).length > 0;
 							var isCommentElementorWidgetForm = form.prev().hasClass( 'activity-actions' );
 							var activity_comments;
+							var actualParentId = response.data.parent_id ? parseInt( response.data.parent_id, 10 ) : null;
+							var wasParentRedirected = actualParentId && actualParentId !== parseInt( item_id, 10 );
 
-							if (isElementorWidget && isCommentElementorWidgetForm) {
+							// If the parent was redirected (due to max depth), find the correct parent element.
+							if ( wasParentRedirected ) {
+								var $searchContext = isInsideModal ? $( '#activity-modal' ) : $( document );
+								// Find the actual parent comment element or activity comments container.
+								if ( actualParentId === parseInt( activity_id, 10 ) ) {
+									// Parent is the root activity, insert in main activity-comments.
+									activity_comments = $searchContext.find( '[data-bp-activity-id="' + activity_id + '"] .activity-comments' );
+									if ( ! activity_comments.length && isInsideModal ) {
+										activity_comments = $searchContext.find( '.activity-comments' );
+									}
+								} else {
+									// Parent is another comment.
+									activity_comments = $searchContext.find( '[data-bp-activity-comment-id="' + actualParentId + '"]' );
+								}
+							} else if (isElementorWidget && isCommentElementorWidgetForm) {
 								activity_comments = form.parent().find( '.activity-actions' );
 							} else {
 								activity_comments = form.parent();

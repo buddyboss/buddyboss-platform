@@ -298,6 +298,12 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 		'can_create_activity_document' => bb_user_can_create_document(),
 	);
 
+	// Comment threading settings for JavaScript.
+	$activity_params['comment_threading'] = array(
+		'enabled'   => bb_is_activity_comment_threading_enabled(),
+		'max_depth' => bb_is_activity_comment_threading_enabled() ? (int) bb_get_activity_comment_threading_depth() : 1,
+	);
+
 	$params['activity'] = array(
 		'params'  => $activity_params,
 		'strings' => $activity_strings,

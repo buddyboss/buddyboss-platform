@@ -598,7 +598,11 @@ function bp_nouveau_ajax_new_activity_comment() {
 	add_filter( 'bp_get_activity_comment_css_class', 'bb_activity_recent_comment_class' );
 	bp_get_template_part( 'activity/comment', null, $comment_template_args );
 	remove_filter( 'bp_get_activity_comment_css_class', 'bb_activity_recent_comment_class' );
-	$response = array( 'contents' => ob_get_contents() );
+
+	$response = array(
+		'contents'  => ob_get_contents(),
+		'parent_id' => (int) $activity->secondary_item_id, // The actual parent (may differ from requested if redirected).
+	);
 	ob_end_clean();
 
 	unset( $activities_template );
