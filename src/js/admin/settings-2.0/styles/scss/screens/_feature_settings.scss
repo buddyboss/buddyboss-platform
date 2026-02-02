@@ -189,6 +189,31 @@
         gap: 12px;
         margin-top: 16px;
     }
+
+    &__radios {
+        display: flex;
+        align-items: center;
+        gap: 24px;
+        margin-bottom: 8px;
+    }
+
+    &__radio-label {
+        display: flex;
+        align-items: center;
+        color: $bb-text-color;
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 18px;
+
+        input {
+            margin: 0 8px 0 0;
+        }
+    }
+
+    .bb-reaction-mode-description {
+        color: $bb-text-tertiary-color;
+        font-size: 13px;
+    }
 }
 
 /* ----------------------------------------------------------------
