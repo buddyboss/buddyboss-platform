@@ -75,3 +75,37 @@ select.bb-admin-settings__select {
 		}
 	}
 }
+
+.bb-admin-settings-form {
+    
+    .components-form-toggle {
+        width: 30px;
+        height: 18px;
+
+        .components-form-toggle__track {
+            width: 28px;
+            height: 18px;
+            border: 1px solid transparent;
+            background-color: $bb-background-tertiary-color;
+        }
+
+        .components-form-toggle__thumb {
+            height: 12px;
+            width: 12px;
+            top: 3px;
+            left: 3px;
+        }
+
+        &.is-checked {
+
+            .components-form-toggle__track {
+                background-color: transparent;
+                border: 1px solid $bb-background-brand-primary-color;
+            }
+            .components-form-toggle__thumb {
+                transform: translateX(9px);
+                background-color: $bb-background-brand-primary-color;
+            }
+        }
+    }
+}
