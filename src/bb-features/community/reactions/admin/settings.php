@@ -260,7 +260,7 @@ add_action( 'bb_register_features', 'bb_admin_settings_register_reactions_settin
  * @param array $field_data Formatted field data.
  * @param array $field      Field data.
  *
- * @return array|void Formatted field data or void if no changes are needed.
+ * @return array Formatted field data.
  */
 function bb_admin_settings_format_reactions_field_data( $field_data, $field ) {
 
@@ -329,6 +329,13 @@ function bb_admin_settings_format_reactions_field_data( $field_data, $field ) {
 		$field_data['icon']      = $button_icon;
 		$field_data['text']      = $button_text;
 		$field_data['maxlength'] = 12;
+
+		// Ensure value is set for React (icon + text).
+		$current_value       = isset( $field_data['value'] ) && is_array( $field_data['value'] ) ? $field_data['value'] : array();
+		$field_data['value'] = array(
+			'icon' => isset( $current_value['icon'] ) ? $current_value['icon'] : $button_icon,
+			'text' => isset( $current_value['text'] ) ? $current_value['text'] : $button_text,
+		);
 
 		$pro_notice = bb_admin_settings_get_pro_notice( 'reaction' );
 		if ( ! empty( $pro_notice['show'] ) ) {

@@ -452,11 +452,11 @@ export function SettingsForm({ fields, values, onChange }) {
 										onChange={() => onChange(field.name, opt.value)}
 									/>
 									{opt.label}
-									{opt.disabled && field.pro_notice && (
+									{opt.disabled && field.pro_notice?.show && (
 										<>
 											<span className="bb-pro-badge">
-												<i className={field.pro_notice.badge_icon} />
-												<span>{field.pro_notice.badge_text}</span>
+												<i className={field.pro_notice.badge_icon || ''} />
+												<span>{field.pro_notice.badge_text || 'PRO'}</span>
 											</span>
 											{field.pro_notice.link_url && (
 												<a
@@ -466,7 +466,7 @@ export function SettingsForm({ fields, values, onChange }) {
 													className="bb-pro-badge__play-link"
 													aria-label={__('Learn more about PRO', 'buddyboss')}
 												>
-													<i className={field.pro_notice.link_icon} />
+													<i className={field.pro_notice.link_icon || ''} />
 												</a>
 											)}
 										</>
