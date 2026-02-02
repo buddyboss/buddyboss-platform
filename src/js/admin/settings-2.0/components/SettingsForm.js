@@ -418,6 +418,10 @@ export function SettingsForm({ fields, values, onChange }) {
 				// Pro plugin extends this via applyFilters to add emoji cards grid, three-dot menu, etc.
 				const reactionMode = value || 'likes';
 
+				// Get reactions data from field (injected by Pro via bb_extend_reaction_field_data filter).
+				const reactionsData = field.reactions || {};
+				const allReactions = reactionsData.emotions || [];
+
 				// Find the notice for the currently selected mode option.
 				const selectedOption = (field.options || []).find((opt) => opt.value === reactionMode);
 				const modeNotice = selectedOption?.notice || '';
@@ -477,7 +481,94 @@ export function SettingsForm({ fields, values, onChange }) {
 						{modeNotice && (
 							<p className="description bb-reaction-mode-description">{modeNotice}</p>
 						)}
-						{/* Hook point: Pro injects emoji cards grid here */}
+						{/* Inline emotion cards - shown when emotions mode selected and data available */}
+						{reactionMode === 'emotions' && allReactions.length > 0 && (
+							<div className="bb-reaction-mode__cards">
+								{allReactions.map((reaction) => (
+									<div
+										key={reaction.id}
+										className={`bb_emotions_item${!reaction.is_emotion_active ? ' is-disabled' : ''}`}
+										data-reaction-id={reaction.id}
+									>
+										<div className="bb_emotions_actions">
+											<label className="bb_emotions_actions_enable">
+												<input
+													type="checkbox"
+													name={`reaction_checks[${reaction.id}]`}
+													checked={reaction.is_emotion_active || false}
+													value="1"
+													onChange={() => {/* Handle via existing JS */}}
+												/>
+											</label>
+											<button
+												className="bb_emotions_actions_remove"
+												aria-label={__('Remove Emotion', 'buddyboss')}
+												onClick={() => {/* Handle via existing JS */}}
+											>
+												<i className="bb-icon-l bb-icon-times"></i>
+											</button>
+										</div>
+
+										<div className="bb_emotions_icon">
+											{reaction.type === 'bb-icons' && (
+												<i
+													className={`bb-icon-rf bb-icon-${reaction.icon}`}
+													style={{color: reaction.icon_color}}
+												></i>
+											)}
+											{reaction.type === 'custom' && reaction.icon_path && (
+												<img src={reaction.icon_path} alt="" />
+											)}
+											{reaction.type === 'emotions' && (
+												<span className="bbpro-icon-emoji">
+													{reaction.icon_path ? (
+														<img src={reaction.icon_path} alt="" />
+													) : (
+														reaction.icon
+													)}
+												</span>
+											)}
+										</div>
+
+										<div className="bb_emotions_footer">
+											<span style={{color: reaction.text_color}}>
+												{reaction.icon_text || reaction.name}
+											</span>
+											<button
+												className="bb_emotions_edit"
+												aria-label={__('Edit Emotion', 'buddyboss')}
+												data-icon={JSON.stringify(reaction)}
+												data-type={reaction.type}
+												onClick={() => {/* Handle via existing JS */}}
+											>
+												<i className="bb-icon-l bb-icon-pencil"></i>
+											</button>
+										</div>
+										<input
+											type="hidden"
+											className="bb_admin_setting_reaction_item"
+											name={`reaction_items[${reaction.id}]`}
+											value={JSON.stringify(reaction)}
+										/>
+									</div>
+								))}
+								{/* Add new emotion slots (max 6 total) */}
+								{[...Array(Math.max(0, 6 - allReactions.length))].map((_, i) => (
+									<div key={`add-${i}`} className="bb_emotions_item bb_emotions_item_action">
+										<button
+											className="bb_emotions_add_new"
+											aria-label={__('Add New Emotion', 'buddyboss')}
+											data-bp-tooltip={__('Add new', 'buddyboss')}
+											data-bp-tooltip-pos="up"
+											onClick={() => {/* Handle via existing JS */}}
+										>
+											<i className="bb-icon-f bb-icon-plus"></i>
+										</button>
+									</div>
+								))}
+							</div>
+						)}
+						{/* Hook point: Pro can still extend if needed */}
 						{reactionModeExtension}
 					</div>
 				);
@@ -485,7 +576,20 @@ export function SettingsForm({ fields, values, onChange }) {
 			case 'reaction_button':
 				// Reaction button: Pro-only field.
 				// Pro plugin extends via applyFilters to render full icon chooser + text input.
-				// If Pro doesn't provide content, hide the field entirely (it's pro_only).
+				// Get current reaction mode to determine visibility
+				const currentReactionMode = values?.bb_reaction_mode || 'likes';
+
+				// Only show reaction button when emotions mode is selected
+				if (currentReactionMode !== 'emotions') {
+					return null;
+				}
+
+				// Get button settings (icon and text)
+				const buttonValue = value || {};
+				const buttonIcon = buttonValue.icon || field.icon || 'thumbs-up';
+				const buttonText = buttonValue.text || field.text || __('Like', 'buddyboss');
+
+				// Allow Pro to extend with additional content if needed
 				const reactionButtonContent = applyFilters(
 					'bb_admin_reaction_button_content',
 					null,
@@ -495,11 +599,63 @@ export function SettingsForm({ fields, values, onChange }) {
 					disabled
 				);
 
-				if (!reactionButtonContent) {
-					return null;
+				// If Pro provides custom content, use it; otherwise render inline
+				if (reactionButtonContent) {
+					return reactionButtonContent;
 				}
 
-				return reactionButtonContent;
+				// Render inline reaction button field
+				return (
+					<div key={field.name} className="bb-reaction-button-field">
+						<div className="bb-reaction-button-card">
+							<div className="bb-reaction-button-card__preview">
+								<div className="bb-reaction-button-card__icon-wrapper">
+									<button
+										type="button"
+										className="bb-reaction-button-card__icon-btn"
+										id="bb-reaction-button-chooser"
+										onClick={() => {/* Handled by Pro's bb-reaction-admin.js */}}
+									>
+										<i className={`bb-icon-rf bb-icon-${buttonIcon}`}></i>
+									</button>
+								</div>
+								<div className="bb-reaction-button-card__footer">
+									<input
+										name="bb_reactions_button[text]"
+										id="bb-reaction-button-text"
+										type="text"
+										maxLength="12"
+										value={buttonText}
+										placeholder={__('Like', 'buddyboss')}
+										className="bb-reaction-button-card__text-input"
+										onChange={(e) => {
+											const newValue = {
+												...buttonValue,
+												icon: buttonIcon,
+												text: e.target.value.substring(0, 12)
+											};
+											onChange(field.name, newValue);
+										}}
+									/>
+									<button
+										type="button"
+										className="bb-reaction-button-card__menu-btn"
+										aria-label={__('More options', 'buddyboss')}
+										onClick={() => {/* Handled by Pro's bb-reaction-admin.js */}}
+									>
+										<i className="bb-icon-rf bb-icon-ellipsis-h"></i>
+									</button>
+								</div>
+							</div>
+							<input
+								type="hidden"
+								name="bb_reactions_button[icon]"
+								id="bb-reaction-button-hidden-field"
+								value={buttonIcon}
+							/>
+						</div>
+					</div>
+				);
 
 			default:
 				return (
