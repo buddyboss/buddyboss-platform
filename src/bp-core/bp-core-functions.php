@@ -10240,3 +10240,27 @@ function bb_add_filter_if_active( $feature_id, $tag, $function, $priority = 10, 
 
 	return add_filter( $tag, $function, $priority, $accepted_args );
 }
+
+/**
+ * Get the Icon Registry instance.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return BB_Icon_Registry
+ */
+function bb_icon_registry() {
+	return BB_Icon_Registry::instance();
+}
+
+/**
+ * Register an icon.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $icon_id Icon ID.
+ * @param array  $args    Icon arguments.
+ * @return bool|WP_Error True on success, WP_Error on failure.
+ */
+function bb_register_icon( $icon_id, $args = array() ) {
+	return bb_icon_registry()->bb_register_icon( $icon_id, $args );
+}

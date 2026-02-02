@@ -56,9 +56,9 @@ class BB_Admin_Settings_Ajax {
 
 		$features = array();
 
-		if ( function_exists( 'bb_feature_registry' ) ) {
+		if ( function_exists( 'bb_feature_registry' ) && function_exists( 'bb_icon_registry' ) ) {
 			$registry      = bb_feature_registry();
-			$icon_registry = array();
+			$icon_registry = bb_icon_registry();
 			$registered    = $registry->bb_get_features( array( 'status' => 'all' ) );
 
 			// Get active features directly (bypasses bp_is_active() cache).
@@ -68,6 +68,26 @@ class BB_Admin_Settings_Ajax {
 			$active_components = bp_get_option( 'bp-active-components', array() );
 
 			foreach ( $registered as $feature_id => $feature ) {
+				// Determine active status.
+				// Priority: 1) bb-active-features, 2) bp-active-components (migration fallback).
+				if ( isset( $active_features[ $feature_id ] ) ) {
+					$is_active = ! empty( $active_features[ $feature_id ] );
+				} elseif ( isset( $active_components[ $feature_id ] ) ) {
+					// Migration fallback: use legacy component status.
+					$is_active = ! empty( $active_components[ $feature_id ] );
+				} else {
+					// Not set in either - default to inactive.
+					$is_active = false;
+				}
+
+				// For integrations, also check if the required plugin is available.
+				$is_integration = ! empty( $feature['integration_id'] ) || 'integrations' === ( $feature['category'] ?? '' );
+				if ( $is_integration ) {
+					$is_available = $registry->bb_is_feature_available( $feature_id );
+					if ( ! $is_available ) {
+						$is_active = false;
+					}
+				}
 
 				$formatted = array(
 					'id'             => $feature_id,
@@ -75,10 +95,15 @@ class BB_Admin_Settings_Ajax {
 					'description'    => $feature['description'] ?? '',
 					'category'       => $feature['category'] ?? 'community',
 					'license_tier'   => $feature['license_tier'] ?? 'free',
-					'status'         => 'active',
+					'status'         => $is_active ? 'active' : 'inactive',
+					'available'      => $registry->bb_is_feature_available( $feature_id ),
 					'settings_route' => $feature['settings_route'] ?? '/settings/' . $feature_id,
-					'icon'           => $feature['icon'] ?? ''
 				);
+
+				// Format icon like REST API.
+				if ( ! empty( $feature['icon'] ) ) {
+					$formatted['icon'] = $icon_registry->bb_get_icon_for_rest( $feature['icon'] );
+				}
 
 				$features[] = $formatted;
 			}
