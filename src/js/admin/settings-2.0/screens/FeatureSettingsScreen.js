@@ -320,11 +320,11 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 														aria-label={__('Help', 'buddyboss')}
 														title={__('View documentation', 'buddyboss')}
 													>
-														<span className="dashicons dashicons-editor-help"></span>
+														<span className="bb-icons-rl-question"></span>
 													</a>
 												) : (
 													<button className="help-icon" aria-label={__('Help', 'buddyboss')}>
-														<span className="dashicons dashicons-editor-help"></span>
+														<span className="bb-icons-rl-question"></span>
 													</button>
 												)}
 											</div>

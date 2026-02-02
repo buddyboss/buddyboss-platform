@@ -94,6 +94,84 @@
         flex: 1;
         padding: 32px;
     }
+
+    &__content {
+        max-width: 985px;
+        margin: 0 auto;
+        width: 100%;
+    }
+
+    &__section {
+        background-color: $bb-background-base-color;
+        border: 1px solid $bb-border-primary-color;
+        border-radius: $bb-border-radius-2xl;
+        box-shadow: 0px 1.5px 1px 0px rgba(0, 0, 0, 0.16);
+        margin-bottom: 24px;
+
+        &-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid $bb-border-secondary-color;
+            padding: 20px 4px;
+            margin: 0 24px;
+        }
+
+        &-title {
+            color: $bb-text-color;
+            font-size: 18px;
+            font-weight: 500;
+            margin: 0;
+        }
+
+        .help-icon {
+            color: $bb-icon-tertiary-color;
+            font-size: 24px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 0;
+            margin: 0;
+            outline: none;
+            box-shadow: none;
+            text-decoration: none;
+        }
+
+        &-body {
+            padding: 32px 24px;
+        }
+    }
+}
+
+.bb-admin-settings-form__field {
+    display: flex;
+    gap: 32px;
+
+    &-label {
+        color: $bb-text-color;
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 1;
+        width: 245px;
+    }
+
+    &-content {
+        flex: 1;
+    }
+
+    &-description {
+        color: $bb-text-tertiary-color;
+        font-size: 13px;
+        font-weight: 400;
+        line-height: 1;
+        margin: 20px 0 0 0;
+    }
+}
+
+.bb-admin-settings-field__toggle-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 }
 
 /* ----------------------------------------------------------------
