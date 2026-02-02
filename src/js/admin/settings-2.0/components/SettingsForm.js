@@ -411,6 +411,90 @@ export function SettingsForm({ fields, values, onChange }) {
 					</div>
 				);
 
+			case 'reaction_mode':
+				// Reaction mode: radio (Like/Emotions) + visual reaction cards grid.
+				const reactionMode = value || 'likes';
+				const reactionsData = field.reactions || {};
+				const modeReactions = reactionMode === 'emotions'
+					? (reactionsData.emotions || [])
+					: (reactionsData.likes || []);
+
+				return (
+					<div key={field.name} className="bb-reaction-mode">
+						<RadioControl
+							label=""
+							selected={reactionMode}
+							options={field.options || []}
+							onChange={(newValue) => onChange(field.name, newValue)}
+						/>
+						{modeReactions.length > 0 && (
+							<div className="bb-reaction-mode__cards">
+								{modeReactions.map((reaction) => (
+									<div key={reaction.id} className="bb-reaction-card">
+										<div className="bb-reaction-card__icon-area">
+											{reaction.icon_path ? (
+												<img
+													src={reaction.icon_path}
+													alt={reaction.icon_text || reaction.name}
+													className="bb-reaction-card__icon-img"
+												/>
+											) : (
+												<i
+													className={`bb-icon-rf bb-icon-${reaction.icon}`}
+													style={reaction.icon_color ? { color: reaction.icon_color } : undefined}
+												/>
+											)}
+										</div>
+										<div className="bb-reaction-card__footer">
+											<span className="bb-reaction-card__name">{reaction.icon_text}</span>
+											<button type="button" className="bb-reaction-card__menu-btn" aria-label={__('More options', 'buddyboss')}>
+												<i className="bb-icon-rf bb-icon-ellipsis-h"></i>
+											</button>
+										</div>
+									</div>
+								))}
+							</div>
+						)}
+					</div>
+				);
+
+			case 'reaction_button':
+				// Reaction button: single card with icon + editable text.
+				const btnValue = (typeof value === 'object' && value !== null) ? value : {};
+				const btnIcon = btnValue.icon || field.icon || 'thumbs-up';
+				const btnText = btnValue.text || field.text || __('Like', 'buddyboss');
+
+				return (
+					<div key={field.name} className="bb-reaction-button-field">
+						<div className="bb-reaction-card">
+							<div className="bb-reaction-card__icon-area">
+								<i
+									className={`bb-icon-rf bb-icon-${btnIcon}`}
+								/>
+							</div>
+							<div className="bb-reaction-card__footer">
+								<input
+									type="text"
+									className="bb-reaction-card__text-input"
+									value={btnText}
+									maxLength={12}
+									onChange={(e) => {
+										onChange(field.name, {
+											...btnValue,
+											icon: btnIcon,
+											text: e.target.value,
+										});
+									}}
+									disabled={disabled}
+								/>
+								<button type="button" className="bb-reaction-card__menu-btn" aria-label={__('More options', 'buddyboss')}>
+									<i className="bb-icon-rf bb-icon-ellipsis-h"></i>
+								</button>
+							</div>
+						</div>
+					</div>
+				);
+
 			default:
 				return (
 					<p className="bb-admin-settings-field__unsupported">

@@ -249,3 +249,66 @@ function bb_admin_settings_register_reactions_settings() {
 }
 
 add_action( 'bb_register_features', 'bb_admin_settings_register_reactions_settings', 20 );
+
+/**
+ * Format reactions field data.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $field_data Formatted field data.
+ * @param array $field      Field data.
+ *
+ * @return array|void Formatted field data or void if no changes are needed.
+ */
+function bb_admin_settings_format_reactions_field_data( $field_data, $field ) {
+	// Add reactions data for reaction_mode field type.
+	if ( 'reaction_mode' === ( $field['type'] ?? '' ) ) {
+		$reactions_data = array();
+		if ( function_exists( 'bb_load_reaction' ) ) {
+			$all_emotions   = bb_load_reaction()->bb_get_reactions( 'emotions', false );
+			$all_likes      = bb_load_reaction()->bb_get_reactions( 'likes' );
+			$reactions_data = array(
+				'emotions' => array_map(
+					function ( $r ) {
+						return array(
+							'id'                => $r['id'],
+							'name'              => $r['name'],
+							'icon'              => $r['icon'],
+							'type'              => $r['type'],
+							'icon_text'         => $r['icon_text'],
+							'icon_color'        => $r['icon_color'],
+							'icon_path'         => $r['icon_path'],
+							'is_emotion_active' => $r['is_emotion_active'],
+						);
+					},
+					$all_emotions
+				),
+				'likes'    => array_map(
+					function ( $r ) {
+						return array(
+							'id'         => $r['id'],
+							'name'       => $r['name'],
+							'icon'       => $r['icon'],
+							'type'       => $r['type'],
+							'icon_text'  => $r['icon_text'],
+							'icon_color' => $r['icon_color'],
+							'icon_path'  => $r['icon_path'],
+						);
+					},
+					$all_likes
+				),
+			);
+		}
+		$field_data['reactions'] = $reactions_data;
+	}
+
+	// Pass through icon/text for reaction_button field type.
+	if ( 'reaction_button' === ( $field['type'] ?? '' ) ) {
+		$field_data['icon'] = $field['icon'] ?? null;
+		$field_data['text'] = $field['text'] ?? null;
+	}
+
+	return $field_data;
+}
+
+add_filter( 'bb_admin_settings_format_field_data', 'bb_admin_settings_format_reactions_field_data', 10, 2 );

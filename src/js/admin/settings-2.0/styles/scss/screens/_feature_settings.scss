@@ -95,3 +95,113 @@
         padding: 32px;
     }
 }
+
+/* ----------------------------------------------------------------
+   Reaction Mode Field — radio + visual emoji cards grid
+   ---------------------------------------------------------------- */
+.bb-reaction-mode {
+
+    &__cards {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 16px;
+    }
+}
+
+/* ----------------------------------------------------------------
+   Reaction Card — shared by reaction_mode grid & reaction_button
+   ---------------------------------------------------------------- */
+.bb-reaction-card {
+    width: 120px;
+    background: $bb-background-base-color;
+    border: 1px solid $bb-border-primary-color;
+    border-radius: $bb-border-radius-xl;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+
+    &__icon-area {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 80px;
+        padding: 12px;
+
+        .bb-icon-rf {
+            font-size: 36px;
+            line-height: 1;
+        }
+    }
+
+    &__icon-img {
+        width: 40px;
+        height: 40px;
+        object-fit: contain;
+    }
+
+    &__footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 6px 10px;
+        border-top: 1px solid $bb-border-primary-color;
+        background: $bb-background-color;
+        min-height: 32px;
+    }
+
+    &__name {
+        font-size: 13px;
+        font-weight: 400;
+        line-height: 18px;
+        color: $bb-text-color;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    &__text-input {
+        font-size: 13px;
+        font-weight: 400;
+        line-height: 18px;
+        color: $bb-text-color;
+        border: none;
+        background: transparent;
+        padding: 0;
+        margin: 0;
+        outline: none;
+        width: 70px;
+        min-width: 0;
+
+        &:focus {
+            outline: none;
+            box-shadow: none;
+        }
+    }
+
+    &__menu-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 2px;
+        color: $bb-text-tertiary-color;
+        flex-shrink: 0;
+
+        .bb-icon-rf {
+            font-size: 16px;
+            line-height: 1;
+        }
+
+        &:hover {
+            color: $bb-text-color;
+        }
+    }
+}
+
+/* Single reaction button field wrapper */
+.bb-reaction-button-field {
+    display: flex;
+}

@@ -471,6 +471,18 @@ class BB_Admin_Settings_Ajax {
 				'invert_value'  => $field['invert_value'] ?? false,
 			);
 
+			/**
+			 * Filters the field data before it is returned.
+			 *
+			 * @since BuddyBoss [BBVERSION]
+			 *
+			 * @param array $field_data Formatted field data.
+			 * @param array $field      Original field data.
+			 *
+			 * @return array|void Formatted field data or void if no changes are needed.
+			 */
+			$field_data = apply_filters( 'bb_admin_settings_format_field_data', $field_data, $field );
+
 			// Add sub-fields for dimensions/child_render type.
 			if ( isset( $field['fields'] ) && is_array( $field['fields'] ) ) {
 				$sub_fields = array();
