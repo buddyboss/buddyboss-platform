@@ -109,3 +109,21 @@ select.bb-admin-settings__select {
         }
     }
 }
+
+/* Radio Buttons */
+.bb-admin-settings-form {
+    
+    input[type="radio"] {
+        border-color: $bb-background-brand-primary-color;
+        height: 18px;
+        width: 18px;
+
+        &:checked::before {
+            height: 12px;
+            width: 12px;
+            background-color: $bb-background-brand-primary-color;
+            border-radius: 50%;
+            margin: 2px;
+        }
+    }
+}
