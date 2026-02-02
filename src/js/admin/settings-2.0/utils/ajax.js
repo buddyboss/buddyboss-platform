@@ -8,11 +8,12 @@
 /**
  * Make an AJAX request to WordPress admin-ajax.php
  *
- * @param {string} action - The AJAX action name
- * @param {Object} data   - Additional data to send
+ * @param {string} action  - The AJAX action name
+ * @param {Object} data    - Additional data to send
+ * @param {Object} options - Optional fetch options (e.g. { signal } for AbortController)
  * @return {Promise} Promise resolving to response data
  */
-export function ajaxFetch(action, data = {}) {
+export function ajaxFetch(action, data = {}, options = {}) {
 	const ajaxUrl = window.bbAdminData?.ajaxUrl || '/wp-admin/admin-ajax.php';
 	const nonce = window.bbAdminData?.ajaxNonce || '';
 
@@ -29,6 +30,7 @@ export function ajaxFetch(action, data = {}) {
 		method: 'POST',
 		credentials: 'same-origin',
 		body: formData,
+		signal: options.signal,
 	}).then((response) => response.json());
 }
 
@@ -97,13 +99,14 @@ export function updateFeatureInCache(featureId, updatedData) {
  *
  * @param {string}  featureId - Feature ID
  * @param {boolean} active    - True to activate, false to deactivate
+ * @param {Object}  options   - Optional fetch options (e.g. { signal } for AbortController)
  * @return {Promise} Promise resolving to response
  */
-export function toggleFeature(featureId, active) {
+export function toggleFeature(featureId, active, options = {}) {
 	return ajaxFetch('bb_admin_toggle_feature', {
 		feature_id: featureId,
 		status: active ? 'active' : 'inactive',
-	});
+	}, options);
 }
 
 /**

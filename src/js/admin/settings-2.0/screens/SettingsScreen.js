@@ -5,7 +5,7 @@
  * @since BuddyBoss 3.0.0
  */
 
-import { useState, useEffect } from '@wordpress/element';
+import { useState, useEffect, useRef } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { Button, Spinner, ToggleControl } from '@wordpress/components';
 import { getCachedFeatures, toggleFeature, updateFeatureInCache } from '../utils/ajax';
@@ -97,31 +97,71 @@ export function SettingsScreen({ onNavigate }) {
 		return acc;
 	}, {});
 
+	// Track in-flight toggle requests per feature for abort on rapid clicks.
+	const toggleControllers = useRef({});
+
 	const handleFeatureToggle = (featureId, checked) => {
-		toggleFeature(featureId, checked)
+		const newStatus = checked ? 'active' : 'inactive';
+		const prevStatus = checked ? 'inactive' : 'active';
+
+		// 1. Optimistic update — instant UI feedback.
+		setFeatures((prev) =>
+			prev.map((f) => (f.id === featureId ? { ...f, status: newStatus } : f))
+		);
+		updateFeatureInCache(featureId, { status: newStatus });
+
+		// 2. Abort any in-flight request for this feature.
+		if (toggleControllers.current[featureId]) {
+			toggleControllers.current[featureId].abort();
+		}
+		const controller = new AbortController();
+		toggleControllers.current[featureId] = controller;
+
+		// 3. Fire AJAX in the background.
+		toggleFeature(featureId, checked, { signal: controller.signal })
 			.then((response) => {
+				// Clean up ref.
+				if (toggleControllers.current[featureId] === controller) {
+					delete toggleControllers.current[featureId];
+				}
+
 				if (response.success) {
-					// Update feature status from response data (matches REST API format)
+					// Confirm with server data.
 					const updatedFeature = response.data?.data;
-					
-					// Update local state
-					setFeatures((prevFeatures) =>
-						prevFeatures.map((feature) =>
-							feature.id === featureId
-								? { ...feature, ...updatedFeature }
-								: feature
+					setFeatures((prev) =>
+						prev.map((f) =>
+							f.id === featureId ? { ...f, ...updatedFeature } : f
 						)
 					);
-					
-					// Update the Router's features cache so feature check is accurate
 					updateFeatureInCache(featureId, updatedFeature);
 				} else {
-					console.error('Failed to toggle feature:', response.data?.message);
-					alert(response.data?.message || __('Failed to toggle feature.', 'buddyboss'));
+					// Server rejected — revert.
+					setFeatures((prev) =>
+						prev.map((f) =>
+							f.id === featureId ? { ...f, status: prevStatus } : f
+						)
+					);
+					updateFeatureInCache(featureId, { status: prevStatus });
 				}
 			})
 			.catch((error) => {
-				console.error('Failed to toggle feature:', error);
+				// Aborted by a newer click — do nothing, the newer request owns the UI.
+				if (error.name === 'AbortError') {
+					return;
+				}
+
+				// Clean up ref.
+				if (toggleControllers.current[featureId] === controller) {
+					delete toggleControllers.current[featureId];
+				}
+
+				// Network/other error — revert.
+				setFeatures((prev) =>
+					prev.map((f) =>
+						f.id === featureId ? { ...f, status: prevStatus } : f
+					)
+				);
+				updateFeatureInCache(featureId, { status: prevStatus });
 			});
 	};
 
