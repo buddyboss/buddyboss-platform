@@ -154,7 +154,7 @@ function bb_admin_settings_register_reactions_settings() {
 			'name'              => 'bb_reaction_mode',
 			'label'             => __( 'Reaction Mode', 'buddyboss' ),
 			'type'              => 'reaction_mode',
-			'description'       => __( 'Allow members to express their thoughts by selecting from a list of up to six emotions.', 'buddyboss' ),
+			'description'       => '',
 			'options'           => array(
 				array(
 					'label'       => __( 'Like', 'buddyboss' ),
@@ -315,29 +315,10 @@ function bb_admin_settings_format_reactions_field_data( $field_data, $field ) {
 			)
 		);
 
-		// Attach reaction items (emotions list).
-		$reactions_data = array();
-		if ( function_exists( 'bb_load_reaction' ) ) {
-			$all_emotions   = bb_load_reaction()->bb_get_reactions( 'emotions', false );
-			$reactions_data = array(
-				'emotions' => array_map(
-					function ( $r ) {
-						return array(
-							'id'                => $r['id'],
-							'name'              => $r['name'],
-							'icon'              => $r['icon'],
-							'type'              => $r['type'],
-							'icon_text'         => $r['icon_text'],
-							'icon_color'        => $r['icon_color'],
-							'icon_path'         => $r['icon_path'],
-							'is_emotion_active' => $r['is_emotion_active'],
-						);
-					},
-					$all_emotions
-				),
-			);
+		$pro_notice = bb_admin_settings_get_pro_notice( 'reaction' );
+		if ( ! empty( $pro_notice['show'] ) ) {
+			$field_data['pro_notice'] = $pro_notice;
 		}
-		$field_data['reactions'] = $reactions_data;
 	}
 
 	if ( 'reaction_button' === ( $field['type'] ?? '' ) ) {
@@ -348,6 +329,11 @@ function bb_admin_settings_format_reactions_field_data( $field_data, $field ) {
 		$field_data['icon']      = $button_icon;
 		$field_data['text']      = $button_text;
 		$field_data['maxlength'] = 12;
+
+		$pro_notice = bb_admin_settings_get_pro_notice( 'reaction' );
+		if ( ! empty( $pro_notice['show'] ) ) {
+			$field_data['pro_notice'] = $pro_notice;
+		}
 	}
 
 	return $field_data;

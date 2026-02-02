@@ -14,6 +14,7 @@ import {
 	CheckboxControl,
 } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
+import { applyFilters } from '@wordpress/hooks';
 
 /**
  * Settings Form Component (matching Figma settingsSection)
@@ -412,15 +413,23 @@ export function SettingsForm({ fields, values, onChange }) {
 				);
 
 			case 'reaction_mode':
-				// Reaction mode: uses same structure as bb_reactions_settings_callback_reaction_mode().
+				// Reaction mode: radio buttons with PRO badge for disabled options.
 				// Options carry: label, value, id, notice, disabled (via bb_setting_reaction_mode_args filter).
+				// Pro plugin extends this via applyFilters to add emoji cards grid, three-dot menu, etc.
 				const reactionMode = value || 'likes';
-				const reactionsData = field.reactions || {};
-				const allReactions = reactionsData.emotions || [];
 
 				// Find the notice for the currently selected mode option.
 				const selectedOption = (field.options || []).find((opt) => opt.value === reactionMode);
 				const modeNotice = selectedOption?.notice || '';
+
+				// Allow Pro to extend with additional content (cards grid, emotion editor, etc.).
+				const reactionModeExtension = applyFilters(
+					'bb_admin_reaction_mode_content',
+					null,
+					field,
+					value,
+					onChange
+				);
 
 				return (
 					<div key={field.name} className="bb-reaction-mode">
@@ -443,85 +452,54 @@ export function SettingsForm({ fields, values, onChange }) {
 										onChange={() => onChange(field.name, opt.value)}
 									/>
 									{opt.label}
+									{opt.disabled && field.pro_notice && (
+										<>
+											<span className="bb-pro-badge">
+												<i className={field.pro_notice.badge_icon} />
+												<span>{field.pro_notice.badge_text}</span>
+											</span>
+											{field.pro_notice.link_url && (
+												<a
+													href={field.pro_notice.link_url}
+													target="_blank"
+													rel="noopener noreferrer"
+													className="bb-pro-badge__play-link"
+													aria-label={__('Learn more about PRO', 'buddyboss')}
+												>
+													<i className={field.pro_notice.link_icon} />
+												</a>
+											)}
+										</>
+									)}
 								</label>
 							))}
 						</div>
 						{modeNotice && (
 							<p className="description bb-reaction-mode-description">{modeNotice}</p>
 						)}
-						{allReactions.length > 0 && (
-							<div className="bb-reaction-mode__cards">
-								{allReactions.map((reaction) => (
-									<div key={reaction.id} className="bb-reaction-card">
-										<div className="bb-reaction-card__icon-area">
-											{reaction.icon_path ? (
-												<img
-													src={reaction.icon_path}
-													alt={reaction.icon_text || reaction.name}
-													className="bb-reaction-card__icon-img"
-												/>
-											) : (
-												<i
-													className={`bb-icon-rf bb-icon-${reaction.icon}`}
-													style={reaction.icon_color ? { color: reaction.icon_color } : undefined}
-												/>
-											)}
-										</div>
-										<div className="bb-reaction-card__footer">
-											<span className="bb-reaction-card__name">{reaction.icon_text}</span>
-											<button type="button" className="bb-reaction-card__menu-btn" aria-label={__('More options', 'buddyboss')}>
-												<i className="bb-icon-rf bb-icon-ellipsis-h"></i>
-											</button>
-										</div>
-									</div>
-								))}
-							</div>
-						)}
+						{/* Hook point: Pro injects emoji cards grid here */}
+						{reactionModeExtension}
 					</div>
 				);
 
 			case 'reaction_button':
-				// Reaction button: uses same structure as bb_reactions_settings_callback_reactions_button().
-				const btnValue = (typeof value === 'object' && value !== null) ? value : {};
-				const btnIcon = btnValue.icon || field.icon || 'thumbs-up';
-				const btnText = btnValue.text !== undefined ? btnValue.text : (field.text || '');
-				const btnMaxLength = field.maxlength || 12;
-
-				return (
-					<div key={field.name} className="bb-reaction-button-field">
-						<label htmlFor="bb-reaction-button-text" className="bb-reaction-button-label">
-							<button type="button" className="button" id="bb-reaction-button-chooser">
-								<i className={`bb-icon-${btnIcon}`} />
-							</button>
-							<input
-								type="hidden"
-								name="bb_reactions_button[icon]"
-								id="bb-reaction-button-hidden-field"
-								value={btnIcon}
-							/>
-							<input
-								name="bb_reactions_button[text]"
-								id="bb-reaction-button-text"
-								type="text"
-								className="bb-reaction-card__text-input"
-								value={btnText}
-								maxLength={btnMaxLength}
-								placeholder={__('Like', 'buddyboss')}
-								onChange={(e) => {
-									onChange(field.name, {
-										...btnValue,
-										icon: btnIcon,
-										text: e.target.value,
-									});
-								}}
-								disabled={disabled}
-							/>
-							<span className="bb-reaction-button-text-limit">
-								<span>{(btnText || '').length}</span>/{btnMaxLength}
-							</span>
-						</label>
-					</div>
+				// Reaction button: Pro-only field.
+				// Pro plugin extends via applyFilters to render full icon chooser + text input.
+				// If Pro doesn't provide content, hide the field entirely (it's pro_only).
+				const reactionButtonContent = applyFilters(
+					'bb_admin_reaction_button_content',
+					null,
+					field,
+					value,
+					onChange,
+					disabled
 				);
+
+				if (!reactionButtonContent) {
+					return null;
+				}
+
+				return reactionButtonContent;
 
 			default:
 				return (
@@ -570,6 +548,12 @@ export function SettingsForm({ fields, values, onChange }) {
 		// Check if field should be disabled (parent toggle is OFF)
 		const disabled = isFieldDisabled(field);
 
+		// Render the control first — if it returns null, skip the entire field row.
+		const controlOutput = renderFieldControl(field, disabled);
+		if (controlOutput === null) {
+			return null;
+		}
+
 		// Get child fields that depend on this field
 		const childFields = fields.filter(f => f.parent_field === field.name);
 
@@ -596,7 +580,7 @@ export function SettingsForm({ fields, values, onChange }) {
 						{field.prefix && (
 							<span className="bb-admin-settings-form__field-prefix">{field.prefix}</span>
 						)}
-						{renderFieldControl(field, disabled)}
+						{controlOutput}
 						{field.suffix && (
 							<span className="bb-admin-settings-form__field-suffix">{field.suffix}</span>
 						)}
