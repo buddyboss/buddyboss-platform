@@ -17,7 +17,6 @@ import {
 	MenuItem,
 } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
-import { applyFilters } from '@wordpress/hooks';
 
 /**
  * Settings Form Component (matching Figma settingsSection)
@@ -422,7 +421,6 @@ export function SettingsForm({ fields, values, onChange }) {
 			case 'reaction_mode':
 				// Reaction mode: radio buttons with PRO badge for disabled options.
 				// Options carry: label, value, id, notice, disabled (via bb_setting_reaction_mode_args filter).
-				// Pro plugin extends this via applyFilters to add emoji cards grid, three-dot menu, etc.
 				const reactionMode = value || 'likes';
 
 				// Get reactions data from field (injected by Pro via bb_extend_reaction_field_data filter).
@@ -432,15 +430,6 @@ export function SettingsForm({ fields, values, onChange }) {
 				// Find the notice for the currently selected mode option.
 				const selectedOption = (field.options || []).find((opt) => opt.value === reactionMode);
 				const modeNotice = selectedOption?.notice || '';
-
-				// Allow Pro to extend with additional content (cards grid, emotion editor, etc.).
-				const reactionModeExtension = applyFilters(
-					'bb_admin_reaction_mode_content',
-					null,
-					field,
-					value,
-					onChange
-				);
 
 				return (
 					<div key={field.name} className="bb-reaction-mode">
@@ -576,45 +565,19 @@ export function SettingsForm({ fields, values, onChange }) {
 								))}
 							</div>
 						)}
-						{/* Hook point: Pro can still extend if needed */}
-						{reactionModeExtension}
 					</div>
 				);
 
 			case 'reaction_button':
 				// Reaction button: Pro-only field.
-				// Pro plugin extends via applyFilters to render full icon chooser + text input.
-				// Get current reaction mode to determine visibility
-				const currentReactionMode = values?.bb_reaction_mode || 'likes';
-
-				// Only show reaction button when emotions mode is selected
-				if (currentReactionMode !== 'emotions') {
-					return null;
-				}
+				const isProLocked = !!field.pro_notice?.show;
 
 				// Get button settings (icon and text)
 				const buttonValue = value || {};
 				const buttonIcon = buttonValue.icon || field.icon || 'thumbs-up';
 				const buttonText = buttonValue.text || field.text || __('Like', 'buddyboss');
-
-				// Allow Pro to extend with additional content if needed
-				const reactionButtonContent = applyFilters(
-					'bb_admin_reaction_button_content',
-					null,
-					field,
-					value,
-					onChange,
-					disabled
-				);
-
-				// If Pro provides custom content, use it; otherwise render inline
-				if (reactionButtonContent) {
-					return reactionButtonContent;
-				}
-
-				// Render inline reaction button field
 				return (
-					<div key={field.name} className="bb-reaction-button-field">
+					<div key={field.name} className={`bb-reaction-button-field${isProLocked ? ' bb-reaction-button-field--disabled' : ''}`}>
 						<div className="bb-reaction-button-card">
 							<div className="bb-reaction-button-card__preview">
 								<div className="bb-reaction-button-card__icon-wrapper">
@@ -622,7 +585,7 @@ export function SettingsForm({ fields, values, onChange }) {
 										type="button"
 										className="bb-reaction-button-card__icon-btn"
 										id="bb-reaction-button-chooser"
-										onClick={() => {/* Handled by Pro's bb-reaction-admin.js */}}
+										disabled={isProLocked}
 									>
 										<i className={`bb-icon-rf bb-icon-${buttonIcon}`}></i>
 									</button>
@@ -636,14 +599,8 @@ export function SettingsForm({ fields, values, onChange }) {
 										value={buttonText}
 										placeholder={__('Like', 'buddyboss')}
 										className="bb-reaction-button-card__text-input"
-										onChange={(e) => {
-											const newValue = {
-												...buttonValue,
-												icon: buttonIcon,
-												text: e.target.value.substring(0, 12)
-											};
-											onChange(field.name, newValue);
-										}}
+										disabled={isProLocked}
+										readOnly={isProLocked}
 									/>
 									<DropdownMenu
 										icon={ <i className="bb-icons-rl-dots-three"></i> }
@@ -683,6 +640,17 @@ export function SettingsForm({ fields, values, onChange }) {
 							/>
 						</div>
 					</div>
+				);
+
+			case 'notice':
+				// Notice field: displays an informational/warning/error notice banner.
+				// Uses notice_type (info, warning, error, success) for styling.
+				return (
+					<div
+						key={field.name}
+						className={`bb-admin-notice bb-admin-notice--${field.notice_type || 'info'}`}
+						dangerouslySetInnerHTML={{ __html: field.description }}
+					/>
 				);
 
 			default:
@@ -756,7 +724,28 @@ export function SettingsForm({ fields, values, onChange }) {
 		return (
 			<div key={field.name} className={fieldClasses}>
 				<div className="bb-admin-settings-form__field-label">
-					<label>{field.label}</label>
+					<label>
+						{field.label}
+						{field.type !== 'reaction_mode' && field.pro_notice?.show && (
+							<>
+								<span className="bb-pro-badge">
+									<i className={field.pro_notice.badge_icon || ''} />
+									<span>{field.pro_notice.badge_text || 'PRO'}</span>
+								</span>
+								{field.pro_notice.link_url && (
+									<a
+										href={field.pro_notice.link_url}
+										target="_blank"
+										rel="noopener noreferrer"
+										className="bb-pro-badge__play-link"
+										aria-label={__('Learn more about PRO', 'buddyboss')}
+									>
+										<i className={field.pro_notice.link_icon || ''} />
+									</a>
+								)}
+							</>
+						)}
+					</label>
 				</div>
 				<div className="bb-admin-settings-form__field-content">
 					{/* Field with optional prefix/suffix */}
@@ -770,8 +759,8 @@ export function SettingsForm({ fields, values, onChange }) {
 						)}
 					</div>
 
-					{/* Description */}
-					{field.description && (
+					{/* Description (skip for notice type — already rendered inside the field) */}
+					{field.description && field.type !== 'notice' && (
 						<p
 							className="bb-admin-settings-form__field-description"
 							dangerouslySetInnerHTML={{ __html: field.description }}

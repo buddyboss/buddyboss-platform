@@ -212,21 +212,7 @@ function bb_admin_settings_register_reactions_settings() {
 	);
 
 	// -------------------------------------------------------------------------
-	// FIELD: Reaction Emotions (Placeholder for Pro extension)
-	// -------------------------------------------------------------------------
-	// This field is intentionally empty in core and gets extended by Pro plugin
-	// Pro plugin will register emotion management fields here
-
-	/**
-	 * Fires after reactions core settings fields are registered.
-	 * Pro plugin uses this to add emotion management fields.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 */
-	do_action( 'bb_reactions_register_emotion_fields' );
-
-	// -------------------------------------------------------------------------
-	// FIELD: Reaction Button (Icon + Text)
+	// FIELD: Reaction Button (icon + text customization, Pro-only)
 	// -------------------------------------------------------------------------
 	$button_settings = function_exists( 'bb_reaction_button_options' ) ? bb_reaction_button_options() : array();
 	$button_icon     = isset( $button_settings['icon'] ) ? $button_settings['icon'] : 'thumbs-up';
@@ -251,28 +237,6 @@ function bb_admin_settings_register_reactions_settings() {
 			),
 			'order'             => 20,
 			'pro_only'          => true,
-		)
-	);
-
-	// -------------------------------------------------------------------------
-	// FIELD: Migration Notice
-	// Footer text about migration wizard
-	// -------------------------------------------------------------------------
-	bb_register_feature_field(
-		'reactions',
-		'reactions',
-		'reactions_settings',
-		array(
-			'name'        => 'bb_reactions_migration_notice',
-			'label'       => '',
-			'type'        => 'notice',
-			'notice_type' => 'info',
-			'description' => sprintf(
-				/* translators: %s: link to migration wizard */
-				__( 'When switching reactions mode, use our %s to map existing reactions to the new options.', 'buddyboss' ),
-				'<a href="' . esc_url( admin_url( 'admin.php?page=bp-tools&tab=bb-reactions-migration' ) ) . '">' . __( 'migration wizard', 'buddyboss' ) . '</a>'
-			),
-			'order'       => 30,
 		)
 	);
 
