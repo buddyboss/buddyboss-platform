@@ -143,8 +143,56 @@ function bb_admin_settings_register_reactions_settings() {
 	// -------------------------------------------------------------------------
 	// FIELD: Reaction Mode (Radio: Like vs Emotions)
 	// -------------------------------------------------------------------------
-	$pro_class = function_exists( 'bb_get_pro_fields_class' ) ? bb_get_pro_fields_class( 'reaction' ) : '';
-	$pro_label = function_exists( 'bb_get_pro_label_notice' ) ? bb_get_pro_label_notice( 'reaction' ) : '';
+
+	// Build reaction mode options with id, notice, and disabled state.
+	$reactions_modes = array(
+		'likes'    => array(
+			'label'    => esc_html__( 'Likes', 'buddyboss' ),
+			'name'     => 'bb_reaction_mode',
+			'value'    => 'likes',
+			'id'       => 'bb_reaction_mode_likes',
+			'notice'   => __( 'A simple "Like" button will show for members to express their appreciation or acknowledgement.', 'buddyboss' ),
+			'disabled' => false,
+		),
+		'emotions' => array(
+			'label'    => esc_html__( 'Emotions', 'buddyboss' ),
+			'name'     => 'bb_reaction_mode',
+			'value'    => 'emotions',
+			'id'       => 'bb_reaction_mode_emotions',
+			'notice'   => esc_html__( 'Members express their thoughts or feelings by selecting an emotion from a list of options. Maximum of only 6 emotions can be used.', 'buddyboss' ),
+			'disabled' => (
+				! class_exists( 'BB_Reactions' ) ||
+				! function_exists( 'bbp_pro_is_license_valid' ) ||
+				! bbp_pro_is_license_valid()
+			),
+		),
+	);
+
+	/**
+	 * Reuse the same filter so third-party code that modifies the
+	 * legacy settings page also applies to the React UI.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $reactions_modes Reaction mode options.
+	 */
+	$reactions_modes = apply_filters( 'bb_setting_reaction_mode_args', $reactions_modes );
+
+	// Map to the option format React expects (label, value, id, notice, disabled).
+	$reaction_mode_options = array_values(
+		array_map(
+			function ( $mode ) {
+				return array(
+					'label'    => $mode['label'],
+					'value'    => $mode['value'],
+					'id'       => $mode['id'],
+					'notice'   => $mode['notice'] ?? '',
+					'disabled' => ! empty( $mode['disabled'] ),
+				);
+			},
+			$reactions_modes
+		)
+	);
 
 	bb_register_feature_field(
 		'reactions',
@@ -155,23 +203,11 @@ function bb_admin_settings_register_reactions_settings() {
 			'label'             => __( 'Reaction Mode', 'buddyboss' ),
 			'type'              => 'reaction_mode',
 			'description'       => '',
-			'options'           => array(
-				array(
-					'label'       => __( 'Like', 'buddyboss' ),
-					'value'       => 'likes',
-					'description' => __( 'A simple \"Like\" button will show for members to express their appreciation or acknowledgement.', 'buddyboss' ),
-				),
-				array(
-					'label'       => __( 'Emotions', 'buddyboss' ),
-					'value'       => 'emotions',
-					'description' => __( 'Members express their thoughts or feelings by selecting an emotion from a list of options. Maximum of only 6 emotions can be used.', 'buddyboss' ),
-				),
-			),
+			'options'           => $reaction_mode_options,
 			'default'           => function_exists( 'bb_get_reaction_mode' ) ? bb_get_reaction_mode() : 'likes',
 			'sanitize_callback' => 'sanitize_text_field',
 			'order'             => 10,
 			'pro_only'          => true,
-			'pro_label'         => $pro_label,
 		)
 	);
 
@@ -192,10 +228,9 @@ function bb_admin_settings_register_reactions_settings() {
 	// -------------------------------------------------------------------------
 	// FIELD: Reaction Button (Icon + Text)
 	// -------------------------------------------------------------------------
-	$button_settings  = function_exists( 'bb_reaction_button_options' ) ? bb_reaction_button_options() : array();
-	$button_icon      = isset( $button_settings['icon'] ) ? $button_settings['icon'] : 'thumbs-up';
-	$button_text      = isset( $button_settings['text'] ) ? trim( $button_settings['text'] ) : __( 'Like', 'buddyboss' );
-	$button_pro_label = function_exists( 'bb_get_pro_label_notice' ) ? bb_get_pro_label_notice( 'reaction' ) : '';
+	$button_settings = function_exists( 'bb_reaction_button_options' ) ? bb_reaction_button_options() : array();
+	$button_icon     = isset( $button_settings['icon'] ) ? $button_settings['icon'] : 'thumbs-up';
+	$button_text     = isset( $button_settings['text'] ) ? trim( $button_settings['text'] ) : __( 'Like', 'buddyboss' );
 
 	bb_register_feature_field(
 		'reactions',
@@ -208,6 +243,7 @@ function bb_admin_settings_register_reactions_settings() {
 			'description'       => __( 'This label and icon indicate the default reaction before any reaction is selected. In \'Emotions\' mode, clicking the button applies the first reaction in the configured list.', 'buddyboss' ),
 			'icon'              => $button_icon,
 			'text'              => $button_text,
+			'maxlength'         => 12,
 			'sanitize_callback' => 'bb_reactions_sanitize_button_settings',
 			'default'           => array(
 				'icon' => $button_icon,
@@ -215,7 +251,6 @@ function bb_admin_settings_register_reactions_settings() {
 			),
 			'order'             => 20,
 			'pro_only'          => true,
-			'pro_label'         => $button_pro_label,
 		)
 	);
 
@@ -252,98 +287,3 @@ function bb_admin_settings_register_reactions_settings() {
 
 add_action( 'bb_register_features', 'bb_admin_settings_register_reactions_settings', 20 );
 
-/**
- * Format reactions field data.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param array $field_data Formatted field data.
- * @param array $field      Field data.
- *
- * @return array Formatted field data.
- */
-function bb_admin_settings_format_reactions_field_data( $field_data, $field ) {
-
-	if ( 'reaction_mode' === ( $field['type'] ?? '' ) ) {
-
-		$reactions_modes = array(
-			'likes'    => array(
-				'label'    => esc_html__( 'Likes', 'buddyboss' ),
-				'name'     => 'bb_reaction_mode',
-				'value'    => 'likes',
-				'id'       => 'bb_reaction_mode_likes',
-				'notice'   => __( 'A simple "Like" button will show for members to express their appreciation or acknowledgement.', 'buddyboss' ),
-				'disabled' => false,
-			),
-			'emotions' => array(
-				'label'    => esc_html__( 'Emotions', 'buddyboss' ),
-				'name'     => 'bb_reaction_mode',
-				'value'    => 'emotions',
-				'id'       => 'bb_reaction_mode_emotions',
-				'notice'   => esc_html__( 'Members express their thoughts or feelings by selecting an emotion from a list of options. Maximum of only 6 emotions can be used.', 'buddyboss' ),
-				'disabled' => (
-					! class_exists( 'BB_Reactions' ) ||
-					! function_exists( 'bbp_pro_is_license_valid' ) ||
-					! bbp_pro_is_license_valid()
-				),
-			),
-		);
-
-		/**
-		 * Reuse the same filter so third-party code that modifies the
-		 * legacy settings page also applies to the React UI.
-		 *
-		 * @since BuddyBoss [BBVERSION]
-		 *
-		 * @param array $reactions_modes Reaction mode options.
-		 */
-		$reactions_modes = apply_filters( 'bb_setting_reaction_mode_args', $reactions_modes );
-
-		// Map to the option format React expects (label, value, id, notice, disabled).
-		$field_data['options'] = array_values(
-			array_map(
-				function ( $mode ) {
-					return array(
-						'label'       => $mode['label'],
-						'value'       => $mode['value'],
-						'id'          => $mode['id'],
-						'notice'      => $mode['notice'] ?? '',
-						'disabled'    => ! empty( $mode['disabled'] ),
-					);
-				},
-				$reactions_modes
-			)
-		);
-
-		$pro_notice = bb_admin_settings_get_pro_notice( 'reaction' );
-		if ( ! empty( $pro_notice['show'] ) ) {
-			$field_data['pro_notice'] = $pro_notice;
-		}
-	}
-
-	if ( 'reaction_button' === ( $field['type'] ?? '' ) ) {
-		$button_settings = function_exists( 'bb_reaction_button_options' ) ? bb_reaction_button_options() : array();
-		$button_icon     = isset( $button_settings['icon'] ) ? $button_settings['icon'] : 'thumbs-up';
-		$button_text     = isset( $button_settings['text'] ) ? trim( $button_settings['text'] ) : '';
-
-		$field_data['icon']      = $button_icon;
-		$field_data['text']      = $button_text;
-		$field_data['maxlength'] = 12;
-
-		// Ensure value is set for React (icon + text).
-		$current_value       = isset( $field_data['value'] ) && is_array( $field_data['value'] ) ? $field_data['value'] : array();
-		$field_data['value'] = array(
-			'icon' => isset( $current_value['icon'] ) ? $current_value['icon'] : $button_icon,
-			'text' => isset( $current_value['text'] ) ? $current_value['text'] : $button_text,
-		);
-
-		$pro_notice = bb_admin_settings_get_pro_notice( 'reaction' );
-		if ( ! empty( $pro_notice['show'] ) ) {
-			$field_data['pro_notice'] = $pro_notice;
-		}
-	}
-
-	return $field_data;
-}
-
-add_filter( 'bb_admin_settings_format_field_data', 'bb_admin_settings_format_reactions_field_data', 10, 2 );

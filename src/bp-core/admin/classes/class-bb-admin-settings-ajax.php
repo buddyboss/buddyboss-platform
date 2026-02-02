@@ -255,7 +255,7 @@ class BB_Admin_Settings_Ajax {
 					'title'       => $section['title'],
 					'description' => $section['description'] ?? '',
 					'order'       => $section['order'] ?? 100,
-					'fields'      => $this->bb_format_fields_for_response( $section_fields, $settings ),
+					'fields'      => $this->bb_format_fields_for_response( $section_fields, $settings, $feature_id ),
 				);
 			}
 
@@ -350,12 +350,13 @@ class BB_Admin_Settings_Ajax {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param array $fields Fields data.
-	 * @param array $values Current field values.
+	 * @param array  $fields     Fields data.
+	 * @param array  $values     Current field values.
+	 * @param string $feature_id Feature ID (used for pro_notice computation).
 	 *
 	 * @return array Formatted fields data.
 	 */
-	private function bb_format_fields_for_response( $fields, $values = array() ) {
+	private function bb_format_fields_for_response( $fields, $values = array(), $feature_id = '' ) {
 		$formatted = array();
 
 		foreach ( $fields as $field_name => $field ) {
@@ -469,7 +470,23 @@ class BB_Admin_Settings_Ajax {
 				'max'           => $field['max'] ?? null,
 				// Invert value for "disable" toggles shown as "enable".
 				'invert_value'  => $field['invert_value'] ?? false,
+				// PRO notice badge data (for pro_only fields).
+				'pro_notice'  => $field['pro_notice'] ?? null,
+				// Notice type for notice fields (info, warning, error, success).
+				'notice_type' => $field['notice_type'] ?? null,
 			);
+
+			// Auto-compute pro_notice for pro_only fields when not set at registration time.
+			// Registration runs early (bb_register_features) before admin functions are loaded,
+			// so pro_notice is computed here at AJAX time when all functions are available.
+			if (
+				! empty( $field_data['pro_only'] ) &&
+				empty( $field_data['pro_notice'] ) &&
+				function_exists( 'bb_admin_settings_get_pro_notice' )
+			) {
+				$pro_notice = bb_admin_settings_get_pro_notice( $feature_id );
+				$field_data['pro_notice'] = ! empty( $pro_notice['show'] ) ? $pro_notice : null;
+			}
 
 			/**
 			 * Filters the field data before it is returned.
