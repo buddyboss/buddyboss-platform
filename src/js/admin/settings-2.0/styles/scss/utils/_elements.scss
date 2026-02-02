@@ -127,3 +127,68 @@ select.bb-admin-settings__select {
         }
     }
 }
+
+/* WordPress DropdownMenu */
+.components-popover__content:has(.bb_dropdown_menu_group) {
+    box-shadow: none;
+}
+
+.bb_dropdown_menu_group {
+
+    // Menu group
+    &.components-menu-group {
+        padding: 8px 0;
+        margin: 0;
+        width: 190px;
+        border: 1px solid $bb-border-secondary-color;
+        border-radius: $bb-border-radius-lg;
+        box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.12);
+
+        + .components-menu-group {
+            margin-top: 0;
+            border-top: 1px solid $bb-border-secondary-color;
+            padding-top: 8px;
+        }
+
+        // Menu item button
+        .components-menu-item__button,
+        .components-button.components-menu-item__button {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            width: 100%;
+            padding: 10px 8px 10px 16px;
+            background: none;
+            border: none;
+            border-radius: 0;
+            cursor: pointer;
+            transition: background-color 0.15s ease;
+
+            &:hover,
+            &:focus {
+                background-color: $bb-background-primary-color;
+                box-shadow: none;
+                outline: none;
+            }
+
+            &:active {
+                background-color: $bb-background-secondary-color;
+            }
+
+            [class*="bb-icons-"] {
+                color: $bb-icon-tertiary-color;
+                font-size: 20px;
+                line-height: 1;
+                font-weight: 400;
+            }
+
+            .components-menu-item__item {
+                font-size: 13px;
+                font-weight: 500;
+                line-height: 18px;
+                color: $bb-text-tertiary-color;
+                min-width: auto;
+            }
+        }
+    }
+}

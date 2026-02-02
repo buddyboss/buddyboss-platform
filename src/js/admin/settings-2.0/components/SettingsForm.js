@@ -12,6 +12,9 @@ import {
 	SelectControl,
 	RadioControl,
 	CheckboxControl,
+	DropdownMenu,
+	MenuGroup,
+	MenuItem,
 } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import { applyFilters } from '@wordpress/hooks';
@@ -72,6 +75,10 @@ export function SettingsForm({ fields, values, onChange }) {
 		// Default: disabled if parent is falsy (for toggles)
 		return !parentValue;
 	};
+
+    const BBIcon = ( { name } ) => (
+        <span className={ `bb-icons-rl-${ name }` } />
+    );
 
 	/**
 	 * Render the field input control
@@ -516,15 +523,34 @@ export function SettingsForm({ fields, values, onChange }) {
 											<span style={{color: reaction.text_color}}>
 												{reaction.icon_text || reaction.name}
 											</span>
-											<button
+											<DropdownMenu
+												icon={ <i className="bb-icons-rl-dots-three"></i> }
+												label={ __( 'More options', 'buddyboss' ) }
 												className="bb_emotions_edit"
-												aria-label={__('Edit Emotion', 'buddyboss')}
-												data-icon={JSON.stringify(reaction)}
-												data-type={reaction.type}
-												onClick={() => {/* Handle via existing JS */}}
 											>
-												<i className="bb-icons-rl-dots-three"></i>
-											</button>
+												{ ( { onClose } ) => (
+													<MenuGroup className="bb_dropdown_menu_group">
+														<MenuItem
+															icon={ <BBIcon name="note-pencil" /> }
+															iconPosition="left"
+															onClick={ () => {
+																onClose();
+															} }
+														>
+															{ __( 'Edit', 'buddyboss' ) }
+														</MenuItem>
+														<MenuItem
+															icon={ <BBIcon name="trash" /> }
+															iconPosition="left"
+															onClick={ () => {
+																onClose();
+															} }
+														>
+															{ __( 'Delete', 'buddyboss' ) }
+														</MenuItem>
+													</MenuGroup>
+												) }
+											</DropdownMenu>
 										</div>
 										<input
 											type="hidden"
@@ -619,14 +645,34 @@ export function SettingsForm({ fields, values, onChange }) {
 											onChange(field.name, newValue);
 										}}
 									/>
-									<button
-										type="button"
+									<DropdownMenu
+										icon={ <i className="bb-icons-rl-dots-three"></i> }
+										label={ __( 'More options', 'buddyboss' ) }
 										className="bb-reaction-button-card__menu-btn"
-										aria-label={__('More options', 'buddyboss')}
-										onClick={() => {/* Handled by Pro's bb-reaction-admin.js */}}
 									>
-										<i className="bb-icons-rl-dots-three"></i>
-									</button>
+										{ ( { onClose } ) => (
+											<MenuGroup className="bb_dropdown_menu_group">
+												<MenuItem
+													icon={ <BBIcon name="note-pencil" /> }
+													iconPosition="left"
+													onClick={ () => {
+														onClose();
+													} }
+												>
+													{ __( 'Edit', 'buddyboss' ) }
+												</MenuItem>
+												<MenuItem
+													icon={ <BBIcon name="trash" /> }
+													iconPosition="left"
+													onClick={ () => {
+														onClose();
+													} }
+												>
+													{ __( 'Delete', 'buddyboss' ) }
+												</MenuItem>
+											</MenuGroup>
+										) }
+									</DropdownMenu>
 								</div>
 							</div>
 							<input

@@ -295,21 +295,40 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: none;
-            border: none;
-            cursor: pointer;
             flex-shrink: 0;
-            padding: 0;
-            color: $bb-icon-tertiary-color;
 
-            i {
-                font-size: 16px;
-                line-height: 1;
-                font-weight: 700;
-            }
+            // WordPress DropdownMenu toggle button
+            .components-dropdown-menu__toggle {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background: none;
+                border: none;
+                cursor: pointer;
+                padding: 0;
+                min-width: auto;
+                height: auto;
+                color: $bb-icon-tertiary-color;
 
-            &:hover {
-                color: $bb-text-color;
+                i {
+                    font-size: 16px;
+                    line-height: 1;
+                    font-weight: 700;
+                }
+
+                &:hover,
+                &:focus,
+                &.is-pressed {
+                    color: $bb-text-color;
+                    background: none;
+                    box-shadow: none;
+                }
+
+                // Hide default WordPress icon if present
+                .dashicon,
+                svg:not(:first-child) {
+                    display: none;
+                }
             }
         }
     }
@@ -447,14 +466,38 @@
         flex-shrink: 0;
         color: $bb-text-tertiary-color;
 
-        i {
-            font-size: 16px;
-            line-height: 1;
-            font-weight: 700;
-        }
+        // WordPress DropdownMenu toggle button
+        .components-dropdown-menu__toggle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            min-width: auto;
+            height: auto;
+            color: $bb-icon-tertiary-color;
 
-        &:hover {
-            color: $bb-text-color;
+            i {
+                font-size: 16px;
+                line-height: 1;
+                font-weight: 700;
+            }
+
+            &:hover,
+            &:focus,
+            &.is-pressed {
+                color: $bb-text-color;
+                background: none;
+                box-shadow: none;
+            }
+
+            // Hide default WordPress icon if present
+            .dashicon,
+            svg:not(:first-child) {
+                display: none;
+            }
         }
     }
 }
