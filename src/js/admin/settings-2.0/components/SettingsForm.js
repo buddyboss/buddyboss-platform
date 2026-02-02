@@ -706,6 +706,15 @@ export function SettingsForm({ fields, values, onChange }) {
 			return null;
 		}
 
+		// Notice fields render full-width without the label column.
+		if (field.type === 'notice') {
+			return (
+				<div key={field.name} className="bb-admin-settings-form__field bb-admin-settings-form__field--full-width">
+					{controlOutput}
+				</div>
+			);
+		}
+
 		// Get child fields that depend on this field
 		const childFields = fields.filter(f => f.parent_field === field.name);
 
