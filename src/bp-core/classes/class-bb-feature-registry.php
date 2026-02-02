@@ -665,7 +665,7 @@ class BB_Feature_Registry {
 
 		// Set default sanitize callback based on type if not provided.
 		if ( is_null( $args['sanitize_callback'] ) ) {
-			$args['sanitize_callback'] = $this->get_default_sanitize_callback( $args['type'] );
+			$args['sanitize_callback'] = $this->bb_get_default_sanitize_callback( $args['type'] );
 		}
 
 		// Register field.
@@ -1258,7 +1258,7 @@ class BB_Feature_Registry {
 		$visited         = array();
 		$recursion_stack = array();
 
-		return $this->dfs_detect_cycle( $feature_id, $visited, $recursion_stack );
+		return $this->bb_dfs_detect_cycle( $feature_id, $visited, $recursion_stack );
 	}
 
 	/**
@@ -1303,7 +1303,7 @@ class BB_Feature_Registry {
 		$callbacks = array(
 			'toggle'        => 'intval',
 			'checkbox'      => 'intval',
-			'checkbox_list' => array( $this, 'sanitize_checkbox_list' ),
+			'checkbox_list' => array( $this, 'bb_sanitize_checkbox_list' ),
 			'text'          => 'sanitize_text_field',
 			'email'         => 'sanitize_email',
 			'url'           => 'esc_url_raw',
