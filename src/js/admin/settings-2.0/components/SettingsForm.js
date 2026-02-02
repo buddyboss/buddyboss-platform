@@ -451,7 +451,7 @@ export function SettingsForm({ fields, values, onChange }) {
 										data-notice={opt.notice || ''}
 										onChange={() => onChange(field.name, opt.value)}
 									/>
-									{opt.label}
+									<span className="bb-reaction-mode__radio-label-text">{opt.label}</span>
 									{opt.disabled && field.pro_notice?.show && (
 										<>
 											<span className="bb-pro-badge">
@@ -734,7 +734,7 @@ export function SettingsForm({ fields, values, onChange }) {
 			<div key={field.name} className={fieldClasses}>
 				<div className="bb-admin-settings-form__field-label">
 					<label>
-						{field.label}
+						<span className="bb-admin-settings-form__field-label-text">{field.label}</span>
 						{field.type !== 'reaction_mode' && field.pro_notice?.show && (
 							<>
 								<span className="bb-pro-badge">

@@ -157,6 +157,11 @@
         font-weight: 500;
         line-height: 1;
         width: 245px;
+
+        > label {
+            display: flex;
+            align-items: center;
+        }
     }
 
     &-content {
@@ -210,6 +215,17 @@
         input {
             margin: 0 8px 0 0;
         }
+
+        &.disabled {
+
+            input[type=radio] {
+                border-color: $bb-icon-brand-disabled-color;
+            }
+
+            .bb-reaction-mode__radio-label-text {
+                color: $bb-text-disabled-color;
+            }
+        }
     }
 
     .bb-reaction-mode-description {
@@ -218,6 +234,40 @@
         line-height: 18px;
         margin: 0;
         padding: 3px 0;
+    }
+}
+
+.bb-pro-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 8px;
+    border: 1px solid #e0623d;
+    border-radius: $bb-border-radius-full;
+    background: linear-gradient(100deg, rgba(224, 98, 61, 0.10) 4.86%, rgba(62, 52, 255, 0.10) 91.52%);
+    margin: 0 8px 0 16px;
+
+    span {
+        font-size: 11px;
+        font-weight: 500;
+        line-height: 16px;
+        color: $bb-text-secondary-color;
+    }
+
+    [class*="bb-icon"] {
+        font-size: 14px;
+        line-height: 1;
+        font-weight: 400;
+    }
+
+    &__play-link {
+        display: inline-flex;
+        vertical-align: middle;
+
+        [class*="bb-icon"] {
+            color: $bb-icon-secondary-color;
+            font-size: 22px;
+            font-weight: 100;
+        }
     }
 }
 
