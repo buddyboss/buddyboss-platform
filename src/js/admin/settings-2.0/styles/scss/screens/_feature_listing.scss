@@ -209,30 +209,30 @@
 		min-width: 0;
 	}
 
-	&__feature-settings-btn {
-		display: inline-flex !important;
-		align-items: center !important;
-		gap: 4px !important;
-		background: $bb-background-secondary-color !important;
-		border: 0.5px solid $bb-border-color !important;
-		border-radius: $bb-border-radius-lg !important;
-		padding: 6px 16px !important;
-		min-height: 32px !important;
-		font-size: 14px !important;
-		line-height: 20px !important;
-		color: $bb-text-color !important;
-		font-weight: 400 !important;
+	&__feature-settings-btn.components-button {
+		display: inline-flex;
+		align-items: center;
+		gap: 4px;
+		background: $bb-background-secondary-color;
+		border: 0.5px solid $bb-border-secondary-color;
+		border-radius: $bb-border-radius-lg;
+		padding: 6px 16px;
+		min-height: 32px;
+		font-size: 14px;
+		line-height: 20px;
+		color: $bb-text-color;
+		font-weight: 400;
 		cursor: pointer;
 		transition: background 0.2s ease, opacity 0.2s ease;
-		text-decoration: none !important;
-		box-shadow: none !important;
+		text-decoration: none;
+		box-shadow: none;
 
 		i[class*="bb-icon-"] {
 			font-size: 16px;
 			width: 16px;
 			height: 16px;
 			line-height: 16px;
-			color: $bb-text-color;
+			color: $bb-icon-color;
 			margin: 0;
 			display: flex;
 			align-items: center;
@@ -240,23 +240,23 @@
 		}
 
 		&:hover {
-			background: #e0e0e0 !important;
-			border: 0.5px solid $bb-border-color !important;
-			box-shadow: none !important;
+			background: #e0e0e0;
+			border: 0.5px solid $bb-border-color;
+			box-shadow: none;
 		}
 
 		&:focus {
-			background: $bb-background-secondary-color !important;
-			border: 0.5px solid $bb-border-color !important;
-			box-shadow: 0 0 0 1px #2271b1 !important;
+			background: $bb-background-secondary-color;
+			border: 0.5px solid $bb-border-color;
+			box-shadow: 0 0 0 1px #2271b1;
 		}
 
 		&--disabled,
 		&:disabled {
-			opacity: 0.5 !important;
-			cursor: not-allowed !important;
+			opacity: 0.5;
+			cursor: not-allowed;
 			pointer-events: none;
-			background: $bb-background-secondary-color !important;
+			background: $bb-background-secondary-color;
 
 			&:hover {
 				background: $bb-background-secondary-color;

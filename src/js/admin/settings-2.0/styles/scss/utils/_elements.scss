@@ -15,3 +15,63 @@ select.bb-admin-settings__select {
         color: $bb-text-color;
     }
 }
+
+// Toggle Control Styling
+.bb-admin-settings-2-0-wrap {
+
+    .components-toggle-control {
+		margin-bottom: 0;
+
+		.components-base-control__field {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			margin-bottom: 0;
+		}
+
+		.components-toggle-control__label {
+			font-size: 14px;
+			font-weight: 400;
+			line-height: 20px;
+			color: $bb-text-color;
+			order: 1;
+		}
+	}
+
+	.components-form-toggle {
+		width: 40px;
+		height: 24px;
+		min-width: 30px;
+		flex-shrink: 0;
+
+		.components-form-toggle__track {
+			width: 40px;
+			height: 24px;
+			border-radius: 99px;
+			background-color: $bb-background-tertiary-color;
+			border: none;
+		}
+
+		.components-form-toggle__thumb {
+			width: 16px;
+			height: 16px;
+			background-color: $bb-background-base-color;
+			box-shadow: none;
+			top: 4px;
+			left: 4px;
+			transition: left 0.15s ease, right 0.15s ease;
+		}
+
+		&.is-checked {
+			.components-form-toggle__track {
+				background-color: $bb-background-brand-primary-color;
+				border: none;
+			}
+
+			.components-form-toggle__thumb {
+				background-color: $bb-background-base-color;
+                transform: translateX(14px);
+			}
+		}
+	}
+}
