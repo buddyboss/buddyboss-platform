@@ -14,6 +14,8 @@ import apiFetch from '@wordpress/api-fetch';
 // import { SideNavigation } from '../SideNavigation';
 // import { SettingsForm } from '../SettingsForm';
 import { getCachedFeatureData, setCachedFeatureData, invalidateFeatureCache } from '../utils/featureCache';
+import { SettingsForm } from '../components/SettingsForm';
+import { SideNavigation } from './SideNavigation';
 
 /**
  * AJAX request helper.
@@ -265,14 +267,14 @@ export function FeatureSettingsScreen({ featureId, sectionId, onNavigate }) {
 			<div className="bb-admin-feature-settings__container">
 				{/* Left Sidebar Navigation */}
 				<aside className="bb-admin-feature-settings__sidebar">
-					{/* <SideNavigation
+					<SideNavigation
 						featureId={featureId}
 						sidePanels={sidePanels}
 						navItems={navItems}
 						currentPanel={activePanelId}
 						onNavigate={onNavigate}
 						onBack={handleBack}
-					/> */}
+					/>
 				</aside>
 
 				{/* Main Content */}
@@ -329,11 +331,11 @@ export function FeatureSettingsScreen({ featureId, sectionId, onNavigate }) {
 												{section.description && (
 													<p className="bb-admin-feature-settings__section-description" dangerouslySetInnerHTML={{ __html: section.description }} />
 												)}
-												{/* <SettingsForm
+												<SettingsForm
 													fields={section.fields || []}
 													values={settings}
 													onChange={handleSettingChange}
-												/> */}
+												/>
 											</div>
 										</div>
 									))}
