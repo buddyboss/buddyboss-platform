@@ -90,6 +90,7 @@ class BB_Admin_Settings_Ajax {
 					}
 				}
 
+				// settings_route: browser URL (query params); generated from feature_id. Frontend uses urlToRoute() for navigation.
 				$formatted = array(
 					'id'             => $feature_id,
 					'label'          => $feature['label'] ?? $feature_id,
@@ -98,7 +99,7 @@ class BB_Admin_Settings_Ajax {
 					'license_tier'   => $feature['license_tier'] ?? 'free',
 					'status'         => $is_active ? 'active' : 'inactive',
 					'available'      => $registry->bb_is_feature_available( $feature_id ),
-					'settings_route' => $feature['settings_route'] ?? '/settings/' . $feature_id,
+					'settings_route' => function_exists( 'bb_get_feature_settings_url' ) ? bb_get_feature_settings_url( $feature_id ) : '',
 				);
 
 				// Format icon like REST API.
@@ -324,6 +325,7 @@ class BB_Admin_Settings_Ajax {
 	 * @return array Formatted feature data.
 	 */
 	private function bb_format_feature_for_response( $feature_id, $feature, $registry, $icon_registry ) {
+		// settings_route: browser URL (query params); generated from feature_id. Frontend uses urlToRoute() for navigation.
 		$formatted = array(
 			'id'             => $feature_id,
 			'label'          => $feature['label'] ?? $feature_id,
@@ -332,7 +334,7 @@ class BB_Admin_Settings_Ajax {
 			'license_tier'   => $feature['license_tier'] ?? 'free',
 			'status'         => $registry->bb_is_feature_active( $feature_id ) ? 'active' : 'inactive',
 			'available'      => $registry->bb_is_feature_available( $feature_id ),
-			'settings_route' => $feature['settings_route'] ?? '/settings/' . $feature_id,
+			'settings_route' => function_exists( 'bb_get_feature_settings_url' ) ? bb_get_feature_settings_url( $feature_id ) : '',
 		);
 
 		// Format icon.

@@ -9,6 +9,7 @@ import { useState, useEffect, useRef } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { Button, Spinner, ToggleControl } from '@wordpress/components';
 import { getCachedFeatures, toggleFeature, updateFeatureInCache } from '../utils/ajax';
+import { urlToRoute } from '../utils/url';
 
 /**
  * Settings Screen Component
@@ -303,7 +304,7 @@ export function SettingsScreen({ onNavigate }) {
 												<Button
 													variant="secondary"
 													className={`bb-admin-settings__feature-settings-btn ${feature.status !== 'active' ? 'bb-admin-settings__feature-settings-btn--disabled' : ''}`}
-													onClick={() => onNavigate(feature.settings_route)}
+													onClick={() => onNavigate(feature.settings_route ? urlToRoute(feature.settings_route) : `/settings/${feature.id}`)}
 													disabled={feature.status !== 'active'}
 												>
 													<i className="bb-icon-settings"></i>

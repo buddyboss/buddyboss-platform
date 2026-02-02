@@ -122,9 +122,38 @@ export function Router({ currentRoute, onNavigate }) {
 		}
 	}, [currentRoute, needsFeatureCheck]);
 
-	// Update hash in URL
-	if (window.location.hash !== `#${currentRoute}`) {
-		window.history.replaceState({}, '', `#${currentRoute}`);
+	// Update URL with query parameters instead of hash
+	// Format: admin.php?page=bb-settings&tab=feature&panel=panel_id
+	// Hierarchy: Feature (tab) → Side Panel (panel) → Sections → Fields
+	const urlParams = new URLSearchParams(window.location.search);
+	const currentTab = urlParams.get('tab');
+	const currentPanel = urlParams.get('panel');
+	
+	if (currentRoute === '/settings') {
+		// Remove tab and panel params when on main settings page
+		if (currentTab || currentPanel || window.location.hash) {
+			urlParams.delete('tab');
+			urlParams.delete('panel');
+			const paramString = urlParams.toString();
+			const cleanUrl = window.location.pathname + (paramString ? '?' + paramString : '');
+			window.history.replaceState({}, '', cleanUrl);
+		}
+	} else if (mainRoute === 'settings' && routeParts[1]) {
+		// Update URL with tab parameter for feature settings
+		const newTab = routeParts[1];
+		const newPanel = routeParts[2] || null;
+		
+		if (currentTab !== newTab || currentPanel !== newPanel || window.location.hash) {
+			urlParams.set('tab', newTab);
+			if (newPanel) {
+				urlParams.set('panel', newPanel);
+			} else {
+				urlParams.delete('panel');
+			}
+			// Use query params (no hash)
+			const newUrl = window.location.pathname + '?' + urlParams.toString();
+			window.history.replaceState({}, '', newUrl);
+		}
 	}
 
 	// Helper to get feature label
@@ -138,8 +167,9 @@ export function Router({ currentRoute, onNavigate }) {
 	switch (mainRoute) {
 
 		case 'settings':
+			// Hierarchy: Feature (tab) → Side Panel (sidepanel) → Sections → Fields
 			const featureId = routeParts[1];
-			const sectionId = routeParts[2];
+			const sidePanelId = routeParts[2];
 
 			if (featureId) {
 				// Check if feature is enabled (wait for features to load)
@@ -160,7 +190,7 @@ export function Router({ currentRoute, onNavigate }) {
 				return (
 					<FeatureSettingsScreen
 						featureId={featureId}
-						sectionId={sectionId}
+						sidePanelId={sidePanelId}
 						onNavigate={onNavigate}
 					/>
 				);

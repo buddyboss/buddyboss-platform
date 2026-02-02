@@ -43,13 +43,15 @@ const ajaxFetch = (action, data = {}) => {
 /**
  * Feature Settings Screen Component
  *
+ * Hierarchy: Feature → Side Panels → Sections → Fields
+ *
  * @param {Object} props Component props
- * @param {string} props.featureId Feature ID
- * @param {string} props.sectionId Optional side panel ID for deep linking
+ * @param {string} props.featureId   Feature ID (from URL tab param)
+ * @param {string} props.sidePanelId Optional side panel ID for deep linking (from URL sidepanel param)
  * @param {Function} props.onNavigate Navigation callback
  * @returns {JSX.Element} Feature settings screen
  */
-export function FeatureSettingsScreen({ featureId, sectionId, onNavigate }) {
+export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 	const [feature, setFeature] = useState(null);
 	const [sidePanels, setSidePanels] = useState([]);
 	const [navItems, setNavItems] = useState([]);
@@ -60,7 +62,7 @@ export function FeatureSettingsScreen({ featureId, sectionId, onNavigate }) {
 	const [isDirty, setIsDirty] = useState(false);
 	const [saveError, setSaveError] = useState(null);
 	const [saveSuccess, setSaveSuccess] = useState(false);
-	const [activePanelId, setActivePanelId] = useState(sectionId || null);
+	const [activePanelId, setActivePanelId] = useState(sidePanelId || null);
 
 	// Load feature settings via AJAX - only when featureId changes
 	// Uses caching to prevent re-fetching on navigation within the same feature
@@ -78,9 +80,9 @@ export function FeatureSettingsScreen({ featureId, sectionId, onNavigate }) {
 			setSettings(loadedSettings);
 			setOriginalSettings(JSON.parse(JSON.stringify(loadedSettings)));
 			
-			// Set active panel
-			if (sectionId && loadedPanels.some(p => p.id === sectionId)) {
-				setActivePanelId(sectionId);
+			// Set active panel from URL sidepanel param or default
+			if (sidePanelId && loadedPanels.some(p => p.id === sidePanelId)) {
+				setActivePanelId(sidePanelId);
 			} else {
 				const defaultPanel = loadedPanels.find(p => p.is_default) || loadedPanels[0];
 				setActivePanelId(defaultPanel ? defaultPanel.id : null);
@@ -105,9 +107,9 @@ export function FeatureSettingsScreen({ featureId, sectionId, onNavigate }) {
 					setSettings(loadedSettings);
 					setOriginalSettings(JSON.parse(JSON.stringify(loadedSettings))); // Deep copy
 					
-					// Set active panel: use sectionId from props, or first panel with is_default, or first panel
-					if (sectionId && loadedPanels.some(p => p.id === sectionId)) {
-						setActivePanelId(sectionId);
+					// Set active panel: use sidePanelId from props, or first panel with is_default, or first panel
+					if (sidePanelId && loadedPanels.some(p => p.id === sidePanelId)) {
+						setActivePanelId(sidePanelId);
 					} else {
 						const defaultPanel = loadedPanels.find(p => p.is_default) || loadedPanels[0];
 						setActivePanelId(defaultPanel ? defaultPanel.id : null);
@@ -120,12 +122,12 @@ export function FeatureSettingsScreen({ featureId, sectionId, onNavigate }) {
 			});
 	}, [featureId]); // Only reload data when featureId changes, not on tab change
 
-	// Sync active panel when sectionId prop changes (from URL) - no AJAX call needed
+	// Sync active panel when sidePanelId prop changes (from URL) - no AJAX call needed
 	useEffect(() => {
-		if (sectionId && sidePanels.some(p => p.id === sectionId)) {
-			setActivePanelId(sectionId);
+		if (sidePanelId && sidePanels.some(p => p.id === sidePanelId)) {
+			setActivePanelId(sidePanelId);
 		}
-	}, [sectionId, sidePanels]);
+	}, [sidePanelId, sidePanels]);
 
 	// Handle unsaved changes warning
 	useEffect(() => {

@@ -23,26 +23,31 @@ export function App() {
 		const urlParams = new URLSearchParams(window.location.search);
 		const page = urlParams.get('page');
 		const tab = urlParams.get('tab');
-		const section = urlParams.get('section');
+		const panel = urlParams.get('panel');
 		const field = urlParams.get('field');
 
 		// Default route for bb-settings page is the Features grid
 		let route = '/settings';
 
 		// New Settings 2.0 page - default to Features grid
+		// URL format: admin.php?page=bb-settings&tab=feature&panel=panel_id
+		// Hierarchy: Feature (tab) → Side Panel (panel) → Sections → Fields
 		if (page === 'bb-settings') {
-			// Check hash first for internal navigation
-			const hash = window.location.hash.replace('#', '');
-			if (hash) {
-				route = hash;
-			} else if (tab) {
-				// Support ?page=bb-settings&tab=activity format
+			// Prioritize query params for settings routes
+			if (tab) {
+				// Support ?page=bb-settings&tab=reactions&panel=general format
 				route = `/settings/${tab}`;
-				if (section) {
-					route += `/${section}`;
+				if (panel) {
+					route += `/${panel}`;
 				}
 			} else {
-				route = '/settings';
+				// Check hash for backward compatibility
+				const hash = window.location.hash.replace('#', '');
+				if (hash) {
+					route = hash;
+				} else {
+					route = '/settings';
+				}
 			}
 		} else if (page === 'bp-settings' && tab) {
 			// Legacy URL mapping for old settings pages
@@ -70,20 +75,19 @@ export function App() {
 			const featureId = tabMap[tab] || tab.replace('bp-', '');
 			route = `/settings/${featureId}`;
 
-			if (section) {
-				route += `/${section}`;
+			if (panel) {
+				route += `/${panel}`;
 			}
 
-			// Optionally update URL to clean format
+			// Redirect to new URL format with query params
 			if (window.history.replaceState) {
-				const newUrl =
-					window.location.pathname +
-					window.location.search
-						.replace(/[?&]page=[^&]*/, '')
-						.replace(/[?&]tab=[^&]*/, '')
-						.replace(/[?&]section=[^&]*/, '')
-						.replace(/[?&]field=[^&]*/, '') +
-					`#${route}`;
+				const newParams = new URLSearchParams();
+				newParams.set('page', 'bb-settings');
+				newParams.set('tab', featureId);
+				if (panel) {
+					newParams.set('panel', panel);
+				}
+				const newUrl = window.location.pathname + '?' + newParams.toString();
 				window.history.replaceState({}, '', newUrl);
 			}
 		} else if (page === 'bp-activity') {
@@ -111,7 +115,33 @@ export function App() {
 		setCurrentRoute(route);
 		setIsLoading(false);
 
-		// Listen for hash changes
+		// Listen for browser back/forward navigation
+		const handlePopState = () => {
+			const params = new URLSearchParams(window.location.search);
+			const currentPage = params.get('page');
+			const currentTab = params.get('tab');
+			const currentPanel = params.get('panel');
+
+			if (currentPage === 'bb-settings') {
+				if (currentTab) {
+					let newRoute = `/settings/${currentTab}`;
+					if (currentPanel) {
+						newRoute += `/${currentPanel}`;
+					}
+					setCurrentRoute(newRoute);
+				} else {
+					// Check hash for backward compatibility
+					const hash = window.location.hash.replace('#', '');
+					if (hash) {
+						setCurrentRoute(hash);
+					} else {
+						setCurrentRoute('/settings');
+					}
+				}
+			}
+		};
+
+		// Also listen for hash changes for backward compatibility
 		const handleHashChange = () => {
 			const hash = window.location.hash.replace('#', '');
 			if (hash) {
@@ -119,9 +149,11 @@ export function App() {
 			}
 		};
 
+		window.addEventListener('popstate', handlePopState);
 		window.addEventListener('hashchange', handleHashChange);
 
 		return () => {
+			window.removeEventListener('popstate', handlePopState);
 			window.removeEventListener('hashchange', handleHashChange);
 		};
 	}, []);

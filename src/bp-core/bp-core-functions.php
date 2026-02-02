@@ -10141,6 +10141,44 @@ function bb_register_feature( $feature_id, $args = array() ) {
 }
 
 /**
+ * Get the admin URL for a feature's settings page.
+ *
+ * Returns URL in format: admin.php?page=bb-settings&tab={feature_id}&panel={panel_id}
+ *
+ * Hierarchy: Feature (tab) → Side Panel (panel) → Sections → Fields
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $feature_id Feature ID (e.g., 'reactions', 'activity').
+ * @param string $panel_id   Optional side panel ID.
+ * @return string Admin URL for the feature settings.
+ */
+function bb_get_feature_settings_url( $feature_id, $panel_id = '' ) {
+	$url = admin_url( 'admin.php?page=bb-settings' );
+
+	if ( ! empty( $feature_id ) ) {
+		$url = add_query_arg( 'tab', sanitize_key( $feature_id ), $url );
+	}
+
+	if ( ! empty( $panel_id ) ) {
+		$url = add_query_arg( 'panel', sanitize_key( $panel_id ), $url );
+	}
+
+	return $url;
+}
+
+/**
+ * Get the admin URL for the main settings page (Features grid).
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string Admin URL for the main settings page.
+ */
+function bb_get_settings_url() {
+	return admin_url( 'admin.php?page=bb-settings' );
+}
+
+/**
  * Register a side panel for a feature.
  *
  * Side panels appear in the left sidebar navigation when viewing feature settings.
