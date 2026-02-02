@@ -167,7 +167,7 @@
         color: $bb-text-tertiary-color;
         font-size: 13px;
         font-weight: 400;
-        line-height: 1;
+        line-height: 1.5;
         margin: 20px 0 0 0;
     }
 }
@@ -179,8 +179,9 @@
 }
 
 /* ----------------------------------------------------------------
-   Reaction Mode Field — radio + visual emoji cards grid
+   Reactions Settings
    ---------------------------------------------------------------- */
+
 .bb-reaction-mode {
 
     &__cards {
@@ -220,12 +221,8 @@
     }
 }
 
-/* ----------------------------------------------------------------
-   Emotion Card Items - Individual emotion cards in the grid
-   ---------------------------------------------------------------- */
 .bb_emotions_item {
     width: 96px;
-    height: 96px;
     background: $bb-background-base-color;
     border: 0.5px solid $bb-border-secondary-color;
     border-radius: $bb-border-radius-lg;
@@ -233,71 +230,12 @@
     display: flex;
     flex-direction: column;
     position: relative;
-    flex-shrink: 0;
 
     &.is-disabled {
         opacity: 0.5;
         pointer-events: none;
     }
 
-    // Top action buttons (enable checkbox and remove button)
-    .bb_emotions_actions {
-        position: absolute;
-        top: 2px;
-        right: 2px;
-        display: flex;
-        gap: 4px;
-        z-index: 2;
-        opacity: 0;
-        transition: opacity 0.2s ease;
-    }
-
-    &:hover .bb_emotions_actions {
-        opacity: 1;
-    }
-
-    .bb_emotions_actions_enable {
-        display: flex;
-        align-items: center;
-        padding: 3px;
-
-        input[type="checkbox"] {
-            width: 18px;
-            height: 18px;
-            margin: 0;
-            border: 1px solid $bb-border-quaternary-color;
-            border-radius: $bb-border-radius-sm;
-        }
-    }
-
-    .bb_emotions_actions_remove {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 24px;
-        height: 24px;
-        background: $bb-background-base-color;
-        border: 1px solid $bb-border-secondary-color;
-        border-radius: $bb-border-radius-sm;
-        cursor: pointer;
-        padding: 0;
-
-        i {
-            font-size: 12px;
-            color: $bb-text-tertiary-color;
-        }
-
-        &:hover {
-            background: $bb-background-primary-color;
-            border-color: $bb-border-primary-color;
-
-            i {
-                color: $bb-text-color;
-            }
-        }
-    }
-
-    // Icon area (64px height, light gray background)
     .bb_emotions_icon {
         height: 64px;
         background: $bb-background-primary-color;
@@ -331,7 +269,6 @@
         }
     }
 
-    // Footer area (32px min-height, white background, name + edit button)
     .bb_emotions_footer {
         min-height: 32px;
         background: $bb-background-base-color;
@@ -339,9 +276,9 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding: 4px 4px 4px 8px;
+        padding: 4px 8px;
         gap: 4px;
-        flex-shrink: 0;
+        box-sizing: border-box;
 
         span {
             font-size: 13px;
@@ -361,13 +298,14 @@
             background: none;
             border: none;
             cursor: pointer;
-            padding: 4px;
             flex-shrink: 0;
-            color: $bb-text-tertiary-color;
+            padding: 0;
+            color: $bb-icon-tertiary-color;
 
             i {
                 font-size: 16px;
                 line-height: 1;
+                font-weight: 700;
             }
 
             &:hover {
@@ -376,7 +314,6 @@
         }
     }
 
-    // Add new emotion card (empty card with plus button)
     &.bb_emotions_item_action {
         background: $bb-background-base-color;
         cursor: pointer;
@@ -410,9 +347,6 @@
     }
 }
 
-/* ----------------------------------------------------------------
-   Reaction Button Field - Similar to emotion cards (96px x 96px)
-   ---------------------------------------------------------------- */
 .bb-reaction-button-field {
     display: flex;
     margin-top: 24px;
@@ -435,14 +369,12 @@
         height: 100%;
     }
 
-    // Icon area (64px height, light gray background)
     &__icon-wrapper {
         height: 64px;
         background: $bb-background-primary-color;
         display: flex;
         align-items: center;
         justify-content: center;
-        flex-shrink: 0;
     }
 
     &__icon-btn {
@@ -465,7 +397,6 @@
         }
     }
 
-    // Footer area (32px min-height, white background, text input + menu button)
     &__footer {
         min-height: 32px;
         background: $bb-background-base-color;
@@ -473,14 +404,14 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding: 4px 4px 4px 8px;
+        padding: 4px 8px;
         gap: 4px;
-        flex-shrink: 0;
+        box-sizing: border-box;
 
         input[type="text"] {
             font-size: 13px;
             font-weight: 400;
-            line-height: 18px;
+            line-height: 1;
             color: $bb-text-color;
             border: none;
             background: transparent;
@@ -492,6 +423,7 @@
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
+            min-height: auto;
 
             &:focus {
                 outline: none;
@@ -511,13 +443,14 @@
         background: none;
         border: none;
         cursor: pointer;
-        padding: 4px;
+        padding: 0;
         flex-shrink: 0;
         color: $bb-text-tertiary-color;
 
         i {
             font-size: 16px;
             line-height: 1;
+            font-weight: 700;
         }
 
         &:hover {

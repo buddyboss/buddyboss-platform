@@ -490,24 +490,6 @@ export function SettingsForm({ fields, values, onChange }) {
 										className={`bb_emotions_item${!reaction.is_emotion_active ? ' is-disabled' : ''}`}
 										data-reaction-id={reaction.id}
 									>
-										<div className="bb_emotions_actions">
-											<label className="bb_emotions_actions_enable">
-												<input
-													type="checkbox"
-													name={`reaction_checks[${reaction.id}]`}
-													checked={reaction.is_emotion_active || false}
-													value="1"
-													onChange={() => {/* Handle via existing JS */}}
-												/>
-											</label>
-											<button
-												className="bb_emotions_actions_remove"
-												aria-label={__('Remove Emotion', 'buddyboss')}
-												onClick={() => {/* Handle via existing JS */}}
-											>
-												<i className="bb-icon-l bb-icon-times"></i>
-											</button>
-										</div>
 
 										<div className="bb_emotions_icon">
 											{reaction.type === 'bb-icons' && (
@@ -541,7 +523,7 @@ export function SettingsForm({ fields, values, onChange }) {
 												data-type={reaction.type}
 												onClick={() => {/* Handle via existing JS */}}
 											>
-												<i className="bb-icon-l bb-icon-pencil"></i>
+												<i className="bb-icons-rl-dots-three"></i>
 											</button>
 										</div>
 										<input
@@ -643,7 +625,7 @@ export function SettingsForm({ fields, values, onChange }) {
 										aria-label={__('More options', 'buddyboss')}
 										onClick={() => {/* Handled by Pro's bb-reaction-admin.js */}}
 									>
-										<i className="bb-icon-rf bb-icon-ellipsis-h"></i>
+										<i className="bb-icons-rl-dots-three"></i>
 									</button>
 								</div>
 							</div>
