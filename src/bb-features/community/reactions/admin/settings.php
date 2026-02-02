@@ -52,7 +52,7 @@ function bb_admin_settings_register_reactions_settings() {
 	// =========================================================================
 	bb_register_side_panel(
 		'reactions',
-		'reactions_nav',
+		'reactions',
 		array(
 			'title'      => __( 'Reactions', 'buddyboss' ),
 			'icon'       => array(
@@ -113,12 +113,12 @@ function bb_admin_settings_register_reactions_settings() {
 	);
 
 	// =========================================================================
-	// SECTION: REACTIONS (under reactions_nav side panel)
+	// SECTION: REACTIONS (under reactions side panel)
 	// For Reactions Mode and Button settings
 	// =========================================================================
 	bb_register_feature_section(
 		'reactions',
-		'reactions_nav',
+		'reactions',
 		'reactions_settings',
 		array(
 			'title'       => __( 'Reactions', 'buddyboss' ),
@@ -148,7 +148,7 @@ function bb_admin_settings_register_reactions_settings() {
 
 	bb_register_feature_field(
 		'reactions',
-		'reactions_nav',
+		'reactions',
 		'reactions_settings',
 		array(
 			'name'              => 'bb_reaction_mode',
@@ -199,7 +199,7 @@ function bb_admin_settings_register_reactions_settings() {
 
 	bb_register_feature_field(
 		'reactions',
-		'reactions_nav',
+		'reactions',
 		'reactions_settings',
 		array(
 			'name'              => 'bb_reactions_button',
@@ -225,7 +225,7 @@ function bb_admin_settings_register_reactions_settings() {
 	// -------------------------------------------------------------------------
 	bb_register_feature_field(
 		'reactions',
-		'reactions_nav',
+		'reactions',
 		'reactions_settings',
 		array(
 			'name'        => 'bb_reactions_migration_notice',
