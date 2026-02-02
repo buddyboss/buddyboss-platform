@@ -157,12 +157,14 @@ function bb_admin_settings_register_reactions_settings() {
 			'description'       => __( 'Allow members to express their thoughts by selecting from a list of up to six emotions.', 'buddyboss' ),
 			'options'           => array(
 				array(
-					'label' => __( 'Like', 'buddyboss' ),
-					'value' => 'likes',
+					'label'       => __( 'Like', 'buddyboss' ),
+					'value'       => 'likes',
+					'description' => __( 'A simple \"Like\" button will show for members to express their appreciation or acknowledgement.', 'buddyboss' ),
 				),
 				array(
-					'label' => __( 'Emotions', 'buddyboss' ),
-					'value' => 'emotions',
+					'label'       => __( 'Emotions', 'buddyboss' ),
+					'value'       => 'emotions',
+					'description' => __( 'Members express their thoughts or feelings by selecting an emotion from a list of options. Maximum of only 6 emotions can be used.', 'buddyboss' ),
 				),
 			),
 			'default'           => function_exists( 'bb_get_reaction_mode' ) ? bb_get_reaction_mode() : 'likes',
@@ -261,12 +263,62 @@ add_action( 'bb_register_features', 'bb_admin_settings_register_reactions_settin
  * @return array|void Formatted field data or void if no changes are needed.
  */
 function bb_admin_settings_format_reactions_field_data( $field_data, $field ) {
-	// Add reactions data for reaction_mode field type.
+
 	if ( 'reaction_mode' === ( $field['type'] ?? '' ) ) {
+
+		$reactions_modes = array(
+			'likes'    => array(
+				'label'    => esc_html__( 'Likes', 'buddyboss' ),
+				'name'     => 'bb_reaction_mode',
+				'value'    => 'likes',
+				'id'       => 'bb_reaction_mode_likes',
+				'notice'   => __( 'A simple "Like" button will show for members to express their appreciation or acknowledgement.', 'buddyboss' ),
+				'disabled' => false,
+			),
+			'emotions' => array(
+				'label'    => esc_html__( 'Emotions', 'buddyboss' ),
+				'name'     => 'bb_reaction_mode',
+				'value'    => 'emotions',
+				'id'       => 'bb_reaction_mode_emotions',
+				'notice'   => esc_html__( 'Members express their thoughts or feelings by selecting an emotion from a list of options. Maximum of only 6 emotions can be used.', 'buddyboss' ),
+				'disabled' => (
+					! class_exists( 'BB_Reactions' ) ||
+					! function_exists( 'bbp_pro_is_license_valid' ) ||
+					! bbp_pro_is_license_valid()
+				),
+			),
+		);
+
+		/**
+		 * Reuse the same filter so third-party code that modifies the
+		 * legacy settings page also applies to the React UI.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array $reactions_modes Reaction mode options.
+		 */
+		$reactions_modes = apply_filters( 'bb_setting_reaction_mode_args', $reactions_modes );
+
+		// Map to the option format React expects (label, value, id, notice, disabled).
+		$field_data['options'] = array_values(
+			array_map(
+				function ( $mode ) {
+					return array(
+						'label'       => $mode['label'],
+						'value'       => $mode['value'],
+						'id'          => $mode['id'],
+						'notice'      => $mode['notice'] ?? '',
+						'disabled'    => ! empty( $mode['disabled'] ),
+					);
+				},
+				$reactions_modes
+			)
+		);
+
+		// Attach reaction items (emotions list).
 		$reactions_data = array();
 		if ( function_exists( 'bb_load_reaction' ) ) {
 			$all_emotions   = bb_load_reaction()->bb_get_reactions( 'emotions', false );
-			$all_likes      = bb_load_reaction()->bb_get_reactions( 'likes' );
 			$reactions_data = array(
 				'emotions' => array_map(
 					function ( $r ) {
@@ -283,29 +335,19 @@ function bb_admin_settings_format_reactions_field_data( $field_data, $field ) {
 					},
 					$all_emotions
 				),
-				'likes'    => array_map(
-					function ( $r ) {
-						return array(
-							'id'         => $r['id'],
-							'name'       => $r['name'],
-							'icon'       => $r['icon'],
-							'type'       => $r['type'],
-							'icon_text'  => $r['icon_text'],
-							'icon_color' => $r['icon_color'],
-							'icon_path'  => $r['icon_path'],
-						);
-					},
-					$all_likes
-				),
 			);
 		}
 		$field_data['reactions'] = $reactions_data;
 	}
 
-	// Pass through icon/text for reaction_button field type.
 	if ( 'reaction_button' === ( $field['type'] ?? '' ) ) {
-		$field_data['icon'] = $field['icon'] ?? null;
-		$field_data['text'] = $field['text'] ?? null;
+		$button_settings = function_exists( 'bb_reaction_button_options' ) ? bb_reaction_button_options() : array();
+		$button_icon     = isset( $button_settings['icon'] ) ? $button_settings['icon'] : 'thumbs-up';
+		$button_text     = isset( $button_settings['text'] ) ? trim( $button_settings['text'] ) : '';
+
+		$field_data['icon']      = $button_icon;
+		$field_data['text']      = $button_text;
+		$field_data['maxlength'] = 12;
 	}
 
 	return $field_data;

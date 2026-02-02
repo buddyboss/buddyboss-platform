@@ -412,24 +412,46 @@ export function SettingsForm({ fields, values, onChange }) {
 				);
 
 			case 'reaction_mode':
-				// Reaction mode: radio (Like/Emotions) + visual reaction cards grid.
+				// Reaction mode: uses same structure as bb_reactions_settings_callback_reaction_mode().
+				// Options carry: label, value, id, notice, disabled (via bb_setting_reaction_mode_args filter).
 				const reactionMode = value || 'likes';
 				const reactionsData = field.reactions || {};
-				const modeReactions = reactionMode === 'emotions'
-					? (reactionsData.emotions || [])
-					: (reactionsData.likes || []);
+				const allReactions = reactionsData.emotions || [];
+
+				// Find the notice for the currently selected mode option.
+				const selectedOption = (field.options || []).find((opt) => opt.value === reactionMode);
+				const modeNotice = selectedOption?.notice || '';
 
 				return (
 					<div key={field.name} className="bb-reaction-mode">
-						<RadioControl
-							label=""
-							selected={reactionMode}
-							options={field.options || []}
-							onChange={(newValue) => onChange(field.name, newValue)}
-						/>
-						{modeReactions.length > 0 && (
+						{/* Radio options — same IDs as legacy, respects disabled */}
+						<div className="bb-reaction-mode__radios">
+							{(field.options || []).map((opt) => (
+								<label
+									key={opt.value}
+									htmlFor={opt.id}
+									className={`bb-reaction-mode__radio-label${opt.disabled ? ' disabled' : ''}`}
+								>
+									<input
+										type="radio"
+										name={field.name}
+										id={opt.id}
+										value={opt.value}
+										checked={reactionMode === opt.value}
+										disabled={opt.disabled}
+										data-notice={opt.notice || ''}
+										onChange={() => onChange(field.name, opt.value)}
+									/>
+									{opt.label}
+								</label>
+							))}
+						</div>
+						{modeNotice && (
+							<p className="description bb-reaction-mode-description">{modeNotice}</p>
+						)}
+						{allReactions.length > 0 && (
 							<div className="bb-reaction-mode__cards">
-								{modeReactions.map((reaction) => (
+								{allReactions.map((reaction) => (
 									<div key={reaction.id} className="bb-reaction-card">
 										<div className="bb-reaction-card__icon-area">
 											{reaction.icon_path ? (
@@ -459,39 +481,45 @@ export function SettingsForm({ fields, values, onChange }) {
 				);
 
 			case 'reaction_button':
-				// Reaction button: single card with icon + editable text.
+				// Reaction button: uses same structure as bb_reactions_settings_callback_reactions_button().
 				const btnValue = (typeof value === 'object' && value !== null) ? value : {};
 				const btnIcon = btnValue.icon || field.icon || 'thumbs-up';
-				const btnText = btnValue.text || field.text || __('Like', 'buddyboss');
+				const btnText = btnValue.text !== undefined ? btnValue.text : (field.text || '');
+				const btnMaxLength = field.maxlength || 12;
 
 				return (
 					<div key={field.name} className="bb-reaction-button-field">
-						<div className="bb-reaction-card">
-							<div className="bb-reaction-card__icon-area">
-								<i
-									className={`bb-icon-rf bb-icon-${btnIcon}`}
-								/>
-							</div>
-							<div className="bb-reaction-card__footer">
-								<input
-									type="text"
-									className="bb-reaction-card__text-input"
-									value={btnText}
-									maxLength={12}
-									onChange={(e) => {
-										onChange(field.name, {
-											...btnValue,
-											icon: btnIcon,
-											text: e.target.value,
-										});
-									}}
-									disabled={disabled}
-								/>
-								<button type="button" className="bb-reaction-card__menu-btn" aria-label={__('More options', 'buddyboss')}>
-									<i className="bb-icon-rf bb-icon-ellipsis-h"></i>
-								</button>
-							</div>
-						</div>
+						<label htmlFor="bb-reaction-button-text" className="bb-reaction-button-label">
+							<button type="button" className="button" id="bb-reaction-button-chooser">
+								<i className={`bb-icon-${btnIcon}`} />
+							</button>
+							<input
+								type="hidden"
+								name="bb_reactions_button[icon]"
+								id="bb-reaction-button-hidden-field"
+								value={btnIcon}
+							/>
+							<input
+								name="bb_reactions_button[text]"
+								id="bb-reaction-button-text"
+								type="text"
+								className="bb-reaction-card__text-input"
+								value={btnText}
+								maxLength={btnMaxLength}
+								placeholder={__('Like', 'buddyboss')}
+								onChange={(e) => {
+									onChange(field.name, {
+										...btnValue,
+										icon: btnIcon,
+										text: e.target.value,
+									});
+								}}
+								disabled={disabled}
+							/>
+							<span className="bb-reaction-button-text-limit">
+								<span>{(btnText || '').length}</span>/{btnMaxLength}
+							</span>
+						</label>
 					</div>
 				);
 
