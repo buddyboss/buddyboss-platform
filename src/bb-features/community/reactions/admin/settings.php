@@ -57,7 +57,7 @@ function bb_admin_settings_register_reactions_settings() {
 			'title'      => __( 'Reactions', 'buddyboss' ),
 			'icon'       => array(
 				'type'  => 'font',
-				'class' => 'bb-icons-rl bb-icons-rl-thumbs-up',
+				'class' => 'bb-icons-rl bb-icons-rl-smiley',
 			),
 			'help_url'   => '',
 			'order'      => 20,
