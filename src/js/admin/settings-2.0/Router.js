@@ -8,7 +8,7 @@
 import { lazy, Suspense, useState, useEffect } from '@wordpress/element';
 import { __, sprintf } from '@wordpress/i18n';
 import { Button } from '@wordpress/components';
-import { getFeatures } from './utils/ajax'
+import { getCachedFeatures, invalidateFeaturesCache, updateFeatureInCache } from './utils/ajax';
 import { SettingsScreen } from './screens/SettingsScreen';
 import { FeatureSettingsScreen } from './screens/FeatureSettingsScreen';
 
@@ -16,54 +16,8 @@ import { FeatureSettingsScreen } from './screens/FeatureSettingsScreen';
 const ActivityListScreen = lazy(() => import('./screens/ActivityListScreen'));
 const GroupsListScreen = lazy(() => import('./screens/GroupsListScreen'));
 
-// Cache for features status
-let featuresCache = null;
-let featuresCachePromise = null;
-
-/**
- * Get features with caching
- */
-async function getCachedFeatures() {
-	if (featuresCache) {
-		return featuresCache;
-	}
-	
-	if (featuresCachePromise) {
-		return featuresCachePromise;
-	}
-	
-	featuresCachePromise = getFeatures().then((response) => {
-		if (response.success && response.data) {
-			featuresCache = response.data;
-			return featuresCache;
-		}
-		return [];
-	});
-	
-	return featuresCachePromise;
-}
-
-/**
- * Invalidate features cache - call this when features are activated/deactivated
- */
-export function invalidateFeaturesCache() {
-	featuresCache = null;
-	featuresCachePromise = null;
-}
-
-/**
- * Update a feature in the cache
- * 
- * @param {string} featureId Feature ID
- * @param {Object} updatedData Updated feature data
- */
-export function updateFeatureInCache(featureId, updatedData) {
-	if (featuresCache && Array.isArray(featuresCache)) {
-		featuresCache = featuresCache.map((feature) => 
-			feature.id === featureId ? { ...feature, ...updatedData } : feature
-		);
-	}
-}
+// Re-export for consumers that import from Router
+export { invalidateFeaturesCache, updateFeatureInCache };
 
 /**
  * Check if a feature is enabled

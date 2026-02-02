@@ -41,6 +41,57 @@ export function getFeatures() {
 	return ajaxFetch('bb_admin_get_features');
 }
 
+// Module-level cache for features list
+let featuresCache = null;
+let featuresCachePromise = null;
+
+/**
+ * Get features with caching (prevents duplicate AJAX calls)
+ *
+ * @return {Promise} Promise resolving to features array
+ */
+export async function getCachedFeatures() {
+	if (featuresCache) {
+		return featuresCache;
+	}
+
+	if (featuresCachePromise) {
+		return featuresCachePromise;
+	}
+
+	featuresCachePromise = getFeatures().then((response) => {
+		if (response.success && response.data) {
+			featuresCache = response.data;
+			return featuresCache;
+		}
+		return [];
+	});
+
+	return featuresCachePromise;
+}
+
+/**
+ * Invalidate features cache - call when features are activated/deactivated
+ */
+export function invalidateFeaturesCache() {
+	featuresCache = null;
+	featuresCachePromise = null;
+}
+
+/**
+ * Update a feature in the cache
+ *
+ * @param {string} featureId   Feature ID
+ * @param {Object} updatedData Updated feature data
+ */
+export function updateFeatureInCache(featureId, updatedData) {
+	if (featuresCache && Array.isArray(featuresCache)) {
+		featuresCache = featuresCache.map((feature) =>
+			feature.id === featureId ? { ...feature, ...updatedData } : feature
+		);
+	}
+}
+
 /**
  * Activate a feature
  *

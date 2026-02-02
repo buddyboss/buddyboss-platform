@@ -8,30 +8,7 @@
 import { useState, useEffect } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { Button, Spinner, ToggleControl } from '@wordpress/components';
-import { updateFeatureInCache } from '../Router'
-
-/**
- * AJAX request helper for features.
- *
- * @param {string} action AJAX action name.
- * @param {Object} data   Additional data.
- * @returns {Promise} Promise resolving to response data.
- */
-const ajaxFetch = (action, data = {}) => {
-	const formData = new FormData();
-	formData.append('action', action);
-	formData.append('nonce', window.bbAdminData?.ajaxNonce || '');
-	
-	Object.keys(data).forEach((key) => {
-		formData.append(key, data[key]);
-	});
-	
-	return fetch(window.bbAdminData?.ajaxUrl || '/wp-admin/admin-ajax.php', {
-		method: 'POST',
-		credentials: 'same-origin',
-		body: formData,
-	}).then((response) => response.json());
-};
+import { ajaxFetch, getCachedFeatures, updateFeatureInCache } from '../utils/ajax';
 
 /**
  * Settings Screen Component
@@ -49,16 +26,13 @@ export function SettingsScreen({ onNavigate }) {
 	const [searchQuery, setSearchQuery] = useState('');
 
 	useEffect(() => {
-		// Load features via AJAX
-		ajaxFetch('bb_admin_get_features')
-			.then((response) => {
-				console.log('Features AJAX response:', response);
-				
-				if (response.success && Array.isArray(response.data)) {
-					setFeatures(response.data);
-					setFilteredFeatures(response.data);
+		// Load features via shared cache (prevents duplicate AJAX calls with Router)
+		getCachedFeatures()
+			.then((data) => {
+				if (Array.isArray(data)) {
+					setFeatures(data);
+					setFilteredFeatures(data);
 				} else {
-					console.warn('No features returned from AJAX.');
 					setFeatures([]);
 					setFilteredFeatures([]);
 				}
