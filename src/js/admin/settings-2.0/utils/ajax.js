@@ -93,23 +93,17 @@ export function updateFeatureInCache(featureId, updatedData) {
 }
 
 /**
- * Activate a feature
+ * Toggle a feature (activate or deactivate)
  *
- * @param {string} featureId - Feature ID to activate
+ * @param {string}  featureId - Feature ID
+ * @param {boolean} active    - True to activate, false to deactivate
  * @return {Promise} Promise resolving to response
  */
-export function activateFeature(featureId) {
-	return ajaxFetch('bb_admin_activate_feature', { feature_id: featureId });
-}
-
-/**
- * Deactivate a feature
- *
- * @param {string} featureId - Feature ID to deactivate
- * @return {Promise} Promise resolving to response
- */
-export function deactivateFeature(featureId) {
-	return ajaxFetch('bb_admin_deactivate_feature', { feature_id: featureId });
+export function toggleFeature(featureId, active) {
+	return ajaxFetch('bb_admin_toggle_feature', {
+		feature_id: featureId,
+		status: active ? 'active' : 'inactive',
+	});
 }
 
 /**

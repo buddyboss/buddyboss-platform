@@ -8,7 +8,7 @@
 import { useState, useEffect } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { Button, Spinner, ToggleControl } from '@wordpress/components';
-import { ajaxFetch, getCachedFeatures, updateFeatureInCache } from '../utils/ajax';
+import { getCachedFeatures, toggleFeature, updateFeatureInCache } from '../utils/ajax';
 
 /**
  * Settings Screen Component
@@ -98,9 +98,7 @@ export function SettingsScreen({ onNavigate }) {
 	}, {});
 
 	const handleFeatureToggle = (featureId, checked) => {
-		const action = checked ? 'bb_admin_activate_feature' : 'bb_admin_deactivate_feature';
-
-		ajaxFetch(action, { feature_id: featureId })
+		toggleFeature(featureId, checked)
 			.then((response) => {
 				if (response.success) {
 					// Update feature status from response data (matches REST API format)

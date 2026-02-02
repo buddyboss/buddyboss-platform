@@ -1152,7 +1152,7 @@ class BB_Feature_Registry {
 		bp_update_option( 'bp-active-components', $active_components );
 
 		// Clear caches.
-		$this->clear_feature_caches( $feature_id );
+		$this->bb_clear_feature_caches( $feature_id );
 
 		/**
 		 * Fired after a feature is activated.

@@ -42,6 +42,7 @@ class BB_Admin_Settings_Ajax {
 	private function bb_register_ajax_handlers() {
 		// Features.
 		add_action( 'wp_ajax_bb_admin_get_features', array( $this, 'bb_admin_get_features' ) );
+		add_action( 'wp_ajax_bb_admin_toggle_feature', array( $this, 'bb_admin_toggle_feature' ) );
 		add_action( 'wp_ajax_bb_admin_get_feature_settings', array( $this, 'bb_admin_get_feature_settings' ) );
 		add_action( 'wp_ajax_bb_admin_save_feature_settings', array( $this, 'bb_admin_save_feature_settings' ) );
 	}
@@ -110,6 +111,66 @@ class BB_Admin_Settings_Ajax {
 		}
 
 		wp_send_json_success( $features );
+	}
+
+	/**
+	 * Toggle a feature (activate or deactivate).
+	 *
+	 * Expects POST parameters:
+	 * - feature_id: The feature ID.
+	 * - status: Desired status ('active' or 'inactive').
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	public function bb_admin_toggle_feature() {
+		$this->bb_verify_request();
+
+		// phpcs:disable WordPress.Security.NonceVerification.Missing
+		$feature_id = isset( $_POST['feature_id'] ) ? sanitize_text_field( wp_unslash( $_POST['feature_id'] ) ) : '';
+		$status     = isset( $_POST['status'] ) ? sanitize_text_field( wp_unslash( $_POST['status'] ) ) : '';
+		// phpcs:enable WordPress.Security.NonceVerification.Missing
+
+		if ( empty( $feature_id ) ) {
+			wp_send_json_error( array( 'message' => __( 'Feature ID is required.', 'buddyboss' ) ) );
+		}
+
+		if ( ! in_array( $status, array( 'active', 'inactive' ), true ) ) {
+			wp_send_json_error( array( 'message' => __( 'Invalid status. Must be "active" or "inactive".', 'buddyboss' ) ) );
+		}
+
+		if ( ! function_exists( 'bb_feature_registry' ) || ! function_exists( 'bb_icon_registry' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Feature registry not available.', 'buddyboss' ) ) );
+		}
+
+		$registry      = bb_feature_registry();
+		$icon_registry = bb_icon_registry();
+		$activate      = 'active' === $status;
+		$result        = $activate
+			? $registry->bb_activate_feature( $feature_id )
+			: $registry->bb_deactivate_feature( $feature_id );
+
+		if ( is_wp_error( $result ) ) {
+			wp_send_json_error( array( 'message' => $result->get_error_message() ) );
+		}
+
+		// Get feature data (status will be overridden since bp_is_active() cache isn't updated yet).
+		$feature   = $registry->bb_get_feature( $feature_id );
+		$formatted = $this->bb_format_feature_for_response( $feature_id, $feature, $registry, $icon_registry );
+
+		// Override status since bp_is_active() cache isn't updated yet.
+		$formatted['status'] = $status;
+
+		wp_send_json_success(
+			array(
+				'data'    => $formatted,
+				'message' => sprintf(
+					/* translators: 1: feature label, 2: activated/deactivated */
+					__( 'Feature "%1$s" %2$s successfully.', 'buddyboss' ),
+					$feature['label'],
+					$activate ? __( 'activated', 'buddyboss' ) : __( 'deactivated', 'buddyboss' )
+				),
+			)
+		);
 	}
 
 	/**
@@ -249,6 +310,37 @@ class BB_Admin_Settings_Ajax {
 				'settings'    => $settings,
 			)
 		);
+	}
+
+	/**
+	 * Format feature for response (matches REST API format).
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string              $feature_id    Feature ID.
+	 * @param array               $feature       Feature data.
+	 * @param BB_Feature_Registry $registry      Feature registry instance.
+	 * @param BB_Icon_Registry    $icon_registry Icon registry instance.
+	 * @return array Formatted feature data.
+	 */
+	private function bb_format_feature_for_response( $feature_id, $feature, $registry, $icon_registry ) {
+		$formatted = array(
+			'id'             => $feature_id,
+			'label'          => $feature['label'] ?? $feature_id,
+			'description'    => $feature['description'] ?? '',
+			'category'       => $feature['category'] ?? 'community',
+			'license_tier'   => $feature['license_tier'] ?? 'free',
+			'status'         => $registry->bb_is_feature_active( $feature_id ) ? 'active' : 'inactive',
+			'available'      => $registry->bb_is_feature_available( $feature_id ),
+			'settings_route' => $feature['settings_route'] ?? '/settings/' . $feature_id,
+		);
+
+		// Format icon.
+		if ( ! empty( $feature['icon'] ) ) {
+			$formatted['icon'] = $icon_registry->bb_get_icon_for_rest( $feature['icon'] );
+		}
+
+		return $formatted;
 	}
 
 	/**
