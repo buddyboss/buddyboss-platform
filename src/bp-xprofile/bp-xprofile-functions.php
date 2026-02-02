@@ -1562,16 +1562,36 @@ function bp_xprofile_maybe_format_datebox_post_data( $field_id ) {
  * @param int|string $user_id ID of the user to get @-mention name for.
  * @return string $mentionname User name appropriate for @-mentions.
  */
-function bp_activity_get_user_mentionname( $user_id ) {
+function bp_activity_get_user_mentionname($user_id)
+{
+
+	$userdata = bp_core_get_core_userdata($user_id);
+
+	return bp_activity_format_mentionname($userdata);
+}
+
+/**
+ * Format a user's mentionname based on username compatibility mode.
+ *
+ * @since BuddyPress 2.18.0
+ *
+ * @param object $user_data User data object. Must contain at least ID and
+ * user_login properties.
+ * @return string $mentionname Formatted mention name.
+ */
+function bp_activity_format_mentionname($user_data): string
+{
 	$mentionname = '';
 
-	$userdata = bp_core_get_core_userdata( $user_id );
-
-	if ( $userdata ) {
-		if ( bp_is_username_compatibility_mode() ) {
-			$mentionname = str_replace( ' ', '-', $userdata->user_login );
+	if (is_object($user_data)) {
+		if (bp_is_username_compatibility_mode()) {
+			$mentionname = str_replace(
+				' ',
+				'-',
+				$user_data->user_login
+			);
 		} else {
-			$mentionname = get_user_meta( $userdata->ID, 'nickname', true );
+			$mentionname = get_user_meta($user_data->ID, 'nickname', true);
 		}
 	}
 
