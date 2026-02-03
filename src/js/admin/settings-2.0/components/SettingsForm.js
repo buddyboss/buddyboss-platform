@@ -590,8 +590,36 @@ export function SettingsForm({ fields, values, onChange }) {
 															iconPosition="left"
 															onClick={ () => {
 																onClose();
+																// Trigger the hidden input which has bb_emotions_edit class
+																// This ensures picker can find parent .bb_emotions_item via closest()
+																const editTrigger = document.querySelector(`.bb_emotions_item[data-reaction-id="${reaction.id}"] .bb_emotions_edit`);
+																if (editTrigger && window.jQuery) {
+																	window.jQuery(editTrigger).trigger('click');
+																	// After modal opens, select the correct category based on icon's data-group
+																	setTimeout(() => {
+																		const $ = window.jQuery;
+																		let iconElement;
+																		if ('emotions' === reaction.type) {
+																			iconElement = $(`#bbpro_emotion_modal .bbpro-emoji-tag-render[data-name="${reaction.name}"]`);
+																		} else if ('bb-icons' === reaction.type) {
+																			iconElement = $(`#bbpro_emotion_modal .bbpro-icon-tag-render[data-css="${reaction.icon}"]`);
+																		}
+																		if (iconElement && iconElement.length) {
+																			const category = iconElement.attr('data-group');
+																			if (category) {
+																				$('.bbpro-icon-category-filter-select').val(category).trigger('change');
+																				// Scroll to the selected icon after category filter is applied
+																				setTimeout(() => {
+																					const selectedIcon = iconElement.get(0);
+																					if (selectedIcon) {
+																						selectedIcon.scrollIntoView({ behavior: 'auto', block: 'center' });
+																					}
+																				}, 50);
+																			}
+																		}
+																	}, 100);
+																}
 															} }
-															className="bb_emotions_edit"
 														>
 															{ __( 'Edit', 'buddyboss' ) }
 														</MenuItem>
@@ -608,11 +636,14 @@ export function SettingsForm({ fields, values, onChange }) {
 												) }
 											</DropdownMenu>
 										</div>
+										{/* Hidden input serves dual purpose: stores reaction data AND triggers edit modal */}
 										<input
 											type="hidden"
-											className="bb_admin_setting_reaction_item"
+											className="bb_admin_setting_reaction_item bb_emotions_edit"
 											name={`reaction_items[${reaction.id}]`}
 											value={JSON.stringify(reaction)}
+											data-icon={JSON.stringify(reaction)}
+											data-type={reaction.type}
 										/>
 									</div>
 								))}
