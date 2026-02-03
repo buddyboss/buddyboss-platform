@@ -5,6 +5,7 @@
  * @since BuddyBoss 3.0.0
  */
 
+import { useEffect } from '@wordpress/element';
 import {
 	ToggleControl,
 	TextControl,
@@ -28,6 +29,71 @@ import { __ } from '@wordpress/i18n';
  * @returns {JSX.Element} Settings form component
  */
 export function SettingsForm({ fields, values, onChange }) {
+
+	/**
+	 * Listen for emotion picker save event (from jQuery modal).
+	 * When an emotion is saved, collect all reaction items and trigger auto-save.
+	 */
+	useEffect(() => {
+		const handleEmotionSaved = () => {
+			// Small delay to ensure DOM is updated after jQuery replaceWith
+			setTimeout(() => {
+				// Collect all reaction items from the DOM
+				const reactionInputs = document.querySelectorAll('.bb_admin_setting_reaction_item');
+				const reactionItems = {};
+				const reactionChecks = {};
+				let newItemIndex = 0;
+
+				reactionInputs.forEach((input) => {
+					try {
+						const data = JSON.parse(input.value);
+						if (data) {
+							// Use existing id or generate a temporary key for new items
+							const key = data.id || `new_${newItemIndex++}`;
+							reactionItems[key] = data;
+
+							// Find the corresponding checkbox for is_emotion_active
+							const parentItem = input.closest('.bb_emotions_item');
+							if (parentItem) {
+								const checkbox = parentItem.querySelector('input[type="checkbox"][name^="reaction_checks"]');
+								if (checkbox) {
+									reactionChecks[key] = checkbox.checked ? '1' : '';
+								} else {
+									// No checkbox found, default to active (for new items or React-rendered items)
+									reactionChecks[key] = data.is_emotion_active ? '1' : '';
+								}
+							} else {
+								// Fallback to data value
+								reactionChecks[key] = data.is_emotion_active ? '1' : '';
+							}
+						}
+					} catch (e) {
+						// Skip invalid JSON
+					}
+				});
+
+				// Trigger auto-save with the reaction items (key matches PHP handler)
+				// Also include bb_reaction_mode and reaction_checks as the PHP handler requires them
+				if (Object.keys(reactionItems).length > 0) {
+					onChange('reaction_items', reactionItems);
+					onChange('reaction_checks', reactionChecks);
+					// Ensure reaction mode is set (PHP handler requires this)
+					onChange('bb_reaction_mode', 'emotions');
+				}
+			}, 100);
+		};
+
+		// Listen via jQuery (the event is triggered via jQuery.trigger)
+		if (window.jQuery) {
+			window.jQuery(document).on('bbpro-icon-selected', handleEmotionSaved);
+		}
+
+		return () => {
+			if (window.jQuery) {
+				window.jQuery(document).off('bbpro-icon-selected', handleEmotionSaved);
+			}
+		};
+	}, [onChange]);
 
 	/**
 	 * Check if a field should be visible based on its conditional logic
@@ -477,8 +543,8 @@ export function SettingsForm({ fields, values, onChange }) {
 						{modeNotice && (
 							<p className="description bb-reaction-mode-description">{modeNotice}</p>
 						)}
-						{/* Inline emotion cards - shown when emotions mode selected and data available */}
-						{reactionMode === 'emotions' && allReactions.length > 0 && (
+						{/* Inline emotion cards - shown when emotions mode selected */}
+						{reactionMode === 'emotions' && (
 							<div className="bb-reaction-mode__cards">
 								{allReactions.map((reaction) => (
 									<div
