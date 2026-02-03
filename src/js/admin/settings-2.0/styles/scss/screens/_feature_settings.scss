@@ -692,6 +692,47 @@
                 font-size: 13px;
                 font-weight: 500;
             }
+
+            .wp-picker-container {
+
+                .wp-color-result {
+                    border-color: $bb-border-secondary-color;
+    
+                    span {
+                        background-color: $bb-background-secondary-color;
+                    }
+                }
+
+                .wp-picker-default {
+                    background-color: $bb-background-secondary-color;
+                    border-color: $bb-border-secondary-color;
+                    color: $bb-text-color;
+                    font-size: 13px;
+                    font-weight: 400;
+                    padding: 4px 8px;
+                    border-radius: $bb-border-radius-md;
+                    line-height: 1.8;
+                    min-height: auto;
+                }
+
+                .iris-picker {
+                    background-color: $bb-background-base-color;
+                    border: 1px solid $bb-border-secondary-color;
+                    border-radius: $bb-border-radius-xl;
+                    box-shadow: none;
+
+                    .iris-picker-inner {
+                        background-color: $bb-background-base-color;
+                    }
+
+                    .iris-square,
+                    .iris-slider,
+                    .iris-square-inner,
+                    .iris-palette {
+                        border-radius: $bb-border-radius-xl;
+                    }
+                }
+            }
         }
 
         .bbpro-new-icon-text-wrp .bbpro-icon-text-limit {
