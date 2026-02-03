@@ -515,7 +515,7 @@ export function SettingsForm({ fields, values, onChange }) {
 											<DropdownMenu
 												icon={ <i className="bb-icons-rl-dots-three"></i> }
 												label={ __( 'More options', 'buddyboss' ) }
-												className="bb_emotions_edit"
+												className="bb_emotions_actions"
 											>
 												{ ( { onClose } ) => (
 													<MenuGroup className="bb_dropdown_menu_group">
@@ -525,6 +525,7 @@ export function SettingsForm({ fields, values, onChange }) {
 															onClick={ () => {
 																onClose();
 															} }
+															className="bb_emotions_edit"
 														>
 															{ __( 'Edit', 'buddyboss' ) }
 														</MenuItem>
