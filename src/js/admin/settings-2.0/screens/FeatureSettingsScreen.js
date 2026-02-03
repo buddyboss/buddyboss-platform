@@ -7,18 +7,17 @@
  * @since BuddyBoss 3.0.0
  */
 
-import { useState, useEffect } from '@wordpress/element';
+import { useState, useEffect, useRef } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
-import { Button, Spinner, Notice } from '@wordpress/components';
-import apiFetch from '@wordpress/api-fetch';
-// import { SideNavigation } from '../SideNavigation';
-// import { SettingsForm } from '../SettingsForm';
+import { Spinner } from '@wordpress/components';
 import { getCachedFeatureData, setCachedFeatureData, invalidateFeatureCache } from '../utils/featureCache';
 import { SettingsForm } from '../components/SettingsForm';
 import { SideNavigation } from './SideNavigation';
+import { Toast } from '../../components/Toast';
+import { debounce } from '../../utils/api';
 
 /**
- * AJAX request helper.
+ * AJAX request helper for fetching feature data.
  *
  * @param {string} action AJAX action name.
  * @param {Object} data   Additional data.
@@ -28,11 +27,11 @@ const ajaxFetch = (action, data = {}) => {
 	const formData = new FormData();
 	formData.append('action', action);
 	formData.append('nonce', window.bbAdminData?.ajaxNonce || '');
-	
+
 	Object.keys(data).forEach((key) => {
 		formData.append(key, data[key]);
 	});
-	
+
 	return fetch(window.bbAdminData?.ajaxUrl || '/wp-admin/admin-ajax.php', {
 		method: 'POST',
 		credentials: 'same-origin',
@@ -58,11 +57,13 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 	const [settings, setSettings] = useState({});
 	const [originalSettings, setOriginalSettings] = useState({}); // Track original values
 	const [isLoading, setIsLoading] = useState(true);
-	const [isSaving, setIsSaving] = useState(false);
-	const [isDirty, setIsDirty] = useState(false);
-	const [saveError, setSaveError] = useState(null);
-	const [saveSuccess, setSaveSuccess] = useState(false);
 	const [activePanelId, setActivePanelId] = useState(sidePanelId || null);
+
+	// Auto-save state (ReadyLaunch pattern)
+	const [toast, setToast] = useState(null);
+	const [changedFields, setChangedFields] = useState({});
+	const [initialLoad, setInitialLoad] = useState(true);
+	const debouncedSaveRef = useRef();
 
 	// Load feature settings via AJAX - only when featureId changes
 	// Uses caching to prevent re-fetching on navigation within the same feature
@@ -88,6 +89,7 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 				setActivePanelId(defaultPanel ? defaultPanel.id : null);
 			}
 			setIsLoading(false);
+			setInitialLoad(false);
 			return;
 		}
 		
@@ -116,9 +118,11 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 					}
 				}
 				setIsLoading(false);
+				setInitialLoad(false);
 			})
 			.catch(() => {
 				setIsLoading(false);
+				setInitialLoad(false);
 			});
 	}, [featureId]); // Only reload data when featureId changes, not on tab change
 
@@ -129,105 +133,85 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 		}
 	}, [sidePanelId, sidePanels]);
 
-	// Handle unsaved changes warning
+	// Setup debounced save (ReadyLaunch pattern - auto-save on change)
+	// Uses AJAX endpoint for feature settings (not REST API which is ReadyLaunch-specific)
 	useEffect(() => {
-		if (isDirty) {
-			const handleBeforeUnload = (e) => {
-				e.preventDefault();
-				e.returnValue = '';
-			};
-			window.addEventListener('beforeunload', handleBeforeUnload);
-			return () => {
-				window.removeEventListener('beforeunload', handleBeforeUnload);
-			};
-		}
-	}, [isDirty]);
+		debouncedSaveRef.current = debounce((fieldsToSave) => {
+			if (Object.keys(fieldsToSave).length === 0) {
+				return;
+			}
 
+			// Use AJAX endpoint for feature settings
+			ajaxFetch('bb_admin_save_feature_settings', {
+				feature_id: featureId,
+				settings: JSON.stringify(fieldsToSave),
+			})
+				.then((response) => {
+					if (response.success) {
+						setToast({
+							status: 'success',
+							message: __('Settings saved.', 'buddyboss'),
+						});
+						setChangedFields({});
+						// Update original settings
+						setOriginalSettings((prev) => ({ ...prev, ...fieldsToSave }));
+						// Update cache
+						const cachedData = getCachedFeatureData(featureId);
+						if (cachedData) {
+							setCachedFeatureData(featureId, {
+								...cachedData,
+								settings: { ...cachedData.settings, ...fieldsToSave },
+							});
+						}
+					} else {
+						setToast({
+							status: 'error',
+							message: response.data?.message || __('Something went wrong. Please try again.', 'buddyboss'),
+						});
+					}
+				})
+				.catch(() => {
+					setToast({
+						status: 'error',
+						message: __('Something went wrong. Please try again.', 'buddyboss'),
+					});
+				});
+		}, 1000);
+
+		return () => {
+			if (debouncedSaveRef.current?.cancel) {
+				debouncedSaveRef.current.cancel();
+			}
+		};
+	}, [featureId]);
+
+	// Auto-trigger save when changedFields updates
+	useEffect(() => {
+		if (!initialLoad && Object.keys(changedFields).length > 0) {
+			debouncedSaveRef.current(changedFields);
+		}
+	}, [changedFields, initialLoad]);
+
+	// Auto-dismiss success toast after 3 seconds
+	useEffect(() => {
+		if (!toast) return;
+
+		if (toast.status === 'success') {
+			const timer = setTimeout(() => {
+				setToast(null);
+			}, 3000);
+			return () => clearTimeout(timer);
+		}
+	}, [toast]);
+
+	// Handle setting change - triggers auto-save
 	const handleSettingChange = (fieldName, value) => {
+		setToast({ status: 'saving', message: __('Saving changes...', 'buddyboss') });
 		setSettings((prev) => ({
 			...prev,
 			[fieldName]: value,
 		}));
-		setIsDirty(true);
-		setSaveError(null);
-		setSaveSuccess(false);
-	};
-
-	// Get only changed settings (compare with original)
-	const getChangedSettings = () => {
-		const changed = {};
-		Object.keys(settings).forEach((key) => {
-			const currentValue = settings[key];
-			const originalValue = originalSettings[key];
-			
-			// Handle object comparison (for toggle_list fields)
-			if (typeof currentValue === 'object' && currentValue !== null) {
-				if (JSON.stringify(currentValue) !== JSON.stringify(originalValue)) {
-					changed[key] = currentValue;
-				}
-			} else if (currentValue !== originalValue) {
-				changed[key] = currentValue;
-			}
-		});
-		return changed;
-	};
-
-	const handleSave = () => {
-		setIsSaving(true);
-		setSaveError(null);
-		setSaveSuccess(false);
-
-		// Only send changed values
-		const changedSettings = getChangedSettings();
-		
-		if (Object.keys(changedSettings).length === 0) {
-			setIsSaving(false);
-			setSaveSuccess(true);
-			setTimeout(() => setSaveSuccess(false), 3000);
-			return;
-		}
-
-		ajaxFetch('bb_admin_save_feature_settings', {
-			feature_id: featureId,
-			settings: JSON.stringify(changedSettings),
-		})
-			.then((response) => {
-				if (response.success) {
-					// Update original settings with new values
-					setOriginalSettings(JSON.parse(JSON.stringify(settings)));
-					setIsDirty(false);
-					setSaveSuccess(true);
-
-					// Update the cache with new settings
-					const cachedData = getCachedFeatureData(featureId);
-					if (cachedData) {
-						setCachedFeatureData(featureId, {
-							...cachedData,
-							settings: JSON.parse(JSON.stringify(settings)),
-						});
-					}
-
-					// Clear success message after 3 seconds
-					setTimeout(() => {
-						setSaveSuccess(false);
-					}, 3000);
-				} else {
-					setSaveError(response.data?.message || __('Failed to save settings.', 'buddyboss'));
-				}
-				setIsSaving(false);
-			})
-			.catch((error) => {
-				setSaveError(error.message || __('Failed to save settings.', 'buddyboss'));
-				setIsSaving(false);
-			});
-	};
-
-	const handleDiscard = () => {
-		// Reset to original settings (no AJAX needed)
-		setSettings(JSON.parse(JSON.stringify(originalSettings)));
-		setIsDirty(false);
-		setSaveError(null);
-		setSaveSuccess(false);
+		setChangedFields((prev) => ({ ...prev, [fieldName]: value }));
 	};
 
 	const handlePanelChange = (route) => {
@@ -286,16 +270,13 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 
 						{/* Settings Form - Show sections for active side panel */}
 						<div className="bb-admin-feature-settings__content">
-							{/* Notices */}
-							{saveSuccess && (
-								<Notice status="success" isDismissible={true} onRemove={() => setSaveSuccess(false)}>
-									{__('Settings saved successfully.', 'buddyboss')}
-								</Notice>
-							)}
-							{saveError && (
-								<Notice status="error" isDismissible={true} onRemove={() => setSaveError(null)}>
-									{saveError}
-								</Notice>
+							{/* Toast notification for auto-save status */}
+							{toast && (
+								<Toast
+									status={toast.status}
+									message={toast.message}
+									onDismiss={() => setToast(null)}
+								/>
 							)}
 
 							{activePanel ? (
@@ -348,22 +329,6 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 								</div>
 							)}
 
-							{/* Save Button */}
-							<div className="bb-admin-feature-settings__actions">
-								<Button
-									variant="primary"
-									isBusy={isSaving}
-									onClick={handleSave}
-									disabled={!isDirty}
-								>
-									{__('Save Changes', 'buddyboss')}
-								</Button>
-								{isDirty && (
-									<Button variant="secondary" onClick={handleDiscard}>
-										{__('Discard Changes', 'buddyboss')}
-									</Button>
-								)}
-							</div>
 						</div>
 					</div>
 				</main>

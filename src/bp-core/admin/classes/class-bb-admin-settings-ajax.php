@@ -591,6 +591,18 @@ class BB_Admin_Settings_Ajax {
 			$saved[ $name ] = $value;
 		}
 
+		/**
+		 * Fires after feature settings have been saved (same flow as Readylaunch: core save then feature-specific apply).
+		 * Use this to persist feature-specific data (e.g. reaction items, button config) that are not simple options.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $feature_id Feature ID (e.g. 'reactions').
+		 * @param array  $settings   Full submitted settings (JSON decoded).
+		 * @param array  $saved      Keys and values saved to options by core.
+		 */
+		do_action( 'bb_admin_save_feature_settings_after', $feature_id, $settings, $saved );
+
 		wp_send_json_success(
 			array(
 				'message' => __( 'Settings saved successfully.', 'buddyboss' ),
