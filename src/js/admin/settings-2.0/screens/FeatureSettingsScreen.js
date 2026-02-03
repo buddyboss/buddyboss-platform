@@ -13,7 +13,7 @@ import { Spinner } from '@wordpress/components';
 import { getCachedFeatureData, setCachedFeatureData, invalidateFeatureCache } from '../utils/featureCache';
 import { SettingsForm } from '../components/SettingsForm';
 import { SideNavigation } from './SideNavigation';
-import { Toast } from '../../components/Toast';
+import { Toast } from '../components/Toast';
 import { debounce } from '../../utils/api';
 
 /**
@@ -270,15 +270,6 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 
 						{/* Settings Form - Show sections for active side panel */}
 						<div className="bb-admin-feature-settings__content">
-							{/* Toast notification for auto-save status */}
-							{toast && (
-								<Toast
-									status={toast.status}
-									message={toast.message}
-									onDismiss={() => setToast(null)}
-								/>
-							)}
-
 							{activePanel ? (
 								<>
 									{/* Render all sections within the active side panel */}
@@ -333,6 +324,17 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 					</div>
 				</main>
 			</div>
+
+			{/* Toast notification for auto-save status - Fixed position at bottom-right */}
+			{toast && (
+				<div className="bb-toast-container">
+					<Toast
+						status={toast.status}
+						message={toast.message}
+						onDismiss={() => setToast(null)}
+					/>
+				</div>
+			)}
 		</div>
 	);
 }
