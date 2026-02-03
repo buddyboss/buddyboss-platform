@@ -731,7 +731,7 @@ export function SettingsForm({ fields, values, onChange }) {
 		].filter(Boolean).join(' ');
 
 		return (
-			<div key={field.name} className={fieldClasses}>
+			<div key={field.name} className={fieldClasses + (field.type !== 'reaction_mode' && field.pro_notice?.show ? ' bb-admin-settings-form__field--pro-locked' : '')}>
 				<div className="bb-admin-settings-form__field-label">
 					<label>
 						<span className="bb-admin-settings-form__field-label-text">{field.label}</span>

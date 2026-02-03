@@ -151,6 +151,10 @@
     display: flex;
     gap: 32px;
 
+    + .bb-admin-settings-form__field {
+        margin-top: 24px;
+    }
+
     &-label {
         color: $bb-text-color;
         font-size: 14px;
@@ -254,20 +258,35 @@
     }
 
     [class*="bb-icon"] {
-        font-size: 14px;
+        font-size: 16px;
         line-height: 1;
         font-weight: 400;
+        margin-right: 4px;
     }
 
     &__play-link {
         display: inline-flex;
         vertical-align: middle;
+        text-decoration: none;
 
         [class*="bb-icon"] {
             color: $bb-icon-secondary-color;
-            font-size: 22px;
-            font-weight: 100;
+            font-size: 16px;
+            font-weight: 400;
+            padding: 4px;
+            background-color: $bb-background-color;
+            border: 1px solid $bb-border-secondary-color;
+            border-radius: $bb-border-radius-full;
         }
+    }
+}
+
+.bb-admin-settings-form__field--pro-locked {
+
+    .bb-admin-settings-form__field-content {
+        opacity: 0.6;
+        pointer-events: none;
+        user-select: none;
     }
 }
 
@@ -418,7 +437,6 @@
 
 .bb-reaction-button-field {
     display: flex;
-    margin-top: 24px;
 }
 
 .bb-reaction-button-card {

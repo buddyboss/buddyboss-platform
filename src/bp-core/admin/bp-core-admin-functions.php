@@ -3938,9 +3938,9 @@ function bb_admin_settings_get_pro_notice( $type = 'default' ) {
 	$data = array(
 		'show'       => false,
 		'badge_text' => __( 'PRO', 'buddyboss' ),
-		'badge_icon' => 'bb-icon-rf bb-icon-crown',
+		'badge_icon' => 'bb-icons-rl-crown-simple',
 		'link_url'   => '',
-		'link_icon'  => 'bb-icon-rf bb-icon-play',
+		'link_icon'  => 'bb-icons-rl-play',
 	);
 
 	$is_pro_locked = false;
