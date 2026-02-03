@@ -559,7 +559,7 @@ export function SettingsForm({ fields, values, onChange }) {
 											data-bp-tooltip-pos="up"
 											onClick={() => {/* Handle via existing JS */}}
 										>
-											<i className="bb-icon-f bb-icon-plus"></i>
+											<i className="bb-icons-rl-plus"></i>
 										</button>
 									</div>
 								))}
