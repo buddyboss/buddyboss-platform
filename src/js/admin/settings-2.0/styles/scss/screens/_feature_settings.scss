@@ -291,6 +291,7 @@
 }
 
 .bb_emotions_item {
+    height: 96px;
     width: 96px;
     background: $bb-background-base-color;
     border: 0.5px solid $bb-border-secondary-color;
@@ -582,7 +583,7 @@
             border-bottom: 1px solid $bb-border-secondary-color;
             border: 1px solid $bb-border-secondary-color;
             border-radius: $bb-border-radius-xl $bb-border-radius-xl 0 0;
-            padding: 16px 24px;
+            padding: 22px 24px;
 
             h3 {
                 color: $bb-text-color;
@@ -593,7 +594,7 @@
         }
 
         .bbpro-modal-box__body {
-            height: calc(100% - 105px);
+            height: calc(100% - 115px);
         }
 
         .bbpro-modal-box__footer {
@@ -615,23 +616,31 @@
         }
     }
 
-    .media-modal-close .media-modal-icon {
-        display: flex;
+    .media-modal-close {
+        top: 20px;
+        right: 20px;
+        width: auto;
+        height: auto;
+        box-shadow: none;
 
-        &:before {
-
-                &:hover {
-                    background-color: $bb-background-primary-color;
-                }
-
-                &:focus {
-                    outline: none;
-                }
-            content: "\e4f6";
-            color: $bb-icon-secondary-color;
-            font-size: 24px;
-            font-family: "bb-icons-rl";
-            font-weight: 400;
+        .media-modal-icon {
+            display: flex;
+    
+            &:before {
+    
+                    &:hover {
+                        background-color: $bb-background-primary-color;
+                    }
+    
+                    &:focus {
+                        outline: none;
+                    }
+                content: "\e4f6";
+                color: $bb-icon-secondary-color;
+                font-size: 24px;
+                font-family: "bb-icons-rl";
+                font-weight: 400;
+            }
         }
     }
 
@@ -821,8 +830,20 @@
         }
     }
 
-    .bbpro-icons-list .bbpro-icon > i:before {
-        color: $bb-text-color;
-        font-size: 5em;
+    .bbpro-icons-list {
+        max-height: calc(100% - 55px);
+
+        .bbpro-icon > i:before {
+            color: $bb-text-color;
+            font-size: 5em;
+        }
     }
+
+    .bbpro-icon-uploader-main,
+    .bbpro-emojis-list {
+        max-height: calc(100% - 55px);
+        overflow: auto;
+    }
+
+
 }
