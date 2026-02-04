@@ -5,7 +5,7 @@
  * @since BuddyBoss 3.0.0
  */
 
-import { useEffect, useState } from '@wordpress/element';
+import { useEffect, useRef } from '@wordpress/element';
 import {
 	ToggleControl,
 	TextControl,
@@ -29,79 +29,67 @@ import { __ } from '@wordpress/i18n';
  * @returns {JSX.Element} Settings form component
  */
 export function SettingsForm({ fields, values, onChange }) {
-	// Track modified reactions for React callback updates (keyed by reaction ID)
-	const [modifiedReactions, setModifiedReactions] = useState({});
+	const valuesRef = useRef(values);
+	valuesRef.current = values;
+	// Server emotions (from field.reactions.emotions) for seeding when values.reaction_items is empty
+	const serverEmotionsRef = useRef([]);
 
 	/**
 	 * Expose React callback for old jQuery emotion picker.
-	 * This allows the old picker to update React state instead of manipulating DOM.
+	 * Updates values.reaction_items directly (single source of truth). No DOM read, no double-fire.
 	 */
 	useEffect(() => {
-		// Initialize global callbacks object if it doesn't exist
 		if (!window.bbReactEmotionCallbacks) {
 			window.bbReactEmotionCallbacks = {};
 		}
 
-		// Register callback for emotion updates from the picker
 		window.bbReactEmotionCallbacks.updateEmotion = (emotionData, isEdit) => {
-			// Ensure emotion has an ID
-			if (!emotionData.id) {
-				emotionData.id = `temp_${Date.now()}`;
+			if (!emotionData || typeof emotionData !== 'object') {
+				return;
+			}
+			// Do not mutate emotionData (picker keeps a reference; would reuse same id on next add).
+			const data = { ...emotionData };
+			const isNew = !isEdit;
+			if (isNew && data.is_emotion_active === undefined) {
+				data.is_emotion_active = true;
+			}
+			// New emotion: always use a fresh temp id so each add gets its own key. Edit: use existing id.
+			const key = isNew ? `temp_${Date.now()}` : (data.id || `temp_${Date.now()}`);
+			if (isNew) {
+				data.id = key;
 			}
 
-			// Ensure new emotions are marked as active by default
-			if (!isEdit && emotionData.is_emotion_active === undefined) {
-				emotionData.is_emotion_active = true;
-			}
-
-			// Update local state to trigger re-render with new/updated emotion
-			setModifiedReactions((prevState) => {
-				const updated = { ...prevState };
-
-				// Store the updated emotion data
-				updated[emotionData.id] = emotionData;
-
-				return updated;
-			});
-
-			// Trigger save after state update (next tick)
-			setTimeout(() => {
-				// Collect all reactions from DOM (React-rendered hidden inputs + any jQuery-rendered ones)
-				const reactionInputs = document.querySelectorAll('.bb_admin_setting_reaction_item');
-				const reactionItems = {};
-				const reactionChecks = {};
-
-				reactionInputs.forEach((input) => {
-					try {
-						const data = JSON.parse(input.value);
-						if (data) {
-							// Use ID for keying, but strip temp IDs before sending to server
-							const key = data.id || `temp_${Date.now()}`;
-							const itemData = { ...data };
-
-							// Remove temp IDs so PHP treats them as new emotions
-							if (itemData.id && String(itemData.id).startsWith('temp_')) {
-								delete itemData.id;
-							}
-
-							reactionItems[key] = itemData;
-							reactionChecks[key] = data.is_emotion_active ? '1' : '';
-						}
-					} catch (e) {
-						// Skip invalid JSON
+			const current = valuesRef.current;
+			let reactionsData = (typeof current?.reaction_items === 'object' && current.reaction_items !== null)
+				? { ...current.reaction_items }
+				: {};
+			if (Object.keys(reactionsData).length === 0 && Array.isArray(serverEmotionsRef.current)) {
+				serverEmotionsRef.current.forEach((r) => {
+					if (r && r.id != null) {
+						reactionsData[r.id] = { ...r };
 					}
 				});
+			}
+			let reactionChecks = (typeof current?.reaction_checks === 'object' && current.reaction_checks !== null)
+				? { ...current.reaction_checks }
+				: {};
+			if (Object.keys(reactionChecks).length === 0 && Array.isArray(serverEmotionsRef.current)) {
+				serverEmotionsRef.current.forEach((r) => {
+					if (r && r.id != null) {
+						reactionChecks[r.id] = r.is_emotion_active ? '1' : '';
+					}
+				});
+			}
 
-				if (Object.keys(reactionItems).length > 0) {
-					onChange('reaction_items', reactionItems);
-					onChange('reaction_checks', reactionChecks);
-					onChange('bb_reaction_mode', 'emotions');
-				}
-			}, 50);
+			reactionsData[key] = data;
+			reactionChecks[key] = data.is_emotion_active ? '1' : '';
+
+			onChange('reaction_items', reactionsData);
+			onChange('reaction_checks', reactionChecks);
+			onChange('bb_reaction_mode', 'emotions');
 		};
 
 		return () => {
-			// Cleanup on unmount
 			if (window.bbReactEmotionCallbacks) {
 				delete window.bbReactEmotionCallbacks.updateEmotion;
 			}
@@ -109,147 +97,72 @@ export function SettingsForm({ fields, values, onChange }) {
 	}, [onChange]);
 
 	/**
-	 * Listen for emotion picker save event (from jQuery modal).
-	 * When an emotion is saved, collect all reaction items and trigger auto-save.
-	 * This is the fallback event-based approach (kept for compatibility).
-	 */
-	useEffect(() => {
-		const handleEmotionSaved = () => {
-			// Small delay to ensure DOM is updated after jQuery replaceWith
-			setTimeout(() => {
-				// Collect all reaction items from the DOM
-				const reactionInputs = document.querySelectorAll('.bb_admin_setting_reaction_item');
-				const reactionItems = {};
-				const reactionChecks = {};
-				let newItemIndex = 0;
-
-				reactionInputs.forEach((input) => {
-					try {
-						const data = JSON.parse(input.value);
-						if (data) {
-							// Use existing id or generate a temporary key for new items
-							const key = data.id || `new_${newItemIndex++}`;
-							const itemData = { ...data };
-
-							// Remove temp IDs so PHP treats them as new emotions
-							if (itemData.id && String(itemData.id).startsWith('temp_')) {
-								delete itemData.id;
-							}
-
-							reactionItems[key] = itemData;
-
-							// Find the corresponding checkbox for is_emotion_active
-							const parentItem = input.closest('.bb_emotions_item');
-							if (parentItem) {
-								const checkbox = parentItem.querySelector('input[type="checkbox"][name^="reaction_checks"]');
-								if (checkbox) {
-									reactionChecks[key] = checkbox.checked ? '1' : '';
-								} else {
-									// No checkbox found, default to active (for new items or React-rendered items)
-									reactionChecks[key] = data.is_emotion_active ? '1' : '';
-								}
-							} else {
-								// Fallback to data value
-								reactionChecks[key] = data.is_emotion_active ? '1' : '';
-							}
-						}
-					} catch (e) {
-						// Skip invalid JSON
-					}
-				});
-
-				// Trigger auto-save with the reaction items (key matches PHP handler)
-				// Also include bb_reaction_mode and reaction_checks as the PHP handler requires them
-				if (Object.keys(reactionItems).length > 0) {
-					onChange('reaction_items', reactionItems);
-					onChange('reaction_checks', reactionChecks);
-					// Ensure reaction mode is set (PHP handler requires this)
-					onChange('bb_reaction_mode', 'emotions');
-				}
-			}, 100);
-		};
-
-		// Listen via jQuery (the event is triggered via jQuery.trigger)
-		if (window.jQuery) {
-			window.jQuery(document).on('bbpro-icon-selected', handleEmotionSaved);
-		}
-
-		return () => {
-			if (window.jQuery) {
-				window.jQuery(document).off('bbpro-icon-selected', handleEmotionSaved);
-			}
-		};
-	}, [onChange]);
-
-	/**
-	 * Listen for delete confirmation button click.
-	 * The Pro plugin's submitSettingForm() doesn't work with React, so we handle save here.
+	 * Delete confirmation: remove emotion from values.reaction_items only.
+	 * Use capture phase + stopImmediatePropagation so Pro's handler never runs and never removes the DOM node;
+	 * React will remove the node when state updates (avoids "removeChild" NotFoundError).
 	 */
 	useEffect(() => {
 		const handleDeleteConfirm = (e) => {
+			const target = e.target && e.target.closest && e.target.closest('#bbpro_reaction_delete_confirmation .bb-pro-reaction-delete-emotion');
+			if (!target) return;
+
 			e.preventDefault();
 			e.stopPropagation();
+			e.stopImmediatePropagation();
 
-			// Remove the emotion element (Pro plugin already does this, but ensure it's done)
-			if (window.bp?.Reaction_Admin?.delete_emotion) {
-				window.bp.Reaction_Admin.delete_emotion.remove();
-				window.bp.Reaction_Admin.delete_emotion = '';
-			}
+			const emotionId = window.bbReactPendingDeleteEmotionId != null
+				? String(window.bbReactPendingDeleteEmotionId)
+				: (() => {
+					const emotionEl = window.bp?.Reaction_Admin?.delete_emotion;
+					return emotionEl && (emotionEl.attr ? emotionEl.attr('data-reaction-id') : (emotionEl.get?.(0)?.getAttribute?.('data-reaction-id'))) || null;
+				})();
+			window.bbReactPendingDeleteEmotionId = null;
 
-			// Close the modal
 			if (window.jQuery) {
 				window.jQuery('#bbpro_reaction_delete_confirmation').css('display', 'none');
 				window.jQuery('body').removeClass('modal-open');
 			}
+			window.bp.Reaction_Admin.delete_emotion = '';
 
-			// Small delay to ensure DOM is updated after element removal
-			setTimeout(() => {
-				// Collect remaining reaction items from the DOM
-				const reactionInputs = document.querySelectorAll('.bb_admin_setting_reaction_item');
-				const reactionItems = {};
-				const reactionChecks = {};
-				let newItemIndex = 0;
+			if (!emotionId) return;
 
-				reactionInputs.forEach((input) => {
-					try {
-						const data = JSON.parse(input.value);
-						if (data) {
-							const key = data.id || `new_${newItemIndex++}`;
-							reactionItems[key] = data;
-
-							const parentItem = input.closest('.bb_emotions_item');
-							if (parentItem) {
-								const checkbox = parentItem.querySelector('input[type="checkbox"][name^="reaction_checks"]');
-								if (checkbox) {
-									reactionChecks[key] = checkbox.checked ? '1' : '';
-								} else {
-									reactionChecks[key] = data.is_emotion_active ? '1' : '';
-								}
-							} else {
-								reactionChecks[key] = data.is_emotion_active ? '1' : '';
-							}
-						}
-					} catch (err) {
-						// Skip invalid JSON
-					}
+			const current = valuesRef.current;
+			let reactionItems = (typeof current?.reaction_items === 'object' && current.reaction_items !== null)
+				? { ...current.reaction_items }
+				: {};
+			if (Object.keys(reactionItems).length === 0 && Array.isArray(serverEmotionsRef.current)) {
+				serverEmotionsRef.current.forEach((r) => {
+					if (r && r.id != null) reactionItems[r.id] = { ...r };
 				});
+			}
+			let reactionChecks = (typeof current?.reaction_checks === 'object' && current.reaction_checks !== null)
+				? { ...current.reaction_checks }
+				: {};
+			if (Object.keys(reactionChecks).length === 0 && Array.isArray(serverEmotionsRef.current)) {
+				serverEmotionsRef.current.forEach((r) => {
+					if (r && r.id != null) reactionChecks[r.id] = r.is_emotion_active ? '1' : '';
+				});
+			}
+			delete reactionItems[emotionId];
+			delete reactionChecks[emotionId];
 
-				// Trigger auto-save
-				onChange('reaction_items', reactionItems);
-				onChange('reaction_checks', reactionChecks);
-				onChange('bb_reaction_mode', 'emotions');
-			}, 100);
+			onChange('reaction_items', reactionItems);
+			onChange('reaction_checks', reactionChecks);
+			onChange('bb_reaction_mode', 'emotions');
 		};
 
-		// Listen for click on delete confirm button
-		if (window.jQuery) {
-			window.jQuery(document).on('click', '#bbpro_reaction_delete_confirmation .bb-pro-reaction-delete-emotion', handleDeleteConfirm);
-		}
+		const handleCancelDelete = (e) => {
+			const target = e.target && e.target.closest && e.target.closest('#bbpro_reaction_delete_confirmation .bb-pro-reaction-cancel-delete-emotion');
+			if (!target) return;
+			window.bbReactPendingDeleteEmotionId = null;
+		};
 
+		// Capture phase so we run before Pro's handler; stopImmediatePropagation so Pro never removes the DOM node
+		document.addEventListener('click', handleDeleteConfirm, true);
+		document.addEventListener('click', handleCancelDelete, true);
 		return () => {
-			if (window.jQuery) {
-				window.jQuery(document).off('click', '#bbpro_reaction_delete_confirmation .bb-pro-reaction-delete-emotion', handleDeleteConfirm);
-			}
+			document.removeEventListener('click', handleDeleteConfirm, true);
+			document.removeEventListener('click', handleCancelDelete, true);
 		};
 	}, [onChange]);
 
@@ -644,28 +557,19 @@ export function SettingsForm({ fields, values, onChange }) {
 
 			case 'reaction_mode':
 				// Reaction mode: radio buttons with PRO badge for disabled options.
-				// Options carry: label, value, id, notice, disabled (via bb_setting_reaction_mode_args filter).
+				// Single source of truth: values.reaction_items when set; otherwise field.reactions.emotions from server.
 				const reactionMode = value || 'likes';
-
-				// Get reactions data from field (injected by Pro via bb_extend_reaction_field_data filter).
 				const reactionsData = field.reactions || {};
-				const serverReactions = reactionsData.emotions || [];
+				const serverEmotions = reactionsData.emotions || [];
+				serverEmotionsRef.current = serverEmotions;
 
-				// Merge server reactions with any locally modified reactions
-				const allReactions = serverReactions.map(reaction => {
-					// If this reaction was modified locally, use the modified version
-					if (modifiedReactions[reaction.id]) {
-						return modifiedReactions[reaction.id];
-					}
-					return reaction;
-				});
-
-				// Add any new reactions that don't exist in serverReactions
-				Object.values(modifiedReactions).forEach(modifiedReaction => {
-					if (!serverReactions.find(r => r.id === modifiedReaction.id)) {
-						allReactions.push(modifiedReaction);
-					}
-				});
+				const reactionItemsObj = values.reaction_items && typeof values.reaction_items === 'object' ? values.reaction_items : null;
+				const allReactions = reactionItemsObj && Object.keys(reactionItemsObj).length > 0
+					? Object.keys(reactionItemsObj).map((k) => {
+						const item = reactionItemsObj[k];
+						return typeof item === 'object' && item !== null ? { ...item, id: item.id || k } : null;
+					}).filter(Boolean)
+					: serverEmotions.map((r) => ({ ...r, is_emotion_active: r.is_emotion_active !== false }));
 
 				// Find the notice for the currently selected mode option.
 				const selectedOption = (field.options || []).find((opt) => opt.value === reactionMode);
@@ -807,7 +711,8 @@ export function SettingsForm({ fields, values, onChange }) {
 																	const $ = window.jQuery;
 																	const emotionItem = $(`.bb_emotions_item[data-reaction-id="${reaction.id}"]`);
 																	const emotionId = reaction.id;
-
+																	// Store so confirm handler can read id after Pro's handler removes the DOM node
+																	window.bbReactPendingDeleteEmotionId = emotionId;
 																	window.bp.Reaction_Admin.delete_emotion = emotionItem;
 
 																	if (emotionId) {
