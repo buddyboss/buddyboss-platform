@@ -5,7 +5,6 @@
  * @since BuddyBoss 3.0.0
  */
 
-import { useEffect, useRef } from '@wordpress/element';
 import {
 	ToggleControl,
 	TextControl,
@@ -18,6 +17,7 @@ import {
 	MenuItem,
 } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
+import { ReactionModeField, useReactionCallbacks } from './reaction';
 
 /**
  * Settings Form Component (matching Figma settingsSection)
@@ -29,142 +29,8 @@ import { __ } from '@wordpress/i18n';
  * @returns {JSX.Element} Settings form component
  */
 export function SettingsForm({ fields, values, onChange }) {
-	const valuesRef = useRef(values);
-	valuesRef.current = values;
-	// Server emotions (from field.reactions.emotions) for seeding when values.reaction_items is empty
-	const serverEmotionsRef = useRef([]);
-
-	/**
-	 * Expose React callback for old jQuery emotion picker.
-	 * Updates values.reaction_items directly (single source of truth). No DOM read, no double-fire.
-	 */
-	useEffect(() => {
-		if (!window.bbReactEmotionCallbacks) {
-			window.bbReactEmotionCallbacks = {};
-		}
-
-		window.bbReactEmotionCallbacks.updateEmotion = (emotionData, isEdit) => {
-			if (!emotionData || typeof emotionData !== 'object') {
-				return;
-			}
-			// Do not mutate emotionData (picker keeps a reference; would reuse same id on next add).
-			const data = { ...emotionData };
-			const isNew = !isEdit;
-			if (isNew && data.is_emotion_active === undefined) {
-				data.is_emotion_active = true;
-			}
-			// New emotion: always use a fresh temp id so each add gets its own key. Edit: use existing id.
-			const key = isNew ? `temp_${Date.now()}` : (data.id || `temp_${Date.now()}`);
-			if (isNew) {
-				data.id = key;
-			}
-
-			const current = valuesRef.current;
-			let reactionsData = (typeof current?.reaction_items === 'object' && current.reaction_items !== null)
-				? { ...current.reaction_items }
-				: {};
-			if (Object.keys(reactionsData).length === 0 && Array.isArray(serverEmotionsRef.current)) {
-				serverEmotionsRef.current.forEach((r) => {
-					if (r && r.id != null) {
-						reactionsData[r.id] = { ...r };
-					}
-				});
-			}
-			let reactionChecks = (typeof current?.reaction_checks === 'object' && current.reaction_checks !== null)
-				? { ...current.reaction_checks }
-				: {};
-			if (Object.keys(reactionChecks).length === 0 && Array.isArray(serverEmotionsRef.current)) {
-				serverEmotionsRef.current.forEach((r) => {
-					if (r && r.id != null) {
-						reactionChecks[r.id] = r.is_emotion_active ? '1' : '';
-					}
-				});
-			}
-
-			reactionsData[key] = data;
-			reactionChecks[key] = data.is_emotion_active ? '1' : '';
-
-			onChange('reaction_items', reactionsData);
-			onChange('reaction_checks', reactionChecks);
-			onChange('bb_reaction_mode', 'emotions');
-		};
-
-		return () => {
-			if (window.bbReactEmotionCallbacks) {
-				delete window.bbReactEmotionCallbacks.updateEmotion;
-			}
-		};
-	}, [onChange]);
-
-	/**
-	 * Delete confirmation: remove emotion from values.reaction_items only.
-	 * Use capture phase + stopImmediatePropagation so Pro's handler never runs and never removes the DOM node;
-	 * React will remove the node when state updates (avoids "removeChild" NotFoundError).
-	 */
-	useEffect(() => {
-		const handleDeleteConfirm = (e) => {
-			const target = e.target && e.target.closest && e.target.closest('#bbpro_reaction_delete_confirmation .bb-pro-reaction-delete-emotion');
-			if (!target) return;
-
-			e.preventDefault();
-			e.stopPropagation();
-			e.stopImmediatePropagation();
-
-			const emotionId = window.bbReactPendingDeleteEmotionId != null
-				? String(window.bbReactPendingDeleteEmotionId)
-				: (() => {
-					const emotionEl = window.bp?.Reaction_Admin?.delete_emotion;
-					return emotionEl && (emotionEl.attr ? emotionEl.attr('data-reaction-id') : (emotionEl.get?.(0)?.getAttribute?.('data-reaction-id'))) || null;
-				})();
-			window.bbReactPendingDeleteEmotionId = null;
-
-			if (window.jQuery) {
-				window.jQuery('#bbpro_reaction_delete_confirmation').css('display', 'none');
-				window.jQuery('body').removeClass('modal-open');
-			}
-			window.bp.Reaction_Admin.delete_emotion = '';
-
-			if (!emotionId) return;
-
-			const current = valuesRef.current;
-			let reactionItems = (typeof current?.reaction_items === 'object' && current.reaction_items !== null)
-				? { ...current.reaction_items }
-				: {};
-			if (Object.keys(reactionItems).length === 0 && Array.isArray(serverEmotionsRef.current)) {
-				serverEmotionsRef.current.forEach((r) => {
-					if (r && r.id != null) reactionItems[r.id] = { ...r };
-				});
-			}
-			let reactionChecks = (typeof current?.reaction_checks === 'object' && current.reaction_checks !== null)
-				? { ...current.reaction_checks }
-				: {};
-			if (Object.keys(reactionChecks).length === 0 && Array.isArray(serverEmotionsRef.current)) {
-				serverEmotionsRef.current.forEach((r) => {
-					if (r && r.id != null) reactionChecks[r.id] = r.is_emotion_active ? '1' : '';
-				});
-			}
-			delete reactionItems[emotionId];
-			delete reactionChecks[emotionId];
-
-			onChange('reaction_items', reactionItems);
-			onChange('reaction_checks', reactionChecks);
-			onChange('bb_reaction_mode', 'emotions');
-		};
-
-		const handleCancelDelete = (e) => {
-			const target = e.target && e.target.closest && e.target.closest('#bbpro_reaction_delete_confirmation .bb-pro-reaction-cancel-delete-emotion');
-			if (!target) return;
-			window.bbReactPendingDeleteEmotionId = null;
-		};
-
-		// Capture phase so we run before Pro's handler; stopImmediatePropagation so Pro never removes the DOM node
-		document.addEventListener('click', handleDeleteConfirm, true);
-		document.addEventListener('click', handleCancelDelete, true);
-		return () => {
-			document.removeEventListener('click', handleDeleteConfirm, true);
-			document.removeEventListener('click', handleCancelDelete, true);
-		};
-	}, [onChange]);
+	// Use reaction callbacks hook for jQuery emotion picker integration
+	const { serverEmotionsRef } = useReactionCallbacks(onChange, values);
 
 	/**
 	 * Check if a field should be visible based on its conditional logic
@@ -556,220 +422,15 @@ export function SettingsForm({ fields, values, onChange }) {
 				);
 
 			case 'reaction_mode':
-				// Reaction mode: radio buttons with PRO badge for disabled options.
-				// Single source of truth: values.reaction_items when set; otherwise field.reactions.emotions from server.
-				const reactionMode = value || 'likes';
-				const reactionsData = field.reactions || {};
-				const serverEmotions = reactionsData.emotions || [];
-				serverEmotionsRef.current = serverEmotions;
-
-				const reactionItemsObj = values.reaction_items && typeof values.reaction_items === 'object' ? values.reaction_items : null;
-				const allReactions = reactionItemsObj && Object.keys(reactionItemsObj).length > 0
-					? Object.keys(reactionItemsObj).map((k) => {
-						const item = reactionItemsObj[k];
-						return typeof item === 'object' && item !== null ? { ...item, id: item.id || k } : null;
-					}).filter(Boolean)
-					: serverEmotions.map((r) => ({ ...r, is_emotion_active: r.is_emotion_active !== false }));
-
-				// Find the notice for the currently selected mode option.
-				const selectedOption = (field.options || []).find((opt) => opt.value === reactionMode);
-				const modeNotice = selectedOption?.notice || '';
-
+				// Delegate to ReactionModeField component
 				return (
-					<div key={field.name} className="bb-reaction-mode">
-						{/* Radio options — same IDs as legacy, respects disabled */}
-						<div className="bb-reaction-mode__radios">
-							{(field.options || []).map((opt) => (
-								<label
-									key={opt.value}
-									htmlFor={opt.id}
-									className={`bb-reaction-mode__radio-label${opt.disabled ? ' disabled' : ''}`}
-								>
-									<input
-										type="radio"
-										name={field.name}
-										id={opt.id}
-										value={opt.value}
-										checked={reactionMode === opt.value}
-										disabled={opt.disabled}
-										data-notice={opt.notice || ''}
-										onChange={() => onChange(field.name, opt.value)}
-									/>
-									<span className="bb-reaction-mode__radio-label-text">{opt.label}</span>
-									{opt.disabled && field.pro_notice?.show && (
-										<>
-											<span className="bb-pro-badge">
-												<i className={field.pro_notice.badge_icon || ''} />
-												<span>{field.pro_notice.badge_text || 'PRO'}</span>
-											</span>
-											{field.pro_notice.link_url && (
-												<a
-													href={field.pro_notice.link_url}
-													target="_blank"
-													rel="noopener noreferrer"
-													className="bb-pro-badge__play-link"
-													aria-label={__('Learn more about PRO', 'buddyboss')}
-												>
-													<i className={field.pro_notice.link_icon || ''} />
-												</a>
-											)}
-										</>
-									)}
-								</label>
-							))}
-						</div>
-						{modeNotice && (
-							<p className="description bb-reaction-mode-description">{modeNotice}</p>
-						)}
-						{/* Inline emotion cards - shown when emotions mode selected */}
-						{reactionMode === 'emotions' && (
-							<div className="bb-reaction-mode__cards">
-								{allReactions.map((reaction) => (
-									<div
-										key={reaction.id}
-										className={`bb_emotions_item${!reaction.is_emotion_active ? ' is-disabled' : ''}`}
-										data-reaction-id={reaction.id}
-									>
-
-										<div className="bb_emotions_icon">
-											{reaction.type === 'bb-icons' && (
-												<i
-													className={`bb-icon-rf bb-icon-${reaction.icon}`}
-													style={{color: reaction.icon_color}}
-												></i>
-											)}
-											{reaction.type === 'custom' && reaction.icon_path && (
-												<img src={reaction.icon_path} alt="" />
-											)}
-											{reaction.type === 'emotions' && (
-												<span className="bbpro-icon-emoji">
-													{reaction.icon_path ? (
-														<img src={reaction.icon_path} alt="" />
-													) : (
-														reaction.icon
-													)}
-												</span>
-											)}
-										</div>
-
-										<div className="bb_emotions_footer">
-											<span style={{color: reaction.text_color}}>
-												{reaction.icon_text || reaction.name}
-											</span>
-											<DropdownMenu
-												icon={ <i className="bb-icons-rl-dots-three"></i> }
-												label={ __( 'More options', 'buddyboss' ) }
-												className="bb_emotions_actions"
-											>
-												{ ( { onClose } ) => (
-													<MenuGroup className="bb_dropdown_menu_group">
-														<MenuItem
-															icon={ <BBIcon name="note-pencil" /> }
-															iconPosition="left"
-															onClick={ () => {
-																onClose();
-																// Trigger the hidden input which has bb_emotions_edit class
-																// This ensures picker can find parent .bb_emotions_item via closest()
-																const editTrigger = document.querySelector(`.bb_emotions_item[data-reaction-id="${reaction.id}"] .bb_emotions_edit`);
-																if (editTrigger && window.jQuery) {
-																	window.jQuery(editTrigger).trigger('click');
-																	// After modal opens, select the correct category based on icon's data-group
-																	setTimeout(() => {
-																		const $ = window.jQuery;
-																		let iconElement;
-																		if ('emotions' === reaction.type) {
-																			iconElement = $(`#bbpro_emotion_modal .bbpro-emoji-tag-render[data-name="${reaction.name}"]`);
-																		} else if ('bb-icons' === reaction.type) {
-																			iconElement = $(`#bbpro_emotion_modal .bbpro-icon-tag-render[data-css="${reaction.icon}"]`);
-																		}
-																		if (iconElement && iconElement.length) {
-																			const category = iconElement.attr('data-group');
-																			if (category) {
-																				$('.bbpro-icon-category-filter-select').val(category).trigger('change');
-																				// Scroll to the selected icon after category filter is applied
-																				setTimeout(() => {
-																					const selectedIcon = iconElement.get(0);
-																					if (selectedIcon) {
-																						selectedIcon.scrollIntoView({ behavior: 'auto', block: 'center' });
-																					}
-																				}, 50);
-																			}
-																		}
-																	}, 100);
-																}
-															} }
-														>
-															{ __( 'Edit', 'buddyboss' ) }
-														</MenuItem>
-														<MenuItem
-															icon={ <BBIcon name="trash" /> }
-															iconPosition="left"
-															onClick={ () => {
-																onClose();
-																// Directly trigger jQuery delete behavior
-																if (window.jQuery && window.bp?.Reaction_Admin) {
-																	const $ = window.jQuery;
-																	const emotionItem = $(`.bb_emotions_item[data-reaction-id="${reaction.id}"]`);
-																	const emotionId = reaction.id;
-																	// Store so confirm handler can read id after Pro's handler removes the DOM node
-																	window.bbReactPendingDeleteEmotionId = emotionId;
-																	window.bp.Reaction_Admin.delete_emotion = emotionItem;
-
-																	if (emotionId) {
-																		$('#bbpro_reaction_delete_confirmation').css('display', 'block');
-																		$.ajax({
-																			url: window.bbReactionAdminVars?.ajax_url,
-																			data: {
-																				'action': 'bb_pro_reaction_check_delete_emotion',
-																				'emotion_id': emotionId,
-																				'nonce': window.bbReactionAdminVars?.nonce?.check_delete_emotion
-																			},
-																			method: 'POST'
-																		}).done(function(response) {
-																			if (true === response.success && 'undefined' !== typeof response.data?.content) {
-																				$('.bb-reaction-delete-modal__content').html(response.data.content);
-																			} else if (response.data?.message) {
-																				$('.bb-reaction-delete-modal__content').html(response.data.message);
-																			}
-																		});
-																	}
-																}
-															} }
-														>
-															{ __( 'Delete', 'buddyboss' ) }
-														</MenuItem>
-													</MenuGroup>
-												) }
-											</DropdownMenu>
-										</div>
-										{/* Hidden input serves dual purpose: stores reaction data AND triggers edit modal */}
-										<input
-											type="hidden"
-											className="bb_admin_setting_reaction_item bb_emotions_edit"
-											name={`reaction_items[${reaction.id}]`}
-											value={JSON.stringify(reaction)}
-											data-icon={JSON.stringify(reaction)}
-											data-type={reaction.type}
-										/>
-									</div>
-								))}
-								{/* Add new emotion slots (max 6 total) */}
-								{[...Array(Math.max(0, 6 - allReactions.length))].map((_, i) => (
-									<div key={`add-${i}`} className="bb_emotions_item bb_emotions_item_action">
-										<button
-											className="bb_emotions_add_new"
-											aria-label={__('Add New Emotion', 'buddyboss')}
-											data-bp-tooltip={__('Add new', 'buddyboss')}
-											data-bp-tooltip-pos="up"
-											onClick={() => {/* Handle via existing JS */}}
-										>
-											<i className="bb-icons-rl-plus"></i>
-										</button>
-									</div>
-								))}
-							</div>
-						)}
-					</div>
+					<ReactionModeField
+						field={field}
+						value={value}
+						values={values}
+						onChange={onChange}
+						serverEmotionsRef={serverEmotionsRef}
+					/>
 				);
 
 			case 'reaction_button':
