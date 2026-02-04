@@ -161,6 +161,11 @@
         border-bottom: 1px solid $bb-border-secondary-color;
     }
 
+    &:last-child {
+        padding-bottom: 0;
+        border-bottom: none;
+    }
+
     + .bb-admin-settings-form__field {
         margin-top: 24px;
     }
