@@ -152,19 +152,20 @@
     gap: 32px;
     padding-bottom: 24px;
 
+    &:empty {
+        margin-top: 0;
+        padding-bottom: 0;
+    }
+
     &:not(.bb-admin-settings-form__field--full-width) {
         border-bottom: 1px solid $bb-border-secondary-color;
     }
 
     + .bb-admin-settings-form__field {
         margin-top: 24px;
-
-		&:empty {
-			margin-top: 0;
-		}
     }
 
-    &:has(.bb-admin-notice) {
+    &:has(.bb-admin-reaction-info-wrapper) {
         margin-top: 0;
         padding-bottom: 0;
     }
@@ -194,7 +195,7 @@
         margin: 20px 0 0 0;
     }
 
-    .bb-admin-notice {
+    .bb-admin-reaction-info {
         color: $bb-text-tertiary-color;
         font-size: 13px;
         padding-top: 24px;
