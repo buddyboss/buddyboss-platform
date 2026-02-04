@@ -5,7 +5,7 @@
  * @since BuddyBoss 3.0.0
  */
 
-import { useEffect } from '@wordpress/element';
+import { useEffect, useState } from '@wordpress/element';
 import {
 	ToggleControl,
 	TextControl,
@@ -29,10 +29,89 @@ import { __ } from '@wordpress/i18n';
  * @returns {JSX.Element} Settings form component
  */
 export function SettingsForm({ fields, values, onChange }) {
+	// Track modified reactions for React callback updates (keyed by reaction ID)
+	const [modifiedReactions, setModifiedReactions] = useState({});
+
+	/**
+	 * Expose React callback for old jQuery emotion picker.
+	 * This allows the old picker to update React state instead of manipulating DOM.
+	 */
+	useEffect(() => {
+		// Initialize global callbacks object if it doesn't exist
+		if (!window.bbReactEmotionCallbacks) {
+			window.bbReactEmotionCallbacks = {};
+		}
+
+		// Register callback for emotion updates from the picker
+		window.bbReactEmotionCallbacks.updateEmotion = (emotionData, isEdit) => {
+			// Ensure emotion has an ID
+			if (!emotionData.id) {
+				emotionData.id = `temp_${Date.now()}`;
+			}
+
+			// Ensure new emotions are marked as active by default
+			if (!isEdit && emotionData.is_emotion_active === undefined) {
+				emotionData.is_emotion_active = true;
+			}
+
+			// Update local state to trigger re-render with new/updated emotion
+			setModifiedReactions((prevState) => {
+				const updated = { ...prevState };
+
+				// Store the updated emotion data
+				updated[emotionData.id] = emotionData;
+
+				return updated;
+			});
+
+			// Trigger save after state update (next tick)
+			setTimeout(() => {
+				// Collect all reactions from DOM (React-rendered hidden inputs + any jQuery-rendered ones)
+				const reactionInputs = document.querySelectorAll('.bb_admin_setting_reaction_item');
+				const reactionItems = {};
+				const reactionChecks = {};
+
+				reactionInputs.forEach((input) => {
+					try {
+						const data = JSON.parse(input.value);
+						if (data) {
+							// Use ID for keying, but strip temp IDs before sending to server
+							const key = data.id || `temp_${Date.now()}`;
+							const itemData = { ...data };
+
+							// Remove temp IDs so PHP treats them as new emotions
+							if (itemData.id && String(itemData.id).startsWith('temp_')) {
+								delete itemData.id;
+							}
+
+							reactionItems[key] = itemData;
+							reactionChecks[key] = data.is_emotion_active ? '1' : '';
+						}
+					} catch (e) {
+						// Skip invalid JSON
+					}
+				});
+
+				if (Object.keys(reactionItems).length > 0) {
+					onChange('reaction_items', reactionItems);
+					onChange('reaction_checks', reactionChecks);
+					onChange('bb_reaction_mode', 'emotions');
+				}
+			}, 50);
+		};
+
+		return () => {
+			// Cleanup on unmount
+			if (window.bbReactEmotionCallbacks) {
+				delete window.bbReactEmotionCallbacks.updateEmotion;
+			}
+		};
+	}, [onChange]);
 
 	/**
 	 * Listen for emotion picker save event (from jQuery modal).
 	 * When an emotion is saved, collect all reaction items and trigger auto-save.
+	 * This is the fallback event-based approach (kept for compatibility).
 	 */
 	useEffect(() => {
 		const handleEmotionSaved = () => {
@@ -50,7 +129,14 @@ export function SettingsForm({ fields, values, onChange }) {
 						if (data) {
 							// Use existing id or generate a temporary key for new items
 							const key = data.id || `new_${newItemIndex++}`;
-							reactionItems[key] = data;
+							const itemData = { ...data };
+
+							// Remove temp IDs so PHP treats them as new emotions
+							if (itemData.id && String(itemData.id).startsWith('temp_')) {
+								delete itemData.id;
+							}
+
+							reactionItems[key] = itemData;
 
 							// Find the corresponding checkbox for is_emotion_active
 							const parentItem = input.closest('.bb_emotions_item');
@@ -491,7 +577,23 @@ export function SettingsForm({ fields, values, onChange }) {
 
 				// Get reactions data from field (injected by Pro via bb_extend_reaction_field_data filter).
 				const reactionsData = field.reactions || {};
-				const allReactions = reactionsData.emotions || [];
+				const serverReactions = reactionsData.emotions || [];
+
+				// Merge server reactions with any locally modified reactions
+				const allReactions = serverReactions.map(reaction => {
+					// If this reaction was modified locally, use the modified version
+					if (modifiedReactions[reaction.id]) {
+						return modifiedReactions[reaction.id];
+					}
+					return reaction;
+				});
+
+				// Add any new reactions that don't exist in serverReactions
+				Object.values(modifiedReactions).forEach(modifiedReaction => {
+					if (!serverReactions.find(r => r.id === modifiedReaction.id)) {
+						allReactions.push(modifiedReaction);
+					}
+				});
 
 				// Find the notice for the currently selected mode option.
 				const selectedOption = (field.options || []).find((opt) => opt.value === reactionMode);
