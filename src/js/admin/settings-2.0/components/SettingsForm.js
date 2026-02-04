@@ -453,6 +453,17 @@ export function SettingsForm({ fields, values, onChange }) {
 				const buttonValue = value || {};
 				const buttonIcon = buttonValue.icon || field.icon || 'thumbs-up';
 				const buttonText = buttonValue.text || field.text || __('Like', 'buddyboss');
+
+				/**
+				 * Handle edit reaction button click - opens the icon picker modal
+				 */
+				const handleEditReactionButton = () => {
+					const iconChooser = document.getElementById('bb-reaction-button-chooser');
+					if (iconChooser && window.jQuery) {
+						window.jQuery(iconChooser).trigger('click');
+					}
+				};
+
 				return (
 					<div key={field.name} className={`bb-reaction-button-field${isProLocked ? ' bb-reaction-button-field--disabled' : ''}`}>
 						<div className="bb-reaction-button-card">
@@ -491,18 +502,10 @@ export function SettingsForm({ fields, values, onChange }) {
 													iconPosition="left"
 													onClick={ () => {
 														onClose();
+														handleEditReactionButton();
 													} }
 												>
 													{ __( 'Edit', 'buddyboss' ) }
-												</MenuItem>
-												<MenuItem
-													icon={ <BBIcon name="trash" /> }
-													iconPosition="left"
-													onClick={ () => {
-														onClose();
-													} }
-												>
-													{ __( 'Delete', 'buddyboss' ) }
 												</MenuItem>
 											</MenuGroup>
 										) }
