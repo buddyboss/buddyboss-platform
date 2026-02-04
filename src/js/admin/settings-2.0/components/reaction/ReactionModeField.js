@@ -62,9 +62,9 @@ export function ReactionModeField({ field, value, values, onChange, serverEmotio
 			setTimeout(() => {
 				const $ = window.jQuery;
 				let iconElement;
-				if ('emotions' === reaction.type) {
+				if ( 'emotions' === reaction.type ) {
 					iconElement = $(`#bbpro_emotion_modal .bbpro-emoji-tag-render[data-name="${reaction.name}"]`);
-				} else if ('bb-icons' === reaction.type) {
+				} else if ( 'bb-icons' === reaction.type ) {
 					iconElement = $(`#bbpro_emotion_modal .bbpro-icon-tag-render[data-css="${reaction.icon}"]`);
 				}
 				if (iconElement && iconElement.length) {
@@ -107,7 +107,7 @@ export function ReactionModeField({ field, value, values, onChange, serverEmotio
 					},
 					method: 'POST'
 				}).done(function(response) {
-					if (true === response.success && 'undefined' !== typeof response.data?.content) {
+					if ( true === response.success && 'undefined' !== typeof response.data?.content ) {
 						$('.bb-reaction-delete-modal__content').html(response.data.content);
 					} else if (response.data?.message) {
 						$('.bb-reaction-delete-modal__content').html(response.data.message);
@@ -121,7 +121,7 @@ export function ReactionModeField({ field, value, values, onChange, serverEmotio
 	 * Render emotion icon based on type
 	 */
 	const renderEmotionIcon = (reaction) => {
-		if (reaction.type === 'bb-icons') {
+		if ( 'bb-icons' === reaction.type ) {
 			return (
 				<i
 					className={`bb-icon-rf bb-icon-${reaction.icon}`}
@@ -129,10 +129,10 @@ export function ReactionModeField({ field, value, values, onChange, serverEmotio
 				></i>
 			);
 		}
-		if (reaction.type === 'custom' && reaction.icon_path) {
+		if ( 'custom' === reaction.type && reaction.icon_path ) {
 			return <img src={reaction.icon_path} alt="" />;
 		}
-		if (reaction.type === 'emotions') {
+		if ( 'emotions' === reaction.type ) {
 			return (
 				<span className="bbpro-icon-emoji">
 					{reaction.icon_path ? (
@@ -195,7 +195,7 @@ export function ReactionModeField({ field, value, values, onChange, serverEmotio
 			)}
 
 			{/* Inline emotion cards - shown when emotions mode selected */}
-			{reactionMode === 'emotions' && (
+			{ 'emotions' === reactionMode && (
 				<div className="bb-reaction-mode__cards">
 					{allReactions.map((reaction) => (
 						<div

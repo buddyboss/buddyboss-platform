@@ -59,7 +59,7 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 	const [isLoading, setIsLoading] = useState(true);
 	const [activePanelId, setActivePanelId] = useState(sidePanelId || null);
 
-	// Auto-save state (ReadyLaunch pattern)
+	// Auto-save state.
 	const [toast, setToast] = useState(null);
 	const [changedFields, setChangedFields] = useState({});
 	const [initialLoad, setInitialLoad] = useState(true);
@@ -133,8 +133,8 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 		}
 	}, [sidePanelId, sidePanels]);
 
-	// Setup debounced save (ReadyLaunch pattern - auto-save on change)
-	// Uses AJAX endpoint for feature settings (not REST API which is ReadyLaunch-specific)
+	// Setup debounced save (auto-save on change)
+	// Uses AJAX endpoint for feature settings.
 	useEffect(() => {
 		debouncedSaveRef.current = debounce((fieldsToSave) => {
 			if (Object.keys(fieldsToSave).length === 0) {
@@ -153,28 +153,38 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 							message: __('Settings saved.', 'buddyboss'),
 						});
 						setChangedFields({});
-						// Update original settings
-						setOriginalSettings((prev) => ({ ...prev, ...fieldsToSave }));
-						// Update cache
-						const cachedData = getCachedFeatureData(featureId);
-						if (cachedData) {
-							setCachedFeatureData(featureId, {
-								...cachedData,
-								settings: { ...cachedData.settings, ...fieldsToSave },
-							});
-						}
 
-						// For reactions feature, if migration data is returned, reload feature data to update fields
-						if (featureId === 'reactions' && (response.data?.migration_data || response.data?.migration_status)) {
+						// Check if reaction_items were saved (need to refetch to get real IDs from server)
+						const savedReactionItems = fieldsToSave.reaction_items !== undefined;
+
+						// For reactions feature, refetch data when:
+						// 1. reaction_items were saved (to get real DB IDs replacing react_key_ IDs)
+						// 2. migration data is returned
+						// This ensures delete checks work correctly (need real IDs for AJAX validation)
+						if (featureId === 'reactions' && (savedReactionItems || response.data?.migration_data || response.data?.migration_status)) {
 							ajaxFetch('bb_admin_get_feature_settings', { feature_id: featureId })
 								.then((featureResponse) => {
 									if (featureResponse.success && featureResponse.data) {
+										// Update cache with fresh data
+										setCachedFeatureData(featureId, featureResponse.data);
 										setFeature(featureResponse.data);
 										setSidePanels(featureResponse.data.side_panels || []);
-										// Don't overwrite user's current changes
-										setOriginalSettings(featureResponse.data.settings || {});
+										const freshSettings = featureResponse.data.settings || {};
+										setSettings(freshSettings);
+										setOriginalSettings(freshSettings);
 									}
 								});
+						} else {
+							// Update original settings
+							setOriginalSettings((prev) => ({ ...prev, ...fieldsToSave }));
+							// Update cache
+							const cachedData = getCachedFeatureData(featureId);
+							if (cachedData) {
+								setCachedFeatureData(featureId, {
+									...cachedData,
+									settings: { ...cachedData.settings, ...fieldsToSave },
+								});
+							}
 						}
 					} else {
 						setToast({
