@@ -182,6 +182,78 @@ export function SettingsForm({ fields, values, onChange }) {
 	}, [onChange]);
 
 	/**
+	 * Listen for delete confirmation button click.
+	 * The Pro plugin's submitSettingForm() doesn't work with React, so we handle save here.
+	 */
+	useEffect(() => {
+		const handleDeleteConfirm = (e) => {
+			e.preventDefault();
+			e.stopPropagation();
+
+			// Remove the emotion element (Pro plugin already does this, but ensure it's done)
+			if (window.bp?.Reaction_Admin?.delete_emotion) {
+				window.bp.Reaction_Admin.delete_emotion.remove();
+				window.bp.Reaction_Admin.delete_emotion = '';
+			}
+
+			// Close the modal
+			if (window.jQuery) {
+				window.jQuery('#bbpro_reaction_delete_confirmation').css('display', 'none');
+				window.jQuery('body').removeClass('modal-open');
+			}
+
+			// Small delay to ensure DOM is updated after element removal
+			setTimeout(() => {
+				// Collect remaining reaction items from the DOM
+				const reactionInputs = document.querySelectorAll('.bb_admin_setting_reaction_item');
+				const reactionItems = {};
+				const reactionChecks = {};
+				let newItemIndex = 0;
+
+				reactionInputs.forEach((input) => {
+					try {
+						const data = JSON.parse(input.value);
+						if (data) {
+							const key = data.id || `new_${newItemIndex++}`;
+							reactionItems[key] = data;
+
+							const parentItem = input.closest('.bb_emotions_item');
+							if (parentItem) {
+								const checkbox = parentItem.querySelector('input[type="checkbox"][name^="reaction_checks"]');
+								if (checkbox) {
+									reactionChecks[key] = checkbox.checked ? '1' : '';
+								} else {
+									reactionChecks[key] = data.is_emotion_active ? '1' : '';
+								}
+							} else {
+								reactionChecks[key] = data.is_emotion_active ? '1' : '';
+							}
+						}
+					} catch (err) {
+						// Skip invalid JSON
+					}
+				});
+
+				// Trigger auto-save
+				onChange('reaction_items', reactionItems);
+				onChange('reaction_checks', reactionChecks);
+				onChange('bb_reaction_mode', 'emotions');
+			}, 100);
+		};
+
+		// Listen for click on delete confirm button
+		if (window.jQuery) {
+			window.jQuery(document).on('click', '#bbpro_reaction_delete_confirmation .bb-pro-reaction-delete-emotion', handleDeleteConfirm);
+		}
+
+		return () => {
+			if (window.jQuery) {
+				window.jQuery(document).off('click', '#bbpro_reaction_delete_confirmation .bb-pro-reaction-delete-emotion', handleDeleteConfirm);
+			}
+		};
+	}, [onChange]);
+
+	/**
 	 * Check if a field should be visible based on its conditional logic
 	 */
 	const isFieldVisible = (field) => {
@@ -730,6 +802,33 @@ export function SettingsForm({ fields, values, onChange }) {
 															iconPosition="left"
 															onClick={ () => {
 																onClose();
+																// Directly trigger jQuery delete behavior
+																if (window.jQuery && window.bp?.Reaction_Admin) {
+																	const $ = window.jQuery;
+																	const emotionItem = $(`.bb_emotions_item[data-reaction-id="${reaction.id}"]`);
+																	const emotionId = reaction.id;
+
+																	window.bp.Reaction_Admin.delete_emotion = emotionItem;
+
+																	if (emotionId) {
+																		$('#bbpro_reaction_delete_confirmation').css('display', 'block');
+																		$.ajax({
+																			url: window.bbReactionAdminVars?.ajax_url,
+																			data: {
+																				'action': 'bb_pro_reaction_check_delete_emotion',
+																				'emotion_id': emotionId,
+																				'nonce': window.bbReactionAdminVars?.nonce?.check_delete_emotion
+																			},
+																			method: 'POST'
+																		}).done(function(response) {
+																			if (true === response.success && 'undefined' !== typeof response.data?.content) {
+																				$('.bb-reaction-delete-modal__content').html(response.data.content);
+																			} else if (response.data?.message) {
+																				$('.bb-reaction-delete-modal__content').html(response.data.message);
+																			}
+																		});
+																	}
+																}
 															} }
 														>
 															{ __( 'Delete', 'buddyboss' ) }
