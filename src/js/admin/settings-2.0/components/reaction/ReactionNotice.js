@@ -1,4 +1,13 @@
-import { useState, useEffect } from '@wordpress/element';
+/**
+ * BuddyBoss Admin Settings 2.0 - Reaction Notice Component
+ *
+ * Displays status for in-progress or completed migrations.
+ *
+ * @package BuddyBoss\Core\Administration
+ * @since BuddyBoss 3.0.0
+ */
+
+import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 
 export function ReactionNotice({ field }) {

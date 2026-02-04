@@ -7,3 +7,7 @@
 
 export { ReactionModeField } from './ReactionModeField';
 export { useReactionCallbacks } from './useReactionCallbacks';
+export { ReactionMigration } from './ReactionMigration';
+export { ReactionNotice } from './ReactionNotice';
+export { ReactionInfo } from './ReactionInfo';
+export { MigrationModal } from './MigrationModal';

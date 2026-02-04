@@ -1,10 +1,16 @@
+/**
+ * BuddyBoss Admin Settings 2.0 - Reaction Info Component
+ *
+ * Displays an informational text notice with inline link for reaction migration.
+ *
+ * @package BuddyBoss\Core\Administration
+ * @since BuddyBoss 3.0.0
+ */
+
 import { __ } from '@wordpress/i18n';
 
 /**
  * Reaction Info Component
- *
- * Displays an informational text notice with inline link for reaction migration.
- * Matches Figma design: 2112-47902
  *
  * @param {Object} props Component props
  * @param {Object} props.field Field configuration

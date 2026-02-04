@@ -1,3 +1,12 @@
+/**
+ * BuddyBoss Admin Settings 2.0 - Migration Modal Component
+ *
+ * Modal for starting and displaying migration wizard.
+ *
+ * @package BuddyBoss\Core\Administration
+ * @since BuddyBoss 3.0.0
+ */
+
 import { useEffect, useState } from '@wordpress/element';
 import { Modal } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';

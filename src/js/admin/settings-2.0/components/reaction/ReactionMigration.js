@@ -1,3 +1,12 @@
+/**
+ * BuddyBoss Admin Settings 2.0 - Reaction Migration Component
+ *
+ * Displays migration warning notice with "Start Conversion" button.
+ *
+ * @package BuddyBoss\Core\Administration
+ * @since BuddyBoss 3.0.0
+ */
+
 import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 
