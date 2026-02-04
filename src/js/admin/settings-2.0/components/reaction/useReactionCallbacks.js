@@ -44,8 +44,8 @@ export function useReactionCallbacks(onChange, values) {
 			if (isNew && data.is_emotion_active === undefined) {
 				data.is_emotion_active = true;
 			}
-			// New emotion: always use a fresh temp id so each add gets its own key. Edit: use existing id.
-			const key = isNew ? `temp_${Date.now()}` : (data.id || `temp_${Date.now()}`);
+			// New emotion: always use a fresh react_key_ id so each add gets its own key. Edit: use existing id.
+			const key = isNew ? `react_key_${Date.now()}` : (data.id || `react_key_${Date.now()}`);
 			if (isNew) {
 				data.id = key;
 			}
