@@ -163,6 +163,19 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 								settings: { ...cachedData.settings, ...fieldsToSave },
 							});
 						}
+
+						// For reactions feature, if migration data is returned, reload feature data to update fields
+						if (featureId === 'reactions' && (response.data?.migration_data || response.data?.migration_status)) {
+							ajaxFetch('bb_admin_get_feature_settings', { feature_id: featureId })
+								.then((featureResponse) => {
+									if (featureResponse.success && featureResponse.data) {
+										setFeature(featureResponse.data);
+										setSidePanels(featureResponse.data.side_panels || []);
+										// Don't overwrite user's current changes
+										setOriginalSettings(featureResponse.data.settings || {});
+									}
+								});
+						}
 					} else {
 						setToast({
 							status: 'error',

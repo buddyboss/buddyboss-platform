@@ -158,6 +158,10 @@
 
     + .bb-admin-settings-form__field {
         margin-top: 24px;
+
+		&:empty {
+			margin-top: 0;
+		}
     }
 
     &:has(.bb-admin-notice) {
@@ -598,7 +602,7 @@
     .media-modal-content {
         background: transparent;
         box-shadow: none;
-        
+
         .bbpro-modal-box__header {
             background-color: $bb-background-base-color;
             border-bottom: 1px solid $bb-border-secondary-color;
@@ -646,13 +650,13 @@
 
         .media-modal-icon {
             display: flex;
-    
+
             &:before {
-    
+
                     &:hover {
                         background-color: $bb-background-primary-color;
                     }
-    
+
                     &:focus {
                         outline: none;
                     }
@@ -727,7 +731,7 @@
 
                 .wp-color-result {
                     border-color: $bb-border-secondary-color;
-    
+
                     span {
                         background-color: $bb-background-secondary-color;
                     }
@@ -791,7 +795,7 @@
             font-weight: 400;
             padding: 2px 8px 2px 30px;
             border-radius: $bb-border-radius-md;
-    
+
             &:focus {
                 outline: none;
                 box-shadow: none;

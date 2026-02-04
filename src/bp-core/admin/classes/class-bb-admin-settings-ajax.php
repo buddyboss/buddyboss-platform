@@ -250,6 +250,11 @@ class BB_Admin_Settings_Ajax {
 				// Get fields for this section.
 				$section_fields = $registry->bb_get_fields( $feature_id, $side_panel_id, $section_id );
 
+				// Debug: Log field names for reactions_settings section
+				if ( 'reactions' === $feature_id && 'reactions_settings' === $section_id ) {
+					error_log('Fields in reactions_settings section: ' . print_r(array_keys($section_fields), true));
+				}
+
 				$formatted_sections[] = array(
 					'id'          => $section_id,
 					'title'       => $section['title'],
@@ -603,12 +608,25 @@ class BB_Admin_Settings_Ajax {
 		 */
 		do_action( 'bb_admin_save_feature_settings_after', $feature_id, $settings, $saved );
 
-		wp_send_json_success(
-			array(
-				'message' => __( 'Settings saved successfully.', 'buddyboss' ),
-				'saved'   => $saved,
-			)
+		$response_data = array(
+			'message' => __( 'Settings saved successfully.', 'buddyboss' ),
+			'saved'   => $saved,
 		);
+
+		/**
+		 * Filters the response data before sending success response for feature settings save.
+		 * Allows plugins to add additional data to the response (e.g., migration_data for reactions).
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array  $response_data Response data to be sent.
+		 * @param string $feature_id    Feature ID (e.g. 'reactions').
+		 * @param array  $settings      Full submitted settings.
+		 * @param array  $saved         Keys and values saved to options.
+		 */
+		$response_data = apply_filters( 'bb_admin_save_feature_settings_response', $response_data, $feature_id, $settings, $saved );
+
+		wp_send_json_success( $response_data );
 	}
 }
 

@@ -5,6 +5,7 @@
  * @since BuddyBoss 3.0.0
  */
 
+import { useState, useEffect } from '@wordpress/element';
 import {
 	ToggleControl,
 	TextControl,
@@ -18,6 +19,10 @@ import {
 } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import { ReactionModeField, useReactionCallbacks } from './reaction';
+import { ReactionMigration } from './ReactionMigration';
+import { ReactionNotice } from './ReactionNotice';
+import { ReactionInfo } from './ReactionInfo';
+import { MigrationModal } from './MigrationModal';
 
 /**
  * Settings Form Component (matching Figma settingsSection)
@@ -31,6 +36,160 @@ import { ReactionModeField, useReactionCallbacks } from './reaction';
 export function SettingsForm({ fields, values, onChange }) {
 	// Use reaction callbacks hook for jQuery emotion picker integration
 	const { serverEmotionsRef } = useReactionCallbacks(onChange, values);
+	// Track modified reactions for React callback updates (keyed by reaction ID)
+	const [modifiedReactions, setModifiedReactions] = useState({});
+	// Track migration modal state
+	const [isMigrationModalOpen, setIsMigrationModalOpen] = useState(false);
+	const [currentMigrationData, setCurrentMigrationData] = useState(null);
+
+	/**
+	 * Expose React callback for old jQuery emotion picker.
+	 * This allows the old picker to update React state instead of manipulating DOM.
+	 */
+	useEffect(() => {
+		// Initialize global callbacks object if it doesn't exist
+		if (!window.bbReactEmotionCallbacks) {
+			window.bbReactEmotionCallbacks = {};
+		}
+
+		// Register callback for emotion updates from the picker
+		window.bbReactEmotionCallbacks.updateEmotion = (emotionData, isEdit) => {
+			// Ensure emotion has an ID
+			if (!emotionData.id) {
+				emotionData.id = `temp_${Date.now()}`;
+			}
+
+			// Ensure new emotions are marked as active by default
+			if (!isEdit && emotionData.is_emotion_active === undefined) {
+				emotionData.is_emotion_active = true;
+			}
+
+			// Update local state to trigger re-render with new/updated emotion
+			setModifiedReactions((prevState) => {
+				const updated = { ...prevState };
+
+				// Store the updated emotion data
+				updated[emotionData.id] = emotionData;
+
+				return updated;
+			});
+
+			// Trigger save after state update (next tick)
+			setTimeout(() => {
+				// Collect all reactions from DOM (React-rendered hidden inputs + any jQuery-rendered ones)
+				const reactionInputs = document.querySelectorAll('.bb_admin_setting_reaction_item');
+				const reactionItems = {};
+				const reactionChecks = {};
+
+				reactionInputs.forEach((input) => {
+					try {
+						const data = JSON.parse(input.value);
+						if (data) {
+							// Use ID for keying, but strip temp IDs before sending to server
+							const key = data.id || `temp_${Date.now()}`;
+							const itemData = { ...data };
+
+							// Remove temp IDs so PHP treats them as new emotions
+							if (itemData.id && String(itemData.id).startsWith('temp_')) {
+								delete itemData.id;
+							}
+
+							reactionItems[key] = itemData;
+							reactionChecks[key] = data.is_emotion_active ? '1' : '';
+						}
+					} catch (e) {
+						// Skip invalid JSON
+					}
+				});
+
+				if (Object.keys(reactionItems).length > 0) {
+					onChange('reaction_items', reactionItems);
+					onChange('reaction_checks', reactionChecks);
+					onChange('bb_reaction_mode', 'emotions');
+				}
+			}, 50);
+		};
+
+		return () => {
+			// Cleanup on unmount
+			if (window.bbReactEmotionCallbacks) {
+				delete window.bbReactEmotionCallbacks.updateEmotion;
+			}
+		};
+	}, [onChange]);
+
+	/**
+	 * Listen for emotion picker save event (from jQuery modal).
+	 * When an emotion is saved, collect all reaction items and trigger auto-save.
+	 * This is the fallback event-based approach (kept for compatibility).
+	 */
+	useEffect(() => {
+		const handleEmotionSaved = () => {
+			// Small delay to ensure DOM is updated after jQuery replaceWith
+			setTimeout(() => {
+				// Collect all reaction items from the DOM
+				const reactionInputs = document.querySelectorAll('.bb_admin_setting_reaction_item');
+				const reactionItems = {};
+				const reactionChecks = {};
+				let newItemIndex = 0;
+
+				reactionInputs.forEach((input) => {
+					try {
+						const data = JSON.parse(input.value);
+						if (data) {
+							// Use existing id or generate a temporary key for new items
+							const key = data.id || `new_${newItemIndex++}`;
+							const itemData = { ...data };
+
+							// Remove temp IDs so PHP treats them as new emotions
+							if (itemData.id && String(itemData.id).startsWith('temp_')) {
+								delete itemData.id;
+							}
+
+							reactionItems[key] = itemData;
+
+							// Find the corresponding checkbox for is_emotion_active
+							const parentItem = input.closest('.bb_emotions_item');
+							if (parentItem) {
+								const checkbox = parentItem.querySelector('input[type="checkbox"][name^="reaction_checks"]');
+								if (checkbox) {
+									reactionChecks[key] = checkbox.checked ? '1' : '';
+								} else {
+									// No checkbox found, default to active (for new items or React-rendered items)
+									reactionChecks[key] = data.is_emotion_active ? '1' : '';
+								}
+							} else {
+								// Fallback to data value
+								reactionChecks[key] = data.is_emotion_active ? '1' : '';
+							}
+						}
+					} catch (e) {
+						// Skip invalid JSON
+					}
+				});
+
+				// Trigger auto-save with the reaction items (key matches PHP handler)
+				// Also include bb_reaction_mode and reaction_checks as the PHP handler requires them
+				if (Object.keys(reactionItems).length > 0) {
+					onChange('reaction_items', reactionItems);
+					onChange('reaction_checks', reactionChecks);
+					// Ensure reaction mode is set (PHP handler requires this)
+					onChange('bb_reaction_mode', 'emotions');
+				}
+			}, 100);
+		};
+
+		// Listen via jQuery (the event is triggered via jQuery.trigger)
+		if (window.jQuery) {
+			window.jQuery(document).on('bbpro-icon-selected', handleEmotionSaved);
+		}
+
+		return () => {
+			if (window.jQuery) {
+				window.jQuery(document).off('bbpro-icon-selected', handleEmotionSaved);
+			}
+		};
+	}, [onChange]);
 
 	/**
 	 * Check if a field should be visible based on its conditional logic
@@ -120,7 +279,7 @@ export function SettingsForm({ fields, values, onChange }) {
 				// - An array like ["just-me", "favorites", ...] (legacy)
 				const isObjectValue = value && typeof value === 'object' && !Array.isArray(value);
 				const checkboxValue = isObjectValue ? value : {};
-				
+
 				// Helper to check if option is selected
 				const isOptionChecked = (optionKey) => {
 					if (isObjectValue) {
@@ -130,7 +289,7 @@ export function SettingsForm({ fields, values, onChange }) {
 					// Array format
 					return Array.isArray(value) && value.includes(optionKey);
 				};
-				
+
 				return (
 					<div key={field.name} className="bb-admin-settings-field__checkbox-list">
 						{(field.options || []).map((option) => (
@@ -518,6 +677,37 @@ export function SettingsForm({ fields, values, onChange }) {
 					/>
 				);
 
+			case 'reaction_migration':
+				// Reaction migration: warning notice for pending migration with "Start Conversion" button
+				return (
+					<ReactionMigration
+						key={field.name}
+						field={field}
+						onStartConversion={(migrationData) => {
+							setCurrentMigrationData(migrationData);
+							setIsMigrationModalOpen(true);
+						}}
+					/>
+				);
+
+			case 'reaction_notice':
+				// Reaction notice: status display for in-progress or completed migrations
+				return (
+					<ReactionNotice
+						key={field.name}
+						field={field}
+					/>
+				);
+
+			case 'reaction_info':
+				// Reaction info: informational text with inline link
+				return (
+					<ReactionInfo
+						key={field.name}
+						field={field}
+					/>
+				);
+
 			default:
 				return (
 					<p className="bb-admin-settings-field__unsupported">
@@ -572,7 +762,8 @@ export function SettingsForm({ fields, values, onChange }) {
 		}
 
 		// Notice fields render full-width without the label column.
-		if (field.type === 'notice') {
+		// This includes standard notices and custom migration/info notice components.
+		if (field.type === 'notice' || field.type === 'reaction_migration' || field.type === 'reaction_notice' || field.type === 'reaction_info') {
 			return (
 				<div key={field.name} className="bb-admin-settings-form__field bb-admin-settings-form__field--full-width">
 					{controlOutput}
@@ -656,8 +847,17 @@ export function SettingsForm({ fields, values, onChange }) {
 	const topLevelFields = fields.filter(field => !field.parent_field);
 
 	return (
-		<div className="bb-admin-settings-form">
-			{topLevelFields.map((field) => renderField(field))}
-		</div>
+		<>
+			<div className="bb-admin-settings-form">
+				{topLevelFields.map((field) => renderField(field))}
+			</div>
+			{isMigrationModalOpen && (
+				<MigrationModal
+					isOpen={isMigrationModalOpen}
+					onClose={() => setIsMigrationModalOpen(false)}
+					migrationData={currentMigrationData}
+				/>
+			)}
+		</>
 	);
 }

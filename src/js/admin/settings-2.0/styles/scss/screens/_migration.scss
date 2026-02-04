@@ -1,0 +1,298 @@
+/**
+ * BuddyBoss Admin Settings 2.0 - Migration Styles
+ *
+ * @package BuddyBoss\Core\Administration
+ * @since BuddyBoss [BBVERSION]
+ */
+
+// Migration notice wrapper (for both reaction_migration and reaction_notice)
+.bb-admin-reaction-migration-wrapper,
+.bb-admin-reaction-notice-wrapper {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	padding-bottom: 16px;
+	border-bottom: 0.5px solid $bb-border-secondary-color;
+	margin-bottom: 16px;
+	width: 100%;
+}
+
+// Reaction info wrapper (informational text with link)
+.bb-admin-reaction-info-wrapper {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	width: 100%;
+}
+
+.bb-admin-reaction-info {
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	min-height: 24px;
+	padding: 3px 16px 3px 0;
+	max-width: 900px;
+	width: 100%;
+
+	&__text {
+		margin: 0;
+		font-size: 13px; // --font/size/sm
+		line-height: 18px; // --font/line-height/sm
+		font-weight: 400; // --font/weight/regular
+		color: #666; // --text/default/tertiary
+		max-width: 900px;
+	}
+
+	&__link {
+		color: #2c6bff;
+		text-decoration: none;
+		transition: opacity 0.2s ease;
+
+		&:hover {
+			opacity: 0.8;
+			text-decoration: underline;
+		}
+
+		&:focus {
+			outline: 2px solid #2c6bff;
+			outline-offset: 2px;
+		}
+	}
+}
+
+// Notice styles (matching Figma design exactly)
+.bb-admin-notice {
+	display: flex;
+	align-items: center; // Changed from flex-start to center
+	gap: 8px; // Changed from 12px to 8px
+	padding: 4px 8px; // Changed from 12px 16px to 4px 8px
+	border-radius: $bb-border-radius-lg; // 8px
+	border: 0.5px solid; // Changed from 1px to 0.5px
+	position: relative;
+	min-height: 32px; // Added min-height
+	width: 100%; // Added full width
+	box-sizing: border-box;
+
+	&__icon {
+		flex-shrink: 0;
+		font-size: 20px;
+		line-height: 1;
+		display: flex;
+		align-items: center;
+
+		.bb-icons-rl {
+			display: block;
+			width: 20px;
+			height: 20px;
+		}
+	}
+
+	&__content {
+		flex: 1 0 0; // Changed to flex: 1 0 0 to match Figma
+		min-width: 0;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+
+		p {
+			margin: 0;
+			font-size: 13px; // --font/size/sm
+			line-height: 18px; // Changed from 1.5 to 18px (--font/line-height/sm)
+			font-weight: 400; // --font/weight/regular
+			color: inherit;
+			white-space: pre-wrap;
+
+			&:not(:last-child) {
+				margin-bottom: 8px;
+			}
+
+			strong {
+				font-weight: 600;
+			}
+		}
+	}
+
+	&__actions {
+		display: flex;
+		align-items: center;
+		gap: 4px; // Changed from 8px to 4px
+		flex-shrink: 0;
+	}
+
+	&__button {
+		padding: 3px 8px; // Changed from 6px 12px to 3px 8px
+		font-size: 13px; // --font/size/sm
+		line-height: 18px; // Changed from 1.4 to 18px (--font/line-height/sm)
+		font-weight: 400; // Changed from 500 to 400 (regular)
+		border-radius: 4px; // Changed to --radius/sm
+		cursor: pointer;
+		transition: all 0.2s ease;
+		white-space: nowrap;
+		border: none;
+		background: transparent; // Changed default to transparent
+		color: inherit;
+
+		&:not(:disabled):hover {
+			background-color: rgba(0, 0, 0, 0.05); // Added subtle hover background
+		}
+
+		&:disabled {
+			opacity: 0.5;
+			cursor: not-allowed;
+		}
+
+		// Primary button style (optional)
+		&--primary {
+			background-color: $bb-primary-color;
+			color: #fff;
+
+			&:not(:disabled):hover {
+				opacity: 0.9;
+			}
+		}
+
+		// Outline button style
+		&--outline {
+			background-color: transparent;
+			border: 1px solid currentColor;
+			color: inherit;
+		}
+
+		// Text button style
+		&--text {
+			background-color: transparent;
+			color: inherit;
+			padding: 3px 8px;
+			text-decoration: underline;
+
+			&:hover {
+				opacity: 0.7;
+			}
+		}
+	}
+
+	&__close {
+		flex-shrink: 0;
+		background: transparent;
+		border: none;
+		cursor: pointer;
+		padding: 0;
+		margin: 0;
+		color: inherit;
+		font-size: 16px;
+		line-height: 1;
+		opacity: 0.7;
+		transition: opacity 0.2s ease;
+		display: flex;
+		align-items: center;
+		width: 16px;
+		height: 16px;
+
+		&:hover {
+			opacity: 1;
+		}
+
+		.bb-icons-rl {
+			display: block;
+			width: 16px;
+			height: 16px;
+		}
+	}
+
+	// Notice types
+	&--warning {
+		background-color: #fffbeb;
+		border-color: #e5a000;
+		color: #000;
+
+		.bb-admin-notice__icon {
+			color: #e5a000;
+		}
+	}
+
+	&--success {
+		background-color: #f0fdf4;
+		border-color: #16a34a;
+		color: #000;
+
+		.bb-admin-notice__icon {
+			color: #16a34a;
+		}
+	}
+
+	&--error {
+		background-color: #fef2f2;
+		border-color: #dc2626;
+		color: #000;
+
+		.bb-admin-notice__icon {
+			color: #dc2626;
+		}
+	}
+
+	&--info {
+		background-color: #eff6ff;
+		border-color: #3b82f6;
+		color: #000;
+
+		.bb-admin-notice__icon {
+			color: #3b82f6;
+		}
+
+		// Progress variant for in-progress migrations
+		&.bb-admin-notice--progress {
+			.bb-admin-notice__content {
+				p:first-child {
+					font-weight: 600;
+				}
+			}
+		}
+	}
+}
+
+// Migration modal specific styles
+.bb-admin-migration-modal {
+	.components-modal__content {
+		padding: 0;
+	}
+
+	&__content {
+		padding: 24px;
+		min-height: 300px;
+	}
+
+	&__loader {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		min-height: 300px;
+		font-size: 32px;
+		color: $bb-primary-color;
+
+		.bb-icons-rl {
+			display: block;
+		}
+	}
+
+	&__wizard {
+		// Old wizard styles will be applied via the HTML content
+		// This wrapper ensures proper spacing
+		.bbpro_migration_wizard_screens {
+			// Styles from old admin will be loaded
+		}
+	}
+}
+
+// Animation for spinner
+@keyframes spin {
+	from {
+		transform: rotate(0deg);
+	}
+	to {
+		transform: rotate(360deg);
+	}
+}
+
+.animate-spin {
+	animation: spin 1s linear infinite;
+}
