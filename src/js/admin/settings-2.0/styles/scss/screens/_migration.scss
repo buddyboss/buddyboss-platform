@@ -93,6 +93,70 @@
 	}
 }
 
+.bb-admin-reaction-migration-wrapper {
+
+	.bb-admin-notice {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		padding: 6px 8px;
+		border: 1px solid transparent;
+		border-radius: $bb-border-radius-lg;
+
+		&--warning {
+			background-color: $bb-background-warning-primary-color;
+			border-color: $bb-border-warning-secondary-color;
+		}
+
+		.bb-admin-notice__content {
+			color: text-color;
+			font-size: 13px;
+
+			p {
+				margin: 0;
+			}
+		}
+
+		.bb-admin-notice__actions {
+			margin-left: auto;
+
+			button {
+				color: $bb-text-color;
+				font-size: 13px;
+				font-weight: 400;
+				border: none;
+				background: none;
+				padding: 2px 4px;
+				cursor: pointer;
+			}
+		}
+
+		.bb-admin-notice__icon {
+			display: flex;
+
+			[class*="bb-icon"] {
+				color: $bb-icon-warning-primary-color;
+				font-size: 20px;
+				font-weight: 500;
+			}
+		}
+
+		.bb-admin-notice__close {
+			display: flex;
+			border: none;
+			background: none;
+			padding: 0;
+			cursor: pointer;
+
+			[class*="bb-icon"] {
+				color: $bb-icon-tertiary-color;
+				font-size: 16px;
+				font-weight: 400;
+			}
+		}
+	}
+}
+
 // Animation for spinner
 @keyframes spin {
 	from {
