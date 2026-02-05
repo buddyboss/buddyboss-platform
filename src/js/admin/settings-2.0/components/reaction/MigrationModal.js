@@ -23,6 +23,57 @@ export function MigrationModal({ isOpen, onClose, migrationData }) {
         }
     }, [isOpen]);
 
+    /**
+     * Handle multiple event listeners for migration wizard.
+     */
+    useEffect(() => {
+        if (!wizardContent) {
+            return;
+        }
+
+        const handleFromAllEmotionsChange = (e) => {
+            if (e.target.name === 'from_all_emotions') {
+                const reactionInputs = document.querySelectorAll('input[name="from_reactions[]"]');
+                reactionInputs.forEach(input => {
+                    input.checked = e.target.checked;
+                    input.disabled = e.target.checked;
+                });
+            }
+
+            const emotionInputs = document.querySelectorAll('input.migrate_emotion_input');
+            const isAnyEmotionChecked = Array.from(emotionInputs).some(input => input.checked);
+
+            if(isAnyEmotionChecked) {
+                document.querySelector('button.footer_next_wizard_screen').classList.remove( 'disabled' );
+            } else {
+                document.querySelector('button.footer_next_wizard_screen').classList.add( 'disabled' );
+            }
+        };
+
+        const handleFooterNextWizardScreenClick = (e) => {
+            if (e.target.classList.contains('footer_next_wizard_screen') && !e.target.classList.contains('disabled')) {
+                document.querySelector('.bbpro_migration_wizard_2').classList.add( 'active' );
+                document.querySelector('.bbpro_migration_wizard_1').classList.remove( 'active' );
+            }
+        };
+
+        const handleCloseMigrationWizard = (e) => {
+            if (e.target.classList.contains('cancel_migration_wizard')) {
+                onClose();
+            }
+        };
+
+        document.addEventListener('change', handleFromAllEmotionsChange);
+        document.addEventListener('click', handleFooterNextWizardScreenClick);
+        document.addEventListener('click', handleCloseMigrationWizard);
+
+        return () => {
+            document.removeEventListener('change', handleFromAllEmotionsChange);
+            document.removeEventListener('click', handleFooterNextWizardScreenClick);
+            document.removeEventListener('click', handleCloseMigrationWizard);
+        };
+    }, [wizardContent]);
+
     const loadWizardData = () => {
         setLoading(true);
         setError('');
