@@ -57,6 +57,21 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 2.19.0 =
+* Bug: Activity - Fixed a fatal error on the Activity admin edit screen when Akismet is enabled
+* Bug: Activity - Fixed an issue where moved documents still appeared in the original folder until the activity page was refreshed
+* Bug: Core - Resolved a vulnerability that allowed unauthenticated access to document folder views
+* Bug: Media - Fixed an issue where videos in the activity feed were not playing correctly on macOS Safari and iOS devices
+* Bug: Media - Updated album permissions and server-side validation so members can no longer upload, edit, or delete photos/videos in other users’ group albums, ensuring consistent and secure behavior across app and web
+* Bug: MemberPress - Fixed UI inconsistencies in MemberPress Courses by aligning icons, colors, and spacing with the BuddyBoss Platform design
+* Bug: ReadyLaunch - Fixed an issue where the Group Leave confirmation modal in ReadyLaunch was misaligned and displayed incorrectly
+* Bug: ReadyLaunch - Fixed an issue where the loader was not displayed while fetching subscription data in Notification Settings
+* Bug: ReadyLaunch - Fixed search filter dropdown options being cut off on smaller screen sizes
+* Bug: ReadyLaunch - Fixed the Members listing page loader to maintain a proper 1:1 aspect ratio in ReadyLaunch Grid view
+* Bug: ReadyLaunch - Resolved dropdown positioning issue for the last message threads in ReadyLaunch
+* Bug: ReadyLaunch - Resolved icon flicker and incorrect state display for the group subscription button in ReadyLaunch
+* Bug: ReadyLaunch - Resolved Show More button misalignment on ReadyLaunch media pages for small screens
+
 = 2.18.0 =
 * Enhancement: Translations - Added new hooks to extend BuddyPress Multilingual 1.8.3 compatibility with BuddyBoss Platform components
 * Bug: Activity - Fixed a fatal error where the Activity Feed block caused pages to load empty when Platform Pro was not installed
