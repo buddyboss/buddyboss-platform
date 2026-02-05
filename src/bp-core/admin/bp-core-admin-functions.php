@@ -3906,3 +3906,121 @@ function bb_web_performance_tester() {
 
 	return $bb_wpt;
 }
+
+/**
+ * Get structured PRO notice data for the React admin settings UI.
+ *
+ * Returns an array with badge and video link data that the React UI renders
+ * as a visual PRO pill badge + play icon button. This is the Settings 2.0
+ * equivalent of `bb_get_pro_label_notice()` which returns HTML strings.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $type Feature type (e.g. 'reaction', 'schedule_posts', 'polls').
+ *
+ * @return array {
+ *     PRO notice data for React rendering.
+ *
+ *     @type bool   $show       Whether the notice should be shown.
+ *     @type string $badge_text Badge label text (default "PRO").
+ *     @type string $badge_icon BuddyBoss icon CSS class for the badge.
+ *     @type string $link_url   URL for the play/video button (upgrade or tutorial).
+ *     @type string $link_icon  BuddyBoss icon CSS class for the play button.
+ * }
+ */
+function bb_admin_settings_get_pro_notice( $type = 'default' ) {
+	static $retval = array();
+
+	if ( isset( $retval[ $type ] ) ) {
+		return $retval[ $type ];
+	}
+
+	$data = array(
+		'show'       => false,
+		'badge_text' => __( 'PRO', 'buddyboss' ),
+		'badge_icon' => 'bb-icons-rl-crown-simple',
+		'link_url'   => '',
+		'link_icon'  => 'bb-icons-rl-play',
+	);
+
+	$is_pro_locked = false;
+
+	if ( function_exists( 'bb_platform_pro' ) && version_compare( bb_platform_pro()->version, '1.1.9.1', '<=' ) ) {
+		$is_pro_locked = true;
+	} elseif (
+		function_exists( 'bb_platform_pro' ) &&
+		! empty( $type ) &&
+		(
+			(
+				'reaction' === $type &&
+				version_compare( bb_platform_pro()->version, '2.4.50', '<' )
+			) ||
+			(
+				'schedule_posts' === $type &&
+				function_exists( 'bb_pro_schedule_posts_version' ) &&
+				version_compare( bb_platform_pro()->version, bb_pro_schedule_posts_version(), '<' )
+			) ||
+			(
+				'polls' === $type &&
+				function_exists( 'bb_pro_poll_version' ) &&
+				version_compare( bb_platform_pro()->version, bb_pro_poll_version(), '<' )
+			) ||
+			(
+				'sso' === $type &&
+				function_exists( 'bb_pro_sso_version' ) &&
+				version_compare( bb_platform_pro()->version, bb_pro_sso_version(), '<' )
+			) ||
+			(
+				'group_activity_topics' === $type &&
+				function_exists( 'bb_pro_group_activity_topics_version' ) &&
+				version_compare( bb_platform_pro()->version, bb_pro_group_activity_topics_version(), '<' )
+			) ||
+			(
+				'post_feature_image' === $type &&
+				function_exists( 'bb_pro_post_feature_image_version' ) &&
+				version_compare( bb_platform_pro()->version, bb_pro_post_feature_image_version(), '<' )
+			)
+		)
+	) {
+		$is_pro_locked = true;
+	} elseif (
+		! function_exists( 'bb_platform_pro' ) ||
+		(
+			function_exists( 'bb_pro_should_lock_features' )
+				? bb_pro_should_lock_features()
+				: ! bbp_pro_is_license_valid()
+		)
+	) {
+		$is_pro_locked = true;
+	}
+
+	if ( $is_pro_locked ) {
+		$data['show'] = true;
+
+		// Per-feature URLs so each PRO badge links to relevant docs/upgrade page.
+		$feature_urls = array(
+			'reaction'              => 'https://www.buddyboss.com/resources/docs/components/reactions/',
+			'schedule_posts'        => '',
+			'polls'                 => '',
+			'sso'                   => '',
+			'group_activity_topics' => '',
+			'post_feature_image'    => '',
+		);
+
+		$data['link_url'] = isset( $feature_urls[ $type ] ) ? $feature_urls[ $type ] : 'https://www.buddyboss.com/platform/';
+	}
+
+	/**
+	 * Filters the PRO notice data for the React admin settings UI.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array  $data PRO notice data.
+	 * @param string $type Feature type.
+	 */
+	$data = apply_filters( 'bb_admin_settings_pro_notice_data', $data, $type );
+
+	$retval[ $type ] = $data;
+
+	return $data;
+}

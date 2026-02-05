@@ -1,0 +1,277 @@
+.bb-admin-settings {
+	padding: 0;
+	max-width: 1600px;
+	margin: 0 auto;
+
+	&__container {
+		padding: 0 24px 24px;
+	}
+
+	&__filters {
+		display: flex;
+		gap: 24px;
+		margin: 16px 0 24px;
+		align-items: center;
+		justify-content: space-between;
+		padding: 0 0 24px 0;
+		border-bottom: 1px solid $bb-border-primary-color;
+		min-height: 56px;
+	}
+
+	&__filter-tabs {
+		display: flex;
+		gap: 8px;
+		align-items: center;
+	}
+
+	&__filter-tab {
+		background: transparent;
+		border: 0.5px solid $bb-border-tertiary-color;
+		border-radius: 999px;
+		padding: 7px 16px;
+		font-size: 13px;
+		line-height: 18px;
+		font-weight: 500;
+		color: $bb-text-tertiary-color;
+		cursor: pointer;
+		transition: all 0.2s ease;
+		white-space: nowrap;
+
+		&:hover {
+			background: $bb-background-secondary-color;
+		}
+
+		&--active {
+			background: $bb-background-secondary-color;
+			border-color: $bb-border-quaternary-color;
+			border-width: 1px;
+			color: $bb-text-color;
+		}
+	}
+
+	&__filter-right {
+		display: flex;
+		align-items: center;
+		gap: 24px;
+	}
+
+	&__filter-select {
+        min-width: 185px;
+
+		&:focus {
+			outline: none;
+			border-color: #2271b1;
+			box-shadow: 0 0 0 1px #2271b1;
+		}
+	}
+
+	&__grid {
+		display: flex;
+		flex-direction: column;
+		gap: 40px;
+	}
+
+	&__category {
+		&-divider {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			margin-bottom: 16px;
+		}
+
+		&-title {
+			font-size: 14px;
+			font-weight: 500;
+			text-transform: uppercase;
+			letter-spacing: 0.5px;
+			color: $bb-text-secondary-color;
+			margin: 0;
+			white-space: nowrap;
+		}
+	}
+
+	&__features-grid {
+		display: grid;
+		grid-template-columns: repeat(4, 328px);
+		gap: 16px;
+		justify-content: start;
+
+		@media (max-width: 1400px) {
+			grid-template-columns: repeat(3, 328px);
+		}
+
+		@media (max-width: 1100px) {
+			grid-template-columns: repeat(2, 328px);
+		}
+
+		@media (max-width: 700px) {
+			grid-template-columns: 1fr;
+		}
+	}
+
+	&__feature-card {
+		background: $bb-background-base-color;
+		border: 0.5px solid $bb-border-tertiary-color;
+		border-radius: $bb-border-radius-xl;
+		padding: 16px;
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		min-height: 208px;
+		transition: box-shadow 0.2s ease;
+	}
+
+	&__feature-body {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+		flex: 1;
+	}
+
+	&__feature-top {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+	}
+
+	&__feature-name {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+		flex: 1;
+	}
+
+	&__feature-icon-frame {
+		width: 28px;
+		height: 28px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex-shrink: 0;
+
+		.dashicons {
+			font-size: 28px;
+			width: 28px;
+			height: 28px;
+			line-height: 28px;
+			color: $bb-icon-primary-color;
+		}
+
+		// BuddyBoss ReadyLaunch font icons
+		.bb-icons-rl {
+			font-size: 28px;
+			width: 28px;
+			height: 28px;
+			line-height: 28px;
+			color: $bb-icon-primary-color;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+	}
+
+	&__feature-icon-img {
+		width: 28px;
+		height: 28px;
+		object-fit: contain;
+	}
+
+	&__feature-title {
+		margin: 0;
+		font-size: 16px;
+		font-weight: 500;
+		line-height: 22px;
+		color: $bb-text-color;
+	}
+
+	&__feature-description {
+		margin: 0;
+		color: $bb-text-tertiary-color;
+		font-size: 13px;
+		line-height: 18px;
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
+	&__feature-bottom {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		margin-top: auto;
+		padding-top: 8px;
+	}
+
+	&__feature-left {
+		flex: 1;
+		min-width: 0;
+	}
+
+	&__feature-settings-btn.components-button {
+		display: inline-flex;
+		align-items: center;
+		gap: 4px;
+		background: $bb-background-secondary-color;
+		border: 0.5px solid $bb-border-secondary-color;
+		border-radius: $bb-border-radius-lg;
+		padding: 6px 16px;
+		min-height: 32px;
+		font-size: 14px;
+		line-height: 20px;
+		color: $bb-text-color;
+		font-weight: 400;
+		cursor: pointer;
+		transition: background 0.2s ease, opacity 0.2s ease;
+		text-decoration: none;
+		box-shadow: none;
+
+		i[class*="bb-icon-"] {
+			font-size: 16px;
+			width: 16px;
+			height: 16px;
+			line-height: 16px;
+			color: $bb-icon-color;
+			margin: 0;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+
+		&:hover {
+			background: #e0e0e0;
+			border: 0.5px solid $bb-border-color;
+			box-shadow: none;
+		}
+
+		&:focus {
+			background: $bb-background-secondary-color;
+			border: 0.5px solid $bb-border-color;
+			box-shadow: 0 0 0 1px #2271b1;
+		}
+
+		&--disabled,
+		&:disabled {
+			opacity: 0.5;
+			cursor: not-allowed;
+			pointer-events: none;
+			background: $bb-background-secondary-color;
+
+			&:hover {
+				background: $bb-background-secondary-color;
+			}
+		}
+	}
+
+	&__feature-right {
+		flex-shrink: 0;
+		margin-left: 16px;
+	}
+
+	&__empty {
+		text-align: center;
+		padding: 40px;
+		color: $bb-text-tertiary-color;
+	}
+}

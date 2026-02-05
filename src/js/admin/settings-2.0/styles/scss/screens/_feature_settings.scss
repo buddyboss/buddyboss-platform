@@ -1,0 +1,880 @@
+.bb-admin-feature-settings {
+
+    &__container {
+        display: flex;
+        background-color: $bb-background-secondary-color;
+        border-right: 1px solid $bb-border-secondary-color;
+        min-height: calc(100vh - 50px);
+        margin: 0 -20px;
+    }
+
+    &__sidebar {
+        width: 248px;
+        background-color: $bb-background-secondary-color;
+        border-right: 1px solid $bb-border-secondary-color;
+        padding: 16px;
+        flex-shrink: 0;
+        box-sizing: border-box;
+    }
+
+    .bb-admin-side-nav {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+    }
+
+    .bb-admin-side-nav__back-btn {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        width: 100%;
+        padding: 6px 16px;
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 20px;
+        color: $bb-text-color;
+        background-color: $bb-background-secondary-color;
+        border: 1px solid $bb-border-secondary-color;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background-color .2s ease;
+        text-decoration: none;
+
+        &:hover {
+            background-color: $bb-background-base-color;
+        }
+    }
+
+    .bb-admin-side-nav {
+
+        &__list {
+            margin: 0;
+        }
+
+        &__item {
+            margin: 0;
+        }
+
+        &__link {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: $bb-text-tertiary-color;
+            font-size: 13px;
+            font-weight: 500;
+            padding: 8px 16px;
+            border: 0;
+            cursor: pointer;
+            border-radius: $bb-border-radius-lg;
+            border: 1px solid transparent;
+            width: 100%;
+            box-sizing: border-box;
+
+            [class*="bb-icons-"] {
+                color: $bb-icon-tertiary-color;
+                font-size: 20px;
+                line-height: 1;
+            }
+
+            &:hover,
+            &--active {
+                color: $bb-text-color;
+                background-color: $bb-background-base-color;
+                border-color: $bb-border-primary-color;
+
+                [class*="bb-icons-"] {
+                    color: $bb-icon-color;
+                }
+            }
+        }
+
+        &__icon {
+            display: flex;
+        }
+
+    }
+
+    &__main {
+        flex: 1;
+        padding: 32px;
+    }
+
+    &__content {
+        max-width: 985px;
+        margin: 0 auto;
+        width: 100%;
+    }
+
+    &__section {
+        background-color: $bb-background-base-color;
+        border: 1px solid $bb-border-primary-color;
+        border-radius: $bb-border-radius-2xl;
+        box-shadow: 0px 1.5px 1px 0px rgba(0, 0, 0, 0.16);
+        margin-bottom: 24px;
+
+        &-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid $bb-border-secondary-color;
+            padding: 20px 4px;
+            margin: 0 24px;
+        }
+
+        &-title {
+            color: $bb-text-color;
+            font-size: 18px;
+            font-weight: 500;
+            margin: 0;
+        }
+
+        .help-icon {
+            color: $bb-icon-tertiary-color;
+            font-size: 24px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 0;
+            margin: 0;
+            outline: none;
+            box-shadow: none;
+            text-decoration: none;
+        }
+
+        &-body {
+            padding: 32px 24px;
+        }
+    }
+}
+
+.bb-admin-settings-form__field {
+    display: flex;
+    gap: 32px;
+    padding-bottom: 24px;
+
+    &:empty {
+        margin-top: 0;
+        padding-bottom: 0;
+    }
+
+    &:not(.bb-admin-settings-form__field--full-width) {
+        border-bottom: 1px solid $bb-border-secondary-color;
+    }
+
+    &:last-child {
+        padding-bottom: 0;
+        border-bottom: none;
+    }
+
+    + .bb-admin-settings-form__field {
+        margin-top: 24px;
+    }
+
+    &:has(.bb-admin-reaction-info-wrapper) {
+        margin-top: 0;
+        padding-bottom: 0;
+    }
+
+    &-label {
+        color: $bb-text-color;
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 1;
+        width: 245px;
+
+        > label {
+            display: flex;
+            align-items: center;
+        }
+    }
+
+    &-content {
+        flex: 1;
+    }
+
+    &-description {
+        color: $bb-text-tertiary-color;
+        font-size: 13px;
+        font-weight: 400;
+        line-height: 1.5;
+        margin: 20px 0 0 0;
+    }
+
+    .bb-admin-reaction-info {
+        color: $bb-text-tertiary-color;
+        font-size: 13px;
+        padding-top: 24px;
+
+        a {
+            color: $bb-link-color;
+            text-decoration: none;
+        }
+    }
+}
+
+.bb-admin-settings-field__toggle-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* ----------------------------------------------------------------
+   Reactions Settings
+   ---------------------------------------------------------------- */
+
+.bb-reaction-mode {
+
+    &__cards {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 24px;
+        max-width: 656px;
+    }
+
+    &__radios {
+        display: flex;
+        align-items: center;
+        gap: 24px;
+        margin-bottom: 8px;
+    }
+
+    &__radio-label {
+        display: flex;
+        align-items: center;
+        color: $bb-text-color;
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 20px;
+
+        input {
+            margin: 0 8px 0 0;
+        }
+
+        &.disabled {
+
+            input[type=radio] {
+                border-color: $bb-icon-brand-disabled-color;
+            }
+
+            .bb-reaction-mode__radio-label-text {
+                color: $bb-text-disabled-color;
+            }
+        }
+    }
+
+    .bb-reaction-mode-description {
+        color: $bb-text-tertiary-color;
+        font-size: 13px;
+        line-height: 18px;
+        margin: 0;
+        padding: 3px 0;
+    }
+}
+
+.bb-pro-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 8px;
+    border: 1px solid #e0623d;
+    border-radius: $bb-border-radius-full;
+    background: linear-gradient(100deg, rgba(224, 98, 61, 0.10) 4.86%, rgba(62, 52, 255, 0.10) 91.52%);
+    margin: 0 8px 0 16px;
+
+    span {
+        font-size: 11px;
+        font-weight: 500;
+        line-height: 16px;
+        color: $bb-text-secondary-color;
+    }
+
+    [class*="bb-icon"] {
+        font-size: 16px;
+        line-height: 1;
+        font-weight: 400;
+        margin-right: 4px;
+    }
+
+    &__play-link {
+        display: inline-flex;
+        vertical-align: middle;
+        text-decoration: none;
+
+        [class*="bb-icon"] {
+            color: $bb-icon-secondary-color;
+            font-size: 16px;
+            font-weight: 400;
+            padding: 4px;
+            background-color: $bb-background-color;
+            border: 1px solid $bb-border-secondary-color;
+            border-radius: $bb-border-radius-full;
+        }
+    }
+}
+
+.bb-admin-settings-form__field--pro-locked {
+
+    .bb-admin-settings-form__field-content {
+        opacity: 0.6;
+        pointer-events: none;
+        user-select: none;
+    }
+}
+
+.bb_emotions_item {
+    height: 96px;
+    width: 96px;
+    background: $bb-background-base-color;
+    border: 0.5px solid $bb-border-secondary-color;
+    border-radius: $bb-border-radius-lg;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+
+    &.is-disabled {
+        opacity: 0.5;
+        pointer-events: none;
+    }
+
+    .bb_emotions_icon {
+        height: 64px;
+        background: $bb-background-primary-color;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+
+        i.bb-icon-rf {
+            font-size: 32px;
+            line-height: 1;
+        }
+
+        img {
+            width: 32px;
+            height: 32px;
+            object-fit: contain;
+        }
+
+        .bbpro-icon-emoji {
+            font-size: 32px;
+            line-height: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            img {
+                width: 32px;
+                height: 32px;
+            }
+        }
+    }
+
+    .bb_emotions_footer {
+        min-height: 32px;
+        background: $bb-background-base-color;
+        border-top: 0.5px solid $bb-border-secondary-color;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 4px 8px;
+        gap: 4px;
+        box-sizing: border-box;
+
+        span {
+            font-size: 13px;
+            font-weight: 400;
+            line-height: 18px;
+            color: $bb-text-color;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            flex: 1;
+        }
+
+        .bb_emotions_actions {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+
+            // WordPress DropdownMenu toggle button
+            .components-dropdown-menu__toggle {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background: none;
+                border: none;
+                cursor: pointer;
+                padding: 0;
+                min-width: auto;
+                height: auto;
+                color: $bb-icon-tertiary-color;
+
+                i {
+                    font-size: 16px;
+                    line-height: 1;
+                    font-weight: 700;
+                }
+
+                &:hover,
+                &:focus,
+                &.is-pressed {
+                    color: $bb-text-color;
+                    background: none;
+                    box-shadow: none;
+                }
+
+                // Hide default WordPress icon if present
+                .dashicon,
+                svg:not(:first-child) {
+                    display: none;
+                }
+            }
+        }
+    }
+
+    &.bb_emotions_item_action {
+        background: $bb-background-primary-color;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+
+        &:hover {
+            background: $bb-background-primary-color;
+        }
+
+        .bb_emotions_add_new {
+            width: 100%;
+            height: 100%;
+            background: none;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+
+            i {
+                font-size: 32px;
+                line-height: 1;
+                color: $bb-text-tertiary-color;
+            }
+        }
+
+        &:hover .bb_emotions_add_new i {
+            color: $bb-text-color;
+        }
+    }
+}
+
+.bb-reaction-button-field {
+    display: flex;
+}
+
+.bb-reaction-button-card {
+    width: 96px;
+    height: 96px;
+    background: $bb-background-base-color;
+    border: 0.5px solid $bb-border-secondary-color;
+    border-radius: $bb-border-radius-lg;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+
+    &__preview {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
+
+    &__icon-wrapper {
+        height: 64px;
+        background: $bb-background-primary-color;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    &__icon-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+
+        [class*="bb-icon"] {
+            font-size: 32px;
+            line-height: 1;
+            color: $bb-text-color;
+        }
+
+        &:hover i {
+            color: $bb-icon-color;
+        }
+    }
+
+    &__footer {
+        min-height: 32px;
+        background: $bb-background-base-color;
+        border-top: 0.5px solid $bb-border-secondary-color;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 4px 8px;
+        gap: 4px;
+        box-sizing: border-box;
+
+        input[type="text"] {
+            font-size: 13px;
+            font-weight: 400;
+            line-height: 1;
+            color: $bb-text-color;
+            border: none;
+            background: transparent;
+            padding: 0;
+            margin: 0;
+            outline: none;
+            flex: 1;
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            min-height: auto;
+
+            &:focus {
+                outline: none;
+                box-shadow: none;
+            }
+
+            &::placeholder {
+                color: $bb-text-tertiary-color;
+            }
+        }
+    }
+
+    &__menu-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 0;
+        flex-shrink: 0;
+        color: $bb-text-tertiary-color;
+
+        // WordPress DropdownMenu toggle button
+        .components-dropdown-menu__toggle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            min-width: auto;
+            height: auto;
+            color: $bb-icon-tertiary-color;
+
+            i {
+                font-size: 16px;
+                line-height: 1;
+                font-weight: 700;
+            }
+
+            &:hover,
+            &:focus,
+            &.is-pressed {
+                color: $bb-text-color;
+                background: none;
+                box-shadow: none;
+            }
+
+            // Hide default WordPress icon if present
+            .dashicon,
+            svg:not(:first-child) {
+                display: none;
+            }
+        }
+    }
+}
+
+/* Emotions modal */
+#bbpro_emotion_modal {
+
+    .media-modal-content {
+        background: transparent;
+        box-shadow: none;
+
+        .bbpro-modal-box__header {
+            background-color: $bb-background-base-color;
+            border-bottom: 1px solid $bb-border-secondary-color;
+            border: 1px solid $bb-border-secondary-color;
+            border-radius: $bb-border-radius-xl $bb-border-radius-xl 0 0;
+            padding: 22px 24px;
+
+            h3 {
+                color: $bb-text-color;
+                font-size: 18px;
+                font-weight: 500;
+                line-height: 1;
+            }
+        }
+
+        .bbpro-modal-box__body {
+            height: calc(100% - 115px);
+        }
+
+        .bbpro-modal-box__footer {
+            background-color: $bb-background-base-color;
+            border-top: 1px solid $bb-border-secondary-color;
+            border-radius: 0 0 $bb-border-radius-xl $bb-border-radius-xl;
+            padding: 8px 16px;
+
+            .bbpro_select_icon {
+                font-size: 14px;
+                font-weight: 400;
+                line-height: 18px;
+                color: $bb-text-inverse-color;
+                background-color: $bb-background-brand-primary-color;
+                padding: 8px 16px;
+                border: none;
+                border-radius: $bb-border-radius-lg;
+            }
+        }
+    }
+
+    .media-modal-close {
+        top: 20px;
+        right: 20px;
+        width: auto;
+        height: auto;
+        box-shadow: none;
+
+        .media-modal-icon {
+            display: flex;
+
+            &:before {
+
+                    &:hover {
+                        background-color: $bb-background-primary-color;
+                    }
+
+                    &:focus {
+                        outline: none;
+                    }
+                content: "\e4f6";
+                color: $bb-icon-secondary-color;
+                font-size: 24px;
+                font-family: "bb-icons-rl";
+                font-weight: 400;
+            }
+        }
+    }
+
+    #bbpro-icon-left-section {
+        background-color: $bb-background-base-color;
+        border-right: 1px solid $bb-border-secondary-color;
+
+        .bbpro-icon-filters {
+            border-bottom: 1px solid $bb-border-secondary-color;
+
+            select {
+                padding: 6px 8px;
+                border-radius: $bb-border-radius-md;
+                border: 1px solid $bb-border-tertiary-color;
+                font-size: 13px;
+                line-height: 18px;
+                color: $bb-text-color;
+                cursor: pointer;
+                appearance: none;
+                padding-right: 26px;
+                background: $bb-background-color url(data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2211%22%20height%3D%226%22%20viewBox%3D%220%200%2011%206%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M10.854%200.854028L5.85403%205.85403C5.80759%205.90052%205.75245%205.9374%205.69175%205.96256C5.63105%205.98772%205.56599%206.00067%205.50028%206.00067C5.43457%206.00067%205.36951%205.98772%205.30881%205.96256C5.24811%205.9374%205.19296%205.90052%205.14653%205.85403L0.146528%200.854028C0.0527077%200.760208%200%200.63296%200%200.500278C0%200.367596%200.0527077%200.240348%200.146528%200.146528C0.240348%200.0527074%200.367596%200%200.500278%200C0.63296%200%200.760208%200.0527074%200.854028%200.146528L5.50028%204.7934L10.1465%200.146528C10.193%200.100073%2010.2481%200.0632225%2010.3088%200.0380812C10.3695%200.0129398%2010.4346%200%2010.5003%200C10.566%200%2010.631%200.0129398%2010.6917%200.0380812C10.7524%200.0632225%2010.8076%200.100073%2010.854%200.146528C10.9005%200.192983%2010.9373%200.248133%2010.9625%200.30883C10.9876%200.369526%2011.0006%200.434581%2011.0006%200.500278C11.0006%200.565975%2010.9876%200.63103%2010.9625%200.691726C10.9373%200.752423%2010.9005%200.807573%2010.854%200.854028Z%22%20fill%3D%22%23666666%22%2F%3E%3C%2Fsvg%3E) no-repeat right 8px center;
+                background-size: 11px 6px;
+
+                &:hover {
+                    color: $bb-text-color;
+                }
+            }
+        }
+    }
+
+    #bbpro-icon-right-section {
+        background-color: $bb-background-base-color;
+    }
+
+    #bbpro_icon_preview {
+
+        h3 {
+            color: $bb-text-color;
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 1;
+        }
+
+        > div[class*="bbpro-new-icon"] {
+
+            input[type="text"] {
+                background-color: $bb-background-primary-color;
+                border: 1px solid $bb-border-secondary-color;
+                color: $bb-text-color;
+                font-size: 13px;
+                font-weight: 400;
+                padding: 2px 8px;
+                border-radius: $bb-border-radius-md;
+            }
+
+            label {
+                color: $bb-text-secondary-color;
+                font-size: 13px;
+                font-weight: 500;
+            }
+
+            .wp-picker-container {
+
+                .wp-color-result {
+                    border-color: $bb-border-secondary-color;
+
+                    span {
+                        background-color: $bb-background-secondary-color;
+                    }
+                }
+
+                .wp-picker-default {
+                    background-color: $bb-background-secondary-color;
+                    border-color: $bb-border-secondary-color;
+                    color: $bb-text-color;
+                    font-size: 13px;
+                    font-weight: 400;
+                    padding: 4px 8px;
+                    border-radius: $bb-border-radius-md;
+                    line-height: 1.8;
+                    min-height: auto;
+                }
+
+                .iris-picker {
+                    background-color: $bb-background-base-color;
+                    border: 1px solid $bb-border-secondary-color;
+                    border-radius: $bb-border-radius-xl;
+                    box-shadow: none;
+
+                    .iris-picker-inner {
+                        background-color: $bb-background-base-color;
+                    }
+
+                    .iris-square,
+                    .iris-slider,
+                    .iris-square-inner,
+                    .iris-palette {
+                        border-radius: $bb-border-radius-xl;
+                    }
+                }
+            }
+        }
+
+        .bbpro-new-icon-text-wrp .bbpro-icon-text-limit {
+            color: $bb-text-tertiary-color;
+        }
+    }
+
+    .bbpro_icon_picker_preview  {
+
+        .icon-picker-preview {
+            background-color: $bb-background-base-color;
+            border: 1px solid $bb-border-secondary-color;
+            border-radius: $bb-border-radius-md;
+            box-shadow: none;
+        }
+    }
+
+    .bbpro-icon-search {
+        position: relative;
+
+        input.bbpro-icon-search-input {
+            background-color: $bb-background-primary-color;
+            border: 1px solid $bb-border-secondary-color;
+            color: $bb-text-color;
+            font-size: 13px;
+            font-weight: 400;
+            padding: 2px 8px 2px 30px;
+            border-radius: $bb-border-radius-md;
+
+            &:focus {
+                outline: none;
+                box-shadow: none;
+                border-color: $bb-border-primary-color;
+            }
+        }
+
+        [class*="bb-icon"] {
+            position: absolute;
+            left: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            padding: 0;
+
+            &:before {
+                content: "\e30c";
+                font-size: 16px;
+                font-family: "bb-icons-rl";
+                line-height: 1;
+                font-weight: 400;
+                color: $bb-icon-tertiary-color;
+            }
+        }
+    }
+
+    .bbpro-dialog-icon-picker a.bbpro-icon {
+        background-color: $bb-background-primary-color;
+        border-radius: $bb-border-radius-md;
+        box-shadow: none;
+        border: 1px solid $bb-border-secondary-color;
+
+        &:after {
+            display: none;
+        }
+
+        .bbpro-icon-title {
+            background-color: $bb-background-base-color;
+            border-top: 1px solid $bb-border-secondary-color;
+            box-shadow: none;
+            border-radius: 0 0 $bb-border-radius-md $bb-border-radius-md;
+
+            span {
+                color: $bb-text-color;
+                font-size: 12px;
+            }
+        }
+
+        .bbpro-icon-emoji {
+            font-size: 4rem;
+            width: 100%;
+            height: calc(100% - 30px);
+            top: 0;
+        }
+
+        img {
+            width: 50px;
+        }
+    }
+
+    .bbpro-icons-list {
+        max-height: calc(100% - 55px);
+
+        .bbpro-icon > i:before {
+            color: $bb-text-color;
+            font-size: 5em;
+        }
+    }
+
+    .bbpro-icon-uploader-main,
+    .bbpro-emojis-list {
+        max-height: calc(100% - 55px);
+        overflow: auto;
+    }
+
+
+}

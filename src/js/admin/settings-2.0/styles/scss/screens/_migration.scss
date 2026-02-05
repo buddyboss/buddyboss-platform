@@ -1,0 +1,264 @@
+/**
+ * BuddyBoss Admin Settings 2.0 - Migration Styles
+ *
+ * @package BuddyBoss\Core\Administration
+ * @since BuddyBoss [BBVERSION]
+ */
+
+// Migration notice wrapper (for both reaction_migration and reaction_notice)
+.bb-admin-reaction-migration-wrapper,
+.bb-admin-reaction-notice-wrapper {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	padding-bottom: 16px;
+	border-bottom: 0.5px solid $bb-border-secondary-color;
+	margin-bottom: 16px;
+	width: 100%;
+}
+
+// Reaction info wrapper (informational text with link)
+.bb-admin-reaction-info-wrapper {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	width: 100%;
+}
+
+.bb-admin-reaction-info {
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	min-height: 24px;
+	padding: 3px 16px 3px 0;
+	max-width: 900px;
+	width: 100%;
+
+	&__text {
+		margin: 0;
+		font-size: 13px; // --font/size/sm
+		line-height: 18px; // --font/line-height/sm
+		font-weight: 400; // --font/weight/regular
+		color: #666; // --text/default/tertiary
+		max-width: 900px;
+	}
+
+	&__link {
+		color: #2c6bff;
+		text-decoration: none;
+		transition: opacity 0.2s ease;
+
+		&:hover {
+			opacity: 0.8;
+			text-decoration: underline;
+		}
+
+		&:focus {
+			outline: 2px solid #2c6bff;
+			outline-offset: 2px;
+		}
+	}
+}
+
+// Migration modal specific styles
+.bb-admin-migration-modal {
+
+	&.components-modal__frame {
+		border-radius: $bb-border-radius-xl;
+		max-width: 850px;
+	}
+
+	.components-modal__header {
+		padding: 10px 24px;
+		height: auto;
+		border-bottom: 1px solid $bb-border-secondary-color;
+
+		.components-button svg {
+			fill: $bb-icon-secondary-color;
+		}
+	}
+
+	.components-modal__header-heading {
+		color: $bb-text-color;
+		font-size: 18px;
+		font-weight: 500;
+	}
+
+	.components-modal__content {
+		padding: 0;
+		margin-top: 52px;
+	}
+
+	&__content {
+		padding: 24px 24px 0; 
+		min-height: 300px;
+	}
+
+	&__loader {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		min-height: 300px;
+		font-size: 32px;
+		color: $bb-primary-color;
+
+		.bb-icons-rl {
+			display: block;
+		}
+	}
+
+	&__wizard {
+
+		.bbpro_migration_wizard_screens {
+			display: none;
+
+			&.active {
+				display: block;
+			}
+		}
+
+		.bbpro-modal-box__body {
+
+			p {
+				margin: 0 0 16px;
+			}
+
+			ul {
+				margin: 0 0 12px;
+				list-style: disc;
+				list-style-position: inside;
+				padding: 0 0 0 16px;
+			}
+
+			.migration_emotion_list {
+
+				ul {
+					display: flex;
+					flex-wrap: wrap;
+					gap: 12px;
+					margin: 0 0 16px 0;
+					list-style: none;
+					padding: 0;
+				}
+			}
+		}
+
+		.bbpro-modal-box__footer {
+			margin-left: -24px;
+			margin-right: -24px;
+			background-color: transparent;
+			border-top: 1px solid $bb-border-secondary-color;
+			padding: 15px 24px;
+
+			.cancel_migration_wizard {
+				background-color: $bb-background-secondary-color;
+				border-color: $bb-border-secondary-color;
+				color: $bb-text-color;
+				font-size: 13px;
+				font-weight: 400;
+				padding: 4px 8px;
+				border-radius: $bb-border-radius-lg;
+				line-height: 1.8;
+				min-height: auto;
+			}
+
+			.start_migration_wizard,
+			.footer_next_wizard_screen {
+				font-size: 14px;
+				font-weight: 400;
+				line-height: 18px;
+				color: $bb-text-inverse-color !important;
+				background-color: $bb-background-brand-primary-color !important;
+				padding: 8px 16px;
+				border: none;
+				border-radius: $bb-border-radius-lg;
+				margin-left: 8px;
+
+				&.disabled {
+					opacity: 0.5;
+					pointer-events: none;
+				}
+			}
+		}
+	}
+
+
+}
+
+.bb-admin-reaction-migration-wrapper {
+
+	.bb-admin-notice {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		padding: 6px 8px;
+		border: 1px solid transparent;
+		border-radius: $bb-border-radius-lg;
+
+		&--warning {
+			background-color: $bb-background-warning-primary-color;
+			border-color: $bb-border-warning-secondary-color;
+		}
+
+		.bb-admin-notice__content {
+			color: text-color;
+			font-size: 13px;
+
+			p {
+				margin: 0;
+			}
+		}
+
+		.bb-admin-notice__actions {
+			margin-left: auto;
+
+			button {
+				color: $bb-text-color;
+				font-size: 13px;
+				font-weight: 400;
+				border: none;
+				background: none;
+				padding: 2px 4px;
+				cursor: pointer;
+			}
+		}
+
+		.bb-admin-notice__icon {
+			display: flex;
+
+			[class*="bb-icon"] {
+				color: $bb-icon-warning-primary-color;
+				font-size: 20px;
+				font-weight: 500;
+			}
+		}
+
+		.bb-admin-notice__close {
+			display: flex;
+			border: none;
+			background: none;
+			padding: 0;
+			cursor: pointer;
+
+			[class*="bb-icon"] {
+				color: $bb-icon-tertiary-color;
+				font-size: 16px;
+				font-weight: 400;
+			}
+		}
+	}
+}
+
+// Animation for spinner
+@keyframes spin {
+	from {
+		transform: rotate(0deg);
+	}
+	to {
+		transform: rotate(360deg);
+	}
+}
+
+.animate-spin {
+	animation: spin 1s linear infinite;
+}

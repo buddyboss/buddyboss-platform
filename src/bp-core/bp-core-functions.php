@@ -10104,3 +10104,201 @@ function bb_is_readylaunch_enabled() {
 function bb_pro_post_feature_image_version() {
 	return '2.9.0';
 }
+
+/**
+ * Get the Feature Loader instance.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return BB_Feature_Loader
+ */
+function bb_feature_loader() {
+	return BB_Feature_Loader::instance();
+}
+
+/**
+ * Get the Feature Registry instance.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return BB_Feature_Registry
+ */
+function bb_feature_registry() {
+	return BB_Feature_Registry::instance();
+}
+
+/**
+ * Register a feature.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $feature_id Feature ID.
+ * @param array  $args       Feature arguments.
+ * @return bool|WP_Error True on success, WP_Error on failure.
+ */
+function bb_register_feature( $feature_id, $args = array() ) {
+	return bb_feature_registry()->bb_register_feature( $feature_id, $args );
+}
+
+/**
+ * Get the admin URL for a feature's settings page.
+ *
+ * Returns URL in format: admin.php?page=bb-settings&tab={feature_id}&panel={panel_id}
+ *
+ * Hierarchy: Feature (tab) → Side Panel (panel) → Sections → Fields
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $feature_id Feature ID (e.g., 'reactions', 'activity').
+ * @param string $panel_id   Optional side panel ID.
+ * @return string Admin URL for the feature settings.
+ */
+function bb_get_feature_settings_url( $feature_id, $panel_id = '' ) {
+	$url = admin_url( 'admin.php?page=bb-settings' );
+
+	if ( ! empty( $feature_id ) ) {
+		$url = add_query_arg( 'tab', sanitize_key( $feature_id ), $url );
+	}
+
+	if ( ! empty( $panel_id ) ) {
+		$url = add_query_arg( 'panel', sanitize_key( $panel_id ), $url );
+	}
+
+	return $url;
+}
+
+/**
+ * Get the admin URL for the main settings page (Features grid).
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string Admin URL for the main settings page.
+ */
+function bb_get_settings_url() {
+	return admin_url( 'admin.php?page=bb-settings' );
+}
+
+/**
+ * Register a side panel for a feature.
+ *
+ * Side panels appear in the left sidebar navigation when viewing feature settings.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $feature_id    Feature ID.
+ * @param string $side_panel_id Side panel ID.
+ * @param array  $args          Side panel arguments.
+ * @return bool|WP_Error True on success, WP_Error on failure.
+ */
+function bb_register_side_panel( $feature_id, $side_panel_id, $args = array() ) {
+	return bb_feature_registry()->bb_register_side_panel( $feature_id, $side_panel_id, $args );
+}
+
+/**
+ * Register a feature section.
+ *
+ * Sections are the white boxes/cards that contain fields.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $feature_id    Feature ID.
+ * @param string $side_panel_id Side panel ID.
+ * @param string $section_id    Section ID.
+ * @param array  $args          Section arguments.
+ * @return bool|WP_Error True on success, WP_Error on failure.
+ */
+function bb_register_feature_section( $feature_id, $side_panel_id, $section_id, $args = array() ) {
+	return bb_feature_registry()->bb_register_section( $feature_id, $side_panel_id, $section_id, $args );
+}
+
+/**
+ * Register a feature field.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $feature_id    Feature ID.
+ * @param string $side_panel_id Side panel ID.
+ * @param string $section_id    Section ID.
+ * @param array  $args          Field arguments.
+ * @return bool|WP_Error True on success, WP_Error on failure.
+ */
+function bb_register_feature_field( $feature_id, $side_panel_id, $section_id, $args = array() ) {
+	return bb_feature_registry()->bb_register_field( $feature_id, $side_panel_id, $section_id, $args );
+}
+
+/**
+ * Register a feature navigation item.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $feature_id Feature ID.
+ * @param array  $args       Navigation item arguments.
+ * @return bool|WP_Error True on success, WP_Error on failure.
+ */
+function bb_register_feature_nav_item( $feature_id, $args = array() ) {
+	return bb_feature_registry()->bb_register_nav_item( $feature_id, $args );
+}
+
+/**
+ * Add action only if feature is active.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string   $feature_id Feature ID to check.
+ * @param string   $tag        Action hook tag.
+ * @param callable $function   Function to call.
+ * @param int      $priority   Priority.
+ * @param int      $accepted_args Number of arguments.
+ * @return bool True if action added, false if feature inactive.
+ */
+function bb_add_action_if_active( $feature_id, $tag, $function, $priority = 10, $accepted_args = 1 ) {
+	if ( ! bp_is_active( $feature_id ) ) {
+		return false;
+	}
+
+	return add_action( $tag, $function, $priority, $accepted_args );
+}
+
+/**
+ * Add filter only if feature is active.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string   $feature_id Feature ID to check.
+ * @param string   $tag        Filter hook tag.
+ * @param callable $function   Function to call.
+ * @param int      $priority   Priority.
+ * @param int      $accepted_args Number of arguments.
+ * @return bool True if filter added, false if feature inactive.
+ */
+function bb_add_filter_if_active( $feature_id, $tag, $function, $priority = 10, $accepted_args = 1 ) {
+	if ( ! bp_is_active( $feature_id ) ) {
+		return false;
+	}
+
+	return add_filter( $tag, $function, $priority, $accepted_args );
+}
+
+/**
+ * Get the Icon Registry instance.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return BB_Icon_Registry
+ */
+function bb_icon_registry() {
+	return BB_Icon_Registry::instance();
+}
+
+/**
+ * Register an icon.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $icon_id Icon ID.
+ * @param array  $args    Icon arguments.
+ * @return bool|WP_Error True on success, WP_Error on failure.
+ */
+function bb_register_icon( $icon_id, $args = array() ) {
+	return bb_icon_registry()->bb_register_icon( $icon_id, $args );
+}

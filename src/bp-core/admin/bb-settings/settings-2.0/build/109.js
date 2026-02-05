@@ -1,0 +1,1 @@
+"use strict";(globalThis.webpackChunk=globalThis.webpackChunk||[]).push([[109],{109:(e,r,n)=>{n.r(r),n.d(r,{GroupsListScreen:()=>u});var s=n(609);function u(){return(0,s.createElement)("div",null,"GroupsListScreen")}}}]);
