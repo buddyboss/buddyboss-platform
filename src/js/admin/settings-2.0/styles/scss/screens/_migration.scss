@@ -62,12 +62,35 @@
 
 // Migration modal specific styles
 .bb-admin-migration-modal {
+
+	&.components-modal__frame {
+		border-radius: $bb-border-radius-xl;
+		max-width: 850px;
+	}
+
+	.components-modal__header {
+		padding: 10px 24px;
+		height: auto;
+		border-bottom: 1px solid $bb-border-secondary-color;
+
+		.components-button svg {
+			fill: $bb-icon-secondary-color;
+		}
+	}
+
+	.components-modal__header-heading {
+		color: $bb-text-color;
+		font-size: 18px;
+		font-weight: 500;
+	}
+
 	.components-modal__content {
 		padding: 0;
+		margin-top: 52px;
 	}
 
 	&__content {
-		padding: 24px;
+		padding: 24px 24px 0; 
 		min-height: 300px;
 	}
 
@@ -85,12 +108,81 @@
 	}
 
 	&__wizard {
-		// Old wizard styles will be applied via the HTML content
-		// This wrapper ensures proper spacing
+
 		.bbpro_migration_wizard_screens {
-			// Styles from old admin will be loaded
+			display: none;
+
+			&.active {
+				display: block;
+			}
+		}
+
+		.bbpro-modal-box__body {
+
+			p {
+				margin: 0 0 16px;
+			}
+
+			ul {
+				margin: 0 0 12px;
+				list-style: disc;
+				list-style-position: inside;
+				padding: 0 0 0 16px;
+			}
+
+			.migration_emotion_list {
+
+				ul {
+					display: flex;
+					flex-wrap: wrap;
+					gap: 12px;
+					margin: 0 0 16px 0;
+					list-style: none;
+					padding: 0;
+				}
+			}
+		}
+
+		.bbpro-modal-box__footer {
+			margin-left: -24px;
+			margin-right: -24px;
+			background-color: transparent;
+			border-top: 1px solid $bb-border-secondary-color;
+			padding: 15px 24px;
+
+			.cancel_migration_wizard {
+				background-color: $bb-background-secondary-color;
+				border-color: $bb-border-secondary-color;
+				color: $bb-text-color;
+				font-size: 13px;
+				font-weight: 400;
+				padding: 4px 8px;
+				border-radius: $bb-border-radius-lg;
+				line-height: 1.8;
+				min-height: auto;
+			}
+
+			.start_migration_wizard,
+			.footer_next_wizard_screen {
+				font-size: 14px;
+				font-weight: 400;
+				line-height: 18px;
+				color: $bb-text-inverse-color !important;
+				background-color: $bb-background-brand-primary-color !important;
+				padding: 8px 16px;
+				border: none;
+				border-radius: $bb-border-radius-lg;
+				margin-left: 8px;
+
+				&.disabled {
+					opacity: 0.5;
+					pointer-events: none;
+				}
+			}
 		}
 	}
+
+
 }
 
 .bb-admin-reaction-migration-wrapper {
