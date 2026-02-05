@@ -651,6 +651,27 @@ function bp_nouveau_ajax_document_document_save() {
 		wp_send_json_error( $response );
 	}
 
+	$group_id = (int) filter_input( INPUT_POST, 'group_id', FILTER_SANITIZE_NUMBER_INT );
+	if (
+		(
+			(
+				bp_is_my_profile() ||
+				bp_is_user_document()
+			) &&
+			empty( bb_user_can_create_document() )
+		) ||
+		(
+			bp_is_active( 'groups' ) &&
+			! empty( $group_id ) &&
+			(
+				! groups_can_user_manage_document( bp_loggedin_user_id(), $group_id ) ||
+				! bp_is_group_document_support_enabled()
+			)
+		)
+	) {
+		wp_send_json_error( $response );
+	}
+
 	$folder_id = filter_input( INPUT_POST, 'folder_id', FILTER_VALIDATE_INT );
 
 	if ( isset( $documents ) && ! empty( $documents ) && $folder_id > 0 ) {
@@ -794,7 +815,8 @@ function bp_nouveau_ajax_document_folder_save() {
 	$folder = new BP_Document_Folder( $folder_id );
 
 	if ( $group_id > 0 ) {
-		$ul = bp_document_user_document_folder_tree_view_li_html( $folder->user_id, $group_id );
+		// For group folders, pass 0 as user_id to get all group folders (not just the current user's).
+		$ul = bp_document_user_document_folder_tree_view_li_html( 0, $group_id );
 	} else {
 		$ul = bp_document_user_document_folder_tree_view_li_html( bp_loggedin_user_id() );
 	}
@@ -894,7 +916,8 @@ function bp_nouveau_ajax_document_child_folder_save() {
 	$folder = new BP_Document_Folder( $folder_id );
 
 	if ( $group_id > 0 ) {
-		$ul = bp_document_user_document_folder_tree_view_li_html( $folder->user_id, $group_id );
+		// For group folders, pass 0 as user_id to get all group folders (not just the current user's).
+		$ul = bp_document_user_document_folder_tree_view_li_html( 0, $group_id );
 	} else {
 		$ul = bp_document_user_document_folder_tree_view_li_html( bp_loggedin_user_id() );
 	}
