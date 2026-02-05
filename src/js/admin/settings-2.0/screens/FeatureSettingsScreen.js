@@ -7,7 +7,7 @@
  * @since BuddyBoss 3.0.0
  */
 
-import { useState, useEffect, useRef } from '@wordpress/element';
+import { useState, useEffect, useRef, useCallback } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { Spinner } from '@wordpress/components';
 import { getCachedFeatureData, setCachedFeatureData, invalidateFeatureCache } from '../utils/featureCache';
@@ -161,7 +161,7 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 						// 1. reaction_items were saved (to get real DB IDs replacing react_key_ IDs)
 						// 2. migration data is returned
 						// This ensures delete checks work correctly (need real IDs for AJAX validation)
-						if (featureId === 'reactions' && (savedReactionItems || response.data?.migration_data || response.data?.migration_status)) {
+						if ( 'reactions' === featureId && ( savedReactionItems || response.data?.migration_data || response.data?.migration_status ) ) {
 							ajaxFetch('bb_admin_get_feature_settings', { feature_id: featureId })
 								.then((featureResponse) => {
 									if (featureResponse.success && featureResponse.data) {
@@ -208,10 +208,17 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 		};
 	}, [featureId]);
 
-	// Auto-trigger save when changedFields updates
+	// Auto-trigger save when changedFields updates.
+	// When a value is a sentinel (true), use current settings for that key (for functional updates from reaction picker).
 	useEffect(() => {
-		if (!initialLoad && Object.keys(changedFields).length > 0) {
-			debouncedSaveRef.current(changedFields);
+		if ( ! initialLoad && Object.keys(changedFields).length > 0 ) {
+			const payload = Object.fromEntries(
+				Object.keys(changedFields).map((k) => [
+					k,
+					changedFields[k] === true ? settings[k] : changedFields[k],
+				])
+			);
+			debouncedSaveRef.current(payload);
 		}
 	}, [changedFields, initialLoad]);
 
@@ -219,7 +226,7 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 	useEffect(() => {
 		if (!toast) return;
 
-		if (toast.status === 'success') {
+		if ( 'success' === toast.status ) {
 			const timer = setTimeout(() => {
 				setToast(null);
 			}, 3000);
@@ -227,15 +234,26 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 		}
 	}, [toast]);
 
-	// Handle setting change - triggers auto-save
-	const handleSettingChange = (fieldName, value) => {
+	// Handle setting change (all fields) - triggers auto-save.
+	// Value may be a function (prevValue) => newValue for functional updates (avoids stale state when merging).
+	// Stable reference so children that depend on this handler do not re-run effects on every render.
+	const handleSettingChange = useCallback((fieldName, value) => {
 		setToast({ status: 'saving', message: __('Saving changes...', 'buddyboss') });
 		setSettings((prev) => ({
 			...prev,
-			[fieldName]: value,
+			[fieldName]: typeof value === 'function' ? value(prev[fieldName]) : value,
 		}));
-		setChangedFields((prev) => ({ ...prev, [fieldName]: value }));
-	};
+		setChangedFields((prev) => {
+			const next = { ...prev };
+			// For functional updates we cannot know the new value here; set a sentinel so save uses latest settings
+			if ( typeof value === 'function' ) {
+				next[fieldName] = true;
+			} else {
+				next[fieldName] = value;
+			}
+			return next;
+		});
+	}, []);
 
 	const handlePanelChange = (route) => {
 		// Route from SideNavigation is already in full format: /settings/featureId/panelId

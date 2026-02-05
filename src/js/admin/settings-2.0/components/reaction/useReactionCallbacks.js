@@ -18,66 +18,67 @@ import { useEffect, useRef } from '@wordpress/element';
  * @returns {Object} Refs for server emotions
  */
 export function useReactionCallbacks(onChange, values) {
-	// Ref to always have access to latest values in callbacks
+	// Refs so callbacks always see latest values/onChange without re-registering the global handler on re-render.
 	const valuesRef = useRef(values);
 	valuesRef.current = values;
+	const onChangeRef = useRef(onChange);
+	onChangeRef.current = onChange;
 
 	// Default emotions from server (field.reactions.emotions) used for seeding when values.reaction_items is empty.
 	const defaultEmotionsRef = useRef([]);
 
 	/**
-	 * Expose React callback for old jQuery emotion picker.
-	 * Updates values.reaction_items directly (single source of truth). No DOM read, no double-fire.
+	 * Register the jQuery emotion picker callback once on mount; cleanup on unmount.
+	 * Callback uses onChangeRef.current so it always has the latest handler without re-running this effect.
 	 */
 	useEffect(() => {
-		if (!window.bbReactEmotionCallbacks) {
+		if ( ! window.bbReactEmotionCallbacks ) {
 			window.bbReactEmotionCallbacks = {};
 		}
 
 		window.bbReactEmotionCallbacks.updateEmotion = (emotionData, isEdit) => {
-			if (!emotionData || typeof emotionData !== 'object') {
+			const onChangeFn = onChangeRef.current;
+			if ( ! onChangeFn || ! emotionData || typeof emotionData !== 'object' ) {
 				return;
 			}
 			// Do not mutate emotionData (picker keeps a reference; would reuse same id on next add).
 			const data = { ...emotionData };
-			const isNew = !isEdit;
-			if (isNew && data.is_emotion_active === undefined) {
+			const isNew = ! isEdit;
+			if ( isNew && data.is_emotion_active === undefined ) {
 				data.is_emotion_active = true;
 			}
 			// New emotion: always use a fresh react_key_ id so each add gets its own key. Edit: use existing id.
-			const key = isNew ? `react_key_${Date.now()}` : (data.id || `react_key_${Date.now()}`);
-			if (isNew) {
+			const key = isNew ? `react_key_${Date.now()}_${( Math.random() * 1e9 ) | 0}` : ( data.id || `react_key_${Date.now()}_${( Math.random() * 1e9 ) | 0}` );
+			if ( isNew ) {
 				data.id = key;
 			}
 
-			const current = valuesRef.current;
-			let reactionsData = (typeof current?.reaction_items === 'object' && current.reaction_items !== null)
-				? { ...current.reaction_items }
-				: {};
-			if (Object.keys(reactionsData).length === 0 && Array.isArray(defaultEmotionsRef.current)) {
-				defaultEmotionsRef.current.forEach((emotion) => {
-					if (emotion && emotion.id != null) {
-						reactionsData[emotion.id] = { ...emotion };
-					}
-				});
-			}
-			let reactionChecks = (typeof current?.reaction_checks === 'object' && current.reaction_checks !== null)
-				? { ...current.reaction_checks }
-				: {};
-			if (Object.keys(reactionChecks).length === 0 && Array.isArray(defaultEmotionsRef.current)) {
-				defaultEmotionsRef.current.forEach((emotion) => {
-					if (emotion && emotion.id != null) {
-						reactionChecks[emotion.id] = emotion.is_emotion_active ? '1' : '';
-					}
-				});
-			}
-
-			reactionsData[key] = data;
-			reactionChecks[key] = data.is_emotion_active ? '1' : '';
-
-			onChange('reaction_items', reactionsData);
-			onChange('reaction_checks', reactionChecks);
-			onChange('bb_reaction_mode', 'emotions');
+			// Functional updates so we always merge on latest state (avoids second add overwriting first when React hasn't re-rendered yet).
+			onChangeFn( 'reaction_items', (prev) => {
+				let reactionsData = ( typeof prev === 'object' && prev !== null ) ? { ...prev } : {};
+				if ( Object.keys( reactionsData ).length === 0 && Array.isArray( defaultEmotionsRef.current ) ) {
+					defaultEmotionsRef.current.forEach( ( emotion ) => {
+						if ( emotion && emotion.id != null ) {
+							reactionsData[ emotion.id ] = { ...emotion };
+						}
+					} );
+				}
+				reactionsData[key] = data;
+				return reactionsData;
+			} );
+			onChangeFn( 'reaction_checks', (prev) => {
+				let reactionChecks = ( typeof prev === 'object' && prev !== null ) ? { ...prev } : {};
+				if ( Object.keys( reactionChecks ).length === 0 && Array.isArray( defaultEmotionsRef.current ) ) {
+					defaultEmotionsRef.current.forEach( ( emotion ) => {
+						if ( emotion && emotion.id != null ) {
+							reactionChecks[ emotion.id ] = emotion.is_emotion_active ? '1' : '';
+						}
+					} );
+				}
+				reactionChecks[key] = data.is_emotion_active ? '1' : '';
+				return reactionChecks;
+			} );
+			onChangeFn( 'bb_reaction_mode', 'emotions' );
 		};
 
 		/**
@@ -101,12 +102,12 @@ export function useReactionCallbacks(onChange, values) {
 		};
 
 		return () => {
-			if (window.bbReactEmotionCallbacks) {
+			if ( window.bbReactEmotionCallbacks ) {
 				delete window.bbReactEmotionCallbacks.updateEmotion;
 				delete window.bbReactEmotionCallbacks.updateReactionButton;
 			}
 		};
-	}, [onChange]);
+	}, []);
 
 	/**
 	 * Delete confirmation: remove emotion from values.reaction_items only.
@@ -136,47 +137,54 @@ export function useReactionCallbacks(onChange, values) {
 			}
 			window.bp.Reaction_Admin.delete_emotion = '';
 
-			if (!emotionId) return;
+			if ( ! emotionId ) return;
 
 			const current = valuesRef.current;
 			let reactionItems = (typeof current?.reaction_items === 'object' && current.reaction_items !== null)
 				? { ...current.reaction_items }
 				: {};
 			if (Object.keys(reactionItems).length === 0 && Array.isArray(defaultEmotionsRef.current)) {
-				defaultEmotionsRef.current.forEach((emotion) => {
-					if (emotion && emotion.id != null) reactionItems[emotion.id] = { ...emotion };
+				defaultEmotionsRef.current.forEach( ( emotion ) => {
+					if ( emotion && emotion.id != null ) {
+						reactionItems[ emotion.id ] = { ...emotion };
+					}
 				});
 			}
 			let reactionChecks = (typeof current?.reaction_checks === 'object' && current.reaction_checks !== null)
 				? { ...current.reaction_checks }
 				: {};
 			if (Object.keys(reactionChecks).length === 0 && Array.isArray(defaultEmotionsRef.current)) {
-				defaultEmotionsRef.current.forEach((emotion) => {
-					if (emotion && emotion.id != null) reactionChecks[emotion.id] = emotion.is_emotion_active ? '1' : '';
+				defaultEmotionsRef.current.forEach( ( emotion ) => {
+					if ( emotion && emotion.id != null ) {
+						reactionChecks[ emotion.id ] = emotion.is_emotion_active ? '1' : '';
+					}
 				});
 			}
 			delete reactionItems[emotionId];
 			delete reactionChecks[emotionId];
 
-			onChange('reaction_items', reactionItems);
-			onChange('reaction_checks', reactionChecks);
-			onChange('bb_reaction_mode', 'emotions');
+			const onChangeFn = onChangeRef.current;
+			if ( onChangeFn ) {
+				onChangeFn( 'reaction_items', reactionItems );
+				onChangeFn( 'reaction_checks', reactionChecks );
+				onChangeFn( 'bb_reaction_mode', 'emotions' );
+			}
 		};
 
 		const handleCancelDelete = (e) => {
 			const target = e.target && e.target.closest && e.target.closest('#bbpro_reaction_delete_confirmation .bb-pro-reaction-cancel-delete-emotion');
-			if (!target) return;
+			if ( ! target ) return;
 			window.bbReactPendingDeleteEmotionId = null;
 		};
 
-		// Capture phase so we run before Pro's handler; stopImmediatePropagation so Pro never removes the DOM node
-		document.addEventListener('click', handleDeleteConfirm, true);
-		document.addEventListener('click', handleCancelDelete, true);
+		// Capture phase so we run before Pro's handler; stopImmediatePropagation so Pro never removes the DOM node. Register once on mount.
+		document.addEventListener( 'click', handleDeleteConfirm, true );
+		document.addEventListener( 'click', handleCancelDelete, true );
 		return () => {
-			document.removeEventListener('click', handleDeleteConfirm, true);
-			document.removeEventListener('click', handleCancelDelete, true);
+			document.removeEventListener( 'click', handleDeleteConfirm, true );
+			document.removeEventListener( 'click', handleCancelDelete, true );
 		};
-	}, [onChange]);
+	}, []);
 
 	return {
 		defaultEmotionsRef,

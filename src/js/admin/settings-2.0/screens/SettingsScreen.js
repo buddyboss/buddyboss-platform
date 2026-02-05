@@ -87,8 +87,8 @@ export function SettingsScreen({ onNavigate }) {
 	// Get filter counts
 	const filterCounts = {
 		all: features.length,
-		active: features.filter((f) => f.status === 'active').length,
-		inactive: features.filter((f) => f.status === 'inactive').length,
+		active: features.filter((f) => 'active' === f.status).length,
+		inactive: features.filter((f) => 'inactive' === f.status).length,
 	};
 
 	// Get category counts
@@ -147,7 +147,7 @@ export function SettingsScreen({ onNavigate }) {
 			})
 			.catch((error) => {
 				// Aborted by a newer click — do nothing, the newer request owns the UI.
-				if (error.name === 'AbortError') {
+				if ( 'AbortError' === error.name ) {
 					return;
 				}
 
@@ -181,19 +181,19 @@ export function SettingsScreen({ onNavigate }) {
 				<div className="bb-admin-settings__filters">
 					<div className="bb-admin-settings__filter-tabs">
 						<button
-							className={`bb-admin-settings__filter-tab ${activeFilter === 'all' ? 'bb-admin-settings__filter-tab--active' : ''}`}
+							className={`bb-admin-settings__filter-tab ${ 'all' === activeFilter ? 'bb-admin-settings__filter-tab--active' : '' }`}
 							onClick={() => setActiveFilter('all')}
 						>
 							{__('All', 'buddyboss')} ({filterCounts.all})
 						</button>
 						<button
-							className={`bb-admin-settings__filter-tab ${activeFilter === 'active' ? 'bb-admin-settings__filter-tab--active' : ''}`}
+							className={`bb-admin-settings__filter-tab ${ 'active' === activeFilter ? 'bb-admin-settings__filter-tab--active' : '' }`}
 							onClick={() => setActiveFilter('active')}
 						>
 							{__('Active', 'buddyboss')} ({filterCounts.active})
 						</button>
 						<button
-							className={`bb-admin-settings__filter-tab ${activeFilter === 'inactive' ? 'bb-admin-settings__filter-tab--active' : ''}`}
+							className={`bb-admin-settings__filter-tab ${ 'inactive' === activeFilter ? 'bb-admin-settings__filter-tab--active' : '' }`}
 							onClick={() => setActiveFilter('inactive')}
 						>
 							{__('Inactive', 'buddyboss')} ({filterCounts.inactive})
@@ -209,11 +209,11 @@ export function SettingsScreen({ onNavigate }) {
 							<option value="">{__('Category', 'buddyboss')}</option>
 							{Object.keys(categoryCounts).map((category) => (
 								<option key={category} value={category}>
-									{category === 'community'
+									{ 'community' === category
 										? __('Community', 'buddyboss')
-										: category === 'add-ons'
+										: 'add-ons' === category
 										? __('Add-ons', 'buddyboss')
-										: __('Integrations', 'buddyboss')}
+										: __('Integrations', 'buddyboss') }
 								</option>
 							))}
 						</select>
@@ -227,11 +227,11 @@ export function SettingsScreen({ onNavigate }) {
 							{/* Category Divider */}
 							<div className="bb-admin-settings__category-divider">
 								<h2 className="bb-admin-settings__category-title">
-									{category === 'community'
+									{ 'community' === category
 										? __('BUDDYBOSS COMMUNITY SETTINGS', 'buddyboss')
-										: category === 'add-ons'
+										: 'add-ons' === category
 										? __('BUDDYBOSS ADD-ONS', 'buddyboss')
-										: __('BUDDYBOSS INTEGRATIONS', 'buddyboss')}
+										: __('BUDDYBOSS INTEGRATIONS', 'buddyboss') }
 								</h2>
 							</div>
 							
@@ -258,26 +258,26 @@ export function SettingsScreen({ onNavigate }) {
 															const iconData = feature.icon.data || feature.icon;
 															const iconType = feature.icon.type || iconData.type;
 															
-															if (iconType === 'dashicon') {
+															if ( 'dashicon' === iconType ) {
 																const slug = feature.icon.slug || iconData.slug || 'dashicons-admin-generic';
 																return <span className={`dashicons ${slug}`}></span>;
 															}
 															
-															if (iconType === 'svg') {
+															if ( 'svg' === iconType ) {
 																const url = feature.icon.url || iconData.url || iconData.data_uri || (iconData.data && iconData.data.url) || (iconData.data && iconData.data.data_uri);
 																if (url) {
 																	return <img src={url} alt={feature.label} className="bb-admin-settings__feature-icon-img" />;
 																}
 															}
 															
-															if (iconType === 'image') {
+															if ( 'image' === iconType ) {
 																const url = feature.icon.url || iconData.url || iconData.path || (iconData.data && iconData.data.url) || (iconData.data && iconData.data.path);
 																if (url) {
 																	return <img src={url} alt={feature.label} className="bb-admin-settings__feature-icon-img" />;
 																}
 															}
 															
-															if (iconType === 'font') {
+															if ( 'font' === iconType ) {
 																const className = feature.icon.class || iconData.class || (iconData.data && iconData.data.class);
 																if (className) {
 																	return <span className={className}></span>;
@@ -313,7 +313,7 @@ export function SettingsScreen({ onNavigate }) {
 											</div>
 											<div className="bb-admin-settings__feature-right">
 												<ToggleControl
-													checked={feature.status === 'active'}
+													checked={ 'active' === feature.status }
 													onChange={(checked) => handleFeatureToggle(feature.id, checked)}
 													disabled={!feature.available}
 													__nextHasNoMarginBottom

@@ -23,19 +23,19 @@ import { __ } from '@wordpress/i18n';
  */
 export function SideNavigation({ featureId, sidePanels, navItems, currentPanel, onNavigate, onBack }) {
 	const handlePanelClick = (panelId) => {
-		if (typeof onNavigate === 'function') {
+		if ( 'function' === typeof onNavigate ) {
 			onNavigate(`/settings/${featureId}/${panelId}`);
 		}
 	};
 
 	const handleNavItemClick = (route) => {
-		if (typeof onNavigate === 'function') {
+		if ( 'function' === typeof onNavigate ) {
 			onNavigate(route);
 		}
 	};
 
 	const handleBackClick = () => {
-		if (typeof onBack === 'function') {
+		if ( 'function' === typeof onBack ) {
 			onBack();
 		}
 	};
@@ -61,13 +61,13 @@ export function SideNavigation({ featureId, sidePanels, navItems, currentPanel, 
 						>
 							{panel.icon && (
 								<span className="bb-admin-side-nav__icon">
-									{panel.icon.type === 'dashicon' && (
+									{ 'dashicon' === panel.icon.type && (
 										<span className={`dashicons ${panel.icon.slug || 'dashicons-admin-generic'}`}></span>
 									)}
-									{panel.icon.type === 'font' && panel.icon.class && (
+									{ 'font' === panel.icon.type && panel.icon.class && (
 										<span className={panel.icon.class}></span>
 									)}
-									{(panel.icon.type === 'svg' || panel.icon.type === 'image') && panel.icon.url && (
+									{( 'svg' === panel.icon.type || 'image' === panel.icon.type ) && panel.icon.url && (
 										<img src={panel.icon.url} alt={panel.title} className="bb-admin-side-nav__icon-img" />
 									)}
 								</span>
@@ -94,16 +94,16 @@ export function SideNavigation({ featureId, sidePanels, navItems, currentPanel, 
 								>
 									{item.icon && (
 										<span className="bb-admin-side-nav__icon">
-											{typeof item.icon === 'string' && (
+											{ 'string' === typeof item.icon && (
 												<span className={`dashicons ${item.icon || 'dashicons-list-view'}`}></span>
 											)}
-											{typeof item.icon === 'object' && item.icon.type === 'dashicon' && (
+											{ 'object' === typeof item.icon && 'dashicon' === item.icon.type && (
 												<span className={`dashicons ${item.icon.slug || 'dashicons-list-view'}`}></span>
 											)}
-											{typeof item.icon === 'object' && item.icon.type === 'font' && item.icon.class && (
+											{ 'object' === typeof item.icon && 'font' === item.icon.type && item.icon.class && (
 												<span className={item.icon.class}></span>
 											)}
-											{typeof item.icon === 'object' && (item.icon.type === 'svg' || item.icon.type === 'image') && item.icon.url && (
+											{ 'object' === typeof item.icon && ( 'svg' === item.icon.type || 'image' === item.icon.type ) && item.icon.url && (
 												<img src={item.icon.url} alt={item.label} className="bb-admin-side-nav__icon-img" />
 											)}
 										</span>

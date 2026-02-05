@@ -72,7 +72,7 @@ export function SettingsForm({ fields, values, onChange }) {
 
 		// Find parent field to check if it's inverted
 		const parentField = fields.find(f => f.name === field.parent_field);
-		const isParentInverted = parentField?.invert_value === true;
+		const isParentInverted = true === parentField?.invert_value;
 
 		// If parent_value is specified, check for exact match
 		if (field.parent_value !== undefined) {
@@ -106,7 +106,7 @@ export function SettingsForm({ fields, values, onChange }) {
 				// Figma: Toggle with toggle_label displayed next to the switch
 				const toggleLabel = field.toggle_label || field.inline_label || '';
 				// Handle inverted values (e.g., "disable" options shown as "enable" toggles)
-				const isInverted = field.invert_value === true;
+				const isInverted = true === field.invert_value;
 				const displayValue = isInverted ? !value : !!value;
 				return (
 					<div className="bb-admin-settings-form__toggle-wrapper">
@@ -170,7 +170,7 @@ export function SettingsForm({ fields, values, onChange }) {
 						label=""
 						value={value || ''}
 						onChange={(newValue) => onChange(field.name, newValue)}
-						type={field.type === 'email' ? 'email' : field.type === 'url' ? 'url' : 'text'}
+						type={ 'email' === field.type ? 'email' : 'url' === field.type ? 'url' : 'text' }
 						disabled={disabled}
 						__nextHasNoMarginBottom
 					/>
@@ -249,39 +249,39 @@ export function SettingsForm({ fields, values, onChange }) {
 							>
 								<div className="bb-admin-settings-field__image-radio-preview">
 									{/* Cover Image Icons */}
-									{option.image === 'cover-buddyboss' && (
+									{ 'cover-buddyboss' === option.image && (
 										<div className="bb-admin-settings-field__image-radio-icon bb-admin-settings-field__image-radio-icon--buddyboss">
 											<span className="dashicons dashicons-format-image"></span>
 										</div>
 									)}
-									{option.image === 'cover-none' && (
+									{ 'cover-none' === option.image && (
 										<div className="bb-admin-settings-field__image-radio-icon bb-admin-settings-field__image-radio-icon--none">
 											<span className="dashicons dashicons-no-alt"></span>
 										</div>
 									)}
-									{option.image === 'cover-custom' && (
+									{ 'cover-custom' === option.image && (
 										<div className="bb-admin-settings-field__image-radio-icon bb-admin-settings-field__image-radio-icon--custom">
 											<span className="dashicons dashicons-admin-generic"></span>
 										</div>
 									)}
 									{/* Avatar Icons */}
-									{option.image === 'avatar-buddyboss' && (
+									{ 'avatar-buddyboss' === option.image && (
 										<div className="bb-admin-settings-field__image-radio-icon bb-admin-settings-field__image-radio-icon--avatar-group">
 											<span className="dashicons dashicons-groups"></span>
 										</div>
 									)}
-									{option.image === 'avatar-name' && (
+									{ 'avatar-name' === option.image && (
 										<div className="bb-admin-settings-field__image-radio-icon bb-admin-settings-field__image-radio-icon--avatar-name">
 											<span className="bb-admin-settings-field__avatar-initials">BB</span>
 										</div>
 									)}
-									{option.image === 'avatar-custom' && (
+									{ 'avatar-custom' === option.image && (
 										<div className="bb-admin-settings-field__image-radio-icon bb-admin-settings-field__image-radio-icon--custom">
 											<span className="dashicons dashicons-admin-generic"></span>
 										</div>
 									)}
 									{/* Header Style Previews */}
-									{option.image === 'header-left-group' && (
+									{ 'header-left-group' === option.image && (
 										<div className="bb-admin-settings-field__header-preview bb-admin-settings-field__header-preview--left">
 											<div className="bb-admin-settings-field__header-preview-cover"></div>
 											<div className="bb-admin-settings-field__header-preview-content">
@@ -295,7 +295,7 @@ export function SettingsForm({ fields, values, onChange }) {
 											</div>
 										</div>
 									)}
-									{option.image === 'header-centered-group' && (
+									{ 'header-centered-group' === option.image && (
 										<div className="bb-admin-settings-field__header-preview bb-admin-settings-field__header-preview--centered">
 											<div className="bb-admin-settings-field__header-preview-cover"></div>
 											<div className="bb-admin-settings-field__header-preview-content">
@@ -629,13 +629,13 @@ export function SettingsForm({ fields, values, onChange }) {
 
 		// Render the control first — if it returns null, skip the entire field row.
 		const controlOutput = renderFieldControl(field, disabled);
-		if (controlOutput === null) {
+		if ( null === controlOutput ) {
 			return null;
 		}
 
 		// Notice fields render full-width without the label column.
 		// This includes standard notices and custom migration/info notice components.
-		if (field.type === 'notice' || field.type === 'reaction_migration' || field.type === 'reaction_notice' || field.type === 'reaction_info') {
+		if ( 'notice' === field.type || 'reaction_migration' === field.type || 'reaction_notice' === field.type || 'reaction_info' === field.type ) {
 			return (
 				<div key={field.name} className="bb-admin-settings-form__field bb-admin-settings-form__field--full-width">
 					{controlOutput}
@@ -647,7 +647,7 @@ export function SettingsForm({ fields, values, onChange }) {
 		const childFields = fields.filter(f => f.parent_field === field.name);
 
 		// Check if this is a toggle with children (special layout)
-		const isToggleWithChildren = (field.type === 'toggle' || field.type === 'checkbox') && childFields.length > 0;
+		const isToggleWithChildren = ( 'toggle' === field.type || 'checkbox' === field.type ) && childFields.length > 0;
 
 		// Build field class names
 		const fieldClasses = [
@@ -659,11 +659,11 @@ export function SettingsForm({ fields, values, onChange }) {
 		].filter(Boolean).join(' ');
 
 		return (
-			<div key={field.name} className={fieldClasses + (field.type !== 'reaction_mode' && field.pro_notice?.show ? ' bb-admin-settings-form__field--pro-locked' : '')}>
+			<div key={field.name} className={fieldClasses + ( 'reaction_mode' !== field.type && field.pro_notice?.show ? ' bb-admin-settings-form__field--pro-locked' : '' )}>
 				<div className="bb-admin-settings-form__field-label">
 					<label>
 						<span className="bb-admin-settings-form__field-label-text">{field.label}</span>
-						{field.type !== 'reaction_mode' && field.pro_notice?.show && (
+						{ 'reaction_mode' !== field.type && field.pro_notice?.show && (
 							<>
 								<span className="bb-pro-badge">
 									<i className={field.pro_notice.badge_icon || ''} />
@@ -697,7 +697,7 @@ export function SettingsForm({ fields, values, onChange }) {
 					</div>
 
 					{/* Description (skip for notice type — already rendered inside the field) */}
-					{field.description && field.type !== 'notice' && (
+					{ field.description && 'notice' !== field.type && (
 						<p
 							className="bb-admin-settings-form__field-description"
 							dangerouslySetInnerHTML={{ __html: field.description }}

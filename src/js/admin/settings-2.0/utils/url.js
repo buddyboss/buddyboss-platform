@@ -36,7 +36,7 @@ export function routeToUrl(route) {
 	const params = new URLSearchParams();
 	params.set('page', 'bb-settings');
 
-	if (mainRoute === 'settings' && routeParts[1]) {
+	if ( 'settings' === mainRoute && routeParts[1] ) {
 		params.set('tab', routeParts[1]);
 		if (routeParts[2]) {
 			params.set('panel', routeParts[2]);

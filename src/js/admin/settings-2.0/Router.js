@@ -32,7 +32,7 @@ function isFeatureEnabled(features, featureId) {
 		return true; // Feature not found in registry, allow access
 	}
 	
-	return feature.status === 'active';
+	return 'active' === feature.status;
 }
 
 /**
@@ -104,7 +104,7 @@ export function Router({ currentRoute, onNavigate }) {
 	const mainRoute = routeParts[0] || 'dashboard';
 
 	// Check if current route needs feature verification
-	const needsFeatureCheck = mainRoute === 'settings' || mainRoute === 'activity' || mainRoute === 'groups';
+	const needsFeatureCheck = 'settings' === mainRoute || 'activity' === mainRoute || 'groups' === mainRoute;
 
 	// Load features on mount AND when navigating to routes that need feature check
 	useEffect(() => {
@@ -129,7 +129,7 @@ export function Router({ currentRoute, onNavigate }) {
 	const currentTab = urlParams.get('tab');
 	const currentPanel = urlParams.get('panel');
 	
-	if (currentRoute === '/settings') {
+	if ( '/settings' === currentRoute ) {
 		// Remove tab and panel params when on main settings page
 		if (currentTab || currentPanel || window.location.hash) {
 			urlParams.delete('tab');
@@ -138,7 +138,7 @@ export function Router({ currentRoute, onNavigate }) {
 			const cleanUrl = window.location.pathname + (paramString ? '?' + paramString : '');
 			window.history.replaceState({}, '', cleanUrl);
 		}
-	} else if (mainRoute === 'settings' && routeParts[1]) {
+	} else if ( 'settings' === mainRoute && routeParts[1] ) {
 		// Update URL with tab parameter for feature settings
 		const newTab = routeParts[1];
 		const newPanel = routeParts[2] || null;

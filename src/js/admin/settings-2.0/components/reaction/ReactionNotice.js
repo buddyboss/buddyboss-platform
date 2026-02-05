@@ -16,7 +16,7 @@ export function ReactionNotice({ field }) {
     const migrationStatus = field.migration_status || '';
 
     // Only show for 'inprogress' or 'completed' status
-    if (isDismissed || (!migrationStatus || (migrationStatus !== 'inprogress' && migrationStatus !== 'completed'))) {
+    if ( isDismissed || ( ! migrationStatus || ( 'inprogress' !== migrationStatus && 'completed' !== migrationStatus ) ) ) {
         return null;
     }
 
@@ -24,7 +24,7 @@ export function ReactionNotice({ field }) {
         setIsDismissed(true);
 
         // For completed status, call dismiss endpoint
-        if (migrationStatus === 'completed' && window.bbReactionAdminVars && window.bbReactionAdminVars.ajax_url) {
+        if ( 'completed' === migrationStatus && window.bbReactionAdminVars && window.bbReactionAdminVars.ajax_url ) {
             jQuery.ajax({
                 url: window.bbReactionAdminVars.ajax_url,
                 method: 'POST',
@@ -51,7 +51,7 @@ export function ReactionNotice({ field }) {
                     if (response.success && response.data) {
                         setMigrationData(response.data.migration_data || {});
                         // Reload page if status changed to completed
-                        if (response.data.migration_status === 'completed') {
+                        if ( 'completed' === response.data.migration_status ) {
                             window.location.reload();
                         }
                     }
@@ -87,18 +87,18 @@ export function ReactionNotice({ field }) {
     };
 
     // Render completed notice
-    if (migrationStatus === 'completed') {
+    if ( 'completed' === migrationStatus ) {
         const action = migrationData.action || '';
         const totalReactions = migrationData.total_reactions || 0;
         const fromEmotionsName = migrationData.from_emotions_name || '';
         const toEmotionsName = migrationData.to_emotions_name || '';
 
         let message = '';
-        if (action === 'like_to_emotions_action') {
+        if ( 'like_to_emotions_action' === action ) {
             message = __('%1$s were successfully converted to the %2$s emotion.', 'buddyboss')
                 .replace('%1$s', `<strong>${formatNumber(totalReactions)} ${fromEmotionsName}</strong>`)
                 .replace('%2$s', `<strong>${toEmotionsName}</strong>`);
-        } else if (action === 'emotions_to_like_action') {
+        } else if ( 'emotions_to_like_action' === action ) {
             message = __('%1$s reactions were successfully converted to %2$s.', 'buddyboss')
                 .replace('%1$s', `<strong>${formatNumber(totalReactions)}</strong>`)
                 .replace('%2$s', `<strong>${toEmotionsName}</strong>`);
@@ -127,7 +127,7 @@ export function ReactionNotice({ field }) {
     }
 
     // Render in-progress notice
-    if (migrationStatus === 'inprogress') {
+    if ( 'inprogress' === migrationStatus ) {
         const total = parseInt(migrationData.total_reactions || 0);
         const updatedEmotions = parseInt(migrationData.updated_emotions || 0);
         const percentage = total > 0 ? Math.ceil((updatedEmotions * 100) / total) : 0;

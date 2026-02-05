@@ -32,7 +32,7 @@ export function App() {
 		// New Settings 2.0 page - default to Features grid
 		// URL format: admin.php?page=bb-settings&tab=feature&panel=panel_id
 		// Hierarchy: Feature (tab) → Side Panel (panel) → Sections → Fields
-		if (page === 'bb-settings') {
+		if ( 'bb-settings' === page ) {
 			// Prioritize query params for settings routes
 			if (tab) {
 				// Support ?page=bb-settings&tab=reactions&panel=general format
@@ -49,7 +49,7 @@ export function App() {
 					route = '/settings';
 				}
 			}
-		} else if (page === 'bp-settings' && tab) {
+		} else if ( 'bp-settings' === page && tab ) {
 			// Legacy URL mapping for old settings pages
 			const tabMap = {
 				'bp-activity': 'activity',
@@ -90,19 +90,19 @@ export function App() {
 				const newUrl = window.location.pathname + '?' + newParams.toString();
 				window.history.replaceState({}, '', newUrl);
 			}
-		} else if (page === 'bp-activity') {
+		} else if ( 'bp-activity' === page ) {
 			route = '/activity/all';
-		} else if (page === 'bp-groups') {
+		} else if ( 'bp-groups' === page ) {
 			const gid = urlParams.get('gid');
 			const action = urlParams.get('action');
-			if (gid && action === 'edit') {
+			if ( gid && 'edit' === action ) {
 				route = `/groups/${gid}/edit`;
 			} else {
 				route = '/groups/all';
 			}
-		} else if (page === 'bp-components') {
+		} else if ( 'bp-components' === page ) {
 			route = '/settings';
-		} else if (page === 'bp-integrations') {
+		} else if ( 'bp-integrations' === page ) {
 			route = '/settings';
 		} else {
 			// Check hash routing
@@ -122,7 +122,7 @@ export function App() {
 			const currentTab = params.get('tab');
 			const currentPanel = params.get('panel');
 
-			if (currentPage === 'bb-settings') {
+			if ( 'bb-settings' === currentPage ) {
 				if (currentTab) {
 					let newRoute = `/settings/${currentTab}`;
 					if (currentPanel) {

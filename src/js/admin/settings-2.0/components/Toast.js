@@ -26,7 +26,7 @@ export const Toast = ({ status, message, onDismiss, showIcon = true }) => {
 		<div className={`bb-toast bb-toast--${status}`}>
 			{showIcon && <div className="bb-toast__icon">{getIcon()}</div>}
 			<div className="bb-toast__message">{message}</div>
-			{status === 'error' && onDismiss && (
+			{ 'error' === status && onDismiss && (
 				<Button
 					onClick={onDismiss}
 					className="bb-toast__dismiss"

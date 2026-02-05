@@ -21,15 +21,15 @@ export function ReactionMigration({ field, onStartConversion }) {
         migrationData &&
         migrationData.action &&
         migrationData.total_reactions > 0 &&
-        migrationStatus !== 'inprogress' &&
-        migrationStatus !== 'completed';
+        'inprogress' !== migrationStatus &&
+        'completed' !== migrationStatus;
 
     if (isDismissed || !hasPendingMigration) {
         return null;
     }
 
     const totalReactions = migrationData.total_reactions || 0;
-    const fromMode = migrationData.action === 'like_to_emotions_action' ? 'Likes' : 'Reactions';
+    const fromMode = 'like_to_emotions_action' === migrationData.action ? 'Likes' : 'Reactions';
 
     const formatNumber = (num) => {
         return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
@@ -74,7 +74,7 @@ export function ReactionMigration({ field, onStartConversion }) {
                         {' '}
                         {__('previously submitted on your site which can be converted to', 'buddyboss')}
                         {' '}
-                        {migrationData.action === 'like_to_emotions_action'
+                        { 'like_to_emotions_action' === migrationData.action
                             ? __('an Emotion', 'buddyboss')
                             : __('Likes', 'buddyboss')}
                         .
