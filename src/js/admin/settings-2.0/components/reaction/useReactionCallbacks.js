@@ -22,8 +22,8 @@ export function useReactionCallbacks(onChange, values) {
 	const valuesRef = useRef(values);
 	valuesRef.current = values;
 
-	// Server emotions (from field.reactions.emotions) for seeding when values.reaction_items is empty
-	const serverEmotionsRef = useRef([]);
+	// Default emotions from server (field.reactions.emotions) used for seeding when values.reaction_items is empty.
+	const defaultEmotionsRef = useRef([]);
 
 	/**
 	 * Expose React callback for old jQuery emotion picker.
@@ -54,20 +54,20 @@ export function useReactionCallbacks(onChange, values) {
 			let reactionsData = (typeof current?.reaction_items === 'object' && current.reaction_items !== null)
 				? { ...current.reaction_items }
 				: {};
-			if (Object.keys(reactionsData).length === 0 && Array.isArray(serverEmotionsRef.current)) {
-				serverEmotionsRef.current.forEach((r) => {
-					if (r && r.id != null) {
-						reactionsData[r.id] = { ...r };
+			if (Object.keys(reactionsData).length === 0 && Array.isArray(defaultEmotionsRef.current)) {
+				defaultEmotionsRef.current.forEach((emotion) => {
+					if (emotion && emotion.id != null) {
+						reactionsData[emotion.id] = { ...emotion };
 					}
 				});
 			}
 			let reactionChecks = (typeof current?.reaction_checks === 'object' && current.reaction_checks !== null)
 				? { ...current.reaction_checks }
 				: {};
-			if (Object.keys(reactionChecks).length === 0 && Array.isArray(serverEmotionsRef.current)) {
-				serverEmotionsRef.current.forEach((r) => {
-					if (r && r.id != null) {
-						reactionChecks[r.id] = r.is_emotion_active ? '1' : '';
+			if (Object.keys(reactionChecks).length === 0 && Array.isArray(defaultEmotionsRef.current)) {
+				defaultEmotionsRef.current.forEach((emotion) => {
+					if (emotion && emotion.id != null) {
+						reactionChecks[emotion.id] = emotion.is_emotion_active ? '1' : '';
 					}
 				});
 			}
@@ -142,17 +142,17 @@ export function useReactionCallbacks(onChange, values) {
 			let reactionItems = (typeof current?.reaction_items === 'object' && current.reaction_items !== null)
 				? { ...current.reaction_items }
 				: {};
-			if (Object.keys(reactionItems).length === 0 && Array.isArray(serverEmotionsRef.current)) {
-				serverEmotionsRef.current.forEach((r) => {
-					if (r && r.id != null) reactionItems[r.id] = { ...r };
+			if (Object.keys(reactionItems).length === 0 && Array.isArray(defaultEmotionsRef.current)) {
+				defaultEmotionsRef.current.forEach((emotion) => {
+					if (emotion && emotion.id != null) reactionItems[emotion.id] = { ...emotion };
 				});
 			}
 			let reactionChecks = (typeof current?.reaction_checks === 'object' && current.reaction_checks !== null)
 				? { ...current.reaction_checks }
 				: {};
-			if (Object.keys(reactionChecks).length === 0 && Array.isArray(serverEmotionsRef.current)) {
-				serverEmotionsRef.current.forEach((r) => {
-					if (r && r.id != null) reactionChecks[r.id] = r.is_emotion_active ? '1' : '';
+			if (Object.keys(reactionChecks).length === 0 && Array.isArray(defaultEmotionsRef.current)) {
+				defaultEmotionsRef.current.forEach((emotion) => {
+					if (emotion && emotion.id != null) reactionChecks[emotion.id] = emotion.is_emotion_active ? '1' : '';
 				});
 			}
 			delete reactionItems[emotionId];
@@ -179,6 +179,6 @@ export function useReactionCallbacks(onChange, values) {
 	}, [onChange]);
 
 	return {
-		serverEmotionsRef,
+		defaultEmotionsRef,
 	};
 }

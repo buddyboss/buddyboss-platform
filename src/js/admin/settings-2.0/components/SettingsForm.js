@@ -38,7 +38,7 @@ import {
  */
 export function SettingsForm({ fields, values, onChange }) {
 	// Use reaction callbacks hook for jQuery emotion picker integration
-	const { serverEmotionsRef } = useReactionCallbacks(onChange, values);
+	const { defaultEmotionsRef } = useReactionCallbacks(onChange, values);
 
 	// Track migration modal state
 	const [isMigrationModalOpen, setIsMigrationModalOpen] = useState(false);
@@ -441,7 +441,7 @@ export function SettingsForm({ fields, values, onChange }) {
 						value={value}
 						values={values}
 						onChange={onChange}
-						serverEmotionsRef={serverEmotionsRef}
+						defaultEmotionsRef={defaultEmotionsRef}
 					/>
 				);
 

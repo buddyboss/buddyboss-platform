@@ -25,17 +25,17 @@ const BBIcon = ({ name }) => (
  * @param {string} props.value Current field value
  * @param {Object} props.values All current values (for reaction_items, reaction_checks)
  * @param {Function} props.onChange Change handler
- * @param {Object} props.serverEmotionsRef Ref to store server emotions
+ * @param {Object} props.defaultEmotionsRef Ref to store default emotions from server
  * @returns {JSX.Element} Reaction mode field
  */
-export function ReactionModeField({ field, value, values, onChange, serverEmotionsRef }) {
+export function ReactionModeField({ field, value, values, onChange, defaultEmotionsRef }) {
 	const reactionMode = value || 'likes';
 	const reactionsData = field.reactions || {};
 	const serverEmotions = reactionsData.emotions || [];
 
-	// Update serverEmotionsRef for use in callbacks
-	if (serverEmotionsRef) {
-		serverEmotionsRef.current = serverEmotions;
+	// Update defaultEmotionsRef for use in callbacks (live: when this component renders, ref is updated)
+	if (defaultEmotionsRef) {
+		defaultEmotionsRef.current = serverEmotions;
 	}
 
 	// Single source of truth: values.reaction_items when set; otherwise field.reactions.emotions from server.
