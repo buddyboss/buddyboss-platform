@@ -65,7 +65,9 @@ class TestPluginConnection extends AbstractPluginConnection
 
     public function getDomain(): string
     {
-        return $_SERVER['HTTP_HOST'];
+        return isset($_SERVER['HTTP_HOST'])
+            ? sanitize_text_field(wp_unslash($_SERVER['HTTP_HOST']))
+            : '';
     }
 }
 ```

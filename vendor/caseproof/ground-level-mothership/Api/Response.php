@@ -13,6 +13,10 @@ use BuddyBossPlatform\GroundLevel\Support\Contracts\Arrayable;
  * @method ?Response prev(array $args = [])  Retrieves the previous page of data for the collection or `null` for non-paginated responses.
  * @method ?Response self(array $args = [])  Retrieves the current page of data for the collection or `null` for non-paginated responses.
  *
+ * @property string  $error The error message, if any.
+ * @property integer $errorCode The error code, if any.
+ * @property array   $errors The errors, if any.
+ *
  * @package GroundLevel\Mothership\Api
  */
 class Response implements Arrayable

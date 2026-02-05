@@ -118,8 +118,7 @@ class Store extends Service
     public function markRead(string $id) : self
     {
         if (isset($this->data[$id])) {
-            $this->data[$id]['read'] = \true;
-            $this->data[$id]['readAt'] = Time::now();
+            $this->update($id, ['read' => \true, 'readAt' => Time::now()]);
         }
         return $this;
     }
@@ -184,6 +183,20 @@ class Store extends Service
     public function setLastId(string $id) : self
     {
         $this->data['__lastId'] = $id;
+        return $this;
+    }
+    /**
+     * Updates a notification in the store.
+     *
+     * @param  string $id   The notification ID.
+     * @param  array  $data The notification data.
+     * @return \GroundLevel\InProductNotifications\Services\Store
+     */
+    public function update(string $id, array $data) : self
+    {
+        if (isset($this->data[$id])) {
+            $this->data[$id] = \array_merge($this->data[$id], $data);
+        }
         return $this;
     }
 }

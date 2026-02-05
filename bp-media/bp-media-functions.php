@@ -3894,6 +3894,18 @@ function bb_media_user_can_access( $id, $type, $attachment_id = 0 ) {
 					$can_delete   = true;
 				}
 
+				// Handle edit permission for album seperately.
+				if (
+					'album' === $type &&
+					(
+						bp_current_user_can( 'bp_moderate' ) ||
+						$is_admin ||
+						$media_user_id === $current_user_id
+					)
+				) {
+					$can_edit = true;
+				}
+
 				$the_group = groups_get_group( $media_group_id );
 				if ( $is_member || ( $the_group->id > 0 && $the_group->user_has_access ) ) {
 					$can_view     = true;

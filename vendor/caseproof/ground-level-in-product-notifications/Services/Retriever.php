@@ -32,11 +32,18 @@ class Retriever extends ScheduledService
      */
     public function maybeForceFetch() : void
     {
+        $service = $this->container->get(IPNService::class);
+        if (!$service->userHasPermission()) {
+            return;
+        }
         $var = Str::toCamelCase($this->container->get(IPNService::class)->prefixId('refresh'));
         // EG: meprIpnRefresh.
         if (1 === (int) \filter_input(\INPUT_GET, $var, \FILTER_VALIDATE_INT)) {
             $this->container->get(Store::class)->clear()->persist();
             do_action($this->eventHookName());
+            if (wp_redirect(remove_query_arg($var))) {
+                exit;
+            }
         }
     }
     /**

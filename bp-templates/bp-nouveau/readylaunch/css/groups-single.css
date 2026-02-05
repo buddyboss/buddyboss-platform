@@ -426,6 +426,10 @@
   z-index: calc(var(--bb-rl-z-index-fixed) - 1);
 }
 
+.bb-rl-groups-single-wrapper > .bb-rl-secondary-header:has(.bb-leave-group-popup.is-visible) {
+  z-index: var(--bb-rl-z-index-tooltip);
+}
+
 .admin-bar .bb-rl-groups-single-wrapper > .bb-rl-secondary-header {
   top: 103px;
 }

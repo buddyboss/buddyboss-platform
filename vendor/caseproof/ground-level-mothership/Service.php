@@ -27,6 +27,10 @@ class Service extends BaseService implements ContainerAwareness, ConfiguresParam
      */
     public const ID = 'GRDLVL.MOTHERSHIP';
     /**
+     * The parameter key for the Mothership API base URL.
+     */
+    public const API_BASE_URL = 'GRDLVL.MOTHERSHIP.API_BASE_URL';
+    /**
      * The parameter key for the Mothership prefix.
      */
     public const PREFIX = 'GRDLVL.MOTHERSHIP.PREFIX';
@@ -91,6 +95,7 @@ class Service extends BaseService implements ContainerAwareness, ConfiguresParam
      */
     public function __construct(Container $container, AbstractPluginConnection $plugin)
     {
+        parent::__construct($container);
         $this->plugin = $plugin;
     }
     /**
@@ -100,7 +105,7 @@ class Service extends BaseService implements ContainerAwareness, ConfiguresParam
      */
     public function getDefaultParameters() : array
     {
-        return [self::CACHE_TTL => 60];
+        return [self::CACHE_TTL => 60, self::API_BASE_URL => null];
     }
     /**
      * Loads the dependencies for the Mothership Component.
@@ -140,8 +145,12 @@ class Service extends BaseService implements ContainerAwareness, ConfiguresParam
         LicenseManager::scheduleEvents($this->plugin->pluginId);
     }
     /**
-     * Get the API base URL.
-     * User can also set the API base URL by defining the constant in the plugin.
+     * Retrieves the API base URL.
+     *
+     * The API base URL is retrieved from the following sources in order of precedence:
+     * 1. The constant defined in the wp-config.php file.
+     * 2. The parameter set in the container.
+     * 3. The default API base URL, defined as the $apiBaseUrl static property.
      *
      * @return string
      */
@@ -151,7 +160,12 @@ class Service extends BaseService implements ContainerAwareness, ConfiguresParam
         if (\defined($apiBaseUrlConstant)) {
             return \constant($apiBaseUrlConstant);
         }
-        return self::$apiBaseUrl;
+        $default = self::$apiBaseUrl;
+        $hasParameter = $this->getContainer()->has(self::API_BASE_URL);
+        if ($hasParameter) {
+            return $this->getContainer()->get(self::API_BASE_URL) ?? $default;
+        }
+        return $default;
     }
     /**
      * Gets the proxy license key.

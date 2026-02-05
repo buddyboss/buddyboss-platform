@@ -37,6 +37,16 @@ class Str
         return \lcfirst(self::toPascalCase($string));
     }
     /**
+     * Converts the input string to constant case.
+     *
+     * @param  string $string String to convert.
+     * @return string
+     */
+    public static function toConstantCase(string $string) : string
+    {
+        return \strtoupper(\implode('_', self::toWords(\str_replace('.', '_', $string))));
+    }
+    /**
      * Converts as string to kebab case
      *
      * @link https://en.wikipedia.org/wiki/Letter_case#Kebab_case

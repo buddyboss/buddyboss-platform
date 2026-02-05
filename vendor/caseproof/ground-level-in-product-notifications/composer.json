@@ -18,8 +18,8 @@
     },
     "require": {
         "php": ">=7.4",
-        "caseproof\/ground-level-container": "^2.0.0",
-        "caseproof\/ground-level-mothership": "^2.0.0",
-        "caseproof\/ground-level-support": "^2.0.0"
+        "caseproof\/ground-level-container": "^2.2.1",
+        "caseproof\/ground-level-mothership": "^2.2.1",
+        "caseproof\/ground-level-support": "^2.2.1"
     }
 }

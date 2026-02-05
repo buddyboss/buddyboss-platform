@@ -41,6 +41,17 @@ $container->addService(
 );
 ```
 
+## Notification Retrieval
+
+The package will automatically fetch notifications from the remote API using the Mothership component.
+
+The [Retriever service](./Services/Retriever.php) runs once-daily to retrieve notifications.
+
+### Force Refresh
+
+During testing and development it may be useful to force retrieval. You can do this by appending a query string variable to the URL of any WordPress admin screen. The variable is dynamic based on the PREFIX container parameter. For a container with the PREFIX parameter of `grdlvl_` the refresh variable should be `grdlvlIpnRefresh=1`. If the PREFIX was `test_` the refresh variable should be `testIpnRefresh=1`.
+
+
 ## Customization
 
 ### Container Parameters

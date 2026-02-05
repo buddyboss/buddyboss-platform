@@ -5,6 +5,7 @@ namespace BuddyBossPlatform\GroundLevel\Mothership;
 
 use BuddyBossPlatform\GroundLevel\Container\Concerns\HasStaticContainer;
 use BuddyBossPlatform\GroundLevel\Container\Contracts\StaticContainerAwareness;
+use BuddyBossPlatform\GroundLevel\Support\Str;
 class Util implements StaticContainerAwareness
 {
     use HasStaticContainer;
@@ -21,6 +22,6 @@ class Util implements StaticContainerAwareness
     {
         $prefix = self::getContainer()->get(AbstractPluginConnection::class)->pluginPrefix;
         $prefix = '_' === \substr($prefix, -1) ? $prefix : $prefix . '_';
-        return \strtoupper(\str_replace(['-', '.', ' '], '_', $prefix . $name));
+        return Str::toConstantCase($prefix . $name);
     }
 }

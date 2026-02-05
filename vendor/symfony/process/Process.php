@@ -1425,7 +1425,7 @@ class Process implements \IteratorAggregate
         if (\str_contains($argument, "\x00")) {
             $argument = \str_replace("\x00", '?', $argument);
         }
-        if (!\preg_match('/[()%!^"<>&|\\s]/', $argument)) {
+        if (!\preg_match('/[()%!^"<>&|\\s[\\]=;*?\'$]/', $argument)) {
             return $argument;
         }
         $argument = \preg_replace('/(\\\\+)$/', '$1$1', $argument);

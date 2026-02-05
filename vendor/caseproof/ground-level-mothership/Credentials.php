@@ -33,8 +33,8 @@ class Credentials implements StaticContainerAwareness
     {
         $domain = self::getCredential(MothershipService::DOMAIN_BASENAME);
         // No domains provided? Let's set something as the default domain via the $_SERVER data.
-        if (!$domain) {
-            $domain = $_SERVER['HTTP_HOST'];
+        if (!$domain && isset($_SERVER['HTTP_HOST'])) {
+            $domain = sanitize_text_field(wp_unslash($_SERVER['HTTP_HOST']));
         }
         return $domain;
     }

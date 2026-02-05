@@ -96,6 +96,22 @@ class Notification
         $this->read = $rawData['read'] ?? \false;
         $this->readAt = $rawData['readAt'] ?? 0;
         $this->subject = $rawData['subject'] ?? '';
+        if (!empty($rawData['buttons'])) {
+            $this->appendButtons($rawData['buttons']);
+        }
+    }
+    /**
+     * Appends the buttons to the notification content.
+     *
+     * @param array[] $buttons An array of buttons to append. The arrays are
+     *                         passed to {@see \GroundLevel\InProductNotifications\Models\Button::__construct}.
+     */
+    private function appendButtons(array $buttons) : void
+    {
+        $btns = \array_map(function ($button) : string {
+            return (string) new Button((array) $button);
+        }, $buttons);
+        $this->content .= '<p>' . \implode(' ', $btns) . '</p>';
     }
     /**
      * Determine if the notification is expired.
