@@ -97,6 +97,10 @@ export function ReactionModeField({ field, value, values, onChange, defaultEmoti
 			window.bp.Reaction_Admin.delete_emotion = emotionItem;
 
 			if (emotionId) {
+				// Reset modal to loading state so stale content from a previous delete is not visible.
+				$('.bb-reaction-delete-modal__content').html(
+					'<div class="bbpro-modal-box_loader"><span class="bb-icons bb-icon-spinner animate-spin"></span></div>'
+				);
 				$('#bbpro_reaction_delete_confirmation').css('display', 'block');
 				$.ajax({
 					url: window.bbReactionAdminVars?.ajax_url,
