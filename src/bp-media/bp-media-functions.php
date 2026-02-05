@@ -2847,7 +2847,21 @@ function bp_media_album_recursive_li_list( $array, $first = false ) {
 	}
 
 	foreach ( $array as $item ) {
-		$output .= '<li data-id="' . esc_attr( $item['id'] ) . '" data-privacy="' . esc_attr( $item['privacy'] ) . '"><span id="' . esc_attr( $item['id'] ) . '" data-id="' . esc_attr( $item['id'] ) . '">' . esc_html( stripslashes( $item['title'] ) ) . '</span>' . bp_media_album_recursive_li_list( $item['children'], true ) . '</li>';
+		$album_id = isset( $item['id'] ) ? (int) $item['id'] : 0;
+
+		/**
+		 * Filters the album title in the album tree list (move popup).
+		 *
+		 * @since BuddyBoss 2.18.0
+		 *
+		 * @param string $title    The album title.
+		 * @param int    $album_id The album ID.
+		 */
+		$album_title = apply_filters( 'bb_media_album_tree_item_title', $item['title'], $album_id );
+
+		if ( ! empty( $album_title ) ) {
+			$output .= '<li data-id="' . esc_attr( $item['id'] ) . '" data-privacy="' . esc_attr( $item['privacy'] ) . '"><span id="' . esc_attr( $item['id'] ) . '" data-id="' . esc_attr( $item['id'] ) . '">' . esc_html( stripslashes( $album_title ) ) . '</span>' . bp_media_album_recursive_li_list( $item['children'], true ) . '</li>';
+		}
 	}
 	$output .= '</ul>';
 
@@ -3880,6 +3894,18 @@ function bb_media_user_can_access( $id, $type, $attachment_id = 0 ) {
 					$can_delete   = true;
 				}
 
+				// Handle edit permission for album seperately.
+				if (
+					'album' === $type &&
+					(
+						bp_current_user_can( 'bp_moderate' ) ||
+						$is_admin ||
+						$media_user_id === $current_user_id
+					)
+				) {
+					$can_edit = true;
+				}
+
 				$the_group = groups_get_group( $media_group_id );
 				if ( $is_member || ( $the_group->id > 0 && $the_group->user_has_access ) ) {
 					$can_view     = true;
@@ -4259,9 +4285,26 @@ function bb_media_get_activity_media( $activity = '', $args = array() ) {
 		$media_args['status'] = bb_media_get_scheduled_status();
 	}
 
-	if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ) {
+	// Determine if this is a group context.
+	// For activity comments, check the parent activity's component to ensure
+	// media attached to group activity comments inherit group privacy.
+	$is_group_context = false;
+
+	if ( 'activity_comment' === $activity->type && ! empty( $activity->item_id ) ) {
+		$parent_activity = new BP_Activity_Activity( $activity->item_id );
+		if ( bp_is_active( 'groups' ) && ! empty( $parent_activity->component ) ) {
+			$is_group_context = 'groups' === $parent_activity->component;
+		}
+	} else {
+		$is_group_context = bp_is_active( 'groups' ) && 'groups' === $activity->component;
+	}
+
+	if ( $is_group_context ) {
 		if ( bp_is_group_media_support_enabled() ) {
 			$media_args['privacy'] = array( 'grouponly' );
+			if ( 'activity_comment' === $activity->type ) {
+				$media_args['privacy'][] = 'comment';
+			}
 			if ( ! bp_is_group_albums_support_enabled() ) {
 				$media_args['album_id'] = 'existing-media';
 			}
