@@ -87,7 +87,7 @@ defined( 'ABSPATH' ) || exit;
 				<div id="mpcs-lesson-<?php echo esc_attr( $link->id ); ?>" class="mpcs-lesson">
 					<a href="<?php echo esc_url( $link->url ); ?>" class="mpcs-lesson-row-link" target="_blank">
 						<div class="mpcs-lesson-link">
-							<i class="mpcs-link"></i>
+							<i class="bb-icons-rl-link"></i>
 							<?php echo esc_html( $link->label ? $link->label : $link->url ); ?>
 						</div>
 						<div class="mpcs-lesson-button">
