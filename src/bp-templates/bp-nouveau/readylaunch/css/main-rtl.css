@@ -20276,6 +20276,35 @@ table.profile-settings tbody td select {
   padding: var(--bb-rl-space-200);
 }
 
+.bb-rl-account-settings-section .is_loading .bb-loading-bg {
+  background-color: var(--bb-rl-background-secondary-color);
+  animation: fade-in-out infinite 2s ease;
+}
+
+.bb-rl-account-settings-section .is_loading .subscription-items_loading {
+  display: flex;
+  align-items: center;
+  padding: 12px 10px;
+}
+
+.bb-rl-account-settings-section .is_loading .subscription-items_loading .subscription-items-image_loading {
+  height: 40px;
+  width: 40px;
+  margin-left: 12px;
+  border-radius: 4px;
+}
+
+.bb-rl-account-settings-section .is_loading .subscription-items_loading .subscription-items-text_loading {
+  height: 14px;
+  flex: 1;
+  max-width: 160px;
+  border-radius: 100px;
+}
+
+.bb-rl-account-settings-section .bbp-pagination-links {
+  gap: var(--bb-rl-space-100);
+}
+
 .bb-rl-account-settings-section .subscription-items {
   list-style: none;
   padding: 0;
@@ -20313,8 +20342,8 @@ table.profile-settings tbody td select {
 }
 
 .bb-rl-account-settings-section .subscription-items .subscription-item_image img {
-  max-width: 32px;
-  height: auto;
+  width: 32px;
+  height: 32px;
   border-radius: var(--bb-rl-radius-md);
 }
 
