@@ -80,9 +80,30 @@ export function useReactionCallbacks(onChange, values) {
 			onChange('bb_reaction_mode', 'emotions');
 		};
 
+		/**
+		 * Callback for reaction button icon update from jQuery picker.
+		 * Updates the bb_reactions_button value with the new icon.
+		 */
+		window.bbReactEmotionCallbacks.updateReactionButton = (newIcon) => {
+			if (!newIcon) {
+				return;
+			}
+
+			const current = valuesRef.current;
+			const currentButtonValue = (typeof current?.bb_reactions_button === 'object' && current.bb_reactions_button !== null)
+				? { ...current.bb_reactions_button }
+				: {};
+
+			// Update the icon while preserving other button settings (like text)
+			currentButtonValue.icon = newIcon;
+
+			onChange('bb_reactions_button', currentButtonValue);
+		};
+
 		return () => {
 			if (window.bbReactEmotionCallbacks) {
 				delete window.bbReactEmotionCallbacks.updateEmotion;
+				delete window.bbReactEmotionCallbacks.updateReactionButton;
 			}
 		};
 	}, [onChange]);

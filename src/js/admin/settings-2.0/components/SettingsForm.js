@@ -464,6 +464,21 @@ export function SettingsForm({ fields, values, onChange }) {
 					}
 				};
 
+				/**
+				 * Handle reaction button text change
+				 */
+				const handleButtonTextChange = (newText) => {
+					const currentButtonValue = (typeof value === 'object' && value !== null)
+						? { ...value }
+						: {};
+					currentButtonValue.text = newText;
+					// Preserve the icon if it exists
+					if (!currentButtonValue.icon) {
+						currentButtonValue.icon = buttonIcon;
+					}
+					onChange(field.name, currentButtonValue);
+				};
+
 				return (
 					<div key={field.name} className={`bb-reaction-button-field${isProLocked ? ' bb-reaction-button-field--disabled' : ''}`}>
 						<div className="bb-reaction-button-card">
@@ -489,6 +504,7 @@ export function SettingsForm({ fields, values, onChange }) {
 										className="bb-reaction-button-card__text-input"
 										disabled={isProLocked}
 										readOnly={isProLocked}
+										onChange={(e) => handleButtonTextChange(e.target.value)}
 									/>
 									<DropdownMenu
 										icon={ <i className="bb-icons-rl-dots-three"></i> }
