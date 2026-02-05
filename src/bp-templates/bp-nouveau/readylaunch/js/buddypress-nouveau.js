@@ -2095,7 +2095,7 @@ window.bp = window.bp || {};
 					}
 
 					body.find( '[data-current-anchor="true"]' ).removeClass( 'bp-toggle-action-button bp-toggle-action-button-hover' ).addClass( 'bp-toggle-action-button-clicked' ); // Add clicked class manually to run function.
-					leave_group_popup.show();
+					leave_group_popup.addClass( 'is-visible' ).show();
 					$( target ).attr( 'data-current-anchor', 'true' );
 					$( target ).attr( 'data-popup-shown', 'true' );
 					return false;
@@ -2104,7 +2104,7 @@ window.bp = window.bp || {};
 				body.find( '[data-popup-shown="true"]' ).attr( 'data-popup-shown' , 'false' );
 				body.find( '[data-current-anchor="true"]' ).attr( 'data-current-anchor' , 'false' );
 				leave_group_popup.find( '.bb-leave-group-content .bb-group-name' ).html( '' );
-				leave_group_popup.hide();
+				leave_group_popup.removeClass( 'is-visible' ).hide();
 			}
 
 			// show popup if it is cancel_request_group action.
@@ -4613,7 +4613,7 @@ window.bp = window.bp || {};
 
 			// Clear content and hide popup.
 			popup.find( options.contentSelector ).html( options.contentPlaceholder );
-			popup.hide();
+			popup.removeClass( 'is-visible' ).hide();
 		},
 
 		openPopUp: function ( popupSelector ) {
