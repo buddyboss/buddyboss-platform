@@ -12,6 +12,14 @@ window.bp = window.bp || {};
 	 */
 	bp.Readylaunch.Members = {
 		/**
+		 * Email validation regex pattern.
+		 * Standard pattern for validating email addresses.
+		 *
+		 * @type {RegExp}
+		 */
+		emailRegex: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+
+		/**
 		 * [start description]
 		 *
 		 * @return {[type]} [description]
@@ -25,35 +33,40 @@ window.bp = window.bp || {};
 		 * [addListeners description]
 		 */
 		addListeners: function () {
+			// Cache DOM elements for better performance
+			var $submitButton = $( '#bb-rl-submit-invite' );
+			var $emailField   = $( '#bb-rl-invite-email' );
+			var $nameField    = $( '#bb-rl-invite-name' );
+			var $subjectField = $( '#bb-rl-invite-custom-subject' );
+
 			$( document ).on( 'keyup blur', '#bb-rl-invite-email', function () {
-				var $emailField   = $( this );
-				var $emailWrapper = $emailField.closest( '.bb-rl-form-field-wrapper' );
-				var emailValue    = $emailField.val().trim();
-				var emailRegex    = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+				var $currentField = $( this );
+				var $emailWrapper = $currentField.closest( '.bb-rl-form-field-wrapper' );
+				var emailValue    = $currentField.val().trim();
 
 				// Remove existing error messages.
 				$emailWrapper.find( '.bb-rl-notice' ).remove();
-				$emailField.removeClass( 'bb-rl-input-field--error' );
+				$currentField.removeClass( 'bb-rl-input-field--error' );
 
 				if ( '' !== emailValue ) {
-					if ( ! emailRegex.test( emailValue ) ) {
-						$emailField.addClass( 'bb-rl-input-field--error' );
+					if ( ! bp.Readylaunch.Members.emailRegex.test( emailValue ) ) {
+						$currentField.addClass( 'bb-rl-input-field--error' );
 						bp.Readylaunch.Members.appendMessage( $emailWrapper, bbReadyLaunchMembersVars.invite_valid_email );
 					}
 				}
 			} );
 
 			$( document ).on( 'keyup', '#bb-rl-invite-name, #bb-rl-invite-email, #bb-rl-invite-custom-subject', function () {
-				var $submitButton = $( '#bb-rl-submit-invite' );
-				var $emailField   = $( '#bb-rl-invite-email' );
-				var emailValue    = $emailField.val().trim();
-				var emailRegex    = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+				var emailValue = $emailField.val().trim();
+				var nameValue  = $nameField.val().trim();
+				var isSubjectRequired = $subjectField.length > 0;
+				var isSubjectValid = ! isSubjectRequired || '' !== ( $subjectField.val() || '' ).trim();
 
 				if (
-					'' !== $( '#bb-rl-invite-name' ).val().trim() &&
+					'' !== nameValue &&
 					'' !== emailValue &&
-					emailRegex.test( emailValue ) &&
-					'' !== $( '#bb-rl-invite-custom-subject' ).val().trim()
+					bp.Readylaunch.Members.emailRegex.test( emailValue ) &&
+					isSubjectValid
 				) {
 					$submitButton.prop( 'disabled', false );
 				} else {
@@ -157,9 +170,8 @@ window.bp = window.bp || {};
 			var $emailField = $( '#bb-rl-invite-email' );
 			var $emailWrapper = $emailField.closest( '.bb-rl-form-field-wrapper' );
 			var emailValue = $emailField.val().trim();
-			var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-			if ( ! emailRegex.test( emailValue ) ) {
+			if ( ! bp.Readylaunch.Members.emailRegex.test( emailValue ) ) {
 				$emailField.addClass( 'bb-rl-input-field--error' );
 				bp.Readylaunch.Members.appendMessage( $emailWrapper, bbReadyLaunchMembersVars.invite_valid_email );
 				isValid = false;
@@ -183,14 +195,17 @@ window.bp = window.bp || {};
 						if ( response.success ) {
 							bp.Readylaunch.Members.showToastMessage( response.data.message, 'success', true );
 							$form[ 0 ].reset();
+							// Disable submit button after reset since form is now empty
+							$submitButton.prop( 'disabled', true );
 						} else {
 							bp.Readylaunch.Members.showToastMessage( response.data.message, 'error', false );
+							// Re-enable button on error so user can try again
+							$submitButton.prop( 'disabled', false );
 						}
 					},
 					error: function () {
 						bp.Readylaunch.Members.showToastMessage( bbReadyLaunchMembersVars.invite_error_notice, 'error', false );
-					},
-					complete: function () {
+						// Re-enable button on error so user can try again
 						$submitButton.prop( 'disabled', false );
 					}
 				}
@@ -199,13 +214,17 @@ window.bp = window.bp || {};
 
 		resetInviteMemberPopupForm: function () {
 			var $modal = $( this ).closest( '#bb-rl-invite-modal' ),
-			    $form  = $modal.find( '#bb-rl-invite-form' );
+			    $form  = $modal.find( '#bb-rl-invite-form' ),
+			    $submitButton = $modal.find( '#bb-rl-submit-invite' );
 
 			// Reset form
 			$form.removeClass( 'bb-rl-form-error' );
 			$form.find( '.bb-rl-input-field' ).removeClass( 'bb-rl-input-field--error' );
 			$form.find( '.bb-rl-notice' ).remove();
 			$form[ 0 ].reset();
+
+			// Disable submit button after reset to maintain consistent state
+			$submitButton.prop( 'disabled', true );
 		},
 	};
 
